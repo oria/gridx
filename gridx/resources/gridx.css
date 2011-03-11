@@ -1,0 +1,35 @@
+.dojoxGridxHeader {
+	background-color: #eee;
+}
+.dojoxGridxHeader, .dojoxGridxHeaderRow, .dojoxGridxFooter {
+	overflow: hidden;
+}
+.dojoxGridxFooter {
+	margin-top: -2px;
+}
+.dojoxGridxMain {
+	position: relative;
+}
+.dojoxGridxBody {
+	height: 400px;
+	overflow: hidden;
+}
+.dojoxGridxVScroller {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	overflow: scroll; 
+	overflow-x: hidden; 
+	width: 20px; 
+	border: none;
+}
+.dojoxGridxHScroller {
+	overflow: scroll;
+	overflow-y: hidden;
+	height: 20px;
+	border: none;
+}
+
+/*below is dummy style*/
+.dojoxGridxRow, .dojoxGridxHeaderRow {
+}
