@@ -4,6 +4,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>Simple Grid (Possible base for mobile grid)</title>
 		<style type="text/css">
+			@import "../../../../dojo/resources/dojo.css";
+			@import "../../../../dijit/themes/claro/claro.css";			
 			@import "../resources/gridx.css";
 			#gridDiv{
 				margin-left: 50px;
@@ -24,7 +26,6 @@
 			dojo.require('dojox.grid.gridx.modules.Layout');
 			dojo.require('dojox.grid.gridx.modules.VScroller');
 			dojo.require('dojox.grid.gridx.modules.HScroller');
-			dojo.require('dojox.grid.gridx.modules.VirtualVScroller');
 			dojo.require('dojox.grid.gridx.modules.SingleSort');
 			dojo.require("dojo.store.JsonRest");
 			
@@ -51,15 +52,14 @@
 				mr.Body,
 				mr.Layout,
 				mr.HScroller,
-				mr.VirtualVScroller,
+				mr.VScroller,
 				mr.SingleSort
 			];
 			
 			dojo.ready(function(){
-				window.grid = new dojox.grid.gridx.Grid({
+				var grid = new dojox.grid.gridx.Grid({
 					id: 'grid',
 					store: store,
-					isAsync: false,
 					structure: columns,
 					modules: modules
 				});
@@ -69,6 +69,7 @@
 		</script>
 	</head>
 	<body>
-		<div id="gridDiv"></div>
+		<h1 align="center">Mini-Grid consisted of minimal modules</h1>
+		<p><div id="gridDiv"></div></p>
 	</body>
 </html>
