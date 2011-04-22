@@ -5,14 +5,16 @@ define('dojox/grid/gridx/core/model/AsyncCache', [
 ], function(dojo, _Cache){
 
 return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
+	// summary:
+	//		
 	cacheSize: 200,
-	pageSize: 200,
-	neighborSize: 100,
+	pageSize: 100,
+	neighborSize: 50,
 	
 	constructor: function(args){
-		this.cacheSize = args.cacheSize || this.cacheSize;
-		this.pageSize = args.pageSize || this.pageSize;
-		this.neighborSize = args.neighborSize || this.neighborSize;
+		this.cacheSize = parseInt(args.cacheSize || this.cacheSize, 10);
+		this.pageSize = parseInt(args.pageSize || this.cacheSize, 10);
+		this.neighborSize = parseInt(args.neighborSize || this.cacheSize, 10);
 	},
 	destroy: function(){
 		dojo.forEach(this._connects, dojo.disconnect);
@@ -29,15 +31,13 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 		this._indexMap = [];
 		this._cache = {};
 		this.totalCount = -1;
+		this._kept = {};
+		this._keptSize = 0;
 	},
-	onBeforeFetch: function(){},
-	onAfterFetch: function(){},
-	onSet: function(index, id, row){},
-	onNew: function(index, id, row){},
-	onDelete: function(index, id){},
 	
 	index: function(index){
-		return this._indexMap[index] === undefined ? null : this._cache[this._indexMap[index]];
+		var id = this._indexMap[index];
+		return id === undefined ? null : this._cache[id];
 	},
 	id: function(id){
 		return this._cache[id];
@@ -55,16 +55,26 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 		var d = args._def = new dojo.Deferred();
 		args._name = callback.name;
 		try{
-			this._fetchById(
-				this._connectRanges(
-					this._mergePendingRequests(
-						this._findMissingIndexes(
-							this._mergeRanges(
-								this._mergeIndexes(args))))), callback, d);
+			this._fetchById(args, callback, d);
 		}catch(e){
 			d.errback(e);
 		}
 		return d;
+	},
+	keep: function(id){
+		if(!this._kept[id] && this._cache[id]){
+			this._kept[id] = true;
+			++this._keptSize;
+		}
+	},
+	free: function(id){
+		if(this._kept[id]){
+			delete this._kept[id];
+			--this._keptSize;
+		}else if(id === undefined){
+			this._kept = {};
+			this._keptSize = 0;
+		}
 	},
 	//-----------------------------------------------------------------------------------------------------------
 	_mergePendingRequests: function(args){
@@ -93,12 +103,12 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 			for(i = 0; i < indexes.length; ++i){
 				if(indexes[i]){
 					f += indexes[i];
-					if(f == 1){
+					if(f === 1){
 						res.push({
 							start: i
 						});
 					}else{
-						if(f == 3){
+						if(f === 3){
 							res._overlap = true;
 						}
 						r = res[res.length - 1];
@@ -110,19 +120,19 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 			}
 			return res;
 		};
-		var ids = {}, defs = [];
-		for(var i = this._requests.length - 1; i >= 0; --i){
-			var req = this._requests[i];
+		var i, req, j, ids = {}, defs = [];
+		for(i = this._requests.length - 1; i >= 0; --i){
+			req = this._requests[i];
 			args.range = minus(args.range, req.range);
 			if(args.range._overlap){
 				defs.push(req._def);
 			}
-			for(var j = req.id.length - 1; j >= 0; --j){
+			for(j = req.id.length - 1; j >= 0; --j){
 				ids[req.id[j]] = true;
 			}
 		}
 		args.id = dojo.filter(args.id, function(id){
-			return !(id in ids);
+			return !ids[id];
 		});
 		if(defs.length){
 			args._req = new dojo.DeferredList(defs);
@@ -131,9 +141,11 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 		return args;
 	},
 	_finish: function(args, callback, deferred){
-		callback && callback();
+		if(callback){
+			callback();
+		}
 		this._requests.shift();
-		if(!args.skipCacheSizeCheck && !this._requests.length){
+		if(!this.skipCacheSizeCheck && !this._requests.length){
 			this._checkSize();
 		}
 		deferred.callback();
@@ -146,47 +158,59 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 		}
 	},
 	_fetchByIndex: function(args, callback, deferred){
+		args = this._connectRanges(
+					this._mergePendingRequests(
+						this._findMissingIndexes(
+							this._mergeRanges(args))));
 		if(args.range.length){
-			var _this = this, fetchTimes = args.range.length,
+			var _this = this, i, fetchTimes = args.range.length,
 				onComplete = function(){
 					if(!--fetchTimes){
 						_this._finishReady(args, callback, deferred);
 					}
 				};
-			for(var i = 0, len = fetchTimes; i < len; ++i){ 
-				this._storeFetch(args.range[i]).then(onComplete);
+			for(i = 0, len = fetchTimes; i < len; ++i){ 
+				this._storeFetch(args.range[i]).then(onComplete, dojo.hitch(deferred, deferred.errback));
 			}
 		}else{
 			this._finishReady(args, callback, deferred);
 		}
 	},
 	_fetchById: function(args, callback, deferred){
-		var func = dojo.hitch(this, function(start, ids){
+		var _this = this;
+		var func = function(start, ids){
 			start += ids.length;
-			var missing = this._findMissingIds(args.id);
+			var missing = _this._findMissingIds(args.id);
 			if(missing.length){
-				for(; this._indexMap[start] !== undefined; ++start){}
-				end = start + 1;
-				if(end < this._indexMap.length){
-					for(; end - start < this.pageSize && this._indexMap[end] === undefined; ++end){}
+				//Find the first hole
+				while(_this._indexMap[start] !== undefined){
+					++start;
+				}
+				var end = start + 1;
+				if(end < _this._indexMap.length){
+					while(end - start < _this.pageSize && _this._indexMap[end] === undefined){
+						++end;
+					}
 				}else{
-					end = start + this.pageSize;
-					if(this.totalCount >= 0 && end > this.totalCount){
-						end = this.totalCount;
+					end = start + _this.pageSize;
+					if(this.totalCount >= 0 && end > _this.totalCount){
+						end = _this.totalCount;
 					}
 				}
 				if(start < end){
-					this._storeFetch({
+					_this._storeFetch({
 						start: start,
 						count: end - start
-					}).then(dojo.partial(func, start));
+					}).then(dojo.partial(func, start), function(e){
+						deferred.errback(e);
+					});
 				}else{
-					throw new Error("Required id does not exist: " + missing);
+					deferred.errback(new Error("Required id does not exist: " + missing));
 				}
 			}else{
-				this._fetchByIndex(args, callback, deferred);
+				_this._fetchByIndex(args, callback, deferred);
 			}
-		});
+		};
 		func(0, []);
 	},
 	_storeFetch: function(options){
@@ -197,16 +221,20 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 			_this.totalCount = size;
 		};
 		var onComplete = function(items){
-			var ids = [], start = options.start || 0;
-			for(var i = 0, len = items.length; i < len; ++i){
-				ids.push(s.getIdentity(items[i]));
-				_this._addRow(_this._itemToObject(items[i]), start + i, ids[i], items[i]);
+			try{
+				var i, len, ids = [], start = options.start || 0;
+				for(i = 0, len = items.length; i < len; ++i){
+					ids.push(s.getIdentity(items[i]));
+					_this._addRow(_this._itemToObject(items[i]), start + i, ids[i], items[i]);
+				}
+				_this.onAfterFetch();
+				d.callback(ids);	
+			}catch(e){
+				d.errback(e);
 			}
-			_this.onAfterFetch();
-			d.callback(ids);
 		};
 		var onError = function(e){
-			console.errer(e);
+			console.error(e);
 		};
 		var req = dojo.mixin({}, this.options || {}, options);
 		if(s.fetch){
@@ -214,58 +242,13 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 				onBegin: onBegin,
 				onComplete: onComplete,
 				onError: onError
-			}));	
+			}));
 		}else{
 			var results = s.query(req.query, req);
 			results.then(onComplete, onError);
 			results.total.then(onBegin);
 		}
 		return d;
-	},
-	_mergeIndexes: function(args){
-		if(!args.range.length && args.index.length > 1){
-			args.range.push({
-				start: args.index.pop(),
-				count: 1
-			});
-		}
-		var func = function(indexArr, rangeArr){
-			var results = [], i, a, b, merged;
-			while(indexArr.length){
-				a = indexArr.pop();
-				merged = false;
-				for(i = rangeArr.length - 1; i >= 0; --i){
-					b = rangeArr[i];
-					if(a == b.start - 1){
-						--b.start;
-						++b.count;
-					}else if(b.count && a == b.start + b.count){
-						++b.count;
-					}else if(a < b.start || (b.count && a > b.start + b.count)){
-						continue;
-					}
-					merged = true;
-					break;
-				}
-				if(merged){
-					indexArr = indexArr.concat(results);
-					results = [];
-				}else{
-					results.push(a);
-				}
-			}
-			return results;
-		};
-		var indexes = func(args.index, args.range), ranges = [];
-		while(indexes.length){
-			ranges.push({
-				start: indexes.pop(),
-				count: 1
-			});
-		}
-		args.range = args.range.concat(ranges);
-		delete args.index;
-		return args;
 	},
 	_mergeRanges: function(args){
 		var ranges = [], tmp = {}, i, a, b, c, merged;
@@ -344,8 +327,8 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 		return args;
 	},
 	_connectRanges: function(args){
-		var pad = this.neighborSize / 2;
-		for(var i = args.range.length - 1; i >= 0; --i){
+		var i, pad = this.neighborSize / 2;
+		for(i = args.range.length - 1; i >= 0; --i){
 			var r = args.range[i];
 			if(r.count < this.pageSize || !r.count){
 				r.start = r.start - pad < 0 ? 0 : r.start - pad;
@@ -367,15 +350,7 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 			this._indexMap[index] = id;
 			this._idMap[id] = index;
 			this._priority.push(id);
-		}else if(record == id){
-			var i = dojo.indexOf(this._priority, id);
-			if(i >= 0){
-				this._priority.splice(i, 1);
-				this._priority.push(id);
-			}else{
-				throw new Error("Fatal error of cache._addRow: cached row not in priority queue.");
-			}
-		}else{
+		}else if(record !== id){
 			throw new Error("Fatal error of cache._addRow: different row id for same row index");
 		}
 	},
@@ -386,13 +361,18 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 		}
 		var c = this.cacheSize;
 		if(c <= 0){ return; }
+		c += this._keptSize;
 		var p = this._priority, idxMap = this._indexMap, idMap = this._idMap, cache = this._cache;
-		console.warn("### Cache size:", p.length, ", To release: ", p.length - c);
+		console.log("### Cache size:", p.length, ", To release: ", p.length - c);
 		while(p.length > c){
 			var id = p.shift();
-			delete idxMap[idMap[id]];
-			delete idMap[id];
-			delete cache[id];
+			if(this._kept[id]){
+				p.push(id);
+			}else{
+				delete idxMap[idMap[id]];
+				delete idMap[id];
+				delete cache[id];
+			}
 		}
 	},
 	_onSet: function(item){
@@ -402,16 +382,16 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 		if(index !== undefined){
 			this._addRow(row, index, id, item);
 		}
-		this.onSet(index, id, row);
+		this.onSet(id, index, this._cache[id]);
 	},
 	_onNew: function(item){
-		var id = this.store.getIdentity(item);
+		var id = this.store.getIdentity(item), idx, row;
 		if(this.totalCount >= 0){
-			var idx = this.totalCount++;
-			var row = this._itemToObject(item);
+			idx = this.totalCount++;
+			row = this._itemToObject(item);
 			this._addRow(row, idx, id, item);
-			this.onNew(idx, id, row);
 		}
+		this.onNew(id, idx, this._cache[id]);
 	},
 	_onDelete: function(item){
 		var id = this.store.fetch ? this.store.getIdentity(item) : item, 
@@ -420,11 +400,11 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 			this._indexMap.splice(index, 1);
 			delete this._idMap[id];
 			delete this._cache[id];
-			var j = dojo.indexOf(this._priority, id);
-			if(j >= 0){
-				this._priority.splice(j, 1);
+			var len, i = dojo.indexOf(this._priority, id);
+			if(i >= 0){
+				this._priority.splice(i, 1);
 			}
-			for(var i = index, len = this._indexMap.length; i < len; ++i){
+			for(i = index, len = this._indexMap.length; i < len; ++i){
 				id = this._indexMap[i];
 				if(id !== undefined){
 					this._idMap[id] = i;
@@ -432,7 +412,7 @@ return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 			}
 			--this.totalCount;
 		}
-		this.onDelete(index, idty);
+		this.onDelete(idty, index);
 	}
 });
 });

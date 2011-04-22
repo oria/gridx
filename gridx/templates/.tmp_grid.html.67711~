@@ -1,6 +1,7 @@
-<div class="dojoxGridx">
+<div>
+
 	<div class="dojoxGridxHeader" dojoAttachPoint="headerNode"></div>
-	<div class="dojoxGridxMain" dojoAttachPoint="mainNode">
+	<div class="dojoxGridxMain">
 		<div class="dojoxGridxBody" dojoAttachPoint="bodyNode"></div>
 		<div class="dojoxGridxVScroller" dojoAttachPoint="vScrollerNode"><div style="width:1px; height: 1px;"></div></div>
 		<div class="clear"></div>

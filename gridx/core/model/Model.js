@@ -4,7 +4,19 @@ var ns = dojox.grid.gridx.core.model;
 
 return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 	constructor: function(args){
-		this.init(args);
+		this._cmdQueue = [];
+		this._prevCmdQueues = [];
+		this._pendingSortQuery = 0;
+		this._pendingCmdCount = 0;
+		this._args = args;
+		var cacheCls = args.cacheClass || (args.isAsync ? ns.AsyncCache : ns.SyncCache);
+		this._model = this._cache = new cacheCls(args);
+		this._createExtensions(args.modelExtensions || [], args);
+		this._connects = [
+			dojo.connect(this._model, "onDelete", this, "onDelete"),
+			dojo.connect(this._model, "onNew", this, "onNew"),
+			dojo.connect(this._model, "onSet", this, "onSet")
+		];
 	},
 	destroy: function(){
 		dojo.forEach(this._connects, dojo.disconnect);
@@ -15,79 +27,106 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 			}
 		}
 	},
-	init: function(args){
-		this.destroy();
-		this._cmdQueue = [];
-		this._plugins = [];
-		this._args = args;
-		var cacheCls = args.cacheClass || (args.isAsync ? ns.AsyncCache : ns.SyncCache);
-		this._model = this._cache = new cacheCls(args);
-		var exts = args.modelExtensions = args.modelExtensions || [];
-		var i = exts.length - 1;
-		for(; i >= 0; --i){
-			this._plugins.push(new exts[i](this, args));
-		}
-		for(i = exts.length - 1; i >= 0; --i){
-			this._plugins[i].init && this._plugins[i].init(this);
-		}
-		var t3 = (new Date()).getTime();
-		this._connects = [
-			dojo.connect(this._model, "onDelete", this, "onDelete"),
-			dojo.connect(this._model, "onNew", this, "onNew"),
-			dojo.connect(this._model, "onSet", this, "onSet")
-		];
-	},
-	onDelete: function(index, id){},
-	onNew: function(index, id, row){},
-	onSet: function(index, id, row){},
+	onDelete: function(id, index){},
+	onNew: function(id, index, row){},
+	onSet: function(id, index, row){},
 	
 	clearCache: function(){
 		this._cache.clear();
 	},
 	restore: function(){
 		this.clearCache();
-		var i = this._plugins.length - 1;
+		var plugins = this._plugins, i = plugins.length - 1;
 		for(; i >= 0; --i){
-			this._plugins[i].clear();
+			plugins[i].clear();
 		}
 		this._cmdQueue = [];
+		this._prevCmdQueues = [];
 	},
 	//---------------------------------------------------------------------------------------
 	size: function(){
-		if(!this._args.isAsync){
-			this._exec();
-		}
 		return this._model.size();
 	},
 	index: function(idx){
-		if(!this._args.isAsync){
-			this._exec();
-		}
 		return this._model.index(idx);
 	},
 	id: function(id){
-		if(!this._args.isAsync){
-			this._exec();
-		}
 		return this._model.id(id);
 	},
 	indexToId: function(index){
-		if(!this._args.isAsync){
-			this._exec();
-		}
 		return this._model.indexToId(index);
 	},
 	idToIndex: function(id){
-		if(!this._args.isAsync){
-			this._exec();
-		}
 		return this._model.idToIndex(id);
 	},
-	when: function(args, callback){
-		var d = new dojo.Deferred(), _this = this;
-		this._exec().then(function(){
-			_this._model.when(_this._normalizeArgs(args), callback).then(dojo.hitch(d, d.callback));
-		});
+	when: function(args, callback, scope){
+		this._cache.skipCacheSizeCheck = this._cache.skipCacheSizeCheck || 0;
+		++this._cache.skipCacheSizeCheck;
+		var d = new dojo.Deferred(), _this = this, 
+			errback = dojo.hitch(d, d.errback),
+			queues = this._prevCmdQueues,
+			last = queues[queues.length - 1], 
+			getData = function(){
+				_this._model.when(_this._normalizeArgs(args), function(){
+					_this._pendingSortQuery = 0;
+					if(callback){
+						callback.apply(scope || window);
+					}
+					--_this._cache.skipCacheSizeCheck;
+				}).then(function(){
+					queues.shift();
+					d.callback();
+				}, errback);
+			};
+		queues.push(d);
+		if(!this._cmdQueue.length && !this._pendingCmdCount){
+			getData();
+		}else{
+			var cmds = this._cmdQueue;
+			this._cmdQueue = [];
+			dojo.when(last, function(){
+				_this._exec(cmds).then(getData, errback);
+			});
+		}
+		return d;
+	},
+	scan: function(args, callback){
+		var d = new dojo.Deferred(),
+			start = args.start || 0,
+			pageSize = args.pageSize || this._cache.pageSize || 1,
+			end = args.count > 0 ? start + args.count : Infinity,
+			scope = args.whenScope || this,
+			whenFunc = args.whenFunc || scope.when;
+		var f = function(s){
+			whenFunc.call(scope, {
+				id: [],
+				range: [{
+					start: s,
+					count: pageSize
+				}]
+			}, function(){
+				var i, r, rows = [];
+				for(i = s; i < s + pageSize && i < end; ++i){
+					r = scope.index(i);
+					if(r){
+						rows.push(r);
+					}else{
+						end = -1;
+						break;
+					}
+				}
+				if(callback(rows, s) || i === end){
+					end = -1;
+				}
+			}).then(function(){
+				if(end === -1){
+					d.callback();
+				}else{
+					f(s + pageSize);
+				}
+			});
+		};
+		f(start);
 		return d;
 	},
 	//---------------------------------------------------------------------------
@@ -99,24 +138,26 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 	},
 	
 	//Private----------------------------------------------------------------------------
-	_exec: function(){
-		var d = new dojo.Deferred();
-		var cmds = this._cmdQueue, _this = this;
+	_exec: function(cmds){
+		var d = new dojo.Deferred(), _this = this;
+		this._pendingCmdCount += cmds.length;
 		var func = function(){
-			if(cmds.length){
-				var i, cmd;
-				for(i = 0; i < cmds.length; ++i){
-					cmd = cmds[i];
-					if(cmd.async){
-						cmds.splice(0, i + 1);
-						cmd.scope[cmd.name].apply(cmd.scope, cmd.args).then(func);
-						return;
-					}else{
-						cmd.scope[cmd.name].apply(cmd.scope, cmd.args)
+			while(cmds.length){
+				var cmd = cmds.shift();
+				--_this._pendingCmdCount;
+				if(cmd.async){
+					cmd.scope[cmd.name].apply(cmd.scope, cmd.args).then(function(){
+						_this._pendingSortQuery = 0;
+						func();
+					});
+					return;
+				}else{
+					if(cmd.name === '_sort' || cmd.name === '_query'){
+						++_this._pendingSortQuery;
 					}
+					cmd.scope[cmd.name].apply(cmd.scope, cmd.args);
 				}
 			}
-			_this._cmdQueue = [];
 			d.callback();
 		};
 		func();
@@ -127,9 +168,9 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 			this[name].apply(this, args);
 			return;
 		}
-		var cmds = this._cmdQueue, len = cmds.length, i = len - 1, cmd, start = 0;
-		for(; i >= 0; --i){
-			if(cmds[i].name == '_doMarkCmd'){
+		var cmds = this._cmdQueue, len = cmds.length, i, cmd, start = 0;
+		for(i = len - 1; i >= 0; --i){
+			if(cmds[i].name === '_mark'){
 				start = i + 1;
 				break;
 			}
@@ -142,14 +183,14 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 		}];
 		for(i = len - 1; i >= start; --i){
 			cmd = cmds[i];
-			if(cmd.name == theOtherName){
+			if(cmd.name === theOtherName){
 				this._cmdQueue.push(cmd);
 				break;
 			}
 		}
 		for(i = len - 1; i >= start; --i){
 			cmd = cmds[i];
-			if(cmd.name == "filter"){
+			if(cmd.name === "filter"){
 				this._cmdQueue.push(cmd);
 				break;
 			}
@@ -157,9 +198,9 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 		this._cmdQueue = pre.concat(this._cmdQueue);
 	},
 	_sort: function(sortSpec){
-		var c = this._cache;
+		var c = this._cache, i;
 		if(dojo.isArrayLike(sortSpec)){
-			for(var i = 0; i < sortSpec.length; ++i){
+			for(i = 0; i < sortSpec.length; ++i){
 				var s = sortSpec[i];
 				if(s.colId !== undefined){
 					s.attribute = c.columns ? (c.columns[s.colId].field || s.colId) : s.colId;
@@ -171,7 +212,7 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 		c.options = c.options || {};
 		var toSort = false;
 		if(c.options.sort && c.options.sort.length){
-			if(dojo.toJson(c.options.sort) != dojo.toJson(sortSpec)){
+			if(dojo.toJson(c.options.sort) !== dojo.toJson(sortSpec)){
 				toSort = true;
 			}
 		}else if(sortSpec && sortSpec.length){
@@ -180,59 +221,80 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 		c.options.sort = sortSpec;
 		if(toSort){
 			c.clear();
-			this._model.onStoreReorder && this._model.onStoreReorder(this._args.isAsync);
+		}
+		if(this._model.onStoreReorder){
+			this._model.onStoreReorder(this._args.isAsync);
 		}
 	},
 	_query: function(query, queryOptions){
-		var c = this._cache;
-		c.options = c.options || {};
-		c.options.query = query;
-		c.options.queryOptions = queryOptions;
-		this._model.onStoreReorder && this._model.onStoreReorder();
+		var c = this._cache, ops = c.options = c.options || {};
+		ops.query = query;
+		ops.queryOptions = queryOptions;
+		if(this._model.onStoreReorder){
+			this._model.onStoreReorder(this._args.isAsync);
+		}
 		c.clear();
 	},
+	_createExtensions: function(exts, args){
+		this._plugins = [];
+		var i, len, priority = [];
+		for(i = exts.length - 1; i >= 0; --i){
+			priority[exts[i].prototype.priority] = exts[i];
+		}
+		for(i = 0, len = priority.length; i < len; ++i){
+			if(priority[i]){
+				this._plugins.push(new priority[i](this, args));
+			}
+		}
+	},
 	_normalizeArgs: function(args){
-		var res = {
-			index: [],
+		var i, res = {
 			range: [],
 			id: []
-		};
-		var isIndex = function(a){
-			return typeof a == 'number' && a >= 0;
-		};
-		var isRange = function(a){
-			return a && typeof a.start == 'number' && a.start >= 0;
-		};
-		if(isIndex(args)){
-			res.index.push(args);
-		}else if(isRange(args)){
-			res.range.push(args);
-		}else if(dojo.isString(args)){
-			res.id.push(args);
-		}else if(dojo.isArrayLike(args)){
-			for(var i = 0; i < args.length; ++i){
-				if(isIndex(args[i])){
-					res.index.push(args[i]);
-				}else if(isRange(args[i])){
-					res.range.push(args[i]);
-				}else if(dojo.isString(args[i])){
-					res.id.push(args[i]);
+		},
+		isIndex = function(a){
+			return typeof a === 'number' && a >= 0;
+		},
+		isRange = function(a){
+			return a && typeof a.start === 'number' && a.start >= 0;
+		},
+		f = function(a){
+			if(isRange(a)){
+				res.range.push(a);
+			}else if(isIndex(a)){
+				res.range.push({start: a, count: 1});
+			}else if(dojo.isArrayLike(a)){
+				for(i = a.length - 1; i >= 0; --i){
+					if(isIndex(a[i])){
+						res.range.push({
+							start: a[i],
+							count: 1
+						});
+					}else if(isRange(a[i])){
+						res.range.push(a[i]);
+					}else if(dojo.isString(a)){
+						res.id.push(a[i]);
+					}
 				}
+			}else if(dojo.isString(a)){
+				res.id.push(a);
 			}
-		}else if(args){
-			res = dojo.clone(args);
-			var toArr = function(attr){
-				res[attr] = res[attr] || [];
-				if(!dojo.isArray(res[attr])){
-					res[attr] = [res[attr]];
+		};
+		if(args && (args.index || args.range || args.id)){
+			f(args.index);
+			f(args.range);
+			if(dojo.isArrayLike(args.id)){
+				for(i = args.id.length - 1; i >= 0; --i){
+					res.id.push(args.id[i]);
 				}
-			};
-			toArr("range");
-			toArr("id");
-			toArr("index");
-			if(res.size && !res.range.length && !res.id.length && !res.index.length){
-				res.index.push(0);
+			}else if(args.id !== undefined){
+				res.id.push(args.id);
 			}
+		}else{
+			f(args);
+		}
+		if(args && args.size && !res.range.length && !res.id.length && this.size() < 0){
+			res.range.push({start: 0, count: 1});
 		}
 		return res;
 	}

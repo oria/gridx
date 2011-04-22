@@ -34,16 +34,15 @@ return dojo.declare('dojox.grid.gridx.core.model.SyncCache', _Cache, {
 		this._init();
 		var d = new dojo.Deferred();
 		try{
-			callback && callback(args);
+			if(callback){
+				callback(args);
+			}
 			d.callback();
 		}catch(e){
 			d.errback(e);
 		}
 		return d;
 	},
-	onBeforeFetch: function(){},
-	onAfterFetch: function(){},
-	onDelete: function(){},
 	
 	//--------------------------------------------------------------------
 	_init: function(){
@@ -70,7 +69,7 @@ return dojo.declare('dojox.grid.gridx.core.model.SyncCache', _Cache, {
 			}));
 		}else{
 			var results = s.query(req.query, req);
-			onBegin(results.total);
+			dojo.when(results.total, onBegin);
 			onComplete(results);
 		}
 	},
@@ -86,9 +85,19 @@ return dojo.declare('dojox.grid.gridx.core.model.SyncCache', _Cache, {
 		};
 	},
 	_onNew: function(item){
-		if(this.totalCount >= 0){
+		if(this.totalCount < 0){
+			this._init();
+		}else{
 			this._addRow(item, this.totalCount++);
 		}
+		var id = this.store.getIdentity(item);
+		this.onNew(id, this.totalCount - 1, this._cache[id]);
+	},
+	_onSet: function(item){
+		this._init();
+		var id = this.store.getIdentity(item), index = this._idMap[id];
+		this._addRow(item, index);
+		this.onSet(id, index, this._cache[id]);
 	},
 	_onDelete: function(item){
 		var id = this.store.fetch ? this.store.getIdentity(item) : item,
@@ -102,13 +111,7 @@ return dojo.declare('dojox.grid.gridx.core.model.SyncCache', _Cache, {
 			}
 			--this.totalCount;
 		}
-		this.onDelete(idx, id);
-	},
-	_onSet: function(item){
-		if(this.totalCount >= 0){
-			var id = this.store.getIdentity(item);
-			this._addRow(item, this._idMap[id]);
-		}
+		this.onDelete(id, idx);
 	}
 });
 });

@@ -17,12 +17,16 @@
 			height: 0px;
 			visibility: hidden;
 		}
+		.title { 
+			text-align:center;
+		}
 		#gridDiv{
+			margin: 3em;
 			position: relative;
 		}
  		#grid{
 			overflow: hidden;
-			width: 70em;
+			width: 700px;
 			border: 1px solid #ddd;
 		}
 		#grid table{
@@ -47,6 +51,7 @@
 		dojo.require("dojo.parser");
 		dojo.require("dojox.grid.gridx.Grid");
 		dojo.require('dojox.grid.gridx.core.model.AsyncCache');
+		dojo.require('dojox.data.QueryReadStore');
 	</script>
 	<script type="text/javascript">
 		var columns = [
@@ -60,17 +65,22 @@
 		];
 		//columns = [{name: 'Col1', field: 'id', id: 'col1', width: '100px'}
 		//	,{name: 'Col2', field: 'number', id: 'col2', width: '80px', template: '<font color="red">${col2}</font>'}];
-	    var store = getStore(300);
+		var store = new dojox.data.QueryReadStore({
+			url: "demoStore.php?datastore=true&totalsize=200",
+			requestMethod: "post"
+		});
+	    store = getStore(200);
 		dojo.addOnLoad(function(){
 			DebugUtil.timer.start();
 			window.grid2 = new dojox.grid.gridx.Grid({
-				id: 'grid',
-				autoHeight: false,
-				cacheSize: 10,
-				height: '400px',
-				isAsync: true,
-				structure: columns,
-				store: store
+				id: 'grid'
+				,autoHeight: false
+				,cacheSize: 10
+				,height: '400px'
+				,isAsync: true
+				,virtualScroller: false
+				,structure: columns
+				,store: store
 			});
 			dojo.place(grid2.domNode, 'gridDiv', 'first');
 			grid2.startup();
@@ -79,7 +89,28 @@
 	</script>
 </head>
 <body class="claro">
-	<h2>New Grid default - all data are rendered at once(300 rows)</h2>
+	<h1 class="title">New Grid General Testing Page</h1>
 	<div id="gridDiv"></div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

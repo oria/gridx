@@ -1,86 +1,61 @@
 define('dojox/grid/gridx/Grid', [
 'dojo',
 'dijit',
+'dojox/grid/gridx/core/Core',
 'dijit/_Widget',
 'dijit/_Templated',
-'dojox/grid/gridx/core/Header',
-'dojox/grid/gridx/core/Body',
-'dojox/grid/gridx/core/_VScroller',
-'dojox/grid/gridx/core/_HScroller',
-'dojox/grid/gridx/VirtualScroller',
-'dojox/grid/gridx/core/Core',
-'text!dojox/grid/gridx/templates/grid.html'], function(dojo, dijit){
+'text!dojox/grid/gridx/templates/grid.html'
+], function(dojo, dijit, Core){
 
-dojo.declare('dojox.grid.gridx.Grid', [dijit._Widget, dijit._Templated, dojox.grid.gridx.core.Core], {
+return dojo.declare('dojox.grid.gridx.Grid', [dijit._Widget, dijit._Templated, Core], {
 	templateString: dojo.cache('dojox.grid.gridx', 'templates/grid.html'),
-	constructor: function(args){
-		this.reset(args);
+
+	postMixInProperties: function(){
+		this.modules = [
+			//Put default modules here!
+		].concat(this.modules || []);
+		this._initMouseEvents();
+		this.reset(this);
 	},
-	
+
 	postCreate: function(){
 		this.inherited(arguments);
+		this._deferStartup = new dojo.Deferred();
+		this._loadModules(this._deferStartup).then(dojo.hitch(this, this.onModulesLoaded));
 	},
 
 	startup: function(){
 		this.inherited(arguments);
-		this._adaptColumnWidth();
-		var arg = {grid: this};
-		this.header = new dojox.grid.gridx.core.Header(arg, this.headerNode);
-		this.body = new dojox.grid.gridx.core.Body(arg, this.bodyNode);
-		
-		if(this.hasHScroller()){
-			this.hScroller = new dojox.grid.gridx.core._HScroller(arg, this.hScrollerNode);
-		}else{
-			dojo.style(this.hScrollerNode, 'display', 'none');
-		}
-		
-		if(this.hasVScroller()){
-			if(this.virtualScroller){
-				this.vScroller = new dojox.grid.gridx.VirtualScroller(arg, this.vScrollerNode)
-			}else{
-				this.vScroller = new dojox.grid.gridx.core._VScroller(arg, this.vScrollerNode);
-			}	
-			this.header.rowNode.style.width = this.bodyNode.style.width;
-		}else{
-			dojo.style(this.vScrollerNode, 'display', 'none');
-		}
+		this._deferStartup.callback();
 	},
-	hasVScroller: function(){
-		return true;
+	destroy: function(){
+		this._uninit();
+		this.inherited(arguments);
 	},
-	hasHScroller: function(){
-		return true;
+	onModulesLoaded: function(){
 	},
-	resize: function(){	},
-	_adaptColumnWidth: function(){
-		var bodyWidth = this.domNode.offsetWidth - (this.hasVScroller()?20:0);//todo: detect if has vscroller
-		this.bodyNode.style.width = bodyWidth + 'px';
-		var contentWidth = 0, autoCount = 0, autoWidth = 30;
-		//calculate content width of the grid
-		dojo.forEach(this._columns, function(col){
-			if(/px$/.test(col.width)){
-				contentWidth += parseInt(col.width);
-			}else if(/%$/.test(col.width)){
-				col.width = eval(bodyWidth + '*' + col.width) + 'px';
-				contentWidth += parseInt(col.width);
-			}else{
-				col.width = 'auto';
-				this._lastAutoColumn = col; //last column for auto resize
-				autoCount ++;
-			}
+	
+	//Mouse event handling begin
+	_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],
+	_mouseEventNames: ['Click', 'DblClick', 'MouseDown', 'MouseUp', 'MouseOver', 'MouseOut', 'MouseMove', 'ContextMenu'],
+	_initMouseEvents: function(){
+		dojo.forEach(this._compNames, function(comp){
+			dojo.forEach(this._mouseEventNames, function(event){
+				var evtName = 'on' + comp + event;
+				if(!this[evtName]){
+					this[evtName] = dijit._connectOnUseEventHandler;
+				}
+			}, this);
 		}, this);
-		//calculate auto width
-		if(bodyWidth > contentWidth + autoCount * autoWidth){
-			autoWidth = (bodyWidth - contentWidth)/autoCount;
-		}
-		//set auto width
-		dojo.filter(this._columns, function(col){
-			return col.width === 'auto';
-		}).forEach(function(col){
-			col.width = autoWidth + 'px';
-		});
+	},
+	_connectMouseEvents: function(node, connector, scope){
+		dojo.forEach(this._mouseEventNames, function(eventName){
+			this.connect(node, 'on' + eventName.toLowerCase(), dojo.hitch(scope, connector, eventName));
+		}, this);
+	},
+	_isConnected: function(eventName){
+		return this[eventName] !== dijit._connectOnUseEventHandler;
 	}
+	//Mouse event handling end
 });
-
-return dojox.grid.gridx.Grid;
 });

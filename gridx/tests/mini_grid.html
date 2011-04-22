@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Simple Grid (Possible base for mobile grid)</title>
+		<style type="text/css">
+			@import "../resources/gridx.css";
+			#gridDiv{
+				margin-left: 50px;
+				float: left;
+			}
+			#grid{
+				height: 400px;
+				width: 800px;
+			}
+		</style>
+		<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug:false, parseOnLoad: true"></script>
+		<script type="text/javascript" src="../../tests/enhanced/support/test_write_store_music.js"></script>
+		<script type="text/javascript">
+			dojo.require('dojox.grid.gridx.Grid');
+			dojo.require('dojox.grid.gridx.core.model.SyncCache');
+			dojo.require('dojox.grid.gridx.modules.Header');
+			dojo.require('dojox.grid.gridx.modules.Body');
+			dojo.require('dojox.grid.gridx.modules.Layout');
+			dojo.require('dojox.grid.gridx.modules.VScroller');
+			dojo.require('dojox.grid.gridx.modules.HScroller');
+			dojo.require('dojox.grid.gridx.modules.VirtualVScroller');
+			dojo.require('dojox.grid.gridx.modules.SingleSort');
+			dojo.require("dojo.store.JsonRest");
+			
+			var store = test_store[0];
+			
+			var columns = [
+				{ field: "id", name:"Index"},
+				{ field: "Genre", name:"Genre"},
+				{ field: "Artist", name:"Artist"},
+				{ field: "Year", name:"Year"},
+				{ field: "Album", name:"Album"},
+				{ field: "Name", name:"Name"},
+				{ field: "Length", name:"Length"},
+				{ field: "Track", name:"Track"},
+				{ field: "Composer", name:"Composer"},
+				{ field: "Download Date", name:"Download Date"},
+				{ field: "Last Played", name:"Last Played"}
+			];
+			
+			var mr = dojox.grid.gridx.modules;
+
+			var modules = [
+				mr.Header,
+				mr.Body,
+				mr.Layout,
+				mr.HScroller,
+				mr.VirtualVScroller,
+				mr.SingleSort
+			];
+			
+			dojo.ready(function(){
+				window.grid = new dojox.grid.gridx.Grid({
+					id: 'grid',
+					store: store,
+					isAsync: false,
+					structure: columns,
+					modules: modules
+				});
+				grid.placeAt('gridDiv');
+				grid.startup();
+			});
+		</script>
+	</head>
+	<body>
+		<div id="gridDiv"></div>
+	</body>
+</html>

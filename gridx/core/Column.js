@@ -1,8 +1,9 @@
 define('dojox/grid/gridx/core/Column', ['dojo'], function(dojo){
 
 return dojo.declare('dojox.grid.gridx.core.Column', null, {
-	constructor: function(core, id){
-		this.grid = core;
+	constructor: function(grid, id){
+		this.grid = grid;
+		this.model = grid.model;
 		this.id = id;
 	},
 	index: function(){
@@ -23,9 +24,6 @@ return dojo.declare('dojox.grid.gridx.core.Column', null, {
 	field: function(){
 		var c = this.grid._columnsById[this.id];
 		return c.field || null;
-	},
-	getHeaderNode: function(){
-		
 	}
 });
 });

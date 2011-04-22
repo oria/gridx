@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>New Grid General Testing Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		#modelPerfMeter{
+			height: 200px;
+			width: 1000px;
+		}
+		.dojoxModelPerfCacheTable{
+			background-color: #ccc;
+			border-collapse: collapse;
+		}
+		.dojoxModelPerfCacheTable td{
+			padding: 0;
+			margin: 0;
+			overflow: visible;
+		}
+		.dojoxModelPerfCachedSlot{
+			background-color: blue;
+		}
+		.dojoxModelPerfNewReqSlot{
+			background-color: red;
+		}
+		.dojoxModelPerfCachedSlot.dojoxModelPerfNewReqSlot{
+			background-color: green;
+		}
+	</style>
+	<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad: true"></script>
+	<script type="text/javascript">
+		dojo.require("dojo.parser");
+		dojo.require("dojox.data.QueryReadStore");
+		dojo.require("dojox.grid.gridx.core.model.AsyncCache");
+		dojo.require('dojox.grid.gridx.core.model.Model');
+		dojo.require('dojox.grid.gridx.tests.ModelPerfMeter');
+
+		var totalSize = 1000;
+		var store = new dojox.data.QueryReadStore({
+			url: "demoStore.php?datastore=true&totalsize=" + totalSize,
+			requestMethod: "post"
+		});
+		var columns = {
+			id: {id: 'id', field: 'id'},
+			num: {id: 'num', field: 'number'}
+		};
+		var model = new dojox.grid.gridx.core.model.Model({
+			store: store,
+			columns: columns,
+			isAsync: true,
+			cacheSize: 300,
+			pageSize: 100,
+			neighborSize: 50
+		});
+		var randomRange = function(){
+			var s = Math.floor(Math.random() * totalSize);
+			var c = Math.ceil(Math.random() * (totalSize - s));
+			return {
+				start: s,
+				count: c
+			};
+		};
+		var randomIndex = function(){
+			return Math.floor(Math.random() * totalSize);
+		};
+		var createRequest = function(){
+			var req = {
+				index: [],
+				range: []
+			};
+			var i;
+			for(i = 0; i < 10; ++i){
+				req.index.push(randomIndex());
+			}
+			for(i = 0; i < 5; ++i){
+				req.range.push(randomRange());
+			}
+			return req;
+		};
+		var verify = function(req, name){
+			var assert = function(i){
+				try{
+					if(model.index(i).data.id != i + 1){
+						throw new Error("Assert fail: " +  a + ", " +  b);
+					}
+				}catch(e){
+					console.error(name, i);
+					return true;
+				}
+			}
+			dojo.some(req.index, assert);
+			dojo.some(req.range, function(r){
+				var end = r.count >= 0 ? r.start + r.count : totalSize;
+				for(var i = r.start; i < end && i < totalSize; ++i){
+					if(assert(i)){
+						return true;
+					}
+				}
+			});
+		};
+		var stopped = false;
+		var startFetch = function(){
+			stopped = false; 
+			var handler = setInterval(function(){
+				if(!stopped){
+					try{
+						var req = createRequest();
+						model.when(req, function(){
+							verify(req);
+						});
+					}catch(e){
+						clearInterval(handler);
+					}
+				}else{
+					clearInterval(handler);
+				}
+			}, 1000);
+		};
+		var stopFetch = function(){
+			stopped = true;
+		};
+		dojo.ready(function(){
+			var mm = new dojox.grid.gridx.tests.ModelPerfMeter({
+				size: totalSize,
+				model: model
+			});
+			mm.placeAt('modelPerfMeter');
+			mm.startup();
+		});
+	</script>
+</head>
+<body class="claro">
+	<div id='modelPerfMeter'></div>
+	<button onclick='startFetch()'>Start</button>
+	<button onclick='stopFetch()'>Stop</button>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

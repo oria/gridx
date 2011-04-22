@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" 
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>New Grid General Testing Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import "../resources/gridx.css";
+		body {
+			font-size: 0.8em;
+			padding: 0.5em;
+			font-family: arial;
+		}
+		.clear {
+			clear: both;
+			width: 0px;
+			height: 0px;
+			visibility: hidden;
+		}
+		.title { 
+			text-align:center;
+		}
+		#gridDiv{
+			margin: 3em;
+			position: relative;
+		}
+ 		#grid{
+			overflow: hidden;
+			width: 700px;
+			border: 1px solid #ddd;
+		}
+		#grid table{
+			border-collapse: collapse;
+			border: none;
+			width: 100%;
+			table-layout: fixed;
+		}
+		#grid td, #grid th{
+			border: 1px solid #ddd;
+			border-left: none;
+			border-top: none;
+			padding: 3px;
+			text-align: left;
+		}
+	</style>
+	<script type="text/javascript" src="../../../../dojo/dojo.js" 
+		djConfig="isDebug:true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript" src="DebugUtil.js"></script>
+	<script type="text/javascript">
+		dojo.require("dojo.parser");
+		dojo.require("dojox.grid.gridx.Grid");
+		dojo.require('dojox.grid.gridx.core.model.AsyncCache');
+		dojo.require('dojox.data.QueryReadStore');
+	</script>
+	<script type="text/javascript">
+		var columns = [
+			{name: 'Col1', field: 'col1', id: 'col1', width: '100px'}
+			,{name: 'Col2', field: 'col2', id: 'col2', width: '80px', template: '<font color="red">${col2}</font>'}
+			,{name: 'Col3', field: 'col3', id: 'col3', width: '50px'}
+			,{name: 'Col4', field: 'col4', id: 'col4', width: '300px'}
+			,{name: 'Col5', field: 'col5', id: 'col5', width: '100px'}
+			,{name: 'Col6', field: 'col6', id: 'col6', width: '100px'}
+			,{name: 'Col5+6', width: '100px', formatter: function(data, key){return data.col5 + data.col6;}}
+		];
+		//columns = [{name: 'Col1', field: 'id', id: 'col1', width: '100px'}
+		//	,{name: 'Col2', field: 'number', id: 'col2', width: '80px', template: '<font color="red">${col2}</font>'}];
+		var store = new dojox.data.QueryReadStore({
+			url: "demoStore.php?datastore=true&totalsize=200",
+			requestMethod: "post"
+		});
+	    store = getStore(200);
+		dojo.addOnLoad(function(){
+			DebugUtil.timer.start();
+			window.grid2 = new dojox.grid.gridx.Grid({
+				id: 'grid',
+				autoHeight: false,
+				cacheSize: 10,
+				height: '400px',
+				isAsync: true,
+				virtualScroller: false,
+				structure: columns,
+				store: store
+			});
+			dojo.place(grid2.domNode, 'gridDiv', 'first');
+			grid2.startup();
+			DebugUtil.timer.end('Grid initializing time');
+		});
+	</script>
+</head>
+<body class="claro">
+	<h1 class="title">New Grid General Testing Page</h1>
+	<div id="gridDiv"></div>
+</body>
+</html>

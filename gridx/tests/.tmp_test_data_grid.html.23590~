@@ -2,7 +2,7 @@
 	"http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>Test dojox.grid.DataGrid</title>
+	<title>Test dojox.grid.DataGrid Basic</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<style type="text/css">
 		@import "../../../../dojo/resources/dojo.css";
@@ -16,9 +16,9 @@
 			font-weight: bold;
 			padding-bottom: 0.25em;
 		}
-		#grid {
+		#grid, #grid2 {
 			width: 65em;
-			height: 40em;
+			height: 25em;
 			padding: 1px;
 		}
 	</style>
@@ -51,7 +51,7 @@
 	</script>
 </head>
 <body class="tundra">
-	<h2>Old DataGrid with virtual scrolling</h2>
+	<div class="heading">dojox.grid.DataGrid Basic Test</div>
 	
 </body>
 </html>

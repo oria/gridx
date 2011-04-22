@@ -1,0 +1,57 @@
+<div class='dojoxGridxConfig'>
+	<div class='dojoxGridxConfigPart'>
+		<table>
+			<thead><tr><th>Stores</th><th>Structures</th></tr></thead>
+			<tbody dojoAttachPoint='storesNode'></tbody>
+		</table>
+	</div>
+	
+	<div class='dojoxGridxConfigPart'>
+		<table>
+			<thead><tr><th>
+				<div dojoType='dijit.form.CheckBox' dojoAttachEvent='onChange: _selectAllExts'></div>
+				Model Extensions
+			</th></tr></thead>
+			<tbody dojoAttachPoint='extsNode'></tbody>
+		</table>
+	</div>
+	
+	<div class='dojoxGridxConfigPart'>
+		<table>
+			<thead><tr>
+				<th>
+					<div dojoType='dijit.form.CheckBox' dojoAttachEvent='onChange: _selectAllMods'></div>
+					Features
+				</th>
+				<th>Implementations</th>
+			</tr></thead>
+			<tbody dojoAttachPoint='modsNode'></tbody>
+		</table>
+	</div>
+	
+	<div class='dojoxGridxConfigPart'>
+		<table>
+			<thead><tr>
+				<th><div dojoType='dijit.form.CheckBox' dojoAttachEvent='onChange: _selectAllAttrs'></div>
+					Attributes</th>
+				<th>Configure</th>
+			</tr></thead>
+			<tbody dojoAttachPoint='argsNode'></tbody>
+		</table>
+	</div>
+	
+	<button dojoAttachEvent='onclick: _showAddAttributePart' dojoAttachPoint='addAttrButton'>New Attribute</button>
+	<div class='dojoxGridxConfigPart' dojoAttachPoint='addAttrPart' style='display: none;'>
+		<table>
+			<thead><tr><th>Attribute Name</th><th>Value(JSON)</th><th></th></thead>
+			<tbody><tr>
+				<td><div dojoType='dijit.form.TextBox' class='dojoxGridxConfigNewAttrName' dojoAttachPoint='inputAttrName'></div></td>
+				<td><div dojoType='dijit.form.TextBox' class='dojoxGridxConfigNewAttrValue' dojoAttachPoint='inputAttrValue'></div></td>
+				<td><button dojoAttachEvent='onclick: _addAttribute'>Add</button></td>
+			</tr></tbody>
+		</table>
+	</div>
+	
+	<br /><button dojoAttachEvent='onclick: _onCreate'>Create Grid</button>
+	<button dojoAttachEvent='onclick: onDestroy'>Destroy Grid</button>
+</div>
