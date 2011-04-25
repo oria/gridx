@@ -1,13 +1,12 @@
-define('dojox/grid/gridx/Grid', [
-'dojo',
-'dijit',
-'dojox/grid/gridx/core/Core',
-'dijit/_Widget',
-'dijit/_Templated',
-'text!dojox/grid/gridx/templates/grid.html'
-], function(dojo, dijit, Core){
+define([
+	'dojo',
+	'dijit',
+	'./core/Core',
+	'dijit/_Widget',
+	'dijit/_TemplatedMixin',
+	'text!./templates/grid.html'], function(dojo, dijit, Core){
 
-return dojo.declare('dojox.grid.gridx.Grid', [dijit._Widget, dijit._Templated, Core], {
+return dojo.declare('dojox.grid.gridx.Grid', [dijit._Widget, dijit._TemplatedMixin, Core], {
 	templateString: dojo.cache('dojox.grid.gridx', 'templates/grid.html'),
 
 	postMixInProperties: function(){

@@ -1,7 +1,4 @@
-define('dojox/grid/gridx/modules/dnd/Column', [
-'dojo',
-'dojox/grid/gridx/modules/dnd/_Base'
-], function(dojo, _Base){
+define(['dojo', './_Base'], function(dojo, _Base){
 
 return dojox.grid.gridx.core.registerModule(
 dojo.declare('dojox.grid.gridx.modules.dnd.Column', _Base, {

@@ -1,8 +1,4 @@
-define('dojox/grid/gridx/modules/Layout', [
-'dojo',
-'dojox/grid/gridx/core/_Module',
-'dojo/DeferredList'
-], function(dojo, _Module){
+define(['dojo', '../core/_Module', 'dojo/DeferredList'], function(dojo, _Module){
 
 return dojox.grid.gridx.core.registerModule(
 dojo.declare('dojox.grid.gridx.modules.Layout', _Module, {

@@ -1,8 +1,4 @@
-define('dojox/grid/gridx/core/model/AsyncCache', [
-'dojo', 
-'dojox/grid/gridx/core/model/_Cache',
-'dojo/DeferredList'
-], function(dojo, _Cache){
+define(['dojo', './_Cache', 'dojo/DeferredList'], function(dojo, _Cache){
 
 return dojo.declare('dojox.grid.gridx.core.model.AsyncCache', _Cache, {
 	// summary:

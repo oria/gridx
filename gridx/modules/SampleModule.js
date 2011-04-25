@@ -1,8 +1,8 @@
-define('dojox/grid/gridx/modules/TestMod', [
-'dojo',
-'dojox/grid/gridx/core/_Module'
-//Add more requirements here
-], function(dojo, _Module){
+define([
+	'dojo',
+	'../core/_Module'
+	//Add more requirements here
+	], function(dojo, _Module){
 
 //If there is some oppotunity that this module could be depended on by some other module (e.g.: moduleB),
 //then it's recommended to register it, so that users won't need to explictly declare this module

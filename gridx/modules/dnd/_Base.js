@@ -1,9 +1,4 @@
-define('dojox/grid/gridx/modules/dnd/_Base', [
-'dojo',
-'dojox/grid/gridx/core/_Module',
-'dojox/grid/gridx/modules/dnd/Avatar',
-'dojo/dnd/Source'
-], function(dojo, _Module, Avatar, Source){
+define(['dojo', '../../core/_Module', './Avatar', 'dojo/dnd/Source'], function(dojo, _Module, Avatar, Source){
 
 return dojo.declare('dojox.grid.gridx.modules.dnd._Base', _Module, {
 	load: function(args, loaded){

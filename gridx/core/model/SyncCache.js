@@ -1,4 +1,4 @@
-define('dojox/grid/gridx/core/model/SyncCache', ['dojo', 'dojox.grid.gridx.core.model._Cache'], function(dojo, _Cache){
+define(['dojo', './_Cache'], function(dojo, _Cache){
 
 return dojo.declare('dojox.grid.gridx.core.model.SyncCache', _Cache, {
 	constructor: function(){

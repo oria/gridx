@@ -1,8 +1,4 @@
-define('dojox/grid/gridx/modules/move/Row', [
-'dojo', 
-'dojox/grid/gridx/core/_Module',
-'dojox/grid/gridx/core/model/Mapper'
-], function(dojo, _Module, Mapper){
+define(['dojo', '../../core/_Module', '../../core/model/Mapper'], function(dojo, _Module, Mapper){
 
 return dojox.grid.gridx.core.registerModule(
 dojo.declare('dojox.grid.gridx.modules.move.Row', _Module, {

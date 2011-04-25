@@ -1,11 +1,10 @@
-define('dojox/grid/gridx/core/Core', [
-'dojo', 
-'dojox/grid/gridx/core/model/Model', 
-'dojox/grid/gridx/core/Row', 
-'dojox/grid/gridx/core/Column',
-'dojox/grid/gridx/core/Cell',
-'dojo.DeferredList'
-], function(dojo, Model, Row, Column, Cell){
+define([
+	'dojo', 
+	'./model/Model',
+	'./Row', 
+	'./Column',
+	'./Cell',
+	'dojo/DeferredList'], function(dojo, Model, Row, Column, Cell){
 
 function shallowCopy(obj){
 	var ret = {}, i;

@@ -1,4 +1,4 @@
-define('dojox/grid/gridx/core/_Module', ['dojo'], function(dojo){
+define(['dojo'], function(dojo){
 
 dojo.declare('dojox.grid.gridx.core._Module', null, {
 	

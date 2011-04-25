@@ -1,6 +1,4 @@
-define('dojox/grid/gridx/core/model/Model', ['dojo', 'dojox'], function(dojo, dojox){
-
-var ns = dojox.grid.gridx.core.model;
+define(['dojo', 'dojox', './AsyncCache', './SyncCache'], function(dojo, dojox, AsyncCache, SyncCache){
 
 return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 	constructor: function(args){
@@ -9,7 +7,7 @@ return dojo.declare('dojox.grid.gridx.core.model.Model', null, {
 		this._pendingSortQuery = 0;
 		this._pendingCmdCount = 0;
 		this._args = args;
-		var cacheCls = args.cacheClass || (args.isAsync ? ns.AsyncCache : ns.SyncCache);
+		var cacheCls = args.cacheClass || (args.isAsync ? AsyncCache : SyncCache);
 		this._model = this._cache = new cacheCls(args);
 		this._createExtensions(args.modelExtensions || [], args);
 		this._connects = [

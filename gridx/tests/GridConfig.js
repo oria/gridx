@@ -1,14 +1,14 @@
-define("dojox/grid/gridx/tests/GridConfig", [
-"dojo",
-"dijit",
-"dojo.parser",
-"dijit.form.CheckBox",
-"dijit.form.RadioButton",
-"dijit.form.TextBox",
-"dijit.form.Select"
-], function(dojo, dijit){
+define([
+	"dojo",
+	"dijit",
+	"dojo/parser",
+	"dijit/form/CheckBox",
+	"dijit/form/RadioButton",
+	"dijit/form/TextBox",
+	"dijit/form/Select",
+	"dijit/_WidgetsInTemplateMixin"], function(dojo, dijit){
 
-return dojo.declare("dojox.grid.gridx.tests.GridConfig", [dijit._Widget, dijit._Templated], {
+return dojo.declare("dojox.grid.gridx.tests.GridConfig", [dijit._Widget, dijit._TemplatedMixin, dijit._WidgetsInTemplateMixin], {
 	templateString: dojo.cache('dojox.grid.gridx.tests', 'grid_config.html'),
 	
 	widgetsInTemplate: true,

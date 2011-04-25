@@ -1,7 +1,4 @@
-define('dojox/grid/gridx/modules/LeftColumnLock', [
-'dojo',
-'dojox/grid/gridx/core/_Module'
-], function(dojo, _Module){
+define(['dojo', '../core/_Module'], function(dojo, _Module){
 	
 dojo.declare('dojox.grid.gridx.modules.LeftColumnLock', _Module, {
 	name: 'leftColumnLock',

@@ -1,8 +1,4 @@
-define('dojox/grid/gridx/modules/VirtualVScroller', [
-'dojo',
-'dijit',
-'dojox/grid/gridx/modules/VScroller'
-], function(dojo, dijit){
+define(['dojo', 'dijit', './VScroller'], function(dojo, dijit){
 	
 dojo.declare('dojox.grid.gridx.modules.VirtualVScroller', dojox.grid.gridx.modules.VScroller, {
 	_currentStartRow: null,

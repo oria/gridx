@@ -1,7 +1,4 @@
-define('dojox/grid/gridx/modules/move/Cell', [
-'dojo', 
-'dojox/grid/gridx/core/_Module'
-], function(dojo, _Module){
+define(['dojo', '../../core/_Module'], function(dojo, _Module){
 
 return dojox.grid.gridx.core.registerModule(
 dojo.declare('dojox.grid.gridx.modules.move.Cell', _Module, {

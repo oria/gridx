@@ -1,4 +1,4 @@
-define('dojox/grid/gridx/core/model/FormatSorter', ['dojo', 'dojo/data/util/sorter'], function(dojo, sorter){
+define(['dojo', 'dojo/data/util/sorter'], function(dojo, sorter){
 
 return dojo.declare('dojox.grid.gridx.core.model.FormatSorter', null, {
 	priority: 50,

@@ -1,4 +1,4 @@
-define('dojox/grid/gridx/core/model/Marker', ['dojo'], function(dojo){
+define(['dojo'], function(dojo){
 
 return dojo.declare('dojox.grid.gridx.core.model.Marker', null, {
 	priority: 20,

@@ -1,4 +1,4 @@
-define('dojox/grid/gridx/core/Row', ['dojo'], function(dojo){
+define(['dojo'], function(dojo){
 
 return dojo.declare('dojox.grid.gridx.core.Row', null, {
 	constructor: function(grid, id){
