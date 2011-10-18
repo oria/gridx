@@ -1,21 +1,21 @@
-define([
-	'dojo',
-	'../core/_Module'
-	//Add more requirements here
-	], function(dojo, _Module){
+define('dojox/grid/gridx/modules/TestMod', [
+'dojo',
+'dojox/grid/gridx/core/_Module'
+//Add more requirements here
+], function(dojo, _Module){
 
 //If there is some oppotunity that this module could be depended on by some other module (e.g.: moduleB),
 //then it's recommended to register it, so that users won't need to explictly declare this module
 //when he is declaring that moduleB.
-return dojox.grid.gridx.core.registerModule(
+return gridx.core.registerModule(
 //Note there's a little trick here: dojo.declare returns the class function itself
 
-dojo.declare('dojox.grid.gridx.modules.TestMod', _Module, {
+dojo.declare('gridx.modules.TestMod', _Module, {
 	// [Module Dependency Management] --------------------------------------------
 	
 	//Every module needs a name. 
 	//It could be the same as another module's, which means that module's public API is the same as this one's.
-	//If this name is omitted, the long class name will be used ('dojox.grid.gridx.modules.TestMod' in this case),
+	//If this name is omitted, the long class name will be used ('gridx.modules.TestMod' in this case),
 	name: 'myTestMod',	
 	
 	//Forced dependency modules must also exist if this module exists. 
@@ -24,7 +24,7 @@ dojo.declare('dojox.grid.gridx.modules.TestMod', _Module, {
 	
 	//Required dependency modules must also exist if this module exists.
 	//But they don't need to finish loading before this one.
-	required: ['layout'],
+	required: ['vLayout'],
 	
 	//Optional dependency modules do not need to exist if this module exists.
 	//But if they do exist, they must be loaded before this one.
@@ -78,7 +78,11 @@ dojo.declare('dojox.grid.gridx.modules.TestMod', _Module, {
 	},
 	
 	// [Module Lifetime Management] -----------------------------------------------
-	load: function(args, deferLoaded, deferStartup){
+	preload: function(args){
+		//This is called after all modules are created, but not loaded yet. Dependancy sequence is not hornored here.
+	},
+
+	load: function(args, deferStartup){
 		//do something in grid's postCreate
 		//All grid methods and all existing module methods are available here, 
 		//although some modules have not been bootstraped.
@@ -88,10 +92,10 @@ dojo.declare('dojox.grid.gridx.modules.TestMod', _Module, {
 		//		When this module is loaded, hook this.domNode to grid.headerNode with priority 5
 		//Note the priority of the header module is 0, so this UI will be after the header.
 		//If priority is negative, then the node will be before the header.
-		this.grid.layout.register(deferLoaded, this, 'domNode', 'headerNode', 5);
+		this.grid.layout.register(this, 'domNode', 'headerNode', 5);
 		
 		//Also, we can hook another node to another hook point.
-		this.grid.layout.register(deferLoaded, this, 'anotherNode', 'footerNode', -5);
+		this.grid.layout.register(this, 'anotherNode', 'footerNode', -5);
 		
 		//Feel free to connect any mouse events here:
 		this.connect(this.grid, 'onHeaderCellDblClick', function(e){
@@ -107,6 +111,7 @@ dojo.declare('dojox.grid.gridx.modules.TestMod', _Module, {
 		//do something to initialize the 'node' here.
 		node.innerHTML = "Test Module!";
 		
+		var _this = this;
 		deferStartup.then(function(){
 			//do something after grid is started up. 
 			//Now the grid's domNode is already in DOM tree,
@@ -116,11 +121,12 @@ dojo.declare('dojox.grid.gridx.modules.TestMod', _Module, {
 			//Also, you can do some other things to initialize the 'node' here.
 			
 			//Hey! I'm done! I've fully loaded myself!
-			deferLoaded.callback();
+			_this.loaded.callback();
 		});
 	},
 	
 	destroy: function(){
+		this.inherited(arguments);
 		//do something to tear me down here.
 		//e.g.: dojo.destroy(this.domNode);
 	},

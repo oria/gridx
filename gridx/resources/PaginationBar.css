@@ -1,0 +1,130 @@
+/* pagination bar */
+.dojoxGridxPager {
+	background: url("images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
+	padding: 3px 9px;
+	border-top: 1px solid #DDDDDD;
+}
+
+.dojoxGridxPagerNodeFocus {
+	border: 1px dotted darkblue;
+}
+
+.dojoxGridxPager table {
+	width: 100%;
+	table-layout: auto;
+}
+
+.dojoxGridxPagerA11yInner {
+	visibility: hidden;
+}
+
+.dijit_a11y .dojoxGridxPagerA11yInner {
+	visibility: visible;
+}
+
+.dojoxGridxPager .dojoxGridxPagerStepper {
+	text-align: right;
+}
+
+.dojoxGridxPagerStepperBtn,	
+.dojoxGridxPagerSizeSwitchBtn {
+	margin: 0 5px;
+	cursor: pointer;
+	color: #5D88AF;
+	display: inline-block;
+	text-align: center;
+}
+
+.dojoxGridxPagerSizeSwitchBtn {
+	margin: 0 7px;
+}
+
+.dojoxGridxPagerStepperBtnHover {
+	text-decoration: underline;
+}
+
+.dojoxGridxPagerStepperBtnActive,
+.dojoxGridxPagerSizeSwitchBtnActive {
+	cursor: default;
+	color: black;
+	font-weight: bold;
+}
+
+.dojoxGridxPagerFirstPage,
+.dojoxGridxPagerPrevPage,
+.dojoxGridxPagerNextPage,
+.dojoxGridxPagerLastPage,
+.dojoxGridxPagerGotoBtn {
+	background: url("images/sprite_icons.png"); 
+}
+
+.dojoxGridxPagerFirstPage {
+	background-position: -58px 4px;
+}
+.dojoxGridxPagerFirstPageDisable {
+	background-position: -58px -16px;
+	cursor: default;
+}
+
+.dojoxGridxPagerPrevPage {
+	background-position: 3px 4px;
+}
+.dojoxGridxPagerPrevPageDisable {
+	background-position: 3px -16px;
+	cursor: default;
+}
+
+.dojoxGridxPagerNextPage {
+	background-position: -16px 4px;
+}
+.dojoxGridxPagerNextPageDisable {
+	background-position: -16px -16px;
+	cursor: default;
+}
+
+.dojoxGridxPagerLastPage {
+	background-position: -38px 4px;
+}
+.dojoxGridxPagerLastPageDisable {
+	background-position: -38px -16px;
+	cursor: default;
+}
+
+.dojoxGridxPagerDescription {
+	text-align: left;
+}
+
+.dojoxGridxPagerSizeSwitch {
+	text-align: center;
+}
+
+.dojoxGridxPagerGoto {
+	width: 20px;
+	text-align: right;
+}
+
+.dojoxGridxPagerGotoBtn {
+	background-position: -77px 4px;
+	cursor: pointer;
+}
+
+/* Goto Page Dialog */
+.dojoxGridxGotoPage td {
+	padding-bottom: 5px;
+}
+
+.dojoxGridxGotoPage .dojoxGridxGotoPageBtns {
+	padding-bottom: 0;
+	text-align: right;
+}
+
+.dojoxGridxGotoPage .dojoxGridxGotoPageInputBox {
+	width: 100px;
+}
+
+.dojoxGridxGotoPage .dojoxGridxPageCountMsg {
+	padding-left: 5px;
+}
+
+
+

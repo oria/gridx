@@ -1,0 +1,66 @@
+<div class='dojoxGridxPager'
+	><table cellpadding="0" cellspacing="0"
+		><tr
+			><td class="dojoxGridxPagerDescription"
+				dojoAttachPoint="_descContainer"
+			></td
+			><td class="dojoxGridxPagerSizeSwitch"
+					dojoAttachPoint='_sizeSwitchContainer'
+					dojoAttachEvent='onclick: _switchPageSize'
+			></td
+			><td class="dojoxGridxPagerStepper"
+				dojoAttachPoint="_pageStepperContainer"
+				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerFirstPage'
+					tabindex='${_tabIndex}'
+					title='${firstPageTitle}'
+					aria-label='${firstPageWai}'
+					pageindex='First',
+					dojoAttachPoint='_firstPageBtn'
+					dojoAttachEvent='onclick: _gotoFirstPage'
+					><span class='dojoxGridxPagerA11yInner'>&nbsp;«</span
+				></span
+				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerPrevPage'
+					tabindex='${_tabIndex}'
+					title='${prevPageTitle}'
+					aria-label='${prevPageWai}'
+					pageindex='Prev',
+					dojoAttachPoint='_prevPageBtn'
+					dojoAttachEvent='onclick: _gotoPrevPage'
+					><span class='dojoxGridxPagerA11yInner'>&nbsp;&lt;</span
+				></span
+				><span class='dojoxGridxPagerPages'
+					dojoAttachPoint='_pageBtnContainer'
+					dojoAttachEvent='onclick: _gotoPage, onmouseover: _onHoverPageBtn, onmouseout: _onLeavePageBtn'
+				></span
+				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerNextPage'
+					tabindex='${_tabIndex}'
+					title='${nextPageTitle}'
+					aria-label='${nextPageWai}'
+					pageindex='Next',
+					dojoAttachPoint='_nextPageBtn'
+					dojoAttachEvent='onclick: _gotoNextPage'
+					><span class='dojoxGridxPagerA11yInner'>&nbsp;&gt;</span
+				></span
+				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerLastPage'
+					tabindex='${_tabIndex}'
+					title='${lastPageTitle}'
+					pageindex='Last',
+					aria-label='${lastPageWai}'
+					dojoAttachPoint='_lastPageBtn'
+					dojoAttachEvent='onclick: _gotoLastPage'
+					><span class='dojoxGridxPagerA11yInner'>&nbsp;»</span
+				></span
+			></td
+			><td class='dojoxGridxPagerGoto'
+				><span class='dojoxGridxPagerGotoBtn'
+					tabindex='${_tabIndex}'
+					title='${gotoBtnTitle}'
+					aria-label='${gotoBtnWai}'
+					dojoAttachPoint='_gotoBtn'
+					dojoAttachEvent='onclick: _showGotoDialog'
+					><span class='dojoxGridxPagerA11yInner'>⊥</span
+				></span
+			></td
+		></tr
+	></table
+></div>

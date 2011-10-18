@@ -1,258 +1,52 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html> 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 		<title>Grid Demo</title>
+		<link rel='stylesheet' href="support/common.css" />
+		<link rel='stylesheet' href="support/GridConfig.css" />
+		<style type="text/css">
+			.viewport {
+				margin: 0 20px;
+				width: 100%;
+			}
+			#gridContainer {
+				width: 800px;
+				height: 600px;
+			}
+			#grid {
+				height: 100%;
+			}
+		</style>
+		<script type="text/javascript" src="../../dojo/dojo.js" 
+			data-dojo-config="async: true, isDebug: true, parseOnLoad: false"></script>
+		<script type="text/javascript" src="../../dijit/tests/_testCommon.js"></script>
+		<script type="text/javascript" src="demo_grid.js"></script>
 	</head>
-	<style type="text/css">
-		@import "../../../../dojo/resources/dojo.css";
-		@import "../../../../dijit/themes/claro/claro.css";
-		@import "../resources/gridx.css";
-		@import "../resources/left_column_lock.css";
-		
-		.dojoxGridxConfig{
-			border: 2px solid black;
-			padding: 5px;
-			width: 250px;
-			position: absolute;
-			top: 0;
-			right: 0; 
-			margin: 10px;
-		}
-		
-		.dojoxGridxConfig .dijitSelect{
-			margin: 0;
-			width: 100%;
-			display: inline-table;
-		}
-		
-		.dojoxGridxConfig .dijitSelect .dijitArrowButton{
-			width: 18px;
-		}
-		
-		.dojoxGridxConfigPart{
-			margin-bottom: 5px;
-		}
-		
-		.dojoxGridxConfigPart .dojoxGridxConfigNewAttrName,
-		.dojoxGridxConfigPart .dojoxGridxConfigNewAttrValue{
-			width: 100%;
-		}
-		
-		
-		
-		.dojoxGridxConfig table{
-			border-collapse: collapse;
-			width: 100%;
-		}
-		
-		.dojoxGridxConfig th{
-			padding: 2px;
-			font-weight: bolder;
-		}
-		
-		.dojoxGridxConfig th, .dojoxGridxConfig td{
-			border: 1px solid grey;
-			padding-left: 2px;
-			padding-right: 2px;
-		}
-		
-		#gridDiv{
-			margin: 20px;
-			width: 70em;
-		}
-		
-		#grid{
-			width: 70em;
-			height: 400px;
-		}
-		
-	</style>
-	<script type="text/javascript" src="../../../../dojo/dojo.js" djConfig="isDebug:false, parseOnLoad: true"></script>
-	<script type="text/javascript" src="common.js"></script>
-	<script type="text/javascript" src="../../tests/enhanced/support/test_write_store_music.js"></script>
-	<script type="text/javascript">
-				dojo.require("dojox.grid.gridx.tests.GridConfig");
-		dojo.require('dojox.grid.gridx.core.model.AsyncCache');
-		dojo.require('dojox.grid.gridx.core.model.SyncCache');
-		dojo.require("dojox.grid.gridx.Grid");
-		
-		dojo.require('dojox.grid.gridx.core.model.FormatSorter');
-		dojo.require('dojox.grid.gridx.modules.Header');
-		dojo.require('dojox.grid.gridx.modules.Body');
-		dojo.require('dojox.grid.gridx.modules.Layout');
-		dojo.require('dojox.grid.gridx.modules.VScroller');
-		dojo.require('dojox.grid.gridx.modules.HScroller');
-		dojo.require('dojox.grid.gridx.modules.VirtualVScroller');
-		dojo.require('dojox.grid.gridx.modules.SingleSort');
-		dojo.require('dojox.grid.gridx.modules.select.Row');
-		dojo.require('dojox.grid.gridx.modules.select.Column');
-		dojo.require('dojox.grid.gridx.modules.select.Cell');
-		dojo.require('dojox.grid.gridx.modules.move.Row');
-		dojo.require('dojox.grid.gridx.modules.move.Column');
-		dojo.require('dojox.grid.gridx.modules.move.Cell');
-		dojo.require('dojox.grid.gridx.modules.dnd.Row');
-		dojo.require('dojox.grid.gridx.modules.dnd.Column');
-		dojo.require('dojox.grid.gridx.modules.dnd.Cell');
-		dojo.require('dojox.grid.gridx.modules.ColumnResizer');
-		dojo.require('dojox.grid.gridx.modules.LeftColumnLock');
-
-		
-		var musicStoreLayouts = {
-			layout1: [
-				{ field: "id", name:"Index"},
-				{ field: "Genre", name:"Genre"},
-				{ field: "Artist", name:"Artist"},
-				{ field: "Year", name:"Year"},
-				{ field: "Album", name:"Album"},
-				{ field: "Name", name:"Name"},
-				{ field: "Length", name:"Length"},
-				{ field: "Track", name:"Track"},
-				{ field: "Composer", name:"Composer"},
-				{ field: "Download Date", name:"Download Date"},
-				{ field: "Last Played", name:"Last Played"}
-			]
-		};
-		
-		var testStoreLayouts = {
-			layout1: [
-				{id: 'c0', name: 'Identity', field: 'id'},
-				{id: 'c1', name: 'index + 1', field: 'col1'},
-				{id: 'c2', name: 'Dummy Text 1', field: 'col2'},
-				{id: 'c3', name: 'New', field: 'col3'},
-				{id: 'c4', name: 'Dummy Text 2', field: 'col4'},
-				{id: 'c7', name: 'Dummy Text 3', field: 'col7'},
-				{id: 'c5', name: 'Random 1000', field: 'col5'},
-				{id: 'c6', name: 'Random 100', field: 'col6'},
-				{id: 'c8', name: 'Sum of previous two columns',
-					sortFormatted: true,
-					formatter: function(rawData){
-						return rawData.col5 + rawData.col6;
-					}
-				}
-			]
-		};
-		
-		var stores = {
-			"music store": {
-				defaultCheck: true,
-				store: test_store[0],
-				layouts: musicStoreLayouts
-			},
-			"test store": {
-				store: getStore(1000),
-				layouts: testStoreLayouts
-			}
-		};
-		
-		var gridAttrs = {
-			"isAsync": {
-				"true": true
-			}
-		};
-		
-		var modelExts = {
-			"Make formatted columns sortable": dojox.grid.gridx.core.model.FormatSorter
-		};
-		
-		var coreModules = [
-			dojox.grid.gridx.modules.Header,
-			dojox.grid.gridx.modules.Body,
-			dojox.grid.gridx.modules.Layout,
-			dojox.grid.gridx.modules.HScroller
-		];
-
-		var mr = dojox.grid.gridx.modules;
-		var modules = {
-			"vertical scroll": {
-				defaultCheck: true,
-				virtual: mr.VirtualVScroller,
-				"non virtual": mr.VScroller
-			},
-			sort: {
-				single: mr.SingleSort
-			},
-			"column resize": {
-				"default": mr.ColumnResizer
-			},
-			"left column lock": {
-				"default": mr.LeftColumnLock
-			},
-			"row select": {
-				basic: mr.select.Row
-			},
-			"column select": {
-				basic: mr.select.Column
-			},
-			"cell select": {
-				basic: mr.select.Cell
-			},
-			"row move api": {
-				"default": mr.move.Row
-			},
-			"column move api": {
-				"default": mr.move.Column
-			},
-			"cell move api": {
-				"default": mr.move.Cell
-			},
-			"row dnd": {
-				"default": mr.dnd.Row
-			},
-			"column dnd": {
-				"default": mr.dnd.Column
-			},
-			"cell dnd": {
-				"default": mr.dnd.Cell
-			}
-		};
-		
-		function createGrid(args){
-			destroyGrid();
-			window.grid = new dojox.grid.gridx.Grid(dojo.mixin(args, {
-				id: 'grid',
-				checkCellMoveAccept: function(sourceRow, sourceCol, targetRow, targetCol){
-					return targetCol % 3;
-				}
-			}));
-			window.grid.placeAt('gridDiv');
-			window.grid.startup();
-		}
-		
-		function destroyGrid(){
-			if(window.grid){
-				window.grid.destroyRecursive();
-				delete window.grid;
-			}
-		}
-		
-		dojo.ready(function(){
-			var cfg = new dojox.grid.gridx.tests.GridConfig({
-				stores:	stores,
-				gridAttrs:	gridAttrs,
-				modules:	modules,
-				modelExts:	modelExts,
-				coreModules:	coreModules,
-				onCreate:	createGrid,
-				onDestroy:	destroyGrid
-			}, 'gridConfig');
-			cfg.startup();
-		});
-	</script>
 	<body class='claro'>
-		<div id="gridConfig"></div>
-		<div id="gridDiv"></div>
-		<div>
-			<h1>Grid All-In-One Demo</h1>
-			<ol>
-				<li>[Optional step] Select a store</li>
-				<li>[Optional step] Select a column structure for the store</li>
-				<li>[Optional step] Select any attributes for grid</li>
-				<li>[Optional step] Select any extensions for grid model</li>
-				<li>[Optional step] Select any features/plugins for grid</li>
-				<li>Hit the&nbsp;<span style='font-weight: bolder;'>Create Grid</span>&nbsp;button and see the grid</li>
-				<li>[Optional step] Go back to step 1</li>
-			</ol>
-		</div>
+		<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+			Grid All-In-One Test Page	
+		</h1>
+		<table class='viewport' border='0' cellspacing='0' cellpadding='0'><tr>
+			<td class='pane'>
+				<div id='gridContainer'>
+					<div id="tutor">
+						<ol>
+							<li>[Optional step] Select a store</li>
+							<li>[Optional step] Select a column structure for the store</li>
+							<li>[Optional step] Select a proper cache for grid</li>
+							<li>[Optional step] Select any attributes for grid</li>
+							<li>[Optional step] Select any extensions for grid model</li>
+							<li>[Optional step] Select any features/plugins for grid</li>
+							<li>Hit the&nbsp;<span style='font-weight: bolder;'>Create Grid</span>&nbsp;button and see the grid</li>
+							<li>[Optional step] Go back to step 1</li>
+						</ol>
+					</div>
+				</div>
+			</td>
+			<td id='ctrlPane' class='pane'>
+				<div id="gridConfig"></div>
+			</td>
+		</tr></table>
 	</body>
 </html>

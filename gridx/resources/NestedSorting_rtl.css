@@ -1,0 +1,44 @@
+
+.dijitRtl .dojoxGridxSortNode {
+	text-align: right;
+}
+
+.dijitRtl .dojoxGridxSortBtn {
+	float: left;
+}
+
+.dijitRtl .dojoxGridxSortBtnNested {
+	width: 20px;
+	background-position: -156px 5px;
+	text-align: right;
+}
+
+.dijitRtl th.dojoxGridxCell:hover .dojoxGridxSortBtn,
+.dijitRtl th.dojoxGridxCellSortFocus .dojoxGridxSortBtn {
+	border-right: 1px solid #bbb;
+	border-left: none;
+}
+.dijitRtl .dojoxGridxCellSortedAsc .dojoxGridxSortBtnNested {
+	background-position: -117px 5px;
+}
+.dijitRtl .dojoxGridxCellSortedDesc .dojoxGridxSortBtnNested {
+	background-position: -97px 5px;
+}
+.dijitRtl th.dojoxGridxCell:hover.dojoxGridxCellSortedAsc .dojoxGridxSortBtnNested,
+.dijitRtl th.dojoxGridxCellSortFocus.dojoxGridxCellSortedAsc .dojoxGridxSortBtnNested {
+	background-position: -137px 5px;
+}
+.dijitRtl th.dojoxGridxCell:hover.dojoxGridxCellSortedDesc .dojoxGridxSortBtnNested,
+.dijitRtl th.dojoxGridxCellSortFocus.dojoxGridxCellSortedDesc .dojoxGridxSortBtnNested {
+	background-position: -177px 5px;
+}
+.dijitRtl .dojoxGridxNestedSorted th.dojoxGridxCell:hover .dojoxGridxSortBtnSingle,
+.dijitRtl .dojoxGridxNestedSorted th.dojoxGridxCellSortFocus .dojoxGridxSortBtnSingle {
+	background-position: -159px 5px;
+}
+
+
+
+
+
+

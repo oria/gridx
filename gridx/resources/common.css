@@ -1,0 +1,30 @@
+.dojoxGridx {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid #ddd;
+	outline: none;
+}
+
+.dojoxGridxHeader,
+.dojoxGridxFooter {
+	overflow: hidden;
+	background-color: #eee;
+}
+
+/* Keep footer at bottom, so the grid won't distort too much when zoomed in/out*/
+.dojoxGridxFooter {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+}
+
+.dojoxGridxHScroller {
+	display: none;
+}
+
+.dojoxGridxMain {
+	position: relative;
+}
+
+

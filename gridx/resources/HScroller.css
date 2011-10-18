@@ -1,0 +1,11 @@
+.dojoxGridxHScroller {
+	overflow: scroll;
+	overflow-y: hidden;
+	border: none;
+	outline: none;
+}
+
+/* ie6 will show the wrong height */
+.dj_ie6 .dojoxGridxHScroller {
+	line-height: 0;
+}

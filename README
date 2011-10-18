@@ -1,3 +1,5 @@
-Experiments & prototypes for new dojo grid - http://www.dojotoolkit.org/
+GridX is an incubation project under Dojo Toolkit(http://www.dojotoolkit.org/), it's also being worked closely with dgrid(https://github.com/kriszyp/dgrid) for the new Dojo Grid.
 
-Please put and run this under dojox/grid/
+GridX is still in development phase, features are experimental and subject to API changes.
+
+Please put and run gridx in parallel with dojo/dijit/dojox folder.

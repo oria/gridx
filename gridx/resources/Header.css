@@ -1,0 +1,43 @@
+.dojoxGridxHeaderRow {
+	background-color: #eee;
+	border-bottom: 1px solid #ccc;
+	position: relative;
+}
+
+.dojoxGridxHeaderRowInner {
+	overflow: hidden;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0 1px 0 0;
+}
+
+.dj_ie .dojoxGridxHeaderRowInner{
+	/* This is only for IE6/7, if not position:relative, overflow:hidden will not work.*/
+	position: relative; 
+}
+
+.dojoxGridxHeaderRow table {
+/*    border-collapse: collapse;*/
+	border-spacing: 0;
+	border: none;
+	table-layout: fixed;
+	width: 1px;
+	height: 100%;
+}
+
+.dojoxGridxHeaderRow .dojoxGridxCell {
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent #ccc transparent transparent;
+	padding: 3px;
+	text-align: left;
+	overflow: hidden;
+	/*box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;*/
+}
+
+.dojoxGridxHeaderCellFocus {
+	border: 1px dashed darkblue !important;
+	outline: medium none;	
+}

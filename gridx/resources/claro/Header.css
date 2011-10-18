@@ -1,0 +1,35 @@
+.claro .dojoxGridxHeaderRow {
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+	
+	background: url("../images/header.png") #EDF2F7 repeat-x bottom;
+	background: -moz-linear-gradient(top, #EDF2F7, #D0DFEA);
+	background: -webkit-gradient(linear, left top, left bottom, from(#EDF2F7), to(#D0DFEA));
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFEDF2F7, endColorstr=#FFD0DFEA);
+	
+}
+
+.claro .dojoxGridxHeaderRowInner {
+	background-image: url('../images/claro-grid-header-onepixel.bmp');
+	background-position: right;
+	background-repeat: repeat-y;
+	border-right: 1px solid #FFFFFF;
+}
+
+.claro .dojoxGridxHeaderRow .dojoxGridxCell {
+	border-color: #EDF2F7 #BCBCBC #D0DFEA #FFFFFF;
+}
+
+.claro .dojoxGridxHeaderRow .dojoxGridxLockedCell {
+	background: url("../images/header.png") #EDF2F7 repeat-x bottom;
+	background: -moz-linear-gradient(top, #EDF2F7, #D0DFEA);
+	background: -webkit-gradient(linear, left top, left bottom, from(#EDF2F7), to(#D0DFEA));
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFEDF2F7, endColorstr=#FFD0DFEA);
+	
+}
+
+.claro .dojoxGridxHeaderRow .dojoxGridxHeaderCellOver {
+	background: url("../images/header.png") #9BCAF7/*#D6E8FA*/ repeat-x bottom;
+	border-top-color: #9BCAF7;
+	border-bottom-color: #9BCAF7;
+}
