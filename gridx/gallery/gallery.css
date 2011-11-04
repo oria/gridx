@@ -80,7 +80,7 @@
 	-o-transition-duration: 0.5s;
 }
 
-#gallary {
+#gallery {
 	width: 700px;
 	height: 600px;
 	overflow: auto;
@@ -89,7 +89,11 @@
 	border-width: 1px 1px 1px 0;
 }
 
-#menulist, #gallary {
+.dj_ie {
+	overflow: scroll;
+}
+
+#menulist, #gallery {
 	box-shadow: 5px 5px 10px #555;
 	-moz-box-shadow: 5px 5px 10px #555;
 	-webkit-box-shadow: 5px 5px 10px #555;
@@ -100,7 +104,6 @@
 	border-color: green;
 	border-width: 1px 1px 0 1px;
 	padding: 5px 20px 5px 5px;
-	position: relative;
 	height: 124px;
 	cursor: pointer;
 }

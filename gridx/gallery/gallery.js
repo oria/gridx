@@ -9,7 +9,7 @@ require([
 
 	var packs = [
 		['Core', [
-			['Simpest Grid', 'test_grid', 'pure.png', 'The Simpest Grid.'],
+			['Simplest Grid', 'test_grid', 'pure.png', 'The Simpest Grid.'],
 			['Resize', 'test_grid_resize', 'resize.png', 'Resize the grid use the resize function.'],
 			['Declarative Creation', 'test_grid_declarative', 'declarative.jpg', 'Declaratively create a grid in HTML by means of dojo parser.'],
 			['AutoHeight / autoWidth', 'test_grid_autoHeight_autoWidth', 'autoheight-autowidth.png', 'Make the grid show every row (autoHeight) and every column (autoWidth).'],
@@ -45,7 +45,7 @@ require([
 		if(toHighlight){
             smoothScroll({
                 node: n,
-                win: dojo.byId('gallary'),
+                win: dojo.byId('gallery'),
                 duration: 500
             }).play();
 		}
@@ -72,13 +72,13 @@ require([
 	}
 
 	dojo.ready(function(){
-		var ac = new AccordionContainer({}), gallarysb = [];
+		var ac = new AccordionContainer({}), gallerysb = [];
 		array.forEach(packs, function(p, i){
 			var sb = [];
 			array.forEach(p[1], function(f, j){
 				if(f){
 					sb.push(createMenu(f, i, j));
-					gallarysb.push(createFeature(f, i, j));
+					gallerysb.push(createFeature(f, i, j));
 				}
 			});
 			ac.addChild(new ContentPane({
@@ -87,7 +87,7 @@ require([
 			}));
 		});
 
-		dom.byId('gallary').innerHTML = gallarysb.join('');
+		dom.byId('gallery').innerHTML = gallerysb.join('');
 		ac.placeAt('menulist');
 		ac.startup();
 	});
