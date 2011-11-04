@@ -1,13 +1,12 @@
 require([
 	'dojo',
-	'doh',
 	'gridx/Grid',
 	'gridx/core/model/AsyncCache',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(dojo, doh, Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(dojo, Grid, Cache, dataSource, storeFactory, modules, TestPane){
 	
 	var structure = [
 		{ field: "id", name:"Index", dataType:"number"},
@@ -59,11 +58,11 @@ tp.startup();
 
 function testSort(){
 	grid.sort.sort('3', false);
-	doh.t(grid.column('3', true).isSorted(), 'testSort() error!');
+	//doh.t(grid.column('3', true).isSorted(), 'testSort() error!');
 }
 function testColumnSortAPI(){
 	grid.column('4', true).sort(false);
-	doh.t(grid.column('4', true).isSorted(), 'testColumnSortAPI() error!');
+	//doh.t(grid.column('4', true).isSorted(), 'testColumnSortAPI() error!');
 }		
 function testClear(){
 	grid.sort.clear();

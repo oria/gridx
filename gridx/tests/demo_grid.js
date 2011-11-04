@@ -193,7 +193,7 @@ var modules = {
 		"defalt": mods.RowHeader
 	},
 	"indirect selection": {
-		"defalt": mods.IndirectSelection
+		"defalt": mods.IndirectSelect
 	},
 	"row select": {
 		basic: mods.SelectRow,

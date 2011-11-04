@@ -132,6 +132,12 @@ define([
 		].join('');
 	};
 
+	var timeDecorator = function(){
+		return [
+			"<div dojoType='dijit.form.TimeTextBox' dojoAttachPoint='timeBox' class='dojoxGridxHasGridCellValue' style='width: 100%;'></div>"
+		].join('');
+	};
+
 	var setDate = function(storeData){
 		var res = locale.parse(storeData, {
 			selector: 'date',
@@ -260,20 +266,26 @@ define([
 					storePattern: 'yyyy/M/d',
 					formatter: 'MMMM d, yyyy',
 					editable: true, 
-					editor: DateTextBox,
-					editorArgs: {
-						fromEditor: getDate
-					}
+					editor: DateTextBox
 				},
 				{ field: "Last Played", name:"Last Played (editable)", width: '100px', 
 					dataType:"time",
 					storePattern: 'HH:mm:ss',
 					formatter: 'hh:mm a',
+
+//                    navigable: true,
+//                    decorator: timeDecorator,
+//                    widgetsInCell: true,
+//                    setCellValue: function(gridData, storeData, cellWidget){
+//                        var t = locale.parse(storeData, {
+//                            selector: 'time',
+//                            timePattern: 'HH:mm:ss'
+//                        });
+//                        cellWidget.timeBox.set('value', t);
+//                    },
+
 					editable: true,
-					editor: TimeTextBox,
-					editorArgs: {
-						fromEditor: getTime
-					}
+					editor: TimeTextBox
 				}
 			],			
 			[

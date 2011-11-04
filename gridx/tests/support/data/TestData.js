@@ -59,12 +59,12 @@ define([], function(){
 				{id: 'string', field: 'string', name: 'String'}
 			],
 			[
-				{id: 'id', field: 'id', name: 'Identity'},
-				{id: 'number', field: 'number', name: 'Number'},
-				{id: 'string', field: 'string', name: 'String'},
-				{id: 'date', field: 'date', name: 'Date'},
-				{id: 'time', field: 'time', name: 'Time'},
-				{id: 'bool', field: 'bool', name: 'Boolean'}
+				{id: 'id', field: 'id', name: 'Identity', width: '10%'},
+				{id: 'number', field: 'number', name: 'Number', width: '10%'},
+				{id: 'string', field: 'string', name: 'String', width: '10%'},
+				{id: 'date', field: 'date', name: 'Date', width: '10%'},
+				{id: 'time', field: 'time', name: 'Time', width: '10%'},
+				{id: 'bool', field: 'bool', name: 'Boolean', width: '10%'}
 			],
 			[
 				{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},

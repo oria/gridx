@@ -32,6 +32,7 @@ define([
 	'gridx/modules/exporter/Table',
 	'gridx/modules/Printer',
 	'gridx/modules/Menu',
+	'gridx/modules/Dod',
 	'gridx/modules/Tree'
 ], function(FormatSorter, 
 	Focus, VScroller, VirtualVScroller,

@@ -91,7 +91,7 @@ require([
 		alert(grid.edit.isEditing('2', '3'));
 	}
 	window.setEditor3 = function(){
-		grid.edit.setEditor(3, DateTextBox);
+		grid.edit.setEditor(10, DateTextBox);
 	}
 
 	//Test buttons
@@ -103,7 +103,7 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: applyEdit2_3">Apply edit cell(2,3)</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: cancelEdit2_3">Cancel edit cell(2,3)</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: isEditing2_3">Is cell(2,3) editing</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the 3rd column editor to a DateTextBox</div><br/>'
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Date" column\'s editor to a DateTextBox</div><br/>'
 	].join(''));
 
 	tp.startup();

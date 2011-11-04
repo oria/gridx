@@ -2,7 +2,7 @@ require([
 	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/AsyncCache',
-	'gridx/tests/support/data/musicData',
+	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 
@@ -24,8 +24,8 @@ require([
 			modules: [
 				mods.Focus,
 				mods.VirtualVScroller,
-				mods.IndirectSelection,
-				mods.NestedSorting,
+				mods.IndirectSelect,
+				mods.NestedSort,
 				mods.ExtendedSelectRow,
 				mods.ExtendedSelectColumn,
 				mods.ExtendedSelectCell,

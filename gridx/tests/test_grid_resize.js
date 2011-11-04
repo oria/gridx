@@ -24,13 +24,13 @@ require([
 		//query: {Genre: 'E*'},
 		paginationInitialPageSize: 25,
 		modules: [
-			modules.Focus,
-			modules.RowHeader,
-			modules.IndirectSelect,
-			modules.SingleSort,
-			modules.ExtendedSelectRow,
-			modules.ExtendedSelectColumn,
-			modules.ExtendedSelectCell,
+//            modules.Focus,
+//            modules.RowHeader,
+//            modules.IndirectSelect,
+//            modules.SingleSort,
+//            modules.ExtendedSelectRow,
+//            modules.ExtendedSelectColumn,
+//            modules.ExtendedSelectCell,
 			modules.PaginationBar,
 			modules.VirtualVScroller
 		]

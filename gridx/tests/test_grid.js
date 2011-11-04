@@ -16,8 +16,11 @@ require([
 			dataSource: dataSource, 
 			size: 200
 		}),
-		modules:[modules.SingleSort, modules.SelectRow],
 		structure: dataSource.layouts[columnSetIdx],
+		modules:[
+			modules.SingleSort,
+			modules.SelectRow
+		],
 		selectRowTriggerOnCell: true
 	});
 	grid.placeAt('gridContainer');
@@ -35,41 +38,33 @@ require([
 		var columns = dataSource.layouts[columnSetIdx];
 		grid.setColumns(columns);
 	};
+	var idcnt = 10000;
+	newRow = function(){
+		grid.store.newItem({
+			id: idcnt++
+		});
+	};
+
+	setRow = function(){
+		var item = grid.row(0).item();
+		grid.store.setValue(item, 'Year', parseInt(Math.random() * 1000 + 1000, 10));
+	};
+
+	deleteRow = function(){
+		var item = grid.row(0).item();
+		grid.store.deleteItem(item);
+	};
 	//Test buttons
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
 
 	tp.addTestSet('Tests', [
-		/*'<div data-dojo-type="dijit.form.Button" data-dojo-props="">grid.row()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">grid.column()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">grid.cell()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">grid.rows()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">grid.columns()</div><br/>',*/
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setColumns">Change column structure</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setStore">Change store</div><br/>'
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setStore">Change store</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: newRow">And an empty new row</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setRow">Set Year of the first row</div><br/>',
+        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>'
 	].join(''));
-	/*tp.addTestSet('Default Row Functions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">row.index()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">row.data()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">row.rawData()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">row.item()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">row.cell()</div><br/>'
-	].join(''));
-	tp.addTestSet('Default Column Functions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">column.index()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">column.name()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">column.field()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">column.getWidth()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">column.setName()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">column.cell()</div><br/>'
-	].join(''));
-	tp.addTestSet('Default Cell Functions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">cell.data()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">cell.rawData()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="">cell.setRawData()</div><br/>'
-	].join(''));*/
 
 	tp.startup();
 });
-
-

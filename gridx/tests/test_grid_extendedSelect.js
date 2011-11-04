@@ -1,7 +1,7 @@
 require([
 	'dojo/_base/connect',
 	'dojo/_base/array',
-	'dojo/dom/dom',
+	'dojo/dom',
 	'gridx/Grid',
 	'gridx/core/model/AsyncCache',
 	'gridx/tests/support/data/MusicData',

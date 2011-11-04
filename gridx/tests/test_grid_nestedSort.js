@@ -6,8 +6,7 @@ require([
 	'gridx/tests/support/TestPane',
 	'gridx/modules/NestedSort',
 	'gridx/modules/VirtualVScroller',
-	'gridx/modules/Focus',
-	"doh"
+	'gridx/modules/Focus'
 ], function(Grid, Cache, dataSource, storeFactory, TestPane, NestedSort, VirtualVScroller, focus){
 
 	grid = new Grid({

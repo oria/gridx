@@ -6,9 +6,22 @@ require([
 	'gridx/tests/support/TestPane',
 	'gridx/modules/Focus',
 	'gridx/modules/VirtualVScroller',
-	'gridx/modules/Dod'
+	'gridx/modules/Dod',
+	
+	'dojox/charting/themes/Julie',
+	'dojox/charting/Chart',
+    'dojox/charting/axis2d/Default',
+    'dojox/charting/plot2d/ClusteredBars',
+    'dojox/charting/plot2d/ClusteredColumns',
+    'dojox/charting/plot2d/Default',
+    'dojox/charting/plot2d/StackedAreas',
+    'dojox/charting/plot2d/Bubble',
+    'dojox/charting/plot2d/Candlesticks',
+    'dojox/charting/plot2d/OHLC',
+    'dojox/charting/plot2d/Pie'
+	
 
-], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, JulieTheme){
 	function random(start, end){
 		//include start but not end. e.g. 1-10, 1 is possible but not 10.
 		return Math.floor(Math.random()*(end-start)) + start;
@@ -25,23 +38,89 @@ require([
 		}
 		return result.join(' ');
 	}
-	window.defaultShow = true;
+	window.defaultShow = false;
 	window.showExpando = true;
+	window.contentType = 'text';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
-		detailNode.innerHTML = '<div style="color: #777; padding:5px">' 
-			+ getDummyText(20,140) + '</div>';
+		setContent(detailNode);
 		window.setTimeout(function(){
 			renderred.callback();
 		}, 2000);
 		return renderred;
 	}
 	window.syncDetailProvider = function(grid, rowId, detailNode, renderred){
-		detailNode.innerHTML = '<div style="color: #777; padding:5px">' 
-			+ getDummyText(20,140) + '</div>';
+		setContent(detailNode);
 		renderred.callback();
 		return renderred;
 	}
+	function setContent(node){
+		switch(contentType){
+			case 'text':
+				setTextContent(node);
+				break;
+			case 'form':
+				setFormContent(node);
+				break;
+			case 'chart':
+				setChartContent(node);
+				break;
+			default:
+				alert('error: unkonw content type: ' + contentType);
+				break;
+		}
+	}
 	
+	function setTextContent(node){
+		node.innerHTML = '<div style="color: #777; padding:5px">' 
+			+ getDummyText(20,140) + '</div>';
+	}
+	function setFormContent(node){
+		node.innerHTML = ['<div style="margin: 10px; background:white;padding: 10px;"><table style="width:400px">',
+				'<tr>',
+				'	<td><label for="name">Name:</label></td>',
+				'	<td><input id="name" data-dojo-type="dijit.form.ValidationTextBox"',
+				'		data-dojo-props=\'required:true, name:"name" \'/></td>',
+				'</tr>',
+				'<tr id="newRow" style="display: none;">',
+				'	<td><label for="lastName">Last Name:</label></td>',
+				'	<td><input id="lastName" /></td>',
+				'</tr>',
+				'<tr>',
+				'	<td><label for="birth">Birthdate (before 2006-12-31):</label><br><br><br><br></td>',
+				'	<td><div><input id="birth" data-dojo-type="dijit.form.DateTextBox" data-dojo-props=\'value:"2000-01-01",',
+				'		required:true, name:"birth", constraints:{min:"1900-01-01", max:"2006-12-31"} \'/> <br>',
+				'	</div></td>',
+				'</tr>',
+				'<tr>',
+				'	<td><label for="notes">Notes (optional)</label></td>',
+				'	<td><input id="notes" data-dojo-type="dijit.form.TextBox"',
+				'		data-dojo-props=\'name:"notes" \'/></td>',
+				'</tr>',
+				'<tr id="newRow2" style="display: none;">',
+				'	<td><label for="color">Favorite Color</label></td>',
+				'	<td><select id="color">',
+				'		<option value="red">Red</option>',
+				'		<option value="yellow">Yellow</option>',
+				'		<option value="blue">Blue</option>',
+				'	</select></td>',
+				'</tr>',
+			'</table></div>'].join('');
+		dojo.parser.parse(node);
+	}
+	function setChartContent(node){
+		var container = dojo.create('div', {}, node, 'last'), div = dojo.create('div', {}, container, 'last');
+		container.style.margin = '10px';
+		container.style.backgroundColor = 'white';
+		var chart = new dojox.charting.Chart(div).
+			addAxis("x", {fixLower: "major", fixUpper: "major"}).
+			addAxis("y", {vertical: true, fixLower: "major", fixUpper: "major", min: 0}).
+			addPlot("default", {type: "StackedAreas", tension: "X"}).
+			addSeries("Series A", [-2, 1.1, 1.2, 1.3, 1.4, 1.5, -1.6]).
+			addSeries("Series B", [1, 1.6, 1.3, 1.4, 1.1, 1.5, 1.1]).
+			addSeries("Series C", [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]).
+			setTheme(JulieTheme).render()
+			;
+	}
 	window.createGrid = function(){
 		if(window.grid){window.grid.destroy();}
 		grid = new Grid({
@@ -127,6 +206,7 @@ require([
 	tp.addTestSet('Dod Properties', [
 		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
 		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
+		'<label>Content type: <select onchange="contentType=this.value"><option value="text">text</option><option value="form">form</option><option value="chart">chart</option></select></label><br/>',
 		'<select onchange="detailProvider=window[this.value]"><option value="syncDetailProvider">sync detailProvider</option>' 
 			+ '<option value="asyncProvider" selected>async detailProvider</option></select><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createGrid">Re Create Grid</div>'
