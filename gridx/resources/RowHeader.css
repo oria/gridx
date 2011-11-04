@@ -20,6 +20,11 @@
 }
 	
 .dojoxGridxRowHeaderCell {
-	overflow: hidden;
 	border-bottom: 1px solid #E5DAC8;
+}
+
+/* Firefox can not fire onmouseover when mouse is "dragging" an "overflow: hidden" node. 
+ * This fix is for IndirectSelect working with ExtendedSelect only */
+.dj_gecko .dojoxGridx .dojoxGridxRowHeaderBody .dojoxGridxRowHeaderRow .dojoxGridxRowHeaderCell .dijitCheckBox {
+	overflow: visible;
 }
