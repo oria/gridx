@@ -8,8 +8,9 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"../util",
+	"dojo/date/locale",
 	"dijit/form/TextBox"
-], function(declare, lang, json, Deferred, sniff, event, keys, _Module, util){
+], function(declare, lang, json, Deferred, sniff, event, keys, _Module, util, locale){
 	
 	/*=====
 	var columnDefinitionEditorMixin = {
@@ -64,11 +65,10 @@ define([
 			};
 		},
 	
-		load: function(){
+		preload: function(){
 			this.connect(this.grid, 'onCellDblClick', '_onUIBegin');
 			this.connect(this.grid, 'onCellMouseDown', '_onMouseApply');
 			this._initFocus();
-			this.loaded.callback();
 		},
 	
 		cellMixin: {
@@ -176,6 +176,8 @@ define([
 						var editorArgs = cell.column.editorArgs;
 						if(editorArgs && editorArgs.fromEditor){
 							v = editorArgs.fromEditor(v);
+						}else if(cell.column.storePattern){
+							v = locale.format(v, cell.column.storePattern);
 						}
 						cell.setRawData(v);
 					}catch(e){

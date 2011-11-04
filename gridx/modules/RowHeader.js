@@ -13,13 +13,19 @@ define([
 	declare('gridx.modules.RowHeader', _Module, {
 		name: 'rowHeader',
 
-		required: ['hLayout'],
+		required: ['hLayout', 'body'],
+
+		getAPIPath: function(){
+			return {
+				rowHeader: this
+			};
+		},
 
 		constructor: function(){
 			this.headerNode = html.create('div', {
 				'class': 'dojoxGridxRowHeaderHeader',
 				innerHTML: ['<table border="0" cellspacing="0" cellpadding="0" style="width: ', 
-					this.width, 
+					this.arg('width'), 
 					';"><tr><th class="dojoxGridxRowHeaderHeaderCell" tabindex="-1"></th></tr></table>'
 				].join('')
 			});
@@ -28,16 +34,28 @@ define([
 			});
 		},
 
-		getAPIPath: function(){
-			return {
-				rowHeader: this
-			};
-		},
-
-		load: function(){
-			this._modifyHeaderBody();
+		preload: function(){
+			var g = this.grid, w = this.arg('width');
+			//register events
+			g._initEvents(['RowHeaderHeader', 'RowHeaderCell'], this.grid._eventNames);
+			//modify header
+			g.header.domNode.appendChild(this.headerNode);
+			this.headerNode.style.width = w;
+			this.headerCellNode = query('th', this.headerNode)[0];
+			g._connectEvents(this.headerNode, '_onHeaderMouseEvent', this);
+			//modify body
+			g.mainNode.appendChild(this.bodyNode);
+			this.bodyNode.style.width = w;
+			g.hLayout.register(null, this.bodyNode);
+			this.batchConnect(
+				[g.body, 'onRender', 'update'],
+				[g.body, 'renderRows', 'update'],
+				[g.bodyNode, 'onscroll', '_updateBody'],
+				[g, 'onRowMouseOver', '_onRowMouseOver'],
+				[g, 'onRowMouseOut', '_onRowMouseOut']
+			);
+			g._connectEvents(this.bodyNode, '_onBodyMouseEvent', this);
 			this._initFocus();
-			this.loaded.callback();
 		},
 
 		//Public--------------------------------------------------------------------------
@@ -69,28 +87,6 @@ define([
 			if(this.grid.focus && this.grid.focus.currentArea() == 'rowHeader'){
 				this._focusRow(this.grid.body._focusCellRow);
 			}
-		},
-
-		_modifyHeaderBody: function(){
-			var g = this.grid, w = this.arg('width');
-			//register events
-			g._initEvents(['RowHeaderHeader', 'RowHeaderCell'], this.grid._eventNames);
-			//modify header
-			g.header.domNode.appendChild(this.headerNode);
-			this.headerNode.style.width = w;
-			this.headerCellNode = query('th', this.headerNode)[0];
-			g._connectEvents(this.headerNode, '_onHeaderMouseEvent', this);
-			//modify body
-			g.mainNode.appendChild(this.bodyNode);
-			this.bodyNode.style.width = w;
-			g.hLayout.register(null, this.bodyNode);
-			this.batchConnect(
-				[g.body, 'onRender', 'update'],
-				[g.bodyNode, 'onscroll', '_updateBody'],
-				[g, 'onRowMouseOver', '_onRowMouseOver'],
-				[g, 'onRowMouseOut', '_onRowMouseOut']
-			);
-			g._connectEvents(this.bodyNode, '_onBodyMouseEvent', this);
 		},
 
 		_buildRow: function(node){

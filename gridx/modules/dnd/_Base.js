@@ -11,7 +11,7 @@ define([
 ], function(declare, lang, html, win, Source, DndManager, _Module, Avatar){
 
 	return declare(_Module, {
-		load: function(args){
+		preload: function(args){
 			this._selectStatus = {};
 			this._saveSelectStatus();
 			this._node = html.create('div');
@@ -38,7 +38,6 @@ define([
 			this.subscribe("/dnd/cancel", '_endDnd');
 			this._selector = this.grid.select[this.type.toLowerCase()];
 			this._load(args);
-			this.loaded.callback();
 		},
 		
 		destory: function(){

@@ -77,9 +77,7 @@ define([
 	declare("gridx.modules.CellDijit", _Module, {
 		name: 'cellDijit',
 	
-		required: ['focus'],
-
-		forced: ['body'],
+		required: ['body'],
 	
 		getAPIPath: function(){
 			return {
@@ -89,9 +87,6 @@ define([
 	
 		constructor: function(){
 			this._decorators = {};
-		},
-	
-		load: function(){
 			var i, col, columns = this.grid._columns;
 			var dummy = function(){
 				return "";
@@ -104,11 +99,15 @@ define([
 					col._cellWidgets = [];
 				}
 			}
-			this.connect(this.grid.body, 'onAfterRow', '_showDijits');
-			this.connect(this.grid.body, 'onAfterCell', '_showDijit');
-			this.connect(this.grid.body, 'onRender', '_releaseWidgets');
+		},
+	
+		preload: function(){
+			this.batchConnect(
+				[this.grid.body, 'onAfterRow', '_showDijits'],
+				[this.grid.body, 'onAfterCell', '_showDijit'],
+				[this.grid.body, 'onRender', '_releaseWidgets']
+			);
 			this._initFocus();
-			this.loaded.callback();
 		},
 	
 		destory: function(){
@@ -179,9 +178,10 @@ define([
 		},
 	
 		//Private---------------------------------------------------------------
-		_showDijits: function(rowNode, rowInfo, rowCache){
+		_showDijits: function(rowInfo, rowCache){
 			var _this = this;
 			var func = function(){
+				var rowNode = query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0];
 				var i, col, cellNode, cellWidget, columns = _this.grid._columns;
 				for(i = columns.length - 1; i >= 0; --i){
 					col = columns[i];
@@ -310,7 +310,6 @@ define([
 				var func = function(){
 					var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
 					if(toFocus){
-						console.log("navigation focus ok!");
 						toFocus.focus();
 					}
 				};

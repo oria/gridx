@@ -39,10 +39,10 @@ define([
 
 		onBeforeFetch: function(){},
 		onAfterFetch: function(){},
-		onSet: function(id, index, row){},
-		onNew: function(id, index, row){},
-		onDelete: function(id, index){},
-		onSizeChange: function(oldSize, newSize){},
+		onSet: function(/*id, index, row*/){},
+		onNew: function(/*id, index, row*/){},
+		onDelete: function(/*id, index*/){},
+		onSizeChange: function(/*oldSize, newSize*/){},
 		keep: function(){},
 		free: function(){},
 

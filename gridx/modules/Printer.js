@@ -36,10 +36,6 @@ define([
 			};
 		},
 	
-		load: function(args, deferStartup){
-			this.loaded.callback();
-		},
-		
 		print: function(exportArgs){
 			//	summary:
 			//		Print all rows of the grid.

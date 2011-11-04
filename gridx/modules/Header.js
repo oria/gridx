@@ -16,8 +16,10 @@ define([
 	declare('gridx.modules.Header', _Module, {
 		name: 'header',
 	
-		required: ['hLayout', 'vLayout'],
-	
+		required: ['vLayout'],
+
+		forced: ['hLayout'],
+
 		getAPIPath: function(){
 			return {
 				header: this
@@ -32,18 +34,15 @@ define([
 			});
 			this.innerNode = html.create('div', {
 				'class': 'dojoxGridxHeaderRowInner',
-				role: 'row'
+				role: 'row',
+				innerHTML: '<table border="0" cellpadding="0" cellspacing="0"><tr><th class="dojoxGridxCell"></th></tr></table>'
 			});
 			this.domNode.appendChild(this.innerNode);
 		},
 
-		destroy: function(){
-			this.inherited(arguments);
-			html.destroy(this.domNode);
-		},
-	
-		load: function(args, startup){
+		preload: function(args){
 			var g = this.grid, _this = this;
+			g.headerNode.appendChild(this.domNode);
 			//Add this.domNode to be a part of the grid header
 			g.vLayout.register(this, 'domNode', 'headerNode');
 			this.batchConnect(
@@ -55,7 +54,12 @@ define([
 					this._adaptWidth();
 					ds.header.callback();
 				}],
-				[g.hLayout, 'onUpdateWidth', '_adaptWidth'],
+				[g.hLayout, 'onUpdateWidth', function(){
+					this._adaptWidth();
+					if(this.loaded.fired < 0){
+						this.loaded.callback();
+					}
+				}],
 				[g, 'setColumns', '_adaptWidth'],
 				g.autoWidth && g.columnResizer && [g.columnResizer, 'onResize', '_onColumnResize']
 			);
@@ -63,12 +67,13 @@ define([
 			
 			//Prepare mouse events
 			g._connectEvents(this.domNode, '_onMouseEvent', this);
-			//Set width and render after grid is started up
-			g.hLayout.loaded.then(function(){
-				_this.loaded.callback();
-			});
 		},
-	
+
+		destroy: function(){
+			this.inherited(arguments);
+			html.destroy(this.domNode);
+		},
+
 		columnMixin: {
 			headerNode: function(){
 				return this.grid.header.getHeaderNode(this.id);
@@ -96,8 +101,10 @@ define([
 			});
 			sb.push('</tr></table>');
 			this.innerNode.innerHTML = sb.join('');
+			this.onRender();
 		},
 
+		onRender: function(){},
 		onMoveToHeaderCell: function(/* columnId, e */){},
 		
 		//Private-----------------------------------------------------------------------------
@@ -109,58 +116,52 @@ define([
 		},
 
 		_adaptWidth: function(){
-			var g = this.grid;
-			var ltr = g.isLeftToRight();
-			var marginLead = ltr ? 'marginLeft' : 'marginRight';
-			var marginTail = ltr ? 'marginRight' : 'marginLeft';
-			var lead = g.hLayout.lead;
-			var tail = g.hLayout.tail;
-			html.style(this.innerNode, marginLead, lead + 'px');
-			html.style(this.innerNode, marginTail, tail + 'px');
-			html.style(g.bodyNode, marginLead, lead + 'px');
+			var g = this.grid,
+				ltr = g.isLeftToRight(),
+				marginLead = ltr ? 'marginLeft' : 'marginRight',
+				marginTail = ltr ? 'marginRight' : 'marginLeft',
+				lead = g.hLayout.lead,
+				tail = g.hLayout.tail,
+				refNode = query('.dojoxGridxCell', this.innerNode)[0];
+				padBorder = html.getMarginBox(refNode).w - html.getContentBox(refNode).w;
+			this.innerNode.style[marginLead] = lead + 'px';
+			this.innerNode.style[marginTail] = tail + 'px';
+			g.bodyNode.style[marginLead] = lead + 'px';
 			if(g.autoWidth){
 				this.refresh();
-				if(!this.domNode.parentNode){
-					g.headerNode.appendChild(this.domNode);
-				}
 				var headers = query('th.dojoxGridxCell', this.innerNode);
 				var totalWidth = 0;
 				headers.forEach(function(node){
-					//var w = node.offsetWidth;
-					var w = sniff('webkit') ? node.offsetWidth : html.style(node, 'width');
-					totalWidth += node.offsetWidth;
-					g._columnsById[node.getAttribute('colid')].width = w + 'px';
+					var w = node.offsetWidth;
+					totalWidth += w;
+					g._columnsById[node.getAttribute('colid')].width = (w - padBorder) + 'px';
 				});
 				this._columnsWidth = totalWidth;
 				g.bodyNode.style.width = totalWidth + 'px';
 				g.domNode.style.width = (lead + tail + totalWidth) + 'px';
 			}else{
 				var bodyWidth = g.domNode.clientWidth - lead - tail;
-				g.bodyNode.style.width = bodyWidth + 'px';
 				var autoCols = [];
+				var fixedWidth = 0;
+				g.bodyNode.style.width = bodyWidth + 'px';
 				array.forEach(g._columns, function(col){
 					if(!col.width || col.width == 'auto'){
 						col.width = 'auto';
 						autoCols.push(col);
 					}else if(/%$/.test(col.width)){
-						col.width = (bodyWidth * parseFloat(col.width, 10) / 100) + 'px';
+						col.width = (bodyWidth * parseFloat(col.width, 10) / 100 - padBorder) + 'px';
 					}
 				});
 				this.refresh();
-				if(!this.domNode.parentNode){
-					g.headerNode.appendChild(this.domNode);
-				}
-				var fixedWidth = 0;
 				array.forEach(g._columns, function(col){
 					if(col.width != 'auto'){
 						var node = this.getHeaderNode(col.id);
-						//var w = node.offsetWidth;
-						var w = sniff('webkit') ? node.offsetWidth : html.style(node, 'width');
-						col.width = w + 'px';
+						var w = node.offsetWidth;
+						col.width = (w - padBorder) + 'px';
 						fixedWidth += w;
 					}
 				}, this);
-				var w = (bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length) : 
+				var w = (bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : 
 					this.arg('defaultColumnWidth')) + 'px';
 				array.forEach(autoCols, function(col){
 					col.width = w; 

@@ -41,9 +41,6 @@ define([
 			};
 		},
 	
-		load: function(args, startup){
-		},
-	
 		//Public ---------------------------------------------------------------------
 		toTable: function(/* __CSVExportArgs */ args){
 			this._result = "";

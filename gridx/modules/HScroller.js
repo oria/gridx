@@ -12,41 +12,46 @@ define([
 
 		required: ['vLayout'],
 
-		constructor: function(){
-			this.grid._initEvents(['H'], ['Scroll']);
-		},
+		forced: ['header'],
 
 		getAPIPath: function(){
 			return this.grid.autoWidth ? {} : {
 				hScroller: this
 			};
 		},
-	
-		load: function(args){
-			if(!this.grid.autoWidth){
-				this.grid.vLayout.register(this, 'domNode', 'footerNode', 0);
-				this.domNode = this.grid.hScrollerNode;
-				this.stubNode = this.domNode.firstChild;
-				html.style(this.domNode, 'display', 'block');
-				this.connect(this.grid.body, 'onRender', 'refresh');
-				//this.connect(this.grid.body, 'onAfterRow', '_doScroll');
-				this.connect(this.domNode, 'onscroll', '_onScroll');
-				this.connect(this.grid, '_onResizeBegin', function(changeSize, ds){
-					ds.hScroller = new Deferred();
-				});
-				this.connect(this.grid, '_onResizeEnd', function(changeSize, ds){
-					var _this = this;
-					Deferred.when(ds.header, function(){
-						_this.refresh();
-						ds.hScroller.callback();
-					});
-				});
+
+		constructor: function(){
+			this.grid._initEvents(['H'], ['Scroll']);
+		},
+
+		preload: function(){
+			var g = this.grid;
+			if(!g.autoWidth){
+				g.vLayout.register(this, 'domNode', 'footerNode', 0);
+				var nd = this.domNode = g.hScrollerNode;
+				this.stubNode = nd.firstChild;
+				nd.style.display = 'block';
+				this.batchConnect(
+//                    [g.body, 'onAfterRow', '_doScroll'],
+//                    [g.body, 'onRender', 'refresh'],
+					[g.header, 'onRender', 'refresh'],
+					[nd, 'onscroll', '_onScroll'],
+					[g, '_onResizeBegin', function(changeSize, ds){
+						ds.hScroller = new Deferred();
+					}],
+					[g, '_onResizeEnd', function(changeSize, ds){
+						var _this = this;
+						Deferred.when(ds.header, function(){
+							_this.refresh();
+							ds.hScroller.callback();
+						});
+					}]
+				);
 				if(sniff('ie') < 7){
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
-					this.domNode.style.height = dojox.html.metrics.getScrollbar().h + 'px';
+					nd.style.height = dojox.html.metrics.getScrollbar().h + 'px';
 				}
 			}
-			this.loaded.callback();
 		},
 		
 		//Public API-----------------------------------------------------------
@@ -57,15 +62,22 @@ define([
 		refresh: function(){
 			//summary:
 			//	Refresh scroller itself to match grid body
-			var bn = this.grid.bodyNode;
+//            var bn = this.grid.bodyNode;
+			var bn = this.grid.header.innerNode;
 			var pl = html.style(bn, 'paddingLeft') || 0;	//TODO: It is special for column lock now.
-			
-			html.style(this.domNode, {
-				marginLeft: html.style(bn, 'marginLeft') + pl + 'px',
-				marginRight: html.style(bn, 'marginRight') + 'px',
-				width:  bn.offsetWidth + 'px'
-			});
-			html.style(this.stubNode, 'width', bn.scrollWidth + 'px');
+			var s = this.domNode.style;
+			var ow = bn.offsetWidth;
+			var sw = bn.scrollWidth;
+			var oldDisplay = s.display;
+			var newDisplay = (sw <= ow) ? 'none' : 'block';
+			s.marginLeft = html.style(bn, 'marginLeft') + pl + 'px';
+			s.marginRight = html.style(bn, 'marginRight') + 'px';
+			s.width = ow + 'px';
+			this.stubNode.style.width = sw + 'px';
+			s.display = newDisplay;
+			if(oldDisplay == 'block' && newDisplay == 'none'){
+				this.grid.vLayout.reLayout();
+			}
 		},
 		
 		//Private-----------------------------------------------------------

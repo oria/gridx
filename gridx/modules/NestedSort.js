@@ -1,17 +1,18 @@
 define([
 	"dojo/_base/kernel",
 	"../core/_Module",
+	"dojo/i18n!../nls/NestedSorting",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/_base/event",
-	"dojo/query",
-	"dojo/i18n!../nls/NestedSorting"
-], function(dojo, _Module){
+	"dojo/query"
+], function(dojo, _Module, locale){
 	
 	dojo.declare('gridx.modules.NestedSort', _Module, {
 		name: 'nestedSort',
-		forced: ['header', 'focus'],
+		forced: ['header'],
+		required: ['vLayout'],
 		_a11yText: {
 			'dojoxGridDescending'   : '&#9662;',
 			'dojoxGridAscending'    : '&#9652;',
@@ -28,7 +29,8 @@ define([
 			}
 		},
 		preload: function(args){
-			this._nls = dojo.i18n.getLocalization('gridx', 'NestedSorting');
+			// this._nls = dojo.i18n.getLocalization('gridx', 'NestedSorting');
+			this._nls = locale;
 			if(args.preSort){this._sortData = args.preSort;}
 			//persistence support
 			if(this.grid.persist){
@@ -105,6 +107,7 @@ define([
 		},
 		
 		_initHeader: function(){
+			console.log('initHeader');
 			var table = this.grid.header.domNode.firstChild.firstChild;
 			var tds = table.rows[0].cells;
 			dojo.forEach(table.rows[0].cells, function(td){

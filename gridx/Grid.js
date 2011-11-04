@@ -21,21 +21,21 @@ define([
 
 	var Grid = declare('gridx.Grid', [_Widget, _TemplatedMixin, Core], {
 		templateString: template,
+
+		coreModules: [
+			//Put default modules here!
+			Header,
+			Body,
+			VLayout,
+			HLayout,
+			VScroller,
+			HScroller,
+			ColumnResizer
+		],
 	
 		postMixInProperties: function(){
-			var mods = [
-				//Put default modules here!
-				Header,
-				Body,
-				VLayout,
-				HLayout,
-				VScroller,
-				HScroller, 
-				ColumnResizer
-			];
-			this._coreModCount = mods.length;
 			this._eventFlags = {};
-			this.modules = mods.concat(this.modules || []);
+			this.modules = this.coreModules.concat(this.modules || []);
 			this._initEvents(this._compNames, this._eventNames);
 			this.reset(this);
 		},

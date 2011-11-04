@@ -170,7 +170,7 @@ define([
 			this.toggle(this.grid.row(parseInt(idx)));
 		},
 		
-		_onAfterRow: function(rowNode, rowInfo, rowCache){
+		_onAfterRow: function(rowInfo, rowCache){
 			var row = this.grid.row(rowInfo.rowIndex), _row = this._row(row);
 			if(this.isShown(row) || (this.defaultShow && _row.dodShown === undefined)){
 				_row.dodShown = false;
@@ -179,6 +179,7 @@ define([
 			}
 			
 			if(this.showExpando){
+				var rowNode = dojo.query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0];
 				var tbl = dojo.query('table', rowNode)[0];
 				var cell = tbl.rows[0].cells[0];
 				var span = dojo.create('span', {

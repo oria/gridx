@@ -108,8 +108,9 @@ define([
 		//	|		{name: "Assistant", field: "assistant"}
 		//	|	];
 		
-		
 		name: "tree",
+
+		required: ['body'],
 	
 		constructor: function(){
 			var openned = [];
@@ -133,29 +134,38 @@ define([
 			};
 		},
 	
-		load: function(args){
-			this.grid.domNode.setAttribute('role', 'treegrid');
-			this.connect(this.grid.body, 'collectCellWrapper', '_createCellWrapper'); 
-			this.connect(this.grid, 'onCellClick', '_onCellClick'); 
+		preload: function(){
+			var g = this.grid;
+			g.domNode.setAttribute('role', 'treegrid');
+			this.batchConnect(
+				[g.body, 'collectCellWrapper', '_createCellWrapper'],
+				[g, 'onCellClick', '_onCellClick']
+			);
 			this._initFocus();
-			if(this.grid.persist){
-				var id, data = this.grid.persist.registerAndLoad('tree', lang.hitch(this, '_persist'));
+			if(g.persist){
+				var id, data = g.persist.registerAndLoad('tree', lang.hitch(this, '_persist'));
 				if(data){
 					this._openInfo = data._openInfo;
 					this._parentOpenInfo = data._parentOpenInfo;
 					for(id in this._openInfo){
 						 this._openInfo[id].openned = this._parentOpenInfo[id];
 					}
-					this.loaded.callback();
-					return;
+					this._persisted = 1;
 				}
 			}
-			var _this = this;
-			this.model.when({}, function(){
-				_this._openInfo[''].count = _this.model.size();
-			}).then(function(){
-				_this.loaded.callback();
-			});
+		},
+
+		load: function(args){
+			if(this._persisted){
+				this.loaded.callback();
+			}else{
+				var _this = this;
+				this.model.when({}, function(){
+					_this._openInfo[''].count = _this.model.size();
+				}).then(function(){
+					_this.loaded.callback();
+				});
+			}
 		},
 	
 		//Public--------------------------------------------------------------------------------

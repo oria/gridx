@@ -11,6 +11,7 @@ define([
 
 		forced: ['header'],
 
+		//Header has required this
 		required: ['vLayout'],
 		
 		getAPIPath: function(){

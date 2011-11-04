@@ -14,7 +14,10 @@ define([
 		name: 'vscroller',
 	
 		required: ['hLayout'],
+
 		forced: ['body', 'vLayout'],
+
+		optional: ['pagination', 'header'],
 	
 		getAPIPath: function(){
 			return {
@@ -22,18 +25,18 @@ define([
 			};
 		},
 
-		preload: function(){
-			this.domNode = this.grid.vScrollerNode;
+		preload: function(args){
+			var g = this.grid;
+			this.domNode = g.vScrollerNode;
 			this.stubNode = this.domNode.firstChild;
-			if(this.grid.autoHeight){
+			if(g.autoHeight){
 				this.domNode.style.display = 'none';
 			}
-			this.grid.hLayout.register(null, this.domNode, true);
+			g.hLayout.register(null, this.domNode, true);
 		},
-	
-		load: function(args, deferStartup){
-			var _this = this, g = this.grid;
-	
+
+		load: function(args, startup){
+			var g = this.grid, _this = this;
 			this.batchConnect(
 				[this.domNode, 'onscroll', '_doScroll'],
 				[g.bodyNode, 'onmousewheel', '_onMouseWheel'], 
@@ -42,9 +45,9 @@ define([
 				[g.body, 'onRootRangeChange', '_onRootRangeChange'],
 				sniff('ff') && [g.bodyNode, 'DOMMouseScroll', '_onMouseWheel']
 			);
-			deferStartup.then(function(){
+			startup.then(function(){
 				Deferred.when(_this._init(args), function(){
-					_this.loaded.callback();	
+					_this.loaded.callback();
 				});
 			});
 		},
@@ -94,7 +97,8 @@ define([
 		},
 	
 		_onBodyChange: function(){
-			html.style(this.stubNode, 'height', this.grid.bodyNode.scrollHeight + 'px');
+//            html.style(this.stubNode, 'height', this.grid.bodyNode.scrollHeight + 'px');
+			this.stubNode.style.height = this.grid.bodyNode.scrollHeight + 'px';
 			this._doScroll();
 		},
 	

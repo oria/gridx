@@ -42,13 +42,12 @@ define([
 				filter: this
 			};
 		},
-	
-		load: function(args){
-			this.serverMode = args.serverMode || this.serverMode;
-			this.setFilter(args.preFilter || this.grid.preFilter, true);
-			this.loaded.callback();
+
+		constructor: function(){
+			this.serverMode = this.arg('serverMode');
+			this.setFilter(this.arg('preCondition'), true);
 		},
-		
+	
 		//Public---------------------------------------------------------
 		setFilter: function(/* Function|null */checker, /* Boolean? */skipUpdateBody){
 			// summary:

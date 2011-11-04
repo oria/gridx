@@ -51,19 +51,19 @@ define([
 		
 		name: 'focus',
 		
-		constructor: function(){
-			this._areas = {};
-			this._tabQueue = [];
-			this._focusNodes = [];
-		},
-		
 		getAPIPath: function(){
 			return {
 				focus: this
 			};
 		},
-	
-		load: function(){
+
+		constructor: function(){
+			this._areas = {};
+			this._tabQueue = [];
+			this._focusNodes = [];
+		},
+
+		preload: function(){
 			var g = this.grid;
 			this.batchConnect(
 				[g.domNode, 'onmousedown', '_onMouseDown'],
@@ -72,7 +72,6 @@ define([
 				[g.lastFocusNode, 'onfocus', '_focus'],
 				[g, 'onBlur', '_doBlur']
 			);
-			this.loaded.callback();
 		},
 	
 		destroy: function(){

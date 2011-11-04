@@ -21,10 +21,14 @@ define([
 				body: this
 			};
 		},
-	
-		load: function(args, deferStartup){
+
+		preload: function(){
 			this.domNode = this.grid.bodyNode;
 			this.grid._connectEvents(this.domNode, '_onMouseEvent', this);
+			this._initFocus();
+		},
+
+		load: function(args, deferStartup){
 			this.batchConnect(
 				[this.model, 'onDelete', '_onDelete'],
 				[this.model, 'onNew', '_onNew'],
@@ -38,7 +42,6 @@ define([
 					this.refresh();
 				}]
 			);
-			this._initFocus();
 			this.model.when({}, function(){
 				if(!this.rootCount){
 					this.rootCount = this.model.size();
@@ -108,9 +111,9 @@ define([
 		},
 
 		getRowInfo: function(args){
-			if(args.id){
-				args.rowIndex = this.model.idToIndex(args.id);
-				args.parentId = this.model.treePath(args.id).pop();
+			if(args.rowId){
+				args.rowIndex = this.model.idToIndex(args.rowId);
+				args.parentId = this.model.treePath(args.rowId).pop();
 			}
 			if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
 				args.visualIndex = this.grid.tree ? this.grid.tree.getVisualIndexByRowInfo(parentId, rowIndex, this.rootStart) : args.rowIndex - this.rootStart;
@@ -125,7 +128,7 @@ define([
 			}else{
 				return args;
 			}
-			args.id = args.id || this.model.indexToId(args.rowIndex, args.parentId);
+			args.rowId = args.rowId || this.model.indexToId(args.rowIndex, args.parentId);
 			return args;
 		},
 
@@ -162,15 +165,18 @@ define([
 					}
 					count = end - start;
 					var node = query('[visualindex="' + start + '"]', _this.domNode)[0];
+					var uncachedRows = [], renderedRows = [];
 					if(node){
-						var rowFrames = _this._buildRowFrames(start, count);
-						if(rowFrames){
-							html.place(rowFrames, node, 'before');
+						var rows = _this._buildRows(start, count, uncachedRows, renderedRows);
+						if(rows){
+							html.place(rows, node, 'before');
+							for(var i = 0, len = renderedRows.length; i < len; ++i){
+								_this.onAfterRow.apply(_this, renderedRows[i]);
+							}
 						}
 					}
-					Deferred.when(_this._buildRows(start, count), function(){
-						var i;
-						for(i = start; (refreshToEnd || i < end) && node; ++i){
+					Deferred.when(_this._buildUncachedRows(uncachedRows), function(){
+						for(var i = start; (refreshToEnd || i < end) && node; ++i){
 							var tmp = node.nextSibling;
 							html.destroy(node);
 							node = tmp;
@@ -256,9 +262,9 @@ define([
 		},
 	
 		renderRows: function(start, count, position/*?top|bottom*/){
-			var d, _this = this, str = '';
+			var d, _this = this, str = '', uncachedRows = [], renderedRows = [];
 			if(count > 0){
-				str = this._buildRowFrames(start, count);
+				str = this._buildRows(start, count, uncachedRows, renderedRows);
 			}
 			if(count > 0 && position === 'top'){
 				this.renderCount += this.renderStart - start;
@@ -275,7 +281,10 @@ define([
 				nd.innerHTML = str;
 				this.model.free();
 			}
-			d = this._buildRows(start, count);
+			for(var i = 0, len = renderedRows.length; i < len; ++i){
+				this.onAfterRow.apply(this, renderedRows[i]);
+			}
+			d = this._buildUncachedRows(uncachedRows);
 			Deferred.when(d, function(){
 				_this.onRender(start, count);
 			});
@@ -306,7 +315,7 @@ define([
 		},
 	
 		//Events--------------------------------------------------------------------------------
-		onBeforeRow: function(){},
+		//onBeforeRow: function(){},
 		onAfterRow: function(){},
 		onBeforeCell: function(){},
 		onAfterCell: function(){},
@@ -335,35 +344,33 @@ define([
 			return req;
 		},
 
-		_buildRowFrames: function(start, count){
-			var i, end = start + count, s = [], gridId = this.grid.id;
+		_buildRows: function(start, count, uncachedRows, renderedRows){
+			var i, end = start + count, s = [];
 			for(i = start; i < end; ++i){
-				s.push('<div class="dojoxGridxRow dojoxGridxRowDummy" role="row" visualindex="', i, '"></div>');
+				var rowInfo = this.getRowInfo({visualIndex: i}),
+					rowCache = this.model.byIndex(rowInfo.rowIndex, rowInfo.parentId);
+				if(rowCache){
+					s.push('<div class="dojoxGridxRow" role="row" visualindex="', i, 
+						'" rowid="', rowInfo.rowId,
+						'" rowindex="', rowInfo.rowIndex,
+						'" parentid="', rowInfo.parentId, 
+						'">', this._buildCells(rowCache.data, rowInfo),
+					'</div>');
+					renderedRows.push([rowInfo, rowCache]);
+				}else{
+					s.push('<div class="dojoxGridxRow" role="row" visualindex="', i, 
+						'"><div class="dojoxGridxRowDummy"></div></div>');
+					rowInfo.start = rowInfo.rowIndex;
+					rowInfo.count = 1;
+					uncachedRows.push(rowInfo);
+				}
 			}
 			return s.join('');
 		},
 
-		_buildRows: function(start, count){
-			var d, _this = this;
-			if(count > 0){
-				var i, end = start + count, uncachedRows = [];
-				for(i = start; i < end; ++i){
-					var rowInfo = this.getRowInfo({visualIndex: i});
-					if(!this._buildRowContent(rowInfo)){
-						rowInfo.start = rowInfo.rowIndex;
-						rowInfo.count = 1;
-						uncachedRows.push(rowInfo);
-					}
-				}
-				if(uncachedRows.length){
-					d = this._buildUncachedRows(uncachedRows);
-				}
-			}
-			return d;
-		},
-	
 		_buildUncachedRows: function(uncachedRows){
-			return this.model.when(uncachedRows, function(){
+			window.___ = 0;
+			return uncachedRows.length && this.model.when(uncachedRows, function(){
 				for(var i = 0, len = uncachedRows.length; i < len; ++i){
 					this._buildRowContent(uncachedRows[i]);
 				}
@@ -371,33 +378,31 @@ define([
 		},
 	
 		_buildRowContent: function(rowInfo){
-			var rowNode = this.getRowNode({visualIndex: rowInfo.visualIndex});
+			var rowNode = query('[visualindex="' + rowInfo.visualIndex + '"]', this.domNode)[0];
 			if(rowNode){
 				var rowCache = this.model.byIndex(rowInfo.rowIndex, rowInfo.parentId);
 				if(rowCache){
 					rowInfo.rowId = this.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
 					this.model.keep(rowInfo.rowId);
-					html.removeClass(rowNode, "dojoxGridxRowDummy");
+					var t1 = new Date().getTime();
 					rowNode.setAttribute('rowid', rowInfo.rowId);
 					rowNode.setAttribute('rowindex', rowInfo.rowIndex);
 					rowNode.setAttribute('parentid', rowInfo.parentId || '');
-					this.onBeforeRow(rowNode, rowInfo, rowCache);
-					rowNode.innerHTML = this._buildCells(rowCache.data, rowInfo);
-					this.onAfterRow(rowNode, rowInfo, rowCache);
-					return true;
+					var str = this._buildCells(rowCache.data, rowInfo);
+					rowNode.innerHTML = str;
+					window.___ += new Date().getTime() - t1;
+					this.onAfterRow(rowInfo, rowCache);
 				}
-				return null;
 			}
-			return false;
 		},
 	
 		_buildCells: function(rowData, rowInfo){
-			var i, col, len, s, isPadding, columns = this.grid._columns,
-				isFocusArea = this.grid.focus && (this.grid.focus.currentArea() === 'body'),
+			var i, col, len, isPadding, g = this.grid, columns = g._columns,
+				isFocusArea = g.focus && (g.focus.currentArea() === 'body'),
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			for(i = 0, len = columns.length; i < len; ++i){
 				col = columns[i];
-				isPadding = this.grid.tree && rowData[col.id] === undefined;
+				isPadding = g.tree && rowData[col.id] === undefined;
 				sb.push('<td class="dojoxGridxCell ');
 				if(isPadding){
 					sb.push('dojoxGridxPaddingCell');
@@ -405,23 +410,21 @@ define([
 				if(isFocusArea && this._focusCellRow === rowInfo.visualIndex && this._focusCellCol === i){
 					sb.push('dojoxGridxCellFocus');
 				}
-				sb.push('" role="gridcell" tabindex="-1" colid="', col.id, '" style="width: ', col.width, '">');
-				sb.push(this._buildCellContent(col, rowInfo, rowData, isPadding));
-				sb.push(s, '</td>');
+				sb.push('" role="gridcell" tabindex="-1" colid="', col.id, 
+					'" style="width: ', col.width, 
+					'">', this._buildCellContent(col, rowInfo, rowData, isPadding),
+				'</td>');
 			}
 			sb.push('</tr></table>');
 			return sb.join('');
 		}, 
 	
 		_buildCellContent: function(col, rowInfo, rowData, isPadding){
-			if(isPadding){
-				s = '';
-			}else if(col.decorator){
-				s = col.decorator(rowData[col.id], rowInfo.rowId, rowInfo.visualIndex);
-			}else{
-				s = rowData[col.id];
+			if(!isPadding){
+				var s = col.decorator ? col.decorator(rowData[col.id], rowInfo.rowId, rowInfo.visualIndex) : rowData[col.id];
+				return this._wrapCellData(s, rowInfo.rowId, col.id);
 			}
-			return this._wrapCellData(s, rowInfo.rowId, col.id);
+			return '';
 		},
 
 		_wrapCellData: function(cellData, rowId, colId){
@@ -481,9 +484,9 @@ define([
 				var rowNode = this.getRowNode({rowId: id});
 				if(rowNode){
 					var rowInfo = this.getRowInfo({rowId: id, rowIndex: index});
-					this.onBeforeRow(rowNode, rowInfo, rowCache);
+//                    this.onBeforeRow(rowInfo, rowCache);
 					rowNode.innerHTML = this._buildCells(rowCache.data, rowInfo);
-					this.onAfterRow(rowNode, rowInfo, rowCache);
+					this.onAfterRow(rowInfo, rowCache);
 					this.onSet(id, index, rowCache);
 					this.onRender(index, 1);
 				}

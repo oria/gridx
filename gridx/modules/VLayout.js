@@ -8,13 +8,14 @@ define([
 	return _Module.registerModule(
 	declare('gridx.modules.VLayout', _Module, {
 		name: 'vLayout',
+
 		getAPIPath: function(){
 			return {
 				vLayout: this
 			};
 		},
-	
-		load: function(args, startup){
+
+		preload: function(){
 			var _this = this;
 			this.connect(this.grid, '_onResizeEnd', function(changeSize, ds){
 				var d, dl = [];
@@ -30,6 +31,10 @@ define([
 					[this.grid.body, 'onRender', 'reLayout']
 				);
 			}
+		},
+	
+		load: function(args, startup){
+			var _this = this;
 			startup.then(function(){
 				if(_this._defs && _this._mods){
 					(new DeferredList(_this._defs)).then(function(){

@@ -86,8 +86,7 @@ define([
 		},
 
 		batchConnect: function(){
-			var i, len = arguments.length;
-			for(i = 0; i < len; ++i){
+			for(var i = 0, len = arguments.length; i < len; ++i){
 				if(lang.isArrayLike(arguments[i])){
 					this.connect.apply(this, arguments[i]);
 				}

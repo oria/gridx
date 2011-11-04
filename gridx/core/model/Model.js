@@ -36,13 +36,13 @@ define([
 			}
 		},
 	
-		onDelete: function(id, index){},
-		onNew: function(id, index, row){},
-		onSet: function(id, index, row){},
-		onSizeChange: function(size, oldSize){},
-		onMarked: function(id, type){},
-		onMarkRemoved: function(id, type){},
-		onFiltered: function(ids){},
+		onDelete: function(/*id, index*/){},
+		onNew: function(/*id, index, row*/){},
+		onSet: function(/*id, index, row*/){},
+		onSizeChange: function(/*size, oldSize*/){},
+		onMarked: function(/*id, type*/){},
+		onMarkRemoved: function(/*id, type*/){},
+		onFiltered: function(/*ids*/){},
 		
 		clearCache: function(){
 			this._cache.clear();
@@ -60,6 +60,7 @@ define([
 
 		//---------------------------------------------------------------------------------------
 		when: function(args, callback, scope){
+//            var t1 = new Date().getTime();
 			this._cache.skipCacheSizeCheck = this._cache.skipCacheSizeCheck || 0;
 			++this._cache.skipCacheSizeCheck;
 			var d = new Deferred();
@@ -68,6 +69,7 @@ define([
 			var _this = this;
 			var getData = function(){
 				_this._model._call('when', [_this._normalizeArgs(args), function(){
+//                    console.log('When time:', new Date().getTime() - t1);
 					if(callback){
 						callback.apply(scope || window);
 					}
@@ -298,7 +300,7 @@ define([
 				f(args);
 			}
 			if(!res.range.length && !res.id.length && this.size() < 0){
-				res.range.push({start: 0, count: 1});
+				res.range.push({start: 0, count: this._cache.pageSize || 1});
 			}
 			return res;
 		}

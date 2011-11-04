@@ -13,7 +13,7 @@ define([
 			return path;
 		},
 
-		load: function(){
+		preload: function(){
 			this.subscribe('gridClearSelection_' + this.grid.id, function(type){
 				if(type != this._type){
 					this.clear();
@@ -21,7 +21,6 @@ define([
 			});
 			this.connect(this.grid.body, 'onRender', '_onRender');
 			this._init();
-			this.loaded.callback();
 		},
 
 		//Public--------------------------------------------------------------------

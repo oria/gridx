@@ -29,9 +29,9 @@ define([
 				return this.grid.pagination.indexInPage(this.index());
 			}
 		},
-		
+
 		// [Module Lifetime Management] -----------------------------------------------
-		load: function(){
+		preload: function(){
 			//Initialize args
 			this._pageSize = this.arg('initialPageSize', this._pageSize, function(arg){
 				return arg > 0;
@@ -40,11 +40,13 @@ define([
 				return arg >= 0;
 			});
 	
-			this.connect(this.model, 'onSizeChange', '_onSizeChange');
 			this.grid.body.autoChangeSize = false;
-			
+		},
+
+		load: function(){
 			this.model.when({}, function(){
-				this._updateBody();
+				this._updateBody(1);
+				this.connect(this.model, 'onSizeChange', '_onSizeChange');
 				this.loaded.callback();	
 			}, this);
 		},
@@ -136,13 +138,15 @@ define([
 	
 		_pageSize: 10,
 	
-		_updateBody: function(){
+		_updateBody: function(noRefresh){
 			var size = this.model.size(), count = this.pageSize(), start = this.firstIndexInPage();
 			if(size - start < count){
 				count = size - start;
 			}
 			this.grid.body.updateRootRange(start, size - start < count ? size - start : count);
-			this.grid.body.refresh();
+			if(!noRefresh){
+				this.grid.body.refresh();
+			}
 		},
 	
 		_onSizeChange: function(size){

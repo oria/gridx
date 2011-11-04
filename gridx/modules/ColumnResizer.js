@@ -49,6 +49,7 @@ define([
 				cell.style.width = width + 'px';
 			});
 			this.grid.vLayout.reLayout();
+			this.grid.header.onRender();
 			this.grid.body.onRender();
 			
 			this.onResize(colId, width, oldWidth);

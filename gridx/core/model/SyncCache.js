@@ -87,7 +87,7 @@ define([
 			}else{
 				var results = s.query(req.query, req);
 				Deferred.when(results.total, onBegin);
-				onComplete(results);
+				Deferred.when(results, onComplete);
 			}
 		},
 	

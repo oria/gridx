@@ -242,7 +242,7 @@ define([
 	
 		_storeFetch: function(options){
 			this.onBeforeFetch();
-			console.warn("\tFETCH: [", options.start, ", ", options.count, ", ", options.count && options.start + options.count - 1, "], options:", this.options);
+            console.warn("\tFETCH: [", options.start, ", ", options.count, ", ", options.count && options.start + options.count - 1, "], options:", this.options);
 			var s = this.store, _this = this, d = new Deferred();
 			var onBegin = function(size){
 				var oldSize = _this.totalCount;
@@ -277,9 +277,10 @@ define([
 					onError: onError
 				}));
 			}else{
+				var t = {a: (new Date()).getTime()};
 				var results = s.query(req.query, req);
-				results.total.then(onBegin);
-				results.then(onComplete, onError);
+				Deferred.when(results.total, onBegin);
+				Deferred.when(results, onComplete, onError);
 			}
 			return d;
 		},

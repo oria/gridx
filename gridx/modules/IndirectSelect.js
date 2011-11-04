@@ -16,7 +16,7 @@ define([
 
 		required: ['rowHeader', 'selectRow'],
 
-		load: function(){
+		preload: function(){
 			var g = this.grid, focus = g.focus, _this = this;
 			g.rowHeader.cellProvider = lang.hitch(this, this._createSelector);
 			this.batchConnect(
@@ -44,7 +44,6 @@ define([
 					_this.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
 				});
 			}
-			this.loaded.callback();
 		},
 		
 		//Private----------------------------------------------------------

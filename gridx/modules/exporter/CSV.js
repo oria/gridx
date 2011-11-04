@@ -42,12 +42,6 @@ define([
 			};
 		},
 	
-		load: function(args, startup){
-		},
-		
-		constructor: function(args){
-		},
-	
 		//Public ---------------------------------------------------------------------
 		toCSV: function(/* __CSVExportArgs */ args){
 			this._separator = args.separator || ",";

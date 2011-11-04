@@ -10,12 +10,15 @@ define([
 	
 	declare('gridx.modules.ColumnLock', _Module, {
 		name: 'columnLock',
+		required: ['body'],
 		count: 0,	//locked columns count
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
 			var _this = this, g = this.grid, body = html.body();
 			deferStartup.then(function(){
-				_this.connect(g.body, 'onAfterRow', '_lockColumns');
+				_this.connect(g.body, 'onAfterRow', function(rowInfo){
+					this._lockColumns(g.body.getRowNode(rowInfo));
+				});
 				if(g.columnResizer){
 					//make it compatible with column resizer
 					_this.connect(g.columnResizer, 'onResize', '_updateUI');
@@ -25,6 +28,7 @@ define([
 						_this._updateHeader();
 					});
 				}
+				console.log('columnlock');
 				_this.loaded.callback();
 			});
 		},
@@ -74,7 +78,8 @@ define([
 			}
 			this._updateBody();
 			this._updateScroller();
-			this.grid.body.onRender();
+			this.grid.header.onRender();
+//            this.grid.body.onRender();
 		},
 		_lockColumns: function(rowNode){
 			//summary:

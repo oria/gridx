@@ -291,7 +291,8 @@ define([
 		},
 
 		_normalizeModules: function(args){
-			var i, len, m, modules = args.modules;
+			var i, len, m, modules = args.modules, 
+				coreModCount = (this.coreModules && this.coreModules.length) || 0;
 			for(i = 0, len = modules.length; i < len; ++i){
 				m = modules[i];
 				if(lang.isFunction(m)){
@@ -299,10 +300,10 @@ define([
 						moduleClass: m
 					};
 				}else if(!m){
-					console.error(["The ", (i + 1 - (this._coreModCount || 0)), 
+					console.error(["The ", (i + 1 - coreModCount), 
 						"-th declared module can NOT be found, please require it before using it"].join(''));
 				}else if(!lang.isFunction(m.moduleClass)){
-					console.error(["The ", (i + 1 - (this._coreModCount || 0)), 
+					console.error(["The ", (i + 1 - coreModCount), 
 						"-th declared module has NO moduleClass, please provide it"].join(''));
 					delete modules[i];
 				}
@@ -432,7 +433,7 @@ define([
 				var finish = function(){
 					if(m.mod.load){
 						m.mod.load(m.args, deferredStartup);
-					}else{
+					}else if(m.deferred.fired < 0){
 						m.deferred.callback();
 					}
 				};

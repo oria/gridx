@@ -3,6 +3,7 @@ define([
 	"dijit",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
+	"dojo/i18n!../../nls/FilterBar",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
@@ -11,14 +12,13 @@ define([
 	"./FilterDialog",
 	"./FilterConfirmDialog",
 	"./FilterTooltip",
-	"dojo/i18n!../../nls/FilterBar",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query",
 	"dojo/parser",
 	"dojo/string"	
-], function(dojo, dijit, _Module, template){
+], function(dojo, dijit, _Module, template, locale){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -124,7 +124,8 @@ define([
 			dojo.parser.parse(this.domNode);
 			dojo.toggleClass(this.domNode, 'dojoxGridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', 5);
-			this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
+			this._nls = locale;
+			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
 			this._initWidgets();
 			this.refresh();
 			//this._buildFilterState();

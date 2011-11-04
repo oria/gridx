@@ -8,7 +8,6 @@ define([
 	"dojo/query",
 	"dojo/string",
 	"dojo/keys",
-	"dojo/DeferredList",
 	"dojo/i18n",
 	"dijit/Dialog",
 	"dijit/_Widget",
@@ -21,9 +20,9 @@ define([
 	"dojo/i18n!../nls/PaginationBar",
 	"dijit/form/Button",
 	"dijit/form/NumberTextBox"
-], function(declare, array, lang, html, sniff, connect, query, string, keys, DeferredList, i18n,
+], function(declare, array, lang, html, sniff, connect, query, string, keys, i18n,
 	Dialog, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, 
-	_Module, util, goToTemplate, barTemplate){
+	_Module, util, goToTemplate, barTemplate, locale){
 
 	var GotoPagePane = declare([_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: goToTemplate,
@@ -310,7 +309,9 @@ define([
 		// [Module Dependency Management] --------------------------------------------
 		name: 'paginationBar',	
 	
-		required: ['pagination', 'vLayout'],
+		required: ['vLayout'],
+
+		forced: ['pagination'],
 		
 		// [Module API Management] ---------------------------------------------------
 		getAPIPath: function(){
@@ -320,8 +321,8 @@ define([
 		},
 		
 		// [Module Lifetime Management] -----------------------------------------------
-		load: function(args, startup){
-			var grid = this.grid, _this = this;
+		preload: function(){
+			var grid = this.grid;
 			
 			//Set arguments
 			this.arg('maxVisiblePageCount', function(arg){
@@ -337,12 +338,12 @@ define([
 			}else{
 				grid.vLayout.register(this, '_pagerNode', 'footerNode', 5);
 			}
-	
+		},
+
+		load: function(args, startup){
+			var _this = this;
 			//Initialize after startup and pagination API
-			(new DeferredList([
-				grid.pagination.loaded,
-				startup
-			])).then(function(){
+			startup.then(function(){
 				_this._init();
 				_this.loaded.callback();
 			});
@@ -405,7 +406,8 @@ define([
 	
 		//Private---------------------------------------------------------------------------------
 		_init: function(){
-			this._nls = i18n.getLocalization("gridx", "PaginationBar");
+			// this._nls = i18n.getLocalization("gridx", "PaginationBar");
+			this._nls = locale;
 			this._pager = new Pager({
 				pagination: this.grid.pagination,
 				module: this
