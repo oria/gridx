@@ -10,13 +10,16 @@ require([
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
-		lazyScroll: true,
+		cacheSize: 1000,
+		pageSize: 200,
+		vscrollerLazyScroll: true,
+		vscrollerBuffSize: 60,
 		store: new XStore({
 			idAttribute: 'id',
-			url: 'http://localhost:8082/data/?totalSize=10000'
+			url: 'http://dojotoolkit.cn/data/?totalSize=1000000'
 		}),
 		
-		structure: dataSource.layouts[0],
+		structure: dataSource.layouts[4],
 		modules: [
 			modules.Focus,
 			modules.VirtualVScroller
@@ -36,15 +39,4 @@ require([
 		console.log(a);
 		grid.column(3).setWidth(a);
 	};
-
-	//Test buttons
-	var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
-
-	tp.addTestSet('Methods', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setWidth">grid.columnResizer.setWidth()</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: columnSetWidth">grid.column().setWidth()</div><br/>',
-	''].join(''));
-
-	tp.startup();
 });
