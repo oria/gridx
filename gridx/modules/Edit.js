@@ -179,19 +179,23 @@ define([
 						}else if(cell.column.storePattern){
 							v = locale.format(v, cell.column.storePattern);
 						}
-						cell.setRawData(v);
+						var _this = this;
+						cell.setRawData(v).then(function(){
+							_this.grid.cellDijit.restoreCellDecorator(rowId, colId);
+							_this._erase(rowId, colId);
+							var rowVisIndex = cell.row.index();
+							var colIndex = _this.grid._columnsById[colId].index;
+							_this.grid.body.refreshCell(rowVisIndex, colIndex).then(function(){
+								d.callback(true);
+							});
+						});
 					}catch(e){
+						this.grid.cellDijit.restoreCellDecorator(rowId, colId);
+						this._erase(rowId, colId);
 						console.warn('Can not apply change! Error message: ', e);
 						d.callback(false);
 						return d;
 					}
-					this.grid.cellDijit.restoreCellDecorator(rowId, colId);
-					this._erase(rowId, colId);
-					var rowVisIndex = cell.row.index();
-					var colIndex = this.grid._columnsById[colId].index;
-					this.grid.body.refreshCell(rowVisIndex, colIndex).then(function(){
-						d.callback(true);
-					});
 					return d;
 				}
 			}

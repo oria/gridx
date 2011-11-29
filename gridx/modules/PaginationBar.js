@@ -124,11 +124,11 @@ define([
 	
 		// Page Stepper Begin
 		_createPageStepper: function(){
-			if(this._toggleNode('dojoxGridxPagerStepper', this.module.arg('pageStepper'))){
+			if(this._toggleNode('dojoxGridxPagerStepper', this.module.arg('stepper'))){
 				var mod = this.module,
 					pageCount = this.pagination.pageCount(),
 					currentPage = this.pagination.currentPage(),
-					maxCount = mod.arg('maxVisiblePageCount'),
+					maxCount = mod.arg('visibleSteppers'),
 					firstPage = Math.max(currentPage - Math.floor(maxCount / 2), 0),
 					lastPage = firstPage + maxCount - 1,
 					sb = [], i, tmp, dir = 1, 
@@ -220,7 +220,7 @@ define([
 		_createPageSizeSwitch: function(){
 			if(this._toggleNode('dojoxGridxPagerSizeSwitch', this.module.arg('sizeSwitch'))){
 				var sb = [], mod = this.module, tabIndex = this._tabIndex,
-					separator = mod.arg('pageSizeSeparator'),
+					separator = mod.arg('sizeSeparator'),
 					currentSize = this.pagination.pageSize(),
 					nlsArr = [
 						mod.arg('pageSizeTitleTemplate', this.pageSizeTitle),
@@ -231,7 +231,7 @@ define([
 						mod.arg('pageSizeAllText', this.pageSizeAll)
 					];
 		
-				array.forEach(mod.arg('pageSizes'), function(pageSize){
+				array.forEach(mod.arg('sizes'), function(pageSize){
 					var isAll = false;
 					//pageSize might be invalid inputs, so be strict here.
 					if(!(pageSize > 0)){
@@ -305,7 +305,7 @@ define([
 	});
 	
 	return _Module.registerModule(
-	declare('gridx.modules.PaginationBar', _Module, {
+	declare(_Module, {
 		// [Module Dependency Management] --------------------------------------------
 		name: 'paginationBar',	
 	
@@ -325,10 +325,10 @@ define([
 			var grid = this.grid;
 			
 			//Set arguments
-			this.arg('maxVisiblePageCount', function(arg){
+			this.arg('visibleSteppers', function(arg){
 				return arg > 0;
 			});
-			this.arg('pageSizes', function(arg){
+			this.arg('sizes', function(arg){
 				return lang.isArrayLike(arg);
 			});
 	
@@ -358,19 +358,19 @@ define([
 		},
 		
 		// [Public API] --------------------------------------------------------
-		maxVisiblePageCount: 5,
+		visibleSteppers: 5,
 
-		pageSizeSeparator: '|',
+		sizeSeparator: '|',
 
 		position: 'bottom',
 
-		pageSizes: [5, 10, 25, 50, 0],
+		sizes: [5, 10, 25, 50, 0],
 
 		description: true,
 
 		sizeSwitch: true,
 
-		pageStepper: true,
+		stepper: true,
 
 		gotoButton: true,
 

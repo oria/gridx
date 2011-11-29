@@ -26,11 +26,11 @@ require([
 			{
 				moduleClass: modules.PaginationBar,
 				pageSizes: [50, 100, 200, 300, 0],
-				maxVisiblePageCount: 6,
-				pageSizeSeparator: '|',
+				visibleSteppers: 6,
+				sizeSeparator: '|',
 				//description: false,
 				//sizeSwitch: false,
-				//pageStepper: false,
+				//stepper: false,
 				//gotoButton: false,
 				position: 'bottom'
 			},
@@ -86,7 +86,7 @@ function toggleSizeSwitch(){
 	grid.paginationBar.refresh();
 }
 function togglePageStepper(){
-	grid.paginationBar.pageStepper = dijit.byId('c').get('checked');
+	grid.paginationBar.stepper = dijit.byId('c').get('checked');
 	grid.paginationBar.refresh();
 }
 function toggleGotoButton(){
