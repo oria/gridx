@@ -1,10 +1,10 @@
 define([
-	'dojo'
-], function(dojo){
+	'dojo/_base/declare',
+], function(declare){
 
 	//This is just an API file, similar to dojo.data.api.Read, should never be directly used
 	
-	dojo.declare('_WriterAPI', null, {
+	return declare(null, {
 
 		beforeHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
 			//summary:

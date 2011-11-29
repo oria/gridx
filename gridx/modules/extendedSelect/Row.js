@@ -13,7 +13,7 @@ define([
 ], function(declare, array, query, html, lang, Deferred, sniff, mouse, keys, _Module, _RowCellBase){
 
 	return _Module.registerModule(
-	declare('gridx.modules.extendedSelect.Row', _RowCellBase, {
+	declare(_RowCellBase, {
 		name: 'selectRow',
 
 		rowMixin: {

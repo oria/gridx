@@ -1,24 +1,24 @@
 define([
 	"dojo/_base/kernel",
 	"dijit",
+	"dojo/_base/declare",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
-	"dijit/TooltipDialog",
-	"dijit/popup",
-	"dijit/Tooltip",
-	"dojo/date/locale",
 	"./Filter",
 	"./FilterDialog",
 	"./FilterConfirmDialog",
 	"./FilterTooltip",
-	"dojo/_base/declare",
+	"dijit/TooltipDialog",
+	"dijit/popup",
+	"dijit/Tooltip",
+	"dojo/date/locale",
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query",
 	"dojo/parser",
 	"dojo/string"	
-], function(dojo, dijit, _Module, template, locale){
+], function(dojo, dijit, declare, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -58,7 +58,7 @@ define([
 	=====*/
 	
 	return _Module.registerModule(
-	dojo.declare('gridx.modules.filter.FilterBar', _Module, {
+	declare(_Module, {
 		name: 'filterBar',
 		forced: ['filter'],
 		getAPIPath: function(){
@@ -113,7 +113,7 @@ define([
 			//summary:
 			//	Init filter bar UI
 			//Add before and after expression for filter.
-			var F = gridx.modules.filter.Filter
+			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
 			
@@ -159,7 +159,7 @@ define([
 		applyFilter: function(filterData){
 			//summary:
 			//		Apply the filter data.
-			var F = gridx.modules.filter.Filter, exps = [];
+			var F = Filter, exps = [];
 			this.filterData = filterData;
 			
 			dojo.forEach(filterData.conditions, function(data){
@@ -191,7 +191,7 @@ define([
 			var max = this.ruleCountToConfirmClearFilter;
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!this._cfmDlg){
-					this._cfmDlg = new gridx.modules.filter.FilterConfirmDialog();
+					this._cfmDlg = new FilterConfirmDialog();
 				}
 				this._cfmDlg.execute = dojo.hitch(scope, callback);
 				this._cfmDlg.show();
@@ -272,7 +272,7 @@ define([
 			//		Show the filter define dialog.
 			var dlg = this._filterDialog;
 			if(!dlg){
-				this._filterDialog = dlg = new gridx.modules.filter.FilterDialog({
+				this._filterDialog = dlg = new FilterDialog({
 					grid: this.grid
 				});
 			}
@@ -350,7 +350,7 @@ define([
 		},
 		_buildTooltip: function(){
 			if(!this._tooltip){
-				this._tooltip = new gridx.modules.filter.FilterTooltip({grid: this.grid});
+				this._tooltip = new FilterTooltip({grid: this.grid});
 			}
 			this._tooltip.buildContent();
 		},
@@ -415,7 +415,7 @@ define([
 		
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
-			var F = gridx.modules.filter.Filter;
+			var F = Filter;
 			var dc = this.grid._columnsById[colId].dateParser||this.stringToDate;
 			var tc = this.grid._columnsById[colId].timeParser||this.stringToTime;
 			var c = data.condition, exp, isNot = false;

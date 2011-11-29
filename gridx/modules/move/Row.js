@@ -5,7 +5,7 @@ define([
 ], function(declare, _Module, Mapper){
 
 	return _Module.registerModule(
-	declare('gridx.modules.move.Row', _Module, {
+	declare(_Module, {
 		name: 'moveRow',
 		
 		modelExtensions: [Mapper],

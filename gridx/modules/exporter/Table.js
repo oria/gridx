@@ -28,7 +28,7 @@ define([
 =====*/
 
 	return _Module.registerModule(
-	declare('gridx.modules.exporter.Table', _Module, {
+	declare(_Module, {
 		name: 'table',
 
 		forced: ['exporter'],

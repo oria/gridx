@@ -4,7 +4,7 @@ define([
 ], function(declare, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.move.Column', _Module, {
+	declare(_Module, {
 		name: 'moveColumn',
 		
 		getAPIPath: function(){

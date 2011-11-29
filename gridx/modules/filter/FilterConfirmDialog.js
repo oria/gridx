@@ -1,16 +1,16 @@
 define([
 	"dojo/_base/kernel",
 	"dijit",
+	"dojo/_base/declare",
 	"dojo/text!../../templates/FilterConfirmDialog.html",
 	"dijit/Dialog",
 	"dijit/layout/AccordionContainer",
-	"dojo/_base/declare",
 	"dojo/data/ItemFileReadStore",
 	"./FilterPane",
 	"./Filter"
-], function(dojo, dijit, template){
+], function(dojo, dijit, declare, template){
 
-	return dojo.declare('gridx.modules.filter.FilterConfirmDialog', dijit.Dialog, {
+	return declare(dijit.Dialog, {
 		title: 'Clear Filter',
 		cssClass: 'dojoxGridxFilterConfirmDialog',
 		autofocus: false,

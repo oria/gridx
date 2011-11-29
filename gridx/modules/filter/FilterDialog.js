@@ -1,19 +1,18 @@
 define([
 	"dojo/_base/kernel",
 	"dijit",
-	"dojo/text!../../templates/FilterDialog.html",
+	"dojo/_base/declare",
 	"dijit/Dialog",
-	"dijit/layout/AccordionContainer",
-	"dojo/data/ItemFileReadStore",
+	"dojo/text!../../templates/FilterDialog.html",
 	"./FilterPane",
 	"./Filter",
-	"dojo/_base/declare",
+	"dijit/layout/AccordionContainer",
+	"dojo/data/ItemFileReadStore",
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, dijit, template){
-
-	return dojo.declare('gridx.modules.filter.FilterDialog', dijit.Dialog, {
+], function(dojo, dijit, declare, Dialog, template, FilterPane){
+	return declare(Dialog, {
 		title: 'Filter',
 		cssClass: 'dojoxGridxFilterDialog',
 		grid: null,
@@ -85,7 +84,7 @@ define([
 			if(ac.getChildren().length === 3){
 				ac._contentBox.w -= dojox.html.metrics.getScrollbar().w;
 			}
-			var fp = new gridx.modules.filter.FilterPane({grid: this.grid, title: 'Rule'});
+			var fp = new FilterPane({grid: this.grid, title: 'Rule'});
 			ac.addChild(fp);
 			ac.selectChild(fp);
 			

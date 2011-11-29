@@ -13,7 +13,7 @@ define([
 ], function(declare, array, query, html, lang, Deferred, sniff, mouse, keys, _Module, _Base){
 
 	return _Module.registerModule(
-	declare('gridx.modules.extendedSelect.Column', _Base, {
+	declare(_Base, {
 		name: 'selectColumn',
 
 		optional: ['columnResizer'],

@@ -22,7 +22,7 @@ define([
 	};
 
 	return _Module.registerModule(
-	declare('gridx.modules.extendedSelect.Cell', _RowCellBase, {
+	declare(_RowCellBase, {
 		name: 'selectCell',
 
 		cellMixin: {

@@ -1,19 +1,19 @@
 define([
 	"dojo",
 	"dijit",
+	"dojo/_base/declare",
+	"./Filter",
+	"./FilterDialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
-	"./Filter",
-	"./FilterDialog",
 	"dojo/i18n!../../nls/FilterBar",
-	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/html"
-], function(dojo, dijit){
+], function(dojo, dijit, declare){
 	
-	dojo.declare('gridx.modules.filter.FilterTooltip', dijit.TooltipDialog, {
+	return declare(dijit.TooltipDialog, {
 		//summary:
 		//	Show status dialog of filter.
 		grid: null,

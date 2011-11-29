@@ -2,6 +2,9 @@ define([
 	"dojo/_base/kernel",
 	"dijit",
 	"dojo/text!../../templates/FilterPane.html",
+	"dojo/_base/declare",
+	"./DistinctComboBoxMenu",
+	"./Filter",
 	"dijit/layout/ContentPane",
 	"dojo/data/ItemFileReadStore",
 	"dijit/form/Select",
@@ -13,16 +16,12 @@ define([
 	"dijit/form/ComboBox",
 	"dojox/html/ellipsis",
 	"dojo/store/util/QueryResults",
-	"./DistinctComboBoxMenu",
-	"./Filter",
-	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, dijit, template){
-
-	return dojo.declare('gridx.modules.filter.FilterPane', [dijit.layout.ContentPane], {
+], function(dojo, dijit, template, declare, DistinctComboBoxMenu, Filter){
+	return declare([dijit.layout.ContentPane], {
 		content: template,
 		sltColumn: null,
 		sltCondition: null,
@@ -34,6 +33,7 @@ define([
 			this._initSltCol();
 			this.connect(this.sltColumn, 'onChange', '_onColumnChange');
 			this.connect(this.sltCondition, 'onChange', '_onConditionChange');
+			this.comboText.dropDownClass = DistinctComboBoxMenu;
 		},
 	
 		getData: function(){

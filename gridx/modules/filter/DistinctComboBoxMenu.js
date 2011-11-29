@@ -1,9 +1,8 @@
 define([
-'dojo',
-'dijit',
+"dojo/_base/declare",
 'dijit/form/_ComboBoxMenu'
-], function(dojo, dijit){
-	dojo.declare('gridx.modules.filter.DistinctComboBoxMenu', dijit.form._ComboBoxMenu, {
+], function(declare, _ComboBoxMenu){
+	return declare(_ComboBoxMenu, {
 		createOptions: function(results, options, labelFunc){
 			var hash = {};
 			arguments[0] = results.filter(function(item){
@@ -14,5 +13,4 @@ define([
 			this.inherited(arguments);
 		}
 	});
-	return gridx.modules.filter.DistinctComboBoxMenu;
 });

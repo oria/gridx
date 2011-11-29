@@ -44,16 +44,13 @@ define([
 =====*/
 
 	return _Module.registerModule(
-	declare('gridx.modules.exporter.Exporter', _Module, {
+	declare(_Module, {
 		name: 'exporter',
 
 		getAPIPath: function(){
 			return {
 				'exporter': this
 			};
-		},
-	
-		load: function(args, startup){
 		},
 	
 		//Package ---------------------------------------------------------------------

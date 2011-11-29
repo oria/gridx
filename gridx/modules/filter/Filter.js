@@ -1,14 +1,14 @@
 define([
-	"dojo/_base/kernel",
+	//"dojo/_base/kernel",
 	"../../core/_Module",
 	"../../core/model/Mapper",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang"
-], function(dojo, _Module, Mapper){
+], function(_Module, Mapper, declare, array, lang){
 
 	var module = _Module.registerModule(
-	dojo.declare('gridx.modules.filter.Filter', _Module, {
+	declare(_Module, {
 		// summary
 		//		Filter Expression:
 		//		A filter expression is just a function returning TRUE/FALSE.
@@ -88,7 +88,7 @@ define([
 	}));
 	
 	var valueConvert = function(d, type, converter){
-		if(dojo.isFunction(converter)){
+		if(lang.isFunction(converter)){
 			d = converter(d);
 		}
 		switch(type){
@@ -115,13 +115,13 @@ define([
 	};
 	
 	var wrap = function(checker, op, operands, options){
-		if(dojo.isArray(operands)){
-			operands = dojo.map(operands, function(operand){
+		if(lang.isArray(operands)){
+			operands = array.map(operands, function(operand){
 				return operand.expr;
 			});
 		}
-		return dojo.mixin(checker, {
-			expr: dojo.mixin({
+		return lang.mixin(checker, {
+			expr: lang.mixin({
 				op: op,
 				data: operands
 			}, options || {})
@@ -193,7 +193,7 @@ define([
 		return wrap(function(){
 			var v = expr.apply(0, arguments);
 			if(emptyValues){
-				return dojo.indexOf(emptyValues, v) >= 0;
+				return array.indexOf(emptyValues, v) >= 0;
 			}else{
 				return v === "" || v == null;
 			}
@@ -206,12 +206,12 @@ define([
 		//		A filter operation to check whether all the filter expressions passed in have TRUE results.
 		// return: Function
 		//		A filter expression
-		var parts = dojo.filter(arguments, function(arg){
-			return dojo.isFunction(arg);
+		var parts = array.filter(arguments, function(arg){
+			return lang.isFunction(arg);
 		});
 		return wrap(function(){
 			var args = arguments;
-			return dojo.every(parts, function(part){
+			return array.every(parts, function(part){
 				return part.apply(0, args);
 			});
 		}, "and", parts);
@@ -222,12 +222,12 @@ define([
 		//		A filter operation to check whether any of the filter expressions passed in have TRUE result.
 		// return: Function
 		//		A filter expression
-		var parts = dojo.filter(arguments, function(arg){
-			return dojo.isFunction(arg);
+		var parts = array.filter(arguments, function(arg){
+			return lang.isFunction(arg);
 		});
 		return wrap(function(){
 			var args = arguments;
-			return dojo.some(parts, function(part){
+			return array.some(parts, function(part){
 				return part.apply(0, args);
 			});
 		}, "or", parts);

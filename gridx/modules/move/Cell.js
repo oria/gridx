@@ -6,7 +6,7 @@ define([
 ], function(declare, array, lang, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.move.Cell', _Module, {
+	declare(_Module, {
 		name: 'moveCell',
 		
 		getAPIPath: function(){

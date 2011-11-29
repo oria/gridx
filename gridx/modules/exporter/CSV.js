@@ -29,7 +29,7 @@ define([
 =====*/
 
 	return _Module.registerModule(
-	declare('gridx.modules.exporter.CSV', _Module, {
+	declare(_Module, {
 		name: 'csv',
 
 		forced: ['exporter'],
