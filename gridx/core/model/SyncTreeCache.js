@@ -5,7 +5,7 @@ define([
 	"./_TreeCache"
 ], function(declare, array, Deferred, _TreeCache){
 
-	return declare('gridx.core.model.TreeSyncCache', _TreeCache, {
+	return declare(_TreeCache, {
 	
 		constructor: function(){
 			this._init();

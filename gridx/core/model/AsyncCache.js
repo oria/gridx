@@ -7,7 +7,7 @@ define([
 	"./_Cache"
 ], function(declare, array, lang, Deferred, DeferredList, _Cache){
 
-	return declare('gridx.core.model.AsyncCache', _Cache, {
+	return declare(_Cache, {
 		// summary:
 		//		
 		isAsync: true,

@@ -31,7 +31,7 @@ define([
 =====*/
 
 	return _Module.registerModule(
-	declare('gridx.modules.Menu', _Module, {
+	declare(_Module, {
 		name: 'menu',
 
 		getAPIPath: function(){

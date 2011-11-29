@@ -11,7 +11,7 @@ define([
 ], function(declare, array, html, lang, Deferred, query, DndManager, _Base, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.dnd.Cell', _Base, {
+	declare(_Base, {
 		name: 'dndCell',
 		
 		required: ['selectCell', 'moveCell', 'body'],

@@ -10,7 +10,7 @@ define([
 ], function(declare, Deferred, html, event, sniff, query, metrics, _Module){
 	
 	return _Module.registerModule(
-	declare('gridx.modules.VScroller', _Module, {
+	declare(_Module, {
 		name: 'vscroller',
 	
 		required: ['hLayout'],
@@ -108,7 +108,8 @@ define([
 		_onRootRangeChange: function(start, count){
 			return this.model.when({start: start, count: count}, function(){
 				count = count || this.model.size() - start;
-				this.grid.body.renderRows(start, count);
+				//Root range changed, so render the body from start.
+				this.grid.body.renderRows(0, count);
 			}, this);
 		}
 	}));

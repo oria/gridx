@@ -50,7 +50,7 @@ define([
 	
 	
 	return _Module.registerModule(
-	declare('gridx.modules.Edit', _Module, {
+	declare(_Module, {
 		name: 'edit',
 	
 		forced: ['cellDijit'],

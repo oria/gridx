@@ -6,7 +6,7 @@ define([
 	'./_Extension'
 ], function(declare, array, lang, Deferred, _Extension){
 
-	return declare('gridx.core.model.Mapper', _Extension, {
+	return declare(_Extension, {
 		priority: 10,
 
 		pageSize: 100,

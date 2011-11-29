@@ -16,7 +16,7 @@ define([
 	};
 
 	return _Module.registerModule(
-	declare('gridx.modules.Tree', _Module, {
+	declare(_Module, {
 		//	summary:
 		//		Tree Grid module.
 		//	description:

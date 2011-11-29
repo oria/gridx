@@ -10,7 +10,7 @@ define([
 ], function(declare, query, array, lang, html, keys, _Module, util){
 
 	return _Module.registerModule(
-	declare('gridx.modules.RowHeader', _Module, {
+	declare(_Module, {
 		name: 'rowHeader',
 
 		required: ['hLayout', 'body'],

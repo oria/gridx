@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare"
 ], function(declare){
 
-	return declare('gridx.core.Column', null, {
+	return declare(null, {
 		constructor: function(grid, id){
 			this.grid = grid;
 			this.model = grid.model;

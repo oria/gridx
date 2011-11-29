@@ -7,7 +7,7 @@ define([
 ], function(declare, html, lang, win, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.AutoScroll', _Module, {
+	declare(_Module, {
 
 		name: 'autoScroll',
 

@@ -20,7 +20,7 @@ define([
 		return ret;
 	}
 	
-	return declare('gridx.core.Core', null, {
+	return declare(null, {
 		reset: function(args){
 			// summary:
 			//		Reset the grid data model completely. Also used in initialization.

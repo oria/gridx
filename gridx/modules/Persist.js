@@ -9,7 +9,7 @@ define([
 ], function(declare, array, lang, json, unload, cookie, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.Persist', _Module, {
+	declare(_Module, {
 		// summary:
 		//		Provide a mechanism to persist various grid features when the grid is destroyed,
 		//		so that when a new grid with the same id (or the same persist key) is created,
@@ -154,7 +154,7 @@ define([
 			// summary:
 			//		Save all the enabled features.
 			var contents = null;
-			if(this.enabled){
+			if(this.arg('enabled')){
 				var name, list = this._persistedList;
 				contents = {};
 				for(name in list){

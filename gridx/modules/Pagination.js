@@ -5,7 +5,7 @@ define([
 ], function(declare, array, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.Pagination', _Module, {
+	declare(_Module, {
 		// summary:
 	
 		// [Module Dependency Management] --------------------------------------------

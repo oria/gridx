@@ -8,7 +8,7 @@ define([
 	"dojo/query"
 ], function(dojo, lang, _Module, declare, array, html, query){	
 	
-	declare('gridx.modules.ColumnLock', _Module, {
+	return declare(_Module, {
 		name: 'columnLock',
 		required: ['body'],
 		count: 0,	//locked columns count
@@ -28,7 +28,11 @@ define([
 						_this._updateHeader();
 					});
 				}
-				console.log('columnlock');
+				_this._hackHScroller();
+				if(_this.count){
+					html.addClass(this.grid.domNode, 'gridxColumnLock');
+					_this._updateScroller();
+				}
 				_this.loaded.callback();
 			});
 		},
@@ -46,6 +50,11 @@ define([
 				return;
 			}
 			this.unlock();
+			
+			if(count){
+				html.addClass(this.grid.domNode, 'gridxColumnLock');
+			}
+			
 			this.count = count;
 			this._updateUI();
 		},
@@ -53,13 +62,15 @@ define([
 		unlock: function(){
 			//summary:
 			//	Unlock columns.
+			html.removeClass(this.grid.domNode, 'gridxColumnLock');
+			
 			var rowNode = query('.dojoxGridxHeaderRowInner', this.grid.headerNode)[0];
 			this._unlockColumns(rowNode);
 			
 			array.forEach(this.grid.bodyNode.childNodes, this._unlockColumns, this);
 			
 			this.count = 0;
-			this._updateScroller();
+			this._updateUI();
 		},
 		
 		_unlockColumns: function(rowNode){
@@ -78,6 +89,7 @@ define([
 			}
 			this._updateBody();
 			this._updateScroller();
+			this.grid.hScroller && this.grid.hScroller._doScroll();
 			this.grid.header.onRender();
 //            this.grid.body.onRender();
 		},
@@ -123,8 +135,31 @@ define([
 			//summary:
 			//	Update h-scroller for column lock
 			if(this.grid.hScroller){this.grid.hScroller.refresh();}
+		},
+		
+		_hackHScroller: function(){
+			//summary:
+			//	This method changes behavior of hscroller. It will scroll each row instead of the body node
+			//	while some columns are locked.
+			var _this = this;
+			lang.mixin(this.grid.hScroller, {
+				_doScroll: function(){
+					//summary:
+					//	Sync the grid body with the scroller.
+					
+					var scrollLeft = this.domNode.scrollLeft;
+					if(_this.count){
+						array.forEach(this.grid.bodyNode.childNodes, function(rowNode){
+							rowNode.scrollLeft = scrollLeft;
+						});
+					}else{
+						this.grid.bodyNode.scrollLeft = scrollLeft;
+					}
+					this.grid.onHScroll(scrollLeft);
+				}
+			});
 		}
+		
 	});
 	
-	return gridx.modules.ColumnLock;
 });

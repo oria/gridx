@@ -8,7 +8,7 @@ define([
 ], function(declare, Deferred, array, html, DeferredList, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.HLayout', _Module, {
+	declare(_Module, {
 
 		name: 'hLayout',
 

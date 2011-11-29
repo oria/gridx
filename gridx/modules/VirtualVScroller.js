@@ -12,7 +12,7 @@ define([
 ], function(declare, lang, array, html, sniff, event, Deferred, query, VScroller, _Module){
 	
 	return _Module.registerModule(
-	declare('gridx.modules.VirtualVScroller', VScroller, {
+	declare(VScroller, {
 		name: 'vscroller',
 
 		getAPIPath: function(){

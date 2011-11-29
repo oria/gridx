@@ -6,7 +6,7 @@ define([
 ], function(declare, html, DeferredList, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.VLayout', _Module, {
+	declare(_Module, {
 		name: 'vLayout',
 
 		getAPIPath: function(){

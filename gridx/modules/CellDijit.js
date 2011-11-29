@@ -74,7 +74,7 @@ define([
 	});
 	
 	return _Module.registerModule(
-	declare("gridx.modules.CellDijit", _Module, {
+	declare(_Module, {
 		name: 'cellDijit',
 	
 		required: ['body'],

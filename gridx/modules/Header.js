@@ -9,11 +9,12 @@ define([
 	"dojo/_base/event",
 	"dojo/keys",
 	"dojox/html/metrics",
+	"../util",
 	"../core/_Module"
-], function(declare, array, html, lang, Deferred, query, sniff, event, keys, metrics, _Module){
+], function(declare, array, html, lang, Deferred, query, sniff, event, keys, metrics, util, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.Header', _Module, {
+	declare(_Module, {
 		name: 'header',
 	
 		required: ['vLayout'],
@@ -237,7 +238,11 @@ define([
 			if(this._focusHeaderId){
 				node = this.getHeaderNode(this._focusHeaderId);
 			}
-			return this._focusNode(node || query('th.dojoxGridxCell', this.domNode)[0]);
+			var ret = this._focusNode(node || query('th.dojoxGridxCell', this.domNode)[0]);
+			if(ret){
+				util.stopEvent(evt);
+			}
+			return ret;
 		},
 
 		_focusNode: function(node){

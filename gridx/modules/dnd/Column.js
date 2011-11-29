@@ -9,7 +9,7 @@ define([
 ], function(declare, array, html, sniff, query, _Base, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.dnd.Column', _Base, {
+	declare(_Base, {
 		name: 'dndColumn',
 		
 		required: ['selectColumn', 'moveColumn'],

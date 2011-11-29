@@ -10,14 +10,14 @@ define([
 ], function(declare, array, lang, html, sniff, query, _Base, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.dnd.Row', _Base, {
+	declare(_Base, {
 		name: 'dndRow',
 		
 		required: ['selectRow', 'moveRow'],
 		
 		type: "Row",
 	
-		accept: ["grid/cells"],
+		accept: ["grid/rows"],
 	
 		copyWhenDragOut: false,
 	

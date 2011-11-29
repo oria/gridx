@@ -6,7 +6,7 @@ define([
 	"./_Extension"
 ], function(declare, array, lang, sorter, _Extension){
 	
-	return declare('gridx.core.model.FormatSorter', _Extension, {
+	return declare(_Extension, {
 		priority: 50,
 		constructor: function(model){
 			this.cache = model._cache;
@@ -53,26 +53,24 @@ define([
 			var sortFunctions = [], c = this.cache,
 				map = store.comparatorMap, bc = sorter.basicComparator;
 			array.forEach(sortSpec, function(sortAttr){
-				if(sortAttr.colId !== undefined){
-					var attr = sortAttr.attribute,
-						dir = sortAttr.descending ? -1 : 1,
-						comp = bc,
-						col = c.columns && c.columns[sortAttr.colId];
-					if(map){
-						if(typeof attr !== "string" && attr.toString){
-							 attr = attr.toString();
-						}
-						comp = map[attr] || bc;
+				var attr = sortAttr.attribute,
+					dir = sortAttr.descending ? -1 : 1,
+					comp = bc,
+					col = c.columns && c.columns[sortAttr.colId];
+				if(map){
+					if(typeof attr !== "string" && attr.toString){
+						 attr = attr.toString();
 					}
-					if(col && col.comparator){
-						comp = col.comparator;
-					}
-					var formatter = col && col.sortFormatted && col.formatter;
-					sortFunctions.push(formatter ? 
-						this._createFormatSortFunc(attr, dir, comp, store, c, formatter) : 
-						this._createSortFunc(attr, dir, comp, store)
-					);
+					comp = map[attr] || bc;
 				}
+				if(col && col.comparator){
+					comp = col.comparator;
+				}
+				var formatter = col && col.sortFormatted && col.formatter;
+				sortFunctions.push(formatter ? 
+					this._createFormatSortFunc(attr, dir, comp, store, c, formatter) : 
+					this._createSortFunc(attr, dir, comp, store)
+				);
 			}, this);
 			return function(rowA, rowB){
 				var i, len, ret = 0;

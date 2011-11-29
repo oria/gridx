@@ -7,7 +7,7 @@ define([
 	"dojo/query"
 ], function(dojo, _Module, declare, html, fx, query){
 	return _Module.registerModule(
-	declare('gridx.modules.Dod', _Module, {
+	declare(_Module, {
 		name: 'dod',
 		required: ['body'],
 		//useAnimation: Boolean
@@ -53,7 +53,7 @@ define([
 			},
 			isDetailShown: function(){
 				return this.grid.dod.isShown(this);
-			},
+			}
 		},
 		
 		show: function(row){
@@ -120,7 +120,7 @@ define([
 			_row.inAnim = true;
 			fx.wipeOut({
 				node: _row.dodNode,
-				duration: this.duration,
+				duration: this.arg('duration'),
 				onEnd: function(){
 					_row.dodShown = false;
 					_row.inAnim = false;
@@ -172,13 +172,13 @@ define([
 		
 		_onAfterRow: function(rowInfo, rowCache){
 			var row = this.grid.row(rowInfo.rowIndex), _row = this._row(row);
-			if(this.isShown(row) || (this.defaultShow && _row.dodShown === undefined)){
+			if(this.isShown(row) || (this.arg('defaultShow') && _row.dodShown === undefined)){
 				_row.dodShown = false;
 				_row.defaultShow = true;
 				this.show(row);
 			}
 			
-			if(this.showExpando){
+			if(this.arg('showExpando')){
 				var rowNode = dojo.query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0];
 				var tbl = dojo.query('table', rowNode)[0];
 				var cell = tbl.rows[0].cells[0];
@@ -210,7 +210,7 @@ define([
 				_row.inAnim = true;
 				fx.wipeIn({
 					node: _row.dodNode,
-					duration: this.duration,
+					duration: this.arg('duration'),
 					onEnd: function(){
 						_row.inAnim = false;
 						g.body.onRender();

@@ -7,7 +7,7 @@ define([
 	"dojo/_base/json"
 ], function(declare, array, lang, Deferred, connect, json){
 
-	return declare('gridx.core.model.Model', null, {
+	return declare(null, {
 	
 		constructor: function(args){
 			this._cmdQueue = [];
@@ -23,6 +23,10 @@ define([
 			];
 			if(args.query){
 				this.query(args.query);
+			}
+			if(args.baseSort && args.baseSort.length){
+				this._baseSort = args.baseSort;
+				this._sort();
 			}
 		},
 	
@@ -211,6 +215,11 @@ define([
 						s.colId = s.attribute;
 					}
 				}
+				if(this._baseSort){
+					sortSpec = sortSpec.concat(this._baseSort);
+				}
+			}else{
+				sortSpec = this._baseSort;
 			}
 			c.options = c.options || {};
 			var toSort = false;

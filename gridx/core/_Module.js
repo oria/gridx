@@ -5,30 +5,75 @@ define([
 	"dojo/_base/connect"
 ], function(declare, lang, array, connect){
 	
-	var moduleBase = declare('gridx.core._Module', null, {
+	var moduleBase = declare(null, {
 		
 	/*=====
+		// name: String
+		//		The API set name of this module. This name represents the API set that this module implements, 
+		//		instead of this module itself. Two different modules can have the same name, so that they provide
+		//		two different implementations of this API set.
+		//		For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+		//		They can be used in two different grids in one page (maybe due to different requirements), 
+		//		without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+		//		without re-writing any other modules.
+		//		This property is mandatary.
 		name: "SomeModule",
 		
-		getAPIPath: function(){
-			// summary: 
-			//
-			return {}
-		},
-		load: function(args, deferStartup){
-			// summary: 
-			//
-		},
-		
-		// summary: 
-		//
+		// forced: String[] 
+		//		An array of module names. All these modules must exist, and have finished loading before this module loads.
+		//		This property can be omitted.
 		forced: [],
 		
-		// summary: 
-		//
+		// optional: String[] 
+		//		An array of module names. These modules can be absent, but if they do exist, 
+		//		they must be loaded before this module loads.
+		//		This property can be omitted.
 		optional: [],
 		
+		// required: []
+		//		An array of module names. These modules must exist, but they can be loaded at any time.
+		//		This property can be omitted.
 		required: [],
+
+		getAPIPath: function(){
+			// summary: 
+			//		This function defines how to access this module's methods from the grid object.
+			//		The returned object of this function will be "recursively" mixed into the grid object.
+			//		That is, any property of object type in grid will be preserved. For example, if this function
+			//		returns { abc: { def: 'ghi'} }, and the grid already has a property called "abc", and 
+			//		grid.abc is { jkl: 'mno'}. Then after mixin, grid.abc will still have this jkl property:
+			//		{
+			//			abc: {
+			//				jkl: 'mno',
+			//				def: 'ghi'
+			//			}
+			//		}
+			//		This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+			//		Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+			//		This function can be omitted.
+			return {}
+		},
+
+		preload: function(args){
+			// summary:
+			//		If this function exists, it is called after all modules are created ("new"-ed), but not yet loaded.
+			//		At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+			//		do not need to load can be used here.
+			//		Note that this function is not the "load" process, so the module dependancy is not honored. For example,
+			//		if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+			//		module B.preload.
+			//		This function can be omitted.
+		},
+
+		load: function(args, deferStartup){
+			// summary: 
+			//		This is the formal loading process of this module. This function will not be called until all the "forced"
+			//		and existing "optional" modules are loaded. When the loading process of this module is finished (Note that
+			//		this might be an async process), this.loaded.callback() must be called to tell any other modules that
+			//		depend on this module.
+			this.loaded.callback();
+		},
+
 	=====*/
 	
 		constructor: function(grid, args){
@@ -51,7 +96,7 @@ define([
 			}
 			var res = this[argName];
 			if(!this.hasOwnProperty(argName)){
-				//IE7 and below dues NOT support string[index] syntex.
+				//IE7 and below does NOT support string[index] syntex.
 				var gridArgName = this.name + argName.substring(0, 1).toUpperCase() + argName.substring(1);
 				if(this.grid[gridArgName] === undefined){
 					if(defaultValue !== undefined){

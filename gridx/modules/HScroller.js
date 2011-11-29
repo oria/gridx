@@ -7,7 +7,7 @@ define([
 	"../core/_Module"
 ], function(declare, html, sniff, Deferred, metrics, _Module){
 	return _Module.registerModule(
-	declare('gridx.modules.HScroller', _Module, {
+	declare(_Module, {
 		name: 'hscroller',
 
 		required: ['vLayout'],
@@ -64,7 +64,8 @@ define([
 			//	Refresh scroller itself to match grid body
 //            var bn = this.grid.bodyNode;
 			var bn = this.grid.header.innerNode;
-			var pl = html.style(bn, 'paddingLeft') || 0;	//TODO: It is special for column lock now.
+			//TODO: It is special for column lock now.
+			var pl = html.style(bn, 'paddingLeft') || 0;
 			var s = this.domNode.style;
 			var ow = bn.offsetWidth;
 			var sw = bn.scrollWidth;
@@ -72,8 +73,8 @@ define([
 			var newDisplay = (sw <= ow) ? 'none' : 'block';
 			s.marginLeft = html.style(bn, 'marginLeft') + pl + 'px';
 			s.marginRight = html.style(bn, 'marginRight') + 'px';
-			s.width = ow + 'px';
-			this.stubNode.style.width = sw + 'px';
+			s.width = ow - pl + 'px';
+			this.stubNode.style.width = sw - pl + 'px';
 			s.display = newDisplay;
 			if(oldDisplay == 'block' && newDisplay == 'none'){
 				this.grid.vLayout.reLayout();

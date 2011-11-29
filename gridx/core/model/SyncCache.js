@@ -6,7 +6,7 @@ define([
 	"./_Cache"
 ], function(declare, array, lang, Deferred, _Cache){
 
-	return declare('gridx.core.model.SyncCache', _Cache, {
+	return declare(_Cache, {
 		constructor: function(){
 			this._init();
 		},

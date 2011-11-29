@@ -4,7 +4,7 @@ define([
 	'./_Extension'
 ], function(declare, Deferred, _Extension){
 
-	return declare('gridx.core.model.Marker', _Extension, {
+	return declare(_Extension, {
 		priority: 5,
 
 		constructor: function(model){

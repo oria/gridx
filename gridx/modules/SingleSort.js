@@ -6,7 +6,7 @@ define([
 ], function(declare, lang, keys, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.SingleSort', _Module, {
+	declare(_Module, {
 		name: 'sort',
 
 		forced: ['header'],
@@ -35,7 +35,7 @@ define([
 				});
 			}
 			//Presort...
-			sort = sort || args.preSort || g.preSort;
+			sort = sort || this.arg('preSort');
 			if(lang.isArrayLike(sort)){
 				sort = sort[0];
 			}
@@ -110,6 +110,7 @@ define([
 		clear: function(skipUpdateBody){
 			if(this._sortId !== null){
 				this._initHeader(this._sortId);
+				this._sortId = this._sortDescend = null;
 				this.model.sort();
 				if(!skipUpdateBody){
 					this.grid.body.refresh();
@@ -118,7 +119,7 @@ define([
 		},
 
 		getSortData: function(){
-			return this._sortId ? [{colId: this._sortId, descending: this._sortDescend}] : [];
+			return this._sortId ? [{colId: this._sortId, descending: this._sortDescend}] : null;
 		},
 	
 		//Private--------------------------------------------------------------
@@ -127,33 +128,37 @@ define([
 		_sortDescend: null, 
 		
 		_initHeader: function(colId){
+			//1 for true, 0 for false
 			var	headerCell = this.grid.header.getHeaderNode(colId);
-			headerCell.innerHTML = ["<div class='dojoxGridxSortNode'>", this.grid.column(colId, true).name(), "</div>"].join('');
+			headerCell.innerHTML = ["<div class='dojoxGridxSortNode'>", this.grid.column(colId, 1).name(), "</div>"].join('');
 			headerCell.removeAttribute('aria-sort');
 		},
 	
 		_updateHeader: function(colId, isDescending){
 			//Change the structure of sorted header
+			//1 for true, 0 for false
 			if(this._sortId && this._sortId !== colId){
 				this._initHeader(this._sortId);
 			}
 			this._sortId = colId;
 			this._sortDescend = !!isDescending;
-			var str = ["<div class='dojoxGridxSortNode ",
-				(isDescending ? 'dojoxGridxSortDown' : 'dojoxGridxSortUp'),
-				"'><div class='dojoxGridxArrowButtonChar'>",
-				(isDescending ? "&#9662;" : "&#9652;"),
-				"</div><div role='presentation' class='dojoxGridxArrowButtonNode'></div><div class='dojoxGridxColCaption'>",
-				this.grid.column(colId, true).name(),
-				"</div></div>"].join('');
-			var	headerCell = this.grid.header.getHeaderNode(colId);
+			var g = this.grid,
+				headerCell = g.header.getHeaderNode(colId);
+				str = ["<div class='dojoxGridxSortNode ",
+					(isDescending ? 'dojoxGridxSortDown' : 'dojoxGridxSortUp'),
+					"'><div class='dojoxGridxArrowButtonChar'>",
+					(isDescending ? "&#9662;" : "&#9652;"),
+					"</div><div role='presentation' class='dojoxGridxArrowButtonNode'></div><div class='dojoxGridxColCaption'>",
+					g.column(colId, 1).name(),
+					"</div></div>"
+				].join('');
 			headerCell.innerHTML = str;
 			headerCell.setAttribute('aria-sort', isDescending ? 'descending' : 'ascending');
-			this.grid.vLayout.reLayout();
+			g.vLayout.reLayout();
 		},
 	
 		_onClick: function(e){
-			this.sort(e.columnId, (this._sortId !== e.columnId ? false : !this._sortDescend));
+			this.sort(e.columnId, (this._sortId !== e.columnId ? 0 : !this._sortDescend));
 		},
 		
 		_onKeyDown: function(e){

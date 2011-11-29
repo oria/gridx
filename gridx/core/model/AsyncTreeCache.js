@@ -7,7 +7,7 @@ define([
 	"./_TreeCache"
 ], function(declare, lang, array, Deferred, DeferredList, _TreeCache){
 	
-	return declare('gridx.core.model.AsyncTreeCache', _TreeCache, {
+	return declare(_TreeCache, {
 		isAsync: true,
 		cacheSize: 200,
 		pageSize: 100,

@@ -11,7 +11,7 @@ define([
 	"dojo/DeferredList"
 ], function(_Module, declare, lang, Deferred, html, xhr, array, has, query, DeferredList){
 	return _Module.registerModule(
-	declare('gridx.modules.Printer', _Module, {
+	declare(_Module, {
 		name: 'printer',
 		forced: ['table'],
 		

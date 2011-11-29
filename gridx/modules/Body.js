@@ -7,11 +7,12 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/keys",
 	"../core/_Module",
-	"../util"
-], function(declare, query, html, lang, event, Deferred, keys, _Module, util){
+	"../util",
+	"dojo/i18n!../nls/Body"
+], function(declare, query, html, lang, event, Deferred, keys, _Module, util, nls){
 
 	return _Module.registerModule(
-	declare('gridx.modules.Body', _Module, {
+	declare(_Module, {
 		name: "body",
 	
 		optional: ['tree'],
@@ -24,6 +25,10 @@ define([
 
 		preload: function(){
 			this.domNode = this.grid.bodyNode;
+			this.emptyNode = html.create('div', {
+				'class': 'dojoxGridxBodyEmpty',
+				innerHTML: nls.emptyInfo
+			}, this.grid.mainNode);
 			this.grid._connectEvents(this.domNode, '_onMouseEvent', this);
 			this._initFocus();
 		},
@@ -219,7 +224,7 @@ define([
 						if(rowCache){
 							rowInfo.rowId = this.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
 							this.onBeforeCell(cellNode, rowInfo, col, rowCache);
-							var isPadding = this.grid.tree && rowData[col.id] === undefined;
+							var isPadding = this.grid.tree && rowCache.data[col.id] === undefined;
 							cellNode.innerHTML = this._buildCellContent(col, rowInfo, rowCache.data, isPadding);
 							this.onAfterCell(cellNode, rowInfo, col, rowCache);
 						}
@@ -279,6 +284,9 @@ define([
 				var nd = this.domNode;
 				nd.scrollTop = 0;
 				nd.innerHTML = str;
+				if(!str){
+					this.grid.mainNode.appendChild(this.emptyNode);
+				}
 				this.model.free();
 			}
 			for(var i = 0, len = renderedRows.length; i < len; ++i){

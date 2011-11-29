@@ -11,7 +11,7 @@ define([
 ], function(declare, array, query, lang, html, Deferred, _Module, util){
 
 	return _Module.registerModule(
-	declare('gridx.modules.IndirectSelect', _Module, {
+	declare(_Module, {
 		name: 'indirectSelect',
 
 		required: ['rowHeader', 'selectRow'],

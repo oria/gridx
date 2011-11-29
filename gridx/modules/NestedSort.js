@@ -9,7 +9,7 @@ define([
 	"dojo/query"
 ], function(dojo, _Module, locale){
 	
-	dojo.declare('gridx.modules.NestedSort', _Module, {
+	return dojo.declare(_Module, {
 		name: 'nestedSort',
 		forced: ['header'],
 		required: ['vLayout'],
@@ -31,7 +31,7 @@ define([
 		preload: function(args){
 			// this._nls = dojo.i18n.getLocalization('gridx', 'NestedSorting');
 			this._nls = locale;
-			if(args.preSort){this._sortData = args.preSort;}
+			this._sortData = this.arg('preSort') || this._sortData;
 			//persistence support
 			if(this.grid.persist){
 				var _this = this;
@@ -80,7 +80,7 @@ define([
 		},
 		_doSort: function(){
 			var g = this.grid, d = this._sortData;
-			g.model.sort(d);
+			g.model.sort(d.length ? d : null);
 			g.body.refresh();
 		},
 		
@@ -358,7 +358,5 @@ define([
 			cell.childNodes[1].setAttribute("aria-label", a11yNestedLabel);
 		}
 	});
-	
-	return gridx.modules.NestedSort;
 	
 });

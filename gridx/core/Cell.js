@@ -1,9 +1,10 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/lang"
-], function(declare, lang){
+	"dojo/_base/lang",
+	"dojo/_base/Deferred"
+], function(declare, lang, Deferred){
 
-	return declare('gridx.core.Cell', null, {
+	return declare(null, {
 		constructor: function(grid, row, column){
 			this.grid = grid;
 			this.model = grid.model;
@@ -21,17 +22,24 @@ define([
 		},
 
 		setRawData: function(rawData){
-			var field = this.column.field(), s = this.grid.store;
+			var field = this.column.field(), s = this.grid.store, d = new Deferred();
 			if(field){
 				if(s.setValue){
 					s.setValue(this.model.byId(this.row.id).item, field, rawData);	
+					s.save({
+						onComplete: function(){
+							d.callback();
+						}
+					});
 				}else if(s.put){
 					var obj = lang.clone(this.model.byId(this.row.id).item);
 					obj[field] = rawData;
-					s.put(obj);
+					Deferred.when(s.put(obj), function(){
+						d.callback();
+					});
 				}
 			}
-			return this;
+			return d;
 		}
 	});
 });
