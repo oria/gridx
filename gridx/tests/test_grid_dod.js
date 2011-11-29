@@ -40,7 +40,7 @@ require([
 	}
 	window.defaultShow = false;
 	window.showExpando = true;
-	window.contentType = 'text';
+	window.contentType = 'chart';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
 		setContent(detailNode);
 		window.setTimeout(function(){
@@ -78,22 +78,22 @@ require([
 		node.innerHTML = ['<div style="margin: 10px; background:white;padding: 10px;"><table style="width:400px">',
 				'<tr>',
 				'	<td><label for="name">Name:</label></td>',
-				'	<td><input id="name" data-dojo-type="dijit.form.ValidationTextBox"',
+				'	<td><input data-dojo-type="dijit.form.ValidationTextBox"',
 				'		data-dojo-props=\'required:true, name:"name" \'/></td>',
 				'</tr>',
 				'<tr id="newRow" style="display: none;">',
 				'	<td><label for="lastName">Last Name:</label></td>',
-				'	<td><input id="lastName" /></td>',
+				'	<td><input /></td>',
 				'</tr>',
 				'<tr>',
 				'	<td><label for="birth">Birthdate (before 2006-12-31):</label><br><br><br><br></td>',
-				'	<td><div><input id="birth" data-dojo-type="dijit.form.DateTextBox" data-dojo-props=\'value:"2000-01-01",',
+				'	<td><div><input data-dojo-type="dijit.form.DateTextBox" data-dojo-props=\'value:"2000-01-01",',
 				'		required:true, name:"birth", constraints:{min:"1900-01-01", max:"2006-12-31"} \'/> <br>',
 				'	</div></td>',
 				'</tr>',
 				'<tr>',
 				'	<td><label for="notes">Notes (optional)</label></td>',
-				'	<td><input id="notes" data-dojo-type="dijit.form.TextBox"',
+				'	<td><input data-dojo-type="dijit.form.TextBox"',
 				'		data-dojo-props=\'name:"notes" \'/></td>',
 				'</tr>',
 				'<tr id="newRow2" style="display: none;">',
@@ -180,6 +180,15 @@ require([
 	window.isRow3DetailShownOnRow = function(){
 		alert(grid.row('1').isDetailShown());
 	}
+	
+	tp.addTestSet('DoD types', [
+ 		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
+ 		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
+ 		'<label>Content type: <select onchange="contentType=this.value"><option value="text">text</option><option value="form">form</option><option value="chart" selected>chart</option></select></label><br/>',
+ 		'<select onchange="detailProvider=window[this.value]"><option value="syncDetailProvider">sync detailProvider</option>' 
+ 			+ '<option value="asyncDetailProvider" selected>async detailProvider</option></select><br/>',
+ 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createGrid">Re Create Grid</div>'
+ 	].join(''));
 
 	tp.addTestSet('Dod APIs', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick:' 
@@ -202,17 +211,6 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick:'
 			+ 'isRow3DetailShownOnRow">grid.row(\'1\').isDetailShown()</div><br/>'
 	].join(''));
-	
-	tp.addTestSet('Dod Properties', [
-		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
-		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
-		'<label>Content type: <select onchange="contentType=this.value"><option value="text">text</option><option value="form">form</option><option value="chart">chart</option></select></label><br/>',
-		'<select onchange="detailProvider=window[this.value]"><option value="syncDetailProvider">sync detailProvider</option>' 
-			+ '<option value="asyncProvider" selected>async detailProvider</option></select><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createGrid">Re Create Grid</div>'
-	].join(''));
-	
-	
 	
 	tp.startup();
 });
