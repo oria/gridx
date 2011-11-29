@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/json",
 	'dijit/_Widget',
 	'dijit/_TemplatedMixin',
 	'dijit/_WidgetsInTemplateMixin',
@@ -8,8 +9,9 @@ define([
 	"dijit/form/RadioButton",
 	"dijit/form/TextBox",
 	"dijit/form/Select",
+	"dijit/form/NumberTextBox",
 	"./TestPane"
-], function(declare, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, template){
+], function(declare, json, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, template){
 
 return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: template,
@@ -120,16 +122,43 @@ return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _Wid
 				"id='", this.getID('cbattr', attrName), "' ",
 				attr.defaultCheck ? "checked='true'" : "",
 				"></div><label for='", this.getID('cbattr', attrName), "'>", attrName, "</label>",
-				"</td><td><select dojoType='dijit.form.Select' ",
-				"id='", this.getID('selectattr', attrName), "' ",
-				attr.defaultCheck ? "" : "disabled='true'",
-			">");
-			var f = 0;
-			for(var valueName in attr){
-				if(valueName === 'defaultCheck')continue;
-				sb.push("<option value='", valueName, "'>", valueName, "</option>");
+				"</td><td>");
+			switch(attr.type){
+				case 'bool':
+					sb.push("<select dojoType='dijit.form.Select' id='",
+						this.getID('selectattr', attrName), "' ",
+						attr.defaultCheck ? '' : "disabled='true'",
+						"><option value='ture'>true</option>",
+						"<option value='false'>false</option>",
+					"</select>");
+					break;
+				case 'enum':
+					sb.push("<select dojoType='dijit.form.Select' id='",
+						this.getID('selectattr', attrName), "' ",
+						attr.defaultCheck ? '' : "disabled='true'",
+					">");
+					for(var valueName in attr.values){
+						sb.push("<option value='", attr.values[valueName], "'>", valueName, "</option>");
+					}
+					sb.push('</select>');
+					break;
+				case 'string':
+				case 'json':
+					sb.push("<input dojoType='dijit.form.TextBox' id='",
+						this.getID('selectattr', attrName), "' ",
+						attr.defaultCheck ? ' ' : "disabled='true' ",
+						"value='", attr.value, "'",
+					"/>");
+					break;
+				case 'number':
+					sb.push("<input dojoType='dijit.form.NumberTextBox' id='",
+						this.getID('selectattr', attrName), "' ",
+						attr.defaultCheck ? ' ' : "disabled='true' ",
+						"value='", attr.value, "'",
+					"/>");
+					break;
 			}
-			sb.push("</select></td></tr>");
+			sb.push("</td></tr>");
 		}
 		sb.push('</table>');
 		return sb.join('');
@@ -216,8 +245,20 @@ return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _Wid
 		for(attrName in this.gridAttrs){
 			var attr = this.gridAttrs[attrName];
 			if(dijit.byId(this.getID('cbattr', attrName)).get('checked')){
-				var valueName = dijit.byId(this.getID('selectattr', attrName)).get('value');
-				attrs[attrName] = attr[valueName];
+				switch(attr.type){
+					case 'bool':
+					case 'number':
+					case 'string':
+						attrs[attrName] = dijit.byId(this.getID('selectattr', attrName)).get('value');
+						break;
+					case 'enum':
+						var valueName = dijit.byId(this.getID('selectattr', attrName)).get('value');
+						attrs[attrName] = attr[valueName];
+						break;
+					case 'json':
+						attrs[attrName] = json.fromJson(dijit.byId(this.getID('selectattr', attrName)).get('value'));
+						break;
+				}
 			}
 		}
 		return attrs;

@@ -14,19 +14,20 @@ require([
 	'gridx/tests/support/stores/TreeJsonRestStore',
 	'gridx/tests/support/stores/HugeStore',
 	'gridx/tests/support/modules',
+	'dojo/store/Memory',
 	'gridx/tests/support/GridConfig'
 ], function(Grid,
 	SyncCache, SyncTreeCache, AsyncCache, AsyncTreeCache,
 	musicData, testData, treeColumnarData, treeNestedData,
 	itemStore, jsonStore, memoryStore, treeJsonStore, hugeStore,
-	mods, GridConfig){
+	mods, Memory, GridConfig){
 
 var stores = {
 	"music store": {
 		defaultCheck: true,
 		store: itemStore({
 			dataSource: musicData,
-			size: 100
+			size: 0
 		}),
 		layouts: {
 			'layout 1': musicData.layouts[3],
@@ -133,29 +134,145 @@ var caches = {
 };
 
 var gridAttrs = {
+	//Grid
 	autoWidth: {
-		"true": true
+		type: 'bool'
 	},
 	autoHeight: {
-		"true": true
+		type: 'bool'
 	},
+	//Header
+	headerDefaultColumnWidth: {
+		type: 'number',
+		value: 50
+	},
+	//VScroller
 	vscrollerLazyScroll: {
-		"true": true
+		type: 'bool'
 	},
+	vscrollerLazyScrollTimeout: {
+		type: 'number',
+		value: 200
+	},
+	vscrollerBuffSize: {
+		type: 'number',
+		value: 5
+	},
+	//ColumnResizer
+	columnResizerMinWidth: {
+		type: 'number',
+		value: 10
+	},
+	columnResizerDetectWidth: {
+		type: 'number',
+		value: 20
+	},
+	//Tree
 	treeNested: {
-		"true": true
+		type: 'bool'
 	},
+	//ColumnLock
 	columnLockCount: {
-		"1": 1,
-		"2": 2,
-		"3": 3,
-		"4": 4
+		type: 'number',
+		value: 1
 	},
+	//Dod
+	dodUseAnimation: {
+		type: 'bool'
+	},
+	dodDuration: {
+		type: 'number',
+		value: 300
+	},
+	dodDefaultShow: {
+		type: 'bool'
+	},
+	dodShowExpando: {
+		type: 'bool'
+	},
+	dodAutoClose: {
+		type: 'bool'
+	},
+	//Sort
+	sortPreSort: {
+		type: 'json',
+		value: '[{colId: "1", descending: true}]'
+	},
+	//Pagination
 	paginationInitialPage: {
-		'2': 2
+		type: 'number',
+		value: 0
 	},
 	paginationInitialPageSize: {
-		'12': 12
+		type: 'number',
+		value: 10
+	},
+
+	//PaginationBar
+	paginationBarVisibleSteppers: {
+		type: 'number',
+		value: 5
+	},
+
+	paginationBarSizeSeparator: {
+		type: 'string',
+		value: '|'
+	},
+
+	paginationBarPosition: {
+		type: 'enum',
+		values: {
+			'top': 'top',
+			'bottom': 'bottom'
+		}
+	},
+
+	paginationBarSizes: {
+		type: 'json',
+		value: '[10, 20, 40, 80, 0]'
+	},
+
+	paginationBarDescription: {
+		type: 'bool'
+	},
+
+	paginationBarSizeSwitch: {
+		type: 'bool'
+	},
+
+	paginationBarStepper: {
+		type: 'bool'
+	},
+
+	paginationBarGotoButton: {
+		type: 'bool'
+	},
+
+	//RowHeader
+	rowHeaderWidth: {
+		type: 'string',
+		value: '20px'
+	},
+
+	//SelectRow
+	selectRowTriggerOnCell: {
+		type: 'bool'
+	},
+	selectRowMultiple: {
+		type: 'bool'
+	},
+	//SelectColumn
+	selectColumnMultiple: {
+		type: 'bool'
+	},
+	//SelectCell
+	selectCellMultiple: {
+		type: 'bool'
+	},
+
+	//MoveCell
+	moveCellCopy: {
+		type: 'bool'
 	}
 };
 
@@ -175,6 +292,9 @@ var modules = {
 	},
 	persistence: {
 		'default': mods.Persist
+	},
+	toolbar: {
+		'default': mods.Toolbar
 	},
 	sort: {
 		single: mods.SingleSort,
@@ -256,9 +376,14 @@ var modules = {
 function createGrid(args){
 	destroyGrid();
 	args.id = 'grid';
+	var t1 = new Date().getTime();
 	window.grid = new Grid(args);
+	var t2 = new Date().getTime();
 	window.grid.placeAt('gridContainer');
+	var t3 = new Date().getTime();
 	window.grid.startup();
+	var t4 = new Date().getTime();
+	console.log('grid:', t2 - t1, t3 - t2, t4 - t3, ' total:', t4 - t1);
 	document.getElementById('tutor').style.display = "none";
 }
 
@@ -269,7 +394,6 @@ function destroyGrid(){
 	}
 	document.getElementById('tutor').style.display = "";
 }
-
 var cfg = new GridConfig({
 	stores:	stores,
 	caches: caches,

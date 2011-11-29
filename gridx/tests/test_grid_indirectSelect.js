@@ -24,7 +24,8 @@ require([
 			modules: [
 				modules.Focus,
 				modules.IndirectSelect,
-				//modules.RowHeader,
+				modules.RowHeader,
+				modules.SelectColumn,
 				modules.VirtualVScroller
 			].concat(mods) 
 		});

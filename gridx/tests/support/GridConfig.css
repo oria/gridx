@@ -1,5 +1,5 @@
 .dojoxGridxConfig{
-	width: 300px;
+	width: 400px;
 	height: 530px;
 	margin: 10px;
 }
@@ -10,7 +10,9 @@
 .dojoxGridxConfig .dijitButton {
 	z-index: 9999;
 }
-.dojoxGridxConfig .dijitSelect{
+.dojoxGridxConfig .dijitSelect,
+.dojoxGridxConfig .dijitTextBox
+{
 	margin: 0;
 	width: 100%;
 	display: inline-table;

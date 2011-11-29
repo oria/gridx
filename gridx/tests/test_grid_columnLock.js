@@ -7,8 +7,6 @@ require([
 	'gridx/tests/support/TestPane',
 	'dijit/form/NumberSpinner'
 ], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
-
-	console.log(modules.NestedSort);
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -18,7 +16,7 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			modules.VirtualVScroller,
+			//modules.VirtualVScroller,
 			{
 				moduleClass: modules.ColumnLock,
 				count: 1

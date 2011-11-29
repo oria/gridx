@@ -14,12 +14,12 @@ require([
 			dataSource: dataSource, 
 			size: 50
 		}),
-		structure: dataSource.layouts[0],
+		structure: dataSource.layouts[1],
 		autoHeight: true,
 		autoWidth: true,
 		modules: [
 			mods.Focus,
-			mods.VirtualVScroller,
+//            mods.VirtualVScroller,
 			mods.PaginationBar
 		]
 	});
