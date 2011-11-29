@@ -1,20 +1,3 @@
 .gridxColumnLock .dojoxGridxRow {
-	width: 100%;
 	overflow: hidden;
-}
-
-.gridxColumnLock .dojoxGridxLockedCell {
-
-}
-
-.dojoxGridxLeftColumnLockNode {
-	position: absolute;
-	overflow: hidden;
-	left: 0;
-	top: 0;
-}
-
-.dojoxGridxLeftColumnLockHeaderNode table
-,.dojoxGridxLeftColumnLockNode table{
-	border-right: 0px solid #ddd;
 }

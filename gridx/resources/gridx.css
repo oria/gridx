@@ -10,6 +10,7 @@
 @import url('ColumnResizer.css');
 @import url('SingleSort.css');
 @import url('ColumnLock.css');
+@import url('RowLock.css');
 @import url('NestedSorting.css');
 @import url('PaginationBar.css');
 @import url('CellDijit.css');
@@ -17,10 +18,12 @@
 @import url('Dod.css');
 @import url('RowHeader.css');
 @import url('IndirectSelection.css');
+@import url('TitleBar.css');
 
 /* Directories */
 @import url('filter.css');
 @import url('select.css');
 @import url('dnd.css');
+
 
 

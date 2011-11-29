@@ -37,7 +37,7 @@
 	-webkit-box-sizing: border-box;*/
 }
 
-.dojoxGridxHeaderCellFocus {
-	border: 1px dashed darkblue !important;
+.dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus {
+	border: 1px dashed darkblue;
 	outline: medium none;	
 }
