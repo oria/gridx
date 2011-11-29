@@ -8,15 +8,15 @@ define([
 ], function(declare, html, sniff, win, query, _Module){
 	
 	return _Module.registerModule(
-	declare('gridx.modules.ColumnResizer', _Module, {
+	declare(_Module, {
 		name: 'columnResizer',
-		resizeNode: null,
 		minWidth: 20,	//in px
 		detectWidth: 5,
 		load: function(args){
 			var g = this.grid, body = win.body();
+			var headerInner = query('.dojoxGridxHeaderRowInner', g.domNode)[0];
 			this.batchConnect(
-				[g, 'onHeaderMouseMove', '_mousemove'],
+				[headerInner, 'mousemove', '_mousemove'],
 				[g, 'onHeaderMouseOut', '_mouseout'],
 				[g, 'onHeaderMouseDown', '_mousedown', this, this.name],
 				[body, 'mousemove', '_docMousemove'],
@@ -37,8 +37,9 @@ define([
 		},
 		setWidth: function(colId, width){
 			width = parseInt(width);
-			if(width < this.minWidth){
-				width = this.minWidth;
+			var minWidth = this.arg('minWidth');
+			if(width < minWidth){
+				width = minWidth;
 			}
 			this.grid._columnsById[colId].width = width + 'px';
 			var oldWidth;
@@ -81,9 +82,10 @@ define([
 		_updateResizerPosition: function(e){
 			var delta = e.pageX - this._startX, cell = this._targetCell;
 			var left = e.pageX - this._gridX;
+			var minWidth = this.arg('minWidth');
 	
-			if(cell.offsetWidth + delta < this.minWidth){
-				left = this._startX - this._gridX - (cell.offsetWidth - this.minWidth); 
+			if(cell.offsetWidth + delta < minWidth){
+				left = this._startX - this._gridX - (cell.offsetWidth - minWidth); 
 			}
 			this._resizer.style.left = left  + 'px';
 		},
@@ -123,7 +125,8 @@ define([
 			
 			var cell = this._targetCell, delta = e.pageX - this._startX;
 			var w = (sniff('webkit') ? cell.offsetWidth : html.style(cell, 'width')) + delta;
-			if(w < this.minWidth){w = this.minWidth;}
+			var minWidth = this.arg('minWidth');
+			if(w < minWidth){w = minWidth;}
 			this.setWidth(cell.getAttribute('colid'), w);
 			this._hideResizer();
 		},
@@ -131,13 +134,14 @@ define([
 		_isInResizeRange: function(e){
 			var cell = this._getCell(e);
 			var x = this._getCellX(e);
-			if(x < this.detectWidth){
+			var detectWidth = this.arg('detectWidth');
+			if(x < detectWidth){
 				this._targetCell = cell.previousSibling;
 				if(!this._targetCell){
 					return false;	//the first cell is not able to be resize
 				}
 				return true;
-			}else if(x > cell.offsetWidth - this.detectWidth && x <= cell.offsetWidth){
+			}else if(x > cell.offsetWidth - detectWidth && x <= cell.offsetWidth){
 				this._targetCell = cell;
 				return true;
 			}

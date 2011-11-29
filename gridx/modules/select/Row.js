@@ -9,7 +9,7 @@ define([
 ], function(declare, array, html, sniff, keys, _RowCellBase, _Module){
 
 	return _Module.registerModule(
-	declare('gridx.modules.select.Row', _RowCellBase, {
+	declare(_RowCellBase, {
 		name: "selectRow",
 		
 		rowMixin: {
