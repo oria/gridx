@@ -3,23 +3,27 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/data/util/sorter",
-	"./_Extension"
+	"../_Extension"
 ], function(declare, array, lang, sorter, _Extension){
 	
 	return declare(_Extension, {
+		name: 'formatSort',
+
 		priority: 50,
+
 		constructor: function(model){
-			this.cache = model._cache;
-			this.connect(this.cache, "onBeforeFetch", "onBeforeFetch");
-			this.connect(this.cache, "onAfterFetch", "onAfterFetch");
+			var c = this.cache = model._cache;
+			this.connect(c, "onBeforeFetch", "_onBeforeFetch");
+			this.connect(c, "onAfterFetch", "_onAfterFetch");
 		},
 
-		onBeforeFetch: function(){
+		//Private--------------------------------------------------------------------
+		_onBeforeFetch: function(){
 			this._oldCreateSortFunction = sorter.createSortFunction;
 			sorter.createSortFunction = lang.hitch(this, this._createComparator);
 		},
 
-		onAfterFetch: function(){
+		_onAfterFetch: function(){
 			if(this._oldCreateSortFunction){
 				sorter.createSortFunction = this._oldCreateSortFunction;
 				delete this._oldCreateSortFunction;

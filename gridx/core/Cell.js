@@ -22,22 +22,24 @@ define([
 		},
 
 		setRawData: function(rawData){
-			var field = this.column.field(), s = this.grid.store, d = new Deferred();
+			var field = this.column.field(), s = this.grid.store, d = new Deferred(),
+				success = lang.hitch(d, d.callback),
+				fail = lang.hitch(d, d.errback);
 			if(field){
+				var item = this.model.byId(this.row.id).item;
 				if(s.setValue){
-					s.setValue(this.model.byId(this.row.id).item, field, rawData);	
+					s.setValue(item, field, rawData);
 					s.save({
-						onComplete: function(){
-							d.callback();
-						}
+						onComplete: success,
+						onError: fail
 					});
 				}else if(s.put){
-					var obj = lang.clone(this.model.byId(this.row.id).item);
+					var obj = lang.clone(item);
 					obj[field] = rawData;
-					Deferred.when(s.put(obj), function(){
-						d.callback();
-					});
+					Deferred.when(s.put(obj), success, fail);
 				}
+			}else{
+				success();
 			}
 			return d;
 		}

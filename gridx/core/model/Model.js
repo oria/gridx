@@ -3,98 +3,56 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
-	"dojo/_base/connect",
-	"dojo/_base/json"
-], function(declare, array, lang, Deferred, connect, json){
+	"dojo/DeferredList",
+	"dojo/_base/connect"
+], function(declare, array, lang, Deferred, DeferredList, connect){
 
 	return declare(null, {
-	
 		constructor: function(args){
+			this.store = args.store;
+			this._exts = {};
 			this._cmdQueue = [];
-			this._prevCmdQueues = [];
-			this._pendingCmdCount = 0;
 			this._model = this._cache = new args.cacheClass(this, args);
 			this._createExtensions(args.modelExtensions || [], args);
+			var m = this._model;
 			this._connects = [
-				connect.connect(this._model, "onDelete", this, "onDelete"),
-				connect.connect(this._model, "onNew", this, "onNew"),
-				connect.connect(this._model, "onSet", this, "onSet"),
-				connect.connect(this._model, "onSizeChange", this, "onSizeChange")
+				connect.connect(m, "onDelete", this, "onDelete"),
+				connect.connect(m, "onNew", this, "onNew"),
+				connect.connect(m, "onSet", this, "onSet"),
+				connect.connect(m, "onSizeChange", this, "onSizeChange")
 			];
-			if(args.query){
-				this.query(args.query);
-			}
-			if(args.baseSort && args.baseSort.length){
-				this._baseSort = args.baseSort;
-				this._sort();
-			}
 		},
 	
 		destroy: function(){
 			array.forEach(this._connects, connect.disconnect);
-			if(this._plugins){
-				var i = this._plugins.length - 1;
-				for(; i >= 0; --i){
-					this._plugins[i].destroy();
-				}
+			for(var name in this._exts){
+				this._exts[name].destroy();
 			}
 		},
 	
-		onDelete: function(/*id, index*/){},
-		onNew: function(/*id, index, row*/){},
-		onSet: function(/*id, index, row*/){},
-		onSizeChange: function(/*size, oldSize*/){},
-		onMarked: function(/*id, type*/){},
-		onMarkRemoved: function(/*id, type*/){},
-		onFiltered: function(/*ids*/){},
-		
+		//Public-------------------------------------------------------------------
 		clearCache: function(){
 			this._cache.clear();
 		},
 	
 		restore: function(){
+			//Restore the model to initial state
+			//FIXME: this has problems when there are still pending commands/requests on the fly.
 			this.clearCache();
-			var plugins = this._plugins, i = plugins.length - 1;
-			for(; i >= 0; --i){
-				plugins[i].clear();
+			for(var name in this._exts){
+				this._exts[name].clear();
 			}
 			this._cmdQueue = [];
-			this._prevCmdQueues = [];
 		},
 
-		//---------------------------------------------------------------------------------------
 		when: function(args, callback, scope){
-//            var t1 = new Date().getTime();
-			this._cache.skipCacheSizeCheck = this._cache.skipCacheSizeCheck || 0;
-			++this._cache.skipCacheSizeCheck;
-			var d = new Deferred();
-			var queues = this._prevCmdQueues;
-			var last = queues[queues.length - 1];
-			var _this = this;
-			var getData = function(){
-				_this._model._call('when', [_this._normalizeArgs(args), function(){
-//                    console.log('When time:', new Date().getTime() - t1);
-					if(callback){
-						callback.apply(scope || window);
-					}
-					--_this._cache.skipCacheSizeCheck;
-				}]).then(function(){
-					queues.shift();
-					d.callback();
-				}, lang.hitch(d, d.errback));
-			};
-			queues.push(d);
-			if(!this._cmdQueue.length && !this._pendingCmdCount){
-				getData();
-			}else{
-				var cmds = this._cmdQueue;
-				this._pendingCmdCount += cmds.length;
-				this._cmdQueue = [];
-				Deferred.when(last, function(){
-					_this._exec(cmds).then(getData, lang.hitch(d, d.errback));
-				});
-			}
-			return d;
+			this._addCmd({
+				name: '_cmdRequest',
+				scope: this,
+				args: arguments,
+				async: 1
+			});
+			return this._exec();
 		},
 	
 		scan: function(args, callback){
@@ -136,128 +94,116 @@ define([
 			f(start);
 			return d;
 		},
-	
-		//---------------------------------------------------------------------------
-		sort: function(sortSpec){
-			this._sortOrQuery('_sort', '_query', arguments);
+
+		//Events---------------------------------------------------------------------------------
+		onDelete: function(/*id, index*/){},
+		onNew: function(/*id, index, row*/){},
+		onSet: function(/*id, index, row*/){},
+		onSizeChange: function(/*size, oldSize*/){},
+
+		//Package----------------------------------------------------------------------------
+		_sendMsg: function(/* msg */){},
+
+		_addCmd: function(args){
+			//Add command to the command queue, and combine same kind of commands if possible.
+			var cmds = this._cmdQueue,
+				cmd = cmds[cmds.length - 1];
+			if(cmd && cmd.name === args.name && cmd.scope === args.scope){
+				cmd.args.push(args.args || []);
+			}else{
+				args.args = [args.args || []];
+				cmds.push(args);
+			}
 		},
-	
-		query: function(req){
-			this._sortOrQuery('_query', '_sort', arguments);
-		},
-		
+
 		//Private----------------------------------------------------------------------------
-		_exec: function(cmds){
-			var _this = this, d = new Deferred();
-			var func = function(){
-				while(cmds.length){
-					var cmd = cmds.shift();
-					var dd = cmd.scope[cmd.name].apply(cmd.scope, cmd.args);
-					if(cmd.async){
-						dd.then(function(){
-							--_this._pendingCmdCount;
-							func();
-						});
-						return;
+		_cmdRequest: function(){
+			var _this = this,
+				defs = array.map(arguments, function(args){
+					var arg = args[0],
+						callback = args[1],
+						scope = args[2];
+					if(arg === null || !args.length){
+						if(callback){
+							callback.apply(scope || window);
+						}
+						var d = new Deferred();
+						d.callback();
+						return d;
 					}else{
-						--_this._pendingCmdCount;
+						arg = _this._normalizeArgs(arg);
+						return _this._model._call('when', [arg, function(){
+							if(callback){
+								callback.apply(scope || window);
+							}
+						}]);
 					}
-				}
-				d.callback();
-			};
+				});
+			return new DeferredList(defs, 0, 1);
+		},
+
+		_exec: function(){
+			//Execute commands one by one.
+			if(this._busy){
+				return this._busy;
+			}
+			this._cache.skipCacheSizeCheck = 1;
+			var d = this._busy = new Deferred(),
+				_this = this,
+				cmds = this._cmdQueue,
+				finish = function(d, err){
+					delete _this._busy;
+					delete _this._cache.skipCacheSizeCheck;
+					if(_this._cache._checkSize){
+						_this._cache._checkSize();
+					}
+					if(err){
+						d.errback(err);
+					}else{
+						d.callback();
+					}
+				},
+				func = function(){
+					if(array.some(cmds, function(cmd){
+						return cmd.name === '_cmdRequest';
+					})){
+						try{
+							while(cmds.length){
+//                                console.log(cmds[0].name, cmds[0]);
+								var cmd = cmds.shift(),
+									dd = cmd.scope[cmd.name].apply(cmd.scope, cmd.args);
+								if(cmd.async){
+									Deferred.when(dd, func, lang.partial(finish, d));
+									return;
+								}
+							}
+							finish(d);
+						}catch(e){
+							finish(d, e);
+						}
+					}else{
+						finish(d);
+					}
+				};
 			func();
 			return d;
 		},
 	
-		_sortOrQuery: function(name, theOtherName, args){
-			if(!this._cache.isAsync){
-				this[name].apply(this, args);
-				return;
-			}
-			var cmds = this._cmdQueue, len = cmds.length, i, cmd, start = 0;
-			for(i = len - 1; i >= 0; --i){
-				if(cmds[i].name === '_mark'){
-					start = i + 1;
-					break;
-				}
-			}
-			var pre = start > 0 ? cmds.slice(0, start) : [];
-			this._cmdQueue = [{
-				scope: this,
-				name: name,
-				args: args
-			}];
-			for(i = len - 1; i >= start; --i){
-				cmd = cmds[i];
-				if(cmd.name === theOtherName){
-					this._cmdQueue.push(cmd);
-					break;
-				}
-			}
-			for(i = len - 1; i >= start; --i){
-				cmd = cmds[i];
-				if(cmd.name === "_filter"){
-					this._cmdQueue.push(cmd);
-					break;
-				}
-			}
-			this._cmdQueue = pre.concat(this._cmdQueue);
-		},
-	
-		_sort: function(sortSpec){
-			var c = this._cache, i;
-			if(lang.isArrayLike(sortSpec)){
-				for(i = 0; i < sortSpec.length; ++i){
-					var s = sortSpec[i];
-					if(s.colId !== undefined){
-						s.attribute = c.columns ? (c.columns[s.colId].field || s.colId) : s.colId;
-					}else{
-						s.colId = s.attribute;
-					}
-				}
-				if(this._baseSort){
-					sortSpec = sortSpec.concat(this._baseSort);
-				}
-			}else{
-				sortSpec = this._baseSort;
-			}
-			c.options = c.options || {};
-			var toSort = false;
-			if(c.options.sort && c.options.sort.length){
-				if(json.toJson(c.options.sort) !== json.toJson(sortSpec)){
-					toSort = true;
-				}
-			}else if(sortSpec && sortSpec.length){
-				toSort = true;
-			}
-			c.options.sort = lang.clone(sortSpec);
-			if(toSort){
-				c.clear();
-			}
-			if(this._model.onStoreReorder){
-				this._model.onStoreReorder(this._cache.isAsync);
-			}
-		},
-	
-		_query: function(query, queryOptions){
-			var c = this._cache, ops = c.options = c.options || {};
-			ops.query = query;
-			ops.queryOptions = queryOptions;
-			if(this._model.onStoreReorder){
-				this._model.onStoreReorder(this._cache.isAsync);
-			}
-			c.clear();
-		},
-	
 		_createExtensions: function(exts, args){
-			this._plugins = [];
-			var i, len, priority = [];
-			for(i = exts.length - 1; i >= 0; --i){
-				priority[exts[i].prototype.priority] = exts[i];
-			}
-			for(i = 0, len = priority.length; i < len; ++i){
-				if(priority[i]){
-					this._plugins.push(new priority[i](this, args));
+			//Ensure the given extensions are valid
+			exts = array.filter(exts, function(ext){
+				return ext && ext.prototype;
+			});
+			//Sort the extensions by priority
+			exts.sort(function(a, b){
+				return a.prototype.priority - b.prototype.priority;
+			});
+			for(var i = 0, len = exts.length; i < len; ++i){
+				//Avoid duplicated extensions
+				//IMPORTANT: Assume extensions all have different priority values!
+				if(i == exts.length - 1 || exts[i] != exts[i + 1]){
+					var ext = new exts[i](this, args);
+					this._exts[ext.name] = ext;
 				}
 			}
 		},
