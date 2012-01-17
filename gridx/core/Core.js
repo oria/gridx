@@ -19,7 +19,12 @@ define([
 		}
 		return ret;
 	}
-	
+
+	function getDepends(mod){
+		var prot = mod.moduleClass.prototype;
+		return (prot.forced || []).concat(prot.optional || []);
+	}
+
 	return declare(null, {
 		reset: function(args){
 			// summary:
@@ -240,8 +245,7 @@ define([
 		},
 
 		_preloadModules: function(){
-			var m;
-			for(m in this._modules){
+			for(var m in this._modules){
 				m = this._modules[m];
 				if(m.mod.preload){
 					m.mod.preload(m.args);
@@ -278,8 +282,7 @@ define([
 		},
 
 		_mixinComponent: function(component, name){
-			var modName;
-			for(modName in this._modules){
+			for(var modName in this._modules){
 				var m = this._modules[modName],
 					mixinObj = m.mod[name + 'Mixin'];
 				if(lang.isFunction(mixinObj)){
@@ -291,24 +294,25 @@ define([
 		},
 
 		_normalizeModules: function(args){
-			var i, len, m, modules = args.modules, 
+			var i, len, m, modules = args.modules, mods = [],
 				coreModCount = (this.coreModules && this.coreModules.length) || 0;
 			for(i = 0, len = modules.length; i < len; ++i){
 				m = modules[i];
 				if(lang.isFunction(m)){
-					modules[i] = {
+					mods.push({
 						moduleClass: m
-					};
+					});
 				}else if(!m){
 					console.error(["The ", (i + 1 - coreModCount), 
 						"-th declared module can NOT be found, please require it before using it"].join(''));
 				}else if(!lang.isFunction(m.moduleClass)){
 					console.error(["The ", (i + 1 - coreModCount), 
 						"-th declared module has NO moduleClass, please provide it"].join(''));
-					delete modules[i];
+				}else{
+					mods.push(m);
 				}
 			}
-			args.modules = array.filter(modules, function(m){ return m; });
+			args.modules = mods;
 			return args;
 		},
 
@@ -331,7 +335,8 @@ define([
 								moduleClass: registeredMods[depName]
 							});
 						}else{
-							throw new Error(["Forced/Required Dependenct Module '", depName, "' is NOT Found for '", prot.declaredClass, "'"].join(''));
+							throw new Error(["Forced/Required Dependent Module '", depName, 
+								"' is NOT Found for '", prot.name, "'"].join(''));
 						}
 					}
 				}
@@ -340,44 +345,35 @@ define([
 		},
 
 		_removeDuplicate: function(args){
-			var modules = args.modules, i, j, modName;
-			for(i = modules.length - 1; i >= 0; --i){
-				if(modules[i]){
-					modName = modules[i].moduleClass.prototype.name;
-					for(j = i - 1; j >= 0; --j){
-						if(modules[j] && modules[j].moduleClass.prototype.name === modName){
-							delete modules[j];
-						}
-					}
-				}else{
-					modules.splice(i, 1);
-				}
+			var modules = args.modules, i, m, mods = {};
+			for(i = 0; m = modules[i]; ++i){
+				mods[m.moduleClass.prototype.name] = m;
 			}
+			modules = [];
+			for(i in mods){
+				modules.push(mods[i]);
+			}
+			args.modules = modules;
 			return args;
 		},
 
 		_checkCircle: function(args){
-			var modules = args.modules, i, j, m, modName, q, key;
-			var getDepends = function(mod){
-				var prot = mod.moduleClass.prototype;
-				return lang.clone((prot.forced || []).concat(prot.optional || []));
-			};
-			var getModule = function(modName){
-				for(j = modules.length - 1; j >= 0; --j){
-					if(modules[j].moduleClass.prototype.name === modName){
-						return modules[j];
+			var modules = args.modules, i, m, modName, q, key,
+				getModule = function(modName){
+					for(var j = modules.length - 1; j >= 0; --j){
+						if(modules[j].moduleClass.prototype.name === modName){
+							return modules[j];
+						}
 					}
-				}
-				return null;
-			};
-			for(i = modules.length - 1; i >= 0; --i){
-				m = modules[i];
+					return null;
+				};
+			for(i = modules.length - 1; m = modules[i]; --i){
 				modName = m.moduleClass.prototype.name;
 				q = getDepends(m);
 				while(q.length){
 					key = q.shift();
-					if(key === modName){
-						throw new Error("Module '" + m.moduleClass.prototype.declaredClass + "' is in a dependancy circle!");
+					if(key == modName){
+						throw new Error("Module '" + key + "' is in a dependancy circle!");
 					}
 					m = getModule(key);
 					if(m){
@@ -389,16 +385,11 @@ define([
 		},
 
 		_checkModelExtensions: function(args){
-			var modules = args.modules, exts = args.modelExtensions, i, j, ext, prot;
+			var modules = args.modules, exts = args.modelExtensions, i, modExts, push = [].push;
 			for(i = modules.length - 1; i >= 0; --i){
-				prot = modules[i].moduleClass.prototype;
-				if(prot.modelExtensions){
-					for(j = prot.modelExtensions.length - 1; j >= 0; --j){
-						ext = prot.modelExtensions[j];
-						if(array.indexOf(exts, ext) < 0){
-							exts.push(ext);
-						}
-					}	
+				modExts = modules[i].moduleClass.prototype.modelExtensions;
+				if(modExts){
+					push.apply(exts, modExts);
 				}
 			}
 			return args;
