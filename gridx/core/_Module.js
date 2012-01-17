@@ -90,13 +90,63 @@ define([
 		},
 
 		arg: function(argName, defaultValue, validate){
+			// summary:
+			//		This method provides a normalized way to access module arguments.
+			//		There are two ways to provide module arguments when creating grid.
+			//		One is to write them in the module declaration object:
+			//			var grid = new Grid({
+			//				......
+			//				modules: [
+			//					{
+			//						moduleClass: gridx.modules.Pagination,
+			//						initialPage: 1		//Put module arguments in module declaration object
+			//					}
+			//				],
+			//				......
+			//			});
+			//		This way is straightforward, but quite verbose. And if user would like to set arguments 
+			//		for pre-included core modules (e.g. Header, Body), he'd have to explictly declare the
+			//		module. This would be too demanding for a grid user, so we need another approach.
+			//		The other way is to treat them as grid arguments:
+			//			var grid = new Grid({
+			//				......
+			//				modules: [
+			//					gridx.modules.Pagination
+			//				],
+			//				paginationInitialPage: 1,	//Treat module arguments as grid arguments
+			//				......
+			//			});
+			//		In this way, there's no need to provide a module declaration object, but one has to tell
+			//		grid for which module the arguments is applied. One can simply put the module name at the
+			//		front of every module argument:
+			//			"pagination" -- module name
+			//			"initialPage" -- module argument
+			//			---------------------------------
+			//			paginationInitialPage -- module argument treated as grid argument
+			//		Note the first letter of the module arugment must be capitalized in the combined argument.
+			//
+			//		This "arg" method makes it possible to access module arguments without worring about where
+			//		they are declared. The priority of every kinds of declarations are:
+			//			Module argument > Grid argument > default value > Base class argument (inherited)
+			//		After this method, the argument will automatically become module argument. But it is still
+			//		recommended to alway access arguments by this.arg(...);
+			//
+			//argName: String
+			//		The name of this argument. This is the "short" name, not the name prefixed with module name.
+			//defaultValue: anything?
+			//		This value will by asigned to the argument if there's no user provided values.
+			//validate: Function?
+			//		This is a validation function and it must return a boolean value. If the user provided value
+			//		can not pass validation, the default value will be used.
+			//		Note if this function is provided, defaultValue must also be provided.
+			//return: anything
+			//		The value of this argument.
 			if(arguments.length == 2 && lang.isFunction(defaultValue)){
 				validate = defaultValue;
 				defaultValue = undefined;
 			}
 			var res = this[argName];
 			if(!this.hasOwnProperty(argName)){
-				//IE7 and below does NOT support string[index] syntex.
 				var gridArgName = this.name + argName.substring(0, 1).toUpperCase() + argName.substring(1);
 				if(this.grid[gridArgName] === undefined){
 					if(defaultValue !== undefined){
@@ -162,7 +212,7 @@ define([
 	});
 	
 	moduleBase._modules = {};
-	moduleBase.registerModule = function(modClass){
+	moduleBase.register = function(modClass){
 		var prot = modClass.prototype;
 		moduleBase._modules[prot.name || prot.declaredClass] = modClass;
 		return modClass;

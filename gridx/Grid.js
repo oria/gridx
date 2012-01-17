@@ -15,9 +15,10 @@ define([
 	"./modules/HLayout",
 	"./modules/VScroller",
 	"./modules/HScroller",
+	"./modules/ColumnWidth",
 	"./modules/ColumnResizer"
-], function(declare, array, lang, html, Deferred, query, _Widget, _TemplatedMixin, template, 
-	Core, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnResizer){
+], function(declare, array, lang, html, Deferred, query, _Widget, _TemplatedMixin, template, Core, 
+	Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, ColumnResizer){
 
 	var Grid = declare('gridx.Grid', [_Widget, _TemplatedMixin, Core], {
 		templateString: template,
@@ -30,18 +31,26 @@ define([
 			HLayout,
 			VScroller,
 			HScroller,
-			ColumnResizer
+			ColumnWidth
+//            ColumnResizer
+		],
+
+		coreExtensions: [
 		],
 	
 		postMixInProperties: function(){
 			this._eventFlags = {};
 			this.modules = this.coreModules.concat(this.modules || []);
+			this.modelExtensions = this.coreExtensions.concat(this.modelExtensions || []);
 			this._initEvents(this._compNames, this._eventNames);
 			this.reset(this);
 		},
 		
 		buildRendering: function(){
 			this.inherited(arguments);
+			if(this.cssMode && lang.isString(this.cssMode)){
+				html.toggleClass(this.domNode, 'compact', this.cssMode.indexOf('compact') > -1);
+			}
 			html.toggleClass(this.domNode, 'dojoxGridxRtl', !this.isLeftToRight());
 		},
 	
@@ -142,7 +151,7 @@ define([
 			});
 		}
 		return new ctor(props, node);		
-	}
+	};
 	
 	return Grid;
 });
