@@ -4,21 +4,8 @@
 			><td class="dojoxGridxPagerDescription"
 				dojoAttachPoint="_descContainer"
 			></td
-			><td class="dojoxGridxPagerSizeSwitch"
-					dojoAttachPoint='_sizeSwitchContainer'
-					dojoAttachEvent='onclick: _switchPageSize'
-			></td
 			><td class="dojoxGridxPagerStepper"
 				dojoAttachPoint="_pageStepperContainer"
-				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerFirstPage'
-					tabindex='${_tabIndex}'
-					title='${firstPageTitle}'
-					aria-label='${firstPageWai}'
-					pageindex='First',
-					dojoAttachPoint='_firstPageBtn'
-					dojoAttachEvent='onclick: _gotoFirstPage'
-					><span class='dojoxGridxPagerA11yInner'>&nbsp;«</span
-				></span
 				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerPrevPage'
 					tabindex='${_tabIndex}'
 					title='${prevPageTitle}'
@@ -30,7 +17,7 @@
 				></span
 				><span class='dojoxGridxPagerPages'
 					dojoAttachPoint='_pageBtnContainer'
-					dojoAttachEvent='onclick: _gotoPage, onmouseover: _onHoverPageBtn, onmouseout: _onLeavePageBtn'
+					dojoAttachEvent='onclick: _gotoPage, onmouseover: _onHoverPageBtn, onmouseout: _onHoverPageBtn'
 				></span
 				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerNextPage'
 					tabindex='${_tabIndex}'
@@ -41,15 +28,10 @@
 					dojoAttachEvent='onclick: _gotoNextPage'
 					><span class='dojoxGridxPagerA11yInner'>&nbsp;&gt;</span
 				></span
-				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerLastPage'
-					tabindex='${_tabIndex}'
-					title='${lastPageTitle}'
-					pageindex='Last',
-					aria-label='${lastPageWai}'
-					dojoAttachPoint='_lastPageBtn'
-					dojoAttachEvent='onclick: _gotoLastPage'
-					><span class='dojoxGridxPagerA11yInner'>&nbsp;»</span
-				></span
+			></td
+			><td class="dojoxGridxPagerSizeSwitch"
+					dojoAttachPoint='_sizeSwitchContainer'
+					dojoAttachEvent='onclick: _switchPageSize, onmouseover: _onHoverSizeBtn, onmouseout: _onHoverSizeBtn'
 			></td
 			><td class='dojoxGridxPagerGoto'
 				><span class='dojoxGridxPagerGotoBtn'

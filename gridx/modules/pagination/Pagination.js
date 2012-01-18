@@ -1,10 +1,10 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"../core/_Module"
+	"../../core/_Module"
 ], function(declare, array, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		// summary:
 	
@@ -52,9 +52,22 @@ define([
 		},
 		
 		// [Public API] --------------------------------------------------------
+
+		// initialPageSize: Integer
+		//		Specify the page size (row count per page) when the grid is created.
+		//initialPageSize: 10,
+
+		// initialPage: Integer
+		//		Specify which page the grid should show when it is created.
+		//initialPage: 0,
+
 		// GET functions
 		pageSize: function(){
 			return this._pageSize > 0 ? this._pageSize : this.model.size();
+		},
+
+		isAll: function(){
+			return this._pageSize === 0;
 		},
 	
 		pageCount: function(){
@@ -140,10 +153,13 @@ define([
 	
 		_updateBody: function(noRefresh){
 			var size = this.model.size(), count = this.pageSize(), start = this.firstIndexInPage();
-			if(size - start < count){
+			if(size === 0 || start < 0){
+				start = 0;
+				count = 0;
+			}else if(size - start < count){
 				count = size - start;
 			}
-			this.grid.body.updateRootRange(start, size - start < count ? size - start : count);
+			this.grid.body.updateRootRange(start, count);
 			if(!noRefresh){
 				this.grid.body.refresh();
 			}
@@ -156,10 +172,10 @@ define([
 			}else{
 				var first = this.firstIndexInPage();
 				if(first < 0){
-					var oldPage = this._page;
-					this._page = this.pageOfIndex(size - 1);
-					if(oldPage !== this._page){
-						this.onSwitchPage(this._page, oldPage);
+					if(this._page !== 0){
+						var oldPage = this._page;
+						this._page = 0;
+						this.onSwitchPage(0, oldPage);
 					}
 				}			
 				this._updateBody();

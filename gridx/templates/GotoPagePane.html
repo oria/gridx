@@ -4,7 +4,7 @@
 		${gotoDialogMainMsg}
 		</td></tr
 		><tr><td class='dojoxGridxGotoPageInput'
-			><input dojoType='dijit.form.NumberTextBox'
+			><input dojoType='${numberTextBoxClass}'
 				class='dojoxGridxGotoPageInputBox'
 				dojoAttachPoint='pageInputBox'
 				dojoAttachEvent='onKeyUp: _updateStatus'></input
@@ -13,12 +13,12 @@
 				dojoAttachPoint='pageCountMsgNode'></span
 		></td></tr
 		><tr><td class='dojoxGridxGotoPageBtns'
-			><button dojoType='dijit.form.Button' 
+			><button dojoType='${buttonClass}' 
 				dojoAttachPoint='okBtn'
 				dojoAttachEvent='onClick: _onOK'>
 				${gotoDialogOKBtn}
 			</button
-			><button dojoType='dijit.form.Button'
+			><button dojoType='${buttonClass}'
 				dojoAttachEvent='onClick: _onCancel'>
 				${gotoDialogCancelBtn}
 			</button
