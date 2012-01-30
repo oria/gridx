@@ -211,10 +211,10 @@ define([
 		},
 	
 		_storeFetch: function(options, onFetched){
-			console.warn("\tFETCH: [", 
-					options.start, ", ", 
-					options.count, ", ", 
-					options.count && options.start + options.count - 1, "], options:", 
+			console.debug("\tFETCH start: ", 
+					options.start, ", count: ", 
+					options.count, ", end: ", 
+					options.count && options.start + options.count - 1, ", options:", 
 					this.options);
 
 			this.onBeforeFetch();
@@ -302,12 +302,14 @@ define([
 				if(i >= 0){
 					this._priority.splice(i, 1);
 				}
+				this.onDelete(id, index);
 				var size = this._size[''];
 				if(!parentId && size >= 0){
 					this.onSizeChange(size, size + 1, 'onDelete');
 				}
+			}else{
+				this.onDelete(id, index);
 			}
-			this.onDelete(id, index);
 		}
 	});
 });

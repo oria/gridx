@@ -2,7 +2,6 @@
 	position: relative;
 	overflow: hidden;
 	border: 1px solid #ddd;
-	outline: none;
 }
 
 .dojoxGridxHeader,
@@ -25,6 +24,14 @@
 
 .dojoxGridxMain {
 	position: relative;
+	
 }
 
+/*.dojoxGridx :focus {*/
+/*    outline: none;*/
+/*}*/
 
+.dojoxGridxPercentColumnWidth .dojoxGridxHeaderRow table,
+.dojoxGridxPercentColumnWidth .dojoxGridxRow table {
+	width: 100%;
+}

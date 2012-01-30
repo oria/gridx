@@ -1,15 +1,15 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title>Grid Pagination Bar Test</title>
+	<title>Grid DnD - Rearrange Rows and Columns</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
-		#gridContainer {
+		.gridContainer {
 			width: 800px;
 			height: 500px;
 		}
-		#grid {
+		.dojoxGridx {
 			height: 100%;
 		}
 	</style>
@@ -17,22 +17,22 @@
 	<script type="text/javascript" src="../../dojo/dojo.js" 
 		data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript" src="../../dijit/tests/_testCommon.js"></script>
-	<script type="text/javascript" src='test_grid_pagination.js'></script>
+	<script type="text/javascript" src='test_grid_dnd_rearrange.js'></script>
 </head>
 <body class='claro'>
-	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-		Grid Pagination Bar Test 
-	</h1>
-	<table border='0' cellspacing='0' cellpadding='0'><tr>
-		<td>
-			<div id='gridContainer'></div>
-		</td>
-		<td id='ctrlPane'></td>
-	</tr></table>
+	<h1 class='title'>Grid DnD - Rearrange Rows and Columns</h1>
+	<table border='0' cellspacing='0' cellpadding='0'>
+		<tr>
+			<td>
+				<div id='gridContainer' class='gridContainer'></div>
+			</td>
+		</tr>
+	</table>
 	<div id="tips">
 		<h2>Notes:</h2>
 		<ul>
-			<li>When clicks the 'Remove sort persistence' button, the persistence data will be removed after page refreshed/closed.</li>
+			<li>Swipe or click on column header to select columns to dnd</li>
+			<li>Swipe or click on row to select a rows to dnd</li>
 		</ul>
 	</div>
 </body>

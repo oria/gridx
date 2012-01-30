@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
@@ -23,6 +23,7 @@ require([
 		cacheClass: Cache,
 		//query: {Genre: 'E*'},
 		paginationInitialPageSize: 25,
+		columnWidthPercentage: true,
 		modules: [
 //            modules.Focus,
 //            modules.RowHeader,
@@ -31,7 +32,7 @@ require([
 //            modules.ExtendedSelectRow,
 //            modules.ExtendedSelectColumn,
 //            modules.ExtendedSelectCell,
-			modules.PaginationBar,
+//            modules.PaginationBar,
 			modules.VirtualVScroller
 		]
 	});

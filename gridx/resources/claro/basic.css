@@ -1,3 +1,40 @@
+/*common*/
+.claro .dojoxGridx {
+	background-color: #fff;
+	border: 1px solid #DBDBDB;
+	color: #131313;
+}
+
+
+/*Body*/
+.claro .dojoxGridxRow {
+	background:url("../images/row_back.png") #fff repeat-x;
+}
+.claro .dojoxGridxLockedCell {
+	background-color: #fff;
+	position: absolute;
+}
+.claro .dojoxGridxRowOdd tr {
+	background-color: #f7fcff;
+}
+.claro .dojoxGridxBody .dojoxGridxCell{
+	border-color: transparent #E5DAC8 #E5DAC8 transparent;
+}
+.claro .dojoxGridxRowOver .dojoxGridxCell {
+    background:url("../images/row_back.png") #ABD6FF repeat-x;
+	/*border-top:none;
+	border-bottom:none;*/
+}
+.claro .dojoxGridxRowOver {
+	background:url("../images/row_back.png") #ABD6FF repeat-x;
+	/*border-top:1px solid #769DC0;
+	border-bottom:1px solid #769DC0;*/
+}
+.claro .dojoxGridxRow .dojoxGridxCellFocus {
+	border: 1px dashed darkblue;
+}
+
+/*Header*/
 .claro .dojoxGridxHeaderRow {
 	border-top: 1px solid #FFFFFF;
 	border-bottom: 1px solid #FFFFFF;

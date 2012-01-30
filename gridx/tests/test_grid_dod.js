@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
@@ -38,7 +38,7 @@ require([
 		}
 		return result.join(' ');
 	}
-	window.defaultShow = false;
+	window.defaultShow = true;
 	window.showExpando = true;
 	window.contentType = 'chart';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
@@ -182,7 +182,7 @@ require([
 	}
 	
 	tp.addTestSet('DoD types', [
- 		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
+ 		'<label><input type="checkbox" checked onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
  		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
  		'<label>Content type: <select onchange="contentType=this.value"><option value="text">text</option><option value="form">form</option><option value="chart" selected>chart</option></select></label><br/>',
  		'<select onchange="detailProvider=window[this.value]"><option value="syncDetailProvider">sync detailProvider</option>' 

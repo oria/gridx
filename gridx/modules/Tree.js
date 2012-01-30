@@ -1,21 +1,22 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/html",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
 	"../core/_Module"
-], function(declare, html, lang, Deferred, DeferredList, query, keys, _Module){
+], function(declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
 
 	var _isExpando = function(cellNode){
 		var n = cellNode.firstChild;
-		return n && n.className && html.hasClass(n, 'dojoxGridxTreeExpandoCell') &&
-			!html.hasClass(n, 'dojoxGridxTreeExpandoLoading');
+		return n && n.className && domClass.contains(n, 'dojoxGridxTreeExpandoCell') &&
+			!domClass.contains(n, 'dojoxGridxTreeExpandoLoading');
 	};
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		//	summary:
 		//		Tree Grid module.
@@ -61,7 +62,7 @@ define([
 		//
 		//		define the grid structure
 		//	|	var structure = [
-		//	|		{name: "Name", field: "name", expandField: ["children"]},
+		//	|		{name: "Name", field: "name", expandLevel: 'all'},
 		//	|		{name: "Type", field: "type"},
 		//	|		{name: "Population", field: "population"}
 		//	|	];
@@ -100,9 +101,9 @@ define([
 		//
 		//		define the grid structure
 		//	|	var structure = [
-		//	|		{name: "Player", field: "playername", expandField: "seasons", nestedLevel: 0},
-		//	|		{name: "Season", field: "seasonindex", expandField: "games", nestedLevel: 1},
-		//	|		{name: "Game", field: "gameindex", expandField: "quarters", nestedLevel: 2},
+		//	|		{name: "Player", field: "playername", expandLevel: 1},
+		//	|		{name: "Season", field: "seasonindex", expandLevel: 2},
+		//	|		{name: "Game", field: "gameindex", expandLevel: 3},
 		//	|		{name: "Point", field: "point"},
 		//	|		{name: "Rebound", field: "rebound"},
 		//	|		{name: "Assistant", field: "assistant"}
@@ -110,8 +111,6 @@ define([
 		
 		name: "tree",
 
-		required: ['body'],
-	
 		constructor: function(){
 			var openned = [];
 			this._openInfo = {
@@ -170,20 +169,23 @@ define([
 	
 		//Public--------------------------------------------------------------------------------
 		nested: false,
-	
+
 		onExpand: function(id){},
 		onCollapse: function(id){},
 	
+		isExpanded: function(id){
+			return !!this._openInfo[id];
+		},
+
 		expand: function(id, skipUpdateBody){
 			//	summary:
 			//		Expand the row which meta data matching with given `id`.
 			//	id: string?
 			var d = new Deferred(), _this = this;
-			if(id && !this._openInfo[id]){
+			if(id && !this.isExpanded(id)){
 				this.model.when({
 					parentId: id, 
-					start: 0, 
-					count: 1
+					start: 0
 				}, function(){
 					_this._logicExpand(id);
 				}).then(function(){
@@ -203,7 +205,7 @@ define([
 			//		Collapse the row which meta data matching with given `id`.
 			//	id: string?
 			var d = new Deferred(), _this = this;
-			if(id && this._openInfo[id]){
+			if(id && this.isExpanded(id)){
 				this._logicCollapse(id);
 				Deferred.when(skipUpdateBody || this._updateBody(id), function(){
 					d.callback();
@@ -340,17 +342,17 @@ define([
 		},
 	
 		//Private-------------------------------------------------------------------------------
-		_parentOpenInfo: null,
+		//_parentOpenInfo: null,
 	
-		_openInfo: null,
+		//_openInfo: null,
 	
 		_createCellWrapper: function(wrappers, rowId, colId){
 			var col = this.grid._columnsById[colId];
-			if(col.expandField){
+			if(col.expandLevel){
 				var level = this.model.treePath(rowId).length;
-				if(!this.arg('nested') || col.nestedLevel === level - 1){
+				if(!this.arg('nested') || col.expandLevel == level){
 					var hasChildren = this.model.hasChildren(rowId);
-					var isOpen = !!this._openInfo[rowId];
+					var isOpen = this.isExpanded(rowId);
 					var pad = 0, singlePad = 18;
 					if(!this.arg('nested')){
 						pad = (level - 1) * singlePad;
@@ -380,9 +382,9 @@ define([
 	
 		_onCellClick: function(e){
 			if(_isExpando(e.cellNode)){
-				var pos = html.position(query('.dojoxGridxTreeExpandoIcon', e.cellNode)[0]);
+				var pos = domGeometry.position(query('.dojoxGridxTreeExpandoIcon', e.cellNode)[0]);
 				if(e.clientX >= pos.x && e.clientX <= pos.x + pos.w && e.clientY >= pos.y && e.clientY <= pos.y + pos.h){
-					if(this._openInfo[e.rowId]){
+					if(this.isExpanded(e.rowId)){
 						this.collapse(e.rowId);
 					}else{
 						this.expand(e.rowId);
@@ -396,21 +398,21 @@ define([
 			if(body){
 				body.updateRootRange(body.rootStart, body.rootCount);
 				var rowNode = body.getRowNode({rowId: id}), n, expando,
-					isOpen = this._openInfo[id];
+					isOpen = this.isExpanded(id);
 				if(rowNode){
 					n = query('.dojoxGridxTreeExpandoCell', rowNode)[0];
 					if(n){
 						expando = query('.dojoxGridxTreeExpandoIcon', n)[0];
 						expando.firstChild.innerHTML = 'o';
-						html.addClass(n, 'dojoxGridxTreeExpandoLoading');
+						domClass.add(n, 'dojoxGridxTreeExpandoLoading');
 					}
 				}
 				var visualIndex = id ? this.getVisualIndexByRowInfo(this.model.treePath(id).pop(), this.model.idToIndex(id), body.rootStart) : -1;
 				return body.refreshVisual(visualIndex + 1).then(function(){
 					if(n){
 						expando.firstChild.innerHTML = isOpen ? '-' : '+';
-						html.removeClass(n, 'dojoxGridxTreeExpandoLoading');
-						html[isOpen ? 'addClass' : 'removeClass'](n, 'dojoxGridxTreeExpandoCellOpen');
+						domClass.remove(n, 'dojoxGridxTreeExpandoLoading');
+						domClass.toggle(n, 'dojoxGridxTreeExpandoCellOpen', isOpen);
 					}
 				});
 			}
@@ -538,7 +540,7 @@ define([
 					var i, col, visualIndex;
 					for(i = grid._columns.length - 1; i >= 0; --i){
 						col = grid._columns[i];
-						if(col.expandField && (!this.arg('nested') || col.nestedLevel === parentLevel - 1)){
+						if(col.expandLevel && (!this.arg('nested') || col.expandLevel == parentLevel)){
 							break;
 						}
 					}

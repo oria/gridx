@@ -10,7 +10,7 @@ define([
 	"dojo/query",
 	"dojo/DeferredList"
 ], function(_Module, declare, lang, Deferred, html, xhr, array, has, query, DeferredList){
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'printer',
 		forced: ['table'],

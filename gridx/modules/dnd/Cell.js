@@ -10,7 +10,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, html, lang, Deferred, query, DndManager, _Base, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Base, {
 		name: 'dndCell',
 		

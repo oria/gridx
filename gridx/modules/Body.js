@@ -11,7 +11,7 @@ define([
 	"dojo/i18n!../nls/Body"
 ], function(declare, query, html, lang, event, Deferred, keys, _Module, util, nls){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: "body",
 	
@@ -25,33 +25,30 @@ define([
 
 		preload: function(){
 			this.domNode = this.grid.bodyNode;
-			this.emptyNode = html.create('div', {
-				'class': 'dojoxGridxBodyEmpty',
-				innerHTML: nls.emptyInfo
-			}, this.grid.mainNode);
 			this.grid._connectEvents(this.domNode, '_onMouseEvent', this);
 			this._initFocus();
 		},
 
 		load: function(args, deferStartup){
+			var m = this.model, g = this.grid;
 			this.batchConnect(
-				[this.model, 'onDelete', '_onDelete'],
-				[this.model, 'onNew', '_onNew'],
-				[this.model, 'onSet', '_onSet'],
-				[this.model, 'onSizeChange', '_onSizeChange'],
-				[this.grid, 'onRowMouseOver', '_onRowMouseHover'],
-				[this.grid, 'onRowMouseOut', '_onRowMouseHover'],
-				[this.grid, 'onCellMouseOver', '_onCellMouseHover'],
-				[this.grid, 'onCellMouseOut', '_onCellMouseHover'],
-				[this.grid, 'setColumns', function(){
+				[m, 'onDelete', '_onDelete'],
+				[m, 'onNew', '_onNew'],
+				[m, 'onSet', '_onSet'],
+				[m, 'onSizeChange', '_onSizeChange'],
+				[g, 'onRowMouseOver', '_onRowMouseOver'],
+				[g, 'onRowMouseOut', '_onRowMouseOver'],
+				[g, 'onCellMouseOver', '_onCellMouseOver'],
+				[g, 'onCellMouseOut', '_onCellMouseOver'],
+				[g, 'setColumns', function(){
 					this.refresh();
 				}]
 			);
-			this.model.when({}, function(){
+			m.when({}, function(){
 				if(!this.rootCount){
-					this.rootCount = this.model.size();
+					this.rootCount = m.size();
 				}
-				this.visualCount = this.grid.tree ? this.grid.tree.getVisualSize(this.rootStart, this.rootCount) : this.rootCount;
+				this.visualCount = g.tree ? g.tree.getVisualSize(this.rootStart, this.rootCount) : this.rootCount;
 				this.loaded.callback();
 			}, this);
 		},
@@ -67,6 +64,7 @@ define([
 					rowId: this.id
 				});
 			},
+
 			visualIndex: function(){
 				return this.grid.body.getRowInfo({
 					rowId: this.id, 
@@ -112,19 +110,21 @@ define([
 		 */
 
 		getRowNode: function(args){
-			return query(this._getRowNodeQuery(args), this.domNode)[0] || null;
+			var req = this._getRowNodeQuery(args);
+			return req ? query(req, this.domNode)[0] || null : null;
 		},
 
 		getRowInfo: function(args){
+			var m = this.model, g = this.grid;
 			if(args.rowId){
-				args.rowIndex = this.model.idToIndex(args.rowId);
-				args.parentId = this.model.treePath(args.rowId).pop();
+				args.rowIndex = m.idToIndex(args.rowId);
+				args.parentId = m.treePath(args.rowId).pop();
 			}
 			if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
-				args.visualIndex = this.grid.tree ? this.grid.tree.getVisualIndexByRowInfo(parentId, rowIndex, this.rootStart) : args.rowIndex - this.rootStart;
+				args.visualIndex = g.tree ? g.tree.getVisualIndexByRowInfo(parentId, rowIndex, this.rootStart) : args.rowIndex - this.rootStart;
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
-				if(this.grid.tree){
-					var info = this.grid.tree.getRowInfoByVisualIndex(args.visualIndex, this.rootStart);
+				if(g.tree){
+					var info = g.tree.getRowInfoByVisualIndex(args.visualIndex, this.rootStart);
 					args.rowIndex = info.start;
 					args.parentId = info.parentId;
 				}else{
@@ -133,7 +133,7 @@ define([
 			}else{
 				return args;
 			}
-			args.rowId = args.rowId || this.model.indexToId(args.rowIndex, args.parentId);
+			args.rowId = args.rowId || m.indexToId(args.rowIndex, args.parentId);
 			return args;
 		},
 
@@ -205,9 +205,9 @@ define([
 		},
 
 		refreshCell: function(rowVisualIndex, columnIndex){
-			var d = new Deferred(),
-				col = this.grid._columns[columnIndex],
-				isFocusArea = this.grid.focus && (this.grid.focus.currentArea() === 'body');
+			var d = new Deferred(), m = this.model, g = this.grid,
+				col = g._columns[columnIndex],
+				isFocusArea = g.focus && (g.focus.currentArea() === 'body');
 			if(col){
 				var cellNode = this.getCellNode({
 						visualIndex: rowVisualIndex,
@@ -215,16 +215,16 @@ define([
 					});
 				if(cellNode){
 					var rowCache, rowInfo = this.getRowInfo({visualIndex: rowVisualIndex});
-					this.model.when({
+					m.when({
 						start: rowInfo.rowIndex,
 						count: 1,
 						parentId: rowInfo.parentId
 					}, function(){
-						rowCache = this.model.byIndex(rowInfo.rowIndex, rowInfo.parentId);
+						rowCache = m.byIndex(rowInfo.rowIndex, rowInfo.parentId);
 						if(rowCache){
-							rowInfo.rowId = this.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+							rowInfo.rowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
 							this.onBeforeCell(cellNode, rowInfo, col, rowCache);
-							var isPadding = this.grid.tree && rowCache.data[col.id] === undefined;
+							var isPadding = g.tree && rowCache.data[col.id] === undefined;
 							cellNode.innerHTML = this._buildCellContent(col, rowInfo, rowCache.data, isPadding);
 							this.onAfterCell(cellNode, rowInfo, col, rowCache);
 						}
@@ -239,16 +239,18 @@ define([
 		},
 		
 		//Package--------------------------------------------------------------------------------
-		updateRootRange: function(start, count){
+		updateRootRange: function(start, count, noEvt){
 			var rootRangeChange = this.rootStart !== start || this.rootCount !== count;
 			this.rootStart = start;
 			this.rootCount = count;
 			var oldCount = this.visualCount;
 			this.visualCount = this.grid.tree ? this.grid.tree.getVisualSize(start, count) : count;
 			if(rootRangeChange){
-				this.domNode.innerHTML = "";
-				this.renderStart = this.renderCount = 0;
-				this.onRootRangeChange(start, count);
+				if(!noEvt){
+					this.domNode.innerHTML = "";
+					this.renderStart = this.renderCount = 0;
+					this.onRootRangeChange(start, count);
+				}
 			}else if(oldCount !== this.visualCount){
 				//Remove all the nodes that are beyond visual range
 				var node = this.getRowNode({visualIndex: this.visualCount});
@@ -267,35 +269,38 @@ define([
 		},
 	
 		renderRows: function(start, count, position/*?top|bottom*/){
-			var d, _this = this, str = '', uncachedRows = [], renderedRows = [];
+			var d, g = this.grid, _this = this, str = '', uncachedRows = [], 
+				renderedRows = [], nd = this.domNode;
 			if(count > 0){
+				g.emptyNode.innerHTML = '';
 				str = this._buildRows(start, count, uncachedRows, renderedRows);
-			}
-			if(count > 0 && position === 'top'){
-				this.renderCount += this.renderStart - start;
-				this.renderStart = start;
-				html.place(str, this.domNode, 'first');
-			}else if(count > 0 && position === 'bottom'){
-				this.renderCount = start + count - this.renderStart;
-				html.place(str, this.domNode, 'last');
-			}else{
-				this.renderStart = start;
-				this.renderCount = count;
-				var nd = this.domNode;
-				nd.scrollTop = 0;
-				nd.innerHTML = str;
-				if(!str){
-					this.grid.mainNode.appendChild(this.emptyNode);
+				if(position === 'top'){
+					this.renderCount += this.renderStart - start;
+					this.renderStart = start;
+					html.place(str, this.domNode, 'first');
+				}else if(position === 'bottom'){
+					this.renderCount = start + count - this.renderStart;
+					html.place(str, this.domNode, 'last');
+				}else{
+					this.renderStart = start;
+					this.renderCount = count;
+					nd.scrollTop = 0;
+					nd.innerHTML = str;
+					g.emptyNode.innerHTML = str ? "" : nls.emptyInfo;
+					this.model.free();
 				}
-				this.model.free();
+				for(var i = 0, len = renderedRows.length; i < len; ++i){
+					this.onAfterRow.apply(this, renderedRows[i]);
+				}
+				d = this._buildUncachedRows(uncachedRows);
+				Deferred.when(d, function(){
+					_this.onRender(start, count);
+				});
+			}else if(!{top: 1, bottom: 1}[position]){
+				nd.scrollTop = 0;
+				nd.innerHTML = '';
+				g.emptyNode.innerHTML = nls.emptyInfo;
 			}
-			for(var i = 0, len = renderedRows.length; i < len; ++i){
-				this.onAfterRow.apply(this, renderedRows[i]);
-			}
-			d = this._buildUncachedRows(uncachedRows);
-			Deferred.when(d, function(){
-				_this.onRender(start, count);
-			});
 		},
 	
 		unrenderRows: function(count, preOrPost){
@@ -353,21 +358,22 @@ define([
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){
-			var i, end = start + count, s = [];
+			var i, end = start + count, s = [], m = this.model;
 			for(i = start; i < end; ++i){
 				var rowInfo = this.getRowInfo({visualIndex: i}),
-					rowCache = this.model.byIndex(rowInfo.rowIndex, rowInfo.parentId);
+					rowCache = m.byIndex(rowInfo.rowIndex, rowInfo.parentId);
+				s.push('<div class="dojoxGridxRow ', i % 2 ? 'dojoxGridxRowOdd' : '',
+					'" role="row" visualindex="', i);
 				if(rowCache){
-					s.push('<div class="dojoxGridxRow" role="row" visualindex="', i, 
-						'" rowid="', rowInfo.rowId,
+					m.keep(rowInfo.rowId);
+					s.push('" rowid="', rowInfo.rowId,
 						'" rowindex="', rowInfo.rowIndex,
 						'" parentid="', rowInfo.parentId, 
 						'">', this._buildCells(rowCache.data, rowInfo),
 					'</div>');
 					renderedRows.push([rowInfo, rowCache]);
 				}else{
-					s.push('<div class="dojoxGridxRow" role="row" visualindex="', i, 
-						'"><div class="dojoxGridxRowDummy"></div></div>');
+					s.push('"><div class="dojoxGridxRowDummy"></div></div>');
 					rowInfo.start = rowInfo.rowIndex;
 					rowInfo.count = 1;
 					uncachedRows.push(rowInfo);
@@ -377,7 +383,6 @@ define([
 		},
 
 		_buildUncachedRows: function(uncachedRows){
-			window.___ = 0;
 			return uncachedRows.length && this.model.when(uncachedRows, function(){
 				for(var i = 0, len = uncachedRows.length; i < len; ++i){
 					this._buildRowContent(uncachedRows[i]);
@@ -386,20 +391,20 @@ define([
 		},
 	
 		_buildRowContent: function(rowInfo){
-			var rowNode = query('[visualindex="' + rowInfo.visualIndex + '"]', this.domNode)[0];
+			var m = this.model, rowNode = query('[visualindex="' + rowInfo.visualIndex + '"]', this.domNode)[0];
 			if(rowNode){
-				var rowCache = this.model.byIndex(rowInfo.rowIndex, rowInfo.parentId);
+				var rowCache = m.byIndex(rowInfo.rowIndex, rowInfo.parentId);
 				if(rowCache){
-					rowInfo.rowId = this.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-					this.model.keep(rowInfo.rowId);
-					var t1 = new Date().getTime();
+					rowInfo.rowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+					m.keep(rowInfo.rowId);
 					rowNode.setAttribute('rowid', rowInfo.rowId);
 					rowNode.setAttribute('rowindex', rowInfo.rowIndex);
 					rowNode.setAttribute('parentid', rowInfo.parentId || '');
 					var str = this._buildCells(rowCache.data, rowInfo);
 					rowNode.innerHTML = str;
-					window.___ += new Date().getTime() - t1;
 					this.onAfterRow(rowInfo, rowCache);
+				}else{
+					console.error('Row is not in cache:', rowInfo.rowIndex);
 				}
 			}
 		},
@@ -490,9 +495,8 @@ define([
 		_onSet: function(id, index, rowCache){
 			if(this.autoUpdate){
 				var rowNode = this.getRowNode({rowId: id});
-				if(rowNode){
+				if(rowNode && rowCache){
 					var rowInfo = this.getRowInfo({rowId: id, rowIndex: index});
-//                    this.onBeforeRow(rowInfo, rowCache);
 					rowNode.innerHTML = this._buildCells(rowCache.data, rowInfo);
 					this.onAfterRow(rowInfo, rowCache);
 					this.onSet(id, index, rowCache);
@@ -502,45 +506,49 @@ define([
 		},
 	
 		_onNew: function(id, index, rowCache){
-			if(this.autoUpdate && this.start + this.count === this.model.size()){
-				//The last row is shown, so the new row should be added.
-				this.renderRows(this.start + this.count, 1, "bottom");
-				this.onNew(id, index, rowCache);
-				this.onRender(index, 1);
-			}
+			//don't know what to do here...
 		},
 	
 		_onDelete: function(id){
 			if(this.autoUpdate){
 				var node = this.getRowNode({rowId: id});
 				if(node){
-					var sibling, index, count = 0;
+					var sibling, index, vindex, count = 0;
 					for(sibling = node; sibling; sibling = sibling.nextSibling){
 						index = parseInt(sibling.getAttribute('rowindex'), 10);
 						sibling.setAttribute('rowindex', index - 1);
+						vindex = parseInt(sibling.getAttribute('visualindex'), 10);
+						sibling.setAttribute('visualindex', vindex - 1);
 						++count;
 					}
 					html.destroy(node);
+					if(this.autoChangeSize && this.rootStart === 0){
+						this._deleted = 1;
+						this.updateRootRange(0, this.rootCount - 1, 1);
+					}
 					this.onDelete(id, index);
 					this.onRender(index, count);
 				}
 			}
 		},
 	
-		_onSizeChange: function(size, oldSize){
-			if(this.autoChangeSize && this.rootStart === 0 && this.rootCount === oldSize){
-				this.updateRootRange(0, size);
+		_onSizeChange: function(size, oldSize, reason){
+			if(this.autoChangeSize && this.rootStart === 0 && (this.rootCount === oldSize || oldSize < 0)){
+				if(!this._deleted){
+					this.updateRootRange(0, size);
+				}
 			}
+			this._deleted = 0;
 		},
 		
 		//-------------------------------------------------------------------------------------
-		_onRowMouseHover: function(e){
+		_onRowMouseOver: function(e){
 			var rowNode = this.getRowNode({rowId: e.rowId});
-			html[e.type == 'mouseout' ? 'removeClass' : 'addClass'](rowNode, "dojoxGridxRowOver");
+			html.toggleClass(rowNode, 'dojoxGridxRowOver', e.type != 'mouseout');
 		},
 		
-		_onCellMouseHover: function(e){
-			html[e.type == 'mouseout' ? 'removeClass' : 'addClass'](e.cellNode, "dojoxGridxCellOver");
+		_onCellMouseOver: function(e){
+			html.toggleClass(e.cellNode, 'dojoxGridxCellOver', e.type != 'mouseout');
 		},
 	
 		//Focus------------------------------------------------------------------------------------------
@@ -579,6 +587,7 @@ define([
 						this._focusCell();
 					}
 				});
+				this.connect(this.domNode, 'onkeypress', '_onKeyScroll');
 				
 				if(grid.hScroller){
 					this.connect(this.grid.bodyNode, 'onscroll', function(){
@@ -624,12 +633,11 @@ define([
 			if(rowStep || colStep){
 				//Prevent scrolling the whole page.
 				event.stop(evt);
-				var r, c;
+				var r, c, _this = this;
 				r = this._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= this.visualCount ? this.visualCount - 1 : r);
 				c = this._focusCellCol + colStep;
 				c = c < 0 ? 0 : (c >= this.grid._columns.length ? this.grid._columns.length - 1 : c);
-				var _this = this;
 				this.grid.vScroller.scrollToRow(r).then(function(){
 					_this._focusCell(null, r, c);
 					_this.onMoveToCell(r, c, evt);
@@ -683,6 +691,45 @@ define([
 				return this._focusCell(null, visualIndex, colIndex);
 			}
 			return false;
+		},
+		
+		// keyboard scroll support
+		_onKeyScroll: function(evt){
+			if(this.grid.vScroller){
+				var g = this.grid, s = g.vScroller, 
+					clientHeight = s.stubNode.clientHeight,
+					bodyHeight = g.bodyNode.offsetHeight;
+				var focusCell = function(){
+					if(g.focus){
+						this._focusCellRow = parseInt(query('.dojoxGridxRow', g.bodyNode)[0].getAttribute('visualIndex'), 10);
+						// g.focus.focusArea('body', true);
+					}
+				}
+				if(evt.keyCode == keys.HOME){
+					s.domNode.scrollTop = 0;
+					this._focusCellRow = 0;
+				}
+				if(evt.keyCode == keys.END){
+					s.domNode.scrollTop = clientHeight - bodyHeight;
+					this._focusCellRow = this.visualCount - 1;
+				}
+				if(evt.keyCode == keys.PAGE_UP){
+					console.log(this.renderStart, ' ; ', this.renderCount);
+					s.scrollToRow(Math.max(this.renderStart - this.renderCount, 0), true);
+					this._focusCellRow = Math.max(this.renderStart - this.renderCount, 0);
+//					console.log(this.renderStart, ' ; ', this.renderCount);
+//					s.domNode.scrollTop = Math.max(0, s.domNode.scrollTop - bodyHeight);
+//					this._focusCellRow = Math.max(0, this.renderStart - 1);
+				}
+				if(evt.keyCode == keys.PAGE_DOWN){
+					console.log(this.renderStart, ' ; ', this.renderCount);
+					s.scrollToRow(Math.min(this.visualCount - 1, this.renderStart + this.renderCount), true);
+					this._focusCellRow = Math.min(this.visualCount - 1, this.renderStart + this.renderCount);;
+//					console.log(this.renderStart, ' ; ', this.renderCount);
+//					s.domNode.scrollTop = Math.min(clientHeight - bodyHeight, s.domNode.scrollTop + bodyHeight);
+//					this._focusCellRow = Math.min(this.visualCount - 1, this.renderStart + this.renderCount);
+				}
+			}
 		}
 	}));
 });

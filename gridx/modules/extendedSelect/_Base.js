@@ -53,28 +53,20 @@ define([
 
 		holdingShift: false,
 
-        selectById: function(){
+        selectById: function(/* id */){
 			return this._subMark('_markById', arguments, true);
         },
 
-		deselectById: function(){
+		deselectById: function(/* id */){
 			return this._subMark('_markById', arguments, false);
 		},
 
-		selectByIndex: function(){
+		selectByIndex: function(/* start, end */){
 			return this._subMark('_markByIndex', arguments, true);
 		},
 
-		deselectByIndex: function(){
+		deselectByIndex: function(/* start, end */){
 			return this._subMark('_markByIndex', arguments, false);
-		},
-
-		selectAll: function(){
-			return this._subMark('_markAll', arguments, true);
-		},
-
-		clear: function(){
-			return this._subMark('_markAll', arguments, false);
 		},
 
 		onSelectionChange: function(newSelectedIds, oldSelectedIds){

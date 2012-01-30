@@ -1,15 +1,16 @@
 require([
 	'dojo/date/locale',
+	'dijit/form/TextBox',
 	'dijit/form/DateTextBox',
 	'dijit/form/TimeTextBox',
 	'dijit/form/NumberTextBox',
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(locale, DateTextBox, TimeTextBox, NumberTextBox,
+], function(locale, TextBox, DateTextBox, TimeTextBox, NumberTextBox,
 	Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	var getDate = function(d){
@@ -91,7 +92,7 @@ require([
 		alert(grid.edit.isEditing('2', '3'));
 	}
 	window.setEditor3 = function(){
-		grid.edit.setEditor(10, DateTextBox);
+		grid.edit.setEditor(4, TextBox);
 	}
 
 	//Test buttons
@@ -103,7 +104,7 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: applyEdit2_3">Apply edit cell(2,3)</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: cancelEdit2_3">Cancel edit cell(2,3)</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: isEditing2_3">Is cell(2,3) editing</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Date" column\'s editor to a DateTextBox</div><br/>'
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Year" column\'s editor to a TextBox</div><br/>'
 	].join(''));
 
 	tp.startup();

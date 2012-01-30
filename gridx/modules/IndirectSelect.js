@@ -10,7 +10,7 @@ define([
 	"./RowHeader"
 ], function(declare, array, query, lang, html, Deferred, _Module, util){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'indirectSelect',
 
@@ -35,7 +35,7 @@ define([
 					}
 				}]
 			);
-			if(g.select.row.selectAll){
+			if(g.select.row.selectByIndex){
 				g.rowHeader.headerProvider = lang.hitch(this, this._createSelectAllBox);
 				if(focus){
 					this._initFocus();

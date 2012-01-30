@@ -1,33 +1,17 @@
-/* base theme begin */
-@import url('../common.css');
 
-/* Single file modules */
-@import url('../Header.css');
-@import url('../Body.css');
-@import url('../VScroller.css');
-@import url('../HScroller.css');
-@import url('../ColumnResizer.css');
-@import url('../SingleSort.css');
-@import url('../ColumnLock.css');
-@import url('../NestedSorting.css');
-@import url('../PaginationBar.css');
-@import url('../CellDijit.css');
+@import url('../basic.css');
+@import url('../sort.css');
+@import url('../lock.css');
 @import url('../Tree.css');
 @import url('../Dod.css');
-@import url('../RowHeader.css');
-@import url('../IndirectSelection.css');
-
-/* Directories */
-@import url('../filter.css');
 @import url('../select.css');
+@import url('../bar.css');
 @import url('../dnd.css');
-/* base theme end */
+@import url('../pagination.css');
 
-@import url('common.css');
-@import url('Header.css');
-@import url('Body.css');
+@import url('basic.css');
 @import url('select.css');
-
+@import url('pagination.css');
 
 /*Other*/
 @import url('../../../dojox/html/resources/ellipsis.css');

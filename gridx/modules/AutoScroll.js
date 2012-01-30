@@ -6,7 +6,7 @@ define([
 	"../core/_Module"
 ], function(declare, html, lang, win, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 
 		name: 'autoScroll',

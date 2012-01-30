@@ -2,17 +2,18 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"./_Base",
-	"../../core/model/Marker"
-], function(declare, lang, _Base, Marker){
+	"../../core/model/extensions/Mark"
+], function(declare, lang, _Base, Mark){
 
 	return declare(_Base, {
-		modelExtensions: [Marker],
+		modelExtensions: [Mark],
 
 		selectById: function(rowId, columnId){
 			// summary:
 			//		Select a cell by its id.
 			if(this.arg('enabled')){
 				this.model.markById(rowId, true, this._getMarkType(columnId));
+				this.model.when();
 			}
 		},
 		
@@ -21,6 +22,7 @@ define([
 			//		Deselect a cell by its id.
 			if(this.arg('enabled')){
 				this.model.markById(rowId, false, this._getMarkType(columnId));
+				this.model.when();
 			}
 		},
 		

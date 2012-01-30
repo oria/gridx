@@ -9,7 +9,7 @@ define([
 	"../util"
 ], function(declare, query, array, lang, html, keys, _Module, util){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'rowHeader',
 
@@ -32,6 +32,12 @@ define([
 			this.bodyNode = html.create('div', {
 				'class': 'dojoxGridxRowHeaderBody'
 			});
+		},
+
+		destroy: function(){
+			this.inherited(arguments);
+			html.destroy(this.headerNode);
+			html.destroy(this.bodyNode);
 		},
 
 		preload: function(){

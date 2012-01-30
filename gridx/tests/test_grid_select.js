@@ -1,7 +1,7 @@
 require([
 	'dojo',
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
@@ -39,13 +39,13 @@ require([
 		grid.select.row.deselectById(5);
 	};
 	rowIsSelected = function(){
-		console.log('row 5 selected: ', grid.select.row.isSelected(5));
+		alert('row 5 selected: ' + grid.select.row.isSelected(5));
 	};
 	rowClear = function(){
 		grid.select.row.clear();
 	};
 	rowGetSelected = function(){
-		console.log('selected rows: ', grid.select.row.getSelected());
+		alert('selected rows: ' + grid.select.row.getSelected());
 	};
 	columnSelectById = function(){
 		grid.select.column.selectById('Name');
@@ -54,13 +54,13 @@ require([
 		grid.select.column.deselectById('Name');
 	};
 	columnIsSelected = function(){
-		console.log('column Name selected: ', grid.select.column.isSelected('Name'));
+		alert('column Name selected: ' + grid.select.column.isSelected('Name'));
 	};
 	columnClear = function(){
 		grid.select.column.clear();
 	};
 	columnGetSelected = function(){
-		console.log('selected columns: ', grid.select.column.getSelected());
+		alert('selected columns: ' + grid.select.column.getSelected());
 	};
 	cellSelectById = function(){
 		grid.select.cell.selectById(4, 'Album');
@@ -69,13 +69,13 @@ require([
 		grid.select.cell.deselectById(4, 'Album');
 	};
 	cellIsSelected = function(){
-		console.log('cell 5 selected: ', grid.select.cell.isSelected(4, 'Album'));
+		alert('cell 5 selected: ' + grid.select.cell.isSelected(4, 'Album'));
 	};
 	cellClear = function(){
 		grid.select.cell.clear();
 	};
 	cellGetSelected = function(){
-		console.log('selected cells: ', grid.select.cell.getSelected());
+		alert('selected cells: ' + grid.select.cell.getSelected());
 	};
 	
 	//Test buttons

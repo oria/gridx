@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/XQueryReadStore',
 	'gridx/tests/support/modules',

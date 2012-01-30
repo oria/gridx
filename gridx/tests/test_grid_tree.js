@@ -1,20 +1,31 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncTreeCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/TreeColumnarTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
 ], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
 
+	var store = storeFactory({
+		dataSource: dataSource, 
+		maxLevel: 3,
+		maxChildrenCount: 10
+	});
+
+	store.hasChildren = function(id, item){
+		return item && store.getValues(item, 'children').length;
+	};
+
+	store.getChildren = function(item){
+		console.log('getChildren:', item);
+		return store.getValues(item, 'children');
+	};
+
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
-		store: storeFactory({
-			dataSource: dataSource, 
-			maxLevel: 3,
-			maxChildrenCount: 10
-		}),
+		store: store,
 		structure: dataSource.layouts[0],
 		modules: [
 			mods.Focus,

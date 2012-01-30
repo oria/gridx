@@ -1,12 +1,11 @@
 require([
-	'dojo',
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(dojo, Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
 	
 	var structure = [
 		{ field: "id", name:"Index", dataType:"number"},
@@ -25,20 +24,23 @@ require([
 
 	grid = new Grid({
 		id: 'grid',
+		cacheClass: Cache,
 		store: storeFactory({
 			dataSource: dataSource,
 			size: 100
 		}),
 		structure: structure,
-		cacheClass: Cache,
+		baseSort: [{attribute: 'Album', descending: true}],
 		modules: [
 			modules.VirtualVScroller,
+			modules.ColumnResizer,
+			modules.Focus,
 			{
 				moduleClass: modules.SingleSort,
-				preSort: {colId: '2', descending: true}
+				preSort:{colId: '3', descending: true}
 			}
 		],
-		modelExtensions: [modules.FormatSorter]
+		modelExtensions: [modules.FormatSort]
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();

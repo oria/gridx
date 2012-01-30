@@ -73,7 +73,7 @@ define([
 		}
 	});
 	
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'cellDijit',
 	

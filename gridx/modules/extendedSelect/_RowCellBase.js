@@ -3,11 +3,11 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/query",
 	"./_Base",
-	"../../core/model/Marker"
-], function(declare, lang, query, _Base, Marker){
+	"../../core/model/extensions/Mark"
+], function(declare, lang, query, _Base, Mark){
 
 	return declare(_Base, {
-		modelExtensions: [Marker],
+		modelExtensions: [Mark],
 
 		_getRowIdByVisualIndex: function(visualIndex){
 			var node = query('[visualindex="' + visualIndex + '"]', this.grid.bodyNode)[0];

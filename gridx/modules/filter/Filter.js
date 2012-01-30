@@ -1,41 +1,20 @@
 define([
-	//"dojo/_base/kernel",
 	"../../core/_Module",
-	"../../core/model/Mapper",
+	"../../core/model/extensions/ClientFilter",
+	"../../core/model/extensions/Query",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang"
-], function(_Module, Mapper, declare, array, lang){
+], function(_Module, ClientFilter, Query, declare, array, lang){
 
-	var module = _Module.registerModule(
+	var module = _Module.register(
 	declare(_Module, {
-		// summary
-		//		Filter Expression:
-		//		A filter expression is just a function returning TRUE/FALSE.
-		//		Here provides a set of useful expression tools to help construct complicated filter expressions for grid.
-		//		These expressions are not bound to any specific grid instance, so they can be directly reused for many grids.
-		//
-		//		For example: 
-		//			var expr = and(
-		//					and(
-		//						startWith(column('colA', 'string'), value('123abc', 'string')),
-		//						greater(column('colB', 'number'), value(456, 'number'))
-		//					),
-		//					or(
-		//						lessEqual(column('colC', 'number'), value(89, 'number')),
-		//						not(
-		//							endWith(column('colD', 'string'), value('xyz', 'string'))
-		//						)
-		//					)
-		//				);
+		// summary:
+		//		This module makes it possible for user to set arbitrary filter condition to grid.
+		
 		name: 'filter',
-		serverMode: false,
-		setupFilterQuery: function(obj){
-			return obj;
-		},
 		
-		
-		modelExtensions: [Mapper],
+		modelExtensions: [ClientFilter, Query],
 	
 		getAPIPath: function(){
 			return {
@@ -44,11 +23,16 @@ define([
 		},
 
 		constructor: function(){
-			this.serverMode = this.arg('serverMode');
 			this.setFilter(this.arg('preCondition'), true);
 		},
 	
 		//Public---------------------------------------------------------
+		serverMode: false,
+
+		setupFilterQuery: function(obj){
+			return obj;
+		},
+		
 		setFilter: function(/* Function|null */checker, /* Boolean? */skipUpdateBody){
 			// summary:
 			//		Apply function *checker* as the filter condition to filter every row.
@@ -65,7 +49,7 @@ define([
 			//		If *checker* is not a function, or null, should not throw.
 			if(checker != this._checker){
 				this._checker = checker;
-				if(this.serverMode){
+				if(this.arg('serverMode')){
 					console.debug('filter: ', checker.expr);
 					this.model.query(this.setupFilterQuery(checker.expr));
 				}else{
@@ -128,9 +112,24 @@ define([
 		});
 	};
 	
-	/*
-	
-	*/
+// Filter Expression:
+//		A filter expression is just a function returning TRUE/FALSE.
+//		Here provides a set of useful expression tools to help construct complicated filter expressions for grid.
+//		These expressions are not bound to any specific grid instance, so they can be directly reused for many grids.
+//
+//		For example: 
+//			var expr = and(
+//					and(
+//						startWith(column('colA', 'string'), value('123abc', 'string')),
+//						greater(column('colB', 'number'), value(456, 'number'))
+//					),
+//					or(
+//						lessEqual(column('colC', 'number'), value(89, 'number')),
+//						not(
+//							endWith(column('colD', 'string'), value('xyz', 'string'))
+//						)
+//					)
+//				);
 	
 	
 	//Data

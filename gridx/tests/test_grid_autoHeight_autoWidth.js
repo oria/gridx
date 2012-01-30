@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
@@ -19,6 +19,7 @@ require([
 		autoWidth: true,
 		modules: [
 			mods.Focus,
+			mods.ColumnResizer,
 //            mods.VirtualVScroller,
 			mods.PaginationBar
 		]

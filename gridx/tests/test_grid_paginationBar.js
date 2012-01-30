@@ -1,7 +1,7 @@
 require([
 	'dojo',
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
@@ -20,18 +20,13 @@ require([
 		modules: [
 			{
 				moduleClass: modules.Pagination,
-				initialPageSize: 25,
+				initialPageSize: 5,
 				initialPage: 3
 			},
 			{
 				moduleClass: modules.PaginationBar,
-				pageSizes: [50, 100, 200, 300, 0],
-				visibleSteppers: 6,
-				sizeSeparator: '|',
-				//description: false,
-				//sizeSwitch: false,
-				//stepper: false,
-				//gotoButton: false,
+				pageSizes: [5, 10, 20, 30, 0],
+				visibleSteppers: 5,
 				position: 'bottom'
 			},
 			modules.Focus,
@@ -51,8 +46,6 @@ require([
 	].join(''));
 
 	tp.addTestSet('Pagination Bar Functions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testHide">Hide the pagination bar</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testShow">Show the pagination bar</div><br/>',
 		'<div id="a" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true, onChange: toggleDescription"></div><label for="a">Toggle Description</label><br/>',
 		'<div id="b" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true, onChange: toggleSizeSwitch"></div><label for="b">Toggle SizeSwitch</label><br/>',
 		'<div id="c" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true, onChange: togglePageStepper"></div><label for="c">Toggle PageStepper</label><br/>',
@@ -70,12 +63,6 @@ function testSetPageSize(){
 }
 function testRefresh(){
 	grid.paginationBar.refresh();
-}
-function testHide(){
-	grid.paginationBar.hide();
-}
-function testShow(){
-	grid.paginationBar.show();
 }
 function toggleDescription(){
 	grid.paginationBar.description = dijit.byId('a').get('checked');

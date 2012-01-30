@@ -2,10 +2,11 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/keys",
+	"../core/model/extensions/Sort",
 	"../core/_Module"
-], function(declare, lang, keys, _Module){
+], function(declare, lang, keys, Sort, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'sort',
 
@@ -13,6 +14,8 @@ define([
 
 		//Header has required this
 		required: ['vLayout'],
+
+		modelExtensions: [Sort],
 		
 		getAPIPath: function(){
 			return {

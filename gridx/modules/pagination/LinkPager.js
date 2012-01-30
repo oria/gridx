@@ -126,7 +126,7 @@ define([
 						mod.arg('pageIndexWaiTemplate', this.pageIndexWai),
 						mod.arg('pageIndexTemplate', this.pageIndex)
 					],
-					ellipsis = '<span class="dojoxGridxPagerStepperEllipsis">...</span>',
+					ellipsis = '<span class="dojoxGridxPagerStepperEllipsis">&hellip;</span>',
 					stepper = function(page){
 						return ['<span class="dojoxGridxPagerStepperBtn dojoxGridxPagerPage ',
 							currentPage == page ? 'dojoxGridxPagerStepperBtnActive' : '',
@@ -145,10 +145,10 @@ define([
 					}else if(firstPage >= pageCount - count){
 						firstPage = pageCount - count;
 					}
-					if(firstPage == 2){
-						firstPage = 1;
-					}
-					if(lastPage >= pageCount - 1 || lastPage == pageCount - 3){
+//                    if(firstPage == 2){
+//                        firstPage = 1;
+//                    }
+					if(lastPage >= pageCount - 1/* || lastPage == pageCount - 3*/){
 						lastPage = pageCount - 2;
 					}
 					sb.push(stepper(0));

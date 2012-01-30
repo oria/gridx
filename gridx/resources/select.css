@@ -14,3 +14,18 @@
 .dojoxGridxCellSelected {
 	background-color: #BFD6EB;
 }
+
+
+/*IndirectSelection*/
+th.dojoxGridxRowHeaderHeaderCell,
+.dojoxGridxRowHeaderCell {
+	text-align: center;
+}
+
+.dojoxGridxIndirectSelectionCheckBoxInner {
+	display: none;
+}
+
+.dijit_a11y .dojoxGridxIndirectSelectionCheckBoxInner {
+	display: inline;
+}

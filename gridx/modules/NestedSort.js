@@ -1,18 +1,20 @@
 define([
 	"dojo/_base/kernel",
 	"../core/_Module",
+	"../core/model/extensions/Sort",
 	"dojo/i18n!../nls/NestedSorting",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/_base/event",
 	"dojo/query"
-], function(dojo, _Module, locale){
+], function(dojo, _Module, Sort, locale){
 	
 	return dojo.declare(_Module, {
 		name: 'nestedSort',
 		forced: ['header'],
 		required: ['vLayout'],
+		modelExtensions: [Sort],
 		_a11yText: {
 			'dojoxGridDescending'   : '&#9662;',
 			'dojoxGridAscending'    : '&#9652;',
@@ -107,7 +109,7 @@ define([
 		},
 		
 		_initHeader: function(){
-			console.log('initHeader');
+			//console.log('initHeader');
 			var table = this.grid.header.domNode.firstChild.firstChild;
 			var tds = table.rows[0].cells;
 			dojo.forEach(table.rows[0].cells, function(td){
@@ -309,7 +311,7 @@ define([
 		_focusRegion: function(region){
 			// summary
 			//		Focus the given region
-			console.debug(region);
+			//console.debug(region);
 			if(!region){return;}
 			region.focus();
 			var header =this._getRegionHeader(region);

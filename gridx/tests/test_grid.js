@@ -1,30 +1,53 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
 ], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	var columnSetIdx = 4;
 
-	grid = new Grid({
-		id: 'grid',
-		cacheClass: Cache,
-		store: storeFactory({
-			dataSource: dataSource, 
-			size: 200
-		}),
-		structure: dataSource.layouts[columnSetIdx],
-		modules:[
-			modules.SingleSort,
-			modules.SelectRow
-		],
-		selectRowTriggerOnCell: true
-	});
-	grid.placeAt('gridContainer');
-	grid.startup();
+	destroy = function(){
+		if(window.grid){
+			grid.destroy();
+			window.grid = undefined;
+		}
+	};
+
+	create = function(){
+		if(!window.grid){
+			var store = storeFactory({
+				dataSource: dataSource, 
+				size: 200
+			}); 
+			var layout = dataSource.layouts[columnSetIdx];
+			var t1 = new Date().getTime();
+			grid = new Grid({
+				id: 'grid',
+				cacheClass: Cache,
+				cacheSize: 0,
+				store: store,
+				structure: layout,
+				modules:[
+//                    modules.SingleSort,
+//                    modules.ExtendedSelectRow,
+//                    modules.IndirectSelect,
+					modules.VirtualVScroller
+				],
+				selectRowTriggerOnCell: true
+			});
+			var t2 = new Date().getTime();
+			grid.placeAt('gridContainer');
+			var t3 = new Date().getTime();
+			grid.startup();
+			var t4 = new Date().getTime();
+			console.log('grid', t2 - t1, t3 - t2, t4 - t3, ' total:', t4 - t1);
+		}
+	};
+
+	create();
 	
 	//Test Functions, must be global
 	setStore = function(){
@@ -40,20 +63,24 @@ require([
 	};
 	var idcnt = 10000;
 	newRow = function(){
-		grid.store.newItem({
+		grid.store.add({
 			id: idcnt++
 		});
 	};
 
 	setRow = function(){
 		var item = grid.row(0).item();
-		grid.store.setValue(item, 'Year', parseInt(Math.random() * 1000 + 1000, 10));
+		item.Year = parseInt(Math.random() * 1000 + 1000, 10);
+//        grid.store.put(item, 'Year', parseInt(Math.random() * 1000 + 1000, 10));
+		grid.store.put(item);
 	};
 
 	deleteRow = function(){
-		var item = grid.row(0).item();
-		grid.store.deleteItem(item);
+		grid.store.remove(grid.row(0).id);
+//        var item = grid.row(0).item();
+//        grid.store.deleteItem(item);
 	};
+
 	//Test buttons
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
@@ -63,7 +90,9 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setStore">Change store</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: newRow">And an empty new row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setRow">Set Year of the first row</div><br/>',
-        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>'
+        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>',
+        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroy">Destroy</div><br/>',
+        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: create">Create</div><br/>'
 	].join(''));
 
 	tp.startup();

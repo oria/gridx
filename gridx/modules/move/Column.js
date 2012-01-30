@@ -3,7 +3,7 @@ define([
 	"../../core/_Module"
 ], function(declare, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'moveColumn',
 		

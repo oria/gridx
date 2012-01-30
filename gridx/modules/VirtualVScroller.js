@@ -11,7 +11,7 @@ define([
 	"../core/_Module"
 ], function(declare, lang, array, html, sniff, event, Deferred, query, VScroller, _Module){
 	
-	return _Module.registerModule(
+	return _Module.register(
 	declare(VScroller, {
 		name: 'vscroller',
 
@@ -179,7 +179,7 @@ define([
 					}
 				}
 				
-				if(start < end){
+				if(typeof start == 'number' && typeof end == 'number'){
 //                    console.debug("render: ", start, end, pos, t, scrollRange);
 					//Only need to render when the range is valid
 					body.renderRows(start, end - start, pos);
@@ -225,8 +225,13 @@ define([
 		},
 	
 		_onRowCountChange: function(){
+			//Row count change is sometimes because of adding/deleting rows, and multiple of these operations might happen
+			//together, so use timeout to reduce render frequency.
 			this._syncHeight();
-			this._doScroll(null, true);
+			if(this._lazyChangeHandle){
+				window.clearTimeout(this._lazyChangeHandle);
+			}
+			this._lazyChangeHandle = window.setTimeout(lang.hitch(this, this._doVirtualScroll, null, true), 0);
 		},
 	
 		_onRootRangeChange: function(){

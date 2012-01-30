@@ -5,7 +5,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, lang, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'moveCell',
 		

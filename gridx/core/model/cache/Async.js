@@ -136,8 +136,9 @@ define([
 		//pageSize: 100,
 		
 		constructor: function(model, args){
-			this.cacheSize = isNumber(args.cacheSize) ? args.cacheSize : -1;
-			this.pageSize = isNumber(args.cacheSize) ? args.cacheSize : 100;
+			var cs = args.cacheSize, ps = args.pageSize;
+			this.cacheSize = isNumber(cs) ? cs : -1;
+			this.pageSize = isNumber(ps) && ps > 0 ? ps : 100;
 		},
 
 		prepare: function(){},
@@ -421,9 +422,9 @@ define([
 			var c = this.cacheSize;
 			if(c < 0){ return; }
 			c += this._keptSize;
-			var p = this._priority, 
+			var p = this._priority,
 				cache = this._cache;
-			console.warn("### Cache size:", p.length, ", Keep size: ", this._keptSize, ", To release: ", p.length - c);
+			//console.warn("### Cache size:", p.length, ", Keep size: ", this._keptSize, ", To release: ", p.length - c);
 			while(p.length > c){
 				var id = p.shift();
 				if(this._kept[id]){

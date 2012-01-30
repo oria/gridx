@@ -22,6 +22,9 @@ define({root:
 
 	description: '${0} - ${1} of ${2} items.',
 	descriptionEmpty: 'Grid is empty.',
+	// OneUI blueprint
+	summary: 'Total: ${0}',
+	summaryWithSelection: 'Total: ${0} Selected: ${1}',
 
 	gotoBtnTitle: 'Go to a specific page',
 	gotoBtnWai: 'Go to a specific page',
@@ -30,6 +33,10 @@ define({root:
 	gotoDialogMainMsg: 'Specify the page number:',
 	gotoDialogPageCount: '(${0} pages)',
 	gotoDialogOKBtn: 'Go',
-	gotoDialogCancelBtn: 'Cancel'
+	gotoDialogCancelBtn: 'Cancel',
+	
+	// for drop down pagination bar
+	pageLabel: 'Page',
+	pageSizeLabel: 'Rows'
 })
 });

@@ -1,14 +1,4 @@
 /* pagination bar */
-.dojoxGridxPager {
-	background: url("images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
-	padding: 3px 9px;
-	border-top: 1px solid #DDDDDD;
-}
-
-.dojoxGridxPagerNodeFocus {
-	border: 1px dotted darkblue;
-}
-
 .dojoxGridxPager table {
 	width: 100%;
 	table-layout: auto;
@@ -22,32 +12,16 @@
 	visibility: visible;
 }
 
-.dojoxGridxPager .dojoxGridxPagerStepper {
-	text-align: right;
-}
-
 .dojoxGridxPagerStepperBtn,	
 .dojoxGridxPagerSizeSwitchBtn {
-	margin: 0 5px;
 	cursor: pointer;
-	color: #5D88AF;
 	display: inline-block;
 	text-align: center;
-}
-
-.dojoxGridxPagerSizeSwitchBtn {
-	margin: 0 7px;
-}
-
-.dojoxGridxPagerStepperBtnHover {
-	text-decoration: underline;
 }
 
 .dojoxGridxPagerStepperBtnActive,
 .dojoxGridxPagerSizeSwitchBtnActive {
 	cursor: default;
-	color: black;
-	font-weight: bold;
 }
 
 .dojoxGridxPagerFirstPage,
@@ -92,10 +66,16 @@
 
 .dojoxGridxPagerDescription {
 	text-align: left;
+	width: 33%;
+}
+
+.dojoxGridxPagerStepper {
+	text-align: center;
+	width: 33%;
 }
 
 .dojoxGridxPagerSizeSwitch {
-	text-align: center;
+	text-align: right;
 }
 
 .dojoxGridxPagerGoto {
@@ -126,5 +106,8 @@
 	padding-left: 5px;
 }
 
-
-
+/*DD*/
+.dojoxGridxPagerStepperWidget,
+.dojoxGridxPagerSizeSwitchWidget {
+	width: 60px;
+}

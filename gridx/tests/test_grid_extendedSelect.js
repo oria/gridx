@@ -3,7 +3,7 @@ require([
 	'dojo/_base/array',
 	'dojo/dom',
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
@@ -21,7 +21,8 @@ grid = new Grid({
 	structure: dataSource.layouts[0],
 	modules: [
 		modules.Focus,
-		modules.IndirectSelect,
+		modules.RowHeader,
+//        modules.IndirectSelect,
 		modules.ExtendedSelectRow,
 		modules.ExtendedSelectColumn,
 		modules.ExtendedSelectCell,

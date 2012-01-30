@@ -1,11 +1,11 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/html",
+	"dojo/dom-geometry",
 	"dojo/DeferredList",
 	"../core/_Module"
-], function(declare, html, DeferredList, _Module){
+], function(declare, domGeometry, DeferredList, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'vLayout',
 
@@ -16,8 +16,8 @@ define([
 		},
 
 		preload: function(){
-			var _this = this;
-			this.connect(this.grid, '_onResizeEnd', function(changeSize, ds){
+			var _this = this, g = this.grid;
+			this.connect(g, '_onResizeEnd', function(changeSize, ds){
 				var d, dl = [];
 				for(d in ds){
 					dl.push(ds[d]);
@@ -26,10 +26,14 @@ define([
 					_this.reLayout();
 				});
 			});
-			if(this.grid.autoHeight){
-				this.batchConnect(
-					[this.grid.body, 'onRender', 'reLayout']
-				);
+			if(g.autoHeight){
+				this.connect(g.body, 'onRender', 'reLayout');
+			}else{
+				this.connect(g, 'setColumns', function(){
+					setTimeout(function(){
+						_this.reLayout();
+					}, 0);
+				});
 			}
 		},
 	
@@ -75,7 +79,7 @@ define([
 			for(hookPoint in this._mods){
 				node = g[hookPoint];
 				if(node){
-					freeHeight += html.marginBox(node).h;	
+					freeHeight += domGeometry.getMarginBox(node).h;	
 				}
 			}
 			this._updateHeight(freeHeight);
@@ -97,7 +101,7 @@ define([
 							node.appendChild(mod[nodeName]);
 						}
 					}
-					freeHeight += html.marginBox(node).h;	
+					freeHeight += domGeometry.getMarginBox(node).h;	
 				}
 			}
 			this._updateHeight(freeHeight);
@@ -107,8 +111,8 @@ define([
 			var g = this.grid;
 			if(g.autoHeight){
 				g.vScroller.loaded.then(function(){
-					var lastRow = g.bodyNode.lastChild;
-					var bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : 0;
+					var lastRow = g.bodyNode.lastChild,
+						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : 0;
 					g.domNode.style.height = (bodyHeight + freeHeight) + 'px';
 					g.mainNode.style.height = bodyHeight + "px";
 				});

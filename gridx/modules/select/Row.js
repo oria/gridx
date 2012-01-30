@@ -8,7 +8,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, html, sniff, keys, _RowCellBase, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_RowCellBase, {
 		name: "selectRow",
 		
@@ -41,6 +41,7 @@ define([
 				array.forEach(model.getMarkedIds(), function(id){
 					model.markById(id, false);
 				});
+				model.when();
 			}
 		},
 		
@@ -84,12 +85,14 @@ define([
 
 		_markById: function(id, toMark){
 			this.model.markById(id, toMark);
+			this.model.when();
 		},
 
 		_onRender: function(start, count){
 			var model = this.model, end = start + count, i, id; 
 			for(i = start; i < end; ++i){
-				id = model.indexToId(i);
+				var idx = this.grid.body.getRowInfo({visualIndex: i}).rowIndex;
+				id = model.indexToId(idx);
 				if(model.isMarked(id)){
 					this._highlight(id, true);
 				}

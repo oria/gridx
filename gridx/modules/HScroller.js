@@ -1,16 +1,16 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/html",
+	"dojo/dom-style",
 	"dojo/_base/sniff",
 	"dojo/_base/Deferred",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, html, sniff, Deferred, metrics, _Module){
-	return _Module.registerModule(
+], function(declare, domStyle, sniff, Deferred, metrics, _Module){
+	return _Module.register(
 	declare(_Module, {
 		name: 'hscroller',
 
-		required: ['vLayout'],
+		required: ['vLayout', 'hLayout'],
 
 		forced: ['header'],
 
@@ -26,9 +26,10 @@ define([
 
 		preload: function(){
 			var g = this.grid;
+			this.container = g.hScrollerNode.parentNode;
 			if(!g.autoWidth){
-				g.vLayout.register(this, 'domNode', 'footerNode', 0);
 				var nd = this.domNode = g.hScrollerNode;
+				g.vLayout.register(this, 'container', 'footerNode', 0);
 				this.stubNode = nd.firstChild;
 				nd.style.display = 'block';
 				this.batchConnect(
@@ -49,7 +50,7 @@ define([
 				);
 				if(sniff('ie') < 7){
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
-					nd.style.height = dojox.html.metrics.getScrollbar().h + 'px';
+					nd.style.height = metrics.getScrollbar().h + 'px';
 				}
 			}
 		},
@@ -62,22 +63,26 @@ define([
 		refresh: function(){
 			//summary:
 			//	Refresh scroller itself to match grid body
-//            var bn = this.grid.bodyNode;
-			var bn = this.grid.header.innerNode;
-			//TODO: It is special for column lock now.
-			var pl = html.style(bn, 'paddingLeft') || 0;
-			var s = this.domNode.style;
-			var ow = bn.offsetWidth;
-			var sw = bn.scrollWidth;
-			var oldDisplay = s.display;
-			var newDisplay = (sw <= ow) ? 'none' : 'block';
-			s.marginLeft = html.style(bn, 'marginLeft') + pl + 'px';
-			s.marginRight = html.style(bn, 'marginRight') + 'px';
-			s.width = ow - pl + 'px';
+			var g = this.grid,
+				ltr = g.isLeftToRight(),
+				marginLead = ltr ? 'marginLeft' : 'marginRight',
+				marginTail = ltr ? 'marginRight' : 'marginLeft',
+				lead = g.hLayout.lead,
+				tail = g.hLayout.tail,
+				width = g.domNode.clientWidth - lead - tail,
+				bn = g.header.innerNode,
+				pl = domStyle.get(bn, 'paddingLeft') || 0,	//TODO: It is special for column lock now.
+				s = this.domNode.style,
+				sw = bn.firstChild.offsetWidth,
+				oldDisplay = s.display,
+				newDisplay = (sw <= width) ? 'none' : 'block';
+			s[marginLead] = lead + pl + 'px';
+			s[marginTail] = tail + 'px';
+			s.width = width - pl + 'px';
 			this.stubNode.style.width = sw - pl + 'px';
 			s.display = newDisplay;
 			if(oldDisplay == 'block' && newDisplay == 'none'){
-				this.grid.vLayout.reLayout();
+				g.vLayout.reLayout();
 			}
 		},
 		
@@ -93,7 +98,6 @@ define([
 		_doScroll: function(rowNode){
 			//summary:
 			//	Sync the grid body with the scroller.
-			
 			var scrollLeft = this.domNode.scrollLeft;
 			this.grid.bodyNode.scrollLeft = scrollLeft;
 			this.grid.onHScroll(scrollLeft);

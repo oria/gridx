@@ -1,13 +1,11 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/TestPane',
-	'gridx/modules/NestedSort',
-	'gridx/modules/VirtualVScroller',
-	'gridx/modules/Focus'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, NestedSort, VirtualVScroller, focus){
+	'gridx/tests/support/modules',
+	'gridx/tests/support/TestPane'
+], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
 
 	grid = new Grid({
 		id: 'grid',
@@ -16,13 +14,14 @@ require([
 			dataSource: dataSource, 
 			size: 100
 		}),
+		baseSort: [{attribute: 'Album', descending: true}],
 		modules: [
-			VirtualVScroller,
+			mods.VirtualVScroller,
+			mods.Focus,
 			{
-				moduleClass: NestedSort,
-				preSort: [{colId: '2', descending: true}, {colId: '4', descending: false}]
-			},
-			focus
+				moduleClass: mods.NestedSort,
+				preSort: [{colId: 'id', descending: true}, {colId: 'Name', descending: false}]
+			}
 		],
 		structure: dataSource.layouts[0]
 	});
@@ -36,7 +35,7 @@ require([
 	tp.addTestSet('Core Functions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testSort">Sort via API</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testClear">Clear sort</div><br/>',
-	].join(''));
+	''].join(''));
 
 	tp.startup();
 });

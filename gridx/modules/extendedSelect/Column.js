@@ -12,7 +12,7 @@ define([
 	"./_Base"
 ], function(declare, array, query, html, lang, Deferred, sniff, mouse, keys, _Module, _Base){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Base, {
 		name: 'selectColumn',
 
@@ -38,6 +38,15 @@ define([
 				return col._selected;
 			}), function(col){
 				return col.id;
+			});
+		},
+
+		clear: function(){
+			query(".dojoxGridxColumnSelected", this.grid.domNode).forEach(function(node){
+				html.removeClass(node, 'dojoxGridxColumnSelected');
+			});
+			array.forEach(this.grid._columns, function(col){
+				col._selected = false;
 			});
 		},
 
@@ -91,27 +100,12 @@ define([
 				}
 			}
 		},
-
-		_markAll: function(args, toSelect){
-			if(toSelect){
-				query(".dojoxGridxCell", this.grid.bodyNode).forEach(function(node){
-					html.addClass(node, 'dojoxGridxColumnSelected');
-				});
-			}else{
-				query(".dojoxGridxColumnSelected", this.grid.domNode).forEach(function(node){
-					html.removeClass(node, 'dojoxGridxColumnSelected');
-				});
-			}
-			array.forEach(this.grid._columns, function(col){
-				col._selected = toSelect;
-			});
-		},
-
+		
 		_init: function(){
 			var g = this.grid;
 			this.batchConnect(
 				[g, 'onHeaderCellMouseDown', function(e){
-					if(mouse.isLeft(e)){
+					if(mouse.isLeft(e) && !html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
 						this._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
@@ -122,7 +116,7 @@ define([
 					this._highlight({column: e.columnIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
-					if(e.keyCode === keys.SPACE){
+					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
 						this._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
 						this._end();
 					}

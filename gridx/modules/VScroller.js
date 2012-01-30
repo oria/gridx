@@ -1,23 +1,23 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
-	"dojo/_base/html",
+//    "dojo/_base/html",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
 	"dojo/query",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, html, event, sniff, query, metrics, _Module){
+], function(declare, Deferred, /*html,*/ event, sniff, query, metrics, _Module){
 	
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'vscroller',
 	
 		required: ['hLayout'],
 
-		forced: ['body', 'vLayout'],
+		forced: ['body', 'vLayout', 'columnWidth'],
 
-		optional: ['pagination', 'header'],
+		optional: ['pagination'],
 	
 		getAPIPath: function(){
 			return {

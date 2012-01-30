@@ -9,7 +9,7 @@ define([
 	"../../core/_Module"
 ], function(declare, query, array, html, sniff, keys, _Base, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Base, {
 		name: "selectColumn",
 
@@ -67,10 +67,12 @@ define([
 		_init: function(){
 			this.batchConnect(
 				[this.grid, 'onHeaderCellClick', function(e){
-					this._select(e.columnId, e.ctrlKey);
+					if(!html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
+						this._select(e.columnId, e.ctrlKey);
+					}
 				}],
 				[this.grid, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
-					if(e.keyCode === keys.SPACE){
+					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
 						this._select(e.columnId, e.ctrlKey);
 					}
 				}]

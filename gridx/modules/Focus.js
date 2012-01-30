@@ -43,7 +43,7 @@ define([
 		};
 	=====*/
 	
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		// summary
 		//		This module controls the TAB sequence of all the UI modules.

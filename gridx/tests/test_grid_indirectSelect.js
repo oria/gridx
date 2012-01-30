@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
@@ -24,8 +24,7 @@ require([
 			modules: [
 				modules.Focus,
 				modules.IndirectSelect,
-				modules.RowHeader,
-				modules.SelectColumn,
+				//modules.RowHeader,
 				modules.VirtualVScroller
 			].concat(mods) 
 		});
@@ -60,7 +59,7 @@ require([
 	createGrid5 = function(){
 		createGrid(mods[5], "IndirectSelection with single-selection (trigger on cell)");
 	};
-	createGrid0();
+	createGrid1();
 	
 	//Test buttons
 	var tp = new TestPane({});

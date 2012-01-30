@@ -21,7 +21,7 @@ define([
 		};
 	};
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_RowCellBase, {
 		name: 'selectCell',
 
@@ -56,6 +56,15 @@ define([
 			return res;
 		},
 
+		clear: function(){
+			query(".dojoxGridxCellSelected", this.grid.bodyNode).forEach(function(node){
+				html.removeClass(node, 'dojoxGridxCellSelected');
+			});
+			array.forEach(this.grid._columns, function(col){
+				this.model.clearMark(this._getMarkType(col.id));
+			}, this);
+		},
+
 		isSelected: function(rowId, columnId){
 			return this.model.isMarked(rowId, this._getMarkType(columnId));
 		},
@@ -82,6 +91,7 @@ define([
 					model.markById(rowId, toSelect, this._getMarkType(colId));
 				}
 			}, this);
+			this.model.when();
 		},
 
 		_markByIndex: function(args, toSelect){
@@ -122,22 +132,6 @@ define([
 						this.model.markByIndex(i, toSelect, this._getMarkType(col.id));
 					}
 				}
-			}, this);
-			return this.model.when();
-		},
-
-		_markAll: function(args, toSelect){
-			if(toSelect){
-				query(".dojoxGridxCell", this.grid.bodyNode).forEach(function(node){
-					html.addClass(node, 'dojoxGridxCellSelected');
-				});
-			}else{
-				query(".dojoxGridxCellSelected", this.grid.bodyNode).forEach(function(node){
-					html.removeClass(node, 'dojoxGridxCellSelected');
-				});
-			}
-			array.forEach(this.grid._columns, function(col){
-				this.model.markAll(toSelect, this._getMarkType(col.id));
 			}, this);
 			return this.model.when();
 		},

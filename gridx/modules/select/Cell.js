@@ -8,7 +8,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, html, sniff, keys, _RowCellBase, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_RowCellBase, {
 		name: "selectCell",
 		
@@ -54,6 +54,7 @@ define([
 						this.model.markById(selected[i], false, markType);
 					}
 				}, this);
+				this.model.when();
 			}
 		},
 		
@@ -108,6 +109,7 @@ define([
 
 		_markById: function(item, toMark){
 			this.model.markById(item[0], toMark, this._getMarkType(item[1]));
+			this.model.when(null);
 		},
 		
 		_onRender: function(start, count){

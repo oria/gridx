@@ -8,7 +8,7 @@ define([
 	"../core/_Module"
 ], function(declare, array, lang, json, unload, cookie, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		// summary:
 		//		Provide a mechanism to persist various grid features when the grid is destroyed,

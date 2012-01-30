@@ -3,13 +3,15 @@ define([
 	"dojo/_base/html",
 	"dojo/_base/sniff",
 	"dojo/_base/window",
+	"dojo/dom-style",
 	"dojo/query",
 	"../core/_Module"
-], function(declare, html, sniff, win, query, _Module){
+], function(declare, html, sniff, win, style, query, _Module){
 	
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'columnResizer',
+		required: ['hscroller'],
 		minWidth: 20,	//in px
 		detectWidth: 5,
 		load: function(args){
@@ -19,8 +21,8 @@ define([
 				[headerInner, 'mousemove', '_mousemove'],
 				[g, 'onHeaderMouseOut', '_mouseout'],
 				[g, 'onHeaderMouseDown', '_mousedown', this, this.name],
-				[body, 'mousemove', '_docMousemove'],
-				[body, 'onmouseup', '_mouseup']
+				[document, 'mousemove', '_docMousemove'],
+				[document, 'onmouseup', '_mouseup']
 			);
 			this.loaded.callback();
 			
@@ -59,7 +61,11 @@ define([
 		onResize: function(/* colId, newWidth, oldWidth */){},
 		
 		_mousemove: function(e){
-			if(this._resizing || !this._getCell(e) || this._ismousedown){
+			var cell = this._getCell(e);
+			if(this._resizing){
+				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
+			}
+			if(this._resizing || !cell || this._ismousedown){
 				return;
 			}
 			this._readyToResize = this._isInResizeRange(e);
@@ -68,6 +74,9 @@ define([
 			flags.onHeaderMouseDown = flags.onHeaderCellMouseDown = this._readyToResize ? this.name : undefined;
 
 			html.toggleClass(win.body(), 'dojoxGridxColumnResizing', this._readyToResize);
+			if(this._readyToResize){
+				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
+			}
 		},
 		_docMousemove: function(e){
 			if(!this._resizing){return;}
@@ -80,14 +89,22 @@ define([
 		},
 		
 		_updateResizerPosition: function(e){
-			var delta = e.pageX - this._startX, cell = this._targetCell;
+			var delta = e.pageX - this._startX, cell = this._targetCell, g = this.grid;
+			var hs = g.hScroller, h = 0;
 			var left = e.pageX - this._gridX;
 			var minWidth = this.arg('minWidth');
 	
 			if(cell.offsetWidth + delta < minWidth){
 				left = this._startX - this._gridX - (cell.offsetWidth - minWidth); 
 			}
-			this._resizer.style.left = left  + 'px';
+			var n = hs && hs.container.offsetHeight ? hs.container : g.body.domNode;
+			h = n.parentNode.offsetTop + n.offsetHeight - g.header.domNode.offsetTop;
+			style.set(this._resizer, {
+				top: g.header.domNode.offsetTop + 'px',
+				left: left + 'px',
+				height: h + 'px'
+			});
+			
 		},
 		_showResizer: function(e){
 			if(!this._resizer){
@@ -134,6 +151,7 @@ define([
 		_isInResizeRange: function(e){
 			var cell = this._getCell(e);
 			var x = this._getCellX(e);
+			
 			var detectWidth = this.arg('detectWidth');
 			if(x < detectWidth){
 				this._targetCell = cell.previousSibling;
@@ -154,6 +172,11 @@ define([
 				return 100000;
 			}
 			var lx = e.layerX;
+			if(dojo.isFF){
+				var ffX = parseInt(dojo.style(cell.parentNode.parentNode.parentNode, 'marginLeft'));
+				if(!ffX){ffx = 0;}
+				lx -= ffX;
+			}
 			var x = lx - cell.offsetLeft;
 			if(x < 0){x = lx;} //chrome take layerX as cell x.
 			return x;
@@ -164,6 +187,7 @@ define([
 			while(node && node.tagName && node.tagName.toLowerCase() !== 'th'){
 				node = node.parentNode;
 			}
+			if(!node.tagName || node.tagName.toLowerCase() !== 'th'){return null;}
 			return node;
 		}
 		

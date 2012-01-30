@@ -2,12 +2,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
 	"dojo/_base/array",
-	"dojo/_base/html",
+	"dojo/dom-geometry",
 	"dojo/DeferredList",
 	"../core/_Module"
-], function(declare, Deferred, array, html, DeferredList, _Module){
+], function(declare, Deferred, array, domGeometry, DeferredList, _Module){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 
 		name: 'hLayout',
@@ -26,6 +26,7 @@ define([
 			});
 		},
 
+		//Public--------------------------------------------------------
 		lead: 0,
 
 		tail: 0,
@@ -39,8 +40,10 @@ define([
 			this._regs.push([defer, refNode, isTail]);
 		},
 
+		//Event---------------------------------------------------------
 		onUpdateWidth: function(){},
 
+		//Private-------------------------------------------------------
 		_layout: function(){
 			if(this._regs){
 				var dl = array.map(this._regs, function(reg){
@@ -49,7 +52,7 @@ define([
 				var _this = this, lead = 0, tail = 0;
 				(new DeferredList(dl)).then(function(){
 					array.forEach(_this._regs, function(reg){
-						var w = html.marginBox(reg[1]).w;
+						var w = domGeometry.getMarginBox(reg[1]).w;
 						if(reg[2]){
 							tail += w;
 						}else{

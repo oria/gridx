@@ -12,7 +12,7 @@ define([
 	"./_RowCellBase"
 ], function(declare, array, query, html, lang, Deferred, sniff, mouse, keys, _Module, _RowCellBase){
 
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_RowCellBase, {
 		name: 'selectRow',
 
@@ -41,6 +41,13 @@ define([
 			return array.every(arguments, function(id){
 				return this.model.isMarked(id);
 			}, this);
+		},
+
+		clear: function(){
+			query(".dojoxGridxRowSelected", this.grid.bodyNode).forEach(function(node){
+				html.removeClass(node, 'dojoxGridxRowSelected');
+			});
+			this.model.clearMark();
 		},
 
 		onHighlightChange: function(){},
@@ -81,6 +88,7 @@ define([
 			array.forEach(args, function(arg){
 				this.model.markById(arg, toSelect);
 			}, this);
+			this.model.when();
 		},
 
 		_markByIndex: function(args, toSelect){
@@ -106,20 +114,6 @@ define([
 					this.model.markByIndex(arg, toSelect);
 				}
 			}, this);
-			return this.model.when();
-		},
-
-		_markAll: function(args, toSelect){
-			if(toSelect){
-				query(".dojoxGridxRow", this.grid.bodyNode).forEach(function(node){
-					html.addClass(node, 'dojoxGridxRowSelected');
-				});
-			}else{
-				query(".dojoxGridxRowSelected", this.grid.bodyNode).forEach(function(node){
-					html.removeClass(node, 'dojoxGridxRowSelected');
-				});
-			}
-			this.model.markAll(toSelect);
 			return this.model.when();
 		},
 

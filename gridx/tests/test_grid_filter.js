@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
@@ -38,6 +38,7 @@ require([
 	};
 
 	//Test buttons
+	/*
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
 	
@@ -82,6 +83,6 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getConditions">Get the available conditions of column "Download Date"</div><br/>',
 	].join(''));
 	tp.startup();
-	
+	*/
 	
 });

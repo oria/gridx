@@ -6,7 +6,7 @@ define([
 	"dojo/fx",
 	"dojo/query"
 ], function(dojo, _Module, declare, html, fx, query){
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'dod',
 		required: ['body'],

@@ -1,5 +1,5 @@
 define([
-	'dojo/_base/declare',
+	'dojo/_base/declare'
 ], function(declare){
 
 	//This is just an API file, similar to dojo.data.api.Read, should never be directly used

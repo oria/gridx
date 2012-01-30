@@ -1,5 +1,9 @@
 /* dnd */
-.dojoxGridxDnDCursor,
+.dojoxGridxDnDReadyCursor {
+	cursor: pointer;
+}
+
+/*.dojoxGridxDnDCursor,*/
 .dojoxGridxCanNotDnD {
 	cursor: default;
 }

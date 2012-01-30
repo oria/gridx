@@ -7,7 +7,7 @@ define('dojox/grid/gridx/modules/TestMod', [
 //If there is some oppotunity that this module could be depended on by some other module (e.g.: moduleB),
 //then it's recommended to register it, so that users won't need to explictly declare this module
 //when he is declaring that moduleB.
-return gridx.core.registerModule(
+return gridx.core.register(
 //Note there's a little trick here: dojo.declare returns the class function itself
 
 dojo.declare('gridx.modules.TestMod', _Module, {

@@ -1,18 +1,19 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/html",
+	"dojo/dom-class",
+	"dojo/dom-construct",
 	"dojo/_base/window",
 	"dojo/dnd/Avatar"
-], function(declare, html, win, Avatar){
+], function(declare, domClass, domConstruct, win, Avatar){
 
 	return declare(Avatar, {
 		construct: function(manager){
 			// summary:
 			//		constructor function;
 			//		it is separate so it can be (dynamically) overwritten in case of need
-			this.isA11y = html.hasClass(win.body(), "dijit_a11y");
+			this.isA11y = domClass.contains(win.body(), "dijit_a11y");
 			
-			this.node = html.toDom(["<table border='0' cellspacing='0' class='dojoxGridxDndAvatar' ",
+			this.node = domConstruct.toDom(["<table border='0' cellspacing='0' class='dojoxGridxDndAvatar' ",
 				"style='position: absolute; z-index: 1999; margin: 0'>",
 				"<tbody><tr style='opacity: 0.9;'>",
 					"<td class='dojoxGridxDnDIcon'>",
@@ -26,7 +27,7 @@ define([
 
 		_getIconClass: function(){
 			var info = this.manager._dndInfo;
-			return ['dojoxGridxDnDIcon', info.type, info.count === 1 ? 'Single' : 'Multi'].join('');
+			return ['dojoxGridxDnDIcon', info.cssName, info.count === 1 ? 'Single' : 'Multi'].join('');
 		},
 
 		_generateText: function(){
@@ -36,4 +37,3 @@ define([
 		}
 	});
 });
-

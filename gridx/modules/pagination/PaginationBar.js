@@ -45,6 +45,6 @@ define([
 		descriptionSelectionTemplate: '',
 	=====*/
 
-		pagerClass: Pager,
+		pagerClass: Pager
 	}));	
 });

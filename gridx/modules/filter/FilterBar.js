@@ -57,7 +57,7 @@ define([
 	};
 	=====*/
 	
-	return _Module.registerModule(
+	return _Module.register(
 	declare(_Module, {
 		name: 'filterBar',
 		forced: ['filter'],
@@ -123,7 +123,7 @@ define([
 			});
 			dojo.parser.parse(this.domNode);
 			dojo.toggleClass(this.domNode, 'dojoxGridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
-			this.grid.vLayout.register(this, 'domNode', 'headerNode', 5);
+			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
 			this._nls = locale;
 			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
 			this._initWidgets();
@@ -252,12 +252,15 @@ define([
 			this.btnClose.style.display = this.closeFilterBarButton ? '': 'none';
 			this.btnFilter.style.display = this.defineFilterButton ? '': 'none';
 		},
-	
+		isVisible: function(){
+			return this.domNode.style.display != 'none';
+		},
 		show: function(){
 			// summary:
 			//		Show the filter bar. (May add animation later)
 			this.domNode.style.display = 'block';
 			this.grid.vLayout.reLayout();
+			this.onShow();
 		},
 	
 		hide: function(){
@@ -266,6 +269,13 @@ define([
 			this.domNode.style.display = 'none';
 			this.grid.vLayout.reLayout();
 			this._hideTooltip();
+			this.onHide();
+		},
+		onShow: function(){
+			
+		},
+		onHide: function(){
+			
 		},
 		showFilterDialog: function(){
 			// summary:

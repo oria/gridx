@@ -1,9 +1,7 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/SyncCache',
-	'gridx/core/model/SyncTreeCache',
-	'gridx/core/model/AsyncCache',
-	'gridx/core/model/AsyncTreeCache',
+	'gridx/core/model/cache/Sync',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/data/TestData',
 	'gridx/tests/support/data/TreeColumnarTestData',
@@ -17,7 +15,7 @@ require([
 	'dojo/store/Memory',
 	'gridx/tests/support/GridConfig'
 ], function(Grid,
-	SyncCache, SyncTreeCache, AsyncCache, AsyncTreeCache,
+	SyncCache, AsyncCache,
 	musicData, testData, treeColumnarData, treeNestedData,
 	itemStore, jsonStore, memoryStore, treeJsonStore, hugeStore,
 	mods, Memory, GridConfig){
@@ -27,7 +25,7 @@ var stores = {
 		defaultCheck: true,
 		store: itemStore({
 			dataSource: musicData,
-			size: 0
+			size: 200
 		}),
 		layouts: {
 			'layout 1': musicData.layouts[3],
@@ -51,7 +49,8 @@ var stores = {
 			size: 10000
 		}),
 		layouts: {
-			'layout 1': testData.layouts[0]
+			'layout 1': testData.layouts[0],
+			'layout 2': testData.layouts[1]
 		},
 		onChange: function(checked, cfg){
 			if(checked){
@@ -124,12 +123,6 @@ var caches = {
 	},
 	"Synchronous Cache": {
 		cache: SyncCache
-	},
-	"Asynchronous Tree Cache": {
-		cache: AsyncTreeCache
-	},
-	"Synchronous Tree Cache": {
-		cache: SyncTreeCache
 	}
 };
 
@@ -277,7 +270,7 @@ var gridAttrs = {
 };
 
 var modelExts = {
-    "Make formatted columns sortable": mods.FormatSorter
+    "Make formatted columns sortable": mods.FormatSort
 };
 
 var modules = {
@@ -349,7 +342,8 @@ var modules = {
 		"default": mods.Pagination
 	},
 	"pagination bar": {
-		"default": mods.PaginationBar
+		"default": mods.PaginationBar,
+		"drop down": mods.PaginationBarDD
 	},
 	"filter api": {
 		"default": mods.Filter

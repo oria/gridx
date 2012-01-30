@@ -1,7 +1,7 @@
 require([
 	'dojo/_base/array',
 	'gridx/Grid',
-	'gridx/core/model/AsyncCache',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
@@ -12,6 +12,11 @@ require([
 	'dijit/layout/AccordionContainer',
 	'dijit/layout/ContentPane'
 ], function(array, Grid, Cache, dataSource, storeFactory, mods){
+//    window.store = storeFactory({
+//                dataSource: dataSource,
+//                size: 50
+//            });
+//    window.Cache = Cache;
 	var createGrid = function(){
 		return new Grid({
 			cacheClass: Cache,
