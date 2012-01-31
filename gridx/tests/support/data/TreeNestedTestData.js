@@ -49,11 +49,13 @@ define([], function(){
 
 	return {
 		getData: function(maxLevel, maxChildrenCount){
-			return {
+			var data = {
 				identifier: 'id', 
 				label: 'id', 
 				items: generateLevel('item', 1, maxLevel, maxChildrenCount)
 			};
+			console.log(data);
+			return data;
 		},
 		
 		layouts: [

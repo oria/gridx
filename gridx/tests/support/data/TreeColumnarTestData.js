@@ -58,12 +58,21 @@ define([], function(){
 		
 		layouts: [
 			[
-				{id: 'id', name: 'id', field: 'id', expandField: 'children'},
+				//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
+				{id: 'id', name: 'id', field: 'id', expandLevel: -1},	
 				{id: 'number', name: 'number', field: 'number'},
 				{id: 'string', name: 'string', field: 'string'},
 				{id: 'date', name: 'date', field: 'date'},
 				{id: 'time', name: 'time', field: 'time'},
 				{id: 'bool', name: 'bool', field: 'bool'}
+			],
+			[
+				{id: 'number', name: 'number', field: 'number', expandLevel: 1},
+				{id: 'string', name: 'string', field: 'string', expandLevel: 2},
+				{id: 'date', name: 'date', field: 'date', expandLevel: 3},
+				{id: 'time', name: 'time', field: 'time'},
+				{id: 'bool', name: 'bool', field: 'bool'},
+				{id: 'id', name: 'id', field: 'id'}
 			]
 		]
 	};

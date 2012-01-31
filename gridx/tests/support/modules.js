@@ -1,7 +1,8 @@
 define([
-	'gridx/core/model/FormatSorter',
+	'gridx/core/model/extensions/FormatSort',
 	'gridx/modules/Focus',
 	'gridx/modules/VScroller',
+	'gridx/modules/ColumnResizer',
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/SingleSort',
 	'gridx/modules/NestedSort',
@@ -18,8 +19,10 @@ define([
 	'gridx/modules/dnd/Row',
 	'gridx/modules/dnd/Column',
 	'gridx/modules/dnd/Cell',
-	'gridx/modules/Pagination',
-	'gridx/modules/PaginationBar',
+	'gridx/modules/AutoScroll',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBar',
+	'gridx/modules/pagination/PaginationBarDD',
 	'gridx/modules/filter/Filter',
 	'gridx/modules/filter/FilterBar',
 	'gridx/modules/CellDijit',
@@ -33,24 +36,27 @@ define([
 	'gridx/modules/Printer',
 	'gridx/modules/Menu',
 	'gridx/modules/Dod',
-	'gridx/modules/Tree'
-], function(FormatSorter, 
-	Focus, VScroller, VirtualVScroller,
+	'gridx/modules/Tree',
+	'gridx/modules/RowLock'
+], function(FormatSort, 
+	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
 	MoveRow, MoveColumn, MoveCell,
-	DndRow, DndColumn, DndCell,
-	Pagination, PaginationBar,
+	DndRow, DndColumn, DndCell, AutoScroll,
+	Pagination, PaginationBar, 
+	PaginationBarDD,
 	Filter, FilterBar,
 	CellDijit, Edit,
 	RowHeader, IndirectSelect,
 	Persist, Exporter, CSV, Table, Printer,
-	Menu, Tree){
+	Menu, Dod, Tree, RowLock){
 return {
-	FormatSorter: FormatSorter,
+	FormatSort: FormatSort,
 	Focus: Focus,
 	VScroller: VScroller,
+	ColumnResizer: ColumnResizer, 
 	VirtualVScroller: VirtualVScroller,
 	SingleSort: SingleSort,
 	NestedSort: NestedSort,
@@ -67,8 +73,10 @@ return {
 	DndRow: DndRow,
 	DndColumn: DndColumn,
 	DndCell: DndCell,
+	AutoScroll: AutoScroll,
 	Pagination: Pagination,
 	PaginationBar: PaginationBar,
+	PaginationBarDD: PaginationBarDD,
 	Filter: Filter,
 	FilterBar: FilterBar,
 	CellDijit: CellDijit,
@@ -81,7 +89,9 @@ return {
 	ExportTable: Table,
 	Printer: Printer,
 	Menu: Menu,
-	Tree: Tree
+	Dod: Dod,
+	Tree: Tree,
+	RowLock: RowLock
 };
 });
 

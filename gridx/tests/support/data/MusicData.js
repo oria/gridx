@@ -176,7 +176,7 @@ define([
 
 	return {
 		getData: function(size){
-			size = size || 100;
+			size = size === undefined ? 100 : size;
 			var data = {
 				identifier: 'id', 
 				label: 'id', 
@@ -185,7 +185,8 @@ define([
 			for(var i = 0; i < size; ++i){
 				var item = items[i % items.length];
 				data.items.push(lang.mixin({
-					id: i + 1
+					id: i + 1,
+					order: i + 1
 				}, item));
 			}
 			return data;
@@ -193,18 +194,18 @@ define([
 
 		layouts: [
 			[
-				{id: 'id', field: 'id', name: 'Identity'},
-				{id: 'Genre', field: 'Genre', name: 'Genre'},
-				{id: 'Artist', field: 'Artist', name: 'Artist'},
-				{id: 'Year', field: 'Year', name: 'Year'},
-				{id: 'Album', field: 'Album', name: 'Album'},
-				{id: 'Name', field: 'Name', name: 'Name'},
-				{id: 'Length', field: 'Length', name: 'Length'},
-				{id: 'Track', field: 'Track', name: 'Track'},
-				{id: 'Composer', field: 'Composer', name: 'Composer'},
-				{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
-				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
-				{id: 'Heard', field: 'Heard', name: 'Heard'}
+				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
+				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px'},
+				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px'},
+				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},
+				{id: 'Album', field: 'Album', name: 'Album', width: '160px'},
+				{id: 'Name', field: 'Name', name: 'Name', width: '80px'},
+				{id: 'Length', field: 'Length', name: 'Length', width: '80px'},
+				{id: 'Track', field: 'Track', name: 'Track', width: '80px'},
+				{id: 'Composer', field: 'Composer', name: 'Composer', width: '160px'},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '160px'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played', width: '120px'},
+				{id: 'Heard', field: 'Heard', name: 'Heard', width: '80px'}
 			],
 			[
 				{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
@@ -296,7 +297,45 @@ define([
 				{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
 				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
 				{id: 'Heard', field: 'Heard', name: 'Heard'}
-			]			
+			],
+			[
+				{id: 'id', field: 'id', name: 'Identity', width: '120px'},
+				{id: 'Genre', field: 'Genre', name: 'Genre', width: '180px', sortable: 'ascend'},
+				{id: 'Artist', field: 'Artist', name: 'Artist', width: '220px', sortable: 'descend'},
+				{id: 'Year', field: 'Year', name: 'Year', width: '100px', sortable: false},
+				{id: 'Album', field: 'Album', name: 'Album', width: '260px'},
+				{id: 'Name', field: 'Name', name: 'Name', width: '160px'},
+				{id: 'Length', field: 'Length', name: 'Length', width: '120px'},
+				{id: 'Track', field: 'Track', name: 'Track', width: '120px'},
+				{id: 'Composer', field: 'Composer', name: 'Composer', width: '360px'},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '260px'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played', width: '220px'},
+				{id: 'Heard', field: 'Heard', name: 'Heard', width: '80px'}
+			],
+			[
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Name', field: 'Name', name: 'Name'},
+				{id: 'Year', field: 'Year', name: 'Year'}
+			],
+			[
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Genre', field: 'Genre', name: 'Genre'},
+				{id: 'Artist', field: 'Artist', name: 'Artist'}
+			],
+			[
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Album', field: 'Album', name: 'Album'},
+				{id: 'Composer', field: 'Composer', name: 'Composer'}
+			],
+			[
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Name', field: 'Name', name: 'Name'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Genre', field: 'Genre', name: 'Genre'},
+				{id: 'Artist', field: 'Artist', name: 'Artist'},
+				{id: 'Album', field: 'Album', name: 'Album'},
+				{id: 'Composer', field: 'Composer', name: 'Composer'}
+			]
 		]
 	};
 });

@@ -9,7 +9,7 @@ require([
 
 	var packs = [
 		['Core', [
-			['Simplest Grid', 'demo_mini_grid', 'simplegrid.png', 'The Simplest Grid.'],
+			['Simplest Grid', 'demo_mini_grid', 'simplegrid.png', 'The most lightweight mini Grid'],
 			['AutoHeight / autoWidth', 'test_grid_autoHeight_autoWidth', 'autoheight-autowidth.png', 'Make the grid show every row (autoHeight) and every column (autoWidth).'],			
 			['Declarative Creation', 'test_grid_declarative', 'declarative.jpg', 'Declaratively create a grid in HTML by means of dojo parser.'],
 			['Resize', 'test_grid_resize', 'resize.png', 'Resize the grid use the resize function.'],
@@ -25,16 +25,16 @@ require([
 			['Persist', 'test_grid_persist', 'persist.jpg', 'An extandable feature-persistance framework, currently allowing to save column width, column order, sorting order, etc.'],
 			['Extended Select', 'test_grid_extendedSelect', 'extendedselect.jpg', 'Full featured extended selection for row, column and cell. Feel more like Excel.'],
 			['Filter', 'test_grid_filter', 'filter.jpg', 'Powerful filter bar and filter dialog, supporting advanced client-side or server-side filtering.'],
-			['Drag & Drop - Rearrange columns and rows', 'test_grid_dnd_rearrange', 'dnd.jpg', 'Rearrange grid rows and columns by drag & drop'],
-			//['Drag & Drop - Drag rows to other grids', 'test_grid_dndrow_betweengrids', 'dnd.jpg', 'Drag and drop grid rows to other grids.'],
-			['Drag & Drop - Drag rows from/to non-grid source', 'test_grid_dndrow_nongrid_source', 'dnd2.jpg', 'Drag and drop grid rows between grid and non-grid sources.'],
-			['Drag & Drop - Drag rows to non-grid targets', 'test_grid_dndrow_nongrid_target', 'dnd3.jpg', 'Drag and drop grid rows to non-grid targets.'],
-			//['Drag & Drop - Drag columns to non-grid targets', 'test_grid_dndcolumns_nongrid_target', 'dnd.jpg', 'Drag and drop grid columns to non-grid targets.'],
 			//['Dijits in Cell', 'test_grid_cellDijit', ' ', 'Provides better support for dijits/widgets in grid cells. These widgets are reused to improve performance, regardless whether the virtual scrolling or pagination feature is used.'],
 			['Editable Cell', 'test_grid_edit', 'editable.jpg', 'Based on the Dijits in Cell module to provide editable cell functionality. The editing dijit/widget only occur while entering editing mode.'],
 			['Indirect Select', 'test_grid_indirectSelect', 'indirectselect.jpg', 'A useful enhancement for row selection, to better demonstrate the selected/unselected status of rows by means of check boxes.'],
 			//['Column Lock', 'test_grid_columnLock', 'columnlock.png', 'Lock up some of the grid columns so that they don\'t move out of view when the grid body is horizontally scrolled.'],
 			['Details on Demand', 'test_grid_dod', 'dod.jpg', 'A pretty feature providing the ability for rows to expand. Various arguments available to support different use cases.'],
+			['DnD columns/rows within Grid', 'test_grid_dnd_rearrange', 'dnd.jpg', 'Rearrange grid rows and columns by drag & drop'],
+			['DnD rows between grid', 'test_grid_dndrow_betweengrids', 'dnd2.jpg', 'Drag and drop grid rows to other grids.'],
+			['DnD rows from/to none-grid sources', 'test_grid_dndrow_nongrid_source', 'dnd3.jpg', 'Drag and drop grid rows between grid and non-grid sources.'],
+			['DnD rows to none-grid targets', 'test_grid_dndrow_nongrid_target', 'dnd4.jpg', 'Drag and drop grid rows to non-grid targets.'],
+			//['Drag & Drop - Drag columns to non-grid targets', 'test_grid_dndcolumns_nongrid_target', 'dnd.jpg', 'Drag and drop grid columns to non-grid targets.'],
 		0]],
 		['Performance', [
  		    ['GridX with a huge store(1,000,000 rows)', 'test_grid_huge_data', 'hugestore.jpg', 'GridX can now work nicely with extremely huge data stores larger than 1 million rows'],

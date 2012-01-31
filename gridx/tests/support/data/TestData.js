@@ -26,17 +26,22 @@ define([], function(){
 	var generateItem = function(index){
 		return {
 			id: index + 1,
-			number: randomNumber(10000),
+			number: randomNumber(100),
 			string: randomString(),
 			date: randomDate().toDateString(),
 			time: randomDate().toTimeString().split(' ')[0],
-			bool: randomNumber(10) < 5
+			bool: randomNumber(10) < 5,
+			order: index + 1
 		};
 	};
 
 	return {
+		resetSeed: function(){
+			seed = 9973;
+		},
+
 		getData: function(size){
-			size = size || 100;
+			size = size === undefined ? 100 : size;
 			var data = {
 				identifier: 'id', 
 				label: 'id', 
@@ -59,12 +64,12 @@ define([], function(){
 				{id: 'string', field: 'string', name: 'String'}
 			],
 			[
-				{id: 'id', field: 'id', name: 'Identity', width: '10%'},
-				{id: 'number', field: 'number', name: 'Number', width: '10%'},
-				{id: 'string', field: 'string', name: 'String', width: '10%'},
-				{id: 'date', field: 'date', name: 'Date', width: '10%'},
-				{id: 'time', field: 'time', name: 'Time', width: '10%'},
-				{id: 'bool', field: 'bool', name: 'Boolean', width: '10%'}
+				{/*id: 'id',*/ field: 'id', name: 'Identity', width: '20px'},
+				{/*id: 'number',*/ field: 'number', name: 'Number', width: '10em'},
+				{/*id: 'string',*/ field: 'string', name: 'String', width: '200px'},
+				{/*id: 'date',*/ field: 'date', name: 'Date', width: '10%'},
+				{/*id: 'time',*/ field: 'time', name: 'Time', width: '20%'},
+				{/*id: 'bool',*/ field: 'bool', name: 'Boolean', width: '30%'}
 			],
 			[
 				{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
@@ -80,6 +85,12 @@ define([], function(){
 				{id: 'date', field: 'date', name: 'Date'},
 				{id: 'time', field: 'time', name: 'Time'},
 				{id: 'bool', field: 'bool', name: 'Boolean'}
+			],
+			[
+				{id: 'id', field: 'id', name: 'Identity', width: '200px'},
+				{id: 'number', field: 'number', name: 'Number', width: '200px'},
+				{id: 'string', field: 'string', name: 'String', width: '200px'},
+				{id: 'date', field: 'date', name: 'Date', width: '200px'}
 			]
 		]
 	};

@@ -17,6 +17,10 @@ define([
 		// editable: Boolean
 		//		If true then the cells in this column will be editable. Default is false.
 		editable: false, 
+
+		// alwaysEditing: Boolean
+		//		If true then the cells in this column will always be in editing mode. Default is false.
+		alwaysEditing: false,
 	
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.
@@ -68,6 +72,7 @@ define([
 		preload: function(){
 			this.connect(this.grid, 'onCellDblClick', '_onUIBegin');
 			this.connect(this.grid, 'onCellMouseDown', '_onMouseApply');
+			this._initAlwaysEdit();
 			this._initFocus();
 		},
 	
@@ -92,7 +97,12 @@ define([
 	
 		columnMixin: {
 			isEditable: function(){
-				return this.grid._columnsById[this.id].editable;
+				var col = this.grid._columnsById[this.id];
+				return col.editable || col.alwaysEditing;
+			},
+
+			isAlwaysEditing: function(){
+				return this.grid._columnsById[this.id].alwaysEditing;
 			},
 	
 			setEditable: function(editable){
@@ -117,25 +127,18 @@ define([
 			var d = new Deferred();
 			if(!this.isEditing(rowId, colId)){
 				var _this = this,
+					g = this.grid,
 					rowIndex = this.model.idToIndex(rowId),
-					col = this.grid._columnsById[colId];
+					col = g._columnsById[colId];
 				if(rowIndex >= 0 && col.editable){
-					this.grid.cellDijit.setCellDecorator(rowId, colId, 
+					g.cellDijit.setCellDecorator(rowId, colId, 
 						this._getDecorator(colId), 
 						this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
-							lang.hitch(this.grid, this.grid._getTypeData, colId))
+							lang.hitch(g, g._getTypeData, colId))
 					);
 					this._record(rowId, colId);
-					this.grid.body.refreshCell(rowIndex, col.index).then(function(){
+					g.body.refreshCell(rowIndex, col.index).then(function(){
 						_this._focusEditor(rowId, colId);
-						
-//						if(_this.grid.hScroller){
-//							//Edit element may cause scrolling after get focus. 
-//							//So nned to keep scrolling of hScroller.
-//							var rowNode = _this.grid.row(rowIndex).node();
-//							this.grid.hScroller.scroll(rowNode.scrollLeft);
-//						}
-						
 						d.callback(true);
 					});
 				}else{
@@ -150,14 +153,27 @@ define([
 		cancel: function(rowId, colId){
 			//summary:
 			//	Cancel the edit. And end the editing state.
-			var d = new Deferred(), rowIndex = this.model.idToIndex(rowId);
+			var d = new Deferred(),
+				m = this.model,
+				rowIndex = m.idToIndex(rowId);
 			if(rowIndex >= 0){
-				this.grid.cellDijit.restoreCellDecorator(rowId, colId);
-				this._erase(rowId, colId);
-				var colIndex = this.grid._columnsById[colId].index;
-				this.grid.body.refreshCell(rowIndex, colIndex).then(function(){
-					d.callback();
-				});
+				var g = this.grid, 
+					cd = g.cellDijit, 
+					col = g._columnsById(colId);
+				if(col){
+					if(col.alwaysEditing){
+						var cw = cd.getCellWidget(rowId, colId), 
+							rowCache = m.byId(rowId);
+						cw.setValue(rowCache.data[colId], rowCache.rawData[col.field]);
+						d.callback();
+					}else{
+						cd.restoreCellDecorator(rowId, colId);
+						this._erase(rowId, colId);
+						g.body.refreshCell(rowIndex, col.index).then(function(){
+							d.callback();
+						});
+					}
+				}
 			}else{
 				d.callback();
 			}
@@ -167,9 +183,11 @@ define([
 		apply: function(rowId, colId){
 			//summary:
 			//	Apply the edit value to the grid store. And end the editing state.
-			var d = new Deferred(), cell = this.grid.cell(rowId, colId, true);
+			var d = new Deferred(),
+				g = this.grid,
+				cell = g.cell(rowId, colId, true);
 			if(cell){
-				var widget = this.grid.cellDijit.getCellWidget(rowId, colId);
+				var widget = g.cellDijit.getCellWidget(rowId, colId);
 				if(widget && widget.gridCellEditField){
 					var v = widget.gridCellEditField.get('value');
 					try{
@@ -181,16 +199,18 @@ define([
 						}
 						var _this = this;
 						cell.setRawData(v).then(function(){
-							_this.grid.cellDijit.restoreCellDecorator(rowId, colId);
-							_this._erase(rowId, colId);
-							var rowVisIndex = cell.row.index();
-							var colIndex = _this.grid._columnsById[colId].index;
-							_this.grid.body.refreshCell(rowVisIndex, colIndex).then(function(){
+							if(cell.column.alwaysEditing){
 								d.callback(true);
-							});
+							}else{
+								g.cellDijit.restoreCellDecorator(rowId, colId);
+								_this._erase(rowId, colId);
+								g.body.refreshCell(cell.row.index(), cell.column.index()).then(function(){
+									d.callback(true);
+								});
+							}
 						});
 					}catch(e){
-						this.grid.cellDijit.restoreCellDecorator(rowId, colId);
+						g.cellDijit.restoreCellDecorator(rowId, colId);
 						this._erase(rowId, colId);
 						console.warn('Can not apply change! Error message: ', e);
 						d.callback(false);
@@ -204,6 +224,10 @@ define([
 		},
 	
 		isEditing: function(rowId, colId){
+			var col = this.grid._columnsById[colId];
+			if(col && col.alwaysEditing){
+				return true;
+			}
 			var widget = this.grid.cellDijit.getCellWidget(rowId, colId);
 			return !!widget && !!widget.gridCellEditField;
 		},
@@ -223,6 +247,20 @@ define([
 		},
 	
 		//Private------------------------------------------------------------------
+		_initAlwaysEdit: function(){
+			var cols = this.grid._columns;
+			for(var i = cols.length - 1; i >= 0; --i){
+				var col = cols[i];
+				if(col.alwaysEditing){
+					col.userDecorator = this._getDecorator(col.id);
+					col.setCellValue = this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
+							lang.hitch(this.grid, this.grid._getTypeData, col.id));
+					col.decorator = function(){ return ''; };
+					col._cellWidgets = [];
+				}
+			}
+		},
+
 		_getColumnEditor: function(colId){
 			var editor = this.grid._columnsById[colId].editor;
 			if(lang.isFunction(editor)){
@@ -240,7 +278,6 @@ define([
 				var widget = cellDijit.getCellWidget(rowId, colId);
 				if(widget && widget.gridCellEditField){
 					widget.gridCellEditField.focus();
-					widget.gridCellEditField.focus();
 				}
 			};
 			if(sniff('webkit')){
@@ -251,11 +288,11 @@ define([
 		},
 	
 		_getDecorator: function(colId){
-			var className = this._getColumnEditor(colId);
-			var p, properties = [];
-			var col = this.grid._columnsById[colId];
-			var dijitProperties = (col.editorArgs && col.editorArgs.dijitProperties) || {};
-			var pattern = col.gridPattern || col.storePattern;
+			var className = this._getColumnEditor(colId),
+				p, properties = [],
+				col = this.grid._columnsById[colId],
+				dijitProperties = (col.editorArgs && col.editorArgs.dijitProperties) || {},
+				pattern = col.gridPattern || col.storePattern;
 			if(pattern){
 				var constraints = dijitProperties.constraints = dijitProperties.constraints || {};
 				lang.mixin(constraints, pattern);
@@ -315,8 +352,9 @@ define([
 	
 		//Focus
 		_initFocus: function(){
-			if(this.grid.focus){
-				this.grid.focus.registerArea({
+			var f = this.grid.focus;
+			if(f){
+				f.registerArea({
 					name: 'edit',
 					priority: 1,
 					doFocus: lang.hitch(this, '_onFocus'),

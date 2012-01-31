@@ -1,6 +1,6 @@
 <?php
-	require_once('FirePHPCore/fb.php');  
-	ob_start(); 
+//    require_once('FirePHPCore/fb.php');  
+//    ob_start(); 
 
 	header("Content-Type: " . ($_SERVER["CONTENT_TYPE"] == 'application/json' ? 'application/json' : 'text/plain'));
 
@@ -28,6 +28,13 @@
 			break;
 	}
 
+	function compare($a, $b){
+		if($a[0] == $b[0]){
+			return 0;
+		}else{
+			return $a[0] < $b[0] ? -1 : 1;
+		}
+	}
 
 class JsonRestStore{
 	public $totalCount = 100;
@@ -42,17 +49,29 @@ class JsonRestStore{
 		if($str){
 			$this->totalCount = (int)$str;
 		}
+		$this->chars = explode(',', $this->chars);
 		fclose($fh);
 	}
 
 	//PipeLine----------------------------------------------------------------------------
-	private $str = "abcd efgh ijkl mnop qrst uvwx yz12 3456 7890";
+	private $chars = "0,1,2,3, ,4,5,6,7, ,8,9,a,b, ,c,d,e,f, ,g,h,i,j, ,k,l,m,n, ,k,o,p,q, ,r,s,t,u, ,v,w,x,y, ,z";
+	private $seed = 9973;
 
-	private function randomString(){
-		$len = rand(1, 200);
+	private function getNumber($r){
+		$a = 8887;
+		$c = 9643;
+		$m = 8677;
+		$this->seed = ($a * $this->seed + $c) % $m;
+		$res = floor($this->seed / $m * $r);
+		return $res;
+	}
+
+	private function getString(){
+		$len = $this->getNumber(50);
 		$sb = array();
+		$cnt = count($this->chars);
 		for($i = 0; $i < $len; ++$i){
-			$sb[] = $this->str[rand(0, strlen($this->str) - 1)];
+			$sb[] = $this->chars[$this->getNumber($cnt)];
 		}
 		return implode($sb);
 	}
@@ -60,8 +79,10 @@ class JsonRestStore{
 	private function getRow($index){
 		return array(
 			"id" => $index + 1,
-			"number" => ($this->totalCount - $index),
-			"string" => $this->randomString()
+//            "number" => $this->totalCount - $index
+			"number" => $this->getNumber($this->totalCount + 1),
+			"string" => $this->getString(),
+			"order" => $index + 1
 		);
 	}
 
@@ -146,6 +167,7 @@ class JsonRestStore{
 			$query = substr($query, $idx + 5);
 			$idx = strpos($query, ')');
 			if($idx !== false){
+				$size = count($items);
 				$query = substr($query, 0, $idx);
 				$attrs = explode(',', $query);
 				foreach($attrs as $attr){
@@ -154,14 +176,20 @@ class JsonRestStore{
 					if(substr($attr, 0, 1) == '-' || substr($attr, 0, 1) == '+'){
 						$attr = substr($attr, 1);
 					}
-					foreach ($items as $i) $toSort[$i[$attr]] = $i;
-					if($desc){
-						krsort($toSort);
-					}else{
-						ksort($toSort);
+					foreach ($items as $i){
+						$toSort[] = array($i[$attr], $i);
 					}
+					usort($toSort, 'compare');
 					$newRet = array();
-					foreach ($toSort as $i) $newRet[] = $i;
+					if($desc){
+						for($i = $size - 1; $i >= 0; --$i){
+							$newRet[] = $toSort[$i][1];
+						}
+					}else{
+						for($i = 0; $i < $size; ++$i){
+							$newRet[] = $toSort[$i][1];
+						}
+					}
 					$items = $newRet;
 				}
 			}
@@ -180,7 +208,7 @@ class JsonRestStore{
 			$end = (int)$range[1];
 			$items = array_slice($items, $start);
 			if($end > 0){
-				$items = array_slice($items, 0, $end + 1);
+				$items = array_slice($items, 0, $end + 1 - $start);
 			}
 		}
 //        fb($items, 'slice');

@@ -22,7 +22,7 @@ define([
 		//		CellDijit module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
 		widgetsInCell: false,
 
-		// decorator: Function() return String
+		// decorator: Function(data, rowId, rowIndex) return String
 		//		This decorator function is slightly different from the one when this module is not used.
 		//		This function should return a template string (see the doc for template string in dijit._TemplatedMixin
 		//		and dijit._WidgetsInTemplateMixin). 
