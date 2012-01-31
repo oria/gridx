@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>New Grid ColumnResizer Test</title>
+	</head>
+	<style type="text/css">
+		@import "../../../util/doh/robot/robot.css";
+	</style>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript">
+		require(['dojo'], function(dojo){
+			dojo.ready(function(){
+				doh.robot.initRobot('../test_grid_columnResizer.html');
+				
+				doh.register("GridX.ColumnResizer", [
+					{name: 'setWidth_getWidth', timeout: 10000, runTest: function(t){
+						grid().columnResizer.setWidth('1', 300);
+						t.is('300px', grid().column('1').getWidth(), 'getWidth');
+						t.is('300px', grid().column('1').headerNode().style.width, 'style.width');
+					}},
+					{name: 'setWidth_zero_width', timeout: 10000, runTest: function(t){
+						w().destroy();
+						w().create();
+						grid().columnResizer.setWidth('1', 0);
+						t.is('0px', grid().column('1').getWidth(), 'getWidth');
+						t.is('0px', grid().column('1').headerNode().style.width, 'style.width');
+					}},
+					{name: 'setWidth_negative_width', timeout: 10000, runTest: function(t){
+						w().destroy();
+						w().create();
+						var w1 = grid().column('1').getWidth();
+						var w2 = grid().column('1').headerNode().style.width;
+						grid().columnResizer.setWidth('1', -100);
+						t.is(w1, grid().column('1').getWidth(), 'getWidth');
+						t.is(w2, grid().column('1').headerNode().style.width, 'style.width');
+					}},
+					{name: 'setWidth_Infinity_width', timeout: 10000, runTest: function(t){
+						w().destroy();
+						w().create();
+						var w1 = grid().column('1').getWidth();
+						var w2 = grid().column('1').headerNode().style.width;
+						grid().columnResizer.setWidth('1', Infinity);
+						t.is(w1, grid().column('1').getWidth(), 'getWidth');
+						t.is(w2, grid().column('1').headerNode().style.width, 'style.width');
+					}},
+					{name: 'setWidth_wrongtype_width', timeout: 10000, runTest: function(t){
+						w().destroy();
+						w().create();
+						var w1 = grid().column('1').getWidth();
+						var w2 = grid().column('1').headerNode().style.width;
+						grid().columnResizer.setWidth('1', 'abcde');
+						t.is(w1, grid().column('1').getWidth(), 'getWidth');
+						t.is(w2, grid().column('1').headerNode().style.width, 'style.width');
+						grid().columnResizer.setWidth('1', null);
+						t.is(w1, grid().column('1').getWidth(), 'getWidth');
+						t.is(w2, grid().column('1').headerNode().style.width, 'style.width');
+						grid().columnResizer.setWidth('1');
+						t.is(w1, grid().column('1').getWidth(), 'getWidth');
+						t.is(w2, grid().column('1').headerNode().style.width, 'style.width');
+					}},
+					{name: 'setWidth_wrong_id', timeout: 10000, runTest: function(t){
+						w().destroy();
+						w().create();
+						var ws = grid().columns().map(function(col){
+							return col.getWidth();
+						});
+						grid().columnResizer.setWidth('abcde', 300);
+						grid().columns().forEach(function(col, i){
+							t.is(ws[i], col.getWidth());
+						});
+					}},
+					{name: 'setWidth_grid_column', timeout: 10000, runTest: function(t){
+						w().destroy();
+						w().create();
+						grid().column('1').setWidth(300);
+						t.is('300px', grid().column('1').getWidth(), 'getWidth');
+						t.is('300px', grid().column('1').headerNode().style.width, 'style.width');
+					}}
+				]);
+				doh.run();
+			});
+		});
+	</script>
+	<body class='claro'>
+	</body>
+</html>
+

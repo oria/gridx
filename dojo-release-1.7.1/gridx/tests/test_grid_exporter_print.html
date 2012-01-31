@@ -1,0 +1,80 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Gridx Export & Print</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		#gridContainer {
+			width: 800px;
+			height: 500px;
+		}
+		#grid {
+			height: 100%;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src="../gridx-all.js"></script>
+	<script type="text/javascript" src="../../dijit/tests/_testCommon.js"></script>
+	<script type="text/javascript" src='test_grid_exporter.js'></script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Gridx Export & Print
+	</h1>
+	<table border='0' cellspacing='0' cellpadding='0'><tr>
+		<td class='pane'>
+			<div id='gridContainer'></div>
+		</td>
+		<td id='ctrlPane' class='pane'></td>
+	</tr></table>
+	
+	<div id="resultDialog" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Export Results"'>
+		<table style="position:relative;">
+			<tr><td><textarea rows="10" cols="100" id="resultsArea" style="width: 540px; height:300px"></textarea></td>
+			</tr>
+			<tr><td style="text-align:right;">
+				<button id="close" data-dojo-type="dijit.form.Button" data-dojo-props='type:"submit"'>Close</button></td>
+			</tr>
+		</table>
+	</div>
+	
+	<div id="customDialog" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Customized Export/Print"'>
+		<table style="position:relative;">
+			<tr><td><label for="type">Export Format: </label></td>
+				<td><select id="typeSelection" data-dojo-id="typeSelection" 
+						data-dojo-type="dijit.form.Select" style="width: 162px;"
+						name="typeSelection" required="true">
+					<option value="CSV">CSV</option>
+					<option value="Table">Table</option>
+				</select></td>
+			</tr>
+			<tr><td><label for="start">Start Row: </label></td>
+				<td><input id="start" data-dojo-id="start" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props=""></input></td>
+			</tr>
+			<tr><td><label for="count">Row Count: </label></td>
+				<td><input id="count" data-dojo-id="count" data-dojo-type="dijit.form.NumberTextBox" data-dojo-props=""></input></td>
+			</tr>
+			<tr>
+				<td colSpan=2><input id="includeHeader" data-dojo-id="includeHeader" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true">includeHeader</input><br/></td>
+			</tr>
+			<tr>
+				<td colSpan=2><input id="selectedOnly" data-dojo-id="selectedOnly" data-dojo-type="dijit.form.CheckBox" data-dojo-props="onChange: setSelectedOnly">selectedOnly</input><br/></td>
+			</tr>
+			<tr>
+				<td colSpan=2><input id="useStoreData" data-dojo-id="useStoreData" data-dojo-type="dijit.form.CheckBox">useStoreData</input><br/></td>
+			</tr>
+			<tr><td colSpan=2><label for="columns">Select Columns: </label></td></tr>
+			<tr><td colSpan=2><table id="columnSelection"></table></td></tr>
+			<tr><td colspan="2" style="text-align:right;">
+				<button id="export" data-dojo-type="dijit.form.Button" data-dojo-props='onClick: customExport'>Export</button>
+				<button id="print" data-dojo-type="dijit.form.Button" data-dojo-props='onClick: customPrint'>Print</button>
+				<button id="cancel" data-dojo-type="dijit.form.Button" data-dojo-props='type: "submit"'>Cancel</button></td>
+			</tr>
+		</table>
+	</div>
+	
+</body>
+</html>

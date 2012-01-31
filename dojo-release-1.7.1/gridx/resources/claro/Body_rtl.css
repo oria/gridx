@@ -1,0 +1,7 @@
+.claro .dojoxGridxRtl .dojoxGridxBody .dojoxGridxCell{
+	border-color: transparent transparent #E5DAC8 #E5DAC8;
+}
+
+.claro .dojoxGridxRtl .dojoxGridxRow .dojoxGridxCellFocus{
+	border: 1px dashed darkblue;
+}

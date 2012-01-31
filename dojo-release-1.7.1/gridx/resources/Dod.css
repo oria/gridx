@@ -1,0 +1,30 @@
+.dojoxGridxDodNode, .dojoxGridxDodLoadNode {
+	border-bottom: 1px solid #E5DAC8;
+}
+
+.dojoxGridxDodLoadNode {
+	background: transparent url(images/loadingAnimation.gif) no-repeat 5px 2px;
+	padding: 5px 5px 5px 30px;
+}
+
+.dojoxGridxRowOver .dojoxGridxDodNode, .dojoxGridxRowOver .dojoxGridxDodLoadNode {
+	/*border-top: 1px solid #E5DAC8;*/
+	/*border-bottom: none;*/
+}
+
+.dojoxGridxDodExpando {
+	width: 10px;
+	height: 10px;
+	float: left;
+	margin: 2px 3px 0 0;
+	background: transparent url(images/sprite_icons.png) no-repeat -380px 0;
+	cursor: pointer;
+	visibility: hidden;
+}
+.dojoxGridxRowOver .dojoxGridxDodExpando {
+	visibility: visible;
+}
+
+.dojoxGridxDodShown .dojoxGridxDodExpando {
+	background-position: -380px -20px;
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>New Grid Nested Sorting Test</title>
+	</head>
+	<style type="text/css">
+		@import "../../../util/doh/robot/robot.css";
+	</style>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript">
+		require(['dojo'], function(dojo){
+			dojo.ready(function(){
+				doh.robot.initRobot('../test_grid_pagination.html');
+				
+				doh.register("GridX.Pagination", [
+					function getPageSize(t){
+						t.is(100, grid().pagination.pageSize(), 'getPageSize() incorrect!');
+					},						
+					function setPageSize(t){//TODO change the API naming?
+						var p = grid().pagination;
+						p.setPageSize(200);
+						t.is(200, p.pageSize(), 'getPageSize() incorrect!');
+					},
+					function getPageCount(t){//TODO change the API naming?
+						t.is(5, grid().pagination.pageCount(), 'getPageCount() incorrect!');
+					},
+					function getCurrentPage(t){
+						t.is(3, grid().pagination.currentPage(), 'getCurrentPage() incorrect!');
+					}
+					/*
+					 TODO - more DOH cases:					
+						firstIndexInPage(page)
+						
+						lastIndexInPage(page)
+						
+						pageOfIndex(index)
+						
+						indexInPage(index)
+						
+						filterIndexesInPage(indexes, page)		 
+					 */
+				]);
+				doh.run();
+			});
+		});
+	</script>
+	<body class='claro'>
+	</body>
+</html>
