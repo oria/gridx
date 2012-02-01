@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>New Grid ExtendedSelect Test</title>
+	</head>
+	<style type="text/css">
+		@import "../../../util/doh/robot/robot.css";
+	</style>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript">
+		require(['dojo'], function(dojo){
+			dojo.ready(function(){
+				doh.robot.initRobot('../test_grid_extendedSelect.html');
+				
+				doh.register("GridX.ExtendedSelect.Row", [
+					function selectById(t){
+						var selectRow = grid().select.row;
+						selectRow.selectById(1, 3, 5);
+						var selected = selectRow.getSelected();
+						t.t(dojo.indexOf(selected, 1) >= 0, 'row 1 should be selected');
+						t.t(selectRow.isSelected(1), 'row 1 should be selected');
+						t.t(dojo.indexOf(selected, 3) >= 0, 'row 3 should be selected');
+						t.t(selectRow.isSelected(3), 'row 3 should be selected');
+						t.t(dojo.indexOf(selected, 5) >= 0, 'row 5 should be selected');
+						t.t(selectRow.isSelected(5), 'row 5 should be selected');
+					},
+					function deselectById(t){
+						var selectRow = grid().select.row;
+						selectRow.selectById(1);
+						t.t(dojo.indexOf(selectRow.getSelected(), 1) >= 0, 'row 1 should be selected');
+						t.t(selectRow.isSelected(1), 'row 1 should be selected');
+						selectRow.deselectById(1);
+						t.t(dojo.indexOf(selectRow.getSelected(), 1) < 0, 'row 1 should not be selected');
+						t.t(!selectRow.isSelected(1), 'row 1 should not be selected');
+					},
+					{
+						name: 'selectByIndex 1',
+						timeout: 100000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+							var selectRow = grid().select.row;
+							selectRow.clear();
+							//select row with index 1, 2, 3 (so ids are 2, 3, 4).
+							dojo.when(selectRow.selectByIndex(1, 2, 3), function(){
+								try{
+									var selected = selectRow.getSelected();
+									t.is(3, selected.length, 'selected row count');
+									t.t(dojo.indexOf(selected, 2) >= 0, 'row 2 should be selected');
+									t.t(selectRow.isSelected(2), 'row 2 should be selected');
+									t.t(dojo.indexOf(selected, 3) >= 0, 'row 3 should be selected');
+									t.t(selectRow.isSelected(3), 'row 3 should be selected');
+									t.t(dojo.indexOf(selected, 4) >= 0, 'row 4 should be selected');
+									t.t(selectRow.isSelected(4), 'row 4 should be selected');
+									d.callback(true);
+								}catch(e){
+									d.errback(e);
+								}
+							});
+							return d;
+						}
+					},
+					{
+						name: 'selectByIndex 2',
+						timeout: 100000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+							var selectRow = grid().select.row;
+							selectRow.clear();
+							//select row from index 5 to index 8, inclusive.
+							dojo.when(selectRow.selectByIndex([5, 8]), function(){
+								try{
+									var selected = selectRow.getSelected();
+									t.is(4, selected.length, 'selected row count');
+									t.t(dojo.indexOf(selected, 6) >= 0, 'row 6 should be selected');
+									t.t(selectRow.isSelected(6), 'row 6 should be selected');
+									t.t(dojo.indexOf(selected, 7) >= 0, 'row 7 should be selected');
+									t.t(selectRow.isSelected(7), 'row 7 should be selected');
+									t.t(dojo.indexOf(selected, 8) >= 0, 'row 8 should be selected');
+									t.t(selectRow.isSelected(8), 'row 8 should be selected');
+									t.t(dojo.indexOf(selected, 9) >= 0, 'row 9 should be selected');
+									t.t(selectRow.isSelected(9), 'row 9 should be selected');
+									d.callback(true);
+								}catch(e){
+									d.errback(e);
+								}
+							});
+							return d;
+						}
+					},
+					{
+						name: 'selectByIndex 3',
+						timeout: 100000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+							var selectRow = grid().select.row;
+							selectRow.clear();
+							//complicated selection
+							dojo.when(selectRow.selectByIndex([20, 23], [5, 8], 11, 13, 15), function(){
+								try{
+									var selected = selectRow.getSelected();
+									t.is(11, selected.length, 'selected row count');
+									t.t(dojo.indexOf(selected, 6) >= 0, 'row 6 should be selected');
+									t.t(selectRow.isSelected(6), 'row 6 should be selected');
+									t.t(dojo.indexOf(selected, 7) >= 0, 'row 7 should be selected');
+									t.t(selectRow.isSelected(7), 'row 7 should be selected');
+									t.t(dojo.indexOf(selected, 8) >= 0, 'row 8 should be selected');
+									t.t(selectRow.isSelected(8), 'row 8 should be selected');
+									t.t(dojo.indexOf(selected, 9) >= 0, 'row 9 should be selected');
+									t.t(selectRow.isSelected(9), 'row 9 should be selected');
+									t.t(dojo.indexOf(selected, 12) >= 0, 'row 12 should be selected');
+									t.t(selectRow.isSelected(12), 'row 12 should be selected');
+									t.t(dojo.indexOf(selected, 14) >= 0, 'row 14 should be selected');
+									t.t(selectRow.isSelected(14), 'row 14 should be selected');
+									t.t(dojo.indexOf(selected, 16) >= 0, 'row 16 should be selected');
+									t.t(selectRow.isSelected(16), 'row 16 should be selected');
+									t.t(dojo.indexOf(selected, 21) >= 0, 'row 21 should be selected');
+									t.t(selectRow.isSelected(21), 'row 21 should be selected');
+									t.t(dojo.indexOf(selected, 22) >= 0, 'row 22 should be selected');
+									t.t(selectRow.isSelected(22), 'row 22 should be selected');
+									t.t(dojo.indexOf(selected, 23) >= 0, 'row 23 should be selected');
+									t.t(selectRow.isSelected(23), 'row 23 should be selected');
+									t.t(dojo.indexOf(selected, 24) >= 0, 'row 24 should be selected');
+									t.t(selectRow.isSelected(24), 'row 24 should be selected');
+									d.callback(true);
+								}catch(e){
+									d.errback(e);
+								}
+							});
+							return d;
+						}
+					},
+					{
+						name: 'selectAll',
+						timeout: 100000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+							var selectRow = grid().select.row;
+							dojo.when(selectRow.selectAll(), function(){
+								try{
+									var selected = selectRow.getSelected();
+									t.is(100, selected.length, 'selected row count');
+									for(var i = 1; i <= 100; ++i){
+										t.t(dojo.indexOf(selected, i) >= 0, 'row ' + i + ' should be selected');
+										t.t(selectRow.isSelected(i), 'row ' + i + ' should be selected');
+									}
+									d.callback(true);
+								}catch(e){
+									d.errback(e);
+								}
+							});
+							return d;
+						}
+					},
+					{
+						name: 'clear',
+						timeout: 100000,
+						runTest: function(t){
+							var d = new doh.Deferred();
+							var selectRow = grid().select.row;
+							//clear means deselect all, it is the opposite of selectAll.
+							dojo.when(selectRow.clear(), function(){
+								try{
+									var selected = selectRow.getSelected();
+									t.is(0, selected.length, 'selected row count');
+									for(var i = 1; i <= 100; ++i){
+										t.t(!selectRow.isSelected(i), 'row ' + i + ' should not be selected');
+									}
+									d.callback(true);
+								}catch(e){
+									d.errback(e);
+								}
+							});
+							return d;
+						}
+					}
+				]);
+				doh.run();
+			});
+		});
+	</script>
+	<body class='claro'>
+	</body>
+</html>
+

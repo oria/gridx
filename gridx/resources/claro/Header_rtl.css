@@ -1,0 +1,9 @@
+.claro .dojoxGridxRtl .dojoxGridxHeaderRow .dojoxGridxCell {
+	border-color: transparent #FFFFFF transparent #BCBCBC ;
+}
+
+.claro .dojoxGridxRtl .dojoxGridxHeaderRowInner {
+	background-position: left;
+	border-right: none;
+	border-left: 1px solid #FFFFFF;
+}
