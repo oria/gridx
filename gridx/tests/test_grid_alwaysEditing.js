@@ -4,13 +4,15 @@ require([
 	'dijit/form/DateTextBox',
 	'dijit/form/TimeTextBox',
 	'dijit/form/NumberTextBox',
+	'dijit/form/NumberSpinner',
+	'dijit/form/HorizontalSlider',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(locale, TextBox, DateTextBox, TimeTextBox, NumberTextBox,
+], function(locale, TextBox, DateTextBox, TimeTextBox, NumberTextBox, NumberSpinner, HSlider,
 	Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	var getDate = function(d){
@@ -28,20 +30,27 @@ require([
 		return res;
 	};
 	var structure = [
-		{ field: "id", name:"Index"},
-		{ field: "Genre", name:"Genre", editable: true},
-		{ field: "Artist", name:"Artist", editable: true},
-		{ field: "Year", name:"Year (editable)", dataType:"number", width: '100px', 
-			editable: true, 
+		{ id: "id", field: "id", name:"Index", width: '50px'},
+//        { id: "Genre", field: "Genre", name:"Genre", alwaysEditing: 1},
+		{ field: "Year", name:"Year", dataType:"number",
 			alwaysEditing: true,
-			editor: NumberTextBox
+			editor: NumberSpinner
 		},
-		{ field: "Album", name:"Album", editable: true},
-		{ field: "Name", name:"Name", editable: true},
-		{ field: "Length", name:"Length", editable: true},
-		{ field: "Track", name:"Track", editable: true},
-		{ field: "Composer", name:"Composer", editable: true},
-		{ field: "Download Date", name:"Date", editable: true, 
+		{ field: "Progress", name:"Progress", 
+//            width: '200px',
+			alwaysEditing: true,
+			editor: HSlider,
+			editorArgs: {
+				dijitProperties: {
+					maximum: 1
+				}
+			}
+		},
+//        { id: "Artist", field: "Artist", name:"Artist", alwaysEditing: 1},
+//        { field: "Album", name:"Album", editable: true, alwaysEditing: 1},
+//        { field: "Name", name:"Name", alwaysEditing: 0},
+//        { field: "Composer", name:"Composer", alwaysEditing: 1},
+		{ field: "Download Date", name:"Date", alwaysEditing: true, 
 			dataType: 'date', 
 			storePattern: 'yyyy/M/d',
 			editor: DateTextBox,
@@ -49,11 +58,11 @@ require([
 				fromEditor: getDate
 			}
 		},
-		{ field: "Last Played", name:"Last Played (editable)", width: '100px', 
+		{ field: "Last Played", name:"Last Played", width: '100px', 
 			dataType:"time",
 			storePattern: 'HH:mm:ss',
 			formatter: 'hh:mm a',
-			editable: true,
+			alwaysEditing: true,
 			editor: TimeTextBox,
 			editorArgs: {
 				fromEditor: getTime
@@ -61,43 +70,32 @@ require([
 		}
 	];
 
+	var t1 = new Date().getTime();
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
 		store: storeFactory({
 			dataSource: dataSource, 
-			size: 100
+			size: 1000
 		}),
 		structure: structure,
+		selectRowTriggerOnCell: 1,
 		modules: [
 			modules.Focus,
 			modules.CellWidget,
 			modules.Edit,
+			modules.SelectRow,
+			modules.SingleSort,
 			modules.VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();
+	alert(new Date().getTime() - t1);
 
-
-	window.beginEdit2_3 = function(){
-		grid.edit.begin('2', '3');
-	}
-	window.applyEdit2_3 = function(){
-		grid.edit.apply('2', '3');
-	}
-	window.cancelEdit2_3 = function(){
-		grid.edit.cancel('2', '3');
-	}
-	window.isEditing2_3 = function(){
-		alert(grid.edit.isEditing('2', '3'));
-	}
-	window.setEditor3 = function(){
-		grid.edit.setEditor(4, TextBox);
-	}
 
 	//Test buttons
-	var tp = new TestPane({});
+	/*var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
 
 	tp.addTestSet('Core Functions', [
@@ -108,5 +106,5 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Year" column\'s editor to a TextBox</div><br/>'
 	].join(''));
 
-	tp.startup();
+	tp.startup();*/
 });
