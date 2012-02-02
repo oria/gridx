@@ -32,8 +32,8 @@ require([
 			['Details on Demand', 'test_grid_dod', 'dod.jpg', 'A pretty feature providing the ability for rows to expand. Various arguments available to support different use cases.'],
 			['DnD columns/rows within Grid', 'test_grid_dnd_rearrange', 'dnd.jpg', 'Rearrange grid rows and columns by drag & drop'],
 			['DnD rows between grid', 'test_grid_dndrow_betweengrids', 'dnd2.jpg', 'Drag and drop grid rows to other grids.'],
-			['DnD rows from/to non-grid sources', 'test_grid_dndrow_nongrid_source', 'dnd3.jpg', 'Drag and drop grid rows between grid and non-grid sources.'],
-			['DnD rows to non-grid targets', 'test_grid_dndrow_nongrid_target', 'dnd4.jpg', 'Drag and drop grid rows to non-grid targets.'],
+			['DnD rows from/to none-grid sources', 'test_grid_dndrow_nongrid_source', 'dnd3.jpg', 'Drag and drop grid rows between grid and non-grid sources.'],
+			['DnD rows to none-grid targets', 'test_grid_dndrow_nongrid_target', 'dnd4.jpg', 'Drag and drop grid rows to non-grid targets.'],
 			//['Drag & Drop - Drag columns to non-grid targets', 'test_grid_dndcolumns_nongrid_target', 'dnd.jpg', 'Drag and drop grid columns to non-grid targets.'],
 		0]],
 		['Performance', [
