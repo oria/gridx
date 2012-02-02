@@ -1,0 +1,53 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+		<title>Grid Demo</title>
+		<link rel='stylesheet' href="support/common.css" />
+		<link rel='stylesheet' href="support/GridConfig.css" />
+		<style type="text/css">
+			.viewport {
+				margin: 0 20px;
+				width: 100%;
+			}
+			#gridContainer {
+				width: 800px;
+				height: 600px;
+			}
+			#grid {
+				height: 100%;
+			}
+		</style>
+		<script type="text/javascript" src="../../dojo/dojo.js" 
+			data-dojo-config="async: true, isDebug: true, parseOnLoad: false,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+		<script type="text/javascript" src="../gridx-all.js"></script>
+		<script type="text/javascript" src="../../dijit/tests/_testCommon.js"></script>
+		<script type="text/javascript" src="demo_grid.js"></script>
+	</head>
+	<body class='claro'>
+		<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+			Grid All-In-One Test Page	
+		</h1>
+		<table class='viewport' border='0' cellspacing='0' cellpadding='0'><tr>
+			<td class='pane'>
+				<div id='gridContainer'>
+					<div id="tutor">
+						<ol>
+							<li>[Optional step] Select a store</li>
+							<li>[Optional step] Select a column structure for the store</li>
+							<li>[Optional step] Select a proper cache for grid</li>
+							<li>[Optional step] Select any attributes for grid</li>
+							<li>[Optional step] Select any extensions for grid model</li>
+							<li>[Optional step] Select any features/plugins for grid</li>
+							<li>Hit the&nbsp;<span style='font-weight: bolder;'>Create Grid</span>&nbsp;button and see the grid</li>
+							<li>[Optional step] Go back to step 1</li>
+						</ol>
+					</div>
+				</div>
+			</td>
+			<td id='ctrlPane' class='pane'>
+				<div id="gridConfig"></div>
+			</td>
+		</tr></table>
+	</body>
+</html>

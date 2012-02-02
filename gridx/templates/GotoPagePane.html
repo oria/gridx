@@ -1,0 +1,27 @@
+<div class='dojoxGridxGotoPage'
+	><table><tbody
+		><tr><td class='dojoxGridxGotoPageMainMsg'>
+		${gotoDialogMainMsg}
+		</td></tr
+		><tr><td class='dojoxGridxGotoPageInput'
+			><input dojoType='${numberTextBoxClass}'
+				class='dojoxGridxGotoPageInputBox'
+				dojoAttachPoint='pageInputBox'
+				dojoAttachEvent='onKeyUp: _updateStatus'></input
+			><span
+				class='dojoxGridxPageCountMsg'
+				dojoAttachPoint='pageCountMsgNode'></span
+		></td></tr
+		><tr><td class='dojoxGridxGotoPageBtns'
+			><button dojoType='${buttonClass}' 
+				dojoAttachPoint='okBtn'
+				dojoAttachEvent='onClick: _onOK'>
+				${gotoDialogOKBtn}
+			</button
+			><button dojoType='${buttonClass}'
+				dojoAttachEvent='onClick: _onCancel'>
+				${gotoDialogCancelBtn}
+			</button
+		></td></tr
+	></tbody></table
+></div>
