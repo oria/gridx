@@ -57,7 +57,7 @@ define([
 	declare(_Module, {
 		name: 'edit',
 	
-		forced: ['cellDijit'],
+		forced: ['cellWidget'],
 	
 		constructor: function(){
 			this._editingCells = {};
@@ -70,8 +70,10 @@ define([
 		},
 	
 		preload: function(){
-			this.connect(this.grid, 'onCellDblClick', '_onUIBegin');
-			this.connect(this.grid, 'onCellMouseDown', '_onMouseApply');
+			this.batchConnect(
+				[this.grid, 'onCellDblClick', '_onUIBegin'],
+				[this.grid, 'onCellMouseDown', '_onMouseApply']
+			);
 			this._initAlwaysEdit();
 			this._initFocus();
 		},
@@ -131,7 +133,7 @@ define([
 					rowIndex = this.model.idToIndex(rowId),
 					col = g._columnsById[colId];
 				if(rowIndex >= 0 && col.editable){
-					g.cellDijit.setCellDecorator(rowId, colId, 
+					g.cellWidget.setCellDecorator(rowId, colId, 
 						this._getDecorator(colId), 
 						this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.hitch(g, g._getTypeData, colId))
@@ -158,16 +160,16 @@ define([
 				rowIndex = m.idToIndex(rowId);
 			if(rowIndex >= 0){
 				var g = this.grid, 
-					cd = g.cellDijit, 
+					cw = g.cellWidget, 
 					col = g._columnsById(colId);
 				if(col){
 					if(col.alwaysEditing){
-						var cw = cd.getCellWidget(rowId, colId), 
+						var cw = cw.getCellWidget(rowId, colId), 
 							rowCache = m.byId(rowId);
 						cw.setValue(rowCache.data[colId], rowCache.rawData[col.field]);
 						d.callback();
 					}else{
-						cd.restoreCellDecorator(rowId, colId);
+						cw.restoreCellDecorator(rowId, colId);
 						this._erase(rowId, colId);
 						g.body.refreshCell(rowIndex, col.index).then(function(){
 							d.callback();
@@ -187,7 +189,7 @@ define([
 				g = this.grid,
 				cell = g.cell(rowId, colId, true);
 			if(cell){
-				var widget = g.cellDijit.getCellWidget(rowId, colId);
+				var widget = g.cellWidget.getCellWidget(rowId, colId);
 				if(widget && widget.gridCellEditField){
 					var v = widget.gridCellEditField.get('value');
 					try{
@@ -202,7 +204,7 @@ define([
 							if(cell.column.alwaysEditing){
 								d.callback(true);
 							}else{
-								g.cellDijit.restoreCellDecorator(rowId, colId);
+								g.cellWidget.restoreCellDecorator(rowId, colId);
 								_this._erase(rowId, colId);
 								g.body.refreshCell(cell.row.index(), cell.column.index()).then(function(){
 									d.callback(true);
@@ -210,7 +212,7 @@ define([
 							}
 						});
 					}catch(e){
-						g.cellDijit.restoreCellDecorator(rowId, colId);
+						g.cellWidget.restoreCellDecorator(rowId, colId);
 						this._erase(rowId, colId);
 						console.warn('Can not apply change! Error message: ', e);
 						d.callback(false);
@@ -228,7 +230,7 @@ define([
 			if(col && col.alwaysEditing){
 				return true;
 			}
-			var widget = this.grid.cellDijit.getCellWidget(rowId, colId);
+			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
 			return !!widget && !!widget.gridCellEditField;
 		},
 	
@@ -248,14 +250,15 @@ define([
 	
 		//Private------------------------------------------------------------------
 		_initAlwaysEdit: function(){
-			var cols = this.grid._columns;
-			for(var i = cols.length - 1; i >= 0; --i){
+			for(var cols = this.grid._columns, i = cols.length - 1; i >= 0; --i){
 				var col = cols[i];
 				if(col.alwaysEditing){
+					col.navigable = true;
 					col.userDecorator = this._getDecorator(col.id);
 					col.setCellValue = this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.hitch(this.grid, this.grid._getTypeData, col.id));
 					col.decorator = function(){ return ''; };
+					//FIXME: this breaks encapsulation
 					col._cellWidgets = [];
 				}
 			}
@@ -273,13 +276,13 @@ define([
 		},
 	
 		_focusEditor: function(rowId, colId){
-			var cellDijit = this.grid.cellDijit;
-			var func = function(){
-				var widget = cellDijit.getCellWidget(rowId, colId);
-				if(widget && widget.gridCellEditField){
-					widget.gridCellEditField.focus();
-				}
-			};
+			var cw = this.grid.cellWidget,
+				func = function(){
+					var widget = cw.getCellWidget(rowId, colId);
+					if(widget && widget.gridCellEditField){
+						widget.gridCellEditField.focus();
+					}
+				};
 			if(sniff('webkit')){
 				func();
 			}else{
@@ -357,13 +360,16 @@ define([
 				f.registerArea({
 					name: 'edit',
 					priority: 1,
-					doFocus: lang.hitch(this, '_onFocus'),
-					doBlur: lang.hitch(this, '_doBlur'),
-					onFocus: lang.hitch(this, '_onFocus'),
-					onBlur: lang.hitch(this, '_onBlur')
+					scope: this,
+					doFocus: this._onFocus,
+					doBlur: this._doBlur,
+					onFocus: this._onFocus,
+					onBlur: this._onBlur,
+					connects: [
+						this.connect(this.grid, 'onCellKeyPress', '_onKey'),
+						this.connect(this, '_focusEditor', '_focus')
+					]
 				});
-				this.connect(this.grid, 'onCellKeyPress', '_onKey');
-				this.connect(this, '_focusEditor', '_focus');
 			}
 		},
 

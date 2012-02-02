@@ -2,7 +2,6 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
-	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/query",
 	"dojo/_base/sniff",
@@ -10,7 +9,7 @@ define([
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, array, html, lang, Deferred, query, sniff, event, keys, metrics, _Module){
+], function(declare, array, html, Deferred, query, sniff, event, keys, metrics, _Module){
 
 	return _Module.register(
 	declare(_Module, {
@@ -52,7 +51,10 @@ define([
 		},
 
 		load: function(){
-			this._ready.then(lang.hitch(this.loaded, this.loaded.callback));
+			var loaded = this.loaded;
+			this._ready.then(function(){
+				loaded.callback();
+			});
 		},
 
 		//Public-----------------------------------------------------------------------------

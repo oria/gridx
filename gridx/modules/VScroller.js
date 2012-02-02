@@ -1,13 +1,12 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
-//    "dojo/_base/html",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
 	"dojo/query",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, /*html,*/ event, sniff, query, metrics, _Module){
+], function(declare, Deferred, event, sniff, query, metrics, _Module){
 	
 	return _Module.register(
 	declare(_Module, {
@@ -97,7 +96,6 @@ define([
 		},
 	
 		_onBodyChange: function(){
-//            html.style(this.stubNode, 'height', this.grid.bodyNode.scrollHeight + 'px');
 			this.stubNode.style.height = this.grid.bodyNode.scrollHeight + 'px';
 			this._doScroll();
 		},

@@ -2,7 +2,6 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
-	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/query",
 	"dojo/_base/sniff",
@@ -11,7 +10,7 @@ define([
 	"dojox/html/metrics",
 	"../util",
 	"../core/_Module"
-], function(declare, array, html, lang, Deferred, query, sniff, event, keys, metrics, util, _Module){
+], function(declare, array, html, Deferred, query, sniff, event, keys, metrics, util, _Module){
 
 	return _Module.register(
 	declare(_Module, {
@@ -158,9 +157,10 @@ define([
 					name: 'header',
 					priority: 0,
 					focusNode: this.domNode,
-					doFocus: lang.hitch(this, '_doFocus'),
-					doBlur: lang.hitch(this, '_blurNode'),
-					onBlur: lang.hitch(this, '_blurNode'),
+					scope: this,
+					doFocus: this._doFocus,
+					doBlur: this._blurNode,
+					onBlur: this._blurNode,
 					connects: [
 						this.connect(this.domNode, 'onkeydown', '_onKeyDown'),
 						this.connect(g, 'onHeaderCellMouseDown', function(evt){

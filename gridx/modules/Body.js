@@ -2,14 +2,13 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/html",
-	"dojo/_base/lang",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
 	"dojo/keys",
 	"../core/_Module",
 	"../util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, html, lang, event, Deferred, keys, _Module, util, nls){
+], function(declare, query, html, event, Deferred, keys, _Module, util, nls){
 
 	return _Module.register(
 	declare(_Module, {
@@ -412,7 +411,7 @@ define([
 		_buildCells: function(rowData, rowInfo){
 			var i, col, len, isPadding, g = this.grid, columns = g._columns,
 				isFocusArea = g.focus && (g.focus.currentArea() === 'body'),
-				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
+				sb = ['<table class="dojoxGridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			for(i = 0, len = columns.length; i < len; ++i){
 				col = columns[i];
 				isPadding = g.tree && rowData[col.id] === undefined;
@@ -562,10 +561,11 @@ define([
 					name: 'body',
 					priority: 1,
 					focusNode: grid.bodyNode,
-					doFocus: lang.hitch(this, '_doFocus'),
-					doBlur: lang.hitch(this, '_blurCell'),
-					onFocus: lang.hitch(this,'_onFocus'),
-					onBlur: lang.hitch(this, '_blurCell')
+					scope: this,
+					doFocus: this._doFocus,
+					doBlur: this._blurCell,
+					onFocus: this._onFocus,
+					onBlur: this._blurCell
 				});
 				this.connect(grid.mainNode, 'onkeypress', function(evt){
 					if(focus.currentArea() == 'body' && (!grid.tree || !evt.ctrlKey)){

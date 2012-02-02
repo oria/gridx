@@ -2,12 +2,11 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
-	"dojo/_base/lang",
 	"dojo/_base/html",
 	"dojo/keys",
 	"../core/_Module",
 	"../util"
-], function(declare, query, array, lang, html, keys, _Module, util){
+], function(declare, query, array, html, keys, _Module, util){
 
 	return _Module.register(
 	declare(_Module, {
@@ -179,10 +178,11 @@ define([
 					name: 'rowHeader',
 					priority: 0.9,
 					focusNode: this.bodyNode,
-					doFocus: lang.hitch(this, this._doFocus),
-					onFocus: lang.hitch(this, this._onFocus),
-					doBlur: lang.hitch(this, this._blur),
-					onBlur: lang.hitch(this, this._blur),
+					scope: this,
+					doFocus: this._doFocus,
+					onFocus: this._onFocus,
+					doBlur: this._blur,
+					onBlur: this._blur,
 					connects: [
 						this.connect(this.bodyNode, 'onkeydown', '_onKeyDown')
 					]

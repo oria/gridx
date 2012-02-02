@@ -1,10 +1,9 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/html",
-	"dojo/_base/lang",
 	"dojo/_base/window",
 	"../core/_Module"
-], function(declare, html, lang, win, _Module){
+], function(declare, html, win, _Module){
 
 	return _Module.register(
 	declare(_Module, {
@@ -78,7 +77,10 @@ define([
 					needScroll = 1;
 				}
 				if(needScroll){
-					this._handler = setTimeout(lang.hitch(this, this._scroll), this._timeout);
+					var _this = this;
+					this._handler = setTimeout(function(){
+						_this._scroll();
+					}, this._timeout);
 					return;
 				}
 			}

@@ -15,10 +15,9 @@ define([
 	"./modules/HLayout",
 	"./modules/VScroller",
 	"./modules/HScroller",
-	"./modules/ColumnWidth",
-	"./modules/ColumnResizer"
+	"./modules/ColumnWidth"
 ], function(declare, array, lang, html, Deferred, query, _Widget, _TemplatedMixin, template, Core, 
-	Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, ColumnResizer){
+	Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
 
 	var Grid = declare('gridx.Grid', [_Widget, _TemplatedMixin, Core], {
 		templateString: template,
@@ -32,7 +31,6 @@ define([
 			VScroller,
 			HScroller,
 			ColumnWidth
-//            ColumnResizer
 		],
 
 		coreExtensions: [

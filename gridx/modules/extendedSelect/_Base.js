@@ -1,14 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
-	"dojo/_base/lang",
 	"dojo/_base/html",
 	"dojo/_base/Deferred",
 	"dojo/_base/window",
 	"dojo/keys",
 	"../../core/_Module",
 	"../AutoScroll"
-], function(declare, connect, lang, html, Deferred, win, keys, _Module){
+], function(declare, connect, html, Deferred, win, keys, _Module){
 
 	return declare(_Module, {
 		required: ['autoScroll'],
@@ -82,7 +81,10 @@ define([
 				}
 				this._lastSelectedIds = this.getSelected();
 				this._refSelectedIds = [];
-				return Deferred.when(this[func](args, toSelect), lang.hitch(this, this._onSelectionChange));
+				var _this = this;
+				return Deferred.when(this[func](args, toSelect), function(){
+					_this._onSelectionChange();
+				});
 			}
 		},
 
@@ -154,19 +156,21 @@ define([
 		_end: function(){
 			if(this._selecting){
 				this._endAutoScroll();
-				this.grid.autoScroll.enabled = false;
 				this._selecting = false;
 				this._marking = true;
+				var g = this.grid,
+					_this = this;
+				g.autoScroll.enabled = false;
 				var d = this._addToSelected(this._startItem, this._currentItem, this._toSelect);
 				this._lastToSelect = this._toSelect;
 				this._lastStartItem = this._startItem;
 				this._lastEndItem = this._currentItem;
 				this._startItem = this._currentItem = this._isRange = null;
-				Deferred.when(d, lang.hitch(this, function(){
-					html.setSelectable(this.grid.domNode, true);
-					this._marking = false;
-					this._onSelectionChange();
-				}));
+				Deferred.when(d, function(){
+					html.setSelectable(g.domNode, true);
+					_this._marking = false;
+					_this._onSelectionChange();
+				});
 			}
 		},
 

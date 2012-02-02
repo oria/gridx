@@ -351,19 +351,14 @@ var modules = {
 	"filter bar": {
 		"default": mods.FilterBar
 	},
-	"cell dijit": {
-		"default": mods.CellDijit
+	"widget in cell": {
+		"default": mods.CellWidget
 	},
 	"edit": {
 		"default": mods.Edit
 	},
 	"tree": {
-		"default": mods.Tree,
-		onChange: function(checked, cfg){
-			if(checked){
-				cfg.getHandle('cache', 'Asynchronous Tree Cache').set('checked', true);
-			}
-		}
+		"default": mods.Tree
 	}
 };
 
