@@ -71,6 +71,8 @@ define([
 			}
 		}
 	});
+
+	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
 	
 	return _Module.register(
 	declare(_Module, {

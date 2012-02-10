@@ -186,7 +186,7 @@ define([
 			}
 			//Firefox seems have problem to get offsetX for TH
 			if(dojo.isFF && /th/i.test(e.target.tagName)){
-				var d = lx - cell.offsetLeft;
+				var d = lx - parseInt(cell.parentNode.parentNode.parentNode.style.marginLeft) - cell.offsetLeft;
 				if(d >= 0){lx = d;}
 			}
 			return lx;

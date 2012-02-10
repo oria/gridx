@@ -217,6 +217,7 @@ define([
 		moduleBase._modules[prot.name || prot.declaredClass] = modClass;
 		return modClass;
 	};
+	moduleBase._markupAttrs = ['id', 'name', 'field', 'width', 'dataType', '!formatter', '!decorator', '!sortable'];
 	
 	return moduleBase;
 });

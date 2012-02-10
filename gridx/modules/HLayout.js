@@ -46,10 +46,10 @@ define([
 		//Private-------------------------------------------------------
 		_layout: function(){
 			if(this._regs){
-				var dl = array.map(this._regs, function(reg){
-					return reg[0];
-				});
-				var _this = this, lead = 0, tail = 0;
+				var _this = this, lead = 0, tail = 0,
+					dl = array.map(this._regs, function(reg){
+						return reg[0];
+					});
 				(new DeferredList(dl)).then(function(){
 					array.forEach(_this._regs, function(reg){
 						var w = domGeometry.getMarginBox(reg[1]).w;

@@ -51,7 +51,19 @@ define([
 		dijitProperties: null
 	};
 	=====*/
-	
+	function getTypeData(col, storeData, gridData){
+		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
+			return locale.parse(storeData, col.storePattern);
+		}
+		return gridData;
+	}
+
+	function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
+		var d = locale.parse(rawData[field], parseArgs);
+		return d ? locale.format(d, formatArgs) : rawData[field];
+	}
+
+	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs');
 	
 	return _Module.register(
 	declare(_Module, {
@@ -61,6 +73,31 @@ define([
 	
 		constructor: function(){
 			this._editingCells = {};
+			for(var i = 0, cols = this.grid._columns, len = cols.length; i < len; ++i){
+				var c = cols[i];
+				if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){
+					c.gridPattern = c.gridPattern || 
+						(!lang.isFunction(c.formatter) && 
+							(lang.isObject(c.formatter) || 
+							 typeof c.formatter == 'string') && 
+						c.formatter) || 
+						c.storePattern;
+					var pattern;
+					if(lang.isString(c.storePattern)){
+						pattern = c.storePattern;
+						c.storePattern = {};
+						c.storePattern[c.dataType + 'Pattern'] = pattern;
+					}
+					c.storePattern.selector = c.dataType;
+					if(lang.isString(c.gridPattern)){
+						pattern = c.gridPattern;
+						c.gridPattern = {};
+						c.gridPattern[c.dataType + 'Pattern'] = pattern;
+					}
+					c.gridPattern.selector = c.dataType;
+					c.formatter = lang.partial(dateTimeFormatter, c.field, c.storePattern, c.gridPattern);
+				}
+			}
 		},
 	
 		getAPIPath: function(){
@@ -136,7 +173,7 @@ define([
 					g.cellWidget.setCellDecorator(rowId, colId, 
 						this._getDecorator(colId), 
 						this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
-							lang.hitch(g, g._getTypeData, colId))
+							lang.partial(getTypeData, col))
 					);
 					this._record(rowId, colId);
 					g.body.refreshCell(rowIndex, col.index).then(function(){
@@ -159,9 +196,9 @@ define([
 				m = this.model,
 				rowIndex = m.idToIndex(rowId);
 			if(rowIndex >= 0){
-				var g = this.grid, 
+				var g = this.grid,
 					cw = g.cellWidget, 
-					col = g._columnsById(colId);
+					col = g._columnsById[colId];
 				if(col){
 					if(col.alwaysEditing){
 						var cw = cw.getCellWidget(rowId, colId), 
@@ -256,7 +293,7 @@ define([
 					col.navigable = true;
 					col.userDecorator = this._getDecorator(col.id);
 					col.setCellValue = this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
-							lang.hitch(this.grid, this.grid._getTypeData, col.id));
+							lang.partial(getTypeData, col));
 					col.decorator = function(){ return ''; };
 					//FIXME: this breaks encapsulation
 					col._cellWidgets = [];
@@ -421,12 +458,14 @@ define([
 		_blur: function(){
 			this._editing = false;
 			var focus = this.grid.focus;
-			if(sniff('ie')){
-				setTimeout(function(){
+			if(focus){
+				if(sniff('ie')){
+					setTimeout(function(){
+						focus.focusArea('body');
+					}, 1);
+				}else{
 					focus.focusArea('body');
-				}, 1);
-			}else{
-				focus.focusArea('body');
+				}
 			}
 		},
 
@@ -458,7 +497,7 @@ define([
 		_onMouseApply: function(e){
 			var cells = this._editingCells, r, c;
 			//Skip apply if we are hitting an editing cell.
-			if(this._editing && (!(e.rowId in cells) || (cells[e.rowId] && !(e.columnId in cells[e.rowId])))){
+			if(!(e.rowId in cells) || (cells[e.rowId] && !(e.columnId in cells[e.rowId]))){
 				for(r in cells){
 					for(c in cells[r]){
 						this.apply(r, c).then(lang.hitch(this, this._blur));

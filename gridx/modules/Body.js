@@ -1,14 +1,15 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
-	"dojo/_base/html",
+	"dojo/dom-construct",
+	"dojo/dom-class",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
 	"dojo/keys",
 	"../core/_Module",
 	"../util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, html, event, Deferred, keys, _Module, util, nls){
+], function(declare, query, domConstruct, domClass, event, Deferred, keys, _Module, util, nls){
 
 	return _Module.register(
 	declare(_Module, {
@@ -168,12 +169,12 @@ define([
 						start = _this.renderStart;
 					}
 					count = end - start;
-					var node = query('[visualindex="' + start + '"]', _this.domNode)[0];
-					var uncachedRows = [], renderedRows = [];
+					var node = query('[visualindex="' + start + '"]', _this.domNode)[0],
+						uncachedRows = [], renderedRows = [];
 					if(node){
 						var rows = _this._buildRows(start, count, uncachedRows, renderedRows);
 						if(rows){
-							html.place(rows, node, 'before');
+							domConstruct.place(rows, node, 'before');
 							for(var i = 0, len = renderedRows.length; i < len; ++i){
 								_this.onAfterRow.apply(_this, renderedRows[i]);
 							}
@@ -182,7 +183,7 @@ define([
 					Deferred.when(_this._buildUncachedRows(uncachedRows), function(){
 						for(var i = start; (refreshToEnd || i < end) && node; ++i){
 							var tmp = node.nextSibling;
-							html.destroy(node);
+							domConstruct.destroy(node);
 							node = tmp;
 						}
 						_this.onRender(start, count);
@@ -255,7 +256,7 @@ define([
 				var node = this.getRowNode({visualIndex: this.visualCount});
 				while(node){
 					var tmp = node.nextSibling;
-					html.destroy(node);
+					domConstruct.destroy(node);
 					node = tmp;
 				}
 				if(this.renderStart >= this.visualCount){
@@ -276,10 +277,10 @@ define([
 				if(position === 'top'){
 					this.renderCount += this.renderStart - start;
 					this.renderStart = start;
-					html.place(str, this.domNode, 'first');
+					domConstruct.place(str, this.domNode, 'first');
 				}else if(position === 'bottom'){
 					this.renderCount = start + count - this.renderStart;
-					html.place(str, this.domNode, 'last');
+					domConstruct.place(str, this.domNode, 'last');
 				}else{
 					this.renderStart = start;
 					this.renderCount = count;
@@ -445,7 +446,7 @@ define([
 			var i = wrappers.length - 1;
 			if(i > 0){
 				wrappers.sort(function(a, b){
-					a.priority >= b.priority;
+					return a.priority - b.priority;
 				});
 			}
 			for(; i >= 0; --i){
@@ -473,13 +474,13 @@ define([
 		_decorateEvent: function(e){
 			var node = e.target || e.originalTarget, g = this.grid;
 			while(node && node !== g.bodyNode){
-				if(node.tagName.toLowerCase() === 'td' && html.hasClass(node, 'dojoxGridxCell')){
+				if(node.tagName.toLowerCase() === 'td' && domClass.contains(node, 'dojoxGridxCell')){
 					var col = g._columnsById[node.getAttribute('colid')];
 					e.cellNode = node;
 					e.columnId = col.id;
 					e.columnIndex = col.index;
 				}
-				if(node.tagName.toLowerCase() === 'div' && html.hasClass(node, 'dojoxGridxRow')){
+				if(node.tagName.toLowerCase() === 'div' && domClass.contains(node, 'dojoxGridxRow')){
 					e.rowId = node.getAttribute('rowid');
 					e.parentId = node.getAttribute('parentid');
 					e.rowIndex = parseInt(node.getAttribute('rowindex'), 10);
@@ -520,7 +521,7 @@ define([
 						sibling.setAttribute('visualindex', vindex - 1);
 						++count;
 					}
-					html.destroy(node);
+					domConstruct.destroy(node);
 					if(this.autoChangeSize && this.rootStart === 0){
 						this._deleted = 1;
 						this.updateRootRange(0, this.rootCount - 1, 1);
@@ -543,11 +544,11 @@ define([
 		//-------------------------------------------------------------------------------------
 		_onRowMouseOver: function(e){
 			var rowNode = this.getRowNode({rowId: e.rowId});
-			html.toggleClass(rowNode, 'dojoxGridxRowOver', e.type != 'mouseout');
+			domClass.toggle(rowNode, 'dojoxGridxRowOver', e.type != 'mouseout');
 		},
 		
 		_onCellMouseOver: function(e){
-			html.toggleClass(e.cellNode, 'dojoxGridxCellOver', e.type != 'mouseout');
+			domClass.toggle(e.cellNode, 'dojoxGridxCellOver', e.type != 'mouseout');
 		},
 	
 		//Focus------------------------------------------------------------------------------------------
@@ -587,10 +588,9 @@ define([
 						this._focusCell();
 					}
 				});
-				this.connect(this.domNode, 'onkeypress', '_onKeyScroll');
 				
 				if(grid.hScroller){
-					this.connect(this.grid.bodyNode, 'onscroll', function(){
+					this.connect(grid.bodyNode, 'onscroll', function(){
 						grid.hScroller.scroll(grid.bodyNode.scrollLeft);
 					});
 				}
@@ -613,9 +613,9 @@ define([
 				var preNode = query('.dojoxGridxCellFocus', this.domNode)[0];
 				if(node !== preNode){
 					if(preNode){
-						html.removeClass(preNode, 'dojoxGridxCellFocus');
+						domClass.remove(preNode, 'dojoxGridxCellFocus');
 					}
-					html.addClass(node, 'dojoxGridxCellFocus');
+					domClass.add(node, 'dojoxGridxCellFocus');
 					this._focusCellRow = rowVisIdx;
 					this._focusCellCol = colIdx;
 				}
@@ -672,65 +672,25 @@ define([
 		_blurCell: function(){
 			var node = query('.dojoxGridxCellFocus', this.domNode)[0];
 			if(node){
-				html.removeClass(node, 'dojoxGridxCellFocus');
+				domClass.remove(node, 'dojoxGridxCellFocus');
 			}
 			return true;
 		},
 
 		_onFocus: function(evt){
 			var node = evt.target;
-			while(node && node !== this.domNode && !html.hasClass(node, 'dojoxGridxCell')){
+			while(node && node !== this.domNode && !domClass.contains(node, 'dojoxGridxCell')){
 				node = node.parentNode;
 			}
 			if(node && node !== this.domNode){
 				var colIndex = this.grid._columnsById[node.getAttribute('colid')].index;
-				while(node && !html.hasClass(node, 'dojoxGridxRow')){
+				while(node && !domClass.contains(node, 'dojoxGridxRow')){
 					node = node.parentNode;
 				}
 				var visualIndex = parseInt(node.getAttribute('visualindex'), 10);
 				return this._focusCell(null, visualIndex, colIndex);
 			}
 			return false;
-		},
-		
-		// keyboard scroll support
-		_onKeyScroll: function(evt){
-			if(this.grid.vScroller){
-				var g = this.grid, s = g.vScroller, 
-					clientHeight = s.stubNode.clientHeight,
-					bodyHeight = g.bodyNode.offsetHeight;
-				var focusCell = function(){
-					if(g.focus){
-						this._focusCellRow = parseInt(query('.dojoxGridxRow', g.bodyNode)[0].getAttribute('visualIndex'), 10);
-						// g.focus.focusArea('body', true);
-					}
-				}
-				if(evt.keyCode == keys.HOME){
-					s.domNode.scrollTop = 0;
-					this._focusCellRow = 0;
-				}
-				if(evt.keyCode == keys.END){
-					s.domNode.scrollTop = clientHeight - bodyHeight;
-					this._focusCellRow = this.visualCount - 1;
-				}
-				if(evt.keyCode == keys.PAGE_UP){
-					console.log(this.renderStart, ' ; ', this.renderCount);
-					s.scrollToRow(Math.max(this.renderStart - this.renderCount, 0), true);
-					this._focusCellRow = Math.max(this.renderStart - this.renderCount, 0);
-//					console.log(this.renderStart, ' ; ', this.renderCount);
-//					s.domNode.scrollTop = Math.max(0, s.domNode.scrollTop - bodyHeight);
-//					this._focusCellRow = Math.max(0, this.renderStart - 1);
-				}
-				if(evt.keyCode == keys.PAGE_DOWN){
-					console.log(this.renderStart, ' ; ', this.renderCount);
-					s.scrollToRow(Math.min(this.visualCount - 1, this.renderStart + this.renderCount), true);
-					this._focusCellRow = Math.min(this.visualCount - 1, this.renderStart + this.renderCount);;
-//					console.log(this.renderStart, ' ; ', this.renderCount);
-//					s.domNode.scrollTop = Math.min(clientHeight - bodyHeight, s.domNode.scrollTop + bodyHeight);
-//					this._focusCellRow = Math.min(this.visualCount - 1, this.renderStart + this.renderCount);
-				}
-			}
 		}
 	}));
 });
-

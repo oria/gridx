@@ -1,7 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/array",
-	"dojo/_base/html",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
 	"dojo/_base/Deferred",
 	"dojo/_base/query",
 	"dojo/_base/sniff",
@@ -10,7 +11,7 @@ define([
 	"dojox/html/metrics",
 	"../util",
 	"../core/_Module"
-], function(declare, array, html, Deferred, query, sniff, event, keys, metrics, util, _Module){
+], function(declare, domConstruct, domClass, domGeometry, Deferred, query, sniff, event, keys, metrics, util, _Module){
 
 	return _Module.register(
 	declare(_Module, {
@@ -28,11 +29,11 @@ define([
 
 		constructor: function(){
 			//Prepare this.domNode
-			this.domNode = html.create('div', {
+			this.domNode = domConstruct.create('div', {
 				'class': 'dojoxGridxHeaderRow',
 				role: 'presentation'
 			});
-			this.innerNode = html.create('div', {
+			this.innerNode = domConstruct.create('div', {
 				'class': 'dojoxGridxHeaderRowInner',
 				role: 'row',
 				innerHTML: '<table border="0" cellpadding="0" cellspacing="0"><tr><th class="dojoxGridxCell"></th></tr></table>'
@@ -59,7 +60,7 @@ define([
 
 		destroy: function(){
 			this.inherited(arguments);
-			html.destroy(this.domNode);
+			domConstruct.destroy(this.domNode);
 		},
 
 		columnMixin: {
@@ -69,7 +70,6 @@ define([
 		},
 	
 		//Public-----------------------------------------------------------------------------
-		defaultColumnWidth: 60,
 
 		getHeaderNode: function(id){
 			return query("[colid='" + id + "']", this.domNode)[0];
@@ -77,12 +77,12 @@ define([
 		
 		refresh: function(){
 			var sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'],
-				f = this.grid.focus, _this = this;
-			array.forEach(this.grid.columns(), function(col){
+				g = this.grid, f = g.focus, _this = this;
+			g.columns().forEach(function(col){
 				sb.push('<th colid="', col.id, '" class="dojoxGridxCell ',
 					f && f.currentArea() == 'header' && col.id == _this._focusHeaderId ? _this._focusClass : '',
 					'" role="columnheader" aria-readonly="true" tabindex="-1" style="width: ',
-					(col.getWidth() || _this.arg('defaultColumnWidth') + 'px'), 
+					col.getWidth(),
 					'"><div class="dojoxGridxSortNode">', 
 					col.name(),
 					'</div></th>');
@@ -142,7 +142,7 @@ define([
 		
 		_onHeaderCellMouseOver: function(e){
 			var node = this.getHeaderNode(e.columnId);
-			html.toggleClass(node, 'dojoxGridxHeaderCellOver', e.type == 'mouseover');
+			domClass.toggle(node, 'dojoxGridxHeaderCellOver', e.type == 'mouseover');
 		},
 		
 		// Focus
@@ -190,8 +190,8 @@ define([
 					this._blurNode();
 					if(this.grid.hScroller){
 						//keep scrolling
-						var pos = html.position(node),
-							containerPos = html.position(this.domNode),
+						var pos = domGeometry.position(node),
+							containerPos = domGeometry.position(this.domNode),
 							dif = pos.x + pos.w - containerPos.x - containerPos.w;
 						if(dif < 0){
 							dif = pos.x - containerPos.x - 1;
@@ -202,7 +202,7 @@ define([
 						this._onHScroll(this._scrollLeft + dif);
 						this.grid.hScroller.scroll(this._scrollLeft);
 					}
-					html.addClass(node, this._focusClass);
+					domClass.add(node, this._focusClass);
 					node.focus();
 					return true;
 				}
@@ -213,7 +213,7 @@ define([
 		_blurNode: function(){
 			var node = query('th.' + this._focusClass, this.domNode)[0];
 			if(node){
-				html.removeClass(node, this._focusClass);
+				domClass.remove(node, this._focusClass);
 			}
 			return true;
 		},
@@ -226,6 +226,8 @@ define([
 				if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
 					//Prevent scrolling the whole page.
 					event.stop(evt);
+					evt.stopPropogation();
+					evt.preventDefault();
 					col = grid._columnsById[this._focusHeaderId];
 					col = grid._columns[col.index + delta];
 					if(col){
@@ -237,4 +239,3 @@ define([
 		}
 	}));
 });
-

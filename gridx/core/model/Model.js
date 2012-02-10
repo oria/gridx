@@ -35,16 +35,6 @@ define([
 			this._cache.clear();
 		},
 	
-		restore: function(){
-			//Restore the model to initial state
-			//FIXME: this has problems when there are still pending commands/requests on the fly.
-			this.clearCache();
-			for(var name in this._exts){
-				this._exts[name].clear();
-			}
-			this._cmdQueue = [];
-		},
-
 		when: function(args, callback, scope){
 			this._addCmd({
 				name: '_cmdRequest',
@@ -61,36 +51,36 @@ define([
 				pageSize = args.pageSize || this._cache.pageSize || 1,
 				end = args.count > 0 ? start + args.count : Infinity,
 				scope = args.whenScope || this,
-				whenFunc = args.whenFunc || scope.when;
-			var f = function(s){
-				whenFunc.call(scope, {
-					id: [],
-					range: [{
-						start: s,
-						count: pageSize
-					}]
-				}, function(){
-					var i, r, rows = [];
-					for(i = s; i < s + pageSize && i < end; ++i){
-						r = scope.byIndex(i);
-						if(r){
-							rows.push(r);
-						}else{
-							end = -1;
-							break;
+				whenFunc = args.whenFunc || scope.when,
+				f = function(s){
+					whenFunc.call(scope, {
+						id: [],
+						range: [{
+							start: s,
+							count: pageSize
+						}]
+					}, function(){
+						var i, r, rows = [];
+						for(i = s; i < s + pageSize && i < end; ++i){
+							r = scope.byIndex(i);
+							if(r){
+								rows.push(r);
+							}else{
+								end = -1;
+								break;
+							}
 						}
-					}
-					if(callback(rows, s) || i === end){
-						end = -1;
-					}
-				}).then(function(){
-					if(end === -1){
-						d.callback();
-					}else{
-						f(s + pageSize);
-					}
-				});
-			};
+						if(callback(rows, s) || i === end){
+							end = -1;
+						}
+					}).then(function(){
+						if(end === -1){
+							d.callback();
+						}else{
+							f(s + pageSize);
+						}
+					});
+				};
 			f(start);
 			return d;
 		},
@@ -148,9 +138,9 @@ define([
 				return this._busy;
 			}
 			this._cache.skipCacheSizeCheck = 1;
-			var d = this._busy = new Deferred(),
-				_this = this,
-				cmds = this._cmdQueue,
+			var _this = this,
+				d = _this._busy = new Deferred(),
+				cmds = _this._cmdQueue,
 				finish = function(d, err){
 					delete _this._busy;
 					delete _this._cache.skipCacheSizeCheck;
