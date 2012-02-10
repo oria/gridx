@@ -1,45 +1,51 @@
 <div class='dojoxGridxPager'
-	><table cellpadding="0" cellspacing="0" role="presentation"
+	><table class='dojoxGridxPagerInner' cellpadding="0" cellspacing="0" role="presentation"
 		><tr
-			><td class="dojoxGridxPagerDescription"
-				dojoAttachPoint="_descContainer"
+			><td class="dojoxGridxPagerDescriptionTD"
+				><div class="dojoxGridxPagerDescription"
+					data-dojo-attach-point="_descContainer"
+				></div
 			></td
-			><td class="dojoxGridxPagerStepper"
-				dojoAttachPoint="_pageStepperContainer"
-				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerPrevPage'
-					tabindex='${_tabIndex}'
-					title='${prevPageTitle}'
-					aria-label='${prevPageWai}'
-					pageindex='Prev',
-					dojoAttachPoint='_prevPageBtn'
-					dojoAttachEvent='onclick: _gotoPrevPage'
-					><span class='dojoxGridxPagerA11yInner'>&nbsp;&lt;</span
-				></span
-				><span class='dojoxGridxPagerPages'
-					dojoAttachPoint='_pageBtnContainer'
-					dojoAttachEvent='onclick: _gotoPage, onmouseover: _onHoverPageBtn, onmouseout: _onHoverPageBtn'
-				></span
-				><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerNextPage'
-					tabindex='${_tabIndex}'
-					title='${nextPageTitle}'
-					aria-label='${nextPageWai}'
-					pageindex='Next',
-					dojoAttachPoint='_nextPageBtn'
-					dojoAttachEvent='onclick: _gotoNextPage'
-					><span class='dojoxGridxPagerA11yInner'>&nbsp;&gt;</span
-				></span
+			><td class="dojoxGridxPagerStepperTD"
+				><div class="dojoxGridxPagerStepper"
+					data-dojo-attach-point="_pageStepperContainer"
+					><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerPrevPage'
+						tabindex='${_tabIndex}'
+						title='${prevPageTitle}'
+						aria-label='${prevPageWai}'
+						pageindex='Prev',
+						data-dojo-attach-point='_prevPageBtn'
+						data-dojo-attach-event='onclick: _gotoPrevPage'
+						><span class='dojoxGridxPagerA11yInner'>&nbsp;&lt;</span
+					></span
+					><span class='dojoxGridxPagerPages'
+						data-dojo-attach-point='_pageBtnContainer'
+						data-dojo-attach-event='onclick: _gotoPage, onmouseover: _onHoverPageBtn, onmouseout: _onHoverPageBtn'
+					></span
+					><span class='dojoxGridxPagerStepperBtn dojoxGridxPagerNextPage'
+						tabindex='${_tabIndex}'
+						title='${nextPageTitle}'
+						aria-label='${nextPageWai}'
+						pageindex='Next',
+						data-dojo-attach-point='_nextPageBtn'
+						data-dojo-attach-event='onclick: _gotoNextPage'
+						><span class='dojoxGridxPagerA11yInner'>&nbsp;&gt;</span
+					></span
+				></div
 			></td
-			><td class="dojoxGridxPagerSizeSwitch"
-					dojoAttachPoint='_sizeSwitchContainer'
-					dojoAttachEvent='onclick: _switchPageSize, onmouseover: _onHoverSizeBtn, onmouseout: _onHoverSizeBtn'
+			><td class="dojoxGridxPagerSizeSwitchTD"
+				><div class="dojoxGridxPagerSizeSwitch"
+					data-dojo-attach-point='_sizeSwitchContainer'
+					data-dojo-attach-event='onclick: _switchPageSize, onmouseover: _onHoverSizeBtn, onmouseout: _onHoverSizeBtn'
+				></div
 			></td
 			><td class='dojoxGridxPagerGoto'
 				><span class='dojoxGridxPagerGotoBtn'
 					tabindex='${_tabIndex}'
 					title='${gotoBtnTitle}'
 					aria-label='${gotoBtnWai}'
-					dojoAttachPoint='_gotoBtn'
-					dojoAttachEvent='onclick: _showGotoDialog'
+					data-dojo-attach-point='_gotoBtn'
+					data-dojo-attach-event='onclick: _showGotoDialog'
 					><span class='dojoxGridxPagerA11yInner'>⊥</span
 				></span
 			></td

@@ -1,10 +1,10 @@
 /* Pagination RTL */
 
-.dojoxGridxRtl .dojoxGridxPagerDescription {
+.dojoxGridxRtl .dojoxGridxPagerDescriptionTD {
 	text-align: right;
 }
 
-.dojoxGridxRtl .dojoxGridxPager .dojoxGridxPagerStepper,
+.dojoxGridxRtl .dojoxGridxPager .dojoxGridxPagerStepperTD,
 .dojoxGridxRtl .dojoxGridxPager .dojoxGridxPagerGoto,
 .dojoxGridxRtl .dojoxGridxGotoPage .dojoxGridxGotoPageBtns {
 	text-align: left;
@@ -35,4 +35,9 @@
 }
 .dojoxGridxRtl .dojoxGridxPagerLastPageDisable {
 	background-position: -60px -16px;
+}
+
+/* PaginationBarDD */
+.dojoxGridxRtl .dojoxGridxPagerSizeSwitchDD {
+	text-align: left;
 }

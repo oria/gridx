@@ -1,16 +1,22 @@
 <div class='dojoxGridxPager'
-	><table cellpadding="0" cellspacing="0" role="presentation"
+	><table class='dojoxGridxPagerInner' cellpadding="0" cellspacing="0" role="presentation"
 		><tr
-			><td class="dojoxGridxPagerDescription"
-				dojoAttachPoint="_descContainer"
+			><td class="dojoxGridxPagerDescriptionTD"
+				><div class="dojoxGridxPagerDescription"
+					data-dojo-attach-point="_descContainer"
+				></div
 			></td
-			><td class="dojoxGridxPagerStepper"
-				dojoAttachPoint="_pageStepperContainer"
-				><label class='dojoxGridxPaggerLabel'>${pageLabel}</label
+			><td class="dojoxGridxPagerStepperTD"
+				><div class="dojoxGridxPagerStepper"
+					data-dojo-attach-point="_pageStepperContainer"
+					><label class='dojoxGridxPagerLabel'>${pageLabel}</label
+				></div
 			></td
-			><td class="dojoxGridxPagerSizeSwitch"
-				dojoAttachPoint='_sizeSwitchContainer'
-				><label class='dojoxGridxPaggerLabel'>${pageSizeLabel}</label
+			><td class="dojoxGridxPagerSizeSwitchTD"
+				><div class="dojoxGridxPagerSizeSwitch"
+					data-dojo-attach-point='_sizeSwitchContainer'
+					><label class='dojoxGridxPagerLabel'>${pageSizeLabel}</label
+				></div
 			></td
 		></tr
 	></table
