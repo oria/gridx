@@ -1,0 +1,20 @@
+/* Body */
+.dojoxGridxRtl .dojoxGridxRow .dojoxGridxCell {
+	border-color: transparent transparent #ccc #ccc;
+	text-align: right;
+}
+
+/* VScroller */
+.dojoxGridxRtl .dojoxGridxVScroller {
+	right: auto;
+	left: 0;
+}
+
+/* RowHeader */
+.dojoxGridxRtl .dojoxGridxRowHeaderHeader,
+.dojoxGridxRtl .dojoxGridxRowHeaderBody {
+	right: 0;
+	left: auto;
+	border-right: none;
+	border-left: 1px solid #E5DAC8;
+}

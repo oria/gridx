@@ -1,0 +1,69 @@
+/* Single Sort */
+
+.claro .dojoxGridxArrowButtonNode {
+	background: transparent url("../images/spriteIcons.png") no-repeat 500px 500px;
+	display: none;
+	float: right;
+	height: 10px;
+	margin: 5px 7px 0 0;
+	padding: 0;
+	width: 9px;
+}
+.claro .dojoxGridxSortUp .dojoxGridxArrowButtonNode {
+	display: block;
+	background-position: -33px -2px;
+}
+.claro .dojoxGridxSortDown .dojoxGridxArrowButtonNode {
+	display: block;
+	background-position: -3px -2px;
+}
+
+.claro .dojoxGridxSortSingle {
+	display: none;
+}
+
+.claro .dojoxGridxSortNested {
+	display: block;
+	margin: 2px 5px;
+	float: right;
+	font-size: 10px;
+}
+
+.claro .dojoxGridxHeaderCellOver .dojoxGridxArrowButtonNode,
+.claro .dojoxGridxHeaderCellFocus .dojoxGridxArrowButtonNode {
+	display: block;
+	background-position: -123px -2px;
+}
+
+.claro .dojoxGridxHeaderCellOver .dojoxGridxSortUp .dojoxGridxArrowButtonNode,
+.claro .dojoxGridxHeaderCellFocus .dojoxGridxSortUp .dojoxGridxArrowButtonNode {
+	background-position: -183px -2px;
+}
+
+.claro .dojoxGridxHeaderCellOver .dojoxGridxSortDown .dojoxGridxArrowButtonNode,
+.claro .dojoxGridxHeaderCellFocus .dojoxGridxSortDown .dojoxGridxArrowButtonNode {
+	background-position: -153px -2px;
+}
+
+.claro .dojoxGridxHeaderCellOver .dojoxGridxSortAscendOnly,
+.claro .dojoxGridxHeaderCellFocus .dojoxGridxSortAscendOnly {
+	background-position: -93px -2px;
+}
+
+.claro .dojoxGridxHeaderCellOver .dojoxGridxSortDescendOnly,
+.claro .dojoxGridxHeaderCellFocus .dojoxGridxSortDescendOnly {
+	background-position: -63px -2px;
+}
+
+.claro .dojoxGridxHeaderCellOver .dojoxGridxSortUp .dojoxGridxSortAscendOnly,
+.claro .dojoxGridxHeaderCellFocus .dojoxGridxSortUp .dojoxGridxSortAscendOnly {
+	background-position: -33px -2px;
+}
+
+.claro .dojoxGridxHeaderCellOver .dojoxGridxSortDown .dojoxGridxSortDescendOnly,
+.claro .dojoxGridxHeaderCellFocus .dojoxGridxSortDown .dojoxGridxSortDescendOnly {
+	background-position: -3px -2px;
+}
+
+.claro .dojoxGridxArrowButtonFocus {
+}

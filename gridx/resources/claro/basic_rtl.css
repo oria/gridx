@@ -1,3 +1,4 @@
+/* Header */
 .claro .dojoxGridxRtl .dojoxGridxHeaderRow .dojoxGridxCell {
 	border-color: transparent #FFFFFF transparent #BCBCBC ;
 }
@@ -7,3 +8,13 @@
 	border-right: none;
 	border-left: 1px solid #FFFFFF;
 }
+
+/* Body */
+.claro .dojoxGridxRtl .dojoxGridxBody .dojoxGridxCell{
+	border-color: transparent transparent #E5DAC8 #E5DAC8;
+}
+
+.claro .dojoxGridxRtl .dojoxGridxRow .dojoxGridxCellFocus{
+	border: 1px dashed darkblue;
+}
+
