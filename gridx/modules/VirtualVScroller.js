@@ -39,14 +39,14 @@ define([
 	
 		scrollToRow: function(rowVisualIndex){
 			var d = new Deferred(), _this = this;
-			if(this._scrolls.length){
-				this._scrolls[this._scrolls.length - 1].then(function(){
+			this._scrolls.push(d);
+			if(this._scrolls.length > 1){
+				this._scrolls[this._scrolls.length - 2].then(function(){
 					_this._subScrollToRow(rowVisualIndex, d);
 				});
 			}else{
 				this._subScrollToRow(rowVisualIndex, d);
 			}
-			this._scrolls.push(d);
 			return d;
 		},
 
@@ -92,7 +92,7 @@ define([
 			}
 			setTimeout(function(){
 				_this._subScrollToRow(rowVisualIndex, defer);
-			}, 10);
+			}, 5);
 		},
 	
 		//Protected -------------------------------------------------
