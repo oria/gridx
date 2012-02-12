@@ -97,7 +97,8 @@ define([
 				if(col.decorator && col.widgetsInCell){
 					col.userDecorator = col.decorator;
 					col.decorator = dummy;
-					col._cellWidgets = [];
+					col._cellWidgets = {};
+					col._backupWidgets = [];
 				}
 			}
 		},
@@ -107,19 +108,19 @@ define([
 			this.batchConnect(
 				[body, 'onAfterRow', '_showDijits'],
 				[body, 'onAfterCell', '_showDijit'],
-				[body, 'onRender', '_releaseWidgets']
+				[body, 'onUnrender', '_onUnrenderRow']
 			);
 			this._initFocus();
 		},
 	
 		destory: function(){
 			this.inherited(arguments);
-			var i, j, col, columns = this.grid._columns;
+			var i, id, col, columns = this.grid._columns;
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
 				if(col._cellWidgets){
-					for(j = col._cellWidgets.length - 1; j >= 0; --j){
-						col._cellWidgets[j].destroyRecursive();
+					for(id in col._cellWidgets){
+						col._cellWidgets[id].destroyRecursive();
 					}
 					delete col._cellWidgets;
 				}
@@ -127,6 +128,10 @@ define([
 		},
 	
 		//Public-----------------------------------------------------------------
+
+		// The count of backup widgets for every column which contains widgets
+		backupCount: 20,
+
 		setCellDecorator: function(rowId, colId, decorator, setCellValue){
 			var rowDecs = this._decorators[rowId];
 			if(!rowDecs){
@@ -181,45 +186,29 @@ define([
 	
 		//Private---------------------------------------------------------------
 		_showDijits: function(rowInfo, rowCache){
-			var _this = this;
-			var func = function(){
-				var rowNode = query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0];
-				var i, col, cellNode, cellWidget, columns = _this.grid._columns;
-				for(i = columns.length - 1; i >= 0; --i){
-					col = columns[i];
-					if(col.userDecorator || _this._getSpecialCellDec(rowInfo.rowId, col.id)){
-						cellNode = query('[colid="' + col.id + '"]', rowNode)[0];
-						if(cellNode){
-							cellWidget = _this._getCellWidget(col, rowInfo, rowCache);
-							cellNode.innerHTML = "";
-							cellWidget.placeAt(cellNode);
-							cellWidget.startup();
-						}
+			var rowNode = query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0],
+				i, col, cellNode, cellWidget, columns = this.grid._columns;
+			for(i = columns.length - 1; i >= 0; --i){
+				col = columns[i];
+				if(col.userDecorator || this._getSpecialCellDec(rowInfo.rowId, col.id)){
+					cellNode = query('[colid="' + col.id + '"]', rowNode)[0];
+					if(cellNode){
+						cellWidget = this._getCellWidget(col, rowInfo, rowCache);
+						cellNode.innerHTML = "";
+						cellWidget.placeAt(cellNode);
+						cellWidget.startup();
 					}
 				}
-			};
-//            if(sniff('webkit')){
-				func();
-//            }else{
-//                setTimeout(func, 0);
-//            }
+			}
 		},
 
 		_showDijit: function(cellNode, rowInfo, col, rowCache){
-			var _this = this;
-			var func = function(){
-				if(col.userDecorator || _this._getSpecialCellDec(rowInfo.rowId, col.id)){
-					cellWidget = _this._getCellWidget(col, rowInfo, rowCache);
-					cellNode.innerHTML = "";
-					cellWidget.placeAt(cellNode);
-					cellWidget.startup();
-				}
-			};
-//            if(sniff('webkit')){
-				func();
-//            }else{
-//                setTimeout(func, 0);
-//            }
+			if(col.userDecorator || this._getSpecialCellDec(rowInfo.rowId, col.id)){
+				cellWidget = this._getCellWidget(col, rowInfo, rowCache);
+				cellNode.innerHTML = "";
+				cellWidget.placeAt(cellNode);
+				cellWidget.startup();
+			}
 		},
 	
 		_getCellWidget: function(column, rowInfo, rowCache){
@@ -227,46 +216,41 @@ define([
 				gridData = rowCache.data[column.id],
 				storeData = rowCache.rawData[column.field];
 			if(!widget){
-				widget = new CellWidget({
+				widget = column._backupWidgets.pop() || new CellWidget({
 					content: column.userDecorator(),
 					setCellValue: column.setCellValue
 				});
-				column._cellWidgets.push(widget);
+				column._cellWidgets[rowInfo.rowId] = widget;
 			}
 			widget.setValue(gridData, storeData);
 			return widget;
 		},
 
-		_releaseHandler: null,
-		_releaseWidgets: function(){
-			if(this._releaseHandler){
-				clearTimeout(this._releaseHandler);
-				delete this._releaseHandler;
-			}
-			var _this = this;
-			this._releaseHandler = setTimeout(function(){
-				var bn = _this.grid.bodyNode,
-					columns = _this.grid._columns,
-					i, col, j, widget,
-					getRoot = function(node){
-						while(node && node !== bn){
-							node = node.parentNode;
+		_onUnrenderRow: function(id){
+			var cols = this.grid._columns,
+				backupCount = this.arg('backupCount'),
+				backup = function(col, rowId){
+					if(col._backupWidgets.length < backupCount){
+						col._backupWidgets.push(col._cellWidgets[rowId]);
+					}else{
+						col._cellWidgets[rowId].destroyRecursive();
+					}
+				};
+			for(var i = 0, len = cols.length; i < len; ++i){
+				var col = cols[i],
+					cellWidgets = col._cellWidgets;
+				if(cellWidgets){
+					if(id && cellWidgets[id]){
+						backup(col, id);
+						delete cellWidgets[id];
+					}else{
+						for(var j in cellWidgets){
+							backup(col, j);
 						}
-						return node;
-					};
-				for(i = columns.length - 1; i >= 0; --i){
-					col = columns[i];
-					if(col._cellWidgets){
-						for(j = col._cellWidgets.length - 1; j >= 0; --j){
-							widget = col._cellWidgets[j];
-							if(!getRoot(widget.domNode)){
-								col._cellWidgets.splice(j, 1);
-								widget.destroyRecursive();
-							}
-						}
+						col._cellWidgets = {};
 					}
 				}
-			}, 1000);
+			}
 		},
 	
 		_getSpecialCellDec: function(rowId, colId){
@@ -433,4 +417,3 @@ define([
 		}
 	}));
 });
-

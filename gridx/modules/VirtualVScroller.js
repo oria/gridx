@@ -31,7 +31,7 @@ define([
 		},
 
 		//Public ----------------------------------------------------
-		buffSize: 2,
+		buffSize: 5,
 		
 		lazyScroll: false,
 		
@@ -276,7 +276,8 @@ define([
 		_updateRowHeightAndUnrenderRows: function(){
 			var preCount = 0, postCount = 0,
 				body = this.grid.body, bn = this.grid.bodyNode,
-				top = bn.scrollTop, bottom = bn.scrollTop + bn.clientHeight;
+				buff = this.buffSize * this._avgRowHeight,
+				top = bn.scrollTop - buff, bottom = bn.scrollTop + bn.clientHeight + buff;
 	
 			array.forEach(bn.childNodes, function(node){
 				this._rowHeight[node.getAttribute('rowid')] = node.offsetHeight;

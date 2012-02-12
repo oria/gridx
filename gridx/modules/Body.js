@@ -284,6 +284,11 @@ define([
 				}else{
 					this.renderStart = start;
 					this.renderCount = count;
+//                    for(var i = 0; i < nd.childNodes.length; ++i){
+//                        var rowNode = nd.childNodes[i];
+//                        this.onUnrender(rowNode.getAttribute('rowid'));
+//                    }
+					this.onUnrender();
 					nd.scrollTop = 0;
 					nd.innerHTML = str;
 					g.emptyNode.innerHTML = str ? "" : nls.emptyInfo;
@@ -311,14 +316,16 @@ define([
 						id = bn.lastChild.getAttribute('rowid');
 						this.model.free(id);
 						bn.removeChild(bn.lastChild);
+						this.onUnrender(id);
 					}
 				}else{
 					var t = bn.scrollTop;
 					for(; i < count && bn.firstChild; ++i){
-						id = bn.lastChild.getAttribute('rowid');
+						id = bn.firstChild.getAttribute('rowid');
 						this.model.free(id);
 						t -= bn.firstChild.offsetHeight;
 						bn.removeChild(bn.firstChild);
+						this.onUnrender(id);
 					}
 					this.renderStart += i;
 					bn.scrollTop = t > 0 ? t : 0;
@@ -335,6 +342,7 @@ define([
 		onRootRangeChange: function(/*start, count*/){},
 		onVisualCountChange: function(){/* start, count*/},
 		onRender: function(/*start, count*/){},
+		onUnrender: function(){},
 		onNew: function(/*id, index, rowCache*/){},
 		onDelete: function(/*id, index*/){},
 		onSet: function(/*id, index, rowCache*/){},

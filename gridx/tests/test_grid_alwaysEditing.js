@@ -1,5 +1,6 @@
 require([
 	'dojo/date/locale',
+	'dijit/registry',
 	'dijit/form/TextBox',
 	'dijit/form/DateTextBox',
 	'dijit/form/TimeTextBox',
@@ -12,7 +13,7 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(locale, TextBox, DateTextBox, TimeTextBox, NumberTextBox, NumberSpinner, HSlider,
+], function(locale, registry, TextBox, DateTextBox, TimeTextBox, NumberTextBox, NumberSpinner, HSlider,
 	Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	var getDate = function(d){
@@ -37,7 +38,7 @@ require([
 			editor: NumberSpinner
 		},
 		{ field: "Progress", name:"Progress", 
-//            width: '200px',
+			width: '200px',
 			alwaysEditing: true,
 			editor: HSlider,
 			editorArgs: {
@@ -80,6 +81,7 @@ require([
 		}),
 		structure: structure,
 		selectRowTriggerOnCell: 1,
+		cellWidgetBackupCount: 40,
 		modules: [
 			modules.Focus,
 			modules.CellWidget,
@@ -89,9 +91,32 @@ require([
 			modules.VirtualVScroller
 		]
 	});
+	grid.connect(grid.body, 'onRender', function(){
+		var cws = grid.column(1)._cellWidgets;
+		var cnt = 0;
+		for(var id in cws){
+			if(cws[id]){
+				++cnt;
+			}
+		}
+		console.log(registry.length, cnt, grid.column(1)._backupWidgets.length, grid.body.domNode.childNodes.length);
+	});
+	grid.connect(grid.body, 'onUnrender', function(){
+		var cws = grid.column(1)._cellWidgets;
+		var cnt = 0;
+		for(var id in cws){
+			if(cws[id]){
+				++cnt;
+			}
+		}
+		console.log(registry.length, cnt, grid.column(1)._backupWidgets.length, grid.body.domNode.childNodes.length);
+	});
+
+
 	grid.placeAt('gridContainer');
+
 	grid.startup();
-	alert(new Date().getTime() - t1);
+//    alert(new Date().getTime() - t1);
 
 
 	//Test buttons

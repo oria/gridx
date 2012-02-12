@@ -296,7 +296,8 @@ define([
 							lang.partial(getTypeData, col));
 					col.decorator = function(){ return ''; };
 					//FIXME: this breaks encapsulation
-					col._cellWidgets = [];
+					col._cellWidgets = {};
+					col._backupWidgets = [];
 				}
 			}
 		},
