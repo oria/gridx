@@ -31,7 +31,7 @@ define([
 		},
 
 		//Public ----------------------------------------------------
-		buffSize: 2,
+		buffSize: 5,
 		
 		lazyScroll: false,
 		
@@ -39,14 +39,14 @@ define([
 	
 		scrollToRow: function(rowVisualIndex){
 			var d = new Deferred(), _this = this;
-			if(this._scrolls.length){
-				this._scrolls[this._scrolls.length - 1].then(function(){
+			this._scrolls.push(d);
+			if(this._scrolls.length > 1){
+				this._scrolls[this._scrolls.length - 2].then(function(){
 					_this._subScrollToRow(rowVisualIndex, d);
 				});
 			}else{
 				this._subScrollToRow(rowVisualIndex, d);
 			}
-			this._scrolls.push(d);
 			return d;
 		},
 
@@ -92,7 +92,7 @@ define([
 			}
 			setTimeout(function(){
 				_this._subScrollToRow(rowVisualIndex, defer);
-			}, 10);
+			}, 5);
 		},
 	
 		//Protected -------------------------------------------------
@@ -276,7 +276,8 @@ define([
 		_updateRowHeightAndUnrenderRows: function(){
 			var preCount = 0, postCount = 0,
 				body = this.grid.body, bn = this.grid.bodyNode,
-				top = bn.scrollTop, bottom = bn.scrollTop + bn.clientHeight;
+				buff = this.buffSize * this._avgRowHeight,
+				top = bn.scrollTop - buff, bottom = bn.scrollTop + bn.clientHeight + buff;
 	
 			array.forEach(bn.childNodes, function(node){
 				this._rowHeight[node.getAttribute('rowid')] = node.offsetHeight;

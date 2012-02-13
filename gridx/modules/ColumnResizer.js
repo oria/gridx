@@ -61,6 +61,7 @@ define([
 		onResize: function(/* colId, newWidth, oldWidth */){},
 		
 		_mousemove: function(e){
+			
 			var cell = this._getCell(e);
 			if(this._resizing){
 				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
@@ -126,6 +127,7 @@ define([
 				return;
 			}
 			html.setSelectable(this.grid.domNode, false);
+			document.onselectstart = function () { return false;}
 			this._resizing = true;
 			this._startX = e.pageX;
 			this._gridX = html.position(this.grid.bodyNode).x - this.grid.bodyNode.offsetLeft;
@@ -139,6 +141,7 @@ define([
 			this._readyToResize = false;
 			html.removeClass(win.body(), 'dojoxGridxColumnResizing');
 			html.setSelectable(this.grid.domNode, true);
+			document.onselectstart = null;
 			
 			var cell = this._targetCell, delta = e.pageX - this._startX;
 			var w = (sniff('webkit') ? cell.offsetWidth : html.style(cell, 'width')) + delta;
@@ -171,20 +174,36 @@ define([
 			if(!cell){
 				return 100000;
 			}
-			var lx = e.layerX;
-			if(dojo.isFF){
-				var ffX = parseInt(dojo.style(cell.parentNode.parentNode.parentNode, 'marginLeft'));
-				if(!ffX){ffx = 0;}
-				lx -= ffX;
+			if(/table/i.test(e.target.tagName)){
+				return 0;
 			}
-			var x = lx - cell.offsetLeft;
-			if(x < 0){x = lx;} //chrome take layerX as cell x.
-			return x;
+			var lx = e.offsetX;
+			if(lx == undefined){
+				lx = e.layerX;
+			}
+			if(!/th/i.test(e.target.tagName)){
+				lx += e.target.offsetLeft;
+			}
+			//Firefox seems have problem to get offsetX for TH
+			if(dojo.isFF && /th/i.test(e.target.tagName)){
+				var d = lx - parseInt(cell.parentNode.parentNode.parentNode.style.marginLeft) - cell.offsetLeft;
+				if(d >= 0){lx = d;}
+			}
+			return lx;
 		},
 		
 		_getCell: function(e){
 			var node = e.target;
-			while(node && node.tagName && node.tagName.toLowerCase() !== 'th'){
+			if(!node){return null;}
+			if(/table/i.test(node.tagName)){
+				var t = e.target, m = e.offsetX || e.layerX || 0, i = 0, cells = t.rows[0].cells;
+				while(m > 0){
+					m -= cells[i].offsetWidth;
+					i++;
+				}
+				return cells[i] || null;
+			}
+			while(node.tagName && node.tagName.toLowerCase() !== 'th'){
 				node = node.parentNode;
 			}
 			if(!node.tagName || node.tagName.toLowerCase() !== 'th'){return null;}

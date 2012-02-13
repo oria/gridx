@@ -3,9 +3,9 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
+	"dojo/_base/query",
 	"dojo/dom",
 	"dojo/dom-class",
-	"dojo/query",
 	"dojo/string",
 	"dojo/keys",
 	"dijit/_WidgetBase",
@@ -15,7 +15,7 @@ define([
 	"./_PagerBase",
 	"dojo/text!../../templates/GotoPagePane.html",
 	"dojo/text!../../templates/PaginationBar.html"
-], function(declare, array, lang, sniff, dom, domClass, query, string, keys, _WidgetBase,
+], function(declare, array, lang, sniff, query, dom, domClass, string, keys, _WidgetBase,
 	_TemplatedMixin, _WidgetsInTemplateMixin, util, _PagerBase, goToTemplate, barTemplate){
 
 	var GotoPagePane = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {

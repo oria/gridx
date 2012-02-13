@@ -1,5 +1,5 @@
 /* pagination bar */
-.dojoxGridxPager table {
+.dojoxGridxPagerInner {
 	width: 100%;
 	table-layout: auto;
 }
@@ -64,17 +64,17 @@
 	cursor: default;
 }
 
-.dojoxGridxPagerDescription {
+.dojoxGridxPagerDescriptionTD {
 	text-align: left;
 	width: 33%;
 }
 
-.dojoxGridxPagerStepper {
+.dojoxGridxPagerStepperTD {
 	text-align: center;
 	width: 33%;
 }
 
-.dojoxGridxPagerSizeSwitch {
+.dojoxGridxPagerSizeSwitchTD {
 	text-align: right;
 }
 
@@ -107,7 +107,13 @@
 }
 
 /*DD*/
-.dojoxGridxPagerStepperWidget,
-.dojoxGridxPagerSizeSwitchWidget {
-	width: 60px;
+.dojoxGridxPagerStepperWidget {
+	width: 50px;
+}
+
+.dojoxGridxPagerSizeSwitchWidget .dijitButtonContents {
+}
+
+.dojoxGridxPagerLabel {
+	vertical-align: middle;
 }

@@ -4,13 +4,12 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/date/locale",
 	"./model/Model",
 	"./Row",
 	"./Column",
 	"./Cell",
 	"./_Module"
-], function(declare, array, lang, Deferred, DeferredList, locale, Model, Row, Column, Cell, _Module){	
+], function(declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
 
 	function shallowCopy(obj){
 		var ret = {}, i;
@@ -25,22 +24,166 @@ define([
 		return (prot.forced || []).concat(prot.optional || []);
 	}
 
+	function configColumns(columns){
+		var cs = {}, c, i, len;
+		if(lang.isArray(columns)){
+			for(i = 0, len = columns.length; i < len; ++i){
+				c = columns[i];
+				c.index = i;
+				c.id = c.id || String(i + 1);
+				cs[c.id] = c;
+			}
+		}
+		return cs;
+	}
+	
+	function mixinArrayUtils(arr){
+		for(var f in array){
+			if(lang.isFunction(array[f])){
+				arr[f] = lang.partial(array[f], arr);
+			}
+		}
+		return arr;
+	}
+
+	function mixinAPI(base, apiPath){
+		if(apiPath){
+			for(var path in apiPath){
+				if(base[path] && lang.isObject(base[path]) && !lang.isFunction(base[path])){
+					mixinAPI(base[path], apiPath[path]);
+				}else{
+					base[path] = apiPath[path];
+				}
+			}
+		}
+	}
+
+	function removeAPI(base, apiPath){
+		if(apiPath){
+			for(var path in apiPath){
+				delete base[path];
+			}
+		}
+	}
+
+	function normalizeModules(args, coreMods){
+		var i, len, m, modules = args.modules, mods = [],
+			coreModCount = (coreMods && coreMods.length) || 0;
+		for(i = 0, len = modules.length; i < len; ++i){
+			m = modules[i];
+			if(lang.isFunction(m)){
+				mods.push({
+					moduleClass: m
+				});
+			}else if(!m){
+				console.error(["The ", (i + 1 - coreModCount), 
+					"-th declared module can NOT be found, please require it before using it"].join(''));
+			}else if(!lang.isFunction(m.moduleClass)){
+				console.error(["The ", (i + 1 - coreModCount), 
+					"-th declared module has NO moduleClass, please provide it"].join(''));
+			}else{
+				mods.push(m);
+			}
+		}
+		args.modules = mods;
+		return args;
+	}
+	
+	function checkForced(args){
+		var registeredMods = _Module._modules,
+			modules = args.modules, i, j, k, prot, deps, depName;
+		for(i = 0; i < modules.length; ++i){
+			prot = modules[i].moduleClass.prototype;
+			deps = (prot.forced || []).concat(prot.required || []);
+			for(j = 0; j < deps.length; ++j){
+				depName = deps[j];
+				for(k = modules.length - 1; k >= 0; --k){
+					if(modules[k].moduleClass.prototype.name === depName){
+						break;
+					}
+				}
+				if(k < 0){
+					if(registeredMods[depName]){
+						modules.push({
+							moduleClass: registeredMods[depName]
+						});
+					}else{
+						throw new Error(["Forced/Required Dependent Module '", depName, 
+							"' is NOT Found for '", prot.name, "'"].join(''));
+					}
+				}
+			}
+		}
+		return args;
+	}
+
+	function removeDuplicate(args){
+		var modules = args.modules, i, m, mods = {};
+		for(i = 0; m = modules[i]; ++i){
+			mods[m.moduleClass.prototype.name] = m;
+		}
+		modules = [];
+		for(i in mods){
+			modules.push(mods[i]);
+		}
+		args.modules = modules;
+		return args;
+	}
+
+	function checkCircle(args){
+		var modules = args.modules, i, m, modName, q, key,
+			getModule = function(modName){
+				for(var j = modules.length - 1; j >= 0; --j){
+					if(modules[j].moduleClass.prototype.name === modName){
+						return modules[j];
+					}
+				}
+				return null;
+			};
+		for(i = modules.length - 1; m = modules[i]; --i){
+			modName = m.moduleClass.prototype.name;
+			q = getDepends(m);
+			while(q.length){
+				key = q.shift();
+				if(key == modName){
+					throw new Error("Module '" + key + "' is in a dependancy circle!");
+				}
+				m = getModule(key);
+				if(m){
+					q = q.concat(getDepends(m));
+				}
+			}
+		}
+		return args;
+	}
+
+	function checkModelExtensions(args){
+		var modules = args.modules, exts = args.modelExtensions, i, modExts, push = [].push;
+		for(i = modules.length - 1; i >= 0; --i){
+			modExts = modules[i].moduleClass.prototype.modelExtensions;
+			if(modExts){
+				push.apply(exts, modExts);
+			}
+		}
+		return args;
+	}
+
 	return declare(null, {
 		reset: function(args){
 			// summary:
 			//		Reset the grid data model completely. Also used in initialization.
 			this._uninit();
 			args = shallowCopy(args);
-			this.setColumns(args.structure);
-			args.columns = this._columnsById;
 			this.store = args.store;
 			args.modules = args.modules || [];
 			args.modelExtensions = args.modelExtensions || [];
-			args = this._checkModelExtensions(
-					this._checkCircle(
-						this._removeDuplicate(
-							this._checkForced(
-								this._normalizeModules(args)))));
+			this.setColumns(args.structure);
+			args.columns = this._columnsById;
+			args = checkModelExtensions(
+					checkCircle(
+						removeDuplicate(
+							checkForced(
+								normalizeModules(args, this.coreModules)))));
 			//Create model before module creation, so that all modules can use the logic grid from very beginning.
 			this.model = new Model(args);
 			this._createModules(args);
@@ -69,7 +212,7 @@ define([
 			//		Change all the column definitions for grid.
 			this.structure = columns;
 			this._columns = lang.clone(columns);
-			this._columnsById = this._configColumns(this._columns);
+			this._columnsById = configColumns(this._columns);
 			if(this.model){
 				this.model._cache.onSetColumns(this._columnsById);
 			}
@@ -149,7 +292,7 @@ define([
 			for(; start < end && start < total; ++start){
 				res.push(this.column(start));
 			}
-			return this._mixinArrayUtils(res);
+			return mixinArrayUtils(res);
 		},
 
 		rows: function(start, count){
@@ -161,33 +304,15 @@ define([
 			for(; start < end && start < total; ++start){
 				res.push(this.row(start));
 			}
-			return this._mixinArrayUtils(res);
+			return mixinArrayUtils(res);
 		},
 		
-		//Package-------------------------------------------------------------------------------------
-		_getTypeData: function(colId, storeData, gridData){
-			var col = this._columnsById[colId];
-			if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-				return locale.parse(storeData, col.storePattern);
-			}
-			return gridData;
-		},
-
 		//Private-------------------------------------------------------------------------------------
-		_mixinArrayUtils: function(arr){
-			for(var f in array){
-				if(lang.isFunction(array[f])){
-					arr[f] = lang.partial(array[f], arr);
-				}
-			}
-			return arr;
-		},
-
 		_uninit: function(){
 			for(var modName in this._modules){
 				var mod = this._modules[modName].mod;
 				if(mod.getAPIPath){
-					this._removeAPI(this, mod.getAPIPath());
+					removeAPI(this, mod.getAPIPath());
 				}
 				mod.destroy();
 			}
@@ -195,55 +320,7 @@ define([
 				this.model.destroy();
 			}
 		},
-
-		_configColumns: function(columns){
-			var cs = {}, c, i, len;
-			if(lang.isArray(columns)){
-				for(i = 0, len = columns.length; i < len; ++i){
-					c = columns[i];
-					c.index = i;
-					c.id = c.id || String(i + 1);
-					if(c.expandField){
-						if(!lang.isArray(c.expandField)){
-							c.expandField = [c.expandField];
-						}
-						if(!(c.nestedLevel >= 0)){
-							c.nestedLevel = i;
-						}
-					}
-					if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){
-						c.gridPattern = c.gridPattern || 
-							(!lang.isFunction(c.formatter) && 
-								(lang.isObject(c.formatter) || 
-								 typeof c.formatter == 'string') && 
-							c.formatter) || 
-							c.storePattern;
-						var pattern;
-						if(lang.isString(c.storePattern)){
-							pattern = c.storePattern;
-							c.storePattern = {};
-							c.storePattern[c.dataType + 'Pattern'] = pattern;
-						}
-						c.storePattern.selector = c.dataType;
-						if(lang.isString(c.gridPattern)){
-							pattern = c.gridPattern;
-							c.gridPattern = {};
-							c.gridPattern[c.dataType + 'Pattern'] = pattern;
-						}
-						c.gridPattern.selector = c.dataType;
-						c.formatter = lang.partial(this._dateTimeFormatter, c.field, c.storePattern, c.gridPattern);
-					}
-					cs[c.id] = c;
-				}
-			}
-			return cs;
-		},
-
-		_dateTimeFormatter: function(field, parseArgs, formatArgs, rawData){
-			var d = locale.parse(rawData[field], parseArgs);
-			return d ? locale.format(d, formatArgs) : rawData[field];
-		},
-
+		
 		_preloadModules: function(){
 			for(var m in this._modules){
 				m = this._modules[m];
@@ -260,27 +337,7 @@ define([
 			}
 			return new DeferredList(dl);
 		},
-
-		_mixinAPI: function(base, apiPath){
-			if(apiPath){
-				for(var path in apiPath){
-					if(base[path] && lang.isObject(base[path]) && !lang.isFunction(base[path])){
-						this._mixinAPI(base[path], apiPath[path]);
-					}else{
-						base[path] = apiPath[path];
-					}
-				}
-			}
-		},
-
-		_removeAPI: function(base, apiPath){
-			if(apiPath){
-				for(var path in apiPath){
-					delete base[path];
-				}
-			}
-		},
-
+		
 		_mixinComponent: function(component, name){
 			for(var modName in this._modules){
 				var m = this._modules[modName],
@@ -292,109 +349,7 @@ define([
 			}
 			return component;
 		},
-
-		_normalizeModules: function(args){
-			var i, len, m, modules = args.modules, mods = [],
-				coreModCount = (this.coreModules && this.coreModules.length) || 0;
-			for(i = 0, len = modules.length; i < len; ++i){
-				m = modules[i];
-				if(lang.isFunction(m)){
-					mods.push({
-						moduleClass: m
-					});
-				}else if(!m){
-					console.error(["The ", (i + 1 - coreModCount), 
-						"-th declared module can NOT be found, please require it before using it"].join(''));
-				}else if(!lang.isFunction(m.moduleClass)){
-					console.error(["The ", (i + 1 - coreModCount), 
-						"-th declared module has NO moduleClass, please provide it"].join(''));
-				}else{
-					mods.push(m);
-				}
-			}
-			args.modules = mods;
-			return args;
-		},
-
-		_checkForced: function(args){
-			var registeredMods = _Module._modules,
-				modules = args.modules, i, j, k, prot, deps, depName;
-			for(i = 0; i < modules.length; ++i){
-				prot = modules[i].moduleClass.prototype;
-				deps = (prot.forced || []).concat(prot.required || []);
-				for(j = 0; j < deps.length; ++j){
-					depName = deps[j];
-					for(k = modules.length - 1; k >= 0; --k){
-						if(modules[k].moduleClass.prototype.name === depName){
-							break;
-						}
-					}
-					if(k < 0){
-						if(registeredMods[depName]){
-							modules.push({
-								moduleClass: registeredMods[depName]
-							});
-						}else{
-							throw new Error(["Forced/Required Dependent Module '", depName, 
-								"' is NOT Found for '", prot.name, "'"].join(''));
-						}
-					}
-				}
-			}
-			return args;
-		},
-
-		_removeDuplicate: function(args){
-			var modules = args.modules, i, m, mods = {};
-			for(i = 0; m = modules[i]; ++i){
-				mods[m.moduleClass.prototype.name] = m;
-			}
-			modules = [];
-			for(i in mods){
-				modules.push(mods[i]);
-			}
-			args.modules = modules;
-			return args;
-		},
-
-		_checkCircle: function(args){
-			var modules = args.modules, i, m, modName, q, key,
-				getModule = function(modName){
-					for(var j = modules.length - 1; j >= 0; --j){
-						if(modules[j].moduleClass.prototype.name === modName){
-							return modules[j];
-						}
-					}
-					return null;
-				};
-			for(i = modules.length - 1; m = modules[i]; --i){
-				modName = m.moduleClass.prototype.name;
-				q = getDepends(m);
-				while(q.length){
-					key = q.shift();
-					if(key == modName){
-						throw new Error("Module '" + key + "' is in a dependancy circle!");
-					}
-					m = getModule(key);
-					if(m){
-						q = q.concat(getDepends(m));
-					}
-				}
-			}
-			return args;
-		},
-
-		_checkModelExtensions: function(args){
-			var modules = args.modules, exts = args.modelExtensions, i, modExts, push = [].push;
-			for(i = modules.length - 1; i >= 0; --i){
-				modExts = modules[i].moduleClass.prototype.modelExtensions;
-				if(modExts){
-					push.apply(exts, modExts);
-				}
-			}
-			return args;
-		},
-
+	
 		_createModules: function(args){
 			var modules = args.modules, i, mod, key, m;
 			this._modules = {};
@@ -411,28 +366,25 @@ define([
 					mod.loaded = new Deferred();
 					m.deps = mod.forced.concat(mod.optional);
 					if(mod.getAPIPath){
-						this._mixinAPI(this, mod.getAPIPath());
+						mixinAPI(this, mod.getAPIPath());
 					}
 				}
 			}
 		},
 
 		_initializeModule: function(deferredStartup, key){
-			var m = this._modules[key];
+			var modules = this._modules, m = modules[key];
 			if(!m.deferred){
 				m.deferred = m.mod.loaded;
-				var finish = function(){
+				(new DeferredList(array.map(array.filter(m.deps, function(depModName){
+					return modules[depModName];
+				}), lang.hitch(this, this._initializeModule, deferredStartup)))).then(function(){
 					if(m.mod.load){
 						m.mod.load(m.args, deferredStartup);
 					}else if(m.deferred.fired < 0){
 						m.deferred.callback();
 					}
-				};
-				var modules = this._modules;
-				var deps = array.filter(m.deps, function(depModName){
-					return modules[depModName];
 				});
-				(new DeferredList(array.map(deps, lang.hitch(this, this._initializeModule, deferredStartup)))).then(finish);
 			}
 			return m.deferred;
 		}

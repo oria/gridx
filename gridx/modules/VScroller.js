@@ -1,13 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
-//    "dojo/_base/html",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
-	"dojo/query",
+	"dojo/_base/query",
+	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, /*html,*/ event, sniff, query, metrics, _Module){
+], function(declare, Deferred, event, sniff, query, keys, metrics, _Module){
 	
 	return _Module.register(
 	declare(_Module, {
@@ -39,7 +39,8 @@ define([
 			var g = this.grid, _this = this;
 			this.batchConnect(
 				[this.domNode, 'onscroll', '_doScroll'],
-				[g.bodyNode, 'onmousewheel', '_onMouseWheel'], 
+				[g.bodyNode, 'onmousewheel', '_onMouseWheel'],
+				[g.mainNode, 'onkeypress', '_onKeyScroll'],
 				[g.body, 'onRender', '_onBodyChange'],
 				[g.body, 'onVisualCountChange', '_onRowCountChange'],
 				[g.body, 'onRootRangeChange', '_onRootRangeChange'],
@@ -97,7 +98,6 @@ define([
 		},
 	
 		_onBodyChange: function(){
-//            html.style(this.stubNode, 'height', this.grid.bodyNode.scrollHeight + 'px');
 			this.stubNode.style.height = this.grid.bodyNode.scrollHeight + 'px';
 			this._doScroll();
 		},
@@ -111,6 +111,26 @@ define([
 				//Root range changed, so render the body from start.
 				this.grid.body.renderRows(0, count);
 			}, this);
+		},
+
+		_onKeyScroll: function(evt){
+			var body = this.grid.body, sn = this.domNode, r;
+			if(evt.keyCode == keys.HOME){
+				body._focusCellRow = 0;
+				sn.scrollTop = 0;
+			}else if(evt.keyCode == keys.END){
+				body._focusCellRow = body.visualCount - 1;
+				sn.scrollTop = this.stubNode.clientHeight - body.domNode.offsetHeight;
+			}else if(evt.keyCode == keys.PAGE_UP){
+				r = body._focusCellRow = Math.max(body.renderStart - body.renderCount, 0);
+				this.scrollToRow(r, true);
+			}else if(evt.keyCode == keys.PAGE_DOWN){
+				r = body._focusCellRow = Math.min(body.visualCount - 1, body.renderStart + body.renderCount);
+				this.scrollToRow(r, true);
+			}else{
+				return;
+			}
+			event.stop(evt);
 		}
 	}));
 });

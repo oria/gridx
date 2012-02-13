@@ -2,10 +2,11 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/connect",
+	"dojo/_base/lang",
 	"dojo/keys",
 	"../core/_Module",
 	"../util"
-], function(declare, array, connect, keys, _Module, util){
+], function(declare, array, connect, lang, keys, _Module, util){
 	
 	/*=====
 		gridx.module.Focus.__FocusArea = function(){
@@ -21,6 +22,9 @@ define([
 			// focusNode: DOM-Node?
 			//		If provided, this is the node of this area. 
 			//		When this area is focused, *onFocus* will be called. When blurred, *onBlur* will be called.
+			//
+			// scope: anything?
+			//		If provided, all area functions are called on this scope.
 			//
 			// doFocus: Function(evt, step)?
 			//		If provided, will be called when TABing to this area.
@@ -94,11 +98,13 @@ define([
 				if(this._areas[area.name]){
 					this.removeArea(area.name);
 				}
-				var dummy = function(){return true;};
-				area.doFocus = area.doFocus || dummy;
-				area.doBlur = area.doBlur || dummy;
-				area.onFocus = area.onFocus || dummy;
-				area.onBlur = area.onBlur || dummy;
+				var init = function(fn){
+					area[fn] = area[fn] ? lang.hitch(area.scope || area, area[fn]) : function(){ return true; };
+				};
+				init('doFocus');
+				init('doBlur');
+				init('onFocus');
+				init('onBlur');
 				area.connects = area.connects || [];
 	
 				this._areas[area.name] = area;

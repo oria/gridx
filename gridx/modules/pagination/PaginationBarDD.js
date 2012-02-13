@@ -20,7 +20,7 @@ define([
 
 		stepperClass: FilteringSelect,
 
-		sizeSwitchClass: FilteringSelect,
+		sizeSwitchClass: Select,
 
 	/*=====
 		// Configurable texts on the pagination bar:

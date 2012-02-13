@@ -68,7 +68,7 @@ require([
 		structure: structure,
 		modules: [
 			modules.Focus,
-			modules.CellDijit,
+			modules.CellWidget,
 			modules.VirtualVScroller
 		]
 	});

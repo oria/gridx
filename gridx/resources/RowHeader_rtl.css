@@ -1,7 +1,0 @@
-.dojoxGridxRtl .dojoxGridxRowHeaderHeader,
-.dojoxGridxRtl .dojoxGridxRowHeaderBody {
-	right: 0;
-	left: auto;
-	border-right: none;
-	border-left: 1px solid #E5DAC8;
-}

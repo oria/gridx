@@ -2,23 +2,24 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
-	"dojo/_base/html",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
 	"dojo/_base/Deferred",
-	"dojo/query",
+	"dojo/_base/query",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dojo/text!./templates/Grid.html",
 	"./core/Core",
+	"./core/_Module",
 	"./modules/Header",
 	"./modules/Body",
 	"./modules/VLayout",
 	"./modules/HLayout",
 	"./modules/VScroller",
 	"./modules/HScroller",
-	"./modules/ColumnWidth",
-	"./modules/ColumnResizer"
-], function(declare, array, lang, html, Deferred, query, _Widget, _TemplatedMixin, template, Core, 
-	Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, ColumnResizer){
+	"./modules/ColumnWidth"
+], function(declare, array, lang, domClass, domGeometry, Deferred, query, _Widget, _TemplatedMixin, template, 
+	Core, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
 
 	var Grid = declare('gridx.Grid', [_Widget, _TemplatedMixin, Core], {
 		templateString: template,
@@ -32,7 +33,6 @@ define([
 			VScroller,
 			HScroller,
 			ColumnWidth
-//            ColumnResizer
 		],
 
 		coreExtensions: [
@@ -49,9 +49,9 @@ define([
 		buildRendering: function(){
 			this.inherited(arguments);
 			if(this.cssMode && lang.isString(this.cssMode)){
-				html.toggleClass(this.domNode, 'compact', this.cssMode.indexOf('compact') > -1);
+				domClass.toggle(this.domNode, 'compact', this.cssMode.indexOf('compact') > -1);
 			}
-			html.toggleClass(this.domNode, 'dojoxGridxRtl', !this.isLeftToRight());
+			domClass.toggle(this.domNode, 'dojoxGridxRtl', !this.isLeftToRight());
 		},
 	
 		postCreate: function(){
@@ -79,7 +79,7 @@ define([
 				if(this.autoHeight){
 					delete changeSize.h;
 				}
-				html.setMarginBox(this.domNode, changeSize);
+				domGeometry.setMarginBox(this.domNode, changeSize);
 			}
 			var ds = {};
 			this._onResizeBegin(changeSize, ds);
@@ -123,31 +123,23 @@ define([
 		}
 		//event handling end
 	});
-	
+
 	Grid.markupFactory = function(props, node, ctor){
-		var widthFromAttr = function(n){
-			var w = html.attr(n, "width")||"auto";
-			if((w != "auto")&&(w.slice(-2) != "em")&&(w.slice(-1) != "%")){
-				w = parseInt(w, 10)+"px";
-			}
-			return w;
-		};
 		if(!props.structure && node.nodeName.toLowerCase() == "table"){
 			props.structure = [];
-			query("thead > tr > th", node).forEach(function(th, th_idx){
-				var cell = {
-					name: lang.trim(html.attr(th, "name")||th.innerHTML),
-					field: html.attr(th, "field"),
-					hidden: !!html.attr(th, "hidden"),
-					width: widthFromAttr(th)
-				};
-				if(html.hasAttr(th, "id")){
-					cell.id = lang.trim(html.attr(th, "id"));
+			query("thead > tr > th", node).forEach(function(th){
+				var col = {}, markupAttrs = _Module._markupAttrs;
+				for(var i = 0, len = markupAttrs.length; i < len; ++i){
+					var attr = markupAttrs[i];
+					if(attr[0] == '!'){
+						attr = attr.slice(1);
+						col[attr] = eval(th.getAttribute(attr));
+					}else{
+						col[attr] = th.getAttribute(attr);
+					}
 				}
-				if(html.hasAttr(th, "dataType")){
-					cell.dataType = lang.trim(html.attr(th, "dataType"));
-				}
-				props.structure.push(cell);
+				col.name = col.name || th.innerHTML;
+				props.structure.push(col);
 			});
 		}
 		return new ctor(props, node);		

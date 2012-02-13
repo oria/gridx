@@ -64,14 +64,14 @@ define([
 					stepper.set('store', store);
 					stepper.set('value', currentPage + 1);
 				}
+				stepper.set('disabled', pageCount <= 1);
 			}
 		},
 	
 		_createPageSizeSwitch: function(){
 			var mod = this.module;
 			if(this._toggleNode('dojoxGridxPagerSizeSwitch', mod._exist(this.position, 'sizeSwitch'))){
-				var items = [],
-					selectedItem,
+				var options = [],
 					p = this.pagination,
 					currentSize = p.pageSize(), 
 					nlsAll = mod.arg('pageSizeAllText', this.pageSizeAll),
@@ -79,25 +79,17 @@ define([
 					sizes = mod.arg('sizes');
 				for(var i = 0, len = sizes.length; i < len; ++i){
 					var pageSize = sizes[i],
-						isAll = !(pageSize > 0),
-						v = isAll ? -1 : pageSize,
-						item = {
-							id: v,
-							label: isAll ? nlsAll : pageSize,
-							value: v
-						};
-					items.push(item);
-					if(currentSize == pageSize || (isAll && p.isAll())){
-						selectedItem = item;
-					}
+						isAll = !(pageSize > 0);
+					options.push({
+						label: isAll ? nlsAll : pageSize,
+						value: isAll ? -1 : pageSize,
+						selected: currentSize == pageSize || (isAll && p.isAll())
+					});
 				}
-				var store = new Store({data: items});
 				if(!sizeSwitch){
 					var cls = mod.arg('sizeSwitchClass'),
 						props = lang.mixin({
-							store: store,
-							searchAttr: 'label',
-							item: selectedItem,
+							options: options,
 							'class': 'dojoxGridxPagerSizeSwitchWidget',
 							onChange: function(ps){
 								p.setPageSize(ps < 0 ? 0 : ps);
@@ -107,8 +99,8 @@ define([
 					sizeSwitch.placeAt(this._sizeSwitchContainer, "last");
 					sizeSwitch.startup();
 				}else{
-					sizeSwitch.set('store', store);
-					sizeSwitch.set('value', p.isAll() ? -1 : currentSize);
+					sizeSwitch.removeOption(sizeSwitch.getOptions());
+					sizeSwitch.addOption(options);
 				}
 			}
 		},
