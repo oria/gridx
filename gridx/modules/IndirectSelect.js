@@ -35,7 +35,7 @@ define([
 					}
 				}]
 			);
-			if(g.select.row.selectByIndex){
+			if(g.select.row.selectByIndex && this.arg('all')){
 				g.rowHeader.headerProvider = lang.hitch(this, this._createSelectAllBox);
 				if(focus){
 					this._initFocus();
@@ -45,7 +45,9 @@ define([
 				});
 			}
 		},
-		
+
+		all: true,
+
 		//Private----------------------------------------------------------
 		_createSelector: function(id){
 			var rowNode = query('[rowid="' + id + '"]', this.grid.bodyNode)[0],

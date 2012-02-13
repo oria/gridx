@@ -43,7 +43,7 @@ define([
 		//		cellWidget: CellWidget
 		//				A widget representing the whole cell. This is the container of the templateString returned by decorator.
 		//				So you can access any dojoAttachPoint from it (maybe your special dijit or node, and then set value for them).
-		setCellValue: null,
+		setCellValue: null
 	};
 	=====*/
 	
@@ -286,7 +286,7 @@ define([
 					doFocus: this._doFocus,
 					doBlur: this._doBlur,
 					onFocus: this._onFocus,
-					onBlur: this._endNavigate,
+					onBlur: this._endNavigate
 				});
 				this.connect(this.grid, 'onCellKeyPress', '_onKey');
 			}
