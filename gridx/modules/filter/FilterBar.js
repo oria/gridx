@@ -109,6 +109,8 @@ define([
 			'boolean': ['equal','isEmpty']
 		},
 		
+		
+		
 		load: function(args, startup){
 			//summary:
 			//	Init filter bar UI
@@ -289,6 +291,12 @@ define([
 			if(dlg.open){return;}
 			dlg.setData(this.filterData);
 			dlg.show();
+		},
+		
+		destroy: function(){
+			this._filterDialog.destroyRecursive();
+			this.inherited(arguments);
+			dojo.destroy(this.domNode);
 		},
 	
 		//Private---------------------------------------------------------------

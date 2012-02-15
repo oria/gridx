@@ -284,10 +284,6 @@ define([
 				}else{
 					this.renderStart = start;
 					this.renderCount = count;
-//                    for(var i = 0; i < nd.childNodes.length; ++i){
-//                        var rowNode = nd.childNodes[i];
-//                        this.onUnrender(rowNode.getAttribute('rowid'));
-//                    }
 					this.onUnrender();
 					nd.scrollTop = 0;
 					nd.innerHTML = str;
@@ -628,11 +624,6 @@ define([
 					this._focusCellCol = colIdx;
 				}
 				node.focus();
-//				if(this.grid.hScroller){
-//					//keep scrolling
-//					var rowNode = node.parentNode.parentNode.parentNode.parentNode;
-//					this.grid.hScroller.scroll(rowNode.scrollLeft);
-//				}
 			}
 			return node;
 		},
