@@ -50,7 +50,7 @@ define([
 		},
 
 		byId: function(id){
-			return this._indexes[id] === undefined ? null : this.inner._call('byId', arguments);
+			return (this.ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
 		},
 
 		indexToId: function(index){
