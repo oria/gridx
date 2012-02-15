@@ -82,6 +82,11 @@ define([
 			g.bodyNode.style[marginLead] = lead + 'px';
 			var bodyWidth = g.domNode.clientWidth - lead - tail;
 			if(g.autoWidth){
+				array.forEach(g._columns, function(col){
+					if(!col.width){
+						col.width = this.arg('default') + 'px';
+					}
+				}, this);
 				header.refresh();
 				var headers = query('th.dojoxGridxCell', innerNode);
 				var totalWidth = 0;

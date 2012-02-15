@@ -3,12 +3,12 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/query",
 	"dojo/_base/lang",
-	"dojo/_base/html",
+	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"../core/_Module",
 	"../util",
 	"./RowHeader"
-], function(declare, array, query, lang, html, Deferred, _Module, util){
+], function(declare, array, query, lang, domClass, Deferred, _Module, util){
 
 	return _Module.register(
 	declare(_Module, {
@@ -51,7 +51,7 @@ define([
 		//Private----------------------------------------------------------
 		_createSelector: function(id){
 			var rowNode = query('[rowid="' + id + '"]', this.grid.bodyNode)[0],
-				selected = rowNode && html.hasClass(rowNode, 'dojoxGridxRowSelected');
+				selected = rowNode && domClass.contains(rowNode, 'dojoxGridxRowSelected');
 			return this._createCheckBox(selected);
 		},
 
@@ -70,7 +70,7 @@ define([
 		_onHighlightChange: function(target, toHighlight){
 			var node = query('[visualindex="' + target.row + '"].dojoxGridxRowHeaderRow .dojoxGridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
 			if(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, this._getDijitClass() + 'Checked');
+				domClass.toggle(node, this._getDijitClass() + 'Checked', toHighlight);
 			}
 		},
 
@@ -126,7 +126,7 @@ define([
 			Deferred.when(d, function(){
 				_this._allSelected = allSelected;
 				var node = _this.grid.rowHeader.headerCellNode.firstChild;
-				html[allSelected ? 'addClass' : 'removeClass'](node, _this._getDijitClass() + 'Checked');
+				domClass.toggle(node, _this._getDijitClass() + 'Checked', allSelected);
 			});
 		},
 
@@ -134,12 +134,12 @@ define([
 			var rowHeader = this.grid.rowHeader;
 			var focus = function(evt){
 				util.stopEvent(evt);
-				html.addClass(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
+				domClass.add(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
 				rowHeader.headerCellNode.focus();
 				return true;
 			};
 			var blur = function(){
-				html.removeClass(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
+				domClass.remove(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
 				return true;
 			};
 			this.grid.focus.registerArea({

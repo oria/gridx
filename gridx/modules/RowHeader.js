@@ -2,11 +2,13 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
-	"dojo/_base/html",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/dom-style",
 	"dojo/keys",
 	"../core/_Module",
 	"../util"
-], function(declare, query, array, html, keys, _Module, util){
+], function(declare, query, array, domConstruct, domClass, domStyle, keys, _Module, util){
 
 	return _Module.register(
 	declare(_Module, {
@@ -21,28 +23,28 @@ define([
 		},
 
 		constructor: function(){
-			this.headerNode = html.create('div', {
+			this.headerNode = domConstruct.create('div', {
 				'class': 'dojoxGridxRowHeaderHeader',
 				innerHTML: ['<table border="0" cellspacing="0" cellpadding="0" style="width: ', 
 					this.arg('width'), 
 					';"><tr><th class="dojoxGridxRowHeaderHeaderCell" tabindex="-1"></th></tr></table>'
 				].join('')
 			});
-			this.bodyNode = html.create('div', {
+			this.bodyNode = domConstruct.create('div', {
 				'class': 'dojoxGridxRowHeaderBody'
 			});
 		},
 
 		destroy: function(){
 			this.inherited(arguments);
-			html.destroy(this.headerNode);
-			html.destroy(this.bodyNode);
+			domConstruct.destroy(this.headerNode);
+			domConstruct.destroy(this.bodyNode);
 		},
 
 		preload: function(){
 			var g = this.grid, w = this.arg('width');
 			//register events
-			g._initEvents(['RowHeaderHeader', 'RowHeaderCell'], this.grid._eventNames);
+			g._initEvents(['RowHeaderHeader', 'RowHeaderCell'], g._eventNames);
 			//modify header
 			g.header.domNode.appendChild(this.headerNode);
 			this.headerNode.style.width = w;
@@ -57,7 +59,7 @@ define([
 				[g.body, 'renderRows', 'update'],
 				[g.bodyNode, 'onscroll', '_updateBody'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
-				[g, 'onRowMouseOut', '_onRowMouseOut']
+				[g, 'onRowMouseOut', '_onRowMouseOver']
 			);
 			g._connectEvents(this.bodyNode, '_onBodyMouseEvent', this);
 			this._initFocus();
@@ -101,7 +103,7 @@ define([
 				'" parentid="', attrs[3],
 				'" rowindex="', attrs[2],
 				'" visualindex="', attrs[1],
-				'"><table border="0" cellspacing="0" cellpadding="0" style="height: ', html.style(node, 'height'),
+				'"><table border="0" cellspacing="0" cellpadding="0" style="height: ', domStyle.get(node, 'height'),
 				'px;"><tr><td class="dojoxGridxRowHeaderCell" tabindex="-1">',
 				this.cellProvider.apply(this, attrs),
 				'</td></tr></table></div>'
@@ -143,9 +145,9 @@ define([
 		_decorateBodyEvent: function(e){
 			var node = e.target || e.originalTarget;
 			while(node && node !== this.bodyNode){
-				if(html.hasClass(node, 'dojoxGridxRowHeaderCell')){
+				if(domClass.contains(node, 'dojoxGridxRowHeaderCell')){
 					e.isRowHeader = true;
-				}else if(node.tagName.toLowerCase() === 'div' && html.hasClass(node, 'dojoxGridxRowHeaderRow')){
+				}else if(node.tagName.toLowerCase() === 'div' && domClass.contains(node, 'dojoxGridxRowHeaderRow')){
 					e.rowId = node.getAttribute('rowid');
 					e.parentId = node.getAttribute('parentid');
 					e.rowIndex = parseInt(node.getAttribute('rowindex'), 10);
@@ -159,14 +161,7 @@ define([
 		_onRowMouseOver: function(e){
 			var rowNode = query('[rowid="' + e.rowId + '"].dojoxGridxRowHeaderRow', this.bodyNode)[0];
 			if(rowNode){
-				html.addClass(rowNode, "dojoxGridxRowOver");
-			}
-		},
-
-		_onRowMouseOut: function(e){
-			var rowNode = query('[rowid="' + e.rowId + '"].dojoxGridxRowHeaderRow', this.bodyNode)[0];
-			if(rowNode){
-				html.removeClass(rowNode, "dojoxGridxRowOver");
+				domClass.toggle(rowNode, "dojoxGridxRowOver", e.type.toLowerCase() == 'mouseover');
 			}
 		},
 
@@ -200,7 +195,7 @@ define([
 		_onFocus: function(evt){
 			var node = evt.target;
 			while(node != this.bodyNode){
-				if(html.hasClass(node, 'dojoxGridxRowHeaderRow')){
+				if(domClass.contains(node, 'dojoxGridxRowHeaderRow')){
 					var r = this.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
 					this._focusRow(r);
 					return true;
@@ -214,7 +209,7 @@ define([
 			var node = query('[visualindex="' + visIndex + '"] .dojoxGridxRowHeaderCell', this.bodyNode)[0];
 			node = node || this.bodyNode.firstChild;
 			if(node){
-				html.addClass(node, 'dojoxGridxCellFocus');
+				domClass.add(node, 'dojoxGridxCellFocus');
 				node.focus();
 			}
 			return node;
@@ -222,7 +217,7 @@ define([
 
 		_blur: function(){
 			query('.dojoxGridxCellFocus', this.bodyNode).forEach(function(node){
-				html.removeClass(node, 'dojoxGridxCellFocus');
+				domClass.remove(node, 'dojoxGridxCellFocus');
 			});
 			return true;
 		},
@@ -243,4 +238,3 @@ define([
 		}
 	}));
 });
-
