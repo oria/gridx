@@ -91,6 +91,13 @@ define([], function(){
 				{id: 'number', field: 'number', name: 'Number', width: '200px'},
 				{id: 'string', field: 'string', name: 'String', width: '200px'},
 				{id: 'date', field: 'date', name: 'Date', width: '200px'}
+			],
+			[
+				{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
+				{id: 'number', field: 'number', name: 'Number', dataType: 'number'},
+				{id: 'date', field: 'date', name: 'Date', dataType: 'date'},
+				{id: 'time', field: 'time', name: 'Time', dataType: 'time'},
+				{id: 'bool', field: 'bool', name: 'Boolean', dataType: 'boolean'}
 			]
 		]
 	};

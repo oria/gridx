@@ -44,6 +44,7 @@ require([
 		{ field: "Download Date", name:"Date", editable: true, 
 			dataType: 'date', 
 			storePattern: 'yyyy/M/d',
+			gridPattern: 'yyyy--MM--dd',
 			editor: DateTextBox,
 			editorArgs: {
 				fromEditor: getDate

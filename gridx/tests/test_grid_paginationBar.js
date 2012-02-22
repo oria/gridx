@@ -17,19 +17,21 @@ require([
 			size: 100
 		}),
 		structure: dataSource.layouts[0],
+		selectRowTriggerOnCell: true,
 		modules: [
 			{
 				moduleClass: modules.Pagination,
-				initialPageSize: 5,
+//                initialPageSize: 5,
 				initialPage: 3
 			},
 			{
 				moduleClass: modules.PaginationBar,
-				pageSizes: [5, 10, 20, 30, 0],
+				sizes: [5, 10, 20, 30, 0],
 				visibleSteppers: 5,
 				position: 'bottom'
 			},
 			modules.Focus,
+			modules.ExtendedSelectRow,
 			modules.VirtualVScroller
 		]
 	});
@@ -43,7 +45,7 @@ require([
 	tp.addTestSet('Pagination Functions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testGoToPage">Jump to first page</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testSetPageSize">Set page size to 15</div><br/>',
-	].join(''));
+	''].join(''));
 
 	tp.addTestSet('Pagination Bar Functions', [
 		'<div id="a" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true, onChange: toggleDescription"></div><label for="a">Toggle Description</label><br/>',

@@ -27,6 +27,7 @@ require([
 			}),
 			selectRowTriggerOnCell: true,
 			modules: [
+				mods.Focus,
 				mods.ExtendedSelectColumn,
 				mods.DndColumn,
 				mods.VirtualVScroller

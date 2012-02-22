@@ -32,7 +32,7 @@ require([
 //            modules.ExtendedSelectRow,
 //            modules.ExtendedSelectColumn,
 //            modules.ExtendedSelectCell,
-//            modules.PaginationBar,
+			modules.PaginationBar,
 			modules.VirtualVScroller
 		]
 	});

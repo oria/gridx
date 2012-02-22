@@ -14,11 +14,23 @@
 	<script type="text/javascript" src="../../dojo/dojo.js" 
 		data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript" src="../../dijit/tests/_testCommon.js"></script>
-	<script type="text/javascript" src='test_grid_declarative.js'></script>
 	<script type="text/javascript">
-		function func(rawData){
-			return "<a href='http://www.google.com'>" + rawData.Artist + "</a>";
-		}
+		require([
+			'gridx/Grid',
+			'gridx/core/model/cache/AsyncList',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/ItemFileWriteStore',
+			'gridx/tests/support/modules'
+		], function(Grid, Cache, dataSource, storeFactory, modules){
+
+			window.Cache = Cache;
+			window.store = storeFactory({
+				dataSource: dataSource,
+				size: 100
+			});
+			window.dataSource = dataSource;
+			window.modules = modules;
+		});
 	</script>
 </head>
 <body class='claro'>
@@ -38,21 +50,17 @@
 	<h3>Column layout is declared in HTML</h3>
 	<table id="grid2" data-dojo-type="gridx.Grid" 
 			data-dojo-id="grid2" 
-			data-dojo-props="
-				store: store,
+			data-dojo-props="store: store,
 				cacheClass: Cache,
-				modules: [
-					modules.Edit,
-					modules.VirtualVScroller
-				]
+				modules: [modules.VirtualVScroller]
 			">
 		<thead>
 		<tr>
-			<th field="id" width="100px" dataType="number">Index</th>
-			<th field="Genre" width="auto" editable="false">Genre</th>
-			<th field="Artist" width="auto" formatter="func">Artist</th>
+			<th field="id" width="auto" dataType="number">Index</th>
+			<th field="Genre" width="auto">Genre</th>
+			<th field="Artist" width="auto">Artist</th>
 			<th field="Year" width="auto" dataType="number">Year</th>
-			<th field="Album" width="auto" editable="true">Album</th>
+			<th field="Album" width="auto">Album</th>
 			<th field="Name" width="auto">Name</th>
 			<th field="Length" width="auto">Length</th>
 			<th field="Track" width="auto">Track</th>

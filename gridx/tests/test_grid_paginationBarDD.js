@@ -20,7 +20,7 @@ require([
 		modules: [
 			{
 				moduleClass: modules.Pagination,
-				initialPageSize: 25,
+				initialPageSize: 5,
 				initialPage: 3
 			},
 			{

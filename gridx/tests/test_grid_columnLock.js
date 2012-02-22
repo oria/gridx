@@ -16,7 +16,7 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			//modules.VirtualVScroller,
+			modules.VirtualVScroller,
 			{
 				moduleClass: modules.ColumnLock,
 				count: 1

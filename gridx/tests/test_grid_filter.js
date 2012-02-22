@@ -38,7 +38,7 @@ require([
 	};
 
 	//Test buttons
-	/*
+	
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
 	
@@ -76,13 +76,13 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: clear">Clear current filter</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: clearWithoutConfirm">Clear current filter without confirm</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showOrHide">Hide filter bar</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showFilterDialog">Show filter dialog</div><br/>'
-	].join(''));
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showFilterDialog">Show filter dialog</div><br/>',
+	''].join(''));
 	tp.addTestSet('Column Extended Actions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setIdentityFilterable">Set "Identity" column un-filterable</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getConditions">Get the available conditions of column "Download Date"</div><br/>',
-	].join(''));
+	''].join(''));
 	tp.startup();
-	*/
+
 	
 });

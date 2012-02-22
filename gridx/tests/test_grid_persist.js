@@ -22,7 +22,7 @@ require([
 				modules: [
 					modules.Persist,
 					modules.DndColumn,
-					modules.NestedSorting
+					modules.NestedSort
 				]
 			});
 			grid.placeAt('gridContainer');

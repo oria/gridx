@@ -20,12 +20,14 @@ require([
 
 	var artistDecorator = function(){
 		return [
-			'<button data-dojo-type="dijit.form.Button" data-dojo-attach-point="btn"></button>'
+			'<button data-dojo-type="dijit.form.Button" data-dojo-attach-point="btn1" data-dojo-props="onClick: function(){alert(\'hello\');}"></button><br />',
+			'<button data-dojo-type="dijit.form.Button" data-dojo-attach-point="btn2"></button>'
 		].join('');
 	};
 
 	var artistSetCellValue = function(data){
-		this.btn.set('label', data);
+		this.btn1.set('label', data);
+		this.btn2.set('label', "Search...");
 	};
 
 	var albumDecorator = function(){
@@ -48,11 +50,13 @@ require([
 		},
 		{ field: "Artist", name:"Artist", 
 			widgetsInCell: true, 
+			navigable: true,
 			decorator: artistDecorator,
 			setCellValue: artistSetCellValue
 		},
 		{ field: "Album", name:"Album", 
 			widgetsInCell: true,
+			navigable: true,
 			decorator: albumDecorator,
 			setCellValue: albumSetCellValue
 		}
