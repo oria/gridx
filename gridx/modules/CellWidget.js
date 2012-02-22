@@ -183,6 +183,8 @@ define([
 			}
 			return null;
 		},
+
+		onCellWidgetCreated: function(){},
 	
 		//Private---------------------------------------------------------------
 		_showDijits: function(rowInfo, rowCache){
@@ -194,7 +196,13 @@ define([
 					cellNode = query('[colid="' + col.id + '"]', rowNode)[0];
 					if(cellNode){
 						cellWidget = this._getCellWidget(col, rowInfo, rowCache);
-						cellNode.innerHTML = "";
+						if(sniff('ie')){
+							while(cellNode.childNodes.length){
+								cellNode.removeChild(cellNode.firstChild);
+							}
+						}else{
+							cellNode.innerHTML = "";
+						}
 						cellWidget.placeAt(cellNode);
 						cellWidget.startup();
 					}
@@ -216,10 +224,14 @@ define([
 				gridData = rowCache.data[column.id],
 				storeData = rowCache.rawData[column.field];
 			if(!widget){
-				widget = column._backupWidgets.pop() || new CellWidget({
-					content: column.userDecorator(),
-					setCellValue: column.setCellValue
-				});
+				widget = column._backupWidgets.pop();
+				if(!widget){
+					widget = new CellWidget({
+						content: column.userDecorator(),
+						setCellValue: column.setCellValue
+					});
+					this.onCellWidgetCreated(widget, column);
+				}
 				column._cellWidgets[rowInfo.rowId] = widget;
 			}
 			widget.setValue(gridData, storeData);
@@ -230,10 +242,11 @@ define([
 			var cols = this.grid._columns,
 				backupCount = this.arg('backupCount'),
 				backup = function(col, rowId){
+					var w = col._cellWidgets[rowId];
 					if(col._backupWidgets.length < backupCount){
-						col._backupWidgets.push(col._cellWidgets[rowId]);
+						col._backupWidgets.push(w);
 					}else{
-						col._cellWidgets[rowId].destroyRecursive();
+						w.destroyRecursive();
 					}
 				};
 			for(var i = 0, len = cols.length; i < len; ++i){
@@ -413,8 +426,8 @@ define([
 			}else if(e.keyCode === keys.ESCAPE && this._navigating && focus.currentArea() === 'celldijit'){
 				this._navigating = false;
 				focus.focusArea('body');
-			}else if(this._navigating && e.keyCode !== keys.TAB){
-				event.stop(e);
+//            }else if(this._navigating && e.keyCode !== keys.TAB){
+//                event.stop(e);
 			}
 		}
 	}));
