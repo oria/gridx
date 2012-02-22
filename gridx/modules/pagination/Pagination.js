@@ -32,18 +32,14 @@ define([
 
 		// [Module Lifetime Management] -----------------------------------------------
 		preload: function(){
-			//Initialize args
-			this._pageSize = this.arg('initialPageSize', this._pageSize, function(arg){
-				return arg > 0;
-			});
-			this._page = this.arg('initialPage', this._page, function(arg){
-				return arg >= 0;
-			});
-	
 			this.grid.body.autoChangeSize = false;
 		},
 
 		load: function(){
+			this._pageSize = this.arg('initialPageSize') || this._pageSize;
+			this._page = this.arg('initialPage', this._page, function(arg){
+				return arg >= 0;
+			});
 			this.model.when({}, function(){
 				this._updateBody(1);
 				this.connect(this.model, 'onSizeChange', '_onSizeChange');

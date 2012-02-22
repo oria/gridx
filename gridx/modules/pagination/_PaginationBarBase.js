@@ -27,6 +27,10 @@ define([
 			if(this._exist('bottom')){
 				vLayout.register(this, '_bottomPagerNode', 'footerNode', 5);
 			}
+			var p = this.grid.pagination;
+			if(!p.arg('initialPageSize')){
+				p.initialPageSize = this.arg('sizes')[0];
+			}
 		},
 
 		load: function(args, startup){

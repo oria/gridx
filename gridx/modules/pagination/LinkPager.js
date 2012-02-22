@@ -8,52 +8,10 @@ define([
 	"dojo/dom-class",
 	"dojo/string",
 	"dojo/keys",
-	"dijit/_WidgetBase",
-	"dijit/_TemplatedMixin",
-	"dijit/_WidgetsInTemplateMixin",
 	"../../util",
 	"./_PagerBase",
-	"dojo/text!../../templates/GotoPagePane.html",
 	"dojo/text!../../templates/PaginationBar.html"
-], function(declare, array, lang, sniff, query, dom, domClass, string, keys, _WidgetBase,
-	_TemplatedMixin, _WidgetsInTemplateMixin, util, _PagerBase, goToTemplate, barTemplate){
-
-	var GotoPagePane = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-		templateString: goToTemplate,
-	
-		pager: null,
-	
-		postMixInProperties: function(){
-			lang.mixin(this, this.pager._nls);
-			var mod = this.pager.module;
-			this.numberTextBoxClass = mod.arg('numberTextBoxClass').prototype.declaredClass;
-			this.buttonClass = mod.arg('buttonClass').prototype.declaredClass;
-			this.connect(this.domNode, 'onkeydown', '_onKeyDown');
-		},
-	
-		postCreate: function(){
-			this._updateStatus();
-		},
-	
-		_updateStatus: function(){
-			this.okBtn.set('disabled', !this.pageInputBox.isValid() || this.pageInputBox.get('displayedValue') === "");
-		},
-	
-		_onOK: function(){
-			this.pager.pagination.gotoPage(this.pageInputBox.get('value') - 1);
-			this.pager._gotoDialog.hide();
-		},
-	
-		_onCancel: function(){
-			this.pager._gotoDialog.hide();
-		},
-		
-		_onKeyDown: function(evt){
-			if(!this.okBtn.get('disabled') && keys.ENTER == evt.keyCode){
-				this._onOK();
-			}
-		}
-	});
+], function(declare, array, lang, sniff, query, dom, domClass, string, keys, util, _PagerBase, barTemplate){
 	
 	return declare(_PagerBase, {
 		templateString: barTemplate,
@@ -270,9 +228,10 @@ define([
 			var mod = this.module;
 			if(!this._gotoDialog){
 				var cls = mod.arg('dialogClass'),
+					gppane = mod.arg('gotoPagePane'),
 					props = lang.mixin({
 						title: this.gotoDialogTitle,
-						content: new GotoPagePane({
+						content: new gppane({
 							pager: this
 						})
 					}, mod.arg('dialogProps') || {});

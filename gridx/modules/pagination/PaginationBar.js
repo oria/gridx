@@ -3,10 +3,11 @@ define([
 	"./_PaginationBarBase",
 	"./LinkPager",
 	"../../core/_Module",
+	"./GotoPagePane",
 	"dijit/Dialog",
 	"dijit/form/Button",
 	"dijit/form/NumberTextBox"
-], function(declare, _PaginationBarBase, Pager, _Module, Dialog, Button, NumberTextBox){
+], function(declare, _PaginationBarBase, Pager, _Module, GotoPagePane, Dialog, Button, NumberTextBox){
 
 	return _Module.register(
 	declare(_PaginationBarBase, {
@@ -23,6 +24,8 @@ define([
 		visibleSteppers: 3,
 
 		sizeSeparator: '|',
+
+		gotoPagePane: GotoPagePane,
 
 		dialogClass: Dialog,
 
