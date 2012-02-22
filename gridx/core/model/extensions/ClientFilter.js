@@ -128,7 +128,7 @@ define([
 					}else{
 						_this._ids = ids;
 						size = ids.length;
-						_this.model._sendMsg('filter');
+						_this.model._sendMsg('filter', ids);
 					}
 					if(size != oldSize){
 						_this.onSizeChange(size, oldSize, 'filter');
