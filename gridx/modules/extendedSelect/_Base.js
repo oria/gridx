@@ -32,12 +32,12 @@ define([
 				[win.doc, 'onmouseup', '_end'],
 				[win.doc, 'onkeydown', function(e){
 					if(e.keyCode === keys.SHIFT){
-						html.setSelectable(this.grid.bodyNode, false);
+						html.setSelectable(this.grid.mainNode, false);
 					}
 				}],
 				[win.doc, 'onkeyup', function(e){
 					if(e.keyCode === keys.SHIFT){
-						html.setSelectable(this.grid.bodyNode, true);
+						html.setSelectable(this.grid.mainNode, true);
 					}
 				}]
 			);
@@ -90,7 +90,7 @@ define([
 
 		_start: function(item, extending, isRange){
 			if(!this._selecting && !this._marking && this.arg('enabled')){
-				html.setSelectable(this.grid.bodyNode, false);
+				html.setSelectable(this.grid.mainNode, false);
 				var isSelected = this._isSelected(item);
 				isRange = isRange || this.arg('holdingShift');
 				if(isRange && this._lastStartItem){
@@ -167,7 +167,7 @@ define([
 				this._lastEndItem = this._currentItem;
 				this._startItem = this._currentItem = this._isRange = null;
 				Deferred.when(d, function(){
-					html.setSelectable(g.bodyNode, true);
+					html.setSelectable(g.mainNode, true);
 					_this._marking = false;
 					_this._onSelectionChange();
 				});
