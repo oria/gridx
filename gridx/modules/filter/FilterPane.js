@@ -40,11 +40,11 @@ define([
 			// summary:
 			//	Get the filter defined by this filter pane.
 			var value = this._getValue(), condition = this.sltCondition.get('value');
-			if(value && (condition !== 'range' || (value.start && value.end))){
+			if(condition === 'isEmpty' || (value && (condition !== 'range' || (value.start && value.end)))){
 				return {
 					colId: this.sltColumn.get('value'),
 					condition: condition,
-					value: value,
+					value: condition === 'isEmpty' ? '' : value,
 					type: this._getType()
 				};
 			}else{
