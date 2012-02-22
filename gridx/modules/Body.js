@@ -5,11 +5,12 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
+	"dojo/_base/sniff",
 	"dojo/keys",
 	"../core/_Module",
 	"../util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, domConstruct, domClass, event, Deferred, keys, _Module, util, nls){
+], function(declare, query, domConstruct, domClass, event, Deferred, sniff, keys, _Module, util, nls){
 
 	return _Module.register(
 	declare(_Module, {
@@ -284,9 +285,14 @@ define([
 				}else{
 					this.renderStart = start;
 					this.renderCount = count;
-					this.onUnrender();
 					nd.scrollTop = 0;
+					if(sniff('ie')){
+						while(nd.childNodes.length){
+							nd.removeChild(nd.firstChild);
+						}
+					}
 					nd.innerHTML = str;
+					this.onUnrender();
 					g.emptyNode.innerHTML = str ? "" : nls.emptyInfo;
 					this.model.free();
 				}
@@ -437,11 +443,15 @@ define([
 		}, 
 	
 		_buildCellContent: function(col, rowInfo, rowData, isPadding){
+			var res = '';
 			if(!isPadding){
 				var s = col.decorator ? col.decorator(rowData[col.id], rowInfo.rowId, rowInfo.visualIndex) : rowData[col.id];
-				return this._wrapCellData(s, rowInfo.rowId, col.id);
+				res = this._wrapCellData(s, rowInfo.rowId, col.id);
 			}
-			return '';
+			if(!res && sniff('ie') < 8){
+				res = '&nbsp;';
+			}
+			return res;
 		},
 
 		_wrapCellData: function(cellData, rowId, colId){
@@ -548,11 +558,13 @@ define([
 		//-------------------------------------------------------------------------------------
 		_onRowMouseOver: function(e){
 			var rowNode = this.getRowNode({rowId: e.rowId});
-			domClass.toggle(rowNode, 'dojoxGridxRowOver', e.type != 'mouseout');
+			if(rowNode){
+				domClass.toggle(rowNode, 'dojoxGridxRowOver', e.type == 'mouseover');
+			}
 		},
 		
 		_onCellMouseOver: function(e){
-			domClass.toggle(e.cellNode, 'dojoxGridxCellOver', e.type != 'mouseout');
+			domClass.toggle(e.cellNode, 'dojoxGridxCellOver', e.type == 'mouseover');
 		},
 	
 		//Focus------------------------------------------------------------------------------------------
@@ -623,7 +635,10 @@ define([
 					this._focusCellRow = rowVisIdx;
 					this._focusCellCol = colIdx;
 				}
-				node.focus();
+				//In IE7 focus this node will scroll grid to the left most.
+				if(!(sniff('ie') < 8)){
+					node.focus();
+				}
 			}
 			return node;
 		},
