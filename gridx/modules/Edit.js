@@ -5,12 +5,13 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	"dojo/_base/event",
+	"dojo/dom-class",
 	"dojo/keys",
 	"../core/_Module",
 	"../util",
 	"dojo/date/locale",
 	"dijit/form/TextBox"
-], function(declare, lang, json, Deferred, sniff, event, keys, _Module, util, locale){
+], function(declare, lang, json, Deferred, sniff, event, domClass, keys, _Module, util, locale){
 	
 	/*=====
 	var columnDefinitionEditorMixin = {
@@ -107,10 +108,8 @@ define([
 		},
 	
 		preload: function(){
-			this.batchConnect(
-				[this.grid, 'onCellDblClick', '_onUIBegin'],
-				[this.grid, 'onCellMouseDown', '_onMouseApply']
-			);
+			this.connect(this.grid, 'onCellDblClick', '_onUIBegin');
+			this.connect(this.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
 			this._initAlwaysEdit();
 			this._initFocus();
 		},
@@ -239,6 +238,7 @@ define([
 						var _this = this;
 						cell.setRawData(v).then(function(){
 							if(cell.column.alwaysEditing){
+								_this._erase(rowId, colId);
 								d.callback(true);
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
@@ -312,6 +312,21 @@ define([
 				return 'dijit.form.TextBox';
 			}
 		},
+
+		_onCellWidgetCreated: function(widget, column){
+			if(widget.gridCellEditField && column.alwaysEditing){
+				var _this = this, w = widget.gridCellEditField;
+				widget.connect(w, 'onBlur', function(){
+					var rn = widget.domNode.parentNode;
+					while(rn && !domClass.contains(rn, 'dojoxGridxRow')){
+						rn = rn.parentNode;
+					}
+					if(rn){
+						_this.apply(rn.getAttribute('rowid'), column.id);
+					}
+				});
+			}
+		},
 	
 		_focusEditor: function(rowId, colId){
 			var cw = this.grid.cellWidget,
@@ -377,17 +392,17 @@ define([
 			}
 		},
 
-		_cancelAll: function(){
+		_applyAll: function(){
 			var cells = this._editingCells, r, c;
 			for(r in cells){
 				for(c in cells[r]){
-					this.cancel(r, c);
+					this.apply(r, c);
 				}
 			}
 		},
 
 		_onUIBegin: function(evt){
-			this._cancelAll();
+			this._applyAll();
 			return this.begin(evt.rowId, evt.columnId);
 		},
 	
@@ -411,11 +426,29 @@ define([
 			}
 		},
 
-		_onFocus: function(){
+		_onFocus: function(evt){
+			if(evt){
+				var n = evt.target;
+				while(n && !domClass.contains(n, 'dojoxGridxCell')){
+					n = n.parentNode;
+				}
+				if(n){
+					var colId = n.getAttribute('colid');
+					var rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
+					console.log('focusing:', colId, rowId);
+					if(this.isEditing(rowId, colId)){
+						this._record(rowId, colId);
+						this._editing = true;
+						return true;
+					}
+				}
+				return false;
+			}
 			return this._editing;
 		},
 
 		_doBlur: function(evt, step){
+			console.log('doBlur');
 			if(this._editing){
 				var rowIndex = this.grid.body.getRowInfo({
 					parentId: this.model.treePath(this._focusCellRow).pop(), 
@@ -429,7 +462,7 @@ define([
 				};
 				this.grid.body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
 					util.stopEvent(evt);
-					_this._cancelAll();
+					_this._applyAll();
 					_this._focusCellCol = _this.grid._columns[obj.c].id;
 					var rowInfo = _this.grid.body.getRowInfo({visualIndex: obj.r});
 					_this._focusCellRow = _this.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
@@ -444,7 +477,7 @@ define([
 		},
 
 		_onBlur: function(){
-			this._cancelAll();
+			this._applyAll();
 			this._editing = false;
 			return true;
 		},
@@ -492,18 +525,6 @@ define([
 			}
 			if(this._editing && e.keyCode !== keys.TAB){
 				e.stopPropagation();
-			}
-		},
-
-		_onMouseApply: function(e){
-			var cells = this._editingCells, r, c;
-			//Skip apply if we are hitting an editing cell.
-			if(!(e.rowId in cells) || (cells[e.rowId] && !(e.columnId in cells[e.rowId]))){
-				for(r in cells){
-					for(c in cells[r]){
-						this.apply(r, c).then(lang.hitch(this, this._blur));
-					}
-				}
 			}
 		}
 	}));
