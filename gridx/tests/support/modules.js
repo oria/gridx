@@ -36,6 +36,7 @@ define([
 	'gridx/modules/Printer',
 	'gridx/modules/Menu',
 	'gridx/modules/Dod',
+	'gridx/modules/TitleBar',
 	'gridx/modules/Tree',
 	'gridx/modules/RowLock'
 ], function(FormatSort, 
@@ -51,7 +52,7 @@ define([
 	CellWidget, Edit,
 	RowHeader, IndirectSelect,
 	Persist, Exporter, CSV, Table, Printer,
-	Menu, Dod, Tree, RowLock){
+	Menu, Dod, TitleBar, Tree, RowLock){
 return {
 	FormatSort: FormatSort,
 	Focus: Focus,
@@ -90,6 +91,7 @@ return {
 	Printer: Printer,
 	Menu: Menu,
 	Dod: Dod,
+	TitleBar: TitleBar,
 	Tree: Tree,
 	RowLock: RowLock
 };
