@@ -144,14 +144,18 @@ define([
 		prepare: function(){},
 
 		when: function(args, callback){
-			var d = args._def = new Deferred(), _this = this;
+			var d = args._def = new Deferred(), _this = this, fail = lang.hitch(d, d.errback);
+			var innerFail = function(e){
+				_this._requests.pop();
+				fail(e);
+			};
 			this._fetchById(args).then(function(args){
 				_this._fetchByIndex(args).then(function(args){
 					_this._fetchByParentId(args).then(function(args){
 						_this._finishReady(args, callback, d);
-					});
-				});
-			});
+					}, innerFail);
+				}, innerFail);
+			}, fail);
 			return d;
 		},
 	
@@ -189,14 +193,23 @@ define([
 
 		//-----------------------------------------------------------------------------------------------------------
 		_finish: function(args, callback, deferred){
+			var err;
 			if(callback){
-				callback();
+				try{
+					callback();
+				}catch(e){
+					err = e;
+				}
 			}
 			this._requests.shift();
 			if(!this.skipCacheSizeCheck && !this._requests.length){
 				this._checkSize();
 			}
-			deferred.callback();
+			if(err){
+				deferred.errback(e);
+			}else{
+				deferred.callback();
+			}
 		},
 	
 		_finishReady: function(args, callback, deferred){

@@ -238,8 +238,6 @@ define([
 			}
 			d.then(function(){
 				_this.onAfterFetch();
-			}, function(e){
-				console.error(e);
 			});
 			return d;
 		},
