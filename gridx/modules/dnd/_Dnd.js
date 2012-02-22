@@ -37,7 +37,7 @@ define([
 		},
 
 		load: function(args){
-			var n = this.grid.domNode, hitch = lang.hitch;
+			var n = this.grid.bodyNode, hitch = lang.hitch;
 			this._source = new Source(n, {
 				isSource: false,
 				accept: this.accept,
@@ -172,7 +172,7 @@ define([
 					count: this.profile._getDndCount()
 				};
 				this.profile._onBeginDnd(this._source);
-				dom.setSelectable(this.grid.domNode, false);	
+				dom.setSelectable(this.grid.bodyNode, false);	
 			}
 		},
 	
@@ -193,7 +193,7 @@ define([
 				delete this._dnding;
 				delete this._extDnding;
 				this._destroyUI();
-				dom.setSelectable(this.grid.domNode, true);
+				dom.setSelectable(this.grid.bodyNode, true);
 				domClass.remove(win.body(), 'dojoxGridxDnDReadyCursor');
 				this.profile._onEndDnd();
 				this._loadSelectStatus(false);
