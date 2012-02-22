@@ -55,9 +55,10 @@ define([
 			this.bodyNode.style.width = w;
 			g.hLayout.register(null, this.bodyNode);
 			this.batchConnect(
-				[g.body, 'onRender', 'update'],
-				[g.body, 'renderRows', 'update'],
-				[g.bodyNode, 'onscroll', '_updateBody'],
+				[g.body, 'onRender', '_onRendered'],
+				[g.body, 'renderRows', '_onRenderRows'],
+				[g.body, 'unrenderRows', '_onUnrenderRows'],
+				[g.bodyNode, 'onscroll', '_onScroll'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver']
 			);
@@ -78,36 +79,73 @@ define([
 			return '';
 		},
 
-		update: function(){
-			this.headerCellNode.innerHTML = this.headerProvider();
-			this._updateBody();
-		},
-
 		//Private-------------------------------------------------------
-		_updateBody: function(){
-			var sb = [];
-			array.forEach(this.grid.bodyNode.childNodes, function(node){
-				sb.push(this._buildRow(node));
-			}, this);
-			this.bodyNode.innerHTML = sb.join('');
-			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
-			if(this.grid.focus && this.grid.focus.currentArea() == 'rowHeader'){
-				this._focusRow(this.grid.body._focusCellRow);
+		_f1: 0,
+		_f2: 0,
+		_onRenderRows: function(start, count, position){
+			if(count > 0){
+				this._f1++;
+				var nd = this.bodyNode, str = this._buildRows(start, count);
+				if(position == 'top'){
+					domConstruct.place(str, nd, 'first');
+				}else if(position == 'bottom'){
+					domConstruct.place(str, nd, 'last');
+				}else{
+					nd.scrollTop = 0;
+					nd.innerHTML = str;
+				}
 			}
 		},
 
-		_buildRow: function(node){
-			var attrs = [node.getAttribute('rowid'), node.getAttribute('visualindex'), 
-				node.getAttribute('rowindex'), node.getAttribute('parentid')];
-			return ['<div class="dojoxGridxRowHeaderRow" rowid="', attrs[0],
-				'" parentid="', attrs[3],
-				'" rowindex="', attrs[2],
-				'" visualindex="', attrs[1],
-				'"><table border="0" cellspacing="0" cellpadding="0" style="height: ', domStyle.get(node, 'height'),
-				'px;"><tr><td class="dojoxGridxRowHeaderCell" tabindex="-1">',
-				this.cellProvider.apply(this, attrs),
-				'</td></tr></table></div>'
-			].join('');
+		_onUnrenderRows: function(count, preOrPost){
+			if(count > 0){
+				var i = 0, bn = this.bodyNode;
+				if(preOrPost === 'post'){
+					for(; i < count && bn.lastChild; ++i){
+						bn.removeChild(bn.lastChild);
+					}
+				}else{
+					for(; i < count && bn.firstChild; ++i){
+						bn.removeChild(bn.firstChild);
+					}
+					bn.scrollTop = this.grid.bodyNode.scrollTop;
+				}
+			}
+		},
+
+		_onRendered: function(start, count){
+            this.headerCellNode.innerHTML = this.headerProvider();
+			if(++this._f2 == this._f1){
+				var node = query('[visualindex="' + start + '"].dojoxGridxRowHeaderRow table', this.bodyNode)[0];
+				var bn = query('[visualindex="' + start + '"].dojoxGridxRow', this.grid.bodyNode)[0];
+				for(var i = 0; i < count; ++i){
+					node.style.height = domStyle.get(node, 'height') + 'px';
+					node = node.nextSibling;
+					bn = bn.nextSibling;
+				}
+			}
+		},
+
+		_onScroll: function(e){
+			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
+		},
+
+		_buildRows: function(start, count){
+			var sb = [], node = query('[visualindex="' + start + '"].dojoxGridxRow', this.grid.bodyNode)[0];
+			for(var i = 0; i < count; ++i){
+				var attrs = [node.getAttribute('rowid'), node.getAttribute('visualindex'), 
+					node.getAttribute('rowindex'), node.getAttribute('parentid')];
+				sb.push('<div class="dojoxGridxRowHeaderRow" rowid="', attrs[0],
+					'" parentid="', attrs[3],
+					'" rowindex="', attrs[2],
+					'" visualindex="', attrs[1],
+					'"><table border="0" cellspacing="0" cellpadding="0" style="height: ', domStyle.get(node, 'height'),
+					'px;"><tr><td class="dojoxGridxRowHeaderCell" tabindex="-1">',
+					this.cellProvider.apply(this, attrs),
+					'</td></tr></table></div>');
+				node = node.nextSibling;
+			}
+			return sb.join('');
 		},
 
 		//Events
