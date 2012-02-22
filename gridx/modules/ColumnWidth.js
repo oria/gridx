@@ -135,7 +135,8 @@ define([
 				});
 				header.refresh();
 			}
+			g.hScroller.scroll(0);
+			header._onHScroll(0);
 		}
 	}));
 });
-
