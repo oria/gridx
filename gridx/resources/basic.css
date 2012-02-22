@@ -41,10 +41,6 @@
 	position: relative;
 }
 
-.dojoxGridxHeaderRow :focus {
-	outline: none;
-}
-
 .dojoxGridxHeaderRowInner {
 	overflow: hidden;
 	border-style: solid;
@@ -58,7 +54,7 @@
 }
 
 .dojoxGridxHeaderRow table {
-/*    border-collapse: collapse;*/
+	border-collapse: collapse;
 	border-spacing: 0;
 	border: none;
 	table-layout: fixed;
@@ -79,8 +75,21 @@
 }
 
 .dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus {
-	border: 1px dashed darkblue;
-	outline: medium none;
+	outline: 1px dashed darkblue;
+	border-top: 1px dashed darkblue;
+	border-bottom: 1px dashed darkblue;
+}
+
+.dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus:first-child {
+	border-left: 1px dashed darkblue;
+}
+
+.dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus:last-child {
+	border-right: 1px dashed darkblue;
+}
+
+.dojoxGridxHeaderRow :focus {
+	outline: none;
 }
 
 /*Body*/
@@ -96,17 +105,12 @@
     -khtml-box-sizing: border-box; /* konqueror */
 }
 
-.dojoxGridxBody :focus {
-	outline: none;
+.dojoxGridx .dojoxGridxRowOver .dojoxGridxRowTable {
+	background-color: #cee8f2;
 }
 
-.dojoxGridxRow {
-	/* This will cause row dnd in FF to fail (event.target does not change while dragging) */
-	/*overflow: hidden;*/
-}
-
-.dojoxGridxRow table.dojoxGridxRowTable {
-/*    border-collapse: collapse;*/
+.dojoxGridxRow .dojoxGridxRowTable {
+	border-collapse: collapse;
 	border-spacing: 0;
 	border: none;
 	table-layout: fixed;
@@ -134,9 +138,26 @@
 	border-top: 1px solid red;*/
 }
 
-.dojoxGridx .dojoxGridxCellFocus {
+.dojoxGridxBody .dojoxGridxCell:focus {
+	outline: none;
+}
+
+.dojoxGridx .dojoxGridxBody .dojoxGridxCellFocus {
+	outline: 1px dashed darkblue;
+}
+
+.dj_ie7 .dojoxGridx .dojoxGridxCellFocus {
 	border: 1px dashed darkblue;
 }
+
+.dojoxGridx .dojoxGridxBody .dojoxGridxRow:first-child .dojoxGridxCellFocus {
+	border-top: 1px dashed darkblue;
+}
+
+.dojoxGridx .dojoxGridxBody .dojoxGridxRow .dojoxGridxCellFocus:first-child {
+	border-left: 1px dashed darkblue;
+}
+
 
 .dojoxGridxBodyEmpty {
 	width: 100%;

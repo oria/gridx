@@ -1,8 +1,9 @@
 /* pagination bar */
 .claro .dojoxGridxPager {
-	background: url("images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
+/*    background: url("images/header_shadow.png") repeat-x scroll center bottom #eaf1f6;*/
+	background-color: #eaf1f6;
 	padding: 3px 9px;
-	border-top: 1px solid #DDDDDD;
+	border-top: 1px solid #dbdbdb;
 }
 
 .claro .dojoxGridxPagerNodeFocus {
@@ -19,8 +20,10 @@
 	margin: 0 7px;
 }
 
-.claro .dojoxGridxPagerStepperBtnHover {
+.claro .dojoxGridxPagerStepperBtnHover,
+.claro .dojoxGridxPagerSizeSwitchBtnHover {
 	text-decoration: underline;
+/*    font-weight: bold;*/
 }
 
 .claro .dojoxGridxPagerStepperBtnActive,

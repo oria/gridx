@@ -1,9 +1,6 @@
 /* row select */
-.dojoxGridxRowSelected td {
+.dojoxGridxRowSelected .dojoxGridxRowTable {
 	background-color: #BFD6EB;
-}
-.dojoxGridxFocusedRow {
-	border: 1px solid red;
 }
 
 /* column select */
