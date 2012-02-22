@@ -33,8 +33,6 @@ define([
 				this.stubNode = nd.firstChild;
 				nd.style.display = 'block';
 				this.batchConnect(
-//                    [g.body, 'onAfterRow', '_doScroll'],
-//                    [g.body, 'onRender', 'refresh'],
 					[g.header, 'onRender', 'refresh'],
 					[nd, 'onscroll', '_onScroll'],
 					[g, '_onResizeBegin', function(changeSize, ds){
@@ -87,6 +85,8 @@ define([
 		},
 		
 		//Private-----------------------------------------------------------
+		_lastLeft: 0,
+
 		_onScroll: function(e){
 			//summary:
 			//	Fired by h-scroller's scrolling event

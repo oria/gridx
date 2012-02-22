@@ -107,7 +107,7 @@ define([
 		},
 
 		_onHScroll: function(left){
-//            this.innerNode.scrollLeft = left;
+			//this.innerNode.scrollLeft = left;
 			this.innerNode.firstChild.style.marginLeft = -left + 'px';
 			this._scrollLeft = left;
 		},
@@ -194,13 +194,13 @@ define([
 							containerPos = domGeometry.position(this.domNode),
 							dif = pos.x + pos.w - containerPos.x - containerPos.w;
 						if(dif < 0){
-							dif = pos.x - containerPos.x - 1;
+							dif = pos.x - containerPos.x;
 							if(dif > 0){
 								dif = 0;
 							}
 						}
 						this._onHScroll(this._scrollLeft + dif);
-						this.grid.hScroller.scroll(this._scrollLeft);
+						this.grid.hScroller.scroll(this._scrollLeft + dif);
 					}
 					domClass.add(node, this._focusClass);
 					node.focus();
@@ -226,8 +226,6 @@ define([
 				if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
 					//Prevent scrolling the whole page.
 					event.stop(evt);
-					evt.stopPropogation();
-					evt.preventDefault();
 					col = grid._columnsById[this._focusHeaderId];
 					col = grid._columns[col.index + delta];
 					if(col){

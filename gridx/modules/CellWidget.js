@@ -286,9 +286,11 @@ define([
 					doFocus: this._doFocus,
 					doBlur: this._doBlur,
 					onFocus: this._onFocus,
-					onBlur: this._endNavigate
+					onBlur: this._endNavigate,
+					connects: [
+						this.connect(this.grid, 'onCellKeyPress', '_onKey')
+					]
 				});
-				this.connect(this.grid, 'onCellKeyPress', '_onKey');
 			}
 		},
 
