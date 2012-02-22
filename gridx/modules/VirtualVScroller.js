@@ -37,30 +37,37 @@ define([
 		
 		lazyScrollTimeout: 50,
 	
-		scrollToRow: function(rowVisualIndex){
+		scrollToRow: function(rowVisualIndex, top){
 			var d = new Deferred(), _this = this;
 			this._scrolls.push(d);
 			if(this._scrolls.length > 1){
 				this._scrolls[this._scrolls.length - 2].then(function(){
-					_this._subScrollToRow(rowVisualIndex, d);
+					_this._subScrollToRow(rowVisualIndex, d, top);
 				});
 			}else{
-				this._subScrollToRow(rowVisualIndex, d);
+				this._subScrollToRow(rowVisualIndex, d, top);
 			}
 			return d;
 		},
 
-		_subScrollToRow: function(rowVisualIndex, defer){
-			var dif = 0, _this = this, bn = this.grid.bodyNode,
-				node = query('[visualindex="' + rowVisualIndex + '"]', bn)[0];
+		_subScrollToRow: function(rowVisualIndex, defer, top){
+			var dif = 0, _this = this, rowHeight = this._avgRowHeight,
+				bn = this.grid.bodyNode, dn = this.domNode,
+				node = query('[visualindex="' + rowVisualIndex + '"]', bn)[0],
+				finish = function(success){
+					_this._scrolls.splice(array.indexOf(_this._scrolls, defer), 1);
+					defer.callback(success);
+				};
 			if(node){
-				if(node.offsetTop < bn.scrollTop){
-					dif = -this._avgRowHeight;
-				}else if(node.offsetTop + node.offsetHeight > bn.scrollTop + bn.clientHeight){
-					dif = this._avgRowHeight;
+				if(node.offsetTop + node.offsetHeight > bn.scrollTop + bn.clientHeight){
+					dif = node.offsetTop - bn.scrollTop;
+					if(!top){
+						dif += node.offsetHeight - bn.clientHeight;
+					}
+				}else if(node.offsetTop < bn.scrollTop || (top && node.offsetTop > bn.scrollTop)){
+					dif = node.offsetTop - bn.scrollTop;
 				}else{
-					this._scrolls.splice(array.indexOf(this._scrolls, defer), 1);
-					defer.callback(true);
+					finish(true);
 					return;
 				}
 			}else if(bn.childNodes.length){
@@ -69,29 +76,40 @@ define([
 				while(n && n.offsetTop < bn.scrollTop){
 					n = n.nextSibling;
 				}
-				if(n){
-					var idx = n.getAttribute('visualindex');
-					dif = (rowVisualIndex > idx ? 1 : -1) * this._avgRowHeight;
+				var idx = n && n.getAttribute('visualindex');
+				if(n && rowVisualIndex < idx){
+					dif = (rowVisualIndex - idx) * rowHeight;
 				}else{
-					this._scrolls.splice(array.indexOf(this._scrolls, defer), 1);
-					defer.callback(false);
-					console.log('ERROR');
-					return;
+					n = bn.lastChild;
+					while(n && n.offsetTop + n.offsetHeight > bn.scrollTop + bn.clientHeight){
+						n = n.previousSibling;
+					}
+					idx = n && n.getAttribute('visualindex');
+					if(n && rowVisualIndex > idx){
+						dif = (rowVisualIndex - idx) * rowHeight;
+					}else{
+						finish(false);
+						return;
+					}
 				}
 			}else{
-				this._scrolls.splice(array.indexOf(this._scrolls, defer), 1);
-				defer.callback(false);
-				console.log('ERROR');
+				finish(false);
 				return;
 			}
-			if((this.domNode.scrollTop === 0 && dif < 0) ||
-					(this.domNode.scrollTop >= this.domNode.scrollHeight - this.domNode.offsetHeight && dif > 0)){
+			var istop = dn.scrollTop === 0 && dif < 0,
+				isbottom = dn.scrollTop >= dn.scrollHeight - dn.offsetHeight && dif > 0;
+			if(istop || isbottom){
 				this._doVirtualScroll(null, true);
 			}else{
-				this.domNode.scrollTop += dif / this._ratio;
+				dn.scrollTop += dif / this._ratio;
+			}
+			if((istop && bn.firstChild.getAttribute('visualindex') == 0) || 
+					(isbottom && bn.lastChild.getAttribute('visualindex') == this.grid.body.visualCount - 1)){
+				finish(false);
+				return;
 			}
 			setTimeout(function(){
-				_this._subScrollToRow(rowVisualIndex, defer);
+				_this._subScrollToRow(rowVisualIndex, defer, top);
 			}, 5);
 		},
 	
