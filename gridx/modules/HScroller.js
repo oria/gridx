@@ -46,7 +46,8 @@ define([
 						});
 					}]
 				);
-				if(sniff('ie') < 7){
+				if(sniff('ie')){
+					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
 					nd.style.height = metrics.getScrollbar().h + 'px';
 				}
