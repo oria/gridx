@@ -294,7 +294,7 @@ define([
 		},
 		
 		destroy: function(){
-			this._filterDialog || this._filterDialog.destroyRecursive();
+			this._filterDialog && this._filterDialog.destroyRecursive();
 			this.inherited(arguments);
 			dojo.destroy(this.domNode);
 		},
