@@ -34,7 +34,7 @@ require([
 	destroyGrid = function(){
 		if(window.grid){
 			grid.destroy();
-			delete window.grid;
+			window.grid = null;
 		}
 	};
 

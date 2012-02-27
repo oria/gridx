@@ -27,9 +27,7 @@ define([
 			// args: Object | undefined
 			//		Arguments of this module
 			//		Possible arguments are: key, put, get
-			this.grid = grid;
 			//Initialize arguments
-			this.arg('enabled');
 			this.key = window.location + '/' + this.arg('key', grid.id, function(arg){
 				return arg;
 			});
@@ -147,7 +145,7 @@ define([
 			if(this._persistedList[name]){
 				return this._persistedList[name].enabled;
 			}
-			return false;
+			return name ? false : this.arg('enabled');
 		},
 	
 		save: function(){
@@ -173,7 +171,7 @@ define([
 			var list = this._persistedList;
 			if(list[name]){
 				list[name].enabled = enabled;
-			}else if(name === null || name === undefined){
+			}else if(!name){
 				for(name in list){
 					list[name].enabled = enabled;
 				}
