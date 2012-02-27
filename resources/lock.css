@@ -4,7 +4,6 @@
 }
 
 /*Row Lock*/
-.gridxColumnLock .dojoxGridxCell,
 .dojoxGridx .dojoxGridxBody .gridxLockedRow,
 .dojoxGridx .dojoxGridxBody .gridxLockedRow .dojoxGridxLockedCell {
 	background-color: #ffffe0 !important;

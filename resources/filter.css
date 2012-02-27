@@ -140,6 +140,10 @@
     padding: 1px 0 0 45px;
 }
 
+.dj_ie9 .dojoxGridxFilterBarStatus{
+	padding-left: 5px;
+}
+
 .dojoxGridxFilterBarCloseBtn {
 	background: transparent url(images/sprite_icons.png) no-repeat -119px -20px;
 	width: 14px;
