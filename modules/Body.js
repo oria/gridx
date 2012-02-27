@@ -38,9 +38,14 @@ define([
 				[m, 'onSet', '_onSet'],
 				[m, 'onSizeChange', '_onSizeChange'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
-				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, 'onCellMouseOver', '_onCellMouseOver'],
 				[g, 'onCellMouseOut', '_onCellMouseOver'],
+				[g.mainNode, 'onmouseleave', function(){
+					var n = query('.dojoxGridxRowOver', this.domNode)[0];
+					if(n){
+						domClass.remove(n, 'dojoxGridxRowOver');
+					}
+				}],
 				[g, 'setColumns', function(){
 					this.refresh();
 				}]
@@ -557,9 +562,13 @@ define([
 		
 		//-------------------------------------------------------------------------------------
 		_onRowMouseOver: function(e){
-			var rowNode = this.getRowNode({rowId: e.rowId});
-			if(rowNode){
-				domClass.toggle(rowNode, 'dojoxGridxRowOver', e.type == 'mouseover');
+			var preNode = query('.dojoxGridxRowOver', this.domNode)[0],
+				rowNode = this.getRowNode({rowId: e.rowId});
+			if(preNode != rowNode){
+				if(preNode){
+					domClass.remove(preNode, 'dojoxGridxRowOver');
+				}
+				domClass.add(rowNode, 'dojoxGridxRowOver');
 			}
 		},
 		
