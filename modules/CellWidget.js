@@ -163,7 +163,7 @@ define([
 							cellDec.widget = null;
 							cellDec.decorator = null;
 							cellDec.setCellValue = null;
-						}, 0);
+						}, 100);
 					}
 				}
 				delete rowDecs[colId];
@@ -387,30 +387,19 @@ define([
 			this._navigating = false;
 		},
 
-		_isFocusable: function(node){
-			return {
-				input: 1,
-				textarea: 1,
-				button: 1,
-				a: 1
-			}[node.tagName.toLowerCase()] || node.tabIndex >= 0;
-		},
-
 		_onFocus: function(evt){
-			var node = evt.target;
-			if(this._isFocusable(node)){
-				while(node && node !== this.grid.domNode && !domClass.contains(node, 'dojoxGridxCell')){
+			var node = evt.target, dn = this.grid.domNode;
+			while(node && node !== dn && !domClass.contains(node, 'dojoxGridxCell')){
+				node = node.parentNode;
+			}
+			if(node && node !== dn){
+				var colId = node.getAttribute('colid');
+				while(node && !domClass.contains(node, 'dojoxGridxRow')){
 					node = node.parentNode;
 				}
-				if(node && node !== this.grid.domNode){
-					var colId = node.getAttribute('colid');
-					while(node && !domClass.contains(node, 'dojoxGridxRow')){
-						node = node.parentNode;
-					}
-					if(node){
-						var rowId = node.getAttribute('rowid');
-						return this._beginNavigate(rowId, colId);
-					}
+				if(node){
+					var rowId = node.getAttribute('rowid');
+					return this._beginNavigate(rowId, colId);
 				}
 			}
 			return false;

@@ -183,6 +183,8 @@ define([
 					d.callback(false);
 				}
 			}else{
+				this._record(rowId, colId);
+				this._focusEditor(rowId, colId);
 				d.callback(true);
 			}
 			return d;
@@ -205,8 +207,8 @@ define([
 						cw.setValue(rowCache.data[colId], rowCache.rawData[col.field]);
 						d.callback();
 					}else{
-						cw.restoreCellDecorator(rowId, colId);
 						this._erase(rowId, colId);
+						cw.restoreCellDecorator(rowId, colId);
 						g.body.refreshCell(rowIndex, col.index).then(function(){
 							d.callback();
 						});
@@ -435,7 +437,6 @@ define([
 				if(n){
 					var colId = n.getAttribute('colid');
 					var rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
-					console.log('focusing:', colId, rowId);
 					if(this.isEditing(rowId, colId)){
 						this._record(rowId, colId);
 						this._editing = true;
@@ -448,7 +449,6 @@ define([
 		},
 
 		_doBlur: function(evt, step){
-			console.log('doBlur');
 			if(this._editing){
 				var rowIndex = this.grid.body.getRowInfo({
 					parentId: this.model.treePath(this._focusCellRow).pop(), 
