@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "dojo": "1.7.2",
-    "dijit": "1.7.2"
+    "dijit": "1.7.2",
+    "dojox": "1.7.2"
   },
   "main": "./Grid",
   "icon": " "
