@@ -63,6 +63,7 @@ define([
 		_mousemove: function(e){
 			
 			var cell = this._getCell(e);
+			if(!cell){return;}
 			if(this._resizing){
 				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
 			}

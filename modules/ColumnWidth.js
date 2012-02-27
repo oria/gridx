@@ -116,7 +116,8 @@ define([
 						col.width = 'auto';
 						autoCols.push(col);
 					}else if(/%$/.test(col.width)){
-						col.width = (bodyWidth * parseFloat(col.width, 10) / 100 - padBorder) + 'px';
+						var w = bodyWidth * parseFloat(col.width, 10) / 100 - padBorder;
+						col.width = parseInt(w, 10) + 'px';
 					}
 				});
 				header.refresh();
@@ -128,15 +129,20 @@ define([
 						fixedWidth += w;
 					}
 				});
-				var w = (bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : 
-					this.arg('default')) + 'px';
+				var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : this.arg('default');
+				w = parseInt(w, 10) + 'px';
 				array.forEach(autoCols, function(col){
 					col.width = w; 
 				});
 				header.refresh();
 			}
-			g.hScroller.scroll(0);
-			header._onHScroll(0);
+			if(sniff('ie') < 8){
+				header.innerNode.style.width = bodyWidth + 'px';
+			}
+			if(g.hScroller){
+				g.hScroller.scroll(0);
+				header._onHScroll(0);
+			}
 		}
 	}));
 });
