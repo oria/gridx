@@ -1,13 +1,15 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/query",
 	"dojo/_base/connect",
 	"dojo/_base/html",
 	"dojo/_base/Deferred",
+	"dojo/_base/sniff",
 	"dojo/_base/window",
 	"dojo/keys",
 	"../../core/_Module",
 	"../AutoScroll"
-], function(declare, connect, html, Deferred, win, keys, _Module){
+], function(declare, query, connect, html, Deferred, sniff, win, keys, _Module){
 
 	return declare(_Module, {
 		required: ['autoScroll'],
@@ -21,23 +23,24 @@ define([
 		},
 		
 		load: function(){
+			var g = this.grid;
 			this._refSelectedIds = [];
-			this.subscribe('gridClearSelection_' + this.grid.id, function(type){
+			this.subscribe('gridClearSelection_' + g.id, function(type){
 				if(type != this._type){
 					this.clear();
 				}
 			});
 			this.batchConnect(
-				[this.grid.body, 'onRender', '_onRender'],
+				[g.body, 'onRender', '_onRender'],
 				[win.doc, 'onmouseup', '_end'],
 				[win.doc, 'onkeydown', function(e){
 					if(e.keyCode === keys.SHIFT){
-						html.setSelectable(this.grid.mainNode, false);
+						html.setSelectable(g.domNode, false);
 					}
 				}],
 				[win.doc, 'onkeyup', function(e){
 					if(e.keyCode === keys.SHIFT){
-						html.setSelectable(this.grid.mainNode, true);
+						html.setSelectable(g.domNode, true);
 					}
 				}]
 			);
@@ -90,7 +93,8 @@ define([
 
 		_start: function(item, extending, isRange){
 			if(!this._selecting && !this._marking && this.arg('enabled')){
-				html.setSelectable(this.grid.mainNode, false);
+				html.setSelectable(this.grid.domNode, false);
+				this._fixFF(1);
 				var isSelected = this._isSelected(item);
 				isRange = isRange || this.arg('holdingShift');
 				if(isRange && this._lastStartItem){
@@ -105,7 +109,7 @@ define([
 						this._toSelect = !isSelected;
 					}else{
 						this._toSelect = true;
-						this.clear();
+						this.clear(1);
 					}
 				}
 				connect.publish('gridClearSelection_' + this.grid.id, [this._type]);
@@ -155,6 +159,7 @@ define([
 
 		_end: function(){
 			if(this._selecting){
+				this._fixFF();
 				this._endAutoScroll();
 				this._selecting = false;
 				this._marking = true;
@@ -167,7 +172,7 @@ define([
 				this._lastEndItem = this._currentItem;
 				this._startItem = this._currentItem = this._isRange = null;
 				Deferred.when(d, function(){
-					html.setSelectable(g.mainNode, true);
+					html.setSelectable(g.domNode, true);
 					_this._marking = false;
 					_this._onSelectionChange();
 				});
@@ -187,7 +192,14 @@ define([
 
 		_inRange: function(value, start, end, isClose){
 			return ((value >= start && value <= end) || (value >= end && value <= start)) && (isClose || value != end);
+		},
+
+		_fixFF: function(isStart){
+			if(sniff('ff')){
+				query('.dojoxGridxSortNode', this.grid.headerNode).forEach(function(n){
+					n.style.overflow = isStart ? 'visible' : '';
+				});
+			}
 		}
 	});
 });
-

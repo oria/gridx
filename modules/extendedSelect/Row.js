@@ -43,11 +43,14 @@ define([
 			}, this);
 		},
 
-		clear: function(){
+		clear: function(silent){
 			query(".dojoxGridxRowSelected", this.grid.bodyNode).forEach(function(node){
 				html.removeClass(node, 'dojoxGridxRowSelected');
 			});
 			this.model.clearMark();
+			if(!silent){
+				this._onSelectionChange();
+			}
 		},
 
 		onHighlightChange: function(){},

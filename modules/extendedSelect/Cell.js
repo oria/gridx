@@ -56,13 +56,16 @@ define([
 			return res;
 		},
 
-		clear: function(){
+		clear: function(silent){
 			query(".dojoxGridxCellSelected", this.grid.bodyNode).forEach(function(node){
 				html.removeClass(node, 'dojoxGridxCellSelected');
 			});
 			array.forEach(this.grid._columns, function(col){
 				this.model.clearMark(this._getMarkType(col.id));
 			}, this);
+			if(!silent){
+				this._onSelectionChange();
+			}
 		},
 
 		isSelected: function(rowId, columnId){
@@ -157,17 +160,19 @@ define([
 		},
 
 		_onRender: function(start, count){
-			var i, end = start + count;
-			for(i = 0; i < this.grid._columns.length; ++i){
-				var cid = this.grid._columns[i].id;
-				var type = this._getMarkType(cid);
-				for(j = start; j < end; ++j){
-					var rid = this._getRowIdByVisualIndex(j);
-					if(this.model.isMarked(rid, type) || (this._selecting && this._toSelect &&
-						this._inRange(i, this._startItem.c, this._currentItem.c, true) &&
-						this._inRange(j, this._startItem.r, this._currentItem.r, true))){
-						var node = query('[visualindex="' + j + '"] [colid="' + cid + '"]', this.grid.bodyNode)[0];
-						html.addClass(node, 'dojoxGridxCellSelected');
+			var i, g = this.grid, end = start + count;
+			for(i = 0; i < g._columns.length; ++i){
+				var cid = g._columns[i].id,
+					type = this._getMarkType(cid);
+				if(this.model.getMarkedIds(type).length){
+					for(j = start; j < end; ++j){
+						var rid = this._getRowIdByVisualIndex(j);
+						if(this.model.isMarked(rid, type) || (this._selecting && this._toSelect &&
+							this._inRange(i, this._startItem.c, this._currentItem.c, true) &&
+							this._inRange(j, this._startItem.r, this._currentItem.r, true))){
+							var node = query('[visualindex="' + j + '"] [colid="' + cid + '"]', g.bodyNode)[0];
+							html.addClass(node, 'dojoxGridxCellSelected');
+						}
 					}
 				}
 			}

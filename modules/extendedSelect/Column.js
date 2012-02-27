@@ -41,13 +41,16 @@ define([
 			});
 		},
 
-		clear: function(){
+		clear: function(silent){
 			query(".dojoxGridxColumnSelected", this.grid.domNode).forEach(function(node){
 				html.removeClass(node, 'dojoxGridxColumnSelected');
 			});
 			array.forEach(this.grid._columns, function(col){
 				col._selected = false;
 			});
+			if(!silent){
+				this._onSelectionChange();
+			}
 		},
 
 		isSelected: function(){
