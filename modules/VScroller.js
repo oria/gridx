@@ -98,8 +98,15 @@ define([
 		},
 	
 		_onBodyChange: function(){
-			this.stubNode.style.height = this.grid.bodyNode.scrollHeight + 'px';
-			this._doScroll();
+			var _this = this;
+			//IE7 Needs setTimeout
+			window.setTimeout(function(){
+				_this.stubNode.style.height = _this.grid.bodyNode.scrollHeight + 'px';
+				_this._doScroll();
+				//FIX IE7 problem:
+				_this.grid.vScrollerNode.scrollTop = _this.grid.vScrollerNode.scrollTop || 0;
+			},0);
+
 		},
 	
 		_onRowCountChange: function(){ 

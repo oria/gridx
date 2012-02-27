@@ -13,14 +13,6 @@ define([
 	
 	return _Module.register(
 	declare(VScroller, {
-		name: 'vscroller',
-
-		getAPIPath: function(){
-			return {
-				vScroller: this
-			};
-		},
-
 		constructor: function(grid, args){
 			if(this.grid.autoHeight){
 				var base = new VScroller(grid, args);
