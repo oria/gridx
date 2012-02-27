@@ -29,14 +29,14 @@ require([
 			var store = storeFactory({
 				path: './support/stores',
 				dataSource: dataSource, 
-				size: 100
+				size: 50
 			}); 
 			var layout = dataSource.layouts[1];
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
 				cacheSize: 0,
-				pageSize: 1000,
+//                pageSize: 1000,
 				store: store,
 				structure: layout,
 				vscrollerLazyScroll: true,
@@ -44,7 +44,6 @@ require([
 				modules: [
 					modules.SingleSort,
 					modules.ExtendedSelectRow,
-					modules.MoveRow,
 					modules.VirtualVScroller
 				]
 			});
@@ -59,7 +58,7 @@ require([
 
 	var getNewItem = function(){
 		var item = dataSource.getData(1).items[0];
-		item.id = ++newId;
+		item.order = item.id = ++newId;
 		return item;
 	};
 
