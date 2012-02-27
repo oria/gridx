@@ -19,7 +19,7 @@
   "dependencies": {
     "dojo": "1.7.2",
     "dijit": "1.7.2"
-    //"dojox/fx|html|charting": "1.7.2" - not available at http://packages.dojofoundation.org/ yet
+    //"dojox/fx | html | charting"
   },
   "main": "./Grid",
   "icon": " "
