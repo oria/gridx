@@ -18,8 +18,10 @@
   },
   "dependencies": {
     "dojo": "1.7.2",
-    "dijit": "1.7.2",
-    "dojox": "1.7.2"
+    "dijit": "1.7.2"/*,
+    "dojox/fx": "1.7.2",
+    "dojox/html": "1.7.2",
+    "dojox/charting": "1.7.2"*/
   },
   "main": "./Grid",
   "icon": " "
