@@ -9,7 +9,7 @@
 	display:none;
 	float:right;
 }
-.dojoxGridxArrowButtonNode {
+.  {
 	background:transparent url("images/spriteArrows.png") no-repeat scroll left center;
 	display:block;
 	float:right;
@@ -22,14 +22,7 @@
 	background-position:-21px 50%;
 }
 
-
-
 /*Nested Sorting*/
-.dojoxGridxSortNode {
-	/* In FF, this will occasionally cause swipe column selection to fail... */
-	/*overflow: hidden;*/
-}
-
 .dojoxGridxSortBtn {
 	background: transparent url(images/sprite_icons.png) no-repeat -159px 5px;
 	float: right;
@@ -45,7 +38,7 @@
 
 .dojoxGridxSortBtn:hover,
 .dojoxGridxSortBtnFocus {
-/*    background-color: #ddd;*/
+	/*background-color: #ddd;*/
 }
 
 .dojoxGridxCellSorted .dojoxGridxSortBtnSingle, 

@@ -1,7 +1,7 @@
 /* Single Sort */
 
 .claro .dojoxGridxArrowButtonNode {
-	background: transparent url("../images/spriteIcons.png") no-repeat 500px 500px;
+	background: transparent url("../images/sprite_icons.png") no-repeat 500px 500px;
 	display: none;
 	float: right;
 	height: 10px;
@@ -11,11 +11,11 @@
 }
 .claro .dojoxGridxSortUp .dojoxGridxArrowButtonNode {
 	display: block;
-	background-position: -33px -2px;
+	background-position: -120px 0px;
 }
 .claro .dojoxGridxSortDown .dojoxGridxArrowButtonNode {
 	display: block;
-	background-position: -3px -2px;
+	background-position: -100px 0px;
 }
 
 .claro .dojoxGridxSortSingle {
@@ -37,12 +37,12 @@
 
 .claro .dojoxGridxHeaderCellOver .dojoxGridxSortUp .dojoxGridxArrowButtonNode,
 .claro .dojoxGridxHeaderCellFocus .dojoxGridxSortUp .dojoxGridxArrowButtonNode {
-	background-position: -183px -2px;
+	background-position: -140px 0px;
 }
 
 .claro .dojoxGridxHeaderCellOver .dojoxGridxSortDown .dojoxGridxArrowButtonNode,
 .claro .dojoxGridxHeaderCellFocus .dojoxGridxSortDown .dojoxGridxArrowButtonNode {
-	background-position: -153px -2px;
+	background-position: -160px 0px;
 }
 
 .claro .dojoxGridxHeaderCellOver .dojoxGridxSortAscendOnly,
