@@ -320,7 +320,7 @@ define([
 				var _this = this, w = widget.gridCellEditField;
 				widget.connect(w, 'onBlur', function(){
 					var rn = widget.domNode.parentNode;
-					while(rn && !domClass.contains(rn, 'dojoxGridxRow')){
+					while(rn && !domClass.contains(rn, 'gridxRow')){
 						rn = rn.parentNode;
 					}
 					if(rn){
@@ -364,7 +364,7 @@ define([
 			return function(){
 				return ["<div dojoType='", className, "' ",
 					"dojoAttachPoint='gridCellEditField' ",
-					"class='dojoxGridxHasGridCellValue dojoxGridxUseStoreData' ",
+					"class='gridxHasGridCellValue gridxUseStoreData' ",
 					"style='width: 100%; height:100%;' ",
 					properties,
 					"></div>"
@@ -431,7 +431,7 @@ define([
 		_onFocus: function(evt){
 			if(evt){
 				var n = evt.target;
-				while(n && !domClass.contains(n, 'dojoxGridxCell')){
+				while(n && !domClass.contains(n, 'gridxCell')){
 					n = n.parentNode;
 				}
 				if(n){

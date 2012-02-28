@@ -99,12 +99,12 @@ define([
 					while(firstIdx > 0 && _this._selector.isSelected(columns[firstIdx - 1].id)){
 						--firstIdx;
 					}
-					first = query(".dojoxGridxHeaderRow [colid='" + columns[firstIdx].id + "']", _this.grid.headerNode)[0];
+					first = query(".gridxHeaderRow [colid='" + columns[firstIdx].id + "']", _this.grid.headerNode)[0];
 					lastIdx = index;
 					while(lastIdx < columns.length - 1 && _this._selector.isSelected(columns[lastIdx + 1].id)){
 						++lastIdx;
 					}
-					last = query(".dojoxGridxHeaderRow [colid='" + columns[lastIdx].id + "']", _this.grid.headerNode)[0];
+					last = query(".gridxHeaderRow [colid='" + columns[lastIdx].id + "']", _this.grid.headerNode)[0];
 				}
 				if(first && last){
 					var firstPos = domGeometry.position(first),
@@ -123,14 +123,14 @@ define([
 				return ret;
 			};
 			while(node){
-				if(domClass.contains(node, 'dojoxGridxCell')){
+				if(domClass.contains(node, 'gridxCell')){
 					return func(node);
 				}
 				node = node.parentNode;
 			}
 			//For FF, when dragging from another grid, the evt.target is always grid.bodyNode!
 			// so have to get the cell node by position, which is relatively slow.
-			var rowNode = query(".dojoxGridxRow", this.grid.bodyNode)[0];
+			var rowNode = query(".gridxRow", this.grid.bodyNode)[0];
 			var rowPos = domGeometry.position(rowNode.firstChild);
 			if(rowPos.x + rowPos.w <= evt.clientX){
 				ret.left = (rowPos.x + rowPos.w - containerPos.x) + 'px';
@@ -138,7 +138,7 @@ define([
 			}else if(rowPos.x >= evt.clientX){
 				ret.left = (rowPos.x - containerPos.x) + 'px';
 				this._target = 0;
-			}else if(query(".dojoxGridxCell", rowNode).some(function(cellNode){
+			}else if(query(".gridxCell", rowNode).some(function(cellNode){
 				var cellPos = domGeometry.position(cellNode);
 				if(cellPos.x <= evt.clientX && cellPos.x + cellPos.w >= evt.clientX){
 					node = cellNode;

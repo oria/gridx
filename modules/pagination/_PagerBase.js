@@ -41,7 +41,7 @@ define([
 
 		_createDescription: function(){
 			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerDescription', mod._exist(this.position, 'description'))){
+			if(this._toggleNode('gridxPagerDescription', mod._exist(this.position, 'description'))){
 				var g = mod.grid,
 					selectRow = g.select && g.select.row,
 					selected = selectRow ? selectRow.getSelected().length : 0, 

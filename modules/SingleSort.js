@@ -133,7 +133,7 @@ define([
 		_initHeader: function(colId){
 			//1 for true, 0 for false
 			var	headerCell = this.grid.header.getHeaderNode(colId);
-			headerCell.innerHTML = ["<div class='dojoxGridxSortNode'>", this.grid.column(colId, 1).name(), "</div>"].join('');
+			headerCell.innerHTML = ["<div class='gridxSortNode'>", this.grid.column(colId, 1).name(), "</div>"].join('');
 			headerCell.removeAttribute('aria-sort');
 		},
 	
@@ -147,11 +147,11 @@ define([
 			this._sortDescend = !!isDescending;
 			var g = this.grid,
 				headerCell = g.header.getHeaderNode(colId);
-				str = ["<div class='dojoxGridxSortNode ",
-					(isDescending ? 'dojoxGridxSortDown' : 'dojoxGridxSortUp'),
-					"'><div class='dojoxGridxArrowButtonChar'>",
+				str = ["<div class='gridxSortNode ",
+					(isDescending ? 'gridxSortDown' : 'gridxSortUp'),
+					"'><div class='gridxArrowButtonChar'>",
 					(isDescending ? "&#9662;" : "&#9652;"),
-					"</div><div role='presentation' class='dojoxGridxArrowButtonNode'></div><div class='dojoxGridxColCaption'>",
+					"</div><div role='presentation' class='gridxArrowButtonNode'></div><div class='gridxColCaption'>",
 					g.column(colId, 1).name(),
 					"</div></div>"
 				].join('');

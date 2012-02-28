@@ -1,18 +1,18 @@
-.dojoxGridxDodNode, .dojoxGridxDodLoadNode {
+.gridxDodNode, .gridxDodLoadNode {
 	border-bottom: 1px solid #E5DAC8;
 }
 
-.dojoxGridxDodLoadNode {
+.gridxDodLoadNode {
 	background: transparent url(images/loadingAnimation.gif) no-repeat 5px 2px;
 	padding: 5px 5px 5px 30px;
 }
 
-.dojoxGridxRowOver .dojoxGridxDodNode, .dojoxGridxRowOver .dojoxGridxDodLoadNode {
+.gridxRowOver .gridxDodNode, .gridxRowOver .gridxDodLoadNode {
 	/*border-top: 1px solid #E5DAC8;*/
 	/*border-bottom: none;*/
 }
 
-.dojoxGridxDodExpando {
+.gridxDodExpando {
 	width: 10px;
 	height: 10px;
 	float: left;
@@ -21,10 +21,10 @@
 	cursor: pointer;
 	visibility: hidden;
 }
-.dojoxGridxRowOver .dojoxGridxDodExpando {
+.gridxRowOver .gridxDodExpando {
 	visibility: visible;
 }
 
-.dojoxGridxDodShown .dojoxGridxDodExpando {
+.gridxDodShown .gridxDodExpando {
 	background-position: -380px -20px;
 }

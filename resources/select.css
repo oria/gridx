@@ -1,28 +1,28 @@
 /* row select */
-.dojoxGridxRowSelected .dojoxGridxRowTable {
+.gridxRowSelected .gridxRowTable {
 	background-color: #BFD6EB;
 }
 
 /* column select */
-.dojoxGridxRow .dojoxGridxColumnSelected {
+.gridxRow .gridxColumnSelected {
 	background-color: #BFD6EB;
 }
 /* cell select */
-.dojoxGridxCellSelected {
+.gridxCellSelected {
 	background-color: #BFD6EB;
 }
 
 
 /*IndirectSelection*/
-th.dojoxGridxRowHeaderHeaderCell,
-.dojoxGridxRowHeaderCell {
+th.gridxRowHeaderHeaderCell,
+.gridxRowHeaderCell {
 	text-align: center;
 }
 
-.dojoxGridxIndirectSelectionCheckBoxInner {
+.gridxIndirectSelectionCheckBoxInner {
 	display: none;
 }
 
-.dijit_a11y .dojoxGridxIndirectSelectionCheckBoxInner {
+.dijit_a11y .gridxIndirectSelectionCheckBoxInner {
 	display: inline;
 }

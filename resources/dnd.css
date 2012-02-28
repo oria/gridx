@@ -1,20 +1,20 @@
 /* dnd */
-.dojoxGridxDnDReadyCursor {
+.gridxDnDReadyCursor {
 	cursor: move;
 }
 
-/*.dojoxGridxDnDCursor,*/
-.dojoxGridxCanNotDnD {
+/*.gridxDnDCursor,*/
+.gridxCanNotDnD {
 	cursor: default;
 }
-.dojoxGridxDnDAnchor {
+.gridxDnDAnchor {
 	width:2px;
 	background-color: gray;
 	font-size:0em;
 	position:absolute;
 	z-index: 998;
 }
-.dojoxGridxDndAvatar {
+.gridxDndAvatar {
 	background-color:white;
 	border: 1px solid #CCCCCC;
 	padding: 0px;
@@ -23,63 +23,63 @@
 	box-shadow: 5px 5px 7px #999;
 	z-index: 999;
 }
-.dojoxGridxDndAvatar td {
+.gridxDndAvatar td {
 	padding: 3px;
 }
-.dojoxGridxDnDItemIcon {
+.gridxDnDItemIcon {
 	background-image: url("images/sprite_icons.png");
 }
-.dojoxGridxDnDIcon,
-.dojoxGridxDnDItemIcon {
+.gridxDnDIcon,
+.gridxDnDItemIcon {
 	width: 16px;
 	height: 16px;
 }
-.dojoDndMove .dojoxGridxDnDIcon {
+.dojoDndMove .gridxDnDIcon {
 	background: url(images/dndNoMove.png) no-repeat center center;
 }
-.dojoDndCopy .dojoxGridxDnDIcon {
+.dojoDndCopy .gridxDnDIcon {
 	background: url(images/dndNoCopy.png) no-repeat center center;
 }
-.dojoDndMove .dojoDndAvatarCanDrop .dojoxGridxDnDIcon {
+.dojoDndMove .dojoDndAvatarCanDrop .gridxDnDIcon {
 	background: url(images/dndMove.png) no-repeat center center;
 }
-.dojoDndCopy .dojoDndAvatarCanDrop .dojoxGridxDnDIcon {
+.dojoDndCopy .dojoDndAvatarCanDrop .gridxDnDIcon {
 	background: url(images/dndCopy.png) no-repeat center center;
 }
 /* dnd row */
-.dojoxGridxDnDAnchorRow {
+.gridxDnDAnchorRow {
 	left: 0;
 	height: 2px;
 }
-.dojoxGridxDnDIconRowSingle {
+.gridxDnDIconRowSingle {
 	background-position: -256px 7px;
 }
-.dojoxGridxDnDIconRowMulti {
+.gridxDnDIconRowMulti {
 	background-position: -256px -13px;
 }
 /* dnd column */
-.dojoxGridxDnDAnchorColumn {
+.gridxDnDAnchorColumn {
 	top: 0;
 	width: 2px;
 }
-.dojoxGridxDnDIconColumnSingle {
+.gridxDnDIconColumnSingle {
 	background-position: -277px 3px;
 }
-.dojoxGridxDnDIconColumnMulti {
+.gridxDnDIconColumnMulti {
 	background-position: -277px -17px;
 }
 /* dnd cell */
-.dojoxGridxDnDAnchorCell {
+.gridxDnDAnchorCell {
 	position: relative;
 	background-color: transparent;
 }
-.dojoxGridxDnDIconCellSingle {
+.gridxDnDIconCellSingle {
 	background-position: -234px 6px;
 }
-.dojoxGridxDnDIconCellMulti {
+.gridxDnDIconCellMulti {
 	background-position: -234px -15px;
 }
-.dojoxGridxCellBorderLeftTopDIV {
+.gridxCellBorderLeftTopDIV {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -87,7 +87,7 @@
 	border-width: 2px 0 0 2px;
 	border-color: gray transparent transparent gray;
 }
-.dojoxGridxCellBorderRightBottomDIV {
+.gridxCellBorderRightBottomDIV {
 	position: absolute;
 	right: 0;
 	bottom: 0;
@@ -95,6 +95,6 @@
 	border-width: 0 2px 2px 0;
 	border-color: transparent gray gray transparent;
 }
-.dojoxGridxDnDCellMask {
+.gridxDnDCellMask {
 	background-color: #ee5555;
 }

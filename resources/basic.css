@@ -1,59 +1,59 @@
 /*Header, Body, Scroller*/
 /*common*/
-.dojoxGridx {
+.gridx {
 	position: relative;
 	overflow: hidden;
 	border: 1px solid #ddd;
 	height: 100%;
 }
 
-.dojoxGridxHeader,
-.dojoxGridxFooter {
+.gridxHeader,
+.gridxFooter {
 	overflow: hidden;
 	background-color: #eee;
 }
 
 /* Keep footer at bottom, so the grid won't distort too much when zoomed in/out*/
-.dojoxGridxFooter {
+.gridxFooter {
 	position: absolute;
 	left: 0;
 	bottom: 0;
 	width: 100%;
 }
 
-.dojoxGridxHScroller {
+.gridxHScroller {
 	display: none;
 }
 
-.dojoxGridxMain {
+.gridxMain {
 	position: relative;
 }
 
-.dojoxGridxPercentColumnWidth .dojoxGridxHeaderRow table,
-.dojoxGridxPercentColumnWidth .dojoxGridxRow table.dojoxGridxRowTable {
+.gridxPercentColumnWidth .gridxHeaderRow table,
+.gridxPercentColumnWidth .gridxRow table.gridxRowTable {
 	width: 100%;
 }
 
 /*Header*/
-.dojoxGridxHeaderRow {
+.gridxHeaderRow {
 	background-color: #eee;
 	border-bottom: 1px solid #ccc;
 	position: relative;
 }
 
-.dojoxGridxHeaderRowInner {
+.gridxHeaderRowInner {
 	overflow: hidden;
 	border-style: solid;
 	border-color: #ccc;
 	border-width: 0 1px 0 0;
 }
 
-.dj_ie .dojoxGridxHeaderRowInner{
+.dj_ie .gridxHeaderRowInner{
 	/* This is only for IE6/7, if not position:relative, overflow:hidden will not work.*/
 	position: relative; 
 }
 
-.dojoxGridxHeaderRow table {
+.gridxHeaderRow table {
 	border-collapse: collapse;
 	border-spacing: 0;
 	border: none;
@@ -62,7 +62,7 @@
 	height: 100%;
 }
 
-.dojoxGridxHeaderRow .dojoxGridxCell {
+.gridxHeaderRow .gridxCell {
 	border-width: 1px;
 	border-style: solid;
 	border-color: transparent #ccc transparent transparent;
@@ -74,26 +74,26 @@
 	-webkit-box-sizing: border-box;*/
 }
 
-.dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus {
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
 	outline: 1px dashed darkblue;
 	border-top: 1px dashed darkblue;
 	border-bottom: 1px dashed darkblue;
 }
 
-.dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus:first-child {
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:first-child {
 	border-left: 1px dashed darkblue;
 }
 
-.dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus:last-child {
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:last-child {
 	border-right: 1px dashed darkblue;
 }
 
-.dojoxGridxHeaderRow :focus {
+.gridxHeaderRow :focus {
 	outline: none;
 }
 
 /*Body*/
-.dojoxGridxBody {
+.gridxBody {
 	height: 100%;
     overflow: hidden;
 	position: absolute;
@@ -105,12 +105,12 @@
     -khtml-box-sizing: border-box; /* konqueror */
 }
 
-.dojoxGridx .dojoxGridxRowOver .dojoxGridxRowTable {
+.gridx .gridxRowOver .gridxRowTable {
 	background-color: #cee8f2;
 }
 
-.dojoxGridxRowHeaderRow table,
-.dojoxGridxRow .dojoxGridxRowTable {
+.gridxRowHeaderRow table,
+.gridxRow .gridxRowTable {
 	border-collapse: collapse;
 	border-spacing: 0;
 	border: none;
@@ -119,7 +119,7 @@
 	empty-cells: show;
 }
 
-.dojoxGridxRow .dojoxGridxCell {
+.gridxRow .gridxCell {
 	border-style: solid;
 	border-color: transparent #ccc #ccc transparent;
 	border-width: 1px;
@@ -131,7 +131,7 @@
 	-webkit-box-sizing: border-box;*/
 }
 
-.dojoxGridxRowDummy {
+.gridxRowDummy {
 	height: 24px;
 	width: 100%;
 	background: url('images/loadingAnimation.gif') no-repeat left;
@@ -139,28 +139,28 @@
 	border-top: 1px solid red;*/
 }
 
-.dojoxGridxBody .dojoxGridxCell:focus {
+.gridxBody .gridxCell:focus {
 	outline: none;
 }
 
-.dojoxGridx .dojoxGridxBody .dojoxGridxCellFocus {
+.gridx .gridxBody .gridxCellFocus {
 	outline: 1px dashed darkblue;
 }
 
-.dj_ie7 .dojoxGridx .dojoxGridxCellFocus {
+.dj_ie7 .gridx .gridxCellFocus {
 	border: 1px dashed darkblue;
 }
 
-.dojoxGridx .dojoxGridxBody .dojoxGridxRow:first-child .dojoxGridxCellFocus {
+.gridx .gridxBody .gridxRow:first-child .gridxCellFocus {
 	border-top: 1px dashed darkblue;
 }
 
-.dojoxGridx .dojoxGridxBody .dojoxGridxRow .dojoxGridxCellFocus:first-child {
+.gridx .gridxBody .gridxRow .gridxCellFocus:first-child {
 	border-left: 1px dashed darkblue;
 }
 
 
-.dojoxGridxBodyEmpty {
+.gridxBodyEmpty {
 	width: 100%;
 	height: 100px;
 	padding: 30px 0;
@@ -168,7 +168,7 @@
 }
 
 /*HScroller*/
-.dojoxGridxHScroller {
+.gridxHScroller {
 	overflow: scroll;
 	overflow-y: hidden;
 	border: none;
@@ -176,13 +176,13 @@
 }
 
 /* ie6 will show the wrong height */
-.dj_ie6 .dojoxGridxHScroller {
+.dj_ie6 .gridxHScroller {
 	line-height: 0;
 }
 
 
 /*VScroller*/
-.dojoxGridxVScroller {
+.gridxVScroller {
 	position: absolute;
 	top: 0px;
 	right: 0px;
@@ -194,14 +194,14 @@
 }
 
 /* in IE7/6 the scroller node can not show automatically */
-.dj_ie7 .dojoxGridxVScroller,
-.dj_ie6 .dojoxGridxVScroller {
+.dj_ie7 .gridxVScroller,
+.dj_ie6 .gridxVScroller {
 	width: 16px;
 }
 
 /*RowHeader*/
-.dojoxGridxRowHeaderHeader,
-.dojoxGridxRowHeaderBody {
+.gridxRowHeaderHeader,
+.gridxRowHeaderBody {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -210,11 +210,11 @@
 	border-right: 1px solid #E5DAC8;
 }
 
-.dojoxGridxRowHeaderBody table {
+.gridxRowHeaderBody table {
 	width: 100%;
 }
 
-.dojoxGridxRowHeaderRow {
+.gridxRowHeaderRow {
 	background: url("../images/header.png") #EDF2F7 repeat-x bottom;
 	background: #edf2f7; /* Old browsers */
 	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
@@ -226,24 +226,24 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
 }
 	
-.dojoxGridxRowHeaderCell {
+.gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }
 
 /* Firefox can not fire onmouseover when mouse is "dragging" an "overflow: hidden" node. 
  * This fix is for IndirectSelect working with ExtendedSelect only */
-.dj_gecko .dojoxGridx .dojoxGridxRowHeaderBody .dojoxGridxRowHeaderRow .dojoxGridxRowHeaderCell .dijitCheckBox {
+.dj_gecko .gridx .gridxRowHeaderBody .gridxRowHeaderRow .gridxRowHeaderCell .dijitCheckBox {
 	overflow: visible;
 }
 
 
 /*Column Resizer*/
 /*Column resizing plugin*/
-.dojoxGridxColumnResizing {
+.gridxColumnResizing {
 	cursor: e-resize;
 }
 
-.dojoxGridxColumnResizer {
+.gridxColumnResizer {
 	position: absolute;
 	height: 100%;
 	width: 2px;
@@ -253,7 +253,7 @@
 }
 
 /*CellDijit*/
-.dojoxGridxCellWidget {
+.gridxCellWidget {
 	width: 100%;
 	height: 100%;
 }

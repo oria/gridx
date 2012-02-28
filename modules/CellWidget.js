@@ -26,12 +26,12 @@ define([
 		//		This function should return a template string (see the doc for template string in dijit._TemplatedMixin
 		//		and dijit._WidgetsInTemplateMixin). 
 		//		In the template string, dijits or widgets can be used and they will be properly set value if they
-		//		have the CSS class 'dojoxGridxHasGridCellValue' in their DOM node.
+		//		have the CSS class 'gridxHasGridCellValue' in their DOM node.
 		//		Since setting value will be done automatically, and the created widgets will be reused between rows,
 		//		so there's no arguments for this function.
 		//		By default the dijits or widgets will be set value using the grid data (the result of the formatter function,
 		//		if there is a formatter function for this column), not the store data (the raw data stored in store).
-		//		If you'd like to use store data in some dijit, you can simly add a CSS class 'dojoxGridxUseStoreData' to it.
+		//		If you'd like to use store data in some dijit, you can simly add a CSS class 'gridxUseStoreData' to it.
 		decorator: null,
 	
 		// setCellValue: Function(gridData, storeData, cellWidget)
@@ -54,15 +54,15 @@ define([
 		setCellValue: null,
 	
 		postMixInProperties: function(){
-			this.templateString = ['<div class="dojoxGridxCellWidget">', this.content, '</div>'].join('');
+			this.templateString = ['<div class="gridxCellWidget">', this.content, '</div>'].join('');
 		},
 	
 		setValue: function(gridData, storeData){
-			query('.dojoxGridxHasGridCellValue', this.domNode).map(function(node){
+			query('.gridxHasGridCellValue', this.domNode).map(function(node){
 				return registry.byNode(node);
 			}).forEach(function(widget){
 				if(widget){
-					var useStoreData = domClass.contains(widget.domNode, 'dojoxGridxUseStoreData');
+					var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
 					widget.set('value', useStoreData ? storeData : gridData);
 				}
 			});
@@ -176,7 +176,7 @@ define([
 				colId: colId
 			});
 			if(cellNode){
-				var widgetNode = query('.dojoxGridxCellWidget', cellNode)[0];
+				var widgetNode = query('.gridxCellWidget', cellNode)[0];
 				if(widgetNode){
 					return registry.byNode(widgetNode);
 				}
@@ -389,12 +389,12 @@ define([
 
 		_onFocus: function(evt){
 			var node = evt.target, dn = this.grid.domNode;
-			while(node && node !== dn && !domClass.contains(node, 'dojoxGridxCell')){
+			while(node && node !== dn && !domClass.contains(node, 'gridxCell')){
 				node = node.parentNode;
 			}
 			if(node && node !== dn){
 				var colId = node.getAttribute('colid');
-				while(node && !domClass.contains(node, 'dojoxGridxRow')){
+				while(node && !domClass.contains(node, 'gridxRow')){
 					node = node.parentNode;
 				}
 				if(node){

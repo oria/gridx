@@ -102,7 +102,7 @@ define([
 				colId: colId
 			});
 			if(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, "dojoxGridxCellSelected");
+				html[toHighlight ? 'addClass' : 'removeClass'](node, "gridxCellSelected");
 				this.onHighlightChange();
 			}
 		},

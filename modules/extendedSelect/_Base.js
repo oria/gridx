@@ -196,7 +196,7 @@ define([
 
 		_fixFF: function(isStart){
 			if(sniff('ff')){
-				query('.dojoxGridxSortNode', this.grid.headerNode).forEach(function(n){
+				query('.gridxSortNode', this.grid.headerNode).forEach(function(n){
 					n.style.overflow = isStart ? 'visible' : '';
 				});
 			}

@@ -12,7 +12,7 @@ define([
 
 	return declare(dijit.Dialog, {
 		title: 'Clear Filter',
-		cssClass: 'dojoxGridxFilterConfirmDialog',
+		cssClass: 'gridxFilterConfirmDialog',
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);

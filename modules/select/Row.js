@@ -78,7 +78,7 @@ define([
 		_highlight: function(rowId, toHighlight){
 			var node = this.grid.body.getRowNode({rowId: rowId});
 			if(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, "dojoxGridxRowSelected");
+				html[toHighlight ? 'addClass' : 'removeClass'](node, "gridxRowSelected");
 				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toHighlight);
 			}
 		},

@@ -67,7 +67,7 @@ define([
 		_init: function(){
 			this.batchConnect(
 				[this.grid, 'onHeaderCellClick', function(e){
-					if(!html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
+					if(!html.hasClass(e.target, 'gridxArrowButtonNode')){
 						this._select(e.columnId, e.ctrlKey);
 					}
 				}],
@@ -93,7 +93,7 @@ define([
 		
 		_highlight: function(id, toHighlight){
 			query("[colid='" + id + "']", this.grid.bodyNode).forEach(function(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, 'dojoxGridxColumnSelected');
+				html[toHighlight ? 'addClass' : 'removeClass'](node, 'gridxColumnSelected');
 				this.onHighlightChange({column: this.grid._columnsById[id].index}, toHighlight);
 			}, this);
 		},
@@ -106,7 +106,7 @@ define([
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
 					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
-					html.addClass(node, 'dojoxGridxColumnSelected');
+					html.addClass(node, 'gridxColumnSelected');
 				}
 			}
 		}

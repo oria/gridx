@@ -22,7 +22,7 @@
 						try{
 							grid().columnLock.lock(lockCount);
 							arr = dojo.map(grid().columns(0, cc), function(col){
-								return dojo.query('[colid="' + col.id + '"].dojoxGridxCell', grid().bodyNode).map(function(node){
+								return dojo.query('[colid="' + col.id + '"].gridxCell', grid().bodyNode).map(function(node){
 									return dojo.position(node);
 								});
 							});
@@ -35,7 +35,7 @@
 							//waiting for the scroll to take effect
 							try{
 								dojo.forEach(grid().columns(0, cc), function(col, i){
-									dojo.query('[colid="' + col.id + '"].dojoxGridxCell', grid().bodyNode).forEach(function(node, j){
+									dojo.query('[colid="' + col.id + '"].gridxCell', grid().bodyNode).forEach(function(node, j){
 										var pos = dojo.position(node);
 										var hint = 'locked column ' + i + ' row ' + j + ' ';
 										t.is(arr[i][j].x, pos.x, hint + 'x');
@@ -54,7 +54,7 @@
 								//waiting for the scroll to take effect
 								try{
 									dojo.forEach(grid().columns(0, cc), function(col, i){
-										dojo.query('[colid="' + col.id + '"].dojoxGridxCell', grid().bodyNode).forEach(function(node, j){
+										dojo.query('[colid="' + col.id + '"].gridxCell', grid().bodyNode).forEach(function(node, j){
 											var pos = dojo.position(node);
 											var hint = 'unlocked column ' + i + ' row ' + j + ' ';
 											t.isNot(arr[i][j].x, pos.x, hint + 'x');

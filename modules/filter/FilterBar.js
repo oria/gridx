@@ -121,10 +121,10 @@ define([
 			
 			this.domNode = dojo.create('div', {
 				innerHTML: template,
-				'class': 'dojoxGridxFilterBar'
+				'class': 'gridxFilterBar'
 			});
 			dojo.parser.parse(this.domNode);
-			dojo.toggleClass(this.domNode, 'dojoxGridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
+			dojo.toggleClass(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
 			this._nls = locale;
 			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
@@ -141,7 +141,7 @@ define([
 			if(!e.target || !e.target.tagName){return;}
 			if(dojo.attr(e.target, 'action') === 'clear'){
 				this.clearFilter();
-			}else if(dojo.hasClass(e.target, 'dojoxGridxFilterBarCloseBtn')){
+			}else if(dojo.hasClass(e.target, 'gridxFilterBarCloseBtn')){
 				this.hide();
 			}else {
 				this.showFilterDialog();
@@ -348,8 +348,8 @@ define([
 		},
 		_initWidgets: function(){
 			this.btnFilter = dijit.byNode(dojo.query('.dijitButton', this.domNode)[0]);
-			this.btnClose = dojo.query('.dojoxGridxFilterBarCloseBtn', this.domNode)[0];
-			this.statusNode = dojo.query('.dojoxGridxFilterBarStatus', this.domNode)[0].firstChild;
+			this.btnClose = dojo.query('.gridxFilterBarCloseBtn', this.domNode)[0];
+			this.statusNode = dojo.query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
 			//this.connect(this.btnFilter, 'onClick', 'showFilterDialog');	
 		},
 		

@@ -1,56 +1,56 @@
 /*common*/
-.claro .dojoxGridx {
+.claro .gridx {
 	background-color: #fff;
 	border: 1px solid #DBDBDB;
 	color: #131313;
 }
 
 /*Body*/
-.claro .dojoxGridxRow {
+.claro .gridxRow {
 /*    background:url("../images/row_back.png") #ffffff repeat-x;*/
 }
 
-.claro .dojoxGridxLockedCell {
+.claro .gridxLockedCell {
 	background-color: #ffffff;
 	position: absolute;
 }
 
-.claro .dojoxGridxRowOdd .dojoxGridxRowTable {
+.claro .gridxRowOdd .gridxRowTable {
 	background-color: #f1f8ff;
 }
 
-.claro .dojoxGridxCell{
+.claro .gridxCell{
 	border-color: transparent #E5DAC8 #E5DAC8 transparent;
 }
 
-.claro .dojoxGridx .dojoxGridxRowOver .dojoxGridxRowTable {
+.claro .gridx .gridxRowOver .gridxRowTable {
 	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
 
 /*Header*/
-.claro .dojoxGridxHeaderRow {
+.claro .gridxHeaderRow {
 	border-top: 1px solid #FFFFFF;
 	border-bottom: 1px solid #FFFFFF;
 }
 
-.claro .dojoxGridxHeaderRow table,
-.claro .dojoxGridxRow .dojoxGridxRowTable {
+.claro .gridxHeaderRow table,
+.claro .gridxRow .gridxRowTable {
 	border-collapse: separate;
 }
 
-.claro .dojoxGridxHeaderRowInner {
+.claro .gridxHeaderRowInner {
 	background-image: url('../images/claro-grid-header-onepixel.bmp');
 	background-position: right;
 	background-repeat: repeat-y;
 	border-right: 1px solid #FFFFFF;
 }
 
-.claro .dojoxGridxHeaderRow .dojoxGridxCell {
+.claro .gridxHeaderRow .gridxCell {
 	border-color: #EDF2F7 #BCBCBC #D0DFEA #FFFFFF;
 }
 
-.claro .dojoxGridxHeaderRow,
-.claro .dojoxGridxHeaderRow .dojoxGridxLockedCell {
+.claro .gridxHeaderRow,
+.claro .gridxHeaderRow .gridxLockedCell {
 	background: #edf2f7; /* Old browsers */
 	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */
@@ -61,7 +61,7 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
 }
 
-.claro .dojoxGridxHeaderRow .dojoxGridxHeaderCellOver {
+.claro .gridxHeaderRow .gridxHeaderCellOver {
 	background-color: #9bcaf7;
 	border-top-color: #9BCAF7;
 /*    border-bottom-color: #9BCAF7;*/

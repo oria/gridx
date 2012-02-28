@@ -16,7 +16,7 @@ define([
 		detectWidth: 5,
 		load: function(args){
 			var g = this.grid, body = win.body();
-			var headerInner = query('.dojoxGridxHeaderRowInner', g.domNode)[0];
+			var headerInner = query('.gridxHeaderRowInner', g.domNode)[0];
 			this.batchConnect(
 				[headerInner, 'mousemove', '_mousemove'],
 				[g, 'onHeaderMouseOut', '_mouseout'],
@@ -65,7 +65,7 @@ define([
 			var cell = this._getCell(e);
 			if(!cell){return;}
 			if(this._resizing){
-				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
+				html.removeClass(cell, 'gridxHeaderCellOver');
 			}
 			if(this._resizing || !cell || this._ismousedown){
 				return;
@@ -75,9 +75,9 @@ define([
 			var flags = this.grid._eventFlags;
 			flags.onHeaderMouseDown = flags.onHeaderCellMouseDown = this._readyToResize ? this.name : undefined;
 
-			html.toggleClass(win.body(), 'dojoxGridxColumnResizing', this._readyToResize);
+			html.toggleClass(win.body(), 'gridxColumnResizing', this._readyToResize);
 			if(this._readyToResize){
-				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
+				html.removeClass(cell, 'gridxHeaderCellOver');
 			}
 		},
 		_docMousemove: function(e){
@@ -87,7 +87,7 @@ define([
 		_mouseout: function(e){
 			if(this._resizing){return;}
 			this._readyToResize = false;
-			html.removeClass(win.body(), 'dojoxGridxColumnResizing');
+			html.removeClass(win.body(), 'gridxColumnResizing');
 		},
 		
 		_updateResizerPosition: function(e){
@@ -111,7 +111,7 @@ define([
 		_showResizer: function(e){
 			if(!this._resizer){
 				this._resizer = html.create('div', {
-					className: 'dojoxGridxColumnResizer'}, 
+					className: 'gridxColumnResizer'}, 
 					this.grid.domNode, 'last');
 		    	this.connect(this._resizer, 'mouseup', '_mouseup');
 			}
@@ -140,7 +140,7 @@ define([
 			if(!this._resizing){return;}
 			this._resizing = false;
 			this._readyToResize = false;
-			html.removeClass(win.body(), 'dojoxGridxColumnResizing');
+			html.removeClass(win.body(), 'gridxColumnResizing');
 			html.setSelectable(this.grid.domNode, true);
 			document.onselectstart = null;
 			

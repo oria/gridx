@@ -1,9 +1,9 @@
-.dojoxGridxTreeExpandoCell {
+.gridxTreeExpandoCell {
 	height: 100%;
 	position: relative;
 }
 
-.dojoxGridxTreeExpandoIcon {
+.gridxTreeExpandoIcon {
 	background-image: url("images/treeExpandImages.png");
 	background-repeat:no-repeat;
 	background-position: 0 0;
@@ -15,31 +15,31 @@
 	cursor: pointer;
 }
 
-.dojoxGridx .dojoxGridxTreeExpandoLoading .dojoxGridxTreeExpandoIcon{
+.gridx .gridxTreeExpandoLoading .gridxTreeExpandoIcon{
 	background-image: url('images/treeExpand_loading.gif');
 	background-position: 0 0;
 }
 
-.dojoxGridxTreeExpandoIcon:hover {
+.gridxTreeExpandoIcon:hover {
 	background-position: -18px 0;
 }
 
-.dojoxGridxTreeExpandoCellOpen .dojoxGridxTreeExpandoIcon {
+.gridxTreeExpandoCellOpen .gridxTreeExpandoIcon {
 	background-position: -36px 0;
 }
-.dojoxGridxTreeExpandoCellOpen .dojoxGridxTreeExpandoIcon:hover {
+.gridxTreeExpandoCellOpen .gridxTreeExpandoIcon:hover {
 	background-position: -54px 0;
 }
 
-.dojoxGridxTreeExpandoIconNoChildren {
+.gridxTreeExpandoIconNoChildren {
 	visibility: hidden;
 }
 
-.dojoxGridxTreeExpandoInner {
+.gridxTreeExpandoInner {
 	visibility: hidden;
 	text-align: center;
 }
 
-.dijit_a11y .dojoxGridxTreeExpandoInner {
+.dijit_a11y .gridxTreeExpandoInner {
 	visibility: visible;
 }

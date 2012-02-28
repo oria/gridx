@@ -73,19 +73,19 @@ define([
 			var node = row.node(), w = node.scrollWidth;
 			if(!_row.dodLoadingNode){
 				_row.dodLoadingNode = dojo.create('div', {
-					className: 'dojoxGridxDodLoadNode', 
+					className: 'gridxDodLoadNode', 
 					innerHTML: 'Loading...'
 				});
 			}
 			if(!_row.dodNode){
-				_row.dodNode = dojo.create('div', {className: 'dojoxGridxDodNode'});
+				_row.dodNode = dojo.create('div', {className: 'gridxDodNode'});
 			}
 			html.place(_row.dodLoadingNode, node, 'last');
 			html.place(_row.dodNode, node, 'last');
 			html.style(_row.dodLoadingNode, 'width', w + 'px');
 			html.style(_row.dodNode, 'width', w + 'px');
 			
-			html.addClass(node, 'dojoxGridxDodShown');
+			html.addClass(node, 'gridxDodShown');
 			html.style(_row.dodNode, 'display', 'none');
 			if(_row.dodLoaded){
 				this._detailLoadComplete(row);
@@ -114,7 +114,7 @@ define([
 			//		A deferred object indicating when the detail is completely hidden.
 			var _row = this._row(row), g = this.grid;
 			if(!_row.dodShown || _row.inAnim){return;}
-			html.removeClass(row.node(), 'dojoxGridxDodShown');
+			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
 			
 			_row.inAnim = true;
@@ -161,9 +161,9 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			if(!html.hasClass(e.target, 'dojoxGridxDodExpando')){return;}
+			if(!html.hasClass(e.target, 'gridxDodExpando')){return;}
 			var node = e.target;
-			while(node && !html.hasClass(node, 'dojoxGridxRow')){
+			while(node && !html.hasClass(node, 'gridxRow')){
 				node = node.parentNode;
 			}
 			var idx = html.attr(node, 'rowindex');
@@ -183,13 +183,13 @@ define([
 				var tbl = dojo.query('table', rowNode)[0];
 				var cell = tbl.rows[0].cells[0];
 				var span = dojo.create('span', {
-					className: 'dojoxGridxDodExpando'
+					className: 'gridxDodExpando'
 				}, cell, 'first');
 			}
 		},
 		
 		_onColumnResize: function(){
-			dojo.query('.dojoxGridxDodNode', this.grid.bodyNode).forEach(function(node){
+			dojo.query('.gridxDodNode', this.grid.bodyNode).forEach(function(node){
 				html.style(node, 'width', node.parentNode.firstChild.offsetWidth + 'px');
 			});
 		},

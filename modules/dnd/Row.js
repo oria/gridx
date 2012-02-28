@@ -162,7 +162,7 @@ define([
 			if(!sniff('ff')){
 				//In FF, this conflicts with the overflow:hidden css rule for grid row DIV, which is required by ColumnLock.
 				while(node){
-					if(domClass.contains(node, 'dojoxGridxRow')){
+					if(domClass.contains(node, 'gridxRow')){
 						return calcPos(node);
 					}
 					node = node.parentNode;

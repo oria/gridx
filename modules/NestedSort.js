@@ -116,10 +116,10 @@ define([
 				var colid = dojo.attr(td, 'colid');
 				if(!this.isSortable(colid)){return;}
 				dojo.create('div', {
-					className: 'dojoxGridxSortBtn dojoxGridxSortBtnNested'
+					className: 'gridxSortBtn gridxSortBtnNested'
 				}, td, 'first');
 				dojo.create('div', {
-					className: 'dojoxGridxSortBtn dojoxGridxSortBtnSingle'
+					className: 'gridxSortBtn gridxSortBtnSingle'
 				}, td, 'first');
 			}, this);
 		},
@@ -127,11 +127,11 @@ define([
 		_onHeaderClick: function(e){
 			var btn = e.target, colid;
 			this._markFocus(e);
-			if(dojo.hasClass(btn, 'dojoxGridxSortBtn')){
+			if(dojo.hasClass(btn, 'gridxSortBtn')){
 				colid = dojo.attr(btn.parentNode, 'colid');
 			}else{ return; }
 			
-			if(dojo.hasClass(btn, 'dojoxGridxSortBtnSingle')){
+			if(dojo.hasClass(btn, 'gridxSortBtnSingle')){
 				//single sort
 				if(this._sortData.length > 1){
 					this._sortData.length = 0;
@@ -140,7 +140,7 @@ define([
 				this._sortData.length = 0;
 				if(d){this._sortData.push(d);}
 				this._sortColumn(colid);
-			}else if(dojo.hasClass(btn, 'dojoxGridxSortBtnNested')){
+			}else if(dojo.hasClass(btn, 'gridxSortBtnNested')){
 				//nested sort
 				this._sortColumn(colid);
 			}
@@ -148,14 +148,14 @@ define([
 		},
 		
 		_onMouseOver: function(e){
-			dojo.addClass(this.grid.header.domNode, 'dojoxGridxHeaderHover');
+			dojo.addClass(this.grid.header.domNode, 'gridxHeaderHover');
 			//FIXME: this is ugly...
 			if(this.grid.autoHeight){
 				this.grid.vLayout.reLayout();
 			}
 		},
 		_onMouseOut: function(e){
-			dojo.removeClass(this.grid.header.domNode, 'dojoxGridxHeaderHover');
+			dojo.removeClass(this.grid.header.domNode, 'gridxHeaderHover');
 			//FIXME: this is ugly...
 			if(this.grid.autoHeight){
 				this.grid.vLayout.reLayout();
@@ -186,14 +186,14 @@ define([
 		},
 		
 		_updateUI: function(){
-			dojo.removeClass(this.grid.domNode, 'dojoxGridxSingleSorted');
-			dojo.removeClass(this.grid.domNode, 'dojoxGridxNestedSorted');
+			dojo.removeClass(this.grid.domNode, 'gridxSingleSorted');
+			dojo.removeClass(this.grid.domNode, 'gridxNestedSorted');
 			var nls = this._nls;
 			dojo.query('th', this.grid.header.domNode).forEach(function(cell){
 				var colid = dojo.attr(cell, 'colid');
 				if(!this.isSortable(colid)){return;}
 				dojo.forEach(['', 'Desc', 'Asc', 'Main'], function(s){
-					dojo.removeClass(cell, 'dojoxGridxCellSorted' + s)
+					dojo.removeClass(cell, 'gridxCellSorted' + s)
 				});
 				var singleBtn = cell.childNodes[0], nestedBtn = cell.childNodes[1];
 				var a11y = dojo.hasClass(dojo.body(), 'dijit_a11y'), a11yText = this._a11yText;
@@ -205,11 +205,11 @@ define([
 				this._setWaiState(cell, colid, d);
 				if(!d){return;};
 				nestedBtn.innerHTML = dojo.indexOf(this._sortData, d) + 1;
-				dojo.addClass(cell, 'dojoxGridxCellSorted');
-				if(d === this._sortData[0]){dojo.addClass(cell, 'dojoxGridxCellSortedMain');}
+				dojo.addClass(cell, 'gridxCellSorted');
+				if(d === this._sortData[0]){dojo.addClass(cell, 'gridxCellSortedMain');}
 				var len = this._sortData.length;
 				if(d.descending){
-					dojo.addClass(cell, 'dojoxGridxCellSortedDesc');
+					dojo.addClass(cell, 'gridxCellSortedDesc');
 					if(len === 1){
 						singleBtn.title = nls.singleSort + ' - ' + nls.unsorted;
 						if(a11y){singleBtn.innerHTML = a11yText.dojoxGridUnsortedTip;}
@@ -218,7 +218,7 @@ define([
 						if(a11y){nestedBtn.innerHTML = a11yText.dojoxGridUnsortedTip;}
 					}
 				}else{
-					dojo.addClass(cell, 'dojoxGridxCellSortedAsc');
+					dojo.addClass(cell, 'gridxCellSortedAsc');
 					if(len === 1){
 						singleBtn.title = nls.singleSort + ': ' + nls.descending;
 						if(a11y){singleBtn.innerHTML = a11yText.dojoxGridDescendingTip;}
@@ -229,10 +229,10 @@ define([
 				}
 			}, this);
 			if(this._sortData.length === 1){
-				dojo.addClass(this.grid.domNode, 'dojoxGridxSingleSorted');
+				dojo.addClass(this.grid.domNode, 'gridxSingleSorted');
 			}
 			else if(this._sortData.length > 1){
-				dojo.addClass(this.grid.domNode, 'dojoxGridxNestedSorted');
+				dojo.addClass(this.grid.domNode, 'gridxNestedSorted');
 			}
 		},
 		
@@ -285,7 +285,7 @@ define([
 		},
 		_focusPrevious: function(){
 			var i = this._currRegionIdx, rs = this._focusRegions;
-			while(rs[i-1] && (dojo.style(rs[--i], 'display') === 'none' || dojo.hasClass(rs[i], 'dojoxGridxSortBtn'))){}
+			while(rs[i-1] && (dojo.style(rs[--i], 'display') === 'none' || dojo.hasClass(rs[i], 'gridxSortBtn'))){}
 			if(rs[i]){this._focusRegion(rs[i]);}
 		},
 		_markFocus: function(e){
@@ -297,7 +297,7 @@ define([
 		_initRegions: function(){
 			dojo.forEach(this._nconns, dojo.disconnect);
 			this._focusRegions = [], this._nconns = [];
-			dojo.query('.dojoxGridxCell', this.grid.header.domNode).forEach(function(cell){
+			dojo.query('.gridxCell', this.grid.header.domNode).forEach(function(cell){
 				var children = cell.childNodes;
 				dojo.forEach([2, 1, 0], function(i){
 					if(!children[i]){return;}
@@ -315,13 +315,13 @@ define([
 			if(!region){return;}
 			region.focus();
 			var header =this._getRegionHeader(region);
-			dojo.addClass(header, 'dojoxGridxCellSortFocus');
-			if(dojo.hasClass(region, 'dojoxGridxSortNode')){
-				dojo.addClass(region, 'dojoxGridxSortNodeFocus');
-			}else if(dojo.hasClass(region, 'dojoxGridxSortBtn')){
-				dojo.addClass(region, 'dojoxGridxSortBtnFocus');
+			dojo.addClass(header, 'gridxCellSortFocus');
+			if(dojo.hasClass(region, 'gridxSortNode')){
+				dojo.addClass(region, 'gridxSortNodeFocus');
+			}else if(dojo.hasClass(region, 'gridxSortBtn')){
+				dojo.addClass(region, 'gridxSortBtnFocus');
 			}
-			dojo.addClass(this.grid.header.domNode, 'dojoxGridxHeaderFocus');
+			dojo.addClass(this.grid.header.domNode, 'gridxHeaderFocus');
 			this._currRegionIdx = dojo.indexOf(this._focusRegions, region);
 			//firefox and ie will lost focus when region is invisible, focus it again.
 			region.focus();
@@ -329,17 +329,17 @@ define([
 		_blurRegion: function(region){
 			if(!region){return;}
 			var header = this._getRegionHeader(region);
-			dojo.removeClass(header, 'dojoxGridxCellSortFocus');
-			dojo.removeClass(region, 'dojoxGridxSortNodeFocus');
-			dojo.removeClass(region, 'dojoxGridxSortBtnFocus');
-			dojo.removeClass(this.grid.header.domNode, 'dojoxGridxHeaderFocus');
+			dojo.removeClass(header, 'gridxCellSortFocus');
+			dojo.removeClass(region, 'gridxSortNodeFocus');
+			dojo.removeClass(region, 'gridxSortBtnFocus');
+			dojo.removeClass(this.grid.header.domNode, 'gridxHeaderFocus');
 		},
 		_getCurrentRegion: function(){
 			if(this._currRegionIdx === -1){return null;}
 			return this._focusRegions[this._currRegionIdx];
 		},
 		_getRegionHeader: function(region){
-			while(region && !dojo.hasClass(region, 'dojoxGridxCell')){
+			while(region && !dojo.hasClass(region, 'gridxCell')){
 				region = region.parentNode;
 			}
 			return region;

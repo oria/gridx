@@ -21,7 +21,7 @@ require([
 
 	var progressDecorator = function(){
 		return [
-			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 1' class='dojoxGridxHasGridCellValue' style='width: 100%;'></div>"
+			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 1' class='gridxHasGridCellValue' style='width: 100%;'></div>"
 		].join('');
 	};
 

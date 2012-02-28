@@ -51,7 +51,7 @@ define([
 			if(this.cssMode && lang.isString(this.cssMode)){
 				domClass.toggle(this.domNode, 'compact', this.cssMode.indexOf('compact') > -1);
 			}
-			domClass.toggle(this.domNode, 'dojoxGridxRtl', !this.isLeftToRight());
+			domClass.toggle(this.domNode, 'gridxRtl', !this.isLeftToRight());
 		},
 	
 		postCreate: function(){

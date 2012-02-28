@@ -137,7 +137,7 @@ define([
 					if(p.arg('enabled') && p._checkDndReady(evt)){
 						this.profile = p;
 						this._saveSelectStatus(false);
-						domClass.add(win.body(), 'dojoxGridxDnDReadyCursor');
+						domClass.add(win.body(), 'gridxDnDReadyCursor');
 						this._dndReady = true;
 						return;
 					}
@@ -149,7 +149,7 @@ define([
 			if(this._dndReady){
 				this._loadSelectStatus();
 				delete this._dndReady;
-				domClass.remove(win.body(), 'dojoxGridxDnDReadyCursor');
+				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 			}
 		},
 
@@ -194,14 +194,14 @@ define([
 				delete this._extDnding;
 				this._destroyUI();
 				dom.setSelectable(this.grid.domNode, true);
-				domClass.remove(win.body(), 'dojoxGridxDnDReadyCursor');
+				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 				this.profile._onEndDnd();
 				this._loadSelectStatus(false);
 			}
 		},
 		
 		_createUI: function(){
-			domClass.add(win.body(), 'dojoxGridxDnDCursor');
+			domClass.add(win.body(), 'gridxDnDCursor');
 			if(this.grid.autoScroll){
 				this.profile._onBeginAutoScroll();
 				this.grid.autoScroll.enabled = true;
@@ -210,7 +210,7 @@ define([
 	
 		_destroyUI: function(){
 			this._unmarkTargetAnchor();
-			domClass.remove(win.body(), 'dojoxGridxDnDCursor');
+			domClass.remove(win.body(), 'gridxDnDCursor');
 			if(this.grid.autoScroll){
 				this.profile._onEndAutoScroll();
 				this.grid.autoScroll.enabled = false;
@@ -219,7 +219,7 @@ define([
 	
 		_createTargetAnchor: function(){
 			return domConstruct.create("div", {
-				"class": "dojoxGridxDnDAnchor"
+				"class": "gridxDnDAnchor"
 			});
 		},
 		
@@ -232,7 +232,7 @@ define([
 					targetAnchor.style.display = "none";
 					this.grid.mainNode.appendChild(targetAnchor);
 				}
-				domClass.add(targetAnchor, 'dojoxGridxDnDAnchor' + this.profile._cssName);
+				domClass.add(targetAnchor, 'gridxDnDAnchor' + this.profile._cssName);
 				var pos = this.profile._calcTargetAnchorPos(evt, containerPos);
 				if(pos){
 					domStyle.set(targetAnchor, pos);
@@ -247,7 +247,7 @@ define([
 			var targetAnchor = this._targetAnchor;
 			if(targetAnchor){
 				targetAnchor.style.display = "none";
-				domClass.remove(targetAnchor, 'dojoxGridxDnDAnchor' + this.profile._cssName);
+				domClass.remove(targetAnchor, 'gridxDnDAnchor' + this.profile._cssName);
 			}
 		},
 		

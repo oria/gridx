@@ -1,43 +1,43 @@
 /* Pagination RTL */
 
-.dojoxGridxRtl .dojoxGridxPagerDescriptionTD {
+.gridxRtl .gridxPagerDescriptionTD {
 	text-align: right;
 }
 
-.dojoxGridxRtl .dojoxGridxPager .dojoxGridxPagerStepperTD,
-.dojoxGridxRtl .dojoxGridxPager .dojoxGridxPagerGoto,
-.dojoxGridxRtl .dojoxGridxGotoPage .dojoxGridxGotoPageBtns {
+.gridxRtl .gridxPager .gridxPagerStepperTD,
+.gridxRtl .gridxPager .gridxPagerGoto,
+.gridxRtl .gridxGotoPage .gridxGotoPageBtns {
 	text-align: left;
 }
-.dojoxGridxRtl .dojoxGridxPagerFirstPage {
+.gridxRtl .gridxPagerFirstPage {
 	background-position: -40px 4px;
 }
-.dojoxGridxRtl .dojoxGridxPagerFirstPageDisable {
+.gridxRtl .gridxPagerFirstPageDisable {
 	background-position: -40px -16px;
 }
 
-.dojoxGridxRtl .dojoxGridxPagerPrevPage {
+.gridxRtl .gridxPagerPrevPage {
 	background-position: -19px 4px;
 }
-.dojoxGridxRtl .dojoxGridxPagerPrevPageDisable {
+.gridxRtl .gridxPagerPrevPageDisable {
 	background-position: -19px -16px;
 }
 
-.dojoxGridxRtl .dojoxGridxPagerNextPage {
+.gridxRtl .gridxPagerNextPage {
 	background-position: 1px 4px;
 }
-.dojoxGridxRtl .dojoxGridxPagerNextPageDisable {
+.gridxRtl .gridxPagerNextPageDisable {
 	background-position: 1px -16px;
 }
 
-.dojoxGridxRtl .dojoxGridxPagerLastPage {
+.gridxRtl .gridxPagerLastPage {
 	background-position: -60px 4px;
 }
-.dojoxGridxRtl .dojoxGridxPagerLastPageDisable {
+.gridxRtl .gridxPagerLastPageDisable {
 	background-position: -60px -16px;
 }
 
 /* PaginationBarDD */
-.dojoxGridxRtl .dojoxGridxPagerSizeSwitchDD {
+.gridxRtl .gridxPagerSizeSwitchDD {
 	text-align: left;
 }

@@ -111,9 +111,9 @@ define([
 					isCell = !type.indexOf('cell'),
 					isHeaderCell = !type.indexOf('headercell'),
 					isSelectedType = type.indexOf('-') > 0,
-					selected = !!((isCell && html.hasClass(e.cellNode, "dojoxGridxCellSelected")) ||
-						(isHeaderCell && html.hasClass(g.header.getHeaderNode(e.columnId), "dojoxGridxColumnSelected")) ||
-						(isRow && html.hasClass(g.body.getRowNode({rowId: e.rowId}), "dojoxGridxRowSelected")));
+					selected = !!((isCell && html.hasClass(e.cellNode, "gridxCellSelected")) ||
+						(isHeaderCell && html.hasClass(g.header.getHeaderNode(e.columnId), "gridxColumnSelected")) ||
+						(isRow && html.hasClass(g.body.getRowNode({rowId: e.rowId}), "gridxRowSelected")));
 				if(isSelectedType == selected || (!isSelectedType && selected && !this._menus[type + '-selected'])){
 					this.context = {
 						grid: g,

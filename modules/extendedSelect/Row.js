@@ -44,8 +44,8 @@ define([
 		},
 
 		clear: function(silent){
-			query(".dojoxGridxRowSelected", this.grid.bodyNode).forEach(function(node){
-				html.removeClass(node, 'dojoxGridxRowSelected');
+			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
+				html.removeClass(node, 'gridxRowSelected');
 			});
 			this.model.clearMark();
 			if(!silent){
@@ -135,7 +135,7 @@ define([
 			if(type === 'select' && !this._marking){
 				var node = query('[rowid="' + id + '"]', this.grid.bodyNode)[0];
 				if(node){
-					html[toMark ? 'addClass' : 'removeClass'](node, 'dojoxGridxRowSelected');
+					html[toMark ? 'addClass' : 'removeClass'](node, 'gridxRowSelected');
 					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toMark);
 				}
 			}
@@ -174,7 +174,7 @@ define([
 		_doHighlight: function(target, toHighlight){
 			var nodes = query('[visualindex="' + target.row + '"]', this.grid.bodyNode);
 			nodes.forEach(function(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, 'dojoxGridxRowSelected');
+				html[toHighlight ? 'addClass' : 'removeClass'](node, 'gridxRowSelected');
 			});
 			this.onHighlightChange(target, toHighlight);
 		},

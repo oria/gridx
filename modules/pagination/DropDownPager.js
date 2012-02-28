@@ -26,7 +26,7 @@ define([
 	
 		_createPageStepper: function(){
 			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerStepper', mod._exist(this.position, 'stepper'))){
+			if(this._toggleNode('gridxPagerStepper', mod._exist(this.position, 'stepper'))){
 				var items = [],
 					selectedItem,
 					p = this.pagination,
@@ -52,7 +52,7 @@ define([
 							store: store,
 							searchAttr: 'label',
 							item: selectedItem,
-							'class': 'dojoxGridxPagerStepperWidget',
+							'class': 'gridxPagerStepperWidget',
 							onChange: function(page){
 								p.gotoPage(page - 1);
 							}
@@ -70,7 +70,7 @@ define([
 	
 		_createPageSizeSwitch: function(){
 			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerSizeSwitch', mod._exist(this.position, 'sizeSwitch'))){
+			if(this._toggleNode('gridxPagerSizeSwitch', mod._exist(this.position, 'sizeSwitch'))){
 				var options = [],
 					p = this.pagination,
 					currentSize = p.pageSize(), 
@@ -90,7 +90,7 @@ define([
 					var cls = mod.arg('sizeSwitchClass'),
 						props = lang.mixin({
 							options: options,
-							'class': 'dojoxGridxPagerSizeSwitchWidget',
+							'class': 'gridxPagerSizeSwitchWidget',
 							onChange: function(ps){
 								p.setPageSize(ps < 0 ? 0 : ps);
 							}

@@ -46,11 +46,11 @@ define([
 		_onChangePageSize: function(size, oldSize){
 			var node = query('[pagesize="' + size + '"]', this._sizeSwitchContainer)[0];
 			if(node){
-				domClass.add(node, 'dojoxGridxPagerSizeSwitchBtnActive');
+				domClass.add(node, 'gridxPagerSizeSwitchBtnActive');
 			}
 			node = query('[pagesize="' + oldSize + '"]', this._sizeSwitchContainer)[0];
 			if(node){
-				domClass.remove(node, 'dojoxGridxPagerSizeSwitchBtnActive');
+				domClass.remove(node, 'gridxPagerSizeSwitchBtnActive');
 			}
 			if(this._focusArea() == this.position + 'PageSizeSwitch'){
 				this._findNextPageSizeSwitch();
@@ -72,7 +72,7 @@ define([
 
 		_createPageStepper: function(){
 			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerStepper', mod._exist(this.position, 'stepper'))){
+			if(this._toggleNode('gridxPagerStepper', mod._exist(this.position, 'stepper'))){
 				var p = this.pagination,
 					pageCount = p.pageCount(),
 					currentPage = p.currentPage(),
@@ -84,10 +84,10 @@ define([
 						mod.arg('pageIndexWaiTemplate', this.pageIndexWai),
 						mod.arg('pageIndexTemplate', this.pageIndex)
 					],
-					ellipsis = '<span class="dojoxGridxPagerStepperEllipsis">&hellip;</span>',
+					ellipsis = '<span class="gridxPagerStepperEllipsis">&hellip;</span>',
 					stepper = function(page){
-						return ['<span class="dojoxGridxPagerStepperBtn dojoxGridxPagerPage ',
-							currentPage == page ? 'dojoxGridxPagerStepperBtnActive' : '',
+						return ['<span class="gridxPagerStepperBtn gridxPagerPage ',
+							currentPage == page ? 'gridxPagerStepperBtnActive' : '',
 							'" pageindex="', page,
 							'" title="', string.substitute(nlsArr[0], [1]),
 							'" aria-label="', string.substitute(nlsArr[1], [1]),
@@ -131,8 +131,8 @@ define([
 					disablePrev = !currentPage || pageCount <= 1;
 					disableNext = currentPage || pageCount <= 1;
 				}
-				domClass.toggle(this._nextPageBtn, 'dojoxGridxPagerStepperBtnDisable dojoxGridxPagerNextPageDisable', disableNext);
-				domClass.toggle(this._prevPageBtn, 'dojoxGridxPagerStepperBtnDisable dojoxGridxPagerPrevPageDisable', disablePrev);
+				domClass.toggle(this._nextPageBtn, 'gridxPagerStepperBtnDisable gridxPagerNextPageDisable', disableNext);
+				domClass.toggle(this._prevPageBtn, 'gridxPagerStepperBtnDisable gridxPagerPrevPageDisable', disablePrev);
 		
 				if(this._focusArea() == this.position + 'PageStepper'){
 					this._findNextPageStepperBtn();
@@ -153,7 +153,7 @@ define([
 		},
 
 		_gotoPage: function(evt){
-			var node = this._findNodeByEvent(evt, 'dojoxGridxPagerStepperBtn', 'dojoxGridxPagerPages');
+			var node = this._findNodeByEvent(evt, 'gridxPagerStepperBtn', 'gridxPagerPages');
 			if(node){
 				var page = this._focusPageIndex = node.getAttribute('pageindex');
 				this.pagination.gotoPage(parseInt(page, 10));
@@ -168,16 +168,16 @@ define([
 		},
 
 		_onHoverPageBtn: function(evt){
-			this._toggleHover(evt, 'dojoxGridxPagerStepperBtn', 'dojoxGridxPagerPages', 'dojoxGridxPagerStepperBtnHover');
+			this._toggleHover(evt, 'gridxPagerStepperBtn', 'gridxPagerPages', 'gridxPagerStepperBtnHover');
 		},
 
 		_onHoverSizeBtn: function(evt){
-			this._toggleHover(evt, 'dojoxGridxPagerSizeSwitchBtn', 'dojoxGridxPagerSizeSwitch', 'dojoxGridxPagerSizeSwitchBtnHover');
+			this._toggleHover(evt, 'gridxPagerSizeSwitchBtn', 'gridxPagerSizeSwitch', 'gridxPagerSizeSwitchBtnHover');
 		},
 	
 		_createPageSizeSwitch: function(){
 			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerSizeSwitch', mod._exist(this.position, 'sizeSwitch'))){
+			if(this._toggleNode('gridxPagerSizeSwitch', mod._exist(this.position, 'sizeSwitch'))){
 				var sb = [], tabIndex = this._tabIndex,
 					separator = mod.arg('sizeSeparator'),
 					currentSize = this.pagination.pageSize(),
@@ -197,15 +197,15 @@ define([
 						pageSize = 0;
 						isAll = true;
 					}
-					sb.push('<span class="dojoxGridxPagerSizeSwitchBtn ',
-						currentSize === pageSize ? 'dojoxGridxPagerSizeSwitchBtnActive' : '',
+					sb.push('<span class="gridxPagerSizeSwitchBtn ',
+						currentSize === pageSize ? 'gridxPagerSizeSwitchBtnActive' : '',
 						'" pagesize="', pageSize,
 						'" title="', isAll ? nlsArr[3] : string.substitute(nlsArr[0], [pageSize]),
 						'" aria-label="', isAll ? nlsArr[4] : string.substitute(nlsArr[1], [pageSize]),
 						'" tabindex="', tabIndex, '">', isAll ? nlsArr[5] : string.substitute(nlsArr[2], [pageSize]),
 						'</span>',
 						//Separate the "separator, so we can pop the last one.
-						'<span class="dojoxGridxPagerSizeSwitchSeparator">' + separator + '</span>');
+						'<span class="gridxPagerSizeSwitchSeparator">' + separator + '</span>');
 				});
 				sb.pop();
 				this._sizeSwitchContainer.innerHTML = sb.join('');
@@ -213,7 +213,7 @@ define([
 		},
 	
 		_switchPageSize: function(evt){
-			var node = this._findNodeByEvent(evt, 'dojoxGridxPagerSizeSwitchBtn', 'dojoxGridxPagerSizeSwitch');
+			var node = this._findNodeByEvent(evt, 'gridxPagerSizeSwitchBtn', 'gridxPagerSizeSwitch');
 			if(node){
 				var pageSize = this._focusPageSize = node.getAttribute('pagesize');
 				this.pagination.setPageSize(parseInt(pageSize, 10));
@@ -221,7 +221,7 @@ define([
 		},
 		
 		_createGotoButton: function(){
-			this._toggleNode('dojoxGridxPagerGoto', this.module._exist(this.position, 'gotoButton'));
+			this._toggleNode('gridxPagerGoto', this.module._exist(this.position, 'gotoButton'));
 		},
 
 		_showGotoDialog: function(){
@@ -264,9 +264,9 @@ define([
 					if(evt.keyCode === keys.LEFT_ARROW || evt.keyCode === keys.RIGHT_ARROW){
 						_this._findNextPageStepperBtn(true, evt.keyCode === leftKey);
 					}else if(evt.keyCode === keys.ENTER && 
-						domClass.contains(evt.target, 'dojoxGridxPagerStepperBtn') && 
-						!domClass.contains(evt.target, 'dojoxGridxPagerStepperBtnActive') &&
-						!domClass.contains(evt.target, 'dojoxGridxPagerStepperBtnDisable')){
+						domClass.contains(evt.target, 'gridxPagerStepperBtn') && 
+						!domClass.contains(evt.target, 'gridxPagerStepperBtnActive') &&
+						!domClass.contains(evt.target, 'gridxPagerStepperBtnDisable')){
 						if(isNaN(parseInt(_this._focusPageIndex, 10))){
 							this['_goto' + _this._focusPageIndex + 'Page']();
 						}else{
@@ -285,8 +285,8 @@ define([
 					if(evt.keyCode === keys.LEFT_ARROW || evt.keyCode === keys.RIGHT_ARROW){
 						_this._findNextPageSizeSwitch(true, evt.keyCode === leftKey);
 					}else if(evt.keyCode === keys.ENTER &&
-						domClass.contains(evt.target, 'dojoxGridxPagerSizeSwitchBtn') &&
-						!domClass.contains(evt.target, 'dojoxGridxPagerSizeSwitchBtnActive')){
+						domClass.contains(evt.target, 'gridxPagerSizeSwitchBtn') &&
+						!domClass.contains(evt.target, 'gridxPagerSizeSwitchBtnActive')){
 						p.setPageSize(parseInt(_this._focusPageSize, 10));
 					}
 				});
@@ -312,9 +312,9 @@ define([
 		_findNextPageSizeSwitch: function(isMove, isLeft, evt){
 			util.stopEvent(evt);
 			var node = query('[pagesize="' + this._focusPageSize + '"]', this._sizeSwitchContainer)[0],
-				nodes = query('.dojoxGridxPagerSizeSwitchBtn', this._sizeSwitchContainer);
+				nodes = query('.gridxPagerSizeSwitchBtn', this._sizeSwitchContainer);
 			node = this._focus(nodes, node, isMove, isLeft, function(node){
-				return !domClass.contains(node, 'dojoxGridxPagerSizeSwitchBtnActive');
+				return !domClass.contains(node, 'gridxPagerSizeSwitchBtnActive');
 			});
 			if(node){
 				this._focusPageSize = node.getAttribute('pagesize');
@@ -325,10 +325,10 @@ define([
 		_findNextPageStepperBtn: function(isMove, isLeft, evt){
 			util.stopEvent(evt);
 			var node = query('[pageindex="' + this._focusPageIndex + '"]', this._pageStepperContainer)[0],
-				nodes = query('.dojoxGridxPagerStepperBtn', this._pageStepperContainer);
+				nodes = query('.gridxPagerStepperBtn', this._pageStepperContainer);
 			node = this._focus(nodes, node, isMove, isLeft, function(node){
-				return !domClass.contains(node, 'dojoxGridxPagerStepperBtnActive') &&
-					!domClass.contains(node, 'dojoxGridxPagerStepperBtnDisable');
+				return !domClass.contains(node, 'gridxPagerStepperBtnActive') &&
+					!domClass.contains(node, 'gridxPagerStepperBtnDisable');
 			});
 			if(node){
 				this._focusPageIndex = node.getAttribute('pageindex');

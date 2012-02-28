@@ -130,13 +130,13 @@ define([
 	
 		_createTargetAnchor: function(){
 			var ta = this.inherited(arguments);
-			ta.innerHTML = "<div class='dojoxGridxCellBorderLeftTopDIV'></div><div class='dojoxGridxCellBorderRightBottomDIV'></div>";
+			ta.innerHTML = "<div class='gridxCellBorderLeftTopDIV'></div><div class='gridxCellBorderRightBottomDIV'></div>";
 			return ta;
 		},
 	
 		_clearCellMasks: function(){
-			query(".dojoxGridxDnDCellMask", this.grid.bodyNode).forEach(function(cellNode){
-				html.removeClass(cellNode, "dojoxGridxDnDCellMask");
+			query(".gridxDnDCellMask", this.grid.bodyNode).forEach(function(cellNode){
+				html.removeClass(cellNode, "gridxDnDCellMask");
 			});
 		},
 	
@@ -154,7 +154,7 @@ define([
 			this._clearCellMasks();
 	
 			var handleRowNode;
-			query(".dojoxGridxRow", bn).some(function(rowNode){
+			query(".gridxRow", bn).some(function(rowNode){
 				var pos = html.position(rowNode);
 				if(evt.clientY >= pos.y && evt.clientY <= pos.y + pos.h){
 					handleRowNode = rowNode;
@@ -196,7 +196,7 @@ define([
 				top -= containerPos.y;
 	
 				var handleCellNode;
-				query("[rowindex='" + handleRowIndex + "'] .dojoxGridxCell", bn).some(function(cellNode){
+				query("[rowindex='" + handleRowIndex + "'] .gridxCell", bn).some(function(cellNode){
 					var pos = html.position(cellNode);
 					if(evt.clientX >= pos.x && evt.clientX <= pos.x + pos.w){
 						handleCellNode = cellNode;
@@ -227,9 +227,9 @@ define([
 					width = pos2.x + pos2.w - pos1.x;
 					left = pos1.x - containerPos.x;
 	
-					var leftTopDiv = query(".dojoxGridxCellBorderLeftTopDIV", this._targetAnchor)[0];
+					var leftTopDiv = query(".gridxCellBorderLeftTopDIV", this._targetAnchor)[0];
 					this._styleAnchorCorner(leftTopDiv, firstRowNode, firstRowIndex, firstColId);
-					var rightBottomDiv = query(".dojoxGridxCellBorderRightBottomDIV", this._targetAnchor)[0];
+					var rightBottomDiv = query(".gridxCellBorderRightBottomDIV", this._targetAnchor)[0];
 					this._styleAnchorCorner(rightBottomDiv, lastRowNode, lastRowIndex, lastColId);
 					
 					if(this._checkCellAccept(firstRowIndex, firstColIndex)){
@@ -283,7 +283,7 @@ define([
 									i + targetRowIndex, 
 									j + targetColIndex, 
 									this.grid)){
-							html.addClass(cellNode, "dojoxGridxDnDCellMask");
+							html.addClass(cellNode, "gridxDnDCellMask");
 							ret = false;
 						}
 					}

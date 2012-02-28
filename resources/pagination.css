@@ -1,119 +1,119 @@
 /* pagination bar */
-.dojoxGridxPagerInner {
+.gridxPagerInner {
 	width: 100%;
 	table-layout: auto;
 }
 
-.dojoxGridxPagerA11yInner {
+.gridxPagerA11yInner {
 	visibility: hidden;
 }
 
-.dijit_a11y .dojoxGridxPagerA11yInner {
+.dijit_a11y .gridxPagerA11yInner {
 	visibility: visible;
 }
 
-.dojoxGridxPagerStepperBtn,	
-.dojoxGridxPagerSizeSwitchBtn {
+.gridxPagerStepperBtn,	
+.gridxPagerSizeSwitchBtn {
 	cursor: pointer;
 	display: inline-block;
 	text-align: center;
 }
 
-.dojoxGridxPagerStepperBtnActive,
-.dojoxGridxPagerSizeSwitchBtnActive {
+.gridxPagerStepperBtnActive,
+.gridxPagerSizeSwitchBtnActive {
 	cursor: default;
 }
 
-.dojoxGridxPagerFirstPage,
-.dojoxGridxPagerPrevPage,
-.dojoxGridxPagerNextPage,
-.dojoxGridxPagerLastPage,
-.dojoxGridxPagerGotoBtn {
+.gridxPagerFirstPage,
+.gridxPagerPrevPage,
+.gridxPagerNextPage,
+.gridxPagerLastPage,
+.gridxPagerGotoBtn {
 	background: url("images/sprite_icons.png"); 
 }
 
-.dojoxGridxPagerFirstPage {
+.gridxPagerFirstPage {
 	background-position: -58px 4px;
 }
-.dojoxGridxPagerFirstPageDisable {
+.gridxPagerFirstPageDisable {
 	background-position: -58px -16px;
 	cursor: default;
 }
 
-.dojoxGridxPagerPrevPage {
+.gridxPagerPrevPage {
 	background-position: 3px 4px;
 }
-.dojoxGridxPagerPrevPageDisable {
+.gridxPagerPrevPageDisable {
 	background-position: 3px -16px;
 	cursor: default;
 }
 
-.dojoxGridxPagerNextPage {
+.gridxPagerNextPage {
 	background-position: -16px 4px;
 }
-.dojoxGridxPagerNextPageDisable {
+.gridxPagerNextPageDisable {
 	background-position: -16px -16px;
 	cursor: default;
 }
 
-.dojoxGridxPagerLastPage {
+.gridxPagerLastPage {
 	background-position: -38px 4px;
 }
-.dojoxGridxPagerLastPageDisable {
+.gridxPagerLastPageDisable {
 	background-position: -38px -16px;
 	cursor: default;
 }
 
-.dojoxGridxPagerDescriptionTD {
+.gridxPagerDescriptionTD {
 	text-align: left;
 	width: 33%;
 }
 
-.dojoxGridxPagerStepperTD {
+.gridxPagerStepperTD {
 	text-align: center;
 	width: 33%;
 }
 
-.dojoxGridxPagerSizeSwitchTD {
+.gridxPagerSizeSwitchTD {
 	text-align: right;
 }
 
-.dojoxGridxPagerGoto {
+.gridxPagerGoto {
 	width: 20px;
 	text-align: right;
 }
 
-.dojoxGridxPagerGotoBtn {
+.gridxPagerGotoBtn {
 	background-position: -79px 4px;
 	cursor: pointer;
 }
 
 /* Goto Page Dialog */
-.dojoxGridxGotoPage td {
+.gridxGotoPage td {
 	padding-bottom: 5px;
 }
 
-.dojoxGridxGotoPage .dojoxGridxGotoPageBtns {
+.gridxGotoPage .gridxGotoPageBtns {
 	padding-bottom: 0;
 	text-align: right;
 }
 
-.dojoxGridxGotoPage .dojoxGridxGotoPageInputBox {
+.gridxGotoPage .gridxGotoPageInputBox {
 	width: 100px;
 }
 
-.dojoxGridxGotoPage .dojoxGridxPageCountMsg {
+.gridxGotoPage .gridxPageCountMsg {
 	padding-left: 5px;
 }
 
 /*DD*/
-.dojoxGridxPagerStepperWidget {
+.gridxPagerStepperWidget {
 	width: 50px;
 }
 
-.dojoxGridxPagerSizeSwitchWidget .dijitButtonContents {
+.gridxPagerSizeSwitchWidget .dijitButtonContents {
 }
 
-.dojoxGridxPagerLabel {
+.gridxPagerLabel {
 	vertical-align: middle;
 }

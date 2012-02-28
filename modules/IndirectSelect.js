@@ -51,15 +51,15 @@ define([
 		//Private----------------------------------------------------------
 		_createSelector: function(id){
 			var rowNode = query('[rowid="' + id + '"]', this.grid.bodyNode)[0],
-				selected = rowNode && domClass.contains(rowNode, 'dojoxGridxRowSelected');
+				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected');
 			return this._createCheckBox(selected);
 		},
 
 		_createCheckBox: function(selected){
 			var dijitClass = this._getDijitClass();
-			return ['<span class="dojoxGridxIndirectSelectionCheckBox dijitReset dijitInline ',
+			return ['<span class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
 				dijitClass, ' ', selected ? dijitClass + 'Checked' : '',
-				'"><span class="dojoxGridxIndirectSelectionCheckBoxInner">□</span></span>'
+				'"><span class="gridxIndirectSelectionCheckBoxInner">□</span></span>'
 			].join('');
 		},
 
@@ -68,7 +68,7 @@ define([
 		},
 
 		_onHighlightChange: function(target, toHighlight){
-			var node = query('[visualindex="' + target.row + '"].dojoxGridxRowHeaderRow .dojoxGridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
+			var node = query('[visualindex="' + target.row + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
 			if(node){
 				domClass.toggle(node, this._getDijitClass() + 'Checked', toHighlight);
 			}
@@ -134,12 +134,12 @@ define([
 			var rowHeader = this.grid.rowHeader;
 			var focus = function(evt){
 				util.stopEvent(evt);
-				domClass.add(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
+				domClass.add(rowHeader.headerCellNode, 'gridxHeaderCellFocus');
 				rowHeader.headerCellNode.focus();
 				return true;
 			};
 			var blur = function(){
-				domClass.remove(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
+				domClass.remove(rowHeader.headerCellNode, 'gridxHeaderCellFocus');
 				return true;
 			};
 			this.grid.focus.registerArea({

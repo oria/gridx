@@ -42,8 +42,8 @@ define([
 		},
 
 		clear: function(silent){
-			query(".dojoxGridxColumnSelected", this.grid.domNode).forEach(function(node){
-				html.removeClass(node, 'dojoxGridxColumnSelected');
+			query(".gridxColumnSelected", this.grid.domNode).forEach(function(node){
+				html.removeClass(node, 'gridxColumnSelected');
 			});
 			array.forEach(this.grid._columns, function(col){
 				col._selected = false;
@@ -108,7 +108,7 @@ define([
 			var g = this.grid;
 			this.batchConnect(
 				[g, 'onHeaderCellMouseDown', function(e){
-					if(mouse.isLeft(e) && !html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
+					if(mouse.isLeft(e) && !html.hasClass(e.target, 'gridxArrowButtonNode')){
 						this._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
@@ -119,7 +119,7 @@ define([
 					this._highlight({column: e.columnIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
-					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
+					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !html.hasClass(e.target, 'gridxArrowButtonNode')){
 						this._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
 						this._end();
 					}
@@ -136,7 +136,7 @@ define([
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
 					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
-					html.addClass(node, 'dojoxGridxColumnSelected');
+					html.addClass(node, 'gridxColumnSelected');
 				}
 			}
 		},
@@ -165,16 +165,16 @@ define([
 
 		_doHighlight: function(target, toHighlight){
 			var id = this.grid._columns[target.column].id;
-			var nodes = query('[colid="' + id + '"].dojoxGridxCell', this.grid.domNode);
+			var nodes = query('[colid="' + id + '"].gridxCell', this.grid.domNode);
 			nodes.forEach(function(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, 'dojoxGridxColumnSelected');
+				html[toHighlight ? 'addClass' : 'removeClass'](node, 'gridxColumnSelected');
 			});
 		},
 
 		_focus: function(target){
 			if(this.grid.focus){
 				var id = this.grid._columns[target.column].id;
-				var node = query('[colid="' + id + '"].dojoxGridxCell', this.grid.header.domNode)[0];
+				var node = query('[colid="' + id + '"].gridxCell', this.grid.header.domNode)[0];
 				this.grid.header._focusNode(node);
 			}
 		},

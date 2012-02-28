@@ -178,7 +178,7 @@ return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _Wid
 	},
 	
 	_createMods: function(){
-		var sb = ['<table class="dojoxGridxConfigAllMods"><tr><td>',
+		var sb = ['<table class="gridxConfigAllMods"><tr><td>',
 			'<div data-dojo-type="dijit.form.CheckBox" ',
 			'id="', this.getID('all', 'modules'), '" ',
 			'></div><label for="', this.getID('all', 'modules'), '">Select All Modules</label>',

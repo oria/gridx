@@ -74,7 +74,7 @@ define([
 				innerNode = header.innerNode,
 				padBorder = 0;
 			if(!sniff('webkit')){
-				var refNode = query('.dojoxGridxCell', innerNode)[0];
+				var refNode = query('.gridxCell', innerNode)[0];
 				padBorder = html.getMarginBox(refNode).w - html.getContentBox(refNode).w;
 			}
 			innerNode.style[marginLead] = lead + 'px';
@@ -88,7 +88,7 @@ define([
 					}
 				}, this);
 				header.refresh();
-				var headers = query('th.dojoxGridxCell', innerNode);
+				var headers = query('th.gridxCell', innerNode);
 				var totalWidth = 0;
 				headers.forEach(function(node){
 					var w = node.offsetWidth;
@@ -100,7 +100,7 @@ define([
 				g.domNode.style.width = (lead + tail + totalWidth) + 'px';
 			}else if(this.arg('percentage')){
 				g.bodyNode.style.width = bodyWidth + 'px';
-				html.addClass(g.domNode, 'dojoxGridxPercentColumnWidth');
+				html.addClass(g.domNode, 'gridxPercentColumnWidth');
 				array.forEach(g._columns, function(col){
 					if(!col.width || !/%$/.test(col.width)){
 						col.width = 'auto';

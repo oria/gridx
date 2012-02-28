@@ -1,18 +1,18 @@
 /* Body */
-.dojoxGridxRtl .dojoxGridxRow .dojoxGridxCell {
+.gridxRtl .gridxRow .gridxCell {
 	border-color: transparent transparent #ccc #ccc;
 	text-align: right;
 }
 
 /* VScroller */
-.dojoxGridxRtl .dojoxGridxVScroller {
+.gridxRtl .gridxVScroller {
 	right: auto;
 	left: 0;
 }
 
 /* RowHeader */
-.dojoxGridxRtl .dojoxGridxRowHeaderHeader,
-.dojoxGridxRtl .dojoxGridxRowHeaderBody {
+.gridxRtl .gridxRowHeaderHeader,
+.gridxRtl .gridxRowHeaderBody {
 	right: 0;
 	left: auto;
 	border-right: none;

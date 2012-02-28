@@ -57,8 +57,8 @@ define([
 		},
 
 		clear: function(silent){
-			query(".dojoxGridxCellSelected", this.grid.bodyNode).forEach(function(node){
-				html.removeClass(node, 'dojoxGridxCellSelected');
+			query(".gridxCellSelected", this.grid.bodyNode).forEach(function(node){
+				html.removeClass(node, 'gridxCellSelected');
 			});
 			array.forEach(this.grid._columns, function(col){
 				this.model.clearMark(this._getMarkType(col.id));
@@ -171,7 +171,7 @@ define([
 							this._inRange(i, this._startItem.c, this._currentItem.c, true) &&
 							this._inRange(j, this._startItem.r, this._currentItem.r, true))){
 							var node = query('[visualindex="' + j + '"] [colid="' + cid + '"]', g.bodyNode)[0];
-							html.addClass(node, 'dojoxGridxCellSelected');
+							html.addClass(node, 'gridxCellSelected');
 						}
 					}
 				}
@@ -185,7 +185,7 @@ define([
 					var cid = type.substr(this._markTypePrefix.length);
 					var node = query('[colid="' + cid + '"]', rowNode)[0];
 					if(node){
-						html[toMark ? 'addClass' : 'removeClass'](node, 'dojoxGridxCellSelected');
+						html[toMark ? 'addClass' : 'removeClass'](node, 'gridxCellSelected');
 					}
 				}
 			}
@@ -257,7 +257,7 @@ define([
 					var cellNodes = rowNodes[i].getElementsByTagName('td');
 					for(j = cellNodes.length - 1; j >= 0; --j){
 						if(cellNodes[j].getAttribute('colid') == item.cid){
-							html[toHighlight ? 'addClass' : 'removeClass'](cellNodes[j], 'dojoxGridxCellSelected');
+							html[toHighlight ? 'addClass' : 'removeClass'](cellNodes[j], 'gridxCellSelected');
 							return;
 						}
 					}

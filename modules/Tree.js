@@ -12,8 +12,8 @@ define([
 
 	var _isExpando = function(cellNode){
 		var n = cellNode.firstChild;
-		return n && n.className && domClass.contains(n, 'dojoxGridxTreeExpandoCell') &&
-			!domClass.contains(n, 'dojoxGridxTreeExpandoLoading');
+		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
+			!domClass.contains(n, 'gridxTreeExpandoLoading');
 	};
 
 	return _Module.register(
@@ -361,16 +361,16 @@ define([
 					wrappers.push({
 						priority: 0,
 						wrap: function(cellData){
-							return ["<div class='dojoxGridxTreeExpandoCell ",
-								isOpen ? "dojoxGridxTreeExpandoCellOpen" : "",
+							return ["<div class='gridxTreeExpandoCell ",
+								isOpen ? "gridxTreeExpandoCellOpen" : "",
 								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + singlePad, "px;'>",
-								"<span class='dojoxGridxTreeExpandoIcon ",
-								hasChildren ? '' : 'dojoxGridxTreeExpandoIconNoChildren',
+								"<span class='gridxTreeExpandoIcon ",
+								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
 								"style='margin-", ltr ? 'left' : 'right', ": ", pad,"px;'>",
-								"<span class='dojoxGridxTreeExpandoInner'>",
+								"<span class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
-								"</span></span><span class='dojoxGridxTreeExpandoContent'>",
+								"</span></span><span class='gridxTreeExpandoContent'>",
 								cellData,
 								"</span></span>"
 							].join('');
@@ -382,7 +382,7 @@ define([
 	
 		_onCellClick: function(e){
 			if(_isExpando(e.cellNode)){
-				var pos = domGeometry.position(query('.dojoxGridxTreeExpandoIcon', e.cellNode)[0]);
+				var pos = domGeometry.position(query('.gridxTreeExpandoIcon', e.cellNode)[0]);
 				if(e.clientX >= pos.x && e.clientX <= pos.x + pos.w && e.clientY >= pos.y && e.clientY <= pos.y + pos.h){
 					if(this.isExpanded(e.rowId)){
 						this.collapse(e.rowId);
@@ -400,19 +400,19 @@ define([
 				var rowNode = body.getRowNode({rowId: id}), n, expando,
 					isOpen = this.isExpanded(id);
 				if(rowNode){
-					n = query('.dojoxGridxTreeExpandoCell', rowNode)[0];
+					n = query('.gridxTreeExpandoCell', rowNode)[0];
 					if(n){
-						expando = query('.dojoxGridxTreeExpandoIcon', n)[0];
+						expando = query('.gridxTreeExpandoIcon', n)[0];
 						expando.firstChild.innerHTML = 'o';
-						domClass.add(n, 'dojoxGridxTreeExpandoLoading');
+						domClass.add(n, 'gridxTreeExpandoLoading');
 					}
 				}
 				var visualIndex = id ? this.getVisualIndexByRowInfo(this.model.treePath(id).pop(), this.model.idToIndex(id), body.rootStart) : -1;
 				return body.refreshVisual(visualIndex + 1).then(function(){
 					if(n){
 						expando.firstChild.innerHTML = isOpen ? '-' : '+';
-						domClass.remove(n, 'dojoxGridxTreeExpandoLoading');
-						domClass.toggle(n, 'dojoxGridxTreeExpandoCellOpen', isOpen);
+						domClass.remove(n, 'gridxTreeExpandoLoading');
+						domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
 					}
 				});
 			}

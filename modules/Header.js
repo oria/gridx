@@ -30,13 +30,13 @@ define([
 		constructor: function(){
 			//Prepare this.domNode
 			this.domNode = domConstruct.create('div', {
-				'class': 'dojoxGridxHeaderRow',
+				'class': 'gridxHeaderRow',
 				role: 'presentation'
 			});
 			this.innerNode = domConstruct.create('div', {
-				'class': 'dojoxGridxHeaderRowInner',
+				'class': 'gridxHeaderRowInner',
 				role: 'row',
-				innerHTML: '<table border="0" cellpadding="0" cellspacing="0"><tr><th class="dojoxGridxCell"></th></tr></table>'
+				innerHTML: '<table border="0" cellpadding="0" cellspacing="0"><tr><th class="gridxCell"></th></tr></table>'
 			});
 			this.domNode.appendChild(this.innerNode);
 		},
@@ -79,11 +79,11 @@ define([
 			var sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'],
 				g = this.grid, f = g.focus, _this = this;
 			g.columns().forEach(function(col){
-				sb.push('<th colid="', col.id, '" class="dojoxGridxCell ',
+				sb.push('<th colid="', col.id, '" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == _this._focusHeaderId ? _this._focusClass : '',
 					'" role="columnheader" aria-readonly="true" tabindex="-1" style="width: ',
 					col.getWidth(),
-					'"><div class="dojoxGridxSortNode">', 
+					'"><div class="gridxSortNode">', 
 					col.name(),
 					'</div></th>');
 			});
@@ -142,13 +142,13 @@ define([
 		
 		_onHeaderCellMouseOver: function(e){
 			var node = this.getHeaderNode(e.columnId);
-			domClass.toggle(node, 'dojoxGridxHeaderCellOver', e.type == 'mouseover');
+			domClass.toggle(node, 'gridxHeaderCellOver', e.type == 'mouseover');
 		},
 		
 		// Focus
 		_focusHeaderId: null,
 
-		_focusClass: "dojoxGridxHeaderCellFocus",
+		_focusClass: "gridxHeaderCellFocus",
 
 		_initFocus: function(){
 			var g = this.grid;
@@ -176,7 +176,7 @@ define([
 			if(this._focusHeaderId){
 				node = this.getHeaderNode(this._focusHeaderId);
 			}
-			var ret = this._focusNode(node || query('th.dojoxGridxCell', this.domNode)[0]);
+			var ret = this._focusNode(node || query('th.gridxCell', this.domNode)[0]);
 			if(ret){
 				util.stopEvent(evt);
 			}
