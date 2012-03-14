@@ -46,7 +46,6 @@ define([
 				pos = columns.length;
 			}
 			this._moveComplete(movedCols, pos, skipUpdateBody);
-			return this;
 		},
 	
 		moveRange: function(start, count, target, skipUpdateBody){
@@ -56,7 +55,6 @@ define([
 				}
 				this._moveComplete(this.grid._columns.splice(start, count), target, skipUpdateBody);
 			}
-			return this;
 		},
 		
 		//Events--------------------------------------------------------------------
@@ -64,7 +62,7 @@ define([
 		
 		//Private-------------------------------------------------------------------
 		_moveComplete: function(movedCols, target, skipUpdateBody){
-			var map = {}, i, columns = this.grid._columns;
+			var g = this.grid, map = {}, i, columns = g._columns;
 			for(i = movedCols.length - 1; i >= 0; --i){
 				map[movedCols[i].index] = target + i;
 			}
@@ -74,8 +72,8 @@ define([
 			}
 			if(!skipUpdateBody){
 				//TODO: need grid.refresh here
-				this.grid.header.refresh();
-				this.grid.body.refresh();
+				g.header.refresh();
+				g.body.refresh();
 				this.onMoved(map);
 			}
 		}	

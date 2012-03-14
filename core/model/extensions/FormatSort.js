@@ -5,16 +5,37 @@ define([
 	"dojo/data/util/sorter",
 	"../_Extension"
 ], function(declare, array, lang, sorter, _Extension){
-	
+
+	function createSortFunc(attr, dir, comp, store){
+		return function(itemA, itemB){
+			return dir * comp(store.getValue(itemA, attr), store.getValue(itemB, attr));
+		};
+	}
+
+	function createFormatSortFunc(attr, dir, comp, store, cache, formatter){
+		var formatCache = {};
+		return function(itemA, itemB){
+			var idA = store.getIdentity(itemA),
+				idB = store.getIdentity(itemB);
+			if(!formatCache[idA]){
+				formatCache[idA] = formatter(cache._itemToObject(itemA));
+			}
+			if(!formatCache[idB]){
+				formatCache[idB] = formatter(cache._itemToObject(itemB));
+			}
+			return dir * comp(formatCache[idA], formatCache[idB]);
+		};
+	}
+
 	return declare(_Extension, {
 		name: 'formatSort',
 
 		priority: 50,
 
 		constructor: function(model){
-			var c = this.cache = model._cache;
-			this.connect(c, "onBeforeFetch", "_onBeforeFetch");
-			this.connect(c, "onAfterFetch", "_onAfterFetch");
+			var t = this, c = t.cache = model._cache;
+			t.connect(c, "onBeforeFetch", "_onBeforeFetch");
+			t.connect(c, "onAfterFetch", "_onAfterFetch");
 		},
 
 		//Private--------------------------------------------------------------------
@@ -28,29 +49,6 @@ define([
 				sorter.createSortFunction = this._oldCreateSortFunction;
 				delete this._oldCreateSortFunction;
 			}
-		},
-
-		_createSortFunc: function(attr, dir, comp, store){
-			return function(itemA, itemB){
-				var a = store.getValue(itemA, attr),
-					b = store.getValue(itemB, attr);
-				return dir * comp(a, b);
-			};
-		},
-
-		_createFormatSortFunc: function(attr, dir, comp, store, cache, formatter){
-			var formatCache = {};
-			return function(itemA, itemB){
-				var idA = store.getIdentity(itemA),
-					idB = store.getIdentity(itemB);
-				if(!formatCache[idA]){
-					formatCache[idA] = formatter(cache._itemToObject(itemA));
-				}
-				if(!formatCache[idB]){
-					formatCache[idB] = formatter(cache._itemToObject(itemB));
-				}
-				return dir * comp(formatCache[idA], formatCache[idB]);
-			};
 		},
 
 		_createComparator: function(sortSpec, store){
@@ -72,10 +70,10 @@ define([
 				}
 				var formatter = col && col.sortFormatted && col.formatter;
 				sortFunctions.push(formatter ? 
-					this._createFormatSortFunc(attr, dir, comp, store, c, formatter) : 
-					this._createSortFunc(attr, dir, comp, store)
+					createFormatSortFunc(attr, dir, comp, store, c, formatter) : 
+					createSortFunc(attr, dir, comp, store)
 				);
-			}, this);
+			});
 			return function(rowA, rowB){
 				var i, len, ret = 0;
 				for(i = 0, len = sortFunctions.length; !ret && i < len; ++i){

@@ -2,9 +2,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"../../core/_Module",
-	"dojo/_base/Deferred",
 	"./Exporter"
-], function(declare, lang, _Module, Deferred){
+], function(declare, lang, _Module){
 
 /*=====
 	dojo.declare('__CSVExportArgs', __ExportArgs, {
@@ -44,10 +43,11 @@ define([
 	
 		//Public ---------------------------------------------------------------------
 		toCSV: function(/* __CSVExportArgs */ args){
-			this._separator = args.separator || ",";
-			this._newLine = args.newLine || "\r\n";
-			this._result = "";
-			return this.grid.exporter._export(args || {}, this);
+			var t = this;
+			t._separator = args.separator || ",";
+			t._newLine = args.newLine || "\r\n";
+			t._result = "";
+			return t.grid.exporter._export(t, args || {});
 		},
 
 		//Package --------------------------------------------------------------------
@@ -62,7 +62,7 @@ define([
 			//		Triggered before exporting the header cells.
 			//return: Boolean|undefined
 			//		If return false, does not handle following header cells.
-			if(!lang.isArray(context.columnIds) || context.columnIds.length == 0){
+			if(!lang.isArray(context.columnIds) || !context.columnIds.length){
 				return false;
 			}
 			this._headerCells = [];
@@ -78,7 +78,8 @@ define([
 		afterHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
 			//summary:
 			//		Triggered when the header has been exported.
-			this._result += this._headerCells.join(this._separator) + this._newLine;
+			var t = this;
+			t._result += t._headerCells.join(t._separator) + t._newLine;
 		},
 
 		beforeBody: function(/* __CSVExportArgs */ args){
@@ -87,13 +88,6 @@ define([
 			//return: Boolean|undefined
 			//		If return false, does not handle any of the grid boyd content.
 			this._rows = [];
-		},
-
-		beforeProgress: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered before exporting a page of rows.
-			//return: Boolean|undefined
-			//		If return false, does not handle this page of rows.
 		},
 
 		beforeRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
@@ -128,15 +122,10 @@ define([
 			this._rows.push(this._cells.join(this._separator));
 		},
 
-		afterProgress: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered when a page has been exported.
-		},
-
 		afterBody: function(/* __CSVExportArgs */ args){
 			//summary:
 			//		Triggered when the grid body has been exported.
-			this._result += this._rows.join(this._newLine)
+			this._result += this._rows.join(this._newLine);
 		}
 	}));
 });

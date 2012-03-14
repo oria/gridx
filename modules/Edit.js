@@ -4,14 +4,13 @@ define([
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
-	"dojo/_base/event",
 	"dojo/dom-class",
 	"dojo/keys",
 	"../core/_Module",
 	"../util",
 	"dojo/date/locale",
 	"dijit/form/TextBox"
-], function(declare, lang, json, Deferred, sniff, event, domClass, keys, _Module, util, locale){
+], function(declare, lang, json, Deferred, sniff, domClass, keys, _Module, util, locale){
 	
 	/*=====
 	var columnDefinitionEditorMixin = {
@@ -64,6 +63,13 @@ define([
 		return d ? locale.format(d, formatArgs) : rawData[field];
 	}
 
+	function getEditorValueSetter(toEditor){
+		return toEditor && function(gridData, storeData, cellWidget){
+			var v = toEditor(storeData, gridData);
+			cellWidget.gridCellEditField.set('value', v);
+		};
+	}
+	
 	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs');
 	
 	return _Module.register(
@@ -108,10 +114,11 @@ define([
 		},
 	
 		preload: function(){
-			this.connect(this.grid, 'onCellDblClick', '_onUIBegin');
-			this.connect(this.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
-			this._initAlwaysEdit();
-			this._initFocus();
+			var t = this;
+			t.connect(t.grid, 'onCellDblClick', '_onUIBegin');
+			t.connect(t.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
+			t._initAlwaysEdit();
+			t._initFocus();
 		},
 	
 		cellMixin: {
@@ -162,29 +169,28 @@ define([
 		begin: function(rowId, colId){
 			//summary:
 			//	Begin to edit a cell with defined dijit.
-			var d = new Deferred();
-			if(!this.isEditing(rowId, colId)){
-				var _this = this,
-					g = this.grid,
-					rowIndex = this.model.idToIndex(rowId),
+			var d = new Deferred(), t = this;
+			if(!t.isEditing(rowId, colId)){
+				var g = t.grid,
+					rowIndex = t.model.idToIndex(rowId),
 					col = g._columnsById[colId];
 				if(rowIndex >= 0 && col.editable){
 					g.cellWidget.setCellDecorator(rowId, colId, 
-						this._getDecorator(colId), 
-						this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
+						t._getDecorator(colId), 
+						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col))
 					);
-					this._record(rowId, colId);
+					t._record(rowId, colId);
 					g.body.refreshCell(rowIndex, col.index).then(function(){
-						_this._focusEditor(rowId, colId);
+						t._focusEditor(rowId, colId);
 						d.callback(true);
 					});
 				}else{
 					d.callback(false);
 				}
 			}else{
-				this._record(rowId, colId);
-				this._focusEditor(rowId, colId);
+				t._record(rowId, colId);
+				t._focusEditor(rowId, colId);
 				d.callback(true);
 			}
 			return d;
@@ -194,20 +200,21 @@ define([
 			//summary:
 			//	Cancel the edit. And end the editing state.
 			var d = new Deferred(),
-				m = this.model,
+				t = this,
+				m = t.model,
 				rowIndex = m.idToIndex(rowId);
 			if(rowIndex >= 0){
-				var g = this.grid,
+				var g = t.grid,
 					cw = g.cellWidget, 
 					col = g._columnsById[colId];
 				if(col){
 					if(col.alwaysEditing){
-						var cw = cw.getCellWidget(rowId, colId), 
-							rowCache = m.byId(rowId);
+						var rowCache = m.byId(rowId);
+						cw = cw.getCellWidget(rowId, colId);
 						cw.setValue(rowCache.data[colId], rowCache.rawData[col.field]);
 						d.callback();
 					}else{
-						this._erase(rowId, colId);
+						t._erase(rowId, colId);
 						cw.restoreCellDecorator(rowId, colId);
 						g.body.refreshCell(rowIndex, col.index).then(function(){
 							d.callback();
@@ -224,8 +231,9 @@ define([
 			//summary:
 			//	Apply the edit value to the grid store. And end the editing state.
 			var d = new Deferred(),
-				g = this.grid,
-				cell = g.cell(rowId, colId, true);
+				t = this,
+				g = t.grid,
+				cell = g.cell(rowId, colId, 1);
 			if(cell){
 				var widget = g.cellWidget.getCellWidget(rowId, colId);
 				if(widget && widget.gridCellEditField){
@@ -237,14 +245,13 @@ define([
 						}else if(cell.column.storePattern){
 							v = locale.format(v, cell.column.storePattern);
 						}
-						var _this = this;
 						cell.setRawData(v).then(function(){
 							if(cell.column.alwaysEditing){
-								_this._erase(rowId, colId);
+								t._erase(rowId, colId);
 								d.callback(true);
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
-								_this._erase(rowId, colId);
+								t._erase(rowId, colId);
 								g.body.refreshCell(cell.row.index(), cell.column.index()).then(function(){
 									d.callback(true);
 								});
@@ -252,7 +259,7 @@ define([
 						});
 					}catch(e){
 						g.cellWidget.restoreCellDecorator(rowId, colId);
-						this._erase(rowId, colId);
+						t._erase(rowId, colId);
 						console.warn('Can not apply change! Error message: ', e);
 						d.callback(false);
 						return d;
@@ -289,12 +296,12 @@ define([
 	
 		//Private------------------------------------------------------------------
 		_initAlwaysEdit: function(){
-			for(var cols = this.grid._columns, i = cols.length - 1; i >= 0; --i){
+			for(var t = this, cols = t.grid._columns, i = cols.length - 1; i >= 0; --i){
 				var col = cols[i];
 				if(col.alwaysEditing){
 					col.navigable = true;
-					col.userDecorator = this._getDecorator(col.id);
-					col.setCellValue = this._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
+					col.userDecorator = t._getDecorator(col.id);
+					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
 					col.decorator = function(){ return ''; };
 					//FIXME: this breaks encapsulation
@@ -317,14 +324,14 @@ define([
 
 		_onCellWidgetCreated: function(widget, column){
 			if(widget.gridCellEditField && column.alwaysEditing){
-				var _this = this, w = widget.gridCellEditField;
+				var t = this, w = widget.gridCellEditField;
 				widget.connect(w, 'onBlur', function(){
 					var rn = widget.domNode.parentNode;
 					while(rn && !domClass.contains(rn, 'gridxRow')){
 						rn = rn.parentNode;
 					}
 					if(rn){
-						_this.apply(rn.getAttribute('rowid'), column.id);
+						t.apply(rn.getAttribute('rowid'), column.id);
 					}
 				});
 			}
@@ -347,44 +354,32 @@ define([
 	
 		_getDecorator: function(colId){
 			var className = this._getColumnEditor(colId),
-				p, properties = [],
+				p, properties,
 				col = this.grid._columnsById[colId],
 				dijitProperties = (col.editorArgs && col.editorArgs.dijitProperties) || {},
 				pattern = col.gridPattern || col.storePattern;
 			if(pattern){
-				var constraints = dijitProperties.constraints = dijitProperties.constraints || {};
-				lang.mixin(constraints, pattern);
+				lang.mixin(dijitProperties.constraints = dijitProperties.constraints || {}, pattern);
 			}
-			for(p in dijitProperties){
-				if(dijitProperties.hasOwnProperty(p)){
-					properties.push(p, "='", json.toJson(dijitProperties[p]), "' ");
-				}
-			}
-			properties = properties.join('');
+			properties = json.toJson(dijitProperties);
 			return function(){
-				return ["<div dojoType='", className, "' ",
-					"dojoAttachPoint='gridCellEditField' ",
-					"class='gridxHasGridCellValue gridxUseStoreData' ",
-					"style='width: 100%; height:100%;' ",
-					properties,
-					"></div>"
+				return ["<div data-dojo-type='", className, "' ",
+					"data-dojo-attach-point='gridCellEditField' ",
+					"class='gridxCellEditor gridxHasGridCellValue gridxUseStoreData' ",
+					"data-dojo-props='",
+					properties.substring(1, properties.length - 1),
+					"'></div>"
 				].join('');
 			};
 		},
 	
-		_getEditorValueSetter: function(toEditor){
-			return toEditor && function(gridData, storeData, cellWidget){
-				var v = toEditor(storeData, gridData);
-				cellWidget.gridCellEditField.set('value', v);
-			};
-		},
-	
+		
 		_record: function(rowId, colId){
 			var cells = this._editingCells, r = cells[rowId];
 			if(!r){
 				r = cells[rowId] = {};
 			}
-			r[colId] = true;
+			r[colId] = 1;
 		},
 	
 		_erase: function(rowId, colId){
@@ -408,68 +403,69 @@ define([
 			return this.begin(evt.rowId, evt.columnId);
 		},
 	
-		//Focus
+		//Focus-----------------------------------------------------
 		_initFocus: function(){
-			var f = this.grid.focus;
+			var t = this, f = t.grid.focus;
 			if(f){
 				f.registerArea({
 					name: 'edit',
 					priority: 1,
-					scope: this,
-					doFocus: this._onFocus,
-					doBlur: this._doBlur,
-					onFocus: this._onFocus,
-					onBlur: this._onBlur,
+					scope: t,
+					doFocus: t._onFocus,
+					doBlur: t._doBlur,
+					onFocus: t._onFocus,
+					onBlur: t._onBlur,
 					connects: [
-						this.connect(this.grid, 'onCellKeyPress', '_onKey'),
-						this.connect(this, '_focusEditor', '_focus')
+						t.connect(t.grid, 'onCellKeyPress', '_onKey'),
+						t.connect(t, '_focusEditor', '_focus')
 					]
 				});
 			}
 		},
 
 		_onFocus: function(evt){
+			var t = this;
 			if(evt){
 				var n = evt.target;
 				while(n && !domClass.contains(n, 'gridxCell')){
 					n = n.parentNode;
 				}
 				if(n){
-					var colId = n.getAttribute('colid');
-					var rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
-					if(this.isEditing(rowId, colId)){
-						this._record(rowId, colId);
-						this._editing = true;
+					var colId = n.getAttribute('colid'),
+						rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
+					if(t.isEditing(rowId, colId)){
+						t._record(rowId, colId);
+						t._editing = true;
 						return true;
 					}
 				}
 				return false;
 			}
-			return this._editing;
+			return t._editing;
 		},
 
 		_doBlur: function(evt, step){
-			if(this._editing){
-				var rowIndex = this.grid.body.getRowInfo({
-					parentId: this.model.treePath(this._focusCellRow).pop(), 
-					rowIndex: this.model.idToIndex(this._focusCellRow)
-				}).visualIndex;
-				var colIndex = this.grid._columnsById[this._focusCellCol].index;
-				var dir = step > 0 ? 1 : -1;
-				var _this = this;
-				var checker = function(r, c){
-					return _this.grid._columns[c].editable;
-				};
-				this.grid.body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
+			var t = this, g = t.grid, body = g.body;
+			if(t._editing){
+				var rowIndex = body.getRowInfo({
+						parentId: t.model.treePath(t._focusCellRow).pop(), 
+						rowIndex: t.model.idToIndex(t._focusCellRow)
+					}).visualIndex,
+					colIndex = g._columnsById[t._focusCellCol].index,
+					dir = step > 0 ? 1 : -1,
+					checker = function(r, c){
+						return g._columns[c].editable;
+					};
+				body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
 					util.stopEvent(evt);
-					_this._applyAll();
-					_this._focusCellCol = _this.grid._columns[obj.c].id;
-					var rowInfo = _this.grid.body.getRowInfo({visualIndex: obj.r});
-					_this._focusCellRow = _this.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+					t._applyAll();
+					t._focusCellCol = g._columns[obj.c].id;
+					var rowInfo = body.getRowInfo({visualIndex: obj.r});
+					t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
 					//This breaks encapsulation a little....
-					_this.grid.body._focusCellCol = obj.c;
-					_this.grid.body._focusCellRow = obj.r;
-					_this.begin(_this._focusCellRow, _this._focusCellCol);
+					body._focusCellCol = obj.c;
+					body._focusCellRow = obj.r;
+					t.begin(t._focusCellRow, t._focusCellCol);
 				});
 				return false;
 			}
@@ -483,10 +479,11 @@ define([
 		},
 		
 		_focus: function(rowId, colId){
-			this._editing = true;
-			this._focusCellCol = colId;
-			this._focusCellRow = rowId;
-			this.grid.focus.focusArea('edit');
+			var t = this;
+			t._editing = true;
+			t._focusCellCol = colId;
+			t._focusCellRow = rowId;
+			t.grid.focus.focusArea('edit');
 		},
 
 		_blur: function(){
@@ -504,26 +501,26 @@ define([
 		},
 
 		_onKey: function(e){
-			var _this = this;
-			if(this.grid._columnsById[e.columnId].editable){
-				var editing = this.isEditing(e.rowId, e.columnId);
-				if(e.keyCode === keys.ENTER){
+			var t = this;
+			if(t.grid._columnsById[e.columnId].editable){
+				var editing = t.isEditing(e.rowId, e.columnId);
+				if(e.keyCode == keys.ENTER){
 					if(editing){
-						this.apply(e.rowId, e.columnId).then(function(success){
+						t.apply(e.rowId, e.columnId).then(function(success){
 							if(success){
-								_this._blur();
+								t._blur();
 							}
 						});
-					}else if(this.grid.focus.currentArea() === 'body'){
+					}else if(t.grid.focus.currentArea() == 'body'){
 						//If not doing this, some dijit, like DateTextBox/TimeTextBox will show validation error.
-						event.stop(e);
-						this._onUIBegin(e);
+						util.stopEvent(e);
+						t._onUIBegin(e);
 					}
-				}else if(e.keyCode === keys.ESCAPE && editing){
-					this.cancel(e.rowId, e.columnId).then(lang.hitch(this, this._blur));
+				}else if(e.keyCode == keys.ESCAPE && editing){
+					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur));
 				}
 			}
-			if(this._editing && e.keyCode !== keys.TAB){
+			if(t._editing && e.keyCode !== keys.TAB){
 				e.stopPropagation();
 			}
 		}

@@ -14,11 +14,13 @@ define([
 		pager: null,
 
 		postMixInProperties: function(){
-			lang.mixin(this, this.pager._nls);
-			var mod = this.pager.module;
-			this.numberTextBoxClass = mod.arg('numberTextBoxClass').prototype.declaredClass;
-			this.buttonClass = mod.arg('buttonClass').prototype.declaredClass;
-			this.connect(this.domNode, 'onkeydown', '_onKeyDown');
+			var t = this,
+				p = t.pager,
+				mod = p.module;
+			lang.mixin(t, p._nls);
+			t.numberTextBoxClass = mod.arg('numberTextBoxClass').prototype.declaredClass;
+			t.buttonClass = mod.arg('buttonClass').prototype.declaredClass;
+			t.connect(t.domNode, 'onkeydown', '_onKeyDown');
 		},
 	
 		postCreate: function(){
@@ -26,12 +28,14 @@ define([
 		},
 	
 		_updateStatus: function(){
-			this.okBtn.set('disabled', !this.pageInputBox.isValid() || this.pageInputBox.get('displayedValue') === "");
+			var b = this.pageInputBox;
+			this.okBtn.set('disabled', !b.isValid() || b.get('displayedValue') === "");
 		},
 	
 		_onOK: function(){
-			this.pager.pagination.gotoPage(this.pageInputBox.get('value') - 1);
-			this.pager._gotoDialog.hide();
+			var p = this.pager;
+			p.pagination.gotoPage(this.pageInputBox.get('value') - 1);
+			p._gotoDialog.hide();
 		},
 	
 		_onCancel: function(){

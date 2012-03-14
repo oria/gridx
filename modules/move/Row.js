@@ -31,19 +31,19 @@ define([
 		
 		//Public-----------------------------------------------------------------
 		move: function(rowIndexes, target, skipUpdateBody){
-			this.model.moveIndexes(rowIndexes, target);
+			var m = this.model;
+			m.moveIndexes(rowIndexes, target);
 			if(!skipUpdateBody){
-				this.model.when();
+				m.when();
 			}
-			return this;
 		},
 		
 		moveRange: function(start, count, target, skipUpdateBody){
-			this.model.move(start, count, target);
+			var m = this.model;
+			m.move(start, count, target);
 			if(!skipUpdateBody){
-				this.model.when();
+				m.when();
 			}
-			return this;
 		},
 		
 		//Events------------------------------------------------------------------

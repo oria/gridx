@@ -96,6 +96,7 @@ define([
 				this.dtbSingle = dijit.byNode(dojo.query('.gridxFilterPaneDateWrapper > .dijitDateTextBox', this.domNode)[0]),
 				this.dtbStart = dijit.byNode(dojo.query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[0]),
 				this.dtbEnd = dijit.byNode(dojo.query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[1]),
+				this.ttbSingle = dijit.byNode(dojo.query('.gridxFilterPaneTimeWrapper > .dijitTimeTextBox', this.domNode)[0]),
 				this.ttbStart = dijit.byNode(dojo.query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[0]),
 				this.ttbEnd = dijit.byNode(dojo.query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[1]),
 				this.rbTrue = dijit.byNode(dojo.query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[0]),
@@ -235,7 +236,7 @@ define([
 	    		case 'DateRange':
 	    			return {start: this.dtbStart.get('value'), end: this.dtbEnd.get('value')};
 	    		case 'Time':
-	    			return this.dtbSingle.get('value') || null;
+	    			return this.ttbSingle.get('value') || null;
 	    		case 'TimeRange':
 	    			return {start: this.ttbStart.get('value'), end: this.ttbEnd.get('value')};
 	    		case 'Radio':
@@ -265,7 +266,7 @@ define([
 	    			this.dtbEnd.set('value', value.end);
 	    			break;
 	    		case 'Time':
-	    			this.dtbSingle.set('value', value);
+	    			this.ttbSingle.set('value', value);
 	    			break;
 	    		case 'TimeRange':
 	    			this.ttbStart.set('value', value.start);

@@ -3,12 +3,11 @@ define([
 	"dojo/_base/array",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
-	"dojo/_base/sniff",
 	"dojo/_base/query",
 	"./_Base",
-	"./_Dnd",
-	"../../core/_Module"
-], function(declare, array, domGeometry, domClass, sniff, query, _Base, _Dnd, _Module){
+	"../../core/_Module",
+	"./_Dnd"
+], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
 	return _Module.register(
 	declare(_Base, {
@@ -37,15 +36,16 @@ define([
 
 		//Package--------------------------------------------------------------------------------------
 		_checkDndReady: function(evt){
-            if(this._selector.isSelected(evt.columnId)){
-				this._selectedColIds = this._selector.getSelected();
-				this.grid.dnd._dnd.profile = this;
+			var t = this;
+            if(t._selector.isSelected(evt.columnId)){
+				t._selectedColIds = t._selector.getSelected();
+				t.grid.dnd._dnd.profile = t;
 				return true;
 			}
 			return false;
 		},
 
-		onDraggedOut: function(source){
+		onDraggedOut: function(/*source*/){
 			//TODO: Support drag columns out (remove columns).
 		},
 
@@ -70,8 +70,9 @@ define([
 		},
 	
 		_onBeginAutoScroll: function(){
-			this._autoScrollV = this.grid.autoScroll.vertical;
-			this.grid.autoScroll.vertical = false;
+			var autoScroll = this.grid.autoScroll;
+			this._autoScrollV = autoScroll.vertical;
+			autoScroll.vertical = false;
 		},
 
 		_onEndAutoScroll: function(){
@@ -84,44 +85,47 @@ define([
 		
 		//---------------------------------------------------------------------------------------------
 		_calcTargetAnchorPos: function(evt, containerPos){
-			var node = evt.target, _this = this, columns = this.grid._columns;
-			var ret = {
-				height: containerPos.h + "px",
-				width: '',
-				top: ''
-			};
-			var func = function(n){
-				var id = n.getAttribute('colid'), 
-					index = _this.grid._columnsById[id].index,
-					first = n, last = n, firstIdx = index, lastIdx = index;
-				if(_this._selector.isSelected(id)){
-					firstIdx = index;
-					while(firstIdx > 0 && _this._selector.isSelected(columns[firstIdx - 1].id)){
-						--firstIdx;
+			var node = evt.target,
+				t = this,
+				g = t.grid,
+				columns = g._columns,
+				ret = {
+					height: containerPos.h + "px",
+					width: '',
+					top: ''
+				},
+				func = function(n){
+					var id = n.getAttribute('colid'), 
+						index = g._columnsById[id].index,
+						first = n, last = n, firstIdx = index, lastIdx = index;
+					if(t._selector.isSelected(id)){
+						firstIdx = index;
+						while(firstIdx > 0 && t._selector.isSelected(columns[firstIdx - 1].id)){
+							--firstIdx;
+						}
+						first = query(".gridxHeaderRow [colid='" + columns[firstIdx].id + "']", g.headerNode)[0];
+						lastIdx = index;
+						while(lastIdx < columns.length - 1 && t._selector.isSelected(columns[lastIdx + 1].id)){
+							++lastIdx;
+						}
+						last = query(".gridxHeaderRow [colid='" + columns[lastIdx].id + "']", g.headerNode)[0];
 					}
-					first = query(".gridxHeaderRow [colid='" + columns[firstIdx].id + "']", _this.grid.headerNode)[0];
-					lastIdx = index;
-					while(lastIdx < columns.length - 1 && _this._selector.isSelected(columns[lastIdx + 1].id)){
-						++lastIdx;
-					}
-					last = query(".gridxHeaderRow [colid='" + columns[lastIdx].id + "']", _this.grid.headerNode)[0];
-				}
-				if(first && last){
-					var firstPos = domGeometry.position(first),
-						lastPos = domGeometry.position(last),
-						middle = (firstPos.x + lastPos.x + lastPos.w) / 2;
-					if(evt.clientX < middle){
-						ret.left = (firstPos.x - containerPos.x) + "px";
-						_this._target = firstIdx;
+					if(first && last){
+						var firstPos = domGeometry.position(first),
+							lastPos = domGeometry.position(last),
+							middle = (firstPos.x + lastPos.x + lastPos.w) / 2;
+						if(evt.clientX < middle){
+							ret.left = (firstPos.x - containerPos.x) + "px";
+							t._target = firstIdx;
+						}else{
+							ret.left = (lastPos.x + lastPos.w - containerPos.x) + "px";
+							t._target = lastIdx + 1;
+						}
 					}else{
-						ret.left = (lastPos.x + lastPos.w - containerPos.x) + "px";
-						_this._target = lastIdx + 1;
+						delete t._target;
 					}
-				}else{
-					delete _this._target;
-				}
-				return ret;
-			};
+					return ret;
+				};
 			while(node){
 				if(domClass.contains(node, 'gridxCell')){
 					return func(node);
@@ -130,14 +134,14 @@ define([
 			}
 			//For FF, when dragging from another grid, the evt.target is always grid.bodyNode!
 			// so have to get the cell node by position, which is relatively slow.
-			var rowNode = query(".gridxRow", this.grid.bodyNode)[0];
-			var rowPos = domGeometry.position(rowNode.firstChild);
+			var rowNode = query(".gridxRow", g.bodyNode)[0],
+				rowPos = domGeometry.position(rowNode.firstChild);
 			if(rowPos.x + rowPos.w <= evt.clientX){
 				ret.left = (rowPos.x + rowPos.w - containerPos.x) + 'px';
-				this._target = columns.length;
+				t._target = columns.length;
 			}else if(rowPos.x >= evt.clientX){
 				ret.left = (rowPos.x - containerPos.x) + 'px';
-				this._target = 0;
+				t._target = 0;
 			}else if(query(".gridxCell", rowNode).some(function(cellNode){
 				var cellPos = domGeometry.position(cellNode);
 				if(cellPos.x <= evt.clientX && cellPos.x + cellPos.w >= evt.clientX){
@@ -151,15 +155,16 @@ define([
 		},
 		
 		_onDropInternal: function(nodes, copy){
-			if(this._target >= 0){
-				var indexes = array.map(this._selectedColIds, function(colId){
-					return this.grid._columnsById[colId].index;
-				}, this);
-				this.grid.move.column.move(indexes, this._target);
+			var t = this;
+			if(t._target >= 0){
+				var indexes = array.map(t._selectedColIds, function(colId){
+					return t.grid._columnsById[colId].index;
+				});
+				t.grid.move.column.move(indexes, t._target);
 			}
 		},
 		
-		_onDropExternal: function(source, nodes, copy){
+		_onDropExternal: function(/*source, nodes, copy*/){
 			//TODO: Support drag in columns from another grid or non-grid source
 		}
 	}));

@@ -15,7 +15,7 @@ define([
 		//		Indicates from which row to start exporting. If invalid, 
 		//		default to 0.
 		//count: Number?
-		//		Indicates how many rows to export starting from the start row. 
+		//		Indicates the count of rows export.
 		//		If invalid, export all rows up to the end of grid.
 		//selectedOnly: Boolean?
 		//		Whether only export selected rows. This constraint is applied 
@@ -34,14 +34,79 @@ define([
 		//		A customized way to export data, if neither grid data nor store 
 		//		data could meet the requirement. A grid cell object will be 
 		//		passed in as an argument.
-		//includeHeader: Boolean?
-		//		Indicates whether to export grid header. Default to true.
+		//omitHeader: Boolean?
+		//		Indicates whether to export grid header. Default to false.
 		//progressStep: Number?
-		//		Number of rows in each progress. Default to 10.
+		//		Number of rows in each progress. Default to 0 (invalid means only one progress).
 		//		After each progress, the deferred.progress() is called, so the 
 		//		exporting process can be controlled by the user.
 	};
 =====*/
+
+	function check(writer, method, args, context){
+		return !writer[method] || false !== writer[method](args, context);
+	}
+
+	function prepareReqs(args, rowIndexes, size){
+		var reqs = [],
+			i, start = 0, end = 0,
+			ps = args.progressStep;
+		if(typeof args.start == 'number' && args.start >= 0){
+			start = args.start;
+		}
+		if(typeof args.count == 'number' && args.count > 0){
+			end = start + args.count;
+		}
+		end = end || size;
+		if(rowIndexes){
+			rowIndexes = array.filter(rowIndexes, function(idx){
+				return idx >= start && idx < end;
+			});
+			if(!ps || rowIndexes.length <= ps){
+				reqs.push(rowIndexes);
+			}else{
+				for(i = 0; i < rowIndexes.length; i += ps){
+					reqs.push(rowIndexes.slice(i, i + ps));
+				}
+			}
+		}else{
+			var count = end - start;
+			if(!ps || count <= ps){
+				reqs.push({
+					start: start,
+					count: count
+				});
+			}else{
+				for(i = start; i < end; i += ps){
+					reqs.push({
+						start: i,
+						count: i + ps < end ? ps : end - i
+					});
+				}
+			}
+		}
+		reqs.p = 0;
+		return reqs;
+	}
+
+	function first(req, grid){
+		return lang.isArray(req) ? {
+			p: 0,
+			row: grid.row(req[0])
+		} : {
+			p: req.start,
+			row: grid.row(req.start)
+		};
+	}
+
+	function next(req, grid, prevRow){
+		var p = prevRow.p + 1,
+			isArray = lang.isArray(req);
+		return p < (isArray ? req.length : req.start + req.count) ? {
+			p: p,
+			row: grid.row(isArray ? req[p] : p)
+		} : null;
+	}
 
 	return _Module.register(
 	declare(_Module, {
@@ -54,159 +119,128 @@ define([
 		},
 	
 		//Package ---------------------------------------------------------------------
-		_export: function(/* __ExportArgs */ args, writer){
+		_export: function(writer, /* __ExportArgs */ args){
 			//summary:
 			//		Go through the grid using the given args and writer implementation.
 			//		Return a dojo.Deferred object. Users can cancel and see progress 
 			//		of the exporting process.
 			//		Pass the exported result to the callback function of the Deferred object.
-			var d = new Deferred(), g = this.grid, model = this.model,  
-				columns = this._getColumns(args), progressStep = args.progressStep || 10,
-				includeHeader = !!args.includeHeader;
+			var d = new Deferred(),
+				t = this,
+				model = t.model,
+				cols = t._getColumns(args),
+				s = t.grid.select,
+				sr = s && s.row,
+				sc = s && s.column,
+				waitForRows,
+				rowIds,
+				context = {
+					columnIds: cols
+				},
+				success = function(){
+					check(writer, 'afterBody', args, context);
+					d.callback(writer.getResult());
+				},
+				fail = lang.hitch(d, d.errback);
+			
 			try{
-				if(includeHeader && false !== writer.beforeHeader(args, {columnIds: columns})){
-					array.forEach(columns, function(columnId){
-						writer.handleHeaderCell(args, {columnId: columnId});
+				if(!args.omitHeader && check(writer, 'beforeHeader', args, context)){
+					array.forEach(cols, function(cid){
+						context.columnId = cid;
+						check(writer, 'handleHeaderCell', args, context);
 					});
-					writer.afterHeader(args, {columnIds: columns});
+					check(writer, 'afterHeader', args, context);
 				}
-				if(false !== writer.beforeBody(args)){
-					if(args.selectedOnly && g.select){
-						var ids, rowIds = [], colIds = [], selectedIds = {}, colId, pagedRowIds = [], i;
-						if(g.select.cell && g.select.cell.getSelected().length > 0){
-							ids = g.select.cell.getSelected();
-							array.forEach(ids, function(id){
-								if(array.indexOf(rowIds, id[0]) < 0){
-									rowIds.push(id[0]);
-									selectedIds[id[0]] = [];
-									array.forEach(ids, function(i){
-										if(i[0] == id[0] && array.indexOf(selectedIds[id[0]], i[1]) < 0){
-											selectedIds[id[0]].push(i[1]);
-										}
-									});
-								}
-							});
-							model.when({id: rowIds}, function(){
-								rowIds.sort(function(a, b){return model.idToIndex(a) - model.idToIndex(b);});
-								for(i = 0; i < rowIds.length; i += progressStep){
-									pagedRowIds = rowIds.slice(i, i + progressStep);
-									this._exportProgress(args, writer, pagedRowIds, columns, selectedIds);
-									d.progress(i/rowIds.length);
-								}
-							}, this);
-						}else if(g.select.row && g.select.row.getSelected().length > 0){
-							rowIds = g.select.row.getSelected();
-							model.when({id: rowIds}, function(){
-								rowIds.sort(function(a, b){return model.idToIndex(a) - model.idToIndex(b);});
-								for(i = 0; i < rowIds.length; i += progressStep){
-									pagedRowIds = rowIds.slice(i, i + progressStep);
-									this._exportProgress(args, writer, pagedRowIds, columns);
-									d.progress(i/rowIds.length);
-								}
-							}, this);
-						}else if(g.select.column && g.select.column.getSelected().length > 0){
-							var index;
-							for(i = 0; i < g.rowCount(); i += progressStep){
-								model.when({start: i, count: progressStep}, function(){
-									pagedRowIds = [];
-									for(index = i; index < i + progressStep; index++){
-										pagedRowIds.push(model.indexToId(index));
-									}
-									this._exportProgress(args, writer, pagedRowIds, columns);
-									d.progress(i/g.rowCount());
-								}, this);
-							}
-						}
-					}else{
-						var start = args.start || 0,
-							count = args.count || g.rowCount();
-						var index;
-						for(i = start; i < start + count; i += progressStep){
-							model.when({start: i, count: progressStep}, function(){
-								pagedRowIds = [];
-								for(index = i; index < i + progressStep && index < start + count; index++){
-									pagedRowIds.push(model.indexToId(index));
-								}
-								this._exportProgress(args, writer, pagedRowIds, columns);
-								d.progress(i/g.rowCount());
-							}, this);
-						}
+				if(check(writer, 'beforeBody', args, context)){
+					if(args.selectedOnly && sr && (!sc || !sc.getSelected().length)){
+						waitForRows = model.when().then(function(){
+							rowIds = sr.getSelected();
+						}, fail);
 					}
-					writer.afterBody(args, {columnIds: columns});
+					Deferred.when(waitForRows, function(){
+						var rowIdxes,
+							waitForRowIndex = rowIds && model.when({id: rowIds}, function(){
+								rowIdxes = arrary.map(rowIds, function(id){
+									return model.idToIndex(id);
+								});
+								rowIdxes.sort(function(a, b){
+									return a - b;
+								});
+							}, fail);
+						Deferred.when(waitForRowIndex, function(){
+							var dd = new Deferred(),
+								rowCount = model.size();
+							t._fetchRows(d, writer, args, context, dd, prepareReqs(args, rowIdxes, rowCount));
+							dd.then(success, fail);
+						}, fail);
+					}, fail);
 				}
-				d.callback(writer.getResult());
 			}catch(e){
-				d.errback(new Error(e));
+				fail(e);
 			}
 			return d;
 		},
-		
+
 		//[Private]=======
-		_exportProgress: function(args, writer, rowIds, columns, validCols){
-			// summary:
-			//		export by a progress
-			var g = this.grid, model = g.model, cellContext,
-				filter = lang.isFunction(args.filter) ? args.filter : function(){return true;},
-				fmt = function(colId, rowId){
-					if(lang.isFunction(args.formatter)){
-						return args.formatter(g.cell(rowId, colId, true)) || "";
-					}else if(args.useStoreData){
-						var field = g._columnsById[colId].field;
-						return field ? model.byId(rowId).rawData[field] : "";
-					}else{
-						return model.byId(rowId).data[colId] || "";
+		_fetchRows: function(defer, writer, args, context, d, reqs){
+			var t = this,
+				g = t.grid,
+				f = args.filter,
+				cols = context.columnIds,
+				req = reqs[reqs.p++],
+				fail = lang.hitch(d, d.errback);
+			if(req){
+				defer.progress(reqs.p / reqs.length);
+				t.model.when(req, function(){
+					for(var r = first(req, g); r; r = next(req, g, r)){
+						context.rowId = r.row.id;
+						if((!f || f(r.row)) && check(writer, 'beforeRow', args, context)){
+							for(var i = 0; i < cols.length; ++i){
+								var c = cols[i];
+								context.columnId = c;
+								context.data = t._format(args, c, r.row);
+								check(writer, 'handleCell', args, context);
+							}
+							check(writer, 'afterRow', args, context);
+						}
 					}
-				};
-			if(false !== writer.beforeProgress(args, { columnIds: columns, rowIds: rowIds })){
-				// export by rows
-				array.forEach(rowIds, function(rowId){
-					if(filter(rowId) && false !== writer.beforeRow(args, {columnIds: columns, rowId: rowId})){
-						array.forEach(columns, function(c){
-							cellContext = {columnId: c, rowId: rowId};
-							cellContext.data = !validCols || array.indexOf(validCols[rowId], c) > -1 ?
-								fmt(c, rowId) : "";
-							writer.handleCell(args, cellContext);
-						});
-						writer.afterRow(args, {columnIds: columns, rowId: rowId});
-					}
-				});
-				writer.afterProgress(args, {columnIds: columns, rowIds: rowIds});
+				}).then(function(){
+					t._fetchRows(defer, writer, args, context, d, reqs);
+				}, fail);
+			}else{
+				d.callback();
 			}
 		},
-		
+
+		_format: function(args, colId, row){
+			if(lang.isFunction(args.formatter)){
+				return args.formatter(row.cell(colId, 1)) || "";
+			}else if(args.useStoreData){
+				var field = this.grid._columnsById[colId].field;
+				return field ? row.rawData()[field] : "";
+			}
+			return row.data()[colId] || "";
+		},
+
 		_getColumns: function(args){
-			var g = this.grid, columns = [], i;
-			if(args.selectedOnly && g.select){
-				if(g.select.row && g.select.row.getSelected().length > 0){
-					array.forEach(g._columns, function(c){
-						columns.push(c.id);
-					});
-				}else if(g.select.column && g.select.column.getSelected().length > 0){
-					columns = g.select.column.getSelected();
-				}else if(g.select.cell && g.select.cell.getSelected().length > 0){
-					array.forEach(g.select.cell.getSelected(), function(cell){
-						if(array.indexOf(columns, cell[1]) < 0){
-							columns.push(cell[1]);
-						}
-					});
-				}
-			}else if(lang.isArray(args.columns) && args.columns.length > 0){
-				for(i = args.columns.length; i >= 0; i--){
-					if(args.columns[i] && g._columnsById[args.columns[i]]){
-						columns.push(args.columns[i]);
-					}
-				}
-				if(columns.length < 1){
-					array.forEach(g._columns, function(c){
-						columns.push(c.id);
-					});
-				}
+			var g = this.grid,
+				colsById = g._columnsById,
+				s = g.select,
+				sc = s && s.column,
+				cols;
+			if(lang.isArrayLike(args.columns) && args.columns.length){
+				cols = array.filter(args.columns, function(cid){
+					return colsById[cid];
+				});
+				cols.sort(function(a, b){
+					return colsById[a].index - colsById[b].index;
+				});
 			}else{
-				array.forEach(g._columns, function(c){
-					columns.push(c.id);
+				cols = array.map(g._columns, function(c){
+					return c.id;
 				});
 			}
-			return columns.sort(function(a, b){return g._columnsById[a].index - g._columnsById[b].index});
+			return cols;
 		}
 	}));
 });

@@ -9,7 +9,7 @@ define(["dojo/_base/kernel",
 	return _Module.register(declare(_Module, {
 		name: 'rowLock',
 		required: ['vLayout'],
-		forced: ['hLayout', 'vscroller'],
+		forced: ['hLayout', 'vScroller'],
 		count: 0,
 		getAPIPath: function(){
 			return {

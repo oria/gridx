@@ -1,49 +1,26 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/html",
-	"dojo/_base/sniff",
-	"dijit/_Widget",
-	"dijit/_TemplatedMixin",
-	"dojo/text!../templates/TitleBar.html",
+	"dojo/dom-construct",
 	"../core/_Module"
-], function(declare, html, sniff, _Widget, _TemplatedMixin, template, _Module){
+], function(declare, domConstruct, _Module){
 	
-	var titleContainer = declare([_Widget, _TemplatedMixin], {
-		templateString: template,
-		
-		_label: '',
-		
-		constructor: function(args){
-			this._label = args.label;
-		},
-		
-		postCreate: function(){
-			html.setSelectable(this.domNode, false);
-		},
-		
-		postMixInProperties: function(){
-			if(sniff.isIE){
-				//IE does not support inline-block, so have to set tabIndex
-				var gridTabIndex = this.module.grid.domNode.getAttribute('tabindex');
-			}
-		}
-	});
-
 	return _Module.register(
 	declare(_Module, {
-		name: 'titlebar',
+		name: 'titleBar',
 		
-		required: ['vLayout'],
+//        required: ['vLayout'],
 		
 		getAPIPath: function(){
 			return {
-				titlebar: this
+				titleBar: this
 			};
 		},
 
-		constructor: function(grid, args){
-			this._titleBar = new titleContainer({'label': this.arg('label')});
-			this.domNode = this._titleBar.domNode;
+		constructor: function(){
+			this.domNode = domConstruct.create('div', {
+				'class': 'gridxTitleBar',
+				innerHTML: this.arg('label')
+			});
 		},
 
 		preload: function(){
@@ -52,28 +29,14 @@ define([
 		
 		destroy: function(){
 			this.inherited(arguments);
-			if(this._titleBar){
-				delete this.domNode;
-				this._titleBar.destroyRecursive();
-			}
+			domConstruct.destroy(this.domNode);
 		},
 		
 		label: '',
 		
 		setLabel: function(label){
-			this._titleBar._titleContent.innerHTML = this.label = label;
-		},
-		
-		show: function(){
-			this.domNode.style.display = 'block';
-			this.grid.vLayout.reLayout();
-		},
-		
-		hide: function(){
-			this.domNode.style.display = 'none';
-			this.grid.vLayout.reLayout();
+			this.domNode.innerHTML = this.label = label;
 		}
-
 	}));
 });
 

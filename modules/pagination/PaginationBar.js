@@ -11,13 +11,12 @@ define([
 
 	return _Module.register(
 	declare(_PaginationBarBase, {
-		sizes: [5, 10, 25, 50, 0],
+		//already declared in base class
+//        sizeSwitch: true,
 
-		description: true,
+//        stepper: true,
 
-		sizeSwitch: true,
-
-		stepper: true,
+//        description: true,
 
 		gotoButton: true,
 

@@ -2,15 +2,15 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/query",
-	"dojo/_base/html",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	"dojo/dom-class",
 	"dojo/mouse",
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(declare, array, query, html, lang, Deferred, sniff, mouse, keys, _Module, _RowCellBase){
+], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
 	return _Module.register(
 	declare(_RowCellBase, {
@@ -45,7 +45,7 @@ define([
 
 		clear: function(silent){
 			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
-				html.removeClass(node, 'gridxRowSelected');
+				domClass.remove(node, 'gridxRowSelected');
 			});
 			this.model.clearMark();
 			if(!silent){
@@ -59,112 +59,116 @@ define([
 		_type: 'row',
 
 		_init: function(){
-			this.inherited(arguments);
+			var t = this, g = t.grid;
+			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
-			this.model._spTypes.select = 1;
-			var g = this.grid;
-			this.batchConnect(
+			t.model._spTypes.select = 1;	//1 as true
+			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if(mouse.isLeft(e) && (this.arg('triggerOnCell') || !e.columnId)){
-						this._isOnCell = e.columnId;
-						this._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
+					if(mouse.isLeft(e) && (t.arg('triggerOnCell') || !e.columnId)){
+						t._isOnCell = e.columnId;
+						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
 				[g, 'onRowMouseOver', function(e){
-					if(this._selecting && this.arg('triggerOnCell') && e.columnId){
+					if(t._selecting && t.arg('triggerOnCell') && e.columnId){
 						g.body._focusCellCol = e.columnIndex;
 					}
-					this._highlight({row: e.visualIndex});
+					t._highlight({row: e.visualIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((this.arg('triggerOnCell') || !e.columnId) && e.keyCode === keys.SPACE){
-						this._isOnCell = e.columnId;
-						this._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
-						this._end();
+					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode === keys.SPACE){
+						t._isOnCell = e.columnId;
+						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
+						t._end();
 					}
 				}]
 			);
 		},
 
 		_markById: function(args, toSelect){
+			var m = this.model;
 			array.forEach(args, function(arg){
-				this.model.markById(arg, toSelect);
-			}, this);
-			this.model.when();
+				m.markById(arg, toSelect);
+			});
+			m.when();
 		},
 
 		_markByIndex: function(args, toSelect){
+			var g = this.grid,
+				m = this.model,
+				body = g.body;
 			array.forEach(args, function(arg){
 				if(lang.isArrayLike(arg)){
-					var start = arg[0];
-					var end = arg[1];
+					var start = arg[0],
+						end = arg[1],
+						i, count;
 					if(start >= 0 && start < Infinity){
-						var count;
 						if(end >= start && end < Infinity){
 							count = end - start + 1;
 						}else{
-							count = this.grid.body.visualCount - start;
+							count = body.visualCount - start;
 						}
-						start = this.grid.body.getRowInfo({visualIndex: start}).rowIndex;
-						var i;
+						start = body.getRowInfo({visualIndex: start}).rowIndex;
 						for(i = 0; i < count; ++i){
-							this.model.markByIndex(i + start, toSelect);	
+							m.markByIndex(i + start, toSelect);	
 						}
 					}
 				}else if(arg >= 0 && arg < Infinity){
-					arg = this.grid.body.getRowInfo({visualIndex: arg}).rowIndex;
-					this.model.markByIndex(arg, toSelect);
+					arg = body.getRowInfo({visualIndex: arg}).rowIndex;
+					m.markByIndex(arg, toSelect);
 				}
-			}, this);
-			return this.model.when();
+			});
+			return m.when();
 		},
 
 		_onRender: function(start, count){
-			var i, end = start + count;
+			var t = this, i, end = start + count;
 			for(i = start; i < end; ++i){
 				var item = {row: i};
-				if(this._isSelected(item) || (this._selecting && this._toSelect && 
-					this._inRange(i, this._startItem.row, this._currentItem.row, true))){
-					this._doHighlight(item, true);
+				if(t._isSelected(item) || (t._selecting && t._toSelect && 
+					t._inRange(i, t._startItem.row, t._currentItem.row, 1))){	//1 as true
+					t._doHighlight(item, 1);	//1 as true
 				}
 			}
 		},
 
 		_onMark: function(toMark, id, type){
-			if(type === 'select' && !this._marking){
+			if(type == 'select' && !this._marking){
 				var node = query('[rowid="' + id + '"]', this.grid.bodyNode)[0];
 				if(node){
-					html[toMark ? 'addClass' : 'removeClass'](node, 'gridxRowSelected');
-					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toMark);
+					domClass.toggle(node, 'gridxRowSelected', toMark);
+					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, !!toMark);
 				}
 			}
 		},
 
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
-			if(this.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				var id = this._getRowIdByVisualIndex(rowVisIndex);
-				this._start({row: rowVisIndex}, e.ctrlKey, true);
-				this._end();
+			var t = this;
+			if(t.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
+				t._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
+				t._end();
 			}
 		},
 
 		_onMoveToRowHeaderCell: function(rowVisIndex, e){
 			if(e.shiftKey){
-				var id = this._getRowIdByVisualIndex(rowVisIndex);
-				this._start({row: rowVisIndex}, e.ctrlKey, true);
+				this._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
 				this._end();
 			}
 		},
 
 		_isSelected: function(target){
-			var id = this._getRowIdByVisualIndex(target.row);
-			return this._isRange ? array.indexOf(this._refSelectedIds, id) >= 0 : this.model.isMarked(id);
+			var t = this,
+				id = t._getRowId(target.row);
+			return t._isRange ? array.indexOf(t._refSelectedIds, id) >= 0 : t.model.isMarked(id);
 		},
 
 		_beginAutoScroll: function(){
-			this._autoScrollH = this.grid.autoScroll.horizontal;
-			this.grid.autoScroll.horizontal = false;
+			var autoScroll = this.grid.autoScroll;
+			this._autoScrollH = autoScroll.horizontal;
+			autoScroll.horizontal = false;
 		},
 
 		_endAutoScroll: function(){
@@ -172,9 +176,8 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			var nodes = query('[visualindex="' + target.row + '"]', this.grid.bodyNode);
-			nodes.forEach(function(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, 'gridxRowSelected');
+			query('[visualindex="' + target.row + '"]', this.grid.bodyNode).forEach(function(node){
+				domClass.toggle(node, 'gridxRowSelected', toHighlight);
 			});
 			this.onHighlightChange(target, toHighlight);
 		},
@@ -185,42 +188,42 @@ define([
 		},
 
 		_focus: function(target){
-			var focus = this.grid.focus;
+			var g = this.grid, focus = g.focus;
 			if(focus){
-				this.grid.body._focusCellRow = target.row;
+				g.body._focusCellRow = target.row;
 				focus.focusArea(this._isOnCell ? 'body' : 'rowHeader', true);
 			}
 		},
 
 		_addToSelected: function(start, end, toSelect){
-			if(!this._isRange){
-				this._refSelectedIds = this.model.getMarkedIds();
+			var t = this, bd = t.grid.body, m = t.model, a, b, i, lastEndItem = t._lastEndItem;
+			if(!t._isRange){
+				t._refSelectedIds = m.getMarkedIds();
 			}
-			var a, b, i;
-			if(this._isRange && this._inRange(end.row, start.row, this._lastEndItem.row)){
-				a = Math.min(end.row, this._lastEndItem.row);
-				b = Math.max(end.row, this._lastEndItem.row);
-				start = this.grid.body.getRowInfo({visualIndex: a}).rowIndex + 1;
-				end = this.grid.body.getRowInfo({visualIndex: b}).rowIndex;
-				return this.model.when({
+			if(t._isRange && t._inRange(end.row, start.row, lastEndItem.row)){
+				a = Math.min(end.row, lastEndItem.row);
+				b = Math.max(end.row, lastEndItem.row);
+				start = bd.getRowInfo({visualIndex: a}).rowIndex + 1;
+				end = bd.getRowInfo({visualIndex: b}).rowIndex;
+				return m.when({
 					start: start, 
 					count: end - start + 1
 				}, function(){
 					for(i = start; i <= end; ++i){
-						var id = this.model.indexToId(i);
-						var selected = array.indexOf(this._refSelectedIds, id) >= 0;
-						this.model.markById(id, selected); 
+						var id = m.indexToId(i),
+							selected = array.indexOf(t._refSelectedIds, id) >= 0;
+						m.markById(id, selected); 
 					}
-				}, this);
+				});
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
-				start = this.grid.body.getRowInfo({visualIndex: a}).rowIndex;
-				end = this.grid.body.getRowInfo({visualIndex: b}).rowIndex;
+				start = bd.getRowInfo({visualIndex: a}).rowIndex;
+				end = bd.getRowInfo({visualIndex: b}).rowIndex;
 				for(i = start; i <= end; ++i){
-					this.model.markByIndex(i, toSelect);
+					m.markByIndex(i, toSelect);
 				}
-				return this.model.when();
+				return m.when();
 			}
 		}
 	}));

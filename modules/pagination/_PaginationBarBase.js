@@ -18,26 +18,28 @@ define([
 		},
 		
 		preload: function(){
-			this._pagers = [];
+			var t = this,
+				g = t.grid,
+				vLayout = g.vLayout,
+				p = g.pagination;
+			t._pagers = [];
 			//Register UI before startup
-			var vLayout = this.grid.vLayout;
-			if(this._exist('top')){
-				vLayout.register(this, '_topPagerNode', 'headerNode', -5);
+			if(t._exist('top')){
+				vLayout.register(t, '_topPagerNode', 'headerNode', -5);
 			}
-			if(this._exist('bottom')){
-				vLayout.register(this, '_bottomPagerNode', 'footerNode', 5);
+			if(t._exist('bottom')){
+				vLayout.register(t, '_bottomPagerNode', 'footerNode', 5);
 			}
-			var p = this.grid.pagination;
 			if(!p.arg('initialPageSize')){
-				p.initialPageSize = this.arg('sizes')[0];
+				p.initialPageSize = t.arg('sizes')[0];
 			}
 		},
 
 		load: function(args, startup){
-			var _this = this;
+			var t = this;
 			startup.then(function(){
-				_this._init();
-				_this.loaded.callback();
+				t._init();
+				t.loaded.callback();
 			});
 		},
 		
@@ -49,7 +51,15 @@ define([
 		},
 		
 		//Public-------------------------------------------------------
+		sizes: [10, 25, 50, 100, 0],
+
 		position: 'bottom',
+
+		sizeSwitch: true,
+
+		stepper: true,
+
+		description: true,
 	
 		refresh: function(){
 			array.forEach(this._pagers, function(pager){
@@ -68,22 +78,23 @@ define([
 		},
 
 		_init: function(){
+			var t = this;
 			array.forEach(['top', 'bottom'], function(pos){
-				if(this._exist(pos)){
-					var cls = this.arg('pagerClass'),
+				if(t._exist(pos)){
+					var cls = t.arg('pagerClass'),
 						pager = new cls({
-							pagination: this.grid.pagination,
-							module: this,
+							pagination: t.grid.pagination,
+							module: t,
 							position: pos,
 							focusPriority: {
 								top: -5,
 								bottom: 5
 							}[pos]
 						});
-					this._pagers.push(pager);
-					this['_' + pos + 'PagerNode'] = pager.domNode;
+					t._pagers.push(pager);
+					t['_' + pos + 'PagerNode'] = pager.domNode;
 				}
-			}, this);
+			});
 		}
 	});	
 });

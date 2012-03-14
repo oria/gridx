@@ -2,21 +2,19 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
-	"dojo/_base/html",
 	"dojo/_base/sniff",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
 	"dojo/query",
 	"./VScroller",
 	"../core/_Module"
-], function(declare, lang, array, html, sniff, event, Deferred, query, VScroller, _Module){
+], function(declare, lang, array, sniff, event, Deferred, query, VScroller, _Module){
 	
 	return _Module.register(
 	declare(VScroller, {
 		constructor: function(grid, args){
-			if(this.grid.autoHeight){
-				var base = new VScroller(grid, args);
-				lang.mixin(this, base);
+			if(grid.autoHeight){
+				lang.mixin(this, new VScroller(grid, args));
 			}else{
 				this._scrolls = [];
 			}
@@ -25,39 +23,46 @@ define([
 		//Public ----------------------------------------------------
 		buffSize: 5,
 		
-		lazyScroll: false,
+		lazy: false,
 		
-		lazyScrollTimeout: 50,
+		lazyTimeout: 50,
 	
 		scrollToRow: function(rowVisualIndex, top){
-			var d = new Deferred(), _this = this;
-			this._scrolls.push(d);
-			if(this._scrolls.length > 1){
-				this._scrolls[this._scrolls.length - 2].then(function(){
-					_this._subScrollToRow(rowVisualIndex, d, top);
-				});
+			var d = new Deferred(), t = this, s = t._scrolls,
+				f = function(){
+					t._subScrollToRow(rowVisualIndex, d, top);
+				};
+			s.push(d);
+			if(s.length > 1){
+				s[s.length - 2].then(f);
 			}else{
-				this._subScrollToRow(rowVisualIndex, d, top);
+				f();
 			}
 			return d;
 		},
 
 		_subScrollToRow: function(rowVisualIndex, defer, top){
-			var dif = 0, _this = this, rowHeight = this._avgRowHeight,
-				bn = this.grid.bodyNode, dn = this.domNode,
+			var t = this,
+				dif = 0,
+				rowHeight = t._avgRowHeight,
+				bn = t.grid.bodyNode,
+				dn = t.domNode,
+				bst = bn.scrollTop,
+				dst = dn.scrollTop,
 				node = query('[visualindex="' + rowVisualIndex + '"]', bn)[0],
 				finish = function(success){
-					_this._scrolls.splice(array.indexOf(_this._scrolls, defer), 1);
+					t._scrolls.splice(array.indexOf(t._scrolls, defer), 1);
 					defer.callback(success);
 				};
 			if(node){
-				if(node.offsetTop + node.offsetHeight > bn.scrollTop + bn.clientHeight){
-					dif = node.offsetTop - bn.scrollTop;
+				var offsetTop = node.offsetTop;
+				if(offsetTop + node.offsetHeight > bst + bn.clientHeight){
+					dif = offsetTop - bst;
 					if(!top){
 						dif += node.offsetHeight - bn.clientHeight;
 					}
-				}else if(node.offsetTop < bn.scrollTop || (top && node.offsetTop > bn.scrollTop)){
-					dif = node.offsetTop - bn.scrollTop;
+				}else if(offsetTop < bst || (top && offsetTop > bst)){
+					dif = offsetTop - bst;
 				}else{
 					finish(true);
 					return;
@@ -65,7 +70,7 @@ define([
 			}else if(bn.childNodes.length){
 				//Find a visible node.
 				var n = bn.firstChild;
-				while(n && n.offsetTop < bn.scrollTop){
+				while(n && n.offsetTop < bst){
 					n = n.nextSibling;
 				}
 				var idx = n && n.getAttribute('visualindex');
@@ -73,7 +78,7 @@ define([
 					dif = (rowVisualIndex - idx) * rowHeight;
 				}else{
 					n = bn.lastChild;
-					while(n && n.offsetTop + n.offsetHeight > bn.scrollTop + bn.clientHeight){
+					while(n && n.offsetTop + n.offsetHeight > bst + bn.clientHeight){
 						n = n.previousSibling;
 					}
 					idx = n && n.getAttribute('visualindex');
@@ -88,89 +93,85 @@ define([
 				finish(false);
 				return;
 			}
-			var istop = dn.scrollTop === 0 && dif < 0,
-				isbottom = dn.scrollTop >= dn.scrollHeight - dn.offsetHeight && dif > 0;
+			var istop = dst === 0 && dif < 0,
+				isbottom = dst >= dn.scrollHeight - dn.offsetHeight && dif > 0;
 			if(istop || isbottom){
-				this._doVirtualScroll(null, true);
+				t._doVirtualScroll(1);
 			}else{
-				dn.scrollTop += dif / this._ratio;
+				dn.scrollTop += dif / t._ratio;
 			}
 			if((istop && bn.firstChild.getAttribute('visualindex') == 0) || 
-					(isbottom && bn.lastChild.getAttribute('visualindex') == this.grid.body.visualCount - 1)){
+					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.body.visualCount - 1)){
 				finish(false);
 				return;
 			}
 			setTimeout(function(){
-				_this._subScrollToRow(rowVisualIndex, defer, top);
+				t._subScrollToRow(rowVisualIndex, defer, top);
 			}, 5);
 		},
 	
 		//Protected -------------------------------------------------
 		_init: function(args){
-			this._rowHeight = {};
-			this._syncHeight();
-			this.connect(this.grid, '_onResizeEnd', function(){
-				this._doScroll(null, true);
+			var t = this;
+			t._rowHeight = {};
+			t._syncHeight();
+			t.connect(t.grid, '_onResizeEnd', function(){
+				t._doScroll(0, 1);
 			});
-			this.connect(this.grid.bodyNode, 'onmouseenter', function(){
-				this._overBody = 1;
-			});
-			this.connect(this.grid.bodyNode, 'onmouseleave', function(){
-				this._overBody = 0;
-			});
-			this._doScroll(null, true);
+			t._doScroll(0, 1);
 		},
 	
-		_doVirtualScroll: function(e, forced){
-			var dn = this.domNode,
-				t = dn.scrollTop,
-				buffSize = this.arg('buffSize'),
-				deltaT = this._ratio * (t - (this._lastScrollTop || 0));
+		_doVirtualScroll: function(forced){
+			var t = this,
+				dn = t.domNode,
+				a = dn.scrollTop,
+				deltaT = t._ratio * (a - (t._lastScrollTop || 0));
 	
 			if(forced || deltaT){
-				this._lastScrollTop = t;
+				t._lastScrollTop = a;
 	
-				var scrollRange = dn.scrollHeight - dn.offsetHeight,
-					body = this.grid.body,
+				var buffSize = t.arg('buffSize'),
+					scrollRange = dn.scrollHeight - dn.offsetHeight,
+					body = t.grid.body,
 					visualStart = body.visualStart,
 					visualEnd = visualStart + body.visualCount,
-					bn = this.grid.bodyNode,
+					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,
 					firstRowTop = firstRow && firstRow.offsetTop - deltaT,
 					lastRow = bn.lastChild,
 					lastRowBtm = lastRow && lastRow.offsetTop - deltaT + lastRow.offsetHeight,
 					bnTop = bn.scrollTop,
 					bnBtm = bnTop + bn.clientHeight,
-					h = this._avgRowHeight,
+					h = t._avgRowHeight,
 					pageRowCount = Math.ceil(dn.offsetHeight / h) + 2 * buffSize,
 					start, end, pos, d;
 				if(firstRow && firstRowTop > bnTop && firstRowTop < bnBtm){
 					//Add some rows to the front
 					end = body.renderStart;
 					d = Math.ceil((firstRowTop - bnTop) / h) + buffSize;
-					start = t === 0 ? visualStart : Math.max(end - d, visualStart);
+					start = a === 0 ? visualStart : Math.max(end - d, visualStart);
 					pos = "top";
 //                    console.log('top: ', start, end);
 				}else if(lastRow && lastRowBtm > bnTop && lastRowBtm < bnBtm){
 					//Add some rows to the end
 					start = body.renderStart + body.renderCount;
 					d = Math.ceil((bnBtm - lastRowBtm) / h) + buffSize;
-					end = t === scrollRange ? visualEnd : Math.min(start + d, visualEnd);
+					end = a === scrollRange ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
 //                    console.log('bottom: ', start, end);
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
-					if(t < scrollRange / 2){
-						start = t === 0 ? visualStart : visualStart + Math.max(Math.floor(t / h) - buffSize, 0);
+					if(a < scrollRange / 2){
+						start = a === 0 ? visualStart : visualStart + Math.max(Math.floor(a / h) - buffSize, 0);
 						end = Math.min(start + pageRowCount, visualEnd);
 					}else{
-						end = t === scrollRange ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - t) / h), 0);
+						end = a === scrollRange ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - a) / h), 0);
 						start = Math.max(end - pageRowCount, visualStart);
 					}
 					pos = "clear";
 				}else if(firstRow){
 					//The body and the scroller bar may be mis-matched, so force to sync here.
-					if(t === 0){
+					if(a === 0){
 						var firstRowIndex = body.renderStart;
 						if(firstRowIndex > visualStart){
 							start = visualStart;
@@ -178,7 +179,7 @@ define([
 							pos = "top";
 //                            console.debug("Recover top", end - start);
 						}	
-					}else if(t === scrollRange){
+					}else if(a === scrollRange){
 						var lastRowIndex = body.renderStart + body.renderCount - 1;
 						if(lastRowIndex < visualEnd - 1){
 							start = lastRowIndex + 1;
@@ -190,10 +191,10 @@ define([
 				}
 				
 				if(typeof start == 'number' && typeof end == 'number'){
-//                    console.debug("render: ", start, end, pos, t, scrollRange);
+//                    console.debug("render: ", start, end, pos, a, scrollRange);
 					//Only need to render when the range is valid
 					body.renderRows(start, end - start, pos);
-					if(t && start < end){
+					if(a && start < end){
 						//Scroll the body to hide the newly added top rows.
 						var n = query('[visualindex="' + end + '"]', bn)[0];
 						if(n){
@@ -202,24 +203,25 @@ define([
 					}
 				}
 				//Ensure the position when user scrolls to end points
-				if(t === 0){
+				if(a === 0){
 					bn.scrollTop = 0;
-				}else if(t >= scrollRange){//Have to use >=, because with huge store, t will sometimes be > scrollRange
+				}else if(a >= scrollRange){//Have to use >=, because with huge store, a will sometimes be > scrollRange
 					bn.scrollTop = bn.scrollHeight;
-				}else if(pos !== "clear"){
+				}else if(pos != "clear"){
 					bn.scrollTop += deltaT;
 				}
 			}
 		},
 		
 		_doScroll: function(e, forced){
-			if(this.arg('lazyScroll')){
-				if(this._lazyScrollHandle){
-					window.clearTimeout(this._lazyScrollHandle);
+			var t = this;
+			if(t.arg('lazy')){
+				if(t._lazyScrollHandle){
+					clearTimeout(t._lazyScrollHandle);
 				}
-				this._lazyScrollHandle = window.setTimeout(lang.hitch(this, this._doVirtualScroll, e, forced), this.arg('lazyScrollTimeout'));
+				t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
 			}else{
-				this._doVirtualScroll(e, forced);
+				t._doVirtualScroll(forced);
 			}
 		},
 	
@@ -230,84 +232,76 @@ define([
 		},
 	
 		_onBodyChange: function(){
-			this._doScroll(null, true);
+			this._doScroll(0, 1);
 			this._doVirtual();
 		},
 	
-		_onRowCountChange: function(){
-			//Row count change is sometimes because of adding/deleting rows, and multiple of these operations might happen
-			//together, so use timeout to reduce render frequency.
-			this._syncHeight();
-			if(this._lazyChangeHandle){
-				window.clearTimeout(this._lazyChangeHandle);
-			}
-			this._lazyChangeHandle = window.setTimeout(lang.hitch(this, this._doVirtualScroll, null, true), 0);
+		_onForcedScroll: function(){
+			this._onBodyChange();
 		},
-	
-		_onRootRangeChange: function(){
-			this.domNode.scrollTop = 0;
-			this._onRowCountChange();
-		},
-	
+
 		//Private ---------------------------------------------------
 		_avgRowHeight: 24,
-		_rowHeight: null, 
+		_rowHeight: null,
 		_ratio: 1,
 	
 		_syncHeight: function(){
-			var h = this._avgRowHeight * this.grid.body.visualCount;
-			var maxHeight;
+			var t = this,
+				h = t._avgRowHeight * t.grid.body.visualCount,
+				maxHeight = 1342177;
 			if(sniff('ff')){
 				maxHeight = 17895697;
 			}else if(sniff('webkit')){
 				maxHeight = 134217726;
-			}else{
-				maxHeight = 1342177;
 			}
 			if(h > maxHeight){
-				this._ratio = h / maxHeight;
+				t._ratio = h / maxHeight;
 				h = maxHeight;
 			}
-			this.stubNode.style.height = h + 'px';
+			t.stubNode.style.height = h + 'px';
 		},
 	
 		_doVirtual: function(){
-			if(this._pointerDoVirtual){
-				window.clearTimeout(this._pointerDoVirtual);
-				delete this._pointerDoVirtual;
-			}
-			var _this = this;
-			this._pointerDoVirtual = window.setTimeout(function(){
-				delete _this._pointerDoVirtual;
-				_this._updateRowHeightAndUnrenderRows();
+			var t = this;
+			clearTimeout(t._pVirtual);
+			t._pVirtual = setTimeout(function(){
+				t._update();
 			}, 100);
 		},
 	
-		_updateRowHeightAndUnrenderRows: function(){
-			var preCount = 0, postCount = 0,
-				body = this.grid.body, bn = this.grid.bodyNode,
-				buff = this.buffSize * this._avgRowHeight,
-				top = bn.scrollTop - buff, bottom = bn.scrollTop + bn.clientHeight + buff;
+		_update: function(){
+			//Update average row height and unrender rows
+			var t = this,
+				preCount = 0,
+				postCount = 0,
+				g = t.grid,
+				bd = g.body,
+				bn = g.bodyNode,
+				buff = t.buffSize * t._avgRowHeight,
+				st = bn.scrollTop,
+				top = st - buff,
+				bottom = st + bn.clientHeight + buff,
+				rh = t._rowHeight;
 	
-			array.forEach(bn.childNodes, function(node){
-				this._rowHeight[node.getAttribute('rowid')] = node.offsetHeight;
-				if(node.offsetTop > bottom){
+			array.forEach(bn.childNodes, function(n){
+				rh[n.getAttribute('rowid')] = n.offsetHeight;
+				if(n.offsetTop > bottom){
 					++postCount;
-				}else if(node.offsetTop + node.offsetHeight < top){
+				}else if(n.offsetTop + n.offsetHeight < top){
 					++preCount;
 				}
-			}, this);
-			body.unrenderRows(preCount);
-			body.unrenderRows(postCount, 'post');
+			});
+			bd.unrenderRows(preCount);
+			bd.unrenderRows(postCount, 'post');
 	
 			var p, h = 0, c = 0;
-			for(p in this._rowHeight){
-				h += this._rowHeight[p];
+			for(p in rh){
+				h += rh[p];
 				++c;
 			}
 			if(c){
-				this._avgRowHeight = h / c;
-				this._syncHeight();
+				t._avgRowHeight = h / c;
+				t._syncHeight();
 			}
 		}
 	}));

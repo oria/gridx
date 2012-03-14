@@ -14,13 +14,14 @@ define([
 		},
 
 		preload: function(){
-			this.subscribe('gridClearSelection_' + this.grid.id, function(type){
-				if(type != this._type){
-					this.clear();
+			var t = this, g = t.grid;
+			t.subscribe('gridClearSelection_' + g.id, function(type){
+				if(type != t._type){
+					t.clear();
 				}
 			});
-			this.connect(this.grid.body, 'onRender', '_onRender');
-			this._init();
+			t.connect(g.body, 'onRender', '_onRender');
+			t._init();
 		},
 
 		//Public--------------------------------------------------------------------
@@ -40,15 +41,15 @@ define([
 		_getMarkType: function(){},
 
 		_select: function(item, extending){
-			if(this.arg('enabled')){
-				var toSelect = true;
-				if(this.arg('multiple') && (extending || this.arg('holdingCtrl'))){
-					toSelect = !this.isSelected(item);
+			var t = this, toSelect = 1;
+			if(t.arg('enabled')){
+				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
+					toSelect = !t.isSelected(item);
 				}else{
-					this.clear();
+					t.clear();
 				}
-				connect.publish('gridClearSelection_' + this.grid.id, [this._type]);
-				this._markById(item, toSelect);
+				connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
+				t._markById(item, toSelect);
 			}
 		}
 	});

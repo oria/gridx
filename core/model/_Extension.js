@@ -1,28 +1,27 @@
 define([
 	'dojo/_base/declare',
-	'dojo/_base/connect'
-], function(declare, connect){
+	'dojo/_base/connect',
+	'dojo/_base/array'
+], function(declare, connect, array){
 
 	return declare([], {
 		// summary:
 		//		Abstract base class for all model components (including cache)
 		constructor: function(model){
-			this._cnnts = [];
-			this.model = model;
-			var inner = this.inner = model._model;
-			model._model = this;
-			if(inner){
-				this.connect(inner, 'onDelete', '_onDelete');
-				this.connect(inner, 'onNew', '_onNew');
-				this.connect(inner, 'onSet', '_onSet');
-				this.connect(inner, 'onSizeChange', '_onSizeChange');
+			var t = this, c = 'connect', i = t.inner = model._model;
+			t._cnnts = [];
+			t.model = model;
+			model._model = t;
+			if(i){
+				t[c](i, 'onDelete', '_onDelete');
+				t[c](i, 'onNew', '_onNew');
+				t[c](i, 'onSet', '_onSet');
+				t[c](i, 'onSizeChange', '_onSizeChange');
 			}
 		},
 
 		destroy: function(){
-			for(var i = this._cnnts.length - 1; i >= 0; --i){
-				connect.disconnect(this._cnnts[i]);
-			}
+			array.forEach(this._cnnts, connect.disconnect);
 		},
 
 		connect: function(obj, event, method, scope){
@@ -56,18 +55,19 @@ define([
 
 		//Protected-----------------------------------------------------------------
 		_call: function(method, args){
-			return this[method] ? this[method].apply(this, args || []) : this.inner && this.inner._call(method, args);
+			var t = this, m = t[method], n = t.inner;
+			return m ? m.apply(t, args || []) : n && n._call(method, args);
 		},
 
 		_mixinAPI: function(){
-			var i, model = this.model, 
+			var i, m = this.model, args = arguments,
 				api = function(method){
 					return function(){
-						return model._model._call(method, arguments);
+						return m._model._call(method, arguments);
 					};
 				};
-			for(i = arguments.length - 1; i >= 0; --i){
-				model[arguments[i]] = api(arguments[i]);
+			for(i = args.length - 1; i >= 0; --i){
+				m[args[i]] = api(args[i]);
 			}
 		}
 	});

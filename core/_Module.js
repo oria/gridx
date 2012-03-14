@@ -5,7 +5,9 @@ define([
 	"dojo/_base/connect"
 ], function(declare, lang, array, connect){
 	
-	var moduleBase = declare(null, {
+var isFunc = lang.isFunction,
+	c = 'connect',	//To reduce code size
+	moduleBase = declare([], {
 		
 	/*=====
 		// name: String
@@ -77,16 +79,18 @@ define([
 	=====*/
 	
 		constructor: function(grid, args){
-			this.grid = grid;
-			this.model = grid.model;
-			this._cnnts = [];
-			this._sbscs = [];
-			lang.mixin(this, args);
+			var t = this;
+			t.grid = grid;
+			t.model = grid.model;
+			t._cnnts = [];
+			t._sbscs = [];
+			lang.mixin(t, args);
 		},
 
 		destroy: function(){
-			array.forEach(this._cnnts, connect.disconnect);
-			array.forEach(this._sbscs, connect.unsubscribe);
+			var f = array.forEach;
+			f(this._cnnts, connect.disconnect);
+			f(this._sbscs, connect.unsubscribe);
 		},
 
 		arg: function(argName, defaultValue, validate){
@@ -141,82 +145,66 @@ define([
 			//		Note if this function is provided, defaultValue must also be provided.
 			//return: anything
 			//		The value of this argument.
-			if(arguments.length == 2 && lang.isFunction(defaultValue)){
+			if(arguments.length == 2 && isFunc(defaultValue)){
 				validate = defaultValue;
 				defaultValue = undefined;
 			}
-			var res = this[argName];
-			if(!this.hasOwnProperty(argName)){
-				var gridArgName = this.name + argName.substring(0, 1).toUpperCase() + argName.substring(1);
-				if(this.grid[gridArgName] === undefined){
+			var t = this, g = t.grid, r = t[argName];
+			if(!t.hasOwnProperty(argName)){
+				var gridArgName = t.name + argName.substring(0, 1).toUpperCase() + argName.substring(1);
+				if(g[gridArgName] === undefined){
 					if(defaultValue !== undefined){
-						res = defaultValue;
+						r = defaultValue;
 					}
 				}else{
-					res = this.grid[gridArgName];
+					r = g[gridArgName];
 				}
 			}
-			this[argName] = (validate && !validate(res)) ? defaultValue : res;
-			return res;
+			t[argName] = (validate && !validate(r)) ? defaultValue : r;
+			return r;
 		},
 
-		connect: function(obj, event, method, scope, flag){
-			scope = scope || this;
-			var cnnt, g = this.grid;
-			if(obj === g && typeof event == 'string'){
-				cnnt = connect.connect(obj, event, function(){
-					if(g._eventFlags[event] === flag){
-						if(lang.isFunction(method)){
-							method.apply(scope, arguments);
-						}else if(lang.isFunction(scope[method])){
-							scope[method].apply(scope, arguments);
+		connect: function(obj, e, method, scope, flag){
+			var t = this, cnnt, g = t.grid, s = scope || t;
+			if(obj === g && typeof e == 'string'){
+				cnnt = connect[c](obj, e, function(){
+					var a = arguments;
+					if(g._eventFlags[e] === flag){
+						if(isFunc(method)){
+							method.apply(s, a);
+						}else if(isFunc(s[method])){
+							s[method].apply(s, a);
 						}
 					}
 				});
 			}else{
-				cnnt = connect.connect(obj, event, scope, method);
+				cnnt = connect[c](obj, e, s, method);
 			}
-			this._cnnts.push(cnnt);
+			t._cnnts.push(cnnt);
 			return cnnt;
 		},
 
 		batchConnect: function(){
-			for(var i = 0, len = arguments.length; i < len; ++i){
-				if(lang.isArrayLike(arguments[i])){
-					this.connect.apply(this, arguments[i]);
+			for(var i = 0, args = arguments, len = args.length; i < len; ++i){
+				if(lang.isArrayLike(args[i])){
+					this[c].apply(this, args[i]);
 				}
 			}
 		},
 
-		disconnect: function(cnnt){
-			var idx = array.indexOf(this._cnnts, cnnt);
-			if(idx >= 0){
-				this._cnnts.splice(idx, 1);
-				connect.disconnect(cnnt);
-			}
-		},
-
 		subscribe: function(topic, method, scope){
-			var sub = connect.subscribe(topic, scope || this, method);
-			this._sbscs.push(sub);
-			return sub;
-		},
-
-		unsubscribe: function(sub){
-			var idx = array.indexOf(this._sbscs, sub);
-			if(idx >= 0){
-				this._sbscs.splice(idx, 1);
-				connect.unsubscribe(sub);
-			}
+			var s = connect.subscribe(topic, scope || this, method);
+			this._sbscs.push(s);
+			return s;
 		}
-	});
+	}),
+	mods = moduleBase._modules = {};
 	
-	moduleBase._modules = {};
 	moduleBase.register = function(modClass){
-		var prot = modClass.prototype;
-		moduleBase._modules[prot.name || prot.declaredClass] = modClass;
-		return modClass;
+		var p = modClass.prototype;
+		return mods[p.name || p.declaredClass] = modClass;
 	};
+	//! means not string, should be 'eval'ed.
 	moduleBase._markupAttrs = ['id', 'name', 'field', 'width', 'dataType', '!formatter', '!decorator', '!sortable'];
 	
 	return moduleBase;

@@ -4,12 +4,13 @@ define([
 	"dojo/_base/Deferred"
 ], function(declare, lang, Deferred){
 
-	return declare(null, {
+	return declare([], {
 		constructor: function(grid, row, column){
-			this.grid = grid;
-			this.model = grid.model;
-			this.row = row;
-			this.column = column;
+			var t=this;
+			t.grid = grid;
+			t.model = grid.model;
+			t.row = row;
+			t.column = column;
 		},
 
 		data: function(){
@@ -17,16 +18,20 @@ define([
 		},
 
 		rawData: function(){
-			var f = this.column.field();
-			return f && this.model.byId(this.row.id).rawData[f];
+			var t = this, f = t.column.field();
+			return f && t.model.byId(t.row.id).rawData[f];
 		},
 
 		setRawData: function(rawData){
-			var field = this.column.field(), s = this.grid.store, d = new Deferred(),
-				success = lang.hitch(d, d.callback),
-				fail = lang.hitch(d, d.errback);
+			var d = new Deferred(),
+				t = this, 
+				field = t.column.field(), 
+				s = t.grid.store, 
+				h = lang.hitch,
+				success = h(d, d.callback),
+				fail = h(d, d.errback);
 			if(field){
-				var item = this.model.byId(this.row.id).item;
+				var item = t.model.byId(t.row.id).item;
 				if(s.setValue){
 					s.setValue(item, field, rawData);
 					s.save({

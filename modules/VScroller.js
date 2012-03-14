@@ -9,11 +9,13 @@ define([
 	"../core/_Module"
 ], function(declare, Deferred, event, sniff, query, keys, metrics, _Module){
 	
+	var st = 'scrollTop';
+
 	return _Module.register(
 	declare(_Module, {
-		name: 'vscroller',
+		name: 'vScroller',
 	
-		required: ['hLayout'],
+//        required: ['hLayout'],
 
 		forced: ['body', 'vLayout', 'columnWidth'],
 
@@ -26,114 +28,123 @@ define([
 		},
 
 		preload: function(args){
-			var g = this.grid;
-			this.domNode = g.vScrollerNode;
-			this.stubNode = this.domNode.firstChild;
-			if(g.autoHeight){
-				this.domNode.style.display = 'none';
+			var t = this, g = t.grid,
+				dn = t.domNode = g.vScrollerNode;
+			t.stubNode = dn.firstChild;
+			if(sniff('ie') < 8){
+				t.stubNode.style.width = metrics.getScrollbar().w + 'px';
 			}
-			g.hLayout.register(null, this.domNode, true);
+			if(g.autoHeight){
+				dn.style.display = 'none';
+			}else{
+				t.domNode.style.width = metrics.getScrollbar().w + 'px';
+			}
+			g.hLayout.register(null, dn, 1);
 		},
 
 		load: function(args, startup){
-			var g = this.grid, _this = this;
-			this.batchConnect(
-				[this.domNode, 'onscroll', '_doScroll'],
-				[g.bodyNode, 'onmousewheel', '_onMouseWheel'],
+			var t = this, g = t.grid, bn = g.bodyNode;
+			t.batchConnect(
+				[t.domNode, 'onscroll', '_doScroll'],
+				[bn, 'onmousewheel', '_onMouseWheel'],
 				[g.mainNode, 'onkeypress', '_onKeyScroll'],
 				[g.body, 'onRender', '_onBodyChange'],
-				[g.body, 'onVisualCountChange', '_onRowCountChange'],
-				[g.body, 'onRootRangeChange', '_onRootRangeChange'],
-				sniff('ff') && [g.bodyNode, 'DOMMouseScroll', '_onMouseWheel']
+				[g.body, 'onForcedScroll', '_onForcedScroll'],
+				[g, '_onResizeEnd', '_onBodyChange'],
+				sniff('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']
 			);
 			startup.then(function(){
-				Deferred.when(_this._init(args), function(){
-					_this.loaded.callback();
+				Deferred.when(t._init(args), function(){
+					t.domNode.style.width = '';
+					t.loaded.callback();
 				});
 			});
 		},
 	
 		//Public ----------------------------------------------------
 		scrollToPercentage: function(percent){
-			this.domNode.scrollTop = this.stubNode.style.clientHeight * percent / 100;
+			this.domNode[st] = this.stubNode.style.clientHeight * percent / 100;
 		},
 	
 		scrollToRow: function(rowVisualIndex, toTop){
-			var d = new Deferred(), bn = this.grid.bodyNode, dif = 0,
-				node = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
-			if(node){
+			var d = new Deferred(),
+				bn = this.grid.bodyNode,
+				dn = this.domNode,
+				dif = 0,
+				n = query('[visualindex="' + rowVisualIndex + '"]', bn)[0];
+			if(n){
+				var no = n.offsetTop,
+					bs = bn[st];
 				if(toTop){
-					this.domNode.scrollTop = node.offsetTop;
+					dn[st] = no;
 					d.callback(true);
 					return d;
-				}else if(node.offsetTop < bn.scrollTop){
-					dif = node.offsetTop - bn.scrollTop;
-				}else if(node.offsetTop + node.offsetHeight > bn.scrollTop + bn.clientHeight){
-					dif = node.offsetTop + node.offsetHeight - bn.scrollTop - bn.clientHeight;
+				}else if(no < bs){
+					dif = no - bs;
+				}else if(no + n.offsetHeight > bs + bn.clientHeight){
+					dif = no + n.offsetHeight - bs - bn.clientHeight;
 				}else{
 					d.callback(true);
 					return d;
 				}
-				this.domNode.scrollTop += dif;
+				dn[st] += dif;
 			}
-			d.callback(!!node);
+			d.callback(!!n);
 			return d;
 		},
 	
 		//Protected -------------------------------------------------
 		_init: function(){
-			return this._onRootRangeChange(this.grid.body.rootStart, this.grid.body.rootCount);
+			this._onForcedScroll();
 		},
 	
 		_doScroll: function(){
-			this.grid.bodyNode.scrollTop = this.domNode.scrollTop;
+			this.grid.bodyNode[st] = this.domNode[st];
 		},
 	
 		_onMouseWheel: function(e){
 			if(!this.grid.autoHeight){
 				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
-				this.domNode.scrollTop -= rolled;
+				this.domNode[st] -= rolled;
 				event.stop(e);
 			}
 		},
 	
 		_onBodyChange: function(){
-			var _this = this;
+			var t = this, g = t.grid;
 			//IE7 Needs setTimeout
 			window.setTimeout(function(){
-				_this.stubNode.style.height = _this.grid.bodyNode.scrollHeight + 'px';
-				_this._doScroll();
+				t.stubNode.style.height = g.bodyNode.scrollHeight + 'px';
+				t._doScroll();
 				//FIX IE7 problem:
-				_this.grid.vScrollerNode.scrollTop = _this.grid.vScrollerNode.scrollTop || 0;
+				g.vScrollerNode[st] = g.vScrollerNode[st] || 0;
 			},0);
-
-		},
-	
-		_onRowCountChange: function(){ 
-		},
-	
-		_onRootRangeChange: function(start, count){
-			return this.model.when({start: start, count: count}, function(){
-				count = count || this.model.size() - start;
-				//Root range changed, so render the body from start.
-				this.grid.body.renderRows(0, count);
-			}, this);
 		},
 
+		_onForcedScroll: function(){
+			var t = this, bd = t.grid.body;
+			return t.model.when({
+				start: bd.rootStart, 
+				count: bd.rootCount
+			}, function(){
+				bd.renderRows(0, bd.rootCount || t.model.size() - start);
+			});
+		},
+	
 		_onKeyScroll: function(evt){
-			var body = this.grid.body, sn = this.domNode, r;
+			var t = this, bd = t.grid.body, sn = t.domNode, r, fc = '_focusCellRow';
 			if(evt.keyCode == keys.HOME){
-				body._focusCellRow = 0;
-				sn.scrollTop = 0;
+				bd[fc] = 0;
+				sn[st] = 0;
 			}else if(evt.keyCode == keys.END){
-				body._focusCellRow = body.visualCount - 1;
-				sn.scrollTop = this.stubNode.clientHeight - body.domNode.offsetHeight;
+				bd[fc] = bd.visualCount - 1;
+				sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
 			}else if(evt.keyCode == keys.PAGE_UP){
-				r = body._focusCellRow = Math.max(body.renderStart - body.renderCount, 0);
-				this.scrollToRow(r, true);
+				r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
+				t.scrollToRow(r, 1);
 			}else if(evt.keyCode == keys.PAGE_DOWN){
-				r = body._focusCellRow = Math.min(body.visualCount - 1, body.renderStart + body.renderCount);
-				this.scrollToRow(r, true);
+				r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
+				t.scrollToRow(r, 1);
 			}else{
 				return;
 			}

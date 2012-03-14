@@ -1,20 +1,35 @@
 define([
-	"dojo/_base/kernel",
-	"../core/_Module",
-	"../core/model/extensions/Sort",
-	"dojo/i18n!../nls/NestedSorting",
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/html",
+	"dojo/_base/connect",
 	"dojo/_base/event",
-	"dojo/query"
-], function(dojo, _Module, Sort, locale){
+	"dojo/_base/query",
+	"dojo/_base/window",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/keys",
+	"../core/_Module",
+	"../core/model/extensions/Sort",
+	"dojo/i18n!../nls/NestedSort"
+], function(declare, array, connect, event, query, win, domClass, domConstruct, domStyle, keys, _Module, Sort, nls){
 	
-	return dojo.declare(_Module, {
-		name: 'nestedSort',
+	var forEach = array.forEach,
+		filter = array.filter,
+		indexOf = array.indexOf,
+		hasClass = domClass.contains,
+		removeClass = domClass.remove,
+		addClass = domClass.add;
+
+	return declare(_Module, {
+		name: 'sort',
+
 		forced: ['header'],
-		required: ['vLayout'],
+
+//        required: ['vLayout'],
+
 		modelExtensions: [Sort],
+
 		_a11yText: {
 			'dojoxGridDescending'   : '&#9662;',
 			'dojoxGridAscending'    : '&#9652;',
@@ -22,44 +37,48 @@ define([
 			'dojoxGridDescendingTip': '&#1783;',
 			'dojoxGridUnsortedTip'  : 'x' //'&#10006;'
 		},
+
 		constructor: function(){
 			this._sortData = [];
 		},
+
 		getAPIPath: function(){
 			return {
-				nestedSort: this
-			}
+				sort: this
+			};
 		},
+
 		preload: function(args){
-			// this._nls = dojo.i18n.getLocalization('gridx', 'NestedSorting');
-			this._nls = locale;
-			this._sortData = this.arg('preSort') || this._sortData;
+			var t = this;
+			t._sortData = t.arg('preSort') || t._sortData;
 			//persistence support
-			if(this.grid.persist){
-				var _this = this;
-				var d = this.grid.persist.registerAndLoad('nestedsorting', function(){
-					return _this._sortData;
+			if(t.grid.persist){
+				var d = t.grid.persist.registerAndLoad('sort', function(){
+					return t._sortData;
 				});
-				if(d){_this._sortData = d;}
+				if(d){
+					t._sortData = d;
+				}
 			}
-			
-			this._sortData = dojo.filter(this._sortData, function(d){
-				return this.isSortable(d.colId);
-			}, this);
-			if(this._sortData.length){
-				this.grid.model.sort(this._sortData);
+			t._sortData = filter(t._sortData, function(d){
+				return t.isSortable(d.colId);
+			});
+			if(t._sortData.length){
+				t.grid.model.sort(t._sortData);
 			}
 		},
+
 		load: function(args){
 			this._init();
 			this.loaded.callback();
 		},
+
 		columnMixin: {
 			isSorted: function(){
-				return this.grid.nestedSorting.isSorted(this.id);
+				return this.grid.sort.isSorted(this.id);
 			},
 			isSortable: function(){
-				return this.grid.nestedSorting.isSortable(this.id);
+				return this.grid.sort.isSortable(this.id);
 			}
 		},
 		
@@ -68,20 +87,23 @@ define([
 		},
 		
 		sort: function(sortData){
-			this._sortData = dojo.filter(sortData, function(d){
-				return this.isSortable(d.colId);
-			}, this);
-			this._doSort();
-			this._updateUI();
+			var t = this;
+			t._sortData = filter(sortData, function(d){
+				return t.isSortable(d.colId);
+			});
+			t._doSort();
+			t._updateUI();
 		},
 		
 		isSorted: function(colId){
-			return dojo.some(this.grid.nestedSorting._sortData, function(d){
+			return array.some(this._sortData, function(d){
 				return d.colId == colId;
 			});
 		},
+
 		_doSort: function(){
-			var g = this.grid, d = this._sortData;
+			var g = this.grid,
+				d = this._sortData;
 			g.model.sort(d.length ? d : null);
 			g.body.refresh();
 		},
@@ -92,254 +114,319 @@ define([
 			this._sortData.length = 0;
 			this._doSort();
 			this._updateUI();
-			
 		},
+
 		isSortable: function(colId){
 			var col = this.grid._columnsById[colId];
 			return col && (col.sortable || col.sortable === undefined);
 		},
+
 		//Private---------------------------------------------------------------------------
 		_init: function(){
-			this.connect(this.grid.header.domNode, 'onclick', '_onHeaderClick');
-			this.connect(this.grid.header.domNode, 'onmouseover', '_onMouseOver');
-			this.connect(this.grid.header.domNode, 'onmouseout', '_onMouseOut');
-			this._initHeader();
-			this._initFocus();
-			this._updateUI();
+			var t = this,
+				n = t.grid.header.domNode,
+				f = function(){
+					t._initHeader();
+					t._initFocus();
+					t._updateUI();
+				};
+			t.connect(n, 'onclick', '_onHeaderClick');
+			t.connect(n, 'onmouseover', '_onMouseOver');
+			t.connect(n, 'onmouseout', '_onMouseOver');
+			t.connect(t.grid.header, 'onRender', f);
+			f();
 		},
 		
 		_initHeader: function(){
 			//console.log('initHeader');
-			var table = this.grid.header.domNode.firstChild.firstChild;
-			var tds = table.rows[0].cells;
-			dojo.forEach(table.rows[0].cells, function(td){
-				var colid = dojo.attr(td, 'colid');
-				if(!this.isSortable(colid)){return;}
-				dojo.create('div', {
-					className: 'gridxSortBtn gridxSortBtnNested'
-				}, td, 'first');
-				dojo.create('div', {
-					className: 'gridxSortBtn gridxSortBtnSingle'
-				}, td, 'first');
-			}, this);
+			var t = this,
+				table = t.grid.header.domNode.firstChild.firstChild,
+				tds = table.rows[0].cells;
+			forEach(table.rows[0].cells, function(td){
+				var colid = td.getAttribute('colid');
+				if(t.isSortable(colid)){
+					domConstruct.create('div', {
+						className: 'gridxSortBtn gridxSortBtnNested'
+					}, td, 'first');
+					domConstruct.create('div', {
+						className: 'gridxSortBtn gridxSortBtnSingle'
+					}, td, 'first');
+				}
+			});
 		},
 		
 		_onHeaderClick: function(e){
-			var btn = e.target, colid;
-			this._markFocus(e);
-			if(dojo.hasClass(btn, 'gridxSortBtn')){
-				colid = dojo.attr(btn.parentNode, 'colid');
-			}else{ return; }
-			
-			if(dojo.hasClass(btn, 'gridxSortBtnSingle')){
-				//single sort
-				if(this._sortData.length > 1){
-					this._sortData.length = 0;
-				}
-				var d = dojo.filter(this._sortData, function(data){return data.colId === colid})[0];
-				this._sortData.length = 0;
-				if(d){this._sortData.push(d);}
-				this._sortColumn(colid);
-			}else if(dojo.hasClass(btn, 'gridxSortBtnNested')){
-				//nested sort
-				this._sortColumn(colid);
+			var t = this,
+				btn = e.target,
+				sortData = t._sortData,
+				colid;
+			t._markFocus(e);
+			if(hasClass(btn, 'gridxSortBtn')){
+				colid = btn.parentNode.getAttribute('colid');
+			}else{
+				return;
 			}
-			dojo.stopEvent(e);
+			if(hasClass(btn, 'gridxSortBtnSingle')){
+				//single sort
+				if(sortData.length > 1){
+					sortData.length = 0;
+				}
+				var d = filter(sortData, function(data){
+					return data.colId === colid;
+				})[0];
+				sortData.length = 0;
+				if(d){
+					sortData.push(d);
+				}
+				t._sortColumn(colid);
+			}else if(hasClass(btn, 'gridxSortBtnNested')){
+				//nested sort
+				t._sortColumn(colid);
+			}
+			event.stop(e);
 		},
 		
 		_onMouseOver: function(e){
-			dojo.addClass(this.grid.header.domNode, 'gridxHeaderHover');
+			var g = this.grid;
+			domClass.toggle(g.header.domNode, 'gridxHeaderHover', e.type == 'mouseover');
 			//FIXME: this is ugly...
-			if(this.grid.autoHeight){
-				this.grid.vLayout.reLayout();
+			if(g.autoHeight){
+				g.vLayout.reLayout();
 			}
 		},
-		_onMouseOut: function(e){
-			dojo.removeClass(this.grid.header.domNode, 'gridxHeaderHover');
-			//FIXME: this is ugly...
-			if(this.grid.autoHeight){
-				this.grid.vLayout.reLayout();
-			}
-		},
-		
+
 		_sortColumn: function(colid){
 			//summary:
 			//	Sort one column in nested sorting state
-			if(!this.isSortable(colid)){return;}
-			
-			var d = dojo.filter(this._sortData, function(d){return d.colId === colid})[0];
-			
-			if(d){
-				if(d.descending === false){
-					d.descending = true;
-				}else if(d.descending === true){
-					var i = dojo.indexOf(this._sortData, d);
-					this._sortData.splice(i, 1);
+			var t = this,
+				sortData = t._sortData;
+			if(t.isSortable(colid)){
+				var d = filter(sortData, function(d){
+					return d.colId === colid;
+				})[0];
+				if(d){
+					if(d.descending){
+						sortData.splice(indexOf(sortData, d), 1);
+					}
+					d.descending = !d.descending;
+				}else{
+					sortData.push({
+						colId: colid,
+						descending: false
+					});
 				}
-			}else{
-				d = {colId: colid, descending: false};	
-				this._sortData.push(d);
+				t._doSort();
+				t._updateUI();
 			}
-			
-			this._doSort();
-			this._updateUI();
 		},
 		
 		_updateUI: function(){
-			dojo.removeClass(this.grid.domNode, 'gridxSingleSorted');
-			dojo.removeClass(this.grid.domNode, 'gridxNestedSorted');
-			var nls = this._nls;
-			dojo.query('th', this.grid.header.domNode).forEach(function(cell){
-				var colid = dojo.attr(cell, 'colid');
-				if(!this.isSortable(colid)){return;}
-				dojo.forEach(['', 'Desc', 'Asc', 'Main'], function(s){
-					dojo.removeClass(cell, 'gridxCellSorted' + s)
-				});
-				var singleBtn = cell.childNodes[0], nestedBtn = cell.childNodes[1];
-				var a11y = dojo.hasClass(dojo.body(), 'dijit_a11y'), a11yText = this._a11yText;
-				singleBtn.title = nls.singleSort + ' - ' + nls.ascending;
-				nestedBtn.title = nls.nestedSort + ' - ' + nls.ascending;
-				singleBtn.innerHTML = a11y ? a11yText.dojoxGridAscendingTip : '&nbsp;';
-				nestedBtn.innerHTML = this._sortData.length + 1 + (a11y ? a11yText.ascending : '');
-				var d = dojo.filter(this._sortData, function(data){return data.colId === colid;})[0];
-				this._setWaiState(cell, colid, d);
-				if(!d){return;};
-				nestedBtn.innerHTML = dojo.indexOf(this._sortData, d) + 1;
-				dojo.addClass(cell, 'gridxCellSorted');
-				if(d === this._sortData[0]){dojo.addClass(cell, 'gridxCellSortedMain');}
-				var len = this._sortData.length;
-				if(d.descending){
-					dojo.addClass(cell, 'gridxCellSortedDesc');
-					if(len === 1){
-						singleBtn.title = nls.singleSort + ' - ' + nls.unsorted;
-						if(a11y){singleBtn.innerHTML = a11yText.dojoxGridUnsortedTip;}
-					}else{
-						nestedBtn.title = nls.nestedSort + ' - ' + nls.unsorted;
-						if(a11y){nestedBtn.innerHTML = a11yText.dojoxGridUnsortedTip;}
-					}
-				}else{
-					dojo.addClass(cell, 'gridxCellSortedAsc');
-					if(len === 1){
-						singleBtn.title = nls.singleSort + ': ' + nls.descending;
-						if(a11y){singleBtn.innerHTML = a11yText.dojoxGridDescendingTip;}
-					}else{
-						nestedBtn.title = nls.nestedSort + ' - ' + nls.descending;
-						if(a11y){nestedBtn.innerHTML = a11yText.dojoxGridDescendingTip;}
+			var t = this,
+				g = t.grid,
+				dn = g.domNode,
+				sortData = t._sortData;
+			removeClass(dn, 'gridxSingleSorted');
+			removeClass(dn, 'gridxNestedSorted');
+			query('th', g.header.domNode).forEach(function(cell){
+				var colid = cell.getAttribute('colid');
+				if(t.isSortable(colid)){
+					forEach(['', 'Desc', 'Asc', 'Main'], function(s){
+						removeClass(cell, 'gridxCellSorted' + s);
+					});
+					var singleBtn = cell.childNodes[0],
+						nestedBtn = cell.childNodes[1],
+						a11y = hasClass(win.body(), 'dijit_a11y'),
+						a11yText = t._a11yText;
+					singleBtn.title = nls.singleSort + ' - ' + nls.ascending;
+					nestedBtn.title = nls.nestedSort + ' - ' + nls.ascending;
+					singleBtn.innerHTML = a11y ? a11yText.dojoxGridAscendingTip : '&nbsp;';
+					nestedBtn.innerHTML = sortData.length + 1 + (a11y ? a11yText.ascending : '');
+					var d = filter(sortData, function(data){
+						return data.colId === colid;
+					})[0];
+					t._setWaiState(cell, colid, d);
+					if(d){
+						nestedBtn.innerHTML = indexOf(sortData, d) + 1;
+						addClass(cell, 'gridxCellSorted');
+						if(d == sortData[0]){
+							addClass(cell, 'gridxCellSortedMain');
+						}
+						var len = sortData.length;
+						if(d.descending){
+							addClass(cell, 'gridxCellSortedDesc');
+							if(len == 1){
+								singleBtn.title = nls.singleSort + ' - ' + nls.unsorted;
+								if(a11y){
+									singleBtn.innerHTML = a11yText.dojoxGridUnsortedTip;
+								}
+							}else{
+								nestedBtn.title = nls.nestedSort + ' - ' + nls.unsorted;
+								if(a11y){
+									nestedBtn.innerHTML = a11yText.dojoxGridUnsortedTip;
+								}
+							}
+						}else{
+							addClass(cell, 'gridxCellSortedAsc');
+							if(len == 1){
+								singleBtn.title = nls.singleSort + ': ' + nls.descending;
+								if(a11y){
+									singleBtn.innerHTML = a11yText.dojoxGridDescendingTip;
+								}
+							}else{
+								nestedBtn.title = nls.nestedSort + ' - ' + nls.descending;
+								if(a11y){
+									nestedBtn.innerHTML = a11yText.dojoxGridDescendingTip;
+								}
+							}
+						}
 					}
 				}
-			}, this);
-			if(this._sortData.length === 1){
-				dojo.addClass(this.grid.domNode, 'gridxSingleSorted');
-			}
-			else if(this._sortData.length > 1){
-				dojo.addClass(this.grid.domNode, 'gridxNestedSorted');
+			});
+			if(sortData.length == 1){
+				addClass(dn, 'gridxSingleSorted');
+			}else if(sortData.length > 1){
+				addClass(dn, 'gridxNestedSorted');
 			}
 		},
 		
 		//Focus and keyboard support---------------------------------------------------------------------------
 		_initFocus: function(){
-			this._initRegions();
-			var g = this.grid;
+			var t = this,
+				g = t.grid,
+				headerNode = g.header.domNode;
 			if(g.focus){
+				t._initRegions();
 				g.focus.registerArea({
 					name: 'header',
 					priority: 0,
-					focusNode: g.header.domNode,
-					doFocus: dojo.hitch(this, '_doFocus'),
-					doBlur: dojo.hitch(this, '_blurNode'),
-					onBlur: dojo.hitch(this, '_blurNode'),
-					connects: [this.connect(this.grid.header.domNode, 'onkeypress', '_onKeyPress')]
+					focusNode: headerNode,
+					scope: t,
+					doFocus: t._doFocus,
+					doBlur: t._blurNode,
+					onBlur: t._blurNode,
+					connects: [
+						t.connect(headerNode, 'onkeypress', '_onKeyPress')
+					]
 				});
 			}
 		},
+
 		_doFocus: function(e){
 			this._focusRegion(this._getCurrentRegion() || this._focusRegions[0]);
 			return true;
 		},
+
 		_blurNode: function(e){
 			return true;
 		},
+
 		_onKeyPress: function(e){
-			var nextKey = this.grid.isLeftToRight() ? dojo.keys.RIGHT_ARROW : dojo.keys.LEFT_ARROW;
-			var previousKey = this.grid.isLeftToRight() ? dojo.keys.LEFT_ARROW : dojo.keys.RIGHT_ARROW;
+			var t = this,
+				ltr = t.grid.isLeftToRight(),
+				nextKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW,
+				previousKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW;
 			switch(e.keyCode){
 				case previousKey:
-					this._focusPrevious();
+					t._focusPrevious();
 					break;
 				case nextKey:
-					this._focusNext();
+					t._focusNext();
 					break;
-				case dojo.keys.ENTER:
-				case dojo.keys.SPACE:
-					this._onHeaderClick(e);
+				case keys.ENTER:
+				case keys.SPACE:
+					t._onHeaderClick(e);
 					break;
 			}
 		},
+
 		_onBlur: function(e){
 			this._blurRegion(e.target);
 		},
+
 		_focusNext: function(){
-			var i = this._currRegionIdx, rs = this._focusRegions;
-			while(rs[i+1] && dojo.style(rs[++i], 'display') === 'none'){}
-			if(rs[i]){this._focusRegion(rs[i]);}
+			var t = this,
+				i = t._currRegionIdx,
+				rs = t._focusRegions;
+			while(rs[i+1] && domStyle.get(rs[++i], 'display') === 'none'){}
+			if(rs[i]){
+				t._focusRegion(rs[i]);
+			}
 		},
+
 		_focusPrevious: function(){
-			var i = this._currRegionIdx, rs = this._focusRegions;
-			while(rs[i-1] && (dojo.style(rs[--i], 'display') === 'none' || dojo.hasClass(rs[i], 'gridxSortBtn'))){}
-			if(rs[i]){this._focusRegion(rs[i]);}
+			var t = this,
+				i = t._currRegionIdx,
+				rs = t._focusRegions;
+			while(rs[i-1] && (domStyle.get(rs[--i], 'display') === 'none' || hasClass(rs[i], 'gridxSortBtn'))){}
+			if(rs[i]){
+				t._focusRegion(rs[i]);
+			}
 		},
+
 		_markFocus: function(e){
-			var region = e.target;
-			var i = dojo.indexOf(this._focusRegions, region);
-			if(i === -1){return;}
-			this._focusRegion(region);
+			var region = e.target,
+				i = indexOf(this._focusRegions, region);
+			if(i >= 0){
+				this._focusRegion(region);
+			}
 		},
+
 		_initRegions: function(){
-			dojo.forEach(this._nconns, dojo.disconnect);
-			this._focusRegions = [], this._nconns = [];
-			dojo.query('.gridxCell', this.grid.header.domNode).forEach(function(cell){
+			var t = this;
+			forEach(t._nconns, connect.disconnect);
+			t._focusRegions = [];
+			t._nconns = [];
+			query('.gridxCell', t.grid.header.domNode).forEach(function(cell){
 				var children = cell.childNodes;
-				dojo.forEach([2, 1, 0], function(i){
-					if(!children[i]){return;}
-					dojo.attr(children[i], 'tabindex', '-1');
-					this._focusRegions.push(children[i]);
-					this._nconns.push(this.connect(children[i], 'onblur', '_onBlur'));
-				}, this);
-			}, this);
-			this._currRegionIdx = -1;
+				forEach([2, 1, 0], function(i){
+					if(children[i]){
+						children[i].setAttribute('tabindex', '-1');
+						t._focusRegions.push(children[i]);
+						t._nconns.push(t.connect(children[i], 'onblur', '_onBlur'));
+						return;
+					}
+				});
+			});
+			t._currRegionIdx = -1;
 		},
+
 		_focusRegion: function(region){
 			// summary
 			//		Focus the given region
 			//console.debug(region);
-			if(!region){return;}
-			region.focus();
-			var header =this._getRegionHeader(region);
-			dojo.addClass(header, 'gridxCellSortFocus');
-			if(dojo.hasClass(region, 'gridxSortNode')){
-				dojo.addClass(region, 'gridxSortNodeFocus');
-			}else if(dojo.hasClass(region, 'gridxSortBtn')){
-				dojo.addClass(region, 'gridxSortBtnFocus');
+			if(region){
+				region.focus();
+				var t = this,
+					header = t._getRegionHeader(region);
+				addClass(header, 'gridxCellSortFocus');
+				if(hasClass(region, 'gridxSortNode')){
+					addClass(region, 'gridxSortNodeFocus');
+				}else if(hasClass(region, 'gridxSortBtn')){
+					addClass(region, 'gridxSortBtnFocus');
+				}
+				addClass(t.grid.header.domNode, 'gridxHeaderFocus');
+				t._currRegionIdx = indexOf(t._focusRegions, region);
+				//firefox and ie will lost focus when region is invisible, focus it again.
+				region.focus();
 			}
-			dojo.addClass(this.grid.header.domNode, 'gridxHeaderFocus');
-			this._currRegionIdx = dojo.indexOf(this._focusRegions, region);
-			//firefox and ie will lost focus when region is invisible, focus it again.
-			region.focus();
 		},
+
 		_blurRegion: function(region){
-			if(!region){return;}
-			var header = this._getRegionHeader(region);
-			dojo.removeClass(header, 'gridxCellSortFocus');
-			dojo.removeClass(region, 'gridxSortNodeFocus');
-			dojo.removeClass(region, 'gridxSortBtnFocus');
-			dojo.removeClass(this.grid.header.domNode, 'gridxHeaderFocus');
+			if(region){
+				var header = this._getRegionHeader(region);
+				removeClass(header, 'gridxCellSortFocus');
+				removeClass(region, 'gridxSortNodeFocus');
+				removeClass(region, 'gridxSortBtnFocus');
+				removeClass(this.grid.header.domNode, 'gridxHeaderFocus');
+			}
 		},
+
 		_getCurrentRegion: function(){
-			if(this._currRegionIdx === -1){return null;}
-			return this._focusRegions[this._currRegionIdx];
+			return this._currRegionIdx === -1 ? null : this._focusRegions[this._currRegionIdx];
 		},
+
 		_getRegionHeader: function(region){
-			while(region && !dojo.hasClass(region, 'gridxCell')){
+			while(region && !hasClass(region, 'gridxCell')){
 				region = region.parentNode;
 			}
 			return region;
@@ -347,18 +434,17 @@ define([
 		
 		//a11y support ----------------------------
 		_setWaiState: function(cell, colid, data){
-			var col = this.grid.column(colid);
-			var columnInfo = 'Column ' + col.name();
-			var orderState = 'none', orderAction = 'ascending';
+			var col = this.grid.column(colid),
+				columnInfo = 'Column ' + col.name(),
+				orderState = 'none', orderAction = 'ascending';
 			if(data){
 				orderState = data.descending ? 'descending' : 'ascending';
 				orderAction = data.descending ? 'none' : 'descending';
 			}
-			var a11ySingleLabel = columnInfo + ' - is sorted by ' + orderState + '. Choose to sort by ' + orderAction;;
-			var a11yNestedLabel = columnInfo + ' - is nested sorted by ' + orderState + '. Choose to nested sort by ' + orderAction;
+			var a11ySingleLabel = columnInfo + ' - is sorted by ' + orderState + '. Choose to sort by ' + orderAction,
+				a11yNestedLabel = columnInfo + ' - is nested sorted by ' + orderState + '. Choose to nested sort by ' + orderAction;
 			cell.childNodes[0].setAttribute("aria-label", a11ySingleLabel);
 			cell.childNodes[1].setAttribute("aria-label", a11yNestedLabel);
 		}
 	});
-	
 });

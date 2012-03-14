@@ -2,10 +2,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"../../core/_Module",
-	"dojo/_base/Deferred",
 	"dojo/dom-geometry",
 	"./Exporter"
-], function(declare, lang, _Module, Deferred, domGeometry){
+], function(declare, lang, _Module, domGeometry){
 
 /*=====
 	dojo.declare('__CSVExportArgs', __ExportArgs, {
@@ -43,9 +42,10 @@ define([
 	
 		//Public ---------------------------------------------------------------------
 		toTable: function(/* __CSVExportArgs */ args){
-			this._result = "";
-			this._rowIdx = 0;
-			return this.grid.exporter._export(args || {}, this);
+			var t = this;
+			t._result = "";
+			t._rowIdx = 0;
+			return t.grid.exporter._export(t, args || {});
 		},
 
 		//Package --------------------------------------------------------------------
@@ -64,14 +64,15 @@ define([
 			//		Triggered before exporting the header cells.
 			//return: Boolean|undefined
 			//		If return false, does not handle following header cells.
-			if(!lang.isArray(context.columnIds) || context.columnIds.length == 0){
+			if(!lang.isArray(context.columnIds) || !context.columnIds.length){
 				return false;
 			}
-			var marginBox = domGeometry.getMarginBox(this.grid.headerNode),
+			var t = this,
+				marginBox = domGeometry.getMarginBox(t.grid.headerNode),
 				height = marginBox.h;
-			this._totalWidth = marginBox.w;
-			this._header = ['<table class="grid_header" style="table-layout:fixed; width:', 
-				this._totalWidth, 'px;height:', height, 
+			t._totalWidth = marginBox.w;
+			t._header = ['<table class="grid_header" style="table-layout:fixed; width:', 
+				t._totalWidth, 'px;height:', height, 
 				'px;" border="0" cellpadding="0" cellspacing="0"><tbody><tr>'];
 			return true;
 		},
@@ -100,23 +101,16 @@ define([
 			return true;
 		},
 
-		beforeProgress: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered before exporting a page of rows.
-			//return: Boolean|undefined
-			//		If return false, does not handle this page of rows.
-			return true;
-		},
-
 		beforeRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
 			//summary:
 			//		Triggered before exporting a row.
 			//return: Boolean|undefined
 			//		If return false, does not handle the cells in this rows.
-			var rowId = context.rowId,
-				rowIndex = this.grid.row(rowId, true).index();
-			this._cells = ['<table class="grid_row_', (this._rowIdx++)%2 ? 'even' : 'odd' , 
-				'" style="table-layout:fixed; width:', this._totalWidth, 
+			var t = this,
+				rowId = context.rowId,
+				rowIndex = t.grid.row(rowId, true).index();
+			t._cells = ['<table class="grid_row_', (t._rowIdx++) % 2 ? 'even' : 'odd' , 
+				'" style="table-layout:fixed; width:', t._totalWidth, 
 				'px;" border="0" cellspacing="0" cellpadding="0" rowId="', rowId,
 				'" rowIndex="', rowIndex, '"><tbody><tr>'];
 			return true;
@@ -143,11 +137,6 @@ define([
 			//		Triggered when a row has been exported.
 			this._cells.push('</tr></tbody></table>');
 			this._rows.push(this._cells.join(''));
-		},
-
-		afterProgress: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered when a page has been exported.
 		},
 
 		afterBody: function(/* __CSVExportArgs */ args){

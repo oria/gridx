@@ -2,9 +2,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/json",
-	"dojo/_base/Deferred",
 	'../_Extension'
-], function(declare, lang, json, Deferred, _Extension){
+], function(declare, lang, json, _Extension){
 
 	return declare(_Extension, {
 		name: 'sort',
@@ -12,11 +11,12 @@ define([
 		priority: 20,
 
 		constructor: function(model, args){
-			this.clear();
-			this._mixinAPI('sort');
-			if(args.baseSort && args.baseSort.length){
-				this._baseSort = args.baseSort;
-				this._sort();
+			var t = this, bs = args.baseSort;
+			t.clear();
+			t._mixinAPI('sort');
+			if(bs && bs.length){
+				t._baseSort = bs;
+				t._sort();
 			}
 		},
 
@@ -33,40 +33,40 @@ define([
 
 		//Private--------------------------------------------------------------
 		_cmdSort: function(){
-			this._sort.apply(this, arguments[arguments.length - 1]);
+			var a = arguments;
+			this._sort.apply(this, a[a.length - 1]);
 		},
 
 		_sort: function(sortSpec){
-			var c = this.model._cache, i;
+			var t = this, m = t.model, bs = t._baseSort, c = m._cache,
+				op = c.options = c.options || {}, i, s, toSort;
 			if(lang.isArrayLike(sortSpec)){
 				for(i = 0; i < sortSpec.length; ++i){
-					var s = sortSpec[i];
+					s = sortSpec[i];
 					if(s.colId !== undefined){
 						s.attribute = c.columns ? (c.columns[s.colId].field || s.colId) : s.colId;
 					}else{
 						s.colId = s.attribute;
 					}
 				}
-				if(this._baseSort){
-					sortSpec = sortSpec.concat(this._baseSort);
+				if(bs){
+					sortSpec = sortSpec.concat(bs);
 				}
 			}else{
-				sortSpec = this._baseSort;
+				sortSpec = bs;
 			}
-			c.options = c.options || {};
-			var toSort = false;
-			if(c.options.sort && c.options.sort.length){
-				if(json.toJson(c.options.sort) !== json.toJson(sortSpec)){
-					toSort = true;
+			if(op.sort && op.sort.length){
+				if(json.toJson(op.sort) !== json.toJson(sortSpec)){
+					toSort = 1;
 				}
 			}else if(sortSpec && sortSpec.length){
-				toSort = true;
+				toSort = 1;
 			}
-			c.options.sort = lang.clone(sortSpec);
+			op.sort = lang.clone(sortSpec);
 			if(toSort){
 				c.clear();
 			}
-			this.model._sendMsg('storeChange');
+			m._msg('storeChange');
 		}
 	});
 });

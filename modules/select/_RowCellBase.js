@@ -11,18 +11,20 @@ define([
 		selectById: function(rowId, columnId){
 			// summary:
 			//		Select a cell by its id.
-			if(this.arg('enabled')){
-				this.model.markById(rowId, true, this._getMarkType(columnId));
-				this.model.when();
+			var t = this, m = t.model;
+			if(t.arg('enabled')){
+				m.markById(rowId, 1, t._getMarkType(columnId));
+				m.when();
 			}
 		},
 		
 		deselectById: function(rowId, columnId){
 			// summary:
 			//		Deselect a cell by its id.
-			if(this.arg('enabled')){
-				this.model.markById(rowId, false, this._getMarkType(columnId));
-				this.model.when();
+			var t = this, m = t.model;
+			if(t.arg('enabled')){
+				m.markById(rowId, 0, t._getMarkType(columnId));
+				m.when();
 			}
 		},
 		
@@ -34,9 +36,10 @@ define([
 
 		//Private-----------------------------------------------------------------
 		_init: function(){
-			this.batchConnect(
-				[this.model, 'onMarked', lang.hitch(this, '_onMark', true)],
-				[this.model, 'onMarkRemoved', lang.hitch(this, '_onMark', false)]
+			var t = this, m = t.model;
+			t.batchConnect(
+				[m, 'onMarked', lang.hitch(t, '_onMark', 1)],
+				[m, 'onMarkRemoved', lang.hitch(t, '_onMark', 0)]
 			);
 		}
 	});

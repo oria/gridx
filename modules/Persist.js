@@ -27,31 +27,32 @@ define([
 			// args: Object | undefined
 			//		Arguments of this module
 			//		Possible arguments are: key, put, get
+			var t = this;
 			//Initialize arguments
-			this.key = window.location + '/' + this.arg('key', grid.id, function(arg){
+			t.key = window.location + '/' + t.arg('key', grid.id, function(arg){
 				return arg;
 			});
-			this.arg('options', function(arg){
-				return arg && lang.isObject(arg);
-			});
-			this.arg('put', function(arg){
-				return lang.isFunction(arg);
-			});
-			this.arg('get', function(arg){
-				return lang.isFunction(arg);
-			});
+//            t.arg('options', function(arg){
+//                return arg && lang.isObject(arg);
+//            });
+//            t.arg('put', function(arg){
+//                return lang.isFunction(arg);
+//            });
+//            t.arg('get', function(arg){
+//                return lang.isFunction(arg);
+//            });
 
-			this._persistedList = {};
+			t._persistedList = {};
 			// Save states when grid destroy or window unload
-			var _this = this, _gridDestroy = grid.destroy;
+			var gridDestroy = grid.destroy;
 			grid.destroy = function(){
-				_this.save();
-				_gridDestroy.call(grid);
+				t.save();
+				gridDestroy.call(grid);
 			};
 			//column state register/restore
-			this._restoreColumnState();
+			t._restoreColumnState();
 			unload.addOnWindowUnload(function(){
-				_this.save();
+				t.save();
 			});
 		},
 	
@@ -104,14 +105,14 @@ define([
 			//		A function to be called when persisting the grid.
 			// return: Object | null
 			//		The loaded contents of the given feature.
-			if(!lang.isString(name) || name === ''){
-				throw new Error("feature name must be an unempty string");
-			}
-			if(!lang.isFunction(saver)){
-				throw new Error("save function must be provided");
-			}
+//            if(!lang.isString(name) || name === ''){
+//                throw new Error("feature name must be an unempty string");
+//            }
+//            if(!lang.isFunction(saver)){
+//                throw new Error("save function must be provided");
+//            }
 			this._persistedList[name] = {
-				saver: saver, 
+				saver: saver,
 				scope: scope,
 				enabled: true
 			};
@@ -125,7 +126,7 @@ define([
 			//		is called. If name is not provided (undefined or null), then enable all registered features.
 			// name: String
 			//		Name of a feature.
-			this._setEnable(name, true);
+			this._setEnable(name, 1);
 		},
 	
 		disable: function(name){
@@ -134,7 +135,7 @@ define([
 			//		function is called. If name is not provided (undefined or null), then disable all registered features.
 			// name: String
 			//		Name of a feature.
-			this._setEnable(name, false);
+			this._setEnable(name, 0);
 		},
 	
 		isEnabled: function(name){
@@ -142,8 +143,9 @@ define([
 			//		Check whether a feature is enabled or not.
 			// name: String
 			//		Name of a feature.
-			if(this._persistedList[name]){
-				return this._persistedList[name].enabled;
+			var feature = this._persistedList[name];
+			if(feature){
+				return feature.enabled;
 			}
 			return name ? false : this.arg('enabled');
 		},
@@ -151,9 +153,9 @@ define([
 		save: function(){
 			// summary:
 			//		Save all the enabled features.
-			var contents = null;
-			if(this.arg('enabled')){
-				var name, list = this._persistedList;
+			var t = this, contents = null;
+			if(t.arg('enabled')){
+				var name, list = t._persistedList;
 				contents = {};
 				for(name in list){
 					if(list[name].enabled){
@@ -161,7 +163,7 @@ define([
 					}
 				}
 			}
-			this.put(this.key, contents, this.options);
+			t.put(t.key, contents, t.options);
 		},
 	
 		//Private--------------------------------------------------------
@@ -169,6 +171,7 @@ define([
 		
 		_setEnable: function(name, enabled){
 			var list = this._persistedList;
+			enabled = !!enabled;
 			if(list[name]){
 				list[name].enabled = enabled;
 			}else if(!name){
@@ -181,13 +184,14 @@ define([
 		
 		//For column state restore---------------------
 		_restoreColumnState: function(){
-			var grid = this.grid,
-				columns = this.registerAndLoad('column', this._columnStateSaver, this);
+			var t = this,
+				grid = t.grid,
+				col, cols = [],
+				columns = t.registerAndLoad('column', t._columnStateSaver, t);
 			if(lang.isArray(columns)){
-				var col, cols = [];
 				array.forEach(columns, function(col){
 					array.some(grid._columns, function(c, i){
-						if(c.id === col.id){
+						if(c.id == col.id){
 							cols[col.index] = grid._columns[i];
 							cols[col.index].width = col.width;
 							return true;

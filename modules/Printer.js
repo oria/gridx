@@ -3,29 +3,48 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
-	"dojo/_base/html",
 	"dojo/_base/xhr",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
-	"dojo/query",
+	"dojo/dom",
+	"dojo/dom-construct",
+	"dojo/dom-style",
 	"dojo/DeferredList"
-], function(_Module, declare, lang, Deferred, html, xhr, array, has, query, DeferredList){
+], function(_Module, declare, lang, Deferred, xhr, array, sniff, dom, domConstruct, domStyle, DeferredList){
+
+	function loadCSSFiles(cssFiles){
+		var dl = array.map(cssFiles, function(cssFile){
+			cssFile = lang.trim(cssFile);
+			if(cssFile.substring(cssFile.length - 4).toLowerCase() === '.css'){
+				return xhr.get({
+					url: cssFile
+				});
+			}else{
+				var d = new Deferred();
+				d.callback(cssFile);
+				return d;
+			}
+		});
+		return DeferredList.prototype.gatherResults(dl);
+	}
+	
 	return _Module.register(
 	declare(_Module, {
 		name: 'printer',
+
 		forced: ['table'],
 		
 		constructor: function(grid, args){
-			//Presort...
+			var t = this;
 			args = lang.isObject(args) ? args : {};
-			this._title = args.title ? args.title : "";
+			t._title = args.title ? args.title : "";
 			if(args.cssFiles){
 				if(lang.isString(args.cssFiles)){
-					this._cssFiles = [args.cssFiles];
+					t._cssFiles = [args.cssFiles];
 				}else if(lang.isArray(args.cssFiles)){
-					this._cssFiles = args.cssFiles;
+					t._cssFiles = args.cssFiles;
 				}else{
-					this._cssFiles = null;
+					t._cssFiles = null;
 				}
 			}
 		},
@@ -41,61 +60,46 @@ define([
 			//		Print all rows of the grid.
 			//	exportArgs: Object
 			//		Please refer to `grid.exporter.__ExportArgs`
-			var _this = this;
-			this.grid.exporter.toTable(exportArgs).then(function(str){
-				_this._wrapHTML(_this._title, _this._cssFiles, str).then(function(result){
-					console.log(result);
-					_this._print(result);
+			var t = this;
+			t.grid.exporter.toTable(exportArgs).then(function(str){
+				t._wrapHTML(t._title, t._cssFiles, str).then(function(result){
+					t._print(result);
 				});
 			});
 		},
 		
 		//[private]
-		_loadCSSFiles: function(cssFiles){
-			var dl = array.map(cssFiles, function(cssFile){
-				cssFile = lang.trim(cssFile);
-				if(cssFile.substring(cssFile.length - 4).toLowerCase() === '.css'){
-					return xhr.get({
-						url: cssFile
-					});
-				}else{
-					var d = new Deferred();
-					d.callback(cssFile);
-					return d;
-				}
-			});
-			return DeferredList.prototype.gatherResults(dl);
-		},
-		
-		_wrapHTML: function(/* string */title, /* Array */cssFiles, /* string */body_content){
+		//
+		_wrapHTML: function(/* string */title, /* Array */cssFiles, /* string */bodyContent){
 			// summary:
-			//		Put title, cssFiles, and body_content together into an HTML string.
+			//		Put title, cssFiles, and bodyContent together into an HTML string.
 			// tags:
 			//		private
 			// title: String
 			//		A title for the html page.
 			// cssFiles: Array
 			//		css file pathes.
-			// body_content: String
+			// bodyContent: String
 			//		Content to print, not including <head></head> part and <html> tags
 			// returns:
 			//		the wrapped HTML string ready for print
-			return this._loadCSSFiles(cssFiles).then(function(cssStrs){
+			var ltr = this.grid.isLeftToRight();
+			return loadCSSFiles(cssFiles).then(function(cssStrs){
 				var i, sb = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
-						'<html ', html._isBodyLtr() ? '' : 'dir="rtl"', '><head><title>', title,
+						'<html ', ltr ? '' : 'dir="rtl"', '><head><title>', title,
 						'</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>'];
 				for(i = 0; i < cssStrs.length; ++i){
 					sb.push('<style type="text/css">', cssStrs[i], '</style>');
 				}
 				sb.push('</head>');
-				if(body_content.search(/^\s*<body/i) < 0){
-					body_content = '<body>' + body_content + '</body>';
+				if(bodyContent.search(/^\s*<body/i) < 0){
+					bodyContent = '<body>' + bodyContent + '</body>';
 				}
-				sb.push(body_content, '</html>');
+				sb.push(bodyContent, '</html>');
 				return sb.join('');
 			});
 		},
-		
+
 		_print: function(/* string */htmlStr){
 			// summary:
 			//		Do the print job.
@@ -105,7 +109,7 @@ define([
 			//		The html content string to be printed.
 			// returns:
 			//		undefined
-			var win, _this = this,
+			var win, t = this,
 				fillDoc = function(w){
 					var doc = w.document;
 					doc.open();
@@ -115,7 +119,7 @@ define([
 			if(!window.print){
 				//We don't have a print facility.
 				return;
-			}else if(has('chrome') || has('opera')){
+			}else if(sniff('chrome') || sniff('opera')){
 				//referred from dijit._editor.plugins.Print._print()
 				//In opera and chrome the iframe.contentWindow.print
 				//will also print the outside window. So we must create a
@@ -131,16 +135,16 @@ define([
 				win.close();
 			}else{
 				//Put private things in deeper namespace to avoid poluting grid namespace.
-				var fn = this._printFrame,
-					dn = this.grid.domNode;
+				var fn = t._printFrame,
+					dn = t.grid.domNode;
 				if(!fn){
 					var frameId = dn.id + "_print_frame";
-					if(!(fn = html.byId(frameId))){
+					if(!(fn = dom.byId(frameId))){
 						//create an iframe to store the grid data.
-						fn = html.create("iframe");
+						fn = domConstruct.create("iframe");
 						fn.id = frameId;
 						fn.frameBorder = 0;
-						html.style(fn, {
+						domStyle.set(fn, {
 							width: "1px",
 							height: "1px",
 							position: "absolute",
@@ -149,13 +153,13 @@ define([
 							border: "none",
 							overflow: "hidden"
 						});
-						if(!has('ie')){
-							html.style(fn, "visibility", "hidden");
+						if(!sniff('ie')){
+							domStyle.set(fn, "visibility", "hidden");
 						}
 						dn.appendChild(fn);
 					}
 					//Reuse this iframe
-					this._printFrame = fn;
+					t._printFrame = fn;
 				}
 				win = fn.contentWindow;
 				fillDoc(win);

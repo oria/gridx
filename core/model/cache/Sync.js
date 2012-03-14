@@ -31,12 +31,11 @@ define([
 		},
 
 		_fetchChildren: function(){
-			var struct = this._strut, parentIds = struct[''].slice(1);
-			while(parentIds.length){
-				var pid = parentIds.shift();
+			var s = this._struct, pids = s[''].slice(1), pid;
+			while(pids.length){
+				pid = pids.shift();
 				this._loadChildren(pid).then(function(){
-					var children = _struct[pid].slice(1);
-					[].push.apply(parentIds, children);
+					[].push.apply(pids, s[pid].slice(1));
 				});
 			}
 		}

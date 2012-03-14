@@ -11,16 +11,17 @@ define([
 			// summary:
 			//		constructor function;
 			//		it is separate so it can be (dynamically) overwritten in case of need
-			this.isA11y = domClass.contains(win.body(), "dijit_a11y");
+			var t = this;
+			t.isA11y = domClass.contains(win.body(), "dijit_a11y");
 			
-			this.node = domConstruct.toDom(["<table border='0' cellspacing='0' class='gridxDndAvatar' ",
+			t.node = domConstruct.toDom(["<table border='0' cellspacing='0' class='gridxDndAvatar' ",
 				"style='position: absolute; z-index: 1999; margin: 0'>",
 				"<tbody><tr style='opacity: 0.9;'>",
 					"<td class='gridxDnDIcon'>",
-						this.isA11y ? "<span id='a11yIcon'>" + (this.manager.copy ? '+' : '<') + "</span>" : '',
+						t.isA11y ? "<span id='a11yIcon'>" + (t.manager.copy ? '+' : '<') + "</span>" : '',
 					"</td>",
-					"<td class='gridxDnDItemIcon ", this._getIconClass(), "'></td>",
-					"<td><span class='gridxDnDItemCount'>", this._generateText(), "</span></td>",
+					"<td class='gridxDnDItemIcon ", t._getIconClass(), "'></td>",
+					"<td><span class='gridxDnDItemCount'>", t._generateText(), "</span></td>",
 				"</tr></tbody></table>"
 			].join(''));
 		},

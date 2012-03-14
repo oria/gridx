@@ -6,11 +6,14 @@ define([
 	"dojox/html/metrics",
 	"../core/_Module"
 ], function(declare, domStyle, sniff, Deferred, metrics, _Module){
+
+	var sl = 'scrollLeft';
+
 	return _Module.register(
 	declare(_Module, {
-		name: 'hscroller',
+		name: 'hScroller',
 
-		required: ['vLayout', 'hLayout'],
+//        required: ['vLayout', 'hLayout'],
 
 		forced: ['header'],
 
@@ -25,23 +28,22 @@ define([
 		},
 
 		preload: function(){
-			var g = this.grid;
-			this.container = g.hScrollerNode.parentNode;
+			var t = this, g = t.grid, n = g.hScrollerNode;
 			if(!g.autoWidth){
-				var nd = this.domNode = g.hScrollerNode;
-				g.vLayout.register(this, 'container', 'footerNode', 0);
-				this.stubNode = nd.firstChild;
-				nd.style.display = 'block';
-				this.batchConnect(
+				t.domNode = n;
+				t.container = n.parentNode;
+				t.stubNode = n.firstChild;
+				g.vLayout.register(t, 'container', 'footerNode', 0);
+				n.style.display = 'block';
+				t.batchConnect(
 					[g.header, 'onRender', 'refresh'],
-					[nd, 'onscroll', '_onScroll'],
+					[n, 'onscroll', '_onScroll'],
 					[g, '_onResizeBegin', function(changeSize, ds){
 						ds.hScroller = new Deferred();
 					}],
 					[g, '_onResizeEnd', function(changeSize, ds){
-						var _this = this;
 						Deferred.when(ds.header, function(){
-							_this.refresh();
+							t.refresh();
 							ds.hScroller.callback();
 						});
 					}]
@@ -49,36 +51,38 @@ define([
 				if(sniff('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
-					nd.style.height = metrics.getScrollbar().h + 'px';
+					n.style.height = metrics.getScrollbar().h + 'px';
 				}
 			}
 		},
 		
 		//Public API-----------------------------------------------------------
 		scroll: function(left){
-			this.domNode.scrollLeft = left;
+			this.domNode[sl] = left;
 		},
 		
 		refresh: function(){
 			//summary:
 			//	Refresh scroller itself to match grid body
-			var g = this.grid,
+			var t = this,
+				g = t.grid,
 				ltr = g.isLeftToRight(),
 				marginLead = ltr ? 'marginLeft' : 'marginRight',
 				marginTail = ltr ? 'marginRight' : 'marginLeft',
 				lead = g.hLayout.lead,
 				tail = g.hLayout.tail,
-				width = g.domNode.clientWidth - lead - tail,
+				w = (g.domNode.clientWidth || domStyle.get(g.domNode, 'width')) - lead - tail,
 				bn = g.header.innerNode,
 				pl = domStyle.get(bn, 'paddingLeft') || 0,	//TODO: It is special for column lock now.
-				s = this.domNode.style,
-				sw = bn.firstChild.offsetWidth,
+				s = t.domNode.style,
+				sw = bn.firstChild.offsetWidth + pl,
 				oldDisplay = s.display,
-				newDisplay = (sw <= width) ? 'none' : 'block';
+				newDisplay = (sw <= w) ? 'none' : 'block';
 			s[marginLead] = lead + pl + 'px';
 			s[marginTail] = tail + 'px';
-			s.width = width - pl + 'px';
-			this.stubNode.style.width = sw - pl + 'px';
+			//Insure IE does not throw error...
+			s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
+			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
 			if(oldDisplay == 'block' && newDisplay == 'none'){
 				g.vLayout.reLayout();
@@ -91,17 +95,18 @@ define([
 		_onScroll: function(e){
 			//summary:
 			//	Fired by h-scroller's scrolling event
-			if(this._lastLeft == this.domNode.scrollLeft){return;}
-			this._lastLeft = this.domNode.scrollLeft;
-			this._doScroll();
+			var t = this, s = t.domNode[sl];
+			if(t._lastLeft != s){
+				t._lastLeft = s;
+				t._doScroll();
+			}
 		},
 
 		_doScroll: function(rowNode){
 			//summary:
 			//	Sync the grid body with the scroller.
-			var scrollLeft = this.domNode.scrollLeft;
-			this.grid.bodyNode.scrollLeft = scrollLeft;
-			this.grid.onHScroll(scrollLeft);
+			var g = this.grid;
+			g.onHScroll(g.bodyNode[sl] = this.domNode[sl]);
 		}
 	}));
 });

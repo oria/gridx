@@ -2,26 +2,24 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
-	"dojo/_base/html",
 	"dojo/_base/sniff",
+	"dojo/dom-class",
 	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, query, array, html, sniff, keys, _Base, _Module){
+], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
 
 	return _Module.register(
 	declare(_Base, {
 		name: "selectColumn",
 
-		optional: ['columnResizer'],
-		
 		columnMixin: {
 			select: function(){
-				this.grid.select.column._markById(this.id, true);
+				this.grid.select.column._markById(this.id, 1);
 				return this;
 			},
 			deselect: function(){
-				this.grid.select.column._markById(this.id, false);
+				this.grid.select.column._markById(this.id, 0);
 				return this;
 			},
 			isSelected: function(){
@@ -31,11 +29,11 @@ define([
 		
 		//Public API----------------------------------------------------------------------
 		selectById: function(id){
-			this._markById(id, true);
+			this._markById(id, 1);
 		},
 		
 		deselectById: function(id){
-			this._markById(id, false);
+			this._markById(id, 0);
 		},
 		
 		isSelected: function(id){
@@ -44,9 +42,12 @@ define([
 		},
 		
 		getSelected: function(){
-			var ids = [], g = this.grid, i, count = g._columns.length, c;
+			var ids = [], i, c,
+				g = this.grid,
+				cols = g._columns,
+				count = cols.length;
 			for(i = 0; i < count; ++i){
-				c = g._columns[i];
+				c = cols[i];
 				if(c._selected){
 					ids.push(c.id);
 				}
@@ -57,7 +58,7 @@ define([
 		clear: function(){
 			var columns = this.grid._columns, i, count = columns.length;
 			for(i = 0; i < count; ++i){
-				this._markById(columns[i].id, false);
+				this._markById(columns[i].id, 0);
 			}
 		},
 		
@@ -65,48 +66,53 @@ define([
 		_type: 'column',
 
 		_init: function(){
-			this.batchConnect(
-				[this.grid, 'onHeaderCellClick', function(e){
-					if(!html.hasClass(e.target, 'gridxArrowButtonNode')){
-						this._select(e.columnId, e.ctrlKey);
+			var t = this;
+			t.batchConnect(
+				[t.grid, 'onHeaderCellClick', function(e){
+					if(!domClass.contains(e.target, 'gridxArrowButtonNode')){
+						t._select(e.columnId, e.ctrlKey);
 					}
 				}],
-				[this.grid, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[t.grid, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
-						this._select(e.columnId, e.ctrlKey);
+						t._select(e.columnId, e.ctrlKey);
 					}
 				}]
 			);
 		},
 
 		_markById: function(id, toSelect){
-			if(this.arg('enabled')){
-				var c = this.grid._columnsById[id];
+			var t = this, c = t.grid._columnsById[id];
+			if(t.arg('enabled')){
 				toSelect = !!toSelect;
 				if(c && !c._selected == toSelect){
 					c._selected = toSelect;
-					this._highlight(id, toSelect);
-					this[toSelect ? "onSelected" : "onDeselected"](this.grid.column(id, true));
+					t._highlight(id, toSelect);
+					t[toSelect ? "onSelected" : "onDeselected"](t.grid.column(id, 1));
 				}
 			}
 		},
 		
 		_highlight: function(id, toHighlight){
-			query("[colid='" + id + "']", this.grid.bodyNode).forEach(function(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, 'gridxColumnSelected');
-				this.onHighlightChange({column: this.grid._columnsById[id].index}, toHighlight);
-			}, this);
+			var t = this, g = t.grid;
+			query("[colid='" + id + "']", g.bodyNode).forEach(function(node){
+				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
+				t.onHighlightChange({column: g._columnsById[id].index}, toHighlight);
+			});
 		},
 
 		_onRender: function(start, count){
-			var i, j, end = start + count, bn = this.grid.bodyNode, node;
-			var cols = array.filter(this.grid._columns, function(col){
-				return col._selected;
-			});
+			var i, j, node,
+				end = start + count,
+				g = this.grid,
+				bn = g.bodyNode,
+				cols = array.filter(g._columns, function(col){
+					return col._selected;
+				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
 					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
-					html.addClass(node, 'gridxColumnSelected');
+					domClass.add(node, 'gridxColumnSelected');
 				}
 			}
 		}

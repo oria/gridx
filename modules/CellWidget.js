@@ -47,30 +47,33 @@ define([
 	};
 	=====*/
 	
-	var CellWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-	
-		content: '',
-	
-		setCellValue: null,
-	
-		postMixInProperties: function(){
-			this.templateString = ['<div class="gridxCellWidget">', this.content, '</div>'].join('');
-		},
-	
-		setValue: function(gridData, storeData){
-			query('.gridxHasGridCellValue', this.domNode).map(function(node){
-				return registry.byNode(node);
-			}).forEach(function(widget){
-				if(widget){
-					var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
-					widget.set('value', useStoreData ? storeData : gridData);
+	var dummyFunc = function(){ return ''; },
+
+		CellWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+		
+			content: '',
+		
+			setCellValue: null,
+		
+			postMixInProperties: function(){
+				this.templateString = ['<div class="gridxCellWidget">', this.content, '</div>'].join('');
+			},
+		
+			setValue: function(gridData, storeData){
+				var t = this;
+				query('.gridxHasGridCellValue', t.domNode).map(function(node){
+					return registry.byNode(node);
+				}).forEach(function(widget){
+					if(widget){
+						var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
+						widget.set('value', useStoreData ? storeData : gridData);
+					}
+				});
+				if(t.setCellValue){
+					t.setCellValue(gridData, storeData, t);
 				}
-			});
-			if(this.setCellValue){
-				this.setCellValue(gridData, storeData, this);
 			}
-		}
-	});
+		});
 
 	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
 	
@@ -78,7 +81,7 @@ define([
 	declare(_Module, {
 		name: 'cellWidget',
 	
-		required: ['body'],
+//        required: ['body'],
 	
 		getAPIPath: function(){
 			return {
@@ -89,14 +92,11 @@ define([
 		constructor: function(){
 			this._decorators = {};
 			var i, col, columns = this.grid._columns;
-			var dummy = function(){
-				return "";
-			};
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
 				if(col.decorator && col.widgetsInCell){
 					col.userDecorator = col.decorator;
-					col.decorator = dummy;
+					col.decorator = dummyFunc;
 					col._cellWidgets = {};
 					col._backupWidgets = [];
 				}
@@ -104,23 +104,24 @@ define([
 		},
 	
 		preload: function(){
-			var body = this.grid.body;
-			this.batchConnect(
+			var t = this, body = t.grid.body;
+			t.batchConnect(
 				[body, 'onAfterRow', '_showDijits'],
 				[body, 'onAfterCell', '_showDijit'],
 				[body, 'onUnrender', '_onUnrenderRow']
 			);
-			this._initFocus();
+			t._initFocus();
 		},
 	
 		destory: function(){
 			this.inherited(arguments);
-			var i, id, col, columns = this.grid._columns;
+			var i, id, col, cw, columns = this.grid._columns;
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
-				if(col._cellWidgets){
-					for(id in col._cellWidgets){
-						col._cellWidgets[id].destroyRecursive();
+				cw = col._cellWidgets;
+				if(cw){
+					for(id in cw){
+						cw[id].destroyRecursive();
 					}
 					delete col._cellWidgets;
 				}
@@ -188,14 +189,15 @@ define([
 	
 		//Private---------------------------------------------------------------
 		_showDijits: function(rowInfo, rowCache){
-			var rowNode = query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0],
-				i, col, cellNode, cellWidget, columns = this.grid._columns;
+			var t = this,
+				rowNode = query('[rowid="' + rowInfo.rowId + '"]', t.grid.bodyNode)[0],
+				i, col, cellNode, cellWidget, columns = t.grid._columns;
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
-				if(col.userDecorator || this._getSpecialCellDec(rowInfo.rowId, col.id)){
+				if(col.userDecorator || t._getSpecialCellDec(rowInfo.rowId, col.id)){
 					cellNode = query('[colid="' + col.id + '"]', rowNode)[0];
 					if(cellNode){
-						cellWidget = this._getCellWidget(col, rowInfo, rowCache);
+						cellWidget = t._getCellWidget(col, rowInfo, rowCache);
 						if(sniff('ie')){
 							while(cellNode.childNodes.length){
 								cellNode.removeChild(cellNode.firstChild);
@@ -290,18 +292,18 @@ define([
 
 		//Focus
 		_initFocus: function(){
-			var focus = this.grid.focus;
+			var t = this, focus = t.grid.focus;
 			if(focus){
 				focus.registerArea({
 					name: 'celldijit',
 					priority: 1,
-					scope: this,
-					doFocus: this._doFocus,
-					doBlur: this._doBlur,
-					onFocus: this._onFocus,
-					onBlur: this._endNavigate,
+					scope: t,
+					doFocus: t._doFocus,
+					doBlur: t._doBlur,
+					onFocus: t._onFocus,
+					onBlur: t._endNavigate,
 					connects: [
-						this.connect(this.grid, 'onCellKeyPress', '_onKey')
+						t.connect(t.grid, 'onCellKeyPress', '_onKey')
 					]
 				});
 			}
@@ -309,13 +311,13 @@ define([
 
 		_doFocus: function(evt, step){
 			if(this._navigating){
-				var elems = this._navElems;
-				var func = function(){
-					var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
-					if(toFocus){
-						toFocus.focus();
-					}
-				};
+				var elems = this._navElems,
+					func = function(){
+						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
+						if(toFocus){
+							toFocus.focus();
+						}
+					};
 				if(sniff('webkit')){
 					func();
 				}else{
@@ -328,38 +330,41 @@ define([
 
 		_doBlur: function(evt, step){
 			if(evt){
-				var elems = this._navElems;
-				var firstElem = elems.lowest || elems.first;
-				var lastElem = elems.last || elems.highest || firstElem;
-				var target = sniff('ie') ? evt.srcElement : evt.target;
+				var t = this,
+					m = t.model,
+					g = t.grid,
+					body = g.body,
+					elems = t._navElems,
+					firstElem = elems.lowest || elems.first,
+					lastElem = elems.last || elems.highest || firstElem,
+					target = sniff('ie') ? evt.srcElement : evt.target;
 				if(target == (step > 0 ? lastElem : firstElem)){
 					event.stop(evt);
-					this.model.when({id: this._focusRowId}, function(){
-						var rowIndex = this.grid.body.getRowInfo({
-							parentId: this.model.treePath(this._focusRowId).pop(), 
-							rowIndex: this.model.idToIndex(this._focusRowId)
-						}).visualIndex;
-						var colIndex = this.grid._columnsById[this._focusColId].index;
-						var dir = step > 0 ? 1 : -1;
-						var _this = this;
-						var checker = function(r, c){
-							return _this._isNavigable(_this.grid._columns[c].id);
-						};
-						this.grid.body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-							_this._focusColId = _this.grid._columns[obj.c].id;
+					m.when({id: t._focusRowId}, function(){
+						var rowIndex = body.getRowInfo({
+								parentId: m.treePath(t._focusRowId).pop(), 
+								rowIndex: m.idToIndex(t._focusRowId)
+							}).visualIndex,
+							colIndex = g._columnsById[t._focusColId].index,
+							dir = step > 0 ? 1 : -1,
+							checker = function(r, c){
+								return t._isNavigable(g._columns[c].id);
+							};
+						body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
+							t._focusColId = g._columns[obj.c].id;
 							//This kind of breaks the encapsulation...
-							var rowInfo = _this.grid.body.getRowInfo({visualIndex: obj.r});
-							_this._focusRowId = _this.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-							_this.grid.body._focusCellCol = obj.c;
-							_this.grid.body._focusCellRow = obj.r;
-							_this._beginNavigate(_this._focusRowId, _this._focusColId);
-							_this._doFocus(null, step);
+							var rowInfo = body.getRowInfo({visualIndex: obj.r});
+							t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+							body._focusCellCol = obj.c;
+							body._focusCellRow = obj.r;
+							t._beginNavigate(t._focusRowId, t._focusColId);
+							t._doFocus(null, step);
 						});
-					}, this);
+					});
 				}
 				return false;
 			}else{
-				this._navigating = false;
+				t._navigating = false;
 				return true;
 			}
 		},
@@ -370,11 +375,12 @@ define([
 		},
 
 		_beginNavigate: function(rowId, colId){
-			if(this._isNavigable(colId)){
-				this._navigating = true;
-				this._focusColId = colId;
-				this._focusRowId = rowId;
-				this._navElems = a11y._getTabNavigable(this.grid.body.getCellNode({
+			var t = this;
+			if(t._isNavigable(colId)){
+				t._navigating = true;
+				t._focusColId = colId;
+				t._focusRowId = rowId;
+				t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
 					rowId: rowId, 
 					colId: colId
 				}));
@@ -406,17 +412,15 @@ define([
 		},
 		
 		_onKey: function(e){
-			var focus = this.grid.focus;
-			if(e.keyCode === keys.F2 && !this._navigating && focus.currentArea() === 'body'){
-				if(this._beginNavigate(e.rowId, e.columnId)){
+			var t = this, focus = t.grid.focus;
+			if(e.keyCode == keys.F2 && !t._navigating && focus.currentArea() == 'body'){
+				if(t._beginNavigate(e.rowId, e.columnId)){
 					event.stop(e);
 					focus.focusArea('celldijit');
 				}
-			}else if(e.keyCode === keys.ESCAPE && this._navigating && focus.currentArea() === 'celldijit'){
-				this._navigating = false;
+			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'celldijit'){
+				t._navigating = false;
 				focus.focusArea('body');
-//            }else if(this._navigating && e.keyCode !== keys.TAB){
-//                event.stop(e);
 			}
 		}
 	}));

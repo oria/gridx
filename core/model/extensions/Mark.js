@@ -15,7 +15,7 @@ define([
 			this._mixinAPI('isMarked', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark');
 			model.onMarked = function(){};
 			model.onMarkRemoved = function(){};
-			this.connect(model, '_sendMsg', '_receiveMsg');
+			this.connect(model, '_msg', '_receiveMsg');
 			model._spTypes = {};
 		},
 
@@ -44,7 +44,7 @@ define([
 
 		markById: function(id, toMark, type){
 			//Should we make this sync?
-			this._cmd(id, toMark, type, true);
+			this._cmd(id, toMark, type, 1);
 		},
 
 		markByIndex: function(index, toMark, type){
@@ -56,17 +56,18 @@ define([
 
 		//Private----------------------------------------------------------------
 		_mark: function(id, toMark, type){
-			type = this._initMark(type);
-			var isMarked = this.isMarked(id, type);
+			var t = this,
+				tp = t._initMark(type),
+				isMarked = t.isMarked(id, tp);
 			if(toMark && !isMarked){
-				this._addMark(id, type);
+				t._addMark(id, tp);
 			}else if(!toMark && isMarked){
-				this._removeMark(id, type);
+				t._removeMark(id, tp);
 			}
 		},
 
 		_cmdMark: function(){
-			var args = arguments, ranges = [], m = this.model._model, _this = this;
+			var t = this, args = arguments, ranges = [], m = t.model._model;
 			array.forEach(args, function(arg){
 				if(!arg[3]){
 					ranges.push({
@@ -83,32 +84,37 @@ define([
 					if(!arg[3]){
 						arg[0] = m._call('indexToId', [arg[0]]);
 					}
-					_this._mark.apply(_this, arg);
+					if(arg[0]){
+						t._mark.apply(t, arg);
+					}
 				});
 			}]);
 		},
 
 		_onDelete: function(id){
-			for(var type in this._byId){
-				delete this._byId[this._initMark(type)][id];
+			var t = this, tp, c = t._byId;
+			for(tp in c){
+				delete c[t._initMark(tp)][id];
 			}
-			this.onDelete.apply(this, arguments);
+			t.onDelete.apply(t, arguments);
 		},
 
 		_initMark: function(type){
-			type = type || "select";
-			this._byId[type] = this._byId[type] || {};
-			return type;
+			var c = this._byId, tp = type || 'select';
+			c[tp] = c[tp] || {};
+			return tp;
 		},
 
 		_addMark: function(id, type){
-			this._byId[this._initMark(type)][id] = true;
-			this.model.onMarked(id, type);
+			var t = this, tp = t._initMark(type);
+			t._byId[tp][id] = 1;
+			t.model.onMarked(id, tp);
 		},
 
 		_removeMark: function(id, type){
-			delete this._byId[this._initMark(type)][id];
-			this.model.onMarkRemoved(id, type);
+			var t = this, tp = t._initMark(type);
+			delete t._byId[tp][id];
+			t.model.onMarkRemoved(id, tp);
 		},
 
 		_cmd: function(){
@@ -121,13 +127,13 @@ define([
 		},
 
 		_receiveMsg: function(msg, filteredIds){
-			if(msg === 'filter'){
-				var type, spTypes = this.model._spTypes, id;
-				for(type in spTypes){
-					if(spTypes[type]){
-						for(id in this._byId[type]){
+			if(msg == 'filter'){
+				var t = this, tp, sp = t.model._spTypes, id;
+				for(tp in sp){
+					if(sp[tp]){
+						for(id in t._byId[tp]){
 							if(!filteredIds[id]){
-								this._removeMark(id, type);
+								t._removeMark(id, tp);
 							}
 						}
 					}

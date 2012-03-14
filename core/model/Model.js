@@ -5,28 +5,31 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/_base/connect"
-], function(declare, array, lang, Deferred, DeferredList, connect){
+], function(declare, array, lang, Deferred, DeferredList, cnnt){
+
+	var isArrayLike = lang.isArrayLike,
+		isString = lang.isString;
 
 	return declare(null, {
 		constructor: function(args){
-			this.store = args.store;
-			this._exts = {};
-			this._cmdQueue = [];
-			this._model = this._cache = new args.cacheClass(this, args);
-			this._createExtensions(args.modelExtensions || [], args);
-			var m = this._model;
-			this._connects = [
-				connect.connect(m, "onDelete", this, "onDelete"),
-				connect.connect(m, "onNew", this, "onNew"),
-				connect.connect(m, "onSet", this, "onSet"),
-				connect.connect(m, "onSizeChange", this, "onSizeChange")
+			var t = this, c = 'connect';
+			t.store = args.store;
+			t._exts = {};
+			t._cmdQueue = [];
+			var m = t._model = t._cache = new args.cacheClass(t, args);
+			t._createExts(args.modelExtensions || [], args);
+			t._connects = [
+				cnnt[c](m, "onDelete", t, "onDelete"),
+				cnnt[c](m, "onNew", t, "onNew"),
+				cnnt[c](m, "onSet", t, "onSet"),
+				cnnt[c](m, "onSizeChange", t, "onSizeChange")
 			];
 		},
 	
 		destroy: function(){
-			array.forEach(this._connects, connect.disconnect);
-			for(var name in this._exts){
-				this._exts[name].destroy();
+			array.forEach(this._connects, cnnt.disconnect);
+			for(var n in this._exts){
+				this._exts[n].destroy();
 			}
 		},
 	
@@ -70,11 +73,11 @@ define([
 								break;
 							}
 						}
-						if(callback(rows, s) || i === end){
+						if(callback(rows, s) || i == end){
 							end = -1;
 						}
 					}).then(function(){
-						if(end === -1){
+						if(end == -1){
 							d.callback();
 						}else{
 							f(s + pageSize);
@@ -92,7 +95,7 @@ define([
 		onSizeChange: function(/*size, oldSize*/){},
 
 		//Package----------------------------------------------------------------------------
-		_sendMsg: function(/* msg */){},
+		_msg: function(/* msg */){},
 
 		_addCmd: function(args){
 			//Add command to the command queue, and combine same kind of commands if possible.
@@ -108,44 +111,30 @@ define([
 
 		//Private----------------------------------------------------------------------------
 		_cmdRequest: function(){
-			var _this = this,
-				defs = array.map(arguments, function(args){
-					var arg = args[0],
-						callback = args[1],
-						scope = args[2];
-					if(arg === null || !args.length){
-						if(callback){
-							callback.apply(scope || window);
-						}
-						var d = new Deferred();
-						d.callback();
-						return d;
-					}else{
-						arg = _this._normalizeArgs(arg);
-						return _this._model._call('when', [arg, function(){
-							if(callback){
-								callback.apply(scope || window);
-							}
-						}]);
-					}
-				});
-			return new DeferredList(defs, 0, 1);
+			return new DeferredList(array.map(arguments, function(args){
+				var arg = args[0],
+					scope = args[2],
+					callback = lang.hitch(scope || window, args[1] || function(){});
+				if(arg === null || !args.length){
+					callback();
+					var d = new Deferred();
+					d.callback();
+					return d;
+				}
+				return this._model._call('when', [this._normArgs(arg), callback]);
+			}, this), 0, 1);
 		},
 
 		_exec: function(){
 			//Execute commands one by one.
-			if(this._busy){
-				return this._busy;
-			}
-			this._cache.skipCacheSizeCheck = 1;
-			var _this = this,
-				d = _this._busy = new Deferred(),
-				cmds = _this._cmdQueue,
+			var t = this, c = t._cache,
+				d = new Deferred(),
+				cmds = t._cmdQueue,
 				finish = function(d, err){
-					delete _this._busy;
-					delete _this._cache.skipCacheSizeCheck;
-					if(_this._cache._checkSize){
-						_this._cache._checkSize();
+					t._busy = 0;
+					c.skipCacheSizeCheck = 0;
+					if(c._checkSize){
+						c._checkSize();
 					}
 					if(err){
 						d.errback(err);
@@ -167,19 +156,23 @@ define([
 									return;
 								}
 							}
-							finish(d);
 						}catch(e){
 							finish(d, e);
+							return;
 						}
-					}else{
-						finish(d);
 					}
+					finish(d);
 				};
+			if(t._busy){
+				return t._busy;
+			}
+			t._busy = d;
+			c.skipCacheSizeCheck = 1;
 			func();
 			return d;
 		},
 	
-		_createExtensions: function(exts, args){
+		_createExts: function(exts, args){
 			//Ensure the given extensions are valid
 			exts = array.filter(exts, function(ext){
 				return ext && ext.prototype;
@@ -198,54 +191,55 @@ define([
 			}
 		},
 	
-		_normalizeArgs: function(args){
-			var i, res = {
-				range: [],
-				id: []
+		_normArgs: function(args){
+			var i, rgs = [], ids = [],
+			res = {
+				range: rgs,
+				id: ids 
 			},
 			isIndex = function(a){
-				return typeof a === 'number' && a >= 0;
+				return typeof a == 'number' && a >= 0;
 			},
 			isRange = function(a){
-				return a && typeof a.start === 'number' && a.start >= 0;
+				return a && isIndex(a.start);
 			},
 			f = function(a){
 				if(isRange(a)){
-					res.range.push(a);
+					rgs.push(a);
 				}else if(isIndex(a)){
-					res.range.push({start: a, count: 1});
-				}else if(lang.isArrayLike(a)){
+					rgs.push({start: a, count: 1});
+				}else if(isArrayLike(a)){
 					for(i = a.length - 1; i >= 0; --i){
 						if(isIndex(a[i])){
-							res.range.push({
+							rgs.push({
 								start: a[i],
 								count: 1
 							});
 						}else if(isRange(a[i])){
-							res.range.push(a[i]);
-						}else if(lang.isString(a)){
-							res.id.push(a[i]);
+							rgs.push(a[i]);
+						}else if(isString(a)){
+							ids.push(a[i]);
 						}
 					}
-				}else if(lang.isString(a)){
-					res.id.push(a);
+				}else if(isString(a)){
+					ids.push(a);
 				}
 			};
 			if(args && (args.index || args.range || args.id)){
 				f(args.index);
 				f(args.range);
-				if(lang.isArrayLike(args.id)){
+				if(isArrayLike(args.id)){
 					for(i = args.id.length - 1; i >= 0; --i){
-						res.id.push(args.id[i]);
+						ids.push(args.id[i]);
 					}
-				}else if(args.id !== undefined){
-					res.id.push(args.id);
+				}else if(args.id){
+					ids.push(args.id);
 				}
 			}else{
 				f(args);
 			}
-			if(!res.range.length && !res.id.length && this.size() < 0){
-				res.range.push({start: 0, count: this._cache.pageSize || 1});
+			if(!rgs.length && !ids.length && this.size() < 0){
+				rgs.push({start: 0, count: this._cache.pageSize || 1});
 			}
 			return res;
 		}

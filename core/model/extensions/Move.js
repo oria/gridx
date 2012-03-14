@@ -1,12 +1,94 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	'../_Extension'
-], function(declare, array, lang, Deferred, DeferredList, _Extension){
+], function(declare, lang, Deferred, DeferredList, _Extension){
 
+	var hitch = lang.hitch;
+
+	function getMoves(indexes, target){
+		//Transform arbitrary index array to an array of standard moves: [start, count, target].
+		var i, len, arr = [], moves = [], move, 
+			beforeBegin = 1, afterBegin = 1,
+			beforeTarget = target, afterTarget = target, pos;
+		for(i = 0, len = indexes.length; i < len; ++i){
+			arr[indexes[i]] = 1;
+		}
+		for(i = 0, len = arr.length; i < len; ++i){
+			if(arr[i]){
+				if(i < target){
+					if(beforeBegin){
+						beforeBegin = 0;
+						move = [i, 1];
+						pos = moves.length;
+						moves.unshift(move);
+					}else if(arr[i - 1]){
+						++move[1];
+					}
+				}else{
+					if(afterBegin){
+						afterBegin = 0;
+						move = [i, 1, afterTarget];
+						moves.push(move);
+						++afterTarget;
+					}else if(arr[i - 1]){
+						++move[1];
+						++afterTarget;
+					}
+				}
+			}else{
+				beforeBegin = afterBegin = 1;
+			}
+		}
+		for(i = 0; i <= pos; ++i){
+			move = moves[i];
+			move[2] = beforeTarget;
+			beforeTarget -= move[1];
+		}
+		return moves;
+	}
+
+	function mapIndex(start, count, target, map){
+		//Do the actual mapping index work.
+		var mapping = {}, from, to, i, revMap = {};
+
+		if(target > start + count){
+			//target is after the range
+			for(i = 0; i < count; ++i){
+				mapping[start + i] = target + i - count;
+			}
+			for(i = 0; i < target - start - count; ++i){
+				mapping[start + count + i] = start + i;
+			}
+		}else if(target < start){
+			//target is before the range
+			for(i = 0; i < count; ++i){
+				mapping[start + i] = target + i;
+			}
+			for(i = 0; i < start - target; ++i){
+				mapping[target + i] = target + i + count;
+			}
+		}else{
+			//target is in the range
+			return;
+		}
+		for(from in map){
+			revMap[map[from]] = parseInt(from, 10);
+		}
+		for(from in mapping){
+			to = mapping[from];
+			if(revMap.hasOwnProperty(from)){
+				from = revMap[from];
+			}
+			if(from == to){
+				delete map[from];
+			}else{
+				map[from] = to;
+			}
+		}
+	}
 	return declare(_Extension, {
 		// Not compatible with Sort and Map extensions!
 		name: 'move',
@@ -14,23 +96,21 @@ define([
 		priority: 10,
 
 		constructor: function(model, args){
-			this._mixinAPI('move', 'moveIndexes', 'insert');
+			var t = this, options = model._cache.options = model._cache.options || {};
+			t._mixinAPI('move', 'moveIndexes', 'insert');
 			model.onMoved = function(){};
 			//User can customize how to deal with moved rows by providing his own updateStore method.
 			if(args.updateStore){
-				this.updateStore = args.updateStore;
+				t.updateStore = args.updateStore;
 			}
-			var options = model._cache.options = model._cache.options || {};
 			if(args.moveSortInfo){
 				//User can customize the whole sort info.
 				options.sort = args.moveSortInfo;
 			}else{
 				//Or just provide a field indicating the moving order (recommended)
-				var attr = this.moveField = args.moveField || 'order',
-					desc = this.moveFieldDescending = args.moveFieldDescending || false;
 				options.sort = [{
-					attribute: attr,
-					descending: desc
+					attribute: t.moveField = args.moveField || 'order',
+					descending: t.moveFieldDescending = args.moveFieldDescending || false
 				}];
 			}
 		},
@@ -71,8 +151,8 @@ define([
 
 		insert: function(dataArray, prevItem, nextItem){
 			var finished = new Deferred(),
-				success = lang.hitch(finished, finished.callback),
-				fail = lang.hitch(finished, finished.errback),
+				success = hitch(finished, finished.callback),
+				fail = hitch(finished, finished.errback),
 				moveField = this.moveField,
 				store = this.model.store,
 				i, data, dl = [],
@@ -100,7 +180,7 @@ define([
 					store.newItem(data);
 				}else{
 					var d = new Deferred();
-					Deferred.when(store.add(data), lang.hitch(d, d.callback), lang.hitch(d, d.errback));
+					Deferred.when(store.add(data), hitch(d, d.callback), hitch(d, d.errback));
 					dl.push(d);
 				}
 			}
@@ -110,7 +190,7 @@ define([
 					onError: fail
 				});
 			}else{
-				(new DeferredList(dl)).then(success, fail);
+				new DeferredList(dl).then(success, fail);
 			}
 			return finished;
 		},
@@ -143,8 +223,8 @@ define([
 			//		so it has exactly the same information as "moves". But it is pre-processed to reflect the final index mapping
 			//		after all these movements are done, so it might be easier to use.
 			var reverseIndexes = [], info = [], indexes = [], ranges = [],
-				from, to, m = {}, i, dif, cat = {}, mostDif, maxCount = 0,
-				inner = this.inner, store = this.model.store, moveField = this.moveField, dl = [],
+				from, to, m = {}, i, dif, cat = {}, mostDif, maxCount = 0, t = this, 
+				inner = t.inner, store = t.model.store, moveField = t.moveField, dl = [],
 
 				findBefore = function(to){
 					if(to > 0){
@@ -191,7 +271,7 @@ define([
 						var d = new Deferred();
 						Deferred.when(store.put(item, {
 							overwrite: true
-						}), lang.hitch(d, d.callback));
+						}), hitch(d, d.callback));
 						dl.push(d);
 					}
 				},
@@ -300,118 +380,37 @@ define([
 		//Private--------------------------------------------------------------------
 		_cmdMove: function(){
 			//Process the move command
-			var d = new Deferred(), _this = this, i, args,
+			var d = new Deferred(), t = this,
+				m = t.model, i, args,
 				map = {}, moved, moves = [],
-				size = this.inner._call('size');
+				size = t.inner._call('size');
 
 			for(i = 0; args = arguments[i]; ++i){
-				this.model._sendMsg('beforeMove', args);
+				m._msg('beforeMove', args);
 				if(args.length == 2){
-					moves = moves.concat(this._getMoves(args[0], args[1]));
+					moves = moves.concat(getMoves(args[0], args[1]));
 				}else{
 					moves.push(args);
 				}
 			}
 			for(i = 0; args = moves[i]; ++i){
-				this._mapIndex(args[0], args[1], args[2], map);
+				mapIndex(args[0], args[1], args[2], map);
 			}
 			for(i in map){
 				moved = 1;
 				break;
 			}
 			if(moved){
-				this.updateStore(d, moves, map);
+				t.updateStore(d, moves, map);
 			}else{
 				d.callback();
 			}
 			d.then(function(){
-				_this.model._cache.clear();
-				_this.model._sendMsg('moved', map);
-				_this.model.onMoved(moves, map);
+				m._cache.clear();
+				m._msg('moved', map);
+				m.onMoved(moves, map);
 			});
 			return d;
-		},
-
-		_getMoves: function(indexes, target){
-			//Transform arbitrary index array to an array of standard moves: [start, count, target].
-			var i, len, arr = [], moves = [], move, 
-				beforeBegin = 1, afterBegin = 1,
-				beforeTarget = target, afterTarget = target, pos;
-			for(i = 0, len = indexes.length; i < len; ++i){
-				arr[indexes[i]] = 1;
-			}
-			for(i = 0, len = arr.length; i < len; ++i){
-				if(arr[i]){
-					if(i < target){
-						if(beforeBegin){
-							beforeBegin = 0;
-							move = [i, 1];
-							pos = moves.length;
-							moves.unshift(move);
-						}else if(arr[i - 1]){
-							++move[1];
-						}
-					}else{
-						if(afterBegin){
-							afterBegin = 0;
-							move = [i, 1, afterTarget];
-							moves.push(move);
-							++afterTarget;
-						}else if(arr[i - 1]){
-							++move[1];
-							++afterTarget;
-						}
-					}
-				}else{
-					beforeBegin = afterBegin = 1;
-				}
-			}
-			for(i = 0; i <= pos; ++i){
-				move = moves[i];
-				move[2] = beforeTarget;
-				beforeTarget -= move[1];
-			}
-			return moves;
-		},
-
-		_mapIndex: function(start, count, target, map){
-			//Do the actual mapping index work.
-			var mapping = {}, from, to, i, revMap = {};
-
-			if(target > start + count){
-				//target is after the range
-				for(i = 0; i < count; ++i){
-					mapping[start + i] = target + i - count;
-				}
-				for(i = 0; i < target - start - count; ++i){
-					mapping[start + count + i] = start + i;
-				}
-			}else if(target < start){
-				//target is before the range
-				for(i = 0; i < count; ++i){
-					mapping[start + i] = target + i;
-				}
-				for(i = 0; i < start - target; ++i){
-					mapping[target + i] = target + i + count;
-				}
-			}else{
-				//target is in the range
-				return;
-			}
-			for(from in map){
-				revMap[map[from]] = parseInt(from, 10);
-			}
-			for(from in mapping){
-				to = mapping[from];
-				if(revMap.hasOwnProperty(from)){
-					from = revMap[from];
-				}
-				if(from == to){
-					delete map[from];
-				}else{
-					map[from] = to;
-				}
-			}
 		}
 	});
 });

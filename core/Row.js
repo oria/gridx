@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare"
 ], function(declare){
 
-	return declare(null, {
+	return declare([], {
 		constructor: function(grid, id){
 			this.grid = grid;
 			this.model = grid.model;
