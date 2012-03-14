@@ -27,7 +27,6 @@ require([
 				modules.IndirectSelect,
 				//modules.RowHeader,
 				modules.VirtualVScroller
-//                modules.VScroller
 			].concat(mods) 
 		});
 		g.placeAt('gridContainer');

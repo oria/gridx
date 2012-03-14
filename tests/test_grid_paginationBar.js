@@ -17,21 +17,19 @@ require([
 			size: 100
 		}),
 		structure: dataSource.layouts[0],
-		selectRowTriggerOnCell: true,
+
+		//selectRowTriggerOnCell: true,
+		paginationInitialPage: 3,
+		paginationBarSizes: [5, 10, 20, 30, 0],
+		paginationBarVisibleSteppers: 5,
+		paginationBarPosition: 'bottom',
 		modules: [
-			{
-				moduleClass: modules.Pagination,
-//                initialPageSize: 5,
-				initialPage: 3
-			},
-			{
-				moduleClass: modules.PaginationBar,
-				sizes: [5, 10, 20, 30, 0],
-				visibleSteppers: 5,
-				position: 'bottom'
-			},
+			modules.Pagination,
+			modules.PaginationBar,
 			modules.Focus,
+			modules.RowHeader,
 			modules.ExtendedSelectRow,
+			//modules.IndirectSelect,
 			modules.VirtualVScroller
 		]
 	});

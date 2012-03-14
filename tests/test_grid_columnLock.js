@@ -23,7 +23,9 @@ require([
 			},
 			modules.ExtendedSelectCell,
 			modules.Edit,
-			modules.NestedSort
+//			modules.NestedSort,
+			modules.ColumnResizer
+			
 		]
 	});
 	grid.placeAt('gridContainer');

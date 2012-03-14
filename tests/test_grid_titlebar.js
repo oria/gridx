@@ -34,17 +34,17 @@ require([
 	//Test functions
 	
 	show = function(){
-		grid.titlebar.show();
+		grid.titleBar.domNode.style.display = 'block';
 	};
 	hide = function(){
-		grid.titlebar.hide();
+		grid.titleBar.domNode.style.display = 'none';
 	};
 	showDialog = function(){
 		dijit.byId('setTitleDialog').show();
 	};
 	submit = function(){
 		var label = dijit.byId("title_input").value;
-		grid.titlebar.setLabel(label);
+		grid.titleBar.setLabel(label);
 		dijit.byId("title_input").set('value', "");
 		dijit.byId('setTitleDialog').hide();
 	};

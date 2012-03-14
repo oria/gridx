@@ -82,6 +82,36 @@ require([
 		
 	};
 	
+	
+	var radioButtonDecorator = function(){
+		return [
+		'<input data-dojo-type="dijit.form.RadioButton" data-dojo-attach-point="rb"</input>',
+        '<label data-dojo-attach-point="radioLabel"></label>'
+		
+		].join('');
+	};
+	
+	var radioButtonSetCellValue = function(data){
+		this.rb.value=data;
+		this.radioLabel.innerHTML=data;
+	};
+	
+	var comboBoxDecorator = function(){
+		return [
+		'<select name="stateSelect" data-dojo-type="dijit.form.ComboBox"',
+        'data-dojo-props="value: \'\',placeHolder: \'Select a State\'">',
+        '<option value="AL">Alabama</option>',
+        '<option value="AK">Alaska</option>',
+        '<option value="AZ">Arizona</option>',
+        '<option value="AR">Arkansas</option>',
+        '<option value="CA">California</option>',
+		'</select>'
+		
+		
+		].join('');
+	
+	};
+	
 	var dropDownButtonDecorator = function(){
 		return [
 		 '<div data-dojo-type="dijit.form.DropDownButton"',
@@ -117,6 +147,19 @@ require([
 			widgetsInCell: true,
 			decorator: albumDecorator,
 			setCellValue: albumSetCellValue
+		},
+		
+		 { field: "Genre", name:"Genre", 
+			widgetsInCell: true,
+			decorator: radioButtonDecorator,
+			setCellValue: radioButtonSetCellValue
+		
+		}, 
+		{ field: "State", name:"State", 
+			widgetsInCell: true, 
+			navigable:true,
+			decorator: comboBoxDecorator
+		
 		},
 		{ field: "Name", name:"Name", 
 			widgetsInCell: true, 

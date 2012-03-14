@@ -328,9 +328,9 @@ define([
 				{id: 'Composer', field: 'Composer', name: 'Composer'}
 			],
 			[
-				{id: 'id', field: 'id', name: 'Identity'},
-				{id: 'Name', field: 'Name', name: 'Name'},
-				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'id', field: 'id', name: 'Identity', width: '100px'},
+				{id: 'Name', field: 'Name', name: 'Name', width: '100px'},
+				{id: 'Year', field: 'Year', name: 'Year', width: '100px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre'},
 				{id: 'Artist', field: 'Artist', name: 'Artist'},
 				{id: 'Album', field: 'Album', name: 'Album'},

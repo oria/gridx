@@ -29,7 +29,7 @@ require([
 			var store = storeFactory({
 				path: './support/stores',
 				dataSource: dataSource, 
-				size: 50
+				size: 100
 			}); 
 			var layout = dataSource.layouts[1];
 			grid = new Grid({
@@ -39,11 +39,13 @@ require([
 //                pageSize: 1000,
 				store: store,
 				structure: layout,
-				vscrollerLazyScroll: true,
-				selectRowTriggerOnCell: true,
+//                vscrollerLazyScroll: true,
+//                selectRowTriggerOnCell: true,
 				modules: [
-					modules.SingleSort,
-					modules.ExtendedSelectRow,
+//                    modules.SingleSort,
+//                    modules.ExtendedSelectRow,
+//                    modules.Pagination,
+//                    modules.PaginationBar,
 					modules.VirtualVScroller
 				]
 			});
@@ -93,7 +95,9 @@ require([
 
 	window.deleteFirstRow = function(){
 		grid.model.when(0, function(){
-			grid.store.remove(grid.row(0).id);
+			if(grid.row(0)){
+				grid.store.remove(grid.row(0).id);
+			}
 		});
 	};
 

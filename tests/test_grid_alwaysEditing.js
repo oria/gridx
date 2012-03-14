@@ -7,13 +7,23 @@ require([
 	'dijit/form/NumberTextBox',
 	'dijit/form/NumberSpinner',
 	'dijit/form/HorizontalSlider',
+	'dijit/form/CheckBox',	
+	'dijit/form/CurrencyTextBox',
+	'dijit/form/RangeBoundTextBox',
+	'dijit/form/Button',
+	'dijit/form/SimpleTextArea',
+	'dijit/form/TextArea',
+	'dijit/form/TextBox',
+	'dijit/form/VerticalSlider',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
-	'gridx/tests/support/data/MusicData',
+	'gridx/tests/support/data/ElaineMusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(locale, registry, TextBox, DateTextBox, TimeTextBox, NumberTextBox, NumberSpinner, HSlider,
+], function(locale, registry, TextBox, DateTextBox, TimeTextBox, NumberTextBox, 
+    NumberSpinner, HSlider, CheckBox, CurrencyTextBox,RangeBoundTextBox, Button,
+	SimpleTextArea, TextArea, TextBox, VSlider, 
 	Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	var getDate = function(d){
@@ -30,6 +40,23 @@ require([
 		});
 		return res;
 	};
+	
+	var heardDecorator = function(){
+		return [
+			'<span data-dojo-type="dijit.form.CheckBox" data-dojo-attach-point="cb"></span>',
+			'<label data-dojo-attach-point="lbl"></label>'
+		].join('');
+	};
+	
+	
+
+	var heardSetCellValue = function(data){
+		this.lbl.innerHTML = data;
+		this.cb.set('checked', data);
+	};
+	
+	
+	
 	var structure = [
 		{ id: "id", field: "id", name:"Index", width: '50px'},
 //        { id: "Genre", field: "Genre", name:"Genre", alwaysEditing: 1},
@@ -44,6 +71,17 @@ require([
 			editorArgs: {
 				dijitProperties: {
 					maximum: 1
+				}
+			}
+		},
+		
+		{ field: "Track", name:"Track_V", 
+			width: '200px',
+			alwaysEditing: true,
+			editor: VSlider,
+			editorArgs: {
+				dijitProperties: {
+					maximum: 10
 				}
 			}
 		},
@@ -68,6 +106,58 @@ require([
 			editorArgs: {
 				fromEditor: getTime
 			}
+		},
+		{ field: "Heard", name:"Heard", 
+			alwaysEditing:true,
+			widgetsInCell: true,
+			//decorator:heardDecorator,
+			//setCellValue:heardSetCellValue,
+			editor:CheckBox
+					
+		},
+		
+		{ field: "Price", name:"Price", width: '100px', 
+			dataType:"currency",
+			alwaysEditing: true,
+			editor: CurrencyTextBox
+			
+		},
+		{ field: "Year", name:"Year", width: '80px', 
+			dataType:"number",
+			alwaysEditing: true,
+			editor: NumberTextBox
+			
+		},
+		{ field: "Track", name:"Track", width: '80px', 
+			dataType:"number",
+			alwaysEditing: true,
+			editor: RangeBoundTextBox,
+			editorArgs:{
+				dijitProperties:{
+					constraints:{min:1,max:10}
+				}
+			}
+			
+		},
+		
+		{ field: "Album", name:"Album", width: '150px', 
+			dataType:"string",
+			alwaysEditing: true,
+			editor: SimpleTextArea
+			
+			
+		},
+		
+		{ field: "Name", name:"Name", width: '150px', 
+			dataType:"string",
+			alwaysEditing: true,
+			editor: TextArea			
+		},
+		
+		{ field: "Composer", name:"Composer", width: '150px', 
+			dataType:"string",
+			alwaysEditing: true,
+			editor: TextBox			
 		}
 	];
 
@@ -89,6 +179,7 @@ require([
 			modules.SelectRow,
 			modules.SingleSort,
 			modules.VirtualVScroller
+			
 		]
 	});
 	grid.connect(grid.body, 'onRender', function(){
@@ -120,16 +211,18 @@ require([
 
 
 	//Test buttons
-	/*var tp = new TestPane({});
+	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
+	
 
 	tp.addTestSet('Core Functions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: beginEdit2_3">Begin edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: applyEdit2_3">Apply edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: cancelEdit2_3">Cancel edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: isEditing2_3">Is cell(2,3) editing</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Year" column\'s editor to a TextBox</div><br/>'
+		'<div id=\'rbtb\' data-dojo-type="dijit.form.RangeBoundTextBox" data-dojo-props="constraints: {min:0,max:10}, value:5"></div><br/>'
+		//'<div id=\'timeBox\' data-dojo-type="dijit.form.TimeTextBox" data-dojo-props=" value:1:00AM"></div><br/>'
+		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: applyEdit2_3">Apply edit cell(2,3)</div><br/>',
+		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: cancelEdit2_3">Cancel edit cell(2,3)</div><br/>',
+		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: isEditing2_3">Is cell(2,3) editing</div><br/>',
+		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Year" column\'s editor to a TextBox</div><br/>'
 	].join(''));
 
-	tp.startup();*/
+	tp.startup();
 });

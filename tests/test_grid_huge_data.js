@@ -12,8 +12,8 @@ require([
 		cacheClass: Cache,
 		cacheSize: 1000,
 		pageSize: 200,
-		vscrollerLazyScroll: true,
-		vscrollerBuffSize: 60,
+		vScrollerLazy: true,
+		vScrollerBuffSize: 60,
 		store: new XStore({
 			idAttribute: 'id',
 			url: 'http://dojotoolkit.cn/data/?totalSize=1000000'

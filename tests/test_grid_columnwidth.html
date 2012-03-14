@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Grid Column Width Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			width: 800px;
+			height: 250px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src="../../dijit/tests/_testCommon.js"></script>
+	<script type="text/javascript" src='test_grid_columnwidth.js'></script>
+</head>
+<body class='claro'>
+	<h1 class='title'>Grid Column Width Test</h1>
+	<h2>All columns are provided pixel width</h2>
+	<div id='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: cache,
+		store: store,
+		structure: layout1,
+		modules: mods
+	'></div>
+	<h2>Some columns are provided pixel width, the others are auto</h2>
+	<div id='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: cache,
+		store: store,
+		structure: layout2,
+		modules: mods
+	'></div>
+	<h2>Some columns are provided too much width, the others are auto</h2>
+	<div id='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: cache,
+		store: store,
+		structure: layout3,
+		modules: mods
+	'></div>
+	<h2>Some columns are provided percentage width</h2>
+	<div id='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: cache,
+		store: store,
+		structure: layout4,
+		modules: mods
+	'></div>
+	<h2>Some columns are provided too much percentage width</h2>
+	<div id='grid5' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: cache,
+		store: store,
+		structure: layout5,
+		modules: mods
+	'></div>
+	<h2>Mixed up: px, em, percentage, auto</h2>
+	<div id='grid6' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: cache,
+		store: store,
+		structure: layout6,
+		modules: mods
+	'></div>
+	<h2>Grid of autoWidth</h2>
+	<div id='grid7' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: cache,
+		store: store,
+		structure: layout7,
+		modules: mods,
+		autoWidth: true
+	'></div>
+	<h2>AutoResize column width</h2>
+	<div data-dojo-type='dijit.layout.BorderContainer' style='width: 1000px; height: 400px;'>
+		<div data-dojo-type='dijit.layout.ContentPane' data-dojo-props='region: "left", splitter: true' style='width: 45%;'>
+			<div id='grid8' data-dojo-type='gridx.Grid' style='width: 100%' data-dojo-props='
+				cacheClass: cache,
+				store: store,
+				structure: layout8,
+				modules: mods,
+				columnWidthAutoResize: true
+			'></div>
+		</div>
+		<div data-dojo-type='dijit.layout.ContentPane' data-dojo-props='region: "center"'>
+			<div id='grid9' data-dojo-type='gridx.Grid' style='width: 100%' data-dojo-props='
+				cacheClass: cache,
+				store: store,
+				structure: layout8,
+				modules: mods,
+				columnWidthAutoResize: true
+			'></div>
+		</div>
+	</div>
+</body>
+</html>

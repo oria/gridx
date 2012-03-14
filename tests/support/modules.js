@@ -15,10 +15,8 @@ define([
 	'gridx/modules/extendedSelect/Cell',
 	'gridx/modules/move/Row',
 	'gridx/modules/move/Column',
-	'gridx/modules/move/Cell',
 	'gridx/modules/dnd/Row',
 	'gridx/modules/dnd/Column',
-	'gridx/modules/dnd/Cell',
 	'gridx/modules/AutoScroll',
 	'gridx/modules/pagination/Pagination',
 	'gridx/modules/pagination/PaginationBar',
@@ -38,21 +36,22 @@ define([
 	'gridx/modules/Dod',
 	'gridx/modules/TitleBar',
 	'gridx/modules/Tree',
-	'gridx/modules/RowLock'
+	'gridx/modules/RowLock',
+	'gridx/modules/Toolbar'
 ], function(FormatSort, 
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
-	MoveRow, MoveColumn, MoveCell,
-	DndRow, DndColumn, DndCell, AutoScroll,
+	MoveRow, MoveColumn,
+	DndRow, DndColumn, AutoScroll,
 	Pagination,
 	PaginationBar, PaginationBarDD,
 	Filter, FilterBar,
 	CellWidget, Edit,
 	RowHeader, IndirectSelect,
 	Persist, Exporter, CSV, Table, Printer,
-	Menu, Dod, TitleBar, Tree, RowLock){
+	Menu, Dod, TitleBar, Tree, RowLock, Toolbar){
 return {
 	FormatSort: FormatSort,
 	Focus: Focus,
@@ -70,10 +69,8 @@ return {
 	ExtendedSelectCell: ExtendedSelectCell,
 	MoveRow: MoveRow,
 	MoveColumn: MoveColumn,
-	MoveCell: MoveCell,
 	DndRow: DndRow,
 	DndColumn: DndColumn,
-	DndCell: DndCell,
 	AutoScroll: AutoScroll,
 	Pagination: Pagination,
 	PaginationBar: PaginationBar,
@@ -93,7 +90,8 @@ return {
 	Dod: Dod,
 	TitleBar: TitleBar,
 	Tree: Tree,
-	RowLock: RowLock
+	RowLock: RowLock,
+	Toolbar: Toolbar
 };
 });
 

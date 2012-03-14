@@ -32,6 +32,8 @@ require([
 				position: 'bottom'
 			},
 			modules.Focus,
+			modules.RowHeader,
+			modules.ExtendedSelectRow,
 			modules.VirtualVScroller
 		]
 	});

@@ -2,8 +2,8 @@ require([
 	'dojo',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
-	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/data/TestData',
+	'gridx/tests/support/stores/JsonRest',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dijit/Dialog',
@@ -16,17 +16,19 @@ require([
 		id: 'grid',
 		cacheClass: Cache,
 		store: storeFactory({
+			path: './support/stores',
 			dataSource: dataSource, 
-			size: 100
+			size: 1000
 		}),
-		structure: dataSource.layouts[0],
+		structure: dataSource.layouts[1],
 		modules: [
 			modules.RowHeader,
 			modules.ExtendedSelectRow,
 			modules.ExtendedSelectColumn,
-			modules.ExtendedSelectCell,
 			modules.ExportCSV,
-			modules.Printer
+			modules.ExportTable,
+			modules.Printer,
+			modules.VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');
