@@ -11,18 +11,23 @@
 }
 
 .claro .gridxLockedCell {
-	background-color: #ffffff;
 	position: absolute;
+	background-color: #fff;
 }
 
-.claro .gridxRowOdd .gridxRowTable {
+.claro .gridxRowOdd .gridxLockedCell {
 	background-color: #f1f8ff;
+}
+.claro .gridxRowOver .gridxLockedCell {
+	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
 
 .claro .gridxCell{
 	border-color: transparent #E5DAC8 #E5DAC8 transparent;
 }
-
+.claro .gridxRowOdd .gridxRowTable {
+	background-color: #f1f8ff;
+}
 .claro .gridx .gridxRowOver .gridxRowTable {
 	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
@@ -34,6 +39,7 @@
 }
 
 .claro .gridxHeaderRow table,
+.claro .gridxRowHeaderRow table,
 .claro .gridxRow .gridxRowTable {
 	border-collapse: separate;
 }

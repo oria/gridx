@@ -4,22 +4,22 @@
 		${gotoDialogMainMsg}
 		</td></tr
 		><tr><td class='gridxGotoPageInput'
-			><input dojoType='${numberTextBoxClass}'
+			><input data-dojo-type='${numberTextBoxClass}'
 				class='gridxGotoPageInputBox'
-				dojoAttachPoint='pageInputBox'
-				dojoAttachEvent='onKeyUp: _updateStatus'></input
+				data-dojo-attach-point='pageInputBox'
+				data-dojo-attach-event='onKeyUp: _updateStatus'></input
 			><span
 				class='gridxPageCountMsg'
-				dojoAttachPoint='pageCountMsgNode'></span
+				data-dojo-attach-point='pageCountMsgNode'></span
 		></td></tr
 		><tr><td class='gridxGotoPageBtns'
-			><button dojoType='${buttonClass}' 
-				dojoAttachPoint='okBtn'
-				dojoAttachEvent='onClick: _onOK'>
+			><button data-dojo-type='${buttonClass}' 
+				data-dojo-attach-point='okBtn'
+				data-dojo-attach-event='onClick: _onOK'>
 				${gotoDialogOKBtn}
 			</button
-			><button dojoType='${buttonClass}'
-				dojoAttachEvent='onClick: _onCancel'>
+			><button data-dojo-type='${buttonClass}'
+				data-dojo-attach-event='onClick: _onCancel'>
 				${gotoDialogCancelBtn}
 			</button
 		></td></tr

@@ -21,7 +21,7 @@
 	width: 100%;
 }
 
-.gridxHScroller {
+.gridxHScrollerInner {
 	display: none;
 }
 
@@ -168,7 +168,7 @@
 }
 
 /*HScroller*/
-.gridxHScroller {
+.gridxHScrollerInner {
 	overflow: scroll;
 	overflow-y: hidden;
 	border: none;
@@ -176,7 +176,7 @@
 }
 
 /* ie6 will show the wrong height */
-.dj_ie6 .gridxHScroller {
+.dj_ie6 .gridxHScrollerInner {
 	line-height: 0;
 }
 
@@ -258,3 +258,12 @@
 	height: 100%;
 }
 
+.gridxCellEditor,
+/* in IE dijitTextArea has width auto by default */
+.dj_ie [class~='dijitTextArea'].gridxCellEditor {
+	width: 100%;
+}
+
+[class~='dijitSliderV'].gridxCellEditor {
+	width: auto;
+}
