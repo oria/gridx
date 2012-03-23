@@ -1,4 +1,5 @@
 require([
+	'dojo/ready',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
@@ -13,8 +14,14 @@ require([
 	'gridx/tests/support/stores/HugeStore',
 	'gridx/tests/support/modules',
 	'dojo/store/Memory',
-	'gridx/tests/support/GridConfig'
-], function(Grid,
+	'gridx/tests/support/GridConfig',
+	'dijit/Menu',
+	'dijit/MenuItem',
+	'dijit/MenuSeparator',
+	'dijit/PopupMenuItem',
+	'dijit/CheckedMenuItem',
+	'dojo/domReady!'
+], function(ready, Grid,
 	SyncCache, AsyncCache,
 	musicData, testData, treeColumnarData, treeNestedData,
 	itemStore, jsonStore, memoryStore, treeJsonStore, hugeStore,
@@ -191,6 +198,29 @@ var gridAttrs = {
 		type: 'json',
 		value: '[{colId: "1", descending: true}]'
 	},
+	//filterBar
+	filterBarMaxRuleCount: {
+		type: 'number',
+		value:0
+	},
+	
+	filterBarCloseFilterBarButton:{
+		type: 'bool',
+		value: true
+	},
+	filterBarDefineFilterButton:{
+		type: 'bool',
+		value: true
+	},
+	filterBarTooltipDelay:{
+		type: 'number',
+		value: 300
+	},
+	filterBarRuleCountToConfirmClearFilter:{
+		type: 'number',
+		value: 2
+	},
+	
 	//Pagination
 	paginationInitialPage: {
 		type: 'number',
@@ -266,6 +296,11 @@ var gridAttrs = {
 	//MoveCell
 	moveCellCopy: {
 		type: 'bool'
+	},
+	//TitleBar
+	titleBarLabel:{
+		type: 'string',
+		value: 'All in one grid'
 	}
 };
 
@@ -283,15 +318,18 @@ var modules = {
 //        defaultCheck: true,
 		'default': mods.Focus
 	},
+	columnResizer: {
+		'default': mods.ColumnResizer
+	},
 	persistence: {
 		'default': mods.Persist
 	},
-	toolbar: {
-		'default': mods.Toolbar
+	toolBar: {
+		'default': mods.ToolBar
 	},
 	sort: {
 		single: mods.SingleSort,
-		nested: mods.NestedSorting
+		nested: mods.NestedSort
 	},
 	"export CSV": {
 		"default": mods.ExportCSV
@@ -357,8 +395,17 @@ var modules = {
 	"edit": {
 		"default": mods.Edit
 	},
+	"title bar": {
+		"default": mods.TitleBar
+	},
 	"tree": {
 		"default": mods.Tree
+	},
+	"summary bar": {
+		"default": mods.SummaryBar
+	},
+	'menu': {
+		"default": mods.Menu
 	}
 };
 
@@ -383,15 +430,17 @@ function destroyGrid(){
 	}
 	document.getElementById('tutor').style.display = "";
 }
-var cfg = new GridConfig({
-	stores:	stores,
-	caches: caches,
-	gridAttrs:	gridAttrs,
-	modules:	modules,
-	modelExts:	modelExts,
-	onCreate:	createGrid,
-	onDestroy:	destroyGrid
-}, 'gridConfig');
-cfg.startup();
+ready(function(){
+	var cfg = new GridConfig({
+		stores:	stores,
+		caches: caches,
+		gridAttrs:	gridAttrs,
+		modules:	modules,
+		modelExts:	modelExts,
+		onCreate:	createGrid,
+		onDestroy:	destroyGrid
+	}, 'gridConfig');
+	cfg.startup();
+});
 
 });

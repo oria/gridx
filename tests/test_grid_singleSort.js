@@ -9,11 +9,11 @@ require([
 	
 	var structure = [
 		{ field: "id", name:"Index", dataType:"number"},
-		{ field: "Genre", name:"Genre"},
-		{ field: "Artist", name:"Artist"},
-		{ field: "Year", name:"Year", dataType:"number"},
-		{ field: "Album", name:"Album (unsortable)", sortable: false},
-		{ field: "Name", name:"Name"},
+		{ field: "Genre", name:"Genre", width: '200px'},
+		{ field: "Artist", name:"Artist", width: '200px'},
+		{ field: "Year", name:"Year", dataType:"number", width: '200px'},
+		{ field: "Album", name:"Album (unsortable)", sortable: false, width: '200px'},
+		{ field: "Name", name:"Name", width: '200px'},
 		{ field: "Composer", name:"Composer"},
 		{ field: "Download Date", name:"Date"},
 		{ field: "Last Played", name:"Last Played"},
@@ -33,8 +33,8 @@ require([
 		baseSort: [{attribute: 'Album', descending: true}],
 		modules: [
 			modules.VirtualVScroller,
-			modules.ColumnResizer,
-			modules.Focus,
+//            modules.ColumnResizer,
+//            modules.Focus,
 			{
 				moduleClass: modules.SingleSort,
 				preSort:{colId: '3', descending: true}

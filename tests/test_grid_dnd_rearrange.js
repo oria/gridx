@@ -25,6 +25,8 @@ require([
 				mods.ExtendedSelectColumn,
 				mods.DndRow,
 				mods.DndColumn,
+				mods.SingleSort,
+//                mods.NestedSort,
 				mods.VirtualVScroller
 			],
 			structure: dataSource.layouts[layoutIdx]

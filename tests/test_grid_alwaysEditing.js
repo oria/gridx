@@ -11,8 +11,8 @@ require([
 	'dijit/form/CurrencyTextBox',
 	'dijit/form/RangeBoundTextBox',
 	'dijit/form/Button',
-	'dijit/form/SimpleTextArea',
-	'dijit/form/TextArea',
+	'dijit/form/SimpleTextarea',
+	'dijit/form/Textarea',
 	'dijit/form/TextBox',
 	'dijit/form/VerticalSlider',
 	'gridx/Grid',
@@ -23,7 +23,7 @@ require([
 	'gridx/tests/support/TestPane'
 ], function(locale, registry, TextBox, DateTextBox, TimeTextBox, NumberTextBox, 
     NumberSpinner, HSlider, CheckBox, CurrencyTextBox,RangeBoundTextBox, Button,
-	SimpleTextArea, TextArea, TextBox, VSlider, 
+	SimpleTextarea, Textarea, TextBox, VSlider, 
 	Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	var getDate = function(d){
@@ -81,7 +81,11 @@ require([
 			editor: VSlider,
 			editorArgs: {
 				dijitProperties: {
-					maximum: 10
+					minimum: 10,
+					maximum: 100,
+					style: {
+						height: '200px'
+					}
 				}
 			}
 		},
@@ -143,7 +147,7 @@ require([
 		{ field: "Album", name:"Album", width: '150px', 
 			dataType:"string",
 			alwaysEditing: true,
-			editor: SimpleTextArea
+			editor: SimpleTextarea
 			
 			
 		},
@@ -151,7 +155,7 @@ require([
 		{ field: "Name", name:"Name", width: '150px', 
 			dataType:"string",
 			alwaysEditing: true,
-			editor: TextArea			
+			editor: Textarea			
 		},
 		
 		{ field: "Composer", name:"Composer", width: '150px', 

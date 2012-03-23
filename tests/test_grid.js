@@ -1,13 +1,14 @@
 require([
+	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(array, Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
-	var columnSetIdx = 5;
+	var columnSetIdx = 0;
 
 	destroy = function(){
 		if(window.grid){
@@ -31,10 +32,13 @@ require([
 				store: store,
 				structure: layout,
 				modules:[
-					modules.ExtendedSelectRow,
-					modules.Focus,
+//                    modules.SingleSort,
+//                    modules.ExtendedSelectRow,
+//                    modules.DndRow,
 //                    modules.FilterBar,
-//                    modules.PaginationBar,
+//                    modules.Focus,
+					modules.RowHeader,
+//                    modules.ColumnResizer,
 					modules.VirtualVScroller
 				],
 				selectRowTriggerOnCell: true

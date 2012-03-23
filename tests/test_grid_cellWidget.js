@@ -132,8 +132,8 @@ require([
 	
 
 	var structure = [
-		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Progress", name:"Progress", 
+		{ field: "id", name:"Index", width: '50px',dataType:'number'},
+		{ field: "Progress", name:"Progress", dataType:'number',
 			widgetsInCell: true, 
 			decorator: progressDecorator
 		},
@@ -187,6 +187,8 @@ require([
 		modules: [
 			modules.Focus,
 			modules.CellWidget,
+			modules.ColumnResizer,
+			modules.FilterBar,
 			modules.VirtualVScroller
 		]
 	});

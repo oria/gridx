@@ -121,7 +121,7 @@ var columns = [
 
 var createCore = function(){
 	var core = new Core();
-	core.reset({
+	core._reset({
 		store: store,
 		structure: columns,
 		cacheClass: Cache,
@@ -131,7 +131,7 @@ var createCore = function(){
 			Tree
 		]
 	});
-	core._loadModules(new dojo.Deferred());
+	core._load(new dojo.Deferred());
 	return core;
 };
 

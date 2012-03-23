@@ -4,11 +4,12 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
+	'gridx/tests/support/modules',
 	'gridx/modules/Focus',
 	'gridx/modules/filter/Filter',
 	'gridx/modules/filter/FilterBar'
 	
-], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, filter, filterBar){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, mods, focus, filter, filterBar){
 
 	grid = new Grid({
 		id: 'grid',
@@ -17,11 +18,15 @@ require([
 			dataSource: dataSource, 
 			size: 100
 		}),
+		selectRowTriggerOnCell: true,
 		modules: [
 			filter,
+//            mods.SelectRow,
 			{
 				moduleClass: filterBar,
-				ruleCountToConfirmClearFilter: 0
+				maxRuleCount: 2,
+			
+				ruleCountToConfirmClearFilter: 2
 			}
 		],
 		structure: dataSource.layouts[1]

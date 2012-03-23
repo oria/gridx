@@ -74,6 +74,7 @@ require([
 			modules.Focus,
 			modules.CellWidget,
 			modules.Edit,
+			modules.SingleSort,
 			modules.VirtualVScroller
 		]
 	});

@@ -100,7 +100,7 @@ define([
 				items: []
 			};
 			for(var i = 0; i < size; ++i){
-				data.items.push(item = {
+				data.items.push({
 					id: i + 1,
 					order: i + 1,
 					name: names[i % names.length],
@@ -119,6 +119,42 @@ define([
 				{id: 'name', field: 'name', name: 'Name', width: '100px'},
 				{id: 'server', field: 'server', name: 'Server', width: '100px'},
 				{id: 'platform', field: 'platform', name: 'Platform', width: '160px'},
+				{id: 'status', field: 'status', name: 'Status', width: '100px',
+					decorator: function(data){
+						return [
+							"<span class='", {
+								normal: 'testDataNormalStatus',
+								warning: 'testDataWarningStatus',
+								critical: 'testDataCriticalStatus'
+							}[data.toLowerCase()], "'></span>",
+							data
+						].join('');
+					}
+				},
+				{id: 'progress', field: 'progress', name: 'Progress', width: '200px',
+					widgetsInCell: true,
+					decorator: function(){
+						return "<div data-dojo-type='dijit.ProgressBar' data-dojo-props='minimum: 0, maximum: 1' class='gridxHasGridCellValue' style='width: 100%;'></div>";
+					}
+				}
+			],
+			[
+				{id: 'id', field: 'id', name: 'System ID', width: '80px',
+					formatter: function(rawData){
+						return "System " + rawData.id;
+					}
+				},
+				{id: 'name', field: 'name', name: 'Name', width: '100px'},
+				{id: 'server', field: 'server', name: 'Server', width: '100px'},
+				{id: 'platform', field: 'platform', name: 'Platform', width: '160px',
+					formatter: function(rawData){
+						if(rawData.platform == 'Ubuntu Linux 11.04' ||
+								rawData.platform == 'Windows XP'){
+							return rawData.platform + ' (to be upgraded...)';
+						}
+						return rawData.platform;
+					}
+				},
 				{id: 'status', field: 'status', name: 'Status', width: '100px',
 					decorator: function(data){
 						return [

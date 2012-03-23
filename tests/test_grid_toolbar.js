@@ -5,8 +5,9 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'dijit/form/Button',
+	'dijit/form/ToggleButton',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, dataSource, storeFactory, modules, Button, TestPane){
+], function(Grid, Cache, dataSource, storeFactory, modules, Button, ToggleButton,TestPane){
 	
 	grid = new Grid({
 		id: 'grid',
@@ -17,14 +18,16 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			modules.Focus,
+			modules.Focus,		
 			modules.Toolbar,
 			modules.SingleSort,
 			modules.VirtualVScroller
 		]
 	});
+	
 	grid.toolBar.widget.addChild(new Button({
 		label: 'scroll to bottom',
+		
 		onClick: function(){
 			grid.vScroller.scrollToRow(grid.rowCount() - 1);
 		}
@@ -35,9 +38,45 @@ require([
 			grid.vScroller.scrollToRow(0);
 		}
 	}));
+	grid.toolBar.widget.addChild(new Button({
+		label: 'cut',
+		showLabel:false,
+		iconClass:"dijitEditorIcon dijitEditorIconCut",
+		onClick: function(){
+			alert('cut');
+		}
+	}));
+	grid.toolBar.widget.addChild(new Button({
+		label: 'copy',
+		iconClass:"dijitEditorIcon dijitEditorIconCopy",
+		showLabel:true,
+		onClick: function(){
+			alert('copy');
+		}
+	}));
+	
+	grid.toolBar.widget.addChild(new ToggleButton({
+		label: 'Bold',
+		iconClass:"dijitEditorIcon dijitEditorIconBold",
+		showLabel:false
+		
+	}));
+	
+	grid.toolBar.widget.addChild(new ToggleButton({
+		label: 'Bold',
+		iconClass:"dijitEditorIcon dijitEditorIconBold",
+		showLabel:true
+		
+	}));
+
+
+	
 	grid.placeAt('gridContainer');
 	grid.startup();
 
+
+	
+	
 
 	window.addClearSortButton = function(){
 		grid.toolBar.widget.addChild(new Button({
