@@ -29,13 +29,13 @@ define([
 
 	return _Module.register(
 	declare(_Module, {
-		name: 'csv',
+		name: 'exportCsv',
 
 		forced: ['exporter'],
 
 		getAPIPath: function(){
 			return {
-				'exporter': {
+				exporter: {
 					toCSV: lang.hitch(this, this.toCSV) 
 				}
 			};
@@ -43,90 +43,46 @@ define([
 	
 		//Public ---------------------------------------------------------------------
 		toCSV: function(/* __CSVExportArgs */ args){
-			var t = this;
-			t._separator = args.separator || ",";
-			t._newLine = args.newLine || "\r\n";
-			t._result = "";
-			return t.grid.exporter._export(t, args || {});
+			return this.grid.exporter._export(this, args || {});
 		},
 
 		//Package --------------------------------------------------------------------
-		getResult: function(){
-			//summary:
-			//		Generate the final exported result.
-			return this._result;
+		initialize: function(/* __CSVExportArgs */ args){
+			this._s = args.separator || ",";
+			this._n = args.newLine || "\r\n";
+			this._lines = [];
 		},
 
-		beforeHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
-			//summary:
-			//		Triggered before exporting the header cells.
-			//return: Boolean|undefined
-			//		If return false, does not handle following header cells.
-			if(!lang.isArray(context.columnIds) || !context.columnIds.length){
-				return false;
-			}
-			this._headerCells = [];
-		},
-
-		handleHeaderCell: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
-			//summary:
-			//		Triggered when exporting a header cell.
-			var column = this.grid.column(context.columnId, true);
-			this._headerCells.push(column.name());
-		},
-
-		afterHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
-			//summary:
-			//		Triggered when the header has been exported.
-			var t = this;
-			t._result += t._headerCells.join(t._separator) + t._newLine;
-		},
-
-		beforeBody: function(/* __CSVExportArgs */ args){
-			//summary:
-			//		Triggered before exporting the grid body.
-			//return: Boolean|undefined
-			//		If return false, does not handle any of the grid boyd content.
-			this._rows = [];
-		},
-
-		beforeRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered before exporting a row.
-			//return: Boolean|undefined
-			//		If return false, does not handle the cells in this rows.
+		beforeHeader: function(){
 			this._cells = [];
 		},
 
-		handleCell: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered when exporting a cell.
-			var data = context.data;
-			if(data === null){
-				data = "";
-			}else if(data === undefined){
-				data = String(grid.cell(context.rowId, context.columnId, true).data()) || "";
-			}else{
-				data = String(data);
-			}
-			data = data.replace(/"/g, '""');
-			if(data.indexOf(this._separator) >= 0 || data.search(/[" \t\r\n]/) >= 0){
+		handleHeaderCell: function(/* __ExportContext */ context){
+			this._cells.push(context.column.name());
+		},
+
+		afterHeader: function(){
+			this._lines.push(this._cells.join(this._s));
+		},
+
+		beforeRow: function(){
+			this._cells = [];
+		},
+
+		handleCell: function(/* __ExportContext */  context){
+			var data = String(context.data).replace(/"/g, '""');
+			if(data.indexOf(this._s) >= 0 || data.search(/[" \t\r\n]/) >= 0){
 				data = '"' + data + '"';
 			}
 			this._cells.push(data);
 		},
 
-		afterRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered when a row has been exported.
-			this._rows.push(this._cells.join(this._separator));
+		afterRow: function(){
+			this._lines.push(this._cells.join(this._s));
 		},
 
-		afterBody: function(/* __CSVExportArgs */ args){
-			//summary:
-			//		Triggered when the grid body has been exported.
-			this._result += this._rows.join(this._newLine);
+		getResult: function(){
+			return this._lines.join(this._n);
 		}
 	}));
 });
-

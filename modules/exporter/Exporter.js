@@ -7,7 +7,7 @@ define([
 ], function(declare, lang, _Module, Deferred, array){
 
 /*=====
-	var __ExportArgs = function(){
+	__ExportArgs = function(){
 		//columns: String[]?
 		//		An array of column ID. Indicates which columns to be exported. 
 		//		If invalid or empty array, export all grid columns.
@@ -30,10 +30,11 @@ define([
 		//useStoreData: Boolean?
 		//		Indicates whether to export grid data (formatted data) or 
 		//		store data. Default to false.
-		//formatter: Function?
+		//formatters: Associative array?
 		//		A customized way to export data, if neither grid data nor store 
-		//		data could meet the requirement. A grid cell object will be 
-		//		passed in as an argument.
+		//		data could meet the requirement. 
+		//		This is an associative array from column id to formatter function. 
+		//		A grid cell object will be passed into that function as an argument.
 		//omitHeader: Boolean?
 		//		Indicates whether to export grid header. Default to false.
 		//progressStep: Number?
@@ -43,8 +44,21 @@ define([
 	};
 =====*/
 
-	function check(writer, method, args, context){
-		return !writer[method] || false !== writer[method](args, context);
+/*=====
+	var __ExportContext = function(){
+		//columnIds: String[]
+		//		Available for header.
+		//column: Grid Column
+		//		Available for header cell or a body cell.
+		//row: Grid Row
+		//		Available for a row or a body cell.
+		//cell: Grid Cell
+		//		Available for a body cell
+	};
+=====*/
+
+	function check(writer, method, context, args){
+		return !writer[method] || false !== writer[method](context || args, args);
 	}
 
 	function prepareReqs(args, rowIndexes, size){
@@ -62,7 +76,7 @@ define([
 			rowIndexes = array.filter(rowIndexes, function(idx){
 				return idx >= start && idx < end;
 			});
-			if(!ps || rowIndexes.length <= ps){
+			if(rowIndexes.length && (!ps || rowIndexes.length <= ps)){
 				reqs.push(rowIndexes);
 			}else{
 				for(i = 0; i < rowIndexes.length; i += ps){
@@ -125,7 +139,7 @@ define([
 			//		Return a dojo.Deferred object. Users can cancel and see progress 
 			//		of the exporting process.
 			//		Pass the exported result to the callback function of the Deferred object.
-			var d = new Deferred(),
+			var d = new Deferred,
 				t = this,
 				model = t.model,
 				cols = t._getColumns(args),
@@ -138,20 +152,21 @@ define([
 					columnIds: cols
 				},
 				success = function(){
-					check(writer, 'afterBody', args, context);
+					check(writer, 'afterBody', context, args);
 					d.callback(writer.getResult());
 				},
 				fail = lang.hitch(d, d.errback);
 			
 			try{
-				if(!args.omitHeader && check(writer, 'beforeHeader', args, context)){
+				check(writer, 'initialize', 0, args);
+				if(!args.omitHeader && check(writer, 'beforeHeader', context, args)){
 					array.forEach(cols, function(cid){
-						context.columnId = cid;
-						check(writer, 'handleHeaderCell', args, context);
+						context.column = t.grid.column(cid, 1);	//1 as true
+						check(writer, 'handleHeaderCell', context, args);
 					});
-					check(writer, 'afterHeader', args, context);
+					check(writer, 'afterHeader', context, args);
 				}
-				if(check(writer, 'beforeBody', args, context)){
+				if(check(writer, 'beforeBody', context, args)){
 					if(args.selectedOnly && sr && (!sc || !sc.getSelected().length)){
 						waitForRows = model.when().then(function(){
 							rowIds = sr.getSelected();
@@ -160,7 +175,7 @@ define([
 					Deferred.when(waitForRows, function(){
 						var rowIdxes,
 							waitForRowIndex = rowIds && model.when({id: rowIds}, function(){
-								rowIdxes = arrary.map(rowIds, function(id){
+								rowIdxes = array.map(rowIds, function(id){
 									return model.idToIndex(id);
 								});
 								rowIdxes.sort(function(a, b){
@@ -168,12 +183,14 @@ define([
 								});
 							}, fail);
 						Deferred.when(waitForRowIndex, function(){
-							var dd = new Deferred(),
+							var dd = new Deferred,
 								rowCount = model.size();
-							t._fetchRows(d, writer, args, context, dd, prepareReqs(args, rowIdxes, rowCount));
+							t._fetchRows(d, writer, context, args, dd, prepareReqs(args, rowIdxes, rowCount));
 							dd.then(success, fail);
 						}, fail);
 					}, fail);
+				}else{
+					d.callback(writer.getResult());
 				}
 			}catch(e){
 				fail(e);
@@ -181,45 +198,54 @@ define([
 			return d;
 		},
 
-		//[Private]=======
-		_fetchRows: function(defer, writer, args, context, d, reqs){
+		//Private---------------------------------------------------------------------------
+		_fetchRows: function(defer, writer, context, args, d, reqs){
 			var t = this,
 				g = t.grid,
 				f = args.filter,
 				cols = context.columnIds,
 				req = reqs[reqs.p++],
-				fail = lang.hitch(d, d.errback);
+				fail = lang.hitch(d, d.errback),
+				func = function(){
+					t.model.when(req, function(){
+						for(var r = first(req, g); r && r.row; r = next(req, g, r)){
+							context.row = r.row;
+							if((!f || f(r.row)) && check(writer, 'beforeRow', context, args)){
+								for(var i = 0; i < cols.length; ++i){
+									var col = g.column(cols[i], 1),	//1 as true
+										cell = context.cell = g.cell(r.row, col);
+									context.column = col;
+									context.data = t._format(args, cell);
+									check(writer, 'handleCell', context, args);
+								}
+								check(writer, 'afterRow', context, args);
+							}
+						}
+					}).then(function(){
+						t._fetchRows(defer, writer, context, args, d, reqs);
+					}, fail);
+				};
 			if(req){
 				defer.progress(reqs.p / reqs.length);
-				t.model.when(req, function(){
-					for(var r = first(req, g); r; r = next(req, g, r)){
-						context.rowId = r.row.id;
-						if((!f || f(r.row)) && check(writer, 'beforeRow', args, context)){
-							for(var i = 0; i < cols.length; ++i){
-								var c = cols[i];
-								context.columnId = c;
-								context.data = t._format(args, c, r.row);
-								check(writer, 'handleCell', args, context);
-							}
-							check(writer, 'afterRow', args, context);
-						}
-					}
-				}).then(function(){
-					t._fetchRows(defer, writer, args, context, d, reqs);
-				}, fail);
+				if(reqs.length > 1){
+					setTimeout(func, 10);
+				}else{
+					func();
+				}
 			}else{
 				d.callback();
 			}
 		},
 
-		_format: function(args, colId, row){
-			if(lang.isFunction(args.formatter)){
-				return args.formatter(row.cell(colId, 1)) || "";
+		_format: function(args, cell){
+			var fs = args.formatters,
+				cid = cell.column.id;
+			if(fs && lang.isFunction(fs[cid])){
+				return fs[cid](cell);
 			}else if(args.useStoreData){
-				var field = this.grid._columnsById[colId].field;
-				return field ? row.rawData()[field] : "";
+				return cell.rawData() || '';
 			}
-			return row.data()[colId] || "";
+			return cell.data() || '';
 		},
 
 		_getColumns: function(args){

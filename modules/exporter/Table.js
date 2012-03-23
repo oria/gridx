@@ -2,148 +2,86 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"../../core/_Module",
-	"dojo/dom-geometry",
 	"./Exporter"
-], function(declare, lang, _Module, domGeometry){
+], function(declare, lang, _Module){
 
 /*=====
-	dojo.declare('__CSVExportArgs', __ExportArgs, {
-		//seperator: String?
-		//		The seperator string used in CSV. Default to comma ','.
+	dojo.declare('__TableExportArgs', __ExportArgs, {
+		natualWidth: false
+		columnWidth: Associative array
 	});
-
-	var __ExportContext = function(){
-		//columnIds: String[]
-		//		Available for header.
-		//columnId: String
-		//		Available for header cell or a body cell.
-		//rowIds: String[]
-		//		Available for a progress
-		//rowId: String
-		//		Available for a row or a body cell.
-		//data: Anything
-		//		Available for a body cell
-	}
 =====*/
+
+	function cellattrs(args, col){
+		var cw = args.columnWidth,
+			w = (cw && cw[col.id]) || (args.natualWidth ? '' : col.getWidth()) || 'auto';
+		return [' colid="', col.id, '" style="width:', w, '"'].join('');
+	}
 
 	return _Module.register(
 	declare(_Module, {
-		name: 'table',
+		name: 'exportTable',
 
 		forced: ['exporter'],
 
 		getAPIPath: function(){
 			return {
-				'exporter': {
+				exporter: {
 					toTable: lang.hitch(this, this.toTable)
 				}
 			};
 		},
 	
 		//Public ---------------------------------------------------------------------
-		toTable: function(/* __CSVExportArgs */ args){
-			var t = this;
-			t._result = "";
-			t._rowIdx = 0;
-			return t.grid.exporter._export(t, args || {});
+		toTable: function(/* __TableExportArgs */ args){
+			return this.grid.exporter._export(this, args || {});
 		},
 
 		//Package --------------------------------------------------------------------
+		initialize: function(/* __TableExportArgs */ args){
+			this._rst = ['<table class="grid"',
+				args.natualWidth ? '' : ' style="table-layout:fixed;"',
+				' border="0" cellpadding="0" cellspacing="0">'
+			];
+		},
+
+		beforeHeader: function(){
+			this._rst.push('<thead><tr class="grid_header">');
+		},
+
+		handleHeaderCell: function(/* __ExportContext */ context, /* __TableExportArgs */ args){
+			var col = context.column;
+			this._rst.push('<th class="grid_header_cell"', cellattrs(args, col), '>', col.name(), '</th>');
+		},
+
+		afterHeader: function(){
+			this._rst.push('</tr><thead>');
+		},
+
+		beforeBody: function(){
+			this._rst.push('<tbody>');
+		},
+
+		beforeRow: function(/* __ExportContext */  context){
+			var r = context.row, idx = r.index();
+			this._rst.push('<tr class="grid_row grid_row_', idx % 2 ? 'even' : 'odd',
+				'" rowid="', r.id, '" rowindex="', idx, '">');
+		},
+
+		handleCell: function(/* __ExportContext */  context, /* __TableExportArgs */ args){
+			this._rst.push('<td class="grid_cell"', cellattrs(args, context.column), '>', context.data, '</td>');
+		},
+
+		afterRow: function(){
+			this._rst.push('</tr>');
+		},
+
+		afterBody: function(){
+			this._rst.push('</tbody></table>');
+		},
+
 		getResult: function(){
-			//summary:
-			//		Generate the final exported result.
-			this._result = '<div style="position: relative;">' + 
-				'<div class="grid_view" style="position: absolute; top: 0; left:0px;">' + 
-				this._result + 
-				'</div></div>';
-			return this._result;
-		},
-
-		beforeHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
-			//summary:
-			//		Triggered before exporting the header cells.
-			//return: Boolean|undefined
-			//		If return false, does not handle following header cells.
-			if(!lang.isArray(context.columnIds) || !context.columnIds.length){
-				return false;
-			}
-			var t = this,
-				marginBox = domGeometry.getMarginBox(t.grid.headerNode),
-				height = marginBox.h;
-			t._totalWidth = marginBox.w;
-			t._header = ['<table class="grid_header" style="table-layout:fixed; width:', 
-				t._totalWidth, 'px;height:', height, 
-				'px;" border="0" cellpadding="0" cellspacing="0"><tbody><tr>'];
-			return true;
-		},
-
-		handleHeaderCell: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
-			//summary:
-			//		Triggered when exporting a header cell.
-			var col = this.grid.column(context.columnId, true);
-			this._header.push('<th colid="', col.id, '" style="width: ',
-				col.getWidth() || 'auto', '">', col.name(), '</th>');
-		},
-
-		afterHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
-			//summary:
-			//		Triggered when the header has been exported.
-			this._header.push('</tr><tbody></table>');
-			this._result += this._header.join('');
-		},
-
-		beforeBody: function(/* __CSVExportArgs */ args){
-			//summary:
-			//		Triggered before exporting the grid body.
-			//return: Boolean|undefined
-			//		If return false, does not handle any of the grid boyd content.
-			this._rows = [];
-			return true;
-		},
-
-		beforeRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered before exporting a row.
-			//return: Boolean|undefined
-			//		If return false, does not handle the cells in this rows.
-			var t = this,
-				rowId = context.rowId,
-				rowIndex = t.grid.row(rowId, true).index();
-			t._cells = ['<table class="grid_row_', (t._rowIdx++) % 2 ? 'even' : 'odd' , 
-				'" style="table-layout:fixed; width:', t._totalWidth, 
-				'px;" border="0" cellspacing="0" cellpadding="0" rowId="', rowId,
-				'" rowIndex="', rowIndex, '"><tbody><tr>'];
-			return true;
-		},
-
-		handleCell: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered when exporting a cell.
-			var data = context.data,
-				col = this.grid.column(context.columnId, true);
-			if(data === null){
-				data = "";
-			}else if(data === undefined){
-				data = String(grid.cell(context.rowId, context.columnId, true).data()) || "";
-			}else{
-				data = String(data);
-			}
-			this._cells.push('<td colid="', col.id, '" style="width: ',
-				col.getWidth() || 'auto', '">', data, '</td>');
-		},
-
-		afterRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered when a row has been exported.
-			this._cells.push('</tr></tbody></table>');
-			this._rows.push(this._cells.join(''));
-		},
-
-		afterBody: function(/* __CSVExportArgs */ args){
-			//summary:
-			//		Triggered when the grid body has been exported.
-			this._result += this._rows.join('');
+			return this._rst.join('');
 		}
 	}));
 });
-
