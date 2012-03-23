@@ -12,10 +12,11 @@ require([
 			['Simplest Grid', 'demo_mini_grid', 'simplegrid.png', 'The most lightweight mini Grid'],
 			['AutoHeight / autoWidth', 'test_grid_autoHeight_autoWidth', 'autoheight-autowidth.png', 'Make the grid show every row (autoHeight) and every column (autoWidth).'],			
 			['Declarative Creation', 'test_grid_declarative', 'declarative.jpg', 'Declaratively create a grid in HTML by means of dojo parser.'],
+			['ColumnWidth Distribution', 'test_grid_columnwidth', 'columnwidth.png', 'Distribute column width smartly based on any flexible combinations of pixel/em/percentage or auto adjusting'],			
 			['Resize', 'test_grid_resize', 'resize.png', 'Resize the grid use the resize function.'],
 		0]],
-		['Plugins', [
-			['Virtual Scrolling', 'test_grid_virtualScroller', 'virtualscroller.jpg', 'Lazy-render the grid body to speed up the whole rendering process and minimize memory usage. This is an useful alternative to pagination.'],
+		['Plugins', [		
+			['Virtual Scrolling', 'test_grid_virtualScroller', 'virtualscroller.jpg', 'Lazy-render the grid body to speed up the whole rendering process and minimize memory usage. This is an useful alternative to pagination.'],						
 			['Simple Select', 'test_grid_select', 'select.jpg', 'Basic but useful support for row selection, column selection and cell selection. Only select by ID. Not support selecting by index. Not support wrap selection.'],
 			['Single Sort', 'test_grid_singleSort', 'singlesort.jpg', 'Only one column is allowed to be sorted at any time.'],
 			['Nested Sort', 'test_grid_nestedSort', 'nestedsort.jpg', 'Multiple columns can be sorted in a nested way.'],
