@@ -37,6 +37,7 @@ define([
 
 		destroy: function(){
 			this.inherited(arguments);
+			this._b.remove();
 			domConstruct.destroy(this.headerNode);
 			domConstruct.destroy(this.bodyNode);
 		},
@@ -64,15 +65,13 @@ define([
 				[body, 'onAfterRow', '_onAfterRow'],
 				[body, 'onUnrender', '_onUnrender'],
 				[g.bodyNode, 'onscroll', '_onScroll'],
-				[rhbn, 'onscroll', function(){
-					g.bodyNode.scrollTop = rhbn.scrollTop;
-				}],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
 				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']
 			);
-			aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
+			//TODO: need to organize this into connect/disconnect system
+			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
 		},
@@ -92,30 +91,32 @@ define([
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){
+			var nd = this.bodyNode;
 			if(count > 0){
-				var nd = this.bodyNode,
-					str = this._buildRows(start, count);
+				var str = this._buildRows(start, count);
 				if(position == 'top'){
 					domConstruct.place(str, nd, 'first');
 				}else if(position == 'bottom'){
 					domConstruct.place(str, nd, 'last');
 				}else{
-					nd.scrollTop = 0;
 					nd.innerHTML = str;
+					nd.scrollTop = 0;
 				}
+			}else if(position != 'top' && position != 'bottom'){
+				nd.innerHTML = '';
 			}
 		},
 
 		_onAfterRow: function(rowInfo, rowCache){
-			var t = this;
-			var n = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
+			var t = this,
+				n = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
 				nt = n.firstChild,
 				cp = t.arg('cellProvider');
 			nt.style.height = bn.offsetHeight + 'px';
 			n.setAttribute('rowid', rowInfo.rowId);
 			n.setAttribute('rowindex', rowInfo.rowIndex);
-			n.setAttribute('parentId', rowInfo.parentId);
+			n.setAttribute('parentid', rowInfo.parentId || '');
 			if(cp){
 				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, rowInfo);
 			}

@@ -1,9 +1,8 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
-	'dojo/_base/Deferred',
 	'../_Extension'
-], function(declare, array, Deferred, _Extension){
+], function(declare, array, _Extension){
 
 	return declare(_Extension, {
 		name: 'move',

@@ -22,8 +22,8 @@ define([
 			return this.grid._columnsById[this.id].name || '';
 		},
 
-		setName: function(n){
-			this.grid._columnsById[this.id].name = n;
+		setName: function(name){
+			this.grid._columnsById[this.id].name = name;
 			return this;
 		},
 

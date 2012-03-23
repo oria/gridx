@@ -10,19 +10,20 @@ define([
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
 
-	return declare(null, {
+	return declare([], {
+
 		constructor: function(args){
 			var t = this, c = 'connect';
 			t.store = args.store;
 			t._exts = {};
 			t._cmdQueue = [];
-			var m = t._model = t._cache = new args.cacheClass(t, args);
+			t._model = t._cache = new args.cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
+			var m = t._model;
 			t._connects = [
 				cnnt[c](m, "onDelete", t, "onDelete"),
 				cnnt[c](m, "onNew", t, "onNew"),
-				cnnt[c](m, "onSet", t, "onSet"),
-				cnnt[c](m, "onSizeChange", t, "onSizeChange")
+				cnnt[c](m, "onSet", t, "onSet")
 			];
 		},
 	
@@ -34,11 +35,9 @@ define([
 		},
 	
 		//Public-------------------------------------------------------------------
-		clearCache: function(){
-			this._cache.clear();
-		},
-	
+
 		when: function(args, callback, scope){
+			this._oldSize = this.size();
 			this._addCmd({
 				name: '_cmdRequest',
 				scope: this,
@@ -49,13 +48,15 @@ define([
 		},
 	
 		scan: function(args, callback){
-			var d = new Deferred(),
+			var d = new Deferred,
 				start = args.start || 0,
 				pageSize = args.pageSize || this._cache.pageSize || 1,
-				end = args.count > 0 ? start + args.count : Infinity,
+				count = args.count,
+				end = count > 0 ? start + count : Infinity,
 				scope = args.whenScope || this,
-				whenFunc = args.whenFunc || scope.when,
-				f = function(s){
+				whenFunc = args.whenFunc || scope.when;
+			var f = function(s){
+					d.progress(s / (count > 0 ? s + count : scope.size()));
 					whenFunc.call(scope, {
 						id: [],
 						range: [{
@@ -101,7 +102,7 @@ define([
 			//Add command to the command queue, and combine same kind of commands if possible.
 			var cmds = this._cmdQueue,
 				cmd = cmds[cmds.length - 1];
-			if(cmd && cmd.name === args.name && cmd.scope === args.scope){
+			if(cmd && cmd.name == args.name && cmd.scope == args.scope){
 				cmd.args.push(args.args || []);
 			}else{
 				args.args = [args.args || []];
@@ -110,25 +111,43 @@ define([
 		},
 
 		//Private----------------------------------------------------------------------------
+		_onSizeChange: function(){
+			var t = this,
+				oldSize = t._oldSize,
+				size = t._oldSize = t.size();
+			if(oldSize != size){
+				t.onSizeChange(size, oldSize);
+			}
+		},
+
+		_execEvents: function(scope, callback){
+			this._onSizeChange();
+			//TODO: fire events here
+			if(callback){
+				callback.call(scope);
+			}
+		},
+
 		_cmdRequest: function(){
+			var t = this;
 			return new DeferredList(array.map(arguments, function(args){
 				var arg = args[0],
-					scope = args[2],
-					callback = lang.hitch(scope || window, args[1] || function(){});
+					finish = lang.hitch(t, t._execEvents, args[2], args[1]);
 				if(arg === null || !args.length){
-					callback();
-					var d = new Deferred();
+					var d = new Deferred;
+					finish();
 					d.callback();
 					return d;
 				}
-				return this._model._call('when', [this._normArgs(arg), callback]);
-			}, this), 0, 1);
+				return t._model._call('when', [t._normArgs(arg), finish]);
+			}), 0, 1);
 		},
 
 		_exec: function(){
 			//Execute commands one by one.
-			var t = this, c = t._cache,
-				d = new Deferred(),
+			var t = this,
+				c = t._cache,
+				d = new Deferred,
 				cmds = t._cmdQueue,
 				finish = function(d, err){
 					t._busy = 0;
@@ -144,11 +163,10 @@ define([
 				},
 				func = function(){
 					if(array.some(cmds, function(cmd){
-						return cmd.name === '_cmdRequest';
+						return cmd.name == '_cmdRequest';
 					})){
 						try{
 							while(cmds.length){
-//                                console.log(cmds[0].name, cmds[0]);
 								var cmd = cmds.shift(),
 									dd = cmd.scope[cmd.name].apply(cmd.scope, cmd.args);
 								if(cmd.async){

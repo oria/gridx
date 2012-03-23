@@ -127,7 +127,7 @@ define([
 				start: bd.rootStart, 
 				count: bd.rootCount
 			}, function(){
-				bd.renderRows(0, bd.rootCount || t.model.size() - start);
+				bd.renderRows(0, bd.rootCount || t.model.size() - bd.rootStart);
 			});
 		},
 	

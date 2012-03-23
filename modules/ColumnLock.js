@@ -102,10 +102,17 @@ define([
 			for(i = 0; i < this.count; i++){
 				dojo.style(r.cells[i], 'height', 'auto');
 			}
+//			var h = 0;
+//			array.forEach(r.cells, function(cell){
+//				var mh = dojo.contentBox(r.cells[r.cells.length - 1]).h;
+//				if(h < mh)h = mh;
+//			});
 			
 			var h = dojo.contentBox(r.cells[r.cells.length - 1]).h;
+			
 			var pl = 0, cols = this.grid._columns;
-			dojo.style(r.cells[r.cells.length - 1], 'height', h + 'px');
+			//TODO: 8 is a magic number which includes padding and border. Don't know why does FF have this behavior.
+			dojo.style(r.cells[r.cells.length - 1], 'height', (dojo.isFF ? h + 8 : h) + 'px');
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.addClass(cell, 'gridxLockedCell');

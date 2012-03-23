@@ -1,9 +1,7 @@
 define([
-	"dojo/_base/declare",
-	"dojo/_base/lang",
-	"dojo/_base/Deferred"
-], function(declare, lang, Deferred){
-
+	"dojo/_base/declare"
+], function(declare){
+	
 	return declare([], {
 		constructor: function(grid, row, column){
 			var t=this;
@@ -23,30 +21,9 @@ define([
 		},
 
 		setRawData: function(rawData){
-			var d = new Deferred(),
-				t = this, 
-				field = t.column.field(), 
-				s = t.grid.store, 
-				h = lang.hitch,
-				success = h(d, d.callback),
-				fail = h(d, d.errback);
-			if(field){
-				var item = t.model.byId(t.row.id).item;
-				if(s.setValue){
-					s.setValue(item, field, rawData);
-					s.save({
-						onComplete: success,
-						onError: fail
-					});
-				}else if(s.put){
-					var obj = lang.clone(item);
-					obj[field] = rawData;
-					Deferred.when(s.put(obj), success, fail);
-				}
-			}else{
-				success();
-			}
-			return d;
+			var obj = {};
+			obj[this.column.field()] = rawData;
+			return this.row.setRawData(obj);
 		}
 	});
 });

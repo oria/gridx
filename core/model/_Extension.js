@@ -16,7 +16,6 @@ define([
 				t[c](i, 'onDelete', '_onDelete');
 				t[c](i, 'onNew', '_onNew');
 				t[c](i, 'onSet', '_onSet');
-				t[c](i, 'onSizeChange', '_onSizeChange');
 			}
 		},
 
@@ -44,14 +43,9 @@ define([
 			this.onDelete.apply(this, arguments);
 		},
 
-		_onSizeChange: function(){
-			this.onSizeChange.apply(this, arguments);
-		},
-
 		onNew: function(){},
 		onDelete: function(){},
 		onSet: function(){},
-		onSizeChange: function(){},
 
 		//Protected-----------------------------------------------------------------
 		_call: function(method, args){

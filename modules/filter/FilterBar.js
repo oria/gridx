@@ -118,6 +118,11 @@ define([
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
+			this.closeFilterBarButton = this.arg('closeFilterBarButton') || this.closeFilterBarButton;
+			this.defineFilterButton = this.arg('defineFilterButton') || this.defineFilterButton;
+			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
+			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
+			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
 			
 			this.domNode = dojo.create('div', {
 				innerHTML: template,

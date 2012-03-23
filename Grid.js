@@ -38,6 +38,7 @@ define([
 			],
 
 			coreExtensions: [
+				//Put default extensions here!
 			],
 		
 			postMixInProperties: function(){
@@ -46,7 +47,7 @@ define([
 				t.modules = t.coreModules.concat(t.modules || []);
 				t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
 				t._initEvents(t._compNames, t._eventNames);
-				t.reset(t);
+				t._reset(t);
 			},
 			
 			buildRendering: function(){

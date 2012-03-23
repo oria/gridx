@@ -13,7 +13,8 @@ define([
 
 	var delegate = lang.delegate,
 		isFunc = lang.isFunction,
-		hitch = lang.hitch;
+		hitch = lang.hitch,
+		forEach = array.forEach;
 
 	function shallowCopy(obj){
 		var ret = {}, i;
@@ -73,10 +74,9 @@ define([
 	}
 
 	function normalizeModules(args, coreMods){
-		var i, len, m, modules = args.modules, mods = [],
-			coreModCount = (coreMods && coreMods.length) || 0;
-		for(i = 0, len = modules.length; i < len; ++i){
-			m = modules[i];
+		var mods = [],
+			coreModCount = coreMods && coreMods.length || 0;
+		forEach(args.modules, function(m, i){
 			if(isFunc(m)){
 				mods.push({
 					moduleClass: m
@@ -90,7 +90,7 @@ define([
 			}else{
 				mods.push(m);
 			}
-		}
+		});
 		args.modules = mods;
 		return args;
 	}
@@ -124,11 +124,10 @@ define([
 	}
 
 	function removeDuplicate(args){
-		var modules = args.modules, i, m, mods = {};
-		for(i = 0; m = modules[i]; ++i){
+		var i, mods = {}, modules = [];
+		forEach(args.modules, function(m){
 			mods[m.moduleClass.prototype.name] = m;
-		}
-		modules = [];
+		});
 		for(i in mods){
 			modules.push(mods[i]);
 		}
@@ -140,7 +139,7 @@ define([
 		var modules = args.modules, i, m, modName, q, key,
 			getModule = function(modName){
 				for(var j = modules.length - 1; j >= 0; --j){
-					if(modules[j].moduleClass.prototype.name === modName){
+					if(modules[j].moduleClass.prototype.name == modName){
 						return modules[j];
 					}
 				}
@@ -164,18 +163,19 @@ define([
 	}
 
 	function checkModelExtensions(args){
-		var modules = args.modules, exts = args.modelExtensions, i, modExts, push = [].push;
+		var modules = args.modules,
+			i, modExts;
 		for(i = modules.length - 1; i >= 0; --i){
 			modExts = modules[i].moduleClass.prototype.modelExtensions;
 			if(modExts){
-				push.apply(exts, modExts);
+				[].push.apply(args.modelExtensions, modExts);
 			}
 		}
 		return args;
 	}
 
 	return declare([], {
-		reset: function(args){
+		_reset: function(args){
 			// summary:
 			//		Reset the grid data model completely. Also used in initialization.
 			var t = this;
@@ -193,32 +193,27 @@ define([
 								normalizeModules(args, t.coreModules)))));
 			//Create model before module creation, so that all modules can use the logic grid from very beginning.
 			t.model = new Model(args);
-			t._createModules(args);
+			t._create(args);
 		},
 
 		_postCreate: function(){
 			var t = this,
-				d = t._deferStartup = new Deferred();
-			t._preloadModules();
-			t._loadModules(d).then(hitch(t, t.onModulesLoaded));
+				d = t._deferStartup = new Deferred;
+			t._preload();
+			t._load(d).then(hitch(t, t.onModulesLoaded));
 		},
 
 		onModulesLoaded: function(){},
 
 		setStore: function(store){
-			// summary:
-			//		Change the store for grid. 
-			//		Since store defines the data model for grid, changing store is usually changing everything.
 			var t = this;
 			t.store = store;
-			t.reset(t);
+			t._reset(t);
 			t._postCreate();
 			t._deferStartup.callback();
 		},
 
 		setColumns: function(columns){
-			// summary:
-			//		Change all the column definitions for grid.
 			var t = this;
 			t.structure = columns;
 			t._columns = lang.clone(columns);
@@ -229,23 +224,18 @@ define([
 		},
 
 		row: function(rowIndexOrId, isId){
-			// summary:
-			//		Get a row object by ID or index.
-			//		For asyc store, if the data of this row is not in cache, then null will be returned.
 			var t = this, id = rowIndexOrId;
 			if(typeof id == "number" && !isId){
 				id = t.model.indexToId(id);
 			}
 			if(t.model.idToIndex(id) >= 0){
-				t._rowObj = t._rowObj || t._mixinComponent(new Row(t), "row");
+				t._rowObj = t._rowObj || t._mixin(new Row(t), "row");
 				return delegate(t._rowObj, {id: id});
 			}
 			return null;
 		},
 
 		column: function(columnIndexOrId, isId){
-			// summary:
-			//		Get a column object by ID or index
 			var t = this, id = columnIndexOrId, c, a, obj = {};
 			if(typeof id == "number" && !isId){
 				c = t._columns[id];
@@ -253,7 +243,7 @@ define([
 			}
 			c = t._columnsById[id];
 			if(c){
-				t._colObj = t._colObj || t._mixinComponent(new Column(t), "column");
+				t._colObj = t._colObj || t._mixin(new Column(t), "column");
 				for(a in c){
 					if(t._colObj[a] === undefined){
 						obj[a] = c[a];
@@ -265,13 +255,11 @@ define([
 		},
 
 		cell: function(rowIndexOrId, columnIndexOrId, isId){
-			// summary:
-			//		Get a cell object
 			var t = this, r = rowIndexOrId instanceof Row ? rowIndexOrId : t.row(rowIndexOrId, isId);
 			if(r){
 				var c = columnIndexOrId instanceof Column ? columnIndexOrId : t.column(columnIndexOrId, isId);
 				if(c){
-					t._cellObj = t._cellObj || t._mixinComponent(new Cell(t), "cell");
+					t._cellObj = t._cellObj || t._mixin(new Cell(t), "cell");
 					return delegate(t._cellObj, {row: r, column: c});
 				}
 			}
@@ -279,30 +267,18 @@ define([
 		},
 
 		columnCount: function(){
-			// summary:
-			//		Get the number of columns
 			return this._columns.length;
 		},
 
 		rowCount: function(parentId){
-			// summary:
-			//		Get the number of rows.
-			//		For async store, the return value is valid only when the grid has fetched something from the store.
 			return this.model.size(parentId);
 		},
 
 		columns: function(start, count){
-			// summary:
-			//		Get a range of columns, from index 'start' to index 'start + count'.
-			//		If 'count' is not provided, all the columns starting from 'start' will be returned.
-			//		If 'start' is not provided, it defaults to 0, so grid.columns() gets all the columns
 			return this._arr(this._columns.length, 'column', start, count);
 		},
 
 		rows: function(start, count){
-			// summary:
-			//		Get a range of rows, similar to grid.columns
-			//		For async store, if some rows are not in cache, then there will be nulls in the returned array.
 			return this._arr(this.model.size(), 'row', start, count);
 		},
 		
@@ -329,7 +305,7 @@ define([
 			return mixinArrayUtils(r);
 		},
 		
-		_preloadModules: function(){
+		_preload: function(){
 			var m, mods = this._modules;
 			for(m in mods){
 				m = mods[m];
@@ -339,15 +315,15 @@ define([
 			}
 		},
 
-		_loadModules: function(deferredStartup){
+		_load: function(deferredStartup){
 			var dl = [], m;
 			for(m in this._modules){
-				dl.push(this._initializeModule(deferredStartup, m));
+				dl.push(this._initMod(deferredStartup, m));
 			}
-			return new DeferredList(dl);
+			return new DeferredList(dl, 0, 1);
 		},
 		
-		_mixinComponent: function(component, name){
+		_mixin: function(component, name){
 			var m, a, mods = this._modules;
 			for(m in mods){
 				m = mods[m].mod;
@@ -360,35 +336,35 @@ define([
 			return component;
 		},
 	
-		_createModules: function(args){
-			var modules = args.modules, t = this, mods = t._modules = {},
-				i, mod, key, m;
-			for(i = 0; i < modules.length; ++i){
-				mod = modules[i];
-				key = mod.moduleClass.prototype.name;
+		_create: function(args){
+			var t = this,
+				mods = t._modules = {};
+			forEach(args.modules, function(mod){
+				var m, key = mod.moduleClass.prototype.name;
 				if(!mods[key]){
-					m = mods[key] = {
-						args: mod
+					mods[key] = {
+						args: mod,
+						mod: m = new mod.moduleClass(t, mod),
+						deps: getDepends(mod)
 					};
-					mod = m.mod = new mod.moduleClass(t, mod);
-					mod.forced = mod.forced || [];
-					mod.optional = mod.optional || [];
-					mod.loaded = new Deferred();
-					m.deps = mod.forced.concat(mod.optional);
-					if(mod.getAPIPath){
-						mixinAPI(t, mod.getAPIPath());
+					if(m.getAPIPath){
+						mixinAPI(t, m.getAPIPath());
 					}
 				}
-			}
+			});
 		},
 
-		_initializeModule: function(deferredStartup, key){
-			var t = this, mods = t._modules, m = mods[key], mod = m.mod,
-				dd = m.deferred, d = m.deferred = dd || mod.loaded;
-			if(!dd){
+		_initMod: function(deferredStartup, key){
+			var t = this,
+				mods = t._modules,
+				m = mods[key],
+				mod = m.mod,
+				d = mod.loaded;
+			if(!m.done){
+				m.done = 1;
 				new DeferredList(array.map(array.filter(m.deps, function(depModName){
 					return mods[depModName];
-				}), hitch(t, t._initializeModule, deferredStartup))).then(function(){
+				}), hitch(t, t._initMod, deferredStartup)), 0, 1).then(function(){
 					if(mod.load){
 						mod.load(m.args, deferredStartup);
 					}else if(d.fired < 0){

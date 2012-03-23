@@ -9,7 +9,7 @@ define([
 		free: function(){},
 
 		when: function(args, callback){
-			var d = new Deferred();
+			var d = new Deferred;
 			try{
 				if(callback){
 					callback();
@@ -21,11 +21,13 @@ define([
 			return d;
 		},
 
-		prepare: function(method, args){
-			if(this._size[''] < 0){
-				this._storeFetch({ start: 0 });
-				if(this.store.getChildren){
-					this._fetchChildren();
+		//Private---------------------------------------------
+		_init: function(method, args){
+			var t = this;
+			if(t._size[''] < 0){
+				t._storeFetch({ start: 0 });
+				if(t.store.getChildren){
+					t._fetchChildren();
 				}
 			}
 		},

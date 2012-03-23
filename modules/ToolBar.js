@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
 	'dijit/Toolbar',
-	"gridx/core/_Module"
+	"../core/_Module"
 ], function(declare, Toolbar, _Module){
 
 	return _Module.register(

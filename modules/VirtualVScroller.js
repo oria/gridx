@@ -156,12 +156,12 @@ define([
 					//Add some rows to the end
 					start = body.renderStart + body.renderCount;
 					d = Math.ceil((bnBtm - lastRowBtm) / h) + buffSize;
-					end = a === scrollRange ? visualEnd : Math.min(start + d, visualEnd);
+					end = a === scrollRange && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
 //                    console.log('bottom: ', start, end);
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
-					if(a < scrollRange / 2){
+					if(a <= scrollRange / 2){
 						start = a === 0 ? visualStart : visualStart + Math.max(Math.floor(a / h) - buffSize, 0);
 						end = Math.min(start + pageRowCount, visualEnd);
 					}else{
@@ -237,6 +237,7 @@ define([
 		},
 	
 		_onForcedScroll: function(){
+			this._rowHeight = {};
 			this._onBodyChange();
 		},
 

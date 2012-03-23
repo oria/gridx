@@ -173,6 +173,7 @@ define([
 					});
 				}else{
 					t.renderRows(rs, rc, 0, 1);
+					t.onForcedScroll();
 				}
 			});
 		},
@@ -533,15 +534,15 @@ define([
 			}
 		},
 	
-		_onSizeChange: function(size, oldSize/*, reason*/){
+		_onSizeChange: function(size, oldSize){
 			var t = this;
 			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
-				//Avoid to much rendering when starting up. TODO: any better way?
-				if(t._started){
-					t.refresh();
-				}
-				t._started = 1;
+				//Avoid too much rendering when starting up. TODO: any better way?
+//                if(t._started){
+				t.refresh();
+//                }
+//                t._started = 1;
 			}
 		},
 		
@@ -566,7 +567,12 @@ define([
 		_focusCellRow: 0,
 
 		_initFocus: function(){
-			var t = this, g = t.grid, bn = g.bodyNode, focus = g.focus, c = 'connect';
+			var t = this,
+				g = t.grid,
+				ltr = g.isLeftToRight(),
+				bn = g.bodyNode,
+				focus = g.focus,
+				c = 'connect';
 			if(focus){
 				focus.registerArea({
 					name: 'body',
@@ -580,7 +586,7 @@ define([
 				});
 				t[c](g.mainNode, 'onkeypress', function(evt){
 					if(focus.currentArea() == 'body' && (!g.tree || !evt.ctrlKey)){
-						var dk = keys, arr = {}, dir = g.isLeftToRight() ? 1 : -1;
+						var dk = keys, arr = {}, dir = ltr ? 1 : -1;
 						arr[dk.LEFT_ARROW] = [0, -dir, evt];
 						arr[dk.RIGHT_ARROW] = [0, dir, evt];
 						arr[dk.UP_ARROW] = [-1, 0, evt];
@@ -601,7 +607,9 @@ define([
 				});
 				if(g.hScroller){
 					t[c](bn, 'onscroll', function(){
-						g.hScroller.scroll(bn.scrollLeft);
+						g.hScroller.scroll(!ltr && sniff('webkit') ?
+							bn.scrollWidth - bn.offsetWidth - bn.scrollLeft :
+							bn.scrollLeft);
 					});
 				}
 			}

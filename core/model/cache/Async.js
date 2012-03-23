@@ -143,10 +143,9 @@ define([
 			this.pageSize = isNumber(ps) && ps > 0 ? ps : 100;
 		},
 
-		prepare: function(){},
-
 		when: function(args, callback){
-			var d = args._def = new Deferred(), t = this,
+			var t = this,
+				d = args._def = new Deferred,
 				fail = hitch(d, d.errback),
 				innerFail = function(e){
 					t._requests.pop();
@@ -155,7 +154,26 @@ define([
 			t._fetchById(args).then(function(args){
 				t._fetchByIndex(args).then(function(args){
 					t._fetchByParentId(args).then(function(args){
-						Deferred.when(args._req, hitch(t, '_finish', args, callback, d));
+						Deferred.when(args._req, function(){
+							var err;
+							if(callback){
+								try{
+									callback();
+								}catch(e){
+									err = e;
+								}
+							}
+							t._requests.shift();
+							//this is meaningless given current model impl
+//                            if(!t.skipCacheSizeCheck && !t._requests.length){
+//                                t._checkSize();
+//                            }
+							if(err){
+								d.errback(err);
+							}else{
+								d.callback();
+							}
+						}, innerFail);
 					}, innerFail);
 				}, innerFail);
 			}, fail);
@@ -164,19 +182,15 @@ define([
 	
 		keep: function(id){
 			var t = this, k = t._kept;
-			if(t._cache[id] && t._struct[id]){
-				if(!k[id]){
-					k[id] = 1;
-					++t._keptSize;
-				}
-				return true;
+			if(t._cache[id] && t._struct[id] && !k[id]){
+				k[id] = 1;
+				++t._keptSize;
 			}
-			return false;
 		},
 	
 		free: function(id){
 			var t = this;
-			if(id === undefined){
+			if(!id){
 				t._kept = {};
 				t._keptSize = 0;
 			}else if(t._kept[id]){
@@ -188,7 +202,7 @@ define([
 		clear: function(){
 			var t = this;
 			if(t._requests && t._requests.length){
-				t._clearLock = true;
+				t._clearLock = 1;	//1 as true
 				return;
 			}
 			t.inherited(arguments);
@@ -199,27 +213,8 @@ define([
 		},
 
 		//-----------------------------------------------------------------------------------------------------------
-		_finish: function(args, callback, d){
-			var err, t = this;
-			if(callback){
-				try{
-					callback();
-				}catch(e){
-					err = e;
-				}
-			}
-			t._requests.shift();
-			//this is meaningless given current model impl
-//            if(!t.skipCacheSizeCheck && !t._requests.length){
-//                t._checkSize();
-//            }
-			if(err){
-				d.errback(err);
-			}else{
-				d.callback();
-			}
-		},
-	
+		_init: function(){},
+
 		_findMissingIds: function(ids){
 			var c = this._cache;
 			return array.filter(ids, function(id){
@@ -229,72 +224,74 @@ define([
 
 		_searchRootLevel: function(ids){
 			//search root level for missing ids
-			var t = this, i, d = new Deferred(), fail = hitch(d, d.errback),
-				indexMap = t._struct[''], ranges = [], lastRange,
-				premissing = 0; //Whether the previous item is missing
-			for(i = 1, len = indexMap.length; i < len; ++i){
-				if(indexMap[i] === undefined){
-					if(premissing){
-						lastRange.count++;
-					}else{
-						ranges.push(lastRange = {
-							start: i - 1,
-							count: 1
-						});
+			var t = this,
+				d = new Deferred,
+				fail = hitch(d, d.errback),
+				indexMap = t._struct[''],
+				ranges = [],
+				lastRange,
+				premissing; //Whether the previous item is missing
+			if(ids.length){
+				for(var i = 1, len = indexMap.length; i < len; ++i){
+					if(!indexMap[i]){
+						if(premissing){
+							lastRange.count++;
+						}else{
+							premissing = 1;
+							ranges.push(lastRange = {
+								start: i - 1,
+								count: 1
+							});
+						}
 					}
 				}
+				ranges.push({
+					start: indexMap.length < 2 ? 0 : indexMap.length - 2
+				});
 			}
-			ranges.push({
-				start: indexMap.length - 2 < 0 ? 0 : indexMap.length - 2
-			});
-			var func = function(){
-				if(ranges.length){
+			var func = function(ids){
+				if(ids.length && ranges.length){
 					t._storeFetch(ranges.shift()).then(function(){
-						ids = t._findMissingIds(ids);
-						if(ids.length){
-							func();
-						}else{
-							d.callback(ids);
-						}
+						func(t._findMissingIds(ids));
 					}, fail);
 				}else{
 					d.callback(ids);
 				}
 			};
-			func();
+			func(ids);
 			return d;
 		},
 
 		_searchChildLevel: function(ids){
 			//Search children level of current level for missing ids
-			var t = this, d = new Deferred(), fail = hitch(d, d.errback),
-				parentIds = t._struct[''].slice(1),
-				func = function(){
-					if(parentIds.length){
+			var t = this,
+				d = new Deferred,
+				fail = hitch(d, d.errback),
+				st = t._struct,
+				parentIds = st[''].slice(1),
+				func = function(ids){
+					if(ids.length && parentIds.length){
 						var pid = parentIds.shift();
 						t._loadChildren(pid).then(function(){
-							[].push.apply(parentIds, t._struct[pid].slice(1));
-							ids = t._findMissingIds(ids);
-							if(ids.length){
-								func();
-							}else{
-								d.callback(ids);
-							}
+							[].push.apply(parentIds, st[pid].slice(1));
+							func(t._findMissingIds(ids));
 						}, fail);
 					}else{
 						d.callback(ids);
 					}
 				};
-			func();
+			func(ids);
 			return d;
 		},
 	
 		_fetchById: function(args){
 			//Although store supports query by id, it does not support get index by id, so must find the index by ourselves.
-			var t = this, d = new Deferred(), 
+			var t = this, d = new Deferred, 
 				i, r, len, pid,
+				success = hitch(d, d.callback),
 				fail = hitch(d, d.errback),
-				ranges = args.range, isTree = t.store.getChildren;
+				ranges = args.range,
+				isTree = t.store.getChildren;
 			args.pids = [];
 			if(isTree){
 				for(i = ranges.length - 1; i >= 0; --i){
@@ -309,67 +306,51 @@ define([
 			}
 			var ids = t._findMissingIds(args.id), mis = [];
 			if(ids.length){
-				for(i = 0, len = ids.length; i < len; ++i){
-					var id = ids[id],
-						idx = t.idToIndex(id);
-					if(idx >= 0){
-						if(t.treePath(id).pop()){
-							mis.push(id);
-						}else{
-							ranges.push({
-								start: idx,
-								count: 1
-							});
-						}
+				array.forEach(ids, function(id){
+					var idx = t.idToIndex(id);
+					if(idx >= 0 && !t.treePath(id).pop()){
+						ranges.push({
+							start: idx,
+							count: 1
+						});
 					}else{
 						mis.push(id);
 					}
-				}
+				});
 				t._searchRootLevel(mis).then(function(ids){
 					if(ids.length && isTree){
 						t._searchChildLevel(ids).then(function(ids){
 							if(ids.length){
 								console.warn('Requested row ids are not found: ', ids);
 							}
-							d.callback(args);
+							success(args);
 						}, fail);
 					}else{
-						d.callback(args);
+						success(args);
 					}
 				}, fail);
 			}else{
-				d.callback(args);
+				success(args);
 			}
 			return d;
 		},
 
 		_fetchByParentId: function(args){
-			for(var i = 0, d = new Deferred(), dl = [], len = args.pids.length; i < len; ++i){
-				dl.push(this._loadChildren(args.pids[i]));
-			}
-			new DeferredList(dl).then(hitch(d, d.callback, args), hitch(d, d.errback));
+			var t = this, d = new Deferred;
+			new DeferredList(array.map(args.pids, function(pid){
+				return t._loadChildren(pid);
+			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
 			return d;
 		},
 
 		_fetchByIndex: function(args){
-			var t = this, d = new Deferred();
+			var t = this, d = new Deferred;
 			args = connectRanges(
-						t._mergePendingRequests(
-							t._findMissingIndexes(
-								mergeRanges(args))), t.pageSize);
-			if(args.range.length){
-				var fetchTimes = args.range.length,
-					onComplete = function(){
-						if(!--fetchTimes){
-							d.callback(args);
-						}
-					};
-				for(var i = 0, len = fetchTimes; i < len; ++i){ 
-					t._storeFetch(args.range[i]).then(onComplete, hitch(d, d.errback));
-				}
-			}else{
-				d.callback(args);
-			}
+					t._mergePendingRequests(
+						t._findMissingIndexes(mergeRanges(args))), t.pageSize);
+			new DeferredList(array.map(args.range, function(r){
+				return t._storeFetch(r);
+			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
 			return d;
 		},
 	
@@ -385,7 +366,7 @@ define([
 				newRange = 1;
 				for(j = r.start; j < end; ++j){
 					var id = indexMap[j + 1];
-					if(id === undefined || !t._cache[id]){
+					if(!id || !t._cache[id]){
 						if(newRange){
 							ranges.push({
 								start: j,
@@ -422,7 +403,7 @@ define([
 					defs.push(req._def);
 				}
 			}
-			args._req = defs.length && new DeferredList(defs);
+			args._req = defs.length && new DeferredList(defs, 0, 1);
 			reqs.push(args);
 			return args;
 		},
@@ -432,7 +413,7 @@ define([
 				cs = t.cacheSize,
 				p = t._priority;
 			if(t._clearLock){
-				delete t._clearLock;
+				t._clearLock = 0;	//0 as false
 				t.clear();
 			}else if(cs >= 0){
 				cs += t._keptSize;

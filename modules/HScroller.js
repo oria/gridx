@@ -58,6 +58,9 @@ define([
 		
 		//Public API-----------------------------------------------------------
 		scroll: function(left){
+			if(sniff('webkit') && !this.grid.isLeftToRight()){
+				left = this.domNode.scrollWidth - this.domNode.clientWidth - left;
+			}
 			this.domNode[sl] = left;
 		},
 		
@@ -96,6 +99,9 @@ define([
 			//summary:
 			//	Fired by h-scroller's scrolling event
 			var t = this, s = t.domNode[sl];
+			if(sniff('webkit') && !t.grid.isLeftToRight()){
+				s = t.domNode.scrollWidth - t.domNode.clientWidth - s;
+			}
 			if(t._lastLeft != s){
 				t._lastLeft = s;
 				t._doScroll();
@@ -106,7 +112,8 @@ define([
 			//summary:
 			//	Sync the grid body with the scroller.
 			var g = this.grid;
-			g.onHScroll(g.bodyNode[sl] = this.domNode[sl]);
+			g.bodyNode[sl] = this.domNode[sl]
+			g.onHScroll(this._lastLeft);
 		}
 	}));
 });

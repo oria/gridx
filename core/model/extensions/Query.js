@@ -6,7 +6,7 @@ define([
 	return declare(_Extension, {
 		name: 'query',
 
-		priority: 30,
+		priority: 40,
 
 		constructor: function(model, args){
 			this.clear();

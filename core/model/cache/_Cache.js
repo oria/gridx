@@ -36,7 +36,7 @@ define([
 			}
 			t.clear();
 			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 
-				'treePath', 'hasChildren', 'keep', 'free', 'item');
+				'treePath', 'hasChildren', 'keep', 'free');
 		},
 
 		destroy: function(){
@@ -57,23 +57,23 @@ define([
 		},
 		
 		byIndex: function(index, parentId){
-			this.prepare('byIndex', arguments);
+			this._init('byIndex', arguments);
 			return this._cache[this.indexToId(index, parentId)];
 		},
 
 		byId: function(id){
-			this.prepare('byId', arguments);
+			this._init('byId', arguments);
 			return this._cache[id];
 		},
 
 		indexToId: function(index, parentId){
-			this.prepare('indexToId', arguments);
+			this._init('indexToId', arguments);
 			var items = this._struct[parentId || ''];
 			return items && items[index + 1];
 		},
 
 		idToIndex: function(id){
-			this.prepare('idToIndex', arguments);
+			this._init('idToIndex', arguments);
 			var s = this._struct,
 				pid = s[id] && s[id][0],
 				index = indexOf(s[pid] || [], id);
@@ -95,14 +95,14 @@ define([
 		},
 
 		hasChildren: function(id){
-			var t = this, s = t.store;
-			t.prepare('hasChildren', arguments);
-			var c = t.byId(id);
+			var t = this, s = t.store, c;
+			t._init('hasChildren', arguments);
+			c = t.byId(id);
 			return s.hasChildren && s.hasChildren(id, c && c.item);
 		},
 
 		size: function(parentId){
-			this.prepare('size', arguments);
+			this._init('size', arguments);
 			var s = this._size[parentId || ''];
 			return s >= 0 ? s : -1;
 		},
@@ -127,10 +127,10 @@ define([
 		_itemToObject: function(item){
 			var s = this.store;
 			if(s.fetch){
-				var i, len, obj = {}, attrs = s.getAttributes(item);
-				for(i = 0, len = attrs.length; i < len; ++i){
-					obj[attrs[i]] = s.getValue(item, attrs[i]);
-				}
+				var obj = {};
+				array.forEach(s.getAttributes(item), function(attr){
+					obj[attr] = s.getValue(item, attr);
+				});
 				return obj;	
 			}
 			return item;
@@ -143,7 +143,6 @@ define([
 
 		_formatRow: function(rowData){
 			var cols = this.columns, res = {}, colId;
-			if(!cols){ return rowData; }
 			for(colId in cols){
 				res[colId] = this._formatCell(colId, rowData);
 			}
@@ -177,15 +176,15 @@ define([
 		},
 
 		_loadChildren: function(parentId){
-			var d = new Deferred(), t = this, s = t.store, items = [],
-				row = t.byId(parentId);
-			if(row){
-				items = (s.getChildren && s.getChildren(row.item)) || [];
-			}
+			var t = this,
+				d = new Deferred,
+				s = t.store,
+				row = t.byId(parentId),
+				items = row && s.getChildren && s.getChildren(row.item) || [];
 			Deferred.when(items, function(items){
-				t._size[parentId] = items.length;
-				for(var i = 0, len = items.length; i < len; ++i){
-					var item = items[i];
+				var i = 0, item, len = t._size[parentId] = items.length;
+				for(; i < len; ++i){
+					item = items[i];
 					t._addRow(s.getIdentity(item), i, t._itemToObject(item), item, parentId);
 				}
 				d.callback();
@@ -193,23 +192,17 @@ define([
 			return d;
 		},
 
-		_onFetchBegin: function(size){
-			var t = this,
-				oldSize = t._size[''],
-				newSize = t._size[''] = parseInt(size, 10);
-			if(oldSize !== newSize){
-				t.onSizeChange(newSize, oldSize);
-			}
+		_onBegin: function(size){
+			this._size[''] = parseInt(size, 10);
 		},
 
-		_onFetchComplete: function(d, start, items){
+		_onComplete: function(d, start, items){
 			try{
-				var t = this, idx, ids = [], s = t.store;
-				for(var i = 0, len = items.length; i < len; ++i){
-					ids.push(s.getIdentity(items[i]));
-					t._addRow(ids[i], start + i, t._itemToObject(items[i]), items[i]);
+				var t = this, i = 0, item;
+				for(; item = items[i]; ++i){
+					t._addRow(t.store.getIdentity(item), start + i, t._itemToObject(item), item);
 				}
-				d.callback(ids);
+				d.callback();
 			}catch(e){
 				d.errback(e);
 			}
@@ -223,11 +216,11 @@ define([
 //                    this.options);
 
 			var t = this,
-				s = t.store, 
-				d = new Deferred(),
+				s = t.store,
+				d = new Deferred,
 				req = mixin({}, t.options || {}, options),
-				onBegin = hitch(t, t._onFetchBegin),
-				onComplete = hitch(t, t._onFetchComplete, d, options.start),
+				onBegin = hitch(t, t._onBegin),
+				onComplete = hitch(t, t._onComplete, d, options.start),
 				onError = hitch(d, d.errback);
 			t.onBeforeFetch();
 			if(s.fetch){
@@ -241,9 +234,7 @@ define([
 				Deferred.when(results.total, onBegin);
 				Deferred.when(results, onComplete, onError);
 			}
-			d.then(function(){
-				t.onAfterFetch();
-			});
+			d.then(hitch(t, t.onAfterFetch));
 			return d;
 		},
 
@@ -261,21 +252,19 @@ define([
 	
 		_onNew: function(item, parentInfo){
 			var t = this, s = t.store,
-				id = s.getIdentity(item),
 				row = t._itemToObject(item),
-				cacheData = {
-					data: t._formatRow(row),
-					rawData: row,
-					item: item
-				},
 				parentItem = parentInfo && parentInfo[s.fetch ? 'item' : 'parent'],
 				parentId = parentItem ? s.getIdentity(parentItem) : '',
 				size = t._size[''];
 			t.clear();
-			t.onNew(id, 0, cacheData);
+			t.onNew(s.getIdentity(item), 0, {
+				data: t._formatRow(row),
+				rawData: row,
+				item: item
+			});
 			if(!parentItem && size >= 0){
 				t._size[''] = size + 1;
-				t.onSizeChange(size + 1, size, 'new');
+				t.model._onSizeChange();
 			}
 		},
 	
@@ -314,11 +303,11 @@ define([
 				t.onDelete(id, index - 1);
 				if(!parentId && size >= 0){
 					sz[''] = size - 1;
-					t.onSizeChange(size - 1, size, 'delete');
+					t.model._onSizeChange();
 				}
 			}else{
 				t.onDelete(id);
-//                var onBegin = hitch(t, t._onFetchBegin),
+//                var onBegin = hitch(t, t._onBegin),
 //                    req = mixin({}, t.options || {}, {
 //                        start: 0,
 //                        count: 1

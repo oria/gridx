@@ -150,7 +150,7 @@ define([
 		},
 
 		insert: function(dataArray, prevItem, nextItem){
-			var finished = new Deferred(),
+			var finished = new Deferred,
 				success = hitch(finished, finished.callback),
 				fail = hitch(finished, finished.errback),
 				moveField = this.moveField,
@@ -179,7 +179,7 @@ define([
 				if(store.fetch){
 					store.newItem(data);
 				}else{
-					var d = new Deferred();
+					var d = new Deferred;
 					Deferred.when(store.add(data), hitch(d, d.callback), hitch(d, d.errback));
 					dl.push(d);
 				}
@@ -222,6 +222,7 @@ define([
 			//		An index mapping from the original indexes to the new indexes. This map is generated from the "moves" argument,
 			//		so it has exactly the same information as "moves". But it is pre-processed to reflect the final index mapping
 			//		after all these movements are done, so it might be easier to use.
+			console.log(moves, map);
 			var reverseIndexes = [], info = [], indexes = [], ranges = [],
 				from, to, m = {}, i, dif, cat = {}, mostDif, maxCount = 0, t = this, 
 				inner = t.inner, store = t.model.store, moveField = t.moveField, dl = [],
@@ -268,7 +269,7 @@ define([
 						item = lang.clone(item);
 						item[moveField] = value;
 //                        console.log('setValue:', item, moveField, value);
-						var d = new Deferred();
+						var d = new Deferred;
 						Deferred.when(store.put(item, {
 							overwrite: true
 						}), hitch(d, d.callback));
@@ -380,7 +381,7 @@ define([
 		//Private--------------------------------------------------------------------
 		_cmdMove: function(){
 			//Process the move command
-			var d = new Deferred(), t = this,
+			var d = new Deferred, t = this,
 				m = t.model, i, args,
 				map = {}, moved, moves = [],
 				size = t.inner._call('size');

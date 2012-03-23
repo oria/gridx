@@ -60,9 +60,10 @@ define([
 			//		The menu to be binded.
 			//args: __MenuArgs
 			//		Indicates how to bind the menu
+			args = args || {};
 			var t = this,
 				g = t.grid,
-				hookPoint = args.hookPoint.toLowerCase(),
+				hookPoint = args.hookPoint && args.hookPoint.toLowerCase() || 'grid',
 				type = args.selected ? hookPoint + '-selected' : hookPoint,
 				evtName = t._evtMap[hookPoint],
 				m = t._menus[type] = t._menus[type] || {},

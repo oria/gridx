@@ -114,9 +114,9 @@ define([
 				}
 				cell.style.width = width + 'px';
 			});
-			g.vLayout.reLayout();
 			g.header.onRender();
 			g.body.onRender();
+			g.vLayout.reLayout();
 			
 			t.onResize(colId, width, oldWidth);
 		},

@@ -4,16 +4,18 @@ define([
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/_base/query",
+	"dojo/_base/sniff",
 	"dojo/keys",
 	"../util",
 	"../core/_Module"
-], function(declare, domConstruct, domClass, domGeometry, query, keys, util, _Module){
+], function(declare, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
 	return _Module.register(
 	declare(_Module, {
+
 		name: 'header',
 	
-		required: ['vLayout'],
+//        required: ['vLayout'],
 
 		forced: ['hLayout'],
 
@@ -106,8 +108,8 @@ define([
 		},
 
 		_onHScroll: function(left){
-			//this.innerNode.scrollLeft = left;
-			this.innerNode.firstChild.style.marginLeft = -left + 'px';
+			var ltr = this.grid.isLeftToRight();
+			this.innerNode.firstChild.style[ltr ? 'marginLeft' : 'marginRight'] = (!ltr && sniff('ff') ? left : -left) + 'px';
 			this._scrollLeft = left;
 		},
 	
@@ -192,7 +194,9 @@ define([
 								dif = 0;
 							}
 						}
-						dif += t._scrollLeft;
+						if(g.isLeftToRight()){
+							dif += t._scrollLeft;
+						}
 						t._onHScroll(dif);
 						g.hScroller.scroll(dif);
 					}

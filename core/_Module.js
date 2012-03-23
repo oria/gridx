@@ -2,8 +2,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
+	"dojo/_base/Deferred",
 	"dojo/_base/connect"
-], function(declare, lang, array, connect){
+], function(declare, lang, array, Deferred, connect){
 	
 var isFunc = lang.isFunction,
 	c = 'connect',	//To reduce code size
@@ -82,6 +83,7 @@ var isFunc = lang.isFunction,
 			var t = this;
 			t.grid = grid;
 			t.model = grid.model;
+			t.loaded = new Deferred;
 			t._cnnts = [];
 			t._sbscs = [];
 			lang.mixin(t, args);
