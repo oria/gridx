@@ -13,8 +13,3 @@
 .claro .gridxRtl .gridxBody .gridxCell{
 	border-color: transparent transparent #E5DAC8 #E5DAC8;
 }
-
-.claro .gridxRtl .gridxRow .gridxCellFocus{
-	border: 1px dashed darkblue;
-}
-

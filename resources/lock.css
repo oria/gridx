@@ -1,3 +1,8 @@
+.gridxLockedCell {
+	position: absolute;
+	background-color: #ffffff;
+}
+
 /*Column Lock*/
 .gridxColumnLock .gridxRow {
 	overflow: hidden;

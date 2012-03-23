@@ -4,7 +4,10 @@
 	text-align: right;
 }
 
-.gridxRtl .gridxPager .gridxPagerStepperTD,
+.gridxRtl .gridxPagerSizeSwitchTD {
+	text-align: left;
+}
+
 .gridxRtl .gridxPager .gridxPagerGoto,
 .gridxRtl .gridxGotoPage .gridxGotoPageBtns {
 	text-align: left;
@@ -35,6 +38,14 @@
 }
 .gridxRtl .gridxPagerLastPageDisable {
 	background-position: -60px -16px;
+}
+
+.dijitRtl .gridxGotoPage .gridxPageCountMsg {
+	padding-left: 0;
+	padding-right: 5px;
+}
+.dijitRtl .gridxGotoPage .gridxGotoPageBtns {
+	text-align: left;
 }
 
 /* PaginationBarDD */

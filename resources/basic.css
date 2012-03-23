@@ -46,6 +46,7 @@
 	border-style: solid;
 	border-color: #ccc;
 	border-width: 0 1px 0 0;
+	position: relative;
 }
 
 .dj_ie .gridxHeaderRowInner{
@@ -68,7 +69,7 @@
 	border-color: transparent #ccc transparent transparent;
 	padding: 3px;
 	text-align: left;
-/*    overflow: hidden;*/
+	overflow: hidden;
 	/*box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;*/
