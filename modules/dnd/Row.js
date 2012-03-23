@@ -7,8 +7,7 @@ define([
 	"dojo/dom-geometry",
 	"dojo/_base/sniff",
 	"./_Base",
-	"../../core/_Module",
-	"./_Dnd"
+	"../../core/_Module"
 ], function(declare, array, Deferred, lang, domClass, domGeometry, sniff, _Base, _Module){
 
 	var hitch = lang.hitch,
@@ -232,13 +231,15 @@ define([
 		},
 
 		_onDropInternal: function(nodes, copy){
-			var t = this;
+			var t = this, g = t.grid;
 			if(t._target >= 0){
 				t.model.when({id: t._selectedRowIds}, function(){
 					var indexes = array.map(t._selectedRowIds, function(rowId){
 						return t.model.idToIndex(rowId);
 					});
-					t.grid.move.row.move(indexes, t._target);
+					g.move.row.move(indexes, g.body.getRowInfo({
+						visualIndex: t._target
+					}).rowIndex);
 				});
 			}
 		},

@@ -5,8 +5,7 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/query",
 	"./_Base",
-	"../../core/_Module",
-	"./_Dnd"
+	"../../core/_Module"
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
 	return _Module.register(
@@ -88,6 +87,7 @@ define([
 			var node = evt.target,
 				t = this,
 				g = t.grid,
+				ltr = g.isLeftToRight(),
 				columns = g._columns,
 				ret = {
 					height: containerPos.h + "px",
@@ -95,9 +95,12 @@ define([
 					top: ''
 				},
 				func = function(n){
-					var id = n.getAttribute('colid'), 
+					var id = n.getAttribute('colid'),
 						index = g._columnsById[id].index,
-						first = n, last = n, firstIdx = index, lastIdx = index;
+						first = n,
+						last = n,
+						firstIdx = index,
+						lastIdx = index;
 					if(t._selector.isSelected(id)){
 						firstIdx = index;
 						while(firstIdx > 0 && t._selector.isSelected(columns[firstIdx - 1].id)){
@@ -113,14 +116,14 @@ define([
 					if(first && last){
 						var firstPos = domGeometry.position(first),
 							lastPos = domGeometry.position(last),
-							middle = (firstPos.x + lastPos.x + lastPos.w) / 2;
-						if(evt.clientX < middle){
-							ret.left = (firstPos.x - containerPos.x) + "px";
-							t._target = firstIdx;
+							middle = (firstPos.x + lastPos.x + lastPos.w) / 2,
+							pre = evt.clientX < middle;
+						if(pre){
+							ret.left = (firstPos.x - containerPos.x - 1) + "px";
 						}else{
-							ret.left = (lastPos.x + lastPos.w - containerPos.x) + "px";
-							t._target = lastIdx + 1;
+							ret.left = (lastPos.x + lastPos.w - containerPos.x - 1) + "px";
 						}
+						t._target = pre ^ ltr ? lastIdx + 1 : firstIdx;
 					}else{
 						delete t._target;
 					}
@@ -137,10 +140,10 @@ define([
 			var rowNode = query(".gridxRow", g.bodyNode)[0],
 				rowPos = domGeometry.position(rowNode.firstChild);
 			if(rowPos.x + rowPos.w <= evt.clientX){
-				ret.left = (rowPos.x + rowPos.w - containerPos.x) + 'px';
+				ret.left = (rowPos.x + rowPos.w - containerPos.x - 1) + 'px';
 				t._target = columns.length;
 			}else if(rowPos.x >= evt.clientX){
-				ret.left = (rowPos.x - containerPos.x) + 'px';
+				ret.left = (rowPos.x - containerPos.x - 1) + 'px';
 				t._target = 0;
 			}else if(query(".gridxCell", rowNode).some(function(cellNode){
 				var cellPos = domGeometry.position(cellNode);
