@@ -69,7 +69,7 @@ define([
 		},
 	
 		pageCount: function(){
-			return Math.ceil(this.model.size() / this.pageSize());
+			return this.isAll() ? 1 : Math.ceil(this.model.size() / this.pageSize());
 		},
 	
 		currentPage: function(){
@@ -98,11 +98,11 @@ define([
 		},
 		
 		pageOfIndex: function(index){
-			return Math.floor(index / this.pageSize());
+			return this.isAll() ? 0 : Math.floor(index / this.pageSize());
 		},
 	
 		indexInPage: function(index){
-			return index % this.pageSize();
+			return this.isAll() ? index : index % this.pageSize();
 		},
 	
 		filterIndexesInPage: function(indexes, page){

@@ -74,9 +74,14 @@ define([
 			t._createGotoButton();
 		},
 	
-		_onSwitchPage: function(page, oldPage){
+		_onSwitchPage: function(){
 			this._createPageStepper();
 			this.module.grid.vLayout.reLayout();
+		},
+
+		_onSizeChange: function(){
+			this._createDescription();
+			this._onSwitchPage();
 		},
 
 		_focusArea: function(){
@@ -121,8 +126,8 @@ define([
 						return ['<span class="gridxPagerStepperBtn gridxPagerPage ',
 							currentPage == page ? 'gridxPagerStepperBtnActive' : '',
 							'" pageindex="', page,
-							'" title="', substitute(nlsArr[0], [1]),
-							'" aria-label="', substitute(nlsArr[1], [1]),
+							'" title="', substitute(nlsArr[0], [page + 1]),
+							'" aria-label="', substitute(nlsArr[1], [page + 1]),
 							'" tabindex="', tabIndex, '">', substitute(nlsArr[2], [page + 1]),
 						'</span>'].join('');
 					};
