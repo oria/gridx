@@ -2,21 +2,20 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/query",
-	"dojo/_base/html",
 	"dojo/_base/lang",
-	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	"dojo/dom-class",
 	"dojo/mouse",
 	"dojo/keys",
 	"../../core/_Module",
 	"./_Base"
-], function(declare, array, query, html, lang, Deferred, sniff, mouse, keys, _Module, _Base){
+], function(declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
 
 	return _Module.register(
 	declare(_Base, {
 		name: 'selectColumn',
 
-		optional: ['columnResizer'],
+//        optional: ['columnResizer'],
 		
 		columnMixin: {
 			select: function(){
@@ -41,13 +40,16 @@ define([
 			});
 		},
 
-		clear: function(){
-			query(".dojoxGridxColumnSelected", this.grid.domNode).forEach(function(node){
-				html.removeClass(node, 'dojoxGridxColumnSelected');
+		clear: function(silent){
+			query(".gridxColumnSelected", this.grid.domNode).forEach(function(node){
+				domClass.remove(node, 'gridxColumnSelected');
 			});
 			array.forEach(this.grid._columns, function(col){
-				col._selected = false;
+				col._selected = 0;	//0 as false
 			});
+			if(!silent){
+				this._onSelectionChange();
+			}
 		},
 
 		isSelected: function(){
@@ -76,10 +78,10 @@ define([
 			for(i = 0; i < args.length; ++i){
 				var arg = args[i];
 				if(lang.isArrayLike(arg)){
-					var start = arg[0];
-					var end = arg[1];
+					var start = arg[0],
+						end = arg[1],
+						count;
 					if(start >= 0 && start < Infinity){
-						var count;
 						if(!(end >= start && end < Infinity)){
 							end = columns.length - 1;
 						}
@@ -102,23 +104,23 @@ define([
 		},
 		
 		_init: function(){
-			var g = this.grid;
-			this.batchConnect(
+			var t = this, g = t.grid;
+			t.batchConnect(
 				[g, 'onHeaderCellMouseDown', function(e){
-					if(mouse.isLeft(e) && !html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
-						this._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
+					if(mouse.isLeft(e) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
+						t._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
 				[g, 'onHeaderCellMouseOver', function(e){
-					this._highlight({column: e.columnIndex});
+					t._highlight({column: e.columnIndex});
 				}],
 				[g, 'onCellMouseOver', function(e){
-					this._highlight({column: e.columnIndex});
+					t._highlight({column: e.columnIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
-					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !html.hasClass(e.target, 'dojoxGridxArrowButtonNode')){
-						this._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
-						this._end();
+					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
+						t._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
+						t._end();
 					}
 				}],
 				[g.header, 'onMoveToHeaderCell', '_onMoveToHeaderCell']
@@ -126,34 +128,35 @@ define([
 		},
 
 		_onRender: function(start, count){
-			var i, j, end = start + count, bn = this.grid.bodyNode, node;
-			var cols = array.filter(this.grid._columns, function(col){
-				return col._selected;
-			});
+			var i, j, end = start + count, g = this.grid, bn = g.bodyNode, node,
+				cols = array.filter(g._columns, function(col){
+					return col._selected;
+				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
 					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
-					html.addClass(node, 'dojoxGridxColumnSelected');
+					domClass.add(node, 'gridxColumnSelected');
 				}
 			}
 		},
 
 		_onMoveToHeaderCell: function(columnId, e){
-			if(e.shiftKey && (e.keyCode === keys.LEFT_ARROW || e.keyCode === keys.RIGHT_ARROW)){
-				var col = this.grid._columnsById[columnId];
-				this._start({column: col.index}, e.ctrlKey, true);
-				this._end();
+			if(e.shiftKey && (e.keyCode == keys.LEFT_ARROW || e.keyCode == keys.RIGHT_ARROW)){
+				var t = this, col = t.grid._columnsById[columnId];
+				t._start({column: col.index}, e.ctrlKey, 1);	//1 as true
+				t._end();
 			}
 		},
 
 		_isSelected: function(target){
-			var col = this.grid._columns[target.column], id = col.id;
-			return this._isRange ? array.indexOf(this._refSelectedIds, id) >= 0 : col._selected;
+			var t = this, col = t.grid._columns[target.column], id = col.id;
+			return t._isRange ? array.indexOf(t._refSelectedIds, id) >= 0 : col._selected;
 		},
 
 		_beginAutoScroll: function(){
-			this._autoScrollV = this.grid.autoScroll.vertical;
-			this.grid.autoScroll.vertical = false;
+			var autoScroll = this.grid.autoScroll;
+			this._autoScrollV = autoScroll.vertical;
+			autoScroll.vertical = false;
 		},
 
 		_endAutoScroll: function(){
@@ -161,43 +164,38 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			var id = this.grid._columns[target.column].id;
-			var nodes = query('[colid="' + id + '"].dojoxGridxCell', this.grid.domNode);
-			nodes.forEach(function(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, 'dojoxGridxColumnSelected');
+			query('[colid="' + this.grid._columns[target.column].id + '"].gridxCell', this.grid.domNode).forEach(function(node){
+				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
 			});
 		},
 
 		_focus: function(target){
-			if(this.grid.focus){
-				var id = this.grid._columns[target.column].id;
-				var node = query('[colid="' + id + '"].dojoxGridxCell', this.grid.header.domNode)[0];
-				this.grid.header._focusNode(node);
+			var g = this.grid;
+			if(g.focus){
+				//Seems breaking encapsulation...
+				g.header._focusNode(query('[colid="' + g._columns[target.column].id + '"].gridxCell', g.header.domNode)[0]);
 			}
 		},
 
 		_addToSelected: function(start, end, toSelect){
-			if(!this._isRange){
-				this._refSelectedIds = this.getSelected();
+			var t = this, g = t.grid, a, i;
+			if(!t._isRange){
+				t._refSelectedIds = t.getSelected();
 			}
-			var a, b, i;
-			if(this._isRange && this._inRange(end.column, start.column, this._lastEndItem.column)){
-				start = Math.min(end.column, this._lastEndItem.column);
-				end = Math.max(end.column, this._lastEndItem.column);
+			if(t._isRange && t._inRange(end.column, start.column, t._lastEndItem.column)){
+				start = Math.min(end.column, t._lastEndItem.column);
+				end = Math.max(end.column, t._lastEndItem.column);
 				for(i = start; i <= end; ++i){
-					var id = this.grid._columns[i].id;
-					var selected = array.indexOf(this._refSelectedIds, id) >= 0;
-					this.grid._columns[i]._selected = selected;
+					g._columns[i]._selected = array.indexOf(t._refSelectedIds, g._columns[i].id) >= 0;
 				}
 			}else{
 				a = Math.min(start.column, end.column);
 				end = Math.max(start.column, end.column);
 				start = a;
 				for(i = start; i <= end; ++i){
-					this.grid._columns[i]._selected = toSelect;
+					g._columns[i]._selected = toSelect;
 				}
 			}
 		}
 	}));
 });
-

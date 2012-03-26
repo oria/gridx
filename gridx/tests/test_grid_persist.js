@@ -22,7 +22,7 @@ require([
 				modules: [
 					modules.Persist,
 					modules.DndColumn,
-					modules.NestedSorting
+					modules.NestedSort
 				]
 			});
 			grid.placeAt('gridContainer');
@@ -34,7 +34,7 @@ require([
 	destroyGrid = function(){
 		if(window.grid){
 			grid.destroy();
-			delete window.grid;
+			window.grid = null;
 		}
 	};
 

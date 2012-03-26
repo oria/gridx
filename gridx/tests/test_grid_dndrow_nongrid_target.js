@@ -31,7 +31,8 @@ require([
 				mods.ExtendedSelectColumn,
 				mods.DndRow,
 				mods.DndColumn,
-				mods.VirtualVScroller
+				mods.VirtualVScroller,
+				mods.ColumnResizer
 			],
 			structure: dataSource.layouts[layoutIdx]
 		}, args));

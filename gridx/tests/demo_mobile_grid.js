@@ -3,12 +3,12 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/modules/SingleSort',
-	"gridx/modules/TouchScroller",
+	"gridx/modules/TouchVScroller",
 	"gridx/modules/Rotater",
 	"dojox/mobile/parser",
 	"dojox/mobile/View",
 	"dojox/mobile/deviceTheme"
-], function(MemoryStore, Grid, Cache, SingleSort, TouchScroller, Rotater){
+], function(MemoryStore, Grid, Cache, SingleSort, TouchVScroller, Rotater){
 	
 	var layout = [
  		{id: 'id', field: 'id', name: 'Identity'},
@@ -53,7 +53,7 @@ require([
 			landscapeStructure: landscapeLayout,
 			modules:[
 			    SingleSort,
-			    TouchScroller,
+			    TouchVScroller,
 			    Rotater	    
 			]
 		});

@@ -22,9 +22,9 @@ require([
 			modules: [
 				mods.TitleBar,
 				mods.ExtendedSelectRow,
-				mods.ExtendedSelectColumn,
+//                mods.ExtendedSelectColumn,
 				mods.DndRow,
-				mods.DndColumn,
+//                mods.DndColumn,
 				mods.VirtualVScroller
 			],
 			structure: dataSource.layouts[layoutIdx]
@@ -35,23 +35,23 @@ require([
 	}
 
 	create('grid1', 'grid1Container', 100, 9, {
-		titlebarLabel: '<h1>Grid 1</h1>Draggable to any other grid.',
+		titleBarLabel: '<h1>Grid 1</h1>Draggable to any other grid.',
 		dndRowAccept: ['grid3/rows', 'grid4/rows'],
 		dndRowProvide: ['grid1/rows']
 	});
 	create('grid2', 'grid2Container', 0, 6, {
-		titlebarLabel: '<h1>Grid 2</h1>Not draggable to grid 1 and grid 4.',
+		titleBarLabel: '<h1>Grid 2</h1>Not draggable to grid 1 and grid 4.',
 		dndRowAccept: ['grid1/rows', 'grid4/rows'],
 		dndRowProvide: ['grid2/rows']
 	});
 	create('grid3', 'grid3Container', 0, 7, {
-		titlebarLabel: '<h1>Grid 3</h1>Not draggable to grid 2. Can not rearrange.',
+		titleBarLabel: '<h1>Grid 3</h1>Not draggable to grid 2. Can not rearrange.',
 		dndRowCanRearrange: false,
 		dndRowAccept: ['grid1/rows', 'grid2/rows'],
 		dndRowProvide: ['grid3/rows']
 	});
 	create('grid4', 'grid4Container', 0, 8, {
-		titlebarLabel: '<h1>Grid 4</h1>Not draggable to grid 3.',
+		titleBarLabel: '<h1>Grid 4</h1>Not draggable to grid 3.',
 		dndRowAccept: ['grid1/rows', 'grid3/rows'],
 		dndRowProvide: ['grid4/rows']
 	});

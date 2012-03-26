@@ -4,11 +4,12 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
+	'gridx/tests/support/modules',
 	'gridx/modules/Focus',
 	'gridx/modules/filter/Filter',
 	'gridx/modules/filter/FilterBar'
 	
-], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, filter, filterBar){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, mods, focus, filter, filterBar){
 
 	grid = new Grid({
 		id: 'grid',
@@ -17,8 +18,10 @@ require([
 			dataSource: dataSource, 
 			size: 100
 		}),
+		selectRowTriggerOnCell: true,
 		modules: [
 			filter,
+//            mods.SelectRow,
 			{
 				moduleClass: filterBar,
 				ruleCountToConfirmClearFilter: 0
@@ -38,7 +41,7 @@ require([
 	};
 
 	//Test buttons
-	/*
+	
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
 	
@@ -76,13 +79,13 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: clear">Clear current filter</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: clearWithoutConfirm">Clear current filter without confirm</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showOrHide">Hide filter bar</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showFilterDialog">Show filter dialog</div><br/>'
-	].join(''));
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showFilterDialog">Show filter dialog</div><br/>',
+	''].join(''));
 	tp.addTestSet('Column Extended Actions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setIdentityFilterable">Set "Identity" column un-filterable</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getConditions">Get the available conditions of column "Download Date"</div><br/>',
-	].join(''));
+	''].join(''));
 	tp.startup();
-	*/
+
 	
 });

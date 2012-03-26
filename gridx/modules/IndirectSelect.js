@@ -17,31 +17,35 @@ define([
 		required: ['rowHeader', 'selectRow'],
 
 		preload: function(){
-			var g = this.grid, focus = g.focus, _this = this;
-			g.rowHeader.cellProvider = lang.hitch(this, this._createSelector);
-			this.batchConnect(
-				[g.select.row,'onHighlightChange', '_onHighlightChange' ],
-				[g.select.row, 'onSelectionChange', '_onSelectionChange'],
+			var t = this,
+				g = t.grid,
+				focus = g.focus,
+				sr = g.select.row,
+				rowHeader = g.rowHeader;
+			rowHeader.cellProvider = lang.hitch(t, t._createSelector);
+			t.batchConnect(
+				[sr,'onHighlightChange', '_onHighlightChange' ],
+				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[g, 'onRowMouseOver', '_onMouseOver'],
 				[g, 'onRowMouseOut', '_onMouseOut'],
 				focus && [focus, 'onFocusArea', function(name){
 					if(name == 'rowHeader'){
-						this._onMouseOver();
+						t._onMouseOver();
 					}
 				}],
 				focus && [focus, 'onBlurArea', function(name){
 					if(name == 'rowHeader'){
-						this._onMouseOut();
+						t._onMouseOut();
 					}
 				}]
 			);
-			if(g.select.row.selectByIndex && this.arg('all')){
-				g.rowHeader.headerProvider = lang.hitch(this, this._createSelectAllBox);
+			if(sr.selectByIndex && t.arg('all')){
+				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
 				if(focus){
-					this._initFocus();
+					t._initFocus();
 				}
-				g.rowHeader.loaded.then(function(){
-					_this.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
+				rowHeader.loaded.then(function(){
+					t.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
 				});
 			}
 		},
@@ -49,17 +53,17 @@ define([
 		all: true,
 
 		//Private----------------------------------------------------------
-		_createSelector: function(id){
-			var rowNode = query('[rowid="' + id + '"]', this.grid.bodyNode)[0],
-				selected = rowNode && domClass.contains(rowNode, 'dojoxGridxRowSelected');
+		_createSelector: function(rowInfo){
+			var rowNode = query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0],
+				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected');
 			return this._createCheckBox(selected);
 		},
 
 		_createCheckBox: function(selected){
 			var dijitClass = this._getDijitClass();
-			return ['<span class="dojoxGridxIndirectSelectionCheckBox dijitReset dijitInline ',
+			return ['<span class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
 				dijitClass, ' ', selected ? dijitClass + 'Checked' : '',
-				'"><span class="dojoxGridxIndirectSelectionCheckBoxInner">□</span></span>'
+				'"><span class="gridxIndirectSelectionCheckBoxInner">□</span></span>'
 			].join('');
 		},
 
@@ -68,16 +72,17 @@ define([
 		},
 
 		_onHighlightChange: function(target, toHighlight){
-			var node = query('[visualindex="' + target.row + '"].dojoxGridxRowHeaderRow .dojoxGridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
+			var node = query('[visualindex="' + target.row + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
 			if(node){
 				domClass.toggle(node, this._getDijitClass() + 'Checked', toHighlight);
 			}
 		},
 
 		_onMouseOver: function(){
-			if(!this.grid.select.row.holdingCtrl){
+			var sr = this.grid.select.row;
+			if(!sr.holdingCtrl){
 				this._holdingCtrl = false;
-				this.grid.select.row.holdingCtrl = true;
+				sr.holdingCtrl = true;
 			}
 		},
 
@@ -94,7 +99,7 @@ define([
 
 		_isSingle: function(){
 			var select = this.grid.select.row;
-			return select.hasOwnProperty('multiple') && !select.multiple;
+			return select.hasOwnProperty('multiple') && !select.arg('multiple');
 		},
 
 		_onSelectAll: function(){
@@ -103,9 +108,12 @@ define([
 		},
 
 		_onSelectionChange: function(selected){
-			var body = this.grid.body, allSelected, d, 
-				model = this.model, _this = this,
-				start = body.rootStart, count = body.rootCount;
+			var t = this, d, 
+				allSelected,
+				body = t.grid.body,
+				model = t.model,
+				start = body.rootStart,
+				count = body.rootCount;
 			if(count === model.size()){
 				allSelected = count == selected.length;
 			}else{
@@ -124,25 +132,28 @@ define([
 				});
 			}
 			Deferred.when(d, function(){
-				_this._allSelected = allSelected;
-				var node = _this.grid.rowHeader.headerCellNode.firstChild;
-				domClass.toggle(node, _this._getDijitClass() + 'Checked', allSelected);
+				t._allSelected = allSelected;
+				var node = t.grid.rowHeader.headerCellNode.firstChild;
+				domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
 			});
 		},
 
+		//Focus------------------------------------------------------
 		_initFocus: function(){
-			var rowHeader = this.grid.rowHeader;
-			var focus = function(evt){
-				util.stopEvent(evt);
-				domClass.add(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
-				rowHeader.headerCellNode.focus();
-				return true;
-			};
-			var blur = function(){
-				domClass.remove(rowHeader.headerCellNode, 'dojoxGridxHeaderCellFocus');
-				return true;
-			};
-			this.grid.focus.registerArea({
+			var g = this.grid,
+				rowHeader = g.rowHeader,
+				headerCellNode = rowHeader.headerCellNode,
+				focus = function(evt){
+					util.stopEvent(evt);
+					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
+					headerCellNode.focus();
+					return true;
+				},
+				blur = function(){
+					domClass.remove(headerCellNode, 'gridxHeaderCellFocus');
+					return true;
+				};
+			g.focus.registerArea({
 				name: 'selectAll',
 				priority: 0.89,
 				focusNode: rowHeader.headerNode,

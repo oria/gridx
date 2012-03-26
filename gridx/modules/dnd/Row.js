@@ -7,9 +7,37 @@ define([
 	"dojo/dom-geometry",
 	"dojo/_base/sniff",
 	"./_Base",
-	"./_Dnd",
-	"../../core/_Module"
-], function(declare, array, Deferred, lang, domClass, domGeometry, sniff, _Base, _Dnd, _Module){
+	"../../core/_Module",
+	"./_Dnd"
+], function(declare, array, Deferred, lang, domClass, domGeometry, sniff, _Base, _Module){
+
+	var hitch = lang.hitch,
+		forEach = array.forEach;
+
+	function getSourceData(source, nodes){
+		if(source.grid){
+			var d = new Deferred(),
+				success = hitch(d, d.callback),
+				fail = hitch(d, d.errback),
+				dataArr = [],
+				sg = source.grid,
+				rowIds = sg.dnd.row._selectedRowIds;
+			sg.model.when({id: rowIds}, function(){
+				forEach(rowIds, function(id){
+					var idx = sg.model.idToIndex(id),
+						row = sg.model.byId(id);
+					if(row){
+						dataArr.push(lang.clone(row.rawData));
+					}
+				});
+			}).then(function(){
+				success(dataArr);
+			}, fail);
+			return d;
+		}else{
+			return source.getGridDndRowData && source.getGridDndRowData(nodes) || [];
+		}
+	}
 
 	return _Module.register(
 	declare(_Base, {
@@ -33,7 +61,8 @@ define([
 		provide: ['grid/rows'],
 
 		onDraggedOut: function(targetSource){
-			var targetAccept = [];
+			var t = this,
+				targetAccept = [];
 			if(targetSource.grid){
 				targetAccept = targetSource.grid.dnd._dnd.profile.arg('accept');
 			}else{
@@ -41,39 +70,36 @@ define([
 					targetAccept.push(n);
 				}
 			}
-			if(!this.checkArg('copyWhenDragOut', targetAccept)){
-				var g = this.grid,
+			if(!t.checkArg('copyWhenDragOut', targetAccept)){
+				var g = t.grid,
 					m = g.model,
 					s = g.store,
-					rowIds = this._selectedRowIds;
+					rowIds = t._selectedRowIds;
 				if(s.fetch){
 					var items = [];
 					g.model.when({id: rowIds}, function(){
-						array.forEach(rowIds, function(id){
+						forEach(rowIds, function(id){
 							var row = m.byId(id);
 							if(row){
 								items.push(row.item);
 							}
 						});
 					}).then(function(){
-						array.forEach(items, s.deleteItem, s);
+						forEach(items, s.deleteItem, s);
 						s.save();
 					});
 				}else{
-					array.forEach(rowIds, s.remove, s);
+					forEach(rowIds, s.remove, s);
 				}
 			}
 		},
 	
 		//Package-----------------------------------------------------------------------------------
         _checkDndReady: function(evt){
-            if(!this.model.isMarked || this.model.isMarked(evt.rowId)){
-				this.grid.dnd._dnd.profile = this;
-				if(this.model.getMarkedIds){
-					this._selectedRowIds = this.model.getMarkedIds();
-				}else{
-					this._selectedRowIds = [evt.rowId];
-				}
+			var t = this, m = t.model;
+            if(!m.isMarked || m.isMarked(evt.rowId)){
+				t.grid.dnd._dnd.profile = t;
+				t._selectedRowIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
 				return true;
 			}
 			return false;
@@ -100,8 +126,9 @@ define([
 		},
 
 		_onBeginAutoScroll: function(){
-			this._autoScrollH = this.grid.autoScroll.horizontal;
-			this.grid.autoScroll.horizontal = false;
+			var autoScroll = this.grid.autoScroll;
+			this._autoScrollH = autoScroll.horizontal;
+			autoScroll.horizontal = false;
 		},
 
 		_onEndAutoScroll: function(){
@@ -114,14 +141,16 @@ define([
 		
 		//----------------------------------------------------------------------------
 		_calcTargetAnchorPos: function(evt, containerPos){
-			var node = evt.target, body = this.grid.body, _this = this,
+			var t = this,
+				node = evt.target,
+				body = t.grid.body,
 				ret = {
 					width: containerPos.w + "px",
 					height: '',
 					left: ''
 				},
 				isSelected = function(n){
-					return _this.model.isMarked && _this.model.isMarked(n.getAttribute('rowid'));
+					return t.model.isMarked && t.model.isMarked(n.getAttribute('rowid'));
 				},
 				getVIdx = function(n){
 					return parseInt(n.getAttribute('visualindex'), 10);
@@ -148,45 +177,45 @@ define([
 							lastPos = domGeometry.position(last),
 							middle = (firstPos.y + lastPos.y + lastPos.h) / 2;
 						if(evt.clientY < middle){
-							_this._target = getVIdx(first);
+							t._target = getVIdx(first);
 							ret.top = (firstPos.y - containerPos.y) + "px";
 						}else{
-							_this._target = getVIdx(last) + 1;
+							t._target = getVIdx(last) + 1;
 							ret.top = (lastPos.y + lastPos.h - containerPos.y) + "px";
 						}
 					}else{
-						delete _this._target;
+						delete t._target;
 					}
 					return ret;
 				};
 			if(!sniff('ff')){
 				//In FF, this conflicts with the overflow:hidden css rule for grid row DIV, which is required by ColumnLock.
 				while(node){
-					if(domClass.contains(node, 'dojoxGridxRow')){
+					if(domClass.contains(node, 'gridxRow')){
 						return calcPos(node);
 					}
 					node = node.parentNode;
 				}
 			}
-			var bn = this.grid.bodyNode,
+			var bn = body.domNode,
 				nodes = bn.childNodes;
 			if(!nodes.length){
 				ret.top = '0px';
-				this._target = 0;
+				t._target = 0;
 			}else{
 				node = bn.firstChild;
 				var idx = getVIdx(node),
 					pos = domGeometry.position(node);
 				if(idx === 0 && evt.clientY <= pos.y + pos.h){
 					ret.top = (pos.y - containerPos.y) + 'px';
-					this._target = 0;
+					t._target = 0;
 				}else{
 					node = bn.lastChild;
 					idx = getVIdx(node);
 					pos = domGeometry.position(node);
 					if(idx === body.visualCount - 1 && evt.clientY > pos.y + pos.h){
 						ret.top = (pos.y + pos.h - containerPos.y) + 'px';
-						this._target = body.visualCount;
+						t._target = body.visualCount;
 					}else{
 						var rowFound = array.some(nodes, function(rowNode){
 							pos = domGeometry.position(rowNode);
@@ -203,24 +232,25 @@ define([
 		},
 
 		_onDropInternal: function(nodes, copy){
-			if(this._target >= 0){
-				this.model.when({id: this._selectedRowIds}, function(){
-					var indexes = array.map(this._selectedRowIds, function(rowId){
-						return this.model.idToIndex(rowId);
-					}, this);
-					this.grid.move.row.move(indexes, this._target);
-				}, this);
+			var t = this;
+			if(t._target >= 0){
+				t.model.when({id: t._selectedRowIds}, function(){
+					var indexes = array.map(t._selectedRowIds, function(rowId){
+						return t.model.idToIndex(rowId);
+					});
+					t.grid.move.row.move(indexes, t._target);
+				});
 			}
 		},
 
 		_onDropExternal: function(source, nodes, copy){
 			var d = new Deferred(),
-				success = lang.hitch(d, d.callback),
-				fail = lang.hitch(d, d.errback),
+				success = hitch(d, d.callback),
+				fail = hitch(d, d.errback),
 				g = this.grid,
 				target = this._target,
 				targetRow, preRow,
-				sourceData = this._getSourceData(source, nodes);
+				sourceData = getSourceData(source, nodes);
 			g.model.when([target - 1, target], function(){
 				targetRow = g.model.byIndex(target);
 				preRow = g.model.byIndex(target - 1);
@@ -235,31 +265,6 @@ define([
 				}, fail);
 			}, fail);
 			return d;
-		},
-
-		_getSourceData: function(source, nodes){
-			if(source.grid){
-				var d = new Deferred(),
-					success = lang.hitch(d, d.callback),
-					fail = lang.hitch(d, d.errback),
-					dataArr = [],
-					sg = source.grid,
-					rowIds = sg.dnd.row._selectedRowIds;
-				sg.model.when({id: rowIds}, function(){
-					array.forEach(rowIds, function(id){
-						var idx = sg.model.idToIndex(id),
-							row = sg.model.byId(id);
-						if(row){
-							dataArr.push(lang.clone(row.rawData));
-						}
-					});
-				}).then(function(){
-					success(dataArr);
-				}, fail);
-				return d;
-			}else{
-				return source.getGridDndRowData && source.getGridDndRowData(nodes) || [];
-			}
 		}
 	}));
 });

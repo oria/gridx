@@ -29,12 +29,14 @@ define([
 	
 		//Private--------------------------------------------------------------
 		_cmdQuery: function(){
-			var args = arguments[arguments.length - 1],
-				c = this.model._cache, 
-				ops = c.options = c.options || {};
-			ops.query = args[0];
-			ops.queryOptions = args[1];
-			this.model._sendMsg('storeChange');
+			var a = arguments,
+				args = a[a.length - 1],
+				m = this.model,
+				c = m._cache, 
+				op = c.options = c.options || {};
+			op.query = args[0];
+			op.queryOptions = args[1];
+			m._msg('storeChange');
 			c.clear();
 		}
 	});

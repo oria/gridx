@@ -1,13 +1,14 @@
 require([
+	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(array, Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
-	var columnSetIdx = 4;
+	var columnSetIdx = 0;
 
 	destroy = function(){
 		if(window.grid){
@@ -27,13 +28,17 @@ require([
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
-				cacheSize: 0,
+				//cacheSize: 0,
 				store: store,
 				structure: layout,
 				modules:[
 //                    modules.SingleSort,
 //                    modules.ExtendedSelectRow,
-//                    modules.IndirectSelect,
+//                    modules.DndRow,
+//                    modules.FilterBar,
+//                    modules.Focus,
+					modules.RowHeader,
+//                    modules.ColumnResizer,
 					modules.VirtualVScroller
 				],
 				selectRowTriggerOnCell: true
@@ -90,9 +95,9 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setStore">Change store</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: newRow">And an empty new row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setRow">Set Year of the first row</div><br/>',
-        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>',
-        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroy">Destroy</div><br/>',
-        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: create">Create</div><br/>'
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroy">Destroy</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: create">Create</div><br/>'
 	].join(''));
 
 	tp.startup();

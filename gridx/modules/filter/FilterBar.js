@@ -121,10 +121,10 @@ define([
 			
 			this.domNode = dojo.create('div', {
 				innerHTML: template,
-				'class': 'dojoxGridxFilterBar'
+				'class': 'gridxFilterBar'
 			});
 			dojo.parser.parse(this.domNode);
-			dojo.toggleClass(this.domNode, 'dojoxGridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
+			dojo.toggleClass(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
 			this._nls = locale;
 			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
@@ -141,7 +141,7 @@ define([
 			if(!e.target || !e.target.tagName){return;}
 			if(dojo.attr(e.target, 'action') === 'clear'){
 				this.clearFilter();
-			}else if(dojo.hasClass(e.target, 'dojoxGridxFilterBarCloseBtn')){
+			}else if(dojo.hasClass(e.target, 'gridxFilterBarCloseBtn')){
 				this.hide();
 			}else {
 				this.showFilterDialog();
@@ -294,7 +294,7 @@ define([
 		},
 		
 		destroy: function(){
-			this._filterDialog.destroyRecursive();
+			this._filterDialog && this._filterDialog.destroyRecursive();
 			this.inherited(arguments);
 			dojo.destroy(this.domNode);
 		},
@@ -348,8 +348,8 @@ define([
 		},
 		_initWidgets: function(){
 			this.btnFilter = dijit.byNode(dojo.query('.dijitButton', this.domNode)[0]);
-			this.btnClose = dojo.query('.dojoxGridxFilterBarCloseBtn', this.domNode)[0];
-			this.statusNode = dojo.query('.dojoxGridxFilterBarStatus', this.domNode)[0].firstChild;
+			this.btnClose = dojo.query('.gridxFilterBarCloseBtn', this.domNode)[0];
+			this.statusNode = dojo.query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
 			//this.connect(this.btnFilter, 'onClick', 'showFilterDialog');	
 		},
 		
@@ -434,14 +434,14 @@ define([
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
 			var F = Filter;
-			var dc = this.grid._columnsById[colId].dateParser||this.stringToDate;
-			var tc = this.grid._columnsById[colId].timeParser||this.stringToTime;
+			var dc = this.grid._columnsById[colId].dateParser||this._stringToDate;
+			var tc = this.grid._columnsById[colId].timeParser||this._stringToTime;
+			var converter = {date: dc, time: tc};
 			var c = data.condition, exp, isNot = false;
 			if(c === 'range'){
-				var c = {date: dc, time: tc}, 
-					startValue = F.value(data.value.start, type),
+				var startValue = F.value(data.value.start, type),
 					endValue = F.value(data.value.end, type), 
-					columnValue = F.column(colId, type);
+					columnValue = F.column(colId, type, converter[type]);
 				exp = F.and(F.greaterEqual(columnValue, startValue), F.lessEqual(columnValue, endValue));
 			}else{
 				if(/^not/.test(c)){
@@ -449,7 +449,7 @@ define([
 					c = c.replace(/^not/g, '');
 					c = c.charAt(0).toLowerCase() + c.substring(1);
 				}
-				exp = F[c](F.column(colId, type), F.value(data.value, type));
+				exp = F[c](F.column(colId, type, converter[type]), c == 'isEmpty' ? null : F.value(data.value, type));
 				if(isNot){exp = F.not(exp);}
 			}
 			return exp;

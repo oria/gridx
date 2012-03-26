@@ -7,14 +7,15 @@ define([
 	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
+	"../util",
 	"../core/_Module"
-], function(declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
+], function(declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 
-	var _isExpando = function(cellNode){
+	function isExpando(cellNode){
 		var n = cellNode.firstChild;
-		return n && n.className && domClass.contains(n, 'dojoxGridxTreeExpandoCell') &&
-			!domClass.contains(n, 'dojoxGridxTreeExpandoLoading');
-	};
+		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
+			!domClass.contains(n, 'gridxTreeExpandoLoading');
+	}
 
 	return _Module.register(
 	declare(_Module, {
@@ -134,35 +135,36 @@ define([
 		},
 	
 		preload: function(){
-			var g = this.grid;
+			var t = this,
+				g = t.grid;
 			g.domNode.setAttribute('role', 'treegrid');
-			this.batchConnect(
+			t.batchConnect(
 				[g.body, 'collectCellWrapper', '_createCellWrapper'],
 				[g, 'onCellClick', '_onCellClick']
 			);
-			this._initFocus();
+			t._initFocus();
 			if(g.persist){
-				var id, data = g.persist.registerAndLoad('tree', lang.hitch(this, '_persist'));
+				var id, data = g.persist.registerAndLoad('tree', lang.hitch(t, t._persist));
 				if(data){
-					this._openInfo = data._openInfo;
-					this._parentOpenInfo = data._parentOpenInfo;
-					for(id in this._openInfo){
-						 this._openInfo[id].openned = this._parentOpenInfo[id];
+					var openInfo = t._openInfo = data.openInfo
+						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
+					for(id in openInfo){
+						 openInfo[id].openned = parentOpenInfo[id];
 					}
-					this._persisted = 1;
+					t._persisted = 1;
 				}
 			}
 		},
 
 		load: function(args){
-			if(this._persisted){
-				this.loaded.callback();
+			var t = this;
+			if(t._persisted){
+				t.loaded.callback();
 			}else{
-				var _this = this;
-				this.model.when({}, function(){
-					_this._openInfo[''].count = _this.model.size();
+				t.model.when({}, function(){
+					t._openInfo[''].count = t.model.size();
 				}).then(function(){
-					_this.loaded.callback();
+					t.loaded.callback();
 				});
 			}
 		},
@@ -181,17 +183,18 @@ define([
 			//	summary:
 			//		Expand the row which meta data matching with given `id`.
 			//	id: string?
-			var d = new Deferred(), _this = this;
-			if(id && !this.isExpanded(id)){
-				this.model.when({
+			var d = new Deferred(),
+				t = this;
+			if(id && !t.isExpanded(id)){
+				t.model.when({
 					parentId: id, 
 					start: 0
 				}, function(){
-					_this._logicExpand(id);
+					t._logicExpand(id);
 				}).then(function(){
-					Deferred.when(skipUpdateBody || _this._updateBody(id), function(){
+					Deferred.when(skipUpdateBody || t._updateBody(id), function(){
 						d.callback();
-						_this.onExpand(id);
+						t.onExpand(id);
 					});
 				});
 			}else{
@@ -204,12 +207,13 @@ define([
 			//	summary:
 			//		Collapse the row which meta data matching with given `id`.
 			//	id: string?
-			var d = new Deferred(), _this = this;
-			if(id && this.isExpanded(id)){
-				this._logicCollapse(id);
-				Deferred.when(skipUpdateBody || this._updateBody(id), function(){
+			var d = new Deferred(),
+				t = this;
+			if(id && t.isExpanded(id)){
+				t._logicCollapse(id);
+				Deferred.when(skipUpdateBody || t._updateBody(id), function(){
 					d.callback();
-					_this.onCollapse(id);
+					t.onCollapse(id);
 				});
 			}else{
 				d.callback();
@@ -221,17 +225,19 @@ define([
 			//	summary:
 			//		Expand the row recursively which meta data matching with given `id`.
 			//	id: string?
-			var _this = this, d = new Deferred();
-			this.expand(id, true).then(function(){
-				var i, dl = [], size = _this.model.size(id);
-				_this.model.when({start: 0, parentId: id}, function(){
+			var t = this,
+				m = t.model,
+				d = new Deferred();
+			t.expand(id, 1).then(function(){
+				var i, dl = [], size = m.size(id);
+				m.when({start: 0, parentId: id}, function(){
 					for(i = 0; i < size; ++i){
-						var childId = _this.model.indexToId(i, id);
-						dl.push(_this.expandRecursive(childId, true));
+						var childId = m.indexToId(i, id);
+						dl.push(t.expandRecursive(childId, 1));
 					}
 				}).then(function(){
-					(new DeferredList(dl)).then(function(){
-						Deferred.when(skipUpdateBody || _this._updateBody(id), function(){
+					new DeferredList(dl).then(function(){
+						Deferred.when(skipUpdateBody || t._updateBody(id), function(){
 							d.callback();
 						});
 					});
@@ -244,35 +250,36 @@ define([
 			//	summary:
 			//		Collapse the row recursively which meta data matching with given `id`.
 			//	id: string?
-			var d = new Deferred(), info = this._openInfo[id || ''];
+			var d = new Deferred(),
+				success = lang.hitch(d, d.callback),
+				fail = lang.hitch(d, d.errback),
+				t = this,
+				info = t._openInfo[id || ''],
+				i, dl = [];
 			if(info){
-				var i, dl = [], _this = this;
 				for(i = info.openned.length - 1; i >= 0; --i){
-					dl.push(this.collapseRecursive(info.openned[i], true));
+					dl.push(t.collapseRecursive(info.openned[i], 1));
 				}
-				(new DeferredList(dl)).then(function(){
+				new DeferredList(dl).then(function(){
 					if(id){
-						_this.collapse(id, skipUpdateBody).then(function(){
-							d.callback();
-						});
+						t.collapse(id, skipUpdateBody).then(success, fail);
 					}else if(!skipUpdateBody){
-						_this._updateBody().then(function(){
-							d.callback();
-						});
+						t._updateBody().then(success, fail);
 					}
 				});
 			}else{
-				d.callback();
+				success();
 			}
 			return d;
 		},
 	
 		//Package------------------------------------------------------------------------------
 		getRowInfoByVisualIndex: function(visualIndex, rootStart){
-			var rootOpenned = this._openInfo[''].openned;
-			var root, i;
+			var t = this,
+				rootOpenned = t._openInfo[''].openned,
+				root, i;
 			for(i = 0; i < rootOpenned.length; ++i){
-				root = this._openInfo[rootOpenned[i]];
+				root = t._openInfo[rootOpenned[i]];
 				if(root.index < rootStart){
 					visualIndex += root.count + 1;
 				}else{
@@ -284,40 +291,11 @@ define([
 				preCount: 0
 			};
 			while(!info.found){
-				info = this._getChild(visualIndex, info);
+				info = t._getChild(visualIndex, info);
 			}
 			return info;
 		},
 
-		_getAbsoluteVisualIndex: function(parentId, rowIndex){
-			var info = this._openInfo[parentId || ''];
-			if(info){
-				var preCount = 0;
-				var openInfo = this._openInfo;
-				var func = function(info){
-					preCount += rowIndex;
-					var child, i;
-					for(i = 0; i < info.openned.length; ++i){
-						child = openInfo[info.openned[i]];
-						if(child.index < rowIndex){
-							preCount += child.count;
-						}else{
-							break;
-						}
-					}
-					rowIndex = info.index;
-					if(info.id){
-						preCount++;
-					}
-					return openInfo[info.parentId];
-				};
-				while(info){
-					info = func(info);
-				}
-				return preCount;
-			}
-			return -1;
-		},
 	
 		getVisualIndexByRowInfo: function(parentId, rowIndex, rootStart){
 			var index = this._getAbsoluteVisualIndex(parentId, rowIndex);
@@ -347,30 +325,31 @@ define([
 		//_openInfo: null,
 	
 		_createCellWrapper: function(wrappers, rowId, colId){
-			var col = this.grid._columnsById[colId];
+			var t = this,
+				col = t.grid._columnsById[colId];
 			if(col.expandLevel){
-				var level = this.model.treePath(rowId).length;
-				if(!this.arg('nested') || col.expandLevel == level){
-					var hasChildren = this.model.hasChildren(rowId);
-					var isOpen = this.isExpanded(rowId);
-					var pad = 0, singlePad = 18;
-					if(!this.arg('nested')){
+				var level = t.model.treePath(rowId).length;
+				if(!t.arg('nested') || col.expandLevel == level){
+					var hasChildren = t.model.hasChildren(rowId),
+						isOpen = t.isExpanded(rowId),
+						pad = 0, singlePad = 18,
+						ltr = t.grid.isLeftToRight();
+					if(!t.arg('nested')){
 						pad = (level - 1) * singlePad;
 					}
-					var ltr = this.grid.isLeftToRight();
 					wrappers.push({
 						priority: 0,
 						wrap: function(cellData){
-							return ["<div class='dojoxGridxTreeExpandoCell ",
-								isOpen ? "dojoxGridxTreeExpandoCellOpen" : "",
+							return ["<div class='gridxTreeExpandoCell ",
+								isOpen ? "gridxTreeExpandoCellOpen" : "",
 								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + singlePad, "px;'>",
-								"<span class='dojoxGridxTreeExpandoIcon ",
-								hasChildren ? '' : 'dojoxGridxTreeExpandoIconNoChildren',
+								"<span class='gridxTreeExpandoIcon ",
+								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
 								"style='margin-", ltr ? 'left' : 'right', ": ", pad,"px;'>",
-								"<span class='dojoxGridxTreeExpandoInner'>",
+								"<span class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
-								"</span></span><span class='dojoxGridxTreeExpandoContent'>",
+								"</span></span><span class='gridxTreeExpandoContent'>",
 								cellData,
 								"</span></span>"
 							].join('');
@@ -381,84 +360,103 @@ define([
 		},
 	
 		_onCellClick: function(e){
-			if(_isExpando(e.cellNode)){
-				var pos = domGeometry.position(query('.dojoxGridxTreeExpandoIcon', e.cellNode)[0]);
+			if(isExpando(e.cellNode)){
+				var t = this,
+					pos = domGeometry.position(query('.gridxTreeExpandoIcon', e.cellNode)[0]);
 				if(e.clientX >= pos.x && e.clientX <= pos.x + pos.w && e.clientY >= pos.y && e.clientY <= pos.y + pos.h){
-					if(this.isExpanded(e.rowId)){
-						this.collapse(e.rowId);
+					if(t.isExpanded(e.rowId)){
+						t.collapse(e.rowId);
 					}else{
-						this.expand(e.rowId);
+						t.expand(e.rowId);
 					}
 				}
 			}
 		},
 	
 		_updateBody: function(id){
-			var body = this.grid.body;
+			var t = this,
+				body = t.grid.body;
 			if(body){
 				body.updateRootRange(body.rootStart, body.rootCount);
 				var rowNode = body.getRowNode({rowId: id}), n, expando,
-					isOpen = this.isExpanded(id);
+					isOpen = t.isExpanded(id);
 				if(rowNode){
-					n = query('.dojoxGridxTreeExpandoCell', rowNode)[0];
+					n = query('.gridxTreeExpandoCell', rowNode)[0];
 					if(n){
-						expando = query('.dojoxGridxTreeExpandoIcon', n)[0];
+						expando = query('.gridxTreeExpandoIcon', n)[0];
 						expando.firstChild.innerHTML = 'o';
-						domClass.add(n, 'dojoxGridxTreeExpandoLoading');
+						domClass.add(n, 'gridxTreeExpandoLoading');
 					}
 				}
-				var visualIndex = id ? this.getVisualIndexByRowInfo(this.model.treePath(id).pop(), this.model.idToIndex(id), body.rootStart) : -1;
-				return body.refreshVisual(visualIndex + 1).then(function(){
+				var visualIndex = id ? t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
+				return body.refresh(visualIndex + 1).then(function(){
 					if(n){
 						expando.firstChild.innerHTML = isOpen ? '-' : '+';
-						domClass.remove(n, 'dojoxGridxTreeExpandoLoading');
-						domClass.toggle(n, 'dojoxGridxTreeExpandoCellOpen', isOpen);
+						domClass.remove(n, 'gridxTreeExpandoLoading');
+						domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
 					}
 				});
 			}
 			return null;
 		},
-	
-		_biSearch: function(arr, comp){
-			var i = 0, j = arr.length, k;
-			for(k = Math.floor((i + j) / 2); i + 1 < j; k = Math.floor((i + j) / 2)){
-				if(comp(arr[k]) > 0){
-					j = k;
-				}else{
-					i = k;
+
+		_getAbsoluteVisualIndex: function(parentId, rowIndex){
+			var info = this._openInfo[parentId || ''];
+			if(info){
+				var preCount = 0,
+					openInfo = this._openInfo,
+					func = function(info){
+						preCount += rowIndex;
+						var child, i;
+						for(i = 0; i < info.openned.length; ++i){
+							child = openInfo[info.openned[i]];
+							if(child.index < rowIndex){
+								preCount += child.count;
+							}else{
+								break;
+							}
+						}
+						rowIndex = info.index;
+						if(info.id){
+							preCount++;
+						}
+						return openInfo[info.parentId];
+					};
+				while(info){
+					info = func(info);
 				}
+				return preCount;
 			}
-			if(arr.length && comp(arr[i]) >= 0){
-				return i;
-			}else{
-				return j;
-			}
+			return -1;
 		},
 	
 		_logicExpand: function(id){
-			if(this.model.hasChildren(id)){
-				var parentId = this.model.treePath(id).pop();
-				var openInfo = this._openInfo;
-				var parentOpenInfo = this._parentOpenInfo[parentId] = this._parentOpenInfo[parentId] || [];
-				this._parentOpenInfo[id] = this._parentOpenInfo[id] || [];
+			var t = this,
+				m = t.model;
+			if(m.hasChildren(id)){
+				var parentId = m.treePath(id).pop(),
+					openInfo = t._openInfo,
+					poi = t._parentOpenInfo,
+					parentOpenInfo = poi[parentId] = poi[parentId] || [];
+				poi[id] = poi[id] || [];
 				if(!openInfo[id]){
-					var index = this.model.idToIndex(id);
-					var childCount = this.model.size(id);
-					var i = this._biSearch(parentOpenInfo, function(childId){
-						return openInfo[childId].index - index;
-					});
+					var index = m.idToIndex(id),
+						childCount = m.size(id),
+						i = util.biSearch(parentOpenInfo, function(childId){
+							return openInfo[childId].index - index;
+						});
 					if(parentOpenInfo[i] !== id){
 						parentOpenInfo.splice(i, 0, id);
 					}
-					for(i = this._parentOpenInfo[id].length - 1; i >= 0; --i){
-						childCount += openInfo[this._parentOpenInfo[id][i]].count;
+					for(i = poi[id].length - 1; i >= 0; --i){
+						childCount += openInfo[poi[id][i]].count;
 					}
 					openInfo[id] = {
 						id: id,
 						parentId: parentId,
 						index: index,
 						count: childCount,
-						openned: this._parentOpenInfo[id]
+						openned: poi[id]
 					};
 					var info = openInfo[parentId];
 					while(info){
@@ -471,39 +469,40 @@ define([
 		},
 	
 		_logicCollapse: function(id){
-			var info = this._openInfo[id];
+			var t = this,
+				info = t._openInfo[id];
 			if(info){
-				var openInfo = this._openInfo;
-				var parentId = this.model.treePath(id).pop();
-				var parentOpenInfo = this._parentOpenInfo[parentId];
-				var i = this._biSearch(parentOpenInfo, function(childId){
-					return openInfo[childId].index - info.index; 
-				});
+				var openInfo = t._openInfo,
+					parentId = t.model.treePath(id).pop(),
+					parentOpenInfo = t._parentOpenInfo[parentId],
+					i = util.biSearch(parentOpenInfo, function(childId){
+						return openInfo[childId].index - info.index; 
+					}),
+					childCount = info.count;
 				parentOpenInfo.splice(i, 1);
-				var childCount = info.count;
 				info = openInfo[parentId];
 				while(info){
 					info.count -= childCount;
 					info = openInfo[info.parentId];
 				}
-				delete this._openInfo[id];
+				delete openInfo[id];
 			}
 			//console.log('after collapse:', id,  dojo.clone(this._openInfo), dojo.clone(this._parentOpenInfo));
 		},
 	
 		_getChild: function(visualIndex, info){
-			var item = this._openInfo[info.parentId];
-			var i, len, preCount = info.preCount + item.index + 1;
-			var commonMixin = {
-				found: true,
-				visualIndex: visualIndex,
-				count: 1
-			};
+			var item = this._openInfo[info.parentId],
+				i, len, preCount = info.preCount + item.index + 1,
+				commonMixin = {
+					found: true,
+					visualIndex: visualIndex,
+					count: 1
+				};
 	
 			for(i = 0, len = item.openned.length; i < len; ++i){
-				var childId = item.openned[i];
-				var child = this._openInfo[childId];
-				var vidx = child.index + preCount;
+				var childId = item.openned[i],
+					child = this._openInfo[childId],
+					vidx = child.index + preCount;
 				if(vidx === visualIndex){
 					return lang.mixin({
 						parentId: item.id,
@@ -531,44 +530,46 @@ define([
 		},
 
 		_onKey: function(e){
-			if(e.keyCode === keys.ESCAPE){
-				var treePath = this.model.treePath(e.rowId);
-				var parentId = treePath.pop();
-				var parentLevel = treePath.length;
-				var grid = this.grid;
+			if(e.keyCode == keys.ESCAPE){
+				var t = this,
+					m = t.model,
+					treePath = m.treePath(e.rowId),
+					parentId = treePath.pop(),
+					parentLevel = treePath.length,
+					grid = t.grid;
 				if(parentId){
 					var i, col, visualIndex;
 					for(i = grid._columns.length - 1; i >= 0; --i){
 						col = grid._columns[i];
-						if(col.expandLevel && (!this.arg('nested') || col.expandLevel == parentLevel)){
+						if(col.expandLevel && (!t.arg('nested') || col.expandLevel == parentLevel)){
 							break;
 						}
 					}
-					this.model.when({id: parentId}, function(){
+					m.when({id: parentId}, function(){
 						visualIndex = grid.body.getVisualIndex({
 							parentId: treePath.pop(), 
-							rowIndex: this.model.idToIndex(parentId)
+							rowIndex: m.idToIndex(parentId)
 						}).visualIndex;
-					}, this).then(function(){
+					}).then(function(){
 						grid.vScroller.scrollToRow(visualIndex).then(function(){
 							grid.body._focusCell(null, visualIndex, col.index);
 						});
 					});
 				}
-			}else if(e.ctrlKey && _isExpando(e.cellNode)){
-				var ltr = this.grid.isLeftToRight();
-				if(e.keyCode === (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && this._openInfo[e.rowId]){
-					this.collapse(e.rowId);
-				}else if(e.keyCode === (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !this._openInfo[e.rowId]){
-					this.expand(e.rowId);
+			}else if(e.ctrlKey && isExpando(e.cellNode)){
+				var ltr = grid.isLeftToRight();
+				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t._openInfo[e.rowId]){
+					t.collapse(e.rowId);
+				}else if(e.keyCode == (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !t._openInfo[e.rowId]){
+					t.expand(e.rowId);
 				}
 			}
 		},
 		//open state persist----------------------------------------------------
 		_persist: function(){
 			return {
-				_openInfo: this._openInfo, 
-				_parentOpenInfo: this._parentOpenInfo
+				openInfo: this._openInfo, 
+				parentOpenInfo: this._parentOpenInfo
 			};
 		}
 	}));

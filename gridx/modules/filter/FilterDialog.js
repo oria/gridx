@@ -14,14 +14,14 @@ define([
 ], function(dojo, dijit, declare, Dialog, template, FilterPane){
 	return declare(Dialog, {
 		title: 'Filter',
-		cssClass: 'dojoxGridxFilterDialog',
+		cssClass: 'gridxFilterDialog',
 		grid: null,
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
 			this.set('content', template);
 			this._initWidgets();
-			dojo.addClass(this.domNode, 'dojoxGridxFilterDialog');
+			dojo.addClass(this.domNode, 'gridxFilterDialog');
 		},
 		
 		done: function(){
@@ -96,7 +96,7 @@ define([
 			try{
 				fp.tbSingle.focus();//TODO: this doesn't work now.
 			}catch(e){}
-			dojo.toggleClass(ac.domNode, 'dojoxGridxFilterSingleRule', ac.getChildren().length === 1);
+			dojo.toggleClass(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
 			
 			this.connect(fp, 'onChange', '_updateButtons');
 			this._updateButtons();

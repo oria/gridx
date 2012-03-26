@@ -23,7 +23,7 @@ require([
 		cacheClass: Cache,
 		//query: {Genre: 'E*'},
 		paginationInitialPageSize: 25,
-		columnWidthPercentage: true,
+//        columnWidthAutoResize: true,
 		modules: [
 //            modules.Focus,
 //            modules.RowHeader,
@@ -32,7 +32,7 @@ require([
 //            modules.ExtendedSelectRow,
 //            modules.ExtendedSelectColumn,
 //            modules.ExtendedSelectCell,
-//            modules.PaginationBar,
+			modules.PaginationBar,
 			modules.VirtualVScroller
 		]
 	});

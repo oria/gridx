@@ -64,7 +64,7 @@ define([
 			//	Unlock columns.
 			html.removeClass(this.grid.domNode, 'gridxColumnLock');
 			
-			var rowNode = query('.dojoxGridxHeaderRowInner', this.grid.headerNode)[0];
+			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
 			this._unlockColumns(rowNode);
 			
 			array.forEach(this.grid.bodyNode.childNodes, this._unlockColumns, this);
@@ -77,7 +77,7 @@ define([
 			var r = rowNode.firstChild.rows[0];
 			for(var i = 0; i < this.count; i++){
 				var cell = r.cells[i];
-				html.removeClass(cell, 'dojoxGridxLockedCell');
+				html.removeClass(cell, 'gridxLockedCell');
 				html.style(cell, {height: 'auto'});
 			}
 			rowNode.style.paddingLeft = '0px';
@@ -108,7 +108,7 @@ define([
 			dojo.style(r.cells[r.cells.length - 1], 'height', h + 'px');
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i];
-				html.addClass(cell, 'dojoxGridxLockedCell');
+				html.addClass(cell, 'gridxLockedCell');
 				html.style(cell, {
 					height: h + 'px',
 					left: pl + 'px'
@@ -121,7 +121,7 @@ define([
 		_updateHeader: function(){
 			//summary:
 			//	Update the header for column lock
-			var rowNode = query('.dojoxGridxHeaderRowInner', this.grid.headerNode)[0];
+			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
 			this._lockColumns(rowNode);
 		},
 		

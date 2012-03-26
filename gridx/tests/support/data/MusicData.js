@@ -113,7 +113,7 @@ define([
 
 	var textDecorator = function(){
 		return [
-			"<div dojoType='dijit.form.TextBox' class='dojoxGridxHasGridCellValue' style='width: 100%;'></div>",
+			"<div dojoType='dijit.form.TextBox' class='gridxHasGridCellValue' style='width: 100%;'></div>",
 			"<button>Button</button>",
 			"<a href='www.google.com'>Google</a>"
 		].join('');
@@ -128,13 +128,13 @@ define([
 
 	var progressDecorator = function(){
 		return [
-			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 1' class='dojoxGridxHasGridCellValue' style='width: 100%;'></div>"
+			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 1' class='gridxHasGridCellValue' style='width: 100%;'></div>"
 		].join('');
 	};
 
 	var timeDecorator = function(){
 		return [
-			"<div dojoType='dijit.form.TimeTextBox' dojoAttachPoint='timeBox' class='dojoxGridxHasGridCellValue' style='width: 100%;'></div>"
+			"<div dojoType='dijit.form.TimeTextBox' dojoAttachPoint='timeBox' class='gridxHasGridCellValue' style='width: 100%;'></div>"
 		].join('');
 	};
 
@@ -328,9 +328,9 @@ define([
 				{id: 'Composer', field: 'Composer', name: 'Composer'}
 			],
 			[
-				{id: 'id', field: 'id', name: 'Identity'},
-				{id: 'Name', field: 'Name', name: 'Name'},
-				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'id', field: 'id', name: 'Identity', width: '100px'},
+				{id: 'Name', field: 'Name', name: 'Name', width: '100px'},
+				{id: 'Year', field: 'Year', name: 'Year', width: '100px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre'},
 				{id: 'Artist', field: 'Artist', name: 'Artist'},
 				{id: 'Album', field: 'Album', name: 'Album'},

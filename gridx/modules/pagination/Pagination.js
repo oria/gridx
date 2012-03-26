@@ -32,23 +32,20 @@ define([
 
 		// [Module Lifetime Management] -----------------------------------------------
 		preload: function(){
-			//Initialize args
-			this._pageSize = this.arg('initialPageSize', this._pageSize, function(arg){
-				return arg > 0;
-			});
-			this._page = this.arg('initialPage', this._page, function(arg){
-				return arg >= 0;
-			});
-	
 			this.grid.body.autoChangeSize = false;
 		},
 
 		load: function(){
-			this.model.when({}, function(){
-				this._updateBody(1);
-				this.connect(this.model, 'onSizeChange', '_onSizeChange');
-				this.loaded.callback();	
-			}, this);
+			var t = this;
+			t._pageSize = t.arg('initialPageSize') || t._pageSize;
+			t._page = t.arg('initialPage', t._page, function(arg){
+				return arg >= 0;
+			});
+			t.model.when({}, function(){
+				t._updateBody(1);
+				t.connect(t.model, 'onSizeChange', '_onSizeChange');
+				t.loaded.callback();	
+			});
 		},
 		
 		// [Public API] --------------------------------------------------------
@@ -63,7 +60,8 @@ define([
 
 		// GET functions
 		pageSize: function(){
-			return this._pageSize > 0 ? this._pageSize : this.model.size();
+			var s = this._pageSize;
+			return s > 0 ? s : this.model.size();
 		},
 
 		isAll: function(){
@@ -89,10 +87,11 @@ define([
 		},
 	
 		lastIndexInPage: function(page){
-			var firstIndex = this.firstIndexInPage(page);
+			var t = this,
+				firstIndex = t.firstIndexInPage(page);
 			if(firstIndex >= 0){
-				var lastIndex = firstIndex + this.pageSize() - 1,
-					size = this.model.size();
+				var lastIndex = firstIndex + t.pageSize() - 1,
+					size = t.model.size();
 				return lastIndex < size ? lastIndex : size - 1;
 			}
 			return -1;
@@ -116,28 +115,28 @@ define([
 	
 		//SET functions
 		gotoPage: function(page){
-			if(page !== this._page && this.firstIndexInPage(page) >= 0){
-				var oldPage = this._page;
-				this._page = page;
-				this._updateBody();
-				this.onSwitchPage(this._page, oldPage);
+			var t = this, oldPage = t._page;
+			if(page != oldPage && t.firstIndexInPage(page) >= 0){
+				t._page = page;
+				t._updateBody();
+				t.onSwitchPage(page, oldPage);
 			}
 		},
 	
 		setPageSize: function(size){
-			var oldSize = this._pageSize;
-			if(size >= 0 && size !== oldSize){
-				var index = this.firstIndexInPage();
-				var oldPage = -1;
-				this._pageSize = size;
-				if(this._page >= this.pageCount()){
-					oldPage = this._page;
-					this._page = this.pageOfIndex(index);
+			var t = this, oldSize = t._pageSize;
+			if(size != oldSize && size >= 0){
+				var index = t.firstIndexInPage(),
+					oldPage = -1;
+				t._pageSize = size;
+				if(t._page >= t.pageCount()){
+					oldPage = t._page;
+					t._page = t.pageOfIndex(index);
 				}
-				this._updateBody();
-				this.onChangePageSize(this._pageSize, oldSize);
+				t._updateBody();
+				t.onChangePageSize(size, oldSize);
 				if(oldPage >= 0){
-					this.onSwitchPage(this._page, oldPage);
+					t.onSwitchPage(t._page, oldPage);
 				}
 			}
 		},
@@ -152,35 +151,39 @@ define([
 		_pageSize: 10,
 	
 		_updateBody: function(noRefresh){
-			var size = this.model.size(), count = this.pageSize(), start = this.firstIndexInPage();
+			var t = this,
+				bd = t.grid.body,
+				size = t.model.size(),
+				count = t.pageSize(),
+				start = t.firstIndexInPage();
 			if(size === 0 || start < 0){
 				start = 0;
 				count = 0;
 			}else if(size - start < count){
 				count = size - start;
 			}
-			this.grid.body.updateRootRange(start, count);
+			bd.updateRootRange(start, count);
 			if(!noRefresh){
-				this.grid.body.refresh();
+				bd.refresh();
 			}
 		},
 	
 		_onSizeChange: function(size){
+			var t = this;
 			if(size === 0){
-				this._page = 0;
-				this.grid.body.updateRootRange(0, 0);
+				t._page = 0;
+				t.grid.body.updateRootRange(0, 0);
 			}else{
-				var first = this.firstIndexInPage();
+				var first = t.firstIndexInPage();
 				if(first < 0){
-					if(this._page !== 0){
-						var oldPage = this._page;
-						this._page = 0;
-						this.onSwitchPage(0, oldPage);
+					if(t._page !== 0){
+						var oldPage = t._page;
+						t._page = 0;
+						t.onSwitchPage(0, oldPage);
 					}
 				}			
-				this._updateBody();
+				t._updateBody();
 			}
 		}
 	}));	
 });
-

@@ -1,13 +1,13 @@
 /* row select */
-.claro .dojoxGridxRowSelected td {
+.claro .gridxRowSelected .gridxRowTable {
 	background:url("../images/row_back.png") #cee6fa repeat-x;
 }
 
 /* column select */
-.claro .dojoxGridxRow .dojoxGridxColumnSelected {
+.claro .gridxRow .gridxColumnSelected {
 	background:url("../images/row_back.png") #cee6fa repeat-x;
 }
 /* cell select */
-.claro .dojoxGridxCellSelected {
+.claro .gridxCellSelected {
 	background:url("../images/row_back.png") #cee6fa repeat-x;
 }

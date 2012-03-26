@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare"
 ], function(declare){
 
-	return declare(null, {
+	return declare([], {
 		constructor: function(grid, id){
 			this.grid = grid;
 			this.model = grid.model;
@@ -19,8 +19,7 @@ define([
 		},
 
 		name: function(){
-			var c = this.grid._columnsById[this.id];
-			return c.name || '';
+			return this.grid._columnsById[this.id].name || '';
 		},
 
 		setName: function(n){
@@ -29,13 +28,11 @@ define([
 		},
 
 		field: function(){
-			var c = this.grid._columnsById[this.id];
-			return c.field || null;
+			return this.grid._columnsById[this.id].field || null;
 		},
 
 		getWidth: function(){
-			var c = this.grid._columnsById[this.id];
-			return c.width;
+			return this.grid._columnsById[this.id].width;
 		}
 	});
 });

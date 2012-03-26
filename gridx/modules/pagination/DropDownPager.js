@@ -25,17 +25,18 @@ define([
 		},
 	
 		_createPageStepper: function(){
-			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerStepper', mod._exist(this.position, 'stepper'))){
+			var t = this, mod = t.module;
+			if(t._toggleNode('gridxPagerStepper', mod._exist(t.position, 'stepper'))){
 				var items = [],
 					selectedItem,
-					p = this.pagination,
+					p = t.pagination,
 					pageCount = p.pageCount(),
 					currentPage = p.currentPage(),
-					stepper = this._pageStepperSelect;
-				for(var i = 0; i < pageCount; ++i){
-					var v = i + 1;
-					var item = {
+					stepper = t._pageStepperSelect,
+					i, v, item;
+				for(i = 0; i < pageCount; ++i){
+					v = i + 1;
+					item = {
 						id: v,
 						label: v,
 						value: v
@@ -52,13 +53,13 @@ define([
 							store: store,
 							searchAttr: 'label',
 							item: selectedItem,
-							'class': 'dojoxGridxPagerStepperWidget',
+							'class': 'gridxPagerStepperWidget',
 							onChange: function(page){
 								p.gotoPage(page - 1);
 							}
 						}, mod.arg('stepperProps') || {});
-					stepper = this._pageStepperSelect = new cls(props);
-					stepper.placeAt(this._pageStepperContainer, "last");
+					stepper = t._pageStepperSelect = new cls(props);
+					stepper.placeAt(t._pageStepperContainer, "last");
 					stepper.startup();
 				}else{
 					stepper.set('store', store);
@@ -69,13 +70,13 @@ define([
 		},
 	
 		_createPageSizeSwitch: function(){
-			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerSizeSwitch', mod._exist(this.position, 'sizeSwitch'))){
+			var t = this, mod = t.module;
+			if(t._toggleNode('gridxPagerSizeSwitch', mod._exist(t.position, 'sizeSwitch'))){
 				var options = [],
-					p = this.pagination,
+					p = t.pagination,
 					currentSize = p.pageSize(), 
-					nlsAll = mod.arg('pageSizeAllText', this.pageSizeAll),
-					sizeSwitch = this._sizeSwitchSelect,
+					nlsAll = mod.arg('pageSizeAllText', t.pageSizeAll),
+					sizeSwitch = t._sizeSwitchSelect,
 					sizes = mod.arg('sizes');
 				for(var i = 0, len = sizes.length; i < len; ++i){
 					var pageSize = sizes[i],
@@ -90,13 +91,13 @@ define([
 					var cls = mod.arg('sizeSwitchClass'),
 						props = lang.mixin({
 							options: options,
-							'class': 'dojoxGridxPagerSizeSwitchWidget',
+							'class': 'gridxPagerSizeSwitchWidget',
 							onChange: function(ps){
 								p.setPageSize(ps < 0 ? 0 : ps);
 							}
 						}, mod.arg('sizeSwitchProps') || {});
-					sizeSwitch = this._sizeSwitchSelect = new cls(props);
-					sizeSwitch.placeAt(this._sizeSwitchContainer, "last");
+					sizeSwitch = t._sizeSwitchSelect = new cls(props);
+					sizeSwitch.placeAt(t._sizeSwitchContainer, "last");
 					sizeSwitch.startup();
 				}else{
 					sizeSwitch.removeOption(sizeSwitch.getOptions());
@@ -106,26 +107,29 @@ define([
 		},
 	
 		_initFocus: function(){
-			var g = this.module.grid, focus = g.focus;
+			var t = this,
+				g = t.module.grid,
+				focus = g.focus,
+				pos = t.position,
+				fp = t.focusPriority;
 			if(focus){
-				var pos = this.position, fp = this.focusPriority, _this = this;
 				focus.registerArea({
 					name: pos + 'PageStepper',
 					priority: fp,
-					focusNode: this._pageStepperContainer,
+					focusNode: t._pageStepperContainer,
 					doFocus: function(evt){
 						util.stopEvent(evt);
-						_this._pageStepperSelect.focus();
+						t._pageStepperSelect.focus();
 						return true;
 					}
 				});
 				focus.registerArea({
 					name: pos + 'PageSizeSwitch',
 					priority: fp + 0.001,
-					focusNode: this._sizeSwitchContainer,
+					focusNode: t._sizeSwitchContainer,
 					doFocus: function(evt){
 						util.stopEvent(evt);
-						_this._sizeSwitchSelect.focus();
+						t._sizeSwitchSelect.focus();
 						return true;
 					}
 				});

@@ -1,20 +1,15 @@
 /* Header */
-.claro .dojoxGridxRtl .dojoxGridxHeaderRow .dojoxGridxCell {
+.claro .gridxRtl .gridxHeaderRow .gridxCell {
 	border-color: transparent #FFFFFF transparent #BCBCBC ;
 }
 
-.claro .dojoxGridxRtl .dojoxGridxHeaderRowInner {
+.claro .gridxRtl .gridxHeaderRowInner {
 	background-position: left;
 	border-right: none;
 	border-left: 1px solid #FFFFFF;
 }
 
 /* Body */
-.claro .dojoxGridxRtl .dojoxGridxBody .dojoxGridxCell{
+.claro .gridxRtl .gridxBody .gridxCell{
 	border-color: transparent transparent #E5DAC8 #E5DAC8;
 }
-
-.claro .dojoxGridxRtl .dojoxGridxRow .dojoxGridxCellFocus{
-	border: 1px dashed darkblue;
-}
-

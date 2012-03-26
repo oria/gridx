@@ -22,6 +22,7 @@ grid = new Grid({
 	modules: [
 		modules.Focus,
 		modules.RowHeader,
+		modules.ColumnResizer,
 //        modules.IndirectSelect,
 		modules.ExtendedSelectRow,
 		modules.ExtendedSelectColumn,
@@ -60,7 +61,7 @@ function selectRow(toSelect){
 
 function selectAllRow(toSelect){
 	if(toSelect){
-		grid.select.row.selectAll();
+		grid.select.row.selectByIndex([0, grid.rowCount() - 1]);
 	}else{
 		grid.select.row.clear();
 	}
@@ -77,7 +78,7 @@ function selectColumn(toSelect){
 
 function selectAllColumn(toSelect){
 	if(toSelect){
-		grid.select.column.selectAll();
+		grid.select.column.selectByIndex([0, grid.columnCount() - 1]);
 	}else{
 		grid.select.column.clear();
 	}
@@ -91,7 +92,7 @@ function selectCell(toSelect){
 
 function selectAllCell(toSelect){
 	if(toSelect){
-		grid.select.cell.selectAll();
+		grid.select.cell.selectByIndex([0, 0, grid.rowCount() - 1, grid.columnCount() - 1]);
 	}else{
 		grid.select.cell.clear();
 	}

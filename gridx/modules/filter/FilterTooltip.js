@@ -24,7 +24,7 @@ define([
 			this.connect(this, 'onClick', '_onClick');
 			this.connect(this, 'onMouseEnter', '_onMouseEnter');
 			this.connect(this, 'onMouseLeave', '_onMouseLeave');
-			dojo.addClass(this.domNode, 'dojoxGridxFilterTooltip');
+			dojo.addClass(this.domNode, 'gridxFilterTooltip');
 		},
 		show: function(evt){
 			this.inherited(arguments);
@@ -48,23 +48,23 @@ define([
 			if(!data || !data.conditions.length){return;}
 			
 			var typeString = data.type === 'all' ? nls.statusTipHeaderAll : nls.statusTipHeaderAny;
-			var arr = ['<div class="dojoxGridxFilterTooltipTitle"><b>Filter:</b> ', 
+			var arr = ['<div class="gridxFilterTooltipTitle"><b>Filter:</b> ', 
 				typeString, '</div><table><tr><th>Column</th><th>Rule</th></tr>'
 			];
 			
 			dojo.forEach(data.conditions, function(d, idx){
-				var odd = idx%2 ? ' class="dojoxGridxFilterTooltipOddRow"' : '';
+				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
 				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : 'Any column'), 
-					'</td><td class="dojoxGridxFilterTooltipValueCell">', 
+					'</td><td class="gridxFilterTooltipValueCell">', 
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
 					'<img src="' + this.grid._blankGif + 
 					'" action="remove-rule" title="' + nls.removeRuleButton + 
-					'" class="dojoxGridxFilterTooltipRemoveBtn"/></div></td></tr>');
+					'" class="gridxFilterTooltipRemoveBtn"/></div></td></tr>');
 			}, this);
 			arr.push('</table>');
 			this.set('content', arr.join(''));
-			dojo.toggleClass(this.domNode, 'dojoxGridxFilterTooltipSingleRule', data.conditions.length === 1);
+			dojo.toggleClass(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},
 		_onMouseEnter: function(e){
 			this.isMouseOn = true;

@@ -1,12 +1,12 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/html",
 	"dojo/_base/sniff",
+	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(declare, array, html, sniff, keys, _RowCellBase, _Module){
+], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
 	return _Module.register(
 	declare(_RowCellBase, {
@@ -39,7 +39,7 @@ define([
 			if(this.arg('enabled')){
 				var model = this.model;
 				array.forEach(model.getMarkedIds(), function(id){
-					model.markById(id, false);
+					model.markById(id, 0);
 				});
 				model.when();
 			}
@@ -49,52 +49,54 @@ define([
 		_type: 'row',
 
 		_init: function(){
-			this.inherited(arguments);
-			this.model._spTypes.select = 1;
-			this.batchConnect(
-				[this.grid, 'onRowMouseDown', function(e){
-					if(this.arg('triggerOnCell') || !e.columnId){
-						this._select(e.rowId, e.ctrlKey);
+			var t = this, g = t.grid;
+			t.inherited(arguments);
+			t.model._spTypes.select = 1;
+			t.batchConnect(
+				[g, 'onRowMouseDown', function(e){
+					if(t.arg('triggerOnCell') || !e.columnId){
+						t._select(e.rowId, e.ctrlKey);
 					}
 				}],
-				[this.grid, sniff.isFF < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((this.arg('triggerOnCell') || !e.columnId) && e.keyCode === keys.SPACE){
-						this._select(e.rowId, e.ctrlKey);
+				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
+					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
+						t._select(e.rowId, e.ctrlKey);
 					}
 				}]
 			);
 		},
 
 		_onMark: function(toMark, id, type){
-			if(type === 'select'){
-				this._highlight(id, toMark);
+			if(type == 'select'){
+				var t = this;
+				t._highlight(id, toMark);
 				//Fire event when the row is loaded, so users can use the row directly.
-				this.model.when({id: id}, function(){
-					this[toMark ? 'onSelected' : 'onDeselected'](this.grid.row(id, true));
-				}, this);
+				t.model.when({id: id}, function(){
+					t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, true));
+				});
 			}
 		},
 		
 		_highlight: function(rowId, toHighlight){
 			var node = this.grid.body.getRowNode({rowId: rowId});
 			if(node){
-				html[toHighlight ? 'addClass' : 'removeClass'](node, "dojoxGridxRowSelected");
-				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toHighlight);
+				domClass.toggle(node, "gridxRowSelected", toHighlight);
+				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, !!toHighlight);
 			}
 		},
 
 		_markById: function(id, toMark){
-			this.model.markById(id, toMark);
-			this.model.when();
+			var m = this.model;
+			m.markById(id, toMark);
+			m.when();
 		},
 
 		_onRender: function(start, count){
-			var model = this.model, end = start + count, i, id; 
+			var t = this, model = t.model, end = start + count, i, id;
 			for(i = start; i < end; ++i){
-				var idx = this.grid.body.getRowInfo({visualIndex: i}).rowIndex;
-				id = model.indexToId(idx);
+				id = model.indexToId(t.grid.body.getRowInfo({visualIndex: i}).rowIndex);
 				if(model.isMarked(id)){
-					this._highlight(id, true);
+					t._highlight(id, 1);
 				}
 			}
 		}

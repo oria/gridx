@@ -1,6 +1,6 @@
 <?php
-	require_once('FirePHPCore/fb.php');  
-	ob_start(); 
+//    require_once('FirePHPCore/fb.php');  
+//    ob_start(); 
 
 	header("Content-Type: " . ($_SERVER["CONTENT_TYPE"] == 'application/json' ? 'application/json' : 'text/plain'));
 
@@ -97,6 +97,7 @@ class JsonRestStore{
 			}else if($record[0] == '-'){
 				for($i = 0; $i < count($items); ++$i){
 					if($items[$i]['id'] == $record[1]){
+						fb('delete '.$record[1], 'patch');
 						array_splice($items, $i, 1);
 						break;
 					}

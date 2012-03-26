@@ -1,64 +1,60 @@
 /*Header, Body, Scroller*/
 /*common*/
-.dojoxGridx {
+.gridx {
 	position: relative;
 	overflow: hidden;
 	border: 1px solid #ddd;
 	height: 100%;
 }
 
-.dojoxGridxHeader,
-.dojoxGridxFooter {
+.gridxHeader,
+.gridxFooter {
 	overflow: hidden;
 	background-color: #eee;
 }
 
 /* Keep footer at bottom, so the grid won't distort too much when zoomed in/out*/
-.dojoxGridxFooter {
+.gridxFooter {
 	position: absolute;
 	left: 0;
 	bottom: 0;
 	width: 100%;
 }
 
-.dojoxGridxHScroller {
+.gridxHScrollerInner {
 	display: none;
 }
 
-.dojoxGridxMain {
+.gridxMain {
 	position: relative;
 }
 
-.dojoxGridxPercentColumnWidth .dojoxGridxHeaderRow table,
-.dojoxGridxPercentColumnWidth .dojoxGridxRow table.dojoxGridxRowTable {
+.gridxPercentColumnWidth .gridxHeaderRow table,
+.gridxPercentColumnWidth .gridxRow table.gridxRowTable {
 	width: 100%;
 }
 
 /*Header*/
-.dojoxGridxHeaderRow {
+.gridxHeaderRow {
 	background-color: #eee;
 	border-bottom: 1px solid #ccc;
 	position: relative;
 }
 
-.dojoxGridxHeaderRow :focus {
-	outline: none;
-}
-
-.dojoxGridxHeaderRowInner {
+.gridxHeaderRowInner {
 	overflow: hidden;
 	border-style: solid;
 	border-color: #ccc;
 	border-width: 0 1px 0 0;
 }
 
-.dj_ie .dojoxGridxHeaderRowInner{
+.dj_ie .gridxHeaderRowInner{
 	/* This is only for IE6/7, if not position:relative, overflow:hidden will not work.*/
 	position: relative; 
 }
 
-.dojoxGridxHeaderRow table {
-/*    border-collapse: collapse;*/
+.gridxHeaderRow table {
+	border-collapse: collapse;
 	border-spacing: 0;
 	border: none;
 	table-layout: fixed;
@@ -66,7 +62,7 @@
 	height: 100%;
 }
 
-.dojoxGridxHeaderRow .dojoxGridxCell {
+.gridxHeaderRow .gridxCell {
 	border-width: 1px;
 	border-style: solid;
 	border-color: transparent #ccc transparent transparent;
@@ -78,13 +74,26 @@
 	-webkit-box-sizing: border-box;*/
 }
 
-.dojoxGridx .dojoxGridxHeader .dojoxGridxHeaderRow .dojoxGridxHeaderCellFocus {
-	border: 1px dashed darkblue;
-	outline: medium none;
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	outline: 1px dashed darkblue;
+	border-top: 1px dashed darkblue;
+	border-bottom: 1px dashed darkblue;
+}
+
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:first-child {
+	border-left: 1px dashed darkblue;
+}
+
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:last-child {
+	border-right: 1px dashed darkblue;
+}
+
+.gridxHeaderRow :focus {
+	outline: none;
 }
 
 /*Body*/
-.dojoxGridxBody {
+.gridxBody {
 	height: 100%;
     overflow: hidden;
 	position: absolute;
@@ -96,17 +105,13 @@
     -khtml-box-sizing: border-box; /* konqueror */
 }
 
-.dojoxGridxBody :focus {
-	outline: none;
+.gridx .gridxRowOver .gridxRowTable {
+	background-color: #cee8f2;
 }
 
-.dojoxGridxRow {
-	/* This will cause row dnd in FF to fail (event.target does not change while dragging) */
-	/*overflow: hidden;*/
-}
-
-.dojoxGridxRow table.dojoxGridxRowTable {
-/*    border-collapse: collapse;*/
+.gridxRowHeaderRow table,
+.gridxRow .gridxRowTable {
+	border-collapse: collapse;
 	border-spacing: 0;
 	border: none;
 	table-layout: fixed;
@@ -114,7 +119,7 @@
 	empty-cells: show;
 }
 
-.dojoxGridxRow .dojoxGridxCell {
+.gridxRow .gridxCell {
 	border-style: solid;
 	border-color: transparent #ccc #ccc transparent;
 	border-width: 1px;
@@ -126,7 +131,7 @@
 	-webkit-box-sizing: border-box;*/
 }
 
-.dojoxGridxRowDummy {
+.gridxRowDummy {
 	height: 24px;
 	width: 100%;
 	background: url('images/loadingAnimation.gif') no-repeat left;
@@ -134,11 +139,28 @@
 	border-top: 1px solid red;*/
 }
 
-.dojoxGridx .dojoxGridxCellFocus {
+.gridxBody .gridxCell:focus {
+	outline: none;
+}
+
+.gridx .gridxBody .gridxCellFocus {
+	outline: 1px dashed darkblue;
+}
+
+.dj_ie7 .gridx .gridxCellFocus {
 	border: 1px dashed darkblue;
 }
 
-.dojoxGridxBodyEmpty {
+.gridx .gridxBody .gridxRow:first-child .gridxCellFocus {
+	border-top: 1px dashed darkblue;
+}
+
+.gridx .gridxBody .gridxRow .gridxCellFocus:first-child {
+	border-left: 1px dashed darkblue;
+}
+
+
+.gridxBodyEmpty {
 	width: 100%;
 	height: 100px;
 	padding: 30px 0;
@@ -146,7 +168,7 @@
 }
 
 /*HScroller*/
-.dojoxGridxHScroller {
+.gridxHScrollerInner {
 	overflow: scroll;
 	overflow-y: hidden;
 	border: none;
@@ -154,13 +176,13 @@
 }
 
 /* ie6 will show the wrong height */
-.dj_ie6 .dojoxGridxHScroller {
+.dj_ie6 .gridxHScrollerInner {
 	line-height: 0;
 }
 
 
 /*VScroller*/
-.dojoxGridxVScroller {
+.gridxVScroller {
 	position: absolute;
 	top: 0px;
 	right: 0px;
@@ -172,14 +194,14 @@
 }
 
 /* in IE7/6 the scroller node can not show automatically */
-.dj_ie7 .dojoxGridxVScroller,
-.dj_ie6 .dojoxGridxVScroller {
+.dj_ie7 .gridxVScroller,
+.dj_ie6 .gridxVScroller {
 	width: 16px;
 }
 
 /*RowHeader*/
-.dojoxGridxRowHeaderHeader,
-.dojoxGridxRowHeaderBody {
+.gridxRowHeaderHeader,
+.gridxRowHeaderBody {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -188,35 +210,40 @@
 	border-right: 1px solid #E5DAC8;
 }
 
-.dojoxGridxRowHeaderBody table {
+.gridxRowHeaderBody table {
 	width: 100%;
 }
 
-.dojoxGridxRowHeaderRow {
+.gridxRowHeaderRow {
 	background: url("../images/header.png") #EDF2F7 repeat-x bottom;
-	background: -moz-linear-gradient(top, #EDF2F7, #D0DFEA);
-	background: -webkit-gradient(linear, left top, left bottom, from(#EDF2F7), to(#D0DFEA));
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#FFEDF2F7, endColorstr=#FFD0DFEA);
+	background: #edf2f7; /* Old browsers */
+	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
+	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
 }
 	
-.dojoxGridxRowHeaderCell {
+.gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }
 
 /* Firefox can not fire onmouseover when mouse is "dragging" an "overflow: hidden" node. 
  * This fix is for IndirectSelect working with ExtendedSelect only */
-.dj_gecko .dojoxGridx .dojoxGridxRowHeaderBody .dojoxGridxRowHeaderRow .dojoxGridxRowHeaderCell .dijitCheckBox {
+.dj_gecko .gridx .gridxRowHeaderBody .gridxRowHeaderRow .gridxRowHeaderCell .dijitCheckBox {
 	overflow: visible;
 }
 
 
 /*Column Resizer*/
 /*Column resizing plugin*/
-.dojoxGridxColumnResizing {
+.gridxColumnResizing {
 	cursor: e-resize;
 }
 
-.dojoxGridxColumnResizer {
+.gridxColumnResizer {
 	position: absolute;
 	height: 100%;
 	width: 2px;
@@ -226,8 +253,17 @@
 }
 
 /*CellDijit*/
-.dojoxGridxCellWidget {
+.gridxCellWidget {
 	width: 100%;
 	height: 100%;
 }
 
+.gridxCellEditor,
+/* in IE dijitTextArea has width auto by default */
+.dj_ie [class~='dijitTextArea'].gridxCellEditor {
+	width: 100%;
+}
+
+[class~='dijitSliderV'].gridxCellEditor {
+	width: auto;
+}

@@ -33,6 +33,7 @@ require([
 		{ field: "Artist", name:"Artist", editable: true},
 		{ field: "Year", name:"Year (editable)", dataType:"number", width: '100px', 
 			editable: true, 
+			alwaysEditing: true,
 			editor: NumberTextBox
 		},
 		{ field: "Album", name:"Album", editable: true},
@@ -43,6 +44,7 @@ require([
 		{ field: "Download Date", name:"Date", editable: true, 
 			dataType: 'date', 
 			storePattern: 'yyyy/M/d',
+			gridPattern: 'yyyy--MM--dd',
 			editor: DateTextBox,
 			editorArgs: {
 				fromEditor: getDate
@@ -70,8 +72,9 @@ require([
 		structure: structure,
 		modules: [
 			modules.Focus,
-			modules.CellDijit,
+			modules.CellWidget,
 			modules.Edit,
+			modules.SingleSort,
 			modules.VirtualVScroller
 		]
 	});

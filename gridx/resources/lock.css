@@ -1,11 +1,10 @@
 /*Column Lock*/
-.gridxColumnLock .dojoxGridxRow {
+.gridxColumnLock .gridxRow {
 	overflow: hidden;
 }
 
 /*Row Lock*/
-.gridxColumnLock .dojoxGridxCell,
-.dojoxGridx .dojoxGridxBody .gridxLockedRow,
-.dojoxGridx .dojoxGridxBody .gridxLockedRow .dojoxGridxLockedCell {
+.gridx .gridxBody .gridxLockedRow,
+.gridx .gridxBody .gridxLockedRow .gridxLockedCell {
 	background-color: #ffffe0 !important;
 }

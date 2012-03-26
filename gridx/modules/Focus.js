@@ -68,22 +68,23 @@ define([
 		},
 
 		preload: function(){
-			var g = this.grid;
+			var g = this.grid, n = g.domNode;
 			this.batchConnect(
-				[g.domNode, 'onmousedown', '_onMouseDown'],
-				[g.domNode, 'onkeydown', '_onTabDown'],
-				[g.domNode, 'onfocus', '_focus'],
+				[n, 'onmousedown', '_onMouseDown'],
+				[n, 'onkeydown', '_onTabDown'],
+				[n, 'onfocus', '_focus'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
 				[g, 'onBlur', '_doBlur']
 			);
 		},
 	
 		destroy: function(){
-			this._areas = null;
-			this._areaQueue = null;
-			this._focusNodes = [];
-			this._queueIdx = -1;
-			this.inherited(arguments);
+			var t = this;
+			t._areas = null;
+			t._areaQueue = null;
+			t._focusNodes = [];
+			t._queueIdx = -1;
+			t.inherited(arguments);
 		},
 	
 		//Public----------------------------------------------------------
@@ -94,34 +95,36 @@ define([
 			//		This function always succeed. No exception.
 			// area: __FocusArea
 			//		A focus area definition.
-			if(area && area.name && typeof area.priority === 'number'){
-				if(this._areas[area.name]){
-					this.removeArea(area.name);
+			if(area && area.name && typeof area.priority == 'number'){
+				var t = this,
+					tq = t._tabQueue,
+					init = function(fn){
+						area[fn] = area[fn] ? lang.hitch(area.scope || area, area[fn]) : function(){ return true; };
+					};
+				if(t._areas[area.name]){
+					t.removeArea(area.name);
 				}
-				var init = function(fn){
-					area[fn] = area[fn] ? lang.hitch(area.scope || area, area[fn]) : function(){ return true; };
-				};
 				init('doFocus');
 				init('doBlur');
 				init('onFocus');
 				init('onBlur');
 				area.connects = area.connects || [];
 	
-				this._areas[area.name] = area;
-				var i = util.biSearch(this._tabQueue, function(a){
+				t._areas[area.name] = area;
+				var i = util.biSearch(tq, function(a){
 					return a.p - area.priority;
 				});
 				//If the priority is the same, put this area above the current one.
-				if(this._tabQueue[i] && this._tabQueue[i].p === area.priority){
-					this._tabQueue[i].stack.unshift(area.name);
+				if(tq[i] && tq[i].p === area.priority){
+					tq[i].stack.unshift(area.name);
 					//Assuming areas with same priority must have same focusNode.
-					this._focusNodes[i] = area.focusNode || this._focusNodes[i];
+					t._focusNodes[i] = area.focusNode || t._focusNodes[i];
 				}else{
-					this._tabQueue.splice(i, 0, {
+					tq.splice(i, 0, {
 						p: area.priority,
 						stack: [area.name]
 					});
-					this._focusNodes.splice(i, 0, area.focusNode);
+					t._focusNodes.splice(i, 0, area.focusNode);
 				}
 			}
 		},
@@ -135,9 +138,9 @@ define([
 			//		If the area with this name does not exist, this is a no-op and return FALSE.
 			// return: Boolean
 			//		TRUE if the focus is successful, FALSE if not.	
-			var area = this._areas[areaName];
+			var t = this, area = t._areas[areaName];
 			if(area){
-				var curArea = this._areas[this.currentArea()];
+				var curArea = t._areas[t.currentArea()];
 				if(curArea && curArea.name === areaName){
 					if(forced){
 						curArea.doFocus();
@@ -145,14 +148,14 @@ define([
 					return true;
 				}else if(!curArea || curArea.doBlur()){
 					if(curArea){
-						this.onBlurArea(curArea.name);
+						t.onBlurArea(curArea.name);
 					}
 					if(area.doFocus()){
-						this.onFocusArea(area.name);
-						this._updateCurrentArea(area);
+						t.onFocusArea(area.name);
+						t._updateCurrentArea(area);
 						return true;
 					}
-					this._updateCurrentArea();
+					t._updateCurrentArea();
 				}
 			}
 			return false;
@@ -180,45 +183,48 @@ define([
 			//		This can either be a real Event object or a mock object with same information .
 			// return: String
 			//		The name of currently focused area. Return "" if no area is focused.
-			var curArea = this._areas[this.currentArea()];
+			var t = this,
+				areas = t._areas,
+				curArea = areas[t.currentArea()];
 			if(!step){
 				return curArea ? curArea.name : '';
 			}
-			var cai = this._queueIdx + step,
-				dir = step > 0 ? 1 : -1;
+			var cai = t._queueIdx + step,
+				dir = step > 0 ? 1 : -1,
+				tq = t._tabQueue;
 			if(curArea){
-				var blurResult = curArea.doBlur(evt, step);
-				var nextArea = this._areas[blurResult];
+				var blurResult = curArea.doBlur(evt, step),
+					nextArea = areas[blurResult];
 				if(blurResult){
-					this.onBlurArea(curArea.name);
+					t.onBlurArea(curArea.name);
 				}
 				if(nextArea && nextArea.doFocus(evt, step)){
-					this.onFocusArea(nextArea.name);
-					this._updateCurrentArea(nextArea);
+					t.onFocusArea(nextArea.name);
+					t._updateCurrentArea(nextArea);
 					return nextArea.name;
 				}else if(!blurResult){
 					return curArea.name;
 				}
 			}
-			for(; cai >= 0 && cai < this._tabQueue.length; cai += dir){
-				var i, stack = this._tabQueue[cai].stack;
+			for(; cai >= 0 && cai < tq.length; cai += dir){
+				var i, stack = tq[cai].stack;
 				for(i = 0; i < stack.length; ++i){
 					var areaName = stack[i];
-					if(this._areas[areaName].doFocus(evt, step)){
-						this.onFocusArea(areaName);
-						this._queueIdx = cai;
-						this._stackIdx = i;
+					if(areas[areaName].doFocus(evt, step)){
+						t.onFocusArea(areaName);
+						t._queueIdx = cai;
+						t._stackIdx = i;
 						return areaName;
 					}
 				}
 			}
-			this._tabingOut = true;
+			t._tabingOut = 1;
 			if(step < 0){
-				this._queueIdx= -1;
-				this.grid.domNode.focus();
+				t._queueIdx= -1;
+				t.grid.domNode.focus();
 			}else{
-				this._queueIdx = this._tabQueue.length;
-				this.grid.lastFocusNode.focus();
+				t._queueIdx = tq.length;
+				t.grid.lastFocusNode.focus();
 			}
 			return "";
 		},
@@ -232,15 +238,15 @@ define([
 			//		The name of the area to be removed.
 			// return: Boolean
 			//		TRUE if this operation is successful, FALSE if not.
-			var area = this._areas[areaName];
+			var t = this, area = t._areas[areaName];
 			if(area){
-				if(this.currentArea() === areaName){
-					this._updateCurrentArea();
+				if(t.currentArea() === areaName){
+					t._updateCurrentArea();
 				}
-				var i = util.biSearch(this._tabQueue, function(a){
-					return a.p - area.priority;
-				});
-				var j, stack = this._tabQueue[i].stack;
+				var i = util.biSearch(t._tabQueue, function(a){
+						return a.p - area.priority;
+					}), j, 
+					stack = t._tabQueue[i].stack;
 				for(j = stack.length - 1; j >= 0; --j){
 					if(stack[j] === area.name){
 						stack.splice(j, 1);
@@ -248,11 +254,11 @@ define([
 					}
 				}
 				if(!stack.length){
-					this._tabQueue.splice(i, 1);
-					this._focusNodes.splice(i, 1);
+					t._tabQueue.splice(i, 1);
+					t._focusNodes.splice(i, 1);
 				}
 				array.forEach(area.connects, connect.disconnect);
-				delete this._areas[areaName];
+				delete t._areas[areaName];
 				return true;
 			}
 			return false;
@@ -281,70 +287,75 @@ define([
 	
 		//-----------------------------------------------------------------------
 		_onMouseDown: function(evt){
-			var node = evt.target,
-				currentArea = this._areas[this.currentArea()];
-			while(node && node !== this.grid.domNode){
-				var i = array.indexOf(this._focusNodes, node);
+			var t = this, i, j, stack, area,
+				dn = t.grid.domNode,
+				n = evt.target,
+				currentArea = t._areas[t.currentArea()];
+			while(n && n !== dn){
+				i = array.indexOf(t._focusNodes, n);
 				if(i >= 0){
-					var j, stack = this._tabQueue[i].stack;
+					stack = t._tabQueue[i].stack;
 					for(j = 0; j < stack.length; ++j){
-						var area = this._areas[stack[j]];
+						area = t._areas[stack[j]];
 						if(area.onFocus(evt)){
 							if(currentArea && currentArea.name !== area.name){
 								currentArea.onBlur(evt);
-								this.onBlurArea(currentArea.name);
+								t.onBlurArea(currentArea.name);
 							}
-							this.onFocusArea(area.name);
-							this._queueIdx = i;
-							this._stackIdx = j;
+							t.onFocusArea(area.name);
+							t._queueIdx = i;
+							t._stackIdx = j;
 							return;
 						}
 					}
 					return;
 				}
-				node = node.parentNode;
+				n = n.parentNode;
 			}
-			if(node === this.grid.domNode && currentArea){
-				this._doBlur(evt, currentArea);
+			if(n == dn && currentArea){
+				t._doBlur(evt, currentArea);
 			}
-			if(!node || node === this.grid.domNode){
+			if(!n || n == dn){
 				util.stopEvent(evt);
 			}
 		},
 		
 		_focus: function(evt){
-			if(this._tabingOut){
-				this._tabingOut = false;
-			}else if(evt.target === this.grid.domNode){
-				this._queueIdx = -1;
-				this.tab(1);
-			}else if(evt.target === this.grid.lastFocusNode){
-				this._queueIdx = this._tabQueue.length;
-				this.tab(-1);
+			var t = this;
+			if(t._tabingOut){
+				t._tabingOut = 0;
+			}else if(evt.target == t.grid.domNode){
+				t._queueIdx = -1;
+				t.tab(1);
+			}else if(evt.target === t.grid.lastFocusNode){
+				t._queueIdx = t._tabQueue.length;
+				t.tab(-1);
 			}
 		},
 		
 		_doBlur: function(evt, area){
-			if(!area && this.currentArea()){
-				area = this._areas[this.currentArea()];
+			var t = this;
+			if(!area && t.currentArea()){
+				area = t._areas[t.currentArea()];
 			}
 			if(area){
 				area.onBlur(evt);
-				this.onBlurArea(area.name);
-				this._updateCurrentArea();
+				t.onBlurArea(area.name);
+				t._updateCurrentArea();
 			}
 		},
 		
 		_updateCurrentArea: function(area){
+			var t = this, tq = t._tabQueue;
 			if(area){
-				var i = this._queueIdx = util.biSearch(this._tabQueue, function(a){
-					return a.p - area.priority;
-				});
-				var stack = this._tabQueue[i].stack;
-				this._stackIdx = array.indexOf(stack, area.name);
+				var i = t._queueIdx = util.biSearch(tq, function(a){
+						return a.p - area.priority;
+					}),
+					stack = tq[i].stack;
+				t._stackIdx = array.indexOf(stack, area.name);
 			}else{
-				this._queueIdx = null;
-				this._stackIdx = 0;
+				t._queueIdx = null;
+				t._stackIdx = 0;
 			}
 		}
 	}));

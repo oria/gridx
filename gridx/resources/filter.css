@@ -1,120 +1,124 @@
-.dojoxGridxFilterDialog .dijitAccordionContainer .dijitAccordionContainer-child {
+.gridxFilterDialog .dijitAccordionContainer .dijitAccordionContainer-child {
 	padding: 6px 9px;
 }
 
-.dojoxGridxFilterDialog .dojoxGridxFilterAccordionWrapper {
+.gridxFilterDialog .gridxFilterAccordionWrapper {
 	height: 227px;
 	width: 300px;
 	overflow: auto;
 	margin: 5px 0 15px 0;
 }
 
-.dojoxGridxFilterDialog .dojoxGridxFilterDialogButtons {
+.gridxFilterDialog .gridxFilterDialogButtons {
 	text-align: right;
 }
 
 
-.dojoxGridxFilterDialog .dojoxGridxFilterDialogButtons .dojoxGridxFilterDialogBtnAdd {
+.gridxFilterDialog .gridxFilterDialogButtons .gridxFilterDialogBtnAdd {
 	float:left;
 	margin-top: -10px;
 }
 
-.dojoxGridxFilterDialog .dijitAccordionTitleFocus{
+.gridxFilterDialog .dijitAccordionTitleFocus{
 	margin-right: 16px;
 }
-.dojoxGridxFilterDialog .dijitAccordionTitleFocus .dijitAccordionText {
+
+.gridxFilterDialog .dijitAccordionTitleFocus .dijitAccordionText {
 	display: block;
 }
-.dojoxGridxFilterDialog .dijitAccordionTitleFocus .dijitAccordionArrow {
+
+.gridxFilterDialog .dijitAccordionTitleFocus .dijitAccordionArrow {
 	display: none;
 }
 
-.dojoxGridxFilterPaneForm {
+.gridxFilterPaneForm {
 	margin: 0px;
 	padding: 0px;
 	list-style: none;
 	font-size: 10px;
 }
 
-.dojoxGridxFilterPaneForm .dijitSelect{
+.gridxFilterPaneForm .dijitSelect{
 	margin: 0;
 }
-.dojoxGridxFilterPaneForm li {
+
+.gridxFilterPaneForm li {
 	margin: 0;
 	padding: 0px;
 	list-style: none;
 	width:98%;
 }
 
-.dojoxGridxFilterPaneForm .dijitSelect,
-.dojoxGridxFilterPaneForm .dijitTextBox,
-.dojoxGridxFilterPaneForm .dijitComboBox {
+.gridxFilterPaneForm .dijitSelect,
+.gridxFilterPaneForm .dijitTextBox,
+.gridxFilterPaneForm .dijitComboBox {
 	font-size: 12px;
 }
 
-.dojoxGridxFilterPaneCloseButton {
+.gridxFilterPaneCloseButton {
 	float: right;
 }
 
-.dojoxGridxFilterPaneCloseButton img {
+.gridxFilterPaneCloseButton img {
 	background: transparent url(images/sprite_icons.png) no-repeat -198px -18px;
 	width: 16px;
 	height: 16px;
 	cursor: pointer;
 }
 
-.dojoxGridxFilterPaneCloseButton img:hover {
+.gridxFilterPaneCloseButton img:hover {
 	background-position: -198px 2px;
 }
-.dojoxGridxFilterSingleRule .dojoxGridxFilterPaneCloseButton {
+
+.gridxFilterSingleRule .gridxFilterPaneCloseButton {
 	display: none;
 }
 
-.dojoxGridxFilterBtnAddRule {
+.gridxFilterBtnAddRule {
 	background: transparent url(images/sprite_icons.png) no-repeat -218px 2px;
 	width: 16px;
 	height: 16px;
 }
 
-.dojoxGridxFilterBarBtnIcon {
+.gridxFilterBarBtnIcon {
 	background: transparent url(images/sprite_icons.png) no-repeat -100px -18px;
 	width: 14px;
 	height: 14px;
 }
 
-.dojoxGridxFilterPaneForm .dojoxGridxFilterPaneFieldWrapper {
+.gridxFilterPaneForm .gridxFilterPaneFieldWrapper {
 	display: none;
 }
   
-.dojoxGridxFilterPaneText .dojoxGridxFilterPaneTextWrapper,
-.dojoxGridxFilterPaneCombo .dojoxGridxFilterPaneComboWrapper,
-.dojoxGridxFilterPaneNumber .dojoxGridxFilterPaneNumberWrapper,
-.dojoxGridxFilterPaneDate .dojoxGridxFilterPaneDateWrapper,
-.dojoxGridxFilterPaneDateRange .dojoxGridxFilterPaneDateRangeWrapper,
-.dojoxGridxFilterPaneTime .dojoxGridxFilterPaneTimeWrapper,
-.dojoxGridxFilterPaneTimeRange .dojoxGridxFilterPaneTimeRangeWrapper,
-.dojoxGridxFilterPaneSelect .dojoxGridxFilterPaneDateSelectWrapper,
-.dojoxGridxFilterPaneRadio .dojoxGridxFilterPaneRadioWrapper {
+.gridxFilterPaneText .gridxFilterPaneTextWrapper,
+.gridxFilterPaneCombo .gridxFilterPaneComboWrapper,
+.gridxFilterPaneNumber .gridxFilterPaneNumberWrapper,
+.gridxFilterPaneDate .gridxFilterPaneDateWrapper,
+.gridxFilterPaneDateRange .gridxFilterPaneDateRangeWrapper,
+.gridxFilterPaneTime .gridxFilterPaneTimeWrapper,
+.gridxFilterPaneTimeRange .gridxFilterPaneTimeRangeWrapper,
+.gridxFilterPaneSelect .gridxFilterPaneDateSelectWrapper,
+.gridxFilterPaneRadio .gridxFilterPaneRadioWrapper {
 	display: block;
 }
 
-.dojoxGridxFilterBar {
+.gridxFilterBar {
 	cursor: pointer;
 	width: 100%;
 	font-family: arial;
 }
-.dojoxGridxFilterBar a{
+.gridxFilterBar a{
 	color: #5B83B6;
 	text-decoration: none;
 }
-.dojoxGridxFilterBar a:hover{
+.gridxFilterBar a:hover{
 	text-decoration: underline;
 }
-.dojoxGridxFilterBar .dijitButton {
+.gridxFilterBar .dijitButton {
 	margin: 0;
 	float: left;
 }
-.dojoxGridxFilterBar .dijitButton .dijitButtonNode {
+.gridxFilterBar .dijitButton .dijitButtonNode {
 	-moz-border-radius: 1px;
 	-webkit-border-radius: 1px;
 	padding-top: 0;
@@ -122,14 +126,25 @@
 	padding-right: 2px;
 }
 
-.dojoxGridxFilterBarStatus {
-	background: -moz-linear-gradient(center top , #F2F9FF, #EAF5FF) repeat scroll 0 0 transparent;
+.gridxFilterBarStatus {
+	background: #f2f9ff; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f2f9ff 0%, #eaf5ff 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f9ff), color-stop(100%,#eaf5ff)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* IE10+ */
+	background: linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f9ff', endColorstr='#eaf5ff',GradientType=0 ); /* IE6-9 */
 	border-bottom: 1px solid #BFD6EB;
     border-top: 1px solid #BFD6EB;
     padding: 1px 0 0 45px;
 }
 
-.dojoxGridxFilterBarCloseBtn {
+.dj_ie9 .gridxFilterBarStatus{
+	padding-left: 5px;
+}
+
+.gridxFilterBarCloseBtn {
 	background: transparent url(images/sprite_icons.png) no-repeat -119px -20px;
 	width: 14px;
 	height: 14px;
@@ -137,43 +152,46 @@
 	margin-right: 3px;
 	cursor: pointer;
 }
+.dj_ie7 .gridxFilterBarCloseBtn{
+	margin-top: -14px;
+}
 
-.dojoxGridxFilterBarHideCloseBtn .dojoxGridxFilterBarCloseBtn {
+.gridxFilterBarHideCloseBtn .gridxFilterBarCloseBtn {
 	display: none;
 }
 
-.dojoxGridxFilterBarCloseBtn:hover {
+.gridxFilterBarCloseBtn:hover {
 	background-position: -140px -20px;
 }
 
-.dojoxGridxFilterTooltip table {
+.gridxFilterTooltip table {
 	border: 1px solid #bbb;
 	border-collapse: collapse;
 }
 
-.dojoxGridxFilterTooltip table th {
+.gridxFilterTooltip table th {
 	background-color: #E8EFF4;
 	border: 1px solid #bbb;
 }
 
 
-.dojoxGridxFilterTooltip table th, .dojoxGridxFilterTooltip table td {
+.gridxFilterTooltip table th, .gridxFilterTooltip table td {
 	padding: 2px 4px;
 	height: 16px;
 	vertical-align: middle;
 }
 
-.dojoxGridxFilterTooltip table .dojoxGridxFilterTooltipValueCell div{
+.gridxFilterTooltip table .gridxFilterTooltipValueCell div{
 	max-width: 150px;
 	position: relative;
 	padding-right: 25px;
 }
 
-.dojoxGridxFilterTooltip .dojoxGridxFilterTooltipTitle {
+.gridxFilterTooltip .gridxFilterTooltipTitle {
 	margin-bottom: 8px;
 }
 
-.dojoxGridxFilterTooltip .dojoxGridxFilterTooltipRemoveBtn {
+.gridxFilterTooltip .gridxFilterTooltipRemoveBtn {
 	background: transparent url(images/sprite_icons.png) no-repeat -198px -18px;
 	width: 16px;
 	height: 16px;
@@ -183,23 +201,19 @@
 	cursor: pointer;
 	border: none;
 }
-.dojoxGridxFilterTooltipSingleRule .dojoxGridxFilterTooltipRemoveBtn {
+.gridxFilterTooltipSingleRule .gridxFilterTooltipRemoveBtn {
 	visibility: hidden;
 }
 
-.dojoxGridxFilterTooltip .dojoxGridxFilterTooltipRemoveBtn:hover {
+.gridxFilterTooltip .gridxFilterTooltipRemoveBtn:hover {
 	background-position: -198px 2px;
 }
 
-.dojoxGridxFilterTooltip .dojoxGridxFilterTooltipOddRow {
+.gridxFilterTooltip .gridxFilterTooltipOddRow {
 	background-color: #F1F8FF;
 }
 
-
-.dojoxGridxFilterConfirmDialogButtons {
+.gridxFilterConfirmDialogButtons {
 	text-align: right;
 	margin-top: 10px;
 }
-
-
-

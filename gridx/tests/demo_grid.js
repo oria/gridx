@@ -28,8 +28,8 @@ var stores = {
 			size: 200
 		}),
 		layouts: {
-			'layout 1': musicData.layouts[3],
-			'layout 2': musicData.layouts[0]
+			'layout 1': musicData.layouts[0],
+			'layout 2': musicData.layouts[1]
 		}
 	},
 	"test store": {
@@ -71,7 +71,7 @@ var stores = {
 			if(checked){
 				cfg.getHandle('cache', 'Asynchronous Cache').set('checked', true);
 			}
-			cfg.getHandle('attr', 'vscrollerLazyScroll').set('checked', checked);
+			cfg.getHandle('attr', 'vScrollerLazy').set('checked', checked);
 		}
 	},
 	"tree columnar store": {
@@ -140,14 +140,14 @@ var gridAttrs = {
 		value: 50
 	},
 	//VScroller
-	vscrollerLazyScroll: {
+	vScrollerLazy: {
 		type: 'bool'
 	},
-	vscrollerLazyScrollTimeout: {
+	vScrollerLazyTimeout: {
 		type: 'number',
 		value: 200
 	},
-	vscrollerBuffSize: {
+	vScrollerBuffSize: {
 		type: 'number',
 		value: 5
 	},

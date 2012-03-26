@@ -23,6 +23,7 @@ require([
 			structure: dataSource.layouts[0],
 			modules: [
 				modules.Focus,
+				modules.ColumnResizer,
 				modules.IndirectSelect,
 				//modules.RowHeader,
 				modules.VirtualVScroller

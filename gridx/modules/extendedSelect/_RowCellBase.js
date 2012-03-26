@@ -9,16 +9,17 @@ define([
 	return declare(_Base, {
 		modelExtensions: [Mark],
 
-		_getRowIdByVisualIndex: function(visualIndex){
+		_getRowId: function(visualIndex){
 			var node = query('[visualindex="' + visualIndex + '"]', this.grid.bodyNode)[0];
 			return node && node.getAttribute('rowid');
 		},
 
 		_init: function(){
-			this.batchConnect(
-				[this.grid.body, 'onMoveToCell', '_onMoveToCell'],
-				[this.model, 'onMarked', lang.hitch(this, '_onMark', true)],
-				[this.model, 'onMarkRemoved', lang.hitch(this, '_onMark', false)]
+			var t = this, m = t.model;
+			t.batchConnect(
+				[t.grid.body, 'onMoveToCell', '_onMoveToCell'],
+				[m, 'onMarked', lang.hitch(t, '_onMark', 1)],	//1 as true
+				[m, 'onMarkRemoved', lang.hitch(t, '_onMark', 0)]	//0 as false
 			);
 		}
 	});

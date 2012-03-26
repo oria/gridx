@@ -6,6 +6,10 @@ define([
 	'../_Extension'
 ], function(declare, array, lang, Deferred, _Extension){
 
+	var hitch = lang.hitch,
+		forEach = array.forEach,
+		indexOf = array.indexOf;
+
 	return declare(_Extension, {
 		// Not compatible with Map extension!
 		name: 'clientFilter',
@@ -15,7 +19,7 @@ define([
 		constructor: function(model, args){
 			this.pageSize = args.pageSize || 100;
 			this._mixinAPI('filter', 'hasFilter');
-			this.connect(model, '_sendMsg', '_receiveMsg');
+			this.connect(model, '_msg', '_receiveMsg');
 		},
 
 		//Public---------------------------------------------------------------------
@@ -41,11 +45,12 @@ define([
 		},
 
 		byIndex: function(index){
-			if(this._ids){
-				var id = this._ids[index];
-				return id && this.inner._call('byId', [id]);
+			var ids = this._ids, inner = this.inner;
+			if(ids){
+				var id = ids[index];
+				return id && inner._call('byId', [id]);
 			}else{
-				return this.inner._call('byIndex', arguments);
+				return inner._call('byIndex', arguments);
 			}
 		},
 
@@ -59,7 +64,7 @@ define([
 
 		idToIndex: function(id){
 			if(this._ids){
-				var idx = array.indexOf(this._ids, id);
+				var idx = indexOf(this._ids, id);
 				return idx >= 0 ? idx : undefined;
 			}
 			return this.inner._call('idToIndex', arguments);
@@ -70,19 +75,19 @@ define([
 		},
 
 		when: function(args, callback){
-			var _this = this,
+			var t = this,
 				f = function(){
-					if(_this._ids){
-						_this._mapWhenArgs(args);
+					if(t._ids){
+						t._mapWhenArgs(args);
 					}
-					return _this.inner._call('when', [args, callback]);
+					return t.inner._call('when', [args, callback]);
 				};
-			if(this._refilter){
-				delete this._refilter;
-				if(this._ids){
+			if(t._refilter){
+				t._refilter = 0;
+				if(t._ids){
 					var d = new Deferred();
-					this._reFilter().then(function(){
-						f().then(lang.hitch(d, d.callback), lang.hitch(d, d.errback));
+					t._reFilter().then(function(){
+						f().then(hitch(d, d.callback), hitch(d, d.errback));
 					});
 					return d;
 				}
@@ -92,53 +97,55 @@ define([
 
 		//Private---------------------------------------------------------------------
 		_cmdFilter: function(){
-			return this._filter.apply(this, arguments[arguments.length - 1]);
+			var a = arguments;
+			return this._filter.apply(this, a[a.length - 1]);
 		},
 
 		_filter: function(checker){
 			var d = new Deferred(),
-				oldSize = this.size();
-			this.clear();
+				t = this,
+				oldSize = t.size();
+			t.clear();
 			if(lang.isFunction(checker)){
-				var _this = this, ids = [];
-				this.model.scan({
+				var ids = [];
+				t.model.scan({
 					start: 0,
-					pageSize: this.pageSize,
-					whenScope: this,
-					whenFunc: this.when
+					pageSize: t.pageSize,
+					whenScope: t,
+					whenFunc: t.when
 				}, function(rows, s){
 					var i, id, row, end = s + rows.length;
 					for(i = s; i < end; ++i){
-						id = _this.indexToId(i);
-						row = _this.byIndex(i);
+						id = t.indexToId(i);
+						row = t.byIndex(i);
 						if(row){
 							if(checker(row, id)){
 								ids.push(id);
-								_this._indexes[id] = i;
+								t._indexes[id] = i;
 							}
 						}else{
 							break;
 						}
 					}
 				}).then(function(){
-					var size = _this.size();
+					var size = t.size();
 					if(ids.length == size){
 						//Filtered item size equals cache size, so filter is useless.
-						_this.clear();
+						t.clear();
 					}else{
-						_this._ids = ids;
+						t._ids = ids;
 						size = ids.length;
-						_this.model._sendMsg('filter');
+						t.model._msg('filter', ids);
 					}
 					if(size != oldSize){
-						_this.onSizeChange(size, oldSize, 'filter');
+						t.onSizeChange(size, oldSize, 'filter');
 					}
 					d.callback();
 				});
 			}else{
-				var size = this.size();
+				var size = t.size();
 				if(size !== oldSize){
-					this.onSizeChange(size, oldSize, 'filter');
+					t.onSizeChange(size, oldSize, 'filter');
 				}
 				d.callback();
 			}
@@ -147,11 +154,11 @@ define([
 
 		_mapWhenArgs: function(args){
 			//Map ids and index ranges to what the store needs.
-			var ranges = [], size = this._ids.length;
+			var t = this, ranges = [], size = t._ids.length;
 			args.id = array.filter(args.id, function(id){
-				return this._indexes[id] !== undefined;
-			}, this);
-			array.forEach(args.range, function(r){
+				return t._indexes[id] !== undefined;
+			});
+			forEach(args.range, function(r){
 				if(!r.count || r.count < 0){
 					//For open ranges, must limit the size because we know the filtered size here.
 					var cnt = size - r.start;
@@ -161,7 +168,7 @@ define([
 					r.count = cnt;
 				}
 				for(var i = 0; i < r.count; ++i){
-					var idx = this._mapIndex(i + r.start);
+					var idx = t._mapIndex(i + r.start);
 					if(idx !== undefined){
 						ranges.push({
 							start: idx,
@@ -169,7 +176,7 @@ define([
 						});
 					}
 				}
-			}, this);
+			});
 			args.range = ranges;
 		},
 
@@ -185,7 +192,7 @@ define([
 			}else{
 				args[0] = array.map(args[0], function(index){
 					return this._mapIndex(index);
-				}, this);
+				});
 				args[1] = this._mapIndex(args[1]);
 			}
 		},
@@ -195,7 +202,7 @@ define([
 		},
 
 		_moveFiltered: function(start, count, target){
-			var size = this._ids.length;
+			var t = this, size = t._ids.length;
 			if(start >= 0 && start < size && 
 				count > 0 && count < Infinity && 
 				target >= 0 && target < size && 
@@ -203,81 +210,84 @@ define([
 
 				var i, len, indexes = [];
 				for(i = start, len = start + count; i < len; ++i){
-					indexes.push(this._mapIndex(i));
+					indexes.push(t._mapIndex(i));
 				}
-				this.inner._call('moveIndexes', [indexes, this._mapIndex(target)]);
+				t.inner._call('moveIndexes', [indexes, t._mapIndex(target)]);
 			}
 		},
 
 		_reFilter: function(){
-			var _this = this;
-			return this.inner._call('when', [{
-				id: this._ids,
+			var t = this;
+			return t.inner._call('when', [{
+				id: t._ids,
 				range: []
 			}, function(){
-				array.forEach(_this._ids, function(id){
-					var idx = _this.inner._call('idToIndex', [id]);
-					_this._indexes[id] = idx;
+				forEach(t._ids, function(id){
+					var idx = t.inner._call('idToIndex', [id]);
+					t._indexes[id] = idx;
 				});
-				_this._ids.sort(function(a, b){
-					return _this._indexes[a] - _this._indexes[b];
+				t._ids.sort(function(a, b){
+					return t._indexes[a] - t._indexes[b];
 				});
 			}]);
 		},
 
 		_onMoved: function(map){
-			var _this = this;
-			array.forEach(this._ids, function(id){
-				var oldIdx = _this._indexes[id];
+			var t = this;
+			forEach(t._ids, function(id){
+				var oldIdx = t._indexes[id];
 				if(map[oldIdx] !== undefined){
-					_this._indexes[id] = map[oldIdx];
+					t._indexes[id] = map[oldIdx];
 				}
 			});
-			this._ids.sort(function(a, b){
-				return _this._indexes[a] - _this._indexes[b];
+			t._ids.sort(function(a, b){
+				return t._indexes[a] - t._indexes[b];
 			});
 		},
 
 		_receiveMsg: function(msg, args){
-			if(this._ids){
+			var t = this;
+			if(t._ids){
 				if(msg == 'storeChange'){
-					this._refilter = true;
+					t._refilter = 1;
 				}else if(msg == 'moved'){
-					this._onMoved(args);
+					t._onMoved(args);
 				}else if(msg == 'beforeMove'){
-					this._mapMoveArgs(args);
+					t._mapMoveArgs(args);
 				}
 			}
 		},
 
 		_onNew: function(id){
-			if(this._ids){
-				this._ids.push(id);
-				this._refilter = true;
+			var t = this;
+			if(t._ids){
+				t._ids.push(id);
+				t._refilter = 1;
 			}
-			this.onNew.apply(this, arguments);
+			t.onNew.apply(t, arguments);
 		},
 
 		_onDelete: function(id, index, row){
-			if(this._ids){
-				var i = array.indexOf(this._ids, id),
-					idx = this._indexes[id];
+			var t = this, indexes = t._indexes, ids = t._ids;
+			if(ids){
+				var i = indexOf(ids, id),
+					idx = indexes[id];
 				if(i >= 0){
-					this._ids.splice(i, 1);
+					ids.splice(i, 1);
 				}
 				if(i >= 0 && idx !== undefined){
 					index = i;
-					for(i in this._indexes){
-						if(this._indexes[i] > idx){
-							--this._indexes[i];
+					for(i in indexes){
+						if(indexes[i] > idx){
+							--indexes[i];
 						}
 					}
 				}else{
 					index = undefined;
-					this._refilter = true;
+					t._refilter = 1;
 				}
 			}
-			this.onDelete.apply(this, [id, index, row]);
+			t.onDelete(id, index, row);
 		}
 	});
 });

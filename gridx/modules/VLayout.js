@@ -16,37 +16,37 @@ define([
 		},
 
 		preload: function(){
-			var _this = this, g = this.grid;
-			this.connect(g, '_onResizeEnd', function(changeSize, ds){
+			var t = this, g = t.grid;
+			t.connect(g, '_onResizeEnd', function(changeSize, ds){
 				var d, dl = [];
 				for(d in ds){
 					dl.push(ds[d]);
 				}
-				(new DeferredList(dl)).then(function(){
-					_this.reLayout();
+				new DeferredList(dl).then(function(){
+					t.reLayout();
 				});
 			});
 			if(g.autoHeight){
-				this.connect(g.body, 'onRender', 'reLayout');
+				t.connect(g.body, 'onRender', 'reLayout');
 			}else{
-				this.connect(g, 'setColumns', function(){
+				t.connect(g, 'setColumns', function(){
 					setTimeout(function(){
-						_this.reLayout();
+						t.reLayout();
 					}, 0);
 				});
 			}
 		},
 	
 		load: function(args, startup){
-			var _this = this;
+			var t = this;
 			startup.then(function(){
-				if(_this._defs && _this._mods){
-					(new DeferredList(_this._defs)).then(function(){
-						_this._layout();
-						_this.loaded.callback();
+				if(t._defs && t._mods){
+					new DeferredList(t._defs).then(function(){
+						t._layout();
+						t.loaded.callback();
 					});
 				}else{
-					_this.loaded.callback();
+					t.loaded.callback();
 				}
 			});
 		},
@@ -63,11 +63,12 @@ define([
 			//		The name of a hook point in grid.
 			// priority: Number?
 			//		The priority of the hook node. If less than 0, then it's above the base node, larger than 0, below the base node.
-			this._defs = this._defs || [];
-			this._mods = this._mods || {};
-			this._mods[hookPoint] = this._mods[hookPoint] || [];
-			this._defs.push(deferReady || mod.loaded);
-			this._mods[hookPoint].push({
+			var t = this;
+			t._defs = t._defs || [];
+			t._mods = t._mods || {};
+			t._mods[hookPoint] = t._mods[hookPoint] || [];
+			t._defs.push(deferReady || mod.loaded);
+			t._mods[hookPoint].push({
 				p: priority || 0,
 				mod: mod,
 				nodeName: nodeName
@@ -75,49 +76,51 @@ define([
 		},
 		
 		reLayout: function(){
-			var hookPoint, freeHeight = 0, node, g = this.grid;
-			for(hookPoint in this._mods){
-				node = g[hookPoint];
-				if(node){
-					freeHeight += domGeometry.getMarginBox(node).h;	
+			var hookPoint, freeHeight = 0, n, t = this;
+			for(hookPoint in t._mods){
+				n = t.grid[hookPoint];
+				if(n){
+					freeHeight += domGeometry.getMarginBox(n).h;	
 				}
 			}
-			this._updateHeight(freeHeight);
+			t._updateHeight(freeHeight);
 		},
 
 		//Private-------------------------------------------------------------------------------
 		_layout: function(){
-			var hookPoint, freeHeight = 0, node, i, mod, nodeName, g = this.grid;
-			for(hookPoint in this._mods){
-				node = g[hookPoint];
-				if(node){
-					this._mods[hookPoint].sort(function(a, b){
+			var hookPoint, freeHeight = 0, t = this, mods = t._mods,
+				n, i, hp, mod, nodeName;
+			for(hookPoint in mods){
+				n = t.grid[hookPoint];
+				if(n){
+					hp = mods[hookPoint];
+					hp.sort(function(a, b){
 						return a.p - b.p;
 					});
-					for(i = 0; i < this._mods[hookPoint].length; ++i){
-						mod = this._mods[hookPoint][i].mod;
-						nodeName = this._mods[hookPoint][i].nodeName;
+					for(i = 0; i < hp.length; ++i){
+						mod = hp[i].mod;
+						nodeName = hp[i].nodeName;
 						if(mod && mod[nodeName]){
-							node.appendChild(mod[nodeName]);
+							n.appendChild(mod[nodeName]);
 						}
 					}
-					freeHeight += domGeometry.getMarginBox(node).h;	
+					freeHeight += domGeometry.getMarginBox(n).h;	
 				}
 			}
-			this._updateHeight(freeHeight);
+			t._updateHeight(freeHeight);
 		},
 
 		_updateHeight: function(freeHeight){
-			var g = this.grid;
+			var g = this.grid, dn = g.domNode, ms = g.mainNode.style;
 			if(g.autoHeight){
 				g.vScroller.loaded.then(function(){
 					var lastRow = g.bodyNode.lastChild,
 						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : 0;
-					g.domNode.style.height = (bodyHeight + freeHeight) + 'px';
-					g.mainNode.style.height = bodyHeight + "px";
+					dn.style.height = (bodyHeight + freeHeight) + 'px';
+					ms.height = bodyHeight + "px";
 				});
 			}else{
-				g.mainNode.style.height = (g.domNode.clientHeight - freeHeight) + "px";
+				ms.height = (dn.clientHeight - freeHeight) + "px";
 			}
 		}
 	}));

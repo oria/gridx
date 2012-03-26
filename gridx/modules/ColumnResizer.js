@@ -1,214 +1,258 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/html",
 	"dojo/_base/sniff",
 	"dojo/_base/window",
+	"dojo/dom",
 	"dojo/dom-style",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-geometry",
 	"dojo/query",
 	"../core/_Module"
-], function(declare, html, sniff, win, style, query, _Module){
-	
-	return _Module.register(
-	declare(_Module, {
-		name: 'columnResizer',
-		required: ['hscroller'],
-		minWidth: 20,	//in px
-		detectWidth: 5,
-		load: function(args){
-			var g = this.grid, body = win.body();
-			var headerInner = query('.dojoxGridxHeaderRowInner', g.domNode)[0];
-			this.batchConnect(
-				[headerInner, 'mousemove', '_mousemove'],
-				[g, 'onHeaderMouseOut', '_mouseout'],
-				[g, 'onHeaderMouseDown', '_mousedown', this, this.name],
-				[document, 'mousemove', '_docMousemove'],
-				[document, 'onmouseup', '_mouseup']
-			);
-			this.loaded.callback();
-			
-		},
-		getAPIPath: function(){
-			return {
-				columnResizer: this
-			};
-		},
-		columnMixin: {
-			setWidth: function(width){
-				this.grid.columnResizer.setWidth(this.id, width);
-			}
-		},
-		setWidth: function(colId, width){
-			width = parseInt(width);
-			var minWidth = this.arg('minWidth');
-			if(width < minWidth){
-				width = minWidth;
-			}
-			this.grid._columnsById[colId].width = width + 'px';
-			var oldWidth;
-			query('[colid="' + colId + '"]', this.grid.domNode).forEach(function(cell){
-				if(!oldWidth){
-					oldWidth = sniff('webkit') ? cell.offsetWidth : html.style(cell, 'width');
-				}
-				cell.style.width = width + 'px';
-			});
-			this.grid.vLayout.reLayout();
-			this.grid.header.onRender();
-			this.grid.body.onRender();
-			
-			this.onResize(colId, width, oldWidth);
-		},
-		
-		onResize: function(/* colId, newWidth, oldWidth */){},
-		
-		_mousemove: function(e){
-			
-			var cell = this._getCell(e);
-			if(this._resizing){
-				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
-			}
-			if(this._resizing || !cell || this._ismousedown){
-				return;
-			}
-			this._readyToResize = this._isInResizeRange(e);
-			//Forbid anything else to happen when we are resizing a column!
-			var flags = this.grid._eventFlags;
-			flags.onHeaderMouseDown = flags.onHeaderCellMouseDown = this._readyToResize ? this.name : undefined;
+], function(declare, sniff, win, dom, domStyle, domClass, domConstruct, domGeometry, query, _Module){
 
-			html.toggleClass(win.body(), 'dojoxGridxColumnResizing', this._readyToResize);
-			if(this._readyToResize){
-				html.removeClass(cell, 'dojoxGridxHeaderCellOver');
-			}
-		},
-		_docMousemove: function(e){
-			if(!this._resizing){return;}
-			this._updateResizerPosition(e);
-		},
-		_mouseout: function(e){
-			if(this._resizing){return;}
-			this._readyToResize = false;
-			html.removeClass(win.body(), 'dojoxGridxColumnResizing');
-		},
-		
-		_updateResizerPosition: function(e){
-			var delta = e.pageX - this._startX, cell = this._targetCell, g = this.grid;
-			var hs = g.hScroller, h = 0;
-			var left = e.pageX - this._gridX;
-			var minWidth = this.arg('minWidth');
-	
-			if(cell.offsetWidth + delta < minWidth){
-				left = this._startX - this._gridX - (cell.offsetWidth - minWidth); 
-			}
-			var n = hs && hs.container.offsetHeight ? hs.container : g.body.domNode;
-			h = n.parentNode.offsetTop + n.offsetHeight - g.header.domNode.offsetTop;
-			style.set(this._resizer, {
-				top: g.header.domNode.offsetTop + 'px',
-				left: left + 'px',
-				height: h + 'px'
-			});
-			
-		},
-		_showResizer: function(e){
-			if(!this._resizer){
-				this._resizer = html.create('div', {
-					className: 'dojoxGridxColumnResizer'}, 
-					this.grid.domNode, 'last');
-		    	this.connect(this._resizer, 'mouseup', '_mouseup');
-			}
-			this._resizer.style.display = 'block';
-			this._updateResizerPosition(e);
-		},
-		_hideResizer: function(){
-			this._resizer.style.display = 'none';
-		},
-		_mousedown: function(e){
-			//begin resize
-			if(!this._readyToResize){
-				this._ismousedown = true;
-				return;
-			}
-			html.setSelectable(this.grid.domNode, false);
-			document.onselectstart = function () { return false;}
-			this._resizing = true;
-			this._startX = e.pageX;
-			this._gridX = html.position(this.grid.bodyNode).x - this.grid.bodyNode.offsetLeft;
-			this._showResizer(e);
-		},
-		_mouseup: function(e){
-			//end resize
-			this._ismousedown = false;
-			if(!this._resizing){return;}
-			this._resizing = false;
-			this._readyToResize = false;
-			html.removeClass(win.body(), 'dojoxGridxColumnResizing');
-			html.setSelectable(this.grid.domNode, true);
-			document.onselectstart = null;
-			
-			var cell = this._targetCell, delta = e.pageX - this._startX;
-			var w = (sniff('webkit') ? cell.offsetWidth : html.style(cell, 'width')) + delta;
-			var minWidth = this.arg('minWidth');
-			if(w < minWidth){w = minWidth;}
-			this.setWidth(cell.getAttribute('colid'), w);
-			this._hideResizer();
-		},
-		
-		_isInResizeRange: function(e){
-			var cell = this._getCell(e);
-			var x = this._getCellX(e);
-			
-			var detectWidth = this.arg('detectWidth');
-			if(x < detectWidth){
-				this._targetCell = cell.previousSibling;
-				if(!this._targetCell){
-					return false;	//the first cell is not able to be resize
-				}
-				return true;
-			}else if(x > cell.offsetWidth - detectWidth && x <= cell.offsetWidth){
-				this._targetCell = cell;
-				return true;
-			}
-			return false;
-		},
-		
-		_getCellX: function(e){
-			var cell = this._getCell(e);
-			if(!cell){
-				return 100000;
-			}
-			if(/table/i.test(e.target.tagName)){
-				return 0;
-			}
-			var lx = e.offsetX;
-			if(lx == undefined){
-				lx = e.layerX;
-			}
-			if(!/th/i.test(e.target.tagName)){
-				lx += e.target.offsetLeft;
-			}
-			//Firefox seems have problem to get offsetX for TH
-			if(dojo.isFF && /th/i.test(e.target.tagName)){
-				var d = lx - parseInt(cell.parentNode.parentNode.parentNode.style.marginLeft) - cell.offsetLeft;
-				if(d >= 0){lx = d;}
-			}
-			return lx;
-		},
-		
-		_getCell: function(e){
-			var node = e.target;
-			if(!node){return null;}
+	var removeClass = domClass.remove;
+
+	function getCell(e){
+		var node = e.target;
+		if(node){
 			if(/table/i.test(node.tagName)){
-				var t = e.target, m = e.offsetX || e.layerX || 0, i = 0, cells = t.rows[0].cells;
+				var m = e.offsetX || e.layerX || 0,
+					i = 0,
+					cells = node.rows[0].cells;
 				while(m > 0){
 					m -= cells[i].offsetWidth;
 					i++;
 				}
 				return cells[i] || null;
 			}
-			while(node.tagName && node.tagName.toLowerCase() !== 'th'){
+			while(node && node.tagName){
+				if(node.tagName.toLowerCase() == 'th'){
+					return node;
+				}
 				node = node.parentNode;
 			}
-			if(!node.tagName || node.tagName.toLowerCase() !== 'th'){return null;}
-			return node;
 		}
+		return null;
+	}
+
+	function getCellX(e){
+		var target = e.target,
+			cell = getCell(e);
+		if(!cell){
+			return 100000;
+		}
+		if(/table/i.test(target.tagName)){
+			return 0;
+		}
+		var lx = e.offsetX;
+		if(lx == undefined){
+			lx = e.layerX;
+		}
+		if(!/th/i.test(target.tagName)){
+			lx += target.offsetLeft;
+		}
+		//Firefox seems have problem to get offsetX for TH
+		if(sniff('ff') && /th/i.test(target.tagName)){
+			var d = lx - parseInt(cell.parentNode.parentNode.parentNode.style.marginLeft, 10) - cell.offsetLeft;
+			if(d >= 0){
+				lx = d;
+			}
+		}
+		return lx;
+	}
 		
+	return _Module.register(
+	declare(_Module, {
+		name: 'columnResizer',
+
+//        required: ['hScroller'],
+
+		minWidth: 20,	//in px
+
+		detectWidth: 5,
+
+		load: function(args){
+			var t = this,
+				g = t.grid;
+			t.batchConnect(
+				[g.header.innerNode, 'mousemove', '_mousemove'],
+				[g, 'onHeaderMouseOut', '_mouseout'],
+				[g, 'onHeaderMouseDown', '_mousedown', t, t.name],
+				[win.doc, 'mousemove', '_docMousemove'],
+				[win.doc, 'onmouseup', '_mouseup']
+			);
+			t.loaded.callback();
+		},
+
+		getAPIPath: function(){
+			return {
+				columnResizer: this
+			};
+		},
+
+		columnMixin: {
+			setWidth: function(width){
+				this.grid.columnResizer.setWidth(this.id, width);
+			}
+		},
+
+		//Public---------------------------------------------------------------------
+		setWidth: function(colId, width){
+			var t = this,
+				g = t.grid,
+				minWidth = t.arg('minWidth'),
+				oldWidth;
+			width = parseInt(width, 10);
+			if(width < minWidth){
+				width = minWidth;
+			}
+			g._columnsById[colId].width = width + 'px';
+			query('[colid="' + colId + '"]', g.domNode).forEach(function(cell){
+				if(!oldWidth){
+					oldWidth = sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width');
+				}
+				cell.style.width = width + 'px';
+			});
+			g.vLayout.reLayout();
+			g.header.onRender();
+			g.body.onRender();
+			
+			t.onResize(colId, width, oldWidth);
+		},
+		
+		//Event--------------------------------------------------------------
+		onResize: function(/* colId, newWidth, oldWidth */){},
+		
+		//Private-----------------------------------------------------------
+		_mousemove: function(e){
+			var t = this,
+				cell = getCell(e),
+				flags = t.grid._eventFlags;
+			if(cell){
+				if(t._resizing){
+					removeClass(cell, 'gridxHeaderCellOver');
+				}
+				if(t._resizing || !cell || t._ismousedown){
+					return;
+				}
+				var ready = t._readyToResize = t._isInResizeRange(e);
+				//Forbid anything else to happen when we are resizing a column!
+				flags.onHeaderMouseDown = flags.onHeaderCellMouseDown = ready ? t.name : undefined;
+
+				domClass.toggle(win.body(), 'gridxColumnResizing', ready);
+				if(ready){
+					removeClass(cell, 'gridxHeaderCellOver');
+				}
+			}
+		},
+
+		_docMousemove: function(e){
+			if(this._resizing){
+				this._updateResizerPosition(e);
+			}
+		},
+
+		_mouseout: function(e){
+			if(!this._resizing){
+				this._readyToResize = 0;	//0 as false
+				removeClass(win.body(), 'gridxColumnResizing');
+			}
+		},
+		
+		_updateResizerPosition: function(e){
+			var t = this,
+				delta = e.pageX - t._startX,
+				cell = t._targetCell,
+				g = t.grid,
+				hs = g.hScroller,
+				h = 0,
+				n,
+				left = e.pageX - t._gridX,
+				minWidth = t.arg('minWidth');
+	
+			if(cell.offsetWidth + delta < minWidth){
+				left = t._startX - t._gridX - cell.offsetWidth + minWidth;
+			}
+			n = hs && hs.container.offsetHeight ? hs.container : g.bodyNode;
+			h = n.parentNode.offsetTop + n.offsetHeight - g.header.domNode.offsetTop;
+			domStyle.set(t._resizer, {
+				top: g.header.domNode.offsetTop + 'px',
+				left: left + 'px',
+				height: h + 'px'
+			});
+		},
+
+		_showResizer: function(e){
+			var t = this;
+			if(!t._resizer){
+				t._resizer = domConstruct.create('div', {
+					className: 'gridxColumnResizer'}, 
+					t.grid.domNode, 'last');
+		    	t.connect(t._resizer, 'mouseup', '_mouseup');
+			}
+			t._resizer.style.display = 'block';
+			t._updateResizerPosition(e);
+		},
+
+		_hideResizer: function(){
+			this._resizer.style.display = 'none';
+		},
+
+		_mousedown: function(e){
+			//begin resize
+			var t = this,
+				bn = t.grid.bodyNode;
+			if(!t._readyToResize){
+				t._ismousedown = 1;	//1 as true
+				return;
+			}
+			dom.setSelectable(t.grid.domNode, false);
+			win.doc.onselectstart = function(){
+				return false;
+			};
+			t._resizing = 1;	//1 as true
+			t._startX = e.pageX;
+			t._gridX = domGeometry.position(bn).x - bn.offsetLeft;
+			t._showResizer(e);
+		},
+
+		_mouseup: function(e){
+			//end resize
+			var t = this;
+			t._ismousedown = 0;	//0 as false
+			if(t._resizing){
+				t._resizing = 0;	//0 as false
+				t._readyToResize = 0;	//0 as false
+				removeClass(win.body(), 'gridxColumnResizing');
+				dom.setSelectable(t.grid.domNode, true);
+				win.doc.onselectstart = null;
+				
+				var cell = t._targetCell,
+					delta = e.pageX - t._startX,
+					w = (sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width')) + delta,
+					minWidth = t.arg('minWidth');
+				if(w < minWidth){
+					w = minWidth;
+				}
+				t.setWidth(cell.getAttribute('colid'), w);
+				t._hideResizer();
+			}
+		},
+		
+		_isInResizeRange: function(e){
+			var t = this,
+				cell = getCell(e),
+				x = getCellX(e),
+				detectWidth = t.arg('detectWidth');
+			if(x < detectWidth){
+				//If !t._targetCell, the first cell is not able to be resize
+				return !!(t._targetCell = cell.previousSibling);
+			}else if(x > cell.offsetWidth - detectWidth && x <= cell.offsetWidth){
+				t._targetCell = cell;
+				return 1;	//1 as true
+			}
+			return 0;	//0 as false
+		}
 	}));
 });

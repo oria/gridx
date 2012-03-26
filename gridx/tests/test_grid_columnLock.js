@@ -16,14 +16,16 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			//modules.VirtualVScroller,
+			modules.VirtualVScroller,
 			{
 				moduleClass: modules.ColumnLock,
 				count: 1
 			},
 			modules.ExtendedSelectCell,
 			modules.Edit,
-			modules.NestedSort
+//			modules.NestedSort,
+			modules.ColumnResizer
+			
 		]
 	});
 	grid.placeAt('gridContainer');

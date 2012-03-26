@@ -1,20 +1,20 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
-	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/aspect",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-style",
 	"dojo/keys",
 	"../core/_Module",
 	"../util"
-], function(declare, query, array, domConstruct, domClass, domStyle, keys, _Module, util){
+], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, keys, _Module, util){
 
 	return _Module.register(
 	declare(_Module, {
 		name: 'rowHeader',
-
-		required: ['hLayout', 'body'],
 
 		getAPIPath: function(){
 			return {
@@ -24,45 +24,59 @@ define([
 
 		constructor: function(){
 			this.headerNode = domConstruct.create('div', {
-				'class': 'dojoxGridxRowHeaderHeader',
+				'class': 'gridxRowHeaderHeader',
 				innerHTML: ['<table border="0" cellspacing="0" cellpadding="0" style="width: ', 
 					this.arg('width'), 
-					';"><tr><th class="dojoxGridxRowHeaderHeaderCell" tabindex="-1"></th></tr></table>'
+					';"><tr><th class="gridxRowHeaderHeaderCell" tabindex="-1"></th></tr></table>'
 				].join('')
 			});
 			this.bodyNode = domConstruct.create('div', {
-				'class': 'dojoxGridxRowHeaderBody'
+				'class': 'gridxRowHeaderBody'
 			});
 		},
 
 		destroy: function(){
 			this.inherited(arguments);
+			this._b.remove();
 			domConstruct.destroy(this.headerNode);
 			domConstruct.destroy(this.bodyNode);
 		},
 
 		preload: function(){
-			var g = this.grid, w = this.arg('width');
+			var t = this,
+				rhhn = t.headerNode,
+				rhbn = t.bodyNode,
+				g = t.grid,
+				body = g.body,
+				w = t.arg('width');
 			//register events
 			g._initEvents(['RowHeaderHeader', 'RowHeaderCell'], g._eventNames);
 			//modify header
-			g.header.domNode.appendChild(this.headerNode);
-			this.headerNode.style.width = w;
-			this.headerCellNode = query('th', this.headerNode)[0];
-			g._connectEvents(this.headerNode, '_onHeaderMouseEvent', this);
+			g.header.domNode.appendChild(rhhn);
+			rhhn.style.width = w;
+			t.headerCellNode = query('th', rhhn)[0];
+			g._connectEvents(rhhn, '_onHeaderMouseEvent', t);
 			//modify body
-			g.mainNode.appendChild(this.bodyNode);
-			this.bodyNode.style.width = w;
-			g.hLayout.register(null, this.bodyNode);
-			this.batchConnect(
-				[g.body, 'onRender', 'update'],
-				[g.body, 'renderRows', 'update'],
-				[g.bodyNode, 'onscroll', '_updateBody'],
+			g.mainNode.appendChild(rhbn);
+			rhbn.style.width = w;
+			g.hLayout.register(null, rhbn);
+			t.batchConnect(
+				[body, 'onRender', '_onRendered'],
+				[body, 'onAfterRow', '_onAfterRow'],
+				[body, 'onUnrender', '_onUnrender'],
+				[g.bodyNode, 'onscroll', '_onScroll'],
+				[rhbn, 'onscroll', function(){
+					g.bodyNode.scrollTop = rhbn.scrollTop;
+				}],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
-				[g, 'onRowMouseOut', '_onRowMouseOver']
+				[g, 'onRowMouseOut', '_onRowMouseOver'],
+				[g, '_onResizeEnd', '_onResize'],
+				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']
 			);
-			g._connectEvents(this.bodyNode, '_onBodyMouseEvent', this);
-			this._initFocus();
+			//TODO: need to organize this into connect/disconnect system
+			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
+			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
+			t._initFocus();
 		},
 
 		//Public--------------------------------------------------------------------------
@@ -70,44 +84,79 @@ define([
 
 		onMoveToRowHeaderCell: function(){},
 
-		headerProvider: function(){
-			return '';
-		},
+//        headerProvider: function(){
+//            return '';
+//        },
 
-		cellProvider: function(){
-			return '';
-		},
-
-		update: function(){
-			this.headerCellNode.innerHTML = this.headerProvider();
-			this._updateBody();
-		},
+//        cellProvider: function(){
+//            return '';
+//        },
 
 		//Private-------------------------------------------------------
-		_updateBody: function(){
-			var sb = [];
-			array.forEach(this.grid.bodyNode.childNodes, function(node){
-				sb.push(this._buildRow(node));
-			}, this);
-			this.bodyNode.innerHTML = sb.join('');
-			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
-			if(this.grid.focus && this.grid.focus.currentArea() == 'rowHeader'){
-				this._focusRow(this.grid.body._focusCellRow);
+		_onRenderRows: function(start, count, position){
+			if(count > 0){
+				var nd = this.bodyNode,
+					str = this._buildRows(start, count);
+				if(position == 'top'){
+					domConstruct.place(str, nd, 'first');
+				}else if(position == 'bottom'){
+					domConstruct.place(str, nd, 'last');
+				}else{
+					nd.scrollTop = 0;
+					nd.innerHTML = str;
+				}
 			}
 		},
 
-		_buildRow: function(node){
-			var attrs = [node.getAttribute('rowid'), node.getAttribute('visualindex'), 
-				node.getAttribute('rowindex'), node.getAttribute('parentid')];
-			return ['<div class="dojoxGridxRowHeaderRow" rowid="', attrs[0],
-				'" parentid="', attrs[3],
-				'" rowindex="', attrs[2],
-				'" visualindex="', attrs[1],
-				'"><table border="0" cellspacing="0" cellpadding="0" style="height: ', domStyle.get(node, 'height'),
-				'px;"><tr><td class="dojoxGridxRowHeaderCell" tabindex="-1">',
-				this.cellProvider.apply(this, attrs),
-				'</td></tr></table></div>'
-			].join('');
+		_onAfterRow: function(rowInfo, rowCache){
+			var t = this;
+			var n = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
+				bn = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
+				nt = n.firstChild,
+				cp = t.arg('cellProvider');
+			nt.style.height = bn.offsetHeight + 'px';
+			n.setAttribute('rowid', rowInfo.rowId);
+			n.setAttribute('rowindex', rowInfo.rowIndex);
+			n.setAttribute('parentId', rowInfo.parentId);
+			if(cp){
+				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, rowInfo);
+			}
+		},
+
+		_onRendered: function(start, count){
+			var t = this, hp = t.arg('headerProvider');
+			if(hp){
+				t.headerCellNode.innerHTML = hp();
+			}
+			t._onScroll();
+		},
+
+		_onUnrender: function(id){
+			var n = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode)[0];
+			if(n){
+				domConstruct.destroy(n);
+			}
+		},
+
+		_onScroll: function(){
+			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
+		},
+
+		_onResize: function(){
+			for(var bn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
+				bn && n;
+				bn = bn.nextSibling, n = n.nextSibling){
+				n.firstChild.style.height = bn.firstChild.offsetHeight + 'px';
+			}
+		},
+
+		_buildRows: function(start, count){
+			var sb = [];
+			for(var i = 0; i < count; ++i){
+				sb.push('<div class="gridxRowHeaderRow" visualindex="', start + i,
+					'"><table border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" tabindex="-1"></td></tr></table></div>');
+			}
+			return sb.join('');
 		},
 
 		//Events
@@ -144,10 +193,10 @@ define([
 
 		_decorateBodyEvent: function(e){
 			var node = e.target || e.originalTarget;
-			while(node && node !== this.bodyNode){
-				if(domClass.contains(node, 'dojoxGridxRowHeaderCell')){
+			while(node && node != this.bodyNode){
+				if(domClass.contains(node, 'gridxRowHeaderCell')){
 					e.isRowHeader = true;
-				}else if(node.tagName.toLowerCase() === 'div' && domClass.contains(node, 'dojoxGridxRowHeaderRow')){
+				}else if(node.tagName.toLowerCase() === 'div' && domClass.contains(node, 'gridxRowHeaderRow')){
 					e.rowId = node.getAttribute('rowid');
 					e.parentId = node.getAttribute('parentid');
 					e.rowIndex = parseInt(node.getAttribute('rowindex'), 10);
@@ -159,27 +208,28 @@ define([
 		},
 
 		_onRowMouseOver: function(e){
-			var rowNode = query('[rowid="' + e.rowId + '"].dojoxGridxRowHeaderRow', this.bodyNode)[0];
+			var rowNode = query('[rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
 			if(rowNode){
-				domClass.toggle(rowNode, "dojoxGridxRowOver", e.type.toLowerCase() == 'mouseover');
+				domClass.toggle(rowNode, "gridxRowOver", e.type.toLowerCase() == 'mouseover');
 			}
 		},
 
 		//Focus--------------------------------------------------------
 		_initFocus: function(){
-			var focus = this.grid.focus;
+			var t = this,
+				focus = t.grid.focus;
 			if(focus){
 				focus.registerArea({
 					name: 'rowHeader',
 					priority: 0.9,
-					focusNode: this.bodyNode,
-					scope: this,
-					doFocus: this._doFocus,
-					onFocus: this._onFocus,
-					doBlur: this._blur,
-					onBlur: this._blur,
+					focusNode: t.bodyNode,
+					scope: t,
+					doFocus: t._doFocus,
+					onFocus: t._onFocus,
+					doBlur: t._blur,
+					onBlur: t._blur,
 					connects: [
-						this.connect(this.bodyNode, 'onkeydown', '_onKeyDown')
+						t.connect(t.bodyNode, 'onkeydown', '_onKeyDown')
 					]
 				});
 			}
@@ -193,11 +243,12 @@ define([
 		},
 
 		_onFocus: function(evt){
-			var node = evt.target;
-			while(node != this.bodyNode){
-				if(domClass.contains(node, 'dojoxGridxRowHeaderRow')){
-					var r = this.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
-					this._focusRow(r);
+			var t = this,
+				node = evt.target;
+			while(node != t.bodyNode){
+				if(domClass.contains(node, 'gridxRowHeaderRow')){
+					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
+					t._focusRow(r);
 					return true;
 				}
 				node = node.parentNode;
@@ -205,34 +256,36 @@ define([
 		},
 
 		_focusRow: function(visIndex){
-			this._blur();
-			var node = query('[visualindex="' + visIndex + '"] .dojoxGridxRowHeaderCell', this.bodyNode)[0];
-			node = node || this.bodyNode.firstChild;
+			var t = this,
+				node = query('[visualindex="' + visIndex + '"] .gridxRowHeaderCell', t.bodyNode)[0];
+			t._blur();
+			node = node || t.bodyNode.firstChild;
 			if(node){
-				domClass.add(node, 'dojoxGridxCellFocus');
+				domClass.add(node, 'gridxCellFocus');
 				node.focus();
 			}
 			return node;
 		},
 
 		_blur: function(){
-			query('.dojoxGridxCellFocus', this.bodyNode).forEach(function(node){
-				domClass.remove(node, 'dojoxGridxCellFocus');
+			query('.gridxCellFocus', this.bodyNode).forEach(function(node){
+				domClass.remove(node, 'gridxCellFocus');
 			});
 			return true;
 		},
 
 		_onKeyDown: function(evt){
-			if(this.grid.focus.currentArea() == 'rowHeader' && 
+			var t = this, g = t.grid;
+			if(g.focus.currentArea() == 'rowHeader' && 
 					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
 				util.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
-					body = this.grid.body, _this = this,
+					body = g.body,
 					r = body._focusCellRow + step;
 				body._focusCellRow = r = r < 0 ? 0 : (r >= body.visualCount ? body.visualCount - 1 : r);
-				this.grid.vScroller.scrollToRow(r).then(function(){
-					_this._focusRow(r);
-					_this.onMoveToRowHeaderCell(r, evt);
+				g.vScroller.scrollToRow(r).then(function(){
+					t._focusRow(r);
+					t.onMoveToRowHeaderCell(r, evt);
 				});
 			}
 		}

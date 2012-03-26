@@ -23,31 +23,33 @@ define([
 		},
 
 		postCreate: function(){
-			var p = this.pagination, m = this.module.model;
-			this.connect(p, 'onSwitchPage', '_onSwitchPage');
-			this.connect(p, 'onChangePageSize', '_onChangePageSize');
-			this.connect(m, 'onSizeChange', '_onSwitchPage');
-			this.connect(m, 'onMarked', '_createDescription');
-			this.connect(m, 'onMarkRemoved', '_createDescription');
-			this._initFocus();
-			this.refresh();
+			var t = this,
+				c = 'connect',
+				p = t.pagination,
+				m = t.module.model;
+			t[c](p, 'onSwitchPage', '_onSwitchPage');
+			t[c](p, 'onChangePageSize', '_onChangePageSize');
+			t[c](m, 'onSizeChange', '_onSwitchPage');
+			t[c](m, 'onMarked', '_createDescription');
+			t[c](m, 'onMarkRemoved', '_createDescription');
+			t._initFocus();
+			t.refresh();
 		},
 
 		_toggleNode: function(cls, toShow){
-			var node = query('.' + cls, this.domNode)[0];
-			node.style.display = toShow ? '' : 'none';
+			query('.' + cls, this.domNode)[0].style.display = toShow ? '' : 'none';
 			return toShow;
 		},
 
 		_createDescription: function(){
-			var mod = this.module;
-			if(this._toggleNode('dojoxGridxPagerDescription', mod._exist(this.position, 'description'))){
+			var t = this, mod = t.module;
+			if(t._toggleNode('gridxPagerDescription', mod._exist(t.position, 'description'))){
 				var g = mod.grid,
 					selectRow = g.select && g.select.row,
 					selected = selectRow ? selectRow.getSelected().length : 0, 
 					tpl = selectRow ? mod.arg('descriptionSelectionTemplate', nls.summaryWithSelection) : 
 						mod.arg('descriptionTemplate', nls.summary);
-				this._descContainer.innerHTML = string.substitute(tpl, [g.model.size(), selected]);
+				t._descContainer.innerHTML = string.substitute(tpl, [g.model.size(), selected]);
 			}
 		}
 	});

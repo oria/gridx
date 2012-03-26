@@ -1,13 +1,14 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/connect",
 	"../core/_Module",
-	"dojo/_base/html",
+	"dojo/dom-class",
 	"dojo/keys",
 	"dojo/_base/event",
 	"dojo/_base/lang",
 	"dijit/registry",
 	"dijit/Menu"
-], function(declare, _Module, html, keys, event, lang, dijit, Menu){
+], function(declare, connect, _Module, domClass, keys, event, lang, registry, Menu){
 
 /*=====
 	var _MenuArgs = function(){
@@ -59,23 +60,25 @@ define([
 			//		The menu to be binded.
 			//args: __MenuArgs
 			//		Indicates how to bind the menu
-			var t = args.hookPoint.toLowerCase(),
-				type = args.selected ? t + '-selected' : t,
-				evtName = this._evtMap[t],
-				m = this._menus[type] = this._menus[type] || {},
-				showMenu = lang.partial(this._showMenu, type);
-			this.disconnect(m.open);
-			this.disconnect(m.close);
-			m.menu = dijit.byId(menu);
+			var t = this,
+				g = t.grid,
+				hookPoint = args.hookPoint.toLowerCase(),
+				type = args.selected ? hookPoint + '-selected' : hookPoint,
+				evtName = t._evtMap[hookPoint],
+				m = t._menus[type] = t._menus[type] || {},
+				showMenu = lang.partial(t._showMenu, type);
+			connect.disconnect(m.open);
+			connect.disconnect(m.close);
+			m.menu = registry.byId(menu);
 			if(evtName){
-				m.open = this.connect(this.grid, evtName, showMenu);
-			}else if(t == 'body'){
-				m.open = this.connect(this.grid.bodyNode, 'oncontextmenu', showMenu);
+				m.open = t.connect(g, evtName, showMenu);
+			}else if(hookPoint == 'body'){
+				m.open = t.connect(g.bodyNode, 'oncontextmenu', showMenu);
 			}else{
-				m.open = this.connect(this.grid.domNode, 'oncontextmenu', showMenu);
+				m.open = t.connect(g.domNode, 'oncontextmenu', showMenu);
 			}
-			m.close = this.connect(m.menu, 'onClose', function(){
-				this._mutex = 0;
+			m.close = t.connect(m.menu, 'onClose', function(){
+				t._mutex = 0;
 			});
 		},
 
@@ -84,12 +87,13 @@ define([
 			//		Unbind a menu from grid.
 			//menu: dijit.Menu | ID
 			//		The menu to be unbinded.
-			var type, menus = this._menus;
-			menu = dijit.byId(menu);
+			var type, menus = this._menus, m;
+			menu = registry.byId(menu);
 			for(type in menus){
-				if(menus[type].menu == menu){
-					this.disconnect(menus[type].open);
-					this.disconnect(menus[type].close);
+				m = menus[type];
+				if(m.menu == menu){
+					connect.disconnect(m.open);
+					connect.disconnect(m.close);
 					delete menus[type];
 					return;
 				}
@@ -105,25 +109,28 @@ define([
 		},
 
 		_showMenu: function(type, e){
-			if(!this._mutex && this._menus[type].menu){
-				var g = this.grid,
+			var t = this, menus = t._menus;
+			if(!t._mutex && menus[type].menu){
+				var g = t.grid,
+					rid = e.rowId,
+					cid = e.columnId,
 					isRow = !type.indexOf('row'),
 					isCell = !type.indexOf('cell'),
 					isHeaderCell = !type.indexOf('headercell'),
 					isSelectedType = type.indexOf('-') > 0,
-					selected = !!((isCell && html.hasClass(e.cellNode, "dojoxGridxCellSelected")) ||
-						(isHeaderCell && html.hasClass(g.header.getHeaderNode(e.columnId), "dojoxGridxColumnSelected")) ||
-						(isRow && html.hasClass(g.body.getRowNode({rowId: e.rowId}), "dojoxGridxRowSelected")));
-				if(isSelectedType == selected || (!isSelectedType && selected && !this._menus[type + '-selected'])){
-					this.context = {
+					selected = !!((isCell && domClass.contains(e.cellNode, "gridxCellSelected")) ||
+						(isHeaderCell && domClass.contains(g.header.getHeaderNode(cid), "gridxColumnSelected")) ||
+						(isRow && domClass.contains(g.body.getRowNode({rowId: rid}), "gridxRowSelected")));
+				if(isSelectedType == selected || (!isSelectedType && selected && !menus[type + '-selected'])){
+					t.context = {
 						grid: g,
-						column: isHeaderCell ? g.column(e.columnId, true) : undefined,
-						row: isRow ? g.row(e.rowId, true) : undefined,
-						cell: isCell ? g.cell(e.rowId, e.columnId, true) : undefined
+						column: isHeaderCell && g.column(cid, 1),
+						row: isRow && g.row(rid, 1),
+						cell: isCell && g.cell(rid, cid, 1)
 					};
 					event.stop(e);
-					this._mutex = 1;
-					this._menus[type].menu._openMyself({
+					t._mutex = 1;
+					menus[type].menu._openMyself({
 						target: e.target, 
 						coords: e.keyCode != keys.F10 && "pageX" in e ? {x: e.pageX, y: e.pageY} : null
 					});
@@ -132,4 +139,3 @@ define([
 		}
 	}));
 });
-
