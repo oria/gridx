@@ -1,0 +1,463 @@
+/*
+@import "http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/resources/dojo.css";
+@import "http://ajax.googleapis.com/ajax/libs/dojo/1.4/dijit/themes/nihilo/nihilo.css";
+*/
+html, body {
+	height: 100%; width: 100%; padding: 0; border: 0;
+	font-family: Helvetica, Arial, sans-serif !important;
+}
+#main { height: 100%; width: 100%; border: 0; }
+#header { margin: 0px; }
+#loader { 
+	padding:0;
+	margin:0;
+	position:absolute; 
+	top:0; left:0; 
+	width:100%; height:100%;  
+	background:#efefef;
+	opacity: 0.98; 
+	z-index:999;
+	vertical-align:middle;
+}
+#loaderInner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 32px;
+	height: 32px;
+	margin-top: -16px;
+	margin-left: -16px;
+	background-image: url('images/loader_lg.gif');
+	background-repeat: no-repeat;
+}
+#printBlock { display: none; }
+hr.spacer { border:0; background-color:#ededed; width:80%; height:1px;}
+/*  Override dijit.layout.ContentPane's loadingMessage style. */
+#content span.dijitContentPaneLoading {
+	position: absolute;
+	display: block;
+	text-indent: -5000px;
+	top: 50%;
+	left: 50%;
+	background-repeat: no-repeat;
+	/* large loader image */
+	/*
+	width: 50px;
+	height: 50px;
+	margin-top: -25px;
+	margin-left: -25px;
+	background-image: url("/images/loader_lg.gif");
+	*/
+	/* medium loader image */
+	width: 24px;
+	height: 24px;
+	margin-top: -12px;
+	margin-left: -12px;
+	background-image: url("images/loader_md.gif");
+	/* small loader image */
+	/*
+	width: 16px;
+	height: 16px;
+	margin-top: -8px;
+	margin-left: -8px;
+	background-image: url("images/loader_sm.gif");
+	*/
+}
+
+/* Added for IC */
+a.jsdoc-link { 
+    margin-left: 4px;
+    color: #47a;
+}
+
+h2.jsdoc-summary-heading {
+	cursor: pointer;
+    	/* Removed for IC : background-position: -16px 0; */
+    	border-bottom: 1px solid #e5e3cf;
+
+}
+h2.jsdoc-summary-heading span  {
+	display: inline-block;
+	/* Removed for IC : width: 16px; */
+    width: 100%;
+	height: 16px;
+	/* Removed for IC : background-image: url("icons/16x16/collapse-sprite.png"); */
+	/* Removed for IC : background-repeat: no-repeat; */
+    
+}
+h2.jsdoc-summary-heading span.closed {
+	background-position: 0 0;
+}
+
+.arrayIcon{ background-image:url('icons/16x16/array.png'); }
+.booleanIcon{ background-image:url('icons/16x16/boolean.png'); }
+.constructorIcon{ background-image:url('icons/16x16/constructor.png'); }
+.dateIcon{ background-image:url('icons/16x16/date.png'); }
+.domnodeIcon{ background-image:url('icons/16x16/domnode.png'); }
+.errorIcon{ background-image:url('icons/16x16/error.png'); }
+.functionIcon{ background-image:url('icons/16x16/function.png'); }
+.namespaceIcon{ background-image:url('icons/16x16/namespace.png'); }
+.numberIcon{ background-image:url('icons/16x16/number.png'); }
+.objectIcon{ background-image:url('icons/16x16/object.png'); }
+.regexpIcon{ background-image:url('icons/16x16/regexp.png'); }
+.singletonIcon{ background-image:url('icons/16x16/singleton.png'); }
+.stringIcon{ background-image:url('icons/16x16/string.png'); }
+
+.arrayIcon16{ background-image:url('icons/16x16/array.png'); }
+.booleanIcon16{ background-image:url('icons/16x16/boolean.png'); }
+.constructorIcon16{ background-image:url('icons/16x16/constructor.png'); }
+.dateIcon16{ background-image:url('icons/16x16/date.png'); }
+.domnodeIcon16{ background-image:url('icons/16x16/domnode.png'); }
+.errorIcon16{ background-image:url('icons/16x16/error.png'); }
+.functionIcon16{ background-image:url('icons/16x16/function.png'); }
+.namespaceIcon16{ background-image:url('icons/16x16/namespace.png'); }
+.numberIcon16{ background-image:url('icons/16x16/number.png'); }
+.objectIcon16{ background-image:url('icons/16x16/object.png'); }
+.regexpIcon16{ background-image:url('icons/16x16/regexp.png'); }
+.singletonIcon16{ background-image:url('icons/16x16/singleton.png'); }
+.stringIcon16{ background-image:url('icons/16x16/string.png'); }
+
+.arrayIcon24{ background-image:url('icons/24x24/array.png'); }
+.booleanIcon24{ background-image:url('icons/24x24/boolean.png'); }
+.constructorIcon24{ background-image:url('icons/24x24/constructor.png'); }
+.dateIcon24{ background-image:url('icons/24x24/date.png'); }
+.domnodeIcon24{ background-image:url('icons/24x24/domnode.png'); }
+.errorIcon24{ background-image:url('icons/24x24/error.png'); }
+.functionIcon24{ background-image:url('icons/24x24/function.png'); }
+.namespaceIcon24{ background-image:url('icons/24x24/namespace.png'); }
+.numberIcon24{ background-image:url('icons/24x24/number.png'); }
+.objectIcon24{ background-image:url('icons/24x24/object.png'); }
+.regexpIcon24{ background-image:url('icons/24x24/regexp.png'); }
+.singletonIcon24{ background-image:url('icons/24x24/singleton.png'); }
+.stringIcon24{ background-image:url('icons/24x24/string.png'); }
+
+
+/* Updated for IC : reduced 36px images to 24px */
+.arrayIcon36{ background-image:url('icons/24x24/array.png'); }
+.booleanIcon36{ background-image:url('icons/24x24/boolean.png'); }
+.constructorIcon36{ background-image:url('icons/24x24/constructor.png'); }
+.dateIcon36{ background-image:url('icons/24x24/date.png'); }
+.domnodeIcon36{ background-image:url('icons/24x24/domnode.png'); }
+.errorIcon36{ background-image:url('icons/24x24/error.png'); }
+.functionIcon36{ background-image:url('icons/24x24/function.png'); }
+.namespaceIcon36{ background-image:url('icons/24x24/namespace.png'); }
+.numberIcon36{ background-image:url('icons/24x24/number.png'); }
+.objectIcon36{ background-image:url('icons/24x24/object.png'); }
+.regexpIcon36{ background-image:url('icons/24x24/regexp.png'); }
+.singletonIcon36{ background-image:url('icons/24x24/singleton.png'); }
+.stringIcon36{ background-image:url('icons/24x24/string.png'); }
+
+/* jsdoc styling */
+a.inline-link { color: #47a; }
+
+h1.arrayIcon36,
+h1.booleanIcon36,
+h1.constructorIcon36,
+h1.dateIcon36,
+h1.domnodeIcon36,
+h1.errorIcon36,
+h1.functionIcon36,
+h1.namespaceIcon36,
+h1.numberIcon36,
+h1.objectIcon36,
+h1.regexpIcon36,
+h1.singletonIcon36,
+h1.stringIcon36 {
+	padding-left: 40px;
+	background-repeat: no-repeat;
+	min-height: 36px;
+}
+
+span.arrayIcon,
+span.booleanIcon,
+span.constructorIcon,
+span.dateIcon,
+span.domnodeIcon,
+span.errorIcon,
+span.functionIcon,
+span.namespaceIcon,
+span.numberIcon,
+span.objectIcon,
+span.regexpIcon,
+span.singletonIcon,
+span.stringIcon {
+	display: inline-block;
+	padding-left: 20px;
+	background-repeat: no-repeat;
+}
+
+div.jsdoc-toolbar {
+    margin: -5px -5px 0 -5px;
+	padding: 4px 4px 0 4px;
+	background-color: #f2f2f2;
+	border-bottom: 1px solid #e5e3cf;
+	height: 28px;
+
+}
+div.jsdoc-toolbar span.jsdoc-permalink {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+div.jsdoc-toolbar span.trans-icon {
+	position: absolute;
+	top: 4px;
+	display: block;
+	width: 24px; 
+	height: 24px;
+	cursor: pointer;
+}
+div.jsdoc-toolbar span.jsdoc-private {
+	right: 28px;
+}
+div.jsdoc-toolbar span.jsdoc-public,
+div.jsdoc-toolbar span.jsdoc-inherited {
+	right: 4px;
+}
+div.jsdoc-toolbar label {
+	position: absolute;
+	top: 10px;
+	right: 60px;
+}
+div.jsdoc-toolbar span.off {
+	opacity: 0.25;
+}
+
+h1.jsdoc-title{ 
+	/* Removed for IC : font-size: 2.5em; */
+    font-size: 2em;
+	margin: 1.35em 0 ;
+	font-weight: normal;
+}
+h1.jsdoc-title img {
+	float: left;
+	padding-right: 0.25em;
+}
+
+div.jsdoc-prototype,
+div.jsdoc-mixins,
+.jsdoc-inheritance {
+	font-size: 0.8em;
+    margin-left: 4px;
+}
+div.jsdoc-prototype a,
+div.jsdoc-mixins a,
+.jsdoc-inheritance a {
+	text-decoration: none;
+}
+div.jsdoc-prototype a:hover,
+div.jsdoc-mixins a:hover,
+.jsdoc-inheritance a:hover {
+	text-decoration: underline;
+}
+span.jsdoc-inheritance {
+	display: inline-block;
+	margin-left: 1.5em;
+	font-weight: normal;
+}
+div.jsdoc-require,
+span.jsdoc-comment-type,
+span.jsdoc-return-type {
+	font-family: Consolas, Courier New, Courier, monospace;
+	font-weight: normal;
+}
+span.parameters{ font-weight: normal; }
+span.jsdoc-comment-type,
+span.jsdoc-return-type {
+	color: #963;
+}
+div.jsdoc-require {
+	margin: 1em 0;
+}
+div.jsdoc-full-summary {
+	margin: 1em 0;
+}
+
+div.jsdoc-children {
+	padding-bottom: 1.5em;
+}
+
+div.jsdoc-children div.jsdoc-field-list h2,
+div.jsdoc-children div.jsdoc-fields h2 {
+	font-size: 1.25em;
+	border-bottom: 1px solid #e5e3cf;
+	/* Removed for IC :  margin: 1.5em -5px 0.5em -5px;*/
+	padding: 0.25em;
+}
+div.jsdoc-children div.jsdoc-fields h2 {
+	font-weight: normal;
+	font-size: 1.5em;
+	/* Removed for IC : background-color: #f2f2f2; */
+}
+
+div.jsdoc-children div.jsdoc-field-list div.jsdoc-field {
+	margin: 0.5em 0;
+	clear: both;
+}
+div.jsdoc-children div.jsdoc-fields div.jsdoc-field {
+	padding: 1em 0;
+	clear: both;
+	border-bottom: 1px dotted #ccc;
+}
+div.jsdoc-children .odd {
+	background-color: #f8f8f8;
+}
+
+div.jsdoc-field div.jsdoc-title {
+	font-weight: bold;
+    /* Added for IC */
+    margin-left: 4px;
+}
+
+div.jsdoc-field div.jsdoc-title span img {
+	/* Removed for IC : float: left; */
+	padding-right: 4px;
+
+}
+
+div.jsdoc-field div.jsdoc-return-type {
+	font-size: 0.95em;
+	margin-bottom: 1em;
+	padding: 0.25em;
+}
+div.jsdoc-field .jsdoc-return-description {
+	font-style: italic;
+}
+div.jsdoc-field div.jsdoc-summary {
+	padding-left: 28px;
+	margin: 0.25em 0 1em 0;
+}
+
+table.jsdoc-parameters {
+	font-size: 1em;
+	width: auto;
+	margin: 1em;
+	border-collapse: collapse;
+}
+table.jsdoc-parameters th,
+table.jsdoc-parameters td {
+	padding: 0.25em 0.5em;
+	text-align: left;
+	vertical-align: top;
+	border: 1px solid #999;
+}
+table.jsdoc-parameters th {
+	background-color: #eee;
+	font-weight: bold;
+}
+table.jsdoc-parameters td {
+	background-color: #fff;
+}
+table.jsdoc-parameters td.jsdoc-param-description p {
+	margin: 0;
+}
+
+div.jsdoc-fields div.jsdoc-example {
+	margin-top: 1em;
+    /* Added for IC */
+    margin-left: 4px;
+}
+
+/* A redo of the summary lists as UL/LI elements */
+div.jsdoc-summary-list ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+div.jsdoc-summary-list ul li {
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	margin: 0.5em 0;
+}
+div.jsdoc-summary-list ul li a {
+	font-weight: bold;
+}
+div.jsdoc-summary-list ul li span {
+	font-size: 0.9em;
+}
+div.jsdoc-summary-list ul li span.parameters {
+	font-size: 1em;
+}
+div.jsdoc-summary-list ul li span.jsdoc-returns {
+	font-weight: bold;
+}
+
+
+/* ibm_diagram custom styles start */
+.sidebar {
+  float:left;
+  border-right: 2px solid #dedede;
+}
+.main-content {
+  float:left; 
+    padding-left: 50px;
+    padding-left: 8px;
+    width: 40%;   /* This is to solve a problem where the whole main-content div colapses below the sidebar if some of the content is too long */ 
+}
+
+.main-content-old {
+  /* Removed for IC : float:left; */
+    /* Updated for IC : padding-left: 50px; */
+    padding-left: 8px; 
+  /* width: 40%; */  /* This is to solve a problem where the whole main-content div colapses below the sidebar if some of the content is too long */	
+}
+
+#treeHeader {
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #dedede;
+    padding: 2px 2px 2px 10px;
+    position: relative;
+    overflow: hidden;
+    font-size: large;
+}
+
+#content {
+	width:100%;
+	margin-left:1%;
+}
+
+.pageTitleContainer {
+	height: 50px;
+	font-size: 14px;
+}
+
+li.arrayIcon,
+li.booleanIcon,
+li.constructorIcon,
+li.dateIcon,
+li.domnodeIcon,
+li.errorIcon,
+li.functionIcon,
+li.namespaceIcon,
+li.numberIcon,
+li.objectIcon,
+li.regexpIcon,
+li.singletonIcon,
+li.stringIcon {
+    padding-left:20px;
+	background-repeat: no-repeat;
+}
+
+
+div.jsdoc-children .odd {
+	/* Removed for IC : background-color: #f8f8fa; */
+}
+
+.private {
+	display: none;
+}
+
+table.jsdoc-parameters td {
+	/* width: 200px; */
+}
+
+pre {
+	/*width: 500px;*/
+	/* overflow: scroll; */
+}
+
+.skip { 
+    position:absolute; top:-9999px; left:-9999px; 
+}
+
+/* ibm_diagram custom styles end */
