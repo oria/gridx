@@ -39,7 +39,52 @@
        <div role="main" class="main-content">
         <div class="unit size3of4 firstUnit">
           <a name="skip-navbar_top"></a>
-          <div class="jsdoc-permalink" style="display:none;">../../gridx/modules/select.html</div><h1 class="jsdoc-title objectIcon36">gridx.modules.select</h1><div class="jsdoc-prototype">Object &raquo; gridx.modules.select</div><div class="jsdoc-children"><div class="jsdoc-field-list"></div></div><div class="jsdoc-children"><div class="jsdoc-fields"></div></div>
+          <div class="jsdoc-permalink" style="display:none;">../../gridx/modules/select.html</div><h1 class="jsdoc-title objectIcon36">gridx.modules.select</h1><div class="jsdoc-prototype">Object &raquo; gridx.modules.select</div><div class="jsdoc-children"><div class="jsdoc-field-list"><h2 class="jsdoc-summary-heading">Method Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon public  even"><a class="inline-link" href="#Cell">Cell</a><span class="parameters">()</span> <span>Provides simple cell selection.</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#Column">Column</a><span class="parameters">()</span> <span>Provides simple column selection.</span></li><li class="functionIcon public  even"><a class="inline-link" href="#Row">Row</a><span class="parameters">()</span> <span>Provides simple row selection.</span></li></ul></div><h2 class="jsdoc-summary-heading">Attached Objects <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../../gridx/modules/select/Cell.html">gridx.modules.select.Cell</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../../gridx/modules/select/Cell/cellMixin.html">gridx.modules.select.Cell.cellMixin</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../../gridx/modules/select/Column.html">gridx.modules.select.Column</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../../gridx/modules/select/Column/columnMixin.html">gridx.modules.select.Column.columnMixin</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../../gridx/modules/select/Column/grid.html">gridx.modules.select.Column.grid</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../../gridx/modules/select/Column/grid/_columns.html">gridx.modules.select.Column.grid._columns</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../../gridx/modules/select/Row.html">gridx.modules.select.Row</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../../gridx/modules/select/Row/rowMixin.html">gridx.modules.select.Row.rowMixin</a></span></div></div></div></div></div><div class="jsdoc-children"><div class="jsdoc-fields"><h2>Methods</h2><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="Cell"></a><span class="functionIcon">Cell</span></div><div class="jsdoc-summary"><p>This module provides a simple way for selecting cells by clicking or SPACE key, or CTRL + Click to select multiple cells.</p>
+</div><div class="jsdoc-examples"><div class="jsdoc-example"><div><strong>Example 1</strong></div>
+1. Use select api on grid cell object obtained from grid.cell(i, j)
+<pre class="brush: js;" lang="javascript">
+	grid.cell(1,1).select();
+	grid.cell(1,1).deselect();
+	grid.cell(1,1).isSelected();
+</pre>
+2. Use select api on selectCell module
+<pre class="brush: js;" lang="javascript">
+	grid.select.cell.selectById(rowId, columnId);
+	grid.select.cell.deSelectById(rowId, columnId);
+	grid.select.cell.isSelected(rowId, columnId);
+	grid.select.cell.getSelected();//[]
+	grid.select.cell.clear();
+</pre></div></div></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="Column"></a><span class="functionIcon">Column</span></div><div class="jsdoc-summary"><p>This module provides a simple way for selecting columns by clicking or SPACE key, or CTRL + Click to select multiple columns.</p>
+</div><div class="jsdoc-examples"><div class="jsdoc-example"><div><strong>Example 1</strong></div>
+1. Use select api on grid cell object obtained from grid.cell(i, j)
+<pre class="brush: js;" lang="javascript">
+	grid.column(1).select();
+	grid.column(1).deselect();
+	grid.column(1).isSelected();
+</pre>
+2. Use select api on selectColumn module
+<pre class="brush: js;" lang="javascript">
+	grid.select.column.selectById(columnId);
+	grid.select.column.deSelectById(columnId);
+	grid.select.column.isSelected(columnId);
+	grid.select.column.getSelected();//[]
+	grid.select.column.clear();
+</pre></div></div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="Row"></a><span class="functionIcon">Row</span></div><div class="jsdoc-summary"><p>This module provides a simple way for selecting rows by clicking or SPACE key, or CTRL + Click to select multiple rows.</p>
+</div><div class="jsdoc-examples"><div class="jsdoc-example"><div><strong>Example 1</strong></div>
+1. Use select api on grid cell object obtained from grid.cell(i, j)
+<pre class="brush: js;" lang="javascript">
+	grid.row(1).select();
+	grid.row(1).deselect();
+	grid.row(1).isSelected();
+</pre>
+2. Use select api on selectRow module
+<pre class="brush: js;" lang="javascript">
+	grid.select.row.selectById(rowId);
+	grid.select.row.deSelectById(rowId);
+	grid.select.row.isSelected(rowId);
+	grid.select.row.getSelected();//[]
+	grid.select.row.clear();
+</pre></div></div></div></div></div>
         </div>
        </div>
       </div>

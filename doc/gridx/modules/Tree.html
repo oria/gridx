@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>gridx.modules.Tree</title>
+  <link rel="stylesheet" href="../../css/dojo.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/jsdoc.css" type="text/css" />
+  <link rel="stylesheet" href="../../themes/dtk/dtk.css" type="text/css" />
+  </head>
+<body>
+    <div style="width: 100%; height: 100%;">
+      <div id="treeHeader" region="top">
+        gridx
+      </div>
+      <div region="bottom" style="height:18px;background-color:#f2f2f2;border-top:1px solid #dedede;padding:0 2px 4px 48px;position:relative;overflow:hidden;">
+        <span style="position:absolute;top:3px;left:3px;font-size:small;">Legend: </span>
+        <img src="../../css/icons/16x16/array.png" align="middle" title="Array" alt="Array" border="0" />
+        <img src="../../css/icons/16x16/boolean.png" align="middle" title="Boolean" alt="Boolean" border="0" />
+        <img src="../../css/icons/16x16/constructor.png" align="middle" title="Constructor" alt="Constructor" border="0" />
+        <img src="../../css/icons/16x16/date.png" align="middle" title="Date" alt="Date" border="0" />
+        <img src="../../css/icons/16x16/domnode.png" align="middle" title="DomNode" alt="DomNode" border="0" />
+        <img src="../../css/icons/16x16/error.png" align="middle" title="Error" alt="Error" border="0" />
+        <img src="../../css/icons/16x16/function.png" align="middle" title="Function" alt="Function" border="0" />
+        <img src="../../css/icons/16x16/namespace.png" align="middle" title="Namespace" alt="Namespace" border="0" />
+        <img src="../../css/icons/16x16/number.png" align="middle" title="Number" alt="Number" border="0" />
+        <img src="../../css/icons/16x16/object.png" align="middle" title="Object" alt="Object" border="0" />
+        <img src="../../css/icons/16x16/regexp.png" align="middle" title="RegExp" alt="RegExp" border="0" />
+        <img src="../../css/icons/16x16/singleton.png" align="middle" title="Singleton" alt="Singleton" border="0" />
+        <img src="../../css/icons/16x16/string.png" align="middle" title="String" alt="String" border="0" />
+      </div>
+      <div region="center">
+       <div class="sidebar unit size1of4 lastUnit infoCenterHeader" >
+         <div class="apisidebar">
+           <div class="apisidebarwrapper">
+             <!-- NAVIGATION -->
+           </div>
+         </div>
+       </div>
+       <div role="main" class="main-content">
+        <div class="unit size3of4 firstUnit">
+          <a name="skip-navbar_top"></a>
+          <div class="jsdoc-permalink" style="display:none;">../../gridx/modules/Tree.html</div><h1 class="jsdoc-title constructorIcon36">gridx.modules.Tree</h1><div class="jsdoc-prototype">Object &raquo; _Module &raquo; gridx.modules.Tree</div><div class="jsdoc-require">dojo.require("gridx.modules.Tree");</div><div class="jsdoc-prototype">Defined in gridx/modules/Tree.js</div><div class="jsdoc-full-summary"><p>This module is used for creation, destruction and management of the Tree Grid.
+There are two kind of Tree Grid: columnar or nested, it will be indicated by
+the argument <code>type</code>, and the layout of the TreeGrid will be defined by extended
+<code>structure</code> argument.</p>
+</div><div class="jsdoc-examples"><h2>Examples:</h2><div class="jsdoc-example"><h3>Example 1</h3>
+For the columnar Tree Grid, the column which is expandable is indicated by the
+new added attribute `expandField`, and the value of the `expandField` is one
+or more attribute names (attributes in the meta data) that specify that item's
+children.
+See the quick sample below:
+
+sample of data source
+<pre class="brush: js;" lang="javascript">
+	{ identifier: 'name',
+	  label: 'name',
+	  items: [
+	 	{ name:'Africa', type:'continent', children: [
+	 		{ name:'Egypt', type:'country' },
+	 		{ name:'Kenya', type:'country', children:[
+	 			{ name:'Nairobi', type:'city', adults: 70400, popnum: 2940911 },
+	 			{ name:'Mombasa', type:'city', adults: 294091, popnum: 707400 } ]
+	 		},
+	 		{ name:'Sudan', type:'country', children:
+	 			{ name:'Khartoum', type:'city', adults: 480293, popnum: 1200394 }
+	 		} ]
+	 	},
+	  	{ name:'Asia', type:'continent', children:[
+	  		{ name:'China', type:'country' },
+	  		{ name:'India', type:'country' },
+	  		{ name:'Russia', type:'country' },
+	  		{ name:'Mongolia', type:'country' } ]
+	  	},
+		{ name:'Australia', type:'continent', population:'21 million', children:
+			{ name:'Commonwealth of Australia', type:'country', population:'21 million'}
+		} ]
+	}
+</pre>
+define the tree grid type
+<pre class="brush: js;" lang="javascript">
+	var type = &quot;columnar&quot;;
+</pre>
+define the grid structure
+<pre class="brush: js;" lang="javascript">
+	var structure = [
+		{name: &quot;Name&quot;, field: &quot;name&quot;, expandLevel: 'all'},
+		{name: &quot;Type&quot;, field: &quot;type&quot;},
+		{name: &quot;Population&quot;, field: &quot;population&quot;}
+	];
+</pre>
+For the nested TreeGrid, there could be more than one column can be expanded,
+so the structure might be a little more complicated. There is ONLY one attribute
+name can be assigned to the `expandField` as children, and there would be a
+attribute called `nestedLevel` to specify the hierarchy of the column.
+A quick sample:
+
+sample of data source
+
+<pre class="brush: js;" lang="javascript">
+	{ identifier: 'id',
+	  items: [
+		{ id: &quot;1&quot;, playername: &quot;Player 1&quot;, seasons: [
+		 	{ id: &quot;2&quot;, seasonindex: &quot;Season 1&quot;, games: [
+				{ id: &quot;3&quot;, gameindex: &quot;Game 1&quot;, quarters: [
+					{id: &quot;4&quot;, point: &quot;3&quot;, rebound: &quot;3&quot;, assistant: &quot;1&quot;},
+					{id: &quot;5&quot;, point: &quot;5&quot;, rebound: &quot;0&quot;, assistant: &quot;0&quot;},
+					{id: &quot;6&quot;, point: &quot;0&quot;, rebound: &quot;1&quot;, assistant: &quot;3&quot;},
+					{id: &quot;7&quot;, point: &quot;2&quot;, rebound: &quot;2&quot;, assistant: &quot;0&quot;} ]
+				},
+				{ id: &quot;8&quot;, gameindex: &quot;Game 2&quot;, quarters: [
+					{id: &quot;9&quot;, point: &quot;3&quot;, rebound: &quot;0&quot;, assistant: &quot;2&quot;},
+					{id: &quot;10&quot;, point: &quot;0&quot;, rebound: &quot;4&quot;, assistant: &quot;1&quot;},
+					{id: &quot;11&quot;, point: &quot;5&quot;, rebound: &quot;0&quot;, assistant: &quot;1&quot;},
+					{id: &quot;12&quot;, point: &quot;10&quot;, rebound: &quot;2&quot;, assistant: &quot;0&quot;} ]
+				} ]
+			},
+			{ id: &quot;13&quot;, seasonindex: &quot;Season 2&quot; } ]
+		} ]
+	}
+</pre>
+define the tree grid type
+<pre class="brush: js;" lang="javascript">
+	var type = &quot;nested&quot;;
+</pre>
+define the grid structure
+<pre class="brush: js;" lang="javascript">
+	var structure = [
+		{name: &quot;Player&quot;, field: &quot;playername&quot;, expandLevel: 1},
+		{name: &quot;Season&quot;, field: &quot;seasonindex&quot;, expandLevel: 2},
+		{name: &quot;Game&quot;, field: &quot;gameindex&quot;, expandLevel: 3},
+		{name: &quot;Point&quot;, field: &quot;point&quot;},
+		{name: &quot;Rebound&quot;, field: &quot;rebound&quot;},
+		{name: &quot;Assistant&quot;, field: &quot;assistant&quot;}
+	];
+</pre></div></div><div class="jsdoc-children"><div class="jsdoc-field-list"><h2 class="jsdoc-summary-heading">Method Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon private  even"><a class="inline-link" href="#_createCellWrapper">_createCellWrapper</a><span class="parameters">(wrappers, rowId, colId)</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_getAbsoluteVisualIndex">_getAbsoluteVisualIndex</a><span class="parameters">(parentId, rowIndex)</span></li><li class="functionIcon private  even"><a class="inline-link" href="#_getChild">_getChild</a><span class="parameters">(visualIndex, info)</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_initFocus">_initFocus</a><span class="parameters">()</span></li><li class="functionIcon private  even"><a class="inline-link" href="#_logicCollapse">_logicCollapse</a><span class="parameters">(id)</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_logicExpand">_logicExpand</a><span class="parameters">(id)</span></li><li class="functionIcon private  even"><a class="inline-link" href="#_onCellClick">_onCellClick</a><span class="parameters">(e)</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_onKey">_onKey</a><span class="parameters">(e)</span></li><li class="functionIcon private  even"><a class="inline-link" href="#_persist">_persist</a><span class="parameters">()</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_updateBody">_updateBody</a><span class="parameters">(id)</span></li><li class="functionIcon public  even"><a class="inline-link" href="#collapse">collapse</a><span class="parameters">(id, skipUpdateBody)</span><span class="jsdoc-returns"> returns dojo.Deferred</span> <span>Collapse a row.</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#collapseRecursive">collapseRecursive</a><span class="parameters">(id, skipUpdateBody)</span> <span>Recursively collapse a row recursively and all its descendants.</span></li><li class="functionIcon public  even"><a class="inline-link" href="#constructor">constructor</a><span class="parameters">()</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#expand">expand</a><span class="parameters">(id, skipUpdateBody)</span><span class="jsdoc-returns"> returns dojo.Deferred</span> <span>Expand the row.</span></li><li class="functionIcon public  even"><a class="inline-link" href="#expandRecursive">expandRecursive</a><span class="parameters">(id, skipUpdateBody)</span> <span>Recursively expand a row and all its descendants.</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#getAPIPath">getAPIPath</a><span class="parameters">()</span></li><li class="functionIcon public  even"><a class="inline-link" href="#getRowInfoByVisualIndex">getRowInfoByVisualIndex</a><span class="parameters">(visualIndex, rootStart)</span><span class="jsdoc-returns"> returns Object</span> <span>Get row info (including row index, row id, parent id, etc) by row visual index.</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#getVisualIndexByRowInfo">getVisualIndexByRowInfo</a><span class="parameters">(parentId, rowIndex, rootStart)</span></li><li class="functionIcon public  even"><a class="inline-link" href="#getVisualSize">getVisualSize</a><span class="parameters">(start, count, parentId)</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#isExpanded">isExpanded</a><span class="parameters">(id)</span><span class="jsdoc-returns"> returns Boolean</span> <span>Check wheter a row is already expanded.</span></li><li class="functionIcon public  even"><a class="inline-link" href="#load">load</a><span class="parameters">(args)</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#preload">preload</a><span class="parameters">()</span></li></ul></div><h2 class="jsdoc-summary-heading">Event Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon public  even"><a class="inline-link" href="#onCollapse">onCollapse</a><span class="parameters">(id)</span> <span>Fired when a row is collapsed.</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#onExpand">onExpand</a><span class="parameters">(id)</span> <span>Fired when a row is expanded.</span></li></ul></div></div></div><div class="jsdoc-children"><div class="jsdoc-fields"><h2>Methods</h2><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_createCellWrapper"></a><span class="functionIcon">_createCellWrapper</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">wrappers</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">rowId</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">colId</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_getAbsoluteVisualIndex"></a><span class="functionIcon">_getAbsoluteVisualIndex</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">parentId</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">rowIndex</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_getChild"></a><span class="functionIcon">_getChild</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">visualIndex</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">info</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_initFocus"></a><span class="functionIcon">_initFocus</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_logicCollapse"></a><span class="functionIcon">_logicCollapse</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_logicExpand"></a><span class="functionIcon">_logicExpand</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_onCellClick"></a><span class="functionIcon">_onCellClick</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">e</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_onKey"></a><span class="functionIcon">_onKey</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">e</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_persist"></a><span class="functionIcon">_persist</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_updateBody"></a><span class="functionIcon">_updateBody</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="collapse"></a><span class="functionIcon">collapse</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-return-type">Returns <strong>dojo.Deferred</strong>: <span class="jsdoc-return-description">A deferred object indicating whether this collapsing process has completed.</span></div><div class="jsdoc-summary">Collapse a row.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The row ID</td></tr><tr><td class="jsdoc-param-name">skipUpdateBody</td><td class="jsdoc-param-type">Boolean</td><td class="jsdoc-param-description">If set to true the grid will not automatically refresh itself after this method,
+	so that several grid operations can be executed altogether.</td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="collapseRecursive"></a><span class="functionIcon">collapseRecursive</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-return-type"><div class="jsdoc-return-description">A deferred object indicating whether this collapsing process has completed.</div></div><div class="jsdoc-summary">Recursively collapse a row recursively and all its descendants.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The row ID</td></tr><tr><td class="jsdoc-param-name">skipUpdateBody</td><td class="jsdoc-param-type">Boolean</td><td class="jsdoc-param-description">If set to true the grid will not automatically refresh itself after this method,
+	so that several grid operations can be executed altogether.</td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="constructor"></a><span class="functionIcon">constructor</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="expand"></a><span class="functionIcon">expand</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-return-type">Returns <strong>dojo.Deferred</strong>: <span class="jsdoc-return-description">A deferred object indicating whether this expanding process has completed.</span></div><div class="jsdoc-summary">Expand the row.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The row ID</td></tr><tr><td class="jsdoc-param-name">skipUpdateBody</td><td class="jsdoc-param-type">Boolean</td><td class="jsdoc-param-description">If set to true the grid will not automatically refresh itself after this method,
+	so that several grid operations can be executed altogether.</td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="expandRecursive"></a><span class="functionIcon">expandRecursive</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-return-type"><div class="jsdoc-return-description">A deferred object indicating whether this expanding process has completed.</div></div><div class="jsdoc-summary">Recursively expand a row and all its descendants.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The row ID</td></tr><tr><td class="jsdoc-param-name">skipUpdateBody</td><td class="jsdoc-param-type">Boolean</td><td class="jsdoc-param-description">If set to true the grid will not automatically refresh itself after this method,
+	so that several grid operations can be executed altogether.</td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="getAPIPath"></a><span class="functionIcon">getAPIPath</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="getRowInfoByVisualIndex"></a><span class="functionIcon">getRowInfoByVisualIndex</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-return-type">Returns <strong>Object</strong>: <span class="jsdoc-return-description">A row info object</span></div><div class="jsdoc-summary">Get row info (including row index, row id, parent id, etc) by row visual index.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">visualIndex</td><td class="jsdoc-param-type">Integer</td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">rootStart</td><td class="jsdoc-param-type">Integer</td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="getVisualIndexByRowInfo"></a><span class="functionIcon">getVisualIndexByRowInfo</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">parentId</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">rowIndex</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">rootStart</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="getVisualSize"></a><span class="functionIcon">getVisualSize</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">start</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">count</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">parentId</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="isExpanded"></a><span class="functionIcon">isExpanded</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-return-type">Returns <strong>Boolean</strong>: <span class="jsdoc-return-description">Whether the row is expanded.</span></div><div class="jsdoc-summary">Check wheter a row is already expanded.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The row ID</td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="load"></a><span class="functionIcon">load</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">args</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="preload"></a><span class="functionIcon">preload</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><h2>Events</h2><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="onCollapse"></a><span class="functionIcon">onCollapse</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Fired when a row is collapsed.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The ID of the collapsed row.</td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="onExpand"></a><span class="functionIcon">onExpand</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Fired when a row is expanded.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The ID of the expanded row</td></tr></table></div></div></div>
+        </div>
+       </div>
+      </div>
+  </div>
+</body>
+</html>
