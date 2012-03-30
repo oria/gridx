@@ -10,7 +10,15 @@ define([
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
 
-	return declare([], {
+	return declare(/*===== "gridx.core.model.Model", =====*/[], {
+		// summary:
+		//		This class handles all of the data logic in grid.
+		// description:
+		//		It provides a clean and useful set of APIs to encapsulate complicated data operations, 
+		//		even for huge asynchronous (server side) data stores.
+		//		It is built upon a simple extension mechanism, allowing new (even user defined) data operaions to be pluged in.
+		//		An instance of this class can be regarded as a stand-alone logic grid providing consistent data processing 
+		//		functionalities. This class can even be instanticated alone without any grid UI.
 
 		constructor: function(args){
 			var t = this, c = 'connect';
@@ -36,7 +44,131 @@ define([
 	
 		//Public-------------------------------------------------------------------
 
+		/*=====
+		byIndex: function(index, parentId){
+			// summary:
+			//		Get the row cache by row index.
+			// index: Integer
+			//		The row index
+			// parentId: String?
+			//		If parentId is valid, the row index means the child index under this parent.
+			// returns:
+			//		The row cache
+			return null;	//gridx.core.model.__RowCache
+		},
+
+		byId: function(id){
+			// summary:
+			//		Get the row cache by row id
+			// id: String
+			//		The row ID
+			// returns:
+			//		The row cache
+			return null;	//gridx.core.model.__RowCache
+		},
+
+		indexToId: function(index, parentId){
+			// summary:
+			//		Transform row index to row ID
+			// index: Integer
+			//		The row index
+			// parentId: String?
+			//		If parentId is valid, the row index means the child index under this parent.
+			// returns:
+			//		The row ID
+			return '';	//String
+		},
+
+		idToIndex: function(id){
+			// summary:
+			//		Transform row ID to row index
+			// id: String
+			//		The row ID
+			// returns:
+			//		The row index
+			return -1;	//Integer
+		},
+
+		treePath: function(id){
+			// summary:
+			//		Get tree path of row by row ID
+			// id: String
+			//		The row ID
+			// returns:
+			//		An array of parent row IDs, from root to parent.
+			//		Root level rows have parent of id ""(empty string).
+			return [];	//String[]
+		},
+
+		hasChildren: function(id){
+			// summary:
+			//		Check whether a row has children rows.
+			// id: String
+			//		The row ID
+			// returns:
+			//		Whether this row has child rows.
+			return false;	//Boolean
+		},
+
+		size: function(parentId){
+			// summary:
+			//		Get the count of rows under the given parent. 
+			// parentId: String?
+			//		The ID of a parent row. No parentId means root rows.
+			// returns:
+			//		The count of (child) rows
+			return -1;	//Integer
+		},
+
+		keep: function(id){
+			// summary:
+			//		Lock up a row cache in memory, avoid clearing it out when cache size is reached.
+			// id: String
+			//		The row ID
+		},
+
+		free: function(id){
+			// summary:
+			//		Unlock a row cache in memory, so that it could be cleared out when cache size is reached.
+			// id: String?
+			//		The row ID. If omitted, all kept rows will be freed.
+		},
+		=====*/
+
 		when: function(args, callback, scope){
+			// summary:
+			//		Call this method to make sure all the pending data operations are executed and
+			//		all the needed rows are at client side.
+			// description:
+			//		This method makes it convenient to do various grid operations without worrying too much about server side
+			//		or client side store. This method is the only asynchronous public method in grid model, so that most of
+			//		the custom code can be written in synchronous way.
+			// args: Object|null?
+			//		Indicate what rows are needed by listing row IDs or row indexes.
+			//		Acceptable args include: 
+			//		1. A single row index.
+			//		e.g.: model.when(1, ...)
+			//		2. A single row index range object in form of: {start: ..., count: ...}.
+			//		If count is omitted, means all remaining rows.
+			//		e.g.: model.when({start: 10, count: 100}, ...)
+			//		3. An array of row indexes and row index ranges.
+			//		e.g.: model.when([0, 1, {start: 10, count: 3}, 100], ...)
+			//		4. An object with property "index" set to the array defined in 3.
+			//		e.g.: model.when({
+			//			index: [0, 1, {start: 10, count: 3}, 100]
+			//		}, ...)
+			//		5. An object with property "id" set to an array of row IDs.
+			//		e.g.: model.when({
+			//		id: ['a', 'b', 'c']
+			//		}, ...)
+			//		6. An object containing both contents defined in 4 and 5.
+			//		7. null or call this method without any arguments.
+			//		This is useful when we only need to execute pending data operations but don't need to fetch rows.
+			// callback: Function?
+			//		The callback function is called when all the pending data operations are executed and all
+			// returns:
+			//		A Deferred object indicating when all this process is finished. Note that in this Deferred object,
+			//		The needed rows might not be available since they might be cleared up to reduce memory usage.
 			this._oldSize = this.size();
 			this._addCmd({
 				name: '_cmdRequest',
@@ -44,10 +176,19 @@ define([
 				args: arguments,
 				async: 1
 			});
-			return this._exec();
+			return this._exec();	//dojo.Deferred
 		},
 	
 		scan: function(args, callback){
+			// summary:
+			//		Go through all the rows in several batches from start to end (or according to given args),
+			//		and execute the callback function for every batch of rows.
+			// args: Object
+			//		An object containing scan arguments
+			// callback: Function(rows,startIndex)
+			//		The callback function.
+			// returns:
+			//		If return true in this function, the scan process will end immediately.
 			var d = new Deferred,
 				start = args.start || 0,
 				pageSize = args.pageSize || this._cache.pageSize || 1,
@@ -86,14 +227,37 @@ define([
 					});
 				};
 			f(start);
-			return d;
+			return d;	//dojo.Deferred
 		},
 
 		//Events---------------------------------------------------------------------------------
-		onDelete: function(/*id, index*/){},
-		onNew: function(/*id, index, row*/){},
-		onSet: function(/*id, index, row*/){},
-		onSizeChange: function(/*size, oldSize*/){},
+		onDelete: function(/*id, index*/){
+			// summary:
+			//		Fired when a row is deleted from store
+			// tags:
+			//		callback
+		},
+
+		onNew: function(/*id, index, row*/){
+			// summary:
+			//		Fired when a row is added to the store
+			// tags:
+			//		callback
+		},
+
+		onSet: function(/*id, index, row*/){
+			// summary:
+			//		Fired when a row's data is changed
+			// tags:
+			//		callback
+		},
+
+		onSizeChange: function(/*size, oldSize*/){
+			// summary:
+			//		Fired when the size of the grid model is changed
+			// tags:
+			//		callback
+		},
 
 		//Package----------------------------------------------------------------------------
 		_msg: function(/* msg */){},
