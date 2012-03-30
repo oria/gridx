@@ -15,19 +15,7 @@ require([
 			size: 100
 		}),
 		structure: dataSource.layouts[0],
-		modules: [
-			{
-				moduleClass: modules.RowLock,
-				count: 0
-			},
-//			{
-//				moduleClass: modules.ColumnLock,
-//				count: 2
-//			},
-			modules.ExtendedSelectCell,
-			modules.Edit,
-			modules.NestedSort
-		]
+		modules: [ modules.RowLock ]
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();

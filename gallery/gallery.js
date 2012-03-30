@@ -30,7 +30,7 @@ require([
 			['Editable Cell', 'test_grid_edit', 'editable.jpg', 'Based on the Dijits in Cell module to provide editable cell functionality. The editing dijit/widget only occur while entering editing mode.'],
 			['Indirect Select', 'test_grid_indirectSelect', 'indirectselect.jpg', 'A useful enhancement for row selection, to better demonstrate the selected/unselected status of rows by means of check boxes.'],
 			//['Column Lock', 'test_grid_columnLock', 'columnlock.png', 'Lock up some of the grid columns so that they don\'t move out of view when the grid body is horizontally scrolled.'],
-			['Details on Demand', 'test_grid_dod', 'dod.jpg', 'A pretty feature providing the ability for rows to expand. Various arguments available to support different use cases.'],
+			['Details on Demand', 'test_grid_dod', 'dod.jpg', '<b>Experimental</b> - A pretty feature providing the ability for rows to expand. Various arguments available to support different use cases.'],
 			['DnD columns/rows within Grid', 'test_grid_dnd_rearrange', 'dnd.jpg', 'Rearrange grid rows and columns by drag & drop'],
 			['DnD rows between grid', 'test_grid_dndrow_betweengrids', 'dnd2.jpg', 'Drag and drop grid rows to other grids.'],
 			['DnD rows from/to non-grid sources', 'test_grid_dndrow_nongrid_source', 'dnd3.jpg', 'Drag and drop grid rows between grid and non-grid sources.'],
@@ -44,7 +44,7 @@ require([
 			['Grid in Dijit Containers', 'test_grid_container', 'container.png', 'Another demo for the grid resize function, showing how it could be used in dijit containers.'],
 		0]],
 		['Other Types of Grid', [
- 			['Tree Grid', 'test_grid_tree', 'tree.jpg', 'Makes grid support Tree structured data. Two types of tree data models are supported: nested or not. In nested mode, expandos are placed in different columns whilist all expandos are in one column in the other mode.'],
+ 			['Tree Grid', 'test_grid_tree', 'tree.jpg', '<b>Experimental</b> - Makes grid support Tree structured data. Two types of tree data models are supported: nested or not. In nested mode, expandos are placed in different columns whilist all expandos are in one column in the other mode.'],
  		0]]		
 	];
 

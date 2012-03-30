@@ -1,4 +1,5 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
@@ -9,8 +10,7 @@ define([
 	"dojo/keys",
 	"../util",
 	"../core/_Module"
-], function(declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
-
+], function(kernel, declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	function isExpando(cellNode){
 		var n = cellNode.firstChild;
 		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
@@ -163,6 +163,7 @@ define([
 		load: function(args){
 			// tags:
 			//		protected extension
+			kernel.experimental('gridx/modules/Tree');
 			var t = this;
 			if(t._persisted){
 				t.loaded.callback();

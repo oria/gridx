@@ -1,9 +1,9 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	'dijit/Toolbar',
 	"../core/_Module"
-], function(declare, Toolbar, _Module){
-
+], function(kernel, declare, Toolbar, _Module){
 	return _Module.register(
 	declare(/*===== "gridx.modules.ToolBar", =====*/_Module, {
 		name: 'toolBar',
@@ -17,6 +17,7 @@ define([
 		},
 
 		constructor: function(grid, args){
+			kernel.experimental('gridx/modules/ToolBar');
 			//Arguments for the dijit.Toolbar widget MUST be provided as module args, instead of grid args.
 			this.widget = new Toolbar(args);
 			this.domNode = this.widget.domNode;

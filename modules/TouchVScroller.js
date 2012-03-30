@@ -1,11 +1,12 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/dom-style",
 	"../core/_Module",
 	"./VScroller",
 	"dojox/mobile/_ScrollableMixin"
-], function(declare, domStyle, _Module, VScroller){
-
+], function(kernel, declare, domStyle, _Module, VScroller){
+	kernel.experimental('gridx/modules/TouchVScroller');
 	return _Module.register(
 	declare(VScroller, {
 		_init: function(){

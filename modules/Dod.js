@@ -25,6 +25,7 @@ define([
 		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
 		autoClose: false,
 		load: function(args, deferStartup){
+			dojo.experimental('gridx/modules/Dod');
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
