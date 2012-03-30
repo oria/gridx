@@ -22,7 +22,9 @@ require([
 				modules: [
 					modules.Persist,
 					modules.DndColumn,
-					modules.NestedSort
+					modules.NestedSort,
+					modules.VirtualScroller,
+					modules.ColumnResizer
 				]
 			});
 			grid.placeAt('gridContainer');

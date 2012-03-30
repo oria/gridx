@@ -7,7 +7,7 @@ define([
 ], function(declare, domConstruct, string, _Module, nls){	
 	
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.SummaryBar", =====*/_Module, {
 		name: 'summaryBar',
 
 //        required: ['vLayout'],

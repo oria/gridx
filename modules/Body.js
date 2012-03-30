@@ -16,18 +16,28 @@ define([
 		sa = 'setAttribute';
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.Body", =====*/_Module, {
+		// summary:
+		//		The body UI of grid.
+		// description:
+		//		This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 
+		//		pagination, details on demand, and even tree structure.
+
 		name: "body",
 	
 		optional: ['tree'],
 	
 		getAPIPath: function(){
+			// tags:
+			//		protected extended
 			return {
 				body: this
 			};
 		},
 
 		preload: function(){
+			// tags:
+			//		protected extended
 			var t = this, g = t.grid,
 				dn = t.domNode = g.bodyNode;
 			g._connectEvents(dn, '_onMouseEvent', t);
@@ -35,6 +45,8 @@ define([
 		},
 
 		load: function(args){
+			// tags:
+			//		protected extended
 			var t = this, m = t.model, g = t.grid;
 			t.batchConnect(
 				[m, 'onDelete', '_onDelete'],
@@ -63,6 +75,8 @@ define([
 		},
 
 		destroy: function(){
+			// tags:
+			//		protected extended
 			this.inherited(arguments);
 			this.domNode.innerHTML = '';
 		},
@@ -106,23 +120,41 @@ define([
 		 */
 
 		getRowNode: function(args){
+			// summary:
+			//		Get the DOM node of a row
+			// args: gridx.__RowCellInfo
+			//		A row info object containing row index or row id
+			// returns:
+			//		The DOM node of the row. Null if not found.
 			var r = this._getRowNodeQuery(args);
-			return r ? query(r, this.domNode)[0] || null : null;
+			return r ? query(r, this.domNode)[0] || null : null;	//DOMNode|null
 		},
 
 		getCellNode: function(args){
+			// summary:
+			//		Get the DOM node of a cell
+			// args: gridx.__RowCellInfo
+			//		A cell info object containing sufficient info
+			// returns:
+			//		The DOM node of the cell. Null if not found.
 			var t = this, colId = args.colId, r = t._getRowNodeQuery(args);
 			if(r){
 				if(!colId && typeof args.colIndex == "number"){
 					colId = t.grid._columns[args.colIndex].id;
 				}
 				r += " [colid='" + colId + "'].gridxCell";
-				return query(r, t.domNode)[0] || null;
+				return query(r, t.domNode)[0] || null;	//DOMNode|null
 			}
-			return null;
+			return null;	//null
 		},
 
 		getRowInfo: function(args){
+			// summary:
+			//		Get complete row info by partial row info
+			// args: gridx.__RowCellInfo
+			//		A row info object containing partial row info
+			// returns:
+			//		A row info object containing as complete as possible row info.
 			var t = this, m = t.model, g = t.grid, id = args.rowId;
 			if(id){
 				args.rowIndex = m.idToIndex(id);
@@ -139,15 +171,21 @@ define([
 					args.rowIndex = t.rootStart + args.visualIndex;
 				} 
 			}else{
-				return args;
+				return args;	//gridx.__RowCellInfo
 			}
 			args.rowId = id || m.indexToId(args.rowIndex, args.parentId);
-			return args;
+			return args;	//gridx.__RowCellInfo
 		},
 	
 		refresh: function(start){
+			// summary:
+			//		Refresh the grid body
+			// start: Integer?
+			//		The visual row index to start refresh. If omitted, default to 0.
+			// returns:
+			//		A deferred object indicating when the refreshing process is finished.
 			var t = this;
-			return t.model.when({}).then(function(){
+			return t.model.when({}).then(function(){	//dojo.Deferred
 				var rs = t.renderStart, rc = t.renderCount;
 				if(typeof start == 'number' && start >= 0){
 					start = rs > start ? rs : start;
@@ -179,6 +217,14 @@ define([
 		},
 	
 		refreshCell: function(rowVisualIndex, columnIndex){
+			// summary:
+			//		Refresh a single cell
+			// rowVisualIndex
+			//		The visual index of the row of this cell
+			// columnIndex
+			//		The index of the column of this cell
+			// returns:
+			//		A deferred object indicating when this refreshing process is finished.
 			var d = new Deferred(), t = this,
 				m = t.model, g = t.grid,
 				col = g._columns[columnIndex],
@@ -204,20 +250,35 @@ define([
 				}).then(function(){
 					d.callback(!!rowCache);
 				});
-				return d;
+				return d;	//dojo.Deferred
 			}
 			d.callback(0);
-			return d;
+			return d;	//dojo.Deferred
 		},
 		
 		//Package--------------------------------------------------------------------------------
+		
+		// rootStart: [readonly] Integer
+		//		The row index of the first root row that logically exists in the current body
 		rootStart: 0,
+
+		// rootCount: [readonly] Integer
+		//		The count of root rows that logically exist in thi current body
 		rootCount: 0,
 	
+		// renderStart: [readonly] Integer
+		//		The visual row index of the first renderred row in the current body
 		renderStart: 0,
+		// renderCount: [readonly] Integer
+		//		The count of renderred rows in the current body.
 		renderCount: 0,
 	
+		// visualStart: [readonly] Integer
+		//		The visual row index of the first row that is logically visible in the current body.
+		//		This should be always zero.
 		visualStart: 0, 
+		// visualCount: [readonly] Integer
+		//		The count of rows that are logically visible in the current body
 		visualCount: 0,
 	
 		//[read/write] Update grid body automatically when onNew/onSet/onDelete is fired
@@ -226,6 +287,8 @@ define([
 		autoChangeSize: 1,
 
 		updateRootRange: function(start, count){
+			// tags:
+			//		private
 			var t = this, tree = t.grid.tree,
 				vc = t.visualCount = tree ? tree.getVisualSize(start, count) : count;
 			t.rootStart = start;
@@ -243,6 +306,8 @@ define([
 		},
 	
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
+			// tags:
+			//		private
 			var t = this, g = t.grid, str = '', uncachedRows = [], 
 				renderedRows = [], n = t.domNode, en = g.emptyNode;
 			if(count > 0){
@@ -290,6 +355,8 @@ define([
 		},
 	
 		unrenderRows: function(count, preOrPost){
+			// tags:
+			//		private
 			if(count > 0){
 				var t = this, i = 0, id, bn = t.domNode;
 				if(preOrPost == 'post'){

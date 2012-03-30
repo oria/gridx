@@ -184,12 +184,17 @@ require([
 			size: 1000
 		}),
 		structure: structure,
+		columnLockCount: 3,
+		vScrollerLazy: true,
 		modules: [
 			modules.Focus,
 			modules.CellWidget,
 			modules.ColumnResizer,
 			modules.FilterBar,
-			modules.VirtualVScroller
+			modules.VirtualVScroller,
+			modules.PaginationBar,
+			//modules.IndirectSelect,
+			//modules.ColumnLock
 		]
 	});
 	grid.placeAt('gridContainer');

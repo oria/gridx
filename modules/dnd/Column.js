@@ -9,7 +9,7 @@ define([
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
 	return _Module.register(
-	declare(_Base, {
+	declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
 		name: 'dndColumn',
 		
 		required: ['_dnd', 'selectColumn', 'moveColumn'],

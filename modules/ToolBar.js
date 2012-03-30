@@ -5,7 +5,7 @@ define([
 ], function(declare, Toolbar, _Module){
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.ToolBar", =====*/_Module, {
 		name: 'toolBar',
 
 //        required: ['vLayout'],

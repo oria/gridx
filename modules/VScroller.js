@@ -12,7 +12,14 @@ define([
 	var st = 'scrollTop';
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.VScroller", =====*/_Module, {
+		// summary:
+		//		This module provides basic vertical scrolling logic for grid.
+		// description:
+		//		This module will make the grid body render all rows without paging.
+		//		So it is very fast for small client side store, and might be extremely slow
+		//		for large server side store.
+
 		name: 'vScroller',
 	
 //        required: ['hLayout'],
@@ -22,12 +29,16 @@ define([
 		optional: ['pagination'],
 	
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				vScroller: this
 			};
 		},
 
 		preload: function(args){
+			// tags:
+			//		protected extension
 			var t = this, g = t.grid,
 				dn = t.domNode = g.vScrollerNode;
 			t.stubNode = dn.firstChild;
@@ -43,6 +54,8 @@ define([
 		},
 
 		load: function(args, startup){
+			// tags:
+			//		protected extension
 			var t = this, g = t.grid, bn = g.bodyNode;
 			t.batchConnect(
 				[t.domNode, 'onscroll', '_doScroll'],
@@ -62,11 +75,20 @@ define([
 		},
 	
 		//Public ----------------------------------------------------
-		scrollToPercentage: function(percent){
-			this.domNode[st] = this.stubNode.style.clientHeight * percent / 100;
-		},
-	
+
 		scrollToRow: function(rowVisualIndex, toTop){
+			// summary:
+			//		Scroll the grid until the required row is in view.
+			// description:
+			//		This job will be an asynchronous one if the lazy-loading and lazy-rendering are used.
+			// rowVisualIndex: Integer
+			//		The visual index of the row
+			// toTop: Boolean?
+			//		If set this to true, the grid will try to scroll the required row to the top of the view.
+			//		Otherwise, the grid will stop scrolling as soon as the row is visible.
+			// returns:
+			//		A deferred object indicating when the scrolling process is finished. This will be useful
+			//		when using lazy-loading and lazy-rendering.
 			var d = new Deferred(),
 				bn = this.grid.bodyNode,
 				dn = this.domNode,
@@ -78,19 +100,19 @@ define([
 				if(toTop){
 					dn[st] = no;
 					d.callback(true);
-					return d;
+					return d;	//dojo.Deferred
 				}else if(no < bs){
 					dif = no - bs;
 				}else if(no + n.offsetHeight > bs + bn.clientHeight){
 					dif = no + n.offsetHeight - bs - bn.clientHeight;
 				}else{
 					d.callback(true);
-					return d;
+					return d;	//dojo.Deferred
 				}
 				dn[st] += dif;
 			}
 			d.callback(!!n);
-			return d;
+			return d;	//dojo.Deferred
 		},
 	
 		//Protected -------------------------------------------------

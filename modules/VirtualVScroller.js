@@ -11,7 +11,14 @@ define([
 ], function(declare, lang, array, sniff, event, Deferred, query, VScroller, _Module){
 	
 	return _Module.register(
-	declare(VScroller, {
+	declare(/*===== "gridx.modules.VirtualVScroller", =====*/VScroller, {
+		// summary:
+		//		This module implements lazy-rendering when virtically scrolling grid.
+		// description:
+		//		This module takes a DOMNode-based way to implement lazy-rendering.
+		//		It tries to remove all the DOMNodes that are out of the grid body viewport,
+		//		so that the DOMNodes in grid are always limited to a very small number.
+
 		constructor: function(grid, args){
 			if(grid.autoHeight){
 				lang.mixin(this, new VScroller(grid, args));
@@ -21,16 +28,29 @@ define([
 		},
 
 		//Public ----------------------------------------------------
+
+		// buffSize: Integer
+		//		The count row nodes that should be maintained above/below the grid body viewport.
+		//		The total count row nodes consists of the count of rows that are visible, and buffSize * 2.
 		buffSize: 5,
 		
+		// lazy: Boolean
+		//		If this argument is set to true, the grid will not fetch data during scrolling.
+		//		Instead, it'll fetch data after the scrolling process is completed (plus a timeout).
+		//		This is useful when a large slow server side data store is used, because frequent
+		//		data fetch requests are avoided.
 		lazy: false,
 		
+		// lazyTimeout: Number
+		//		This is the timeout for the "lazy" argument.
 		lazyTimeout: 50,
 	
-		scrollToRow: function(rowVisualIndex, top){
+		scrollToRow: function(rowVisualIndex, toTop){
+			// tags:
+			//		extension
 			var d = new Deferred(), t = this, s = t._scrolls,
 				f = function(){
-					t._subScrollToRow(rowVisualIndex, d, top);
+					t._subScrollToRow(rowVisualIndex, d, toTop);
 				};
 			s.push(d);
 			if(s.length > 1){
@@ -41,7 +61,8 @@ define([
 			return d;
 		},
 
-		_subScrollToRow: function(rowVisualIndex, defer, top){
+		//Private -------------------------------------------------
+		_subScrollToRow: function(rowVisualIndex, defer, toTop){
 			var t = this,
 				dif = 0,
 				rowHeight = t._avgRowHeight,
@@ -58,10 +79,10 @@ define([
 				var offsetTop = node.offsetTop;
 				if(offsetTop + node.offsetHeight > bst + bn.clientHeight){
 					dif = offsetTop - bst;
-					if(!top){
+					if(!toTop){
 						dif += node.offsetHeight - bn.clientHeight;
 					}
-				}else if(offsetTop < bst || (top && offsetTop > bst)){
+				}else if(offsetTop < bst || (toTop && offsetTop > bst)){
 					dif = offsetTop - bst;
 				}else{
 					finish(true);
@@ -106,11 +127,10 @@ define([
 				return;
 			}
 			setTimeout(function(){
-				t._subScrollToRow(rowVisualIndex, defer, top);
+				t._subScrollToRow(rowVisualIndex, defer, toTop);
 			}, 5);
 		},
 	
-		//Protected -------------------------------------------------
 		_init: function(args){
 			var t = this;
 			t._rowHeight = {};

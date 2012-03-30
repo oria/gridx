@@ -298,7 +298,7 @@ define([
 			dlg.show();
 		},
 		
-		destroy: function(){
+		uninitialize: function(){
 			this._filterDialog && this._filterDialog.destroyRecursive();
 			this.inherited(arguments);
 			dojo.destroy(this.domNode);
@@ -403,7 +403,9 @@ define([
 			//var k = condition.charAt(0).toUpperCase() + condition.substring(1);
 			//return '<span style="font-style:italic">' + k + '</span> ' + value;
 			var valueString, type;
-			if(/^date|^time/i.test(type)){
+			if(condition == 'isEmpty'){
+				valueString = '';
+			}else if(/^date|^time/i.test(type)){
 				var f = this._formatDate;
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
@@ -439,10 +441,13 @@ define([
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
 			var F = Filter;
+//			if(data.condition === 'isEmpty'){
+//				return F.isEmpty(F.column(colId, type));
+//			}
 			var dc = this.grid._columnsById[colId].dateParser||this._stringToDate;
 			var tc = this.grid._columnsById[colId].timeParser||this._stringToTime;
 			var converter = {date: dc, time: tc};
-			var c = data.condition, exp, isNot = false;
+			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			if(c === 'range'){
 				var startValue = F.value(data.value.start, type),
 					endValue = F.value(data.value.end, type), 
@@ -463,8 +468,8 @@ define([
 			pattern = pattern || /(\d{4})\/(\d\d?)\/(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
-			d.setYear()(parseInt(RegExp.$1));
-			d.setMonth()(parseInt(RegExp.$2)-1);
+			d.setFullYear(parseInt(RegExp.$1));
+			d.setMonth(parseInt(RegExp.$2)-1);
 			return d;
 		},
 		_stringToTime: function(s, pattern){

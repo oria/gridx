@@ -39,7 +39,7 @@ define([
 	}
 
 	return _Module.register(
-	declare(_Base, {
+	declare(/*===== "gridx.modules.dnd.Row", =====*/_Base, {
 		name: 'dndRow',
 		
 		required: ['_dnd', 'moveRow'],

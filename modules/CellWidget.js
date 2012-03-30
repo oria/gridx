@@ -58,6 +58,12 @@ define([
 			postMixInProperties: function(){
 				this.templateString = ['<div class="gridxCellWidget">', this.content, '</div>'].join('');
 			},
+
+			postCreate: function(){
+				this.connect(this.domNode, 'onmousedown', function(e){
+					e.cancelBubble = true;
+				});
+			},
 		
 			setValue: function(gridData, storeData){
 				var t = this;
@@ -78,12 +84,24 @@ define([
 	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
 	
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
+		// summary:
+		//		This module makes it possible to efficiently show widgets within a grid cell.
+		// description:
+		//		Since widget declarations need to be parsed by dojo.parser, it can NOT be directly
+		//		created by the decorator function. This module takes advantage of the _TemplatedMixin
+		//		and the _WidgetInTemplateMixin so that users can write "templates" containing widgets
+		//		in decorator function.
+		//		This modules also limits the total number of widgets, so that the performance of grid
+		//		can be configured to a tolerable level when there're lots of widgets in grid.
+
 		name: 'cellWidget',
 	
 //        required: ['body'],
 	
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				cellWidget: this
 			};
@@ -104,6 +122,8 @@ define([
 		},
 	
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this, body = t.grid.body;
 			t.batchConnect(
 				[body, 'onAfterRow', '_showDijits'],
@@ -114,6 +134,8 @@ define([
 		},
 	
 		destory: function(){
+			// tags:
+			//		protected extension
 			this.inherited(arguments);
 			var i, id, col, cw, columns = this.grid._columns;
 			for(i = columns.length - 1; i >= 0; --i){
@@ -130,10 +152,21 @@ define([
 	
 		//Public-----------------------------------------------------------------
 
-		// The count of backup widgets for every column which contains widgets
+		// backupCount: Integer
+		//		The count of backup widgets for every column which contains widgets
 		backupCount: 20,
 
 		setCellDecorator: function(rowId, colId, decorator, setCellValue){
+			// summary:
+			//		This method is used to decorate a specific cell instead of a whole column.
+			// rowId: String
+			//		The row ID of the cell
+			// colId: String
+			//		The column ID of the cell
+			// decorator: Function(data)
+			//		The decorator function for this cell.
+			// setCellValue: Function()?
+			//		This function can be provided to customiz the way of setting widget value
 			var rowDecs = this._decorators[rowId];
 			if(!rowDecs){
 				rowDecs = this._decorators[rowId] = {};
@@ -148,6 +181,12 @@ define([
 		},
 	
 		restoreCellDecorator: function(rowId, colId){
+			// summary:
+			//		Remove a cell decorator defined by the "setCellDecorator" method.
+			// rowId: String
+			//		The row ID of the cell
+			// colId: String
+			//		The column ID of the cell
 			var rowDecs = this._decorators[rowId];
 			if(rowDecs){
 				var cellDec = rowDecs[colId];
@@ -172,6 +211,16 @@ define([
 		},
 	
 		getCellWidget: function(rowId, colId){
+			// summary:
+			//		Get the CellWidget displayed in the given cell.
+			// description:
+			//		When this module is used, the string returned from decorator function will be
+			//		the template string of a CellWidget. This method gets this widget so that
+			//		more control can be applied to it.
+			// rowId: string
+			//		The row ID of the cell
+			// colId: string
+			//		The column ID of the cell
 			var cellNode = this.grid.body.getCellNode({
 				rowId: rowId, 
 				colId: colId
@@ -185,7 +234,12 @@ define([
 			return null;
 		},
 
-		onCellWidgetCreated: function(){},
+		onCellWidgetCreated: function(/* widget, column */){
+			// summary:
+			//		Fired when a cell widget is created.
+			// tags:
+			//		callback
+		},
 	
 		//Private---------------------------------------------------------------
 		_showDijits: function(rowInfo, rowCache){

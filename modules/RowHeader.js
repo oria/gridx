@@ -13,10 +13,19 @@ define([
 ], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, keys, _Module, util){
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
+		// summary:
+		//		This modules provides a header before each row.
+		// description:
+		//		Row header can be used as a UI handler for row selection, especially when
+		//		cell selection is turned on and selectRowTriggerOnCell is turned off.
+		//		It can also be used as a place to hold the checkbox/radiobutton for IndirectSelect
+
 		name: 'rowHeader',
 
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				rowHeader: this
 			};
@@ -36,6 +45,8 @@ define([
 		},
 
 		destroy: function(){
+			// tags:
+			//		protected extension
 			this.inherited(arguments);
 			this._b.remove();
 			domConstruct.destroy(this.headerNode);
@@ -43,6 +54,8 @@ define([
 		},
 
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this,
 				rhhn = t.headerNode,
 				rhbn = t.bodyNode,
@@ -77,17 +90,25 @@ define([
 		},
 
 		//Public--------------------------------------------------------------------------
+
+		// width: String
+		//		The width (CSS value) of a row header.
 		width: '20px',
 
-		onMoveToRowHeaderCell: function(){},
+		onMoveToRowHeaderCell: function(){
+			// tags:
+			//		callback
+		},
 
-//        headerProvider: function(){
-//            return '';
-//        },
+		/*=====
+		// headerProvider: Function
+		//		A functionn that returns an HTML string to fill the header cell of row headers.
+		headerProvider: null,
 
-//        cellProvider: function(){
-//            return '';
-//        },
+		// cellProvider: Function
+		//		A function that returns an HTML string to fill the body cells of row headers.
+		cellProvider: null,
+		=====*/
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){

@@ -18,15 +18,15 @@ define([
 	}
 
 	return _Module.register(
-	declare(_Module, {
-		//	summary:
+	declare(/*===== "gridx.modules.Tree", =====*/_Module, {
+		// summary:
 		//		Tree Grid module.
-		//	description:
+		// description:
 		//		This module is used for creation, destruction and management of the Tree Grid.
 		//		There are two kind of Tree Grid: columnar or nested, it will be indicated by
 		//		the argument `type`, and the layout of the TreeGrid will be defined by extended
 		//		`structure` argument.
-		//	example:
+		// example:
 		//		For the columnar Tree Grid, the column which is expandable is indicated by the 
 		//		new added attribute `expandField`, and the value of the `expandField` is one 
 		//		or more attribute names (attributes in the meta data) that specify that item's 
@@ -129,12 +129,16 @@ define([
 		},
 	
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				tree: this
 			};
 		},
 	
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this,
 				g = t.grid;
 			g.domNode.setAttribute('role', 'treegrid');
@@ -157,6 +161,8 @@ define([
 		},
 
 		load: function(args){
+			// tags:
+			//		protected extension
 			var t = this;
 			if(t._persisted){
 				t.loaded.callback();
@@ -170,19 +176,48 @@ define([
 		},
 	
 		//Public--------------------------------------------------------------------------------
+
+		// nested: Boolean
+		//		If set to true, the tree nodes can be shown in nested mode.
 		nested: false,
 
-		onExpand: function(id){},
-		onCollapse: function(id){},
+		onExpand: function(id){
+			// summary:
+			//		Fired when a row is expanded.
+			// tags:
+			//		callback
+			// id: String
+			//		The ID of the expanded row
+		},
+		onCollapse: function(id){
+			// summary:
+			//		Fired when a row is collapsed.
+			// tags:
+			//		callback
+			// id: String
+			//		The ID of the collapsed row.
+		},
 	
 		isExpanded: function(id){
-			return !!this._openInfo[id];
+			// summary:
+			//		Check wheter a row is already expanded.
+			// id: String
+			//		The row ID
+			// returns:
+			//		Whether the row is expanded.
+			return !!this._openInfo[id];	//Boolean
 		},
 
 		expand: function(id, skipUpdateBody){
-			//	summary:
-			//		Expand the row which meta data matching with given `id`.
-			//	id: string?
+			// summary:
+			//		Expand the row.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this expanding process has completed.
 			var d = new Deferred(),
 				t = this;
 			if(id && !t.isExpanded(id)){
@@ -200,13 +235,19 @@ define([
 			}else{
 				d.callback();
 			}
-			return d;
+			return d;	//dojo.Deferred
 		},
 	
 		collapse: function(id, skipUpdateBody){
-			//	summary:
-			//		Collapse the row which meta data matching with given `id`.
-			//	id: string?
+			// summary:
+			//		Collapse a row.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this collapsing process has completed.
 			var d = new Deferred(),
 				t = this;
 			if(id && t.isExpanded(id)){
@@ -218,13 +259,19 @@ define([
 			}else{
 				d.callback();
 			}
-			return d;
+			return d;	//dojo.Deferred
 		},
 	
 		expandRecursive: function(id, skipUpdateBody){
-			//	summary:
-			//		Expand the row recursively which meta data matching with given `id`.
-			//	id: string?
+			// summary:
+			//		Recursively expand a row and all its descendants.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this expanding process has completed.
 			var t = this,
 				m = t.model,
 				d = new Deferred();
@@ -247,9 +294,15 @@ define([
 		},
 	
 		collapseRecursive: function(id, skipUpdateBody){
-			//	summary:
-			//		Collapse the row recursively which meta data matching with given `id`.
-			//	id: string?
+			// summary:
+			//		Recursively collapse a row recursively and all its descendants.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this collapsing process has completed.
 			var d = new Deferred(),
 				success = lang.hitch(d, d.callback),
 				fail = lang.hitch(d, d.errback),
@@ -275,6 +328,14 @@ define([
 	
 		//Package------------------------------------------------------------------------------
 		getRowInfoByVisualIndex: function(visualIndex, rootStart){
+			// summary:
+			//		Get row info (including row index, row id, parent id, etc) by row visual index.
+			// tags:
+			//		package
+			// visualIndex: Integer
+			// rootStart: Integer
+			// returns:
+			//		A row info object
 			var t = this,
 				rootOpenned = t._openInfo[''].openned,
 				root, i;
@@ -293,18 +354,19 @@ define([
 			while(!info.found){
 				info = t._getChild(visualIndex, info);
 			}
-			return info;
+			return info;	//Object
 		},
-
 	
 		getVisualIndexByRowInfo: function(parentId, rowIndex, rootStart){
+			// tags:
+			//		package
 			var index = this._getAbsoluteVisualIndex(parentId, rowIndex);
-			if(index >= 0){
-				return index - this._getAbsoluteVisualIndex('', rootStart);
-			}
+			return index >= 0 ? index - this._getAbsoluteVisualIndex('', rootStart) : null;
 		},
 	
 		getVisualSize: function(start, count, parentId){
+			// tags:
+			//		package
 			var info = this._openInfo[parentId || ''];
 			if(info){
 				var i, len = info.openned.length, child, size = count;

@@ -8,10 +8,49 @@ define([
 	"dojo/query"
 ], function(dojo, lang, _Module, declare, array, html, query){	
 	
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.ColumnLock", =====*/_Module, {
+		// summary:
+		//		Column lock machinery.
+		// description:
+		//		This module provides a way to lock consecutive leading columns. 
+		//		Columns can be locked in following ways:
+		//
+		// example:
+		//		1. Columns can be locked when Grid is initially rendered
+		//		|	var grid = new Grid({
+		//		|		modules: [
+		//		|			{moduleClass: gridx.modules.ColumnLock, count: 2}, ...
+		//		|		],
+		//		|		...
+		//		|	});
+		//		|
+		//			Or another way to set the lock number:
+		//		|	var grid = new Grid({
+		//		|		columnLockCount: 2
+		//		|		modules: [
+		//		|			gridx.modules.ColumnLock, ...
+		//		|		],
+		//		|	})
+		//
+		//		2. Lock or unlock columns dynamically
+		//		|	// lock 2 leading columns
+		//		|	grid.columnLock.lock(2)
+		//		|	
+		//		|	// unlock all columns
+		//		|	grid.columnLock.unLock();
+		
+		// name: [readonly] String
+		//		module name			
 		name: 'columnLock',
+		
+		// name: [readonly] Array
+		//		Module dependencies			
 		required: ['body'],
-		count: 0,	//locked columns count
+		
+		// count: [readonly] Integer
+		//		Number of columns that will be locked by default			
+		count: 0,
+		
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
 			var _this = this, g = this.grid, body = html.body();
@@ -27,11 +66,15 @@ define([
 					g.header.loaded.then(function(){
 						_this._updateHeader();
 					});
+					if(g.move && g.move.column){
+						_this.connect(g.move.column, 'move', '_updateHeader');
+					}
 				}
 				_this._hackHScroller();
 				if(_this.count){
-					html.addClass(this.grid.domNode, 'gridxColumnLock');
-					_this._updateScroller();
+					_this.lock(_this.count);
+//					html.addClass(this.grid.domNode, 'gridxColumnLock');
+//					_this._updateScroller();
 				}
 				_this.loaded.callback();
 			});
@@ -42,10 +85,11 @@ define([
 			};
 		},
 		
-		lock: function(count){
-			//summary:
-			//	Lock leading columns by count.
+		lock: function(/*Integer*/count){
+			// summary:
+			//		Dynamically lock consecutive #count leading columns.
 			if(count >= this.grid._columns.length){
+				this.count = 0;
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
 				return;
 			}
@@ -60,8 +104,8 @@ define([
 		},
 		
 		unlock: function(){
-			//summary:
-			//	Unlock columns.
+			// summary:
+			//		Unlock all columns.
 			html.removeClass(this.grid.domNode, 'gridxColumnLock');
 			
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
@@ -96,7 +140,10 @@ define([
 		_lockColumns: function(rowNode){
 			//summary:
 			//	Lock columns for one row
-			if(!this.count){return;}
+			if(!this.count || this.count >= this.grid._columns.length){
+				this.count = 0;
+				return;
+			}
 			
 			var r = rowNode.firstChild.rows[0], i;
 			for(i = 0; i < this.count; i++){
@@ -108,21 +155,21 @@ define([
 //				if(h < mh)h = mh;
 //			});
 			
-			var h = dojo.contentBox(r.cells[r.cells.length - 1]).h;
-			
+			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
+				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
+			dojo.style(rowNode.firstChild, 'height', h2 + 'px');
 			var pl = 0, cols = this.grid._columns;
-			//TODO: 8 is a magic number which includes padding and border. Don't know why does FF have this behavior.
-			dojo.style(r.cells[r.cells.length - 1], 'height', (dojo.isFF ? h + 8 : h) + 'px');
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.addClass(cell, 'gridxLockedCell');
 				html.style(cell, {
-					height: h + 'px',
+					height: h1 + 'px',
 					left: pl + 'px'
 				});
 				pl += cell.offsetWidth;
 			}
 			rowNode.style.paddingLeft = pl + 'px';
+			//rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
 		},
 		
 		_updateHeader: function(){
@@ -130,6 +177,7 @@ define([
 			//	Update the header for column lock
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
 			this._lockColumns(rowNode);
+			this._updateScroller();//used for column dnd to sync hscroller.
 		},
 		
 		_updateBody: function(){

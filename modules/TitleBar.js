@@ -5,7 +5,7 @@ define([
 ], function(declare, domConstruct, _Module){
 	
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.TitleBar", =====*/_Module, {
 		name: 'titleBar',
 		
 //        required: ['vLayout'],

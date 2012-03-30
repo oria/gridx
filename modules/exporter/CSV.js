@@ -28,7 +28,10 @@ define([
 =====*/
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.exporter.CSV", =====*/_Module, {
+		// summary:
+		//		This module provides the API to export grid contents to CSV format string
+
 		name: 'exportCsv',
 
 		forced: ['exporter'],
@@ -42,34 +45,54 @@ define([
 		},
 	
 		//Public ---------------------------------------------------------------------
-		toCSV: function(/* __CSVExportArgs */ args){
-			return this.grid.exporter._export(this, args || {});
+		toCSV: function(/* __CSVExportArgs? */ args){
+			// summary:
+			//		Export the grid contents to CSV according to the given args.
+			//		This method should be called through grid.exporter.toCSV();
+			// args: __CSVExportArgs?
+			//		The args to configure the export result and the export process.
+			// returns:
+			//		A deferred object indicating when the export process is completed,
+			//		and then pass the exported CSV string to callbacks.
+			return this.grid.exporter._export(this, args || {});	//dojo.Deferred
 		},
 
 		//Package --------------------------------------------------------------------
 		initialize: function(/* __CSVExportArgs */ args){
+			// tags:
+			//		private
 			this._s = args.separator || ",";
 			this._n = args.newLine || "\r\n";
 			this._lines = [];
 		},
 
 		beforeHeader: function(){
+			// tags:
+			//		private
 			this._cells = [];
 		},
 
 		handleHeaderCell: function(/* __ExportContext */ context){
+			// tags:
+			//		private
 			this._cells.push(context.column.name());
 		},
 
 		afterHeader: function(){
+			// tags:
+			//		private
 			this._lines.push(this._cells.join(this._s));
 		},
 
 		beforeRow: function(){
+			// tags:
+			//		private
 			this._cells = [];
 		},
 
 		handleCell: function(/* __ExportContext */  context){
+			// tags:
+			//		private
 			var data = String(context.data).replace(/"/g, '""');
 			if(data.indexOf(this._s) >= 0 || data.search(/[" \t\r\n]/) >= 0){
 				data = '"' + data + '"';
@@ -78,10 +101,14 @@ define([
 		},
 
 		afterRow: function(){
+			// tags:
+			//		private
 			this._lines.push(this._cells.join(this._s));
 		},
 
 		getResult: function(){
+			// tags:
+			//		private
 			return this._lines.join(this._n);
 		}
 	}));

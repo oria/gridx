@@ -37,7 +37,7 @@ require([
 			modules.DndColumn,
 			modules.VirtualVScroller
 		],
-		autoWidth: true,
+		autoWidth: false,
 		selectRowTriggerOnCell: true
 	});
 	grid.placeAt('gridContainer');

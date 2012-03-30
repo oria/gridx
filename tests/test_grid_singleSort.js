@@ -30,14 +30,13 @@ require([
 			size: 100
 		}),
 		structure: structure,
-		baseSort: [{attribute: 'Album', descending: true}],
+		baseSort: [{attribute: 'Album', descending: false}],
 		modules: [
 			modules.VirtualVScroller,
 //            modules.ColumnResizer,
 //            modules.Focus,
 			{
-				moduleClass: modules.SingleSort,
-				preSort:{colId: '3', descending: true}
+				moduleClass: modules.SingleSort
 			}
 		],
 		modelExtensions: [modules.FormatSort]

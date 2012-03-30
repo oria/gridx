@@ -21,7 +21,7 @@ define([
 		removeClass = domClass.remove,
 		addClass = domClass.add;
 
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.NestedSort", =====*/_Module, {
 		name: 'sort',
 
 		forced: ['header'],
@@ -138,7 +138,6 @@ define([
 		},
 		
 		_initHeader: function(){
-			
 			var t = this,
 				table = t.grid.header.domNode.firstChild.firstChild,
 				tds = table.rows[0].cells;

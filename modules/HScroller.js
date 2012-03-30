@@ -7,10 +7,13 @@ define([
 	"../core/_Module"
 ], function(declare, domStyle, sniff, Deferred, metrics, _Module){
 
-	var sl = 'scrollLeft';
+	var sl = 'scrollLeft';		//This is for reducing code size only.
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
+		// summary:
+		//		This module provides basic horizontal scrolling for grid
+
 		name: 'hScroller',
 
 //        required: ['vLayout', 'hLayout'],
@@ -18,6 +21,8 @@ define([
 		forced: ['header'],
 
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return this.grid.autoWidth ? {} : {
 				hScroller: this
 			};
@@ -28,6 +33,8 @@ define([
 		},
 
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this, g = t.grid, n = g.hScrollerNode;
 			if(!g.autoWidth){
 				t.domNode = n;
@@ -57,16 +64,26 @@ define([
 		},
 		
 		//Public API-----------------------------------------------------------
+
 		scroll: function(left){
+			// summary:
+			//		Scroll the grid horizontally
+			// tags:
+			//		package
+			// left: Number
+			//		The scrollLeft value
+			var dn = this.domNode;
 			if(sniff('webkit') && !this.grid.isLeftToRight()){
-				left = this.domNode.scrollWidth - this.domNode.clientWidth - left;
+				left = dn.scrollWidth - dn.clientWidth - left;
 			}
-			this.domNode[sl] = left;
+			dn[sl] = left;
 		},
 		
 		refresh: function(){
-			//summary:
-			//	Refresh scroller itself to match grid body
+			// summary:
+			//		Refresh scroller itself to match grid body
+			// tags:
+			//		package
 			var t = this,
 				g = t.grid,
 				ltr = g.isLeftToRight(),
@@ -96,9 +113,9 @@ define([
 		_lastLeft: 0,
 
 		_onScroll: function(e){
-			//summary:
 			//	Fired by h-scroller's scrolling event
-			var t = this, s = t.domNode[sl];
+			var t = this,
+				s = t.domNode[sl];
 			if(sniff('webkit') && !t.grid.isLeftToRight()){
 				s = t.domNode.scrollWidth - t.domNode.clientWidth - s;
 			}
@@ -109,11 +126,11 @@ define([
 		},
 
 		_doScroll: function(rowNode){
-			//summary:
 			//	Sync the grid body with the scroller.
-			var g = this.grid;
-			g.bodyNode[sl] = this.domNode[sl]
-			g.onHScroll(this._lastLeft);
+			var t = this,
+				g = t.grid;
+			g.bodyNode[sl] = t.domNode[sl];
+			g.onHScroll(t._lastLeft);
 		}
 	}));
 });

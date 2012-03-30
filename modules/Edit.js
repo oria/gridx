@@ -22,6 +22,15 @@ define([
 		//		If true then the cells in this column will always be in editing mode. Default is false.
 		alwaysEditing: false,
 	
+		// applyWhen: String
+		//		When alwaysEditing, the changed value will by default be applied to store when the editor is blurred.
+		//		But sometimes it might be better to apply the change at a different time, for example: when the click
+		//		a checkbox in a cell, it ususally is expected to take effect at once.
+		//		This argument is a method name of the editor used in this column, for example: 'onClick'. If this
+		//		argument is provided, the changes will be applied to the store when that method is called instead of
+		//		'onBlur'.
+		applyWhen: 'onBlur',
+
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.
 		//		The default dijit is dijit.form.TextBox.
@@ -70,10 +79,18 @@ define([
 		};
 	}
 	
-	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs');
+	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs', 'applyWhen');
 	
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.Edit", =====*/_Module, {
+		// summary:
+		//		This module provides editing mode for grid cells.
+		// description:
+		//		This module relies on an implementation of the CellWidget module.
+		//		The editing mode means there will be an editable widget appearing in the grid cell.
+		//		This implementation also covers "alwaysEditing" mode for grid columns,
+		//		which means all the cells in this column are always in editing mode.
+
 		name: 'edit',
 	
 		forced: ['cellWidget'],
@@ -108,12 +125,16 @@ define([
 		},
 	
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				edit: this
 			};
 		},
 	
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this;
 			t.connect(t.grid, 'onCellDblClick', '_onUIBegin');
 			t.connect(t.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
@@ -167,8 +188,14 @@ define([
 		
 		//Public------------------------------------------------------------------------------
 		begin: function(rowId, colId){
-			//summary:
-			//	Begin to edit a cell with defined dijit.
+			// summary:
+			//		Begin to edit a cell with defined editor widget.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		A deferred object indicating when the cell has completely changed into eidting mode.
 			var d = new Deferred(), t = this;
 			if(!t.isEditing(rowId, colId)){
 				var g = t.grid,
@@ -193,12 +220,18 @@ define([
 				t._focusEditor(rowId, colId);
 				d.callback(true);
 			}
-			return d;
+			return d;	//dojo.Deferred
 		},
 	
 		cancel: function(rowId, colId){
-			//summary:
-			//	Cancel the edit. And end the editing state.
+			// summary:
+			//		Cancel the edit. And end the editing state.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		A deferred object indicating when the cell value has been successfully restored.
 			var d = new Deferred(),
 				t = this,
 				m = t.model,
@@ -224,12 +257,18 @@ define([
 			}else{
 				d.callback();
 			}
-			return d;
+			return d;	//dojo.Deferred
 		},
 	
 		apply: function(rowId, colId){
-			//summary:
-			//	Apply the edit value to the grid store. And end the editing state.
+			// summary:
+			//		Apply the edit value to the grid store. And end the editing state.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		A deferred object indicating when the change has been written back to the store.
 			var d = new Deferred(),
 				t = this,
 				g = t.grid,
@@ -262,28 +301,42 @@ define([
 						t._erase(rowId, colId);
 						console.warn('Can not apply change! Error message: ', e);
 						d.callback(false);
-						return d;
+						return d;	//dojo.Deferred
 					}
-					return d;
+					return d;	//dojo.Deferred
 				}
 			}
 			d.callback(false);
-			return d;
+			return d;	//dojo.Deferred
 		},
 	
 		isEditing: function(rowId, colId){
+			// summary:
+			//		Check whether a cell is in editing mode.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		Whether the cell is in eidting mode.
 			var col = this.grid._columnsById[colId];
 			if(col && col.alwaysEditing){
 				return true;
 			}
 			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
-			return !!widget && !!widget.gridCellEditField;
+			return !!widget && !!widget.gridCellEditField;	//Boolean
 		},
 	
 		setEditor: function(colId, editor, args){
-			//summary:
-			//	Define the dijit to edit a column of a grid.
-			//	The dijit should have a get and set method to get value and set value.
+			// summary:
+			//		Define the editor widget to edit a column of a grid.
+			//		The widget should have a get and set method to get value and set value.
+			// colId: String
+			//		A column ID
+			// editor: Function|String
+			//		Class constructor or declared name of an editor widget
+			// args: __GridCellEditorArgs?
+			//		Any args that are related to this editor.
 			var col = this.grid._columnsById[colId],
 				editorArgs = col.editorArgs = col.editorArgs || {};
 			col.editor = editor;
@@ -324,8 +377,9 @@ define([
 
 		_onCellWidgetCreated: function(widget, column){
 			if(widget.gridCellEditField && column.alwaysEditing){
-				var t = this, w = widget.gridCellEditField;
-				widget.connect(w, 'onBlur', function(){
+				var t = this,
+					w = widget.gridCellEditField;
+				widget.connect(w, column.applyWhen || 'onBlur', function(){
 					var rn = widget.domNode.parentNode;
 					while(rn && !domClass.contains(rn, 'gridxRow')){
 						rn = rn.parentNode;
@@ -435,7 +489,10 @@ define([
 						rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
 					if(t.isEditing(rowId, colId)){
 						t._record(rowId, colId);
-						t._editing = true;
+						//FIXME
+//                        t._editing = true;
+//                        t._focusCellCol = colId;
+//                        t._focusCellRow = rowId;
 						return true;
 					}
 				}

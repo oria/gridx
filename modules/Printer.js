@@ -101,12 +101,18 @@ define([
 	}
 	
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.Printer", =====*/_Module, {
+		// summary:
+		//		This module provides the API to print grid contents or provide print preview
+		// description:
+		//		This module relies on the ExportTable module to produce HTML table from grid.
 		name: 'printer',
 
 		forced: ['exportTable'],
 		
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				printer: this
 			};
@@ -114,25 +120,29 @@ define([
 	
 		//Public-----------------------------------------------------------------
 		print: function(args){
-			//	summary:
-			//		Print all rows of the grid.
-			//	args: Object
+			// summary:
+			//		Print grid contents.
+			// args: Object
 			//		Please refer to `grid.printer.__PrinterArgs`
-			return this.toHTML(args).then(print);
+			// returns:
+			//		A deferred object indicating when the export process is completed.
+			return this.toHTML(args).then(print);	//dojo.Deferred
 		},
 
 		toHTML: function(args){
 			// summary
 			//		Export to printable html, used for preview
-			//	args: Object
+			// args: Object
 			//		Please refer to `grid.printer.__PrinterArgs`
+			// returns:
+			//		A deferred object indicating when the export process is completed.
 			var t = this, d = new Deferred;
 			loadStyleFiles(args.styleSrc).then(function(styleSrc){
 				t.grid.exporter.toTable(args).then(function(str){
 					d.callback(t._wrap(args, styleSrc, str));
 				}, hitch(d, d.errback), hitch(d, d.progress));
 			});
-			return d;
+			return d;	//dojo.Deferred
 		},
 		
 		//private----------------------------------------------------------------------------

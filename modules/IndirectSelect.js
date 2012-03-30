@@ -11,12 +11,26 @@ define([
 ], function(declare, array, query, lang, domClass, Deferred, _Module, util){
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.IndirectSelect", =====*/_Module, {
+		// summary:
+		//		This module shows a checkbox(or radiobutton) on the row header when row selection is used.
+		// description:
+		//		This module relies on an implementation of the RowHeader module, and an implementation of
+		//		the SelectRow module.
+		//		This module will check whether the SelectRow module provides the functionality of "select rows by index" 
+		//		(which means the "selectByIndex" method exists). If so, a "select all" checkbox can be provided 
+		//		in the header node of the row header column.
+		//		This module will also check whether the SelectRow module is configured to "single selection" mode
+		//		(which means the "multiple" attribute is set to false). If so, radio button instead of checkbox
+		//		will be used in row headers.
+
 		name: 'indirectSelect',
 
 		required: ['rowHeader', 'selectRow'],
 
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this,
 				g = t.grid,
 				focus = g.focus,
@@ -25,6 +39,7 @@ define([
 			rowHeader.cellProvider = lang.hitch(t, t._createSelector);
 			t.batchConnect(
 				[sr,'onHighlightChange', '_onHighlightChange' ],
+				[sr,'clear', '_onClear' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[g, 'onRowMouseOver', '_onMouseOver'],
 				[g, 'onRowMouseOut', '_onMouseOut'],
@@ -40,16 +55,19 @@ define([
 				}]
 			);
 			if(sr.selectByIndex && t.arg('all')){
+				t._allSelected = {};
 				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
-				if(focus){
-					t._initFocus();
-				}
 				rowHeader.loaded.then(function(){
+					if(focus){
+						t._initFocus();
+					}
 					t.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
 				});
 			}
 		},
 
+		// all: Boolean
+		//		Whether the "select all" checkbox is allowed to appear.
 		all: true,
 
 		//Private----------------------------------------------------------
@@ -63,12 +81,23 @@ define([
 			var dijitClass = this._getDijitClass();
 			return ['<span class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
 				dijitClass, ' ', selected ? dijitClass + 'Checked' : '',
-				'"><span class="gridxIndirectSelectionCheckBoxInner">□</span></span>'
+				'"><span class="gridxIndirectSelectionCheckBoxInner">&#9633;</span></span>'
 			].join('');
 		},
 
 		_createSelectAllBox: function(){
-			return this._createCheckBox(this._allSelected);
+			return this._createCheckBox(this._allSelected[this._getPageId()]);
+		},
+
+		_getPageId: function(){
+			return this.grid.body.rootStart + ',' + this.grid.body.rootCount;
+		},
+
+		_onClear: function(){
+			var cls = this._getDijitClass() + 'Checked';
+			query('.' + cls, this.grid.rowHeader.bodyNode).forEach(function(node){
+				domClass.remove(node, cls);
+			});
 		},
 
 		_onHighlightChange: function(target, toHighlight){
@@ -103,8 +132,13 @@ define([
 		},
 
 		_onSelectAll: function(){
-			var g = this.grid, body = g.body;
-			g.select.row[this._allSelected ? 'deselectByIndex' : 'selectByIndex']([body.rootStart, body.rootStart + body.rootCount - 1]);
+			var t = this,
+				g = t.grid,
+				body = g.body;
+			g.select.row[t._allSelected[t._getPageId()] ? 
+				'deselectByIndex' :
+				'selectByIndex'
+			]([0, body.visualCount - 1]);
 		},
 
 		_onSelectionChange: function(selected){
@@ -132,7 +166,7 @@ define([
 				});
 			}
 			Deferred.when(d, function(){
-				t._allSelected = allSelected;
+				t._allSelected[t._getPageId()] = allSelected;
 				var node = t.grid.rowHeader.headerCellNode.firstChild;
 				domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
 			});

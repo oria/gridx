@@ -13,9 +13,32 @@ define([
 ], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
 	return _Module.register(
-	declare(_RowCellBase, {
+	declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
+		// summary:
+		//		Provides advanced row selections.
+		// description:
+		//		This module provides an advanced way for selecting rows by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple rows.
+		//
+		// example:
+		//		1. Use select api on grid row object obtained from grid.row(i)
+		//		|	grid.row(1).select();
+		//		|	grid.row(1).deselect();
+		//		|	grid.row(1).isSelected();
+		//
+		//		2. Use select api on select.row module
+		//		|	grid.select.row.selectById(rowId);
+		//		|	grid.select.row.deSelectById(rowId);
+		//		|	grid.select.row.isSelected(rowId);
+		//		|	grid.select.row.getSelected();//[]
+		//		|	grid.select.row.clear();
+
+		// name: [readonly] String
+		//		module name		
 		name: 'selectRow',
 
+		// rowMixin: Object
+		//		A map of functions to be mixed into grid row object, so that we can use select api on row object directly
+		//		- grid.row(1).select() | deselect() | isSelected();
 		rowMixin: {
 			select: function(){
 				this.grid.select.row.selectById(this.id);
@@ -31,19 +54,50 @@ define([
 		},
 		
 		//Public-----------------------------------------------------------------
+		
+		// triggerOnCell: [readonly] Boolean
+		//		Whether row will be selected by clicking on cell, false by default		
 		triggerOnCell: false,
-
+		
+/*=====
+		selectById: function(rowId){
+			// summary:
+			//		Select a row by id.
+		},
+		
+		deselectById: function(rowId){
+			// summary:
+			//		Deselect a row by id.
+		},
+		
+		selectByIndex: function(rowIndex){
+			// summary:
+			//		Select a row by index
+		},
+		
+		deSelectByIndex: function(rowIndex){
+			// summary:
+			//		Deselect a row by index.
+		},
+		
+=====*/
 		getSelected: function(){
+			// summary:
+			//		Get id array of all selected rows
 			return this.model.getMarkedIds();
 		},
 
 		isSelected: function(){
+			// summary:
+			//		Check if the given rows are all selected.
 			return array.every(arguments, function(id){
 				return this.model.isMarked(id);
 			}, this);
 		},
 
 		clear: function(silent){
+			// summary:
+			//		Deselected all selected rows;			
 			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowSelected');
 			});

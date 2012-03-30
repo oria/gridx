@@ -10,15 +10,14 @@ define([
 
 	return _Module.register(
 	declare(_PaginationBarBase, {
-		//already declared in base class
-//        sizeSwitch: true,
+		// summary:
+		//		This module implements a pagination bar UI that uses drop down lists for pages and page sizes.
+		//		This implementation saves more horizontal space compared to the link button version of pagination bar.
 
-//        stepper: true,
-
-//        description: true,
-
+		// stepperClass: [private]
 		stepperClass: FilteringSelect,
 
+		// sizeSwitchCalss [private]
 		sizeSwitchClass: Select,
 
 	/*=====
@@ -28,6 +27,7 @@ define([
 		descriptionSelectionTemplate: '',
 	=====*/
 
+		// pagerClass: [private]
 		pagerClass: Pager
 	}));	
 });

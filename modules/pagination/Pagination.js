@@ -5,8 +5,12 @@ define([
 ], function(declare, array, _Module){
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.pagination.Pagination", =====*/_Module, {
 		// summary:
+		//		This module provides (logical) pagination functionality for grid.
+		// description:
+		//		This module does not include any UI buttons for pagination, so that various
+		//		kinds of pagination UI implementations can benifit from this module.
 	
 		// [Module Dependency Management] --------------------------------------------
 		name: 'pagination',	
@@ -32,10 +36,14 @@ define([
 
 		// [Module Lifetime Management] -----------------------------------------------
 		preload: function(){
+			// tags:
+			//		protected extension
 			this.grid.body.autoChangeSize = false;
 		},
 
 		load: function(){
+			// tags:
+			//		protected extension
 			var t = this;
 			t._pageSize = t.arg('initialPageSize') || t._pageSize;
 			t._page = t.arg('initialPage', t._page, function(arg){
@@ -60,61 +68,113 @@ define([
 
 		// GET functions
 		pageSize: function(){
+			// summary:
+			//		Get current page size
+			// returns:
+			//		The current page size
 			var s = this._pageSize;
-			return s > 0 ? s : this.model.size();
+			return s > 0 ? s : this.model.size();	//Integer
 		},
 
 		isAll: function(){
-			return this._pageSize === 0;
+			// summary:
+			//		Check if the grid is currently showing all rows (page size set to 0).
+			// returns:
+			//		Whether the grid is showing all rows.
+			return this._pageSize === 0;	//Boolean
 		},
 	
 		pageCount: function(){
-			return this.isAll() ? 1 : Math.ceil(this.model.size() / this.pageSize());
+			// summary:
+			//		Get the current count of pages.
+			// returns:
+			//		The current count of pages.
+			return this.isAll() ? 1 : Math.ceil(this.model.size() / this.pageSize());	//Integer
 		},
 	
 		currentPage: function(){
-			return this._page;
+			// summary:
+			//		Get the index of current page.
+			// returns:
+			//		The index of current page.
+			return this._page;	//Integer
 		},
 	
 		firstIndexInPage: function(page){
+			// summary:
+			//		Get the index of the first row in the given page.
+			// page: Integer
+			//		The index of a page.
+			// returns:
+			//		The index of the first row in the page. If page is not valid, return -1.
 			if(!page && page !== 0){
 				page = this._page;
 			}else if(!(page >= 0)){
-				return -1;
+				return -1;	//Integer
 			}
 			var index = page * this.pageSize();
-			return index < this.model.size() ? index : -1;
+			return index < this.model.size() ? index : -1;	//Integer
 		},
 	
 		lastIndexInPage: function(page){
+			// summary:
+			//		Get the index of the last row in the given page.
+			// page: Integer
+			//		The index of a page
+			// returns:
+			//		The index of the last row in the given page.
 			var t = this,
 				firstIndex = t.firstIndexInPage(page);
 			if(firstIndex >= 0){
 				var lastIndex = firstIndex + t.pageSize() - 1,
 					size = t.model.size();
-				return lastIndex < size ? lastIndex : size - 1;
+				return lastIndex < size ? lastIndex : size - 1;	//Integer
 			}
-			return -1;
+			return -1;	//Integer
 		},
 		
 		pageOfIndex: function(index){
-			return this.isAll() ? 0 : Math.floor(index / this.pageSize());
+			// summary:
+			//		Get the index of the page that the given row is in.
+			// index: Integer
+			//		The row index
+			// returns:
+			//		The page index
+			return this.isAll() ? 0 : Math.floor(index / this.pageSize());	//Integer
 		},
 	
 		indexInPage: function(index){
-			return this.isAll() ? index : index % this.pageSize();
+			// summary:
+			//		Get the row index in page by overall row index
+			// index: Integer
+			//		The row index
+			// returns:
+			//		The row index in page
+			return this.isAll() ? index : index % this.pageSize();	//Integer
 		},
 	
 		filterIndexesInPage: function(indexes, page){
+			// summary:
+			//		Filter out the indexes that are in the given page.
+			// indexes: Integer[]
+			//		An array of row indexes.
+			// page: Integer
+			//		A page index
+			// returns:
+			//		A subset of indexes that appear in the given page.
 			var first = this.firstIndexInPage(page),
 				end = this.lastIndexInPage(page);
-			return first < 0 ? [] : array.filter(indexes, function(index){
+			return first < 0 ? [] : array.filter(indexes, function(index){	//Integer[]
 				return index >= first && index <= end;
 			});
 		},
 	
 		//SET functions
 		gotoPage: function(page){
+			// summary:
+			//		Set the current page
+			// page: Integer
+			//		A page index
 			var t = this, oldPage = t._page;
 			if(page != oldPage && t.firstIndexInPage(page) >= 0){
 				t._page = page;
@@ -124,6 +184,10 @@ define([
 		},
 	
 		setPageSize: function(size){
+			// summary:
+			//		Set page size (count of rows in one page)
+			// size: Integer
+			//		The new page size 
 			var t = this, oldSize = t._pageSize;
 			if(size != oldSize && size >= 0){
 				var index = t.firstIndexInPage(),
@@ -142,8 +206,19 @@ define([
 		},
 	
 		// [Events] ----------------------------------------------------------------
-		onSwitchPage: function(/*currentPage, originalPage*/){},
-		onChangePageSize: function(/*currentSize, originalSize*/){},
+		onSwitchPage: function(/*currentPage, originalPage*/){
+			// summary:
+			//		Fired when switched to another page.
+			// tags:
+			//		callback
+		},
+
+		onChangePageSize: function(/*currentSize, originalSize*/){
+			// summary:
+			//		Fired when the page size is changed
+			// tags:
+			//		callback
+		},
 		
 		// [Private] -------------------------------------------------------
 		_page: 0,

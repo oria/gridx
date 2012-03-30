@@ -134,11 +134,13 @@ define([
 	
 		//Package ---------------------------------------------------------------------
 		_export: function(writer, /* __ExportArgs */ args){
-			//summary:
+			// summary:
 			//		Go through the grid using the given args and writer implementation.
 			//		Return a dojo.Deferred object. Users can cancel and see progress 
 			//		of the exporting process.
 			//		Pass the exported result to the callback function of the Deferred object.
+			// tags:
+			//		private
 			var d = new Deferred,
 				t = this,
 				model = t.model,

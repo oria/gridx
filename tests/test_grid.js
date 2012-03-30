@@ -37,8 +37,8 @@ require([
 //                    modules.DndRow,
 //                    modules.FilterBar,
 //                    modules.Focus,
-					modules.RowHeader,
-//                    modules.ColumnResizer,
+//					modules.RowHeader,
+                    modules.ColumnResizer,
 					modules.VirtualVScroller
 				],
 				selectRowTriggerOnCell: true

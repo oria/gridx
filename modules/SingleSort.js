@@ -7,7 +7,10 @@ define([
 ], function(declare, lang, keys, Sort, _Module){
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.SingleSort", =====*/_Module, {
+		// summary:
+		//		This module provides the single column sorting functionality for grid.
+
 		name: 'sort',
 
 		forced: ['header'],
@@ -18,12 +21,16 @@ define([
 		modelExtensions: [Sort],
 		
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				sort: this
 			};
 		},
 
-		preload: function(args){
+		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this, g = t.grid, sort;
 			t.connect(g, 'onHeaderCellClick', '_onClick');
 			t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown');
@@ -50,6 +57,8 @@ define([
 		},
 	
 		load: function(){
+			// tags:
+			//		protected extension
 			var t = this, colId, f = function(){
 				if(t._sortId){
 					t._updateHeader(t._sortId, t._sortDescend);
@@ -93,7 +102,22 @@ define([
 		},
 	
 		//Public--------------------------------------------------------------
+
+		/*=====
+		preSort: null,
+		=====*/
+
 		sort: function(colId, isDescending, skipUpdateBody){
+			// summary:
+			//		Sort the grid on given column.
+			// colId: String
+			//		The column ID
+			// isDescending: Boolean?
+			//		Whether to sort the column descendingly
+			// skipUpdateBody: Boolean?
+			//		If set to true, the grid body will not automatically be refreshed after this call,
+			//		so that several grid operations could be done altogether
+			//		without refreshing the grid over and over.
 			var t = this, g = t.grid, col = g._columnsById[colId];
 			if(col && (col.sortable || col.sortable === undefined)){
 				if(t._sortId != colId || t._sortDescend == !isDescending){
@@ -107,13 +131,27 @@ define([
 		},
 	
 		isSorted: function(colId){
+			// summary:
+			//		Check wheter (and how) the grid is sorted on the given column.
+			// colId: String
+			//		The columnn ID
+			// returns:
+			//		Positive number if the column is sorted ascendingly;
+			//		Negative number if the column is sorted descendingly;
+			//		Zero if the column is not sorted.
 			if(colId == this._sortId){
-				return this._sortDescend ? -1 : 1;
+				return this._sortDescend ? -1 : 1;	//Number
 			}
-			return 0;
+			return 0;	//Number
 		},
 	
 		clear: function(skipUpdateBody){
+			// summary:
+			//		Clear sort.
+			// skipUpdateBody:
+			//		If set to true, the grid body will not automatically be refreshed after this call,
+			//		so that several grid operations could be done altogether
+			//		without refreshing the grid over and over.
 			var t = this;
 			if(t._sortId !== null){
 				t._initHeader(t._sortId);
@@ -126,7 +164,11 @@ define([
 		},
 
 		getSortData: function(){
-			return this._sortId ? [{
+			// summary:
+			//		Get an array of objects that can be accepted by the store's "sort" argument.	
+			// returns:
+			//		An array containing the sort info
+			return this._sortId ? [{	//Object[]|null
 				colId: this._sortId, 
 				descending: this._sortDescend
 			}] : null;

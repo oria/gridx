@@ -81,7 +81,7 @@ require([
 			editor: VSlider,
 			editorArgs: {
 				dijitProperties: {
-					minimum: 10,
+					minimum: 0,
 					maximum: 100,
 					style: {
 						height: '200px'
@@ -176,12 +176,16 @@ require([
 		structure: structure,
 		selectRowTriggerOnCell: 1,
 		cellWidgetBackupCount: 40,
+		columnLockCount: 3,
 		modules: [
 			modules.Focus,
 			modules.CellWidget,
 			modules.Edit,
 			modules.SelectRow,
+			modules.IndirectSelect,
 			modules.SingleSort,
+			//modules.ColumnLock,
+			//modules.FilterBar,
 			modules.VirtualVScroller
 			
 		]

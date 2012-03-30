@@ -54,7 +54,8 @@ define([
 		}
 		//Firefox seems have problem to get offsetX for TH
 		if(sniff('ff') && /th/i.test(target.tagName)){
-			var d = lx - parseInt(cell.parentNode.parentNode.parentNode.style.marginLeft, 10) - cell.offsetLeft;
+			var d = lx - parseInt(cell.parentNode.parentNode.parentNode.style.marginLeft, 10) 
+				- cell.offsetLeft - cell.offsetParent.offsetLeft;
 			if(d >= 0){
 				lx = d;
 			}
@@ -63,12 +64,21 @@ define([
 	}
 		
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.ColumnResizer", =====*/_Module, {
+		// summary:
+		//		Column Resizer machinery.
+		// description:
+		//		This module provides a way to resize column width. 
+		
+		// name: [readonly] String
+		//		module name
 		name: 'columnResizer',
 
 //        required: ['hScroller'],
 
-		minWidth: 20,	//in px
+		// minWidth: Integer
+		//		min column width in px
+		minWidth: 20,
 
 		detectWidth: 5,
 
@@ -86,11 +96,17 @@ define([
 		},
 
 		getAPIPath: function(){
+			// summary:
+			//		Module reference shortcut so that we can 
+			//		quickly locate this module by grid.columnResizer
 			return {
 				columnResizer: this
 			};
 		},
 
+		// columnMixin: Object
+		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
+		//		- grid.column(1).setWidth(300);
 		columnMixin: {
 			setWidth: function(width){
 				this.grid.columnResizer.setWidth(this.id, width);
@@ -98,7 +114,9 @@ define([
 		},
 
 		//Public---------------------------------------------------------------------
-		setWidth: function(colId, width){
+		setWidth: function(/*String | Integer*/colId, /*Integer*/width){
+			// summary:
+			//		Set width of the target column
 			var t = this,
 				g = t.grid,
 				minWidth = t.arg('minWidth'),
@@ -245,6 +263,7 @@ define([
 				cell = getCell(e),
 				x = getCellX(e),
 				detectWidth = t.arg('detectWidth');
+			
 			if(x < detectWidth){
 				//If !t._targetCell, the first cell is not able to be resize
 				return !!(t._targetCell = cell.previousSibling);

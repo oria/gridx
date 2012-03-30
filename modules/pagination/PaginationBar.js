@@ -10,26 +10,29 @@ define([
 ], function(declare, _PaginationBarBase, Pager, _Module, GotoPagePane, Dialog, Button, NumberTextBox){
 
 	return _Module.register(
-	declare(_PaginationBarBase, {
-		//already declared in base class
-//        sizeSwitch: true,
+	declare(/*===== "gridx.modules.pagination.PaginationBar", =====*/_PaginationBarBase, {
+		// summary:
+		//		This module implements a pagination bar UI that uses link buttons for pages and page sizes.
 
-//        stepper: true,
-
-//        description: true,
-
+		// gotoButton: Boolean|String
 		gotoButton: true,
 
+		// visibleSteppers: Integer
 		visibleSteppers: 3,
 
+		// sizeSeparator: String
 		sizeSeparator: '|',
 
+		// gotoPagePane: [private]
 		gotoPagePane: GotoPagePane,
 
+		// dialogClass: [private]
 		dialogClass: Dialog,
 
+		// buttonClass: [private]
 		buttonClass: Button,
 
+		// numberTextBoxClass: [private]
 		numberTextBoxClass: NumberTextBox,
 
 	/*=====
@@ -47,6 +50,7 @@ define([
 		descriptionSelectionTemplate: '',
 	=====*/
 
+		// pagerClass: [private]
 		pagerClass: Pager
 	}));	
 });

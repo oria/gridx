@@ -71,7 +71,7 @@ define([
 			return this._subMark('_markByIndex', arguments, false);
 		},
 
-		onSelectionChange: function(newSelectedIds, oldSelectedIds){
+		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
 			//summary:
 			//	Event: fired when the selection is changed.
 		},

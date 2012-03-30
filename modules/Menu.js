@@ -32,7 +32,7 @@ define([
 =====*/
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.Menu", =====*/_Module, {
 		name: 'menu',
 
 		getAPIPath: function(){

@@ -19,7 +19,7 @@ require([
 		structure: dataSource.layouts[0],
 		modules: [
 			modules.Focus,		
-			modules.Toolbar,
+			modules.ToolBar,
 			modules.SingleSort,
 			modules.VirtualVScroller
 		]

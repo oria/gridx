@@ -11,7 +11,12 @@ define([
 ], function(declare, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
 	return _Module.register(
-	declare(_Module, {
+	declare(/*===== "gridx.modules.Header", =====*/_Module, {
+		// summary:
+		//		The header UI of grid
+		// description:
+		//		This module is in charge of the rendering of the grid header. But it should not manage column width,
+		//		which is the responsibility of ColumnWidth module.
 
 		name: 'header',
 	
@@ -20,6 +25,8 @@ define([
 		forced: ['hLayout'],
 
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				header: this
 			};
@@ -40,6 +47,8 @@ define([
 		},
 
 		preload: function(args){
+			// tags:
+			//		protected extension
 			var t = this, g = t.grid, dn = t.domNode;
 			g.headerNode.appendChild(dn);
 			//Add this.domNode to be a part of the grid header
@@ -57,6 +66,8 @@ define([
 		},
 
 		destroy: function(){
+			// tags:
+			//		protected extension
 			this.inherited(arguments);
 			domConstruct.destroy(this.domNode);
 		},
@@ -69,10 +80,18 @@ define([
 	
 		//Public-----------------------------------------------------------------------------
 		getHeaderNode: function(id){
-			return query("[colid='" + id + "']", this.domNode)[0];
+			// summary:
+			//		Get the header DOM node by column ID.
+			// id: String
+			//		The column ID
+			// returns:
+			//		The header DOM node
+			return query("[colid='" + id + "']", this.domNode)[0];	//DOMNode
 		},
 		
 		refresh: function(){
+			// summary:
+			//		Re-build the header UI.
 			var t = this, g = t.grid, f = g.focus,
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			g.columns().forEach(function(col){
@@ -90,8 +109,15 @@ define([
 			t.onRender();
 		},
 
-		onRender: function(){},
-		onMoveToHeaderCell: function(/* columnId, e */){},
+		onRender: function(){
+			// tags:
+			//		callback
+		},
+
+		onMoveToHeaderCell: function(/* columnId, e */){
+			// tags:
+			//		callback
+		},
 		
 		//Private-----------------------------------------------------------------------------
 		_scrollLeft: 0,

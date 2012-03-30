@@ -23,7 +23,7 @@ require([
 			},
 			modules.ExtendedSelectCell,
 			modules.Edit,
-//			modules.NestedSort,
+			modules.SingleSort,
 			modules.ColumnResizer
 			
 		]

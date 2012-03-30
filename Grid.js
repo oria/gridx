@@ -24,6 +24,18 @@ define([
 		dummyFunc = function(){},
 
 		Grid = declare('gridx.Grid', [_Widget, _TemplatedMixin, Core], {
+			// summary:
+			//		Gridx is a highly extensible widget providing grid/table functionalities. 
+			// description:
+			//		Gridx is much smaller, faster, more reasonable designed, more powerful and more flexible 
+			//		compared to the old dojo DataGrid/EnhancedGrid.
+			//
+			//		NOTE:
+			//		=====
+			//		The API documents will be updated from time to time. If you encountered an API whose doc is
+			//		not sufficient enough, please refer to the following link for latest API docs:
+			//		http://evanhw.github.com/gridx/doc/gridx.html
+
 			templateString: template,
 
 			coreModules: [
@@ -42,6 +54,10 @@ define([
 			],
 		
 			postMixInProperties: function(){
+				// summary:
+				//		Override to initialize grid core
+				// tags:
+				//		protected extension
 				var t = this;
 				t._eventFlags = {};
 				t.modules = t.coreModules.concat(t.modules || []);
@@ -50,17 +66,22 @@ define([
 				t._reset(t);
 			},
 			
-			buildRendering: function(){
-				this.inherited(arguments);
-				domClass.toggle(this.domNode, 'gridxRtl', !this.isLeftToRight());
-			},
-		
 			postCreate: function(){
-				this.inherited(arguments);
-				this._postCreate();
+				// summary:
+				//		Override to initialize grid modules
+				// tags:
+				//		protected extension
+				var t = this;
+				domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
+				t.inherited(arguments);
+				t._postCreate();
 			},
 		
 			startup: function(){
+				// summary:
+				//		Destroy this grid widget
+				// tags:
+				//		public extension
 				if(!this._started){
 					this.inherited(arguments);
 					this._deferStartup.callback();
@@ -68,11 +89,22 @@ define([
 			},
 		
 			destroy: function(){
+				// summary:
+				//		Destroy this grid widget
+				// tags:
+				//		public extension
 				this._uninit();
 				this.inherited(arguments);
 			},
 
 			resize: function(changeSize){
+				// summary:
+				//		Resize the grid using given width and height.
+				// tags:
+				//		public
+				// changeSize: Object?
+				//		An object like {w: ..., h: ...}.
+				//		If omitted, the grid will re-layout itself in current width/height.
 				var t = this, ds = {};
 				if(changeSize){
 					if(t.autoWidth){

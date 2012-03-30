@@ -25,6 +25,7 @@
 .claro .gridxHeaderRow {
 	border-top: 1px solid #FFFFFF;
 	border-bottom: 1px solid #FFFFFF;
+	clear: both;
 }
 
 .claro .gridxHeaderRow table,

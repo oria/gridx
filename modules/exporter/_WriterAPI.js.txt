@@ -3,7 +3,20 @@ define([
 ], function(declare){
 
 	//This is just an API file, similar to dojo.data.api.Read, should never be directly used
-	
+
+/*=====
+	var __ExportContext = function(){
+		//columnIds: String[]
+		//		Available for header.
+		//column: Grid Column
+		//		Available for header cell or a body cell.
+		//row: Grid Row
+		//		Available for a row or a body cell.
+		//cell: Grid Cell
+		//		Available for a body cell
+	};
+=====*/
+
 	return declare(null, {
 
 		beforeHeader: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
@@ -23,25 +36,18 @@ define([
 			//		Triggered when the header has been exported.
 		},
 
-		beforeBody: function(/* __CSVExportArgs */ args){
+		beforeBody: function(/* __CSVExportArgs */ args, /* __ExportContext */ context){
 			//summary:
 			//		Triggered before exporting the grid body.
 			//return: Boolean|undefined
-			//		If return false, does not handle any of the grid boyd content.
-		},
-
-		beforeProgress: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered before exporting a page of rows.
-			//return: Boolean|undefined
-			//		If return false, does not handle this page of rows.
+			//		If return false, does not handle any of the grid body content.
 		},
 
 		beforeRow: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
 			//summary:
 			//		Triggered before exporting a row.
 			//return: Boolean|undefined
-			//		If return false, does not handle the cells in this rows.
+			//		If return false, does not handle the cells in this row.
 		},
 
 		handleCell: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
@@ -54,14 +60,15 @@ define([
 			//		Triggered when a row has been exported.
 		},
 
-		afterProgress: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
-			//summary:
-			//		Triggered when a page has been exported.
-		},
-
-		afterBody: function(/* __CSVExportArgs */ args){
+		afterBody: function(/* __CSVExportArgs */ args, /* __ExportContext */  context){
 			//summary:
 			//		Triggered when the grid body has been exported.
+		},
+
+		getResult: function(){
+			//summary:
+			//		This must be implemented.
+			return '';
 		}
 	});
 });
