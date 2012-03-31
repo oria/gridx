@@ -1,186 +1,52 @@
-<html>
-</html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <style type="text/css">	
-	body{
-		font-family: Futura, "Century Gothic", AppleGothic, sans-serif;
-		color: #959595;
-	}
-	
-	li{
-		-webkit-transition: color 1000 ;
-		-moz-transition: color 1000 ;
-		-o-transition: color 1000 ;
-		transition: color 1000 ;
-	}
-	
-	.bg{
-		height: 630px;
-		width: 1150px;
-		position: relative;
-		margin-top: 30px;
-		margin-left: 60px;
-		background-image: url(images/bg.png);
-	}
-	.logo{
-		font-size: 100px;
-		color: #cccccc;
-		position: absolute;
-		left: 77px;
-		top: -11px;
-	}
-	.logoX{
-		color: #6bb1ff;
-	}
-	.mainNav{
-		list-style: none;
-		font-size: 25px;
-		line-height: 50px;
-		color: #cccccc;
-		position: absolute;
-		left: 400px;
-		top: 35px;
-	}
-	.mainNav li{
-		float: left;
-	}
-	.mainNav .home{
-		margin-right: 85px;
-	}
-	.mainNav .doc{
-		margin-right: 80px;
-	}
-	.mainNav .code{
-		margin-right: 75px;
-	}
-	.icon{
-		height: 45px;
-		width: 45px;
-		float: left;
-	}
-	
-	.home .icon{
-		background-image: url(images/home-icon.png);
-	}
-	.doc .icon{
-		background-image: url(images/doc-icon.png);
-	}
-	.code .icon{
-		background-image: url(images/code-icon.png);
-	}
-	.about .icon{
-		background-image: url(images/about-icon.png);
-	}
-	
-	.leftNav{
-		position: absolute;
-		left: 30px;
-		top: 145px;
-		text-align: right;
-		list-style: none;
-		font-size: 20px;
-		line-height: 52px;
-		color: #cccccc;
-	}
-	
-	.leftNav li, .mainNav li{
-		cursor: pointer;
-	}
-	
-	li:hover{
-		color: #6bb1ff;
-	}
-	
-	.selected{
-		color: #6bb1ff;
-	}
-	.main{
-		width: 845px;
-		height: 455px;
-		-webkit-box-shadow: 0px 0px 24px 0px rgba(100, 100, 100, 1);
-		-moz-box-shadow: 0px 0px 24px 0px rgba(100, 100, 100, 1);
-		box-shadow: 0px 0px 24px 0px rgba(100, 100, 100, 1);
-		position: absolute;
-		left: 255px;
-		top: 135px;
-	}
-	.title{
-		font-weight: bold;
-		font-size: 23px;
-		color: #6bb1ff;
-		position: absolute;
-		top: 40px;
-		left: 25px;
-	}
-	.newImage{
-		position: absolute;
-		top: 100px;
-		left: 25px;
-		width: 350px;
-		height: 300px;
-		background-image: url(images/newsImage1.jpg);
-	}
-	.newContent{
-		position: absolute;
-		top: 100px;
-		left: 395px;
-		width: 430px;
-		height: 300px;
-	}
-	
-	.mainBackGround{
-		width: 845px;
-		height: 455px;
-		position: absolute;
-		left: 255px;
-		top: 135px;
-		background-color: white;
-		opacity: 0.5;
-	}
+	@import "css/main.css";
 </style>
 <script type="text/javascript" src="../dojo/dojo.js" djConfig="isDebug:true, parseOnLoad:true"></script>
 <script type="text/javascript">
-	var currentImageAnimation;
-	var currentContentAnimation;
-	require(["dojox/fx/split", "dojo/domReady!"], function(split){
-
-	});
-	function fade(){
-		var imageProperties = {
-			node: dojo.byId("imageNode"),
-			random: 0.1,
-			rows: 10,
-			columns: 10,
-			//interval: 5,
-			duration: 2000,
-			reverseOrder: true
-		};
-		imageProperties.onEnd = function(){
-			currentImageAnimation = dojox.fx.blockFadeIn(dojo.mixin(imageProperties, {onEnd: undefined}));
-			currentImageAnimation.play();
-		};
-		currentImageAnimation = dojox.fx.blockFadeOut(imageProperties);
-		currentImageAnimation.play();
+	
+	require(["dojo/dom-class", "dojo/query", "dojo/on", "dojo/fx/easing", "dojox/widget/Rotator", "dojox/widget/rotator/pan",
+		"dojox/widget/rotator/Pan", "dojo/domReady!"], function(domClass, query, on){
+		var leftNavMenuItems = query(".leftNav li");
+		var currentMenuItemIndex = 0;
 		
-		var contentProperties = {
-			node: dojo.byId("contentNode"),
-			random: 0.1,
-			rows: 10,
-			columns: 10,
-			//interval: 5,
-			duration: 2000,
-			reverseOrder: true
+		function selectItem(index){
+			leftNavMenuItems.forEach(function(element, i){
+				if(i !== index){
+					domClass.remove(element, "selected");
+				}else{
+					domClass.add(element, "selected");
+				}
+			});
+			mainRotator.go(index);
+			currentMenuItemIndex = index;
 		};
-		contentProperties.onEnd = function(){
-			currentContentAnimation = dojox.fx.blockFadeIn(dojo.mixin(contentProperties, {onEnd: undefined}));
-			currentContentAnimation.play();
-		};
-		currentContentAnimation = dojox.fx.blockFadeOut(contentProperties);
-		currentContentAnimation.play();
-	}
+		
+		dojo.ready(function(){
+			// Add hanlders for clicks on menu items
+			leftNavMenuItems.forEach(function(element, i){
+				on(element, "click", function(){
+					selectItem(i);
+				})
+			});
+			
+			// Initial the menu status
+			selectItem(0);
+			
+			// Start the rotater
+			setInterval(function(){
+				currentMenuItemIndex = currentMenuItemIndex >= 5 ? 0 : currentMenuItemIndex + 1;
+				selectItem(currentMenuItemIndex);
+			}, 5000);
+		});
+	});
+	
+
 </script>
 </head>
-<body onclick="fade();">
+<body>
 	<div class="bg">
 		<div class="logo">
 			<span>Grid</span><span class="logoX">X</span>
@@ -225,15 +91,35 @@
 		</ul>
 		<div class="mainBackGround"></div>
 		<div class="main" id="mainNode">
-			<span class="title">GridX 1.0 Released!</span>
-			<div class="newImage" id="imageNode">
-			</div>
-			<div class="newContent" id="contentNode">
-				GridX is an incubation project under Dojo Toolkit(http://www.dojotoolkit.org/), it's also being worked closely with dgrid for the new
-				Dojo Grid.<br/>
-				GridX is still in development phase, features are experimental and subject to API changes.<br/>
-				Please put and run gridx in parallel with dojo/dijit/dojox folder....
+			<div data-dojo-type="dojox.widget.Rotator" class="rotator" data-dojo-id="mainRotator" data-dojo-props="transition: 'dojox.widget.rotator.pan'">
+				<div class="pane">
+					<div class="title">News</div>
+					<div class="newImage" id="imageNode">
+					</div>
+					<div class="newContent" id="contentNode">
+						GridX is an incubation project under Dojo Toolkit(http://www.dojotoolkit.org/), it's also being worked closely with dgrid for the new
+						Dojo Grid.<br/>
+						GridX is still in development phase, features are experimental and subject to API changes.<br/>
+						Please put and run gridx in parallel with dojo/dijit/dojox folder....
+					</div>
+				</div>
+				<div class="pane">
+					<div class="title">Nano Core</div>
+				</div>
+				<div class="pane">
+					<div class="title">Rich Plugins</div>
+				</div>
+				<div class="pane">
+					<div class="title">Stability</div>
+				</div>
+				<div class="pane">
+					<div class="title">Benchmark</div>
+				</div>
+				<div class="pane">
+					<div class="title">Roadmap</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </body>
+</html>

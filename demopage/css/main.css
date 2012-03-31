@@ -1,0 +1,145 @@
+body{
+	font-family: Futura, "Century Gothic", AppleGothic, sans-serif;
+	color: #959595;
+}
+
+li{
+	-webkit-transition: color 1000ms;
+	-moz-transition: color 1000ms;
+	-ms-transition: color 1000ms;
+	-o-transition: color 1000ms;
+	transition: color 1000ms;
+}
+
+.bg{
+	height: 630px;
+	width: 1150px;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
+	background-image: url("../images/bg.png");
+}
+.logo{
+	font-size: 100px;
+	color: #cccccc;
+	position: absolute;
+	left: 77px;
+	top: -11px;
+}
+.logoX{
+	color: #6bb1ff;
+}
+.mainNav{
+	list-style: none;
+	font-size: 25px;
+	line-height: 50px;
+	color: #cccccc;
+	position: absolute;
+	left: 400px;
+	top: 35px;
+}
+.mainNav li{
+	float: left;
+}
+.mainNav .home{
+	margin-right: 85px;
+}
+.mainNav .doc{
+	margin-right: 80px;
+}
+.mainNav .code{
+	margin-right: 75px;
+}
+.icon{
+	height: 45px;
+	width: 45px;
+	float: left;
+}
+
+.home .icon{
+	background-image: url("../images/home-icon.png");
+}
+.doc .icon{
+	background-image: url("../images/doc-icon.png");
+}
+.code .icon{
+	background-image: url("../images/code-icon.png");
+}
+.about .icon{
+	background-image: url("../images/about-icon.png");
+}
+
+.leftNav{
+	position: absolute;
+	left: 30px;
+	top: 145px;
+	text-align: right;
+	list-style: none;
+	font-size: 20px;
+	line-height: 52px;
+	color: #cccccc;
+}
+
+.leftNav li, .mainNav li{
+	cursor: pointer;
+}
+
+li:hover, .mainNav .selected{
+	color: #6bb1ff;
+}
+
+.selected{
+	color: #6bb1ff;
+}
+.main{
+	width: 845px;
+	height: 455px;
+	border: 1px solid rgb(230, 230, 230);
+	-webkit-box-shadow: 0px 0px 24px 0px rgba(100, 100, 100, 1);
+	-moz-box-shadow: 0px 0px 24px 0px rgba(100, 100, 100, 1);
+	box-shadow: 0px 0px 24px 0px rgba(100, 100, 100, 1);
+	position: absolute;
+	left: 255px;
+	top: 135px;
+	overflow:hidden
+}
+
+.pane{
+	width: 845px;
+	height: 455px;
+	overflow:hidden;
+}
+
+.title{
+	font-weight: bold;
+	font-size: 23px;
+	color: #6bb1ff;
+	margin-top: 40px;
+	margin-left: 25px;
+}
+.newImage{
+	margin-top: 20px;
+	margin-left: 25px;
+	width: 350px;
+	height: 300px;
+	float: left;
+	background-image: url(images/newsImage1.jpg);
+}
+.newContent{
+	margin-top: 20px;
+	margin-left: 395px;
+	width: 430px;
+	height: 300px;
+}
+
+.mainBackGround{
+	width: 845px;
+	height: 455px;
+	position: absolute;
+	left: 255px;
+	top: 135px;
+	background-color: white;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+}
