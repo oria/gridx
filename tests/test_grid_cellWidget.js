@@ -181,7 +181,7 @@ require([
 		cacheClass: Cache,
 		store: storeFactory({
 			dataSource: dataSource, 
-			size: 1000
+			size: 200
 		}),
 		structure: structure,
 		columnLockCount: 3,
@@ -190,7 +190,7 @@ require([
 			modules.Focus,
 			modules.CellWidget,
 			modules.ColumnResizer,
-			modules.FilterBar,
+			//modules.FilterBar,
 			modules.VirtualVScroller,
 			modules.PaginationBar,
 			//modules.IndirectSelect,

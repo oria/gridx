@@ -60,7 +60,7 @@ define([
 				});
 				if(g.columnResizer){
 					//make it compatible with column resizer
-					_this.connect(g.columnResizer, 'onResize', '_updateUI');
+					_this.connect(g.columnResizer, 'onResize', '_updateBody');
 				}
 				if(g.header){
 					g.header.loaded.then(function(){
@@ -169,7 +169,9 @@ define([
 				pl += cell.offsetWidth;
 			}
 			rowNode.style.paddingLeft = pl + 'px';
-			//rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
+			
+			//This is useful for virtual scrolling.
+			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
 		},
 		
 		_updateHeader: function(){

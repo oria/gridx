@@ -74,7 +74,7 @@ require([
 				}
 			}
 		},
-		
+		/*
 		{ field: "Track", name:"Track_V", 
 			width: '200px',
 			alwaysEditing: true,
@@ -88,7 +88,7 @@ require([
 					}
 				}
 			}
-		},
+		},*/
 //        { id: "Artist", field: "Artist", name:"Artist", alwaysEditing: 1},
 //        { field: "Album", name:"Album", editable: true, alwaysEditing: 1},
 //        { field: "Name", name:"Name", alwaysEditing: 0},
@@ -125,7 +125,7 @@ require([
 			alwaysEditing: true,
 			editor: CurrencyTextBox
 			
-		},
+		}/*,
 		{ field: "Year", name:"Year", width: '80px', 
 			dataType:"number",
 			alwaysEditing: true,
@@ -162,7 +162,7 @@ require([
 			dataType:"string",
 			alwaysEditing: true,
 			editor: TextBox			
-		}
+		}*/
 	];
 
 	var t1 = new Date().getTime();
@@ -171,23 +171,21 @@ require([
 		cacheClass: Cache,
 		store: storeFactory({
 			dataSource: dataSource, 
-			size: 1000
+			size: 100
 		}),
 		structure: structure,
 		selectRowTriggerOnCell: 1,
-		cellWidgetBackupCount: 40,
-		columnLockCount: 3,
+		cellWidgetBackupCount: 20,
+		//columnLockCount: 3,
+		vScrollerLazy: true,
 		modules: [
 			modules.Focus,
 			modules.CellWidget,
 			modules.Edit,
 			modules.SelectRow,
-			modules.IndirectSelect,
+			modules.ColumnResizer,
 			modules.SingleSort,
-			//modules.ColumnLock,
-			//modules.FilterBar,
 			modules.VirtualVScroller
-			
 		]
 	});
 	grid.connect(grid.body, 'onRender', function(){
