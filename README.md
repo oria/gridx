@@ -1,6 +1,6 @@
 ## GridX Overview
 
-**A fast rendering, well modularized and plugin architecture based Grid.**
+### **A fast rendering, well modularized and plugin architecture based Grid.**
 
 Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset(e.g.[larger than millions of rows](http://evanhw.github.com/gridx/gridx/tests/test_grid_huge_data.html)).
 
