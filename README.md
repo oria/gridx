@@ -1,6 +1,6 @@
 ## GridX Overview
 
-### **A fast rendering, well modularized and plugin architecture based Grid.**
+#### **A fast rendering, well modularized and plugin architecture based Grid.**
 
 Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset(e.g.[larger than millions of rows](http://evanhw.github.com/gridx/gridx/tests/test_grid_huge_data.html)).
 
@@ -44,10 +44,10 @@ Please check out [GridX Home Site]() for more details on how GridX can help you.
 
 
 ## GridX Team
-* Wei Huang(Evan) -  Dojo Committer
-* Xiao Wen Zhu(Oliver) - IBM, CCLA
-* Pei Wang(Nate) - IBM, CCLA
-* Yang Liu(Elaine) - IBM, CCLA
-* Si Qi Zhong(SiQi) - IBM, CCLA
+* Wei Huang (Evan) -  Dojo Committer
+* Xiao Wen Zhu (Oliver) - IBM, CCLA
+* Pei Wang (Nate) - IBM, CCLA
+* Yang Liu (Elaine) - IBM, CCLA
+* Si Qi Zhong (SiQi) - IBM, CCLA
 
-Please contact [Wei Huang(Evan)](mailto:evanhuangwei@gmail.com) if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.
+Please contact [Wei Huang (Evan)](mailto:evanhuangwei@gmail.com) if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.
