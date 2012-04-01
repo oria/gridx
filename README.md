@@ -27,19 +27,19 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) with the same [
 GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2/) or higher.
 
 
-## Quick ways to know GridX (in writing)
+## Quick ways to know GridX
 
-* [Feature Matrix]()
+* [Feature Matrix]() (in progress)
 * [Demo gallery](http://evanhw.github.com/gridx/gridx/gallery/gallery.html)
-* [Benchmaks]()
-* [Tutorial]()
-* [API Doc](http://evanhw.github.com/gridx/doc/gridx.html)
-* [Known limitations]()
+* [Benchmaks]() (in progress)
+* [Tutorial](https://github.com/evanhw/gridx/wiki/Introduction-to-Gridx) (in progress)
+* [API Doc](http://evanhw.github.com/gridx/doc/gridx.html) (in progress)
+* [Known limitations]() (in progress)
 * [Release download](https://github.com/evanhw/gridx/zipball/v1.0beta)
 * [Report bugs](https://github.com/evanhw/gridx/issues/new)
 
 
-## GridX Home Site
+## GridX Home Site (in progress)
 Please check out [GridX Home Site]() for more details on how GridX can help you.
 
 
