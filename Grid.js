@@ -53,27 +53,19 @@ define([
 				//Put default extensions here!
 			],
 		
-			postMixInProperties: function(){
-				// summary:
-				//		Override to initialize grid core
-				// tags:
-				//		protected extension
-				var t = this;
-				t._eventFlags = {};
-				t.modules = t.coreModules.concat(t.modules || []);
-				t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
-				t._initEvents(t._compNames, t._eventNames);
-				t._reset(t);
-			},
-			
 			postCreate: function(){
 				// summary:
 				//		Override to initialize grid modules
 				// tags:
 				//		protected extension
 				var t = this;
-				domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
 				t.inherited(arguments);
+				t._eventFlags = {};
+				t.modules = t.coreModules.concat(t.modules || []);
+				t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
+				domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
+				t._initEvents(t._compNames, t._eventNames);
+				t._reset(t);
 				t._postCreate();
 			},
 		
