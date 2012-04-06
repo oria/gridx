@@ -47,6 +47,7 @@ define([
 		//Public----------------------------------------------
 		clear: function(){
 			var t = this;
+			t._filled = 0;
 			t._priority = [];
 			t._struct = {};
 			t._cache = {};
@@ -173,6 +174,7 @@ define([
 				rawData: rowData,
 				item: item
 			};
+			t._filled = 1;
 		},
 
 		_loadChildren: function(parentId){
