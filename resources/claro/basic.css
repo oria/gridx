@@ -34,6 +34,10 @@
 	border-collapse: separate;
 }
 
+.dj_ie7 .claro .gridxRowHeaderRow table {
+	border-collapse: collapse;
+}
+
 .claro .gridxHeaderRowInner {
 	background-image: url('../images/claro-grid-header-onepixel.bmp');
 	background-position: right;

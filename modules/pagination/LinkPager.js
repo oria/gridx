@@ -34,7 +34,7 @@ define([
 		}
 	}
 
-	function _focus(nodes, node, isMove, isLeft, isFocusable){
+	function focus(nodes, node, isMove, isLeft, isFocusable){
 		//Try to focus on node, but if node is not focsable, find the next focusable node in nodes 
 		//along the given direction. If not found, try the other direction.
 		//Return the node if successfully focused, null if not.
