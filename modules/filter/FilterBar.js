@@ -2,6 +2,7 @@ define([
 	"dojo/_base/kernel",
 	"dijit",
 	"dojo/_base/declare",
+	"dojo/dom-construct",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
@@ -18,7 +19,7 @@ define([
 	"dojo/query",
 	"dojo/parser",
 	"dojo/string"	
-], function(dojo, dijit, declare, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(dojo, dijit, declare, domConstruct, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -492,6 +493,10 @@ define([
 			if(h < 10){h = '0' + h;}
 			if(m < 10){m = '0' + m;}
 			return h + ':' + m + ':00';
+		},
+		destroy: function(){
+			domConstruct.destroy(this.domNode);
+			this.inherited(arguments);
 		}
 	}));
 });
