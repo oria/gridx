@@ -182,6 +182,10 @@ define([
 		//		If set to true, the tree nodes can be shown in nested mode.
 		nested: false,
 
+		// expandoPadding: Integer
+		//		The padding added for each level of expando. Unit is pixel. Default to 18.
+		expandoPadding: 18,
+
 		onExpand: function(id){
 			// summary:
 			//		Fired when a row is expanded.
@@ -395,7 +399,7 @@ define([
 				if(!t.arg('nested') || col.expandLevel == level){
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
-						pad = 0, singlePad = 18,
+						pad = 0, singlePad = t.arg('expandoPadding'),
 						ltr = t.grid.isLeftToRight();
 					if(!t.arg('nested')){
 						pad = (level - 1) * singlePad;
