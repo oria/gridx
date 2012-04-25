@@ -333,10 +333,14 @@ define([
 				var cellDec = rowDecs[column.id];
 				if(cellDec){
 					if(!cellDec.widget && cellDec.decorator){
-						cellDec.widget = new CellWidget({
-							content: cellDec.decorator(rowCache.data[column.id], rowInfo.rowId, rowInfo.rowIndex),
-							setCellValue: cellDec.setCellValue
-						});
+						try{
+							cellDec.widget = new CellWidget({
+								content: cellDec.decorator(rowCache.data[column.id], rowInfo.rowId, rowInfo.rowIndex),
+								setCellValue: cellDec.setCellValue
+							});
+						}catch(e){
+							console.error('Edit:', e);
+						}
 					}
 					return cellDec.widget;
 				}
@@ -418,7 +422,7 @@ define([
 				}
 				return false;
 			}else{
-				t._navigating = false;
+				this._navigating = false;
 				return true;
 			}
 		},

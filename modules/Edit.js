@@ -284,7 +284,7 @@ define([
 						}else if(cell.column.storePattern){
 							v = locale.format(v, cell.column.storePattern);
 						}
-						cell.setRawData(v).then(function(){
+						Deferred.when(cell.setRawData(v), function(){
 							if(cell.column.alwaysEditing){
 								t._erase(rowId, colId);
 								d.callback(true);
@@ -411,17 +411,22 @@ define([
 				p, properties,
 				col = this.grid._columnsById[colId],
 				dijitProperties = (col.editorArgs && col.editorArgs.dijitProperties) || {},
+				dijitPropString = (col.editorArgs && col.editorArgs.dijitPropertyString) || '',
 				pattern = col.gridPattern || col.storePattern;
 			if(pattern){
 				lang.mixin(dijitProperties.constraints = dijitProperties.constraints || {}, pattern);
 			}
 			properties = json.toJson(dijitProperties);
+			properties = properties.substring(1, properties.length - 1);
+			if(dijitPropString && properties){
+				dijitPropString += ', ';
+			}
 			return function(){
 				return ["<div data-dojo-type='", className, "' ",
 					"data-dojo-attach-point='gridCellEditField' ",
 					"class='gridxCellEditor gridxHasGridCellValue gridxUseStoreData' ",
 					"data-dojo-props='",
-					properties.substring(1, properties.length - 1),
+					dijitPropString, properties,
 					"'></div>"
 				].join('');
 			};
