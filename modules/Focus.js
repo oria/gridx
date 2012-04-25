@@ -3,10 +3,12 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/connect",
 	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/_base/window",
 	"dojo/keys",
 	"../core/_Module",
 	"../util"
-], function(declare, array, connect, lang, keys, _Module, util){
+], function(declare, array, connect, lang, sniff, win, keys, _Module, util){
 	
 	/*=====
 		gridx.modules.Focus.__FocusArea = function(){
@@ -68,14 +70,30 @@ define([
 		},
 
 		preload: function(){
-			var g = this.grid, n = g.domNode;
-			this.batchConnect(
+			var t = this, g = t.grid, n = g.domNode,
+				onDocFocus = function(e){
+					var node = e.target;
+					while(node && node !== n){
+						node = node.parentNode;
+					}
+					if(!node){
+						t._doBlur(e);
+					}
+				};
+			t.batchConnect(
 				[n, 'onmousedown', '_onMouseDown'],
 				[n, 'onkeydown', '_onTabDown'],
 				[n, 'onfocus', '_focus'],
-				[g.lastFocusNode, 'onfocus', '_focus'],
-				[g, 'onBlur', '_doBlur']
+				[g.lastFocusNode, 'onfocus', '_focus']
+				//,[g, 'onBlur', '_doBlur']
+				//The onBlur event is not guaranteed to fire when some node inside grid loses focus.
+				//So use the technique below.
 			);
+			if(sniff('ie')){
+				win.doc.attachEvent('onfocusin', onDocFocus);
+			}else{
+				win.doc.addEventListener('focus', onDocFocus, true);
+			}
 		},
 	
 		destroy: function(){
