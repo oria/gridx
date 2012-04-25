@@ -344,11 +344,19 @@ define([
 		},
 
 		_fetchByIndex: function(args){
-			var t = this, d = new Deferred;
+			var t = this,
+				d = new Deferred,
+				size = t._size[''];
 			args = connectRanges(
 					t._mergePendingRequests(
 						t._findMissingIndexes(mergeRanges(args))), t.pageSize);
-			new DeferredList(array.map(args.range, function(r){
+			var ranges = size > 0 ? array.filter(args.range, function(r){
+				if(r.count > 0 && size > r.start + r.count){
+					r.count = size - r.start;
+				}
+				return r.start < size;
+			}) : args.range;
+			new DeferredList(array.map(ranges, function(r){
 				return t._storeFetch(r);
 			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
 			return d;
