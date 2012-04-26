@@ -1,11 +1,12 @@
 define([
+	"require",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/_base/connect"
-], function(declare, array, lang, Deferred, DeferredList, cnnt){
+], function(require, declare, array, lang, Deferred, DeferredList, cnnt){
 
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
@@ -21,11 +22,14 @@ define([
 		//		functionalities. This class can even be instanticated alone without any grid UI.
 
 		constructor: function(args){
-			var t = this, c = 'connect';
+			var t = this,
+				c = 'connect',
+				cacheClass = args.cacheClass;
+			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
 			t._exts = {};
 			t._cmdQueue = [];
-			t._model = t._cache = new args.cacheClass(t, args);
+			t._model = t._cache = new cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
 			var m = t._model;
 			t._connects = [
@@ -357,6 +361,7 @@ define([
 		_createExts: function(exts, args){
 			//Ensure the given extensions are valid
 			exts = array.filter(exts, function(ext){
+				ext = typeof ext == 'string' ? require(ext) : ext;
 				return ext && ext.prototype;
 			});
 			//Sort the extensions by priority

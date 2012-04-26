@@ -1,4 +1,5 @@
 define([
+	"require",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
@@ -9,10 +10,11 @@ define([
 	"./Column",
 	"./Cell",
 	"./_Module"
-], function(declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
+], function(require, declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
 
 	var delegate = lang.delegate,
 		isFunc = lang.isFunction,
+		isString = lang.isString,
 		hitch = lang.hitch,
 		forEach = array.forEach;
 
@@ -84,11 +86,17 @@ define([
 			}else if(!m){
 				console.error(["The ", (i + 1 - coreModCount), 
 					"-th declared module can NOT be found, please require it before using it"].join(''));
-			}else if(!isFunc(m.moduleClass)){
-				console.error(["The ", (i + 1 - coreModCount), 
-					"-th declared module has NO moduleClass, please provide it"].join(''));
 			}else{
-				mods.push(m);
+				var mc = m.moduleClass;
+				if(isString(mc)){
+					mc = require(mc);
+				}
+				if(isFunc(mc)){
+					mods.push(m);
+				}else{
+					console.error(["The ", (i + 1 - coreModCount), 
+						"-th declared module has NO moduleClass, please provide it"].join(''));
+				}
 			}
 		});
 		args.modules = mods;
@@ -97,7 +105,7 @@ define([
 	
 	function checkForced(args){
 		var registeredMods = _Module._modules,
-			modules = args.modules, i, j, k, p, deps, depName;
+			modules = args.modules, i, j, k, p, deps, depName, err;
 		for(i = 0; i < modules.length; ++i){
 			p = modules[i].moduleClass.prototype;
 			deps = (p.forced || []).concat(p.required || []);
@@ -114,11 +122,15 @@ define([
 							moduleClass: registeredMods[depName]
 						});
 					}else{
-						throw new Error(["Forced/Required Dependent Module '", depName, 
-							"' is NOT Found for '", p.name, "'"].join(''));
+						err = 1;	//1 as true
+						console.error(["Forced/Required dependent module '", depName, 
+							"' is NOT found for '", p.name, "' module."].join(''));
 					}
 				}
 			}
+		}
+		if(err){
+			throw new Error("Some forced/required dependent modules are NOT found.");
 		}
 		return args;
 	}
