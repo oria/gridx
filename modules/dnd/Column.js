@@ -8,8 +8,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
+	return declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
 		name: 'dndColumn',
 		
 		required: ['_dnd', 'selectColumn', 'moveColumn'],
@@ -170,5 +169,5 @@ define([
 		_onDropExternal: function(/*source, nodes, copy*/){
 			//TODO: Support drag in columns from another grid or non-grid source
 		}
-	}));
+	});
 });

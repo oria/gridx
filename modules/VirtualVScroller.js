@@ -10,8 +10,7 @@ define([
 	"../core/_Module"
 ], function(declare, lang, array, sniff, event, Deferred, query, VScroller, _Module){
 	
-	return _Module.register(
-	declare(/*===== "gridx.modules.VirtualVScroller", =====*/VScroller, {
+	return declare(/*===== "gridx.modules.VirtualVScroller", =====*/VScroller, {
 		// summary:
 		//		This module implements lazy-rendering when virtically scrolling grid.
 		// description:
@@ -325,5 +324,5 @@ define([
 				t._syncHeight();
 			}
 		}
-	}));
+	});
 });

@@ -6,8 +6,7 @@ define([
 	"../core/_Module"
 ], function(declare, lang, keys, Sort, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.SingleSort", =====*/_Module, {
+	return declare(/*===== "gridx.modules.SingleSort", =====*/_Module, {
 		// summary:
 		//		This module provides the single column sorting functionality for grid.
 
@@ -218,5 +217,5 @@ define([
 				this._onClick(e);
 			}
 		}
-	}));
+	});
 });

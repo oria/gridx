@@ -4,8 +4,7 @@ define([
 	"../../core/model/extensions/Move"
 ], function(declare, _Module, Move){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.move.Row", =====*/_Module, {
+	return declare(/*===== "gridx.modules.move.Row", =====*/_Module, {
 		// summary:
 		//		This module provides some APIs to move rows within grid
 		// description:
@@ -85,5 +84,5 @@ define([
 			this.grid.body.refresh();
 			this.onMoved();
 		}
-	}));
+	});
 });

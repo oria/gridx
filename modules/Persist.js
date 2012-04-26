@@ -8,8 +8,7 @@ define([
 	"../core/_Module"
 ], function(declare, array, lang, json, unload, cookie, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.Persist", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Persist", =====*/_Module, {
 		// summary:
 		//		Provide a mechanism to persist various grid features when the grid is destroyed,
 		//		so that when a new grid with the same id (or the same persist key) is created,
@@ -211,5 +210,5 @@ define([
 				};
 			});
 		}
-	}));
+	});
 });

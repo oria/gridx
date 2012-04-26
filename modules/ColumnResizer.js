@@ -63,8 +63,7 @@ define([
 		return lx;
 	}
 		
-	return _Module.register(
-	declare(/*===== "gridx.modules.ColumnResizer", =====*/_Module, {
+	return declare(/*===== "gridx.modules.ColumnResizer", =====*/_Module, {
 		// summary:
 		//		Column Resizer machinery.
 		// description:
@@ -273,5 +272,5 @@ define([
 			}
 			return 0;	//0 as false
 		}
-	}));
+	});
 });

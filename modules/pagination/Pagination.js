@@ -4,8 +4,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.pagination.Pagination", =====*/_Module, {
+	return declare(/*===== "gridx.modules.pagination.Pagination", =====*/_Module, {
 		// summary:
 		//		This module provides (logical) pagination functionality for grid.
 		// description:
@@ -260,5 +259,5 @@ define([
 				t._updateBody();
 			}
 		}
-	}));	
+	});	
 });

@@ -12,8 +12,7 @@ define([
 	"./_RowCellBase"
 ], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
+	return declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
 		// summary:
 		//		Provides advanced row selections.
 		// description:
@@ -280,5 +279,5 @@ define([
 				return m.when();
 			}
 		}
-	}));
+	});
 });

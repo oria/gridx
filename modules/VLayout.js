@@ -5,8 +5,7 @@ define([
 	"../core/_Module"
 ], function(declare, domGeometry, DeferredList, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.VLayout", =====*/_Module, {
+	return declare(/*===== "gridx.modules.VLayout", =====*/_Module, {
 		// summary:
 		//		This module manages the vertical layout of all the grid UI parts.
 		// description:
@@ -141,5 +140,5 @@ define([
 				ms.height = (dn.clientHeight - freeHeight) + "px";
 			}
 		}
-	}));
+	});
 });

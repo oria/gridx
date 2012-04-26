@@ -31,8 +31,7 @@ define([
 	};
 =====*/
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.Menu", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Menu", =====*/_Module, {
 		name: 'menu',
 
 		getAPIPath: function(){
@@ -138,5 +137,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

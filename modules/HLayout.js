@@ -8,8 +8,7 @@ define([
 	"../core/_Module"
 ], function(declare, Deferred, array, domGeometry, domStyle, DeferredList, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.HLayout", =====*/_Module, {
+	return declare(/*===== "gridx.modules.HLayout", =====*/_Module, {
 		// summary:
 		//		This module manages the horizontal layout of all grid UI parts.
 		// description:
@@ -100,6 +99,5 @@ define([
 				t.onUpdateWidth(0, 0);
 			}
 		}
-	}));
+	});
 });
-

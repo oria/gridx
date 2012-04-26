@@ -8,8 +8,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.select.Row", =====*/_RowCellBase, {
+	return declare(/*===== "gridx.modules.select.Row", =====*/_RowCellBase, {
 		// summary:
 		//		Provides simple row selection.
 		// description:
@@ -145,5 +144,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

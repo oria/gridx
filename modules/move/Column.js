@@ -3,8 +3,7 @@ define([
 	"../../core/_Module"
 ], function(declare, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.move.Column", =====*/_Module, {
+	return declare(/*===== "gridx.modules.move.Column", =====*/_Module, {
 		// summary:
 		//		This module provides several APIs to move columns within grid.
 		// description:
@@ -109,6 +108,5 @@ define([
 				this.onMoved(map);
 			}
 		}	
-	}));
+	});
 });
-

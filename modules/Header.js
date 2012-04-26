@@ -10,8 +10,7 @@ define([
 	"../core/_Module"
 ], function(declare, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.Header", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Header", =====*/_Module, {
 		// summary:
 		//		The header UI of grid
 		// description:
@@ -259,5 +258,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

@@ -11,8 +11,7 @@ define([
 	
 	var st = 'scrollTop';
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.VScroller", =====*/_Module, {
+	return declare(/*===== "gridx.modules.VScroller", =====*/_Module, {
 		// summary:
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
@@ -172,5 +171,5 @@ define([
 			}
 			event.stop(evt);
 		}
-	}));
+	});
 });

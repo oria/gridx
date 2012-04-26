@@ -81,8 +81,7 @@ define([
 	
 	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs', 'applyWhen');
 	
-	return _Module.register(
-	declare(/*===== "gridx.modules.Edit", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Edit", =====*/_Module, {
 		// summary:
 		//		This module provides editing mode for grid cells.
 		// description:
@@ -586,5 +585,5 @@ define([
 				e.stopPropagation();
 			}
 		}
-	}));
+	});
 });

@@ -10,8 +10,7 @@ define([
 	"./RowHeader"
 ], function(declare, array, query, lang, domClass, Deferred, _Module, util){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.IndirectSelect", =====*/_Module, {
+	return declare(/*===== "gridx.modules.IndirectSelect", =====*/_Module, {
 		// summary:
 		//		This module shows a checkbox(or radiobutton) on the row header when row selection is used.
 		// description:
@@ -197,5 +196,5 @@ define([
 				onBlur: blur
 			});
 		}
-	}));
+	});
 });

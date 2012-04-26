@@ -6,8 +6,7 @@ define([
 	"dojo/fx",
 	"dojo/query"
 ], function(dojo, _Module, declare, html, fx, query){
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
 		//useAnimation: Boolean
@@ -246,5 +245,5 @@ define([
 		
 		
 		endFunc: function(){}
-	}));
+	});
 });

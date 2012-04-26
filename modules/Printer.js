@@ -100,8 +100,7 @@ define([
 		}
 	}
 	
-	return _Module.register(
-	declare(/*===== "gridx.modules.Printer", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Printer", =====*/_Module, {
 		// summary:
 		//		This module provides the API to print grid contents or provide print preview
 		// description:
@@ -164,5 +163,5 @@ define([
 				'</body></html>'
 			].join('');
 		}
-	}));
+	});
 });

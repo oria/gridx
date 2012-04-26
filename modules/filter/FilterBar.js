@@ -18,7 +18,7 @@ define([
 	"dojo/_base/html",
 	"dojo/query",
 	"dojo/parser",
-	"dojo/string"	
+	"dojo/string"
 ], function(dojo, dijit, declare, domConstruct, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
@@ -58,8 +58,7 @@ define([
 	};
 	=====*/
 	
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.filter.FilterBar", =====*/_Module, {
 		name: 'filterBar',
 		forced: ['filter'],
 		getAPIPath: function(){
@@ -498,5 +497,5 @@ define([
 			domConstruct.destroy(this.domNode);
 			this.inherited(arguments);
 		}
-	}));
+	});
 });

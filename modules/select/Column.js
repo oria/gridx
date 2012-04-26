@@ -9,8 +9,7 @@ define([
 	"../../core/_Module"
 ], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
+	return declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
 		// summary:
 		//		Provides simple column selection.
 		// description:
@@ -149,5 +148,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

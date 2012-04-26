@@ -7,7 +7,7 @@ define([
 	"dojo/_base/html",
 	"dojo/query"
 ], function(dojo, lang, _Module, declare, array, html, query){
-	return _Module.register(declare(_Module, {
+	return declare(_Module, {
 		name: 'rowLock',
 		required: ['vLayout'],
 		forced: ['hLayout', 'vScroller'],
@@ -73,5 +73,5 @@ define([
 				callback(nodes[i]);
 			}
 		}
-	}));
+	});
 });

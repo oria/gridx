@@ -4,10 +4,9 @@ define([
 	"dojo/string",
 	"../core/_Module",
 	"dojo/i18n!../nls/SummaryBar"
-], function(declare, domConstruct, string, _Module, nls){	
+], function(declare, domConstruct, string, _Module, nls){
 	
-	return _Module.register(
-	declare(/*===== "gridx.modules.SummaryBar", =====*/_Module, {
+	return declare(/*===== "gridx.modules.SummaryBar", =====*/_Module, {
 		name: 'summaryBar',
 
 //        required: ['vLayout'],
@@ -36,5 +35,5 @@ define([
 				tpl = sr ? nls.summaryWithSelection : nls.summary;
 			t.domNode.innerHTML = string.substitute(tpl, [size, selected]);
 		}
-	}));
+	});
 });

@@ -17,8 +17,7 @@ define([
 			!domClass.contains(n, 'gridxTreeExpandoLoading');
 	}
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.Tree", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Tree", =====*/_Module, {
 		// summary:
 		//		Tree Grid module.
 		// description:
@@ -639,5 +638,5 @@ define([
 				parentOpenInfo: this._parentOpenInfo
 			};
 		}
-	}));
+	});
 });

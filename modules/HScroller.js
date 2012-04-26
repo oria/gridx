@@ -9,8 +9,7 @@ define([
 
 	var sl = 'scrollLeft';		//This is for reducing code size only.
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
+	return declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
 		// summary:
 		//		This module provides basic horizontal scrolling for grid
 
@@ -132,5 +131,5 @@ define([
 			g.bodyNode[sl] = t.domNode[sl];
 			g.onHScroll(t._lastLeft);
 		}
-	}));
+	});
 });

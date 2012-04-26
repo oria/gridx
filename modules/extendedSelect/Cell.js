@@ -23,8 +23,7 @@ define([
 		};
 	}
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.extendedSelect.Cell", =====*/_RowCellBase, {
+	return declare(/*===== "gridx.modules.extendedSelect.Cell", =====*/_RowCellBase, {
 		// summary:
 		//		Provides advanced cell selections.
 		// description:
@@ -418,5 +417,5 @@ define([
 			}
 			return d;
 		}
-	}));
+	});
 });

@@ -15,8 +15,7 @@ define([
 	var ga = 'getAttribute',
 		sa = 'setAttribute';
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.Body", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Body", =====*/_Module, {
 		// summary:
 		//		The body UI of grid.
 		// description:
@@ -773,5 +772,5 @@ define([
 			}
 			return false;
 		}
-	}));
+	});
 });

@@ -18,8 +18,7 @@ define([
 		return [' colid="', col.id, '" style="width:', w, '"'].join('');
 	}
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.exporter.Table", =====*/_Module, {
+	return declare(/*===== "gridx.modules.exporter.Table", =====*/_Module, {
 		// summary:
 		//		This module provides the API to export grid contents to an HTML table, which is mainly used in print.
 
@@ -114,5 +113,5 @@ define([
 			//		private
 			return this._rst.join('');
 		}
-	}));
+	});
 });

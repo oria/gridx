@@ -4,8 +4,7 @@ define([
 	'dijit/Toolbar',
 	"../core/_Module"
 ], function(kernel, declare, Toolbar, _Module){
-	return _Module.register(
-	declare(/*===== "gridx.modules.ToolBar", =====*/_Module, {
+	return declare(/*===== "gridx.modules.ToolBar", =====*/_Module, {
 		name: 'toolBar',
 
 //        required: ['vLayout'],
@@ -57,6 +56,5 @@ define([
 			}
 			return children.length;
 		}
-	}));
+	});
 });
-

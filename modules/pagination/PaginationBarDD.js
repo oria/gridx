@@ -5,11 +5,9 @@ define([
 	"./DropDownPager",
 	"dijit/form/FilteringSelect",
 	"dijit/form/Select"
-], function(declare, _Module, _PaginationBarBase, Pager,
-	FilteringSelect, Select){
+], function(declare, _Module, _PaginationBarBase, Pager, FilteringSelect, Select){
 
-	return _Module.register(
-	declare(_PaginationBarBase, {
+	return declare(/*===== "gridx.modules.pagination.PaginationBar", =====*/_PaginationBarBase, {
 		// summary:
 		//		This module implements a pagination bar UI that uses drop down lists for pages and page sizes.
 		//		This implementation saves more horizontal space compared to the link button version of pagination bar.
@@ -29,6 +27,5 @@ define([
 
 		// pagerClass: [private]
 		pagerClass: Pager
-	}));	
+	});	
 });
-

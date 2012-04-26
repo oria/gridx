@@ -11,8 +11,7 @@ define([
 	"../core/_Module"
 ], function(declare, array, Deferred, query, sniff, domGeometry, domClass, domStyle, keys, _Module){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.ColumnWidth", =====*/_Module, {
+	return declare(/*===== "gridx.modules.ColumnWidth", =====*/_Module, {
 		// summary:
 		//		Manages column width distribution, allow grid autoWidth and column autoResize.
 
@@ -181,5 +180,5 @@ define([
 				header._onHScroll(0);
 			}
 		}
-	}));
+	});
 });

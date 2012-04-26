@@ -83,8 +83,7 @@ define([
 
 	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
 	
-	return _Module.register(
-	declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
+	return declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
 		// summary:
 		//		This module makes it possible to efficiently show widgets within a grid cell.
 		// description:
@@ -481,5 +480,5 @@ define([
 				focus.focusArea('body');
 			}
 		}
-	}));
+	});
 });

@@ -11,8 +11,7 @@ define([
 	"./_Base"
 ], function(declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.extendedSelect.Column", =====*/_Base, {
+	return declare(/*===== "gridx.modules.extendedSelect.Column", =====*/_Base, {
 		// summary:
 		//		Provides advanced column selections.
 		// description:
@@ -248,5 +247,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

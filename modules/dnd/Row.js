@@ -38,8 +38,7 @@ define([
 		}
 	}
 
-	return _Module.register(
-	declare(/*===== "gridx.modules.dnd.Row", =====*/_Base, {
+	return declare(/*===== "gridx.modules.dnd.Row", =====*/_Base, {
 		name: 'dndRow',
 		
 		required: ['_dnd', 'moveRow'],
@@ -267,5 +266,5 @@ define([
 			}, fail);
 			return d;
 		}
-	}));
+	});
 });

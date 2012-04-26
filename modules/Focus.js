@@ -49,8 +49,7 @@ define([
 		};
 	=====*/
 	
-	return _Module.register(
-	declare(/*===== "gridx.modules.Focus", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Focus", =====*/_Module, {
 		// summary
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
@@ -392,5 +391,5 @@ define([
 				t._stackIdx = 0;
 			}
 		}
-	}));
+	});
 });
