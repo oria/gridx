@@ -25,6 +25,7 @@ require([
 		modules: [
 			modules.CellWidget,
 			modules.ExtendedSelectRow,
+			modules.ExtendedSelectColumn,
 			modules.ExportTable,
 			modules.Printer,
 			modules.SingleSort,
@@ -33,6 +34,8 @@ require([
 			modules.FilterBar,
 			modules.Pagination,
 			modules.PaginationBar,
+			modules.MoveRow,
+			modules.MoveColumn,
 			modules.DndRow,
 			modules.DndColumn,
 			modules.VirtualVScroller

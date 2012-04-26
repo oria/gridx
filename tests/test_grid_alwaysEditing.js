@@ -176,7 +176,7 @@ require([
 		structure: structure,
 		selectRowTriggerOnCell: 1,
 		cellWidgetBackupCount: 20,
-		//columnLockCount: 3,
+		columnLockCount: 2,
 		vScrollerLazy: true,
 		modules: [
 			modules.Focus,

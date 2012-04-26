@@ -6,7 +6,8 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
 	'gridx/tests/support/modules',
-	'dijit/form/Button'
+	'dijit/form/Button',
+	'dojo/domReady!'
 ], function(lang, Grid, Cache, dataSource, storeFactory, TestPane, mods){
 
 	function create(id, container, size, layoutIdx, args){
@@ -21,11 +22,17 @@ require([
 			selectRowTriggerOnCell: true,
 			modules: [
 				mods.Focus,
+				mods.Filter,
+				mods.FilterBar,
 				mods.ExtendedSelectRow,
 				mods.ExtendedSelectColumn,
+				mods.MoveRow,
+				mods.MoveColumn,
 				mods.DndRow,
 				mods.DndColumn,
-				mods.SingleSort,
+				mods.Pagination,
+				mods.PaginationBar,
+//                mods.SingleSort,
 //                mods.NestedSort,
 				mods.VirtualVScroller
 			],

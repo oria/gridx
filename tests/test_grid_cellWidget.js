@@ -192,9 +192,10 @@ require([
 			modules.ColumnResizer,
 			//modules.FilterBar,
 			modules.VirtualVScroller,
-			modules.PaginationBar,
 			//modules.IndirectSelect,
 			//modules.ColumnLock
+			modules.Pagination,
+			modules.PaginationBar
 		]
 	});
 	grid.placeAt('gridContainer');

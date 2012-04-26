@@ -7,7 +7,8 @@ require([
 	'dijit/Dialog',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/TabContainer',
-	'dijit/layout/ContentPane'
+	'dijit/layout/ContentPane',
+	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, modules){
 
 	cache = Cache;

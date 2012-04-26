@@ -4,8 +4,8 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/XQueryReadStore',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane'
-], function(Grid, Cache, dataSource, XStore, modules, TestPane){
+	'dojo/domReady!'
+], function(Grid, Cache, dataSource, XStore, modules){
 
 	grid = new Grid({
 		id: 'grid',

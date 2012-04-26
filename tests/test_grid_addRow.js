@@ -5,11 +5,12 @@ require([
 	'dijit/form/RadioButton',
 	'gridx/Grid',
 	'gridx/tests/support/data/TestData',
-	'gridx/core/model/cache/Async',
-	'gridx/tests/support/stores/JsonRest',
-//    'gridx/tests/support/stores/Memory',
+	'gridx/core/model/cache/Sync',
+//    'gridx/tests/support/stores/JsonRest',
+	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane'
+	'gridx/tests/support/TestPane',
+	'dojo/domReady!'
 ], function(Deferred, lang, DeferredList, RadioButton, Grid, dataSource, Cache, storeFactory, modules, TestPane){
 
 
@@ -48,7 +49,7 @@ require([
 					modules.RowHeader,
 					modules.ColumnResizer,
 //                    modules.Pagination,
-//                    modules.PaginationBar,
+//                    modules.PaginationBarDD,
 					modules.VirtualVScroller
 				]
 			});

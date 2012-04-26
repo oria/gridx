@@ -40,8 +40,9 @@
 			data-dojo-id="grid2" 
 			data-dojo-props="
 				store: store,
-				cacheClass: Cache,
+				cacheClass: 'gridx/core/model/cache/Async',
 				modules: [
+					modules.CellWidget,
 					modules.Edit,
 					modules.VirtualVScroller
 				]

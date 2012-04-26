@@ -18,9 +18,8 @@ require([
     'dojox/charting/plot2d/Bubble',
     'dojox/charting/plot2d/Candlesticks',
     'dojox/charting/plot2d/OHLC',
-    'dojox/charting/plot2d/Pie'
-	
-
+    'dojox/charting/plot2d/Pie',
+	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, JulieTheme){
 	function random(start, end){
 		//include start but not end. e.g. 1-10, 1 is possible but not 10.
