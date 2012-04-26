@@ -4,7 +4,7 @@ define([
 	"./_Cache"
 ], function(declare, Deferred, _Cache){
 
-	return declare(_Cache, {
+	return declare(/*===== "gridx.core.model.cache.Sync", =====*/_Cache, {
 		keep: function(){},
 		free: function(){},
 

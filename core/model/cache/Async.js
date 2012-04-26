@@ -129,7 +129,7 @@ define([
 		return typeof n == 'number' && !isNaN(n);
 	}
 
-	return declare(_Cache, {
+	return declare(/*===== "gridx.core.model.cache.Async", =====*/_Cache, {
 		// summary:
 		//		
 		isAsync: true,

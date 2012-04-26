@@ -3,7 +3,7 @@ define([
 	'../_Extension'
 ], function(declare, _Extension){
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Query", =====*/_Extension, {
 		name: 'query',
 
 		priority: 40,

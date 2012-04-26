@@ -10,7 +10,7 @@ define([
 		forEach = array.forEach,
 		indexOf = array.indexOf;
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.ClientFilter", =====*/_Extension, {
 		// Not compatible with Map extension!
 		name: 'clientFilter',
 

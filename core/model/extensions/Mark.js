@@ -4,7 +4,7 @@ define([
 	'../_Extension'
 ], function(declare, array, _Extension){
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Mark", =====*/_Extension, {
 		name: 'move',
 
 		priority: 5,

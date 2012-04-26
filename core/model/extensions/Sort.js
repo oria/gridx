@@ -5,7 +5,7 @@ define([
 	'../_Extension'
 ], function(declare, lang, json, _Extension){
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Sort", =====*/_Extension, {
 		name: 'sort',
 
 		priority: 30,

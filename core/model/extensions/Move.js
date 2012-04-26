@@ -89,7 +89,7 @@ define([
 			}
 		}
 	}
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Move", =====*/_Extension, {
 		// Not compatible with Sort and Map extensions!
 		name: 'move',
 
