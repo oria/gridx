@@ -1,10 +1,12 @@
 require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
+	'gridx/tests/support/data/TestData',
+	'gridx/tests/support/stores/JsonRest',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
+	'gridx/tests/support/modules',
 	'dijit/form/ComboButton',
 	'dijit/Menu',
 	'dijit/MenuItem',
@@ -12,17 +14,30 @@ require([
 	'dijit/form/Button',
 	'dijit/form/CheckBox',
 	'dijit/form/DropDownButton',
-	'dijit/TooltipDialog'
-], function(dataSource, storeFactory){
+	'dijit/form/TextBox',
+	'dijit/form/NumberTextBox',
+	'dijit/TooltipDialog',
+	'dijit/ColorPalette'
+], function(dataSource1, storeFactory1, dataSource2, storeFactory2){
 
-	store = storeFactory({
-		dataSource: dataSource,
+	store1 = storeFactory1({
+		dataSource: dataSource1,
 		size: 100
 	});
 
-	layout1 = [
-		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Progress", name:"Progress", dataType:'number',
+	layout1 = dataSource1.layouts[1];
+
+	store2 = storeFactory2({
+		path: './support/stores',
+		dataSource: dataSource2,
+		size: 100
+	});
+
+	layout2 = dataSource2.layouts[1];
+
+	layout3 = [
+		{ field: "id", name:"Index", width: '30px'},
+		{ field: "Progress", name:"Progress", dataType:'number', width: '200px',
 			widgetsInCell: true, 
 			decorator: function(){
 				return [
@@ -31,7 +46,7 @@ require([
 				].join('');
 			}
 		},
-		{ field: "Artist", name:"Button", 
+		{ field: "Artist", name:"Button", width: '200px',
 			widgetsInCell: true,
 			navigable: true,
 			decorator: function(){
@@ -49,7 +64,7 @@ require([
 				this.btn.set('label', data);
 			}
 		},
-		{ field: "Album", name:"Read-only CheckBox", 
+		{ field: "Album", name:"Read-only CheckBox", width: '200px',
 			widgetsInCell: true,
 			decorator: function(){
 				return [
@@ -66,7 +81,7 @@ require([
 				this.cb.set('value', data.length % 2);
 			}
 		},
-		{ field: "Genre", name:"ComboButton", 
+		{ field: "Genre", name:"ComboButton", width: '200px',
 			widgetsInCell: true,
 			decorator: function(){
 				return [
@@ -94,7 +109,7 @@ require([
 				this.btn.set('label', data);
 			}
 		},
-		{ field: "Name", name:"DropDown Button",
+		{ field: "Name", name:"DropDown Button", width: '200px',
 			widgetsInCell: true, 
 			navigable:true,
 			decorator: function(){
@@ -111,6 +126,56 @@ require([
 			setCellValue: function(data){
 				this.btn.set('label', data);
 			}
+		}
+	];
+
+	layout4 = [
+		{ field: "id", name:"ID", width: '20px'},
+		{ field: "Color", name:"Color Palatte", width: '205px', editable: true,
+			decorator: function(data){
+				return [
+					'<div style="display: inline-block; border: 1px solid black; ',
+					'width: 20px; height: 20px; background-color: ',
+					data,
+					'"></div>',
+					data
+				].join('');
+			},
+			editor: 'dijit/ColorPalette',
+			editorArgs: {
+				fromEditor: function(v, cell){
+					return v || cell.data(); //If no color selected, use the orginal one.
+				}
+			}
+		},
+		{ field: "Genre", name:"TextBox", width: '100px', editable: true},
+		{ field: "Year", name:"NumberTextBox", width: '100px', editable: true,
+			editor: "dijit.form.NumberTextBox"
+		}
+	];
+
+	layout5 = [
+		{ field: "id", name:"ID", width: '20px'},
+		{ field: "Color", name:"Color Palatte", width: '205px', alwaysEditing: true,
+			decorator: function(data){
+				return [
+					'<div style="display: inline-block; border: 1px solid black; ',
+					'width: 20px; height: 20px; background-color: ',
+					data,
+					'"></div>',
+					data
+				].join('');
+			},
+			editor: 'dijit/ColorPalette',
+			editorArgs: {
+				fromEditor: function(v, cell){
+					return v || cell.data(); //If no color selected, use the orginal one.
+				}
+			}
+		},
+		{ field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
+		{ field: "Year", name:"NumberTextBox", width: '100px', alwaysEditing: true,
+			editor: "dijit.form.NumberTextBox"
 		}
 	];
 });

@@ -4,13 +4,14 @@ define([
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	"dojo/DeferredList",
 	"dojo/dom-class",
 	"dojo/keys",
 	"../core/_Module",
 	"../util",
 	"dojo/date/locale",
 	"dijit/form/TextBox"
-], function(declare, lang, json, Deferred, sniff, domClass, keys, _Module, util, locale){
+], function(declare, lang, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
 	
 	/*=====
 	var columnDefinitionEditorMixin = {
@@ -22,14 +23,9 @@ define([
 		//		If true then the cells in this column will always be in editing mode. Default is false.
 		alwaysEditing: false,
 	
-		// applyWhen: String
-		//		When alwaysEditing, the changed value will by default be applied to store when the editor is blurred.
-		//		But sometimes it might be better to apply the change at a different time, for example: when the click
-		//		a checkbox in a cell, it ususally is expected to take effect at once.
-		//		This argument is a method name of the editor used in this column, for example: 'onClick'. If this
-		//		argument is provided, the changes will be applied to the store when that method is called instead of
-		//		'onBlur'.
-		applyWhen: 'onBlur',
+		// applyDelay: Integer
+		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
+		applyDelay: 700,
 
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.
@@ -55,9 +51,14 @@ define([
 		//		to get a suitable value from editor.
 		fromEditor: null,
 	
-		// dijitProperties: Properties for a dijit
+		//props: String
 		//		The properties to be used when creating the dijit in a editing cell.
-		dijitProperties: null
+		//		Just like data-dojo-props for a widget.
+		props: ''
+
+		//constraints: Object
+		//		If the editor widget has some constraints, it can be set here instead of in props.
+		constraints: null
 	};
 	=====*/
 	function getTypeData(col, storeData, gridData){
@@ -74,8 +75,10 @@ define([
 
 	function getEditorValueSetter(toEditor){
 		return toEditor && function(gridData, storeData, cellWidget){
-			var v = toEditor(storeData, gridData);
-			cellWidget.gridCellEditField.set('value', v);
+			var editor = cellWidget.gridCellEditField,
+				cell = cellWidget.cell,
+				editorArgs = cell.column.editorArgs;
+			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
 		};
 	}
 	
@@ -273,33 +276,39 @@ define([
 				g = t.grid,
 				cell = g.cell(rowId, colId, 1);
 			if(cell){
-				var widget = g.cellWidget.getCellWidget(rowId, colId);
-				if(widget && widget.gridCellEditField){
-					var v = widget.gridCellEditField.get('value');
+				var widget = g.cellWidget.getCellWidget(rowId, colId),
+					editor = widget && widget.gridCellEditField;
+				if(editor && (!lang.isFunction(editor.isValid) || editor.isValid())){
+					var editorArgs = cell.column.editorArgs,
+						valueField = editorArgs && editorArgs.valueField || 'value',
+						v = editor.get(valueField),
+						finish = function(success){
+							t._erase(rowId, colId);
+							if(cell.column.alwaysEditing){
+								d.callback(success);
+							}else{
+								g.cellWidget.restoreCellDecorator(rowId, colId);
+								g.body.refreshCell(cell.row.index(), cell.column.index()).then(function(){
+									d.callback(success);
+								});
+							}
+						};
 					try{
-						var editorArgs = cell.column.editorArgs;
 						if(editorArgs && editorArgs.fromEditor){
-							v = editorArgs.fromEditor(v);
+							v = editorArgs.fromEditor(v, widget.cell);
 						}else if(cell.column.storePattern){
 							v = locale.format(v, cell.column.storePattern);
 						}
-						Deferred.when(cell.setRawData(v), function(){
-							if(cell.column.alwaysEditing){
-								t._erase(rowId, colId);
-								d.callback(true);
-							}else{
-								g.cellWidget.restoreCellDecorator(rowId, colId);
-								t._erase(rowId, colId);
-								g.body.refreshCell(cell.row.index(), cell.column.index()).then(function(){
-									d.callback(true);
-								});
-							}
-						});
+						if(cell.rawData() == v){
+							finish(true);
+						}else{
+							Deferred.when(cell.setRawData(v), function(success){
+								finish(true);
+							});
+						}
 					}catch(e){
-						g.cellWidget.restoreCellDecorator(rowId, colId);
-						t._erase(rowId, colId);
 						console.warn('Can not apply change! Error message: ', e);
-						d.callback(false);
+						finish(false);
 						return d;	//dojo.Deferred
 					}
 					return d;	//dojo.Deferred
@@ -377,14 +386,24 @@ define([
 		_onCellWidgetCreated: function(widget, column){
 			if(widget.gridCellEditField && column.alwaysEditing){
 				var t = this,
-					w = widget.gridCellEditField;
-				widget.connect(w, column.applyWhen || 'onBlur', function(){
+					editor = widget.gridCellEditField;
+				widget.connect(editor, 'onChange', function(){
+					//If this onChange is due to initialization, ignore it
+					if(widget.isInit){
+						widget.isInit = 0;
+						return;
+					}
 					var rn = widget.domNode.parentNode;
 					while(rn && !domClass.contains(rn, 'gridxRow')){
 						rn = rn.parentNode;
 					}
 					if(rn){
-						t.apply(rn.getAttribute('rowid'), column.id);
+						//TODO: is 500ms okay?
+						var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
+						clearTimeout(editor._timeoutApply);
+						editor._timeoutApply = setTimeout(function(){
+							t.apply(rn.getAttribute('rowid'), column.id);
+						}, delay);
 					}
 				});
 			}
@@ -393,9 +412,10 @@ define([
 		_focusEditor: function(rowId, colId){
 			var cw = this.grid.cellWidget,
 				func = function(){
-					var widget = cw.getCellWidget(rowId, colId);
-					if(widget && widget.gridCellEditField){
-						widget.gridCellEditField.focus();
+					var widget = cw.getCellWidget(rowId, colId),
+						editor = widget && widget.gridCellEditField;
+					if(editor && !editor.focused){
+						editor.focus();
 					}
 				};
 			if(sniff('webkit')){
@@ -409,23 +429,24 @@ define([
 			var className = this._getColumnEditor(colId),
 				p, properties,
 				col = this.grid._columnsById[colId],
-				dijitProperties = (col.editorArgs && col.editorArgs.dijitProperties) || {},
-				dijitPropString = (col.editorArgs && col.editorArgs.dijitPropertyString) || '',
+				editorArgs = col.editorArgs,
+				constraints = editorArgs && editorArgs.constraints || {},
+				props = editorArgs && editorArgs.props || '',
 				pattern = col.gridPattern || col.storePattern;
 			if(pattern){
-				lang.mixin(dijitProperties.constraints = dijitProperties.constraints || {}, pattern);
+				constraints = lang.mixin({}, pattern, constraints);
 			}
-			properties = json.toJson(dijitProperties);
-			properties = properties.substring(1, properties.length - 1);
-			if(dijitPropString && properties){
-				dijitPropString += ', ';
+			constraints = json.toJson(constraints);
+			constraints = constraints.substring(1, constraints.length - 1);
+			if(props && constraints){
+				props += ', ';
 			}
 			return function(){
 				return ["<div data-dojo-type='", className, "' ",
 					"data-dojo-attach-point='gridCellEditField' ",
 					"class='gridxCellEditor gridxHasGridCellValue gridxUseStoreData' ",
 					"data-dojo-props='",
-					dijitPropString, properties,
+					props, constraints,
 					"'></div>"
 				].join('');
 			};
@@ -448,7 +469,8 @@ define([
 		},
 
 		_applyAll: function(){
-			var cells = this._editingCells, r, c;
+			var cells = this._editingCells,
+				r, c;
 			for(r in cells){
 				for(c in cells[r]){
 					this.apply(r, c);
@@ -457,7 +479,9 @@ define([
 		},
 
 		_onUIBegin: function(evt){
-			this._applyAll();
+			if(!this.isEditing(evt.rowId, evt.columnId)){
+				this._applyAll();
+			}
 			return this.begin(evt.rowId, evt.columnId);
 		},
 	
@@ -493,10 +517,6 @@ define([
 						rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
 					if(t.isEditing(rowId, colId)){
 						t._record(rowId, colId);
-						//FIXME
-//                        t._editing = true;
-//                        t._focusCellCol = colId;
-//                        t._focusCellRow = rowId;
 						return true;
 					}
 				}
@@ -535,7 +555,6 @@ define([
 
 		_onBlur: function(){
 			this._applyAll();
-			this._editing = false;
 			return true;
 		},
 		

@@ -10,6 +10,7 @@ define([
 	"../core/_Module"
 ], function(declare, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
+	
 	return declare(/*===== "gridx.modules.Header", =====*/_Module, {
 		// summary:
 		//		The header UI of grid
@@ -27,6 +28,9 @@ define([
 			// tags:
 			//		protected extension
 			return {
+				
+
+				
 				header: this
 			};
 		},
@@ -72,12 +76,18 @@ define([
 		},
 
 		columnMixin: {
+			
+
+			
 			headerNode: function(){
 				return this.grid.header.getHeaderNode(this.id);
 			}
 		},
 	
 		//Public-----------------------------------------------------------------------------
+		
+
+		
 		getHeaderNode: function(id){
 			// summary:
 			//		Get the header DOM node by column ID.
@@ -87,6 +97,7 @@ define([
 			//		The header DOM node
 			return query("[colid='" + id + "']", this.domNode)[0];	//DOMNode
 		},
+		
 		
 		refresh: function(){
 			// summary:

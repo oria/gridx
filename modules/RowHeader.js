@@ -75,6 +75,7 @@ define([
 			t.batchConnect(
 				[body, 'onRender', '_onRendered'],
 				[body, 'onAfterRow', '_onAfterRow'],
+				[body, 'onAfterCell', '_onAfterCell'],
 				[body, 'onUnrender', '_onUnrender'],
 				[g.bodyNode, 'onscroll', '_onScroll'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
@@ -133,13 +134,33 @@ define([
 				bn = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
 				nt = n.firstChild,
 				cp = t.arg('cellProvider');
-			nt.style.height = bn.offsetHeight + 'px';
 			n.setAttribute('rowid', rowInfo.rowId);
 			n.setAttribute('rowindex', rowInfo.rowIndex);
 			n.setAttribute('parentid', rowInfo.parentId || '');
 			if(cp){
 				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, rowInfo);
 			}
+			t._syncRowHeight(nt, bn);
+		},
+
+		_onAfterCell: function(cellNode, rowInfo){
+			//This is to ensure the rowHeader get correct height for editable cells
+			var t = this,
+				n = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
+				bn = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
+			t._syncRowHeight(n.firstChild, bn);
+		},
+
+		_syncRowHeight: function(rowHeaderNode, bodyNode){
+			//Use setTimeout to ensure the row header height correct reflects the body row height.
+			//FIXME: This is tricky and may not be working in some special cases.
+			function getHeight(){
+				return sniff('ie') ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
+			}
+			rowHeaderNode.style.height = getHeight();
+			setTimeout(function(){
+				rowHeaderNode.style.height = getHeight();
+			}, 0);
 		},
 
 		_onRendered: function(start, count){

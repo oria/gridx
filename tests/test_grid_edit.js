@@ -1,17 +1,25 @@
 require([
+	'gridx/tests/support/data/MusicData',
+	'gridx/tests/support/stores/Memory',
+	'dojo/store/Memory',
 	'dojo/date/locale',
 	'dijit/form/TextBox',
+	'dijit/form/ComboBox',
 	'dijit/form/DateTextBox',
 	'dijit/form/TimeTextBox',
 	'dijit/form/NumberTextBox',
+	'dijit/form/FilteringSelect',
+	'dijit/form/Select',
+	'dijit/form/HorizontalSlider',
+	'dijit/form/NumberSpinner',
+	'dijit/form/CheckBox',
+	'dijit/form/ToggleButton',
+	'dijit/Calendar',
+	'dijit/ColorPalette',
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
-	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane'
-], function(locale, TextBox, DateTextBox, TimeTextBox, NumberTextBox,
-	Grid, Cache, dataSource, storeFactory, modules, TestPane){
+	'gridx/core/model/cache/Sync',
+	'gridx/tests/support/modules'
+], function(dataSource, storeFactory, Memory, locale, TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
 		res = locale.format(d, {
@@ -27,22 +35,114 @@ require([
 		});
 		return res;
 	};
-	var structure = [
-		{ field: "id", name:"Index"},
-		{ field: "Genre", name:"Genre", editable: true},
-		{ field: "Artist", name:"Artist", editable: true},
-		{ field: "Year", name:"Year (editable)", dataType:"number", width: '100px', 
-			editable: true, 
-			alwaysEditing: true,
-			editor: NumberTextBox
+
+	store = storeFactory({
+		dataSource: dataSource, 
+		size: 100
+	});
+
+	mystore = storeFactory({
+		dataSource: dataSource, 
+		size: 200
+	});
+
+	function createSelectStore(field){
+		var data = dataSource.getData(100).items;
+		//Make the items unique
+		var res = {};
+		for(var i = 0; i < data.length; ++i){
+			res[data[i][field]] = 1;
+		}
+		data = [];
+		for(var d in res){
+			data.push({
+				id: d
+			});
+		}
+		return new Memory({
+			data: data
+		});
+	}
+
+	fsStore = createSelectStore('Album');
+	selectStore = createSelectStore('Length');
+
+	layout = [
+		{ field: "id", name:"ID", width: '20px'},
+		{ field: "Color", name:"Color Palatte", width: '205px', editable: true,
+			decorator: function(data){
+				return [
+					'<div style="display: inline-block; border: 1px solid black; ',
+					'width: 20px; height: 20px; background-color: ',
+					data,
+					'"></div>',
+					data
+				].join('');
+			},
+			editor: 'dijit/ColorPalette',
+			editorArgs: {
+				fromEditor: function(v, cell){
+					return v || cell.data(); //If no color selected, use the orginal one.
+				}
+			}
 		},
-		{ field: "Album", name:"Album", editable: true},
-		{ field: "Name", name:"Name", editable: true},
-		{ field: "Length", name:"Length", editable: true},
-		{ field: "Track", name:"Track", editable: true},
-		{ field: "Composer", name:"Composer", editable: true},
-		{ field: "Download Date", name:"Date", editable: true, 
-			dataType: 'date', 
+		{ field: "Genre", name:"TextBox", width: '100px', editable: true},
+		{ field: "Artist", name:"ComboBox", width: '100px', editable: true,
+			editor: "dijit/form/ComboBox",
+			editorArgs: {
+				props: 'store: mystore, searchAttr: "Artist"'
+			}
+		},
+		{ field: "Year", name:"NumberTextBox", width: '100px', editable: true,
+			editor: "dijit.form.NumberTextBox"
+		},
+		{ field: "Album", name:"FilteringSelect", width: '100px', editable: true,
+			editor: FilteringSelect,
+			editorArgs: {
+				props: 'store: fsStore, searchAttr: "id"'
+			}
+		},
+		{ field: "Length", name:"Select", width: '100px', editable: true,
+			//FIXME: this is still buggy, hard to set width
+			editor: Select,
+			editorArgs: {
+				props: 'store: selectStore, labelAttr: "id"'
+			}
+		},
+		{ field: "Progress", name:"HorizontalSlider", width: '100px', editable: true,
+			editor: "dijit/form/HorizontalSlider",
+			editorArgs: {
+				props: 'minimum: 0, maximum: 1'
+			}
+		},
+		{ field: "Track", name:"Number Spinner", width: '100px', editable: true,
+			width: '50px',
+			editor: "dijit/form/NumberSpinner"
+		},
+		{ field: "Heard", name:"Check Box", width: '30px', editable: true,
+			editor: "dijit.form.CheckBox",
+			editorArgs: {
+				props: 'value: true'
+			}
+		},
+		{ field: "Heard", name:"ToggleButton", width: '100px', editable: true,
+			editor: "dijit.form.ToggleButton",
+			editorArgs: {
+				valueField: 'checked',
+				props: 'label: "Press me"'
+			}
+		},
+		{ field: "Download Date", name:"Calendar", width: '180px', editable: true,
+			dataType: 'date',
+			storePattern: 'yyyy/M/d',
+			gridPattern: 'yyyy/MMMM/dd',
+			editor: 'dijit/Calendar',
+			editorArgs: {
+				fromEditor: getDate
+			}
+		},
+		{ field: "Download Date", name:"DateTextBox", width: '100px', editable: true,
+			dataType: 'date',
 			storePattern: 'yyyy/M/d',
 			gridPattern: 'yyyy--MM--dd',
 			editor: DateTextBox,
@@ -50,65 +150,18 @@ require([
 				fromEditor: getDate
 			}
 		},
-		{ field: "Last Played", name:"Last Played (editable)", width: '100px', 
-			dataType:"time",
+		//FIXME: this is still buggy, can not TAB out.
+//        { field: "Composer", name:"Editor", width: '200px', editable: true,
+//            editor: "dijit/Editor"
+//        },
+		{ field: "Last Played", name:"TimeTextBox", width: '100px', editable: true,
+			dataType: "time",
 			storePattern: 'HH:mm:ss',
 			formatter: 'hh:mm a',
-			editable: true,
 			editor: TimeTextBox,
 			editorArgs: {
 				fromEditor: getTime
 			}
 		}
 	];
-
-	grid = new Grid({
-		id: 'grid',
-		cacheClass: Cache,
-		store: storeFactory({
-			dataSource: dataSource, 
-			size: 100
-		}),
-		structure: structure,
-		modules: [
-			modules.Focus,
-			modules.CellWidget,
-			modules.Edit,
-			modules.SingleSort,
-			modules.VirtualVScroller
-		]
-	});
-	grid.placeAt('gridContainer');
-	grid.startup();
-
-
-	window.beginEdit2_3 = function(){
-		grid.edit.begin('2', '3');
-	}
-	window.applyEdit2_3 = function(){
-		grid.edit.apply('2', '3');
-	}
-	window.cancelEdit2_3 = function(){
-		grid.edit.cancel('2', '3');
-	}
-	window.isEditing2_3 = function(){
-		alert(grid.edit.isEditing('2', '3'));
-	}
-	window.setEditor3 = function(){
-		grid.edit.setEditor(4, TextBox);
-	}
-
-	//Test buttons
-	var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
-
-	tp.addTestSet('Core Functions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: beginEdit2_3">Begin edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: applyEdit2_3">Apply edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: cancelEdit2_3">Cancel edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: isEditing2_3">Is cell(2,3) editing</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Year" column\'s editor to a TextBox</div><br/>'
-	].join(''));
-
-	tp.startup();
 });

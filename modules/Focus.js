@@ -69,29 +69,19 @@ define([
 		},
 
 		preload: function(){
-			var t = this, g = t.grid, n = g.domNode,
-				onDocFocus = function(e){
-					var node = e.target;
-					while(node && node !== n){
-						node = node.parentNode;
-					}
-					if(!node){
-						t._doBlur(e);
-					}
-				};
+			var t = this,
+				g = t.grid;
+			t._onDocFocus = lang.hitch(t, '_onFocus');
 			t.batchConnect(
-				[n, 'onmousedown', '_onMouseDown'],
-				[n, 'onkeydown', '_onTabDown'],
-				[n, 'onfocus', '_focus'],
-				[g.lastFocusNode, 'onfocus', '_focus']
-				//,[g, 'onBlur', '_doBlur']
-				//The onBlur event is not guaranteed to fire when some node inside grid loses focus.
-				//So use the technique below.
+				[g.domNode, 'onkeydown', '_onTabDown'],
+				[g.firstFocusNode, 'onfocus', '_focus'],
+				[g.lastFocusNode, 'onfocus', '_focus'],
+				[g, 'onBlur', '_doBlur']
 			);
 			if(sniff('ie')){
-				win.doc.attachEvent('onfocusin', onDocFocus);
+				win.doc.attachEvent('onfocusin', t._onDocFocus);
 			}else{
-				win.doc.addEventListener('focus', onDocFocus, true);
+				win.doc.addEventListener('focus', t._onDocFocus, true);
 			}
 		},
 	
@@ -101,6 +91,11 @@ define([
 			t._areaQueue = null;
 			t._focusNodes = [];
 			t._queueIdx = -1;
+			if(sniff('ie')){
+				win.doc.detachEvent('onfocusin', t._onDocFocus);
+			}else{
+				win.doc.removeEventListener('focus', t._onDocFocus, true);
+			}
 			t.inherited(arguments);
 		},
 	
@@ -319,7 +314,7 @@ define([
 		},
 	
 		//-----------------------------------------------------------------------
-		_onMouseDown: function(evt){
+		_onFocus: function(evt){
 			var t = this, i, j, stack, area,
 				dn = t.grid.domNode,
 				n = evt.target,
@@ -348,16 +343,13 @@ define([
 			if(n == dn && currentArea){
 				t._doBlur(evt, currentArea);
 			}
-			if(!n || n == dn){
-				util.stopEvent(evt);
-			}
 		},
 		
 		_focus: function(evt){
 			var t = this;
 			if(t._tabingOut){
 				t._tabingOut = 0;
-			}else if(evt.target == t.grid.domNode){
+			}else if(evt.target == t.grid.firstFocusNode){
 				t._queueIdx = -1;
 				t.tab(1);
 			}else if(evt.target === t.grid.lastFocusNode){

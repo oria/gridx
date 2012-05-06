@@ -1,7 +1,7 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
-	'gridx/tests/support/data/TreeColumnarTestData',
+	'gridx/tests/support/data/TreeNestedTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
@@ -26,7 +26,7 @@ require([
 		id: 'grid',
 		cacheClass: Cache,
 		store: store,
-		structure: dataSource.layouts[1],
+		structure: dataSource.layouts[0],
 		modules: [
 			mods.Focus,
 			mods.Tree,

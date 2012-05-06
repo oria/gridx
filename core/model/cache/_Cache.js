@@ -11,12 +11,15 @@ define([
 		indexOf = array.indexOf;
 
 	return declare(_Extension, {
+		
+
 		// summary:
 		//		Abstract base cache class, providing cache data structure and some common cache functions.
 		constructor: function(model, args){
-			args = args || {};
-			var t = this, c = 'connect',
-				s = t.store = args.store, old = s.fetch;
+			var t = this,
+				c = 'connect',
+				s = t.store = args.store,
+				old = s.fetch;
 			t.columns = args.columns;
 			if(!old && s.notify){
 				//The store implements the dojo.store.Observable API
@@ -57,22 +60,26 @@ define([
 			t._size[''] = -1;
 		},
 		
+		
 		byIndex: function(index, parentId){
 			this._init('byIndex', arguments);
 			return this._cache[this.indexToId(index, parentId)];
 		},
 
+		
 		byId: function(id){
 			this._init('byId', arguments);
 			return this._cache[id];
 		},
 
+		
 		indexToId: function(index, parentId){
 			this._init('indexToId', arguments);
 			var items = this._struct[parentId || ''];
-			return items && items[index + 1];
+			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
 		},
 
+		
 		idToIndex: function(id){
 			this._init('idToIndex', arguments);
 			var s = this._struct,
@@ -81,6 +88,7 @@ define([
 			return index > 0 ? index - 1 : -1;
 		},
 
+		
 		treePath: function(id){
 			var s = this._struct, path = [];
 			while(id !== undefined){
@@ -95,6 +103,7 @@ define([
 			}
 		},
 
+		
 		hasChildren: function(id){
 			var t = this, s = t.store, c;
 			t._init('hasChildren', arguments);
@@ -102,6 +111,7 @@ define([
 			return s.hasChildren && s.hasChildren(id, c && c.item);
 		},
 
+		
 		size: function(parentId){
 			this._init('size', arguments);
 			var s = this._size[parentId || ''];

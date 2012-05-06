@@ -153,23 +153,31 @@ define([
 		},
 	
 		_onKeyScroll: function(evt){
-			var t = this, bd = t.grid.body, sn = t.domNode, r, fc = '_focusCellRow';
-			if(evt.keyCode == keys.HOME){
-				bd[fc] = 0;
-				sn[st] = 0;
-			}else if(evt.keyCode == keys.END){
-				bd[fc] = bd.visualCount - 1;
-				sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
-			}else if(evt.keyCode == keys.PAGE_UP){
-				r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
-				t.scrollToRow(r, 1);
-			}else if(evt.keyCode == keys.PAGE_DOWN){
-				r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
-				t.scrollToRow(r, 1);
-			}else{
-				return;
+			
+			var t = this,
+				bd = t.grid.body,
+				focus = t.grid.focus,
+				sn = t.domNode,
+				r,
+				fc = '_focusCellRow';
+			if(!focus || focus.currentArea() == 'body'){
+				if(evt.keyCode == keys.HOME){
+					bd[fc] = 0;
+					sn[st] = 0;
+				}else if(evt.keyCode == keys.END){
+					bd[fc] = bd.visualCount - 1;
+					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
+				}else if(evt.keyCode == keys.PAGE_UP){
+					r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
+					t.scrollToRow(r, 1);
+				}else if(evt.keyCode == keys.PAGE_DOWN){
+					r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
+					t.scrollToRow(r, 1);
+				}else{
+					return;
+				}
+				event.stop(evt);
 			}
-			event.stop(evt);
 		}
 	});
 });

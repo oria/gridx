@@ -5,12 +5,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
-		#gridContainer {
-			width: 800px;
-			height: 500px;
-		}
-		#grid {
-			height: 100%;
+		.gridx {
+			width: 1000px;
+			height: 400px;
 		}
 	</style>
 
@@ -23,11 +20,18 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Edit Test 
 	</h1>
-	<table border='0' cellspacing='0' cellpadding='0'><tr>
-		<td>
-			<div id='gridContainer'></div>
-		</td>
-		<td id='ctrlPane'></td>
-	</tr></table>
+	<p>Double click or press ENTER on a cell to edit</p>
+	<div jsid='grid' data-dojo-type='gridx/Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		modules: [
+			"gridx/modules/Focus",
+			"gridx/modules/CellWidget",
+			"gridx/modules/Edit",
+			"gridx/modules/pagination/Pagination",
+			"gridx/modules/pagination/PaginationBar"
+		]
+	'></div>
 </body>
 </html>

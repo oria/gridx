@@ -231,6 +231,17 @@
 	border-bottom: 1px solid #E5DAC8;
 }
 
+.gridxRowHeaderRow .gridxCellFocus {
+	outline: 1px dashed darkblue;
+	border-left: 1px dashed darkblue;
+	border-right: 1px dashed darkblue;
+}
+
+.gridxRowHeaderRow:first-child .gridxCellFocus {
+	border-top: 1px dashed darkblue;
+}
+
+
 /* Firefox can not fire onmouseover when mouse is "dragging" an "overflow: hidden" node. 
  * This fix is for IndirectSelect working with ExtendedSelect only */
 .dj_gecko .gridx .gridxRowHeaderBody .gridxRowHeaderRow .gridxRowHeaderCell .dijitCheckBox {

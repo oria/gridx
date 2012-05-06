@@ -6,6 +6,7 @@ define([
 	"dojo/dom-geometry",
 	"dojo/_base/query",
 	"dijit/_WidgetBase",
+	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
 	"dojo/text!./templates/Grid.html",
 	"./core/Core",
@@ -17,13 +18,15 @@ define([
 	"./modules/VScroller",
 	"./modules/HScroller",
 	"./modules/ColumnWidth"
-], function(declare, array, lang, domClass, domGeometry, query, _Widget, _TemplatedMixin, template, 
+], function(declare, array, lang, domClass, domGeometry, query, 
+	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){},
 
-		Grid = declare('gridx.Grid', [_Widget, _TemplatedMixin, Core], {
+		
+		Grid = declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 			// summary:
 			//		Gridx is a highly extensible widget providing grid/table functionalities. 
 			// description:
@@ -36,6 +39,7 @@ define([
 			//		not sufficient enough, please refer to the following link for latest API docs:
 			//		http://evanhw.github.com/gridx/doc/gridx.html
 
+			
 			templateString: template,
 
 			coreModules: [
@@ -89,6 +93,7 @@ define([
 				this.inherited(arguments);
 			},
 
+			
 			resize: function(changeSize){
 				// summary:
 				//		Resize the grid using given width and height.

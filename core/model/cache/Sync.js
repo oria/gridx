@@ -4,7 +4,7 @@ define([
 	"./_Cache"
 ], function(declare, Deferred, _Cache){
 
-	return declare(/*===== "gridx.core.model.cache.Sync", =====*/_Cache, {
+	return declare(/*===== "gridx.core.model.cache.Async", =====*/_Cache, {
 		keep: function(){},
 		free: function(){},
 
@@ -33,10 +33,12 @@ define([
 		},
 
 		_fetchChildren: function(){
-			var s = this._struct, pids = s[''].slice(1), pid;
+			var s = this._struct,
+				pids = s[''].slice(1),
+				pid;
 			while(pids.length){
 				pid = pids.shift();
-				this._loadChildren(pid).then(function(){
+				Deferred.when(this._loadChildren(pid), function(){
 					[].push.apply(pids, s[pid].slice(1));
 				});
 			}

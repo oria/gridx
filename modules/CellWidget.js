@@ -54,6 +54,8 @@ define([
 			content: '',
 		
 			setCellValue: null,
+
+			cell: null,
 		
 			postMixInProperties: function(){
 				this.templateString = ['<div class="gridxCellWidget">', this.content, '</div>'].join('');
@@ -66,17 +68,21 @@ define([
 			},
 		
 			setValue: function(gridData, storeData){
-				var t = this;
-				query('.gridxHasGridCellValue', t.domNode).map(function(node){
-					return registry.byNode(node);
-				}).forEach(function(widget){
-					if(widget){
-						var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
-						widget.set('value', useStoreData ? storeData : gridData);
+				try{
+					var t = this;
+					query('.gridxHasGridCellValue', t.domNode).map(function(node){
+						return registry.byNode(node);
+					}).forEach(function(widget){
+						if(widget){
+							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
+							widget.set('value', useStoreData ? storeData : gridData);
+						}
+					});
+					if(t.setCellValue){
+							t.setCellValue(gridData, storeData, t);
 					}
-				});
-				if(t.setCellValue){
-					t.setCellValue(gridData, storeData, t);
+				}catch(e){
+					console.error('Can not set cell value: ', e);
 				}
 			}
 		});
@@ -289,6 +295,8 @@ define([
 				}
 				column._cellWidgets[rowInfo.rowId] = widget;
 			}
+			widget.cell = this.grid.cell(rowInfo.rowId, column.id, 1);
+			widget.isInit = true;
 			widget.setValue(gridData, storeData);
 			return widget;
 		},
