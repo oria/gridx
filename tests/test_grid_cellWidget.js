@@ -68,6 +68,7 @@ require([
 		},
 		{ field: "Genre", name:"ComboButton", 
 			widgetsInCell: true,
+			navigable: true,
 			decorator: function(){
 				return [
 					'<div data-dojo-type="dijit.form.ComboButton" ',
@@ -96,7 +97,7 @@ require([
 		},
 		{ field: "Name", name:"DropDown Button",
 			widgetsInCell: true, 
-			navigable:true,
+			navigable: true,
 			decorator: function(){
 				return [
 					'<div data-dojo-type="dijit.form.DropDownButton" ',
@@ -110,6 +111,17 @@ require([
 			},
 			setCellValue: function(data){
 				this.btn.set('label', data);
+			}
+		}
+	];
+
+	layout1 = [
+		{ field: "id", name:"Index", width: '50px'},
+		{ field: "Name", name:"Links",
+			navigable: true,
+			decorator: function(data){
+				return [
+				].join('');
 			}
 		}
 	];

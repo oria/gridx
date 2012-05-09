@@ -16,7 +16,7 @@ require([
 		vScrollerBuffSize: 60,
 		store: new XStore({
 			idAttribute: 'id',
-			url: 'http://dojotoolkit.cn/data/?totalSize=1000000'
+			url: 'http://dojotoolkit.cn/data/?totalSize=1000'
 		}),
 		
 		structure: dataSource.layouts[4],
