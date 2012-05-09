@@ -115,7 +115,7 @@ require([
 		}
 	];
 
-	layout1 = [
+	layout2 = [
 		{ field: "id", name:"Index", width: '50px'},
 		{ field: "Name", name:"Links",
 			navigable: true,
