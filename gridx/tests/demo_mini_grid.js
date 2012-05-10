@@ -4,7 +4,8 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/modules/SingleSort',
 	'gridx/modules/ColumnResizer',
-	'gridx/modules/select/Row'
+	'gridx/modules/select/Row',
+	'gridx/xd'
 ], function(MemoryStore, Grid, Cache, SingleSort, ColumnResizer, SelectRow){
 	var layout = [
 		{id: 'id', field: 'id', name: 'Identity'},
