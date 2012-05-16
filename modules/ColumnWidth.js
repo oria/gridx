@@ -118,6 +118,9 @@ define([
 						w += padBorder;
 					}
 					totalWidth += w;
+					if(sniff('ie') && isCollapse){
+						totalWidth--;
+					}
 					var c = g._columnsById[node.getAttribute('colid')];
 					if(!c.width || /%$/.test(c.width)){
 						c.width = w + 'px';
@@ -165,9 +168,12 @@ define([
 						padBorder = 0;
 					}
 					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default');
-					w = parseInt(w, 10) + 'px';
+					if(bodyWidth > fixedWidth && sniff('ie') && isCollapse){
+						w += g._columns.length / autoCols.length;
+					}
+					w = parseInt(w, 10);
 					array.forEach(autoCols, function(c){
-						c.width = w; 
+						c.width = w + 'px';
 					});
 				}
 				header.refresh();
