@@ -111,6 +111,12 @@ define([
 				cellWidget: this
 			};
 		},
+
+		cellMixin: {
+			cellWidget: function(){
+				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
+			}
+		},
 	
 		constructor: function(){
 			this._decorators = {};
@@ -360,7 +366,7 @@ define([
 			var t = this, focus = t.grid.focus;
 			if(focus){
 				focus.registerArea({
-					name: 'celldijit',
+					name: 'cellwidget',
 					priority: 1,
 					scope: t,
 					doFocus: t._doFocus,
@@ -464,13 +470,14 @@ define([
 				node = node.parentNode;
 			}
 			if(node && node !== dn){
-				var colId = node.getAttribute('colid');
+				var cellNode = node,
+					colId = node.getAttribute('colid');
 				while(node && !domClass.contains(node, 'gridxRow')){
 					node = node.parentNode;
 				}
 				if(node){
 					var rowId = node.getAttribute('rowid');
-					return this._beginNavigate(rowId, colId);
+					return cellNode != evt.target && this._beginNavigate(rowId, colId);
 				}
 			}
 			return false;
@@ -481,9 +488,9 @@ define([
 			if(e.keyCode == keys.F2 && !t._navigating && focus.currentArea() == 'body'){
 				if(t._beginNavigate(e.rowId, e.columnId)){
 					event.stop(e);
-					focus.focusArea('celldijit');
+					focus.focusArea('cellwidget');
 				}
-			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'celldijit'){
+			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'cellwidget'){
 				t._navigating = false;
 				focus.focusArea('body');
 			}

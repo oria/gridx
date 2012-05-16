@@ -166,7 +166,7 @@ define([
 		columnMixin: {
 			isEditable: function(){
 				var col = this.grid._columnsById[this.id];
-				return col.editable || col.alwaysEditing;
+				return col.editable;
 			},
 
 			isAlwaysEditing: function(){
@@ -360,6 +360,7 @@ define([
 			for(var t = this, cols = t.grid._columns, i = cols.length - 1; i >= 0; --i){
 				var col = cols[i];
 				if(col.alwaysEditing){
+					col.editable = true;
 					col.navigable = true;
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
@@ -515,7 +516,7 @@ define([
 				if(n){
 					var colId = n.getAttribute('colid'),
 						rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
-					if(t.isEditing(rowId, colId)){
+					if(t.isEditing(rowId, colId) && n != evt.target){
 						t._record(rowId, colId);
 						return true;
 					}
@@ -581,8 +582,9 @@ define([
 		},
 
 		_onKey: function(e){
-			var t = this;
-			if(t.grid._columnsById[e.columnId].editable){
+			var t = this,
+				g = t.grid;
+			if(g._columnsById[e.columnId].editable){
 				var editing = t.isEditing(e.rowId, e.columnId);
 				if(e.keyCode == keys.ENTER){
 					if(editing){
@@ -591,13 +593,15 @@ define([
 								t._blur();
 							}
 						});
-					}else if(t.grid.focus.currentArea() == 'body'){
+					}else if(g.focus.currentArea() == 'body'){
 						//If not doing this, some dijit, like DateTextBox/TimeTextBox will show validation error.
 						util.stopEvent(e);
 						t._onUIBegin(e);
 					}
 				}else if(e.keyCode == keys.ESCAPE && editing){
-					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur));
+					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
+						g.focus.focusArea('body');
+					});
 				}
 			}
 			if(t._editing && e.keyCode !== keys.TAB){
