@@ -39,6 +39,7 @@ define([
 			//		protected extended
 			var t = this, g = t.grid,
 				dn = t.domNode = g.bodyNode;
+			g.emptyNode.innerHTML = nls.loadingInfo;
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t._initFocus();
 		},
@@ -310,7 +311,7 @@ define([
 			var t = this, g = t.grid, str = '', uncachedRows = [], 
 				renderedRows = [], n = t.domNode, en = g.emptyNode;
 			if(count > 0){
-				en.innerHTML = '';
+				en.innerHTML = nls.loadingInfo;
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
@@ -652,12 +653,14 @@ define([
 				});
 				t[c](g.mainNode, 'onkeypress', function(evt){
 					if(focus.currentArea() == 'body' && (!g.tree || !evt.ctrlKey)){
+						focus._noBlur = 1;	//1 as true
 						var dk = keys, arr = {}, dir = ltr ? 1 : -1;
 						arr[dk.LEFT_ARROW] = [0, -dir, evt];
 						arr[dk.RIGHT_ARROW] = [0, dir, evt];
 						arr[dk.UP_ARROW] = [-1, 0, evt];
 						arr[dk.DOWN_ARROW] = [1, 0, evt];
 						t._moveFocus.apply(t, arr[evt.keyCode] || []);
+						focus._noBlur = 0;	//0 as false
 					}
 				});
 				t[c](g, 'onCellClick', function(evt){
@@ -673,7 +676,7 @@ define([
 				});
 				if(g.hScroller){
 					t[c](bn, 'onscroll', function(){
-						g.hScroller.scroll(!ltr && sniff('webkit') ?
+						g.hScroller.scroll(!ltr && (sniff('webkit') || sniff('ie') < 8) ?
 							bn.scrollWidth - bn.offsetWidth - bn.scrollLeft :
 							bn.scrollLeft);
 					});
@@ -682,7 +685,7 @@ define([
 		},
 
 		_doFocus: function(evt){
-			return this._focusCell(evt) || this._focusCell(0, 0, 0);
+			return this._focusCell(evt) || this._focusCell(0, -1, -1);
 		},
 
 		_focusCell: function(evt, rowVisIdx, colIdx){
@@ -708,6 +711,9 @@ define([
 				if(!(sniff('ie') < 8)){
 					n.focus();
 				}
+			}else if(!t.grid.rowCount()){
+				t.grid.emptyNode.focus();
+				return true;
 			}
 			return n;
 		},
