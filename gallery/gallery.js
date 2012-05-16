@@ -15,7 +15,7 @@ require([
 			['ColumnWidth Distribution', 'test_grid_columnwidth', 'columnwidth.png', 'Distribute column width smartly based on any flexible combinations of pixel/em/percentage or auto adjusting'],			
 			['Resize', 'test_grid_resize', 'resize.png', 'Resize the grid use the resize function.'],
 		0]],
-		['Plugins', [		
+		['Plugins', [	
 			['Virtual Scrolling', 'test_grid_virtualScroller', 'virtualscroller.jpg', 'Lazy-render the grid body to speed up the whole rendering process and minimize memory usage. This is an useful alternative to pagination.'],						
 			['Simple Select', 'test_grid_select', 'select.jpg', 'Basic but useful support for row selection, column selection and cell selection. Only select by ID. Not support selecting by index. Not support wrap selection.'],
 			['Single Sort', 'test_grid_singleSort', 'singlesort.jpg', 'Only one column is allowed to be sorted at any time.'],
@@ -26,10 +26,10 @@ require([
 			['Persist', 'test_grid_persist', 'persist.jpg', 'An extandable feature-persistance framework, currently allowing to save column width, column order, sorting order, etc.'],
 			['Extended Select', 'test_grid_extendedSelect', 'extendedselect.jpg', 'Full featured extended selection for row, column and cell. Feel more like Excel.'],
 			['Filter', 'test_grid_filter', 'filter.jpg', 'Powerful filter bar and filter dialog, supporting advanced client-side or server-side filtering.'],
-			//['Dijits in Cell', 'test_grid_cellDijit', ' ', 'Provides better support for dijits/widgets in grid cells. These widgets are reused to improve performance, regardless whether the virtual scrolling or pagination feature is used.'],
+			['Dijits in Cell', 'test_grid_cellWidget', 'cellWidget.png', 'Provides better support for dijits/widgets in grid cells. These widgets are reused to improve performance, regardless whether the virtual scrolling or pagination feature is used.'],
 			['Editable Cell', 'test_grid_edit', 'editable.jpg', 'Based on the Dijits in Cell module to provide editable cell functionality. The editing dijit/widget only occur while entering editing mode.'],
 			['Indirect Select', 'test_grid_indirectSelect', 'indirectselect.jpg', 'A useful enhancement for row selection, to better demonstrate the selected/unselected status of rows by means of check boxes.'],
-			//['Column Lock', 'test_grid_columnLock', 'columnlock.png', 'Lock up some of the grid columns so that they don\'t move out of view when the grid body is horizontally scrolled.'],
+			['Column Lock', 'test_grid_columnLock', 'columnlock.png', 'Lock up some of the grid columns so that they don\'t move out of view when the grid body is horizontally scrolled.'],
 			['Details on Demand', 'test_grid_dod', 'dod.jpg', '<b>Experimental</b> - A pretty feature providing the ability for rows to expand. Various arguments available to support different use cases.'],
 			['DnD columns/rows within Grid', 'test_grid_dnd_rearrange', 'dnd.jpg', 'Rearrange grid rows and columns by drag & drop'],
 			['DnD rows between grid', 'test_grid_dndrow_betweengrids', 'dnd2.jpg', 'Drag and drop grid rows to other grids.'],
@@ -40,12 +40,15 @@ require([
 		['Performance', [
  		    ['GridX with a huge store(1,000,000 rows)', 'test_grid_huge_data', 'hugestore.jpg', 'GridX can now work nicely with extremely huge data stores larger than 1 million rows'],
  		0]],		
-		['Compatibility', [
+		['Layout', [
 			['Grid in Dijit Containers', 'test_grid_container', 'container.png', 'Another demo for the grid resize function, showing how it could be used in dijit containers.'],
 		0]],
-		['Other Types of Grid', [
+		['Tree Grid (Experimental)', [
  			['Tree Grid', 'test_grid_tree', 'tree.jpg', '<b>Experimental</b> - Makes grid support Tree structured data. Two types of tree data models are supported: nested or not. In nested mode, expandos are placed in different columns whilist all expandos are in one column in the other mode.'],
- 		0]]		
+ 		0]],
+		['Mobile Grid (Experimental)', [
+   			['Mobile Grid', '../mobile/tests/demo', 'mobile.png', '<b>Experimental</b> - Targeting to provide a native mobile grid with small code size, fast rendering speed and mobile-oriented features & experiences. <br>Demos run best on iOS4+ and Chrome(desktop)<br/>'],
+   		0]]
 	];
 
 	window.highlightFeature = function(packIdx, index, toHighlight){
