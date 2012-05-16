@@ -14,6 +14,3 @@
 @import url('select.css');
 @import url('pagination.css');
 @import url('sort.css');
-
-/*Other*/
-@import url('../../../dojox/html/resources/ellipsis.css');
