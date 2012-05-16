@@ -125,6 +125,7 @@ define([
 			var node = this.grid.body.getRowNode({rowId: rowId});
 			if(node){
 				domClass.toggle(node, "gridxRowSelected", toHighlight);
+				node.setAttribute('aria-selected', !!toHighlight);
 				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, !!toHighlight);
 			}
 		},

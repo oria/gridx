@@ -317,6 +317,7 @@ define([
 					for(j = cellNodes.length - 1; j >= 0; --j){
 						if(cellNodes[j].getAttribute('colid') == item.cid){
 							domClass.toggle(cellNodes[j], 'gridxCellSelected', toHighlight);
+							cellNodes[j].setAttribute('aria-selected', !!toHighlight);
 							return;
 						}
 					}

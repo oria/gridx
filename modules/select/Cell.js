@@ -145,6 +145,7 @@ define([
 			});
 			if(node){
 				domClass.toggle(node, "gridxCellSelected", toHighlight);
+				node.setAttribute('aria-selected', !!toHighlight);
 				this.onHighlightChange();
 			}
 		},
