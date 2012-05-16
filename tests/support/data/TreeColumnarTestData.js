@@ -59,7 +59,7 @@ define([], function(){
 		layouts: [
 			[
 				//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
-				{id: 'id', name: 'id', field: 'id', expandLevel: -1},	
+				{id: 'id', name: 'id', field: 'id', expandLevel: 'all'},	
 				{id: 'number', name: 'number', field: 'number'},
 				{id: 'string', name: 'string', field: 'string'},
 				{id: 'date', name: 'date', field: 'date'},

@@ -5,9 +5,9 @@ require([
 	'dijit/form/RadioButton',
 	'gridx/Grid',
 	'gridx/tests/support/data/TestData',
-	'gridx/core/model/cache/Sync',
-//    'gridx/tests/support/stores/JsonRest',
-	'gridx/tests/support/stores/Memory',
+	'gridx/core/model/cache/Async',
+	'gridx/tests/support/stores/JsonRest',
+//    'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
@@ -30,13 +30,13 @@ require([
 			var store = storeFactory({
 				path: './support/stores',
 				dataSource: dataSource, 
-				size: 50
+				size: 1000
 			}); 
 			var layout = dataSource.layouts[1];
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
-				cacheSize: 0,
+//                cacheSize: 0,
 //                pageSize: 1000,
 				store: store,
 				structure: layout,

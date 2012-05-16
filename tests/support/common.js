@@ -13,7 +13,7 @@
 						b : '';
 	v = v == b ? '' : b;
 	p = d.createElement('a');
-	p.innerHTML = "<button style='position:fixed;top:0;right:0;'>" + (v || 'LTR') + "</button>";
+	p.innerHTML = "<button style='position:fixed;top:0;right:0;width:5em;'>" + (v || 'LTR') + "</button>";
 	p.firstChild.onclick = function(){
 		l.href = (q ? h.substr(0, i) : h) + (v && '?dir=' + v);
 	};

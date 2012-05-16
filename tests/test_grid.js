@@ -21,7 +21,7 @@ require([
 		if(!window.grid){
 			var store = storeFactory({
 				dataSource: dataSource, 
-				size: 200
+				size: 100
 			}); 
 			var layout = dataSource.layouts[columnSetIdx];
 			var t1 = new Date().getTime();
@@ -33,12 +33,13 @@ require([
 				structure: layout,
 				modules:[
 //                    modules.SingleSort,
-//                    modules.ExtendedSelectRow,
+					modules.ExtendedSelectRow,
+//                    modules.SelectRow,
 //                    modules.DndRow,
 //                    modules.FilterBar,
-//                    modules.Focus,
+					modules.Focus,
 //					modules.RowHeader,
-                    modules.ColumnResizer,
+//                    modules.ColumnResizer,
 					modules.VirtualVScroller
 				],
 				selectRowTriggerOnCell: true
