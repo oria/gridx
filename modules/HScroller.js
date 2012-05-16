@@ -72,8 +72,8 @@ define([
 			// left: Number
 			//		The scrollLeft value
 			var dn = this.domNode;
-			if(sniff('webkit') && !this.grid.isLeftToRight()){
-				left = dn.scrollWidth - dn.clientWidth - left;
+			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
+				left = dn.scrollWidth - dn.offsetWidth - left;
 			}
 			dn[sl] = left;
 		},
@@ -115,8 +115,8 @@ define([
 			//	Fired by h-scroller's scrolling event
 			var t = this,
 				s = t.domNode[sl];
-			if(sniff('webkit') && !t.grid.isLeftToRight()){
-				s = t.domNode.scrollWidth - t.domNode.clientWidth - s;
+			if((sniff('webkit') || sniff('ie') < 8) && !t.grid.isLeftToRight()){
+				s = t.domNode.scrollWidth - t.domNode.offsetWidth - s;
 			}
 			if(t._lastLeft != s){
 				t._lastLeft = s;

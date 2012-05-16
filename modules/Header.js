@@ -230,9 +230,7 @@ define([
 								dif = 0;
 							}
 						}
-						if(g.isLeftToRight()){
-							dif += t._scrollLeft;
-						}
+						dif += t._scrollLeft;
 						t._onHScroll(dif);
 						g.hScroller.scroll(dif);
 					}
