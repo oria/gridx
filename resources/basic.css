@@ -110,6 +110,10 @@
 	background-color: #cee8f2;
 }
 
+.gridxRow {
+	background-color: #fff;
+}
+
 .gridxRowHeaderRow table,
 .gridxRow .gridxRowTable {
 	border-collapse: collapse;
@@ -148,7 +152,7 @@
 	outline: 1px dashed darkblue;
 }
 
-.dj_ie7 .gridx .gridxCellFocus {
+.dj_ie7 .gridx .gridxBody .gridxRow .gridxCellFocus {
 	border: 1px dashed darkblue;
 }
 
