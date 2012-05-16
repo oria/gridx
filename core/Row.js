@@ -4,7 +4,6 @@ define([
 	"dojo/_base/Deferred"
 ], function(declare, lang, Deferred){
 
-	
 	return declare(/*===== "gridx.core.Row", =====*/[], {
 		// summary:
 		//		Represents a row of a grid
@@ -26,15 +25,12 @@ define([
 		model: null,
 		=====*/
 
-		
-
 		constructor: function(grid, id){
 			this.grid = grid;
 			this.model = grid.model;
 			this.id = id;
 		},
 
-		
 		index: function(){
 			// summary:
 			//		Get the index of this row
@@ -43,7 +39,6 @@ define([
 			return this.model.idToIndex(this.id);	//Integer
 		},
 
-		
 		cell: function(column, isId){
 			// summary:
 			//		Get a cell object in this row
@@ -56,7 +51,6 @@ define([
 			return this.grid.cell(this, column, isId);	//gridx.core.Cell|null
 		},
 
-		
 		data: function(){
 			// summary:
 			//		Get the grid data in this row.
@@ -68,7 +62,6 @@ define([
 			return this.model.byId(this.id).data;	//Object
 		},
 
-		
 		rawData: function(){
 			// summary:
 			//		Get the store data in this row.
@@ -80,7 +73,6 @@ define([
 			return this.model.byId(this.id).rawData;	//Object
 		},
 
-		
 		item: function(){
 			// summary:
 			//		Get the store item of this row
@@ -92,7 +84,6 @@ define([
 			return this.model.byId(this.id).item;	//Object
 		},
 
-		
 		setRawData: function(rawData){
 			// summary:
 			//		Set new raw data of this row into the store

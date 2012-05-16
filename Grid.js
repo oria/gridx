@@ -25,7 +25,6 @@ define([
 	var forEach = array.forEach,
 		dummyFunc = function(){},
 
-		
 		Grid = declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 			// summary:
 			//		Gridx is a highly extensible widget providing grid/table functionalities. 
@@ -39,7 +38,6 @@ define([
 			//		not sufficient enough, please refer to the following link for latest API docs:
 			//		http://evanhw.github.com/gridx/doc/gridx.html
 
-			
 			templateString: template,
 
 			coreModules: [
@@ -93,7 +91,6 @@ define([
 				this.inherited(arguments);
 			},
 
-			
 			resize: function(changeSize){
 				// summary:
 				//		Resize the grid using given width and height.
