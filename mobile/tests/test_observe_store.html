@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Gridx Mobile</title>
+	<link href="../../../dojox/mobile/themes/iphone/base.css" rel="stylesheet"/>
+	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
+	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
+	<script>
+		var djConfig = {
+			packages: [
+				{
+					name: 'gridx'
+					,location: '../gridx'
+				}
+			]
+		};
+	</script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
+	
+	<style>
+		.mobileGridxBody {	
+			background-color: #889FC2;
+			-webkit-background-size: 8px 5px;
+		    background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(.32, rgba(255, 255, 255, .09)), color-stop(.32, transparent), to(transparent));
+		}
+		.mobileGridxHeaderCell			{	text-align: right;}
+		.mobileGridxHeaderCell.comp		{	text-align: left;}
+		.mobileGridxCell				{	text-align: center; text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0; font-weight: bold; color: #fff; font-size: 20px;  font-family: arial;}
+		.mobileGridxCell.comp			{	text-align: left;}
+		
+		.change.mobileGridxCell > span	{	display:block; border-radius: 5px; border: 2px solid #ddd;}
+		.change.mobileGridxCell .down	{	border-color: #973737; background-color: #B02D27;}
+		.change.mobileGridxCell .up		{	border-color: #497F39; background-color: #55982E; }
+		
+		.mobileGridxRow {
+			background-color: #889FC2;
+			-webkit-background-size: 8px 5px;
+		    background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(.32, rgba(255, 255, 255, .09)), color-stop(.32, transparent), to(transparent));
+		}
+		.mobileGridxRowOdd {
+		    background-color: #A9B2C7;
+		}
+	</style>
+	
+	<script>
+		function random(range, digit, forcePositive){
+			var d = Math.pow(10, digit||0);
+			var value = Math.round(range * Math.random() * d)/d;
+			var positive = Math.random() >= 0.5 || forcePositive;
+			return positive ? value : -value;
+		}
+		
+		function formatter(item, col){
+			var c = item.change, css = 'up';
+			if(c < 0)css = 'down';
+			return '<span class="' + css + '">' + (c >= 0 ? '+' : '-') + Math.abs(c) + '</span>';
+		}
+		var columns = [
+			{field: 'company', width: '40%', title: 'Company', cssClass: 'comp'},
+			{field: 'shares', width: '30%', title: 'Shares', cssClass: 'shares'},
+			{field: 'change', width: '30%', title: 'Change', cssClass: 'change', formatter: formatter}
+		];
+		
+		require([
+			'dojo/_base/declare',
+			'dojo/_base/lang',
+			'dojo/domReady',
+			'dojo/store/Memory',
+			'dojox/mobile/parser',
+			'gridx/mobile/Grid',
+			'gridx/mobile/StoreObserver',
+			'gridx/mobile/tests/support/data',
+			'dojox/mobile/Heading',
+			'dojox/mobile/View',
+			'dojox/mobile/ScrollableView',
+			'dojox/mobile/TabBar'
+		], function(declare, lang, ready, MemoryStore, parser, Grid, StoreObserver, data){
+			declare('gridx.mobile.tests.Grid', [Grid, StoreObserver], {});
+			ready(function(){
+				parser.parse();
+				grid.setStore(new MemoryStore({data: data.stock, idProperty: 'company'}));
+				grid.setColumns(columns);
+				
+				window.setInterval(function(){
+					data.stock.forEach(function(stock){
+						var r = random(5, 2);
+						stock.shares = Math.round(100*(stock.shares + r))/100;	// to 2 decimal digit
+						stock.change = Math.round(100*(stock.change + r))/100;
+						grid.store.put(stock);
+					});
+				}, 3000);
+			});
+			
+		});
+	</script>
+</head>
+
+<body style="visibility:hidden;">
+	<div id="group1" dojoType="dojox.mobile.View" selected="true">
+		<h1 dojoType="dojox.mobile.Heading">Stock Observer</h1>
+		<div dojoType="gridx.mobile.tests.Grid" jsId="grid" hScroller="false" showHeader="false"></div>
+		<ul dojoType="dojox.mobile.TabBar" fixed="bottom" style="border-bottom:none;">
+			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
+			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
+			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
+			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
+		</ul>
+	</div>
+
+</body>
+</html>

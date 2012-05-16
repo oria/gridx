@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Gridx Mobile</title>
+	<link href="../../../dojox/mobile/themes/iphone/base.css" rel="stylesheet"/>
+	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
+	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
+	<script>
+		var djConfig = {
+			packages: [
+				{
+					name: 'gridx'
+					,location: '../gridx'
+				}
+			]
+		};
+	</script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
+	
+	
+	<style>
+		body				{	background-color: #fff!important;}
+		.mobileGridx		{	width: 95%; margin-left: auto; margin-right: auto;}
+		.mobileGridxBody	{	height: 150px;}
+		.mobileGridxRow		{	border-bottom: 1px solid #ddd;}
+		.mobileGridxRowOdd	{	background-color: #fff;}
+		.mobileGridxCell	{	font-size: 12px; padding: 5px;}
+		.color	span 		{	float: left; width:12px; height: 12px;}
+	</style>
+	
+	<script>
+		var columns = [
+			{field: 'color', width: '10%', title: 'Color', cssClass: 'color', template: '<span style="background-color:${color};">&nbsp;</span>'}
+			,{field: 'name', width: '40%', title: 'Name'}
+			,{field: 'country', width: '40%', title: 'Country'}
+			,{field: 'count', width: '10%', title: 'Count'}
+		];
+		
+		require([
+			'dojo/domReady',
+			'dojo/store/Memory',
+			'dojox/mobile/parser',
+			'gridx/mobile/tests/support/data',
+			'dojox/mobile/Heading',
+			'dojox/mobile/View',
+			'dojox/mobile/ScrollableView',
+			'dojox/mobile/TabBar',
+			'gridx/mobile/Grid',
+			'dojox/charting/widget/Chart',
+			'dojox/charting/plot2d/Pie',
+			'gridx/mobile/tests/support/chart-theme'
+		], function(ready, MemoryStore, parser, data){
+			seriesB = data.chart.series;
+			ready(function(){
+				parser.parse();
+				grid.store = new MemoryStore({data: data.chart.gridData['2.6']});
+				grid.setColumns(columns);
+			});
+		});
+	</script>
+</head>
+
+<body style="visibility:hidden;">
+	<div id="group1" dojoType="dojox.mobile.View" selected="true">
+		<h1 dojoType="dojox.mobile.Heading">Patent Filed</h1>
+		<div dojoType="dojox.mobile.Pane">
+			<div dojoType="dojox.charting.widget.Chart" id="chart3" theme="dojox.charting.themes.MobileGridx"
+							 style="width: 100%; height: 190px;">
+				<div class="plot" name="default" type="Pie" radius="80" fontColor="white"></div>
+				<div class="series" name="Series B" array="seriesB"></div>
+				
+			</div>
+		</div>
+		<div dojoType="gridx.mobile.Grid" jsId="grid" autoHeight="false" showHeader="false">
+		</div>
+	</div>
+
+</body>
+</html>

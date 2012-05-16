@@ -1,0 +1,55 @@
+.mobileGridx {
+	position: relative;
+}
+
+.mobileGridxHeader {
+	background-color: #ddd;
+	overflow: hidden;
+	top: 0;
+	width: 100%;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#B0BCCD), to(#6D84A2), color-stop(0.5, #889BB3), color-stop(0.5, #8195AF));
+}
+.mobileGridxHeaderRow > table,
+.mobileGridxRow > table{
+	width: 100%;
+	border-collapse: collapse;
+}
+.mobileGridxHeaderCell {
+	color: #fff;
+	text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
+	padding: 5px;
+	font-weight: bold;
+}
+
+.mobileGridxBody {
+	background-color: #fff;
+	overflow: hidden;
+	position: relative;	/*Fix scoller position issue*/
+}
+
+.mobileGridxFooter {
+	bottom: 0;
+	width: 100%;
+	background-color: #ddd;
+}
+
+
+.mobileGridxCell {
+	padding: 5px;
+}
+
+.mobileGridxRowOdd {
+	background-color: #f0f0f0;
+}
+
+
+/*Load More Mixin*/
+.mobileGridxLoadMoreWrapper {
+	text-align: center;
+}
+.mobileGridxLoadMoreButton {
+	margin: 10px auto;
+	display: inline-block;
+	padding: 5px;
+	width: 80%;
+}
