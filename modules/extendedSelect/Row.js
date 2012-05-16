@@ -121,6 +121,7 @@ define([
 				[g, 'onRowMouseDown', function(e){
 					if(mouse.isLeft(e) && (t.arg('triggerOnCell') || !e.columnId)){
 						t._isOnCell = e.columnId;
+						g.body._focusCellCol = e.columnIndex;
 						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
@@ -231,6 +232,7 @@ define([
 		_doHighlight: function(target, toHighlight){
 			query('[visualindex="' + target.row + '"]', this.grid.bodyNode).forEach(function(node){
 				domClass.toggle(node, 'gridxRowSelected', toHighlight);
+				node.setAttribute('aria-selected', !!toHighlight);
 			});
 			this.onHighlightChange(target, toHighlight);
 		},
@@ -249,7 +251,11 @@ define([
 		},
 
 		_addToSelected: function(start, end, toSelect){
-			var t = this, bd = t.grid.body, m = t.model, a, b, i, lastEndItem = t._lastEndItem;
+			var t = this,
+				bd = t.grid.body,
+				m = t.model,
+				lastEndItem = t._lastEndItem,
+				a, b, i, d;
 			if(!t._isRange){
 				t._refSelectedIds = m.getMarkedIds();
 			}
@@ -258,7 +264,8 @@ define([
 				b = Math.max(end.row, lastEndItem.row);
 				start = bd.getRowInfo({visualIndex: a}).rowIndex + 1;
 				end = bd.getRowInfo({visualIndex: b}).rowIndex;
-				return m.when({
+				d = new Deferred;
+				m.when({
 					start: start, 
 					count: end - start + 1
 				}, function(){
@@ -267,7 +274,12 @@ define([
 							selected = array.indexOf(t._refSelectedIds, id) >= 0;
 						m.markById(id, selected); 
 					}
+				}).then(function(){
+					m.when(null, function(){
+						d.callback();
+					});
 				});
+				return d;
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);

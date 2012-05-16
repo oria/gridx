@@ -24,6 +24,7 @@ define([
 			t.connect(m, 'onSizeChange', '_update');
 			t.connect(m, 'onMarked', '_update');
 			t.connect(m, 'onMarkRemoved', '_update');
+			t._update();
 		},
 
 		_update: function(){

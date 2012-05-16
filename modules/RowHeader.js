@@ -33,9 +33,10 @@ define([
 		constructor: function(){
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',
+				role: 'row',
 				innerHTML: ['<table border="0" cellspacing="0" cellpadding="0" style="width: ', 
 					this.arg('width'), 
-					';"><tr><th class="gridxRowHeaderHeaderCell" tabindex="-1"></th></tr></table>'
+					';"><tr><th class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></th></tr></table>'
 				].join('')
 			});
 			this.bodyNode = domConstruct.create('div', {
@@ -193,8 +194,8 @@ define([
 		_buildRows: function(start, count){
 			var sb = [];
 			for(var i = 0; i < count; ++i){
-				sb.push('<div class="gridxRowHeaderRow" visualindex="', start + i,
-					'"><table border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" tabindex="-1"></td></tr></table></div>');
+				sb.push('<div class="gridxRowHeaderRow" role="row" visualindex="', start + i,
+					'"><table border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" role="rowheader" tabindex="-1"></td></tr></table></div>');
 			}
 			return sb.join('');
 		},

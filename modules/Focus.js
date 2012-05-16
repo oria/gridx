@@ -71,7 +71,14 @@ define([
 		preload: function(){
 			var t = this,
 				g = t.grid;
-			t._onDocFocus = lang.hitch(t, '_onFocus');
+			t._onDocFocus = function(evt){
+				if(!t._noBlur){
+					if(sniff('ie')){
+						evt.target = evt.srcElement;
+					}
+					t._onFocus(evt);
+				}
+			};
 			t.batchConnect(
 				[g.domNode, 'onkeydown', '_onTabDown'],
 				[g.firstFocusNode, 'onfocus', '_focus'],
@@ -286,7 +293,7 @@ define([
 			return false;
 		},
 
-		onFocusArea: function(/* String areaName */){
+		onFocusArea: function(/* String */areaName){
 			// summary:
 			//		Fired when an area is focused.
 			// tags:
