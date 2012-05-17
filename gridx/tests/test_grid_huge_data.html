@@ -7,7 +7,7 @@
 	<style type="text/css">
 		#gridContainer {
 			width: 800px;
-			height: 300px;
+			height: 500px;
 		}
 		#grid {
 			height: 100%;
@@ -16,14 +16,20 @@
 
 	<script type="text/javascript" src="../../dojo/dojo.js" 
 		data-dojo-config="async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
-	<script type="text/javascript" src="../gridx-all.js"></script>		
-	<script type="text/javascript" src="../../dijit/tests/_testCommon.js"></script>
-	<script type="text/javascript" src='test_grid_huge_data.js'></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require(["gridx/dojo-deps-mini", "gridx/gridx-virtual"], function(){
+			require(["gridx/tests/test_grid_huge_data"]);
+		});
+	</script>		
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		GridX with a Huge Data Store (1,000,000 rows) - Lazy Loading
 	</h1>
+	<h2>
+		<p>Please note - All data are loaded from a <a href="http://dojotoolkit.cn/data/?totalSize=1000000&count=200">third party server</a>, so loading speed will be highly dependent on the network and stability of the service.</p>
+	</h2>
 	<table border='0' cellspacing='0' cellpadding='0'><tr>
 		<td>
 			<div id='gridContainer'></div>

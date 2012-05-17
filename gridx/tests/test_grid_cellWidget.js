@@ -1,11 +1,10 @@
 require([
-	'dojo/date/locale',
-	'gridx/Grid',
-	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane',
+	'gridx/Grid',
+	'gridx/core/model/cache/Sync',
+	'gridx/core/model/cache/Async',
 	'dijit/form/ComboButton',
 	'dijit/Menu',
 	'dijit/MenuItem',
@@ -14,198 +13,116 @@ require([
 	'dijit/form/CheckBox',
 	'dijit/form/DropDownButton',
 	'dijit/TooltipDialog'
-	
-	
+], function(dataSource, storeFactory){
 
-], function(locale, Grid, Cache, dataSource, storeFactory, modules, TestPane,ComboButton,Menu,MenuItem){
+	store = storeFactory({
+		dataSource: dataSource,
+		size: 100
+	});
 
-	var progressDecorator = function(){
-		return [
-			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 1' class='gridxHasGridCellValue' style='width: 100%;'></div>"
-		].join('');
-	};
-
-	var artistDecorator = function(){
-		return [
-			'<button data-dojo-type="dijit.form.Button" data-dojo-attach-point="btn" onClick="alert(123)"></button>'
-		].join('');
-	};
-
-	var artistSetCellValue = function(data){
-		this.btn.set('label', data);
-	};
-
-	var albumDecorator = function(){
-		return [
-			'<span data-dojo-type="dijit.form.CheckBox" data-dojo-attach-point="cb"></span>',
-			'<label data-dojo-attach-point="lbl"></label>'
-		].join('');
-	};
-	
-	
-
-	var albumSetCellValue = function(data){
-		this.lbl.innerHTML = data;
-		this.cb.set('value', data.length % 2);
-	};
-	
-	var comboButtonDecorator = function(){
-		return [
-			'<div data-dojo-type="dijit.form.ComboButton"',
-        'data-dojo-props="',
-            'optionsTitle:\'Save Options\',',
-            'iconClass:\'dijitIconFile\',',
-            'onClick:function(){ console.log(\'Clicked ComboButton\'); }">',
-        '<span>Combo</span>',
-        '<div  data-dojo-type="dijit.Menu">',
-            '<div data-dojo-type="dijit.MenuItem"',
-                'data-dojo-props="',
-                    'iconClass:\'dijitEditorIcon dijitEditorIconSave\',',
-                    'onClick:function(){ console.log(\'Save\'); }">',
-                'Save',
-            '</div>',
-            '<div data-dojo-type="dijit.MenuItem"',
-                'data-dojo-props="onClick:function(){ console.log(\'Save As\'); }">',
-                'Save As',
-            '</div></div> </div>'
-        
-   
-			
-		].join('');
-	};
-	
-	
-
-	var comboButtonSetCellValue = function(data){
-	
-		
-		
-	};
-	
-	
-	var radioButtonDecorator = function(){
-		return [
-		'<input data-dojo-type="dijit.form.RadioButton" data-dojo-attach-point="rb"</input>',
-        '<label data-dojo-attach-point="radioLabel"></label>'
-		
-		].join('');
-	};
-	
-	var radioButtonSetCellValue = function(data){
-		this.rb.value=data;
-		this.radioLabel.innerHTML=data;
-	};
-	
-	var comboBoxDecorator = function(){
-		return [
-		'<select name="stateSelect" data-dojo-type="dijit.form.ComboBox"',
-        'data-dojo-props="value: \'\',placeHolder: \'Select a State\'">',
-        '<option value="AL">Alabama</option>',
-        '<option value="AK">Alaska</option>',
-        '<option value="AZ">Arizona</option>',
-        '<option value="AR">Arkansas</option>',
-        '<option value="CA">California</option>',
-		'</select>'
-		
-		
-		].join('');
-	
-	};
-	
-	var dropDownButtonDecorator = function(){
-		return [
-		 '<div data-dojo-type="dijit.form.DropDownButton"',
-        'data-dojo-props="iconClass:\'dijitIconApplication\'">',
-        '<span>DropDown</span>',
-        '<div data-dojo-type="dijit.TooltipDialog" data-dojo-attach-point="ttd">',
-		'hihi',
-        ' </div></div>'
-	
-		
-		].join('');
-	};
-	
-	var dropDownButtonSetCellValue = function(data){
-		this.ttd.containerNode.innerHTML=data;
-		this.ttd.set('value', data);
-	};
-	
-
-	var structure = [
+	layout1 = [
 		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Progress", name:"Progress", 
+		{ field: "Progress", name:"Progress", dataType:'number',
 			widgetsInCell: true, 
-			decorator: progressDecorator
+			decorator: function(){
+				return [
+					"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 1' ",
+					"class='gridxHasGridCellValue' style='width: 100%;'></div>"
+				].join('');
+			}
 		},
-		{ field: "Artist", name:"Artist", 
+		{ field: "Artist", name:"Button", 
 			widgetsInCell: true,
-			navigable:true,			
-			decorator: artistDecorator,
-			setCellValue: artistSetCellValue
+			navigable: true,
+			decorator: function(){
+				//Generate cell widget template string
+				return [
+					'<button data-dojo-type="dijit.form.Button" ',
+					'data-dojo-attach-point="btn" ',
+					'data-dojo-props="onClick: function(){',
+						'alert(this.get(\'label\'));',
+					'}"></button>'
+				].join('');
+			},
+			setCellValue: function(data){
+				//"this" is the cell widget
+				this.btn.set('label', data);
+			}
 		},
-		{ field: "Album", name:"Album", 
+		{ field: "Album", name:"Read-only CheckBox", 
 			widgetsInCell: true,
-			decorator: albumDecorator,
-			setCellValue: albumSetCellValue
+			decorator: function(){
+				return [
+					'<span data-dojo-type="dijit.form.CheckBox" ',
+						'data-dojo-attach-point="cb" ',
+						'data-dojo-props="readOnly: true"',
+					'></span>',
+					'<label data-dojo-attach-point="lbl"></label>'
+				].join('');
+			},
+			setCellValue: function(data){
+				//"this" is the cell widget
+				this.lbl.innerHTML = data;
+				this.cb.set('value', data.length % 2);
+			}
 		},
-		
-		 { field: "Genre", name:"Genre", 
+		{ field: "Genre", name:"ComboButton", 
 			widgetsInCell: true,
-			decorator: radioButtonDecorator,
-			setCellValue: radioButtonSetCellValue
-		
-		}, 
-		{ field: "State", name:"State", 
-			widgetsInCell: true, 
-			navigable:true,
-			decorator: comboBoxDecorator
-		
+			navigable: true,
+			decorator: function(){
+				return [
+					'<div data-dojo-type="dijit.form.ComboButton" ',
+						'data-dojo-attach-point="btn" ',
+						'data-dojo-props="',
+							'optionsTitle:\'Save Options\',',
+							'iconClass:\'dijitIconFile\',',
+							'onClick:function(){ console.log(\'Clicked ComboButton\'); }',
+					'">',
+					'<div data-dojo-type="dijit.Menu">',
+					'<div data-dojo-type="dijit.MenuItem"',
+						'data-dojo-props="',
+							'iconClass:\'dijitEditorIcon dijitEditorIconSave\',',
+							'onClick:function(){ console.log(\'Save\'); }">',
+						'Save',
+					'</div>',
+					'<div data-dojo-type="dijit.MenuItem"',
+						'data-dojo-props="onClick:function(){ console.log(\'Save As\'); }">',
+						'Save As',
+					'</div></div></div>'
+				].join('');
+			},
+			setCellValue: function(data){
+				this.btn.set('label', data);
+			}
 		},
-		{ field: "Name", name:"Name", 
+		{ field: "Name", name:"DropDown Button",
 			widgetsInCell: true, 
-			navigable:true,
-			decorator: comboButtonDecorator,
-			setCellValue: comboButtonSetCellValue
-		},
-		{ field: "Composer", name:"Composer", 
-			widgetsInCell: true, 
-			navigable:true,
-			decorator: dropDownButtonDecorator,
-			setCellValue: dropDownButtonSetCellValue
+			navigable: true,
+			decorator: function(){
+				return [
+					'<div data-dojo-type="dijit.form.DropDownButton" ',
+						'data-dojo-attach-point="btn"',
+						'data-dojo-props="iconClass:\'dijitIconApplication\'">',
+						'<div data-dojo-type="dijit.TooltipDialog" data-dojo-attach-point="ttd">',
+							'hihi',
+						'</div>',
+					'</div>'
+				].join('');
+			},
+			setCellValue: function(data){
+				this.btn.set('label', data);
+			}
 		}
-		
 	];
 
-	grid = new Grid({
-		id: 'grid',
-		cacheClass: Cache,
-		store: storeFactory({
-			dataSource: dataSource, 
-			size: 1000
-		}),
-		structure: structure,
-		modules: [
-			modules.Focus,
-			modules.CellWidget,
-			modules.VirtualVScroller
-		]
-	});
-	grid.placeAt('gridContainer');
-	grid.startup();
-
-
-	//Test buttons
-	/*var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
-
-	tp.addTestSet('Core Functions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: beginEdit2_3">Begin edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: applyEdit2_3">Apply edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: cancelEdit2_3">Cancel edit cell(2,3)</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: isEditing2_3">Is cell(2,3) editing</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setEditor3">set the "Year" column\'s editor to a TextBox</div><br/>'
-	].join(''));
-
-	tp.startup();
-	*/
+	layout2 = [
+		{ field: "id", name:"Index", width: '50px'},
+		{ field: "Name", name:"Links",
+			navigable: true,
+			decorator: function(data){
+				return [
+				].join('');
+			}
+		}
+	];
 });

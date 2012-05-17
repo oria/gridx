@@ -11,13 +11,17 @@ define([
 	"../core/_Module"
 ], function(declare, array, Deferred, query, sniff, domGeometry, domClass, domStyle, keys, _Module){
 
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.ColumnWidth", =====*/_Module, {
+		// summary:
+		//		Manages column width distribution, allow grid autoWidth and column autoResize.
+
 		name: 'columnWidth',
 	
 		forced: ['hLayout', 'header'],
 
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				columnWidth: this
 			};
@@ -28,6 +32,8 @@ define([
 		},
 
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this, g = t.grid;
 			if(!g.hScroller){
 				t.autoResize = true;
@@ -52,6 +58,8 @@ define([
 		},
 
 		load: function(){
+			// tags:
+			//		protected extension
 			var loaded = this.loaded;
 			this._ready.then(function(){
 				loaded.callback();
@@ -59,8 +67,15 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------------------
+
+		// default: Number
+		//		Default column width. Applied when it's not possible to decide accurate column width from user's config.
 		'default': 60,
 
+		// autoResize: Boolean
+		//		If set to true, the column width can only be set to auto or percentage values (if not, it'll be regarded as auto),
+		//		then the column will automatically resize when the grid width is changed (this is the default behavior of an
+		//		HTML table).
 		autoResize: false,
 
 		//Private-----------------------------------------------------------------------------
@@ -103,6 +118,9 @@ define([
 						w += padBorder;
 					}
 					totalWidth += w;
+					if(sniff('ie') && isCollapse){
+						totalWidth--;
+					}
 					var c = g._columnsById[node.getAttribute('colid')];
 					if(!c.width || /%$/.test(c.width)){
 						c.width = w + 'px';
@@ -132,11 +150,7 @@ define([
 						c.width = parseInt(bodyWidth * parseFloat(c.width, 10) / 100 - padBorder, 10) + 'px';
 					}
 				});
-				try{
 				header.refresh();
-			}catch(e){
-				alert(e);
-			}
 				array.forEach(g._columns, function(c){
 					if(c.width != 'auto'){
 						var w = domStyle.get(header.getHeaderNode(c.id), 'width');
@@ -154,9 +168,12 @@ define([
 						padBorder = 0;
 					}
 					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default');
-					w = parseInt(w, 10) + 'px';
+					if(bodyWidth > fixedWidth && sniff('ie') && isCollapse){
+						w += g._columns.length / autoCols.length;
+					}
+					w = parseInt(w, 10);
 					array.forEach(autoCols, function(c){
-						c.width = w; 
+						c.width = w + 'px';
 					});
 				}
 				header.refresh();
@@ -169,5 +186,5 @@ define([
 				header._onHScroll(0);
 			}
 		}
-	}));
+	});
 });

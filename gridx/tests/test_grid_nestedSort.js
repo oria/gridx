@@ -4,7 +4,8 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane'
+	'gridx/tests/support/TestPane',
+	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
 
 	grid = new Grid({

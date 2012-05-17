@@ -13,7 +13,8 @@ require([
 	'gridx/tests/support/TestPane',
 	'gridx/tests/support/modules',
 	'dijit/form/Button',
-	'dijit/form/TextBox'
+	'dijit/form/TextBox',
+	'dojo/domReady!'
 ], function(lang, html, array, connect, win, dndTarget, dndSource, Grid, Cache, dataSource, storeFactory, TestPane, mods){
 
 	function create(id, container, size, layoutIdx, args){
@@ -29,6 +30,8 @@ require([
 			modules: [
 				mods.ExtendedSelectRow,
 				mods.ExtendedSelectColumn,
+				mods.MoveRow,
+				mods.MoveColumn,
 				mods.DndRow,
 				mods.DndColumn,
 				mods.VirtualVScroller,

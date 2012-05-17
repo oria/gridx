@@ -37,7 +37,8 @@ define([
 	'gridx/modules/TitleBar',
 	'gridx/modules/Tree',
 	'gridx/modules/RowLock',
-	'gridx/modules/ToolBar'
+	'gridx/modules/ToolBar',
+	'gridx/modules/SummaryBar'
 ], function(FormatSort, 
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
@@ -51,7 +52,7 @@ define([
 	CellWidget, Edit,
 	RowHeader, IndirectSelect,
 	Persist, Exporter, CSV, Table, Printer,
-	Menu, Dod, TitleBar, Tree, RowLock, ToolBar){
+	Menu, Dod, TitleBar, Tree, RowLock, ToolBar,SummaryBar){
 return {
 	FormatSort: FormatSort,
 	Focus: Focus,
@@ -91,7 +92,8 @@ return {
 	TitleBar: TitleBar,
 	Tree: Tree,
 	RowLock: RowLock,
-	ToolBar: ToolBar
+	ToolBar: ToolBar,
+	SummaryBar: SummaryBar
 };
 });
 

@@ -1,4 +1,5 @@
 define([
+	"dojo/_base/kernel",
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
@@ -7,11 +8,13 @@ define([
 	'dojo/dom-class',
 	'dojox/mobile/Pane',
 	'dojox/mobile/ScrollablePane'
-], function(declare, lang, array, aspect, string, css, Pane, ScrollablePane){
+], function(kernel, declare, lang, array, aspect, string, css, Pane, ScrollablePane){
 	//module:
 	//	gridx/mobile/Grid
 	//summary:
 	//	A mobile grid that has fixed header, footer and a scrollable body.
+	
+	kernel.experimental('gridx/mobile/Grid');
 	
 	var Grid = declare('gridx.mobile.Grid', [Pane], {
 		//summary:
@@ -43,6 +46,11 @@ define([
 		//	The store to show as grid.
 		store: null,
 		
+		query: null,
+		
+		//queryOptions: dojo.store.util.SimpleQueryEngine.__queryOptions?
+		queryOptions: null,
+		
 		//plugins: array
 		//	Plugins for the mobile grid.
 		//,plugins: [],
@@ -60,6 +68,12 @@ define([
 			//  Maybe improve performance by adding/removing some columns instead of re-rendering.
 			this.columns = columns;
 			this.buildGrid();
+		},
+		
+		postMixInProperties: function(){
+			this.inherited(arguments);
+			this.queryOptions = this.queryOptions || {};
+			this.query = this.query || {};
 		},
 		
 		buildGrid: function(){
@@ -97,7 +111,8 @@ define([
 			//summary:
 			//	Build the grid body
 			var arr = [];
-			this.store.query({}).forEach(function(item, i){
+			this._queryResults = this.store.query(this.query, this.queryOptions);
+			this._queryResults.forEach(function(item, i){
 				arr.push(this._createRow(item, i));
 			}, this);
 			this.bodyPane.containerNode.innerHTML = arr.join('');

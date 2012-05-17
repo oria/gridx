@@ -23,10 +23,32 @@ define([
 		};
 	}
 
-	return _Module.register(
-	declare(_RowCellBase, {
+	return declare(/*===== "gridx.modules.extendedSelect.Cell", =====*/_RowCellBase, {
+		// summary:
+		//		Provides advanced cell selections.
+		// description:
+		//		This module provides an advanced way for selecting cells by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple cell.
+		//
+		// example:
+		//		1. Use select api on cell object obtained from grid.cell(i,j)
+		//		|	grid.cell(1,1).select();
+		//		|	grid.cell(1,1).deselect();
+		//		|	grid.cell(1,1).isSelected();
+		//
+		//		2. Use select api on select.cell module
+		//		|	grid.select.cell.selectById(columnId);
+		//		|	grid.select.cell.deSelectById(columnId);
+		//		|	grid.select.cell.isSelected(columnId);
+		//		|	grid.select.cell.getSelected();//[]
+		//		|	grid.select.cell.clear();
+
+		// name: [readonly] String
+		//		module name
 		name: 'selectCell',
 
+		// cellMixin: Object
+		//		A map of functions to be mixed into grid cell object, so that we can use select api on column object directly
+		//		- grid.cell(1,1).select() | deselect() | isSelected();
 		cellMixin: {
 			select: function(){
 				this.grid.select.cell.selectByIndex(this.row.index(), this.column.index());
@@ -42,12 +64,30 @@ define([
 		},
 		
 		//Public-----------------------------------------------------------------
+/*=====
+		selectById: function(rowId, columnId){
+			// summary:
+			//		Select a cell by (rowId, columnId)
+		},
+		
+		deselectById: function(columnId){
+			// summary:
+			//		Deselect a cell by (rowId, columnId)
+		},
+		
+		selectByIndex: function(rowIndex, columnIndex){
+			// summary:
+			//		Select a cess by (rowIndex, columnIndex)
+		},
+		
+		deSelectByIndex: function(rowIndex, columnIndex){
+			// summary:
+			//		Deselect a cell by (rowIndex, columnIndex)
+		},		
+=====*/
 		getSelected: function(){
-			//summary:
-			//	Get selected rows, cells, or columns
-			//return:
-			//	An array of selected cells. For example: 
-			//	[['row1', 'col1'], ['row2', 'col2']]
+			// summary:
+			//		Get an array of selected cells e.g.[['row1', 'col1'], ['row2', 'col2']]
 			var t = this, res = [];
 			array.forEach(t.grid._columns, function(col){
 				var ids = t.model.getMarkedIds(t._getMarkType(col.id));
@@ -59,6 +99,8 @@ define([
 		},
 
 		clear: function(silent){
+			// summary:
+			//		Deselected all selected cells	
 			var t = this;
 			query(".gridxCellSelected", t.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxCellSelected');
@@ -72,6 +114,8 @@ define([
 		},
 
 		isSelected: function(rowId, columnId){
+			// summary:
+			//		Check if the given cell is selected.			
 			return this.model.isMarked(rowId, this._getMarkType(columnId));
 		},
 		
@@ -273,6 +317,7 @@ define([
 					for(j = cellNodes.length - 1; j >= 0; --j){
 						if(cellNodes[j].getAttribute('colid') == item.cid){
 							domClass.toggle(cellNodes[j], 'gridxCellSelected', toHighlight);
+							cellNodes[j].setAttribute('aria-selected', !!toHighlight);
 							return;
 						}
 					}
@@ -373,5 +418,5 @@ define([
 			}
 			return d;
 		}
-	}));
+	});
 });

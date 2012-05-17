@@ -3,13 +3,15 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/connect",
 	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/_base/window",
 	"dojo/keys",
 	"../core/_Module",
 	"../util"
-], function(declare, array, connect, lang, keys, _Module, util){
+], function(declare, array, connect, lang, sniff, win, keys, _Module, util){
 	
 	/*=====
-		gridx.module.Focus.__FocusArea = function(){
+		gridx.modules.Focus.__FocusArea = function(){
 			// name: String (mandatory)
 			//		The name of this area. Must be unique. Must not be empty.
 			//
@@ -47,8 +49,7 @@ define([
 		};
 	=====*/
 	
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.Focus", =====*/_Module, {
 		// summary
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
@@ -68,14 +69,27 @@ define([
 		},
 
 		preload: function(){
-			var g = this.grid, n = g.domNode;
-			this.batchConnect(
-				[n, 'onmousedown', '_onMouseDown'],
-				[n, 'onkeydown', '_onTabDown'],
-				[n, 'onfocus', '_focus'],
+			var t = this,
+				g = t.grid;
+			t._onDocFocus = function(evt){
+				if(!t._noBlur){
+					if(sniff('ie')){
+						evt.target = evt.srcElement;
+					}
+					t._onFocus(evt);
+				}
+			};
+			t.batchConnect(
+				[g.domNode, 'onkeydown', '_onTabDown'],
+				[g.firstFocusNode, 'onfocus', '_focus'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
 				[g, 'onBlur', '_doBlur']
 			);
+			if(sniff('ie')){
+				win.doc.attachEvent('onfocusin', t._onDocFocus);
+			}else{
+				win.doc.addEventListener('focus', t._onDocFocus, true);
+			}
 		},
 	
 		destroy: function(){
@@ -84,6 +98,11 @@ define([
 			t._areaQueue = null;
 			t._focusNodes = [];
 			t._queueIdx = -1;
+			if(sniff('ie')){
+				win.doc.detachEvent('onfocusin', t._onDocFocus);
+			}else{
+				win.doc.removeEventListener('focus', t._onDocFocus, true);
+			}
 			t.inherited(arguments);
 		},
 	
@@ -93,6 +112,8 @@ define([
 			//		Register a new focus area, so this area will be included in the TAB sequence.
 			//		If there's an existing area with the same name, it is removed and replaced by the new area.
 			//		This function always succeed. No exception.
+			// tags:
+			//		package
 			// area: __FocusArea
 			//		A focus area definition.
 			if(area && area.name && typeof area.priority == 'number'){
@@ -136,6 +157,8 @@ define([
 			//		If the current area is not this area, blur the current area.
 			//		If the current area is this area, this is a no-op and return TRUE.
 			//		If the area with this name does not exist, this is a no-op and return FALSE.
+			// tags:
+			//		package
 			// return: Boolean
 			//		TRUE if the focus is successful, FALSE if not.	
 			var t = this, area = t._areas[areaName];
@@ -164,6 +187,8 @@ define([
 		currentArea: function(){
 			// summary:
 			//		Get the name of the current focus area. 
+			// tags:
+			//		package
 			// return: String
 			//		The name of the current Area. Return "" if no area is focused.
 			var a = this._tabQueue[this._queueIdx];
@@ -173,6 +198,8 @@ define([
 		tab: function(step, evt){
 			// summary:
 			//		Move focus from one area to another.
+			// tags:
+			//		package
 			// step: Integer
 			//		If positive, then move forward along the TAB sequence.
 			//		If negative, then move backward along the TAB sequence (SHIFT-TAB).
@@ -234,6 +261,8 @@ define([
 			//		Remove the area with name of *areaName*.
 			//		If there's no such area, this is a no-op and return FALSE.
 			//		If currently focused area is removed, then current area becomes empty.
+			// tags:
+			//		package
 			// areaName: String
 			//		The name of the area to be removed.
 			// return: Boolean
@@ -264,12 +293,18 @@ define([
 			return false;
 		},
 
-		onFocusArea: function(/* String areaName */){
-			//Fired when an area is focused.
+		onFocusArea: function(/* String */areaName){
+			// summary:
+			//		Fired when an area is focused.
+			// tags:
+			//		callback
 		},
 
 		onBlurArea: function(/* String areaName */){
-			//Fired when an area is blurred.
+			// summary:
+			//		Fired when an area is blurred.
+			// tags:
+			//		callback
 		},
 	
 		//Private----------------------------------------------------------
@@ -286,7 +321,7 @@ define([
 		},
 	
 		//-----------------------------------------------------------------------
-		_onMouseDown: function(evt){
+		_onFocus: function(evt){
 			var t = this, i, j, stack, area,
 				dn = t.grid.domNode,
 				n = evt.target,
@@ -315,16 +350,13 @@ define([
 			if(n == dn && currentArea){
 				t._doBlur(evt, currentArea);
 			}
-			if(!n || n == dn){
-				util.stopEvent(evt);
-			}
 		},
 		
 		_focus: function(evt){
 			var t = this;
 			if(t._tabingOut){
 				t._tabingOut = 0;
-			}else if(evt.target == t.grid.domNode){
+			}else if(evt.target == t.grid.firstFocusNode){
 				t._queueIdx = -1;
 				t.tab(1);
 			}else if(evt.target === t.grid.lastFocusNode){
@@ -358,5 +390,5 @@ define([
 				t._stackIdx = 0;
 			}
 		}
-	}));
+	});
 });

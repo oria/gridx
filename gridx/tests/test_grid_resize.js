@@ -10,7 +10,8 @@ require([
 	'dijit/form/HorizontalRuleLabels',
 	'dijit/form/VerticalSlider',
 	'dijit/form/VerticalRule',
-	'dijit/form/VerticalRuleLabels'
+	'dijit/form/VerticalRuleLabels',
+	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, modules){
 
 	grid = new Grid({
@@ -32,6 +33,7 @@ require([
 //            modules.ExtendedSelectRow,
 //            modules.ExtendedSelectColumn,
 //            modules.ExtendedSelectCell,
+			modules.Pagination,
 			modules.PaginationBar,
 			modules.VirtualVScroller
 		]

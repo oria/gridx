@@ -24,6 +24,7 @@ define([
 		
 		load: function(){
 			var t = this, g = t.grid, doc = win.doc;
+			g.domNode.setAttribute('aria-multiselectable', true);
 			t._refSelectedIds = [];
 			t.subscribe('gridClearSelection_' + g.id, function(type){
 				if(type != t._type){
@@ -71,7 +72,7 @@ define([
 			return this._subMark('_markByIndex', arguments, false);
 		},
 
-		onSelectionChange: function(newSelectedIds, oldSelectedIds){
+		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
 			//summary:
 			//	Event: fired when the selection is changed.
 		},

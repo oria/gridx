@@ -6,7 +6,8 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
-	'dijit/form/CheckBox'
+	'dijit/form/CheckBox',
+	'dojo/domReady!'
 ], function(dojo, Grid, Cache, dataSource, storeFactory, modules, TestPane){
 	
 	grid = new Grid({
@@ -17,19 +18,24 @@ require([
 			size: 100
 		}),
 		structure: dataSource.layouts[0],
+
+		//selectRowTriggerOnCell: true,
+		paginationInitialPage: 3,
+		paginationBarSizes: [5, 10, 20, 30],
+		paginationBarVisibleSteppers: 5,
+		paginationBarPosition: 'bottom',
+//        paginationBarSizeSwitch: false,
+		paginationBarGotoButton: false,
 		modules: [
-			{
-				moduleClass: modules.Pagination,
-				initialPageSize: 5,
-				initialPage: 3
-			},
-			{
-				moduleClass: modules.PaginationBar,
-				pageSizes: [5, 10, 20, 30, 0],
-				visibleSteppers: 5,
-				position: 'bottom'
-			},
+			modules.Pagination,
+			modules.Filter,
+			modules.FilterBar,
+			modules.PaginationBar,
 			modules.Focus,
+			modules.RowHeader,
+			modules.ExtendedSelectRow,
+			modules.MoveRow,
+			modules.DndRow,
 			modules.VirtualVScroller
 		]
 	});
@@ -43,7 +49,7 @@ require([
 	tp.addTestSet('Pagination Functions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testGoToPage">Jump to first page</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: testSetPageSize">Set page size to 15</div><br/>',
-	].join(''));
+	''].join(''));
 
 	tp.addTestSet('Pagination Bar Functions', [
 		'<div id="a" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true, onChange: toggleDescription"></div><label for="a">Toggle Description</label><br/>',

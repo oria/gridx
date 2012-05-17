@@ -4,7 +4,8 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
-	'gridx/tests/support/modules'
+	'gridx/tests/support/modules',
+	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, TestPane, modules){
 
 	g = null;
@@ -20,12 +21,14 @@ require([
 				dataSource: dataSource,
 				size: 100
 			}),
-			structure: dataSource.layouts[0],
+			structure: dataSource.layouts[1],
 			modules: [
 				modules.Focus,
 				modules.ColumnResizer,
+				modules.RowHeader,
 				modules.IndirectSelect,
-				//modules.RowHeader,
+				modules.Pagination,
+				modules.PaginationBar,
 				modules.VirtualVScroller
 			].concat(mods) 
 		});

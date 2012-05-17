@@ -15,26 +15,38 @@ define([
 	var ga = 'getAttribute',
 		sa = 'setAttribute';
 
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.Body", =====*/_Module, {
+		// summary:
+		//		The body UI of grid.
+		// description:
+		//		This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 
+		//		pagination, details on demand, and even tree structure.
+
 		name: "body",
 	
 		optional: ['tree'],
 	
 		getAPIPath: function(){
+			// tags:
+			//		protected extended
 			return {
 				body: this
 			};
 		},
 
 		preload: function(){
+			// tags:
+			//		protected extended
 			var t = this, g = t.grid,
 				dn = t.domNode = g.bodyNode;
+			g.emptyNode.innerHTML = nls.loadingInfo;
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t._initFocus();
 		},
 
 		load: function(args){
+			// tags:
+			//		protected extended
 			var t = this, m = t.model, g = t.grid;
 			t.batchConnect(
 				[m, 'onDelete', '_onDelete'],
@@ -63,6 +75,8 @@ define([
 		},
 
 		destroy: function(){
+			// tags:
+			//		protected extended
 			this.inherited(arguments);
 			this.domNode.innerHTML = '';
 		},
@@ -106,23 +120,41 @@ define([
 		 */
 
 		getRowNode: function(args){
+			// summary:
+			//		Get the DOM node of a row
+			// args: gridx.__RowCellInfo
+			//		A row info object containing row index or row id
+			// returns:
+			//		The DOM node of the row. Null if not found.
 			var r = this._getRowNodeQuery(args);
-			return r ? query(r, this.domNode)[0] || null : null;
+			return r ? query(r, this.domNode)[0] || null : null;	//DOMNode|null
 		},
 
 		getCellNode: function(args){
+			// summary:
+			//		Get the DOM node of a cell
+			// args: gridx.__RowCellInfo
+			//		A cell info object containing sufficient info
+			// returns:
+			//		The DOM node of the cell. Null if not found.
 			var t = this, colId = args.colId, r = t._getRowNodeQuery(args);
 			if(r){
 				if(!colId && typeof args.colIndex == "number"){
 					colId = t.grid._columns[args.colIndex].id;
 				}
 				r += " [colid='" + colId + "'].gridxCell";
-				return query(r, t.domNode)[0] || null;
+				return query(r, t.domNode)[0] || null;	//DOMNode|null
 			}
-			return null;
+			return null;	//null
 		},
 
 		getRowInfo: function(args){
+			// summary:
+			//		Get complete row info by partial row info
+			// args: gridx.__RowCellInfo
+			//		A row info object containing partial row info
+			// returns:
+			//		A row info object containing as complete as possible row info.
 			var t = this, m = t.model, g = t.grid, id = args.rowId;
 			if(id){
 				args.rowIndex = m.idToIndex(id);
@@ -139,15 +171,21 @@ define([
 					args.rowIndex = t.rootStart + args.visualIndex;
 				} 
 			}else{
-				return args;
+				return args;	//gridx.__RowCellInfo
 			}
 			args.rowId = id || m.indexToId(args.rowIndex, args.parentId);
-			return args;
+			return args;	//gridx.__RowCellInfo
 		},
 	
 		refresh: function(start){
+			// summary:
+			//		Refresh the grid body
+			// start: Integer?
+			//		The visual row index to start refresh. If omitted, default to 0.
+			// returns:
+			//		A deferred object indicating when the refreshing process is finished.
 			var t = this;
-			return t.model.when({}).then(function(){
+			return t.model.when({}).then(function(){	//dojo.Deferred
 				var rs = t.renderStart, rc = t.renderCount;
 				if(typeof start == 'number' && start >= 0){
 					start = rs > start ? rs : start;
@@ -173,11 +211,20 @@ define([
 					});
 				}else{
 					t.renderRows(rs, rc, 0, 1);
+					t.onForcedScroll();
 				}
 			});
 		},
 	
 		refreshCell: function(rowVisualIndex, columnIndex){
+			// summary:
+			//		Refresh a single cell
+			// rowVisualIndex
+			//		The visual index of the row of this cell
+			// columnIndex
+			//		The index of the column of this cell
+			// returns:
+			//		A deferred object indicating when this refreshing process is finished.
 			var d = new Deferred(), t = this,
 				m = t.model, g = t.grid,
 				col = g._columns[columnIndex],
@@ -203,20 +250,35 @@ define([
 				}).then(function(){
 					d.callback(!!rowCache);
 				});
-				return d;
+				return d;	//dojo.Deferred
 			}
 			d.callback(0);
-			return d;
+			return d;	//dojo.Deferred
 		},
 		
 		//Package--------------------------------------------------------------------------------
+		
+		// rootStart: [readonly] Integer
+		//		The row index of the first root row that logically exists in the current body
 		rootStart: 0,
+
+		// rootCount: [readonly] Integer
+		//		The count of root rows that logically exist in thi current body
 		rootCount: 0,
 	
+		// renderStart: [readonly] Integer
+		//		The visual row index of the first renderred row in the current body
 		renderStart: 0,
+		// renderCount: [readonly] Integer
+		//		The count of renderred rows in the current body.
 		renderCount: 0,
 	
+		// visualStart: [readonly] Integer
+		//		The visual row index of the first row that is logically visible in the current body.
+		//		This should be always zero.
 		visualStart: 0, 
+		// visualCount: [readonly] Integer
+		//		The count of rows that are logically visible in the current body
 		visualCount: 0,
 	
 		//[read/write] Update grid body automatically when onNew/onSet/onDelete is fired
@@ -225,6 +287,8 @@ define([
 		autoChangeSize: 1,
 
 		updateRootRange: function(start, count){
+			// tags:
+			//		private
 			var t = this, tree = t.grid.tree,
 				vc = t.visualCount = tree ? tree.getVisualSize(start, count) : count;
 			t.rootStart = start;
@@ -242,10 +306,12 @@ define([
 		},
 	
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
+			// tags:
+			//		private
 			var t = this, g = t.grid, str = '', uncachedRows = [], 
 				renderedRows = [], n = t.domNode, en = g.emptyNode;
 			if(count > 0){
-				en.innerHTML = '';
+				en.innerHTML = nls.loadingInfo;
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
@@ -289,6 +355,8 @@ define([
 		},
 	
 		unrenderRows: function(count, preOrPost){
+			// tags:
+			//		private
 			if(count > 0){
 				var t = this, i = 0, id, bn = t.domNode;
 				if(preOrPost == 'post'){
@@ -533,15 +601,15 @@ define([
 			}
 		},
 	
-		_onSizeChange: function(size, oldSize/*, reason*/){
+		_onSizeChange: function(size, oldSize){
 			var t = this;
 			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
-				//Avoid to much rendering when starting up. TODO: any better way?
-				if(t._started){
-					t.refresh();
-				}
-				t._started = 1;
+				//Avoid too much rendering when starting up. TODO: any better way?
+//                if(t._started){
+				t.refresh();
+//                }
+//                t._started = 1;
 			}
 		},
 		
@@ -566,7 +634,12 @@ define([
 		_focusCellRow: 0,
 
 		_initFocus: function(){
-			var t = this, g = t.grid, bn = g.bodyNode, focus = g.focus, c = 'connect';
+			var t = this,
+				g = t.grid,
+				ltr = g.isLeftToRight(),
+				bn = g.bodyNode,
+				focus = g.focus,
+				c = 'connect';
 			if(focus){
 				focus.registerArea({
 					name: 'body',
@@ -580,12 +653,14 @@ define([
 				});
 				t[c](g.mainNode, 'onkeypress', function(evt){
 					if(focus.currentArea() == 'body' && (!g.tree || !evt.ctrlKey)){
-						var dk = keys, arr = {}, dir = g.isLeftToRight() ? 1 : -1;
+						focus._noBlur = 1;	//1 as true
+						var dk = keys, arr = {}, dir = ltr ? 1 : -1;
 						arr[dk.LEFT_ARROW] = [0, -dir, evt];
 						arr[dk.RIGHT_ARROW] = [0, dir, evt];
 						arr[dk.UP_ARROW] = [-1, 0, evt];
 						arr[dk.DOWN_ARROW] = [1, 0, evt];
 						t._moveFocus.apply(t, arr[evt.keyCode] || []);
+						focus._noBlur = 0;	//0 as false
 					}
 				});
 				t[c](g, 'onCellClick', function(evt){
@@ -601,14 +676,16 @@ define([
 				});
 				if(g.hScroller){
 					t[c](bn, 'onscroll', function(){
-						g.hScroller.scroll(bn.scrollLeft);
+						g.hScroller.scroll(!ltr && (sniff('webkit') || sniff('ie') < 8) ?
+							bn.scrollWidth - bn.offsetWidth - bn.scrollLeft :
+							bn.scrollLeft);
 					});
 				}
 			}
 		},
 
 		_doFocus: function(evt){
-			return this._focusCell(evt) || this._focusCell(0, 0, 0);
+			return this._focusCell(evt) || this._focusCell(0, -1, -1);
 		},
 
 		_focusCell: function(evt, rowVisIdx, colIdx){
@@ -634,6 +711,9 @@ define([
 				if(!(sniff('ie') < 8)){
 					n.focus();
 				}
+			}else if(!t.grid.rowCount()){
+				t.grid.emptyNode.focus();
+				return true;
 			}
 			return n;
 		},
@@ -698,5 +778,5 @@ define([
 			}
 			return false;
 		}
-	}));
+	});
 });

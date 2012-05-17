@@ -6,7 +6,8 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
-	'dijit/form/CheckBox'
+	'dijit/form/CheckBox',
+	'dojo/domReady!'
 ], function(dojo, Grid, Cache, dataSource, storeFactory, modules, TestPane){
 	
 	grid = new Grid({
@@ -20,7 +21,7 @@ require([
 		modules: [
 			{
 				moduleClass: modules.Pagination,
-				initialPageSize: 25,
+				initialPageSize: 5,
 				initialPage: 3
 			},
 			{
@@ -32,6 +33,10 @@ require([
 				position: 'bottom'
 			},
 			modules.Focus,
+			modules.RowHeader,
+			modules.Filter,
+			modules.FilterBar,
+			modules.ExtendedSelectRow,
 			modules.VirtualVScroller
 		]
 	});

@@ -7,8 +7,8 @@ require([
 	'gridx/tests/support/modules',
 	'gridx/modules/Focus',
 	'gridx/modules/filter/Filter',
-	'gridx/modules/filter/FilterBar'
-	
+	'gridx/modules/filter/FilterBar',
+	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, TestPane, mods, focus, filter, filterBar){
 
 	grid = new Grid({
@@ -21,10 +21,14 @@ require([
 		selectRowTriggerOnCell: true,
 		modules: [
 			filter,
+			mods.SingleSort,
+			mods.VirtualVScroller,
 //            mods.SelectRow,
 			{
 				moduleClass: filterBar,
-				ruleCountToConfirmClearFilter: 0
+				maxRuleCount: 2,
+			
+				ruleCountToConfirmClearFilter: 2
 			}
 		],
 		structure: dataSource.layouts[1]

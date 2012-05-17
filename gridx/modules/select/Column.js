@@ -9,10 +9,32 @@ define([
 	"../../core/_Module"
 ], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
 
-	return _Module.register(
-	declare(_Base, {
+	return declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
+		// summary:
+		//		Provides simple column selection.
+		// description:
+		//		This module provides a simple way for selecting columns by clicking or SPACE key, or CTRL + Click to select multiple columns.
+		//
+		// example:
+		//		1. Use select api on grid column object obtained from grid.column(i)
+		//		|	grid.column(1).select();
+		//		|	grid.column(1).deselect();
+		//		|	grid.column(1).isSelected();
+		//
+		//		2. Use select api on select.column module
+		//		|	grid.select.column.selectById(columnId);
+		//		|	grid.select.column.deSelectById(columnId);
+		//		|	grid.select.column.isSelected(columnId);
+		//		|	grid.select.column.getSelected();//[]
+		//		|	grid.select.column.clear();
+
+		// name: [readonly] String
+		//		module name
 		name: "selectColumn",
 
+		// columnMixin: Object
+		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
+		//		- grid.column(1).select() | deselect() | isSelected();
 		columnMixin: {
 			select: function(){
 				this.grid.select.column._markById(this.id, 1);
@@ -28,20 +50,28 @@ define([
 		},
 		
 		//Public API----------------------------------------------------------------------
-		selectById: function(id){
+		selectById: function(/*String*/id){
+			// summary:
+			//		Select target column by id
 			this._markById(id, 1);
 		},
 		
-		deselectById: function(id){
+		deselectById: function(/*String*/id){
+			// summary:
+			//		Deselect target column by id
 			this._markById(id, 0);
 		},
 		
-		isSelected: function(id){
+		isSelected: function(/*String*/id){
+			// summary:
+			//		Check if a column is selected 
 			var c = this.grid._columnsById[id];
 			return !!(c && c._selected);
 		},
 		
 		getSelected: function(){
+			// summary:
+			//		Get array of column id of all selected columns
 			var ids = [], i, c,
 				g = this.grid,
 				cols = g._columns,
@@ -56,6 +86,8 @@ define([
 		},
 		
 		clear: function(){
+			// summary:
+			//		Clear all column selections
 			var columns = this.grid._columns, i, count = columns.length;
 			for(i = 0; i < count; ++i){
 				this._markById(columns[i].id, 0);
@@ -116,5 +148,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

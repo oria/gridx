@@ -40,7 +40,7 @@ define([
 			// summary:
 			//	Get the filter defined by this filter pane.
 			var value = this._getValue(), condition = this.sltCondition.get('value');
-			if(condition === 'isEmpty' || (value && (condition !== 'range' || (value.start && value.end)))){
+			if(condition === 'isEmpty' || (value !== null && (condition !== 'range' || (value.start && value.end)))){
 				return {
 					colId: this.sltColumn.get('value'),
 					condition: condition,
@@ -228,7 +228,7 @@ define([
 	    		case 'Text':
 	    			return (combo ? this.comboText : this.tbSingle).get('value') || null;
 	    		case 'Number':
-	    			return this.tbNumber.get('value') || null;
+	    			return isNaN(this.tbNumber.get('value')) ? null : this.tbNumber.get('value');
 	    		case 'Select':
 	    			return this.sltSingle.get('value') || null;
 	    		case 'Date':

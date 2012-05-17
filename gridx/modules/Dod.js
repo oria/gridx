@@ -6,8 +6,7 @@ define([
 	"dojo/fx",
 	"dojo/query"
 ], function(dojo, _Module, declare, html, fx, query){
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
 		//useAnimation: Boolean
@@ -25,6 +24,7 @@ define([
 		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
 		autoClose: false,
 		load: function(args, deferStartup){
+			dojo.experimental('gridx/modules/Dod');
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
@@ -245,5 +245,5 @@ define([
 		
 		
 		endFunc: function(){}
-	}));
+	});
 });

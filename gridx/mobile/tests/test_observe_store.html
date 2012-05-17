@@ -19,11 +19,6 @@
 		};
 	</script>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
-	<script type="text/javascript">
-		require(["gridx/dojo-deps-mobile", "gridx/gridx-mobile"], function(){
-			require(["gridx/mobile/tests/test_observe_store"]);
-		});
-	</script>		
 	
 	<style>
 		.mobileGridxBody {	
@@ -49,12 +44,66 @@
 		    background-color: #A9B2C7;
 		}
 	</style>
+	
+	<script>
+		function random(range, digit, forcePositive){
+			var d = Math.pow(10, digit||0);
+			var value = Math.round(range * Math.random() * d)/d;
+			var positive = Math.random() >= 0.5 || forcePositive;
+			return positive ? value : -value;
+		}
+		
+		function formatter(item, col){
+			var c = item.change, css = 'up';
+			if(c < 0)css = 'down';
+			return '<span class="' + css + '">' + (c >= 0 ? '+' : '-') + Math.abs(c) + '</span>';
+		}
+		var columns = [
+			{field: 'company', width: '40%', title: 'Company', cssClass: 'comp'},
+			{field: 'shares', width: '30%', title: 'Shares', cssClass: 'shares'},
+			{field: 'change', width: '30%', title: 'Change', cssClass: 'change', formatter: formatter}
+		];
+		
+require(["gridx/dojo-deps-mobile", "gridx/gridx-mobile"], function(){	
+		require([
+			'dojo/_base/declare',
+			'dojo/_base/lang',
+			'dojo/domReady',
+			'dojo/store/Memory',
+			'dojox/mobile/parser',
+			'gridx/mobile/Grid',
+			'gridx/mobile/StoreObserver',
+			'gridx/mobile/tests/support/data',
+			'dojox/mobile/Heading',
+			'dojox/mobile/View',
+			'dojox/mobile/ScrollableView',
+			'dojox/mobile/TabBar'
+		], function(declare, lang, ready, MemoryStore, parser, Grid, StoreObserver, data){
+			declare('gridx.mobile.tests.Grid', [Grid, StoreObserver], {});
+			ready(function(){
+				parser.parse();
+				grid.setStore(new MemoryStore({data: data.stock, idProperty: 'company'}));
+				grid.setColumns(columns);
+				
+				window.setInterval(function(){
+					data.stock.forEach(function(stock){
+						var r = random(5, 2);
+						stock.shares = Math.round(100*(stock.shares + r))/100;	// to 2 decimal digit
+						stock.change = Math.round(100*(stock.change + r))/100;
+						grid.store.put(stock);
+					});
+				}, 3000);
+			});
+			
+		});
+});
+	</script>
 </head>
 
 <body style="visibility:hidden;">
 	<div id="group1" dojoType="dojox.mobile.View" selected="true">
 		<h1 dojoType="dojox.mobile.Heading">Stock Observer</h1>
-		<div dojoType="gridx.mobile.test.Grid" jsId="grid" hScroller="false" showHeader="false"></div>
+		<div dojoType="gridx.mobile.tests.Grid" jsId="grid" hScroller="false" showHeader="false"></div>
 		<ul dojoType="dojox.mobile.TabBar" fixed="bottom" style="border-bottom:none;">
 			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
 			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>

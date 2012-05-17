@@ -8,7 +8,8 @@ require([
 	'gridx/tests/support/modules',
 
 	'dijit/form/Button',
-	'dijit/form/NumberTextBox'
+	'dijit/form/NumberTextBox',
+	'dojo/domReady!'
 ], function(dojo, Grid, Cache, dataSource, storeFactory, TestPane, modules){
 
 	grid = new Grid({

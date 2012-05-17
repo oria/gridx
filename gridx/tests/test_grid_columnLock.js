@@ -22,8 +22,9 @@ require([
 				count: 1
 			},
 			modules.ExtendedSelectCell,
+			modules.CellWidget,
 			modules.Edit,
-//			modules.NestedSort,
+			modules.SingleSort,
 			modules.ColumnResizer
 			
 		]

@@ -3,11 +3,18 @@ define([
 	"../../core/_Module"
 ], function(declare, _Module){
 
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.move.Column", =====*/_Module, {
+		// summary:
+		//		This module provides several APIs to move columns within grid.
+		// description:
+		//		This module does not include any UI. So different kind of column dnd UI implementations can be built
+		//		upon this module.
+
 		name: 'moveColumn',
 		
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				move: {
 					column: this
@@ -22,7 +29,18 @@ define([
 			}
 		},
 		
+		//public---------------------------------------------------------------
+
 		move: function(columnIndexes, target, skipUpdateBody){
+			// summary:
+			//		Move some columns to the given target position
+			// columnIndexes: Integer[]
+			//		The current indexes of columns to move
+			// target: Integer
+			//		The moved columns will be inserted before the column with this index.
+			// skipUpdateBody: Boolean?
+			//		If set to true, grid body won't be refreshed immediately
+			//		so that several grid operations can be efficiently executed altogether.
 			if(typeof columnIndexes === 'number'){
 				columnIndexes = [columnIndexes];
 			}
@@ -49,6 +67,15 @@ define([
 		},
 	
 		moveRange: function(start, count, target, skipUpdateBody){
+			// summary:
+			//		Move a range of columns to a given target position
+			// start: Integer
+			//		The index of the first column to move
+			// count: Integer
+			//		The count of columns to move
+			// skipUpdateBody: Boolean?
+			//		If set to true, grid body won't be refreshed immediately
+			//		so that several grid operations can be efficiently executed altogether.
 			if(target < start || target > start + count){
 				if(target > start + count){
 					target -= count;
@@ -58,7 +85,12 @@ define([
 		},
 		
 		//Events--------------------------------------------------------------------
-		onMoved: function(){},
+		onMoved: function(){
+			// summary:
+			//		Fired when column move is performed successfully
+			// tags:
+			//		callback
+		},
 		
 		//Private-------------------------------------------------------------------
 		_moveComplete: function(movedCols, target, skipUpdateBody){
@@ -70,13 +102,11 @@ define([
 			for(i = columns.length - 1; i >= 0; --i){
 				columns[i].index = i;
 			}
+			g.header.refresh();
 			if(!skipUpdateBody){
-				//TODO: need grid.refresh here
-				g.header.refresh();
 				g.body.refresh();
 				this.onMoved(map);
 			}
 		}	
-	}));
+	});
 });
-

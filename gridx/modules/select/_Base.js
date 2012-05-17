@@ -21,6 +21,9 @@ define([
 				}
 			});
 			t.connect(g.body, 'onRender', '_onRender');
+			if(t.arg('multiple')){
+				g.domNode.setAttribute('aria-multiselectable', true);
+			}
 			t._init();
 		},
 

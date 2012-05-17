@@ -19,8 +19,13 @@ define([
 		_onSwitchPage: function(page){
 			this._pageStepperSelect.set('value', page + 1);
 		},
-	
-		_onChangePageSize: function(size, oldSize){
+
+		_onChangePageSize: function(){
+			this._createPageStepper();
+		},
+
+		_onSizeChange: function(){
+			this._createDescription();
 			this._createPageStepper();
 		},
 	

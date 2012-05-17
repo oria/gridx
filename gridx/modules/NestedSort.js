@@ -21,7 +21,7 @@ define([
 		removeClass = domClass.remove,
 		addClass = domClass.add;
 
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.NestedSort", =====*/_Module, {
 		name: 'sort',
 
 		forced: ['header'],
@@ -138,10 +138,10 @@ define([
 		},
 		
 		_initHeader: function(){
-			//console.log('initHeader');
 			var t = this,
 				table = t.grid.header.domNode.firstChild.firstChild,
 				tds = table.rows[0].cells;
+			if(query('.gridxSortBtn', table).length)return;
 			forEach(table.rows[0].cells, function(td){
 				var colid = td.getAttribute('colid');
 				if(t.isSortable(colid)){
@@ -227,6 +227,7 @@ define([
 				sortData = t._sortData;
 			removeClass(dn, 'gridxSingleSorted');
 			removeClass(dn, 'gridxNestedSorted');
+			
 			query('th', g.header.domNode).forEach(function(cell){
 				var colid = cell.getAttribute('colid');
 				if(t.isSortable(colid)){

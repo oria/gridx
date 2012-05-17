@@ -67,10 +67,32 @@ define(function(){
 		,{company: 'Ebay', shares: 216.13, change: -2.56}
 		,{company: 'Dropb', shares: 182.89, change: 1.89}
 	];
+	
+	var products = [
+		{name: 'Note Book', price: 17, rating: 3},
+		{name: 'Pen', price: 25, rating: 7},
+		{name: 'Telephone', price: 56, rating: 9},
+		{name: 'Glass', price: 12, rating: 8},
+		{name: 'Chocolate', price: 23, rating: 7},
+		{name: 'Tea', price: 67, rating: 4},
+		{name: 'Mouse', price: 23, rating: 7},
+		{name: 'Keyboard', price: 76, rating: 5},
+		{name: 'Desk', price: 126, rating: 3},
+		{name: 'Chair', price: 67, rating: 1},
+		{name: 'Bag', price: 37, rating: 3},
+		{name: 'T-shirt', price: 6, rating: 9},
+		{name: 'Apple', price: 12, rating: 4},
+		{name: 'Orange', price: 87, rating: 2},
+		{name: 'Banana', price: 92, rating: 4},
+		{name: 'Coffee', price: 32, rating: 2},
+		{name: 'Soft drink', price: 12, rating: 1}
+		
+	];
 	return {
 		weather: weather
 		,chart: chart
 		,large: large
 		,stock: stock
+		,products: products
 	};
 });

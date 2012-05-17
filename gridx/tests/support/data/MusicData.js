@@ -5,8 +5,9 @@ define([
 	'dijit/form/DateTextBox',
 	'dijit/form/TimeTextBox',
 	'dijit/Editor',
-	'dijit/ProgressBar'
-], function(lang, locale, NumberTextBox, DateTextBox, TimeTextBox, Editor, ProgressBar){
+	'dijit/ProgressBar',
+	'dojo/_base/Color'
+], function(lang, locale, NumberTextBox, DateTextBox, TimeTextBox, Editor, ProgressBar, Color){
 
 	var items = [
 		{"Heard": true, "Progress": 0.5, "Genre":"Easy Listening",	"Artist":"Bette Midler",	"Year":2003,	"Album":"Bette Midler Sings the Rosemary Clooney Songbook",	"Name":"Hey There",	"Length":"03:31",	"Track":4,	"Composer":"Ross, Jerry 1926-1956 -w Adler, Richard 1921-",	"Download Date":"1923/4/9",	"Last Played":"04:32:49"},
@@ -186,7 +187,8 @@ define([
 				var item = items[i % items.length];
 				data.items.push(lang.mixin({
 					id: i + 1,
-					order: i + 1
+					order: i + 1,
+					Color: new Color([Math.sin(i) * 100, Math.cos(i) * 100, i * i]).toHex()
 				}, item));
 			}
 			return data;
@@ -195,6 +197,7 @@ define([
 		layouts: [
 			[
 				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
+				{id: 'order', field: 'order', name: 'Order', width: '80px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px'},
 				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px'},
 				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},

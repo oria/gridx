@@ -4,7 +4,7 @@ define([
 	"../../core/_Module"
 ], function(declare, array, _Module){
 
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.pagination._PaginationBarBase", =====*/_Module, {
 		name: 'paginationBar',	
 	
 		required: ['vLayout'],
@@ -51,17 +51,31 @@ define([
 		},
 		
 		//Public-------------------------------------------------------
+
+		// sizeSwitch: Boolean|String
+		//		Whether (and where) to show "size switch" part of the pagination bar UI.
+		//		Can be true/false, or "bottom", or "top"
 		sizes: [10, 25, 50, 100, 0],
 
+		// position: String
+		//		The position of the pagination bar, can be "bottom" (default), "top" or "both" (any other value means "both")
 		position: 'bottom',
 
 		sizeSwitch: true,
 
+		// stepper: Boolean|String
+		//		Whether (and where) to show "page stepper" part of the pagination bar UI.
+		//		Can be true/false, or "bottom", or "top"
 		stepper: true,
 
+		// description: Boolean|String
+		//		Whether (and where) to show "description" part of the pagination bar UI.
+		//		Can be true/false, or "bottom", or "top"
 		description: true,
 	
 		refresh: function(){
+			// summary:
+			//		Refresh the pagination bar UI
 			array.forEach(this._pagers, function(pager){
 				pager.refresh();
 			});

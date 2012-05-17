@@ -13,7 +13,8 @@ require([
 	'gridx/tests/support/TestPane',
 	'gridx/tests/support/modules',
 	'dijit/form/Button',
-	'dijit/form/TextBox'
+	'dijit/form/TextBox',
+	'dojo/domReady!'
 ], function(lang, html, array, connect, win, dndTarget, dndSource, Grid, Cache, dataSource, storeFactory, TestPane, mods){
 
 	function create(id, container, size, layoutIdx, args){
@@ -29,6 +30,7 @@ require([
 			modules: [
 				mods.Focus,
 				mods.ExtendedSelectColumn,
+				mods.MoveColumn,
 				mods.DndColumn,
 				mods.VirtualVScroller
 			],
@@ -39,7 +41,7 @@ require([
 		return g;
 	}
 
-	grid = create('grid', 'grid1Container', 10, 0, {
+	grid = create('grid', 'grid1Container', 100, 7, {
 		dndColumnCanRearrange: false
 	});
 

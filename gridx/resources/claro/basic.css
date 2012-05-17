@@ -10,25 +10,14 @@
 /*    background:url("../images/row_back.png") #ffffff repeat-x;*/
 }
 
-.claro .gridxLockedCell {
-	position: absolute;
-	background-color: #fff;
-}
-
-.claro .gridxRowOdd .gridxLockedCell {
-	background-color: #f1f8ff;
-}
-.claro .gridxRowOver .gridxLockedCell {
-	background:url("../images/row_back.png") #ABD6FF repeat-x;
-}
-
 .claro .gridxCell{
 	border-color: transparent #E5DAC8 #E5DAC8 transparent;
 }
 .claro .gridxRowOdd .gridxRowTable {
 	background-color: #f1f8ff;
 }
-.claro .gridx .gridxRowOver .gridxRowTable {
+.claro .gridx .gridxRowOver .gridxRowTable,
+.claro .gridx .gridxRowOver .gridxCell {
 	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
 
@@ -36,12 +25,17 @@
 .claro .gridxHeaderRow {
 	border-top: 1px solid #FFFFFF;
 	border-bottom: 1px solid #FFFFFF;
+	clear: both;
 }
 
 .claro .gridxHeaderRow table,
 .claro .gridxRowHeaderRow table,
 .claro .gridxRow .gridxRowTable {
 	border-collapse: separate;
+}
+
+.dj_ie7 .claro .gridxRowHeaderRow table {
+	border-collapse: collapse;
 }
 
 .claro .gridxHeaderRowInner {
@@ -55,8 +49,7 @@
 	border-color: #EDF2F7 #BCBCBC #D0DFEA #FFFFFF;
 }
 
-.claro .gridxHeaderRow,
-.claro .gridxHeaderRow .gridxLockedCell {
+.claro .gridxHeaderRow {
 	background: #edf2f7; /* Old browsers */
 	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */

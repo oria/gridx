@@ -1,13 +1,13 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/dom-style",
 	"../core/_Module",
 	"./VScroller",
 	"dojox/mobile/_ScrollableMixin"
-], function(declare, domStyle, _Module, VScroller){
-
-	return _Module.register(
-	declare(VScroller, {
+], function(kernel, declare, domStyle, _Module, VScroller){
+	kernel.experimental('gridx/modules/TouchVScroller');
+	return declare(VScroller, {
 		_init: function(){
 			var g = this.grid, mn = g.mainNode, bn = g.bodyNode,
 				scrollable = new dojox.mobile.scrollable(dojo, dojox);
@@ -21,5 +21,5 @@ define([
 				noResize: true
 			});
 		}
-	}));
+	});
 });

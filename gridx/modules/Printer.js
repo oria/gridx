@@ -6,167 +6,162 @@ define([
 	"dojo/_base/xhr",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
-	"dojo/dom",
-	"dojo/dom-construct",
-	"dojo/dom-style",
-	"dojo/DeferredList"
-], function(_Module, declare, lang, Deferred, xhr, array, sniff, dom, domConstruct, domStyle, DeferredList){
+	"dojo/_base/window"
+], function(_Module, declare, lang, Deferred, xhr, array, sniff, win){
 
-	function loadCSSFiles(cssFiles){
-		var dl = array.map(cssFiles, function(cssFile){
-			cssFile = lang.trim(cssFile);
-			if(cssFile.substring(cssFile.length - 4).toLowerCase() === '.css'){
-				return xhr.get({
-					url: cssFile
-				});
-			}else{
-				var d = new Deferred();
-				d.callback(cssFile);
-				return d;
+	/*=====
+	declare('__PrinterArgs', __ExporterArgs, {
+		// style: String
+		//		The CSS string for the printed document
+		style: '',
+
+		// styleSrc: URL String
+		//		The CSS file url used for the printed document
+		styleSrc: '',
+
+		// title: String
+		//		The content of the <title> element in the <head> of the printed document
+		title: '',
+
+		// description: String
+		//		Any HTML content that will be put before the grid in the printed document.
+		description: ''
+
+		// customHead: String
+		//		Any HTML <head> content that will be put in the <head> of the printed document.
+		customHead: ''
+	});
+	=====*/
+
+	var printFrame,
+		hitch = lang.hitch;
+
+	function loadStyleFiles(src){
+		var d = new Deferred,
+			loaded = hitch(d, d.callback);
+		if(src){
+			xhr.get({
+				url: src
+			}).then(loaded, function(){
+	//            console.warn('Failed to load resource: ', src);
+				loaded('');
+			});
+		}else{
+			loaded('');
+		}
+		return d;
+	}
+
+	function print(str){
+		var w, fillDoc = function(w){
+			var doc = w.document;
+			doc.open();
+			doc.write(str);
+			doc.close();
+		};
+		if(!win.print){
+			console.warn('Print function is not available');
+			return;
+		}else if(sniff('chrome') || sniff('opera')){
+			//referred from dijit._editor.plugins.Print._print()
+			//In opera and chrome the iframe.contentWindow.print
+			//will also print the outside window. So we must create a
+			//stand-alone new window.
+			w = win.open("javascript:''", "",
+				"status=0,menubar=0,location=0,toolbar=0,width=1,height=1,resizable=0,scrollbars=0");
+			fillDoc(w);
+			w.print();
+			//Opera will stop at this point, showing the popping-out window.
+			//If the user closes the window, the following codes will not execute.
+			//If the user returns focus to the main window, the print function
+			// is executed, but still a no-op.
+			w.close();
+		}else{
+			if(!printFrame){
+				//create an iframe to store the grid data.
+				printFrame = win.doc.createElement('iframe');
+				printFrame.frameBorder = 0;
+				var s = printFrame.style;
+				s.position = 'absolute';
+				s.width = s.height = '1px';
+				s.right = s.bottom = 0;
+				s.border = 'none';
+				s.overflow = 'hidden';
+				if(!sniff('ie')){
+					s.visibility = 'hidden';
+				}
+				win.body().appendChild(printFrame);
 			}
-		});
-		return DeferredList.prototype.gatherResults(dl);
+			w = printFrame.contentWindow;
+			fillDoc(w);
+			//IE requires the frame to be focused for print to work, and it's harmless for FF.
+			w.focus();
+			w.print();
+		}
 	}
 	
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.Printer", =====*/_Module, {
+		// summary:
+		//		This module provides the API to print grid contents or provide print preview
+		// description:
+		//		This module relies on the ExportTable module to produce HTML table from grid.
 		name: 'printer',
 
-		forced: ['table'],
-		
-		constructor: function(grid, args){
-			var t = this;
-			args = lang.isObject(args) ? args : {};
-			t._title = args.title ? args.title : "";
-			if(args.cssFiles){
-				if(lang.isString(args.cssFiles)){
-					t._cssFiles = [args.cssFiles];
-				}else if(lang.isArray(args.cssFiles)){
-					t._cssFiles = args.cssFiles;
-				}else{
-					t._cssFiles = null;
-				}
-			}
-		},
+		forced: ['exportTable'],
 		
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
-				'printer': this
+				printer: this
 			};
 		},
 	
-		print: function(exportArgs){
-			//	summary:
-			//		Print all rows of the grid.
-			//	exportArgs: Object
-			//		Please refer to `grid.exporter.__ExportArgs`
-			var t = this;
-			t.grid.exporter.toTable(exportArgs).then(function(str){
-				t._wrapHTML(t._title, t._cssFiles, str).then(function(result){
-					t._print(result);
-				});
-			});
-		},
-		
-		//[private]
-		//
-		_wrapHTML: function(/* string */title, /* Array */cssFiles, /* string */bodyContent){
+		//Public-----------------------------------------------------------------
+		print: function(args){
 			// summary:
-			//		Put title, cssFiles, and bodyContent together into an HTML string.
-			// tags:
-			//		private
-			// title: String
-			//		A title for the html page.
-			// cssFiles: Array
-			//		css file pathes.
-			// bodyContent: String
-			//		Content to print, not including <head></head> part and <html> tags
+			//		Print grid contents.
+			// args: Object
+			//		Please refer to `grid.printer.__PrinterArgs`
 			// returns:
-			//		the wrapped HTML string ready for print
-			var ltr = this.grid.isLeftToRight();
-			return loadCSSFiles(cssFiles).then(function(cssStrs){
-				var i, sb = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
-						'<html ', ltr ? '' : 'dir="rtl"', '><head><title>', title,
-						'</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>'];
-				for(i = 0; i < cssStrs.length; ++i){
-					sb.push('<style type="text/css">', cssStrs[i], '</style>');
-				}
-				sb.push('</head>');
-				if(bodyContent.search(/^\s*<body/i) < 0){
-					bodyContent = '<body>' + bodyContent + '</body>';
-				}
-				sb.push(bodyContent, '</html>');
-				return sb.join('');
-			});
+			//		A deferred object indicating when the export process is completed.
+			return this.toHTML(args).then(print);	//dojo.Deferred
 		},
 
-		_print: function(/* string */htmlStr){
-			// summary:
-			//		Do the print job.
-			// tags:
-			//		private
-			// htmlStr: String
-			//		The html content string to be printed.
+		toHTML: function(args){
+			// summary
+			//		Export to printable html, used for preview
+			// args: Object
+			//		Please refer to `grid.printer.__PrinterArgs`
 			// returns:
-			//		undefined
-			var win, t = this,
-				fillDoc = function(w){
-					var doc = w.document;
-					doc.open();
-					doc.write(htmlStr);
-					doc.close();
-				};
-			if(!window.print){
-				//We don't have a print facility.
-				return;
-			}else if(sniff('chrome') || sniff('opera')){
-				//referred from dijit._editor.plugins.Print._print()
-				//In opera and chrome the iframe.contentWindow.print
-				//will also print the outside window. So we must create a
-				//stand-alone new window.
-				win = window.open("javascript: ''", "",
-					"status=0,menubar=0,location=0,toolbar=0,width=1,height=1,resizable=0,scrollbars=0");
-				fillDoc(win);
-				win.print();
-				//Opera will stop at this point, showing the popping-out window.
-				//If the user closes the window, the following codes will not execute.
-				//If the user returns focus to the main window, the print function
-				// is executed, but still a no-op.
-				win.close();
-			}else{
-				//Put private things in deeper namespace to avoid poluting grid namespace.
-				var fn = t._printFrame,
-					dn = t.grid.domNode;
-				if(!fn){
-					var frameId = dn.id + "_print_frame";
-					if(!(fn = dom.byId(frameId))){
-						//create an iframe to store the grid data.
-						fn = domConstruct.create("iframe");
-						fn.id = frameId;
-						fn.frameBorder = 0;
-						domStyle.set(fn, {
-							width: "1px",
-							height: "1px",
-							position: "absolute",
-							right: 0,
-							bottom: 0,
-							border: "none",
-							overflow: "hidden"
-						});
-						if(!sniff('ie')){
-							domStyle.set(fn, "visibility", "hidden");
-						}
-						dn.appendChild(fn);
-					}
-					//Reuse this iframe
-					t._printFrame = fn;
-				}
-				win = fn.contentWindow;
-				fillDoc(win);
-				//IE requires the frame to be focused for print to work, and it's harmless for FF.
-				win.focus();
-				win.print();
-			}
+			//		A deferred object indicating when the export process is completed.
+			var t = this, d = new Deferred;
+			loadStyleFiles(args.styleSrc).then(function(styleSrc){
+				t.grid.exporter.toTable(args).then(function(str){
+					d.callback(t._wrap(args, styleSrc, str));
+				}, hitch(d, d.errback), hitch(d, d.progress));
+			});
+			return d;	//dojo.Deferred
+		},
+		
+		//private----------------------------------------------------------------------------
+		_wrap: function(args, styleSrc, bodyContent){
+			return [
+				'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html ',
+					this.grid.isLeftToRight() ? '' : 'dir="rtl"',
+				'><head><title>',
+					args.title || '',
+				'</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><style type="text/css">',
+					styleSrc,
+				'</style><style type="text/css">',
+					args.style || '',
+				'</style>',
+					args.customHead || '',
+				'</head><body>', 
+					args.description || '', 
+					bodyContent,
+				'</body></html>'
+			].join('');
 		}
-	}));
+	});
 });

@@ -5,12 +5,10 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/query",
 	"./_Base",
-	"../../core/_Module",
-	"./_Dnd"
+	"../../core/_Module"
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
-	return _Module.register(
-	declare(_Base, {
+	return declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
 		name: 'dndColumn',
 		
 		required: ['_dnd', 'selectColumn', 'moveColumn'],
@@ -118,14 +116,13 @@ define([
 						var firstPos = domGeometry.position(first),
 							lastPos = domGeometry.position(last),
 							middle = (firstPos.x + lastPos.x + lastPos.w) / 2,
-							post = ltr ^ (evt.clientX < middle);
-						if(post){
+							pre = evt.clientX < middle;
+						if(pre){
 							ret.left = (firstPos.x - containerPos.x - 1) + "px";
-							t._target = firstIdx;
 						}else{
 							ret.left = (lastPos.x + lastPos.w - containerPos.x - 1) + "px";
-							t._target = lastIdx + 1;
 						}
+						t._target = pre ^ ltr ? lastIdx + 1 : firstIdx;
 					}else{
 						delete t._target;
 					}
@@ -172,5 +169,5 @@ define([
 		_onDropExternal: function(/*source, nodes, copy*/){
 			//TODO: Support drag in columns from another grid or non-grid source
 		}
-	}));
+	});
 });

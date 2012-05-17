@@ -10,7 +10,8 @@ require([
 	'dijit/layout/BorderContainer',
 	'dijit/layout/TabContainer',
 	'dijit/layout/AccordionContainer',
-	'dijit/layout/ContentPane'
+	'dijit/layout/ContentPane',
+	'dojo/domReady!'
 ], function(array, Grid, Cache, dataSource, storeFactory, mods){
 //    window.store = storeFactory({
 //                dataSource: dataSource,
@@ -29,12 +30,15 @@ require([
 			modules: [
 				mods.Focus,
 				mods.VirtualVScroller,
+				mods.RowHeader,
 				mods.IndirectSelect,
 				mods.NestedSort,
 				mods.ExtendedSelectRow,
 				mods.ExtendedSelectColumn,
 				mods.ExtendedSelectCell,
+				mods.Filter,	
 				mods.FilterBar,	
+				mods.Pagination,
 				mods.PaginationBar
 			]
 		});

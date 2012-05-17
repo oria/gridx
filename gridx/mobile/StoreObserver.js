@@ -10,17 +10,18 @@ define([
 		
 		postMixInProperties: function(){
 			this.inherited(arguments);
-			this._makeObservable();
 		},
 		setStore: function(store){
 			this.inherited(arguments);
-			this._makeObservable();
+			
 		},
-		_makeObservable: function(){
-			if(!this.store)return;
-			this.store = new Observable(this.store);
+		_buildBody:function(){
+			//observe only after body is built
+			this._makeObservable();
+			this.inherited(arguments);
+			this._ob && this._ob.cancel();
 			var self = this;
-			this.store.query({}).observe(function(object, removedFrom, insertedInto){ 
+			this._ob = this._queryResults.observe(function(object, removedFrom, insertedInto){ 
 				if(removedFrom > -1){ 
 				    self._removeRow(object, removedFrom);
 				}
@@ -34,6 +35,12 @@ define([
 		},
 		_insertRow: function(item, idx){
 			dom.place(this._createRow(item, idx), this.bodyNode.firstChild, idx);
+		},
+		_makeObservable: function(){
+			//summary:
+			//	Ensure the store to be observable
+			//this should be called just before any observe feature used
+			if(this.store && !this.store.notify)this.store = new Observable(this.store);
 		}
 	});
 });

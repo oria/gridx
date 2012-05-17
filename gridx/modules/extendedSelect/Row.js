@@ -12,10 +12,32 @@ define([
 	"./_RowCellBase"
 ], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
-	return _Module.register(
-	declare(_RowCellBase, {
+	return declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
+		// summary:
+		//		Provides advanced row selections.
+		// description:
+		//		This module provides an advanced way for selecting rows by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple rows.
+		//
+		// example:
+		//		1. Use select api on grid row object obtained from grid.row(i)
+		//		|	grid.row(1).select();
+		//		|	grid.row(1).deselect();
+		//		|	grid.row(1).isSelected();
+		//
+		//		2. Use select api on select.row module
+		//		|	grid.select.row.selectById(rowId);
+		//		|	grid.select.row.deSelectById(rowId);
+		//		|	grid.select.row.isSelected(rowId);
+		//		|	grid.select.row.getSelected();//[]
+		//		|	grid.select.row.clear();
+
+		// name: [readonly] String
+		//		module name		
 		name: 'selectRow',
 
+		// rowMixin: Object
+		//		A map of functions to be mixed into grid row object, so that we can use select api on row object directly
+		//		- grid.row(1).select() | deselect() | isSelected();
 		rowMixin: {
 			select: function(){
 				this.grid.select.row.selectById(this.id);
@@ -31,19 +53,50 @@ define([
 		},
 		
 		//Public-----------------------------------------------------------------
+		
+		// triggerOnCell: [readonly] Boolean
+		//		Whether row will be selected by clicking on cell, false by default		
 		triggerOnCell: false,
-
+		
+/*=====
+		selectById: function(rowId){
+			// summary:
+			//		Select a row by id.
+		},
+		
+		deselectById: function(rowId){
+			// summary:
+			//		Deselect a row by id.
+		},
+		
+		selectByIndex: function(rowIndex){
+			// summary:
+			//		Select a row by index
+		},
+		
+		deSelectByIndex: function(rowIndex){
+			// summary:
+			//		Deselect a row by index.
+		},
+		
+=====*/
 		getSelected: function(){
+			// summary:
+			//		Get id array of all selected rows
 			return this.model.getMarkedIds();
 		},
 
 		isSelected: function(){
+			// summary:
+			//		Check if the given rows are all selected.
 			return array.every(arguments, function(id){
 				return this.model.isMarked(id);
 			}, this);
 		},
 
 		clear: function(silent){
+			// summary:
+			//		Deselected all selected rows;			
 			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowSelected');
 			});
@@ -68,6 +121,7 @@ define([
 				[g, 'onRowMouseDown', function(e){
 					if(mouse.isLeft(e) && (t.arg('triggerOnCell') || !e.columnId)){
 						t._isOnCell = e.columnId;
+						g.body._focusCellCol = e.columnIndex;
 						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
@@ -178,6 +232,7 @@ define([
 		_doHighlight: function(target, toHighlight){
 			query('[visualindex="' + target.row + '"]', this.grid.bodyNode).forEach(function(node){
 				domClass.toggle(node, 'gridxRowSelected', toHighlight);
+				node.setAttribute('aria-selected', !!toHighlight);
 			});
 			this.onHighlightChange(target, toHighlight);
 		},
@@ -196,7 +251,11 @@ define([
 		},
 
 		_addToSelected: function(start, end, toSelect){
-			var t = this, bd = t.grid.body, m = t.model, a, b, i, lastEndItem = t._lastEndItem;
+			var t = this,
+				bd = t.grid.body,
+				m = t.model,
+				lastEndItem = t._lastEndItem,
+				a, b, i, d;
 			if(!t._isRange){
 				t._refSelectedIds = m.getMarkedIds();
 			}
@@ -205,7 +264,8 @@ define([
 				b = Math.max(end.row, lastEndItem.row);
 				start = bd.getRowInfo({visualIndex: a}).rowIndex + 1;
 				end = bd.getRowInfo({visualIndex: b}).rowIndex;
-				return m.when({
+				d = new Deferred;
+				m.when({
 					start: start, 
 					count: end - start + 1
 				}, function(){
@@ -214,7 +274,12 @@ define([
 							selected = array.indexOf(t._refSelectedIds, id) >= 0;
 						m.markById(id, selected); 
 					}
+				}).then(function(){
+					m.when(null, function(){
+						d.callback();
+					});
 				});
+				return d;
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
@@ -226,5 +291,5 @@ define([
 				return m.when();
 			}
 		}
-	}));
+	});
 });

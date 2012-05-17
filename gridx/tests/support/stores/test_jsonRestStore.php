@@ -167,31 +167,48 @@ class JsonRestStore{
 			$query = substr($query, $idx + 5);
 			$idx = strpos($query, ')');
 			if($idx !== false){
-				$size = count($items);
+				$toSort = array();
+				$dict = array();
 				$query = substr($query, 0, $idx);
 				$attrs = explode(',', $query);
+				$cols = array();
+				$args = array();
+				foreach($items as $item){
+					$dict[$item['id']] = $item;
+				}
 				foreach($attrs as $attr){
-					$toSort = array();
 					$desc = substr($attr, 0, 1) == '-';
-					if(substr($attr, 0, 1) == '-' || substr($attr, 0, 1) == '+'){
+					if($desc || substr($attr, 0, 1) == '+'){
 						$attr = substr($attr, 1);
 					}
-					foreach ($items as $i){
-						$toSort[] = array($i[$attr], $i);
+					$cols[] = $attr;
+					$a = 'attrname'.$attr;
+					$$a = array();
+					foreach($items as $item){
+						array_push($$a, $item[$attr]);
 					}
-					usort($toSort, 'compare');
-					$newRet = array();
-					if($desc){
-						for($i = $size - 1; $i >= 0; --$i){
-							$newRet[] = $toSort[$i][1];
-						}
-					}else{
-						for($i = 0; $i < $size; ++$i){
-							$newRet[] = $toSort[$i][1];
-						}
-					}
-					$items = $newRet;
+					$toSort[] = &$$a;
+					$args[] = &$$a;
+					$args[] = $desc ? SORT_DESC : SORT_ASC;
+					$args[] = $attr == 'string' ? SORT_STRING : SORT_NUMERIC;
 				}
+				if(!in_array('id', $cols)){
+					$cols[] = 'id';
+					$arr = array();
+					foreach($items as $item){
+						$arr[] = $item['id'];
+					}
+					$toSort[] = &$arr;
+					$args[] = &$arr;
+					$args[] = SORT_ASC;
+					$args[] = SORT_NUMERIC;
+				}
+				call_user_func_array('array_multisort', $args);
+				$result = array();
+				foreach($toSort[array_search('id', $cols)] as $i){
+					$result[] = $dict[$i];
+				}
+				$items = $result;
 			}
 		}
 //        fb($items, 'sort');
@@ -256,5 +273,4 @@ class JsonRestStore{
 		return true;
 	}
 }
-
 ?>

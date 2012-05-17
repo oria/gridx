@@ -54,39 +54,68 @@ define([
 			content: '',
 		
 			setCellValue: null,
+
+			cell: null,
 		
 			postMixInProperties: function(){
 				this.templateString = ['<div class="gridxCellWidget">', this.content, '</div>'].join('');
 			},
+
+			postCreate: function(){
+				this.connect(this.domNode, 'onmousedown', function(e){
+					e.cancelBubble = true;
+				});
+			},
 		
 			setValue: function(gridData, storeData){
-				var t = this;
-				query('.gridxHasGridCellValue', t.domNode).map(function(node){
-					return registry.byNode(node);
-				}).forEach(function(widget){
-					if(widget){
-						var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
-						widget.set('value', useStoreData ? storeData : gridData);
+				try{
+					var t = this;
+					query('.gridxHasGridCellValue', t.domNode).map(function(node){
+						return registry.byNode(node);
+					}).forEach(function(widget){
+						if(widget){
+							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
+							widget.set('value', useStoreData ? storeData : gridData);
+						}
+					});
+					if(t.setCellValue){
+							t.setCellValue(gridData, storeData, t);
 					}
-				});
-				if(t.setCellValue){
-					t.setCellValue(gridData, storeData, t);
+				}catch(e){
+					console.error('Can not set cell value: ', e);
 				}
 			}
 		});
 
 	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
 	
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
+		// summary:
+		//		This module makes it possible to efficiently show widgets within a grid cell.
+		// description:
+		//		Since widget declarations need to be parsed by dojo.parser, it can NOT be directly
+		//		created by the decorator function. This module takes advantage of the _TemplatedMixin
+		//		and the _WidgetInTemplateMixin so that users can write "templates" containing widgets
+		//		in decorator function.
+		//		This modules also limits the total number of widgets, so that the performance of grid
+		//		can be configured to a tolerable level when there're lots of widgets in grid.
+
 		name: 'cellWidget',
 	
 //        required: ['body'],
 	
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				cellWidget: this
 			};
+		},
+
+		cellMixin: {
+			cellWidget: function(){
+				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
+			}
 		},
 	
 		constructor: function(){
@@ -104,6 +133,8 @@ define([
 		},
 	
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this, body = t.grid.body;
 			t.batchConnect(
 				[body, 'onAfterRow', '_showDijits'],
@@ -114,6 +145,8 @@ define([
 		},
 	
 		destory: function(){
+			// tags:
+			//		protected extension
 			this.inherited(arguments);
 			var i, id, col, cw, columns = this.grid._columns;
 			for(i = columns.length - 1; i >= 0; --i){
@@ -130,10 +163,21 @@ define([
 	
 		//Public-----------------------------------------------------------------
 
-		// The count of backup widgets for every column which contains widgets
+		// backupCount: Integer
+		//		The count of backup widgets for every column which contains widgets
 		backupCount: 20,
 
 		setCellDecorator: function(rowId, colId, decorator, setCellValue){
+			// summary:
+			//		This method is used to decorate a specific cell instead of a whole column.
+			// rowId: String
+			//		The row ID of the cell
+			// colId: String
+			//		The column ID of the cell
+			// decorator: Function(data)
+			//		The decorator function for this cell.
+			// setCellValue: Function()?
+			//		This function can be provided to customiz the way of setting widget value
 			var rowDecs = this._decorators[rowId];
 			if(!rowDecs){
 				rowDecs = this._decorators[rowId] = {};
@@ -148,6 +192,12 @@ define([
 		},
 	
 		restoreCellDecorator: function(rowId, colId){
+			// summary:
+			//		Remove a cell decorator defined by the "setCellDecorator" method.
+			// rowId: String
+			//		The row ID of the cell
+			// colId: String
+			//		The column ID of the cell
 			var rowDecs = this._decorators[rowId];
 			if(rowDecs){
 				var cellDec = rowDecs[colId];
@@ -172,6 +222,16 @@ define([
 		},
 	
 		getCellWidget: function(rowId, colId){
+			// summary:
+			//		Get the CellWidget displayed in the given cell.
+			// description:
+			//		When this module is used, the string returned from decorator function will be
+			//		the template string of a CellWidget. This method gets this widget so that
+			//		more control can be applied to it.
+			// rowId: string
+			//		The row ID of the cell
+			// colId: string
+			//		The column ID of the cell
 			var cellNode = this.grid.body.getCellNode({
 				rowId: rowId, 
 				colId: colId
@@ -185,7 +245,12 @@ define([
 			return null;
 		},
 
-		onCellWidgetCreated: function(){},
+		onCellWidgetCreated: function(/* widget, column */){
+			// summary:
+			//		Fired when a cell widget is created.
+			// tags:
+			//		callback
+		},
 	
 		//Private---------------------------------------------------------------
 		_showDijits: function(rowInfo, rowCache){
@@ -236,6 +301,8 @@ define([
 				}
 				column._cellWidgets[rowInfo.rowId] = widget;
 			}
+			widget.cell = this.grid.cell(rowInfo.rowId, column.id, 1);
+			widget.isInit = true;
 			widget.setValue(gridData, storeData);
 			return widget;
 		},
@@ -279,10 +346,14 @@ define([
 				var cellDec = rowDecs[column.id];
 				if(cellDec){
 					if(!cellDec.widget && cellDec.decorator){
-						cellDec.widget = new CellWidget({
-							content: cellDec.decorator(rowCache.data[column.id], rowInfo.rowId, rowInfo.rowIndex),
-							setCellValue: cellDec.setCellValue
-						});
+						try{
+							cellDec.widget = new CellWidget({
+								content: cellDec.decorator(rowCache.data[column.id], rowInfo.rowId, rowInfo.rowIndex),
+								setCellValue: cellDec.setCellValue
+							});
+						}catch(e){
+							console.error('Edit:', e);
+						}
 					}
 					return cellDec.widget;
 				}
@@ -295,7 +366,7 @@ define([
 			var t = this, focus = t.grid.focus;
 			if(focus){
 				focus.registerArea({
-					name: 'celldijit',
+					name: 'cellwidget',
 					priority: 1,
 					scope: t,
 					doFocus: t._doFocus,
@@ -364,7 +435,7 @@ define([
 				}
 				return false;
 			}else{
-				t._navigating = false;
+				this._navigating = false;
 				return true;
 			}
 		},
@@ -399,13 +470,14 @@ define([
 				node = node.parentNode;
 			}
 			if(node && node !== dn){
-				var colId = node.getAttribute('colid');
+				var cellNode = node,
+					colId = node.getAttribute('colid');
 				while(node && !domClass.contains(node, 'gridxRow')){
 					node = node.parentNode;
 				}
 				if(node){
 					var rowId = node.getAttribute('rowid');
-					return this._beginNavigate(rowId, colId);
+					return cellNode != evt.target && this._beginNavigate(rowId, colId);
 				}
 			}
 			return false;
@@ -416,12 +488,12 @@ define([
 			if(e.keyCode == keys.F2 && !t._navigating && focus.currentArea() == 'body'){
 				if(t._beginNavigate(e.rowId, e.columnId)){
 					event.stop(e);
-					focus.focusArea('celldijit');
+					focus.focusArea('cellwidget');
 				}
-			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'celldijit'){
+			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'cellwidget'){
 				t._navigating = false;
 				focus.focusArea('body');
 			}
 		}
-	}));
+	});
 });

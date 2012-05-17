@@ -1,12 +1,13 @@
-define(["dojo/_base/kernel",
+define([
+	"dojo/_base/kernel",
 	"dojo/_base/lang",
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, lang, _Module, declare, array, html, query){	
-	return _Module.register(declare(_Module, {
+], function(dojo, lang, _Module, declare, array, html, query){
+	return declare(_Module, {
 		name: 'rowLock',
 		required: ['vLayout'],
 		forced: ['hLayout', 'vScroller'],
@@ -17,6 +18,7 @@ define(["dojo/_base/kernel",
 			};
 		},
 		load: function(args, deferStartup){
+			dojo.experimental('gridx/modules/RowLock');
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;
 			deferStartup.then(function(){
@@ -71,5 +73,5 @@ define(["dojo/_base/kernel",
 				callback(nodes[i]);
 			}
 		}
-	}));
+	});
 });

@@ -8,10 +8,32 @@ define([
 	"../../core/_Module"
 ], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
-	return _Module.register(
-	declare(_RowCellBase, {
+	return declare(/*===== "gridx.modules.select.Cell", =====*/_RowCellBase, {
+		// summary:
+		//		Provides simple cell selection.
+		// description:
+		//		This module provides a simple way for selecting cells by clicking or SPACE key, or CTRL + Click to select multiple cells.
+		//
+		// example:
+		//		1. Use select api on grid cell object obtained from grid.cell(i, j)
+		//		|	grid.cell(1,1).select();
+		//		|	grid.cell(1,1).deselect();
+		//		|	grid.cell(1,1).isSelected();
+		//
+		//		2. Use select api on select.cell module
+		//		|	grid.select.cell.selectById(rowId, columnId);
+		//		|	grid.select.cell.deSelectById(rowId, columnId);
+		//		|	grid.select.cell.isSelected(rowId, columnId);		
+		//		|	grid.select.cell.getSelected();//[]
+		//		|	grid.select.cell.clear();
+
+		// name: [readonly] String
+		//		module name
 		name: "selectCell",
 		
+		// cellMixin: Object
+		//		A map of functions to be mixed into grid cell object, so that we can use select api on cell object directly
+		//		- grid.cell(1,1).select() | deselect() | isSelected();
 		cellMixin: {
 			select: function(){
 				this.grid.select.cell.selectById(this.row.id, this.column.id);
@@ -19,7 +41,7 @@ define([
 			},
 			
 			deselect: function(){
-				this.grid.select.cell.deselectById(this.row.id, this.column.is);
+				this.grid.select.cell.deselectById(this.row.id, this.column.id);
 				return this;
 			},
 			
@@ -29,9 +51,26 @@ define([
 		},
 		
 		//Public API--------------------------------------------------------------------------------
+/*=====
+		selectById: function(rowId, columnId){
+			// summary:
+			//		Select a cell by [rowId, columnId].
+		},
+		
+		deselectById: function(rowId, columnId){
+			// summary:
+			//		Deselect a cell by [rowId, columnId].
+		},
+		
+		isSelected: function(rowId, columnId){
+			// summary:
+			//		Check if a cell is already selected.
+		},
+=====*/
+		
 		getSelected: function(){
 			// summary:
-			//		Get arrays of rowids of all the selected cells in every column.
+			//		Get arrays of [rowId, columnId] of all the selected cells
 			var t = this, res = [];
 			array.forEach(t.grid._columns, function(col){
 				var ids = t.model.getMarkedIds(t._getMarkType(col.id));
@@ -44,7 +83,7 @@ define([
 		
 		clear: function(){
 			// summary:
-			//		Deselected all the selected rows;
+			//		Deselected all the selected cells;
 			var t = this, m = t.model;
 			if(t.arg('enabled')){
 				array.forEach(t.grid._columns, function(col){
@@ -106,6 +145,7 @@ define([
 			});
 			if(node){
 				domClass.toggle(node, "gridxCellSelected", toHighlight);
+				node.setAttribute('aria-selected', !!toHighlight);
 				this.onHighlightChange();
 			}
 		},
@@ -129,5 +169,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

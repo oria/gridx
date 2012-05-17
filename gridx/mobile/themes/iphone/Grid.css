@@ -41,3 +41,15 @@
 .mobileGridxRowOdd {
 	background-color: #f0f0f0;
 }
+
+
+/*Load More Mixin*/
+.mobileGridxLoadMoreWrapper {
+	text-align: center;
+}
+.mobileGridxLoadMoreButton {
+	margin: 10px auto;
+	display: inline-block;
+	padding: 5px;
+	width: 80%;
+}

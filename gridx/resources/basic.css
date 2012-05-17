@@ -46,6 +46,7 @@
 	border-style: solid;
 	border-color: #ccc;
 	border-width: 0 1px 0 0;
+	position: relative;
 }
 
 .dj_ie .gridxHeaderRowInner{
@@ -68,7 +69,7 @@
 	border-color: transparent #ccc transparent transparent;
 	padding: 3px;
 	text-align: left;
-/*    overflow: hidden;*/
+	overflow: hidden;
 	/*box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;*/
@@ -109,6 +110,10 @@
 	background-color: #cee8f2;
 }
 
+.gridxRow {
+	background-color: #fff;
+}
+
 .gridxRowHeaderRow table,
 .gridxRow .gridxRowTable {
 	border-collapse: collapse;
@@ -147,7 +152,7 @@
 	outline: 1px dashed darkblue;
 }
 
-.dj_ie7 .gridx .gridxCellFocus {
+.dj_ie7 .gridx .gridxBody .gridxRow .gridxCellFocus {
 	border: 1px dashed darkblue;
 }
 
@@ -229,6 +234,17 @@
 .gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }
+
+.gridxRowHeaderRow .gridxCellFocus {
+	outline: 1px dashed darkblue;
+	border-left: 1px dashed darkblue;
+	border-right: 1px dashed darkblue;
+}
+
+.gridxRowHeaderRow:first-child .gridxCellFocus {
+	border-top: 1px dashed darkblue;
+}
+
 
 /* Firefox can not fire onmouseover when mouse is "dragging" an "overflow: hidden" node. 
  * This fix is for IndirectSelect working with ExtendedSelect only */

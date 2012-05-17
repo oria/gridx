@@ -8,10 +8,32 @@ define([
 	"../../core/_Module"
 ], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
-	return _Module.register(
-	declare(_RowCellBase, {
+	return declare(/*===== "gridx.modules.select.Row", =====*/_RowCellBase, {
+		// summary:
+		//		Provides simple row selection.
+		// description:
+		//		This module provides a simple way for selecting rows by clicking or SPACE key, or CTRL + Click to select multiple rows.
+		//
+		// example:
+		//		1. Use select api on grid row object obtained from grid.row(i)
+		//		|	grid.row(1).select();
+		//		|	grid.row(1).deselect();
+		//		|	grid.row(1).isSelected();
+		//
+		//		2. Use select api on select.row module
+		//		|	grid.select.row.selectById(rowId);
+		//		|	grid.select.row.deSelectById(rowId);
+		//		|	grid.select.row.isSelected(rowId);
+		//		|	grid.select.row.getSelected();//[]
+		//		|	grid.select.row.clear();
+
+		// name: [readonly] String
+		//		module name
 		name: "selectRow",
 		
+		// rowMixin: Object
+		//		A map of functions to be mixed into grid row object, so that we can use select api on row object directly
+		//		- grid.row(1).select() | deselect() | isSelected();
 		rowMixin: {
 			select: function(){
 				this.grid.select.row.selectById(this.id);
@@ -27,15 +49,37 @@ define([
 		},
 		
 		//Public API--------------------------------------------------------------------------------
+		
+		// triggerOnCell: [readonly] Boolean
+		//		Whether row will be selected by clicking on cell, false by default
 		triggerOnCell: false,
 
+/*=====
+		selectById: function(rowId){
+			// summary:
+			//		Select a row by id.
+		},
+		
+		deselectById: function(rowId){
+			// summary:
+			//		Deselect a row by id.
+		},
+		
+		isSelected: function(rowId){
+			// summary:
+			//		Check if a row is already selected.
+		},
+=====*/
+
 		getSelected: function(){
+			// summary:
+			//		Get id array of all selected rows
 			return this.model.getMarkedIds();
 		},
 		
 		clear: function(){
 			// summary:
-			//		Deselected all the selected rows;
+			//		Deselected all selected rows;
 			if(this.arg('enabled')){
 				var model = this.model;
 				array.forEach(model.getMarkedIds(), function(id){
@@ -81,6 +125,7 @@ define([
 			var node = this.grid.body.getRowNode({rowId: rowId});
 			if(node){
 				domClass.toggle(node, "gridxRowSelected", toHighlight);
+				node.setAttribute('aria-selected', !!toHighlight);
 				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, !!toHighlight);
 			}
 		},
@@ -100,5 +145,5 @@ define([
 				}
 			}
 		}
-	}));
+	});
 });

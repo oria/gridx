@@ -12,10 +12,9 @@ define([
 	"dojo/dnd/Source",
 	"dojo/dnd/Manager",
 	"../../core/_Module",
-	"./Avatar",
 	"../AutoScroll"
 ], function(declare, lang, Deferred, domConstruct, domGeometry, domClass, domStyle, dom, win, sniff,
-	Source, DndManager, _Module, Avatar){
+	Source, DndManager, _Module){
 
 	var hitch = lang.hitch;
 
@@ -173,10 +172,12 @@ define([
 				t._oldStartDrag = m.startDrag;
 				m.startDrag = hitch(t, '_startDrag', evt);
 				
-				t._oldMakeAvatar = m.makeAvatar;
-				m.makeAvatar = function(){
-					return new Avatar(m);
-				};
+				if(t.avatar){
+					t._oldMakeAvatar = m.makeAvatar;
+					m.makeAvatar = function(){
+						return new t.avatar(m);
+					};
+				}
 				m._dndInfo = {
 					cssName: p._cssName,
 					count: p._getDndCount()

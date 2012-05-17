@@ -29,7 +29,7 @@ define([
 				m = t.module.model;
 			t[c](p, 'onSwitchPage', '_onSwitchPage');
 			t[c](p, 'onChangePageSize', '_onChangePageSize');
-			t[c](m, 'onSizeChange', '_onSwitchPage');
+			t[c](m, 'onSizeChange', '_onSizeChange');
 			t[c](m, 'onMarked', '_createDescription');
 			t[c](m, 'onMarkRemoved', '_createDescription');
 			t._initFocus();

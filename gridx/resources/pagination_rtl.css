@@ -40,6 +40,14 @@
 	background-position: -60px -16px;
 }
 
+.dijitRtl .gridxGotoPage .gridxPageCountMsg {
+	padding-left: 0;
+	padding-right: 5px;
+}
+.dijitRtl .gridxGotoPage .gridxGotoPageBtns {
+	text-align: left;
+}
+
 /* PaginationBarDD */
 .gridxRtl .gridxPagerSizeSwitchDD {
 	text-align: left;

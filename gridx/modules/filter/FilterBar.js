@@ -2,6 +2,7 @@ define([
 	"dojo/_base/kernel",
 	"dijit",
 	"dojo/_base/declare",
+	"dojo/dom-construct",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
@@ -17,8 +18,8 @@ define([
 	"dojo/_base/html",
 	"dojo/query",
 	"dojo/parser",
-	"dojo/string"	
-], function(dojo, dijit, declare, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+	"dojo/string"
+], function(dojo, dijit, declare, domConstruct, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -57,8 +58,7 @@ define([
 	};
 	=====*/
 	
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.filter.FilterBar", =====*/_Module, {
 		name: 'filterBar',
 		forced: ['filter'],
 		getAPIPath: function(){
@@ -118,6 +118,11 @@ define([
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
+			this.closeFilterBarButton = this.arg('closeFilterBarButton') || this.closeFilterBarButton;
+			this.defineFilterButton = this.arg('defineFilterButton') || this.defineFilterButton;
+			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
+			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
+			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
 			
 			this.domNode = dojo.create('div', {
 				innerHTML: template,
@@ -293,7 +298,7 @@ define([
 			dlg.show();
 		},
 		
-		destroy: function(){
+		uninitialize: function(){
 			this._filterDialog && this._filterDialog.destroyRecursive();
 			this.inherited(arguments);
 			dojo.destroy(this.domNode);
@@ -398,7 +403,9 @@ define([
 			//var k = condition.charAt(0).toUpperCase() + condition.substring(1);
 			//return '<span style="font-style:italic">' + k + '</span> ' + value;
 			var valueString, type;
-			if(/^date|^time/i.test(type)){
+			if(condition == 'isEmpty'){
+				valueString = '';
+			}else if(/^date|^time/i.test(type)){
 				var f = this._formatDate;
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
@@ -434,10 +441,13 @@ define([
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
 			var F = Filter;
+//			if(data.condition === 'isEmpty'){
+//				return F.isEmpty(F.column(colId, type));
+//			}
 			var dc = this.grid._columnsById[colId].dateParser||this._stringToDate;
 			var tc = this.grid._columnsById[colId].timeParser||this._stringToTime;
 			var converter = {date: dc, time: tc};
-			var c = data.condition, exp, isNot = false;
+			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			if(c === 'range'){
 				var startValue = F.value(data.value.start, type),
 					endValue = F.value(data.value.end, type), 
@@ -458,8 +468,8 @@ define([
 			pattern = pattern || /(\d{4})\/(\d\d?)\/(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
-			d.setYear()(parseInt(RegExp.$1));
-			d.setMonth()(parseInt(RegExp.$2)-1);
+			d.setFullYear(parseInt(RegExp.$1));
+			d.setMonth(parseInt(RegExp.$2)-1);
 			return d;
 		},
 		_stringToTime: function(s, pattern){
@@ -482,6 +492,10 @@ define([
 			if(h < 10){h = '0' + h;}
 			if(m < 10){m = '0' + m;}
 			return h + ':' + m + ':00';
+		},
+		destroy: function(){
+			domConstruct.destroy(this.domNode);
+			this.inherited(arguments);
 		}
-	}));
+	});
 });

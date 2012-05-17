@@ -5,17 +5,30 @@ define([
 	"../core/_Module"
 ], function(declare, domGeometry, DeferredList, _Module){
 
-	return _Module.register(
-	declare(_Module, {
+	return declare(/*===== "gridx.modules.VLayout", =====*/_Module, {
+		// summary:
+		//		This module manages the vertical layout of all the grid UI parts.
+		// description:
+		//		When user creates a grid with a given height, it means the height of the whole grid,
+		//		which includes grid body, toobar, pagination bar, headerbar, horizontal scrollerbar, etc.
+		//		So the height of the grid body must be calculated out so as to layout the grid properly.
+		//		This module calculates grid body height by collecting height from all the registered
+		//		grid UI parts. The reLayout function in this module will be called everytime the
+		//		grid size is changed.
+
 		name: 'vLayout',
 
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				vLayout: this
 			};
 		},
 
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this, g = t.grid;
 			t.connect(g, '_onResizeEnd', function(changeSize, ds){
 				var d, dl = [];
@@ -38,6 +51,8 @@ define([
 		},
 	
 		load: function(args, startup){
+			// tags:
+			//		protected extension
 			var t = this;
 			startup.then(function(){
 				if(t._defs && t._mods){
@@ -76,6 +91,8 @@ define([
 		},
 		
 		reLayout: function(){
+			// summary:
+			//		Virtically re-layout all the grid UI parts.
 			var hookPoint, freeHeight = 0, n, t = this;
 			for(hookPoint in t._mods){
 				n = t.grid[hookPoint];
@@ -123,5 +140,5 @@ define([
 				ms.height = (dn.clientHeight - freeHeight) + "px";
 			}
 		}
-	}));
+	});
 });
