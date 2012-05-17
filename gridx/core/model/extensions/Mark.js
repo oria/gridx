@@ -1,11 +1,10 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
-	'dojo/_base/Deferred',
 	'../_Extension'
-], function(declare, array, Deferred, _Extension){
+], function(declare, array, _Extension){
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Mark", =====*/_Extension, {
 		name: 'move',
 
 		priority: 5,

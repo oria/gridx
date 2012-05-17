@@ -6,8 +6,8 @@
 .header {
 	width: 960px;
 	position: relative;
-	padding: 5px;
-	margin: 20px 0 10px 0;
+	padding: 2px;
+	margin: 2px 0 10px 0;
 }
 
 .header h1 {
@@ -104,7 +104,7 @@
 	border-color: green;
 	border-width: 1px 1px 0 1px;
 	padding: 5px 20px 5px 5px;
-	height: 124px;
+	height: 130px;
 	cursor: pointer;
 }
 
@@ -128,10 +128,15 @@
 
 .feature img {
 	float: left;
-	width: 200px;
-	height: 124px;
+	/*width: 200px;*/
+	/*height: 130px;*/
 	margin-right: 10px;
 }
+.dj_webkit .feature img {
+	width: 200px;
+	height: 130px;
+}
+
 
 .feature div {
 	float: left;

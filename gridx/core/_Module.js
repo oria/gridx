@@ -2,13 +2,14 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
+	"dojo/_base/Deferred",
 	"dojo/_base/connect"
-], function(declare, lang, array, connect){
+], function(declare, lang, array, Deferred, connect){
 	
 var isFunc = lang.isFunction,
 	c = 'connect',	//To reduce code size
-	moduleBase = declare([], {
-		
+
+	moduleBase = declare(/*===== "gridx.core._Module", =====*/[], {
 	/*=====
 		// name: String
 		//		The API set name of this module. This name represents the API set that this module implements, 
@@ -40,16 +41,17 @@ var isFunc = lang.isFunction,
 		getAPIPath: function(){
 			// summary: 
 			//		This function defines how to access this module's methods from the grid object.
+			// description:
 			//		The returned object of this function will be "recursively" mixed into the grid object.
 			//		That is, any property of object type in grid will be preserved. For example, if this function
 			//		returns { abc: { def: 'ghi'} }, and the grid already has a property called "abc", and 
 			//		grid.abc is { jkl: 'mno'}. Then after mixin, grid.abc will still have this jkl property:
-			//		{
-			//			abc: {
-			//				jkl: 'mno',
-			//				def: 'ghi'
-			//			}
-			//		}
+			// |	{
+			// |		abc: {
+			// |			jkl: 'mno',
+			// |			def: 'ghi'
+			// |		}
+			// |	}
 			//		This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
 			//		Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
 			//		This function can be omitted.
@@ -58,6 +60,8 @@ var isFunc = lang.isFunction,
 
 		preload: function(args){
 			// summary:
+			//		Preload this module.
+			// description:
 			//		If this function exists, it is called after all modules are created ("new"-ed), but not yet loaded.
 			//		At this time point, all the module APIs are already accessable, so all the mothods of those modules that
 			//		do not need to load can be used here.
@@ -69,6 +73,8 @@ var isFunc = lang.isFunction,
 
 		load: function(args, deferStartup){
 			// summary: 
+			//		Completely load this module.
+			// description:
 			//		This is the formal loading process of this module. This function will not be called until all the "forced"
 			//		and existing "optional" modules are loaded. When the loading process of this module is finished (Note that
 			//		this might be an async process), this.loaded.callback() must be called to tell any other modules that
@@ -76,12 +82,24 @@ var isFunc = lang.isFunction,
 			this.loaded.callback();
 		},
 
+		// grid: gridx.Grid
+		//		Reference to the grid
+		grid: null,
+		
+		// model: gridx.core.model.Model
+		//		Reference to the grid model
+		model: null,
+
+		// loaded: dojo.Deferred
+		//		Indicate when this module is completely loaded.
+		loaded: null,
 	=====*/
 	
 		constructor: function(grid, args){
 			var t = this;
 			t.grid = grid;
 			t.model = grid.model;
+			t.loaded = new Deferred;
 			t._cnnts = [];
 			t._sbscs = [];
 			lang.mixin(t, args);
@@ -96,30 +114,31 @@ var isFunc = lang.isFunction,
 		arg: function(argName, defaultValue, validate){
 			// summary:
 			//		This method provides a normalized way to access module arguments.
+			// description:
 			//		There are two ways to provide module arguments when creating grid.
 			//		One is to write them in the module declaration object:
-			//			var grid = new Grid({
-			//				......
-			//				modules: [
-			//					{
-			//						moduleClass: gridx.modules.Pagination,
-			//						initialPage: 1		//Put module arguments in module declaration object
-			//					}
-			//				],
-			//				......
-			//			});
+			// |	var grid = new Grid({
+			// |		......
+			// |		modules: [
+			// |			{
+			// |				moduleClass: gridx.modules.Pagination,
+			// |				initialPage: 1		//Put module arguments in module declaration object
+			// |			}
+			// |		],
+			// |		......
+			// |	});
 			//		This way is straightforward, but quite verbose. And if user would like to set arguments 
 			//		for pre-included core modules (e.g. Header, Body), he'd have to explictly declare the
 			//		module. This would be too demanding for a grid user, so we need another approach.
 			//		The other way is to treat them as grid arguments:
-			//			var grid = new Grid({
-			//				......
-			//				modules: [
-			//					gridx.modules.Pagination
-			//				],
-			//				paginationInitialPage: 1,	//Treat module arguments as grid arguments
-			//				......
-			//			});
+			// |	var grid = new Grid({
+			// |		......
+			// |		modules: [
+			// |			gridx.modules.Pagination
+			// |		],
+			// |		paginationInitialPage: 1,	//Treat module arguments as grid arguments
+			// |		......
+			// |	});
 			//		In this way, there's no need to provide a module declaration object, but one has to tell
 			//		grid for which module the arguments is applied. One can simply put the module name at the
 			//		front of every module argument:
@@ -134,16 +153,15 @@ var isFunc = lang.isFunction,
 			//			Module argument > Grid argument > default value > Base class argument (inherited)
 			//		After this method, the argument will automatically become module argument. But it is still
 			//		recommended to alway access arguments by this.arg(...);
-			//
-			//argName: String
+			// argName: String
 			//		The name of this argument. This is the "short" name, not the name prefixed with module name.
-			//defaultValue: anything?
+			// defaultValue: anything?
 			//		This value will by asigned to the argument if there's no user provided values.
-			//validate: Function?
+			// validate: Function?
 			//		This is a validation function and it must return a boolean value. If the user provided value
 			//		can not pass validation, the default value will be used.
 			//		Note if this function is provided, defaultValue must also be provided.
-			//return: anything
+			// returns:
 			//		The value of this argument.
 			if(arguments.length == 2 && isFunc(defaultValue)){
 				validate = defaultValue;
@@ -161,10 +179,25 @@ var isFunc = lang.isFunction,
 				}
 			}
 			t[argName] = (validate && !validate(r)) ? defaultValue : r;
-			return r;
+			return r;	//anything
 		},
 
 		connect: function(obj, e, method, scope, flag){
+			// summary:
+			//		Connect an event handler to an event or function.
+			// description:
+			//		Similar to widget.connect, the scope of the listener will be default to this module.
+			//		But in this API, the scope argument is placed behind the listener function, so as to
+			//		avoid arguemnt checking logic.
+			//		This method also allows conditional event firing using the flag argument.
+			// obj: Object
+			// e: String
+			// method: String|Function
+			// scope: Object?
+			// flag: Anything
+			//		If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.
+			// returns:
+			//		The connect handle
 			var t = this, cnnt, g = t.grid, s = scope || t;
 			if(obj === g && typeof e == 'string'){
 				cnnt = connect[c](obj, e, function(){
@@ -181,10 +214,14 @@ var isFunc = lang.isFunction,
 				cnnt = connect[c](obj, e, s, method);
 			}
 			t._cnnts.push(cnnt);
-			return cnnt;
+			return cnnt;	//Object
 		},
 
 		batchConnect: function(){
+			// summary:
+			//		Do a lot of connects in a batch.
+			// description:
+			//		This method is used to optimize code size.
 			for(var i = 0, args = arguments, len = args.length; i < len; ++i){
 				if(lang.isArrayLike(args[i])){
 					this[c].apply(this, args[i]);
@@ -193,9 +230,15 @@ var isFunc = lang.isFunction,
 		},
 
 		subscribe: function(topic, method, scope){
+			// summary:
+			//		Subscribe to a topic.
+			// description:
+			//		This is similar to widget.subscribe, except that the "scope" argument in this method is behind the listener function.
+			// returns:
+			//		The subscription handle
 			var s = connect.subscribe(topic, scope || this, method);
 			this._sbscs.push(s);
-			return s;
+			return s;	//Object
 		}
 	}),
 	mods = moduleBase._modules = {};

@@ -1,4 +1,5 @@
 define([
+	"require",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
@@ -9,11 +10,13 @@ define([
 	"./Column",
 	"./Cell",
 	"./_Module"
-], function(declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
+], function(require, declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
 
 	var delegate = lang.delegate,
 		isFunc = lang.isFunction,
-		hitch = lang.hitch;
+		isString = lang.isString,
+		hitch = lang.hitch,
+		forEach = array.forEach;
 
 	function shallowCopy(obj){
 		var ret = {}, i;
@@ -73,31 +76,38 @@ define([
 	}
 
 	function normalizeModules(args, coreMods){
-		var i, len, m, modules = args.modules, mods = [],
-			coreModCount = (coreMods && coreMods.length) || 0;
-		for(i = 0, len = modules.length; i < len; ++i){
-			m = modules[i];
-			if(isFunc(m)){
-				mods.push({
+		var mods = [],
+			coreModCount = coreMods && coreMods.length || 0;
+		forEach(args.modules, function(m, i){
+			if(isFunc(m) || isString(m)){
+				m = {
 					moduleClass: m
-				});
-			}else if(!m){
-				console.error(["The ", (i + 1 - coreModCount), 
-					"-th declared module can NOT be found, please require it before using it"].join(''));
-			}else if(!isFunc(m.moduleClass)){
-				console.error(["The ", (i + 1 - coreModCount), 
-					"-th declared module has NO moduleClass, please provide it"].join(''));
-			}else{
-				mods.push(m);
+				};
 			}
-		}
+			if(m){
+				var mc = m.moduleClass;
+				if(isString(mc)){
+					try{
+						mc = m.moduleClass = require(mc);
+					}catch(e){
+						console.error(e);
+					}
+				}
+				if(isFunc(mc)){
+					mods.push(m);
+					return;
+				}
+			}
+			console.error(["The ", (i + 1 - coreModCount), 
+				"-th declared module can NOT be found, please require it before using it"].join(''));
+		});
 		args.modules = mods;
 		return args;
 	}
 	
 	function checkForced(args){
 		var registeredMods = _Module._modules,
-			modules = args.modules, i, j, k, p, deps, depName;
+			modules = args.modules, i, j, k, p, deps, depName, err;
 		for(i = 0; i < modules.length; ++i){
 			p = modules[i].moduleClass.prototype;
 			deps = (p.forced || []).concat(p.required || []);
@@ -114,21 +124,24 @@ define([
 							moduleClass: registeredMods[depName]
 						});
 					}else{
-						throw new Error(["Forced/Required Dependent Module '", depName, 
-							"' is NOT Found for '", p.name, "'"].join(''));
+						err = 1;	//1 as true
+						console.error(["Forced/Required dependent module '", depName, 
+							"' is NOT found for '", p.name, "' module."].join(''));
 					}
 				}
 			}
+		}
+		if(err){
+			throw new Error("Some forced/required dependent modules are NOT found.");
 		}
 		return args;
 	}
 
 	function removeDuplicate(args){
-		var modules = args.modules, i, m, mods = {};
-		for(i = 0; m = modules[i]; ++i){
+		var i, mods = {}, modules = [];
+		forEach(args.modules, function(m){
 			mods[m.moduleClass.prototype.name] = m;
-		}
-		modules = [];
+		});
 		for(i in mods){
 			modules.push(mods[i]);
 		}
@@ -140,7 +153,7 @@ define([
 		var modules = args.modules, i, m, modName, q, key,
 			getModule = function(modName){
 				for(var j = modules.length - 1; j >= 0; --j){
-					if(modules[j].moduleClass.prototype.name === modName){
+					if(modules[j].moduleClass.prototype.name == modName){
 						return modules[j];
 					}
 				}
@@ -164,20 +177,26 @@ define([
 	}
 
 	function checkModelExtensions(args){
-		var modules = args.modules, exts = args.modelExtensions, i, modExts, push = [].push;
+		var modules = args.modules,
+			i, modExts;
 		for(i = modules.length - 1; i >= 0; --i){
 			modExts = modules[i].moduleClass.prototype.modelExtensions;
 			if(modExts){
-				push.apply(exts, modExts);
+				[].push.apply(args.modelExtensions, modExts);
 			}
 		}
 		return args;
 	}
 
-	return declare([], {
-		reset: function(args){
-			// summary:
-			//		Reset the grid data model completely. Also used in initialization.
+	return declare(/*===== "gridx.core.Core", =====*/[], {
+		// summary:
+		//		This is the logical grid (also the base class of the grid widget), 
+		//		providing grid data model and defines a module/plugin framework
+		//		so that the whole grid can be as flexible as possible while still convenient enough for
+		//		web page developers.
+
+		_reset: function(args){
+			//Reset the grid data model completely. Also used in initialization.
 			var t = this;
 			t._uninit();
 			args = shallowCopy(args);
@@ -193,25 +212,33 @@ define([
 								normalizeModules(args, t.coreModules)))));
 			//Create model before module creation, so that all modules can use the logic grid from very beginning.
 			t.model = new Model(args);
-			t._createModules(args);
+			t._create(args);
 		},
 
 		_postCreate: function(){
 			var t = this,
-				d = t._deferStartup = new Deferred();
-			t._preloadModules();
-			t._loadModules(d).then(hitch(t, t.onModulesLoaded));
+				d = t._deferStartup = new Deferred;
+			t._preload();
+			t._load(d).then(hitch(t, 'onModulesLoaded'));
 		},
 
-		onModulesLoaded: function(){},
+		onModulesLoaded: function(){
+			// summary:
+			//		Fired when all grid modules are loaded. Can be used as a signal of grid creation complete.
+			// tags:
+			//		callback
+		},
 
 		setStore: function(store){
 			// summary:
 			//		Change the store for grid. 
+			// description:
 			//		Since store defines the data model for grid, changing store is usually changing everything.
+			// store: dojo.data.*|dojox.data.*|dojo.store.*
+			//		The new data store
 			var t = this;
 			t.store = store;
-			t.reset(t);
+			t._reset(t);
 			t._postCreate();
 			t._deferStartup.callback();
 		},
@@ -219,6 +246,8 @@ define([
 		setColumns: function(columns){
 			// summary:
 			//		Change all the column definitions for grid.
+			// columns: Array
+			//		The new column structure
 			var t = this;
 			t.structure = columns;
 			t._columns = lang.clone(columns);
@@ -228,82 +257,129 @@ define([
 			}
 		},
 
-		row: function(rowIndexOrId, isId){
+		row: function(row, isId){
 			// summary:
 			//		Get a row object by ID or index.
 			//		For asyc store, if the data of this row is not in cache, then null will be returned.
-			var t = this, id = rowIndexOrId;
-			if(typeof id == "number" && !isId){
-				id = t.model.indexToId(id);
+			// row: Integer|String
+			//		Row index of row ID
+			// isId: Boolean?
+			//		If the row parameter is a numeric ID, set this to true
+			// returns:
+			//		If the params are valid and row data is in cache, return a row object, else return null.
+			var t = this;
+			if(typeof row == "number" && !isId){
+				row = t.model.indexToId(row);
 			}
-			if(t.model.idToIndex(id) >= 0){
-				t._rowObj = t._rowObj || t._mixinComponent(new Row(t), "row");
-				return delegate(t._rowObj, {id: id});
+			if(t.model.idToIndex(row) >= 0){
+				t._rowObj = t._rowObj || t._mixin(new Row(t), "row");
+				return delegate(t._rowObj, {	//gridx.core.Row
+					id: row
+				});
 			}
-			return null;
+			return null;	//null
 		},
 
-		column: function(columnIndexOrId, isId){
+		column: function(column, isId){
 			// summary:
 			//		Get a column object by ID or index
-			var t = this, id = columnIndexOrId, c, a, obj = {};
-			if(typeof id == "number" && !isId){
-				c = t._columns[id];
-				id = c && c.id;
+			// column: Integer|String
+			//		Column index or column ID
+			// isId: Boolean
+			//		If the column parameter is a numeric ID, set this to true
+			// returns:
+			//		If the params are valid return a column object, else return NULL
+			var t = this, c, a, obj = {};
+			if(typeof column == "number" && !isId){
+				c = t._columns[column];
+				column = c && c.id;
 			}
-			c = t._columnsById[id];
+			c = t._columnsById[column];
 			if(c){
-				t._colObj = t._colObj || t._mixinComponent(new Column(t), "column");
+				t._colObj = t._colObj || t._mixin(new Column(t), "column");
 				for(a in c){
 					if(t._colObj[a] === undefined){
 						obj[a] = c[a];
 					}
 				}
-				return delegate(t._colObj, obj);
+				return delegate(t._colObj, obj);	//gridx.core.Column
 			}
-			return null;
+			return null;	//null
 		},
 
-		cell: function(rowIndexOrId, columnIndexOrId, isId){
+		cell: function(row, column, isId){
 			// summary:
 			//		Get a cell object
-			var t = this, r = rowIndexOrId instanceof Row ? rowIndexOrId : t.row(rowIndexOrId, isId);
+			// row: gridx.core.Row|Integer|String
+			//		Row index or row ID or a row object
+			// column: gridx.core.Column|Integer|String
+			//		Column index or column ID or a column object
+			// isId: Boolean?
+			//		If the row and coumn params are numeric IDs, set this to true
+			// returns:
+			//		If the params are valid and the row is in cache return a cell object, else return null.
+			var t = this, r = row instanceof Row ? row : t.row(row, isId);
 			if(r){
-				var c = columnIndexOrId instanceof Column ? columnIndexOrId : t.column(columnIndexOrId, isId);
+				var c = column instanceof Column ? column : t.column(column, isId);
 				if(c){
-					t._cellObj = t._cellObj || t._mixinComponent(new Cell(t), "cell");
-					return delegate(t._cellObj, {row: r, column: c});
+					t._cellObj = t._cellObj || t._mixin(new Cell(t), "cell");
+					return delegate(t._cellObj, {	//gridx.core.Cell
+						row: r,
+						column: c
+					});
 				}
 			}
-			return null;
+			return null;	//null
 		},
 
 		columnCount: function(){
 			// summary:
 			//		Get the number of columns
-			return this._columns.length;
+			// returns:
+			//		The count of columns
+			return this._columns.length;	//Integer
 		},
 
 		rowCount: function(parentId){
 			// summary:
 			//		Get the number of rows.
+			// description:
 			//		For async store, the return value is valid only when the grid has fetched something from the store.
-			return this.model.size(parentId);
+			// parentId: String?
+			//		If provided, return the child count of the given parent row.
+			// returns:
+			//		The count of rows. -1 if the size info is not available (using server side store and never fetched any data)
+			return this.model.size(parentId);	//Integer
 		},
 
 		columns: function(start, count){
 			// summary:
 			//		Get a range of columns, from index 'start' to index 'start + count'.
-			//		If 'count' is not provided, all the columns starting from 'start' will be returned.
-			//		If 'start' is not provided, it defaults to 0, so grid.columns() gets all the columns
-			return this._arr(this._columns.length, 'column', start, count);
+			// start: Integer?
+			//		The index of the first column in the returned array.
+			//		If omitted, defaults to 0, so grid.columns() gets all the columns.
+			// count: Integer?
+			//		The number of columns to return.
+			//		If omitted, all the columns starting from 'start' will be returned.
+			// returns:
+			//		An array of column objects
+			return this._arr(this._columns.length, 'column', start, count);	//gridx.core.Column[]
 		},
 
 		rows: function(start, count){
 			// summary:
-			//		Get a range of rows, similar to grid.columns
-			//		For async store, if some rows are not in cache, then there will be nulls in the returned array.
-			return this._arr(this.model.size(), 'row', start, count);
+			//		Get a range of rows, from index 'start' to index 'start + count'.
+			// description:
+			//		For async store, if some rows are not in cache, then there will be NULLs in the returned array.
+			// start: Integer?
+			//		The index of the first row in the returned array.
+			//		If omitted, defaults to 0, so grid.rows() gets all the rows.
+			// count: Integer?
+			//		The number of rows to return.
+			//		If omitted, all the rows starting from 'start' will be returned.
+			// returns:
+			//		An array of row objects
+			return this._arr(this.model.size(), 'row', start, count);	//gridx.core.Row[]
 		},
 		
 		//Private-------------------------------------------------------------------------------------
@@ -329,7 +405,7 @@ define([
 			return mixinArrayUtils(r);
 		},
 		
-		_preloadModules: function(){
+		_preload: function(){
 			var m, mods = this._modules;
 			for(m in mods){
 				m = mods[m];
@@ -339,15 +415,15 @@ define([
 			}
 		},
 
-		_loadModules: function(deferredStartup){
+		_load: function(deferredStartup){
 			var dl = [], m;
 			for(m in this._modules){
-				dl.push(this._initializeModule(deferredStartup, m));
+				dl.push(this._initMod(deferredStartup, m));
 			}
-			return new DeferredList(dl);
+			return new DeferredList(dl, 0, 1);
 		},
 		
-		_mixinComponent: function(component, name){
+		_mixin: function(component, name){
 			var m, a, mods = this._modules;
 			for(m in mods){
 				m = mods[m].mod;
@@ -360,35 +436,35 @@ define([
 			return component;
 		},
 	
-		_createModules: function(args){
-			var modules = args.modules, t = this, mods = t._modules = {},
-				i, mod, key, m;
-			for(i = 0; i < modules.length; ++i){
-				mod = modules[i];
-				key = mod.moduleClass.prototype.name;
+		_create: function(args){
+			var t = this,
+				mods = t._modules = {};
+			forEach(args.modules, function(mod){
+				var m, key = mod.moduleClass.prototype.name;
 				if(!mods[key]){
-					m = mods[key] = {
-						args: mod
+					mods[key] = {
+						args: mod,
+						mod: m = new mod.moduleClass(t, mod),
+						deps: getDepends(mod)
 					};
-					mod = m.mod = new mod.moduleClass(t, mod);
-					mod.forced = mod.forced || [];
-					mod.optional = mod.optional || [];
-					mod.loaded = new Deferred();
-					m.deps = mod.forced.concat(mod.optional);
-					if(mod.getAPIPath){
-						mixinAPI(t, mod.getAPIPath());
+					if(m.getAPIPath){
+						mixinAPI(t, m.getAPIPath());
 					}
 				}
-			}
+			});
 		},
 
-		_initializeModule: function(deferredStartup, key){
-			var t = this, mods = t._modules, m = mods[key], mod = m.mod,
-				dd = m.deferred, d = m.deferred = dd || mod.loaded;
-			if(!dd){
+		_initMod: function(deferredStartup, key){
+			var t = this,
+				mods = t._modules,
+				m = mods[key],
+				mod = m.mod,
+				d = mod.loaded;
+			if(!m.done){
+				m.done = 1;
 				new DeferredList(array.map(array.filter(m.deps, function(depModName){
 					return mods[depModName];
-				}), hitch(t, t._initializeModule, deferredStartup))).then(function(){
+				}), hitch(t, t._initMod, deferredStartup)), 0, 1).then(function(){
 					if(mod.load){
 						mod.load(m.args, deferredStartup);
 					}else if(d.fired < 0){

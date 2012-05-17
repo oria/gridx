@@ -27,7 +27,7 @@ define([
 		};
 	}
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.FormatSort", =====*/_Extension, {
 		name: 'formatSort',
 
 		priority: 50,

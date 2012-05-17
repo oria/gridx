@@ -5,10 +5,10 @@ define([
 	'../_Extension'
 ], function(declare, lang, json, _Extension){
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Sort", =====*/_Extension, {
 		name: 'sort',
 
-		priority: 20,
+		priority: 30,
 
 		constructor: function(model, args){
 			var t = this, bs = args.baseSort;
@@ -43,7 +43,7 @@ define([
 			if(lang.isArrayLike(sortSpec)){
 				for(i = 0; i < sortSpec.length; ++i){
 					s = sortSpec[i];
-					if(s.colId !== undefined){
+					if(s.colId){
 						s.attribute = c.columns ? (c.columns[s.colId].field || s.colId) : s.colId;
 					}else{
 						s.colId = s.attribute;

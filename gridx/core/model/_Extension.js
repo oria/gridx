@@ -8,7 +8,9 @@ define([
 		// summary:
 		//		Abstract base class for all model components (including cache)
 		constructor: function(model){
-			var t = this, c = 'connect', i = t.inner = model._model;
+			var t = this,
+				c = 'connect',
+				i = t.inner = model._model;
 			t._cnnts = [];
 			t.model = model;
 			model._model = t;
@@ -16,7 +18,6 @@ define([
 				t[c](i, 'onDelete', '_onDelete');
 				t[c](i, 'onNew', '_onNew');
 				t[c](i, 'onSet', '_onSet');
-				t[c](i, 'onSizeChange', '_onSizeChange');
 			}
 		},
 
@@ -44,23 +45,22 @@ define([
 			this.onDelete.apply(this, arguments);
 		},
 
-		_onSizeChange: function(){
-			this.onSizeChange.apply(this, arguments);
-		},
-
 		onNew: function(){},
 		onDelete: function(){},
 		onSet: function(){},
-		onSizeChange: function(){},
 
 		//Protected-----------------------------------------------------------------
 		_call: function(method, args){
-			var t = this, m = t[method], n = t.inner;
+			var t = this,
+				m = t[method],
+				n = t.inner;
 			return m ? m.apply(t, args || []) : n && n._call(method, args);
 		},
 
 		_mixinAPI: function(){
-			var i, m = this.model, args = arguments,
+			var i,
+				m = this.model,
+				args = arguments,
 				api = function(method){
 					return function(){
 						return m._model._call(method, arguments);

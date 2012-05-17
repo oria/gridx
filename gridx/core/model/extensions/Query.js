@@ -3,10 +3,10 @@ define([
 	'../_Extension'
 ], function(declare, _Extension){
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Query", =====*/_Extension, {
 		name: 'query',
 
-		priority: 30,
+		priority: 40,
 
 		constructor: function(model, args){
 			this.clear();

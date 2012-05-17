@@ -10,15 +10,16 @@ define([
 		forEach = array.forEach,
 		indexOf = array.indexOf;
 
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.ClientFilter", =====*/_Extension, {
 		// Not compatible with Map extension!
 		name: 'clientFilter',
 
-		priority: 10,
+		priority: 20,
 
 		constructor: function(model, args){
 			this.pageSize = args.pageSize || 100;
 			this._mixinAPI('filter', 'hasFilter');
+			model.onFilterProgress = function(){};
 			this.connect(model, '_msg', '_receiveMsg');
 		},
 
@@ -45,13 +46,10 @@ define([
 		},
 
 		byIndex: function(index){
-			var ids = this._ids, inner = this.inner;
-			if(ids){
-				var id = ids[index];
-				return id && inner._call('byId', [id]);
-			}else{
-				return inner._call('byIndex', arguments);
-			}
+			var ids = this._ids,
+				inner = this.inner,
+				id = ids && ids[index];
+			return ids ? id && inner._call('byId', [id]) : inner._call('byIndex', arguments);
 		},
 
 		byId: function(id){
@@ -85,7 +83,7 @@ define([
 			if(t._refilter){
 				t._refilter = 0;
 				if(t._ids){
-					var d = new Deferred();
+					var d = new Deferred;
 					t._reFilter().then(function(){
 						f().then(hitch(d, d.callback), hitch(d, d.errback));
 					});
@@ -102,13 +100,12 @@ define([
 		},
 
 		_filter: function(checker){
-			var d = new Deferred(),
-				t = this,
+			var t = this,
 				oldSize = t.size();
 			t.clear();
 			if(lang.isFunction(checker)){
 				var ids = [];
-				t.model.scan({
+				return t.model.scan({
 					start: 0,
 					pageSize: t.pageSize,
 					whenScope: t,
@@ -128,28 +125,19 @@ define([
 						}
 					}
 				}).then(function(){
-					var size = t.size();
-					if(ids.length == size){
+					if(ids.length == t.size()){
 						//Filtered item size equals cache size, so filter is useless.
 						t.clear();
 					}else{
 						t._ids = ids;
-						size = ids.length;
 						t.model._msg('filter', ids);
 					}
-					if(size != oldSize){
-						t.onSizeChange(size, oldSize, 'filter');
-					}
-					d.callback();
-				});
+				}, 0, t.model.onFilterProgress);
 			}else{
-				var size = t.size();
-				if(size !== oldSize){
-					t.onSizeChange(size, oldSize, 'filter');
-				}
+				var d = new Deferred;
 				d.callback();
+				return d;
 			}
-			return d;
 		},
 
 		_mapWhenArgs: function(args){
@@ -181,19 +169,20 @@ define([
 		},
 
 		_mapMoveArgs: function(args){
+			var t = this;
 			if(args.length == 3){
 				var indexes = [];
 				for(var i = args[0], end = args[0] + args[1]; i < end; ++i){
-					indexes.push(this._mapIndex(i));
+					indexes.push(t._mapIndex(i));
 				}
 				args[0] = indexes;
-				args[1] = this._mapIndex(args[2]);
+				args[1] = t._mapIndex(args[2]);
 				args.pop();
 			}else{
 				args[0] = array.map(args[0], function(index){
-					return this._mapIndex(index);
+					return t._mapIndex(index);
 				});
-				args[1] = this._mapIndex(args[1]);
+				args[1] = t._mapIndex(args[1]);
 			}
 		},
 
