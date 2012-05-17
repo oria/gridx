@@ -1,13 +1,22 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
-	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/XQueryReadStore',
-	'gridx/tests/support/modules',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/select/Row',
+	'gridx/tests/support/XQueryReadStore',	
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, XStore, modules){
-
-	grid = new Grid({
+], function(Grid, Cache, ColumnResizer, VirtualVScroller, selectRow, XStore){
+	var layout = [
+		{id: 'id', field: 'id', name: 'Identity'},
+		{id: 'Year', field: 'Year', name: 'Year'},
+		{id: 'Length', field: 'Length', name: 'Length'},
+		{id: 'Track', field: 'Track', name: 'Track'},
+		{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
+		{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
+		{id: 'Heard', field: 'Heard', name: 'Heard'}
+	];
+	var grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
 		cacheSize: 1000,
@@ -17,26 +26,20 @@ require([
 		store: new XStore({
 			idAttribute: 'id',
 			url: 'http://dojotoolkit.cn/data/?totalSize=1000000'
-		}),
-		
-		structure: dataSource.layouts[4],
+		}),		
+		structure: layout,
 		modules: [
-			modules.Focus,
-			modules.VirtualVScroller
+		    selectRow,
+		    ColumnResizer,
+			VirtualVScroller
 		]
+	});
+	var b = grid.body;
+	b.connect(b, 'renderRows', function(start, count){
+		if(count <= 0){
+			grid.emptyNode.innerHTML = '<b>Failed to load data from data service, please try it later.</b>';		
+		}
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();
-	
-	setWidth = function(){
-		var a = 20 + Math.random() * 200;
-		console.log(a);
-		grid.columnResizer.setWidth('Genre', a);
-	};
-
-	columnSetWidth = function(){
-		var a = 20 + Math.random() * 200;
-		console.log(a);
-		grid.column(3).setWidth(a);
-	};
 });

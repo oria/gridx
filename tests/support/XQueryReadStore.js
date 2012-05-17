@@ -195,7 +195,7 @@ return dojo.declare("gridx.tests.support.XQueryReadStore",
 			dojo.io.script.get({
 				url: this.url
 				,content: serverQuery
-				,timeout: 10000
+				,timeout: 20000
 				,preventCache: true
 				,callbackParamName: 'callback'
 				,handle: function(data){
