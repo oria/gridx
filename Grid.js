@@ -66,6 +66,7 @@ define([
 				t.modules = t.coreModules.concat(t.modules || []);
 				t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
 				domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
+				t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 				t._initEvents(t._compNames, t._eventNames);
 				t._reset(t);
 				t._postCreate();
