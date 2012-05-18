@@ -34,6 +34,7 @@ define([
 			this.connect(this.sltColumn, 'onChange', '_onColumnChange');
 			this.connect(this.sltCondition, 'onChange', '_onConditionChange');
 			this.comboText.dropDownClass = DistinctComboBoxMenu;
+			this._onConditionChange();//In the latest dijit, onChange event is no longer fired after creation
 		},
 	
 		getData: function(){
