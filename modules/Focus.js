@@ -81,7 +81,7 @@ define([
 			};
 			t.batchConnect(
 				[g.domNode, 'onkeydown', '_onTabDown'],
-				[g.firstFocusNode, 'onfocus', '_focus'],
+				[g.domNode, 'onfocus', '_focus'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
 				[g, 'onBlur', '_doBlur']
 			);
@@ -356,7 +356,7 @@ define([
 			var t = this;
 			if(t._tabingOut){
 				t._tabingOut = 0;
-			}else if(evt.target == t.grid.firstFocusNode){
+			}else if(evt.target == t.grid.domNode){
 				t._queueIdx = -1;
 				t.tab(1);
 			}else if(evt.target === t.grid.lastFocusNode){
