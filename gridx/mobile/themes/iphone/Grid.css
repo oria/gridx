@@ -46,10 +46,53 @@
 /*Load More Mixin*/
 .mobileGridxLoadMoreWrapper {
 	text-align: center;
+	padding: 10px 0;
 }
 .mobileGridxLoadMoreButton {
 	margin: 10px auto;
+	display: block;
+	width: 90%;
+	font-weight: bold;
+	color: #333;
+}
+.mobileGridxLoadingIcon {
+	width: 16px;
+	height: 16px;
+	background: transparent url(images/ajax-loader.gif) no-repeat 0 0;
+	margin-bottom: -3px;
+	margin-right: 10px;
+	
+}
+
+/*Pull Refresh Mixin*/
+.mobileGridxPullRefreshWrapper {
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	padding-top: 20px;
+	top: -60px;
+	width: 100%;
+	left: 0;
+	color: #777;
+	font-weight: bold;
+	font-size: 12px;
+	position: absolute;
+}
+
+.mobileGridxPullRefreshWrapper img{
+	width: 13px;
+	height: 18px;
+	background: transparent url(images/arrow.png) no-repeat 0 0;
+	margin-right: 10px;
+	margin-bottom: -5px;
+	-webkit-transition: all 0.2s;
+}
+.releaseToRefresh img{
+	-webkit-transform: rotate(-180deg);
+}
+
+.mobileGridxPullRefreshWrapper span {
 	display: inline-block;
-	padding: 5px;
-	width: 80%;
+	width: 150px;
+	text-align: left;
 }

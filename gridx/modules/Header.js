@@ -139,7 +139,8 @@ define([
 				g.bodyNode.style.width = w + 'px';
 				g.domNode.style.width = (g.hLayout.lead + g.hLayout.tail + w) + 'px';
 			}else{
-				t._onHScroll(g.hScrollerNode.scrollLeft);
+				//t._onHScroll(g.hScrollerNode.scrollLeft);
+				t.grid.hScroller && t.grid.hScroller._onScroll();
 			}
 		},
 

@@ -1,11 +1,17 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dijit/a11y",
 	"dojo/dom-construct",
-	"../core/_Module"
-], function(declare, lang, domConstruct, _Module){
+	"../core/_Module",
+	"../util"
+], function(kernel, declare, lang, array, a11y, domConstruct, _Module, util){
+
+	kernel.experimental('gridx/modules/Bar');
 	
-	return declare(/*===== "gridx.modules.GridBar", =====*/_Module, {
+	return declare(/*===== "gridx.modules.Bar", =====*/_Module, {
 		// summary:
 		//		This is a general-purpose bar for gridx. It can be configured to hold various plugins,
 		//		such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
@@ -41,6 +47,7 @@ define([
 						plugin.startup();
 					}
 				});
+				t._initFocus();
 				setTimeout(function(){
 					t.grid.vLayout.reLayout();
 				}, 10);
@@ -74,7 +81,13 @@ define([
 		_parse: function(defs, node){
 			var plugin,
 				plugins = [],
-				tbody = domConstruct.create('tbody');
+				tbody = domConstruct.create('tbody'),
+				setAttr = function(n, def, domAttr, attr){
+					if(def[attr]){
+						n.setAttribute(domAttr || attr, def[attr]);
+						delete def[attr];
+					}
+				};
 			if(!lang.isArray(defs[0])){
 				defs = [defs];
 			}
@@ -85,22 +98,8 @@ define([
 				for(var j = 0, colCount = row.length; j < colCount; ++j){
 					var def = this._normalizePlugin(row[j]),
 						td = domConstruct.create('td');
-					if(def.colSpan){
-						td.setAttribute('colspan', def.colSpan);
-						delete def.colSpan;
-					}
-					if(def.rowSpan){
-						td.setAttribute('rowspan', def.rowSpan);
-						delete def.rowSpan;
-					}
-					if(def.style){
-						td.setAttribute('style', def.style);
-						delete def.style;
-					}
-					if(def.className){
-						td.setAttribute('class', def.className);
-						delete def.className;
-					}
+					array.forEach(['colSpan', 'rowSpan', 'style'], lang.partial(setAttr, td, def, 0));
+					setAttr(td, def, 'class', 'className');
 					if(def.pluginClass){
 						var cls = def.pluginClass;
 						delete def.pluginClass;
@@ -159,6 +158,42 @@ define([
 			var plugins = this.plugins;
 			forEach(plugins.top);
 			forEach(plugins.bottom);
+		},
+
+		//Focus---------------------
+		_initFocus: function(){
+			var t = this,
+				f = t.grid.focus;
+			if(f){
+				function register(pos, priority){
+					if(t[pos + 'Node']){
+						f.registerArea({
+							name: pos + 'bar',
+							priority: priority,
+							focusNode: t[pos + 'Node'],
+							doFocus: lang.hitch(t, t._doFocus, pos),
+							doBlur: lang.hitch(t, t._doBlur, pos)
+						});
+					}
+				}
+				register('top', -10);
+				register('bottom', 10);
+			}
+		},
+
+		_doFocus: function(pos, evt, step){
+			util.stopEvent(evt);
+			var elems = a11y._getTabNavigable(this[pos + 'Node']),
+				node = elems[step < 0 ? 'last' : 'first'];
+			if(node){
+				node.focus();
+			}
+			return !!node;
+		},
+
+		_doBlur: function(pos, evt, step){
+			var elems = a11y._getTabNavigable(this[pos + 'Node']);
+			return evt ? evt.target == (step < 0 ? elems.first : elems.last) : true;
 		}
 	});
 });

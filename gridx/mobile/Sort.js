@@ -6,7 +6,6 @@ define([
 		//summary:
 		//	Provide sort api for the grid
 		//	and provide a single UI in the header like traditional grid sorting.
-		
 		sort: function(args){
 			//summary:
 			//	Sort the grid by args which in store sorting format.

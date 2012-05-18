@@ -1,0 +1,37 @@
+<div class="gridxQuickFilter ${_hasFilterBar}"
+	><span class="gridxQuickFilterInputContainer"
+		><input type="text" data-dojo-type="dijit.form.TextBox"
+			class="gridxQuickFilterInput"
+			data-dojo-attach-point="textBox"
+			data-dojo-props="placeHolder: '${placeHolder}'"
+		/><span class="gridxQuickFilterClear"
+			data-dojo-attach-event="onclick: _clear"
+			title="${clearButtonTitle}"
+			><span class="gridxQuickFilterClearInner">x</span
+		></span
+	></span
+	><button data-dojo-type="${buttonClass}"
+		class="gridxQuickFilterButton"
+		data-dojo-props="
+			showLabel: false,
+			title: '${filterButtonTitle}',
+			iconClass: 'gridxQuickFilterIcon'"
+		data-dojo-attach-event="onClick: _filter"
+	></button
+	><button data-dojo-type="${comboButtonClass}"
+		class="gridxQuickFilterComboButton"
+		data-dojo-props="
+			showLabel: false,
+			title: '${filterButtonTitle}',
+			iconClass: 'gridxQuickFilterIcon'"
+		data-dojo-attach-event="onClick: _filter"
+		><span data-dojo-type="${menuClass}">
+			<span data-dojo-type="${menuItemClass}"
+				data-dojo-attach-event="onClick: _filter"
+			>${filterMenuLabel}</span
+			><span data-dojo-type="${menuItemClass}"
+				data-dojo-attach-event="onClick: _showFilterBar"
+			>${buildFilterMenuLabel}</span
+		></span
+	></button
+></div>

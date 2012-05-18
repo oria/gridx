@@ -31,6 +31,7 @@ require([
 			['Indirect Select', 'test_grid_indirectSelect', 'indirectselect.png', 'A useful enhancement for row selection, to better demonstrate the selected/unselected status of rows by means of check boxes.'],
 			['Column Lock', 'test_grid_columnLock', 'columnlock.png', 'Lock up some of the grid columns so that they don\'t move out of view when the grid body is horizontally scrolled.'],
 			['Details on Demand', 'test_grid_dod', 'dod.png', '<b>Experimental</b> - A pretty feature providing the ability for rows to expand. Various arguments available to support different use cases.'],
+			['Smart Bar', 'test_grid_bar', 'bar.png', '<b>Experimental</b> - An extremely flexible bar that supports any combinations of widgets e.g QuickFilter, Pagers or Dijit widgets.'],
 			['DnD columns/rows within Grid', 'test_grid_dnd_rearrange', 'dnd.png', 'Rearrange grid rows and columns by drag & drop'],
 			['DnD rows between grid', 'test_grid_dndrow_betweengrids', 'dnd2.png', 'Drag and drop grid rows to other grids.'],
 			['DnD rows from/to non-grid sources', 'test_grid_dndrow_nongrid_source', 'dnd3.png', 'Drag and drop grid rows between grid and non-grid sources.'],

@@ -54,7 +54,7 @@ define([
 		}
 		//Firefox seems have problem to get offsetX for TH
 		if(sniff('ff') && /th/i.test(target.tagName)){
-			var d = lx - parseInt(cell.parentNode.parentNode.parentNode.style.marginLeft, 10) 
+			var d = lx - parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, 'marginLeft'), 10) 
 				- cell.offsetLeft - cell.offsetParent.offsetLeft;
 			if(d >= 0){
 				lx = d;
@@ -246,14 +246,18 @@ define([
 				win.doc.onselectstart = null;
 				
 				var cell = t._targetCell,
-					delta = e.pageX - t._startX,
-					w = (sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width')) + delta,
+					delta = e.pageX - t._startX;
+				if(!t.grid.isLeftToRight()){
+					delta = -delta;
+				}
+				var	w = (sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width')) + delta,
 					minWidth = t.arg('minWidth');
 				if(w < minWidth){
 					w = minWidth;
 				}
 				t.setWidth(cell.getAttribute('colid'), w);
 				t._hideResizer();
+				
 			}
 		},
 		
@@ -261,14 +265,23 @@ define([
 			var t = this,
 				cell = getCell(e),
 				x = getCellX(e),
-				detectWidth = t.arg('detectWidth');
-			
+				detectWidth = t.arg('detectWidth'),
+				ltr = t.grid.isLeftToRight();
 			if(x < detectWidth){
 				//If !t._targetCell, the first cell is not able to be resize
-				return !!(t._targetCell = cell.previousSibling);
+				if(ltr){
+					return !!(t._targetCell = cell.previousSibling);
+				}else{
+					t._targetCell = cell;
+					return 1;
+				}
 			}else if(x > cell.offsetWidth - detectWidth && x <= cell.offsetWidth){
-				t._targetCell = cell;
-				return 1;	//1 as true
+				if(ltr){
+					t._targetCell = cell;
+					return 1;	//1 as true
+				}else{
+					return !!(t._targetCell = cell.previousSibling);
+				}
 			}
 			return 0;	//0 as false
 		}
