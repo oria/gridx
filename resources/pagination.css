@@ -117,3 +117,11 @@
 .gridxPagerLabel {
 	vertical-align: middle;
 }
+
+/* LinkPage in GridBar */
+.gridxLinkPager {
+	padding: 5px;
+}
+.gridxLinkSizer {
+	padding: 5px;
+}

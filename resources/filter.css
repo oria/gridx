@@ -217,3 +217,43 @@
 	text-align: right;
 	margin-top: 10px;
 }
+
+/* QuickFilter */
+.gridxQuickFilterInputContainer {
+	position: relative;
+	margin-right: 2px;
+}
+
+.gridxQuickFilterInput {
+	width: 150px;
+}
+
+.gridxQuickFilterClear {
+	background: transparent url(images/sprite_icons.png) no-repeat -178px 5px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
+	display: none;
+}
+
+.gridxQuickFilterClearInner {
+	display: none;
+}
+
+.gridxQuickFilterActive .gridxQuickFilterClear {
+	display: block;
+}
+
+.gridxQuickFilterIcon {
+	width: 19px;
+	height: 19px;
+	background: transparent url(images/sprite_icons.png) no-repeat -98px -15px;
+}
+
+.gridxQuickFilterNoFilterBar .gridxQuickFilterComboButton,
+.gridxQuickFilterHasFilterBar .gridxQuickFilterButton {
+	display: none;
+}

@@ -8,9 +8,9 @@
 	cursor: default;
 }
 .gridxDnDAnchor {
-	width:2px;
+	width: 2px;
 	background-color: gray;
-	font-size:0em;
+	font-size: 0em;
 	position:absolute;
 	z-index: 998;
 }
