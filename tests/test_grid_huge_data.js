@@ -26,19 +26,14 @@ require([
 		store: new XStore({
 			idAttribute: 'id',
 			url: 'http://dojotoolkit.cn/data/?totalSize=1000000'
-		}),		
+		}),
 		structure: layout,
+		bodyLoadFailInfo: '<b>Failed to load data from data service, please try it later.</b>',
 		modules: [
 		    selectRow,
 		    ColumnResizer,
 			VirtualVScroller
 		]
-	});
-	var b = grid.body;
-	b.connect(b, 'renderRows', function(start, count){
-		if(count <= 0){
-			grid.emptyNode.innerHTML = '<b>Failed to load data from data service, please try it later.</b>';		
-		}
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();

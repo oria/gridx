@@ -205,8 +205,9 @@ return dojo.declare("gridx.tests.support.XQueryReadStore",
 				}
 				,load: function(data){
 				}
-				,error: function(){
+				,error: function(e){
 					console.debug('error to send jsonp.');
+					errorHandler(e, request);
 				}
 			});
 			
