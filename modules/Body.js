@@ -39,7 +39,7 @@ define([
 			//		protected extended
 			var t = this, g = t.grid,
 				dn = t.domNode = g.bodyNode;
-			g.emptyNode.innerHTML = nls.loadingInfo;
+			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t._initFocus();
 		},
@@ -70,6 +70,9 @@ define([
 				var rc = t.rootCount;
 				rc = t.rootCount = rc ? rc : m.size();
 				t.visualCount = g.tree ? g.tree.getVisualSize(t.rootStart, rc) : rc;
+				t.loaded.callback();
+			}).then(null, function(e){
+				t._loadFail(e);
 				t.loaded.callback();
 			});
 		},
@@ -185,6 +188,7 @@ define([
 			// returns:
 			//		A deferred object indicating when the refreshing process is finished.
 			var t = this;
+			delete t._err;
 			return t.model.when({}).then(function(){	//dojo.Deferred
 				var rs = t.renderStart, rc = t.renderCount;
 				if(typeof start == 'number' && start >= 0){
@@ -213,6 +217,8 @@ define([
 					t.renderRows(rs, rc, 0, 1);
 					t.onForcedScroll();
 				}
+			}, function(e){
+				t._loadFail(e);
 			});
 		},
 	
@@ -308,10 +314,19 @@ define([
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
 			// tags:
 			//		private
-			var t = this, g = t.grid, str = '', uncachedRows = [], 
-				renderedRows = [], n = t.domNode, en = g.emptyNode;
+			var t = this,
+				g = t.grid,
+				str = '',
+				uncachedRows = [], 
+				renderedRows = [],
+				n = t.domNode,
+				en = g.emptyNode,
+				emptyInfo = t.arg('emptyInfo', nls.emptyInfo);
+			if(t._err){
+				return;
+			}
 			if(count > 0){
-				en.innerHTML = nls.loadingInfo;
+				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
@@ -336,7 +351,7 @@ define([
 					n.innerHTML = str;
 					n.scrollTop = scrollTop;
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
-					en.innerHTML = str ? "" : nls.emptyInfo;
+					en.innerHTML = str ? "" : emptyInfo;
 					t.onUnrender();
 				}
 				for(var i = 0, len = renderedRows.length; i < len; ++i){
@@ -348,7 +363,7 @@ define([
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
 				n.innerHTML = '';
-				en.innerHTML = nls.emptyInfo;
+				en.innerHTML = emptyInfo;
 				t.onUnrender();
 				t.model.free();
 			}
@@ -439,11 +454,25 @@ define([
 		},
 
 		_buildUncachedRows: function(uncachedRows){
-			return uncachedRows.length && this.model.when(uncachedRows, function(){
-				for(var i = 0, len = uncachedRows.length; i < len; ++i){
-					this._buildRowContent(uncachedRows[i]);
+			var t = this;
+			return uncachedRows.length && t.model.when(uncachedRows, function(){
+				try{
+					for(var i = 0, len = uncachedRows.length; i < len; ++i){
+						t._buildRowContent(uncachedRows[i]);
+					}
+				}catch(e){
+					t._loadFail(e);
 				}
-			}, this);
+			}).then(null, function(e){
+				t._loadFail(e);
+			});
+		},
+
+		_loadFail: function(e){
+			console.error(e);
+			this.grid.emptyNode.innerHTML = this.arg('loadFailInfo', nls.loadFailInfo);
+			this.domNode.innerHTML = '';
+			this._err = 1;	//1 as true;
 		},
 	
 		_buildRowContent: function(rowInfo){
@@ -459,7 +488,7 @@ define([
 					n.innerHTML = t._buildCells(rowCache.data, rowInfo);
 					t.onAfterRow(rowInfo, rowCache);
 				}else{
-					console.error('Row is not in cache:', rowInfo.rowIndex);
+					throw new Error('Row is not in cache:' + rowInfo.rowIndex);
 				}
 			}
 		},
