@@ -1,22 +1,16 @@
-define('dojox/grid/gridx/modules/TestMod', [
-'dojo',
-'dojox/grid/gridx/core/_Module'
-//Add more requirements here
-], function(dojo, _Module){
+define([
+	'dojo/_base/declare',
+	'../core/_Module'
+	//Add more requirements here
+], function(declare, _Module){
 
-//If there is some oppotunity that this module could be depended on by some other module (e.g.: moduleB),
-//then it's recommended to register it, so that users won't need to explictly declare this module
-//when he is declaring that moduleB.
-return gridx.core.register(
-//Note there's a little trick here: dojo.declare returns the class function itself
-
-dojo.declare('gridx.modules.TestMod', _Module, {
+return declare(_Module, {
 	// [Module Dependency Management] --------------------------------------------
 	
 	//Every module needs a name. 
 	//It could be the same as another module's, which means that module's public API is the same as this one's.
 	//If this name is omitted, the long class name will be used ('gridx.modules.TestMod' in this case),
-	name: 'myTestMod',	
+	name: 'myTestMod',
 	
 	//Forced dependency modules must also exist if this module exists. 
 	//They also need to be loaded before this module. 
@@ -28,7 +22,7 @@ dojo.declare('gridx.modules.TestMod', _Module, {
 	
 	//Optional dependency modules do not need to exist if this module exists.
 	//But if they do exist, they must be loaded before this one.
-	optional: ['someCoolMod'],
+	optional: ['someCoolMod', 'someOtherCoolMod'],
 	
 	// [Module API Management] ---------------------------------------------------
 	
@@ -109,7 +103,8 @@ dojo.declare('gridx.modules.TestMod', _Module, {
 		
 		var node = this.domNode = dojo.create('div');
 		//do something to initialize the 'node' here.
-		node.innerHTML = "Test Module!";
+		//Access module arguments by arg method, so that module arguments can be declared as grid arguments.
+		node.innerHTML = this.arg('info');	
 		
 		var _this = this;
 		deferStartup.then(function(){
@@ -132,6 +127,9 @@ dojo.declare('gridx.modules.TestMod', _Module, {
 	},
 	
 	// [Public API] --------------------------------------------------------
+	
+	info: 'Test Module!',
+
 	testRow: function(id){
 		//Do actual work here
 		console.log("testing row: ", id);
@@ -144,5 +142,5 @@ dojo.declare('gridx.modules.TestMod', _Module, {
 	
 	// [Private methods] -------------------------------------------------------
 	//.......
-}));	
+});
 });
