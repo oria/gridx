@@ -20,7 +20,7 @@ define([
 	TextBox, Button, ComboButton, Menu, MenuItem,
 	F, nls, template){
 
-	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+	return declare(/*===== "gridx.modules.barPlugins.QuickFilter", =====*/[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: template,
 
 		postMixInProperties: function(){
@@ -101,7 +101,7 @@ define([
 				}
 			}else{
 				g.filter.setFilter(v === '' ? 0 : F.or.apply(0, array.map(cols, function(col){
-					return F.contain(F.column(col.id), F.value(str));
+					return F.contain(F.column(col.id), F.value(v));
 				})));
 			}
 		},

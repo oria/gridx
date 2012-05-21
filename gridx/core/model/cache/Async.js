@@ -351,7 +351,7 @@ define([
 					t._mergePendingRequests(
 						t._findMissingIndexes(mergeRanges(args))), t.pageSize);
 			var ranges = size > 0 ? array.filter(args.range, function(r){
-				if(r.count > 0 && size > r.start + r.count){
+				if(r.count > 0 && size < r.start + r.count){
 					r.count = size - r.start;
 				}
 				return r.start < size;

@@ -10,7 +10,7 @@ define([
 
 	var hasClass = domClass.contains;
 
-	return declare(/*===== "gridx.modules.bar.LinkSizer", =====*/_LinkPageBase, {
+	return declare(/*===== "gridx.modules.barPlugins.LinkSizer", =====*/_LinkPageBase, {
 		templateString: '<div class="gridxLinkSizer" data-dojo-attach-event="onclick: _changePageSize, onmouseover: _onHover, onmouseout: _onHover"></div>',
 
 		postMixInProperties: function(){
