@@ -10,7 +10,7 @@ define([
 	"dijit/form/NumberTextBox"
 ], function(declare, lang, string, _LinkPageBase, GotoPagePane, nls, Dialog, Button, NumberTextBox){
 	
-	return declare(/*===== "gridx.modules.bar.GotoPageButton", =====*/_LinkPageBase, {
+	return declare(/*===== "gridx.modules.barPlugins.GotoPageButton", =====*/_LinkPageBase, {
 		templateString: "<span class='gridxPagerGotoBtn' tabindex='${_tabIndex}' title='${gotoBtnTitle}' aria-label='${gotoBtnWai}' data-dojo-attach-event='onclick: _showGotoDialog'><span class='gridxPagerA11yInner'>&perp;</span>",
 
 		gotoPagePane: GotoPagePane,

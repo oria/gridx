@@ -11,7 +11,7 @@ define([
 
 	var hasClass = domClass.contains;
 
-	return declare(/*===== "gridx.modules.bar.LinkPager", =====*/_LinkPageBase, {
+	return declare(/*===== "gridx.modules.barPlugins.LinkPager", =====*/_LinkPageBase, {
 		templateString: template,
 
 		postMixInProperties: function(){

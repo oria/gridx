@@ -4,13 +4,13 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
-	'gridx/modules/bar/Summary',
-	'gridx/modules/bar/LinkPager',
-	'gridx/modules/bar/LinkSizer',
-	'gridx/modules/bar/DropDownPager',
-	'gridx/modules/bar/DropDownSizer',
-	'gridx/modules/bar/GotoPageButton',
-	'gridx/modules/bar/QuickFilter',
+	'gridx/modules/barPlugins/Summary',
+	'gridx/modules/barPlugins/LinkPager',
+	'gridx/modules/barPlugins/LinkSizer',
+	'gridx/modules/barPlugins/DropDownPager',
+	'gridx/modules/barPlugins/DropDownSizer',
+	'gridx/modules/barPlugins/GotoPageButton',
+	'gridx/modules/barPlugins/QuickFilter',
 	'dijit/Toolbar',
 	'dijit/form/Button',
 	'dijit/form/ToggleButton',
@@ -40,16 +40,16 @@ require([
 		barTop: [
 			[
 				'dijit/Toolbar',
-				{pluginClass: LinkPager, 'class': 'linkPager'},
-				{pluginClass: DropDownSizer, 'class': 'dropDownSizer'},
-				{pluginClass: QuickFilter, 'class': 'quickFilter'}
+				{pluginClass: LinkPager, 'className': 'linkPager'},
+				{pluginClass: DropDownSizer, 'className': 'dropDownSizer'},
+				{pluginClass: QuickFilter, 'className': 'quickFilter'}
 			]
 		],
 		barBottom: [
 		    Summary,
-			{pluginClass: LinkSizer, 'class': 'linkSizer'},
-			{pluginClass: LinkPager, 'class': 'linkPager'},
-			{pluginClass: DropDownSizer, 'class': 'dropDownSizer'},
+			{pluginClass: LinkSizer, 'className': 'linkSizer'},
+			{pluginClass: LinkPager, 'className': 'linkPager'},
+			{pluginClass: DropDownSizer, 'className': 'dropDownSizer'},
 			{pluginClass: DropDownPager, style: 'text-align: center;'},
 			GotoPageButton
 		]

@@ -6,7 +6,7 @@ define([
 	"dojo/i18n!../../nls/SummaryBar"
 ], function(declare, string, _WidgetBase, _TemplatedMixin, nls){
 	
-	return declare(/*===== "gridx.modules.bar.Summary", =====*/[_WidgetBase, _TemplatedMixin], {
+	return declare(/*===== "gridx.modules.barPlugins.Summary", =====*/[_WidgetBase, _TemplatedMixin], {
 		templateString: '<div class="gridxSummary"></div>',
 
 		grid: null,

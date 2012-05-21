@@ -9,7 +9,7 @@ define([
 	"dijit/form/Select"
 ], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, Select){
 
-	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
+	return declare(/*===== "gridx.modules.barPlugins.DropDownSizer", =====*/[_WidgetBase, _FocusMixin, _TemplatedMixin], {
 		templateString: '<div class="gridxDropDownSizer"><label class="gridxPagerLabel">${pageLabel}</label></div>',
 
 		constructor: function(args){
