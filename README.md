@@ -29,7 +29,8 @@ GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2
 
 ## Quick ways to know GridX
 
-* [Feature Matrix](https://docs.google.com/spreadsheet/pub?key=0AgR1KOpszcsZdF9ZbW5hWFdYUFAzdjdhZi1xcGMwUVE&output=html)
+* [Feature Coverage](https://docs.google.com/spreadsheet/pub?key=0AgR1KOpszcsZdF9ZbW5hWFdYUFAzdjdhZi1xcGMwUVE&gid=1)
+* [Module Compatibility Matrix](https://docs.google.com/spreadsheet/pub?key=0AgR1KOpszcsZdF9ZbW5hWFdYUFAzdjdhZi1xcGMwUVE&gid=0)
 * [Demo gallery](http://evanhw.github.com/gridx/gridx/gallery/gallery.html)
 * [Benchmaks]() (in progress)
 * [Tutorial](https://github.com/evanhw/gridx/wiki/Introduction-to-Gridx) (in progress)
