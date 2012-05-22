@@ -47,7 +47,5 @@ Please check out [GridX Home Site]() for more details on how GridX can help you.
 * Xiao Wen Zhu (Oliver) - IBM, CCLA
 * Pei Wang (Nate) - IBM, CCLA
 * Wei Huang (Evan) -  Dojo Committer
-* Yang Liu (Elaine) - IBM, CCLA
-* Si Qi Zhong (SiQi) - IBM, CCLA
 
 Please contact [Wei Huang (Evan)](mailto:evanhuangwei@gmail.com) if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.
