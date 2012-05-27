@@ -37,8 +37,12 @@ define([
 		preload: function(){
 			// tags:
 			//		protected extended
-			var t = this, g = t.grid,
+			var t = this,
+				g = t.grid,
 				dn = t.domNode = g.bodyNode;
+			if(t.arg('rowHoverEffect')){
+				domClass.add(dn, 'gridxBodyRowHoverEffect');
+			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t._initFocus();
@@ -111,6 +115,7 @@ define([
 		},
 	
 		//Public-----------------------------------------------------------------------------
+		rowHoverEffect: true,
 		/*
 		 * infoArgs: {
 		 *		rowId
@@ -212,6 +217,7 @@ define([
 					}
 					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 						t.onRender(start, count);
+						t.onForcedScroll();
 					});
 				}else{
 					t.renderRows(rs, rc, 0, 1);

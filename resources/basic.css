@@ -59,7 +59,6 @@
 	border: none;
 	table-layout: fixed;
 	width: 1px;
-	height: 100%;
 }
 
 .gridxHeaderRow .gridxCell {
@@ -105,7 +104,7 @@
     -khtml-box-sizing: border-box; /* konqueror */
 }
 
-.gridx .gridxRowOver .gridxRowTable {
+.gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
 	background-color: #cee8f2;
 }
 
