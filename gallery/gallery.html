@@ -6,8 +6,10 @@
 		<link rel="stylesheet" href="../../dojo/resources/dojo.css" />
 		<link rel="stylesheet" href="../../dijit/themes/claro/claro.css" />
 		<link rel="stylesheet" href="gallery.css" />
-		<script type='text/javascript' src='../../dojo/dojo.js' data-dojo-config='isDebug: false, async: true'></script>
-		<script type='text/javascript' src='gallery.js'></script>
+		<script type='text/javascript' src='../../dojo/dojo.js' data-dojo-config="isDebug: false, async: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+		<script type="text/javascript">
+			require(["gridx/gallery/gallery"]);
+		</script>		
 	</head>
 	<body class='claro'>
 		<div class='viewport'>
