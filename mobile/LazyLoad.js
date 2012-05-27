@@ -24,7 +24,7 @@ define([
 			}, this.bodyPane.containerNode, 'last');
 			this._buttonLoadMore = dom.create('button', { 
 				innerHTML: 'Load more',
-				className: 'mobileGridxLoadMoreButton mblButton',
+				className: 'mobileGridxLoadMoreButton mblButton'
 			}, wrapper, 'last');
 			this.connect(this._buttonLoadMore, 'onclick', 'loadMore');
 		},
