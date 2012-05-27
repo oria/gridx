@@ -3,6 +3,7 @@ define([
 	"dijit",
 	"dojo/_base/declare",
 	"dojo/dom-construct",
+	"dojo/dom-attr",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
@@ -19,7 +20,7 @@ define([
 	"dojo/query",
 	"dojo/parser",
 	"dojo/string"
-], function(dojo, dijit, declare, domConstruct, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(dojo, dijit, declare, domConstruct, domAttr, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -294,8 +295,17 @@ define([
 				});
 			}
 			if(dlg.open){return;}
-			dlg.setData(this.filterData);
+			//Fix #7345: If there exists filterData, it should be set after dlg is shown;
+			//If there is no filterData, dlg.setData have to be called before dlg.show(),
+			//otherwise, the dlg will not show any condition boxes.
+			//TODO: Need more investigation on this to make the logic more reasonable!
+			if(!this.filterData){
+				dlg.setData(this.filterData);
+			}
 			dlg.show();
+			if(this.filterData){
+				dlg.setData(this.filterData);
+			}
 		},
 		
 		uninitialize: function(){
@@ -355,6 +365,7 @@ define([
 			this.btnFilter = dijit.byNode(dojo.query('.dijitButton', this.domNode)[0]);
 			this.btnClose = dojo.query('.gridxFilterBarCloseBtn', this.domNode)[0];
 			this.statusNode = dojo.query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
+			domAttr.remove(this.btnFilter.focusNode, 'aria-labelledby');
 			//this.connect(this.btnFilter, 'onClick', 'showFilterDialog');	
 		},
 		

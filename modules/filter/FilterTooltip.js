@@ -24,7 +24,9 @@ define([
 			this.connect(this, 'onClick', '_onClick');
 			this.connect(this, 'onMouseEnter', '_onMouseEnter');
 			this.connect(this, 'onMouseLeave', '_onMouseLeave');
-			dojo.addClass(this.domNode, 'gridxFilterTooltip');
+			//Now we need dijitTooltipBelow here, but this should be done by the TooltipDialog,
+			//so maybe we'll remove this in the future.
+			dojo.addClass(this.domNode, 'gridxFilterTooltip dijitTooltipBelow');
 		},
 		show: function(evt){
 			this.inherited(arguments);
