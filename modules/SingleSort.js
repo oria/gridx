@@ -14,9 +14,6 @@ define([
 
 		forced: ['header'],
 
-		//Header has required this
-//        required: ['vLayout'],
-
 		modelExtensions: [Sort],
 		
 		getAPIPath: function(){
@@ -176,18 +173,22 @@ define([
 		//Private--------------------------------------------------------------
 		_sortId: null,
 
-		_sortDescend: null, 
+		_sortDescend: null,
 		
 		_initHeader: function(colId){
-			//1 for true, 0 for false
-			var	headerCell = this.grid.header.getHeaderNode(colId);
-			headerCell.innerHTML = ["<div class='gridxSortNode'>", this.grid.column(colId, 1).name(), "</div>"].join('');
-			headerCell.removeAttribute('aria-sort');
+			var g = this.grid,
+				headerCell = g.header.getHeaderNode(colId),
+				col = g.column(colId, 1);	//1 as true
+			headerCell.innerHTML = ["<div class='gridxSortNode'>", col.name(), "</div>"].join('');
+			if(col.isSortable()){
+				headerCell.setAttribute('aria-sort', 'none');
+			}else{
+				headerCell.removeAttribute('aria-sort');
+			}
 		},
 	
 		_updateHeader: function(colId, isDescending){
 			//Change the structure of sorted header
-			//1 for true, 0 for false
 			var t = this;
 			if(t._sortId && t._sortId != colId){
 				t._initHeader(t._sortId);
@@ -201,7 +202,7 @@ define([
 				"'><div class='gridxArrowButtonChar'>",
 				isDescending ? "&#9662;" : "&#9652;",
 				"</div><div role='presentation' class='gridxArrowButtonNode'></div><div class='gridxColCaption'>",
-				g.column(colId, 1).name(),
+				g.column(colId, 1).name(),	//1 as true
 				"</div></div>"
 			].join('');
 			headerCell.setAttribute('aria-sort', isDescending ? 'descending' : 'ascending');

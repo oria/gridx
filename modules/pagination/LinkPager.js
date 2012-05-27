@@ -125,10 +125,11 @@ define([
 					stepper = function(page){
 						return ['<span class="gridxPagerStepperBtn gridxPagerPage ',
 							currentPage == page ? 'gridxPagerStepperBtnActive' : '',
+							'" aria-pressed="', currentPage == page ? 'true' : 'false',
 							'" pageindex="', page,
 							'" title="', substitute(nlsArr[0], [page + 1]),
 							'" aria-label="', substitute(nlsArr[1], [page + 1]),
-							'" tabindex="', tabIndex, '">', substitute(nlsArr[2], [page + 1]),
+							'" role="button" tabindex="', tabIndex, '">', substitute(nlsArr[2], [page + 1]),
 						'</span>'].join('');
 					};
 				if(pageCount){
@@ -167,6 +168,8 @@ define([
 				}
 				toggle(t._nextPageBtn, 'gridxPagerStepperBtnDisable gridxPagerNextPageDisable', disableNext);
 				toggle(t._prevPageBtn, 'gridxPagerStepperBtnDisable gridxPagerPrevPageDisable', disablePrev);
+				t._nextPageBtn.setAttribute('aria-disabled', disableNext);
+				t._prevPageBtn.setAttribute('aria-disabled', disablePrev);
 		
 				if(t._focusArea() == t.position + 'PageStepper'){
 					t._findNextPageStepperBtn();
@@ -226,10 +229,11 @@ define([
 					}
 					sb.push('<span class="gridxPagerSizeSwitchBtn ',
 						currentSize === pageSize ? 'gridxPagerSizeSwitchBtnActive' : '',
+						'" aria-pressed="', currentSize === pageSize ? 'true' : 'false',
 						'" pagesize="', pageSize,
 						'" title="', isAll ? nlsArr[3] : substitute(nlsArr[0], [pageSize]),
 						'" aria-label="', isAll ? nlsArr[4] : substitute(nlsArr[1], [pageSize]),
-						'" tabindex="', tabIndex, '">', isAll ? nlsArr[5] : substitute(nlsArr[2], [pageSize]),
+						'" role="button" tabindex="', tabIndex, '">', isAll ? nlsArr[5] : substitute(nlsArr[2], [pageSize]),
 						'</span>',
 						//Separate the "separator, so we can pop the last one.
 						'<span class="gridxPagerSizeSwitchSeparator">' + separator + '</span>');
@@ -257,6 +261,7 @@ define([
 				var cls = mod.arg('dialogClass'),
 					gppane = mod.arg('gotoPagePane'),
 					props = lang.mixin({
+						'class': 'gridxGotoPageDialog',
 						title: t.gotoDialogTitle,
 						content: new gppane({
 							pager: t

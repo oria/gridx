@@ -138,6 +138,7 @@ define([
 			// tags:
 			//		protected extension
 			var t = this;
+			t.grid.domNode.removeAttribute('aria-readonly');
 			t.connect(t.grid, 'onCellDblClick', '_onUIBegin');
 			t.connect(t.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
 			t._initAlwaysEdit();
