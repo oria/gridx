@@ -21,14 +21,13 @@ require([
 		selectRowTriggerOnCell: true,
 		modules: [
 			filter,
-//            mods.Focus,
 			mods.SingleSort,
 			mods.VirtualVScroller,
+			mods.Focus,
 //            mods.SelectRow,
 			{
 				moduleClass: filterBar,
-				maxRuleCount: 3,
-			
+				maxRuleCount: 2,
 				ruleCountToConfirmClearFilter: 2
 			}
 		],

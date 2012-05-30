@@ -135,6 +135,7 @@ define([
 			this._nls = locale;
 			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
 			this._initWidgets();
+			this._initFocus();
 			this.refresh();
 			//this._buildFilterState();
 			this.connect(this.domNode, 'onclick', 'onDomClick');
@@ -504,6 +505,61 @@ define([
 			if(m < 10){m = '0' + m;}
 			return h + ':' + m + ':00';
 		},
+		
+		_initFocus: function(){
+			var focus = this.grid.focus;
+			console.log('initing focus');
+			if(focus){
+				focus.registerArea({
+					name: 'filterbar_btn',
+					priority: -1,
+					focusNode: this.btnFilter.domNode,
+					doFocus: this._doFocusBtnFilter,
+					scope: this
+				});
+				
+				focus.registerArea({
+					name: 'filterbar_clear',
+					priority: -0.9,
+					focusNode: this.domNode,
+					doFocus: this._doFocusClearLink,
+					scope: this
+				});
+				
+				focus.registerArea({
+					name: 'filterbar_close',
+					priority: -0.8,
+					focusNode: this.btnClose,
+					doFocus: this._doFocusBtnClose,
+					scope: this
+				});
+			}
+		},
+		_doFocusBtnFilter: function(evt){
+			this.btnFilter.focus();
+			if(evt)if(evt){dojo.stopEvent(evt);}
+			return true;
+		},
+		_doFocusClearLink: function(evt){
+			this.btnFilter.focus();
+			var link = dojo.query('a[action="clear"]')[0];
+			if(link){
+				link.focus();
+				if(evt){dojo.stopEvent(evt);}
+				return true;
+			}
+			return false;
+		},
+		_doFocusBtnClose: function(evt){
+			this.btnClose.focus();
+			if(evt){dojo.stopEvent(evt);}
+			return true;
+		},
+		
+		_doBlur: function(){
+			return true;
+		},
+		
 		destroy: function(){
 			domConstruct.destroy(this.domNode);
 			this.inherited(arguments);
