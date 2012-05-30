@@ -11,6 +11,7 @@ define([
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
 
+	
 	return declare(/*===== "gridx.core.model.Model", =====*/[], {
 		// summary:
 		//		This class handles all of the data logic in grid.
@@ -21,6 +22,7 @@ define([
 		//		An instance of this class can be regarded as a stand-alone logic grid providing consistent data processing 
 		//		functionalities. This class can even be instanticated alone without any grid UI.
 
+		
 		constructor: function(args){
 			var t = this,
 				c = 'connect',
@@ -139,6 +141,7 @@ define([
 		},
 		=====*/
 
+		
 		when: function(args, callback, scope){
 			// summary:
 			//		Call this method to make sure all the pending data operations are executed and
@@ -183,6 +186,7 @@ define([
 			return this._exec();	//dojo.Deferred
 		},
 	
+		
 		scan: function(args, callback){
 			// summary:
 			//		Go through all the rows in several batches from start to end (or according to given args),

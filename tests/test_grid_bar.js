@@ -40,16 +40,16 @@ require([
 		barTop: [
 			[
 				'dijit/Toolbar',
-				{pluginClass: LinkPager, 'className': 'linkPager'},
-				{pluginClass: DropDownSizer, 'className': 'dropDownSizer'},
-				{pluginClass: QuickFilter, 'className': 'quickFilter'}
+				{pluginClass: QuickFilter, className: 'quickFilter', colSpan: 2}
+			],
+			[
+				{pluginClass: LinkPager, className: 'linkPager'},
+				Summary,
+				{pluginClass: DropDownSizer, className: 'dropDownSizer'}
 			]
 		],
 		barBottom: [
-		    Summary,
-			{pluginClass: LinkSizer, 'className': 'linkSizer'},
-			{pluginClass: LinkPager, 'className': 'linkPager'},
-			{pluginClass: DropDownSizer, 'className': 'dropDownSizer'},
+			{pluginClass: LinkSizer, 'class': 'linkSizer'},
 			{pluginClass: DropDownPager, style: 'text-align: center;'},
 			GotoPageButton
 		]

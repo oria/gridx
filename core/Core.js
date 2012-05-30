@@ -195,6 +195,8 @@ define([
 		//		so that the whole grid can be as flexible as possible while still convenient enough for
 		//		web page developers.
 
+		
+
 		_reset: function(args){
 			//Reset the grid data model completely. Also used in initialization.
 			var t = this;
@@ -229,6 +231,7 @@ define([
 			//		callback
 		},
 
+		
 		setStore: function(store){
 			// summary:
 			//		Change the store for grid. 
@@ -243,6 +246,7 @@ define([
 			t._deferStartup.callback();
 		},
 
+		
 		setColumns: function(columns){
 			// summary:
 			//		Change all the column definitions for grid.
@@ -257,6 +261,7 @@ define([
 			}
 		},
 
+		
 		row: function(row, isId){
 			// summary:
 			//		Get a row object by ID or index.
@@ -280,6 +285,7 @@ define([
 			return null;	//null
 		},
 
+		
 		column: function(column, isId){
 			// summary:
 			//		Get a column object by ID or index
@@ -307,6 +313,7 @@ define([
 			return null;	//null
 		},
 
+		
 		cell: function(row, column, isId){
 			// summary:
 			//		Get a cell object
@@ -332,6 +339,7 @@ define([
 			return null;	//null
 		},
 
+		
 		columnCount: function(){
 			// summary:
 			//		Get the number of columns
@@ -340,6 +348,7 @@ define([
 			return this._columns.length;	//Integer
 		},
 
+		
 		rowCount: function(parentId){
 			// summary:
 			//		Get the number of rows.
@@ -352,6 +361,7 @@ define([
 			return this.model.size(parentId);	//Integer
 		},
 
+		
 		columns: function(start, count){
 			// summary:
 			//		Get a range of columns, from index 'start' to index 'start + count'.
@@ -366,6 +376,7 @@ define([
 			return this._arr(this._columns.length, 'column', start, count);	//gridx.core.Column[]
 		},
 
+		
 		rows: function(start, count){
 			// summary:
 			//		Get a range of rows, from index 'start' to index 'start + count'.

@@ -169,7 +169,9 @@ define([
 				args.parentId = m.treePath(id).pop();
 			}
 			if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
-				args.visualIndex = g.tree ? g.tree.getVisualIndexByRowInfo(parentId, rowIndex, t.rootStart) : args.rowIndex - t.rootStart;
+				args.visualIndex = g.tree ? 
+					g.tree.getVisualIndexByRowInfo(args.parentId, args.rowIndex, t.rootStart) : 
+					args.rowIndex - t.rootStart;
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				if(g.tree){
 					var info = g.tree.getRowInfoByVisualIndex(args.visualIndex, t.rootStart);

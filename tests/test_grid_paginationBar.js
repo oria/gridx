@@ -25,7 +25,8 @@ require([
 		paginationBarVisibleSteppers: 5,
 		paginationBarPosition: 'bottom',
 //        paginationBarSizeSwitch: false,
-		paginationBarGotoButton: false,
+//        paginationBarGotoButton: false,
+		bodyRowHoverEffect: false,
 		modules: [
 			modules.Pagination,
 			modules.Filter,

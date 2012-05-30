@@ -9,6 +9,7 @@ define([
 var isFunc = lang.isFunction,
 	c = 'connect',	//To reduce code size
 
+	
 	moduleBase = declare(/*===== "gridx.core._Module", =====*/[], {
 	/*=====
 		// name: String
@@ -95,6 +96,7 @@ var isFunc = lang.isFunction,
 		loaded: null,
 	=====*/
 	
+		
 		constructor: function(grid, args){
 			var t = this;
 			t.grid = grid;
