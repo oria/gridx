@@ -62,9 +62,9 @@ define([
 			t.loaded.callback();
 		},
 		
-		destory: function(){
+		destroy: function(){
 			this.inherited(arguments);
-			this._source.destory();
+			this._source.destroy();
 			domConstruct.destroy(this._node);
 		},
 	

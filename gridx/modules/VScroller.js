@@ -138,7 +138,7 @@ define([
 				if(!g.bodyNode){
 					//fix FF10 - g.bodyNode will be undefined during a quick recreation
 					return;
-				}
+				}				
 				t.stubNode.style.height = g.bodyNode.scrollHeight + 'px';
 				t._doScroll();
 				//FIX IE7 problem:
@@ -149,10 +149,10 @@ define([
 		_onForcedScroll: function(){
 			var t = this, bd = t.grid.body;
 			return t.model.when({
-				start: bd.rootStart, 
+				start: bd.rootStart,
 				count: bd.rootCount
 			}, function(){
-				bd.renderRows(0, bd.rootCount || t.model.size() - bd.rootStart);
+				bd.renderRows(0, bd.visualCount);
 			});
 		},
 	

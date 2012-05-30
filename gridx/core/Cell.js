@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare"
 ], function(declare){
 
+	
 	return declare(/*===== "gridx.core.Cell", =====*/[], {
 		// summary:
 		//		Represents a cell of a grid
@@ -27,6 +28,7 @@ define([
 		model: null,
 		=====*/
 
+		
 		constructor: function(grid, row, column){
 			var t=this;
 			t.grid = grid;
@@ -35,6 +37,7 @@ define([
 			t.column = column;
 		},
 
+		
 		data: function(){
 			// summary:
 			//		Get the grid data of this cell.
@@ -46,6 +49,7 @@ define([
 			return this.model.byId(this.row.id).data[this.column.id];	//String|Number
 		},
 
+		
 		rawData: function(){
 			// summary:
 			//		Get the store data of this cell.
@@ -57,6 +61,7 @@ define([
 			return f && t.model.byId(t.row.id).rawData[f];	//anything
 		},
 
+		
 		setRawData: function(rawData){
 			// summary:
 			//		Set new raw data to this cell.

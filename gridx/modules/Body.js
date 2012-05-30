@@ -37,8 +37,12 @@ define([
 		preload: function(){
 			// tags:
 			//		protected extended
-			var t = this, g = t.grid,
+			var t = this,
+				g = t.grid,
 				dn = t.domNode = g.bodyNode;
+			if(t.arg('rowHoverEffect')){
+				domClass.add(dn, 'gridxBodyRowHoverEffect');
+			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t._initFocus();
@@ -111,6 +115,7 @@ define([
 		},
 	
 		//Public-----------------------------------------------------------------------------
+		rowHoverEffect: true,
 		/*
 		 * infoArgs: {
 		 *		rowId
@@ -164,7 +169,9 @@ define([
 				args.parentId = m.treePath(id).pop();
 			}
 			if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
-				args.visualIndex = g.tree ? g.tree.getVisualIndexByRowInfo(parentId, rowIndex, t.rootStart) : args.rowIndex - t.rootStart;
+				args.visualIndex = g.tree ? 
+					g.tree.getVisualIndexByRowInfo(args.parentId, args.rowIndex, t.rootStart) : 
+					args.rowIndex - t.rootStart;
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				if(g.tree){
 					var info = g.tree.getRowInfoByVisualIndex(args.visualIndex, t.rootStart);
@@ -212,6 +219,7 @@ define([
 					}
 					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 						t.onRender(start, count);
+						t.onForcedScroll();
 					});
 				}else{
 					t.renderRows(rs, rc, 0, 1);

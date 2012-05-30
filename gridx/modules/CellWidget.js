@@ -144,7 +144,7 @@ define([
 			t._initFocus();
 		},
 	
-		destory: function(){
+		destroy: function(){
 			// tags:
 			//		protected extension
 			this.inherited(arguments);
