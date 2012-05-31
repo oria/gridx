@@ -4,6 +4,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/dom-construct",
 	"dojo/dom-attr",
+	"dojo/string",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
@@ -18,9 +19,9 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query",
-	"dojo/parser",
-	"dojo/string"
-], function(dojo, dijit, declare, domConstruct, domAttr, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+	"dojo/parser"
+	
+], function(dojo, dijit, declare, domConstruct, domAttr, string, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -110,8 +111,6 @@ define([
 			'boolean': ['equal','isEmpty']
 		},
 		
-		
-		
 		load: function(args, startup){
 			//summary:
 			//	Init filter bar UI
@@ -124,9 +123,9 @@ define([
 			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
 			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
 			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
-			
+			//console.log(locale, locale.falseLabel);
 			this.domNode = dojo.create('div', {
-				innerHTML: template,
+				innerHTML: string.substitute(template, locale),
 				'class': 'gridxFilterBar'
 			});
 			dojo.parser.parse(this.domNode);
@@ -508,7 +507,6 @@ define([
 		
 		_initFocus: function(){
 			var focus = this.grid.focus;
-			console.log('initing focus');
 			if(focus){
 				focus.registerArea({
 					name: 'filterbar_btn',

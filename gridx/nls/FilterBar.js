@@ -4,6 +4,8 @@ define({ root:
 	"clearFilterDialogTitle": "Clear Filter",
 	"filterDefDialogTitle": "Filter",
 	"ruleTitleTemplate": "Rule ${0}",
+	"noFilterApplied": "No filter applied.",
+	"defineFilter": "Define filter",
 	
 	"conditionEqual": "equal",
 	"conditionNotEqual": "does not equal",

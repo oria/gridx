@@ -1,7 +1,10 @@
 define([
 	"dojo/_base/kernel",
+	"dojo/_base/lang",
 	"dijit",
+	"dojo/string",
 	"dojo/text!../../templates/FilterPane.html",
+	"dojo/i18n!../../nls/FilterBar",
 	"dojo/_base/declare",
 	"./DistinctComboBoxMenu",
 	"./Filter",
@@ -20,15 +23,17 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, dijit, template, declare, DistinctComboBoxMenu, Filter){
+], function(dojo, lang, dijit, string, template, i18n, declare, DistinctComboBoxMenu, Filter){
 	return declare([dijit.layout.ContentPane], {
-		content: template,
+		//content: template,
 		sltColumn: null,
 		sltCondition: null,
 		grid: null,
 		title: 'Rule',
 		postCreate: function(){
 			this.inherited(arguments);
+			i18n = lang.mixin({id: this.id, '0': '${0}'}, i18n);	//add id to bundle
+			this.set('content', string.substitute(template, i18n));
 			this._initFields();
 			this._initSltCol();
 			this.connect(this.sltColumn, 'onChange', '_onColumnChange');
@@ -279,6 +284,7 @@ define([
 	    	}
 	    },
 	    uninitialize: function(){
+	    	this.inherited(arguments);
 	    	if(this._dummyCombo){this._dummyCombo.destroyRecursive();}
 	    }
 	});
