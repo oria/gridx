@@ -1,9 +1,12 @@
 define([
 	"dojo/_base/kernel",
+	"dojo/_base/lang",
 	"dijit",
 	"dojo/_base/declare",
+	"dojo/string",
 	"dijit/Dialog",
 	"dojo/text!../../templates/FilterDialog.html",
+	"dojo/i18n!../../nls/FilterBar",
 	"./FilterPane",
 	"./Filter",
 	"dijit/layout/AccordionContainer",
@@ -11,15 +14,16 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, dijit, declare, Dialog, template, FilterPane){
+], function(dojo, lang, dijit, declare, string, Dialog, template, i18n, FilterPane){
 	return declare(Dialog, {
-		title: 'Filter',
+		title: i18n.filterDefDialogTitle,
 		cssClass: 'gridxFilterDialog',
 		grid: null,
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.set('content', template);
+			i18n = lang.mixin({id: this.id}, i18n);
+			this.set('content', string.substitute(template, i18n));
 			this._initWidgets();
 			dojo.addClass(this.domNode, 'gridxFilterDialog');
 		},
@@ -58,7 +62,12 @@ define([
 		removeChildren: function(){
 			//summary:
 			//	Remove all child of the accodion container.
-			dojo.forEach(this._accordionContainer.getChildren(), dojo.hitch(this._accordionContainer, 'removeChild'));
+			dojo.forEach(this._accordionContainer.getChildren(), function(child){
+				this._accordionContainer.removeChild(child);
+				child.destroy();
+			}, this);
+			//dojo.hitch(this._accordionContainer, 'removeChild'));
+		
 		},
 		
 		clear: function(){

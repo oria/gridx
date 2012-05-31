@@ -222,7 +222,6 @@ define([
 			//		An index mapping from the original indexes to the new indexes. This map is generated from the "moves" argument,
 			//		so it has exactly the same information as "moves". But it is pre-processed to reflect the final index mapping
 			//		after all these movements are done, so it might be easier to use.
-			console.log(moves, map);
 			var reverseIndexes = [], info = [], indexes = [], ranges = [],
 				from, to, m = {}, i, dif, cat = {}, mostDif, maxCount = 0, t = this, 
 				inner = t.inner, store = t.model.store, moveField = t.moveField, dl = [],

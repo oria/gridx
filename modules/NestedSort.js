@@ -5,6 +5,7 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/_base/window",
+	"dojo/string",
 	"dojo/dom-class",
 	"dojo/dom-construct",
 	"dojo/dom-style",
@@ -12,7 +13,7 @@ define([
 	"../core/_Module",
 	"../core/model/extensions/Sort",
 	"dojo/i18n!../nls/NestedSort"
-], function(declare, array, connect, event, query, win, domClass, domConstruct, domStyle, keys, _Module, Sort, nls){
+], function(declare, array, connect, event, query, win, string, domClass, domConstruct, domStyle, keys, _Module, Sort, nls){
 	
 	var forEach = array.forEach,
 		filter = array.filter,
@@ -442,8 +443,8 @@ define([
 				orderState = data.descending ? 'descending' : 'ascending';
 				orderAction = data.descending ? 'none' : 'descending';
 			}
-			var a11ySingleLabel = columnInfo + ' - is sorted by ' + orderState + '. Choose to sort by ' + orderAction,
-				a11yNestedLabel = columnInfo + ' - is nested sorted by ' + orderState + '. Choose to nested sort by ' + orderAction;
+			var a11ySingleLabel = string.substitute(nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]);
+				a11yNestedLabel = string.substitute(nls.waiNestedSortLabel, [columnInfo, orderState, orderAction]);
 			cell.childNodes[0].setAttribute("aria-label", a11ySingleLabel);
 			cell.childNodes[1].setAttribute("aria-label", a11yNestedLabel);
 		}
