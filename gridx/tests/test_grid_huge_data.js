@@ -20,7 +20,7 @@ require([
 		id: 'grid',
 		cacheClass: Cache,
 		cacheSize: 1000,
-		pageSize: 100,
+		pageSize: 200,
 		vScrollerLazy: true,
 		vScrollerBuffSize: 60,
 		store: new XStore({

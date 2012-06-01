@@ -23,11 +23,11 @@ require([
 			filter,
 			mods.SingleSort,
 			mods.VirtualVScroller,
-			mods.Focus,
 //            mods.SelectRow,
 			{
 				moduleClass: filterBar,
 				maxRuleCount: 2,
+			
 				ruleCountToConfirmClearFilter: 2
 			}
 		],

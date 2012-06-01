@@ -28,12 +28,10 @@ require([
 		cacheClass: Cache,
 		store: store,
 		structure: dataSource.layouts[0],
-		selectRowTriggerOnCell: true,
 		modules: [
-//            mods.Focus,
-//            mods.VirtualVScroller,
-			mods.Tree,
-			mods.ExtendedSelectRow
+			mods.Focus,
+			mods.VirtualVScroller,
+			mods.Tree
 		]
 	});
 	grid.placeAt('gridContainer');

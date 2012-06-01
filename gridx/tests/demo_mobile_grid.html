@@ -23,8 +23,12 @@
 			}
 		</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="isDebug: true, async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}], mblThemeFiles:['base']"></script>	
-	<script type="text/javascript" src="demo_mobile_grid.js"></script>
+		data-dojo-config="async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}], mblThemeFiles:['base']"></script>	
+	<script type="text/javascript">
+		require(["gridx/dojo-deps-mobile", "gridx/gridx-mobile"], function(){
+			require(["gridx/tests/demo_mobile_grid"]);
+		});
+	</script>		
 	</head>
 	<body>
 		<div dojoType="dojox.mobile.View" id="view" selected="true">

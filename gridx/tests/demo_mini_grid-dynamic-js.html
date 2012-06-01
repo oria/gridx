@@ -1,0 +1,105 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Simple Gird</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import url('../resources/basic.css');
+		@import url('../resources/sort.css');
+		@import url('../resources/select.css');
+		@import url('../resources/claro/basic.css');
+		@import url('../resources/claro/select.css');
+		@import url('../resources/claro/sort.css');		
+		body {
+			margin: 5em;
+			font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
+		}		
+		.title {
+			font-size: large;
+			font-weight: bolder;
+		}
+		#gridContainer {
+			width: 700px;
+			height: 350px;
+		}
+		#grid {
+			height: 100%;
+		}
+	</style>
+
+	<!--script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script-->	
+	<script type="text/javascript">
+		var doc = window.document;
+		if(!doc.dojoLoaded){
+			console.log('1 entered');
+			var head = doc.getElementsByTagName('head')[0];		
+			var node = doc.createElement("script");
+			
+			function loaded(){
+				if(head.gridLoaded){ return; }
+				var script = doc.createElement("script");
+				script.type = "text/javascript";
+				script.charset = "utf-8";
+				script.src = "demo_mini_grid.js";
+				head.appendChild(script);
+				head.gridLoaded = true;
+				console.log('load callback');
+			}
+			
+			if(node.attachEvent){//ie
+				node.attachEvent('onreadystatechange', loaded);
+			}else{
+				node.addEventListener('load', loaded);
+			}
+			doc.dojoLoaded = true;
+			node.type = "text/javascript";
+			node.charset = "utf-8";
+			node.src = "../../dojo/dojo.js";
+			node['data-dojo-config'] = "async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]";
+			head.appendChild(node);
+		}
+	</script>	
+	
+	<script type="text/javascript">
+		var doc = window.document;
+		console.log('2 doc.dojoLoaded', doc.dojoLoaded);
+		if(!doc.dojoLoaded){
+			console.log('2 entered');
+			var head = doc.head;		
+			var node = doc.createElement("script");
+			
+			function loaded(){
+				var script = doc.createElement("script");
+				script.type = "text/javascript";
+				script.charset = "utf-8";
+				script.src = "demo_mini_grid.js";
+				head.appendChild(script);
+			}
+			
+			if(node.attachEvent){//ie
+				node.attachEvent('onreadystatechange', loaded);
+			}else{
+				node.addEventListener('load', loaded);
+			}
+			node.type = "text/javascript";
+			node.charset = "utf-8";
+			node.src = "../../dojo/dojo.js";
+			node['data-dojo-config'] = "async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]";
+			head.appendChild(node);
+		}
+	</script>	
+	
+
+	<!--script type="text/javascript">
+		require(["gridx/dojo-deps-mini", "gridx/gridx-mini"], function(){
+			require(["gridx/tests/demo_mini_grid"]);
+		});
+	</script-->		
+	<!--script type="text/javascript" src='demo_mini_grid.js'></script-->
+</head>
+<body class='claro'>
+	<h1 class='title'>The simplest Grid</h1>
+	<div id='gridContainer'></div>
+</body>
+</html>

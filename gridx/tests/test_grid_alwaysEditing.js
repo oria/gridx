@@ -94,14 +94,14 @@ require([
 			editorArgs: {
 				props: 'store: fsStore, searchAttr: "id"'
 			}
-		},
+		},/*
 		{ field: "Length", name:"Select", width: '100px', alwaysEditing: true,
 			//FIXME: this is still buggy, hard to set width properly
 			editor: Select,
 			editorArgs: {
 				props: 'store: selectStore, labelAttr: "id"'
 			}
-		},
+		},*/
 		{ field: "Progress", name:"HorizontalSlider", width: '100px', alwaysEditing: true,
 			editor: "dijit/form/HorizontalSlider",
 			editorArgs: {

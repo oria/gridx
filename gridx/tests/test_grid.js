@@ -32,8 +32,8 @@ require([
 				store: store,
 				structure: layout,
 				modules:[
-					modules.SingleSort,
-//                    modules.ExtendedSelectRow,
+//                    modules.SingleSort,
+					modules.ExtendedSelectRow,
 //                    modules.SelectRow,
 //                    modules.DndRow,
 //                    modules.FilterBar,
