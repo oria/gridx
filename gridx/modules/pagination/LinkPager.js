@@ -272,11 +272,11 @@ define([
 			var pageCount = t.pagination.pageCount(),
 				pane = t._gotoDialog.content;
 			pane.pageCountMsgNode.innerHTML = substitute(t.gotoDialogPageCount, [pageCount]);
-			pane.pageInputBox.constraints = {
+			pane.pageInputBox.set('constraints', {
 				fractional: false, 
 				min: 1, 
 				max: pageCount
-			};
+			});
 			t._gotoDialog.show();
 		},
 

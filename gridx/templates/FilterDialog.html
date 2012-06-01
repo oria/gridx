@@ -1,7 +1,7 @@
-<label>Match </label>
-<select data-dojo-type="dijit.form.Select">
-	<option value="all">All rules</option>
-	<option value="any">Any rules</option>
+<label id="${id}_MatchOptionLabel" for="${id}_MatchOptionSelect">${relationMsgFront} </label>
+<select data-dojo-type="dijit.form.Select" id="${id}_MatchOptionSelect" aria-labelledby="${id}_MatchOptionLabel">
+	<option value="all">${relationAll}</option>
+	<option value="any">${relationAny}</option>
 </select>
 
 <div class="gridxFilterAccordionWrapper">
@@ -10,7 +10,7 @@
 
 <div class="gridxFilterDialogButtons">
 	<input type="button" class="gridxFilterDialogBtnAdd" data-dojo-type="dijit.form.Button" showLabel="false" iconClass="gridxFilterBtnAddRule"/>
-	<input type="button" data-dojo-type="dijit.form.Button" label="Filter"/>
-	<input type="button" data-dojo-type="dijit.form.Button" label="Clear"/>
-	<input type="button" data-dojo-type="dijit.form.Button" label="Cancel"/>
+	<input type="button" data-dojo-type="dijit.form.Button" label="${filterButton}"/>
+	<input type="button" data-dojo-type="dijit.form.Button" label="${clearButton}"/>
+	<input type="button" data-dojo-type="dijit.form.Button" label="${cancelButton}"/>
 </div>

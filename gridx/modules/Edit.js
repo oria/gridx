@@ -25,7 +25,7 @@ define([
 	
 		// applyDelay: Integer
 		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
-		applyDelay: 700,
+		applyDelay: 500,
 
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.
@@ -161,6 +161,11 @@ define([
 	
 			isEditing: function(){
 				return this.grid.edit.isEditing(this.row.id, this.column.id);
+			},
+
+			editor: function(){
+				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
+				return cw && cw.gridCellEditField;
 			}
 		},
 	
@@ -214,6 +219,7 @@ define([
 					g.body.refreshCell(rowIndex, col.index).then(function(){
 						t._focusEditor(rowId, colId);
 						d.callback(true);
+						t.onBegin(g.cell(rowId, colId, 1));
 					});
 				}else{
 					d.callback(false);
@@ -222,6 +228,7 @@ define([
 				t._record(rowId, colId);
 				t._focusEditor(rowId, colId);
 				d.callback(true);
+				t.onBegin(g.cell(rowId, colId, 1));
 			}
 			return d;	//dojo.Deferred
 		},
@@ -249,11 +256,13 @@ define([
 						cw = cw.getCellWidget(rowId, colId);
 						cw.setValue(rowCache.data[colId], rowCache.rawData[col.field]);
 						d.callback();
+						t.onCancel(g.cell(rowId, colId, 1));
 					}else{
 						t._erase(rowId, colId);
 						cw.restoreCellDecorator(rowId, colId);
 						g.body.refreshCell(rowIndex, col.index).then(function(){
 							d.callback();
+							t.onCancel(g.cell(rowId, colId, 1));
 						});
 					}
 				}
@@ -287,13 +296,16 @@ define([
 							t._erase(rowId, colId);
 							if(cell.column.alwaysEditing){
 								d.callback(success);
+								t.onApply(cell, success);
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
 								g.body.refreshCell(cell.row.index(), cell.column.index()).then(function(){
 									d.callback(success);
+									t.onApply(cell, success);
 								});
 							}
 						};
+					console.log(valueField, v);
 					try{
 						if(editorArgs && editorArgs.fromEditor){
 							v = editorArgs.fromEditor(v, widget.cell);
@@ -355,6 +367,13 @@ define([
 				editorArgs.dijitProperties = args.dijitProperties;
 			}
 		},
+
+		//Events-------------------------------------------------------------------
+		onBegin: function(cell){},
+
+		onApply: function(cell, applySuccess){},
+
+		onCancel: function(cell){},
 	
 		//Private------------------------------------------------------------------
 		_initAlwaysEdit: function(){
@@ -584,14 +603,18 @@ define([
 
 		_onKey: function(e){
 			var t = this,
-				g = t.grid;
-			if(g._columnsById[e.columnId].editable){
+				g = t.grid,
+				col = g._columnsById[e.columnId];
+			if(col.editable){
 				var editing = t.isEditing(e.rowId, e.columnId);
 				if(e.keyCode == keys.ENTER){
 					if(editing){
 						t.apply(e.rowId, e.columnId).then(function(success){
 							if(success){
 								t._blur();
+							}
+							if(col.alwaysEditing){
+								t._focusEditor(e.rowId, e.columnId);
 							}
 						});
 					}else if(g.focus.currentArea() == 'body'){

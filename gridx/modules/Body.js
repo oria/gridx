@@ -329,7 +329,8 @@ define([
 				renderedRows = [],
 				n = t.domNode,
 				en = g.emptyNode,
-				emptyInfo = t.arg('emptyInfo', nls.emptyInfo);
+				emptyInfo = t.arg('emptyInfo', nls.emptyInfo),
+				finalInfo = '';
 			if(t._err){
 				return;
 			}
@@ -359,13 +360,14 @@ define([
 					n.innerHTML = str;
 					n.scrollTop = scrollTop;
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
-					en.innerHTML = str ? "" : emptyInfo;
+					finalInfo = str ? "" : emptyInfo;
 					t.onUnrender();
 				}
 				for(var i = 0, len = renderedRows.length; i < len; ++i){
 					t.onAfterRow.apply(t, renderedRows[i]);
 				}
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
+					en.innerHTML = finalInfo;
 					t.onRender(start, count);
 				});
 			}else if(!{top: 1, bottom: 1}[position]){

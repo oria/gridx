@@ -57,6 +57,31 @@ define([
 		},
 
 		
+		cells: function(start, count){
+			// summary:
+			//		Get cells in this row.
+			// start: Integer?
+			//		The column index of the first cell in the returned array.
+			//		If omitted, defaults to 0, so row.cells() gets all the cells.
+			// count: Integer?
+			//		The number of cells to return.
+			//		If omitted, all the cells starting from column 'start' will be returned.
+			// returns:
+			//		An array of cells in this row
+			var t = this,
+				g = t.grid,
+				cells = [],
+				cols = g._columns,
+				total = cols.length,
+				i = start || 0,
+				end = count >= 0 ? start + count : total;
+			for(; i < end && i < total; ++i){
+				cells.push(g.cell(t.id, cols[i].id, 1));	//1 as true
+			}
+			return cells;	//gridx.core.Cell[]
+		},
+
+		
 		data: function(){
 			// summary:
 			//		Get the grid data in this row.

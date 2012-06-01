@@ -1,10 +1,11 @@
 <div class='gridxGotoPage'
 	><table><tbody
-		><tr><td class='gridxGotoPageMainMsg'>
+		><tr><td id='${id}-pageInputLabel' class='gridxGotoPageMainMsg'>
 		${gotoDialogMainMsg}
 		</td></tr
 		><tr><td class='gridxGotoPageInput'
 			><input data-dojo-type='${numberTextBoxClass}'
+				data-dojo-props='"aria-labelledby": "${id}-pageInputLabel"'
 				class='gridxGotoPageInputBox'
 				data-dojo-attach-point='pageInputBox'
 				data-dojo-attach-event='onKeyUp: _updateStatus'></input

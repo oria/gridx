@@ -2,16 +2,18 @@ define([
 	"dojo",
 	"dijit",
 	"dojo/_base/declare",
+	"dojo/string",
+	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
 	"./FilterDialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
-	"dojo/i18n!../../nls/FilterBar",
+	
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/html"
-], function(dojo, dijit, declare){
+], function(dojo, dijit, declare, string, i18n){
 	
 	return declare(dijit.TooltipDialog, {
 		//summary:
@@ -24,9 +26,8 @@ define([
 			this.connect(this, 'onClick', '_onClick');
 			this.connect(this, 'onMouseEnter', '_onMouseEnter');
 			this.connect(this, 'onMouseLeave', '_onMouseLeave');
-			//Now we need dijitTooltipBelow here, but this should be done by the TooltipDialog,
-			//so maybe we'll remove this in the future.
-			dojo.addClass(this.domNode, 'gridxFilterTooltip dijitTooltipBelow');
+			dojo.addClass(this.domNode, 'gridxFilterTooltip');
+			dojo.addClass(this.domNode, 'dijitTooltipBelow');
 		},
 		show: function(evt){
 			this.inherited(arguments);
@@ -50,22 +51,22 @@ define([
 			if(!data || !data.conditions.length){return;}
 			
 			var typeString = data.type === 'all' ? nls.statusTipHeaderAll : nls.statusTipHeaderAny;
-			var arr = ['<div class="gridxFilterTooltipTitle"><b>Filter:</b> ', 
-				typeString, '</div><table><tr><th>Column</th><th>Rule</th></tr>'
+			var arr = ['<div class="gridxFilterTooltipTitle"><b>${statusTipTitleHasFilter}</b> ', 
+				typeString, '</div><table><tr><th>${statusTipHeaderColumn}</th><th>${statusTipHeaderCondition}</th></tr>'
 			];
 			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : 'Any column'), 
+				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : '${anyColumnOption}'), 
 					'</td><td class="gridxFilterTooltipValueCell">', 
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
-					'<img src="' + this.grid._blankGif + 
-					'" action="remove-rule" title="' + nls.removeRuleButton + 
-					'" class="gridxFilterTooltipRemoveBtn"/></div></td></tr>');
+					'<img src="' + this.grid._blankGif, 
+					'" action="remove-rule" title="${removeRuleButton}"',
+					' class="gridxFilterTooltipRemoveBtn"/></div></td></tr>');
 			}, this);
 			arr.push('</table>');
-			this.set('content', arr.join(''));
+			this.set('content', string.substitute(arr.join(''), i18n));
 			dojo.toggleClass(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},
 		_onMouseEnter: function(e){

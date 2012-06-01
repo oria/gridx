@@ -113,7 +113,7 @@ define([
 		},
 
 		cellMixin: {
-			cellWidget: function(){
+			widget: function(){
 				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 			}
 		},
