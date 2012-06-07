@@ -93,15 +93,15 @@ define([
 		},
 	
 		//Package-----------------------------------------------------------------------------------
-        _checkDndReady: function(evt){
+		_checkDndReady: function(evt){
 			var t = this, m = t.model;
-            if(!m.isMarked || m.isMarked(evt.rowId)){
+			if(!m.getMark || m.getMark(evt.rowId)){
 				t.grid.dnd._dnd.profile = t;
 				t._selectedRowIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
 				return true;
 			}
 			return false;
-        },
+		},
 
 		//Private-----------------------------------------------------------------------------
 		_cssName: 'Row',
@@ -148,7 +148,7 @@ define([
 					left: ''
 				},
 				isSelected = function(n){
-					return t.model.isMarked && t.model.isMarked(n.getAttribute('rowid'));
+					return t.model.getMark && t.model.getMark(n.getAttribute('rowid'));
 				},
 				getVIdx = function(n){
 					return parseInt(n.getAttribute('visualindex'), 10);

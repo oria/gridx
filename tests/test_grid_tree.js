@@ -10,7 +10,7 @@ require([
 
 	var store = storeFactory({
 		dataSource: dataSource, 
-		maxLevel: 3,
+		maxLevel: 4,
 		maxChildrenCount: 10
 	});
 
@@ -28,12 +28,15 @@ require([
 		cacheClass: Cache,
 		store: store,
 		structure: dataSource.layouts[0],
-		selectRowTriggerOnCell: true,
+		selectRowTriggerOnCell: false,
 		modules: [
 //            mods.Focus,
-//            mods.VirtualVScroller,
+			mods.VirtualVScroller,
 			mods.Tree,
-			mods.ExtendedSelectRow
+//            mods.ExtendedSelectRow,
+			mods.SelectRow,
+			mods.RowHeader,
+			mods.IndirectSelect
 		]
 	});
 	grid.placeAt('gridContainer');

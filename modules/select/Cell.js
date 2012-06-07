@@ -46,7 +46,7 @@ define([
 			},
 			
 			isSelected: function(){
-				return this.model.isMarked(this.row.id, this.column.id);
+				return this.model.getMark(this.row.id, this.column.id);
 			}
 		},
 		
@@ -124,7 +124,7 @@ define([
 			);
 		},
 	
-		_onMark: function(toMark, rowId, type){
+		_onMark: function(rowId, toMark, oldState, type){
 			var t = this;
 			if(type.indexOf(t._markTypePrefix) === 0){
 				var colId = type.substr(t._markTypePrefix.length);
@@ -163,7 +163,7 @@ define([
 				rowId = model.indexToId(i);
 				for(j = columns.length - 1; j >= 0; --j){
 					colId = columns[j].id;
-					if(model.isMarked(rowId, t._getMarkType(colId))){
+					if(model.getMark(rowId, t._getMarkType(colId))){
 						t._highlight(rowId, colId, 1);
 					}
 				}

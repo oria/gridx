@@ -40,7 +40,7 @@ define([
 				});
 			}
 			//Presort...
-			sort = sort || t.arg('preSort');
+			sort = sort || t.arg('initialOrder');
 			if(lang.isArrayLike(sort)){
 				sort = sort[0];
 			}
@@ -100,7 +100,7 @@ define([
 		//Public--------------------------------------------------------------
 
 		/*=====
-		preSort: null,
+		initialOrder: null,
 		=====*/
 
 		sort: function(colId, isDescending, skipUpdateBody){

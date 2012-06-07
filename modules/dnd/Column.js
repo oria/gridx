@@ -35,7 +35,7 @@ define([
 		//Package--------------------------------------------------------------------------------------
 		_checkDndReady: function(evt){
 			var t = this;
-            if(t._selector.isSelected(evt.columnId)){
+			if(t._selector.isSelected(evt.columnId)){
 				t._selectedColIds = t._selector.getSelected();
 				t.grid.dnd._dnd.profile = t;
 				return true;

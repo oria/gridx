@@ -3,9 +3,10 @@ define([
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/html",
+	"dojo/hccss",
 	"dojo/fx",
 	"dojo/query"
-], function(dojo, _Module, declare, html, fx, query){
+], function(dojo, _Module, declare, html, has, fx, query){
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
@@ -69,6 +70,9 @@ define([
 			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
+			if(has('highcontrast')){
+				this._getExpando(row).innerHTML = '-';
+			}
 			
 			var node = row.node(), w = node.scrollWidth;
 			if(!_row.dodLoadingNode){
@@ -116,7 +120,9 @@ define([
 			if(!_row.dodShown || _row.inAnim){return;}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
-			
+			if(has('highcontrast')){
+				this._getExpando(row).innerHTML = '+';
+			}
 			_row.inAnim = true;
 			fx.wipeOut({
 				node: _row.dodNode,
@@ -170,8 +176,8 @@ define([
 			this.toggle(this.grid.row(parseInt(idx)));
 		},
 		
-		_onAfterRow: function(rowInfo, rowCache){
-			var row = this.grid.row(rowInfo.rowIndex), _row = this._row(row);
+		_onAfterRow: function(row){
+			var _row = this._row(row);
 			if(this.isShown(row) || (this.arg('defaultShow') && _row.dodShown === undefined)){
 				_row.dodShown = false;
 				_row.defaultShow = true;
@@ -179,11 +185,11 @@ define([
 			}
 			
 			if(this.arg('showExpando')){
-				var rowNode = dojo.query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0];
-				var tbl = dojo.query('table', rowNode)[0];
+				var tbl = dojo.query('table', row.node())[0];
 				var cell = tbl.rows[0].cells[0];
 				var span = dojo.create('span', {
-					className: 'gridxDodExpando'
+					className: 'gridxDodExpando',
+					innerHTML: has('highcontrast') ? '+' : ''
 				}, cell, 'first');
 			}
 		},
@@ -230,18 +236,17 @@ define([
 			var node = _row.dodLoadingNode;
 			node.innerHTML = 'Loading...';
 		},
+		_getExpando: function(row){
+			var tbl = dojo.query('table', row.node())[0];
+			var cell = tbl.rows[0].cells[0];
+			return cell.firstChild;
+		},
 		_hideLoading: function(row){
 			
 		},
 		
 		
 		//Focus
-		
-		
-		
-		
-		
-		
 		
 		
 		endFunc: function(){}

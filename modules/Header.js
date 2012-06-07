@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/array",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
@@ -8,7 +9,7 @@ define([
 	"dojo/keys",
 	"../util",
 	"../core/_Module"
-], function(declare, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
+], function(declare, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
 	
 	return declare(/*===== "gridx.modules.Header", =====*/_Module, {
@@ -104,7 +105,7 @@ define([
 			//		Re-build the header UI.
 			var t = this, g = t.grid, f = g.focus,
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
-			g.columns().forEach(function(col){
+			array.forEach(g.columns(), function(col){
 				sb.push('<th colid="', col.id, '" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
 					'" role="columnheader" aria-readonly="true" tabindex="-1" style="width: ',

@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",	
 	"dojo/_base/query",
+	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
@@ -11,7 +12,7 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"../core/_Module"
-], function(declare, query, event, sniff, domClass, keys, 
+], function(declare, query, array, event, sniff, domClass, keys, 
 	registry, a11y, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Module){
 
 	/*=====
@@ -253,16 +254,14 @@ define([
 		},
 	
 		//Private---------------------------------------------------------------
-		_showDijits: function(rowInfo, rowCache){
-			var t = this,
-				rowNode = query('[rowid="' + rowInfo.rowId + '"]', t.grid.bodyNode)[0],
-				i, col, cellNode, cellWidget, columns = t.grid._columns;
-			for(i = columns.length - 1; i >= 0; --i){
-				col = columns[i];
-				if(col.userDecorator || t._getSpecialCellDec(rowInfo.rowId, col.id)){
-					cellNode = query('[colid="' + col.id + '"]', rowNode)[0];
+		_showDijits: function(row){
+			var t = this;
+			array.forEach(row.cells(), function(cell){
+				var col = cell.column.def();
+				if(col.userDecorator || t._getSpecialCellDec(cell.row.id, col.id)){
+					var cellNode = cell.node();
 					if(cellNode){
-						cellWidget = t._getCellWidget(col, rowInfo, rowCache);
+						var cellWidget = t._prepareCellWidget(cell);
 						if(sniff('ie')){
 							while(cellNode.childNodes.length){
 								cellNode.removeChild(cellNode.firstChild);
@@ -274,36 +273,37 @@ define([
 						cellWidget.startup();
 					}
 				}
-			}
+			});
 		},
 
-		_showDijit: function(cellNode, rowInfo, col, rowCache){
-			if(col.userDecorator || this._getSpecialCellDec(rowInfo.rowId, col.id)){
-				cellWidget = this._getCellWidget(col, rowInfo, rowCache);
+		_showDijit: function(cell){
+			var col = cell.column.def();
+			if(col.userDecorator || this._getSpecialCellDec(cell.row.id, col.id)){
+				cellWidget = this._prepareCellWidget(cell);
+				var cellNode = cell.node();
 				cellNode.innerHTML = "";
 				cellWidget.placeAt(cellNode);
 				cellWidget.startup();
 			}
 		},
 	
-		_getCellWidget: function(column, rowInfo, rowCache){
-			var widget = this._getSpecialWidget(column, rowInfo, rowCache),
-				gridData = rowCache.data[column.id],
-				storeData = rowCache.rawData[column.field];
+		_prepareCellWidget: function(cell){
+			var col = cell.column.def(),
+				widget = this._getSpecialWidget(cell);
 			if(!widget){
-				widget = column._backupWidgets.pop();
+				widget = col._backupWidgets.pop();
 				if(!widget){
 					widget = new CellWidget({
-						content: column.userDecorator(),
-						setCellValue: column.setCellValue
+						content: col.userDecorator(),
+						setCellValue: col.setCellValue
 					});
-					this.onCellWidgetCreated(widget, column);
+					this.onCellWidgetCreated(widget, col);
 				}
-				column._cellWidgets[rowInfo.rowId] = widget;
+				col._cellWidgets[cell.row.id] = widget;
 			}
-			widget.cell = this.grid.cell(rowInfo.rowId, column.id, 1);
+			widget.cell = cell;
 			widget.isInit = true;
-			widget.setValue(gridData, storeData);
+			widget.setValue(cell.data(), cell.rawData());
 			return widget;
 		},
 
@@ -322,7 +322,7 @@ define([
 				var col = cols[i],
 					cellWidgets = col._cellWidgets;
 				if(cellWidgets){
-					if(id && cellWidgets[id]){
+					if(this.model.isId(id) && cellWidgets[id]){
 						backup(col, id);
 						delete cellWidgets[id];
 					}else{
@@ -340,15 +340,15 @@ define([
 			return rowDecs && rowDecs[colId];
 		},
 	
-		_getSpecialWidget: function(column, rowInfo, rowCache){
-			var rowDecs = this._decorators[rowInfo.rowId];
+		_getSpecialWidget: function(cell){
+			var rowDecs = this._decorators[cell.row.id];
 			if(rowDecs){
-				var cellDec = rowDecs[column.id];
+				var cellDec = rowDecs[cell.column.id];
 				if(cellDec){
 					if(!cellDec.widget && cellDec.decorator){
 						try{
 							cellDec.widget = new CellWidget({
-								content: cellDec.decorator(rowCache.data[column.id], rowInfo.rowId, rowInfo.rowIndex),
+								content: cellDec.decorator(cell.data(), cell.row.id, cell.row.visualIndex()),
 								setCellValue: cellDec.setCellValue
 							});
 						}catch(e){

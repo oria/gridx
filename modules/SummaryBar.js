@@ -22,11 +22,13 @@ define([
 			t.domNode = domConstruct.create('div', {'class': 'gridxSummaryBar'});
 			t.grid.vLayout.register(t, 'domNode', 'footerNode', 5);
 			t.connect(m, 'onSizeChange', '_update');
-			t.connect(m, 'onMarked', '_update');
-			t.connect(m, 'onMarkRemoved', '_update');
+			t.connect(m, 'onMarkChange', '_update');
 			t._update();
 		},
-
+		destroy: function(){
+			domConstruct.destroy(this.domNode);
+			this.inherited(arguments);
+		},
 		_update: function(){
 			var t = this,
 				g = t.grid,

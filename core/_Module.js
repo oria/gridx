@@ -5,7 +5,7 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/connect"
 ], function(declare, lang, array, Deferred, connect){
-	
+
 var isFunc = lang.isFunction,
 	c = 'connect',	//To reduce code size
 

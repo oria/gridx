@@ -61,7 +61,7 @@ define([
 					col = c.columns && c.columns[sortAttr.colId];
 				if(map){
 					if(typeof attr !== "string" && attr.toString){
-						 attr = attr.toString();
+						attr = attr.toString();
 					}
 					comp = map[attr] || bc;
 				}

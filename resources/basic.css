@@ -79,6 +79,10 @@
 	border-bottom: 1px dashed darkblue;
 }
 
+.dijit_a11y .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	border: 1px dashed darkblue;
+}
+
 .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:first-child {
 	border-left: 1px dashed darkblue;
 }
@@ -162,6 +166,9 @@
 	border-left: 1px dashed darkblue;
 }
 
+.dijit_a11y .gridx .gridxBody .gridxCellFocus {
+	border: 1px dashed darkblue;
+}
 
 .gridxBodyEmpty {
 	width: 100%;

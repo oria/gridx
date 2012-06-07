@@ -138,14 +138,15 @@ define([
 		//pageSize: 100,
 		
 		constructor: function(model, args){
-			var cs = args.cacheSize, ps = args.pageSize;
+			var cs = args.cacheSize,
+				ps = args.pageSize;
 			this.cacheSize = isNumber(cs) ? cs : -1;
 			this.pageSize = isNumber(ps) && ps > 0 ? ps : 100;
 		},
 
 		when: function(args, callback){
 			var t = this,
-				d = args._def = new Deferred,
+				d = args._def = new Deferred(),
 				fail = hitch(d, d.errback),
 				innerFail = function(e){
 					t._requests.pop();
@@ -181,7 +182,8 @@ define([
 		},
 	
 		keep: function(id){
-			var t = this, k = t._kept;
+			var t = this,
+				k = t._kept;
 			if(t._cache[id] && t._struct[id] && !k[id]){
 				k[id] = 1;
 				++t._keptSize;
@@ -190,7 +192,7 @@ define([
 	
 		free: function(id){
 			var t = this;
-			if(!id){
+			if(!t.model.isId(id)){
 				t._kept = {};
 				t._keptSize = 0;
 			}else if(t._kept[id]){
@@ -225,7 +227,7 @@ define([
 		_searchRootLevel: function(ids){
 			//search root level for missing ids
 			var t = this,
-				d = new Deferred,
+				d = new Deferred(),
 				fail = hitch(d, d.errback),
 				indexMap = t._struct[''],
 				ranges = [],
@@ -265,7 +267,7 @@ define([
 		_searchChildLevel: function(ids){
 			//Search children level of current level for missing ids
 			var t = this,
-				d = new Deferred,
+				d = new Deferred(),
 				fail = hitch(d, d.errback),
 				st = t._struct,
 				parentIds = st[''].slice(1),
@@ -286,7 +288,8 @@ define([
 	
 		_fetchById: function(args){
 			//Although store supports query by id, it does not support get index by id, so must find the index by ourselves.
-			var t = this, d = new Deferred, 
+			var t = this,
+				d = new Deferred(), 
 				i, r, len, pid,
 				success = hitch(d, d.callback),
 				fail = hitch(d, d.errback),
@@ -297,14 +300,15 @@ define([
 				for(i = ranges.length - 1; i >= 0; --i){
 					r = ranges[i];
 					pid = r.parentId;
-					if(pid){
+					if(t.model.isId(pid)){
 						args.id.push(pid);
 						args.pids.push(pid);
 						ranges.splice(i, 1);
 					}
 				}
 			}
-			var ids = t._findMissingIds(args.id), mis = [];
+			var ids = t._findMissingIds(args.id),
+				mis = [];
 			if(ids.length){
 				array.forEach(ids, function(id){
 					var idx = t.idToIndex(id);
@@ -336,7 +340,8 @@ define([
 		},
 
 		_fetchByParentId: function(args){
-			var t = this, d = new Deferred;
+			var t = this,
+				d = new Deferred();
 			new DeferredList(array.map(args.pids, function(pid){
 				return t._loadChildren(pid);
 			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
@@ -345,7 +350,7 @@ define([
 
 		_fetchByIndex: function(args){
 			var t = this,
-				d = new Deferred,
+				d = new Deferred(),
 				size = t._size[''];
 			args = connectRanges(
 					t._mergePendingRequests(
@@ -365,7 +370,9 @@ define([
 		_findMissingIndexes: function(args){
 			//Removed loaded rows from the request index ranges.
 			//generate unsorted range list.
-			var i, j, r, end, newRange, ranges = [], t = this,
+			var i, j, r, end, newRange,
+				t = this,
+				ranges = [],
 				indexMap = t._struct[''],
 				totalSize = t._size[''];
 			for(i = args.range.length - 1; i >= 0; --i){
@@ -403,7 +410,9 @@ define([
 		},
 
 		_mergePendingRequests: function(args){
-			var i, req, defs = [], reqs = this._requests;
+			var i, req,
+				defs = [],
+				reqs = this._requests;
 			for(i = reqs.length - 1; i >= 0; --i){
 				req = reqs[i];
 				args.range = minus(args.range, req.range);

@@ -29,11 +29,11 @@ define([
 		sltColumn: null,
 		sltCondition: null,
 		grid: null,
-		title: 'Rule',
+		title: i18n.defaultRuleTitle,
 		postCreate: function(){
 			this.inherited(arguments);
-			i18n = lang.mixin({id: this.id, '0': '${0}'}, i18n);	//add id to bundle
-			this.set('content', string.substitute(template, i18n));
+			this.i18n = i18n;
+			this.set('content', string.substitute(template, this));
 			this._initFields();
 			this._initSltCol();
 			this.connect(this.sltColumn, 'onChange', '_onColumnChange');
@@ -187,7 +187,8 @@ define([
 	    	if(value && (condition !== 'range' || (value.start && value.end))){
 				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
 	    	}else{
-	    		title = 'Rule ' + (dojo.indexOf(this._getContainer().getChildren(), this) + 1);
+	    		var ruleNumber = dojo.indexOf(this._getContainer().getChildren(), this) + 1;
+	    		title = dojo.string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
 	    	}
 	    	txtNode.innerHTML = title;
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');

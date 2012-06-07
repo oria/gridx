@@ -39,12 +39,14 @@ define([
 				this.grid.select.row.selectById(this.id);
 				return this;
 			},
+
 			deselect: function(){
 				this.grid.select.row.deselectById(this.id);
 				return this;
 			},
+
 			isSelected: function(){
-				return this.model.isMarked(this.id);
+				return this.model.getMark(this.id);
 			}
 		},
 		
@@ -53,6 +55,8 @@ define([
 		// triggerOnCell: [readonly] Boolean
 		//		Whether row will be selected by clicking on cell, false by default
 		triggerOnCell: false,
+
+		treeMode: true,
 
 /*=====
 		selectById: function(rowId){
@@ -94,6 +98,7 @@ define([
 
 		_init: function(){
 			var t = this, g = t.grid;
+			t.model.treeMarkMode(0, t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.batchConnect(
@@ -110,13 +115,13 @@ define([
 			);
 		},
 
-		_onMark: function(toMark, id, type){
+		_onMark: function(id, toMark, oldState, type){
 			if(type == 'select'){
 				var t = this;
 				t._highlight(id, toMark);
 				//Fire event when the row is loaded, so users can use the row directly.
 				t.model.when({id: id}, function(){
-					t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, true));
+					t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, 1));	//1 as true
 				});
 			}
 		},
@@ -124,24 +129,33 @@ define([
 		_highlight: function(rowId, toHighlight){
 			var node = this.grid.body.getRowNode({rowId: rowId});
 			if(node){
-				domClass.toggle(node, "gridxRowSelected", toHighlight);
-				node.setAttribute('aria-selected', !!toHighlight);
-				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, !!toHighlight);
+				var selected = toHighlight && toHighlight != 'mixed';
+				domClass.toggle(node, "gridxRowSelected", selected);
+				domClass.toggle(node, "gridxRowPartialSelected", toHighlight == 'mixed');
+				node.setAttribute('aria-selected', !!selected);
+				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toHighlight);
 			}
 		},
 
 		_markById: function(id, toMark){
 			var m = this.model;
+			if(m.treeMarkMode() && !m.getMark(id) && toMark){
+				toMark = 'mixed';
+			}
 			m.markById(id, toMark);
 			m.when();
 		},
 
 		_onRender: function(start, count){
-			var t = this, model = t.model, end = start + count, i, id;
+			var t = this,
+				model = t.model,
+				end = start + count,
+				i, id, rowNode;
 			for(i = start; i < end; ++i){
-				id = model.indexToId(t.grid.body.getRowInfo({visualIndex: i}).rowIndex);
-				if(model.isMarked(id)){
-					t._highlight(id, 1);
+				rowNode = t.grid.body.getRowNode({visualIndex: i});
+				if(rowNode){
+					id = rowNode.getAttribute('rowid');
+					t._highlight(id, model.getMark(id));
 				}
 			}
 		}

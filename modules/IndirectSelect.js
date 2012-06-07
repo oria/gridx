@@ -70,17 +70,22 @@ define([
 		all: true,
 
 		//Private----------------------------------------------------------
-		_createSelector: function(rowInfo){
-			var rowNode = query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0],
-				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected');
-			return this._createCheckBox(selected);
+		_createSelector: function(row){
+			var rowNode = row.node(),
+				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
+				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
+			return this._createCheckBox(selected, partial);
 		},
 
-		_createCheckBox: function(selected){
+		_createCheckBox: function(selected, partial){
 			var dijitClass = this._getDijitClass();
 			return ['<span class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
-				dijitClass, ' ', selected ? dijitClass + 'Checked' : '',
-				'"><span class="gridxIndirectSelectionCheckBoxInner">&#9633;</span></span>'
+				dijitClass, ' ',
+				selected ? dijitClass + 'Checked' : '',
+				partial ? dijitClass + 'Partial' : '',
+				'"><span class="gridxIndirectSelectionCheckBoxInner">',
+				selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;',
+				'</span></span>'
 			].join('');
 		},
 
@@ -102,7 +107,11 @@ define([
 		_onHighlightChange: function(target, toHighlight){
 			var node = query('[visualindex="' + target.row + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
 			if(node){
-				domClass.toggle(node, this._getDijitClass() + 'Checked', toHighlight);
+				var dijitClass = this._getDijitClass(),
+					selected = toHighlight && toHighlight != 'mixed'; 
+				domClass.toggle(node, dijitClass + 'Checked', selected);
+				domClass.toggle(node, dijitClass + 'Partial', toHighlight == 'mixed');
+				node.firstChild.innerHTML = selected ? '&#10003;' : toHighlight == 'mixed' ? '&#9646;' : '&#9744;';
 			}
 		},
 

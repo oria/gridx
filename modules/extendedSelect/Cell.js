@@ -116,7 +116,7 @@ define([
 		isSelected: function(rowId, columnId){
 			// summary:
 			//		Check if the given cell is selected.			
-			return this.model.isMarked(rowId, this._getMarkType(columnId));
+			return this.model.getMark(rowId, this._getMarkType(columnId));
 		},
 		
 		//Private---------------------------------------------------------------------
@@ -224,8 +224,8 @@ define([
 				if(m.getMarkedIds(type).length){
 					for(j = start; j < end; ++j){
 						var rid = t._getRowId(j);
-						if(m.isMarked(rid, type) || (t._selecting && t._toSelect &&
-							t._inRange(i, t._startItem.c, t._currentItem.c, 1) &&	//1 as true
+						if(m.getMark(rid, type) || (t._selecting && t._toSelect &&
+							t._inRange(i, t._startItem.c, t._currentItem.c, 1) && //1 as true
 							t._inRange(j, t._startItem.r, t._currentItem.r, 1))){	//1 as true
 							domClass.add(query('[visualindex="' + j + '"] [colid="' + cid + '"]', g.bodyNode)[0], 'gridxCellSelected');
 						}
@@ -234,9 +234,9 @@ define([
 			}
 		},
 
-		_onMark: function(toMark, id, type){
+		_onMark: function(id, toMark, oldState, type){
 			var t = this;
-			if(!t._marking && type.indexOf(t._markTypePrefix) === 0){
+			if(lang.isString(type) && !t._marking && type.indexOf(t._markTypePrefix) === 0){
 				var rowNode = query('[rowid="' + id + '"]', t.grid.bodyNode)[0];
 				if(rowNode){
 					var cid = type.substr(t._markTypePrefix.length),
@@ -267,7 +267,7 @@ define([
 				var rids = t._refSelectedIds[item.cid];
 				return rids && array.indexOf(rids, item.rid) >= 0;
 			}else{
-				return t.model.isMarked(item.rid, t._getMarkType(item.cid));
+				return t.model.getMark(item.rid, t._getMarkType(item.cid));
 			}
 		},
 

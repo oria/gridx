@@ -22,8 +22,8 @@ define([
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			i18n = lang.mixin({id: this.id}, i18n);
-			this.set('content', string.substitute(template, i18n));
+			this.i18n = i18n;
+			this.set('content', string.substitute(template, this));
 			this._initWidgets();
 			dojo.addClass(this.domNode, 'gridxFilterDialog');
 		},
@@ -93,7 +93,9 @@ define([
 			if(ac.getChildren().length === 3){
 				ac._contentBox.w -= dojox.html.metrics.getScrollbar().w;
 			}
-			var fp = new FilterPane({grid: this.grid, title: 'Rule'});
+			var nextRuleNumber = ac.getChildren().length + 1;
+			var ruleTitle = dojo.string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
+			var fp = new FilterPane({grid: this.grid, title: ruleTitle});
 			ac.addChild(fp);
 			ac.selectChild(fp);
 			

@@ -6,8 +6,8 @@ require([
 	'gridx/Grid',
 	'gridx/tests/support/data/TestData',
 	'gridx/core/model/cache/Async',
-//    'gridx/tests/support/stores/JsonRest',
-	'gridx/tests/support/stores/Memory',
+	'gridx/tests/support/stores/JsonRest',
+//    'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
@@ -36,7 +36,7 @@ require([
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
-//                cacheSize: 0,
+				cacheSize: 0,
 //                pageSize: 1000,
 				store: store,
 				structure: layout,

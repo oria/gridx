@@ -31,16 +31,6 @@ define([
 			t.key = window.location + '/' + t.arg('key', grid.id, function(arg){
 				return arg;
 			});
-//            t.arg('options', function(arg){
-//                return arg && lang.isObject(arg);
-//            });
-//            t.arg('put', function(arg){
-//                return lang.isFunction(arg);
-//            });
-//            t.arg('get', function(arg){
-//                return lang.isFunction(arg);
-//            });
-
 			t._persistedList = {};
 			// Save states when grid destroy or window unload
 			var gridDestroy = grid.destroy;
@@ -104,12 +94,6 @@ define([
 			//		A function to be called when persisting the grid.
 			// return: Object | null
 			//		The loaded contents of the given feature.
-//            if(!lang.isString(name) || name === ''){
-//                throw new Error("feature name must be an unempty string");
-//            }
-//            if(!lang.isFunction(saver)){
-//                throw new Error("save function must be provided");
-//            }
 			this._persistedList[name] = {
 				saver: saver,
 				scope: scope,

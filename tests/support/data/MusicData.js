@@ -186,7 +186,7 @@ define([
 			for(var i = 0; i < size; ++i){
 				var item = items[i % items.length];
 				data.items.push(lang.mixin({
-					id: i + 1,
+					id: i,
 					order: i + 1,
 					Color: new Color([Math.sin(i) * 100, Math.cos(i) * 100, i * i]).toHex()
 				}, item));

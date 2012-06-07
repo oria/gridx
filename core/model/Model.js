@@ -47,6 +47,14 @@ define([
 				this._exts[n].destroy();
 			}
 		},
+
+		clearCache: function(){
+			this._cache.clear();
+		},
+
+		isId: function(id){
+			return id || id === 0;
+		},
 	
 		//Public-------------------------------------------------------------------
 
@@ -423,13 +431,14 @@ define([
 					for(i = args.id.length - 1; i >= 0; --i){
 						ids.push(args.id[i]);
 					}
-				}else if(args.id){
+				}else if(this.isId(args.id)){
 					ids.push(args.id);
 				}
 			}else{
 				f(args);
 			}
 			if(!rgs.length && !ids.length && this.size() < 0){
+				//first time load, try to load a page
 				rgs.push({start: 0, count: this._cache.pageSize || 1});
 			}
 			return res;

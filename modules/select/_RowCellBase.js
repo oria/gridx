@@ -31,16 +31,13 @@ define([
 		isSelected: function(rowId, columnId){
 			// summary:
 			//		Check if a cell is already selected.
-			return this.model.isMarked(rowId, this._getMarkType(columnId));
+			return this.model.getMark(rowId, this._getMarkType(columnId)) === true;	//Mixed status is not selected
 		},
 
 		//Private-----------------------------------------------------------------
 		_init: function(){
 			var t = this, m = t.model;
-			t.batchConnect(
-				[m, 'onMarked', lang.hitch(t, '_onMark', 1)],
-				[m, 'onMarkRemoved', lang.hitch(t, '_onMark', 0)]
-			);
+			t.connect(m, 'onMarkChange', '_onMark');
 		}
 	});
 });

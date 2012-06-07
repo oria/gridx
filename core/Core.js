@@ -214,6 +214,7 @@ define([
 								normalizeModules(args, t.coreModules)))));
 			//Create model before module creation, so that all modules can use the logic grid from very beginning.
 			t.model = new Model(args);
+			t.when = lang.hitch(t.model, t.model.when);
 			t._create(args);
 		},
 
@@ -262,7 +263,7 @@ define([
 		},
 
 		
-		row: function(row, isId){
+		row: function(row, isId, parentId){
 			// summary:
 			//		Get a row object by ID or index.
 			//		For asyc store, if the data of this row is not in cache, then null will be returned.
@@ -274,9 +275,9 @@ define([
 			//		If the params are valid and row data is in cache, return a row object, else return null.
 			var t = this;
 			if(typeof row == "number" && !isId){
-				row = t.model.indexToId(row);
+				row = t.model.indexToId(row, parentId);
 			}
-			if(t.model.idToIndex(row) >= 0){
+			if(t.model.byId(row)){
 				t._rowObj = t._rowObj || t._mixin(new Row(t), "row");
 				return delegate(t._rowObj, {	//gridx.core.Row
 					id: row
@@ -314,7 +315,7 @@ define([
 		},
 
 		
-		cell: function(row, column, isId){
+		cell: function(row, column, isId, parentId){
 			// summary:
 			//		Get a cell object
 			// row: gridx.core.Row|Integer|String
@@ -325,7 +326,7 @@ define([
 			//		If the row and coumn params are numeric IDs, set this to true
 			// returns:
 			//		If the params are valid and the row is in cache return a cell object, else return null.
-			var t = this, r = row instanceof Row ? row : t.row(row, isId);
+			var t = this, r = row instanceof Row ? row : t.row(row, isId, parentId);
 			if(r){
 				var c = column instanceof Column ? column : t.column(column, isId);
 				if(c){
@@ -377,7 +378,7 @@ define([
 		},
 
 		
-		rows: function(start, count){
+		rows: function(start, count, parentId){
 			// summary:
 			//		Get a range of rows, from index 'start' to index 'start + count'.
 			// description:
@@ -390,7 +391,7 @@ define([
 			//		If omitted, all the rows starting from 'start' will be returned.
 			// returns:
 			//		An array of row objects
-			return this._arr(this.model.size(), 'row', start, count);	//gridx.core.Row[]
+			return this._arr(this.rowCount(parentId), 'row', start, count, parentId);	//gridx.core.Row[]
 		},
 		
 		//Private-------------------------------------------------------------------------------------
@@ -408,10 +409,10 @@ define([
 			}
 		},
 
-		_arr: function(total, type, start, count){
+		_arr: function(total, type, start, count, pid){
 			var i = start || 0, end = count >= 0 ? start + count : total, r = [];
 			for(; i < end && i < total; ++i){
-				r.push(this[type](i));
+				r.push(this[type](i, 0, pid));
 			}
 			return mixinArrayUtils(r);
 		},

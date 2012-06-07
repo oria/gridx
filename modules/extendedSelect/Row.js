@@ -43,12 +43,14 @@ define([
 				this.grid.select.row.selectById(this.id);
 				return this;
 			},
+
 			deselect: function(){
 				this.grid.select.row.deselectById(this.id);
 				return this;
 			},
+
 			isSelected: function(){
-				return this.model.isMarked(this.id);
+				return this.model.getMark(this.id);
 			}
 		},
 		
@@ -57,7 +59,7 @@ define([
 		// triggerOnCell: [readonly] Boolean
 		//		Whether row will be selected by clicking on cell, false by default		
 		triggerOnCell: false,
-		
+
 /*=====
 		selectById: function(rowId){
 			// summary:
@@ -90,7 +92,7 @@ define([
 			// summary:
 			//		Check if the given rows are all selected.
 			return array.every(arguments, function(id){
-				return this.model.isMarked(id);
+				return this.model.getMark(id);
 			}, this);
 		},
 
@@ -132,7 +134,7 @@ define([
 					t._highlight({row: e.visualIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode === keys.SPACE){
+					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
 						t._isOnCell = e.columnId;
 						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 						t._end();
@@ -152,7 +154,8 @@ define([
 		_markByIndex: function(args, toSelect){
 			var g = this.grid,
 				m = this.model,
-				body = g.body;
+				body = g.body,
+				rowInfo;
 			array.forEach(args, function(arg){
 				if(lang.isArrayLike(arg)){
 					var start = arg[0],
@@ -164,14 +167,15 @@ define([
 						}else{
 							count = body.visualCount - start;
 						}
-						start = body.getRowInfo({visualIndex: start}).rowIndex;
+						rowInfo = body.getRowInfo({visualIndex: start});
+						start = rowInfo.rowIndex;
 						for(i = 0; i < count; ++i){
-							m.markByIndex(i + start, toSelect);	
+							m.markByIndex(i + start, toSelect, rowInfo.parentId);
 						}
 					}
 				}else if(arg >= 0 && arg < Infinity){
-					arg = body.getRowInfo({visualIndex: arg}).rowIndex;
-					m.markByIndex(arg, toSelect);
+					rowInfo = body.getRowInfo({visualIndex: arg}).rowIndex;
+					m.markByIndex(rowInfo.rowIndex, toSelect, rowInfo.parentId);
 				}
 			});
 			return m.when();
@@ -188,12 +192,14 @@ define([
 			}
 		},
 
-		_onMark: function(toMark, id, type){
-			if(type == 'select' && !this._marking){
+		_onMark: function(id, toMark, oldState, type){
+			if(type == 'select'){
 				var node = query('[rowid="' + id + '"]', this.grid.bodyNode)[0];
 				if(node){
-					domClass.toggle(node, 'gridxRowSelected', toMark);
-					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, !!toMark);
+					var selected = toMark && toMark != 'mixed';
+					domClass.toggle(node, 'gridxRowSelected', selected);
+					domClass.toggle(node, 'gridxRowPartialSelected', toMark == 'mixed');
+					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toMark);
 				}
 			}
 		},
@@ -216,7 +222,7 @@ define([
 		_isSelected: function(target){
 			var t = this,
 				id = t._getRowId(target.row);
-			return t._isRange ? array.indexOf(t._refSelectedIds, id) >= 0 : t.model.isMarked(id);
+			return t._isRange ? array.indexOf(t._refSelectedIds, id) >= 0 : t.model.getMark(id);
 		},
 
 		_beginAutoScroll: function(){
@@ -283,10 +289,9 @@ define([
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
-				start = bd.getRowInfo({visualIndex: a}).rowIndex;
-				end = bd.getRowInfo({visualIndex: b}).rowIndex;
-				for(i = start; i <= end; ++i){
-					m.markByIndex(i, toSelect);
+				for(i = a; i <= b; ++i){
+					var rowInfo = bd.getRowInfo({visualIndex: i});
+					m.markByIndex(rowInfo.rowIndex, toSelect, rowInfo.parentId);
 				}
 				return m.when();
 			}

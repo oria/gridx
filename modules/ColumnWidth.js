@@ -100,8 +100,8 @@ define([
 			hs[marginLead] = bs[marginLead] = lead + 'px';
 			hs[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
-			if(isGridHidden && isCollapse){
-				padBorder--;
+			if(isCollapse){
+				padBorder += isGridHidden ? -1 : 1;
 			}
 			if(g.autoWidth){
 				array.forEach(g._columns, function(c){
@@ -114,7 +114,7 @@ define([
 					totalWidth = isCollapse ? 2 : 0;
 				headers.forEach(function(node){
 					var w = domStyle.get(node, 'width');
-					if(!sniff('webkit') || !isGridHidden){
+					if(!sniff('safari') || !isGridHidden){
 						w += padBorder;
 					}
 					totalWidth += w;
@@ -147,7 +147,8 @@ define([
 						c.width = 'auto';
 						autoCols.push(c);
 					}else if(/%$/.test(c.width)){
-						c.width = parseInt(bodyWidth * parseFloat(c.width, 10) / 100 - padBorder, 10) + 'px';
+						c.width = parseInt(bodyWidth * parseFloat(c.width, 10) / 100 - 
+							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10) + 'px';
 					}
 				});
 				header.refresh();
@@ -157,14 +158,14 @@ define([
 						if(!c.width || /%$/.test(c.width)){
 							c.width = w + 'px';
 						}
-						if(!sniff('webkit') ||!isGridHidden){
+						if(!sniff('safari') || !isGridHidden){
 							w += padBorder;
 						}
 						fixedWidth += w;
 					}
 				});
 				if(autoCols.length){
-					if(sniff('webkit')){
+					if(sniff('safari')){
 						padBorder = 0;
 					}
 					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default');

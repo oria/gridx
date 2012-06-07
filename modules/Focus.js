@@ -247,7 +247,7 @@ define([
 			}
 			t._tabingOut = 1;
 			if(step < 0){
-				t._queueIdx= -1;
+				t._queueIdx = -1;
 				t.grid.domNode.focus();
 			}else{
 				t._queueIdx = tq.length;
@@ -293,7 +293,7 @@ define([
 			return false;
 		},
 
-		onFocusArea: function(/* String */areaName){
+		onFocusArea: function(/* String areaName*/){
 			// summary:
 			//		Fired when an area is focused.
 			// tags:

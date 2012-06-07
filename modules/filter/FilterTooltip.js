@@ -3,6 +3,7 @@ define([
 	"dijit",
 	"dojo/_base/declare",
 	"dojo/string",
+	"dojo/hccss",
 	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
 	"./FilterDialog",
@@ -13,7 +14,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/html"
-], function(dojo, dijit, declare, string, i18n){
+], function(dojo, dijit, declare, string, has, i18n){
 	
 	return declare(dijit.TooltipDialog, {
 		//summary:
@@ -51,22 +52,22 @@ define([
 			if(!data || !data.conditions.length){return;}
 			
 			var typeString = data.type === 'all' ? nls.statusTipHeaderAll : nls.statusTipHeaderAny;
-			var arr = ['<div class="gridxFilterTooltipTitle"><b>${statusTipTitleHasFilter}</b> ', 
-				typeString, '</div><table><tr><th>${statusTipHeaderColumn}</th><th>${statusTipHeaderCondition}</th></tr>'
+			var arr = ['<div class="gridxFilterTooltipTitle"><b>${i18n.statusTipTitleHasFilter}</b> ', 
+				typeString, '</div><table><tr><th>${i18n.statusTipHeaderColumn}</th><th>${i18n.statusTipHeaderCondition}</th></tr>'
 			];
 			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : '${anyColumnOption}'), 
+				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : '${i18n.anyColumnOption}'), 
 					'</td><td class="gridxFilterTooltipValueCell">', 
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
-					'<img src="' + this.grid._blankGif, 
-					'" action="remove-rule" title="${removeRuleButton}"',
-					' class="gridxFilterTooltipRemoveBtn"/></div></td></tr>');
+					'<span action="remove-rule" title="${i18n.removeRuleButton}"',
+					' class="gridxFilterTooltipRemoveBtn">' + (has('highcontrast') ? 'x':'') + '</span></div></td></tr>');
 			}, this);
 			arr.push('</table>');
-			this.set('content', string.substitute(arr.join(''), i18n));
+			this.i18n = i18n;
+			this.set('content', string.substitute(arr.join(''), this));
 			dojo.toggleClass(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},
 		_onMouseEnter: function(e){
@@ -78,7 +79,7 @@ define([
 		},
 		_onClick: function(e){
 			var tr = this._getTr(e), fb = this.filterBar;
-			if(tr && /^img$/i.test(e.target.tagName)){
+			if(tr && /^span$/i.test(e.target.tagName)){
 				//remove the rule
 				fb.filterData.conditions.splice(tr.rowIndex - 1, 1);
 				tr.parentNode.removeChild(tr);

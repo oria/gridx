@@ -11,6 +11,8 @@ define([
 	"../util",
 	"../core/_Module"
 ], function(kernel, declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
+	kernel.experimental('gridx/modules/Tree');
+
 	function isExpando(cellNode){
 		var n = cellNode.firstChild;
 		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
@@ -147,9 +149,15 @@ define([
 			);
 			t._initFocus();
 			if(g.persist){
-				var id, data = g.persist.registerAndLoad('tree', lang.hitch(t, t._persist));
+				var id,
+					data = g.persist.registerAndLoad('tree', function(){
+						return {
+							openInfo: this._openInfo, 
+							parentOpenInfo: this._parentOpenInfo
+						};
+					});
 				if(data){
-					var openInfo = t._openInfo = data.openInfo
+					var openInfo = t._openInfo = data.openInfo,
 						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
 					for(id in openInfo){
 						 openInfo[id].openned = parentOpenInfo[id];
@@ -162,7 +170,6 @@ define([
 		load: function(args){
 			// tags:
 			//		protected extension
-			kernel.experimental('gridx/modules/Tree');
 			var t = this;
 			if(t._persisted){
 				t.loaded.callback();
@@ -193,6 +200,7 @@ define([
 			// id: String
 			//		The ID of the expanded row
 		},
+
 		onCollapse: function(id){
 			// summary:
 			//		Fired when a row is collapsed.
@@ -630,13 +638,6 @@ define([
 					t.expand(e.rowId);
 				}
 			}
-		},
-		//open state persist----------------------------------------------------
-		_persist: function(){
-			return {
-				openInfo: this._openInfo, 
-				parentOpenInfo: this._parentOpenInfo
-			};
 		}
 	});
 });

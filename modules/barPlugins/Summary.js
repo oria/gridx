@@ -16,8 +16,7 @@ define([
 				c = 'connect',
 				m = t.grid.model;
 			t[c](m, 'onSizeChange', 'refresh');
-			t[c](m, 'onMarked', 'refresh');
-			t[c](m, 'onMarkRemoved', 'refresh');
+			t[c](m, 'onMarkChange', 'refresh');
 			t.refresh();
 		},
 

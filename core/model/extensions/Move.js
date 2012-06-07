@@ -150,7 +150,7 @@ define([
 		},
 
 		insert: function(dataArray, prevItem, nextItem){
-			var finished = new Deferred,
+			var finished = new Deferred(),
 				success = hitch(finished, finished.callback),
 				fail = hitch(finished, finished.errback),
 				moveField = this.moveField,
@@ -179,7 +179,7 @@ define([
 				if(store.fetch){
 					store.newItem(data);
 				}else{
-					var d = new Deferred;
+					var d = new Deferred();
 					Deferred.when(store.add(data), hitch(d, d.callback), hitch(d, d.errback));
 					dl.push(d);
 				}
@@ -268,7 +268,7 @@ define([
 						item = lang.clone(item);
 						item[moveField] = value;
 //                        console.log('setValue:', item, moveField, value);
-						var d = new Deferred;
+						var d = new Deferred();
 						Deferred.when(store.put(item, {
 							overwrite: true
 						}), hitch(d, d.callback));
@@ -380,7 +380,7 @@ define([
 		//Private--------------------------------------------------------------------
 		_cmdMove: function(){
 			//Process the move command
-			var d = new Deferred, t = this,
+			var d = new Deferred(), t = this,
 				m = t.model, i, args,
 				map = {}, moved, moves = [],
 				size = t.inner._call('size');

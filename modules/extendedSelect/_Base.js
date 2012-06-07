@@ -56,9 +56,9 @@ define([
 
 		holdingShift: false,
 
-        selectById: function(/* id */){
+		selectById: function(/* id */){
 			return this._subMark('_markById', arguments, true);
-        },
+		},
 
 		deselectById: function(/* id */){
 			return this._subMark('_markById', arguments, false);
@@ -73,8 +73,8 @@ define([
 		},
 
 		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
-			//summary:
-			//	Event: fired when the selection is changed.
+			// summary:
+			//		Event: fired when the selection is changed.
 		},
 
 		//Private -----------------------------------------------------------------

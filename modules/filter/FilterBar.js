@@ -1,10 +1,18 @@
 define([
+	
 	"dojo/_base/kernel",
 	"dijit",
 	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/dom-construct",
 	"dojo/dom-attr",
+	"dojo/dom-class",
+	"dojo/hccss",
 	"dojo/string",
+	"dojo/parser",
+	"dojo/query",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
@@ -21,7 +29,7 @@ define([
 	"dojo/query",
 	"dojo/parser"
 	
-], function(dojo, dijit, declare, domConstruct, domAttr, string, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(dojo, dijit, declare, lang, array, event, dom, domAttr, css, has, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -119,17 +127,18 @@ define([
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
 			this.closeFilterBarButton = this.arg('closeFilterBarButton') || this.closeFilterBarButton;
+			
 			this.defineFilterButton = this.arg('defineFilterButton') || this.defineFilterButton;
 			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
 			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
 			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
 			//console.log(locale, locale.falseLabel);
-			this.domNode = dojo.create('div', {
+			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, locale),
 				'class': 'gridxFilterBar'
 			});
-			dojo.parser.parse(this.domNode);
-			dojo.toggleClass(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
+			parser.parse(this.domNode);
+			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
 			this._nls = locale;
 			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
@@ -142,26 +151,30 @@ define([
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
 			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
 			this.loaded.callback();
+			
+			if(has('highcontrast')){
+				query('.gridxFilterBarCloseBtn', this.domNode)[0].innerHTML = 'x';
+			}
 		},
 		onDomClick: function(e){
 			if(!e.target || !e.target.tagName){return;}
-			if(dojo.attr(e.target, 'action') === 'clear'){
+			if(domAttr.get(e.target, 'action') === 'clear'){
 				this.clearFilter();
-			}else if(dojo.hasClass(e.target, 'gridxFilterBarCloseBtn')){
+			}else if(css.contains(e.target, 'gridxFilterBarCloseBtn')){
 				this.hide();
 			}else {
 				this.showFilterDialog();
 			}
 		},
 		onDomMouseMove: function(e){
-			if(e && e.target && (dojo.attr(e.target, 'action') === 'clear'
+			if(e && e.target && (domAttr.get(e.target, 'action') === 'clear'
 				|| this.btnFilter === dijit.getEnclosingWidget(e.target))){return;}
 			this._showTooltip(e);
 		},
 		onDomMouseOver: function(e){},
 		onDomMouseOut: function(e){
 			//Make sure to not hide tooltip when mouse moves to tooltip itself.
-			window.setTimeout(dojo.hitch(this, '_hideTooltip'), 10);
+			window.setTimeout(lang.hitch(this, '_hideTooltip'), 10);
 		},
 		
 		applyFilter: function(filterData){
@@ -170,7 +183,7 @@ define([
 			var F = Filter, exps = [];
 			this.filterData = filterData;
 			
-			dojo.forEach(filterData.conditions, function(data){
+			array.forEach(filterData.conditions, function(data){
 				var type = 'string';
 				if(data.colId){
 					type = this.grid.column(data.colId).dataType();
@@ -178,7 +191,7 @@ define([
 				}else{
 					//any column
 					var arr = [];
-					dojo.forEach(this.grid.columns(), function(col){
+					array.forEach(this.grid.columns(), function(col){
 						if(!col.isFilterable()){return;}
 						arr.push(this._getFilterExpression(data.condition, data, type, col.id));
 					}, this);
@@ -311,7 +324,7 @@ define([
 		uninitialize: function(){
 			this._filterDialog && this._filterDialog.destroyRecursive();
 			this.inherited(arguments);
-			dojo.destroy(this.domNode);
+			dom.destroy(this.domNode);
 		},
 	
 		//Private---------------------------------------------------------------
@@ -338,8 +351,8 @@ define([
 			
 			var ret = this.conditions[type], hash = {};
 			if(!ret){ret = conditionData['string'];}
-			dojo.forEach(disabled, function(name){hash[name]=true;});
-			ret = dojo.filter(ret, function(name){return !hash[name];});
+			array.forEach(disabled, function(name){hash[name]=true;});
+			ret = array.filter(ret, function(name){return !hash[name];});
 			return ret;
 		},
 		
@@ -377,7 +390,7 @@ define([
 				this.statusNode.innerHTML = nls.filterBarMsgNoFilterTemplate;
 				return;
 			}
-			this.statusNode.innerHTML = dojo.string.substitute(nls.filterBarMsgHasFilterTemplate, 
+			this.statusNode.innerHTML = string.substitute(nls.filterBarMsgHasFilterTemplate, 
 				[this._currentSize, this._totalSize, 'items']) + 
 				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="Clear filter">Clear Filter</a>';
 			this._buildTooltip();
@@ -394,7 +407,7 @@ define([
 				!this.filterData.conditions || 
 				!this.filterData.conditions.length){return;}
 			if(!delayed){
-				this._pointTooltipDelay = window.setTimeout(dojo.hitch(this, '_showTooltip', 
+				this._pointTooltipDelay = window.setTimeout(lang.hitch(this, '_showTooltip', 
 					evt, true),this.tooltipDelay);
 				return;
 			}
@@ -422,7 +435,7 @@ define([
 				
 				if(condition === 'range'){
 					var tpl = this._nls.rangeTemplate;
-					valueString = dojo.string.substitute(tpl, [f(value.start), f(value.end)]);
+					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
 				}
@@ -440,7 +453,7 @@ define([
 			var cache = this._conditionOptions = this._conditionOptions || {};
 			if(!cache[colId]){
 				var arr = [];
-				dojo.forEach(this._getColumnConditions(colId), function(s){
+				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({label: nls['condition' + k], value: s});
 				}, this);
@@ -535,7 +548,7 @@ define([
 		},
 		_doFocusBtnFilter: function(evt){
 			this.btnFilter.focus();
-			if(evt)if(evt){dojo.stopEvent(evt);}
+			if(evt)if(evt){event.stopEvent(evt);}
 			return true;
 		},
 		_doFocusClearLink: function(evt){
@@ -543,14 +556,14 @@ define([
 			var link = dojo.query('a[action="clear"]')[0];
 			if(link){
 				link.focus();
-				if(evt){dojo.stopEvent(evt);}
+				if(evt){event.stopEvent(evt);}
 				return true;
 			}
 			return false;
 		},
 		_doFocusBtnClose: function(evt){
 			this.btnClose.focus();
-			if(evt){dojo.stopEvent(evt);}
+			if(evt){event.stopEvent(evt);}
 			return true;
 		},
 		
@@ -559,7 +572,7 @@ define([
 		},
 		
 		destroy: function(){
-			domConstruct.destroy(this.domNode);
+			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}
 	});

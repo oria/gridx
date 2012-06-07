@@ -5,6 +5,7 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/_base/window",
+	"dojo/hccss",
 	"dojo/string",
 	"dojo/dom-class",
 	"dojo/dom-construct",
@@ -13,7 +14,7 @@ define([
 	"../core/_Module",
 	"../core/model/extensions/Sort",
 	"dojo/i18n!../nls/NestedSort"
-], function(declare, array, connect, event, query, win, string, domClass, domConstruct, domStyle, keys, _Module, Sort, nls){
+], function(declare, array, connect, event, query, win, has, string, domClass, domConstruct, domStyle, keys, _Module, Sort, nls){
 	
 	var forEach = array.forEach,
 		filter = array.filter,
@@ -225,10 +226,10 @@ define([
 			var t = this,
 				g = t.grid,
 				dn = g.domNode,
-				sortData = t._sortData;
+				sortData = t._sortData
+				a11y = has("highcontrast");
 			removeClass(dn, 'gridxSingleSorted');
 			removeClass(dn, 'gridxNestedSorted');
-			
 			query('th', g.header.domNode).forEach(function(cell){
 				var colid = cell.getAttribute('colid');
 				if(t.isSortable(colid)){
@@ -237,12 +238,11 @@ define([
 					});
 					var singleBtn = cell.childNodes[0],
 						nestedBtn = cell.childNodes[1],
-						a11y = hasClass(win.body(), 'dijit_a11y'),
 						a11yText = t._a11yText;
 					singleBtn.title = nls.singleSort + ' - ' + nls.ascending;
 					nestedBtn.title = nls.nestedSort + ' - ' + nls.ascending;
 					singleBtn.innerHTML = a11y ? a11yText.dojoxGridAscendingTip : '&nbsp;';
-					nestedBtn.innerHTML = sortData.length + 1 + (a11y ? a11yText.ascending : '');
+					nestedBtn.innerHTML = sortData.length + 1 + (a11y ? a11yText.dojoxGridAscendingTip : '');
 					var d = filter(sortData, function(data){
 						return data.colId === colid;
 					})[0];
@@ -259,12 +259,12 @@ define([
 							if(len == 1){
 								singleBtn.title = nls.singleSort + ' - ' + nls.unsorted;
 								if(a11y){
-									singleBtn.innerHTML = a11yText.dojoxGridUnsortedTip;
+									singleBtn.innerHTML = a11yText.dojoxGridDescending;
 								}
 							}else{
 								nestedBtn.title = nls.nestedSort + ' - ' + nls.unsorted;
 								if(a11y){
-									nestedBtn.innerHTML = a11yText.dojoxGridUnsortedTip;
+									nestedBtn.innerHTML += a11yText.dojoxGridDescending;
 								}
 							}
 						}else{
@@ -272,12 +272,12 @@ define([
 							if(len == 1){
 								singleBtn.title = nls.singleSort + ': ' + nls.descending;
 								if(a11y){
-									singleBtn.innerHTML = a11yText.dojoxGridDescendingTip;
+									singleBtn.innerHTML = a11yText.dojoxGridAscending;
 								}
 							}else{
 								nestedBtn.title = nls.nestedSort + ' - ' + nls.descending;
 								if(a11y){
-									nestedBtn.innerHTML = a11yText.dojoxGridDescendingTip;
+									nestedBtn.innerHTML += a11yText.dojoxGridAscending;
 								}
 							}
 						}

@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
+	"dojo/_base/lang",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
@@ -10,7 +11,7 @@ define([
 	"../core/_Module",
 	"../util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, array, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
+], function(declare, query, array, lang, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
 	var ga = 'getAttribute',
 		sa = 'setAttribute';
@@ -61,10 +62,7 @@ define([
 				[g, 'onCellMouseOver', '_onCellMouseOver'],
 				[g, 'onCellMouseOut', '_onCellMouseOver'],
 				[g.bodyNode, 'onmouseleave', function(){
-					var n = query('.gridxRowOver', t.domNode)[0];
-					if(n){
-						domClass.remove(n, 'gridxRowOver');
-					}
+					query('.gridxRowOver', t.domNode).removeClass('gridxRowOver');
 				}],
 				[g, 'setColumns', function(){
 					t.refresh();
@@ -109,7 +107,7 @@ define([
 			node: function(){
 				return this.grid.body.getCellNode({
 					rowId: this.row.id,
-					cellId: this.column.id
+					colId: this.column.id
 				});
 			}
 		},
@@ -197,7 +195,8 @@ define([
 			var t = this;
 			delete t._err;
 			return t.model.when({}).then(function(){	//dojo.Deferred
-				var rs = t.renderStart, rc = t.renderCount;
+				var rs = t.renderStart,
+					rc = t.renderCount;
 				if(typeof start == 'number' && start >= 0){
 					start = rs > start ? rs : start;
 					var count = rs + rc - start,
@@ -207,14 +206,17 @@ define([
 						var rows = t._buildRows(start, count, uncachedRows, renderedRows);
 						if(rows){
 							domConstruct.place(rows, n, 'before');
-							for(var i = 0, len = renderedRows.length; i < len; ++i){
-								t.onAfterRow.apply(t, renderedRows[i]);
-							}
+							array.forEach(renderedRows, t.onAfterRow, t);
 						}
 					}
 					while(n){
-						var tmp = n.nextSibling;
+						var tmp = n.nextSibling,
+							vidx = parseInt(n.getAttribute('visualindex'), 10),
+							id = n.getAttribute('rowid');
 						domConstruct.destroy(n);
+						if(vidx >= start + count){
+							t.onUnrender(id);
+						}
 						n = tmp;
 					}
 					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
@@ -239,15 +241,18 @@ define([
 			//		The index of the column of this cell
 			// returns:
 			//		A deferred object indicating when this refreshing process is finished.
-			var d = new Deferred(), t = this,
-				m = t.model, g = t.grid,
+			var d = new Deferred(),
+				t = this,
+				m = t.model,
+				g = t.grid,
 				col = g._columns[columnIndex],
 				cellNode = col && t.getCellNode({
 					visualIndex: rowVisualIndex,
 					colId: col.id
 				});
 			if(cellNode){
-				var rowCache, rowInfo = t.getRowInfo({visualIndex: rowVisualIndex}),
+				var rowCache,
+					rowInfo = t.getRowInfo({visualIndex: rowVisualIndex}),
 					idx = rowInfo.rowIndex, pid = rowInfo.parentId;
 				m.when({
 					start: idx,
@@ -258,8 +263,9 @@ define([
 					if(rowCache){
 						rowInfo.rowId = m.indexToId(idx, pid);
 						var isPadding = g.tree && rowCache.data[col.id] === undefined;
-						cellNode.innerHTML = t._buildCellContent(col, rowInfo, rowCache.data, isPadding);
-						t.onAfterCell(cellNode, rowInfo, col, rowCache);
+						var cell = g.cell(rowInfo.rowId, col.id, 1);
+						cellNode.innerHTML = t._buildCellContent(cell, isPadding);
+						t.onAfterCell(cell);
 					}
 				}).then(function(){
 					d.callback(!!rowCache);
@@ -318,6 +324,9 @@ define([
 				t.onForcedScroll();
 			}
 		},
+
+		refreshRows: function(){
+		},
 	
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
 			// tags:
@@ -363,9 +372,7 @@ define([
 					finalInfo = str ? "" : emptyInfo;
 					t.onUnrender();
 				}
-				for(var i = 0, len = renderedRows.length; i < len; ++i){
-					t.onAfterRow.apply(t, renderedRows[i]);
-				}
+				array.forEach(renderedRows, t.onAfterRow, t);
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 					en.innerHTML = finalInfo;
 					t.onRender(start, count);
@@ -411,7 +418,7 @@ define([
 	
 		//Events--------------------------------------------------------------------------------
 		//onBeforeRow: function(){},
-		onAfterRow: function(){},
+		onAfterRow: function(/* Row */){},
 		onAfterCell: function(){},
 		onRender: function(/*start, count*/){},
 		onUnrender: function(){},
@@ -425,7 +432,7 @@ define([
 		//Private---------------------------------------------------------------------------
 		_getRowNodeQuery: function(args){
 			var r;
-			if(args.rowId){
+			if(this.model.isId(args.rowId)){
 				r = "[rowid='" + args.rowId + "']";
 			}else if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
 				r = "[rowindex='" + args.rowIndex + "']";
@@ -439,20 +446,26 @@ define([
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){
-			var i, end = start + count, s = [], t = this, m = t.model, w = t.domNode.scrollWidth;
+			var i,
+				end = start + count,
+				s = [],
+				t = this,
+				g = t.grid,
+				m = t.model,
+				w = t.domNode.scrollWidth;
 			for(i = start; i < end; ++i){
 				var rowInfo = t.getRowInfo({visualIndex: i}),
-					rowCache = m.byIndex(rowInfo.rowIndex, rowInfo.parentId);
+					row = g.row(rowInfo.rowId, 1);
 				s.push('<div class="gridxRow ', i % 2 ? 'gridxRowOdd' : '',
 					'" role="row" visualindex="', i);
-				if(rowCache){
-					m.keep(rowInfo.rowId);
-					s.push('" rowid="', rowInfo.rowId,
+				if(row){
+					m.keep(row.id);
+					s.push('" rowid="', row.id,
 						'" rowindex="', rowInfo.rowIndex,
 						'" parentid="', rowInfo.parentId, 
-						'">', t._buildCells(rowCache.data, rowInfo),
+						'">', t._buildCells(row),
 					'</div>');
-					renderedRows.push([rowInfo, rowCache]);
+					renderedRows.push(row);
 				}else{
 					s.push('"><div class="gridxRowDummy" style="width:', w, 'px;"></div></div>');
 					rowInfo.start = rowInfo.rowIndex;
@@ -467,9 +480,7 @@ define([
 			var t = this;
 			return uncachedRows.length && t.model.when(uncachedRows, function(){
 				try{
-					for(var i = 0, len = uncachedRows.length; i < len; ++i){
-						t._buildRowContent(uncachedRows[i]);
-					}
+					array.forEach(uncachedRows, t._buildRowContent, t);
 				}catch(e){
 					t._loadFail(e);
 				}
@@ -486,51 +497,66 @@ define([
 		},
 	
 		_buildRowContent: function(rowInfo){
-			var t = this, m = t.model, n = query('[visualindex="' + rowInfo.visualIndex + '"]', t.domNode)[0];
+			var t = this,
+				g = t.grid,
+				m = t.model,
+				n = query('[visualindex="' + rowInfo.visualIndex + '"]', t.domNode)[0];
 			if(n){
 				var rowCache = m.byIndex(rowInfo.rowIndex, rowInfo.parentId);
 				if(rowCache){
-					rowInfo.rowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-					m.keep(rowInfo.rowId);
-					n[sa]('rowid', rowInfo.rowId);
+					var rowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId),
+						row = g.row(rowId, 1);
+					m.keep(rowId);
+					n[sa]('rowid', rowId);
 					n[sa]('rowindex', rowInfo.rowIndex);
 					n[sa]('parentid', rowInfo.parentId || '');
-					n.innerHTML = t._buildCells(rowCache.data, rowInfo);
-					t.onAfterRow(rowInfo, rowCache);
+					n.innerHTML = t._buildCells(row);
+					t.onAfterRow(row);
 				}else{
 					throw new Error('Row is not in cache:' + rowInfo.rowIndex);
 				}
 			}
 		},
 	
-		_buildCells: function(rowData, rowInfo){
-			var col, isPadding, t = this, g = t.grid, columns = g._columns,
+		_buildCells: function(row){
+			var col,
+				isPadding,
+				style,
+				t = this,
+				g = t.grid,
+				columns = g._columns,
+				rowData = row.data(),
 				isFocusArea = g.focus && (g.focus.currentArea() == 'body'),
 				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			for(var i = 0, len = columns.length; i < len; ++i){
 				col = columns[i];
 				isPadding = g.tree && rowData[col.id] === undefined;
+				style = lang.isFunction(col.style) ? col.style(g.cell(row.id, col.id, 1)) : col.style;
 				sb.push('<td class="gridxCell ');
 				if(isPadding){
 					sb.push('gridxPaddingCell');
 				}
-				if(isFocusArea && t._focusCellRow === rowInfo.visualIndex && t._focusCellCol === i){
+				if(isFocusArea && t._focusCellRow === row.visualIndex() && t._focusCellCol === i){
 					sb.push('gridxCellFocus');
 				}
 				sb.push('" role="gridcell" tabindex="-1" colid="', col.id, 
 					'" style="width: ', col.width, 
-					'">', t._buildCellContent(col, rowInfo, rowData, isPadding),
+					'; ', style,
+					'">', t._buildCellContent(row.cell(col.id, 1), isPadding),
 				'</td>');
 			}
 			sb.push('</tr></table>');
 			return sb.join('');
 		}, 
 	
-		_buildCellContent: function(col, rowInfo, rowData, isPadding){
-			var r = '';
+		_buildCellContent: function(cell, isPadding){
+			var r = '',
+				col = cell.column,
+				row = cell.row,
+				data = cell.data();
 			if(!isPadding){
-				var s = col.decorator ? col.decorator(rowData[col.id], rowInfo.rowId, rowInfo.visualIndex) : rowData[col.id];
-				r = this._wrapCellData(s, rowInfo.rowId, col.id);
+				var s = col.decorator ? col.decorator(data, row.id, row.visualIndex()) : data;
+				r = this._wrapCellData(s, row.id, col.id);
 			}
 			return (!r && sniff('ie') < 8) ? '$nbsp;' : r;
 		},
@@ -589,12 +615,12 @@ define([
 		//Store Notification-------------------------------------------------------------------
 		_onSet: function(id, index, rowCache){
 			var t = this;
-			if(t.autoUpdate){
-				var rowNode = t.getRowNode({rowId: id});
-				if(rowNode && rowCache){
-					var rowInfo = t.getRowInfo({rowId: id, rowIndex: index});
-					rowNode.innerHTML = t._buildCells(rowCache.data, rowInfo);
-					t.onAfterRow(rowInfo, rowCache);
+			if(t.autoUpdate && rowCache){
+				var row = t.grid.row(id, 1),
+					rowNode = row && row.node();
+				if(rowNode){
+					rowNode.innerHTML = t._buildCells(row);
+					t.onAfterRow(row);
 					t.onSet(id, index, rowCache);
 					t.onRender(index, 1);
 				}
@@ -644,11 +670,7 @@ define([
 			var t = this;
 			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
-				//Avoid too much rendering when starting up. TODO: any better way?
-//                if(t._started){
 				t.refresh();
-//                }
-//                t._started = 1;
 			}
 		},
 		

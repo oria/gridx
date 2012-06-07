@@ -3,7 +3,8 @@ define({ root:
 ({
 	"clearFilterDialogTitle": "Clear Filter",
 	"filterDefDialogTitle": "Filter",
-	"ruleTitleTemplate": "Rule ${0}",
+	"defaultRuleTitle": "Rule",
+	"ruleTitleTemplate": "Rule ${ruleNumber}",
 	"noFilterApplied": "No filter applied.",
 	"defineFilter": "Define filter",
 	
@@ -42,6 +43,7 @@ define({ root:
 	"removeRuleButton": "Remove Rule",
 	"waiRemoveRuleButtonTemplate": "Remove rule ${0}",
 	
+	"addRuleButton": "Add Filter Rule",
 	"cancelButton": "Cancel",
 	"waiCancelButton": "Cancel this dialog",
 	"clearButton": "Clear",
@@ -86,7 +88,14 @@ define({ root:
 	"anyColumnOption": "Any Column",
 	
 	"trueLabel": "True",
-	"falseLabel": "False"
+	"falseLabel": "False",
+	"radioTrueLabel": "Value True",
+	"radioFalseLabel": "Value False",
+	"beginTimeRangeLabel": "Time Range Value Start",
+	"endTimeRangeLabel": "Time Range Value End",
+	"beginDateRangeLabel": "Date Range Value Start",
+	"endDateRangeLabel": "Date Range Value End",
+	"startsWithExpr": "${0}*"
 })
 //end v1.x content
 });

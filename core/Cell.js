@@ -30,7 +30,7 @@ define([
 
 		
 		constructor: function(grid, row, column){
-			var t=this;
+			var t = this;
 			t.grid = grid;
 			t.model = grid.model;
 			t.row = row;
