@@ -3,10 +3,9 @@ define([
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/html",
-	"dojo/hccss",
 	"dojo/fx",
 	"dojo/query"
-], function(dojo, _Module, declare, html, has, fx, query){
+], function(dojo, _Module, declare, html, fx, query){
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
@@ -33,6 +32,7 @@ define([
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
 			this.loaded.callback();
+			
 		},
 		getAPIPath: function(){
 			return {
@@ -70,9 +70,7 @@ define([
 			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
-			if(has('highcontrast')){
-				this._getExpando(row).innerHTML = '-';
-			}
+			this._getExpando(row).firstChild.innerHTML = '-';
 			
 			var node = row.node(), w = node.scrollWidth;
 			if(!_row.dodLoadingNode){
@@ -120,9 +118,7 @@ define([
 			if(!_row.dodShown || _row.inAnim){return;}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
-			if(has('highcontrast')){
-				this._getExpando(row).innerHTML = '+';
-			}
+			this._getExpando(row).firstChild.innerHTML = '+';
 			_row.inAnim = true;
 			fx.wipeOut({
 				node: _row.dodNode,
@@ -167,7 +163,7 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			if(!html.hasClass(e.target, 'gridxDodExpando')){return;}
+			if(!html.hasClass(e.target, 'gridxDodExpando') && !html.hasClass(e.target, 'gridxDodExpandoText')){return;}
 			var node = e.target;
 			while(node && !html.hasClass(node, 'gridxRow')){
 				node = node.parentNode;
@@ -178,20 +174,22 @@ define([
 		
 		_onAfterRow: function(row){
 			var _row = this._row(row);
+			if(this.arg('showExpando')){
+				var tbl = dojo.query('table', row.node())[0];
+				var cell = tbl.rows[0].cells[0];
+				var span = dojo.create('span', {
+					className: 'gridxDodExpando',
+					innerHTML: '<span class="gridxDodExpandoText">' 
+						+ (this.defaultShow ? '-' : '+') + '</span>'
+				}, cell, 'first');
+			}
+			
 			if(this.isShown(row) || (this.arg('defaultShow') && _row.dodShown === undefined)){
 				_row.dodShown = false;
 				_row.defaultShow = true;
 				this.show(row);
 			}
 			
-			if(this.arg('showExpando')){
-				var tbl = dojo.query('table', row.node())[0];
-				var cell = tbl.rows[0].cells[0];
-				var span = dojo.create('span', {
-					className: 'gridxDodExpando',
-					innerHTML: has('highcontrast') ? '+' : ''
-				}, cell, 'first');
-			}
 		},
 		
 		_onColumnResize: function(){

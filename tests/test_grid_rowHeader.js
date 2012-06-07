@@ -141,7 +141,7 @@ require([
 					data
 				].join('');
 			},
-			editor: 'dijit/ColorPalette',
+			editor: 'dijit.ColorPalette',
 			editorArgs: {
 				fromEditor: function(v, cell){
 					return v || cell.data(); //If no color selected, use the orginal one.
@@ -166,7 +166,7 @@ require([
 					data
 				].join('');
 			},
-			editor: 'dijit/ColorPalette',
+			editor: 'dijit.ColorPalette',
 			editorArgs: {
 				fromEditor: function(v, cell){
 					return v || cell.data(); //If no color selected, use the orginal one.

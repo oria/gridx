@@ -9,7 +9,6 @@ define([
 	"dojo/dom-construct",
 	"dojo/dom-attr",
 	"dojo/dom-class",
-	"dojo/hccss",
 	"dojo/string",
 	"dojo/parser",
 	"dojo/query",
@@ -29,7 +28,7 @@ define([
 	"dojo/query",
 	"dojo/parser"
 	
-], function(dojo, dijit, declare, lang, array, event, dom, domAttr, css, has, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(dojo, dijit, declare, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -151,16 +150,12 @@ define([
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
 			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
 			this.loaded.callback();
-			
-			if(has('highcontrast')){
-				query('.gridxFilterBarCloseBtn', this.domNode)[0].innerHTML = 'x';
-			}
 		},
 		onDomClick: function(e){
 			if(!e.target || !e.target.tagName){return;}
 			if(domAttr.get(e.target, 'action') === 'clear'){
 				this.clearFilter();
-			}else if(css.contains(e.target, 'gridxFilterBarCloseBtn')){
+			}else if(css.contains(e.target, 'gridxFilterBarCloseBtn') || css.contains(e.target,'gridxFilterBarCloseBtnText')){
 				this.hide();
 			}else {
 				this.showFilterDialog();

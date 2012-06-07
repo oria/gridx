@@ -116,6 +116,11 @@ th.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested {
 }
 
 
-
+.gridxNestedSortBtnText {
+	display: none;
+}
+.dijit_a11y .gridxNestedSortBtnText {
+	display: inline;
+}
 
 

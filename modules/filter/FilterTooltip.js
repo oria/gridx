@@ -3,18 +3,16 @@ define([
 	"dijit",
 	"dojo/_base/declare",
 	"dojo/string",
-	"dojo/hccss",
 	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
 	"./FilterDialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
-	
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/html"
-], function(dojo, dijit, declare, string, has, i18n){
+], function(dojo, dijit, declare, string, i18n){
 	
 	return declare(dijit.TooltipDialog, {
 		//summary:
@@ -63,7 +61,7 @@ define([
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
 					'<span action="remove-rule" title="${i18n.removeRuleButton}"',
-					' class="gridxFilterTooltipRemoveBtn">' + (has('highcontrast') ? 'x':'') + '</span></div></td></tr>');
+					' class="gridxFilterTooltipRemoveBtn"><span class="gridxFilterTooltipRemoveBtnText">x</span></span></div></td></tr>');
 			}, this);
 			arr.push('</table>');
 			this.i18n = i18n;

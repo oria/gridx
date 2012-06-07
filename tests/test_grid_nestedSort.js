@@ -7,7 +7,7 @@ require([
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
-
+	
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,

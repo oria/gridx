@@ -27,7 +27,7 @@ require([
 //            mods.SelectRow,
 			{
 				moduleClass: filterBar,
-				maxRuleCount: 2,
+				maxRuleCount: 3,
 				ruleCountToConfirmClearFilter: 2
 			}
 		],

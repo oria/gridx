@@ -257,3 +257,13 @@
 .gridxQuickFilterHasFilterBar .gridxQuickFilterButton {
 	display: none;
 }
+
+.gridxFilterBarCloseBtnText,
+.gridxFilterTooltipRemoveBtnText {
+	display: none;
+}
+
+.dijit_a11y .gridxFilterBarCloseBtnText,
+.dijit_a11y .gridxFilterTooltipRemoveBtnText {
+	display: inline;
+}

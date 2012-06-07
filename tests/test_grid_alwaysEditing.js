@@ -1,7 +1,8 @@
 require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'dojo/store/Memory',
+	'gridx/tests/support/stores/ItemFileWriteStore',
+	'dojo/data/ItemFileWriteStore',
 	'dojo/date/locale',
 	'dijit/form/TextBox',
 	'dijit/form/ComboBox',
@@ -19,7 +20,7 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/modules'
-], function(dataSource, storeFactory, Memory, locale, TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
+], function(dataSource, storeFactory, IFWSFactory, IFWStore, locale, TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
 		res = locale.format(d, {
@@ -51,7 +52,7 @@ require([
 		size: 100
 	});
 
-	mystore = storeFactory({
+	mystore = IFWSFactory({
 		dataSource: dataSource, 
 		size: 200
 	});
@@ -69,8 +70,12 @@ require([
 				id: d
 			});
 		}
-		return new Memory({
-			data: data
+		return new IFWStore({
+			data: {
+				identifier: 'id',
+				label: 'id',
+				items: data
+			}
 		});
 	}
 
@@ -81,7 +86,7 @@ require([
 		{ field: "id", name:"ID", width: '20px'},
 		{ field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
 		{ field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
-			editor: "dijit/form/ComboBox",
+			editor: "dijit.form.ComboBox",
 			editorArgs: {
 				props: 'store: mystore, searchAttr: "Artist"'
 			}
@@ -103,14 +108,14 @@ require([
 			}
 		},
 		{ field: "Progress", name:"HorizontalSlider", width: '100px', alwaysEditing: true,
-			editor: "dijit/form/HorizontalSlider",
+			editor: "dijit.form.HorizontalSlider",
 			editorArgs: {
 				props: 'minimum: 0, maximum: 1'
 			}
 		},
 		{ field: "Track", name:"Number Spinner", width: '100px', alwaysEditing: true,
 			width: '50px',
-			editor: "dijit/form/NumberSpinner"
+			editor: "dijit.form.NumberSpinner"
 		},
 		{ field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
 			editor: "dijit.form.CheckBox",
@@ -148,7 +153,7 @@ require([
 	layout2 = [
 		{ field: "id", name:"ID", width: '20px'},
 		{ field: "Color", name:"Color Palatte", width: '210px', alwaysEditing: true,
-			editor: 'dijit/ColorPalette',
+			editor: 'dijit.ColorPalette',
 			editorArgs: {
 				fromEditor: function(v, cell){
 					return v || cell.data(); //If no color selected, use the orginal one.
@@ -159,14 +164,14 @@ require([
 			dataType: 'date',
 			storePattern: 'yyyy/M/d',
 			gridPattern: 'yyyy/MMMM/dd',
-			editor: 'dijit/Calendar',
+			editor: 'dijit.Calendar',
 			editorArgs: {
 				fromEditor: getDate
 			}
 		},
 		{ field: "Composer", name:"Editor", width: '500px', alwaysEditing: true,
 			//FIXME: this is still buggy, can not TAB out.
-			editor: "dijit/Editor",
+			editor: "dijit.Editor",
 			editorArgs: {
 				props: 'height: 20'
 			}
