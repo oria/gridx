@@ -48,7 +48,7 @@ define([
 			
 		},
 		_adjustBody: function(){
-			//summary:
+			// summary:
 			//	Called after content is changed or column width is resized, which
 			//	may cause row height change of locked rows.
 			var h = 0;
@@ -58,7 +58,7 @@ define([
 			this.grid.bodyNode.style.paddingTop = h + 'px';
 		},
 		_updatePosition: function(){
-			//summary:
+			// summary:
 			//	Update position of locked rows so that they look like locked.
 			if(!this.count){return;}
 			var t = this.grid.bodyNode.scrollTop, h = 0, _this = this;

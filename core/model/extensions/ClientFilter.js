@@ -21,6 +21,7 @@ define([
 			this._mixinAPI('filter', 'hasFilter');
 			model.onFilterProgress = function(){};
 			this.connect(model, '_msg', '_receiveMsg');
+			this.connect(model, 'setStore', 'clear');
 		},
 
 		//Public---------------------------------------------------------------------

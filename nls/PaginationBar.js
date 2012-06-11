@@ -1,5 +1,7 @@
 define({root:
 ({
+	pagerWai: 'Pager',
+
 	pageIndex: '${0}',
 	pageIndexTitle: 'Page ${0}',
 	pageIndexWai: 'Page ${0}',

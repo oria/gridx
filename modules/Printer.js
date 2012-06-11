@@ -37,7 +37,7 @@ define([
 		hitch = lang.hitch;
 
 	function loadStyleFiles(src){
-		var d = new Deferred,
+		var d = new Deferred(),
 			loaded = hitch(d, d.callback);
 		if(src){
 			xhr.get({
@@ -135,7 +135,7 @@ define([
 			//		Please refer to `grid.printer.__PrinterArgs`
 			// returns:
 			//		A deferred object indicating when the export process is completed.
-			var t = this, d = new Deferred;
+			var t = this, d = new Deferred();
 			loadStyleFiles(args.styleSrc).then(function(styleSrc){
 				t.grid.exporter.toTable(args).then(function(str){
 					d.callback(t._wrap(args, styleSrc, str));

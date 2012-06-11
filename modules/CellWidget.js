@@ -88,8 +88,6 @@ define([
 			}
 		});
 
-	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
-	
 	return declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
 		// summary:
 		//		This module makes it possible to efficiently show widgets within a grid cell.
@@ -279,8 +277,8 @@ define([
 		_showDijit: function(cell){
 			var col = cell.column.def();
 			if(col.userDecorator || this._getSpecialCellDec(cell.row.id, col.id)){
-				cellWidget = this._prepareCellWidget(cell);
-				var cellNode = cell.node();
+				var cellWidget = this._prepareCellWidget(cell),
+					cellNode = cell.node();
 				cellNode.innerHTML = "";
 				cellWidget.placeAt(cellNode);
 				cellWidget.startup();

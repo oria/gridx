@@ -220,7 +220,7 @@ define([
 
 		_postCreate: function(){
 			var t = this,
-				d = t._deferStartup = new Deferred;
+				d = t._deferStartup = new Deferred();
 			t._preload();
 			t._load(d).then(hitch(t, 'onModulesLoaded'));
 		},
@@ -235,16 +235,10 @@ define([
 		
 		setStore: function(store){
 			// summary:
-			//		Change the store for grid. 
-			// description:
-			//		Since store defines the data model for grid, changing store is usually changing everything.
+			//		Change the store for grid.
 			// store: dojo.data.*|dojox.data.*|dojo.store.*
 			//		The new data store
-			var t = this;
-			t.store = store;
-			t._reset(t);
-			t._postCreate();
-			t._deferStartup.callback();
+			this.model.setStore(store);
 		},
 
 		

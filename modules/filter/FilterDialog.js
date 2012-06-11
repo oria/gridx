@@ -5,6 +5,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/string",
 	"dijit/Dialog",
+	"dojox/html/metrics",
 	"dojo/text!../../templates/FilterDialog.html",
 	"dojo/i18n!../../nls/FilterBar",
 	"./FilterPane",
@@ -14,7 +15,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, lang, dijit, declare, string, Dialog, template, i18n, FilterPane){
+], function(dojo, lang, dijit, declare, string, Dialog, htmlMetrics, template, i18n, FilterPane){
 	return declare(Dialog, {
 		title: i18n.filterDefDialogTitle,
 		cssClass: 'gridxFilterDialog',
@@ -29,14 +30,14 @@ define([
 		},
 		
 		done: function(){
-			//summary:
+			// summary:
 			//	Apply the filter.
 			this.hide();
 			this.grid.filterBar.applyFilter(this.getData());
 		},
 		
 		getData: function(){
-			//summary:
+			// summary:
 			//	Get filter data.
 			return {
 				type: this._sltMatch.get('value'),
@@ -47,7 +48,7 @@ define([
 		},
 		
 		setData: function(data){
-			//summary:
+			// summary:
 			//	Set filter data.
 			this.removeChildren();
 			if(!data || !data.conditions.length){
@@ -60,7 +61,7 @@ define([
 		},
 		
 		removeChildren: function(){
-			//summary:
+			// summary:
 			//	Remove all child of the accodion container.
 			dojo.forEach(this._accordionContainer.getChildren(), function(child){
 				this._accordionContainer.removeChild(child);
@@ -91,7 +92,7 @@ define([
 		addRule: function(){
 			var ac = this._accordionContainer;
 			if(ac.getChildren().length === 3){
-				ac._contentBox.w -= dojox.html.metrics.getScrollbar().w;
+				ac._contentBox.w -= htmlMetrics.getScrollbar().w;
 			}
 			var nextRuleNumber = ac.getChildren().length + 1;
 			var ruleTitle = dojo.string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
@@ -156,7 +157,7 @@ define([
 		},
 		
 		_updateAccordionContainerHeight: function(){
-			//summary:
+			// summary:
 			//	Update the height of the accordion container to ensure consistent height of each accordion pane.
 			var ac = this._accordionContainer, len = ac.getChildren().length;
 			dojo.style(ac.domNode, 'height', 145 + len * this._titlePaneHeight + 'px');

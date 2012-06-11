@@ -66,6 +66,9 @@ define([
 				}],
 				[g, 'setColumns', function(){
 					t.refresh();
+				}],
+				[g, 'setStore', function(){
+					t.refresh();
 				}]
 			);
 			m.when({}, function(){
@@ -114,16 +117,17 @@ define([
 	
 		//Public-----------------------------------------------------------------------------
 		rowHoverEffect: true,
-		/*
-		 * infoArgs: {
-		 *		rowId
-		 *		rowIndex
-		 *		visualIndex
-		 *		parentId
-		 *		colId
-		 *		colIndex
-		 * }
-		 */
+
+		/*=====
+		infoArgs: {
+			rowId
+			rowIndex
+			visualIndex
+			parentId
+			colId
+			colIndex
+		},
+		=====*/
 
 		getRowNode: function(args){
 			// summary:
@@ -421,7 +425,7 @@ define([
 		onAfterRow: function(/* Row */){},
 		onAfterCell: function(){},
 		onRender: function(/*start, count*/){},
-		onUnrender: function(){},
+		onUnrender: function(/* id */){},
 //        onNew: function(/*id, index, rowCache*/){},
 		onDelete: function(/*id, index*/){},
 		onSet: function(/*id, index, rowCache*/){},
@@ -641,7 +645,8 @@ define([
 						pid = node[ga]('parentid'),
 						pids = {id: 1},
 						toDelete = [node],
-						rid, ids = [id];
+						rid, ids = [id],
+						vidx;
 					for(sn = node.nextSibling; sn && pids[sn[ga]('parentid')]; sn = sn.nextSibling){
 						rid = sn[ga]('rowid');
 						ids.push(rid);
@@ -652,9 +657,12 @@ define([
 						if(sn[ga]('parentid') == pid){
 							sn[sa]('rowindex', parseInt(sn[ga]('rowindex'), 10) - 1);
 						}
-						sn[sa]('visualindex', parseInt(sn[ga]('visualindex'), 10) - 1);
+						vidx = parseInt(sn[ga]('visualindex'), 10) - 1;
+						sn[sa]('visualindex', vidx);
+						domClass.toggle(sn, 'gridxRowOdd', vidx % 2);
 						++count;
 					}
+					t.renderCount -= toDelete.length;
 					array.forEach(toDelete, domConstruct.destroy);
 					array.forEach(ids, t.onUnrender, t);
 					if(t.autoChangeSize && t.rootStart === 0 && !pid){

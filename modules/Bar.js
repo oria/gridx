@@ -1,4 +1,5 @@
 define([
+	"require",
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
@@ -7,7 +8,7 @@ define([
 	"dojo/dom-construct",
 	"../core/_Module",
 	"../util"
-], function(kernel, declare, lang, array, a11y, domConstruct, _Module, util){
+], function(require, kernel, declare, lang, array, a11y, domConstruct, _Module, util){
 
 	kernel.experimental('gridx/modules/Bar');
 	

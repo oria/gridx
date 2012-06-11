@@ -135,10 +135,9 @@ define([
 			this._updateScroller();
 			this.grid.hScroller && this.grid.hScroller._doScroll();
 			this.grid.header.onRender();
-//            this.grid.body.onRender();
 		},
 		_lockColumns: function(rowNode){
-			//summary:
+			// summary:
 			//	Lock columns for one row
 			if(!this.count || this.count >= this.grid._columns.length){
 				this.count = 0;
@@ -149,11 +148,6 @@ define([
 			for(i = 0; i < this.count; i++){
 				dojo.style(r.cells[i], 'height', 'auto');
 			}
-//			var h = 0;
-//			array.forEach(r.cells, function(cell){
-//				var mh = dojo.contentBox(r.cells[r.cells.length - 1]).h;
-//				if(h < mh)h = mh;
-//			});
 			
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
@@ -175,7 +169,7 @@ define([
 		},
 		
 		_updateHeader: function(){
-			//summary:
+			// summary:
 			//	Update the header for column lock
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
 			this._lockColumns(rowNode);
@@ -183,25 +177,25 @@ define([
 		},
 		
 		_updateBody: function(){
-			//summary:
+			// summary:
 			//	Update the body for column lock
 			array.forEach(this.grid.bodyNode.childNodes, this._lockColumns, this);
 		},
 		
 		_updateScroller: function(){
-			//summary:
+			// summary:
 			//	Update h-scroller for column lock
 			if(this.grid.hScroller){this.grid.hScroller.refresh();}
 		},
 		
 		_hackHScroller: function(){
-			//summary:
+			// summary:
 			//	This method changes behavior of hscroller. It will scroll each row instead of the body node
 			//	while some columns are locked.
 			var _this = this;
 			lang.mixin(this.grid.hScroller, {
 				_doScroll: function(){
-					//summary:
+					// summary:
 					//	Sync the grid body with the scroller.
 					
 					var scrollLeft = this.domNode.scrollLeft;

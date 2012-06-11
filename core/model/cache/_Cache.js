@@ -16,14 +16,26 @@ define([
 		// summary:
 		//		Abstract base cache class, providing cache data structure and some common cache functions.
 		constructor: function(model, args){
+			var t = this;
+			t.setStore(args.store);
+			t.columns = args.columns;
+			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'hasChildren', 'keep', 'free');
+		},
+
+		destroy: function(){
+			this.inherited(arguments);
+			this.clear();
+		},
+
+		setStore: function(store){
 			var t = this,
 				c = 'connect',
-				s = t.store = args.store,
-				old = s.fetch;
-			t.columns = args.columns;
-			if(!old && s.notify){
+				old = store.fetch;
+			t.clear();
+			t.store = store;
+			if(!old && store.notify){
 				//The store implements the dojo.store.Observable API
-				t[c](s, 'notify', function(item, id){
+				t[c](store, 'notify', function(item, id){
 					if(item === undefined){
 						t._onDelete(id);
 					}else if(id === undefined){
@@ -33,17 +45,10 @@ define([
 					}
 				});
 			}else{
-				t[c](s, old ? "onSet" : "put", "_onSet");
-				t[c](s, old ? "onNew" : "add", "_onNew");
-				t[c](s, old ? "onDelete" : "remove", "_onDelete");
+				t[c](store, old ? "onSet" : "put", "_onSet");
+				t[c](store, old ? "onNew" : "add", "_onNew");
+				t[c](store, old ? "onDelete" : "remove", "_onDelete");
 			}
-			t.clear();
-			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'hasChildren', 'keep', 'free');
-		},
-
-		destroy: function(){
-			this.inherited(arguments);
-			this.clear();
 		},
 		
 		//Public----------------------------------------------

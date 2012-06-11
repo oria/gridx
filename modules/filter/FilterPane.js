@@ -3,6 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dijit",
 	"dojo/string",
+	"dojox/html/metrics",
 	"dojo/text!../../templates/FilterPane.html",
 	"dojo/i18n!../../nls/FilterBar",
 	"dojo/_base/declare",
@@ -23,7 +24,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, lang, dijit, string, template, i18n, declare, DistinctComboBoxMenu, Filter){
+], function(dojo, lang, dijit, string, htmlMetrics, template, i18n, declare, DistinctComboBoxMenu, Filter){
 	return declare([dijit.layout.ContentPane], {
 		//content: template,
 		sltColumn: null,
@@ -71,7 +72,7 @@ define([
 			var ac = this._getContainer();
 			if(ac.getChildren().length === 4){
 				//while there's less than 4 rules, no scroll bar
-				ac._contentBox.w += dojox.html.metrics.getScrollbar().w;
+				ac._contentBox.w += htmlMetrics.getScrollbar().w;
 			}
 			
 			if(this === ac.selectedChildWidget){
@@ -85,7 +86,7 @@ define([
 			this.grid.filterBar._filterDialog._updateAccordionContainerHeight();
 		},
 		onChange: function(){
-			//summary:
+			// summary:
 			//	event: fired when column, condition or value is changed
 		},
 		_getContainer: function(){
@@ -124,94 +125,100 @@ define([
 				fb = this.grid.filterBar, 
 				sltCol = this.sltColumn;
 			dojo.forEach(this.grid.columns(), function(col){
-				if(!col.isFilterable())return;
+				if(!col.isFilterable()){
+					return;
+				}
 				colOpts.push({value: col.id, label: col.name()});
 			}, this);
 			sltCol.addOption(colOpts);
 		},
 		_initCloseButton: function(){
-			//summary:
+			// summary:
 			//	Add a close button to the accordion pane.
 			//  Must be called after adding to an accordion container.
-	        var btnWidget = this._buttonWidget;
-	        var closeButton = dojo.create('span', {
-	            className: 'gridxFilterPaneCloseButton'
-	            ,innerHTML: '<img src="' + this._blankGif + '"/>'
-	            ,title: 'Close'
-	        }, btnWidget.domNode, 'first');
-	        this.connect(closeButton, 'onclick', 'close');
-	        dojo.addClass(btnWidget.titleTextNode, 'dojoxEllipsis');
-	    },
-	    
-	    _onColumnChange: function(){
-	    	var opt = this.grid.filterBar._getConditionOptions(this.sltColumn.get('value'));
-	    	var slt = this.sltCondition;
-	    	if(slt.options && slt.options.length){slt.removeOption(slt.options);}
-	    	slt.addOption(dojo.clone(opt));
-	    	this._updateTitle();
-	    	this.onChange();
-	    },
-	    _onConditionChange: function(){
-	    	this._updateValueField();
-	    	this._updateTitle();
-	    	this.onChange();
-	    },
-	    _onValueChange: function(){
-	    	this._updateTitle();
-	    	this.onChange();
-	    },
-	    _getDataType: function(){
-	    	//summary:
-	    	//		Get current column data type
-	    	var colid = this.sltColumn.get('value');
-	    	var dataType = 'string';
-	    	if(colid !== ''){
-	    		dataType = this.grid.column(colid).dataType();
-	    	}
-	    	return dataType;
-	    },
-	    _getType: function(){
-	    	//summary:
-	    	//	Get current filter type, determined by data type and condition.
-	    	var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', 'boolean': 'Radio'};
-	    	var type = mapping[this._getDataType()];
-	    	if('range' === this.sltCondition.get('value')){type += 'Range';} ;
-	    	return type;
-	    },
-	    _updateTitle: function(){
-	    	if(!this._buttonWidget){return;}
-	    	var title, value = this._getValue(), 
-	    		type = this._getType(), condition = this.sltCondition.get('value'),
-	    		txtNode = this._buttonWidget.titleTextNode;
-	    	
-	    	if(value && (condition !== 'range' || (value.start && value.end))){
+			var btnWidget = this._buttonWidget;
+			var closeButton = dojo.create('span', {
+				className: 'gridxFilterPaneCloseButton',
+				innerHTML: '<img src="' + this._blankGif + '"/>',
+				title: 'Close'
+			}, btnWidget.domNode, 'first');
+			this.connect(closeButton, 'onclick', 'close');
+			dojo.addClass(btnWidget.titleTextNode, 'dojoxEllipsis');
+		},
+		
+		_onColumnChange: function(){
+			var opt = this.grid.filterBar._getConditionOptions(this.sltColumn.get('value'));
+			var slt = this.sltCondition;
+			if(slt.options && slt.options.length){slt.removeOption(slt.options);}
+			slt.addOption(dojo.clone(opt));
+			this._updateTitle();
+			this.onChange();
+		},
+		_onConditionChange: function(){
+			this._updateValueField();
+			this._updateTitle();
+			this.onChange();
+		},
+		_onValueChange: function(){
+			this._updateTitle();
+			this.onChange();
+		},
+		_getDataType: function(){
+			// summary:
+			//		Get current column data type
+			var colid = this.sltColumn.get('value');
+			var dataType = 'string';
+			if(colid !== ''){
+				dataType = this.grid.column(colid).dataType();
+			}
+			return dataType;
+		},
+		_getType: function(){
+			// summary:
+			//	Get current filter type, determined by data type and condition.
+			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', 'boolean': 'Radio'};
+			var type = mapping[this._getDataType()];
+			if('range' === this.sltCondition.get('value')){
+				type += 'Range';
+			}
+			return type;
+		},
+		_updateTitle: function(){
+			if(!this._buttonWidget){return;}
+			var title, value = this._getValue(), 
+				type = this._getType(), condition = this.sltCondition.get('value'),
+				txtNode = this._buttonWidget.titleTextNode;
+			
+			if(value && (condition !== 'range' || (value.start && value.end))){
 				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
-	    	}else{
-	    		var ruleNumber = dojo.indexOf(this._getContainer().getChildren(), this) + 1;
-	    		title = dojo.string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
-	    	}
-	    	txtNode.innerHTML = title;
+			}else{
+				var ruleNumber = dojo.indexOf(this._getContainer().getChildren(), this) + 1;
+				title = dojo.string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
+			}
+			txtNode.innerHTML = title;
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');
 		},
 		_needComboBox: function(){
-			//summary:
+			// summary:
 			//	Whether current state needs a combo box for string input, may rewrite to support virtual column
 			var colId = this.sltColumn.get('value');
 			return this._getType() === 'Text' && !!colId && this.grid._columnsById[colId].field;
 		},
-	    _updateValueField: function(){
-	    	// summary:
-	    	//	Update the UI for field to show/hide fields.
-	    	var type = this._getType(), colId = this.sltColumn.get('value');
-	    	var combo = this._needComboBox();
-	    	
-	    	dojo.forEach(['Text','Combo', 'Date', 'Number', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
-	    		dojo.removeClass(this.domNode, 'gridxFilterPane' + k);
-	    	}, this);
-	    	
+		_updateValueField: function(){
+			// summary:
+			//	Update the UI for field to show/hide fields.
+			var type = this._getType(), colId = this.sltColumn.get('value');
+			var combo = this._needComboBox();
+			
+			dojo.forEach(['Text','Combo', 'Date', 'Number', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
+				dojo.removeClass(this.domNode, 'gridxFilterPane' + k);
+			}, this);
+			
 			dojo.addClass(this.domNode, 'gridxFilterPane' + (combo ? 'Combo' : type));
 			var disabled = this.sltCondition.get('value') === 'isEmpty';
-			dojo.forEach(this._fields, function(f){f.set('disabled', disabled)});
+			dojo.forEach(this._fields, function(f){
+				f.set('disabled', disabled);
+			});
 			
 			if(combo){
 				if(!this._dummyCombo){
@@ -226,67 +233,67 @@ define([
 					fetchProperties: {sort:[{attribute: col.field, descending: false}]}
 				});
 			}
-	    },
-	    _getValue: function(){
-	    	// summary:
-	    	//		Get current filter value
-	    	var type = this._getType(), combo = this._needComboBox();
-	    	switch(type){
-	    		case 'Text':
-	    			return (combo ? this.comboText : this.tbSingle).get('value') || null;
-	    		case 'Number':
-	    			return isNaN(this.tbNumber.get('value')) ? null : this.tbNumber.get('value');
-	    		case 'Select':
-	    			return this.sltSingle.get('value') || null;
-	    		case 'Date':
-	    			return this.dtbSingle.get('value') || null;
-	    		case 'DateRange':
-	    			return {start: this.dtbStart.get('value'), end: this.dtbEnd.get('value')};
-	    		case 'Time':
-	    			return this.ttbSingle.get('value') || null;
-	    		case 'TimeRange':
-	    			return {start: this.ttbStart.get('value'), end: this.ttbEnd.get('value')};
-	    		case 'Radio':
-	    			return !!this.rbTrue.get('checked');
-	    		default:
-	    			return null;
-	    	}
-	    },
-	    _setValue: function(value){
-	    	if(!value){return;}
-	    	var type = this._getType(), combo = this._needComboBox();
-	    	switch(type){
-	    		case 'Text':
-	    			(combo ? this.comboText : this.tbSingle).set('value', value);
-	    			break;
-	    		case 'Number':
-	    			this.tbNumber.set('value', value);
-	    			break;
-	    		case 'Select':
-	    			this.sltSingle.set('value', value);
-	    			break;
-	    		case 'Date':
-	    			this.dtbSingle.set('value', value);
-	    			break;
-	    		case 'DateRange':
-	    			this.dtbStart.set('value', value.start);
-	    			this.dtbEnd.set('value', value.end);
-	    			break;
-	    		case 'Time':
-	    			this.ttbSingle.set('value', value);
-	    			break;
-	    		case 'TimeRange':
-	    			this.ttbStart.set('value', value.start);
+		},
+		_getValue: function(){
+			// summary:
+			//		Get current filter value
+			var type = this._getType(), combo = this._needComboBox();
+			switch(type){
+				case 'Text':
+					return (combo ? this.comboText : this.tbSingle).get('value') || null;
+				case 'Number':
+					return isNaN(this.tbNumber.get('value')) ? null : this.tbNumber.get('value');
+				case 'Select':
+					return this.sltSingle.get('value') || null;
+				case 'Date':
+					return this.dtbSingle.get('value') || null;
+				case 'DateRange':
+					return {start: this.dtbStart.get('value'), end: this.dtbEnd.get('value')};
+				case 'Time':
+					return this.ttbSingle.get('value') || null;
+				case 'TimeRange':
+					return {start: this.ttbStart.get('value'), end: this.ttbEnd.get('value')};
+				case 'Radio':
+					return !!this.rbTrue.get('checked');
+				default:
+					return null;
+			}
+		},
+		_setValue: function(value){
+			if(!value){return;}
+			var type = this._getType(), combo = this._needComboBox();
+			switch(type){
+				case 'Text':
+					(combo ? this.comboText : this.tbSingle).set('value', value);
+					break;
+				case 'Number':
+					this.tbNumber.set('value', value);
+					break;
+				case 'Select':
+					this.sltSingle.set('value', value);
+					break;
+				case 'Date':
+					this.dtbSingle.set('value', value);
+					break;
+				case 'DateRange':
+					this.dtbStart.set('value', value.start);
+					this.dtbEnd.set('value', value.end);
+					break;
+				case 'Time':
+					this.ttbSingle.set('value', value);
+					break;
+				case 'TimeRange':
+					this.ttbStart.set('value', value.start);
 					this.ttbEnd.set('value', value.end);
 					break;
-	    		case 'Radio':
-	    			this.rbTrue.set('checked', true);
-	    			break;
-	    	}
-	    },
-	    uninitialize: function(){
-	    	this.inherited(arguments);
-	    	if(this._dummyCombo){this._dummyCombo.destroyRecursive();}
-	    }
+				case 'Radio':
+					this.rbTrue.set('checked', true);
+					break;
+			}
+		},
+		uninitialize: function(){
+			this.inherited(arguments);
+			if(this._dummyCombo){this._dummyCombo.destroyRecursive();}
+		}
 	});
 });

@@ -213,7 +213,7 @@ define([
 		},
 
 		_onRender: function(start, count){
-			var t = this, i, 
+			var t = this, i, j,
 				m = t.model,
 				g = t.grid,
 				cols = g._columns,
@@ -283,7 +283,7 @@ define([
 						highlight = function(from, to, toHL){
 							var colDir = to.c > from.c ? 1 : -1,
 								rowDir = to.r > from.r ? 1 : -1,
-								i, j, rids = {};
+								i, j, p, q, rids = {};
 							if(!toHL){
 								for(j = from.r, p = to.r + rowDir; j != p; j += rowDir){
 									rids[j] = t.model.indexToId(j);

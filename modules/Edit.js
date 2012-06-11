@@ -82,8 +82,6 @@ define([
 		};
 	}
 	
-	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs', 'applyWhen');
-	
 	return declare(/*===== "gridx.modules.Edit", =====*/_Module, {
 		// summary:
 		//		This module provides editing mode for grid cells.
@@ -105,7 +103,7 @@ define([
 					c.gridPattern = c.gridPattern || 
 						(!lang.isFunction(c.formatter) && 
 							(lang.isObject(c.formatter) || 
-							 typeof c.formatter == 'string') && 
+							typeof c.formatter == 'string') && 
 						c.formatter) || 
 						c.storePattern;
 					var pattern;
@@ -204,10 +202,11 @@ define([
 			//		The column ID of this cell
 			// returns:
 			//		A deferred object indicating when the cell has completely changed into eidting mode.
-			var d = new Deferred(), t = this;
+			var d = new Deferred(),
+				t = this,
+				g = t.grid;
 			if(!t.isEditing(rowId, colId)){
-				var g = t.grid,
-					rowIndex = t.model.idToIndex(rowId),
+				var rowIndex = t.model.idToIndex(rowId),
 					col = g._columnsById[colId];
 				if(rowIndex >= 0 && col.editable){
 					g.cellWidget.setCellDecorator(rowId, colId, 
@@ -305,14 +304,13 @@ define([
 								});
 							}
 						};
-					console.log(valueField, v);
 					try{
 						if(editorArgs && editorArgs.fromEditor){
 							v = editorArgs.fromEditor(v, widget.cell);
 						}else if(cell.column.storePattern){
 							v = locale.format(v, cell.column.storePattern);
 						}
-						if(cell.rawData() == v){
+						if(cell.rawData() === v){
 							finish(true);
 						}else{
 							Deferred.when(cell.setRawData(v), function(success){

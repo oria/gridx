@@ -139,14 +139,19 @@ define([
 				w = t._columnsWidth += width - oldWidth;
 				g.bodyNode.style.width = w + 'px';
 				g.domNode.style.width = (g.hLayout.lead + g.hLayout.tail + w) + 'px';
-			}else{
-				//t._onHScroll(g.hScrollerNode.scrollLeft);
-				t.grid.hScroller && t.grid.hScroller._onScroll();
+			}else if(t.grid.hScroller){
+				t.grid.hScroller._onScroll();
 			}
 		},
 
 		_onHScroll: function(left){
 			var ltr = this.grid.isLeftToRight();
+			
+			if(sniff('webkit') && !ltr){
+				this.innerNode.scrollLeft = this.innerNode.scrollWidth - left;
+			}else{
+				this.innerNode.scrollLeft = 0;
+			}
 			this.innerNode.firstChild.style[ltr ? 'marginLeft' : 'marginRight'] = (!ltr && sniff('ff') ? left : -left) + 'px';
 			this._scrollLeft = left;
 		},
@@ -214,7 +219,7 @@ define([
 			util.stopEvent(r && evt);
 			return r;
 		},
-
+		
 		_focusNode: function(node){
 			if(node){
 				var t = this, g = t.grid,
@@ -222,20 +227,9 @@ define([
 				if(fid){
 					t._blurNode();
 					if(g.hScroller){
-						//keep scrolling
-						var pos = domGeometry.position(node),
-							containerPos = domGeometry.position(t.domNode),
-							dif = pos.x + pos.w - containerPos.x - containerPos.w;
-						if(dif < 0){
-							dif = pos.x - containerPos.x;
-							if(dif > 0){
-								dif = 0;
-							}
-						}
-						dif += t._scrollLeft;
-						t._onHScroll(dif);
-						g.hScroller.scroll(dif);
+						g.hScroller.scrollToColumn(fid);
 					}
+
 					domClass.add(node, t._focusClass);
 					node.focus();
 					return true;

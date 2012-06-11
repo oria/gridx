@@ -90,8 +90,8 @@ define([
 				var pos = domGeometry.position(source.node),
 					x = evt.clientX,
 					y = evt.clientY,
-					alreadyIn = source._alreadyIn;
-				isIn = y >= pos.y && y <= pos.y + pos.h && x >= pos.x && x <= pos.x + pos.w;
+					alreadyIn = source._alreadyIn,
+					isIn = y >= pos.y && y <= pos.y + pos.h && x >= pos.x && x <= pos.x + pos.w;
 				if(!alreadyIn && isIn){
 					source._alreadyIn = 1;	//1 as true
 					source.onOverEvent();

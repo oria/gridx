@@ -41,7 +41,9 @@ define([
 			t.batchConnect(
 				[g, '_onResizeBegin', function(changeSize, ds){
 					ds.header = new Deferred();
-					if(!t.arg('autoResize')){
+					if(!t.arg('autoResize') && array.some(g._columns, function(col){
+						return !col.width || col.width == 'auto' || /%$/.test(col.width);
+					})){
 						t._adaptWidth();
 					}else{
 						var w = g.domNode.clientWidth - g.hLayout.lead - g.hLayout.tail;

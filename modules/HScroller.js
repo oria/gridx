@@ -3,9 +3,10 @@ define([
 	"dojo/dom-style",
 	"dojo/_base/sniff",
 	"dojo/_base/Deferred",
+	"dojo/query",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, sniff, Deferred, metrics, _Module){
+], function(declare, domStyle, sniff, Deferred, query, metrics, _Module){
 
 	var sl = 'scrollLeft';		//This is for reducing code size only.
 
@@ -76,6 +77,31 @@ define([
 				left = dn.scrollWidth - dn.offsetWidth - left;
 			}
 			dn[sl] = left;
+		},
+		
+		scrollToColumn: function(colId){
+			// summary:
+			//	Scroll the grid to make a column fully visible.
+			var hNode = this.grid.header.innerNode,
+				table = query('table', hNode)[0], 
+				cells = table.rows[0].cells,
+				left = 0,
+				right = 0,
+				scrollLeft = this.domNode.scrollLeft;
+			
+			//get cell's left border and right border position
+			for(var i = 0; i < cells.length; i++){
+				right += cells[i].offsetWidth;
+				if(cells[i].getAttribute('colid') == colId){break;}
+				left += cells[i].offsetWidth;
+			}
+			
+			//if the cell is not visible, scroll to it
+			if(left < scrollLeft){
+				this.scroll(left);
+			}else if(right > scrollLeft + hNode.offsetWidth){
+				this.scroll(right - hNode.offsetWidth);
+			}
 		},
 		
 		refresh: function(){

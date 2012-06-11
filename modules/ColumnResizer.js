@@ -73,7 +73,7 @@ define([
 		//		module name
 		name: 'columnResizer',
 
-//        required: ['hScroller'],
+//		required: ['hScroller'],
 
 		// minWidth: Integer
 		//		min column width in px
@@ -206,7 +206,7 @@ define([
 				t._resizer = domConstruct.create('div', {
 					className: 'gridxColumnResizer'}, 
 					t.grid.domNode, 'last');
-		    	t.connect(t._resizer, 'mouseup', '_mouseup');
+				t.connect(t._resizer, 'mouseup', '_mouseup');
 			}
 			t._resizer.style.display = 'block';
 			t._updateResizerPosition(e);

@@ -27,6 +27,7 @@ require([
 			var t1 = new Date().getTime();
 			grid = new Grid({
 				id: 'grid',
+//                style: 'width: 100px; height: 100px;',
 				cacheClass: Cache,
 				cacheSize: 0,
 				store: store,

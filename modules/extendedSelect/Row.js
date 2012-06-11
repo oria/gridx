@@ -270,7 +270,7 @@ define([
 				b = Math.max(end.row, lastEndItem.row);
 				start = bd.getRowInfo({visualIndex: a}).rowIndex + 1;
 				end = bd.getRowInfo({visualIndex: b}).rowIndex;
-				d = new Deferred;
+				d = new Deferred();
 				m.when({
 					start: start, 
 					count: end - start + 1

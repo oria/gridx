@@ -55,6 +55,10 @@ define([
 		isId: function(id){
 			return id || id === 0;
 		},
+
+		setStore: function(store){
+			this._cache.setStore(store);
+		},
 	
 		//Public-------------------------------------------------------------------
 

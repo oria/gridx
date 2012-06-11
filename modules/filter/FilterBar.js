@@ -1,5 +1,4 @@
 define([
-	
 	"dojo/_base/kernel",
 	"dijit",
 	"dojo/_base/declare",
@@ -119,7 +118,7 @@ define([
 		},
 		
 		load: function(args, startup){
-			//summary:
+			// summary:
 			//	Init filter bar UI
 			//Add before and after expression for filter.
 			var F = Filter;
@@ -157,7 +156,7 @@ define([
 				this.clearFilter();
 			}else if(css.contains(e.target, 'gridxFilterBarCloseBtn') || css.contains(e.target,'gridxFilterBarCloseBtnText')){
 				this.hide();
-			}else {
+			}else{
 				this.showFilterDialog();
 			}
 		},
@@ -173,7 +172,7 @@ define([
 		},
 		
 		applyFilter: function(filterData){
-			//summary:
+			// summary:
 			//		Apply the filter data.
 			var F = Filter, exps = [];
 			this.filterData = filterData;
@@ -326,7 +325,7 @@ define([
 		_getColumnConditions: function(colId){
 			// summary:
 			//		Get the available conditions for a specific column. 
-			// 		Excluded condtions is defined by col.disabledConditions
+			//		Excluded condtions is defined by col.disabledConditions
 			// tag:
 			//		private
 			// colId: String|Number
@@ -340,13 +339,13 @@ define([
 				disabled = [];
 				type = 'string';
 			}else{
-				disabled = this.grid._columnsById[colId].disabledConditions||[];
+				disabled = this.grid._columnsById[colId].disabledConditions || [];
 				type = (this.grid._columnsById[colId].dataType || 'string').toLowerCase();
 			}
 			
 			var ret = this.conditions[type], hash = {};
-			if(!ret){ret = conditionData['string'];}
-			array.forEach(disabled, function(name){hash[name]=true;});
+			if(!ret){ret = this.conditions.string;}
+			array.forEach(disabled, function(name){hash[name] = true;});
 			ret = array.filter(ret, function(name){return !hash[name];});
 			return ret;
 		},
@@ -378,7 +377,7 @@ define([
 		},
 		
 		_buildFilterState: function(){
-			//summary:
+			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			var nls = this._nls;
 			if(!this.filterData || !this.filterData.conditions.length){
@@ -421,7 +420,7 @@ define([
 		_getRuleString: function(condition, value, type){
 			//var k = condition.charAt(0).toUpperCase() + condition.substring(1);
 			//return '<span style="font-style:italic">' + k + '</span> ' + value;
-			var valueString, type;
+			var valueString;
 			if(condition == 'isEmpty'){
 				valueString = '';
 			}else if(/^date|^time/i.test(type)){
@@ -460,11 +459,8 @@ define([
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
 			var F = Filter;
-//			if(data.condition === 'isEmpty'){
-//				return F.isEmpty(F.column(colId, type));
-//			}
-			var dc = this.grid._columnsById[colId].dateParser||this._stringToDate;
-			var tc = this.grid._columnsById[colId].timeParser||this._stringToTime;
+			var dc = this.grid._columnsById[colId].dateParser || this._stringToDate;
+			var tc = this.grid._columnsById[colId].timeParser || this._stringToTime;
 			var converter = {date: dc, time: tc};
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			if(c === 'range'){
@@ -543,7 +539,7 @@ define([
 		},
 		_doFocusBtnFilter: function(evt){
 			this.btnFilter.focus();
-			if(evt)if(evt){event.stopEvent(evt);}
+			if(evt){event.stopEvent(evt);}
 			return true;
 		},
 		_doFocusClearLink: function(evt){

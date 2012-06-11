@@ -15,7 +15,7 @@ define([
 ], function(dojo, dijit, declare, string, i18n){
 	
 	return declare(dijit.TooltipDialog, {
-		//summary:
+		// summary:
 		//	Show status dialog of filter.
 		grid: null,
 		filterBar: null,
@@ -43,7 +43,7 @@ define([
 		},
 
 		buildContent: function(){
-			//summary:
+			// summary:
 			//	Build the status of current filter.
 			
 			var fb = this.filterBar, nls = fb._nls, data = fb.filterData;
@@ -89,7 +89,7 @@ define([
 			}
 		},
 		_getTr: function(e){
-			//summary:
+			// summary:
 			//	Get table row of status
 			var tr = e.target;
 			while(tr && !/^tr$/i.test(tr.tagName) && tr !== this.domNode){

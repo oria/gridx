@@ -134,7 +134,7 @@ define([
 				item = t.item(),
 				field, d;
 			if(s.setValue){
-				d = new Deferred;
+				d = new Deferred();
 				try{
 					for(field in rawData){
 						s.setValue(item, field, rawData[field]);

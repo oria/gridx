@@ -5,15 +5,17 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/_base/window",
+	"dojo/_base/sniff",
 	"dojo/string",
 	"dojo/dom-class",
 	"dojo/dom-construct",
 	"dojo/dom-style",
+	"dojo/dom-geometry",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/model/extensions/Sort",
 	"dojo/i18n!../nls/NestedSort"
-], function(declare, array, connect, event, query, win, string, domClass, domConstruct, domStyle, keys, _Module, Sort, nls){
+], function(declare, array, connect, event, query, win, sniff, string, domClass, domConstruct, domStyle, domGeometry, keys, _Module, Sort, nls){
 	
 	var forEach = array.forEach,
 		filter = array.filter,
@@ -27,16 +29,16 @@ define([
 
 		forced: ['header'],
 
-//        required: ['vLayout'],
+//		required: ['vLayout'],
 
 		modelExtensions: [Sort],
 
 		_a11yText: {
-			'dojoxGridDescending'   : '<span class="gridxNestedSortBtnText">&#9662;</span>',
-			'dojoxGridAscending'    : '<span class="gridxNestedSortBtnText">&#9652;</span>',
-			'dojoxGridAscendingTip' : '<span class="gridxNestedSortBtnText">&#1784;</span>',
+			'dojoxGridDescending': '<span class="gridxNestedSortBtnText">&#9662;</span>',
+			'dojoxGridAscending': '<span class="gridxNestedSortBtnText">&#9652;</span>',
+			'dojoxGridAscendingTip': '<span class="gridxNestedSortBtnText">&#1784;</span>',
 			'dojoxGridDescendingTip': '<span class="gridxNestedSortBtnText">&#1783;</span>',
-			'dojoxGridUnsortedTip'  : '<span class="gridxNestedSortBtnText">x</span>' //'&#10006;'
+			'dojoxGridUnsortedTip': '<span class="gridxNestedSortBtnText">x</span>' //'&#10006;'
 		},
 
 		constructor: function(){
@@ -110,7 +112,7 @@ define([
 		},
 		
 		clear: function(){
-			//summary:
+			// summary:
 			//	Clear the sorting state
 			this._sortData.length = 0;
 			this._doSort();
@@ -142,7 +144,9 @@ define([
 			var t = this,
 				table = t.grid.header.domNode.firstChild.firstChild,
 				tds = table.rows[0].cells;
-			if(query('.gridxSortBtn', table).length)return;
+			if(query('.gridxSortBtn', table).length){
+				return;
+			}
 			forEach(table.rows[0].cells, function(td){
 				var colid = td.getAttribute('colid');
 				if(t.isSortable(colid)){
@@ -200,7 +204,7 @@ define([
 		},
 
 		_sortColumn: function(colid){
-			//summary:
+			// summary:
 			//	Sort one column in nested sorting state
 			var t = this,
 				sortData = t._sortData;
@@ -388,11 +392,14 @@ define([
 		_focusRegion: function(region){
 			// summary
 			//		Focus the given region
-			//console.debug(region);
 			if(region){
-				region.focus();
 				var t = this,
+					g = t.grid,
 					header = t._getRegionHeader(region);
+				if(g.hScroller){
+					g.hScroller.scrollToColumn(header.getAttribute('colid'));
+				}
+				region.focus();
 				addClass(header, 'gridxCellSortFocus');
 				if(hasClass(region, 'gridxSortNode')){
 					addClass(region, 'gridxSortNodeFocus');
@@ -403,6 +410,8 @@ define([
 				t._currRegionIdx = indexOf(t._focusRegions, region);
 				//firefox and ie will lost focus when region is invisible, focus it again.
 				region.focus();
+				
+				
 			}
 		},
 
@@ -436,7 +445,7 @@ define([
 				orderState = data.descending ? 'descending' : 'ascending';
 				orderAction = data.descending ? 'none' : 'descending';
 			}
-			var a11ySingleLabel = string.substitute(nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]);
+			var a11ySingleLabel = string.substitute(nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]),
 				a11yNestedLabel = string.substitute(nls.waiNestedSortLabel, [columnInfo, orderState, orderAction]);
 			cell.childNodes[0].setAttribute("aria-label", a11ySingleLabel);
 			cell.childNodes[1].setAttribute("aria-label", a11yNestedLabel);

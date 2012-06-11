@@ -38,22 +38,22 @@ define([
 		//	|	{ identifier: 'name',
 		//	|	  label: 'name',
 		//	|	  items: [
-		//	|	 	{ name:'Africa', type:'continent', children: [
-		//	|	 		{ name:'Egypt', type:'country' }, 
-		//	|	 		{ name:'Kenya', type:'country', children:[
-		//	|	 			{ name:'Nairobi', type:'city', adults: 70400, popnum: 2940911 },
-		//	|	 			{ name:'Mombasa', type:'city', adults: 294091, popnum: 707400 } ]
-		//	|	 		},
-		//	|	 		{ name:'Sudan', type:'country', children:
-		//	|	 			{ name:'Khartoum', type:'city', adults: 480293, popnum: 1200394 } 
-		//	|	 		} ]
-		//	|	 	},
-		//	|	  	{ name:'Asia', type:'continent', children:[
-		//	|	  		{ name:'China', type:'country' },
-		//	|	  		{ name:'India', type:'country' },
-		//	|	  		{ name:'Russia', type:'country' },
-		//	|	  		{ name:'Mongolia', type:'country' } ]
-		//	|	  	},
+		//	|		{ name:'Africa', type:'continent', children: [
+		//	|			{ name:'Egypt', type:'country' }, 
+		//	|			{ name:'Kenya', type:'country', children:[
+		//	|				{ name:'Nairobi', type:'city', adults: 70400, popnum: 2940911 },
+		//	|				{ name:'Mombasa', type:'city', adults: 294091, popnum: 707400 } ]
+		//	|			},
+		//	|			{ name:'Sudan', type:'country', children:
+		//	|				{ name:'Khartoum', type:'city', adults: 480293, popnum: 1200394 } 
+		//	|			} ]
+		//	|		},
+		//	|		{ name:'Asia', type:'continent', children:[
+		//	|			{ name:'China', type:'country' },
+		//	|			{ name:'India', type:'country' },
+		//	|			{ name:'Russia', type:'country' },
+		//	|			{ name:'Mongolia', type:'country' } ]
+		//	|		},
 		//	|		{ name:'Australia', type:'continent', population:'21 million', children:
 		//	|			{ name:'Commonwealth of Australia', type:'country', population:'21 million'}
 		//	|		} ]
@@ -80,7 +80,7 @@ define([
 		//	|	{ identifier: 'id',
 		//	|	  items: [
 		//	|		{ id: "1", playername: "Player 1", seasons: [
-		//	|		 	{ id: "2", seasonindex: "Season 1", games: [
+		//	|			{ id: "2", seasonindex: "Season 1", games: [
 		//	|				{ id: "3", gameindex: "Game 1", quarters: [
 		//	|					{id: "4", point: "3", rebound: "3", assistant: "1"},
 		//	|					{id: "5", point: "5", rebound: "0", assistant: "0"},
@@ -114,19 +114,7 @@ define([
 		name: "tree",
 
 		constructor: function(){
-			var openned = [];
-			this._openInfo = {
-				'': {
-					id: '',
-					parentId: null,
-					index: -1,
-					count: 0,
-					openned: openned
-				}
-			};
-			this._parentOpenInfo = {
-				'': openned
-			};
+			this._clear();
 		},
 	
 		getAPIPath: function(){
@@ -145,7 +133,8 @@ define([
 			g.domNode.setAttribute('role', 'treegrid');
 			t.batchConnect(
 				[g.body, 'collectCellWrapper', '_createCellWrapper'],
-				[g, 'onCellClick', '_onCellClick']
+				[g, 'onCellClick', '_onCellClick'],
+				[g, 'setStore', '_clear']
 			);
 			t._initFocus();
 			if(g.persist){
@@ -160,7 +149,7 @@ define([
 					var openInfo = t._openInfo = data.openInfo,
 						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
 					for(id in openInfo){
-						 openInfo[id].openned = parentOpenInfo[id];
+						openInfo[id].openned = parentOpenInfo[id];
 					}
 					t._persisted = 1;
 				}
@@ -398,6 +387,22 @@ define([
 	
 		//_openInfo: null,
 	
+		_clear: function(){
+			var openned = [];
+			this._openInfo = {
+				'': {
+					id: '',
+					parentId: null,
+					index: -1,
+					count: 0,
+					openned: openned
+				}
+			};
+			this._parentOpenInfo = {
+				'': openned
+			};
+		},
+
 		_createCellWrapper: function(wrappers, rowId, colId){
 			var t = this,
 				col = t.grid._columnsById[colId];
@@ -604,9 +609,9 @@ define([
 		},
 
 		_onKey: function(e){
+			var t = this;
 			if(e.keyCode == keys.ESCAPE){
-				var t = this,
-					m = t.model,
+				var m = t.model,
 					treePath = m.treePath(e.rowId),
 					parentId = treePath.pop(),
 					parentLevel = treePath.length,
@@ -631,7 +636,7 @@ define([
 					});
 				}
 			}else if(e.ctrlKey && isExpando(e.cellNode)){
-				var ltr = grid.isLeftToRight();
+				var ltr = t.grid.isLeftToRight();
 				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t._openInfo[e.rowId]){
 					t.collapse(e.rowId);
 				}else if(e.keyCode == (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !t._openInfo[e.rowId]){

@@ -9,18 +9,18 @@ define([
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
-		//useAnimation: Boolean
+		// useAnimation: Boolean
 		//		Indicates whether to use animation (slide) when showing/hiding the detail part.
 		useAnimation: true,
 
-		//duration: Number
+		// duration: Number
 		//		The time used to play the animation.
 		duration: 750,
 		
 		defaultShow: false,
 		showExpando: true,
 
-		//autoClose: Boolean
+		// autoClose: Boolean
 		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
 		autoClose: false,
 		load: function(args, deferStartup){
@@ -58,13 +58,13 @@ define([
 		},
 		
 		show: function(row){
-			//summary:
+			// summary:
 			//		Show the detail part of a row, if this row has a detail part.
 			//		Use animation (slide the detail part out) if useAnimation is true.
 			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			//rowId: String
+			// rowId: String
 			//		The ID of a row.
-			//return: dojo.Deferred.
+			// return: dojo.Deferred.
 			//		A deferred object indicating when the detail is completely shown.
 			var _row = this._row(row);
 			if(_row.dodShown || _row.inAnim){return;}
@@ -106,13 +106,13 @@ define([
 		},
 		
 		hide: function(row){
-			//summary:
+			// summary:
 			//		Hide the detail part of a row, if this row has a detail part.
 			//		Use animation (slide the detail part in) if useAnimation is true.
 			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			//rowId: String
+			// rowId: String
 			//		The ID of a row.
-			//return: dojo.Deferred.
+			// return: dojo.Deferred.
 			//		A deferred object indicating when the detail is completely hidden.
 			var _row = this._row(row), g = this.grid;
 			if(!_row.dodShown || _row.inAnim){return;}
@@ -130,7 +130,6 @@ define([
 				}
 			}).play();
 			_row.defaultShow = false;
-			//html.style(_row.dodNode, 'display', 'none');
 		},
 		
 		toggle: function(row){
