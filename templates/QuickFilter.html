@@ -3,7 +3,7 @@
 		><input type="text" data-dojo-type="dijit.form.TextBox"
 			class="gridxQuickFilterInput"
 			data-dojo-attach-point="textBox"
-			data-dojo-props="placeHolder: '${placeHolder}'"
+			data-dojo-props="placeHolder: '${filterLabel}'"
 		/><span class="gridxQuickFilterClear"
 			data-dojo-attach-event="onclick: _clear"
 			title="${clearButtonTitle}"
@@ -14,7 +14,7 @@
 		class="gridxQuickFilterButton"
 		data-dojo-props="
 			showLabel: false,
-			title: '${filterButtonTitle}',
+			title: '${filterLabel}',
 			iconClass: 'gridxQuickFilterIcon'"
 		data-dojo-attach-event="onClick: _filter"
 	></button
@@ -22,13 +22,13 @@
 		class="gridxQuickFilterComboButton"
 		data-dojo-props="
 			showLabel: false,
-			title: '${filterButtonTitle}',
+			title: '${filterLabel}',
 			iconClass: 'gridxQuickFilterIcon'"
 		data-dojo-attach-event="onClick: _filter"
 		><span data-dojo-type="${menuClass}">
 			<span data-dojo-type="${menuItemClass}"
 				data-dojo-attach-event="onClick: _filter"
-			>${filterMenuLabel}</span
+			>${filterLabel}</span
 			><span data-dojo-type="${menuItemClass}"
 				data-dojo-attach-event="onClick: _showFilterBar"
 			>${buildFilterMenuLabel}</span
