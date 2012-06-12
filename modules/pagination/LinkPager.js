@@ -118,7 +118,7 @@ define([
 					disablePrev = false,
 					nlsArr = [
 						mod.arg('pageIndexTitleTemplate', t.pageIndexTitle),
-						mod.arg('pageIndexWaiTemplate', t.pageIndexWai),
+						mod.arg('pageIndexWaiTemplate', t.pageIndexTitle),
 						mod.arg('pageIndexTemplate', t.pageIndex)
 					],
 					ellipsis = '<span class="gridxPagerStepperEllipsis">&hellip;</span>',
@@ -213,10 +213,10 @@ define([
 					currentSize = t.pagination.pageSize(),
 					nlsArr = [
 						mod.arg('pageSizeTitleTemplate', t.pageSizeTitle),
-						mod.arg('pageSizeWaiTemplate', t.pageSizeWai),
+						mod.arg('pageSizeWaiTemplate', t.pageSizeTitle),
 						mod.arg('pageSizeTemplate', t.pageSize),
 						mod.arg('pageSizeAllTitleText', t.pageSizeAllTitle),
-						mod.arg('pageSizeAllWaiText', t.pageSizeAllWai),
+						mod.arg('pageSizeAllWaiText', t.pageSizeAllTitle),
 						mod.arg('pageSizeAllText', t.pageSizeAll)
 					];
 		

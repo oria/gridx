@@ -1,6 +1,6 @@
 define({root:
 ({
-	summary: '${0} items',
+	summary: 'Total: ${0}',
 	summaryWithSelection: 'Total: ${0} Selected: ${1}'
 })
 });

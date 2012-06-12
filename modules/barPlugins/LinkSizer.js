@@ -43,7 +43,7 @@ define([
 					currentSize === pageSize ? 'gridxPagerSizeSwitchBtnActive' : '',
 					'" pagesize="', pageSize,
 					'" title="', isAll ? t.pageSizeAllTitle : substitute(t.pageSizeTitle, [pageSize]),
-					'" aria-label="', isAll ? t.pageSizeWai : substitute(t.pageSizeWai, [pageSize]),
+					'" aria-label="', isAll ? t.pageSizeTitle : substitute(t.pageSizeTitle, [pageSize]),
 					'" tabindex="', tabIndex, '">', isAll ? t.pageSizeAll : substitute(t.pageSize, [pageSize]),
 					'</span>',
 					//Separate the "separator, so we can pop the last one.

@@ -11,7 +11,7 @@ define([
 ], function(declare, lang, string, _LinkPageBase, GotoPagePane, nls, Dialog, Button, NumberTextBox){
 	
 	return declare(/*===== "gridx.modules.barPlugins.GotoPageButton", =====*/_LinkPageBase, {
-		templateString: "<span class='gridxPagerGotoBtn' tabindex='${_tabIndex}' title='${gotoBtnTitle}' aria-label='${gotoBtnWai}' data-dojo-attach-event='onclick: _showGotoDialog'><span class='gridxPagerA11yInner'>&#9650;</span></span>",
+		templateString: "<span class='gridxPagerGotoBtn' tabindex='${_tabIndex}' title='${gotoBtnTitle}' aria-label='${gotoBtnTitle}' data-dojo-attach-event='onclick: _showGotoDialog'><span class='gridxPagerA11yInner'>&#9650;</span></span>",
 
 		gotoPagePane: GotoPagePane,
 

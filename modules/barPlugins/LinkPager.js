@@ -43,7 +43,7 @@ define([
 						currentPage == page ? 'gridxPagerStepperBtnActive' : '',
 						'" pageindex="', page,
 						'" title="', substitute(t.pageIndexTitle, [page + 1]),
-						'" aria-label="', substitute(t.pageIndexWai, [page + 1]),
+						'" aria-label="', substitute(t.pageIndexTitle, [page + 1]),
 						'" tabindex="', tabIndex, '">', substitute(t.pageIndex, [page + 1]),
 					'</span>'].join('');
 				};
