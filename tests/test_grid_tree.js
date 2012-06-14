@@ -49,6 +49,7 @@ require([
 			mods.VirtualVScroller,
 			mods.Tree,
 //            mods.ExtendedSelectRow,
+			mods.ColumnResizer,
 			mods.SelectRow,
 			mods.RowHeader,
 			mods.IndirectSelect
