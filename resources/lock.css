@@ -1,6 +1,7 @@
 .gridxLockedCell {
 	position: absolute;
 	background-color: #ffffff;
+	z-index: 1;
 }
 
 /*Column Lock*/

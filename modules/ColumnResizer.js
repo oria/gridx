@@ -54,8 +54,8 @@ define([
 		}
 		//Firefox seems have problem to get offsetX for TH
 		if(sniff('ff') && /th/i.test(target.tagName)){
-			var d = lx - parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, 'marginLeft'), 10) 
-				- cell.offsetLeft - cell.offsetParent.offsetLeft;
+			var scrollLeft = -parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, 'marginLeft'));
+			var d = lx - (cell.offsetLeft - scrollLeft);
 			if(d >= 0){
 				lx = d;
 			}
