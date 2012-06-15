@@ -41,7 +41,7 @@
 		
 		require([
 			'dojo/domReady',
-			'dojo/store/Memory',
+			'dojo/data/ItemFileReadStore',
 			'dojox/mobile/parser',
 			'gridx/mobile/tests/support/data',
 			'dojox/mobile/Heading',
@@ -52,11 +52,11 @@
 			'dojox/charting/widget/Chart',
 			'dojox/charting/plot2d/Pie',
 			'gridx/mobile/tests/support/chart-theme'
-		], function(ready, MemoryStore, parser, data){
+		], function(ready, ItemFileReadStore, parser, data){
 			seriesB = data.chart.series;
 			ready(function(){
 				parser.parse();
-				grid.store = new MemoryStore({data: data.chart.gridData['2.6']});
+				grid.store = new ItemFileReadStore({data: {items:data.chart.gridData['2.6']}});
 				grid.setColumns(columns);
 			});
 		});

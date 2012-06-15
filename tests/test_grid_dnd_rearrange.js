@@ -20,8 +20,6 @@ require([
 				size: size
 			}),
 			selectRowTriggerOnCell: true,
-			dndRowAccept: [],
-			dndRowProvide: [],
 			modules: [
 				mods.Focus,
 				mods.Filter,

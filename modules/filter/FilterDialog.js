@@ -1,21 +1,17 @@
 define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dijit",
 	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/dom-class",
 	"dojo/string",
+	"dojo/query",
+	"dijit/registry",
 	"dijit/Dialog",
 	"dojox/html/metrics",
-	"dojo/text!../../templates/FilterDialog.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"./FilterPane",
-	"./Filter",
-	"dijit/layout/AccordionContainer",
-	"dojo/data/ItemFileReadStore",
-	"dojo/_base/array",
-	"dojo/_base/html",
-	"dojo/query"
-], function(dojo, lang, dijit, declare, string, Dialog, htmlMetrics, template, i18n, FilterPane){
+	"dojo/text!../../templates/FilterDialog.html",
+	"dojo/i18n!../../nls/FilterBar"
+], function(declare, lang, array, css, string, query, registry, Dialog, metrics, FilterPane, template, i18n){
 	return declare(Dialog, {
 		title: i18n.filterDefDialogTitle,
 		cssClass: 'gridxFilterDialog',
@@ -26,7 +22,7 @@ define([
 			this.i18n = i18n;
 			this.set('content', string.substitute(template, this));
 			this._initWidgets();
-			dojo.addClass(this.domNode, 'gridxFilterDialog');
+			css.add(this.domNode, 'gridxFilterDialog');
 		},
 		
 		done: function(){
@@ -41,7 +37,7 @@ define([
 			//	Get filter data.
 			return {
 				type: this._sltMatch.get('value'),
-				conditions: dojo.map(this._accordionContainer.getChildren(), function(p){
+				conditions: array.map(this._accordionContainer.getChildren(), function(p){
 					return p.getData();
 				})
 			};
@@ -55,7 +51,7 @@ define([
 				return;
 			}
 			this._sltMatch.set('value', 'all' && data && data.type);
-			dojo.forEach(data.conditions, function(d){
+			array.forEach(data.conditions, function(d){
 				this.addRule().setData(d);
 			}, this);
 		},
@@ -63,11 +59,10 @@ define([
 		removeChildren: function(){
 			// summary:
 			//	Remove all child of the accodion container.
-			dojo.forEach(this._accordionContainer.getChildren(), function(child){
+			array.forEach(this._accordionContainer.getChildren(), function(child){
 				this._accordionContainer.removeChild(child);
 				child.destroy();
 			}, this);
-			//dojo.hitch(this._accordionContainer, 'removeChild'));
 		
 		},
 		
@@ -92,23 +87,23 @@ define([
 		addRule: function(){
 			var ac = this._accordionContainer;
 			if(ac.getChildren().length === 3){
-				ac._contentBox.w -= htmlMetrics.getScrollbar().w;
+				ac._contentBox.w -= metrics.getScrollbar().w;
 			}
 			var nextRuleNumber = ac.getChildren().length + 1;
-			var ruleTitle = dojo.string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
+			var ruleTitle = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
 			var fp = new FilterPane({grid: this.grid, title: ruleTitle});
 			ac.addChild(fp);
 			ac.selectChild(fp);
 			
 			if(!this._titlePaneHeight){
-				this._titlePaneHeight = dojo.position(fp._buttonWidget.domNode).h + 3;
+				this._titlePaneHeight = fp._buttonWidget.domNode.offsetHeight + 3;
 			}
 			fp._initCloseButton();
 			fp._onColumnChange();
 			try{
 				fp.tbSingle.focus();//TODO: this doesn't work now.
 			}catch(e){}
-			dojo.toggleClass(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
+			css.toggle(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
 			
 			this.connect(fp, 'onChange', '_updateButtons');
 			this._updateButtons();
@@ -119,13 +114,13 @@ define([
 		},
 		
 		_initWidgets: function(){
-			this._accordionContainer = dijit.byNode(dojo.query('.dijitAccordionContainer', this.domNode)[0]);
-			this._sltMatch = dijit.byNode(dojo.query('.dijitSelect', this.domNode)[0]);
-			var btns = dojo.query('.dijitButton', this.domNode);
-			this._btnAdd = dijit.byNode(btns[0]);
-			this._btnFilter = dijit.byNode(btns[1]);
-			this._btnClear = dijit.byNode(btns[2]);
-			this._btnCancel = dijit.byNode(btns[3]);
+			this._accordionContainer = registry.byNode(query('.dijitAccordionContainer', this.domNode)[0]);
+			this._sltMatch = registry.byNode(query('.dijitSelect', this.domNode)[0]);
+			var btns = query('.dijitButton', this.domNode);
+			this._btnAdd = registry.byNode(btns[0]);
+			this._btnFilter = registry.byNode(btns[1]);
+			this._btnClear = registry.byNode(btns[2]);
+			this._btnCancel = registry.byNode(btns[3]);
 			this.connect(this._btnAdd, 'onClick', 'addRule');
 			this.connect(this._btnFilter, 'onClick', 'done');
 			this.connect(this._btnClear, 'onClick', 'clear');
@@ -137,7 +132,7 @@ define([
 		_updatePaneTitle: function(){
 			// summary:
 			//		Update each pane title. Only called after remove a RULE pane.
-			dojo.forEach(this._accordionContainer.getChildren(), function(pane){
+			array.forEach(this._accordionContainer.getChildren(), function(pane){
 				pane._updateTitle();
 			});
 		},
@@ -145,7 +140,7 @@ define([
 		_updateButtons: function(){
 			var children = this._accordionContainer.getChildren();
 			//toggle filter button disable
-			if(dojo.some(children, function(c){return c.getData() === null;})){
+			if(array.some(children, function(c){return c.getData() === null;})){
 				this._btnFilter.set('disabled', true);
 			}else{
 				this._btnFilter.set('disabled', false);
@@ -160,7 +155,7 @@ define([
 			// summary:
 			//	Update the height of the accordion container to ensure consistent height of each accordion pane.
 			var ac = this._accordionContainer, len = ac.getChildren().length;
-			dojo.style(ac.domNode, 'height', 145 + len * this._titlePaneHeight + 'px');
+			ac.domNode.style.height = 145 + len * this._titlePaneHeight + 'px';
 			ac.resize();
 		}
 	});

@@ -1,8 +1,9 @@
 define([
 	'dojo/_base/declare',
+	'dojo/_base/array',
 	'dojo/dom-construct',
 	'dojo/dom-class'
-], function(declare, dom, css){
+], function(declare, array, dom, css){
 	return declare(null, {
 		pageSize: 20,
 		currentPage: 0,
@@ -29,20 +30,31 @@ define([
 			this.connect(this._buttonLoadMore, 'onclick', 'loadMore');
 		},
 		_buildBody: function(){
-			var arr = [];
-			this._queryResults = this.store.query(this.query, this.queryOptions);
-			this._queryResults.forEach(function(item, i){
-				arr.push(this._createRow(item, i));
-			}, this);
-			dom.place(arr.join(''), this._buttonLoadMore.parentNode, 'before');
-			
+			var self = this, q = this.query, opt = this.queryOptions;
+			this.store.fetch({
+				query: q,
+				queryOptions: opt,
+				sort: opt && opt.sort || [],
+				onComplete: function(items){
+					var arr = [];
+					array.forEach(items, function(item, i){
+						arr.push(self._createRow(item, i));
+					});
+					dom.place(arr.join(''), self._buttonLoadMore.parentNode, 'before');
+				},
+				onError: function(err){
+					console.error('Failed to fetch items from store:', err);
+				},
+				start: opt && opt.start,
+				count: opt && opt.count
+			});
 			this.currentPage++;
 			this._updateLoadMoreButton();
 		},
 		loadMore: function(){
 			var _this = this;
 			this._makeButtonBusy();
-			window.setTimeout(function(){
+			window.setTimeout(function(){	//time out for demo purpose
 				var count = _this.pageSize;
 				if(_this.pageSize * (_this.currentPage + 1) >= _this.rowCount){
 					count = _this.rowCount - _this.pageSize * _this.currentPage;

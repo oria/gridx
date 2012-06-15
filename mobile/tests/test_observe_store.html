@@ -67,8 +67,9 @@
 		require([
 			'dojo/_base/declare',
 			'dojo/_base/lang',
+			'dojo/_base/array',
 			'dojo/domReady',
-			'dojo/store/Memory',
+			'dojo/data/ItemFileWriteStore',
 			'dojox/mobile/parser',
 			'gridx/mobile/Grid',
 			'gridx/mobile/StoreObserver',
@@ -77,21 +78,29 @@
 			'dojox/mobile/View',
 			'dojox/mobile/ScrollableView',
 			'dojox/mobile/TabBar'
-		], function(declare, lang, ready, MemoryStore, parser, Grid, StoreObserver, data){
+		], function(declare, lang, array, ready, ItemFileWriteStore, parser, Grid, StoreObserver, data){
 			declare('gridx.mobile.tests.Grid', [Grid, StoreObserver], {});
 			ready(function(){
 				parser.parse();
-				grid.setStore(new MemoryStore({data: data.stock, idProperty: 'company'}));
+				var store = new ItemFileWriteStore({data: {items:data.stock}});
+				grid.setStore(store);
 				grid.setColumns(columns);
 				
 				window.setInterval(function(){
-					data.stock.forEach(function(stock){
-						var r = random(5, 2);
-						stock.shares = Math.round(100*(stock.shares + r))/100;	// to 2 decimal digit
-						stock.change = Math.round(100*(stock.change + r))/100;
-						grid.store.put(stock);
+					store.fetch({
+						onComplete: function(items){
+							array.forEach(items, function(item){
+								//for demo purpose, some rows need update
+								if(Math.random() > 0.5)return;
+								
+								var r = random(5, 2);
+								store.setValue(item, 'shares', Math.round(100*(store.getValue(item, 'shares') + r))/100);
+								store.setValue(item, 'change', Math.round(100*(store.getValue(item, 'change') + r))/100);
+							});
+						}
 					});
-				}, 3000);
+					
+				}, 2000);
 			});
 			
 		});

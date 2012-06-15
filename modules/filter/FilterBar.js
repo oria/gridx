@@ -1,7 +1,6 @@
 define([
-	"dojo/_base/kernel",
-	"dijit",
 	"dojo/_base/declare",
+	"dijit/registry",
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/_base/event",
@@ -21,13 +20,7 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
-	"dojo/date/locale",
-	"dojo/_base/array",
-	"dojo/_base/html",
-	"dojo/query",
-	"dojo/parser"
-	
-], function(dojo, dijit, declare, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -62,7 +55,7 @@ define([
 		//				return dojo.date.locale.parse(v, {...});
 		//			}
 		//		}
-		dataTypeArgs: {},
+		dataTypeArgs: {}
 	};
 	=====*/
 	
@@ -130,7 +123,6 @@ define([
 			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
 			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
 			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
-			//console.log(locale, locale.falseLabel);
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, locale),
 				'class': 'gridxFilterBar'
@@ -139,11 +131,9 @@ define([
 			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
 			this._nls = locale;
-			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
 			this._initWidgets();
 			this._initFocus();
 			this.refresh();
-			//this._buildFilterState();
 			this.connect(this.domNode, 'onclick', 'onDomClick');
 			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
@@ -208,7 +198,7 @@ define([
 				if(!this._cfmDlg){
 					this._cfmDlg = new FilterConfirmDialog();
 				}
-				this._cfmDlg.execute = dojo.hitch(scope, callback);
+				this._cfmDlg.execute = lang.hitch(scope, callback);
 				this._cfmDlg.show();
 			}else{
 				callback.apply(scope);
@@ -217,7 +207,7 @@ define([
 		
 		clearFilter: function(noConfirm){
 			if(!noConfirm){
-				this.confirmToExecute(dojo.hitch(this, 'clearFilter', true), this);
+				this.confirmToExecute(lang.hitch(this, 'clearFilter', true), this);
 			}else{
 				this.filterData = null;
 				this.grid.filter.setFilter();
@@ -325,7 +315,7 @@ define([
 		_getColumnConditions: function(colId){
 			// summary:
 			//		Get the available conditions for a specific column. 
-			//		Excluded condtions is defined by col.disabledConditions
+			// 		Excluded condtions is defined by col.disabledConditions
 			// tag:
 			//		private
 			// colId: String|Number
@@ -344,7 +334,7 @@ define([
 			}
 			
 			var ret = this.conditions[type], hash = {};
-			if(!ret){ret = this.conditions.string;}
+			if(!ret){ret = this.conditions['string'];}
 			array.forEach(disabled, function(name){hash[name] = true;});
 			ret = array.filter(ret, function(name){return !hash[name];});
 			return ret;
@@ -357,7 +347,7 @@ define([
 			col.filterable = !!filterable;
 			if(this.filterData){
 				var d = this.filterData, len = d.conditions.length;
-				d.conditions = dojo.filter(d.conditions, function(c){
+				d.conditions = array.filter(d.conditions, function(c){
 					return c.colId != colId;
 				});
 				if(len != d.conditions.length){
@@ -369,11 +359,10 @@ define([
 			}
 		},
 		_initWidgets: function(){
-			this.btnFilter = dijit.byNode(dojo.query('.dijitButton', this.domNode)[0]);
-			this.btnClose = dojo.query('.gridxFilterBarCloseBtn', this.domNode)[0];
-			this.statusNode = dojo.query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
+			this.btnFilter = registry.byNode(query('.dijitButton', this.domNode)[0]);
+			this.btnClose = query('.gridxFilterBarCloseBtn', this.domNode)[0];
+			this.statusNode = query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
 			domAttr.remove(this.btnFilter.focusNode, 'aria-labelledby');
-			//this.connect(this.btnFilter, 'onClick', 'showFilterDialog');	
 		},
 		
 		_buildFilterState: function(){
@@ -418,9 +407,7 @@ define([
 			dlg.hide();
 		},
 		_getRuleString: function(condition, value, type){
-			//var k = condition.charAt(0).toUpperCase() + condition.substring(1);
-			//return '<span style="font-style:italic">' + k + '</span> ' + value;
-			var valueString;
+			var valueString, type;
 			if(condition == 'isEmpty'){
 				valueString = '';
 			}else if(/^date|^time/i.test(type)){
@@ -544,7 +531,7 @@ define([
 		},
 		_doFocusClearLink: function(evt){
 			this.btnFilter.focus();
-			var link = dojo.query('a[action="clear"]')[0];
+			var link = query('a[action="clear"]')[0];
 			if(link){
 				link.focus();
 				if(evt){event.stopEvent(evt);}

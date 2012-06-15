@@ -6,18 +6,20 @@ define([
 	'dojo/aspect',
 	'dojo/string',
 	'dojo/dom-class',
+	'dojox/mobile/_DataMixin',
 	'dojox/mobile/Pane',
 	'dojox/mobile/ScrollablePane'
-], function(kernel, declare, lang, array, aspect, string, css, Pane, ScrollablePane){
+	
+], function(kernel, declare, lang, array, aspect, string, css, _DataMixin, Pane, ScrollablePane){
 	//module:
 	//	gridx/mobile/Grid
-	//summary:
+	// summary:
 	//	A mobile grid that has fixed header, footer and a scrollable body.
 	
 	kernel.experimental('gridx/mobile/Grid');
 	
-	var Grid = declare('gridx.mobile.Grid', [Pane], {
-		//summary:
+	var Grid = declare('gridx.mobile.Grid', [Pane, _DataMixin], {
+		// summary:
 		//	A mobile grid that has fixed header, footer and a scrollable body.
 		
 		//autoHeight: boolean
@@ -42,28 +44,19 @@ define([
 		//	Column definition to show the grid from store
 		columns: null,
 		
-		//store: dojo/store/api/Store
-		//	The store to show as grid.
-		store: null,
-		
-		query: null,
-		
-		//queryOptions: dojo.store.util.SimpleQueryEngine.__queryOptions?
-		queryOptions: null,
-		
 		//plugins: array
 		//	Plugins for the mobile grid.
 		//,plugins: [],
 		
-		setStore: function(store){
-			//summary
+		setStore: function(store, query, queryOptions){
+			// summary
 			//	Set the store of the grid, it causes rebuild the grid body.
-			this.store = store;
+			this.inherited(arguments);
 			this._buildBody();
 		},
 		
 		setColumns: function(columns){
-			//summary:
+			// summary:
 			//	Set columns to show for the grid. 
 			//  Maybe improve performance by adding/removing some columns instead of re-rendering.
 			this.columns = columns;
@@ -77,7 +70,7 @@ define([
 		},
 		
 		buildGrid: function(){
-			//summary:
+			// summary:
 			//	Build the whole grid
 			this._buildHeader();
 			this._buildBody();
@@ -85,19 +78,19 @@ define([
 		},
 		
 		_buildHeader: function(){
-			//summary:
+			// summary:
 			//	Build the grid header when showHeader is true.
 			if(!this.showHeader){
 				this.headerNode.style.display = 'none';
 				return;
-			} else {
+			}else{
 				this.headerNode.style.display = 'block';
 			}
 			
 			var arr = ['<div class="mobileGridxHeaderRow"><table><tr>'];
 			array.forEach(this.columns, function(col){
 				arr.push(
-					'<th class="mobileGridxHeaderCell ', col.cssClass||''
+					'<th class="mobileGridxHeaderCell ', col.cssClass || ''
 						,col.align ? ' align-' + col.align : ''
 					,col.width? '" style="width:' + col.width + ';"' : ''
 					,'>', col.title, '</th>'
@@ -108,26 +101,41 @@ define([
 		},
 		
 		_buildBody: function(){
-			//summary:
+			// summary:
 			//	Build the grid body
-			var arr = [];
-			this._queryResults = this.store.query(this.query, this.queryOptions);
-			this._queryResults.forEach(function(item, i){
-				arr.push(this._createRow(item, i));
-			}, this);
-			this.bodyPane.containerNode.innerHTML = arr.join('');
+			var self = this, q = this.query, opt = this.queryOptions;
+			this.store.fetch({
+				query: q,
+				queryOptions: opt,
+				sort: opt && opt.sort || [],
+				onComplete: function(items){
+					var arr = [];
+					array.forEach(items, function(item, i){
+						arr.push(self._createRow(item, i));
+					});
+					self.bodyPane.containerNode.innerHTML = arr.join('');
+				},
+				onError: function(err){
+					console.error('Failed to fetch items from store:', err);
+				},
+				start: opt && opt.start,
+				count: opt && opt.count
+			});
 		},
 		
 		_createRow: function(item, i){
-			//summary:
+			// summary:
 			//	Create a grid row by object store item.
 			var isOdd = !(i%2);	//i is from 0
-			var arr = ['<div class="mobileGridxRow ' + (isOdd ? 'mobileGridxRowOdd' : '' ) + '"><table><tr>'];
+			var rowId = this.store.getIdentity(item);
+			var arr = ['<div class="mobileGridxRow ' + (isOdd ? 'mobileGridxRowOdd' : '' ) + '"',
+				' rowId="' + rowId + '"',
+				 '><table><tr>'];
 			array.forEach(this.columns, function(col){
 				var value = this._getCellContent(col, item);
 				arr.push(
 					'<td class="mobileGridxCell ' 
-					,((col.cssClass || col.align) ? ((col.cssClass||'') + (col.align ? ' align-' + col.align : '')) : '')
+					,((col.cssClass || col.align) ? ((col.cssClass || '') + (col.align ? ' align-' + col.align : '')) : '')
 					,'"'
 					,(col.width? ' style="width:' + col.width + ';"' : '') 
 					,'>', value, '</td>'
@@ -137,20 +145,20 @@ define([
 			return arr.join('');
 		},
 		
-		_getCellContent: function(col, obj){
-			//summary:
+		_getCellContent: function(col, item){
+			// summary:
 			//	Get a cell content by the column definition.
 			//	* Currently only support string content, will add support for widget in future.
-			var f = col.formatter, store = this.store;
+			var f = col.formatter, obj = this._itemToObject(item);
 			if(col.template){
 				return string.substitute(col.template, obj);
-			} else {
+			}else{
 				return f ? f(obj, col) : obj[col.field];
 			}
 		},
 		
 		buildRendering: function(){
-			//summary:
+			// summary:
 			//	Build the grid dom structure.
 			this.inherited(arguments);
 			css.add(this.domNode, 'mobileGridx');
@@ -184,7 +192,7 @@ define([
 		},
 		
 		resize: function(){
-			//summary:
+			// summary:
 			//	Calculate the height of grid body according to the autoHeight property.
 			this.inherited(arguments);
 			var h = this.domNode.offsetHeight;
@@ -205,6 +213,16 @@ define([
 		startup: function(){
 			this.inherited(arguments);
 			this.bodyPane.startup();
+		},
+		
+		_itemToObject: function(item){
+			// summary:
+			//	Convert a store item to object
+			var store = this.store, arr = store.getAttributes(item), res = {};
+			array.forEach(arr, function(key){
+				res[key] = store.getValue(item, key);
+			});
+			return res;
 		}
 	});
 	

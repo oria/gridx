@@ -120,7 +120,7 @@ define([
 						w += padBorder;
 					}
 					totalWidth += w;
-					if(sniff('ie') && isCollapse){
+					if(isCollapse){
 						totalWidth--;
 					}
 					var c = g._columnsById[node.getAttribute('colid')];

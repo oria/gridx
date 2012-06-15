@@ -1,16 +1,20 @@
 define([
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dijit",
-	"dojo/string",
-	"dojox/html/metrics",
-	"dojo/text!../../templates/FilterPane.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/string",
+	"dojo/query",
+	"dijit/registry",
+	"dojox/html/ellipsis",
+	"dojox/html/metrics",
 	"./DistinctComboBoxMenu",
 	"./Filter",
+	"dojo/text!../../templates/FilterPane.html",
+	"dojo/i18n!../../nls/FilterBar",
+	
 	"dijit/layout/ContentPane",
-	"dojo/data/ItemFileReadStore",
 	"dijit/form/Select",
 	"dijit/form/TextBox",
 	"dijit/form/DateTextBox",
@@ -18,13 +22,7 @@ define([
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox",
-	"dojox/html/ellipsis",
-	"dojo/store/util/QueryResults",
-	"dojo/_base/array",
-	"dojo/_base/lang",
-	"dojo/_base/html",
-	"dojo/query"
-], function(dojo, lang, dijit, string, htmlMetrics, template, i18n, declare, DistinctComboBoxMenu, Filter){
+], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n){
 	return declare([dijit.layout.ContentPane], {
 		//content: template,
 		sltColumn: null,
@@ -72,17 +70,17 @@ define([
 			var ac = this._getContainer();
 			if(ac.getChildren().length === 4){
 				//while there's less than 4 rules, no scroll bar
-				ac._contentBox.w += htmlMetrics.getScrollbar().w;
+				ac._contentBox.w += metrics.getScrollbar().w;
 			}
 			
 			if(this === ac.selectedChildWidget){
 				//select previous pane if this is current, consistent with EDG filter.
-				var i = dojo.indexOf(ac.getChildren(), this);
+				var i = array.indexOf(ac.getChildren(), this);
 				if(i > 0){ac.selectChild(ac.getChildren()[i-1]);}
 			}
 			
 			ac.removeChild(this);
-			dojo.toggleClass(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
+			css.toggle(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
 			this.grid.filterBar._filterDialog._updateAccordionContainerHeight();
 		},
 		onChange: function(){
@@ -90,24 +88,24 @@ define([
 			//	event: fired when column, condition or value is changed
 		},
 		_getContainer: function(){
-			return dijit.byNode(this.domNode.parentNode.parentNode.parentNode);
+			return registry.byNode(this.domNode.parentNode.parentNode.parentNode);
 		},
 		_initFields: function(){
-			this.sltColumn = dijit.byNode(dojo.query('li>table', this.domNode)[0]);
-			this.sltCondition = dijit.byNode(dojo.query('li>table', this.domNode)[1]);
+			this.sltColumn = registry.byNode(query('li>table', this.domNode)[0]);
+			this.sltCondition = registry.byNode(query('li>table', this.domNode)[1]);
 			var fields = this._fields = [
-				this.tbSingle = dijit.byNode(dojo.query('.gridxFilterPaneTextWrapper > .dijitTextBox', this.domNode)[0]),
-				this.tbNumber = dijit.byNode(dojo.query('.gridxFilterPaneNumberWrapper > .dijitTextBox', this.domNode)[0]),
-				this.comboText = dijit.byNode(dojo.query('.gridxFilterPaneComboWrapper > .dijitComboBox', this.domNode)[0]),
-				this.sltSingle = dijit.byNode(dojo.query('.gridxFilterPaneSelectWrapper > .dijitSelect', this.domNode)[0]),
-				this.dtbSingle = dijit.byNode(dojo.query('.gridxFilterPaneDateWrapper > .dijitDateTextBox', this.domNode)[0]),
-				this.dtbStart = dijit.byNode(dojo.query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[0]),
-				this.dtbEnd = dijit.byNode(dojo.query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[1]),
-				this.ttbSingle = dijit.byNode(dojo.query('.gridxFilterPaneTimeWrapper > .dijitTimeTextBox', this.domNode)[0]),
-				this.ttbStart = dijit.byNode(dojo.query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[0]),
-				this.ttbEnd = dijit.byNode(dojo.query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[1]),
-				this.rbTrue = dijit.byNode(dojo.query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[0]),
-				this.rbFalse = dijit.byNode(dojo.query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[1])
+				this.tbSingle = registry.byNode(query('.gridxFilterPaneTextWrapper > .dijitTextBox', this.domNode)[0]),
+				this.tbNumber = registry.byNode(query('.gridxFilterPaneNumberWrapper > .dijitTextBox', this.domNode)[0]),
+				this.comboText = registry.byNode(query('.gridxFilterPaneComboWrapper > .dijitComboBox', this.domNode)[0]),
+				this.sltSingle = registry.byNode(query('.gridxFilterPaneSelectWrapper > .dijitSelect', this.domNode)[0]),
+				this.dtbSingle = registry.byNode(query('.gridxFilterPaneDateWrapper > .dijitDateTextBox', this.domNode)[0]),
+				this.dtbStart = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[0]),
+				this.dtbEnd = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[1]),
+				this.ttbSingle = registry.byNode(query('.gridxFilterPaneTimeWrapper > .dijitTimeTextBox', this.domNode)[0]),
+				this.ttbStart = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[0]),
+				this.ttbEnd = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[1]),
+				this.rbTrue = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[0]),
+				this.rbFalse = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[1])
 			];
 			
 			this.rbTrue.domNode.nextSibling.htmlFor = this.rbTrue.id;
@@ -116,7 +114,7 @@ define([
 			this.rbTrue.set('name', name);
 			this.rbFalse.set('name', name);
 			
-			dojo.forEach(fields, function(field){
+			array.forEach(fields, function(field){
 				this.connect(field, 'onChange', '_onValueChange');
 			}, this);
 		},
@@ -124,10 +122,8 @@ define([
 			var colOpts = [{label: 'Any Column', value: ''}],
 				fb = this.grid.filterBar, 
 				sltCol = this.sltColumn;
-			dojo.forEach(this.grid.columns(), function(col){
-				if(!col.isFilterable()){
-					return;
-				}
+			array.forEach(this.grid.columns(), function(col){
+				if(!col.isFilterable())return;
 				colOpts.push({value: col.id, label: col.name()});
 			}, this);
 			sltCol.addOption(colOpts);
@@ -137,20 +133,20 @@ define([
 			//	Add a close button to the accordion pane.
 			//  Must be called after adding to an accordion container.
 			var btnWidget = this._buttonWidget;
-			var closeButton = dojo.create('span', {
+			var closeButton = dom.create('span', {
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
 				title: 'Close'
 			}, btnWidget.domNode, 'first');
 			this.connect(closeButton, 'onclick', 'close');
-			dojo.addClass(btnWidget.titleTextNode, 'dojoxEllipsis');
+			css.add(btnWidget.titleTextNode, 'dojoxEllipsis');
 		},
 		
 		_onColumnChange: function(){
 			var opt = this.grid.filterBar._getConditionOptions(this.sltColumn.get('value'));
 			var slt = this.sltCondition;
 			if(slt.options && slt.options.length){slt.removeOption(slt.options);}
-			slt.addOption(dojo.clone(opt));
+			slt.addOption(lang.clone(opt));
 			this._updateTitle();
 			this.onChange();
 		},
@@ -178,9 +174,7 @@ define([
 			//	Get current filter type, determined by data type and condition.
 			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', 'boolean': 'Radio'};
 			var type = mapping[this._getDataType()];
-			if('range' === this.sltCondition.get('value')){
-				type += 'Range';
-			}
+			if('range' === this.sltCondition.get('value')){type += 'Range';} ;
 			return type;
 		},
 		_updateTitle: function(){
@@ -192,8 +186,8 @@ define([
 			if(value && (condition !== 'range' || (value.start && value.end))){
 				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
 			}else{
-				var ruleNumber = dojo.indexOf(this._getContainer().getChildren(), this) + 1;
-				title = dojo.string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
+				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
+				title = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
 			}
 			txtNode.innerHTML = title;
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');
@@ -210,15 +204,13 @@ define([
 			var type = this._getType(), colId = this.sltColumn.get('value');
 			var combo = this._needComboBox();
 			
-			dojo.forEach(['Text','Combo', 'Date', 'Number', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
-				dojo.removeClass(this.domNode, 'gridxFilterPane' + k);
+			array.forEach(['Text','Combo', 'Date', 'Number', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
+				css.remove(this.domNode, 'gridxFilterPane' + k);
 			}, this);
 			
-			dojo.addClass(this.domNode, 'gridxFilterPane' + (combo ? 'Combo' : type));
+			css.add(this.domNode, 'gridxFilterPane' + (combo ? 'Combo' : type));
 			var disabled = this.sltCondition.get('value') === 'isEmpty';
-			dojo.forEach(this._fields, function(f){
-				f.set('disabled', disabled);
-			});
+			array.forEach(this._fields, function(f){f.set('disabled', disabled)});
 			
 			if(combo){
 				if(!this._dummyCombo){
@@ -227,7 +219,7 @@ define([
 				}
 				//init combobox
 				var col = this.grid._columnsById[colId];
-				dojo.mixin(this.comboText, {
+				lang.mixin(this.comboText, {
 					store: this.grid.store,
 					searchAttr: col.field,
 					fetchProperties: {sort:[{attribute: col.field, descending: false}]}

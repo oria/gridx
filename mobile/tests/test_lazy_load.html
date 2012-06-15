@@ -35,7 +35,7 @@
 		require([
 			'dojo/_base/declare',
 			'dojo/domReady',
-			'dojo/store/Memory',
+			'dojo/data/ItemFileReadStore',
 			'dojox/mobile/parser',
 			'gridx/mobile/tests/support/data',
 			'gridx/mobile/Grid',
@@ -44,13 +44,11 @@
 			'dojox/mobile/View',
 			'dojox/mobile/ScrollableView',
 			'dojox/mobile/TabBar'
-		], function(declare, ready, MemoryStore, parser, data, Grid, LazyLoad){
+		], function(declare, ready, ItemFileReadStore, parser, data, Grid, LazyLoad){
 			declare('gridx.mobile.tests.Grid', [Grid, LazyLoad], {});
 			ready(function(){
 				parser.parse();
-				grid.store = new MemoryStore({
-					data: data.many
-				});
+				grid.store = new ItemFileReadStore({data: {items: data.many}});
 				grid.setColumns(columns);
 			});
 		});

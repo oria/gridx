@@ -38,7 +38,7 @@
 		];
 		require([
 			'dojo/domReady',
-			'dojo/store/Memory',
+			'dojo/data/ItemFileReadStore',
 			'dojox/mobile/parser',
 			'gridx/mobile/tests/support/data',
 			'dojox/mobile/Heading',
@@ -46,10 +46,10 @@
 			'dojox/mobile/ScrollableView',
 			'dojox/mobile/TabBar',
 			'gridx/mobile/Grid'
-		], function(ready, MemoryStore, parser, data){
+		], function(ready, ItemFileReadStore, parser, data){
 			ready(function(){
 				parser.parse();
-				grid.store = new MemoryStore({data: data.weather});
+				grid.store = new ItemFileReadStore({data: {items: data.weather}});
 				grid.setColumns(columns);
 			});
 		});

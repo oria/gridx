@@ -1,18 +1,12 @@
 define([
-	"dojo/_base/kernel",
-	"dijit",
-	"dojo/string",
 	"dojo/_base/declare",
+	"dojo/string",
+	"dijit/Dialog",
 	"dojo/text!../../templates/FilterConfirmDialog.html",
 	"dojo/i18n!../../nls/FilterBar",
-	"dijit/Dialog",
-	"dijit/layout/AccordionContainer",
-	"dojo/data/ItemFileReadStore",
-	"./FilterPane",
-	"./Filter"
-], function(dojo, dijit, string, declare, template, i18n){
+], function(declare, string, Dialog, template, i18n){
 
-	return declare(dijit.Dialog, {
+	return declare(Dialog, {
 		title: i18n.clearFilterDialogTitle,
 		cssClass: 'gridxFilterConfirmDialog',
 		autofocus: false,

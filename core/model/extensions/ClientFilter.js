@@ -59,7 +59,7 @@ define([
 		},
 
 		indexToId: function(index){
-			return this._ids ? this._ids[index] || undefined : this.inner._call('indexToId', arguments);
+			return this._ids ? this._ids[index] : this.inner._call('indexToId', arguments);
 		},
 
 		idToIndex: function(id){

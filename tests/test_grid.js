@@ -27,14 +27,13 @@ require([
 			var t1 = new Date().getTime();
 			grid = new Grid({
 				id: 'grid',
-//                style: 'width: 100px; height: 100px;',
 				cacheClass: Cache,
-				cacheSize: 0,
+				//cacheSize: 0,
 				store: store,
 				structure: layout,
 				modules:[
-					modules.SingleSort,
-//                    modules.ExtendedSelectRow,
+//                    modules.SingleSort,
+					modules.ExtendedSelectRow,
 //                    modules.SelectRow,
 //                    modules.DndRow,
 //                    modules.FilterBar,
