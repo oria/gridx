@@ -3,7 +3,7 @@ define([
 	"dojo/string",
 	"dijit/Dialog",
 	"dojo/text!../../templates/FilterConfirmDialog.html",
-	"dojo/i18n!../../nls/FilterBar",
+	"dojo/i18n!../../nls/FilterBar"
 ], function(declare, string, Dialog, template, i18n){
 
 	return declare(Dialog, {

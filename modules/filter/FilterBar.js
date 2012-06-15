@@ -19,7 +19,7 @@ define([
 	"./FilterTooltip",
 	"dijit/TooltipDialog",
 	"dijit/popup",
-	"dijit/Tooltip",
+	"dijit/Tooltip"
 ], function(declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====

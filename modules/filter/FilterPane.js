@@ -21,7 +21,7 @@ define([
 	"dijit/form/TimeTextBox",
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
-	"dijit/form/ComboBox",
+	"dijit/form/ComboBox"
 ], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n){
 	return declare([dijit.layout.ContentPane], {
 		//content: template,
