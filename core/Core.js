@@ -199,8 +199,8 @@ define([
 
 		_reset: function(args){
 			//Reset the grid data model completely. Also used in initialization.
-			var t = this;
-			t._uninit();
+			var t = this,
+				d = t._deferStartup = new Deferred();
 			args = shallowCopy(args);
 			t.store = args.store;
 			args.modules = args.modules || [];
@@ -216,11 +216,6 @@ define([
 			t.model = new Model(args);
 			t.when = lang.hitch(t.model, t.model.when);
 			t._create(args);
-		},
-
-		_postCreate: function(){
-			var t = this,
-				d = t._deferStartup = new Deferred();
 			t._preload();
 			t._load(d).then(hitch(t, 'onModulesLoaded'));
 		},

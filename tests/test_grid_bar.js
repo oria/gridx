@@ -46,7 +46,7 @@ require([
 			]
 		],
 		barBottom: [
-		    Summary,
+			Summary,
 			{pluginClass: LinkSizer, 'className': 'linkSizer'},
 			{pluginClass: LinkPager, 'className': 'linkPager'},
 			{pluginClass: DropDownSizer, 'className': 'dropDownSizer'},

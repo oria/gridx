@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
@@ -27,7 +27,7 @@ require([
 //            mods.SelectRow,
 			{
 				moduleClass: filterBar,
-				maxRuleCount: 2,
+				maxRuleCount: 3,
 				ruleCountToConfirmClearFilter: 2
 			}
 		],

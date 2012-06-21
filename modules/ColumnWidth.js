@@ -17,7 +17,7 @@ define([
 
 		name: 'columnWidth',
 	
-		forced: ['hLayout', 'header'],
+		forced: ['hLayout'],
 
 		getAPIPath: function(){
 			// tags:
@@ -28,44 +28,29 @@ define([
 		},
 
 		constructor: function(){
-			this._ready = new Deferred();
+			this._init();
 		},
 
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this, g = t.grid;
-			if(!g.hScroller){
-				t.autoResize = true;
-			}
+			var t = this,
+				g = t.grid;
+			t._ready = new Deferred();
 			t.batchConnect(
 				[g, '_onResizeBegin', function(changeSize, ds){
 					ds.header = new Deferred();
-					if(!t.arg('autoResize') && array.some(g._columns, function(col){
-						return !col.width || col.width == 'auto' || /%$/.test(col.width);
-					})){
-						t._adaptWidth();
-					}else{
-						var w = g.domNode.clientWidth - g.hLayout.lead - g.hLayout.tail;
-						g.bodyNode.style.width = (w < 0 ? 0 : w) + 'px';
-					}
+					var w = g.domNode.clientWidth - g.hLayout.lead - g.hLayout.tail;
+					g.bodyNode.style.width = (w < 0 ? 0 : w) + 'px';
 					ds.header.callback();
 				}],
-				[g.hLayout, 'onUpdateWidth', function(){
-					t._adaptWidth();
-					t._ready.callback();
-				}],
-				[g, 'setColumns', '_adaptWidth']
-			);
+				[g.hLayout, 'onUpdateWidth', '_onUpdateWidth'],
+				[g, 'setColumns', '_onSetColumns']);
 		},
 
 		load: function(){
-			// tags:
-			//		protected extension
-			var loaded = this.loaded;
-			this._ready.then(function(){
-				loaded.callback();
-			});
+			this._adaptWidth();
+			this.loaded.callback();
 		},
 
 		//Public-----------------------------------------------------------------------------
@@ -80,8 +65,58 @@ define([
 		//		HTML table).
 		autoResize: false,
 
+		onUpdate: function(){},
+
 		//Private-----------------------------------------------------------------------------
-		_adaptWidth: function(){
+		_init: function(){
+			var t = this,
+				g = t.grid,
+				dn = g.domNode,
+				cols = g._columns;
+			array.forEach(cols, function(col){
+				if(!col.hasOwnProperty('declaredWidth')){
+					col.declaredWidth = col.width = col.width || 'auto';
+				}
+			});
+			if(g.autoWidth){
+				array.forEach(cols, function(c){
+					if(c.declaredWidth == 'auto'){
+						c.width = t.arg('default') + 'px';
+					}
+				});
+			}else if(t.arg('autoResize')){
+				domClass.add(dn, 'gridxPercentColumnWidth');
+				array.forEach(cols, function(c){
+					if(!(/%$/).test(c.declaredWidth)){
+						c.width = 'auto';
+					}
+				});
+			}
+		},
+
+		_onUpdateWidth: function(){
+			var t = this,
+				g = t.grid;
+			if(g.autoWidth){
+				t._adaptWidth();
+			}else{
+				var noHScroller = g.hScrollerNode.clientWidth >= g.hScrollerNode.scrollWidth;
+				t._adaptWidth(!noHScroller);
+				if(!t.arg('autoResize') && noHScroller){
+					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
+						var col = g._columnsById[cellNode.getAttribute('colId')];
+						if(t.arg('autoResize') ||
+							!col.declaredWidth ||
+							col.declaredWidth == 'auto' ||
+							(/%$/).test(col.declaredWidth)){
+							cellNode.style.width = col.width;
+						}
+					});
+				}
+			}
+		},
+
+		_adaptWidth: function(skip){
 			var t = this,
 				g = t.grid,
 				dn = g.domNode,
@@ -102,16 +137,18 @@ define([
 			hs[marginLead] = bs[marginLead] = lead + 'px';
 			hs[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
+			if(sniff('ie') < 8){
+				hs.width = bodyWidth + 'px';
+			}
+			if(skip){
+				bs.width = bodyWidth + 'px';
+				t.onUpdate();
+				return;
+			}
 			if(isCollapse){
 				padBorder += isGridHidden ? -1 : 1;
 			}
 			if(g.autoWidth){
-				array.forEach(g._columns, function(c){
-					if(!c.width){
-						c.width = t.arg('default') + 'px';
-					}
-				});
-				header.refresh();
 				var headers = query('th.gridxCell', innerNode),
 					totalWidth = isCollapse ? 2 : 0;
 				headers.forEach(function(node){
@@ -124,70 +161,71 @@ define([
 						totalWidth--;
 					}
 					var c = g._columnsById[node.getAttribute('colid')];
-					if(!c.width || /%$/.test(c.width)){
-						c.width = w + 'px';
+					if(c.width == 'auto' || (/%$/).test(c.width)){
+						node.style.width = c.width = w + 'px';
 					}
 				});
-				header._columnsWidth = totalWidth;
 				bs.width = totalWidth + 'px';
 				dn.style.width = (lead + tail + totalWidth) + 'px';
-			}else if(t.arg('autoResize')){
-				bs.width = bodyWidth + 'px';
-				domClass.add(dn, 'gridxPercentColumnWidth');
-				array.forEach(g._columns, function(c){
-					if(!c.width || !/%$/.test(c.width)){
-						c.width = 'auto';
-					}
-				});
-				header.refresh();
 			}else{
-				var autoCols = [],
-					fixedWidth = isCollapse ? 2 : 0;
 				bs.width = bodyWidth + 'px';
-				array.forEach(g._columns, function(c){
-					if(!c.width || c.width == 'auto'){
-						c.width = 'auto';
-						autoCols.push(c);
-					}else if(/%$/.test(c.width)){
-						c.width = parseInt(bodyWidth * parseFloat(c.width, 10) / 100 - 
-							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10) + 'px';
-					}
-				});
-				header.refresh();
-				array.forEach(g._columns, function(c){
-					if(c.width != 'auto'){
-						var w = domStyle.get(header.getHeaderNode(c.id), 'width');
-						if(!c.width || /%$/.test(c.width)){
-							c.width = w + 'px';
+				if(!t.arg('autoResize')){
+					var autoCols = [],
+						cols = g._columns,
+						fixedWidth = isCollapse ? 2 : 0;
+					array.forEach(cols, function(c){
+						if(c.declaredWidth == 'auto'){
+							autoCols.push(c);
+						}else if(/%$/.test(c.declaredWidth)){
+							c.width = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - 
+								(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10) + 'px';
+							header.getHeaderNode(c.id).style.width = c.width;
 						}
-						if(!sniff('safari') || !isGridHidden){
-							w += padBorder;
-						}
-						fixedWidth += w;
-					}
-				});
-				if(autoCols.length){
-					if(sniff('safari')){
-						padBorder = 0;
-					}
-					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default');
-					if(bodyWidth > fixedWidth && sniff('ie') && isCollapse){
-						w += g._columns.length / autoCols.length;
-					}
-					w = parseInt(w, 10);
-					array.forEach(autoCols, function(c){
-						c.width = w + 'px';
 					});
+					array.forEach(cols, function(c){
+						if(c.declaredWidth != 'auto'){
+							var w = domStyle.get(header.getHeaderNode(c.id), 'width');
+							if(/%$/.test(c.declaredWidth)){
+								c.width = w + 'px';
+							}
+							if(!sniff('safari') || !isGridHidden){
+								w += padBorder;
+							}
+							fixedWidth += w;
+						}
+					});
+					if(autoCols.length){
+						if(sniff('safari')){
+							padBorder = 0;
+						}
+						var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
+							ww = parseInt(w, 10);
+						if(bodyWidth > fixedWidth){
+							if(sniff('ie') && isCollapse){
+								w += cols.length / autoCols.length;
+							}
+							ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
+						}
+						w = parseInt(w, 10);
+						array.forEach(autoCols, function(c, i){
+							header.getHeaderNode(c.id).style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
+						});
+					}
 				}
-				header.refresh();
 			}
-			if(sniff('ie') < 8){
-				hs.width = bodyWidth + 'px';
-			}
-			if(g.hScroller){
-				g.hScroller.scroll(0);
-				header._onHScroll(0);
-			}
+			g.hScroller.scroll(0);
+			header._onHScroll(0);
+			g.vLayout.reLayout();
+			t.onUpdate();
+		},
+
+		_onSetColumns: function(){
+			var t = this,
+				g = t.grid;
+			t._init();
+			g.header.refresh();
+			t._adaptWidth();
+			g.body.refresh();
 		}
 	});
 });

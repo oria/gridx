@@ -88,7 +88,7 @@ define([
 			//		Get the current count of pages.
 			// returns:
 			//		The current count of pages.
-			return this.isAll() ? 1 : Math.ceil(this.model.size() / this.pageSize());	//Integer
+			return this.isAll() ? 1 : Math.max(Math.ceil(this.model.size() / this.pageSize()), 1);	//Integer
 		},
 	
 		currentPage: function(){

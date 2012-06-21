@@ -29,7 +29,7 @@ define([
 
 		setStore: function(store){
 			var t = this,
-				c = 'connect',
+				c = 'aspect',
 				old = store.fetch;
 			t.clear();
 			t.store = store;
@@ -247,10 +247,10 @@ define([
 		},
 	
 		_storeFetch: function(options, onFetched){
-//            console.debug("\tFETCH start: ", 
-//                    options.start, ", count: ", 
-//                    options.count, ", end: ", 
-//                    options.count && options.start + options.count - 1, ", options:", 
+//            console.debug("\tFETCH start: ",
+//                    options.start, ", count: ",
+//                    options.count, ", end: ",
+//                    options.count && options.start + options.count - 1, ", options:",
 //                    this.options);
 
 			var t = this,

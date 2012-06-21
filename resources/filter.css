@@ -57,6 +57,7 @@
 
 .gridxFilterPaneCloseButton {
 	float: right;
+	margin-top: -15px;
 }
 
 .gridxFilterPaneCloseButton img {
@@ -237,6 +238,10 @@
 	height: 15px;
 	cursor: pointer;
 	display: none;
+}
+
+.dj_ie7 .gridxQuickFilterClear {
+	top: 5px;
 }
 
 .gridxQuickFilterClearInner {

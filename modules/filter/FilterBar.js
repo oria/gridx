@@ -526,7 +526,7 @@ define([
 		},
 		_doFocusBtnFilter: function(evt){
 			this.btnFilter.focus();
-			if(evt){event.stopEvent(evt);}
+			if(evt){event.stop(evt);}
 			return true;
 		},
 		_doFocusClearLink: function(evt){
@@ -534,14 +534,14 @@ define([
 			var link = query('a[action="clear"]')[0];
 			if(link){
 				link.focus();
-				if(evt){event.stopEvent(evt);}
+				if(evt){event.stop(evt);}
 				return true;
 			}
 			return false;
 		},
 		_doFocusBtnClose: function(evt){
 			this.btnClose.focus();
-			if(evt){event.stopEvent(evt);}
+			if(evt){event.stop(evt);}
 			return true;
 		},
 		

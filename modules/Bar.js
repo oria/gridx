@@ -101,6 +101,7 @@ define([
 						td = domConstruct.create('td');
 					array.forEach(['colSpan', 'rowSpan', 'style'], lang.partial(setAttr, td, def, 0));
 					setAttr(td, def, 'class', 'className');
+					plugin = null;
 					if(def.pluginClass){
 						var cls = def.pluginClass;
 						delete def.pluginClass;
@@ -110,6 +111,8 @@ define([
 						}catch(e){
 							console.error(e);
 						}
+					}else if(def.content){
+						td.innerHTML = def.content;
 					}
 					pluginRow.push(plugin);
 					tr.appendChild(td);

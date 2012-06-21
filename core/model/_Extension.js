@@ -1,32 +1,34 @@
 define([
 	'dojo/_base/declare',
-	'dojo/_base/connect',
-	'dojo/_base/array'
-], function(declare, connect, array){
+	"dojo/_base/lang",
+	'dojo/_base/array',
+	'dojo/aspect'
+], function(declare, lang, array, aspect){
 
 	return declare([], {
 		// summary:
 		//		Abstract base class for all model components (including cache)
 		constructor: function(model){
 			var t = this,
-				c = 'connect',
 				i = t.inner = model._model;
 			t._cnnts = [];
 			t.model = model;
 			model._model = t;
 			if(i){
-				t[c](i, 'onDelete', '_onDelete');
-				t[c](i, 'onNew', '_onNew');
-				t[c](i, 'onSet', '_onSet');
+				t.aspect(i, 'onDelete', '_onDelete');
+				t.aspect(i, 'onNew', '_onNew');
+				t.aspect(i, 'onSet', '_onSet');
 			}
 		},
 
 		destroy: function(){
-			array.forEach(this._cnnts, connect.disconnect);
+			array.forEach(this._cnnts, function(cnnt){
+				cnnt.remove();
+			});
 		},
 
-		connect: function(obj, event, method, scope){
-			var cnnt = connect.connect(obj, event, scope || this, method);
+		aspect: function(obj, e, method, scope, pos){
+			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
 			this._cnnts.push(cnnt);
 			return cnnt;
 		},

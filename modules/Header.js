@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/dom-construct",
 	"dojo/dom-class",
@@ -9,7 +10,7 @@ define([
 	"dojo/keys",
 	"../util",
 	"../core/_Module"
-], function(declare, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
+], function(declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
 	
 	return declare(/*===== "gridx.modules.Header", =====*/_Module, {
@@ -21,9 +22,7 @@ define([
 
 		name: 'header',
 	
-//        required: ['vLayout'],
-
-		forced: ['hLayout'],
+		//required: ['vLayout', 'hLayout'],
 
 		getAPIPath: function(){
 			// tags:
@@ -37,36 +36,32 @@ define([
 		},
 
 		constructor: function(){
-			//Prepare this.domNode
-			var dn = this.domNode = domConstruct.create('div', {
+			var t = this,
+				dn = t.domNode = domConstruct.create('div', {
 					'class': 'gridxHeaderRow',
 					role: 'presentation'
 				}),
-				inner = this.innerNode = domConstruct.create('div', {
+				inner = t.innerNode = domConstruct.create('div', {
 					'class': 'gridxHeaderRowInner',
-					role: 'row',
-					innerHTML: '<table border="0" cellpadding="0" cellspacing="0"><tr><th class="gridxCell"></th></tr></table>'
+					role: 'row'
 				});
-			dn.appendChild(inner);
+			t.grid._connectEvents(dn, '_onMouseEvent', t);
 		},
 
 		preload: function(args){
 			// tags:
 			//		protected extension
-			var t = this, g = t.grid, dn = t.domNode;
-			g.headerNode.appendChild(dn);
+			var t = this,
+				g = t.grid;
+			t.domNode.appendChild(t.innerNode);
+			t._build();
+			g.headerNode.appendChild(t.domNode);
 			//Add this.domNode to be a part of the grid header
 			g.vLayout.register(t, 'domNode', 'headerNode');
-			t.batchConnect(
-				[g, 'onHScroll', '_onHScroll'],
-				[g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver'],
-				[g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver'],
-				g.columnResizer && [g.columnResizer, 'onResize', '_onColumnResize']
-			);
+			t.aspect(g, 'onHScroll', '_onHScroll');
+			t.aspect(g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver');
+			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
 			t._initFocus();
-			
-			//Prepare mouse events
-			g._connectEvents(dn, '_onMouseEvent', t);
 		},
 
 		destroy: function(){
@@ -103,21 +98,9 @@ define([
 		refresh: function(){
 			// summary:
 			//		Re-build the header UI.
-			var t = this, g = t.grid, f = g.focus,
-				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
-			array.forEach(g.columns(), function(col){
-				sb.push('<th colid="', col.id, '" class="gridxCell ',
-					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
-					'" role="columnheader" aria-readonly="true" tabindex="-1" style="width: ',
-					col.getWidth(),
-					'"><div class="gridxSortNode">', 
-					col.name(),
-					'</div></th>');
-			});
-			sb.push('</tr></table>');
-			t.innerNode.innerHTML = sb.join('');
-			t._onHScroll(t._scrollLeft);
-			t.onRender();
+			this._build();
+			this._onHScroll(this._scrollLeft);
+			this.onRender();
 		},
 
 		onRender: function(){
@@ -133,15 +116,24 @@ define([
 		//Private-----------------------------------------------------------------------------
 		_scrollLeft: 0,
 
-		_onColumnResize: function(colId, width, oldWidth){
-			var t = this, g = t.grid, w;
-			if(g.autoWidth){
-				w = t._columnsWidth += width - oldWidth;
-				g.bodyNode.style.width = w + 'px';
-				g.domNode.style.width = (g.hLayout.lead + g.hLayout.tail + w) + 'px';
-			}else if(t.grid.hScroller){
-				t.grid.hScroller._onScroll();
-			}
+		_build: function(){
+			var t = this,
+				g = t.grid,
+				f = g.focus,
+				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
+			array.forEach(g._columns, function(col){
+				sb.push('<th role="columnheader" aria-readonly="true" tabindex="-1" colid="', col.id,
+					'" class="gridxCell ',
+					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
+					(lang.isFunction(col.headerClass) ? col.headerClass(col) : col.headerClass) || '',
+					'" style="width: ', col.width, ';',
+					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
+					'"><div class="gridxSortNode">',
+					col.name || '',
+					'</div></th>');
+			});
+			sb.push('</tr></table>');
+			t.innerNode.innerHTML = sb.join('');
 		},
 
 		_onHScroll: function(left){
@@ -203,7 +195,7 @@ define([
 					doBlur: t._blurNode,
 					onBlur: t._blurNode,
 					connects: [
-						t.connect(t.domNode, 'onkeydown', '_onKeyDown'),
+						t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
 						t.connect(g, 'onHeaderCellMouseDown', function(evt){
 							t._focusNode(t.getHeaderNode(evt.columnId));
 						})
@@ -250,16 +242,15 @@ define([
 			var t = this, g = t.grid, col,
 				dir = g.isLeftToRight() ? 1 : -1,
 				delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir;
-			if(t._focusHeaderId){
-				if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
-					//Prevent scrolling the whole page.
-					util.stopEvent(evt);
-					col = g._columnsById[t._focusHeaderId];
-					col = g._columns[col.index + delta];
-					if(col){
-						t._focusNode(t.getHeaderNode(col.id));
-						t.onMoveToHeaderCell(col.id, evt);
-					}
+			if(t._focusHeaderId && !evt.ctrlKey && !evt.altKey &&
+				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
+				//Prevent scrolling the whole page.
+				util.stopEvent(evt);
+				col = g._columnsById[t._focusHeaderId];
+				col = g._columns[col.index + delta];
+				if(col){
+					t._focusNode(t.getHeaderNode(col.id));
+					t.onMoveToHeaderCell(col.id, evt);
 				}
 			}
 		}

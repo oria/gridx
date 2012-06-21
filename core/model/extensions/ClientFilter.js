@@ -20,8 +20,8 @@ define([
 			this.pageSize = args.pageSize || 100;
 			this._mixinAPI('filter', 'hasFilter');
 			model.onFilterProgress = function(){};
-			this.connect(model, '_msg', '_receiveMsg');
-			this.connect(model, 'setStore', 'clear');
+			this.aspect(model, '_msg', '_receiveMsg');
+			this.aspect(model, 'setStore', 'clear');
 		},
 
 		//Public---------------------------------------------------------------------

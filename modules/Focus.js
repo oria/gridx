@@ -63,14 +63,11 @@ define([
 		},
 
 		constructor: function(){
-			this._areas = {};
-			this._tabQueue = [];
-			this._focusNodes = [];
-		},
-
-		preload: function(){
 			var t = this,
 				g = t.grid;
+			t._areas = {};
+			t._tabQueue = [];
+			t._focusNodes = [];
 			t._onDocFocus = function(evt){
 				if(!t._noBlur){
 					if(sniff('ie')){
@@ -83,15 +80,14 @@ define([
 				[g.domNode, 'onkeydown', '_onTabDown'],
 				[g.domNode, 'onfocus', '_focus'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
-				[g, 'onBlur', '_doBlur']
-			);
+				[g, 'onBlur', '_doBlur']);
 			if(sniff('ie')){
 				win.doc.attachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.addEventListener('focus', t._onDocFocus, true);
 			}
 		},
-	
+
 		destroy: function(){
 			var t = this;
 			t._areas = null;

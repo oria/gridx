@@ -5,8 +5,8 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/_base/connect"
-], function(require, declare, array, lang, Deferred, DeferredList, cnnt){
+	"dojo/aspect"
+], function(require, declare, array, lang, Deferred, DeferredList, aspect){
 
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
@@ -25,7 +25,6 @@ define([
 		
 		constructor: function(args){
 			var t = this,
-				c = 'connect',
 				cacheClass = args.cacheClass;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
@@ -34,15 +33,17 @@ define([
 			t._model = t._cache = new cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
 			var m = t._model;
-			t._connects = [
-				cnnt[c](m, "onDelete", t, "onDelete"),
-				cnnt[c](m, "onNew", t, "onNew"),
-				cnnt[c](m, "onSet", t, "onSet")
+			t._cnnts = [
+				aspect.after(m, "onDelete", lang.hitch(t, "onDelete"), 1),
+				aspect.after(m, "onNew", lang.hitch(t, "onNew"), 1),
+				aspect.after(m, "onSet", lang.hitch(t, "onSet"), 1)
 			];
 		},
 	
 		destroy: function(){
-			array.forEach(this._connects, cnnt.disconnect);
+			array.forEach(this._cnnts, function(cnnt){
+				cnnt.remove();
+			});
 			for(var n in this._exts){
 				this._exts[n].destroy();
 			}

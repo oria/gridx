@@ -2,11 +2,10 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
 	"dojo/_base/array",
-	"dojo/dom-geometry",
 	"dojo/dom-style",
 	"dojo/DeferredList",
 	"../core/_Module"
-], function(declare, Deferred, array, domGeometry, domStyle, DeferredList, _Module){
+], function(declare, Deferred, array, domStyle, DeferredList, _Module){
 
 	return declare(/*===== "gridx.modules.HLayout", =====*/_Module, {
 		// summary:
@@ -34,7 +33,6 @@ define([
 			var t = this;
 			startup.then(function(){
 				t._layout();
-				t.loaded.callback();
 			});
 		},
 
@@ -68,6 +66,26 @@ define([
 			r.push([ready, refNode, isTail]);
 		},
 
+		reLayout: function(){
+			var t = this,
+				r = t._regs,
+				lead = 0,
+				tail = 0;
+			if(r){
+				array.forEach(r, function(reg){
+					var w = reg[1].offsetWidth || domStyle.get(reg[1], 'width');
+					if(reg[2]){
+						tail += w;
+					}else{
+						lead += w;
+					}
+				});
+				t.lead = lead;
+				t.tail = tail;
+				t.onUpdateWidth(lead, tail);
+			}
+		},
+
 		//Event---------------------------------------------------------
 		onUpdateWidth: function(){
 			// tags:
@@ -84,7 +102,7 @@ define([
 					});
 				new DeferredList(dl).then(function(){
 					array.forEach(r, function(reg){
-						var w = domGeometry.getMarginBox(reg[1]).w || domStyle.get(reg[1], 'width');
+						var w = reg[1].offsetWidth || domStyle.get(reg[1], 'width');
 						if(reg[2]){
 							tail += w;
 						}else{
@@ -93,10 +111,10 @@ define([
 					});
 					t.lead = lead;
 					t.tail = tail;
-					t.onUpdateWidth(lead, tail);
+					t.loaded.callback();
 				});
 			}else{
-				t.onUpdateWidth(0, 0);
+				t.loaded.callback();
 			}
 		}
 	});

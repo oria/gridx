@@ -35,50 +35,57 @@ define([
 			};
 		},
 
-		preload: function(){
-			// tags:
-			//		protected extended
+		constructor: function(){
 			var t = this,
+				m = t.model,
 				g = t.grid,
-				dn = t.domNode = g.bodyNode;
+				dn = t.domNode = g.bodyNode,
+				refresh = function(){ t.refresh(); };
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
-			t._initFocus();
+			t.aspect(m, 'onDelete', '_onDelete');
+			t.aspect(m, 'onSet', '_onSet');
+			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
+			t.aspect(g, 'onCellMouseOver', '_onCellMouseOver');
+			t.aspect(g, 'onCellMouseOut', '_onCellMouseOver');
+			t.connect(g.bodyNode, 'onmouseleave', function(){
+				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+			});
+			t.connect(g.bodyNode, 'onmouseover', function(e){
+				if(e.target == g.bodyNode){
+					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+				}
+			});
+			t.aspect(g, 'setStore', refresh);
+		},
+
+		preload: function(){
+			// tags:
+			//		protected extended
+			this._initFocus();
 		},
 
 		load: function(args){
 			// tags:
 			//		protected extended
-			var t = this, m = t.model, g = t.grid;
-			t.batchConnect(
-				[m, 'onDelete', '_onDelete'],
-//                [m, 'onNew', '_onNew'],
-				[m, 'onSet', '_onSet'],
-				[m, 'onSizeChange', '_onSizeChange'],
-				[g, 'onRowMouseOver', '_onRowMouseOver'],
-				[g, 'onCellMouseOver', '_onCellMouseOver'],
-				[g, 'onCellMouseOut', '_onCellMouseOver'],
-				[g.bodyNode, 'onmouseleave', function(){
-					query('.gridxRowOver', t.domNode).removeClass('gridxRowOver');
-				}],
-				[g, 'setColumns', function(){
-					t.refresh();
-				}],
-				[g, 'setStore', function(){
-					t.refresh();
-				}]
-			);
+			var t = this,
+				m = t.model,
+				g = t.grid,
+				finish = function(){
+					t.aspect(m, 'onSizeChange', '_onSizeChange');
+					t.loaded.callback();
+				};
 			m.when({}, function(){
 				var rc = t.rootCount;
 				rc = t.rootCount = rc ? rc : m.size();
 				t.visualCount = g.tree ? g.tree.getVisualSize(t.rootStart, rc) : rc;
-				t.loaded.callback();
+				finish();
 			}).then(null, function(e){
 				t._loadFail(e);
-				t.loaded.callback();
+				finish();
 			});
 		},
 
@@ -137,7 +144,7 @@ define([
 			// returns:
 			//		The DOM node of the row. Null if not found.
 			var r = this._getRowNodeQuery(args);
-			return r ? query(r, this.domNode)[0] || null : null;	//DOMNode|null
+			return r && query('> ' + r, this.domNode)[0] || null;	//DOMNode|null
 		},
 
 		getCellNode: function(args){
@@ -147,7 +154,9 @@ define([
 			//		A cell info object containing sufficient info
 			// returns:
 			//		The DOM node of the cell. Null if not found.
-			var t = this, colId = args.colId, r = t._getRowNodeQuery(args);
+			var t = this,
+				colId = args.colId,
+				r = t._getRowNodeQuery(args);
 			if(r){
 				if(!colId && typeof args.colIndex == "number"){
 					colId = t.grid._columns[args.colIndex].id;
@@ -204,7 +213,7 @@ define([
 				if(typeof start == 'number' && start >= 0){
 					start = rs > start ? rs : start;
 					var count = rs + rc - start,
-						n = query('[visualindex="' + start + '"]', t.domNode)[0],
+						n = query('> [visualindex="' + start + '"]', t.domNode)[0],
 						uncachedRows = [], renderedRows = [];
 					if(n){
 						var rows = t._buildRows(start, count, uncachedRows, renderedRows);
@@ -329,9 +338,6 @@ define([
 			}
 		},
 
-		refreshRows: function(){
-		},
-	
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
 			// tags:
 			//		private
@@ -371,7 +377,9 @@ define([
 						}
 					}
 					n.innerHTML = str;
-					n.scrollTop = scrollTop;
+					if(scrollTop){
+						n.scrollTop = scrollTop;
+					}
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
 					finalInfo = str ? "" : emptyInfo;
 					t.onUnrender();
@@ -386,6 +394,7 @@ define([
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				t.onUnrender();
+				t.onEmpty();
 				t.model.free();
 			}
 		},
@@ -432,6 +441,7 @@ define([
 		collectCellWrapper: function(wrappers, rowId, colId){},
 		onMoveToCell: function(){},
 		onForcedScroll: function(){},
+		onEmpty: function(){},
 	
 		//Private---------------------------------------------------------------------------
 		_getRowNodeQuery: function(args){
@@ -450,10 +460,10 @@ define([
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){
-			var i,
+			var t = this,
+				i,
 				end = start + count,
 				s = [],
-				t = this,
 				g = t.grid,
 				m = t.model,
 				w = t.domNode.scrollWidth;
@@ -466,7 +476,7 @@ define([
 					m.keep(row.id);
 					s.push('" rowid="', row.id,
 						'" rowindex="', rowInfo.rowIndex,
-						'" parentid="', rowInfo.parentId, 
+						'" parentid="', rowInfo.parentId,
 						'">', t._buildCells(row),
 					'</div>');
 					renderedRows.push(row);
@@ -502,16 +512,12 @@ define([
 	
 		_buildRowContent: function(rowInfo){
 			var t = this,
-				g = t.grid,
-				m = t.model,
-				n = query('[visualindex="' + rowInfo.visualIndex + '"]', t.domNode)[0];
+				n = query('> [visualindex="' + rowInfo.visualIndex + '"]', t.domNode)[0];
 			if(n){
-				var rowCache = m.byIndex(rowInfo.rowIndex, rowInfo.parentId);
-				if(rowCache){
-					var rowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId),
-						row = g.row(rowId, 1);
-					m.keep(rowId);
-					n[sa]('rowid', rowId);
+				var row = t.grid.row(rowInfo.rowIndex, 0, rowInfo.parentId);
+				if(row){
+					t.model.keep(row.id);
+					n[sa]('rowid', row.id);
 					n[sa]('rowindex', rowInfo.rowIndex);
 					n[sa]('parentid', rowInfo.parentId || '');
 					n.innerHTML = t._buildCells(row);
@@ -523,19 +529,19 @@ define([
 		},
 	
 		_buildCells: function(row){
-			var col,
-				isPadding,
-				style,
+			var col, cell, isPadding, cls, style, i, len,
 				t = this,
 				g = t.grid,
 				columns = g._columns,
 				rowData = row.data(),
 				isFocusArea = g.focus && (g.focus.currentArea() == 'body'),
 				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
-			for(var i = 0, len = columns.length; i < len; ++i){
+			for(i = 0, len = columns.length; i < len; ++i){
 				col = columns[i];
 				isPadding = g.tree && rowData[col.id] === undefined;
-				style = lang.isFunction(col.style) ? col.style(g.cell(row.id, col.id, 1)) : col.style;
+				cell = g.cell(row.id, col.id, 1);
+				cls = (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
+				style = (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
 				sb.push('<td class="gridxCell ');
 				if(isPadding){
 					sb.push('gridxPaddingCell');
@@ -543,10 +549,11 @@ define([
 				if(isFocusArea && t._focusCellRow === row.visualIndex() && t._focusCellCol === i){
 					sb.push('gridxCellFocus');
 				}
-				sb.push('" role="gridcell" tabindex="-1" colid="', col.id, 
-					'" style="width: ', col.width, 
+				sb.push(cls,
+					'" role="gridcell" tabindex="-1" colid="', col.id, 
+					'" style="width: ', col.width,
 					'; ', style,
-					'">', t._buildCellContent(row.cell(col.id, 1), isPadding),
+					'">', t._buildCellContent(cell, isPadding),
 				'</td>');
 			}
 			sb.push('</tr></table>');
@@ -562,7 +569,7 @@ define([
 				var s = col.decorator ? col.decorator(data, row.id, row.visualIndex()) : data;
 				r = this._wrapCellData(s, row.id, col.id);
 			}
-			return (!r && sniff('ie') < 8) ? '$nbsp;' : r;
+			return (r === '' && sniff('ie') < 8) ? '&nbsp;' : r;
 		},
 
 		_wrapCellData: function(cellData, rowId, colId){
@@ -690,7 +697,9 @@ define([
 				if(preNode){
 					domClass.remove(preNode, 'gridxRowOver');
 				}
-				domClass.add(rowNode, 'gridxRowOver');
+				if(rowNode){
+					domClass.add(rowNode, 'gridxRowOver');
+				}
 			}
 		},
 		

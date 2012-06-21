@@ -22,23 +22,25 @@ require([
 			var store = storeFactory({
 				dataSource: dataSource, 
 				size: 100
-			}); 
+			});
 			var layout = dataSource.layouts[columnSetIdx];
 			var t1 = new Date().getTime();
 			grid = new Grid({
 				id: 'grid',
+//                style: 'width: 100px; height: 100px;',
 				cacheClass: Cache,
-				//cacheSize: 0,
 				store: store,
 				structure: layout,
 				modules:[
 //                    modules.SingleSort,
-					modules.ExtendedSelectRow,
-//                    modules.SelectRow,
-//                    modules.DndRow,
+//                    modules.ExtendedSelectRow,
+//                    modules.Filter,
 //                    modules.FilterBar,
-					modules.Focus,
-//					modules.RowHeader,
+//                    modules.Focus,
+//                    modules.Pagination,
+//                    modules.PaginationBar,
+//                    modules.RowHeader,
+//                    modules.IndirectSelect,
 //                    modules.ColumnResizer,
 					modules.VirtualVScroller
 				],

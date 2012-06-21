@@ -117,7 +117,8 @@ define([
 			// summary:
 			//		Set width of the target column
 			var t = this,
-				g = t.grid,
+				g = t.grid, i,
+				cols = g._columns,
 				minWidth = t.arg('minWidth'),
 				oldWidth;
 			width = parseInt(width, 10);
@@ -125,22 +126,24 @@ define([
 				width = minWidth;
 			}
 			g._columnsById[colId].width = width + 'px';
+			for(i = 0; i < cols.length; ++i){
+				cols[i].declaredWidth = cols[i].width;
+			}
 			query('[colid="' + colId + '"]', g.domNode).forEach(function(cell){
 				if(!oldWidth){
 					oldWidth = sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width');
 				}
 				cell.style.width = width + 'px';
 			});
-			g.header.onRender();
 			g.body.onRender();
 			g.vLayout.reLayout();
 			
 			t.onResize(colId, width, oldWidth);
 		},
-		
+
 		//Event--------------------------------------------------------------
 		onResize: function(/* colId, newWidth, oldWidth */){},
-		
+
 		//Private-----------------------------------------------------------
 		_mousemove: function(e){
 			var t = this,

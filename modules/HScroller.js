@@ -16,34 +16,37 @@ define([
 
 		name: 'hScroller',
 
-//        required: ['vLayout', 'hLayout'],
-
-		forced: ['header'],
+//        required: ['vLayout', 'hLayout', 'header'],
 
 		getAPIPath: function(){
 			// tags:
 			//		protected extension
-			return this.grid.autoWidth ? {} : {
+			return {
 				hScroller: this
 			};
 		},
 
 		constructor: function(){
-			this.grid._initEvents(['H'], ['Scroll']);
+			var t = this,
+				g = t.grid,
+				n = g.hScrollerNode;
+			g._initEvents(['H'], ['Scroll']);
+			t.domNode = n;
+			t.container = n.parentNode;
+			t.stubNode = n.firstChild;
 		},
 
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this, g = t.grid, n = g.hScrollerNode;
+			var t = this,
+				g = t.grid,
+				n = g.hScrollerNode;
 			if(!g.autoWidth){
-				t.domNode = n;
-				t.container = n.parentNode;
-				t.stubNode = n.firstChild;
 				g.vLayout.register(t, 'container', 'footerNode', 0);
 				n.style.display = 'block';
 				t.batchConnect(
-					[g.header, 'onRender', 'refresh'],
+					[g.columnWidth, 'onUpdate', 'refresh'],
 					[n, 'onscroll', '_onScroll'],
 					[g, '_onResizeBegin', function(changeSize, ds){
 						ds.hScroller = new Deferred();
@@ -53,8 +56,7 @@ define([
 							t.refresh();
 							ds.hScroller.callback();
 						});
-					}]
-				);
+					}]);
 				if(sniff('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.

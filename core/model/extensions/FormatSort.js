@@ -34,8 +34,8 @@ define([
 
 		constructor: function(model){
 			var t = this, c = t.cache = model._cache;
-			t.connect(c, "onBeforeFetch", "_onBeforeFetch");
-			t.connect(c, "onAfterFetch", "_onAfterFetch");
+			t.aspect(c, "onBeforeFetch", "_onBeforeFetch");
+			t.aspect(c, "onAfterFetch", "_onAfterFetch");
 		},
 
 		//Private--------------------------------------------------------------------

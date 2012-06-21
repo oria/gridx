@@ -13,7 +13,6 @@ define([
 	"./Filter",
 	"dojo/text!../../templates/FilterPane.html",
 	"dojo/i18n!../../nls/FilterBar",
-	
 	"dijit/layout/ContentPane",
 	"dijit/form/Select",
 	"dijit/form/TextBox",
@@ -23,6 +22,11 @@ define([
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
 ], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n){
+	var ANY_COLUMN_VALUE = '_gridx_any_column_value_';
+	
+	function isAnyColumn(colid){
+		return colid == ANY_COLUMN_VALUE;
+	}
 	return declare([dijit.layout.ContentPane], {
 		//content: template,
 		sltColumn: null,
@@ -44,10 +48,13 @@ define([
 		getData: function(){
 			// summary:
 			//	Get the filter defined by this filter pane.
-			var value = this._getValue(), condition = this.sltCondition.get('value');
+			var value = this._getValue(), 
+				colId = this.sltColumn.get('value'),
+				condition = this.sltCondition.get('value');
+			
 			if(condition === 'isEmpty' || (value !== null && (condition !== 'range' || (value.start && value.end)))){
 				return {
-					colId: this.sltColumn.get('value'),
+					colId: isAnyColumn(colId) ? '' : colId,
 					condition: condition,
 					value: condition === 'isEmpty' ? '' : value,
 					type: this._getType()
@@ -119,7 +126,7 @@ define([
 			}, this);
 		},
 		_initSltCol: function(){
-			var colOpts = [{label: 'Any Column', value: ''}],
+			var colOpts = [{label: i18n.anyColumnOption, value: ANY_COLUMN_VALUE}],
 				fb = this.grid.filterBar, 
 				sltCol = this.sltColumn;
 			array.forEach(this.grid.columns(), function(col){
@@ -136,18 +143,21 @@ define([
 			var closeButton = dom.create('span', {
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
+				tabIndex: 0,
 				title: 'Close'
-			}, btnWidget.domNode, 'first');
+			}, btnWidget.domNode, 'last');
 			this.connect(closeButton, 'onclick', 'close');
 			css.add(btnWidget.titleTextNode, 'dojoxEllipsis');
 		},
 		
 		_onColumnChange: function(){
-			var opt = this.grid.filterBar._getConditionOptions(this.sltColumn.get('value'));
+			var colId = this.sltColumn.get('value');
+			var opt = this.grid.filterBar._getConditionOptions(isAnyColumn(colId) ? '' : colId);
 			var slt = this.sltCondition;
 			if(slt.options && slt.options.length){slt.removeOption(slt.options);}
 			slt.addOption(lang.clone(opt));
 			this._updateTitle();
+			this._updateValueField();
 			this.onChange();
 		},
 		_onConditionChange: function(){
@@ -164,7 +174,7 @@ define([
 			//		Get current column data type
 			var colid = this.sltColumn.get('value');
 			var dataType = 'string';
-			if(colid !== ''){
+			if(!isAnyColumn(colid)){
 				dataType = this.grid.column(colid).dataType();
 			}
 			return dataType;
@@ -196,7 +206,7 @@ define([
 			// summary:
 			//	Whether current state needs a combo box for string input, may rewrite to support virtual column
 			var colId = this.sltColumn.get('value');
-			return this._getType() === 'Text' && !!colId && this.grid._columnsById[colId].field;
+			return this._getType() === 'Text' && !isAnyColumn(colId) && this.grid._columnsById[colId].field;
 		},
 		_updateValueField: function(){
 			// summary:
@@ -283,6 +293,7 @@ define([
 					break;
 			}
 		},
+		
 		uninitialize: function(){
 			this.inherited(arguments);
 			if(this._dummyCombo){this._dummyCombo.destroyRecursive();}

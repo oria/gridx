@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Custome Style Cells in Grid</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			width: 600px;
+			height: 600px;
+		}
+
+		.gridxHeader .gridxCell {
+			text-align: center;
+		}
+
+		.gridxBody .gridxCell {
+			background: url('support/images/chessboard.png') no-repeat;
+			border-color: transparent;
+		}
+
+		.gridxBody .gridxCellSelected,
+		.gridxBody .gridxCellOver {
+			background-image: url('support/images/invert-chessboard.png') !important;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript" src='test_grid_customStyleCell.js'></script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Custom Style Cells in Grid
+	</h1>
+	<div data-dojo-id='store' data-dojo-type='dojo.store.Memory' data-dojo-props='
+		data: [
+			{id: 1},
+			{id: 2},
+			{id: 3},
+			{id: 4},
+			{id: 5},
+			{id: 6},
+			{id: 7},
+			{id: 8}
+		]
+	'></div>
+	<div data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: [
+			{id: "a", name: "A", width: "73px", style: cellStyle},
+			{id: "b", name: "B", width: "73px", style: cellStyle},
+			{id: "c", name: "C", width: "73px", style: cellStyle},
+			{id: "d", name: "D", width: "73px", style: cellStyle},
+			{id: "e", name: "E", width: "73px", style: cellStyle},
+			{id: "f", name: "F", width: "73px", style: cellStyle},
+			{id: "g", name: "G", width: "73px", style: cellStyle},
+			{id: "h", name: "H", width: "73px", style: cellStyle},
+		],
+		autoWidth: true,
+		autoHeight: true,
+		bodyRowHoverEffect: false,
+		rowHeaderCellProvider: function(row){
+			return row.id;
+		},
+		modules: [
+			"gridx/modules/RowHeader",
+			"gridx/modules/extendedSelect/Cell"
+		]
+	'></div>
+</body>
+</html>

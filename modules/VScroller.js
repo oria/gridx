@@ -35,36 +35,56 @@ define([
 			};
 		},
 
-		preload: function(args){
-			// tags:
-			//		protected extension
-			var t = this, g = t.grid,
+		constructor: function(){
+			var t = this,
+				g = t.grid,
 				dn = t.domNode = g.vScrollerNode;
 			t.stubNode = dn.firstChild;
-			if(sniff('ie') < 8){
-				t.stubNode.style.width = metrics.getScrollbar().w + 'px';
-			}
 			if(g.autoHeight){
 				dn.style.display = 'none';
 			}else{
-				t.domNode.style.width = metrics.getScrollbar().w + 'px';
+				var w = metrics.getScrollbar().w + 'px';
+				dn.style.width = w;
+				if(sniff('ie') < 8){
+					t.stubNode.style.width = w;
+				}
 			}
-			g.hLayout.register(null, dn, 1);
+		},
+
+		preload: function(args){
+			// tags:
+			//		protected extension
+			this.grid.hLayout.register(null, this.domNode, 1);
 		},
 
 		load: function(args, startup){
 			// tags:
 			//		protected extension
-			var t = this, g = t.grid, bn = g.bodyNode;
+			var t = this,
+				g = t.grid,
+				bd = g.body,
+				dn = t.domNode,
+				bn = g.bodyNode;
 			t.batchConnect(
 				[t.domNode, 'onscroll', '_doScroll'],
 				[bn, 'onmousewheel', '_onMouseWheel'],
 				[g.mainNode, 'onkeypress', '_onKeyScroll'],
-				[g.body, 'onRender', '_onBodyChange'],
-				[g.body, 'onForcedScroll', '_onForcedScroll'],
-				[g, '_onResizeEnd', '_onBodyChange'],
-				sniff('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']
-			);
+				sniff('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']);
+			t.aspect(g, '_onResizeEnd', '_onBodyChange');
+			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
+			t.aspect(bd, 'onRender', '_onBodyChange');
+			if(!g.autoHeight){
+				t.aspect(bd, 'onEmpty', function(){
+					var ds = t.domNode.style;
+					ds.display = 'none';
+					ds.width = '';
+					if(sniff('ie') < 8){
+						ds.width = t.stub.style.width = '0px';
+					}
+					g.hLayout.reLayout();
+					g.hScroller.refresh();
+				});
+			}
 			startup.then(function(){
 				Deferred.when(t._init(args), function(){
 					t.domNode.style.width = '';
@@ -118,13 +138,33 @@ define([
 		_init: function(){
 			this._onForcedScroll();
 		},
-	
+
+		_update: function(){
+			var t = this,
+				g = t.grid;
+			if(!g.autoHeight){
+				var bd = g.body,
+					bn = g.bodyNode,
+					toShow = bd.renderCount < bd.visualCount || bn.scrollHeight > bn.clientHeight,
+					ds = t.domNode.style;
+				if(sniff('ie') < 8){
+					var w = toShow ? metrics.getScrollbar().w + 'px' : '0px';
+					t.stubNode.style.width = w;
+					ds.width = w;
+				}else{
+					ds.width = toShow ? metrics.getScrollbar().w + 'px' : '';
+				}
+				ds.display = toShow ? '' : 'none';
+			}
+			g.hLayout.reLayout();
+		},
+
 		_doScroll: function(){
 			this.grid.bodyNode[st] = this.domNode[st];
 		},
 	
 		_onMouseWheel: function(e){
-			if(!this.grid.autoHeight){
+			if(this.grid.vScrollerNode.style.display != 'none'){
 				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
 				this.domNode[st] -= rolled;
 				event.stop(e);
@@ -132,9 +172,11 @@ define([
 		},
 	
 		_onBodyChange: function(){
-			var t = this, g = t.grid;
+			var t = this,
+				g = t.grid;
+			t._update();
 			//IE7 Needs setTimeout
-			window.setTimeout(function(){
+			setTimeout(function(){
 				if(!g.bodyNode){
 					//fix FF10 - g.bodyNode will be undefined during a quick recreation
 					return;
@@ -143,11 +185,12 @@ define([
 				t._doScroll();
 				//FIX IE7 problem:
 				g.vScrollerNode[st] = g.vScrollerNode[st] || 0;
-			},0);
+			}, 0);
 		},
 
 		_onForcedScroll: function(){
-			var t = this, bd = t.grid.body;
+			var t = this,
+				bd = t.grid.body;
 			return t.model.when({
 				start: bd.rootStart,
 				count: bd.rootCount

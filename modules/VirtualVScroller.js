@@ -245,19 +245,23 @@ define([
 		},
 	
 		_onMouseWheel: function(e){
-			var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
-			this.domNode.scrollTop -= rolled / this._ratio;
-			event.stop(e);
+			if(this.grid.vScrollerNode.style.display != 'none'){
+				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
+				this.domNode.scrollTop -= rolled / this._ratio;
+				event.stop(e);
+			}
 		},
 	
 		_onBodyChange: function(){
+			this._update();
 			this._doScroll(0, 1);
 			this._doVirtual();
 		},
 	
 		_onForcedScroll: function(){
 			this._rowHeight = {};
-			this._onBodyChange();
+			this._doScroll(0, 1);
+			this._doVirtual();
 		},
 
 		//Private ---------------------------------------------------
@@ -285,11 +289,11 @@ define([
 			var t = this;
 			clearTimeout(t._pVirtual);
 			t._pVirtual = setTimeout(function(){
-				t._update();
+				t._updateRowHeight();
 			}, 100);
 		},
 	
-		_update: function(){
+		_updateRowHeight: function(){
 			//Update average row height and unrender rows
 			var t = this,
 				preCount = 0,

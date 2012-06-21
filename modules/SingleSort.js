@@ -27,7 +27,8 @@ define([
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this, g = t.grid, sort;
+			var t = this,
+				g = t.grid, sort;
 			t.connect(g, 'onHeaderCellClick', '_onClick');
 			t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown');
 			//persistence support
@@ -55,11 +56,13 @@ define([
 		load: function(){
 			// tags:
 			//		protected extension
-			var t = this, colId, f = function(){
-				if(t._sortId){
-					t._updateHeader(t._sortId, t._sortDescend);
-				}
-			};
+			var t = this,
+				colId,
+				f = function(){
+					if(t._sortId){
+						t._updateHeader(t._sortId, t._sortDescend);
+					}
+				};
 			t.connect(t.grid.header, 'onRender', f);
 			for(colId in t.grid._columnsById){
 				t._initHeader(colId);
