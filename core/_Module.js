@@ -259,6 +259,8 @@ var isFunc = lang.isFunction,
 		var p = modClass.prototype;
 		return mods[p.name || p.declaredClass] = modClass;
 	};
-	
+	//! means not string, should be 'eval'ed.
+	moduleBase._markupAttrs = ['id', 'name', 'field', 'width', 'dataType', '!formatter', '!decorator', '!sortable'];
+
 	return moduleBase;
 });

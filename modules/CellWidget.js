@@ -88,6 +88,8 @@ define([
 			}
 		});
 
+	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
+
 	return declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
 		// summary:
 		//		This module makes it possible to efficiently show widgets within a grid cell.
