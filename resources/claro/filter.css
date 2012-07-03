@@ -1,0 +1,47 @@
+/* Quick Filter */
+.claro .gridxQuickFilter {
+	padding: 2px;
+}
+
+.claro .gridxQuickFilterButton,
+.claro .gridxQuickFilterComboButton {
+	margin: 0;
+}
+
+.claro .gridxQuickFilterComboButton .dijitButtonNode,
+.claro .gridxQuickFilterButton .dijitButtonNode {
+	border: none;
+	background: none;
+	box-shadow: none;
+	padding: 1px;
+
+	-moz-transition-duration: 0.3s, 0.35s;
+    -moz-transition-property: background-color;
+	border-radius: 4px;
+}
+
+.claro .gridxQuickFilterComboButton .dijitButtonNode {
+	border-radius: 4px 0 0 4px;
+}
+.claro .gridxQuickFilterComboButton .dijitArrowButton {
+	border-radius: 0 4px 4px 0;
+}
+
+.claro .gridxQuickFilter .dijitComboButtonHover .dijitButtonNode,
+.claro .gridxQuickFilter .dijitButtonHover .dijitButtonNode {
+	background-color: #6bd6ff;
+    background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+    background-repeat: repeat-x;
+	padding: 0;
+	border: 1px solid #759DC0;
+}
+
+.claro .gridxQuickFilter .dijitComboButtonActive .dijitButtonNode,
+.claro .gridxQuickFilter .dijitButtonActive .dijitButtonNode {
+	background-color: #7DBDFA;
+    background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+    background-repeat: repeat-x;
+	padding: 0;
+	border: 1px solid #759DC0;
+}
+
