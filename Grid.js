@@ -1,7 +1,9 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
+	"dojo/on",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/_base/query",
@@ -18,14 +20,22 @@ define([
 	"./modules/VScroller",
 	"./modules/HScroller",
 	"./modules/ColumnWidth"
-], function(declare, array, lang, domClass, domGeometry, query, 
+], function(kernel, declare, array, lang, on, domClass, domGeometry, query, 
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){};
 
-	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
+	/**
+	 * @name	idx.gridx.Grid
+	 * @class	Gridx is a highly extensible widget providing grid/table functionalities. 
+	 *			It is much smaller, faster, more reasonable designed, more powerful and more flexible 
+	 *			compared to the old dojo DataGrid/EnhancedGrid.
+	 * @augments	dijit._WidgetBase
+	 * @augments	dijit._TemplatedMixin
+	 */
+	var Grid = declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
 		//		Gridx is a highly extensible widget providing grid/table functionalities. 
 		// description:
@@ -38,6 +48,7 @@ define([
 		//		not sufficient enough, please refer to the following link for latest API docs:
 		//		http://evanhw.github.com/gridx/doc/gridx.html
 
+		/**@lends idx.gridx.Grid#*/
 		templateString: template,
 
 		coreModules: [
@@ -69,7 +80,6 @@ define([
 			t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 			t._initEvents(t._compNames, t._eventNames);
 			t._reset(t);
-			t._postCreate();
 		},
 	
 		startup: function(){
@@ -97,6 +107,11 @@ define([
 		autoWidth: false,
 	=====*/
 
+		/**
+		 * Resize the grid using given width and height.
+		 * @param {Object?} changeSize An object like {w: ..., h: ...}.
+		 *		If omitted, the grid will re-layout itself in current width/height.
+		 */
 		resize: function(changeSize){
 			// summary:
 			//		Resize the grid using given width and height.
@@ -145,9 +160,15 @@ define([
 		},
 	
 		_connectEvents: function(node, connector, scope){
-			forEach(this._eventNames, function(eventName){
-				this.connect(node, 'on' + eventName.toLowerCase(), lang.hitch(scope, connector, eventName));
-			}, this);
+			for(var t = this,
+					m = t.model,
+					eventName,
+					eventNames = t._eventNames,
+					len = eventNames.length,
+					i = 0; i < len; ++i){
+				eventName = eventNames[i];
+				m._cnnts.push(on(node, eventName.toLowerCase(), lang.hitch(scope, connector, eventName)));
+			}
 		},
 	
 		_isConnected: function(eventName){
@@ -155,4 +176,27 @@ define([
 		}
 		//event handling end
 	});
+
+	Grid.markupFactory = function(props, node, ctor){
+		if(!props.structure && node.nodeName.toLowerCase() == "table"){
+			kernel.deprecated('Column declaration in <th> elements is deprecated,', 'use "structure" attribute in data-dojo-props instead', '1.1');
+			var s = props.structure = [];
+			query("thead > tr > th", node).forEach(function(th){
+				var col = {};
+				forEach(_Module._markupAttrs, function(attr){
+					if(attr[0] == '!'){
+						attr = attr.slice(1);
+						col[attr] = eval(th.getAttribute(attr));
+					}else{
+						col[attr] = th.getAttribute(attr);
+					}
+				});
+				col.name = col.name || th.innerHTML;
+				s.push(col);
+			});
+		}
+		return new ctor(props, node);
+	};
+	
+	return Grid;
 });
