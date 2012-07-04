@@ -30,6 +30,7 @@ body {
 #logo {
 	font-size: 60px;
 	float: left;
+	padding: 0 20px;
 }
 
 #headerButtons {
@@ -138,13 +139,13 @@ body {
 	border-left: 2px solid #aaa;
 }
 .codeContainerInner {
-	height: 505px;
+	height: 465px;
 	overflow: auto;
 }
 #jscodeContainer,
 #htmlcodeContainer {
-	padding: 0 20px;
-	width: 100%;
+	padding: 20px;
+	width: 860px;
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -230,11 +231,11 @@ body {
 	border: 1px solid #aaa;
 	border-radius: 80px;
 	cursor: pointer;
-	background: url('images/run.png');
+	background: url('images/run.png') #fff;
 }
 
 #configComplete:hover {
-	background: url('images/run-hover.png');
+	background: url('images/run-hover.png') #fff;
 }
 
 #configCompleteInner {
@@ -270,7 +271,20 @@ body {
 	left: 400px;
 	cursor: pointer;
 }
-
+/* store config preview */
+#storeConfigPreviewSummary {
+	padding-left: 100px;
+	font-size: 20px;
+	color: #555;
+	text-shadow: 1px 1px 1px #fff;
+}
+#storeConfigPreviewSummary li {
+	padding: 10px;
+	width: 200px;
+}
+#storeConfigPreviewSummary li:hover {
+	background-color: #ddd;
+}
 /* columns config preview */
 #columnsConfigPreviewTitle {
 	text-align: center;
@@ -427,6 +441,58 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 }
 .attributePreviewItemValue {
 	padding-left: 30px;
+}
+
+/* store config */
+#clientOrServer,
+#listOrTree,
+#rowCountConfig {
+	width: 400px;
+	margin: 20px auto;
+	text-align: center;
+	position: relative;
+}
+#clientOrServer {
+	margin-top: 180px;
+}
+#rowCountConfig label {
+	font-size: 20px;
+	margin-left: 10px;
+}
+.storeConfigBtn {
+	display: inline-block;
+	width: 50%;
+	text-align: center;
+	font-size: 20px;
+	padding: 20px 0;
+	cursor: pointer;
+	border-radius: 20px;
+	-moz-transition: background-color 0.5s ease;
+	transition: background-color 0.5s ease;
+	color: #555;
+}
+.storeConfigBtn:hover {
+	background-color: #eee;
+	color: #555;
+}
+#storeConfig .storeConfigBtnSelected {
+	background-color: #aaa;
+	color: #eee;
+}
+.storeConfigPointer {
+	position: absolute;
+	width: 50px;
+	left: -50px;
+	top: 20px;
+	font-size: 20px;
+	opacity: 0;
+	-moz-transition: opacity 0.5s ease;
+	transition: opacity 0.5s ease;
+	color: #555;
+	text-shadow: 1px 1px 1px #fff;
+}
+.storeConfigChoose:hover .storeConfigPointer {
+	opacity: 1;
 }
 
 /* columns config */

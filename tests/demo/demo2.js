@@ -1,5 +1,6 @@
 require([
 	'require',
+	'dojo/ready',
 	'dojo/parser',
 	'dojo/_base/lang',
 	'dojo/_base/query',
@@ -23,7 +24,7 @@ require([
 	'dojo/NodeList-manipulate',
 	'dijit/form/NumberSpinner',
 	'dijit/form/NumberTextBox'
-], function(require, parser, lang, query, array, DeferredList,
+], function(require, ready, parser, lang, query, array, DeferredList,
 	dom, domConstruct, domGeo, domClass, domStyle,
 	registry, ColumnBar, modules, attrs, data,
 Store, Grid){
@@ -51,6 +52,15 @@ Store, Grid){
 	query('.closeConfig').on('click', function(){
 		query('.configDetailOpen').removeClass('configDetailOpen');
 	});
+	query('.storeConfigBtn', 'clientOrServer').on('click', function(){
+		query('.storeConfigBtnSelected', 'clientOrServer').removeClass('storeConfigBtnSelected');
+		domClass.add(this, 'storeConfigBtnSelected');
+	});
+	query('.storeConfigBtn', 'listOrTree').on('click', function(){
+		query('.storeConfigBtnSelected', 'listOrTree').removeClass('storeConfigBtnSelected');
+		domClass.add(this, 'storeConfigBtnSelected');
+	});
+	query('#storeConfig .closeConfig').on('click', storeSummary);
 	query('#columnsConfig .closeConfig').on('click', columnsSummary);
 	query('#modulesConfig .closeConfig').on('click', modulesSummary);
 	query('#attributesConfig .closeConfig').on('click', attributesSummary);
@@ -225,6 +235,7 @@ Store, Grid){
 	}
 	function toggleCode(e, toShow){
 		updateJSCode();
+		updateHTMLCode();
 		var cfg = query('#codeViewer');
 		if(toShow === undefined){
 			toShow = !domClass.contains(cfg[0], 'configOpen');
@@ -250,7 +261,9 @@ Store, Grid){
 		var colbar = new ColumnBar({
 			columnId: colProps.id || 'column_' + cid++,
 			columnName: colProps.name || 'New Column',
-			fields: ['Genre', 'Name', 'Artist'],
+			columnField: colProps.field || 'name',
+			columnWidth: colProps.width,
+			fields: ['name', 'id', 'server', 'platform', 'status', 'progress'],
 			onAdd: function(){
 				addColumnBar(this);
 			},
@@ -281,7 +294,17 @@ Store, Grid){
 			colbar.domNode.style.height = '80px';
 		}, 40);
 	}
-
+	function storeSummary(){
+		var isClient = domClass.contains('clientStoreBtn', 'storeConfigBtnSelected');
+		var isList = domClass.contains('listDataBtn', 'storeConfigBtnSelected');
+		var rowCount = registry.byId('rowCountInput').get('value');
+		var sb = ["<ul>",
+			"<li>", isClient ? "Client" : "Server", " store</li>",
+			"<li>", isList ? "List" : "Hierarchical", " data</li>",
+			"<li>", rowCount, " rows</li>",
+		"</ul>"];
+		dom.byId('storeConfigPreviewSummary').innerHTML = sb.join('');
+	}
 	function columnsSummary(){
 		var cols = query('.columnBar', 'columnsContainer').map(function(columnBarNode){
 			return colBar = registry.byNode(columnBarNode).getColumn();
@@ -320,17 +343,19 @@ Store, Grid){
 		});
 		query('#attributesConfigPreviewSummary tbody')[0].innerHTML = rows.join('');
 	}
+	var coreMods = array.map(Grid.prototype.coreModules, function(m){
+		return m.prototype.name;
+	}).concat(['autoScroll', '_dnd']);
 	function loadModules(){
-		var coreMods = array.map(Grid.prototype.coreModules, function(m){
-			return m.prototype.name;
-		}).concat(['autoScroll', '_dnd']);
 		dom.byId('modulesAvailable').innerHTML = array.map(modules, function(mod, i){
 			var prot = mod.module.prototype;
 			mod.deps = array.filter((prot.forced || []).concat(prot.required || []), function(dep){
 				return array.indexOf(coreMods, dep) < 0;
 			});
 			return [
-				"<div class='moduleItem' data-mod-idx='", i, "' data-mod-name='", mod.module.prototype.name,
+				"<div class='moduleItem' data-mod-idx='", i, 
+				"' data-mod-name='", mod.module.prototype.name,
+				"' data-mod-mid='", mod.mid,
 				"' title='click to show description, double click to use'><div class='moduleIcon' style='background:url(\"",
 				mod.icon,
 				"\");'></div><div class='moduleLabel'><table><tr><td>",
@@ -366,7 +391,7 @@ Store, Grid){
 			return attr.type == 'bool';
 		}), function(attr, i){
 			return ["<div class='attributeBoolItem attributeItem ",
-				attr.mod ? 'attributeItemDisabled' : '',
+				(attr.mod && array.indexOf(coreMods, attr.mod) < 0) ? 'attributeItemDisabled' : '',
 				"' data-attr-mod='", attr.mod,
 				"' data-attr-name='", attr.label, 
 				"'><table><tbody><tr><td>",
@@ -391,7 +416,7 @@ Store, Grid){
 			return attr.type == 'number';
 		}), function(attr, i){
 			return ["<div class='attributeNumberItem attributeItem ",
-				attr.mod ? 'attributeItemDisabled' : '',
+				(attr.mod && array.indexOf(coreMods, attr.mod) < 0) ? 'attributeItemDisabled' : '',
 				"' data-attr-mod='", attr.mod,
 				"' data-attr-name='", attr.label, 
 				"'>", attr.unitPre,
@@ -410,14 +435,12 @@ Store, Grid){
 				var attr = attrsByName[n.parentNode.getAttribute('data-attr-name')];
 				valueBox.connect(valueBox, 'onChange', function(){
 					setTimeout(function(){
-						console.log('onChange', valueBox.get('value'));
 						domClass.toggle(n.parentNode, 'attributeItemUsed', valueBox.get('value') != attr.value);
 						attr.curValue = valueBox.get('value');
 					}, 10);
 				});
 				valueBox.connect(valueBox, 'onInput', function(){
 					setTimeout(function(){
-						console.log('onInput', valueBox.get('value'));
 						domClass.toggle(n.parentNode, 'attributeItemUsed', valueBox.get('value') != attr.value);
 						attr.curValue = valueBox.get('value');
 					}, 10);
@@ -469,17 +492,9 @@ Store, Grid){
 	}
 
 	function createStore(){
-		var i;
-		var items = [];
-		var rowCount = 100;
-		for(i = 0; i < rowCount; ++i){
-			var item = lang.clone(data[i % data.length]);
-			item.id = i + 1;
-			item.order = i + 1;
-			items.push(item);
-		}
+		var rowCount = registry.byId('rowCountInput').get('value');
 		return new Store({
-			data: items
+			data: data(rowCount).items
 		});
 	}
 	function gatherColumns(){
@@ -519,6 +534,9 @@ Store, Grid){
 				return mod.mid;
 			})
 		};
+		array.forEach(attributes, function(attr){
+			cfg[attr.label] = attr.curValue;
+		});
 		grid = new Grid(cfg);
 		grid.placeAt('gridContainer');
 		grid.startup();
@@ -530,12 +548,15 @@ Store, Grid){
 		var i, j = 0, sb = [
 			'require([\n',
 				'\t"gridx/Grid",\n',
-				'\t"gridx/core/model/cache/Sync",\n'
+				'\t"gridx/core/model/cache/'
 		];
+		var isAsync = domClass.contains('serverStoreBtn', 'storeConfigBtnSelected');
+		sb.push(isAsync ? 'Async' : 'Sync', '",\n');
+
 		[].push.apply(sb, array.map(mods, function(mod){
 			return ['\t"', mod.mid, '",\n'].join('');
 		}));
-		sb.push('\t"dojo/store/Memory",\n',
+		sb.push(isAsync ? '\t"dojo/store/JsonRest",\n' : '\t"dojo/store/Memory",\n',
 				'\t"dojo/domReady!"\n',
 			'], function(Grid, Cache, \n');
 		array.forEach(mods, function(mod){
@@ -581,17 +602,98 @@ Store, Grid){
 			'});');
 		dom.byId('jscode').innerHTML = sb.join('');
 	}
+	function updateHTMLCode(){
+		var i, sb = [
+			'&lt;script type="text/javascript"&gt;\n',
+				'\trequire([\n',
+					'\t\t"gridx/Grid",\n',
+					'\t\t"gridx/core/model/cache/'
+		];
+		var columns = gatherColumns();
+		var mods = gatherModules();
+		var attributes = gatherAttributes();
+		var isAsync = domClass.contains('serverStoreBtn', 'storeConfigBtnSelected');
+		sb.push(isAsync ? 'Async' : 'Sync', '",\n');
+		[].push.apply(sb, array.map(mods, function(mod){
+			return ['\t\t"', mod.mid, '",\n'].join('');
+		}));
+		sb.push(isAsync ? '\t\t"dojo/store/JsonRest"\n' : '\t\t"dojo/store/Memory"\n',
+				'\t], function(){\n',
+					'\t\t//Create store here.\n',
+					'\t\t//store = ...\n',
+				'\t});\n',
+			'&lt;/script&gt;\n',
+			'......\n',
+			'&lt;div data-dojo-type="gridx/Grid"\n',
+				'\tdata-dojo-props="\n',
+				'\t\tstore: store,\n',
+				'\t\tcacheClass: \'gridx/core/model/cache/',
+				isAsync ? 'Async' : 'Sync',
+				'\',\n',
+				'\t\tstructure: [\n');
+		[].push.apply(sb, array.map(columns, function(col, i, cols){
+			return [
+				'\t\t\t{ id: \'', col.id, 
+				'\', field: \'', col.field, 
+				'\', name: \'', col.name, 
+				'\', width: \'', col.width, 
+				'\' }', i == cols.length - 1 ? '' : ',', 
+			'\n'].join('');
+		}));
 
-	addColumnBar();
-	addColumnBar();
-	addColumnBar();
+		sb.push('\t\t],\n');
+		[].push.apply(sb, array.map(attributes, function(attr){
+			return ['\t\t', attr.label, ': ', attr.curValue, ',\n'].join('');
+		}));
+		sb.push('\t\tmodules: [\n');
+		[].push.apply(sb, array.map(mods, function(mod){
+			return ['\t\t\t\'', mod.mid, '\',\n'].join('');
+		}));
+		sb.push('\t\t]\n',
+			'"&gt;&lt;/div&gt;\n');
+
+		dom.byId('htmlcode').innerHTML = sb.join('');
+	}
+
+	addColumnBar(null, {
+		field: 'id',
+		name: 'ID',
+		width: [50, 'px']
+	});
+	addColumnBar(null, {
+		field: 'name',
+		name: 'Name',
+		width: [50, 'percent']
+	});
+	addColumnBar(null, {
+		field: 'server',
+		name: 'Server'
+	});
+	addColumnBar(null, {
+		field: 'status',
+		name: 'Status'
+	});
+
 	loadModules();
 	loadAttributes();
 
-	columnsSummary();
-	modulesSummary();
-	attributesSummary();
+	dom.byId('modulesLoadedCover').style.display = 'none';
+	useModule(query('[data-mod-mid="gridx/modules/VirtualVScroller"].moduleItem', 'modulesConfig')[0]);
+	useModule(query('[data-mod-mid="gridx/modules/ColumnResizer"].moduleItem', 'modulesConfig')[0]);
+	useModule(query('[data-mod-mid="gridx/modules/extendedSelect/Row"].moduleItem', 'modulesConfig')[0]);
+	useModule(query('[data-mod-mid="gridx/modules/SingleSort"].moduleItem', 'modulesConfig')[0]);
 
+	query('[data-attr-name="selectRowTriggerOnCell"].attributeItem', 'attributesConfig').forEach(function(n){
+		domClass.toggle(n, 'attributeItemUsed', true);
+		query('.attributeBoolBtn', n).addClass('attributeBoolOn');
+		attrsByName["selectRowTriggerOnCell"].curValue = true;
+	});
 
-	createGrid();
+	ready(function(){
+		storeSummary();
+		columnsSummary();
+		modulesSummary();
+		attributesSummary();
+		createGrid();
+	});
 });

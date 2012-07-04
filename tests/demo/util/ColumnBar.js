@@ -30,7 +30,6 @@ define([
 			options.unshift('{label: "", value: ""}');
 			options = options.join(',');
 			this.fieldOptions = '[' + options + ']';
-			console.log('here', this.fieldOptions);
 		},
 
 		postCreate: function(){
@@ -38,7 +37,14 @@ define([
 				return {label: field, value: field, selected: i === 0};
 			});
 			this.fieldNode.addOption(options);
-			this.fieldNode.set('value', options[0].value);
+			this.fieldNode.set('value', this.columnField || options[0].value);
+			if(this.columnWidth){
+				this.widthUnitNode.set('value', this.columnWidth[1]);
+				var t = this;
+				setTimeout(function(){
+					t.widthValueNode.set('value', t.columnWidth[0]);
+				}, 0);
+			}
 		},
 
 		setIndex: function(index){

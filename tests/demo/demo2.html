@@ -29,6 +29,7 @@
 		<div id='config'>
 			<div id='storeConfigPreview' class='configPreview'>
 				<div id='storeConfigPreviewTitle'>Data</div>
+				<div id='storeConfigPreviewSummary'></div>
 			</div>
 			<div id='columnsConfigPreview' class='configPreview'>
 				<div id='columnsConfigPreviewTitle'>Columns</div>
@@ -62,7 +63,22 @@
 				</div>
 			</div>
 			<div id='configComplete'><div id='configCompleteInner'></div></div>
-			<div id='storeConfig' class='configDetail'>
+			<div id='storeConfig' class='configDetail'
+				><div id='clientOrServer' class='storeConfigChoose'
+					><div class='storeConfigPointer'>&#9654;</div
+					><div id='clientStoreBtn' class='storeConfigBtn storeConfigBtnSelected'>Client Data</div
+					><div id='serverStoreBtn' class='storeConfigBtn'>Server Data</div
+				></div
+				><div id='listOrTree' class='storeConfigChoose'
+					><div class='storeConfigPointer'>&#9654;</div
+					><div id='listDataBtn' class='storeConfigBtn storeConfigBtnSelected'>List Data</div
+					><div id='treeDataBtn' class='storeConfigBtn'>Hierarchical Data</div
+				></div>
+				<div id='rowCountConfig'>
+					<input id='rowCountInput' data-dojo-type='dijit/form/NumberSpinner'
+						data-dojo-props='constraints: {min: 0}, value: 100'
+					/><label for='rowCountInput'>rows</label>
+				</div>
 				<div class='closeConfig'>OK</div>
 			</div>
 			<div id='columnsConfig' class='configDetail'>

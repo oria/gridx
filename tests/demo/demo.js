@@ -493,17 +493,9 @@ require([
 		var gridContainer = dom.byId('gridContainer');
 		gridContainer.innerHTML = '<div class="loader"><img src="images/loader.gif"/><h1>Loading</h1></div>';
 		setTimeout(function(){
-			var i;
-			var items = [];
 			var rowCount = registry.byId('rowCountSlider').get('value');
-			for(i = 0; i < rowCount; ++i){
-				var item = lang.clone(data[i % data.length]);
-				item.id = i + 1;
-				item.order = i + 1;
-				items.push(item);
-			}
 			var store = new Store({
-				data: items
+				data: data(rowCount).items
 			});
 			var args = {
 				id: 'grid',
