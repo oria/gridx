@@ -41,12 +41,20 @@ require([
 		dataSource: dataSource, 
 		size: 100
 	});
+//    item = null;
+//    store.fetch({
+//        start: 0,
+//        count: 1,
+//        onComplete: function(items){
+//            item = items[0];
+//        }
+//    });
 
-	mystore = storeFactory({
-		path: './support/stores',
-		dataSource: dataSource, 
-		size: 200
-	});
+//    mystore = storeFactory({
+//        path: './support/stores',
+//        dataSource: dataSource, 
+//        size: 200
+//    });
 
 	function createSelectStore(field){
 		var data = dataSource.getData(100).items;
@@ -71,46 +79,45 @@ require([
 
 	layout = [
 		{ field: "id", name:"ID", width: '20px'},
-		{ field: "number", name:"TextBox", width: '100px', editable: true}
-		/*{ field: "number", name:"Color Palatte", width: '205px', editable: true,
-			decorator: function(data){
-				return [
-					'<div style="display: inline-block; border: 1px solid black; ',
-					'width: 20px; height: 20px; background-color: ',
-					data,
-					'"></div>',
-					data
-				].join('');
-			},
-			editor: 'dijit/ColorPalette',
-			editorArgs: {
-				fromEditor: function(v, cell){
-					return v || cell.data(); //If no color selected, use the orginal one.
-				}
-			}
-		},
-		{ field: "number", name:"ComboBox", width: '100px', editable: true,
-			editor: "dijit/form/ComboBox",
-			editorArgs: {
-				props: 'store: mystore, searchAttr: "Artist"'
-			}
-		},
+		{ field: "number", name:"TextBox", width: '100px', editable: true},
+//        { field: "number", name:"Color Palatte", width: '205px', editable: true,
+//            decorator: function(data){
+//                return [
+//                    '<div style="display: inline-block; border: 1px solid black; ',
+//                    'width: 20px; height: 20px; background-color: ',
+//                    data,
+//                    '"></div>',
+//                    data
+//                ].join('');
+//            },
+//            editor: 'dijit/ColorPalette',
+//            editorArgs: {
+//                fromEditor: function(v, cell){
+//                    return v || cell.data(); //If no color selected, use the orginal one.
+//                }
+//            }
+//        },
+//        { field: "number", name:"ComboBox", width: '100px', editable: true,
+//            editor: "dijit/form/ComboBox",
+//            editorArgs: {
+//                props: 'store: mystore, searchAttr: "Artist"'
+//            }
+//        },
 		{ field: "number", name:"NumberTextBox", width: '100px', editable: true,
 			editor: "dijit.form.NumberTextBox"
 		},
-		{ field: "number", name:"FilteringSelect", width: '100px', editable: true,
-			editor: FilteringSelect,
-			editorArgs: {
-				props: 'store: fsStore, searchAttr: "id"'
-			}
-		},
-		{ field: "number", name:"Select", width: '100px', editable: true,
-			//FIXME: this is still buggy, hard to set width
-			editor: Select,
-			editorArgs: {
-				props: 'store: selectStore, labelAttr: "id"'
-			}
-		},
+//        { field: "number", name:"FilteringSelect", width: '100px', editable: true,
+//            editor: FilteringSelect,
+//            editorArgs: {
+//                props: 'store: fsStore, searchAttr: "id"'
+//            }
+//        },
+//        { field: "number", name:"Select", width: '100px', editable: true,
+//            editor: Select,
+//            editorArgs: {
+//                props: 'store: selectStore, labelAttr: "id"'
+//            }
+//        },
 		{ field: "number", name:"HorizontalSlider", width: '100px', editable: true,
 			editor: "dijit/form/HorizontalSlider",
 			editorArgs: {
@@ -133,37 +140,6 @@ require([
 				valueField: 'checked',
 				props: 'label: "Press me"'
 			}
-		},
-		{ field: "number", name:"Calendar", width: '180px', editable: true,
-			dataType: 'date',
-			storePattern: 'yyyy/M/d',
-			gridPattern: 'yyyy/MMMM/dd',
-			editor: 'dijit/Calendar',
-			editorArgs: {
-				fromEditor: getDate
-			}
-		},
-		{ field: "number", name:"DateTextBox", width: '100px', editable: true,
-			dataType: 'date',
-			storePattern: 'yyyy/M/d',
-			gridPattern: 'yyyy--MM--dd',
-			editor: DateTextBox,
-			editorArgs: {
-				fromEditor: getDate
-			}
-		},
-		//FIXME: this is still buggy, can not TAB out.
-//        { field: "Composer", name:"Editor", width: '200px', editable: true,
-//            editor: "dijit/Editor"
-//        },
-		{ field: "number", name:"TimeTextBox", width: '100px', editable: true,
-			dataType: "time",
-			storePattern: 'HH:mm:ss',
-			formatter: 'hh:mm a',
-			editor: TimeTextBox,
-			editorArgs: {
-				fromEditor: getTime
-			}
-		}*/
+		}
 	];
 });

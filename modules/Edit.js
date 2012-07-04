@@ -182,16 +182,16 @@ define([
 				t = this,
 				g = t.grid;
 			if(!t.isEditing(rowId, colId)){
-				var rowIndex = t.model.idToIndex(rowId),
+				var row = g.row(rowId, 1),	//1 as true
 					col = g._columnsById[colId];
-				if(rowIndex >= 0 && col.editable){
+				if(row && col.editable){
 					g.cellWidget.setCellDecorator(rowId, colId, 
 						t._getDecorator(colId), 
 						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col))
 					);
 					t._record(rowId, colId);
-					g.body.refreshCell(rowIndex, col.index).then(function(){
+					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 						t._focusEditor(rowId, colId);
 						d.callback(true);
 						t.onBegin(g.cell(rowId, colId, 1));
@@ -219,11 +219,11 @@ define([
 			//		A deferred object indicating when the cell value has been successfully restored.
 			var d = new Deferred(),
 				t = this,
+				g = t.grid,
 				m = t.model,
-				rowIndex = m.idToIndex(rowId);
-			if(rowIndex >= 0){
-				var g = t.grid,
-					cw = g.cellWidget, 
+				row = g.row(rowId, 1);
+			if(row){
+				var cw = g.cellWidget, 
 					col = g._columnsById[colId];
 				if(col){
 					if(col.alwaysEditing){
@@ -235,7 +235,7 @@ define([
 					}else{
 						t._erase(rowId, colId);
 						cw.restoreCellDecorator(rowId, colId);
-						g.body.refreshCell(rowIndex, col.index).then(function(){
+						g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 							d.callback();
 							t.onCancel(g.cell(rowId, colId, 1));
 						});
@@ -274,7 +274,7 @@ define([
 								t.onApply(cell, success);
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
-								g.body.refreshCell(cell.row.index(), cell.column.index()).then(function(){
+								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
 									t.onApply(cell, success);
 								});
