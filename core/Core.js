@@ -195,7 +195,7 @@ define([
 		//		so that the whole grid can be as flexible as possible while still convenient enough for
 		//		web page developers.
 
-		/**@lends idx.gridx.Grid#*/
+		
 
 		_reset: function(args){
 			//Reset the grid data model completely. Also used in initialization.
@@ -227,11 +227,7 @@ define([
 			//		callback
 		},
 
-		/**
-		 * Change the store for grid. 
-		 * Since store defines the data model for grid, changing store is usually changing everything.
-		 * @param {dojo.data.*|dojo.store.*} store The new data store
-		 */
+		
 		setStore: function(store){
 			// summary:
 			//		Change the store for grid.
@@ -240,10 +236,7 @@ define([
 			this.model.setStore(store);
 		},
 
-		/**
-		 * Change all the column definitions for grid.
-		 * @param {Array} columns The new column structure
-		 */
+		
 		setColumns: function(columns){
 			// summary:
 			//		Change all the column definitions for grid.
@@ -258,13 +251,7 @@ define([
 			}
 		},
 
-		/**
-		 * Get a row object by ID or index.
-		 * For asyc store, if the data of this row is not in cache, then null will be returned.
-		 * @param {Integer|String} row Row index or row ID
-		 * @param {Boolean?} isId	If the row parameter is a numeric ID, set this to true
-		 * @returns {idx.gridx.core.Row} If the params are valid and row data is in cache, return a row object, else return NULL.
-		 */
+		
 		row: function(row, isId, parentId){
 			// summary:
 			//		Get a row object by ID or index.
@@ -288,12 +275,7 @@ define([
 			return null;	//null
 		},
 
-		/**
-		 * Get a column object by ID or index
-		 * @param {Integer|String} column Column index or column ID
-		 * @param {Boolean?} isId If the column parameter is a numeric ID, set this to true
-		 * @returns {idx.gridx.core.Column} If the params are valid return a column object, else return NULL
-		 */
+		
 		column: function(column, isId){
 			// summary:
 			//		Get a column object by ID or index
@@ -321,13 +303,7 @@ define([
 			return null;	//null
 		},
 
-		/**
-		 * Get a cell object
-		 * @param {idx.gridx.core.Row|Integer|String} row Row index or row ID or a row object
-		 * @param {idx.gridx.core.Column|Integer|String} column Column index or column ID or a column object
-		 * @param {Boolean?} isId If the row and coumn params are numeric IDs, set this to true
-		 * @returns {idx.gridx.core.Cell} If the params are valid and the row is in cache return a cell object, else return NULL
-		 */
+		
 		cell: function(row, column, isId, parentId){
 			// summary:
 			//		Get a cell object
@@ -353,10 +329,7 @@ define([
 			return null;	//null
 		},
 
-		/**
-		 * Get the number of columns
-		 * @returns {Integer} The count of columns
-		 */
+		
 		columnCount: function(){
 			// summary:
 			//		Get the number of columns
@@ -365,12 +338,7 @@ define([
 			return this._columns.length;	//Integer
 		},
 
-		/**
-		 * Get the number of rows.
-		 * For async store, the return value is valid only when the grid has fetched something from the store.
-		 * @param {String?} parentId If provided, return the child count of the given parent row.
-		 * @returns {Integer} The count of rows. -1 if the size info is not available (using server side store and never fetched any data)
-		 */
+		
 		rowCount: function(parentId){
 			// summary:
 			//		Get the number of rows.
@@ -383,14 +351,7 @@ define([
 			return this.model.size(parentId);	//Integer
 		},
 
-		/**
-		 * Get a range of columns, from index 'start' to index 'start + count'.
-		 * @param {Integer?} start The index of the first column in the returned array.
-		 *		If omitted, defaults to 0, so grid.columns() gets all the columns.
-		 * @param {Integer?} count The number of columns to return.
-		 *		If omitted, all the columns starting from 'start' will be returned.
-		 * @returns {idx.gridx.core.Column[]} An array of column objects
-		 */
+		
 		columns: function(start, count){
 			// summary:
 			//		Get a range of columns, from index 'start' to index 'start + count'.
@@ -405,15 +366,7 @@ define([
 			return this._arr(this._columns.length, 'column', start, count);	//gridx.core.Column[]
 		},
 
-		/**
-		 * Get a range of rows, from index 'start' to index 'start + count'.
-		 * For async store, if some rows are not in cache, then there will be NULLs in the returned array.
-		 * @param {Integer?} start The index of the first row in the returned array.
-		 *		If omitted, defaults to 0, so grid.rows() gets all the rows.
-		 * @param {Integer?} count The number of rows to return.
-		 *		If omitted, all the rows starting from 'start' will be returned.
-		 * @returns {idx.gridx.core.Row[]} An array of row objects
-		 */
+		
 		rows: function(start, count, parentId){
 			// summary:
 			//		Get a range of rows, from index 'start' to index 'start + count'.

@@ -21,7 +21,7 @@ require([
 	});
 
 	layout1 = [
-		{ field: "id", name:"Index", width: '50px'},
+        { field: "id", name:"Index", width: '50px'},
 		{ field: "Progress", name:"Progress", dataType:'number',
 			widgetsInCell: true, 
 			decorator: function(){
@@ -117,11 +117,22 @@ require([
 
 	layout2 = [
 		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Name", name:"Links",
+		{ field: "Name", name:"Dropdown Button",
+			widgetsInCell: true, 
 			navigable: true,
-			decorator: function(data){
+			decorator: function(){
 				return [
+					'<div data-dojo-type="dijit.form.DropDownButton" ',
+						'data-dojo-attach-point="btn"',
+						'data-dojo-props="iconClass:\'dijitIconApplication\'">',
+						'<div data-dojo-type="dijit.TooltipDialog" data-dojo-attach-point="ttd">',
+							'hihi',
+						'</div>',
+					'</div>'
 				].join('');
+			},
+			setCellValue: function(data){
+				this.btn.set('label', data);
 			}
 		}
 	];

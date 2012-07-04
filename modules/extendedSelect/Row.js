@@ -102,6 +102,7 @@ define([
 			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowSelected');
 			});
+			this._clear();
 			this.model.clearMark();
 			if(!silent){
 				this._onSelectionChange();

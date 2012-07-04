@@ -98,32 +98,7 @@ define([
 		forced: ['cellWidget'],
 	
 		constructor: function(){
-			this._editingCells = {};
-			for(var i = 0, cols = this.grid._columns, len = cols.length; i < len; ++i){
-				var c = cols[i];
-				if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){
-					c.gridPattern = c.gridPattern || 
-						(!lang.isFunction(c.formatter) && 
-							(lang.isObject(c.formatter) || 
-							typeof c.formatter == 'string') && 
-						c.formatter) || 
-						c.storePattern;
-					var pattern;
-					if(lang.isString(c.storePattern)){
-						pattern = c.storePattern;
-						c.storePattern = {};
-						c.storePattern[c.dataType + 'Pattern'] = pattern;
-					}
-					c.storePattern.selector = c.dataType;
-					if(lang.isString(c.gridPattern)){
-						pattern = c.gridPattern;
-						c.gridPattern = {};
-						c.gridPattern[c.dataType + 'Pattern'] = pattern;
-					}
-					c.gridPattern.selector = c.dataType;
-					c.formatter = lang.partial(dateTimeFormatter, c.field, c.storePattern, c.gridPattern);
-				}
-			}
+			this._init();
 		},
 	
 		getAPIPath: function(){
@@ -141,7 +116,6 @@ define([
 			t.grid.domNode.removeAttribute('aria-readonly');
 			t.connect(t.grid, 'onCellDblClick', '_onUIBegin');
 			t.connect(t.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
-			t._initAlwaysEdit();
 			t._initFocus();
 		},
 	
@@ -376,6 +350,36 @@ define([
 		onCancel: function(cell){},
 	
 		//Private------------------------------------------------------------------
+		_init: function(){
+			this._editingCells = {};
+			for(var i = 0, cols = this.grid._columns, len = cols.length; i < len; ++i){
+				var c = cols[i];
+				if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){
+					c.gridPattern = c.gridPattern || 
+						(!lang.isFunction(c.formatter) && 
+							(lang.isObject(c.formatter) || 
+							typeof c.formatter == 'string') && 
+						c.formatter) || 
+						c.storePattern;
+					var pattern;
+					if(lang.isString(c.storePattern)){
+						pattern = c.storePattern;
+						c.storePattern = {};
+						c.storePattern[c.dataType + 'Pattern'] = pattern;
+					}
+					c.storePattern.selector = c.dataType;
+					if(lang.isString(c.gridPattern)){
+						pattern = c.gridPattern;
+						c.gridPattern = {};
+						c.gridPattern[c.dataType + 'Pattern'] = pattern;
+					}
+					c.gridPattern.selector = c.dataType;
+					c.formatter = lang.partial(dateTimeFormatter, c.field, c.storePattern, c.gridPattern);
+				}
+			}
+			this._initAlwaysEdit();
+		},
+
 		_initAlwaysEdit: function(){
 			for(var t = this, cols = t.grid._columns, i = cols.length - 1; i >= 0; --i){
 				var col = cols[i];

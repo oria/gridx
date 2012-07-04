@@ -31,6 +31,15 @@ define([
 			// tags:
 			//		protected extension
 			var t = this;
+			t.connect(t.grid, '_onResizeEnd', function(changeSize, ds){
+				var d, dl = [];
+				for(d in ds){
+					dl.push(ds[d]);
+				}
+				new DeferredList(dl).then(function(){
+					t.reLayout();
+				});
+			});
 			startup.then(function(){
 				t._layout();
 			});

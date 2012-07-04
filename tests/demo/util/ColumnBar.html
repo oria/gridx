@@ -1,0 +1,45 @@
+<div class='columnBar'
+	><div class='columnBarIndex'><div class='columnBarIndexInner' data-dojo-attach-point='indexNode'>${columnIndex}</div></div
+	><div class='columnBarBasic'
+		><div class='columnBarBasicLabel'>id:</div
+		><div data-dojo-attach-point='idNode'
+			class='columnBarBasicAttr'
+			data-dojo-type='dijit.form.TextBox'
+			data-dojo-props='value: "${columnId}"'
+		></div
+		><div class='columnBarBasicLabel'>name:</div
+		><div data-dojo-attach-point='nameNode'
+			class='columnBarBasicAttr'
+			data-dojo-type='dijit.form.TextBox'
+			data-dojo-props='value: "${columnName}"'
+		></div
+		><div class='columnBarBasicLabel'>field:</div
+		><select data-dojo-attach-point='fieldNode'
+			class='columnBarBasicAttr'
+			data-dojo-type='dijit.form.Select'
+			data-dojo-props='options: [{lable: "", value: "empty"}]'
+		></select
+		><div class='columnBarBasicLabel'>width:</div
+		><div class='columnBarBasicAttr columnBarWidthAttr'
+			><div data-dojo-attach-point='widthValueNode'
+				class='columnBarWidthValue'
+				data-dojo-type='dijit.form.TextBox'
+			></div
+			><select data-dojo-attach-point='widthUnitNode'
+				class='columnBarWidthUnit'
+				data-dojo-type='dijit.form.Select'
+				data-dojo-attach-event='onChange: _onWidthUnitChange'
+				><option value='auto'>auto</option
+				><option value='px'>px</option
+				><option value='em'>em</option
+				><option value='percent'>%</option
+			></select
+		></div
+	></div
+	><div data-dojo-attach-point='columnBarFeatures'></div
+	><div class='columnBarBtns'
+		><div class='columnBarBtn columnBarEditBtn' data-dojo-attach-event='onclick: onEdit'></div
+		><div class='columnBarBtn columnBarAddBtn' data-dojo-attach-event='onclick: onAdd'></div
+		><div class='columnBarBtn columnBarDelBtn' data-dojo-attach-event='onclick: onDelete'></div
+	></div
+></div>

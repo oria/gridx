@@ -47,16 +47,7 @@ define([
 				n.style.display = 'block';
 				t.batchConnect(
 					[g.columnWidth, 'onUpdate', 'refresh'],
-					[n, 'onscroll', '_onScroll'],
-					[g, '_onResizeBegin', function(changeSize, ds){
-						ds.hScroller = new Deferred();
-					}],
-					[g, '_onResizeEnd', function(changeSize, ds){
-						Deferred.when(ds.header, function(){
-							t.refresh();
-							ds.hScroller.callback();
-						});
-					}]);
+					[n, 'onscroll', '_onScroll']);
 				if(sniff('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.

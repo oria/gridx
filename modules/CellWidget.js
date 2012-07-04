@@ -120,17 +120,7 @@ define([
 		},
 	
 		constructor: function(){
-			this._decorators = {};
-			var i, col, columns = this.grid._columns;
-			for(i = columns.length - 1; i >= 0; --i){
-				col = columns[i];
-				if(col.decorator && col.widgetsInCell){
-					col.userDecorator = col.decorator;
-					col.decorator = dummyFunc;
-					col._cellWidgets = {};
-					col._backupWidgets = [];
-				}
-			}
+			this._init();
 		},
 	
 		preload: function(){
@@ -254,6 +244,20 @@ define([
 		},
 	
 		//Private---------------------------------------------------------------
+		_init: function(){
+			this._decorators = {};
+			var i, col, columns = this.grid._columns;
+			for(i = columns.length - 1; i >= 0; --i){
+				col = columns[i];
+				if(col.decorator && col.widgetsInCell){
+					col.userDecorator = col.decorator;
+					col.decorator = dummyFunc;
+					col._cellWidgets = {};
+					col._backupWidgets = [];
+				}
+			}
+		},
+
 		_showDijits: function(row){
 			var t = this;
 			array.forEach(row.cells(), function(cell){

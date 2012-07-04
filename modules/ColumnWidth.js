@@ -38,12 +38,6 @@ define([
 				g = t.grid;
 			t._ready = new Deferred();
 			t.batchConnect(
-				[g, '_onResizeBegin', function(changeSize, ds){
-					ds.header = new Deferred();
-					var w = g.domNode.clientWidth - g.hLayout.lead - g.hLayout.tail;
-					g.bodyNode.style.width = (w < 0 ? 0 : w) + 'px';
-					ds.header.callback();
-				}],
 				[g.hLayout, 'onUpdateWidth', '_onUpdateWidth'],
 				[g, 'setColumns', '_onSetColumns']);
 		},
@@ -225,6 +219,13 @@ define([
 			t._init();
 			g.header.refresh();
 			t._adaptWidth();
+			//FIXME: Is there any more elegant way to do this?
+			if(g.cellWidget){
+				g.cellWidget._init();
+				if(g.edit){
+					g.edit._init();
+				}
+			}
 			g.body.refresh();
 		}
 	});

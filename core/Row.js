@@ -4,14 +4,7 @@ define([
 	"dojo/_base/Deferred"
 ], function(declare, lang, Deferred){
 
-	/**
-	 * @name	idx.gridx.core.Row
-	 * @class	An instance of this class represents a grid row.
-	 *			This class should not be directly instantiated by users. It should be returned by grid APIs.
-	 * @property {idx.gridx.Grid} grid Reference to the grid
-	 * @property {idx.gridx.core.model.Model} model Reference to the grid model
-	 * @property {String} id The ID of this row
-	 */
+	
 	return declare(/*===== "gridx.core.Row", =====*/[], {
 		// summary:
 		//		Represents a row of a grid
@@ -33,7 +26,7 @@ define([
 		model: null,
 		=====*/
 
-		/**@lends idx.gridx.core.Row#*/
+		
 
 		constructor: function(grid, id){
 			this.grid = grid;
@@ -41,10 +34,7 @@ define([
 			this.id = id;
 		},
 
-		/**
-		 * Get the index of this row
-		 * @returns {Integer} The row index
-		 */
+		
 		index: function(){
 			// summary:
 			//		Get the index of this row
@@ -57,12 +47,7 @@ define([
 			return this.grid.row(this.model.treePath(this.id).pop(), 1);	//gridx.core.Row
 		},
 
-		/**
-		 * Get a cell object in this row
-		 * @param {idx.gridx.core.Column|Integer|String} column Column index or column ID or a column object
-		 * @param {Boolean?} isId If the column parameter is a numeric ID, set this to true
-		 * @returns {idx.gridx.core.Cell} If the params are valid return the cell object, else return NULL.
-		 */
+		
 		cell: function(column, isId){
 			// summary:
 			//		Get a cell object in this row
@@ -75,14 +60,7 @@ define([
 			return this.grid.cell(this, column, isId);	//gridx.core.Cell|null
 		},
 
-		/**
-		 * Get cells in this row.
-		 * @param {Integer?} start The column index of the first cell in the returned array.
-		 *		If omitted, defaults to 0, so row.cells() gets all the cells in this row.
-		 * @param {Integer?} count The number of cells to return.
-		 *		If omitted, all the cells starting from column 'start' will be returned.
-		 * @returns {idx.gridx.core.Cell} An array of cells in this row.
-		 */
+		
 		cells: function(start, count){
 			// summary:
 			//		Get cells in this row.
@@ -107,11 +85,7 @@ define([
 			return cells;	//gridx.core.Cell[]
 		},
 
-		/**
-		 * Get the grid data in this row.
-		 * Grid data means the result of the formatter functions (if exist). It can be different from store data (a.k.a. raw data).
-		 * @returns {Object} An associative array using column IDs as keys and grid data as values
-		 */
+		
 		data: function(){
 			// summary:
 			//		Get the grid data in this row.
@@ -123,12 +97,7 @@ define([
 			return this.model.byId(this.id).data;	//Object
 		},
 
-		/**
-		 * Get the store data in this row.
-		 * Store data means the data defined in store. It is the data before applying the formatter functions.
-		 * It can be different from grid data (a.k.a. formatted data)
-		 * @returns {Object} An associative array using store fields as keys and store data as values
-		 */
+		
 		rawData: function(){
 			// summary:
 			//		Get the store data in this row.
@@ -140,12 +109,7 @@ define([
 			return this.model.byId(this.id).rawData;	//Object
 		},
 
-		/**
-		 * Get the store item of this row
-		 * If using the old dojo.data store, store items usually have complicated structures, 
-		 * and they are also useful when doing store operations.
-		 * @returns {Object} A store item
-		 */
+		
 		item: function(){
 			// summary:
 			//		Get the store item of this row
@@ -157,11 +121,7 @@ define([
 			return this.model.byId(this.id).item;	//Object
 		},
 
-		/**
-		 * Set new raw data of this row into the store
-		 * @param {Object} rawData The new data to be set. It can be incomplete, only providing a few fields.
-		 * @returns	{dojo.Deferred} If using server side store, a Deferred object is returned to indicate when the operation is finished.
-		 */
+		
 		setRawData: function(rawData){
 			// summary:
 			//		Set new raw data of this row into the store

@@ -28,6 +28,7 @@ require([
 				mods.FilterBar,
 				mods.ExtendedSelectRow,
 				mods.ExtendedSelectColumn,
+				mods.RowHeader,
 				mods.MoveRow,
 				mods.MoveColumn,
 				mods.DndRow,

@@ -11,16 +11,7 @@ define([
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
 
-	/**
-	 * @name	idx.gridx.core.model.Model
-	 * @class	This class handles all of the data logic in grid.
-	 *			It provides a clean and useful set of APIs to encapsulate complicated data operations, 
-	 *			even for huge asynchronous (server side) data stores.
-	 *			It is built upon a simple extension mechanism, allowing new (even user defined) data operaions to be pluged in.
-	 *			An instance of this class can be regarded as a stand-alone logic grid providing consistent data processing 
-	 *			functionalities.
-	 *			This class can even be instanticated alone without any grid UI.
-	 */
+	
 	return declare(/*===== "gridx.core.model.Model", =====*/[], {
 		// summary:
 		//		This class handles all of the data logic in grid.
@@ -31,7 +22,7 @@ define([
 		//		An instance of this class can be regarded as a stand-alone logic grid providing consistent data processing 
 		//		functionalities. This class can even be instanticated alone without any grid UI.
 
-		/**@lends idx.gridx.core.model.Model#*/
+		
 		constructor: function(args){
 			var t = this,
 				cacheClass = args.cacheClass;
@@ -163,34 +154,7 @@ define([
 		},
 		=====*/
 
-		/**
-		 * Call this method to make sure all the pending data operations are executed and all the needed rows are at client side.
-		 * @param {Object?} args Indicate what rows are needed by listing row IDs or row indexes. <br/>
-		 *		Acceptable args include: <br/>
-		 *		1. A single row index.<br/>
-		 *			e.g.: model.when(1, ...)<br/>
-		 *		2. A single row index range object in form of: {start: ..., count: ...}.<br/>
-		 *			If count is omitted, means all remaining rows.<br/>
-		 *			e.g.: model.when({start: 10, count: 100}, ...)<br/>
-		 *		3. An array of row indexes and row index ranges.<br/>
-		 *			e.g.: model.when([0, 1, {start: 10, count: 3}, 100], ...)<br/>
-		 *		4. An object with property "index" set to the array defined in 3.<br/>
-		 *			e.g.: model.when({<br/>
-		 *				index: [0, 1, {start: 10, count: 3}, 100]<br/>
-		 *			}, ...)<br/>
-		 *		5. An object with property "id" set to an array of row IDs.<br/>
-		 *			e.g.: model.when({<br/>
-		 *				id: ['a', 'b', 'c']<br/>
-		 *			}, ...)<br/>
-		 *		6. An object containing both contents defined in 4 and 5.<br/>
-		 *		7. null or call this method without any arguments.<br/>
-		 *		This is useful when we only need to execute pending data operations but don't need to fetch rows.
-		 * @param {Function()?} callback The callback function is called when all the pending data operations are executed and all
-		 *		the needed rows are at client side.
-		 * @param {Object?} scope The context of the callback function
-		 * @returns {dojo.Deferred} A Deferred object indicating when all this process is finished. Note that in this Deferred object,
-		 *		The needed rows might not be available since they might be cleared up to reduce memory usage.
-		 */
+		
 		when: function(args, callback, scope){
 			// summary:
 			//		Call this method to make sure all the pending data operations are executed and
@@ -235,14 +199,7 @@ define([
 			return this._exec();	//dojo.Deferred
 		},
 	
-		/**
-		 * Go through all the rows in several batches from start to end (or according to given args),
-		 * and execute the callback function for every batch of rows.
-		 * @param {Object} args An object containing arguments.
-		 * @param {Function(rows,startIndex)} callback The callback function.
-		 *		If return true in this function, the scan process will end immediately.
-		 * @returns {dojo.Deferred} A Deferred object indicating when this scan process finish.
-		 */
+		
 		scan: function(args, callback){
 			// summary:
 			//		Go through all the rows in several batches from start to end (or according to given args),

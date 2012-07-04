@@ -10,15 +10,7 @@ define([
 var isFunc = lang.isFunction,
 	c = 'connect',	//To reduce code size
 
-	/**
-	 * @name idx.gridx.core._Module
-	 * @class This is the abstract base class for all modules of grid.
-	 *		It is not mandatary for a grid module to inherit from this base class. This is only for convenience.
-	 * @property {String} name The name of this module.
-	 *		Different modules can use one same name, which means they provide a same set of APIs.
-	 * @property {idx.gridx.Grid} grid Reference to the grid
-	 * @property {idx.gridx.core.model.Model} model Reference to the grid model
-	 */
+	
 	moduleBase = declare(/*===== "gridx.core._Module", =====*/[], {
 	/*=====
 		// name: String
@@ -105,7 +97,7 @@ var isFunc = lang.isFunction,
 		loaded: null,
 	=====*/
 	
-		/**@lends idx.gridx.core._Module#*/
+		
 		constructor: function(grid, args){
 			var t = this;
 			t.grid = grid;

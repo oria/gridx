@@ -21,7 +21,7 @@ require([
 		if(!window.grid){
 			var store = storeFactory({
 				dataSource: dataSource, 
-				size: 100
+				size: 10
 			});
 			var layout = dataSource.layouts[columnSetIdx];
 			var t1 = new Date().getTime();

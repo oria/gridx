@@ -11,7 +11,7 @@ define([
 		indexOf = array.indexOf;
 
 	return declare(_Extension, {
-		/**@lends idx.gridx.core.model.Model#*/
+		
 
 		// summary:
 		//		Abstract base cache class, providing cache data structure and some common cache functions.
@@ -64,44 +64,26 @@ define([
 			t._size[''] = -1;
 		},
 		
-		/**
-		 * Get the row cache by row index.
-		 * @param {Integer} index The row index
-		 * @param {String?} parentId If parentId is valid, the row index means the child index under this parent.
-		 * @returns {Object} The row cache
-		 */
+		
 		byIndex: function(index, parentId){
 			this._init('byIndex', arguments);
 			return this._cache[this.indexToId(index, parentId)];
 		},
 
-		/**
-		 * Get the row cache by row id
-		 * @param {String} id The row ID
-		 * @returns {Object} The row cache
-		 */
+		
 		byId: function(id){
 			this._init('byId', arguments);
 			return this._cache[id];
 		},
 
-		/**
-		 * Transform row index to row ID
-		 * @param {Integer} index The row index
-		 * @param {String?} parentId If parentId is valid, the row index means the child index under this parent.
-		 * @returns {Object} The row cache
-		 */
+		
 		indexToId: function(index, parentId){
 			this._init('indexToId', arguments);
 			var items = this._struct[this.model.isId(parentId) ? parentId : ''];
 			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
 		},
 
-		/**
-		 * Transform row ID to row index
-		 * @param {String?} id The row id
-		 * @returns {Object} The row cache
-		 */
+		
 		idToIndex: function(id){
 			this._init('idToIndex', arguments);
 			var s = this._struct,
@@ -110,12 +92,7 @@ define([
 			return index > 0 ? index - 1 : -1;
 		},
 
-		/**
-		 * Get tree path of row by row ID
-		 * @param {String} id The row ID
-		 * @returns {Array} An array of parent row IDs, from root to parent.
-		 *		Root level rows have parent of id ""(empty string).
-		 */
+		
 		treePath: function(id){
 			var s = this._struct,
 				path = [];
@@ -131,11 +108,7 @@ define([
 			return path;
 		},
 
-		/**
-		 * Check whether a row has children rows.
-		 * @param {String} id The row ID
-		 * @returns {Boolean}
-		 */
+		
 		hasChildren: function(id){
 			var t = this,
 				s = t.store,
@@ -145,11 +118,7 @@ define([
 			return s.hasChildren && s.hasChildren(id, c && c.item);
 		},
 		
-		/**
-		 * Get ids of children rows.
-		 * @param {String} id The parent row ID
-		 * @returns {Array}
-		 */
+		
 		children: function(parentId){
 			parentId = this.model.isId(parentId) ? parentId : '';
 			var size = this._size[parentId],
@@ -160,11 +129,7 @@ define([
 			return children;
 		},
 
-		/**
-		 * Get the count of rows under the given parent. 
-		 * @param {String?} parentId The ID of a parent row. No parentId means root rows.
-		 * @returns {Integer} The coutn of (child) rows.
-		 */
+		
 		size: function(parentId){
 			this._init('size', arguments);
 			var s = this._size[this.model.isId(parentId) ? parentId : ''];

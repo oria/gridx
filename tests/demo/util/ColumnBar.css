@@ -1,0 +1,85 @@
+.columnBar {
+	width: 800px;
+	height: 0;
+	border: 2px solid #aaa;
+	border-radius: 50px 20px 20px 50px;
+	position: relative;
+	overflow: hidden;
+	background-color: #fff;
+	-moz-transition: height 0.5s ease;
+	transition: height 0.5s ease;
+}
+
+.columnBarIndex {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	left: 10px;
+	top: 18px;
+	border: 1px solid #aaa;
+	border-radius: 20px;
+	background-color: #eee;
+}
+
+.columnBarIndexInner {
+	position: relative;
+	top: 10px;
+	text-align: center;
+}
+
+.columnBarBasic {
+	padding: 15px 0 0 60px;
+	position: relative;
+}
+
+.columnBarBasicLabel {
+	float: left;
+	font-size: 20px;
+	padding: 0 5px;
+}
+
+.columnBarBasicAttr {
+	float: left;
+	width: 110px;
+}
+
+.columnBarWidthAttr {
+	width: 200px;
+}
+.columnBarWidthValue {
+	width: 0;
+	-moz-transition-property: background-color, border, width !important;
+	transition-property: background-color, border, width;
+}
+.columnBarWidthValue .dijitInputInner {
+	text-align: right;
+}
+.columnBarWidthUnit {
+	position: relative;
+	left: -2px;
+}
+
+.columnBarBtn {
+	width: 32px;
+	height: 32px;
+	position: absolute;
+	top: 45px;
+	cursor: pointer;
+}
+
+.columnBarEditBtn {
+	background: url('../images/columnbar-edit.png');
+	right: 110px;
+}
+.columnBarAddBtn {
+	background: url('../images/columnbar-add.png');
+	right: 70px;
+}
+.columnBarDelBtn {
+	background: url('../images/columnbar-remove.png');
+	right: 30px;
+}
+
+.columnBarBasic .dijitArrowButton {
+	width: 18px !important;
+}

@@ -138,7 +138,7 @@ define([
 			if(g.autoHeight){
 				g.vScroller.loaded.then(function(){
 					var lastRow = g.bodyNode.lastChild,
-						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : 0;
+						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : g.emptyNode.offsetHeight;
 					dn.style.height = (bodyHeight + freeHeight) + 'px';
 					ms.height = bodyHeight + "px";
 				});

@@ -21,7 +21,7 @@ require([
 
 		//selectRowTriggerOnCell: true,
 		paginationInitialPage: 3,
-		paginationBarSizes: [5, 10, 20, 30],
+		paginationBarSizes: [10, 20, 40, 0],
 		paginationBarVisibleSteppers: 5,
 		paginationBarPosition: 'bottom',
 //        paginationBarSizeSwitch: false,

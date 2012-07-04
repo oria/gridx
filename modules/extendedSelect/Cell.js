@@ -108,6 +108,7 @@ define([
 			array.forEach(t.grid._columns, function(col){
 				t.model.clearMark(t._getMarkType(col.id));
 			});
+			t._clear();
 			if(!silent){
 				t._onSelectionChange();
 			}

@@ -95,6 +95,7 @@ define([
 			array.forEach(this.grid._columns, function(col){
 				col._selected = 0;	//0 as false
 			});
+			this._clear();
 			if(!silent){
 				this._onSelectionChange();
 			}

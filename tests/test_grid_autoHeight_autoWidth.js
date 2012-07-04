@@ -20,6 +20,11 @@ require([
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 20
+		size: 10
 	});
+	emptyStore = storeFactory({
+		dataSource: dataSource, 
+		size: 0
+	});
+
 });

@@ -1,38 +1,37 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title>Virtual Scrolling</title>
+	<title>Grid Edit Test</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
 		.gridx {
-			width: 80%;
-			height: 500px;
+			width: 1000px;
+			height: 400px;
 		}
 	</style>
 
 	<script type="text/javascript" src="../../dojo/dojo.js" 
 		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script type="text/javascript" src='test_grid_windowresize.js'></script>
-
+	<script type="text/javascript" src='test_grid_edit_server.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-		Window Resize
+		Grid Edit Test 
 	</h1>
-	<div jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
-		cacheClass: "gridx/core/model/cache/Sync",
+	<p>Double click or press ENTER on a cell to edit</p>
+	<div jsid='grid' data-dojo-type='gridx/Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Async",
 		store: store,
-		columnWidthAutoResize: false,
-		autoHeight: true,
-		structure: [
-			{id: "id", field: "id", name: "Identity", width: "30%"},
-			{id: "order", field: "order", name: "Order", width: "30%"},
-			{id: "Genre", field: "Genre", name: "Genre", width: "40%"}
-		],
+		structure: layout,
 		modules: [
-			"gridx/modules/ColumnResizer"
+			"gridx/modules/Focus",
+			"gridx/modules/CellWidget",
+			"gridx/modules/Edit",
+			"gridx/modules/ColumnResizer",
+			"gridx/modules/pagination/Pagination",
+			"gridx/modules/pagination/PaginationBar"
 		]
 	'></div>
 </body>

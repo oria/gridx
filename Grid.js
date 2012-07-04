@@ -27,14 +27,7 @@ define([
 	var forEach = array.forEach,
 		dummyFunc = function(){};
 
-	/**
-	 * @name	idx.gridx.Grid
-	 * @class	Gridx is a highly extensible widget providing grid/table functionalities. 
-	 *			It is much smaller, faster, more reasonable designed, more powerful and more flexible 
-	 *			compared to the old dojo DataGrid/EnhancedGrid.
-	 * @augments	dijit._WidgetBase
-	 * @augments	dijit._TemplatedMixin
-	 */
+	
 	var Grid = declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
 		//		Gridx is a highly extensible widget providing grid/table functionalities. 
@@ -48,7 +41,7 @@ define([
 		//		not sufficient enough, please refer to the following link for latest API docs:
 		//		http://evanhw.github.com/gridx/doc/gridx.html
 
-		/**@lends idx.gridx.Grid#*/
+		
 		templateString: template,
 
 		coreModules: [
@@ -107,11 +100,7 @@ define([
 		autoWidth: false,
 	=====*/
 
-		/**
-		 * Resize the grid using given width and height.
-		 * @param {Object?} changeSize An object like {w: ..., h: ...}.
-		 *		If omitted, the grid will re-layout itself in current width/height.
-		 */
+		
 		resize: function(changeSize){
 			// summary:
 			//		Resize the grid using given width and height.

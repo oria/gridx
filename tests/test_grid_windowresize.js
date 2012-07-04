@@ -9,7 +9,7 @@ require([
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 2000
+		size: 20
 	});
 
 	ready(function(){

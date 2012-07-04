@@ -12,12 +12,7 @@ define([
 	"../core/_Module"
 ], function(declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
-	/**
-	 * @name idx.gridx.modules.Header
-	 * @class The header UI of grid
-	 * @augments idx.gridx.core._Module
-	 * @property {DOMNode} domNode The whole header node
-	 */
+	
 	return declare(/*===== "gridx.modules.Header", =====*/_Module, {
 		// summary:
 		//		The header UI of grid
@@ -33,12 +28,9 @@ define([
 			// tags:
 			//		protected extension
 			return {
-				/**@lends idx.gridx.Grid#*/
+				
 
-				/**
-				 * Reference to the Header module.
-				 * @type {idx.gridx.modules.Header}
-				 */
+				
 				header: this
 			};
 		},
@@ -80,25 +72,18 @@ define([
 		},
 
 		columnMixin: {
-			/**@lends idx.gridx.core.Column#*/
+			
 
-			/**
-			 * [Mixin From Header] Get the header cell DOM node of this Column.
-			 * @returns {DOMNode} The header cell DOM node
-			 */
+			
 			headerNode: function(){
 				return this.grid.header.getHeaderNode(this.id);
 			}
 		},
 	
 		//Public-----------------------------------------------------------------------------
-		/**@lends idx.gridx.modules.Header#*/
+		
 
-		/**
-		 * Get the header DOM node by column ID.
-		 * @param {String} id The column ID
-		 * @returns {DOMNode} The header DOM node
-		 */
+		
 		getHeaderNode: function(id){
 			// summary:
 			//		Get the header DOM node by column ID.
@@ -109,9 +94,7 @@ define([
 			return query("[colid='" + id + "']", this.domNode)[0];	//DOMNode
 		},
 		
-		/**
-		 * Re-build the header UI.
-		 */
+		
 		refresh: function(){
 			// summary:
 			//		Re-build the header UI.
