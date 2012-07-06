@@ -20,7 +20,7 @@ require([
 			dataSource: dataSource,
 			size: 100
 		}),
-		structure: dataSource.layouts[0],
+		structure: dataSource.layouts[1],
 		cacheClass: Cache,
 		//query: {Genre: 'E*'},
 		paginationInitialPageSize: 25,

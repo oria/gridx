@@ -12,7 +12,7 @@ define([
 			this.clear();
 			this._mixinAPI('query');
 			if(args.query){
-				this.query(args.query);
+				this.query(args.query, args.queryOptions);
 			}
 		},
 

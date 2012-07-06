@@ -94,6 +94,7 @@ define([
 
 		
 		treePath: function(id){
+			this._init('treePath', arguments);
 			var s = this._struct,
 				path = [];
 			while(id !== undefined){
@@ -120,6 +121,7 @@ define([
 		
 		
 		children: function(parentId){
+			this._init('children', arguments);
 			parentId = this.model.isId(parentId) ? parentId : '';
 			var size = this._size[parentId],
 				children = [];
