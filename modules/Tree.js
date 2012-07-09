@@ -19,6 +19,8 @@ define([
 			!domClass.contains(n, 'gridxTreeExpandoLoading');
 	}
 
+	_Module._markupAttrs.push('!expandLevel');
+
 	return declare(/*===== "gridx.modules.Tree", =====*/_Module, {
 		// summary:
 		//		Tree Grid module.
@@ -59,9 +61,6 @@ define([
 		//	|		} ]
 		//	|	}
 		//
-		//		define the tree grid type
-		//	|	var type = "columnar";
-		//
 		//		define the grid structure
 		//	|	var structure = [
 		//	|		{name: "Name", field: "name", expandLevel: 'all'},
@@ -99,7 +98,7 @@ define([
 		//	|	}
 		//
 		//		define the tree grid type
-		//	|	var type = "nested";
+		//	|	treeNested: true;
 		//
 		//		define the grid structure
 		//	|	var structure = [
@@ -408,13 +407,15 @@ define([
 			var t = this,
 				col = t.grid._columnsById[colId];
 			if(col.expandLevel){
-				var level = t.model.treePath(rowId).length;
-				if(!t.arg('nested') || col.expandLevel == level){
+				var isNested = t.arg('nested'),
+					level = t.model.treePath(rowId).length;
+				if(!isNested || col.expandLevel == level){
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
-						pad = 0, singlePad = t.arg('expandoPadding'),
+						pad = 0,
+						singlePad = t.arg('expandoPadding'),
 						ltr = t.grid.isLeftToRight();
-					if(!t.arg('nested')){
+					if(!isNested){
 						pad = (level - 1) * singlePad;
 					}
 					wrappers.push({
@@ -426,7 +427,7 @@ define([
 								"<span class='gridxTreeExpandoIcon ",
 								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
-								"style='margin-", ltr ? 'left' : 'right', ": ", pad,"px;'>",
+								"style='margin-", ltr ? 'left' : 'right', ": ", pad, "px;'>",
 								"<span class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
 								"</span></span><span class='gridxTreeExpandoContent'>",

@@ -16,6 +16,18 @@ define([
 	var ga = 'getAttribute',
 		sa = 'setAttribute';
 
+	/*=====
+	gridx._RowCellInfo = function(){
+		this.rowId = '';
+		this.rowIndex = 0;
+		this.visualIndex = 0;
+		this.parentId = '';
+		this.colId = 1;
+		this.colIndex = 0;
+	};
+	=====*/
+
+
 	return declare(/*===== "gridx.modules.Body", =====*/_Module, {
 		// summary:
 		//		The body UI of grid.
@@ -124,17 +136,6 @@ define([
 	
 		//Public-----------------------------------------------------------------------------
 		rowHoverEffect: true,
-
-		/*=====
-		infoArgs: {
-			rowId
-			rowIndex
-			visualIndex
-			parentId
-			colId
-			colIndex
-		},
-		=====*/
 
 		getRowNode: function(args){
 			// summary:
@@ -624,7 +625,7 @@ define([
 		},
 	
 		//Store Notification-------------------------------------------------------------------
-		_onSet: function(id, index, rowCache){
+		_onSet: function(id, index, rowCache, oldCache){
 			var t = this;
 			if(t.autoUpdate && rowCache){
 				var row = t.grid.row(id, 1),

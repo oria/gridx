@@ -209,7 +209,6 @@ define([
 				rawData: rowData,
 				item: item
 			};
-			t._filled = 1;
 			t.onLoadRow(id);
 		},
 
@@ -262,6 +261,7 @@ define([
 				onBegin = hitch(t, t._onBegin),
 				onComplete = hitch(t, t._onComplete, d, options.start),
 				onError = hitch(d, d.errback);
+			t._filled = 1;	//1 as true;
 			t.onBeforeFetch();
 			if(s.fetch){
 				s.fetch(mixin(req, {
@@ -285,9 +285,10 @@ define([
 				index = t.idToIndex(id),
 				path = t.treePath(id);
 			if(path.length){
+				var old = t._cache[id];
 				t._addRow(id, index, t._itemToObject(item), item, path.pop());
 			}
-			t.onSet(id, index, t._cache[id]);
+			t.onSet(id, index, t._cache[id], old);
 		},
 	
 		_onNew: function(item, parentInfo){

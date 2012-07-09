@@ -195,6 +195,7 @@ define([
 					if(evt.keyCode == keys.LEFT_ARROW){width -= step;}
 					else {width += step;}
 					this.setWidth(colId, width);
+					event.stop(evt);
 				}, this);
 			}
 		},
