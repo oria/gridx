@@ -119,14 +119,14 @@ require([
 //            }
 //        },
 		{ field: "number", name:"HorizontalSlider", width: '100px', editable: true,
-			editor: "dijit/form/HorizontalSlider",
+			editor: "dijit.form.HorizontalSlider",
 			editorArgs: {
 				props: 'minimum: 0, maximum: 1'
 			}
 		},
 		{ field: "number", name:"Number Spinner", width: '100px', editable: true,
 			width: '50px',
-			editor: "dijit/form/NumberSpinner"
+			editor: "dijit.form.NumberSpinner"
 		},
 		{ field: "number", name:"Check Box", width: '30px', editable: true,
 			editor: "dijit.form.CheckBox",

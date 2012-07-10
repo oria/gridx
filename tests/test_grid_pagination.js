@@ -20,8 +20,8 @@ require([
 		paginationInitialPageSize: 10,
 		paginationInitialPage: 2,
 		modules: [
-			modules.Pagination,
-			modules.VirtualVScroller
+			modules.Pagination
+//            modules.VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');

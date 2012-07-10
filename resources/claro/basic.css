@@ -27,6 +27,10 @@
 	border-bottom: 1px solid #FFFFFF;
 	clear: both;
 }
+.claro .gridxHeaderRowHidden {
+	height: 0;
+	border-width: 0;
+}
 
 .claro .gridxHeaderRow table,
 .claro .gridxRowHeaderRow table,

@@ -40,6 +40,10 @@
 	position: relative;
 }
 
+.gridxHeaderRowHidden {
+	height: 0;
+}
+
 .gridxHeaderRowInner {
 	overflow: hidden;
 	border-style: solid;
@@ -238,7 +242,7 @@
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
 }
-	
+
 .gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }

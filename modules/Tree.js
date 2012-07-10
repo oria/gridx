@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
+	"dojo/_base/array",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/_base/lang",
@@ -10,7 +11,7 @@ define([
 	"dojo/keys",
 	"../util",
 	"../core/_Module"
-], function(kernel, declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
+], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
 	function isExpando(cellNode){
@@ -134,8 +135,8 @@ define([
 				[g.body, 'collectCellWrapper', '_createCellWrapper'],
 				[g.body, 'onAfterRow', '_onAfterRow'],
 				[g, 'onCellClick', '_onCellClick'],
-				[g, 'setStore', '_clear']
-			);
+				[g, 'setStore', '_clear']);
+			t._initExpandLevel();
 			t._initFocus();
 			if(g.persist){
 				var id,
@@ -180,6 +181,8 @@ define([
 		// expandoPadding: Integer
 		//		The padding added for each level of expando. Unit is pixel. Default to 18.
 		expandoPadding: 18,
+
+		expandLevel: Infinity,
 
 		onExpand: function(id){
 			// summary:
@@ -403,13 +406,30 @@ define([
 			};
 		},
 
+		_initExpandLevel: function(){
+			var cols = this.grid._columns;
+			if(!array.some(cols, function(col){
+				return col.expandLevel;
+			})){
+				if(this.arg('nested')){
+					array.forEach(cols, function(col, i){
+						col.expandLevel = i + 1;
+					});
+				}else{
+					cols[0].expandLevel = 1;
+				}
+			}
+		},
+
 		_createCellWrapper: function(wrappers, rowId, colId){
 			var t = this,
 				col = t.grid._columnsById[colId];
 			if(col.expandLevel){
 				var isNested = t.arg('nested'),
-					level = t.model.treePath(rowId).length;
-				if(!isNested || col.expandLevel == level){
+					level = t.model.treePath(rowId).length,
+					expandLevel = t.arg('expandLevel');
+				if((!isNested || col.expandLevel == level) && 
+						(!(expandLevel > 0) || level <= expandLevel + 1)){
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
 						pad = 0,
@@ -417,6 +437,15 @@ define([
 						ltr = t.grid.isLeftToRight();
 					if(!isNested){
 						pad = (level - 1) * singlePad;
+					}
+					if(level == expandLevel + 1){
+						//This is one level beyond the last level, there should not be expando
+						if(isNested){
+							//If nested, no indent needed
+							return;
+						}
+						//If not nested, this level still needs indent
+						hasChildren = false;
 					}
 					wrappers.push({
 						priority: 0,

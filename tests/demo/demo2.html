@@ -6,8 +6,8 @@
 	<link rel='stylesheet' href="demo2.css" />
 	<style type="text/css">
 		.gridx {
-			width: 800px;
-			height: 500px;
+			width: 900px;
+			height: 570px;
 			margin: auto;
 		}
 	</style>
@@ -18,9 +18,11 @@
 <body class='claro'>
 	<div id='main'>
 		<div id='header'>
-			<div id='logo'>Gridx</div>
+			<div id='logo'>Grid<span style='color: #189FF9;'>X</span> Playground</div>
 			<div id='headerButtons'
-				><span id='showConfig'>Configure</span><span id='showGrid'>Run</span><span id='showCode'>Code</span
+				><span id='showConfig' class='headerBtn'>Configure</span
+				><span id='showGrid' class='headerBtn'>Run</span
+				><span id='showCode' class='headerBtn'>Code</span
 			></div>
 		</div>
 		<div id='playground'>
@@ -110,6 +112,10 @@
 						<div id='moduleDescCoverMsg'>Click a module to view descriptions</div>
 					</div
 				></div>
+				<div id='modulesFilter'>
+					<label>Filter Modules</label>
+					<input id='modulesFilterInput' data-dojo-type='dijit.form.TextBox'/>
+				</div>
 				<div id='modulesAvailable' class='modulesContainer'></div>
 				<div id='modulesLoaded' class='modulesContainer'>
 					<div id='modulesLoadedCover'>
@@ -119,6 +125,10 @@
 				<div class='closeConfig'>OK</div>
 			</div>
 			<div id='attributesConfig' class='configDetail'>
+				<div id='attributesFilter'>
+					<label>Filter Attributes</label>
+					<input id='attributesFilterInput' data-dojo-type='dijit.form.TextBox'/>
+				</div>
 				<div id='attributesConfigInner'
 					><div id='attributesBool' class='attributesPane attributesPaneSelected'
 						><div id='attributesBoolLabel' class='attributesConfigLabel'></div

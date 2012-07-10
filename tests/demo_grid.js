@@ -334,6 +334,9 @@ var modules = {
 	"export CSV": {
 		"default": mods.ExportCSV
 	},
+	"export Table": {
+		"default": mods.ExportTable
+	},
 	"print": {
 		"default": mods.Printer
 	},

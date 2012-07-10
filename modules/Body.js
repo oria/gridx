@@ -137,6 +137,8 @@ define([
 		//Public-----------------------------------------------------------------------------
 		rowHoverEffect: true,
 
+		stuffEmptyCell: true,
+
 		getRowNode: function(args){
 			// summary:
 			//		Get the DOM node of a row
@@ -570,7 +572,7 @@ define([
 				var s = col.decorator ? col.decorator(data, row.id, row.visualIndex()) : data;
 				r = this._wrapCellData(s, row.id, col.id);
 			}
-			return (r === '' && sniff('ie') < 8) ? '&nbsp;' : r;
+			return (r === '' || r === null || r === undefined) && (sniff('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
 		},
 
 		_wrapCellData: function(cellData, rowId, colId){
@@ -628,13 +630,32 @@ define([
 		_onSet: function(id, index, rowCache, oldCache){
 			var t = this;
 			if(t.autoUpdate && rowCache){
-				var row = t.grid.row(id, 1),
+				var g = t.grid,
+					row = g.row(id, 1),
 					rowNode = row && row.node();
 				if(rowNode){
-					rowNode.innerHTML = t._buildCells(row);
-					t.onAfterRow(row);
-					t.onSet(id, index, rowCache);
-					t.onRender(index, 1);
+					var curData = rowCache.data,
+						oldData = oldCache.data,
+						cols = g._columns,
+						changedCols = [];
+					array.some(cols, function(col){
+						if(curData[col.id] !== oldData[col.id]){
+							changedCols.push(col);
+						}
+						return changedCols.length > 1;
+					});
+					if(changedCols.length > 1){
+						rowNode.innerHTML = t._buildCells(row);
+						t.onAfterRow(row);
+						t.onSet(id, index, rowCache);
+						t.onRender(index, 1);
+					}else if(changedCols.length == 1){
+						var col = changedCols[0],
+							isPadding = g.tree && curData[col.id] === undefined,
+							cell = row.cell(col.id, 1);
+						cell.node().innerHTML = t._buildCellContent(cell, isPadding);
+						t.onAfterCell(cell);
+					}
 				}
 			}
 		},

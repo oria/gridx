@@ -38,33 +38,6 @@ define([
 		return null;
 	}
 
-	function getCellX(e){
-		var target = e.target,
-			cell = getCell(e);
-		if(!cell){
-			return 100000;
-		}
-		if(/table/i.test(target.tagName)){
-			return 0;
-		}
-		var lx = e.offsetX;
-		if(lx == undefined){
-			lx = e.layerX;
-		}
-		if(!/th/i.test(target.tagName)){
-			lx += target.offsetLeft;
-		}
-		//Firefox seems have problem to get offsetX for TH
-		if(sniff('ff') && /th/i.test(target.tagName)){
-			var scrollLeft = -parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, 'marginLeft'));
-			var d = lx - (cell.offsetLeft - scrollLeft);
-			if(d >= 0){
-				lx = d;
-			}
-		}
-		return lx;
-	}
-		
 	return declare(/*===== "gridx.modules.ColumnResizer", =====*/_Module, {
 		// summary:
 		//		Column Resizer machinery.
@@ -209,10 +182,17 @@ define([
 				h = 0,
 				n,
 				left = e.pageX - t._gridX,
-				minWidth = t.arg('minWidth');
-	
+				minWidth = t.arg('minWidth'),
+				ltr = this.grid.isLeftToRight();
+			if(!ltr){
+				delta = -delta;
+			}
 			if(cell.offsetWidth + delta < minWidth){
-				left = t._startX - t._gridX - cell.offsetWidth + minWidth;
+				if(ltr){
+					left = t._startX - t._gridX - cell.offsetWidth + minWidth;
+				}else{
+					left = t._startX - t._gridX + (cell.offsetWidth - minWidth);
+				}
 			}
 			n = hs && hs.container.offsetHeight ? hs.container : g.bodyNode;
 			h = n.parentNode.offsetTop + n.offsetHeight - g.header.domNode.offsetTop;
@@ -287,7 +267,7 @@ define([
 		_isInResizeRange: function(e){
 			var t = this,
 				cell = getCell(e),
-				x = getCellX(e),
+				x = t._getCellX(e),
 				detectWidth = t.arg('detectWidth'),
 				ltr = t.grid.isLeftToRight();
 			if(x < detectWidth){
@@ -307,6 +287,39 @@ define([
 				}
 			}
 			return 0;	//0 as false
+		},
+
+		_getCellX: function(e){
+			var target = e.target,
+				cell = getCell(e);
+			if(!cell){
+				return 100000;
+			}
+			
+			if(/table/i.test(target.tagName)){
+				return 0;
+			}
+			var lx = e.offsetX;
+			if(lx == undefined){
+				lx = e.layerX;
+			}
+			if(!/th/i.test(target.tagName)){
+				lx += target.offsetLeft;
+			}
+			//Firefox seems have problem to get offsetX for TH
+			if(sniff('ff') && /th/i.test(target.tagName)){
+				var ltr = this.grid.isLeftToRight();
+				var scrollLeft = -parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, ltr ? 'marginLeft' : 'marginRight'));
+				if(!ltr){
+					scrollLeft = this.grid.header.domNode.firstChild.scrollWidth - scrollLeft - this.grid.header.innerNode.offsetWidth;
+				}
+				var d = lx - (cell.offsetLeft - scrollLeft);
+				if(d >= 0){
+					lx = d;
+				}
+				if(lx >= cell.offsetWidth)lx = 0;
+			}
+			return lx;
 		}
 	});
 });

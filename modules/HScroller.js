@@ -65,10 +65,12 @@ define([
 			//		package
 			// left: Number
 			//		The scrollLeft value
+			
 			var dn = this.domNode;
 			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
 				left = dn.scrollWidth - dn.offsetWidth - left;
 			}
+			if((sniff('ff')) && !this.grid.isLeftToRight() && left > 0){left = -left;}
 			dn[sl] = left;
 		},
 		
@@ -80,9 +82,13 @@ define([
 				cells = table.rows[0].cells,
 				left = 0,
 				right = 0,
-				dir = this.grid.isLeftToRight() ? 1 : -1,
+				ltr = this.grid.isLeftToRight() ? true : false,
 				scrollLeft = this.domNode.scrollLeft;
 			
+			if(!ltr && (sniff('webkit') || sniff('ie') < 8)){
+				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth;//the value relative to col 0
+			}
+			scrollLeft = Math.abs(scrollLeft);
 			//get cell's left border and right border position
 			for(var i = 0; i < cells.length; i++){
 				right += cells[i].offsetWidth;

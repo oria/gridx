@@ -22,6 +22,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	'dojo/domReady!',
 	'dojo/NodeList-manipulate',
+	'dijit/form/TextBox',
 	'dijit/form/NumberSpinner',
 	'dijit/form/NumberTextBox'
 ], function(require, ready, parser, lang, query, array, DeferredList,
@@ -230,6 +231,7 @@ Store, Grid){
 		if(toShow === undefined){
 			toShow = !domClass.contains(cfg[0], 'configOpen');
 		}
+		query('#showConfig').toggleClass('headerBtnPressed', toShow);
 		cfg.toggleClass('configOpen', toShow);
 		cfg.style('height', toShow ? '642px' : '0');
 	}
@@ -240,6 +242,7 @@ Store, Grid){
 		if(toShow === undefined){
 			toShow = !domClass.contains(cfg[0], 'configOpen');
 		}
+		query('#showCode').toggleClass('headerBtnPressed', toShow);
 		cfg.toggleClass('configOpen', toShow);
 		cfg.style('height', toShow ? '642px' : '0');
 	}
@@ -397,7 +400,7 @@ Store, Grid){
 				"'><table><tbody><tr><td>",
 				boolBtn(attr.value),
 				"</td><td>",
-				"<div class='attributeBoolItemDesc'>", attr.name, "</div>",
+				"<div class='attributeBoolItemDesc'>", attr.unitPost, "</div>",
 			"</td></tr></tbody></table></div>"].join('');
 		}).join('');
 		query('.attributeBoolBtn', 'attributesBoolInner').on('click', function(){
@@ -654,6 +657,38 @@ Store, Grid){
 
 		dom.byId('htmlcode').innerHTML = sb.join('');
 	}
+	function filterModules(){
+		var filter = registry.byId('modulesFilterInput').get('value').toLowerCase();
+		query('.moduleItem', 'modulesAvailable').forEach(function(node){
+			var mod = modules[node.getAttribute('data-mod-idx')];
+			if(mod.label.toLowerCase().search(filter) >= 0 ||
+				mod.name.toLowerCase().search(filter) >= 0 ||
+				mod.description.toLowerCase().search(filter) >= 0 ||
+				mod.mid.toLowerCase().search(filter) >= 0){
+				domClass.remove(node, 'moduleItemHidden');
+			}else{
+				domClass.add(node, 'moduleItemHidden');
+			}
+		});
+	}
+	function filterAttributes(){
+		var filter = registry.byId('attributesFilterInput').get('value').toLowerCase();
+		query('.attributeItem', 'attributesConfig').forEach(function(node){
+			var label = node.getAttribute('data-attr-name');
+			var attr = attrsByName[label];
+			if(!domClass.contains(node, 'attributeItemDisabled') && (
+					attr.mod.toLowerCase().search(filter) >= 0 ||
+					attr.name.toLowerCase().search(filter) >= 0 ||
+					attr.description.toLowerCase().search(filter) >= 0 ||
+					(attr.unitPre && attr.unitPre.toLowerCase().search(filter) >= 0) ||
+					(attr.unitPost && attr.unitPost.toLowerCase().search(filter) >= 0))){
+				domClass.remove(node, 'attributeItemHidden');
+			}else{
+				domClass.add(node, 'attributeItemHidden');
+			}
+		});
+
+	}
 
 	addColumnBar(null, {
 		field: 'id',
@@ -695,5 +730,29 @@ Store, Grid){
 		modulesSummary();
 		attributesSummary();
 		createGrid();
+
+		var moduleFilter = registry.byId('modulesFilterInput');
+		var mfhandler = null;
+		moduleFilter.connect(moduleFilter, 'onInput', function(){
+			if(mfhandler){
+				clearTimeout(mfhandler);
+			}
+			mfhandler = setTimeout(function(){
+				mfhandler = null;
+				filterModules();
+			}, 100);
+		});
+		var attributeFilter = registry.byId('attributesFilterInput');
+		var afhandler = null;
+		attributeFilter.connect(attributeFilter, 'onInput', function(){
+			if(afhandler){
+				clearTimeout(afhandler);
+			}
+			afhandler = setTimeout(function(){
+				afhandler = null;
+				filterAttributes();
+			}, 100);
+		});
+
 	});
 });

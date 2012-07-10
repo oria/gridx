@@ -95,7 +95,7 @@ define([
 				t._adaptWidth();
 			}else{
 				var noHScroller = g.hScrollerNode.style.display == 'none';
-				t._adaptWidth(!noHScroller);
+				t._adaptWidth(!noHScroller, 1);	//1 as true
 				if(!t.arg('autoResize') && noHScroller){
 					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
 						var col = g._columnsById[cellNode.getAttribute('colId')];
@@ -107,10 +107,11 @@ define([
 						}
 					});
 				}
+				t.onUpdate();
 			}
 		},
 
-		_adaptWidth: function(skip){
+		_adaptWidth: function(skip, noEvent){
 			var t = this,
 				g = t.grid,
 				dn = g.domNode,
@@ -210,7 +211,9 @@ define([
 			g.hScroller.scroll(0);
 			header._onHScroll(0);
 			g.vLayout.reLayout();
-			t.onUpdate();
+			if(!noEvent){
+				t.onUpdate();
+			}
 		},
 
 		_onSetColumns: function(){
@@ -225,6 +228,9 @@ define([
 				if(g.edit){
 					g.edit._init();
 				}
+			}
+			if(g.tree){
+				g.tree._initExpandLevel();
 			}
 			g.body.refresh();
 		}

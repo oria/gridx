@@ -512,7 +512,9 @@ define([
 	
 		//Focus-----------------------------------------------------
 		_initFocus: function(){
-			var t = this, f = t.grid.focus;
+			var t = this,
+				g = t.grid,
+				f = g.focus;
 			if(f){
 				f.registerArea({
 					name: 'edit',
@@ -523,9 +525,17 @@ define([
 					onFocus: t._onFocus,
 					onBlur: t._onBlur,
 					connects: [
-						t.connect(t.grid, 'onCellKeyPress', '_onKey'),
+						t.connect(g, 'onCellKeyPress', '_onKey'),
 						t.connect(t, '_focusEditor', '_focus')
 					]
+				});
+			}else{
+				//If not keyboard support, at least single clicking on other cells should apply the changes.
+				t.connect(g, 'onCellMouseDown', function(e){
+					var cells = t._editingCells;
+					if(!cells[e.rowId] || !cells[e.rowId][e.columnId]){
+						t._applyAll();
+					}
 				});
 			}
 		},

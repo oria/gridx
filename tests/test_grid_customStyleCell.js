@@ -4,11 +4,31 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/modules'
 ], function(){
+	function cellStyle(cell){
+		return ["height: 28px; background-color: rgb(",
+			cell.column.index() * 8 % 255, ',',
+			cell.row.index() * 28 % 255, ',',
+			cell.column.index() * cell.row.index(),
+		');'].join("");
+	}
 
-	cellStyle = function(cell){
-		return ["height: 73px; background-position: ",
-			cell.column.index() * -80.52, "px ",
-			cell.row.index() * -81, "px;"
-		].join("");
-	};
+	items = [];
+	layout = [];
+	var cn = 30;
+	var rn = 10;
+	var i;
+	for(i = 0; i < rn; ++i){
+		items.push({
+			id: i + 1
+		});
+	}
+	for(i = 0; i < cn; ++i){
+		layout.push({
+			id: i + 1,
+			name: i + 1,
+			width: '20px',
+			style: cellStyle
+		});
+	}
+
 });

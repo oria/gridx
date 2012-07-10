@@ -82,6 +82,7 @@ define([
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
+				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
 				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']
 			);
 			//TODO: need to organize this into connect/disconnect system

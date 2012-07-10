@@ -36,13 +36,13 @@ require([
 //                    modules.ExtendedSelectRow,
 //                    modules.Filter,
 //                    modules.FilterBar,
-//                    modules.Focus,
 //                    modules.Pagination,
 //                    modules.PaginationBar,
 //                    modules.RowHeader,
 //                    modules.IndirectSelect,
 //                    modules.ColumnResizer,
 //                    modules.VirtualVScroller
+					modules.Focus
 				],
 				selectRowTriggerOnCell: true
 			});

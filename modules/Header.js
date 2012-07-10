@@ -83,6 +83,7 @@ define([
 		//Public-----------------------------------------------------------------------------
 		
 
+		hidden: false,
 		
 		getHeaderNode: function(id){
 			// summary:
@@ -134,16 +135,11 @@ define([
 			});
 			sb.push('</tr></table>');
 			t.innerNode.innerHTML = sb.join('');
+			domClass.toggle(t.domNode, 'gridxHeaderRowHidden', t.arg('hidden'));
 		},
 
 		_onHScroll: function(left){
 			var ltr = this.grid.isLeftToRight();
-			
-			if(sniff('webkit') && !ltr){
-				this.innerNode.scrollLeft = this.innerNode.scrollWidth - left;
-			}else{
-				this.innerNode.scrollLeft = 0;
-			}
 			this.innerNode.firstChild.style[ltr ? 'marginLeft' : 'marginRight'] = (!ltr && sniff('ff') ? left : -left) + 'px';
 			this._scrollLeft = left;
 		},

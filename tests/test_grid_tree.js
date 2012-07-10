@@ -42,8 +42,9 @@ require([
 		id: 'grid',
 		cacheClass: Cache,
 		store: store,
-		structure: dataSource.layouts[0],
+		structure: dataSource.layouts[1],
 		selectRowTriggerOnCell: false,
+		treeExpandLevel: 2,
 		modules: [
 //            mods.Focus,
 			mods.VirtualVScroller,
