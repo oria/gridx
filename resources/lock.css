@@ -9,8 +9,7 @@
 	overflow: hidden;
 }
 
-/*Row Lock*/
-/*.gridx .gridxBody .gridxLockedRow,
-.gridx .gridxBody .gridxLockedRow .gridxLockedCell {
-	background-color: #ffffe0 !important;
-}*/
+.gridxLockedRow .gridxLockedCell {
+	z-index: 2;
+}
+

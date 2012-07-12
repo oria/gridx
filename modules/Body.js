@@ -793,10 +793,11 @@ define([
 			var t = this;
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
-			var n = t.getCellNode({
-				visualIndex: rowVisIdx,
-				colId: t.grid._columns[colIdx].id
-			});
+			var colId = t.grid._columns[colIdx].id,
+				n = t.getCellNode({
+					visualIndex: rowVisIdx,
+					colId: colId
+				});
 			if(n){
 				var preNode = query('.gridxCellFocus', t.domNode)[0];
 				if(n != preNode){
@@ -806,6 +807,7 @@ define([
 					domClass.add(n, 'gridxCellFocus');
 					t._focusCellRow = rowVisIdx;
 					t._focusCellCol = colIdx;
+					t.grid.header._focusHeaderId = colId;
 				}
 				//In IE7 focus cell node will scroll grid to the left most.
 				if(!(sniff('ie') < 8)){

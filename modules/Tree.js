@@ -130,6 +130,9 @@ define([
 			//		protected extension
 			var t = this,
 				g = t.grid;
+			if(t.model.treeMarkMode){
+				t.model.treeMarkMode('', true);
+			}
 			g.domNode.setAttribute('role', 'treegrid');
 			t.batchConnect(
 				[g.body, 'collectCellWrapper', '_createCellWrapper'],
@@ -171,6 +174,27 @@ define([
 				});
 			}
 		},
+
+		rowMixin: {
+			canExpand: function(){
+				return this.grid.tree.canExpand(this.id);
+			},
+			isExpanded: function(){
+				return this.grid.tree.isExpanded(this.id);
+			},
+			expand: function(){
+				return this.grid.tree.expand(this.id);
+			},
+			collapse: function(){
+				return this.grid.tree.collapse(this.id);
+			},
+			expandRecursive: function(){
+				return this.grid.expandRecursive(this.id);
+			},
+			collapseRecursive: function(){
+				return this.grid.collapseRecursive(this.id);
+			}
+		},
 	
 		//Public--------------------------------------------------------------------------------
 
@@ -201,10 +225,24 @@ define([
 			// id: String
 			//		The ID of the collapsed row.
 		},
+
+		canExpand: function(id){
+			// summary:
+			//		Check whether a row can be expanded.
+			// id: String
+			//		The row ID
+			// returns:
+			//		Whether the row can be expanded.
+			var t = this,
+				m = t.model,
+				level = m.treePath(id).length,
+				expandLevel = t.arg('expandLevel');
+			return m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel);
+		},
 	
 		isExpanded: function(id){
 			// summary:
-			//		Check wheter a row is already expanded.
+			//		Check whether a row is already expanded.
 			// id: String
 			//		The row ID
 			// returns:
@@ -543,9 +581,12 @@ define([
 	
 		_logicExpand: function(id){
 			var t = this,
-				m = t.model;
-			if(m.hasChildren(id)){
-				var parentId = m.treePath(id).pop(),
+				m = t.model,
+				treePath = m.treePath(id),
+				level = treePath.length,
+				expandLevel = t.arg('expandLevel');
+			if(m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel)){
+				var parentId = treePath.pop(),
 					openInfo = t._openInfo,
 					poi = t._parentOpenInfo,
 					parentOpenInfo = poi[parentId] = poi[parentId] || [];

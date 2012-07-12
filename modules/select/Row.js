@@ -46,7 +46,7 @@ define([
 			},
 
 			isSelected: function(){
-				return this.model.getMark(this.id);
+				return this.grid.select.row.isSelected(this.row.id);
 			}
 		},
 		
@@ -56,6 +56,8 @@ define([
 		//		Whether row will be selected by clicking on cell, false by default
 		triggerOnCell: false,
 
+		// treeMode: Boolean
+		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
 /*=====
@@ -97,8 +99,9 @@ define([
 		_type: 'row',
 
 		_init: function(){
-			var t = this, g = t.grid;
-			t.model.treeMarkMode(0, t.arg('treeMode'));
+			var t = this,
+				g = t.grid;
+			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.batchConnect(
@@ -111,8 +114,7 @@ define([
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
 						t._select(e.rowId, e.ctrlKey);
 					}
-				}]
-			);
+				}]);
 		},
 
 		_onMark: function(id, toMark, oldState, type){

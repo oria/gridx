@@ -50,7 +50,7 @@ define([
 			},
 
 			isSelected: function(){
-				return this.model.getMark(this.id);
+				return this.model.getMark(this.id) === true;
 			}
 		},
 		
@@ -59,6 +59,10 @@ define([
 		// triggerOnCell: [readonly] Boolean
 		//		Whether row will be selected by clicking on cell, false by default		
 		triggerOnCell: false,
+
+		// treeMode: Boolean
+		//		Whether to apply tri-state selection for child rows.
+		treeMode: true,
 
 /*=====
 		selectById: function(rowId){
@@ -92,7 +96,7 @@ define([
 			// summary:
 			//		Check if the given rows are all selected.
 			return array.every(arguments, function(id){
-				return this.model.getMark(id);
+				return this.model.getMark(id) === true;
 			}, this);
 		},
 
@@ -115,7 +119,9 @@ define([
 		_type: 'row',
 
 		_init: function(){
-			var t = this, g = t.grid;
+			var t = this,
+				g = t.grid;
+			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
@@ -140,8 +146,7 @@ define([
 						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 						t._end();
 					}
-				}]
-			);
+				}]);
 		},
 
 		_markById: function(args, toSelect){
@@ -171,12 +176,12 @@ define([
 						rowInfo = body.getRowInfo({visualIndex: start});
 						start = rowInfo.rowIndex;
 						for(i = 0; i < count; ++i){
-							m.markByIndex(i + start, toSelect, rowInfo.parentId);
+							m.markByIndex(i + start, toSelect, '', rowInfo.parentId);
 						}
 					}
 				}else if(arg >= 0 && arg < Infinity){
-					rowInfo = body.getRowInfo({visualIndex: arg}).rowIndex;
-					m.markByIndex(rowInfo.rowIndex, toSelect, rowInfo.parentId);
+					rowInfo = body.getRowInfo({visualIndex: arg});
+					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
 				}
 			});
 			return m.when();
@@ -290,9 +295,10 @@ define([
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
+
 				for(i = a; i <= b; ++i){
 					var rowInfo = bd.getRowInfo({visualIndex: i});
-					m.markByIndex(rowInfo.rowIndex, toSelect, rowInfo.parentId);
+					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
 				}
 				return m.when();
 			}

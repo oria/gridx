@@ -70,7 +70,9 @@ define([
 			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
 				left = dn.scrollWidth - dn.offsetWidth - left;
 			}
-			if((sniff('ff')) && !this.grid.isLeftToRight() && left > 0){left = -left;}
+			if((sniff('ff')) && !this.grid.isLeftToRight() && left > 0){
+				left = -left;
+			}
 			dn[sl] = left;
 		},
 		
@@ -78,11 +80,11 @@ define([
 			// summary:
 			//	Scroll the grid to make a column fully visible.
 			var hNode = this.grid.header.innerNode,
-				table = query('table', hNode)[0], 
+				table = query('table', hNode)[0],
 				cells = table.rows[0].cells,
 				left = 0,
 				right = 0,
-				ltr = this.grid.isLeftToRight() ? true : false,
+				ltr = this.grid.isLeftToRight(),
 				scrollLeft = this.domNode.scrollLeft;
 			
 			if(!ltr && (sniff('webkit') || sniff('ie') < 8)){
@@ -92,7 +94,9 @@ define([
 			//get cell's left border and right border position
 			for(var i = 0; i < cells.length; i++){
 				right += cells[i].offsetWidth;
-				if(cells[i].getAttribute('colid') == colId){break;}
+				if(cells[i].getAttribute('colid') == colId){
+					break;
+				}
 				left += cells[i].offsetWidth;
 			}
 			

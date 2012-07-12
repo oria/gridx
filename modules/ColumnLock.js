@@ -125,6 +125,7 @@ define([
 				html.style(cell, {height: 'auto'});
 			}
 			rowNode.style.paddingLeft = '0px';
+			rowNode.style.width = 'auto';
 		},
 		
 		_updateUI: function(){
@@ -163,6 +164,7 @@ define([
 				pl += cell.offsetWidth;
 			}
 			rowNode.style.paddingLeft = pl + 'px';
+			rowNode.style.width = rowNode.offsetWidth - pl + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
@@ -202,6 +204,16 @@ define([
 					if(_this.count){
 						array.forEach(this.grid.bodyNode.childNodes, function(rowNode){
 							rowNode.scrollLeft = scrollLeft;
+							//to be compatible with row lock
+							if(rowNode.style.position == 'absolute'){
+								var l = 0;
+								array.forEach(rowNode.firstChild.rows[0].cells, function(cell){
+									if(dojo.hasClass(cell, 'gridxLockedCell')){
+										cell.style.left = scrollLeft + l + 'px';
+										l += cell.offsetWidth;
+									}
+								});
+							}
 						});
 					}else{
 						this.grid.bodyNode.scrollLeft = scrollLeft;

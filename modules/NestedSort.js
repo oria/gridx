@@ -53,7 +53,7 @@ define([
 
 		preload: function(args){
 			var t = this;
-			t._sortData = t.arg('preSort') || t._sortData;
+			t._sortData = t.arg('initialOrder') || t._sortData;
 			//persistence support
 			if(t.grid.persist){
 				var d = t.grid.persist.registerAndLoad('sort', function(){

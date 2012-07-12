@@ -46,7 +46,7 @@ define([
 			},
 			
 			isSelected: function(){
-				return this.model.getMark(this.row.id, this.column.id);
+				return this.grid.select.cell.isSelected(this.row.id, this.column.id);
 			}
 		},
 		

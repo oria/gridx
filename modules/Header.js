@@ -61,6 +61,13 @@ define([
 			t.aspect(g, 'onHScroll', '_onHScroll');
 			t.aspect(g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver');
 			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
+			if(g.columnResizer){
+				t.aspect(g.columnResizer, 'onResize', function(){
+					if(g.hScrollerNode.style.display == 'none'){
+						t._onHScroll(0);
+					}
+				});
+			}
 			t._initFocus();
 		},
 
@@ -217,9 +224,13 @@ define([
 					if(g.hScroller){
 						g.hScroller.scrollToColumn(fid);
 					}
+					g.body._focusCellCol = g._columnsById[fid].index;
 
 					domClass.add(node, t._focusClass);
-					node.focus();
+					//If no timeout, the header and body may be mismatch.
+					setTimeout(function(){
+						node.focus();
+					}, 0);
 					return true;
 				}
 			}

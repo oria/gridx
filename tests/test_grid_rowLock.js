@@ -14,10 +14,9 @@ require([
 			dataSource: dataSource, 
 			size: 100
 		}),
+		rowLockCount: 2,
 		structure: dataSource.layouts[0],
-		modules: [
-			modules.RowLock
-		]
+		modules: [ modules.RowLock]
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();

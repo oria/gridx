@@ -21,12 +21,22 @@
 	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
 
+.claro .gridx .gridxBody .gridxRow .gridxCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+
 /*Header*/
 .claro .gridxHeaderRow {
 	border-top: 1px solid #FFFFFF;
 	border-bottom: 1px solid #FFFFFF;
 	clear: both;
 }
+.claro .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+
 .claro .gridxHeaderRowHidden {
 	height: 0;
 	border-width: 0;
@@ -69,3 +79,15 @@
 	border-top-color: #9BCAF7;
 /*    border-bottom-color: #9BCAF7;*/
 }
+
+/* Row header */
+.gridxRowHeaderHeader .gridxHeaderCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+	
+.gridxRowHeaderRow .gridxCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+

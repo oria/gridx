@@ -196,8 +196,12 @@ define([
 						var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
 							ww = parseInt(w, 10);
 						if(bodyWidth > fixedWidth){
-							if(sniff('ie') && isCollapse){
+							if(isCollapse){
 								w += cols.length / autoCols.length;
+								//FIXME:IE7 is strange here...
+								if(sniff('ie') < 8){
+									w += cols.length / autoCols.length;
+								}
 							}
 							ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
 						}

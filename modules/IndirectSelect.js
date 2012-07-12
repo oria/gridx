@@ -51,8 +51,7 @@ define([
 					if(name == 'rowHeader'){
 						t._onMouseOut();
 					}
-				}]
-			);
+				}]);
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
@@ -150,21 +149,24 @@ define([
 		},
 
 		_onSelectionChange: function(selected){
-			var t = this, d, 
+			var t = this, d,
 				allSelected,
 				body = t.grid.body,
 				model = t.model,
 				start = body.rootStart,
 				count = body.rootCount;
+			var selectedRoot = array.filter(selected, function(id){
+				return !model.treePath(id).pop();
+			});
 			if(count === model.size()){
-				allSelected = count == selected.length;
+				allSelected = count == selectedRoot.length;
 			}else{
 				d = new Deferred();
 				model.when({
 					start: start,
 					count: count
 				}, function(){
-					var indexes = array.filter(array.map(selected, function(id){
+					var indexes = array.filter(array.map(selectedRoot, function(id){
 						return model.idToIndex(id);
 					}), function(index){
 						return index >= start && index < start + count;
