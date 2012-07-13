@@ -16,6 +16,7 @@ require([
 			size: 100
 		}),
 		structure: dataSource.layouts[0],
+//        columnWidthAutoResize: true,
 		modules: [
 			modules.Focus,
 			modules.ColumnResizer,

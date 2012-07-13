@@ -358,6 +358,7 @@ define([
 			}
 			if(count > 0){
 				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+				en.style.zIndex = '';
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
@@ -385,6 +386,9 @@ define([
 					}
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
 					finalInfo = str ? "" : emptyInfo;
+					if(!str){
+						en.style.zIndex = 1;
+					}
 					t.onUnrender();
 				}
 				array.forEach(renderedRows, t.onAfterRow, t);
@@ -396,6 +400,7 @@ define([
 				n.scrollTop = 0;
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
+				en.style.zIndex = 1;
 				t.onUnrender();
 				t.onEmpty();
 				t.model.free();
@@ -508,7 +513,9 @@ define([
 
 		_loadFail: function(e){
 			console.error(e);
-			this.grid.emptyNode.innerHTML = this.arg('loadFailInfo', nls.loadFailInfo);
+			var en = this.grid.emptyNode;
+			en.innerHTML = this.arg('loadFailInfo', nls.loadFailInfo);
+			en.style.zIndex = 1;
 			this.domNode.innerHTML = '';
 			this._err = 1;	//1 as true;
 		},
@@ -768,11 +775,14 @@ define([
 					t._focusCellCol = evt.columnIndex;
 				});
 				t[c](t, 'onRender', function(start, count){
-					if(t._focusCellRow >= start && 
+					if(t._focusCellRow >= start &&
 						t._focusCellRow < start + count &&
 						focus.currentArea() == 'body'){
 						t._focusCell();
 					}
+				});
+				t[c](g.emptyNode, 'onfocus', function(){
+					focus.focusArea('body');
 				});
 				if(g.hScroller){
 					t[c](bn, 'onscroll', function(){

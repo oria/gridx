@@ -42,4 +42,63 @@
 		><div class='columnBarBtn columnBarAddBtn' data-dojo-attach-event='onclick: onAdd'></div
 		><div class='columnBarBtn columnBarDelBtn' data-dojo-attach-event='onclick: onDelete'></div
 	></div
+	><div id='${id}-editor' data-dojo-attach-point='editPane' class='columnBarEditPane'
+		><div class='columnBarEditPaneInner'>
+			<div class='columnBarEditPaneTitle'><span>Column&nbsp;</span><span class=''>${columnId}</span></div>
+			<table class='columnBarEditTable' border='0' cellborder='0' cellpadding='0'><tbody><tr>
+					<td class='columnAttrLabel'>style</td>
+					<td><input data-dojo-attach-point='styleBox' style='width: 200px;' data-dojo-type='dijit.form.TextBox'/></td>
+				</tr><tr>
+					<td class='columnAttrLabel'>sortable</td>
+					<td columnAttr='sortable'><input 
+						class='columnBarEditInput'
+						data-dojo-attach-point='sortableBox'
+						data-dojo-type='dijit.form.CheckBox'
+						data-dojo-attach-event='onInput: onAttrChange'
+						data-dojo-props='
+							checked: true
+						'/></td>
+				</tr><tr>
+					<td class='columnAttrLabel'>filterable</td>
+					<td columnAttr='filterable'><input 
+						class='columnBarEditInput'
+						data-dojo-attach-point='filterableBox'
+						data-dojo-type='dijit.form.CheckBox'
+						data-dojo-attach-event='onChange: onAttrChange'
+						data-dojo-props='
+							checked: true
+						'/></td>
+				</tr><tr>
+					<td class='columnAttrLabel'>editable</td>
+					<td columnAttr='editable'><input 
+						class='columnBarEditInput'
+						data-dojo-attach-point='editableBox'
+						data-dojo-type='dijit.form.CheckBox'
+						data-dojo-attach-event='onChange: onAttrChange'
+						/></td>
+				</tr><tr>
+					<td class='columnAttrLabel'>alwaysEditing</td>
+					<td columnAttr='alwaysEditing'><input 
+						class='columnBarEditInput'
+						data-dojo-attach-point='alwaysEditingBox'
+						data-dojo-type='dijit.form.CheckBox'
+						data-dojo-attach-event='onChange: onAttrChange'
+						/></td>
+				</tr><tr>
+					<td class='columnAttrLabel'>editor</td>
+					<td columnAttr='editor'><select 
+							class='columnBarEditInput'
+							data-dojo-attach-point='editorBox'
+							data-dojo-type='dijit.form.Select'
+							data-dojo-attach-event='onChange: onAttrChange'
+						><option value='empty'>TextBox</option
+						><option value='dijit/form/NumberTextBox' selected='true'>NumberTextBox</option
+						><option value='dijit/form/DateTextBox'>DateTextBox</option
+						><option value='dijit/form/TimeTextBox'>TimeTextBox</option
+						><option value='dijit/Editor'>Editor</option
+						></select></td>
+			</tr></tbody></table>
+			<div class='columnBarCloseEdit' data-dojo-attach-event='onclick: hideEditPane'>OK</div
+		></div
+	></div
 ></div>

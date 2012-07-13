@@ -729,7 +729,6 @@ Store, Grid){
 		columnsSummary();
 		modulesSummary();
 		attributesSummary();
-		createGrid();
 
 		var moduleFilter = registry.byId('modulesFilterInput');
 		var mfhandler = null;

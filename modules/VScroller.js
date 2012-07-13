@@ -4,10 +4,11 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/sniff",
 	"dojo/_base/query",
+	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, sniff, query, keys, metrics, _Module){
+], function(declare, Deferred, event, sniff, query, domGeo, keys, metrics, _Module){
 	
 	var st = 'scrollTop';
 
@@ -42,6 +43,9 @@ define([
 			t.stubNode = dn.firstChild;
 			if(g.autoHeight){
 				dn.style.display = 'none';
+				if(sniff('ie') < 8){
+					dn.style.width = '0px';
+				}
 			}else{
 				var w = metrics.getScrollbar().w + 'px';
 				dn.style.width = w;
@@ -75,7 +79,7 @@ define([
 			t.aspect(bd, 'onRender', '_onBodyChange');
 			if(!g.autoHeight){
 				t.aspect(bd, 'onEmpty', function(){
-					var ds = t.domNode.style;
+					var ds = dn.style;
 					ds.display = 'none';
 					ds.width = '';
 					if(sniff('ie') < 8){
@@ -146,15 +150,17 @@ define([
 				var bd = g.body,
 					bn = g.bodyNode,
 					toShow = bd.renderCount < bd.visualCount || bn.scrollHeight > bn.clientHeight,
-					ds = t.domNode.style;
+					ds = t.domNode.style,
+					scrollBarWidth = metrics.getScrollbar().w;
 				if(sniff('ie') < 8){
-					var w = toShow ? metrics.getScrollbar().w + 'px' : '0px';
+					var w = toShow ? scrollBarWidth + 'px' : '0px';
 					t.stubNode.style.width = w;
 					ds.width = w;
 				}else{
-					ds.width = toShow ? metrics.getScrollbar().w + 'px' : '';
+					ds.width = toShow ? scrollBarWidth + 'px' : '';
 				}
 				ds.display = toShow ? '' : 'none';
+				ds[g.isLeftToRight() ? 'right' : 'left'] = -scrollBarWidth + 'px';
 			}
 			g.hLayout.reLayout();
 		},
@@ -200,28 +206,104 @@ define([
 		},
 	
 		_onKeyScroll: function(evt){
-			
 			var t = this,
-				bd = t.grid.body,
-				focus = t.grid.focus,
+				g = t.grid,
+				bd = g.body,
+				bn = g.bodyNode,
+				focus = g.focus,
 				sn = t.domNode,
-				r,
-				fc = '_focusCellRow';
-			if(!focus || focus.currentArea() == 'body'){
+				rowNode;
+			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
 				if(evt.keyCode == keys.HOME){
-					bd[fc] = 0;
 					sn[st] = 0;
+					rowNode = bn.firstChild;
 				}else if(evt.keyCode == keys.END){
-					bd[fc] = bd.visualCount - 1;
-					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
+					sn[st] = sn.scrollHeight - sn.offsetHeight;
+					rowNode = bn.lastChild;
 				}else if(evt.keyCode == keys.PAGE_UP){
-					r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
-					t.scrollToRow(r, 1);
+					if(!sn[st]){
+						rowNode = bn.firstChild;
+					}else{
+						sn[st] -= sn.offsetHeight;
+					}
 				}else if(evt.keyCode == keys.PAGE_DOWN){
-					r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
-					t.scrollToRow(r, 1);
+					if(sn[st] >= sn.scrollHeight - sn.offsetHeight){
+						rowNode = bn.lastChild;
+					}else{
+						sn[st] += sn.offsetHeight;
+					}
 				}else{
 					return;
+				}
+				if(focus){
+					if(rowNode){
+						bd._focusCellRow = parseInt(rowNode.getAttribute('visualindex'), 10);
+						focus.focusArea('body', 1);	//1 as true
+					}else{
+						setTimeout(function(){
+							var rowNodes = bn.childNodes,
+								start = 0,
+								end = rowNodes.length - 1,
+								containerPos = domGeo.position(bn),
+								i, p,
+								checkPos = function(idx){
+									var rn = rowNodes[idx],
+										pos = domGeo.position(rn);
+									if(evt.keyCode == keys.PAGE_DOWN){
+										var prev = rn.previousSibling;
+										if((!prev && pos.y >= containerPos.y) || pos.y == containerPos.y){
+											return 0;
+										}else if(!prev){
+											return -1;
+										}else{
+											var prevPos = domGeo.position(prev);
+											if(prevPos.y < containerPos.y && prevPos.y + prevPos.h >= containerPos.y){
+												return 0;
+											}else if(prevPos.y > containerPos.y){
+												return 1;
+											}else{
+												return -1;
+											}
+										}
+									}else{
+										var post = rn.nextSibling;
+										if((!post && pos.y + pos.h <= containerPos.y + containerPos.h) ||
+											pos.y + pos.h == containerPos.y + containerPos.h){
+											return 0;
+										}else if(!post){
+											return 1;
+										}else{
+											var postPos = domGeo.position(post);
+											if(postPos.y <= containerPos.y + containerPos.h &&
+													postPos.y + postPos.h > containerPos.y + containerPos.h){
+												return 0;
+											}else if(postPos.y > containerPos.y + containerPos.h){
+												return 1;
+											}else{
+												return -1;
+											}
+										}
+									}
+								};
+							//Binary search the row to focus
+							while(start <= end){
+								i = Math.floor((start + end) / 2);
+								p = checkPos(i);
+								if(p < 0){
+									start = i + 1;
+								}else if(p > 0){
+									end = i - 1;
+								}else{
+									rowNode = rowNodes[i];
+									break;
+								}
+							}
+							if(rowNode){
+								bd._focusCellRow = parseInt(rowNode.getAttribute('visualindex'), 10);
+								focus.focusArea('body', 1);	//1 as true
+							}
+						}, 0);
+					}
 				}
 				event.stop(evt);
 			}

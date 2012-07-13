@@ -126,17 +126,14 @@ define([
 				hs = innerNode.style,
 				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail,
 				refNode = query('.gridxCell', innerNode)[0],
-				padBorder = domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w,
+				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
 				isGridHidden = !dn.offsetHeight,
-				isCollapse = domStyle.get(refNode, 'borderCollapse') == 'collapse';
+				isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse';
 			hs[marginLead] = bs[marginLead] = lead + 'px';
 			hs[marginTail] = tail + 'px';
+			g.mainNode.style[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
-			if(sniff('ie') < 8){
-				hs.width = bodyWidth + 'px';
-			}
 			if(skip){
-				bs.width = bodyWidth + 'px';
 				t.onUpdate();
 				return;
 			}
@@ -162,54 +159,51 @@ define([
 				});
 				bs.width = totalWidth + 'px';
 				dn.style.width = (lead + tail + totalWidth) + 'px';
-			}else{
-				bs.width = bodyWidth + 'px';
-				if(!t.arg('autoResize')){
-					var autoCols = [],
-						cols = g._columns,
-						fixedWidth = isCollapse ? 2 : 0;
-					array.forEach(cols, function(c){
-						if(c.declaredWidth == 'auto'){
-							autoCols.push(c);
-						}else if(/%$/.test(c.declaredWidth)){
-							c.width = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - 
-								(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10) + 'px';
-							header.getHeaderNode(c.id).style.width = c.width;
-						}
-					});
-					array.forEach(cols, function(c){
-						if(c.declaredWidth != 'auto'){
-							var w = domStyle.get(header.getHeaderNode(c.id), 'width');
-							if(/%$/.test(c.declaredWidth)){
-								c.width = w + 'px';
-							}
-							if(!sniff('safari') || !isGridHidden){
-								w += padBorder;
-							}
-							fixedWidth += w;
-						}
-					});
-					if(autoCols.length){
-						if(sniff('safari')){
-							padBorder = 0;
-						}
-						var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
-							ww = parseInt(w, 10);
-						if(bodyWidth > fixedWidth){
-							if(isCollapse){
-								w += cols.length / autoCols.length;
-								//FIXME:IE7 is strange here...
-								if(sniff('ie') < 8){
-									w += cols.length / autoCols.length;
-								}
-							}
-							ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
-						}
-						w = parseInt(w, 10);
-						array.forEach(autoCols, function(c, i){
-							header.getHeaderNode(c.id).style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
-						});
+			}else if(!t.arg('autoResize')){
+				var autoCols = [],
+					cols = g._columns,
+					fixedWidth = isCollapse ? 2 : 0;
+				array.forEach(cols, function(c){
+					if(c.declaredWidth == 'auto'){
+						autoCols.push(c);
+					}else if(/%$/.test(c.declaredWidth)){
+						c.width = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - 
+							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10) + 'px';
+						header.getHeaderNode(c.id).style.width = c.width;
 					}
+				});
+				array.forEach(cols, function(c){
+					if(c.declaredWidth != 'auto'){
+						var w = domStyle.get(header.getHeaderNode(c.id), 'width');
+						if(/%$/.test(c.declaredWidth)){
+							c.width = w + 'px';
+						}
+						if(!sniff('safari') || !isGridHidden){
+							w += padBorder;
+						}
+						fixedWidth += w;
+					}
+				});
+				if(autoCols.length){
+					if(sniff('safari')){
+						padBorder = 0;
+					}
+					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
+						ww = parseInt(w, 10);
+					if(bodyWidth > fixedWidth){
+						if(isCollapse){
+							w += cols.length / autoCols.length;
+							//FIXME:IE7 is strange here...
+							if(sniff('ie') < 8){
+								w += cols.length / autoCols.length;
+							}
+						}
+						ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
+					}
+					w = parseInt(w, 10);
+					array.forEach(autoCols, function(c, i){
+						header.getHeaderNode(c.id).style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
+					});
 				}
 			}
 			g.hScroller.scroll(0);

@@ -55,26 +55,28 @@ define([
 			this.count = this.arg('count');
 			var _this = this, g = this.grid, body = html.body();
 			deferStartup.then(function(){
-				_this.connect(g.body, 'onAfterRow', function(row){
-					this._lockColumns(row.node());
-				});
-				if(g.columnResizer){
-					//make it compatible with column resizer
-					_this.connect(g.columnResizer, 'onResize', '_updateBody');
-				}
-				if(g.header){
-					g.header.loaded.then(function(){
-						_this._updateHeader();
+				if(!this.grid.columnWidth || !this.grid.columnWidth.arg('autoResize')){
+					_this.connect(g.body, 'onAfterRow', function(row){
+						this._lockColumns(row.node());
 					});
-					if(g.move && g.move.column){
-						_this.connect(g.move.column, 'move', '_updateHeader');
+					if(g.columnResizer){
+						//make it compatible with column resizer
+						_this.connect(g.columnResizer, 'onResize', '_updateBody');
 					}
-				}
-				_this._hackHScroller();
-				if(_this.count){
-					_this.lock(_this.count);
-//					html.addClass(this.grid.domNode, 'gridxColumnLock');
-//					_this._updateScroller();
+					if(g.header){
+						g.header.loaded.then(function(){
+							_this._updateHeader();
+						});
+						if(g.move && g.move.column){
+							_this.connect(g.move.column, 'move', '_updateHeader');
+						}
+					}
+					_this._hackHScroller();
+					if(_this.count){
+						_this.lock(_this.count);
+	//					html.addClass(this.grid.domNode, 'gridxColumnLock');
+	//					_this._updateScroller();
+					}
 				}
 				_this.loaded.callback();
 			});
@@ -88,6 +90,7 @@ define([
 		lock: function(/*Integer*/count){
 			// summary:
 			//		Dynamically lock consecutive #count leading columns.
+			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			if(count >= this.grid._columns.length){
 				this.count = 0;
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
@@ -106,6 +109,7 @@ define([
 		unlock: function(){
 			// summary:
 			//		Unlock all columns.
+			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			html.removeClass(this.grid.domNode, 'gridxColumnLock');
 			
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];

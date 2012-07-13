@@ -1,21 +1,27 @@
 define([
 	'dojo/_base/declare',
+	'dojo/_base/query',
 	'dojo/_base/array',
+	'dijit/registry',
 	'dijit/_WidgetBase',
 	'dijit/_TemplatedMixin',
 	'dijit/_WidgetsInTemplateMixin',
 	'dojo/text!./ColumnBar.html',
+	'dijit/DialogUnderlay',
 	'dijit/form/TextBox'
-], function(declare, array, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template){
+], function(declare, query, array, registry, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, DialogUnderlay){
+	if(!DialogUnderlay._singleton){
+		DialogUnderlay._singleton = new DialogUnderlay({});
+	}
 
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin],{
-//        columnId: '',
+		columnId: '',
 
-//        columnField: '',
+		columnField: '',
 
-//        columnName: '',
+		columnName: '',
 
-//        columnWidth: '',
+		columnWidth: '',
 
 		columnIndex: 0,
 
@@ -45,6 +51,7 @@ define([
 					t.widthValueNode.set('value', t.columnWidth[0]);
 				}, 0);
 			}
+			document.body.appendChild(this.editPane);
 		},
 
 		setIndex: function(index){
@@ -54,13 +61,18 @@ define([
 
 		getColumn: function(){
 			var field = this.fieldNode.get('value');
-			return {
+			var ret = {
 				index: this.columnIndex,
 				id: this.idNode.get('value'),
 				name: this.nameNode.get('value'),
 				field: field == 'empty' ? '' : field,
 				width: this.widthValueNode.get('value') + this.widthUnitNode.get('displayedValue')
 			};
+			query('.columnBarEditUsedAttr .columnBarEditInput', this.editPane).forEach(function(node){
+				var editor = registry.byNode(node);
+				ret[node.parentNode.getAttribute('columnAttr')] = editor.get('value');
+			});
+			return ret;
 		},
 
 		_onWidthUnitChange: function(data){
@@ -76,12 +88,25 @@ define([
 				wv.set('value', '');
 			}
 		},
+		hideEditPane: function(){
+			DialogUnderlay._singleton.hide();
+			this.editPane.style.display = 'none';
+		},
 
 		onEdit: function(){
+			DialogUnderlay._singleton.set({
+				dialogId: this.id + '-editor'
+			});
+			DialogUnderlay._singleton.show();
+			this.editPane.style.display = 'block';
 		},
 		onAdd: function(){
 		},
 		onDelete: function(){
+		},
+
+		onAttrChange: function(){
+			console.log(this);
 		}
 	});
 });

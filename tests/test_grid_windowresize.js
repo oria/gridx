@@ -9,12 +9,12 @@ require([
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 20
+		size: 100
 	});
 
-	ready(function(){
-		grid.connect(window, 'onresize', function(){
-			grid.resize();
-		});
-	});
+//    ready(function(){
+//        grid.connect(window, 'onresize', function(){
+//            grid.resize();
+//        });
+//    });
 });
