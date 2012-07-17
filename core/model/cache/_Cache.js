@@ -19,7 +19,8 @@ define([
 			var t = this;
 			t.setStore(args.store);
 			t.columns = args.columns;
-			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'hasChildren', 'keep', 'free');
+			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'parentId',
+				'hasChildren', 'children', 'keep', 'free');
 		},
 
 		destroy: function(){
@@ -107,6 +108,11 @@ define([
 				path.pop();
 			}
 			return path;
+		},
+
+		
+		parentId: function(id){
+			return this.treePath(id).pop();
 		},
 
 		

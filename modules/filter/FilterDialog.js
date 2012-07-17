@@ -118,6 +118,11 @@ define([
 		},
 		
 		_initWidgets: function(){
+			var form = dojo.query('form', this.domNode)[0], _this = this;
+			form.onsubmit = function(){
+				_this.done();
+				return false;
+			}
 			this._accordionContainer = registry.byNode(query('.dijitAccordionContainer', this.domNode)[0]);
 			this._sltMatch = registry.byNode(query('.dijitSelect', this.domNode)[0]);
 			var btns = query('.dijitButton', this.domNode);

@@ -97,7 +97,30 @@ define([
 				m.when();
 			}
 		},
-		
+
+	/*=====
+		onSelected: function(cell){
+			// summary:
+			//		Fired when a cell is selected.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
+
+		onDeselected: function(cell){
+			// summary:
+			//		Fired when a cell is deselected.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
+
+		onHighlightChange: function(){
+			// summary:
+			//		Fired when a cell's highlight is changed.
+			// tags:
+			//		private package
+		},
+	=====*/
+
 		//Private--------------------------------------------------------------------------------
 		_type: 'cell',
 

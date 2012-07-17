@@ -43,7 +43,7 @@ define([
 			xhr.get({
 				url: src
 			}).then(loaded, function(){
-	//            console.warn('Failed to load resource: ', src);
+				console.warn('Failed to load resource: ', src);
 				loaded('');
 			});
 		}else{

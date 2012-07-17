@@ -1,9 +1,10 @@
 require([
 	'dojo/_base/array',
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
+//    'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 
 	'dojo/number',
@@ -13,17 +14,12 @@ require([
 	'dijit/layout/ContentPane',
 	'dojo/domReady!'
 ], function(array, Grid, Cache, dataSource, storeFactory, mods){
-//    window.store = storeFactory({
-//                dataSource: dataSource,
-//                size: 50
-//            });
-//    window.Cache = Cache;
 	var createGrid = function(){
 		return new Grid({
 			cacheClass: Cache,
 			store: storeFactory({
 				dataSource: dataSource,
-				size: 50
+				size: 10
 			}),
 			structure: dataSource.layouts[0],
 			//query: {Genre: 'E*'},
@@ -36,8 +32,8 @@ require([
 				mods.ExtendedSelectRow,
 				mods.ExtendedSelectColumn,
 				mods.ExtendedSelectCell,
-				mods.Filter,	
-				mods.FilterBar,	
+				mods.Filter,
+				mods.FilterBar,
 				mods.Pagination,
 				mods.PaginationBar
 			]

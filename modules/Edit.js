@@ -94,13 +94,13 @@ define([
 		//		which means all the cells in this column are always in editing mode.
 
 		name: 'edit',
-	
+
 		forced: ['cellWidget'],
-	
+
 		constructor: function(){
 			this._init();
 		},
-	
+
 		getAPIPath: function(){
 			// tags:
 			//		protected extension
@@ -108,7 +108,7 @@ define([
 				edit: this
 			};
 		},
-	
+
 		preload: function(){
 			// tags:
 			//		protected extension
@@ -118,56 +118,80 @@ define([
 			t.connect(t.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
 			t._initFocus();
 		},
-	
+
 		cellMixin: {
 			beginEdit: function(){
+				// summary:
+				//		Begin editing mode on this cell
 				return this.grid.edit.begin(this.row.id, this.column.id);
 			},
-	
+
 			cancelEdit: function(){
+				// summary:
+				//		Cancel editing mode on this cell.
 				this.grid.edit.cancel(this.row.id, this.column.id);
 				return this;
 			},
-	
+
 			applyEdit: function(){
+				// summary:
+				//		Apply change to store for this cell
 				return this.grid.edit.apply(this.row.id, this.column.id);
 			},
-	
+
 			isEditing: function(){
+				// summary:
+				//		Check whether this cell is in editing mode.
 				return this.grid.edit.isEditing(this.row.id, this.column.id);
 			},
 
 			editor: function(){
+				// summary:
+				//		Get the editor in this cell if it is in editing mode.
 				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 				return cw && cw.gridCellEditField;
 			}
 		},
-	
+
 		columnMixin: {
 			isEditable: function(){
+				// summary:
+				//		Check if the cells in this column are editable.
 				var col = this.grid._columnsById[this.id];
 				return col.editable;
 			},
 
 			isAlwaysEditing: function(){
+				// summary:
+				//		Check if the cells in this column are always editing.
 				return this.grid._columnsById[this.id].alwaysEditing;
 			},
-	
+
 			setEditable: function(editable){
+				// summary:
+				//		Set editable to the cells of this column
 				this.grid._columnsById[this.id].editable = !!editable;
 				return this;
 			},
-	
+
 			editor: function(){
+				// summary:
+				//		Get predefined editor for cells in this column
 				return this.grid._columnsById[this.id].editor;
 			},
-	
+
 			setEditor: function(/*dijit|short name*/dijitClass, args){
+				// summary:
+				//		Set editor for cells in this column
+				// dijitClass:
+				//		The dijit class to be used as the editor.
+				// args: __GridCellEditorArgs
+				//		Any args that are related to this editor.
 				this.grid.edit.setEditor(this.id, dijitClass, args);
 				return this;
 			}
 		},
-		
+
 		//Public------------------------------------------------------------------------------
 		begin: function(rowId, colId){
 			// summary:
@@ -207,7 +231,7 @@ define([
 			}
 			return d;	//dojo.Deferred
 		},
-	
+
 		cancel: function(rowId, colId){
 			// summary:
 			//		Cancel the edit. And end the editing state.
@@ -246,7 +270,7 @@ define([
 			}
 			return d;	//dojo.Deferred
 		},
-	
+
 		apply: function(rowId, colId){
 			// summary:
 			//		Apply the edit value to the grid store. And end the editing state.
@@ -304,7 +328,7 @@ define([
 			d.callback(false);
 			return d;	//dojo.Deferred
 		},
-	
+
 		isEditing: function(rowId, colId){
 			// summary:
 			//		Check whether a cell is in editing mode.
@@ -321,7 +345,7 @@ define([
 			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
 			return !!widget && !!widget.gridCellEditField;	//Boolean
 		},
-	
+
 		setEditor: function(colId, editor, args){
 			// summary:
 			//		Define the editor widget to edit a column of a grid.
@@ -343,12 +367,29 @@ define([
 		},
 
 		//Events-------------------------------------------------------------------
-		onBegin: function(cell){},
+		onBegin: function(/* cell */){
+			// summary:
+			//		Fired when a cells enters editing mode.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
 
-		onApply: function(cell, applySuccess){},
+		onApply: function(/* cell, applySuccess */){
+			// summary:
+			//		Fired when the change in a cell is applied to the store.
+			// cell: gridx.core.Cell
+			//		The cell object
+			// applySuccess: Boolean
+			//		Whether the change is successfully applied to the store
+		},
 
-		onCancel: function(cell){},
-	
+		onCancel: function(/* cell */){
+			// summary:
+			//		Fired when an editing cell is canceled.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
+
 		//Private------------------------------------------------------------------
 		_init: function(){
 			this._editingCells = {};
@@ -408,10 +449,11 @@ define([
 			}
 		},
 
-		_onCellWidgetCreated: function(widget, column){
-			if(widget.gridCellEditField && column.alwaysEditing){
-				var t = this,
-					editor = widget.gridCellEditField;
+		_onCellWidgetCreated: function(widget, cell){
+			var t = this,
+				column = cell.column,
+				editor = widget.gridCellEditField;
+			if(editor && column.alwaysEditing){
 				widget.connect(editor, 'onChange', function(){
 					//If this onChange is due to initialization, ignore it
 					if(widget.isInit){
@@ -433,7 +475,7 @@ define([
 				});
 			}
 		},
-	
+
 		_focusEditor: function(rowId, colId){
 			var cw = this.grid.cellWidget,
 				func = function(){
@@ -449,7 +491,7 @@ define([
 				setTimeout(func, 1);
 			}
 		},
-	
+
 		_getDecorator: function(colId){
 			var className = this._getColumnEditor(colId),
 				p, properties,
@@ -476,8 +518,7 @@ define([
 				].join('');
 			};
 		},
-	
-		
+
 		_record: function(rowId, colId){
 			var cells = this._editingCells, r = cells[rowId];
 			if(!r){
@@ -485,7 +526,7 @@ define([
 			}
 			r[colId] = 1;
 		},
-	
+
 		_erase: function(rowId, colId){
 			var cells = this._editingCells, r = cells[rowId];
 			if(r){
@@ -509,7 +550,7 @@ define([
 			}
 			return this.begin(evt.rowId, evt.columnId);
 		},
-	
+
 		//Focus-----------------------------------------------------
 		_initFocus: function(){
 			var t = this,
@@ -593,7 +634,7 @@ define([
 			this._applyAll();
 			return true;
 		},
-		
+
 		_focus: function(rowId, colId){
 			var t = this;
 			t._editing = true;

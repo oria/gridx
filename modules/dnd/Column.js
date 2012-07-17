@@ -10,8 +10,12 @@ define([
 ], function(declare, array, domGeometry, domClass, query, keys, _Base, _Module){
 
 	return declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
+		// summary:
+		//		This module provides an implementation of column drag & drop.
+		//		It supports column reordering within grid, dragging out of grid, and dragging into grid.
+
 		name: 'dndColumn',
-		
+
 		required: ['_dnd', 'selectColumn', 'moveColumn'],
 
 		getAPIPath: function(){
@@ -30,9 +34,14 @@ define([
 		},
 	
 		//Public---------------------------------------------------------------------------------------
-		//For now can not drag in any columns
+
+		//accept: String[]
+		//		Can drag out what kind of stuff.
+		//		For now can not drag in any columns.
 		accept: [],
 
+		//provide: String[]
+		//		Can drag out what kind of stuff
 		provide: ['grid/columns'],
 
 		//Package--------------------------------------------------------------------------------------

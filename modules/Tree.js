@@ -206,7 +206,10 @@ define([
 		//		The padding added for each level of expando. Unit is pixel. Default to 18.
 		expandoPadding: 18,
 
-		expandLevel: Infinity,
+		// expandLevel: Integer
+		//		The maximum allowed expand level of this tree grid.
+		//		If less than 1, then this is not a tree grid at all.
+		expandLevel: 1 / 0,
 
 		onExpand: function(id){
 			// summary:

@@ -74,8 +74,6 @@ define([
 					_this._hackHScroller();
 					if(_this.count){
 						_this.lock(_this.count);
-	//					html.addClass(this.grid.domNode, 'gridxColumnLock');
-	//					_this._updateScroller();
 					}
 				}
 				_this.loaded.callback();
@@ -122,13 +120,14 @@ define([
 		},
 		
 		_unlockColumns: function(rowNode){
+			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0];
 			for(var i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.removeClass(cell, 'gridxLockedCell');
 				html.style(cell, {height: 'auto'});
 			}
-			rowNode.style.paddingLeft = '0px';
+			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = '0px';
 			rowNode.style.width = 'auto';
 		},
 		
@@ -149,6 +148,7 @@ define([
 				return;
 			}
 			
+			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
 			for(i = 0; i < this.count; i++){
 				dojo.style(r.cells[i], 'height', 'auto');
@@ -161,13 +161,13 @@ define([
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.addClass(cell, 'gridxLockedCell');
-				html.style(cell, {
-					height: h1 + 'px',
-					left: pl + 'px'
-				});
+				var s = {height: h1 + 'px'};
+				s[ltr ? 'left' : 'right'] = pl + 'px';
+				html.style(cell, s);
+				
 				pl += cell.offsetWidth;
 			}
-			rowNode.style.paddingLeft = pl + 'px';
+			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl + 'px';
 			rowNode.style.width = rowNode.offsetWidth - pl + 'px';
 			
 			//This is useful for virtual scrolling.
@@ -222,7 +222,7 @@ define([
 					}else{
 						this.grid.bodyNode.scrollLeft = scrollLeft;
 					}
-					this.grid.onHScroll(scrollLeft);
+					this.grid.onHScroll(this.grid.hScroller._lastLeft);
 				}
 			});
 		}

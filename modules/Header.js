@@ -21,8 +21,6 @@ define([
 		//		which is the responsibility of ColumnWidth module.
 
 		name: 'header',
-	
-		//required: ['vLayout', 'hLayout'],
 
 		getAPIPath: function(){
 			// tags:
@@ -90,7 +88,10 @@ define([
 		//Public-----------------------------------------------------------------------------
 		
 
+		// hidden: Boolean
+		//		Whether the header UI should be hidden.
 		hidden: false,
+
 		
 		getHeaderNode: function(id){
 			// summary:
@@ -112,11 +113,15 @@ define([
 		},
 
 		onRender: function(){
+			// summary:
+			//		Fired when the header is rendered.
 			// tags:
 			//		callback
 		},
 
 		onMoveToHeaderCell: function(/* columnId, e */){
+			// summary:
+			//		Fired when the focus is moved to a header cell by keyboard.
 			// tags:
 			//		callback
 		},

@@ -12,6 +12,8 @@ define([
 		// description:
 		//		This module does not include any UI. So different kind of column dnd UI implementations can be built
 		//		upon this module.
+		//		But this module does provide a keyboard support for reordering columns. When focus is on a column header,
+		//		pressing CTRL+LEFT/RIGHT ARROW will move the column around within grid.
 
 		name: 'moveColumn',
 		
@@ -31,12 +33,20 @@ define([
 
 		columnMixin: {
 			moveTo: function(target){
+				// summary:
+				//		Move this column to the position before the column with index "target"
+				// target: Integer
+				//		The target index
 				this.grid.move.column.moveRange(this.index(), 1, target);
 				return this;
 			}
 		},
 		
 		//public---------------------------------------------------------------
+
+		//moveSelected: Boolean
+		//		When moving using keyboard, whether to move all selected columns together.
+		moveSelected: true,
 
 		move: function(columnIndexes, target){
 			// summary:
@@ -126,7 +136,7 @@ define([
 		_onKeyDown: function(e){
 			var t = this,
 				g = t.grid,
-				selector = g.select && g.select.column,
+				selector = t.arg('moveSelected') && g.select && g.select.column,
 				ltr = g.isLeftToRight(),
 				preKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW,
 				postKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW;

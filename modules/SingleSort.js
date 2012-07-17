@@ -74,15 +74,21 @@ define([
 	
 		columnMixin: {
 			sort: function(isDescending, skipUpdateBody){
+				// summary:
+				//		Sort this column.
 				this.grid.sort.sort(this.id, isDescending, skipUpdateBody);
 				return this;
 			},
 	
 			isSorted: function(){
+				// summary:
+				//		Check wheter this column is sorted.
 				return this.grid.sort.isSorted(this.id);
 			},
 	
 			clearSort: function(skipUpdateBody){
+				// summary:
+				//		Clear sort on this column
 				if(this.isSorted()){
 					this.grid.sort.clear(skipUpdateBody);
 				}
@@ -90,11 +96,15 @@ define([
 			},
 	
 			isSortable: function(){
+				// summary:
+				//		Check whether this column is sortable.
 				var col = this.grid._columnsById[this.id];
 				return col.sortable || col.sortable === undefined;
 			},
 	
 			setSortable: function(isSortable){
+				// summary:
+				//		Set sortable for this column
 				this.grid._columnsById[this.id].sortable = !!isSortable;
 				return this;
 			}
@@ -102,9 +112,13 @@ define([
 	
 		//Public--------------------------------------------------------------
 
-		/*=====
+	/*=====
+		// initialOrder: Object|Array
+		//		The initial sort order when grid is created.
+		//		This is of the same format of the sort argument of the store fetch function.
+		//		If an array of sort orders is provided, only the first will be used.
 		initialOrder: null,
-		=====*/
+	=====*/
 
 		sort: function(colId, isDescending, skipUpdateBody){
 			// summary:

@@ -23,7 +23,7 @@ require([
 		{"Heard": true, "Year":1992, "Length":"07:00", "Track":8, "Download Date":"1906/3/22",	"Last Played":"21:56:15"},
 		{"Heard": true, "Year":1992, "Length":"20:40", "Track":5, "Download Date":"1994/11/29", "Last Played":"03:25:19"}
 	];
-	var rows = 10;
+	var rows = 100;
 	for(var i = 0, l = data_list.length; i < rows; i++){
 		items.push(dojo.mixin({ id: i + 1 }, data_list[i%l]));
 	}

@@ -1,6 +1,6 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/cache/Sync',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',

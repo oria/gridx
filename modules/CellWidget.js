@@ -103,8 +103,6 @@ define([
 
 		name: 'cellWidget',
 	
-//        required: ['body'],
-	
 		getAPIPath: function(){
 			// tags:
 			//		protected extension
@@ -115,6 +113,8 @@ define([
 
 		cellMixin: {
 			widget: function(){
+				// summary:
+				//		Get the cell widget in this cell.
 				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 			}
 		},
@@ -130,8 +130,7 @@ define([
 			t.batchConnect(
 				[body, 'onAfterRow', '_showDijits'],
 				[body, 'onAfterCell', '_showDijit'],
-				[body, 'onUnrender', '_onUnrenderRow']
-			);
+				[body, 'onUnrender', '_onUnrenderRow']);
 			t._initFocus();
 		},
 	
@@ -236,9 +235,13 @@ define([
 			return null;
 		},
 
-		onCellWidgetCreated: function(/* widget, column */){
+		onCellWidgetCreated: function(/* widget, cell */){
 			// summary:
 			//		Fired when a cell widget is created.
+			// widget: gridx.__CellWidget
+			//		The created cell widget.
+			// cell: gridx.core.Cell
+			//		The cell object containing this widget.
 			// tags:
 			//		callback
 		},
@@ -301,7 +304,7 @@ define([
 						content: col.userDecorator(),
 						setCellValue: col.setCellValue
 					});
-					this.onCellWidgetCreated(widget, col);
+					this.onCellWidgetCreated(widget, cell);
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}

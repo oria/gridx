@@ -9,7 +9,7 @@ define([
 	"../core/_Module",
 	"../util"
 ], function(declare, array, connect, lang, sniff, win, keys, _Module, util){
-	
+
 	/*=====
 		gridx.modules.Focus.__FocusArea = function(){
 			// name: String (mandatory)
@@ -48,7 +48,7 @@ define([
 			//		When *focusNode* is blurred, only the currently focused area will be called.
 		};
 	=====*/
-	
+
 	return declare(/*===== "gridx.modules.Focus", =====*/_Module, {
 		// summary
 		//		This module controls the TAB sequence of all the UI modules.
@@ -126,7 +126,7 @@ define([
 				init('onFocus');
 				init('onBlur');
 				area.connects = area.connects || [];
-	
+
 				t._areas[area.name] = area;
 				var i = util.biSearch(tq, function(a){
 					return a.p - area.priority;
@@ -145,8 +145,7 @@ define([
 				}
 			}
 		},
-		//_tabQueue: [{p: 1, stack: ['name']}]
-	
+
 		focusArea: function(/* String */ areaName, forced){
 			// summary:
 			//		Focus the area with name of *areaName*.
@@ -179,7 +178,7 @@ define([
 			}
 			return false;
 		},
-	
+
 		currentArea: function(){
 			// summary:
 			//		Get the name of the current focus area. 
@@ -190,7 +189,7 @@ define([
 			var a = this._tabQueue[this._queueIdx];
 			return a ? a.stack[this._stackIdx] : '';
 		},
-	
+
 		tab: function(step, evt){
 			// summary:
 			//		Move focus from one area to another.
@@ -251,7 +250,7 @@ define([
 			}
 			return "";
 		},
-	
+
 		removeArea: function(areaName){
 			// summary:
 			//		Remove the area with name of *areaName*.
@@ -302,20 +301,20 @@ define([
 			// tags:
 			//		callback
 		},
-	
+
 		//Private----------------------------------------------------------
 		//_areas: null,
 		//_tabQueue: null,
 		//_focusNodes: null,
 		_queueIdx: -1,
 		_stackIdx: 0,
-	
+
 		_onTabDown: function(evt){
 			if(evt.keyCode === keys.TAB){
 				this.tab(evt.shiftKey ? -1 : 1, evt);
 			}
 		},
-	
+
 		//-----------------------------------------------------------------------
 		_onFocus: function(evt){
 			var t = this, i, j, stack, area,
@@ -347,7 +346,7 @@ define([
 				t._doBlur(evt, currentArea);
 			}
 		},
-		
+
 		_focus: function(evt){
 			var t = this;
 			if(t._tabingOut){
@@ -360,7 +359,7 @@ define([
 				t.tab(-1);
 			}
 		},
-		
+
 		_doBlur: function(evt, area){
 			var t = this;
 			if(!area && t.currentArea()){
@@ -372,7 +371,7 @@ define([
 				t._updateCurrentArea();
 			}
 		},
-		
+
 		_updateCurrentArea: function(area){
 			var t = this, tq = t._tabQueue;
 			if(area){

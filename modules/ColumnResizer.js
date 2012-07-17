@@ -221,8 +221,7 @@ define([
 
 		_mousedown: function(e){
 			//begin resize
-			var t = this,
-				bn = t.grid.bodyNode;
+			var t = this;
 			if(!t._readyToResize){
 				t._ismousedown = 1;	//1 as true
 				return;
@@ -233,7 +232,7 @@ define([
 			};
 			t._resizing = 1;	//1 as true
 			t._startX = e.pageX;
-			t._gridX = domGeometry.position(bn).x - bn.offsetLeft;
+			t._gridX = domGeometry.position(t.grid.domNode).x;
 			t._showResizer(e);
 		},
 

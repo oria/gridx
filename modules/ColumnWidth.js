@@ -59,7 +59,10 @@ define([
 		//		HTML table).
 		autoResize: false,
 
-		onUpdate: function(){},
+		onUpdate: function(){
+			// summary:
+			//		Fired when column widths are updated.
+		},
 
 		//Private-----------------------------------------------------------------------------
 		_init: function(){
@@ -129,8 +132,9 @@ define([
 				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
 				isGridHidden = !dn.offsetHeight,
 				isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse';
-			hs[marginLead] = bs[marginLead] = lead + 'px';
-			hs[marginTail] = tail + 'px';
+			hs[marginLead] = lead + 'px';
+			hs[marginTail] = (!isCollapse && tail > 0 ? tail - 1 : 0)  + 'px';
+			g.mainNode.style[marginLead] = lead + 'px';
 			g.mainNode.style[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
 			if(skip){

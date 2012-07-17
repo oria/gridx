@@ -142,7 +142,8 @@ define([
 					dn.style.height = (bodyHeight + freeHeight) + 'px';
 					ms.height = bodyHeight + "px";
 				});
-			}else{
+			}else if(dn.clientHeight > freeHeight){
+				//If grid height is smaller than freeHeight, IE will throw errer.
 				ms.height = (dn.clientHeight - freeHeight) + "px";
 			}
 		}

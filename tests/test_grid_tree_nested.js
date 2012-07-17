@@ -30,7 +30,6 @@ require([
 		modules: [
 			mods.Focus,
 			mods.Tree,
-//            mods.ExtendedSelectRow,
 			mods.SelectRow,
 			mods.RowHeader,
 			mods.IndirectSelect,

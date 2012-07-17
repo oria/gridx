@@ -94,7 +94,30 @@ define([
 				model.when();
 			}
 		},
-		
+
+/*=====
+		onSelected: function(row){
+			// summary:
+			//		Fired when a row is selected.
+			// row: gridx.core.Row
+			//		The row object
+		},
+
+		onDeselected: function(row){
+			// summary:
+			//		Fired when a row is deselected.
+			// row: gridx.core.Row
+			//		The row object
+		},
+
+		onHighlightChange: function(){
+			// summary:
+			//		Fired when a row's highlight is changed.
+			// tags:
+			//		private package
+		},
+=====*/
+
 		//Private--------------------------------------------------------------------------------
 		_type: 'row',
 

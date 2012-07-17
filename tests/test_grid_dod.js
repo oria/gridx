@@ -37,7 +37,7 @@ require([
 		}
 		return result.join(' ');
 	}
-	window.defaultShow = true;
+	window.defaultShow = false;
 	window.showExpando = true;
 	window.contentType = 'chart';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
@@ -181,7 +181,7 @@ require([
 	}
 	
 	tp.addTestSet('DoD types', [
- 		'<label><input type="checkbox" checked onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
+ 		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
  		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
  		'<label>Content type: <select onchange="window.contentType=this.value;">',
  		'<option value="text" selected>text</option><option value="form">form</option>',

@@ -76,6 +76,11 @@ define([
 		},
 
 		reLayout: function(){
+			// summary:
+			//		Re-layout the grid horizontally. This means calculated the width of all registered
+			//		grid UI components except the grid body. Then update the grid body width.
+			//		Usually there's no need for users to call this method. It'll be automatically called
+			//		when calling grid.resize().
 			var t = this,
 				r = t._regs,
 				lead = 0,
@@ -97,6 +102,8 @@ define([
 
 		//Event---------------------------------------------------------
 		onUpdateWidth: function(){
+			// summary:
+			//		Fired when the body width is updated.
 			// tags:
 			//		package
 		},

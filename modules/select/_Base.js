@@ -28,15 +28,24 @@ define([
 		},
 
 		//Public--------------------------------------------------------------------
+
+		// enabled: Boolean
+		//		Whether this module is enabled.
 		enabled: true,
 	
+		// multiple: Boolean
+		//		Whether multiple selectionis allowe.
 		multiple: true,
 	
+		// holdingCtrl: Boolean
+		//		Whether to add to selection all the time (as if the CTRL key is always held).
 		holdingCtrl: false,
 
 		//Events----------------------------------------------------------------------
-		onSelected: function(/* rowObject */){},
-		onDeselected: function(/* rowObject */){},
+		onSelected: function(){},
+
+		onDeselected: function(){},
+
 		onHighlightChange: function(){},
 
 		//Private---------------------------------------------------------------------

@@ -9,8 +9,6 @@ define([
 		modelExtensions: [Mark],
 
 		selectById: function(rowId, columnId){
-			// summary:
-			//		Select a cell by its id.
 			var t = this, m = t.model;
 			if(t.arg('enabled')){
 				m.markById(rowId, 1, t._getMarkType(columnId));
@@ -19,8 +17,6 @@ define([
 		},
 		
 		deselectById: function(rowId, columnId){
-			// summary:
-			//		Deselect a cell by its id.
 			var t = this, m = t.model;
 			if(t.arg('enabled')){
 				m.markById(rowId, 0, t._getMarkType(columnId));
@@ -29,8 +25,6 @@ define([
 		},
 		
 		isSelected: function(rowId, columnId){
-			// summary:
-			//		Check if a cell is already selected.
 			return this.model.getMark(rowId, this._getMarkType(columnId)) === true;	//Mixed status is not selected
 		},
 

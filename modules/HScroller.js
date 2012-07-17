@@ -8,15 +8,11 @@ define([
 	"../core/_Module"
 ], function(declare, domStyle, sniff, Deferred, query, metrics, _Module){
 
-	var sl = 'scrollLeft';		//This is for reducing code size only.
-
 	return declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
 		// summary:
 		//		This module provides basic horizontal scrolling for grid
 
 		name: 'hScroller',
-
-//        required: ['vLayout', 'hLayout', 'header'],
 
 		getAPIPath: function(){
 			// tags:
@@ -73,7 +69,7 @@ define([
 			if((sniff('ff')) && !this.grid.isLeftToRight() && left > 0){
 				left = -left;
 			}
-			dn[sl] = left;
+			dn.scrollLeft = left;
 		},
 		
 		scrollToColumn: function(colId){
@@ -122,7 +118,7 @@ define([
 				tail = g.hLayout.tail,
 				w = (g.domNode.clientWidth || domStyle.get(g.domNode, 'width')) - lead - tail,
 				bn = g.header.innerNode,
-				pl = domStyle.get(bn, 'paddingLeft') || 0,	//TODO: It is special for column lock now.
+				pl = domStyle.get(bn, ltr ? 'paddingLeft' : 'paddingRight') || 0,	//TODO: It is special for column lock now.
 				s = t.domNode.style,
 				sw = bn.firstChild.offsetWidth + pl,
 				oldDisplay = s.display,
@@ -133,7 +129,7 @@ define([
 			s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
 			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
-			if(oldDisplay == 'block' && newDisplay == 'none'){
+			if(oldDisplay != newDisplay){
 				g.vLayout.reLayout();
 			}
 		},
@@ -144,7 +140,7 @@ define([
 		_onScroll: function(e){
 			//	Fired by h-scroller's scrolling event
 			var t = this,
-				s = t.domNode[sl];
+				s = t.domNode.scrollLeft;
 			if((sniff('webkit') || sniff('ie') < 8) && !t.grid.isLeftToRight()){
 				s = t.domNode.scrollWidth - t.domNode.offsetWidth - s;
 			}
@@ -158,7 +154,7 @@ define([
 			//	Sync the grid body with the scroller.
 			var t = this,
 				g = t.grid;
-			g.bodyNode[sl] = t.domNode[sl];
+			g.bodyNode.scrollLeft = t.domNode.scrollLeft;
 			g.onHScroll(t._lastLeft);
 		}
 	});

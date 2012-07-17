@@ -13,7 +13,8 @@ define([
 		// summary:
 		//		Provides simple column selection.
 		// description:
-		//		This module provides a simple way for selecting columns by clicking or SPACE key, or CTRL + Click to select multiple columns.
+		//		This module provides a simple way for selecting columns by clicking or SPACE key, 
+		//		or CTRL + Click to select multiple columns.
 		//
 		// example:
 		//		1. Use select api on grid column object obtained from grid.column(i)
@@ -93,7 +94,30 @@ define([
 				this._markById(columns[i].id, 0);
 			}
 		},
-		
+
+	/*=====
+		onSelected: function(col){
+			// summary:
+			//		Fired when a column is selected.
+			// col: gridx.core.Column
+			//		The column object
+		},
+
+		onDeselected: function(col){
+			// summary:
+			//		Fired when a column is deselected.
+			// col: gridx.core.Column
+			//		The column object
+		},
+
+		onHighlightChange: function(){
+			// summary:
+			//		Fired when a column's highlight is changed.
+			// tags:
+			//		private package
+		},
+	=====*/
+
 		//Private-------------------------------------------------------------------------------
 		_type: 'column',
 

@@ -22,8 +22,6 @@ define([
 
 		name: 'vScroller',
 	
-//        required: ['hLayout'],
-
 		forced: ['body', 'vLayout', 'columnWidth'],
 
 		optional: ['pagination'],
@@ -49,6 +47,7 @@ define([
 			}else{
 				var w = metrics.getScrollbar().w + 'px';
 				dn.style.width = w;
+				dn.style[g.isLeftToRight() ? 'right' : 'left'] = -metrics.getScrollbar().w + 'px';
 				if(sniff('ie') < 8){
 					t.stubNode.style.width = w;
 				}
@@ -150,17 +149,15 @@ define([
 				var bd = g.body,
 					bn = g.bodyNode,
 					toShow = bd.renderCount < bd.visualCount || bn.scrollHeight > bn.clientHeight,
-					ds = t.domNode.style,
-					scrollBarWidth = metrics.getScrollbar().w;
+					ds = t.domNode.style;
+					scrollBarWidth = metrics.getScrollbar().w + (sniff('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(sniff('ie') < 8){
 					var w = toShow ? scrollBarWidth + 'px' : '0px';
 					t.stubNode.style.width = w;
 					ds.width = w;
-				}else{
-					ds.width = toShow ? scrollBarWidth + 'px' : '';
 				}
 				ds.display = toShow ? '' : 'none';
-				ds[g.isLeftToRight() ? 'right' : 'left'] = -scrollBarWidth + 'px';
+				ds[g.isLeftToRight() ? 'right' : 'left'] = -t.domNode.offsetWidth + 'px';
 			}
 			g.hLayout.reLayout();
 		},

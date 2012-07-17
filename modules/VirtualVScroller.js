@@ -46,6 +46,8 @@ define([
 		lazyTimeout: 50,
 	
 		scrollToRow: function(rowVisualIndex, toTop){
+			// summary:
+			//		Override VScroller.scrollToRow
 			// tags:
 			//		extension
 			var d = new Deferred(), t = this, s = t._scrolls,
@@ -165,6 +167,10 @@ define([
 					h = t._avgRowHeight,
 					pageRowCount = Math.ceil(dn.offsetHeight / h) + 2 * buffSize,
 					start, end, pos, d;
+				if(bnTop == bnBtm && !bnBtm){
+					//The grid is not correctly shown, so we just ignore.
+					return;
+				}
 				if(firstRow && firstRowTop > bnTop && firstRowTop < bnBtm){
 					//Add some rows to the front
 					end = body.renderStart;
@@ -335,6 +341,7 @@ define([
 				bd = t.grid.body,
 				focus = t.grid.focus,
 				sn = t.domNode,
+				st = 'scrollTop',
 				r,
 				fc = '_focusCellRow';
 			if(!focus || focus.currentArea() == 'body'){
