@@ -16,7 +16,7 @@
     "type":"git",
     "url":"https://github.com/evanhw/gridx"
   },
-  "dependencies": {//1.0 branch
+  "dependencies": {
     "dojo": "1.7.2",
     "dijit": "1.7.2",
     "dojox": "1.7.2"
