@@ -198,8 +198,8 @@ define([
 
 		layouts: [
 			[
-//                {id: 'id', field: 'id', name: 'Identity', width: '80px'},
-//                {id: 'order', field: 'order', name: 'Order', width: '80px'},
+				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
+				{id: 'order', field: 'order', name: 'Order', width: '80px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px', alwaysEditing: true},
 				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px'},
 				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},

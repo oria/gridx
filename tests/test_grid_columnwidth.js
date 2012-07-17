@@ -18,7 +18,6 @@ require([
 
 	mods = [
 		modules.ColumnResizer,
-		modules.Focus,
 //        modules.RowHeader,
 //        modules.PaginationBar,
 		modules.VirtualVScroller

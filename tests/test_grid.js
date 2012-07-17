@@ -1,13 +1,12 @@
 require([
 	'dojo/_base/array',
 	'gridx/Grid',
-	'gridx/core/model/cache/Sync',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane',
-	"dojox/html/metrics"
-], function(array, Grid, Cache, dataSource, storeFactory, modules, TestPane, metrics){
+	'gridx/tests/support/TestPane'
+], function(array, Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	var columnSetIdx = 0;
 
@@ -31,22 +30,20 @@ require([
 				cacheClass: Cache,
 				store: store,
 				structure: layout,
-//                autoHeight: false,
-//                columnWidthAutoResize: true,
-//                selectRowTriggerOnCell: true
 				modules:[
 //                    modules.SingleSort,
 //                    modules.ExtendedSelectRow,
 //                    modules.Filter,
-					modules.Focus
-//                    modules.RowHeader
+//                    modules.FilterBar,
 //                    modules.Pagination,
 //                    modules.PaginationBar,
 //                    modules.RowHeader,
 //                    modules.IndirectSelect,
 //                    modules.ColumnResizer,
 //                    modules.VirtualVScroller,
-				]
+					modules.Focus
+				],
+				selectRowTriggerOnCell: true
 			});
 			var t2 = new Date().getTime();
 			grid.placeAt('gridContainer');
@@ -54,11 +51,6 @@ require([
 			grid.startup();
 			var t4 = new Date().getTime();
 			console.log('grid', t2 - t1, t3 - t2, t4 - t3, ' total:', t4 - t1);
-
-			grid.connect(metrics, "onFontResize", function(){
-				console.log('here');
-				grid.resize();
-			});
 		}
 	};
 

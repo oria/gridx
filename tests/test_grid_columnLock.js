@@ -26,7 +26,6 @@ require([
 			modules.Edit,
 			modules.SingleSort,
 			modules.ColumnResizer,
-			modules.RowHeader,
 			modules.Focus
 			
 		]

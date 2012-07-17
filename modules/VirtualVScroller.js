@@ -73,8 +73,13 @@ define([
 				bst = bn.scrollTop,
 				dst = dn.scrollTop,
 				node = query('[visualindex="' + rowVisualIndex + '"]', bn)[0],
+				focus = t.grid.focus,
 				finish = function(success){
 					t._scrolls.splice(array.indexOf(t._scrolls, defer), 1);
+					//since we've changed the focus row index, re-focus it.
+					if(focus && focus.currentArea() == 'body'){
+						focus.focusArea('body', 1);	//1 as true
+					}
 					defer.callback(success);
 				};
 			if(node){
@@ -353,10 +358,10 @@ define([
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
 				}else if(evt.keyCode == keys.PAGE_UP){
 					r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
-					t.scrollToRow(r, 1);
+					t.scrollToRow(r);
 				}else if(evt.keyCode == keys.PAGE_DOWN){
 					r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
-					t.scrollToRow(r, 1);
+					t.scrollToRow(r, 1);	//1 as true
 				}else{
 					return;
 				}
