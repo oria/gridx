@@ -812,7 +812,7 @@ define([
 						if(sn.getAttribute('parentid') == pid){
 							sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex'), 10) - 1);
 						}
-						vidx = parseInt(sn.getAttribute('visualindex'), 10) - toDelete;
+						vidx = parseInt(sn.getAttribute('visualindex'), 10) - toDelete.length;
 						sn.setAttribute('visualindex', vidx);
 						domClass.toggle(sn, 'gridxRowOdd', vidx % 2);
 						++count;
