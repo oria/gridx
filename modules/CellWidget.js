@@ -80,7 +80,7 @@ define([
 						}
 					});
 					if(t.setCellValue){
-							t.setCellValue(gridData, storeData, t);
+						t.setCellValue(gridData, storeData, t);
 					}
 				}catch(e){
 					console.error('Can not set cell value: ', e);
