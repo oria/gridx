@@ -4,13 +4,14 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/_base/query",
+	"dojo/_base/event",
 	"dojo/dom-class",
 	"dojo/string",
 	"dojo/keys",
 	"../../util",
 	"./_PagerBase",
 	"dojo/text!../../templates/PaginationBar.html"
-], function(declare, array, lang, sniff, query, domClass, string, keys, util, _PagerBase, barTemplate){
+], function(declare, array, lang, sniff, query, event, domClass, string, keys, util, _PagerBase, barTemplate){
 
 	var hasClass = domClass.contains,
 		toggle = domClass.toggle,
@@ -293,7 +294,7 @@ define([
 					focusNode: t._pageStepperContainer,
 					doFocus: lang.hitch(t, t._findNextPageStepperBtn, false, false)
 				});
-				t.connect(t._pageStepperContainer, 'onkeypress', function(evt){
+				t.connect(t._pageStepperContainer, 'onkeydown', function(evt){
 					if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
 						t._findNextPageStepperBtn(true, evt.keyCode == leftKey);
 					}else if(evt.keyCode == keys.ENTER && 
@@ -305,7 +306,10 @@ define([
 						}else{
 							p.gotoPage(parseInt(t._focusPageIndex, 10));
 						}
+					}else{
+						return;
 					}
+					event.stop(evt);
 				});
 
 				focus.registerArea({
@@ -314,14 +318,17 @@ define([
 					focusNode: t._sizeSwitchContainer,
 					doFocus: lang.hitch(t, t._findNextPageSizeSwitch, false, false)
 				});
-				t.connect(t._sizeSwitchContainer, 'onkeypress', function(evt){
+				t.connect(t._sizeSwitchContainer, 'onkeydown', function(evt){
 					if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
 						t._findNextPageSizeSwitch(true, evt.keyCode == leftKey);
 					}else if(evt.keyCode == keys.ENTER &&
 						hasClass(evt.target, 'gridxPagerSizeSwitchBtn') &&
 						!hasClass(evt.target, 'gridxPagerSizeSwitchBtnActive')){
 						p.setPageSize(parseInt(t._focusPageSize, 10));
+					}else{
+						return;
 					}
+					event.stop(evt);
 				});
 
 				focus.registerArea({
@@ -334,9 +341,10 @@ define([
 						return true;
 					}
 				});
-				t.connect(t._gotoBtn, 'onkeypress', function(evt){
+				t.connect(t._gotoBtn, 'onkeydown', function(evt){
 					if(evt.keyCode == keys.ENTER){
 						t._showGotoDialog();
+						event.stop(evt);
 					}
 				});
 			}

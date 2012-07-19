@@ -2,11 +2,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
+	"dojo/_base/query",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
+], function(declare, array, sniff, query, domClass, keys, _RowCellBase, _Module){
 
 	return declare(/*===== "gridx.modules.select.Row", =====*/_RowCellBase, {
 		// summary:

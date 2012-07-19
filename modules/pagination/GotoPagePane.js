@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/event",
 	"dojo/keys",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"dojo/text!../../templates/GotoPagePane.html"
-], function(declare, lang, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate){
+], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate){
 
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: goToTemplate,
@@ -20,7 +21,6 @@ define([
 			lang.mixin(t, p._nls);
 			t.numberTextBoxClass = mod.arg('numberTextBoxClass').prototype.declaredClass;
 			t.buttonClass = mod.arg('buttonClass').prototype.declaredClass;
-			t.connect(t.domNode, 'onkeydown', '_onKeyDown');
 		},
 	
 		postCreate: function(){
@@ -45,6 +45,7 @@ define([
 		_onKeyDown: function(evt){
 			if(!this.okBtn.get('disabled') && keys.ENTER == evt.keyCode){
 				this._onOK();
+				event.stop(evt);
 			}
 		}
 	});
