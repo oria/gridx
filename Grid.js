@@ -7,11 +7,13 @@ define([
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/_base/query",
+	"dojox/html/metrics",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
 	"dojo/text!./templates/Grid.html",
 	"./core/Core",
+	"./core/model/extensions/Query",
 	"./core/_Module",
 	"./modules/Header",
 	"./modules/Body",
@@ -20,9 +22,9 @@ define([
 	"./modules/VScroller",
 	"./modules/HScroller",
 	"./modules/ColumnWidth"
-], function(kernel, declare, array, lang, on, domClass, domGeometry, query, 
+], function(kernel, declare, array, lang, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
-	Core, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
+	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){};
@@ -73,6 +75,10 @@ define([
 			t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 			t._initEvents(t._compNames, t._eventNames);
 			t._reset(t);
+			//resize the grid when zoomed in/out.
+			t.connect(metrics, 'onFontResize', function(){
+				t.resize();
+			});
 		},
 	
 		startup: function(){
@@ -96,7 +102,14 @@ define([
 		},
 
 	/*=====
+		// autoHeight: Boolean
+		//		If true, the grid's height is determined by the total height of the rows in current body view,
+		//		so that there will never be vertical scroller bar. And when scrolling the mouse wheel over grid body,
+		//		the whole page will be scrolled. Note if this is false, only the grid body will be scrolled.
 		autoHeight: false,
+		// autoWidth: Boolean
+		//		If true, the grid's width is determined by the total width of the columns, so that there will
+		//		never be horizontal scroller bar.
 		autoWidth: false,
 	=====*/
 
@@ -112,10 +125,10 @@ define([
 			var t = this, ds = {};
 			if(changeSize){
 				if(t.autoWidth){
-					delete changeSize.w;
+					changeSize.w = undefined;
 				}
 				if(t.autoHeight){
-					delete changeSize.h;
+					changeSize.h = undefined;
 				}
 				domGeometry.setMarginBox(t.domNode, changeSize);
 			}
