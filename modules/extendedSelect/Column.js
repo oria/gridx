@@ -91,6 +91,7 @@ define([
 			//		Deselected all selected columns;			
 			query(".gridxColumnSelected", this.grid.domNode).forEach(function(node){
 				domClass.remove(node, 'gridxColumnSelected');
+				node.removeAttribute('aria-selected');
 			});
 			array.forEach(this.grid._columns, function(col){
 				col._selected = 0;	//0 as false
@@ -187,6 +188,7 @@ define([
 				for(j = start; j < end; ++j){
 					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
+					node.setAttribute('aria-selected', true);
 				}
 			}
 		},
