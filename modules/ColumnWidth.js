@@ -171,9 +171,13 @@ define([
 					if(c.declaredWidth == 'auto'){
 						autoCols.push(c);
 					}else if(/%$/.test(c.declaredWidth)){
-						c.width = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - 
-							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10) + 'px';
-						header.getHeaderNode(c.id).style.width = c.width;
+						var w = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 -
+							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10);
+						//Check if less than zero, prevent error in IE.
+						if(w < 0){
+							w = 0;
+						}
+						header.getHeaderNode(c.id).style.width = c.width = w + 'px';
 					}
 				});
 				array.forEach(cols, function(c){
@@ -207,6 +211,13 @@ define([
 						ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
 					}
 					w = parseInt(w, 10);
+					//Check if less than zero, prevent error in IE.
+					if(w < 0){
+						w = 0;
+					}
+					if(ww < 0){
+						ww = 0;
+					}
 					array.forEach(autoCols, function(c, i){
 						header.getHeaderNode(c.id).style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
 					});
