@@ -80,7 +80,7 @@ define([
 						}
 					});
 					if(t.setCellValue){
-							t.setCellValue(gridData, storeData, t);
+						t.setCellValue(gridData, storeData, t);
 					}
 				}catch(e){
 					console.error('Can not set cell value: ', e);
@@ -381,7 +381,7 @@ define([
 					onFocus: t._onFocus,
 					onBlur: t._endNavigate,
 					connects: [
-						t.connect(t.grid, 'onCellKeyPress', '_onKey')
+						t.connect(t.grid, 'onCellKeyDown', '_onKey')
 					]
 				});
 			}

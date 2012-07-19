@@ -155,6 +155,8 @@ define([
 					var w = toShow ? scrollBarWidth + 'px' : '0px';
 					t.stubNode.style.width = w;
 					ds.width = w;
+				}else{
+					ds.width = '';
 				}
 				ds.display = toShow ? '' : 'none';
 				ds[g.isLeftToRight() ? 'right' : 'left'] = -t.domNode.offsetWidth + 'px';

@@ -41,7 +41,7 @@ require([
 		return g;
 	}
 
-	grid = create('grid', 'grid1Container', 100, 7, {
+	grid = create('grid', 'grid1Container', 100, 0, {
 		dndColumnCanRearrange: false
 	});
 

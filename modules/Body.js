@@ -933,8 +933,14 @@ define([
 					g.header._focusHeaderId = colId;
 				}
 				g.hScroller.scrollToColumn(colId);
-				//In IE7 focus cell node will scroll grid to the left most.
-				if(!(sniff('ie') < 8)){
+				if(sniff('ie') < 8){
+					//In IE7 focus cell node will scroll grid to the left most.
+					//So save the scrollLeft first and then set it back.
+					//FIXME: this still makes the grid body shake, any better solution?
+					var scrollLeft = g.bodyNode.scrollLeft;
+					n.focus();
+					g.bodyNode.scrollLeft = scrollLeft;
+				}else{
 					n.focus();
 				}
 			}else if(!g.rowCount()){

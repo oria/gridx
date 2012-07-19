@@ -178,11 +178,13 @@ define([
 				});
 				array.forEach(cols, function(c){
 					if(c.declaredWidth != 'auto'){
-						var w = domStyle.get(header.getHeaderNode(c.id), 'width');
+						var w = sniff('safari') ?
+							parseFloat(header.getHeaderNode(c.id).style.width, 10) :
+							domStyle.get(header.getHeaderNode(c.id), 'width');
 						if(/%$/.test(c.declaredWidth)){
 							c.width = w + 'px';
 						}
-						if(!sniff('safari') || !isGridHidden){
+						if(!sniff('safari')){
 							w += padBorder;
 						}
 						fixedWidth += w;

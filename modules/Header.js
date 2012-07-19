@@ -234,6 +234,11 @@ define([
 					domClass.add(node, t._focusClass);
 					//If no timeout, the header and body may be mismatch.
 					setTimeout(function(){
+						//For webkit browsers, when moving column using keyboard, the header cell will lose this focus class,
+						//although it was set correctly before this setTimeout. So re-add it here.
+						if(sniff('webkit')){
+							domClass.add(node, t._focusClass);
+						}
 						node.focus();
 					}, 0);
 					return true;

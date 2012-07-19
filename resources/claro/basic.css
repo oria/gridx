@@ -6,10 +6,6 @@
 }
 
 /*Body*/
-.claro .gridxRow {
-/*    background:url("../images/row_back.png") #ffffff repeat-x;*/
-}
-
 .claro .gridxCell{
 	border-color: transparent #E5DAC8 #E5DAC8 transparent;
 }
@@ -71,13 +67,11 @@
 	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
 }
 
-.claro .gridxHeaderRow .gridxHeaderCellOver {
-	background-color: #9bcaf7;
+.claro .gridxHeader .gridxHeaderRow .gridxHeaderCellOver {
+	background: #9bcaf7;
 	border-top-color: #9BCAF7;
-/*    border-bottom-color: #9BCAF7;*/
 }
 
 /* Row header */
