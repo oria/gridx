@@ -566,7 +566,7 @@ define([
 					onFocus: t._onFocus,
 					onBlur: t._onBlur,
 					connects: [
-						t.connect(g, 'onCellKeyPress', '_onKey'),
+						t.connect(g, 'onCellKeyDown', '_onKey'),
 						t.connect(t, '_focusEditor', '_focus')
 					]
 				});
