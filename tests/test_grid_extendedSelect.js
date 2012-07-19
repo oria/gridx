@@ -17,7 +17,7 @@ grid = new Grid({
 	cacheClass: Cache,
 	store: storeFactory({
 		dataSource: dataSource,
-		size: 100
+		size: 200
 	}),
 	structure: dataSource.layouts[0],
 	modules: [

@@ -152,13 +152,15 @@ define([
 		},
 		
 		_highlight: function(rowId, toHighlight){
-			var node = this.grid.body.getRowNode({rowId: rowId});
-			if(node){
-				var selected = toHighlight && toHighlight != 'mixed';
-				domClass.toggle(node, "gridxRowSelected", selected);
-				domClass.toggle(node, "gridxRowPartialSelected", toHighlight == 'mixed');
-				node.setAttribute('aria-selected', !!selected);
-				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toHighlight);
+			var nodes = query('[rowid="' + rowId + '"]', this.grid.mainNode),
+				selected = toHighlight && toHighlight != 'mixed';
+			if(nodes.length){
+				nodes.forEach(function(node){
+					domClass.toggle(node, "gridxRowSelected", selected);
+					domClass.toggle(node, "gridxRowPartialSelected", toHighlight == 'mixed');
+					node.setAttribute('aria-selected', !!selected);
+				});
+				this.onHighlightChange({row: parseInt(nodes[0].getAttribute('visualindex'), 10)}, toHighlight);
 			}
 		},
 

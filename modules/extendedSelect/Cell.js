@@ -104,6 +104,7 @@ define([
 			var t = this;
 			query(".gridxCellSelected", t.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxCellSelected');
+				node.removeAttribute('aria-selected');
 			});
 			array.forEach(t.grid._columns, function(col){
 				t.model.clearMark(t._getMarkType(col.id));
