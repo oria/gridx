@@ -37,7 +37,9 @@
 	width: 10px;
 	display: none;
 }
-
+.gridxSortNodeFocus {
+	background: #ddd;
+}
 .gridxSortBtnNested {
 	width: 20px;
 	background-position: -149px 5px;

@@ -8,6 +8,7 @@
 	height: 227px;
 	width: 300px;
 	overflow: auto;
+	position: relative;
 	margin: 5px 0 15px 0;
 }
 
