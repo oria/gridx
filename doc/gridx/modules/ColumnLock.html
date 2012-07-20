@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>gridx.modules.ColumnLock</title>
+  <link rel="stylesheet" href="../../css/dojo.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/jsdoc.css" type="text/css" />
+  <link rel="stylesheet" href="../../themes/dtk/dtk.css" type="text/css" />
+  </head>
+<body>
+    <div style="width: 100%; height: 100%;">
+      <div id="treeHeader" region="top">
+        gridx
+      </div>
+      <div region="bottom" style="height:18px;background-color:#f2f2f2;border-top:1px solid #dedede;padding:0 2px 4px 48px;position:relative;overflow:hidden;">
+        <span style="position:absolute;top:3px;left:3px;font-size:small;">Legend: </span>
+        <img src="../../css/icons/16x16/array.png" align="middle" title="Array" alt="Array" border="0" />
+        <img src="../../css/icons/16x16/boolean.png" align="middle" title="Boolean" alt="Boolean" border="0" />
+        <img src="../../css/icons/16x16/constructor.png" align="middle" title="Constructor" alt="Constructor" border="0" />
+        <img src="../../css/icons/16x16/date.png" align="middle" title="Date" alt="Date" border="0" />
+        <img src="../../css/icons/16x16/domnode.png" align="middle" title="DomNode" alt="DomNode" border="0" />
+        <img src="../../css/icons/16x16/error.png" align="middle" title="Error" alt="Error" border="0" />
+        <img src="../../css/icons/16x16/function.png" align="middle" title="Function" alt="Function" border="0" />
+        <img src="../../css/icons/16x16/namespace.png" align="middle" title="Namespace" alt="Namespace" border="0" />
+        <img src="../../css/icons/16x16/number.png" align="middle" title="Number" alt="Number" border="0" />
+        <img src="../../css/icons/16x16/object.png" align="middle" title="Object" alt="Object" border="0" />
+        <img src="../../css/icons/16x16/regexp.png" align="middle" title="RegExp" alt="RegExp" border="0" />
+        <img src="../../css/icons/16x16/singleton.png" align="middle" title="Singleton" alt="Singleton" border="0" />
+        <img src="../../css/icons/16x16/string.png" align="middle" title="String" alt="String" border="0" />
+      </div>
+      <div region="center">
+       <div class="sidebar unit size1of4 lastUnit infoCenterHeader" >
+         <div class="apisidebar">
+           <div class="apisidebarwrapper">
+             <!-- NAVIGATION -->
+           </div>
+         </div>
+       </div>
+       <div role="main" class="main-content">
+        <div class="unit size3of4 firstUnit">
+          <a name="skip-navbar_top"></a>
+          <div class="jsdoc-permalink" style="display:none;">../../gridx/modules/ColumnLock.html</div><h1 class="jsdoc-title constructorIcon36">gridx.modules.ColumnLock</h1><div class="jsdoc-prototype">Object &raquo; _Module &raquo; gridx.modules.ColumnLock</div><div class="jsdoc-require">dojo.require("gridx.modules.ColumnLock");</div><div class="jsdoc-prototype">Defined in gridx/modules/ColumnLock.js</div><div class="jsdoc-full-summary"><p>This module provides a way to lock consecutive leading columns.
+Columns can be locked in following ways:</p>
+</div><div class="jsdoc-examples"><h2>Examples:</h2><div class="jsdoc-example"><h3>Example 1</h3>
+1. Columns can be locked when Grid is initially rendered
+<pre class="brush: js;" lang="javascript">
+	var grid = new Grid({
+		modules: [
+			{moduleClass: gridx.modules.ColumnLock, count: 2}, ...
+		],
+		...
+	});
+</pre>
+Or another way to set the lock number:
+<pre class="brush: js;" lang="javascript">
+	var grid = new Grid({
+		columnLockCount: 2
+		modules: [
+			gridx.modules.ColumnLock, ...
+		],
+	})
+</pre>
+2. Lock or unlock columns dynamically
+<pre class="brush: js;" lang="javascript">
+	// lock 2 leading columns
+	grid.columnLock.lock(2)
+</pre>
+<pre class="brush: js;" lang="javascript">
+	// unlock all columns
+	grid.columnLock.unLock();
+</pre></div></div><div class="jsdoc-children"><div class="jsdoc-field-list"><h2 class="jsdoc-summary-heading">Property Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="objectIcon public  even"><a class="inline-link" href="#grid">grid</a></li></ul></div><h2 class="jsdoc-summary-heading">Method Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon private  odd"><a class="inline-link" href="#_hackHScroller">_hackHScroller</a><span class="parameters">()</span> <span>This method changes behavior of hscroller. It will scroll each row instead of the body node
+	while some columns are locked.</span></li><li class="functionIcon private  even"><a class="inline-link" href="#_lockColumns">_lockColumns</a><span class="parameters">(rowNode)</span> <span>Lock columns for one row</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_unlockColumns">_unlockColumns</a><span class="parameters">(rowNode)</span></li><li class="functionIcon private  even"><a class="inline-link" href="#_updateBody">_updateBody</a><span class="parameters">()</span> <span>Update the body for column lock</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_updateHeader">_updateHeader</a><span class="parameters">()</span> <span>Update the header for column lock</span></li><li class="functionIcon private  even"><a class="inline-link" href="#_updateScroller">_updateScroller</a><span class="parameters">()</span> <span>Update h-scroller for column lock</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_updateUI">_updateUI</a><span class="parameters">()</span></li><li class="functionIcon public  even"><a class="inline-link" href="#getAPIPath">getAPIPath</a><span class="parameters">()</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#load">load</a><span class="parameters">(args, deferStartup)</span></li><li class="functionIcon public  even"><a class="inline-link" href="#lock">lock</a><span class="parameters">(count)</span> <span>Dynamically lock consecutive #count leading columns.</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#unlock">unlock</a><span class="parameters">()</span> <span>Unlock all columns.</span></li></ul></div><h2 class="jsdoc-summary-heading">Attached Objects <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../../gridx/modules/ColumnLock/grid.html">gridx.modules.ColumnLock.grid</a></span></div></div></div></div></div><div class="jsdoc-children"><div class="jsdoc-fields"><h2>Properties</h2><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="grid"></a><span class="objectIcon">grid</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><h2>Methods</h2><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_hackHScroller"></a><span class="functionIcon">_hackHScroller</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">This method changes behavior of hscroller. It will scroll each row instead of the body node
+	while some columns are locked.</div></div><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_lockColumns"></a><span class="functionIcon">_lockColumns</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Lock columns for one row</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">rowNode</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_unlockColumns"></a><span class="functionIcon">_unlockColumns</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">rowNode</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_updateBody"></a><span class="functionIcon">_updateBody</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Update the body for column lock</div></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_updateHeader"></a><span class="functionIcon">_updateHeader</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Update the header for column lock</div></div><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_updateScroller"></a><span class="functionIcon">_updateScroller</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Update h-scroller for column lock</div></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_updateUI"></a><span class="functionIcon">_updateUI</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="getAPIPath"></a><span class="functionIcon">getAPIPath</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="load"></a><span class="functionIcon">load</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">args</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">deferStartup</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="lock"></a><span class="functionIcon">lock</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Dynamically lock consecutive #count leading columns.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">count</td><td class="jsdoc-param-type">Integer</td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="unlock"></a><span class="functionIcon">unlock</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Unlock all columns.</div></div></div></div>
+        </div>
+       </div>
+      </div>
+  </div>
+</body>
+</html>

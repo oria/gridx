@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>gridx.modules.HLayout</title>
+  <link rel="stylesheet" href="../../css/dojo.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/jsdoc.css" type="text/css" />
+  <link rel="stylesheet" href="../../themes/dtk/dtk.css" type="text/css" />
+  </head>
+<body>
+    <div style="width: 100%; height: 100%;">
+      <div id="treeHeader" region="top">
+        gridx
+      </div>
+      <div region="bottom" style="height:18px;background-color:#f2f2f2;border-top:1px solid #dedede;padding:0 2px 4px 48px;position:relative;overflow:hidden;">
+        <span style="position:absolute;top:3px;left:3px;font-size:small;">Legend: </span>
+        <img src="../../css/icons/16x16/array.png" align="middle" title="Array" alt="Array" border="0" />
+        <img src="../../css/icons/16x16/boolean.png" align="middle" title="Boolean" alt="Boolean" border="0" />
+        <img src="../../css/icons/16x16/constructor.png" align="middle" title="Constructor" alt="Constructor" border="0" />
+        <img src="../../css/icons/16x16/date.png" align="middle" title="Date" alt="Date" border="0" />
+        <img src="../../css/icons/16x16/domnode.png" align="middle" title="DomNode" alt="DomNode" border="0" />
+        <img src="../../css/icons/16x16/error.png" align="middle" title="Error" alt="Error" border="0" />
+        <img src="../../css/icons/16x16/function.png" align="middle" title="Function" alt="Function" border="0" />
+        <img src="../../css/icons/16x16/namespace.png" align="middle" title="Namespace" alt="Namespace" border="0" />
+        <img src="../../css/icons/16x16/number.png" align="middle" title="Number" alt="Number" border="0" />
+        <img src="../../css/icons/16x16/object.png" align="middle" title="Object" alt="Object" border="0" />
+        <img src="../../css/icons/16x16/regexp.png" align="middle" title="RegExp" alt="RegExp" border="0" />
+        <img src="../../css/icons/16x16/singleton.png" align="middle" title="Singleton" alt="Singleton" border="0" />
+        <img src="../../css/icons/16x16/string.png" align="middle" title="String" alt="String" border="0" />
+      </div>
+      <div region="center">
+       <div class="sidebar unit size1of4 lastUnit infoCenterHeader" >
+         <div class="apisidebar">
+           <div class="apisidebarwrapper">
+             <!-- NAVIGATION -->
+           </div>
+         </div>
+       </div>
+       <div role="main" class="main-content">
+        <div class="unit size3of4 firstUnit">
+          <a name="skip-navbar_top"></a>
+          <div class="jsdoc-permalink" style="display:none;">../../gridx/modules/HLayout.html</div><h1 class="jsdoc-title constructorIcon36">gridx.modules.HLayout</h1><div class="jsdoc-prototype">Object &raquo; _Module &raquo; gridx.modules.HLayout</div><div class="jsdoc-require">dojo.require("gridx.modules.HLayout");</div><div class="jsdoc-prototype">Defined in gridx/modules/HLayout.js</div><div class="jsdoc-full-summary"><p>When a user creates a grid with a given width, it means the width of the whole grid,
+which includes grid body, row header, and virtical scrollerbar (and maybe more in the future).
+So the width of the grid body must be calculated out so as to layout the grid properly.
+This module calculates grid body width by collecting width from all the registered
+grid UI parts. It is assumed that the width of these UI parts will not change when grid is resized.</p>
+</div><div class="jsdoc-children"><div class="jsdoc-field-list"><h2 class="jsdoc-summary-heading">Method Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon private  even"><a class="inline-link" href="#_layout">_layout</a><span class="parameters">()</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#getAPIPath">getAPIPath</a><span class="parameters">()</span></li><li class="functionIcon public  even"><a class="inline-link" href="#load">load</a><span class="parameters">(args, startup)</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#reLayout">reLayout</a><span class="parameters">()</span> <span>Re-layout the grid horizontally. This means calculated the width of all registered
+	grid UI components except the grid body. Then update the grid body width.
+	Usually there's no need for users to call this method. It'll be automatically called
+	when calling grid.resize().</span></li><li class="functionIcon public  even"><a class="inline-link" href="#register">register</a><span class="parameters">(ready, refNode, isTail)</span> <span>Register a 'refNode' so this module can calculate its width when it is 'ready'</span></li></ul></div><h2 class="jsdoc-summary-heading">Event Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon public  odd"><a class="inline-link" href="#onUpdateWidth">onUpdateWidth</a><span class="parameters">()</span> <span>Fired when the body width is updated.</span></li></ul></div></div></div><div class="jsdoc-children"><div class="jsdoc-fields"><h2>Methods</h2><div class="jsdoc-field private  even"><div class="jsdoc-title"><a name="_layout"></a><span class="functionIcon">_layout</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="getAPIPath"></a><span class="functionIcon">getAPIPath</span></div><div class="jsdoc-inheritance">Overrides _Module</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="load"></a><span class="functionIcon">load</span></div><div class="jsdoc-inheritance">Overrides _Module</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">args</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">startup</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="reLayout"></a><span class="functionIcon">reLayout</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Re-layout the grid horizontally. This means calculated the width of all registered
+	grid UI components except the grid body. Then update the grid body width.
+	Usually there's no need for users to call this method. It'll be automatically called
+	when calling grid.resize().</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="register"></a><span class="functionIcon">register</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Register a 'refNode' so this module can calculate its width when it is 'ready'</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">ready</td><td class="jsdoc-param-type">dojo.Deferred|null</td><td class="jsdoc-param-description">A deferred object indicating when the DOM node is ready for width calculation.
+	If omitted, it means the refNode can be calculated at any time.</td></tr><tr><td class="jsdoc-param-name">refNode</td><td class="jsdoc-param-type">DOMNode</td><td class="jsdoc-param-description">The DOM node that represents a UI part in grid.</td></tr><tr><td class="jsdoc-param-name">isTail</td><td class="jsdoc-param-type">Boolean</td><td class="jsdoc-param-description"><div><em>Optional.</em></div>If the 'refNode' appears after(LTR: right, RTL: left) the grid body, set this to true.</td></tr></table></div><h2>Events</h2><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="onUpdateWidth"></a><span class="functionIcon">onUpdateWidth</span></div><div class="jsdoc-inheritance">Overrides _Module</div><div class="jsdoc-summary">Fired when the body width is updated.</div></div></div></div>
+        </div>
+       </div>
+      </div>
+  </div>
+</body>
+</html>

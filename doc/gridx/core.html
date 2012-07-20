@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>gridx.core</title>
+  <link rel="stylesheet" href="../css/dojo.css" type="text/css" />
+  <link rel="stylesheet" href="../css/jsdoc.css" type="text/css" />
+  <link rel="stylesheet" href="../themes/dtk/dtk.css" type="text/css" />
+  </head>
+<body>
+    <div style="width: 100%; height: 100%;">
+      <div id="treeHeader" region="top">
+        gridx
+      </div>
+      <div region="bottom" style="height:18px;background-color:#f2f2f2;border-top:1px solid #dedede;padding:0 2px 4px 48px;position:relative;overflow:hidden;">
+        <span style="position:absolute;top:3px;left:3px;font-size:small;">Legend: </span>
+        <img src="../css/icons/16x16/array.png" align="middle" title="Array" alt="Array" border="0" />
+        <img src="../css/icons/16x16/boolean.png" align="middle" title="Boolean" alt="Boolean" border="0" />
+        <img src="../css/icons/16x16/constructor.png" align="middle" title="Constructor" alt="Constructor" border="0" />
+        <img src="../css/icons/16x16/date.png" align="middle" title="Date" alt="Date" border="0" />
+        <img src="../css/icons/16x16/domnode.png" align="middle" title="DomNode" alt="DomNode" border="0" />
+        <img src="../css/icons/16x16/error.png" align="middle" title="Error" alt="Error" border="0" />
+        <img src="../css/icons/16x16/function.png" align="middle" title="Function" alt="Function" border="0" />
+        <img src="../css/icons/16x16/namespace.png" align="middle" title="Namespace" alt="Namespace" border="0" />
+        <img src="../css/icons/16x16/number.png" align="middle" title="Number" alt="Number" border="0" />
+        <img src="../css/icons/16x16/object.png" align="middle" title="Object" alt="Object" border="0" />
+        <img src="../css/icons/16x16/regexp.png" align="middle" title="RegExp" alt="RegExp" border="0" />
+        <img src="../css/icons/16x16/singleton.png" align="middle" title="Singleton" alt="Singleton" border="0" />
+        <img src="../css/icons/16x16/string.png" align="middle" title="String" alt="String" border="0" />
+      </div>
+      <div region="center">
+       <div class="sidebar unit size1of4 lastUnit infoCenterHeader" >
+         <div class="apisidebar">
+           <div class="apisidebarwrapper">
+             <!-- NAVIGATION -->
+           </div>
+         </div>
+       </div>
+       <div role="main" class="main-content">
+        <div class="unit size3of4 firstUnit">
+          <a name="skip-navbar_top"></a>
+          <div class="jsdoc-permalink" style="display:none;">../gridx/core.html</div><h1 class="jsdoc-title objectIcon36">gridx.core</h1><div class="jsdoc-prototype">Object &raquo; gridx.core</div><div class="jsdoc-children"><div class="jsdoc-field-list"><h2 class="jsdoc-summary-heading">Property Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="objectIcon public  even"><a class="inline-link" href="#model">model</a></li></ul></div><h2 class="jsdoc-summary-heading">Method Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon public  odd"><a class="inline-link" href="#Cell">Cell</a><span class="parameters">(grid, row, column)</span> <span>Represents a cell of a grid</span></li><li class="functionIcon public  even"><a class="inline-link" href="#Column">Column</a><span class="parameters">(grid, id)</span> <span>Represents a column of a grid</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#Core">Core</a><span class="parameters">()</span> <span>This is the logical grid (also the base class of the grid widget),
+	providing grid data model and defines a module/plugin framework
+	so that the whole grid can be as flexible as possible while still convenient enough for
+	web page developers.</span></li><li class="functionIcon public  even"><a class="inline-link" href="#Row">Row</a><span class="parameters">(grid, id)</span> <span>Represents a row of a grid</span></li><li class="functionIcon private  odd"><a class="inline-link" href="#_Module">_Module</a><span class="parameters">(grid, args)</span></li></ul></div><h2 class="jsdoc-summary-heading">Attached Objects <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/Cell.html">gridx.core.Cell</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/Column.html">gridx.core.Column</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/Core.html">gridx.core.Core</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/Row.html">gridx.core.Row</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/_Module.html">gridx.core._Module</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../gridx/core/model.html">gridx.core.model</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/Model.html">gridx.core.model.Model</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../gridx/core/model/cache.html">gridx.core.model.cache</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/cache/Async.html">gridx.core.model.cache.Async</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../gridx/core/model/extensions.html">gridx.core.model.extensions</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/extensions/ClientFilter.html">gridx.core.model.extensions.ClientFilter</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/extensions/FormatSort.html">gridx.core.model.extensions.FormatSort</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/extensions/Mark.html">gridx.core.model.extensions.Mark</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/extensions/Move.html">gridx.core.model.extensions.Move</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../gridx/core/model/extensions/Move/model.html">gridx.core.model.extensions.Move.model</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/extensions/Query.html">gridx.core.model.extensions.Query</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../gridx/core/model/extensions/Query/model.html">gridx.core.model.extensions.Query.model</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../gridx/core/model/extensions/Query/model/_cache.html">gridx.core.model.extensions.Query.model._cache</a></span></div></div><div class="jsdoc-field"><div class="jsdoc-title"><span class="constructor"><a class="jsdoc-link" href="../gridx/core/model/extensions/Sort.html">gridx.core.model.extensions.Sort</a></span></div></div></div></div></div><div class="jsdoc-children"><div class="jsdoc-fields"><h2>Properties</h2><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="model"></a><span class="objectIcon">model</span></div></div><h2>Methods</h2><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="Cell"></a><span class="functionIcon">Cell</span></div><div class="jsdoc-summary"><p>An instance of this class represents a grid cell.
+This class should not be directly instantiated by users. It should be returned by grid APIs.</p>
+</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">grid</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">row</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">column</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="Column"></a><span class="functionIcon">Column</span></div><div class="jsdoc-summary"><p>An instance of this class represents a grid column.
+This class should not be directly instantiated by users. It should be returned by grid APIs.</p>
+</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">grid</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="Core"></a><span class="functionIcon">Core</span></div><div class="jsdoc-summary">This is the logical grid (also the base class of the grid widget),
+	providing grid data model and defines a module/plugin framework
+	so that the whole grid can be as flexible as possible while still convenient enough for
+	web page developers.</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="Row"></a><span class="functionIcon">Row</span></div><div class="jsdoc-summary"><p>An instance of this class represents a grid row.
+This class should not be directly instantiated by users. It should be returned by grid APIs.</p>
+</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">grid</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_Module"></a><span class="functionIcon">_Module</span></div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">grid</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">args</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div></div></div>
+        </div>
+       </div>
+      </div>
+  </div>
+</body>
+</html>
