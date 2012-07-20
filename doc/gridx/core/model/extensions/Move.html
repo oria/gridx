@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>gridx.core.model.extensions.Move</title>
+  <link rel="stylesheet" href="../../../../css/dojo.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../css/jsdoc.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../themes/dtk/dtk.css" type="text/css" />
+  </head>
+<body>
+    <div style="width: 100%; height: 100%;">
+      <div id="treeHeader" region="top">
+        gridx
+      </div>
+      <div region="bottom" style="height:18px;background-color:#f2f2f2;border-top:1px solid #dedede;padding:0 2px 4px 48px;position:relative;overflow:hidden;">
+        <span style="position:absolute;top:3px;left:3px;font-size:small;">Legend: </span>
+        <img src="../../../../css/icons/16x16/array.png" align="middle" title="Array" alt="Array" border="0" />
+        <img src="../../../../css/icons/16x16/boolean.png" align="middle" title="Boolean" alt="Boolean" border="0" />
+        <img src="../../../../css/icons/16x16/constructor.png" align="middle" title="Constructor" alt="Constructor" border="0" />
+        <img src="../../../../css/icons/16x16/date.png" align="middle" title="Date" alt="Date" border="0" />
+        <img src="../../../../css/icons/16x16/domnode.png" align="middle" title="DomNode" alt="DomNode" border="0" />
+        <img src="../../../../css/icons/16x16/error.png" align="middle" title="Error" alt="Error" border="0" />
+        <img src="../../../../css/icons/16x16/function.png" align="middle" title="Function" alt="Function" border="0" />
+        <img src="../../../../css/icons/16x16/namespace.png" align="middle" title="Namespace" alt="Namespace" border="0" />
+        <img src="../../../../css/icons/16x16/number.png" align="middle" title="Number" alt="Number" border="0" />
+        <img src="../../../../css/icons/16x16/object.png" align="middle" title="Object" alt="Object" border="0" />
+        <img src="../../../../css/icons/16x16/regexp.png" align="middle" title="RegExp" alt="RegExp" border="0" />
+        <img src="../../../../css/icons/16x16/singleton.png" align="middle" title="Singleton" alt="Singleton" border="0" />
+        <img src="../../../../css/icons/16x16/string.png" align="middle" title="String" alt="String" border="0" />
+      </div>
+      <div region="center">
+       <div class="sidebar unit size1of4 lastUnit infoCenterHeader" >
+         <div class="apisidebar">
+           <div class="apisidebarwrapper">
+             <!-- NAVIGATION -->
+           </div>
+         </div>
+       </div>
+       <div role="main" class="main-content">
+        <div class="unit size3of4 firstUnit">
+          <a name="skip-navbar_top"></a>
+          <div class="jsdoc-permalink" style="display:none;">../../../../gridx/core/model/extensions/Move.html</div><h1 class="jsdoc-title constructorIcon36">gridx.core.model.extensions.Move</h1><div class="jsdoc-prototype">Object &raquo; _Extension &raquo; gridx.core.model.extensions.Move</div><div class="jsdoc-require">dojo.require("gridx.core.model.extensions.Move");</div><div class="jsdoc-prototype">Defined in gridx/core/model/extensions/Move.js</div><div class="jsdoc-children"><div class="jsdoc-field-list"><h2 class="jsdoc-summary-heading">Property Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="objectIcon public  even"><a class="inline-link" href="#model">model</a></li></ul></div><h2 class="jsdoc-summary-heading">Method Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon private  odd"><a class="inline-link" href="#_cmdMove">_cmdMove</a><span class="parameters">()</span></li><li class="functionIcon public  even"><a class="inline-link" href="#clear">clear</a><span class="parameters">()</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#constructor">constructor</a><span class="parameters">(model, args)</span></li><li class="functionIcon public  even"><a class="inline-link" href="#insert">insert</a><span class="parameters">(dataArray, prevItem, nextItem)</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#move">move</a><span class="parameters">(start, count, target)</span></li><li class="functionIcon public  even"><a class="inline-link" href="#moveIndexes">moveIndexes</a><span class="parameters">(indexes, target)</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#updateStore">updateStore</a><span class="parameters">(finishDef, moves, map)</span> <span>Do the actual moving work here, that is to change the moveField of moved rows.
+	User can overwrite this function to provide customized logic.
+	Here a default implementation is provided. This implementation requires the
+	moveField is a field of number type, and it can accept any number. In other words,
+	this moveField is just a field to indicate row order without any other meanings.
+	This default implementation tries to reduce the overall requests sent to store,
+	because the current store implementation sends a separate PUT command to store for every
+	single item one by one.
+	
+	Note: this is more like a public attribute rather than a public method, because users
+	should assign a value to is rather can directly call it.</span></li></ul></div><h2 class="jsdoc-summary-heading">Attached Objects <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><div class="jsdoc-field"><div class="jsdoc-title"><span class="object"><a class="jsdoc-link" href="../../../../gridx/core/model/extensions/Move/model.html">gridx.core.model.extensions.Move.model</a></span></div></div></div></div></div><div class="jsdoc-children"><div class="jsdoc-fields"><h2>Properties</h2><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="model"></a><span class="objectIcon">model</span></div><div class="jsdoc-inheritance">Overrides _Extension</div></div><h2>Methods</h2><div class="jsdoc-field private  odd"><div class="jsdoc-title"><a name="_cmdMove"></a><span class="functionIcon">_cmdMove</span></div><div class="jsdoc-inheritance">Overrides _Extension</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="clear"></a><span class="functionIcon">clear</span></div><div class="jsdoc-inheritance">Overrides _Extension</div></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="constructor"></a><span class="functionIcon">constructor</span></div><div class="jsdoc-inheritance">Overrides _Extension</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">model</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">args</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="insert"></a><span class="functionIcon">insert</span></div><div class="jsdoc-inheritance">Overrides _Extension</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">dataArray</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">prevItem</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">nextItem</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="move"></a><span class="functionIcon">move</span></div><div class="jsdoc-inheritance">Overrides _Extension</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">start</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">count</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">target</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="moveIndexes"></a><span class="functionIcon">moveIndexes</span></div><div class="jsdoc-inheritance">Overrides _Extension</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">indexes</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">target</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="updateStore"></a><span class="functionIcon">updateStore</span></div><div class="jsdoc-inheritance">Overrides _Extension</div><div class="jsdoc-summary">Do the actual moving work here, that is to change the moveField of moved rows.
+	User can overwrite this function to provide customized logic.
+	Here a default implementation is provided. This implementation requires the
+	moveField is a field of number type, and it can accept any number. In other words,
+	this moveField is just a field to indicate row order without any other meanings.
+	This default implementation tries to reduce the overall requests sent to store,
+	because the current store implementation sends a separate PUT command to store for every
+	single item one by one.
+	
+	Note: this is more like a public attribute rather than a public method, because users
+	should assign a value to is rather can directly call it.</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">finishDef</td><td class="jsdoc-param-type">dojo.Deferred</td><td class="jsdoc-param-description">A Deferred object to indicate when the update is finished. finishDef.callback() or finishDef.errback()
+	must be called in this function, otherwise the grid will break.</td></tr><tr><td class="jsdoc-param-name">moves</td><td class="jsdoc-param-type">Array</td><td class="jsdoc-param-description">This is an array of arrays. Each element is an array of 3 numbers: startIndex, rowCount, targetIndex.
+	These numbers represents a single movement operation, which has the following semantic:
+	&quot;rowCount&quot; rows from index &quot;startIndex&quot; are moved to index &quot;targetIndex&quot;
+	These movement operations take place in the given order, so the index in later movement is different from
+	those in the previous movement, since it is based on the result of the previous movement.</td></tr><tr><td class="jsdoc-param-name">map</td><td class="jsdoc-param-type">Association</td><td class="jsdoc-param-description">array
+	An index mapping from the original indexes to the new indexes. This map is generated from the &quot;moves&quot; argument,
+	so it has exactly the same information as &quot;moves&quot;. But it is pre-processed to reflect the final index mapping
+	after all these movements are done, so it might be easier to use.</td></tr></table></div></div></div>
+        </div>
+       </div>
+      </div>
+  </div>
+</body>
+</html>
