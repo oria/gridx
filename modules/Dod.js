@@ -67,7 +67,7 @@ define([
 			// return: dojo.Deferred.
 			//		A deferred object indicating when the detail is completely shown.
 			var _row = this._row(row);
-			if(_row.dodShown || _row.inAnim){return;}
+			if(_row.dodShown || _row.inAnim || !row.node()){return;}
 			
 			_row.dodShown = true;
 			this._getExpando(row).firstChild.innerHTML = '-';
@@ -115,7 +115,7 @@ define([
 			// return: dojo.Deferred.
 			//		A deferred object indicating when the detail is completely hidden.
 			var _row = this._row(row), g = this.grid;
-			if(!_row.dodShown || _row.inAnim){return;}
+			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
 			this._getExpando(row).firstChild.innerHTML = '+';
