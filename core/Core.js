@@ -233,7 +233,10 @@ define([
 			//		Change the store for grid.
 			// store: dojo.data.*|dojox.data.*|dojo.store.*
 			//		The new data store
-			this.model.setStore(store);
+			if(this.store != store){
+				this.store = store;
+				this.model.setStore(store);
+			}
 		},
 
 		

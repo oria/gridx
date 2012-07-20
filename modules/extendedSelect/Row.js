@@ -103,8 +103,12 @@ define([
 		clear: function(silent){
 			// summary:
 			//		Deselected all selected rows;			
-			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
+			query(".gridxRowSelected", this.grid.mainNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowSelected');
+				node.removeAttribute('aria-selected');
+			});
+			query(".gridxRowPartialSelected", this.grid.mainNode).forEach(function(node){
+				domClass.remove(node, 'gridxRowPartialSelected');
 			});
 			this._clear();
 			this.model.clearMark();
@@ -200,12 +204,15 @@ define([
 
 		_onMark: function(id, toMark, oldState, type){
 			if(type == 'select'){
-				var node = query('[rowid="' + id + '"]', this.grid.bodyNode)[0];
-				if(node){
-					var selected = toMark && toMark != 'mixed';
-					domClass.toggle(node, 'gridxRowSelected', selected);
-					domClass.toggle(node, 'gridxRowPartialSelected', toMark == 'mixed');
-					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toMark);
+				var nodes = query('[rowid="' + id + '"]', this.grid.mainNode);
+				if(nodes.length){
+					nodes.forEach(function(node){
+						var selected = toMark && toMark != 'mixed';
+						domClass.toggle(node, 'gridxRowSelected', selected);
+						domClass.toggle(node, 'gridxRowPartialSelected', toMark == 'mixed');
+						node.setAttribute('aria-selected', !!selected);
+					});
+					this.onHighlightChange({row: parseInt(nodes[0].getAttribute('visualindex'), 10)}, toMark);
 				}
 			}
 		},
@@ -242,7 +249,7 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			query('[visualindex="' + target.row + '"]', this.grid.bodyNode).forEach(function(node){
+			query('[visualindex="' + target.row + '"]', this.grid.mainNode).forEach(function(node){
 				domClass.toggle(node, 'gridxRowSelected', toHighlight);
 				node.setAttribute('aria-selected', !!toHighlight);
 			});

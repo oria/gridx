@@ -58,6 +58,7 @@ define([
 		},
 
 		setStore: function(store){
+			this.store = store;
 			this._cache.setStore(store);
 		},
 	

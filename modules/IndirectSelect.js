@@ -78,10 +78,12 @@ define([
 
 		_createCheckBox: function(selected, partial){
 			var dijitClass = this._getDijitClass();
-			return ['<span class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
+			return ['<span role="', this._isSingle() ? 'radio' : 'checkbox',
+				'" class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
 				dijitClass, ' ',
 				selected ? dijitClass + 'Checked' : '',
 				partial ? dijitClass + 'Partial' : '',
+				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
 				'"><span class="gridxIndirectSelectionCheckBoxInner">',
 				selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;',
 				'</span></span>'
@@ -107,10 +109,12 @@ define([
 			var node = query('[visualindex="' + target.row + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
 			if(node){
 				var dijitClass = this._getDijitClass(),
-					selected = toHighlight && toHighlight != 'mixed'; 
+					partial = toHighlight == 'mixed',
+					selected = toHighlight && !partial;
 				domClass.toggle(node, dijitClass + 'Checked', selected);
-				domClass.toggle(node, dijitClass + 'Partial', toHighlight == 'mixed');
-				node.firstChild.innerHTML = selected ? '&#10003;' : toHighlight == 'mixed' ? '&#9646;' : '&#9744;';
+				domClass.toggle(node, dijitClass + 'Partial', partial);
+				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
+				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
 			}
 		},
 
@@ -179,6 +183,7 @@ define([
 				t._allSelected[t._getPageId()] = allSelected;
 				var node = t.grid.rowHeader.headerCellNode.firstChild;
 				domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+				node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
 			});
 		},
 
