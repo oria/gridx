@@ -166,6 +166,11 @@ define([
 			var ac = this._accordionContainer, len = ac.getChildren().length;
 			ac.domNode.style.height = 145 + len * this._titlePaneHeight + 'px';
 			ac.resize();
+		},
+		uninitialize: function(){
+			console.log('bbb');
+			this.inherited(arguments);
 		}
+		
 	});
 });

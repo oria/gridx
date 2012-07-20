@@ -549,10 +549,11 @@ define([
 		_doBlur: function(){
 			return true;
 		},
-		
 		destroy: function(){
+			this._filterDialog && this._filterDialog.destroy();
 			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}
+		
 	});
 });
