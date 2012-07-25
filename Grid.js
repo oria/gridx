@@ -59,6 +59,7 @@ define([
 
 		coreExtensions: [
 			//Put default extensions here!
+			Query
 		],
 	
 		postCreate: function(){
