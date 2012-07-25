@@ -455,11 +455,6 @@ define([
 				editor = widget.gridCellEditField;
 			if(editor && column.alwaysEditing){
 				widget.connect(editor, 'onChange', function(){
-					//If this onChange is due to initialization, ignore it
-					if(widget.isInit){
-						widget.isInit = 0;
-						return;
-					}
 					var rn = widget.domNode.parentNode;
 					while(rn && !domClass.contains(rn, 'gridxRow')){
 						rn = rn.parentNode;
