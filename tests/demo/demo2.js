@@ -20,11 +20,13 @@ require([
 	'gridx/Grid',
 	'gridx/allModules',
 	'gridx/core/model/cache/Sync',
-	'dojo/domReady!',
+	'gridx/core/model/cache/Async',
 	'dojo/NodeList-manipulate',
 	'dijit/form/TextBox',
 	'dijit/form/NumberSpinner',
-	'dijit/form/NumberTextBox'
+	'dijit/form/Select',
+	'dijit/form/NumberTextBox',
+	'dojo/domReady!'
 ], function(require, ready, parser, lang, query, array, DeferredList,
 	dom, domConstruct, domGeo, domClass, domStyle,
 	registry, ColumnBar, modules, attrs, data,
@@ -60,6 +62,7 @@ Store, Grid){
 	query('.storeConfigBtn', 'listOrTree').on('click', function(){
 		query('.storeConfigBtnSelected', 'listOrTree').removeClass('storeConfigBtnSelected');
 		domClass.add(this, 'storeConfigBtnSelected');
+		dom.byId('treeDataConfig').style.height = this.id == 'treeDataBtn' ? '80px' : '0';
 	});
 	query('#storeConfig .closeConfig').on('click', storeSummary);
 	query('#columnsConfig .closeConfig').on('click', columnsSummary);
@@ -266,7 +269,7 @@ Store, Grid){
 			columnName: colProps.name || 'New Column',
 			columnField: colProps.field || 'name',
 			columnWidth: colProps.width,
-			fields: ['name', 'id', 'server', 'platform', 'status', 'progress'],
+			fields: data.fields,
 			onAdd: function(){
 				addColumnBar(this);
 			},
@@ -397,7 +400,9 @@ Store, Grid){
 				(attr.mod && array.indexOf(coreMods, attr.mod) < 0) ? 'attributeItemDisabled' : '',
 				"' data-attr-mod='", attr.mod,
 				"' data-attr-name='", attr.label, 
-				"'><table><tbody><tr><td>",
+				"'><table><tbody><tr><td style='width: 200px; text-align: center;'>",
+				"<span>", attr.mod, "</span><span>", attr._name, "</span>",
+				"</td><td>",
 				boolBtn(attr.value),
 				"</td><td>",
 				"<div class='attributeBoolItemDesc'>", attr.unitPost, "</div>",
@@ -422,14 +427,16 @@ Store, Grid){
 				(attr.mod && array.indexOf(coreMods, attr.mod) < 0) ? 'attributeItemDisabled' : '',
 				"' data-attr-mod='", attr.mod,
 				"' data-attr-name='", attr.label, 
-				"'>", attr.unitPre,
+				"'><table><tbody><tr><td style='width: 200px; text-align: center;'>",
+				"<span class='attributeItemMod'>", attr.mod, "</span><span class='attributeItemName'>", attr._name, "</span>",
+				"</td><td>", attr.unitPre,
 				{
 					spinner: "<span class='attributeNumberInput' data-dojo-type='dijit/form/NumberSpinner'",
 					numberTextBox: "<span class='attributeNumberInput' data-dojo-type='dijit/form/NumberTextbox'"
 				}[attr.editor],
 				" data-dojo-props='value: ", attr.value, "'></span>",
 				attr.unitPost,
-			"</div>"].join('');
+			"</td></tr></tbody></table></div>"].join('');
 		}).join('');
 		parser.parse(dom.byId('attributesNumberInner'));
 		setTimeout(function(){
@@ -470,6 +477,7 @@ Store, Grid){
 		array.forEach(mod.deps, function(dep){
 			if(!query('[data-mod-name="' + dep + '"].moduleItem', 'modulesLoaded').length){
 				var n = query('[data-mod-name="' + dep + '"].moduleItem', 'modulesAvailable')[0];
+				domClass.remove(n, 'moduleItemHidden');
 				if(n){
 					useModule(n);
 				}
@@ -496,9 +504,21 @@ Store, Grid){
 
 	function createStore(){
 		var rowCount = registry.byId('rowCountInput').get('value');
-		return new Store({
-			data: data(rowCount).items
+		var isList = domClass.contains('listDataBtn', 'storeConfigBtnSelected');
+		var maxLevel = parseInt(registry.byId('levelInput').get('value'), 10);
+		var maxChildrenCount = registry.byId('childrenCountInput').get('value');
+		var store = new Store({
+			data: !isList ? data(rowCount, maxLevel, maxChildrenCount).items : data(rowCount).items
 		});
+		if(!isList){
+			store.hasChildren = function(id, item){
+				return item.children && item.children.length;
+			};
+			store.getChildren = function(item){
+				return item.children || [];
+			};
+		}
+		return store;
 	}
 	function gatherColumns(){
 		var cols = query('.columnBar', 'columnsContainer').map(function(columnBarNode){
@@ -524,13 +544,15 @@ Store, Grid){
 	function createGrid(){
 		if(grid){
 			grid.destroy();
+			console.log('destroy ok');
 		}
 		var store = createStore();
 		var columns = gatherColumns();
 		var mods = gatherModules();
 		var attributes = gatherAttributes();
+		var isClient = domClass.contains('clientStoreBtn', 'storeConfigBtnSelected');
 		var cfg = {
-			cacheClass: 'gridx/core/model/cache/Sync',
+			cacheClass: isClient ? 'gridx/core/model/cache/Sync' : 'gridx/core/model/cache/Async',
 			store: store,
 			structure: columns,
 			modules: array.map(mods, function(mod){
@@ -540,6 +562,7 @@ Store, Grid){
 		array.forEach(attributes, function(attr){
 			cfg[attr.label] = attr.curValue;
 		});
+		console.log(cfg);
 		grid = new Grid(cfg);
 		grid.placeAt('gridContainer');
 		grid.startup();
@@ -691,22 +714,21 @@ Store, Grid){
 	}
 
 	addColumnBar(null, {
-		field: 'id',
-		name: 'ID',
-		width: [50, 'px']
-	});
-	addColumnBar(null, {
 		field: 'name',
 		name: 'Name',
 		width: [50, 'percent']
 	});
 	addColumnBar(null, {
-		field: 'server',
-		name: 'Server'
+		field: 'genre',
+		name: 'Genre'
 	});
 	addColumnBar(null, {
-		field: 'status',
-		name: 'Status'
+		field: 'composer',
+		name: 'Composer'
+	});
+	addColumnBar(null, {
+		field: 'year',
+		name: 'Year'
 	});
 
 	loadModules();

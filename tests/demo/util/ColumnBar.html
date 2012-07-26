@@ -18,6 +18,7 @@
 			class='columnBarBasicAttr'
 			data-dojo-type='dijit.form.Select'
 			data-dojo-props='options: [{lable: "", value: "empty"}]'
+			data-dojo-attach-event='onChange: onFieldChange'
 		></select
 		><div class='columnBarBasicLabel'>width:</div
 		><div class='columnBarBasicAttr columnBarWidthAttr'
@@ -36,7 +37,13 @@
 			></select
 		></div
 	></div
-	><div data-dojo-attach-point='columnBarFeatures'></div
+	><div class='columnBarFeatures' data-dojo-attach-point='columnBarFeatures'
+		><div class='columnBarFeature columnBarFeatureSortable'>not sortable</div
+		><div class='columnBarFeature columnBarFeatureFilterable'>not filterable</div
+		><div class='columnBarFeature columnBarFeatureEditable'>editable</div
+		><div class='columnBarFeature columnBarFeatureAlwaysEditing'>always editing</div
+		><div class='columnBarFeature columnBarFeatureEditor'>custom editor</div
+	></div
 	><div class='columnBarBtns'
 		><div class='columnBarBtn columnBarEditBtn' data-dojo-attach-event='onclick: onEdit'></div
 		><div class='columnBarBtn columnBarAddBtn' data-dojo-attach-event='onclick: onAdd'></div
@@ -54,7 +61,7 @@
 						class='columnBarEditInput'
 						data-dojo-attach-point='sortableBox'
 						data-dojo-type='dijit.form.CheckBox'
-						data-dojo-attach-event='onInput: onAttrChange'
+						data-dojo-attach-event='onInput: onSortableChange'
 						data-dojo-props='
 							checked: true
 						'/></td>
@@ -64,7 +71,7 @@
 						class='columnBarEditInput'
 						data-dojo-attach-point='filterableBox'
 						data-dojo-type='dijit.form.CheckBox'
-						data-dojo-attach-event='onChange: onAttrChange'
+						data-dojo-attach-event='onChange: onFilterableChange'
 						data-dojo-props='
 							checked: true
 						'/></td>
@@ -74,7 +81,7 @@
 						class='columnBarEditInput'
 						data-dojo-attach-point='editableBox'
 						data-dojo-type='dijit.form.CheckBox'
-						data-dojo-attach-event='onChange: onAttrChange'
+						data-dojo-attach-event='onChange: onEditableChange'
 						/></td>
 				</tr><tr>
 					<td class='columnAttrLabel'>alwaysEditing</td>
@@ -82,7 +89,7 @@
 						class='columnBarEditInput'
 						data-dojo-attach-point='alwaysEditingBox'
 						data-dojo-type='dijit.form.CheckBox'
-						data-dojo-attach-event='onChange: onAttrChange'
+						data-dojo-attach-event='onChange: onAlwaysEditChange'
 						/></td>
 				</tr><tr>
 					<td class='columnAttrLabel'>editor</td>
@@ -90,9 +97,9 @@
 							class='columnBarEditInput'
 							data-dojo-attach-point='editorBox'
 							data-dojo-type='dijit.form.Select'
-							data-dojo-attach-event='onChange: onAttrChange'
-						><option value='empty'>TextBox</option
-						><option value='dijit/form/NumberTextBox' selected='true'>NumberTextBox</option
+							data-dojo-attach-event='onChange: onEditorChange'
+						><option value='empty' selected='true'>TextBox</option
+						><option value='dijit/form/NumberTextBox'>NumberTextBox</option
 						><option value='dijit/form/DateTextBox'>DateTextBox</option
 						><option value='dijit/form/TimeTextBox'>TimeTextBox</option
 						><option value='dijit/Editor'>Editor</option

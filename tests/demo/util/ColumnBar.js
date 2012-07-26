@@ -2,14 +2,16 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/query',
 	'dojo/_base/array',
+	'dojo/dom-class',
 	'dijit/registry',
 	'dijit/_WidgetBase',
 	'dijit/_TemplatedMixin',
 	'dijit/_WidgetsInTemplateMixin',
 	'dojo/text!./ColumnBar.html',
 	'dijit/DialogUnderlay',
+	'dijit/form/CheckBox',
 	'dijit/form/TextBox'
-], function(declare, query, array, registry, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, DialogUnderlay){
+], function(declare, query, array, domClass, registry, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, template, DialogUnderlay, CheckBox){
 	if(!DialogUnderlay._singleton){
 		DialogUnderlay._singleton = new DialogUnderlay({});
 	}
@@ -26,6 +28,8 @@ define([
 		columnIndex: 0,
 
 		templateString: template,
+
+		idField: 'id',
 
 		fieldOptions: '[]',
 
@@ -52,6 +56,26 @@ define([
 				}, 0);
 			}
 			document.body.appendChild(this.editPane);
+			query('.columnBarEditInput', this.editPane).forEach(function(node){
+				var editor = registry.byNode(node);
+				editor.editorDefaultValue = editor.get('value');
+			});
+		},
+
+		onFieldChange: function(){
+			var readOnly = this.fieldNode.get('value') == this.idField || this.fieldNode.get('value') == 'empty';
+			if(readOnly){
+				this.editableBox.set('checked', false);
+			}
+			this.editableBox.set('disabled', readOnly);
+			if(readOnly){
+				this.alwaysEditingBox.set('checked', false);
+			}
+			this.alwaysEditingBox.set('disabled', readOnly);
+			if(readOnly){
+				this.editorBox.set('value', 'empty');
+			}
+			this.editorBox.set('disabled', readOnly);
 		},
 
 		setIndex: function(index){
@@ -70,8 +94,14 @@ define([
 			};
 			query('.columnBarEditUsedAttr .columnBarEditInput', this.editPane).forEach(function(node){
 				var editor = registry.byNode(node);
-				ret[node.parentNode.getAttribute('columnAttr')] = editor.get('value');
+				var attr = node.parentNode.getAttribute('columnAttr');
+				if(editor instanceof CheckBox){
+					ret[attr] = editor.get('checked');
+				}else{
+					ret[attr] = editor.get('value');
+				}
 			});
+			console.log(ret);
 			return ret;
 		},
 
@@ -105,8 +135,25 @@ define([
 		onDelete: function(){
 		},
 
-		onAttrChange: function(){
-			console.log(this);
+		onSortableChange: function(){
+			this.onAttrChange(this.sortableBox, 'Sortable');
+		},
+		onFilterableChange: function(){
+			this.onAttrChange(this.filterableBox, 'Filterable');
+		},
+		onEditableChange: function(){
+			this.onAttrChange(this.editableBox, 'Editable');
+		},
+		onAlwaysEditChange: function(){
+			this.onAttrChange(this.alwaysEditingBox, 'AlwaysEdting');
+		},
+		onEditorChange: function(){
+			this.onAttrChange(this.editorBox, 'Editor');
+		},
+		onAttrChange: function(widget, featureName){
+			var toUse = widget.editorDefaultValue != widget.get('value');
+			domClass.toggle(widget.domNode.parentNode.parentNode, 'columnBarEditUsedAttr', toUse);
+			query('.columnBarFeature' + featureName, this.columnBarFeatures).toggleClass('columnBarFeatureUsed', toUse);
 		}
 	});
 });

@@ -30,11 +30,13 @@
 .columnBarBasic {
 	padding: 15px 0 0 60px;
 	position: relative;
+	height: 35px;
 }
 
 .columnBarBasicLabel {
 	float: left;
-	font-size: 20px;
+	font-size: 16px;
+	font-weight: bolder;
 	padding: 0 5px;
 }
 
@@ -116,6 +118,10 @@
 .columnBarEditTable {
 	width: 100%;
 	margin: 0 0 50px 0;
+	border-collapse: collapse;
+}
+.columnBarEditTable td {
+	border: none;
 }
 .columnBarEditTable .columnAttrLabel {
 	padding: 10px;
@@ -132,4 +138,20 @@
 	font-weight: bolder;
 	text-shadow: 1px 1px 1px #fff;
 	color: #555;
+}
+.columnBarEditUsedAttr {
+	background-color: #ccffff;
+}
+.columnBarFeatures {
+	padding-left: 70px;
+}
+.columnBarFeature {
+	display: none;
+	padding: 0 3px;
+	margin: 0 5px;
+	border: 1px solid #aaa;
+	background-color: #ccffff;
+}
+.columnBarFeatureUsed {
+    display: inline-block;
 }

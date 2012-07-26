@@ -5,6 +5,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="demo2.css" />
 	<style type="text/css">
+
 		.gridx {
 			width: 900px;
 			height: 570px;
@@ -76,10 +77,28 @@
 					><div id='listDataBtn' class='storeConfigBtn storeConfigBtnSelected'>List Data</div
 					><div id='treeDataBtn' class='storeConfigBtn'>Hierarchical Data</div
 				></div>
+				<div id='treeDataConfig'>
+					<div>
+						<label>Max Level</label>
+						<select id='levelInput' data-dojo-type='dijit/form/Select'>
+							<option value='1'>1</option>
+							<option value='2' selected='true'>2</option>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+						</select>
+					</div>
+					<div style='margin-top: 10px;'>
+						<label for='childrenCountInput'>Max Children Count</label>
+						<input id='childrenCountInput' data-dojo-type='dijit/form/NumberSpinner'
+							data-dojo-props='constraints: {min: 0}, value: 10'
+						/>
+					</div>
+				</div>
 				<div id='rowCountConfig'>
+					<label for='rowCountInput'>Row Count</label>
 					<input id='rowCountInput' data-dojo-type='dijit/form/NumberSpinner'
 						data-dojo-props='constraints: {min: 0}, value: 100'
-					/><label for='rowCountInput'>rows</label>
+					/>
 				</div>
 				<div class='closeConfig'>OK</div>
 			</div>

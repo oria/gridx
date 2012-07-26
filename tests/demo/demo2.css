@@ -1,5 +1,5 @@
 @import "../../../dijit/themes/claro/claro.css";
-/*@import "../../../dijit/themes/claro/document.css";*/
+@import "../../../dijit/themes/claro/document.css";
 @import "../../resources/claro/Gridx.css";
 @import "../../resources/claro/Gridx_rtl.css";
 @import 'util/ColumnBar.css';
@@ -193,7 +193,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1da36', end
 	border-left: 2px solid #aaa;
 }
 .codeContainerInner {
-	height: 465px;
+	height: 463px;
 	overflow: auto;
 }
 #jscodeContainer,
@@ -507,6 +507,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 /* store config */
 #clientOrServer,
 #listOrTree,
+#treeDataConfig,
 #rowCountConfig {
 	width: 400px;
 	margin: 20px auto;
@@ -516,10 +517,23 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 #clientOrServer {
 	margin-top: 180px;
 }
+#treeDataConfig {
+	overflow: hidden;
+	-moz-transition: height 0.5s ease;
+	-webkit-transition: height 0.5s ease;
+	transition: height 0.5s ease;
+	height: 0;
+}
+#treeDataConfig label,
 #rowCountConfig label {
 	font-size: 20px;
 	margin-left: 10px;
 }
+#treeDataConfig .dijitSpinner,
+#rowCountConfig .dijitSpinner {
+	width: 100px;
+}
+
 .storeConfigBtn {
 	display: inline-block;
 	width: 50%;
@@ -942,7 +956,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	width: 600px;
 	padding: 5px 10px;
 	margin: 3px;
-	font-size: 15px;
 }
 .attributeNumberInput {
 	width: 50px;
