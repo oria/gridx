@@ -101,7 +101,6 @@ define([
 					ret[attr] = editor.get('value');
 				}
 			});
-			console.log(ret);
 			return ret;
 		},
 

@@ -129,11 +129,11 @@ Store, Grid){
 	});
 	query('#columnsContainer').on('mousedown', function(e){
 		var n = e.target;
+		if(domClass.contains(n, 'columnBarBasic') || domClass.contains(n, 'columnBarIndex')){
+			n = n.parentNode;
+		}
 		if(!domClass.contains(n, 'columnBar')){
 			while(n && !domClass.contains(n, 'columnBarIndex')){
-				n = n.parentNode;
-			}
-			if(n){
 				n = n.parentNode;
 			}
 		}
@@ -203,14 +203,16 @@ Store, Grid){
 			delete container._dndReady;
 			delete container._dnd;
 			var pad = query('.betweenColumnsBarExpanded', 'columnsContainer').removeClass('betweenColumnsBarExpanded')[0];
-			pad.style.height = '';
-			container._dndColNode.style.top = '';
-			domConstruct.place(container._dndColNode, pad, 'after');
-			domConstruct.place(container._pad, container._dndColNode, 'after');
-			domClass.remove(container._dndColNode, 'columnBarDnD');
-			domClass.remove(container, 'columnDnD');
-			dom.setSelectable('columnsConfig', true);
-			updateColumnIdx();
+			if(pad){
+				pad.style.height = '';
+				container._dndColNode.style.top = '';
+				domConstruct.place(container._dndColNode, pad, 'after');
+				domConstruct.place(container._pad, container._dndColNode, 'after');
+				domClass.remove(container._dndColNode, 'columnBarDnD');
+				domClass.remove(container, 'columnDnD');
+				dom.setSelectable('columnsConfig', true);
+				updateColumnIdx();
+			}
 		}
 	});
 	colScrollHandler = null;
@@ -543,7 +545,12 @@ Store, Grid){
 	grid = null;
 	function createGrid(){
 		if(grid){
+			try{
 			grid.destroy();
+			}catch(e){
+				alert(e);
+				console.error(e);
+			}
 			console.log('destroy ok');
 		}
 		var store = createStore();
@@ -712,6 +719,30 @@ Store, Grid){
 		});
 
 	}
+	function initialClip(){
+		var clip = new ZeroClipboard.Client();
+		clip.setText(''); // will be set later on mouseDown
+		clip.setHandCursor(true);
+		clip.setCSSEffects(true);
+		clip.addEventListener('mouseOver', function(client){
+			domClass.add(dom.byId('clipBtn'), 'clipBtnHover');
+		});
+		clip.addEventListener('mouseOut', function(client){
+			domClass.remove(dom.byId('clipBtn'), 'clipBtnHover');
+		});
+		clip.addEventListener('mouseDown', function(client){
+			domClass.add(dom.byId('clipBtn'), 'clipBtnDown');
+			if(domClass.contains(dom.byId('jscodeContainer'), 'codeHidden')){
+				clip.setText(dom.byId('htmlcode').innerHTML);
+			}else{
+				clip.setText(dom.byId('jscode').innerHTML);
+			}
+		});
+		clip.addEventListener('mouseUp', function(client){
+			domClass.remove(dom.byId('clipBtn'), 'clipBtnDown');
+		});
+		clip.glue('clipBtn');
+	}
 
 	addColumnBar(null, {
 		field: 'name',
@@ -747,6 +778,7 @@ Store, Grid){
 	});
 
 	ready(function(){
+		initialClip();
 		storeSummary();
 		columnsSummary();
 		modulesSummary();
@@ -776,4 +808,5 @@ Store, Grid){
 		});
 
 	});
+
 });
