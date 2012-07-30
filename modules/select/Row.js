@@ -131,12 +131,12 @@ define([
 			t.batchConnect(
 				[g, 'onRowMouseDown', function(e){
 					if(t.arg('triggerOnCell') || !e.columnId){
-						t._select(e.rowId, e.ctrlKey);
+						t._select(e.rowId, g._isCopyEvent(e));
 					}
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
-						t._select(e.rowId, e.ctrlKey);
+						t._select(e.rowId, g._isCopyEvent(e));
 					}
 				}]);
 		},

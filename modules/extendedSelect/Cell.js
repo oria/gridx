@@ -199,7 +199,7 @@ define([
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
 					if(mouse.isLeft(e)){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 					}
 				}],
 				[g, 'onCellMouseOver', function(e){
@@ -207,7 +207,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
 				}]
@@ -255,7 +255,7 @@ define([
 				var t = this,
 					rid = t._getRowId(rowVisIndex),
 					cid = t.grid._columns[colIndex].id;
-				t._start(createItem(rid, rowVisIndex, cid, colIndex), e.ctrlKey, 1);	//1 as true
+				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
 				t._end();
 			}
 		},

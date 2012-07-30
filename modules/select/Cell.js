@@ -133,15 +133,16 @@ define([
 		},
 
 		_init: function(){
-			var t = this;
+			var t = this,
+				g = t.grid;
 			t.inherited(arguments);
 			t.batchConnect(
-				[t.grid, 'onCellMouseDown', function(e){
-					t._select([e.rowId, e.columnId], e.ctrlKey);
+				[g, 'onCellMouseDown', function(e){
+					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 				}],
-				[t.grid, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE){
-						t._select([e.rowId, e.columnId], e.ctrlKey);
+						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 					}
 				}]);
 		},
