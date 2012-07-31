@@ -282,6 +282,11 @@ define([
 				if(current === null){
 					//First time select.
 					t._highlightSingle(target, 1);	//1 as true
+					//In IE, when setSelectable(false), the onfocusin event will not fire on doc, so the focus border is gone.
+					//So refocus it here.
+					if(sniff('ie')){
+						t._focus(target);
+					}
 				}else{
 					var start = t._startItem,
 						highlight = function(from, to, toHL){
