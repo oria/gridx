@@ -444,16 +444,17 @@ Store, Grid){
 		setTimeout(function(){
 			query('.attributeNumberInput', 'attributesNumberInner').forEach(function(n){
 				var valueBox = registry.byNode(n);
-				var attr = attrsByName[n.parentNode.getAttribute('data-attr-name')];
+				var attrNode = n.parentNode.parentNode.parentNode.parentNode.parentNode;
+				var attr = attrsByName[attrNode.getAttribute('data-attr-name')];
 				valueBox.connect(valueBox, 'onChange', function(){
 					setTimeout(function(){
-						domClass.toggle(n.parentNode, 'attributeItemUsed', valueBox.get('value') != attr.value);
+						domClass.toggle(attrNode, 'attributeItemUsed', valueBox.get('value') != attr.value);
 						attr.curValue = valueBox.get('value');
 					}, 10);
 				});
 				valueBox.connect(valueBox, 'onInput', function(){
 					setTimeout(function(){
-						domClass.toggle(n.parentNode, 'attributeItemUsed', valueBox.get('value') != attr.value);
+						domClass.toggle(attrNode, 'attributeItemUsed', valueBox.get('value') != attr.value);
 						attr.curValue = valueBox.get('value');
 					}, 10);
 				});

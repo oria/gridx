@@ -289,9 +289,9 @@ define([
 			var t = this,
 				id = t.store.getIdentity(item),
 				index = t.idToIndex(id),
-				path = t.treePath(id);
+				path = t.treePath(id),
+				old = t._cache[id];
 			if(path.length){
-				var old = t._cache[id];
 				t._addRow(id, index, t._itemToObject(item), item, path.pop());
 			}
 			t.onSet(id, index, t._cache[id], old);

@@ -164,7 +164,7 @@ define([
 				g = t.grid,
 				columns = g._columns,
 				body = g.body,
-				i, j, col, type;
+				i, j, col, type, rowInfo;
 			array.forEach(args, function(arg){
 				if(arg._range){
 					var a = Math.min(arg[0], arg[2]),
@@ -175,18 +175,20 @@ define([
 					for(i = c1; i <= c2; ++i){
 						col = columns[i];
 						if(col){
-							a = body.getRowInfo({visualIndex: a}).rowIndex;
+							rowInfo = body.getRowInfo({visualIndex: a});
+							a = rowInfo.rowIndex;
 							type = t._getMarkType(col.id);
 							for(j = 0; j < n; ++j){
-								m.markByIndex(j, toSelect, type);
+								m.markByIndex(a + j, toSelect, type, rowInfo.parentId);
 							}
 						}
 					}
 				}else{
 					col = columns[arg[1]];
 					if(col){
-						i = body.getRowInfo({visualIndex: arg[0]}).rowIndex;
-						m.markByIndex(i, toSelect, t._getMarkType(col.id));
+						rowInfo = body.getRowInfo({visualIndex: arg[0]});
+						i = rowInfo.rowIndex;
+						m.markByIndex(i, toSelect, t._getMarkType(col.id), rowInfo.parentId);
 					}
 				}
 			});
