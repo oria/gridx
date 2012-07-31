@@ -3,6 +3,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
+	"dojo/sniff",
 	"dojo/on",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
@@ -22,7 +23,7 @@ define([
 	"./modules/VScroller",
 	"./modules/HScroller",
 	"./modules/ColumnWidth"
-], function(kernel, declare, array, lang, on, domClass, domGeometry, query, metrics,
+], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
 
@@ -176,8 +177,15 @@ define([
 	
 		_isConnected: function(eventName){
 			return this[eventName] !== dummyFunc;
-		}
+		},
 		//event handling end
+
+		_isCopyEvent: function(evt){
+			// summary:
+			//		On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
+			//		if you need to implement some handler for Ctrl+click.
+			return has('mac') ? evt.metaKey : evt.ctrlKey;
+		}
 	});
 
 	Grid.markupFactory = function(props, node, ctor){

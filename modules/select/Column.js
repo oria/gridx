@@ -122,16 +122,17 @@ define([
 		_type: 'column',
 
 		_init: function(){
-			var t = this;
+			var t = this,
+				g = t.grid;
 			t.batchConnect(
-				[t.grid, 'onHeaderCellClick', function(e){
+				[g, 'onHeaderCellClick', function(e){
 					if(!domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._select(e.columnId, e.ctrlKey);
+						t._select(e.columnId, g._isCopyEvent(e));
 					}
 				}],
-				[t.grid, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
-						t._select(e.columnId, e.ctrlKey);
+						t._select(e.columnId, g._isCopyEvent(e));
 					}
 				}]
 			);

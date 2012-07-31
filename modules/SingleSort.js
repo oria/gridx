@@ -218,7 +218,7 @@ define([
 				isDescending ? 'gridxSortDown' : 'gridxSortUp',
 				"'><div class='gridxArrowButtonChar'>",
 				isDescending ? "&#9662;" : "&#9652;",
-				"</div><div role='presentation' class='gridxArrowButtonNode'></div><div class='gridxColCaption'>",
+				"</div><div role='presentation' class='gridxArrowButtonNode'>&nbsp;</div><div class='gridxColCaption'>",
 				g.column(colId, 1).name(),	//1 as true
 				"</div></div>"
 			].join('');

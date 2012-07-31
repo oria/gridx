@@ -598,8 +598,10 @@ define([
 		},
 
 		_doBlur: function(evt, step){
-			var t = this, g = t.grid, body = g.body;
-			if(t._editing){
+			var t = this,
+				g = t.grid,
+				body = g.body;
+			if(t._editing && step){
 				var rowIndex = body.getRowInfo({
 						parentId: t.model.treePath(t._focusCellRow).pop(), 
 						rowIndex: t.model.idToIndex(t._focusCellRow)
