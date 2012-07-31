@@ -1,5 +1,4 @@
 define([
-	"require",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
@@ -10,11 +9,10 @@ define([
 	"./Column",
 	"./Cell",
 	"./_Module"
-], function(require, declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
+], function(declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
 
 	var delegate = lang.delegate,
 		isFunc = lang.isFunction,
-		isString = lang.isString,
 		hitch = lang.hitch,
 		forEach = array.forEach;
 
@@ -79,27 +77,19 @@ define([
 		var mods = [],
 			coreModCount = coreMods && coreMods.length || 0;
 		forEach(args.modules, function(m, i){
-			if(isFunc(m) || isString(m)){
-				m = {
+			if(isFunc(m)){
+				mods.push({
 					moduleClass: m
-				};
+				});
+			}else if(!m){
+				console.error(["The ", (i + 1 - coreModCount), 
+					"-th declared module can NOT be found, please require it before using it"].join(''));
+			}else if(!isFunc(m.moduleClass)){
+				console.error(["The ", (i + 1 - coreModCount), 
+					"-th declared module has NO moduleClass, please provide it"].join(''));
+			}else{
+				mods.push(m);
 			}
-			if(m){
-				var mc = m.moduleClass;
-				if(isString(mc)){
-					try{
-						mc = m.moduleClass = require(mc);
-					}catch(e){
-						console.error(e);
-					}
-				}
-				if(isFunc(mc)){
-					mods.push(m);
-					return;
-				}
-			}
-			console.error(["The ", (i + 1 - coreModCount), 
-				"-th declared module can NOT be found, please require it before using it"].join(''));
 		});
 		args.modules = mods;
 		return args;
@@ -107,7 +97,7 @@ define([
 	
 	function checkForced(args){
 		var registeredMods = _Module._modules,
-			modules = args.modules, i, j, k, p, deps, depName, err;
+			modules = args.modules, i, j, k, p, deps, depName;
 		for(i = 0; i < modules.length; ++i){
 			p = modules[i].moduleClass.prototype;
 			deps = (p.forced || []).concat(p.required || []);
@@ -124,15 +114,11 @@ define([
 							moduleClass: registeredMods[depName]
 						});
 					}else{
-						err = 1;	//1 as true
-						console.error(["Forced/Required dependent module '", depName, 
-							"' is NOT found for '", p.name, "' module."].join(''));
+						throw new Error(["Forced/Required Dependent Module '", depName, 
+							"' is NOT Found for '", p.name, "'"].join(''));
 					}
 				}
 			}
-		}
-		if(err){
-			throw new Error("Some forced/required dependent modules are NOT found.");
 		}
 		return args;
 	}
@@ -195,12 +181,10 @@ define([
 		//		so that the whole grid can be as flexible as possible while still convenient enough for
 		//		web page developers.
 
-		
-
 		_reset: function(args){
 			//Reset the grid data model completely. Also used in initialization.
-			var t = this,
-				d = t._deferStartup = new Deferred();
+			var t = this;
+			t._uninit();
 			args = shallowCopy(args);
 			t.store = args.store;
 			args.modules = args.modules || [];
@@ -214,10 +198,14 @@ define([
 								normalizeModules(args, t.coreModules)))));
 			//Create model before module creation, so that all modules can use the logic grid from very beginning.
 			t.model = new Model(args);
-			t.when = lang.hitch(t.model, t.model.when);
 			t._create(args);
+		},
+
+		_postCreate: function(){
+			var t = this,
+				d = t._deferStartup = new Deferred;
 			t._preload();
-			t._load(d).then(hitch(t, 'onModulesLoaded'));
+			t._load(d).then(hitch(t, t.onModulesLoaded));
 		},
 
 		onModulesLoaded: function(){
@@ -227,19 +215,20 @@ define([
 			//		callback
 		},
 
-		
 		setStore: function(store){
 			// summary:
-			//		Change the store for grid.
+			//		Change the store for grid. 
+			// description:
+			//		Since store defines the data model for grid, changing store is usually changing everything.
 			// store: dojo.data.*|dojox.data.*|dojo.store.*
 			//		The new data store
-			if(this.store != store){
-				this.store = store;
-				this.model.setStore(store);
-			}
+			var t = this;
+			t.store = store;
+			t._reset(t);
+			t._postCreate();
+			t._deferStartup.callback();
 		},
 
-		
 		setColumns: function(columns){
 			// summary:
 			//		Change all the column definitions for grid.
@@ -254,8 +243,7 @@ define([
 			}
 		},
 
-		
-		row: function(row, isId, parentId){
+		row: function(row, isId){
 			// summary:
 			//		Get a row object by ID or index.
 			//		For asyc store, if the data of this row is not in cache, then null will be returned.
@@ -267,9 +255,9 @@ define([
 			//		If the params are valid and row data is in cache, return a row object, else return null.
 			var t = this;
 			if(typeof row == "number" && !isId){
-				row = t.model.indexToId(row, parentId);
+				row = t.model.indexToId(row);
 			}
-			if(t.model.byId(row)){
+			if(t.model.idToIndex(row) >= 0){
 				t._rowObj = t._rowObj || t._mixin(new Row(t), "row");
 				return delegate(t._rowObj, {	//gridx.core.Row
 					id: row
@@ -278,7 +266,6 @@ define([
 			return null;	//null
 		},
 
-		
 		column: function(column, isId){
 			// summary:
 			//		Get a column object by ID or index
@@ -306,8 +293,7 @@ define([
 			return null;	//null
 		},
 
-		
-		cell: function(row, column, isId, parentId){
+		cell: function(row, column, isId){
 			// summary:
 			//		Get a cell object
 			// row: gridx.core.Row|Integer|String
@@ -318,7 +304,7 @@ define([
 			//		If the row and coumn params are numeric IDs, set this to true
 			// returns:
 			//		If the params are valid and the row is in cache return a cell object, else return null.
-			var t = this, r = row instanceof Row ? row : t.row(row, isId, parentId);
+			var t = this, r = row instanceof Row ? row : t.row(row, isId);
 			if(r){
 				var c = column instanceof Column ? column : t.column(column, isId);
 				if(c){
@@ -332,7 +318,6 @@ define([
 			return null;	//null
 		},
 
-		
 		columnCount: function(){
 			// summary:
 			//		Get the number of columns
@@ -341,7 +326,6 @@ define([
 			return this._columns.length;	//Integer
 		},
 
-		
 		rowCount: function(parentId){
 			// summary:
 			//		Get the number of rows.
@@ -354,7 +338,6 @@ define([
 			return this.model.size(parentId);	//Integer
 		},
 
-		
 		columns: function(start, count){
 			// summary:
 			//		Get a range of columns, from index 'start' to index 'start + count'.
@@ -369,8 +352,7 @@ define([
 			return this._arr(this._columns.length, 'column', start, count);	//gridx.core.Column[]
 		},
 
-		
-		rows: function(start, count, parentId){
+		rows: function(start, count){
 			// summary:
 			//		Get a range of rows, from index 'start' to index 'start + count'.
 			// description:
@@ -383,7 +365,7 @@ define([
 			//		If omitted, all the rows starting from 'start' will be returned.
 			// returns:
 			//		An array of row objects
-			return this._arr(this.rowCount(parentId), 'row', start, count, parentId);	//gridx.core.Row[]
+			return this._arr(this.model.size(), 'row', start, count);	//gridx.core.Row[]
 		},
 		
 		//Private-------------------------------------------------------------------------------------
@@ -401,10 +383,10 @@ define([
 			}
 		},
 
-		_arr: function(total, type, start, count, pid){
+		_arr: function(total, type, start, count){
 			var i = start || 0, end = count >= 0 ? start + count : total, r = [];
 			for(; i < end && i < total; ++i){
-				r.push(this[type](i, 0, pid));
+				r.push(this[type](i));
 			}
 			return mixinArrayUtils(r);
 		},

@@ -2,20 +2,19 @@ define([
 	"dojo",
 	"dijit",
 	"dojo/_base/declare",
-	"dojo/string",
-	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
 	"./FilterDialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
+	"dojo/i18n!../../nls/FilterBar",
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/html"
-], function(dojo, dijit, declare, string, i18n){
+], function(dojo, dijit, declare){
 	
 	return declare(dijit.TooltipDialog, {
-		// summary:
+		//summary:
 		//	Show status dialog of filter.
 		grid: null,
 		filterBar: null,
@@ -26,7 +25,6 @@ define([
 			this.connect(this, 'onMouseEnter', '_onMouseEnter');
 			this.connect(this, 'onMouseLeave', '_onMouseLeave');
 			dojo.addClass(this.domNode, 'gridxFilterTooltip');
-			dojo.addClass(this.domNode, 'dijitTooltipBelow');
 		},
 		show: function(evt){
 			this.inherited(arguments);
@@ -43,29 +41,29 @@ define([
 		},
 
 		buildContent: function(){
-			// summary:
+			//summary:
 			//	Build the status of current filter.
 			
 			var fb = this.filterBar, nls = fb._nls, data = fb.filterData;
 			if(!data || !data.conditions.length){return;}
 			
 			var typeString = data.type === 'all' ? nls.statusTipHeaderAll : nls.statusTipHeaderAny;
-			var arr = ['<div class="gridxFilterTooltipTitle"><b>${i18n.statusTipTitleHasFilter}</b> ', 
-				typeString, '</div><table><tr><th>${i18n.statusTipHeaderColumn}</th><th>${i18n.statusTipHeaderCondition}</th></tr>'
+			var arr = ['<div class="gridxFilterTooltipTitle"><b>Filter:</b> ', 
+				typeString, '</div><table><tr><th>Column</th><th>Rule</th></tr>'
 			];
 			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : '${i18n.anyColumnOption}'), 
+				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : 'Any column'), 
 					'</td><td class="gridxFilterTooltipValueCell">', 
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
-					'<span action="remove-rule" title="${i18n.removeRuleButton}"',
-					' class="gridxFilterTooltipRemoveBtn"><span class="gridxFilterTooltipRemoveBtnText">x</span></span></div></td></tr>');
+					'<img src="' + this.grid._blankGif + 
+					'" action="remove-rule" title="' + nls.removeRuleButton + 
+					'" class="gridxFilterTooltipRemoveBtn"/></div></td></tr>');
 			}, this);
 			arr.push('</table>');
-			this.i18n = i18n;
-			this.set('content', string.substitute(arr.join(''), this));
+			this.set('content', arr.join(''));
 			dojo.toggleClass(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},
 		_onMouseEnter: function(e){
@@ -77,7 +75,7 @@ define([
 		},
 		_onClick: function(e){
 			var tr = this._getTr(e), fb = this.filterBar;
-			if(tr && /^span$/i.test(e.target.tagName)){
+			if(tr && /^img$/i.test(e.target.tagName)){
 				//remove the rule
 				fb.filterData.conditions.splice(tr.rowIndex - 1, 1);
 				tr.parentNode.removeChild(tr);
@@ -89,7 +87,7 @@ define([
 			}
 		},
 		_getTr: function(e){
-			// summary:
+			//summary:
 			//	Get table row of status
 			var tr = e.target;
 			while(tr && !/^tr$/i.test(tr.tagName) && tr !== this.domNode){

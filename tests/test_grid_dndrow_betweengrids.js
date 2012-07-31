@@ -6,8 +6,7 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
 	'gridx/tests/support/modules',
-	'dijit/form/Button',
-	'dojo/domReady!'
+	'dijit/form/Button'
 ], function(lang, Grid, Cache, dataSource, storeFactory, TestPane, mods){
 
 	function create(id, container, size, layoutIdx, args){
@@ -24,7 +23,6 @@ require([
 				mods.TitleBar,
 				mods.ExtendedSelectRow,
 //                mods.ExtendedSelectColumn,
-				mods.MoveRow,
 				mods.DndRow,
 //                mods.DndColumn,
 				mods.VirtualVScroller

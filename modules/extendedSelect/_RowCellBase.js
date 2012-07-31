@@ -18,7 +18,8 @@ define([
 			var t = this, m = t.model;
 			t.batchConnect(
 				[t.grid.body, 'onMoveToCell', '_onMoveToCell'],
-				[m, 'onMarkChange', '_onMark']
+				[m, 'onMarked', lang.hitch(t, '_onMark', 1)],	//1 as true
+				[m, 'onMarkRemoved', lang.hitch(t, '_onMark', 0)]	//0 as false
 			);
 		}
 	});

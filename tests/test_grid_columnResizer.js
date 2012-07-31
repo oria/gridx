@@ -4,8 +4,7 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane',
-	'dojo/domReady!'
+	'gridx/tests/support/TestPane'
 ], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	grid = new Grid({
@@ -19,7 +18,6 @@ require([
 		modules: [
 			modules.Focus,
 			modules.ColumnResizer,
-			modules.RowHeader,
 			modules.VirtualVScroller
 		]
 	});

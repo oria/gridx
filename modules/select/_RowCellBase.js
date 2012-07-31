@@ -9,6 +9,8 @@ define([
 		modelExtensions: [Mark],
 
 		selectById: function(rowId, columnId){
+			// summary:
+			//		Select a cell by its id.
 			var t = this, m = t.model;
 			if(t.arg('enabled')){
 				m.markById(rowId, 1, t._getMarkType(columnId));
@@ -17,6 +19,8 @@ define([
 		},
 		
 		deselectById: function(rowId, columnId){
+			// summary:
+			//		Deselect a cell by its id.
 			var t = this, m = t.model;
 			if(t.arg('enabled')){
 				m.markById(rowId, 0, t._getMarkType(columnId));
@@ -25,13 +29,18 @@ define([
 		},
 		
 		isSelected: function(rowId, columnId){
-			return this.model.getMark(rowId, this._getMarkType(columnId)) === true;	//Mixed status is not selected
+			// summary:
+			//		Check if a cell is already selected.
+			return this.model.isMarked(rowId, this._getMarkType(columnId));
 		},
 
 		//Private-----------------------------------------------------------------
 		_init: function(){
 			var t = this, m = t.model;
-			t.connect(m, 'onMarkChange', '_onMark');
+			t.batchConnect(
+				[m, 'onMarked', lang.hitch(t, '_onMark', 1)],
+				[m, 'onMarkRemoved', lang.hitch(t, '_onMark', 0)]
+			);
 		}
 	});
 });

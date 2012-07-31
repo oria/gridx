@@ -27,7 +27,8 @@ define([
 	}
 =====*/
 
-	return declare(/*===== "gridx.modules.exporter.CSV", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.exporter.CSV", =====*/_Module, {
 		// summary:
 		//		This module provides the API to export grid contents to CSV format string
 
@@ -89,7 +90,7 @@ define([
 			this._cells = [];
 		},
 
-		handleCell: function(/* __ExportContext */ context){
+		handleCell: function(/* __ExportContext */  context){
 			// tags:
 			//		private
 			var data = String(context.data).replace(/"/g, '""');
@@ -110,5 +111,5 @@ define([
 			//		private
 			return this._lines.join(this._n);
 		}
-	});
+	}));
 });

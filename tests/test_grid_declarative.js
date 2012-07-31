@@ -3,8 +3,7 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
-	'dojo/domReady!'
+	'gridx/tests/support/modules'
 ], function(Grid, Cache, dataSource, storeFactory, modules){
 
 	window.Cache = Cache;

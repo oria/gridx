@@ -30,7 +30,8 @@ define([
 			t[c](p, 'onSwitchPage', '_onSwitchPage');
 			t[c](p, 'onChangePageSize', '_onChangePageSize');
 			t[c](m, 'onSizeChange', '_onSizeChange');
-			t[c](m, 'onMarkChange', '_createDescription');
+			t[c](m, 'onMarked', '_createDescription');
+			t[c](m, 'onMarkRemoved', '_createDescription');
 			t._initFocus();
 			t.refresh();
 		},

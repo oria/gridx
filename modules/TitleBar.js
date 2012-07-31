@@ -4,7 +4,8 @@ define([
 	"../core/_Module"
 ], function(declare, domConstruct, _Module){
 	
-	return declare(/*===== "gridx.modules.TitleBar", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.TitleBar", =====*/_Module, {
 		name: 'titleBar',
 		
 //        required: ['vLayout'],
@@ -36,5 +37,6 @@ define([
 		setLabel: function(label){
 			this.domNode.innerHTML = this.label = label;
 		}
-	});
+	}));
 });
+

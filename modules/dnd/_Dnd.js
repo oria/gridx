@@ -31,9 +31,9 @@ define([
 			t._selectStatus = {};
 			t._node = domConstruct.create('div');
 			t.batchConnect(
-				[g, 'onCellMouseOver', '_checkDndReady'],
-				[g, 'onCellMouseOut', '_dismissDndReady'],
-				[g, 'onCellMouseDown', '_beginDnd'],
+	            [g, 'onCellMouseOver', '_checkDndReady'],
+	            [g, 'onCellMouseOut', '_dismissDndReady'],
+	            [g, 'onCellMouseDown', '_beginDnd'],
 				[doc, 'onmouseup', '_endDnd'],
 				[doc, 'onmousemove', '_onMouseMove']
 			);
@@ -42,7 +42,7 @@ define([
 
 		load: function(args){
 			var t = this,
-				n = t.grid.mainNode;
+				n = t.grid.bodyNode;
 			t._source = new Source(n, {
 				isSource: false,
 				accept: t.accept,
@@ -62,9 +62,9 @@ define([
 			t.loaded.callback();
 		},
 		
-		destroy: function(){
+		destory: function(){
 			this.inherited(arguments);
-			this._source.destroy();
+			this._source.destory();
 			domConstruct.destroy(this._node);
 		},
 	
@@ -90,8 +90,8 @@ define([
 				var pos = domGeometry.position(source.node),
 					x = evt.clientX,
 					y = evt.clientY,
-					alreadyIn = source._alreadyIn,
-					isIn = y >= pos.y && y <= pos.y + pos.h && x >= pos.x && x <= pos.x + pos.w;
+					alreadyIn = source._alreadyIn;
+				isIn = y >= pos.y && y <= pos.y + pos.h && x >= pos.x && x <= pos.x + pos.w;
 				if(!alreadyIn && isIn){
 					source._alreadyIn = 1;	//1 as true
 					source.onOverEvent();
@@ -101,7 +101,7 @@ define([
 				}
 			});
 		},
-
+	
 		_onMouseMove: function(evt){
 			var t = this;
 			if(t._alreadyIn && (t._dnding || t._extDnding)){
@@ -186,7 +186,7 @@ define([
 				dom.setSelectable(t.grid.domNode, false);	
 			}
 		},
-
+	
 		_endDnd: function(){
 			var t = this,
 				m = DndManager.manager();
@@ -218,7 +218,7 @@ define([
 				this.grid.autoScroll.enabled = true;
 			}
 		},
-
+	
 		_destroyUI: function(){
 			var t = this;
 			t._unmarkTargetAnchor();
@@ -228,13 +228,13 @@ define([
 				t.grid.autoScroll.enabled = false;
 			}
 		},
-
+	
 		_createTargetAnchor: function(){
 			return domConstruct.create("div", {
 				"class": "gridxDnDAnchor"
 			});
 		},
-
+		
 		_markTargetAnchor: function(evt){
 			var t = this;
 			if(t._extDnding || t.profile.arg('canRearrange')){
@@ -255,7 +255,7 @@ define([
 				}
 			}
 		},
-
+		
 		_unmarkTargetAnchor: function(){
 			var targetAnchor = this._targetAnchor;
 			if(targetAnchor){
@@ -263,7 +263,7 @@ define([
 				domClass.remove(targetAnchor, 'gridxDnDAnchor' + this.profile._cssName);
 			}
 		},
-
+		
 		//---------------------------------------------------------------------------------
 		_startDrag: function(evt, source, nodes, copy){
 			var t = this;
@@ -275,14 +275,14 @@ define([
 				t._markTargetAnchor(evt);
 			}
 		},
-
+		
 		_getItem: function(id){
 			return {
 				type: this.profile.arg('provide'),
 				data: this.profile._getItemData(id)
 			};
 		},
-
+		
 		_checkAcceptance: function(source, nodes){
 			var t = this,
 				getHash = function(arr){
@@ -315,7 +315,7 @@ define([
 			}
 			return false;
 		},
-
+		
 		_onDraggingOver: function(){
 			var t = this;
 			if(t._dnding || t._extDnding){
@@ -323,7 +323,7 @@ define([
 				t._createUI();
 			}
 		},
-
+		
 		_onDraggingOut: function(){
 			var t = this;
 			if(t._dnding || t._extDnding){

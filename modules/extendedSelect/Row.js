@@ -12,7 +12,8 @@ define([
 	"./_RowCellBase"
 ], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
-	return declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
 		// summary:
 		//		Provides advanced row selections.
 		// description:
@@ -43,14 +44,12 @@ define([
 				this.grid.select.row.selectById(this.id);
 				return this;
 			},
-
 			deselect: function(){
 				this.grid.select.row.deselectById(this.id);
 				return this;
 			},
-
 			isSelected: function(){
-				return this.model.getMark(this.id) === true;
+				return this.model.isMarked(this.id);
 			}
 		},
 		
@@ -59,11 +58,7 @@ define([
 		// triggerOnCell: [readonly] Boolean
 		//		Whether row will be selected by clicking on cell, false by default		
 		triggerOnCell: false,
-
-		// treeMode: Boolean
-		//		Whether to apply tri-state selection for child rows.
-		treeMode: true,
-
+		
 /*=====
 		selectById: function(rowId){
 			// summary:
@@ -96,21 +91,16 @@ define([
 			// summary:
 			//		Check if the given rows are all selected.
 			return array.every(arguments, function(id){
-				return this.model.getMark(id) === true;
+				return this.model.isMarked(id);
 			}, this);
 		},
 
 		clear: function(silent){
 			// summary:
 			//		Deselected all selected rows;			
-			query(".gridxRowSelected", this.grid.mainNode).forEach(function(node){
+			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowSelected');
-				node.removeAttribute('aria-selected');
 			});
-			query(".gridxRowPartialSelected", this.grid.mainNode).forEach(function(node){
-				domClass.remove(node, 'gridxRowPartialSelected');
-			});
-			this._clear();
 			this.model.clearMark();
 			if(!silent){
 				this._onSelectionChange();
@@ -123,9 +113,7 @@ define([
 		_type: 'row',
 
 		_init: function(){
-			var t = this,
-				g = t.grid;
-			t.model.treeMarkMode('', t.arg('treeMode'));
+			var t = this, g = t.grid;
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
@@ -134,8 +122,7 @@ define([
 				[g, 'onRowMouseDown', function(e){
 					if(mouse.isLeft(e) && (t.arg('triggerOnCell') || !e.columnId)){
 						t._isOnCell = e.columnId;
-						g.body._focusCellCol = e.columnIndex;
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
 				[g, 'onRowMouseOver', function(e){
@@ -145,14 +132,13 @@ define([
 					t._highlight({row: e.visualIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if(e.keyCode == keys.SPACE && (!e.columnId ||
-							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
-							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode === keys.SPACE){
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 						t._end();
 					}
-				}]);
+				}]
+			);
 		},
 
 		_markById: function(args, toSelect){
@@ -166,8 +152,7 @@ define([
 		_markByIndex: function(args, toSelect){
 			var g = this.grid,
 				m = this.model,
-				body = g.body,
-				rowInfo;
+				body = g.body;
 			array.forEach(args, function(arg){
 				if(lang.isArrayLike(arg)){
 					var start = arg[0],
@@ -179,15 +164,14 @@ define([
 						}else{
 							count = body.visualCount - start;
 						}
-						rowInfo = body.getRowInfo({visualIndex: start});
-						start = rowInfo.rowIndex;
+						start = body.getRowInfo({visualIndex: start}).rowIndex;
 						for(i = 0; i < count; ++i){
-							m.markByIndex(i + start, toSelect, '', rowInfo.parentId);
+							m.markByIndex(i + start, toSelect);	
 						}
 					}
 				}else if(arg >= 0 && arg < Infinity){
-					rowInfo = body.getRowInfo({visualIndex: arg});
-					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+					arg = body.getRowInfo({visualIndex: arg}).rowIndex;
+					m.markByIndex(arg, toSelect);
 				}
 			});
 			return m.when();
@@ -204,17 +188,12 @@ define([
 			}
 		},
 
-		_onMark: function(id, toMark, oldState, type){
-			if(type == 'select'){
-				var nodes = query('[rowid="' + id + '"]', this.grid.mainNode);
-				if(nodes.length){
-					nodes.forEach(function(node){
-						var selected = toMark && toMark != 'mixed';
-						domClass.toggle(node, 'gridxRowSelected', selected);
-						domClass.toggle(node, 'gridxRowPartialSelected', toMark == 'mixed');
-						node.setAttribute('aria-selected', !!selected);
-					});
-					this.onHighlightChange({row: parseInt(nodes[0].getAttribute('visualindex'), 10)}, toMark);
+		_onMark: function(toMark, id, type){
+			if(type == 'select' && !this._marking){
+				var node = query('[rowid="' + id + '"]', this.grid.bodyNode)[0];
+				if(node){
+					domClass.toggle(node, 'gridxRowSelected', toMark);
+					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, !!toMark);
 				}
 			}
 		},
@@ -222,14 +201,14 @@ define([
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
 			var t = this;
 			if(t.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				t._start({row: rowVisIndex}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
 				t._end();
 			}
 		},
 
 		_onMoveToRowHeaderCell: function(rowVisIndex, e){
 			if(e.shiftKey){
-				this._start({row: rowVisIndex}, this.grid._isCopyEvent(e), 1);	//1 as true
+				this._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
 				this._end();
 			}
 		},
@@ -237,7 +216,7 @@ define([
 		_isSelected: function(target){
 			var t = this,
 				id = t._getRowId(target.row);
-			return t._isRange ? array.indexOf(t._refSelectedIds, id) >= 0 : t.model.getMark(id);
+			return t._isRange ? array.indexOf(t._refSelectedIds, id) >= 0 : t.model.isMarked(id);
 		},
 
 		_beginAutoScroll: function(){
@@ -251,9 +230,8 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			query('[visualindex="' + target.row + '"]', this.grid.mainNode).forEach(function(node){
+			query('[visualindex="' + target.row + '"]', this.grid.bodyNode).forEach(function(node){
 				domClass.toggle(node, 'gridxRowSelected', toHighlight);
-				node.setAttribute('aria-selected', !!toHighlight);
 			});
 			this.onHighlightChange(target, toHighlight);
 		},
@@ -272,11 +250,7 @@ define([
 		},
 
 		_addToSelected: function(start, end, toSelect){
-			var t = this,
-				bd = t.grid.body,
-				m = t.model,
-				lastEndItem = t._lastEndItem,
-				a, b, i, d;
+			var t = this, bd = t.grid.body, m = t.model, a, b, i, lastEndItem = t._lastEndItem;
 			if(!t._isRange){
 				t._refSelectedIds = m.getMarkedIds();
 			}
@@ -285,8 +259,7 @@ define([
 				b = Math.max(end.row, lastEndItem.row);
 				start = bd.getRowInfo({visualIndex: a}).rowIndex + 1;
 				end = bd.getRowInfo({visualIndex: b}).rowIndex;
-				d = new Deferred();
-				m.when({
+				return m.when({
 					start: start, 
 					count: end - start + 1
 				}, function(){
@@ -295,22 +268,17 @@ define([
 							selected = array.indexOf(t._refSelectedIds, id) >= 0;
 						m.markById(id, selected); 
 					}
-				}).then(function(){
-					m.when(null, function(){
-						d.callback();
-					});
 				});
-				return d;
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
-
-				for(i = a; i <= b; ++i){
-					var rowInfo = bd.getRowInfo({visualIndex: i});
-					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+				start = bd.getRowInfo({visualIndex: a}).rowIndex;
+				end = bd.getRowInfo({visualIndex: b}).rowIndex;
+				for(i = start; i <= end; ++i){
+					m.markByIndex(i, toSelect);
 				}
 				return m.when();
 			}
 		}
-	});
+	}));
 });

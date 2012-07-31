@@ -1,13 +1,16 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title>Grid AlwaysEditing Test</title>
+	<title>Grid Edit Test</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
-		.gridx {
-			width: 1000px;
+		#gridContainer {
+			width: 800px;
 			height: 420px;
+		}
+		#grid {
+			height: 100%;
 		}
 	</style>
 
@@ -18,34 +21,13 @@
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-		Grid AlwaysEditing Test 
+		Grid Edit Test 
 	</h1>
-	<h2>Test Grid1: narrow rows</h2>
-	<div jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
-		cacheClass: "gridx/core/model/cache/Sync",
-		store: store1,
-		structure: layout1,
-		modules: [
-			"gridx/modules/Focus",
-			"gridx/modules/CellWidget",
-			"gridx/modules/Edit",
-			"gridx/modules/pagination/Pagination",
-			"gridx/modules/pagination/PaginationBar"
-		]
-	'></div>
-	<h2>Test Grid2: tall rows</h2>
-	<div jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
-		cacheClass: "gridx/core/model/cache/Sync",
-		store: store2,
-		structure: layout2,
-		autoWidth: true,
-		modules: [
-			"gridx/modules/Focus",
-			"gridx/modules/CellWidget",
-			"gridx/modules/Edit",
-			"gridx/modules/pagination/Pagination",
-			"gridx/modules/pagination/PaginationBar"
-		]
-	'></div>
+	<table border='0' cellspacing='0' cellpadding='0'><tr>
+		<td>
+			<div id='gridContainer'></div>
+		</td>
+		<td id='ctrlPane'></td>
+	</tr></table>
 </body>
 </html>

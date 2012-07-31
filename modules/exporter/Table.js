@@ -18,7 +18,8 @@ define([
 		return [' colid="', col.id, '" style="width:', w, '"'].join('');
 	}
 
-	return declare(/*===== "gridx.modules.exporter.Table", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.exporter.Table", =====*/_Module, {
 		// summary:
 		//		This module provides the API to export grid contents to an HTML table, which is mainly used in print.
 
@@ -82,7 +83,7 @@ define([
 			this._rst.push('<tbody>');
 		},
 
-		beforeRow: function(/* __ExportContext */ context){
+		beforeRow: function(/* __ExportContext */  context){
 			// tags:
 			//		private
 			var r = context.row, idx = r.index();
@@ -90,7 +91,7 @@ define([
 				'" rowid="', r.id, '" rowindex="', idx, '">');
 		},
 
-		handleCell: function(/* __ExportContext */ context, /* __TableExportArgs */ args){
+		handleCell: function(/* __ExportContext */  context, /* __TableExportArgs */ args){
 			// tags:
 			//		private
 			this._rst.push('<td class="grid_cell"', cellattrs(args, context.column), '>', context.data, '</td>');
@@ -113,5 +114,5 @@ define([
 			//		private
 			return this._rst.join('');
 		}
-	});
+	}));
 });

@@ -24,7 +24,6 @@ define([
 		
 		load: function(){
 			var t = this, g = t.grid, doc = win.doc;
-			g.domNode.setAttribute('aria-multiselectable', true);
 			t._refSelectedIds = [];
 			t.subscribe('gridClearSelection_' + g.id, function(type){
 				if(type != t._type){
@@ -56,9 +55,9 @@ define([
 
 		holdingShift: false,
 
-		selectById: function(/* id */){
+        selectById: function(/* id */){
 			return this._subMark('_markById', arguments, true);
-		},
+        },
 
 		deselectById: function(/* id */){
 			return this._subMark('_markById', arguments, false);
@@ -73,18 +72,11 @@ define([
 		},
 
 		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
-			// summary:
-			//		Event: fired when the selection is changed.
+			//summary:
+			//	Event: fired when the selection is changed.
 		},
 
 		//Private -----------------------------------------------------------------
-		_clear: function(){
-			var t = this;
-			delete t._lastToSelect;
-			delete t._lastStartItem;
-			delete t._lastEndItem;
-		},
-
 		_subMark: function(func, args, toSelect){
 			var t = this;
 			if(t.arg('enabled')){
@@ -205,7 +197,9 @@ define([
 
 		_fixFF: function(isStart){
 			if(sniff('ff')){
-				query('.gridxSortNode', this.grid.headerNode).style('overflow', isStart ? 'visible' : '');
+				query('.gridxSortNode', this.grid.headerNode).forEach(function(n){
+					n.style.overflow = isStart ? 'visible' : '';
+				});
 			}
 		}
 	});

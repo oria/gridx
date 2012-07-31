@@ -53,8 +53,7 @@ define([
 				}
 				var store = new Store({data: items});
 				if(!stepper){
-					var label = t._pageStepperContainer.firstChild,
-						cls = mod.arg('stepperClass'),
+					var cls = mod.arg('stepperClass'),
 						props = lang.mixin({
 							store: store,
 							searchAttr: 'label',
@@ -67,7 +66,6 @@ define([
 					stepper = t._pageStepperSelect = new cls(props);
 					stepper.placeAt(t._pageStepperContainer, "last");
 					stepper.startup();
-					label.setAttribute('for', stepper.focusNode.id);
 				}else{
 					stepper.set('store', store);
 					stepper.set('value', currentPage + 1);
@@ -95,8 +93,7 @@ define([
 					});
 				}
 				if(!sizeSwitch){
-					var label = t._sizeSwitchContainer.firstChild,
-						cls = mod.arg('sizeSwitchClass'),
+					var cls = mod.arg('sizeSwitchClass'),
 						props = lang.mixin({
 							options: options,
 							'class': 'gridxPagerSizeSwitchWidget',
@@ -107,7 +104,6 @@ define([
 					sizeSwitch = t._sizeSwitchSelect = new cls(props);
 					sizeSwitch.placeAt(t._sizeSwitchContainer, "last");
 					sizeSwitch.startup();
-					label.setAttribute('for', sizeSwitch.focusNode.id);
 				}else{
 					sizeSwitch.removeOption(sizeSwitch.getOptions());
 					sizeSwitch.addOption(options);

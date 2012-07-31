@@ -3,8 +3,6 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/ComputerData',
 	'gridx/tests/support/stores/Memory',
-//    'gridx/tests/support/data/TestData',
-//    'gridx/tests/support/stores/JsonRest',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dijit/registry',
@@ -13,8 +11,7 @@ require([
 	'dijit/form/SimpleTextarea',
 	'dijit/form/Button',
 	'dijit/ProgressBar',
-	'dijit/Dialog',
-	'dojo/domReady!'
+	'dijit/Dialog'
 ], function(Grid, Cache, dataSource, storeFactory, modules, TestPane, registry){
 	grid = new Grid({
 		id: 'grid',

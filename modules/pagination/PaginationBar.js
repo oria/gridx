@@ -9,7 +9,8 @@ define([
 	"dijit/form/NumberTextBox"
 ], function(declare, _PaginationBarBase, Pager, _Module, GotoPagePane, Dialog, Button, NumberTextBox){
 
-	return declare(/*===== "gridx.modules.pagination.PaginationBar", =====*/_PaginationBarBase, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.pagination.PaginationBar", =====*/_PaginationBarBase, {
 		// summary:
 		//		This module implements a pagination bar UI that uses link buttons for pages and page sizes.
 
@@ -51,5 +52,5 @@ define([
 
 		// pagerClass: [private]
 		pagerClass: Pager
-	});	
+	}));	
 });

@@ -1,17 +1,15 @@
 define([
-	"require",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/aspect"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect){
+	"dojo/_base/connect"
+], function(declare, array, lang, Deferred, DeferredList, cnnt){
 
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
 
-	
 	return declare(/*===== "gridx.core.model.Model", =====*/[], {
 		// summary:
 		//		This class handles all of the data logic in grid.
@@ -22,44 +20,26 @@ define([
 		//		An instance of this class can be regarded as a stand-alone logic grid providing consistent data processing 
 		//		functionalities. This class can even be instanticated alone without any grid UI.
 
-		
 		constructor: function(args){
-			var t = this,
-				cacheClass = args.cacheClass;
-			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
+			var t = this, c = 'connect';
 			t.store = args.store;
 			t._exts = {};
 			t._cmdQueue = [];
-			t._model = t._cache = new cacheClass(t, args);
+			t._model = t._cache = new args.cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
 			var m = t._model;
-			t._cnnts = [
-				aspect.after(m, "onDelete", lang.hitch(t, "onDelete"), 1),
-				aspect.after(m, "onNew", lang.hitch(t, "onNew"), 1),
-				aspect.after(m, "onSet", lang.hitch(t, "onSet"), 1)
+			t._connects = [
+				cnnt[c](m, "onDelete", t, "onDelete"),
+				cnnt[c](m, "onNew", t, "onNew"),
+				cnnt[c](m, "onSet", t, "onSet")
 			];
 		},
 	
 		destroy: function(){
-			array.forEach(this._cnnts, function(cnnt){
-				cnnt.remove();
-			});
+			array.forEach(this._connects, cnnt.disconnect);
 			for(var n in this._exts){
 				this._exts[n].destroy();
 			}
-		},
-
-		clearCache: function(){
-			this._cache.clear();
-		},
-
-		isId: function(id){
-			return id || id === 0;
-		},
-
-		setStore: function(store){
-			this.store = store;
-			this._cache.setStore(store);
 		},
 	
 		//Public-------------------------------------------------------------------
@@ -120,16 +100,6 @@ define([
 			return [];	//String[]
 		},
 
-		parent: function(id){
-			// summary:
-			//		Get the parent ID of the given row.
-			// id: String
-			//		The row ID
-			// returns:
-			//		The parent ID.
-			return [];
-		},
-
 		hasChildren: function(id){
 			// summary:
 			//		Check whether a row has children rows.
@@ -138,16 +108,6 @@ define([
 			// returns:
 			//		Whether this row has child rows.
 			return false;	//Boolean
-		},
-
-		children: function(id){
-			// summary:
-			//		Get IDs of children rows.
-			// id: String
-			//		The row ID
-			// returns:
-			//		An array of row IDs
-			return [];	//Array
 		},
 
 		size: function(parentId){
@@ -175,7 +135,6 @@ define([
 		},
 		=====*/
 
-		
 		when: function(args, callback, scope){
 			// summary:
 			//		Call this method to make sure all the pending data operations are executed and
@@ -203,9 +162,7 @@ define([
 			//		id: ['a', 'b', 'c']
 			//		}, ...)
 			//		6. An object containing both contents defined in 4 and 5.
-			//		7. An empty object
-			//		The model will fetch the store size. Currently it is implemented by fetching the first page of data.
-			//		8. null or call this method without any arguments.
+			//		7. null or call this method without any arguments.
 			//		This is useful when we only need to execute pending data operations but don't need to fetch rows.
 			// callback: Function?
 			//		The callback function is called when all the pending data operations are executed and all
@@ -222,7 +179,6 @@ define([
 			return this._exec();	//dojo.Deferred
 		},
 	
-		
 		scan: function(args, callback){
 			// summary:
 			//		Go through all the rows in several batches from start to end (or according to given args),
@@ -401,7 +357,6 @@ define([
 		_createExts: function(exts, args){
 			//Ensure the given extensions are valid
 			exts = array.filter(exts, function(ext){
-				ext = typeof ext == 'string' ? require(ext) : ext;
 				return ext && ext.prototype;
 			});
 			//Sort the extensions by priority
@@ -459,14 +414,13 @@ define([
 					for(i = args.id.length - 1; i >= 0; --i){
 						ids.push(args.id[i]);
 					}
-				}else if(this.isId(args.id)){
+				}else if(args.id){
 					ids.push(args.id);
 				}
 			}else{
 				f(args);
 			}
 			if(!rgs.length && !ids.length && this.size() < 0){
-				//first time load, try to load a page
 				rgs.push({start: 0, count: this._cache.pageSize || 1});
 			}
 			return res;

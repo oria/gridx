@@ -195,7 +195,7 @@ return dojo.declare("gridx.tests.support.XQueryReadStore",
 			dojo.io.script.get({
 				url: this.url
 				,content: serverQuery
-				,timeout: 20000
+				,timeout: 10000
 				,preventCache: true
 				,callbackParamName: 'callback'
 				,handle: function(data){
@@ -205,9 +205,8 @@ return dojo.declare("gridx.tests.support.XQueryReadStore",
 				}
 				,load: function(data){
 				}
-				,error: function(e){
+				,error: function(){
 					console.debug('error to send jsonp.');
-					errorHandler(e, request);
 				}
 			});
 			

@@ -4,6 +4,7 @@
 	position: relative;
 	overflow: hidden;
 	border: 1px solid #ddd;
+	height: 100%;
 }
 
 .gridxHeader,
@@ -40,10 +41,6 @@
 	position: relative;
 }
 
-.gridxHeaderRowHidden {
-	height: 0;
-}
-
 .gridxHeaderRowInner {
 	overflow: hidden;
 	border-style: solid;
@@ -63,6 +60,7 @@
 	border: none;
 	table-layout: fixed;
 	width: 1px;
+	height: 100%;
 }
 
 .gridxHeaderRow .gridxCell {
@@ -77,14 +75,10 @@
 	-webkit-box-sizing: border-box;*/
 }
 
-.gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxHeaderCellFocus {
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
 	outline: 1px dashed darkblue;
 	border-top: 1px dashed darkblue;
 	border-bottom: 1px dashed darkblue;
-}
-
-.dijit_a11y .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
-	border: 1px dashed darkblue;
 }
 
 .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:first-child {
@@ -102,7 +96,6 @@
 /*Body*/
 .gridxBody {
 	height: 100%;
-	width: 100%;
     overflow: hidden;
 	position: absolute;
 	top: 0;
@@ -113,12 +106,8 @@
     -khtml-box-sizing: border-box; /* konqueror */
 }
 
-.gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
+.gridx .gridxRowOver .gridxRowTable {
 	background-color: #cee8f2;
-}
-
-.gridxRow {
-	background-color: #fff;
 }
 
 .gridxRowHeaderRow table,
@@ -159,7 +148,7 @@
 	outline: 1px dashed darkblue;
 }
 
-.dj_ie7 .gridx .gridxBody .gridxRow .gridxCellFocus {
+.dj_ie7 .gridx .gridxCellFocus {
 	border: 1px dashed darkblue;
 }
 
@@ -171,21 +160,12 @@
 	border-left: 1px dashed darkblue;
 }
 
-.dijit_a11y .gridx .gridxBody .gridxCellFocus {
-	border: 1px dashed darkblue;
-}
 
 .gridxBodyEmpty {
 	width: 100%;
 	height: 100px;
 	padding: 30px 0;
 	text-align: center;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-.gridxBodyEmpty:focus {
-	outline: 1px dotted #aaa;
 }
 
 /*HScroller*/
@@ -214,6 +194,12 @@
 	outline: none;
 }
 
+/* in IE7/6 the scroller node can not show automatically */
+.dj_ie7 .gridxVScroller,
+.dj_ie6 .gridxVScroller {
+	width: 16px;
+}
+
 /*RowHeader*/
 .gridxRowHeaderHeader,
 .gridxRowHeaderBody {
@@ -228,9 +214,6 @@
 .gridxRowHeaderBody table {
 	width: 100%;
 }
-.gridxRowHeaderHeader table {
-	height: 100%;
-}
 
 .gridxRowHeaderRow {
 	background: url("../images/header.png") #EDF2F7 repeat-x bottom;
@@ -241,27 +224,12 @@
 	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
-}
-
-.gridxRowHeaderHeader .gridxHeaderCellFocus {
-	border-top: 1px dashed darkblue;
-	border-bottom: 1px dashed darkblue;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#edf2f7', endColorstr='#d0dfea',GradientType=0 ); /* IE6-9 */
 }
 	
 .gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }
-
-.gridxRowHeaderRow .gridxCellFocus {
-	outline: 1px dashed darkblue;
-	border-left: 1px dashed darkblue;
-	border-right: 1px dashed darkblue;
-}
-
-.gridxRowHeaderRow:first-child .gridxCellFocus {
-	border-top: 1px dashed darkblue;
-}
-
 
 /* Firefox can not fire onmouseover when mouse is "dragging" an "overflow: hidden" node. 
  * This fix is for IndirectSelect working with ExtendedSelect only */

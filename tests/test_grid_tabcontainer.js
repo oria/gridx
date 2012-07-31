@@ -7,15 +7,14 @@ require([
 	'dijit/Dialog',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/TabContainer',
-	'dijit/layout/ContentPane',
-	'dojo/domReady!'
+	'dijit/layout/ContentPane'
 ], function(Grid, Cache, dataSource, storeFactory, modules){
 
 	cache = Cache;
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 10
+		size: 200
 	}); 
 
 	mods = [

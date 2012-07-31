@@ -8,8 +8,7 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
 	'gridx/tests/support/modules',
-	'dijit/form/NumberTextBox',
-	'dojo/domReady!'
+	'dijit/form/NumberTextBox'
 ], function(connect, array, dom, Grid, Cache, dataSource, storeFactory, TestPane, modules){
 
 grid = new Grid({
@@ -17,7 +16,7 @@ grid = new Grid({
 	cacheClass: Cache,
 	store: storeFactory({
 		dataSource: dataSource,
-		size: 200
+		size: 100
 	}),
 	structure: dataSource.layouts[0],
 	modules: [

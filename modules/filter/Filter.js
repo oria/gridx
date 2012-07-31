@@ -7,7 +7,8 @@ define([
 	"dojo/_base/lang"
 ], function(_Module, ClientFilter, Query, declare, array, lang){
 
-	var module = declare(/*===== "gridx.modules.filter.Filter", =====*/_Module, {
+	var module = _Module.register(
+	declare(_Module, {
 		// summary:
 		//		This module makes it possible for user to set arbitrary filter condition to grid.
 		
@@ -68,7 +69,7 @@ define([
 			//		The current checker function
 			return this._checker;
 		}
-	});
+	}));
 	
 	//Util
 	function valueConvert(d, type, converter){

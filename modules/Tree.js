@@ -1,7 +1,6 @@
 define([
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
-	"dojo/_base/array",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/_base/lang",
@@ -11,18 +10,15 @@ define([
 	"dojo/keys",
 	"../util",
 	"../core/_Module"
-], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
-	kernel.experimental('gridx/modules/Tree');
-
+], function(kernel, declare, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	function isExpando(cellNode){
 		var n = cellNode.firstChild;
 		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
 			!domClass.contains(n, 'gridxTreeExpandoLoading');
 	}
 
-	_Module._markupAttrs.push('!expandLevel');
-
-	return declare(/*===== "gridx.modules.Tree", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.Tree", =====*/_Module, {
 		// summary:
 		//		Tree Grid module.
 		// description:
@@ -41,26 +37,29 @@ define([
 		//	|	{ identifier: 'name',
 		//	|	  label: 'name',
 		//	|	  items: [
-		//	|		{ name:'Africa', type:'continent', children: [
-		//	|			{ name:'Egypt', type:'country' }, 
-		//	|			{ name:'Kenya', type:'country', children:[
-		//	|				{ name:'Nairobi', type:'city', adults: 70400, popnum: 2940911 },
-		//	|				{ name:'Mombasa', type:'city', adults: 294091, popnum: 707400 } ]
-		//	|			},
-		//	|			{ name:'Sudan', type:'country', children:
-		//	|				{ name:'Khartoum', type:'city', adults: 480293, popnum: 1200394 } 
-		//	|			} ]
-		//	|		},
-		//	|		{ name:'Asia', type:'continent', children:[
-		//	|			{ name:'China', type:'country' },
-		//	|			{ name:'India', type:'country' },
-		//	|			{ name:'Russia', type:'country' },
-		//	|			{ name:'Mongolia', type:'country' } ]
-		//	|		},
+		//	|	 	{ name:'Africa', type:'continent', children: [
+		//	|	 		{ name:'Egypt', type:'country' }, 
+		//	|	 		{ name:'Kenya', type:'country', children:[
+		//	|	 			{ name:'Nairobi', type:'city', adults: 70400, popnum: 2940911 },
+		//	|	 			{ name:'Mombasa', type:'city', adults: 294091, popnum: 707400 } ]
+		//	|	 		},
+		//	|	 		{ name:'Sudan', type:'country', children:
+		//	|	 			{ name:'Khartoum', type:'city', adults: 480293, popnum: 1200394 } 
+		//	|	 		} ]
+		//	|	 	},
+		//	|	  	{ name:'Asia', type:'continent', children:[
+		//	|	  		{ name:'China', type:'country' },
+		//	|	  		{ name:'India', type:'country' },
+		//	|	  		{ name:'Russia', type:'country' },
+		//	|	  		{ name:'Mongolia', type:'country' } ]
+		//	|	  	},
 		//	|		{ name:'Australia', type:'continent', population:'21 million', children:
 		//	|			{ name:'Commonwealth of Australia', type:'country', population:'21 million'}
 		//	|		} ]
 		//	|	}
+		//
+		//		define the tree grid type
+		//	|	var type = "columnar";
 		//
 		//		define the grid structure
 		//	|	var structure = [
@@ -80,7 +79,7 @@ define([
 		//	|	{ identifier: 'id',
 		//	|	  items: [
 		//	|		{ id: "1", playername: "Player 1", seasons: [
-		//	|			{ id: "2", seasonindex: "Season 1", games: [
+		//	|		 	{ id: "2", seasonindex: "Season 1", games: [
 		//	|				{ id: "3", gameindex: "Game 1", quarters: [
 		//	|					{id: "4", point: "3", rebound: "3", assistant: "1"},
 		//	|					{id: "5", point: "5", rebound: "0", assistant: "0"},
@@ -99,7 +98,7 @@ define([
 		//	|	}
 		//
 		//		define the tree grid type
-		//	|	treeNested: true;
+		//	|	var type = "nested";
 		//
 		//		define the grid structure
 		//	|	var structure = [
@@ -114,7 +113,19 @@ define([
 		name: "tree",
 
 		constructor: function(){
-			this._clear();
+			var openned = [];
+			this._openInfo = {
+				'': {
+					id: '',
+					parentId: null,
+					index: -1,
+					count: 0,
+					openned: openned
+				}
+			};
+			this._parentOpenInfo = {
+				'': openned
+			};
 		},
 	
 		getAPIPath: function(){
@@ -130,30 +141,19 @@ define([
 			//		protected extension
 			var t = this,
 				g = t.grid;
-			if(t.model.treeMarkMode){
-				t.model.treeMarkMode('', true);
-			}
 			g.domNode.setAttribute('role', 'treegrid');
 			t.batchConnect(
 				[g.body, 'collectCellWrapper', '_createCellWrapper'],
-				[g.body, 'onAfterRow', '_onAfterRow'],
-				[g, 'onCellClick', '_onCellClick'],
-				[g, 'setStore', '_clear']);
-			t._initExpandLevel();
+				[g, 'onCellClick', '_onCellClick']
+			);
 			t._initFocus();
 			if(g.persist){
-				var id,
-					data = g.persist.registerAndLoad('tree', function(){
-						return {
-							openInfo: this._openInfo, 
-							parentOpenInfo: this._parentOpenInfo
-						};
-					});
+				var id, data = g.persist.registerAndLoad('tree', lang.hitch(t, t._persist));
 				if(data){
-					var openInfo = t._openInfo = data.openInfo,
+					var openInfo = t._openInfo = data.openInfo
 						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
 					for(id in openInfo){
-						openInfo[id].openned = parentOpenInfo[id];
+						 openInfo[id].openned = parentOpenInfo[id];
 					}
 					t._persisted = 1;
 				}
@@ -163,6 +163,7 @@ define([
 		load: function(args){
 			// tags:
 			//		protected extension
+			kernel.experimental('gridx/modules/Tree');
 			var t = this;
 			if(t._persisted){
 				t.loaded.callback();
@@ -174,42 +175,12 @@ define([
 				});
 			}
 		},
-
-		rowMixin: {
-			canExpand: function(){
-				return this.grid.tree.canExpand(this.id);
-			},
-			isExpanded: function(){
-				return this.grid.tree.isExpanded(this.id);
-			},
-			expand: function(){
-				return this.grid.tree.expand(this.id);
-			},
-			collapse: function(){
-				return this.grid.tree.collapse(this.id);
-			},
-			expandRecursive: function(){
-				return this.grid.expandRecursive(this.id);
-			},
-			collapseRecursive: function(){
-				return this.grid.collapseRecursive(this.id);
-			}
-		},
 	
 		//Public--------------------------------------------------------------------------------
 
 		// nested: Boolean
 		//		If set to true, the tree nodes can be shown in nested mode.
 		nested: false,
-
-		// expandoPadding: Integer
-		//		The padding added for each level of expando. Unit is pixel. Default to 18.
-		expandoPadding: 18,
-
-		// expandLevel: Integer
-		//		The maximum allowed expand level of this tree grid.
-		//		If less than 1, then this is not a tree grid at all.
-		expandLevel: 1 / 0,
 
 		onExpand: function(id){
 			// summary:
@@ -219,7 +190,6 @@ define([
 			// id: String
 			//		The ID of the expanded row
 		},
-
 		onCollapse: function(id){
 			// summary:
 			//		Fired when a row is collapsed.
@@ -228,24 +198,10 @@ define([
 			// id: String
 			//		The ID of the collapsed row.
 		},
-
-		canExpand: function(id){
-			// summary:
-			//		Check whether a row can be expanded.
-			// id: String
-			//		The row ID
-			// returns:
-			//		Whether the row can be expanded.
-			var t = this,
-				m = t.model,
-				level = m.treePath(id).length,
-				expandLevel = t.arg('expandLevel');
-			return m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel);
-		},
 	
 		isExpanded: function(id){
 			// summary:
-			//		Check whether a row is already expanded.
+			//		Check wheter a row is already expanded.
 			// id: String
 			//		The row ID
 			// returns:
@@ -431,62 +387,18 @@ define([
 	
 		//_openInfo: null,
 	
-		_clear: function(){
-			var openned = [];
-			this._openInfo = {
-				'': {
-					id: '',
-					parentId: null,
-					index: -1,
-					count: 0,
-					openned: openned
-				}
-			};
-			this._parentOpenInfo = {
-				'': openned
-			};
-		},
-
-		_initExpandLevel: function(){
-			var cols = this.grid._columns;
-			if(!array.some(cols, function(col){
-				return col.expandLevel;
-			})){
-				if(this.arg('nested')){
-					array.forEach(cols, function(col, i){
-						col.expandLevel = i + 1;
-					});
-				}else{
-					cols[0].expandLevel = 1;
-				}
-			}
-		},
-
 		_createCellWrapper: function(wrappers, rowId, colId){
 			var t = this,
 				col = t.grid._columnsById[colId];
 			if(col.expandLevel){
-				var isNested = t.arg('nested'),
-					level = t.model.treePath(rowId).length,
-					expandLevel = t.arg('expandLevel');
-				if((!isNested || col.expandLevel == level) && 
-						(!(expandLevel > 0) || level <= expandLevel + 1)){
+				var level = t.model.treePath(rowId).length;
+				if(!t.arg('nested') || col.expandLevel == level){
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
-						pad = 0,
-						singlePad = t.arg('expandoPadding'),
+						pad = 0, singlePad = 18,
 						ltr = t.grid.isLeftToRight();
-					if(!isNested){
+					if(!t.arg('nested')){
 						pad = (level - 1) * singlePad;
-					}
-					if(level == expandLevel + 1){
-						//This is one level beyond the last level, there should not be expando
-						if(isNested){
-							//If nested, no indent needed
-							return;
-						}
-						//If not nested, this level still needs indent
-						hasChildren = false;
 					}
 					wrappers.push({
 						priority: 0,
@@ -497,7 +409,7 @@ define([
 								"<span class='gridxTreeExpandoIcon ",
 								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
-								"style='margin-", ltr ? 'left' : 'right', ": ", pad, "px;'>",
+								"style='margin-", ltr ? 'left' : 'right', ": ", pad,"px;'>",
 								"<span class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
 								"</span></span><span class='gridxTreeExpandoContent'>",
@@ -542,7 +454,6 @@ define([
 				var visualIndex = id ? t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
 				return body.refresh(visualIndex + 1).then(function(){
 					if(n){
-						rowNode.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 						expando.firstChild.innerHTML = isOpen ? '-' : '+';
 						domClass.remove(n, 'gridxTreeExpandoLoading');
 						domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
@@ -584,12 +495,9 @@ define([
 	
 		_logicExpand: function(id){
 			var t = this,
-				m = t.model,
-				treePath = m.treePath(id),
-				level = treePath.length,
-				expandLevel = t.arg('expandLevel');
-			if(m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel)){
-				var parentId = treePath.pop(),
+				m = t.model;
+			if(m.hasChildren(id)){
+				var parentId = m.treePath(id).pop(),
 					openInfo = t._openInfo,
 					poi = t._parentOpenInfo,
 					parentOpenInfo = poi[parentId] = poi[parentId] || [];
@@ -679,22 +587,15 @@ define([
 			}, commonMixin);
 		},
 
-		_onAfterRow: function(row){
-			var hasChildren = this.model.hasChildren(row.id);
-			if(hasChildren){
-				row.node().setAttribute('aria-expanded', this.isExpanded(row.id));
-			}
-		},
-
 		//Focus------------------------------------------------------------------
 		_initFocus: function(){
 			this.connect(this.grid, 'onCellKeyPress', '_onKey'); 
 		},
 
 		_onKey: function(e){
-			var t = this;
 			if(e.keyCode == keys.ESCAPE){
-				var m = t.model,
+				var t = this,
+					m = t.model,
 					treePath = m.treePath(e.rowId),
 					parentId = treePath.pop(),
 					parentLevel = treePath.length,
@@ -719,13 +620,20 @@ define([
 					});
 				}
 			}else if(e.ctrlKey && isExpando(e.cellNode)){
-				var ltr = t.grid.isLeftToRight();
+				var ltr = grid.isLeftToRight();
 				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t._openInfo[e.rowId]){
 					t.collapse(e.rowId);
 				}else if(e.keyCode == (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !t._openInfo[e.rowId]){
 					t.expand(e.rowId);
 				}
 			}
+		},
+		//open state persist----------------------------------------------------
+		_persist: function(){
+			return {
+				openInfo: this._openInfo, 
+				parentOpenInfo: this._parentOpenInfo
+			};
 		}
-	});
+	}));
 });

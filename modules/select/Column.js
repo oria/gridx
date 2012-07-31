@@ -9,12 +9,12 @@ define([
 	"../../core/_Module"
 ], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
 
-	return declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
 		// summary:
 		//		Provides simple column selection.
 		// description:
-		//		This module provides a simple way for selecting columns by clicking or SPACE key, 
-		//		or CTRL + Click to select multiple columns.
+		//		This module provides a simple way for selecting columns by clicking or SPACE key, or CTRL + Click to select multiple columns.
 		//
 		// example:
 		//		1. Use select api on grid column object obtained from grid.column(i)
@@ -94,45 +94,21 @@ define([
 				this._markById(columns[i].id, 0);
 			}
 		},
-
-	/*=====
-		onSelected: function(col){
-			// summary:
-			//		Fired when a column is selected.
-			// col: gridx.core.Column
-			//		The column object
-		},
-
-		onDeselected: function(col){
-			// summary:
-			//		Fired when a column is deselected.
-			// col: gridx.core.Column
-			//		The column object
-		},
-
-		onHighlightChange: function(){
-			// summary:
-			//		Fired when a column's highlight is changed.
-			// tags:
-			//		private package
-		},
-	=====*/
-
+		
 		//Private-------------------------------------------------------------------------------
 		_type: 'column',
 
 		_init: function(){
-			var t = this,
-				g = t.grid;
+			var t = this;
 			t.batchConnect(
-				[g, 'onHeaderCellClick', function(e){
+				[t.grid, 'onHeaderCellClick', function(e){
 					if(!domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, e.ctrlKey);
 					}
 				}],
-				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[t.grid, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, e.ctrlKey);
 					}
 				}]
 			);
@@ -173,5 +149,5 @@ define([
 				}
 			}
 		}
-	});
+	}));
 });

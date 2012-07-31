@@ -9,8 +9,7 @@ require([
 	'gridx/tests/support/stores/JsonRest',
 //    'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane',
-	'dojo/domReady!'
+	'gridx/tests/support/TestPane'
 ], function(Deferred, lang, DeferredList, RadioButton, Grid, dataSource, Cache, storeFactory, modules, TestPane){
 
 
@@ -30,12 +29,14 @@ require([
 			var store = storeFactory({
 				path: './support/stores',
 				dataSource: dataSource, 
-				size: 1000
+				size: 50
 			}); 
 			var layout = dataSource.layouts[1];
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
+				cacheSize: 0,
+//                pageSize: 1000,
 				store: store,
 				structure: layout,
 //                vScrollerLazy: true,
@@ -47,7 +48,7 @@ require([
 					modules.RowHeader,
 					modules.ColumnResizer,
 //                    modules.Pagination,
-//                    modules.PaginationBarDD,
+//                    modules.PaginationBar,
 					modules.VirtualVScroller
 				]
 			});

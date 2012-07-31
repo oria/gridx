@@ -4,18 +4,12 @@ require([
 	'gridx/tests/support/data/TreeColumnarTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane',
-	'dojo/domReady!'
+	'gridx/tests/support/TestPane'
 ], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
 
 	var store = storeFactory({
 		dataSource: dataSource, 
-		maxLevel: 4,
-		maxChildrenCount: 10
-	});
-	store2 = storeFactory({
-		dataSource: dataSource, 
-		maxLevel: 4,
+		maxLevel: 3,
 		maxChildrenCount: 10
 	});
 
@@ -28,32 +22,15 @@ require([
 		return store.getValues(item, 'children');
 	};
 
-	store2.hasChildren = function(id, item){
-		return item && store2.getValues(item, 'children').length;
-	};
-
-	store2.getChildren = function(item){
-		console.log('getChildren:', item);
-		return store2.getValues(item, 'children');
-	};
-
-
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
 		store: store,
-		structure: dataSource.layouts[1],
-		selectRowTriggerOnCell: false,
-		treeExpandLevel: 2,
+		structure: dataSource.layouts[0],
 		modules: [
-//            mods.Focus,
+			mods.Focus,
 			mods.VirtualVScroller,
-			mods.Tree,
-//            mods.ExtendedSelectRow,
-			mods.ColumnResizer,
-			mods.SelectRow,
-			mods.RowHeader,
-			mods.IndirectSelect
+			mods.Tree
 		]
 	});
 	grid.placeAt('gridContainer');

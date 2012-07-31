@@ -18,8 +18,9 @@ require([
     'dojox/charting/plot2d/Bubble',
     'dojox/charting/plot2d/Candlesticks',
     'dojox/charting/plot2d/OHLC',
-    'dojox/charting/plot2d/Pie',
-	'dojo/domReady!'
+    'dojox/charting/plot2d/Pie'
+	
+
 ], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, JulieTheme){
 	function random(start, end){
 		//include start but not end. e.g. 1-10, 1 is possible but not 10.
@@ -37,7 +38,7 @@ require([
 		}
 		return result.join(' ');
 	}
-	window.defaultShow = false;
+	window.defaultShow = true;
 	window.showExpando = true;
 	window.contentType = 'chart';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
@@ -181,11 +182,9 @@ require([
 	}
 	
 	tp.addTestSet('DoD types', [
- 		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
+ 		'<label><input type="checkbox" checked onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
  		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
- 		'<label>Content type: <select onchange="window.contentType=this.value;">',
- 		'<option value="text" selected>text</option><option value="form">form</option>',
- 		'<option value="chart" >chart</option></select></label><br/>',
+ 		'<label>Content type: <select onchange="contentType=this.value"><option value="text">text</option><option value="form">form</option><option value="chart" selected>chart</option></select></label><br/>',
  		'<select onchange="detailProvider=window[this.value]"><option value="syncDetailProvider">sync detailProvider</option>' 
  			+ '<option value="asyncDetailProvider" selected>async detailProvider</option></select><br/>',
  		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createGrid">Re Create Grid</div>'

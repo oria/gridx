@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>gridx.core.Column</title>
+  <link rel="stylesheet" href="../../css/dojo.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/jsdoc.css" type="text/css" />
+  <link rel="stylesheet" href="../../themes/dtk/dtk.css" type="text/css" />
+  </head>
+<body>
+    <div style="width: 100%; height: 100%;">
+      <div id="treeHeader" region="top">
+        gridx
+      </div>
+      <div region="bottom" style="height:18px;background-color:#f2f2f2;border-top:1px solid #dedede;padding:0 2px 4px 48px;position:relative;overflow:hidden;">
+        <span style="position:absolute;top:3px;left:3px;font-size:small;">Legend: </span>
+        <img src="../../css/icons/16x16/array.png" align="middle" title="Array" alt="Array" border="0" />
+        <img src="../../css/icons/16x16/boolean.png" align="middle" title="Boolean" alt="Boolean" border="0" />
+        <img src="../../css/icons/16x16/constructor.png" align="middle" title="Constructor" alt="Constructor" border="0" />
+        <img src="../../css/icons/16x16/date.png" align="middle" title="Date" alt="Date" border="0" />
+        <img src="../../css/icons/16x16/domnode.png" align="middle" title="DomNode" alt="DomNode" border="0" />
+        <img src="../../css/icons/16x16/error.png" align="middle" title="Error" alt="Error" border="0" />
+        <img src="../../css/icons/16x16/function.png" align="middle" title="Function" alt="Function" border="0" />
+        <img src="../../css/icons/16x16/namespace.png" align="middle" title="Namespace" alt="Namespace" border="0" />
+        <img src="../../css/icons/16x16/number.png" align="middle" title="Number" alt="Number" border="0" />
+        <img src="../../css/icons/16x16/object.png" align="middle" title="Object" alt="Object" border="0" />
+        <img src="../../css/icons/16x16/regexp.png" align="middle" title="RegExp" alt="RegExp" border="0" />
+        <img src="../../css/icons/16x16/singleton.png" align="middle" title="Singleton" alt="Singleton" border="0" />
+        <img src="../../css/icons/16x16/string.png" align="middle" title="String" alt="String" border="0" />
+      </div>
+      <div region="center">
+       <div class="sidebar unit size1of4 lastUnit infoCenterHeader" >
+         <div class="apisidebar">
+           <div class="apisidebarwrapper">
+             <!-- NAVIGATION -->
+           </div>
+         </div>
+       </div>
+       <div role="main" class="main-content">
+        <div class="unit size3of4 firstUnit">
+          <a name="skip-navbar_top"></a>
+          <div class="jsdoc-permalink" style="display:none;">../../gridx/core/Column.html</div><h1 class="jsdoc-title constructorIcon36">gridx.core.Column</h1><div class="jsdoc-prototype">Object &raquo; gridx.core.Column</div><div class="jsdoc-require">dojo.require("gridx.core.Column");</div><div class="jsdoc-prototype">Defined in gridx/core/Column.js</div><div class="jsdoc-full-summary"><p>An instance of this class represents a grid column.
+This class should not be directly instantiated by users. It should be returned by grid APIs.</p>
+</div><div class="jsdoc-children"><div class="jsdoc-field-list"><h2 class="jsdoc-summary-heading">Method Summary <span class="jsdoc-summary-toggle"></span></h2><div class="jsdoc-summary-list"><ul><li class="functionIcon public  even"><a class="inline-link" href="#cell">cell</a><span class="parameters">(row, isId)</span><span class="jsdoc-returns"> returns gridx.core.Cell|null</span> <span>Get a cell object in this column</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#constructor">constructor</a><span class="parameters">(grid, id)</span></li><li class="functionIcon public  even"><a class="inline-link" href="#field">field</a><span class="parameters">()</span><span class="jsdoc-returns"> returns String</span> <span>Get the store field of this column</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#getWidth">getWidth</a><span class="parameters">()</span><span class="jsdoc-returns"> returns String</span> <span>Get the width of this column</span></li><li class="functionIcon public  even"><a class="inline-link" href="#index">index</a><span class="parameters">()</span><span class="jsdoc-returns"> returns Integer</span> <span>Get the index of this column</span></li><li class="functionIcon public  odd"><a class="inline-link" href="#name">name</a><span class="parameters">()</span><span class="jsdoc-returns"> returns String</span> <span>Get the name of this column.</span></li><li class="functionIcon public  even"><a class="inline-link" href="#setName">setName</a><span class="parameters">(name)</span><span class="jsdoc-returns"> returns gridx.core.Column</span> <span>Set the name of this column</span></li></ul></div></div></div><div class="jsdoc-children"><div class="jsdoc-fields"><h2>Methods</h2><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="cell"></a><span class="functionIcon">cell</span></div><div class="jsdoc-return-type">Returns <strong>gridx.core.Cell|null</strong>: <span class="jsdoc-return-description">If the params are valid and the row is in cache return a cell object, else return null</span></div><div class="jsdoc-summary">Get a cell object in this column</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">row</td><td class="jsdoc-param-type">gridx.core.Row|Integer|String</td><td class="jsdoc-param-description">Row index or row ID or a row object</td></tr><tr><td class="jsdoc-param-name">isId</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="constructor"></a><span class="functionIcon">constructor</span></div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">grid</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr><tr><td class="jsdoc-param-name">id</td><td class="jsdoc-param-type"></td><td class="jsdoc-param-description"></td></tr></table></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="field"></a><span class="functionIcon">field</span></div><div class="jsdoc-return-type">Returns <strong>String</strong>: <span class="jsdoc-return-description">The store field of this column</span></div><div class="jsdoc-summary"><p>If a column corresponds to a field in store, this method returns the field.
+It's possible for a column to have no store field related.</p>
+</div></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="getWidth"></a><span class="functionIcon">getWidth</span></div><div class="jsdoc-return-type">Returns <strong>String</strong>: <span class="jsdoc-return-description">The CSS value of column width</span></div><div class="jsdoc-summary">Get the width of this column</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="index"></a><span class="functionIcon">index</span></div><div class="jsdoc-return-type">Returns <strong>Integer</strong>: <span class="jsdoc-return-description">The index of this column</span></div><div class="jsdoc-summary">Get the index of this column</div></div><div class="jsdoc-field public  odd"><div class="jsdoc-title"><a name="name"></a><span class="functionIcon">name</span></div><div class="jsdoc-return-type">Returns <strong>String</strong>: <span class="jsdoc-return-description">The name of this column</span></div><div class="jsdoc-summary"><p>Column name is the string displayed in the grid header cell.
+Column names can be anything. Two columns can share one name. But they must have different IDs.</p>
+</div></div><div class="jsdoc-field public  even"><div class="jsdoc-title"><a name="setName"></a><span class="functionIcon">setName</span></div><div class="jsdoc-return-type">Returns <strong>gridx.core.Column</strong>: <span class="jsdoc-return-description">Return self reference, so as to cascade methods</span></div><div class="jsdoc-summary">Set the name of this column</div><table class="jsdoc-parameters"><tr><th>Parameter</th><th>Type</th><th>Description</th></tr><tr><td class="jsdoc-param-name">name</td><td class="jsdoc-param-type">String</td><td class="jsdoc-param-description">The new name</td></tr></table></div></div></div>
+        </div>
+       </div>
+      </div>
+  </div>
+</body>
+</html>

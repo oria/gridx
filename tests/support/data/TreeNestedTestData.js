@@ -41,7 +41,7 @@ define([], function(){
 			item = generateItem(parentId, i, level);
 			res.push(item);
 			if(level < maxLevel){
-				item.children = generateLevel(item.id, level + 1, maxLevel, maxChildrenCount);
+				item['level' + (level - 1) + 'Child'] = generateLevel(item.id, level + 1, maxLevel, maxChildrenCount);
 			}
 		}
 		return res;
@@ -60,17 +60,9 @@ define([], function(){
 		
 		layouts: [
 			[
-				{id: 'number', name: 'number', field: 'number', expandLevel: 1},
-				{id: 'string', name: 'string', field: 'string', expandLevel: 2},
-				{id: 'date', name: 'date', field: 'date', expandLevel: 3},
-				{id: 'time', name: 'time', field: 'time'},
-				{id: 'bool', name: 'bool', field: 'bool'},
-				{id: 'id', name: 'id', field: 'id'}
-			],
-			[
-				{id: 'number', name: 'number', field: 'number'},
-				{id: 'string', name: 'string', field: 'string'},
-				{id: 'date', name: 'date', field: 'date'},
+				{id: 'number', name: 'number', field: 'number', expandField: 'level0Child', nestedLevel: 0},
+				{id: 'string', name: 'string', field: 'string', expandField: 'level1Child', nestedLevel: 1},
+				{id: 'date', name: 'date', field: 'date', expandField: 'level2Child', nestedLevel: 2},
 				{id: 'time', name: 'time', field: 'time'},
 				{id: 'bool', name: 'bool', field: 'bool'},
 				{id: 'id', name: 'id', field: 'id'}

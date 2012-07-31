@@ -10,8 +10,7 @@ require([
 	'dijit/form/HorizontalRuleLabels',
 	'dijit/form/VerticalSlider',
 	'dijit/form/VerticalRule',
-	'dijit/form/VerticalRuleLabels',
-	'dojo/domReady!'
+	'dijit/form/VerticalRuleLabels'
 ], function(Grid, Cache, dataSource, storeFactory, modules){
 
 	grid = new Grid({
@@ -20,7 +19,7 @@ require([
 			dataSource: dataSource,
 			size: 100
 		}),
-		structure: dataSource.layouts[1],
+		structure: dataSource.layouts[0],
 		cacheClass: Cache,
 		//query: {Genre: 'E*'},
 		paginationInitialPageSize: 25,
@@ -33,7 +32,6 @@ require([
 //            modules.ExtendedSelectRow,
 //            modules.ExtendedSelectColumn,
 //            modules.ExtendedSelectCell,
-			modules.Pagination,
 			modules.PaginationBar,
 			modules.VirtualVScroller
 		]

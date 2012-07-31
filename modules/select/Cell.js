@@ -8,7 +8,8 @@ define([
 	"../../core/_Module"
 ], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
-	return declare(/*===== "gridx.modules.select.Cell", =====*/_RowCellBase, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.select.Cell", =====*/_RowCellBase, {
 		// summary:
 		//		Provides simple cell selection.
 		// description:
@@ -46,7 +47,7 @@ define([
 			},
 			
 			isSelected: function(){
-				return this.grid.select.cell.isSelected(this.row.id, this.column.id);
+				return this.model.isMarked(this.row.id, this.column.id);
 			}
 		},
 		
@@ -97,30 +98,7 @@ define([
 				m.when();
 			}
 		},
-
-	/*=====
-		onSelected: function(cell){
-			// summary:
-			//		Fired when a cell is selected.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
-
-		onDeselected: function(cell){
-			// summary:
-			//		Fired when a cell is deselected.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
-
-		onHighlightChange: function(){
-			// summary:
-			//		Fired when a cell's highlight is changed.
-			// tags:
-			//		private package
-		},
-	=====*/
-
+		
 		//Private--------------------------------------------------------------------------------
 		_type: 'cell',
 
@@ -133,25 +111,21 @@ define([
 		},
 
 		_init: function(){
-			var t = this,
-				g = t.grid;
+			var t = this;
 			t.inherited(arguments);
 			t.batchConnect(
-				[g, 'onCellMouseDown', function(e){
-					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+				[t.grid, 'onCellMouseDown', function(e){
+					t._select([e.rowId, e.columnId], e.ctrlKey);
 				}],
-				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[t.grid, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+						t._select([e.rowId, e.columnId], e.ctrlKey);
 					}
-				}]);
+				}]
+			);
 		},
-
-		_isSelected: function(cell){
-			return this.isSelected(cell[0], cell[1]);
-		},
-
-		_onMark: function(rowId, toMark, oldState, type){
+	
+		_onMark: function(toMark, rowId, type){
 			var t = this;
 			if(type.indexOf(t._markTypePrefix) === 0){
 				var colId = type.substr(t._markTypePrefix.length);
@@ -172,7 +146,6 @@ define([
 			});
 			if(node){
 				domClass.toggle(node, "gridxCellSelected", toHighlight);
-				node.setAttribute('aria-selected', !!toHighlight);
 				this.onHighlightChange();
 			}
 		},
@@ -190,11 +163,11 @@ define([
 				rowId = model.indexToId(i);
 				for(j = columns.length - 1; j >= 0; --j){
 					colId = columns[j].id;
-					if(model.getMark(rowId, t._getMarkType(colId))){
+					if(model.isMarked(rowId, t._getMarkType(colId))){
 						t._highlight(rowId, colId, 1);
 					}
 				}
 			}
 		}
-	});
+	}));
 });

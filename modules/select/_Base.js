@@ -21,46 +21,30 @@ define([
 				}
 			});
 			t.connect(g.body, 'onRender', '_onRender');
-			if(t.arg('multiple')){
-				g.domNode.setAttribute('aria-multiselectable', true);
-			}
 			t._init();
 		},
 
 		//Public--------------------------------------------------------------------
-
-		// enabled: Boolean
-		//		Whether this module is enabled.
 		enabled: true,
 	
-		// multiple: Boolean
-		//		Whether multiple selectionis allowe.
 		multiple: true,
 	
-		// holdingCtrl: Boolean
-		//		Whether to add to selection all the time (as if the CTRL key is always held).
 		holdingCtrl: false,
 
 		//Events----------------------------------------------------------------------
-		onSelected: function(){},
-
-		onDeselected: function(){},
-
+		onSelected: function(/* rowObject */){},
+		onDeselected: function(/* rowObject */){},
 		onHighlightChange: function(){},
 
 		//Private---------------------------------------------------------------------
 		
 		_getMarkType: function(){},
 
-		_isSelected: function(){
-			return this.isSelected.apply(this, arguments);
-		},
-
 		_select: function(item, extending){
 			var t = this, toSelect = 1;
 			if(t.arg('enabled')){
 				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
-					toSelect = !t._isSelected(item);
+					toSelect = !t.isSelected(item);
 				}else{
 					t.clear();
 				}

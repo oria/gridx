@@ -1,30 +1,29 @@
 require([
-	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
-	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
-], function(dataSource, storeFactory){
+	'gridx/core/model/cache/Async',
+	'gridx/tests/support/data/MusicData',
+	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/modules',
+	'gridx/tests/support/TestPane'
+], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
 
-	layout = [
-		{id: 'id', field: 'id', name: 'Identity', width: '80px'},
-		{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px'},
-		{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px'},
-		{id: 'Year', field: 'Year', name: 'Year', width: '80px'},
-		{id: 'Album', field: 'Album', name: 'Album', width: '160px'},
-		{id: 'Name', field: 'Name', name: 'Name', width: '80px'},
-		{id: 'Length', field: 'Length', name: 'Length', width: '80px'},
-		{id: 'Track', field: 'Track', name: 'Track', width: '80px'},
-		{id: 'Composer', field: 'Composer', name: 'Composer', width: '160px'}
-	];
-
-	store = storeFactory({
-		dataSource: dataSource, 
-		size: 10
+	grid = new Grid({
+		id: 'grid',
+		cacheClass: Cache,
+		store: storeFactory({
+			dataSource: dataSource, 
+			size: 50
+		}),
+		structure: dataSource.layouts[1],
+		autoHeight: true,
+		autoWidth: true,
+		modules: [
+			mods.Focus,
+			mods.ColumnResizer,
+//            mods.VirtualVScroller,
+			mods.PaginationBar
+		]
 	});
-	emptyStore = storeFactory({
-		dataSource: dataSource, 
-		size: 0
-	});
-
+	grid.placeAt('gridContainer');
+	grid.startup();
 });

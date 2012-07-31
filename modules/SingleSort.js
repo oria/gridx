@@ -6,13 +6,17 @@ define([
 	"../core/_Module"
 ], function(declare, lang, keys, Sort, _Module){
 
-	return declare(/*===== "gridx.modules.SingleSort", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.SingleSort", =====*/_Module, {
 		// summary:
 		//		This module provides the single column sorting functionality for grid.
 
 		name: 'sort',
 
 		forced: ['header'],
+
+		//Header has required this
+//        required: ['vLayout'],
 
 		modelExtensions: [Sort],
 		
@@ -27,8 +31,7 @@ define([
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this,
-				g = t.grid, sort;
+			var t = this, g = t.grid, sort;
 			t.connect(g, 'onHeaderCellClick', '_onClick');
 			t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown');
 			//persistence support
@@ -41,7 +44,7 @@ define([
 				});
 			}
 			//Presort...
-			sort = sort || t.arg('initialOrder');
+			sort = sort || t.arg('preSort');
 			if(lang.isArrayLike(sort)){
 				sort = sort[0];
 			}
@@ -56,13 +59,11 @@ define([
 		load: function(){
 			// tags:
 			//		protected extension
-			var t = this,
-				colId,
-				f = function(){
-					if(t._sortId){
-						t._updateHeader(t._sortId, t._sortDescend);
-					}
-				};
+			var t = this, colId, f = function(){
+				if(t._sortId){
+					t._updateHeader(t._sortId, t._sortDescend);
+				}
+			};
 			t.connect(t.grid.header, 'onRender', f);
 			for(colId in t.grid._columnsById){
 				t._initHeader(colId);
@@ -74,21 +75,15 @@ define([
 	
 		columnMixin: {
 			sort: function(isDescending, skipUpdateBody){
-				// summary:
-				//		Sort this column.
 				this.grid.sort.sort(this.id, isDescending, skipUpdateBody);
 				return this;
 			},
 	
 			isSorted: function(){
-				// summary:
-				//		Check wheter this column is sorted.
 				return this.grid.sort.isSorted(this.id);
 			},
 	
 			clearSort: function(skipUpdateBody){
-				// summary:
-				//		Clear sort on this column
 				if(this.isSorted()){
 					this.grid.sort.clear(skipUpdateBody);
 				}
@@ -96,15 +91,11 @@ define([
 			},
 	
 			isSortable: function(){
-				// summary:
-				//		Check whether this column is sortable.
 				var col = this.grid._columnsById[this.id];
 				return col.sortable || col.sortable === undefined;
 			},
 	
 			setSortable: function(isSortable){
-				// summary:
-				//		Set sortable for this column
 				this.grid._columnsById[this.id].sortable = !!isSortable;
 				return this;
 			}
@@ -112,13 +103,9 @@ define([
 	
 		//Public--------------------------------------------------------------
 
-	/*=====
-		// initialOrder: Object|Array
-		//		The initial sort order when grid is created.
-		//		This is of the same format of the sort argument of the store fetch function.
-		//		If an array of sort orders is provided, only the first will be used.
-		initialOrder: null,
-	=====*/
+		/*=====
+		preSort: null,
+		=====*/
 
 		sort: function(colId, isDescending, skipUpdateBody){
 			// summary:
@@ -190,22 +177,18 @@ define([
 		//Private--------------------------------------------------------------
 		_sortId: null,
 
-		_sortDescend: null,
+		_sortDescend: null, 
 		
 		_initHeader: function(colId){
-			var g = this.grid,
-				headerCell = g.header.getHeaderNode(colId),
-				col = g.column(colId, 1);	//1 as true
-			headerCell.innerHTML = ["<div class='gridxSortNode'>", col.name(), "</div>"].join('');
-			if(col.isSortable()){
-				headerCell.setAttribute('aria-sort', 'none');
-			}else{
-				headerCell.removeAttribute('aria-sort');
-			}
+			//1 for true, 0 for false
+			var	headerCell = this.grid.header.getHeaderNode(colId);
+			headerCell.innerHTML = ["<div class='gridxSortNode'>", this.grid.column(colId, 1).name(), "</div>"].join('');
+			headerCell.removeAttribute('aria-sort');
 		},
 	
 		_updateHeader: function(colId, isDescending){
 			//Change the structure of sorted header
+			//1 for true, 0 for false
 			var t = this;
 			if(t._sortId && t._sortId != colId){
 				t._initHeader(t._sortId);
@@ -218,8 +201,8 @@ define([
 				isDescending ? 'gridxSortDown' : 'gridxSortUp',
 				"'><div class='gridxArrowButtonChar'>",
 				isDescending ? "&#9662;" : "&#9652;",
-				"</div><div role='presentation' class='gridxArrowButtonNode'>&nbsp;</div><div class='gridxColCaption'>",
-				g.column(colId, 1).name(),	//1 as true
+				"</div><div role='presentation' class='gridxArrowButtonNode'></div><div class='gridxColCaption'>",
+				g.column(colId, 1).name(),
 				"</div></div>"
 			].join('');
 			headerCell.setAttribute('aria-sort', isDescending ? 'descending' : 'ascending');
@@ -235,5 +218,5 @@ define([
 				this._onClick(e);
 			}
 		}
-	});
+	}));
 });

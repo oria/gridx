@@ -27,15 +27,15 @@ define([
 		};
 	}
 
-	return declare(/*===== "gridx.core.model.extensions.FormatSort", =====*/_Extension, {
+	return declare(_Extension, {
 		name: 'formatSort',
 
 		priority: 50,
 
 		constructor: function(model){
 			var t = this, c = t.cache = model._cache;
-			t.aspect(c, "onBeforeFetch", "_onBeforeFetch");
-			t.aspect(c, "onAfterFetch", "_onAfterFetch");
+			t.connect(c, "onBeforeFetch", "_onBeforeFetch");
+			t.connect(c, "onAfterFetch", "_onAfterFetch");
 		},
 
 		//Private--------------------------------------------------------------------
@@ -61,7 +61,7 @@ define([
 					col = c.columns && c.columns[sortAttr.colId];
 				if(map){
 					if(typeof attr !== "string" && attr.toString){
-						attr = attr.toString();
+						 attr = attr.toString();
 					}
 					comp = map[attr] || bc;
 				}

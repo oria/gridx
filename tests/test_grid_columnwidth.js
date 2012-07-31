@@ -5,8 +5,7 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'dijit/layout/BorderContainer',
-	'dijit/layout/ContentPane',
-	'dojo/domReady!'
+	'dijit/layout/ContentPane'
 ], function(Grid, Cache, dataSource, storeFactory, modules){
 
 	cache = Cache;

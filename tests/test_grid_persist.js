@@ -21,11 +21,9 @@ require([
 				structure: dataSource.layouts[4],
 				modules: [
 					modules.Persist,
-					modules.SelectColumn,
-					modules.MoveColumn,
 					modules.DndColumn,
 					modules.NestedSort,
-					modules.VirtualVScroller,
+					modules.VirtualScroller,
 					modules.ColumnResizer
 				]
 			});

@@ -11,32 +11,16 @@ define([
 		indexOf = array.indexOf;
 
 	return declare(_Extension, {
-		
-
 		// summary:
 		//		Abstract base cache class, providing cache data structure and some common cache functions.
 		constructor: function(model, args){
-			var t = this;
-			t.setStore(args.store);
+			args = args || {};
+			var t = this, c = 'connect',
+				s = t.store = args.store, old = s.fetch;
 			t.columns = args.columns;
-			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'parentId',
-				'hasChildren', 'children', 'keep', 'free');
-		},
-
-		destroy: function(){
-			this.inherited(arguments);
-			this.clear();
-		},
-
-		setStore: function(store){
-			var t = this,
-				c = 'aspect',
-				old = store.fetch;
-			t.clear();
-			t.store = store;
-			if(!old && store.notify){
+			if(!old && s.notify){
 				//The store implements the dojo.store.Observable API
-				t[c](store, 'notify', function(item, id){
+				t[c](s, 'notify', function(item, id){
 					if(item === undefined){
 						t._onDelete(id);
 					}else if(id === undefined){
@@ -46,45 +30,48 @@ define([
 					}
 				});
 			}else{
-				t[c](store, old ? "onSet" : "put", "_onSet");
-				t[c](store, old ? "onNew" : "add", "_onNew");
-				t[c](store, old ? "onDelete" : "remove", "_onDelete");
+				t[c](s, old ? "onSet" : "put", "_onSet");
+				t[c](s, old ? "onNew" : "add", "_onNew");
+				t[c](s, old ? "onDelete" : "remove", "_onDelete");
 			}
+			t.clear();
+			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 
+				'treePath', 'hasChildren', 'keep', 'free');
+		},
+
+		destroy: function(){
+			this.inherited(arguments);
+			this.clear();
 		},
 		
 		//Public----------------------------------------------
 		clear: function(){
 			var t = this;
-			t._filled = 0;
 			t._priority = [];
 			t._struct = {};
 			t._cache = {};
 			t._size = {};
-			//virtual root node, with id ''.
+			//virtual root node, with name ''.
 			t._struct[''] = [];
 			t._size[''] = -1;
 		},
-		
 		
 		byIndex: function(index, parentId){
 			this._init('byIndex', arguments);
 			return this._cache[this.indexToId(index, parentId)];
 		},
 
-		
 		byId: function(id){
 			this._init('byId', arguments);
 			return this._cache[id];
 		},
 
-		
 		indexToId: function(index, parentId){
 			this._init('indexToId', arguments);
-			var items = this._struct[this.model.isId(parentId) ? parentId : ''];
-			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
+			var items = this._struct[parentId || ''];
+			return items && items[index + 1];
 		},
 
-		
 		idToIndex: function(id){
 			this._init('idToIndex', arguments);
 			var s = this._struct,
@@ -93,61 +80,36 @@ define([
 			return index > 0 ? index - 1 : -1;
 		},
 
-		
 		treePath: function(id){
-			this._init('treePath', arguments);
-			var s = this._struct,
-				path = [];
+			var s = this._struct, path = [];
 			while(id !== undefined){
 				path.unshift(id);
 				id = s[id] && s[id][0];
 			}
 			if(path[0] !== ''){
-				path = [];
+				return [];
 			}else{
 				path.pop();
+				return path;
 			}
-			return path;
 		},
 
-		
-		parentId: function(id){
-			return this.treePath(id).pop();
-		},
-
-		
 		hasChildren: function(id){
-			var t = this,
-				s = t.store,
-				c;
+			var t = this, s = t.store, c;
 			t._init('hasChildren', arguments);
 			c = t.byId(id);
 			return s.hasChildren && s.hasChildren(id, c && c.item);
 		},
-		
-		
-		children: function(parentId){
-			this._init('children', arguments);
-			parentId = this.model.isId(parentId) ? parentId : '';
-			var size = this._size[parentId],
-				children = [];
-			for(var i = 0; i < size; ++i){
-				children.push(this.indexToId(i, parentId));
-			}
-			return children;
-		},
 
-		
 		size: function(parentId){
 			this._init('size', arguments);
-			var s = this._size[this.model.isId(parentId) ? parentId : ''];
+			var s = this._size[parentId || ''];
 			return s >= 0 ? s : -1;
 		},
 
 		//Events--------------------------------------------
 		onBeforeFetch: function(){},
 		onAfterFetch: function(){},
-		onLoadRow: function(){},
 
 		onSetColumns: function(columns){
 			var t = this, id, c, colId, col;
@@ -188,22 +150,18 @@ define([
 		},
 
 		_addRow:function(id, index, rowData, item, parentId){
-			var t = this,
-				st = t._struct,
-				pr = t._priority,
-				pid = t.model.isId(parentId) ? parentId : '',
-				ids = st[pid],
-				i;
+			parentId = parentId || '';
+			var t = this, st = t._struct, pr = t._priority, ids = st[parentId], i;
 			if(!ids){
-				throw new Error("Fatal error of cache._addRow: parent item " + pid + " of " + id + " is not loaded");
+				throw new Error("Fatal error of cache._addRow: parent item " + parentId + " of " + id + " is not loaded");
 			}
 			if(!ids[index + 1]){
 				ids[index + 1] = id;
 			}else if(ids[index + 1] !== id){
 				throw new Error("Fatal error of cache._addRow: different row id " + id + " and " + ids[index + 1] + " for same row index " + index);
 			}
-			st[id] = st[id] || [pid];
-			if(pid === ''){
+			st[id] = st[id] || [parentId];
+			if(!parentId){
 				i = indexOf(pr, id);
 				if(i >= 0){
 					pr.splice(i, 1);
@@ -215,19 +173,16 @@ define([
 				rawData: rowData,
 				item: item
 			};
-			t.onLoadRow(id);
 		},
 
 		_loadChildren: function(parentId){
 			var t = this,
-				d = new Deferred(),
+				d = new Deferred,
 				s = t.store,
 				row = t.byId(parentId),
 				items = row && s.getChildren && s.getChildren(row.item) || [];
 			Deferred.when(items, function(items){
-				var i = 0,
-					item,
-					len = t._size[parentId] = items.length;
+				var i = 0, item, len = t._size[parentId] = items.length;
 				for(; i < len; ++i){
 					item = items[i];
 					t._addRow(s.getIdentity(item), i, t._itemToObject(item), item, parentId);
@@ -254,20 +209,19 @@ define([
 		},
 	
 		_storeFetch: function(options, onFetched){
-//            console.debug("\tFETCH start: ",
-//                    options.start, ", count: ",
-//                    options.count, ", end: ",
-//                    options.count && options.start + options.count - 1, ", options:",
+//            console.debug("\tFETCH start: ", 
+//                    options.start, ", count: ", 
+//                    options.count, ", end: ", 
+//                    options.count && options.start + options.count - 1, ", options:", 
 //                    this.options);
 
 			var t = this,
 				s = t.store,
-				d = new Deferred(),
+				d = new Deferred,
 				req = mixin({}, t.options || {}, options),
 				onBegin = hitch(t, t._onBegin),
 				onComplete = hitch(t, t._onComplete, d, options.start),
 				onError = hitch(d, d.errback);
-			t._filled = 1;	//1 as true;
 			t.onBeforeFetch();
 			if(s.fetch){
 				s.fetch(mixin(req, {
@@ -289,12 +243,11 @@ define([
 			var t = this,
 				id = t.store.getIdentity(item),
 				index = t.idToIndex(id),
-				path = t.treePath(id),
-				old = t._cache[id];
+				path = t.treePath(id);
 			if(path.length){
 				t._addRow(id, index, t._itemToObject(item), item, path.pop());
 			}
-			t.onSet(id, index, t._cache[id], old);
+			t.onSet(id, index, t._cache[id]);
 		},
 	
 		_onNew: function(item, parentInfo){

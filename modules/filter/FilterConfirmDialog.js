@@ -1,18 +1,22 @@
 define([
+	"dojo/_base/kernel",
+	"dijit",
 	"dojo/_base/declare",
-	"dojo/string",
-	"dijit/Dialog",
 	"dojo/text!../../templates/FilterConfirmDialog.html",
-	"dojo/i18n!../../nls/FilterBar"
-], function(declare, string, Dialog, template, i18n){
+	"dijit/Dialog",
+	"dijit/layout/AccordionContainer",
+	"dojo/data/ItemFileReadStore",
+	"./FilterPane",
+	"./Filter"
+], function(dojo, dijit, declare, template){
 
-	return declare(Dialog, {
-		title: i18n.clearFilterDialogTitle,
+	return declare(dijit.Dialog, {
+		title: 'Clear Filter',
 		cssClass: 'gridxFilterConfirmDialog',
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.set('content', string.substitute(template, i18n));
+			this.set('content', template);
 			var arr = dijit.findWidgets(this.domNode);
 			this.btnClear = arr[0];
 			this.btnCancel = arr[1];

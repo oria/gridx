@@ -5,8 +5,8 @@ define([
 	"../core/_Module"
 ], function(kernel, declare, domGeometry, _Module){
 	kernel.experimental('gridx/modules/Rotater');
-
-	return declare(_Module, {
+	return _Module.register(
+	declare( _Module, {
 		name: "rotater",
 		
 		getAPIPath: function(){
@@ -40,5 +40,5 @@ define([
 				grid.body.refresh();
 			}
 		}
-	});
+	}));
 });

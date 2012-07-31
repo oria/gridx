@@ -3,7 +3,7 @@ define([
 	'../_Extension'
 ], function(declare, _Extension){
 
-	return declare(/*===== "gridx.core.model.extensions.Query", =====*/_Extension, {
+	return declare(_Extension, {
 		name: 'query',
 
 		priority: 40,
@@ -12,7 +12,7 @@ define([
 			this.clear();
 			this._mixinAPI('query');
 			if(args.query){
-				this.query(args.query, args.queryOptions);
+				this.query(args.query);
 			}
 		},
 

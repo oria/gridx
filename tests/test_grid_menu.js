@@ -11,8 +11,7 @@ require([
 	"dijit/PopupMenuItem",
 	"dijit/CheckedMenuItem",
 	"dijit/MenuSeparator",
-	'dijit/form/CheckBox',
-	'dojo/domReady!'
+	'dijit/form/CheckBox'
 ], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	grid = new Grid({

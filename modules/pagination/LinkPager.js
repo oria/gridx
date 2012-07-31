@@ -4,14 +4,13 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/_base/query",
-	"dojo/_base/event",
 	"dojo/dom-class",
 	"dojo/string",
 	"dojo/keys",
 	"../../util",
 	"./_PagerBase",
 	"dojo/text!../../templates/PaginationBar.html"
-], function(declare, array, lang, sniff, query, event, domClass, string, keys, util, _PagerBase, barTemplate){
+], function(declare, array, lang, sniff, query, domClass, string, keys, util, _PagerBase, barTemplate){
 
 	var hasClass = domClass.contains,
 		toggle = domClass.toggle,
@@ -35,7 +34,7 @@ define([
 		}
 	}
 
-	function focus(nodes, node, isMove, isLeft, isFocusable){
+	function _focus(nodes, node, isMove, isLeft, isFocusable){
 		//Try to focus on node, but if node is not focsable, find the next focusable node in nodes 
 		//along the given direction. If not found, try the other direction.
 		//Return the node if successfully focused, null if not.
@@ -119,18 +118,17 @@ define([
 					disablePrev = false,
 					nlsArr = [
 						mod.arg('pageIndexTitleTemplate', t.pageIndexTitle),
-						mod.arg('pageIndexWaiTemplate', t.pageIndexTitle),
+						mod.arg('pageIndexWaiTemplate', t.pageIndexWai),
 						mod.arg('pageIndexTemplate', t.pageIndex)
 					],
 					ellipsis = '<span class="gridxPagerStepperEllipsis">&hellip;</span>',
 					stepper = function(page){
 						return ['<span class="gridxPagerStepperBtn gridxPagerPage ',
 							currentPage == page ? 'gridxPagerStepperBtnActive' : '',
-							'" aria-pressed="', currentPage == page ? 'true' : 'false',
 							'" pageindex="', page,
 							'" title="', substitute(nlsArr[0], [page + 1]),
 							'" aria-label="', substitute(nlsArr[1], [page + 1]),
-							'" role="button" tabindex="', tabIndex, '">', substitute(nlsArr[2], [page + 1]),
+							'" tabindex="', tabIndex, '">', substitute(nlsArr[2], [page + 1]),
 						'</span>'].join('');
 					};
 				if(pageCount){
@@ -169,8 +167,6 @@ define([
 				}
 				toggle(t._nextPageBtn, 'gridxPagerStepperBtnDisable gridxPagerNextPageDisable', disableNext);
 				toggle(t._prevPageBtn, 'gridxPagerStepperBtnDisable gridxPagerPrevPageDisable', disablePrev);
-				t._nextPageBtn.setAttribute('aria-disabled', disableNext);
-				t._prevPageBtn.setAttribute('aria-disabled', disablePrev);
 		
 				if(t._focusArea() == t.position + 'PageStepper'){
 					t._findNextPageStepperBtn();
@@ -214,10 +210,10 @@ define([
 					currentSize = t.pagination.pageSize(),
 					nlsArr = [
 						mod.arg('pageSizeTitleTemplate', t.pageSizeTitle),
-						mod.arg('pageSizeWaiTemplate', t.pageSizeTitle),
+						mod.arg('pageSizeWaiTemplate', t.pageSizeWai),
 						mod.arg('pageSizeTemplate', t.pageSize),
 						mod.arg('pageSizeAllTitleText', t.pageSizeAllTitle),
-						mod.arg('pageSizeAllWaiText', t.pageSizeAllTitle),
+						mod.arg('pageSizeAllWaiText', t.pageSizeAllWai),
 						mod.arg('pageSizeAllText', t.pageSizeAll)
 					];
 		
@@ -230,11 +226,10 @@ define([
 					}
 					sb.push('<span class="gridxPagerSizeSwitchBtn ',
 						currentSize === pageSize ? 'gridxPagerSizeSwitchBtnActive' : '',
-						'" aria-pressed="', currentSize === pageSize ? 'true' : 'false',
 						'" pagesize="', pageSize,
 						'" title="', isAll ? nlsArr[3] : substitute(nlsArr[0], [pageSize]),
 						'" aria-label="', isAll ? nlsArr[4] : substitute(nlsArr[1], [pageSize]),
-						'" role="button" tabindex="', tabIndex, '">', isAll ? nlsArr[5] : substitute(nlsArr[2], [pageSize]),
+						'" tabindex="', tabIndex, '">', isAll ? nlsArr[5] : substitute(nlsArr[2], [pageSize]),
 						'</span>',
 						//Separate the "separator, so we can pop the last one.
 						'<span class="gridxPagerSizeSwitchSeparator">' + separator + '</span>');
@@ -262,7 +257,6 @@ define([
 				var cls = mod.arg('dialogClass'),
 					gppane = mod.arg('gotoPagePane'),
 					props = lang.mixin({
-						'class': 'gridxGotoPageDialog',
 						title: t.gotoDialogTitle,
 						content: new gppane({
 							pager: t
@@ -273,11 +267,11 @@ define([
 			var pageCount = t.pagination.pageCount(),
 				pane = t._gotoDialog.content;
 			pane.pageCountMsgNode.innerHTML = substitute(t.gotoDialogPageCount, [pageCount]);
-			pane.pageInputBox.set('constraints', {
+			pane.pageInputBox.constraints = {
 				fractional: false, 
 				min: 1, 
 				max: pageCount
-			});
+			};
 			t._gotoDialog.show();
 		},
 
@@ -294,7 +288,7 @@ define([
 					focusNode: t._pageStepperContainer,
 					doFocus: lang.hitch(t, t._findNextPageStepperBtn, false, false)
 				});
-				t.connect(t._pageStepperContainer, 'onkeydown', function(evt){
+				t.connect(t._pageStepperContainer, 'onkeypress', function(evt){
 					if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
 						t._findNextPageStepperBtn(true, evt.keyCode == leftKey);
 					}else if(evt.keyCode == keys.ENTER && 
@@ -306,10 +300,7 @@ define([
 						}else{
 							p.gotoPage(parseInt(t._focusPageIndex, 10));
 						}
-					}else{
-						return;
 					}
-					event.stop(evt);
 				});
 
 				focus.registerArea({
@@ -318,17 +309,14 @@ define([
 					focusNode: t._sizeSwitchContainer,
 					doFocus: lang.hitch(t, t._findNextPageSizeSwitch, false, false)
 				});
-				t.connect(t._sizeSwitchContainer, 'onkeydown', function(evt){
+				t.connect(t._sizeSwitchContainer, 'onkeypress', function(evt){
 					if(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW){
 						t._findNextPageSizeSwitch(true, evt.keyCode == leftKey);
 					}else if(evt.keyCode == keys.ENTER &&
 						hasClass(evt.target, 'gridxPagerSizeSwitchBtn') &&
 						!hasClass(evt.target, 'gridxPagerSizeSwitchBtnActive')){
 						p.setPageSize(parseInt(t._focusPageSize, 10));
-					}else{
-						return;
 					}
-					event.stop(evt);
 				});
 
 				focus.registerArea({
@@ -341,10 +329,9 @@ define([
 						return true;
 					}
 				});
-				t.connect(t._gotoBtn, 'onkeydown', function(evt){
+				t.connect(t._gotoBtn, 'onkeypress', function(evt){
 					if(evt.keyCode == keys.ENTER){
 						t._showGotoDialog();
-						event.stop(evt);
 					}
 				});
 			}

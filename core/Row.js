@@ -4,7 +4,6 @@ define([
 	"dojo/_base/Deferred"
 ], function(declare, lang, Deferred){
 
-	
 	return declare(/*===== "gridx.core.Row", =====*/[], {
 		// summary:
 		//		Represents a row of a grid
@@ -26,15 +25,12 @@ define([
 		model: null,
 		=====*/
 
-		
-
 		constructor: function(grid, id){
 			this.grid = grid;
 			this.model = grid.model;
 			this.id = id;
 		},
 
-		
 		index: function(){
 			// summary:
 			//		Get the index of this row
@@ -43,11 +39,6 @@ define([
 			return this.model.idToIndex(this.id);	//Integer
 		},
 
-		parent: function(){
-			return this.grid.row(this.model.treePath(this.id).pop(), 1);	//gridx.core.Row
-		},
-
-		
 		cell: function(column, isId){
 			// summary:
 			//		Get a cell object in this row
@@ -60,32 +51,6 @@ define([
 			return this.grid.cell(this, column, isId);	//gridx.core.Cell|null
 		},
 
-		
-		cells: function(start, count){
-			// summary:
-			//		Get cells in this row.
-			// start: Integer?
-			//		The column index of the first cell in the returned array.
-			//		If omitted, defaults to 0, so row.cells() gets all the cells.
-			// count: Integer?
-			//		The number of cells to return.
-			//		If omitted, all the cells starting from column 'start' will be returned.
-			// returns:
-			//		An array of cells in this row
-			var t = this,
-				g = t.grid,
-				cells = [],
-				cols = g._columns,
-				total = cols.length,
-				i = start || 0,
-				end = count >= 0 ? start + count : total;
-			for(; i < end && i < total; ++i){
-				cells.push(g.cell(t.id, cols[i].id, 1));	//1 as true
-			}
-			return cells;	//gridx.core.Cell[]
-		},
-
-		
 		data: function(){
 			// summary:
 			//		Get the grid data in this row.
@@ -97,7 +62,6 @@ define([
 			return this.model.byId(this.id).data;	//Object
 		},
 
-		
 		rawData: function(){
 			// summary:
 			//		Get the store data in this row.
@@ -109,7 +73,6 @@ define([
 			return this.model.byId(this.id).rawData;	//Object
 		},
 
-		
 		item: function(){
 			// summary:
 			//		Get the store item of this row
@@ -121,7 +84,6 @@ define([
 			return this.model.byId(this.id).item;	//Object
 		},
 
-		
 		setRawData: function(rawData){
 			// summary:
 			//		Set new raw data of this row into the store
@@ -134,7 +96,7 @@ define([
 				item = t.item(),
 				field, d;
 			if(s.setValue){
-				d = new Deferred();
+				d = new Deferred;
 				try{
 					for(field in rawData){
 						s.setValue(item, field, rawData[field]);

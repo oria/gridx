@@ -1,14 +1,8 @@
 /*Single Sorting*/
-.gridxRtl .gridxArrowButtonNode {
-	float: left;
+.gridxRtl .gridxArrowButtonNode{
+	float:left;
 	margin:2px 5px 0 4px;
 }
-
-.gridxRtl .gridxArrowButtonChar{
-	float: left;
-	margin: 0 5px 0 4px;
-}
-
 /* NestedSorting */
 .dijitRtl .gridxSortNode {
 	text-align: right;

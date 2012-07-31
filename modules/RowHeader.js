@@ -12,7 +12,8 @@ define([
 	"../util"
 ], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, keys, _Module, util){
 
-	return declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
 		// summary:
 		//		This modules provides a header before each row.
 		// description:
@@ -33,10 +34,9 @@ define([
 		constructor: function(){
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',
-				role: 'row',
 				innerHTML: ['<table border="0" cellspacing="0" cellpadding="0" style="width: ', 
 					this.arg('width'), 
-					';"><tr><th class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></th></tr></table>'
+					';"><tr><th class="gridxRowHeaderHeaderCell" tabindex="-1"></th></tr></table>'
 				].join('')
 			});
 			this.bodyNode = domConstruct.create('div', {
@@ -76,27 +76,17 @@ define([
 			t.batchConnect(
 				[body, 'onRender', '_onRendered'],
 				[body, 'onAfterRow', '_onAfterRow'],
-				[body, 'onAfterCell', '_onAfterCell'],
 				[body, 'onUnrender', '_onUnrender'],
 				[g.bodyNode, 'onscroll', '_onScroll'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
-				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
-				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']);
+				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']
+			);
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
-		},
-
-		load: function(args, startup){
-			var t = this,
-				bn = t.bodyNode;
-			startup.then(function(){
-				bn.style[t.grid.isLeftToRight() ? 'left' : 'right'] = -bn.offsetWidth + 'px';
-				t.loaded.callback();
-			});
 		},
 
 		//Public--------------------------------------------------------------------------
@@ -106,13 +96,11 @@ define([
 		width: '20px',
 
 		onMoveToRowHeaderCell: function(){
-			// summary:
-			//		Fired when focus is moved to a row header using keyboard.
 			// tags:
 			//		callback
 		},
 
-	/*=====
+		/*=====
 		// headerProvider: Function
 		//		A functionn that returns an HTML string to fill the header cell of row headers.
 		headerProvider: null,
@@ -120,7 +108,7 @@ define([
 		// cellProvider: Function
 		//		A function that returns an HTML string to fill the body cells of row headers.
 		cellProvider: null,
-	=====*/
+		=====*/
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){
@@ -140,46 +128,23 @@ define([
 			}
 		},
 
-		_onAfterRow: function(row){
+		_onAfterRow: function(rowInfo, rowCache){
 			var t = this,
-				visualIndex = row.visualIndex(),
-				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
-				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
+				n = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
+				bn = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
 				nt = n.firstChild,
 				cp = t.arg('cellProvider');
-			n.setAttribute('rowid', row.id);
-			n.setAttribute('rowindex', row.index());
-			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');
+			nt.style.height = bn.offsetHeight + 'px';
+			n.setAttribute('rowid', rowInfo.rowId);
+			n.setAttribute('rowindex', rowInfo.rowIndex);
+			n.setAttribute('parentid', rowInfo.parentId || '');
 			if(cp){
-				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
+				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, rowInfo);
 			}
-			t._syncRowHeight(nt, bn);
-		},
-
-		_onAfterCell: function(cell){
-			//This is to ensure the rowHeader get correct height for editable cells
-			var t = this,
-				visualIndex = cell.row.visualIndex(),
-				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
-				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
-			t._syncRowHeight(n.firstChild, bn);
-		},
-
-		_syncRowHeight: function(rowHeaderNode, bodyNode){
-			//Use setTimeout to ensure the row header height correct reflects the body row height.
-			//FIXME: This is tricky and may not be working in some special cases.
-			function getHeight(){
-				return sniff('ie') ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
-			}
-			rowHeaderNode.style.height = getHeight();
-			setTimeout(function(){
-				rowHeaderNode.style.height = getHeight();
-			}, 0);
 		},
 
 		_onRendered: function(start, count){
-			var t = this,
-				hp = t.arg('headerProvider');
+			var t = this, hp = t.arg('headerProvider');
 			if(hp){
 				t.headerCellNode.innerHTML = hp();
 			}
@@ -187,10 +152,9 @@ define([
 		},
 
 		_onUnrender: function(id){
-			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
-			if(nodes && nodes.length){
-				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
-				domConstruct.destroy(nodes[nodes.length - 1]);
+			var n = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode)[0];
+			if(n){
+				domConstruct.destroy(n);
 			}
 		},
 
@@ -209,8 +173,8 @@ define([
 		_buildRows: function(start, count){
 			var sb = [];
 			for(var i = 0; i < count; ++i){
-				sb.push('<div class="gridxRowHeaderRow" role="row" visualindex="', start + i,
-					'"><table border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" role="rowheader" tabindex="-1"></td></tr></table></div>');
+				sb.push('<div class="gridxRowHeaderRow" visualindex="', start + i,
+					'"><table border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" tabindex="-1"></td></tr></table></div>');
 			}
 			return sb.join('');
 		},
@@ -345,5 +309,5 @@ define([
 				});
 			}
 		}
-	});
+	}));
 });

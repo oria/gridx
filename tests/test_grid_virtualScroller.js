@@ -1,24 +1,19 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
-	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules){
+	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/modules'
+], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
 
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
 		store: storeFactory({
 			dataSource: dataSource, 
-			size: 2000
+			size: 1000
 		}),
-		modules:[
-			modules.SingleSort,
-			modules.SelectRow,
-			modules.VirtualVScroller
-		],
+		modules:[modules.SingleSort, modules.SelectRow, modules.VirtualVScroller],
 		structure: dataSource.layouts[4]
 	});
 	grid.placeAt('gridContainer');

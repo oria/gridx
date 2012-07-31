@@ -1,16 +1,15 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"./_Cache"
-], function(declare, lang, Deferred, _Cache){
+], function(declare, Deferred, _Cache){
 
-	return declare(/*===== "gridx.core.model.cache.Async", =====*/_Cache, {
+	return declare(_Cache, {
 		keep: function(){},
 		free: function(){},
 
 		when: function(args, callback){
-			var d = new Deferred();
+			var d = new Deferred;
 			try{
 				if(callback){
 					callback();
@@ -23,27 +22,23 @@ define([
 		},
 
 		//Private---------------------------------------------
-		_init: function(/*method, args*/){
+		_init: function(method, args){
 			var t = this;
-			if(!t._filled){
+			if(t._size[''] < 0){
 				t._storeFetch({ start: 0 });
 				if(t.store.getChildren){
 					t._fetchChildren();
 				}
-				t.model._onSizeChange();
 			}
 		},
 
 		_fetchChildren: function(){
-			var s = this._struct,
-				pids = s[''].slice(1),
-				pid,
-				appendChildren = function(pid){
-					[].push.apply(pids, s[pid].slice(1));
-				};
+			var s = this._struct, pids = s[''].slice(1), pid;
 			while(pids.length){
 				pid = pids.shift();
-				Deferred.when(this._loadChildren(pid), lang.partial(appendChildren, pid));
+				this._loadChildren(pid).then(function(){
+					[].push.apply(pids, s[pid].slice(1));
+				});
 			}
 		}
 	});

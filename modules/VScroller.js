@@ -4,15 +4,15 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/sniff",
 	"dojo/_base/query",
-	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, sniff, query, domGeo, keys, metrics, _Module){
+], function(declare, Deferred, event, sniff, query, keys, metrics, _Module){
 	
 	var st = 'scrollTop';
 
-	return declare(/*===== "gridx.modules.VScroller", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.VScroller", =====*/_Module, {
 		// summary:
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
@@ -22,6 +22,8 @@ define([
 
 		name: 'vScroller',
 	
+//        required: ['hLayout'],
+
 		forced: ['body', 'vLayout', 'columnWidth'],
 
 		optional: ['pagination'],
@@ -34,60 +36,36 @@ define([
 			};
 		},
 
-		constructor: function(){
-			var t = this,
-				g = t.grid,
-				dn = t.domNode = g.vScrollerNode;
-			t.stubNode = dn.firstChild;
-			if(g.autoHeight){
-				dn.style.display = 'none';
-				if(sniff('ie') < 8){
-					dn.style.width = '0px';
-				}
-			}else{
-				var w = metrics.getScrollbar().w + 'px';
-				dn.style.width = w;
-				dn.style[g.isLeftToRight() ? 'right' : 'left'] = -metrics.getScrollbar().w + 'px';
-				if(sniff('ie') < 8){
-					t.stubNode.style.width = w;
-				}
-			}
-		},
-
 		preload: function(args){
 			// tags:
 			//		protected extension
-			this.grid.hLayout.register(null, this.domNode, 1);
+			var t = this, g = t.grid,
+				dn = t.domNode = g.vScrollerNode;
+			t.stubNode = dn.firstChild;
+			if(sniff('ie') < 8){
+				t.stubNode.style.width = metrics.getScrollbar().w + 'px';
+			}
+			if(g.autoHeight){
+				dn.style.display = 'none';
+			}else{
+				t.domNode.style.width = metrics.getScrollbar().w + 'px';
+			}
+			g.hLayout.register(null, dn, 1);
 		},
 
 		load: function(args, startup){
 			// tags:
 			//		protected extension
-			var t = this,
-				g = t.grid,
-				bd = g.body,
-				dn = t.domNode,
-				bn = g.bodyNode;
+			var t = this, g = t.grid, bn = g.bodyNode;
 			t.batchConnect(
 				[t.domNode, 'onscroll', '_doScroll'],
 				[bn, 'onmousewheel', '_onMouseWheel'],
 				[g.mainNode, 'onkeypress', '_onKeyScroll'],
-				sniff('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']);
-			t.aspect(g, '_onResizeEnd', '_onBodyChange');
-			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
-			t.aspect(bd, 'onRender', '_onBodyChange');
-			if(!g.autoHeight){
-				t.aspect(bd, 'onEmpty', function(){
-					var ds = dn.style;
-					ds.display = 'none';
-					ds.width = '';
-					if(sniff('ie') < 8){
-						ds.width = t.stub.style.width = '0px';
-					}
-					g.hLayout.reLayout();
-					g.hScroller.refresh();
-				});
-			}
+				[g.body, 'onRender', '_onBodyChange'],
+				[g.body, 'onForcedScroll', '_onForcedScroll'],
+				[g, '_onResizeEnd', '_onBodyChange'],
+				sniff('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']
+			);
 			startup.then(function(){
 				Deferred.when(t._init(args), function(){
 					t.domNode.style.width = '';
@@ -141,35 +119,13 @@ define([
 		_init: function(){
 			this._onForcedScroll();
 		},
-
-		_update: function(){
-			var t = this,
-				g = t.grid;
-			if(!g.autoHeight){
-				var bd = g.body,
-					bn = g.bodyNode,
-					toShow = bd.renderCount < bd.visualCount || bn.scrollHeight > bn.clientHeight,
-					ds = t.domNode.style;
-					scrollBarWidth = metrics.getScrollbar().w + (sniff('webkit') ? 1 : 0);//Fix a chrome RTL defect
-				if(sniff('ie') < 8){
-					var w = toShow ? scrollBarWidth + 'px' : '0px';
-					t.stubNode.style.width = w;
-					ds.width = w;
-				}else{
-					ds.width = '';
-				}
-				ds.display = toShow ? '' : 'none';
-				ds[g.isLeftToRight() ? 'right' : 'left'] = -t.domNode.offsetWidth + 'px';
-			}
-			g.hLayout.reLayout();
-		},
-
+	
 		_doScroll: function(){
 			this.grid.bodyNode[st] = this.domNode[st];
 		},
 	
 		_onMouseWheel: function(e){
-			if(this.grid.vScrollerNode.style.display != 'none'){
+			if(!this.grid.autoHeight){
 				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
 				this.domNode[st] -= rolled;
 				event.stop(e);
@@ -177,135 +133,44 @@ define([
 		},
 	
 		_onBodyChange: function(){
-			var t = this,
-				g = t.grid;
-			t._update();
+			var t = this, g = t.grid;
 			//IE7 Needs setTimeout
-			setTimeout(function(){
-				if(!g.bodyNode){
-					//fix FF10 - g.bodyNode will be undefined during a quick recreation
-					return;
-				}				
+			window.setTimeout(function(){
 				t.stubNode.style.height = g.bodyNode.scrollHeight + 'px';
 				t._doScroll();
 				//FIX IE7 problem:
 				g.vScrollerNode[st] = g.vScrollerNode[st] || 0;
-			}, 0);
+			},0);
 		},
 
 		_onForcedScroll: function(){
-			var t = this,
-				bd = t.grid.body;
+			var t = this, bd = t.grid.body;
 			return t.model.when({
-				start: bd.rootStart,
+				start: bd.rootStart, 
 				count: bd.rootCount
 			}, function(){
-				bd.renderRows(0, bd.visualCount);
+				bd.renderRows(0, bd.rootCount || t.model.size() - bd.rootStart);
 			});
 		},
 	
 		_onKeyScroll: function(evt){
-			var t = this,
-				g = t.grid,
-				bd = g.body,
-				bn = g.bodyNode,
-				focus = g.focus,
-				sn = t.domNode,
-				rowNode;
-			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
-				if(evt.keyCode == keys.HOME){
-					sn[st] = 0;
-					rowNode = bn.firstChild;
-				}else if(evt.keyCode == keys.END){
-					sn[st] = sn.scrollHeight - sn.offsetHeight;
-					rowNode = bn.lastChild;
-				}else if(evt.keyCode == keys.PAGE_UP){
-					if(!sn[st]){
-						rowNode = bn.firstChild;
-					}else{
-						sn[st] -= sn.offsetHeight;
-					}
-				}else if(evt.keyCode == keys.PAGE_DOWN){
-					if(sn[st] >= sn.scrollHeight - sn.offsetHeight){
-						rowNode = bn.lastChild;
-					}else{
-						sn[st] += sn.offsetHeight;
-					}
-				}else{
-					return;
-				}
-				if(focus){
-					if(rowNode){
-						bd._focusCellRow = parseInt(rowNode.getAttribute('visualindex'), 10);
-						focus.focusArea('body', 1);	//1 as true
-					}else{
-						setTimeout(function(){
-							var rowNodes = bn.childNodes,
-								start = 0,
-								end = rowNodes.length - 1,
-								containerPos = domGeo.position(bn),
-								i, p,
-								checkPos = function(idx){
-									var rn = rowNodes[idx],
-										pos = domGeo.position(rn);
-									if(evt.keyCode == keys.PAGE_DOWN){
-										var prev = rn.previousSibling;
-										if((!prev && pos.y >= containerPos.y) || pos.y == containerPos.y){
-											return 0;
-										}else if(!prev){
-											return -1;
-										}else{
-											var prevPos = domGeo.position(prev);
-											if(prevPos.y < containerPos.y && prevPos.y + prevPos.h >= containerPos.y){
-												return 0;
-											}else if(prevPos.y > containerPos.y){
-												return 1;
-											}else{
-												return -1;
-											}
-										}
-									}else{
-										var post = rn.nextSibling;
-										if((!post && pos.y + pos.h <= containerPos.y + containerPos.h) ||
-											pos.y + pos.h == containerPos.y + containerPos.h){
-											return 0;
-										}else if(!post){
-											return 1;
-										}else{
-											var postPos = domGeo.position(post);
-											if(postPos.y <= containerPos.y + containerPos.h &&
-													postPos.y + postPos.h > containerPos.y + containerPos.h){
-												return 0;
-											}else if(postPos.y > containerPos.y + containerPos.h){
-												return 1;
-											}else{
-												return -1;
-											}
-										}
-									}
-								};
-							//Binary search the row to focus
-							while(start <= end){
-								i = Math.floor((start + end) / 2);
-								p = checkPos(i);
-								if(p < 0){
-									start = i + 1;
-								}else if(p > 0){
-									end = i - 1;
-								}else{
-									rowNode = rowNodes[i];
-									break;
-								}
-							}
-							if(rowNode){
-								bd._focusCellRow = parseInt(rowNode.getAttribute('visualindex'), 10);
-								focus.focusArea('body', 1);	//1 as true
-							}
-						}, 0);
-					}
-				}
-				event.stop(evt);
+			var t = this, bd = t.grid.body, sn = t.domNode, r, fc = '_focusCellRow';
+			if(evt.keyCode == keys.HOME){
+				bd[fc] = 0;
+				sn[st] = 0;
+			}else if(evt.keyCode == keys.END){
+				bd[fc] = bd.visualCount - 1;
+				sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
+			}else if(evt.keyCode == keys.PAGE_UP){
+				r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
+				t.scrollToRow(r, 1);
+			}else if(evt.keyCode == keys.PAGE_DOWN){
+				r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
+				t.scrollToRow(r, 1);
+			}else{
+				return;
 			}
+			event.stop(evt);
 		}
-	});
+	}));
 });

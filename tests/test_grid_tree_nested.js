@@ -1,11 +1,10 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
-	'gridx/tests/support/data/TreeNestedTestData',
+	'gridx/tests/support/data/TreeColumnarTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane',
-	'dojo/domReady!'
+	'gridx/tests/support/TestPane'
 ], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
 
 	var store = storeFactory({
@@ -30,12 +29,8 @@ require([
 		modules: [
 			mods.Focus,
 			mods.Tree,
-			mods.SelectRow,
-			mods.RowHeader,
-			mods.IndirectSelect,
 			mods.VirtualVScroller
 		],
-		treeExpandLevel: 2,
 		treeNested: true
 	});
 	grid.placeAt('gridContainer');

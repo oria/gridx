@@ -1,34 +1,30 @@
 define([
 	'dojo/_base/declare',
-	"dojo/_base/lang",
-	'dojo/_base/array',
-	'dojo/aspect'
-], function(declare, lang, array, aspect){
+	'dojo/_base/connect',
+	'dojo/_base/array'
+], function(declare, connect, array){
 
 	return declare([], {
 		// summary:
 		//		Abstract base class for all model components (including cache)
 		constructor: function(model){
-			var t = this,
-				i = t.inner = model._model;
+			var t = this, c = 'connect', i = t.inner = model._model;
 			t._cnnts = [];
 			t.model = model;
 			model._model = t;
 			if(i){
-				t.aspect(i, 'onDelete', '_onDelete');
-				t.aspect(i, 'onNew', '_onNew');
-				t.aspect(i, 'onSet', '_onSet');
+				t[c](i, 'onDelete', '_onDelete');
+				t[c](i, 'onNew', '_onNew');
+				t[c](i, 'onSet', '_onSet');
 			}
 		},
 
 		destroy: function(){
-			array.forEach(this._cnnts, function(cnnt){
-				cnnt.remove();
-			});
+			array.forEach(this._cnnts, connect.disconnect);
 		},
 
-		aspect: function(obj, e, method, scope, pos){
-			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
+		connect: function(obj, event, method, scope){
+			var cnnt = connect.connect(obj, event, scope || this, method);
 			this._cnnts.push(cnnt);
 			return cnnt;
 		},
@@ -53,16 +49,12 @@ define([
 
 		//Protected-----------------------------------------------------------------
 		_call: function(method, args){
-			var t = this,
-				m = t[method],
-				n = t.inner;
+			var t = this, m = t[method], n = t.inner;
 			return m ? m.apply(t, args || []) : n && n._call(method, args);
 		},
 
 		_mixinAPI: function(){
-			var i,
-				m = this.model,
-				args = arguments,
+			var i, m = this.model, args = arguments,
 				api = function(method){
 					return function(){
 						return m._model._call(method, arguments);

@@ -1,13 +1,12 @@
 require([
 	'dojo',
 	'gridx/Grid',
-	'gridx/core/model/cache/Sync',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
-	'dijit/form/CheckBox',
-	'dojo/domReady!'
+	'dijit/form/CheckBox'
 ], function(dojo, Grid, Cache, dataSource, storeFactory, modules, TestPane){
 	
 	grid = new Grid({
@@ -21,22 +20,16 @@ require([
 
 		//selectRowTriggerOnCell: true,
 		paginationInitialPage: 3,
-		paginationBarSizes: [10, 20, 40, 0],
+		paginationBarSizes: [5, 10, 20, 30, 0],
 		paginationBarVisibleSteppers: 5,
 		paginationBarPosition: 'bottom',
-//        paginationBarSizeSwitch: false,
-//        paginationBarGotoButton: false,
-		bodyRowHoverEffect: false,
 		modules: [
 			modules.Pagination,
-			modules.Filter,
-			modules.FilterBar,
 			modules.PaginationBar,
 			modules.Focus,
 			modules.RowHeader,
 			modules.ExtendedSelectRow,
-			modules.MoveRow,
-			modules.DndRow,
+			//modules.IndirectSelect,
 			modules.VirtualVScroller
 		]
 	});

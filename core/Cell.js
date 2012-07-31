@@ -2,7 +2,6 @@ define([
 	"dojo/_base/declare"
 ], function(declare){
 
-	
 	return declare(/*===== "gridx.core.Cell", =====*/[], {
 		// summary:
 		//		Represents a cell of a grid
@@ -28,16 +27,14 @@ define([
 		model: null,
 		=====*/
 
-		
 		constructor: function(grid, row, column){
-			var t = this;
+			var t=this;
 			t.grid = grid;
 			t.model = grid.model;
 			t.row = row;
 			t.column = column;
 		},
 
-		
 		data: function(){
 			// summary:
 			//		Get the grid data of this cell.
@@ -49,7 +46,6 @@ define([
 			return this.model.byId(this.row.id).data[this.column.id];	//String|Number
 		},
 
-		
 		rawData: function(){
 			// summary:
 			//		Get the store data of this cell.
@@ -61,7 +57,6 @@ define([
 			return f && t.model.byId(t.row.id).rawData[f];	//anything
 		},
 
-		
 		setRawData: function(rawData){
 			// summary:
 			//		Set new raw data to this cell.
@@ -69,12 +64,9 @@ define([
 			//		Anything that store can recognize as data
 			// returns:
 			//		If using server side store, a Deferred object is returned to indicate when the operation is finished.
-			var obj = {},
-				field = this.column.field();
-			if(field){
-				obj[field] = rawData;
-				return this.row.setRawData(obj);	//dojo.Deferred
-			}
+			var obj = {};
+			obj[this.column.field()] = rawData;
+			return this.row.setRawData(obj);	//dojo.Deferred
 		}
 	});
 });

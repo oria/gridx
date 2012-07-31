@@ -3,14 +3,12 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/_base/Deferred",
-	"dojo/_base/connect",
-	"dojo/aspect"
-], function(declare, lang, array, Deferred, connect, aspect){
-
+	"dojo/_base/connect"
+], function(declare, lang, array, Deferred, connect){
+	
 var isFunc = lang.isFunction,
 	c = 'connect',	//To reduce code size
 
-	
 	moduleBase = declare(/*===== "gridx.core._Module", =====*/[], {
 	/*=====
 		// name: String
@@ -97,7 +95,6 @@ var isFunc = lang.isFunction,
 		loaded: null,
 	=====*/
 	
-		
 		constructor: function(grid, args){
 			var t = this;
 			t.grid = grid;
@@ -185,12 +182,6 @@ var isFunc = lang.isFunction,
 			return r;	//anything
 		},
 
-		aspect: function(obj, e, method, scope, pos){
-			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
-			this._cnnts.push(cnnt);
-			return cnnt;
-		},
-
 		connect: function(obj, e, method, scope, flag){
 			// summary:
 			//		Connect an event handler to an event or function.
@@ -207,10 +198,7 @@ var isFunc = lang.isFunction,
 			//		If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.
 			// returns:
 			//		The connect handle
-			var t = this,
-				cnnt,
-				g = t.grid,
-				s = scope || t;
+			var t = this, cnnt, g = t.grid, s = scope || t;
 			if(obj === g && typeof e == 'string'){
 				cnnt = connect[c](obj, e, function(){
 					var a = arguments;
@@ -261,6 +249,6 @@ var isFunc = lang.isFunction,
 	};
 	//! means not string, should be 'eval'ed.
 	moduleBase._markupAttrs = ['id', 'name', 'field', 'width', 'dataType', '!formatter', '!decorator', '!sortable'];
-
+	
 	return moduleBase;
 });
