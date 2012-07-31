@@ -22,7 +22,7 @@ define([
 				var m = e.offsetX || e.layerX || 0,
 					i = 0,
 					cells = node.rows[0].cells;
-				while(m > 0){
+				while(m > 0 && cells[i]){
 					m -= cells[i].offsetWidth;
 					i++;
 				}
