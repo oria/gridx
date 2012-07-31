@@ -10,7 +10,7 @@ GridX is consisted of:
 * A flexible plugin machinery with comprehensive module life-cycle and conflict management
 * A rich and extend-able set of modules which can be loaded on demand.
 
-GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) with the same [BSD/AFLv2 license] (http://dojotoolkit.org/license)
+GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://dojofoundation.org/about/cla) with the same [BSD/AFLv2 license] (http://dojotoolkit.org/license)
 
 ## Installation
 
