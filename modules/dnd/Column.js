@@ -4,10 +4,9 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"dojo/_base/query",
-	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, array, domGeometry, domClass, query, keys, _Base, _Module){
+], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
 	return declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
 		// summary:

@@ -135,7 +135,7 @@ define([
 					if(mouse.isLeft(e) && (t.arg('triggerOnCell') || !e.columnId)){
 						t._isOnCell = e.columnId;
 						g.body._focusCellCol = e.columnIndex;
-						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 					}
 				}],
 				[g, 'onRowMouseOver', function(e){
@@ -145,9 +145,11 @@ define([
 					t._highlight({row: e.visualIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
+					if(e.keyCode == keys.SPACE && (!e.columnId ||
+							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
 				}]);
@@ -220,14 +222,14 @@ define([
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
 			var t = this;
 			if(t.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				t._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
+				t._start({row: rowVisIndex}, t.grid._isCopyEvent(e), 1);	//1 as true
 				t._end();
 			}
 		},
 
 		_onMoveToRowHeaderCell: function(rowVisIndex, e){
 			if(e.shiftKey){
-				this._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
+				this._start({row: rowVisIndex}, this.grid._isCopyEvent(e), 1);	//1 as true
 				this._end();
 			}
 		},

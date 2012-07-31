@@ -20,13 +20,12 @@
 	background:transparent url("images/spriteArrows.png") no-repeat scroll left center;
 	display:block;
 	float:right;
-	height:1em;
-	margin:2px 4px 0 5px;
+	margin: 0px 4px 0 5px;
 	padding-left:0;
 	width:7px;
 }
 .gridxSortUp .gridxArrowButtonNode {
-	background-position:-21px 50%;
+	background-position:-21px 4px;
 }
 
 /*Nested Sorting*/

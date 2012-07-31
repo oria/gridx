@@ -214,12 +214,6 @@
 	outline: none;
 }
 
-/* in IE7/6 the scroller node can not show automatically */
-.dj_ie7 .gridxVScroller,
-.dj_ie6 .gridxVScroller {
-	width: 16px;
-}
-
 /*RowHeader*/
 .gridxRowHeaderHeader,
 .gridxRowHeaderBody {

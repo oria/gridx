@@ -164,7 +164,7 @@ define([
 				g = t.grid,
 				columns = g._columns,
 				body = g.body,
-				i, j, col, type;
+				i, j, col, type, rowInfo;
 			array.forEach(args, function(arg){
 				if(arg._range){
 					var a = Math.min(arg[0], arg[2]),
@@ -175,18 +175,20 @@ define([
 					for(i = c1; i <= c2; ++i){
 						col = columns[i];
 						if(col){
-							a = body.getRowInfo({visualIndex: a}).rowIndex;
+							rowInfo = body.getRowInfo({visualIndex: a});
+							a = rowInfo.rowIndex;
 							type = t._getMarkType(col.id);
 							for(j = 0; j < n; ++j){
-								m.markByIndex(j, toSelect, type);
+								m.markByIndex(a + j, toSelect, type, rowInfo.parentId);
 							}
 						}
 					}
 				}else{
 					col = columns[arg[1]];
 					if(col){
-						i = body.getRowInfo({visualIndex: arg[0]}).rowIndex;
-						m.markByIndex(i, toSelect, t._getMarkType(col.id));
+						rowInfo = body.getRowInfo({visualIndex: arg[0]});
+						i = rowInfo.rowIndex;
+						m.markByIndex(i, toSelect, t._getMarkType(col.id), rowInfo.parentId);
 					}
 				}
 			});
@@ -199,7 +201,7 @@ define([
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
 					if(mouse.isLeft(e)){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 					}
 				}],
 				[g, 'onCellMouseOver', function(e){
@@ -207,7 +209,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
 				}]
@@ -255,7 +257,7 @@ define([
 				var t = this,
 					rid = t._getRowId(rowVisIndex),
 					cid = t.grid._columns[colIndex].id;
-				t._start(createItem(rid, rowVisIndex, cid, colIndex), e.ctrlKey, 1);	//1 as true
+				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
 				t._end();
 			}
 		},
@@ -280,6 +282,11 @@ define([
 				if(current === null){
 					//First time select.
 					t._highlightSingle(target, 1);	//1 as true
+					//In IE, when setSelectable(false), the onfocusin event will not fire on doc, so the focus border is gone.
+					//So refocus it here.
+					if(sniff('ie')){
+						t._focus(target);
+					}
 				}else{
 					var start = t._startItem,
 						highlight = function(from, to, toHL){

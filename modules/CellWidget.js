@@ -68,15 +68,26 @@ define([
 				});
 			},
 		
-			setValue: function(gridData, storeData){
+			setValue: function(gridData, storeData, isInit){
 				try{
 					var t = this;
 					query('.gridxHasGridCellValue', t.domNode).map(function(node){
 						return registry.byNode(node);
 					}).forEach(function(widget){
 						if(widget){
-							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
-							widget.set('value', useStoreData ? storeData : gridData);
+							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData'),
+								data = useStoreData ? storeData : gridData,
+								onChange = widget.onChange;
+							//If we are just rendering this cell, setting widget value should not trigger onChange event,
+							//which will then trigger edit apply. But things are complicated because onChange is
+							//fired asynchronously, and maybe sometimes not fired.
+							//FIXME: How to ensure the onChange event does not fire if isInit is true?
+							if(isInit && widget.get('value') !== data){
+								widget.onChange = function(){
+									widget.onChange = onChange;
+								};
+							}
+							widget.set('value', data);
 						}
 					});
 					if(t.setCellValue){
@@ -309,8 +320,7 @@ define([
 				col._cellWidgets[cell.row.id] = widget;
 			}
 			widget.cell = cell;
-			widget.isInit = true;
-			widget.setValue(cell.data(), cell.rawData());
+			widget.setValue(cell.data(), cell.rawData(), true);
 			return widget;
 		},
 
