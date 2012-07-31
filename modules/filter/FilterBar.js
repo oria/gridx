@@ -19,8 +19,7 @@ define([
 	"./FilterTooltip",
 	"dijit/TooltipDialog",
 	"dijit/popup",
-	"dijit/Tooltip",
-	"dijit/form/Button"
+	"dijit/Tooltip"
 ], function(declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
@@ -527,7 +526,7 @@ define([
 		},
 		_doFocusBtnFilter: function(evt){
 			this.btnFilter.focus();
-			if(evt){event.stop(evt);}
+			if(evt){event.stopEvent(evt);}
 			return true;
 		},
 		_doFocusClearLink: function(evt){
@@ -535,25 +534,24 @@ define([
 			var link = query('a[action="clear"]')[0];
 			if(link){
 				link.focus();
-				if(evt){event.stop(evt);}
+				if(evt){event.stopEvent(evt);}
 				return true;
 			}
 			return false;
 		},
 		_doFocusBtnClose: function(evt){
 			this.btnClose.focus();
-			if(evt){event.stop(evt);}
+			if(evt){event.stopEvent(evt);}
 			return true;
 		},
 		
 		_doBlur: function(){
 			return true;
 		},
+		
 		destroy: function(){
-			this._filterDialog && this._filterDialog.destroy();
 			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}
-		
 	});
 });

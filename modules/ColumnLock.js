@@ -55,26 +55,26 @@ define([
 			this.count = this.arg('count');
 			var _this = this, g = this.grid, body = html.body();
 			deferStartup.then(function(){
-				if(!this.grid.columnWidth || !this.grid.columnWidth.arg('autoResize')){
-					_this.connect(g.body, 'onAfterRow', function(row){
-						this._lockColumns(row.node());
+				_this.connect(g.body, 'onAfterRow', function(row){
+					this._lockColumns(row.node());
+				});
+				if(g.columnResizer){
+					//make it compatible with column resizer
+					_this.connect(g.columnResizer, 'onResize', '_updateBody');
+				}
+				if(g.header){
+					g.header.loaded.then(function(){
+						_this._updateHeader();
 					});
-					if(g.columnResizer){
-						//make it compatible with column resizer
-						_this.connect(g.columnResizer, 'onResize', '_updateBody');
+					if(g.move && g.move.column){
+						_this.connect(g.move.column, 'move', '_updateHeader');
 					}
-					if(g.header){
-						g.header.loaded.then(function(){
-							_this._updateHeader();
-						});
-						if(g.move && g.move.column){
-							_this.connect(g.move.column, 'move', '_updateHeader');
-						}
-					}
-					_this._hackHScroller();
-					if(_this.count){
-						_this.lock(_this.count);
-					}
+				}
+				_this._hackHScroller();
+				if(_this.count){
+					_this.lock(_this.count);
+//					html.addClass(this.grid.domNode, 'gridxColumnLock');
+//					_this._updateScroller();
 				}
 				_this.loaded.callback();
 			});
@@ -88,7 +88,6 @@ define([
 		lock: function(/*Integer*/count){
 			// summary:
 			//		Dynamically lock consecutive #count leading columns.
-			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			if(count >= this.grid._columns.length){
 				this.count = 0;
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
@@ -107,7 +106,6 @@ define([
 		unlock: function(){
 			// summary:
 			//		Unlock all columns.
-			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			html.removeClass(this.grid.domNode, 'gridxColumnLock');
 			
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
@@ -120,15 +118,13 @@ define([
 		},
 		
 		_unlockColumns: function(rowNode){
-			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0];
 			for(var i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.removeClass(cell, 'gridxLockedCell');
 				html.style(cell, {height: 'auto'});
 			}
-			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = '0px';
-			rowNode.style.width = 'auto';
+			rowNode.style.paddingLeft = '0px';
 		},
 		
 		_updateUI: function(){
@@ -148,7 +144,6 @@ define([
 				return;
 			}
 			
-			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
 			for(i = 0; i < this.count; i++){
 				dojo.style(r.cells[i], 'height', 'auto');
@@ -161,14 +156,13 @@ define([
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.addClass(cell, 'gridxLockedCell');
-				var s = {height: h1 + 'px'};
-				s[ltr ? 'left' : 'right'] = pl + 'px';
-				html.style(cell, s);
-				
+				html.style(cell, {
+					height: h1 + 'px',
+					left: pl + 'px'
+				});
 				pl += cell.offsetWidth;
 			}
-			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl + 'px';
-			rowNode.style.width = rowNode.offsetWidth - pl + 'px';
+			rowNode.style.paddingLeft = pl + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
@@ -208,21 +202,11 @@ define([
 					if(_this.count){
 						array.forEach(this.grid.bodyNode.childNodes, function(rowNode){
 							rowNode.scrollLeft = scrollLeft;
-							//to be compatible with row lock
-							if(rowNode.style.position == 'absolute'){
-								var l = 0;
-								array.forEach(rowNode.firstChild.rows[0].cells, function(cell){
-									if(dojo.hasClass(cell, 'gridxLockedCell')){
-										cell.style.left = scrollLeft + l + 'px';
-										l += cell.offsetWidth;
-									}
-								});
-							}
 						});
 					}else{
 						this.grid.bodyNode.scrollLeft = scrollLeft;
 					}
-					this.grid.onHScroll(this.grid.hScroller._lastLeft);
+					this.grid.onHScroll(scrollLeft);
 				}
 			});
 		}

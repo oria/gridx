@@ -66,14 +66,6 @@ define([], function(){
 				{id: 'time', name: 'time', field: 'time'},
 				{id: 'bool', name: 'bool', field: 'bool'},
 				{id: 'id', name: 'id', field: 'id'}
-			],
-			[
-				{id: 'number', name: 'number', field: 'number'},
-				{id: 'string', name: 'string', field: 'string'},
-				{id: 'date', name: 'date', field: 'date'},
-				{id: 'time', name: 'time', field: 'time'},
-				{id: 'bool', name: 'bool', field: 'bool'},
-				{id: 'id', name: 'id', field: 'id'}
 			]
 		]
 	};

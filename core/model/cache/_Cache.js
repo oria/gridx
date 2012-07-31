@@ -19,8 +19,7 @@ define([
 			var t = this;
 			t.setStore(args.store);
 			t.columns = args.columns;
-			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'parentId',
-				'hasChildren', 'children', 'keep', 'free');
+			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'hasChildren', 'keep', 'free');
 		},
 
 		destroy: function(){
@@ -30,7 +29,7 @@ define([
 
 		setStore: function(store){
 			var t = this,
-				c = 'aspect',
+				c = 'connect',
 				old = store.fetch;
 			t.clear();
 			t.store = store;
@@ -95,7 +94,6 @@ define([
 
 		
 		treePath: function(id){
-			this._init('treePath', arguments);
 			var s = this._struct,
 				path = [];
 			while(id !== undefined){
@@ -111,11 +109,6 @@ define([
 		},
 
 		
-		parentId: function(id){
-			return this.treePath(id).pop();
-		},
-
-		
 		hasChildren: function(id){
 			var t = this,
 				s = t.store,
@@ -127,7 +120,6 @@ define([
 		
 		
 		children: function(parentId){
-			this._init('children', arguments);
 			parentId = this.model.isId(parentId) ? parentId : '';
 			var size = this._size[parentId],
 				children = [];
@@ -215,6 +207,7 @@ define([
 				rawData: rowData,
 				item: item
 			};
+			t._filled = 1;
 			t.onLoadRow(id);
 		},
 
@@ -254,10 +247,10 @@ define([
 		},
 	
 		_storeFetch: function(options, onFetched){
-//            console.debug("\tFETCH start: ",
-//                    options.start, ", count: ",
-//                    options.count, ", end: ",
-//                    options.count && options.start + options.count - 1, ", options:",
+//            console.debug("\tFETCH start: ", 
+//                    options.start, ", count: ", 
+//                    options.count, ", end: ", 
+//                    options.count && options.start + options.count - 1, ", options:", 
 //                    this.options);
 
 			var t = this,
@@ -267,7 +260,6 @@ define([
 				onBegin = hitch(t, t._onBegin),
 				onComplete = hitch(t, t._onComplete, d, options.start),
 				onError = hitch(d, d.errback);
-			t._filled = 1;	//1 as true;
 			t.onBeforeFetch();
 			if(s.fetch){
 				s.fetch(mixin(req, {
@@ -289,12 +281,11 @@ define([
 			var t = this,
 				id = t.store.getIdentity(item),
 				index = t.idToIndex(id),
-				path = t.treePath(id),
-				old = t._cache[id];
+				path = t.treePath(id);
 			if(path.length){
 				t._addRow(id, index, t._itemToObject(item), item, path.pop());
 			}
-			t.onSet(id, index, t._cache[id], old);
+			t.onSet(id, index, t._cache[id]);
 		},
 	
 		_onNew: function(item, parentInfo){

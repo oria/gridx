@@ -23,14 +23,13 @@ define([
 		},
 
 		//Private---------------------------------------------
-		_init: function(/*method, args*/){
+		_init: function(method, args){
 			var t = this;
 			if(!t._filled){
 				t._storeFetch({ start: 0 });
 				if(t.store.getChildren){
 					t._fetchChildren();
 				}
-				t.model._onSizeChange();
 			}
 		},
 

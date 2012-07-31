@@ -20,15 +20,12 @@ require([
 				size: size
 			}),
 			selectRowTriggerOnCell: true,
-			dndRowAccept: [],
-			dndRowProvide: [],
 			modules: [
 				mods.Focus,
 				mods.Filter,
 				mods.FilterBar,
 				mods.ExtendedSelectRow,
 				mods.ExtendedSelectColumn,
-				mods.RowHeader,
 				mods.MoveRow,
 				mods.MoveColumn,
 				mods.DndRow,

@@ -67,12 +67,12 @@ define([], function(){
 				{id: 'bool', name: 'bool', field: 'bool'}
 			],
 			[
-				{id: 'id', name: 'id', field: 'id'},
-				{id: 'number', name: 'number', field: 'number'},
-				{id: 'string', name: 'string', field: 'string'},
-				{id: 'date', name: 'date', field: 'date'},
+				{id: 'number', name: 'number', field: 'number', expandLevel: 1},
+				{id: 'string', name: 'string', field: 'string', expandLevel: 2},
+				{id: 'date', name: 'date', field: 'date', expandLevel: 3},
 				{id: 'time', name: 'time', field: 'time'},
-				{id: 'bool', name: 'bool', field: 'bool'}
+				{id: 'bool', name: 'bool', field: 'bool'},
+				{id: 'id', name: 'id', field: 'id'}
 			]
 		]
 	};

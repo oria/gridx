@@ -68,38 +68,25 @@ define([
 				});
 			},
 		
-			setValue: function(gridData, storeData, isInit){
+			setValue: function(gridData, storeData){
 				try{
 					var t = this;
 					query('.gridxHasGridCellValue', t.domNode).map(function(node){
 						return registry.byNode(node);
 					}).forEach(function(widget){
 						if(widget){
-							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData'),
-								data = useStoreData ? storeData : gridData,
-								onChange = widget.onChange;
-							//If we are just rendering this cell, setting widget value should not trigger onChange event,
-							//which will then trigger edit apply. But things are complicated because onChange is
-							//fired asynchronously, and maybe sometimes not fired.
-							//FIXME: How to ensure the onChange event does not fire if isInit is true?
-							if(isInit && widget.get('value') !== data){
-								widget.onChange = function(){
-									widget.onChange = onChange;
-								};
-							}
-							widget.set('value', data);
+							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
+							widget.set('value', useStoreData ? storeData : gridData);
 						}
 					});
 					if(t.setCellValue){
-						t.setCellValue(gridData, storeData, t);
+							t.setCellValue(gridData, storeData, t);
 					}
 				}catch(e){
 					console.error('Can not set cell value: ', e);
 				}
 			}
 		});
-
-	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
 
 	return declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
 		// summary:
@@ -114,6 +101,8 @@ define([
 
 		name: 'cellWidget',
 	
+//        required: ['body'],
+	
 		getAPIPath: function(){
 			// tags:
 			//		protected extension
@@ -124,14 +113,22 @@ define([
 
 		cellMixin: {
 			widget: function(){
-				// summary:
-				//		Get the cell widget in this cell.
 				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 			}
 		},
 	
 		constructor: function(){
-			this._init();
+			this._decorators = {};
+			var i, col, columns = this.grid._columns;
+			for(i = columns.length - 1; i >= 0; --i){
+				col = columns[i];
+				if(col.decorator && col.widgetsInCell){
+					col.userDecorator = col.decorator;
+					col.decorator = dummyFunc;
+					col._cellWidgets = {};
+					col._backupWidgets = [];
+				}
+			}
 		},
 	
 		preload: function(){
@@ -141,7 +138,8 @@ define([
 			t.batchConnect(
 				[body, 'onAfterRow', '_showDijits'],
 				[body, 'onAfterCell', '_showDijit'],
-				[body, 'onUnrender', '_onUnrenderRow']);
+				[body, 'onUnrender', '_onUnrenderRow']
+			);
 			t._initFocus();
 		},
 	
@@ -246,32 +244,14 @@ define([
 			return null;
 		},
 
-		onCellWidgetCreated: function(/* widget, cell */){
+		onCellWidgetCreated: function(/* widget, column */){
 			// summary:
 			//		Fired when a cell widget is created.
-			// widget: gridx.__CellWidget
-			//		The created cell widget.
-			// cell: gridx.core.Cell
-			//		The cell object containing this widget.
 			// tags:
 			//		callback
 		},
 	
 		//Private---------------------------------------------------------------
-		_init: function(){
-			this._decorators = {};
-			var i, col, columns = this.grid._columns;
-			for(i = columns.length - 1; i >= 0; --i){
-				col = columns[i];
-				if(col.decorator && col.widgetsInCell){
-					col.userDecorator = col.decorator;
-					col.decorator = dummyFunc;
-					col._cellWidgets = {};
-					col._backupWidgets = [];
-				}
-			}
-		},
-
 		_showDijits: function(row){
 			var t = this;
 			array.forEach(row.cells(), function(cell){
@@ -315,12 +295,13 @@ define([
 						content: col.userDecorator(),
 						setCellValue: col.setCellValue
 					});
-					this.onCellWidgetCreated(widget, cell);
+					this.onCellWidgetCreated(widget, col);
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}
 			widget.cell = cell;
-			widget.setValue(cell.data(), cell.rawData(), true);
+			widget.isInit = true;
+			widget.setValue(cell.data(), cell.rawData());
 			return widget;
 		},
 
@@ -391,7 +372,7 @@ define([
 					onFocus: t._onFocus,
 					onBlur: t._endNavigate,
 					connects: [
-						t.connect(t.grid, 'onCellKeyDown', '_onKey')
+						t.connect(t.grid, 'onCellKeyPress', '_onKey')
 					]
 				});
 			}

@@ -2,12 +2,11 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
-	"dojo/_base/query",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(declare, array, sniff, query, domClass, keys, _RowCellBase, _Module){
+], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
 	return declare(/*===== "gridx.modules.select.Row", =====*/_RowCellBase, {
 		// summary:
@@ -47,7 +46,7 @@ define([
 			},
 
 			isSelected: function(){
-				return this.grid.select.row.isSelected(this.row.id);
+				return this.model.getMark(this.id);
 			}
 		},
 		
@@ -57,8 +56,6 @@ define([
 		//		Whether row will be selected by clicking on cell, false by default
 		triggerOnCell: false,
 
-		// treeMode: Boolean
-		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
 /*=====
@@ -95,50 +92,27 @@ define([
 				model.when();
 			}
 		},
-
-/*=====
-		onSelected: function(row){
-			// summary:
-			//		Fired when a row is selected.
-			// row: gridx.core.Row
-			//		The row object
-		},
-
-		onDeselected: function(row){
-			// summary:
-			//		Fired when a row is deselected.
-			// row: gridx.core.Row
-			//		The row object
-		},
-
-		onHighlightChange: function(){
-			// summary:
-			//		Fired when a row's highlight is changed.
-			// tags:
-			//		private package
-		},
-=====*/
-
+		
 		//Private--------------------------------------------------------------------------------
 		_type: 'row',
 
 		_init: function(){
-			var t = this,
-				g = t.grid;
-			t.model.treeMarkMode('', t.arg('treeMode'));
+			var t = this, g = t.grid;
+			t.model.treeMarkMode(0, t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.batchConnect(
 				[g, 'onRowMouseDown', function(e){
 					if(t.arg('triggerOnCell') || !e.columnId){
-						t._select(e.rowId, g._isCopyEvent(e));
+						t._select(e.rowId, e.ctrlKey);
 					}
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
-						t._select(e.rowId, g._isCopyEvent(e));
+						t._select(e.rowId, e.ctrlKey);
 					}
-				}]);
+				}]
+			);
 		},
 
 		_onMark: function(id, toMark, oldState, type){
@@ -153,15 +127,13 @@ define([
 		},
 		
 		_highlight: function(rowId, toHighlight){
-			var nodes = query('[rowid="' + rowId + '"]', this.grid.mainNode),
-				selected = toHighlight && toHighlight != 'mixed';
-			if(nodes.length){
-				nodes.forEach(function(node){
-					domClass.toggle(node, "gridxRowSelected", selected);
-					domClass.toggle(node, "gridxRowPartialSelected", toHighlight == 'mixed');
-					node.setAttribute('aria-selected', !!selected);
-				});
-				this.onHighlightChange({row: parseInt(nodes[0].getAttribute('visualindex'), 10)}, toHighlight);
+			var node = this.grid.body.getRowNode({rowId: rowId});
+			if(node){
+				var selected = toHighlight && toHighlight != 'mixed';
+				domClass.toggle(node, "gridxRowSelected", selected);
+				domClass.toggle(node, "gridxRowPartialSelected", toHighlight == 'mixed');
+				node.setAttribute('aria-selected', !!selected);
+				this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toHighlight);
 			}
 		},
 

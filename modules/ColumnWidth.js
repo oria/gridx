@@ -17,7 +17,7 @@ define([
 
 		name: 'columnWidth',
 	
-		forced: ['hLayout'],
+		forced: ['hLayout', 'header'],
 
 		getAPIPath: function(){
 			// tags:
@@ -28,23 +28,44 @@ define([
 		},
 
 		constructor: function(){
-			this._init();
+			this._ready = new Deferred();
 		},
 
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this,
-				g = t.grid;
-			t._ready = new Deferred();
+			var t = this, g = t.grid;
+			if(!g.hScroller){
+				t.autoResize = true;
+			}
 			t.batchConnect(
-				[g.hLayout, 'onUpdateWidth', '_onUpdateWidth'],
-				[g, 'setColumns', '_onSetColumns']);
+				[g, '_onResizeBegin', function(changeSize, ds){
+					ds.header = new Deferred();
+					if(!t.arg('autoResize') && array.some(g._columns, function(col){
+						return !col.width || col.width == 'auto' || /%$/.test(col.width);
+					})){
+						t._adaptWidth();
+					}else{
+						var w = g.domNode.clientWidth - g.hLayout.lead - g.hLayout.tail;
+						g.bodyNode.style.width = (w < 0 ? 0 : w) + 'px';
+					}
+					ds.header.callback();
+				}],
+				[g.hLayout, 'onUpdateWidth', function(){
+					t._adaptWidth();
+					t._ready.callback();
+				}],
+				[g, 'setColumns', '_adaptWidth']
+			);
 		},
 
 		load: function(){
-			this._adaptWidth();
-			this.loaded.callback();
+			// tags:
+			//		protected extension
+			var loaded = this.loaded;
+			this._ready.then(function(){
+				loaded.callback();
+			});
 		},
 
 		//Public-----------------------------------------------------------------------------
@@ -59,62 +80,8 @@ define([
 		//		HTML table).
 		autoResize: false,
 
-		onUpdate: function(){
-			// summary:
-			//		Fired when column widths are updated.
-		},
-
 		//Private-----------------------------------------------------------------------------
-		_init: function(){
-			var t = this,
-				g = t.grid,
-				dn = g.domNode,
-				cols = g._columns;
-			array.forEach(cols, function(col){
-				if(!col.hasOwnProperty('declaredWidth')){
-					col.declaredWidth = col.width = col.width || 'auto';
-				}
-			});
-			if(g.autoWidth){
-				array.forEach(cols, function(c){
-					if(c.declaredWidth == 'auto'){
-						c.width = t.arg('default') + 'px';
-					}
-				});
-			}else if(t.arg('autoResize')){
-				domClass.add(dn, 'gridxPercentColumnWidth');
-				array.forEach(cols, function(c){
-					if(!(/%$/).test(c.declaredWidth)){
-						c.width = 'auto';
-					}
-				});
-			}
-		},
-
-		_onUpdateWidth: function(){
-			var t = this,
-				g = t.grid;
-			if(g.autoWidth){
-				t._adaptWidth();
-			}else{
-				var noHScroller = g.hScrollerNode.style.display == 'none';
-				t._adaptWidth(!noHScroller, 1);	//1 as true
-				if(!t.arg('autoResize') && noHScroller){
-					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
-						var col = g._columnsById[cellNode.getAttribute('colId')];
-						if(t.arg('autoResize') ||
-							!col.declaredWidth ||
-							col.declaredWidth == 'auto' ||
-							(/%$/).test(col.declaredWidth)){
-							cellNode.style.width = col.width;
-						}
-					});
-				}
-				t.onUpdate();
-			}
-		},
-
-		_adaptWidth: function(skip, noEvent){
+		_adaptWidth: function(){
 			var t = this,
 				g = t.grid,
 				dn = g.domNode,
@@ -129,22 +96,22 @@ define([
 				hs = innerNode.style,
 				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail,
 				refNode = query('.gridxCell', innerNode)[0],
-				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
+				padBorder = domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w,
 				isGridHidden = !dn.offsetHeight,
-				isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse';
-			hs[marginLead] = lead + 'px';
-			hs[marginTail] = (!isCollapse && tail > 0 ? tail - 1 : 0)  + 'px';
-			g.mainNode.style[marginLead] = lead + 'px';
-			g.mainNode.style[marginTail] = tail + 'px';
+				isCollapse = domStyle.get(refNode, 'borderCollapse') == 'collapse';
+			hs[marginLead] = bs[marginLead] = lead + 'px';
+			hs[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
-			if(skip){
-				t.onUpdate();
-				return;
-			}
 			if(isCollapse){
 				padBorder += isGridHidden ? -1 : 1;
 			}
 			if(g.autoWidth){
+				array.forEach(g._columns, function(c){
+					if(!c.width){
+						c.width = t.arg('default') + 'px';
+					}
+				});
+				header.refresh();
 				var headers = query('th.gridxCell', innerNode),
 					totalWidth = isCollapse ? 2 : 0;
 				headers.forEach(function(node){
@@ -157,38 +124,43 @@ define([
 						totalWidth--;
 					}
 					var c = g._columnsById[node.getAttribute('colid')];
-					if(c.width == 'auto' || (/%$/).test(c.width)){
-						node.style.width = c.width = w + 'px';
+					if(!c.width || /%$/.test(c.width)){
+						c.width = w + 'px';
 					}
 				});
+				header._columnsWidth = totalWidth;
 				bs.width = totalWidth + 'px';
 				dn.style.width = (lead + tail + totalWidth) + 'px';
-			}else if(!t.arg('autoResize')){
-				var autoCols = [],
-					cols = g._columns,
-					fixedWidth = isCollapse ? 2 : 0;
-				array.forEach(cols, function(c){
-					if(c.declaredWidth == 'auto'){
-						autoCols.push(c);
-					}else if(/%$/.test(c.declaredWidth)){
-						var w = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 -
-							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10);
-						//Check if less than zero, prevent error in IE.
-						if(w < 0){
-							w = 0;
-						}
-						header.getHeaderNode(c.id).style.width = c.width = w + 'px';
+			}else if(t.arg('autoResize')){
+				bs.width = bodyWidth + 'px';
+				domClass.add(dn, 'gridxPercentColumnWidth');
+				array.forEach(g._columns, function(c){
+					if(!c.width || !/%$/.test(c.width)){
+						c.width = 'auto';
 					}
 				});
-				array.forEach(cols, function(c){
-					if(c.declaredWidth != 'auto'){
-						var w = sniff('safari') ?
-							parseFloat(header.getHeaderNode(c.id).style.width, 10) :
-							domStyle.get(header.getHeaderNode(c.id), 'width');
-						if(/%$/.test(c.declaredWidth)){
+				header.refresh();
+			}else{
+				var autoCols = [],
+					fixedWidth = isCollapse ? 2 : 0;
+				bs.width = bodyWidth + 'px';
+				array.forEach(g._columns, function(c){
+					if(!c.width || c.width == 'auto'){
+						c.width = 'auto';
+						autoCols.push(c);
+					}else if(/%$/.test(c.width)){
+						c.width = parseInt(bodyWidth * parseFloat(c.width, 10) / 100 - 
+							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10) + 'px';
+					}
+				});
+				header.refresh();
+				array.forEach(g._columns, function(c){
+					if(c.width != 'auto'){
+						var w = domStyle.get(header.getHeaderNode(c.id), 'width');
+						if(!c.width || /%$/.test(c.width)){
 							c.width = w + 'px';
 						}
-						if(!sniff('safari')){
+						if(!sniff('safari') || !isGridHidden){
 							w += padBorder;
 						}
 						fixedWidth += w;
@@ -198,56 +170,24 @@ define([
 					if(sniff('safari')){
 						padBorder = 0;
 					}
-					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
-						ww = parseInt(w, 10);
-					if(bodyWidth > fixedWidth){
-						if(isCollapse){
-							w += cols.length / autoCols.length;
-							//FIXME:IE7 is strange here...
-							if(sniff('ie') < 8){
-								w += cols.length / autoCols.length;
-							}
-						}
-						ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
+					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default');
+					if(bodyWidth > fixedWidth && sniff('ie') && isCollapse){
+						w += g._columns.length / autoCols.length;
 					}
 					w = parseInt(w, 10);
-					//Check if less than zero, prevent error in IE.
-					if(w < 0){
-						w = 0;
-					}
-					if(ww < 0){
-						ww = 0;
-					}
-					array.forEach(autoCols, function(c, i){
-						header.getHeaderNode(c.id).style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
+					array.forEach(autoCols, function(c){
+						c.width = w + 'px';
 					});
 				}
+				header.refresh();
 			}
-			g.hScroller.scroll(0);
-			header._onHScroll(0);
-			g.vLayout.reLayout();
-			if(!noEvent){
-				t.onUpdate();
+			if(sniff('ie') < 8){
+				hs.width = bodyWidth + 'px';
 			}
-		},
-
-		_onSetColumns: function(){
-			var t = this,
-				g = t.grid;
-			t._init();
-			g.header.refresh();
-			t._adaptWidth();
-			//FIXME: Is there any more elegant way to do this?
-			if(g.cellWidget){
-				g.cellWidget._init();
-				if(g.edit){
-					g.edit._init();
-				}
+			if(g.hScroller){
+				g.hScroller.scroll(0);
+				header._onHScroll(0);
 			}
-			if(g.tree){
-				g.tree._initExpandLevel();
-			}
-			g.body.refresh();
 		}
 	});
 });

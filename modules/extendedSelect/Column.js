@@ -91,12 +91,10 @@ define([
 			//		Deselected all selected columns;			
 			query(".gridxColumnSelected", this.grid.domNode).forEach(function(node){
 				domClass.remove(node, 'gridxColumnSelected');
-				node.removeAttribute('aria-selected');
 			});
 			array.forEach(this.grid._columns, function(col){
 				col._selected = 0;	//0 as false
 			});
-			this._clear();
 			if(!silent){
 				this._onSelectionChange();
 			}
@@ -160,7 +158,7 @@ define([
 			t.batchConnect(
 				[g, 'onHeaderCellMouseDown', function(e){
 					if(mouse.isLeft(e) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
 				[g, 'onHeaderCellMouseOver', function(e){
@@ -171,7 +169,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({column: e.columnIndex}, e.ctrlKey, e.shiftKey);
 						t._end();
 					}
 				}],
@@ -188,7 +186,6 @@ define([
 				for(j = start; j < end; ++j){
 					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
-					node.setAttribute('aria-selected', true);
 				}
 			}
 		},
@@ -196,7 +193,7 @@ define([
 		_onMoveToHeaderCell: function(columnId, e){
 			if(e.shiftKey && (e.keyCode == keys.LEFT_ARROW || e.keyCode == keys.RIGHT_ARROW)){
 				var t = this, col = t.grid._columnsById[columnId];
-				t._start({column: col.index}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({column: col.index}, e.ctrlKey, 1);	//1 as true
 				t._end();
 			}
 		},

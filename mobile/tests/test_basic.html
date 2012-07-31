@@ -25,13 +25,14 @@
 		.mobileGridxRow 		{	background-color: #3D567A; border-bottom: 2px solid #2D3E57;}
 		.mobileGridxRowOdd 		{	background-color: #344865;}
 		td.mobileGridxCell		{	color: #fff; font-size: 14px; text-shadow: 1px 1px 2px #000; padding: 3px;}
-		td.temp					{	font-size: 22px; font-weight: bold;}
-		td.tempMin				{	color: #7696C1;}
+		td.temp					{	font-size: 22px; font-weight: bold; text-align: right;}
+		td.tempMin				{	color: #7696C1; text-align: left;}
 	</style>
 	
 	<script>
 		var columns = [
 			{field: 'day', width: '50%', title: 'Day'},
+			{field: 'weather', width: '18%', title: 'Weather', template: '<img src="images/${weather}.png" alt="${weather}" title="${weather}"/>'},
 			{field: 'max', width: '16%', title: 'Max', cssClass: 'temp', template: '${max}°'},
 			{field: 'min', width: '16%', title: 'Min', cssClass: 'temp tempMin', template: '${min}°'}
 		];
@@ -40,8 +41,6 @@
 			'dojo/data/ItemFileReadStore',
 			'dojox/mobile/parser',
 			'gridx/mobile/tests/support/data',
-			"dojox/mobile",
-			"dojox/mobile/compat",
 			'dojox/mobile/Heading',
 			'dojox/mobile/View',
 			'dojox/mobile/ScrollableView',

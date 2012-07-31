@@ -10,7 +10,7 @@ define([
 	return declare(_Module, {
 		name: 'rowLock',
 		required: ['vLayout'],
-		forced: ['hLayout', 'body'],
+		forced: ['hLayout', 'vScroller'],
 		count: 0,
 		getAPIPath: function(){
 			return {
@@ -22,10 +22,9 @@ define([
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;
 			deferStartup.then(function(){
-				if(_this.grid.vScroller)_this.connect(g.vScrollerNode, 'onscroll', function(){
+				_this.connect(g.vScrollerNode, 'onscroll', function(){
 					_this._updatePosition();
 				});
-				_this.lock(_this.count);
 				_this.loaded.callback();
 			});
 		},

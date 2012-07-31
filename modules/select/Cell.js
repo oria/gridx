@@ -46,7 +46,7 @@ define([
 			},
 			
 			isSelected: function(){
-				return this.grid.select.cell.isSelected(this.row.id, this.column.id);
+				return this.model.getMark(this.row.id, this.column.id);
 			}
 		},
 		
@@ -97,30 +97,7 @@ define([
 				m.when();
 			}
 		},
-
-	/*=====
-		onSelected: function(cell){
-			// summary:
-			//		Fired when a cell is selected.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
-
-		onDeselected: function(cell){
-			// summary:
-			//		Fired when a cell is deselected.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
-
-		onHighlightChange: function(){
-			// summary:
-			//		Fired when a cell's highlight is changed.
-			// tags:
-			//		private package
-		},
-	=====*/
-
+		
 		//Private--------------------------------------------------------------------------------
 		_type: 'cell',
 
@@ -133,24 +110,20 @@ define([
 		},
 
 		_init: function(){
-			var t = this,
-				g = t.grid;
+			var t = this;
 			t.inherited(arguments);
 			t.batchConnect(
-				[g, 'onCellMouseDown', function(e){
-					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+				[t.grid, 'onCellMouseDown', function(e){
+					t._select([e.rowId, e.columnId], e.ctrlKey);
 				}],
-				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[t.grid, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+						t._select([e.rowId, e.columnId], e.ctrlKey);
 					}
-				}]);
+				}]
+			);
 		},
-
-		_isSelected: function(cell){
-			return this.isSelected(cell[0], cell[1]);
-		},
-
+	
 		_onMark: function(rowId, toMark, oldState, type){
 			var t = this;
 			if(type.indexOf(t._markTypePrefix) === 0){

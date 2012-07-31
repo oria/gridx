@@ -21,7 +21,7 @@ require([
 	});
 
 	layout1 = [
-        { field: "id", name:"Index", width: '50px'},
+		{ field: "id", name:"Index", width: '50px'},
 		{ field: "Progress", name:"Progress", dataType:'number',
 			widgetsInCell: true, 
 			decorator: function(){
@@ -117,47 +117,11 @@ require([
 
 	layout2 = [
 		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Name", name:"Buttons",
-			widgetsInCell: true,
+		{ field: "Name", name:"Links",
 			navigable: true,
-			decorator: function(){
+			decorator: function(data){
 				return [
-					'<button data-dojo-type="dijit.form.Button" ',
-					'data-dojo-attach-point="btn1" ',
-					'data-dojo-props="onClick: function(){',
-						'alert(this.get(\'label\'));',
-					'}"></button>',
-					'<div data-dojo-type="dijit.form.DropDownButton" ',
-						'data-dojo-attach-point="btn2"',
-						'data-dojo-props="iconClass:\'dijitIconApplication\'">',
-						'<div data-dojo-type="dijit.TooltipDialog" data-dojo-attach-point="ttd">',
-							'hihi',
-						'</div>',
-					'</div>',
-					'<div data-dojo-type="dijit.form.ComboButton" ',
-						'data-dojo-attach-point="btn3" ',
-						'data-dojo-props="',
-							'optionsTitle:\'Save Options\',',
-							'iconClass:\'dijitIconFile\',',
-							'onClick:function(){ console.log(\'Clicked ComboButton\'); }',
-					'">',
-					'<div data-dojo-type="dijit.Menu">',
-					'<div data-dojo-type="dijit.MenuItem"',
-						'data-dojo-props="',
-							'iconClass:\'dijitEditorIcon dijitEditorIconSave\',',
-							'onClick:function(){ console.log(\'Save\'); }">',
-						'Save',
-					'</div>',
-					'<div data-dojo-type="dijit.MenuItem"',
-						'data-dojo-props="onClick:function(){ console.log(\'Save As\'); }">',
-						'Save As',
-					'</div></div></div>'
 				].join('');
-			},
-			setCellValue: function(data){
-				this.btn1.set('label', data);
-				this.btn2.set('label', data);
-				this.btn3.set('label', data);
 			}
 		}
 	];

@@ -199,8 +199,8 @@ define([
 
 		_reset: function(args){
 			//Reset the grid data model completely. Also used in initialization.
-			var t = this,
-				d = t._deferStartup = new Deferred();
+			var t = this;
+			t._uninit();
 			args = shallowCopy(args);
 			t.store = args.store;
 			args.modules = args.modules || [];
@@ -216,6 +216,11 @@ define([
 			t.model = new Model(args);
 			t.when = lang.hitch(t.model, t.model.when);
 			t._create(args);
+		},
+
+		_postCreate: function(){
+			var t = this,
+				d = t._deferStartup = new Deferred();
 			t._preload();
 			t._load(d).then(hitch(t, 'onModulesLoaded'));
 		},
@@ -233,10 +238,7 @@ define([
 			//		Change the store for grid.
 			// store: dojo.data.*|dojox.data.*|dojo.store.*
 			//		The new data store
-			if(this.store != store){
-				this.store = store;
-				this.model.setStore(store);
-			}
+			this.model.setStore(store);
 		},
 
 		

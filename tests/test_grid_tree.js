@@ -13,11 +13,6 @@ require([
 		maxLevel: 4,
 		maxChildrenCount: 10
 	});
-	store2 = storeFactory({
-		dataSource: dataSource, 
-		maxLevel: 4,
-		maxChildrenCount: 10
-	});
 
 	store.hasChildren = function(id, item){
 		return item && store.getValues(item, 'children').length;
@@ -28,23 +23,12 @@ require([
 		return store.getValues(item, 'children');
 	};
 
-	store2.hasChildren = function(id, item){
-		return item && store2.getValues(item, 'children').length;
-	};
-
-	store2.getChildren = function(item){
-		console.log('getChildren:', item);
-		return store2.getValues(item, 'children');
-	};
-
-
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
 		store: store,
-		structure: dataSource.layouts[1],
+		structure: dataSource.layouts[0],
 		selectRowTriggerOnCell: false,
-		treeExpandLevel: 2,
 		modules: [
 //            mods.Focus,
 			mods.VirtualVScroller,

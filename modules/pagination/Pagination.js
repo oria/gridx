@@ -10,29 +10,25 @@ define([
 		// description:
 		//		This module does not include any UI buttons for pagination, so that various
 		//		kinds of pagination UI implementations can benifit from this module.
-
+	
 		// [Module Dependency Management] --------------------------------------------
 		name: 'pagination',	
-
+		
 		forced: ['body'],
-
+		
 		// [Module API Management] ---------------------------------------------------
 		getAPIPath: function(){
 			return {
 				pagination: this
 			};
 		},
-
+		
 		rowMixin: {
 			getPage: function(){
-				// summary:
-				//		Get the page index this row belongs to.
 				return this.grid.pagination.pageOfIndex(this.index());
 			},
-
+	
 			indexInPage: function(){
-				// summary:
-				//		Get the index of this row in its page.
 				return this.grid.pagination.indexInPage(this.index());
 			}
 		},
@@ -58,7 +54,7 @@ define([
 				t.loaded.callback();	
 			});
 		},
-
+		
 		// [Public API] --------------------------------------------------------
 
 		// initialPageSize: Integer
@@ -86,15 +82,15 @@ define([
 			//		Whether the grid is showing all rows.
 			return this._pageSize === 0;	//Boolean
 		},
-
+	
 		pageCount: function(){
 			// summary:
 			//		Get the current count of pages.
 			// returns:
 			//		The current count of pages.
-			return this.isAll() ? 1 : Math.max(Math.ceil(this.model.size() / this.pageSize()), 1);	//Integer
+			return this.isAll() ? 1 : Math.ceil(this.model.size() / this.pageSize());	//Integer
 		},
-
+	
 		currentPage: function(){
 			// summary:
 			//		Get the index of current page.
@@ -102,7 +98,7 @@ define([
 			//		The index of current page.
 			return this._page;	//Integer
 		},
-
+	
 		firstIndexInPage: function(page){
 			// summary:
 			//		Get the index of the first row in the given page.
@@ -118,7 +114,7 @@ define([
 			var index = page * this.pageSize();
 			return index < this.model.size() ? index : -1;	//Integer
 		},
-
+	
 		lastIndexInPage: function(page){
 			// summary:
 			//		Get the index of the last row in the given page.
@@ -135,7 +131,7 @@ define([
 			}
 			return -1;	//Integer
 		},
-
+		
 		pageOfIndex: function(index){
 			// summary:
 			//		Get the index of the page that the given row is in.
@@ -145,7 +141,7 @@ define([
 			//		The page index
 			return this.isAll() ? 0 : Math.floor(index / this.pageSize());	//Integer
 		},
-
+	
 		indexInPage: function(index){
 			// summary:
 			//		Get the row index in page by overall row index
@@ -155,7 +151,7 @@ define([
 			//		The row index in page
 			return this.isAll() ? index : index % this.pageSize();	//Integer
 		},
-
+	
 		filterIndexesInPage: function(indexes, page){
 			// summary:
 			//		Filter out the indexes that are in the given page.
@@ -171,7 +167,7 @@ define([
 				return index >= first && index <= end;
 			});
 		},
-
+	
 		//SET functions
 		gotoPage: function(page){
 			// summary:
@@ -185,7 +181,7 @@ define([
 				t.onSwitchPage(page, oldPage);
 			}
 		},
-
+	
 		setPageSize: function(size){
 			// summary:
 			//		Set page size (count of rows in one page)
@@ -207,7 +203,7 @@ define([
 				}
 			}
 		},
-
+	
 		// [Events] ----------------------------------------------------------------
 		onSwitchPage: function(/*currentPage, originalPage*/){
 			// summary:
@@ -225,9 +221,9 @@ define([
 		
 		// [Private] -------------------------------------------------------
 		_page: 0,
-
+	
 		_pageSize: 10,
-
+	
 		_updateBody: function(noRefresh){
 			var t = this,
 				bd = t.grid.body,
@@ -245,7 +241,7 @@ define([
 				bd.refresh();
 			}
 		},
-
+	
 		_onSizeChange: function(size){
 			var t = this;
 			if(size === 0){

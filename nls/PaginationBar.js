@@ -17,7 +17,7 @@ define({root:
 
 	description: '${0} - ${1} of ${2} items.',
 	descriptionEmpty: 'Grid is empty.',
-
+	// OneUI blueprint
 	summary: 'Total: ${0}',
 	summaryWithSelection: 'Total: ${0} Selected: ${1}',
 
@@ -32,33 +32,5 @@ define({root:
 	// for drop down pagination bar
 	pageLabel: 'Page',
 	pageSizeLabel: 'Rows'
-}),
-"ar": true,
-"ca": true,
-"cs": true,
-"da": true,
-"de": true,
-"el": true,
-"es": true,
-"fi": true,
-"fr": true,
-"hu": true,
-"it": true,
-"ja": true,
-"kk": true,
-"ko": true,
-"nb": true,
-"nl": true,
-"pl": true,
-"pt": true,
-"pt-pt": true,
-"ro": true,
-"ru": true,
-"sk": true,
-"sl": true,
-"sv": true,
-"th": true,
-"tr": true,
-"zh": true,
-"zh-tw": true
+})
 });

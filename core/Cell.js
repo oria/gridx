@@ -69,12 +69,9 @@ define([
 			//		Anything that store can recognize as data
 			// returns:
 			//		If using server side store, a Deferred object is returned to indicate when the operation is finished.
-			var obj = {},
-				field = this.column.field();
-			if(field){
-				obj[field] = rawData;
-				return this.row.setRawData(obj);	//dojo.Deferred
-			}
+			var obj = {};
+			obj[this.column.field()] = rawData;
+			return this.row.setRawData(obj);	//dojo.Deferred
 		}
 	});
 });

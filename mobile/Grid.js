@@ -9,8 +9,9 @@ define([
 	'dojox/mobile/_DataMixin',
 	'dojox/mobile/Pane',
 	'dojox/mobile/ScrollablePane'
+	
 ], function(kernel, declare, lang, array, aspect, string, css, _DataMixin, Pane, ScrollablePane){
-	// module:
+	//module:
 	//	gridx/mobile/Grid
 	// summary:
 	//	A mobile grid that has fixed header, footer and a scrollable body.

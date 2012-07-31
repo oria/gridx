@@ -2,10 +2,11 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
 	"dojo/_base/array",
+	"dojo/dom-geometry",
 	"dojo/dom-style",
 	"dojo/DeferredList",
 	"../core/_Module"
-], function(declare, Deferred, array, domStyle, DeferredList, _Module){
+], function(declare, Deferred, array, domGeometry, domStyle, DeferredList, _Module){
 
 	return declare(/*===== "gridx.modules.HLayout", =====*/_Module, {
 		// summary:
@@ -31,17 +32,9 @@ define([
 			// tags:
 			//		protected extension
 			var t = this;
-			t.connect(t.grid, '_onResizeEnd', function(changeSize, ds){
-				var d, dl = [];
-				for(d in ds){
-					dl.push(ds[d]);
-				}
-				new DeferredList(dl).then(function(){
-					t.reLayout();
-				});
-			});
 			startup.then(function(){
 				t._layout();
+				t.loaded.callback();
 			});
 		},
 
@@ -75,35 +68,8 @@ define([
 			r.push([ready, refNode, isTail]);
 		},
 
-		reLayout: function(){
-			// summary:
-			//		Re-layout the grid horizontally. This means calculated the width of all registered
-			//		grid UI components except the grid body. Then update the grid body width.
-			//		Usually there's no need for users to call this method. It'll be automatically called
-			//		when calling grid.resize().
-			var t = this,
-				r = t._regs,
-				lead = 0,
-				tail = 0;
-			if(r){
-				array.forEach(r, function(reg){
-					var w = reg[1].offsetWidth || domStyle.get(reg[1], 'width');
-					if(reg[2]){
-						tail += w;
-					}else{
-						lead += w;
-					}
-				});
-				t.lead = lead;
-				t.tail = tail;
-				t.onUpdateWidth(lead, tail);
-			}
-		},
-
 		//Event---------------------------------------------------------
 		onUpdateWidth: function(){
-			// summary:
-			//		Fired when the body width is updated.
 			// tags:
 			//		package
 		},
@@ -118,7 +84,7 @@ define([
 					});
 				new DeferredList(dl).then(function(){
 					array.forEach(r, function(reg){
-						var w = reg[1].offsetWidth || domStyle.get(reg[1], 'width');
+						var w = domGeometry.getMarginBox(reg[1]).w || domStyle.get(reg[1], 'width');
 						if(reg[2]){
 							tail += w;
 						}else{
@@ -127,10 +93,10 @@ define([
 					});
 					t.lead = lead;
 					t.tail = tail;
-					t.loaded.callback();
+					t.onUpdateWidth(lead, tail);
 				});
 			}else{
-				t.loaded.callback();
+				t.onUpdateWidth(0, 0);
 			}
 		}
 	});

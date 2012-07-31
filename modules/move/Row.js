@@ -1,10 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/array",
-	"dojo/keys",
 	"../../core/_Module",
 	"../../core/model/extensions/Move"
-], function(declare, array, keys, _Module, Move){
+], function(declare, _Module, Move){
 
 	return declare(/*===== "gridx.modules.move.Row", =====*/_Module, {
 		// summary:
@@ -31,10 +29,6 @@ define([
 				}
 			};
 		},
-
-		preload: function(){
-			this.aspect(this.grid, 'onRowKeyDown', '_onKeyDown');
-		},
 		
 		rowMixin: {
 			moveTo: function(target, skipUpdateBody){
@@ -44,11 +38,6 @@ define([
 		},
 		
 		//Public-----------------------------------------------------------------
-
-		//moveSelected: Boolean
-		//		When moving using keyboard, whether to move all selected rows together.
-		moveSelected: true,
-
 		move: function(rowIndexes, target, skipUpdateBody){
 			// summary:
 			//		Move some rows to target position
@@ -94,43 +83,6 @@ define([
 		_onMoved: function(){
 			this.grid.body.refresh();
 			this.onMoved();
-		},
-
-		_onKeyDown: function(e){
-			var t = this,
-				g = t.grid,
-				selector = g.select && g.select.row;
-			if(e.ctrlKey && !e.shiftKey && !e.altKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				var target = e.rowIndex,
-					doMove = function(rowIdxes){
-						if(e.keyCode == keys.UP_ARROW){
-							while(array.indexOf(rowIdxes, target) >= 0){
-								target--;
-							}
-							if(target >= 0){
-								t.move(rowIdxes, target);
-							}
-						}else{
-							while(array.indexOf(rowIdxes, target) >= 0){
-								target++;
-							}
-							if(target < g.body.rootStart + g.body.rootCount){
-								t.move(rowIdxes, target + 1);
-							}
-						}
-					};
-				if(t.arg('moveSelected') && selector && selector.isSelected(e.rowId)){
-					var selected = selector.getSelected();
-					g.model.when({id: selected}, function(){
-						var rowIdxes = array.map(selected, function(id){
-							return g.model.idToIndex(id);
-						});
-						doMove(rowIdxes);
-					});
-				}else{
-					doMove([g.model.idToIndex(e.rowId)]);
-				}
-			}
 		}
 	});
 });

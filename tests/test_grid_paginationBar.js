@@ -1,7 +1,7 @@
 require([
 	'dojo',
 	'gridx/Grid',
-	'gridx/core/model/cache/Sync',
+	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/modules',
@@ -21,12 +21,11 @@ require([
 
 		//selectRowTriggerOnCell: true,
 		paginationInitialPage: 3,
-		paginationBarSizes: [10, 20, 40, 0],
+		paginationBarSizes: [5, 10, 20, 30],
 		paginationBarVisibleSteppers: 5,
 		paginationBarPosition: 'bottom',
 //        paginationBarSizeSwitch: false,
-//        paginationBarGotoButton: false,
-		bodyRowHoverEffect: false,
+		paginationBarGotoButton: false,
 		modules: [
 			modules.Pagination,
 			modules.Filter,

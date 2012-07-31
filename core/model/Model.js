@@ -5,8 +5,8 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/aspect"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect){
+	"dojo/_base/connect"
+], function(require, declare, array, lang, Deferred, DeferredList, cnnt){
 
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
@@ -25,6 +25,7 @@ define([
 		
 		constructor: function(args){
 			var t = this,
+				c = 'connect',
 				cacheClass = args.cacheClass;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
@@ -33,17 +34,15 @@ define([
 			t._model = t._cache = new cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
 			var m = t._model;
-			t._cnnts = [
-				aspect.after(m, "onDelete", lang.hitch(t, "onDelete"), 1),
-				aspect.after(m, "onNew", lang.hitch(t, "onNew"), 1),
-				aspect.after(m, "onSet", lang.hitch(t, "onSet"), 1)
+			t._connects = [
+				cnnt[c](m, "onDelete", t, "onDelete"),
+				cnnt[c](m, "onNew", t, "onNew"),
+				cnnt[c](m, "onSet", t, "onSet")
 			];
 		},
 	
 		destroy: function(){
-			array.forEach(this._cnnts, function(cnnt){
-				cnnt.remove();
-			});
+			array.forEach(this._connects, cnnt.disconnect);
 			for(var n in this._exts){
 				this._exts[n].destroy();
 			}
@@ -58,7 +57,6 @@ define([
 		},
 
 		setStore: function(store){
-			this.store = store;
 			this._cache.setStore(store);
 		},
 	
@@ -120,16 +118,6 @@ define([
 			return [];	//String[]
 		},
 
-		parent: function(id){
-			// summary:
-			//		Get the parent ID of the given row.
-			// id: String
-			//		The row ID
-			// returns:
-			//		The parent ID.
-			return [];
-		},
-
 		hasChildren: function(id){
 			// summary:
 			//		Check whether a row has children rows.
@@ -138,16 +126,6 @@ define([
 			// returns:
 			//		Whether this row has child rows.
 			return false;	//Boolean
-		},
-
-		children: function(id){
-			// summary:
-			//		Get IDs of children rows.
-			// id: String
-			//		The row ID
-			// returns:
-			//		An array of row IDs
-			return [];	//Array
 		},
 
 		size: function(parentId){
@@ -203,9 +181,7 @@ define([
 			//		id: ['a', 'b', 'c']
 			//		}, ...)
 			//		6. An object containing both contents defined in 4 and 5.
-			//		7. An empty object
-			//		The model will fetch the store size. Currently it is implemented by fetching the first page of data.
-			//		8. null or call this method without any arguments.
+			//		7. null or call this method without any arguments.
 			//		This is useful when we only need to execute pending data operations but don't need to fetch rows.
 			// callback: Function?
 			//		The callback function is called when all the pending data operations are executed and all

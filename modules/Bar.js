@@ -16,7 +16,6 @@ define([
 		// summary:
 		//		This is a general-purpose bar for gridx. It can be configured to hold various plugins,
 		//		such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
-
 		name: 'bar',
 
 		getAPIPath: function(){
@@ -69,39 +68,13 @@ define([
 
 	/*=====
 		//top: Array
-		//		An array of bar content declarations. Located above grid header.
-		//		The top bar is big html table, and every content occupies a cell in it.
-		//		If it is a single demension array, then the top bar will contain only one row.
-		//		If it is a 2 demension array, then every sub-array represents a row.
-		//		For example:
-		//		[
-		//			gridx.barPlugins.QuickFilter,		//can be the constructor of a bar plugin widget.
-		//			"gridx/barPlugins/Summary"			//can also be the MID of a bar plugin widget.
-		//			{pluginClass: gridx.barPlugins.LinkSizer, style: "text-align: center;"}		//or an object with attributes
-		//		]
-		//		or
-		//		[
-		//			[		//every sub-array is a table row.
-		//				{content: "This is <b>a message</b>", style: "backgroun-color: blue;"},	//Can add some html
-		//				null	//if null, just an empty cell
-		//			],
-		//			[
-		//				{pluginClass: gridx.barPlugins.LinkPager, 'class': 'myclass'},		//can provide custom class
-		//				{colSpan: 2, rowSpan: 2}	//can add colSpan and rowSpan
-		//			]
-		//		]
 		top: null,
 
 		//bottom: Array
-		//		An array of bar content declarations. Located below grid horizontal scroller.
-		//		Usage is similar to the "top" attribute.
 		bottom: null,
 
+		
 		//plugins: [readonly]Object
-		//		A place to access to the plugins.
-		//		For plugins in top bar, use plugins.top, which is an array of bar rows.
-		//		e.g.: plugins.top[0][0] is the first plugin the first row of the top bar.
-		//		plugin.bottom is similar.
 		plugins: null,
 	=====*/
 
@@ -128,7 +101,6 @@ define([
 						td = domConstruct.create('td');
 					array.forEach(['colSpan', 'rowSpan', 'style'], lang.partial(setAttr, td, def, 0));
 					setAttr(td, def, 'class', 'className');
-					plugin = null;
 					if(def.pluginClass){
 						var cls = def.pluginClass;
 						delete def.pluginClass;
@@ -138,8 +110,6 @@ define([
 						}catch(e){
 							console.error(e);
 						}
-					}else if(def.content){
-						td.innerHTML = def.content;
 					}
 					pluginRow.push(plugin);
 					tr.appendChild(td);

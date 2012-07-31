@@ -104,12 +104,10 @@ define([
 			var t = this;
 			query(".gridxCellSelected", t.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxCellSelected');
-				node.removeAttribute('aria-selected');
 			});
 			array.forEach(t.grid._columns, function(col){
 				t.model.clearMark(t._getMarkType(col.id));
 			});
-			t._clear();
 			if(!silent){
 				t._onSelectionChange();
 			}
@@ -164,7 +162,7 @@ define([
 				g = t.grid,
 				columns = g._columns,
 				body = g.body,
-				i, j, col, type, rowInfo;
+				i, j, col, type;
 			array.forEach(args, function(arg){
 				if(arg._range){
 					var a = Math.min(arg[0], arg[2]),
@@ -175,20 +173,18 @@ define([
 					for(i = c1; i <= c2; ++i){
 						col = columns[i];
 						if(col){
-							rowInfo = body.getRowInfo({visualIndex: a});
-							a = rowInfo.rowIndex;
+							a = body.getRowInfo({visualIndex: a}).rowIndex;
 							type = t._getMarkType(col.id);
 							for(j = 0; j < n; ++j){
-								m.markByIndex(a + j, toSelect, type, rowInfo.parentId);
+								m.markByIndex(j, toSelect, type);
 							}
 						}
 					}
 				}else{
 					col = columns[arg[1]];
 					if(col){
-						rowInfo = body.getRowInfo({visualIndex: arg[0]});
-						i = rowInfo.rowIndex;
-						m.markByIndex(i, toSelect, t._getMarkType(col.id), rowInfo.parentId);
+						i = body.getRowInfo({visualIndex: arg[0]}).rowIndex;
+						m.markByIndex(i, toSelect, t._getMarkType(col.id));
 					}
 				}
 			});
@@ -201,7 +197,7 @@ define([
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
 					if(mouse.isLeft(e)){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
 					}
 				}],
 				[g, 'onCellMouseOver', function(e){
@@ -209,7 +205,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
 						t._end();
 					}
 				}]
@@ -257,7 +253,7 @@ define([
 				var t = this,
 					rid = t._getRowId(rowVisIndex),
 					cid = t.grid._columns[colIndex].id;
-				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
+				t._start(createItem(rid, rowVisIndex, cid, colIndex), e.ctrlKey, 1);	//1 as true
 				t._end();
 			}
 		},

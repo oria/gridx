@@ -16,12 +16,14 @@ require([
 			size: 100
 		}),
 		baseSort: [{attribute: 'Album', descending: true}],
-		sortInitialOrder: [{colId: 'id', descending: true}, {colId: 'Name', descending: false}],
 		modules: [
 			mods.VirtualVScroller,
 			mods.Focus,
 			mods.ColumnResizer,
-			mods.NestedSort
+			{
+				moduleClass: mods.NestedSort,
+				preSort: [{colId: 'id', descending: true}, {colId: 'Name', descending: false}]
+			}
 		],
 		structure: dataSource.layouts[0]
 	});

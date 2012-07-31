@@ -42,7 +42,7 @@ define([
 
 		load: function(args){
 			var t = this,
-				n = t.grid.mainNode;
+				n = t.grid.bodyNode;
 			t._source = new Source(n, {
 				isSource: false,
 				accept: t.accept,

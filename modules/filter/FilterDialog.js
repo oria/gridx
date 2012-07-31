@@ -5,17 +5,13 @@ define([
 	"dojo/dom-class",
 	"dojo/string",
 	"dojo/query",
-	"dojo/keys",
 	"dijit/registry",
 	"dijit/Dialog",
 	"dojox/html/metrics",
 	"./FilterPane",
 	"dojo/text!../../templates/FilterDialog.html",
-	"dojo/i18n!../../nls/FilterBar",
-	"dijit/form/Select",
-	"dijit/form/Button",
-	"dijit/layout/AccordionContainer"
-], function(declare, lang, array, css, string, query, keys, registry, Dialog, metrics, FilterPane, template, i18n){
+	"dojo/i18n!../../nls/FilterBar"
+], function(declare, lang, array, css, string, query, registry, Dialog, metrics, FilterPane, template, i18n){
 	return declare(Dialog, {
 		title: i18n.filterDefDialogTitle,
 		cssClass: 'gridxFilterDialog',
@@ -118,11 +114,6 @@ define([
 		},
 		
 		_initWidgets: function(){
-			var form = dojo.query('form', this.domNode)[0], _this = this;
-			form.onsubmit = function(){
-				_this.done();
-				return false;
-			}
 			this._accordionContainer = registry.byNode(query('.dijitAccordionContainer', this.domNode)[0]);
 			this._sltMatch = registry.byNode(query('.dijitSelect', this.domNode)[0]);
 			var btns = query('.dijitButton', this.domNode);
@@ -166,11 +157,6 @@ define([
 			var ac = this._accordionContainer, len = ac.getChildren().length;
 			ac.domNode.style.height = 145 + len * this._titlePaneHeight + 'px';
 			ac.resize();
-		},
-		uninitialize: function(){
-			console.log('bbb');
-			this.inherited(arguments);
 		}
-		
 	});
 });

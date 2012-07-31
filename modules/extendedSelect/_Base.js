@@ -78,13 +78,6 @@ define([
 		},
 
 		//Private -----------------------------------------------------------------
-		_clear: function(){
-			var t = this;
-			delete t._lastToSelect;
-			delete t._lastStartItem;
-			delete t._lastEndItem;
-		},
-
 		_subMark: function(func, args, toSelect){
 			var t = this;
 			if(t.arg('enabled')){
@@ -205,7 +198,9 @@ define([
 
 		_fixFF: function(isStart){
 			if(sniff('ff')){
-				query('.gridxSortNode', this.grid.headerNode).style('overflow', isStart ? 'visible' : '');
+				query('.gridxSortNode', this.grid.headerNode).forEach(function(n){
+					n.style.overflow = isStart ? 'visible' : '';
+				});
 			}
 		}
 	});

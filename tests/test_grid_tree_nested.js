@@ -26,16 +26,12 @@ require([
 		id: 'grid',
 		cacheClass: Cache,
 		store: store,
-		structure: dataSource.layouts[1],
+		structure: dataSource.layouts[0],
 		modules: [
 			mods.Focus,
 			mods.Tree,
-			mods.SelectRow,
-			mods.RowHeader,
-			mods.IndirectSelect,
 			mods.VirtualVScroller
 		],
-		treeExpandLevel: 2,
 		treeNested: true
 	});
 	grid.placeAt('gridContainer');

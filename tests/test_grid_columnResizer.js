@@ -19,7 +19,6 @@ require([
 		modules: [
 			modules.Focus,
 			modules.ColumnResizer,
-			modules.RowHeader,
 			modules.VirtualVScroller
 		]
 	});

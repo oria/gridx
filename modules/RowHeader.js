@@ -82,21 +82,12 @@ define([
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
-				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
-				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']);
+				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']
+			);
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
-		},
-
-		load: function(args, startup){
-			var t = this,
-				bn = t.bodyNode;
-			startup.then(function(){
-				bn.style[t.grid.isLeftToRight() ? 'left' : 'right'] = -bn.offsetWidth + 'px';
-				t.loaded.callback();
-			});
 		},
 
 		//Public--------------------------------------------------------------------------
@@ -106,13 +97,11 @@ define([
 		width: '20px',
 
 		onMoveToRowHeaderCell: function(){
-			// summary:
-			//		Fired when focus is moved to a row header using keyboard.
 			// tags:
 			//		callback
 		},
 
-	/*=====
+		/*=====
 		// headerProvider: Function
 		//		A functionn that returns an HTML string to fill the header cell of row headers.
 		headerProvider: null,
@@ -120,7 +109,7 @@ define([
 		// cellProvider: Function
 		//		A function that returns an HTML string to fill the body cells of row headers.
 		cellProvider: null,
-	=====*/
+		=====*/
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){

@@ -36,6 +36,8 @@ require([
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
+//                cacheSize: 0,
+//                pageSize: 1000,
 				store: store,
 				structure: layout,
 //                vScrollerLazy: true,

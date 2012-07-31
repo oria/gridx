@@ -50,7 +50,7 @@ define([
 			},
 
 			isSelected: function(){
-				return this.model.getMark(this.id) === true;
+				return this.model.getMark(this.id);
 			}
 		},
 		
@@ -59,10 +59,6 @@ define([
 		// triggerOnCell: [readonly] Boolean
 		//		Whether row will be selected by clicking on cell, false by default		
 		triggerOnCell: false,
-
-		// treeMode: Boolean
-		//		Whether to apply tri-state selection for child rows.
-		treeMode: true,
 
 /*=====
 		selectById: function(rowId){
@@ -96,21 +92,16 @@ define([
 			// summary:
 			//		Check if the given rows are all selected.
 			return array.every(arguments, function(id){
-				return this.model.getMark(id) === true;
+				return this.model.getMark(id);
 			}, this);
 		},
 
 		clear: function(silent){
 			// summary:
 			//		Deselected all selected rows;			
-			query(".gridxRowSelected", this.grid.mainNode).forEach(function(node){
+			query(".gridxRowSelected", this.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowSelected');
-				node.removeAttribute('aria-selected');
 			});
-			query(".gridxRowPartialSelected", this.grid.mainNode).forEach(function(node){
-				domClass.remove(node, 'gridxRowPartialSelected');
-			});
-			this._clear();
 			this.model.clearMark();
 			if(!silent){
 				this._onSelectionChange();
@@ -123,9 +114,7 @@ define([
 		_type: 'row',
 
 		_init: function(){
-			var t = this,
-				g = t.grid;
-			t.model.treeMarkMode('', t.arg('treeMode'));
+			var t = this, g = t.grid;
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
@@ -135,7 +124,7 @@ define([
 					if(mouse.isLeft(e) && (t.arg('triggerOnCell') || !e.columnId)){
 						t._isOnCell = e.columnId;
 						g.body._focusCellCol = e.columnIndex;
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 					}
 				}],
 				[g, 'onRowMouseOver', function(e){
@@ -145,14 +134,13 @@ define([
 					t._highlight({row: e.visualIndex});
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if(e.keyCode == keys.SPACE && (!e.columnId ||
-							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
-							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, e.ctrlKey, e.shiftKey);
 						t._end();
 					}
-				}]);
+				}]
+			);
 		},
 
 		_markById: function(args, toSelect){
@@ -182,12 +170,12 @@ define([
 						rowInfo = body.getRowInfo({visualIndex: start});
 						start = rowInfo.rowIndex;
 						for(i = 0; i < count; ++i){
-							m.markByIndex(i + start, toSelect, '', rowInfo.parentId);
+							m.markByIndex(i + start, toSelect, rowInfo.parentId);
 						}
 					}
 				}else if(arg >= 0 && arg < Infinity){
-					rowInfo = body.getRowInfo({visualIndex: arg});
-					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+					rowInfo = body.getRowInfo({visualIndex: arg}).rowIndex;
+					m.markByIndex(rowInfo.rowIndex, toSelect, rowInfo.parentId);
 				}
 			});
 			return m.when();
@@ -206,15 +194,12 @@ define([
 
 		_onMark: function(id, toMark, oldState, type){
 			if(type == 'select'){
-				var nodes = query('[rowid="' + id + '"]', this.grid.mainNode);
-				if(nodes.length){
-					nodes.forEach(function(node){
-						var selected = toMark && toMark != 'mixed';
-						domClass.toggle(node, 'gridxRowSelected', selected);
-						domClass.toggle(node, 'gridxRowPartialSelected', toMark == 'mixed');
-						node.setAttribute('aria-selected', !!selected);
-					});
-					this.onHighlightChange({row: parseInt(nodes[0].getAttribute('visualindex'), 10)}, toMark);
+				var node = query('[rowid="' + id + '"]', this.grid.bodyNode)[0];
+				if(node){
+					var selected = toMark && toMark != 'mixed';
+					domClass.toggle(node, 'gridxRowSelected', selected);
+					domClass.toggle(node, 'gridxRowPartialSelected', toMark == 'mixed');
+					this.onHighlightChange({row: parseInt(node.getAttribute('visualindex'), 10)}, toMark);
 				}
 			}
 		},
@@ -222,14 +207,14 @@ define([
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
 			var t = this;
 			if(t.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				t._start({row: rowVisIndex}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
 				t._end();
 			}
 		},
 
 		_onMoveToRowHeaderCell: function(rowVisIndex, e){
 			if(e.shiftKey){
-				this._start({row: rowVisIndex}, this.grid._isCopyEvent(e), 1);	//1 as true
+				this._start({row: rowVisIndex}, e.ctrlKey, 1);	//1 as true
 				this._end();
 			}
 		},
@@ -251,7 +236,7 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			query('[visualindex="' + target.row + '"]', this.grid.mainNode).forEach(function(node){
+			query('[visualindex="' + target.row + '"]', this.grid.bodyNode).forEach(function(node){
 				domClass.toggle(node, 'gridxRowSelected', toHighlight);
 				node.setAttribute('aria-selected', !!toHighlight);
 			});
@@ -304,10 +289,9 @@ define([
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
-
 				for(i = a; i <= b; ++i){
 					var rowInfo = bd.getRowInfo({visualIndex: i});
-					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+					m.markByIndex(rowInfo.rowIndex, toSelect, rowInfo.parentId);
 				}
 				return m.when();
 			}

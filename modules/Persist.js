@@ -18,19 +18,22 @@ define([
 		//		things like gears or behavior storage, so we aren't supporting dojox.storage by default.
 		name: 'persist',
 	
-		constructor: function(grid){
+		constructor: function(grid, args){
 			// summary:
 			//		All initializations, if any, must be done in the constructor, instead of the load function.
 			// grid: Object
 			//		The grid itself.
-			var t = this,
-				gridDestroy = grid.destroy;
+			// args: Object | undefined
+			//		Arguments of this module
+			//		Possible arguments are: key, put, get
+			var t = this;
 			//Initialize arguments
-			t.arg('key', window.location + '/' + grid.id, function(arg){
+			t.key = window.location + '/' + t.arg('key', grid.id, function(arg){
 				return arg;
 			});
 			t._persistedList = {};
 			// Save states when grid destroy or window unload
+			var gridDestroy = grid.destroy;
 			grid.destroy = function(){
 				t.save();
 				gridDestroy.call(grid);
@@ -49,13 +52,8 @@ define([
 		},
 		
 		//Public---------------------------------------------------------
-		
-		// enabled: Boolean
-		//		Whether this module is enabled (also means whether all registered features are persistable).
 		enabled: true,
 
-		// options:
-		//		Options meaningful to the persist mechanism. By default it mean the cookie options.
 		options: null,
 		
 		// key: String
@@ -82,44 +80,27 @@ define([
 			// summary:
 			//		This is NOT a public method, but users can provide their own to override it.
 			//		This function is called when loading things from storage.
-			// return:
+			// return: Object
 			//		Then things we stored before.
-			return json.fromJson(cookie(key));	//Object
+			return json.fromJson(cookie(key));
 		},
 	
 		registerAndLoad: function(name, saver, scope){
 			// summary:
-			//		Register a feature to be persisted, and then load (return) its contents.
+			//		Register a feature to be persisted, and the load (return) its contents.
 			// name: String
 			//		A unique name of the feature to be persisted.
 			// saver: Function() return object
 			//		A function to be called when persisting the grid.
-			// return:
+			// return: Object | null
 			//		The loaded contents of the given feature.
 			this._persistedList[name] = {
 				saver: saver,
 				scope: scope,
 				enabled: true
 			};
-			var content = this.get(this.arg('key'));
-			return content ? content[name] : null;	//Object
-		},
-
-		features: function(){
-			// summary:
-			//		Get the names of all the persistable features.
-			//		These names can be used in enable(), disable() or isEnabled() methods.
-			// return:
-			//		An array of persistable feature names.
-			var list = this._persistedList,
-				features = [],
-				name;
-			for(name in list){
-				if(list.hasOwnProperty(name)){
-					features.push(name);
-				}
-			}
-			return features;	//String[]
+			var content = this.get(this.key);
+			return content ? content[name] : null;
 		},
 	
 		enable: function(name){
@@ -144,38 +125,32 @@ define([
 			// summary:
 			//		Check whether a feature is enabled or not.
 			// name: String
-			//		Name of a feature. If omitted, means every feature.
-			// return:
-			//		Whether this feature (or every feature) is enabled.
+			//		Name of a feature.
 			var feature = this._persistedList[name];
 			if(feature){
-				return feature.enabled;	//Boolean
+				return feature.enabled;
 			}
-			return name ? false : this.arg('enabled');	//Boolean
+			return name ? false : this.arg('enabled');
 		},
 	
 		save: function(){
 			// summary:
 			//		Save all the enabled features.
-			var t = this,
-				contents = null;
+			var t = this, contents = null;
 			if(t.arg('enabled')){
-				var name,
-					feature,
-					list = t._persistedList;
+				var name, list = t._persistedList;
 				contents = {};
 				for(name in list){
-					feature = list[name];
-					if(feature.enabled){
-						contents[name] = feature.saver.call(feature.scope || lang.global);
+					if(list[name].enabled){
+						contents[name] = list[name].saver.call(list[name].scope || lang.global);
 					}
 				}
 			}
-			t.put(t.arg('key'), contents, t.arg('options'));
+			t.put(t.key, contents, t.options);
 		},
 	
 		//Private--------------------------------------------------------
-		//_persistedList: null,
+		_persistedList: null,
 		
 		_setEnable: function(name, enabled){
 			var list = this._persistedList;
@@ -200,8 +175,8 @@ define([
 				array.forEach(columns, function(col){
 					array.some(grid._columns, function(c, i){
 						if(c.id == col.id){
-							c = cols[col.index] = grid._columns[i];
-							c.declaredWidth = c.width = col.width;
+							cols[col.index] = grid._columns[i];
+							cols[col.index].width = col.width;
 							return true;
 						}
 					});

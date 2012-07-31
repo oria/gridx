@@ -15,7 +15,7 @@ require([
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 10
+		size: 200
 	}); 
 
 	mods = [

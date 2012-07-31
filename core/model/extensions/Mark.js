@@ -19,9 +19,9 @@ define([
 			};
 			t.clear();
 			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode');
-			t.aspect(model, '_msg', '_receiveMsg');
-			t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
-			t.aspect(model, 'setStore', 'clear');
+			t.connect(model, '_msg', '_receiveMsg');
+			t.connect(model._cache, 'onLoadRow', '_onLoadRow');
+			t.connect(model, 'setStore', 'clear');
 			model.onMarkChange = function(){};
 			model._spTypes = {};
 		},

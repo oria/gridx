@@ -121,10 +121,6 @@ define([
 			}
 			ranges.push(a);
 		}
-		//Improve performance for most cases
-		if(ranges.length == 1 && ranges[0].count < ps){
-			ranges[0].count = ps;
-		}
 		args.range = ranges;
 		return args;
 	}

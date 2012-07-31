@@ -39,24 +39,19 @@ require([
 		selectRowTriggerOnCell: true,
 		barTop: [
 			[
-				{pluginClass: 'dijit/Toolbar', colSpan: 2},
-				{pluginClass: QuickFilter, 'className': 'quickFilter'}
-			],
-			[
+				'dijit/Toolbar',
 				{pluginClass: LinkPager, 'className': 'linkPager'},
-				{content: 'Grid Bar Test', style: 'text-align: center; font-size: 15px; font-weight: bolder; text-shadow: 1px 1px 1px #fff;'},
-				null
+				{pluginClass: DropDownSizer, 'className': 'dropDownSizer'},
+				{pluginClass: QuickFilter, 'className': 'quickFilter'}
 			]
 		],
 		barBottom: [
-			[
-				{pluginClass: Summary, rowSpan: 2},
-				{pluginClass: LinkSizer, style: 'text-align: center;', colSpan: 2}
-			],[
-				{pluginClass: DropDownPager, style: 'text-align: center;'},
-				'gridx/modules/barPlugins/DropDownSizer',
-				GotoPageButton
-			]
+		    Summary,
+			{pluginClass: LinkSizer, 'className': 'linkSizer'},
+			{pluginClass: LinkPager, 'className': 'linkPager'},
+			{pluginClass: DropDownSizer, 'className': 'dropDownSizer'},
+			{pluginClass: DropDownPager, style: 'text-align: center;'},
+			GotoPageButton
 		]
 	});
 	

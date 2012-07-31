@@ -31,16 +31,15 @@ require([
 		}),
 		structure: structure,
 		baseSort: [{attribute: 'Album', descending: false}],
-		sortInitialOrder: [{colId: '2', descending: true}],
 		modules: [
 			modules.VirtualVScroller,
-			modules.ColumnResizer,
+//            modules.ColumnResizer,
 //            modules.Focus,
-			modules.SingleSort
+			{
+				moduleClass: modules.SingleSort
+			}
 		],
-		modelExtensions: [
-			modules.FormatSort
-		]
+		modelExtensions: [modules.FormatSort]
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();

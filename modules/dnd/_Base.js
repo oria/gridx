@@ -8,25 +8,14 @@ define([
 ], function(declare, array, lang, _Module, Avatar){
 
 	return declare(_Module, {
-
-		// delay: Number
-		//		The time delay before starting dnd after mouse down.
 		delay: 2,
 	
-		// enabled: Boolean
-		//		Whether this module is enabled.
 		enabled: true,
 
-		// canRearrange: Boolean
-		//		Whether rearrange within grid using dnd iw allowed.
 		canRearrange: true,
 
-		// copyWhenDragOut: Boolean|Object
-		//		When dragging out, whehter to delete in this grid.
 		copyWhenDragOut: false,
 
-		// avatar: Function
-		//		The avatar used during dnd.
 		avatar: Avatar,
 
 		preload: function(args){

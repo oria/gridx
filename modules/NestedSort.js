@@ -53,7 +53,7 @@ define([
 
 		preload: function(args){
 			var t = this;
-			t._sortData = t.arg('initialOrder') || t._sortData;
+			t._sortData = t.arg('preSort') || t._sortData;
 			//persistence support
 			if(t.grid.persist){
 				var d = t.grid.persist.registerAndLoad('sort', function(){
@@ -356,7 +356,7 @@ define([
 			var t = this,
 				i = t._currRegionIdx,
 				rs = t._focusRegions;
-			while(rs[i-1] && (domStyle.get(rs[--i], 'display') === 'none')){}
+			while(rs[i-1] && (domStyle.get(rs[--i], 'display') === 'none' || hasClass(rs[i], 'gridxSortBtn'))){}
 			if(rs[i]){
 				t._focusRegion(rs[i]);
 			}
@@ -400,20 +400,17 @@ define([
 					g.hScroller.scrollToColumn(header.getAttribute('colid'));
 				}
 				region.focus();
-				window.setTimeout(function(){
-					//make it asnyc so that IE will not lost focus
-					addClass(header, 'gridxCellSortFocus');
-					if(hasClass(region, 'gridxSortNode')){
-						addClass(region, 'gridxSortNodeFocus');
-					}else if(hasClass(region, 'gridxSortBtn')){
-						addClass(region, 'gridxSortBtnFocus');
-					}
-					addClass(t.grid.header.domNode, 'gridxHeaderFocus');
-					t._currRegionIdx = indexOf(t._focusRegions, region);
-					
-					//firefox and ie will lost focus when region is invisible, focus it again.
-					region.focus();
-				}, 0);
+				addClass(header, 'gridxCellSortFocus');
+				if(hasClass(region, 'gridxSortNode')){
+					addClass(region, 'gridxSortNodeFocus');
+				}else if(hasClass(region, 'gridxSortBtn')){
+					addClass(region, 'gridxSortBtnFocus');
+				}
+				addClass(t.grid.header.domNode, 'gridxHeaderFocus');
+				t._currRegionIdx = indexOf(t._focusRegions, region);
+				//firefox and ie will lost focus when region is invisible, focus it again.
+				region.focus();
+				
 				
 			}
 		},

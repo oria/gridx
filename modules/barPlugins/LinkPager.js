@@ -12,9 +12,6 @@ define([
 	var hasClass = domClass.contains;
 
 	return declare(/*===== "gridx.modules.barPlugins.LinkPager", =====*/_LinkPageBase, {
-		// summary:
-		//		This is a grid bar plugin to switch pages for grid using link buttons.
-
 		templateString: template,
 
 		postMixInProperties: function(){
@@ -28,9 +25,6 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------------------
-
-		// visibleSteppers: Integer
-		//		Number of visible page steppers. If invalid, default to 3.
 		visibleSteppers: 3,
 
 		refresh: function(){
@@ -53,9 +47,6 @@ define([
 						'" tabindex="', tabIndex, '">', substitute(t.pageIndex, [page + 1]),
 					'</span>'].join('');
 				};
-			if(typeof count != 'number' || count <= 0){
-				count = 3;
-			}
 			if(pageCount){
 				var firstPage = currentPage - Math.floor((count - 1) / 2),
 					lastPage = firstPage + count - 1;
