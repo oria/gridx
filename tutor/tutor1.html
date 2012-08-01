@@ -4,9 +4,57 @@
 	<title></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<style type="text/css">
+		@import "../dojo/resources/dojo.css";
+		@import "../dijit/themes/claro/claro.css";
+		@import "../dijit/themes/claro/document.css";
+		@import "../gridx/resources/claro/Gridx.css";
+
+		.gridx {
+			width: 400px;
+			height: 200px;
+		}
 	</style>
-	<script type="text/javascript" src="../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src="../dojo/dojo.js.uncompressed.js"
+		data-dojo-config="async: true, packages:[{name: 'gridx', location:'../gridx'}]"></script>
 	<script type="text/javascript">
+		require([
+			//Require resources.
+			"dojo/store/Memory",
+			"gridx/core/model/cache/Sync",
+			"gridx/Grid"
+		], function(Memory, Cache, Grid){
+
+			//Use dojo/store/Memory here
+			var store = new Memory({
+				data: [
+					{ id: 1, name: 'John', score: 130, city: 'New York', birthday: '1980/2/5'},
+					{ id: 2, name: 'Alice', score: 123, city: 'Washington', birthday: '1984/3/7'},
+					{ id: 3, name: 'Lee', score: 149, city: 'Shanghai', birthday: '1986/10/8'},
+					{ id: 4, name: 'Mike', score: 100, city: 'London', birthday: '1988/8/12'},
+					{ id: 5, name: 'Tom', score: 89, city: 'San Francisco', birthday: '1990/1/21'}
+				]
+			});
+
+			var structure = [
+				{ id: 'name', field: 'name', name: 'Name', width: '50px'},
+				{ id: 'city', field: 'city', name: 'City'},
+				{ id: 'score', field: 'score', name: 'Score', width: '80px'}
+			];
+
+			//Create grid widget.
+			var grid = Grid({
+				id: 'grid',
+				cacheClass: Cache,
+				store: store,
+				structure: structure
+			});
+
+			//Put it into the DOM tree. Let's assume there's a node with id "gridContainer".
+			grid.placeAt('gridContainer');
+
+			//Start it up.
+			grid.startup();
+		});
 	</script>
 </head>
 <body class='claro'>
