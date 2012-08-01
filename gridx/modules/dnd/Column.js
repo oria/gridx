@@ -9,8 +9,12 @@ define([
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
 	return declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
+		// summary:
+		//		This module provides an implementation of column drag & drop.
+		//		It supports column reordering within grid, dragging out of grid, and dragging into grid.
+
 		name: 'dndColumn',
-		
+
 		required: ['_dnd', 'selectColumn', 'moveColumn'],
 
 		getAPIPath: function(){
@@ -22,20 +26,27 @@ define([
 		},
 
 		preload: function(){
-			this.inherited(arguments);
-			this._selector = this.grid.select.column;
+			var t = this,
+				g = t.grid;
+			t.inherited(arguments);
+			t._selector = g.select.column;
 		},
 	
 		//Public---------------------------------------------------------------------------------------
-		//For now can not drag in any columns
+
+		//accept: String[]
+		//		Can drag out what kind of stuff.
+		//		For now can not drag in any columns.
 		accept: [],
 
+		//provide: String[]
+		//		Can drag out what kind of stuff
 		provide: ['grid/columns'],
 
 		//Package--------------------------------------------------------------------------------------
 		_checkDndReady: function(evt){
 			var t = this;
-            if(t._selector.isSelected(evt.columnId)){
+			if(t._selector.isSelected(evt.columnId)){
 				t._selectedColIds = t._selector.getSelected();
 				t.grid.dnd._dnd.profile = t;
 				return true;
@@ -49,6 +60,7 @@ define([
 
 		//Private--------------------------------------------------------------------------------------
 		_cssName: "Column",
+
 
 		_onBeginDnd: function(source){
 			source.delay = this.arg('delay');

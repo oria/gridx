@@ -39,6 +39,10 @@ define([
 	}
 
 	return declare(/*===== "gridx.modules.dnd.Row", =====*/_Base, {
+		// summary:
+		//		This module provides an implementation of row drag & drop.
+		//		It supports row reordering within grid, dragging out of grid, and dragging into grid.
+
 		name: 'dndRow',
 		
 		required: ['_dnd', 'moveRow'],
@@ -52,10 +56,12 @@ define([
 		},
 
 		//Public---------------------------------------------------------------------------
-		//Can drag in what kind of stuff
+		// accept: String[]
+		//		Can drag in what kind of stuff
 		accept: ['grid/rows'],
 
-		//Can drag out what kind of stuff
+		// provide: String[]
+		//		Can drag out what kind of stuff
 		provide: ['grid/rows'],
 
 		onDraggedOut: function(targetSource){
@@ -93,15 +99,15 @@ define([
 		},
 	
 		//Package-----------------------------------------------------------------------------------
-        _checkDndReady: function(evt){
+		_checkDndReady: function(evt){
 			var t = this, m = t.model;
-            if(!m.isMarked || m.isMarked(evt.rowId)){
+			if(!m.getMark || m.getMark(evt.rowId)){
 				t.grid.dnd._dnd.profile = t;
 				t._selectedRowIds = m.getMarkedIds ? m.getMarkedIds() : [evt.rowId];
 				return true;
 			}
 			return false;
-        },
+		},
 
 		//Private-----------------------------------------------------------------------------
 		_cssName: 'Row',
@@ -148,7 +154,7 @@ define([
 					left: ''
 				},
 				isSelected = function(n){
-					return t.model.isMarked && t.model.isMarked(n.getAttribute('rowid'));
+					return t.model.getMark && t.model.getMark(n.getAttribute('rowid'));
 				},
 				getVIdx = function(n){
 					return parseInt(n.getAttribute('visualindex'), 10);

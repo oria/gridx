@@ -30,7 +30,7 @@ define([
 
 		
 		constructor: function(grid, row, column){
-			var t=this;
+			var t = this;
 			t.grid = grid;
 			t.model = grid.model;
 			t.row = row;
@@ -69,9 +69,12 @@ define([
 			//		Anything that store can recognize as data
 			// returns:
 			//		If using server side store, a Deferred object is returned to indicate when the operation is finished.
-			var obj = {};
-			obj[this.column.field()] = rawData;
-			return this.row.setRawData(obj);	//dojo.Deferred
+			var obj = {},
+				field = this.column.field();
+			if(field){
+				obj[field] = rawData;
+				return this.row.setRawData(obj);	//dojo.Deferred
+			}
 		}
 	});
 });

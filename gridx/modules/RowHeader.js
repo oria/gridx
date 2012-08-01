@@ -82,12 +82,21 @@ define([
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
-				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']
-			);
+				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
+				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']);
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
+		},
+
+		load: function(args, startup){
+			var t = this,
+				bn = t.bodyNode;
+			startup.then(function(){
+				bn.style[t.grid.isLeftToRight() ? 'left' : 'right'] = -bn.offsetWidth + 'px';
+				t.loaded.callback();
+			});
 		},
 
 		//Public--------------------------------------------------------------------------
@@ -97,11 +106,13 @@ define([
 		width: '20px',
 
 		onMoveToRowHeaderCell: function(){
+			// summary:
+			//		Fired when focus is moved to a row header using keyboard.
 			// tags:
 			//		callback
 		},
 
-		/*=====
+	/*=====
 		// headerProvider: Function
 		//		A functionn that returns an HTML string to fill the header cell of row headers.
 		headerProvider: null,
@@ -109,7 +120,7 @@ define([
 		// cellProvider: Function
 		//		A function that returns an HTML string to fill the body cells of row headers.
 		cellProvider: null,
-		=====*/
+	=====*/
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){
@@ -129,26 +140,28 @@ define([
 			}
 		},
 
-		_onAfterRow: function(rowInfo, rowCache){
+		_onAfterRow: function(row){
 			var t = this,
-				n = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
-				bn = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
+				visualIndex = row.visualIndex(),
+				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
+				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
 				nt = n.firstChild,
 				cp = t.arg('cellProvider');
-			n.setAttribute('rowid', rowInfo.rowId);
-			n.setAttribute('rowindex', rowInfo.rowIndex);
-			n.setAttribute('parentid', rowInfo.parentId || '');
+			n.setAttribute('rowid', row.id);
+			n.setAttribute('rowindex', row.index());
+			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');
 			if(cp){
-				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, rowInfo);
+				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
 			}
 			t._syncRowHeight(nt, bn);
 		},
 
-		_onAfterCell: function(cellNode, rowInfo){
+		_onAfterCell: function(cell){
 			//This is to ensure the rowHeader get correct height for editable cells
 			var t = this,
-				n = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
-				bn = query('[visualindex="' + rowInfo.visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
+				visualIndex = cell.row.visualIndex(),
+				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
+				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
 			t._syncRowHeight(n.firstChild, bn);
 		},
 
@@ -165,7 +178,8 @@ define([
 		},
 
 		_onRendered: function(start, count){
-			var t = this, hp = t.arg('headerProvider');
+			var t = this,
+				hp = t.arg('headerProvider');
 			if(hp){
 				t.headerCellNode.innerHTML = hp();
 			}
@@ -173,9 +187,10 @@ define([
 		},
 
 		_onUnrender: function(id){
-			var n = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode)[0];
-			if(n){
-				domConstruct.destroy(n);
+			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			if(nodes && nodes.length){
+				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
+				domConstruct.destroy(nodes[nodes.length - 1]);
 			}
 		},
 

@@ -5,8 +5,8 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/_base/connect"
-], function(require, declare, array, lang, Deferred, DeferredList, cnnt){
+	"dojo/aspect"
+], function(require, declare, array, lang, Deferred, DeferredList, aspect){
 
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
@@ -25,7 +25,6 @@ define([
 		
 		constructor: function(args){
 			var t = this,
-				c = 'connect',
 				cacheClass = args.cacheClass;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
@@ -34,18 +33,33 @@ define([
 			t._model = t._cache = new cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
 			var m = t._model;
-			t._connects = [
-				cnnt[c](m, "onDelete", t, "onDelete"),
-				cnnt[c](m, "onNew", t, "onNew"),
-				cnnt[c](m, "onSet", t, "onSet")
+			t._cnnts = [
+				aspect.after(m, "onDelete", lang.hitch(t, "onDelete"), 1),
+				aspect.after(m, "onNew", lang.hitch(t, "onNew"), 1),
+				aspect.after(m, "onSet", lang.hitch(t, "onSet"), 1)
 			];
 		},
 	
 		destroy: function(){
-			array.forEach(this._connects, cnnt.disconnect);
+			array.forEach(this._cnnts, function(cnnt){
+				cnnt.remove();
+			});
 			for(var n in this._exts){
 				this._exts[n].destroy();
 			}
+		},
+
+		clearCache: function(){
+			this._cache.clear();
+		},
+
+		isId: function(id){
+			return id || id === 0;
+		},
+
+		setStore: function(store){
+			this.store = store;
+			this._cache.setStore(store);
 		},
 	
 		//Public-------------------------------------------------------------------
@@ -106,6 +120,16 @@ define([
 			return [];	//String[]
 		},
 
+		parent: function(id){
+			// summary:
+			//		Get the parent ID of the given row.
+			// id: String
+			//		The row ID
+			// returns:
+			//		The parent ID.
+			return [];
+		},
+
 		hasChildren: function(id){
 			// summary:
 			//		Check whether a row has children rows.
@@ -114,6 +138,16 @@ define([
 			// returns:
 			//		Whether this row has child rows.
 			return false;	//Boolean
+		},
+
+		children: function(id){
+			// summary:
+			//		Get IDs of children rows.
+			// id: String
+			//		The row ID
+			// returns:
+			//		An array of row IDs
+			return [];	//Array
 		},
 
 		size: function(parentId){
@@ -169,7 +203,9 @@ define([
 			//		id: ['a', 'b', 'c']
 			//		}, ...)
 			//		6. An object containing both contents defined in 4 and 5.
-			//		7. null or call this method without any arguments.
+			//		7. An empty object
+			//		The model will fetch the store size. Currently it is implemented by fetching the first page of data.
+			//		8. null or call this method without any arguments.
 			//		This is useful when we only need to execute pending data operations but don't need to fetch rows.
 			// callback: Function?
 			//		The callback function is called when all the pending data operations are executed and all
@@ -423,13 +459,14 @@ define([
 					for(i = args.id.length - 1; i >= 0; --i){
 						ids.push(args.id[i]);
 					}
-				}else if(args.id){
+				}else if(this.isId(args.id)){
 					ids.push(args.id);
 				}
 			}else{
 				f(args);
 			}
 			if(!rgs.length && !ids.length && this.size() < 0){
+				//first time load, try to load a page
 				rgs.push({start: 0, count: this._cache.pageSize || 1});
 			}
 			return res;

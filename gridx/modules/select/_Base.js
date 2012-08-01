@@ -28,26 +28,39 @@ define([
 		},
 
 		//Public--------------------------------------------------------------------
+
+		// enabled: Boolean
+		//		Whether this module is enabled.
 		enabled: true,
 	
+		// multiple: Boolean
+		//		Whether multiple selectionis allowe.
 		multiple: true,
 	
+		// holdingCtrl: Boolean
+		//		Whether to add to selection all the time (as if the CTRL key is always held).
 		holdingCtrl: false,
 
 		//Events----------------------------------------------------------------------
-		onSelected: function(/* rowObject */){},
-		onDeselected: function(/* rowObject */){},
+		onSelected: function(){},
+
+		onDeselected: function(){},
+
 		onHighlightChange: function(){},
 
 		//Private---------------------------------------------------------------------
 		
 		_getMarkType: function(){},
 
+		_isSelected: function(){
+			return this.isSelected.apply(this, arguments);
+		},
+
 		_select: function(item, extending){
 			var t = this, toSelect = 1;
 			if(t.arg('enabled')){
 				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
-					toSelect = !t.isSelected(item);
+					toSelect = !t._isSelected(item);
 				}else{
 					t.clear();
 				}

@@ -51,8 +51,7 @@ define([
 					if(name == 'rowHeader'){
 						t._onMouseOut();
 					}
-				}]
-			);
+				}]);
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
@@ -70,17 +69,24 @@ define([
 		all: true,
 
 		//Private----------------------------------------------------------
-		_createSelector: function(rowInfo){
-			var rowNode = query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0],
-				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected');
-			return this._createCheckBox(selected);
+		_createSelector: function(row){
+			var rowNode = row.node(),
+				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
+				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
+			return this._createCheckBox(selected, partial);
 		},
 
-		_createCheckBox: function(selected){
+		_createCheckBox: function(selected, partial){
 			var dijitClass = this._getDijitClass();
-			return ['<span class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
-				dijitClass, ' ', selected ? dijitClass + 'Checked' : '',
-				'"><span class="gridxIndirectSelectionCheckBoxInner">&#9633;</span></span>'
+			return ['<span role="', this._isSingle() ? 'radio' : 'checkbox',
+				'" class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
+				dijitClass, ' ',
+				selected ? dijitClass + 'Checked' : '',
+				partial ? dijitClass + 'Partial' : '',
+				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
+				'"><span class="gridxIndirectSelectionCheckBoxInner">',
+				selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;',
+				'</span></span>'
 			].join('');
 		},
 
@@ -102,7 +108,13 @@ define([
 		_onHighlightChange: function(target, toHighlight){
 			var node = query('[visualindex="' + target.row + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
 			if(node){
-				domClass.toggle(node, this._getDijitClass() + 'Checked', toHighlight);
+				var dijitClass = this._getDijitClass(),
+					partial = toHighlight == 'mixed',
+					selected = toHighlight && !partial;
+				domClass.toggle(node, dijitClass + 'Checked', selected);
+				domClass.toggle(node, dijitClass + 'Partial', partial);
+				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
+				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
 			}
 		},
 
@@ -141,21 +153,24 @@ define([
 		},
 
 		_onSelectionChange: function(selected){
-			var t = this, d, 
+			var t = this, d,
 				allSelected,
 				body = t.grid.body,
 				model = t.model,
 				start = body.rootStart,
 				count = body.rootCount;
+			var selectedRoot = array.filter(selected, function(id){
+				return !model.treePath(id).pop();
+			});
 			if(count === model.size()){
-				allSelected = count == selected.length;
+				allSelected = count == selectedRoot.length;
 			}else{
 				d = new Deferred();
 				model.when({
 					start: start,
 					count: count
 				}, function(){
-					var indexes = array.filter(array.map(selected, function(id){
+					var indexes = array.filter(array.map(selectedRoot, function(id){
 						return model.idToIndex(id);
 					}), function(index){
 						return index >= start && index < start + count;
@@ -168,6 +183,7 @@ define([
 				t._allSelected[t._getPageId()] = allSelected;
 				var node = t.grid.rowHeader.headerCellNode.firstChild;
 				domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+				node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
 			});
 		},
 

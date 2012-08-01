@@ -141,7 +141,7 @@ define([
 			//		Pass the exported result to the callback function of the Deferred object.
 			// tags:
 			//		private
-			var d = new Deferred,
+			var d = new Deferred(),
 				t = this,
 				model = t.model,
 				cols = t._getColumns(args),
@@ -185,7 +185,7 @@ define([
 								});
 							}, fail);
 						Deferred.when(waitForRowIndex, function(){
-							var dd = new Deferred,
+							var dd = new Deferred(),
 								rowCount = model.size();
 							t._fetchRows(d, writer, context, args, dd, prepareReqs(args, rowIdxes, rowCount));
 							dd.then(success, fail);

@@ -9,7 +9,7 @@ define([
 	"../core/_Module",
 	"../util"
 ], function(declare, array, connect, lang, sniff, win, keys, _Module, util){
-	
+
 	/*=====
 		gridx.modules.Focus.__FocusArea = function(){
 			// name: String (mandatory)
@@ -48,7 +48,7 @@ define([
 			//		When *focusNode* is blurred, only the currently focused area will be called.
 		};
 	=====*/
-	
+
 	return declare(/*===== "gridx.modules.Focus", =====*/_Module, {
 		// summary
 		//		This module controls the TAB sequence of all the UI modules.
@@ -63,14 +63,11 @@ define([
 		},
 
 		constructor: function(){
-			this._areas = {};
-			this._tabQueue = [];
-			this._focusNodes = [];
-		},
-
-		preload: function(){
 			var t = this,
 				g = t.grid;
+			t._areas = {};
+			t._tabQueue = [];
+			t._focusNodes = [];
 			t._onDocFocus = function(evt){
 				if(!t._noBlur){
 					if(sniff('ie')){
@@ -83,15 +80,14 @@ define([
 				[g.domNode, 'onkeydown', '_onTabDown'],
 				[g.domNode, 'onfocus', '_focus'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
-				[g, 'onBlur', '_doBlur']
-			);
+				[g, 'onBlur', '_doBlur']);
 			if(sniff('ie')){
 				win.doc.attachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.addEventListener('focus', t._onDocFocus, true);
 			}
 		},
-	
+
 		destroy: function(){
 			var t = this;
 			t._areas = null;
@@ -130,7 +126,7 @@ define([
 				init('onFocus');
 				init('onBlur');
 				area.connects = area.connects || [];
-	
+
 				t._areas[area.name] = area;
 				var i = util.biSearch(tq, function(a){
 					return a.p - area.priority;
@@ -149,8 +145,7 @@ define([
 				}
 			}
 		},
-		//_tabQueue: [{p: 1, stack: ['name']}]
-	
+
 		focusArea: function(/* String */ areaName, forced){
 			// summary:
 			//		Focus the area with name of *areaName*.
@@ -183,7 +178,7 @@ define([
 			}
 			return false;
 		},
-	
+
 		currentArea: function(){
 			// summary:
 			//		Get the name of the current focus area. 
@@ -194,7 +189,7 @@ define([
 			var a = this._tabQueue[this._queueIdx];
 			return a ? a.stack[this._stackIdx] : '';
 		},
-	
+
 		tab: function(step, evt){
 			// summary:
 			//		Move focus from one area to another.
@@ -247,7 +242,7 @@ define([
 			}
 			t._tabingOut = 1;
 			if(step < 0){
-				t._queueIdx= -1;
+				t._queueIdx = -1;
 				t.grid.domNode.focus();
 			}else{
 				t._queueIdx = tq.length;
@@ -255,7 +250,7 @@ define([
 			}
 			return "";
 		},
-	
+
 		removeArea: function(areaName){
 			// summary:
 			//		Remove the area with name of *areaName*.
@@ -293,7 +288,7 @@ define([
 			return false;
 		},
 
-		onFocusArea: function(/* String */areaName){
+		onFocusArea: function(/* String areaName*/){
 			// summary:
 			//		Fired when an area is focused.
 			// tags:
@@ -306,20 +301,20 @@ define([
 			// tags:
 			//		callback
 		},
-	
+
 		//Private----------------------------------------------------------
 		//_areas: null,
 		//_tabQueue: null,
 		//_focusNodes: null,
 		_queueIdx: -1,
 		_stackIdx: 0,
-	
+
 		_onTabDown: function(evt){
 			if(evt.keyCode === keys.TAB){
 				this.tab(evt.shiftKey ? -1 : 1, evt);
 			}
 		},
-	
+
 		//-----------------------------------------------------------------------
 		_onFocus: function(evt){
 			var t = this, i, j, stack, area,
@@ -351,7 +346,7 @@ define([
 				t._doBlur(evt, currentArea);
 			}
 		},
-		
+
 		_focus: function(evt){
 			var t = this;
 			if(t._tabingOut){
@@ -364,7 +359,7 @@ define([
 				t.tab(-1);
 			}
 		},
-		
+
 		_doBlur: function(evt, area){
 			var t = this;
 			if(!area && t.currentArea()){
@@ -376,7 +371,7 @@ define([
 				t._updateCurrentArea();
 			}
 		},
-		
+
 		_updateCurrentArea: function(area){
 			var t = this, tq = t._tabQueue;
 			if(area){

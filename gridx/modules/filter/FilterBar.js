@@ -1,10 +1,15 @@
 define([
-	"dojo/_base/kernel",
-	"dijit",
 	"dojo/_base/declare",
+	"dijit/registry",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/dom-construct",
 	"dojo/dom-attr",
+	"dojo/dom-class",
 	"dojo/string",
+	"dojo/parser",
+	"dojo/query",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
@@ -15,13 +20,8 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
-	"dojo/date/locale",
-	"dojo/_base/array",
-	"dojo/_base/html",
-	"dojo/query",
-	"dojo/parser"
-	
-], function(dojo, dijit, declare, domConstruct, domAttr, string, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+	"dijit/form/Button"
+], function(declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -56,7 +56,7 @@ define([
 		//				return dojo.date.locale.parse(v, {...});
 		//			}
 		//		}
-		dataTypeArgs: {},
+		dataTypeArgs: {}
 	};
 	=====*/
 	
@@ -112,31 +112,29 @@ define([
 		},
 		
 		load: function(args, startup){
-			//summary:
+			// summary:
 			//	Init filter bar UI
 			//Add before and after expression for filter.
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
 			this.closeFilterBarButton = this.arg('closeFilterBarButton') || this.closeFilterBarButton;
+			
 			this.defineFilterButton = this.arg('defineFilterButton') || this.defineFilterButton;
 			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
 			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
 			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
-			//console.log(locale, locale.falseLabel);
-			this.domNode = dojo.create('div', {
+			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, locale),
 				'class': 'gridxFilterBar'
 			});
-			dojo.parser.parse(this.domNode);
-			dojo.toggleClass(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
+			parser.parse(this.domNode);
+			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
 			this._nls = locale;
-			// this._nls = dojo.i18n.getLocalization("gridx", "FilterBar");
 			this._initWidgets();
 			this._initFocus();
 			this.refresh();
-			//this._buildFilterState();
 			this.connect(this.domNode, 'onclick', 'onDomClick');
 			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
@@ -145,32 +143,32 @@ define([
 		},
 		onDomClick: function(e){
 			if(!e.target || !e.target.tagName){return;}
-			if(dojo.attr(e.target, 'action') === 'clear'){
+			if(domAttr.get(e.target, 'action') === 'clear'){
 				this.clearFilter();
-			}else if(dojo.hasClass(e.target, 'gridxFilterBarCloseBtn')){
+			}else if(css.contains(e.target, 'gridxFilterBarCloseBtn') || css.contains(e.target,'gridxFilterBarCloseBtnText')){
 				this.hide();
-			}else {
+			}else{
 				this.showFilterDialog();
 			}
 		},
 		onDomMouseMove: function(e){
-			if(e && e.target && (dojo.attr(e.target, 'action') === 'clear'
+			if(e && e.target && (domAttr.get(e.target, 'action') === 'clear'
 				|| this.btnFilter === dijit.getEnclosingWidget(e.target))){return;}
 			this._showTooltip(e);
 		},
 		onDomMouseOver: function(e){},
 		onDomMouseOut: function(e){
 			//Make sure to not hide tooltip when mouse moves to tooltip itself.
-			window.setTimeout(dojo.hitch(this, '_hideTooltip'), 10);
+			window.setTimeout(lang.hitch(this, '_hideTooltip'), 10);
 		},
 		
 		applyFilter: function(filterData){
-			//summary:
+			// summary:
 			//		Apply the filter data.
 			var F = Filter, exps = [];
 			this.filterData = filterData;
 			
-			dojo.forEach(filterData.conditions, function(data){
+			array.forEach(filterData.conditions, function(data){
 				var type = 'string';
 				if(data.colId){
 					type = this.grid.column(data.colId).dataType();
@@ -178,7 +176,7 @@ define([
 				}else{
 					//any column
 					var arr = [];
-					dojo.forEach(this.grid.columns(), function(col){
+					array.forEach(this.grid.columns(), function(col){
 						if(!col.isFilterable()){return;}
 						arr.push(this._getFilterExpression(data.condition, data, type, col.id));
 					}, this);
@@ -201,7 +199,7 @@ define([
 				if(!this._cfmDlg){
 					this._cfmDlg = new FilterConfirmDialog();
 				}
-				this._cfmDlg.execute = dojo.hitch(scope, callback);
+				this._cfmDlg.execute = lang.hitch(scope, callback);
 				this._cfmDlg.show();
 			}else{
 				callback.apply(scope);
@@ -210,7 +208,7 @@ define([
 		
 		clearFilter: function(noConfirm){
 			if(!noConfirm){
-				this.confirmToExecute(dojo.hitch(this, 'clearFilter', true), this);
+				this.confirmToExecute(lang.hitch(this, 'clearFilter', true), this);
 			}else{
 				this.filterData = null;
 				this.grid.filter.setFilter();
@@ -311,7 +309,7 @@ define([
 		uninitialize: function(){
 			this._filterDialog && this._filterDialog.destroyRecursive();
 			this.inherited(arguments);
-			dojo.destroy(this.domNode);
+			dom.destroy(this.domNode);
 		},
 	
 		//Private---------------------------------------------------------------
@@ -332,14 +330,14 @@ define([
 				disabled = [];
 				type = 'string';
 			}else{
-				disabled = this.grid._columnsById[colId].disabledConditions||[];
+				disabled = this.grid._columnsById[colId].disabledConditions || [];
 				type = (this.grid._columnsById[colId].dataType || 'string').toLowerCase();
 			}
 			
 			var ret = this.conditions[type], hash = {};
-			if(!ret){ret = conditionData['string'];}
-			dojo.forEach(disabled, function(name){hash[name]=true;});
-			ret = dojo.filter(ret, function(name){return !hash[name];});
+			if(!ret){ret = this.conditions['string'];}
+			array.forEach(disabled, function(name){hash[name] = true;});
+			ret = array.filter(ret, function(name){return !hash[name];});
 			return ret;
 		},
 		
@@ -350,7 +348,7 @@ define([
 			col.filterable = !!filterable;
 			if(this.filterData){
 				var d = this.filterData, len = d.conditions.length;
-				d.conditions = dojo.filter(d.conditions, function(c){
+				d.conditions = array.filter(d.conditions, function(c){
 					return c.colId != colId;
 				});
 				if(len != d.conditions.length){
@@ -362,22 +360,21 @@ define([
 			}
 		},
 		_initWidgets: function(){
-			this.btnFilter = dijit.byNode(dojo.query('.dijitButton', this.domNode)[0]);
-			this.btnClose = dojo.query('.gridxFilterBarCloseBtn', this.domNode)[0];
-			this.statusNode = dojo.query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
+			this.btnFilter = registry.byNode(query('.dijitButton', this.domNode)[0]);
+			this.btnClose = query('.gridxFilterBarCloseBtn', this.domNode)[0];
+			this.statusNode = query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
 			domAttr.remove(this.btnFilter.focusNode, 'aria-labelledby');
-			//this.connect(this.btnFilter, 'onClick', 'showFilterDialog');	
 		},
 		
 		_buildFilterState: function(){
-			//summary:
+			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			var nls = this._nls;
 			if(!this.filterData || !this.filterData.conditions.length){
 				this.statusNode.innerHTML = nls.filterBarMsgNoFilterTemplate;
 				return;
 			}
-			this.statusNode.innerHTML = dojo.string.substitute(nls.filterBarMsgHasFilterTemplate, 
+			this.statusNode.innerHTML = string.substitute(nls.filterBarMsgHasFilterTemplate, 
 				[this._currentSize, this._totalSize, 'items']) + 
 				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="Clear filter">Clear Filter</a>';
 			this._buildTooltip();
@@ -394,7 +391,7 @@ define([
 				!this.filterData.conditions || 
 				!this.filterData.conditions.length){return;}
 			if(!delayed){
-				this._pointTooltipDelay = window.setTimeout(dojo.hitch(this, '_showTooltip', 
+				this._pointTooltipDelay = window.setTimeout(lang.hitch(this, '_showTooltip', 
 					evt, true),this.tooltipDelay);
 				return;
 			}
@@ -411,8 +408,6 @@ define([
 			dlg.hide();
 		},
 		_getRuleString: function(condition, value, type){
-			//var k = condition.charAt(0).toUpperCase() + condition.substring(1);
-			//return '<span style="font-style:italic">' + k + '</span> ' + value;
 			var valueString, type;
 			if(condition == 'isEmpty'){
 				valueString = '';
@@ -422,7 +417,7 @@ define([
 				
 				if(condition === 'range'){
 					var tpl = this._nls.rangeTemplate;
-					valueString = dojo.string.substitute(tpl, [f(value.start), f(value.end)]);
+					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
 				}
@@ -440,7 +435,7 @@ define([
 			var cache = this._conditionOptions = this._conditionOptions || {};
 			if(!cache[colId]){
 				var arr = [];
-				dojo.forEach(this._getColumnConditions(colId), function(s){
+				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({label: nls['condition' + k], value: s});
 				}, this);
@@ -452,11 +447,8 @@ define([
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
 			var F = Filter;
-//			if(data.condition === 'isEmpty'){
-//				return F.isEmpty(F.column(colId, type));
-//			}
-			var dc = this.grid._columnsById[colId].dateParser||this._stringToDate;
-			var tc = this.grid._columnsById[colId].timeParser||this._stringToTime;
+			var dc = this.grid._columnsById[colId].dateParser || this._stringToDate;
+			var tc = this.grid._columnsById[colId].timeParser || this._stringToTime;
 			var converter = {date: dc, time: tc};
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			if(c === 'range'){
@@ -535,32 +527,33 @@ define([
 		},
 		_doFocusBtnFilter: function(evt){
 			this.btnFilter.focus();
-			if(evt)if(evt){dojo.stopEvent(evt);}
+			if(evt){event.stop(evt);}
 			return true;
 		},
 		_doFocusClearLink: function(evt){
 			this.btnFilter.focus();
-			var link = dojo.query('a[action="clear"]')[0];
+			var link = query('a[action="clear"]')[0];
 			if(link){
 				link.focus();
-				if(evt){dojo.stopEvent(evt);}
+				if(evt){event.stop(evt);}
 				return true;
 			}
 			return false;
 		},
 		_doFocusBtnClose: function(evt){
 			this.btnClose.focus();
-			if(evt){dojo.stopEvent(evt);}
+			if(evt){event.stop(evt);}
 			return true;
 		},
 		
 		_doBlur: function(){
 			return true;
 		},
-		
 		destroy: function(){
-			domConstruct.destroy(this.domNode);
+			this._filterDialog && this._filterDialog.destroy();
+			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}
+		
 	});
 });

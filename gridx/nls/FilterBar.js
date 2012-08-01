@@ -3,7 +3,8 @@ define({ root:
 ({
 	"clearFilterDialogTitle": "Clear Filter",
 	"filterDefDialogTitle": "Filter",
-	"ruleTitleTemplate": "Rule ${0}",
+	"defaultRuleTitle": "Rule",
+	"ruleTitleTemplate": "Rule ${ruleNumber}",
 	"noFilterApplied": "No filter applied.",
 	"defineFilter": "Define filter",
 	
@@ -42,6 +43,7 @@ define({ root:
 	"removeRuleButton": "Remove Rule",
 	"waiRemoveRuleButtonTemplate": "Remove rule ${0}",
 	
+	"addRuleButton": "Add Filter Rule",
 	"cancelButton": "Cancel",
 	"waiCancelButton": "Cancel this dialog",
 	"clearButton": "Clear",
@@ -86,7 +88,42 @@ define({ root:
 	"anyColumnOption": "Any Column",
 	
 	"trueLabel": "True",
-	"falseLabel": "False"
-})
+	"falseLabel": "False",
+	"radioTrueLabel": "Value True",
+	"radioFalseLabel": "Value False",
+	"beginTimeRangeLabel": "Time Range Value Start",
+	"endTimeRangeLabel": "Time Range Value End",
+	"beginDateRangeLabel": "Date Range Value Start",
+	"endDateRangeLabel": "Date Range Value End",
+	"startsWithExpr": "${0}*"
+}),
 //end v1.x content
+"ar": true,
+"ca": true,
+"cs": true,
+"da": true,
+"de": true,
+"el": true,
+"es": true,
+"fi": true,
+"fr": true,
+"hu": true,
+"it": true,
+"ja": true,
+"kk": true,
+"ko": true,
+"nb": true,
+"nl": true,
+"pl": true,
+"pt": true,
+"pt-pt": true,
+"ro": true,
+"ru": true,
+"sk": true,
+"sl": true,
+"sv": true,
+"th": true,
+"tr": true,
+"zh": true,
+"zh-tw": true
 });

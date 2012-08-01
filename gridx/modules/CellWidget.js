@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",	
 	"dojo/_base/query",
+	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
@@ -11,7 +12,7 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"../core/_Module"
-], function(declare, query, event, sniff, domClass, keys, 
+], function(declare, query, array, event, sniff, domClass, keys, 
 	registry, a11y, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Module){
 
 	/*=====
@@ -67,19 +68,30 @@ define([
 				});
 			},
 		
-			setValue: function(gridData, storeData){
+			setValue: function(gridData, storeData, isInit){
 				try{
 					var t = this;
 					query('.gridxHasGridCellValue', t.domNode).map(function(node){
 						return registry.byNode(node);
 					}).forEach(function(widget){
 						if(widget){
-							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData');
-							widget.set('value', useStoreData ? storeData : gridData);
+							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData'),
+								data = useStoreData ? storeData : gridData,
+								onChange = widget.onChange;
+							//If we are just rendering this cell, setting widget value should not trigger onChange event,
+							//which will then trigger edit apply. But things are complicated because onChange is
+							//fired asynchronously, and maybe sometimes not fired.
+							//FIXME: How to ensure the onChange event does not fire if isInit is true?
+							if(isInit && widget.get('value') !== data){
+								widget.onChange = function(){
+									widget.onChange = onChange;
+								};
+							}
+							widget.set('value', data);
 						}
 					});
 					if(t.setCellValue){
-							t.setCellValue(gridData, storeData, t);
+						t.setCellValue(gridData, storeData, t);
 					}
 				}catch(e){
 					console.error('Can not set cell value: ', e);
@@ -88,7 +100,7 @@ define([
 		});
 
 	_Module._markupAttrs.push('!widgetsInCell', '!setCellValue');
-	
+
 	return declare(/*===== "gridx.modules.CellWidget", =====*/_Module, {
 		// summary:
 		//		This module makes it possible to efficiently show widgets within a grid cell.
@@ -102,8 +114,6 @@ define([
 
 		name: 'cellWidget',
 	
-//        required: ['body'],
-	
 		getAPIPath: function(){
 			// tags:
 			//		protected extension
@@ -114,22 +124,14 @@ define([
 
 		cellMixin: {
 			widget: function(){
+				// summary:
+				//		Get the cell widget in this cell.
 				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 			}
 		},
 	
 		constructor: function(){
-			this._decorators = {};
-			var i, col, columns = this.grid._columns;
-			for(i = columns.length - 1; i >= 0; --i){
-				col = columns[i];
-				if(col.decorator && col.widgetsInCell){
-					col.userDecorator = col.decorator;
-					col.decorator = dummyFunc;
-					col._cellWidgets = {};
-					col._backupWidgets = [];
-				}
-			}
+			this._init();
 		},
 	
 		preload: function(){
@@ -139,8 +141,7 @@ define([
 			t.batchConnect(
 				[body, 'onAfterRow', '_showDijits'],
 				[body, 'onAfterCell', '_showDijit'],
-				[body, 'onUnrender', '_onUnrenderRow']
-			);
+				[body, 'onUnrender', '_onUnrenderRow']);
 			t._initFocus();
 		},
 	
@@ -245,24 +246,40 @@ define([
 			return null;
 		},
 
-		onCellWidgetCreated: function(/* widget, column */){
+		onCellWidgetCreated: function(/* widget, cell */){
 			// summary:
 			//		Fired when a cell widget is created.
+			// widget: gridx.__CellWidget
+			//		The created cell widget.
+			// cell: gridx.core.Cell
+			//		The cell object containing this widget.
 			// tags:
 			//		callback
 		},
 	
 		//Private---------------------------------------------------------------
-		_showDijits: function(rowInfo, rowCache){
-			var t = this,
-				rowNode = query('[rowid="' + rowInfo.rowId + '"]', t.grid.bodyNode)[0],
-				i, col, cellNode, cellWidget, columns = t.grid._columns;
+		_init: function(){
+			this._decorators = {};
+			var i, col, columns = this.grid._columns;
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
-				if(col.userDecorator || t._getSpecialCellDec(rowInfo.rowId, col.id)){
-					cellNode = query('[colid="' + col.id + '"]', rowNode)[0];
+				if(col.decorator && col.widgetsInCell){
+					col.userDecorator = col.decorator;
+					col.decorator = dummyFunc;
+					col._cellWidgets = {};
+					col._backupWidgets = [];
+				}
+			}
+		},
+
+		_showDijits: function(row){
+			var t = this;
+			array.forEach(row.cells(), function(cell){
+				var col = cell.column.def();
+				if(col.userDecorator || t._getSpecialCellDec(cell.row.id, col.id)){
+					var cellNode = cell.node();
 					if(cellNode){
-						cellWidget = t._getCellWidget(col, rowInfo, rowCache);
+						var cellWidget = t._prepareCellWidget(cell);
 						if(sniff('ie')){
 							while(cellNode.childNodes.length){
 								cellNode.removeChild(cellNode.firstChild);
@@ -274,36 +291,36 @@ define([
 						cellWidget.startup();
 					}
 				}
-			}
+			});
 		},
 
-		_showDijit: function(cellNode, rowInfo, col, rowCache){
-			if(col.userDecorator || this._getSpecialCellDec(rowInfo.rowId, col.id)){
-				cellWidget = this._getCellWidget(col, rowInfo, rowCache);
+		_showDijit: function(cell){
+			var col = cell.column.def();
+			if(col.userDecorator || this._getSpecialCellDec(cell.row.id, col.id)){
+				var cellWidget = this._prepareCellWidget(cell),
+					cellNode = cell.node();
 				cellNode.innerHTML = "";
 				cellWidget.placeAt(cellNode);
 				cellWidget.startup();
 			}
 		},
 	
-		_getCellWidget: function(column, rowInfo, rowCache){
-			var widget = this._getSpecialWidget(column, rowInfo, rowCache),
-				gridData = rowCache.data[column.id],
-				storeData = rowCache.rawData[column.field];
+		_prepareCellWidget: function(cell){
+			var col = cell.column.def(),
+				widget = this._getSpecialWidget(cell);
 			if(!widget){
-				widget = column._backupWidgets.pop();
+				widget = col._backupWidgets.pop();
 				if(!widget){
 					widget = new CellWidget({
-						content: column.userDecorator(),
-						setCellValue: column.setCellValue
+						content: col.userDecorator(),
+						setCellValue: col.setCellValue
 					});
-					this.onCellWidgetCreated(widget, column);
+					this.onCellWidgetCreated(widget, cell);
 				}
-				column._cellWidgets[rowInfo.rowId] = widget;
+				col._cellWidgets[cell.row.id] = widget;
 			}
-			widget.cell = this.grid.cell(rowInfo.rowId, column.id, 1);
-			widget.isInit = true;
-			widget.setValue(gridData, storeData);
+			widget.cell = cell;
+			widget.setValue(cell.data(), cell.rawData(), true);
 			return widget;
 		},
 
@@ -322,7 +339,7 @@ define([
 				var col = cols[i],
 					cellWidgets = col._cellWidgets;
 				if(cellWidgets){
-					if(id && cellWidgets[id]){
+					if(this.model.isId(id) && cellWidgets[id]){
 						backup(col, id);
 						delete cellWidgets[id];
 					}else{
@@ -340,15 +357,15 @@ define([
 			return rowDecs && rowDecs[colId];
 		},
 	
-		_getSpecialWidget: function(column, rowInfo, rowCache){
-			var rowDecs = this._decorators[rowInfo.rowId];
+		_getSpecialWidget: function(cell){
+			var rowDecs = this._decorators[cell.row.id];
 			if(rowDecs){
-				var cellDec = rowDecs[column.id];
+				var cellDec = rowDecs[cell.column.id];
 				if(cellDec){
 					if(!cellDec.widget && cellDec.decorator){
 						try{
 							cellDec.widget = new CellWidget({
-								content: cellDec.decorator(rowCache.data[column.id], rowInfo.rowId, rowInfo.rowIndex),
+								content: cellDec.decorator(cell.data(), cell.row.id, cell.row.visualIndex()),
 								setCellValue: cellDec.setCellValue
 							});
 						}catch(e){
@@ -374,7 +391,7 @@ define([
 					onFocus: t._onFocus,
 					onBlur: t._endNavigate,
 					connects: [
-						t.connect(t.grid, 'onCellKeyPress', '_onKey')
+						t.connect(t.grid, 'onCellKeyDown', '_onKey')
 					]
 				});
 			}

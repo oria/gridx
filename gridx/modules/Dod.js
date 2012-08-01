@@ -9,18 +9,18 @@ define([
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
-		//useAnimation: Boolean
+		// useAnimation: Boolean
 		//		Indicates whether to use animation (slide) when showing/hiding the detail part.
 		useAnimation: true,
 
-		//duration: Number
+		// duration: Number
 		//		The time used to play the animation.
 		duration: 750,
 		
 		defaultShow: false,
 		showExpando: true,
 
-		//autoClose: Boolean
+		// autoClose: Boolean
 		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
 		autoClose: false,
 		load: function(args, deferStartup){
@@ -32,6 +32,7 @@ define([
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
 			this.loaded.callback();
+			
 		},
 		getAPIPath: function(){
 			return {
@@ -57,18 +58,19 @@ define([
 		},
 		
 		show: function(row){
-			//summary:
+			// summary:
 			//		Show the detail part of a row, if this row has a detail part.
 			//		Use animation (slide the detail part out) if useAnimation is true.
 			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			//rowId: String
+			// rowId: String
 			//		The ID of a row.
-			//return: dojo.Deferred.
+			// return: dojo.Deferred.
 			//		A deferred object indicating when the detail is completely shown.
 			var _row = this._row(row);
-			if(_row.dodShown || _row.inAnim){return;}
+			if(_row.dodShown || _row.inAnim || !row.node()){return;}
 			
 			_row.dodShown = true;
+			this._getExpando(row).firstChild.innerHTML = '-';
 			
 			var node = row.node(), w = node.scrollWidth;
 			if(!_row.dodLoadingNode){
@@ -104,19 +106,19 @@ define([
 		},
 		
 		hide: function(row){
-			//summary:
+			// summary:
 			//		Hide the detail part of a row, if this row has a detail part.
 			//		Use animation (slide the detail part in) if useAnimation is true.
 			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			//rowId: String
+			// rowId: String
 			//		The ID of a row.
-			//return: dojo.Deferred.
+			// return: dojo.Deferred.
 			//		A deferred object indicating when the detail is completely hidden.
 			var _row = this._row(row), g = this.grid;
-			if(!_row.dodShown || _row.inAnim){return;}
+			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
-			
+			this._getExpando(row).firstChild.innerHTML = '+';
 			_row.inAnim = true;
 			fx.wipeOut({
 				node: _row.dodNode,
@@ -128,7 +130,6 @@ define([
 				}
 			}).play();
 			_row.defaultShow = false;
-			//html.style(_row.dodNode, 'display', 'none');
 		},
 		
 		toggle: function(row){
@@ -161,7 +162,7 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			if(!html.hasClass(e.target, 'gridxDodExpando')){return;}
+			if(!html.hasClass(e.target, 'gridxDodExpando') && !html.hasClass(e.target, 'gridxDodExpandoText')){return;}
 			var node = e.target;
 			while(node && !html.hasClass(node, 'gridxRow')){
 				node = node.parentNode;
@@ -170,22 +171,24 @@ define([
 			this.toggle(this.grid.row(parseInt(idx)));
 		},
 		
-		_onAfterRow: function(rowInfo, rowCache){
-			var row = this.grid.row(rowInfo.rowIndex), _row = this._row(row);
+		_onAfterRow: function(row){
+			var _row = this._row(row);
+			if(this.arg('showExpando')){
+				var tbl = dojo.query('table', row.node())[0];
+				var cell = tbl.rows[0].cells[0];
+				var span = dojo.create('span', {
+					className: 'gridxDodExpando',
+					innerHTML: '<span class="gridxDodExpandoText">' 
+						+ (this.defaultShow ? '-' : '+') + '</span>'
+				}, cell, 'first');
+			}
+			
 			if(this.isShown(row) || (this.arg('defaultShow') && _row.dodShown === undefined)){
 				_row.dodShown = false;
 				_row.defaultShow = true;
 				this.show(row);
 			}
 			
-			if(this.arg('showExpando')){
-				var rowNode = dojo.query('[rowid="' + rowInfo.rowId + '"]', this.grid.bodyNode)[0];
-				var tbl = dojo.query('table', rowNode)[0];
-				var cell = tbl.rows[0].cells[0];
-				var span = dojo.create('span', {
-					className: 'gridxDodExpando'
-				}, cell, 'first');
-			}
 		},
 		
 		_onColumnResize: function(){
@@ -230,18 +233,17 @@ define([
 			var node = _row.dodLoadingNode;
 			node.innerHTML = 'Loading...';
 		},
+		_getExpando: function(row){
+			var tbl = dojo.query('table', row.node())[0];
+			var cell = tbl.rows[0].cells[0];
+			return cell.firstChild;
+		},
 		_hideLoading: function(row){
 			
 		},
 		
 		
 		//Focus
-		
-		
-		
-		
-		
-		
 		
 		
 		endFunc: function(){}

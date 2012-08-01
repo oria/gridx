@@ -6,9 +6,10 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
 	"dojo/query",
+	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"
-], function(declare, lang, array, sniff, event, Deferred, query, VScroller, _Module){
+], function(declare, lang, array, sniff, event, Deferred, query, keys, VScroller, _Module){
 	
 	return declare(/*===== "gridx.modules.VirtualVScroller", =====*/VScroller, {
 		// summary:
@@ -45,6 +46,8 @@ define([
 		lazyTimeout: 50,
 	
 		scrollToRow: function(rowVisualIndex, toTop){
+			// summary:
+			//		Override VScroller.scrollToRow
 			// tags:
 			//		extension
 			var d = new Deferred(), t = this, s = t._scrolls,
@@ -70,8 +73,13 @@ define([
 				bst = bn.scrollTop,
 				dst = dn.scrollTop,
 				node = query('[visualindex="' + rowVisualIndex + '"]', bn)[0],
+				focus = t.grid.focus,
 				finish = function(success){
 					t._scrolls.splice(array.indexOf(t._scrolls, defer), 1);
+					//since we've changed the focus row index, re-focus it.
+					if(focus && focus.currentArea() == 'body'){
+						focus.focusArea('body', 1);	//1 as true
+					}
 					defer.callback(success);
 				};
 			if(node){
@@ -164,6 +172,10 @@ define([
 					h = t._avgRowHeight,
 					pageRowCount = Math.ceil(dn.offsetHeight / h) + 2 * buffSize,
 					start, end, pos, d;
+				if(bnTop == bnBtm && !bnBtm){
+					//The grid is not correctly shown, so we just ignore.
+					return;
+				}
 				if(firstRow && firstRowTop > bnTop && firstRowTop < bnBtm){
 					//Add some rows to the front
 					end = body.renderStart;
@@ -245,19 +257,23 @@ define([
 		},
 	
 		_onMouseWheel: function(e){
-			var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
-			this.domNode.scrollTop -= rolled / this._ratio;
-			event.stop(e);
+			if(this.grid.vScrollerNode.style.display != 'none'){
+				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
+				this.domNode.scrollTop -= rolled / this._ratio;
+				event.stop(e);
+			}
 		},
 	
 		_onBodyChange: function(){
+			this._update();
 			this._doScroll(0, 1);
 			this._doVirtual();
 		},
 	
 		_onForcedScroll: function(){
 			this._rowHeight = {};
-			this._onBodyChange();
+			this._doScroll(0, 1);
+			this._doVirtual();
 		},
 
 		//Private ---------------------------------------------------
@@ -285,11 +301,11 @@ define([
 			var t = this;
 			clearTimeout(t._pVirtual);
 			t._pVirtual = setTimeout(function(){
-				t._update();
+				t._updateRowHeight();
 			}, 100);
 		},
 	
-		_update: function(){
+		_updateRowHeight: function(){
 			//Update average row height and unrender rows
 			var t = this,
 				preCount = 0,
@@ -322,6 +338,34 @@ define([
 			if(c){
 				t._avgRowHeight = h / c;
 				t._syncHeight();
+			}
+		},
+
+		_onKeyScroll: function(evt){
+			var t = this,
+				bd = t.grid.body,
+				focus = t.grid.focus,
+				sn = t.domNode,
+				st = 'scrollTop',
+				r,
+				fc = '_focusCellRow';
+			if(!focus || focus.currentArea() == 'body'){
+				if(evt.keyCode == keys.HOME){
+					bd[fc] = 0;
+					sn[st] = 0;
+				}else if(evt.keyCode == keys.END){
+					bd[fc] = bd.visualCount - 1;
+					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
+				}else if(evt.keyCode == keys.PAGE_UP){
+					r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
+					t.scrollToRow(r);
+				}else if(evt.keyCode == keys.PAGE_DOWN){
+					r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
+					t.scrollToRow(r, 1);	//1 as true
+				}else{
+					return;
+				}
+				event.stop(evt);
 			}
 		}
 	});

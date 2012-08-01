@@ -20,7 +20,8 @@ define([
 			this.pageSize = args.pageSize || 100;
 			this._mixinAPI('filter', 'hasFilter');
 			model.onFilterProgress = function(){};
-			this.connect(model, '_msg', '_receiveMsg');
+			this.aspect(model, '_msg', '_receiveMsg');
+			this.aspect(model, 'setStore', 'clear');
 		},
 
 		//Public---------------------------------------------------------------------
@@ -46,10 +47,11 @@ define([
 		},
 
 		byIndex: function(index){
-			var ids = this._ids,
-				inner = this.inner,
+			var t = this,
+				ids = t._ids,
+				inner = t.inner,
 				id = ids && ids[index];
-			return ids ? id && inner._call('byId', [id]) : inner._call('byIndex', arguments);
+			return ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
 		},
 
 		byId: function(id){
@@ -57,7 +59,7 @@ define([
 		},
 
 		indexToId: function(index){
-			return this._ids ? this._ids[index] || undefined : this.inner._call('indexToId', arguments);
+			return this._ids ? this._ids[index] : this.inner._call('indexToId', arguments);
 		},
 
 		idToIndex: function(id){
@@ -83,7 +85,7 @@ define([
 			if(t._refilter){
 				t._refilter = 0;
 				if(t._ids){
-					var d = new Deferred;
+					var d = new Deferred();
 					t._reFilter().then(function(){
 						f().then(hitch(d, d.callback), hitch(d, d.errback));
 					});
@@ -111,7 +113,8 @@ define([
 					whenScope: t,
 					whenFunc: t.when
 				}, function(rows, s){
-					var i, id, row, end = s + rows.length;
+					var i, id, row,
+						end = s + rows.length;
 					for(i = s; i < end; ++i){
 						id = t.indexToId(i);
 						row = t.byIndex(i);
@@ -134,7 +137,7 @@ define([
 					}
 				}, 0, t.model.onFilterProgress);
 			}else{
-				var d = new Deferred;
+				var d = new Deferred();
 				d.callback();
 				return d;
 			}

@@ -89,7 +89,7 @@ define([
 			this._cells = [];
 		},
 
-		handleCell: function(/* __ExportContext */  context){
+		handleCell: function(/* __ExportContext */ context){
 			// tags:
 			//		private
 			var data = String(context.data).replace(/"/g, '""');

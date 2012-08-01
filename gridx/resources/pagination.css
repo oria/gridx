@@ -38,6 +38,7 @@
 .gridxPagerFirstPageDisable {
 	background-position: -58px -16px;
 	cursor: default;
+	opacity: 0.8;
 }
 
 .gridxPagerPrevPage {
@@ -46,6 +47,7 @@
 .gridxPagerPrevPageDisable {
 	background-position: 3px -16px;
 	cursor: default;
+	opacity: 0.8;
 }
 
 .gridxPagerNextPage {
@@ -54,6 +56,7 @@
 .gridxPagerNextPageDisable {
 	background-position: -16px -16px;
 	cursor: default;
+	opacity: 0.8;
 }
 
 .gridxPagerLastPage {
@@ -62,6 +65,7 @@
 .gridxPagerLastPageDisable {
 	background-position: -38px -16px;
 	cursor: default;
+	opacity: 0.8;
 }
 
 .gridxPagerDescriptionTD {

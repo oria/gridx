@@ -104,10 +104,12 @@ define([
 			var t = this;
 			query(".gridxCellSelected", t.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxCellSelected');
+				node.removeAttribute('aria-selected');
 			});
 			array.forEach(t.grid._columns, function(col){
 				t.model.clearMark(t._getMarkType(col.id));
 			});
+			t._clear();
 			if(!silent){
 				t._onSelectionChange();
 			}
@@ -116,7 +118,7 @@ define([
 		isSelected: function(rowId, columnId){
 			// summary:
 			//		Check if the given cell is selected.			
-			return this.model.isMarked(rowId, this._getMarkType(columnId));
+			return this.model.getMark(rowId, this._getMarkType(columnId));
 		},
 		
 		//Private---------------------------------------------------------------------
@@ -162,7 +164,7 @@ define([
 				g = t.grid,
 				columns = g._columns,
 				body = g.body,
-				i, j, col, type;
+				i, j, col, type, rowInfo;
 			array.forEach(args, function(arg){
 				if(arg._range){
 					var a = Math.min(arg[0], arg[2]),
@@ -173,18 +175,20 @@ define([
 					for(i = c1; i <= c2; ++i){
 						col = columns[i];
 						if(col){
-							a = body.getRowInfo({visualIndex: a}).rowIndex;
+							rowInfo = body.getRowInfo({visualIndex: a});
+							a = rowInfo.rowIndex;
 							type = t._getMarkType(col.id);
 							for(j = 0; j < n; ++j){
-								m.markByIndex(j, toSelect, type);
+								m.markByIndex(a + j, toSelect, type, rowInfo.parentId);
 							}
 						}
 					}
 				}else{
 					col = columns[arg[1]];
 					if(col){
-						i = body.getRowInfo({visualIndex: arg[0]}).rowIndex;
-						m.markByIndex(i, toSelect, t._getMarkType(col.id));
+						rowInfo = body.getRowInfo({visualIndex: arg[0]});
+						i = rowInfo.rowIndex;
+						m.markByIndex(i, toSelect, t._getMarkType(col.id), rowInfo.parentId);
 					}
 				}
 			});
@@ -197,7 +201,7 @@ define([
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
 					if(mouse.isLeft(e)){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 					}
 				}],
 				[g, 'onCellMouseOver', function(e){
@@ -205,7 +209,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), e.ctrlKey, e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
 				}]
@@ -213,7 +217,7 @@ define([
 		},
 
 		_onRender: function(start, count){
-			var t = this, i, 
+			var t = this, i, j,
 				m = t.model,
 				g = t.grid,
 				cols = g._columns,
@@ -224,8 +228,8 @@ define([
 				if(m.getMarkedIds(type).length){
 					for(j = start; j < end; ++j){
 						var rid = t._getRowId(j);
-						if(m.isMarked(rid, type) || (t._selecting && t._toSelect &&
-							t._inRange(i, t._startItem.c, t._currentItem.c, 1) &&	//1 as true
+						if(m.getMark(rid, type) || (t._selecting && t._toSelect &&
+							t._inRange(i, t._startItem.c, t._currentItem.c, 1) && //1 as true
 							t._inRange(j, t._startItem.r, t._currentItem.r, 1))){	//1 as true
 							domClass.add(query('[visualindex="' + j + '"] [colid="' + cid + '"]', g.bodyNode)[0], 'gridxCellSelected');
 						}
@@ -234,9 +238,9 @@ define([
 			}
 		},
 
-		_onMark: function(toMark, id, type){
+		_onMark: function(id, toMark, oldState, type){
 			var t = this;
-			if(!t._marking && type.indexOf(t._markTypePrefix) === 0){
+			if(lang.isString(type) && !t._marking && type.indexOf(t._markTypePrefix) === 0){
 				var rowNode = query('[rowid="' + id + '"]', t.grid.bodyNode)[0];
 				if(rowNode){
 					var cid = type.substr(t._markTypePrefix.length),
@@ -253,7 +257,7 @@ define([
 				var t = this,
 					rid = t._getRowId(rowVisIndex),
 					cid = t.grid._columns[colIndex].id;
-				t._start(createItem(rid, rowVisIndex, cid, colIndex), e.ctrlKey, 1);	//1 as true
+				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
 				t._end();
 			}
 		},
@@ -267,7 +271,7 @@ define([
 				var rids = t._refSelectedIds[item.cid];
 				return rids && array.indexOf(rids, item.rid) >= 0;
 			}else{
-				return t.model.isMarked(item.rid, t._getMarkType(item.cid));
+				return t.model.getMark(item.rid, t._getMarkType(item.cid));
 			}
 		},
 
@@ -278,12 +282,17 @@ define([
 				if(current === null){
 					//First time select.
 					t._highlightSingle(target, 1);	//1 as true
+					//In IE, when setSelectable(false), the onfocusin event will not fire on doc, so the focus border is gone.
+					//So refocus it here.
+					if(sniff('ie')){
+						t._focus(target);
+					}
 				}else{
 					var start = t._startItem,
 						highlight = function(from, to, toHL){
 							var colDir = to.c > from.c ? 1 : -1,
 								rowDir = to.r > from.r ? 1 : -1,
-								i, j, rids = {};
+								i, j, p, q, rids = {};
 							if(!toHL){
 								for(j = from.r, p = to.r + rowDir; j != p; j += rowDir){
 									rids[j] = t.model.indexToId(j);

@@ -28,3 +28,11 @@
 .gridxDodShown .gridxDodExpando {
 	background-position: -380px -20px;
 }
+
+.gridxDodExpandoText {
+	display: none;
+}
+
+.dijit_a11y .gridxDodExpandoText {
+	display: inline;
+}

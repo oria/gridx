@@ -43,6 +43,10 @@ define([
 			return this.model.idToIndex(this.id);	//Integer
 		},
 
+		parent: function(){
+			return this.grid.row(this.model.treePath(this.id).pop(), 1);	//gridx.core.Row
+		},
+
 		
 		cell: function(column, isId){
 			// summary:
@@ -130,7 +134,7 @@ define([
 				item = t.item(),
 				field, d;
 			if(s.setValue){
-				d = new Deferred;
+				d = new Deferred();
 				try{
 					for(field in rawData){
 						s.setValue(item, field, rawData[field]);

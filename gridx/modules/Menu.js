@@ -53,7 +53,7 @@ define([
 		context: null,
 
 		bind: function(/* dijit.Menu|ID */ menu, /* __MenuArgs? */ args){
-			//summary:
+			// summary:
 			//		Bind a memu to grid, according to the provided args
 			//menu: dijit.Menu | ID
 			//		The menu to be binded.
@@ -83,7 +83,7 @@ define([
 		},
 
 		unbind: function(menu){
-			//summary:
+			// summary:
 			//		Unbind a menu from grid.
 			//menu: dijit.Menu | ID
 			//		The menu to be unbinded.

@@ -10,7 +10,7 @@ define([
 	return declare(_Module, {
 		name: 'rowLock',
 		required: ['vLayout'],
-		forced: ['hLayout', 'vScroller'],
+		forced: ['hLayout', 'body'],
 		count: 0,
 		getAPIPath: function(){
 			return {
@@ -22,9 +22,10 @@ define([
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;
 			deferStartup.then(function(){
-				_this.connect(g.vScrollerNode, 'onscroll', function(){
+				if(_this.grid.vScroller)_this.connect(g.vScrollerNode, 'onscroll', function(){
 					_this._updatePosition();
 				});
+				_this.lock(_this.count);
 				_this.loaded.callback();
 			});
 		},
@@ -48,7 +49,7 @@ define([
 			
 		},
 		_adjustBody: function(){
-			//summary:
+			// summary:
 			//	Called after content is changed or column width is resized, which
 			//	may cause row height change of locked rows.
 			var h = 0;
@@ -58,7 +59,7 @@ define([
 			this.grid.bodyNode.style.paddingTop = h + 'px';
 		},
 		_updatePosition: function(){
-			//summary:
+			// summary:
 			//	Update position of locked rows so that they look like locked.
 			if(!this.count){return;}
 			var t = this.grid.bodyNode.scrollTop, h = 0, _this = this;

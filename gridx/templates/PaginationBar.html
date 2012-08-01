@@ -1,4 +1,4 @@
-<div class='gridxPager' role="navigation"
+<div class='gridxPager' role="navigation" aria-label='${id} ${pagerWai}'
 	><table class='gridxPagerInner' cellpadding="0" cellspacing="0" role="presentation"
 		><tr
 			><td class="gridxPagerDescriptionTD"
@@ -13,7 +13,7 @@
 					><span class='gridxPagerStepperBtn gridxPagerPrevPage'
 						tabindex='${_tabIndex}'
 						title='${prevPageTitle}'
-						aria-label='${prevPageWai}'
+						aria-label='${prevPageTitle}'
 						role="button"
 						pageindex='Prev'
 						data-dojo-attach-point='_prevPageBtn'
@@ -27,7 +27,7 @@
 					><span class='gridxPagerStepperBtn gridxPagerNextPage'
 						tabindex='${_tabIndex}'
 						title='${nextPageTitle}'
-						aria-label='${nextPageWai}'
+						aria-label='${nextPageTitle}'
 						pageindex='Next'
 						data-dojo-attach-point='_nextPageBtn'
 						data-dojo-attach-event='onclick: _gotoNextPage'
@@ -47,10 +47,10 @@
 					tabindex='${_tabIndex}'
 					title='${gotoBtnTitle}'
 					role='button'
-					aria-label='${gotoBtnWai}'
+					aria-label='${gotoBtnTitle}'
 					data-dojo-attach-point='_gotoBtn'
 					data-dojo-attach-event='onclick: _showGotoDialog'
-					><span class='gridxPagerA11yInner'>&perp;</span
+					><span class='gridxPagerA11yInner'>&#9650;</span
 				></span
 			></td
 		></tr

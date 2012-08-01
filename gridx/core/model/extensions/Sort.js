@@ -57,7 +57,7 @@ define([
 			}
 			if(op.sort && op.sort.length){
 				if(json.toJson(op.sort) !== json.toJson(sortSpec)){
-					toSort = 1;
+					toSort = 1;	//1 as true
 				}
 			}else if(sortSpec && sortSpec.length){
 				toSort = 1;

@@ -12,9 +12,15 @@
 	background-color: #BFD6EB;
 }
 
+/* high contrast */
+.dijit_a11y .gridxRowSelected,
+.dijit_a11y .gridxRow .gridxColumnSelected,
+.dijit_a11y .gridxCellSelected {
+	opacity: 0.8;
+}
 
 /*IndirectSelection*/
-th.gridxRowHeaderHeaderCell,
+.gridxRowHeaderHeaderCell,
 .gridxRowHeaderCell {
 	text-align: center;
 }

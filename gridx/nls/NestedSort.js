@@ -1,5 +1,4 @@
 define({ root:
-
 ({
 	singleSort: "Single Sort",
 	nestedSort: "Nested Sort",
@@ -10,6 +9,33 @@ define({ root:
 	
 	waiSingleSortLabel: "${0} - is sorted by ${1}. Choose to sort by ${2}",
 	waiNestedSortLabel:"${0} - is nested sorted by ${1}. Choose to nested sort by ${2}"
-})
-
+}),
+"ar": true,
+"ca": true,
+"cs": true,
+"da": true,
+"de": true,
+"el": true,
+"es": true,
+"fi": true,
+"fr": true,
+"hu": true,
+"it": true,
+"ja": true,
+"kk": true,
+"ko": true,
+"nb": true,
+"nl": true,
+"pl": true,
+"pt": true,
+"pt-pt": true,
+"ro": true,
+"ru": true,
+"sk": true,
+"sl": true,
+"sv": true,
+"th": true,
+"tr": true,
+"zh": true,
+"zh-tw": true
 });

@@ -1,9 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"dojo/dom-geometry",
 	"dojo/DeferredList",
 	"../core/_Module"
-], function(declare, domGeometry, DeferredList, _Module){
+], function(declare, DeferredList, _Module){
 
 	return declare(/*===== "gridx.modules.VLayout", =====*/_Module, {
 		// summary:
@@ -29,7 +28,8 @@ define([
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this, g = t.grid;
+			var t = this,
+				g = t.grid;
 			t.connect(g, '_onResizeEnd', function(changeSize, ds){
 				var d, dl = [];
 				for(d in ds){
@@ -93,11 +93,13 @@ define([
 		reLayout: function(){
 			// summary:
 			//		Virtically re-layout all the grid UI parts.
-			var hookPoint, freeHeight = 0, n, t = this;
+			var t = this,
+				freeHeight = 0,
+				hookPoint, n;
 			for(hookPoint in t._mods){
 				n = t.grid[hookPoint];
 				if(n){
-					freeHeight += domGeometry.getMarginBox(n).h;	
+					freeHeight += n.offsetHeight;
 				}
 			}
 			t._updateHeight(freeHeight);
@@ -105,8 +107,10 @@ define([
 
 		//Private-------------------------------------------------------------------------------
 		_layout: function(){
-			var hookPoint, freeHeight = 0, t = this, mods = t._mods,
-				n, i, hp, mod, nodeName;
+			var freeHeight = 0,
+				t = this,
+				mods = t._mods,
+				hookPoint, n, i, hp, mod, nodeName;
 			for(hookPoint in mods){
 				n = t.grid[hookPoint];
 				if(n){
@@ -121,22 +125,25 @@ define([
 							n.appendChild(mod[nodeName]);
 						}
 					}
-					freeHeight += domGeometry.getMarginBox(n).h;	
+					freeHeight += n.offsetHeight;
 				}
 			}
 			t._updateHeight(freeHeight);
 		},
 
 		_updateHeight: function(freeHeight){
-			var g = this.grid, dn = g.domNode, ms = g.mainNode.style;
+			var g = this.grid,
+				dn = g.domNode,
+				ms = g.mainNode.style;
 			if(g.autoHeight){
 				g.vScroller.loaded.then(function(){
 					var lastRow = g.bodyNode.lastChild,
-						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : 0;
+						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : g.emptyNode.offsetHeight;
 					dn.style.height = (bodyHeight + freeHeight) + 'px';
 					ms.height = bodyHeight + "px";
 				});
-			}else{
+			}else if(dn.clientHeight > freeHeight){
+				//If grid height is smaller than freeHeight, IE will throw errer.
 				ms.height = (dn.clientHeight - freeHeight) + "px";
 			}
 		}

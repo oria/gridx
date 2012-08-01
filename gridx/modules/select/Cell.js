@@ -46,7 +46,7 @@ define([
 			},
 			
 			isSelected: function(){
-				return this.model.isMarked(this.row.id, this.column.id);
+				return this.grid.select.cell.isSelected(this.row.id, this.column.id);
 			}
 		},
 		
@@ -97,7 +97,30 @@ define([
 				m.when();
 			}
 		},
-		
+
+	/*=====
+		onSelected: function(cell){
+			// summary:
+			//		Fired when a cell is selected.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
+
+		onDeselected: function(cell){
+			// summary:
+			//		Fired when a cell is deselected.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
+
+		onHighlightChange: function(){
+			// summary:
+			//		Fired when a cell's highlight is changed.
+			// tags:
+			//		private package
+		},
+	=====*/
+
 		//Private--------------------------------------------------------------------------------
 		_type: 'cell',
 
@@ -110,21 +133,25 @@ define([
 		},
 
 		_init: function(){
-			var t = this;
+			var t = this,
+				g = t.grid;
 			t.inherited(arguments);
 			t.batchConnect(
-				[t.grid, 'onCellMouseDown', function(e){
-					t._select([e.rowId, e.columnId], e.ctrlKey);
+				[g, 'onCellMouseDown', function(e){
+					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 				}],
-				[t.grid, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE){
-						t._select([e.rowId, e.columnId], e.ctrlKey);
+						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 					}
-				}]
-			);
+				}]);
 		},
-	
-		_onMark: function(toMark, rowId, type){
+
+		_isSelected: function(cell){
+			return this.isSelected(cell[0], cell[1]);
+		},
+
+		_onMark: function(rowId, toMark, oldState, type){
 			var t = this;
 			if(type.indexOf(t._markTypePrefix) === 0){
 				var colId = type.substr(t._markTypePrefix.length);
@@ -163,7 +190,7 @@ define([
 				rowId = model.indexToId(i);
 				for(j = columns.length - 1; j >= 0; --j){
 					colId = columns[j].id;
-					if(model.isMarked(rowId, t._getMarkType(colId))){
+					if(model.getMark(rowId, t._getMarkType(colId))){
 						t._highlight(rowId, colId, 1);
 					}
 				}

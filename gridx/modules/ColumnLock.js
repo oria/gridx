@@ -55,26 +55,26 @@ define([
 			this.count = this.arg('count');
 			var _this = this, g = this.grid, body = html.body();
 			deferStartup.then(function(){
-				_this.connect(g.body, 'onAfterRow', function(rowInfo){
-					this._lockColumns(g.body.getRowNode(rowInfo));
-				});
-				if(g.columnResizer){
-					//make it compatible with column resizer
-					_this.connect(g.columnResizer, 'onResize', '_updateBody');
-				}
-				if(g.header){
-					g.header.loaded.then(function(){
-						_this._updateHeader();
+				if(!this.grid.columnWidth || !this.grid.columnWidth.arg('autoResize')){
+					_this.connect(g.body, 'onAfterRow', function(row){
+						this._lockColumns(row.node());
 					});
-					if(g.move && g.move.column){
-						_this.connect(g.move.column, 'move', '_updateHeader');
+					if(g.columnResizer){
+						//make it compatible with column resizer
+						_this.connect(g.columnResizer, 'onResize', '_updateBody');
 					}
-				}
-				_this._hackHScroller();
-				if(_this.count){
-					_this.lock(_this.count);
-//					html.addClass(this.grid.domNode, 'gridxColumnLock');
-//					_this._updateScroller();
+					if(g.header){
+						g.header.loaded.then(function(){
+							_this._updateHeader();
+						});
+						if(g.move && g.move.column){
+							_this.connect(g.move.column, 'move', '_updateHeader');
+						}
+					}
+					_this._hackHScroller();
+					if(_this.count){
+						_this.lock(_this.count);
+					}
 				}
 				_this.loaded.callback();
 			});
@@ -88,6 +88,7 @@ define([
 		lock: function(/*Integer*/count){
 			// summary:
 			//		Dynamically lock consecutive #count leading columns.
+			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			if(count >= this.grid._columns.length){
 				this.count = 0;
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
@@ -106,6 +107,7 @@ define([
 		unlock: function(){
 			// summary:
 			//		Unlock all columns.
+			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			html.removeClass(this.grid.domNode, 'gridxColumnLock');
 			
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
@@ -118,13 +120,15 @@ define([
 		},
 		
 		_unlockColumns: function(rowNode){
+			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0];
 			for(var i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.removeClass(cell, 'gridxLockedCell');
 				html.style(cell, {height: 'auto'});
 			}
-			rowNode.style.paddingLeft = '0px';
+			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = '0px';
+			rowNode.style.width = 'auto';
 		},
 		
 		_updateUI: function(){
@@ -135,25 +139,20 @@ define([
 			this._updateScroller();
 			this.grid.hScroller && this.grid.hScroller._doScroll();
 			this.grid.header.onRender();
-//            this.grid.body.onRender();
 		},
 		_lockColumns: function(rowNode){
-			//summary:
+			// summary:
 			//	Lock columns for one row
 			if(!this.count || this.count >= this.grid._columns.length){
 				this.count = 0;
 				return;
 			}
 			
+			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
 			for(i = 0; i < this.count; i++){
 				dojo.style(r.cells[i], 'height', 'auto');
 			}
-//			var h = 0;
-//			array.forEach(r.cells, function(cell){
-//				var mh = dojo.contentBox(r.cells[r.cells.length - 1]).h;
-//				if(h < mh)h = mh;
-//			});
 			
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
@@ -162,20 +161,21 @@ define([
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.addClass(cell, 'gridxLockedCell');
-				html.style(cell, {
-					height: h1 + 'px',
-					left: pl + 'px'
-				});
+				var s = {height: h1 + 'px'};
+				s[ltr ? 'left' : 'right'] = pl + 'px';
+				html.style(cell, s);
+				
 				pl += cell.offsetWidth;
 			}
-			rowNode.style.paddingLeft = pl + 'px';
+			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl + 'px';
+			rowNode.style.width = rowNode.offsetWidth - pl + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
 		},
 		
 		_updateHeader: function(){
-			//summary:
+			// summary:
 			//	Update the header for column lock
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
 			this._lockColumns(rowNode);
@@ -183,36 +183,46 @@ define([
 		},
 		
 		_updateBody: function(){
-			//summary:
+			// summary:
 			//	Update the body for column lock
 			array.forEach(this.grid.bodyNode.childNodes, this._lockColumns, this);
 		},
 		
 		_updateScroller: function(){
-			//summary:
+			// summary:
 			//	Update h-scroller for column lock
 			if(this.grid.hScroller){this.grid.hScroller.refresh();}
 		},
 		
 		_hackHScroller: function(){
-			//summary:
+			// summary:
 			//	This method changes behavior of hscroller. It will scroll each row instead of the body node
 			//	while some columns are locked.
 			var _this = this;
 			lang.mixin(this.grid.hScroller, {
 				_doScroll: function(){
-					//summary:
+					// summary:
 					//	Sync the grid body with the scroller.
 					
 					var scrollLeft = this.domNode.scrollLeft;
 					if(_this.count){
 						array.forEach(this.grid.bodyNode.childNodes, function(rowNode){
 							rowNode.scrollLeft = scrollLeft;
+							//to be compatible with row lock
+							if(rowNode.style.position == 'absolute'){
+								var l = 0;
+								array.forEach(rowNode.firstChild.rows[0].cells, function(cell){
+									if(dojo.hasClass(cell, 'gridxLockedCell')){
+										cell.style.left = scrollLeft + l + 'px';
+										l += cell.offsetWidth;
+									}
+								});
+							}
 						});
 					}else{
 						this.grid.bodyNode.scrollLeft = scrollLeft;
 					}
-					this.grid.onHScroll(scrollLeft);
+					this.grid.onHScroll(this.grid.hScroller._lastLeft);
 				}
 			});
 		}

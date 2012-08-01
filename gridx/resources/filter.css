@@ -1,3 +1,5 @@
+@import url('../../dojox/html/resources/ellipsis.css');
+
 .gridxFilterDialog .dijitAccordionContainer .dijitAccordionContainer-child {
 	padding: 6px 9px;
 }
@@ -6,6 +8,7 @@
 	height: 227px;
 	width: 300px;
 	overflow: auto;
+	position: relative;
 	margin: 5px 0 15px 0;
 }
 
@@ -57,6 +60,7 @@
 
 .gridxFilterPaneCloseButton {
 	float: right;
+	margin-top: -15px;
 }
 
 .gridxFilterPaneCloseButton img {
@@ -239,6 +243,10 @@
 	display: none;
 }
 
+.dj_ie7 .gridxQuickFilterClear {
+	top: 5px;
+}
+
 .gridxQuickFilterClearInner {
 	display: none;
 }
@@ -256,4 +264,14 @@
 .gridxQuickFilterNoFilterBar .gridxQuickFilterComboButton,
 .gridxQuickFilterHasFilterBar .gridxQuickFilterButton {
 	display: none;
+}
+
+.gridxFilterBarCloseBtnText,
+.gridxFilterTooltipRemoveBtnText {
+	display: none;
+}
+
+.dijit_a11y .gridxFilterBarCloseBtnText,
+.dijit_a11y .gridxFilterTooltipRemoveBtnText {
+	display: inline;
 }

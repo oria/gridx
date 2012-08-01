@@ -32,11 +32,10 @@
 			{field: 'artist', width: '46%', title: 'Name'},
 			{field: 'year', width: '18%', title: 'Price'}
 		];
-	require(["gridx/dojo-deps-mobile", "gridx/gridx-mobile"], function(){		
 		require([
 			'dojo/_base/declare',
 			'dojo/domReady',
-			'dojo/store/Memory',
+			'dojo/data/ItemFileReadStore',
 			'dojox/mobile/parser',
 			'gridx/mobile/tests/support/data',
 			'gridx/mobile/Grid',
@@ -44,18 +43,18 @@
 			'dojox/mobile/Heading',
 			'dojox/mobile/View',
 			'dojox/mobile/ScrollableView',
+			"dojox/mobile/compat",
 			'dojox/mobile/TabBar'
-		], function(declare, ready, MemoryStore, parser, data, Grid, PullRefresh){
+		], function(declare, ready, ItemFileReadStore, parser, data, Grid, PullRefresh){
 			declare('gridx.mobile.tests.Grid', [Grid, PullRefresh], {});
 			ready(function(){
 				parser.parse();
-				grid.store = new MemoryStore({
-					data: data.many
+				grid.store = new ItemFileReadStore({
+					data: {items: data.many}
 				});
 				grid.setColumns(columns);
 			});
 		});
-	});
 	</script>
 	
 </head>

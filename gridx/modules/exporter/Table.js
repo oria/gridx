@@ -82,7 +82,7 @@ define([
 			this._rst.push('<tbody>');
 		},
 
-		beforeRow: function(/* __ExportContext */  context){
+		beforeRow: function(/* __ExportContext */ context){
 			// tags:
 			//		private
 			var r = context.row, idx = r.index();
@@ -90,7 +90,7 @@ define([
 				'" rowid="', r.id, '" rowindex="', idx, '">');
 		},
 
-		handleCell: function(/* __ExportContext */  context, /* __TableExportArgs */ args){
+		handleCell: function(/* __ExportContext */ context, /* __TableExportArgs */ args){
 			// tags:
 			//		private
 			this._rst.push('<td class="grid_cell"', cellattrs(args, context.column), '>', context.data, '</td>');

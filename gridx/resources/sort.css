@@ -5,21 +5,27 @@
 	display:block;
 	overflow: hidden;
 }
+
 .gridxArrowButtonChar {
 	display:none;
 	float:right;
 }
+
+.dijit_a11y .gridxArrowButtonChar {
+	display: block;
+	margin: 0 4px 0 5px;
+}
+
 .gridxArrowButtonNode{
 	background:transparent url("images/spriteArrows.png") no-repeat scroll left center;
 	display:block;
 	float:right;
-	height:1em;
-	margin:2px 4px 0 5px;
+	margin: 0px 4px 0 5px;
 	padding-left:0;
 	width:7px;
 }
 .gridxSortUp .gridxArrowButtonNode {
-	background-position:-21px 50%;
+	background-position:-21px 4px;
 }
 
 /*Nested Sorting*/
@@ -30,7 +36,9 @@
 	width: 10px;
 	display: none;
 }
-
+.gridxSortNodeFocus {
+	background: #ddd;
+}
 .gridxSortBtnNested {
 	width: 20px;
 	background-position: -149px 5px;
@@ -38,7 +46,7 @@
 
 .gridxSortBtn:hover,
 .gridxSortBtnFocus {
-    /*background-color: #ddd;*/
+    background-color: #ddd;
 }
 
 .gridxCellSorted .gridxSortBtnSingle, 
@@ -109,6 +117,11 @@ th.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested {
 }
 
 
-
+.gridxNestedSortBtnText {
+	display: none;
+}
+.dijit_a11y .gridxNestedSortBtnText {
+	display: inline;
+}
 
 

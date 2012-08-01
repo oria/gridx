@@ -27,7 +27,8 @@ define([
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this, g = t.grid, sort;
+			var t = this,
+				g = t.grid, sort;
 			t.connect(g, 'onHeaderCellClick', '_onClick');
 			t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown');
 			//persistence support
@@ -40,7 +41,7 @@ define([
 				});
 			}
 			//Presort...
-			sort = sort || t.arg('preSort');
+			sort = sort || t.arg('initialOrder');
 			if(lang.isArrayLike(sort)){
 				sort = sort[0];
 			}
@@ -55,11 +56,13 @@ define([
 		load: function(){
 			// tags:
 			//		protected extension
-			var t = this, colId, f = function(){
-				if(t._sortId){
-					t._updateHeader(t._sortId, t._sortDescend);
-				}
-			};
+			var t = this,
+				colId,
+				f = function(){
+					if(t._sortId){
+						t._updateHeader(t._sortId, t._sortDescend);
+					}
+				};
 			t.connect(t.grid.header, 'onRender', f);
 			for(colId in t.grid._columnsById){
 				t._initHeader(colId);
@@ -71,15 +74,21 @@ define([
 	
 		columnMixin: {
 			sort: function(isDescending, skipUpdateBody){
+				// summary:
+				//		Sort this column.
 				this.grid.sort.sort(this.id, isDescending, skipUpdateBody);
 				return this;
 			},
 	
 			isSorted: function(){
+				// summary:
+				//		Check wheter this column is sorted.
 				return this.grid.sort.isSorted(this.id);
 			},
 	
 			clearSort: function(skipUpdateBody){
+				// summary:
+				//		Clear sort on this column
 				if(this.isSorted()){
 					this.grid.sort.clear(skipUpdateBody);
 				}
@@ -87,11 +96,15 @@ define([
 			},
 	
 			isSortable: function(){
+				// summary:
+				//		Check whether this column is sortable.
 				var col = this.grid._columnsById[this.id];
 				return col.sortable || col.sortable === undefined;
 			},
 	
 			setSortable: function(isSortable){
+				// summary:
+				//		Set sortable for this column
 				this.grid._columnsById[this.id].sortable = !!isSortable;
 				return this;
 			}
@@ -99,9 +112,13 @@ define([
 	
 		//Public--------------------------------------------------------------
 
-		/*=====
-		preSort: null,
-		=====*/
+	/*=====
+		// initialOrder: Object|Array
+		//		The initial sort order when grid is created.
+		//		This is of the same format of the sort argument of the store fetch function.
+		//		If an array of sort orders is provided, only the first will be used.
+		initialOrder: null,
+	=====*/
 
 		sort: function(colId, isDescending, skipUpdateBody){
 			// summary:
@@ -201,7 +218,7 @@ define([
 				isDescending ? 'gridxSortDown' : 'gridxSortUp',
 				"'><div class='gridxArrowButtonChar'>",
 				isDescending ? "&#9662;" : "&#9652;",
-				"</div><div role='presentation' class='gridxArrowButtonNode'></div><div class='gridxColCaption'>",
+				"</div><div role='presentation' class='gridxArrowButtonNode'>&nbsp;</div><div class='gridxColCaption'>",
 				g.column(colId, 1).name(),	//1 as true
 				"</div></div>"
 			].join('');

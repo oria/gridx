@@ -34,6 +34,8 @@ define([
 			}
 		},
 
+		//grid: gridx.Grid
+		//		The grid widget this plugin works for.
 		grid: null,
 
 		textBoxClass: TextBox.prototype.declaredClass,
@@ -48,9 +50,12 @@ define([
 
 		//Public-------------------------------------------------------------------
 		// autoApply: Boolean
+		//		If true, the filter will be applied to grid during typing in the filter box.
 		autoApply: true,
 
 		// delay: Integer
+		//		The time (in ms) delay before applying the filter after each key stroke in the filter box.
+		//		Only effective when autoApply is true, 
 		delay: 700,
 
 		//Private--------------------------------------------------------------------
