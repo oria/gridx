@@ -83,7 +83,9 @@ define([
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
 				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
-				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']);
+				g.columnResizer && [g.columnResizer, 'onResize', '_onResize'],
+				[g, 'onRowHeaderCellMouseOver', '_onCellMouseOver'],
+				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver']);
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
@@ -252,6 +254,7 @@ define([
 			while(node && node != this.bodyNode){
 				if(domClass.contains(node, 'gridxRowHeaderCell')){
 					e.isRowHeader = true;
+					e.rowHeaderCellNode = node;
 				}else if(node.tagName.toLowerCase() === 'div' && domClass.contains(node, 'gridxRowHeaderRow')){
 					e.rowId = node.getAttribute('rowid');
 					e.parentId = node.getAttribute('parentid');
@@ -264,9 +267,16 @@ define([
 		},
 
 		_onRowMouseOver: function(e){
-			var rowNode = query('[rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
+			var rowNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
 			if(rowNode){
 				domClass.toggle(rowNode, "gridxRowOver", e.type.toLowerCase() == 'mouseover');
+			}
+		},
+
+		_onCellMouseOver: function(e){
+			var cellNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
+			if(cellNode){
+				domClass.toggle(cellNode, "gridxRowHeaderCellOver", e.type.toLowerCase() == 'mouseover');
 			}
 		},
 
