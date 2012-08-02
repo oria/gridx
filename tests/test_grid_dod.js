@@ -7,6 +7,7 @@ require([
 	'gridx/modules/Focus',
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/Dod',
+	'gridx/modules/RowHeader',
 	
 	'dojox/charting/themes/Julie',
 	'dojox/charting/Chart',
@@ -20,7 +21,7 @@ require([
     'dojox/charting/plot2d/OHLC',
     'dojox/charting/plot2d/Pie',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, JulieTheme){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, RowHeader, JulieTheme){
 	function random(start, end){
 		//include start but not end. e.g. 1-10, 1 is possible but not 10.
 		return Math.floor(Math.random()*(end-start)) + start;
@@ -131,6 +132,7 @@ require([
 			}),
 			modules: [
 				VirtualVScroller,
+				RowHeader,
 				{
 					moduleClass: Dod,
 					defaultShow: defaultShow,

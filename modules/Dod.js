@@ -3,9 +3,10 @@ define([
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/html",
+	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/query"
-], function(dojo, _Module, declare, html, fx, query){
+], function(dojo, _Module, declare, html, baseFx, fx, query){
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
@@ -129,6 +130,16 @@ define([
 					g.body.onRender();
 				}
 			}).play();
+			if(this.grid.rowHeader){
+				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				console.log(rowHeaderNode);
+				baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+					properties: {
+						height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" },
+					}
+				}).play();
+			}
+			
 			_row.defaultShow = false;
 		},
 		
@@ -219,6 +230,16 @@ define([
 						g.body.onRender();
 					}
 				}).play();
+				
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					console.log(rowHeaderNode);
+					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+						properties: {
+							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight + _row.dodNode.scrollHeight, units:"px" },
+						}
+					}).play();
+				}
 			}
 			html.style(_row.dodLoadingNode, 'display', 'none');
 		},
