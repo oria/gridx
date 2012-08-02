@@ -3,9 +3,10 @@ define([
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/html",
+	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/query"
-], function(dojo, _Module, declare, html, fx, query){
+], function(dojo, _Module, declare, html, baseFx, fx, query){
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
@@ -89,11 +90,18 @@ define([
 			
 			html.addClass(node, 'gridxDodShown');
 			html.style(_row.dodNode, 'display', 'none');
+			
 			if(_row.dodLoaded){
 				this._detailLoadComplete(row);
 				return;
 			}else{
 				html.style(_row.dodLoadingNode, 'display', 'block');
+			}
+			
+			if(this.grid.rowHeader){
+				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				//TODO: 1 is the border for claro theme, will fix
+				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') + 'px');
 			}
 			
 			var df = new dojo.Deferred(), _this = this;
@@ -118,6 +126,11 @@ define([
 			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
+			if(this.grid.rowHeader){
+				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') - 1 + 'px');
+				//TODO: 1 is the border for claro theme, will fix
+			}
 			this._getExpando(row).firstChild.innerHTML = '+';
 			_row.inAnim = true;
 			fx.wipeOut({
@@ -129,6 +142,15 @@ define([
 					g.body.onRender();
 				}
 			}).play();
+			if(this.grid.rowHeader){
+				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+					properties: {
+						height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" },
+					}
+				}).play();
+			}
+			
 			_row.defaultShow = false;
 		},
 		
@@ -219,6 +241,15 @@ define([
 						g.body.onRender();
 					}
 				}).play();
+				
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+						properties: {
+							height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" },
+						}
+					}).play();
+				}
 			}
 			html.style(_row.dodLoadingNode, 'display', 'none');
 		},

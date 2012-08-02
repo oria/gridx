@@ -7,7 +7,9 @@ require([
 	'gridx/modules/Focus',
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/Dod',
-	
+	'gridx/modules/select/Row',
+	'gridx/modules/RowHeader',
+	'gridx/modules/IndirectSelect',
 	'dojox/charting/themes/Julie',
 	'dojox/charting/Chart',
     'dojox/charting/axis2d/Default',
@@ -20,7 +22,7 @@ require([
     'dojox/charting/plot2d/OHLC',
     'dojox/charting/plot2d/Pie',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, JulieTheme){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
 	function random(start, end){
 		//include start but not end. e.g. 1-10, 1 is possible but not 10.
 		return Math.floor(Math.random()*(end-start)) + start;
@@ -39,7 +41,7 @@ require([
 	}
 	window.defaultShow = false;
 	window.showExpando = true;
-	window.contentType = 'chart';
+	window.contentType = 'form';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
 		setContent(detailNode);
 		window.setTimeout(function(){
@@ -184,7 +186,7 @@ require([
  		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
  		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
  		'<label>Content type: <select onchange="window.contentType=this.value;">',
- 		'<option value="text" selected>text</option><option value="form">form</option>',
+ 		'<option value="text">text</option><option value="form" selected>form</option>',
  		'<option value="chart" >chart</option></select></label><br/>',
  		'<select onchange="detailProvider=window[this.value]"><option value="syncDetailProvider">sync detailProvider</option>' 
  			+ '<option value="asyncDetailProvider" selected>async detailProvider</option></select><br/>',

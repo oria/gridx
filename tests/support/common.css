@@ -1,11 +1,12 @@
 @import "../../../dojo/resources/dojo.css";
-@import "../../../dijit/tests/css/dijitTests.css";
 @import "../../../dijit/themes/claro/claro.css";
 @import "../../../dijit/themes/claro/document.css";
 @import "../../resources/claro/Gridx.css";
 @import "../../resources/claro/Gridx_rtl.css";
 
 body {
+	background:#fff url("../../../dijit/tests/images/testsBodyBg.gif") repeat-x top left;
+	padding:2em 2em 2em 2em;
 	margin: 5em;
 }
 

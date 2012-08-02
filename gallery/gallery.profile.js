@@ -1,30 +1,29 @@
 profile = {
 	defaultConfig: {async: true},
-	stripConsole: 'normal'
-	,layerOptimize: 'closure'
-	,optimize: 'closure'
-	,releaseDir: '../../../gridx_release'
-	,action: 'release'
-	,packages: [
+	stripConsole: 'normal',
+	layerOptimize: 'closure',
+	optimize: 'closure',
+	releaseDir: '../../../gridx_release',
+	action: 'release',
+	packages: [
 		{
-			name: 'dojo'
-			,location: '../../../dojo'
+			name: 'dojo',
+			location: '../../../dojo'
+		},
+		{
+			name: 'dijit',
+			location: '../../../dijit' 	//always relative to profile path
+		},
+		{
+			name: 'dojox',
+			location: '../../../dojox' 	//always relative to profile path
+		},
+		{
+			name: 'gridx',
+			location: '../../../gridx'
 		}
-
-		,{
-			name: 'dijit'
-			,location: '../../../dijit' 	//always relative to profile path
-		}
-		,{
-			name: 'dojox'
-			,location: '../../../dojox' 	//always relative to profile path
-		}
-		,{
-			name: 'gridx'
-			,location: '../../../gridx'
-		}
-	]
-	,layers: {
+	],
+	layers: {
 		'gridx/gridx-mobile': {
 			include: [
 				'gridx/Grid',
@@ -276,8 +275,8 @@ profile = {
 				'gridx/tests/support/TestPane'		    	
 		    ]
 		}
-	}
-	,transformJobs:[
+	},
+	transformJobs:[
 			[
 				// the synthetic report module
 				function(resource) {

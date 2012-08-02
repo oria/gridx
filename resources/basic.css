@@ -233,7 +233,7 @@
 }
 
 .gridxRowHeaderRow {
-	background: url("../images/header.png") #EDF2F7 repeat-x bottom;
+	background: url("images/header.png") #EDF2F7 repeat-x bottom;
 	background: #edf2f7; /* Old browsers */
 	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */
