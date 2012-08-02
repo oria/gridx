@@ -3,7 +3,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
-	"dojo/sniff",
+	"dojo/_base/sniff",
 	"dojo/on",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
