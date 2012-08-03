@@ -359,11 +359,7 @@ define([
 			var col = this.grid._columnsById[colId],
 				editorArgs = col.editorArgs = col.editorArgs || {};
 			col.editor = editor;
-			if(args){
-				editorArgs.toEditor = args.toEditor;
-				editorArgs.fromEditor = args.fromEditor;
-				editorArgs.dijitProperties = args.dijitProperties;
-			}
+			lang.mixin(editorArgs, args || {});
 		},
 
 		//Events-------------------------------------------------------------------
