@@ -166,10 +166,16 @@ define([
 		},
 
 		_syncRowHeight: function(rowHeaderNode, bodyNode){
+			//Check if the table is collasped.
+			var t = this;
+			if(t._isCollapse === undefined){
+				var refNode = query('.gridxCell', t.grid.header.innerNode)[0];
+				t._isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse';
+			}
 			//Use setTimeout to ensure the row header height correct reflects the body row height.
 			//FIXME: This is tricky and may not be working in some special cases.
 			function getHeight(){
-				return sniff('ie') ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
+				return sniff('ie') || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			rowHeaderNode.style.height = getHeight();
 			setTimeout(function(){
