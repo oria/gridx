@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/query",
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -11,7 +12,7 @@ define([
 	"../util",
 	"dojo/date/locale",
 	"dijit/form/TextBox"
-], function(declare, lang, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
+], function(declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
 	
 	/*=====
 	var columnDefinitionEditorMixin = {
@@ -128,10 +129,18 @@ define([
 		preload: function(){
 			// tags:
 			//		protected extension
-			var t = this;
-			t.grid.domNode.removeAttribute('aria-readonly');
-			t.connect(t.grid, 'onCellDblClick', '_onUIBegin');
-			t.connect(t.grid.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
+			var t = this,
+				g = t.grid;
+			g.domNode.removeAttribute('aria-readonly');
+			t.connect(g, 'onCellDblClick', '_onUIBegin');
+			t.connect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
+			t.connect(g.body, 'onAfterRow', function(row){
+				query('.gridxCell', row.node()).forEach(function(node){
+					if(g._columnsById[node.getAttribute('colid')].editable){
+						node.removeAttribute('aria-readonly');
+					}
+				});
+			});
 			t._initFocus();
 		},
 
@@ -507,10 +516,10 @@ define([
 			var className = this._getColumnEditor(colId),
 				p, properties,
 				col = this.grid._columnsById[colId],
-				editorArgs = col.editorArgs,
+				editorArgs = col.editorArgs || {},
 				useGridData = editorArgs.useGridData,
-				constraints = editorArgs && editorArgs.constraints || {},
-				props = editorArgs && editorArgs.props || '',
+				constraints = editorArgs.constraints || {},
+				props = editorArgs.props || '',
 				pattern = col.gridPattern || col.storePattern;
 			if(pattern){
 				constraints = lang.mixin({}, pattern, constraints);

@@ -678,7 +678,7 @@ define([
 					sb.push('gridxCellFocus');
 				}
 				sb.push(cls,
-					'" role="gridcell" tabindex="-1" colid="', col.id, 
+					'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
 					'" style="width: ', col.width,
 					'; ', style,
 					'">', t._buildCellContent(cell, isPadding),
