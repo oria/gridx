@@ -35,7 +35,13 @@ define([
 		editor: "dijit.form.TextBox",
 	
 		// editorArgs: __GridCellEditorArgs
-		editorArgs: null
+		editorArgs: null,
+
+		// customApplyEdit: function(cell, value)
+		//		If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
+		//		For example, setting multiple fields of store for a formatted cell.
+		//		Can return a Deferred object if the work can not be done synchronously.
+		customApplyEdit: null
 	};
 	
 	var __GridCellEditorArgs = {
@@ -58,7 +64,17 @@ define([
 
 		//constraints: Object
 		//		If the editor widget has some constraints, it can be set here instead of in props.
-		constraints: null
+		constraints: null,
+
+		//useGridData: Boolean
+		//		Whether to feed the editor with grid data or store data.
+		//		This property is only effective when toEditor is not provided.
+		useGridData: false,
+
+		//valueField: String
+		//		The property name of the editor used to take the data. In most cases it is "value",
+		//		so editor.set('value', ...) can do the job.
+		valueField: 'value'
 	};
 	=====*/
 	function getTypeData(col, storeData, gridData){
@@ -310,10 +326,14 @@ define([
 						}else if(cell.column.storePattern){
 							v = locale.format(v, cell.column.storePattern);
 						}
-						if(cell.rawData() === v){
+						if(lang.isFunction(cell.column.customApplyEdit)){
+							Deferred.when(cell.column.customApplyEdit(cell, v), function(){
+								finish(true);
+							});
+						}else if(cell.rawData() === v){
 							finish(true);
 						}else{
-							Deferred.when(cell.setRawData(v), function(success){
+							Deferred.when(cell.setRawData(v), function(){
 								finish(true);
 							});
 						}
@@ -472,7 +492,7 @@ define([
 				func = function(){
 					var widget = cw.getCellWidget(rowId, colId),
 						editor = widget && widget.gridCellEditField;
-					if(editor && !editor.focused){
+					if(editor && !editor.focused && lang.isFunction(editor.focus)){
 						editor.focus();
 					}
 				};
@@ -488,6 +508,7 @@ define([
 				p, properties,
 				col = this.grid._columnsById[colId],
 				editorArgs = col.editorArgs,
+				useGridData = editorArgs.useGridData,
 				constraints = editorArgs && editorArgs.constraints || {},
 				props = editorArgs && editorArgs.props || '',
 				pattern = col.gridPattern || col.storePattern;
@@ -502,8 +523,9 @@ define([
 			return function(){
 				return ["<div data-dojo-type='", className, "' ",
 					"data-dojo-attach-point='gridCellEditField' ",
-					"class='gridxCellEditor gridxHasGridCellValue gridxUseStoreData' ",
-					"data-dojo-props='",
+					"class='gridxCellEditor gridxHasGridCellValue ",
+					useGridData ? "" : "gridxUseStoreData",
+					"' data-dojo-props='",
 					props, constraints,
 					"'></div>"
 				].join('');

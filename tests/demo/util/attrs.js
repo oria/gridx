@@ -184,8 +184,8 @@ define([
 		{mod: 'pagination', name: 'initialPage',
 			type: 'number',
 			editor: 'spinner',
-			unitPre: 'Show the',
-			unitPost: '-th page when grid is created.',
+			unitPre: 'Show the page of index',
+			unitPost: 'when grid is created.',
 			value: 0,
 			description: ''
 		},

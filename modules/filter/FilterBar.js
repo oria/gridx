@@ -123,7 +123,6 @@ define([
 			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
 			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
 			
-			this.defineFilterButton = this.arg('defineFilterButton') || this.defineFilterButton;
 			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
 			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
 			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
@@ -259,7 +258,7 @@ define([
 			//		grid.filterBar.closeButton = true;
 			//		grid.filterBar.refresh();
 			this.btnClose.style.display = this.closeButton ? '': 'none';
-			this.btnFilter.style.display = this.defineFilterButton ? '': 'none';
+			this.btnFilter.style.display = this.arg('defineFilterButton') ? '': 'none';
 		},
 		isVisible: function(){
 			return this.domNode.style.display != 'none';
