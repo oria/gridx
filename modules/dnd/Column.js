@@ -30,6 +30,12 @@ define([
 				g = t.grid;
 			t.inherited(arguments);
 			t._selector = g.select.column;
+			t.connect(g.header, 'onRender', '_initHeader');
+		},
+
+		load: function(){
+			this._initHeader();
+			this.loaded.callback();
 		},
 	
 		//Public---------------------------------------------------------------------------------------
@@ -61,16 +67,25 @@ define([
 		//Private--------------------------------------------------------------------------------------
 		_cssName: "Column",
 
+		_initHeader: function(){
+			query('.gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
+		},
 
 		_onBeginDnd: function(source){
-			source.delay = this.arg('delay');
+			var t = this;
+			source.delay = t.arg('delay');
+			array.forEach(t._selectedColIds, function(id){
+				query('[colid="' + id + '"].gridxCell', t.grid.header.domNode).attr('aria-dragged', 'true');
+			});
 		},
 
 		_getDndCount: function(){
 			return this._selectedColIds.length;
 		},
 
-		_onEndDnd: function(){},
+		_onEndDnd: function(){
+			query('[aria-dragged="true"].gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
+		},
 
 		_buildDndNodes: function(){
 			var gid = this.grid.id;
