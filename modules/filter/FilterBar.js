@@ -123,9 +123,6 @@ define([
 			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
 			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
 			
-			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
-			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
-			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, locale),
 				'class': 'gridxFilterBar'
@@ -196,7 +193,7 @@ define([
 		},
 		
 		confirmToExecute: function(callback, scope){
-			var max = this.ruleCountToConfirmClearFilter;
+			var max = this.arg('ruleCountToConfirmClearFilter');
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!this._cfmDlg){
 					this._cfmDlg = new FilterConfirmDialog();
@@ -394,7 +391,7 @@ define([
 				!this.filterData.conditions.length){return;}
 			if(!delayed){
 				this._pointTooltipDelay = window.setTimeout(lang.hitch(this, '_showTooltip', 
-					evt, true),this.tooltipDelay);
+					evt, true),this.arg('tooltipDelay'));
 				return;
 			}
 			this._tooltip.show(evt);
