@@ -132,7 +132,7 @@ define([
 				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
 				isGridHidden = !dn.offsetHeight,
 				isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse',
-				margin = isCollapse ? (lead - 1) : lead;
+				margin = isCollapse && lead > 0 ? (lead - 1) : lead;
 			hs[marginLead] = margin + 'px';
 			hs[marginTail] = (!isCollapse && tail > 0 ? tail - 1 : 0)  + 'px';
 			g.mainNode.style[marginLead] = margin + 'px';
