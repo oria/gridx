@@ -26,7 +26,7 @@ require([
 			},
 			{
 				moduleClass: modules.PaginationBarDD,
-				pageSizes: [50, 100, 200, 300, 0],
+				sizes: [50, 100, 200, 300, 0],
 				//description: false,
 				//sizeSwitch: false,
 				//stepper: false,
