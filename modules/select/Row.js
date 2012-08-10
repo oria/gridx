@@ -47,7 +47,7 @@ define([
 			},
 
 			isSelected: function(){
-				return this.grid.select.row.isSelected(this.row.id);
+				return this.grid.select.row.isSelected(this.id);
 			}
 		},
 		
