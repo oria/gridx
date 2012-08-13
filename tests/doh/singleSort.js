@@ -32,59 +32,52 @@ require([
 		store: store,
 		structure: layout,
 		modules: [
-			modules.VirtualVScroller
+			modules.SingleSort
 		]
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();
 
 	//doh---------------------------------------------------------------------
-	doh.prefix = 'virtualVScroller:';
+	doh.prefix = 'pure_grid:';
 
 	//------------------------------------------------------------------------
-	doh.ts('virtualRender');
+	doh.ts('sort');
 
-	doh.td('less rendered rows', function(t){
-		t.t(query('.gridxRow', grid.domNode).length < grid.rowCount());
+	doh.td('sort descend', function(t){
+		grid.sort.sort('id', true);
+		t.is(-1, grid.column('id').isSorted());
+		t.is(100, grid.row(0).id);
+		t.is(1, grid.row(99).id);
 	});
 
-	doh.ts('scrollToRow');
-
-	doh.tt('scroll to bottom', function(d, t){
-		grid.vScroller.scrollToRow(grid.rowCount() - 1).then(function(success){
-			setTimeout(function(){
-				try{
-					var containerPos = domGeo.position(grid.bodyNode);
-					var pos = domGeo.position(grid.row(grid.rowCount() - 1).node());
-					t.t(pos.y >= containerPos.y);
-					t.t(pos.y + pos.h <= containerPos.y + containerPos.h);
-					d.callback(true);
-				}catch(e){
-					d.errback(e);
-				}
-			}, 10);
-		});
+	doh.td('sort ascend', function(t){
+		grid.sort.sort('id');
+		t.is(1, grid.column('id').isSorted());
+		t.is(1, grid.row(0).id);
+		t.is(100, grid.row(99).id);
 	});
 
-	doh.tt('scroll to view top', function(d, t){
-		var idx = parseInt(grid.rowCount() / 3 * 2, 10);
-		grid.vScroller.scrollToRow(idx, true).then(function(success){
-			setTimeout(function(){
-				try{
-					var containerPos = domGeo.position(grid.bodyNode);
-					var pos = domGeo.position(grid.row(idx).node());
-					t.t(pos.y == containerPos.y);
-					d.callback(true);
-				}catch(e){
-					d.errback(e);
-				}
-			}, 10);
-		});
+	doh.ts('clear');
+
+	doh.td('clear', function(t){
+		grid.sort.clear();
+		t.is(0, grid.column('id').isSorted());
+	});
+
+	doh.ts('setSortable');
+
+	doh.td('set not sortable', function(t){
+		grid.column(1).setSortable(false);
+		grid.column(1).sort();
+		t.is(1, grid.row(0).id);
+		t.is(100, grid.row(99).id);
 	});
 
 	//------------------------------------------------------------------------
 	doh.go(
-		'virtualRender',
-		'scrollToRow',
+		'sort',
+		'clear',
+		'setSortable',
 	0);
 });
