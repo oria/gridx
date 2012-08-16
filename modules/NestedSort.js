@@ -336,6 +336,7 @@ define([
 					t._onHeaderClick(e);
 					break;
 			}
+			event.stop(e);
 		},
 
 		_onBlur: function(e){
