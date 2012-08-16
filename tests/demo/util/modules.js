@@ -20,7 +20,7 @@ define([
 			mid: 'gridx/modules/filter/Filter',
 			name: 'Filter',
 			description: [
-				'Provides filter API for grid, no UI. Also provides a set of utility functions to help create ',
+				'Provides filter API for grid, no UI. Also provides a set of useful utility functions to help create ',
 				'complicated filter condition.'
 			].join(''),
 			icon: 'images/modIcon-Filter.png',
@@ -63,7 +63,7 @@ define([
 			module: mods.RowLock,
 			mid: 'gridx/modules/RowLock',
 			name: 'RowLock',
-			description: '', 
+			description: 'Lock several rows at the top of the current view, so that the vertical scroll bar will not scroll them out of view. This module only provides API to lock and unlock rows, but and attribute called "count" can be used to lock rows when grid is created.',
 			icon: 'images/modIcon-RowLock.png',
 			iconClass: ''
 		},
@@ -228,7 +228,8 @@ define([
 			mid: 'gridx/modules/move/Row',
 			name: 'MoveRow',
 			description: [
-				'Provides row reordering API.'
+				'Provides row reordering API. Also support moving rows by keyboard (CTRL+UP_ARROW/DOWN_ARROW) if Focus module is used.',
+				'Row reordering is implemented by sorting a special field in store. By default this field is called "order", and only contains unique number values in every row. Specify "moveField" attribute for grid to use other fields instead of "order".'
 			].join(''),
 			icon: 'images/modIcon-MoveRow.png',
 			iconClass: ''
@@ -238,7 +239,7 @@ define([
 			mid: 'gridx/modules/move/Column',
 			name: 'MoveColumn',
 			description: [
-				'Provides column reordering API.'
+				'Provides column reordering API. Also support moving columns by keyboard (CTRL+LEFT_ARROW/RIGHT_ARROW) if Focus module is used.'
 			].join(''),
 			icon: 'images/modIcon-MoveColumn.png',
 			iconClass: ''
@@ -248,7 +249,13 @@ define([
 			mid: 'gridx/modules/CellWidget',
 			name: 'CellWidget',
 			description: [
-				''
+				'Provide support to efficiently show dijits/widgets in cell. ',
+				'This module is only effective for columns with "widgetsInCell" set to true. ',
+				'In these columns, the "decorator" function returns the templateString of the CellWidget, ',
+				'which is the container widget in every cell in these columns. ',
+				'Widgets in cell are reused among different rows by setting different cell values, ',
+				'so the "data" argument in the "decorator" function is no longer valid. ',
+				'Set css class "gridxHasGridCellValue" for your widget or provide "setCellValue" function to fill data into your widget.'
 			].join(''),
 			icon: 'images/modIcon-CellWidget.png',
 			iconClass: '',
@@ -258,7 +265,9 @@ define([
 			module: mods.Edit,
 			mid: 'gridx/modules/Edit',
 			name: 'Edit',
-			description: '', 
+			description: [
+				'Make cells editable.'
+			].join(''),
 			icon: 'images/modIcon-Edit.png',
 			iconClass: '',
 			pic: '../../gallery/image/editable.png'

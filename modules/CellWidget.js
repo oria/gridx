@@ -87,11 +87,13 @@ define([
 									widget.onChange = onChange;
 								};
 							}
-							widget.set('value', data);
+							if(!t.setCellValue){
+								widget.set('value', data);
+							}
 						}
 					});
 					if(t.setCellValue){
-						t.setCellValue(gridData, storeData, t);
+						t.setCellValue(gridData, storeData, t, isInit);
 					}
 				}catch(e){
 					console.error('Can not set cell value: ', e);

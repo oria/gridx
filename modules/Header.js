@@ -175,6 +175,7 @@ define([
 				if(n.tagName.toLowerCase() == 'th'){
 					c = this.grid._columnsById[n.getAttribute('colid')];
 					if(c){
+						e.headerCellNode = n;
 						e.columnId = c.id;
 						e.columnIndex = c.index;
 					}

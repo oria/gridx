@@ -83,7 +83,9 @@ define([
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
 				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
-				g.columnResizer && [g.columnResizer, 'onResize', '_onResize']);
+				g.columnResizer && [g.columnResizer, 'onResize', '_onResize'],
+				[g, 'onRowHeaderCellMouseOver', '_onCellMouseOver'],
+				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver']);
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
@@ -166,10 +168,16 @@ define([
 		},
 
 		_syncRowHeight: function(rowHeaderNode, bodyNode){
+			//Check if the table is collasped.
+			var t = this;
+			if(t._isCollapse === undefined){
+				var refNode = query('.gridxCell', t.grid.header.innerNode)[0];
+				t._isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse';
+			}
 			//Use setTimeout to ensure the row header height correct reflects the body row height.
 			//FIXME: This is tricky and may not be working in some special cases.
 			function getHeight(){
-				return sniff('ie') ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
+				return sniff('ie') || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			rowHeaderNode.style.height = getHeight();
 			setTimeout(function(){
@@ -252,6 +260,7 @@ define([
 			while(node && node != this.bodyNode){
 				if(domClass.contains(node, 'gridxRowHeaderCell')){
 					e.isRowHeader = true;
+					e.rowHeaderCellNode = node;
 				}else if(node.tagName.toLowerCase() === 'div' && domClass.contains(node, 'gridxRowHeaderRow')){
 					e.rowId = node.getAttribute('rowid');
 					e.parentId = node.getAttribute('parentid');
@@ -264,9 +273,16 @@ define([
 		},
 
 		_onRowMouseOver: function(e){
-			var rowNode = query('[rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
+			var rowNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
 			if(rowNode){
 				domClass.toggle(rowNode, "gridxRowOver", e.type.toLowerCase() == 'mouseover');
+			}
+		},
+
+		_onCellMouseOver: function(e){
+			var cellNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
+			if(cellNode){
+				domClass.toggle(cellNode, "gridxRowHeaderCellOver", e.type.toLowerCase() == 'mouseover');
 			}
 		},
 

@@ -255,8 +255,9 @@ define([
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
 			if(e.shiftKey){
 				var t = this,
+					g = t.grid,
 					rid = t._getRowId(rowVisIndex),
-					cid = t.grid._columns[colIndex].id;
+					cid = g._columns[colIndex].id;
 				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
 				t._end();
 			}
