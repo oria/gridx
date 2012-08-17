@@ -3,7 +3,9 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar",
+	"gridx/modules/ColumnResizer"
 ], function(dataSource, storeFactory){
 
 	layout = [

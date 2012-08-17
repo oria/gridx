@@ -3,12 +3,17 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/ContentPane',
 	'gridx/modules/barPlugins/QuickFilter',
+	"gridx/modules/Focus",
+	"gridx/modules/ColumnResizer",
+	"gridx/modules/filter/Filter",
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar",
+	"gridx/modules/Bar",
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules){
+], function(Grid, Cache, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource, 

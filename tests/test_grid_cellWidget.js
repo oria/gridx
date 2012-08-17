@@ -1,7 +1,6 @@
 require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
@@ -12,7 +11,12 @@ require([
 	'dijit/form/Button',
 	'dijit/form/CheckBox',
 	'dijit/form/DropDownButton',
-	'dijit/TooltipDialog'
+	'dijit/TooltipDialog',
+	"gridx/modules/Focus",
+	"gridx/modules/CellWidget",
+	"gridx/modules/ColumnResizer",
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar"
 ], function(dataSource, storeFactory){
 
 	store = storeFactory({

@@ -3,10 +3,19 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/ColumnLock',
+	'gridx/modules/CellWidget',
+	'gridx/modules/Edit',
+	'gridx/modules/SingleSort',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/Focus',
+	'gridx/modules/extendedSelect/Cell',
 	'gridx/tests/support/TestPane',
 	'dijit/form/NumberSpinner'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(Grid, Cache, dataSource, storeFactory,
+	VirtualVScroller, ColumnLock, CellWidget, Edit, SingleSort, ColumnResizer, Focus, ExtendedSelectCell,
+	TestPane){
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -16,18 +25,17 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			modules.VirtualVScroller,
+			VirtualVScroller,
 			{
-				moduleClass: modules.ColumnLock,
+				moduleClass: ColumnLock,
 				count: 1
 			},
-			modules.ExtendedSelectCell,
-			modules.CellWidget,
-			modules.Edit,
-			modules.SingleSort,
-			modules.ColumnResizer,
-			modules.Focus
-			
+			ExtendedSelectCell,
+			CellWidget,
+			Edit,
+			SingleSort,
+			ColumnResizer,
+			Focus
 		]
 	});
 	grid.placeAt('gridContainer');

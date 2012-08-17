@@ -3,7 +3,11 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
+	'gridx/modules/Focus',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/filter/Filter',
+	'gridx/modules/Bar',
 	'gridx/modules/barPlugins/Summary',
 	'gridx/modules/barPlugins/LinkPager',
 	'gridx/modules/barPlugins/LinkSizer',
@@ -15,11 +19,11 @@ require([
 	'dijit/form/Button',
 	'dijit/form/ToggleButton',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules,
+], function(Grid, Cache, dataSource, storeFactory,
+	Focus, ExtendedSelectRow, Pagination, Filter, Bar,
 	Summary, LinkPager, LinkSizer, DropDownPager, DropDownSizer, GotoPageButton, QuickFilter,
 	Toolbar, Button, ToggleButton){
 	
-	var t1 = new Date;
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -29,12 +33,11 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			modules.Focus,
-			modules.ExtendedSelectRow,
-			modules.Pagination,
-			modules.Filter,
-//            modules.FilterBar,
-			modules.Bar
+			Focus,
+			ExtendedSelectRow,
+			Pagination,
+			Filter,
+			Bar
 		],
 		selectRowTriggerOnCell: true,
 		barTop: [
@@ -94,5 +97,4 @@ require([
 
 	grid.placeAt('gridContainer');
 	grid.startup();
-	console.log(new Date - t1);
 });
