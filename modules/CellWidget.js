@@ -17,6 +17,14 @@ define([
 
 	/*=====
 	var columnDefinitionCellDijitMixin = {
+		// navigable: Boolean
+		//      If a cell is navigable, that means the focusable elements in the cell can be focused.
+		//      Use F2 to enter navigation mode, ESC to exit navigation mode and return focus back to cell.
+		//      Pressing TAB during navigation mode will focus the next focusalbe element in all cells.
+		//      That means if the current focused element is the last one in the current cell, then pressing TAB
+		//      will focus the first focusable element in the next cell.
+		navigable: true,
+
 		// widgetsInCell: Boolean
 		//		Indicating whether this column should use this CellDijit module.
 		//		CellDijit module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
@@ -461,7 +469,7 @@ define([
 
 		_isNavigable: function(colId){
 			var col = this.grid._columnsById[colId];
-			return col && col.navigable && col.decorator;
+			return col && (col.navigable || col.navigable === undefined) && col.decorator;
 		},
 
 		_beginNavigate: function(rowId, colId){
