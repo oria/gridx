@@ -9,7 +9,7 @@ define([
 	"dojo/dom-class",
 	"dojo/keys",
 	"../core/_Module",
-	"../util",
+	"../core/util",
 	"dojo/date/locale",
 	"dijit/form/TextBox"
 ], function(declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){

@@ -8,7 +8,7 @@ define([
 	"dojo/_base/query",
 	"dojo/_base/sniff",
 	"dojo/keys",
-	"../util",
+	"../core/util",
 	"../core/_Module"
 ], function(declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 

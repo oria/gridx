@@ -8,7 +8,7 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/keys",
 	"../core/_Module",
-	"../util",
+	"../core/util",
 	"./RowHeader"
 ], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util){
 

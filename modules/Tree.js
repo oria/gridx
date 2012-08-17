@@ -9,7 +9,7 @@ define([
 	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
-	"../util",
+	"../core/util",
 	"../core/_Module"
 ], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	kernel.experimental('gridx/modules/Tree');

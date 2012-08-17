@@ -9,7 +9,7 @@ define([
 	"dojo/dom-style",
 	"dojo/keys",
 	"../core/_Module",
-	"../util"
+	"../core/util"
 ], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, keys, _Module, util){
 
 	return declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
