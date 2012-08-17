@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/image/Gallery", ["dijit","dojo","dojox","dojo/require!dojo/fx,dijit/_Widget,dijit/_Templated,dojox/image/ThumbnailPicker,dojox/image/SlideShow"], function(dijit,dojo,dojox){
 dojo.provide("dojox.image.Gallery");
@@ -64,7 +63,7 @@ dojo.declare("dojox.image.Gallery",
 	//		Time, in seconds, between image changes in the slide show.
 	slideshowInterval: 3,
 	
-	templateString: dojo.cache("dojox.image", "resources/Gallery.html", "<div dojoAttachPoint=\"outerNode\" class=\"imageGalleryWrapper\">\n\t<div dojoAttachPoint=\"thumbPickerNode\"></div>\n\t<div dojoAttachPoint=\"slideShowNode\"></div>\n</div>"),
+	templateString: dojo.cache("dojox.image", "resources/Gallery.html", "<div dojoAttachPoint=\"outerNode\" class=\"imageGalleryWrapper\">\r\n\t<div dojoAttachPoint=\"thumbPickerNode\"></div>\r\n\t<div dojoAttachPoint=\"slideShowNode\"></div>\r\n</div>"),
 
 	postCreate: function(){
 		// summary:
@@ -120,10 +119,10 @@ dojo.declare("dojox.image.Gallery",
 		// summary:
 		//		Sets the data store and request objects to read data from.
 		// dataStore:
-		//		An implementation of the dojo.data.api.Read API. This accesses the image
+		//		An implementation of the dojo/data/api/Read API. This accesses the image
 		//		data.
 		// request:
-		//		An implementation of the dojo.data.api.Request API. This specifies the
+		//		An implementation of the dojo/data/api/Request API. This specifies the
 		//		query and paging information to be used by the data store
 		// paramNames:
 		//		An object defining the names of the item attributes to fetch from the

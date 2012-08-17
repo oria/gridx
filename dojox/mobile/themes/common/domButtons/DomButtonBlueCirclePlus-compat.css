@@ -1,8 +1,1 @@
-
-.mblDomButtonBlueCirclePlus {
-	background-image: url(compat/mblDomButtonBlueCirclePlus.png);
-	background-repeat: no-repeat;
-}
-.mblDomButtonBlueCirclePlus > div {
-	display: none;
-}
+.mblDomButtonBlueCirclePlus {background-image: url(compat/mblDomButtonBlueCirclePlus.png); background-repeat: no-repeat;}.mblDomButtonBlueCirclePlus > div {display: none;}

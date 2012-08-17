@@ -1,37 +1,3 @@
 //>>built
-define(["dijit","dojo","dojox","dojo/require!dojox/wire/_base,dojox/wire/Wire"],function(_1,_2,_3){
-_2.provide("dojox.wire.CompositeWire");
-_2.require("dojox.wire._base");
-_2.require("dojox.wire.Wire");
-_2.declare("dojox.wire.CompositeWire",_3.wire.Wire,{_wireClass:"dojox.wire.CompositeWire",constructor:function(_4){
-this._initializeChildren(this.children);
-},_getValue:function(_5){
-if(!_5||!this.children){
-return _5;
-}
-var _6=(_2.isArray(this.children)?[]:{});
-for(var c in this.children){
-_6[c]=this.children[c].getValue(_5);
-}
-return _6;
-},_setValue:function(_7,_8){
-if(!_7||!this.children){
-return _7;
-}
-for(var c in this.children){
-this.children[c].setValue(_8[c],_7);
-}
-return _7;
-},_initializeChildren:function(_9){
-if(!_9){
-return;
-}
-for(var c in _9){
-var _a=_9[c];
-_a.parent=this;
-if(!_3.wire.isWire(_a)){
-_9[c]=_3.wire.create(_a);
-}
-}
-}});
-});
+define("dojox/wire/CompositeWire",["dijit","dojo","dojox","dojo/require!dojox/wire/_base,dojox/wire/Wire"],function(f,d,e){d.provide("dojox.wire.CompositeWire");d.require("dojox.wire._base");d.require("dojox.wire.Wire");d.declare("dojox.wire.CompositeWire",e.wire.Wire,{_wireClass:"dojox.wire.CompositeWire",constructor:function(){this._initializeChildren(this.children)},_getValue:function(a){if(!a||!this.children)return a;var c=d.isArray(this.children)?[]:{},b;for(b in this.children)c[b]=this.children[b].getValue(a);
+return c},_setValue:function(a,c){if(!a||!this.children)return a;for(var b in this.children)this.children[b].setValue(c[b],a);return a},_initializeChildren:function(a){if(a)for(var c in a){var b=a[c];b.parent=this;e.wire.isWire(b)||(a[c]=e.wire.create(b))}}})});

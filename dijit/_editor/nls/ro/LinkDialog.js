@@ -1,18 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	createLinkTitle: "Proprietăţi legătură",
-	insertImageTitle: "Proprietăţi imagine",
-	url: "URL:",
-	text: "Descriere:",
-	target: "Destinaţie:",
-	set: "Setare",
-	currentWindow: "Fereastra curentă",
-	parentWindow: "Fereastra părinte",
-	topWindow: "Fereastra cea mai de sus",
-	newWindow: "Fereastra nouă"
-})
-
-//end v1.x content
-);
+define("dijit/_editor/nls/ro/LinkDialog",{createLinkTitle:"Propriet\u0103\u0163i leg\u0103tur\u0103",insertImageTitle:"Propriet\u0103\u0163i imagine",url:"URL:",text:"Descriere:",target:"Destina\u0163ie:",set:"Setare",currentWindow:"Fereastra curent\u0103",parentWindow:"Fereastra p\u0103rinte",topWindow:"Fereastra cea mai de sus",newWindow:"Fereastra nou\u0103"});

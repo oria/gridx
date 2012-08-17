@@ -1,19 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-{
-	"group": "٬",
-	"percentSign": "٪",
-	"exponential": "اس",
-	"list": "؛",
-	"infinity": "∞",
-	"minusSign": "-",
-	"decimal": "٫",
-	"nan": "ليس رقم",
-	"perMille": "؉",
-	"decimalFormat": "#,##0.###;#,##0.###-",
-	"currencyFormat": "¤ #,##0.00;¤ #,##0.00-",
-	"plusSign": "+"
-}
-//end v1.x content
-);
+define("dojo/cldr/nls/ar/number",{decimal:",",group:".",list:";",percentSign:"%",plusSign:"+",minusSign:"-",exponential:"E",perMille:"\u2030",infinity:"\u221e",nan:"NaN",decimalFormat:"#,##0.###;#,##0.###-","decimalFormat-short":"000T",currencyFormat:"\u00a4\u00a0#,##0.00;\u00a4\u00a0#,##0.00-"});

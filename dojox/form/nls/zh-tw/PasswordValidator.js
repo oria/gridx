@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-        nomatchMessage: "密碼不符合。",
-		badPasswordMessage: "無效的密碼。"
-})
-
-//end v1.x content
-);
+define("dojox/form/nls/zh-tw/PasswordValidator",{nomatchMessage:"\u5bc6\u78bc\u4e0d\u7b26\u5408\u3002",badPasswordMessage:"\u7121\u6548\u7684\u5bc6\u78bc\u3002"});

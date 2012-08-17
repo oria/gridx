@@ -1,18 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	createLinkTitle: "링크 등록 정보",
-	insertImageTitle: "이미지 등록 정보",
-	url: "URL:",
-	text: "설명:",
-	target: "대상",
-	set: "설정",
-	currentWindow: "현재 창",
-	parentWindow: "상위 창",
-	topWindow: "최상위 창",
-	newWindow: "새 창"
-})
-
-//end v1.x content
-);
+define("dijit/_editor/nls/ko/LinkDialog",{createLinkTitle:"\ub9c1\ud06c \ud2b9\uc131",insertImageTitle:"\uc774\ubbf8\uc9c0 \ud2b9\uc131",url:"URL:",text:"\uc124\uba85:",target:"\ub300\uc0c1",set:"\uc124\uc815",currentWindow:"\ud604\uc7ac \ucc3d",parentWindow:"\uc0c1\uc704 \ucc3d",topWindow:"\ucd5c\uc0c1\uc704 \ucc3d",newWindow:"\uc0c8 \ucc3d"});

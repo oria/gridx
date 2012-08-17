@@ -1,21 +1,4 @@
 //>>built
-define("dojox/app/model",["dojo/_base/kernel","dojo/_base/Deferred","dojox/mvc/StatefulModel"],function(_1,_2){
-return function(_3,_4){
-var _5={};
-if(_4){
-_1.mixin(_5,_4);
-}
-if(_3){
-for(var _6 in _3){
-if(_6.charAt(0)!=="_"){
-var _7=_3[_6].params?_3[_6].params:{};
-var _8={"store":_7.store.store,"query":_7.store.query?_7.store.query:{}};
-_5[_6]=_2.when(dojox.mvc.newStatefulModel(_8),function(_9){
-return _9;
-});
-}
-}
-}
-return _5;
-};
-});
+define("dojox/app/model",["dojo/_base/lang","dojo/Deferred","dojo/when"],function(j,e,k){function m(b,a,d,g,c){var h=b[a].params?b[a].params:{},l=new e;require([b[a].modelLoader?b[a].modelLoader:"dojox/app/utils/simpleModel"],function(a){l.resolve(a)});var f=new e;return k(l,j.hitch(this,function(d){var i;try{i=d(b,h,a)}catch(e){return console.warn("load model error in model.",e),f.reject("load model error in model.",e),f.promise}if(i.then)return k(i,j.hitch(this,function(b){c[a]=b;this.app.log("in app/model, for item=[",
+a,"] loadedModels =",c);this.defCount--;0==this.defCount&&g.resolve(c);f.resolve(c);return c}),function(){f.reject("load model error in models.")}),f;c[a]=i;this.app.log("in app/model else path, for item=[",a,"] loadedModels=",c);this.defCount--;0==this.defCount&&g.resolve(c);f.resolve(c);return c}))}return function(b,a,d){this.app=d||a;this.defCount=0;var d={},g=new e;a.loadedModels&&j.mixin(d,a.loadedModels);if(b){for(var c in b)"_"!==c.charAt(0)&&this.defCount++;if(0==this.defCount)return d;for(var h in b)"_"!==
+h.charAt(0)&&m(b,h,a,g,d);return g}return d}});

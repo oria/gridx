@@ -1,4 +1,3 @@
-//>>built
 define("dijit/form/TimeTextBox", [
 	"dojo/_base/declare", // declare
 	"dojo/keys", // keys.DOWN_ARROW keys.ENTER keys.ESCAPE keys.TAB keys.UP_ARROW
@@ -7,22 +6,13 @@ define("dijit/form/TimeTextBox", [
 	"./_DateTimeTextBox"
 ], function(declare, keys, lang, _TimePicker, _DateTimeTextBox){
 
-/*=====
-	var _TimePicker = dijit._TimePicker;
-	var _DateTimeTextBox = dijit.form._DateTimeTextBox;
-=====*/
-
 	// module:
 	//		dijit/form/TimeTextBox
-	// summary:
-	//		A validating, serializable, range-bound time text box with a drop down time picker
 
 
 	/*=====
-	declare(
-		"dijit.form.TimeTextBox.__Constraints",
-		[dijit.form._DateTimeTextBox.__Constraints, dijit._TimePicker.__Constraints]
-	);
+	var __Constraints = declare([_DateTimeTextBox.__Constraints, _TimePicker.__Constraints], {
+	});
 	=====*/
 
 	return declare("dijit.form.TimeTextBox", _DateTimeTextBox, {
@@ -34,7 +24,7 @@ define("dijit/form/TimeTextBox", [
 		_selector: "time",
 
 /*=====
-		// constraints: dijit.form.TimeTextBox.__Constraints
+		// constraints: __Constraints
 		constraints:{},
 =====*/
 
@@ -42,13 +32,13 @@ define("dijit/form/TimeTextBox", [
 		//		The value of this widget as a JavaScript Date object.  Note that the date portion implies time zone and daylight savings rules.
 		//
 		//		Example:
-		// |	new dijit.form.TimeTextBox({value: stamp.fromISOString("T12:59:59", new Date())})
+		// |	new dijit/form/TimeTextBox({value: stamp.fromISOString("T12:59:59", new Date())})
 		//
 		//		When passed to the parser in markup, must be specified according to locale-independent
 		//		`stamp.fromISOString` format.
 		//
 		//		Example:
-		// |	<input data-dojo-type='dijit.form.TimeTextBox' value='T12:34:00'>
+		// |	<input data-dojo-type='dijit/form/TimeTextBox' value='T12:34:00'>
 		value: new Date(""),		// value.toString()="NaN"
 		//FIXME: in markup, you have no control over daylight savings
 
@@ -67,9 +57,9 @@ define("dijit/form/TimeTextBox", [
 					// these keys have special meaning
 					break;
 				default:
-					// setTimeout() because the keystroke hasn't yet appeared in the <input>,
+					// defer() because the keystroke hasn't yet appeared in the <input>,
 					// so the get('displayedValue') call below won't give the result we want.
-					setTimeout(lang.hitch(this, function(){
+					this.defer(function(){
 						// set this.filterString to the filter to apply to the drop down list;
 						// it will be used in openDropDown()
 						var val = this.get('displayedValue');
@@ -82,7 +72,7 @@ define("dijit/form/TimeTextBox", [
 							this.closeDropDown();
 						}
 						this.openDropDown();
-					}), 0);
+					});
 			}
 		}
 	});

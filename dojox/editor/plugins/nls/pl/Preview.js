@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"preview": "Podgląd"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/pl/Preview",{preview:"Podgl\u0105d"});

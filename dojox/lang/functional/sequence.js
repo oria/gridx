@@ -1,21 +1,2 @@
 //>>built
-define("dojox/lang/functional/sequence",["dojo/_base/lang","./lambda"],function(_1,df){
-_1.mixin(df,{repeat:function(n,f,z,o){
-o=o||dojo.global;
-f=df.lambda(f);
-var t=new Array(n),i=1;
-t[0]=z;
-for(;i<n;t[i]=z=f.call(o,z),++i){
-}
-return t;
-},until:function(pr,f,z,o){
-o=o||dojo.global;
-f=df.lambda(f);
-pr=df.lambda(pr);
-var t=[];
-for(;!pr.call(o,z);t.push(z),z=f.call(o,z)){
-}
-return t;
-}});
-return df;
-});
+define("dojox/lang/functional/sequence",["dojo/_base/kernel","dojo/_base/lang","./lambda"],function(h,i,f){i.mixin(f,{repeat:function(d,c,a,b){var b=b||h.global,c=f.lambda(c),e=Array(d),g=1;for(e[0]=a;g<d;e[g]=a=c.call(b,a),++g);return e},until:function(d,c,a,b){for(var b=b||h.global,c=f.lambda(c),d=f.lambda(d),e=[];!d.call(b,a);e.push(a),a=c.call(b,a));return e}});return f});

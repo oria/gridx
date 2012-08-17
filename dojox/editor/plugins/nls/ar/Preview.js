@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"preview": "معاينة"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ar/Preview",{preview:"\u0645\u0639\u0627\u064a\u0646\u0629"});

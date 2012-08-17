@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"pageBreak": "分頁"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/zh-tw/PageBreak",{pageBreak:"\u5206\u9801"});

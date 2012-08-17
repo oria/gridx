@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"collapse": "Pienennä muokkausohjelman työkalurivi",
-	"expand": "Laajenna muokkausohjelman työkalurivi"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/fi/CollapsibleToolbar",{collapse:"Pienenn\u00e4 muokkausohjelman ty\u00f6kalurivi",expand:"Laajenna muokkausohjelman ty\u00f6kalurivi"});

@@ -1,13 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-/* used by both the editor and textarea widgets to provide information to screen reader users */
-({
-	iframeEditTitle: 'แก้ไขพื้นที่',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
-	iframeFocusTitle: 'แก้ไขกรอบพื้นที่'  // secondary title for editable IFRAME when focus is on outer container
-									 //  to let user know that focus has moved out of editing area and to the
-									 //  parent element of the editing area
-})
-
-//end v1.x content
-);
+define("dijit/form/nls/th/Textarea",{iframeEditTitle:"\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e41\u0e01\u0e49\u0e44\u0e02",iframeFocusTitle:"\u0e01\u0e23\u0e2d\u0e1a\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e41\u0e01\u0e49\u0e44\u0e02"});

@@ -1,22 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	widgetLabel: "Verificare ortografică lot",
-	unfound: "Nu a fost găsit",
-	skip: "Salt",
-	skipAll: "Salt toate",
-	toDic: "Adăugare la dicţionar",
-	suggestions: "Sugestii",
-	replace: "Înlocuire",
-	replaceWith: "Înlocuire cu",
-	replaceAll: "Înlocuire toate",
-	cancel: "Anulare",
-	msg: "Nicio greşeală de verificare ortografică nu a fost găsită.",
-	iSkip: "Salt peste acesta",
-	iSkipAll: "Salt peste toate acestea",
-	iMsg: "Nicio sugestie de verificare ortografică"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ro/SpellCheck",{widgetLabel:"Verificare ortografic\u0103 batch",unfound:"Nu a fost g\u0103sit",skip:"Salt peste",skipAll:"Se sar toate",toDic:"Ad\u0103ugare la dic\u0163ionar",suggestions:"Sugestii",replace:"\u00cenlocuire",replaceWith:"\u00cenlocuire cu",replaceAll:"\u00cenlocuire toate",cancel:"Anulare",msg:"Nu au fost g\u0103site gre\u015feli de scriere",iSkip:"Salt peste aceasta",iSkipAll:"Se sar toate ca aceasta",iMsg:"Nu exist\u0103 sugestii de scriere corect\u0103"});

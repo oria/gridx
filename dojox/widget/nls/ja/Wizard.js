@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-next: "次へ",
-previous: "前へ",
-done: "完了"
-})
-//end v1.x content
-);
+define("dojox/widget/nls/ja/Wizard",{next:"\u6b21\u3078",previous:"\u524d\u3078",done:"\u5b8c\u4e86"});

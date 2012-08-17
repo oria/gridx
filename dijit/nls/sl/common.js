@@ -1,12 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	buttonOk: "V redu",
-	buttonCancel: "Prekliči",
-	buttonSave: "Shrani",
-	itemClose: "Zapri"
-})
-
-//end v1.x content
-);
+define("dijit/nls/sl/common",{buttonOk:"V redu",buttonCancel:"Prekli\u010di",buttonSave:"Shrani",itemClose:"Zapri"});

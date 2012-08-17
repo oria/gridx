@@ -1,9 +1,4 @@
-//>>built
-define("dojox/encoding/digests/SHA1", ["./_base"], function(dxd) {
-
-	/*=====
-		dxd = dojox.encoding.digests;
-	=====*/
+define("dojox/encoding/digests/SHA1", ["./_base"], function(dxd){
 
 /*
  * A port of Paul Johnstone's SHA1 implementation
@@ -90,7 +85,7 @@ define("dojox/encoding/digests/SHA1", ["./_base"], function(dxd) {
 	}
 
 	function toBase64(/* word[] */wa){
-		//	summary:
+		// summary:
 		//		convert an array of words to base64 encoding, should be more efficient
 		//		than using dojox.encoding.base64
 		var p="=", tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", s=[];
@@ -109,7 +104,7 @@ define("dojox/encoding/digests/SHA1", ["./_base"], function(dxd) {
 
 	//	public function
 	dxd.SHA1=function(/* String */data, /* dojox.encoding.digests.outputTypes? */outputType){
-		//	summary:
+		// summary:
 		//		Computes the SHA1 digest of the data, and returns the result according to output type.
 		var out=outputType||dxd.outputTypes.Base64;
 		var wa=core(toWord(data), data.length*chrsz);
@@ -131,7 +126,7 @@ define("dojox/encoding/digests/SHA1", ["./_base"], function(dxd) {
 
 	//	make this private, for later use with a generic HMAC calculator.
 	dxd.SHA1._hmac=function(/* string */data, /* string */key, /* dojox.encoding.digests.outputTypes? */outputType){
-		//	summary:
+		// summary:
 		//		computes the digest of data, and returns the result according to type outputType
 		var out=outputType || dxd.outputTypes.Base64;
 		var wa=hmac(data, key);

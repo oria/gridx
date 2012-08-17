@@ -1,31 +1,3 @@
 //>>built
-define("dojox/mdnd/LazyManager",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/html","dojo/dnd/Manager","./PureSource"],function(_1){
-return _1.declare("dojox.mdnd.LazyManager",null,{constructor:function(){
-this._registry={};
-this._fakeSource=new dojox.mdnd.PureSource(_1.create("div"),{"copyOnly":false});
-this._fakeSource.startup();
-_1.addOnUnload(_1.hitch(this,"destroy"));
-this.manager=_1.dnd.manager();
-},getItem:function(_2){
-var _3=_2.getAttribute("dndType");
-return {"data":_2.getAttribute("dndData")||_2.innerHTML,"type":_3?_3.split(/\s*,\s*/):["text"]};
-},startDrag:function(e,_4){
-_4=_4||e.target;
-if(_4){
-var m=this.manager,_5=this.getItem(_4);
-if(_4.id==""){
-_1.attr(_4,"id",_1.dnd.getUniqueId());
-}
-_1.addClass(_4,"dojoDndItem");
-this._fakeSource.setItem(_4.id,_5);
-m.startDrag(this._fakeSource,[_4],false);
-m.onMouseMove(e);
-}
-},cancelDrag:function(){
-var m=this.manager;
-m.target=null;
-m.onMouseUp();
-},destroy:function(){
-this._fakeSource.destroy();
-}});
-});
+define("dojox/mdnd/LazyManager","dojo/_base/kernel,dojo/_base/declare,dojo/_base/lang,dojo/dom-class,dojo/dom-construct,dojo/dom-attr,dojo/dnd/common,dojo/dnd/Manager,./PureSource,dojo/_base/unload".split(","),function(c,e,f,g,h,i,j,k,l){return e("dojox.mdnd.LazyManager",null,{constructor:function(){this._registry={};this._fakeSource=new l(h.create("div"),{copyOnly:!1});this._fakeSource.startup();c.addOnUnload(f.hitch(this,"destroy"));this.manager=k.manager()},getItem:function(b){var a=b.getAttribute("dndType");
+return{data:b.getAttribute("dndData")||b.innerHTML,type:a?a.split(/\s*,\s*/):["text"]}},startDrag:function(b,a){if(a=a||b.target){var d=this.manager,c=this.getItem(a);""==a.id&&i.set(a,"id",j.getUniqueId());g.add(a,"dojoDndItem");this._fakeSource.setItem(a.id,c);d.startDrag(this._fakeSource,[a],!1);d.onMouseMove(b)}},cancelDrag:function(){var b=this.manager;b.target=null;b.onMouseUp()},destroy:function(){this._fakeSource.destroy()}})});

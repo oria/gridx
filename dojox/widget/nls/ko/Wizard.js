@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-next: "다음",
-previous: "이전",
-done: "완료"
-})
-//end v1.x content
-);
+define("dojox/widget/nls/ko/Wizard",{next:"\ub2e4\uc74c",previous:"\uc774\uc804",done:"\uc644\ub8cc"});

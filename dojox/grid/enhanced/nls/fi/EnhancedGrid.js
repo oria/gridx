@@ -1,17 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	singleSort: "Yksinkertainen lajittelu",
-	nestedSort: "Sisäkkäinen lajittelu",
-	ascending: "Nouseva",
-	descending: "Laskeva",
-	sortingState: "${0} - ${1}",
-	unsorted: "Älä lajittele tätä saraketta",
-	indirectSelectionRadio: "Rivi ${0}, yksittäisvalinta, ruutu",
-	indirectSelectionCheckBox: "Rivi ${0}, monivalinta, valintaruutu",
-	selectAll: "Valitse kaikki"
-})
-//end v1.x content
-);
-
+define("dojox/grid/enhanced/nls/fi/EnhancedGrid",{singleSort:"Yksinkertainen lajittelu",nestedSort:"Sis\u00e4kk\u00e4inen lajittelu",ascending:"Lajittele nousevaan j\u00e4rjestykseen napsauttamalla",descending:"Lajittele laskevaan j\u00e4rjestykseen napsauttamalla",sortingState:"${0} - ${1}",unsorted:"\u00c4l\u00e4 lajittele t\u00e4t\u00e4 saraketta",indirectSelectionRadio:"Rivi ${0}, yksi valinta, valintanappi",indirectSelectionCheckBox:"Rivi ${0}, useita valintoja, valintaruutu",selectAll:"Valitse kaikki"});

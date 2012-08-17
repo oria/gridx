@@ -1,22 +1,17 @@
-//>>built
 define("dijit/BackgroundIframe", [
 	"require",			// require.toUrl
-	".",	// to export dijit.BackgroundIframe
+	"./main",	// to export dijit.BackgroundIframe
 	"dojo/_base/config",
 	"dojo/dom-construct", // domConstruct.create
 	"dojo/dom-style", // domStyle.set
 	"dojo/_base/lang", // lang.extend lang.hitch
 	"dojo/on",
-	"dojo/_base/sniff", // has("ie"), has("mozilla"), has("quirks")
+	"dojo/sniff", // has("ie"), has("mozilla"), has("quirks")
 	"dojo/_base/window" // win.doc.createElement
 ], function(require, dijit, config, domConstruct, domStyle, lang, on, has, win){
 
 	// module:
 	//		dijit/BackgroundIFrame
-	// summary:
-	//		new dijit.BackgroundIframe(node)
-	//		Makes a background iframe as a child of node, that fills
-	//		area (and position) of node
 
 	// TODO: remove _frames, it isn't being used much, since popups never release their
 	// iframes (see [22236])
@@ -62,9 +57,10 @@ define("dijit/BackgroundIframe", [
 		//		For IE/FF z-index schenanigans. id attribute is required.
 		//
 		// description:
-		//		new dijit.BackgroundIframe(node)
-		//			Makes a background iframe as a child of node, that fills
-		//			area (and position) of node
+		//		new dijit.BackgroundIframe(node).
+		//
+		//		Makes a background iframe as a child of node, that fills
+		//		area (and position) of node
 
 		if(!node.id){ throw new Error("no id"); }
 		if(has("ie") || has("mozilla")){
@@ -87,7 +83,7 @@ define("dijit/BackgroundIframe", [
 	lang.extend(dijit.BackgroundIframe, {
 		resize: function(node){
 			// summary:
-			// 		Resize the iframe so it's the same size as node.
+			//		Resize the iframe so it's the same size as node.
 			//		Needed on IE6 and IE/quirks because height:100% doesn't work right.
 			if(this.iframe){
 				domStyle.set(this.iframe, {

@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"blockquote": "ציטוט"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/he/Blockquote",{blockquote:"\u05e6\u05d9\u05d8\u05d5\u05d8"});

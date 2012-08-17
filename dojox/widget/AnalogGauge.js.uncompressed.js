@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/widget/AnalogGauge", ["dijit","dojo","dojox","dojo/require!dojox/widget/gauge/_Gauge,dojox/gauges/AnalogGauge"], function(dijit,dojo,dojox){
 // backward compatibility for dojox.widget.AnalogGauge

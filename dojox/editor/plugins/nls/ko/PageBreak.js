@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"pageBreak": "페이지 나누기"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ko/PageBreak",{pageBreak:"\ud398\uc774\uc9c0 \ub098\ub204\uae30"});

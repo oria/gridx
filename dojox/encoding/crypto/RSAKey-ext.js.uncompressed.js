@@ -1,4 +1,3 @@
-//>>built
 define("dojox/encoding/crypto/RSAKey-ext", [
 	"dojo/_base/kernel", // dojo.experimental
 	"dojo/_base/lang", // dojo.extend
@@ -30,7 +29,7 @@ define("dojox/encoding/crypto/RSAKey-ext", [
 	lang.extend(RSAKey, {
 		setPrivate: function(N, E, D){
 			// summary:
-			//	Set the private key fields N, e, d and CRT params from hex strings
+			//		Set the private key fields N, e, d and CRT params from hex strings
 			if(N && E && N.length && E.length){
 				this.n = new BigInteger(N, 16);
 				this.e = parseInt(E, 16);
@@ -41,7 +40,7 @@ define("dojox/encoding/crypto/RSAKey-ext", [
 		},
 		setPrivateEx: function(N, E, D, P, Q, DP, DQ, C) {
 			// summary:
-			//	Set the private key fields N, e, d and CRT params from hex strings
+			//		Set the private key fields N, e, d and CRT params from hex strings
 			if(N && E && N.length && E.length){
 				this.n = new BigInteger(N, 16);
 				this.e = parseInt(E, 16);
@@ -57,7 +56,7 @@ define("dojox/encoding/crypto/RSAKey-ext", [
 		},
 		generate: function(B, E){
 			// summary:
-			//	Generate a new random private key B bits long, using public expt E
+			//		Generate a new random private key B bits long, using public expt E
 			var rng = this.rngf(), qs = B >> 1;
 			this.e = parseInt(E, 16);
 			var ee = new BigInteger(E, 16);
@@ -96,10 +95,11 @@ define("dojox/encoding/crypto/RSAKey-ext", [
 
 		decrypt: function(ctext){
 			// summary:
-			//	Return the PKCS#1 RSA decryption of "ctext".
-			// ctext: String:
-			//	an even-length hex string
-			// returns: a plain string.
+			//		Return the PKCS#1 RSA decryption of "ctext".
+			// ctext: String
+			//		an even-length hex string
+			// returns:
+			//		a plain string.
 			var c = new BigInteger(ctext, 16), m;
 			if(!this.p || !this.q){
 				m = c.modPow(this.d, this.n);

@@ -1,4 +1,3 @@
-//>>built
 define("dojox/grid/enhanced/plugins/NestedSorting", [
 	"dojo/_base/declare",
 	"dojo/_base/array",
@@ -20,6 +19,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 	//
 	// description:
 	//		A flexible way to control multiple column sorting, including
+	//
 	//		1. Set default sorting order
 	//		2. Disable sorting for certain columns
 	//		3. Set sorting order dynamically with JS API
@@ -210,7 +210,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		this._updateHeaderNodeUI(node);
 	},
 	_onHeaderCellClick: function(e){
-		// summary
+		// summary:
 		//		See dojox.grid.enhanced._Events._onHeaderCellClick()
 		this._focusRegion(e.target);
 		if(html.hasClass(e.target, 'dojoxGridSortBtn')){
@@ -220,7 +220,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		}
 	},
 	_onHeaderCellMouseOver: function(e){
-		// summary
+		// summary:
 		//		See dojox.grid._Events._onHeaderCellMouseOver()
 		//		When user mouseover other columns than sorted column in a single sorted grid,
 		//		We need to show 1 in the sorted column
@@ -267,7 +267,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		}
 	},
 	_onHeaderCellMouseOut: function(e){
-		// summary
+		// summary:
 		//		See dojox.grid.enhanced._Events._onHeaderCellMouseOut()
 		var p;
 		for(p in this._sortData){
@@ -341,7 +341,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		}
 	},
 	_prepareNestedSort: function(cellIdx){
-		// summary
+		// summary:
 		//		Prepare the nested sorting, this will order the column on existing sorting result.
 		var i = this._sortData[cellIdx] ? this._sortData[cellIdx].index : null;
 		if(i === 0 || !!i){ return; }
@@ -490,7 +490,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 	_focusHeader: function(e){
 		// summary:
 		//		Overwritten, see _FocusManager.focusHeader()
-		//delayed: Boolean
+		// delayed: Boolean
 		//		If called from "this.focus._delayedHeaderFocus()"
 		if(this._currRegionIdx === -1){
 			this._onMove(0, 1, null);
@@ -559,7 +559,7 @@ var NestedSorting = declare("dojox.grid.enhanced.plugins.NestedSorting", _Plugin
 		return regions;
 	},
 	_focusRegion: function(region){
-		// summary
+		// summary:
 		//		Focus the given region
 		if(!region){return;}
 		var currRegion = this._getCurrentRegion();

@@ -1,33 +1,42 @@
-//>>built
-define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", "../_base/sniff", "../_base/array", "../_base/lang", "../_base/event", "../_base/unload"], function(dojo, require) {
+define("dojo/_firebug/firebug", [
+	"../_base/kernel",
+	"require",
+	"../_base/html",
+	"../sniff",
+	"../_base/array",
+	"../_base/lang",
+	"../_base/event",
+	"../_base/unload"], function(dojo, require, html, has){
+
 	// module:
 	//		dojo/_firebug/firebug
 	// summary:
-
-// FIREBUG LITE
-	// summary: Firebug Lite, the baby brother to Joe Hewitt's Firebug for Mozilla Firefox
+	//		Firebug Lite, the baby brother to Joe Hewitt's Firebug for Mozilla Firefox
 	// description:
 	//		Opens a console for logging, debugging, and error messages.
 	//		Contains partial functionality to Firebug. See function list below.
-	//	NOTE:
-	//			Firebug is a Firefox extension created by Joe Hewitt (see license). You do not need Dojo to run Firebug.
-	//			Firebug Lite is included in Dojo by permission from Joe Hewitt
-	//			If you are new to Firebug, or used to the Dojo 0.4 dojo.debug, you can learn Firebug
-	//				functionality by reading the function comments below or visiting http://www.getfirebug.com/docs.html
-	//	NOTE:
+	//
+	//		NOTE:
+	//		Firebug is a Firefox extension created by Joe Hewitt (see license). You do not need Dojo to run Firebug.
+	//		Firebug Lite is included in Dojo by permission from Joe Hewitt
+	//		If you are new to Firebug, or used to the Dojo 0.4 dojo.debug, you can learn Firebug
+	//		functionality by reading the function comments below or visiting http://www.getfirebug.com/docs.html
+	//
+	//		NOTE:
 	//		To test Firebug Lite in Firefox:
-	//			FF2: set "console = null" before loading dojo and set djConfig.isDebug=true
-	//			FF3: disable Firebug and set djConfig.isDebug=true
+	//
+	//		- FF2: set "console = null" before loading dojo and set djConfig.isDebug=true
+	//		- FF3: disable Firebug and set djConfig.isDebug=true
 	//
 	// example:
 	//		Supports inline objects in object inspector window (only simple trace of dom nodes, however)
-	//		|	console.log("my object", {foo:"bar"})
+	//	|	console.log("my object", {foo:"bar"})
 	// example:
 	//		Option for console to open in popup window
-	//		|	var djConfig = {isDebug: true, popup:true };
+	//	|	var djConfig = {isDebug: true, popup:true };
 	// example:
 	//		Option for console height (ignored for popup)
-	//		|	var djConfig = {isDebug: true, debugHeight:100 }
+	//	|	var djConfig = {isDebug: true, debugHeight:100 }
 
 
 	var isNewIE = (/Trident/.test(window.navigator.userAgent));
@@ -56,14 +65,14 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 	}
 
 	if(
-		dojo.isFF ||								// Firefox has Firebug
-		dojo.isChrome ||							// Chrome 3+ has a console
-		dojo.isSafari ||							// Safari 4 has a console
+		has("ff") ||								// Firefox has Firebug
+		has("chrome") ||							// Chrome 3+ has a console
+		has("safari") ||							// Safari 4 has a console
 		isNewIE ||									// Has the new IE console
 		window.firebug ||							// Testing for mozilla firebug lite
 		(typeof console != "undefined" && console.firebug) || //The firebug console
 		dojo.config.useCustomLogger ||				// Allow custom loggers
-		dojo.isAIR									// isDebug triggers AIRInsector, not Firebug
+		has("air")									// isDebug triggers AIRInsector, not Firebug
 	){
 		return;
 	}
@@ -143,7 +152,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 		error: function(){
 			// summary:
 			//		Sends error arguments (object) to console, highlighted with (X) icon and yellow style
-			//			NEW: error object now displays in object inspector
+			//		NEW: error object now displays in object inspector
 			logFormatted(arguments, "error");
 		},
 
@@ -169,8 +178,6 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 		},
 
 		dirxml: function(node){
-			// summary:
-			//
 			var html = [];
 			appendNode(node, html);
 			logRow(html, "dirxml");
@@ -179,7 +186,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 		group: function(){
 			// summary:
 			//		collects log messages into a group, starting with this call and ending with
-			//			groupEnd(). Missing collapse functionality
+			//		groupEnd(). Missing collapse functionality
 			logRow(arguments, "group", pushGroup);
 		},
 
@@ -192,7 +199,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 		time: function(name){
 			// summary:
 			//		Starts timers assigned to name given in argument. Timer stops and displays on timeEnd(title);
-			//	example:
+			// example:
 			//	|	console.time("load");
 			//	|	console.time("myFunction");
 			//	|	console.timeEnd("load");
@@ -225,7 +232,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 			for(var i=0;i<stackAmt;i++){
 				var func = f.toString();
 				var args=[];
-				for (var a = 0; a < f.arguments.length; a++) {
+				for (var a = 0; a < f.arguments.length; a++){
 					args.push(f.arguments[a]);
 				}
 				if(f.arguments.length){
@@ -333,13 +340,12 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 			console._closeDomInspector();
 		},
 		recss: function(){
-			// http://turtle.dojotoolkit.org/~david/recss.html
 			// this is placed in dojo since the console is most likely
 			// in another window and dojo is easilly accessible
 			var i,a,s;a=document.getElementsByTagName('link');
 			for(i=0;i<a.length;i++){
 				s=a[i];
-				if(s.rel.toLowerCase().indexOf('stylesheet')>=0&&s.href) {
+				if(s.rel.toLowerCase().indexOf('stylesheet')>=0&&s.href){
 					var h=s.href.replace(/(&|%5C?)forceReload=\d+/,'');
 					s.href=h+(h.indexOf('?')>=0?'&':'?')+'forceReload='+new Date().valueOf();
 				}
@@ -467,7 +473,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 		if(!styleParent){
 			styleParent = _firebugDoc.getElementsByTagName("html")[0];
 		}
-		if(dojo.isIE){
+		if(has("ie")){
 			window.setTimeout(function(){ styleParent.appendChild(styleElement); }, 0);
 		}else{
 			styleParent.appendChild(styleElement);
@@ -481,6 +487,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 			_firebugDoc.body.appendChild(consoleFrame);
 		}
 		consoleFrame.className += " firebug";
+		consoleFrame.id = "firebug";
 		consoleFrame.style.height = containerHeight;
 		consoleFrame.style.display = (frameVisible ? "block" : "none");
 
@@ -512,7 +519,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 		commandLine = _firebugDoc.getElementById("firebugCommandLine");
 		addEvent(commandLine, "keydown", onCommandLineKeyDown);
 
-		addEvent(_firebugDoc, dojo.isIE || dojo.isSafari ? "keydown" : "keypress", onKeyDown);
+		addEvent(_firebugDoc, has("ie") || has("safari") ? "keydown" : "keypress", onKeyDown);
 
 		consoleBody = _firebugDoc.getElementById("firebugLog");
 		consoleObjectInspector = _firebugDoc.getElementById("objectLog");
@@ -1166,7 +1173,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 
 	//window.onerror = onError;
 
-	addEvent(document, dojo.isIE || dojo.isSafari ? "keydown" : "keypress", onKeyDown);
+	addEvent(document, has("ie") || has("safari") ? "keydown" : "keypress", onKeyDown);
 
 	if(	(document.documentElement.getAttribute("debug") == "true")||
 		(dojo.config.isDebug)
@@ -1176,7 +1183,7 @@ define("dojo/_firebug/firebug", ["../_base/kernel", "require", "../_base/html", 
 
 	dojo.addOnWindowUnload(function(){
 		// Erase the globals and event handlers I created, to prevent spurious leak warnings
-		removeEvent(document, dojo.isIE || dojo.isSafari ? "keydown" : "keypress", onKeyDown);
+		removeEvent(document, has("ie") || has("safari") ? "keydown" : "keypress", onKeyDown);
 		window.onFirebugResize = null;
 		window.console = null;
 	});

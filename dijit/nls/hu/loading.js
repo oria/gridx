@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	loadingState: "Betöltés...",
-	errorState: "Sajnálom, hiba történt"
-})
-//end v1.x content
-);
+define("dijit/nls/hu/loading",{loadingState:"Bet\u00f6lt\u00e9s...",errorState:"Sajn\u00e1lom, hiba t\u00f6rt\u00e9nt"});

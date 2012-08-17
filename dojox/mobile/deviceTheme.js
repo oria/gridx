@@ -1,46 +1,6 @@
 //>>built
-define("dojox/mobile/deviceTheme",["dojo/_base/array","dojo/_base/config","dojo/_base/lang","dojo/_base/window","dojo/dom-class","dojo/dom-construct","require"],function(_1,_2,_3,_4,_5,_6,_7){
-var dm=_3.getObject("dojox.mobile",true);
-dm.loadCssFile=function(_8){
-dm.loadedCssFiles.push(_6.create("LINK",{href:_8,type:"text/css",rel:"stylesheet"},_4.doc.getElementsByTagName("head")[0]));
-};
-dm.themeMap=dm.themeMap||[["Android","android",[]],["BlackBerry","blackberry",[]],["iPad","iphone",[_7.toUrl("dojox/mobile/themes/iphone/ipad.css")]],["Custom","custom",[]],[".*","iphone",[]]];
-dm.loadDeviceTheme=function(_9){
-var t=_2["mblThemeFiles"]||dm.themeFiles||["@theme"];
-if(!_3.isArray(t)){
-}
-var i,j;
-var m=dm.themeMap;
-var ua=_9||_2["mblUserAgent"]||(location.search.match(/theme=(\w+)/)?RegExp.$1:navigator.userAgent);
-for(i=0;i<m.length;i++){
-if(ua.match(new RegExp(m[i][0]))){
-var _a=m[i][1];
-_5.replace(_4.doc.documentElement,_a+"_theme",dm.currentTheme?dm.currentTheme+"_theme":"");
-dm.currentTheme=_a;
-var _b=[].concat(m[i][2]);
-for(j=t.length-1;j>=0;j--){
-var _c=_3.isArray(t[j])?(t[j][0]||"").replace(/\./g,"/"):"dojox/mobile";
-var _d=_3.isArray(t[j])?t[j][1]:t[j];
-var f="themes/"+_a+"/"+(_d==="@theme"?_a:_d)+".css";
-_b.unshift(_7.toUrl(_c+"/"+f));
-}
-_1.forEach(dm.loadedCssFiles,function(n){
-n.parentNode.removeChild(n);
-});
-dm.loadedCssFiles=[];
-for(j=0;j<_b.length;j++){
-dm.loadCssFile(_b[j].toString());
-}
-if(_9&&dm.loadCompatCssFiles){
-dm.loadCompatCssFiles();
-}
-break;
-}
-}
-};
-if(dm.configDeviceTheme){
-dm.configDeviceTheme();
-}
-dm.loadDeviceTheme();
-return dm;
-});
+("undefined"===typeof define?function(e,a){a()}:define)(["dojo/_base/config","dojo/_base/lang","dojo/_base/window","require"],function(e,a,f,o){var d=a&&a.getObject("dojox.mobile",!0)||{},a=new function(){if(!f)f=window,f.doc=document,f._no_dojo_dm=d;e=e||f.mblConfig||{};for(var a=f.doc.getElementsByTagName("script"),l=0;l<a.length;l++){var m=a[l],k=m.getAttribute("src")||"";if(k.match(/\/deviceTheme\.js/i)){e.baseUrl=k.replace("deviceTheme.js","../../dojo/");if(a=m.getAttribute("data-dojo-config")||
+m.getAttribute("djConfig")){var a=eval("({ "+a+" })"),n;for(n in a)e[n]=a[n]}break}else if(k.match(/\/dojo\.js/i)){e.baseUrl=k.replace("dojo.js","");break}}this.loadCssFile=function(a){var c=f.doc.createElement("link");c.href=a;c.type="text/css";c.rel="stylesheet";a=f.doc.getElementsByTagName("head")[0];a.insertBefore(c,a.firstChild);d.loadedCssFiles.push(c)};this.toUrl=function(a){return o?o.toUrl(a):e.baseUrl+"../"+a};this.setDm=function(a){d=a};this.themeMap=e.themeMap||[["Android","android",[]],
+["BlackBerry","blackberry",[]],["iPhone","iphone",[]],["iPad","iphone",[this.toUrl("dojox/mobile/themes/iphone/ipad.css")]],["Custom","custom",[]],[".*","iphone",[]]];d.loadedCssFiles=[];this.loadDeviceTheme=function(a){var c=e.mblThemeFiles||d.themeFiles||["@theme"],g,b;b=this.themeMap;var h=a||e.mblUserAgent||(location.search.match(/theme=(\w+)/)?RegExp.$1:navigator.userAgent);for(g=0;g<b.length;g++)if(h.match(RegExp(b[g][0]))){var h=b[g][1],i=f.doc.documentElement.className,i=i.replace(RegExp(" *"+
+d.currentTheme+"_theme"),"")+" "+h+"_theme";f.doc.documentElement.className=i;d.currentTheme=h;g=[].concat(b[g][2]);for(b=0;b<c.length;b++){var j=c[b]instanceof Array||"array"==typeof c[b];!j&&-1!==c[b].indexOf("/")?i=c[b]:(i=j?(c[b][0]||"").replace(/\./g,"/"):"dojox/mobile",j=(j?c[b][1]:c[b]).replace(/\./g,"/"),i=i+"/"+("themes/"+h+"/"+("@theme"===j?h:j)+".css"));g.unshift(this.toUrl(i))}for(c=0;c<d.loadedCssFiles.length;c++)h=d.loadedCssFiles[c],h.parentNode.removeChild(h);d.loadedCssFiles=[];for(b=
+0;b<g.length;b++)this.loadCssFile(g[b].toString());a&&d.loadCompatCssFiles&&d.loadCompatCssFiles();break}}};a.loadDeviceTheme();return window.deviceTheme=d.deviceTheme=a});

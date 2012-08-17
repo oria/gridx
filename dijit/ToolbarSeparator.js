@@ -1,9 +1,2 @@
 //>>built
-define("dijit/ToolbarSeparator",["dojo/_base/declare","dojo/dom","./_Widget","./_TemplatedMixin"],function(_1,_2,_3,_4){
-return _1("dijit.ToolbarSeparator",[_3,_4],{templateString:"<div class=\"dijitToolbarSeparator dijitInline\" role=\"presentation\"></div>",buildRendering:function(){
-this.inherited(arguments);
-_2.setSelectable(this.domNode,false);
-},isFocusable:function(){
-return false;
-}});
-});
+define("dijit/ToolbarSeparator",["dojo/_base/declare","dojo/dom","./_Widget","./_TemplatedMixin"],function(a,b,c,d){return a("dijit.ToolbarSeparator",[c,d],{templateString:'<div class="dijitToolbarSeparator dijitInline" role="presentation"></div>',buildRendering:function(){this.inherited(arguments);b.setSelectable(this.domNode,!1)},isFocusable:function(){return!1}})});

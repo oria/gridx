@@ -1,11 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	iframeEditTitle: 'مساحة التحرير',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
-	iframeFocusTitle: 'اطار مساحة التحرير'  // secondary title for editable IFRAME when focus is on outer container
-									 //  to let user know that focus has moved out of editing area and to the
-									 //  parent element of the editing area
-})
-//end v1.x content
-);
+define("dijit/form/nls/ar/Textarea",{iframeEditTitle:"\u0645\u0633\u0627\u062d\u0629 \u0627\u0644\u062a\u062d\u0631\u064a\u0631",iframeFocusTitle:"\u0627\u0637\u0627\u0631 \u0645\u0633\u0627\u062d\u0629 \u0627\u0644\u062a\u062d\u0631\u064a\u0631"});

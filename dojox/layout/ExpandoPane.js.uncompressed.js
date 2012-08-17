@@ -1,27 +1,31 @@
-//>>built
 require({cache:{
-'url:dojox/layout/resources/ExpandoPane.html':"<div class=\"dojoxExpandoPane\">\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"onclick:toggle\"><span class=\"a11yNode\">X</span></div>\t\t\t\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\n\t</div>\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\n\t</div>\n</div>\n"}});
-define("dojox/layout/ExpandoPane", ["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/array", 
-	"dojo/_base/connect","dojo/_base/event","dojo/_base/fx","dojo/dom-style",
-	"dojo/dom-class","dojo/dom-geometry","dojo/text!./resources/ExpandoPane.html",
-	"dijit/layout/ContentPane","dijit/_TemplatedMixin","dijit/_Contained","dijit/_Container"], 
-  function(kernel,lang,declare,arrayUtil,connectUtil,eventUtil,baseFx,domStyle,domClass,domGeom,
+'url:dojox/layout/resources/ExpandoPane.html':"<div class=\"dojoxExpandoPane\">\r\n\t<div dojoAttachPoint=\"titleWrapper\" class=\"dojoxExpandoTitle\">\r\n\t\t<div class=\"dojoxExpandoIcon\" dojoAttachPoint=\"iconNode\" dojoAttachEvent=\"ondijitclick:toggle\"><span class=\"a11yNode\">X</span></div>\r\n\t\t<span class=\"dojoxExpandoTitleNode\" dojoAttachPoint=\"titleNode\">${title}</span>\r\n\t</div>\r\n\t<div class=\"dojoxExpandoWrapper\" dojoAttachPoint=\"cwrapper\" dojoAttachEvent=\"ondblclick:_trap\">\r\n\t\t<div class=\"dojoxExpandoContent\" dojoAttachPoint=\"containerNode\"></div>\r\n\t</div>\r\n</div>\r\n"}});
+define("dojox/layout/ExpandoPane", [
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array", 
+	"dojo/_base/connect",
+	"dojo/_base/event",
+	"dojo/_base/fx",
+	"dojo/dom-style",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
+	"dojo/text!./resources/ExpandoPane.html",
+	"dijit/layout/ContentPane",
+	"dijit/_TemplatedMixin",
+	"dijit/_Contained",
+	"dijit/_Container"
+], function(kernel,lang,declare,arrayUtil,connectUtil,eventUtil,baseFx,domStyle,domClass,domGeom,
 		template,ContentPane,TemplatedMixin,Contained,Container) {
-/*=====
-var ContentPane = dijit.layout.ContentPane;
-var TemplatedMixin = dijit._TemplatedMixin;
-var Contained = dijit._Contained;
-var Container = dijit._Container;
-  =====*/
 kernel.experimental("dojox.layout.ExpandoPane"); // just to show it can be done?
 
 return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contained, Container],{
-	// summary: An experimental collapsing-pane for dijit.layout.BorderContainer
-	//
+	// summary:
+	//		An experimental collapsing-pane for dijit.layout.BorderContainer
 	// description:
 	//		Works just like a ContentPane inside of a borderContainer. Will expand/collapse on
 	//		command, and supports having Layout Children as direct descendants
-	//
 
 	//maxHeight: "",
 	//maxWidth: "",
@@ -58,6 +62,11 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	//		If false, a double-click will cause the preview to popup
 	previewOnDblClick: false,
 
+	// tabIndex: String
+	//		Order fields are traversed when user hits the tab key
+	tabIndex: "0",
+	_setTabIndexAttr: "iconNode",
+
 	baseClass: "dijitExpandoPane",
 
 	postCreate: function(){
@@ -79,6 +88,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 				case "trailing" :
 				case "right" :
 					thisClass = rtl ? "Left" : "Right";
+					this._needsPosition = "left";
 					break;
 				case "leading" :
 				case "left" :
@@ -88,6 +98,7 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 					thisClass = "Top";
 					break;
 				case "bottom" :
+					this._needsPosition = "top";
 					thisClass = "Bottom";
 					break;
 			}
@@ -101,6 +112,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		});
 		
 		this.connect(this.domNode, "ondblclick", this.previewOnDblClick ? "preview" : "toggle");
+		
+		this.iconNode.setAttribute("aria-controls", this.id);
 		
 		if(this.previewOnDblClick){
 			this.connect(this.getParent(), "_layoutChildren", lang.hitch(this, function(){
@@ -137,13 +150,14 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			this._hideAnim.gotoPercent(99,true);
 		}
 		
+		this.domNode.setAttribute("aria-expanded", this._showing);
 		this._hasSizes = true;
 	},
 	
 	_afterResize: function(e){
 		var tmp = this._currentSize;						// the old size
 		this._currentSize = domGeom.getMarginBox(this.domNode);	// the new size
-		var n = this._currentSize[(this._isHorizontal ? "h" : "w")]
+		var n = this._currentSize[(this._isHorizontal ? "h" : "w")];
 		if(n > this._titleHeight){
 			if(!this._showing){
 				this._showing = !this._showing;
@@ -161,7 +175,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_setupAnims: function(){
-		// summary: Create the show and hide animations
+		// summary:
+		//		Create the show and hide animations
 		arrayUtil.forEach(this._animConnects, connectUtil.disconnect);
 		
 		var _common = {
@@ -170,16 +185,34 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			},
 			isHorizontal = this._isHorizontal,
 			showProps = {},
+			showSize = this._showSize,
+			hideSize = this._closedSize,
 			hideProps = {},
-			dimension = isHorizontal ? "height" : "width"
+			dimension = isHorizontal ? "height" : "width",
+			also = this._needsPosition
 		;
 
 		showProps[dimension] = {
-			end: this._showSize
+			end: showSize
 		};
 		hideProps[dimension] = {
-			end: this._closedSize
+			end: hideSize
 		};
+		
+		if(also){
+			showProps[also] = {
+				end: function(n){
+					var c = parseInt(n.style[also], 10);
+					return c - showSize + hideSize; 
+				}
+			}
+			hideProps[also] = {
+				end: function(n){
+					var c = parseInt(n.style[also], 10);
+					return c + showSize - hideSize;
+				}
+			}
+		}
 		
 		this._showAnim = baseFx.animateProperty(lang.mixin(_common,{
 			easing:this.easeIn,
@@ -197,7 +230,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	preview: function(){
-		// summary: Expand this pane in preview mode (does not affect surrounding layout)
+		// summary:
+		//		Expand this pane in preview mode (does not affect surrounding layout)
 
 		if(!this._showing){
 			this._isonlypreview = !this._isonlypreview;
@@ -206,7 +240,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 
 	toggle: function(){
-		// summary: Toggle this pane's visibility
+		// summary:
+		//		Toggle this pane's visibility
 		if(this._showing){
 			this._hideWrapper();
 			this._showAnim && this._showAnim.stop();
@@ -216,10 +251,12 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 			this._showAnim.play();
 		}
 		this._showing = !this._showing;
+		this.domNode.setAttribute("aria-expanded", this._showing);
 	},
 	
 	_hideWrapper: function(){
-		// summary: Set the Expando state to "closed"
+		// summary:
+		//		Set the Expando state to "closed"
 		domClass.add(this.domNode, "dojoxExpandoClosed");
 		
 		domStyle.set(this.cwrapper,{
@@ -230,7 +267,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_showEnd: function(){
-		// summary: Common animation onEnd code - "unclose"
+		// summary:
+		//		Common animation onEnd code - "unclose"
 		domStyle.set(this.cwrapper, {
 			opacity: 0,
 			visibility:"visible"
@@ -248,7 +286,8 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 	},
 	
 	_hideEnd: function(){
-		// summary: Callback for the hide animation - "close"
+		// summary:
+		//		Callback for the hide animation - "close"
 
 		// every time we hide, reset the "only preview" state
 		if(!this._isonlypreview){
@@ -260,9 +299,9 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		
 	},
 	
-	resize: function(/* Object? */newSize){
+	resize: function(/*Object?*/newSize){
 		// summary:
-		//		we aren't a layout widget, but need to act like one:
+		//		we aren't a layout widget, but need to act like one.
 		// newSize: Object
 		//		The size object to resize to
 
@@ -281,10 +320,12 @@ return declare("dojox.layout.ExpandoPane", [ContentPane, TemplatedMixin, Contain
 		}
 
 		this._layoutChildren();
+		this._setupAnims();
 	},
 	
-	_trap: function(e){
-		// summary: Trap stray events
+	_trap: function(/*Event*/ e){
+		// summary:
+		//		Trap stray events
 		eventUtil.stop(e);
 	}
 });

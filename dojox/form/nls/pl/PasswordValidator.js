@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-        nomatchMessage: "Hasła nie są zgodne.",
-		badPasswordMessage: "Niepoprawne hasło."
-})
-
-//end v1.x content
-);
+define("dojox/form/nls/pl/PasswordValidator",{nomatchMessage:"Has\u0142a nie s\u0105 zgodne.",badPasswordMessage:"Niepoprawne has\u0142o."});

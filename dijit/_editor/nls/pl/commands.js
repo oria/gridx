@@ -1,54 +1,5 @@
 //>>built
-define(
-//begin v1.x content
-({
-	'bold': 'Pogrubienie',
-	'copy': 'Kopiuj',
-	'cut': 'Wytnij',
-	'delete': 'Usuń',
-	'indent': 'Wcięcie',
-	'insertHorizontalRule': 'Linia pozioma',
-	'insertOrderedList': 'Lista numerowana',
-	'insertUnorderedList': 'Lista wypunktowana',
-	'italic': 'Kursywa',
-	'justifyCenter': 'Wyrównaj do środka',
-	'justifyFull': 'Wyrównaj do lewej i prawej',
-	'justifyLeft': 'Wyrównaj do lewej',
-	'justifyRight': 'Wyrównaj do prawej',
-	'outdent': 'Usuń wcięcie',
-	'paste': 'Wklej',
-	'redo': 'Ponów',
-	'removeFormat': 'Usuń formatowanie',
-	'selectAll': 'Wybierz wszystko',
-	'strikethrough': 'Przekreślenie',
-	'subscript': 'Indeks dolny',
-	'superscript': 'Indeks górny',
-	'underline': 'Podkreślenie',
-	'undo': 'Cofnij',
-	'unlink': 'Usuń odsyłacz',
-	'createLink': 'Utwórz odsyłacz',
-	'toggleDir': 'Przełącz kierunek',
-	'insertImage': 'Wstaw obraz',
-	'insertTable': 'Wstaw/edytuj tabelę',
-	'toggleTableBorder': 'Przełącz ramkę tabeli',
-	'deleteTable': 'Usuń tabelę',
-	'tableProp': 'Właściwość tabeli',
-	'htmlToggle': 'Kod źródłowy HTML',
-	'foreColor': 'Kolor pierwszego planu',
-	'hiliteColor': 'Kolor tła',
-	'plainFormatBlock': 'Styl akapitu',
-	'formatBlock': 'Styl akapitu',
-	'fontSize': 'Wielkość czcionki',
-	'fontName': 'Nazwa czcionki',
-	'tabIndent': 'Wcięcie o tabulator',
-	"fullScreen": "Przełącz pełny ekran",
-	"viewSource": "Wyświetl kod źródłowy HTML",
-	"print": "Drukuj",
-	"newPage": "Nowa strona",
-	/* Error messages */
-	'systemShortcut': 'Działanie ${0} jest dostępne w tej przeglądarce wyłącznie przy użyciu skrótu klawiaturowego. Należy użyć klawiszy ${1}.',
-	'ctrlKey':'Ctrl+${0}'
-})
-
-//end v1.x content
-);
+define("dijit/_editor/nls/pl/commands",{bold:"Pogrubienie",copy:"Kopiuj",cut:"Wytnij","delete":"Usu\u0144",indent:"Wci\u0119cie",insertHorizontalRule:"Linijka pozioma",insertOrderedList:"Lista numerowana",insertUnorderedList:"Lista wypunktowana",italic:"Kursywa",justifyCenter:"Wy\u015brodkowanie",justifyFull:"Wyr\u00f3wnaj do lewej i prawej",justifyLeft:"Wyr\u00f3wnanie do lewej",justifyRight:"Wyr\u00f3wnanie do prawej",outdent:"Usuwanie wci\u0119cia",paste:"Wklej",redo:"Pon\u00f3w",removeFormat:"Usu\u0144 formatowanie",
+selectAll:"Zaznacz wszystko",strikethrough:"Przekre\u015blenie",subscript:"Indeks dolny",superscript:"Indeks g\u00f3rny",underline:"Podkre\u015blenie",undo:"Cofnij",unlink:"Usu\u0144 odsy\u0142acz",createLink:"Utw\u00f3rz odsy\u0142acz",toggleDir:"Prze\u0142\u0105cz kierunek",insertImage:"Wstaw obraz",insertTable:"Wstaw/edytuj tabel\u0119",toggleTableBorder:"Prze\u0142\u0105cz ramk\u0119 tabeli",deleteTable:"Usu\u0144 tabel\u0119",tableProp:"W\u0142a\u015bciwo\u015b\u0107 tabeli",htmlToggle:"\u0179r\u00f3d\u0142o HTML",
+foreColor:"Kolor pierwszego planu",hiliteColor:"Kolor t\u0142a",plainFormatBlock:"Styl akapitu",formatBlock:"Styl akapitu",fontSize:"Rozmiar czcionki",fontName:"Nazwa czcionki",tabIndent:"Wci\u0119cie o tabulator",fullScreen:"Prze\u0142\u0105cz pe\u0142ny ekran",viewSource:"Wy\u015bwietl kod \u017ar\u00f3d\u0142owy HTML",print:"Drukuj",newPage:"Nowa strona",systemShortcut:"Dzia\u0142anie ${0} jest dost\u0119pne w tej przegl\u0105darce wy\u0142\u0105cznie przy u\u017cyciu skr\u00f3tu klawiaturowego. Nale\u017cy u\u017cy\u0107 klawiszy ${1}.",
+ctrlKey:"Ctrl+${0}",appleKey:"\u2318${0}"});

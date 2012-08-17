@@ -1,4 +1,3 @@
-//>>built
 define("dijit/_editor/plugins/ViewSource", [
 	"dojo/_base/array", // array.forEach
 	"dojo/_base/declare", // declare
@@ -8,10 +7,10 @@ define("dijit/_editor/plugins/ViewSource", [
 	"dojo/dom-style", // domStyle.set
 	"dojo/_base/event", // event.stop
 	"dojo/i18n", // i18n.getLocalization
-	"dojo/keys",	//  keys.F12
+	"dojo/keys",	// keys.F12
 	"dojo/_base/lang", // lang.hitch
 	"dojo/on", // on()
-	"dojo/_base/sniff", // has("ie") has("webkit")
+	"dojo/sniff", // has("ie") has("webkit")
 	"dojo/_base/window", // win.body win.global
 	"dojo/window", // winUtils.getBox
 	"../../focus",	// focus.focus()
@@ -19,18 +18,13 @@ define("dijit/_editor/plugins/ViewSource", [
 	"../../form/ToggleButton",
 	"../..",	// dijit._scopeName
 	"../../registry", // registry.getEnclosingWidget()
+	"dojo/aspect", // Aspect commands for adice
 	"dojo/i18n!../nls/commands"
 ], function(array, declare, domAttr, domConstruct, domGeometry, domStyle, event, i18n, keys, lang, on, has, win,
-	winUtils, focus, _Plugin, ToggleButton, dijit, registry){
-
-/*=====
-	var _Plugin = dijit._editor._Plugin;
-=====*/
+	winUtils, focus, _Plugin, ToggleButton, dijit, registry, aspect){
 
 // module:
 //		dijit/_editor/plugins/ViewSource
-// summary:
-//		This plugin provides a simple view source capability.
 
 
 var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
@@ -86,6 +80,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 			editor = this.editor;
 		this.button = new ToggleButton({
 			label: strings["viewSource"],
+			ownerDocument: editor.ownerDocument,
 			dir: editor.dir,
 			lang: editor.lang,
 			showLabel: false,
@@ -104,14 +99,14 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 					position: "absolute",
 					top: "-1000px"
 				}
-			}, win.body());
+			}, editor.ownerDocumentBody);
 		}
 		// Make sure readonly mode doesn't make the wrong cursor appear over the button.
 		this.button.set("readOnly", false);
 	},
 
 
-	setEditor: function(/*dijit.Editor*/ editor){
+	setEditor: function(/*dijit/Editor*/ editor){
 		// summary:
 		//		Tell the plugin which Editor it is associated with.
 		// editor: Object
@@ -165,7 +160,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 				ed.set("value", html);
 				array.forEach(edPlugins, function(p){
 					// Turn off any plugins not controlled by queryCommandenabled.
-					if(!(p instanceof ViewSource)){
+					if(p && !(p instanceof ViewSource) && p.isInstanceOf(_Plugin)){
 						p.set("disabled", true)
 					}
 				});
@@ -193,7 +188,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 					// function to handle resize events.
 					// Will check current VP and only resize if
 					// different.
-					var vp = winUtils.getBox();
+					var vp = winUtils.getBox(ed.ownerDocument);
 
 					if("_prevW" in this && "_prevH" in this){
 						// No actual size change, ignore.
@@ -232,6 +227,12 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 					txt = this._filter(txt);
 					return txt;
 				});
+				
+				this._setListener = aspect.after(this.editor, "setValue", lang.hitch(this, function(htmlTxt){
+					htmlTxt = htmlTxt || "";
+					htmlTxt = this._filter(htmlTxt);
+					this.sourceArea.value = htmlTxt;
+				}), true);
 			}else{
 				// First check that we were in source view before doing anything.
 				// corner case for being called with a value of false and we hadn't
@@ -239,6 +240,11 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 				if(!ed._sourceQueryCommandEnabled){
 					return;
 				}
+				
+				// Remove the set listener.
+				this._setListener.remove();
+				delete this._setListener;
+				
 				this._resizeHandle.remove();
 				delete this._resizeHandle;
 
@@ -259,7 +265,9 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 
 				array.forEach(edPlugins, function(p){
 					// Turn back on any plugins we turned off.
-					p.set("disabled", false);
+					if(p && p.isInstanceOf(_Plugin)){
+						p.set("disabled", false);
+					}
 				});
 
 				domStyle.set(this.sourceArea, "display", "none");
@@ -310,14 +318,14 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 		var extents = domGeometry.getPadBorderExtents(ed.domNode);
 		var edb = {
 			w: eb.w - extents.w,
-			h: eb.h - (tbH + extents.h + + fH)
+			h: eb.h - (tbH + extents.h + fH)
 		};
 
 		// Fullscreen gets odd, so we need to check for the FS plugin and
 		// adapt.
 		if(this._fsPlugin && this._fsPlugin.isFullscreen){
 			//Okay, probably in FS, adjust.
-			var vp = winUtils.getBox();
+			var vp = winUtils.getBox(ed.ownerDocument);
 			edb.w = (vp.w - extents.w);
 			edb.h = (vp.h - (tbH + extents.h + fH));
 		}
@@ -533,7 +541,7 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 		//		Over-ride to remove the node used to correct for IE's
 		//		zoom bug.
 		if(this._ieFixNode){
-			win.body().removeChild(this._ieFixNode);
+			domConstruct.destroy(this._ieFixNode);
 		}
 		if(this._resizer){
 			clearTimeout(this._resizer);
@@ -542,6 +550,10 @@ var ViewSource = declare("dijit._editor.plugins.ViewSource",_Plugin, {
 		if(this._resizeHandle){
 			this._resizeHandle.remove();
 			delete this._resizeHandle;
+		}
+		if(this._setListener){
+			this._setListener.remove();
+			delete this._setListener;
 		}
 		this.inherited(arguments);
 	}

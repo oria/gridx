@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/widget/BarGauge", ["dijit","dojo","dojox","dojo/require!dojox/widget/gauge/_Gauge,dojox/gauges/BarGauge"], function(dijit,dojo,dojox){
 // backward compatibility for dojox.widget.BarGauge

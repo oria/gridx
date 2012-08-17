@@ -1,12 +1,8 @@
-//>>built
 define("dojox/encoding/compression/splay", [
 	"dojo/_base/lang",	// dojo.extend
 	"../bits"
 ], function(lang, bits) {
 	var compression = lang.getObject("dojox.encoding.compression", true);
-	/*=====
-		compression = dojox.encoding.compression;
-	=====*/
 
 	compression.Splay = function(n){
 		this.up = new Array(2 * n + 1);

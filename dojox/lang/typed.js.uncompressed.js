@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/lang/typed", ["dijit","dojo","dojox","dojo/require!dojox/json/schema"], function(dijit,dojo,dojox){
 (function(){
@@ -45,9 +44,10 @@ define("dojox/lang/typed", ["dijit","dojo","dojox","dojo/require!dojox/json/sche
 		}
 	}
 	function validate(instance, schema, property){
-		//	summary:
+		// summary:
 		//		This checks to ensure that the result is valid and will throw an appropriate error message if it is not
-		// result: the result returned from checkPropertyChange or validate
+		// result:
+		//		the result returned from checkPropertyChange or validate
 		if(typeof instance == "function" && schema && !instance.__typedFunction__){
 			instance = validatingFunction(instance, identityFunc(schema));
 		}

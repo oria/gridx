@@ -1,53 +1,5 @@
 //>>built
-define(
-//begin v1.x content
-({
-	'bold': '粗体',
-	'copy': '复制',
-	'cut': '剪切',
-	'delete': '删除',
-	'indent': '增加缩进',
-	'insertHorizontalRule': '水平线',
-	'insertOrderedList': '编号列表',
-	'insertUnorderedList': '符号列表',
-	'italic': '斜体',
-	'justifyCenter': '居中',
-	'justifyFull': '对齐',
-	'justifyLeft': '左对齐',
-	'justifyRight': '右对齐',
-	'outdent': '减少缩进',
-	'paste': '粘贴',
-	'redo': '重做',
-	'removeFormat': '除去格式',
-	'selectAll': '全选',
-	'strikethrough': '删除线',
-	'subscript': '下标',
-	'superscript': '上标',
-	'underline': '下划线',
-	'undo': '撤销',
-	'unlink': '除去链接',
-	'createLink': '创建链接',
-	'toggleDir': '固定方向',
-	'insertImage': '插入图像',
-	'insertTable': '插入/编辑表',
-	'toggleTableBorder': '切换表边框',
-	'deleteTable': '删除表',
-	'tableProp': '表属性',
-	'htmlToggle': 'HTML 源代码',
-	'foreColor': '前景色',
-	'hiliteColor': '背景色',
-	'plainFormatBlock': '段落样式',
-	'formatBlock': '段落样式',
-	'fontSize': '字体大小',
-	'fontName': '字体名称',
-	'tabIndent': '制表符缩进',
-	"fullScreen": "切换全屏幕",
-	"viewSource": "查看 HTML 源代码",
-	"print": "打印",
-	"newPage": "新建页面",
-	/* Error messages */
-	'systemShortcut': '只能在浏览器中通过键盘快捷方式执行“${0}”操作。使用 ${1}。'
-})
-
-//end v1.x content
-);
+define("dijit/_editor/nls/zh/commands",{bold:"\u7c97\u4f53",copy:"\u590d\u5236",cut:"\u526a\u5207","delete":"\u5220\u9664",indent:"\u7f29\u8fdb",insertHorizontalRule:"\u6c34\u5e73\u7ebf",insertOrderedList:"\u7f16\u53f7\u5217\u8868",insertUnorderedList:"\u7b26\u53f7\u5217\u8868",italic:"\u659c\u4f53",justifyCenter:"\u5c45\u4e2d",justifyFull:"\u8c03\u6574",justifyLeft:"\u5de6\u5bf9\u9f50",justifyRight:"\u53f3\u5bf9\u9f50",outdent:"\u51f8\u51fa",paste:"\u7c98\u8d34",redo:"\u91cd\u505a",removeFormat:"\u9664\u53bb\u683c\u5f0f",
+selectAll:"\u5168\u9009",strikethrough:"\u5220\u9664\u7ebf",subscript:"\u4e0b\u6807",superscript:"\u4e0a\u6807",underline:"\u4e0b\u5212\u7ebf",undo:"\u64a4\u9500",unlink:"\u9664\u53bb\u94fe\u63a5",createLink:"\u521b\u5efa\u94fe\u63a5",toggleDir:"\u5207\u6362\u65b9\u5411",insertImage:"\u63d2\u5165\u56fe\u50cf",insertTable:"\u63d2\u5165/\u7f16\u8f91\u8868",toggleTableBorder:"\u5207\u6362\u8868\u683c\u8fb9\u6846",deleteTable:"\u5220\u9664\u8868\u683c",tableProp:"\u8868\u683c\u5c5e\u6027",htmlToggle:"HTML \u6e90",
+foreColor:"\u524d\u666f\u989c\u8272",hiliteColor:"\u80cc\u666f\u989c\u8272",plainFormatBlock:"\u6bb5\u843d\u6837\u5f0f",formatBlock:"\u6bb5\u843d\u6837\u5f0f",fontSize:"\u5b57\u4f53\u5927\u5c0f",fontName:"\u5b57\u4f53\u540d\u79f0",tabIndent:"\u8df3\u683c\u7f29\u8fdb",fullScreen:"\u5207\u6362\u5168\u5c4f\u5e55",viewSource:"\u67e5\u770b HTML \u6e90",print:"\u6253\u5370",newPage:"\u65b0\u5efa\u9875\u9762",systemShortcut:"\u53ea\u80fd\u5728\u6d4f\u89c8\u5668\u4e2d\u901a\u8fc7\u952e\u76d8\u5feb\u6377\u65b9\u5f0f\u6267\u884c\u201c${0}\u201d\u64cd\u4f5c\u3002\u4f7f\u7528 ${1}\u3002",
+ctrlKey:"ctrl+${0}",appleKey:"\u2318${0}"});

@@ -1,21 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-{
-	"group": ".",
-	"percentSign": "%",
-	"exponential": "e",
-	"percentFormat": "#,##0%",
-	"list": ",",
-	"infinity": "∞",
-	"patternDigit": "#",
-	"minusSign": "-",
-	"decimal": ",",
-	"nan": "NaN",
-	"nativeZeroDigit": "0",
-	"perMille": "‰",
-	"currencyFormat": "#,##0.00 ¤",
-	"plusSign": "+"
-}
-//end v1.x content
-);
+define("dojo/cldr/nls/el/number",{decimal:",",group:".",list:",",percentSign:"%",plusSign:"+",minusSign:"-",exponential:"e",perMille:"\u2030",infinity:"\u221e",nan:"NaN",decimalFormat:"#,##0.###","decimalFormat-short":"000\u00a0\u03c4\u03c1\u03b9\u03c2",percentFormat:"#,##0%",currencyFormat:"#,##0.00\u00a0\u00a4"});

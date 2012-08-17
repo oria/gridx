@@ -1,25 +1,3 @@
 //>>built
-define(["dijit","dojo","dojox"],function(_1,_2,_3){
-_2.provide("dojox.widget.rotator.Slide");
-(function(d){
-var _4=0,_5=1,UP=2,_6=3;
-function _7(_8,_9){
-var _a=_9.node=_9.next.node,r=_9.rotatorBox,m=_8%2,s=(m?r.w:r.h)*(_8<2?-1:1);
-d.style(_a,{display:"",zIndex:(d.style(_9.current.node,"zIndex")||1)+1});
-if(!_9.properties){
-_9.properties={};
-}
-_9.properties[m?"left":"top"]={start:s,end:0};
-return d.animateProperty(_9);
-};
-d.mixin(_3.widget.rotator,{slideDown:function(_b){
-return _7(_4,_b);
-},slideRight:function(_c){
-return _7(_5,_c);
-},slideUp:function(_d){
-return _7(UP,_d);
-},slideLeft:function(_e){
-return _7(_6,_e);
-}});
-})(_2);
-});
+define("dojox/widget/rotator/Slide",["dojo/_base/lang","dojo/_base/fx","dojo/dom-style"],function(d,h,f){function c(a,b){var c=b.node=b.next.node,e=b.rotatorBox,d=a%2,e=(d?e.w:e.h)*(2>a?-1:1);f.set(c,{display:"",zIndex:(f.get(b.current.node,"zIndex")||1)+1});if(!b.properties)b.properties={};b.properties[d?"left":"top"]={start:e,end:0};return h.animateProperty(b)}var g={slideDown:function(a){return c(0,a)},slideRight:function(a){return c(1,a)},slideUp:function(a){return c(2,a)},slideLeft:function(a){return c(3,
+a)}};d.mixin(d.getObject("dojox.widget.rotator"),g);return g});

@@ -1,20 +1,3 @@
 //>>built
-define("dojox/editor/plugins/ToolbarLineBreak",["dojo","dijit","dojox","dijit/_Widget","dijit/_TemplatedMixin","dijit/_editor/_Plugin","dojo/_base/connect","dojo/_base/declare"],function(_1,_2,_3){
-_1.declare("dojox.editor.plugins.ToolbarLineBreak",[_2._Widget,_2._TemplatedMixin],{templateString:"<span class='dijit dijitReset'><br></span>",postCreate:function(){
-_1.setSelectable(this.domNode,false);
-},isFocusable:function(){
-return false;
-}});
-_1.subscribe(_2._scopeName+".Editor.getPlugin",null,function(o){
-if(o.plugin){
-return;
-}
-var _4=o.args.name.toLowerCase();
-if(_4==="||"||_4==="toolbarlinebreak"){
-o.plugin=new _2._editor._Plugin({button:new _3.editor.plugins.ToolbarLineBreak(),setEditor:function(_5){
-this.editor=_5;
-}});
-}
-});
-return _3.editor.plugins.ToolbarLineBreak;
-});
+define("dojox/editor/plugins/ToolbarLineBreak","dojo,dijit,dojox,dijit/_Widget,dijit/_TemplatedMixin,dijit/_editor/_Plugin,dojo/_base/declare".split(","),function(a,d,i,e,f,g,h){var c=h("dojox.editor.plugins.ToolbarLineBreak",[e,f],{templateString:"<span class='dijit dijitReset'><br></span>",postCreate:function(){a.setSelectable(this.domNode,!1)},isFocusable:function(){return!1}});a.subscribe(d._scopeName+".Editor.getPlugin",null,function(b){if(!b.plugin){var a=b.args.name.toLowerCase();if("||"===
+a||"toolbarlinebreak"===a)b.plugin=new g({button:new c,setEditor:function(a){this.editor=a}})}});return c});

@@ -1,28 +1,3 @@
 //>>built
-define("dijit/_editor/plugins/ToggleDir",["dojo/_base/declare","dojo/dom-style","dojo/_base/kernel","dojo/_base/lang","../_Plugin","../../form/ToggleButton"],function(_1,_2,_3,_4,_5,_6){
-_3.experimental("dijit._editor.plugins.ToggleDir");
-var _7=_1("dijit._editor.plugins.ToggleDir",_5,{useDefaultCommand:false,command:"toggleDir",buttonClass:_6,_initButton:function(){
-this.inherited(arguments);
-this.editor.onLoadDeferred.addCallback(_4.hitch(this,function(){
-var _8=this.editor.editorObject.contentWindow.document.documentElement;
-_8=_8.getElementsByTagName("body")[0];
-var _9=_2.getComputedStyle(_8).direction=="ltr";
-this.button.set("checked",!_9);
-this.connect(this.button,"onChange","_setRtl");
-}));
-},updateState:function(){
-this.button.set("disabled",this.get("disabled"));
-},_setRtl:function(_a){
-var _b="ltr";
-if(_a){
-_b="rtl";
-}
-var _c=this.editor.editorObject.contentWindow.document.documentElement;
-_c=_c.getElementsByTagName("body")[0];
-_c.dir=_b;
-}});
-_5.registry["toggleDir"]=function(){
-return new _7({command:"toggleDir"});
-};
-return _7;
-});
+define("dijit/_editor/plugins/ToggleDir","dojo/_base/declare,dojo/dom-style,dojo/_base/kernel,dojo/_base/lang,../_Plugin,../../form/ToggleButton".split(","),function(d,e,f,g,b,h){f.experimental("dijit._editor.plugins.ToggleDir");var c=d("dijit._editor.plugins.ToggleDir",b,{useDefaultCommand:!1,command:"toggleDir",buttonClass:h,_initButton:function(){this.inherited(arguments);this.editor.onLoadDeferred.then(g.hitch(this,function(){var a=this.editor.editorObject.contentWindow.document.documentElement,
+a=a.getElementsByTagName("body")[0];this.button.set("checked","ltr"!=e.getComputedStyle(a).direction);this.connect(this.button,"onChange","_setRtl")}))},updateState:function(){this.button.set("disabled",this.get("disabled"))},_setRtl:function(a){var b="ltr";a&&(b="rtl");a=this.editor.editorObject.contentWindow.document.documentElement;a=a.getElementsByTagName("body")[0];a.dir=b}});b.registry.toggleDir=function(){return new c({command:"toggleDir"})};return c});

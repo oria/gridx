@@ -1,19 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"saveLabel": "Salvare",
-	"saveSettingLabelOn": "Setare interval auto-salvare...",
-	"saveSettingLabelOff": "Oprire auto-salvare",
-	"saveSettingdialogTitle": "Auto-salvare",
-	"saveSettingdialogDescription": "Specificare interval auto-salvare",
-	"saveSettingdialogParamName": "Interval auto-salvare",
-	"saveSettingdialogParamLabel": "min",
-	"saveSettingdialogButtonOk": "Setare interval",
-	"saveSettingdialogButtonCancel": "Anulare",
-	"saveMessageSuccess": "Salvat la ${0}",
-	"saveMessageFail": "A eşuat să salveze la${0}"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ro/AutoSave",{saveLabel:"Salvare",saveSettingLabelOn:"Setare interval de salvare automat\u0103...",saveSettingLabelOff:"Dezactivare salvare automat\u0103",saveSettingdialogTitle:"Salvare automat\u0103",saveSettingdialogDescription:"Specifica\u0163i intervalul de salvare automat\u0103",saveSettingdialogParamName:"Interval salvare automat\u0103",saveSettingdialogParamLabel:"min",saveSettingdialogButtonOk:"Setare interval",saveSettingdialogButtonCancel:"Anulare",saveMessageSuccess:"Salvat la ${0}",
+saveMessageFail:"A e\u015fuat salvarea la ${0}"});

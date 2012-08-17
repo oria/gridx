@@ -1,14 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertAnchor: "Vstavi sidro",
-	title: "Lastnosti sidra",
-	anchor: "Ime:",
-	text: "Opis:",
-	set: "Nastavi",
-	cancel: "Prekliči"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/sl/InsertAnchor",{insertAnchor:"Vstavi sidro",title:"Lastnosti sidra",anchor:"Ime:",text:"Opis:",set:"Nastavi",cancel:"Prekli\u010di"});

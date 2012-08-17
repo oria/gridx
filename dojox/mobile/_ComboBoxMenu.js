@@ -1,30 +1,4 @@
 //>>built
-define("dojox/mobile/_ComboBoxMenu",["dojo/_base/kernel","dojo/_base/declare","dojo/dom-class","dojo/dom-construct","dijit/form/_ComboBoxMenuMixin","dijit/_WidgetBase","dojox/mobile/_ListTouchMixin","./scrollable"],function(_1,_2,_3,_4,_5,_6,_7,_8){
-return _2("dojox.mobile._ComboBoxMenu",[_6,_7,_5],{baseClass:"mblComboBoxMenu",bgIframe:true,buildRendering:function(){
-this.domNode=this.focusNode=_4.create("div",{"class":"mblReset"});
-this.containerNode=_4.create("div",{style:{position:"absolute",top:0,left:0}},this.domNode);
-this.previousButton=_4.create("div",{"class":"mblReset mblComboBoxMenuItem mblComboBoxMenuPreviousButton",role:"option"},this.containerNode);
-this.nextButton=_4.create("div",{"class":"mblReset mblComboBoxMenuItem mblComboBoxMenuNextButton",role:"option"},this.containerNode);
-this.inherited(arguments);
-},_createMenuItem:function(){
-return _4.create("div",{"class":"mblReset mblComboBoxMenuItem"+(this.isLeftToRight()?"":" mblComboBoxMenuItemRtl"),role:"option"});
-},onSelect:function(_9){
-_3.add(_9,"mblComboBoxMenuItemSelected");
-},onDeselect:function(_a){
-_3.remove(_a,"mblComboBoxMenuItemSelected");
-},onOpen:function(){
-this.scrollable.init({domNode:this.domNode,containerNode:this.containerNode});
-this.scrollable.scrollTo({x:0,y:0});
-},onClose:function(){
-this.scrollable.cleanup();
-},destroyRendering:function(){
-this.bgIframe=false;
-this.inherited(arguments);
-},postCreate:function(){
-this.inherited(arguments);
-this.scrollable=new _8(_1,dojox);
-this.scrollable.resize=function(){
-};
-this.scrollable.androidWorkaroud=false;
-}});
-});
+define("dojox/mobile/_ComboBoxMenu","dojo/_base/kernel,dojo/_base/declare,dojo/dom-class,dojo/dom-construct,dijit/form/_ComboBoxMenuMixin,dijit/_WidgetBase,./_ListTouchMixin,./scrollable".split(","),function(h,c,b,a,d,e,f,g){return c("dojox.mobile._ComboBoxMenu",[e,f,d],{baseClass:"mblComboBoxMenu",bgIframe:!0,buildRendering:function(){this.domNode=this.focusNode=a.create("div",{"class":"mblReset"});this.containerNode=a.create("div",{style:{position:"absolute",top:0,left:0}},this.domNode);this.previousButton=
+a.create("div",{"class":"mblReset mblComboBoxMenuItem mblComboBoxMenuPreviousButton",role:"option"},this.containerNode);this.nextButton=a.create("div",{"class":"mblReset mblComboBoxMenuItem mblComboBoxMenuNextButton",role:"option"},this.containerNode);this.inherited(arguments)},_createMenuItem:function(){return a.create("div",{"class":"mblReset mblComboBoxMenuItem"+(this.isLeftToRight()?"":" mblComboBoxMenuItemRtl"),role:"option"})},onSelect:function(a){b.add(a,"mblComboBoxMenuItemSelected")},onDeselect:function(a){b.remove(a,
+"mblComboBoxMenuItemSelected")},onOpen:function(){this.scrollable.init({domNode:this.domNode,containerNode:this.containerNode});this.scrollable.scrollTo({x:0,y:0})},onClose:function(){this.scrollable.cleanup()},destroyRendering:function(){this.bgIframe=!1;this.inherited(arguments)},postCreate:function(){this.inherited(arguments);this.scrollable=new g;this.scrollable.resize=function(){}}})});

@@ -1,42 +1,4 @@
 //>>built
-define(["dijit","dojo","dojox"],function(_1,_2,_3){
-_2.provide("dojox.drawing.tools.Rect");
-_3.drawing.tools.Rect=_3.drawing.util.oo.declare(_3.drawing.stencil.Rect,function(){
-},{draws:true,onDrag:function(_4){
-var s=_4.start,e=_4;
-var x=s.x<e.x?s.x:e.x,y=s.y<e.y?s.y:e.y,w=s.x<e.x?e.x-s.x:s.x-e.x,h=s.y<e.y?e.y-s.y:s.y-e.y;
-if(this.keys.shift){
-w=h=Math.max(w,h);
-}
-if(this.keys.alt){
-x-=w;
-y-=h;
-w*=2;
-h*=2;
-x=Math.max(x,0);
-y=Math.max(y,0);
-}
-this.setPoints([{x:x,y:y},{x:x+w,y:y},{x:x+w,y:y+h},{x:x,y:y+h}]);
-this.render();
-},onUp:function(_5){
-if(this.created||!this._downOnCanvas){
-return;
-}
-this._downOnCanvas=false;
-if(!this.shape){
-var s=_5.start;
-var e=this.minimumSize*4;
-this.setPoints([{x:s.x,y:s.y},{x:s.x+e,y:s.y},{x:s.x+e,y:s.y+e},{x:s.x,y:s.y+e}]);
-this.render();
-}else{
-var o=this.data;
-if(o.width<this.minimumSize&&o.height<this.minimumSize){
-this.remove(this.shape,this.hit);
-return;
-}
-}
-this.onRender(this);
-}});
-_3.drawing.tools.Rect.setup={name:"dojox.drawing.tools.Rect",tooltip:"<span class=\"drawingTipTitle\">Rectangle Tool</span><br/>"+"<span class=\"drawingTipDesc\">SHIFT - constrain to square</span>",iconClass:"iconRect"};
-_3.drawing.register(_3.drawing.tools.Rect.setup,"tool");
-});
+define("dojox/drawing/tools/Rect",["dojo/_base/lang","../util/oo","../manager/_registry","../stencil/Rect"],function(g,f,h,i){f=f.declare(i,function(){},{draws:!0,onDrag:function(a){var b=a.start,c=b.x<a.x?b.x:a.x,d=b.y<a.y?b.y:a.y,e=b.x<a.x?a.x-b.x:b.x-a.x,a=b.y<a.y?a.y-b.y:b.y-a.y;this.keys.shift&&(e=a=Math.max(e,a));this.keys.alt&&(c-=e,d-=a,e*=2,a*=2,c=Math.max(c,0),d=Math.max(d,0));this.setPoints([{x:c,y:d},{x:c+e,y:d},{x:c+e,y:d+a},{x:c,y:d+a}]);this.render()},onUp:function(a){if(!this.created&&
+this._downOnCanvas){this._downOnCanvas=!1;if(this.shape){if(a=this.data,a.width<this.minimumSize&&a.height<this.minimumSize){this.remove(this.shape,this.hit);return}}else{var a=a.start,b=4*this.minimumSize;this.setPoints([{x:a.x,y:a.y},{x:a.x+b,y:a.y},{x:a.x+b,y:a.y+b},{x:a.x,y:a.y+b}]);this.render()}this.onRender(this)}}});g.setObject("dojox.drawing.tools.Rect",f);f.setup={name:"dojox.drawing.tools.Rect",tooltip:'<span class="drawingTipTitle">Rectangle Tool</span><br/><span class="drawingTipDesc">SHIFT - constrain to square</span>',
+iconClass:"iconRect"};h.register(f.setup,"tool");return f});

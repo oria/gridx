@@ -1,8 +1,1 @@
-
-.mblDomButtonGrayStar {
-	background-image: url(compat/mblDomButtonGrayStar.png);
-	background-repeat: no-repeat;
-}
-.mblDomButtonGrayStar > div {
-	display: none;
-}
+.mblDomButtonGrayStar {background-image: url(compat/mblDomButtonGrayStar.png); background-repeat: no-repeat;}.mblDomButtonGrayStar > div {display: none;}

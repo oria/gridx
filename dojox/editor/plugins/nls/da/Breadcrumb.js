@@ -1,15 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"nodeActions": "${nodeName} - handlinger",
-	"selectContents": "Vælg indhold",
-	"selectElement": "Vælg element",
-	"deleteElement": "Slet element",
-	"deleteContents": "Slet indhold",
-	"moveStart": "Flyt markør til start",
-	"moveEnd": "Flyt markør til slut"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/da/Breadcrumb",{nodeActions:"Handlinger for ${nodeName}",selectContents:"V\u00e6lg indhold",selectElement:"V\u00e6lg element",deleteElement:"Slet element",deleteContents:"Slet indhold",moveStart:"Flyt mark\u00f8r til start",moveEnd:"Flyt mark\u00f8r til slut"});

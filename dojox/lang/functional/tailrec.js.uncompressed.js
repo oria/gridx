@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/lang/functional/tailrec", ["dijit","dojo","dojox","dojo/require!dojox/lang/functional/lambda,dojox/lang/functional/util"], function(dijit,dojo,dojox){
 dojo.provide("dojox.lang.functional.tailrec");
@@ -9,7 +8,7 @@ dojo.require("dojox.lang.functional.util");
 // This module provides recursion combinators:
 //	- a tail recursion combinator.
 
-// Acknoledgements:
+// Acknowledgements:
 //	- recursion combinators are inspired by Manfred von Thun's article
 //		"Recursion Theory and Joy"
 //		(http://www.latrobe.edu.au/philosophy/phimvt/joy/j05cmp.html)

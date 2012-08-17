@@ -1,43 +1,5 @@
 //>>built
-define("dijit/form/MultiSelect",["dojo/_base/array","dojo/_base/declare","dojo/dom-geometry","dojo/query","./_FormValueWidget"],function(_1,_2,_3,_4,_5){
-return _2("dijit.form.MultiSelect",_5,{size:7,templateString:"<select multiple='true' ${!nameAttrSetting} data-dojo-attach-point='containerNode,focusNode' data-dojo-attach-event='onchange: _onChange'></select>",addSelected:function(_6){
-_6.getSelected().forEach(function(n){
-this.containerNode.appendChild(n);
-this.domNode.scrollTop=this.domNode.offsetHeight;
-var _7=_6.domNode.scrollTop;
-_6.domNode.scrollTop=0;
-_6.domNode.scrollTop=_7;
-},this);
-this._set("value",this.get("value"));
-},getSelected:function(){
-return _4("option",this.containerNode).filter(function(n){
-return n.selected;
-});
-},_getValueAttr:function(){
-return _1.map(this.getSelected(),function(n){
-return n.value;
-});
-},multiple:true,_setValueAttr:function(_8,_9){
-_4("option",this.containerNode).forEach(function(n){
-n.selected=(_1.indexOf(_8,n.value)!=-1);
-});
-this.inherited(arguments);
-},invertSelection:function(_a){
-var _b=[];
-_4("option",this.containerNode).forEach(function(n){
-if(!n.selected){
-_b.push(n.value);
-}
-});
-this._setValueAttr(_b,!(_a===false||_a==null));
-},_onChange:function(){
-this._handleOnChange(this.get("value"),true);
-},resize:function(_c){
-if(_c){
-_3.setMarginBox(this.domNode,_c);
-}
-},postCreate:function(){
-this._set("value",this.get("value"));
-this.inherited(arguments);
-}});
-});
+define("dijit/form/MultiSelect",["dojo/_base/array","dojo/_base/declare","dojo/dom-geometry","dojo/query","./_FormValueWidget"],function(d,e,f,c,g){return e("dijit.form.MultiSelect",g,{size:7,templateString:"<select multiple='true' ${!nameAttrSetting} data-dojo-attach-point='containerNode,focusNode' data-dojo-attach-event='onchange: _onChange'></select>",addSelected:function(a){a.getSelected().forEach(function(b){if(this.restoreOriginalText)b.text=this.enforceTextDirWithUcc(this.restoreOriginalText(b),
+b.text);this.containerNode.appendChild(b);this.domNode.scrollTop=this.domNode.offsetHeight;b=a.domNode.scrollTop;a.domNode.scrollTop=0;a.domNode.scrollTop=b},this);this._set("value",this.get("value"))},getSelected:function(){return c("option",this.containerNode).filter(function(a){return a.selected})},_getValueAttr:function(){return d.map(this.getSelected(),function(a){return a.value})},multiple:!0,_setValueAttr:function(a,b){c("option",this.containerNode).forEach(function(b){b.selected=-1!=d.indexOf(a,
+b.value)});this.inherited(arguments)},invertSelection:function(a){var b=[];c("option",this.containerNode).forEach(function(a){a.selected||b.push(a.value)});this._setValueAttr(b,!(!1===a||null==a))},_onChange:function(){this._handleOnChange(this.get("value"),!0)},resize:function(a){a&&f.setMarginBox(this.domNode,a)},postCreate:function(){this._set("value",this.get("value"));this.inherited(arguments)},_setTextDirAttr:function(a){if((this.textDir!=a||!this._created)&&this.enforceTextDirWithUcc)this._set("textDir",
+a),c("option",this.containerNode).forEach(function(a){if(!this._created&&a.value===a.text)a.value=a.text;a.text=this.enforceTextDirWithUcc(a,a.originalText||a.text)},this)}})});

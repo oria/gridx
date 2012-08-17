@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/xmpp/ChatService", ["dijit","dojo","dojox"], function(dijit,dojo,dojox){
 dojo.provide("dojox.xmpp.ChatService");
@@ -11,7 +10,7 @@ dojox.xmpp.chat = {
 	INACTIVE_STATE: 'inactive',
 	PAUSED_STATE: 'paused',
 	GONE_STATE: 'gone'
-}
+};
 
 dojo.declare("dojox.xmpp.ChatService", null, {
 	state: "",

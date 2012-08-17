@@ -1,35 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertTableTitle: "Infoga tabell",
-	modifyTableTitle: "Ändra tabell",
-	rows: "Rader:",
-	columns: "Kolumner:",
-	align: "Justera:",
-	cellPadding: "Cellutfyllnad:",
-	cellSpacing: "Cellavstånd:",
-	tableWidth: "Tabellbredd:",
-	backgroundColor: "Bakgrundsfärg:",
-	borderColor: "Ramfärg:",
-	borderThickness: "Ramtjocklek",
-	percent: "%",
-	pixels: "bildpunkter",
-	"default": "standard",
-	left: "vänsterjustera",
-	center: "centrera",
-	right: "högerjustera",
-	buttonSet: "Ange", // translated elsewhere?
-	buttonInsert: "Infoga",
-	buttonCancel: "Avbryt",
-
-	selectTableLabel: "Välj tabell",
-	insertTableRowBeforeLabel: "Lägg till rad före",
-	insertTableRowAfterLabel: "Lägg till rad efter",
-	insertTableColumnBeforeLabel: "Lägg till kolumn före",
-	insertTableColumnAfterLabel: "Lägg till kolumn efter",
-	deleteTableRowLabel: "Ta bort rad",
-	deleteTableColumnLabel: "Ta bort kolumn"
-})
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/sv/TableDialog",{insertTableTitle:"Infoga tabell",modifyTableTitle:"\u00c4ndra tabell",rows:"Rader:",columns:"Kolumner:",align:"Justering:",cellPadding:"Cellfyllning:",cellSpacing:"Cellavst\u00e5nd:",tableWidth:"Tabellbredd:",backgroundColor:"Bakgrundsf\u00e4rg:",borderColor:"Kantlinjef\u00e4rg:",borderThickness:"Kantlinjetjocklek:",percent:"procent",pixels:"bildpunkter","default":"standard",left:"v\u00e4nster",center:"centrerat",right:"h\u00f6ger",buttonSet:"Anv\u00e4nd",
+buttonInsert:"Infoga",buttonCancel:"Avbryt",selectTableLabel:"V\u00e4lj tabell",insertTableRowBeforeLabel:"L\u00e4gg till rad f\u00f6re",insertTableRowAfterLabel:"L\u00e4gg till rad efter",insertTableColumnBeforeLabel:"L\u00e4gg till kolumn f\u00f6re",insertTableColumnAfterLabel:"L\u00e4gg till kolumn efter",deleteTableRowLabel:"Ta bort rad",deleteTableColumnLabel:"Ta bort kolumn"});

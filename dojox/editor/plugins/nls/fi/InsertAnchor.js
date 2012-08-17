@@ -1,14 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertAnchor: "Lisää ankkuri",
-	title: "Ankkurin ominaisuudet",
-	anchor: "Nimi:",
-	text: "Kuvaus:",
-	set: "Aseta",
-	cancel: "Peruuta"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/fi/InsertAnchor",{insertAnchor:"Lis\u00e4\u00e4 ankkuri",title:"Ankkurin ominaisuudet",anchor:"Nimi:",text:"Kuvaus:",set:"Aseta",cancel:"Peruuta"});

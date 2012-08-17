@@ -1,4 +1,3 @@
-//>>built
 define("dojox/grid/enhanced/plugins/filter/ClearFilterConfirm", [
 	"dojo/_base/declare",
 	"dojo/cache",

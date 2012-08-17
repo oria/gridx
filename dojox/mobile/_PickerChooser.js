@@ -1,0 +1,2 @@
+//>>built
+define("dojox/mobile/_PickerChooser",["dojo/_base/lang","dojo/_base/window"],function(a,b){return{load:function(c,d,e){var f=b.global._no_dojo_dm||a.getObject("dojox.mobile",!0);d([("android"===f.currentTheme?"./ValuePicker":"./SpinWheel")+c],e)}}});

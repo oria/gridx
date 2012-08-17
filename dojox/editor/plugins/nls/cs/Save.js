@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"save": "Uložit"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/cs/Save",{save:"Ulo\u017eit"});

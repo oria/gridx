@@ -1,28 +1,3 @@
 //>>built
-define("dojox/date/relative",["dojo/_base/kernel","dojo/_base/lang","dojo/date/locale","dojo/i18n"],function(_1,_2,_3,_4){
-_1.getObject("date.relative",true,dojox);
-var _5=1000*60*60*24,_6=6*_5,_7=_1.delegate,_8=_3._getGregorianBundle,_9=_3.format;
-function _a(_b){
-_b=new Date(_b);
-_b.setHours(0,0,0,0);
-return _b;
-};
-dojox.date.relative.format=function(_c,_d){
-_d=_d||{};
-var _e=_a(_d.relativeDate||new Date()),_f=_e.getTime()-_a(_c).getTime(),_10={locale:_d.locale};
-if(_f===0){
-return _9(_c,_7(_10,{selector:"time"}));
-}else{
-if(_f<=_6&&_f>0&&_d.weekCheck!==false){
-return _9(_c,_7(_10,{selector:"date",datePattern:"EEE"}))+" "+_9(_c,_7(_10,{selector:"time",formatLength:"short"}));
-}else{
-if(_c.getFullYear()==_e.getFullYear()){
-var _11=_8(_4.normalizeLocale(_d.locale));
-return _9(_c,_7(_10,{selector:"date",datePattern:_11["dateFormatItem-MMMd"]}));
-}else{
-return _9(_c,_7(_10,{selector:"date",formatLength:"medium",locale:_d.locale}));
-}
-}
-}
-};
-});
+define("dojox/date/relative",["..","dojo/_base/lang","dojo/date/locale","dojo/i18n"],function(b,j,h,k){function i(a){a=new Date(a);a.setHours(0,0,0,0);return a}var b=j.getObject("date.relative",!0,b),d=dojo.delegate,l=h._getGregorianBundle,e=h.format;b.format=function(a,c){var c=c||{},b=i(c.relativeDate||new Date),g=b.getTime()-i(a).getTime(),f={locale:c.locale};if(0===g)return e(a,d(f,{selector:"time"}));if(5184E5>=g&&0<g&&!1!==c.weekCheck)return e(a,d(f,{selector:"date",datePattern:"EEE"}))+" "+
+e(a,d(f,{selector:"time",formatLength:"short"}));return a.getFullYear()==b.getFullYear()?(b=l(k.normalizeLocale(c.locale)),e(a,d(f,{selector:"date",datePattern:b["dateFormatItem-MMMd"]}))):e(a,d(f,{selector:"date",formatLength:"medium",locale:c.locale}))};return b});

@@ -1,30 +1,3 @@
 //>>built
-define("dojox/gfx/Mover",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/connect","dojo/_base/event"],function(_1,_2,_3,_4,_5){
-return _3("dojox.gfx.Mover",null,{constructor:function(_6,e,_7){
-this.shape=_6;
-this.lastX=e.clientX;
-this.lastY=e.clientY;
-var h=this.host=_7,d=document,_8=_4.connect(d,"onmousemove",this,"onFirstMove");
-this.events=[_4.connect(d,"onmousemove",this,"onMouseMove"),_4.connect(d,"onmouseup",this,"destroy"),_4.connect(d,"ondragstart",_5,"stop"),_4.connect(d,"onselectstart",_5,"stop"),_8];
-if(h&&h.onMoveStart){
-h.onMoveStart(this);
-}
-},onMouseMove:function(e){
-var x=e.clientX;
-var y=e.clientY;
-this.host.onMove(this,{dx:x-this.lastX,dy:y-this.lastY});
-this.lastX=x;
-this.lastY=y;
-_5.stop(e);
-},onFirstMove:function(){
-this.host.onFirstMove(this);
-_4.disconnect(this.events.pop());
-},destroy:function(){
-_2.forEach(this.events,_4.disconnect);
-var h=this.host;
-if(h&&h.onMoveStop){
-h.onMoveStop(this);
-}
-this.events=this.shape=null;
-}});
-});
+define("dojox/gfx/Mover","dojo/_base/lang,dojo/_base/array,dojo/_base/declare,dojo/on,dojo/touch,dojo/_base/event".split(","),function(d,h,i,e,f,g){return i("dojox.gfx.Mover",null,{constructor:function(a,b,c){this.shape=a;this.lastX=b.clientX;this.lastY=b.clientY;a=this.host=c;b=document;c=e(b,f.move,d.hitch(this,"onFirstMove"));this.events=[e(b,f.move,d.hitch(this,"onMouseMove")),e(b,f.release,d.hitch(this,"destroy")),e(b,"dragstart",d.hitch(g,"stop")),e(b,"selectstart",d.hitch(g,"stop")),c];if(a&&
+a.onMoveStart)a.onMoveStart(this)},onMouseMove:function(a){var b=a.clientX,c=a.clientY;this.host.onMove(this,{dx:b-this.lastX,dy:c-this.lastY});this.lastX=b;this.lastY=c;g.stop(a)},onFirstMove:function(){this.host.onFirstMove(this);this.events.pop().remove()},destroy:function(){h.forEach(this.events,function(a){a.remove()});var a=this.host;if(a&&a.onMoveStop)a.onMoveStop(this);this.events=this.shape=null}})});

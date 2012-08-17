@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"pageBreak": "改ページ"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ja/PageBreak",{pageBreak:"\u6539\u30da\u30fc\u30b8"});

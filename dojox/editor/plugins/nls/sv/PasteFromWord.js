@@ -1,12 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"pasteFromWord": "Klistra in från Word",
-	"paste": "Klistra in",
-	"cancel": "Avbryt",
-	"instructions": "Klistra in innehållet från Word i textfältet nedan. När du är klar klickar du på Klistra in. Om du vill avbryta klickar du på Avbryt."
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/sv/PasteFromWord",{pasteFromWord:"Klistra in fr\u00e5n Word",instructions:"Klistra in inneh\u00e5llet fr\u00e5n Word i textrutan nedan. N\u00e4r du har valt inneh\u00e5ll klickar du p\u00e5 Klistra in. Klicka p\u00e5 Avbryt om du inte vill klistra in text. "});

@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	loadingState: "正在加载...",
-	errorState: "对不起，发生了错误"
-})
-//end v1.x content
-);
+define("dijit/nls/zh/loading",{loadingState:"\u6b63\u5728\u52a0\u8f7d...",errorState:"\u5bf9\u4e0d\u8d77\uff0c\u53d1\u751f\u4e86\u9519\u8bef"});

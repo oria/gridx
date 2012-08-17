@@ -1,22 +1,2 @@
 //>>built
-define("dojox/dtl/filter/integers",["dojo/_base/lang","../_base"],function(_1,dd){
-_1.getObject("dojox.dtl.filter.integers",true);
-_1.mixin(dd.filter.integers,{add:function(_2,_3){
-_2=parseInt(_2,10);
-_3=parseInt(_3,10);
-return isNaN(_3)?_2:_2+_3;
-},get_digit:function(_4,_5){
-_4=parseInt(_4,10);
-_5=parseInt(_5,10)-1;
-if(_5>=0){
-_4+="";
-if(_5<_4.length){
-_4=parseInt(_4.charAt(_5),10);
-}else{
-_4=0;
-}
-}
-return (isNaN(_4)?0:_4);
-}});
-return dojox.dtl.filter.integers;
-});
+define("dojox/dtl/filter/integers",["dojo/_base/lang","../_base"],function(c,d){c.getObject("dojox.dtl.filter.integers",!0);c.mixin(d.filter.integers,{add:function(a,b){a=parseInt(a,10);b=parseInt(b,10);return isNaN(b)?a:a+b},get_digit:function(a,b){a=parseInt(a,10);b=parseInt(b,10)-1;0<=b&&(a+="",a=b<a.length?parseInt(a.charAt(b),10):0);return isNaN(a)?0:a}});return dojox.dtl.filter.integers});

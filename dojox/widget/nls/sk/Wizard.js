@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-next: "Ďalej",
-previous: "Späť",
-done: "Hotovo"
-})
-//end v1.x content
-);
+define("dojox/widget/nls/sk/Wizard",{next:"Nasleduj\u00faci",previous:"Predch\u00e1dzaj\u00faci",done:"Hotovo"});

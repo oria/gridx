@@ -1,4 +1,3 @@
-//>>built
 define("dojox/gesture/tap", [
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
@@ -79,6 +78,7 @@ var clz = declare(/*===== "dojox.gesture.tap", =====*/Base, {
 		//		Overwritten, record initial tap info and register a timeout checker for 'tap.hold'
 		if(e.touches && e.touches.length >= 2){
 			//tap gesture is only for single touch
+			clearTimeout(data.tapTimeOut); 
 			delete data.context;
 			return;
 		}

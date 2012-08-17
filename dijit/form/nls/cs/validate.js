@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	invalidMessage: "Zadaná hodnota není platná.",
-	missingMessage: "Tato hodnota je vyžadována.",
-	rangeMessage: "Tato hodnota je mimo rozsah."
-})
-//end v1.x content
-);
+define("dijit/form/nls/cs/validate",{invalidMessage:"Zadan\u00e1 hodnota nen\u00ed platn\u00e1.",missingMessage:"Tato hodnota je vy\u017eadov\u00e1na.",rangeMessage:"Tato hodnota je mimo rozsah."});

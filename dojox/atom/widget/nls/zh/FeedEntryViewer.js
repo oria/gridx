@@ -1,16 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	displayOptions: "[显示选项]",
-	title: "标题",
-	authors: "作者",
-	contributors: "内容添加者",
-	id: "标识",
-	close: "[关闭]",
-	updated: "更新时间",
-	summary: "摘要",
-	content: "内容"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/zh/FeedEntryViewer",{displayOptions:"[\u663e\u793a\u9009\u9879]",title:"\u6807\u9898",authors:"\u521b\u5efa\u8005",contributors:"\u6dfb\u52a0\u8005",id:"\u6807\u8bc6",close:"[\u5173\u95ed]",updated:"\u5df2\u66f4\u65b0",summary:"\u6982\u8981",content:"\u5185\u5bb9"});

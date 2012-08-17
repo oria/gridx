@@ -1,22 +1,3 @@
 //>>built
-define("dojox/form/Manager",["dijit/_Widget","dijit/_TemplatedMixin","./manager/_Mixin","./manager/_NodeMixin","./manager/_FormMixin","./manager/_ValueMixin","./manager/_EnableMixin","./manager/_DisplayMixin","./manager/_ClassMixin","dojo/_base/declare"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
-return _a("dojox.form.Manager",[_1,_3,_4,_5,_6,_7,_8,_9],{buildRendering:function(){
-var _b=(this.domNode=this.srcNodeRef);
-if(!this.containerNode){
-this.containerNode=_b;
-}
-this.inherited(arguments);
-this._attachPoints=[];
-this._attachEvents=[];
-_2.prototype._attachTemplateNodes.call(this,_b,function(n,p){
-return n.getAttribute(p);
-});
-},destroyRendering:function(_c){
-if(!this.__ctm){
-this.__ctm=true;
-_2.prototype.destroyRendering.apply(this,arguments);
-delete this.__ctm;
-this.inherited(arguments);
-}
-}});
-});
+define("dojox/form/Manager","dijit/_Widget,dijit/_TemplatedMixin,./manager/_Mixin,./manager/_NodeMixin,./manager/_FormMixin,./manager/_ValueMixin,./manager/_EnableMixin,./manager/_DisplayMixin,./manager/_ClassMixin,dojo/_base/declare".split(","),function(c,b,d,e,f,g,h,i,j,k){return k("dojox.form.Manager",[c,d,e,f,g,h,i,j],{buildRendering:function(){var a=this.domNode=this.srcNodeRef;if(!this.containerNode)this.containerNode=a;this.inherited(arguments);this._attachPoints=[];this._attachEvents=[];b.prototype._attachTemplateNodes.call(this,
+a,function(a,b){return a.getAttribute(b)})},destroyRendering:function(a){if(!this.__ctm)this.__ctm=!0,b.prototype.destroyRendering.apply(this,arguments),delete this.__ctm,this.inherited(arguments)}})});

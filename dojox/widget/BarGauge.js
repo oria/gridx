@@ -1,8 +1,2 @@
 //>>built
-define(["dijit","dojo","dojox","dojo/require!dojox/widget/gauge/_Gauge,dojox/gauges/BarGauge"],function(_1,_2,_3){
-_2.provide("dojox.widget.BarGauge");
-_2.require("dojox.widget.gauge._Gauge");
-_2.require("dojox.gauges.BarGauge");
-_3.widget.BarGauge=_3.gauges.BarGauge;
-_3.widget.gauge.BarLineIndicator=_3.gauges.BarLineIndicator;
-});
+define("dojox/widget/BarGauge",["dijit","dojo","dojox","dojo/require!dojox/widget/gauge/_Gauge,dojox/gauges/BarGauge"],function(c,b,a){b.provide("dojox.widget.BarGauge");b.require("dojox.widget.gauge._Gauge");b.require("dojox.gauges.BarGauge");a.widget.BarGauge=a.gauges.BarGauge;a.widget.gauge.BarLineIndicator=a.gauges.BarLineIndicator});

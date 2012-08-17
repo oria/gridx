@@ -1,16 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	displayOptions: "[exibir opções]",
-	title: "Título",
-	authors: "Autores",
-	contributors: "Contribuidores",
-	id: "ID",
-	close: "[fechar]",
-	updated: "Atualizado",
-	summary: "Resumo",
-	content: "Conteúdo"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/pt/FeedEntryViewer",{displayOptions:"[exibir op\u00e7\u00f5es]",title:"T\u00edtulo",authors:"Autores",contributors:"Contribuidores",id:"ID",close:"[fechar]",updated:"Atualizado",summary:"Resumo",content:"Conte\u00fado"});

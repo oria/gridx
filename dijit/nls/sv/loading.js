@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	loadingState: "Läser in...",
-	errorState: "Det uppstod ett fel."
-})
-//end v1.x content
-);
+define("dijit/nls/sv/loading",{loadingState:"L\u00e4ser in...",errorState:"Det har intr\u00e4ffat ett fel."});

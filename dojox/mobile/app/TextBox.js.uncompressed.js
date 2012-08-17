@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/mobile/app/TextBox", ["dijit","dojo","dojox","dojo/require!dojox/mobile/TextBox"], function(dijit,dojo,dojox){
 dojo.provide("dojox.mobile.app.TextBox");

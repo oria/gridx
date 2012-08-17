@@ -1,11 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"edit" : "[tərtib et]",
-	"save" : "[saxla]",
-	"cancel" : "[ləğv et]",
-	"doNew" : "[yeni]"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/az/FeedEntryEditor",{edit:"[t\u0259rtib et]",save:"[saxla]",cancel:"[l\u0259\u011fv et]",doNew:"[yeni]"});

@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/lang/aspect/cflow", ["dijit","dojo","dojox"], function(dijit,dojo,dojox){
 dojo.provide("dojox.lang.aspect.cflow");

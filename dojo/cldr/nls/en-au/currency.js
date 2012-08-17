@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-{
-	"AUD_symbol": "$",
-	"USD_symbol": "US$"
-}
-//end v1.x content
-);
+define("dojo/cldr/nls/en-au/currency",{AUD_symbol:"$",USD_symbol:"US$"});

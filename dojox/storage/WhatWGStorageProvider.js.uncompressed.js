@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/storage/WhatWGStorageProvider", ["dijit","dojo","dojox","dojo/require!dojox/storage/Provider,dojox/storage/manager"], function(dijit,dojo,dojox){
 dojo.provide("dojox.storage.WhatWGStorageProvider");
@@ -13,13 +12,13 @@ dojo.declare("dojox.storage.WhatWGStorageProvider", [ dojox.storage.Provider ], 
 	//		The WHAT WG storage API is documented at
 	//		http://www.whatwg.org/specs/web-apps/current-work/#scs-client-side
 	//
-	//		You can disable this storage provider with the following djConfig
-	//		variable:
-	//		var djConfig = { disableWhatWGStorage: true };
+	//		You can disable this storage provider with the following djConfig variable:
+	// |	var djConfig = { disableWhatWGStorage: true };
 	//
-	//		Authors of this storage provider-
-	//			JB Boisseau, jb.boisseau@eutech-ssii.com
-	//			Brad Neuberg, bkn3@columbia.edu
+	//		Authors of this storage provider:
+	//
+	//		- JB Boisseau, jb.boisseau@eutech-ssii.com
+	//		- Brad Neuberg, bkn3@columbia.edu
 
 	initialized: false,
 	

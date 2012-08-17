@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/layout/dnd/Avatar", ["dijit","dojo","dojox","dojo/require!dojo/dnd/Avatar,dojo/dnd/common"], function(dijit,dojo,dojox){
 dojo.provide("dojox.layout.dnd.Avatar");
@@ -8,7 +7,7 @@ dojo.require("dojo.dnd.common");
 
 dojo.declare("dojox.layout.dnd.Avatar", dojo.dnd.Avatar, {
 	// summary:
-	//      An Object, which represents the object being moved in a GridContainer
+	//		An Object, which represents the object being moved in a GridContainer
 	constructor: function(manager, opacity){
 		this.opacity = opacity || 0.9;
 	},
@@ -40,7 +39,8 @@ dojo.declare("dojox.layout.dnd.Avatar", dojo.dnd.Avatar, {
 	},
 
 	update: function(){
-		// summary: Updates the avatar to reflect the current DnD state.
+		// summary:
+		//		Updates the avatar to reflect the current DnD state.
 		dojo.toggleClass(this.node, "dojoDndAvatarCanDrop", this.manager.canDropFlag);
 	},
 

@@ -1,11 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	buttonOk: "确定",
-	buttonCancel: "取消",
-	buttonSave: "保存",
-	itemClose: "关闭"
-})
-//end v1.x content
-);
+define("dijit/nls/zh/common",{buttonOk:"\u786e\u5b9a",buttonCancel:"\u53d6\u6d88",buttonSave:"\u4fdd\u5b58",itemClose:"\u5173\u95ed"});

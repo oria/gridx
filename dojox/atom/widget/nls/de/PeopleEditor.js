@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	add: "Hinzufügen",
-	addAuthor: "Autor hinzufügen",
-	addContributor: "Mitwirkenden hinzufügen"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/de/PeopleEditor",{add:"Hinzuf\u00fcgen",addAuthor:"Autor hinzuf\u00fcgen",addContributor:"Mitwirkenden hinzuf\u00fcgen"});

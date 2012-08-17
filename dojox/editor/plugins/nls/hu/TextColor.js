@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"setButtonText": "Beállítás",
-	"cancelButtonText": "Mégse"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/hu/TextColor",{setButtonText:"Be\u00e1ll\u00edt\u00e1s",cancelButtonText:"M\u00e9gse"});

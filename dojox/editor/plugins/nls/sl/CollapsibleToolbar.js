@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"collapse": "Strni orodno vrstico urejevalnika ",
-	"expand": "Razširi orodno vrstico urejevalnika "
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/sl/CollapsibleToolbar",{collapse:"Strni orodno vrstico urejevalnika ",expand:"Raz\u0161iri orodno vrstico urejevalnika "});

@@ -1,27 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	smiley: "Emoticon einfügen",
-	emoticonSmile: "Lächeln",
-	emoticonLaughing: "Lachen",
-	emoticonWink: "Augenzwinkern",
-	emoticonGrin: "Grinsen",
-	emoticonCool: "Cool",
-	emoticonAngry: "Zornig",
-	emoticonHalf: "Halb",
-	emoticonEyebrow: "Hochgezogene Augenbraue",
-	emoticonFrown: "Stirnrunzeln",
-	emoticonShy: "Schüchtern",
-	emoticonGoofy: "Albern",
-	emoticonOops: "Hoppla",
-	emoticonTongue: "Zunge",
-	emoticonIdea: "Idee",
-	emoticonYes: "Ja",
-	emoticonNo: "Nein",
-	emoticonAngel: "Engel",
-	emoticonCrying: "Weinen"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/de/Smiley",{smiley:"Emoticon einf\u00fcgen",emoticonSmile:"L\u00e4cheln",emoticonLaughing:"Lachen",emoticonWink:"Zwinkern",emoticonGrin:"Grinsen",emoticonCool:"Cool",emoticonAngry:"W\u00fctend",emoticonHalf:"Halbes L\u00e4cheln",emoticonEyebrow:"Augenbraue",emoticonFrown:"Stirnrunzeln",emoticonShy:"Sch\u00fcchtern",emoticonGoofy:"Albern",emoticonOops:"Hoppla",emoticonTongue:"Zunge",emoticonIdea:"Idee",emoticonYes:"Ja",emoticonNo:"Nein",emoticonAngel:"Engel",emoticonCrying:"Weinen",
+emoticonHappy:"Gl\u00fccklich"});

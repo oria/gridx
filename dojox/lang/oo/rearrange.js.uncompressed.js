@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/lang/oo/rearrange", ["dijit","dojo","dojox"], function(dijit,dojo,dojox){
 dojo.provide("dojox.lang.oo.rearrange");
@@ -8,21 +7,21 @@ dojo.provide("dojox.lang.oo.rearrange");
 		opts = Object.prototype.toString, empty = {};
 
 	dojox.lang.oo.rearrange = function(bag, map){
-		//	summary:
+		// summary:
 		//		Process properties in place by removing and renaming them.
-		//	description:
+		// description:
 		//		Properties of an object are to be renamed or removed specified
 		//		by "map" argument. Only own properties of "map" are processed.
-		//	example:
+		// example:
 		//	|	oo.rearrange(bag, {
 		//	|		abc: "def",	// rename "abc" attribute to "def"
 		//	|		ghi: null	// remove/hide "ghi" attribute
 		//	|	});
-		//	bag: Object:
+		// bag: Object
 		//		the object to be processed
-		//	map: Object:
+		// map: Object
 		//		the dictionary for renaming (false value indicates removal of the named property)
-		//	returns: Object:
+		// returns: Object
 		//		the original object
 
 	var name, newName, prop, i, t;

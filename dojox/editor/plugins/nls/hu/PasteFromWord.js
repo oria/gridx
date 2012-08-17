@@ -1,12 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"pasteFromWord": "Beillesztés Word alkalmazásból",
-	"paste": "Beillesztés",
-	"cancel": "Mégse",
-	"instructions": "Illessze be a Word alkalmazás tartalmát az alábbi szövegmezőbe. Ha elégedett a beszúrandó tartalommal, akkor nyomja meg a beillesztés gombot. Szöveg beszúrásának megszakításához nyomja meg a mégse gombot."
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/hu/PasteFromWord",{pasteFromWord:"Beilleszt\u00e9s Word alkalmaz\u00e1sb\u00f3l",instructions:"Illessze be a Word alkalmaz\u00e1s tartalm\u00e1t az al\u00e1bbi sz\u00f6vegmez\u0151be. Ha el\u00e9gedett a besz\u00farand\u00f3 tartalommal, akkor nyomja meg a beilleszt\u00e9s gombot. Sz\u00f6veg besz\u00far\u00e1s\u00e1nak megszak\u00edt\u00e1s\u00e1hoz nyomja meg a m\u00e9gse gombot."});

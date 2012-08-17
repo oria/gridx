@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"save": "שמירה"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/he/Save",{save:"\u05e9\u05de\u05d9\u05e8\u05d4"});

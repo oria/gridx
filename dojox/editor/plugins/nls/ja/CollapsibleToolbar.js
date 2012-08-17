@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"collapse": "エディターのツールバーを省略",
-	"expand": "エディターのツールバーを展開"
-})
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ja/CollapsibleToolbar",{collapse:"\u30a8\u30c7\u30a3\u30bf\u30fc\u30fb\u30c4\u30fc\u30eb\u30d0\u30fc\u3092\u7701\u7565",expand:"\u30a8\u30c7\u30a3\u30bf\u30fc\u30fb\u30c4\u30fc\u30eb\u30d0\u30fc\u3092\u5c55\u958b"});

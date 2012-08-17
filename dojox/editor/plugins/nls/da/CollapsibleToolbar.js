@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"collapse": "Skjul editorværktøjslinje",
-	"expand": "Udvid editorværktøjslinje"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/da/CollapsibleToolbar",{collapse:"Skjul editorv\u00e6rkt\u00f8jslinje",expand:"Udvid editorv\u00e6rkt\u00f8jslinje"});

@@ -1,4 +1,2 @@
 //>>built
-define("dojox/image",["./image/_base"],function(_1){
-return _1;
-});
+define("dojox/image",["./image/_base"],function(a){return a});

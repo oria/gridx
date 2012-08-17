@@ -1,9 +1,4 @@
-//>>built
 define("dojox/encoding/digests/MD5", ["./_base"], function(dxd) {
-
-	/*=====
-		dxd = dojox.encoding.digests;
-	=====*/
 
 /*	A port of Paul Johnstone's MD5 implementation
  *	http://pajhome.org.uk/crypt/md5/index.html
@@ -131,8 +126,8 @@ define("dojox/encoding/digests/MD5", ["./_base"], function(dxd) {
 
 	//	public function
 	dxd.MD5=function(/* string */data, /* dojox.encoding.digests.outputTypes? */outputType){
-		//	summary
-		//	computes the digest of data, and returns the result according to type outputType
+		// summary:
+		//		computes the digest of data, and returns the result according to type outputType
 		var out=outputType || dxd.outputTypes.Base64;
 		var wa=core(dxd.stringToWord(data), data.length*chrsz);
 		switch(out){
@@ -153,8 +148,8 @@ define("dojox/encoding/digests/MD5", ["./_base"], function(dxd) {
 
 	//	make this private, for later use with a generic HMAC calculator.
 	dxd.MD5._hmac=function(/* string */data, /* string */key, /* dojox.encoding.digests.outputTypes? */outputType){
-		//	summary
-		//	computes the digest of data, and returns the result according to type outputType
+		// summary:
+		//		computes the digest of data, and returns the result according to type outputType
 		var out=outputType || dxd.outputTypes.Base64;
 		var wa=hmac(data, key);
 		switch(out){

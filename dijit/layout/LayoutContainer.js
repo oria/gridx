@@ -1,19 +1,3 @@
 //>>built
-define("dijit/layout/LayoutContainer",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","../_WidgetBase","./_LayoutWidget","./utils"],function(_1,_2,_3,_4,_5,_6){
-_2.extend(_4,{layoutAlign:"none"});
-return _3("dijit.layout.LayoutContainer",_5,{baseClass:"dijitLayoutContainer",constructor:function(){
-_1.deprecated("dijit.layout.LayoutContainer is deprecated","use BorderContainer instead",2);
-},layout:function(){
-_6.layoutChildren(this.domNode,this._contentBox,this.getChildren());
-},addChild:function(_7,_8){
-this.inherited(arguments);
-if(this._started){
-_6.layoutChildren(this.domNode,this._contentBox,this.getChildren());
-}
-},removeChild:function(_9){
-this.inherited(arguments);
-if(this._started){
-_6.layoutChildren(this.domNode,this._contentBox,this.getChildren());
-}
-}});
-});
+define("dijit/layout/LayoutContainer","dojo/_base/kernel,dojo/_base/lang,dojo/_base/declare,../_WidgetBase,./_LayoutWidget,./utils".split(","),function(c,d,a,e,f,b){a=a("dijit.layout.LayoutContainer",f,{baseClass:"dijitLayoutContainer",constructor:function(){c.deprecated("dijit.layout.LayoutContainer is deprecated","use BorderContainer instead",2)},layout:function(){b.layoutChildren(this.domNode,this._contentBox,this.getChildren())},addChild:function(a,c){this.inherited(arguments);this._started&&
+b.layoutChildren(this.domNode,this._contentBox,this.getChildren())},removeChild:function(a){this.inherited(arguments);this._started&&b.layoutChildren(this.domNode,this._contentBox,this.getChildren())}});a.ChildWidgetProperties={layoutAlign:"none"};d.extend(e,a.ChildWidgetProperties);return a});

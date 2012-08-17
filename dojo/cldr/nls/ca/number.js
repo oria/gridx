@@ -1,23 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-{
-	"group": ".",
-	"percentSign": "%",
-	"exponential": "E",
-	"scientificFormat": "#E0",
-	"percentFormat": "#,##0%",
-	"list": ";",
-	"infinity": "∞",
-	"patternDigit": "#",
-	"minusSign": "-",
-	"decimal": ",",
-	"nan": "NaN",
-	"nativeZeroDigit": "0",
-	"perMille": "‰",
-	"decimalFormat": "#,##0.###",
-	"currencyFormat": "#,##0.00 ¤",
-	"plusSign": "+"
-}
-//end v1.x content
-);
+define("dojo/cldr/nls/ca/number",{decimal:",",group:".",list:";",percentSign:"%",plusSign:"+",minusSign:"-",exponential:"E",perMille:"\u2030",infinity:"\u221e",nan:"NaN",decimalFormat:"#,##0.###","decimalFormat-short":"000\u00a0B",scientificFormat:"#E0",percentFormat:"#,##0%",currencyFormat:"#,##0.00\u00a0\u00a4"});

@@ -1,41 +1,4 @@
 //>>built
-define("dojox/grid/enhanced/plugins/exporter/CSVWriter",["dojo/_base/declare","dojo/_base/array","./_ExportWriter","../Exporter"],function(_1,_2,_3,_4){
-_4.registerWriter("csv","dojox.grid.enhanced.plugins.exporter.CSVWriter");
-return _1("dojox.grid.enhanced.plugins.exporter.CSVWriter",_3,{_separator:",",_newline:"\r\n",constructor:function(_5){
-if(_5){
-this._separator=_5.separator?_5.separator:this._separator;
-this._newline=_5.newline?_5.newline:this._newline;
-}
-this._headers=[];
-this._dataRows=[];
-},_formatCSVCell:function(_6){
-if(_6===null||_6===undefined){
-return "";
-}
-var _7=String(_6).replace(/"/g,"\"\"");
-if(_7.indexOf(this._separator)>=0||_7.search(/[" \t\r\n]/)>=0){
-_7="\""+_7+"\"";
-}
-return _7;
-},beforeContentRow:function(_8){
-var _9=[],_a=this._formatCSVCell;
-_2.forEach(_8.grid.layout.cells,function(_b){
-if(!_b.hidden&&_2.indexOf(_8.spCols,_b.index)<0){
-_9.push(_a(this._getExportDataForCell(_8.rowIndex,_8.row,_b,_8.grid)));
-}
-},this);
-this._dataRows.push(_9);
-return false;
-},handleCell:function(_c){
-var _d=_c.cell;
-if(_c.isHeader&&!_d.hidden&&_2.indexOf(_c.spCols,_d.index)<0){
-this._headers.push(_d.name||_d.field);
-}
-},toString:function(){
-var _e=this._headers.join(this._separator);
-for(var i=this._dataRows.length-1;i>=0;--i){
-this._dataRows[i]=this._dataRows[i].join(this._separator);
-}
-return _e+this._newline+this._dataRows.join(this._newline);
-}});
-});
+define("dojox/grid/enhanced/plugins/exporter/CSVWriter",["dojo/_base/declare","dojo/_base/array","./_ExportWriter","../Exporter"],function(c,d,f,g){g.registerWriter("csv","dojox.grid.enhanced.plugins.exporter.CSVWriter");return c("dojox.grid.enhanced.plugins.exporter.CSVWriter",f,{_separator:",",_newline:"\r\n",constructor:function(a){if(a)this._separator=a.separator?a.separator:this._separator,this._newline=a.newline?a.newline:this._newline;this._headers=[];this._dataRows=[]},_formatCSVCell:function(a){if(null===
+a||void 0===a)return"";a=(""+a).replace(/"/g,'""');if(0<=a.indexOf(this._separator)||0<=a.search(/[" \t\r\n]/))a='"'+a+'"';return a},beforeContentRow:function(a){var b=[],c=this._formatCSVCell;d.forEach(a.grid.layout.cells,function(e){!e.hidden&&0>d.indexOf(a.spCols,e.index)&&b.push(c(this._getExportDataForCell(a.rowIndex,a.row,e,a.grid)))},this);this._dataRows.push(b);return!1},handleCell:function(a){var b=a.cell;a.isHeader&&!b.hidden&&0>d.indexOf(a.spCols,b.index)&&this._headers.push(b.name||b.field)},
+toString:function(){for(var a=this._headers.join(this._separator),b=this._dataRows.length-1;0<=b;--b)this._dataRows[b]=this._dataRows[b].join(this._separator);return a+this._newline+this._dataRows.join(this._newline)}})});

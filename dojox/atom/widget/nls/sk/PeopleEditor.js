@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	add: "Pridať",
-	addAuthor: "Pridať autora",
-	addContributor: "Pridať prispievateľa"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/sk/PeopleEditor",{add:"Prida\u0165",addAuthor:"Prida\u0165 autora",addContributor:"Prida\u0165 prispievate\u013ea"});

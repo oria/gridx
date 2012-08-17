@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"setButtonText": "설정",
-	"cancelButtonText": "취소"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ko/TextColor",{setButtonText:"\uc124\uc815",cancelButtonText:"\ucde8\uc18c"});

@@ -1,11 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	doNew: "[nouveau]",
-	edit: "[éditer]",
-	save: "[sauvegarder]",
-	cancel: "[annuler]"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/fr/FeedEntryEditor",{doNew:"[nouveau]",edit:"[\u00e9diter]",save:"[sauvegarder]",cancel:"[annuler]"});

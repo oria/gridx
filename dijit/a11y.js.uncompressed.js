@@ -1,4 +1,3 @@
-//>>built
 define("dijit/a11y", [
 	"dojo/_base/array", // array.forEach array.map
 	"dojo/_base/config", // defaultDuration
@@ -6,15 +5,12 @@ define("dijit/a11y", [
 	"dojo/dom",			// dom.byId
 	"dojo/dom-attr", // domAttr.attr domAttr.has
 	"dojo/dom-style", // style.style
-	"dojo/_base/sniff", // has("ie")
-	"./_base/manager",	// manager._isElementShown
-	"."	// for exporting methods to dijit namespace
-], function(array, config, declare, dom, domAttr, domStyle, has, manager, dijit){
+	"dojo/sniff", // has("ie")
+	"./main"	// for exporting methods to dijit namespace
+], function(array, config, declare, dom, domAttr, domStyle, has, dijit){
 
 	// module:
 	//		dijit/a11y
-	// summary:
-	//		Accessibility utility functions (keyboard, tab stops, etc.)
 
 	var shown = (dijit._isElementShown = function(/*Element*/ elem){
 		var s = domStyle.get(elem);
@@ -87,16 +83,16 @@ define("dijit/a11y", [
 	dijit._getTabNavigable = function(/*DOMNode*/ root){
 		// summary:
 		//		Finds descendants of the specified root node.
-		//
 		// description:
 		//		Finds the following descendants of the specified root node:
-		//		* the first tab-navigable element in document order
+		//
+		//		- the first tab-navigable element in document order
 		//		  without a tabIndex or with tabIndex="0"
-		//		* the last tab-navigable element in document order
+		//		- the last tab-navigable element in document order
 		//		  without a tabIndex or with tabIndex="0"
-		//		* the first element in document order with the lowest
+		//		- the first element in document order with the lowest
 		//		  positive tabIndex value
-		//		* the last element in document order with the highest
+		//		- the last element in document order with the highest
 		//		  positive tabIndex value
 		var first, last, lowest, lowestTabindex, highest, highestTabindex, radioSelected = {};
 
@@ -107,7 +103,7 @@ define("dijit/a11y", [
 				node.name && node.name.toLowerCase();
 		}
 
-		var walkTree = function(/*DOMNode*/parent){
+		var walkTree = function(/*DOMNode*/ parent){
 			for(var child = parent.firstChild; child; child = child.nextSibling){
 				// Skip text elements, hidden elements, and also non-HTML elements (those in custom namespaces) in IE,
 				// since show() invokes getAttribute("type"), which crash on VML nodes in IE.
@@ -116,7 +112,7 @@ define("dijit/a11y", [
 				}
 
 				if(isTabNavigable(child)){
-					var tabindex = domAttr.get(child, "tabIndex");
+					var tabindex = +domAttr.get(child, "tabIndex");	// + to convert string --> number
 					if(!domAttr.has(child, "tabIndex") || tabindex == 0){
 						if(!first){
 							first = child;
@@ -152,23 +148,26 @@ define("dijit/a11y", [
 
 		return { first: rs(first), last: rs(last), lowest: rs(lowest), highest: rs(highest) };
 	};
-	dijit.getFirstInTabbingOrder = function(/*String|DOMNode*/ root){
+	dijit.getFirstInTabbingOrder = function(/*String|DOMNode*/ root, /*Document?*/ doc){
 		// summary:
 		//		Finds the descendant of the specified root node
 		//		that is first in the tabbing order
-		var elems = dijit._getTabNavigable(dom.byId(root));
+		var elems = dijit._getTabNavigable(dom.byId(root, doc));
 		return elems.lowest ? elems.lowest : elems.first; // DomNode
 	};
 
-	dijit.getLastInTabbingOrder = function(/*String|DOMNode*/ root){
+	dijit.getLastInTabbingOrder = function(/*String|DOMNode*/ root, /*Document?*/ doc){
 		// summary:
 		//		Finds the descendant of the specified root node
 		//		that is last in the tabbing order
-		var elems = dijit._getTabNavigable(dom.byId(root));
+		var elems = dijit._getTabNavigable(dom.byId(root, doc));
 		return elems.last ? elems.last : elems.highest; // DomNode
 	};
 
 	return {
+		// summary:
+		//		Accessibility utility functions (keyboard, tab stops, etc.)
+
 		hasDefaultTabStop: dijit.hasDefaultTabStop,
 		isTabNavigable: dijit.isTabNavigable,
 		_getTabNavigable: dijit._getTabNavigable,

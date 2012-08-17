@@ -1,8 +1,1 @@
-
-.mblDomButtonSilverCircleDownArrow {
-	background-image: url(compat/mblDomButtonSilverCircleDownArrow.png);
-	background-repeat: no-repeat;
-}
-.mblDomButtonSilverCircleDownArrow > div {
-	display: none;
-}
+.mblDomButtonSilverCircleDownArrow {background-image: url(compat/mblDomButtonSilverCircleDownArrow.png); background-repeat: no-repeat;}.mblDomButtonSilverCircleDownArrow > div {display: none;}

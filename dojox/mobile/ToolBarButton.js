@@ -1,54 +1,7 @@
 //>>built
-define("dojox/mobile/ToolBarButton",["dojo/_base/declare","dojo/_base/window","dojo/dom-class","dojo/dom-construct","dojo/dom-style","./common","./_ItemBase"],function(_1,_2,_3,_4,_5,_6,_7){
-return _1("dojox.mobile.ToolBarButton",_7,{selected:false,btnClass:"",_defaultColor:"mblColorDefault",_selColor:"mblColorDefaultSel",buildRendering:function(){
-this.domNode=this.containerNode=this.srcNodeRef||_2.doc.createElement("div");
-this.inheritParams();
-_3.add(this.domNode,"mblToolBarButton mblArrowButtonText");
-var _8;
-if(this.selected){
-_8=this._selColor;
-}else{
-if(this.domNode.className.indexOf("mblColor")==-1){
-_8=this._defaultColor;
-}
-}
-_3.add(this.domNode,_8);
-if(!this.label){
-this.label=this.domNode.innerHTML;
-}
-if(this.icon&&this.icon!="none"){
-this.iconNode=_4.create("div",{className:"mblToolBarButtonIcon"},this.domNode);
-_6.createIcon(this.icon,this.iconPos,null,this.alt,this.iconNode);
-if(this.iconPos){
-_3.add(this.iconNode.firstChild,"mblToolBarButtonSpriteIcon");
-}
-}else{
-if(_6.createDomButton(this.domNode)){
-_3.add(this.domNode,"mblToolBarButtonDomButton");
-}else{
-_3.add(this.domNode,"mblToolBarButtonText");
-}
-}
-this.connect(this.domNode,"onclick","onClick");
-},select:function(){
-_3.toggle(this.domNode,this._selColor,!arguments[0]);
-this.selected=!arguments[0];
-},deselect:function(){
-this.select(true);
-},onClick:function(e){
-this.setTransitionPos(e);
-this.defaultClickAction();
-},_setBtnClassAttr:function(_9){
-var _a=this.domNode;
-if(_a.className.match(/(mblDomButton\w+)/)){
-_3.remove(_a,RegExp.$1);
-}
-_3.add(_a,_9);
-if(_6.createDomButton(this.domNode)){
-_3.add(this.domNode,"mblToolBarButtonDomButton");
-}
-},_setLabelAttr:function(_b){
-this.label=_b;
-this.domNode.innerHTML=this._cv?this._cv(_b):_b;
-}});
-});
+define("dojox/mobile/ToolBarButton","dojo/_base/declare,dojo/_base/lang,dojo/_base/window,dojo/dom-class,dojo/dom-construct,dojo/dom-style,./sniff,./_ItemBase".split(","),function(g,h,j,b,e,k,f,i){return g("dojox.mobile.ToolBarButton",i,{selected:!1,arrow:"",light:!0,defaultColor:"mblColorDefault",selColor:"mblColorDefaultSel",baseClass:"mblToolBarButton",_selStartMethod:"touch",_selEndMethod:"touch",buildRendering:function(){if(!this.label&&this.srcNodeRef)this.label=this.srcNodeRef.innerHTML;this.label=
+h.trim(this.label);this.domNode=this.srcNodeRef&&"SPAN"===this.srcNodeRef.tagName?this.srcNodeRef:e.create("span");this.inherited(arguments);if(this.light&&!this.arrow&&(!this.icon||!this.label))this.labelNode=this.tableNode=this.bodyNode=this.iconParentNode=this.domNode,b.add(this.domNode,this.defaultColor+" mblToolBarButtonBody"+(this.icon?" mblToolBarButtonLightIcon":" mblToolBarButtonLightText"));else{this.domNode.innerHTML="";if("left"===this.arrow||"right"===this.arrow)this.arrowNode=e.create("span",
+{className:"mblToolBarButtonArrow mblToolBarButton"+("left"===this.arrow?"Left":"Right")+"Arrow "+(f("ie")?"":this.defaultColor+" "+this.defaultColor+"45")},this.domNode),b.add(this.domNode,"mblToolBarButtonHas"+("left"===this.arrow?"Left":"Right")+"Arrow");this.bodyNode=e.create("span",{className:"mblToolBarButtonBody"},this.domNode);this.tableNode=e.create("table",{cellPadding:"0",cellSpacing:"0",border:"0"},this.bodyNode);var a=this.tableNode.insertRow(-1);this.iconParentNode=a.insertCell(-1);
+this.labelNode=a.insertCell(-1);this.iconParentNode.className="mblToolBarButtonIcon";this.labelNode.className="mblToolBarButtonLabel";this.icon&&"none"!==this.icon&&this.label&&(b.add(this.domNode,"mblToolBarButtonHasIcon"),b.add(this.bodyNode,"mblToolBarButtonLabeledIcon"));b.add(this.bodyNode,this.defaultColor)}},startup:function(){if(!this._started&&(this._keydownHandle=this.connect(this.domNode,"onkeydown","_onClick"),this.inherited(arguments),!this._isOnLine))this._isOnLine=!0,this.set("icon",
+this.icon)},_onClick:function(a){a&&"keydown"===a.type&&13!==a.keyCode||!1===this.onClick(a)||this.defaultClickAction(a)},onClick:function(){},_setLabelAttr:function(a){this.inherited(arguments);b.toggle(this.tableNode,"mblToolBarButtonText",a)},_setSelectedAttr:function(a){this.inherited(arguments);if(a){if(b.replace(this.bodyNode,this.selColor,this.defaultColor),!f("ie")&&this.arrowNode){var c=this.selColor,d=this.defaultColor;b.replace(this.arrowNode,c+" "+c+"45",d+" "+d+"45")}}else if(b.replace(this.bodyNode,
+this.defaultColor,this.selColor),!f("ie")&&this.arrowNode)c=this.defaultColor,d=this.selColor,b.replace(this.arrowNode,c+" "+c+"45",d+" "+d+"45");b.toggle(this.domNode,"mblToolBarButtonSelected",a);b.toggle(this.bodyNode,"mblToolBarButtonBodySelected",a)}})});

@@ -1,36 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertTableTitle: "Insérer une table",
-	modifyTableTitle: "Modifier une table",
-	rows: "Lignes :",
-	columns: "Colonnes :",
-	align: "Aligner :",
-	cellPadding: "Remplissage des cellules :",
-	cellSpacing: "Espacement des cellules :",
-	tableWidth: "Largeur de table :",
-	backgroundColor: "Couleur d'arrière-plan :",
-	borderColor: "Couleur des bordures :",
-	borderThickness: "Epaisseur des bordures",
-	percent: "pourcentage",
-	pixels: "pixels",
-	"default": "par défaut",
-	left: "aligné à gauche",
-	center: "centré",
-	right: "aligné à droite",
-	buttonSet: "Définir", // translated elsewhere?
-	buttonInsert: "Insérer",
-	buttonCancel: "Annuler",
-
-	selectTableLabel: "Sélectionner une table",
-	insertTableRowBeforeLabel: "Ajouter une ligne avant",
-	insertTableRowAfterLabel: "Ajouter une ligne après",
-	insertTableColumnBeforeLabel: "Ajouter une colonne avant",
-	insertTableColumnAfterLabel: "Ajouter une colonne après",
-	deleteTableRowLabel: "Supprimer la ligne",
-	deleteTableColumnLabel: "Supprimer la colonne"
-})
-	
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/fr/TableDialog",{insertTableTitle:"Ins\u00e9rer une table",modifyTableTitle:"Modifier une table",rows:"Lignes :",columns:"Colonnes :",align:"Aligner :",cellPadding:"Remplissage des cellules :",cellSpacing:"Espacement des cellules :",tableWidth:"Largeur de table :",backgroundColor:"Couleur d'arri\u00e8re-plan :",borderColor:"Couleur des bordures :",borderThickness:"Epaisseur des bordures :",percent:"pourcentage",pixels:"pixels","default":"par d\u00e9faut",left:"align\u00e9 \u00e0 gauche",
+center:"centr\u00e9",right:"align\u00e9 \u00e0 droite",buttonSet:"D\u00e9finir",buttonInsert:"Ins\u00e9rer",buttonCancel:"Annuler",selectTableLabel:"S\u00e9lectionner une table",insertTableRowBeforeLabel:"Ajouter une ligne avant",insertTableRowAfterLabel:"Ajouter une ligne apr\u00e8s",insertTableColumnBeforeLabel:"Ajouter une colonne avant",insertTableColumnAfterLabel:"Ajouter une colonne apr\u00e8s",deleteTableRowLabel:"Supprimer la ligne",deleteTableColumnLabel:"Supprimer la colonne"});

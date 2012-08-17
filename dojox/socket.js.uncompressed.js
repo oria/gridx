@@ -1,25 +1,24 @@
-//>>built
-define("dojox/socket", ["dojo", "dojo/Evented", "dojo/cookie", "dojo/_base/url"], function(dojo, Evented) {
+define("dojox/socket", ["dojo", "dojo/on", "dojo/Evented", "dojo/cookie", "dojo/_base/url"], function(dojo, on, Evented) {
 
 var WebSocket = window.WebSocket;
 
 function Socket(/*dojo.__XhrArgs*/ argsOrUrl){
 	// summary:
 	//		Provides a simple socket connection using WebSocket, or alternate
-	// 		communication mechanisms in legacy browsers for comet-style communication. This is based
+	//		communication mechanisms in legacy browsers for comet-style communication. This is based
 	//		on the WebSocket API and returns an object that implements the WebSocket interface:
 	//		http://dev.w3.org/html5/websockets/#websocket
-	//	description:
+	// description:
 	//		Provides socket connections. This can be used with virtually any Comet protocol.
-	//	argsOrUrl:
+	// argsOrUrl:
 	//		This uses the same arguments as the other I/O functions in Dojo, or a
-	// 		URL to connect to. The URL should be a relative URL in order to properly
+	//		URL to connect to. The URL should be a relative URL in order to properly
 	//		work with WebSockets (it can still be host relative, like //other-site.org/endpoint)
 	// returns:
-	// 		An object that implements the WebSocket API
+	//		An object that implements the WebSocket API
 	// example:
 	//		| dojo.require("dojox.socket");
-	//		| var socket = dojox.socket({"//comet-server/comet");
+	//		| var socket = dojox.socket({"url://comet-server/comet");
 	//		| // we could also add auto-reconnect support
 	//		| // now we can connect to standard HTML5 WebSocket-style events
 	//		| dojo.connect(socket, "onmessage", function(event){
@@ -76,29 +75,27 @@ Socket.replace = function(socket, newSocket, listenForOpen){
 	dojo.forEach(["message", "close", "error"], proxyEvent);
 	function proxyEvent(type){
 		(newSocket.addEventListener || newSocket.on).call(newSocket, type, function(event){
-			var newEvent = document.createEvent("MessageEvent");
-			newEvent.initMessageEvent(event.type, false, false, event.data, event.origin, event.lastEventId, event.source);
-			socket.dispatchEvent(newEvent);
+			on.emit(socket, event.type, event);
 		}, true);
 	}
 };
 Socket.LongPoll = function(/*dojo.__XhrArgs*/ args){
 	// summary:
 	//		Provides a simple long-poll based comet-style socket/connection to a server and returns an
-	// 		object implementing the WebSocket interface:
+	//		object implementing the WebSocket interface:
 	//		http://dev.w3.org/html5/websockets/#websocket
-	//	args:
+	// args:
 	//		This uses the same arguments as the other I/O functions in Dojo, with this addition:
 	//	args.interval:
 	//		Indicates the amount of time (in milliseconds) after a response was received
 	//		before another request is made. By default, a request is made immediately
 	//		after getting a response. The interval can be increased to reduce load on the
 	//		server or to do simple time-based polling where the server always responds
-	// 		immediately.
+	//		immediately.
 	//	args.transport:
 	//		Provide an alternate transport like dojo.io.script.get
 	// returns:
-	// 		An object that implements the WebSocket API
+	//		An object that implements the WebSocket API
 	// example:
 	//		| dojo.require("dojox.socket.LongPoll");
 	//		| var socket = dojox.socket.LongPoll({url:"/comet"});
@@ -116,7 +113,7 @@ var cancelled = false,
 	var socket = {
 		send: function(data){
 			// summary:
-			// 		Send some data using XHR or provided transport
+			//		Send some data using XHR or provided transport
 			var sendArgs = dojo.delegate(args);
 			sendArgs.rawBody = data;
 			clearTimeout(timeoutId);
@@ -152,7 +149,7 @@ var cancelled = false,
 		},
 		close: function(){
 			// summary:
-			// 		Close the connection
+			//		Close the connection
 			socket.readyState = 2;
 			cancelled = true;
 			for(var i = 0; i < connections.length; i++){
@@ -169,17 +166,14 @@ var cancelled = false,
 		OPEN: 1,
 		CLOSING: 2,
 		CLOSED: 3,
-		dispatchEvent: function(event){
-			fire(event.type, event);
-		},
 		on: Evented.prototype.on,
 		firstRequest: function(args){
 			// summary:
-			// 		This allows for special handling for the first request. This is useful for
+			//		This allows for special handling for the first request. This is useful for
 			//		providing information to disambiguate between the first request and
 			//		subsequent long-poll requests so the server can properly setup a
-			// 		connection on the first connection or reject a request for an expired
-			// 		connection if the request is not expecting to be the first for a connection.
+			//		connection on the first connection or reject a request for an expired
+			//		connection if the request is not expecting to be the first for a connection.
 			//		This method can be overriden. The default behavior is to include a Pragma
 			//		header with a value of "start-long-poll"
 			var headers = (args.headers || (args.headers = {}));
@@ -206,11 +200,9 @@ var cancelled = false,
 	}
 	function fire(type, object, deferred){
 		if(socket["on" + type]){
-			var event = document.createEvent("HTMLEvents");
-			event.initEvent(type, false, false);
-			dojo.mixin(event, object);
-			event.ioArgs = deferred && deferred.ioArgs;
-			socket["on" + type](event);
+			object.ioArgs = deferred && deferred.ioArgs;
+			object.type = type;
+			on.emit(socket, type, object);
 		}
 	}
 	// provide an alias for Dojo's connect method

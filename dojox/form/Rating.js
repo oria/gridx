@@ -1,46 +1,5 @@
 //>>built
-define("dojox/form/Rating",["dojo/_base/declare","dojo/_base/lang","dojo/dom-attr","dojo/dom-class","dojo/string","dojo/query","dijit/form/_FormWidget"],function(_1,_2,_3,_4,_5,_6,_7){
-return _1("dojox.form.Rating",_7,{templateString:null,numStars:3,value:0,constructor:function(_8){
-_2.mixin(this,_8);
-var _9="<div dojoAttachPoint=\"domNode\" class=\"dojoxRating dijitInline\">"+"<input type=\"hidden\" value=\"0\" dojoAttachPoint=\"focusNode\" /><ul>${stars}</ul>"+"</div>";
-var _a="<li class=\"dojoxRatingStar dijitInline\" dojoAttachEvent=\"onclick:onStarClick,onmouseover:_onMouse,onmouseout:_onMouse\" value=\"${value}\"></li>";
-var _b="";
-for(var i=0;i<this.numStars;i++){
-_b+=_5.substitute(_a,{value:i+1});
-}
-this.templateString=_5.substitute(_9,{stars:_b});
-},postCreate:function(){
-this.inherited(arguments);
-this._renderStars(this.value);
-},_onMouse:function(_c){
-if(this.hovering){
-var _d=+_3.get(_c.target,"value");
-this.onMouseOver(_c,_d);
-this._renderStars(_d,true);
-}else{
-this._renderStars(this.value);
-}
-},_renderStars:function(_e,_f){
-_6(".dojoxRatingStar",this.domNode).forEach(function(_10,i){
-if(i+1>_e){
-_4.remove(_10,"dojoxRatingStarHover");
-_4.remove(_10,"dojoxRatingStarChecked");
-}else{
-_4.remove(_10,"dojoxRatingStar"+(_f?"Checked":"Hover"));
-_4.add(_10,"dojoxRatingStar"+(_f?"Hover":"Checked"));
-}
-});
-},onStarClick:function(evt){
-var _11=+_3.get(evt.target,"value");
-this.setAttribute("value",_11==this.value?0:_11);
-this._renderStars(this.value);
-this.onChange(this.value);
-},onMouseOver:function(){
-},setAttribute:function(key,_12){
-this.set(key,_12);
-if(key=="value"){
-this._renderStars(this.value);
-this.onChange(this.value);
-}
-}});
-});
+define("dojox/form/Rating","dojo/_base/declare,dojo/_base/lang,dojo/dom-attr,dojo/dom-class,dojo/mouse,dojo/on,dojo/string,dojo/query,dijit/form/_FormWidget".split(","),function(i,f,g,e,j,d,h,k,l){return i("dojox.form.Rating",l,{templateString:null,numStars:3,value:0,buildRendering:function(a){for(var b="",c=0;c<this.numStars;c++)b+=h.substitute('<li class="dojoxRatingStar dijitInline" value="${value}"></li>',{value:c+1});this.templateString=h.substitute('<div dojoAttachPoint="domNode" class="dojoxRating dijitInline"><input type="hidden" value="0" dojoAttachPoint="focusNode" /><ul data-dojo-attach-point="list">${stars}</ul></div>',
+{stars:b});this.inherited(arguments)},postCreate:function(){this.inherited(arguments);this._renderStars(this.value);this.own(d(this.list,d.selector(".dojoxRatingStar","mouseover"),f.hitch(this,"_onMouse")),d(this.list,d.selector(".dojoxRatingStar","click"),f.hitch(this,"onStarClick")),d(this.list,j.leave,f.hitch(this,function(){this._renderStars(this.value)})))},_onMouse:function(a){var b=+g.get(a.target,"value");this._renderStars(b,!0);this.onMouseOver(a,b)},_renderStars:function(a,b){k(".dojoxRatingStar",
+this.domNode).forEach(function(c,d){d+1>a?(e.remove(c,"dojoxRatingStarHover"),e.remove(c,"dojoxRatingStarChecked")):(e.remove(c,"dojoxRatingStar"+(b?"Checked":"Hover")),e.add(c,"dojoxRatingStar"+(b?"Hover":"Checked")))})},onStarClick:function(a){a=+g.get(a.target,"value");this.setAttribute("value",a==this.value?0:a);this._renderStars(this.value);this.onChange(this.value)},onMouseOver:function(){},setAttribute:function(a,b){this.set(a,b)},_setValueAttr:function(a){this._set("value",a);this._renderStars(a);
+this.onChange(a)}})});

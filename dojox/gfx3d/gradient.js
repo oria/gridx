@@ -1,18 +1,3 @@
 //>>built
-define("dojox/gfx3d/gradient",["dojo/_base/lang","./matrix","./vector"],function(_1,m,v){
-var _2=_1.getObject("dojox.gfx3d",true);
-var _3=function(a,b){
-return Math.sqrt(Math.pow(b.x-a.x,2)+Math.pow(b.y-a.y,2));
-};
-var N=32;
-_2.gradient=function(_4,_5,_6,_7,_8,to,_9){
-var mx=m.normalize(_9),f=m.multiplyPoint(mx,_7*Math.cos(_8)+_6.x,_7*Math.sin(_8)+_6.y,_6.z),t=m.multiplyPoint(mx,_7*Math.cos(to)+_6.x,_7*Math.sin(to)+_6.y,_6.z),c=m.multiplyPoint(mx,_6.x,_6.y,_6.z),_a=(to-_8)/N,r=_3(f,t)/2,_b=_4[_5.type],_c=_5.finish,_d=_5.color,_e=[{offset:0,color:_b.call(_4,v.substract(f,c),_c,_d)}];
-for(var a=_8+_a;a<to;a+=_a){
-var p=m.multiplyPoint(mx,_7*Math.cos(a)+_6.x,_7*Math.sin(a)+_6.y,_6.z),df=_3(f,p),dt=_3(t,p);
-_e.push({offset:df/(df+dt),color:_b.call(_4,v.substract(p,c),_c,_d)});
-}
-_e.push({offset:1,color:_b.call(_4,v.substract(t,c),_c,_d)});
-return {type:"linear",x1:0,y1:-r,x2:0,y2:r,colors:_e};
-};
-return _2.gradient;
-});
+define("dojox/gfx3d/gradient",["dojo/_base/lang","./matrix","./vector"],function(d,h,i){var d=d.getObject("dojox.gfx3d",!0),j=function(e,b){return Math.sqrt(Math.pow(b.x-e.x,2)+Math.pow(b.y-e.y,2))};d.gradient=function(e,b,a,f,c,d,g){for(var g=h.normalize(g),k=h.multiplyPoint(g,f*Math.cos(c)+a.x,f*Math.sin(c)+a.y,a.z),l=h.multiplyPoint(g,f*Math.cos(d)+a.x,f*Math.sin(d)+a.y,a.z),m=h.multiplyPoint(g,a.x,a.y,a.z),r=(d-c)/32,s=j(k,l)/2,n=e[b.type],o=b.finish,b=b.color,p=[{offset:0,color:n.call(e,i.substract(k,
+m),o,b)}],c=c+r;c<d;c+=r){var q=h.multiplyPoint(g,f*Math.cos(c)+a.x,f*Math.sin(c)+a.y,a.z),t=j(k,q),u=j(l,q);p.push({offset:t/(t+u),color:n.call(e,i.substract(q,m),o,b)})}p.push({offset:1,color:n.call(e,i.substract(l,m),o,b)});return{type:"linear",x1:0,y1:-s,x2:0,y2:s,colors:p}};return d.gradient});

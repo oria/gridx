@@ -1,12 +1,9 @@
-//>>built
-define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang) {
+define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_base/lang"], function(dojo, has, require, domReady, lang){
 	// module:
 	//		dojo/ready
-	// summary:
-	//		This module defines the dojo.ready API.
-	//
 	// note:
 	//		This module should be unnecessary in dojo 2.0
+
 	var
 		// truthy if DOMContentLoaded or better (e.g., window.onload fired) has been achieved
 		isDomReady = 0,
@@ -48,25 +45,17 @@ define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_ba
 			}
 		};
 
-	// define requireCompleteSignal; impl depends on loader
-	if(1){
-		require.on("idle", onLoad);
-		requestCompleteSignal = function(){
-			if(require.idle()){
-				onLoad();
-			} // else do nothing, onLoad will be called with the next idle signal
-		};
-	}else{
-		// RequireJS or similar
-		requestCompleteSignal = function(){
-			// the next function call will fail if you don't have a loader with require.ready
-			// in that case, either fix your loader, use dojo's loader, or don't call dojo.ready;
-			require.ready(onLoad);
-		};
-	}
+	require.on("idle", onLoad);
+	requestCompleteSignal = function(){
+		if(require.idle()){
+			onLoad();
+		} // else do nothing, onLoad will be called with the next idle signal
+	};
 
 	var ready = dojo.ready = dojo.addOnLoad = function(priority, context, callback){
-		// summary: Add a function to execute on DOM content loaded and all requested modules have arrived and been evaluated.
+		// summary:
+		//		Add a function to execute on DOM content loaded and all requested modules have arrived and been evaluated.
+		//		In most cases, the `domReady` plug-in should suffice and this method should not be needed.
 		// priority: Integer?
 		//		The order in which to exec this callback relative to other callbacks, defaults to 1000
 		// context: Object?|Function
@@ -76,22 +65,30 @@ define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_ba
 		//
 		// example:
 		//	Simple DOM and Modules ready syntax
-		//	|	dojo.ready(function(){ alert("Dom ready!"); });
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		ready(function(){ alert("Dom ready!"); });
+		//	|	});
 		//
 		// example:
 		//	Using a priority
-		//	|	dojo.ready(2, function(){ alert("low priority ready!"); })
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		ready(2, function(){ alert("low priority ready!"); })
+		//	|	});
 		//
 		// example:
 		//	Using context
-		//	|	dojo.ready(foo, function(){
-		//	|		// in here, this == foo
-		//	|	})
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		ready(foo, function(){
+		//	|			// in here, this == foo
+		//	|		});
+		//	|	});
 		//
 		// example:
-		//	Using dojo.hitch style args:
-		//	|	var foo = { dojoReady: function(){ console.warn(this, "dojo dom and modules ready."); } };
-		//	|	dojo.ready(foo, "dojoReady");
+		//	Using dojo/hitch style args:
+		//	|	require(["dojo/ready"], function(ready){
+		//	|		var foo = { dojoReady: function(){ console.warn(this, "dojo dom and modules ready."); } };
+		//	|		ready(foo, "dojoReady");
+		//	|	});
 
 		var hitchArgs = lang._toArray(arguments);
 		if(typeof priority != "number"){
@@ -112,15 +109,15 @@ define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_ba
 		requestCompleteSignal();
 	};
 
-	true || has.add("dojo-config-addOnLoad", 1);
-	if(1){
+	 1 || has.add("dojo-config-addOnLoad", 1);
+	if( 1 ){
 		var dca = dojo.config.addOnLoad;
 		if(dca){
 			ready[(lang.isArray(dca) ? "apply" : "call")](dojo, dca);
 		}
 	}
 
-	if(1 && dojo.config.parseOnLoad && !dojo.isAsync){
+	if( 1  && dojo.config.parseOnLoad && !dojo.isAsync){
 		ready(99, function(){
 			if(!dojo.parser){
 				dojo.deprecated("Add explicit require(['dojo/parser']);", "", "2.0");
@@ -129,7 +126,7 @@ define("dojo/ready", ["./_base/kernel", "./has", "require", "./domReady", "./_ba
 		});
 	}
 
-	if(1){
+	if( 1 ){
 		domReady(handleDomReady);
 	}else{
 		handleDomReady();

@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"collapse": "Zwiń pasek narzędzi edytora",
-	"expand": "Rozwiń pasek narzędzi edytora"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/pl/CollapsibleToolbar",{collapse:"Zwi\u0144 pasek narz\u0119dzi edytora",expand:"Rozwi\u0144 pasek narz\u0119dzi edytora"});

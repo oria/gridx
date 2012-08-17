@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/rails", ["dijit","dojo","dojox","dojo/require!dojo/NodeList-traverse"], function(dijit,dojo,dojox){
 dojo.provide("dojox.rails");

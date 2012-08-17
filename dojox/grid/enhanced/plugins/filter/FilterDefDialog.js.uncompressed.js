@@ -1,4 +1,3 @@
-//>>built
 define("dojox/grid/enhanced/plugins/filter/FilterDefDialog", [
 	"dojo/_base/declare",
 	"dojo/_base/array",
@@ -91,10 +90,10 @@ var FilterAccordionContainer = declare("dojox.grid.enhanced.plugins.filter.Accor
 			return;
 		}
 		this.inherited(arguments);
-		if(parseInt(has("ie"), 10) == 7){
+		if(parseInt(has('ie'), 10) == 7){
 			//IE7 will fire a lot of "onresize" event during initialization.
 			array.some(this._connects, function(cnnt){
-				if(cnnt[0][1] == "onresize"){
+				if((cnnt[0] || {})[1] == "onresize"){
 					this.disconnect(cnnt);
 					return true;
 				}
@@ -129,7 +128,7 @@ var FilterAccordionContainer = declare("dojox.grid.enhanced.plugins.filter.Accor
 		}
 		event.stop(e);
 		win.scrollIntoView(this.selectedChildWidget._buttonWidget.domNode.parentNode);
-		if(has("ie")){
+		if(has('ie')){
 			//IE will not show focus indicator if tabIndex is -1
 			this.selectedChildWidget._removeCBoxBtn.focusNode.setAttribute("tabIndex", this._focusOnRemoveBtn ? _tabIdxes.accordionTitle : -1);
 		}
@@ -196,7 +195,7 @@ var FilterAccordionContainer = declare("dojox.grid.enhanced.plugins.filter.Accor
 	},
 	_setupTitleDom: function(child){
 		var w = html.contentBox(child._buttonWidget.titleNode).w;
-		if(has("ie") < 8){ w -= 8; }
+		if(has('ie') < 8){ w -= 8; }
 		html.style(child._buttonWidget.titleTextNode, "width", w + "px");
 	}
 });
@@ -294,6 +293,11 @@ var CriteriaBox = declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[_Wid
 		this._showSelectOrLabel(this._condSelect, this._condSelectAlt);
 		
 		this.connect(g.layout, "moveColumn", "onMoveColumn");
+		var _this = this;
+		setTimeout(function(){
+			var type = dlg.getColumnType(dlg.curColIdx);
+			_this._setValueBoxByType(type);
+		}, 0);
 	},
 	_getColumnOptions: function(){
 		var colIdx = this.dlg.curColIdx >= 0 ? String(this.dlg.curColIdx) : "anycolumn";
@@ -468,13 +472,14 @@ var CriteriaBox = declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[_Wid
 		if(obj.column){
 			this._colSelect.set("value", obj.column);
 		}
-		if(obj.condition){
-			this._condSelect.set("value", obj.condition);
-		}
 		if(obj.type){
+			this._setConditionsByType(obj.type);
 			this._setValueBoxByType(obj.type);
 		}else{
 			obj.type = this.dlg.getColumnType(this._colSelect.get("value"));
+		}
+		if(obj.condition){
+			this._condSelect.set("value", obj.condition);
 		}
 		var value = obj.value || "";
 		if(value || (obj.type != "date" && obj.type != "time")){
@@ -527,7 +532,7 @@ var CriteriaBox = declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[_Wid
 			node.title = [column, " ", condition, " ", value].join('');
 		}
 		node.innerHTML = title.join('');
-		if(has("mozilla")){
+		if(has('mozilla')){
 			var tt = html.create("div", {
 				"style": "width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 9999;"
 			}, node);
@@ -612,21 +617,24 @@ var CriteriaBox = declare("dojox.grid.enhanced.plugins.filter.CriteriaBox",[_Wid
 			};
 		if(type == "string"){
 			if(cell && (cell.suggestion || cell.autoComplete)){
-				html.mixin(res, {
+				lang.mixin(res, {
 					store: g.store,
 					searchAttr: cell.field || cell.name,
+					query: g.query || {},
 					fetchProperties: {
 						sort: [{"attribute": cell.field || cell.name}],
-						query: g.query,
-						queryOptions: g.queryOptions
+						queryOptions: lang.mixin({
+							ignoreCase: true,
+							deep: true
+						}, g.queryOptions || {})
 					}
 				});
 			}
 		}else if(type == "boolean"){
-			html.mixin(res, this.dlg.builder.defaultArgs["boolean"]);
+			lang.mixin(res, this.dlg.builder.defaultArgs["boolean"]);
 		}
 		if(cell && cell.dataTypeArgs){
-			html.mixin(res, cell.dataTypeArgs);
+			lang.mixin(res, cell.dataTypeArgs);
 		}
 		return res;
 	},
@@ -931,7 +939,7 @@ var FilterDefDialog = declare("dojox.grid.enhanced.plugins.filter.FilterDefDialo
 		//Asign an impossibly large scrollTop to scroll the criteria pane to the bottom.
 		this.filterDefPane.criteriaPane.scrollTop = 1000000;
 		if(cbs.length === 4){
-			if(has("ie") <= 6 && !this.__alreadyResizedForIE6){
+			if(has('ie') <= 6 && !this.__alreadyResizedForIE6){
 				var size = html.position(cc.domNode);
 				size.w -= metrics.getScrollbar().w;
 				cc.resize(size);
@@ -1146,7 +1154,7 @@ var FilterDefDialog = declare("dojox.grid.enhanced.plugins.filter.FilterDefDialo
 		//		Triggered when the rendering of the filter definition dialog is completely finished.
 		// cbox:
 		//		Current visible criteria box
-		if(!has("ff")){
+		if(!has('ff')){
 			var elems = dijitA11y._getTabNavigable(html.byId(cbox.domNode));
 			dijitFocus.focus(elems.lowest || elems.first);
 		}else{

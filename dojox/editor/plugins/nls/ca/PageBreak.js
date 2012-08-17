@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"pageBreak": "Salt de pàgina"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/ca/PageBreak",{pageBreak:"Salt de p\u00e0gina"});

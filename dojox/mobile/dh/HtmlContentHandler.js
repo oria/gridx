@@ -1,0 +1,3 @@
+//>>built
+define("dojox/mobile/dh/HtmlContentHandler","dojo/_base/kernel,dojo/_base/array,dojo/_base/declare,dojo/_base/Deferred,dojo/dom-class,dojo/dom-construct,dijit/registry,../lazyLoadUtils".split(","),function(m,n,f,g,h,j,k,l){return f("dojox.mobile.dh.HtmlContentHandler",null,{parse:function(a,d,e){this.execScript&&(a=this.execScript(a));var b=j.create("div",{innerHTML:a,style:{visibility:"hidden"}});d.insertBefore(b,e);return g.when(l.instantiateLazyWidgets(b),function(){var c;for(i=0,len=b.childNodes.length;i<
+len;i++){var a=b.firstChild;!c&&1===a.nodeType&&(c=k.byNode(a));d.insertBefore(b.firstChild,e)}d.removeChild(b);return!c||!h.contains(c.domNode,"mblView")?null:c.id})}})});

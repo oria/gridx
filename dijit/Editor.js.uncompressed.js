@@ -1,4 +1,3 @@
-//>>built
 define("dijit/Editor", [
 	"dojo/_base/array", // array.forEach
 	"dojo/_base/declare", // declare
@@ -11,7 +10,7 @@ define("dijit/Editor", [
 	"dojo/_base/event", // event.stop
 	"dojo/keys", // keys.F1 keys.F15 keys.TAB
 	"dojo/_base/lang", // lang.getObject lang.hitch
-	"dojo/_base/sniff", // has("ie") has("mac") has("webkit")
+	"dojo/sniff", // has("ie") has("mac") has("webkit")
 	"dojo/string", // string.substitute
 	"dojo/topic", // topic.publish()
 	"dojo/_base/window", // win.withGlobal
@@ -26,7 +25,7 @@ define("dijit/Editor", [
 	"./_editor/html",
 	"./_editor/range",
 	"./_editor/RichText",
-	".",	// dijit._scopeName
+	"./main",	// dijit._scopeName
 	"dojo/i18n!./_editor/nls/commands"
 ], function(array, declare, Deferred, i18n, domAttr, domClass, domGeometry, domStyle,
 			event, keys, lang, has, string, topic, win,
@@ -35,8 +34,6 @@ define("dijit/Editor", [
 
 	// module:
 	//		dijit/Editor
-	// summary:
-	//		A rich text Editing widget
 
 	var Editor = declare("dijit.Editor", RichText, {
 		// summary:
@@ -49,7 +46,7 @@ define("dijit/Editor", [
 		//		the options available in the toolbar.  Content generation may vary across
 		//		browsers, and clipboard operations may have different results, to name
 		//		a few limitations.  Note: this widget should not be used with the HTML
-		//		&lt;TEXTAREA&gt; tag -- see dijit._editor.RichText for details.
+		//		&lt;TEXTAREA&gt; tag -- see dijit/_editor/RichText for details.
 
 		// plugins: [const] Object[]
 		//		A list of plugin names (as strings) or instances (as objects)
@@ -63,11 +60,13 @@ define("dijit/Editor", [
 		//		A list of extra plugin names which will be appended to plugins array
 		extraPlugins: null,
 
-		constructor: function(){
+		constructor: function(/*===== params, srcNodeRef =====*/){
 			// summary:
-			//		Runs on widget initialization to setup arrays etc.
-			// tags:
-			//		private
+			//		Create the widget.
+			// params: Object|null
+			//		Initial settings for any of the attributes, except readonly attributes.
+			// srcNodeRef: DOMNode
+			//		The editor replaces the specified DOMNode.
 
 			if(!lang.isArray(this.plugins)){
 				this.plugins=["undo","redo","|","cut","copy","paste","|","bold","italic","underline","strikethrough","|",
@@ -122,6 +121,7 @@ define("dijit/Editor", [
 			if(!this.toolbar){
 				// if we haven't been assigned a toolbar, create one
 				this.toolbar = new Toolbar({
+					ownerDocument: this.ownerDocument,
 					dir: this.dir,
 					lang: this.lang
 				});
@@ -131,7 +131,7 @@ define("dijit/Editor", [
 			array.forEach(this.plugins, this.addPlugin, this);
 
 			// Okay, denote the value can now be set.
-			this.setValueDeferred.callback(true);
+			this.setValueDeferred.resolve(true);
 
 			domClass.add(this.iframe.parentNode, "dijitEditorIFrameContainer");
 			domClass.add(this.iframe, "dijitEditorIFrame");
@@ -157,7 +157,7 @@ define("dijit/Editor", [
 			delete this.toolbar;
 			this.inherited(arguments);
 		},
-		addPlugin: function(/*String||Object||Function*/plugin, /*Integer?*/index){
+		addPlugin: function(/*String||Object||Function*/ plugin, /*Integer?*/ index){
 			// summary:
 			//		takes a plugin name as a string or a plugin instance and
 			//		adds it to the toolbar and associates it with this editor
@@ -165,13 +165,11 @@ define("dijit/Editor", [
 			//		plugins array. If index is passed, it's placed in the plugins
 			//		array at that index. No big magic, but a nice helper for
 			//		passing in plugin names via markup.
-			//
-			// plugin: String, args object, plugin instance, or plugin constructor
-			//
+			// plugin:
+			//		String, args object, plugin instance, or plugin constructor
 			// args:
 			//		This object will be passed to the plugin constructor
-			//
-			// index: Integer
+			// index:
 			//		Used when creating an instance from
 			//		something already in this.plugins. Ensures that the new
 			//		instance is assigned to this.plugins at that index.
@@ -190,14 +188,18 @@ define("dijit/Editor", [
 					}
 				}
 				if(!o.plugin){
-					var pc = args.ctor || lang.getObject(args.name);
-					if(pc){
-						o.plugin=new pc(args);
+					try{
+						// TODO: remove lang.getObject() call in 2.0
+						var pc = args.ctor || lang.getObject(args.name) || require(args.name);
+						if(pc){
+							o.plugin = new pc(args);
+						}
+					}catch(e){
+						throw new Error(this.id + ": cannot find plugin [" + args.name + "]");
 					}
 				}
 				if(!o.plugin){
-					console.warn('Cannot find plugin',plugin);
-					return;
+					throw new Error(this.id + ": cannot find plugin [" + args.name + "]");
 				}
 				plugin=o.plugin;
 			}
@@ -216,7 +218,7 @@ define("dijit/Editor", [
 
 		resize: function(size){
 			// summary:
-			//		Resize the editor to the specified size, see `dijit.layout._LayoutWidget.resize`
+			//		Resize the editor to the specified size, see `dijit/layout/_LayoutWidget.resize()`
 			if(size){
 				// we've been given a height/width for the entire editor (toolbar + contents), calls layout()
 				// to split the allocated size between the toolbar and the contents
@@ -231,7 +233,7 @@ define("dijit/Editor", [
 		},
 		layout: function(){
 			// summary:
-			//		Called from `dijit.layout._LayoutWidget.resize`.  This shouldn't be called directly
+			//		Called from `dijit/layout/_LayoutWidget.resize()`.  This shouldn't be called directly
 			// tags:
 			//		protected
 
@@ -291,7 +293,7 @@ define("dijit/Editor", [
 				delete this._cursorToStart; // Remove the force to cursor to start position.
 				delete this._savedSelection; // new mouse position overrides old selection
 				if(e.target.tagName == "BODY"){
-					setTimeout(lang.hitch(this, "placeCursorAtEnd"), 0);
+					this.defer("placeCursorAtEnd");
 				}
 				this.inherited(arguments);
 			}
@@ -346,9 +348,9 @@ define("dijit/Editor", [
 			}
 			if(this.editActionInterval>0){
 				if(this._editTimer){
-					clearTimeout(this._editTimer);
+					this._editTimer.remove();
 				}
-				this._editTimer = setTimeout(lang.hitch(this, this.endEditing), this._editInterval);
+				this._editTimer = this.defer("endEditing", this._editInterval);
 			}
 		},
 
@@ -359,7 +361,7 @@ define("dijit/Editor", [
 		execCommand: function(cmd){
 			// summary:
 			//		Main handler for executing any commands to the editor, like paste, bold, etc.
-			//      Called by plugins, but not meant to be called by end users.
+			//		Called by plugins, but not meant to be called by end users.
 			// tags:
 			//		protected
 			if(this.customUndo && (cmd == 'undo' || cmd == 'redo')){
@@ -415,7 +417,8 @@ define("dijit/Editor", [
 				}
 			}catch(e){
 				//TODO: when else might we get an exception?  Do we need the Mozilla test below?
-				if(e.code == 1011 /* Mozilla: service denied */){
+				if(e.code == 1011 /* Mozilla: service denied */ ||
+					(e.code == 9 && has("opera") /* Opera not supported */)){
 					// Warn user of platform limitation.  Cannot programmatically access clipboard. See ticket #4136
 					var sub = string.substitute,
 						accel = {cut:'X', copy:'C', paste:'V'};
@@ -430,7 +433,7 @@ define("dijit/Editor", [
 		queryCommandEnabled: function(cmd){
 			// summary:
 			//		Returns true if specified editor command is enabled.
-			//      Used by the plugins to know when to highlight/not highlight buttons.
+			//		Used by the plugins to know when to highlight/not highlight buttons.
 			// tags:
 			//		protected
 			if(this.customUndo && (cmd == 'undo' || cmd == 'redo')){
@@ -456,7 +459,7 @@ define("dijit/Editor", [
 						array.forEach(mark,function(n){
 							bookmark.push(rangeapi.getNode(n,this.editNode));
 						},this);
-						win.withGlobal(this.window,'moveToBookmark',dijit,[{mark: bookmark, isCollapsed: col}]);
+						win.withGlobal(this.window,'moveToBookmark',focusBase,[{mark: bookmark, isCollapsed: col}]);
 					}else{
 						if(mark.startContainer && mark.endContainer){
 							// Use the pseudo WC3 range API.  This works better for positions
@@ -513,7 +516,6 @@ define("dijit/Editor", [
 			//		Handler for editor undo (ex: ctrl-z) operation
 			// tags:
 			//		private
-			//console.log('undo');
 			var ret = false;
 			if(!this._undoRedoActive){
 				this._undoRedoActive = true;
@@ -536,7 +538,6 @@ define("dijit/Editor", [
 			//		Handler for editor redo (ex: ctrl-y) operation
 			// tags:
 			//		private
-			//console.log('redo');
 			var ret = false;
 			if(!this._undoRedoActive){
 				this._undoRedoActive = true;
@@ -560,7 +561,7 @@ define("dijit/Editor", [
 			// tags:
 			//		private
 			if(this._editTimer){
-				clearTimeout(this._editTimer);
+				this._editTimer = this._editTimer.remove();
 			}
 			if(this._inEditing){
 				this._endEditing(ignore_caret);
@@ -634,6 +635,7 @@ define("dijit/Editor", [
 			//		Deals with saving undo; see editActionInterval parameter.
 			// tags:
 			//		private
+			
 			// Avoid filtering to make sure selections restore.
 			var v = html.getChildrenHtml(this.editNode);
 
@@ -681,13 +683,11 @@ define("dijit/Editor", [
 							this.endEditing();//end current typing step if any
 							if(e.keyCode == 88){
 								this.beginEditing('cut');
-								//use timeout to trigger after the cut is complete
-								setTimeout(lang.hitch(this, this.endEditing), 1);
 							}else{
 								this.beginEditing('paste');
-								//use timeout to trigger after the paste is complete
-								setTimeout(lang.hitch(this, this.endEditing), 1);
 							}
+							//use timeout to trigger after the paste is complete
+							this.defer("endEditing", 1);
 							break;
 						}
 						//pass through
@@ -748,7 +748,7 @@ define("dijit/Editor", [
 				// only restore the selection if the current range is collapsed
 				// if not collapsed, then it means the editor does not lose
 				// selection and there is no need to restore it
-				if(win.withGlobal(this.window,'isCollapsed',dijit)){
+				if(win.withGlobal(this.window,'isCollapsed',focusBase)){
 					this._moveToBookmark(this._savedSelection);
 				}
 				delete this._savedSelection;
@@ -786,20 +786,19 @@ define("dijit/Editor", [
 		},
 
 		_setDisabledAttr: function(/*Boolean*/ value){
-			var disableFunc = lang.hitch(this, function(){
+			this.setValueDeferred.then(lang.hitch(this, function(){
 				if((!this.disabled && value) || (!this._buttonEnabledPlugins && value)){
-				// Disable editor: disable all enabled buttons and remember that list
+					// Disable editor: disable all enabled buttons and remember that list
 					array.forEach(this._plugins, function(p){
 						p.set("disabled", true);
-				});
-			}else if(this.disabled && !value){
+					});
+				}else if(this.disabled && !value){
 					// Restore plugins to being active.
 					array.forEach(this._plugins, function(p){
 						p.set("disabled", false);
-				});
-			}
-			});
-			this.setValueDeferred.addCallback(disableFunc);
+					});
+				}
+			}));
 			this.inherited(arguments);
 		},
 
@@ -852,7 +851,12 @@ define("dijit/Editor", [
 		"superscript": togglePluginFactory,
 
 		"|": function(){
-			return new _Plugin({ button: new ToolbarSeparator(), setEditor: function(editor){this.editor = editor;}});
+			return new _Plugin({
+				setEditor: function(editor){
+					this.editor = editor;
+					this.button = new ToolbarSeparator({ownerDocument: editor.ownerDocument});
+				}
+			});
 		}
 	});
 

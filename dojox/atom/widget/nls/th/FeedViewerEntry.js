@@ -1,8 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	deleteButton: "[ลบ]"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/th/FeedViewerEntry",{deleteButton:"[\u0e25\u0e1a]"});

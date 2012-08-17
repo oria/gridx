@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/mobile/app/ImageView", ["dijit","dojo","dojox","dojo/require!dojox/mobile/app/_Widget,dojo/fx/easing"], function(dijit,dojo,dojox){
 dojo.provide("dojox.mobile.app.ImageView");

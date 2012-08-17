@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/lang/oo/aop", ["dijit","dojo","dojox","dojo/require!dojox/lang/oo/Decorator,dojox/lang/oo/general"], function(dijit,dojo,dojox){
 dojo.provide("dojox.lang.oo.aop");
@@ -12,30 +11,34 @@ dojo.require("dojox.lang.oo.general");
 
 	// five decorators implementing light-weight AOP weaving
 
+	// reuse existing decorators
+	ooa.before = oog.before;
+	ooa.around = oog.wrap;
+
 	/*=====
 	ooa.before = md(function(name, newValue, oldValue){
-		// summary: creates a "before" advise, by calling new function
-		// before the old one
+		// summary:
+		//		creates a "before" advise, by calling new function
+		//		before the old one
 
 		// dummy body
 	});
 
 	ooa.around = md(function(name, newValue, oldValue){
-		// summary: creates an "around" advise,
-		// the previous value is passed as a first argument and can be null,
-		// arguments are passed as a second argument
+		// summary:
+		//		creates an "around" advise,
+		//		the previous value is passed as a first argument and can be null,
+		//		arguments are passed as a second argument
 
 		// dummy body
 	});
 	=====*/
 
-	// reuse existing decorators
-	ooa.before = oog.before;
-	ooa.around = oog.wrap;
 
 	ooa.afterReturning = md(function(name, newValue, oldValue){
-		// summary: creates an "afterReturning" advise,
-		// the returned value is passed as the only argument
+		// summary:
+		//		creates an "afterReturning" advise,
+		//		the returned value is passed as the only argument
 		return isF(oldValue) ?
 			function(){
 				var ret = oldValue.apply(this, arguments);
@@ -45,8 +48,9 @@ dojo.require("dojox.lang.oo.general");
 	});
 
 	ooa.afterThrowing = md(function(name, newValue, oldValue){
-		// summary: creates an "afterThrowing" advise,
-		// the exception is passed as the only argument
+		// summary:
+		//		creates an "afterThrowing" advise,
+		//		the exception is passed as the only argument
 		return isF(oldValue) ?
 			function(){
 				var ret;
@@ -61,8 +65,9 @@ dojo.require("dojox.lang.oo.general");
 	});
 
 	ooa.after = md(function(name, newValue, oldValue){
-		// summary: creates an "after" advise,
-		// it takes no arguments
+		// summary:
+		//		creates an "after" advise,
+		//		it takes no arguments
 		return isF(oldValue) ?
 			function(){
 				var ret;

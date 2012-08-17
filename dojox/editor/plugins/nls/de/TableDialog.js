@@ -1,35 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertTableTitle: "Tabelle einfügen",
-	modifyTableTitle: "Tabelle ändern",
-	rows: "Zeilen:",
-	columns: "Spalten:",
-	align: "Ausrichten:",
-	cellPadding: "Zellenrandbreite:",
-	cellSpacing: "Zellenabstand:",
-	tableWidth: "Tabellenbreite:",
-	backgroundColor: "Hintergrundfarbe:",
-	borderColor: "Randfarbe:",
-	borderThickness: "Randbreite",
-	percent: "Prozent",
-	pixels: "Pixel",
-	"default": "Standard",
-	left: "Links",
-	center: "Mitte",
-	right: "Rechts",
-	buttonSet: "Festlegen", // translated elsewhere?
-	buttonInsert: "Einfügen",
-	buttonCancel: "Abbrechen",
-
-	selectTableLabel: "Tabelle auswählen",
-	insertTableRowBeforeLabel: "Zeile oberhalb einfügen",
-	insertTableRowAfterLabel: "Zeile unterhalb einfügen",
-	insertTableColumnBeforeLabel: "Spalte oberhalb einfügen",
-	insertTableColumnAfterLabel: "Spalte unterhalb einfügen",
-	deleteTableRowLabel: "Zeile löschen",
-	deleteTableColumnLabel: "Spalte löschen"
-})
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/de/TableDialog",{insertTableTitle:"Tabelle einf\u00fcgen",modifyTableTitle:"Tabelle \u00e4ndern",rows:"Zeilen:",columns:"Spalten:",align:"Ausrichten:",cellPadding:"Zellenrandbreite:",cellSpacing:"Zellenabstand:",tableWidth:"Tabellenbreite:",backgroundColor:"Hintergrundfarbe:",borderColor:"Umrandungsfarbe:",borderThickness:"Umrandungsst\u00e4rke:",percent:"Prozent",pixels:"Pixel","default":"Standard",left:"Links",center:"Mitte",right:"Rechts",buttonSet:"Festlegen",
+buttonInsert:"Einf\u00fcgen",buttonCancel:"Abbrechen",selectTableLabel:"Tabelle ausw\u00e4hlen",insertTableRowBeforeLabel:"Zeile davor einf\u00fcgen",insertTableRowAfterLabel:"Zeile danach einf\u00fcgen",insertTableColumnBeforeLabel:"Spalte davor einf\u00fcgen",insertTableColumnAfterLabel:"Spalte danach einf\u00fcgen",deleteTableRowLabel:"Zeile l\u00f6schen",deleteTableColumnLabel:"Spalte l\u00f6schen"});

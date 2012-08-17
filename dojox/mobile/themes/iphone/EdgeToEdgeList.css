@@ -1,11 +1,1 @@
-
-.mblEdgeToEdgeList {
-  position: relative;
-  
-  margin: 0px;
-  padding: 0px;
-  background-color: white;
-}
-.mblEdgeToEdgeList .mblListItem:last-child {
-  border-bottom-color: #707C84;
-}
+.mblEdgeToEdgeList {margin: 0; padding: 0; background-color: white;}.mblEdgeToEdgeList .mblListItem:last-child {border-bottom-color: #707c84;}

@@ -1,4 +1,3 @@
-//>>built
 define("dijit/_HasDropDown", [
 	"dojo/_base/declare", // declare
 	"dojo/_base/Deferred",
@@ -8,27 +7,21 @@ define("dijit/_HasDropDown", [
 	"dojo/dom-class", // domClass.add domClass.contains domClass.remove
 	"dojo/dom-geometry", // domGeometry.marginBox domGeometry.position
 	"dojo/dom-style", // domStyle.set
-	"dojo/has",
+	"dojo/has",	// has("touch")
 	"dojo/keys", // keys.DOWN_ARROW keys.ENTER keys.ESCAPE
 	"dojo/_base/lang", // lang.hitch lang.isFunction
-	"dojo/touch",
-	"dojo/_base/window", // win.doc
+	"dojo/on",
 	"dojo/window", // winUtils.getBox
 	"./registry",	// registry.byNode()
 	"./focus",
 	"./popup",
 	"./_FocusMixin"
-], function(declare, Deferred, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, touch,
-			win, winUtils, registry, focus, popup, _FocusMixin){
+], function(declare, Deferred, event,dom, domAttr, domClass, domGeometry, domStyle, has, keys, lang, on,
+			winUtils, registry, focus, popup, _FocusMixin){
 
-/*=====
-	var _FocusMixin = dijit._FocusMixin;
-=====*/
 
 	// module:
 	//		dijit/_HasDropDown
-	// summary:
-	//		Mixin for widgets that need drop down ability.
 
 	return declare("dijit._HasDropDown", _FocusMixin, {
 		// summary:
@@ -85,12 +78,12 @@ define("dijit/_HasDropDown", [
 		//		This variable controls the position of the drop down.
 		//		It's an array of strings with the following values:
 		//
-		//			* before: places drop down to the left of the target node/widget, or to the right in
-		//			  the case of RTL scripts like Hebrew and Arabic
-		//			* after: places drop down to the right of the target node/widget, or to the left in
-		//			  the case of RTL scripts like Hebrew and Arabic
-		//			* above: drop down goes above target node
-		//			* below: drop down goes below target node
+		//		- before: places drop down to the left of the target node/widget, or to the right in
+		//		  the case of RTL scripts like Hebrew and Arabic
+		//		- after: places drop down to the right of the target node/widget, or to the left in
+		//		  the case of RTL scripts like Hebrew and Arabic
+		//		- above: drop down goes above target node
+		//		- below: drop down goes below target node
 		//
 		//		The list is positions is tried, in order, until a position is found where the drop down fits
 		//		within the viewport.
@@ -99,7 +92,7 @@ define("dijit/_HasDropDown", [
 
 		// _stopClickEvents: Boolean
 		//		When set to false, the click events will not be stopped, in
-		//		case you want to use them in your subwidget
+		//		case you want to use them in your subclass
 		_stopClickEvents: true,
 
 		_onDropDownMouseDown: function(/*Event*/ e){
@@ -107,9 +100,13 @@ define("dijit/_HasDropDown", [
 			//		Callback when the user mousedown's on the arrow icon
 			if(this.disabled || this.readOnly){ return; }
 
-			event.stop(e);
+			// Prevent default to stop things like text selection, but don't stop propagation, so that:
+			//		1. TimeTextBox etc. can focus the <input> on mousedown
+			//		2. dropDownButtonActive class applied by _CssStateMixin (on button depress)
+			//		3. user defined onMouseDown handler fires
+			e.preventDefault();
 
-			this._docHandler = this.connect(win.doc, touch.release, "_onDropDownMouseUp");
+			this._docHandler = this.connect(this.ownerDocument, "mouseup", "_onDropDownMouseUp");
 
 			this.toggleDropDown();
 		},
@@ -122,10 +119,11 @@ define("dijit/_HasDropDown", [
 			//		a mouseup event.
 			//
 			//		This is useful for the common mouse movement pattern
-			//		with native browser <select> nodes:
-			//			1. mouse down on the select node (probably on the arrow)
-			//			2. move mouse to a menu item while holding down the mouse button
-			//			3. mouse up.  this selects the menu item as though the user had clicked it.
+			//		with native browser `<select>` nodes:
+			//
+			//		1. mouse down on the select node (probably on the arrow)
+			//		2. move mouse to a menu item while holding down the mouse button
+			//		3. mouse up.  this selects the menu item as though the user had clicked it.
 			if(e && this._docHandler){
 				this.disconnect(this._docHandler);
 			}
@@ -165,29 +163,33 @@ define("dijit/_HasDropDown", [
 			if(this._opened){
 				if(dropDown.focus && dropDown.autoFocus !== false){
 					// Focus the dropdown widget - do it on a delay so that we
-					// don't steal our own focus.
-					window.setTimeout(lang.hitch(dropDown, "focus"), 1);
+					// don't steal back focus from the dropdown.
+					this._focusDropDownTimer = this.defer(function(){
+						dropDown.focus();
+						delete this._focusDropDownTimer;
+					});
 				}
 			}else{
 				// The drop down arrow icon probably can't receive focus, but widget itself should get focus.
-				// setTimeout() needed to make it work on IE (test DateTextBox)
-				setTimeout(lang.hitch(this, "focus"), 0);
+				// defer() needed to make it work on IE (test DateTextBox)
+				this.defer("focus");
 			}
 
 			if(has("ios")){
 				this._justGotMouseUp = true;
-				setTimeout(lang.hitch(this, function(){
+				this.defer(function(){
 					this._justGotMouseUp = false;
-				}), 0);
+				});
 			}
 		},
 
 		_onDropDownClick: function(/*Event*/ e){
-			if(has("ios") && !this._justGotMouseUp){
-				// This branch fires on iPhone for ComboBox, because the button node is an <input> and doesn't
-				// generate touchstart/touchend events.   Pretend we just got a mouse down / mouse up.
-				// The if(has("ios") is necessary since IE and desktop safari get spurious onclick events
-				// when there are nested tables (specifically, clicking on a table that holds a dijit.form.Select,
+			if(has("touch") && !this._justGotMouseUp){
+				// If there was no preceding mousedown/mouseup (like on android), then simulate them to
+				// toggle the drop down.
+				//
+				// The if(has("touch") is necessary since IE and desktop safari get spurious onclick events
+				// when there are nested tables (specifically, clicking on a table that holds a dijit/form/Select,
 				// but not on the Select itself, causes an onclick event on the Select)
 				this._onDropDownMouseDown(e);
 				this._onDropDownMouseUp(e);
@@ -220,14 +222,16 @@ define("dijit/_HasDropDown", [
 
 		postCreate: function(){
 			// summary:
-			//		set up nodes and connect our mouse and keypress events
+			//		set up nodes and connect our mouse and keyboard events
 
 			this.inherited(arguments);
 
-			this.connect(this._buttonNode, touch.press, "_onDropDownMouseDown");
-			this.connect(this._buttonNode, "onclick", "_onDropDownClick");
-			this.connect(this.focusNode, "onkeypress", "_onKey");
-			this.connect(this.focusNode, "onkeyup", "_onKeyUp");
+			this.own(
+				on(this._buttonNode, "mousedown", lang.hitch(this, "_onDropDownMouseDown")),
+				on(this._buttonNode, "click", lang.hitch(this, "_onDropDownClick")),
+				on(this.focusNode, "keydown", lang.hitch(this, "_onKey")),
+				on(this.focusNode, "keyup", lang.hitch(this, "_onKeyUp"))
+			);
 		},
 
 		destroy: function(){
@@ -247,7 +251,6 @@ define("dijit/_HasDropDown", [
 			//		Callback when the user presses a key while focused on the button node
 
 			if(this.disabled || this.readOnly){ return; }
-
 			var d = this.dropDown, target = e.target;
 			if(d && this._opened && d.handleKey){
 				if(d.handleKey(e) === false){
@@ -256,12 +259,12 @@ define("dijit/_HasDropDown", [
 					return;
 				}
 			}
-			if(d && this._opened && e.charOrCode == keys.ESCAPE){
+			if(d && this._opened && e.keyCode == keys.ESCAPE){
 				this.closeDropDown();
 				event.stop(e);
 			}else if(!this._opened &&
-					(e.charOrCode == keys.DOWN_ARROW ||
-						( (e.charOrCode == keys.ENTER || e.charOrCode == " ") &&
+					(e.keyCode == keys.DOWN_ARROW ||
+						( (e.keyCode == keys.ENTER || e.keyCode == dojo.keys.SPACE) &&
 						  //ignore enter and space if the event is for a text input
 						  ((target.tagName || "").toLowerCase() !== 'input' ||
 						     (target.type && target.type.toLowerCase() !== 'text'))))){
@@ -279,7 +282,7 @@ define("dijit/_HasDropDown", [
 				this.toggleDropDown();
 				var d = this.dropDown;	// drop down may not exist until toggleDropDown() call
 				if(d && d.focus){
-					setTimeout(lang.hitch(d, "focus"), 1);
+					this.defer(lang.hitch(d, "focus"), 1);
 				}
 			}
 		},
@@ -366,7 +369,7 @@ define("dijit/_HasDropDown", [
 			//		Opens the dropdown for this widget.   To be called only when this.dropDown
 			//		has been created and is ready to display (ie, it's data is loaded).
 			// returns:
-			//		return value of dijit.popup.open()
+			//		return value of dijit/popup.open()
 			// tags:
 			//		protected
 
@@ -377,7 +380,7 @@ define("dijit/_HasDropDown", [
 
 			// Prepare our popup's height and honor maxHeight if it exists.
 
-			// TODO: isn't maxHeight dependent on the return value from dijit.popup.open(),
+			// TODO: isn't maxHeight dependent on the return value from dijit/popup.open(),
 			// ie, dependent on how much space is available (BK)
 
 			if(!this._preparedNode){
@@ -410,7 +413,7 @@ define("dijit/_HasDropDown", [
 				if(maxHeight == -1){
 					// limit height to space available in viewport either above or below my domNode
 					// (whichever side has more room)
-					var viewport = winUtils.getBox(),
+					var viewport = winUtils.getBox(this.ownerDocument),
 						position = domGeometry.position(aroundNode, false);
 					maxHeight = Math.floor(Math.max(position.y, viewport.h - (position.y + position.h)));
 				}
@@ -422,12 +425,13 @@ define("dijit/_HasDropDown", [
 				if(dropDown.startup && !dropDown._started){
 					dropDown.startup(); // this has to be done after being added to the DOM
 				}
-				// Get size of drop down, and determine if vertical scroll bar needed
+				// Get size of drop down, and determine if vertical scroll bar needed.  If no scroll bar needed,
+				// use overflow:visible rather than overflow:hidden so off-by-one errors don't hide drop down border.
 				var mb = domGeometry.getMarginSize(ddNode);
 				var overHeight = (maxHeight && mb.h > maxHeight);
 				domStyle.set(ddNode, {
-					overflowX: "hidden",
-					overflowY: overHeight ? "auto" : "hidden"
+					overflowX: "visible",
+					overflowY: overHeight ? "auto" : "visible"
 				});
 				if(overHeight){
 					mb.h = maxHeight;
@@ -469,14 +473,14 @@ define("dijit/_HasDropDown", [
 				onClose: function(){
 					domAttr.set(self._popupStateNode, "popupActive", false);
 					domClass.remove(self._popupStateNode, "dijitHasDropDownOpen");
-					self._opened = false;
+					self._set("_opened", false);	// use set() because _CssStateMixin is watching
 				}
 			});
 			domAttr.set(this._popupStateNode, "popupActive", "true");
-			domClass.add(self._popupStateNode, "dijitHasDropDownOpen");
-			this._opened=true;
-
-			// TODO: set this.checked and call setStateClass(), to affect button look while drop down is shown
+			domClass.add(this._popupStateNode, "dijitHasDropDownOpen");
+			this._set("_opened", true);	// use set() because _CssStateMixin is watching
+			this.domNode.setAttribute("aria-expanded", "true");
+			
 			return retVal;
 		},
 
@@ -488,7 +492,12 @@ define("dijit/_HasDropDown", [
 			// tags:
 			//		protected
 
+			if(this._focusDropDownTimer){
+				this._focusDropDownTimer.remove();
+				delete this._focusDropDownTimer;
+			}
 			if(this._opened){
+				this.domNode.setAttribute("aria-expanded", "false");
 				if(focus){ this.focus(); }
 				popup.close(this.dropDown);
 				this._opened = false;

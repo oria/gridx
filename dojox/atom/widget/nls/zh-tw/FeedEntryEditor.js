@@ -1,11 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	doNew: "[新建]",
-	edit: "[編輯]",
-	save: "[儲存]",
-	cancel: "[取消]"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/zh-tw/FeedEntryEditor",{doNew:"[\u65b0\u5efa]",edit:"[\u7de8\u8f2f]",save:"[\u5132\u5b58]",cancel:"[\u53d6\u6d88]"});

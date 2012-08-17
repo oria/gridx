@@ -1,8 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-{
-	"currencyFormat": "¤#,##0.00"
-}
-//end v1.x content
-);
+define("dojo/cldr/nls/en-gb/number",{currencyFormat:"\u00a4#,##0.00"});

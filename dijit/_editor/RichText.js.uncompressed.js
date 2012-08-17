@@ -1,4 +1,3 @@
-//>>built
 define("dijit/_editor/RichText", [
 	"dojo/_base/array", // array.forEach array.indexOf array.some
 	"dojo/_base/config", // config
@@ -8,7 +7,7 @@ define("dijit/_editor/RichText", [
 	"dojo/dom-attr", // domAttr.set or get
 	"dojo/dom-class", // domClass.add domClass.remove
 	"dojo/dom-construct", // domConstruct.create domConstruct.destroy domConstruct.place
-	"dojo/dom-geometry", // domGeometry.getMarginBox domGeometry.position
+	"dojo/dom-geometry", // domGeometry.position
 	"dojo/dom-style", // domStyle.getComputedStyle domStyle.set
 	"dojo/_base/event", // event.stop
 	"dojo/_base/kernel", // kernel.deprecated
@@ -17,35 +16,30 @@ define("dijit/_editor/RichText", [
 	"dojo/on", // on()
 	"dojo/query", // query
 	"dojo/ready", // ready
-	"dojo/_base/sniff", // has("ie") has("mozilla") has("opera") has("safari") has("webkit")
+	"dojo/sniff", // has("ie") has("mozilla") has("opera") has("safari") has("webkit")
 	"dojo/topic",	// topic.publish() (publish)
 	"dojo/_base/unload", // unload
 	"dojo/_base/url", // url
-	"dojo/_base/window", // win.body win.doc.body.focus win.doc.createElement win.global.location win.withGlobal
+	"dojo/_base/window", // win.global
 	"../_Widget",
 	"../_CssStateMixin",
 	"./selection",
 	"./range",
 	"./html",
 	"../focus",
-	".."	// dijit._scopeName
+	"../main"	// dijit._scopeName
 ], function(array, config, declare, Deferred, dom, domAttr, domClass, domConstruct, domGeometry, domStyle,
 	event, kernel, keys, lang, on, query, ready, has, topic, unload, _Url, win,
 	_Widget, _CssStateMixin, selectionapi, rangeapi, htmlapi, focus, dijit){
 
-/*=====
-	var _Widget = dijit._Widget;
-	var _CssStateMixin = dijit._CssStateMixin;
-=====*/
-
 // module:
 //		dijit/_editor/RichText
 // summary:
-//		dijit._editor.RichText is the core of dijit.Editor, which provides basic
+//		dijit/_editor/RichText is the core of dijit/Editor, which provides basic
 //		WYSIWYG editing features.
 
 // if you want to allow for rich text saving with back/forward actions, you must add a text area to your page with
-// the id==dijit._scopeName + "._editor.RichText.value" (typically "dijit._editor.RichText.value). For example,
+// the id==dijit._scopeName + "._editor.RichText.value" (typically "dijit/_editor/RichText.value). For example,
 // something like this will work:
 //
 //	<textarea id="dijit._editor.RichText.value" style="display:none;position:absolute;top:-100px;left:-100px;height:3px;width:3px;overflow:hidden;"></textarea>
@@ -53,11 +47,11 @@ define("dijit/_editor/RichText", [
 
 var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	// summary:
-	//		dijit._editor.RichText is the core of dijit.Editor, which provides basic
+	//		dijit/_editor/RichText is the core of dijit.Editor, which provides basic
 	//		WYSIWYG editing features.
 	//
 	// description:
-	//		dijit._editor.RichText is the core of dijit.Editor, which provides basic
+	//		dijit/_editor/RichText is the core of dijit.Editor, which provides basic
 	//		WYSIWYG editing features. It also encapsulates the differences
 	//		of different js engines for various browsers.  Do not use this widget
 	//		with an HTML &lt;TEXTAREA&gt; tag, since the browser unescapes XML escape characters,
@@ -67,7 +61,14 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	// tags:
 	//		private
 
-	constructor: function(params){
+	constructor: function(params /*===== , srcNodeRef =====*/){
+		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Initial settings for any of the widget attributes, except readonly attributes.
+		// srcNodeRef: DOMNode
+		//		The widget replaces the specified DOMNode.
+
 		// contentPreFilters: Function(String)[]
 		//		Pre content filter function register array.
 		//		these filters will be executed before the actual
@@ -121,7 +122,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	focusOnLoad: false,
 
 	// name: String?
-	//		Specifies the name of a (hidden) <textarea> node on the page that's used to save
+	//		Specifies the name of a (hidden) `<textarea>` node on the page that's used to save
 	//		the editor content on page leave.   Used to restore editor contents after navigating
 	//		to a new page and then hitting the back button.
 	name: "",
@@ -150,7 +151,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 	// _SEPARATOR: [private] String
 	//		Used to concat contents from multiple editors into a single string,
-	//		so they can be saved into a single <textarea> node.  See "name" attribute.
+	//		so they can be saved into a single `<textarea>` node.  See "name" attribute.
 	_SEPARATOR: "@@**%%__RICHTEXTBOUNDRY__%%**@@",
 
 	// _NAME_CONTENT_SEP: [private] String
@@ -296,7 +297,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		// Also, IE9 does weird stuff unless we do it inside the editor iframe.
 		var style = { position: "absolute", top: "0px", zIndex: 10, opacity: 0.01 };
 		var div = domConstruct.create('div', {style: style, innerHTML: localhtml});
-		win.body().appendChild(div);
+		this.ownerDocumentBody.appendChild(div);
 
 		// IE9 has a timing issue with doing this right after setting
 		// the inner HTML, so put a delay in.
@@ -304,7 +305,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 			var node = div.firstChild;
 			while(node){
 				try{
-					selectionapi.selectElement(node.firstChild);
+					this._sCall("selectElement", [node.firstChild]);
 					var nativename = node.tagName.toLowerCase();
 					this._local2NativeFormatNames[nativename] = document.queryCommandValue("formatblock");
 					this._native2LocalFormatNames[this._local2NativeFormatNames[nativename]] = nativename;
@@ -312,10 +313,9 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 					//console.log("Mapped: ", nativename, " to: ", this._local2NativeFormatNames[nativename]);
 				}catch(e){ /*Sqelch the occasional IE9 error */ }
 			}
-			div.parentNode.removeChild(div);
-			div.innerHTML = "";
+			domConstruct.destroy(div);
 		});
-		setTimeout(inject, 0);
+		this.defer(inject);
 	},
 
 	open: function(/*DomNode?*/ element){
@@ -358,7 +358,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 			var ta = (this.textarea = dn);
 			this.name = ta.name;
 			html = ta.value;
-			dn = this.domNode = win.doc.createElement("div");
+			dn = this.domNode = this.ownerDocument.createElement("div");
 			dn.setAttribute('widgetId', this.id);
 			ta.removeAttribute('widgetId');
 			dn.cssText = ta.cssText;
@@ -380,7 +380,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 				}
 			});
 			if(has("ie")){
-				setTimeout(tmpFunc, 10);
+				this.defer(tmpFunc, 10);
 			}else{
 				tmpFunc();
 			}
@@ -460,9 +460,8 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 		this.isClosed = false;
 
-		var ifr = (this.editorObject = this.iframe = win.doc.createElement('iframe'));
+		var ifr = (this.editorObject = this.iframe = this.ownerDocument.createElement('iframe'));
 		ifr.id = this.id+"_iframe";
-		this._iframeSrc = this._getIframeDocTxt();
 		ifr.style.border = "none";
 		ifr.style.width = "100%";
 		if(this._layoutMode){
@@ -495,18 +494,17 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		});
 
 		// Set the iframe's initial (blank) content.
-		var iframeSrcRef = 'parent.' + dijit._scopeName + '.byId("'+this.id+'")._iframeSrc';
-		var s = 'javascript:(function(){try{return ' + iframeSrcRef + '}catch(e){document.open();document.domain="' +
-				document.domain + '";document.write(' + iframeSrcRef + ');document.close();}})()';
+		var src = this._getIframeDocTxt(),
+			s = "javascript: '" + src.replace(/\\/g, "\\\\").replace(/'/g, "\\'") + "'";
 		ifr.setAttribute('src', s);
 		this.editingArea.appendChild(ifr);
 
 		if(has("safari") <= 4){
-			var src = ifr.getAttribute("src");
+			src = ifr.getAttribute("src");
 			if(!src || src.indexOf("javascript") === -1){
 				// Safari 4 and earlier sometimes act oddly
 				// So we have to set it again.
-				setTimeout(function(){ifr.setAttribute('src', s);},0);
+				this.defer(function(){ ifr.setAttribute('src', s); });
 			}
 		}
 
@@ -524,7 +522,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 	_getIframeDocTxt: function(){
 		// summary:
-		//		Generates the boilerplate text of the document inside the iframe (ie, <html><head>...</head><body/></html>).
+		//		Generates the boilerplate text of the document inside the iframe (ie, `<html><head>...</head><body/></html>`).
 		//		Editor content (if not blank) should be added afterwards.
 		// tags:
 		//		private
@@ -633,7 +631,11 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 			this._applyEditingAreaStyleSheets(),"\n",
 			"</head>\n<body ",
 			(setBodyId?"id='dijitEditorBody' ":""),
-			"onload='frameElement._loadFunc(window,document)' style='"+userStyle+"'>", html, "</body>\n</html>"
+
+			// Onload handler fills in real editor content.
+			// On IE9, sometimes onload is called twice, and the first time frameElement is null (test_FullScreen.html)
+			"onload='frameElement && frameElement._loadFunc(window,document)' ",
+			"style='"+userStyle+"'>", html, "</body>\n</html>"
 		].join(""); // String
 	},
 
@@ -661,11 +663,11 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		return text;
 	},
 
-	addStyleSheet: function(/*dojo._Url*/ uri){
+	addStyleSheet: function(/*dojo/_base/url*/ uri){
 		// summary:
 		//		add an external stylesheet for the editing area
 		// uri:
-		//		A dojo.uri.Uri pointing to the url of the external css file
+		//		Url of the external css file
 		var url=uri.toString();
 
 		//if uri is relative, then convert it to absolute so that it can be resolved correctly in iframe
@@ -674,12 +676,12 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		}
 
 		if(array.indexOf(this.editingAreaStyleSheets, url) > -1){
-//			console.debug("dijit._editor.RichText.addStyleSheet: Style sheet "+url+" is already applied");
+//			console.debug("dijit/_editor/RichText.addStyleSheet(): Style sheet "+url+" is already applied");
 			return;
 		}
 
 		this.editingAreaStyleSheets.push(url);
-		this.onLoadDeferred.addCallback(lang.hitch(this, function(){
+		this.onLoadDeferred.then(lang.hitch(this, function(){
 			if(this.document.createStyleSheet){ //IE
 				this.document.createStyleSheet(url);
 			}else{ //other browser
@@ -693,7 +695,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		}));
 	},
 
-	removeStyleSheet: function(/*dojo._Url*/ uri){
+	removeStyleSheet: function(/*dojo/_base/url*/ uri){
 		// summary:
 		//		remove an external stylesheet for the editing area
 		var url=uri.toString();
@@ -703,11 +705,11 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		}
 		var index = array.indexOf(this.editingAreaStyleSheets, url);
 		if(index === -1){
-//			console.debug("dijit._editor.RichText.removeStyleSheet: Style sheet "+url+" has not been applied");
+//			console.debug("dijit/_editor/RichText.removeStyleSheet(): Style sheet "+url+" has not been applied");
 			return;
 		}
 		delete this.editingAreaStyleSheets[index];
-		win.withGlobal(this.window,'query', dojo, ['link:[href="'+url+'"]']).orphan();
+		query('link:[href="'+url+'"]', this.window.document).orphan();
 	},
 
 	// disabled: Boolean
@@ -724,12 +726,11 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 			if(preventIEfocus){ this.editNode.unselectable = "on"; }
 			this.editNode.contentEditable = !value;
 			if(preventIEfocus){
-				var _this = this;
-				setTimeout(function(){
-					if(_this.editNode){		// guard in case widget destroyed before timeout
-						_this.editNode.unselectable = "off";
+				this.defer(function(){
+					if(this.editNode){		// guard in case widget destroyed before timeout
+						this.editNode.unselectable = "off";
 					}
-				}, 0);
+				});
 			}
 		}else{ //moz
 			try{
@@ -822,7 +823,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 				if(t && (t === this.document.body || t === this.document)){
 					// Since WebKit uses the inner DIV, we need to check and set position.
 					// See: #12024 as to why the change was made.
-					setTimeout(lang.hitch(this, "placeCursorAtEnd"), 0);
+					this.defer("placeCursorAtEnd");
 				}
 			});
 		}
@@ -847,19 +848,19 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		var setContent = lang.hitch(this, function(){
 			this.setValue(html);
 			if(this.onLoadDeferred){
-				this.onLoadDeferred.callback(true);
+				this.onLoadDeferred.resolve(true);
 			}
 			this.onDisplayChanged();
 			if(this.focusOnLoad){
 				// after the document loads, then set focus after updateInterval expires so that
 				// onNormalizedDisplayChanged has run to avoid input caret issues
-				ready(lang.hitch(this, function(){ setTimeout(lang.hitch(this, "focus"), this.updateInterval); }));
+				ready(lang.hitch(this, "defer", "focus", this.updateInterval));
 			}
 			// Save off the initial content now
 			this.value = this.getValue(true);
 		});
 		if(this.setValueDeferred){
-			this.setValueDeferred.addCallback(setContent);
+			this.setValueDeferred.then(setContent);
 		}else{
 			setContent();
 		}
@@ -922,7 +923,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		// summary:
 		//		Handler for onkeyup event
 		// tags:
-		//      callback
+		//		callback
 	},
 
 	setDisabled: function(/*Boolean*/ disabled){
@@ -935,7 +936,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	},
 	_setValueAttr: function(/*String*/ value){
 		// summary:
-		//      Registers that attr("value", foo) should call setValue(foo)
+		//		Registers that attr("value", foo) should call setValue(foo)
 		this.setValue(value);
 	},
 	_setDisableSpellCheckAttr: function(/*Boolean*/ disabled){
@@ -943,7 +944,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 			domAttr.set(this.document.body, "spellcheck", !disabled);
 		}else{
 			// try again after the editor is finished loading
-			this.onLoadDeferred.addCallback(lang.hitch(this, function(){
+			this.onLoadDeferred.then(lang.hitch(this, function(){
 				domAttr.set(this.document.body, "spellcheck", !disabled);
 			}));
 		}
@@ -976,7 +977,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		if(!this._onKeyHitch){
 			this._onKeyHitch = lang.hitch(this, "onKeyPressed");
 		}
-		setTimeout(this._onKeyHitch, 1);
+		this.defer("_onKeyHitch", 1);
 		return true;
 	},
 
@@ -1068,8 +1069,8 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		//		deprecated
 		if(!has("ie") && this.window.document.documentElement && this.window.document.documentElement.focus){
 			this.window.document.documentElement.focus();
-		}else if(win.doc.body.focus){
-			win.doc.body.focus();
+		}else if(this.ownerDocumentBody.focus){
+			this.ownerDocumentBody.focus();
 		}
 	},
 
@@ -1116,12 +1117,9 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 		// var _t=new Date();
 		if(this._updateTimer){
-			clearTimeout(this._updateTimer);
+			this._updateTimer.remove();
 		}
-		if(!this._updateHandler){
-			this._updateHandler = lang.hitch(this,"onNormalizedDisplayChanged");
-		}
-		this._updateTimer = setTimeout(this._updateHandler, this.updateInterval);
+		this._updateTimer = this.defer("onNormalizedDisplayChanged", this.updateInterval);
 
 		// Technically this should trigger a call to watch("value", ...) registered handlers,
 		// but getValue() is too slow to call on every keystroke so we don't.
@@ -1222,7 +1220,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 				supportedBy = isSupportedBy(ie);
 				break;
 			case "cut": case "copy": case "paste":
-				supportedBy = isSupportedBy( ie | mozilla | webkit);
+				supportedBy = isSupportedBy( ie | mozilla | webkit | opera);
 				break;
 
 			case "inserttable":
@@ -1358,7 +1356,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 	_sCall: function(name, args){
 		// summary:
-		//		Run the named method of dijit._editor.selection over the
+		//		Run the named method of dijit/_editor/selection over the
 		//		current editor instance's window, with the passed args.
 		// tags:
 		//		private
@@ -1434,11 +1432,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 					}
 				}else if(last.nodeType === 1){
 					isvalid=true;
-					if(last.lastChild){
-						this._sCall("selectElement", [ last.lastChild ]);
-					}else{
-						this._sCall("selectElement", [ last ]);
-					}
+					this._sCall("selectElement", [ last.lastChild || last]);
 					break;
 				}
 				last = last.previousSibling;
@@ -1456,7 +1450,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		// summary:
 		//		Return the current content of the editing area (post filters
 		//		are applied).  Users should call get('value') instead.
-		//	nonDestructive:
+		// nonDestructive:
 		//		defaults to false. Should the post-filtering be run over a copy
 		//		of the live DOM? Most users should pass "true" here unless they
 		//		*really* know that none of the installed filters are going to
@@ -1488,7 +1482,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 		if(!this.isLoaded){
 			// try again after the editor is finished loading
-			this.onLoadDeferred.addCallback(lang.hitch(this, function(){
+			this.onLoadDeferred.then(lang.hitch(this, function(){
 				this.setValue(html);
 			}));
 			return;
@@ -1605,11 +1599,11 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		//		the DOM which is passed is run through each of the
 		//		contentPostFilters functions.
 		//
-		//	dom:
+		// dom:
 		//		a node, set of nodes, which to filter using each of the current
 		//		members of the contentDomPostFilters and contentPostFilters arrays.
 		//
-		//	nonDestructive:
+		// nonDestructive:
 		//		defaults to "false". If true, ensures that filtering happens on
 		//		a clone of the passed-in content and not the actual node
 		//		itself.
@@ -1771,7 +1765,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 	destroy: function(){
 		if(!this.isClosed){ this.close(false); }
 		if(this._updateTimer){
-			clearTimeout(this._updateTimer);
+			this._updateTimer.remove();
 		}
 		this.inherited(arguments);
 		if(RichText._globalSaveHandler){
@@ -1814,7 +1808,7 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 
 	_preFixUrlAttributes: function(/* String */ html){
 		// summary:
-		//		Pre-filter to do fixing to href attributes on <a> and <img> tags
+		//		Pre-filter to do fixing to href attributes on `<a>` and `<img>` tags
 		// tags:
 		//		private
 		return html.replace(/(?:(<a(?=\s).*?\shref=)("|')(.*?)\2)|(?:(<a\s.*?href=)([^"'][^ >]+))/gi,
@@ -2529,7 +2523,8 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 						}
 						
 						// We had intermediate tags, we have to now recreate them inbetween the split
-						// and restore what styles, classnames, etc, we can.  
+						// and restore what styles, classnames, etc, we can.
+						var newrange;
 						if(tagList.length){
 							tagData = tagList.pop();
 							var newContTag = doc.createElement(tagData.tagName);
@@ -2581,15 +2576,13 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 							sNode = doc.createTextNode(".");
 							breaker.appendChild(sNode);
 							newContTag.appendChild(sNode);
-							win.withGlobal(this.window, lang.hitch(this, function(){
-								var newrange = rangeapi.create();
-								newrange.setStart(sNode, 0);
-								newrange.setEnd(sNode, sNode.length);
-								selection.removeAllRanges();
-								selection.addRange(newrange);
-								selectionapi.collapse(false);
-								sNode.parentNode.innerHTML = "";
-							}));							
+							newrange = rangeapi.create(this.window);
+							newrange.setStart(sNode, 0);
+							newrange.setEnd(sNode, sNode.length);
+							selection.removeAllRanges();
+							selection.addRange(newrange);
+							this._sCall("collapse", [false]);
+							sNode.parentNode.innerHTML = "";
 						}else{
 							// No extra tags, so we have to insert a breaker point and rely
 							// on filters to remove it later.
@@ -2598,15 +2591,13 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 							sNode = doc.createTextNode(".");
 							breaker.appendChild(sNode);
 							domConstruct.place(breaker, newblock, "before");
-							win.withGlobal(this.window, lang.hitch(this, function(){
-								var newrange = rangeapi.create();
-								newrange.setStart(sNode, 0);
-								newrange.setEnd(sNode, sNode.length);
-								selection.removeAllRanges();
-								selection.addRange(newrange);
-								selectionapi.collapse(false);
-								sNode.parentNode.innerHTML = "";
-							}));
+							newrange = rangeapi.create(this.window);
+							newrange.setStart(sNode, 0);
+							newrange.setEnd(sNode, sNode.length);
+							selection.removeAllRanges();
+							selection.addRange(newrange);
+							this._sCall("collapse", [false]);
+							sNode.parentNode.innerHTML = "";
 						}
 						if(!newblock.firstChild){
 							// Empty, we don't need it.  Split was at end or similar
@@ -2622,50 +2613,48 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 				rs = range.startContainer;
 				if(rs && rs.nodeType === 3){
 					// Text node, we have to split it.
-					win.withGlobal(this.window, lang.hitch(this, function(){
-						var offset = range.startOffset;
-						if(rs.length < offset){
-							//We are not splitting the right node, try to locate the correct one
-							ret = this._adjustNodeAndOffset(rs, offset);
-							rs = ret.node;
-							offset = ret.offset;
-						}
-						txt = rs.nodeValue;
-						startNode = doc.createTextNode(txt.substring(0, offset));
-						var endText = txt.substring(offset);
-						if(endText !== ""){
-							endNode = doc.createTextNode(txt.substring(offset));
-						}
-						// Create a space, we'll select and bold it, so 
-						// the whole word doesn't get bolded
-						breaker = doc.createElement("span");
-						sNode = doc.createTextNode(".");
-						breaker.appendChild(sNode);
-						if(startNode.length){
-							domConstruct.place(startNode, rs, "after");
-						}else{
-							startNode = rs;
-						}
-						domConstruct.place(breaker, startNode, "after");
-						if(endNode){
-							domConstruct.place(endNode, breaker, "after");
-						}
-						domConstruct.destroy(rs);
-						var newrange = rangeapi.create();
-						newrange.setStart(sNode, 0);
-						newrange.setEnd(sNode, sNode.length);
-						selection.removeAllRanges();
-						selection.addRange(newrange);
-						doc.execCommand(command);
-						domConstruct.place(breaker.firstChild, breaker, "before");
-						domConstruct.destroy(breaker);
-						newrange.setStart(sNode, 0);
-						newrange.setEnd(sNode, sNode.length);
-						selection.removeAllRanges();
-						selection.addRange(newrange);
-						selectionapi.collapse(false);
-						sNode.parentNode.innerHTML = "";
-					}));
+					var offset = range.startOffset;
+					if(rs.length < offset){
+						//We are not splitting the right node, try to locate the correct one
+						ret = this._adjustNodeAndOffset(rs, offset);
+						rs = ret.node;
+						offset = ret.offset;
+					}
+					txt = rs.nodeValue;
+					startNode = doc.createTextNode(txt.substring(0, offset));
+					var endText = txt.substring(offset);
+					if(endText !== ""){
+						endNode = doc.createTextNode(txt.substring(offset));
+					}
+					// Create a space, we'll select and bold it, so
+					// the whole word doesn't get bolded
+					breaker = doc.createElement("span");
+					sNode = doc.createTextNode(".");
+					breaker.appendChild(sNode);
+					if(startNode.length){
+						domConstruct.place(startNode, rs, "after");
+					}else{
+						startNode = rs;
+					}
+					domConstruct.place(breaker, startNode, "after");
+					if(endNode){
+						domConstruct.place(endNode, breaker, "after");
+					}
+					domConstruct.destroy(rs);
+					var newrange = rangeapi.create(this.window);
+					newrange.setStart(sNode, 0);
+					newrange.setEnd(sNode, sNode.length);
+					selection.removeAllRanges();
+					selection.addRange(newrange);
+					doc.execCommand(command);
+					domConstruct.place(breaker.firstChild, breaker, "before");
+					domConstruct.destroy(breaker);
+					newrange.setStart(sNode, 0);
+					newrange.setEnd(sNode, sNode.length);
+					selection.removeAllRanges();
+					selection.addRange(newrange);
+					this._sCall("collapse", [false]);
+					sNode.parentNode.innerHTML = "";
 					return true;
 				}
 			}
@@ -2700,29 +2689,28 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 						// or IE may shove too much into the list element.  It seems to
 						// grab content before the text node too if it's br split.
 						// Why can't IE work like everyone else?
-						win.withGlobal(this.window, lang.hitch(this, function(){
-							// Create a space, we'll select and bold it, so 
-							// the whole word doesn't get bolded
-							var lType = "ul";
-							if(command === "insertorderedlist"){
-								lType = "ol";
-							}
-							var list = domConstruct.create(lType);
-							var li = domConstruct.create("li", null, list);
-							domConstruct.place(list, sc, "before");
-							// Move in the text node as part of the li.
-							li.appendChild(sc);
-							// We need a br after it or the enter key handler
-							// sometimes throws errors.
-							domConstruct.create("br", null, list, "after");
-							// Okay, now lets move our cursor to the beginning.
-							var newrange = rangeapi.create();
-							newrange.setStart(sc, 0);
-							newrange.setEnd(sc, sc.length);
-							selection.removeAllRanges();
-							selection.addRange(newrange);
-							selectionapi.collapse(true);
-						}));
+
+						// Create a space, we'll select and bold it, so
+						// the whole word doesn't get bolded
+						var lType = "ul";
+						if(command === "insertorderedlist"){
+							lType = "ol";
+						}
+						var list = this.document.createElement(lType);
+						var li = domConstruct.create("li", null, list);
+						domConstruct.place(list, sc, "before");
+						// Move in the text node as part of the li.
+						li.appendChild(sc);
+						// We need a br after it or the enter key handler
+						// sometimes throws errors.
+						domConstruct.create("br", null, list, "after");
+						// Okay, now lets move our cursor to the beginning.
+						var newrange = rangeapi.create(this.window);
+						newrange.setStart(sc, 0);
+						newrange.setEnd(sc, sc.length);
+						selection.removeAllRanges();
+						selection.addRange(newrange);
+						this._sCall("collapse", [true]);
 						return true;
 					}
 				}
@@ -2753,70 +2741,68 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 				rs = range.startContainer;
 				if(rs && rs.nodeType === 3){
 					// Text node, we have to split it.
-					win.withGlobal(this.window, lang.hitch(this, function(){
-						var offset = range.startOffset;
-						if(rs.length < offset){
-							//We are not splitting the right node, try to locate the correct one
-							ret = this._adjustNodeAndOffset(rs, offset);
-							rs = ret.node;
-							offset = ret.offset;
+					var offset = range.startOffset;
+					if(rs.length < offset){
+						//We are not splitting the right node, try to locate the correct one
+						ret = this._adjustNodeAndOffset(rs, offset);
+						rs = ret.node;
+						offset = ret.offset;
+					}
+					txt = rs.nodeValue;
+					startNode = doc.createTextNode(txt.substring(0, offset));
+					var endText = txt.substring(offset);
+					if(endText !== ""){
+						endNode = doc.createTextNode(txt.substring(offset));
+					}
+					// Create a space, we'll select and bold it, so
+					// the whole word doesn't get bolded
+					breaker = doc.createElement("span");
+					sNode = doc.createTextNode(".");
+					breaker.appendChild(sNode);
+					// Create a junk node to avoid it trying to style the breaker.
+					// This will get destroyed later.
+					var extraSpan = doc.createElement("span");
+					breaker.appendChild(extraSpan);
+					if(startNode.length){
+						domConstruct.place(startNode, rs, "after");
+					}else{
+						startNode = rs;
+					}
+					domConstruct.place(breaker, startNode, "after");
+					if(endNode){
+						domConstruct.place(endNode, breaker, "after");
+					}
+					domConstruct.destroy(rs);
+					var newrange = rangeapi.create(this.window);
+					newrange.setStart(sNode, 0);
+					newrange.setEnd(sNode, sNode.length);
+					selection.removeAllRanges();
+					selection.addRange(newrange);
+					if(has("webkit")){
+						// WebKit is frustrating with positioning the cursor.
+						// It stinks to have a selected space, but there really
+						// isn't much choice here.
+						var style = "color";
+						if(command === "hilitecolor" || command === "backcolor"){
+							style = "backgroundColor";
 						}
-						txt = rs.nodeValue;
-						startNode = doc.createTextNode(txt.substring(0, offset));
-						var endText = txt.substring(offset);
-						if(endText !== ""){
-							endNode = doc.createTextNode(txt.substring(offset));
-						}
-						// Create a space, we'll select and bold it, so 
-						// the whole word doesn't get bolded
-						breaker = domConstruct.create("span");
-						sNode = doc.createTextNode(".");
-						breaker.appendChild(sNode);
-						// Create a junk node to avoid it trying to stlye the breaker.
-						// This will get destroyed later.
-						var extraSpan = domConstruct.create("span");
-						breaker.appendChild(extraSpan);
-						if(startNode.length){
-							domConstruct.place(startNode, rs, "after");
-						}else{
-							startNode = rs;
-						}
-						domConstruct.place(breaker, startNode, "after");
-						if(endNode){
-							domConstruct.place(endNode, breaker, "after");
-						}
-						domConstruct.destroy(rs);
-						var newrange = rangeapi.create();
+						domStyle.set(breaker, style, argument);
+						this._sCall("remove", []);
+						domConstruct.destroy(extraSpan);
+						breaker.innerHTML = "&#160;";	// &nbsp;
+						this._sCall("selectElement", [breaker]);
+						this.focus();
+					}else{
+						this.execCommand(command, argument);
+						domConstruct.place(breaker.firstChild, breaker, "before");
+						domConstruct.destroy(breaker);
 						newrange.setStart(sNode, 0);
 						newrange.setEnd(sNode, sNode.length);
 						selection.removeAllRanges();
 						selection.addRange(newrange);
-						if(has("webkit")){
-							// WebKit is frustrating with positioning the cursor. 
-							// It stinks to have a selected space, but there really
-							// isn't much choice here.
-							var style = "color";
-							if(command === "hilitecolor" || command === "backcolor"){
-								style = "backgroundColor";
-							}
-							domStyle.set(breaker, style, argument);
-							selectionapi.remove();
-							domConstruct.destroy(extraSpan);
-							breaker.innerHTML = "&#160;";	// &nbsp;
-							selectionapi.selectElement(breaker);
-							this.focus();
-						}else{
-							this.execCommand(command, argument);
-							domConstruct.place(breaker.firstChild, breaker, "before");
-							domConstruct.destroy(breaker);
-							newrange.setStart(sNode, 0);
-							newrange.setEnd(sNode, sNode.length);
-							selection.removeAllRanges();
-							selection.addRange(newrange);
-							selectionapi.collapse(false);
-							sNode.parentNode.removeChild(sNode);
-						}
-					}));
+						this._sCall("collapse", [false]);
+						sNode.parentNode.removeChild(sNode);
+					}
 					return true;
 				}
 			}				
@@ -2867,22 +2853,18 @@ var RichText = declare("dijit._editor.RichText", [_Widget, _CssStateMixin], {
 		return [];
 	},
 
-	_stripBreakerNodes: function(node){
+	_stripBreakerNodes: function(/*DOMNode*/ node){
 		// summary:
 		//		Function for stripping out the breaker spans inserted by the formatting command.
 		//		Registered as a filter for IE, handles the breaker spans needed to fix up
 		//		How bold/italic/etc, work when selection is collapsed (single cursor).
-		win.withGlobal(this.window, lang.hitch(this, function(){
-			var breakers = query(".ieFormatBreakerSpan", node);
-			var i;
-			for(i = 0; i < breakers.length; i++){
-				var b = breakers[i];
-				while(b.firstChild){
-					domConstruct.place(b.firstChild, b, "before");
-				}
-				domConstruct.destroy(b);
-			}		
-		}));
+		if(!this.isLoaded){ return; } // this method requires init to be complete
+		query(".ieFormatBreakerSpan", node).forEach(function(b){
+			while(b.firstChild){
+				domConstruct.place(b.firstChild, b, "before");
+			}
+			domConstruct.destroy(b);
+		});
 		return node;
 	}
 });

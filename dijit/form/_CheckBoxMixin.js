@@ -1,23 +1,3 @@
 //>>built
-define("dijit/form/_CheckBoxMixin",["dojo/_base/declare","dojo/dom-attr","dojo/_base/event"],function(_1,_2,_3){
-return _1("dijit.form._CheckBoxMixin",null,{type:"checkbox",value:"on",readOnly:false,_aria_attr:"aria-checked",_setReadOnlyAttr:function(_4){
-this._set("readOnly",_4);
-_2.set(this.focusNode,"readOnly",_4);
-this.focusNode.setAttribute("aria-readonly",_4);
-},_setLabelAttr:undefined,postMixInProperties:function(){
-if(this.value==""){
-this.value="on";
-}
-this.inherited(arguments);
-},reset:function(){
-this.inherited(arguments);
-this._set("value",this.params.value||"on");
-_2.set(this.focusNode,"value",this.value);
-},_onClick:function(e){
-if(this.readOnly){
-_3.stop(e);
-return false;
-}
-return this.inherited(arguments);
-}});
-});
+define("dijit/form/_CheckBoxMixin",["dojo/_base/declare","dojo/dom-attr","dojo/_base/event"],function(c,b,d){return c("dijit.form._CheckBoxMixin",null,{type:"checkbox",value:"on",readOnly:!1,_aria_attr:"aria-checked",_setReadOnlyAttr:function(a){this._set("readOnly",a);b.set(this.focusNode,"readOnly",a);this.focusNode.setAttribute("aria-readonly",a)},_setLabelAttr:void 0,_getSubmitValue:function(a){return!a&&0!==a?"on":a},_setValueAttr:function(a){a=this._getSubmitValue(a);this._set("value",a);b.set(this.focusNode,
+"value",a)},reset:function(){this.inherited(arguments);this._set("value",this.params.value||"on");b.set(this.focusNode,"value",this.value)},_onClick:function(a){return this.readOnly?(d.stop(a),!1):this.inherited(arguments)}})});

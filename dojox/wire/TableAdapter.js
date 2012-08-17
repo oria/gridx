@@ -1,30 +1,3 @@
 //>>built
-define(["dijit","dojo","dojox","dojo/require!dojox/wire/CompositeWire"],function(_1,_2,_3){
-_2.provide("dojox.wire.TableAdapter");
-_2.require("dojox.wire.CompositeWire");
-_2.declare("dojox.wire.TableAdapter",_3.wire.CompositeWire,{_wireClass:"dojox.wire.TableAdapter",constructor:function(_4){
-this._initializeChildren(this.columns);
-},_getValue:function(_5){
-if(!_5||!this.columns){
-return _5;
-}
-var _6=_5;
-if(!_2.isArray(_6)){
-_6=[_6];
-}
-var _7=[];
-for(var i in _6){
-var _8=this._getRow(_6[i]);
-_7.push(_8);
-}
-return _7;
-},_setValue:function(_9,_a){
-throw new Error("Unsupported API: "+this._wireClass+"._setValue");
-},_getRow:function(_b){
-var _c=(_2.isArray(this.columns)?[]:{});
-for(var c in this.columns){
-_c[c]=this.columns[c].getValue(_b);
-}
-return _c;
-}});
-});
+define("dojox/wire/TableAdapter",["dijit","dojo","dojox","dojo/require!dojox/wire/CompositeWire"],function(f,c,e){c.provide("dojox.wire.TableAdapter");c.require("dojox.wire.CompositeWire");c.declare("dojox.wire.TableAdapter",e.wire.CompositeWire,{_wireClass:"dojox.wire.TableAdapter",constructor:function(){this._initializeChildren(this.columns)},_getValue:function(a){if(!a||!this.columns)return a;c.isArray(a)||(a=[a]);var d=[],b;for(b in a){var e=this._getRow(a[b]);d.push(e)}return d},_setValue:function(){throw Error("Unsupported API: "+
+this._wireClass+"._setValue");},_getRow:function(a){var d=c.isArray(this.columns)?[]:{},b;for(b in this.columns)d[b]=this.columns[b].getValue(a);return d}})});

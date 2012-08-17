@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"preview": "Náhled"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/cs/Preview",{preview:"N\u00e1hled"});

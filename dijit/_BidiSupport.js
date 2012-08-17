@@ -1,15 +1,3 @@
 //>>built
-define("dijit/_BidiSupport",["./_WidgetBase"],function(_1){
-_1.extend({getTextDir:function(_2){
-return this.textDir=="auto"?this._checkContextual(_2):this.textDir;
-},_checkContextual:function(_3){
-var _4=/[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(_3);
-return _4?(_4[0]<="z"?"ltr":"rtl"):this.dir?this.dir:this.isLeftToRight()?"ltr":"rtl";
-},applyTextDir:function(_5,_6){
-var _7=this.textDir=="auto"?this._checkContextual(_6):this.textDir;
-if(_5.dir!=_7){
-_5.dir=_7;
-}
-}});
-return _1;
-});
+define("dijit/_BidiSupport",["./_WidgetBase"],function(c){var d,e,f;c.extend({getTextDir:function(a){return"auto"==this.textDir?this._checkContextual(a):this.textDir},_checkContextual:function(a){return(a=/[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(a))?"z">=a[0]?"ltr":"rtl":this.dir?this.dir:this.isLeftToRight()?"ltr":"rtl"},applyTextDir:function(a,b){var c="auto"==this.textDir?this._checkContextual(b):this.textDir;if(a.dir!=c)a.dir=c},enforceTextDirWithUcc:function(a,
+b){return this.textDir?(a.originalText=b,("ltr"==("auto"==this.textDir?this._checkContextual(b):this.textDir)?d:e)+b+f):b},restoreOriginalText:function(a){if(a.originalText)a.text=a.originalText,delete a.originalText;return a}});d="\u202a";f="\u202c";e="\u202b";return c});

@@ -1,4 +1,3 @@
-//>>built
 define("dijit/form/_TextBoxMixin", [
 	"dojo/_base/array", // array.forEach
 	"dojo/_base/declare", // declare
@@ -6,13 +5,12 @@ define("dijit/form/_TextBoxMixin", [
 	"dojo/_base/event", // event.stop
 	"dojo/keys", // keys.ALT keys.CAPS_LOCK keys.CTRL keys.META keys.SHIFT
 	"dojo/_base/lang", // lang.mixin
-	".."	// for exporting dijit._setSelectionRange, dijit.selectInputText
-], function(array, declare, dom, event, keys, lang, dijit){
+	"dojo/on", // on
+	"../main"	// for exporting dijit._setSelectionRange, dijit.selectInputText
+], function(array, declare, dom, event, keys, lang, on, dijit){
 
 // module:
 //		dijit/form/_TextBoxMixin
-// summary:
-//		A mixin for textbox form input widgets
 
 var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 	// summary:
@@ -51,9 +49,9 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		// summary:
 		//		Hook so get('value') works as we like.
 		// description:
-		//		For `dijit.form.TextBox` this basically returns the value of the <input>.
+		//		For `dijit/form/TextBox` this basically returns the value of the `<input>`.
 		//
-		//		For `dijit.form.MappedTextBox` subclasses, which have both
+		//		For `dijit/form/MappedTextBox` subclasses, which have both
 		//		a "displayed value" and a separate "submit value",
 		//		This treats the "displayed value" as the master value, computing the
 		//		submit value from it via this.parse().
@@ -91,7 +89,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 				}else{ formattedValue = ''; }
 			}
 		}
-		if(formattedValue != null && formattedValue != undefined && ((typeof formattedValue) != "number" || !isNaN(formattedValue)) && this.textbox.value != formattedValue){
+		if(formattedValue != null /* and !undefined */ && ((typeof formattedValue) != "number" || !isNaN(formattedValue)) && this.textbox.value != formattedValue){
 			this.textbox.value = formattedValue;
 			this._set("displayedValue", this.get("displayedValue"));
 		}
@@ -122,11 +120,11 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		//		Hook so get('displayedValue') works.
 		// description:
 		//		Returns the displayed value (what the user sees on the screen),
-		// 		after filtering (ie, trimming spaces etc.).
+		//		after filtering (ie, trimming spaces etc.).
 		//
 		//		For some subclasses of TextBox (like ComboBox), the displayed value
 		//		is different from the serialized value that's actually
-		//		sent to the server (see dijit.form.ValidationTextBox.serialize)
+		//		sent to the server (see `dijit/form/ValidationTextBox.serialize()`)
 
 		// TODO: maybe we should update this.displayedValue on every keystroke so that we don't need
 		// this method
@@ -142,7 +140,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		//		The widget value is also set to a corresponding,
 		//		but not necessarily the same, value.
 
-		if(value === null || value === undefined){ value = '' }
+		if(value == null /* or undefined */){ value = '' }
 		else if(typeof value != "string"){ value = String(value) }
 
 		this.textbox.value = value;
@@ -167,7 +165,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		// constraints: Object
 		// tags:
 		//		protected extension
-		return ((value == null || value == undefined) ? "" : (value.toString ? value.toString() : value));
+		return value == null /* or undefined */ ? "" : (value.toString ? value.toString() : value);
 	},
 
 	parse: function(value /*=====, constraints =====*/){
@@ -185,7 +183,7 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		// summary:
 		//		After the user types some characters, etc., this method is
 		//		called to check the field for validity etc.  The base method
-		//		in `dijit.form.TextBox` does nothing, but subclasses override.
+		//		in `dijit/form/TextBox` does nothing, but subclasses override.
 		// tags:
 		//		protected
 	},
@@ -204,13 +202,21 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 	onInput: function(){},
 
 	__skipInputEvent: false,
-	_onInput: function(){
+	_onInput: function(/*Event*/ evt){
 		// summary:
 		//		Called AFTER the input event has happened
+
 		// set text direction according to textDir that was defined in creation
 		if(this.textDir == "auto"){
 			this.applyTextDir(this.focusNode, this.focusNode.value);
 		}
+
+		this._processInput(evt);
+	},
+
+	_processInput: function(/*Event*/ evt){
+		// summary:
+		//		Default action handler for user input events
 
 		this._refreshState();
 
@@ -227,25 +233,70 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 
 		// normalize input events to reduce spurious event processing
 		//	onkeydown: do not forward modifier keys
-		//	           set charOrCode to numeric keycode
+		//		       set charOrCode to numeric keycode
 		//	onkeypress: do not forward numeric charOrCode keys (already sent through onkeydown)
 		//	onpaste & oncut: set charOrCode to 229 (IME)
 		//	oninput: if primary event not already processed, set charOrCode to 229 (IME), else do not forward
 		var handleEvent = function(e){
-			var charCode = e.charOrCode || e.keyCode || 229;
+			var charOrCode;
 			if(e.type == "keydown"){
-				switch(charCode){ // ignore "state" keys
+				charOrCode = e.keyCode;
+				switch(charOrCode){ // ignore state keys
 					case keys.SHIFT:
 					case keys.ALT:
 					case keys.CTRL:
 					case keys.META:
 					case keys.CAPS_LOCK:
+					case keys.NUM_LOCK:
+					case keys.SCROLL_LOCK:
 						return;
-					default:
-						if(charCode >= 65 && charCode <= 90){ return; } // keydown for A-Z can be processed with keypress
+				}
+				if(!e.ctrlKey && !e.metaKey && !e.altKey){ // no modifiers
+					switch(charOrCode){ // ignore location keys
+						case keys.NUMPAD_0:
+						case keys.NUMPAD_1:
+						case keys.NUMPAD_2:
+						case keys.NUMPAD_3:
+						case keys.NUMPAD_4:
+						case keys.NUMPAD_5:
+						case keys.NUMPAD_6:
+						case keys.NUMPAD_7:
+						case keys.NUMPAD_8:
+						case keys.NUMPAD_9:
+						case keys.NUMPAD_MULTIPLY:
+						case keys.NUMPAD_PLUS:
+						case keys.NUMPAD_ENTER:
+						case keys.NUMPAD_MINUS:
+						case keys.NUMPAD_PERIOD:
+						case keys.NUMPAD_DIVIDE:
+							return;
+					}
+					if((charOrCode >= 65 && charOrCode <= 90) || (charOrCode >= 48 && charOrCode <= 57) || charOrCode == keys.SPACE){
+						return; // keypress will handle simple non-modified printable keys
+					}
+					var named = false;
+					for(var i in keys){
+						if(keys[i] === e.keyCode){
+							named = true;
+							break;
+						}
+					}
+					if(!named){ return; } // only allow named ones through
 				}
 			}
-			if(e.type == "keypress" && typeof charCode != "string"){ return; }
+			charOrCode = e.charCode >= 32 ? String.fromCharCode(e.charCode) : e.charCode;
+			if(!charOrCode){
+				charOrCode = (e.keyCode >= 65 && e.keyCode <= 90) || (e.keyCode >= 48 && e.keyCode <= 57) || e.keyCode == keys.SPACE ? String.fromCharCode(e.keyCode) : e.keyCode;
+			}
+			if(!charOrCode){
+				charOrCode = 229; // IME
+			}
+			if(e.type == "keypress"){
+				if(typeof charOrCode != "string"){ return; }
+				if((charOrCode >= 'a' && charOrCode <= 'z') || (charOrCode >= 'A' && charOrCode <= 'Z') || (charOrCode >= '0' && charOrCode <= '9') || (charOrCode === ' ')){
+					if(e.ctrlKey || e.metaKey || e.altKey){ return; } // can only be stopped reliably in keydown
+				}
+			}
 			if(e.type == "input"){
 				if(this.__skipInputEvent){ // duplicate event
 					this.__skipInputEvent = false;
@@ -255,25 +306,32 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 				this.__skipInputEvent = true;
 			}
 			// create fake event to set charOrCode and to know if preventDefault() was called
-			var faux = lang.mixin({}, e, {
-				charOrCode: charCode,
-				wasConsumed: false,
+			var faux = { faux: true }, attr;
+			for(attr in e){
+				if(attr != "layerX" && attr != "layerY"){ // prevent WebKit warnings
+					var v = e[attr];
+					if(typeof v != "function" && typeof v != "undefined"){ faux[attr] = v; }
+				}
+			}
+			lang.mixin(faux, {
+				charOrCode: charOrCode,
+				_wasConsumed: false,
 				preventDefault: function(){
-					faux.wasConsumed = true;
+					faux._wasConsumed = true;
 					e.preventDefault();
 				},
 				stopPropagation: function(){ e.stopPropagation(); }
 			});
 			// give web page author a chance to consume the event
-			if(this.onInput(faux) === false){
-				event.stop(faux); // return false means stop
+			//console.log(faux.type + ', charOrCode = (' + (typeof charOrCode) + ') ' + charOrCode + ', ctrl ' + !!faux.ctrlKey + ', alt ' + !!faux.altKey + ', meta ' + !!faux.metaKey + ', shift ' + !!faux.shiftKey);
+			if(this.onInput(faux) === false){ // return false means stop
+				faux.preventDefault();
+				faux.stopPropagation();
 			}
-			if(faux.wasConsumed){ return; } // if preventDefault was called
-			setTimeout(lang.hitch(this, "_onInput", faux), 0); // widget notification after key has posted
+			if(faux._wasConsumed){ return; } // if preventDefault was called
+			this.defer(function(){ this._onInput(faux); }); // widget notification after key has posted
 		};
-		array.forEach([ "onkeydown", "onkeypress", "onpaste", "oncut", "oninput" ], function(event){
-			this.connect(this.textbox, event, handleEvent);
-		}, this);
+		this.own(on(this.textbox, "keydown, keypress, paste, cut, input, compositionend", lang.hitch(this, handleEvent)));
 	},
 
 	_blankValue: '', // if the textbox is blank, what value should be reported
@@ -283,8 +341,10 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		//		value on blur or form submit.
 		// description:
 		//		For MappedTextBox subclasses, this is called twice
-		// 			- once with the display value
-		//			- once the value as set/returned by set('value', ...)
+		//
+		//		- once with the display value
+		//		- once the value as set/returned by set('value', ...)
+		//
 		//		and get('value'), ex: a Number for NumberTextBox.
 		//
 		//		In the latter case it does corrections like converting null to NaN.  In
@@ -322,34 +382,38 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 		if(this.disabled){ return; }
 		this._setBlurValue();
 		this.inherited(arguments);
-
-		if(this._selectOnClickHandle){
-			this.disconnect(this._selectOnClickHandle);
-		}
 	},
 
 	_isTextSelected: function(){
-		return this.textbox.selectionStart == this.textbox.selectionEnd;
+		return this.textbox.selectionStart != this.textbox.selectionEnd;
 	},
 
 	_onFocus: function(/*String*/ by){
 		if(this.disabled || this.readOnly){ return; }
 
 		// Select all text on focus via click if nothing already selected.
-		// Since mouse-up will clear the selection need to defer selection until after mouse-up.
+		// Since mouse-up will clear the selection, need to defer selection until after mouse-up.
 		// Don't do anything on focus by tabbing into the widget since there's no associated mouse-up event.
 		if(this.selectOnClick && by == "mouse"){
 			this._selectOnClickHandle = this.connect(this.domNode, "onmouseup", function(){
 				// Only select all text on first click; otherwise users would have no way to clear
 				// the selection.
 				this.disconnect(this._selectOnClickHandle);
+				this._selectOnClickHandle = null;
 
 				// Check if the user selected some text manually (mouse-down, mouse-move, mouse-up)
 				// and if not, then select all the text
-				if(this._isTextSelected()){
+				if(!this._isTextSelected()){
 					_TextBoxMixin.selectInputText(this.textbox);
 				}
 			});
+			// in case the mouseup never comes
+			this.defer(function(){ 
+				if(this._selectOnClickHandle){
+					this.disconnect(this._selectOnClickHandle);
+					this._selectOnClickHandle = null;
+				}
+			}, 500); // if mouseup not received soon, then treat it as some gesture
 		}
 		// call this.inherited() before refreshState(), since this.inherited() will possibly scroll the viewport
 		// (to scroll the TextBox into view), which will affect how _refreshState() positions the tooltip
@@ -359,11 +423,12 @@ var _TextBoxMixin = declare("dijit.form._TextBoxMixin", null, {
 	},
 
 	reset: function(){
-		// Overrides dijit._FormWidget.reset().
+		// Overrides `dijit/_FormWidget/reset()`.
 		// Additionally resets the displayed textbox value to ''
 		this.textbox.value = '';
 		this.inherited(arguments);
 	},
+
 	_setTextDirAttr: function(/*String*/ textDir){
 		// summary:
 		//		Setter for textDir.

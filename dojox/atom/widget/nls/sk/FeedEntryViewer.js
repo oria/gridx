@@ -1,16 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	displayOptions: "[zobraziť voľby]",
-	title: "Nadpis",
-	authors: "Autori",
-	contributors: "Prispievatelia",
-	id: "ID",
-	close: "[zatvoriť]",
-	updated: "Aktualizovaný",
-	summary: "Súhrn",
-	content: "Obsah"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/sk/FeedEntryViewer",{displayOptions:"[vo\u013eby zobrazenia]",title:"Nadpis",authors:"Autori",contributors:"Prispievatelia",id:"ID",close:"[zatvori\u0165]",updated:"Aktualizovan\u00e9",summary:"Zhrnutie",content:"Obsah"});

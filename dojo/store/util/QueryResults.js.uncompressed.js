@@ -1,18 +1,13 @@
-//>>built
 define("dojo/store/util/QueryResults", ["../../_base/array", "../../_base/lang", "../../_base/Deferred"
-], function(array, lang, Deferred) {
-  //  module:
-  //    dojo/store/util/QueryResults
-  //  summary:
-  //    The module defines a query results wrapper
+], function(array, lang, Deferred){
 
-var util = lang.getObject("dojo.store.util", true);
+// module:
+//		dojo/store/util/QueryResults
 
-util.QueryResults = function(results){
+var QueryResults = function(results){
 	// summary:
 	//		A function that wraps the results of a store query with additional
 	//		methods.
-	//
 	// description:
 	//		QueryResults is a basic wrapper that allows for array-like iteration
 	//		over any kind of returned data from a query.  While the simplest store
@@ -21,10 +16,10 @@ util.QueryResults = function(results){
 	//		the same.
 	//
 	//		Additional methods include `forEach`, `filter` and `map`.
-	//
-	// returns: Object
+	// results: Array|dojo/promise/Promise
+	//		The result set as an array, or a promise for an array.
+	// returns:
 	//		An array-like object that can be used for iterating over.
-	//
 	// example:
 	//		Query a store and iterate over the results.
 	//
@@ -45,7 +40,7 @@ util.QueryResults = function(results){
 				var args = arguments;
 				return Deferred.when(results, function(results){
 					Array.prototype.unshift.call(args, results);
-					return util.QueryResults(array[method].apply(array, args));
+					return QueryResults(array[method].apply(array, args));
 				});
 			};
 		}
@@ -58,8 +53,11 @@ util.QueryResults = function(results){
 			return results.length;
 		});
 	}
-	return results;
+	return results; // Object
 };
 
-return util.QueryResults;
+lang.setObject("dojo.store.util.QueryResults", QueryResults);
+
+return QueryResults;
+
 });

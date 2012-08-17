@@ -1,4 +1,3 @@
-//>>built
 define("dojox/form/BusyButton", [
 	"dojo/_base/lang",
 	"dojo/dom-attr",
@@ -10,17 +9,21 @@ define("dojox/form/BusyButton", [
 	"dojo/i18n!dijit/nls/loading",
 	"dojo/_base/declare"
 ], function(lang, domAttr, domClass, Button, DropDownButton, ComboButton, i18n, nlsLoading, declare){
-	/*=====
-		Button = dijit.form.Button;
-		DropDownButton = dijit.form.DropDownButton;
-		ComboButton = dijit.form.ComboButton;
-	=====*/
+
 var _BusyButtonMixin = declare("dojox.form._BusyButtonMixin", null, {
 
+	// isBusy: Boolean
 	isBusy: false,
-	busyLabel: "", // text while button is busy
+	
+	// busyLabel: String
+	//		text while button is busy
+	busyLabel: "",
+	
 	timeout: null, // timeout, should be controlled by xhr call
-	useIcon: true, // use a busy icon
+	
+	// useIcon: Boolean
+	//		use a busy icon
+	useIcon: true,
 
 	postMixInProperties: function(){
 		this.inherited(arguments);
@@ -54,7 +57,7 @@ var _BusyButtonMixin = declare("dojox.form._BusyButtonMixin", null, {
 	cancel: function(){
 		// summary:
 		//		if no timeout is set or for other reason the user can put the button back
-		//  	to being idle
+		//		to being idle
 		this.set("disabled", false);
 		this.isBusy = false;
 		this.setLabel(this._label);
@@ -86,7 +89,6 @@ var _BusyButtonMixin = declare("dojox.form._BusyButtonMixin", null, {
 		// this.inherited(arguments); FIXME: throws an Unknown runtime error
 
 		// Begin IE hack
-		// summary: reset the label (text) of the button; takes an HTML string
 		this.label = content;
 		// remove children
 		while(this.containerNode.firstChild){
@@ -128,7 +130,16 @@ var _BusyButtonMixin = declare("dojox.form._BusyButtonMixin", null, {
 	}
 });
 
-var BusyButton = declare("dojox.form.BusyButton", [Button, _BusyButtonMixin], {});
+var BusyButton = declare("dojox.form.BusyButton", [Button, _BusyButtonMixin], {
+	// summary:
+	//		BusyButton is a simple widget which provides implementing more 
+	//		user friendly form submission.
+	// description:
+	//		When a form gets submitted by a user, many times it is recommended to disable
+	//		the submit buttons to prevent double submission. BusyButton provides a simple set
+	//		of features for this purpose
+
+});
 declare("dojox.form.BusyComboButton", [ComboButton, _BusyButtonMixin], {});
 declare("dojox.form.BusyDropDownButton", [DropDownButton, _BusyButtonMixin], {});
 return BusyButton;

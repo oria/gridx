@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertEntity: "Symbol einfügen"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/de/InsertEntity",{insertEntity:"Symbol einf\u00fcgen"});

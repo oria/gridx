@@ -1,34 +1,3 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
 //>>built
-define("dojo/rpc/JsonService",["../main","./RpcService"],function(_1){
-_1.declare("dojo.rpc.JsonService",_1.rpc.RpcService,{bustCache:false,contentType:"application/json-rpc",lastSubmissionId:0,callRemote:function(_2,_3){
-var _4=new _1.Deferred();
-this.bind(_2,_3,_4);
-return _4;
-},bind:function(_5,_6,_7,_8){
-var _9=_1.rawXhrPost({url:_8||this.serviceUrl,postData:this.createRequest(_5,_6),contentType:this.contentType,timeout:this.timeout,handleAs:"json-comment-optional"});
-_9.addCallbacks(this.resultCallback(_7),this.errorCallback(_7));
-},createRequest:function(_a,_b){
-var _c={"params":_b,"method":_a,"id":++this.lastSubmissionId};
-return _1.toJson(_c);
-},parseResults:function(_d){
-if(_1.isObject(_d)){
-if("result" in _d){
-return _d.result;
-}
-if("Result" in _d){
-return _d.Result;
-}
-if("ResultSet" in _d){
-return _d.ResultSet;
-}
-}
-return _d;
-}});
-return _1.rpc.JsonService;
-});
+define("dojo/rpc/JsonService","../_base/declare,../_base/Deferred,../_base/json,../_base/lang,../_base/xhr,./RpcService".split(","),function(d,e,f,g,h,i){return d("dojo.rpc.JsonService",i,{bustCache:!1,contentType:"application/json-rpc",lastSubmissionId:0,callRemote:function(a,c){var b=new e;this.bind(a,c,b);return b},bind:function(a,c,b,d){h.post({url:d||this.serviceUrl,postData:this.createRequest(a,c),contentType:this.contentType,timeout:this.timeout,handleAs:"json-comment-optional"}).addCallbacks(this.resultCallback(b),
+this.errorCallback(b))},createRequest:function(a,c){var b={params:c,method:a,id:++this.lastSubmissionId};return f.toJson(b)},parseResults:function(a){if(g.isObject(a)){if("result"in a)return a.result;if("Result"in a)return a.Result;if("ResultSet"in a)return a.ResultSet}return a}})});

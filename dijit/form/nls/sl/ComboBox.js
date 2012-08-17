@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-		previousMessage: "Prejšnje izbire",
-		nextMessage: "Dodatne izbire"
-})
-
-//end v1.x content
-);
+define("dijit/form/nls/sl/ComboBox",{previousMessage:"Prej\u0161nje izbire",nextMessage:"Dodatne izbire"});

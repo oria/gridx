@@ -1,4 +1,2 @@
 //>>built
-define("dojox/mvc/Group",["dojo/_base/declare","dijit/_WidgetBase"],function(_1,_2){
-return _1("dojox.mvc.Group",[_2],{});
-});
+define("dojox/mvc/Group",["dojo/_base/declare","dijit/_WidgetBase","dojo/_base/lang"],function(b,c,d){return b("dojox.mvc.Group",c,{target:null,startup:function(){if(d.isFunction(this.getParent)&&this.getParent()&&this.getParent().removeRepeatNode)this.select=this.getParent().select,this.onCheckStateChanged=this.getParent().onCheckStateChanged;this.inherited(arguments)},_setTargetAttr:function(a){this._set("target",a);this.binding!=a&&this.set("ref",a)}})});

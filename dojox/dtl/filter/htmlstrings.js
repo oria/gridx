@@ -1,30 +1,3 @@
 //>>built
-define("dojox/dtl/filter/htmlstrings",["dojo/_base/lang","../_base"],function(_1,dd){
-_1.getObject("dojox.dtl.filter.htmlstrings",true);
-_1.mixin(dd.filter.htmlstrings,{_linebreaksrn:/(\r\n|\n\r)/g,_linebreaksn:/\n{2,}/g,_linebreakss:/(^\s+|\s+$)/g,_linebreaksbr:/\n/g,_removetagsfind:/[a-z0-9]+/g,_striptags:/<[^>]*?>/g,linebreaks:function(_2){
-var _3=[];
-var dh=dd.filter.htmlstrings;
-_2=_2.replace(dh._linebreaksrn,"\n");
-var _4=_2.split(dh._linebreaksn);
-for(var i=0;i<_4.length;i++){
-var _5=_4[i].replace(dh._linebreakss,"").replace(dh._linebreaksbr,"<br />");
-_3.push("<p>"+_5+"</p>");
-}
-return _3.join("\n\n");
-},linebreaksbr:function(_6){
-var dh=dd.filter.htmlstrings;
-return _6.replace(dh._linebreaksrn,"\n").replace(dh._linebreaksbr,"<br />");
-},removetags:function(_7,_8){
-var dh=dd.filter.htmlstrings;
-var _9=[];
-var _a;
-while(_a=dh._removetagsfind.exec(_8)){
-_9.push(_a[0]);
-}
-_9="("+_9.join("|")+")";
-return _7.replace(new RegExp("</?s*"+_9+"s*[^>]*>","gi"),"");
-},striptags:function(_b){
-return _b.replace(dojox.dtl.filter.htmlstrings._striptags,"");
-}});
-return dojox.dtl.filter.htmlstrings;
-});
+define("dojox/dtl/filter/htmlstrings",["dojo/_base/lang","../_base"],function(g,e){g.getObject("dojox.dtl.filter.htmlstrings",!0);g.mixin(e.filter.htmlstrings,{_linebreaksrn:/(\r\n|\n\r)/g,_linebreaksn:/\n{2,}/g,_linebreakss:/(^\s+|\s+$)/g,_linebreaksbr:/\n/g,_removetagsfind:/[a-z0-9]+/g,_striptags:/<[^>]*?>/g,linebreaks:function(a){for(var c=[],d=e.filter.htmlstrings,a=a.replace(d._linebreaksrn,"\n"),a=a.split(d._linebreaksn),b=0;b<a.length;b++){var f=a[b].replace(d._linebreakss,"").replace(d._linebreaksbr,
+"<br />");c.push("<p>"+f+"</p>")}return c.join("\n\n")},linebreaksbr:function(a){var c=e.filter.htmlstrings;return a.replace(c._linebreaksrn,"\n").replace(c._linebreaksbr,"<br />")},removetags:function(a,c){for(var d=e.filter.htmlstrings,b=[],f;f=d._removetagsfind.exec(c);)b.push(f[0]);b="("+b.join("|")+")";return a.replace(RegExp("</?s*"+b+"s*[^>]*>","gi"),"")},striptags:function(a){return a.replace(dojox.dtl.filter.htmlstrings._striptags,"")}});return dojox.dtl.filter.htmlstrings});

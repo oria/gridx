@@ -1,18 +1,2 @@
 //>>built
-define(["dijit","dojo","dojox","dojo/require!dojo/fx"],function(_1,_2,_3){
-_2.provide("dojox.widget.rotator.Fade");
-_2.require("dojo.fx");
-(function(d){
-function _4(_5,_6){
-var n=_5.next.node;
-d.style(n,{display:"",opacity:0});
-_5.node=_5.current.node;
-return d.fx[_6]([d.fadeOut(_5),d.fadeIn(d.mixin(_5,{node:n}))]);
-};
-d.mixin(_3.widget.rotator,{fade:function(_7){
-return _4(_7,"chain");
-},crossFade:function(_8){
-return _4(_8,"combine");
-}});
-})(_2);
-});
+define("dojox/widget/rotator/Fade",["dojo/_base/lang","dojo/_base/fx","dojo/dom-style","dojo/fx"],function(d,e,f,g){function c(a,c){var b=a.next.node;f.set(b,{display:"",opacity:0});a.node=a.current.node;return g[c]([e.fadeOut(a),e.fadeIn(d.mixin(a,{node:b}))])}var b={fade:function(a){return c(a,"chain")},crossFade:function(a){return c(a,"combine")}};d.mixin(d.getObject("dojox.widget.rotator"),b);return b});

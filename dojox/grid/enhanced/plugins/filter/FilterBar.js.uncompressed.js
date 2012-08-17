@@ -1,4 +1,3 @@
-//>>built
 define("dojox/grid/enhanced/plugins/filter/FilterBar", [
 	"dojo/_base/declare",
 	"dojo/_base/array",
@@ -126,7 +125,7 @@ return declare("dojox.grid.enhanced.plugins.filter.FilterBar", [_Widget, _Templa
 					"height": {
 						"end": lang.hitch(this, function(){
 							var barHeight = this.domNode.scrollHeight;
-							if(has("ff")){
+							if(has('ff')){
 								barHeight -= 2;
 							}
 							return toShow ? (curHeight - barHeight) : (curHeight + barHeight);
@@ -354,7 +353,9 @@ return declare("dojox.grid.enhanced.plugins.filter.FilterBar", [_Widget, _Templa
 	},
 	_showStatusTooltip: function(){
 		this._handle_statusTooltip = null;
-		this.plugin.filterStatusTip.showDialog(this._tippos.x, this._tippos.y, this.getColumnIdx(this._tippos.x));
+		if(this.plugin){
+			this.plugin.filterStatusTip.showDialog(this._tippos.x, this._tippos.y, this.getColumnIdx(this._tippos.x));
+		}
 	},
 	_highlightHeader: function(/* int */colIdx){
 		if(colIdx != this._previousHeaderIdx){

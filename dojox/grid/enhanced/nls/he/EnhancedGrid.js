@@ -1,17 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	singleSort: "מיון יחיד",
-	nestedSort: "מיון מקונן",
-	ascending: "עולה",
-	descending: "יורד",
-	sortingState: "${0} - ${1}",
-	unsorted: "אין למיין עמודה זו",
-	indirectSelectionRadio: "שורה ${0}, בחירה יחידה, תיבת בחירה",
-	indirectSelectionCheckBox: "שורה ${0}, בחירה מרובה, תיבת סימון",
-	selectAll: "בחירת הכל"
-})
-//end v1.x content
-);
-
+define("dojox/grid/enhanced/nls/he/EnhancedGrid",{singleSort:"\u05de\u05d9\u05d5\u05df \u05d9\u05d7\u05d9\u05d3",nestedSort:"\u05de\u05d9\u05d5\u05df \u05de\u05e7\u05d5\u05e0\u05df",ascending:"\u05e2\u05d5\u05dc\u05d4",descending:"\u05d9\u05d5\u05e8\u05d3",sortingState:"${0} - ${1}",unsorted:"\u05d0\u05d9\u05df \u05dc\u05de\u05d9\u05d9\u05df \u05e2\u05de\u05d5\u05d3\u05d4 \u05d6\u05d5",indirectSelectionRadio:"\u05e9\u05d5\u05e8\u05d4 ${0}, \u05d1\u05d7\u05d9\u05e8\u05d4 \u05d9\u05d7\u05d9\u05d3\u05d4, \u05ea\u05d9\u05d1\u05ea \u05d1\u05d7\u05d9\u05e8\u05d4",
+indirectSelectionCheckBox:"\u05e9\u05d5\u05e8\u05d4 ${0}, \u05d1\u05d7\u05d9\u05e8\u05d4 \u05de\u05e8\u05d5\u05d1\u05d4, \u05ea\u05d9\u05d1\u05ea \u05e1\u05d9\u05de\u05d5\u05df",selectAll:"\u05d1\u05d7\u05d9\u05e8\u05ea \u05d4\u05db\u05dc"});

@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-		previousMessage: "Предыдущие варианты",
-		nextMessage: "Следующие варианты"
-})
-//end v1.x content
-);
+define("dijit/form/nls/ru/ComboBox",{previousMessage:"\u041f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0435 \u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b",nextMessage:"\u0421\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0435 \u0432\u0430\u0440\u0438\u0430\u043d\u0442\u044b"});

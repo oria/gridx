@@ -1,35 +1,5 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertTableTitle: "แทรกตาราง",
-	modifyTableTitle: "ปรับเปลี่ยนไขตาราง",
-	rows: "แถว:",
-	columns: "คอลัมน์:",
-	align: "จัดตำแหน่ง:",
-	cellPadding: "ส่วนเสริมเซลล์:",
-	cellSpacing: "ระยะห่างเซลล์:",
-	tableWidth: "ความกว้างของตาราง:",
-	backgroundColor: "สีพื้นหลัง:",
-	borderColor: "สีเส้นขอบ:",
-	borderThickness: "ความหนาเส้นขอบ",
-	percent: "เปอร์เซ็นต์",
-	pixels: "พิกเซล",
-	"default": "ดีฟอลต์",
-	left: "ซ้าย",
-	center: "กึ่งกลาง",
-	right: "ขวา",
-	buttonSet: "ตั้งค่า", // translated elsewhere?
-	buttonInsert: "แทรก",
-	buttonCancel: "ยกเลิก",
-
-	selectTableLabel: "เลือกตาราง",
-	insertTableRowBeforeLabel: "เพิ่มแถวก่อน",
-	insertTableRowAfterLabel: "เพิ่มแถวหลัง",
-	insertTableColumnBeforeLabel: "เพิ่มคอลัมน์ก่อน",
-	insertTableColumnAfterLabel: "เพิ่มคอลัมน์หลัง",
-	deleteTableRowLabel: "ลบแถว",
-	deleteTableColumnLabel: "ลบคอลัมน์"
-})
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/th/TableDialog",{insertTableTitle:"\u0e41\u0e17\u0e23\u0e01\u0e15\u0e32\u0e23\u0e32\u0e07",modifyTableTitle:"\u0e41\u0e01\u0e49\u0e44\u0e02\u0e15\u0e32\u0e23\u0e32\u0e07",rows:"\u0e41\u0e16\u0e27:",columns:"\u0e04\u0e2d\u0e25\u0e31\u0e21\u0e19\u0e4c:",align:"\u0e08\u0e31\u0e14\u0e41\u0e19\u0e27:",cellPadding:"\u0e04\u0e27\u0e32\u0e21\u0e2a\u0e39\u0e07\u0e02\u0e2d\u0e07\u0e40\u0e0b\u0e25\u0e25\u0e4c:",cellSpacing:"\u0e23\u0e30\u0e22\u0e30\u0e2b\u0e48\u0e32\u0e07\u0e02\u0e2d\u0e07\u0e40\u0e0b\u0e25\u0e25\u0e4c:",
+tableWidth:"\u0e04\u0e27\u0e32\u0e21\u0e01\u0e27\u0e49\u0e32\u0e07\u0e02\u0e2d\u0e07\u0e15\u0e32\u0e23\u0e32\u0e07:",backgroundColor:"\u0e2a\u0e35\u0e1e\u0e37\u0e49\u0e19\u0e2b\u0e25\u0e31\u0e07:",borderColor:"\u0e2a\u0e35\u0e40\u0e2a\u0e49\u0e19\u0e02\u0e2d\u0e1a:",borderThickness:"\u0e04\u0e27\u0e32\u0e21\u0e01\u0e27\u0e49\u0e32\u0e07\u0e02\u0e2d\u0e07\u0e02\u0e2d\u0e1a",percent:"\u0e40\u0e1b\u0e2d\u0e23\u0e4c\u0e40\u0e0b\u0e47\u0e19\u0e15\u0e4c",pixels:"\u0e1e\u0e34\u0e01\u0e40\u0e0b\u0e25","default":"\u0e14\u0e35\u0e1f\u0e2d\u0e25\u0e15\u0e4c",
+left:"\u0e0b\u0e49\u0e32\u0e22",center:"\u0e01\u0e36\u0e48\u0e07\u0e01\u0e25\u0e32\u0e07",right:"\u0e02\u0e27\u0e32",buttonSet:"\u0e40\u0e0b\u0e47\u0e15",buttonInsert:"\u0e41\u0e17\u0e23\u0e01",buttonCancel:"\u0e22\u0e01\u0e40\u0e25\u0e34\u0e01",selectTableLabel:"\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e15\u0e32\u0e23\u0e32\u0e07",insertTableRowBeforeLabel:"\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e41\u0e16\u0e27\u0e01\u0e48\u0e2d\u0e19",insertTableRowAfterLabel:"\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e41\u0e16\u0e27\u0e2b\u0e25\u0e31\u0e07\u0e08\u0e32\u0e01",
+insertTableColumnBeforeLabel:"\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e04\u0e2d\u0e25\u0e31\u0e21\u0e19\u0e4c\u0e01\u0e48\u0e2d\u0e19",insertTableColumnAfterLabel:"\u0e40\u0e1e\u0e34\u0e48\u0e21\u0e04\u0e2d\u0e25\u0e31\u0e21\u0e19\u0e4c\u0e2b\u0e25\u0e31\u0e07\u0e08\u0e32\u0e01",deleteTableRowLabel:"\u0e25\u0e1a\u0e41\u0e16\u0e27",deleteTableColumnLabel:"\u0e25\u0e1a\u0e04\u0e2d\u0e25\u0e31\u0e21\u0e19\u0e4c"});

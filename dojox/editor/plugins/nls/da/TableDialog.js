@@ -1,35 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	insertTableTitle: "Indsæt tabel",
-	modifyTableTitle: "Revidér tabel",
-	rows: "Rækker:",
-	columns: "Kolonner:",
-	align: "Justér:",
-	cellPadding: "Cellemargen:",
-	cellSpacing: "Celleafstand:",
-	tableWidth: "Tabelbredde:",
-	backgroundColor: "Baggrundsfarve:",
-	borderColor: "Kantfarve:",
-	borderThickness: "Kanttykkelse",
-	percent: "procent",
-	pixels: "pixel",
-	"default": "standard",
-	left: "venstre",
-	center: "centreret",
-	right: "højre",
-	buttonSet: "Definér", // translated elsewhere?
-	buttonInsert: "Indsæt",
-	buttonCancel: "Annullér",
-
-	selectTableLabel: "Markér tabel",
-	insertTableRowBeforeLabel: "Tilføj række før",
-	insertTableRowAfterLabel: "Tilføj række efter",
-	insertTableColumnBeforeLabel: "Tilføj kolonne før",
-	insertTableColumnAfterLabel: "Tilføj kolonne efter",
-	deleteTableRowLabel: "Slet række",
-	deleteTableColumnLabel: "Slet kolonne"
-})
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/da/TableDialog",{insertTableTitle:"Inds\u00e6t tabel",modifyTableTitle:"Revid\u00e9r tabel",rows:"R\u00e6kker:",columns:"Kolonner:",align:"Just\u00e9r:",cellPadding:"Cellemargen:",cellSpacing:"Celleafstand:",tableWidth:"Tabelbredde:",backgroundColor:"Baggrundsfarve:",borderColor:"Kantfarve:",borderThickness:"Kanttykkelse:",percent:"procent",pixels:"pixel","default":"standard",left:"venstre",center:"centreret",right:"h\u00f8jre",buttonSet:"Defin\u00e9r",buttonInsert:"Inds\u00e6t",
+buttonCancel:"Annull\u00e9r",selectTableLabel:"Mark\u00e9r tabel",insertTableRowBeforeLabel:"Tilf\u00f8j r\u00e6kke f\u00f8r",insertTableRowAfterLabel:"Tilf\u00f8j r\u00e6kke efter",insertTableColumnBeforeLabel:"Tilf\u00f8j kolonne f\u00f8r",insertTableColumnAfterLabel:"Tilf\u00f8j kolonne efter",deleteTableRowLabel:"Slet r\u00e6kke",deleteTableColumnLabel:"Slet kolonne"});

@@ -1,63 +1,6 @@
 //>>built
-define(["dijit","dojo","dojox","dojo/require!dojo/string,dijit/_Widget,dijit/_Templated,dojox/form/BusyButton,dojox/testing/DocTest"],function(_1,_2,_3){
-_2.provide("dojox.widget.DocTester");
-_2.require("dojo.string");
-_2.require("dijit._Widget");
-_2.require("dijit._Templated");
-_2.require("dojox.form.BusyButton");
-_2.require("dojox.testing.DocTest");
-_2.declare("dojox.widget.DocTester",[_1._Widget,_1._Templated],{templateString:_2.cache("dojox.widget","DocTester/DocTester.html","<div dojoAttachPoint=\"domNode\" class=\"dojoxDocTester\">\n\t<div dojoAttachPoint=\"containerNode\"></div>\n\t<button dojoType=\"dojox.form.BusyButton\" busyLabel=\"Testing...\" dojoAttachPoint=\"runButtonNode\">Run tests</button>\n\t<button dojoType=\"dijit.form.Button\" dojoAttachPoint=\"resetButtonNode\" style=\"display:none;\">Reset</button>\n\t<span>\n\t\t<span dojoAttachPoint=\"numTestsNode\">0</span> tests,\n\t\t<span dojoAttachPoint=\"numTestsOkNode\">0</span> passed,\n\t\t<span dojoAttachPoint=\"numTestsNokNode\">0</span> failed\n\t</span>\n</div>"),widgetsInTemplate:true,_fillContent:function(_4){
-var _5=_4.innerHTML;
-this.doctests=new _3.testing.DocTest();
-this.tests=this.doctests.getTestsFromString(this._unescapeHtml(_5));
-var _6=_2.map(this.tests,"return item.line-1");
-var _7=_5.split("\n");
-var _8="<div class=\"actualResult\">FAILED, actual result was: <span class=\"result\"></span></div>";
-var _9="<pre class=\"testCase testNum0 odd\">";
-for(var i=0;i<_7.length;i++){
-var _a=_2.indexOf(_6,i);
-if(_a>0&&_a!=-1){
-var _b=_a%2?"even":"odd";
-_9+=_8;
-_9+="</pre><pre class=\"testCase testNum"+_a+" "+_b+"\">";
-}
-_9+=_7[i].replace(/^\s+/,"")+"\n";
-}
-_9+=_8+"</pre>";
-this.containerNode.innerHTML=_9;
-},postCreate:function(){
-this.inherited("postCreate",arguments);
-_2.connect(this.runButtonNode,"onClick",_2.hitch(this,"runTests"));
-_2.connect(this.resetButtonNode,"onClick",_2.hitch(this,"reset"));
-this.numTestsNode.innerHTML=this.tests.length;
-},runTests:function(){
-var _c={ok:0,nok:0};
-for(var i=0;i<this.tests.length;i++){
-var _d=this.doctests.runTest(this.tests[i].commands,this.tests[i].expectedResult);
-_2.query(".testNum"+i,this.domNode).addClass(_d.success?"resultOk":"resultNok");
-if(!_d.success){
-_c.nok++;
-this.numTestsNokNode.innerHTML=_c.nok;
-var _e=_2.query(".testNum"+i+" .actualResult",this.domNode)[0];
-_2.style(_e,"display","inline");
-_2.query(".result",_e)[0].innerHTML=_2.toJson(_d.actualResult);
-}else{
-_c.ok++;
-this.numTestsOkNode.innerHTML=_c.ok;
-}
-}
-this.runButtonNode.cancel();
-_2.style(this.runButtonNode.domNode,"display","none");
-_2.style(this.resetButtonNode.domNode,"display","");
-},reset:function(){
-_2.style(this.runButtonNode.domNode,"display","");
-_2.style(this.resetButtonNode.domNode,"display","none");
-this.numTestsOkNode.innerHTML="0";
-this.numTestsNokNode.innerHTML="0";
-_2.query(".actualResult",this.domNode).style("display","none");
-_2.query(".testCase",this.domNode).removeClass("resultOk").removeClass("resultNok");
-},_unescapeHtml:function(_f){
-_f=String(_f).replace(/&amp;/gm,"&").replace(/&lt;/gm,"<").replace(/&gt;/gm,">").replace(/&quot;/gm,"\"");
-return _f;
-}});
-});
+define("dojox/widget/DocTester",["dijit","dojo","dojox","dojo/require!dojo/string,dijit/_Widget,dijit/_Templated,dojox/form/BusyButton,dojox/testing/DocTest"],function(g,a,h){a.provide("dojox.widget.DocTester");a.require("dojo.string");a.require("dijit._Widget");a.require("dijit._Templated");a.require("dojox.form.BusyButton");a.require("dojox.testing.DocTest");a.declare("dojox.widget.DocTester",[g._Widget,g._Templated],{templateString:a.cache("dojox.widget","DocTester/DocTester.html",'<div dojoAttachPoint="domNode" class="dojoxDocTester">\r\n\t<div dojoAttachPoint="containerNode"></div>\r\n\t<button dojoType="dojox.form.BusyButton" busyLabel="Testing..." dojoAttachPoint="runButtonNode">Run tests</button>\r\n\t<button dojoType="dijit.form.Button" dojoAttachPoint="resetButtonNode" style="display:none;">Reset</button>\r\n\t<span>\r\n\t\t<span dojoAttachPoint="numTestsNode">0</span> tests,\r\n\t\t<span dojoAttachPoint="numTestsOkNode">0</span> passed,\r\n\t\t<span dojoAttachPoint="numTestsNokNode">0</span> failed\r\n\t</span>\r\n</div>'),
+widgetsInTemplate:!0,_fillContent:function(f){var c=f.innerHTML;this.doctests=new h.testing.DocTest;this.tests=this.doctests.getTestsFromString(this._unescapeHtml(c));for(var f=a.map(this.tests,"return item.line-1"),c=c.split("\n"),b='<pre class="testCase testNum0 odd">',d=0;d<c.length;d++){var e=a.indexOf(f,d);if(0<e&&-1!=e)var g=e%2?"even":"odd",b=b+'<div class="actualResult">FAILED, actual result was: <span class="result"></span></div>',b=b+('</pre><pre class="testCase testNum'+e+" "+g+'">');b+=
+c[d].replace(/^\s+/,"")+"\n"}this.containerNode.innerHTML=b+'<div class="actualResult">FAILED, actual result was: <span class="result"></span></div></pre>'},postCreate:function(){this.inherited("postCreate",arguments);a.connect(this.runButtonNode,"onClick",a.hitch(this,"runTests"));a.connect(this.resetButtonNode,"onClick",a.hitch(this,"reset"));this.numTestsNode.innerHTML=this.tests.length},runTests:function(){for(var f=0,c=0,b=0;b<this.tests.length;b++){var d=this.doctests.runTest(this.tests[b].commands,
+this.tests[b].expectedResult);a.query(".testNum"+b,this.domNode).addClass(d.success?"resultOk":"resultNok");if(d.success)f++,this.numTestsOkNode.innerHTML=f;else{c++;this.numTestsNokNode.innerHTML=c;var e=a.query(".testNum"+b+" .actualResult",this.domNode)[0];a.style(e,"display","inline");a.query(".result",e)[0].innerHTML=a.toJson(d.actualResult)}}this.runButtonNode.cancel();a.style(this.runButtonNode.domNode,"display","none");a.style(this.resetButtonNode.domNode,"display","")},reset:function(){a.style(this.runButtonNode.domNode,
+"display","");a.style(this.resetButtonNode.domNode,"display","none");this.numTestsOkNode.innerHTML="0";this.numTestsNokNode.innerHTML="0";a.query(".actualResult",this.domNode).style("display","none");a.query(".testCase",this.domNode).removeClass("resultOk").removeClass("resultNok")},_unescapeHtml:function(a){return a=(""+a).replace(/&amp;/gm,"&").replace(/&lt;/gm,"<").replace(/&gt;/gm,">").replace(/&quot;/gm,'"')}})});

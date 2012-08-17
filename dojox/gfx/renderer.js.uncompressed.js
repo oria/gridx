@@ -1,17 +1,15 @@
-//>>built
 define("dojox/gfx/renderer", ["./_base","dojo/_base/lang", "dojo/_base/sniff", "dojo/_base/window", "dojo/_base/config"],
   function(g, lang, has, win, config){
   //>> noBuildResolver
-/*=====
-	dojox.gfx.renderer = {
+	var currentRenderer = null;
+	return {
 		// summary:
 		//		This module is an AMD loader plugin that loads the appropriate graphics renderer
 		//		implementation based on detected environment and current configuration settings.
-	};
-  =====*/
-	var currentRenderer = null;
-	return {
+		
 		load: function(id, require, load){
+			// tags:
+			//      private
 			if(currentRenderer && id != "force"){
 				load(currentRenderer);
 				return;

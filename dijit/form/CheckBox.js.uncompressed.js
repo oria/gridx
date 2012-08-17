@@ -1,31 +1,23 @@
-//>>built
 require({cache:{
-'url:dijit/form/templates/CheckBox.html':"<div class=\"dijit dijitReset dijitInline\" role=\"presentation\"\n\t><input\n\t \t${!nameAttrSetting} type=\"${type}\" ${checkedAttrSetting}\n\t\tclass=\"dijitReset dijitCheckBoxInput\"\n\t\tdata-dojo-attach-point=\"focusNode\"\n\t \tdata-dojo-attach-event=\"onclick:_onClick\"\n/></div>\n"}});
+'url:dijit/form/templates/CheckBox.html':"<div class=\"dijit dijitReset dijitInline\" role=\"presentation\"\r\n\t><input\r\n\t \t${!nameAttrSetting} type=\"${type}\" ${checkedAttrSetting}\r\n\t\tclass=\"dijitReset dijitCheckBoxInput\"\r\n\t\tdata-dojo-attach-point=\"focusNode\"\r\n\t \tdata-dojo-attach-event=\"onclick:_onClick\"\r\n/></div>\r\n"}});
 define("dijit/form/CheckBox", [
 	"require",
 	"dojo/_base/declare", // declare
 	"dojo/dom-attr", // domAttr.set
-	"dojo/_base/kernel",
+	"dojo/has",		// has("dijit-legacy-requires")
 	"dojo/query", // query
 	"dojo/ready",
 	"./ToggleButton",
 	"./_CheckBoxMixin",
 	"dojo/text!./templates/CheckBox.html",
 	"dojo/NodeList-dom" // NodeList.addClass/removeClass
-], function(require, declare, domAttr, kernel, query, ready, ToggleButton, _CheckBoxMixin, template){
-
-/*=====
-	var ToggleButton = dijit.form.ToggleButton;
-	var _CheckBoxMixin = dijit.form._CheckBoxMixin;
-=====*/
+], function(require, declare, domAttr, has, query, ready, ToggleButton, _CheckBoxMixin, template){
 
 	// module:
 	//		dijit/form/CheckBox
-	// summary:
-	//		Checkbox widget
 
 	// Back compat w/1.6, remove for 2.0
-	if(!kernel.isAsync){
+	if(has("dijit-legacy-requires")){
 		ready(0, function(){
 			var requires = ["dijit/form/RadioButton"];
 			require(requires);	// use indirection so modules not rolled into a build
@@ -34,7 +26,7 @@ define("dijit/form/CheckBox", [
 
 	return declare("dijit.form.CheckBox", [ToggleButton, _CheckBoxMixin], {
 		// summary:
-		// 		Same as an HTML checkbox, but with fancy styling.
+		//		Same as an HTML checkbox, but with fancy styling.
 		//
 		// description:
 		//		User interacts with real html inputs.
@@ -43,8 +35,9 @@ define("dijit/form/CheckBox", [
 		//		we update the state of the checkbox/radio.
 		//
 		//		There are two modes:
-		//			1. High contrast mode
-		//			2. Normal mode
+		//
+		//		1. High contrast mode
+		//		2. Normal mode
 		//
 		//		In case 1, the regular html inputs are shown and used by the user.
 		//		In case 2, the regular html inputs are invisible but still used by
@@ -59,19 +52,21 @@ define("dijit/form/CheckBox", [
 			//		Handler for value= attribute to constructor, and also calls to
 			//		set('value', val).
 			// description:
-			//		During initialization, just saves as attribute to the <input type=checkbox>.
+			//		During initialization, just saves as attribute to the `<input type=checkbox>`.
 			//
 			//		After initialization,
 			//		when passed a boolean, controls whether or not the CheckBox is checked.
 			//		If passed a string, changes the value attribute of the CheckBox (the one
-			//		specified as "value" when the CheckBox was constructed (ex: <input
-			//		data-dojo-type="dijit.CheckBox" value="chicken">)
-			//		widget.set('value', string) will check the checkbox and change the value to the
-			//		specified string
-			//		widget.set('value', boolean) will change the checked state.
+			//		specified as "value" when the CheckBox was constructed
+			//		(ex: `<input data-dojo-type="dijit/CheckBox" value="chicken">`).
+			//
+			//		`widget.set('value', string)` will check the checkbox and change the value to the
+			//		specified string.
+			//
+			//		`widget.set('value', boolean)` will change the checked state.
+
 			if(typeof newValue == "string"){
-				this._set("value", newValue);
-				domAttr.set(this.focusNode, 'value', newValue);
+				this.inherited(arguments);
 				newValue = true;
 			}
 			if(this._created){

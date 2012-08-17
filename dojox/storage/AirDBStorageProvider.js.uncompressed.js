@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/storage/AirDBStorageProvider", ["dijit","dojo","dojox","dojo/require!dojox/storage/manager,dojox/storage/Provider"], function(dijit,dojo,dojox){
 dojo.provide("dojox.storage.AirDBStorageProvider");

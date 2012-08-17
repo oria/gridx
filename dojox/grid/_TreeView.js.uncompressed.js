@@ -1,6 +1,5 @@
-//>>built
 require({cache:{
-'url:dojox/grid/resources/Expando.html':"<div class=\"dojoxGridExpando\"\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\n\t></div\n></div>\n"}});
+'url:dojox/grid/resources/Expando.html':"<div class=\"dojoxGridExpando\"\r\n\t><div class=\"dojoxGridExpandoNode\" dojoAttachEvent=\"onclick:onToggle\"\r\n\t\t><div class=\"dojoxGridExpandoNodeInner\" dojoAttachPoint=\"expandoInner\"></div\r\n\t></div\r\n></div>\r\n"}});
 define("dojox/grid/_TreeView", [
 	"dijit/registry",
 	"../main",

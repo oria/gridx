@@ -1,15 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-{
-	"USD_symbol": "$",
-	"EUR_displayName": "歐元",
-	"HKD_displayName": "港幣",
-	"CAD_displayName": "加幣",
-	"JPY_displayName": "日圓",
-	"GBP_displayName": "英鎊",
-	"AUD_displayName": "澳幣",
-	"CNY_displayName": "人民幣"
-}
-//end v1.x content
-);
+define("dojo/cldr/nls/zh-tw/currency",{USD_symbol:"$",AUD_displayName:"\u6fb3\u5e63",CAD_displayName:"\u52a0\u5e63",CNY_displayName:"\u4eba\u6c11\u5e63",EUR_displayName:"\u6b50\u5143",GBP_displayName:"\u82f1\u938a",HKD_displayName:"\u6e2f\u5e63",JPY_displayName:"\u65e5\u5713",USD_displayName:"\u7f8e\u91d1"});

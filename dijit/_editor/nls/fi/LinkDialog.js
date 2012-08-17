@@ -1,18 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	createLinkTitle: "Linkin ominaisuudet",
-	insertImageTitle: "Kuvan ominaisuudet",
-	url: "URL-osoite:",
-	text: "Kuvaus:",
-	target: "Kohde:",
-	set: "Aseta",
-	currentWindow: "Nykyinen ikkuna",
-	parentWindow: "Pääikkuna",
-	topWindow: "Päällimmäinen ikkuna",
-	newWindow: "Uusi ikkuna"
-})
-
-//end v1.x content
-);
+define("dijit/_editor/nls/fi/LinkDialog",{createLinkTitle:"Linkin ominaisuudet",insertImageTitle:"Kuvan ominaisuudet",url:"URL-osoite:",text:"Kuvaus:",target:"Kohde:",set:"Aseta",currentWindow:"Nykyinen ikkuna",parentWindow:"P\u00e4\u00e4ikkuna",topWindow:"P\u00e4\u00e4llimm\u00e4inen ikkuna",newWindow:"Uusi ikkuna"});

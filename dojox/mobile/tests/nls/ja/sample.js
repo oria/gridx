@@ -1,0 +1,2 @@
+//>>built
+define("dojox/mobile/tests/nls/ja/sample",{MINUTES:"%1 \u5206",Second:"\u79d2","Day of the Week":"\u66dc\u65e5",Today:"\u4eca\u65e5",Sunday:"\u65e5\u66dc\u65e5",Monday:"\u6708\u66dc\u65e5",ON:"\u30aa\u30f3",OFF:"\u30aa\u30d5"});

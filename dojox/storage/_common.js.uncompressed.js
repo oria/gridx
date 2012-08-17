@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/storage/_common", ["dijit","dojo","dojox","dojo/require!dojox/storage/Provider,dojox/storage/manager,dojox/storage/LocalStorageProvider,dojox/storage/GearsStorageProvider,dojox/storage/WhatWGStorageProvider,dojox/storage/FlashStorageProvider,dojox/storage/BehaviorStorageProvider,dojox/storage/CookieStorageProvider"], function(dijit,dojo,dojox){
 dojo.provide("dojox.storage._common");

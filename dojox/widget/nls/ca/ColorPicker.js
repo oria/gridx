@@ -1,11 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-redLabel: "v",
-greenLabel: "e",
-hueLabel: "m",
-huePickerTitle: "Selector de matís",
-saturationPickerTitle: "Selector de saturació"
-})
-);
+define("dojox/widget/nls/ca/ColorPicker",{redLabel:"v",greenLabel:"e",blueLabel:"b",hueLabel:"m",saturationLabel:"s",valueLabel:"v",degLabel:"\u00b0",hexLabel:"hex",huePickerTitle:"Selector de mat\u00eds",saturationPickerTitle:"Selector de saturaci\u00f3"});

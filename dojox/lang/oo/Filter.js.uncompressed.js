@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/lang/oo/Filter", ["dijit","dojo","dojox"], function(dijit,dojo,dojox){
 dojo.provide("dojox.lang.oo.Filter");
@@ -7,16 +6,16 @@ dojo.provide("dojox.lang.oo.Filter");
 	var oo = dojox.lang.oo,
 
 	F = oo.Filter = function(bag, filter){
-		//	summary:
+		// summary:
 		//		Filter to control mixing in objects by skipping
 		//		properties and renaming them.
-		//	description:
+		// description:
 		//		This object is used as a holder of an original object
-		//		(whose properites are to be copied), and a filter
+		//		(whose properties are to be copied), and a filter
 		//		function used while copying by dojox.lang.oo.mixin.
-		//	bag: Object:
+		// bag: Object
 		//		object to be filtered
-		//	filter: Function|Object:
+		// filter: Function|Object
 		//		a function to handle the name filtering,
 		//		or an object with exec() method
 		this.bag = bag;
@@ -34,13 +33,13 @@ dojo.provide("dojox.lang.oo.Filter");
 	};
 
 	oo.filter = function(bag, map){
-		//	summary:
+		// summary:
 		//		creates a simple filter object
-		//	bag: Object:
+		// bag: Object
 		//		object to be filtered
-		//	map: Object:
+		// map: Object
 		//		the dictionary for renaming/removing while copying
-		//	returns:
+		// returns:
 		//		new dojox.lang.oo.Filter object
 		return new F(bag, new MapFilter(map));
 	};

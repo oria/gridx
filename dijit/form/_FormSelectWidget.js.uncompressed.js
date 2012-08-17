@@ -1,6 +1,6 @@
-//>>built
 define("dijit/form/_FormSelectWidget", [
 	"dojo/_base/array", // array.filter array.forEach array.map array.some
+	"dojo/_base/Deferred",
 	"dojo/aspect", // aspect.after
 	"dojo/data/util/sorter", // util.sorter.createSortFunction
 	"dojo/_base/declare", // declare
@@ -9,22 +9,17 @@ define("dijit/form/_FormSelectWidget", [
 	"dojo/_base/kernel",	// _scopeName
 	"dojo/_base/lang", // lang.delegate lang.isArray lang.isObject lang.hitch
 	"dojo/query", // query
+	"dojo/when",
+	"dojo/store/util/QueryResults",
 	"./_FormValueWidget"
-], function(array, aspect, sorter, declare, dom, domClass, kernel, lang, query, _FormValueWidget){
-
-/*=====
-	var _FormValueWidget = dijit.form._FormValueWidget;
-=====*/
+], function(array, Deferred, aspect, sorter, declare, dom, domClass, kernel, lang, query, when,
+			QueryResults, _FormValueWidget){
 
 // module:
 //		dijit/form/_FormSelectWidget
-// summary:
-//		Extends _FormValueWidget in order to provide "select-specific"
-//		values - i.e., those values that are unique to <select> elements.
-
 
 /*=====
-dijit.form.__SelectOption = function(){
+var __SelectOption = {
 	// value: String
 	//		The value of the option.  Setting to empty (or missing) will
 	//		place a separator at that location
@@ -34,17 +29,13 @@ dijit.form.__SelectOption = function(){
 	//		Whether or not we are a selected option
 	// disabled: Boolean
 	//		Whether or not this specific option is disabled
-	this.value = value;
-	this.label = label;
-	this.selected = selected;
-	this.disabled = disabled;
-}
+};
 =====*/
 
-return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
+var _FormSelectWidget = declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 	// summary:
 	//		Extends _FormValueWidget in order to provide "select-specific"
-	//		values - i.e., those values that are unique to <select> elements.
+	//		values - i.e., those values that are unique to `<select>` elements.
 	//		This also provides the mechanism for reading the elements from
 	//		a store, if desired.
 
@@ -52,15 +43,15 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 	//		Whether or not we are multi-valued
 	multiple: false,
 
-	// options: dijit.form.__SelectOption[]
+	// options: __SelectOption[]
 	//		The set of options for our select item.  Roughly corresponds to
-	//		the html <option> tag.
+	//		the html `<option>` tag.
 	options: null,
 
-	// store: dojo.data.api.Identity
-	//		A store which, at the very least implements dojo.data.api.Identity
-	//		to use for getting our list of options - rather than reading them
-	//		from the <option> html tags.
+	// store: dojo/store/api/Store
+	//		A store to use for getting our list of options - rather than reading them
+	//		from the `<option>` html tags.   Should support getIdentity().
+	//		For back-compat store can also be a dojo/data/api/Identity.
 	store: null,
 
 	// query: object
@@ -70,6 +61,12 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 	// queryOptions: object
 	//		Query options to use when fetching from the store
 	queryOptions: null,
+
+	// labelAttr: String?
+	//		The entries in the drop down list come from this attribute in the dojo.store items.
+	//		If ``store`` is set, labelAttr must be set too, unless store is an old-style
+	//		dojo.data store rather than a new dojo/store.
+	labelAttr: "",
 
 	// onFetch: Function
 	//		A callback to do with an onFetch - but before any items are actually
@@ -89,18 +86,24 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 	//		dropdown.
 	loadChildrenOnOpen: false,
 
+	// onLoadDeferred: [readonly] dojo.Deferred
+	//		This is the `dojo.Deferred` returned by setStore().
+	//		Calling onLoadDeferred.then() registers your
+	//		callback to be called only once, when the prior setStore completes.
+	onLoadDeferred: null,
+
 	getOptions: function(/*anything*/ valueOrIdx){
 		// summary:
 		//		Returns a given option (or options).
 		// valueOrIdx:
 		//		If passed in as a string, that string is used to look up the option
 		//		in the array of options - based on the value property.
-		//		(See dijit.form.__SelectOption).
+		//		(See dijit/form/_FormSelectWidget.__SelectOption).
 		//
 		//		If passed in a number, then the option with the given index (0-based)
 		//		within this select will be returned.
 		//
-		//		If passed in a dijit.form.__SelectOption, the same option will be
+		//		If passed in a dijit/form/_FormSelectWidget.__SelectOption, the same option will be
 		//		returned if and only if it exists within this select.
 		//
 		//		If passed an array, then an array will be returned with each element
@@ -111,21 +114,22 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		// returns:
 		//		The option corresponding with the given value or index.  null
 		//		is returned if any of the following are true:
-		//			- A string value is passed in which doesn't exist
-		//			- An index is passed in which is outside the bounds of the array of options
-		//			- A dijit.form.__SelectOption is passed in which is not a part of the select
+		//
+		//		- A string value is passed in which doesn't exist
+		//		- An index is passed in which is outside the bounds of the array of options
+		//		- A dijit/form/_FormSelectWidget.__SelectOption is passed in which is not a part of the select
 
-		// NOTE: the compare for passing in a dijit.form.__SelectOption checks
+		// NOTE: the compare for passing in a dijit/form/_FormSelectWidget.__SelectOption checks
 		//		if the value property matches - NOT if the exact option exists
 		// NOTE: if passing in an array, null elements will be placed in the returned
 		//		array when a value is not found.
 		var lookupValue = valueOrIdx, opts = this.options || [], l = opts.length;
 
 		if(lookupValue === undefined){
-			return opts; // dijit.form.__SelectOption[]
+			return opts; // __SelectOption[]
 		}
 		if(lang.isArray(lookupValue)){
-			return array.map(lookupValue, "return this.getOptions(item);", this); // dijit.form.__SelectOption[]
+			return array.map(lookupValue, "return this.getOptions(item);", this); // __SelectOption[]
 		}
 		if(lang.isObject(valueOrIdx)){
 			// We were passed an option - so see if it's in our array (directly),
@@ -150,12 +154,12 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 			}
 		}
 		if(typeof lookupValue == "number" && lookupValue >= 0 && lookupValue < l){
-			return this.options[lookupValue]; // dijit.form.__SelectOption
+			return this.options[lookupValue]; // __SelectOption
 		}
 		return null; // null
 	},
 
-	addOption: function(/*dijit.form.__SelectOption|dijit.form.__SelectOption[]*/ option){
+	addOption: function(/*__SelectOption|__SelectOption[]*/ option){
 		// summary:
 		//		Adds an option or options to the end of the select.  If value
 		//		of the option is empty or missing, a separator is created instead.
@@ -170,7 +174,7 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		this._loadChildren();
 	},
 
-	removeOption: function(/*String|dijit.form.__SelectOption|Number|Array*/ valueOrIdx){
+	removeOption: function(/*String|__SelectOption|Number|Array*/ valueOrIdx){
 		// summary:
 		//		Removes the given option or options.  You can remove by string
 		//		(in which case the value is removed), number (in which case the
@@ -193,7 +197,7 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		this._loadChildren();
 	},
 
-	updateOption: function(/*dijit.form.__SelectOption|dijit.form.__SelectOption[]*/ newOption){
+	updateOption: function(/*__SelectOption|__SelectOption[]*/ newOption){
 		// summary:
 		//		Updates the values of the given option.  The option to update
 		//		is matched based on the value of the entered option.  Passing
@@ -209,89 +213,174 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		this._loadChildren();
 	},
 
-	setStore: function(/*dojo.data.api.Identity*/ store,
-						/*anything?*/ selectedValue,
-						/*Object?*/ fetchArgs){
+	setStore: function(store,
+						selectedValue,
+						fetchArgs){
 		// summary:
 		//		Sets the store you would like to use with this select widget.
 		//		The selected value is the value of the new store to set.  This
 		//		function returns the original store, in case you want to reuse
 		//		it or something.
-		// store: dojo.data.api.Identity
-		//		The store you would like to use - it MUST implement dojo.data.api.Identity,
-		//		and MAY implement dojo.data.api.Notification.
+		// store: dojo/store/api/Store
+		//		The dojo.store you would like to use - it MUST implement getIdentity()
+		//		and MAY implement observe().
+		//		For backwards-compatibility this can also be a data.data store, in which case
+		//		it MUST implement dojo/data/api/Identity,
+		//		and MAY implement dojo/data/api/Notification.
 		// selectedValue: anything?
 		//		The value that this widget should set itself to *after* the store
 		//		has been loaded
 		// fetchArgs: Object?
-		//		The arguments that will be passed to the store's fetch() function
+		//		Hash of parameters to set filter on store, etc.
+		//
+		//		- query: new value for Select.query,
+		//		- queryOptions: new value for Select.queryOptions,
+		//		- onFetch: callback function for each item in data (Deprecated)
 		var oStore = this.store;
 		fetchArgs = fetchArgs || {};
+
 		if(oStore !== store){
-			// Our store has changed, so update our notifications
+			// Our store has changed, so cancel any listeners on old store (remove for 2.0)
 			var h;
-			while(h = this._notifyConnections.pop()){ h.remove(); }
+			while((h = this._notifyConnections.pop())){ h.remove(); }
 
-			if(store && store.getFeatures()["dojo.data.api.Notification"]){
-				this._notifyConnections = [
-					aspect.after(store, "onNew", lang.hitch(this, "_onNewItem"), true),
-					aspect.after(store, "onDelete", lang.hitch(this, "_onDeleteItem"), true),
-					aspect.after(store, "onSet", lang.hitch(this, "_onSetItem"), true)
-				];
+			// For backwards-compatibility, accept dojo.data store in addition to dojo.store.store.  Remove in 2.0.
+			if(!store.get){
+				lang.mixin(store, {
+					_oldAPI: true,
+					get: function(id){
+						// summary:
+						//		Retrieves an object by it's identity. This will trigger a fetchItemByIdentity.
+						//		Like dojo.store.DataStore.get() except returns native item.
+						var deferred = new Deferred();
+						this.fetchItemByIdentity({
+							identity: id,
+							onItem: function(object){
+								deferred.resolve(object);
+							},
+							onError: function(error){
+								deferred.reject(error);
+							}
+						});
+						return deferred.promise;
+					},
+					query: function(query, options){
+						// summary:
+						//		Queries the store for objects.   Like dojo/store/DataStore.query()
+						//		except returned Deferred contains array of native items.
+						var deferred = new Deferred(function(){ if(fetchHandle.abort){ fetchHandle.abort(); } } );
+						deferred.total = new Deferred();
+						var fetchHandle = this.fetch(lang.mixin({
+							query: query,
+							onBegin: function(count){
+								deferred.total.resolve(count);
+							},
+							onComplete: function(results){
+								deferred.resolve(results);
+							},
+							onError: function(error){
+								deferred.reject(error);
+							}
+						}, options));
+						return new QueryResults(deferred);
+					}
+				});
+
+				if(store.getFeatures()["dojo.data.api.Notification"]){
+					this._notifyConnections = [
+						aspect.after(store, "onNew", lang.hitch(this, "_onNewItem"), true),
+						aspect.after(store, "onDelete", lang.hitch(this, "_onDeleteItem"), true),
+						aspect.after(store, "onSet", lang.hitch(this, "_onSetItem"), true)
+					];
+				}
 			}
-			this._set("store", store);
+			this._set("store", store);			// Our store has changed, so update our notifications
 		}
-
-		// Turn off change notifications while we make all these changes
-		this._onChangeActive = false;
 
 		// Remove existing options (if there are any)
 		if(this.options && this.options.length){
 			this.removeOption(this.options);
 		}
 
+		// Cancel listener for updates to old store
+		if(this._queryRes && this._queryRes.close){
+			this._queryRes.close();
+		}
+
+		// If user has specified new query and query options along with this new store, then use them.
+		if(fetchArgs.query){
+			this._set("query", fetchArgs.query);
+			this._set("queryOptions", fetchArgs.queryOptions);
+		}
+
 		// Add our new options
 		if(store){
 			this._loadingStore = true;
-			store.fetch(lang.delegate(fetchArgs, {
-				onComplete: function(items, opts){
-					if(this.sortByLabel && !fetchArgs.sort && items.length){
+			this.onLoadDeferred = new Deferred();
+
+			// Run query
+			// Save result in this._queryRes so we can cancel the listeners we register below
+			this._queryRes = store.query(this.query, this.queryOptions);
+			when(this._queryRes, lang.hitch(this, function(items){
+
+				if(this.sortByLabel && !fetchArgs.sort && items.length){
+					if(items[0].getValue){
+						// Old dojo.data API to access items, remove for 2.0
 						items.sort(sorter.createSortFunction([{
 							attribute: store.getLabelAttributes(items[0])[0]
 						}], store));
-					}
-
-					if(fetchArgs.onFetch){
-							items = fetchArgs.onFetch.call(this, items, opts);
-					}
-					// TODO: Add these guys as a batch, instead of separately
-					array.forEach(items, function(i){
-						this._addOptionForItem(i);
-					}, this);
-
-					// Set our value (which might be undefined), and then tweak
-					// it to send a change event with the real value
-					this._loadingStore = false;
-						this.set("value", "_pendingValue" in this ? this._pendingValue : selectedValue);
-					delete this._pendingValue;
-
-					if(!this.loadChildrenOnOpen){
-						this._loadChildren();
 					}else{
-						this._pseudoLoadChildren(items);
+						var labelAttr = this.labelAttr;
+						items.sort(function(a, b){
+							return a[labelAttr] > b[labelAttr] ? 1 :  b[labelAttr] > a[labelAttr] ? -1 : 0;
+						});
 					}
-					this._fetchedWith = opts;
-					this._lastValueReported = this.multiple ? [] : null;
-					this._onChangeActive = true;
-					this.onSetStore();
-					this._handleOnChange(this.value);
-				},
-				scope: this
-			}));
-		}else{
-			delete this._fetchedWith;
+				}
+
+				if(fetchArgs.onFetch){
+						items = fetchArgs.onFetch.call(this, items, fetchArgs);
+				}
+
+				// TODO: Add these guys as a batch, instead of separately
+				array.forEach(items, function(i){
+					this._addOptionForItem(i);
+				}, this);
+
+				// Register listener for store updates
+				if(this._queryRes.observe){
+					this._queryRes.observe(lang.hitch(this, function(object, deletedFrom, insertedInto){
+						if(deletedFrom == insertedInto){
+							this._onSetItem(object);
+						}else{
+							if(deletedFrom != -1){
+								this._onDeleteItem(object);
+							}
+							if(insertedInto != -1){
+								this._onNewItem(object);
+							}
+						}
+					}), true);
+				}
+
+				// Set our value (which might be undefined), and then tweak
+				// it to send a change event with the real value
+				this._loadingStore = false;
+				this.set("value", "_pendingValue" in this ? this._pendingValue : selectedValue);
+				delete this._pendingValue;
+
+				if(!this.loadChildrenOnOpen){
+					this._loadChildren();
+				}else{
+					this._pseudoLoadChildren(items);
+				}
+				this.onLoadDeferred.resolve(true);
+				this.onSetStore();
+			}), function(err){
+					console.error('dijit.form.Select: ' + err.toString());
+					this.onLoadDeferred.reject(err);
+			});
 		}
-		return oStore;	// dojo.data.api.Identity
+		return oStore;	// dojo/data/api/Identity
 	},
 
 	// TODO: implement set() and watch() for store and query, although not sure how to handle
@@ -301,6 +390,7 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		// summary:
 		//		set the value of the widget.
 		//		If a string is passed, then we set our value from looking it up.
+		if(!this._onChangeActive){ priorityChange = null; }
 		if(this._loadingStore){
 			// Our store is loading - so save our value, and we'll set it when
 			// we're done
@@ -330,13 +420,13 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		array.forEach(opts, function(i){
 			i.selected = array.some(newValue, function(v){ return v.value === i.value; });
 		});
-		var val = array.map(newValue, function(i){ return i.value; }),
+		var	val = array.map(newValue, function(i){ return i.value; }),
 			disp = array.map(newValue, function(i){ return i.label; });
 
-		this._set("value", this.multiple ? val : val[0]);
+		if(typeof val == "undefined" || typeof val[0] == "undefined"){ return; } // not fully initialized yet or a failed value lookup
 		this._setDisplay(this.multiple ? disp : disp[0]);
+		this.inherited(arguments, [ this.multiple ? val : val[0], priorityChange ]);
 		this._updateSelection();
-		this._handleOnChange(this.value, priorityChange);
 	},
 
 	_getDisplayedValueAttr: function(){
@@ -385,8 +475,8 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 				var isSelected = array.some(val, function(v){
 					return child.option && (v === child.option.value);
 				});
-				domClass.toggle(child.domNode, this.baseClass + "SelectedOption", isSelected);
-				child.domNode.setAttribute("aria-selected", isSelected);
+				domClass.toggle(child.domNode, this.baseClass.replace(/\s+|$/g, "SelectedOption "), isSelected);
+				child.domNode.setAttribute("aria-selected", isSelected ? "true" : "false");
 			}, this);
 		}
 	},
@@ -402,7 +492,7 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 				return i.selected;
 			})[0];
 			if(opt && opt.value){
-				return opt.value
+				return opt.value;
 			}else{
 				opts[0].selected = true;
 				return opts[0].value;
@@ -437,19 +527,22 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		// summary:
 		//		Returns an option object based off the given item.  The "value"
 		//		of the option item will be the identity of the item, the "label"
-		//		of the option will be the label of the item.  If the item contains
-		//		children, the children value of the item will be set
-		var store = this.store, label = store.getLabel(item),
+		//		of the option will be the label of the item.
+
+		// remove getLabel() call for 2.0 (it's to support the old dojo.data API)
+		var store = this.store,
+			label = (this.labelAttr && this.labelAttr in item) ? item[this.labelAttr] : store.getLabel(item),
 			value = (label ? store.getIdentity(item) : null);
-		return {value: value, label: label, item:item}; // dijit.form.__SelectOption
+		return {value: value, label: label, item: item}; // __SelectOption
 	},
 
 	_addOptionForItem: function(/*item*/ item){
 		// summary:
 		//		Creates (and adds) the option for the given item
 		var store = this.store;
-		if(!store.isItemLoaded(item)){
-			// We are not loaded - so let's load it and add later
+		if(store.isItemLoaded && !store.isItemLoaded(item)){
+			// We are not loaded - so let's load it and add later.
+			// Remove for 2.0 (it's the old dojo.data API)
 			store.loadItem({item: item, onItem: function(i){
 				this._addOptionForItem(i);
 			},
@@ -460,12 +553,20 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		this.addOption(newOpt);
 	},
 
-	constructor: function(/*Object*/ keywordArgs){
+	constructor: function(params /*===== , srcNodeRef =====*/){
 		// summary:
+		//		Create the widget.
+		// params: Object|null
+		//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+		//		and functions, typically callbacks like onClick.
+		//		The hash can contain any of the widget's properties, excluding read-only properties.
+		// srcNodeRef: DOMNode|String?
+		//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
 		//		Saves off our value, if we have an initial one set so we
 		//		can use it if we have a store as well (see startup())
-		this._oValue = (keywordArgs || {}).value || null;
-		this._notifyConnections = [];
+		this._oValue = (params || {}).value || null;
+		this._notifyConnections = [];	// remove for 2.0
 	},
 
 	buildRendering: function(){
@@ -478,23 +579,26 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		//		Loads our options and sets up our dropdown correctly.  We
 		//		don't want any content, so we don't call any inherit chain
 		//		function.
-		var opts = this.options;
-		if(!opts){
-			opts = this.options = this.srcNodeRef ? query("> *",
-						this.srcNodeRef).map(function(node){
-							if(node.getAttribute("type") === "separator"){
-								return { value: "", label: "", selected: false, disabled: false };
-							}
-							return {
-								value: (node.getAttribute("data-" + kernel._scopeName + "-value") || node.getAttribute("value")),
-										label: String(node.innerHTML),
-								// FIXME: disabled and selected are not valid on complex markup children (which is why we're
-								// looking for data-dojo-value above.  perhaps we should data-dojo-props="" this whole thing?)
-								// decide before 1.6
-										selected: node.getAttribute("selected") || false,
-								disabled: node.getAttribute("disabled") || false
-							};
-						}, this) : [];
+		if(!this.options){
+			this.options =
+				this.srcNodeRef
+				? query("> *", this.srcNodeRef).map(
+					function(node){
+						if(node.getAttribute("type") === "separator"){
+							return { value: "", label: "", selected: false, disabled: false };
+						}
+						return {
+							value: (node.getAttribute("data-" + kernel._scopeName + "-value") || node.getAttribute("value")),
+							label: String(node.innerHTML),
+							// FIXME: disabled and selected are not valid on complex markup children (which is why we're
+							// looking for data-dojo-value above.  perhaps we should data-dojo-props="" this whole thing?)
+							// decide before 1.6
+							selected: node.getAttribute("selected") || false,
+							disabled: node.getAttribute("disabled") || false
+						};
+					},
+					this)
+				: [];
 		}
 		if(!this.value){
 			this._set("value", this._getValueFromOpts());
@@ -511,39 +615,40 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 
 		// Make our event connections for updating state
 		this.connect(this, "onChange", "_updateSelection");
-		this.connect(this, "startup", "_loadChildren");
 
-		this._setValueAttr(this.value, null);
+		// moved from startup
+		//		Connects in our store, if we have one defined
+		var store = this.store;
+		if(store && (store.getIdentity || store.getFeatures()["dojo.data.api.Identity"])){
+			// Temporarily set our store to null so that it will get set
+			// and connected appropriately
+			this.store = null;
+			this.setStore(store, this._oValue);
+		}
 	},
 
 	startup: function(){
 		// summary:
-		//		Connects in our store, if we have one defined
+		this._loadChildren();
 		this.inherited(arguments);
-		var store = this.store, fetchArgs = {};
-		array.forEach(["query", "queryOptions", "onFetch"], function(i){
-			if(this[i]){
-				fetchArgs[i] = this[i];
-			}
-			delete this[i];
-		}, this);
-		if(store && store.getFeatures()["dojo.data.api.Identity"]){
-			// Temporarily set our store to null so that it will get set
-			// and connected appropriately
-			this.store = null;
-			this.setStore(store, this._oValue, fetchArgs);
-		}
 	},
 
 	destroy: function(){
 		// summary:
 		//		Clean up our connections
+
 		var h;
-		while(h = this._notifyConnections.pop()){ h.remove(); }
+		while((h = this._notifyConnections.pop())){ h.remove(); }
+
+		// Cancel listener for store updates
+		if(this._queryRes && this._queryRes.close){
+			this._queryRes.close();
+		}
+
 		this.inherited(arguments);
 	},
 
-	_addOptionItem: function(/*dijit.form.__SelectOption*/ /*===== option =====*/){
+	_addOptionItem: function(/*__SelectOption*/ /*===== option =====*/){
 		// summary:
 		//		User-overridable function which, for the given option, adds an
 		//		item to the select.  If the option doesn't have a value, then a
@@ -551,7 +656,7 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		//		in the created option widget.
 	},
 
-	_removeOptionItem: function(/*dijit.form.__SelectOption*/ /*===== option =====*/){
+	_removeOptionItem: function(/*__SelectOption*/ /*===== option =====*/){
 		// summary:
 		//		User-overridable function which, for the given option, removes
 		//		its item from the select.
@@ -592,5 +697,11 @@ return declare("dijit.form._FormSelectWidget", _FormValueWidget, {
 		//		from that store are available
 	}
 });
+
+/*=====
+_FormSelectWidget.__SelectOption = __SelectOption;
+=====*/
+
+return _FormSelectWidget;
 
 });

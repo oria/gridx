@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-        nomatchMessage: "Heslá sa nezhodujú.",
-		badPasswordMessage: "Neplatné heslo."
-})
-
-//end v1.x content
-);
+define("dojox/form/nls/sk/PasswordValidator",{nomatchMessage:"Hesl\u00e1 sa nezhoduj\u00fa.",badPasswordMessage:"Neplatn\u00e9 heslo."});

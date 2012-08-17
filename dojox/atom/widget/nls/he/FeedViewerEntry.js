@@ -1,8 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	deleteButton: "[מחיקה]"
-})
-//end v1.x content
-);
+define("dojox/atom/widget/nls/he/FeedViewerEntry",{deleteButton:"[\u05de\u05d7\u05d9\u05e7\u05d4]"});

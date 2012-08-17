@@ -1,4 +1,3 @@
-//>>built
 define("dojox/grid/Selection", [
 	"dojo/_base/declare",
 	"dojo/_base/array",

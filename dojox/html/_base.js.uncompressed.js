@@ -1,17 +1,20 @@
-//>>built
 define("dojox/html/_base", [
-	"dojo/_base/kernel",
-	"dojo/_base/lang",
-	"dojo/_base/xhr",
-	"dojo/_base/window",
-	"dojo/_base/sniff",
-	"dojo/_base/url",
+	"dojo/_base/declare",
+	"dojo/Deferred",
 	"dojo/dom-construct",
 	"dojo/html",
-	"dojo/_base/declare"
-], function (dojo, lang, xhrUtil, windowUtil, has, _Url, domConstruct, htmlUtil) {
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/ready",
+	"dojo/_base/sniff",
+	"dojo/_base/url",
+	"dojo/_base/xhr",
+	"dojo/when",
+	"dojo/_base/window"
+], function(declare, Deferred, domConstruct, htmlUtil, kernel, lang, ready, has, _Url, xhrUtil, when, windowUtil){
+
 /*
-	Status: dont know where this will all live exactly
+	Status: don't know where this will all live exactly
 	Need to pull in the implementation of the various helper methods
 	Some can be static method, others maybe methods of the ContentSetter (?)
 
@@ -19,7 +22,7 @@ define("dojox/html/_base", [
 
 
 */
-	var html = dojo.getObject("dojox.html", true);
+	var html = kernel.getObject("dojox.html", true);
 
 	if(has("ie")){
 		var alphaImageLoader = /(AlphaImageLoader\([^)]*?src=(['"]))(?![a-z]+:|\/)([^\r\n;}]+?)(\2[^)]*\)\s*[;}]?)/g;
@@ -42,26 +45,26 @@ define("dojox/html/_base", [
 	var cssPaths = /(?:(?:@import\s*(['"])(?![a-z]+:|\/)([^\r\n;{]+?)\1)|url\(\s*(['"]?)(?![a-z]+:|\/)([^\r\n;]+?)\3\s*\))([a-z, \s]*[;}]?)/g;
 
 	var adjustCssPaths = html._adjustCssPaths = function(cssUrl, cssText){
-		//	summary:
+		// summary:
 		//		adjusts relative paths in cssText to be relative to cssUrl
 		//		a path is considered relative if it doesn't start with '/' and not contains ':'
-		//	description:
+		// description:
 		//		Say we fetch a HTML page from level1/page.html
 		//		It has some inline CSS:
-		//			@import "css/page.css" tv, screen;
-		//			...
-		//			background-image: url(images/aplhaimage.png);
+		//	|		@import "css/page.css" tv, screen;
+		//	|		...
+		//	|		background-image: url(images/aplhaimage.png);
 		//
 		//		as we fetched this HTML and therefore this CSS
 		//		from level1/page.html, these paths needs to be adjusted to:
-		//			@import 'level1/css/page.css' tv, screen;
-		//			...
-		//			background-image: url(level1/images/alphaimage.png);
+		//	|		@import 'level1/css/page.css' tv, screen;
+		//	|		...
+		//	|		background-image: url(level1/images/alphaimage.png);
 		//
 		//		In IE it will also adjust relative paths in AlphaImageLoader()
-		//			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/alphaimage.png');
+		//	|		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='images/alphaimage.png');
 		//		will be adjusted to:
-		//			filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='level1/images/alphaimage.png');
+		//	|		filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='level1/images/alphaimage.png');
 		//
 		//		Please note that any relative paths in AlphaImageLoader in external css files wont work, as
 		//		the paths in AlphaImageLoader is MUST be declared relative to the HTML page,
@@ -114,6 +117,11 @@ define("dojox/html/_base", [
 		// if cssUrl is set it will adjust paths accordingly
 		styles.attributes = [];
 
+		cont = cont.replace(/<[!][-][-](.|\s)*?[-][-]>/g,
+			function(comment){
+				return comment.replace(/<(\/?)style\b/ig,"&lt;$1Style").replace(/<(\/?)link\b/ig,"&lt;$1Link").replace(/@import "/ig,"@ import \"");
+			}
+		);
 		return cont.replace(/(?:<style([^>]*)>([\s\S]*?)<\/style>|<link\s+(?=[^>]*rel=['"]?stylesheet)([^>]*?href=(['"])([^>]*?)\4[^>\/]*)\/?>)/gi,
 			function(ignore, styleAttr, cssText, linkAttr, delim, href){
 				// trim attribute
@@ -139,11 +147,11 @@ define("dojox/html/_base", [
 	};
 
 	var snarfScripts = html._snarfScripts = function(cont, byRef){
-		// summary
+		// summary:
 		//		strips out script tags from cont
-		// invoke with
-		//	byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
-		//	byRef will have {code: 'jscode'} when this scope leaves
+		// byRef:
+		//		byRef = {errBack:function(){/*add your download error code here*/, downloadRemote: true(default false)}}
+		//		byRef will have {code: 'jscode'} when this scope leaves
 		byRef.code = "";
 
 		//Update script tags nested in comments so that the script tag collector doesn't pick
@@ -180,7 +188,7 @@ define("dojox/html/_base", [
 		}
 
 		// match <script>, <script type="text/..., but not <script type="dojo(/method)...
-		return cont.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))(?:[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?)*>([\s\S]*?)<\/script>/gi,
+		return cont.replace(/<script\s*(?![^>]*type=['"]?(?:dojo\/|text\/html\b))[^>]*?(?:src=(['"]?)([^>]*?)\1[^>]*)?>([\s\S]*?)<\/script>/gi,
 			function(ignore, delim, src, code){
 				if(src){
 					download(src);
@@ -203,7 +211,7 @@ define("dojox/html/_base", [
 		n.text = code; // DOM 1 says this should work
 	};
 
-	html._ContentSetter = dojo.declare(/*===== "dojox.html._ContentSetter", =====*/ htmlUtil._ContentSetter, {
+	html._ContentSetter = declare(/*===== "dojox.html._ContentSetter", =====*/ htmlUtil._ContentSetter, {
 		// adjustPaths: Boolean
 		//		Adjust relative paths in html string content to point to this page
 		//		Only useful if you grab content from a another folder than the current one
@@ -249,7 +257,7 @@ define("dojox/html/_base", [
 		},
 
 		onBegin: function() {
-			// summary
+			// summary:
 			//		Called after instantiation, but before set();
 			//		It allows modification of any of the object properties - including the node and content
 			//		provided - before the set operation actually takes place
@@ -289,7 +297,7 @@ define("dojox/html/_base", [
 		},
 
 		onEnd: function() {
-			// summary
+			// summary:
 			//		Called after set(), when the new content has been pushed into the node
 			//		It provides an opportunity for post-processing before handing back the node to the caller
 			//		This implementation extends that of dojo.html._ContentSetter
@@ -329,8 +337,26 @@ define("dojox/html/_base", [
 					this._onError('Exec', 'Error eval script in '+this.id+', '+e.message, e);
 				}
 			}
-			this.inherited("onEnd", arguments);
+
+			// Call onEnd() in the superclass, for parsing, but only after any require() calls from above executeScripts
+			// code block have executed.  If there were no require() calls the superclass call will execute immediately,
+			// unless this function is being called from the parser in which case the parser needs to finish running
+			// first before ready() fires the callback.
+			// For 2.0, remove the call to ready() since the parser can do loading for us.
+			var superClassOnEndMethod = this.getInherited(arguments),
+				args = arguments,
+				d = new Deferred();
+			ready(lang.hitch(this, function(){
+				superClassOnEndMethod.apply(this, args);
+
+				// If parser ran (parseContent == true), wait for it to finish, otherwise call d.resolve() immediately
+				when(this.parseDeferred, function(){ d.resolve(); });
+			}));
+
+			// Return a promise that resolves after the ready() call completes, and after the parser finishes running.
+			return d.promise;
 		},
+
 		tearDown: function() {
 			this.inherited(arguments);
 			delete this._styles;
@@ -346,7 +372,7 @@ define("dojox/html/_base", [
 			// XXX: not sure if this is the correct intended behaviour, it was originally
 			// dojo.getObject(this.declaredClass).prototype which will not work with anonymous
 			// modules
-			dojo.mixin(this, html._ContentSetter.prototype);
+			lang.mixin(this, html._ContentSetter.prototype);
 		}
 
 	});
@@ -355,26 +381,26 @@ define("dojox/html/_base", [
 		// TODO: add all the other options
 			// summary:
 			//		inserts (replaces) the given content into the given node
-			//	node:
+			// node:
 			//		the parent element that will receive the content
-			//	cont:
+			// cont:
 			//		the content to be set on the parent element.
-			//		This can be an html string, a node reference or a NodeList, dojo.NodeList, Array or other enumerable list of nodes
-			//	params:
+			//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
+			// params:
 			//		Optional flags/properties to configure the content-setting. See dojo.html._ContentSetter
-			//	example:
+			// example:
 			//		A safe string/node/nodelist content replacement/injection with hooks for extension
 			//		Example Usage:
-			//		dojo.html.set(node, "some string");
-			//		dojo.html.set(node, contentNode, {options});
-			//		dojo.html.set(node, myNode.childNodes, {options});
+			//	|	dojo.html.set(node, "some string");
+			//	|	dojo.html.set(node, contentNode, {options});
+			//	|	dojo.html.set(node, myNode.childNodes, {options});
 
 		if(!params){
 			// simple and fast
 			return htmlUtil._setNodeContent(node, cont, true);
 		}else{
 			// more options but slower
-			var op = new html._ContentSetter(dojo.mixin(
+			var op = new html._ContentSetter(lang.mixin(
 					params,
 					{ content: cont, node: node }
 			));

@@ -1,0 +1,2 @@
+//>>built
+define("dojox/mvc/Templated","dojo/_base/declare,dojo/_base/lang,dijit/_WidgetBase,dijit/_TemplatedMixin,dijit/_WidgetsInTemplateMixin,dojox/mvc/at".split(","),function(e,i,f,g,h){return e("dojox.mvc.Templated",[f,g,h],{bindings:null,startup:function(){this.inherited(arguments);for(var a in this.bindings){var b=this[a],c=this.bindings[a];if(b)for(var d in c)b.set(d,c[d])}}})});

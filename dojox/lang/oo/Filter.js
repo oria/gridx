@@ -1,20 +1,2 @@
 //>>built
-define(["dijit","dojo","dojox"],function(_1,_2,_3){
-_2.provide("dojox.lang.oo.Filter");
-(function(){
-var oo=_3.lang.oo,F=oo.Filter=function(_4,_5){
-this.bag=_4;
-this.filter=typeof _5=="object"?function(){
-return _5.exec.apply(_5,arguments);
-}:_5;
-},_6=function(_7){
-this.map=_7;
-};
-_6.prototype.exec=function(_8){
-return this.map.hasOwnProperty(_8)?this.map[_8]:_8;
-};
-oo.filter=function(_9,_a){
-return new F(_9,new _6(_a));
-};
-})();
-});
+define("dojox/lang/oo/Filter",["dijit","dojo","dojox"],function(g,c,f){c.provide("dojox.lang.oo.Filter");(function(){var d=f.lang.oo,c=d.Filter=function(a,b){this.bag=a;this.filter="object"==typeof b?function(){return b.exec.apply(b,arguments)}:b},e=function(a){this.map=a};e.prototype.exec=function(a){return this.map.hasOwnProperty(a)?this.map[a]:a};d.filter=function(a,b){return new c(a,new e(b))}})()});

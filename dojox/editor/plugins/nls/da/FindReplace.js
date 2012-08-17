@@ -1,28 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"findLabel": "Søg efter:",
-	"findTooltip": "Indtast tekst, der skal søges efter",
-	"replaceLabel": "Erstat med:",
-	"replaceTooltip": "Indtast tekst, der skal erstattes med",
-	"findReplace": "Søg og erstat",
-	"matchCase": "Store/små bogstaver",
-	"matchCaseTooltip": "Store/små bogstaver",
-	"backwards": "Tilbage",
-	"backwardsTooltip": "Søg baglæns efter tekst",
-	"replaceAll": "Alle forekomster",
-	"replaceAllButton": "Erstat alle",
-	"replaceAllButtonTooltip": "Erstat alle forekomster i teksten",
-	"findButton": "Søg",
-	"findButtonTooltip": "Find teksten",
-	"replaceButton": "Erstat",
-	"replaceButtonTooltip": "Erstat teksten",
-	"replaceDialogText": "Erstattet ${0} forekomster.",
-	"eofDialogText": "Sidste forekomst ${0}",
-	"eofDialogTextFind": "fundet",
-	"eofDialogTextReplace": "erstattet"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/da/FindReplace",{findLabel:"S\u00f8g:",findTooltip:"Indtast tekst, du vil s\u00f8ge efter",replaceLabel:"Erstat med:",replaceTooltip:"Indtast tekst, du vil erstatte med",findReplace:"S\u00f8g og erstat",matchCase:"Forskel p\u00e5 store og sm\u00e5 bogstaver",matchCaseTooltip:"Forskel p\u00e5 store og sm\u00e5 bogstaver",backwards:"Bagl\u00e6ns",backwardsTooltip:"S\u00f8g bagl\u00e6ns i teksten",replaceAllButton:"Erstat alle",replaceAllButtonTooltip:"Erstat i hele teksten",
+findButton:"S\u00f8g",findButtonTooltip:"Find teksten",replaceButton:"Erstat",replaceButtonTooltip:"Erstat teksten",replaceDialogText:"${0} forekomster erstattet.",eofDialogText:"Sidste forekomst ${0}",eofDialogTextFind:"fundet",eofDialogTextReplace:"erstattet"});

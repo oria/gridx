@@ -1,4 +1,3 @@
-//>>built
 // wrapped by build app
 define("dojox/editor/plugins/SpellCheck", ["dijit","dojo","dojox","dojo/i18n!dojox/editor/plugins/nls/SpellCheck","dojo/require!dijit/_base/popup,dijit/_Widget,dijit/_Templated,dijit/form/TextBox,dijit/form/DropDownButton,dijit/TooltipDialog,dijit/form/MultiSelect,dojo/io/script,dijit/Menu"], function(dijit,dojo,dojox){
 dojo.provide("dojox.editor.plugins.SpellCheck");
@@ -24,7 +23,7 @@ dojo.declare("dojox.editor.plugins._spellCheckControl", [dijit._Widget, dijit._T
 	widgetsInTemplate: true,
 	
 	templateString:
-		"<table class='dijitEditorSpellCheckTable'>" +
+		"<table role='presentation' class='dijitEditorSpellCheckTable'>" +
 			"<tr><td colspan='3' class='alignBottom'><label for='${textId}' id='${textId}_label'>${unfound}</label>" +
 				"<div class='dijitEditorSpellCheckBusyIcon' id='${id}_progressIcon'></div></td></tr>" +
 			"<tr>" +
@@ -306,25 +305,25 @@ dojo.declare("dojox.editor.plugins._SpellCheckScriptMultiPart", null, {
 	// delimiter [public] String
 	//		A token that is used to identify the end of a word (a complete unit). It prevents the service from
 	//		cutting a single word into two parts. For example:
-	//			"Dojo toolkit is a ajax framework. It helps the developers buid their web applications."
+	// |		"Dojo toolkit is a ajax framework. It helps the developers buid their web applications."
 	//		Without the delimiter, the sentence might be split into the follow pieces which is absolutely
 	//		not the result we want.
-	//			"Dojo toolkit is a ajax fram", "ework It helps the developers bu", "id their web applications"
+	// |		"Dojo toolkit is a ajax fram", "ework It helps the developers bu", "id their web applications"
 	//		Having " " as the delimiter, we get the following correct pieces.
-	//			"Dojo toolkit is a ajax framework", " It helps the developers buid", " their web applications"
+	// |		"Dojo toolkit is a ajax framework", " It helps the developers buid", " their web applications"
 	delimiter: " ",
 	
 	// label [public] String
 	//		The leading label of the JSON response. The service will return the result like this:
-	//		{response: [
-	//				{
-	//					text: "teest",
-	//					suggestion: ["test","treat"]
-	//				}
-	//			]}
+	// |	{response: [
+	// |		{
+	// |			text: "teest",
+	// |			suggestion: ["test","treat"]
+	// |		}
+	// |	]}
 	label: "response",
 	
-	// _timeout [private] Number
+	// _timeout: [private] Number
 	//		Set JSONP timeout period
 	_timeout: 30000,
 	SEC: 1000,
@@ -364,7 +363,7 @@ dojo.declare("dojox.editor.plugins._SpellCheckScriptMultiPart", null, {
 			timeout = this._timeout,
 			l = 0, r = 0;
 		
-		// Temparary list that holds the result returns from the service, which will be
+		// Temporary list that holds the result returns from the service, which will be
 		// assembled into a completed one.
 		if(!this._result) {
 			this._result = [];
@@ -470,73 +469,73 @@ dojo.declare("dojox.editor.plugins._SpellCheckScriptMultiPart", null, {
 });
 
 dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
-	//	summary:
-	//		This plugin provides a spelling check cabability for the editor.
+	// summary:
+	//		This plugin provides a spelling check capability for the editor.
 	
-	// url [public] String
+	// url: [public] String
 	//		The url of the spelling check service
 	url: "",
 	
-	// bufferLength [public] Number
+	// bufferLength: [public] Number
 	//		The max length of each XHR request. It is used to divide the large
 	//		text into pieces so that the server-side piece can hold.
 	bufferLength: 100,
 	
-	// interactive [public] Boolean
+	// interactive: [public] Boolean
 	//		Indicate if the interactive spelling check is enabled
 	interactive: false,
 	
-	// timeout [public] Number
+	// timeout: [public] Number
 	//		The minutes to waiting for the response. The default value is 30 seconds.
 	timeout: 30,
 	
-	// button [protected] dijit.form.DropDownButton
+	// button: [protected] dijit/form/DropDownButton
 	//		The button displayed on the editor's toolbar
 	button: null,
 	
-	// _editor [private] dijit.Editor
+	// _editor: [private] dijit/Editor
 	//		The reference to the editor the plug-in belongs to.
 	_editor: null,
 	
-	// exArgs [private] Object
+	// exArgs: [private] Object
 	//		The object that holds all the parametes passed into the constructor
 	exArgs: null,
 	
-	// _cursorSpan [private] String
+	// _cursorSpan: [private] String
 	//		The span that holds the current position of the cursor
 	_cursorSpan:
 		"<span class=\"cursorPlaceHolder\"></span>",
 	
-	// _cursorSelector [private] String
+	// _cursorSelector: [private] String
 	//		The CSS selector of the cursor span
 	_cursorSelector:
 		"cursorPlaceHolder",
 	
-	// _incorrectWordsSpan [private] String
+	// _incorrectWordsSpan: [private] String
 	//		The wrapper that marks the incorrect words
 	_incorrectWordsSpan:
 		"<span class='incorrectWordPlaceHolder'>${text}</span>",
 		
-	// _ignoredIncorrectStyle [private] Object
+	// _ignoredIncorrectStyle: [private] Object
 	//		The style of the ignored incorrect words
 	_ignoredIncorrectStyle:
 		{"cursor": "inherit", "borderBottom": "none", "backgroundColor": "transparent"},
 		
-	// _normalIncorrectStyle [private] Object
+	// _normalIncorrectStyle: [private] Object
 	//		The style of the marked incorrect words.
 	_normalIncorrectStyle:
 		{"cursor": "pointer", "borderBottom": "1px dotted red", "backgroundColor": "yellow"},
 	
-	// _highlightedIncorrectStyle [private] Object
+	// _highlightedIncorrectStyle: [private] Object
 	//		The style of the highlighted incorrect words
 	_highlightedIncorrectStyle:
 		{"borderBottom": "1px dotted red", "backgroundColor": "#b3b3ff"},
 	
-	// _selector [private] String
+	// _selector: [private] String
 	//		An empty CSS class that identifies the incorrect words
 	_selector: "incorrectWordPlaceHolder",
 	
-	// _maxItemNumber [private] Number
+	// _maxItemNumber: [private] Number
 	//		The max number of the suggestion list items
 	_maxItemNumber: 3,
 	
@@ -550,8 +549,8 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 		this._spanList = [];
 		// The cache that stores all the words. It looks like the following
 		// {
-		//   "word": [],
-		//   "wrd": ["word", "world"]
+		//	 "word": [],
+		//	 "wrd": ["word", "world"]
 		// }
 		this._cache = {};
 		// Indicate if this plugin is enabled or not
@@ -934,8 +933,8 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 		// summary:
 		//		Substitute the tag with white charactors so that the server
 		//		can easily process the text. For example:
-		//		"<a src="sample.html">Hello, world!</a>" ==>
-		//		"                     Hello, world!    "
+		// |	"<a src="sample.html">Hello, world!</a>" ==>
+		// |	"                     Hello, world!    "
 		// html:
 		//		The html code
 		// tags:
@@ -981,7 +980,7 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 		// tags:
 		//		private
 		var ed = this._editor,
-			cps = dojo.withGlobal(ed.window, "query", dojo, ["." + this._cursorSelector]),
+			cps = dojo.query("." + this._cursorSelector, ed.document),
 			cursorSpan = cps && cps[0];
 		// Find the cursor place holder
 		if(cursorSpan){
@@ -1087,8 +1086,8 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 		this._moveToBookmark();
 		
 		// Get the incorrect words <span>
-		spanList = this._spanList = dojo.withGlobal(editor.window, "query", dojo, ["." + this._selector]);
-		dojo.forEach(spanList, function(span, i){ span.id = selector + i; });
+		spanList = this._spanList = dojo.query("." + this._selector, editor.document);
+		spanList.forEach(function(span, i){ span.id = selector + i; });
 		
 		// Set them to the incorrect word style
 		if(!this.interactive){ delete nstyle.cursor; }
@@ -1116,7 +1115,7 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 					if(node.tagName.toLowerCase() == "iframe"){
 						iframe = node;
 						win = this._iframeContentWindow(iframe);
-						cn = dojo.withGlobal(win, dojo.body);
+						cn = dojo.body(ed.document)
 					}else{
 						
 						// To capture these events at the top level, attach to <html>, not <body>.
@@ -1229,7 +1228,7 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 							// access the <body> node because it's already gone, or at least in a state of limbo
 			
 							var win = this._iframeContentWindow(iframe);
-								cn = dojo.withGlobal(win, dojo.body);
+								cn = dojo.body(ed.document)
 							binding.connects = doConnects(cn);
 						});
 						if(iframe.addEventListener){
@@ -1250,12 +1249,11 @@ dojo.declare("dojox.editor.plugins.SpellCheck", [dijit._editor._Plugin], {
 		//		The index of the span list
 		// tags:
 		//		private
-		var list = this._spanList,
-			win = this._editor.window;
+		var list = this._spanList;
 		
 		if(index < list.length && list.length > 0){
-			dojo.withGlobal(win, "selectElement", dijit._editor.selection, [list[index]]);
-			dojo.withGlobal(win, "collapse", dijit._editor.selection, [true]);
+			ed._sCall("selectElement", [list[index]]);
+			ed._sCall("collapse", [true]);
 			this._findText(list[index].innerHTML, false, false);
 			if(dojo.isIE){
 				// Because the selection in the iframe will be lost when the outer window get the

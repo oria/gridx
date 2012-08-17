@@ -1,4 +1,3 @@
-//>>built
 define("dijit/form/NumberSpinner", [
 	"dojo/_base/declare", // declare
 	"dojo/_base/event", // event.stop
@@ -7,15 +6,8 @@ define("dijit/form/NumberSpinner", [
 	"./NumberTextBox"
 ], function(declare, event, keys, _Spinner, NumberTextBox){
 
-/*=====
-	var _Spinner = dijit.form._Spinner;
-	var NumberTextBox = dijit.form.NumberTextBox;
-=====*/
-
 // module:
 //		dijit/form/NumberSpinner
-// summary:
-//		Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value
 
 
 return declare("dijit.form.NumberSpinner", [_Spinner, NumberTextBox.Mixin], {
@@ -23,13 +15,13 @@ return declare("dijit.form.NumberSpinner", [_Spinner, NumberTextBox.Mixin], {
 	//		Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value
 	//
 	// description:
-	//		A `dijit.form.NumberTextBox` extension to provide keyboard accessible value selection
+	//		A `dijit/form/NumberTextBox` extension to provide keyboard accessible value selection
 	//		as well as icons for spinning direction. When using the keyboard, the typematic rules
 	//		apply, meaning holding the key will gradually increase or decrease the value and
-	// 		accelerate.
+	//		accelerate.
 	//
 	// example:
-	//	| new dijit.form.NumberSpinner({ constraints:{ max:300, min:100 }}, "someInput");
+	//	| new NumberSpinner({ constraints:{ max:300, min:100 }}, "someInput");
 
 	adjust: function(/*Object*/ val, /*Number*/ delta){
 		// summary:

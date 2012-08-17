@@ -1,9 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"pageBreak": "换页符"
-})
-
-//end v1.x content
-);
+define("dojox/editor/plugins/nls/zh/PageBreak",{pageBreak:"\u5206\u9875\u7b26"});

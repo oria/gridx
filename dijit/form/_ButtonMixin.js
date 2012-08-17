@@ -1,32 +1,3 @@
 //>>built
-define("dijit/form/_ButtonMixin",["dojo/_base/declare","dojo/dom","dojo/_base/event","../registry"],function(_1,_2,_3,_4){
-return _1("dijit.form._ButtonMixin",null,{label:"",type:"button",_onClick:function(e){
-if(this.disabled){
-_3.stop(e);
-return false;
-}
-var _5=this.onClick(e)===false;
-if(!_5&&this.type=="submit"&&!(this.valueNode||this.focusNode).form){
-for(var _6=this.domNode;_6.parentNode;_6=_6.parentNode){
-var _7=_4.byNode(_6);
-if(_7&&typeof _7._onSubmit=="function"){
-_7._onSubmit(e);
-_5=true;
-break;
-}
-}
-}
-if(_5){
-e.preventDefault();
-}
-return !_5;
-},postCreate:function(){
-this.inherited(arguments);
-_2.setSelectable(this.focusNode,false);
-},onClick:function(){
-return true;
-},_setLabelAttr:function(_8){
-this._set("label",_8);
-(this.containerNode||this.focusNode).innerHTML=_8;
-}});
-});
+define("dijit/form/_ButtonMixin",["dojo/_base/declare","dojo/dom","dojo/_base/event","../registry"],function(e,f,g,h){return e("dijit.form._ButtonMixin",null,{label:"",type:"button",_onClick:function(a){if(this.disabled)return g.stop(a),!1;var b=!1===this.onClick(a);if(!b&&"submit"==this.type&&!(this.valueNode||this.focusNode).form)for(var c=this.domNode;c.parentNode;c=c.parentNode){var d=h.byNode(c);if(d&&"function"==typeof d._onSubmit){d._onSubmit(a);b=!0;break}}b&&a.preventDefault();return!b},
+postCreate:function(){this.inherited(arguments);f.setSelectable(this.focusNode,!1)},onClick:function(){return!0},_setLabelAttr:function(a){this._set("label",a);(this.containerNode||this.focusNode).innerHTML=a}})});

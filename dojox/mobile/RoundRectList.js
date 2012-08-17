@@ -1,27 +1,4 @@
 //>>built
-define("dojox/mobile/RoundRectList",["dojo/_base/array","dojo/_base/declare","dojo/_base/window","dijit/_Contained","dijit/_Container","dijit/_WidgetBase"],function(_1,_2,_3,_4,_5,_6){
-return _2("dojox.mobile.RoundRectList",[_6,_5,_4],{transition:"slide",iconBase:"",iconPos:"",select:"",stateful:false,buildRendering:function(){
-this.domNode=this.containerNode=this.srcNodeRef||_3.doc.createElement("UL");
-this.domNode.className="mblRoundRectList";
-},resize:function(){
-_1.forEach(this.getChildren(),function(_7){
-if(_7.resize){
-_7.resize();
-}
-});
-},onCheckStateChanged:function(_8,_9){
-},_setStatefulAttr:function(_a){
-this.stateful=_a;
-_1.forEach(this.getChildren(),function(_b){
-_b.setArrow&&_b.setArrow();
-});
-},deselectItem:function(_c){
-_c.deselect();
-},deselectAll:function(){
-_1.forEach(this.getChildren(),function(_d){
-_d.deselect&&_d.deselect();
-});
-},selectItem:function(_e){
-_e.select();
-}});
-});
+define("dojox/mobile/RoundRectList","dojo/_base/array,dojo/_base/declare,dojo/_base/event,dojo/_base/lang,dojo/_base/window,dojo/dom-construct,dijit/_Contained,dijit/_Container,dijit/_WidgetBase".split(","),function(c,d,e,b,j,f,g,h,i){return d("dojox.mobile.RoundRectList",[i,h,g],{transition:"slide",iconBase:"",iconPos:"",select:"",stateful:!1,syncWithViews:!1,editable:!1,tag:"ul",editableMixinClass:"dojox/mobile/_EditableListMixin",baseClass:"mblRoundRectList",buildRendering:function(){this.domNode=
+this.srcNodeRef||f.create(this.tag);this.inherited(arguments)},postCreate:function(){this.editable&&require([this.editableMixinClass],b.hitch(this,function(a){b.mixin(this,new a)}));this.connect(this.domNode,"onselectstart",e.stop);if(this.syncWithViews){var a=function(a){var b=c.filter(this.getChildren(),function(b){return b.moveTo==="#"+a.id||b.moveTo===a.id})[0];b&&b.set("selected",!0)};this.subscribe("/dojox/mobile/afterTransitionIn",a);this.subscribe("/dojox/mobile/startView",a)}},resize:function(){c.forEach(this.getChildren(),
+function(a){a.resize&&a.resize()})},onCheckStateChanged:function(){},_setStatefulAttr:function(a){this._set("stateful",a);this.selectOne=a;c.forEach(this.getChildren(),function(a){a.setArrow&&a.setArrow()})},deselectItem:function(a){a.set("selected",!1)},deselectAll:function(){c.forEach(this.getChildren(),function(a){a.set("selected",!1)})},selectItem:function(a){a.set("selected",!0)}})});

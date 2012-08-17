@@ -1,25 +1,3 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"descTemplate": "${1} 个${0}中的  ${2} - ${3}",
-	"firstTip": "第一页",
-	"lastTip": "最后一页",
-	"nextTip": "下一页",
-	"prevTip": "上一页",
-	"itemTitle": "项目",
-	"singularItemTitle": "项",
-	"pageStepLabelTemplate": "第 ${0} 页",
-	"pageSizeLabelTemplate": "每页的 ${0} 项目",
-	"allItemsLabelTemplate": "所有项目",
-	"gotoButtonTitle": "转到指定页面",
-	"dialogTitle": "转到页面",
-	"dialogIndication": "指定页数",
-	"pageCountIndication": "（${0} 页）",
-	"dialogConfirm": "确定",
-	"dialogCancel": "取消",
-	"all": "全部"
-})
-//end v1.x content
-);
-
+define("dojox/grid/enhanced/nls/zh/Pagination",{descTemplate:"\u7b2c ${2} - ${3} \u4e2a\uff08\u5171 ${1} ${0}\uff09",firstTip:"\u9996\u9875",lastTip:"\u672b\u9875",nextTip:"\u4e0b\u4e00\u9875",prevTip:"\u4e0a\u4e00\u9875",itemTitle:"\u9879\u76ee\u6570",singularItemTitle:"\u9879",pageStepLabelTemplate:"\u7b2c ${0} \u9875",pageSizeLabelTemplate:"\u6bcf\u9875\u7684 ${0} \u9879",allItemsLabelTemplate:"\u6240\u6709\u9879",gotoButtonTitle:"\u8f6c\u81f3\u7279\u5b9a\u9875",dialogTitle:"\u8f6c\u81f3\u9875",
+dialogIndication:"\u6307\u5b9a\u9875\u6570",pageCountIndication:"\uff08\u5171 ${0} \u9875\uff09",dialogConfirm:"\u8fd0\u884c",dialogCancel:"\u53d6\u6d88",all:"\u5168\u90e8"});

@@ -1,10 +1,2 @@
 //>>built
-define(
-//begin v1.x content
-({
-	"next" : "Irəli",
-	"done" : "Qurtardı",
-	"previous" : "Geri"
-})
-//end v1.x content
-);
+define("dojox/widget/nls/az/Wizard",{next:"Ir\u0259li",done:"Qurtard\u0131",previous:"Geri"});
