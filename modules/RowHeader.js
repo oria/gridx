@@ -96,7 +96,7 @@ define([
 			var t = this,
 				bn = t.bodyNode;
 			startup.then(function(){
-				bn.style[t.grid.isLeftToRight() ? 'left' : 'right'] = -bn.offsetWidth + 'px';
+				bn.style[t.grid.isLeftToRight() ? 'left' : 'right'] = -domStyle.get(bn, 'width') + 'px';
 				t.loaded.callback();
 			});
 		},
