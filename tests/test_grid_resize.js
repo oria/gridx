@@ -1,10 +1,11 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBar',
+	'gridx/modules/VirtualVScroller',	
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
-
 	'dijit/form/HorizontalSlider',
 	'dijit/form/HorizontalRule',
 	'dijit/form/HorizontalRuleLabels',
@@ -12,7 +13,7 @@ require([
 	'dijit/form/VerticalRule',
 	'dijit/form/VerticalRuleLabels',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules){
+], function(Grid, Cache, Pagination, PaginationBar, VirtualVScroller, dataSource, storeFactory, modules){
 
 	grid = new Grid({
 		id: 'grid',
@@ -26,16 +27,16 @@ require([
 		paginationInitialPageSize: 25,
 //        columnWidthAutoResize: true,
 		modules: [
-//            modules.Focus,
-//            modules.RowHeader,
-//            modules.IndirectSelect,
-//            modules.SingleSort,
-//            modules.ExtendedSelectRow,
-//            modules.ExtendedSelectColumn,
-//            modules.ExtendedSelectCell,
-			modules.Pagination,
-			modules.PaginationBar,
-			modules.VirtualVScroller
+//            Focus,
+//            RowHeader,
+//            IndirectSelect,
+//            SingleSort,
+//            ExtendedSelectRow,
+//            ExtendedSelectColumn,
+//            ExtendedSelectCell,
+			Pagination,
+			PaginationBar,
+			VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');
