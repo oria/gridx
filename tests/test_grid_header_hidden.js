@@ -1,12 +1,12 @@
-require([
+define([
 	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
+	'gridx/modules/Focus',
 	'gridx/tests/support/TestPane'
-], function(array, Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(array, Grid, Cache, dataSource, storeFactory, Focus, TestPane){
 
 	create = function(){
 		if(!window.grid){
@@ -33,7 +33,7 @@ require([
 //                    modules.IndirectSelect,
 //                    modules.ColumnResizer,
 //                    modules.VirtualVScroller
-					modules.Focus
+					Focus
 				]
 			});
 			var t2 = new Date().getTime();

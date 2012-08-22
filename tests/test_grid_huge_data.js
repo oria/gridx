@@ -1,4 +1,4 @@
-require([
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/modules/ColumnResizer',

@@ -1,11 +1,10 @@
-require([
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
-	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules){
+	'gridx/modules/pagination/Pagination'
+], function(Grid, Cache, dataSource, storeFactory, Pagination){
 	
 	grid = new Grid({
 		id: 'grid',
@@ -20,8 +19,7 @@ require([
 		paginationInitialPageSize: 10,
 		paginationInitialPage: 2,
 		modules: [
-			modules.Pagination
-//            modules.VirtualVScroller
+			Pagination
 		]
 	});
 	grid.placeAt('gridContainer');

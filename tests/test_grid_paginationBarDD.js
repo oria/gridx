@@ -1,14 +1,21 @@
-require([
+define([
 	'dojo',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBarDD',
+	'gridx/modules/Focus',
+	'gridx/modules/RowHeader',
+	'gridx/modules/filter/Filter',
+	'gridx/modules/filter/FilterBar',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/TestPane',
-	'dijit/form/CheckBox',
-	'dojo/domReady!'
-], function(dojo, Grid, Cache, dataSource, storeFactory, modules, TestPane){
+	'dijit/form/CheckBox'
+], function(dojo, Grid, Cache, dataSource, storeFactory, Pagination, PaginationBarDD, Focus,
+			RowHeader, Filter, FilterBar, ExtendedSelectRow, VirtualVScroller, TestPane){
 	
 	grid = new Grid({
 		id: 'grid',
@@ -20,24 +27,24 @@ require([
 		structure: dataSource.layouts[0],
 		modules: [
 			{
-				moduleClass: modules.Pagination,
+				moduleClass: Pagination,
 				initialPageSize: 5,
 				initialPage: 3
 			},
 			{
-				moduleClass: modules.PaginationBarDD,
+				moduleClass: PaginationBarDD,
 				sizes: [50, 100, 200, 300, 0],
 				//description: false,
 				//sizeSwitch: false,
 				//stepper: false,
 				position: 'bottom'
 			},
-			modules.Focus,
-			modules.RowHeader,
-			modules.Filter,
-			modules.FilterBar,
-			modules.ExtendedSelectRow,
-			modules.VirtualVScroller
+			Focus,
+			RowHeader,
+			Filter,
+			FilterBar,
+			ExtendedSelectRow,
+			VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');
