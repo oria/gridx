@@ -1,15 +1,15 @@
-require([
+define([
 	'dojo/_base/array',
-	'dojo/ready',
+	'dojo/html',
 	'dojo/query',
 	'dojo/store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
-], function(array, ready, query, Memory, Grid, Cache, modules){
-
-	var comps = ['Header', 'Row', 'HeaderCell', 'Cell'];
-	var events = [
+	'gridx/modules/Focus',
+	'dijit/form/Button'
+], function(array, html, query, Memory, Grid, Cache){
+	comps = ['Header', 'Row', 'HeaderCell', 'Cell'];
+	events = [
 		'Click', 'DblClick', 
 		'MouseDown', 'MouseUp', 
 		'MouseOver', 'MouseOut', 
@@ -39,15 +39,5 @@ require([
 		grid.setStore(createStore());
 	};
 
-	ready(function(){
-		array.forEach(comps, function(comp){
-			array.forEach(events, function(evt){
-				var evtName = 'on' + comp + evt;
-				grid.connect(grid, evtName, function(e){
-					var cell = grid.cell(evt, comp);
-					cell.setRawData(parseInt(cell.data(), 10) + 1);
-				});
-			});
-		});
-	});
+
 });

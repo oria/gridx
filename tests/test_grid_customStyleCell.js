@@ -2,7 +2,8 @@ require([
 	'dojo/store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
+	"gridx/modules/RowHeader",
+	'dojo/parser'
 ], function(){
 	function cellStyle(cell){
 		return ["height: 28px; background-color: rgb(",

@@ -209,6 +209,7 @@ define([
 				req = reqs[reqs.p++],
 				fail = lang.hitch(d, d.errback),
 				func = function(){
+					defer.progress(reqs.p / reqs.length);
 					t.model.when(req, function(){
 						for(var r = first(req, g); r && r.row; r = next(req, g, r)){
 							context.row = r.row;
@@ -228,7 +229,6 @@ define([
 					}, fail);
 				};
 			if(req){
-				defer.progress(reqs.p / reqs.length);
 				if(reqs.length > 1){
 					setTimeout(func, 10);
 				}else{

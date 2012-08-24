@@ -61,6 +61,7 @@ define([
 					});
 					if(g.columnResizer){
 						//make it compatible with column resizer
+						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
 						_this.connect(g.columnResizer, 'onResize', '_updateBody');
 					}
 					if(g.header){
@@ -168,7 +169,7 @@ define([
 				pl += cell.offsetWidth;
 			}
 			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl + 'px';
-			rowNode.style.width = rowNode.offsetWidth - pl + 'px';
+			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
@@ -178,7 +179,9 @@ define([
 			// summary:
 			//	Update the header for column lock
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
+			var sl = rowNode.scrollLeft;
 			this._lockColumns(rowNode);
+			rowNode.scrollLeft = sl;
 			this._updateScroller();//used for column dnd to sync hscroller.
 		},
 		

@@ -4,14 +4,19 @@ require([
 	'dojo/DeferredList',
 	'dijit/form/RadioButton',
 	'gridx/Grid',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/Focus',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/RowHeader',
+	'gridx/modules/ExtendedSelect/Row',
 	'gridx/tests/support/data/TestData',
 	'gridx/core/model/cache/Async',
-//    'gridx/tests/support/stores/JsonRest',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
-], function(Deferred, lang, DeferredList, RadioButton, Grid, dataSource, Cache, storeFactory, modules, TestPane){
+], function(Deferred, lang, DeferredList, RadioButton, Grid,
+	VirtualVScroller, Focus, ColumnResizer, RowHeader, ExtendedSelectRow,
+	dataSource, Cache, storeFactory, TestPane){
 
 
 	destroy = function(){
@@ -38,17 +43,13 @@ require([
 				cacheClass: Cache,
 				store: store,
 				structure: layout,
-//                vScrollerLazy: true,
 				selectRowTriggerOnCell: true,
 				modules: [
-//                    modules.SingleSort,
-					modules.ExtendedSelectRow,
-					modules.Focus,
-					modules.RowHeader,
-					modules.ColumnResizer,
-//                    modules.Pagination,
-//                    modules.PaginationBarDD,
-					modules.VirtualVScroller
+					ExtendedSelectRow,
+					Focus,
+					RowHeader,
+					ColumnResizer,
+					VirtualVScroller
 				]
 			});
 			grid.placeAt('gridContainer');
@@ -69,13 +70,6 @@ require([
 	window.newRow = function(){
 		var btn = dijit.byId('addRowBtn');
 		btn.set('disabled', true);
-//        grid.store.newItem(item);
-//        grid.store.save({
-//            onComplete: function(){
-//                btn.set('disabled', false);
-//                console.log("A new item is saved to server");
-//            }
-//        });
 		Deferred.when(grid.store.add(getNewItem()), function(){
 			btn.set('disabled', false);
 			console.log("A new item is saved to server");

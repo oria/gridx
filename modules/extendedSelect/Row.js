@@ -136,7 +136,9 @@ define([
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
 						!domClass.contains(e.target, 'gridxTreeExpandoInner')) || !e.columnId)){
 						t._isOnCell = e.columnId;
-						g.body._focusCellCol = e.columnIndex;
+						if(t._isOnCell){
+							g.body._focusCellCol = e.columnIndex;
+						}
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 					}
 				}],

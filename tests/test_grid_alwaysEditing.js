@@ -19,7 +19,11 @@ require([
 	'dijit/ColorPalette',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
+	"gridx/modules/Focus",
+	"gridx/modules/CellWidget",
+	"gridx/modules/Edit",
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar"
 ], function(dataSource, storeFactory, IFWSFactory, IFWStore, locale, TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){

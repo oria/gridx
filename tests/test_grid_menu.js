@@ -1,9 +1,15 @@
-require([
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/Focus',
+	'gridx/modules/RowHeader',
+	'gridx/modules/extendedSelect/Cell',
+	'gridx/modules/extendedSelect/Column',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/Menu',
 	'gridx/tests/support/TestPane',
 
 	'dijit/Menu',
@@ -13,7 +19,9 @@ require([
 	"dijit/MenuSeparator",
 	'dijit/form/CheckBox',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(Grid, Cache, dataSource, storeFactory, VirtualVScroller,
+			Focus, RowHeader, ExtendedSelectCell, ExtendedSelectColumn, ExtendedSelectRow, Menu, TestPane
+	){
 
 	grid = new Grid({
 		id: 'grid',
@@ -24,13 +32,13 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			modules.VirtualVScroller,
-			modules.Focus,
-			modules.RowHeader,
-			modules.ExtendedSelectCell,
-			modules.ExtendedSelectColumn,
-			modules.ExtendedSelectRow,
-			modules.Menu
+			VirtualVScroller,
+			Focus,
+			RowHeader,
+			ExtendedSelectCell,
+			ExtendedSelectColumn,
+			ExtendedSelectRow,
+			Menu
 		]
 	});
 	grid.placeAt('gridContainer');

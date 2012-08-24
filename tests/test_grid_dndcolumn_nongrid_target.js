@@ -1,4 +1,4 @@
-require([
+define([
 	'dojo/_base/lang',
 	'dojo/_base/html',
 	'dojo/_base/array',
@@ -11,11 +11,15 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
-	'gridx/tests/support/modules',
+	'gridx/modules/Focus',
+	'gridx/modules/extendedSelect/Column',
+	'gridx/modules/move/Column',
+	'gridx/modules/dnd/Column',
+	'gridx/modules/VirtualVScroller',
 	'dijit/form/Button',
-	'dijit/form/TextBox',
-	'dojo/domReady!'
-], function(lang, html, array, connect, win, dndTarget, dndSource, Grid, Cache, dataSource, storeFactory, TestPane, mods){
+	'dijit/form/TextBox'
+], function(lang, html, array, connect, win, dndTarget, dndSource, Grid, Cache, dataSource, storeFactory, TestPane, 
+	Focus, ExtendedSelectColumn, MoveColumn, DndColumn, VirtualVScroller){
 
 	function create(id, container, size, layoutIdx, args){
 		var g = new Grid(lang.mixin({
@@ -28,11 +32,11 @@ require([
 			}),
 			selectRowTriggerOnCell: true,
 			modules: [
-				mods.Focus,
-				mods.ExtendedSelectColumn,
-				mods.MoveColumn,
-				mods.DndColumn,
-				mods.VirtualVScroller
+				Focus,
+				ExtendedSelectColumn,
+				MoveColumn,
+				DndColumn,
+				VirtualVScroller
 			],
 			structure: dataSource.layouts[layoutIdx]
 		}, args));

@@ -1,4 +1,4 @@
-require([
+define([
 	'dojo/_base/declare',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
@@ -11,7 +11,9 @@ require([
 	'dijit/form/CheckBox',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
+	'gridx/modules/Focus',
+	'gridx/modules/CellWidget',
+	'gridx/modules/Edit'
 ], function(declare, dataSource, storeFactory, Memory, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, TextBox, NumberTextBox){
 
 	store = storeFactory({

@@ -7,7 +7,7 @@ define([
 	"dijit/a11y",
 	"dojo/dom-construct",
 	"../core/_Module",
-	"../util"
+	"../core/util"
 ], function(require, kernel, declare, lang, array, a11y, domConstruct, _Module, util){
 
 	kernel.experimental('gridx/modules/Bar');

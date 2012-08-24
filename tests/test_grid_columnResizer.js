@@ -3,10 +3,15 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
+	'gridx/modules/Focus',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/RowHeader',
+	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(Grid, Cache, dataSource, storeFactory,
+	Focus, ColumnResizer, RowHeader, VirtualVScroller,
+	TestPane){
 
 	grid = new Grid({
 		id: 'grid',
@@ -17,10 +22,10 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			modules.Focus,
-			modules.ColumnResizer,
-			modules.RowHeader,
-			modules.VirtualVScroller
+			Focus,
+			ColumnResizer,
+			RowHeader,
+			VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');

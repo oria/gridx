@@ -1,11 +1,17 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
+	'gridx/modules/Persist',
+	'gridx/modules/Select/Column',
+	'gridx/modules/move/Column',
+	'gridx/modules/dnd/Column',
+	'gridx/modules/NestedSort',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/ColumnResizer',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(Grid, Cache, Persist, SelectColumn, MoveColumn, DndColumn, NestedSort, VirtualVScroller, ColumnResizer, dataSource, storeFactory, TestPane){
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -20,13 +26,13 @@ require([
 				store: store,
 				structure: dataSource.layouts[4],
 				modules: [
-					modules.Persist,
-					modules.SelectColumn,
-					modules.MoveColumn,
-					modules.DndColumn,
-					modules.NestedSort,
-					modules.VirtualVScroller,
-					modules.ColumnResizer
+					Persist,
+					SelectColumn,
+					MoveColumn,
+					DndColumn,
+					NestedSort,
+					VirtualVScroller,
+					ColumnResizer
 				]
 			});
 			grid.placeAt('gridContainer');

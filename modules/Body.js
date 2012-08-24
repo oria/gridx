@@ -9,7 +9,7 @@ define([
 	"dojo/_base/sniff",
 	"dojo/keys",
 	"../core/_Module",
-	"../util",
+	"../core/util",
 	"dojo/i18n!../nls/Body"
 ], function(declare, query, array, lang, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 

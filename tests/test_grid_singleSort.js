@@ -1,11 +1,14 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/core/model/extensions/FormatSort',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/SingleSort',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(Grid, Cache, FormatSort, VirtualVScroller, ColumnResizer, SingleSort, dataSource, storeFactory, TestPane){
 	
 	var structure = [
 		{ field: "id", name:"Index", dataType:"number"},
@@ -33,13 +36,13 @@ require([
 		baseSort: [{attribute: 'Album', descending: false}],
 		sortInitialOrder: [{colId: '2', descending: true}],
 		modules: [
-			modules.VirtualVScroller,
-			modules.ColumnResizer,
-//            modules.Focus,
-			modules.SingleSort
+			VirtualVScroller,
+			ColumnResizer,
+//          Focus,
+			SingleSort
 		],
 		modelExtensions: [
-			modules.FormatSort
+			FormatSort
 		]
 	});
 	grid.placeAt('gridContainer');

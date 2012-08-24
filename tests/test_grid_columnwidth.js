@@ -3,11 +3,13 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/RowHeader',
+	'gridx/modules/VirtualVScroller',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/ContentPane',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules){
+], function(Grid, Cache, dataSource, storeFactory, ColumnResizer, RowHeader, VirtualVScroller){
 
 	cache = Cache;
 
@@ -17,10 +19,9 @@ require([
 	}); 
 
 	mods = [
-		modules.ColumnResizer,
+		ColumnResizer,
 //        modules.RowHeader,
-//        modules.PaginationBar,
-		modules.VirtualVScroller
+		VirtualVScroller
 	];
 
 	layout1 = [

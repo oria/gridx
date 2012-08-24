@@ -146,7 +146,7 @@ define([
 				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
 					properties: {
-						height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" },
+						height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 					}
 				}).play();
 			}
@@ -246,7 +246,7 @@ define([
 					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
 						properties: {
-							height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" },
+							height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
 						}
 					}).play();
 				}
