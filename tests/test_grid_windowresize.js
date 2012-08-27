@@ -4,7 +4,7 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
-	'gridx/tests/support/modules'
+	"gridx/modules/ColumnResizer"
 ], function(ready, Cache, dataSource, storeFactory){
 
 	store = storeFactory({

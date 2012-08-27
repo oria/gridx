@@ -1,12 +1,17 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/Focus',
+	'gridx/modules/Tree',
+	'gridx/modules/RowHeader',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/IndirectSelect',
+	'gridx/modules/select/Row',	
 	'gridx/tests/support/data/TreeNestedTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
+], function(Grid, Cache, Focus, Tree, RowHeader, VirtualVScroller, IndirectSelect, SelectRow, dataSource, storeFactory, TestPane){
 
 	var store = storeFactory({
 		dataSource: dataSource, 
@@ -28,12 +33,12 @@ require([
 		store: store,
 		structure: dataSource.layouts[1],
 		modules: [
-			mods.Focus,
-			mods.Tree,
-			mods.SelectRow,
-			mods.RowHeader,
-			mods.IndirectSelect,
-			mods.VirtualVScroller
+			Focus,
+			Tree,
+			SelectRow,
+			RowHeader,
+			IndirectSelect,
+			VirtualVScroller
 		],
 		treeExpandLevel: 2,
 		treeNested: true

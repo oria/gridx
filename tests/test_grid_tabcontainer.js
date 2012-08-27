@@ -1,15 +1,15 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
 	'dijit/Dialog',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/TabContainer',
 	'dijit/layout/ContentPane',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules){
+], function(Grid, Cache, VirtualVScroller, dataSource, storeFactory){
 
 	cache = Cache;
 
@@ -19,10 +19,10 @@ require([
 	}); 
 
 	mods = [
-//        modules.RowHeader,
-//        modules.Pagination,
-//        modules.PaginationBar,
-		modules.VirtualVScroller
+//      RowHeader,
+//      Pagination,
+//      PaginationBar,
+		VirtualVScroller
 	];
 
 	layout1 = [

@@ -12,16 +12,21 @@
 	</style>
 
 	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: false,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script type="text/javascript" src='test_grid_windowresize.js'></script>
-
+	<script>
+		require(['dojo/parser', 'dojo/ready', 'gridx/tests/test_grid_windowresize'], function(parser, ready){
+			ready(function(){
+				parser.parse();
+			});
+		});		
+	</script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Window Resize
 	</h1>
-	<div jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+	<div jsid='grid' data-dojo-type='gridx/Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		columnWidthAutoResize: true,

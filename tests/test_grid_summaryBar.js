@@ -3,13 +3,14 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'gridx/modules/extendedSelect/Row',
 	'gridx/modules/IndirectSelect',
 	'gridx/modules/SummaryBar',
+	'gridx/modules/RowHeader',
+	'gridx/modules/VirtualVScroller',	
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane, SelectRow, IndirectSelect, SummaryBar){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, SelectRow, IndirectSelect, SummaryBar, RowHeader, VirtualVScroller){
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -20,11 +21,11 @@ require([
 		structure: dataSource.layouts[0],
 		selectRowTriggerOnCell: true,
 		modules: [
-			modules.SummaryBar,
-			modules.SelectRow,
-			modules.RowHeader,
-			modules.IndirectSelect,
-			modules.VirtualVScroller
+			SummaryBar,
+			SelectRow,
+			RowHeader,
+			IndirectSelect,
+			VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');

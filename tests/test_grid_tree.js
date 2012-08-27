@@ -1,12 +1,18 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/Focus',
+	'gridx/modules/Tree',
+	'gridx/modules/RowHeader',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/IndirectSelect',
+	'gridx/modules/select/Row',
+	'gridx/modules/ColumnResizer',		
 	'gridx/tests/support/data/TreeColumnarTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
+], function(Grid, Cache, Focus, Tree, RowHeader, VirtualVScroller, IndirectSelect, SelectRow, ColumnResizer, dataSource, storeFactory, TestPane){
 
 	var store = storeFactory({
 		dataSource: dataSource, 
@@ -46,14 +52,14 @@ require([
 		selectRowTriggerOnCell: false,
 		treeExpandLevel: 2,
 		modules: [
-//            mods.Focus,
-			mods.VirtualVScroller,
-			mods.Tree,
-//            mods.ExtendedSelectRow,
-			mods.ColumnResizer,
-			mods.SelectRow,
-			mods.RowHeader,
-			mods.IndirectSelect
+//            Focus,
+			VirtualVScroller,
+			Tree,
+//            ExtendedSelectRow,
+			ColumnResizer,
+			SelectRow,
+			RowHeader,
+			IndirectSelect
 		]
 	});
 	grid.placeAt('gridContainer');

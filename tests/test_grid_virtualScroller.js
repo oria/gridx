@@ -1,11 +1,13 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/SingleSort',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/select/Row',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules){
+], function(Grid, Cache, SingleSort, VirtualVScroller, SelectRow, dataSource, storeFactory){
 
 	grid = new Grid({
 		id: 'grid',
@@ -15,9 +17,9 @@ require([
 			size: 2000
 		}),
 		modules:[
-			modules.SingleSort,
-			modules.SelectRow,
-			modules.VirtualVScroller
+			SingleSort,
+			SelectRow,
+			VirtualVScroller
 		],
 		structure: dataSource.layouts[4]
 	});
