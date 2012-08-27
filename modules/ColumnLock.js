@@ -55,9 +55,9 @@ define([
 			this.count = this.arg('count');
 			var _this = this, g = this.grid, body = html.body();
 			deferStartup.then(function(){
-				if(!this.grid.columnWidth || !this.grid.columnWidth.arg('autoResize')){
+				if(!g.columnWidth || !g.columnWidth.arg('autoResize')){
 					_this.connect(g.body, 'onAfterRow', function(row){
-						this._lockColumns(row.node());
+						_this._lockColumns(row.node());
 					});
 					if(g.columnResizer){
 						//make it compatible with column resizer

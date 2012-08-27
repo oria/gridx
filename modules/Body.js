@@ -211,7 +211,7 @@ define([
 				m = t.model,
 				g = t.grid,
 				id = args.rowId;
-			if(id){
+			if(m.isId(id)){
 				args.rowIndex = m.idToIndex(id);
 				args.parentId = m.parentId(id);
 			}
@@ -230,7 +230,7 @@ define([
 			}else{
 				return args;	//gridx.__RowCellInfo
 			}
-			args.rowId = id || m.indexToId(args.rowIndex, args.parentId);
+			args.rowId = m.isId(id) ? id : m.indexToId(args.rowIndex, args.parentId);
 			return args;	//gridx.__RowCellInfo
 		},
 	

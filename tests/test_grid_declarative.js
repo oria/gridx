@@ -1,4 +1,4 @@
-require([
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',

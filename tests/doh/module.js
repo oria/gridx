@@ -1,8 +1,3 @@
 define(['doh'], function(doh){
-	doh.registerUrl("gridx.tests.doh.pureGrid", dojo.moduleUrl("gridx", "tests/doh/pure_grid.html"));
-	doh.registerUrl("gridx.tests.doh.virtualVScroller", dojo.moduleUrl("gridx", "tests/doh/virtualVScroller.html"));
-	doh.registerUrl("gridx.tests.doh.singleSort", dojo.moduleUrl("gridx", "tests/doh/singleSort.html"));
+	doh.registerUrl("gridx.tests.doh.test_all", dojo.moduleUrl("gridx", "tests/doh/test_all.html"), 1000000);
 });
-
-
-
