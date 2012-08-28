@@ -168,6 +168,11 @@ define([
 		//		Whether to stuff a cell with &nbsp; if it is empty.
 		stuffEmptyCell: true,
 
+		// renderWholeRowOnSet: Boolean
+		//		If true, the whole row will be re-rendered even if only one field has changed.
+		//		Default to false, so that only one cell will be re-rendered editing that cell.
+		renderWholeRowOnSet: false,
+
 		getRowNode: function(args){
 			// summary:
 			//		Get the DOM node of a row
@@ -766,14 +771,17 @@ define([
 					var curData = rowCache.data,
 						oldData = oldCache.data,
 						cols = g._columns,
+						renderWhole = t.arg('renderWholeRowOnSet'),
 						changedCols = [];
-					array.some(cols, function(col){
-						if(curData[col.id] !== oldData[col.id]){
-							changedCols.push(col);
-						}
-						return changedCols.length > 1;
-					});
-					if(changedCols.length > 1){
+					if(!renderWhole){
+						array.some(cols, function(col){
+							if(curData[col.id] !== oldData[col.id]){
+								changedCols.push(col);
+							}
+							return changedCols.length > 1;
+						});
+					}
+					if(renderWhole || changedCols.length > 1){
 						rowNode.innerHTML = t._buildCells(row);
 						t.onAfterRow(row);
 						t.onSet(row);
