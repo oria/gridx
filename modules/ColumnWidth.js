@@ -134,7 +134,7 @@ define([
 				isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse',
 				margin = isCollapse && lead > 0 ? (lead - 1) : lead;
 			hs[marginLead] = margin + 'px';
-			hs[marginTail] = (!isCollapse && tail > 0 ? tail - 1 : 0)  + 'px';
+			hs[marginTail] = ((t.arg('autoResize') || !isCollapse) && tail > 0 ? tail - 1 : 0)  + 'px';
 			g.mainNode.style[marginLead] = margin + 'px';
 			g.mainNode.style[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
