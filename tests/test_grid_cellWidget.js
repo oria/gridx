@@ -25,7 +25,7 @@ define([
 	});
 
 	layout1 = [
-        { field: "id", name:"Index", width: '50px'},
+		{ field: "id", name:"Index", width: '50px'},
 		{ field: "Progress", name:"Progress", dataType:'number',
 			widgetsInCell: true, 
 			decorator: function(){

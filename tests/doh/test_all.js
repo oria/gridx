@@ -9,6 +9,7 @@ define([
 	'./doh_columnResizer',
 	'./doh_columnLock',
 	'./doh_vScroller',
+	'./doh_cellWidget',
 	'dojo/domReady!'
 ], function(modules, doh,
 	core,
@@ -18,7 +19,8 @@ define([
 	nestedSort,
 	columnResizer,
 	columnLock,
-	vScroller){
+	vScroller,
+	cellWidget){
 
 	core();
 	header();
@@ -28,6 +30,11 @@ define([
 	columnResizer();
 	columnLock();
 	vScroller();
+	cellWidget();
+
+	core([
+		modules.SingleSort
+	]);
 
 	doh.run();
 });

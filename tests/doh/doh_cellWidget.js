@@ -6,7 +6,9 @@ define([
 	'gridx/core/model/cache/Sync',
 	'../support/data/TestData',
 	'../support/stores/Memory',
-	'../support/modules'
+	'../support/modules',
+	'dijit/form/Button',
+	'dijit/ProgressBar'
 ], function(query, dom, domGeo, doh, Cache, dataSource, storeFactory, modules){
 
 	var store = storeFactory({
@@ -15,9 +17,38 @@ define([
 	});
 
 	var layout = [
-		{id: 'id', field: 'id', name: 'Identity'},
-		{id: 'number', field: 'number', name: 'Number'},
-		{id: 'string', field: 'string', name: 'String'},
+		{id: 'id', field: 'id', name: 'Identity',
+			decorator: function(data){
+				return "<a href='www.google.com'>" + data + "</a>";
+			}
+		},
+		{id: 'number', field: 'number', name: 'Number',
+			widgetsInCell: true,
+			decorator: function(){
+				return [
+					"<div data-dojo-type='dijit.ProgressBar' data-dojo-attach-point='prog' data-dojo-props='maximum: 100' ",
+					"class='gridxHasGridCellValue' style='width: 100%;'></div>"
+				].join('');
+			}
+		},
+		{id: 'string', field: 'string', name: 'String',
+			widgetsInCell: true,
+			navigable: true,
+			decorator: function(){
+				//Generate cell widget template string
+				return [
+					'<button data-dojo-type="dijit.form.Button" ',
+					'data-dojo-attach-point="btn" ',
+					'data-dojo-props="onClick: function(){',
+						'alert(this.get(\'label\'));',
+					'}"></button>'
+				].join('');
+			},
+			setCellValue: function(data){
+				//"this" is the cell widget
+				this.btn.set('label', data);
+			}
+		},
 		{id: 'date', field: 'date', name: 'Date'},
 		{id: 'time', field: 'time', name: 'Time'},
 		{id: 'bool', field: 'bool', name: 'Boolean'}
@@ -25,6 +56,13 @@ define([
 
 	//------------------------------------------------------------------------
 	doh.ts('cellWidget.getCellWidget');
+
+	doh.td('getCellWidget', function(t, grid){
+		var w = grid.cell(0, 'number').widget();
+		t.t(!!w);
+		t.t(!!w.prog);
+		t.is(grid.cell(0, 'number').data(), w.prog.get('value'));
+	});
 
 	doh.ts('cellWidget.setCellDecorator');
 
