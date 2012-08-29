@@ -154,8 +154,7 @@ define([
 			cancelEdit: function(){
 				// summary:
 				//		Cancel editing mode on this cell.
-				this.grid.edit.cancel(this.row.id, this.column.id);
-				return this;
+				return this.grid.edit.cancel(this.row.id, this.column.id);
 			},
 
 			applyEdit: function(){
