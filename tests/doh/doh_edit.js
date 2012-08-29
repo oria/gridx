@@ -27,10 +27,13 @@ define([
 	doh.ts('edit.begin/cancel');
 
 	doh.tt('begin', function(d, t, grid){
-		t.f(grid.cell(1, 'number', true).editor());
+		var cell = grid.cell(1, 'number', true);
+		t.f(cell.isEditing());
+		t.f(cell.editor());
 		grid.edit.begin(1, 'number').then(function(){
-			t.t(grid.cell(1, 'number', true).editor());
-			t.is(grid.cell(1, 'number', true).data(), grid.cell(1, 'number', true).editor().get('value'));
+			t.t(cell.isEditing());
+			t.t(cell.editor());
+			t.is(cell.data(), cell.editor().get('value'));
 			d.callback(true);
 		}, function(e){
 			d.errback(e);
@@ -40,9 +43,11 @@ define([
 	doh.tt('cancel', function(d, t, grid){
 		var cell = grid.cell(1, 'number', true);
 		var data = cell.data();
+		t.t(cell.isEditing());
 		t.t(cell.editor());
 		cell.editor().set('value', 12345);
 		cell.cancelEdit().then(function(){
+			t.f(cell.isEditing());
 			t.f(cell.editor());
 			t.is(data, cell.data());
 			d.callback(true);
@@ -55,10 +60,21 @@ define([
 
 	doh.tt('begin/apply', function(d, t, grid){
 		var cell = grid.cell(1, 'number', true);
+		t.f(cell.isEditing());
 		t.f(cell.editor());
 		cell.beginEdit().then(function(){
+			t.t(cell.isEditing());
 			t.t(cell.editor());
 			t.is(cell.data(), cell.editor().get('value'));
+			cell.editor().set('value', 12345);
+			cell.applyEdit().then(function(){
+				t.f(cell.isEditing());
+				t.f(cell.editor());
+				t.is(12345, cell.data());
+				d.callback(true);
+			}, function(e){
+				d.errback(e);
+			});
 		}, function(e){
 			d.errback(e);
 		});

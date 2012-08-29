@@ -9,7 +9,12 @@ define([
 	'./doh_columnResizer',
 	'./doh_columnLock',
 	'./doh_vScroller',
+	'./doh_selectRow',
+	'./doh_selectColumn',
+	'./doh_selectCell',
+	'./doh_moveColumn',
 	'./doh_cellWidget',
+	'./doh_edit',
 	'dojo/domReady!'
 ], function(modules, doh,
 	core,
@@ -20,20 +25,39 @@ define([
 	columnResizer,
 	columnLock,
 	vScroller,
-	cellWidget){
+	selectRow,
+	selectColumn,
+	selectCell,
+	moveColumn,
+	cellWidget,
+	edit,
+dummy){
 
-	core();
-	header();
-	body();
-	singleSort();
-	nestedSort();
-	columnResizer();
-	columnLock();
-	vScroller();
-	cellWidget();
+	function runAll(modules, args){
+		var funcs = [
+			core,
+			header,
+			body,
+			singleSort,
+			nestedSort,
+			columnResizer,
+			columnLock,
+			vScroller,
+			selectRow,
+			selectColumn,
+			selectCell,
+			moveColumn,
+			cellWidget,
+			edit
+		];
+		for(var i = 0; i < funcs.length; ++i){
+			funcs[i](modules, args);
+		}
+	}
 
-	core([
-		modules.SingleSort
+	runAll();
+	runAll([
+		modules.VirtualVScroller
 	]);
 
 	doh.run();

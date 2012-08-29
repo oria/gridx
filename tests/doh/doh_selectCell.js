@@ -26,18 +26,64 @@ define([
 	//------------------------------------------------------------------------
 	doh.ts('selectCell.selectById');
 
+	doh.td('selectById', function(t, grid){
+		t.f(grid.select.cell.isSelected(1, 'id'));
+		grid.select.cell.selectById(1, 'id');
+		t.t(grid.select.cell.isSelected(1, 'id'));
+
+		t.f(grid.cell(3, 'string', true).isSelected());
+		grid.cell(3, 'string', true).select();
+		t.t(grid.cell(3, 'string', true).isSelected());
+	});
+
 	doh.ts('selectCell.deselectById');
 
+	doh.td('deselectById', function(t, grid){
+		t.t(grid.select.cell.isSelected(1, 'id'));
+		grid.select.cell.deselectById(1, 'id');
+		t.f(grid.select.cell.isSelected(1, 'id'));
+
+		t.t(grid.cell(3, 'string', true).isSelected());
+		grid.cell(3, 'string', true).deselect();
+		t.f(grid.cell(3, 'string', true).isSelected());
+	});
+
 	doh.ts('selectCell.clear');
+
+	doh.td('clear', function(t, grid){
+		t.f(grid.select.cell.isSelected(1, 'id'));
+		grid.select.cell.selectById(1, 'id');
+		t.t(grid.select.cell.isSelected(1, 'id'));
+		grid.select.cell.clear();
+		t.f(grid.select.cell.isSelected(1, 'id'));
+	});
+
+	doh.ts('selectCell.getSelected');
+
+	doh.td('getSelected', function(t, grid){
+		grid.select.cell.selectById(1, 'id');
+		grid.select.cell.selectById(2, 'number');
+		grid.select.cell.selectById(3, 'string');
+
+		var selected = grid.select.cell.getSelected();
+		t.is(3, selected.length);
+		for(var i = 0; i < selected.length; ++i){
+			t.t(grid.select.cell.isSelected(selected[i][0], selected[i][1]));
+		}
+	});
 
 	//------------------------------------------------------------------------
 	return doh.go('selectCell', [
 		'selectCell.selectById',
 		'selectCell.deselectById',
 		'selectCell.clear',
+		'selectCell.getSelected',
 	0], {
 		cacheClass: Cache,
 		store: store,
-		structure: layout
+		structure: layout,
+		modules: [
+			modules.SelectCell
+		]
 	});
 });

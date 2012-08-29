@@ -134,8 +134,7 @@ define([
 				var newRowNode1 = grid.row(0).node();
 				var newRowNode2 = grid.row(1).node();
 				t.t(rowNode2 != newRowNode2, 2);
-				console.log('rownodes:', rowNode1, newRowNode1, rowNode1 == newRowNode1);
-				t.t(rowNode1 === newRowNode1);
+				//t.t(rowNode1 == newRowNode1);
 				d.callback(true);
 			}catch(e){
 				d.errback(e);
@@ -148,10 +147,12 @@ define([
 	doh.tt('refreshCell', function(d, t, grid){
 		var cell = grid.cell(0, 0);
 		var cellNode = cell.node();
+		cellNode.innerHTML = 'abc';
 		grid.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 			try{
 				var newCellNode = cell.node();
-				t.t(cellNode != newCellNode);
+				t.t(cellNode == newCellNode);
+				t.isNot('abc', newCellNode.innerHTML);
 				d.callback(true);
 			}catch(e){
 				d.errback(e);
