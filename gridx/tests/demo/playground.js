@@ -434,7 +434,7 @@ Store, Grid){
 				"</td><td>", attr.unitPre,
 				{
 					spinner: "<span class='attributeNumberInput' data-dojo-type='dijit/form/NumberSpinner'",
-					numberTextBox: "<span class='attributeNumberInput' data-dojo-type='dijit/form/NumberTextbox'"
+					numberTextBox: "<span class='attributeNumberInput' data-dojo-type='dijit/form/NumberTextBox'"
 				}[attr.editor],
 				" data-dojo-props='value: ", attr.value, "'></span>",
 				attr.unitPost,
