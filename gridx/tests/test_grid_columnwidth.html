@@ -12,16 +12,14 @@
 	</style>
 
 	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script type="text/javascript">
-		require(["gridx/dojo-dijit-deps-all", "gridx/gridx-all"], function(){
-			require(["gridx/tests/test_grid_columnwidth"]);
-		});
-	</script>		
+	<script>
+		require(['gridx/tests/test_grid_columnwidth']);
+	</script>
 </head>
 <body class='claro'>
-	<!--h1 class='title'>Grid Column Width Test</h1>
+	<h1 class='title'>Grid Column Width Test</h1>
 	<h2>All columns are provided pixel width</h2>
 	<div id='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: cache,
@@ -64,14 +62,14 @@
 		structure: layout6,
 		modules: mods
 	'></div>
-	<h2>Grid of autoWidth</h2-->
-	<!--div id='grid7' data-dojo-type='gridx.Grid' data-dojo-props='
+	<h2>Grid of autoWidth</h2>
+	<div id='grid7' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: cache,
 		store: store,
 		structure: layout7,
 		modules: mods,
 		autoWidth: true
-	'></div-->
+	'></div>
 	<h2>AutoResize column width</h2>
 	<div data-dojo-type='dijit.layout.BorderContainer' style='width: 1000px; height: 400px;'>
 		<div data-dojo-type='dijit.layout.ContentPane' data-dojo-props='region: "left", splitter: true' style='width: 45%;'>

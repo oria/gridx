@@ -7,7 +7,7 @@ define([
 	"dojo/_base/window",
 	"dojo/keys",
 	"../core/_Module",
-	"../util"
+	"../core/util"
 ], function(declare, array, connect, lang, sniff, win, keys, _Module, util){
 
 	/*=====

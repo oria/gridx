@@ -1,13 +1,15 @@
-require([
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
-	'gridx/tests/support/TestPane',
-	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, mods, TestPane){
-
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/Focus',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/NestedSort',
+	'gridx/tests/support/TestPane'
+], function(Grid, Cache, dataSource, storeFactory, VirtualVScroller, Focus, ColumnResizer, NestedSort, TestPane){
+	
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -16,14 +18,12 @@ require([
 			size: 100
 		}),
 		baseSort: [{attribute: 'Album', descending: true}],
+		sortInitialOrder: [{colId: 'id', descending: true}, {colId: 'Name', descending: false}],
 		modules: [
-			mods.VirtualVScroller,
-			mods.Focus,
-			mods.ColumnResizer,
-			{
-				moduleClass: mods.NestedSort,
-				preSort: [{colId: 'id', descending: true}, {colId: 'Name', descending: false}]
-			}
+			VirtualVScroller,
+			Focus,
+			ColumnResizer,
+			NestedSort
 		],
 		structure: dataSource.layouts[0]
 	});

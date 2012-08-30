@@ -1,13 +1,16 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/Focus',
+	'gridx/modules/ToolBar',
+	'gridx/modules/SingleSort',
+	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
 	'dijit/form/Button',
 	'dijit/form/ToggleButton',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, dataSource, storeFactory, modules, Button, ToggleButton,TestPane){
+], function(Grid, Cache, Focus, ToolBar, SingleSort, VirtualVScroller, dataSource, storeFactory, Button, ToggleButton,TestPane){
 	
 	grid = new Grid({
 		id: 'grid',
@@ -18,10 +21,10 @@ require([
 		}),
 		structure: dataSource.layouts[0],
 		modules: [
-			modules.Focus,		
-			modules.ToolBar,
-			modules.SingleSort,
-			modules.VirtualVScroller
+			Focus,		
+			ToolBar,
+			SingleSort,
+			VirtualVScroller
 		]
 	});
 	

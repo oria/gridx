@@ -1,12 +1,12 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/RowLock',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dijit/form/NumberSpinner'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
+], function(Grid, Cache, RowLock, dataSource, storeFactory, TestPane){
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -14,8 +14,9 @@ require([
 			dataSource: dataSource, 
 			size: 100
 		}),
+		rowLockCount: 2,
 		structure: dataSource.layouts[0],
-		modules: [ modules.RowLock ]
+		modules: [RowLock]
 	});
 	grid.placeAt('gridContainer');
 	grid.startup();

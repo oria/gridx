@@ -1,0 +1,56 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Grid AlwaysEditing Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="../tests/support/common.css" />
+	<style type="text/css">
+		.gridx {
+			width: 1000px;
+			height: 420px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript" src='../tests/support/common.js'></script>
+	<script>
+		require(['./test_grid_alwaysEditing.js'], function(){
+			require(['gridx/tests/test_grid_alwaysEditing']);
+		});
+		
+	</script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Grid AlwaysEditing Test 
+	</h1>
+	<h2>Test Grid1: narrow rows</h2>
+	<div jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store1,
+		structure: layout1,
+		modules: [
+			"gridx/modules/Focus",
+			"gridx/modules/CellWidget",
+			"gridx/modules/Edit",
+			"gridx/modules/pagination/Pagination",
+			"gridx/modules/pagination/PaginationBar"
+		]
+	'></div>
+	<h2>Test Grid2: tall rows</h2>
+	<div jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store2,
+		structure: layout2,
+		autoWidth: true,
+		modules: [
+			"gridx/modules/Focus",
+			"gridx/modules/CellWidget",
+			"gridx/modules/Edit",
+			"gridx/modules/pagination/Pagination",
+			"gridx/modules/pagination/PaginationBar"
+		]
+	'></div>
+</body>
+</html>

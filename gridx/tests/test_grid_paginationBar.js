@@ -1,14 +1,23 @@
-require([
+define([
 	'dojo',
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/filter/Filter',
+	'gridx/modules/filter/FilterBar',
+	'gridx/modules/pagination/PaginationBar',
+	'gridx/modules/Focus',
+	'gridx/modules/RowHeader',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/move/Row',
+	'gridx/modules/dnd/Row',
+	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/TestPane',
-	'dijit/form/CheckBox',
-	'dojo/domReady!'
-], function(dojo, Grid, Cache, dataSource, storeFactory, modules, TestPane){
+	'dijit/form/CheckBox'
+], function(dojo, Grid, Cache, dataSource, storeFactory, Pagination,
+			Filter, FilterBar, PaginationBar, Focus, RowHeader, ExtendedSelectRow, MoveRow, DndRow, VirtualVScroller, TestPane){
 	
 	grid = new Grid({
 		id: 'grid',
@@ -21,22 +30,23 @@ require([
 
 		//selectRowTriggerOnCell: true,
 		paginationInitialPage: 3,
-		paginationBarSizes: [5, 10, 20, 30],
+		paginationBarSizes: [10, 20, 40, 0],
 		paginationBarVisibleSteppers: 5,
 		paginationBarPosition: 'bottom',
 //        paginationBarSizeSwitch: false,
-		paginationBarGotoButton: false,
+//        paginationBarGotoButton: false,
+		bodyRowHoverEffect: false,
 		modules: [
-			modules.Pagination,
-			modules.Filter,
-			modules.FilterBar,
-			modules.PaginationBar,
-			modules.Focus,
-			modules.RowHeader,
-			modules.ExtendedSelectRow,
-			modules.MoveRow,
-			modules.DndRow,
-			modules.VirtualVScroller
+			Pagination,
+			Filter,
+			FilterBar,
+			PaginationBar,
+			Focus,
+			RowHeader,
+			ExtendedSelectRow,
+			MoveRow,
+			DndRow,
+			VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');

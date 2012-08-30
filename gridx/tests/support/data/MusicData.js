@@ -10,6 +10,8 @@ define([
 ], function(lang, locale, NumberTextBox, DateTextBox, TimeTextBox, Editor, ProgressBar, Color){
 
 	var items = [
+//        {"Heard": '', "Progress": '', "Genre":"",	"Artist":"",	"Year": '',	"Album":"",	"Name":"",	"Length":"",	"Track": '',	"Composer":"",	"Download Date":"",	"Last Played":""},
+//        {"Heard": '', "Progress": '', "Genre":"",	"Artist":"",	"Year": '',	"Album":"",	"Name":"",	"Length":"",	"Track": '',	"Composer":"",	"Download Date":"",	"Last Played":""},
 		{"Heard": true, "Progress": 0.5, "Genre":"Easy Listening",	"Artist":"Bette Midler",	"Year":2003,	"Album":"Bette Midler Sings the Rosemary Clooney Songbook",	"Name":"Hey There",	"Length":"03:31",	"Track":4,	"Composer":"Ross, Jerry 1926-1956 -w Adler, Richard 1921-",	"Download Date":"1923/4/9",	"Last Played":"04:32:49"},
 		{"Heard": false, "Progress": 0.6, "Genre":"Classic Rock",	"Artist":"Jimi Hendrix",	"Year":1993,	"Album":"Are You Experienced",	"Name":"Love Or Confusion",	"Length":"03:15",	"Track":4,	"Composer":"Jimi Hendrix",	"Download Date":"1947/12/6",	"Last Played":"03:47:49"},
 		{"Heard": true, "Progress": 0.7, "Genre":"Jazz",	"Artist":"Andy Narell",	"Year":1992,	"Album":"Down the Road",	"Name":"Sugar Street",	"Length":"07:00",	"Track":8,	"Composer":"Andy Narell",	"Download Date":"1906/3/22",	"Last Played":"21:56:15"},
@@ -186,7 +188,7 @@ define([
 			for(var i = 0; i < size; ++i){
 				var item = items[i % items.length];
 				data.items.push(lang.mixin({
-					id: i + 1,
+					id: i,
 					order: i + 1,
 					Color: new Color([Math.sin(i) * 100, Math.cos(i) * 100, i * i]).toHex()
 				}, item));
@@ -198,7 +200,7 @@ define([
 			[
 				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
 				{id: 'order', field: 'order', name: 'Order', width: '80px'},
-				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px'},
+				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px', alwaysEditing: true},
 				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px'},
 				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},
 				{id: 'Album', field: 'Album', name: 'Album', width: '160px'},
@@ -214,9 +216,9 @@ define([
 				{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
 				{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'string'},
 				{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'string'},
-				{id: 'Year', field: 'Year', name: 'Year', dataType: 'number'},
 				{id: 'Album', field: 'Album', name: 'Album', dataType: 'string'},
 				{id: 'Name', field: 'Name', name: 'Name', dataType: 'string'},
+				{id: 'Year', field: 'Year', name: 'Year', dataType: 'number'},
 				{id: 'Length', field: 'Length', name: 'Length', dataType: 'string'},
 				{id: 'Track', field: 'Track', name: 'Track', dataType: 'number'},
 				{id: 'Composer', field: 'Composer', name: 'Composer', dataType: 'string'},

@@ -4,17 +4,17 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
-	'gridx/tests/support/modules'
+	"gridx/modules/ColumnResizer"
 ], function(ready, Cache, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 2000
+		size: 100
 	});
 
-	ready(function(){
-		grid.connect(window, 'onresize', function(){
-			grid.resize();
-		});
-	});
+//    ready(function(){
+//        grid.connect(window, 'onresize', function(){
+//            grid.resize();
+//        });
+//    });
 });

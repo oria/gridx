@@ -336,6 +336,7 @@ define([
 					t._onHeaderClick(e);
 					break;
 			}
+			event.stop(e);
 		},
 
 		_onBlur: function(e){
@@ -396,10 +397,9 @@ define([
 				var t = this,
 					g = t.grid,
 					header = t._getRegionHeader(region);
-				if(g.hScroller){
-					g.hScroller.scrollToColumn(header.getAttribute('colid'));
-				}
 				region.focus();
+				
+				
 				window.setTimeout(function(){
 					//make it asnyc so that IE will not lost focus
 					addClass(header, 'gridxCellSortFocus');
@@ -413,6 +413,10 @@ define([
 					
 					//firefox and ie will lost focus when region is invisible, focus it again.
 					region.focus();
+					
+					if(g.hScroller){
+						g.hScroller.scrollToColumn(header.getAttribute('colid'));
+					}
 				}, 0);
 				
 			}

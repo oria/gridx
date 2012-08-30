@@ -1,11 +1,17 @@
-require([
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/ComputerData',
 	'gridx/tests/support/stores/Memory',
-//    'gridx/tests/support/data/TestData',
-//    'gridx/tests/support/stores/JsonRest',
-	'gridx/tests/support/modules',
+	'gridx/modules/CellWidget',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/exporter/CSV',
+	'gridx/modules/SingleSort',
+	'gridx/modules/filter/Filter',
+	'gridx/modules/filter/FilterBar',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBar',
+	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/TestPane',
 	'dijit/registry',
 	'dijit/form/CheckBox',
@@ -15,7 +21,9 @@ require([
 	'dijit/ProgressBar',
 	'dijit/Dialog',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, modules, TestPane, registry){
+], function(Grid, Cache, dataSource, storeFactory, CellWidget, ExtendedSelectRow, ExportCSV, SingleSort,
+			Filter, FilterBar, Pagination, PaginationBar, VirtualVScroller, TestPane, registry
+	){
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -26,15 +34,15 @@ require([
 		}),
 		structure: dataSource.layouts[1],
 		modules: [
-			modules.CellWidget,
-			modules.ExtendedSelectRow,
-			modules.ExportCSV,
-			modules.SingleSort,
-			modules.Filter,
-			modules.FilterBar,
-			modules.Pagination,
-			modules.PaginationBar,
-			modules.VirtualVScroller
+			CellWidget,
+			ExtendedSelectRow,
+			ExportCSV,
+			SingleSort,
+			Filter,
+			FilterBar,
+			Pagination,
+			PaginationBar,
+			VirtualVScroller
 		],
 		autoWidth: true,
 		selectRowTriggerOnCell: true

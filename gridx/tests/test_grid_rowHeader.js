@@ -6,7 +6,13 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
-	'gridx/tests/support/modules',
+	"gridx/modules/Focus",
+	"gridx/modules/RowHeader",
+	"gridx/modules/Edit",
+	"gridx/modules/CellWidget",
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar",
+	"gridx/modules/VirtualVScroller",
 	'dijit/form/ComboButton',
 	'dijit/Menu',
 	'dijit/MenuItem',
@@ -141,7 +147,7 @@ require([
 					data
 				].join('');
 			},
-			editor: 'dijit/ColorPalette',
+			editor: 'dijit.ColorPalette',
 			editorArgs: {
 				fromEditor: function(v, cell){
 					return v || cell.data(); //If no color selected, use the orginal one.
@@ -166,7 +172,7 @@ require([
 					data
 				].join('');
 			},
-			editor: 'dijit/ColorPalette',
+			editor: 'dijit.ColorPalette',
 			editorArgs: {
 				fromEditor: function(v, cell){
 					return v || cell.data(); //If no color selected, use the orginal one.

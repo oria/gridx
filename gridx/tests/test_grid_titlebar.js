@@ -2,15 +2,17 @@ require([
 	'dojo',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/modules/TitleBar',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/Focus',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
-	'gridx/tests/support/modules',
-
+	'dijit/Dialog',
 	'dijit/form/Button',
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
-], function(dojo, Grid, Cache, dataSource, storeFactory, TestPane, modules){
+], function(dojo, Grid, Cache, TitleBar, VirtualVScroller, Focus, dataSource, storeFactory, TestPane){
 
 	grid = new Grid({
 		id: 'grid',
@@ -21,12 +23,12 @@ require([
 		structure: dataSource.layouts[0],
 		cacheClass: Cache,
 		modules: [
-			modules.Focus,
+			Focus,
 			{
-				moduleClass: modules.TitleBar,
+				moduleClass: TitleBar,
 				label: 'Gridx - Title Bar Label'
 			},
-			modules.VirtualVScroller
+			VirtualVScroller
 		]
 	});
 	grid.placeAt('gridContainer');

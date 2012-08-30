@@ -1,15 +1,16 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
-	'gridx/tests/support/modules',
-	'gridx/modules/Focus',
 	'gridx/modules/filter/Filter',
+	'gridx/modules/SingleSort',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/Focus',
 	'gridx/modules/filter/FilterBar',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, mods, focus, filter, filterBar){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, Filter, SingleSort, VirtualVScroller, Focus, FilterBar){
 
 	grid = new Grid({
 		id: 'grid',
@@ -20,14 +21,13 @@ require([
 		}),
 		selectRowTriggerOnCell: true,
 		modules: [
-			filter,
-			mods.SingleSort,
-			mods.VirtualVScroller,
-//            mods.SelectRow,
+			Filter,
+			SingleSort,
+			VirtualVScroller,
+			Focus,
 			{
-				moduleClass: filterBar,
-				maxRuleCount: 2,
-			
+				moduleClass: FilterBar,
+				maxRuleCount: 5,
 				ruleCountToConfirmClearFilter: 2
 			}
 		],

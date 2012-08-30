@@ -55,6 +55,8 @@ define([
 					t._subScrollToRow(rowVisualIndex, d, toTop);
 				};
 			s.push(d);
+			t._lazy = t.arg('lazy');
+			t.lazy = false;
 			if(s.length > 1){
 				s[s.length - 2].then(f);
 			}else{
@@ -80,7 +82,11 @@ define([
 					if(focus && focus.currentArea() == 'body'){
 						focus.focusArea('body', 1);	//1 as true
 					}
-					defer.callback(success);
+					t.lazy = t._lazy;
+					//wait for the dom nodes to settle down.
+					setTimeout(function(){
+						defer.callback(success);
+					}, 5);
 				};
 			if(node){
 				var offsetTop = node.offsetTop;

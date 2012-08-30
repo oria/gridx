@@ -155,7 +155,7 @@ define([
 				this._btnFilter.set('disabled', false);
 			}
 			//toggle add rule button disable
-			var c = this.grid.filterBar.maxRuleCount;
+			var c = this.grid.filterBar.arg('maxRuleCount');
 			this._btnAdd.set('disabled', children.length >= c && c > 0);
 			this._btnClear.set('disabled', !this.grid.filterBar.filterData);
 		},

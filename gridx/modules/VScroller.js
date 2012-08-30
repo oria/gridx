@@ -115,25 +115,30 @@ define([
 				bn = this.grid.bodyNode,
 				dn = this.domNode,
 				dif = 0,
-				n = query('[visualindex="' + rowVisualIndex + '"]', bn)[0];
+				n = query('[visualindex="' + rowVisualIndex + '"]', bn)[0],
+				finish = function(success){
+					setTimeout(function(){
+						d.callback(success);
+					}, 5);
+				};
 			if(n){
 				var no = n.offsetTop,
 					bs = bn[st];
 				if(toTop){
 					dn[st] = no;
-					d.callback(true);
+					finish(true);
 					return d;	//dojo.Deferred
 				}else if(no < bs){
 					dif = no - bs;
 				}else if(no + n.offsetHeight > bs + bn.clientHeight){
 					dif = no + n.offsetHeight - bs - bn.clientHeight;
 				}else{
-					d.callback(true);
+					finish(true);
 					return d;	//dojo.Deferred
 				}
 				dn[st] += dif;
 			}
-			d.callback(!!n);
+			finish(!!n);
 			return d;	//dojo.Deferred
 		},
 	

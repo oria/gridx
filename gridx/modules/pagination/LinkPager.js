@@ -8,7 +8,7 @@ define([
 	"dojo/dom-class",
 	"dojo/string",
 	"dojo/keys",
-	"../../util",
+	"../../core/util",
 	"./_PagerBase",
 	"dojo/text!../../templates/PaginationBar.html"
 ], function(declare, array, lang, sniff, query, event, domClass, string, keys, util, _PagerBase, barTemplate){

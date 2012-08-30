@@ -1,4 +1,5 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dijit/registry",
 	"dojo/_base/lang",
@@ -21,7 +22,7 @@ define([
 	"dijit/popup",
 	"dijit/Tooltip",
 	"dijit/form/Button"
-], function(declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -70,9 +71,9 @@ define([
 		},
 		//Public-----------------------------------------------------------
 		
-		// closeFilterBarButton: Boolean
+		// closeButton: Boolean
 		//		TRUE to show a small button on the filter bar for the user to close/hide the filter bar.
-		closeFilterBarButton: true,
+		closeButton: true,
 	
 		// defineFilterButton: Boolean
 		//		FALSE to hide the define filter button on the left side (right side for RTL) of the filter bar.
@@ -118,18 +119,16 @@ define([
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
-			this.closeFilterBarButton = this.arg('closeFilterBarButton') || this.closeFilterBarButton;
+			//For backward compatibility
+			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
+			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
 			
-			this.defineFilterButton = this.arg('defineFilterButton') || this.defineFilterButton;
-			this.tooltipDelay = this.arg('tooltipDelay') || this.tooltipDelay;
-			this.maxRuleCount = this.arg('maxRuleCount') || this.maxRuleCount;
-			this.ruleCountToConfirmClearFilter = this.arg('ruleCountToConfirmClearFilter') || this.ruleCountToConfirmClearFilter;
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, locale),
 				'class': 'gridxFilterBar'
 			});
 			parser.parse(this.domNode);
-			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.closeFilterBarButton);
+			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.arg('closeButton'));
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
 			this._nls = locale;
 			this._initWidgets();
@@ -194,7 +193,7 @@ define([
 		},
 		
 		confirmToExecute: function(callback, scope){
-			var max = this.ruleCountToConfirmClearFilter;
+			var max = this.arg('ruleCountToConfirmClearFilter');
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!this._cfmDlg){
 					this._cfmDlg = new FilterConfirmDialog();
@@ -253,10 +252,10 @@ define([
 			// summary:
 			//		Re-draw the filter bar if necessary with the current attributes.
 			// example:
-			//		grid.filterBar.closeFilterBarButton = true;
+			//		grid.filterBar.closeButton = true;
 			//		grid.filterBar.refresh();
-			this.btnClose.style.display = this.closeFilterBarButton ? '': 'none';
-			this.btnFilter.style.display = this.defineFilterButton ? '': 'none';
+			this.btnClose.style.display = this.closeButton ? '': 'none';
+			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
 		},
 		isVisible: function(){
 			return this.domNode.style.display != 'none';
@@ -392,7 +391,7 @@ define([
 				!this.filterData.conditions.length){return;}
 			if(!delayed){
 				this._pointTooltipDelay = window.setTimeout(lang.hitch(this, '_showTooltip', 
-					evt, true),this.tooltipDelay);
+					evt, true),this.arg('tooltipDelay'));
 				return;
 			}
 			this._tooltip.show(evt);

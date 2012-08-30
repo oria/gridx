@@ -1,9 +1,11 @@
-require([
+define([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar",
+	"gridx/modules/ColumnResizer"
 ], function(dataSource, storeFactory){
 
 	layout = [
@@ -20,6 +22,11 @@ require([
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 20
+		size: 10
 	});
+	emptyStore = storeFactory({
+		dataSource: dataSource, 
+		size: 0
+	});
+
 });

@@ -102,6 +102,8 @@ define([
 			}else if(right > scrollLeft + hNode.offsetWidth){
 				this.scroll(right - hNode.offsetWidth);
 			}
+			if(ltr)hNode.scrollLeft = 0;//force to 0, the header uses margin to scroll
+			else hNode.scrollLeft = hNode.scrollWidth - hNode.offsetWidth;
 		},
 		
 		refresh: function(){

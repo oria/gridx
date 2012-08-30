@@ -9,7 +9,7 @@ define([
 	"dojo/_base/sniff",
 	"dojo/keys",
 	"../core/_Module",
-	"../util",
+	"../core/util",
 	"dojo/i18n!../nls/Body"
 ], function(declare, query, array, lang, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
@@ -168,6 +168,11 @@ define([
 		//		Whether to stuff a cell with &nbsp; if it is empty.
 		stuffEmptyCell: true,
 
+		// renderWholeRowOnSet: Boolean
+		//		If true, the whole row will be re-rendered even if only one field has changed.
+		//		Default to false, so that only one cell will be re-rendered editing that cell.
+		renderWholeRowOnSet: false,
+
 		getRowNode: function(args){
 			// summary:
 			//		Get the DOM node of a row
@@ -211,7 +216,7 @@ define([
 				m = t.model,
 				g = t.grid,
 				id = args.rowId;
-			if(id){
+			if(m.isId(id)){
 				args.rowIndex = m.idToIndex(id);
 				args.parentId = m.parentId(id);
 			}
@@ -230,7 +235,7 @@ define([
 			}else{
 				return args;	//gridx.__RowCellInfo
 			}
-			args.rowId = id || m.indexToId(args.rowIndex, args.parentId);
+			args.rowId = m.isId(id) ? id : m.indexToId(args.rowIndex, args.parentId);
 			return args;	//gridx.__RowCellInfo
 		},
 	
@@ -678,7 +683,7 @@ define([
 					sb.push('gridxCellFocus');
 				}
 				sb.push(cls,
-					'" role="gridcell" tabindex="-1" colid="', col.id, 
+					'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
 					'" style="width: ', col.width,
 					'; ', style,
 					'">', t._buildCellContent(cell, isPadding),
@@ -766,14 +771,17 @@ define([
 					var curData = rowCache.data,
 						oldData = oldCache.data,
 						cols = g._columns,
+						renderWhole = t.arg('renderWholeRowOnSet'),
 						changedCols = [];
-					array.some(cols, function(col){
-						if(curData[col.id] !== oldData[col.id]){
-							changedCols.push(col);
-						}
-						return changedCols.length > 1;
-					});
-					if(changedCols.length > 1){
+					if(!renderWhole){
+						array.some(cols, function(col){
+							if(curData[col.id] !== oldData[col.id]){
+								changedCols.push(col);
+							}
+							return changedCols.length > 1;
+						});
+					}
+					if(renderWhole || changedCols.length > 1){
 						rowNode.innerHTML = t._buildCells(row);
 						t.onAfterRow(row);
 						t.onSet(row);

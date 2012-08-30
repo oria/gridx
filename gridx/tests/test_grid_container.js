@@ -1,45 +1,49 @@
-require([
+define([
 	'dojo/_base/array',
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
-
-	'dojo/number',
+	'gridx/tests/support/stores/Memory',
+	'gridx/modules/Focus',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/RowHeader',
+	'gridx/modules/IndirectSelect',
+	'gridx/modules/NestedSort',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/extendedSelect/Column',
+	'gridx/modules/extendedSelect/Cell',
+	'gridx/modules/filter/Filter',
+	'gridx/modules/filter/FilterBar',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBar',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/TabContainer',
 	'dijit/layout/AccordionContainer',
 	'dijit/layout/ContentPane',
 	'dojo/domReady!'
 ], function(array, Grid, Cache, dataSource, storeFactory, mods){
-//    window.store = storeFactory({
-//                dataSource: dataSource,
-//                size: 50
-//            });
-//    window.Cache = Cache;
 	var createGrid = function(){
 		return new Grid({
 			cacheClass: Cache,
 			store: storeFactory({
 				dataSource: dataSource,
-				size: 50
+				size: 10
 			}),
 			structure: dataSource.layouts[0],
 			//query: {Genre: 'E*'},
 			modules: [
-				mods.Focus,
-				mods.VirtualVScroller,
-				mods.RowHeader,
-				mods.IndirectSelect,
-				mods.NestedSort,
-				mods.ExtendedSelectRow,
-				mods.ExtendedSelectColumn,
-				mods.ExtendedSelectCell,
-				mods.Filter,	
-				mods.FilterBar,	
-				mods.Pagination,
-				mods.PaginationBar
+				'gridx/modules/Focus',
+				'gridx/modules/VirtualVScroller',
+				'gridx/modules/RowHeader',
+				'gridx/modules/IndirectSelect',
+				'gridx/modules/NestedSort',
+				'gridx/modules/extendedSelect/Row',
+				'gridx/modules/extendedSelect/Column',
+				'gridx/modules/extendedSelect/Cell',
+				'gridx/modules/filter/Filter',
+				'gridx/modules/filter/FilterBar',
+				'gridx/modules/pagination/Pagination',
+				'gridx/modules/pagination/PaginationBar'
 			]
 		});
 	};

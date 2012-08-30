@@ -3,7 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/store/Memory",
 	"./_PagerBase",
-	'../../util',
+	'../../core/util',
 	"dojo/text!../../templates/PaginationBarDD.html"
 ], function(declare, lang, Store, _PagerBase, util, barTemplate){
 

@@ -1,12 +1,22 @@
-require([
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
-	'gridx/tests/support/modules',
-	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, modules){
+	'gridx/modules/Focus',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/RowHeader',
+	'gridx/modules/IndirectSelect',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBar',
+	'gridx/modules/VirtualVScroller',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/select/Row'
+	
+], function(Grid, Cache, dataSource, storeFactory, TestPane, Focus, ColumnResizer,
+		RowHeader, IndirectSelect, Pagination, PaginationBar, VirtualVScroller, ExtendedSelectRow, SelectRow
+){
 
 	g = null;
 	createGrid = function(mods, title){
@@ -23,13 +33,13 @@ require([
 			}),
 			structure: dataSource.layouts[1],
 			modules: [
-				modules.Focus,
-				modules.ColumnResizer,
-				modules.RowHeader,
-				modules.IndirectSelect,
-				modules.Pagination,
-				modules.PaginationBar,
-				modules.VirtualVScroller
+				Focus,
+				ColumnResizer,
+				RowHeader,
+				IndirectSelect,
+				Pagination,
+				PaginationBar,
+				VirtualVScroller
 			].concat(mods) 
 		});
 		g.placeAt('gridContainer');
@@ -37,12 +47,12 @@ require([
 	};
 	
 	mods = [ 
-		[modules.ExtendedSelectRow],
-		[{moduleClass: modules.ExtendedSelectRow, triggerOnCell: true}],
-		[modules.SelectRow],
-		[{moduleClass: modules.SelectRow, triggerOnCell: true}],
-		[{moduleClass: modules.SelectRow, multiple: false}],
-		[{moduleClass: modules.SelectRow, multiple: false, triggerOnCell: true}]
+		[ExtendedSelectRow],
+		[{moduleClass: ExtendedSelectRow, triggerOnCell: true}],
+		[SelectRow],
+		[{moduleClass: SelectRow, triggerOnCell: true}],
+		[{moduleClass: SelectRow, multiple: false}],
+		[{moduleClass: SelectRow, multiple: false, triggerOnCell: true}]
 	];
 	
 	createGrid0 = function(){

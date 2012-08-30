@@ -17,10 +17,10 @@
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" 
 		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
-	<script type="text/javascript" src="../gridx-all.js"></script>
-	<script type="text/javascript" src="../dojo-dijit-deps-all.js"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script type="text/javascript" src='test_grid_tabcontainer.js'></script>
+	<script>
+		require(['gridx/tests/test_grid_tabcontainer']);
+	</script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
@@ -42,7 +42,7 @@
 				cacheClass: cache,
 				store: store,
 				structure: layout2,
-				modules: mods,
+				modules: mods
 			'></div>
 		</div>
 		<div data-dojo-type='dijit.layout.ContentPane' data-dojo-props='title: "Grid 3"'>
@@ -121,8 +121,8 @@
 		<div data-dojo-type='gridx.Grid' data-dojo-props='
 			cacheClass: cache,
 			store: store,
-			structure: layout2,
-			modules: mods,
+			structure: layout1,
+			modules: mods
 		'></div>
 	</div>
 </body>

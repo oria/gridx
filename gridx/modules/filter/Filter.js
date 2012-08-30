@@ -50,12 +50,12 @@ define([
 			if(checker != t._checker){
 				t._checker = checker;
 				if(t.arg('serverMode')){
-					m.query(t.setupFilterQuery(checker.expr));
+					m.query(t.setupFilterQuery(checker && checker.expr));
 				}else{
 					m.filter(checker);
-					if(!skipUpdateBody){
-						t.grid.body.refresh();
-					}
+				}
+				if(!skipUpdateBody){
+					t.grid.body.refresh();
 				}
 			}
 			//this.model.query({_filter: 'xxx'});//{_filter: 'xxx'});//checker.expr);

@@ -1,4 +1,4 @@
-require([
+define([
 	'dojo/_base/connect',
 	'dojo/_base/array',
 	'dojo/dom',
@@ -7,28 +7,35 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
-	'gridx/tests/support/modules',
+	'gridx/modules/Focus',
+	'gridx/modules/RowHeader',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/extendedSelect/Column',
+	'gridx/modules/extendedSelect/Cell',
+	'gridx/modules/VirtualVScroller',
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
-], function(connect, array, dom, Grid, Cache, dataSource, storeFactory, TestPane, modules){
+], function(connect, array, dom, Grid, Cache, dataSource, storeFactory, TestPane, Focus,
+		RowHeader, ColumnResizer, ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell, VirtualVScroller
+	){
 
-grid = new Grid({
+	grid = new Grid({
 	id: 'grid',
 	cacheClass: Cache,
 	store: storeFactory({
 		dataSource: dataSource,
-		size: 100
+		size: 200
 	}),
 	structure: dataSource.layouts[0],
 	modules: [
-		modules.Focus,
-		modules.RowHeader,
-		modules.ColumnResizer,
-//        modules.IndirectSelect,
-		modules.ExtendedSelectRow,
-		modules.ExtendedSelectColumn,
-		modules.ExtendedSelectCell,
-		modules.VirtualVScroller
+		Focus,
+		RowHeader,
+		ColumnResizer,
+		ExtendedSelectRow,
+		ExtendedSelectColumn,
+		ExtendedSelectCell,
+		VirtualVScroller
 	]
 });
 grid.placeAt('gridContainer');

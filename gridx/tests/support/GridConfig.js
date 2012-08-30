@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/array",
 	"dojo/_base/json",
 	'dijit/_Widget',
 	'dijit/_TemplatedMixin',
@@ -11,7 +12,7 @@ define([
 	"dijit/form/Select",
 	"dijit/form/NumberTextBox",
 	"./TestPane"
-], function(declare, json, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, template){
+], function(declare, array, json, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin, template){
 
 return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: template,
@@ -57,9 +58,59 @@ return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _Wid
 				this.connect(dijit.byId(this.getID('cbattr', attrName)), 'onChange', dojo.hitch(this, '_onChangeCheckBox', attrName, 'cbattr', this.gridAttrs[attrName]));
 			}
 			
+			var onChange = function(mods, modName){
+				t._onChangeCheckBox(modName, 'cb', mods);
+				t._requireDepends(mods, modName);
+			};
 			for(modName in this.modules){
-				this.connect(dijit.byId(this.getID('cb', modName)), 'onChange', dojo.hitch(this, '_onChangeCheckBox', modName, 'cb', this.modules[modName]));
+				var t = this;
+				var mods = t.modules[modName];
+				this.connect(dijit.byId(this.getID('cb', modName)), 'onChange', dojo.hitch(this, onChange, mods, modName));
 			}
+		}
+	},
+
+	_requireDepends: function(mods, mName){
+		var thisName;
+		var deps = [];
+		for(var implName in mods){
+			var mod = mods[implName];
+			var prot = mod.prototype;
+			var dep = (prot.forced || []).concat(prot.required || []);
+			thisName = prot.name;
+			deps = deps.concat(dep);
+		}
+		if(dijit.byId(this.getID('cb', mName)).get('checked')){
+			if(deps.length){
+				var res = [];
+				for(var modName in this.modules){
+					var m = this.modules[modName];
+					for(implName in m){
+						if(array.indexOf(deps, m[implName].prototype.name) >= 0){
+							res.push(modName);
+							break;
+						}
+					}
+				}
+				var t = this;
+				array.forEach(res, function(modName){
+					dijit.byId(t.getID('cb', modName)).set('checked', true);
+				});
+			}
+		}else{
+			var mods = [], modName;
+			for(modName in this.modules){
+				var mod = this.modules[modName];
+				if(dijit.byId(this.getID('cb', modName)).get('checked')){
+					var implName = dijit.byId(this.getID('select', modName)).get('value');
+					var prot = mod[implName].prototype;
+					var dep = (prot.forced || []).concat(prot.required || []);
+					if(array.indexOf(dep, thisName) >= 0){
+						dijit.byId(this.getID('cb', modName)).set('checked', false);
+					}
+				}
+			}
+
 		}
 	},
 

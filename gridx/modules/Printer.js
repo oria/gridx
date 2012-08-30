@@ -59,7 +59,7 @@ define([
 			doc.write(str);
 			doc.close();
 		};
-		if(!win.print){
+		if(!window.print){
 			console.warn('Print function is not available');
 			return;
 		}else if(sniff('chrome') || sniff('opera')){
@@ -67,7 +67,7 @@ define([
 			//In opera and chrome the iframe.contentWindow.print
 			//will also print the outside window. So we must create a
 			//stand-alone new window.
-			w = win.open("javascript:''", "",
+			w = window.open("javascript:''", "",
 				"status=0,menubar=0,location=0,toolbar=0,width=1,height=1,resizable=0,scrollbars=0");
 			fillDoc(w);
 			w.print();

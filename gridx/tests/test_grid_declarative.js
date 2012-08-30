@@ -1,9 +1,11 @@
-require([
+define([
 	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/modules',
+	'gridx/modules/CellWidget',
+	'gridx/modules/Edit',
+	'gridx/modules/VirtualVScroller',
 	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, modules){
 

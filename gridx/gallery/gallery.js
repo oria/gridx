@@ -16,7 +16,7 @@ require([
 			['Resize', 'test_grid_resize', 'resize.png', 'Resize the grid use the resize function.'],
 		0]],
 		['Plugins', [	
-			['Virtual Scrolling', 'demo_virtual_scrolling', 'virtualscroller.png', 'Lazy-render the grid body to speed up the whole rendering process and minimize memory usage. This is an useful alternative to pagination.'],						
+			['Virtual Scrolling', 'test_grid_virtualScroller', 'virtualscroller.png', 'Lazy-render the grid body to speed up the whole rendering process and minimize memory usage. This is an useful alternative to pagination.'],						
 			['Simple Select', 'test_grid_select', 'select.png', 'Basic but useful support for row selection, column selection and cell selection. Only select by ID. Not support selecting by index. Not support wrap selection.'],
 			['Single Sort', 'test_grid_singleSort', 'singlesort.png', 'Only one column is allowed to be sorted at any time.'],
 			['Nested Sort', 'test_grid_nestedSort', 'nestedsort.png', 'Multiple columns can be sorted in a nested way.'],

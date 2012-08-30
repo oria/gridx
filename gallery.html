@@ -1,0 +1,596 @@
+<html>
+<head>
+  <title>GridX</title>
+  <link rel="stylesheet" href="css/960/reset.css" />
+  <link rel="stylesheet" href="css/960/text.css" />
+  <link rel="stylesheet" href="css/960/960.css" />
+
+  <style>
+    body {
+      color: #666;
+      font-family: arial;
+      font-size: 12px;
+      background: url(images/header_bg.png) 0 0 repeat-x;
+      text-align: center;
+    }
+    div.container_12 {
+      text-align: left;
+    }
+    h2 {
+      font-size: 14px;
+      padding: 3px;
+      border-bottom: 1px solid #ddd;
+      margin: 0;
+    }
+    div{
+      
+      margin: 5px 0;
+    }
+    
+    ul,li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    
+    li {
+      padding: 3px;
+      
+    }
+    
+    li a {
+      color: #666;
+      text-decoration: none;
+    }
+    
+    .logo {
+    	padding: 20px 0 0 0;
+    	margin-top: 10px;
+    	margin-bottom: 40px;
+    }
+    
+    .search {
+      text-align: right;
+      margin-top:20px;
+    }
+    
+    .search input {
+      border: 1px solid #ddd;
+      width: 200px;
+      background: #fff url(images/icon_search.png) 178px 4px no-repeat;
+      color: #777;
+      padding: 3px;
+      border-radius: 3px;
+      
+    }
+    .menu {
+      text-align: right;
+      padding: 3px 0;
+      margin-top: 10px;
+    }
+    
+    .menu a {
+      font-size: 14px;
+      font-weight: bold;
+      color: #888;
+      text-decoration: none;
+      margin-left: 15px;
+      text-shadow: 1px 1px 1px #fff;
+    }
+    
+    .menu a.current
+    ,.menu a:hover {
+      color: #f90;
+    }
+
+    .summary {
+      margin-bottom: 20px;
+    }
+    .summary img {
+      margin: 30px;
+    }
+    
+    .button {
+    	font-size: 12px;
+    	color: #555;
+    	padding: 4px 16px;
+    	margin-right: 10px;
+    	cursor: pointer;
+    	text-decoration: none;
+    	
+    	/*From OneUI*/
+    	background-color: #F4F4F4;
+		background-image: -moz-linear-gradient(top, #F4F4F4, #DBDBDB);
+		background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#F4F4F4),to(#DBDBDB));
+		background-image: -webkit-linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
+		background-image: -o-linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
+		background-image: -ms-linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
+		background-image: linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
+		border: 1px solid #C3C3C3;
+		-moz-border-radius: 3px;
+		-webkit-border-radius: 3px;
+		border-radius: 3px;
+		-webkit-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
+		-moz-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
+		box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
+		text-shadow: 0px 1px 0px white;
+		font-weight: bold;
+    }
+    
+    .button:hover {
+		-webkit-transition-duration: 0.2s;
+		-moz-transition-duration: 0.2s;
+		transition-duration: 0.2s;
+		background-color: #E5E5E5;
+		background-image: -moz-linear-gradient(top, #FEFEFE, #CCC);
+		background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#FEFEFE),to(#CCC));
+		background-image: -webkit-linear-gradient(top, #FEFEFE 0%, #CCC 100%);
+		background-image: -o-linear-gradient(top, #FEFEFE 0%, #CCC 100%);
+		background-image: -ms-linear-gradient(top, #FEFEFE 0%, #CCC 100%);
+		background-image: linear-gradient(top, #FEFEFE 0%, #CCC 100%);
+		border: 1px solid -moz-linear-gradient(top, #FDFDFD, #E4E4E4);
+		border: 1px solid -webkit-gradient(linear,0% 0%,100% 100%,from(#FDFDFD),to(#E4E4E4));
+    }
+    
+    .button-demo {
+      background-color: #008ABF;
+	  background-image: -moz-linear-gradient(top, #008ABF, #085884);
+	  background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#008ABF),to(#085884));
+	  background-image: -webkit-linear-gradient(top, #008ABF 0%, #085884 100%);
+	  background-image: -o-linear-gradient(top, #008ABF 0%, #085884 100%);
+	  background-image: -ms-linear-gradient(top, #008ABF 0%, #085884 100%);
+	  background-image: linear-gradient(top, #008ABF 0%, #085884 100%);
+	  border: 1px solid #0A5F8E;
+	  color: white;
+	  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.35);
+    }
+    
+    .button-demo:hover {
+      background-color: #206B93;
+	  background-image: -moz-linear-gradient(top, #1A95C5, #206B93);
+	  background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#1A95C5),to(#206B93));
+	  background-image: -webkit-linear-gradient(top, #1A95C5 0%, #206B93 100%);
+	  background-image: -o-linear-gradient(top, #1A95C5 0%, #206B93 100%);
+	  background-image: -ms-linear-gradient(top, #1A95C5 0%, #206B93 100%);
+	  background-image: linear-gradient(top, #1A95C5 0%, #206B93 100%);
+    }
+    
+    
+    #gallery-nav {
+    	padding: 15px;
+    	background-color: #f3f3f3;
+    }
+    #gallery-nav li {
+      list-style: none;
+      margin-left: 0px;
+      color: #666;
+      font-weight: bold;
+    }
+    #gallery-nav .sub-nav {
+      margin-left: 15px;
+    }
+    #gallery-nav .sub-nav li {
+   		font-weight: normal
+    }
+    
+    #gallery-nav .sub-nav li a:hover {
+    	color: #f90;
+    }
+    
+    #gallery-list-header{
+    	padding: 5px;
+    }
+    .gallery-item {
+    	border-top: 1px solid #eee;
+    	padding: 10px;
+    	clear: both;
+    }
+    .gallery-item h4 {
+    	padding: 5px 5px 5px 0;
+    	margin: 0;
+    }
+    .gallery-item .description{
+    	line-height: 150%;
+    	margin-bottom: 20px;
+    	min-height: 60px;
+    }
+    .gallery-item img {
+    	float:right;
+    	margin: 10px;
+    	border: 1px solid #fff;
+    	-webkit-box-shadow: #999 3px 3px 3px;
+		-moz-box-shadow: #999 3px 3px 3px;
+		box-shadow: #999 3px 3px 3px;
+		width: 200px;
+    }
+    .gallery-item .button {
+    }
+    
+    .footer {
+      text-align: center;
+      border-top: 1px solid #ddd;
+      padding: 5px 0;
+      margin-top: 30px;
+      color: #999;
+      font-weight: bold;
+    }
+    
+    
+    .footer a{
+      margin: 10px;
+      color: #999;
+      text-decoration: none;
+    }
+    
+    .footer a.git-link {
+      color: #2175bc;
+    }
+    
+    .grid_3 {
+    
+    }
+    
+  </style>
+  
+  <style type="text/css">
+	
+  </style>
+  <script src="../dojo/dojo.js" djConfig="parseOnLoad:true, isDebug:true"></script>
+  <script>
+	require([
+		'dojo/domReady!'], function(){
+	});
+  </script>
+</head>
+
+<body>
+  <div class="container_12" style="background: none;">
+    <div class="grid_3 logo">
+      <img src="images/logo.png" alt="Gridx Logo"/>
+    </div>
+    <div class="grid_9">
+      <div class="search">
+      <form action="http://www.google.com/" method="get" target="_blank">
+        <input type="text" class="search-box" name="q" placeholder="Search" onkeydown="if(event.keyCode==13)this.form.submit();"/>
+        <input type="hidden" name="sitesearch" value="oria.github.com/gridx">
+      </form>
+      </div>
+      <div class="menu" id="navMenu">
+	    <a href="./index.html">Home</a>
+	    <a href="./demo.html">Demo</a>
+	    <a href="./playground.html">Playground</a>
+	    <a href="./gallery.html" class="current" >Gallery</a>
+	    <a href="https://github.com/oria/gridx/downloads">Downloads</a>
+	    <a href="https://github.com/oria/gridx/wiki">Documentation</a>
+      </div>
+    </div>
+    <div class="clear"></div>
+    
+    <div class="grid_3">
+    	<div id="gallery-nav">
+    		<ul>
+    			<li>Core Modules</li>
+    			<li>
+    				<ul class="sub-nav">
+    					
+					     <li><a href="#header">Header</a></li>
+					    
+					     <li><a href="#body">Body</a></li>
+					    
+					     <li><a href="#virtualScroller">Virtual Scroller</a></li>
+					    
+					     <li><a href="#hScroller">Horizontal Scroller</a></li>
+					    
+					     <li><a href="#columnResizer">Column Resizer</a></li>
+					    
+					     <li><a href="#singleSort">Single Sort</a></li>
+					    
+    				</ul>
+    			</li>
+    			<li>Basic Modules</li>
+    			<li>
+    				<ul class="sub-nav">
+    					
+					     <li><a href="#editableCell">Editable Cell</a></li>
+					    
+					     <li><a href="#pagination">Pagination</a></li>
+					    
+					     <li><a href="#simpleSelect">Simple Select</a></li>
+					    
+					     <li><a href="#indirectSelect">Indirect Select</a></li>
+					    
+					     <li><a href="#rowDnd">Row DnD</a></li>
+					    
+					     <li><a href="#columnDnd">Column DnD</a></li>
+					    
+					     <li><a href="#filter">Filter</a></li>
+					    
+					     <li><a href="#cellWidget">Cell Widgets</a></li>
+					    
+					     <li><a href="#menu">Menus</a></li>
+					    
+					     <li><a href="#persist">Persists</a></li>
+					    
+    				</ul>
+    			</li>
+    			<li>Advanced Modules</li>
+    			<li>
+    				<ul class="sub-nav">
+    					
+					    <li><a href="#export_print">Export/Print</a></li>
+					    
+					    <li><a href="#nestedSort">Nested Sort</a></li>
+					    
+					    <li><a href="#columnLock">Column Lock</a></li>
+					    
+					    <li><a href="#rowLock">Row Lock</a></li>
+					    
+					    <li><a href="#dod">Details on Demand</a></li>
+					    
+					    <li><a href="#extendedSelect">Extended Select</a></li>
+					    
+					    <li><a href="#treeGrid">Tree Grid</a></li>
+					    
+    				</ul>
+    			</li>
+    			
+    		</ul>
+    	</div>
+    </div>
+    <div class="grid_9">
+    	<div id="gallery-list-header">
+    		<img src="images/gallery_header.png"/>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="header"/>
+    		<img src="images/gallery/header.jpg"/>
+    		<h4>Header</h4>
+    		<div class="description">This module is in charge of the rendering of the grid header. But it should not manage column width, which is the responsibility of ColumnWidth module.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#header">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="body"/>
+    		<img src="images/gallery/body.jpg"/>
+    		<h4>Body</h4>
+    		<div class="description">This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, pagination, details on demand, and even tree structure.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#body">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="virtualScroller"/>
+    		<img src="images/gallery/virtualScroller.jpg"/>
+    		<h4>Virtual Scroller</h4>
+    		<div class="description">This module takes a DOMNode-based way to implement lazy-rendering.							It tries to remove all the DOMNodes that are out of the grid body viewport,							so that the DOMNodes in grid are always limited to a very small number.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#virtualScroller">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_virtualScroller.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="hScroller"/>
+    		<img src="images/gallery/hScroller.jpg"/>
+    		<h4>Horizontal Scroller</h4>
+    		<div class="description">This module provides basic horizontal scrolling for grid</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#hScroller">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="columnResizer"/>
+    		<img src="images/gallery/columnResizer.jpg"/>
+    		<h4>Column Resizer</h4>
+    		<div class="description">This module provides a way to resize column width. </div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#columnResizer">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_columnResizer.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="singleSort"/>
+    		<img src="images/gallery/singleSort.jpg"/>
+    		<h4>Single Sort</h4>
+    		<div class="description">This module provides the single column sorting functionality for grid.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#singleSort">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_singleSort.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="editableCell"/>
+    		<img src="images/gallery/editableCell.jpg"/>
+    		<h4>Editable Cell</h4>
+    		<div class="description">This module relies on an implementation of the CellWidget module.							The editing mode means there will be an editable widget appearing in the grid cell.							This implementation also covers &quot;alwaysEditing&quot; mode for grid columns,							which means all the cells in this column are always in editing mode.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#editableCell">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_edit.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="pagination"/>
+    		<img src="images/gallery/pagination.jpg"/>
+    		<h4>Pagination</h4>
+    		<div class="description">This module does not include any UI buttons for pagination, so that various							kinds of pagination UI implementations can benifit from this module.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#pagination">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_paginationBar.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="simpleSelect"/>
+    		<img src="images/gallery/simpleSelect.jpg"/>
+    		<h4>Simple Select</h4>
+    		<div class="description">There are three modules for simple row/column/cell select.			    			These modules only allow to select a single row/column/cell in one time.			    			If need multi select, use extendedSelect instead.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#simpleSelect">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_select.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="indirectSelect"/>
+    		<img src="images/gallery/indirectSelect.jpg"/>
+    		<h4>Indirect Select</h4>
+    		<div class="description">This module will check whether the SelectRow module provides the functionality 	        				 of &quot;select rows by index&quot; 							(which means the &quot;selectByIndex&quot; method exists). If so, a &quot;select all&quot; checkbox can be provided 							in the header node of the row header column.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#indirectSelect">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_indirectSelect.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="rowDnd"/>
+    		<img src="images/gallery/rowDnd.jpg"/>
+    		<h4>Row DnD</h4>
+    		<div class="description">This module provides an implementation of row drag &amp; drop. It supports row reordering within grid, dragging out of grid, and dragging into grid.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#rowDnd">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_dndrow_nongrid_source.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="columnDnd"/>
+    		<img src="images/gallery/columnDnd.jpg"/>
+    		<h4>Column DnD</h4>
+    		<div class="description">This module provides an implementation of column drag &amp; drop. It supports column reordering within grid, dragging out of grid, and dragging into grid.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#columnDnd">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_dnd_rearrange.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="filter"/>
+    		<img src="images/gallery/filter.jpg"/>
+    		<h4>Filter</h4>
+    		<div class="description">This module makes it possible for user to set arbitrary filter condition to grid. It is used by an UI module FilterBar which provides the interface to set filter rules.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#filter">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_filter.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="cellWidget"/>
+    		<img src="images/gallery/cellWidget.jpg"/>
+    		<h4>Cell Widgets</h4>
+    		<div class="description">Since widget declarations need to be parsed by dojo.parser, it can NOT be directly created by the decorator function. This module takes advantage of the _TemplatedMixin and the _WidgetInTemplateMixin so that users can write &quot;templates&quot; containing widgets in decorator function.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#cellWidget">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_cellWidget.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="menu"/>
+    		<img src="images/gallery/menu.jpg"/>
+    		<h4>Menus</h4>
+    		<div class="description">This module provides grid context menu. The context could be cell, column, row, header, body etc. All information is passed to menu actions by callback arguments</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#menu">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_menu.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="persist"/>
+    		<img src="images/gallery/persist.jpg"/>
+    		<h4>Persists</h4>
+    		<div class="description">Provide a mechanism to persist various grid features when the grid is destroyed, so that when a new grid with the same id (or the same persist key) is created, all these features will be restored.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#persist">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_persist.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="export_print"/>
+    		<img src="images/gallery/export_print.jpg"/>
+    		<h4>Export/Print</h4>
+    		<div class="description">This module provides the API to print grid contents or provide print preview</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#export_print">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_exporter.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="nestedSort"/>
+    		<img src="images/gallery/nestedSort.jpg"/>
+    		<h4>Nested Sort</h4>
+    		<div class="description">This module provides the UI to sort the grid by multi columns. Each column header shows a number indicating the sort order.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#nestedSort">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_nestedSort.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="columnLock"/>
+    		<img src="images/gallery/columnLock.jpg"/>
+    		<h4>Column Lock</h4>
+    		<div class="description">This module provides a way to lock consecutive leading columns.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#columnLock">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_columnLock.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="rowLock"/>
+    		<img src="images/gallery/rowLock.jpg"/>
+    		<h4>Row Lock</h4>
+    		<div class="description">This module allows consecutive top rows to be locked. It could only be used with sync vertical scroller.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#rowLock">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_rowLock.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="dod"/>
+    		<img src="images/gallery/dod.jpg"/>
+    		<h4>Details on Demand</h4>
+    		<div class="description">This module allows a row to be expanded to show details. An arrow is displayed in the first of each row and clicking it will toggle detail display.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#dod">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_dod.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="extendedSelect"/>
+    		<img src="images/gallery/extendedSelect.jpg"/>
+    		<h4>Extended Select</h4>
+    		<div class="description">This module provides the capability to select multi rows/columns</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#extendedSelect">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_extendedSelect.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
+    		<a name="treeGrid"/>
+    		<img src="images/gallery/treeGrid.jpg"/>
+    		<h4>Tree Grid</h4>
+    		<div class="description">This module is used for creation, destruction and management of the Tree Grid. There are two kind of Tree Grid: columnar or nested, it will be indicated by the argument `type`, and the layout of the TreeGrid will be defined by extended structure` argument.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#treeGrid">API Reference</a>
+    		<a class="button button-demo" href="gridx/demos/test_grid_tree.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	
+    </div>
+    <div class="clear"></div>
+    
+    <div class="grid_12 footer">
+  <div class="footer-menu">
+    <a href="index.html">Home</a>
+    <a href="./demo.html">Demo</a>
+    <a href="./playground.html">Playground</a>
+    <a href="https://github.com/oria/gridx/downloads">Downloads</a>
+	<a href="https://github.com/oria/gridx/wiki">Documentation</a>
+    <a href="license.html">License</a>
+    <a href="about.html">Contact</a>
+  </div>
+  @2012 <a href="#" class="git-link">http://github.com/oria/gridx</a>
+</div>
+<div class="clear"></div>
+    
+  </div>
+</body>
+
+</html>

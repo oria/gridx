@@ -1,4 +1,4 @@
-require([
+define([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'dojo/store/Memory',
@@ -18,7 +18,11 @@ require([
 	'dijit/ColorPalette',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/tests/support/modules'
+	'gridx/modules/Focus',
+	'gridx/modules/CellWidget',
+	'gridx/modules/Edit',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBar'
 ], function(dataSource, storeFactory, Memory, locale, TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
@@ -102,17 +106,34 @@ require([
 				props: 'store: fsStore, searchAttr: "id"'
 			}
 		},
-//		{ field: "Length", name:"Select", width: '100px', editable: true,
-//			//FIXME: this is still buggy, hard to set width
-//			editor: Select,
-//			editorArgs: {
-//				props: 'store: selectStore, labelAttr: "id"'
-//			}
-//		},
+		{ field: "Length", name:"Select", width: '100px', editable: true,
+			//FIXME: this is still buggy, hard to set width
+			editor: Select,
+			editorArgs: {
+				props: 'store: selectStore, labelAttr: "id"'
+			}
+		},
 		{ field: "Progress", name:"HorizontalSlider", width: '100px', editable: true,
 			editor: "dijit/form/HorizontalSlider",
 			editorArgs: {
 				props: 'minimum: 0, maximum: 1'
+			}
+		},
+		{ field: "Track", name:"Number Spinner", width: '100px', editable: true,
+			width: '50px',
+			editor: "dijit/form/NumberSpinner"
+		},
+		{ field: "Heard", name:"Check Box", width: '30px', editable: true,
+			editor: "dijit.form.CheckBox",
+			editorArgs: {
+				props: 'value: true'
+			}
+		},
+		{ field: "Heard", name:"ToggleButton", width: '100px', editable: true,
+			editor: "dijit.form.ToggleButton",
+			editorArgs: {
+				valueField: 'checked',
+				props: 'label: "Press me"'
 			}
 		},
 		{ field: "Download Date", name:"Calendar", width: '180px', editable: true,
@@ -144,23 +165,6 @@ require([
 			editor: TimeTextBox,
 			editorArgs: {
 				fromEditor: getTime
-			}
-		},		
-		{ field: "Track", name:"Number Spinner", width: '100px', editable: true,
-			width: '50px',
-			editor: "dijit/form/NumberSpinner"
-		},
-		{ field: "Heard", name:"Check Box", width: '30px', editable: true,
-			editor: "dijit.form.CheckBox",
-			editorArgs: {
-				props: 'value: true'
-			}
-		},
-		{ field: "Heard", name:"ToggleButton", width: '100px', editable: true,
-			editor: "dijit.form.ToggleButton",
-			editorArgs: {
-				valueField: 'checked',
-				props: 'label: "Press me"'
 			}
 		}
 	];

@@ -1,7 +1,6 @@
-require([
+define([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/modules',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
@@ -12,7 +11,12 @@ require([
 	'dijit/form/Button',
 	'dijit/form/CheckBox',
 	'dijit/form/DropDownButton',
-	'dijit/TooltipDialog'
+	'dijit/TooltipDialog',
+	"gridx/modules/Focus",
+	"gridx/modules/CellWidget",
+	"gridx/modules/ColumnResizer",
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar"
 ], function(dataSource, storeFactory){
 
 	store = storeFactory({
@@ -117,11 +121,47 @@ require([
 
 	layout2 = [
 		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Name", name:"Links",
+		{ field: "Name", name:"Buttons",
+			widgetsInCell: true,
 			navigable: true,
-			decorator: function(data){
+			decorator: function(){
 				return [
+					'<button data-dojo-type="dijit.form.Button" ',
+					'data-dojo-attach-point="btn1" ',
+					'data-dojo-props="onClick: function(){',
+						'alert(this.get(\'label\'));',
+					'}"></button>',
+					'<div data-dojo-type="dijit.form.DropDownButton" ',
+						'data-dojo-attach-point="btn2"',
+						'data-dojo-props="iconClass:\'dijitIconApplication\'">',
+						'<div data-dojo-type="dijit.TooltipDialog" data-dojo-attach-point="ttd">',
+							'hihi',
+						'</div>',
+					'</div>',
+					'<div data-dojo-type="dijit.form.ComboButton" ',
+						'data-dojo-attach-point="btn3" ',
+						'data-dojo-props="',
+							'optionsTitle:\'Save Options\',',
+							'iconClass:\'dijitIconFile\',',
+							'onClick:function(){ console.log(\'Clicked ComboButton\'); }',
+					'">',
+					'<div data-dojo-type="dijit.Menu">',
+					'<div data-dojo-type="dijit.MenuItem"',
+						'data-dojo-props="',
+							'iconClass:\'dijitEditorIcon dijitEditorIconSave\',',
+							'onClick:function(){ console.log(\'Save\'); }">',
+						'Save',
+					'</div>',
+					'<div data-dojo-type="dijit.MenuItem"',
+						'data-dojo-props="onClick:function(){ console.log(\'Save As\'); }">',
+						'Save As',
+					'</div></div></div>'
 				].join('');
+			},
+			setCellValue: function(data){
+				this.btn1.set('label', data);
+				this.btn2.set('label', data);
+				this.btn3.set('label', data);
 			}
 		}
 	];

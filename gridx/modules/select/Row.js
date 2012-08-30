@@ -47,7 +47,7 @@ define([
 			},
 
 			isSelected: function(){
-				return this.grid.select.row.isSelected(this.row.id);
+				return this.grid.select.row.isSelected(this.id);
 			}
 		},
 		
@@ -130,7 +130,11 @@ define([
 			t.model._spTypes.select = 1;
 			t.batchConnect(
 				[g, 'onRowMouseDown', function(e){
-					if(t.arg('triggerOnCell') || !e.columnId){
+					//Have to check whether we are on the 
+					if((t.arg('triggerOnCell') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
+						!e.columnId){
 						t._select(e.rowId, g._isCopyEvent(e));
 					}
 				}],
