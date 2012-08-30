@@ -12,6 +12,7 @@ define([
 	'./doh_selectRow',
 	'./doh_selectColumn',
 	'./doh_selectCell',
+	'./doh_pagination',
 	'./doh_moveColumn',
 	'./doh_cellWidget',
 	'./doh_edit',
@@ -28,6 +29,7 @@ define([
 	selectRow,
 	selectColumn,
 	selectCell,
+	pagination,
 	moveColumn,
 	cellWidget,
 	edit,
@@ -46,6 +48,7 @@ dummy){
 			selectRow,
 			selectColumn,
 			selectCell,
+			pagination,
 			moveColumn,
 			cellWidget,
 			edit
