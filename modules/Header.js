@@ -8,7 +8,7 @@ define([
 	"dojo/_base/query",
 	"dojo/_base/sniff",
 	"dojo/keys",
-	"../util",
+	"../core/util",
 	"../core/_Module"
 ], function(declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
@@ -175,6 +175,7 @@ define([
 				if(n.tagName.toLowerCase() == 'th'){
 					c = this.grid._columnsById[n.getAttribute('colid')];
 					if(c){
+						e.headerCellNode = n;
 						e.columnId = c.id;
 						e.columnIndex = c.index;
 					}

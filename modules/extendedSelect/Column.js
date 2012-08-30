@@ -49,7 +49,7 @@ define([
 				return this;
 			},
 			isSelected: function(){
-				return this.grid._columnsById[this.id]._selected;
+				return !!this.grid._columnsById[this.id]._selected;
 			}
 		},
 

@@ -255,7 +255,7 @@ define([
 			//		grid.filterBar.closeButton = true;
 			//		grid.filterBar.refresh();
 			this.btnClose.style.display = this.closeButton ? '': 'none';
-			this.btnFilter.style.display = this.arg('defineFilterButton') ? '': 'none';
+			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
 		},
 		isVisible: function(){
 			return this.domNode.style.display != 'none';

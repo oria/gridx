@@ -1,14 +1,16 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
+	"dojo/keys",
 	"../core/_Module",
-	"../util",
+	"../core/util",
 	"./RowHeader"
-], function(declare, array, query, lang, domClass, Deferred, _Module, util){
+], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util){
 
 	return declare(/*===== "gridx.modules.IndirectSelect", =====*/_Module, {
 		// summary:
@@ -42,6 +44,8 @@ define([
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[g, 'onRowMouseOver', '_onMouseOver'],
 				[g, 'onRowMouseOut', '_onMouseOut'],
+				[g, 'onRowKeyDown', '_onKeyDown'],
+				[g, 'onHeaderKeyDown', '_onKeyDown'],
 				focus && [focus, 'onFocusArea', function(name){
 					if(name == 'rowHeader'){
 						t._onMouseOver();
@@ -211,6 +215,14 @@ define([
 				onFocus: focus,
 				onBlur: blur
 			});
-		}
+		},
+		_onKeyDown: function(evt){
+			if(evt.keyCode == 65 && evt.ctrlKey && !evt.shiftKey){
+				if(!this._allSelected[this._getPageId()]){
+					this._onSelectAll();
+				}
+				event.stop(evt);
+			}
+		}		
 	});
 });
