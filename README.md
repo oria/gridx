@@ -2,7 +2,7 @@
 
 #### **A fast rendering, well modularized and plugin architecture based Grid.**
 
-Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset(e.g.[larger than millions of rows](http://oria.github.com/gridx/gridx/tests/test_grid_huge_data.html)).
+Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset(e.g.[larger than millions of rows]()).
 
 GridX is consisted of:
 
@@ -31,7 +31,7 @@ GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2
 
 * [Feature Coverage](https://docs.google.com/spreadsheet/pub?key=0AgR1KOpszcsZdF9ZbW5hWFdYUFAzdjdhZi1xcGMwUVE&gid=1)
 * [Module Compatibility Matrix](https://docs.google.com/spreadsheet/pub?key=0AgR1KOpszcsZdF9ZbW5hWFdYUFAzdjdhZi1xcGMwUVE&gid=0)
-* [Demo gallery](http://oria.github.com/gridx/gridx/gallery/gallery.html)
+* [Demo gallery]() (in progress)
 * [Benchmaks]() (in progress)
 * [Tutorial](https://github.com/oria/gridx/wiki/Introduction-to-Gridx) (in progress)
 * [API Doc](http://oria.github.com/gridx/doc/gridx.html) (in progress)
