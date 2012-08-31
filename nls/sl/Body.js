@@ -1,8 +1,6 @@
-define(
-({
+define({     
 	loadingInfo: "Nalaganje ...",
-	emptyInfo: "Ni postavk za prikaz",
+	emptyInfo: "Ni elementov za prikaz",
 	loadFailInfo: "Nalaganje podatkov ni uspelo!"
-})
-);
+});
 

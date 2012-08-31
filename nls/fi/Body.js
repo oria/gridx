@@ -1,8 +1,6 @@
-define(
-({
+define({     
 	loadingInfo: "Lataus on meneillään...",
-	emptyInfo: "Näytettäviä tietoja ei ole",
-	loadFailInfo: "Tietojen lataus ei onnistunut."
-})
-);
+	emptyInfo: "Ei näytettäviä objekteja",
+	loadFailInfo: "Tietojen lataus epäonnistui."
+});
 

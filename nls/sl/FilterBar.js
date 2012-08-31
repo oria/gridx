@@ -1,10 +1,10 @@
-define(
-({
+define({      
+//begin v1.x content
 	"clearFilterDialogTitle": "Počisti filter",
 	"filterDefDialogTitle": "Filter",
 	"defaultRuleTitle": "Pravilo",
 	"ruleTitleTemplate": "Pravilo ${ruleNumber}",
-	"noFilterApplied": "Filter ni uveljavljen.",
+	"noFilterApplied": "Uporabljen ni noben filter.",
 	"defineFilter": "Definiraj filter",
 	"conditionEqual": "je enako",
 	"conditionNotEqual": "ni enako",
@@ -25,7 +25,7 @@ define(
 	"conditionRange": "obseg",
 	"conditionIsEmpty": "je prazno",
 	"all": "vse",
-	"any": "karkoli",
+	"any": "kateri koli",
 	"relationAll": "vsa pravila",
 	"waiRelAll": "Ujema se z vsemi od naslednjih pravil:",
 	"relationAny": "katerakoli pravila",
@@ -38,7 +38,7 @@ define(
 	"waiAddRuleButton": "Dodaj novo pravilo",
 	"removeRuleButton": "Odstrani pravilo",
 	"waiRemoveRuleButtonTemplate": "Odstrani pravilo ${0}",
-	"addRuleButton": "Dodaj pravilo za filtriranje",
+	"addRuleButton": "Dodaj pravilo filtra",
 	"cancelButton": "Prekliči",
 	"waiCancelButton": "Prekliči to pogovorno okno",
 	"clearButton": "Počisti",
@@ -61,9 +61,9 @@ define(
 	"statusTipTitleNoFilter": "Vrstica za filtriranje",
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Ujemanje",
-	"statusTipRelPost": "pravila.",
-	"statusTipHeaderAll": "Ujema se z vsemi pravili.",
-	"statusTipHeaderAny": "Ujema se s katerimkoli pravilom.",
+	"statusTipRelPost": "pravil.",
+	"statusTipHeaderAll": "Ujemanje vseh pravil.",
+	"statusTipHeaderAny": "Ujemanje vseh pravil.",
 	"defaultItemsName": "postavke",
 	"filterBarMsgHasFilterTemplate": "Prikazanih je ${0} od ${1} ${2}.",
 	"filterBarMsgNoFilterTemplate": "Uveljavljen ni noben filter.",
@@ -77,13 +77,13 @@ define(
 	"anyColumnOption": "Katerikoli stolpec",
 	"trueLabel": "True",
 	"falseLabel": "False",
-	"radioTrueLabel": "Vrednost je true",
-	"radioFalseLabel": "Vrednost je false",
+	"radioTrueLabel": "Vrednost True",
+	"radioFalseLabel": "Vrednost False",
 	"beginTimeRangeLabel": "Začetek vrednosti časovnega obsega",
 	"endTimeRangeLabel": "Konec vrednosti časovnega obsega",
 	"beginDateRangeLabel": "Začetek vrednosti datumskega obsega",
 	"endDateRangeLabel": "Konec vrednosti datumskega obsega",
 	"startsWithExpr": "${0}*"
-})
-);
+//end v1.x content
+});
 

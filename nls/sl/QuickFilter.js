@@ -1,9 +1,7 @@
-define(
-({
+define({     
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Počisti filter',
-	buildFilterMenuLabel: 'Zgradi filter&hellip;',
-	apply: 'Uveljavi filter'
-})
-);
+	buildFilterMenuLabel: 'Ustvari filter&hellip;',
+	apply: 'Uporabi filter'
+});
 

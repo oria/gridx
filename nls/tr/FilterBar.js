@@ -1,5 +1,5 @@
-define(
-({
+define({      
+//begin v1.x content
 	"clearFilterDialogTitle": "Süzgeci Kaldır",
 	"filterDefDialogTitle": "Süzgeç",
 	"defaultRuleTitle": "Kural",
@@ -27,9 +27,9 @@ define(
 	"all": "tümü",
 	"any": "herhangi biri",
 	"relationAll": "tüm kurallar",
-	"waiRelAll": "Aşağıdaki kuralların tümüyle eşleştir:",
-	"relationAny": "kurallardan herhangi biri",
-	"waiRelAny": "Aşağıdaki kurallardan herhangi biriyle eşleştir:",
+	"waiRelAll": "Aşağıdaki tüm kurallarla eşleştir",
+	"relationAny": "kuralların herhangi biri",
+	"waiRelAny": "Aşağıdaki kuralların herhangi biri ile eşleştir",
 	"relationMsgFront": "Eşleştir",
 	"relationMsgTail": "",
 	"and": "ve",
@@ -61,8 +61,8 @@ define(
 	"statusTipTitleNoFilter": "Süzgeç Çubuğu",
 	"statusTipTitleHasFilter": "Süzgeç",
 	"statusTipRelPre": "Eşleştir",
-	"statusTipRelPost": "kurallar.",
-	"statusTipHeaderAll": "Bütün kuralları eşleştir.",
+	"statusTipRelPost": "kural.",
+	"statusTipHeaderAll": "Tüm kuralları eşleştir.",
 	"statusTipHeaderAny": "Herhangi bir kuralı eşleştir.",
 	"defaultItemsName": "öğe",
 	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} gösteriliyor.",
@@ -84,6 +84,6 @@ define(
 	"beginDateRangeLabel": "Tarih Aralığı Başlangıç Değeri",
 	"endDateRangeLabel": "Tarih Aralığı Bitiş Değeri",
 	"startsWithExpr": "${0}*"
-})
-);
+//end v1.x content
+});
 

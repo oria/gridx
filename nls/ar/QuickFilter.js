@@ -1,9 +1,7 @@
-define(
-({
-	filterLabel: '‏ترشيح البيانات‏',
+define({     
+	filterLabel: 'ترشيح البيانات',
 	clearButtonTitle: 'محو ترشيح البيانات',
 	buildFilterMenuLabel: 'بناء مرشح البيانات&hellip;',
-	apply: 'تطبيق ترشيح البيانات'
-})
-);
+	apply: 'تطبيق مرشح البيانات'
+});
 
