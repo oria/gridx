@@ -52,7 +52,14 @@ define([
 		//		cellWidget: CellWidget
 		//				A widget representing the whole cell. This is the container of the templateString returned by decorator.
 		//				So you can access any dojoAttachPoint from it (maybe your special dijit or node, and then set value for them).
-		setCellValue: null
+		setCellValue: null,
+		
+		// navigable: Boolean
+		//		On the mouse down event if navigable is true the widget will keep the focus else the focus will be given to the parent cell.
+		//		That mean, the navigable attribute should be true if the widgets requiring focus to work correctly, like dropdown, textbox ... 
+		//		consequently the parent cell will be never "selected".
+		navigable: false
+		
 	};
 	=====*/
 	
