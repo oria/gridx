@@ -122,7 +122,7 @@ define([
 			//For backward compatibility
 			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
 			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
-			
+			this._nls = nls;
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, nls),
 				'class': 'gridxFilterBar'
@@ -372,8 +372,9 @@ define([
 				return;
 			}
 			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
-				[this._currentSize, this._totalSize, 'items']) + 
-				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="Clear filter">Clear Filter</a>';
+				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
+				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + nls.filterBarClearButton + '">'
+					 + nls.filterBarClearButton + '</a>';
 			this._buildTooltip();
 		},
 		_buildTooltip: function(){
