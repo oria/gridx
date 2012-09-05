@@ -919,9 +919,9 @@ define([
 		},
 
 		_focusCell: function(evt, rowVisIdx, colIdx){
-			util.stopEvent(evt);
 			var t = this,
 				g = t.grid;
+			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
 			var colId = g._columns[colIdx].id,
@@ -960,12 +960,12 @@ define([
 
 		_moveFocus: function(rowStep, colStep, evt){
 			if(rowStep || colStep){
-				util.stopEvent(evt); //Prevent scrolling the whole page.
 				var r, c,
 					t = this,
 					g = t.grid, 
 					cols = g._columns,
 					vc = t.visualCount;
+				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
 				r = t._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
 				c = t._focusCellCol + colStep;

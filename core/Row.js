@@ -44,7 +44,7 @@ define([
 		},
 
 		parent: function(){
-			return this.grid.row(this.model.treePath(this.id).pop(), 1);	//gridx.core.Row
+			return this.grid.row(this.model.parentId(this.id), 1);	//gridx.core.Row
 		},
 
 		

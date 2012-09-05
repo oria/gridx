@@ -218,7 +218,7 @@ define([
 			var t = this, 
 				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
 				r = t._focusNode(n || query('th.gridxCell', t.domNode)[0]);
-			util.stopEvent(r && evt);
+			t.grid.focus.stopEvent(r && evt);
 			return r;
 		},
 		
@@ -264,7 +264,7 @@ define([
 			if(t._focusHeaderId && !evt.ctrlKey && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
-				util.stopEvent(evt);
+				g.focus.stopEvent(evt);
 				col = g._columnsById[t._focusHeaderId];
 				col = g._columns[col.index + delta];
 				if(col){

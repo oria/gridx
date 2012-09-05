@@ -236,8 +236,7 @@ define([
 					g.cellWidget.setCellDecorator(rowId, colId, 
 						t._getDecorator(colId), 
 						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
-							lang.partial(getTypeData, col))
-					);
+							lang.partial(getTypeData, col)));
 					t._record(rowId, colId);
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 						t._focusEditor(rowId, colId);
@@ -638,7 +637,7 @@ define([
 						return g._columns[c].editable;
 					};
 				body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-					util.stopEvent(evt);
+					g.focus.stopEvent(evt);
 					t._applyAll();
 					t._focusCellCol = g._columns[obj.c].id;
 					var rowInfo = body.getRowInfo({visualIndex: obj.r});
@@ -698,7 +697,7 @@ define([
 						});
 					}else if(g.focus.currentArea() == 'body'){
 						//If not doing this, some dijit, like DateTextBox/TimeTextBox will show validation error.
-						util.stopEvent(e);
+						g.focus.stopEvent(e);
 						t._onUIBegin(e);
 					}
 				}else if(e.keyCode == keys.ESCAPE && editing){

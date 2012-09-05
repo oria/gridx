@@ -310,7 +310,7 @@ define([
 
 		_doFocus: function(evt){
 			if(this._focusRow(this.grid.body._focusCellRow)){
-				util.stopEvent(evt);
+				this.grid.focus.stopEvent(evt);
 				return true;
 			}
 		},
@@ -351,7 +351,7 @@ define([
 			var t = this, g = t.grid;
 			if(g.focus.currentArea() == 'rowHeader' && 
 					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
-				util.stopEvent(evt);
+				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;

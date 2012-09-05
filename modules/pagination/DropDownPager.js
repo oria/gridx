@@ -127,7 +127,7 @@ define([
 					priority: fp,
 					focusNode: t._pageStepperContainer,
 					doFocus: function(evt){
-						util.stopEvent(evt);
+						focus.stopEvent(evt);
 						t._pageStepperSelect.focus();
 						return true;
 					}
@@ -137,7 +137,7 @@ define([
 					priority: fp + 0.001,
 					focusNode: t._sizeSwitchContainer,
 					doFocus: function(evt){
-						util.stopEvent(evt);
+						focus.stopEvent(evt);
 						t._sizeSwitchSelect.focus();
 						return true;
 					}

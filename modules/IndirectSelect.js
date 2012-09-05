@@ -197,7 +197,7 @@ define([
 				rowHeader = g.rowHeader,
 				headerCellNode = rowHeader.headerCellNode,
 				focus = function(evt){
-					util.stopEvent(evt);
+					g.focus.stopEvent(evt);
 					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
 					headerCellNode.focus();
 					return true;

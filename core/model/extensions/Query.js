@@ -9,7 +9,6 @@ define([
 		priority: 40,
 
 		constructor: function(model, args){
-			this.clear();
 			this._mixinAPI('query');
 			if(args.query){
 				this.query(args.query, args.queryOptions);
@@ -17,8 +16,6 @@ define([
 		},
 
 		//Public--------------------------------------------------------------
-		clear: function(){},
-
 		query: function(/* query, queryOptions */){
 			this.model._addCmd({
 				name: '_cmdQuery',

@@ -10,15 +10,31 @@ define([
 		mixin = lang.mixin,
 		indexOf = array.indexOf;
 
-	return declare(_Extension, {
-		
+	function _onBegin(size){
+		//Private function to be called in the scope of cache
+		this._size[''] = parseInt(size, 10);
+	}
 
+	function _onComplete(d, start, items){
+		//Private function to be called in the scope of cache
+		try{
+			var t = this, i = 0, item;
+			for(; item = items[i]; ++i){
+				t._addRow(t.store.getIdentity(item), start + i, t._itemToObject(item), item);
+			}
+			d.callback();
+		}catch(e){
+			d.errback(e);
+		}
+	}
+
+	return declare(_Extension, {
 		// summary:
 		//		Abstract base cache class, providing cache data structure and some common cache functions.
 		constructor: function(model, args){
 			var t = this;
 			t.setStore(args.store);
-			t.columns = args.columns;
+			t.columns = args._columnsById;
 			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'parentId',
 				'hasChildren', 'children', 'keep', 'free');
 		},
@@ -51,7 +67,7 @@ define([
 				t[c](store, old ? "onDelete" : "remove", "_onDelete");
 			}
 		},
-		
+
 		//Public----------------------------------------------
 		clear: function(){
 			var t = this;
@@ -64,27 +80,23 @@ define([
 			t._struct[''] = [];
 			t._size[''] = -1;
 		},
-		
-		
+
 		byIndex: function(index, parentId){
 			this._init('byIndex', arguments);
 			return this._cache[this.indexToId(index, parentId)];
 		},
 
-		
 		byId: function(id){
 			this._init('byId', arguments);
 			return this._cache[id];
 		},
 
-		
 		indexToId: function(index, parentId){
 			this._init('indexToId', arguments);
 			var items = this._struct[this.model.isId(parentId) ? parentId : ''];
 			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
 		},
 
-		
 		idToIndex: function(id){
 			this._init('idToIndex', arguments);
 			var s = this._struct,
@@ -93,7 +105,6 @@ define([
 			return index > 0 ? index - 1 : -1;
 		},
 
-		
 		treePath: function(id){
 			this._init('treePath', arguments);
 			var s = this._struct,
@@ -110,12 +121,10 @@ define([
 			return path;
 		},
 
-		
 		parentId: function(id){
 			return this.treePath(id).pop();
 		},
 
-		
 		hasChildren: function(id){
 			var t = this,
 				s = t.store,
@@ -124,20 +133,19 @@ define([
 			c = t.byId(id);
 			return s.hasChildren && s.hasChildren(id, c && c.item);
 		},
-		
-		
+
 		children: function(parentId){
 			this._init('children', arguments);
 			parentId = this.model.isId(parentId) ? parentId : '';
 			var size = this._size[parentId],
-				children = [];
-			for(var i = 0; i < size; ++i){
+				children = [],
+				i = 0;
+			for(; i < size; ++i){
 				children.push(this.indexToId(i, parentId));
 			}
 			return children;
 		},
 
-		
 		size: function(parentId){
 			this._init('size', arguments);
 			var s = this._size[this.model.isId(parentId) ? parentId : ''];
@@ -163,9 +171,9 @@ define([
 
 		//Protected-----------------------------------------
 		_itemToObject: function(item){
-			var s = this.store;
+			var s = this.store,
+				obj = {};
 			if(s.fetch){
-				var obj = {};
 				array.forEach(s.getAttributes(item), function(attr){
 					obj[attr] = s.getValue(item, attr);
 				});
@@ -187,7 +195,7 @@ define([
 			return res;
 		},
 
-		_addRow:function(id, index, rowData, item, parentId){
+		_addRow: function(id, index, rowData, item, parentId){
 			var t = this,
 				st = t._struct,
 				pr = t._priority,
@@ -237,22 +245,6 @@ define([
 			return d;
 		},
 
-		_onBegin: function(size){
-			this._size[''] = parseInt(size, 10);
-		},
-
-		_onComplete: function(d, start, items){
-			try{
-				var t = this, i = 0, item;
-				for(; item = items[i]; ++i){
-					t._addRow(t.store.getIdentity(item), start + i, t._itemToObject(item), item);
-				}
-				d.callback();
-			}catch(e){
-				d.errback(e);
-			}
-		},
-	
 		_storeFetch: function(options, onFetched){
 //            console.debug("\tFETCH start: ",
 //                    options.start, ", count: ",
@@ -264,8 +256,8 @@ define([
 				s = t.store,
 				d = new Deferred(),
 				req = mixin({}, t.options || {}, options),
-				onBegin = hitch(t, t._onBegin),
-				onComplete = hitch(t, t._onComplete, d, options.start),
+				onBegin = hitch(t, _onBegin),
+				onComplete = hitch(t, _onComplete, d, options.start),
 				onError = hitch(d, d.errback);
 			t._filled = 1;	//1 as true;
 			t.onBeforeFetch();
@@ -354,7 +346,7 @@ define([
 				}
 			}else{
 				t.onDelete(id);
-//                var onBegin = hitch(t, t._onBegin),
+//                var onBegin = hitch(t, _onBegin),
 //                    req = mixin({}, t.options || {}, {
 //                        start: 0,
 //                        count: 1
