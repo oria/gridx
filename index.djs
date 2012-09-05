@@ -295,18 +295,18 @@
 	}
 	
   </style>
-  <script src="dojo/dojo.js" djConfig="isDebug:true, parseOnLoad:true"></script>
   <script>
-	require([
-		'dojo/parser',
-		'dojox/widget/AutoRotator', 
-		'dojox/widget/rotator/Controller',
-		'dojox/widget/rotator/Fade',
-		'dojo/domReady!'], function(parser){
-		console.log('loaded.');
-		//parser.parse();
-		
-	});
+  var djConfig = {
+  	isDebug:true
+  	, async: true
+  	, parseOnLoad: true
+  	, packages:[{name: 'gridxSite', location: '..'}]
+  };
+  </script>
+  <script src="dojo/dojo.js"></script>
+  <script src="layers/index-layer.js"></script>
+  <script>
+	require(['gridxSite/layers/index']);
   </script>
 </head>
 

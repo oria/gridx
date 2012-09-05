@@ -1,0 +1,1580 @@
+Build started: Wed Sep 05 2012 17:37:09 GMT+0800 (China Standard Time)
+Build application version: 1.7.0dev (23930)
+Messages:
+info(100) Assumed module uses legacy loader API.
+	module: dojo/OpenAjax
+	module: dojo/_base/configFirefoxExtension
+	module: dojo/_base/configNode
+	module: dojo/_base/configRhino
+	module: dojo/_base/configSpidermonkey
+	module: dijit/themes/claro/compile
+	module: dojox/jq
+	module: dojox/rails
+	module: dojox/data/ItemExplorer
+	module: dojox/data/restListener
+	module: dojox/data/StoreExplorer
+	module: dojox/data/demos/stores/LazyLoadJSIStore
+	module: dojox/data/demos/widgets/FileView
+	module: dojox/data/demos/widgets/FlickrViewList
+	module: dojox/data/demos/widgets/PicasaView
+	module: dojox/data/demos/widgets/PicasaViewList
+	module: dojox/drawing/plugins/drawing/Silverlight
+	module: dojox/editor/plugins/ResizeTableColumn
+	module: dojox/editor/plugins/SpellCheck
+	module: dojox/flash/_base
+	module: dojox/help/console
+	module: dojox/help/_base
+	module: dojox/image/Gallery
+	module: dojox/image/SlideShow
+	module: dojox/image/ThumbnailPicker
+	module: dojox/jsonPath/query
+	module: dojox/lang/aspect
+	module: dojox/lang/async
+	module: dojox/lang/docs
+	module: dojox/lang/observable
+	module: dojox/lang/typed
+	module: dojox/lang/aspect/cflow
+	module: dojox/lang/aspect/counter
+	module: dojox/lang/aspect/memoizer
+	module: dojox/lang/aspect/memoizerGuard
+	module: dojox/lang/aspect/profiler
+	module: dojox/lang/aspect/timer
+	module: dojox/lang/aspect/tracer
+	module: dojox/lang/async/event
+	module: dojox/lang/async/timeout
+	module: dojox/lang/async/topic
+	module: dojox/lang/functional/binrec
+	module: dojox/lang/functional/curry
+	module: dojox/lang/functional/linrec
+	module: dojox/lang/functional/listcomp
+	module: dojox/lang/functional/multirec
+	module: dojox/lang/functional/numrec
+	module: dojox/lang/functional/tailrec
+	module: dojox/lang/functional/util
+	module: dojox/lang/functional/zip
+	module: dojox/lang/oo/aop
+	module: dojox/lang/oo/Decorator
+	module: dojox/lang/oo/Filter
+	module: dojox/lang/oo/general
+	module: dojox/lang/oo/mixin
+	module: dojox/lang/oo/rearrange
+	module: dojox/layout/BorderContainer
+	module: dojox/layout/dnd/Avatar
+	module: dojox/layout/dnd/PlottedDnd
+	module: dojox/layout/ext-dijit/layout/StackContainer-touch
+	module: dojox/mobile/app/AlertDialog
+	module: dojox/mobile/app/compat
+	module: dojox/mobile/app/ImageThumbView
+	module: dojox/mobile/app/ImageView
+	module: dojox/mobile/app/List
+	module: dojox/mobile/app/ListSelector
+	module: dojox/mobile/app/SceneAssistant
+	module: dojox/mobile/app/SceneController
+	module: dojox/mobile/app/StageController
+	module: dojox/mobile/app/TextBox
+	module: dojox/mobile/app/_base
+	module: dojox/mobile/app/_event
+	module: dojox/mobile/app/_FormWidget
+	module: dojox/mobile/app/_Widget
+	module: dojox/mobile/themes/common/compile
+	module: dojox/robot/recorder
+	module: dojox/secure/capability
+	module: dojox/secure/DOM
+	module: dojox/secure/fromJson
+	module: dojox/secure/sandbox
+	module: dojox/socket/Reconnect
+	module: dojox/sql/_base
+	module: dojox/sql/_crypto
+	module: dojox/storage/AirDBStorageProvider
+	module: dojox/storage/AirEncryptedLocalStorageProvider
+	module: dojox/storage/AirFileStorageProvider
+	module: dojox/storage/BehaviorStorageProvider
+	module: dojox/storage/CookieStorageProvider
+	module: dojox/storage/FlashStorageProvider
+	module: dojox/storage/GearsStorageProvider
+	module: dojox/storage/LocalStorageProvider
+	module: dojox/storage/manager
+	module: dojox/storage/Provider
+	module: dojox/storage/WhatWGStorageProvider
+	module: dojox/storage/_common
+	module: dojox/widget/AnalogGauge
+	module: dojox/widget/BarGauge
+	module: dojox/widget/DataPresentation
+	module: dojox/widget/DocTester
+	module: dojox/widget/DynamicTooltip
+	module: dojox/widget/FeedPortlet
+	module: dojox/widget/FilePicker
+	module: dojox/widget/Iterator
+	module: dojox/widget/Loader
+	module: dojox/widget/RollingList
+	module: dojox/widget/SortList
+	module: dojox/widget/gauge/AnalogArcIndicator
+	module: dojox/widget/gauge/AnalogArrowIndicator
+	module: dojox/widget/gauge/AnalogNeedleIndicator
+	module: dojox/widget/gauge/BarIndicator
+	module: dojox/widget/gauge/_Gauge
+	module: dojox/wire/CompositeWire
+	module: dojox/wire/DataWire
+	module: dojox/wire/TableAdapter
+	module: dojox/wire/TextAdapter
+	module: dojox/wire/TreeAdapter
+	module: dojox/wire/Wire
+	module: dojox/wire/XmlWire
+	module: dojox/wire/_base
+	module: dojox/wire/demos/TableContainer
+	module: dojox/wire/demos/WidgetRepeater
+	module: dojox/wire/ml/Action
+	module: dojox/wire/ml/Data
+	module: dojox/wire/ml/DataStore
+	module: dojox/wire/ml/Invocation
+	module: dojox/wire/ml/JsonHandler
+	module: dojox/wire/ml/RestHandler
+	module: dojox/wire/ml/Service
+	module: dojox/wire/ml/Transfer
+	module: dojox/wire/ml/util
+	module: dojox/wire/ml/XmlHandler
+	module: dojox/xmpp/bosh
+	module: dojox/xmpp/ChatService
+	module: dojox/xmpp/PresenceService
+	module: dojox/xmpp/RosterService
+	module: dojox/xmpp/sasl
+	module: dojox/xmpp/TransportSession
+	module: dojox/xmpp/UserService
+	module: dojox/xmpp/util
+	module: dojox/xmpp/xmppSession
+	module: dojox/xmpp/widget/ChatSession
+	module: siteLayers/demo-layer
+	module: gridx/tests/demo/ZeroClipboard
+	module: gridx/tests/doh/doh_extendedSelectCell
+	module: gridx/tests/doh/doh_extendedSelectColumn
+	module: gridx/tests/doh/doh_extendedSelectRow
+	module: gridx/tests/doh/doh_filter
+	module: gridx/tests/doh/doh_filterBar
+	module: gridx/tests/doh/doh_tree
+	module: gridx/tests/support/common
+	module: gridx/tests/support/DebugUtil
+	module: gridx/tests/support/stores/Observable
+	module: gridx/tests/support/stores/QueryReadStore
+	module: gridx/tests/support/stores/test_jsonRestStore
+	module: gridx/tests/support/stores/test_tree_jsonRestStore
+	module: gridx/util/build_demos
+	module: gridx/util/demos.profile.tpl
+info(103) Optimizing module complete.
+	E:/workspace/oria/gridx/layers/index-layer.js (compile time:4.208s)
+	E:/workspace/oria/gridx/layers/demo-layer.js (compile time:7.269s)
+info(104) Optimizer messages.
+	E:/workspace/oria/gridx/layers/index-layer.js:
+E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1018: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1200: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1528: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:6364: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 6 warning(s)
+Done (compile time:4.208s)
+E:/workspace/oria/gridx/layers/demo-layer.js:
+E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:1626: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:1954: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:5305: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:10508: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:13774: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:24329: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:28454: WARNING - unreachable code
+	return ret;
+	^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:36179: WARNING - If this if/for/while really shouldnt have a body, use {}
+		for(var top=this; top.parentMenu; top=top.parentMenu);
+		^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:40406: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
+			^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:40832: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
+	if (! 1 ){
+	         ^
+
+0 error(s), 12 warning(s)
+Done (compile time:7.269s)
+
+info(107) Package Version:
+	package: dojo; version: 1.8.0
+	package: dijit; version: 1.8.0
+	package: dojox; version: 1.8.0
+warn(202) AMD module specified and absolute module identifier that is not consistent with the configuration and filename
+	module: siteLayers/demo-layer.js.consoleStripped; specified: layers/demo-layer
+	module: siteLayers/demo-layer.js.uncompressed; specified: layers/demo-layer
+	module: siteLayers/index-layer.js.consoleStripped; specified: layers/index-layer
+	module: siteLayers/index-layer.js.uncompressed; specified: layers/index-layer
+	module: siteLayers/dojo/dojo.js.consoleStripped; specified: dojo/dojo
+	module: siteLayers/dojo/dojo.js.uncompressed; specified: dojo/dojo
+	module: gridx/tests/support/stores/MockServerStore; specified: gridx/tests/MockServerStore
+warn(203) Module tagged as pure AMD yet it contains legacy loader API applications.
+	module: dojo/dojo
+warn(205) Module not tagged as pure AMD yet it contains AMD API applications.
+	module: siteLayers/demo-layer.js.consoleStripped
+	module: siteLayers/demo-layer.js.uncompressed
+	module: siteLayers/demo
+	module: siteLayers/index-layer
+	module: siteLayers/index-layer.js.consoleStripped
+	module: siteLayers/index-layer.js.uncompressed
+	module: siteLayers/index
+	module: siteLayers/dojo/dojo.js.consoleStripped
+	module: siteLayers/dojo/dojo.js.uncompressed
+	module: gridx/allModules
+	module: gridx/Grid
+	module: gridx/build/test_grid_build
+	module: gridx/core/Cell
+	module: gridx/core/Column
+	module: gridx/core/Core
+	module: gridx/core/Row
+	module: gridx/core/util
+	module: gridx/core/_Module
+	module: gridx/core/model/Model
+	module: gridx/core/model/_Extension
+	module: gridx/core/model/cache/Async
+	module: gridx/core/model/cache/Sync
+	module: gridx/core/model/cache/_Cache
+	module: gridx/core/model/extensions/ClientFilter
+	module: gridx/core/model/extensions/FormatSort
+	module: gridx/core/model/extensions/Mark
+	module: gridx/core/model/extensions/Move
+	module: gridx/core/model/extensions/Query
+	module: gridx/core/model/extensions/Sort
+	module: gridx/gallery/gallery
+	module: gridx/mobile/Grid
+	module: gridx/mobile/LazyLoad
+	module: gridx/mobile/PullRefresh
+	module: gridx/mobile/Sort
+	module: gridx/mobile/StoreObserver
+	module: gridx/mobile/nls/PullRefresh
+	module: gridx/mobile/tests/support/chart-theme
+	module: gridx/mobile/tests/support/data
+	module: gridx/modules/AutoScroll
+	module: gridx/modules/Bar
+	module: gridx/modules/Body
+	module: gridx/modules/CellWidget
+	module: gridx/modules/ColumnLock
+	module: gridx/modules/ColumnResizer
+	module: gridx/modules/ColumnWidth
+	module: gridx/modules/Dod
+	module: gridx/modules/Edit
+	module: gridx/modules/Focus
+	module: gridx/modules/Header
+	module: gridx/modules/HLayout
+	module: gridx/modules/HScroller
+	module: gridx/modules/IndirectSelect
+	module: gridx/modules/Menu
+	module: gridx/modules/NestedSort
+	module: gridx/modules/Persist
+	module: gridx/modules/Printer
+	module: gridx/modules/Rotater
+	module: gridx/modules/RowHeader
+	module: gridx/modules/RowLock
+	module: gridx/modules/SingleSort
+	module: gridx/modules/SummaryBar
+	module: gridx/modules/TitleBar
+	module: gridx/modules/ToolBar
+	module: gridx/modules/TouchVScroller
+	module: gridx/modules/Tree
+	module: gridx/modules/VirtualVScroller
+	module: gridx/modules/VLayout
+	module: gridx/modules/VScroller
+	module: gridx/modules/barPlugins/DropDownPager
+	module: gridx/modules/barPlugins/DropDownSizer
+	module: gridx/modules/barPlugins/GotoPageButton
+	module: gridx/modules/barPlugins/GotoPagePane
+	module: gridx/modules/barPlugins/LinkPager
+	module: gridx/modules/barPlugins/LinkSizer
+	module: gridx/modules/barPlugins/QuickFilter
+	module: gridx/modules/barPlugins/Summary
+	module: gridx/modules/barPlugins/_LinkPageBase
+	module: gridx/modules/dnd/Avatar
+	module: gridx/modules/dnd/Column
+	module: gridx/modules/dnd/Row
+	module: gridx/modules/dnd/_Base
+	module: gridx/modules/dnd/_Dnd
+	module: gridx/modules/exporter/CSV
+	module: gridx/modules/exporter/Exporter
+	module: gridx/modules/exporter/Table
+	module: gridx/modules/extendedSelect/Cell
+	module: gridx/modules/extendedSelect/Column
+	module: gridx/modules/extendedSelect/Row
+	module: gridx/modules/extendedSelect/_Base
+	module: gridx/modules/extendedSelect/_RowCellBase
+	module: gridx/modules/filter/DistinctComboBoxMenu
+	module: gridx/modules/filter/Filter
+	module: gridx/modules/filter/FilterBar
+	module: gridx/modules/filter/FilterConfirmDialog
+	module: gridx/modules/filter/FilterDialog
+	module: gridx/modules/filter/FilterPane
+	module: gridx/modules/filter/FilterTooltip
+	module: gridx/modules/move/Column
+	module: gridx/modules/move/Row
+	module: gridx/modules/pagination/DropDownPager
+	module: gridx/modules/pagination/GotoPagePane
+	module: gridx/modules/pagination/LinkPager
+	module: gridx/modules/pagination/Pagination
+	module: gridx/modules/pagination/PaginationBar
+	module: gridx/modules/pagination/PaginationBarDD
+	module: gridx/modules/pagination/_PagerBase
+	module: gridx/modules/pagination/_PaginationBarBase
+	module: gridx/modules/select/Cell
+	module: gridx/modules/select/Column
+	module: gridx/modules/select/Row
+	module: gridx/modules/select/_Base
+	module: gridx/modules/select/_RowCellBase
+	module: gridx/nls/Body
+	module: gridx/nls/FilterBar
+	module: gridx/nls/NestedSort
+	module: gridx/nls/PaginationBar
+	module: gridx/nls/QuickFilter
+	module: gridx/nls/SummaryBar
+	module: gridx/nls/ar/Body
+	module: gridx/nls/ar/FilterBar
+	module: gridx/nls/ar/NestedSort
+	module: gridx/nls/ar/PaginationBar
+	module: gridx/nls/ar/QuickFilter
+	module: gridx/nls/ar/SummaryBar
+	module: gridx/nls/ca/Body
+	module: gridx/nls/ca/FilterBar
+	module: gridx/nls/ca/NestedSort
+	module: gridx/nls/ca/PaginationBar
+	module: gridx/nls/ca/QuickFilter
+	module: gridx/nls/ca/SummaryBar
+	module: gridx/nls/cs/Body
+	module: gridx/nls/cs/FilterBar
+	module: gridx/nls/cs/NestedSort
+	module: gridx/nls/cs/PaginationBar
+	module: gridx/nls/cs/QuickFilter
+	module: gridx/nls/cs/SummaryBar
+	module: gridx/nls/da/Body
+	module: gridx/nls/da/FilterBar
+	module: gridx/nls/da/NestedSort
+	module: gridx/nls/da/PaginationBar
+	module: gridx/nls/da/QuickFilter
+	module: gridx/nls/da/SummaryBar
+	module: gridx/nls/de/Body
+	module: gridx/nls/de/FilterBar
+	module: gridx/nls/de/NestedSort
+	module: gridx/nls/de/PaginationBar
+	module: gridx/nls/de/QuickFilter
+	module: gridx/nls/de/SummaryBar
+	module: gridx/nls/el/Body
+	module: gridx/nls/el/FilterBar
+	module: gridx/nls/el/NestedSort
+	module: gridx/nls/el/PaginationBar
+	module: gridx/nls/el/QuickFilter
+	module: gridx/nls/el/SummaryBar
+	module: gridx/nls/es/Body
+	module: gridx/nls/es/FilterBar
+	module: gridx/nls/es/NestedSort
+	module: gridx/nls/es/PaginationBar
+	module: gridx/nls/es/QuickFilter
+	module: gridx/nls/es/SummaryBar
+	module: gridx/nls/fi/Body
+	module: gridx/nls/fi/FilterBar
+	module: gridx/nls/fi/NestedSort
+	module: gridx/nls/fi/PaginationBar
+	module: gridx/nls/fi/QuickFilter
+	module: gridx/nls/fi/SummaryBar
+	module: gridx/nls/fr/Body
+	module: gridx/nls/fr/FilterBar
+	module: gridx/nls/fr/NestedSort
+	module: gridx/nls/fr/PaginationBar
+	module: gridx/nls/fr/QuickFilter
+	module: gridx/nls/fr/SummaryBar
+	module: gridx/nls/he/Body
+	module: gridx/nls/he/FilterBar
+	module: gridx/nls/he/NestedSort
+	module: gridx/nls/he/PaginationBar
+	module: gridx/nls/he/QuickFilter
+	module: gridx/nls/he/SummaryBar
+	module: gridx/nls/hr/Body
+	module: gridx/nls/hr/FilterBar
+	module: gridx/nls/hr/NestedSort
+	module: gridx/nls/hr/PaginationBar
+	module: gridx/nls/hr/QuickFilter
+	module: gridx/nls/hr/SummaryBar
+	module: gridx/nls/hu/Body
+	module: gridx/nls/hu/FilterBar
+	module: gridx/nls/hu/NestedSort
+	module: gridx/nls/hu/PaginationBar
+	module: gridx/nls/hu/QuickFilter
+	module: gridx/nls/hu/SummaryBar
+	module: gridx/nls/it/Body
+	module: gridx/nls/it/FilterBar
+	module: gridx/nls/it/NestedSort
+	module: gridx/nls/it/PaginationBar
+	module: gridx/nls/it/QuickFilter
+	module: gridx/nls/it/SummaryBar
+	module: gridx/nls/ja/Body
+	module: gridx/nls/ja/FilterBar
+	module: gridx/nls/ja/NestedSort
+	module: gridx/nls/ja/PaginationBar
+	module: gridx/nls/ja/QuickFilter
+	module: gridx/nls/ja/SummaryBar
+	module: gridx/nls/kk/Body
+	module: gridx/nls/kk/FilterBar
+	module: gridx/nls/kk/NestedSort
+	module: gridx/nls/kk/PaginationBar
+	module: gridx/nls/kk/QuickFilter
+	module: gridx/nls/kk/SummaryBar
+	module: gridx/nls/ko/Body
+	module: gridx/nls/ko/FilterBar
+	module: gridx/nls/ko/NestedSort
+	module: gridx/nls/ko/PaginationBar
+	module: gridx/nls/ko/QuickFilter
+	module: gridx/nls/ko/SummaryBar
+	module: gridx/nls/nb/Body
+	module: gridx/nls/nb/FilterBar
+	module: gridx/nls/nb/NestedSort
+	module: gridx/nls/nb/PaginationBar
+	module: gridx/nls/nb/QuickFilter
+	module: gridx/nls/nb/SummaryBar
+	module: gridx/nls/nl/Body
+	module: gridx/nls/nl/FilterBar
+	module: gridx/nls/nl/NestedSort
+	module: gridx/nls/nl/PaginationBar
+	module: gridx/nls/nl/QuickFilter
+	module: gridx/nls/nl/SummaryBar
+	module: gridx/nls/pl/Body
+	module: gridx/nls/pl/FilterBar
+	module: gridx/nls/pl/NestedSort
+	module: gridx/nls/pl/PaginationBar
+	module: gridx/nls/pl/QuickFilter
+	module: gridx/nls/pl/SummaryBar
+	module: gridx/nls/pt/Body
+	module: gridx/nls/pt/FilterBar
+	module: gridx/nls/pt/NestedSort
+	module: gridx/nls/pt/PaginationBar
+	module: gridx/nls/pt/QuickFilter
+	module: gridx/nls/pt/SummaryBar
+	module: gridx/nls/pt-br/Body
+	module: gridx/nls/pt-br/FilterBar
+	module: gridx/nls/pt-br/NestedSort
+	module: gridx/nls/pt-br/NestedSorting
+	module: gridx/nls/pt-br/PaginationBar
+	module: gridx/nls/pt-br/QuickFilter
+	module: gridx/nls/pt-br/SummaryBar
+	module: gridx/nls/pt-pt/Body
+	module: gridx/nls/pt-pt/FilterBar
+	module: gridx/nls/pt-pt/NestedSort
+	module: gridx/nls/pt-pt/PaginationBar
+	module: gridx/nls/pt-pt/QuickFilter
+	module: gridx/nls/pt-pt/SummaryBar
+	module: gridx/nls/ro/Body
+	module: gridx/nls/ro/FilterBar
+	module: gridx/nls/ro/NestedSort
+	module: gridx/nls/ro/PaginationBar
+	module: gridx/nls/ro/QuickFilter
+	module: gridx/nls/ro/SummaryBar
+	module: gridx/nls/ru/Body
+	module: gridx/nls/ru/FilterBar
+	module: gridx/nls/ru/NestedSort
+	module: gridx/nls/ru/PaginationBar
+	module: gridx/nls/ru/QuickFilter
+	module: gridx/nls/ru/SummaryBar
+	module: gridx/nls/sk/Body
+	module: gridx/nls/sk/FilterBar
+	module: gridx/nls/sk/NestedSort
+	module: gridx/nls/sk/PaginationBar
+	module: gridx/nls/sk/QuickFilter
+	module: gridx/nls/sk/SummaryBar
+	module: gridx/nls/sl/Body
+	module: gridx/nls/sl/FilterBar
+	module: gridx/nls/sl/NestedSort
+	module: gridx/nls/sl/PaginationBar
+	module: gridx/nls/sl/QuickFilter
+	module: gridx/nls/sl/SummaryBar
+	module: gridx/nls/sv/Body
+	module: gridx/nls/sv/FilterBar
+	module: gridx/nls/sv/NestedSort
+	module: gridx/nls/sv/PaginationBar
+	module: gridx/nls/sv/QuickFilter
+	module: gridx/nls/sv/SummaryBar
+	module: gridx/nls/th/Body
+	module: gridx/nls/th/FilterBar
+	module: gridx/nls/th/NestedSort
+	module: gridx/nls/th/PaginationBar
+	module: gridx/nls/th/QuickFilter
+	module: gridx/nls/th/SummaryBar
+	module: gridx/nls/tr/Body
+	module: gridx/nls/tr/FilterBar
+	module: gridx/nls/tr/NestedSort
+	module: gridx/nls/tr/PaginationBar
+	module: gridx/nls/tr/QuickFilter
+	module: gridx/nls/tr/SummaryBar
+	module: gridx/nls/zh/Body
+	module: gridx/nls/zh/FilterBar
+	module: gridx/nls/zh/NestedSort
+	module: gridx/nls/zh/PaginationBar
+	module: gridx/nls/zh/QuickFilter
+	module: gridx/nls/zh/SummaryBar
+	module: gridx/nls/zh-tw/Body
+	module: gridx/nls/zh-tw/FilterBar
+	module: gridx/nls/zh-tw/NestedSort
+	module: gridx/nls/zh-tw/PaginationBar
+	module: gridx/nls/zh-tw/QuickFilter
+	module: gridx/nls/zh-tw/SummaryBar
+	module: gridx/tests/demo_grid
+	module: gridx/tests/demo_mini_grid
+	module: gridx/tests/demo_mobile_grid
+	module: gridx/tests/test_datagrid_compatible
+	module: gridx/tests/test_grid
+	module: gridx/tests/test_grid_addRow
+	module: gridx/tests/test_grid_alwaysEditing
+	module: gridx/tests/test_grid_autoHeight_autoWidth
+	module: gridx/tests/test_grid_autoHideVScroller
+	module: gridx/tests/test_grid_bar
+	module: gridx/tests/test_grid_cellWidget
+	module: gridx/tests/test_grid_columnLock
+	module: gridx/tests/test_grid_columnResizer
+	module: gridx/tests/test_grid_columnwidth
+	module: gridx/tests/test_grid_container
+	module: gridx/tests/test_grid_customStyleCell
+	module: gridx/tests/test_grid_declarative
+	module: gridx/tests/test_grid_dndcolumn_nongrid_target
+	module: gridx/tests/test_grid_dndrow_betweengrids
+	module: gridx/tests/test_grid_dndrow_nongrid_source
+	module: gridx/tests/test_grid_dndrow_nongrid_target
+	module: gridx/tests/test_grid_dnd_rearrange
+	module: gridx/tests/test_grid_dod
+	module: gridx/tests/test_grid_edit
+	module: gridx/tests/test_grid_edit_custom
+	module: gridx/tests/test_grid_events
+	module: gridx/tests/test_grid_exporter
+	module: gridx/tests/test_grid_extendedSelect
+	module: gridx/tests/test_grid_filter
+	module: gridx/tests/test_grid_header_hidden
+	module: gridx/tests/test_grid_huge_data
+	module: gridx/tests/test_grid_indirectSelect
+	module: gridx/tests/test_grid_menu
+	module: gridx/tests/test_grid_nestedSort
+	module: gridx/tests/test_grid_pagination
+	module: gridx/tests/test_grid_paginationBar
+	module: gridx/tests/test_grid_paginationBarDD
+	module: gridx/tests/test_grid_persist
+	module: gridx/tests/test_grid_printer
+	module: gridx/tests/test_grid_resize
+	module: gridx/tests/test_grid_rowHeader
+	module: gridx/tests/test_grid_rowLock
+	module: gridx/tests/test_grid_select
+	module: gridx/tests/test_grid_singleSort
+	module: gridx/tests/test_grid_summaryBar
+	module: gridx/tests/test_grid_tabcontainer
+	module: gridx/tests/test_grid_titlebar
+	module: gridx/tests/test_grid_toolbar
+	module: gridx/tests/test_grid_tree
+	module: gridx/tests/test_grid_tree_nested
+	module: gridx/tests/test_grid_virtualScroller
+	module: gridx/tests/test_grid_windowresize
+	module: gridx/tests/demo/demo
+	module: gridx/tests/demo/playground
+	module: gridx/tests/demo/util/attrs
+	module: gridx/tests/demo/util/ColumnBar
+	module: gridx/tests/demo/util/data
+	module: gridx/tests/demo/util/modules
+	module: gridx/tests/doh/doh_body
+	module: gridx/tests/doh/doh_cellWidget
+	module: gridx/tests/doh/doh_columnLock
+	module: gridx/tests/doh/doh_columnResizer
+	module: gridx/tests/doh/doh_core
+	module: gridx/tests/doh/doh_edit
+	module: gridx/tests/doh/doh_header
+	module: gridx/tests/doh/doh_hScroller
+	module: gridx/tests/doh/doh_moveColumn
+	module: gridx/tests/doh/doh_moveRow
+	module: gridx/tests/doh/doh_nestedSort
+	module: gridx/tests/doh/doh_pagination
+	module: gridx/tests/doh/doh_selectCell
+	module: gridx/tests/doh/doh_selectColumn
+	module: gridx/tests/doh/doh_selectRow
+	module: gridx/tests/doh/doh_singleSort
+	module: gridx/tests/doh/doh_vScroller
+	module: gridx/tests/doh/gdoh
+	module: gridx/tests/doh/module
+	module: gridx/tests/doh/test_all
+	module: gridx/tests/support/GridConfig
+	module: gridx/tests/support/modules
+	module: gridx/tests/support/TestPane
+	module: gridx/tests/support/XQueryReadStore
+	module: gridx/tests/support/data/ComputerData
+	module: gridx/tests/support/data/ElaineMusicData
+	module: gridx/tests/support/data/MusicData
+	module: gridx/tests/support/data/TestData
+	module: gridx/tests/support/data/TreeColumnarTestData
+	module: gridx/tests/support/data/TreeCountryData
+	module: gridx/tests/support/data/TreeNestedTestData
+	module: gridx/tests/support/stores/HugeStore
+	module: gridx/tests/support/stores/ItemFileWriteStore
+	module: gridx/tests/support/stores/JsonRest
+	module: gridx/tests/support/stores/JsonRestStore
+	module: gridx/tests/support/stores/Memory
+	module: gridx/tests/support/stores/MockServerStore
+	module: gridx/tests/support/stores/TreeJsonRestStore
+warn(209) Missing or empty package.json.
+	filename: E:/workspace/oria/gridx/layers/package.json
+warn(216) dojo/has plugin resource could not be resolved during build-time.
+	plugin resource id: dojo-firebug?./_firebug/firebug; reference module id: dojo/main
+	plugin resource id: dom-addeventlistener?:./aspect; reference module id: dojo/on
+	plugin resource id: host-browser?dom-addeventlistener?:../on:; reference module id: dojo/request/watch
+	plugin resource id: dojo-parser?:dojo/_base/window; reference module id: dojox/mvc/parserExtension
+	plugin resource id: dojo-mobile-parser?:dojo/parser; reference module id: dojox/mvc/parserExtension
+	plugin resource id: dojo-parser?:dojox/mobile/parser; reference module id: dojox/mvc/parserExtension
+	plugin resource id: touch?dojox/gesture/tap; reference module id: dojox/treemap/DrillDownUp
+warn(224) A plugin dependency was encountered but there was no build-time plugin resolver.
+	module: dojo/request; plugin: dojo/request/default
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/registry; plugin: dojo/request/default
+	module: dojox/mobile/DatePicker; plugin: dojox/mobile/_PickerChooser
+	module: dojox/mobile/TimePicker; plugin: dojox/mobile/_PickerChooser
+warn(226) A package without a profile could throw errors or warnings.
+	package: gridx
+error(311) Missing dependency.
+	module: dojo/robot; dependency: doh/_browserRunner
+	module: dojo/robot; dependency: doh/robot
+	module: dojo/robotx; dependency: doh/main
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/declare
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./util/QueryResults
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./util/SimpleQueryEngine
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./config
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../sniff
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/array; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/lang; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/Deferred; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../Deferred
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../promise/Promise
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../errors/CancelError
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../when
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./errors/CancelError
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./promise/Promise
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./promise/instrumentation
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./create
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./tracer
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/array
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./Promise
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../Evented
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./aspect
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./on
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has!dom-addeventlistener?:./aspect
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./Deferred
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./promise/Promise
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/array; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../dom
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../sniff
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/array
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/window
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/window
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../sniff
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/declare
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./util/QueryResults
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./util/SimpleQueryEngine
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./config
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../sniff
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/array; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/lang; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/Deferred; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../Deferred
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../promise/Promise
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../errors/CancelError
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../when
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./errors/CancelError
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./promise/Promise
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./promise/instrumentation
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./create
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./tracer
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/array
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./Promise
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../Evented
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./aspect
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./on
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has!dom-addeventlistener?:./aspect
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./Deferred
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./promise/Promise
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/array; error: Error: irrationalPath
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../dom
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../sniff
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/array
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/window
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/window
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/demo-layer.js.uncompressed; dependency: ../sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/config
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/html
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/window
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/url
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/json
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./aspect
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./date/stamp
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./Deferred
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./query
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./on
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./ready
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./config
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-style
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-attr
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-prop
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-class
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-construct
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-geometry
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/window
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-style
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-prop
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-style
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-construct
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/connect
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/window
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-attr
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./on
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has!dom-addeventlistener?:./aspect
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../on
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../topic
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../aspect
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./event
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../mouse
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../keys
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./Evented
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./aspect
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./on
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../on
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-geometry
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/window
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-style
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./on
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/window
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../json
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./errors/CancelError
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./promise/Promise
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./promise/instrumentation
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./create
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./tracer
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./Promise
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../Evented
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./on
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./selector/_loader
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./selector/_loader!default
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./domReady
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../Deferred
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../promise/Promise
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../errors/CancelError
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../has
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../when
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./Deferred
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./promise/Promise
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./config
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../Evented
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./Color
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./connect
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom-style
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./config
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./query
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-class
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-construct
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-geometry
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-attr
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-style
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./Evented
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/connect
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/fx
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-style
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./dom-geometry
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ./ready
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../dom
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../sniff
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/array
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.consoleStripped; dependency: ../_base/window
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/config
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/html
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/window
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/url
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/json
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./aspect
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./date/stamp
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./Deferred
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./query
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./on
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./ready
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./config
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-style
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-attr
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-prop
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-class
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-construct
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-geometry
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/window
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-style
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-prop
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-style
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-construct
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/connect
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/window
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-attr
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./on
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has!dom-addeventlistener?:./aspect
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../on
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../topic
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../aspect
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./event
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../mouse
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../keys
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./Evented
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./aspect
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./on
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../on
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-geometry
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/window
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-style
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./on
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/window
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../json
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./errors/CancelError
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./promise/Promise
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./promise/instrumentation
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./create
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./tracer
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./Promise
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../Evented
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./on
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./selector/_loader
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./selector/_loader!default
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./domReady
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../Deferred
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../promise/Promise
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../errors/CancelError
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../has
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../when
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./Deferred
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./promise/Promise
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./config
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../Evented
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./Color
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./connect
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom-style
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./config
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./query
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-class
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-construct
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-geometry
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-attr
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-style
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./Evented
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/kernel
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/connect
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./_base/fx
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-style
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./dom-geometry
+	module: siteLayers/index-layer.js.uncompressed; dependency: ./ready
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../dom
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../sniff
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/array
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/lang
+	module: siteLayers/index-layer.js.uncompressed; dependency: ../_base/window
+	module: gridx/tests/test_grid_addRow; dependency: gridx/modules/ExtendedSelect/Row
+	module: gridx/tests/test_grid_persist; dependency: gridx/modules/Select/Column
+	module: gridx/tests/doh/gdoh; dependency: doh/runner
+	module: gridx/tests/doh/module; dependency: doh
+error(326) Output intersects input
+	input: E:/workspace/oria/gridx/layers/dojo/dojo.js; resource destined for same location: : E:/workspace/dojo_ga/1.8.0_src/dojo/dojo.js
+Layer Contents:
+layers/index-layer:
+	layers/index-layer
+	siteLayers/index
+	dojo/parser
+	dojo/_base/kernel
+	dojo/has
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/_base/array
+	dojo/_base/html
+	dojo/dom
+	dojo/_base/window
+	dojo/dom-style
+	dojo/dom-attr
+	dojo/dom-prop
+	dojo/dom-construct
+	dojo/on
+	dojo/_base/connect
+	dojo/topic
+	dojo/Evented
+	dojo/aspect
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/mouse
+	dojo/_base/sniff
+	dojo/keys
+	dojo/dom-class
+	dojo/_base/url
+	dojo/_base/json
+	dojo/json
+	dojo/date/stamp
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/query
+	dojo/selector/_loader
+	dojo/ready
+	dojo/domReady
+	dojox/widget/AutoRotator
+	dojo/_base/declare
+	dojox/widget/Rotator
+	dojo/_base/Deferred
+	dojo/when
+	dojo/_base/fx
+	dojo/_base/Color
+	dojo/fx/easing
+	dojo/NodeList-dom
+	dojox/widget/rotator/Controller
+	dojox/widget/rotator/Fade
+	dojo/fx
+	dojo/selector/acme
+
+layers/demo-layer:
+	layers/demo-layer
+	siteLayers/demo
+	dojo/store/Memory
+	dojo/_base/declare
+	dojo/_base/kernel
+	dojo/has
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/store/util/QueryResults
+	dojo/_base/array
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/when
+	dojo/store/util/SimpleQueryEngine
+	gridx/Grid
+	dojo/_base/sniff
+	dojo/dom-class
+	dojo/dom
+	dojo/_base/window
+	dojo/dom-geometry
+	dojo/dom-style
+	dojo/_base/query
+	dojo/query
+	dojo/selector/_loader
+	dojo/_base/NodeList
+	dojo/_base/html
+	dojo/dom-attr
+	dojo/dom-prop
+	dojo/dom-construct
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/mouse
+	dojo/keys
+	dojo/NodeList-dom
+	dojox/html/metrics
+	dojo/ready
+	dojo/domReady
+	dojo/_base/unload
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dijit/registry
+	dijit/main
+	dijit/_FocusMixin
+	dijit/focus
+	dojo/window
+	dijit/a11y
+	dijit/_TemplatedMixin
+	dojo/touch
+	dojo/string
+	dojo/cache
+	dojo/text
+	dojo/_base/xhr
+	dojo/io-query
+	dojo/dom-form
+	dojo/json
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	gridx/templates/Grid.html
+	gridx/core/Core
+	dojo/DeferredList
+	gridx/core/model/Model
+	gridx/core/Row
+	gridx/core/Column
+	gridx/core/Cell
+	gridx/core/_Module
+	gridx/core/model/extensions/Query
+	gridx/core/model/_Extension
+	gridx/modules/Header
+	gridx/core/util
+	gridx/modules/Body
+	dojo/i18n
+	gridx/nls/Body
+	gridx/modules/VLayout
+	gridx/modules/HLayout
+	gridx/modules/VScroller
+	gridx/modules/HScroller
+	gridx/modules/ColumnWidth
+	gridx/core/model/cache/Sync
+	gridx/core/model/cache/_Cache
+	gridx/modules/Focus
+	gridx/modules/SingleSort
+	gridx/core/model/extensions/Sort
+	gridx/modules/ColumnResizer
+	gridx/modules/extendedSelect/Row
+	gridx/modules/extendedSelect/_RowCellBase
+	gridx/modules/extendedSelect/_Base
+	gridx/modules/AutoScroll
+	gridx/core/model/extensions/Mark
+	gridx/modules/filter/Filter
+	gridx/core/model/extensions/ClientFilter
+	gridx/modules/filter/FilterBar
+	dojo/parser
+	dojo/_base/url
+	dojo/date/stamp
+	gridx/templates/FilterBar.html
+	gridx/nls/FilterBar
+	gridx/modules/filter/FilterDialog
+	dijit/Dialog
+	dojo/_base/fx
+	dojo/_base/Color
+	dojo/dnd/Moveable
+	dojo/dnd/common
+	dojo/dnd/Mover
+	dojo/dnd/autoscroll
+	dojo/dnd/TimedMoveable
+	dijit/_base/manager
+	dijit/_Widget
+	dijit/_OnDijitClickMixin
+	dijit/a11yclick
+	dojo/uacss
+	dijit/hccss
+	dojo/hccss
+	dijit/_CssStateMixin
+	dijit/form/_FormMixin
+	dijit/_DialogMixin
+	dijit/DialogUnderlay
+	dijit/BackgroundIframe
+	dijit/layout/ContentPane
+	dijit/_Container
+	dijit/layout/_ContentPaneResizeMixin
+	dijit/Viewport
+	dijit/layout/utils
+	dojo/html
+	dijit/nls/loading
+	dijit/templates/Dialog.html
+	dijit/nls/common
+	gridx/modules/filter/FilterPane
+	dojox/html/ellipsis
+	dojo/colors
+	gridx/modules/filter/DistinctComboBoxMenu
+	dijit/form/_ComboBoxMenu
+	dijit/form/_ComboBoxMenuMixin
+	dijit/form/nls/ComboBox
+	dijit/form/_ListMouseMixin
+	dijit/form/_ListBase
+	gridx/templates/FilterPane.html
+	dijit/form/Select
+	dijit/form/_FormSelectWidget
+	dojo/data/util/sorter
+	dijit/form/_FormValueWidget
+	dijit/form/_FormWidget
+	dijit/form/_FormWidgetMixin
+	dijit/form/_FormValueMixin
+	dijit/_HasDropDown
+	dijit/popup
+	dijit/place
+	dijit/Menu
+	dijit/DropDownMenu
+	dijit/templates/Menu.html
+	dijit/_MenuBase
+	dijit/_KeyNavContainer
+	dijit/MenuItem
+	dijit/_Contained
+	dijit/templates/MenuItem.html
+	dijit/MenuSeparator
+	dijit/templates/MenuSeparator.html
+	dijit/Tooltip
+	dijit/templates/Tooltip.html
+	dijit/form/templates/Select.html
+	dijit/form/nls/validate
+	dijit/form/TextBox
+	dijit/form/_TextBoxMixin
+	dijit/form/templates/TextBox.html
+	dijit/form/DateTextBox
+	dijit/Calendar
+	dojo/date
+	dojo/date/locale
+	dojo/cldr/supplemental
+	dojo/regexp
+	dojo/cldr/nls/gregorian
+	dijit/CalendarLite
+	dijit/templates/Calendar.html
+	dijit/form/DropDownButton
+	dijit/form/Button
+	dijit/form/_ButtonMixin
+	dijit/form/templates/Button.html
+	dijit/form/templates/DropDownButton.html
+	dijit/form/_DateTimeTextBox
+	dijit/form/RangeBoundTextBox
+	dijit/form/MappedTextBox
+	dijit/form/ValidationTextBox
+	dijit/form/templates/ValidationTextBox.html
+	dijit/form/templates/DropDownBox.html
+	dijit/form/TimeTextBox
+	dijit/_TimePicker
+	dijit/typematic
+	dijit/templates/TimePicker.html
+	dijit/form/RadioButton
+	dijit/form/CheckBox
+	dijit/form/ToggleButton
+	dijit/form/_ToggleButtonMixin
+	dijit/form/_CheckBoxMixin
+	dijit/form/templates/CheckBox.html
+	dijit/form/_RadioButtonMixin
+	dijit/form/NumberTextBox
+	dojo/number
+	dojo/cldr/nls/number
+	dijit/form/ComboBox
+	dijit/form/ComboBoxMixin
+	dijit/form/_AutoCompleterMixin
+	dojo/data/util/filter
+	dijit/form/DataList
+	dijit/form/_SearchMixin
+	gridx/templates/FilterDialog.html
+	dijit/layout/AccordionContainer
+	dijit/layout/StackContainer
+	dojo/cookie
+	dijit/layout/_LayoutWidget
+	dijit/layout/templates/AccordionButton.html
+	gridx/modules/filter/FilterConfirmDialog
+	gridx/templates/FilterConfirmDialog.html
+	gridx/modules/filter/FilterTooltip
+	dojo/main
+	dojo/_base/browser
+	dojo/_base/loader
+	dijit/TooltipDialog
+	dijit/templates/TooltipDialog.html
+	gridx/modules/CellWidget
+	dijit/_WidgetsInTemplateMixin
+	gridx/modules/Edit
+	gridx/modules/VirtualVScroller
+	dojo/selector/acme
+
+Optimizer Messages:
+E:/workspace/oria/gridx/layers/index-layer.js:
+E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1018: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1200: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1528: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:6364: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 6 warning(s)
+Done (compile time:4.208s)
+E:/workspace/oria/gridx/layers/index-layer.js:
+E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1018: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1200: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1528: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:6364: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 6 warning(s)
+Done (compile time:4.208s)
+E:/workspace/oria/gridx/layers/demo-layer.js:
+E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:1626: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:1954: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:5305: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:10508: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:13774: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:24329: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:28454: WARNING - unreachable code
+	return ret;
+	^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:36179: WARNING - If this if/for/while really shouldnt have a body, use {}
+		for(var top=this; top.parentMenu; top=top.parentMenu);
+		^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:40406: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
+			^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:40832: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
+	if (! 1 ){
+	         ^
+
+0 error(s), 12 warning(s)
+Done (compile time:7.269s)
+
+
+Process finished normally
+	errors: 488
+	warnings: 426
+	build time: 12.231 seconds

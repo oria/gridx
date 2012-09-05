@@ -1,0 +1,39 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Gridx</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import "dijit/themes/claro/claro.css";
+		@import "dijit/themes/claro/document.css";
+		@import "gridx/resources/claro/Gridx.css";
+
+		body {
+			padding: 20px;
+		}
+		.gridx {
+			width: 700px;
+			height: 400px;
+		}
+		.gridxCell {
+			vertical-align: top !important;
+		}
+	</style>
+	<script>
+	  var djConfig = {
+	  	isDebug:true
+	  	, async: true
+	  	, parseOnLoad: true
+	  	, packages:[{name: 'gridxSite', location: '..'}]
+	  };
+	  </script>
+	<script type="text/javascript" src="dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script src="layers/demo-layer.js"></script>
+	<script>
+	require(['gridxSite/layers/demo']);
+  </script>
+</head>
+<body class='claro'>
+	<div id='gridContainer'></div>
+</body>
+</html>

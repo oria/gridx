@@ -1,16 +1,13 @@
-require([
+define([
 	'dojo/store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/modules/Focus',
 	'gridx/modules/SingleSort',
-	'gridx/modules/ColumnLock',
 	'gridx/modules/ColumnResizer',
 	'gridx/modules/extendedSelect/Row',
 	'gridx/modules/filter/Filter',
 	'gridx/modules/filter/FilterBar',
-	'gridx/modules/RowHeader',
-	'gridx/modules/IndirectSelect',
 	'gridx/modules/CellWidget',
 	'gridx/modules/Edit',
 	'gridx/modules/VirtualVScroller'
@@ -49,10 +46,10 @@ require([
 
 	var layout = [
 		{ id: 'name', field: 'name', name: 'Name', width: '160px',
-			style: 'background-color: #EDF2F7; color: #555; font-weight: bold; text-shadow: 1px 1px 1px #fff; font-size: 15px;'
+			style2: 'background-color: #EDF2F7; color: #555; font-weight: bold; text-shadow: 1px 1px 1px #fff; font-size: 15px;'
 		},
 		{ id: 'heard', field: 'heard', name: 'Heard', width: '50px',
-			style: 'background-color: #F9FFE0;',
+			style2: 'background-color: #F9FFE0;',
 			decorator: function(data){
 				return data ? 'Yes' : 'No';
 			}
@@ -69,18 +66,14 @@ require([
 		cacheClass: 'gridx/core/model/cache/Sync',
 		store: store,
 		structure: layout,
-		columnLockCount: 2,
 		filterBarCloseFilterBarButton: false,
 		modules: [
 			'gridx/modules/Focus',
-			'gridx/modules/ColumnLock',
 			'gridx/modules/SingleSort',
 			'gridx/modules/ColumnResizer',
 			'gridx/modules/extendedSelect/Row',
 			'gridx/modules/filter/Filter',
 			'gridx/modules/filter/FilterBar',
-			'gridx/modules/RowHeader',
-			'gridx/modules/IndirectSelect',
 			'gridx/modules/CellWidget',
 			'gridx/modules/Edit',
 			'gridx/modules/VirtualVScroller'
