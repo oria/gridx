@@ -272,7 +272,7 @@ define([
 				}, function(){
 					t._logicExpand(id);
 				}).then(function(){
-					Deferred.when(skipUpdateBody || t._updateBody(id), function(){
+					Deferred.when(t._updateBody(id, skipUpdateBody), function(){
 						d.callback();
 						t.onExpand(id);
 					});
@@ -297,7 +297,7 @@ define([
 				t = this;
 			if(id && t.isExpanded(id)){
 				t._logicCollapse(id);
-				Deferred.when(skipUpdateBody || t._updateBody(id), function(){
+				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
 					d.callback();
 					t.onCollapse(id);
 				});
@@ -329,7 +329,7 @@ define([
 					}
 				}).then(function(){
 					new DeferredList(dl).then(function(){
-						Deferred.when(skipUpdateBody || t._updateBody(id), function(){
+						Deferred.when(t._updateBody(id, skipUpdateBody), function(){
 							d.callback();
 						});
 					});
@@ -361,8 +361,8 @@ define([
 				new DeferredList(dl).then(function(){
 					if(id){
 						t.collapse(id, skipUpdateBody).then(success, fail);
-					}else if(!skipUpdateBody){
-						t._updateBody().then(success, fail);
+					}else{
+						Deferred.when(t._updateBody('', skipUpdateBody), success, fail);
 					}
 				});
 			}else{
@@ -524,11 +524,11 @@ define([
 			}
 		},
 	
-		_updateBody: function(id){
+		_updateBody: function(id, skip){
 			var t = this,
 				body = t.grid.body;
-			if(body){
-				body.updateRootRange(body.rootStart, body.rootCount);
+			body.updateRootRange(body.rootStart, body.rootCount);
+			if(!skip){
 				var rowNode = body.getRowNode({rowId: id}), n, expando,
 					isOpen = t.isExpanded(id);
 				if(rowNode){

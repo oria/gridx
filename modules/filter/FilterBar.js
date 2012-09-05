@@ -22,7 +22,7 @@ define([
 	"dijit/popup",
 	"dijit/Tooltip",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, locale, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -124,13 +124,12 @@ define([
 			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
 			
 			this.domNode = dom.create('div', {
-				innerHTML: string.substitute(template, locale),
+				innerHTML: string.substitute(template, nls),
 				'class': 'gridxFilterBar'
 			});
 			parser.parse(this.domNode);
 			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.arg('closeButton'));
 			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
-			this._nls = locale;
 			this._initWidgets();
 			this._initFocus();
 			this.refresh();
@@ -368,12 +367,11 @@ define([
 		_buildFilterState: function(){
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
-			var nls = this._nls;
 			if(!this.filterData || !this.filterData.conditions.length){
-				this.statusNode.innerHTML = nls.filterBarMsgNoFilterTemplate;
+				this.statusNode.innerHTML = this.arg('noFilterMessage', nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(nls.filterBarMsgHasFilterTemplate, 
+			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
 				[this._currentSize, this._totalSize, 'items']) + 
 				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="Clear filter">Clear Filter</a>';
 			this._buildTooltip();
@@ -415,7 +413,7 @@ define([
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this._nls.rangeTemplate;
+					var tpl = this.arg('rangeTemplate', nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -427,16 +425,18 @@ define([
 		},
 		_getConditionDisplayName: function(c){
 			var k = c.charAt(0).toUpperCase() + c.substring(1);
-			return this._nls['condition' + k];
+			return this.arg('condition' + k, nls['condition' + k]);
 		},
 		_getConditionOptions: function(colId){
-			var nls = this._nls;
 			var cache = this._conditionOptions = this._conditionOptions || {};
 			if(!cache[colId]){
 				var arr = [];
 				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
-					arr.push({label: nls['condition' + k], value: s});
+					arr.push({
+						label: this.arg('condition' + k, nls['condition' + k]),
+						value: s
+					});
 				}, this);
 				cache[colId] = arr;
 			}
