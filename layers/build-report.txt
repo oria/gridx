@@ -1,4 +1,4 @@
-Build started: Wed Sep 05 2012 17:37:09 GMT+0800 (China Standard Time)
+Build started: Thu Sep 06 2012 10:00:19 GMT+0800 (China Standard Time)
 Build application version: 1.7.0dev (23930)
 Messages:
 info(100) Assumed module uses legacy loader API.
@@ -143,7 +143,6 @@ info(100) Assumed module uses legacy loader API.
 	module: dojox/xmpp/util
 	module: dojox/xmpp/xmppSession
 	module: dojox/xmpp/widget/ChatSession
-	module: siteLayers/demo-layer
 	module: gridx/tests/demo/ZeroClipboard
 	module: gridx/tests/doh/doh_extendedSelectCell
 	module: gridx/tests/doh/doh_extendedSelectColumn
@@ -160,8 +159,9 @@ info(100) Assumed module uses legacy loader API.
 	module: gridx/util/build_demos
 	module: gridx/util/demos.profile.tpl
 info(103) Optimizing module complete.
-	E:/workspace/oria/gridx/layers/index-layer.js (compile time:4.208s)
-	E:/workspace/oria/gridx/layers/demo-layer.js (compile time:7.269s)
+	E:/workspace/oria/gridx/layers/index-layer.js (compile time:8.497s)
+	E:/workspace/oria/gridx/layers/demo-layer.js (compile time:11.215s)
+	../gridx/tests/demo/playground-layer (compile time:12.047s)
 info(104) Optimizer messages.
 	E:/workspace/oria/gridx/layers/index-layer.js:
 E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
@@ -189,7 +189,7 @@ E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
 	     ^
 
 0 error(s), 6 warning(s)
-Done (compile time:4.208s)
+Done (compile time:8.497s)
 E:/workspace/oria/gridx/layers/demo-layer.js:
 E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
 	if( 0 ){
@@ -240,7 +240,58 @@ E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
 	         ^
 
 0 error(s), 12 warning(s)
-Done (compile time:7.269s)
+Done (compile time:11.215s)
+../gridx/tests/demo/playground-layer:
+../gridx/tests/demo/playground-layer:949: WARNING - unreachable code
+	}else{
+	     ^
+
+../gridx/tests/demo/playground-layer:1096: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+../gridx/tests/demo/playground-layer:1278: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+../gridx/tests/demo/playground-layer:1606: WARNING - unreachable code
+	}else{
+	     ^
+
+../gridx/tests/demo/playground-layer:2415: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+../gridx/tests/demo/playground-layer:7410: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+../gridx/tests/demo/playground-layer:14596: WARNING - unreachable code
+	}else{
+	     ^
+
+../gridx/tests/demo/playground-layer:17336: WARNING - unreachable code
+	return ret;
+	^
+
+../gridx/tests/demo/playground-layer:42787: WARNING - If this if/for/while really shouldnt have a body, use {}
+		for(var top=this; top.parentMenu; top=top.parentMenu);
+		^
+
+../gridx/tests/demo/playground-layer:48079: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
+			^
+
+../gridx/tests/demo/playground-layer:48295: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+../gridx/tests/demo/playground-layer:50910: WARNING - unreachable code
+	if (! 1 ){
+	         ^
+
+0 error(s), 12 warning(s)
+Done (compile time:12.047s)
 
 info(107) Package Version:
 	package: dojo; version: 1.8.0
@@ -253,12 +304,17 @@ warn(202) AMD module specified and absolute module identifier that is not consis
 	module: siteLayers/index-layer.js.uncompressed; specified: layers/index-layer
 	module: siteLayers/dojo/dojo.js.consoleStripped; specified: dojo/dojo
 	module: siteLayers/dojo/dojo.js.uncompressed; specified: dojo/dojo
+	module: siteLayers/gridx/tests/demo/playground-layer.js.consoleStripped; specified: gridx/tests/demo/playground-layer
+	module: siteLayers/gridx/tests/demo/playground-layer.js.uncompressed; specified: gridx/tests/demo/playground-layer
 	module: gridx/tests/support/stores/MockServerStore; specified: gridx/tests/MockServerStore
 warn(203) Module tagged as pure AMD yet it contains legacy loader API applications.
 	module: dojo/dojo
-warn(205) Module not tagged as pure AMD yet it contains AMD API applications.
 	module: siteLayers/demo-layer.js.consoleStripped
 	module: siteLayers/demo-layer.js.uncompressed
+	module: siteLayers/gridx/tests/demo/playground-layer.js.consoleStripped
+	module: siteLayers/gridx/tests/demo/playground-layer.js.uncompressed
+warn(205) Module not tagged as pure AMD yet it contains AMD API applications.
+	module: siteLayers/demo-layer
 	module: siteLayers/demo
 	module: siteLayers/index-layer
 	module: siteLayers/index-layer.js.consoleStripped
@@ -266,6 +322,7 @@ warn(205) Module not tagged as pure AMD yet it contains AMD API applications.
 	module: siteLayers/index
 	module: siteLayers/dojo/dojo.js.consoleStripped
 	module: siteLayers/dojo/dojo.js.uncompressed
+	module: siteLayers/gridx/tests/demo/playground-layer
 	module: gridx/allModules
 	module: gridx/Grid
 	module: gridx/build/test_grid_build
@@ -683,126 +740,6 @@ error(311) Missing dependency.
 	module: dojo/robot; dependency: doh/_browserRunner
 	module: dojo/robot; dependency: doh/robot
 	module: dojo/robotx; dependency: doh/main
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/declare
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./util/QueryResults
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./util/SimpleQueryEngine
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./config
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../sniff
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/array; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/lang; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/Deferred; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../Deferred
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../promise/Promise
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../errors/CancelError
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../when
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./errors/CancelError
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./promise/Promise
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./promise/instrumentation
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./create
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./tracer
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/array
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./Promise
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../Evented
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./aspect
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./on
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has!dom-addeventlistener?:./aspect
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/kernel
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./has
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./Deferred
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./promise/Promise
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../../_base/array; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../dom
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../sniff
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/array
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../_base/window
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./sniff
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./_base/window
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./kernel
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ./lang
-	module: siteLayers/demo-layer.js.consoleStripped; dependency: ../sniff
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/declare
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./util/QueryResults
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./util/SimpleQueryEngine
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./config
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../sniff
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/array; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/lang; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/Deferred; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../Deferred
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../promise/Promise
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../errors/CancelError
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../when
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./errors/CancelError
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./promise/Promise
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./promise/instrumentation
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./create
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./tracer
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/array
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./Promise
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../Evented
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./aspect
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./on
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has!dom-addeventlistener?:./aspect
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/kernel
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./has
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./Deferred
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./promise/Promise
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../../_base/array; error: Error: irrationalPath
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../dom
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../sniff
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/array
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../_base/window
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./sniff
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./_base/window
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./kernel
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ./lang
-	module: siteLayers/demo-layer.js.uncompressed; dependency: ../sniff
 	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/kernel
 	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/lang
 	module: siteLayers/index-layer.js.consoleStripped; dependency: ./_base/array
@@ -1466,6 +1403,311 @@ layers/demo-layer:
 	gridx/modules/VirtualVScroller
 	dojo/selector/acme
 
+../gridx/tests/demo/playground-layer:
+	../gridx/tests/demo/playground-layer
+	gridx/tests/demo/playground
+	dojo/ready
+	dojo/_base/kernel
+	dojo/has
+	dojo/_base/config
+	dojo/domReady
+	dojo/_base/lang
+	dojo/sniff
+	dojo/parser
+	dojo/_base/array
+	dojo/_base/html
+	dojo/dom
+	dojo/_base/window
+	dojo/dom-style
+	dojo/dom-attr
+	dojo/dom-prop
+	dojo/dom-construct
+	dojo/on
+	dojo/_base/connect
+	dojo/topic
+	dojo/Evented
+	dojo/aspect
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/mouse
+	dojo/_base/sniff
+	dojo/keys
+	dojo/dom-class
+	dojo/_base/url
+	dojo/_base/json
+	dojo/json
+	dojo/date/stamp
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/query
+	dojo/selector/_loader
+	dojo/_base/query
+	dojo/_base/NodeList
+	dojo/NodeList-dom
+	dojo/DeferredList
+	dojo/_base/Deferred
+	dojo/when
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	gridx/tests/demo/util/ColumnBar
+	dojo/_base/declare
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dijit/_TemplatedMixin
+	dojo/touch
+	dojo/string
+	dojo/cache
+	dojo/text
+	dojo/_base/xhr
+	dojo/io-query
+	dojo/dom-form
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	dijit/_WidgetsInTemplateMixin
+	gridx/tests/demo/util/ColumnBar.html
+	dijit/DialogUnderlay
+	dojo/window
+	dijit/_Widget
+	dijit/_OnDijitClickMixin
+	dijit/a11yclick
+	dijit/_FocusMixin
+	dijit/focus
+	dijit/a11y
+	dojo/uacss
+	dijit/hccss
+	dojo/hccss
+	dijit/BackgroundIframe
+	dijit/form/CheckBox
+	dijit/form/ToggleButton
+	dijit/form/Button
+	dijit/form/_FormWidget
+	dijit/_CssStateMixin
+	dijit/form/_FormWidgetMixin
+	dijit/form/_ButtonMixin
+	dijit/form/templates/Button.html
+	dijit/form/_ToggleButtonMixin
+	dijit/form/_CheckBoxMixin
+	dijit/form/templates/CheckBox.html
+	dijit/form/TextBox
+	dijit/form/_FormValueWidget
+	dijit/form/_FormValueMixin
+	dijit/form/_TextBoxMixin
+	dijit/form/templates/TextBox.html
+	gridx/tests/demo/util/modules
+	gridx/allModules
+	gridx/modules/Focus
+	gridx/core/_Module
+	gridx/core/util
+	gridx/modules/VScroller
+	dojox/html/metrics
+	gridx/modules/ColumnResizer
+	gridx/modules/VirtualVScroller
+	gridx/modules/SingleSort
+	gridx/core/model/extensions/Sort
+	gridx/core/model/_Extension
+	gridx/modules/NestedSort
+	dojo/i18n
+	gridx/nls/NestedSort
+	gridx/modules/ColumnLock
+	gridx/modules/select/Row
+	gridx/modules/select/_RowCellBase
+	gridx/modules/select/_Base
+	gridx/core/model/extensions/Mark
+	gridx/modules/select/Column
+	gridx/modules/select/Cell
+	gridx/modules/extendedSelect/Row
+	gridx/modules/extendedSelect/_RowCellBase
+	gridx/modules/extendedSelect/_Base
+	gridx/modules/AutoScroll
+	gridx/modules/extendedSelect/Column
+	gridx/modules/extendedSelect/Cell
+	gridx/modules/move/Row
+	gridx/core/model/extensions/Move
+	gridx/modules/move/Column
+	gridx/modules/dnd/Row
+	gridx/modules/dnd/_Base
+	gridx/modules/dnd/Avatar
+	dojo/dnd/Avatar
+	gridx/modules/dnd/_Dnd
+	dojo/dnd/Source
+	dojo/dnd/common
+	dojo/dnd/Selector
+	dojo/dnd/Container
+	dojo/dnd/Manager
+	dojo/dnd/autoscroll
+	gridx/modules/dnd/Column
+	gridx/modules/pagination/Pagination
+	gridx/modules/pagination/PaginationBar
+	gridx/modules/pagination/_PaginationBarBase
+	gridx/modules/pagination/LinkPager
+	gridx/modules/pagination/_PagerBase
+	gridx/nls/PaginationBar
+	gridx/templates/PaginationBar.html
+	gridx/modules/pagination/GotoPagePane
+	gridx/templates/GotoPagePane.html
+	dijit/Dialog
+	dojo/_base/fx
+	dojo/_base/Color
+	dojo/dnd/Moveable
+	dojo/dnd/Mover
+	dojo/dnd/TimedMoveable
+	dijit/_base/manager
+	dijit/form/_FormMixin
+	dijit/_DialogMixin
+	dijit/layout/ContentPane
+	dijit/_Container
+	dijit/layout/_ContentPaneResizeMixin
+	dijit/Viewport
+	dijit/layout/utils
+	dojo/html
+	dijit/nls/loading
+	dijit/templates/Dialog.html
+	dijit/nls/common
+	dijit/form/NumberTextBox
+	dojo/number
+	dojo/cldr/nls/number
+	dojo/regexp
+	dijit/form/RangeBoundTextBox
+	dijit/form/MappedTextBox
+	dijit/form/ValidationTextBox
+	dijit/Tooltip
+	dijit/place
+	dijit/templates/Tooltip.html
+	dijit/form/templates/ValidationTextBox.html
+	dijit/form/nls/validate
+	gridx/modules/pagination/PaginationBarDD
+	gridx/modules/pagination/DropDownPager
+	dojo/store/Memory
+	dojo/store/util/QueryResults
+	dojo/store/util/SimpleQueryEngine
+	gridx/templates/PaginationBarDD.html
+	dijit/form/FilteringSelect
+	dojo/data/util/filter
+	dijit/form/ComboBoxMixin
+	dijit/form/_AutoCompleterMixin
+	dijit/form/DataList
+	dijit/form/_SearchMixin
+	dijit/form/_ComboBoxMenu
+	dijit/form/_ComboBoxMenuMixin
+	dijit/form/nls/ComboBox
+	dijit/form/_ListMouseMixin
+	dijit/form/_ListBase
+	dijit/_HasDropDown
+	dijit/popup
+	dijit/form/templates/DropDownBox.html
+	dijit/form/Select
+	dijit/form/_FormSelectWidget
+	dojo/data/util/sorter
+	dijit/Menu
+	dijit/DropDownMenu
+	dijit/templates/Menu.html
+	dijit/_MenuBase
+	dijit/_KeyNavContainer
+	dijit/MenuItem
+	dijit/_Contained
+	dijit/templates/MenuItem.html
+	dijit/MenuSeparator
+	dijit/templates/MenuSeparator.html
+	dijit/form/templates/Select.html
+	gridx/modules/filter/Filter
+	gridx/core/model/extensions/ClientFilter
+	gridx/core/model/extensions/Query
+	gridx/modules/filter/FilterBar
+	gridx/templates/FilterBar.html
+	gridx/nls/FilterBar
+	gridx/modules/filter/FilterDialog
+	gridx/modules/filter/FilterPane
+	dojox/html/ellipsis
+	dojo/colors
+	gridx/modules/filter/DistinctComboBoxMenu
+	gridx/templates/FilterPane.html
+	dijit/form/DateTextBox
+	dijit/Calendar
+	dojo/date
+	dojo/date/locale
+	dojo/cldr/supplemental
+	dojo/cldr/nls/gregorian
+	dijit/CalendarLite
+	dijit/templates/Calendar.html
+	dijit/form/DropDownButton
+	dijit/form/templates/DropDownButton.html
+	dijit/form/_DateTimeTextBox
+	dijit/form/TimeTextBox
+	dijit/_TimePicker
+	dijit/typematic
+	dijit/templates/TimePicker.html
+	dijit/form/RadioButton
+	dijit/form/_RadioButtonMixin
+	dijit/form/ComboBox
+	gridx/templates/FilterDialog.html
+	dijit/layout/AccordionContainer
+	dijit/layout/StackContainer
+	dojo/cookie
+	dijit/layout/_LayoutWidget
+	dijit/layout/templates/AccordionButton.html
+	gridx/modules/filter/FilterConfirmDialog
+	gridx/templates/FilterConfirmDialog.html
+	gridx/modules/filter/FilterTooltip
+	dojo/main
+	dojo/_base/browser
+	dojo/_base/loader
+	dijit/TooltipDialog
+	dijit/templates/TooltipDialog.html
+	gridx/modules/CellWidget
+	gridx/modules/Edit
+	gridx/modules/RowHeader
+	gridx/modules/IndirectSelect
+	gridx/modules/Persist
+	gridx/modules/exporter/Exporter
+	gridx/modules/exporter/CSV
+	gridx/modules/exporter/Table
+	gridx/modules/Printer
+	gridx/modules/Menu
+	gridx/modules/Dod
+	dojo/fx
+	gridx/modules/TitleBar
+	gridx/modules/Tree
+	gridx/modules/RowLock
+	gridx/modules/ToolBar
+	dijit/Toolbar
+	gridx/modules/SummaryBar
+	gridx/nls/SummaryBar
+	gridx/modules/Bar
+	gridx/tests/demo/util/attrs
+	gridx/tests/demo/util/data
+	gridx/Grid
+	gridx/templates/Grid.html
+	gridx/core/Core
+	gridx/core/model/Model
+	gridx/core/Row
+	gridx/core/Column
+	gridx/core/Cell
+	gridx/modules/Header
+	gridx/modules/Body
+	gridx/nls/Body
+	gridx/modules/VLayout
+	gridx/modules/HLayout
+	gridx/modules/HScroller
+	gridx/modules/ColumnWidth
+	gridx/core/model/cache/Sync
+	gridx/core/model/cache/_Cache
+	gridx/core/model/cache/Async
+	dojo/NodeList-manipulate
+	dijit/form/NumberSpinner
+	dijit/form/_Spinner
+	dijit/form/templates/Spinner.html
+	dojo/selector/acme
+
 Optimizer Messages:
 E:/workspace/oria/gridx/layers/index-layer.js:
 E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
@@ -1493,7 +1735,7 @@ E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
 	     ^
 
 0 error(s), 6 warning(s)
-Done (compile time:4.208s)
+Done (compile time:8.497s)
 E:/workspace/oria/gridx/layers/index-layer.js:
 E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 	new Date("X"); // workaround for #11279, new Date("") == NaN
@@ -1520,7 +1762,7 @@ E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
 	     ^
 
 0 error(s), 6 warning(s)
-Done (compile time:4.208s)
+Done (compile time:8.497s)
 E:/workspace/oria/gridx/layers/demo-layer.js:
 E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
 	if( 0 ){
@@ -1571,10 +1813,139 @@ E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
 	         ^
 
 0 error(s), 12 warning(s)
-Done (compile time:7.269s)
+Done (compile time:11.215s)
+E:/workspace/oria/gridx/layers/index-layer.js:
+E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1018: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1200: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:1528: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:6364: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 6 warning(s)
+Done (compile time:8.497s)
+E:/workspace/oria/gridx/layers/demo-layer.js:
+E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:1626: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:1954: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:5305: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:10508: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:13774: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:24329: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:28454: WARNING - unreachable code
+	return ret;
+	^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:36179: WARNING - If this if/for/while really shouldnt have a body, use {}
+		for(var top=this; top.parentMenu; top=top.parentMenu);
+		^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:40406: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
+			^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:40832: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
+	if (! 1 ){
+	         ^
+
+0 error(s), 12 warning(s)
+Done (compile time:11.215s)
+../gridx/tests/demo/playground-layer:
+../gridx/tests/demo/playground-layer:949: WARNING - unreachable code
+	}else{
+	     ^
+
+../gridx/tests/demo/playground-layer:1096: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+../gridx/tests/demo/playground-layer:1278: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+../gridx/tests/demo/playground-layer:1606: WARNING - unreachable code
+	}else{
+	     ^
+
+../gridx/tests/demo/playground-layer:2415: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+../gridx/tests/demo/playground-layer:7410: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+../gridx/tests/demo/playground-layer:14596: WARNING - unreachable code
+	}else{
+	     ^
+
+../gridx/tests/demo/playground-layer:17336: WARNING - unreachable code
+	return ret;
+	^
+
+../gridx/tests/demo/playground-layer:42787: WARNING - If this if/for/while really shouldnt have a body, use {}
+		for(var top=this; top.parentMenu; top=top.parentMenu);
+		^
+
+../gridx/tests/demo/playground-layer:48079: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
+			^
+
+../gridx/tests/demo/playground-layer:48295: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+	        ^
+
+../gridx/tests/demo/playground-layer:50910: WARNING - unreachable code
+	if (! 1 ){
+	         ^
+
+0 error(s), 12 warning(s)
+Done (compile time:12.047s)
 
 
 Process finished normally
-	errors: 488
-	warnings: 426
-	build time: 12.231 seconds
+	errors: 368
+	warnings: 432
+	build time: 22.012 seconds

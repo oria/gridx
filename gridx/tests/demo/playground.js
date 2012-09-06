@@ -1,4 +1,4 @@
-require([
+define([
 	'require',
 	'dojo/ready',
 	'dojo/parser',

@@ -24,6 +24,7 @@ profile = {
 	,layers: {
 		'layers/index-layer': {boot: false, customBase: true, include: ['siteLayers/index', 'dojo/selector/acme']}
 		,'layers/demo-layer': {boot: false, customBase: true, include: ['siteLayers/demo', 'dojo/selector/acme']}
+		,'layers/playground-layer': {boot: false, customBase: true, include: ['gridx/tests/demo/playground', 'dojo/selector/acme']}
 		
 	}
 	
