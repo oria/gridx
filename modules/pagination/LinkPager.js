@@ -353,7 +353,7 @@ define([
 			var t = this,
 				c = t._sizeSwitchContainer,
 				n = query('[pagesize="' + t._focusPageSize + '"]', c)[0];
-			t.grid.focus.stopEvent(evt);
+			t.module.grid.focus.stopEvent(evt);
 			n = focus(query('.gridxPagerSizeSwitchBtn', c), n, isMove, isLeft, function(node){
 				return !hasClass(node, 'gridxPagerSizeSwitchBtnActive');
 			});
@@ -367,7 +367,7 @@ define([
 			var t = this,
 				c = t._pageStepperContainer,
 				n = query('[pageindex="' + t._focusPageIndex + '"]', c)[0];
-			t.grid.focus.stopEvent(evt);
+			t.module.grid.focus.stopEvent(evt);
 			n = focus(query('.gridxPagerStepperBtn', c), n, isMove, isLeft, function(node){
 				return !hasClass(node, 'gridxPagerStepperBtnActive') &&
 					!hasClass(node, 'gridxPagerStepperBtnDisable');
