@@ -12,6 +12,7 @@
     	padding: 8px 30px;
     	margin-left: 0px;
     	width: 160px;
+    	white-space:nowrap;
     	cursor: pointer;
     	text-decoration: none;
     	

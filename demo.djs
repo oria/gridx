@@ -14,10 +14,10 @@
     
     <div class="grid_12" style="padding-left: 120px;">
     	<div style="padding: 5px; margin-right: 240px; margin-bottom: 20px; line-height: 150%;">
-    		This is a simple GridX demo which demostrates some key features of GridX, such as: Sorting, Column Resizer, Selection, Filter, Column Lock, etc.
+    		This is a simple GridX demo which demostrates some key features of GridX, such as: Virtual Scrolling, Sorting, Column Resizer, Selection, Filter etc.
     		For more demos, please go to the <a href="./gallery.html">gallery</a> page.
     	</div>
-    	<iframe src="demo_grid.html" style="width: 800px; height: 460px"></iframe>
+    	<iframe src="demo_grid.html" frameborder="0" style="border:none;width: 800px; height: 460px;"></iframe>
     </div>
     <div class="clear"></div>
     {{footer|safe}}

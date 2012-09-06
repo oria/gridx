@@ -1,4 +1,4 @@
-Build started: Thu Sep 06 2012 10:00:19 GMT+0800 (China Standard Time)
+Build started: Thu Sep 06 2012 15:43:45 GMT+0800 (China Standard Time)
 Build application version: 1.7.0dev (23930)
 Messages:
 info(100) Assumed module uses legacy loader API.
@@ -159,9 +159,9 @@ info(100) Assumed module uses legacy loader API.
 	module: gridx/util/build_demos
 	module: gridx/util/demos.profile.tpl
 info(103) Optimizing module complete.
-	E:/workspace/oria/gridx/layers/index-layer.js (compile time:8.497s)
-	E:/workspace/oria/gridx/layers/demo-layer.js (compile time:11.215s)
-	../gridx/tests/demo/playground-layer (compile time:12.047s)
+	E:/workspace/oria/gridx/layers/index-layer.js (compile time:6.874s)
+	E:/workspace/oria/gridx/layers/demo-layer.js (compile time:10.092s)
+	E:/workspace/oria/gridx/layers/playground-layer.js (compile time:10.97s)
 info(104) Optimizer messages.
 	E:/workspace/oria/gridx/layers/index-layer.js:
 E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
@@ -189,7 +189,7 @@ E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
 	     ^
 
 0 error(s), 6 warning(s)
-Done (compile time:8.497s)
+Done (compile time:6.874s)
 E:/workspace/oria/gridx/layers/demo-layer.js:
 E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
 	if( 0 ){
@@ -240,58 +240,58 @@ E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
 	         ^
 
 0 error(s), 12 warning(s)
-Done (compile time:11.215s)
-../gridx/tests/demo/playground-layer:
-../gridx/tests/demo/playground-layer:949: WARNING - unreachable code
+Done (compile time:10.092s)
+E:/workspace/oria/gridx/layers/playground-layer.js:
+E:/workspace/oria/gridx/layers/playground-layer.js:949: WARNING - unreachable code
 	}else{
 	     ^
 
-../gridx/tests/demo/playground-layer:1096: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:1096: WARNING - unreachable code
 	if( 0 ){
 	       ^
 
-../gridx/tests/demo/playground-layer:1278: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:1278: WARNING - unreachable code
 	if(! 1 ){
 	        ^
 
-../gridx/tests/demo/playground-layer:1606: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:1606: WARNING - unreachable code
 	}else{
 	     ^
 
-../gridx/tests/demo/playground-layer:2415: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+E:/workspace/oria/gridx/layers/playground-layer.js:2415: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 	new Date("X"); // workaround for #11279, new Date("") == NaN
 	        ^
 
-../gridx/tests/demo/playground-layer:7410: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:7410: WARNING - unreachable code
 	if(! 1 ){
 	        ^
 
-../gridx/tests/demo/playground-layer:14596: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:14596: WARNING - unreachable code
 	}else{
 	     ^
 
-../gridx/tests/demo/playground-layer:17336: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:17336: WARNING - unreachable code
 	return ret;
 	^
 
-../gridx/tests/demo/playground-layer:42787: WARNING - If this if/for/while really shouldnt have a body, use {}
+E:/workspace/oria/gridx/layers/playground-layer.js:42787: WARNING - If this if/for/while really shouldnt have a body, use {}
 		for(var top=this; top.parentMenu; top=top.parentMenu);
 		^
 
-../gridx/tests/demo/playground-layer:48079: WARNING - If this if/for/while really shouldnt have a body, use {}
+E:/workspace/oria/gridx/layers/playground-layer.js:48079: WARNING - If this if/for/while really shouldnt have a body, use {}
 			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
 			^
 
-../gridx/tests/demo/playground-layer:48295: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+E:/workspace/oria/gridx/layers/playground-layer.js:48295: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 	new Date("X"); // workaround for #11279, new Date("") == NaN
 	        ^
 
-../gridx/tests/demo/playground-layer:50910: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:50910: WARNING - unreachable code
 	if (! 1 ){
 	         ^
 
 0 error(s), 12 warning(s)
-Done (compile time:12.047s)
+Done (compile time:10.97s)
 
 info(107) Package Version:
 	package: dojo; version: 1.8.0
@@ -302,17 +302,17 @@ warn(202) AMD module specified and absolute module identifier that is not consis
 	module: siteLayers/demo-layer.js.uncompressed; specified: layers/demo-layer
 	module: siteLayers/index-layer.js.consoleStripped; specified: layers/index-layer
 	module: siteLayers/index-layer.js.uncompressed; specified: layers/index-layer
+	module: siteLayers/playground-layer.js.consoleStripped; specified: layers/playground-layer
+	module: siteLayers/playground-layer.js.uncompressed; specified: layers/playground-layer
 	module: siteLayers/dojo/dojo.js.consoleStripped; specified: dojo/dojo
 	module: siteLayers/dojo/dojo.js.uncompressed; specified: dojo/dojo
-	module: siteLayers/gridx/tests/demo/playground-layer.js.consoleStripped; specified: gridx/tests/demo/playground-layer
-	module: siteLayers/gridx/tests/demo/playground-layer.js.uncompressed; specified: gridx/tests/demo/playground-layer
 	module: gridx/tests/support/stores/MockServerStore; specified: gridx/tests/MockServerStore
 warn(203) Module tagged as pure AMD yet it contains legacy loader API applications.
 	module: dojo/dojo
 	module: siteLayers/demo-layer.js.consoleStripped
 	module: siteLayers/demo-layer.js.uncompressed
-	module: siteLayers/gridx/tests/demo/playground-layer.js.consoleStripped
-	module: siteLayers/gridx/tests/demo/playground-layer.js.uncompressed
+	module: siteLayers/playground-layer.js.consoleStripped
+	module: siteLayers/playground-layer.js.uncompressed
 warn(205) Module not tagged as pure AMD yet it contains AMD API applications.
 	module: siteLayers/demo-layer
 	module: siteLayers/demo
@@ -320,9 +320,9 @@ warn(205) Module not tagged as pure AMD yet it contains AMD API applications.
 	module: siteLayers/index-layer.js.consoleStripped
 	module: siteLayers/index-layer.js.uncompressed
 	module: siteLayers/index
+	module: siteLayers/playground-layer
 	module: siteLayers/dojo/dojo.js.consoleStripped
 	module: siteLayers/dojo/dojo.js.uncompressed
-	module: siteLayers/gridx/tests/demo/playground-layer
 	module: gridx/allModules
 	module: gridx/Grid
 	module: gridx/build/test_grid_build
@@ -1403,8 +1403,8 @@ layers/demo-layer:
 	gridx/modules/VirtualVScroller
 	dojo/selector/acme
 
-../gridx/tests/demo/playground-layer:
-	../gridx/tests/demo/playground-layer
+layers/playground-layer:
+	layers/playground-layer
 	gridx/tests/demo/playground
 	dojo/ready
 	dojo/_base/kernel
@@ -1735,7 +1735,7 @@ E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
 	     ^
 
 0 error(s), 6 warning(s)
-Done (compile time:8.497s)
+Done (compile time:6.874s)
 E:/workspace/oria/gridx/layers/index-layer.js:
 E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 	new Date("X"); // workaround for #11279, new Date("") == NaN
@@ -1762,7 +1762,7 @@ E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
 	     ^
 
 0 error(s), 6 warning(s)
-Done (compile time:8.497s)
+Done (compile time:6.874s)
 E:/workspace/oria/gridx/layers/demo-layer.js:
 E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
 	if( 0 ){
@@ -1813,7 +1813,7 @@ E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
 	         ^
 
 0 error(s), 12 warning(s)
-Done (compile time:11.215s)
+Done (compile time:10.092s)
 E:/workspace/oria/gridx/layers/index-layer.js:
 E:/workspace/oria/gridx/layers/index-layer.js:20: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 	new Date("X"); // workaround for #11279, new Date("") == NaN
@@ -1840,7 +1840,7 @@ E:/workspace/oria/gridx/layers/index-layer.js:8963: WARNING - unreachable code
 	     ^
 
 0 error(s), 6 warning(s)
-Done (compile time:8.497s)
+Done (compile time:6.874s)
 E:/workspace/oria/gridx/layers/demo-layer.js:
 E:/workspace/oria/gridx/layers/demo-layer.js:1444: WARNING - unreachable code
 	if( 0 ){
@@ -1891,61 +1891,61 @@ E:/workspace/oria/gridx/layers/demo-layer.js:46318: WARNING - unreachable code
 	         ^
 
 0 error(s), 12 warning(s)
-Done (compile time:11.215s)
-../gridx/tests/demo/playground-layer:
-../gridx/tests/demo/playground-layer:949: WARNING - unreachable code
+Done (compile time:10.092s)
+E:/workspace/oria/gridx/layers/playground-layer.js:
+E:/workspace/oria/gridx/layers/playground-layer.js:949: WARNING - unreachable code
 	}else{
 	     ^
 
-../gridx/tests/demo/playground-layer:1096: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:1096: WARNING - unreachable code
 	if( 0 ){
 	       ^
 
-../gridx/tests/demo/playground-layer:1278: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:1278: WARNING - unreachable code
 	if(! 1 ){
 	        ^
 
-../gridx/tests/demo/playground-layer:1606: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:1606: WARNING - unreachable code
 	}else{
 	     ^
 
-../gridx/tests/demo/playground-layer:2415: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+E:/workspace/oria/gridx/layers/playground-layer.js:2415: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 	new Date("X"); // workaround for #11279, new Date("") == NaN
 	        ^
 
-../gridx/tests/demo/playground-layer:7410: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:7410: WARNING - unreachable code
 	if(! 1 ){
 	        ^
 
-../gridx/tests/demo/playground-layer:14596: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:14596: WARNING - unreachable code
 	}else{
 	     ^
 
-../gridx/tests/demo/playground-layer:17336: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:17336: WARNING - unreachable code
 	return ret;
 	^
 
-../gridx/tests/demo/playground-layer:42787: WARNING - If this if/for/while really shouldnt have a body, use {}
+E:/workspace/oria/gridx/layers/playground-layer.js:42787: WARNING - If this if/for/while really shouldnt have a body, use {}
 		for(var top=this; top.parentMenu; top=top.parentMenu);
 		^
 
-../gridx/tests/demo/playground-layer:48079: WARNING - If this if/for/while really shouldnt have a body, use {}
+E:/workspace/oria/gridx/layers/playground-layer.js:48079: WARNING - If this if/for/while really shouldnt have a body, use {}
 			for(var node = evt.target; node && !node.dijitDateValue; node = node.parentNode);
 			^
 
-../gridx/tests/demo/playground-layer:48295: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+E:/workspace/oria/gridx/layers/playground-layer.js:48295: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 	new Date("X"); // workaround for #11279, new Date("") == NaN
 	        ^
 
-../gridx/tests/demo/playground-layer:50910: WARNING - unreachable code
+E:/workspace/oria/gridx/layers/playground-layer.js:50910: WARNING - unreachable code
 	if (! 1 ){
 	         ^
 
 0 error(s), 12 warning(s)
-Done (compile time:12.047s)
+Done (compile time:10.97s)
 
 
 Process finished normally
 	errors: 368
 	warnings: 432
-	build time: 22.012 seconds
+	build time: 16.464 seconds

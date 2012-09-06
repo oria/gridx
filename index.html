@@ -95,9 +95,10 @@
     	color: #555;
     	padding: 8px 30px;
     	margin-left: 30px;
-    	width: 160px;
+    	width: 170px;
     	cursor: pointer;
     	text-decoration: none;
+    	white-space:nowrap;
     	
     	/*From OneUI*/
     	background-color: #F4F4F4;
