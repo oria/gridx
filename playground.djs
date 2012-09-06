@@ -62,7 +62,7 @@
     {{header|safe}}
     
     <div class="grid_12">
-    	<h1>Playground</h1>
+    	<h1>Playground (beta)</h1>
     	
 		<p>GridX playground is a place where you can customize GridX using UI interface. 
 		And you can see the code for creating the customized GridX. 
