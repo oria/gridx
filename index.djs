@@ -334,9 +334,7 @@
     	  	<h3 class="description">New smart scroller</h3>
     	    <img src="images/f3.png"/>
     	  </div>
-    	  <div class="pane">
-    	    <img src="images/f4.png"/>
-    	  </div>
+    	  
         </div>
         
         <div class="slider-toolbar">
