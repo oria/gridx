@@ -376,8 +376,8 @@
       </ul>
     </div>
     <div class="grid_3 usings">
-      <h2>Who's using</h2>
-      <img src="images/usings.png" style="margin: 14px;"/>
+      <!-- <h2>Who's using</h2>
+      <img src="images/usings.png" style="margin: 14px;"/> -->
       
       <h2>Supported browsers</h2>
       <img src="images/supported_browsers.png" style="margin: 14px;"/>
