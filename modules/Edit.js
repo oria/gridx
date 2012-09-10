@@ -314,16 +314,19 @@ define([
 					var editorArgs = cell.column.editorArgs,
 						valueField = editorArgs && editorArgs.valueField || 'value',
 						v = editor.get(valueField),
-						finish = function(success){
+						finish = function(success, e){
+							if(!success){
+								console.warn('Can not apply change! Error message: ', e);
+							}
 							t._erase(rowId, colId);
 							if(cell.column.alwaysEditing){
 								d.callback(success);
-								t.onApply(cell, success);
+								t.onApply(cell, success, e);
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
-									t.onApply(cell, success);
+									t.onApply(cell, success, e);
 								});
 							}
 						};
@@ -336,18 +339,20 @@ define([
 						if(lang.isFunction(cell.column.customApplyEdit)){
 							Deferred.when(cell.column.customApplyEdit(cell, v), function(){
 								finish(true);
+							}, function(e){
+								finish(false, e);
 							});
 						}else if(cell.rawData() === v){
 							finish(true);
 						}else{
 							Deferred.when(cell.setRawData(v), function(){
 								finish(true);
+							}, function(e){
+								finish(false, e);
 							});
 						}
 					}catch(e){
-						console.warn('Can not apply change! Error message: ', e);
-						finish(false);
-						return d;	//dojo.Deferred
+						finish(false, e);
 					}
 					return d;	//dojo.Deferred
 				}
