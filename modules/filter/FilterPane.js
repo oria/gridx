@@ -69,9 +69,13 @@ define([
 			if(data === null){return;}
 			this.sltColumn.set('value', data.colId, null);
 			this._onColumnChange();
-			this.sltCondition.set('value', data.condition, null);
-			this._onConditionChange();
-			this._setValue(data.value);
+			var _this = this;
+			
+			window.setTimeout(function(){
+				_this.sltCondition.set('value', data.condition, null);
+				_this._onConditionChange();
+				_this._setValue(data.value);
+			}, 10);
 		},
 		close: function(){
 			var ac = this._getContainer();
