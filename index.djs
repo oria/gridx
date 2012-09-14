@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>GridX</title>
+  <title>GridX - The next generation of dojo enhanced data grid.</title>
   <link rel="stylesheet" href="css/960/reset.css" />
   <link rel="stylesheet" href="css/960/text.css" />
   <link rel="stylesheet" href="css/960/960.css" />
