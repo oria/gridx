@@ -4,7 +4,9 @@
   <link rel="stylesheet" href="css/960/reset.css" />
   <link rel="stylesheet" href="css/960/text.css" />
   <link rel="stylesheet" href="css/960/960.css" />
-
+  <meta name="description" content="GridX is the next generation of dojo grid(datagrid). It provides well modularized and plugin architecture." />
+  <meta name="keywords" content="dojo,grid,best,dijit,datagrid" />
+  
   <style>
     body {
       color: #666;
