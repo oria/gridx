@@ -161,3 +161,9 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+#############
+## IDE
+#############
+
+.c9revisions
