@@ -268,7 +268,7 @@ define([
 					onError: onError
 				}));
 			}else{
-				var results = s.query(req.query, req);
+				var results = s.query(req.query || {}, req);
 				Deferred.when(results.total, onBegin);
 				Deferred.when(results, onComplete, onError);
 			}
