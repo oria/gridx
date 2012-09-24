@@ -10,13 +10,20 @@
 	<link href="../../../dojox/mobile/themes/iphone/Button.css" rel="stylesheet"/>
 	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
 	<script>
-		var djConfig = {
-			packages: [
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
 				{
 					name: 'gridx',
 					location: '../gridx'
 				}
 			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_pull_refresh']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_pull_refresh']);
+			}
 		};
 	</script>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
@@ -27,34 +34,7 @@
 	</style>
 	
 	<script>
-		var columns = [
-			{field: 'id', width: '5%', title: 'Id'},
-			{field: 'artist', width: '46%', title: 'Name'},
-			{field: 'year', width: '18%', title: 'Price'}
-		];
-		require([
-			'dojo/_base/declare',
-			'dojo/domReady',
-			'dojo/data/ItemFileReadStore',
-			'dojox/mobile/parser',
-			'gridx/mobile/tests/support/data',
-			'gridx/mobile/Grid',
-			'gridx/mobile/PullRefresh',
-			'dojox/mobile/Heading',
-			'dojox/mobile/View',
-			'dojox/mobile/ScrollableView',
-			"dojox/mobile/compat",
-			'dojox/mobile/TabBar'
-		], function(declare, ready, ItemFileReadStore, parser, data, Grid, PullRefresh){
-			declare('gridx.mobile.tests.Grid', [Grid, PullRefresh], {});
-			ready(function(){
-				parser.parse();
-				grid.store = new ItemFileReadStore({
-					data: {items: data.many}
-				});
-				grid.setColumns(columns);
-			});
-		});
+		
 	</script>
 	
 </head>

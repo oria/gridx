@@ -13,11 +13,28 @@
 			height: 100%;
 		}
 	</style>
-	<script type="text/javascript" src="../../dojo_ga/1.7.2_src/dojo/dojo.js" 
+	<script type="text/javascript" src="../../dojo/dojo.js" 
 		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../../../gridx'}]"></script>
 	<script type="text/javascript" src='support/common.js'></script>
 	<script>
 	require(['gridx/tests/test_grid_filter'], function(){});
+	</script>
+	<script>
+	require(['gridx/modules/filter/Filter', 'dojo/ready'], function(F, dojoReady){
+		//
+		dojoReady(function(){
+			grid.filter.setFilter(
+				F.and(
+					F.or(F.contain(F.column('Name'), F.value('Hey'))
+						,F.contain(F.column('Name'), F.value('Love'))
+					)
+					,F.or(F.contain(F.column('Artist'), F.value('Bette'))
+						,F.contain(F.column('Artist'), F.value('Andy'))
+					)
+				)
+			);
+		});
+	});
 	</script>
 </head>
 <body class='claro'>

@@ -9,18 +9,23 @@
 	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
 	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
 	<script>
-		var djConfig = {
-			packages: [
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
 				{
-					name: 'gridx'
-					,location: '../gridx'
+					name: 'gridx',
+					location: '../gridx'
 				}
 			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_chart']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_chart']);
+			}
 		};
 	</script>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
-	
-	
 	<style>
 		body				{	background-color: #fff!important;}
 		.mobileGridx		{	width: 95%; margin-left: auto; margin-right: auto;}
@@ -30,38 +35,6 @@
 		.mobileGridxCell	{	font-size: 12px; padding: 5px;}
 		.color	span 		{	float: left; width:12px; height: 12px;}
 	</style>
-	
-	<script>
-		var columns = [
-			{field: 'color', width: '10%', title: 'Color', cssClass: 'color', template: '<span style="background-color:${color};">&nbsp;</span>'}
-			,{field: 'name', width: '40%', title: 'Name'}
-			,{field: 'country', width: '40%', title: 'Country'}
-			,{field: 'count', width: '10%', title: 'Count'}
-		];
-		
-		require([
-			'dojo/domReady',
-			'dojo/data/ItemFileReadStore',
-			'dojox/mobile/parser',
-			'gridx/mobile/tests/support/data',
-			"dojox/mobile/compat",
-			'dojox/mobile/Heading',
-			'dojox/mobile/View',
-			'dojox/mobile/ScrollableView',
-			'dojox/mobile/TabBar',
-			'gridx/mobile/Grid',
-			'dojox/charting/widget/Chart',
-			'dojox/charting/plot2d/Pie',
-			'gridx/mobile/tests/support/chart-theme'
-		], function(ready, ItemFileReadStore, parser, data){
-			seriesB = data.chart.series;
-			ready(function(){
-				parser.parse();
-				grid.store = new ItemFileReadStore({data: {items:data.chart.gridData['2.6']}});
-				grid.setColumns(columns);
-			});
-		});
-	</script>
 </head>
 
 <body style="visibility:hidden;">

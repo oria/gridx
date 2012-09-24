@@ -9,13 +9,20 @@
 	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
 	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
 	<script>
-		var djConfig = {
-			packages: [
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
 				{
 					name: 'gridx',
 					location: '../gridx'
 				}
 			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_sort']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_sort']);
+			}
 		};
 	</script>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
@@ -25,36 +32,6 @@
 		td, th	{	font-size: 12px; text-align: left;}
 		.mobileGridx th	{	}
 	</style>
-	
-	<script>
-		var columns = [
-			{field: 'name', width: '50%', title: 'Name'},
-			{field: 'price', width: '20%', title: 'Price', template: '<font color="green">$${price}.00</font>'},
-			{field: 'rating', width: '28%', title: 'Rating', template: '<font color="red">0.${rating}</font>'}
-		];
-		require([
-			'dojo/_base/declare',
-			'dojo/domReady',
-			'dojo/data/ItemFileReadStore',
-			'dojox/mobile/parser',
-			'gridx/mobile/tests/support/data',
-			'gridx/mobile/Grid',
-			'gridx/mobile/Sort',
-			'dojox/mobile/Heading',
-			'dojox/mobile/View',
-			'dojox/mobile/ScrollableView',
-			"dojox/mobile/compat",
-			'dojox/mobile/TabBar'
-		], function(declare, ready, ItemFileReadStore, parser, data, Grid, Sort){
-			declare('gridx.mobile.tests.Grid', [Grid, Sort], {});
-			ready(function(){
-				parser.parse();
-				grid.store = new ItemFileReadStore({data: {items:data.products}});
-				grid.setColumns(columns);
-			});
-		});
-	</script>
-	
 </head>
 
 <body style="visibility:hidden;">

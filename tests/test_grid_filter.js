@@ -90,6 +90,6 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getConditions">Get the available conditions of column "Download Date"</div><br/>',
 	''].join(''));
 	tp.startup();
-
+	
 	
 });

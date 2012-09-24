@@ -9,17 +9,23 @@
 	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
 	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
 	<script>
-		var djConfig = {
-			packages: [
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
 				{
 					name: 'gridx',
 					location: '../gridx'
 				}
 			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_basic']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_basic']);
+			}
 		};
 	</script>
-	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
-	
+	<script type="text/javascript" src="../../../dojo/dojo.js"></script>
 	<style>
 		.mobileGridxBody		{	background-color: #3D567A;}
 		.mobileGridxRow 		{	background-color: #3D567A; border-bottom: 2px solid #2D3E57;}
@@ -28,33 +34,6 @@
 		td.temp					{	font-size: 22px; font-weight: bold;}
 		td.tempMin				{	color: #7696C1;}
 	</style>
-	
-	<script>
-		var columns = [
-			{field: 'day', width: '50%', title: 'Day'},
-			{field: 'max', width: '16%', title: 'Max', cssClass: 'temp', template: '${max}°'},
-			{field: 'min', width: '16%', title: 'Min', cssClass: 'temp tempMin', template: '${min}°'}
-		];
-		require([
-			'dojo/domReady',
-			'dojo/data/ItemFileReadStore',
-			'dojox/mobile/parser',
-			'gridx/mobile/tests/support/data',
-			"dojox/mobile",
-			"dojox/mobile/compat",
-			'dojox/mobile/Heading',
-			'dojox/mobile/View',
-			'dojox/mobile/ScrollableView',
-			'dojox/mobile/TabBar',
-			'gridx/mobile/Grid'
-		], function(ready, ItemFileReadStore, parser, data){
-			ready(function(){
-				parser.parse();
-				grid.store = new ItemFileReadStore({data: {items: data.weather}});
-				grid.setColumns(columns);
-			});
-		});
-	</script>		
 </head>
 
 <body style="visibility:hidden;">
