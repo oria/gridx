@@ -235,12 +235,7 @@
   <style type="text/css">
 	
   </style>
-  <script src="../dojo/dojo.js" djConfig="parseOnLoad:true, isDebug:true"></script>
-  <script>
-	require([
-		'dojo/domReady!'], function(){
-	});
-  </script>
+  
 </head>
 
 <body>
@@ -270,6 +265,15 @@
     			<li>
     				<ul class="sub-nav">
     					{% for m in advanced %}
+					    <li><a href="#{{m.id}}">{{m.name}}</a></li>
+					    {% endfor %}
+    				</ul>
+    			</li>
+    			
+    			<li>Mobile GridX</li>
+    			<li>
+    				<ul class="sub-nav">
+    					{% for m in mobile %}
 					    <li><a href="#{{m.id}}">{{m.name}}</a></li>
 					    {% endfor %}
     				</ul>

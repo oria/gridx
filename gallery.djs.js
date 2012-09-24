@@ -148,8 +148,18 @@ define([
 	        			,demo: 'test_grid_tree.html'
 	        		}
 	        	]
+	        	,mobile: [
+	        		{
+	        			id: 'mobile'
+	        			,name: 'Mobile Grid'
+	        			,description: 'Mobile GridX is based on dojox.mobile and provides native-like UI.'
+	        				+ 'It\'s now only for experienmental using. '
+	        				+ 'Currently it provides several plugins such as pull-refresh/lazy-load/sort etc.'
+	        			,demo: '../mobie/demos/demo.html'
+	        		}
+	        	]
 	        };
-	        context.all = context.core.concat(context.basic).concat(context.advanced);
+	        context.all = context.core.concat(context.basic).concat(context.advanced).concat(context.mobile);
 	        context.all.forEach(function(m){if(!m.demo)m.demo = 'test_grid_' + m.id + '.html';});
 	        return context;
 	    }
