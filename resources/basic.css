@@ -58,7 +58,7 @@
 }
 
 .gridxHeaderRow table {
-	border-collapse: collapse;
+	border-collapse: separate;
 	border-spacing: 0;
 	border: none;
 	table-layout: fixed;
@@ -123,7 +123,7 @@
 
 .gridxRowHeaderRow table,
 .gridxRow .gridxRowTable {
-	border-collapse: collapse;
+	border-collapse: separate;
 	border-spacing: 0;
 	border: none;
 	table-layout: fixed;

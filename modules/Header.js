@@ -26,9 +26,6 @@ define([
 			// tags:
 			//		protected extension
 			return {
-				
-
-				
 				header: this
 			};
 		},
@@ -59,6 +56,13 @@ define([
 			t.aspect(g, 'onHScroll', '_onHScroll');
 			t.aspect(g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver');
 			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
+			//FIXME: sometimes FF will remember the scroll position of the header row, so force aligned with body.
+			//Does not occur in any other browsers.
+			if(sniff('ff')){
+				t.aspect(g, 'onModulesLoaded', function(){
+					t._onHScroll(t._scrollLeft);
+				});
+			}
 			if(g.columnResizer){
 				t.aspect(g.columnResizer, 'onResize', function(){
 					if(g.hScrollerNode.style.display == 'none'){
@@ -77,9 +81,6 @@ define([
 		},
 
 		columnMixin: {
-			
-
-			
 			headerNode: function(){
 				return this.grid.header.getHeaderNode(this.id);
 			}
@@ -152,9 +153,10 @@ define([
 		},
 
 		_onHScroll: function(left){
-			var ltr = this.grid.isLeftToRight();
-			this.innerNode.firstChild.style[ltr ? 'marginLeft' : 'marginRight'] = (!ltr && sniff('ff') ? left : -left) + 'px';
-			this._scrollLeft = left;
+			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
+				left = this.innerNode.scrollWidth - this.innerNode.offsetWidth - left;
+			}
+			this.innerNode.scrollLeft = this._scrollLeft = left;
 		},
 	
 		_onMouseEvent: function(eventName, e){
@@ -199,7 +201,7 @@ define([
 				g.focus.registerArea({
 					name: 'header',
 					priority: 0,
-					focusNode: t.domNode,
+					focusNode: t.innerNode,
 					scope: t,
 					doFocus: t._doFocus,
 					doBlur: t._blurNode,
@@ -242,6 +244,9 @@ define([
 							domClass.add(node, t._focusClass);
 						}
 						node.focus();
+						if(sniff('ie') < 8){
+							t.innerNode.scrollLeft = t._scrollLeft;
+						}
 					}, 0);
 					return true;
 				}
