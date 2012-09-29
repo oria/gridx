@@ -8,11 +8,12 @@ require([
 	'gridx/modules/IndirectSelect',
 	'gridx/modules/select/Row',
 	'gridx/modules/ColumnResizer',		
+	'gridx/modules/Persist',		
 	'gridx/tests/support/data/TreeColumnarTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
-], function(Grid, Cache, Focus, Tree, RowHeader, VirtualVScroller, IndirectSelect, SelectRow, ColumnResizer, dataSource, storeFactory, TestPane){
+], function(Grid, Cache, Focus, Tree, RowHeader, VirtualVScroller, IndirectSelect, SelectRow, ColumnResizer, Persist, dataSource, storeFactory, TestPane){
 
 	var store = storeFactory({
 		dataSource: dataSource, 
@@ -55,6 +56,7 @@ require([
 //            Focus,
 			VirtualVScroller,
 			Tree,
+//            Persist,
 //            ExtendedSelectRow,
 			ColumnResizer,
 			SelectRow,

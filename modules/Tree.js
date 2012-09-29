@@ -145,11 +145,11 @@ define([
 				var id,
 					data = g.persist.registerAndLoad('tree', function(){
 						return {
-							openInfo: this._openInfo, 
-							parentOpenInfo: this._parentOpenInfo
+							openInfo: t._openInfo, 
+							parentOpenInfo: t._parentOpenInfo
 						};
 					});
-				if(data){
+				if(data && data.openInfo && data.parentOpenInfo){
 					var openInfo = t._openInfo = data.openInfo,
 						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
 					for(id in openInfo){
