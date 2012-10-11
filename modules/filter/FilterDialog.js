@@ -131,7 +131,6 @@ define([
 			this._btnClear = registry.byNode(btns[2]);
 			this._btnCancel = registry.byNode(btns[3]);
 			this.connect(this._btnAdd, 'onClick', 'addRule');
-			this.connect(this._btnFilter, 'onClick', 'done');
 			this.connect(this._btnClear, 'onClick', 'clear');
 			this.connect(this._btnCancel, 'onClick', 'cancel');
 			this.connect(this._accordionContainer, 'removeChild', '_updateButtons');
