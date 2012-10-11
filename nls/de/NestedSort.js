@@ -1,13 +1,11 @@
-define(
-({
-	singleSort: "Einfache Sortierung",
+define({      
+	singleSort: "Einzelne Sortierung",
 	nestedSort: "Verschachtelte Sortierung",
-	ascending: "Für aufsteigende Sortierung hier klicken",
-	descending: "Für absteigende Sortierung hier klicken",
+	ascending: "Für aufsteigende Sortierung klicken",
+	descending: "Für absteigende Sortierung klicken",
 	sortingState: "${0} - ${1}",
 	unsorted: "Diese Spalte nicht sortieren",
-	waiSingleSortLabel: "${0} ist sortiert nach ${1}. Wählen Sie die Sortierung nach ${2} aus.",
-	waiNestedSortLabel:"${0} ist verschachtelt nach ${1} sortiert. Wählen Sie die verschachtelte Sortierung nach ${2} aus."
-})
-);
+	waiSingleSortLabel: "${0} - wird sortiert nach ${1}. Auswahl der Sortierung nach ${2}",
+	waiNestedSortLabel:"${0} - wird verschachtelt sortiert nach ${1}. Auswahl der verschachtelten Sortierung nach ${2}"
+});
 

@@ -1,7 +1,5 @@
-define(
-({
-	summary: 'Insgesamt: ${0}',
-	summaryWithSelection: 'Insgesamt: ${0} Ausgewählt: ${1}'
-})
-);
+define({     
+	summary: 'Gesamt: ${0}',
+	summaryWithSelection: 'Gesamt: ${0} Ausgewählt: ${1}'
+});
 

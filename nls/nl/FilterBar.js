@@ -1,7 +1,7 @@
-define(
-({
+define({      
+//begin v1.x content
 	"clearFilterDialogTitle": "Filter wissen",
-	"filterDefDialogTitle": "Filter",
+	"filterDefDialogTitle": "Filteren",
 	"defaultRuleTitle": "Regel",
 	"ruleTitleTemplate": "Regel ${ruleNumber}",
 	"noFilterApplied": "Geen filter toegepast.",
@@ -30,7 +30,7 @@ define(
 	"waiRelAll": "Voldoen aan al deze regels:",
 	"relationAny": "een of meer regels",
 	"waiRelAny": "Voldoen aan een van deze regels:",
-	"relationMsgFront": "Voldoen aan",
+	"relationMsgFront": "Overeenkomst",
 	"relationMsgTail": "",
 	"and": "en",
 	"or": "of",
@@ -43,7 +43,7 @@ define(
 	"waiCancelButton": "Dit dialoogvenster annuleren",
 	"clearButton": "Leegmaken",
 	"waiClearButton": "Het filter wissen",
-	"filterButton": "Filter",
+	"filterButton": "Filteren",
 	"waiFilterButton": "Het filter verzenden",
 	"columnSelectLabel": "Kolom",
 	"waiColumnSelectTemplate": "Kolom voor regel ${0}",
@@ -60,8 +60,8 @@ define(
 	"anycolumn": "een kolom",
 	"statusTipTitleNoFilter": "Filterbalk",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Voldoen aan",
-	"statusTipRelPost": "regel.",
+	"statusTipRelPre": "Overeenkomst",
+	"statusTipRelPost": "regels.",
 	"statusTipHeaderAll": "Voldoen aan alle regels.",
 	"statusTipHeaderAny": "Voldoen aan een regel.",
 	"defaultItemsName": "items",
@@ -79,11 +79,11 @@ define(
 	"falseLabel": "Onwaar",
 	"radioTrueLabel": "Waarde waar",
 	"radioFalseLabel": "Waarde onwaar",
-	"beginTimeRangeLabel": "Beginwaarde tijdsperiode",
-	"endTimeRangeLabel": "Eindwaarde tijdsperiode",
-	"beginDateRangeLabel": "Beginwaarde datumperiode",
-	"endDateRangeLabel": "Eindwaarde datumperiode",
+	"beginTimeRangeLabel": "Beginwaarde tijdbereik",
+	"endTimeRangeLabel": "Eindwaarde tijdbereik",
+	"beginDateRangeLabel": "Beginwaarde datumbereik",
+	"endDateRangeLabel": "Eindwaarde datumbereik",
 	"startsWithExpr": "${0}*"
-})
-);
+//end v1.x content
+});
 

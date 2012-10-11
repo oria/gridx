@@ -1,13 +1,11 @@
-define(
-({
+define({      
 	singleSort: "Enkelvoudig sorteren",
 	nestedSort: "Genest sorteren",
-	ascending: "Klik hier voor oplopend sorteren",
-	descending: "Klik hier voor aflopend sorteren",
+	ascending: "Klik om oplopend te sorteren",
+	descending: "Klik om aflopend te sorteren",
 	sortingState: "${0} - ${1}",
 	unsorted: "Deze kolom niet sorteren",
-	waiSingleSortLabel: "${0} - is gesorteerd op ${1}. Kies om te sorteren op ${2}",
-	waiNestedSortLabel:"${0} - is genest gesorteerd op ${1}. Kies om genest te sorteren op ${2}"
-})
-);
+	waiSingleSortLabel: "${0} - is gesorteerd op ${1}. Nu sorteren op ${2}",
+	waiNestedSortLabel:"${0} - is genest gesorteerd op ${1}. Nu genest sorteren op ${2}"
+});
 
