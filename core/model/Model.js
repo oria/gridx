@@ -11,7 +11,66 @@ define([
 	var isArrayLike = lang.isArrayLike,
 		isString = lang.isString;
 
-	
+	function isId(it){
+		return it || it === 0;
+	}
+
+	function isIndex(it){
+		return typeof it == 'number' && it >= 0;
+	}
+
+	function isRange(it){
+		return it && isIndex(it.start);
+	}
+
+	function normArgs(self, args){
+		var i, rgs = [], ids = [],
+		res = {
+			range: rgs,
+			id: ids 
+		},
+		f = function(a){
+			if(isRange(a)){
+				rgs.push(a);
+			}else if(isIndex(a)){
+				rgs.push({start: a, count: 1});
+			}else if(isArrayLike(a)){
+				for(i = a.length - 1; i >= 0; --i){
+					if(isIndex(a[i])){
+						rgs.push({
+							start: a[i],
+							count: 1
+						});
+					}else if(isRange(a[i])){
+						rgs.push(a[i]);
+					}else if(isString(a)){
+						ids.push(a[i]);
+					}
+				}
+			}else if(isString(a)){
+				ids.push(a);
+			}
+		};
+		if(args && (args.index || args.range || args.id)){
+			f(args.index);
+			f(args.range);
+			if(isArrayLike(args.id)){
+				for(i = args.id.length - 1; i >= 0; --i){
+					ids.push(args.id[i]);
+				}
+			}else if(isId(args.id)){
+				ids.push(args.id);
+			}
+		}else{
+			f(args);
+		}
+		if(!rgs.length && !ids.length && self.size() < 0){
+			//first time load, try to load a page
+			rgs.push({start: 0, count: self._cache.pageSize || 1});
+		}
+		return res;
+	}
+
 	return declare(/*===== "gridx.core.model.Model", =====*/[], {
 		// summary:
 		//		This class handles all of the data logic in grid.
@@ -53,9 +112,7 @@ define([
 			this._cache.clear();
 		},
 
-		isId: function(id){
-			return id || id === 0;
-		},
+		isId: isId,
 
 		setStore: function(store){
 			this.store = store;
@@ -221,8 +278,7 @@ define([
 			});
 			return this._exec();	//dojo.Deferred
 		},
-	
-		
+
 		scan: function(args, callback){
 			// summary:
 			//		Go through all the rows in several batches from start to end (or according to given args),
@@ -328,26 +384,25 @@ define([
 			}
 		},
 
-		_execEvents: function(scope, callback){
-			this._onSizeChange();
-			//TODO: fire events here
-			if(callback){
-				callback.call(scope);
-			}
-		},
-
 		_cmdRequest: function(){
 			var t = this;
 			return new DeferredList(array.map(arguments, function(args){
 				var arg = args[0],
-					finish = lang.hitch(t, t._execEvents, args[2], args[1]);
+					finish = function(){
+						t._onSizeChange();
+						//TODO: fire events here
+						//args[1] is callback, args[2] is scope
+						if(args[1]){
+							args[1].call(args[2]);
+						}
+					};
 				if(arg === null || !args.length){
 					var d = new Deferred;
 					finish();
 					d.callback();
 					return d;
 				}
-				return t._model._call('when', [t._normArgs(arg), finish]);
+				return t._model._call('when', [normArgs(t, arg), finish]);
 			}), 0, 1);
 		},
 
@@ -359,7 +414,6 @@ define([
 				cmds = t._cmdQueue,
 				finish = function(d, err){
 					t._busy = 0;
-					c.skipCacheSizeCheck = 0;
 					if(c._checkSize){
 						c._checkSize();
 					}
@@ -393,11 +447,10 @@ define([
 				return t._busy;
 			}
 			t._busy = d;
-			c.skipCacheSizeCheck = 1;
 			func();
 			return d;
 		},
-	
+
 		_createExts: function(exts, args){
 			//Ensure the given extensions are valid
 			exts = array.filter(exts, function(ext){
@@ -416,60 +469,6 @@ define([
 					this._exts[ext.name] = ext;
 				}
 			}
-		},
-	
-		_normArgs: function(args){
-			var i, rgs = [], ids = [],
-			res = {
-				range: rgs,
-				id: ids 
-			},
-			isIndex = function(a){
-				return typeof a == 'number' && a >= 0;
-			},
-			isRange = function(a){
-				return a && isIndex(a.start);
-			},
-			f = function(a){
-				if(isRange(a)){
-					rgs.push(a);
-				}else if(isIndex(a)){
-					rgs.push({start: a, count: 1});
-				}else if(isArrayLike(a)){
-					for(i = a.length - 1; i >= 0; --i){
-						if(isIndex(a[i])){
-							rgs.push({
-								start: a[i],
-								count: 1
-							});
-						}else if(isRange(a[i])){
-							rgs.push(a[i]);
-						}else if(isString(a)){
-							ids.push(a[i]);
-						}
-					}
-				}else if(isString(a)){
-					ids.push(a);
-				}
-			};
-			if(args && (args.index || args.range || args.id)){
-				f(args.index);
-				f(args.range);
-				if(isArrayLike(args.id)){
-					for(i = args.id.length - 1; i >= 0; --i){
-						ids.push(args.id[i]);
-					}
-				}else if(this.isId(args.id)){
-					ids.push(args.id);
-				}
-			}else{
-				f(args);
-			}
-			if(!rgs.length && !ids.length && this.size() < 0){
-				//first time load, try to load a page
-				rgs.push({start: 0, count: this._cache.pageSize || 1});
-			}
-			return res;
 		}
 	});
 });

@@ -76,7 +76,7 @@ define([
 			domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
 			t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 			t._initEvents(t._compNames, t._eventNames);
-			t._reset(t);
+			t._init();
 			//resize the grid when zoomed in/out.
 			t.connect(metrics, 'onFontResize', function(){
 				t.resize();
