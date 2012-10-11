@@ -127,17 +127,21 @@ define([
 				innerNode = header.innerNode,
 				bs = g.bodyNode.style,
 				hs = innerNode.style,
-				headerBorder = domGeometry.getMarginBox(header.domNode).w - domGeometry.getContentBox(header.domNode).w,
-				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail - headerBorder / 2,
+				headerBorder = domGeometry.getBorderExtents(header.domNode).w,
+				tailBorder = headerBorder,
+				mainBorder = 0,
+				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail - headerBorder,
 				refNode = query('.gridxCell', innerNode)[0],
 				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
 				isGridHidden = !dn.offsetHeight;
-			//FIXME: this is only for claro theme. Any better way to do this?
-			if(headerBorder === 0){
-				headerBorder = 1;
+			//FIXME: this is theme dependent. Any better way to do this?
+			if(tailBorder === 0){
+				tailBorder = 1;
+			}else{
+				mainBorder = 2;
 			}
 			hs[marginLead] = lead + 'px';
-			hs[marginTail] = (tail > headerBorder ? tail - headerBorder : 0)  + 'px';
+			hs[marginTail] = (tail > tailBorder ? tail - tailBorder : 0)  + 'px';
 			g.mainNode.style[marginLead] = lead + 'px';
 			g.mainNode.style[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
@@ -160,8 +164,10 @@ define([
 					}
 				});
 				bs.width = totalWidth + 'px';
-				dn.style.width = (lead + tail + totalWidth) + 'px';
-			}else if(!t.arg('autoResize')){
+				dn.style.width = (lead + tail + totalWidth + mainBorder) + 'px';
+			}else if(t.arg('autoResize')){
+				hs.borderWidth = g.vScrollerNode.style.display == 'none' ? 0 : '';
+			}else{
 				var autoCols = [],
 					cols = g._columns,
 					fixedWidth = 0;

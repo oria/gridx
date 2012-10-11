@@ -150,23 +150,7 @@
 }
 
 .gridx .gridxBody .gridxCellFocus {
-	outline: 1px dashed darkblue;
-}
-
-.dj_ie7 .gridx .gridxBody .gridxRow .gridxCellFocus {
-	border: 1px dashed darkblue;
-}
-
-.gridx .gridxBody .gridxRow:first-child .gridxCellFocus {
-	border-top: 1px dashed darkblue;
-}
-
-.gridx .gridxBody .gridxRow .gridxCellFocus:first-child {
-	border-left: 1px dashed darkblue;
-}
-
-.dijit_a11y .gridx .gridxBody .gridxCellFocus {
-	border: 1px dashed darkblue;
+	border: 1px dashed darkblue !important;
 }
 
 .gridxBodyEmpty {
