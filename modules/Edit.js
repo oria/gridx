@@ -236,8 +236,7 @@ define([
 					g.cellWidget.setCellDecorator(rowId, colId, 
 						t._getDecorator(colId), 
 						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
-							lang.partial(getTypeData, col))
-					);
+							lang.partial(getTypeData, col)));
 					t._record(rowId, colId);
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 						t._focusEditor(rowId, colId);
@@ -315,16 +314,19 @@ define([
 					var editorArgs = cell.column.editorArgs,
 						valueField = editorArgs && editorArgs.valueField || 'value',
 						v = editor.get(valueField),
-						finish = function(success){
+						finish = function(success, e){
+							if(!success){
+								console.warn('Can not apply change! Error message: ', e);
+							}
 							t._erase(rowId, colId);
 							if(cell.column.alwaysEditing){
 								d.callback(success);
-								t.onApply(cell, success);
+								t.onApply(cell, success, e);
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
-									t.onApply(cell, success);
+									t.onApply(cell, success, e);
 								});
 							}
 						};
@@ -337,18 +339,20 @@ define([
 						if(lang.isFunction(cell.column.customApplyEdit)){
 							Deferred.when(cell.column.customApplyEdit(cell, v), function(){
 								finish(true);
+							}, function(e){
+								finish(false, e);
 							});
 						}else if(cell.rawData() === v){
 							finish(true);
 						}else{
 							Deferred.when(cell.setRawData(v), function(){
 								finish(true);
+							}, function(e){
+								finish(false, e);
 							});
 						}
 					}catch(e){
-						console.warn('Can not apply change! Error message: ', e);
-						finish(false);
-						return d;	//dojo.Deferred
+						finish(false, e);
 					}
 					return d;	//dojo.Deferred
 				}
@@ -638,7 +642,7 @@ define([
 						return g._columns[c].editable;
 					};
 				body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-					util.stopEvent(evt);
+					g.focus.stopEvent(evt);
 					t._applyAll();
 					t._focusCellCol = g._columns[obj.c].id;
 					var rowInfo = body.getRowInfo({visualIndex: obj.r});
@@ -698,7 +702,7 @@ define([
 						});
 					}else if(g.focus.currentArea() == 'body'){
 						//If not doing this, some dijit, like DateTextBox/TimeTextBox will show validation error.
-						util.stopEvent(e);
+						g.focus.stopEvent(e);
 						t._onUIBegin(e);
 					}
 				}else if(e.keyCode == keys.ESCAPE && editing){
