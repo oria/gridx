@@ -51,11 +51,6 @@
 	border-width: 0 1px 0 0;
 }
 
-.dj_ie .gridxHeaderRowInner{
-	/* This is only for IE6/7, if not position:relative, overflow:hidden will not work.*/
-	position: relative; 
-}
-
 .gridxHeaderRow table {
 	border-collapse: separate;
 	border-spacing: 0;
