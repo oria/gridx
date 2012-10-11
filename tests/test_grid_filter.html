@@ -14,14 +14,13 @@
 		}
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../../../gridx'}]"></script>
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
 	<script type="text/javascript" src='support/common.js'></script>
 	<script>
 	require(['gridx/tests/test_grid_filter'], function(){});
 	</script>
 	<script>
-	require(['gridx/modules/filter/Filter', 'dojo/ready'], function(F, dojoReady){
-		//
+	/*require(['gridx/modules/filter/Filter', 'dojo/ready'], function(F, dojoReady){
 		dojoReady(function(){
 			grid.filter.setFilter(
 				F.and(
@@ -34,7 +33,7 @@
 				)
 			);
 		});
-	});
+	});*/
 	</script>
 </head>
 <body class='claro'>

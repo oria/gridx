@@ -131,25 +131,23 @@ define([
 				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail - headerBorder / 2,
 				refNode = query('.gridxCell', innerNode)[0],
 				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
-				isGridHidden = !dn.offsetHeight,
-				margin = /*isCollapse && lead > 0 ? (lead - 1) : */lead;
+				isGridHidden = !dn.offsetHeight;
 			//FIXME: this is only for claro theme. Any better way to do this?
 			if(headerBorder === 0){
 				headerBorder = 1;
 			}
-			hs[marginLead] = margin + 'px';
+			hs[marginLead] = lead + 'px';
 			hs[marginTail] = (tail > headerBorder ? tail - headerBorder : 0)  + 'px';
-			g.mainNode.style[marginLead] = margin + 'px';
+			g.mainNode.style[marginLead] = lead + 'px';
 			g.mainNode.style[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
-			console.log('bodyWidth: ', bodyWidth, lead, tail, headerBorder);
 			if(skip){
 				t.onUpdate();
 				return;
 			}
 			if(g.autoWidth){
 				var headers = query('th.gridxCell', innerNode),
-					totalWidth = /*isCollapse ? 2 : */0;
+					totalWidth = 0;
 				headers.forEach(function(node){
 					var w = domStyle.get(node, 'width');
 					if(!sniff('safari') || !isGridHidden){

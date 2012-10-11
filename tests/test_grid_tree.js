@@ -53,7 +53,7 @@ require([
 		selectRowTriggerOnCell: false,
 		treeExpandLevel: 2,
 		modules: [
-//            Focus,
+			Focus,
 			VirtualVScroller,
 			Tree,
 //            Persist,
