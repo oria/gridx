@@ -46,7 +46,9 @@ define([
 			//		If *skipUpdateBody* is not TRUE, then must not throw, else, only allowed to throw the exceptions
 			//		that are generated from the *checker* function.
 			//		If *checker* is not a function, or null, should not throw.
-			var t = this, m = t.model;
+			var t = this,
+				g = t.grid,
+				m = t.model;
 			if(checker != t._checker){
 				t._checker = checker;
 				if(t.arg('serverMode')){
@@ -55,7 +57,11 @@ define([
 					m.filter(checker);
 				}
 				if(!skipUpdateBody){
-					t.grid.body.refresh();
+					if(g.tree){
+						g.tree.refresh();
+					}else{
+						g.body.refresh();
+					}
 				}
 			}
 			//this.model.query({_filter: 'xxx'});//{_filter: 'xxx'});//checker.expr);
