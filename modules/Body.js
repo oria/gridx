@@ -3,6 +3,7 @@ define([
 	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
+	"dojo/json",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
@@ -11,7 +12,7 @@ define([
 	"../core/_Module",
 	"../core/util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, array, lang, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
+], function(declare, query, array, lang, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
 	/*=====
 	gridx._RowCellInfo = function(){
@@ -172,6 +173,15 @@ define([
 		//		If true, the whole row will be re-rendered even if only one field has changed.
 		//		Default to false, so that only one cell will be re-rendered editing that cell.
 		renderWholeRowOnSet: false,
+
+		// compareOnSet: Function
+		//		When data is changed in store, compare the old data and the new data of grid, return true if
+		//		they are the same, false if not, so that the body can decide whether to refresh the corresponding cell.
+		compareOnSet: function(v1, v2){
+			return typeof v1 == 'object' && typeof v2 == 'object' ? 
+				json.stringify(v1) == json.stringify(v2) : 
+				v1 === v2;
+		},
 
 		getRowNode: function(args){
 			// summary:
@@ -772,30 +782,26 @@ define([
 						oldData = oldCache.data,
 						cols = g._columns,
 						renderWhole = t.arg('renderWholeRowOnSet'),
-						changedCols = [];
-					if(!renderWhole){
-						array.some(cols, function(col){
-							if(curData[col.id] !== oldData[col.id]){
-								changedCols.push(col);
-							}
-							return changedCols.length > 1;
-						});
-					}
-					if(renderWhole || changedCols.length > 1){
+						compareOnSet = t.arg('compareOnSet');
+					if(renderWhole){
 						rowNode.innerHTML = t._buildCells(row);
 						t.onAfterRow(row);
 						t.onSet(row);
 						t.onRender(index, 1);
-					}else if(changedCols.length == 1){
-						var col = changedCols[0],
-							isPadding = g.tree && curData[col.id] === undefined,
-							cell = row.cell(col.id, 1);
-						cell.node().innerHTML = t._buildCellContent(cell, isPadding);
-						t.onAfterCell(cell);
+					}else{
+						array.forEach(cols, function(col){
+							if(!compareOnSet(curData[col.id], oldData[col.id])){
+								var isPadding = g.tree && curData[col.id] === undefined,
+									cell = row.cell(col.id, 1);
+								cell.node().innerHTML = t._buildCellContent(cell, isPadding);
+								t.onAfterCell(cell);
+							}
+						});
 					}
 				}
 			}
 		},
+
 
 		_onDelete: function(id){
 			var t = this;
@@ -919,9 +925,9 @@ define([
 		},
 
 		_focusCell: function(evt, rowVisIdx, colIdx){
-			util.stopEvent(evt);
 			var t = this,
 				g = t.grid;
+			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
 			var colId = g._columns[colIdx].id,
@@ -960,12 +966,12 @@ define([
 
 		_moveFocus: function(rowStep, colStep, evt){
 			if(rowStep || colStep){
-				util.stopEvent(evt); //Prevent scrolling the whole page.
 				var r, c,
 					t = this,
 					g = t.grid, 
 					cols = g._columns,
 					vc = t.visualCount;
+				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
 				r = t._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
 				c = t._focusCellCol + colStep;
