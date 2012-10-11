@@ -327,7 +327,7 @@ define([
 					}else{
 						return;
 					}
-					focus.stop(evt);
+					focus.stopEvent(evt);
 				});
 
 				focus.registerArea({
@@ -343,7 +343,7 @@ define([
 				t.connect(t._gotoBtn, 'onkeydown', function(evt){
 					if(evt.keyCode == keys.ENTER){
 						t._showGotoDialog();
-						focus.stop(evt);
+						focus.stopEvent(evt);
 					}
 				});
 			}

@@ -4,9 +4,10 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/Deferred",
 	"dojo/query",
+	"dojo/dom-geometry",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, sniff, Deferred, query, metrics, _Module){
+], function(declare, domStyle, sniff, Deferred, query, domGeo, metrics, _Module){
 
 	return declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
 		// summary:
@@ -117,6 +118,7 @@ define([
 				lead = g.hLayout.lead,
 				tail = g.hLayout.tail,
 				w = (g.domNode.clientWidth || domStyle.get(g.domNode, 'width')) - lead - tail,
+				headerBorder = domGeo.getBorderExtents(g.header.domNode).w,
 				bn = g.header.innerNode,
 				pl = domStyle.get(bn, ltr ? 'paddingLeft' : 'paddingRight') || 0,	//TODO: It is special for column lock now.
 				s = t.domNode.style,
