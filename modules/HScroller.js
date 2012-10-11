@@ -102,8 +102,6 @@ define([
 			}else if(right > scrollLeft + hNode.offsetWidth){
 				this.scroll(right - hNode.offsetWidth);
 			}
-			if(ltr)hNode.scrollLeft = 0;//force to 0, the header uses margin to scroll
-			else hNode.scrollLeft = hNode.scrollWidth - hNode.offsetWidth;
 		},
 		
 		refresh: function(){
@@ -128,7 +126,9 @@ define([
 			s[marginLead] = lead + pl + 'px';
 			s[marginTail] = tail + 'px';
 			//Insure IE does not throw error...
-			s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
+			if(pl > 0){
+				s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
+			}
 			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
 			if(oldDisplay != newDisplay){

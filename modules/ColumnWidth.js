@@ -127,36 +127,33 @@ define([
 				innerNode = header.innerNode,
 				bs = g.bodyNode.style,
 				hs = innerNode.style,
-				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail,
+				headerBorder = domGeometry.getMarginBox(header.domNode).w - domGeometry.getContentBox(header.domNode).w,
+				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail - headerBorder / 2,
 				refNode = query('.gridxCell', innerNode)[0],
 				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
-				isGridHidden = !dn.offsetHeight,
-				isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse',
-				margin = isCollapse && lead > 0 ? (lead - 1) : lead;
-			hs[marginLead] = margin + 'px';
-			hs[marginTail] = ((t.arg('autoResize') || !isCollapse) && tail > 0 ? tail - 1 : 0)  + 'px';
-			g.mainNode.style[marginLead] = margin + 'px';
+				isGridHidden = !dn.offsetHeight;
+			//FIXME: this is only for claro theme. Any better way to do this?
+			if(headerBorder === 0){
+				headerBorder = 1;
+			}
+			hs[marginLead] = lead + 'px';
+			hs[marginTail] = (tail > headerBorder ? tail - headerBorder : 0)  + 'px';
+			g.mainNode.style[marginLead] = lead + 'px';
 			g.mainNode.style[marginTail] = tail + 'px';
 			bodyWidth = bodyWidth < 0 ? 0 : bodyWidth;
 			if(skip){
 				t.onUpdate();
 				return;
 			}
-			if(isCollapse){
-				padBorder += isGridHidden ? -1 : 1;
-			}
 			if(g.autoWidth){
 				var headers = query('th.gridxCell', innerNode),
-					totalWidth = isCollapse ? 2 : 0;
+					totalWidth = 0;
 				headers.forEach(function(node){
 					var w = domStyle.get(node, 'width');
 					if(!sniff('safari') || !isGridHidden){
 						w += padBorder;
 					}
 					totalWidth += w;
-					if(isCollapse){
-						totalWidth--;
-					}
 					var c = g._columnsById[node.getAttribute('colid')];
 					if(c.width == 'auto' || (/%$/).test(c.width)){
 						node.style.width = c.width = w + 'px';
@@ -167,13 +164,15 @@ define([
 			}else if(!t.arg('autoResize')){
 				var autoCols = [],
 					cols = g._columns,
-					fixedWidth = isCollapse ? 2 : 0;
+					fixedWidth = 0;
+				if(sniff('safari')){
+					padBorder = 0;
+				}
 				array.forEach(cols, function(c){
 					if(c.declaredWidth == 'auto'){
 						autoCols.push(c);
 					}else if(/%$/.test(c.declaredWidth)){
-						var w = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 -
-							(sniff('safari') ? (isCollapse ? 1 : 0) : padBorder), 10);
+						var w = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - padBorder, 10);
 						//Check if less than zero, prevent error in IE.
 						if(w < 0){
 							w = 0;
@@ -183,32 +182,19 @@ define([
 				});
 				array.forEach(cols, function(c){
 					if(c.declaredWidth != 'auto'){
-						var w = sniff('safari') ?
-							parseFloat(header.getHeaderNode(c.id).style.width, 10) :
-							domStyle.get(header.getHeaderNode(c.id), 'width');
+						var headerNode = header.getHeaderNode(c.id),
+							w = sniff('safari') ? parseFloat(headerNode.style.width, 10) :
+								headerNode.offsetWidth || (domStyle.get(headerNode, 'width') + padBorder);
 						if(/%$/.test(c.declaredWidth)){
-							c.width = w + 'px';
-						}
-						if(!sniff('safari')){
-							w += padBorder;
+							c.width = (w > padBorder ? w - padBorder : 0) + 'px';
 						}
 						fixedWidth += w;
 					}
 				});
 				if(autoCols.length){
-					if(sniff('safari')){
-						padBorder = 0;
-					}
 					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
 						ww = parseInt(w, 10);
 					if(bodyWidth > fixedWidth){
-						if(isCollapse){
-							w += cols.length / autoCols.length;
-							//FIXME:IE7 is strange here...
-							if(sniff('ie') < 8){
-								w += cols.length / autoCols.length;
-							}
-						}
 						ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
 					}
 					w = parseInt(w, 10);
