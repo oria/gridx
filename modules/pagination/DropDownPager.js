@@ -90,7 +90,7 @@ define([
 						isAll = !(pageSize > 0);
 					options.push({
 						label: isAll ? nlsAll : pageSize,
-						value: isAll ? -1 : pageSize,
+						value: (isAll ? -1 : pageSize) + '',
 						selected: currentSize == pageSize || (isAll && p.isAll())
 					});
 				}
