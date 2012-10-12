@@ -455,6 +455,13 @@ define([
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
+				if(sniff('ie')){
+					//In IE, setting innerHTML will completely destroy the node,
+					//But CellWidget still need it.
+					while(n.childNodes.length){
+						n.removeChild(n.firstChild);
+					}
+				}
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
