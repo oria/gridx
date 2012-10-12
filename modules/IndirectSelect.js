@@ -208,7 +208,7 @@ define([
 				};
 			g.focus.registerArea({
 				name: 'selectAll',
-				priority: 0.89,
+				priority: -0.1,
 				focusNode: rowHeader.headerNode,
 				doFocus: focus,
 				doBlur: blur,

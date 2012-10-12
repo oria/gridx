@@ -255,7 +255,7 @@ define([
 		},
 
 		_blurNode: function(){
-			var t = this, n = query('th.' + t._focusClass, t.domNode)[0];
+			var t = this, n = query('th.' + t._focusClass, t.innerNode)[0];
 			if(n){
 				domClass.remove(n, t._focusClass);
 			}
