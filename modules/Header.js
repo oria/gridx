@@ -136,7 +136,7 @@ define([
 				f = g.focus,
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			array.forEach(g._columns, function(col){
-				sb.push('<th id="', g.id, '-', col.id,
+				sb.push('<th id="', (g.id + '-' + col.id).replace(/\s+/, ''),
 					'" role="columnheader" aria-readonly="true" tabindex="-1" colid="', col.id,
 					'" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
