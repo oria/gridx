@@ -272,7 +272,6 @@ define([
 						var rows = t._buildRows(start, count, uncachedRows, renderedRows);
 						if(rows){
 							domConstruct.place(rows, n, 'before');
-							array.forEach(renderedRows, t.onAfterRow, t);
 						}
 					}
 					while(n){
@@ -285,6 +284,7 @@ define([
 						}
 						n = tmp;
 					}
+					array.forEach(renderedRows, t.onAfterRow, t);
 					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 						t.onRender(start, count);
 						t.onForcedScroll();
