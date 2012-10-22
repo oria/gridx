@@ -760,7 +760,7 @@ define([
 				g = this.grid,
 				tag;
 			for(; n && n != g.bodyNode; n = n.parentNode){
-				tag = n.tagName.toLowerCase();
+				tag = n.tagName && n.tagName.toLowerCase();
 				if(tag == 'td' && domClass.contains(n, 'gridxCell')){
 					var col = g._columnsById[n.getAttribute('colid')];
 					e.cellNode = n;

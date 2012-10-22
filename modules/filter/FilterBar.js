@@ -255,6 +255,9 @@ define([
 			//		grid.filterBar.refresh();
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
+			this._currentSize = this.model.size();
+			this._totalSize = this.model._cache.size();
+			this._buildFilterState();
 		},
 		isVisible: function(){
 			return this.domNode.style.display != 'none';
