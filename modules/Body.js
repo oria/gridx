@@ -692,7 +692,7 @@ define([
 				cell = g.cell(row.id, col.id, 1);
 				cls = (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
 				style = (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-				sb.push('<td aria-describedby="', g.id, '-', col.id, '" class="gridxCell ');
+				sb.push('<td aria-describedby="', (g.id + '-' + col.id).replace(/\s+/, ''), '" class="gridxCell ');
 				if(isPadding){
 					sb.push('gridxPaddingCell');
 				}
@@ -760,7 +760,7 @@ define([
 				g = this.grid,
 				tag;
 			for(; n && n != g.bodyNode; n = n.parentNode){
-				tag = n.tagName.toLowerCase();
+				tag = n.tagName && n.tagName.toLowerCase();
 				if(tag == 'td' && domClass.contains(n, 'gridxCell')){
 					var col = g._columnsById[n.getAttribute('colid')];
 					e.cellNode = n;
