@@ -19,23 +19,7 @@
 	<script>
 	require(['gridx/tests/test_grid_filter'], function(){});
 	</script>
-	<script>
-	require(['gridx/modules/filter/Filter', 'dojo/ready'], function(F, dojoReady){
-		//
-		dojoReady(function(){
-			grid.filter.setFilter(
-				F.and(
-					F.or(F.contain(F.column('Name'), F.value('Hey'))
-						,F.contain(F.column('Name'), F.value('Love'))
-					)
-					,F.or(F.contain(F.column('Artist'), F.value('Bette'))
-						,F.contain(F.column('Artist'), F.value('Andy'))
-					)
-				)
-			);
-		});
-	});
-	</script>
+	
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>

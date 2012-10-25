@@ -6,10 +6,10 @@ define([
 	'dojo/aspect',
 	'dojo/string',
 	'dojo/dom-class',
-	'dojox/mobile/_DataMixin',
+	'dojox/mobile/_StoreMixin',
 	'dojox/mobile/Pane',
 	'dojox/mobile/ScrollablePane'
-], function(kernel, declare, lang, array, aspect, string, css, _DataMixin, Pane, ScrollablePane){
+], function(kernel, declare, lang, array, aspect, string, css, _StoreMixin, Pane, ScrollablePane){
 	// module:
 	//	gridx/mobile/Grid
 	// summary:
@@ -17,7 +17,7 @@ define([
 	
 	kernel.experimental('gridx/mobile/Grid');
 	
-	var Grid = declare('gridx.mobile.Grid', [Pane, _DataMixin], {
+	return declare('gridx.mobile.Grid', [Pane, _StoreMixin], {
 		// summary:
 		//	A mobile grid that has fixed header, footer and a scrollable body.
 		
@@ -43,29 +43,15 @@ define([
 		//	Column definition to show the grid from store
 		columns: null,
 		
-		//plugins: array
-		//	Plugins for the mobile grid.
-		//,plugins: [],
-		
-		setStore: function(store, query, queryOptions){
-			// summary
-			//	Set the store of the grid, it causes rebuild the grid body.
-			this.inherited(arguments);
-			this._buildBody();
-		},
+		//rowCount: number
+		//	Total rows of the grid
+		rowCount: 0,
 		
 		setColumns: function(columns){
 			// summary:
 			//	Set columns to show for the grid. 
 			//  Maybe improve performance by adding/removing some columns instead of re-rendering.
 			this.columns = columns;
-			this.buildGrid();
-		},
-		
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			this.queryOptions = this.queryOptions || {};
-			this.query = this.query || {};
 		},
 		
 		buildGrid: function(){
@@ -99,27 +85,14 @@ define([
 			this.headerNode.innerHTML = arr.join('');
 		},
 		
-		_buildBody: function(){
+		_buildBody: function(items){
 			// summary:
 			//	Build the grid body
-			var self = this, q = this.query, opt = this.queryOptions;
-			this.store.fetch({
-				query: q,
-				queryOptions: opt,
-				sort: opt && opt.sort || [],
-				onComplete: function(items){
-					var arr = [];
-					array.forEach(items, function(item, i){
-						arr.push(self._createRow(item, i));
-					});
-					self.bodyPane.containerNode.innerHTML = arr.join('');
-				},
-				onError: function(err){
-					console.error('Failed to fetch items from store:', err);
-				},
-				start: opt && opt.start,
-				count: opt && opt.count
-			});
+			var arr = [];
+			array.forEach(items, function(item, i){
+				arr.push(this._createRow(item, i));
+			}, this);
+			this.bodyPane.containerNode.innerHTML = arr.join('');
 		},
 		
 		_createRow: function(item, i){
@@ -148,11 +121,11 @@ define([
 			// summary:
 			//	Get a cell content by the column definition.
 			//	* Currently only support string content, will add support for widget in future.
-			var f = col.formatter, obj = this._itemToObject(item);
+			var f = col.formatter;
 			if(col.template){
-				return string.substitute(col.template, obj);
+				return string.substitute(col.template, item);
 			}else{
-				return f ? f(obj, col) : obj[col.field];
+				return f ? f(item, col) : item[col.field];
 			}
 		},
 		
@@ -210,20 +183,37 @@ define([
 		},
 		
 		startup: function(){
-			this.inherited(arguments);
 			this.bodyPane.startup();
+			this.inherited(arguments);
+			this.refresh();
 		},
 		
-		_itemToObject: function(item){
+		refresh: function(){
+			this.buildGrid();
+			this.inherited(arguments);
+		},
+		
+		onComplete: function(items){
 			// summary:
-			//	Convert a store item to object
-			var store = this.store, arr = store.getAttributes(item), res = {};
-			array.forEach(arr, function(key){
-				res[key] = store.getValue(item, key);
-			});
-			return res;
+			//		An handler that is called after the fetch completes.
+			this._buildBody(items);
+		},
+
+		onError: function(errorData){
+			// summary:
+			//		An error handler.
+			console.log('error: ', errorData);
+		},
+
+		onUpdate: function(item, insertedInto){
+			// summary:
+			//		Adds a new item or updates an existing item.
+		},
+
+		onDelete: function(item, removedFrom){
+			// summary:
+			//		Deletes an existing item.
 		}
 	});
-	
-	return Grid;
+
 });

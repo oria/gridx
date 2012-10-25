@@ -2,13 +2,14 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
 	'dojo/dom-construct',
-	'dojo/dom-class'
-], function(declare, array, dom, css){
+	'dojo/dom-class',
+	'dojo/Deferred'
+], function(declare, array, dom, css, Deferred){
 	return declare(null, {
 		pageSize: 20,
 		currentPage: 0,
 		totalPages: 0,
-		rowCount: 910,
+		
 		postMixInProperties: function(){
 			this.inherited(arguments);
 			var opt = this.queryOptions;
@@ -29,43 +30,64 @@ define([
 			}, wrapper, 'last');
 			this.connect(this._buttonLoadMore, 'onclick', 'loadMore');
 		},
-		_buildBody: function(){
-			var self = this, q = this.query, opt = this.queryOptions;
-			this.store.fetch({
-				query: q,
-				queryOptions: opt,
-				sort: opt && opt.sort || [],
-				onComplete: function(items){
-					var arr = [];
-					array.forEach(items, function(item, i){
-						arr.push(self._createRow(item, i));
-					});
-					dom.place(arr.join(''), self._buttonLoadMore.parentNode, 'before');
-				},
-				onError: function(err){
-					console.error('Failed to fetch items from store:', err);
-				},
-				start: opt && opt.start,
-				count: opt && opt.count
-			});
-			this.currentPage++;
-			this._updateLoadMoreButton();
-		},
+//		_buildBody: function(items){
+//			//summary:
+//			//	Override _buildBody method so that it will just add items instead of replacing items.
+//			var arr = [];
+//			array.forEach(items, function(item, i){
+//				arr.push(this._createRow(item, i));
+//			}, this);
+//			dom.place(arr.join(''), this._buttonLoadMore.parentNode, 'before');
+//			this.currentPage++;
+//			this._updateLoadMoreButton();
+
+//			var self = this, q = this.query, opt = this.queryOptions, deferred = new Deferred();
+//			this.store.fetch({
+//				query: q,
+//				queryOptions: opt,
+//				sort: opt && opt.sort || [],
+//				onComplete: function(items){
+//					var arr = [];
+//					array.forEach(items, function(item, i){
+//						arr.push(self._createRow(item, i));
+//					});
+//					//lazy load needs to put rows at the bottom instead of fully filling the body
+//					dom.place(arr.join(''), self._buttonLoadMore.parentNode, 'before');
+//					deferred.resolve();
+//				},
+//				onError: function(err){
+//					console.error('Failed to fetch items from store:', err);
+//					deferred.reject(err);
+//				},
+//				start: opt && opt.start,
+//				count: opt && opt.count
+//			});
+//			this.currentPage++;
+//			this._updateLoadMoreButton();
+//			return deferred.promise;
+//		},
 		loadMore: function(){
-			var _this = this;
-			this._makeButtonBusy();
-			window.setTimeout(function(){	//time out for demo purpose
-				var count = _this.pageSize;
-				if(_this.pageSize * (_this.currentPage + 1) >= _this.rowCount){
-					count = _this.rowCount - _this.pageSize * _this.currentPage;
-				}
-				var opt = _this.queryOptions;
-				opt.start = _this.currentPage * _this.pageSize;
-				opt.count = count;
-				_this._buildBody();
-				_this._cancelButtonBusy();
-			}, 2000);
+			// summary:
+			//	Called when touch load more button.
 			
+			this._makeButtonBusy();
+			var count = this.pageSize;
+			if(this.pageSize * (this.currentPage + 1) >= this.rowCount){
+				count = this.rowCount - this.pageSize * this.currentPage;
+			}
+			var opt = this.queryOptions;
+			opt.start = this.currentPage * this.pageSize;
+			opt.count = count;
+			
+			var self = this;
+			this.store.fetch(this.query, this.queryOptions).then(function(results){
+				var arr = [];
+				array.forEach(items, function(item, i){
+					arr.push(self._createRow(item, i));
+				});
+				//add new rows at the bottom
+				dom.place(arr.join(''), self._buttonLoadMore.parentNode, 'before');
+			}, lang.hitch(this, '_onError'));
 		},
 		_updateLoadMoreButton: function(){
 			var btn = this._buttonLoadMore;
