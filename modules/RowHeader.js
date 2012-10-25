@@ -7,10 +7,11 @@ define([
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-style",
+	"dojo/dom-geometry",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util"
-], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, keys, _Module, util){
+], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
 
 	return declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
 		// summary:
@@ -94,10 +95,13 @@ define([
 
 		load: function(args, startup){
 			var t = this,
+				g = t.grid,
 				bn = t.bodyNode;
 			startup.then(function(){
-				var w = bn.offsetWidth || domStyle.get(bn, 'width');
-				bn.style[t.grid.isLeftToRight() ? 'left' : 'right'] = -w + 'px';
+				var w = bn.offsetWidth || domStyle.get(bn, 'width'),
+					ltr = g.isLeftToRight(),
+					mainBorder = domGeo.getBorderExtents(g.mainNode);
+				bn.style[ltr ? 'left' : 'right'] = -(w + (ltr ? mainBorder.l : mainBorder.r)) + 'px';
 				t.loaded.callback();
 			});
 		},

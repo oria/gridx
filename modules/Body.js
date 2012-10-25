@@ -3,6 +3,7 @@ define([
 	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
+	"dojo/json",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
@@ -11,7 +12,7 @@ define([
 	"../core/_Module",
 	"../core/util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, array, lang, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
+], function(declare, query, array, lang, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
 	/*=====
 	gridx._RowCellInfo = function(){
@@ -173,6 +174,15 @@ define([
 		//		Default to false, so that only one cell will be re-rendered editing that cell.
 		renderWholeRowOnSet: false,
 
+		// compareOnSet: Function
+		//		When data is changed in store, compare the old data and the new data of grid, return true if
+		//		they are the same, false if not, so that the body can decide whether to refresh the corresponding cell.
+		compareOnSet: function(v1, v2){
+			return typeof v1 == 'object' && typeof v2 == 'object' ? 
+				json.stringify(v1) == json.stringify(v2) : 
+				v1 === v2;
+		},
+
 		getRowNode: function(args){
 			// summary:
 			//		Get the DOM node of a row
@@ -262,7 +272,6 @@ define([
 						var rows = t._buildRows(start, count, uncachedRows, renderedRows);
 						if(rows){
 							domConstruct.place(rows, n, 'before');
-							array.forEach(renderedRows, t.onAfterRow, t);
 						}
 					}
 					while(n){
@@ -275,6 +284,7 @@ define([
 						}
 						n = tmp;
 					}
+					array.forEach(renderedRows, t.onAfterRow, t);
 					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 						t.onRender(start, count);
 						t.onForcedScroll();
@@ -445,6 +455,13 @@ define([
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
+				if(sniff('ie')){
+					//In IE, setting innerHTML will completely destroy the node,
+					//But CellWidget still need it.
+					while(n.childNodes.length){
+						n.removeChild(n.firstChild);
+					}
+				}
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
@@ -675,7 +692,7 @@ define([
 				cell = g.cell(row.id, col.id, 1);
 				cls = (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
 				style = (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-				sb.push('<td aria-describedby="', g.id, '-', col.id, '" class="gridxCell ');
+				sb.push('<td aria-describedby="', (g.id + '-' + col.id).replace(/\s+/, ''), '" class="gridxCell ');
 				if(isPadding){
 					sb.push('gridxPaddingCell');
 				}
@@ -743,7 +760,7 @@ define([
 				g = this.grid,
 				tag;
 			for(; n && n != g.bodyNode; n = n.parentNode){
-				tag = n.tagName.toLowerCase();
+				tag = n.tagName && n.tagName.toLowerCase();
 				if(tag == 'td' && domClass.contains(n, 'gridxCell')){
 					var col = g._columnsById[n.getAttribute('colid')];
 					e.cellNode = n;
@@ -772,30 +789,26 @@ define([
 						oldData = oldCache.data,
 						cols = g._columns,
 						renderWhole = t.arg('renderWholeRowOnSet'),
-						changedCols = [];
-					if(!renderWhole){
-						array.some(cols, function(col){
-							if(curData[col.id] !== oldData[col.id]){
-								changedCols.push(col);
-							}
-							return changedCols.length > 1;
-						});
-					}
-					if(renderWhole || changedCols.length > 1){
+						compareOnSet = t.arg('compareOnSet');
+					if(renderWhole){
 						rowNode.innerHTML = t._buildCells(row);
 						t.onAfterRow(row);
 						t.onSet(row);
 						t.onRender(index, 1);
-					}else if(changedCols.length == 1){
-						var col = changedCols[0],
-							isPadding = g.tree && curData[col.id] === undefined,
-							cell = row.cell(col.id, 1);
-						cell.node().innerHTML = t._buildCellContent(cell, isPadding);
-						t.onAfterCell(cell);
+					}else{
+						array.forEach(cols, function(col){
+							if(!compareOnSet(curData[col.id], oldData[col.id])){
+								var isPadding = g.tree && curData[col.id] === undefined,
+									cell = row.cell(col.id, 1);
+								cell.node().innerHTML = t._buildCellContent(cell, isPadding);
+								t.onAfterCell(cell);
+							}
+						});
 					}
 				}
 			}
 		},
+
 
 		_onDelete: function(id){
 			var t = this;

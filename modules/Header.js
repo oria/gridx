@@ -26,9 +26,6 @@ define([
 			// tags:
 			//		protected extension
 			return {
-				
-
-				
 				header: this
 			};
 		},
@@ -59,6 +56,13 @@ define([
 			t.aspect(g, 'onHScroll', '_onHScroll');
 			t.aspect(g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver');
 			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
+			//FIXME: sometimes FF will remember the scroll position of the header row, so force aligned with body.
+			//Does not occur in any other browsers.
+			if(sniff('ff')){
+				t.aspect(g, 'onModulesLoaded', function(){
+					t._onHScroll(t._scrollLeft);
+				});
+			}
 			if(g.columnResizer){
 				t.aspect(g.columnResizer, 'onResize', function(){
 					if(g.hScrollerNode.style.display == 'none'){
@@ -77,9 +81,6 @@ define([
 		},
 
 		columnMixin: {
-			
-
-			
 			headerNode: function(){
 				return this.grid.header.getHeaderNode(this.id);
 			}
@@ -133,9 +134,9 @@ define([
 			var t = this,
 				g = t.grid,
 				f = g.focus,
-				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
+				sb = ['<table border="0" cellpadding="0" cellspacing="0"><tr>'];
 			array.forEach(g._columns, function(col){
-				sb.push('<th id="', g.id, '-', col.id,
+				sb.push('<th id="', (g.id + '-' + col.id).replace(/\s+/, ''),
 					'" role="columnheader" aria-readonly="true" tabindex="-1" colid="', col.id,
 					'" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
@@ -152,9 +153,10 @@ define([
 		},
 
 		_onHScroll: function(left){
-			var ltr = this.grid.isLeftToRight();
-			this.innerNode.firstChild.style[ltr ? 'marginLeft' : 'marginRight'] = (!ltr && sniff('ff') ? left : -left) + 'px';
-			this._scrollLeft = left;
+			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
+				left = this.innerNode.scrollWidth - this.innerNode.offsetWidth - left;
+			}
+			this.innerNode.scrollLeft = this._scrollLeft = left;
 		},
 	
 		_onMouseEvent: function(eventName, e){
@@ -172,7 +174,7 @@ define([
 	
 		_decorateEvent: function(e){
 			for(var n = e.target, c; n && n !== this.domNode; n = n.parentNode){
-				if(n.tagName.toLowerCase() == 'th'){
+				if(n.tagName && n.tagName.toLowerCase() == 'th'){
 					c = this.grid._columnsById[n.getAttribute('colid')];
 					if(c){
 						e.headerCellNode = n;
@@ -199,7 +201,7 @@ define([
 				g.focus.registerArea({
 					name: 'header',
 					priority: 0,
-					focusNode: t.domNode,
+					focusNode: t.innerNode,
 					scope: t,
 					doFocus: t._doFocus,
 					doBlur: t._blurNode,
@@ -242,6 +244,9 @@ define([
 							domClass.add(node, t._focusClass);
 						}
 						node.focus();
+						if(sniff('ie') < 8){
+							t.innerNode.scrollLeft = t._scrollLeft;
+						}
 					}, 0);
 					return true;
 				}
@@ -250,7 +255,7 @@ define([
 		},
 
 		_blurNode: function(){
-			var t = this, n = query('th.' + t._focusClass, t.domNode)[0];
+			var t = this, n = query('th.' + t._focusClass, t.innerNode)[0];
 			if(n){
 				domClass.remove(n, t._focusClass);
 			}

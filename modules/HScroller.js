@@ -4,9 +4,10 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/Deferred",
 	"dojo/query",
+	"dojo/dom-geometry",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, sniff, Deferred, query, metrics, _Module){
+], function(declare, domStyle, sniff, Deferred, query, domGeo, metrics, _Module){
 
 	return declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
 		// summary:
@@ -47,7 +48,7 @@ define([
 				if(sniff('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
-					n.style.height = metrics.getScrollbar().h + 'px';
+					n.style.height = (metrics.getScrollbar().h + 1) + 'px';
 				}
 			}
 		},
@@ -102,8 +103,6 @@ define([
 			}else if(right > scrollLeft + hNode.offsetWidth){
 				this.scroll(right - hNode.offsetWidth);
 			}
-			if(ltr)hNode.scrollLeft = 0;//force to 0, the header uses margin to scroll
-			else hNode.scrollLeft = hNode.scrollWidth - hNode.offsetWidth;
 		},
 		
 		refresh: function(){
@@ -119,6 +118,7 @@ define([
 				lead = g.hLayout.lead,
 				tail = g.hLayout.tail,
 				w = (g.domNode.clientWidth || domStyle.get(g.domNode, 'width')) - lead - tail,
+				headerBorder = domGeo.getBorderExtents(g.header.domNode).w,
 				bn = g.header.innerNode,
 				pl = domStyle.get(bn, ltr ? 'paddingLeft' : 'paddingRight') || 0,	//TODO: It is special for column lock now.
 				s = t.domNode.style,
@@ -128,7 +128,9 @@ define([
 			s[marginLead] = lead + pl + 'px';
 			s[marginTail] = tail + 'px';
 			//Insure IE does not throw error...
-			s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
+			if(pl > 0){
+				s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
+			}
 			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
 			if(oldDisplay != newDisplay){

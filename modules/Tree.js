@@ -145,11 +145,11 @@ define([
 				var id,
 					data = g.persist.registerAndLoad('tree', function(){
 						return {
-							openInfo: this._openInfo, 
-							parentOpenInfo: this._parentOpenInfo
+							openInfo: t._openInfo, 
+							parentOpenInfo: t._parentOpenInfo
 						};
 					});
-				if(data){
+				if(data && data.openInfo && data.parentOpenInfo){
 					var openInfo = t._openInfo = data.openInfo,
 						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
 					for(id in openInfo){
@@ -368,6 +368,42 @@ define([
 			}else{
 				success();
 			}
+			return d;
+		},
+
+		refresh: function(){
+			// summary:
+			//		When the row order are changed or rows are filtered, the expand info recorded here will
+			//		be invalid. This method refreshes the expand info by logically re-open all expanded rows,
+			//		and then refresh the grid body.
+			//		When this method is called, no need to call grid.body.refresh() anymore.
+			// returns:
+			//		A Deferred object indicating when this process ends.
+			var t = this,
+				m = t.model,
+				d = new Deferred(),
+				success = lang.hitch(d, d.callback),
+				fail = lang.hitch(d, d.errback),
+				id, ids = [],
+				ranges = [],
+				body = t.grid.body;
+			for(id in t._openInfo){
+				if(m.isId(id)){
+					ids.push(id);
+					ranges.push({
+						parentId: id,
+						start: 0
+					});
+				}
+			}
+			t._clear();
+			m.when(ranges, function(){
+				var size = t._openInfo[''].count = m.size();
+				array.forEach(ids, t._logicExpand, t);
+				body.visualCount = t.getVisualSize(0, size);
+			}).then(function(){
+				body.refresh().then(success, fail);
+			}, fail);
 			return d;
 		},
 	
@@ -595,28 +631,30 @@ define([
 					parentOpenInfo = poi[parentId] = poi[parentId] || [];
 				poi[id] = poi[id] || [];
 				if(!openInfo[id]){
-					var index = m.idToIndex(id),
-						childCount = m.size(id),
-						i = util.biSearch(parentOpenInfo, function(childId){
-							return openInfo[childId].index - index;
-						});
-					if(parentOpenInfo[i] !== id){
-						parentOpenInfo.splice(i, 0, id);
-					}
-					for(i = poi[id].length - 1; i >= 0; --i){
-						childCount += openInfo[poi[id][i]].count;
-					}
-					openInfo[id] = {
-						id: id,
-						parentId: parentId,
-						index: index,
-						count: childCount,
-						openned: poi[id]
-					};
-					var info = openInfo[parentId];
-					while(info){
-						info.count += childCount;
-						info = openInfo[info.parentId];
+					var index = m.idToIndex(id);
+					if(index >= 0){
+						var childCount = m.size(id),
+							i = util.biSearch(parentOpenInfo, function(childId){
+								return openInfo[childId].index - index;
+							});
+						if(parentOpenInfo[i] !== id){
+							parentOpenInfo.splice(i, 0, id);
+						}
+						for(i = poi[id].length - 1; i >= 0; --i){
+							childCount += openInfo[poi[id][i]].count;
+						}
+						openInfo[id] = {
+							id: id,
+							parentId: parentId,
+							index: index,
+							count: childCount,
+							openned: poi[id]
+						};
+						var info = openInfo[parentId];
+						while(info){
+							info.count += childCount;
+							info = openInfo[info.parentId];
+						}
 					}
 				}
 			}

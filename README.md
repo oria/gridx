@@ -41,7 +41,7 @@ GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2
 
 
 ## GridX Home Site (in progress)
-Please also check out [GridX Home Site](https://oria.github.com/gridx) for more details on how GridX can help you.
+Please also check out [GridX Home Site](http://oria.github.com/gridx) for more details on how GridX can help you.
 
 
 ## GridX Team

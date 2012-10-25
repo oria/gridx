@@ -46,32 +46,32 @@ define([
 			return !!this._ids;
 		},
 
-		byIndex: function(index){
+		byIndex: function(index, parentId){
 			var t = this,
 				ids = t._ids,
 				inner = t.inner,
 				id = ids && ids[index];
-			return ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
+			return !t.model.isId(parentId) && ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
 		},
 
 		byId: function(id){
 			return (this.ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
 		},
 
-		indexToId: function(index){
-			return this._ids ? this._ids[index] : this.inner._call('indexToId', arguments);
+		indexToId: function(index, parentId){
+			return !this.model.isId(parentId) && this._ids ? this._ids[index] : this.inner._call('indexToId', arguments);
 		},
 
 		idToIndex: function(id){
-			if(this._ids){
+			if(this._ids && this.inner._call('parentId', arguments) === ''){
 				var idx = indexOf(this._ids, id);
 				return idx >= 0 ? idx : undefined;
 			}
 			return this.inner._call('idToIndex', arguments);
 		},
 
-		size: function(){
-			return this._ids ? this._ids.length : this.inner._call('size', arguments);
+		size: function(parentId){
+			return !this.model.isId(parentId) && this._ids ? this._ids.length : this.inner._call('size', arguments);
 		},
 
 		when: function(args, callback){
@@ -150,21 +150,25 @@ define([
 				return t._indexes[id] !== undefined;
 			});
 			forEach(args.range, function(r){
-				if(!r.count || r.count < 0){
-					//For open ranges, must limit the size because we know the filtered size here.
-					var cnt = size - r.start;
-					if(cnt <= 0){
-						return;
+				if(t.model.isId(r.parentId)){
+					ranges.push(r);
+				}else{
+					if(!r.count || r.count < 0){
+						//For open ranges, must limit the size because we know the filtered size here.
+						var cnt = size - r.start;
+						if(cnt <= 0){
+							return;
+						}
+						r.count = cnt;
 					}
-					r.count = cnt;
-				}
-				for(var i = 0; i < r.count; ++i){
-					var idx = t._mapIndex(i + r.start);
-					if(idx !== undefined){
-						ranges.push({
-							start: idx,
-							count: 1
-						});
+					for(var i = 0; i < r.count; ++i){
+						var idx = t._mapIndex(i + r.start);
+						if(idx !== undefined){
+							ranges.push({
+								start: idx,
+								count: 1
+							});
+						}
 					}
 				}
 			});

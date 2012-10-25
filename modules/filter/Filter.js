@@ -46,17 +46,9 @@ define([
 			//		If *skipUpdateBody* is not TRUE, then must not throw, else, only allowed to throw the exceptions
 			//		that are generated from the *checker* function.
 			//		If *checker* is not a function, or null, should not throw.
-			var t = this, m = t.model;
-			if(checker != t._checker){
-				t._checker = checker;
-				if(t.arg('serverMode')){
-					m.query(t.setupFilterQuery(checker && checker.expr));
-				}else{
-					m.filter(checker);
-				}
-				if(!skipUpdateBody){
-					t.grid.body.refresh();
-				}
+			if(checker != this._checker){
+				this._checker = checker;
+				this.refresh(skipUpdateBody);
 			}
 			//this.model.query({_filter: 'xxx'});//{_filter: 'xxx'});//checker.expr);
 		},
@@ -67,6 +59,26 @@ define([
 			// return: Function|null|undefined (or anything that is invalid)
 			//		The current checker function
 			return this._checker;
+		},
+
+		refresh: function(/* Boolean? */skipUpdateBody){
+			// summary:
+			//		Re-filter the grid with current filter. Useful when data is changed.
+			// return
+			//		Deferred when refreshing is completed.
+			var t = this,
+				g = t.grid,
+				m = t.model,
+				checker = t._checker;
+			if(t.arg('serverMode')){
+				m.query(t.setupFilterQuery(checker && checker.expr));
+			}else{
+				m.filter(checker);
+			}
+			m.clearCache();
+			if(!skipUpdateBody){
+				return g.tree ? g.tree.refresh() : g.body.refresh();	//dojo.Deferred
+			}
 		}
 	});
 	
