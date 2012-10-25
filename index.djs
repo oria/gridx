@@ -319,7 +319,7 @@
     
     <div class="grid_6 summary">
       <img src="images/summary.png"/>
-      <a href="https://github.com/oria/gridx/downloads" class="button button-download">Download v1.0</a>
+      <a href="https://github.com/oria/gridx/tags" class="button button-download">Download v1.0.1</a>
       <a href="./demo.html" class="button button-demo">See the demo</a>
     </div>
     <div class="grid_6">
@@ -350,6 +350,7 @@
     <div class="grid_3 news">
       <h2>What's new</h2>
       <ul>
+        <li><a href="./gallery.html#mobile">Gridx 1.0.1 released!</a></li>
       	<li><a href="./gallery.html#mobile">Gridx mobile demos added to the gallery!</a></li>
         <li><a href="#">Gridx v1.0 launched!</a></li>
         <li><a href="#">Gridx home site is online</a></li>
