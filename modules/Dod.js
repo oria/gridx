@@ -71,7 +71,8 @@ define([
 			if(_row.dodShown || _row.inAnim || !row.node()){return;}
 			
 			_row.dodShown = true;
-			this._getExpando(row).firstChild.innerHTML = '-';
+			var expando = this._getExpando(row);
+			if(expando){expando.firstChild.innerHTML = '-';}
 			
 			var node = row.node(), w = node.scrollWidth;
 			if(!_row.dodLoadingNode){
@@ -131,7 +132,8 @@ define([
 				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
-			this._getExpando(row).firstChild.innerHTML = '+';
+			var expando = this._getExpando(row);
+			if(expando){expando.firstChild.innerHTML = '+';}
 			_row.inAnim = true;
 			fx.wipeOut({
 				node: _row.dodNode,
@@ -265,6 +267,7 @@ define([
 			node.innerHTML = 'Loading...';
 		},
 		_getExpando: function(row){
+			if(!this.showExpando)return null;
 			var tbl = dojo.query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
 			return cell.firstChild;
