@@ -33,6 +33,11 @@
 	background-color: #ddd;
 }
 
+.mobileGridxNoDataNode {
+	padding: 20px;
+	text-align: center;
+	color: #999;
+}
 
 .mobileGridxCell {
 	padding: 5px;

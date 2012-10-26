@@ -8,8 +8,9 @@ define([
 	'dojo/dom-class',
 	'dojox/mobile/_StoreMixin',
 	'dojox/mobile/Pane',
-	'dojox/mobile/ScrollablePane'
-], function(kernel, declare, lang, array, aspect, string, css, _StoreMixin, Pane, ScrollablePane){
+	'dojox/mobile/ScrollablePane',
+	'dojo/i18n!./nls/common'
+], function(kernel, declare, lang, array, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n){
 	// module:
 	//	gridx/mobile/Grid
 	// summary:
@@ -88,17 +89,20 @@ define([
 		_buildBody: function(items){
 			// summary:
 			//	Build the grid body
-			var arr = [];
-			array.forEach(items, function(item, i){
-				arr.push(this._createRow(item, i));
-			}, this);
-			this.bodyPane.containerNode.innerHTML = arr.join('');
+			if(items && items.length){
+				var arr = [];
+				array.forEach(items, function(item, i){
+					arr.push(this._createRow(item, i%2 == 1));
+				}, this);
+				this.bodyPane.containerNode.innerHTML = arr.join('');
+			}else{
+				this.bodyPane.containerNode.innerHTML = '<div class="mobileGridxNoDataNode">' + i18n.noDataMsg + '</div>';
+			}
 		},
 		
-		_createRow: function(item, i){
+		_createRow: function(item, isOdd){
 			// summary:
 			//	Create a grid row by object store item.
-			var isOdd = !(i%2);	//i is from 0
 			var rowId = this.store.getIdentity(item);
 			var arr = ['<div class="mobileGridxRow ' + (isOdd ? 'mobileGridxRowOdd' : '' ) + '"',
 				' rowId="' + rowId + '"',

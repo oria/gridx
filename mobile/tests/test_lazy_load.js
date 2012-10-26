@@ -16,7 +16,6 @@ define([
 		{field: 'Artist', width: '46%', title: 'Name'},
 		{field: 'Year', width: '18%', title: 'Price'}
 	];
-	declare('gridx.mobile.tests.Grid', [Grid, LazyLoad], {});
 	ready(function(){
 		parser.parse();
 		grid.setColumns(columns);

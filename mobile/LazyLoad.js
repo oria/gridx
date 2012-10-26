@@ -1,110 +1,89 @@
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/dom-construct',
 	'dojo/dom-class',
-	'dojo/Deferred'
-], function(declare, array, dom, css, Deferred){
+	'dojo/query',
+	'dojo/Deferred',
+	'dojo/i18n!./nls/LazyLoad'
+], function(declare, lang, array, dom, css, query, Deferred, i18n){
 	return declare(null, {
 		pageSize: 20,
-		currentPage: 0,
-		totalPages: 0,
-		
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			var opt = this.queryOptions;
-			if(!opt){
-				this.queryOptions = opt = {};
-			}
-			opt.start = 0;
-			opt.count = this.pageSize;
-		},
-		buildRendering: function(){
+		lastId: null,	//used to store last id value for query, so that server side knows the state of grid
+		_buildBody: function(items){
 			this.inherited(arguments);
 			var wrapper = dom.create('div', {
 				className: 'mobileGridxLoadMoreWrapper'
 			}, this.bodyPane.containerNode, 'last');
 			this._buttonLoadMore = dom.create('button', { 
-				innerHTML: 'Load more',
+				innerHTML: i18n.loadMore,
 				className: 'mobileGridxLoadMoreButton mblButton'
 			}, wrapper, 'last');
 			this.connect(this._buttonLoadMore, 'onclick', 'loadMore');
+			if(items && items.length < this.pageSize){
+				this._buttonLoadMore.style.display = 'none';
+			}
+			if(items && items.length){
+				this.lastId = items[items.length - 1][this.store.idProperty];
+			}
 		},
-//		_buildBody: function(items){
-//			//summary:
-//			//	Override _buildBody method so that it will just add items instead of replacing items.
-//			var arr = [];
-//			array.forEach(items, function(item, i){
-//				arr.push(this._createRow(item, i));
-//			}, this);
-//			dom.place(arr.join(''), this._buttonLoadMore.parentNode, 'before');
-//			this.currentPage++;
-//			this._updateLoadMoreButton();
 
-//			var self = this, q = this.query, opt = this.queryOptions, deferred = new Deferred();
-//			this.store.fetch({
-//				query: q,
-//				queryOptions: opt,
-//				sort: opt && opt.sort || [],
-//				onComplete: function(items){
-//					var arr = [];
-//					array.forEach(items, function(item, i){
-//						arr.push(self._createRow(item, i));
-//					});
-//					//lazy load needs to put rows at the bottom instead of fully filling the body
-//					dom.place(arr.join(''), self._buttonLoadMore.parentNode, 'before');
-//					deferred.resolve();
-//				},
-//				onError: function(err){
-//					console.error('Failed to fetch items from store:', err);
-//					deferred.reject(err);
-//				},
-//				start: opt && opt.start,
-//				count: opt && opt.count
-//			});
-//			this.currentPage++;
-//			this._updateLoadMoreButton();
-//			return deferred.promise;
-//		},
 		loadMore: function(){
 			// summary:
 			//	Called when touch load more button.
+			//	It loads data from server side and create extra rows at the bottom.
+			//  If need to provide custom query information, use aspect.before(grid, 'loadMore')
 			
 			this._makeButtonBusy();
-			var count = this.pageSize;
-			if(this.pageSize * (this.currentPage + 1) >= this.rowCount){
-				count = this.rowCount - this.pageSize * this.currentPage;
-			}
-			var opt = this.queryOptions;
-			opt.start = this.currentPage * this.pageSize;
-			opt.count = count;
+			var q = lang.mixin({
+				'lastId': this.lastId,
+				count: this.pageSize
+			}, this.query);
 			
 			var self = this;
-			this.store.fetch(this.query, this.queryOptions).then(function(results){
-				var arr = [];
-				array.forEach(items, function(item, i){
-					arr.push(self._createRow(item, i));
-				});
-				//add new rows at the bottom
-				dom.place(arr.join(''), self._buttonLoadMore.parentNode, 'before');
-			}, lang.hitch(this, '_onError'));
+			this.store.query(q, this.queryOptions).then(
+			   lang.hitch(this, '_loadMoreComplete'),
+			   lang.hitch(this, 'onError')
+			);
 		},
-		_updateLoadMoreButton: function(){
-			var btn = this._buttonLoadMore;
-			if(this.pageSize * this.currentPage >= this.rowCount){
-				btn.style.display = 'none';
-			}else{
-				btn.style.display = 'block';
+		
+		_loadMoreComplete: function(results){
+			//summary:
+			//	Called after the store completes the query
+			
+			var items = results.items || results;
+			//add new rows at the bottom
+			if(items && items.length){
+				var rows = query('>.mobileGridxRow', this.bodyPane.containerNode);
+				var arr = [], isOdd = false;//!css.contains(this.bodyPane.containerNode.lastChild, 'mobileGridxRowOdd');
+				if(rows.length){isOdd = !css.contains(rows[rows.length - 1], 'mobileGridxRowOdd');}
+				array.forEach(items, function(item){
+					arr.push(this._createRow(item, isOdd));
+					isOdd = !isOdd;
+				}, this);
+				dom.place(arr.join(''), this._buttonLoadMore.parentNode, 'before');
+				this.lastId = items[items.length - 1][this.store.idProperty];
+			}
+			this._cancelButtonBusy();
+			if(results.noMore){
+				//if no more data, results should have a property 'noMore' with truthy value
+				this._buttonLoadMore.style.display = 'none';
 			}
 		},
+		onError: function(){
+			this.inherited(arguments);
+			this._cancelButtonBusy();
+		},
+		
 		_makeButtonBusy: function(){
 			var btn = this._buttonLoadMore;
-			btn.innerHTML = '<img src="' + this._blankGif +'" class="mobileGridxLoadingIcon"/> Loading...';
+			btn.innerHTML = '<img src="' + this._blankGif +'" class="mobileGridxLoadingIcon"/> ' + i18n.loading;
 			btn.disabled = true;
 		},
 		_cancelButtonBusy: function(){
 			var btn = this._buttonLoadMore;
-			btn.innerHTML = 'Load more';
+			btn.innerHTML = i18n.loadMore;
 			btn.disabled = false;
 		}
 	});
