@@ -691,7 +691,8 @@ define([
 				isPadding = g.tree && rowData[col.id] === undefined;
 				cell = g.cell(row.id, col.id, 1);
 				cls = (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
-				style = (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
+				style = g.bidi ? g.bidi.getTextDirStyle(col.id, cell.data()) : '';
+				style += (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
 				sb.push('<td aria-describedby="', (g.id + '-' + col.id).replace(/\s+/, ''), '" class="gridxCell ');
 				if(isPadding){
 					sb.push('gridxPaddingCell');

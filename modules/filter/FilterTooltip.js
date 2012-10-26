@@ -56,8 +56,13 @@ define([
 			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : '${i18n.anyColumnOption}'), 
-					'</td><td class="gridxFilterTooltipValueCell">', 
+				var col = this.grid.column(d.colId);
+				var colName = col.name();
+				if(this.grid.bidi){
+					colName = this.grid.bidi.enforceTextDirWithUcc(d.colId, colName);
+				}
+				arr.push('<tr', odd, '><td>', (d.colId ? colName : '${i18n.anyColumnOption}'), 
+					'</td><td class="gridxFilterTooltipValueCell">',
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
 					'<span action="remove-rule" title="${i18n.removeRuleButton}"',

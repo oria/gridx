@@ -11,13 +11,6 @@ define([
 		columnWidth: Associative array
 	});
 =====*/
-
-	function cellattrs(args, col){
-		var cw = args.columnWidth,
-			w = (cw && cw[col.id]) || (args.natualWidth ? '' : col.getWidth()) || 'auto';
-		return [' colid="', col.id, '" style="width:', w, '"'].join('');
-	}
-
 	return declare(/*===== "gridx.modules.exporter.Table", =====*/_Module, {
 		// summary:
 		//		This module provides the API to export grid contents to an HTML table, which is mainly used in print.
@@ -33,7 +26,14 @@ define([
 				}
 			};
 		},
-	
+
+		_cellattrs: function (args, col, cellContent){
+			var cw = args.columnWidth,
+				w = (cw && cw[col.id]) || (args.natualWidth ? '' : col.getWidth()) || 'auto',
+				dir = this.grid.bidi ? this.grid.bidi.getTextDirStyle(col.id, cellContent) : '';
+			return [' colid="', col.id, '" style="', dir, ' width:', w, '"'].join('');
+		},	
+
 		//Public ---------------------------------------------------------------------
 		toTable: function(/* __TableExportArgs */ args){
 			// summary:
@@ -67,7 +67,7 @@ define([
 			// tags:
 			//		private
 			var col = context.column;
-			this._rst.push('<th class="grid_header_cell"', cellattrs(args, col), '>', col.name(), '</th>');
+			this._rst.push('<th class="grid_header_cell"', this._cellattrs(args, col, col.name()), '>', col.name(), '</th>');
 		},
 
 		afterHeader: function(){
@@ -93,7 +93,7 @@ define([
 		handleCell: function(/* __ExportContext */ context, /* __TableExportArgs */ args){
 			// tags:
 			//		private
-			this._rst.push('<td class="grid_cell"', cellattrs(args, context.column), '>', context.data, '</td>');
+			this._rst.push('<td class="grid_cell"', this._cellattrs(args, context.column, context.data), '>', context.data, '</td>');
 		},
 
 		afterRow: function(){
