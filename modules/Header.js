@@ -142,6 +142,7 @@ define([
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
 					(lang.isFunction(col.headerClass) ? col.headerClass(col) : col.headerClass) || '',
 					'" style="width: ', col.width, ';',
+					g.bidi ? g.bidi.getTextDirStyle(col.id, col.name) : '',
 					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
 					'"><div class="gridxSortNode">',
 					col.name || '',

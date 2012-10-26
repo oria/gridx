@@ -135,7 +135,11 @@ define([
 				sltCol = this.sltColumn;
 			array.forEach(this.grid.columns(), function(col){
 				if(!col.isFilterable())return;
-				colOpts.push({value: col.id, label: col.name()});
+				var colName = col.name();
+				if(this.grid.bidi){
+					colName = this.grid.bidi.enforceTextDirWithUcc(col.id, colName);
+				}
+				colOpts.push({value: col.id, label: colName});
 			}, this);
 			sltCol.addOption(colOpts);
 		},
