@@ -3,14 +3,16 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'dojo/dom-construct',
 	'dojo/aspect',
 	'dojo/string',
 	'dojo/dom-class',
 	'dojox/mobile/_StoreMixin',
 	'dojox/mobile/Pane',
 	'dojox/mobile/ScrollablePane',
-	'dojo/i18n!./nls/common'
-], function(kernel, declare, lang, array, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n){
+	'dojo/i18n!./nls/common',
+	"dojo/_base/Deferred"
+], function(kernel, declare, lang, array, dom, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n, Deferred){
 	// module:
 	//	gridx/mobile/Grid
 	// summary:
@@ -44,22 +46,19 @@ define([
 		//	Column definition to show the grid from store
 		columns: null,
 		
-		//rowCount: number
-		//	Total rows of the grid
-		rowCount: 0,
-		
 		setColumns: function(columns){
 			// summary:
 			//	Set columns to show for the grid. 
 			//  Maybe improve performance by adding/removing some columns instead of re-rendering.
 			this.columns = columns;
+			this.refresh();
 		},
 		
 		buildGrid: function(){
 			// summary:
 			//	Build the whole grid
-			this._buildHeader();
-			this._buildBody();
+			if(this.columns)this._buildHeader();
+			if(this.store)this._buildBody();
 			this.resize();
 		},
 		
@@ -89,6 +88,7 @@ define([
 		_buildBody: function(items){
 			// summary:
 			//	Build the grid body
+			console.log('building body');
 			if(items && items.length){
 				var arr = [];
 				array.forEach(items, function(item, i){
@@ -100,11 +100,11 @@ define([
 			}
 		},
 		
-		_createRow: function(item, isOdd){
+		_createRow: function(item){
 			// summary:
 			//	Create a grid row by object store item.
 			var rowId = this.store.getIdentity(item);
-			var arr = ['<div class="mobileGridxRow ' + (isOdd ? 'mobileGridxRowOdd' : '' ) + '"',
+			var arr = ['<div class="mobileGridxRow"',
 				' rowId="' + rowId + '"',
 				 '><table><tr>'];
 			array.forEach(this.columns, function(col){
@@ -187,15 +187,22 @@ define([
 		},
 		
 		startup: function(){
+			//summary:
+			//	Start up the body pane, and fetch data from store.
+			
 			this.bodyPane.startup();
 			this.inherited(arguments);
 			this.refresh();
 		},
 		
-		refresh: function(){
-			this.buildGrid();
-			this.inherited(arguments);
-		},
+//		refresh: function(){
+//			//summary:
+//			//	Firstly refresh header, then fetch data from store.
+//			//	Body will be refreshed after store query completes.
+//			
+//			this._buildHeader();
+//			return this.inherited(arguments);
+//		},
 		
 		onComplete: function(items){
 			// summary:
@@ -212,11 +219,47 @@ define([
 		onUpdate: function(item, insertedInto){
 			// summary:
 			//		Adds a new item or updates an existing item.
+			dom.place(this._createRow(item), this.bodyNode.firstChild, insertedInto);
 		},
 
 		onDelete: function(item, removedFrom){
 			// summary:
 			//		Deletes an existing item.
+			dom.destroy(this.bodyNode.firstChild.childNodes[removedFrom]);
+		},
+		
+		
+		///////////////////
+		//////////////////////////////////////////////
+		//Over-write from dojox/mobile/_StoreMixin.js , which doesn't support updating events
+		//TODO: will remove this if it's fixed in _StoreMixin
+		refresh: function(){
+			// summary:
+			//		Fetches the data and generates the list items.
+			
+			this._buildHeader();
+			if(!this.store){ return null; }
+			var _this = this;
+			var promise = this.store.query(this.query, this.queryOptions);
+			Deferred.when(promise, function(results){
+				if(results.items){
+					results = results.items; // looks like dojo/data style items array
+				}
+				if(promise.observe){
+					promise.observe(function(object, removedFrom, insertedInto){
+						if(removedFrom > -1){ // existing object removed
+							_this.onDelete(object, removedFrom);
+						}
+						if(insertedInto > -1){ // new or updated object inserted
+							_this.onUpdate(object, insertedInto);
+						}
+					}, true);
+				}
+				_this.onComplete(results);
+			}, function(error){
+				_this.onError(error);
+			});
+			return promise;
 		}
 	});
 

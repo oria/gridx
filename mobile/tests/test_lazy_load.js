@@ -18,7 +18,7 @@ define([
 	];
 	ready(function(){
 		parser.parse();
-		grid.setColumns(columns);
+		grid.columns = columns;
 		grid.setStore(new JsonRest({target: './support/JsonData.js'}));
 	});
 });

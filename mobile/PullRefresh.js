@@ -18,6 +18,9 @@ define([
 		lastId: null,
 		
 		buildRendering: function(){
+			//summary:
+			//	Add pull refresh related ui elements, and connect events to them.
+			
 			this.inherited(arguments);
 			var self = this;
 			aspect.before(this.bodyPane, 'slideTo', function(to, duration, easing){
@@ -65,13 +68,10 @@ define([
 			
 			var items = results.items || results, arr = [];
 			if(items.length){
-				var isOdd = items.length%2 == 1;
 				var rows = query('>.mobileGridxRow', this.bodyPane.containerNode);
-				if(rows.length){isOdd = isOdd && !css.contains(rows[0], 'mobileGridxRowOdd');}
 				this.lastId = items[0][this.store.idProperty];
 				array.forEach(items, function(item){
-					arr.push(this._createRow(item, isOdd));
-					isOdd = !isOdd;
+					arr.push(this._createRow(item));
 				}, this);
 				dom.place(arr.join(''), this.pullRefreshWrapper, 'after');
 			}

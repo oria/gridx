@@ -1,7 +1,7 @@
 define([
 	'dojo/_base/declare',
 	'dojo/domReady',
-	'dojo/data/ItemFileReadStore',
+	'dojo/store/Memory',
 	'dojox/mobile/parser',
 	'gridx/mobile/tests/support/data',
 	'gridx/mobile/Grid',
@@ -11,7 +11,7 @@ define([
 	'dojox/mobile/ScrollableView',
 	'dojox/mobile/compat',
 	'dojox/mobile/TabBar'
-], function(declare, ready, ItemFileReadStore, parser, data, Grid, Sort){
+], function(declare, ready, MemoryStore, parser, data, Grid, Sort){
 	var columns = [
 		{field: 'name', width: '50%', title: 'Name'},
 		{field: 'price', width: '20%', title: 'Price', template: '<font color="green">$${price}.00</font>'},
@@ -20,7 +20,7 @@ define([
 	declare('gridx.mobile.tests.Grid', [Grid, Sort], {});
 	ready(function(){
 		parser.parse();
-		grid.store = new ItemFileReadStore({data: {items:data.products}});
-		grid.setColumns(columns);
+		grid.columns = columns;
+		grid.setStore(new MemoryStore({data: data.products}));
 	});
 });

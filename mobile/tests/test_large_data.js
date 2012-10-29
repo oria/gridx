@@ -48,7 +48,7 @@ define([
 	
 	ready(function(){
 		parser.parse();
-		grid.setColumns(columns);
+		grid.columns = columns;
 		grid.setStore(new MemoryStore({data: data.large}));
 		
 	});

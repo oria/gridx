@@ -56,11 +56,9 @@ define([
 			//add new rows at the bottom
 			if(items && items.length){
 				var rows = query('>.mobileGridxRow', this.bodyPane.containerNode);
-				var arr = [], isOdd = false;//!css.contains(this.bodyPane.containerNode.lastChild, 'mobileGridxRowOdd');
-				if(rows.length){isOdd = !css.contains(rows[rows.length - 1], 'mobileGridxRowOdd');}
+				var arr = [];
 				array.forEach(items, function(item){
-					arr.push(this._createRow(item, isOdd));
-					isOdd = !isOdd;
+					arr.push(this._createRow(item));
 				}, this);
 				dom.place(arr.join(''), this._buttonLoadMore.parentNode, 'before');
 				this.lastId = items[items.length - 1][this.store.idProperty];

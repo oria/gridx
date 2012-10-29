@@ -3,17 +3,17 @@ define([
 	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/domReady',
-	'dojo/data/ItemFileWriteStore',
+	'dojo/store/Memory',
+	'dojo/store/Observable',
 	'dojox/mobile/parser',
 	'gridx/mobile/Grid',
-	'gridx/mobile/StoreObserver',
 	'gridx/mobile/tests/support/data',
 	'dojox/mobile/Heading',
 	'dojox/mobile/View',
 	'dojox/mobile/ScrollableView',
 	"dojox/mobile/compat",
 	'dojox/mobile/TabBar'
-], function(declare, lang, array, ready, ItemFileWriteStore, parser, Grid, StoreObserver, data){
+], function(declare, lang, array, ready, MemoryStore, Observable, parser, Grid, data){
 		function random(range, digit, forcePositive){
 			var d = Math.pow(10, digit||0);
 			var value = Math.round(range * Math.random() * d)/d;
@@ -33,27 +33,20 @@ define([
 		];
 		
 			
-		declare('gridx.mobile.tests.Grid', [Grid, StoreObserver], {});
 		ready(function(){
 			parser.parse();
-			var store = new ItemFileWriteStore({data: {items:data.stock}});
+			var store = new Observable(new MemoryStore({data: data.stock}));
+			grid.columns = columns;
 			grid.setStore(store);
-			grid.setColumns(columns);
 			
 			window.setInterval(function(){
-				store.fetch({
-					onComplete: function(items){
-						array.forEach(items, function(item){
-							//for demo purpose, some rows need update
-							if(Math.random() > 0.5)return;
-							
-							var r = random(5, 2);
-							store.setValue(item, 'shares', Math.round(100*(store.getValue(item, 'shares') + r))/100);
-							store.setValue(item, 'change', Math.round(100*(store.getValue(item, 'change') + r))/100);
-						});
-					}
+				store.data.forEach(function(stock){
+					if(Math.random() > 0.5)return;
+					var r = random(5, 2);
+					stock.shares = Math.round(100*(stock.shares + r))/100;
+					stock.change = Math.round(100*(stock.change + r))/100;
+					store.put(stock);
 				});
-				
 			}, 2000);
 		});
 			

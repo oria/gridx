@@ -28,11 +28,14 @@
 	<script type="text/javascript" src="../../../dojo/dojo.js"></script>
 	<style>
 		.mobileGridxBody		{	background-color: #3D567A;}
-		.mobileGridxRow 		{	background-color: #3D567A; border-bottom: 2px solid #2D3E57;}
-		.mobileGridxRowOdd 		{	background-color: #344865;}
+		.mobileGridxRow 		{	background-color: #344865;border-bottom: 2px solid #2D3E57;}
+		.mobileGridxRowOdd 		{	background-color: #3D567A; }
 		td.mobileGridxCell		{	color: #fff; font-size: 14px; text-shadow: 1px 1px 2px #000; padding: 3px;}
 		td.temp					{	font-size: 22px; font-weight: bold;}
 		td.tempMin				{	color: #7696C1;}
+		
+		.mobileGridxRow:nth-child(odd) {background-color: #3D567A; }
+		.mobileGridxRow:nth-child(even) {background-color: #344865; }
 	</style>
 </head>
 
