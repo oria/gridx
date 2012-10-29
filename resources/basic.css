@@ -271,3 +271,23 @@
 [class~='dijitSliderV'].gridxCellEditor {
 	width: auto;
 }
+
+/* TouchVScroller */
+.gridxTouchVScroller .gridxVScroller {
+	display: none;
+}
+
+.gridxTouchVScroller .gridxMain {
+	overflow: hidden;
+}
+.gridxTouchVScroller .gridxBody {
+	height: auto !important;
+	width: auto !important;
+}
+
+.gridxTouchVScroller .gridxHeaderRowInner {
+	position: relative;
+}
+.gridxTouchVScroller .gridxHeaderRowInner > table {
+	position: absolute;
+}

@@ -1,28 +1,41 @@
 define([
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
-	"dojo/dom-style",
-	"../core/_Module",
+	"dojo/dom-class",
 	"./VScroller",
-	"dojox/mobile/_ScrollableMixin"
-], function(kernel, declare, domStyle, _Module, VScroller){
+	"dojox/mobile/scrollable"
+], function(kernel, declare, domClass, VScroller, Scrollable){
 	kernel.experimental('gridx/modules/TouchVScroller');
 
 	return declare(VScroller, {
 		_init: function(){
 			var g = this.grid,
-				mn = g.mainNode,
-				bn = g.bodyNode,
-				scrollable = new dojox.mobile.scrollable(dojo, dojox);
-			domStyle.set(this.domNode, "display", "none");
-			domStyle.set(mn, "overflow", "hidden");
-			domStyle.set(bn, "height", "auto");
-			domStyle.set(g.headerNode.firstChild.firstChild, "margin-right", "0px"); // FIXME: Header assumes VScroller
+				h = g.header.innerNode,
+				scrollable = new Scrollable();
+			domClass.add(g.domNode, 'gridxTouchVScroller');
+			h.style.height = h.firstChild.offsetHeight + 'px';
 			scrollable.init({
-				domNode: mn, 
-				containerNode: bn, 
+				domNode: g.mainNode,
+				containerNode: g.bodyNode,
+				scrollDir: 'vh',
 				noResize: true
 			});
+			this.connect(scrollable, 'scrollTo', function(to){
+				if(typeof to.x == "number"){
+					h.firstChild.style.webkitTransform = scrollable.makeTranslateStr({x:to.x});
+				}
+			});
+			this.connect(scrollable, 'slideTo', function(to, duration, easing){
+				scrollable._runSlideAnimation({
+					x: scrollable.getPos().x
+				}, {
+					x: to.x
+				}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
+			});
+			this.connect(scrollable, 'stopAnimation', function(){
+				domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
+			});
+			this.inherited(arguments);
 		}
 	});
 });
