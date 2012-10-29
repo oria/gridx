@@ -20,21 +20,22 @@ define([
 				scrollDir: 'vh',
 				noResize: true
 			});
-			this.connect(scrollable, 'scrollTo', function(to){
-				if(typeof to.x == "number"){
-					h.firstChild.style.webkitTransform = scrollable.makeTranslateStr({x:to.x});
-				}
-			});
-			this.connect(scrollable, 'slideTo', function(to, duration, easing){
-				scrollable._runSlideAnimation({
-					x: scrollable.getPos().x
-				}, {
-					x: to.x
-				}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
-			});
-			this.connect(scrollable, 'stopAnimation', function(){
-				domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
-			});
+			this.batchConnect(
+				[scrollable, 'scrollTo', function(to){
+					if(typeof to.x == "number"){
+						h.firstChild.style.webkitTransform = scrollable.makeTranslateStr({x: to.x});
+					}
+				}],
+				[scrollable, 'slideTo', function(to, duration, easing){
+					scrollable._runSlideAnimation({
+						x: scrollable.getPos().x
+					}, {
+						x: to.x
+					}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
+				}],
+				[scrollable, 'stopAnimation', function(){
+					domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
+				}]);
 			this.inherited(arguments);
 		}
 	});
