@@ -102,7 +102,7 @@
 .gridxFilterPaneTimeRange .gridxFilterPaneTimeRangeWrapper,
 .gridxFilterPaneSelect .gridxFilterPaneDateSelectWrapper,
 .gridxFilterPaneRadio .gridxFilterPaneRadioWrapper {
-	display: block;
+	display: inline;
 }
 
 .gridxFilterBar {
@@ -307,7 +307,37 @@
 .dojoxEllipsisContainer{
 	width: 100%;
 }
-.dojoxEllipsisShown:after{
-	content: "\2026"
+.dojoxEllipsisShown:after {
+	content: "\2026";
 }
 
+/* FilterDialogOneLine */
+.gridxFilterRules {
+	height: 132px;
+	width: 690px;
+	overflow: auto;
+}
+
+.gridxFilterPaneRemoveBtnIcon {
+	background: transparent url(images/sprite_icons.png) no-repeat -198px 2px;
+	width: 16px;
+	height: 16px;
+}
+
+.gridxFilterPaneAddBtnIcon {
+	background: transparent url(images/sprite_icons.png) no-repeat -218px 2px;
+	width: 16px;
+	height: 16px;
+}
+
+.gridxFilterPaneForm .gridxFilterPaneConditionSelect {
+	margin: 0 14px;
+}
+
+.gridxFilterPaneFieldWrapper {
+	margin-right: 14px;
+}
+
+.gridxFilterSingleRule .gridxFilterPaneRemoveBtn {
+	display: none;
+}

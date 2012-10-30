@@ -1,0 +1,14 @@
+<form action="./" onsubmit="return false;">
+	<label id="${id}_MatchOptionLabel" for="${id}_MatchOptionSelect">${i18n.relationMsgFront} </label>
+	<select data-dojo-type="dijit.form.Select" id="${id}_MatchOptionSelect" aria-labelledby="${id}_MatchOptionLabel">
+		<option value="all">${i18n.relationAll}</option>
+		<option value="any">${i18n.relationAny}</option>
+	</select>
+	<div>${i18n.rules}</div>
+	<div class="gridxFilterRules"></div>
+	<div class="gridxFilterDialogButtons">
+		<input type="submit" data-dojo-type="dijit.form.Button" label="${i18n.filterButton}"/>
+		<input type="button" data-dojo-type="dijit.form.Button" label="${i18n.clearButton}"/>
+		<input type="button" data-dojo-type="dijit.form.Button" label="${i18n.cancelButton}"/>
+	</div>
+</form>

@@ -72,7 +72,7 @@ define([
 			// text:
 			//		The text to be wrapped.
 			var textDir = this.getTextDir(colId, text);
-			return textDir ? (textDir === "rtl" ? RLE : LRE) + text + PDF : "";
+			return textDir ? (textDir === "rtl" ? RLE : LRE) + text + PDF : text;
 		}
 	});
 });
