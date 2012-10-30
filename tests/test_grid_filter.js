@@ -9,7 +9,7 @@ require([
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/Focus',
 	'gridx/modules/filter/FilterBar',
-	'gridx/modules/filter/FilterDialogOneLine',
+//    'gridx/modules/filter/FilterDialogOneLine',
 	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, TestPane, Filter, SingleSort, VirtualVScroller, Focus, FilterBar){
 
@@ -29,8 +29,8 @@ require([
 			{
 				moduleClass: FilterBar,
 				maxRuleCount: 5,
-				ruleCountToConfirmClearFilter: 2,
-				dialogImpl: 'gridx/modules/filter/FilterDialogOneLine'
+//                dialogImpl: 'gridx/modules/filter/FilterDialogOneLine',
+				ruleCountToConfirmClearFilter: 2
 			}
 		],
 		structure: dataSource.layouts[1]
