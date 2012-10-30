@@ -1,0 +1,93 @@
+<div class="gridxFilterPaneForm">
+	<span data-dojo-type="dijit.form.Select" id="${id}_ColumnSelect" aria-labelledby="${id}_ColumnLabel"
+		class="gridxFilterPaneColumnSelect"
+		style="width: 200px;"></span>
+	<span data-dojo-type="dijit.form.Select" id="${id}_ConditionSelect" aria-labelledby="${id}_ConditionLabel"
+		class="gridxFilterPaneConditionSelect"
+		style="width: 150px;"></span>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneTextWrapper">
+		<input type="text" data-dojo-type="dijit.form.TextBox" style="" aria-labelledby="${id}_ValueLabel"
+			data-dojo-props="
+			intermediateChanges: true
+		"/>
+	</div>
+	
+<!--            dropDownClass="gridx.modules.filter.DistinctComboBoxMenu"-->
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneComboWrapper">
+		<input type="text" data-dojo-type="dijit.form.ComboBox" style="" aria-labelledby="${id}_ValueLabel"
+			data-dojo-props="
+			intermediateChanges: true,
+			autoComplete: false,
+			queryExpr: '*${i18n.startsWithExpr}'
+		"/>
+	</div>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneNumberWrapper">
+		<input type="text" data-dojo-type="dijit.form.NumberTextBox" style="" aria-labelledby="${id}_ValueLabel"
+			data-dojo-props="
+			intermediateChanges: true
+		"/>
+	</div>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneDateWrapper">
+		<span data-dojo-type="dijit.form.DateTextBox" aria-labelledby="${id}_ValueLabel" style="" data-dojo-props="
+			intermediateChanges: true
+		"></span>
+	</div>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneDateRangeWrapper">
+		<span data-dojo-type="dijit.form.DateTextBox" style="" aria-label="${i18n.beginDateRangeLabel}"
+			data-dojo-props="
+			intermediateChanges: true
+		"></span>
+		<span data-dojo-type="dijit.form.DateTextBox" style="" aria-label="${i18n.endDateRangeLabel}"
+			data-dojo-props="
+			intermediateChanges: true
+		"></span>
+	</div>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeWrapper">
+		<span data-dojo-type="dijit.form.TimeTextBox" aria-labelledby="${id}_ValueLabel" style=""
+			data-dojo-props="
+			intermediateChanges: true
+		"></span>
+	</div>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeRangeWrapper">
+		<span data-dojo-type="dijit.form.TimeTextBox" style="" aria-label="${i18n.beginTimeRangeLabel}"
+			data-dojo-props="
+			intermediateChanges: true
+		"></span>
+		<span data-dojo-type="dijit.form.TimeTextBox" style="" aria-label="${i18n.endTimeRangeLabel}"
+			data-dojo-props="
+			intermediateChanges: true
+		"></span>
+	</div>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneRadioWrapper">
+		<span style="">
+			<span data-dojo-type="dijit.form.RadioButton" aria-label="${i18n.radioTrueLabel}" checked="true"></span><span>${i18n.trueLabel}</span>
+		</span>
+		<span style="">
+			<span data-dojo-type="dijit.form.RadioButton" aria-label="${i18n.radioFalseLabel}"></span><span>${i18n.falseLabel}</span>
+		</span>
+	</div>
+	
+	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneSelectWrapper">
+		<span data-dojo-type="dijit.form.Select" aria-labelledby="${id}_ValueLabel" style=""></span>
+	</div>
+
+	<input type="button" class="gridxFilterPaneRemoveBtn" data-dojo-type="dijit.form.Button"
+		data-dojo-props="
+		showLabel: false,
+		iconClass: 'gridxFilterPaneRemoveBtnIcon',
+		label: '${i18n.removeRuleButton}'
+	"/>
+	<input type="button" class="gridxFilterPaneAddBtn" data-dojo-type="dijit.form.Button"
+		data-dojo-props="
+		showLabel: false,
+		iconClass: 'gridxFilterPaneAddBtnIcon',
+		label: '${i18n.addRuleButton}'
+	"/>
+</div>
