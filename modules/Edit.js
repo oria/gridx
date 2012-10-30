@@ -523,13 +523,19 @@ define([
 				useGridData = editorArgs.useGridData,
 				constraints = editorArgs.constraints || {},
 				props = editorArgs.props || '',
-				pattern = col.gridPattern || col.storePattern;
+				pattern = col.gridPattern || col.storePattern,
+				textDir = col.textDir || this.grid.textDir;
 			if(pattern){
 				constraints = lang.mixin({}, pattern, constraints);
 			}
 			constraints = json.toJson(constraints);
 			constraints = constraints.substring(1, constraints.length - 1);
-			if(props && constraints){
+			if(textDir){
+				props += [(props ? ', ' : ''),
+					'dir: "', (this.grid.isLeftToRight() ? 'ltr' : 'rtl'),
+					'", textDir: "', textDir, (constraints ? '", ' : '"')
+				].join('');
+			}else if(props && constraints){
 				props += ', ';
 			}
 			return function(){
