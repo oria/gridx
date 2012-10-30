@@ -1,0 +1,33 @@
+.gridxRtl .gridxFilterBar .dijitButton {
+	float: right;
+}
+.gridxRtl .gridxFilterBar .dijitButton .dijitButtonNode {
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-right: 2px;
+}
+
+.gridxRtl .gridxFilterBarStatus {
+	background: #f2f9ff; /* Old browsers */
+	background: -moz-linear-gradient(top,  #f2f9ff 0%, #eaf5ff 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f9ff), color-stop(100%,#eaf5ff)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* IE10+ */
+	background: linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f9ff', endColorstr='#eaf5ff',GradientType=0 ); /* IE6-9 */
+	border-bottom: 1px solid #BFD6EB;
+    border-top: 1px solid #BFD6EB;
+    padding: 1px 45px 0 0;
+}
+
+.gridxRtl .gridxFilterBarCloseBtn {
+	background: transparent url(images/sprite_icons.png) no-repeat -119px -20px;
+	width: 14px;
+	height: 14px;
+	float: left;
+	margin-right: 3px;
+	cursor: pointer;
+}

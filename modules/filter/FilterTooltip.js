@@ -56,8 +56,10 @@ define([
 			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				var col = this.grid.column(d.colId);
-				var colName = col.name();
+				var colName = i18n.anycolumn;
+				if(d.colId){
+					colName = this.grid.column(d.colId).name();
+				}
 				if(this.grid.bidi){
 					colName = this.grid.bidi.enforceTextDirWithUcc(d.colId, colName);
 				}
