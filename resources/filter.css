@@ -312,9 +312,15 @@
 }
 
 /* FilterDialogOneLine */
+.gridxFilterRulesLabel {
+	font-size: 15px;
+	font-weight: bolder;
+	margin-top: 10px;
+}
 .gridxFilterRules {
-	height: 132px;
+	height: 108px;
 	width: 690px;
+	margin-bottom: 10px;
 	overflow: auto;
 }
 
@@ -330,6 +336,21 @@
 	height: 16px;
 }
 
+.gridxFilterRules .gridxFilterPaneForm {
+	position: relative;
+}
+
+.gridxFilterPaneRemoveBtn {
+	position: absolute;
+	right: 40px;
+	top: -4px;
+}
+.gridxFilterPaneAddBtn {
+	position: absolute;
+	right: 0;
+	top: -4px;
+}
+
 .gridxFilterPaneForm .gridxFilterPaneConditionSelect {
 	margin: 0 14px;
 }
@@ -339,5 +360,9 @@
 }
 
 .gridxFilterSingleRule .gridxFilterPaneRemoveBtn {
+	display: none;
+}
+
+.gridxFilterMaxRuleCount .gridxFilterPaneAddBtn {
 	display: none;
 }

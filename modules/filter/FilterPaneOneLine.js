@@ -85,8 +85,10 @@ define([
 
 		close: function(){
 			var ac = this.domNode.parentNode;
+			var c = this.grid.filterBar.arg('maxRuleCount');
 			ac.removeChild(this.domNode);
 			css.toggle(ac, 'gridxFilterSingleRule', ac.childNodes.length === 1);
+			css.toggle(ac, 'gridxFilterMaxRuleCount', ac.childNodes.length >= c && c > 0);
 			this.destroyRecursive();
 		},
 

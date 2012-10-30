@@ -119,7 +119,7 @@ define([
 		}));
 		//toggle add rule button disable
 		var c = dlg.grid.filterBar.arg('maxRuleCount');
-//        dlg._btnAdd.set('disabled', children.length >= c && c > 0);
+		query('.gridxFilterRules', dlg.domNode).toggleClass('gridxFilterMaxRuleCount', children.length >= c && c > 0);
 		dlg._btnClear.set('disabled', !dlg.grid.filterBar.filterData);
 	}
 
