@@ -27,6 +27,13 @@ define([
 			}
 		},
 
+		destroy: function(){
+			this.inherited(arguments);
+			//clear all the timeouts, avoid possible errors.
+			clearTimeout(this._lazyScrollHandle);
+			clearTimeout(this._pVirtual);
+		},
+
 		//Public ----------------------------------------------------
 
 		// buffSize: Integer
