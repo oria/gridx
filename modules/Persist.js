@@ -101,7 +101,8 @@ define([
 				scope: scope,
 				enabled: true
 			};
-			var content = this.get(this.arg('key'));
+			var get = this.arg('get'),
+				content = get(this.arg('key'));
 			return content ? content[name] : null;	//Object
 		},
 
@@ -158,7 +159,8 @@ define([
 			// summary:
 			//		Save all the enabled features.
 			var t = this,
-				contents = null;
+				contents = null,
+				put = t.arg('put');
 			if(t.arg('enabled')){
 				var name,
 					feature,
@@ -171,7 +173,7 @@ define([
 					}
 				}
 			}
-			t.put(t.arg('key'), contents, t.arg('options'));
+			put(t.arg('key'), contents, t.arg('options'));
 		},
 	
 		//Private--------------------------------------------------------
@@ -194,18 +196,39 @@ define([
 		_restoreColumnState: function(){
 			var t = this,
 				grid = t.grid,
-				col, cols = [],
+				col, cols = [], colHash = {},
+				notPersistOrder,
 				columns = t.registerAndLoad('column', t._columnStateSaver, t);
 			if(lang.isArray(columns)){
-				array.forEach(columns, function(col){
-					array.some(grid._columns, function(c, i){
-						if(c.id == col.id){
-							c = cols[col.index] = grid._columns[i];
-							c.declaredWidth = c.width = col.width;
-							return true;
-						}
-					});
+				array.forEach(columns, function(c){
+					colHash[c.id] = c;
 				});
+				//persist column width
+				array.forEach(grid._columns, function(col){
+					var c = colHash[col.id];
+					if(!c){
+						//If there exists some column that is not in the persisted column array,
+						//don't restore column order
+						notPersistOrder = true;
+					}else if(c.id == col.id){
+						col.declaredWidth = col.width = c.width;
+					}
+				});
+				if(notPersistOrder){
+					cols = grid._columns;
+				}else{
+					//persist column order
+					array.forEach(grid._columns, function(col){
+						var c = colHash[col.id];
+						cols[c.index] = col;
+					});
+					//remove possible holes if the current columns are less.
+					for(var i = cols.length - 1; i >= 0; --i){
+						if(!cols[i]){
+							cols.splice(i, 1);
+						}
+					}
+				}
 				grid.setColumns(cols);
 			}
 		},

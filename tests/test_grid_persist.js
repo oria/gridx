@@ -1,4 +1,5 @@
 require([
+	'dojo/_base/lang',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/modules/Persist',
@@ -18,13 +19,13 @@ require([
 		size: 100
 	});
 
-	createGrid = function(){
+	createGrid = function(e, structure){
 		if(!window.grid){
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
 				store: store,
-				structure: dataSource.layouts[4],
+				structure: structure || dataSource.layouts[4],
 				modules: [
 					Persist,
 					SelectColumn,
@@ -40,6 +41,20 @@ require([
 		}
 	};
 	createGrid();
+
+	createNewColGrid = function(){
+		var structure = lang.clone(dataSource.layouts[4]);
+		structure.push({
+			id: 'newCol', field: 'Genre', name: 'New Column'
+		});
+		createGrid(null, structure);
+	};
+
+	createLessColGrid = function(){
+		var structure = lang.clone(dataSource.layouts[4]);
+		structure.splice(1, 1);
+		createGrid(null, structure);
+	};
 
 	destroyGrid = function(){
 		if(window.grid){
@@ -66,6 +81,8 @@ require([
 
 	tp.addTestSet('Pesistent Actions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createGrid">Create Grid</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createNewColGrid">Create Grid with new columns</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createLessColGrid">Create Grid with less columns</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroyGrid">Destroy Grid</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: enablePersist">Enable Persist</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: disablePersist">Disable Persist</div><br/>',
