@@ -190,8 +190,23 @@ define([
 			//		A row info object containing row index or row id
 			// returns:
 			//		The DOM node of the row. Null if not found.
-			var rowQuery = this._getRowNodeQuery(args);
-			return rowQuery && query('> ' + rowQuery, this.domNode)[0] || null;	//DOMNode|null
+			if(this.model.isId(args.rowId) && sniff('ie')){
+				return this._getRowNode(args.rowId);
+			}else{
+				var rowQuery = this._getRowNodeQuery(args);
+				return rowQuery && query('> ' + rowQuery, this.domNode)[0] || null;	//DOMNode|null
+			}
+		},
+
+		_getRowNode: function(id){
+			//TODO: this should be resolved in dojo.query!
+			//In IE, some special ids (with special charactors in it, e.g. "+") can not be queried out.
+			for(var i = 0, rows = this.domNode.childNodes, row; row = rows[i]; ++i){
+				if(row.getAttribute('rowid') == id){
+					return row;
+				}
+			}
+			return null;
 		},
 
 		getCellNode: function(args){
@@ -209,8 +224,13 @@ define([
 				if(!colId && cols[args.colIndex]){
 					colId = cols[args.colIndex].id;
 				}
-				r += " [colid='" + colId + "'].gridxCell";
-				return query(r, t.domNode)[0] || null;	//DOMNode|null
+				var c = " [colid='" + colId + "'].gridxCell";
+				if(t.model.isId(args.rowId) && sniff('ie')){
+					var rowNode = t._getRowNode(args.rowId);
+					return query(c, rowNode)[0] || null;	//DOMNode|null
+				}else{
+					return query(r + c, t.domNode)[0] || null;	//DOMNode|null
+				}
 			}
 			return null;	//null
 		},
