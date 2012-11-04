@@ -252,7 +252,8 @@ define([
 				if(!t.grid.isLeftToRight()){
 					delta = -delta;
 				}
-				var	w = domStyle.get(cell, 'width') + delta, minWidth = t.arg('minWidth');
+				var	w = (sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width')) + delta,
+					minWidth = t.arg('minWidth');
 				if(w < minWidth){
 					w = minWidth;
 				}
