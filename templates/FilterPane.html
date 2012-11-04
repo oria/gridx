@@ -1,64 +1,129 @@
 <ul class="gridxFilterPaneForm">
-	<li><label id="${id}_ColumnLabel" for="${id}_ColumnSelect">${i18n.columnSelectLabel}</label></li>
+	<li><label id="${id}_ColumnLabel" for="${id}_ColumnSelect">${module.nls.columnSelectLabel}</label></li>
 	<li name="sltColumn">
-		<div data-dojo-type="dijit.form.Select" id="${id}_ColumnSelect" aria-labelledby="${id}_ColumnLabel" style="width:100%;"></div>
+		<div data-dojo-type="${module.selectClass}"
+			id="${id}_ColumnSelect"
+			aria-labelledby="${id}_ColumnLabel"
+			style="width:100%;"
+			data-dojo-attach-point='sltColumn'
+			data-dojo-attach-event='onChange: _onColumnChange'
+		></div>
 	</li>
-	<li><label id="${id}_ConditionLabel" for="${id}_ConditionSelect">${i18n.conditionSelectLabel}</label></li>
+	<li><label id="${id}_ConditionLabel" for="${id}_ConditionSelect">${module.nls.conditionSelectLabel}</label></li>
 	<li name="sltCondition">
-		<div data-dojo-type="dijit.form.Select" id="${id}_ConditionSelect" style="width:100%;" aria-labelledby="${id}_ConditionLabel"></div>
+		<div data-dojo-type="${module.selectClass}"
+			id="${id}_ConditionSelect"
+			style="width:100%;"
+			aria-labelledby="${id}_ConditionLabel"
+			data-dojo-attach-point='sltCondition'
+			data-dojo-attach-event='onChange: _onConditionChange'
+		></div>
 	</li>
-	<li><label id="${id}_ValueLabel">${i18n.valueBoxLabel}</label></li>
+	<li><label id="${id}_ValueLabel">${module.nls.valueBoxLabel}</label></li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTextWrapper">
-		<input type="text" data-dojo-type="dijit.form.TextBox" intermediateChanges="true"
-		 style="width:100%;" aria-labelledby="${id}_ValueLabel"/>
+		<input type="text"
+			data-dojo-type="${module.textBoxClass}"
+			intermediateChanges="true"
+			style="width:100%;"
+			aria-labelledby="${id}_ValueLabel"
+			data-dojo-attach-point='tbSingle'
+		/>
 	</li>
 	
-<!--            dropDownClass="gridx.modules.filter.DistinctComboBoxMenu"-->
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneComboWrapper">
-		<input type="text" data-dojo-type="dijit.form.ComboBox" 
-			intermediateChanges="true" autoComplete="false" queryExpr="*${i18n.startsWithExpr}" 
-			style="width:100%;"  aria-labelledby="${id}_ValueLabel"/>
+		<input type="text"
+			data-dojo-type="${module.comboBoxClass}"
+			intermediateChanges="true"
+			autoComplete="false"
+			queryExpr="*${module.nls.startsWithExpr}"
+			style="width:100%;"
+			aria-labelledby="${id}_ValueLabel"
+			data-dojo-attach-point='comboText'
+		/>
 	</li>
-	
+
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneNumberWrapper">
-		<input type="text" data-dojo-type="dijit.form.NumberTextBox"  aria-labelledby="${id}_ValueLabel" intermediateChanges="true" style="width:100%;"/>
+		<input type="text"
+			data-dojo-type="${module.numberTextBoxClass}"
+			aria-labelledby="${id}_ValueLabel"
+			intermediateChanges="true"
+			style="width:100%;"
+			data-dojo-attach-point='tbNumber'
+		/>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDateWrapper">
-		<div data-dojo-type="dijit.form.DateTextBox" aria-labelledby="${id}_ValueLabel" intermediateChanges="true" style="width: 100%"></div>
+		<div data-dojo-type="${module.dateTextBoxClass}"
+			aria-labelledby="${id}_ValueLabel"
+			intermediateChanges="true"
+			style="width: 100%"
+			data-dojo-attach-point='dtbSingle'
+		></div>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDateRangeWrapper">
-		<div data-dojo-type="dijit.form.DateTextBox" style="width:44%; float: left;" intermediateChanges="true"
-			 aria-label="${i18n.beginDateRangeLabel}"></div>
-		<div style="width:10%; text-align: center; float: left;">${i18n.rangeTo}</div>
-		<div data-dojo-type="dijit.form.DateTextBox" style="width:44%; float: right;" intermediateChanges="true"
-			 aria-label="${i18n.endDateRangeLabel}"></div>
+		<div data-dojo-type="${module.dateTextBoxClass}"
+			style="width:44%; float: left;"
+			intermediateChanges="true"
+			aria-label="${module.nls.beginDateRangeLabel}"
+			data-dojo-attach-point='dtbStart'
+		></div>
+		<div style="width:10%; text-align: center; float: left;">${module.nls.rangeTo}</div>
+		<div data-dojo-type="${module.dateTextBoxClass}"
+			style="width:44%; float: right;"
+			intermediateChanges="true"
+			aria-label="${module.nls.endDateRangeLabel}"
+			data-dojo-attach-point='dtbEnd'
+		></div>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeWrapper">
-		<div data-dojo-type="dijit.form.TimeTextBox" aria-labelledby="${id}_ValueLabel" style="width: 100%" intermediateChanges="true"></div>
+		<div data-dojo-type="${module.timeTextBoxClass}"
+			aria-labelledby="${id}_ValueLabel"
+			style="width: 100%"
+			intermediateChanges="true"
+			data-dojo-attach-point='ttbSingle'
+		></div>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeRangeWrapper">
-		<div data-dojo-type="dijit.form.TimeTextBox" style="width:44%; float: left;" intermediateChanges="true"
-			 aria-label="${i18n.beginTimeRangeLabel}"></div>
-		<div style="text-align: center; float: left; width: 10%;">${i18n.rangeTo}</div>
-		<div data-dojo-type="dijit.form.TimeTextBox" style="width:44%; float: right;" intermediateChanges="true"
-			 aria-label="${i18n.endTimeRangeLabel}"></div>
+		<div data-dojo-type="${module.timeTextBoxClass}"
+			style="width:44%; float: left;"
+			intermediateChanges="true"
+			aria-label="${module.nls.beginTimeRangeLabel}"
+			data-dojo-attach-point='ttbStart'
+		></div>
+		<div style="text-align: center; float: left; width: 10%;">${module.nls.rangeTo}</div>
+		<div data-dojo-type="${module.timeTextBoxClass}"
+			style="width:44%; float: right;"
+			intermediateChanges="true"
+			aria-label="${module.nls.endTimeRangeLabel}"
+			data-dojo-attach-point='ttbEnd'
+		></div>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneRadioWrapper">
 		<span style="width:49%; float:left;">
-			<div data-dojo-type="dijit.form.RadioButton" aria-label="${i18n.radioTrueLabel}" checked="true"></div><span>${i18n.trueLabel}</span>
+			<div data-dojo-type="${module.radioButtonClass}"
+				aria-label="${module.nls.radioTrueLabel}"
+				checked="true"
+				data-dojo-attach-point='rbTrue'
+			></div><span>${module.nls.trueLabel}</span>
 		</span>
 		<span style="width:49%; float: right;">
-			<div data-dojo-type="dijit.form.RadioButton" aria-label="${i18n.radioFalseLabel}"></div><span>${i18n.falseLabel}</span>
+			<div data-dojo-type="${module.radioButtonClass}"
+				aria-label="${module.nls.radioFalseLabel}"
+				data-dojo-attach-point='rbFalse'
+			></div><span>${module.nls.falseLabel}</span>
 		</span>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneSelectWrapper">
-		<div data-dojo-type="dijit.form.Select" aria-labelledby="${id}_ValueLabel" style="width: 100%"></div>
+		<div data-dojo-type="${module.selectClass}"
+			aria-labelledby="${id}_ValueLabel"
+			style="width: 100%"
+			data-dojo-attach-point='sltSingle'
+		></div>
 	</li>
 </ul>

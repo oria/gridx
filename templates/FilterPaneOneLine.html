@@ -1,65 +1,88 @@
 <div class="gridxFilterPaneForm">
-	<span data-dojo-type="dijit.form.Select" id="${id}_ColumnSelect" aria-labelledby="${id}_ColumnLabel"
+	<span data-dojo-type="${module.selectClass}"
+		id="${id}_ColumnSelect"
+		aria-labelledby="${id}_ColumnLabel"
 		class="gridxFilterPaneColumnSelect"
-		style="width: 200px;"></span>
-	<span data-dojo-type="dijit.form.Select" id="${id}_ConditionSelect" aria-labelledby="${id}_ConditionLabel"
+		style="width: 200px"
+		data-dojo-attach-point='sltColumn'
+		data-dojo-attach-event='onChange: _onColumnChange'
+	></span>
+	<span data-dojo-type="${module.selectClass}"
+		id="${id}_ConditionSelect"
+		aria-labelledby="${id}_ConditionLabel"
 		class="gridxFilterPaneConditionSelect"
-		style="width: 150px;"></span>
+		style="width: 150px"
+		data-dojo-attach-point='sltCondition'
+		data-dojo-attach-event='onChange: _onConditionChange'
+	></span>
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneTextWrapper">
-		<input type="text" data-dojo-type="dijit.form.TextBox" style="" aria-labelledby="${id}_ValueLabel"
+		<input type="text"
+			data-dojo-type="${module.textBoxClass}"
+			style=""
+			aria-labelledby="${id}_ValueLabel"
+			data-dojo-attach-point='tbSingle'
 			data-dojo-props="
 			intermediateChanges: true
 		"/>
 	</div>
-	
+
 <!--            dropDownClass="gridx.modules.filter.DistinctComboBoxMenu"-->
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneComboWrapper">
-		<input type="text" data-dojo-type="dijit.form.ComboBox" style="" aria-labelledby="${id}_ValueLabel"
+		<input type="text" data-dojo-type="${module.comboBoxClass}" style="" aria-labelledby="${id}_ValueLabel"
+			data-dojo-attach-point='comboText'
 			data-dojo-props="
 			intermediateChanges: true,
 			autoComplete: false,
-			queryExpr: '*${i18n.startsWithExpr}'
+			queryExpr: '*${module.nls.startsWithExpr}'
 		"/>
 	</div>
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneNumberWrapper">
-		<input type="text" data-dojo-type="dijit.form.NumberTextBox" style="" aria-labelledby="${id}_ValueLabel"
+		<input type="text" data-dojo-type="${module.numberTextBoxClass}" style="" aria-labelledby="${id}_ValueLabel"
+			data-dojo-attach-point='tbNumber'
 			data-dojo-props="
 			intermediateChanges: true
 		"/>
 	</div>
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneDateWrapper">
-		<span data-dojo-type="dijit.form.DateTextBox" aria-labelledby="${id}_ValueLabel" style="" data-dojo-props="
+		<span data-dojo-type="${module.dateTextBoxClass}" aria-labelledby="${id}_ValueLabel" style=""
+			data-dojo-attach-point='dtbSingle'
+			data-dojo-props="
 			intermediateChanges: true
 		"></span>
 	</div>
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneDateRangeWrapper">
-		<span data-dojo-type="dijit.form.DateTextBox" style="" aria-label="${i18n.beginDateRangeLabel}"
+		<span data-dojo-type="${module.dateTextBoxClass}" style="" aria-label="${module.nls.beginDateRangeLabel}"
+			data-dojo-attach-point='dtbStart'
 			data-dojo-props="
 			intermediateChanges: true
 		"></span>
-		<span data-dojo-type="dijit.form.DateTextBox" style="" aria-label="${i18n.endDateRangeLabel}"
+		<span data-dojo-type="${module.dateTextBoxClass}" style="" aria-label="${module.nls.endDateRangeLabel}"
+			data-dojo-attach-point='dtbEnd'
 			data-dojo-props="
 			intermediateChanges: true
 		"></span>
 	</div>
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeWrapper">
-		<span data-dojo-type="dijit.form.TimeTextBox" aria-labelledby="${id}_ValueLabel" style=""
+		<span data-dojo-type="${module.timeTextBoxClass}" aria-labelledby="${id}_ValueLabel" style=""
+			data-dojo-attach-point='ttbSingle'
 			data-dojo-props="
 			intermediateChanges: true
 		"></span>
 	</div>
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeRangeWrapper">
-		<span data-dojo-type="dijit.form.TimeTextBox" style="" aria-label="${i18n.beginTimeRangeLabel}"
+		<span data-dojo-type="${module.timeTextBoxClass}" style="" aria-label="${module.nls.beginTimeRangeLabel}"
+			data-dojo-attach-point='ttbStart'
 			data-dojo-props="
 			intermediateChanges: true
 		"></span>
-		<span data-dojo-type="dijit.form.TimeTextBox" style="" aria-label="${i18n.endTimeRangeLabel}"
+		<span data-dojo-type="${module.timeTextBoxClass}" style="" aria-label="${module.nls.endTimeRangeLabel}"
+			data-dojo-attach-point='ttbEnd'
 			data-dojo-props="
 			intermediateChanges: true
 		"></span>
@@ -67,27 +90,35 @@
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneRadioWrapper">
 		<span style="">
-			<span data-dojo-type="dijit.form.RadioButton" aria-label="${i18n.radioTrueLabel}" checked="true"></span><span>${i18n.trueLabel}</span>
+			<span data-dojo-type="${module.radioButtonClass}" aria-label="${module.nls.radioTrueLabel}"
+				data-dojo-attach-point='rbTrue'
+				checked="true"></span><span>${module.nls.trueLabel}</span>
 		</span>
 		<span style="">
-			<span data-dojo-type="dijit.form.RadioButton" aria-label="${i18n.radioFalseLabel}"></span><span>${i18n.falseLabel}</span>
+			<span data-dojo-type="${module.radioButtonClass}" aria-label="${module.nls.radioFalseLabel}"
+				data-dojo-attach-point='rbFalse'
+			></span><span>${module.nls.falseLabel}</span>
 		</span>
 	</div>
 	
 	<div class="gridxFilterPaneFieldWrapper gridxFilterPaneSelectWrapper">
-		<span data-dojo-type="dijit.form.Select" aria-labelledby="${id}_ValueLabel" style=""></span>
+		<span data-dojo-type="${module.selectClass}" aria-labelledby="${id}_ValueLabel"
+			data-dojo-attach-point='sltSingle'
+			style=""></span>
 	</div>
 
-	<input type="button" class="gridxFilterPaneRemoveBtn" data-dojo-type="dijit.form.Button"
+	<input type="button" class="gridxFilterPaneRemoveBtn" data-dojo-type="${module.buttonClass}"
+		data-dojo-attach-event='onClick: close'
 		data-dojo-props="
 		showLabel: false,
 		iconClass: 'gridxFilterPaneRemoveBtnIcon',
-		label: '${i18n.removeRuleButton}'
+		label: '${module.nls.removeRuleButton}'
 	"/>
-	<input type="button" class="gridxFilterPaneAddBtn" data-dojo-type="dijit.form.Button"
+	<input type="button" class="gridxFilterPaneAddBtn" data-dojo-type="${module.buttonClass}"
+		data-dojo-attach-event='onClick: _insertRule'
 		data-dojo-props="
 		showLabel: false,
 		iconClass: 'gridxFilterPaneAddBtnIcon',
-		label: '${i18n.addRuleButton}'
+		label: '${module.nls.addRuleButton}'
 	"/>
 </div>

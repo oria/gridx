@@ -16,14 +16,23 @@ define([
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
-	"./FilterDialog",
-	"./FilterConfirmDialog",
+	"./FilterDialogPane",
+	"./FilterConfirmDialogPane",
 	"./FilterTooltip",
+	"dijit/Dialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
-	"dijit/form/Button"
-], function(require, kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, F, FilterDialog, FilterConfirmDialog, FilterTooltip){
+	"dijit/form/Select",
+	"dijit/form/Button",
+	"dijit/form/TextBox",
+	"dijit/form/NumberTextBox",
+	"dijit/form/DateTextBox",
+	"dijit/form/TimeTextBox",
+	"dijit/form/ComboBox",
+	"dijit/form/RadioButton",
+	"dijit/layout/AccordionContainer"
+], function(require, kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, F, FilterDialogPane, FilterConfirmDialogPane, FilterTooltip, Dialog){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -105,7 +114,20 @@ define([
 		//		If not provided, then search the language bundle.
 		itemsName: '',
 	=====*/
-	
+
+		nls: nls,
+		accordionContainerClass: 'dijit.layout.AccordionContainer',
+		selectClass: 'dijit.form.Select',
+		buttonClass: 'dijit.form.Button',
+		textBoxClass: 'dijit.form.TextBox',
+		comboBoxClass: 'dijit.form.ComboBox',
+		numberTextBoxClass: 'dijit.form.NumberTextBox',
+		dateTextBoxClass: 'dijit.form.DateTextBox',
+		timeTextBoxClass: 'dijit.form.TimeTextBox',
+		radioButtonClass: 'dijit.form.RadioButton',
+		dialogClass: Dialog,
+		filterDialogPaneClass: FilterDialogPane,
+
 		// condition:
 		//		Name of all supported conditions.
 		//		Hard coded here or dynamicly generated is up to the implementer. Anyway, users should be able to get this info.
@@ -116,14 +138,14 @@ define([
 			time: ['equal','before','after','range','isEmpty'],
 			'boolean': ['equal','isEmpty']
 		},
-		
+
 		load: function(args, startup){
 			// summary:
 			//	Init filter bar UI
 			//Add before and after expression for filter.
 			var t = this,
 				dn = t.domNode = dom.create('div', {
-					innerHTML: string.substitute(template, nls),
+					innerHTML: string.substitute(template, t),
 					'class': 'gridxFilterBar'
 				});
 			F.before = F.lessEqual;
@@ -131,7 +153,6 @@ define([
 			//For backward compatibility
 			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
 			t.closeFilterBarButton = t.arg('closeButton', t.arg('closeFilterBarButton'));
-			t._nls = nls;
 			parser.parse(dn);
 			css.toggle(dn, 'gridxFilterBarHideCloseBtn', !t.arg('closeButton'));
 			t.grid.vLayout.register(t, 'domNode', 'headerNode', -1);
@@ -144,6 +165,39 @@ define([
 				[dn, 'onmousemove', 'onDomMouseMove'],
 				[dn, 'onmouseout', 'onDomMouseOut']);
 			t.loaded.callback();
+		},
+
+		columnMixin: {
+			isFilterable: function(){
+				// summary:
+				//		Check if this column is filterable.
+				// return: Boolean
+				return this.def().filterable !== false;
+			},
+
+			setFilterable: function(filterable){
+				// summary:
+				//		Set filterable for this column.
+				// filterable: Boolean
+				//		TRUE for filterable, FALSE for not.
+				// return:
+				//		column object itself
+				this.grid.filterBar._setFilterable(this.id, filterable);
+				return this;
+			},
+
+			dataType: function(){
+				// summary:
+				//		Get the data type of this column. Always lowercase.
+				// return: String
+				return (this.def().dataType || 'string').toLowerCase();
+			},
+
+			filterConditions: function(){
+				// summary:
+				//		Get the available conditions for this column.	
+				return this.grid.filterBar._getColumnConditions(this.id);
+			}
 		},
 
 		onDomClick: function(e){
@@ -206,16 +260,41 @@ define([
 
 		confirmToExecute: function(callback, scope){
 			var max = this.arg('ruleCountToConfirmClearFilter'),
-				cfmDlg = this._cfmDlg;
+				cfmDlg = this._cfmDlg,
+				cfmDlgPane = this._cfmDlgPane;
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!cfmDlg){
-					cfmDlg = this._cfmDlg = new FilterConfirmDialog();
+					cfmDlgPane = this._cfmDlgPane = this._createConfirmDialogPane({
+						module: this,
+						execute: lang.hitch(scope, callback)
+					});
+					cfmDlg = this._cfmDlg = this._createConfirmDialog({
+						title: this.nls.clearFilterDialogTitle,
+						autofocus: false,
+						'class': 'gridxFilterConfirmDialog',
+						content: this._cfmDlgPane
+					});
 				}
-				cfmDlg.execute = lang.hitch(scope, callback);
 				cfmDlg.show();
 			}else{
 				callback.apply(scope);
 			}
+		},
+
+		_createFilterDialogPane: function(args){
+			return new this.filterDialogPaneClass(args);
+		},
+
+		_createConfirmDialogPane: function(args){
+			return new FilterConfirmDialogPane(args);
+		},
+
+		_createFilterDialog: function(args){
+			return new this.dialogClass(args);
+		},
+
+		_createConfirmDialog: function(args){
+			return new this.dialogClass(args);
 		},
 
 		clearFilter: function(noConfirm){
@@ -225,39 +304,6 @@ define([
 				this.filterData = null;
 				this.grid.filter.setFilter();
 				this._buildFilterState();
-			}
-		},
-
-		columnMixin: {
-			isFilterable: function(){
-				// summary:
-				//		Check if this column is filterable.
-				// return: Boolean
-				return this.def().filterable !== false;
-			},
-
-			setFilterable: function(filterable){
-				// summary:
-				//		Set filterable for this column.
-				// filterable: Boolean
-				//		TRUE for filterable, FALSE for not.
-				// return:
-				//		column object itself
-				this.grid.filterBar._setFilterable(this.id, filterable);
-				return this;
-			},
-
-			dataType: function(){
-				// summary:
-				//		Get the data type of this column. Always lowercase.
-				// return: String
-				return (this.def().dataType || 'string').toLowerCase();
-			},
-
-			filterConditions: function(){
-				// summary:
-				//		Get the available conditions for this column.	
-				return this.grid.filterBar._getColumnConditions(this.id);
 			}
 		},
 
@@ -302,26 +348,33 @@ define([
 		showFilterDialog: function(){
 			// summary:
 			//		Show the filter define dialog.
-			var dlg = this._filterDialog,
-				filterData = this.filterData;
-			if(!dlg){
-				var dlgImpl = this.arg('dialogImpl') || FilterDialog;
-				if(lang.isString(dlgImpl)){
-					dlgImpl = require(dlgImpl);
+			var dlgPane = this._filterDialogPane,
+				filterData = this.filterData,
+				filterDialogPaneClass = this.filterDialogPaneClass;
+			if(!dlgPane){
+				if(lang.isString(filterDialogPaneClass)){
+					this.filterDialogPaneClass = require(filterDialogPaneClass);
 				}
-				this._filterDialog = dlg = dlgImpl.create(this.grid);
+				this._filterDialogPane = dlgPane = this._createFilterDialogPane({
+					module: this
+				});
+				this._filterDialog = this._createFilterDialog({
+					title: this.nls.filterDefDialogTitle,
+					'class': 'gridxFilterDialog',
+					content: this._filterDialogPane
+				});
 			}
-			if(!dlg.open){
+			if(!this._filterDialog.open){
 				//Fix #7345: If there exists filterData, it should be set after dlg is shown;
 				//If there is no filterData, dlg.setData have to be called before dlg.show(),
 				//otherwise, the dlg will not show any condition boxes.
 				//TODO: Need more investigation on this to make the logic more reasonable!
 				if(!filterData){
-					dlg.setData(filterData);
+					dlgPane.setData(filterData);
 				}
-				dlg.show();
+				dlgPane.show();
 				if(filterData){
-					dlg.setData(filterData);
+					dlgPane.setData(filterData);
 				}
 			}
 		},
@@ -373,7 +426,7 @@ define([
 					this.applyFilter(d);
 				}
 				if(this._filterDialog.open){
-					this._filterDialog.setData(d);
+					this._filterDialogPane.setData(d);
 				}
 			}
 		},
@@ -389,14 +442,14 @@ define([
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			if(!this.filterData || !this.filterData.conditions.length){
-				this.statusNode.innerHTML = this.arg('noFilterMessage', nls.filterBarMsgNoFilterTemplate);
+				this.statusNode.innerHTML = this.arg('noFilterMessage', this.nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
-				[this._currentSize, this._totalSize, nls.defaultItemsName]) +
+			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', this.nls.filterBarMsgHasFilterTemplate),
+				[this._currentSize, this._totalSize, this.nls.defaultItemsName]) +
 				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' +
-				nls.filterBarClearButton + '">' +
-				nls.filterBarClearButton + '</a>';
+				this.nls.filterBarClearButton + '">' +
+				this.nls.filterBarClearButton + '</a>';
 			this._buildTooltip();
 		},
 
@@ -440,7 +493,7 @@ define([
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', nls.rangeTemplate);
+					var tpl = this.arg('rangeTemplate', this.nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -453,7 +506,7 @@ define([
 
 		_getConditionDisplayName: function(c){
 			var k = c.charAt(0).toUpperCase() + c.substring(1);
-			return this.arg('condition' + k, nls['condition' + k]);
+			return this.arg('condition' + k, this.nls['condition' + k]);
 		},
 
 		_getConditionOptions: function(colId){
@@ -463,7 +516,7 @@ define([
 				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({
-						label: this.arg('condition' + k, nls['condition' + k]),
+						label: this.arg('condition' + k, this.nls['condition' + k]),
 						value: s
 					});
 				}, this);

@@ -6,41 +6,33 @@ define([
 	"dojo/dom-class",
 	"dojo/string",
 	"dojo/query",
-	"dijit/registry",
+	'dijit/_WidgetBase',
+	'dijit/_TemplatedMixin',
+	'dijit/_WidgetsInTemplateMixin',
 	"dojox/html/ellipsis",
 	"dojox/html/metrics",
 	"./DistinctComboBoxMenu",
 	"./Filter",
-	"dojo/text!../../templates/FilterPane.html",
-	"dojo/i18n!../../nls/FilterBar",
-	"dijit/layout/ContentPane",
-	"dijit/form/Select",
-	"dijit/form/TextBox",
-	"dijit/form/DateTextBox",
-	"dijit/form/TimeTextBox",
-	"dijit/form/RadioButton",
-	"dijit/form/NumberTextBox",
-	"dijit/form/ComboBox"
-], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n){
+	"dojo/text!../../templates/FilterPane.html"
+], function(declare, lang, array, dom, css, string, query,
+	_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+	ellipsis, metrics, DistinctComboBoxMenu, Filter, template){
+
 	var ANY_COLUMN_VALUE = '_gridx_any_column_value_';
 	
 	function isAnyColumn(colid){
 		return colid == ANY_COLUMN_VALUE;
 	}
-	return declare([dijit.layout.ContentPane], {
-		//content: template,
-		sltColumn: null,
-		sltCondition: null,
-		grid: null,
-		title: i18n.defaultRuleTitle,
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+		templateString: template,
+
+		module: null,
+
+		title: '',
+
 		postCreate: function(){
-			this.inherited(arguments);
-			this.i18n = i18n;
-			this.set('content', string.substitute(template, this));
 			this._initFields();
 			this._initSltCol();
-			this.connect(this.sltColumn, 'onChange', '_onColumnChange');
-			this.connect(this.sltCondition, 'onChange', '_onConditionChange');
 			this.comboText.dropDownClass = DistinctComboBoxMenu;
 			this._onConditionChange();//In the latest dijit, onChange event is no longer fired after creation
 		},
@@ -92,62 +84,59 @@ define([
 			
 			ac.removeChild(this);
 			css.toggle(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
-			this.grid.filterBar._filterDialog._updateAccordionContainerHeight();
+			this.module._filterDialog._updateAccordionContainerHeight();
 		},
 		onChange: function(){
 			// summary:
 			//	event: fired when column, condition or value is changed
 		},
 		_getContainer: function(){
-			return registry.byNode(this.domNode.parentNode.parentNode.parentNode);
+			return this.module._filterDialogPane._accordionContainer;
 		},
 		_initFields: function(){
-			this.sltColumn = registry.byNode(query('li>table', this.domNode)[0]);
-			this.sltCondition = registry.byNode(query('li>table', this.domNode)[1]);
-			var fields = this._fields = [
-				this.tbSingle = registry.byNode(query('.gridxFilterPaneTextWrapper > .dijitTextBox', this.domNode)[0]),
-				this.tbNumber = registry.byNode(query('.gridxFilterPaneNumberWrapper > .dijitTextBox', this.domNode)[0]),
-				this.comboText = registry.byNode(query('.gridxFilterPaneComboWrapper > .dijitComboBox', this.domNode)[0]),
-				this.sltSingle = registry.byNode(query('.gridxFilterPaneSelectWrapper > .dijitSelect', this.domNode)[0]),
-				this.dtbSingle = registry.byNode(query('.gridxFilterPaneDateWrapper > .dijitDateTextBox', this.domNode)[0]),
-				this.dtbStart = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[0]),
-				this.dtbEnd = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[1]),
-				this.ttbSingle = registry.byNode(query('.gridxFilterPaneTimeWrapper > .dijitTimeTextBox', this.domNode)[0]),
-				this.ttbStart = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[0]),
-				this.ttbEnd = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[1]),
-				this.rbTrue = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[0]),
-				this.rbFalse = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[1])
-			];
-			
 			this.rbTrue.domNode.nextSibling.htmlFor = this.rbTrue.id;
 			this.rbFalse.domNode.nextSibling.htmlFor = this.rbFalse.id;
 			var name = 'rb_name_' + Math.random();
 			this.rbTrue.set('name', name);
 			this.rbFalse.set('name', name);
-			
-			array.forEach(fields, function(field){
+			this._fields = [
+				this.tbSingle,
+				this.tbNumber,
+				this.comboText,
+				this.sltSingle,
+				this.dtbSingle,
+				this.dtbStart,
+				this.dtbEnd,
+				this.ttbSingle,
+				this.ttbStart,
+				this.ttbEnd,
+				this.rbTrue,
+				this.rbFalse
+			];
+			array.forEach(this._fields, function(field){
 				this.connect(field, 'onChange', '_onValueChange');
 			}, this);
 		},
 		_initSltCol: function(){
-			var colOpts = [{label: i18n.anyColumnOption, value: ANY_COLUMN_VALUE}],
-				fb = this.grid.filterBar, 
+			var colOpts = [{label: this.module.nls.anyColumnOption, value: ANY_COLUMN_VALUE}],
+				fb = this.module,
+				grid = fb.grid,
 				sltCol = this.sltColumn;
-			array.forEach(this.grid.columns(), function(col){
+			array.forEach(grid.columns(), function(col){
 				if(!col.isFilterable())return;
 				var colName = col.name();
-				if(this.grid.bidi){
-					colName = this.grid.bidi.enforceTextDirWithUcc(col.id, colName);
+				if(grid.bidi){
+					colName = grid.bidi.enforceTextDirWithUcc(col.id, colName);
 				}
 				colOpts.push({value: col.id, label: colName});
-			}, this);
+			});
 			sltCol.addOption(colOpts);
 		},
 		_initCloseButton: function(){
 			// summary:
 			//	Add a close button to the accordion pane.
 			//  Must be called after adding to an accordion container.
-			var btnWidget = this._buttonWidget;
+			var btnWidget = this.container._buttonWidget;
 			var closeButton = dom.create('span', {
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
@@ -160,7 +149,7 @@ define([
 		
 		_onColumnChange: function(){
 			var colId = this.sltColumn.get('value');
-			var opt = this.grid.filterBar._getConditionOptions(isAnyColumn(colId) ? '' : colId);
+			var opt = this.module._getConditionOptions(isAnyColumn(colId) ? '' : colId);
 			var slt = this.sltCondition;
 			if(slt.options && slt.options.length){slt.removeOption(slt.options);}
 			slt.addOption(lang.clone(opt));
@@ -183,7 +172,7 @@ define([
 			var colid = this.sltColumn.get('value');
 			var dataType = 'string';
 			if(!isAnyColumn(colid)){
-				dataType = this.grid.column(colid).dataType();
+				dataType = this.module.grid.column(colid).dataType();
 			}
 			return dataType;
 		},
@@ -196,16 +185,16 @@ define([
 			return type;
 		},
 		_updateTitle: function(){
-			if(!this._buttonWidget){return;}
+			if(!this.container || !this.container._buttonWidget){return;}
 			var title, value = this._getValue(), 
 				type = this._getType(), condition = this.sltCondition.get('value'),
-				txtNode = this._buttonWidget.titleTextNode;
+				txtNode = this.container._buttonWidget.titleTextNode;
 			
 			if(value && (condition !== 'range' || (value.start && value.end))){
-				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
+				title = this.sltColumn.get('displayedValue') + ' ' + this.module._getRuleString(condition, value, type);
 			}else{
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
-				title = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
+				title = string.substitute(this.module.nls.ruleTitleTemplate, {ruleNumber: ruleNumber});
 			}
 			txtNode.innerHTML = title;
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');
@@ -214,7 +203,7 @@ define([
 			// summary:
 			//	Whether current state needs a combo box for string input, may rewrite to support virtual column
 			var colId = this.sltColumn.get('value');
-			return this._getType() === 'Text' && !isAnyColumn(colId) && this.grid._columnsById[colId].field;
+			return this._getType() === 'Text' && !isAnyColumn(colId) && this.module.grid._columnsById[colId].field;
 		},
 		_updateValueField: function(){
 			// summary:
@@ -233,12 +222,12 @@ define([
 			if(combo){
 				if(!this._dummyCombo){
 					//HACK: mixin query, get, etc methods to store, remove from 2.0.
-					this._dummyCombo = new dijit.form.ComboBox({store: this.grid.store});
+					this._dummyCombo = new dijit.form.ComboBox({store: this.module.grid.store});
 				}
 				//init combobox
-				var col = this.grid._columnsById[colId];
+				var col = this.module.grid._columnsById[colId];
 				lang.mixin(this.comboText, {
-					store: this.grid.store,
+					store: this.module.grid.store,
 					searchAttr: col.field,
 					fetchProperties: {sort:[{attribute: col.field, descending: false}]}
 				});

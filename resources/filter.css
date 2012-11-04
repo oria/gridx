@@ -101,7 +101,7 @@
 .gridxFilterPaneTimeRange .gridxFilterPaneTimeRangeWrapper,
 .gridxFilterPaneSelect .gridxFilterPaneDateSelectWrapper,
 .gridxFilterPaneRadio .gridxFilterPaneRadioWrapper {
-	display: inline;
+	display: inline-block;
 }
 
 .gridxFilterBar {
@@ -317,7 +317,7 @@
 	margin-top: 10px;
 }
 .gridxFilterRules {
-	height: 108px;
+	height: 152px;
 	width: 690px;
 	margin-bottom: 10px;
 	overflow: auto;
@@ -337,17 +337,16 @@
 
 .gridxFilterRules .gridxFilterPaneForm {
 	position: relative;
+	padding: 5px 0;
 }
 
 .gridxFilterPaneRemoveBtn {
-	position: absolute;
-	right: 40px;
-	top: -4px;
+	position: relative;
+	top: 0px;
 }
 .gridxFilterPaneAddBtn {
-	position: absolute;
-	right: 0;
-	top: -4px;
+	position: relative;
+	top: 0px;
 }
 
 .gridxFilterPaneForm .gridxFilterPaneConditionSelect {

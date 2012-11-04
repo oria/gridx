@@ -5,7 +5,6 @@ define([
 	"dojo/string",
 	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
-	"./FilterDialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
@@ -46,7 +45,7 @@ define([
 			// summary:
 			//	Build the status of current filter.
 			
-			var fb = this.filterBar, nls = fb._nls, data = fb.filterData;
+			var fb = this.filterBar, nls = fb.nls, data = fb.filterData;
 			if(!data || !data.conditions.length){return;}
 			
 			var typeString = data.type === 'all' ? nls.statusTipHeaderAll : nls.statusTipHeaderAny;
