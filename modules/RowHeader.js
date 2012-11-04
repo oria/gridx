@@ -212,11 +212,18 @@ define([
 		},
 
 		_onResize: function(){
-			for(var bn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
-				bn && n;
-				bn = bn.nextSibling, n = n.nextSibling){
-				n.firstChild.style.height = bn.firstChild.offsetHeight + 'px';
+			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
+				brn && n;
+				brn = brn.nextSibling, n = n.nextSibling){
+				n.firstChild.style.height = brn.firstChild.offsetHeight + 'px';
 			}
+			var t = this,
+				g = t.grid,
+				bn = t.bodyNode,
+				w = bn.offsetWidth || domStyle.get(bn, 'width'),
+				ltr = g.isLeftToRight(),
+				mainBorder = domGeo.getBorderExtents(g.mainNode);
+			bn.style[ltr ? 'left' : 'right'] = -(w + (ltr ? mainBorder.l : mainBorder.r)) + 'px';
 		},
 
 		_buildRows: function(start, count){
