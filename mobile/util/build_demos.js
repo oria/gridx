@@ -1,3 +1,11 @@
+//README
+/*
+ * This script generates built version of demo pages.
+ * 
+ * usage:
+ * 	node build_demos.js
+ */
+
 var fs = require('fs');
 var path = require('path');
 var util = require('util')
