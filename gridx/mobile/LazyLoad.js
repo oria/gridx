@@ -1,88 +1,87 @@
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/dom-construct',
-	'dojo/dom-class'
-], function(declare, array, dom, css){
+	'dojo/dom-class',
+	'dojo/query',
+	'dojo/Deferred',
+	'dojo/i18n!./nls/LazyLoad'
+], function(declare, lang, array, dom, css, query, Deferred, i18n){
 	return declare(null, {
 		pageSize: 20,
-		currentPage: 0,
-		totalPages: 0,
-		rowCount: 910,
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			var opt = this.queryOptions;
-			if(!opt){
-				this.queryOptions = opt = {};
-			}
-			opt.start = 0;
-			opt.count = this.pageSize;
-		},
-		buildRendering: function(){
+		lastId: null,	//used to store last id value for query, so that server side knows the state of grid
+		_buildBody: function(items){
 			this.inherited(arguments);
 			var wrapper = dom.create('div', {
 				className: 'mobileGridxLoadMoreWrapper'
 			}, this.bodyPane.containerNode, 'last');
 			this._buttonLoadMore = dom.create('button', { 
-				innerHTML: 'Load more',
+				innerHTML: i18n.loadMore,
 				className: 'mobileGridxLoadMoreButton mblButton'
 			}, wrapper, 'last');
 			this.connect(this._buttonLoadMore, 'onclick', 'loadMore');
-		},
-		_buildBody: function(){
-			var self = this, q = this.query, opt = this.queryOptions;
-			this.store.fetch({
-				query: q,
-				queryOptions: opt,
-				sort: opt && opt.sort || [],
-				onComplete: function(items){
-					var arr = [];
-					array.forEach(items, function(item, i){
-						arr.push(self._createRow(item, i));
-					});
-					dom.place(arr.join(''), self._buttonLoadMore.parentNode, 'before');
-				},
-				onError: function(err){
-					console.error('Failed to fetch items from store:', err);
-				},
-				start: opt && opt.start,
-				count: opt && opt.count
-			});
-			this.currentPage++;
-			this._updateLoadMoreButton();
-		},
-		loadMore: function(){
-			var _this = this;
-			this._makeButtonBusy();
-			window.setTimeout(function(){	//time out for demo purpose
-				var count = _this.pageSize;
-				if(_this.pageSize * (_this.currentPage + 1) >= _this.rowCount){
-					count = _this.rowCount - _this.pageSize * _this.currentPage;
-				}
-				var opt = _this.queryOptions;
-				opt.start = _this.currentPage * _this.pageSize;
-				opt.count = count;
-				_this._buildBody();
-				_this._cancelButtonBusy();
-			}, 2000);
-			
-		},
-		_updateLoadMoreButton: function(){
-			var btn = this._buttonLoadMore;
-			if(this.pageSize * this.currentPage >= this.rowCount){
-				btn.style.display = 'none';
-			}else{
-				btn.style.display = 'block';
+			if(items && items.length < this.pageSize){
+				this._buttonLoadMore.style.display = 'none';
+			}
+			if(items && items.length){
+				this.lastId = items[items.length - 1][this.store.idProperty];
 			}
 		},
+
+		loadMore: function(){
+			// summary:
+			//	Called when touch load more button.
+			//	It loads data from server side and create extra rows at the bottom.
+			//  If need to provide custom query information, use aspect.before(grid, 'loadMore')
+			
+			this._makeButtonBusy();
+			var q = lang.mixin({
+				'lastId': this.lastId,
+				count: this.pageSize
+			}, this.query);
+			
+			var self = this;
+			this.store.query(q, this.queryOptions).then(
+			   lang.hitch(this, '_loadMoreComplete'),
+			   lang.hitch(this, 'onError')
+			);
+		},
+		
+		_loadMoreComplete: function(results){
+			//summary:
+			//	Called after the store completes the query
+			
+			var items = results.items || results;
+			//add new rows at the bottom
+			if(items && items.length){
+				var rows = query('>.mobileGridxRow', this.bodyPane.containerNode);
+				var arr = [];
+				array.forEach(items, function(item){
+					arr.push(this._createRow(item));
+				}, this);
+				dom.place(arr.join(''), this._buttonLoadMore.parentNode, 'before');
+				this.lastId = items[items.length - 1][this.store.idProperty];
+			}
+			this._cancelButtonBusy();
+			if(results.noMore){
+				//if no more data, results should have a property 'noMore' with truthy value
+				this._buttonLoadMore.style.display = 'none';
+			}
+		},
+		onError: function(){
+			this.inherited(arguments);
+			this._cancelButtonBusy();
+		},
+		
 		_makeButtonBusy: function(){
 			var btn = this._buttonLoadMore;
-			btn.innerHTML = '<img src="' + this._blankGif +'" class="mobileGridxLoadingIcon"/> Loading...';
+			btn.innerHTML = '<img src="' + this._blankGif +'" class="mobileGridxLoadingIcon"/> ' + i18n.loading;
 			btn.disabled = true;
 		},
 		_cancelButtonBusy: function(){
 			var btn = this._buttonLoadMore;
-			btn.innerHTML = 'Load more';
+			btn.innerHTML = i18n.loadMore;
 			btn.disabled = false;
 		}
 	});

@@ -38,17 +38,17 @@
 </head>
 
 <body style="visibility:hidden;">
-	<div id="group1" dojoType="dojox.mobile.View" selected="true">
-		<h1 dojoType="dojox.mobile.Heading">Patent Filed</h1>
-		<div dojoType="dojox.mobile.Pane">
-			<div dojoType="dojox.charting.widget.Chart" id="chart3" theme="dojox.charting.themes.MobileGridx"
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Patent Filed</h1>
+		<div data-dojo-type="dojox/mobile/Pane">
+			<div data-dojo-type="dojox/charting/widget/Chart" id="chart3" theme="dojox.charting.themes.MobileGridx"
 							 style="width: 100%; height: 190px;">
 				<div class="plot" name="default" type="Pie" radius="80" fontColor="white"></div>
 				<div class="series" name="Series B" array="seriesB"></div>
-				
 			</div>
 		</div>
-		<div dojoType="gridx.mobile.Grid" jsId="grid" autoHeight="false" showHeader="false">
+		<div data-dojo-type="gridx/mobile/Grid"
+			data-dojo-props="autoHeight: true, showHeader: false" jsId="grid">
 		</div>
 	</div>
 

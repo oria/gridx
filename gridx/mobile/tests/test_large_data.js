@@ -1,6 +1,6 @@
 define([
 	'dojo/domReady',
-	'dojo/data/ItemFileReadStore',
+	'dojo/store/Memory',
 	'dojox/mobile/parser',
 	'gridx/mobile/tests/support/data',
 	'dojox/mobile/Heading',
@@ -9,7 +9,7 @@ define([
 	'dojox/mobile/TabBar',
 	"dojox/mobile/compat",
 	'gridx/mobile/Grid'
-], function(ready, ItemFileReadStore, parser, data){
+], function(ready, MemoryStore, parser, data){
 	
 	function formatter(obj, col){
 		var speed='normal', f = col.field, min = 100000, max = -1, minLib = [], maxLib = [];
@@ -48,7 +48,8 @@ define([
 	
 	ready(function(){
 		parser.parse();
-		grid.store = new ItemFileReadStore({data: {items:data.large}});
-		grid.setColumns(columns);
+		grid.columns = columns;
+		grid.setStore(new MemoryStore({data: data.large}));
+		
 	});
 });

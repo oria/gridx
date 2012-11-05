@@ -30,19 +30,21 @@
 	
 	<style>
 		td, th	{	font-size: 12px; text-align: left;}
-		.mobileGridx th	{	}
 	</style>
 </head>
 
 <body style="visibility:hidden;">
-	<div id="group1" dojoType="dojox.mobile.View" selected="true">
-		<h1 dojoType="dojox.mobile.Heading">Products</h1>
-		<div dojoType="gridx.mobile.tests.Grid" jsId="grid" showHeader="true"></div>
-		<ul dojoType="dojox.mobile.TabBar" fixed="bottom" style="border-bottom:none;">
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Products</h1>
+		<div data-dojo-type="gridx/mobile/Grid"
+			data-dojo-mixins="gridx/mobile/Sort"
+			data-dojo-props="showHeader: true"
+			jsId="grid"></div>
+		<ul data-dojo-type="dojox/mobile/TabBar" fixed="bottom" style="border-bottom:none;">
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
 		</ul>
 	</div>
 </body>

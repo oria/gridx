@@ -1,6 +1,6 @@
 define([
 	'dojo/domReady',
-	'dojo/data/ItemFileReadStore',
+	'dojo/store/Memory',
 	'dojox/mobile/parser',
 	'gridx/mobile/tests/support/data',
 	"dojox/mobile/compat",
@@ -12,7 +12,7 @@ define([
 	'dojox/charting/widget/Chart',
 	'dojox/charting/plot2d/Pie',
 	'gridx/mobile/tests/support/chart-theme'
-], function(ready, ItemFileReadStore, parser, data){
+], function(ready, MemoryStore, parser, data){
 	var columns = [
 		{field: 'color', width: '10%', title: 'Color', cssClass: 'color', template: '<span style="background-color:${color};">&nbsp;</span>'}
 		,{field: 'name', width: '40%', title: 'Name'}
@@ -23,7 +23,7 @@ define([
 	seriesB = data.chart.series;
 	ready(function(){
 		parser.parse();
-		grid.store = new ItemFileReadStore({data: {items:data.chart.gridData['2.6']}});
-		grid.setColumns(columns);
+		grid.columns = columns;
+		grid.setStore(new MemoryStore({data:data.chart.gridData['2.6']}));
 	});
 });

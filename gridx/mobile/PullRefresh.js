@@ -1,21 +1,26 @@
 define([
 	'dojo/_base/declare',
+	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/aspect',
 	'dojo/dom-construct',
 	'dojo/dom-class',
+	'dojo/query',
 	'dojo/i18n!./nls/PullRefresh'
-], function(declare, array, aspect, dom, css, i18n){
+], function(declare, lang, array, aspect, dom, css, query, i18n){
 	return declare(null, {
 		readyToRefresh: false,
 		state: 'normal',
 		triggerHeight: 50,
-		maxId: 20,
-		queryOptions: {sort: [{attribute: 'id', descending: true}], start: 980, count: 20},
-		postMixInProperties: function(){
-			this.inherited(arguments);
-		},
+		
+		//lastId:
+		//	used to store last id value for query, so that server side knows the state of grid
+		lastId: null,
+		
 		buildRendering: function(){
+			//summary:
+			//	Add pull refresh related ui elements, and connect events to them.
+			
 			this.inherited(arguments);
 			var self = this;
 			aspect.before(this.bodyPane, 'slideTo', function(to, duration, easing){
@@ -23,7 +28,7 @@ define([
 				if(to.y == 0 && self.state != 'normal'){
 					to.y = self.triggerHeight;
 					if(self.state == 'ready'){
-						self._loadNew();
+						self.loadNew();
 						self._setPullRefreshState('loading');
 					}
 				}
@@ -44,32 +49,32 @@ define([
 				}
 			});
 		},
-		_loadNew: function(){
-			var self = this, q = this.query, opt = this.queryOptions;
-			console.log('loading new...');
-			window.setTimeout(function(){	//time out for demo purpose
-				opt.start -= 20;	//every time load 20 rows
-				self.store.fetch({
-					query: q,
-					queryOptions: opt,
-					sort: opt && opt.sort || [],
-					onComplete: function(items){
-						var arr = [];
-						array.forEach(items, function(item, i){
-							arr.push(self._createRow(item, i));
-						});
-						dom.place(arr.join(''), self.pullRefreshWrapper, 'after');
-						self._loadComplete();
-					},
-					onError: function(err){
-						console.error('Failed to fetch items from store:', err);
-					},
-					start: opt && opt.start,
-					count: opt && opt.count
-				});
-			}, 1500);
+		loadNew: function(){
+			// summary:
+			//	Called when pull refresh triggers.
+			//	It loads data from server side and create extra rows at the top.
+			
+			var q = lang.mixin({
+				'lastId': this.lastId
+			}, this.query);
+			this.store.query(q, this.queryOptions).then(
+				lang.hitch(this, '_loadNewComplete'), 
+				lang.hitch(this, 'onError')
+			);
 		},
-		_loadComplete: function(){
+		_loadNewComplete: function(results){
+			// summary:
+			//	Called after store finishes fetching data from server side.
+			
+			var items = results.items || results, arr = [];
+			if(items.length){
+				var rows = query('>.mobileGridxRow', this.bodyPane.containerNode);
+				this.lastId = items[0][this.store.idProperty];
+				array.forEach(items, function(item){
+					arr.push(this._createRow(item));
+				}, this);
+				dom.place(arr.join(''), this.pullRefreshWrapper, 'after');
+			}
 			this._setPullRefreshState('normal');
 			this.bodyPane.slideTo({y:0});
 		},
@@ -101,6 +106,8 @@ define([
 
 		_buildBody: function(){
 			this.inherited(arguments);
+			
+			//Add an extra node for pull refresh UI
 			this.pullRefreshWrapper = dom.create('div', {
 				className: 'mobileGridxPullRefreshWrapper'
 			}, this.bodyPane.containerNode, 'first');

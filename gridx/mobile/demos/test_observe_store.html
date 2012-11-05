@@ -47,21 +47,22 @@
 			-webkit-background-size: 8px 5px;
 		    background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(.32, rgba(255, 255, 255, .09)), color-stop(.32, transparent), to(transparent));
 		}
-		.mobileGridxRowOdd {
+		.mobileGridxRow:nth-child(even) {
 		    background-color: #A9B2C7;
 		}
 	</style>
 </head>
 
 <body style="visibility:hidden;">
-	<div id="group1" dojoType="dojox.mobile.View" selected="true">
-		<h1 dojoType="dojox.mobile.Heading">Stock Observer</h1>
-		<div dojoType="gridx.mobile.tests.Grid" jsId="grid" hScroller="false" showHeader="false"></div>
-		<ul dojoType="dojox.mobile.TabBar" fixed="bottom" style="border-bottom:none;">
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Stock Observer</h1>
+		<div data-dojo-type="gridx/mobile/Grid" jsId="grid" 
+			data-dojo-props="hScroller: false, showHeader: false"></div>
+		<ul data-dojo-type="dojox/mobile/TabBar" fixed="bottom" style="border-bottom:none;">
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
 		</ul>
 	</div>
 
