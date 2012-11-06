@@ -244,6 +244,9 @@
 /*Column Resizer*/
 /*Column resizing plugin*/
 .gridxColumnResizing {
+	cursor: ew-resize;
+}
+.dj_ie .gridxColumnResizing {
 	cursor: e-resize;
 }
 
