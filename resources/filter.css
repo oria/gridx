@@ -101,7 +101,7 @@
 .gridxFilterPaneTimeRange .gridxFilterPaneTimeRangeWrapper,
 .gridxFilterPaneSelect .gridxFilterPaneDateSelectWrapper,
 .gridxFilterPaneRadio .gridxFilterPaneRadioWrapper {
-	display: inline-block;
+	display: block;
 }
 
 .gridxFilterBar {
@@ -310,57 +310,3 @@
 	content: "\2026";
 }
 
-/* FilterDialogOneLine */
-.gridxFilterRulesLabel {
-	font-size: 15px;
-	font-weight: bolder;
-	margin-top: 10px;
-}
-.gridxFilterRules {
-	height: 152px;
-	width: 690px;
-	margin-bottom: 10px;
-	overflow: auto;
-}
-
-.gridxFilterPaneRemoveBtnIcon {
-	background: transparent url(images/sprite_icons.png) no-repeat -198px 2px;
-	width: 16px;
-	height: 16px;
-}
-
-.gridxFilterPaneAddBtnIcon {
-	background: transparent url(images/sprite_icons.png) no-repeat -218px 2px;
-	width: 16px;
-	height: 16px;
-}
-
-.gridxFilterRules .gridxFilterPaneForm {
-	position: relative;
-	padding: 5px 0;
-}
-
-.gridxFilterPaneRemoveBtn {
-	position: relative;
-	top: 0px;
-}
-.gridxFilterPaneAddBtn {
-	position: relative;
-	top: 0px;
-}
-
-.gridxFilterPaneForm .gridxFilterPaneConditionSelect {
-	margin: 0 14px;
-}
-
-.gridxFilterPaneFieldWrapper {
-	margin-right: 14px;
-}
-
-.gridxFilterSingleRule .gridxFilterPaneRemoveBtn {
-	display: none;
-}
-
-.gridxFilterMaxRuleCount .gridxFilterPaneAddBtn {
-	display: none;
-}

@@ -8,13 +8,11 @@ require([
 	'gridx/modules/SingleSort',
 	'gridx/modules/RowHeader',
 	'gridx/modules/select/Row',
-	'gridx/modules/IndirectSelect',
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/Focus',
 	'gridx/modules/filter/FilterBar',
-//    'gridx/modules/filter/FilterDialogPaneOneLine',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, Filter, SingleSort, RowHeader, SelectRow, IndirectSelect, VirtualVScroller, Focus, FilterBar){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, Filter, SingleSort, RowHeader, SelectRow, VirtualVScroller, Focus, FilterBar){
 
 	grid = new Grid({
 		id: 'grid',
@@ -31,11 +29,9 @@ require([
 			Focus,
 			SelectRow,
 			RowHeader,
-//            IndirectSelect,
 			{
 				moduleClass: FilterBar,
 				maxRuleCount: Infinity,
-//                filterDialogPaneClass: 'gridx/modules/filter/FilterDialogPaneOneLine',
 				ruleCountToConfirmClearFilter: 2
 			}
 		],

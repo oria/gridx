@@ -1,5 +1,4 @@
 define([
-	"require",
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dijit/registry",
@@ -16,23 +15,14 @@ define([
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
-	"./FilterDialogPane",
-	"./FilterConfirmDialogPane",
+	"./FilterDialog",
+	"./FilterConfirmDialog",
 	"./FilterTooltip",
-	"dijit/Dialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
-	"dijit/form/Select",
-	"dijit/form/Button",
-	"dijit/form/TextBox",
-	"dijit/form/NumberTextBox",
-	"dijit/form/DateTextBox",
-	"dijit/form/TimeTextBox",
-	"dijit/form/ComboBox",
-	"dijit/form/RadioButton",
-	"dijit/layout/AccordionContainer"
-], function(require, kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, F, FilterDialogPane, FilterConfirmDialogPane, FilterTooltip, Dialog){
+	"dijit/form/Button"
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 	/*=====
 	var columnDefinitionFilterMixin = {
@@ -73,15 +63,12 @@ define([
 	
 	return declare(/*===== "gridx.modules.filter.FilterBar", =====*/_Module, {
 		name: 'filterBar',
-
 		forced: ['filter'],
-
 		getAPIPath: function(){
 			return {
 				filterBar: this
 			};
 		},
-
 		//Public-----------------------------------------------------------
 		
 		// closeButton: Boolean
@@ -112,69 +99,129 @@ define([
 		// itemsName: String
 		//		The general name of the items listed in the grid.
 		//		If not provided, then search the language bundle.
-		itemsName: '',
-	=====*/
-
-		nls: nls,
-		accordionContainerClass: 'dijit.layout.AccordionContainer',
-		selectClass: 'dijit.form.Select',
-		buttonClass: 'dijit.form.Button',
-		textBoxClass: 'dijit.form.TextBox',
-		comboBoxClass: 'dijit.form.ComboBox',
-		numberTextBoxClass: 'dijit.form.NumberTextBox',
-		dateTextBoxClass: 'dijit.form.DateTextBox',
-		timeTextBoxClass: 'dijit.form.TimeTextBox',
-		radioButtonClass: 'dijit.form.RadioButton',
-		dialogClass: Dialog,
-		filterDialogPaneClass: FilterDialogPane,
-
+		itemsName: '',=====*/
+	
 		// condition:
 		//		Name of all supported conditions.
 		//		Hard coded here or dynamicly generated is up to the implementer. Anyway, users should be able to get this info.
 		conditions: {
-			string: ['equal', 'contain','startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith', 'isEmpty'],
+			string: ['equal', 'contain','startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
 			number: ['equal','greater','less','greaterEqual','lessEqual','notEqual','isEmpty'],
 			date: ['equal','before','after','range','isEmpty'],
 			time: ['equal','before','after','range','isEmpty'],
 			'boolean': ['equal','isEmpty']
 		},
-
+		
 		load: function(args, startup){
 			// summary:
 			//	Init filter bar UI
 			//Add before and after expression for filter.
-			var t = this,
-				dn = t.domNode = dom.create('div', {
-					innerHTML: string.substitute(template, t),
-					'class': 'gridxFilterBar'
-				});
+			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
 			//For backward compatibility
 			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
-			t.closeFilterBarButton = t.arg('closeButton', t.arg('closeFilterBarButton'));
-			parser.parse(dn);
-			css.toggle(dn, 'gridxFilterBarHideCloseBtn', !t.arg('closeButton'));
-			t.grid.vLayout.register(t, 'domNode', 'headerNode', -1);
-			t._initWidgets();
-			t._initFocus();
-			t.refresh();
-			t.batchConnect(
-				[dn, 'onclick', 'onDomClick'],
-				[dn, 'onmouseover', 'onDomMouseOver'],
-				[dn, 'onmousemove', 'onDomMouseMove'],
-				[dn, 'onmouseout', 'onDomMouseOut']);
-			t.loaded.callback();
+			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
+			this._nls = nls;
+			this.domNode = dom.create('div', {
+				innerHTML: string.substitute(template, nls),
+				'class': 'gridxFilterBar'
+			});
+			parser.parse(this.domNode);
+			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.arg('closeButton'));
+			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
+			this._initWidgets();
+			this._initFocus();
+			this.refresh();
+			this.connect(this.domNode, 'onclick', 'onDomClick');
+			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
+			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
+			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
+			this.loaded.callback();
 		},
-
+		onDomClick: function(e){
+			if(!e.target || !e.target.tagName){return;}
+			if(domAttr.get(e.target, 'action') === 'clear'){
+				this.clearFilter();
+			}else if(css.contains(e.target, 'gridxFilterBarCloseBtn') || css.contains(e.target,'gridxFilterBarCloseBtnText')){
+				this.hide();
+			}else{
+				this.showFilterDialog();
+			}
+		},
+		onDomMouseMove: function(e){
+			if(e && e.target && (domAttr.get(e.target, 'action') === 'clear'
+				|| this.btnFilter === dijit.getEnclosingWidget(e.target))){return;}
+			this._showTooltip(e);
+		},
+		onDomMouseOver: function(e){},
+		onDomMouseOut: function(e){
+			//Make sure to not hide tooltip when mouse moves to tooltip itself.
+			window.setTimeout(lang.hitch(this, '_hideTooltip'), 10);
+		},
+		
+		applyFilter: function(filterData){
+			// summary:
+			//		Apply the filter data.
+			var F = Filter, exps = [];
+			this.filterData = filterData;
+			
+			array.forEach(filterData.conditions, function(data){
+				var type = 'string';
+				if(data.colId){
+					type = this.grid.column(data.colId).dataType();
+					exps.push(this._getFilterExpression(data.condition, data, type, data.colId));
+				}else{
+					//any column
+					var arr = [];
+					array.forEach(this.grid.columns(), function(col){
+						if(!col.isFilterable()){return;}
+						arr.push(this._getFilterExpression(data.condition, data, type, col.id));
+					}, this);
+					exps.push(F.or.apply(F, arr));
+				}
+			}, this);
+			var filter = (filterData.type === 'all' ? F.and : F.or).apply(F, exps);
+			this.grid.filter.setFilter(filter);
+			var _this = this;
+			this.model.when({}).then(function(){
+				_this._currentSize = _this.model.size();
+				_this._totalSize = _this.model._cache.size();
+				_this._buildFilterState();
+			});
+		},
+		
+		confirmToExecute: function(callback, scope){
+			var max = this.arg('ruleCountToConfirmClearFilter');
+			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
+				if(!this._cfmDlg){
+					this._cfmDlg = new FilterConfirmDialog();
+				}
+				this._cfmDlg.execute = lang.hitch(scope, callback);
+				this._cfmDlg.show();
+			}else{
+				callback.apply(scope);
+			}
+		},
+		
+		clearFilter: function(noConfirm){
+			if(!noConfirm){
+				this.confirmToExecute(lang.hitch(this, 'clearFilter', true), this);
+			}else{
+				this.filterData = null;
+				this.grid.filter.setFilter();
+				this._buildFilterState();
+			}
+		},
+	
 		columnMixin: {
 			isFilterable: function(){
 				// summary:
 				//		Check if this column is filterable.
 				// return: Boolean
-				return this.def().filterable !== false;
+				return this.grid._columnsById[this.id].filterable !== false;
 			},
-
+	
 			setFilterable: function(filterable){
 				// summary:
 				//		Set filterable for this column.
@@ -185,128 +232,21 @@ define([
 				this.grid.filterBar._setFilterable(this.id, filterable);
 				return this;
 			},
-
+	
 			dataType: function(){
 				// summary:
 				//		Get the data type of this column. Always lowercase.
 				// return: String
-				return (this.def().dataType || 'string').toLowerCase();
+				return (this.grid._columnsById[this.id].dataType || 'string').toLowerCase();
 			},
-
+	
 			filterConditions: function(){
 				// summary:
 				//		Get the available conditions for this column.	
 				return this.grid.filterBar._getColumnConditions(this.id);
 			}
 		},
-
-		onDomClick: function(e){
-			if(e.target && e.target.tagName){
-				if(domAttr.get(e.target, 'action') === 'clear'){
-					this.clearFilter();
-				}else if(css.contains(e.target, 'gridxFilterBarCloseBtn') || css.contains(e.target,'gridxFilterBarCloseBtnText')){
-					this.hide();
-				}else{
-					this.showFilterDialog();
-				}
-			}
-		},
-
-		onDomMouseMove: function(e){
-			if(e && e.target && (domAttr.get(e.target, 'action') === 'clear' ||
-				this.btnFilter === dijit.getEnclosingWidget(e.target))){
-				return;
-			}
-			this._showTooltip(e);
-		},
-
-		onDomMouseOver: function(e){},
-
-		onDomMouseOut: function(e){
-			//Make sure to not hide tooltip when mouse moves to tooltip itself.
-			window.setTimeout(lang.hitch(this, '_hideTooltip'), 10);
-		},
-
-		applyFilter: function(filterData){
-			// summary:
-			//		Apply the filter data.
-			var t = this,
-				model = t.model,
-				exps = array.map(filterData.conditions, function(data){
-					var type = 'string';
-					if(data.colId){
-						type = t.grid.column(data.colId).dataType();
-						return t._getFilterExpression(data.condition, data, type, data.colId);
-					}else{
-						//any column
-						var arr = [];
-						array.forEach(t.grid.columns(), function(col){
-							if(col.isFilterable()){
-								arr.push(t._getFilterExpression(data.condition, data, type, col.id));
-							}
-						});
-						return F.or.apply(F, arr);
-					}
-				}),
-				filter = (filterData.type === 'all' ? F.and : F.or).apply(F, exps);
-			t.filterData = filterData;
-			t.grid.filter.setFilter(filter);
-			model.when({}).then(function(){
-				t._currentSize = model.size();
-				t._totalSize = model._cache.size();
-				t._buildFilterState();
-			});
-		},
-
-		confirmToExecute: function(callback, scope){
-			var max = this.arg('ruleCountToConfirmClearFilter'),
-				cfmDlg = this._cfmDlg,
-				cfmDlgPane = this._cfmDlgPane;
-			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
-				if(!cfmDlg){
-					cfmDlgPane = this._cfmDlgPane = this._createConfirmDialogPane({
-						module: this,
-						execute: lang.hitch(scope, callback)
-					});
-					cfmDlg = this._cfmDlg = this._createConfirmDialog({
-						title: this.nls.clearFilterDialogTitle,
-						autofocus: false,
-						'class': 'gridxFilterConfirmDialog',
-						content: this._cfmDlgPane
-					});
-				}
-				cfmDlg.show();
-			}else{
-				callback.apply(scope);
-			}
-		},
-
-		_createFilterDialogPane: function(args){
-			return new this.filterDialogPaneClass(args);
-		},
-
-		_createConfirmDialogPane: function(args){
-			return new FilterConfirmDialogPane(args);
-		},
-
-		_createFilterDialog: function(args){
-			return new this.dialogClass(args);
-		},
-
-		_createConfirmDialog: function(args){
-			return new this.dialogClass(args);
-		},
-
-		clearFilter: function(noConfirm){
-			if(!noConfirm){
-				this.confirmToExecute(lang.hitch(this, 'clearFilter', true), this);
-			}else{
-				this.filterData = null;
-				this.grid.filter.setFilter();
-				this._buildFilterState();
-			}
-		},
-
+	
 		refresh: function(){
 			// summary:
 			//		Re-draw the filter bar if necessary with the current attributes.
@@ -319,11 +259,9 @@ define([
 			this._totalSize = this.model._cache.size();
 			this._buildFilterState();
 		},
-
 		isVisible: function(){
 			return this.domNode.style.display != 'none';
 		},
-
 		show: function(){
 			// summary:
 			//		Show the filter bar. (May add animation later)
@@ -331,7 +269,7 @@ define([
 			this.grid.vLayout.reLayout();
 			this.onShow();
 		},
-
+	
 		hide: function(){
 			// summary:
 			//		Hide the filter bar. (May add animation later)
@@ -340,51 +278,41 @@ define([
 			this._hideTooltip();
 			this.onHide();
 		},
-
-		onShow: function(){},
-
-		onHide: function(){},
-
+		onShow: function(){
+			
+		},
+		onHide: function(){
+			
+		},
 		showFilterDialog: function(){
 			// summary:
 			//		Show the filter define dialog.
-			var dlgPane = this._filterDialogPane,
-				filterData = this.filterData,
-				filterDialogPaneClass = this.filterDialogPaneClass;
-			if(!dlgPane){
-				if(lang.isString(filterDialogPaneClass)){
-					this.filterDialogPaneClass = require(filterDialogPaneClass);
-				}
-				this._filterDialogPane = dlgPane = this._createFilterDialogPane({
-					module: this
-				});
-				this._filterDialog = this._createFilterDialog({
-					title: this.nls.filterDefDialogTitle,
-					'class': 'gridxFilterDialog',
-					content: this._filterDialogPane
+			var dlg = this._filterDialog;
+			if(!dlg){
+				this._filterDialog = dlg = new FilterDialog({
+					grid: this.grid
 				});
 			}
-			if(!this._filterDialog.open){
-				//Fix #7345: If there exists filterData, it should be set after dlg is shown;
-				//If there is no filterData, dlg.setData have to be called before dlg.show(),
-				//otherwise, the dlg will not show any condition boxes.
-				//TODO: Need more investigation on this to make the logic more reasonable!
-				if(!filterData){
-					dlgPane.setData(filterData);
-				}
-				dlgPane.show();
-				if(filterData){
-					dlgPane.setData(filterData);
-				}
+			if(dlg.open){return;}
+			//Fix #7345: If there exists filterData, it should be set after dlg is shown;
+			//If there is no filterData, dlg.setData have to be called before dlg.show(),
+			//otherwise, the dlg will not show any condition boxes.
+			//TODO: Need more investigation on this to make the logic more reasonable!
+			if(!this.filterData){
+				dlg.setData(this.filterData);
+			}
+			dlg.show();
+			if(this.filterData){
+				dlg.setData(this.filterData);
 			}
 		},
-
+		
 		uninitialize: function(){
 			this._filterDialog && this._filterDialog.destroyRecursive();
 			this.inherited(arguments);
 			dom.destroy(this.domNode);
 		},
-
+	
 		//Private---------------------------------------------------------------
 		_getColumnConditions: function(colId){
 			// summary:
@@ -396,6 +324,7 @@ define([
 			//		The ID of a column.
 			// return: String[]
 			//		An array of condition names.
+			
 			var disabled, type;
 			if(!colId){
 				//any column
@@ -405,13 +334,14 @@ define([
 				disabled = this.grid._columnsById[colId].disabledConditions || [];
 				type = (this.grid._columnsById[colId].dataType || 'string').toLowerCase();
 			}
+			
 			var ret = this.conditions[type], hash = {};
 			if(!ret){ret = this.conditions['string'];}
 			array.forEach(disabled, function(name){hash[name] = true;});
 			ret = array.filter(ret, function(name){return !hash[name];});
 			return ret;
 		},
-
+		
 		_setFilterable: function(colId, filterable){
 			var col = this.grid._columnsById[colId];
 			if(!col){return;}
@@ -426,11 +356,10 @@ define([
 					this.applyFilter(d);
 				}
 				if(this._filterDialog.open){
-					this._filterDialogPane.setData(d);
+					this._filterDialog.setData(d);
 				}
 			}
 		},
-
 		_initWidgets: function(){
 			this.btnFilter = registry.byNode(query('.dijitButton', this.domNode)[0]);
 			this.btnClose = query('.gridxFilterBarCloseBtn', this.domNode)[0];
@@ -442,24 +371,21 @@ define([
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			if(!this.filterData || !this.filterData.conditions.length){
-				this.statusNode.innerHTML = this.arg('noFilterMessage', this.nls.filterBarMsgNoFilterTemplate);
+				this.statusNode.innerHTML = this.arg('noFilterMessage', nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', this.nls.filterBarMsgHasFilterTemplate),
-				[this._currentSize, this._totalSize, this.nls.defaultItemsName]) +
-				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' +
-				this.nls.filterBarClearButton + '">' +
-				this.nls.filterBarClearButton + '</a>';
+			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
+				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
+				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + nls.filterBarClearButton + '">'
+					 + nls.filterBarClearButton + '</a>';
 			this._buildTooltip();
 		},
-
 		_buildTooltip: function(){
 			if(!this._tooltip){
 				this._tooltip = new FilterTooltip({grid: this.grid});
 			}
 			this._tooltip.buildContent();
 		},
-
 		_showTooltip: function(evt, delayed){
 			this._hideTooltip();
 			if(!this.filterData || 
@@ -472,7 +398,6 @@ define([
 			}
 			this._tooltip.show(evt);
 		},
-
 		_hideTooltip: function(){
 			var dlg = this._tooltip;
 			if(!dlg){return;}
@@ -483,9 +408,8 @@ define([
 			}
 			dlg.hide();
 		},
-
 		_getRuleString: function(condition, value, type){
-			var valueString;
+			var valueString, type;
 			if(condition == 'isEmpty'){
 				valueString = '';
 			}else if(/^date|^time/i.test(type)){
@@ -493,7 +417,7 @@ define([
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', this.nls.rangeTemplate);
+					var tpl = this.arg('rangeTemplate', nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -503,12 +427,10 @@ define([
 			}
 			return '<span style="font-style:italic">' + this._getConditionDisplayName(condition) + '</span> ' + valueString;
 		},
-
 		_getConditionDisplayName: function(c){
 			var k = c.charAt(0).toUpperCase() + c.substring(1);
-			return this.arg('condition' + k, this.nls['condition' + k]);
+			return this.arg('condition' + k, nls['condition' + k]);
 		},
-
 		_getConditionOptions: function(colId){
 			var cache = this._conditionOptions = this._conditionOptions || {};
 			if(!cache[colId]){
@@ -516,7 +438,7 @@ define([
 				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({
-						label: this.arg('condition' + k, this.nls['condition' + k]),
+						label: this.arg('condition' + k, nls['condition' + k]),
 						value: s
 					});
 				}, this);
@@ -524,14 +446,14 @@ define([
 			}
 			return cache[colId];
 		},
-
+		
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
+			var F = Filter;
 			var dc = this.grid._columnsById[colId].dateParser || this._stringToDate;
 			var tc = this.grid._columnsById[colId].timeParser || this._stringToTime;
 			var converter = {date: dc, time: tc};
-			var c = data.condition, exp, isNot = false;
-			type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
+			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			if(c === 'range'){
 				var startValue = F.value(data.value.start, type),
 					endValue = F.value(data.value.end, type), 
@@ -548,32 +470,28 @@ define([
 			}
 			return exp;
 		},
-
 		_stringToDate: function(s, pattern){
 			pattern = pattern || /(\d{4})\/(\d\d?)\/(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
-			d.setFullYear(parseInt(RegExp.$1, 10));
-			d.setMonth(parseInt(RegExp.$2, 10) - 1);
+			d.setFullYear(parseInt(RegExp.$1));
+			d.setMonth(parseInt(RegExp.$2)-1);
 			return d;
 		},
-
 		_stringToTime: function(s, pattern){
 			pattern = pattern || /(\d\d?):(\d\d?):(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
-			d.setHours(parseInt(RegExp.$1, 10));
-			d.setMinutes(parseInt(RegExp.$2, 10));
-			d.setSeconds(parseInt(RegExp.$3, 10));
+			d.setHours(parseInt(RegExp.$1));
+			d.setMinutes(parseInt(RegExp.$2));
+			d.setSeconds(parseInt(RegExp.$3));
 			return d;
 		},
-
 		_formatDate: function(date){
 			//this may be customized by grid layout definition
 			var m = date.getMonth() + 1, d = date.getDate();
 			return m + '/' + d + '/' + date.getFullYear();
 		},
-
 		_formatTime: function(time){
 			//this may be customized by grid layout definition
 			var h = time.getHours(), m = time.getMinutes();
@@ -581,7 +499,7 @@ define([
 			if(m < 10){m = '0' + m;}
 			return h + ':' + m + ':00';
 		},
-
+		
 		_initFocus: function(){
 			var focus = this.grid.focus;
 			if(focus){
@@ -592,6 +510,7 @@ define([
 					doFocus: this._doFocusBtnFilter,
 					scope: this
 				});
+				
 				focus.registerArea({
 					name: 'filterbar_clear',
 					priority: -0.9,
@@ -599,6 +518,7 @@ define([
 					doFocus: this._doFocusClearLink,
 					scope: this
 				});
+				
 				focus.registerArea({
 					name: 'filterbar_close',
 					priority: -0.8,
@@ -608,13 +528,11 @@ define([
 				});
 			}
 		},
-
 		_doFocusBtnFilter: function(evt){
 			this.btnFilter.focus();
 			if(evt){event.stop(evt);}
 			return true;
 		},
-
 		_doFocusClearLink: function(evt){
 			this.btnFilter.focus();
 			var link = query('a[action="clear"]')[0];
@@ -625,21 +543,20 @@ define([
 			}
 			return false;
 		},
-
 		_doFocusBtnClose: function(evt){
 			this.btnClose.focus();
 			if(evt){event.stop(evt);}
 			return true;
 		},
-
+		
 		_doBlur: function(){
 			return true;
 		},
-
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
 			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}
+		
 	});
 });

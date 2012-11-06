@@ -5,6 +5,7 @@ define([
 	"dojo/string",
 	"dojo/i18n!../../nls/FilterBar",
 	"./Filter",
+	"./FilterDialog",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
@@ -45,7 +46,7 @@ define([
 			// summary:
 			//	Build the status of current filter.
 			
-			var fb = this.filterBar, nls = fb.nls, data = fb.filterData;
+			var fb = this.filterBar, nls = fb._nls, data = fb.filterData;
 			if(!data || !data.conditions.length){return;}
 			
 			var typeString = data.type === 'all' ? nls.statusTipHeaderAll : nls.statusTipHeaderAny;
@@ -55,15 +56,8 @@ define([
 			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				var colName = i18n.anycolumn;
-				if(d.colId){
-					colName = this.grid.column(d.colId).name();
-				}
-				if(this.grid.bidi){
-					colName = this.grid.bidi.enforceTextDirWithUcc(d.colId, colName);
-				}
-				arr.push('<tr', odd, '><td>', (d.colId ? colName : '${i18n.anyColumnOption}'), 
-					'</td><td class="gridxFilterTooltipValueCell">',
+				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : '${i18n.anyColumnOption}'), 
+					'</td><td class="gridxFilterTooltipValueCell">', 
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
 					'<span action="remove-rule" title="${i18n.removeRuleButton}"',
