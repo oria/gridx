@@ -190,7 +190,7 @@ define([
 				type = this._getType(), condition = this.sltCondition.get('value'),
 				txtNode = this.container._buttonWidget.titleTextNode;
 			
-			if(value && (condition !== 'range' || (value.start && value.end))){
+			if(value !== undefined && (condition !== 'range' || (value.start && value.end))){
 				title = this.sltColumn.get('displayedValue') + ' ' + this.module._getRuleString(condition, value, type);
 			}else{
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
@@ -259,7 +259,7 @@ define([
 			}
 		},
 		_setValue: function(value){
-			if(!value){return;}
+			if(value === undefined){return;}
 			var type = this._getType(), combo = this._needComboBox();
 			switch(type){
 				case 'Text':
@@ -286,7 +286,8 @@ define([
 					this.ttbEnd.set('value', value.end);
 					break;
 				case 'Radio':
-					this.rbTrue.set('checked', true);
+					if(value){this.rbTrue.set('checked', true);}
+					else{this.rbFalse.set('checked', true);}
 					break;
 			}
 		},
