@@ -198,11 +198,7 @@ define([
 				txtNode = this._buttonWidget.titleTextNode;
 			
 			if(value !== undefined && (condition !== 'range' || (value.start && value.end))){
-<<<<<<< HEAD
-				title = this.sltColumn.get('displayedValue') + ' ' + this.module._getRuleString(condition, value, type);
-=======
 				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
->>>>>>> Restore filter bar
 			}else{
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
 				title = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
