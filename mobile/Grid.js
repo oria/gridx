@@ -105,7 +105,7 @@ define([
 			//	Create a grid row by object store item.
 			var rowId = this.store.getIdentity(item);
 			var arr = ['<div class="mobileGridxRow"',
-				' rowId="' + rowId + '"',
+				rowId ? ' rowId="' + rowId + '"' : '',
 				 '><table><tr>'];
 			array.forEach(this.columns, function(col){
 				var value = this._getCellContent(col, item);
@@ -146,8 +146,10 @@ define([
 			var scrollDir = (this.vScroller ? 'v' : '') + (this.hScroller ? 'h' : '');
 			if(!scrollDir)scrollDir = 'v';
 			this.bodyPane = new ScrollablePane({
-				scrollDir: scrollDir
+				scrollDir: scrollDir,
+				scrollType: 1
 			}, this.bodyNode);
+			this.bodyPane._useTopLeft = false;
 			
 			if(this.showHeader){
 				var h = this.headerNode;
@@ -194,15 +196,7 @@ define([
 			this.inherited(arguments);
 			this.refresh();
 		},
-		
-//		refresh: function(){
-//			//summary:
-//			//	Firstly refresh header, then fetch data from store.
-//			//	Body will be refreshed after store query completes.
-//			
-//			this._buildHeader();
-//			return this.inherited(arguments);
-//		},
+
 		
 		onComplete: function(items){
 			// summary:
@@ -228,6 +222,16 @@ define([
 			dom.destroy(this.bodyNode.firstChild.childNodes[removedFrom]);
 		},
 		
+		
+				
+//		refresh: function(){
+//			//summary:
+//			//	Firstly refresh header, then fetch data from store.
+//			//	Body will be refreshed after store query completes.
+//			
+//			this._buildHeader();
+//			return this.inherited(arguments);
+//		},
 		
 		///////////////////
 		//////////////////////////////////////////////

@@ -19,6 +19,6 @@ define([
 	ready(function(){
 		parser.parse();
 		grid.columns = columns;
-		grid.setStore(new JsonRest({target: './support/JsonData.js'}));
+		grid.setStore(new JsonRest({target: '../tests/support/JsonData.js'}));
 	});
 });
