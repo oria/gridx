@@ -166,8 +166,9 @@ define([
 				for(tp in sp){
 					if(sp[tp]){
 						for(id in t._byId[tp]){
-							if(!filteredIds[id]){
-								t._doMark(id, tp, 0);
+							if(array.indexOf(filteredIds, id) < 0){
+								//Do not fire event since now is still during filter.
+								t._doMark(id, tp, 0, 0, 1);
 							}
 						}
 					}
@@ -225,7 +226,7 @@ define([
 			}
 		},
 
-		_doMark: function(id, tp, toMark, skipParent){
+		_doMark: function(id, tp, toMark, skipParent, noEvent){
 			var i, ids, children, childId, pid, siblings, markCount, fullCount, treePath,
 				t = this,
 				m = t.model,
@@ -244,14 +245,18 @@ define([
 				}
 			}
 			byId[id] = last[id] = toMark;
-			t._fireEvent(id, tp, toMark, oldState);
+			if(!noEvent){
+				t._fireEvent(id, tp, toMark, oldState);
+			}
 			if(t._tree[tp]){
 				ids = [id];
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
 					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
-					t._fireEvent(childId, tp, newState, oldState);
+					if(!noEvent){
+						t._fireEvent(childId, tp, newState, oldState);
+					}
 					if(mm._call('hasChildren', [childId])){
 						children = mm._call('children', [childId]);
 						if(children.length){
@@ -280,7 +285,9 @@ define([
 						}else if(markCount && fullCount < siblings.length && oldState != 1){
 							byId[pid] = 1; //all|none -> partial
 						}
-						t._fireEvent(pid, tp, byId[pid], oldState);
+						if(!noEvent){
+							t._fireEvent(pid, tp, byId[pid], oldState);
+						}
 					}
 				}
 			}
