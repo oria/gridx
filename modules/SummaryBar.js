@@ -1,42 +1,26 @@
 define([
 	"dojo/_base/declare",
-	"dojo/dom-construct",
-	"dojo/string",
+	"./barPlugins/Summary",
 	"../core/_Module",
-	"dojo/i18n!../nls/SummaryBar"
-], function(declare, domConstruct, string, _Module, nls){
+	"./Bar"
+], function(declare, Summary, _Module){
 	
-	return declare(/*===== "gridx.modules.SummaryBar", =====*/_Module, {
+	return declare(_Module, {
 		name: 'summaryBar',
 
-//        required: ['vLayout'],
+		required: ['bar'],
 
-		getAPIPath: function(){
-			return {
-				summaryBar: this
-			};
-		},
+		isBarPlugin: true,
 
-		preload: function(){
-			var t = this, m = t.model;
-			t.domNode = domConstruct.create('div', {'class': 'gridxSummaryBar'});
-			t.grid.vLayout.register(t, 'domNode', 'footerNode', 5);
-			t.connect(m, 'onSizeChange', '_update');
-			t.connect(m, 'onMarkChange', '_update');
-			t._update();
-		},
-		destroy: function(){
-			domConstruct.destroy(this.domNode);
-			this.inherited(arguments);
-		},
-		_update: function(){
-			var t = this,
-				g = t.grid,
-				sr = g.select && g.select.row,
-				size = t.model.size(),
-				selected = sr ? sr.getSelected().length : 0,
-				tpl = sr ? nls.summaryWithSelection : nls.summary;
-			t.domNode.innerHTML = string.substitute(tpl, [size, selected]);
+		bar: 'bottom',
+
+		row: 0,
+
+		col: 0,
+
+		def: {
+			pluginClass: Summary,
+			className: 'gridxBarSummary'
 		}
 	});
 });

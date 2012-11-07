@@ -274,6 +274,10 @@
 	display: inline;
 }
 
+.gridxBarQuickFilter {
+	text-align: right;
+}
+
 /*Copied from dojox/html/resources/ellipsis.css*/
 .dojoxEllipsis,
 .dojoxEllipsisShown {

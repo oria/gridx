@@ -1,0 +1,30 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Grid QuickFilter Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		#gridContainer {
+			width: 700px;
+			height: 370px;
+		}
+		#grid {
+			height: 100%;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require(['./test_grid_quickFilter.js']);
+	</script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Grid QuickFilter Test
+	</h1>
+	<div id='gridContainer'></div>
+</body>
+</html>

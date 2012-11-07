@@ -11,3 +11,8 @@
 .gridxRtl .gridxFilterBarCloseBtn {
 	float: left;
 }
+
+.gridxRtl .gridxBarQuickFilter {
+	text-align: left;
+}
+

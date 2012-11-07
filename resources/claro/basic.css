@@ -69,13 +69,18 @@
 }
 
 /* Row header */
-.gridxRowHeaderHeader .gridxHeaderCellFocus {
+.claro .gridxRowHeaderHeader .gridxHeaderCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;
 }
 	
-.gridxRowHeaderRow .gridxCellFocus {
+.claro .gridxRowHeaderRow .gridxCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;
 }
 
+/* toolbar */
+.claro .gridxBarToolBar .dijitToolbar {
+	background: none;
+	border-bottom: none;
+}

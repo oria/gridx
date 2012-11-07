@@ -1,6 +1,5 @@
 define([
 	"require",
-	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
@@ -8,11 +7,10 @@ define([
 	"dojo/dom-construct",
 	"../core/_Module",
 	"../core/util"
-], function(require, kernel, declare, lang, array, a11y, domConstruct, _Module, util){
+], function(require, declare, lang, array, a11y, domConstruct, _Module, util){
 
-	kernel.experimental('gridx/modules/Bar');
-	
-	return declare(/*===== "gridx.modules.Bar", =====*/_Module, {
+	return _Module.register(
+	declare(/*===== "gridx.modules.Bar", =====*/_Module, {
 		// summary:
 		//		This is a general-purpose bar for gridx. It can be configured to hold various plugins,
 		//		such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
@@ -36,6 +34,7 @@ define([
 						plugins[pos] = t._parse(t[pos], t[node]);
 					}
 				};
+			t._initModules();
 			init('top', 'headerNode', -5);
 			init('bottom', 'footerNode', 5);
 		},
@@ -106,6 +105,34 @@ define([
 	=====*/
 
 		//Private---------------------------------------------------------
+		_initModules: function(){
+			var t = this,
+				name,
+				mods = t.grid._modules;
+			for(name in mods){
+				mod = mods[name].mod;
+				if(mod.isBarPlugin){
+					var pos = mod.arg('bar'),
+						rowIdx = mod.arg('row'),
+						col = mod.arg('col'),
+						defs = t.arg(pos, []);
+					if(!lang.isArray(defs[0])){
+						defs = [defs];
+					}
+					if(rowIdx < 0){
+						rowIdx = defs.length - 1;
+					}
+					var row = defs[rowIdx];
+					while(!row){
+						defs.push([]);
+						row = defs[rowIdx];
+					}
+					row[col < 0 ? 'push' : 'unshift'](mod.arg('def'));
+					t[pos] = defs;
+				}
+			}
+		},
+
 		_parse: function(defs, node){
 			var plugin,
 				plugins = [],
@@ -226,5 +253,5 @@ define([
 			var elems = a11y._getTabNavigable(this[pos + 'Node']);
 			return evt ? evt.target == (step < 0 ? elems.first : elems.last) : true;
 		}
-	});
+	}));
 });
