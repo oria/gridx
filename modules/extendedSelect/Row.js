@@ -150,6 +150,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if(e.keyCode == keys.SPACE && (!e.columnId ||
+							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						t._isOnCell = e.columnId;
