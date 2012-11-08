@@ -294,3 +294,36 @@
 .gridxTouchVScroller .gridxHeaderRowInner > table {
 	position: absolute;
 }
+
+/* TouchScroll */
+.gridxTouchScrollVWrapper {
+    overflow: hidden;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 5px;
+}
+
+.gridxTouchScrollHWrapper {
+    overflow: hidden;
+    position: absolute;
+	bottom: 2px;
+	left: 2px;
+	height: 5px;
+}
+
+.gridxTouchScrollVBar {
+    background-color: #606060;
+    opacity: 0;
+    position: absolute;
+    z-index: 999;
+    width: 5px;
+}
+
+.gridxTouchScrollHBar {
+    background-color: #606060;
+    opacity: 0;
+    position: absolute;
+    z-index: 999;
+	height: 5px;
+}
