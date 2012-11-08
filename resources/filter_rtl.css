@@ -23,3 +23,12 @@
 .dijitRtl .gridxFilterPaneCloseButton{
 	float: left;
 }
+
+.dijitRtl .gridxFilterDialog .gridxFilterDialogButtons {
+	text-align: left;
+}
+
+.dijitRtl .gridxFilterDialog .gridxFilterDialogButtons .gridxFilterDialogBtnAdd {
+	float:right;
+}
+
