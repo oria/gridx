@@ -197,7 +197,7 @@ define([
 				type = this._getType(), condition = this.sltCondition.get('value'),
 				txtNode = this._buttonWidget.titleTextNode;
 			
-			if(value !== undefined && (condition !== 'range' || (value.start && value.end))){
+			if(this._isValidValue(value) && (condition !== 'range' || (value.start && value.end))){
 				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
 			}else{
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
@@ -266,7 +266,7 @@ define([
 			}
 		},
 		_setValue: function(value){
-			if(value === undefined){return;}
+			if(!this._isValidValue(value)){return;}
 			var type = this._getType(), combo = this._needComboBox();
 			switch(type){
 				case 'Text':
@@ -297,6 +297,10 @@ define([
 					else{this.rbFalse.set('checked', true);}
 					break;
 			}
+		},
+		
+		_isValidValue: function(value){
+			return value !== null && value != undefined;
 		},
 		
 		uninitialize: function(){
