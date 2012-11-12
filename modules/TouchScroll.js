@@ -41,24 +41,30 @@ define([
 		_start: function(e){
 			var t = this,
 				g = t.grid,
-				vns = t.vInner.style,
-				hns = t.hInner.style,
-				bn = g.bodyNode,
-				h = bn.clientHeight,
-				w = bn.clientWidth,
-				sh = g.vScrollerNode.scrollHeight,
-				sw = g.hScrollerNode.scrollWidth;
-			t._last = e;
-			dom.setSelectable(g.domNode, false);
-			t.vWrapper.style.height = (h - 4) + 'px';
-			t.hWrapper.style.width = (w - 4) + 'px';
-			vns.height = h * (h - 4) / sh + 'px';
-			hns.width = w * (w - 4) / sw + 'px';
-			vns.opacity = 1;
-			hns.opacity = 1;
-			t._vr = (h - 4) / sh;
-			t._hr = (w - 4) / sw;
-			event.stop(e);
+				vScrollerNode = g.vScrollerNode;
+				hScrollerNode = g.hScrollerNode;
+			//Start touch scroll only on mobile devices where the scroll bar can not be shown
+			if((vScrollerNode.style.display != 'none' && vScrollerNode.offsetWidth == 1) ||
+				(hScrollerNode.style.display != 'none' && hScrollerNode.offsetHeight == 1)){
+				var vns = t.vInner.style,
+					hns = t.hInner.style,
+					bn = g.bodyNode,
+					h = bn.clientHeight,
+					w = bn.clientWidth,
+					sh = vScrollerNode.scrollHeight,
+					sw = hScrollerNode.scrollWidth;
+				t._last = e;
+				dom.setSelectable(g.domNode, false);
+				t.vWrapper.style.height = (h - 4) + 'px';
+				t.hWrapper.style.width = (w - 4) + 'px';
+				vns.height = h * (h - 4) / sh + 'px';
+				hns.width = w * (w - 4) / sw + 'px';
+				vns.opacity = 1;
+				hns.opacity = 1;
+				t._vr = (h - 4) / sh;
+				t._hr = (w - 4) / sw;
+				event.stop(e);
+			}
 		},
 
 		_scroll: function(e){
@@ -79,11 +85,13 @@ define([
 
 		_end: function(e){
 			var t = this;
+			if(t._last){
 			t._last = null;
-			dom.setSelectable(t.grid.domNode, true);
-			t.vInner.style.opacity = 0;
-			t.hInner.style.opacity = 0;
-			event.stop(e);
+				dom.setSelectable(t.grid.domNode, true);
+				t.vInner.style.opacity = 0;
+				t.hInner.style.opacity = 0;
+				event.stop(e);
+			}
 		}
 	});
 });

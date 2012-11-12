@@ -327,3 +327,16 @@
     z-index: 999;
 	height: 5px;
 }
+
+.gridxTouchScrollVBar,
+.gridxTouchScrollHBar {
+	-webkit-transition-property: opacity;
+	-moz-transition-property: opacity;
+	-o-transition-property: opacity;
+	transition-property: opacity;
+	-webkit-transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-o-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+}
+
