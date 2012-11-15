@@ -38,15 +38,15 @@ define([
 		//		The grid widget this plugin works for.
 		grid: null,
 
-		textBoxClass: TextBox.prototype.declaredClass,
+		textBoxClass: 'dijit.form.TextBox',
 
-		buttonClass: Button.prototype.declaredClass,
+		buttonClass: 'dijit.form.Button',
 
-		comboButtonClass: ComboButton.prototype.declaredClass,
+		comboButtonClass: 'dijit.form.ComboButton',
 
-		menuClass: Menu.prototype.declaredClass,
+		menuClass: 'dijit.Menu',
 
-		menuItemClass: MenuItem.prototype.declaredClass,
+		menuItemClass: 'dijit.MenuItem',
 
 		//Public-------------------------------------------------------------------
 		// autoApply: Boolean

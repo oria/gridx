@@ -14,9 +14,9 @@ define([
 
 		bar: 'top',
 
-		row: 0,
+		row: 0,//The first row
 
-		col: -1,
+		col: -1,//The last column
 
 		def: {
 			pluginClass: QuickFilter,
