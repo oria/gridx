@@ -13,7 +13,7 @@ define([
 		// summary:
 		//		This grid bar plugin is to switch pages using select widget.
 
-		templateString: '<div class="gridxDropDownSizer"><label class="gridxPagerLabel">${pageLabel}</label></div>',
+		templateString: '<div class="gridxDropDownPager"><label class="gridxPagerLabel">${pageLabel}</label></div>',
 
 		constructor: function(args){
 			lang.mixin(this, nls);
