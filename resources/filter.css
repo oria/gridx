@@ -307,7 +307,7 @@
 .dojoxEllipsisContainer{
 	width: 100%;
 }
-.dojoxEllipsisShown:after{
-	content: "\2026"
+.dojoxEllipsisShown:after {
+	content: "\2026";
 }
 
