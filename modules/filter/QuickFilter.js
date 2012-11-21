@@ -10,17 +10,14 @@ define([
 
 		required: ['bar', 'filter'],
 
-		isBarPlugin: true,
-
-		bar: 'top',
-
-		row: 0,//The first row
-
-		col: -1,//The last column
-
-		def: {
-			pluginClass: QuickFilter,
-			className: 'gridxBarQuickFilter'
+		preload: function(){
+			this.grid.bar.defs.push({
+				bar: 'top',
+				row: 0,
+				col: 3,
+				pluginClass: QuickFilter,
+				className: 'gridxBarQuickFilter'
+			});
 		}
 	});
 });

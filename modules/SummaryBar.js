@@ -10,17 +10,14 @@ define([
 
 		required: ['bar'],
 
-		isBarPlugin: true,
-
-		bar: 'bottom',
-
-		row: 0,
-
-		col: 0,
-
-		def: {
-			pluginClass: Summary,
-			className: 'gridxBarSummary'
+		preload: function(){
+			this.grid.bar.defs.push({
+				bar: 'bottom',
+				row: 0,
+				col: 0,
+				pluginClass: Summary,
+				className: 'gridxBarSummary'
+			});
 		}
 	});
 });

@@ -1,55 +1,51 @@
 define([
-	"dojo/_base/declare",
-	"./_PaginationBarBase",
-	"./LinkPager",
-	"../../core/_Module",
-	"./GotoPagePane",
-	"dijit/Dialog",
-	"dijit/form/Button",
-	"dijit/form/NumberTextBox"
-], function(declare, _PaginationBarBase, Pager, _Module, GotoPagePane, Dialog, Button, NumberTextBox){
+	'dojo/_base/declare',
+	'dojo/dom-class',
+	'./_PaginationBarBase',
+	'../barPlugins/LinkPager',
+	'../barPlugins/LinkSizer',
+	'../barPlugins/GotoPageButton'
+], function(declare, domClass, _PaginationBarBase, LinkPager, LinkSizer, GotoPageButton){
 
-	return declare(/*===== "gridx.modules.pagination.PaginationBar", =====*/_PaginationBarBase, {
-		// summary:
-		//		This module implements a pagination bar UI that uses link buttons for pages and page sizes.
-
-		// gotoButton: Boolean|String
-		gotoButton: true,
-
+	return declare(_PaginationBarBase, {
 		// visibleSteppers: Integer
 		visibleSteppers: 3,
 
 		// sizeSeparator: String
 		sizeSeparator: '|',
 
-		// gotoPagePane: [private]
-		gotoPagePane: GotoPagePane,
+		// gotoButton: Boolean|String
+		gotoButton: true,
 
-		// dialogClass: [private]
-		dialogClass: Dialog,
+		_init: function(pos){
+			var t = this,
+				gotoBtnProt = GotoPageButton.prototype;
+			t._add(LinkPager, 1, pos, 'stepper', {
+				className: 'gridxPagerStepperTD',
+				visibleSteppers: t.arg('visibleSteppers')
+			});
+			t._add(LinkSizer, 2, pos, 'sizeSwitch', {
+				className: 'gridxPagerSizeSwitchTD',
+				sizes: t.arg('sizes'),
+				sizeSeparator: t.arg('sizeSeparator')
+			});
+			t._add(GotoPageButton, 3, pos, 'gotoButton', {
+				className: 'gridxPagerGoto',
+				dialogClass: t.arg('dialogClass') || gotoBtnProt.dialogClass,
+				dialogProps: t.arg('dialogProps') || gotoBtnProt.dialogProps,
+				buttonClass: t.arg('buttonClass') || gotoBtnProt.buttonClass,
+				numberTextBoxClass: t.arg('numberTextBoxClass') || gotoBtnProt.numberTextBoxClass
+			});
+		},
 
-		// buttonClass: [private]
-		buttonClass: Button,
-
-		// numberTextBoxClass: [private]
-		numberTextBoxClass: NumberTextBox,
-
-	/*=====
-		// Configurable texts on the pagination bar:
-		pageIndexTitleTemplate: '',
-		pageIndexWaiTemplate: '',
-		pageIndexTemplate: '',
-		pageSizeTitleTemplate: '',
-		pageSizeWaiTemplate: '',
-		pageSizeTemplate: '',
-		pageSizeAllTitleText: '',
-		pageSizeAllWaiText: '',
-		pageSizeAllText: '',
-		descriptionTemplate: '',
-		descriptionSelectionTemplate: '',
-	=====*/
-
-		// pagerClass: [private]
-		pagerClass: Pager
-	});	
+		_refresh: function(bar, pos){
+			var t = this;
+			domClass.toggle(bar[1].domNode, 'dijitHidden', !t._exist(pos, 'stepper'));
+			domClass.toggle(bar[2].domNode, 'dijitHidden', !t._exist(pos, 'sizeSwitch'));
+			domClass.toggle(bar[3].domNode.parentNode, 'dijitHidden', !t._exist(pos, 'gotoButton'));
+			bar[1].visibleSteppers = t.arg('visibleSteppers');
+			bar[2].sizes = t.arg('sizes');
+			bar[2].sizeSeparator = t.arg('sizeSeparator');
+		}
+	});
 });

@@ -45,14 +45,14 @@ define([
 			var t = this,
 				options = [],
 				p = t.grid.pagination,
-				currentSize = p.pageSize(), 
+				currentSize = p.pageSize(),
 				sizeSwitch = t._sizeSwitchSelect,
 				sizes = t.sizes;
 			for(var i = 0, len = sizes.length; i < len; ++i){
 				var pageSize = sizes[i],
 					isAll = !(pageSize > 0);
 				options.push({
-					label: isAll ? nls.pageSizeAll : pageSize,
+					label: String(isAll ? nls.pageSizeAll : pageSize),
 					value: String(isAll ? -1 : pageSize),
 					selected: currentSize == pageSize || (isAll && p.isAll())
 				});

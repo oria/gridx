@@ -23,24 +23,13 @@ define([
 			};
 		},
 
-		preload: function(){
-			var t = this,
-				plugins = t.plugins = {},
-				init = function(pos, container, priority){
-					if(lang.isArray(t.arg(pos))){
-						var node = pos + 'Node';
-						t[node] = domConstruct.toDom('<table class="gridxBar" border="0" cellspacing="0"></table>');
-						t.grid.vLayout.register(t, node, container, priority);
-						plugins[pos] = t._parse(t[pos], t[node]);
-					}
-				};
-			t._initModules();
-			init('top', 'headerNode', -5);
-			init('bottom', 'footerNode', 5);
+		constructor: function(){
+			this.defs = [];
 		},
 
 		load: function(args, startup){
 			var t = this;
+			t._init();
 			t.loaded.callback();
 			startup.then(function(){
 				t._forEachPlugin(function(plugin){
@@ -48,7 +37,6 @@ define([
 						plugin.startup();
 					}
 				});
-				t._initFocus();
 				setTimeout(function(){
 					t.grid.vLayout.reLayout();
 				}, 10);
@@ -105,31 +93,59 @@ define([
 	=====*/
 
 		//Private---------------------------------------------------------
-		_initModules: function(){
+		_init: function(){
 			var t = this,
-				name,
-				mods = t.grid._modules;
-			for(name in mods){
-				mod = mods[name].mod;
-				if(mod.isBarPlugin){
-					var pos = mod.arg('bar'),
-						rowIdx = mod.arg('row'),
-						col = mod.arg('col'),
-						defs = t.arg(pos, []);
-					if(!lang.isArray(defs[0])){
-						defs = [defs];
+				bar,
+				defDict = t._defDict = {},
+				sortDefCols = function(row){
+					row.sort(function(a, b){
+						return a.col - b.col;
+					});
+				},
+				normalize = function(def){
+					if(lang.isArray(def) && def.length && !lang.isArray(def[0])){
+						def = [def];
 					}
-					if(rowIdx < 0){
-						rowIdx = defs.length - 1;
-					}
-					var row = defs[rowIdx];
-					while(!row){
-						defs.push([]);
-						row = defs[rowIdx];
-					}
-					row[col < 0 ? 'push' : 'unshift'](mod.arg('def'));
-					t[pos] = defs;
-				}
+					return def;
+				},
+				top = normalize(t.arg('top')),
+				bottom = normalize(t.arg('bottom'));
+			array.forEach(t.defs, function(def){
+				var barDef = defDict[def.bar] = defDict[def.bar] || [],
+					row = barDef[def.row] = barDef[def.row] || [];
+				row.push(def);
+				barDef.priority = 'priority' in def ? def.priority : barDef.priority || -5;
+				barDef.container = def.container ? def.container : barDef.container || 'headerNode';
+				barDef.barClass = def.barClass ? def.barClass : barDef.barClass || '';
+			});
+			for(bar in defDict){
+				array.forEach(defDict[bar], sortDefCols);
+			}
+			if(top){
+				defDict.top = top.concat(defDict.top || []);
+			}
+			if(defDict.top){
+				defDict.top.priority = -5;
+				defDict.top.container = 'headerNode';
+			}
+			if(bottom){
+				defDict.bottom = (defDict.bottom || []).concat(bottom);
+			}
+			if(defDict.bottom){
+				defDict.bottom.priority = 5;
+				defDict.bottom.container = 'footerNode';
+			}
+			for(bar in defDict){
+				var def = defDict[bar],
+					nodeName = bar + 'Node',
+					node = t[nodeName] = domConstruct.create('div', {
+						'class': "gridxBar " + def.barClass || '',
+						innerHTML: '<table border="0" cellspacing="0"></table>'
+					});
+				t.grid.vLayout.register(t, nodeName, def.container, def.priority);
+				t._initFocus(bar, def.priority);
+				t.plugins = t.plugins || {};
+				t.plugins[bar] = t._parse(def, node.firstChild);
 			}
 		},
 
@@ -143,9 +159,6 @@ define([
 						delete def[attr];
 					}
 				};
-			if(!lang.isArray(defs[0])){
-				defs = [defs];
-			}
 			for(var i = 0, rowCount = defs.length; i < rowCount; ++i){
 				var pluginRow = [],
 					row = defs[i],
@@ -168,7 +181,7 @@ define([
 					}else if(def.content){
 						td.innerHTML = def.content;
 					}
-					pluginRow.push(plugin);
+					pluginRow.push(plugin || td);
 					tr.appendChild(td);
 				}
 				plugins.push(pluginRow);
@@ -214,43 +227,39 @@ define([
 				}
 			}
 			var plugins = this.plugins;
-			forEach(plugins.top);
-			forEach(plugins.bottom);
+			for(var barName in plugins){
+				forEach(plugins[barName]);
+			}
 		},
 
 		//Focus---------------------
-		_initFocus: function(){
+		_initFocus: function(barName, priority){
 			var t = this,
-				f = t.grid.focus;
-			if(f){
-				function register(pos, priority){
-					if(t[pos + 'Node']){
-						f.registerArea({
-							name: pos + 'bar',
-							priority: priority,
-							focusNode: t[pos + 'Node'],
-							doFocus: lang.hitch(t, t._doFocus, pos),
-							doBlur: lang.hitch(t, t._doBlur, pos)
-						});
-					}
-				}
-				register('top', -10);
-				register('bottom', 10);
+				f = t.grid.focus,
+				node = t[barName + 'Node'];
+			if(f && node){
+				f.registerArea({
+					name: barName + 'bar',
+					priority: priority,
+					focusNode: node,
+					doFocus: lang.hitch(t, t._doFocus, node),
+					doBlur: lang.hitch(t, t._doBlur, node)
+				});
 			}
 		},
 
-		_doFocus: function(pos, evt, step){
+		_doFocus: function(node, evt, step){
 			this.grid.focus.stopEvent(evt);
-			var elems = a11y._getTabNavigable(this[pos + 'Node']),
-				node = elems[step < 0 ? 'last' : 'first'];
-			if(node){
-				node.focus();
+			var elems = a11y._getTabNavigable(node),
+				n = elems[step < 0 ? 'last' : 'first'];
+			if(n){
+				n.focus();
 			}
-			return !!node;
+			return !!n;
 		},
 
-		_doBlur: function(pos, evt, step){
-			var elems = a11y._getTabNavigable(this[pos + 'Node']);
+		_doBlur: function(node, evt, step){
+			var elems = a11y._getTabNavigable(node);
 			return evt ? evt.target == (step < 0 ? elems.first : elems.last) : true;
 		}
 	}));

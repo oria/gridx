@@ -11,21 +11,14 @@ define([
 
 		required: ['bar'],
 
-		isBarPlugin: true,
-
-		bar: 'top',
-
-		row: 0,
-
-		col: 0,
-
-		def: {
-			pluginClass: Toolbar,
-			className: 'gridxBarToolBar'
-		},
-
 		constructor: function(grid, args){
-			this.def = lang.mixin(args, this.arg('def'));
+			this._def = lang.mixin(args, {
+				bar: 'top',
+				row: 0,
+				col: 0,
+				pluginClass: Toolbar,
+				className: 'gridxBarToolBar'
+			});
 		},
 
 		getAPIPath: function(){
@@ -34,10 +27,18 @@ define([
 			};
 		},
 
+		preload: function(){
+			this.grid.bar.defs.push(this._def);
+		},
+
 		load: function(){
-			this.widget = this.grid.bar.plugins.top[0][0];
-			this.domNode = this.widget.domNode;
-			this.loaded.callback();
+			var t = this,
+				bar = t.grid.bar;
+			bar.loaded.then(function(){
+				t.widget = bar.plugins.top[0][0];
+				t.domNode = t.widget.domNode;
+				t.loaded.callback();
+			});
 		}
 	});
 });

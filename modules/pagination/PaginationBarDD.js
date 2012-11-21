@@ -1,31 +1,36 @@
 define([
-	"dojo/_base/declare",
-	"../../core/_Module",
-	"./_PaginationBarBase",
-	"./DropDownPager",
-	"dijit/form/FilteringSelect",
-	"dijit/form/Select"
-], function(declare, _Module, _PaginationBarBase, Pager, FilteringSelect, Select){
+	'dojo/_base/declare',
+	'dojo/dom-class',
+	'./_PaginationBarBase',
+	'../barPlugins/DropDownPager',
+	'../barPlugins/DropDownSizer',
+	'../Bar'
+], function(declare, domClass, _PaginationBarBase, DropDownPager, DropDownSizer){
 
-	return declare(/*===== "gridx.modules.pagination.PaginationBar", =====*/_PaginationBarBase, {
-		// summary:
-		//		This module implements a pagination bar UI that uses drop down lists for pages and page sizes.
-		//		This implementation saves more horizontal space compared to the link button version of pagination bar.
+	return declare(_PaginationBarBase, {
+		_init: function(pos){
+			var t = this,
+				pagerProt = DropDownPager.prototype,
+				sizerProt = DropDownSizer.prototype;
+			t._add(DropDownPager, 1, pos, 'stepper', {
+				className: 'gridxPagerStepperTD',
+				visibleSteppers: t.arg('visibleSteppers'),
+				stepperClass: t.arg('stepperClass') || pagerProt.stepperClass,
+				stepperProps: t.arg('stepperProps') || pagerProt.stepperProps
+			});
+			t._add(DropDownSizer, 2, pos, 'sizeSwitch', {
+				className: 'gridxPagerSizeSwitchTD',
+				sizes: t.arg('sizes'),
+				sizeSeparator: t.arg('sizeSeparator'),
+				sizerClass: t.arg('sizerClass') || sizerProt.sizerClass,
+				sizerProps: t.arg('sizerProps') || sizerProt.sizerProps
+			});
+		},
 
-		// stepperClass: [private]
-		stepperClass: FilteringSelect,
-
-		// sizeSwitchCalss [private]
-		sizeSwitchClass: Select,
-
-	/*=====
-		// Configurable texts on the pagination bar:
-		pageSizeAllText: '',
-		descriptionTemplate: '',
-		descriptionSelectionTemplate: '',
-	=====*/
-
-		// pagerClass: [private]
-		pagerClass: Pager
-	});	
+		_refresh: function(bar, pos){
+			domClass.toggle(bar[1].domNode, 'dijitHidden', !this._exist(pos, 'stepper'));
+			domClass.toggle(bar[2].domNode, 'dijitHidden', !this._exist(pos, 'sizeSwitch'));
+			bar[2].sizes = this.arg('sizes');
+		}
+	});
 });
