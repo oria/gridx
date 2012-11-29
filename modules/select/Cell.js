@@ -115,6 +115,11 @@ define([
 			//		Fired when a cell is deselected.
 			// cell: gridx.core.Cell
 			//		The cell object
+			// rowId: string|number
+			//		The row id
+			// colId: string|number
+			//		The column id
+
 		},
 
 		onHighlightChange: function(){
