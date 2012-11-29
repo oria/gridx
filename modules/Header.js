@@ -134,7 +134,7 @@ define([
 			var t = this,
 				g = t.grid,
 				f = g.focus,
-				sb = ['<table border="0" cellpadding="0" cellspacing="0"><tr>'];
+				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			array.forEach(g._columns, function(col){
 				sb.push('<th id="', (g.id + '-' + col.id).replace(/\s+/, ''),
 					'" role="columnheader" aria-readonly="true" tabindex="-1" colid="', col.id,
