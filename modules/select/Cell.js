@@ -99,14 +99,18 @@ define([
 		},
 
 	/*=====
-		onSelected: function(cell){
+		onSelected: function(cell, rowId, colId){
 			// summary:
 			//		Fired when a cell is selected.
 			// cell: gridx.core.Cell
-			//		The cell object
+			//		The cell object (null if the row of the cell is not yet loaded)
+			// rowId: string|number
+			//		The row id
+			// colId: string|number
+			//		The column id
 		},
 
-		onDeselected: function(cell){
+		onDeselected: function(cell, rowId, colId){
 			// summary:
 			//		Fired when a cell is deselected.
 			// cell: gridx.core.Cell
@@ -157,10 +161,7 @@ define([
 				var colId = type.substr(t._markTypePrefix.length);
 				if(t.grid._columnsById[colId]){
 					t._highlight(rowId, colId, toMark);
-					//Fire event when the row is loaded, so users can use the cell directly.
-					t.model.when({id: rowId}, function(){
-						t[toMark ? 'onSelected' : 'onDeselected'](t.grid.cell(rowId, colId, 1));
-					});
+					t[toMark ? 'onSelected' : 'onDeselected'](t.grid.cell(rowId, colId, 1), rowId, colId);
 				}
 			}
 		},

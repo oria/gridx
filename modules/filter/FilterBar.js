@@ -109,6 +109,7 @@ define([
 			number: ['equal','greater','less','greaterEqual','lessEqual','notEqual','isEmpty'],
 			date: ['equal','before','after','range','isEmpty'],
 			time: ['equal','before','after','range','isEmpty'],
+			'enum': ['equal', 'notEqual', 'isEmpty'],
 			'boolean': ['equal','isEmpty']
 		},
 		

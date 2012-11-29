@@ -99,7 +99,7 @@
 .gridxFilterPaneDateRange .gridxFilterPaneDateRangeWrapper,
 .gridxFilterPaneTime .gridxFilterPaneTimeWrapper,
 .gridxFilterPaneTimeRange .gridxFilterPaneTimeRangeWrapper,
-.gridxFilterPaneSelect .gridxFilterPaneDateSelectWrapper,
+.gridxFilterPaneSelect .gridxFilterPaneSelectWrapper,
 .gridxFilterPaneRadio .gridxFilterPaneRadioWrapper {
 	display: block;
 }
