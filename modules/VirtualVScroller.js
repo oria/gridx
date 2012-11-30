@@ -165,7 +165,7 @@ define([
 			var t = this,
 				dn = t.domNode,
 				a = dn.scrollTop,
-				deltaT = t._ratio * (a - (t._lastScrollTop || 0));
+				deltaT = a - (t._lastScrollTop || 0);
 	
 			if(forced || deltaT){
 				t._lastScrollTop = a;
@@ -184,6 +184,7 @@ define([
 					bnBtm = bnTop + bn.clientHeight,
 					h = t._avgRowHeight,
 					pageRowCount = Math.ceil(dn.offsetHeight / h) + 2 * buffSize,
+					ratio = t._ratio,
 					start, end, pos, d;
 				if(bnTop == bnBtm && !bnBtm){
 					//The grid is not correctly shown, so we just ignore.
@@ -192,24 +193,24 @@ define([
 				if(firstRow && firstRowTop > bnTop && firstRowTop < bnBtm){
 					//Add some rows to the front
 					end = body.renderStart;
-					d = Math.ceil((firstRowTop - bnTop) / h) + buffSize;
+					d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
 					start = a === 0 ? visualStart : Math.max(end - d, visualStart);
 					pos = "top";
 //                    console.log('top: ', start, end);
 				}else if(lastRow && lastRowBtm > bnTop && lastRowBtm < bnBtm){
 					//Add some rows to the end
 					start = body.renderStart + body.renderCount;
-					d = Math.ceil((bnBtm - lastRowBtm) / h) + buffSize;
+					d = Math.ceil((bnBtm - lastRowBtm) * ratio / h) + buffSize;
 					end = a === scrollRange && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
 //                    console.log('bottom: ', start, end);
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
 					if(a <= scrollRange / 2){
-						start = a === 0 ? visualStart : visualStart + Math.max(Math.floor(a / h) - buffSize, 0);
+						start = a === 0 ? visualStart : visualStart + Math.max(Math.floor(a * ratio / h) - buffSize, 0);
 						end = Math.min(start + pageRowCount, visualEnd);
 					}else{
-						end = a === scrollRange ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - a) / h), 0);
+						end = a === scrollRange ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - a) * ratio / h), 0);
 						start = Math.max(end - pageRowCount, visualStart);
 					}
 					pos = "clear";
