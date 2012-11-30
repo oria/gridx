@@ -861,8 +861,10 @@ define([
 					t.renderCount -= toDelete.length;
 					array.forEach(toDelete, domConstruct.destroy);
 					array.forEach(ids, t.onUnrender, t);
-					if(t.autoChangeSize && t.rootStart === 0 && !pid){
-						t.updateRootRange(0, t.rootCount - 1);
+					//If the body is showing the last a few rows, it should respond to deletion 
+					//no matter pagination is on or not.
+					if(!pid && t.rootStart + t.rootCount >= t.model.size()){
+						t.updateRootRange(t.rootStart, t.rootCount - 1);
 					}
 					t.onDelete(id, start);
 					t.onRender(start, count);
