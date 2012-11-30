@@ -1,4 +1,5 @@
 require([
+	'dojo/date/locale',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/core/model/extensions/FormatSort',
@@ -8,7 +9,7 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, FormatSort, VirtualVScroller, ColumnResizer, SingleSort, dataSource, storeFactory, TestPane){
+], function(locale, Grid, Cache, FormatSort, VirtualVScroller, ColumnResizer, SingleSort, dataSource, storeFactory, TestPane){
 	
 	var structure = [
 		{ field: "id", name:"Index", dataType:"number"},
@@ -18,7 +19,14 @@ require([
 		{ field: "Album", name:"Album (unsortable)", sortable: false, width: '200px'},
 		{ field: "Name", name:"Name", width: '200px'},
 		{ field: "Composer", name:"Composer"},
-		{ field: "Download Date", name:"Date"},
+		{ field: "Download Date", name:"Date",
+			//Need FormatSort extension to make this effective
+			comparator: function(a, b){
+				var d1 = locale.parse(a, {selector: 'date', datePattern: 'yyyy/M/d'});
+				var d2 = locale.parse(b, {selector: 'date', datePattern: 'yyyy/M/d'});
+				return d1 - d2;
+			}
+		},
 		{ field: "Last Played", name:"Last Played"},
 		{ name: 'Summary Genre and Year', formatter: function(rawData){
 			return rawData.Genre + '_' + rawData.Year;
@@ -42,6 +50,7 @@ require([
 			SingleSort
 		],
 		modelExtensions: [
+			//This extension can sort formatted data, and also support user defined comparators.
 			FormatSort
 		]
 	});
