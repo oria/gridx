@@ -47,16 +47,17 @@ define([
 		load: function(){
 			// tags:
 			//		protected extension
-			var t = this;
+			var t = this,
+				finish = function(){
+					t._updateBody(1);
+					t.connect(t.model, 'onSizeChange', '_onSizeChange');
+					t.loaded.callback();
+				};
 			t._pageSize = t.arg('initialPageSize') || t._pageSize;
 			t._page = t.arg('initialPage', t._page, function(arg){
 				return arg >= 0;
 			});
-			t.model.when({}, function(){
-				t._updateBody(1);
-				t.connect(t.model, 'onSizeChange', '_onSizeChange');
-				t.loaded.callback();	
-			});
+			t.model.when({}).then(finish, finish);
 		},
 
 		// [Public API] --------------------------------------------------------

@@ -547,6 +547,13 @@ define([
 			//		The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.
 			// count: Integer
 			//		The count of rows that is affected by this rendering. If omitted, all rows from start are affected.
+			
+			//FIX #8746
+			var bn = this.domNode;
+			if(sniff('ie') < 9 && bn.childNodes.length){
+				query('> gridxLastRow', bn).removeClass('gridxLastRow');
+				domClass.add(bn.lastChild, 'gridxLastRow');
+			}
 		},
 
 		onUnrender: function(/* id */){
