@@ -155,7 +155,7 @@ define([
 	        			,description: 'Mobile GridX is based on dojox.mobile and provides native-like UI.'
 	        				+ 'It\'s now only for experienmental using. '
 	        				+ 'Currently it provides several plugins such as pull-refresh/lazy-load/sort etc.'
-	        			,demo: '../mobie/demos/demo.html'
+	        			,demo: '../mobile/demos/demo.html'
 	        		}
 	        	]
 	        };
