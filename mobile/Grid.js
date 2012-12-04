@@ -195,6 +195,7 @@ define([
 			this.bodyPane.startup();
 			this.inherited(arguments);
 			this.refresh();
+			this.resize();
 		},
 
 		
@@ -263,6 +264,7 @@ define([
 			}, function(error){
 				_this.onError(error);
 			});
+			this.resize();
 			return promise;
 		}
 	});
