@@ -254,13 +254,11 @@ define([
 				t.grid.body.updateRootRange(0, 0);
 			}else{
 				var first = t.firstIndexInPage();
-				if(first < 0){
-					if(t._page !== 0){
-						var oldPage = t._page;
-						t._page = 0;
-						t.onSwitchPage(0, oldPage);
-					}
-				}			
+				if(first < 0 && t._page !== 0){
+					var oldPage = t._page;
+					t._page = 0;
+					t.onSwitchPage(0, oldPage);
+				}
 				t._updateBody();
 			}
 		}

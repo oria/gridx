@@ -320,7 +320,7 @@ define([
 			var col = cell.column.def(),
 				widget = this._getSpecialWidget(cell);
 			if(!widget){
-				widget = col._backupWidgets.pop();
+				widget = col._backupWidgets.shift();
 				if(!widget){
 					widget = new CellWidget({
 						content: col.userDecorator(),
