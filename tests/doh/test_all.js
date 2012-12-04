@@ -16,6 +16,11 @@ define([
 	'./doh_moveColumn',
 	'./doh_cellWidget',
 	'./doh_edit',
+	'./doh_filter',
+	'./doh_filterBar',
+	'./doh_extendedSelectRow',
+	'./doh_extendedSelectColumn',
+	'./doh_extendedSelectCell',
 	'dojo/domReady!'
 ], function(modules, doh,
 	core,
@@ -33,6 +38,11 @@ define([
 	moveColumn,
 	cellWidget,
 	edit,
+	filter,
+	filterBar,
+	extendedSelectRow,
+	extendedSelectColumn,
+	extendedSelectCell,
 dummy){
 
 	function runAll(modules, args){
@@ -51,7 +61,12 @@ dummy){
 			pagination,
 			moveColumn,
 			cellWidget,
-			edit
+			edit,*/
+			filter, 
+			filterBar,
+			extendedSelectRow,
+			extendedSelectColumn,
+			extendedSelectCell
 		];
 		for(var i = 0; i < funcs.length; ++i){
 			funcs[i](modules, args);
