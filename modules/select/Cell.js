@@ -119,6 +119,7 @@ define([
 			//		The row id
 			// colId: string|number
 			//		The column id
+
 		},
 
 		onHighlightChange: function(){

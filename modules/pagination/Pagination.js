@@ -47,16 +47,17 @@ define([
 		load: function(){
 			// tags:
 			//		protected extension
-			var t = this;
+			var t = this,
+				finish = function(){
+					t._updateBody(1);
+					t.connect(t.model, 'onSizeChange', '_onSizeChange');
+					t.loaded.callback();
+				};
 			t._pageSize = t.arg('initialPageSize') || t._pageSize;
 			t._page = t.arg('initialPage', t._page, function(arg){
 				return arg >= 0;
 			});
-			t.model.when({}, function(){
-				t._updateBody(1);
-				t.connect(t.model, 'onSizeChange', '_onSizeChange');
-				t.loaded.callback();	
-			});
+			t.model.when({}).then(finish, finish);
 		},
 
 		// [Public API] --------------------------------------------------------
@@ -253,13 +254,11 @@ define([
 				t.grid.body.updateRootRange(0, 0);
 			}else{
 				var first = t.firstIndexInPage();
-				if(first < 0){
-					if(t._page !== 0){
-						var oldPage = t._page;
-						t._page = 0;
-						t.onSwitchPage(0, oldPage);
-					}
-				}			
+				if(first < 0 && t._page !== 0){
+					var oldPage = t._page;
+					t._page = 0;
+					t.onSwitchPage(0, oldPage);
+				}
 				t._updateBody();
 			}
 		}

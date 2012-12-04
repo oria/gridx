@@ -95,9 +95,7 @@ define({ root:
 	"endTimeRangeLabel": "Time Range Value End",
 	"beginDateRangeLabel": "Date Range Value Start",
 	"endDateRangeLabel": "Date Range Value End",
-	"startsWithExpr": "${0}*",
-
-	"rules": "Rules"
+	"startsWithExpr": "${0}*"
 }),
 //end v1.x content
 "ar": true,
