@@ -61,7 +61,7 @@ dummy){
 			pagination,
 			moveColumn,
 			cellWidget,
-			edit,*/
+			edit,
 			filter, 
 			filterBar,
 			extendedSelectRow,
