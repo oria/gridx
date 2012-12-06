@@ -120,6 +120,7 @@ define([
 			//		protected extended
 			this.inherited(arguments);
 			this.domNode.innerHTML = '';
+			this._destroyed = true;
 		},
 	
 		rowMixin: {
@@ -278,6 +279,7 @@ define([
 			//		A deferred object indicating when the refreshing process is finished.
 			var t = this;
 			delete t._err;
+			console.log('refresh');
 			//Call when to make sure all pending commands are executed
 			return t.model.when({}).then(function(){	//dojo.Deferred
 				var rs = t.renderStart,
@@ -884,7 +886,14 @@ define([
 			var t = this;
 			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
-				t.refresh();
+				if(t._sizeChangeHandler){
+					clearTimeout(t._sizeChangeHandler);
+				}
+				t._sizeChangeHandler = setTimeout(function(){
+					if(!t._destroyed){
+						t.refresh();
+					}
+				}, 10);
 			}
 		},
 		
