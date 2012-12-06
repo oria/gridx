@@ -279,7 +279,6 @@ define([
 			//		A deferred object indicating when the refreshing process is finished.
 			var t = this;
 			delete t._err;
-			console.log('refresh');
 			//Call when to make sure all pending commands are executed
 			return t.model.when({}).then(function(){	//dojo.Deferred
 				var rs = t.renderStart,
