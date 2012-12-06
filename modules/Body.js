@@ -120,6 +120,7 @@ define([
 			//		protected extended
 			this.inherited(arguments);
 			this.domNode.innerHTML = '';
+			this._destroyed = true;
 		},
 	
 		rowMixin: {
@@ -883,7 +884,14 @@ define([
 			var t = this;
 			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
-				t.refresh();
+				if(t._sizeChangeHandler){
+					clearTimeout(t._sizeChangeHandler);
+				}
+				t._sizeChangeHandler = setTimeout(function(){
+					if(!t._destroyed){
+						t.refresh();
+					}
+				}, 10);
 			}
 		},
 		
