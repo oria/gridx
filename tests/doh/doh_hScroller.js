@@ -24,11 +24,11 @@ define([
 	];
 
 	//------------------------------------------------------------------------
-	doh.ts('hScroller.scrollToRow');
+	doh.ts('hScroller.scrollToColumn');
 
 	//------------------------------------------------------------------------
 	return doh.go('hScroller', [
-		'hScroller.scrollToRow',
+		'hScroller.scrollToColumn',
 	0], {
 		cacheClass: Cache,
 		store: store,

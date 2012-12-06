@@ -1,13 +1,14 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/dom-construct",
 	"../core/_Module"
-], function(declare, domConstruct, _Module){
-	
+], function(kernel, declare, domConstruct, _Module){
+
+	kernel.deprecated('TitleBar is deprecated', 'Use Bar module instead', '1.2');
+
 	return declare(/*===== "gridx.modules.TitleBar", =====*/_Module, {
 		name: 'titleBar',
-		
-//        required: ['vLayout'],
 		
 		getAPIPath: function(){
 			return {

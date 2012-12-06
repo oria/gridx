@@ -99,8 +99,6 @@ define([
 		};
 	}
 
-	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs', 'applyWhen');
-
 	return declare(/*===== "gridx.modules.Edit", =====*/_Module, {
 		// summary:
 		//		This module provides editing mode for grid cells.

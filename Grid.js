@@ -30,8 +30,7 @@ define([
 	var forEach = array.forEach,
 		dummyFunc = function(){};
 
-	
-	var Grid = declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
+	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
 		//		Gridx is a highly extensible widget providing grid/table functionalities. 
 		// description:
@@ -187,27 +186,4 @@ define([
 			return has('mac') ? evt.metaKey : evt.ctrlKey;
 		}
 	});
-
-	Grid.markupFactory = function(props, node, ctor){
-		if(!props.structure && node.nodeName.toLowerCase() == "table"){
-			kernel.deprecated('Column declaration in <th> elements is deprecated,', 'use "structure" attribute in data-dojo-props instead', '1.1');
-			var s = props.structure = [];
-			query("thead > tr > th", node).forEach(function(th){
-				var col = {};
-				forEach(_Module._markupAttrs, function(attr){
-					if(attr[0] == '!'){
-						attr = attr.slice(1);
-						col[attr] = eval(th.getAttribute(attr));
-					}else{
-						col[attr] = th.getAttribute(attr);
-					}
-				});
-				col.name = col.name || th.innerHTML;
-				s.push(col);
-			});
-		}
-		return new ctor(props, node);
-	};
-	
-	return Grid;
 });
