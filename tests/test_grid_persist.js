@@ -3,7 +3,7 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/modules/Persist',
-	'gridx/modules/Select/Column',
+	'gridx/modules/select/Column',
 	'gridx/modules/move/Column',
 	'gridx/modules/dnd/Column',
 	'gridx/modules/NestedSort',
@@ -12,7 +12,7 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, Persist, SelectColumn, MoveColumn, DndColumn, NestedSort, VirtualVScroller, ColumnResizer, dataSource, storeFactory, TestPane){
+], function(lang, Grid, Cache, Persist, SelectColumn, MoveColumn, DndColumn, NestedSort, VirtualVScroller, ColumnResizer, dataSource, storeFactory, TestPane){
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -47,12 +47,14 @@ require([
 		structure.push({
 			id: 'newCol', field: 'Genre', name: 'New Column'
 		});
+		destroyGrid();
 		createGrid(null, structure);
 	};
 
 	createLessColGrid = function(){
 		var structure = lang.clone(dataSource.layouts[4]);
 		structure.splice(1, 1);
+		destroyGrid();
 		createGrid(null, structure);
 	};
 
