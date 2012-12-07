@@ -83,11 +83,6 @@ define([
 				});
 			}else if(t.arg('autoResize')){
 				domClass.add(dn, 'gridxPercentColumnWidth');
-				array.forEach(cols, function(c){
-					if(!(/%$/).test(c.declaredWidth)){
-						c.width = 'auto';
-					}
-				});
 			}
 		},
 
