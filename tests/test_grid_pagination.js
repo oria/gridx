@@ -3,7 +3,8 @@ define([
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/modules/pagination/Pagination'
+	'gridx/modules/pagination/Pagination',
+	'dojo/parser'
 ], function(Grid, Cache, dataSource, storeFactory, Pagination){
 	
 	grid = new Grid({
