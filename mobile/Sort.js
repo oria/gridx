@@ -14,7 +14,7 @@ define([
 			}else{
 				this.queryOptions.sort = null;
 			}
-			this._buildBody();
+			this.refresh();
 			this.updateSortIndicators();
 		},
 		
@@ -22,9 +22,11 @@ define([
 			// summary:
 			//	Add click to sort capability for header, only for single sort.
 			this.inherited(arguments);
-			this.connect(this.headerNode, 'onclick', function(evt){
+			if(this._headerClickHandler){return;}
+			this._headerClickHandler = this.connect(this.headerNode, 'onclick', function(evt){
 				var cell = evt.target;
 				if(!/th/i.test(cell.tagName))return;
+				if(!this.queryOptions){this.queryOptions = {};}
 				var col = this.columns[cell.cellIndex], sort = this.queryOptions.sort;
 				
 				//Initial sort may be a array or null..

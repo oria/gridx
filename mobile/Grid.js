@@ -3,13 +3,16 @@ define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'dojo/dom-construct',
 	'dojo/aspect',
 	'dojo/string',
 	'dojo/dom-class',
-	'dojox/mobile/_DataMixin',
+	'dojox/mobile/_StoreMixin',
 	'dojox/mobile/Pane',
-	'dojox/mobile/ScrollablePane'
-], function(kernel, declare, lang, array, aspect, string, css, _DataMixin, Pane, ScrollablePane){
+	'dojox/mobile/ScrollablePane',
+	'dojo/i18n!./nls/common',
+	"dojo/_base/Deferred"
+], function(kernel, declare, lang, array, dom, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n, Deferred){
 	// module:
 	//	gridx/mobile/Grid
 	// summary:
@@ -17,7 +20,7 @@ define([
 	
 	kernel.experimental('gridx/mobile/Grid');
 	
-	var Grid = declare('gridx.mobile.Grid', [Pane, _DataMixin], {
+	return declare('gridx.mobile.Grid', [Pane, _StoreMixin], {
 		// summary:
 		//	A mobile grid that has fixed header, footer and a scrollable body.
 		
@@ -43,36 +46,19 @@ define([
 		//	Column definition to show the grid from store
 		columns: null,
 		
-		//plugins: array
-		//	Plugins for the mobile grid.
-		//,plugins: [],
-		
-		setStore: function(store, query, queryOptions){
-			// summary
-			//	Set the store of the grid, it causes rebuild the grid body.
-			this.inherited(arguments);
-			this._buildBody();
-		},
-		
 		setColumns: function(columns){
 			// summary:
 			//	Set columns to show for the grid. 
 			//  Maybe improve performance by adding/removing some columns instead of re-rendering.
 			this.columns = columns;
-			this.buildGrid();
-		},
-		
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			this.queryOptions = this.queryOptions || {};
-			this.query = this.query || {};
+			this.refresh();
 		},
 		
 		buildGrid: function(){
 			// summary:
 			//	Build the whole grid
-			this._buildHeader();
-			this._buildBody();
+			if(this.columns)this._buildHeader();
+			if(this.store)this._buildBody();
 			this.resize();
 		},
 		
@@ -99,36 +85,27 @@ define([
 			this.headerNode.innerHTML = arr.join('');
 		},
 		
-		_buildBody: function(){
+		_buildBody: function(items){
 			// summary:
 			//	Build the grid body
-			var self = this, q = this.query, opt = this.queryOptions;
-			this.store.fetch({
-				query: q,
-				queryOptions: opt,
-				sort: opt && opt.sort || [],
-				onComplete: function(items){
-					var arr = [];
-					array.forEach(items, function(item, i){
-						arr.push(self._createRow(item, i));
-					});
-					self.bodyPane.containerNode.innerHTML = arr.join('');
-				},
-				onError: function(err){
-					console.error('Failed to fetch items from store:', err);
-				},
-				start: opt && opt.start,
-				count: opt && opt.count
-			});
+			console.log('building body');
+			if(items && items.length){
+				var arr = [];
+				array.forEach(items, function(item, i){
+					arr.push(this._createRow(item, i%2 == 1));
+				}, this);
+				this.bodyPane.containerNode.innerHTML = arr.join('');
+			}else{
+				this.bodyPane.containerNode.innerHTML = '<div class="mobileGridxNoDataNode">' + i18n.noDataMsg + '</div>';
+			}
 		},
 		
-		_createRow: function(item, i){
+		_createRow: function(item){
 			// summary:
 			//	Create a grid row by object store item.
-			var isOdd = !(i%2);	//i is from 0
 			var rowId = this.store.getIdentity(item);
-			var arr = ['<div class="mobileGridxRow ' + (isOdd ? 'mobileGridxRowOdd' : '' ) + '"',
-				' rowId="' + rowId + '"',
+			var arr = ['<div class="mobileGridxRow"',
+				rowId ? ' rowId="' + rowId + '"' : '',
 				 '><table><tr>'];
 			array.forEach(this.columns, function(col){
 				var value = this._getCellContent(col, item);
@@ -148,11 +125,11 @@ define([
 			// summary:
 			//	Get a cell content by the column definition.
 			//	* Currently only support string content, will add support for widget in future.
-			var f = col.formatter, obj = this._itemToObject(item);
+			var f = col.formatter;
 			if(col.template){
-				return string.substitute(col.template, obj);
+				return string.substitute(col.template, item);
 			}else{
-				return f ? f(obj, col) : obj[col.field];
+				return f ? f(item, col) : item[col.field];
 			}
 		},
 		
@@ -169,8 +146,10 @@ define([
 			var scrollDir = (this.vScroller ? 'v' : '') + (this.hScroller ? 'h' : '');
 			if(!scrollDir)scrollDir = 'v';
 			this.bodyPane = new ScrollablePane({
-				scrollDir: scrollDir
+				scrollDir: scrollDir,
+				scrollType: 1
 			}, this.bodyNode);
+			this.bodyPane._useTopLeft = false;
 			
 			if(this.showHeader){
 				var h = this.headerNode;
@@ -210,20 +189,84 @@ define([
 		},
 		
 		startup: function(){
-			this.inherited(arguments);
+			//summary:
+			//	Start up the body pane, and fetch data from store.
+			
 			this.bodyPane.startup();
+			this.inherited(arguments);
+			this.refresh();
+			this.resize();
+		},
+
+		
+		onComplete: function(items){
+			// summary:
+			//		An handler that is called after the fetch completes.
+			this._buildBody(items);
+		},
+
+		onError: function(errorData){
+			// summary:
+			//		An error handler.
+			console.log('error: ', errorData);
+		},
+
+		onUpdate: function(item, insertedInto){
+			// summary:
+			//		Adds a new item or updates an existing item.
+			dom.place(this._createRow(item), this.bodyNode.firstChild, insertedInto);
+		},
+
+		onDelete: function(item, removedFrom){
+			// summary:
+			//		Deletes an existing item.
+			dom.destroy(this.bodyNode.firstChild.childNodes[removedFrom]);
 		},
 		
-		_itemToObject: function(item){
+		
+				
+//		refresh: function(){
+//			//summary:
+//			//	Firstly refresh header, then fetch data from store.
+//			//	Body will be refreshed after store query completes.
+//			
+//			this._buildHeader();
+//			return this.inherited(arguments);
+//		},
+		
+		///////////////////
+		//////////////////////////////////////////////
+		//Over-write from dojox/mobile/_StoreMixin.js , which doesn't support updating events
+		//TODO: will remove this if it's fixed in _StoreMixin
+		refresh: function(){
 			// summary:
-			//	Convert a store item to object
-			var store = this.store, arr = store.getAttributes(item), res = {};
-			array.forEach(arr, function(key){
-				res[key] = store.getValue(item, key);
+			//		Fetches the data and generates the list items.
+			
+			this._buildHeader();
+			if(!this.store){ return null; }
+			var _this = this;
+			var promise = this.store.query(this.query, this.queryOptions);
+			Deferred.when(promise, function(results){
+				if(results.items){
+					results = results.items; // looks like dojo/data style items array
+				}
+				if(promise.observe){
+					promise.observe(function(object, removedFrom, insertedInto){
+						if(removedFrom > -1){ // existing object removed
+							_this.onDelete(object, removedFrom);
+						}
+						if(insertedInto > -1){ // new or updated object inserted
+							_this.onUpdate(object, insertedInto);
+						}
+					}, true);
+				}
+				_this.onComplete(results);
+			}, function(error){
+				_this.onError(error);
 			});
-			return res;
+			this.resize();
+			return promise;
 		}
 	});
-	
-	return Grid;
+
 });

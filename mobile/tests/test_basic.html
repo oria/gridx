@@ -9,63 +9,45 @@
 	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
 	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
 	<script>
-		var djConfig = {
-			packages: [
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
 				{
 					name: 'gridx',
 					location: '../gridx'
 				}
 			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_basic']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_basic']);
+			}
 		};
 	</script>
-	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
-	
+	<script type="text/javascript" src="../../../dojo/dojo.js"></script>
 	<style>
 		.mobileGridxBody		{	background-color: #3D567A;}
-		.mobileGridxRow 		{	background-color: #3D567A; border-bottom: 2px solid #2D3E57;}
-		.mobileGridxRowOdd 		{	background-color: #344865;}
+		.mobileGridxRow 		{	background-color: #344865;border-bottom: 2px solid #2D3E57;}
+		.mobileGridxRowOdd 		{	background-color: #3D567A; }
 		td.mobileGridxCell		{	color: #fff; font-size: 14px; text-shadow: 1px 1px 2px #000; padding: 3px;}
 		td.temp					{	font-size: 22px; font-weight: bold;}
 		td.tempMin				{	color: #7696C1;}
+		
+		.mobileGridxRow:nth-child(odd) {background-color: #3D567A; }
+		.mobileGridxRow:nth-child(even) {background-color: #344865; }
 	</style>
-	
-	<script>
-		var columns = [
-			{field: 'day', width: '50%', title: 'Day'},
-			{field: 'max', width: '16%', title: 'Max', cssClass: 'temp', template: '${max}°'},
-			{field: 'min', width: '16%', title: 'Min', cssClass: 'temp tempMin', template: '${min}°'}
-		];
-		require([
-			'dojo/domReady',
-			'dojo/data/ItemFileReadStore',
-			'dojox/mobile/parser',
-			'gridx/mobile/tests/support/data',
-			"dojox/mobile",
-			"dojox/mobile/compat",
-			'dojox/mobile/Heading',
-			'dojox/mobile/View',
-			'dojox/mobile/ScrollableView',
-			'dojox/mobile/TabBar',
-			'gridx/mobile/Grid'
-		], function(ready, ItemFileReadStore, parser, data){
-			ready(function(){
-				parser.parse();
-				grid.store = new ItemFileReadStore({data: {items: data.weather}});
-				grid.setColumns(columns);
-			});
-		});
-	</script>		
 </head>
 
 <body style="visibility:hidden;">
-	<div id="group1" dojoType="dojox.mobile.View" selected="true">
-		<h1 dojoType="dojox.mobile.Heading">Weather</h1>
-		<div dojoType="gridx.mobile.Grid" jsId="grid" showHeader="false"></div>
-		<ul dojoType="dojox.mobile.TabBar" fixed="bottom" style="border-bottom:none;">
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Weather</h1>
+		<div data-dojo-type="gridx/mobile/Grid" jsId="grid" showHeader="false"></div>
+		<ul data-dojo-type="dojox/mobile/TabBar" fixed="bottom" style="border-bottom:none;">
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
 		</ul>
 	</div>
 </body>

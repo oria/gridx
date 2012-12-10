@@ -33,12 +33,17 @@
 	background-color: #ddd;
 }
 
+.mobileGridxNoDataNode {
+	padding: 20px;
+	text-align: center;
+	color: #999;
+}
 
 .mobileGridxCell {
 	padding: 5px;
 }
 
-.mobileGridxRowOdd {
+.mobileGridxRow:nth-child(even) {
 	background-color: #f0f0f0;
 }
 

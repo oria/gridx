@@ -2,7 +2,7 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
 	'gridx/tests/support/modules',
 	'gridx/modules/Focus',
@@ -77,6 +77,12 @@ require([
 		var c = grid.column("Download Date", true);
 		alert(dojo.toJson(c.filterConditions()));
 	};
+	refreshFilter = function(){
+		grid.store.data.splice(0, 2);
+		grid.filter.refresh().then(function(){
+			grid.filterBar.refresh();
+		});
+	};
 
 	tp.addTestSet('Filter Actions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: applyFilter">Apply a given filter</div><br/>',
@@ -84,6 +90,7 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: clearWithoutConfirm">Clear current filter without confirm</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showOrHide">Hide filter bar</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: showFilterDialog">Show filter dialog</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: refreshFilter">Change Store & Refresh</div><br/>',
 	''].join(''));
 	tp.addTestSet('Column Extended Actions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setIdentityFilterable">Set "Identity" column un-filterable</div><br/>',

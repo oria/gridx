@@ -10,13 +10,20 @@
 	<link href="../../../dojox/mobile/themes/iphone/Button.css" rel="stylesheet"/>
 	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
 	<script>
-		var djConfig = {
-			packages: [
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
 				{
-					name: 'gridx'
-					,location: '../gridx'
+					name: 'gridx',
+					location: '../gridx'
 				}
 			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_lazy_load']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_lazy_load']);
+			}
 		};
 	</script>
 	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
@@ -27,45 +34,23 @@
 	</style>
 	
 	<script>
-		var columns = [
-			{field: 'id', width: '5%', title: 'Id'},
-			{field: 'artist', width: '46%', title: 'Name'},
-			{field: 'year', width: '18%', title: 'Price'}
-		];
-		require([
-			'dojo/_base/declare',
-			'dojo/domReady',
-			'dojo/data/ItemFileReadStore',
-			'dojox/mobile/parser',
-			'gridx/mobile/tests/support/data',
-			'gridx/mobile/Grid',
-			'gridx/mobile/LazyLoad',
-			'dojox/mobile/Heading',
-			'dojox/mobile/View',
-			'dojox/mobile/ScrollableView',
-			"dojox/mobile/compat",
-			'dojox/mobile/TabBar'
-		], function(declare, ready, ItemFileReadStore, parser, data, Grid, LazyLoad){
-			declare('gridx.mobile.tests.Grid', [Grid, LazyLoad], {});
-			ready(function(){
-				parser.parse();
-				grid.store = new ItemFileReadStore({data: {items: data.many}});
-				grid.setColumns(columns);
-			});
-		});
+		
 	</script>
 	
 </head>
 
 <body style="visibility:hidden;">
-	<div id="group1" dojoType="dojox.mobile.View" selected="true">
-		<h1 dojoType="dojox.mobile.Heading">Lazy Load</h1>
-		<div dojoType="gridx.mobile.tests.Grid" jsId="grid" showHeader="false"></div>
-		<ul dojoType="dojox.mobile.TabBar" fixed="bottom" style="border-bottom:none;">
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
-			<li dojoType="dojox.mobile.TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Lazy Load</h1>
+		<div data-dojo-type="gridx/mobile/Grid" 
+			data-dojo-mixins="gridx/mobile/LazyLoad" 
+			data-dojo-props="rowCount: 50, showHeader: false" 
+			jsId="grid"></div>
+		<ul data-dojo-type="dojox/mobile/TabBar" fixed="bottom" style="border-bottom:none;">
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
 		</ul>
 	</div>
 </body>
