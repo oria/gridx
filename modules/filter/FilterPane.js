@@ -227,18 +227,29 @@ define([
 			var disabled = this.sltCondition.get('value') === 'isEmpty';
 			array.forEach(this._fields, function(f){f.set('disabled', disabled)});
 			
+			var col = this.grid._columnsById[colId];
 			if(combo){
 				if(!this._dummyCombo){
 					//HACK: mixin query, get, etc methods to store, remove from 2.0.
 					this._dummyCombo = new dijit.form.ComboBox({store: this.grid.store});
 				}
 				//init combobox
-				var col = this.grid._columnsById[colId];
 				lang.mixin(this.comboText, {
 					store: this.grid.store,
 					searchAttr: col.field,
 					fetchProperties: {sort:[{attribute: col.field, descending: false}]}
 				});
+			}
+			if(type == 'Select'){
+				if(!this.sltSingle.getOptions().length){
+					this.sltSingle.addOption(array.map(col.enumOptions || [], function(option){
+						return lang.isObject(option) ? option : {
+							label: option,
+							value: option
+						};
+					}));
+				}
+				this._updateTitle();
 			}
 		},
 		_getValue: function(){

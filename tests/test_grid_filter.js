@@ -32,6 +32,17 @@ require([
 			{
 				moduleClass: FilterBar,
 				maxRuleCount: Infinity,
+				filterData: {
+					type: 'all',
+					conditions: [
+						{
+							colId: "",
+							condition: "contain",
+							type: "Text",
+							value: "Easy"
+						}
+					]
+				},
 				ruleCountToConfirmClearFilter: 2
 			}
 		],

@@ -214,7 +214,8 @@ define([
 			],
 			[
 				{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
-				{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'enum'},
+				{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'enum',
+					enumOptions: ['a', 'b', 'c']},
 				{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'string'},
 				{id: 'Album', field: 'Album', name: 'Album', dataType: 'string'},
 				{id: 'Name', field: 'Name', name: 'Name', dataType: 'string'},
