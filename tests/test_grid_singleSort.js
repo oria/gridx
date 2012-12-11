@@ -2,7 +2,7 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane'
 ], function(Grid, Cache, dataSource, storeFactory, modules, TestPane){
