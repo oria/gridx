@@ -8,7 +8,11 @@ define([
 
 	function createSortFunc(attr, dir, comp, store){
 		return function(itemA, itemB){
-			return dir * comp(store.getValue(itemA, attr), store.getValue(itemB, attr));
+			return store.getValue ?
+				//Old store
+				dir * comp(store.getValue(itemA, attr), store.getValue(itemB, attr)) :
+				//New store
+				dir * comp(itemA[attr], itemB[attr]);
 		};
 	}
 
@@ -39,9 +43,15 @@ define([
 		},
 
 		//Private--------------------------------------------------------------------
-		_onBeforeFetch: function(){
-			this._oldCreateSortFunction = sorter.createSortFunction;
-			sorter.createSortFunction = lang.hitch(this, this._createComparator);
+		_onBeforeFetch: function(req){
+			var t = this,
+				store = t.model.store;
+			t._oldCreateSortFunction = sorter.createSortFunction;
+			sorter.createSortFunction = lang.hitch(t, t._createComparator);
+			//FIXME: How to check whether it is a new store?
+			if(req.sort && lang.isFunction(store.put)){
+				req.sort = t._createComparator(req.sort, store);
+			}
 		},
 
 		_onAfterFetch: function(){

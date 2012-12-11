@@ -260,7 +260,7 @@ define([
 				onComplete = hitch(t, _onComplete, d, options.start),
 				onError = hitch(d, d.errback);
 			t._filled = 1;	//1 as true;
-			t.onBeforeFetch();
+			t.onBeforeFetch(req);
 			if(s.fetch){
 				s.fetch(mixin(req, {
 					onBegin: onBegin,
