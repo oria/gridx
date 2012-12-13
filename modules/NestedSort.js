@@ -320,23 +320,25 @@ define([
 		},
 
 		_onKeyPress: function(e){
-			var t = this,
-				ltr = t.grid.isLeftToRight(),
-				nextKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW,
-				previousKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW;
-			switch(e.keyCode){
-				case previousKey:
-					t._focusPrevious();
-					break;
-				case nextKey:
-					t._focusNext();
-					break;
-				case keys.ENTER:
-				case keys.SPACE:
-					t._onHeaderClick(e);
-					break;
+			if(!e.ctrlKey && !e.shiftKey && !e.altKey){
+				var t = this,
+					ltr = t.grid.isLeftToRight(),
+					nextKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW,
+					previousKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW;
+				switch(e.keyCode){
+					case previousKey:
+						t._focusPrevious();
+						break;
+					case nextKey:
+						t._focusNext();
+						break;
+					case keys.ENTER:
+					case keys.SPACE:
+						t._onHeaderClick(e);
+						break;
+				}
+				event.stop(e);
 			}
-			event.stop(e);
 		},
 
 		_onBlur: function(e){
