@@ -3,6 +3,8 @@
 
 # Explicitly declare text files we want to always be normalized and converted 
 # to native line endings on checkout.
+*.js text
+*.css text
 
 
 # Denote all files that are truly binary and should not be modified.
