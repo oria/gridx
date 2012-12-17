@@ -182,7 +182,7 @@ define([
 			//Use setTimeout to ensure the row header height correct reflects the body row height.
 			//FIXME: This is tricky and may not be working in some special cases.
 			function getHeight(){
-				return sniff('ie') || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
+				return sniff('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			rowHeaderNode.style.height = getHeight();
 			setTimeout(function(){
@@ -212,10 +212,11 @@ define([
 		},
 
 		_onResize: function(){
+			var ie = sniff('ie');
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
-				n.firstChild.style.height = brn.firstChild.offsetHeight + 'px';
+				n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(brn.firstChild).height : brn.firstChild.offsetHeight + 'px';
 			}
 			var t = this,
 				g = t.grid,
