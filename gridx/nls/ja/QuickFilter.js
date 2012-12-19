@@ -1,9 +1,7 @@
-define(
-({
+define({     
 	filterLabel: 'フィルター',
 	clearButtonTitle: 'フィルターのクリア',
-	buildFilterMenuLabel: 'フィルターのビルド&hellip;',
+	buildFilterMenuLabel: 'フィルターの作成&hellip;',
 	apply: 'フィルターの適用'
-})
-);
+});
 

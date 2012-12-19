@@ -5,10 +5,11 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/_base/window",
+	"dojo/_base/event",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util"
-], function(declare, array, connect, lang, sniff, win, keys, _Module, util){
+], function(declare, array, connect, lang, sniff, win, event, keys, _Module, util){
 
 	/*=====
 		gridx.modules.Focus.__FocusArea = function(){
@@ -286,6 +287,12 @@ define([
 				return true;
 			}
 			return false;
+		},
+
+		stopEvent: function(evt){
+			if(evt){
+				event.stop(evt);
+			}
 		},
 
 		onFocusArea: function(/* String areaName*/){

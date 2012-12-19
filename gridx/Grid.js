@@ -31,7 +31,7 @@ define([
 		dummyFunc = function(){};
 
 	
-	var Grid = declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
+	var Grid = declare([_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
 		//		Gridx is a highly extensible widget providing grid/table functionalities. 
 		// description:
@@ -76,7 +76,7 @@ define([
 			domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
 			t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 			t._initEvents(t._compNames, t._eventNames);
-			t._reset(t);
+			t._init();
 			//resize the grid when zoomed in/out.
 			t.connect(metrics, 'onFontResize', function(){
 				t.resize();

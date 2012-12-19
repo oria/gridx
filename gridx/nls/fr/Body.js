@@ -1,8 +1,6 @@
-define(
-({
+define({     
 	loadingInfo: "Chargement...",
-	emptyInfo: "Aucun élément à afficher",
-	loadFailInfo: "Echec du chargement des données"
-})
-);
+	emptyInfo: "Pas d'éléments à afficher",
+	loadFailInfo: "Echec de chargement des données !"
+});
 

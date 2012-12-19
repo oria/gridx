@@ -18,14 +18,6 @@ define([
 		hitch = lang.hitch,
 		forEach = array.forEach;
 
-	function shallowCopy(obj){
-		var ret = {}, i;
-		for(i in obj){
-			ret[i] = obj[i];
-		}
-		return ret;
-	}
-
 	function getDepends(mod){
 		var p = mod.moduleClass.prototype;
 		return (p.forced || []).concat(p.optional || []);
@@ -43,15 +35,6 @@ define([
 		}
 		return cs;
 	}
-	
-	function mixinArrayUtils(arr){
-		for(var f in array){
-			if(isFunc(array[f])){
-				arr[f] = lang.partial(array[f], arr);
-			}
-		}
-		return arr;
-	}
 
 	function mixinAPI(base, apiPath){
 		if(apiPath){
@@ -67,18 +50,10 @@ define([
 		}
 	}
 
-	function removeAPI(base, apiPath){
-		if(apiPath){
-			for(var path in apiPath){
-				delete base[path];
-			}
-		}
-	}
-
-	function normalizeModules(args, coreMods){
+	function normalizeModules(self){
 		var mods = [],
-			coreModCount = coreMods && coreMods.length || 0;
-		forEach(args.modules, function(m, i){
+			coreModCount = self.coreModules.length;
+		forEach(self.modules, function(m, i){
 			if(isFunc(m) || isString(m)){
 				m = {
 					moduleClass: m
@@ -98,16 +73,15 @@ define([
 					return;
 				}
 			}
-			console.error(["The ", (i + 1 - coreModCount), 
-				"-th declared module can NOT be found, please require it before using it"].join(''));
+			console.error("The " + (i + 1 - coreModCount) +
+				"-th declared module can NOT be found, please require it before using it");
 		});
-		args.modules = mods;
-		return args;
+		self.modules = mods;
 	}
 	
-	function checkForced(args){
+	function checkForced(self){
 		var registeredMods = _Module._modules,
-			modules = args.modules, i, j, k, p, deps, depName, err;
+			modules = self.modules, i, j, k, p, deps, depName, err;
 		for(i = 0; i < modules.length; ++i){
 			p = modules[i].moduleClass.prototype;
 			deps = (p.forced || []).concat(p.required || []);
@@ -125,8 +99,8 @@ define([
 						});
 					}else{
 						err = 1;	//1 as true
-						console.error(["Forced/Required dependent module '", depName, 
-							"' is NOT found for '", p.name, "' module."].join(''));
+						console.error("Forced/Required dependent module '" + depName +
+							"' is NOT found for '" + p.name + "' module.");
 					}
 				}
 			}
@@ -134,23 +108,21 @@ define([
 		if(err){
 			throw new Error("Some forced/required dependent modules are NOT found.");
 		}
-		return args;
 	}
 
-	function removeDuplicate(args){
+	function removeDuplicate(self){
 		var i, mods = {}, modules = [];
-		forEach(args.modules, function(m){
+		forEach(self.modules, function(m){
 			mods[m.moduleClass.prototype.name] = m;
 		});
 		for(i in mods){
 			modules.push(mods[i]);
 		}
-		args.modules = modules;
-		return args;
+		self.modules = modules;
 	}
 
-	function checkCircle(args){
-		var modules = args.modules, i, m, modName, q, key,
+	function checkCircle(self){
+		var modules = self.modules, i, m, modName, q, key,
 			getModule = function(modName){
 				for(var j = modules.length - 1; j >= 0; --j){
 					if(modules[j].moduleClass.prototype.name == modName){
@@ -173,19 +145,58 @@ define([
 				}
 			}
 		}
-		return args;
 	}
 
-	function checkModelExtensions(args){
-		var modules = args.modules,
+	function checkModelExtensions(self){
+		var modules = self.modules,
 			i, modExts;
 		for(i = modules.length - 1; i >= 0; --i){
 			modExts = modules[i].moduleClass.prototype.modelExtensions;
 			if(modExts){
-				[].push.apply(args.modelExtensions, modExts);
+				[].push.apply(self.modelExtensions, modExts);
 			}
 		}
-		return args;
+	}
+
+	function arr(self, total, type, start, count, pid){
+		var i = start || 0, end = count >= 0 ? start + count : total, r = [];
+		for(; i < end && i < total; ++i){
+			r.push(self[type](i, 0, pid));
+		}
+		return r;
+	}
+
+	function mixin(self, component, name){
+		var m, a, mods = self._modules;
+		for(m in mods){
+			m = mods[m].mod;
+			a = m[name + 'Mixin'];
+			if(isFunc(a)){
+				a = a.apply(m);
+			}
+			lang.mixin(component, a || {});
+		}
+		return component;
+	}
+
+	function initMod(self, deferredStartup, key){
+		var mods = self._modules,
+			m = mods[key],
+			mod = m.mod,
+			d = mod.loaded;
+		if(!m.done){
+			m.done = 1;
+			new DeferredList(array.map(array.filter(m.deps, function(depModName){
+				return mods[depModName];
+			}), hitch(self, initMod, self, deferredStartup)), 0, 1).then(function(){
+				if(mod.load){
+					mod.load(m.args, deferredStartup);
+				}else if(d.fired < 0){
+					d.callback();
+				}
+			});
+		}
+		return d;
 	}
 
 	return declare(/*===== "gridx.core.Core", =====*/[], {
@@ -195,39 +206,6 @@ define([
 		//		so that the whole grid can be as flexible as possible while still convenient enough for
 		//		web page developers.
 
-		
-
-		_reset: function(args){
-			//Reset the grid data model completely. Also used in initialization.
-			var t = this,
-				d = t._deferStartup = new Deferred();
-			args = shallowCopy(args);
-			t.store = args.store;
-			args.modules = args.modules || [];
-			args.modelExtensions = args.modelExtensions || [];
-			t.setColumns(args.structure);
-			args.columns = t._columnsById;
-			args = checkModelExtensions(
-					checkCircle(
-						removeDuplicate(
-							checkForced(
-								normalizeModules(args, t.coreModules)))));
-			//Create model before module creation, so that all modules can use the logic grid from very beginning.
-			t.model = new Model(args);
-			t.when = lang.hitch(t.model, t.model.when);
-			t._create(args);
-			t._preload();
-			t._load(d).then(hitch(t, 'onModulesLoaded'));
-		},
-
-		onModulesLoaded: function(){
-			// summary:
-			//		Fired when all grid modules are loaded. Can be used as a signal of grid creation complete.
-			// tags:
-			//		callback
-		},
-
-		
 		setStore: function(store){
 			// summary:
 			//		Change the store for grid.
@@ -239,7 +217,6 @@ define([
 			}
 		},
 
-		
 		setColumns: function(columns){
 			// summary:
 			//		Change all the column definitions for grid.
@@ -254,7 +231,6 @@ define([
 			}
 		},
 
-		
 		row: function(row, isId, parentId){
 			// summary:
 			//		Get a row object by ID or index.
@@ -270,7 +246,7 @@ define([
 				row = t.model.indexToId(row, parentId);
 			}
 			if(t.model.byId(row)){
-				t._rowObj = t._rowObj || t._mixin(new Row(t), "row");
+				t._rowObj = t._rowObj || mixin(t, new Row(t), "row");
 				return delegate(t._rowObj, {	//gridx.core.Row
 					id: row
 				});
@@ -278,7 +254,6 @@ define([
 			return null;	//null
 		},
 
-		
 		column: function(column, isId){
 			// summary:
 			//		Get a column object by ID or index
@@ -295,7 +270,7 @@ define([
 			}
 			c = t._columnsById[column];
 			if(c){
-				t._colObj = t._colObj || t._mixin(new Column(t), "column");
+				t._colObj = t._colObj || mixin(t, new Column(t), "column");
 				for(a in c){
 					if(t._colObj[a] === undefined){
 						obj[a] = c[a];
@@ -306,7 +281,6 @@ define([
 			return null;	//null
 		},
 
-		
 		cell: function(row, column, isId, parentId){
 			// summary:
 			//		Get a cell object
@@ -322,7 +296,7 @@ define([
 			if(r){
 				var c = column instanceof Column ? column : t.column(column, isId);
 				if(c){
-					t._cellObj = t._cellObj || t._mixin(new Cell(t), "cell");
+					t._cellObj = t._cellObj || mixin(t, new Cell(t), "cell");
 					return delegate(t._cellObj, {	//gridx.core.Cell
 						row: r,
 						column: c
@@ -332,7 +306,6 @@ define([
 			return null;	//null
 		},
 
-		
 		columnCount: function(){
 			// summary:
 			//		Get the number of columns
@@ -341,7 +314,6 @@ define([
 			return this._columns.length;	//Integer
 		},
 
-		
 		rowCount: function(parentId){
 			// summary:
 			//		Get the number of rows.
@@ -354,7 +326,6 @@ define([
 			return this.model.size(parentId);	//Integer
 		},
 
-		
 		columns: function(start, count){
 			// summary:
 			//		Get a range of columns, from index 'start' to index 'start + count'.
@@ -366,10 +337,9 @@ define([
 			//		If omitted, all the columns starting from 'start' will be returned.
 			// returns:
 			//		An array of column objects
-			return this._arr(this._columns.length, 'column', start, count);	//gridx.core.Column[]
+			return arr(this, this._columns.length, 'column', start, count);	//gridx.core.Column[]
 		},
 
-		
 		rows: function(start, count, parentId){
 			// summary:
 			//		Get a range of rows, from index 'start' to index 'start + count'.
@@ -383,67 +353,52 @@ define([
 			//		If omitted, all the rows starting from 'start' will be returned.
 			// returns:
 			//		An array of row objects
-			return this._arr(this.rowCount(parentId), 'row', start, count, parentId);	//gridx.core.Row[]
+			return arr(this, this.rowCount(parentId), 'row', start, count, parentId);	//gridx.core.Row[]
 		},
-		
+
+		onModulesLoaded: function(){
+			// summary:
+			//		Fired when all grid modules are loaded. Can be used as a signal of grid creation complete.
+			// tags:
+			//		callback
+		},
+
 		//Private-------------------------------------------------------------------------------------
+		_init: function(){
+			//Reset the grid data model completely. Also used in initialization.
+			var t = this,
+				d = t._deferStartup = new Deferred();
+			t.modules = t.modules || [];
+			t.modelExtensions = t.modelExtensions || [];
+			t.setColumns(t.structure);
+
+			normalizeModules(t);
+			checkForced(t);
+			removeDuplicate(t);
+			checkCircle(t);
+			checkModelExtensions(t);
+			//Create model before module creation, so that all modules can use the logic grid from very beginning.
+			t.model = new Model(t);
+			t.when = lang.hitch(t.model, t.model.when);
+			t._create();
+			t._preload();
+			t._load(d).then(hitch(t, 'onModulesLoaded'));
+		},
+
 		_uninit: function(){
 			var t = this, mods = t._modules, m;
 			for(m in mods){
-				m = mods[m].mod;
-				if(m.getAPIPath){
-					removeAPI(t, m.getAPIPath());
-				}
-				m.destroy();
+				mods[m].mod.destroy();
 			}
 			if(t.model){
 				t.model.destroy();
 			}
 		},
 
-		_arr: function(total, type, start, count, pid){
-			var i = start || 0, end = count >= 0 ? start + count : total, r = [];
-			for(; i < end && i < total; ++i){
-				r.push(this[type](i, 0, pid));
-			}
-			return mixinArrayUtils(r);
-		},
-		
-		_preload: function(){
-			var m, mods = this._modules;
-			for(m in mods){
-				m = mods[m];
-				if(m.mod.preload){
-					m.mod.preload(m.args);
-				}
-			}
-		},
-
-		_load: function(deferredStartup){
-			var dl = [], m;
-			for(m in this._modules){
-				dl.push(this._initMod(deferredStartup, m));
-			}
-			return new DeferredList(dl, 0, 1);
-		},
-		
-		_mixin: function(component, name){
-			var m, a, mods = this._modules;
-			for(m in mods){
-				m = mods[m].mod;
-				a = m[name + 'Mixin'];
-				if(isFunc(a)){
-					a = a.apply(m);
-				}
-				lang.mixin(component, a || {});
-			}
-			return component;
-		},
-	
-		_create: function(args){
+		_create: function(){
 			var t = this,
 				mods = t._modules = {};
-			forEach(args.modules, function(mod){
+			forEach(t.modules, function(mod){
 				var m, key = mod.moduleClass.prototype.name;
 				if(!mods[key]){
 					mods[key] = {
@@ -458,25 +413,22 @@ define([
 			});
 		},
 
-		_initMod: function(deferredStartup, key){
-			var t = this,
-				mods = t._modules,
-				m = mods[key],
-				mod = m.mod,
-				d = mod.loaded;
-			if(!m.done){
-				m.done = 1;
-				new DeferredList(array.map(array.filter(m.deps, function(depModName){
-					return mods[depModName];
-				}), hitch(t, t._initMod, deferredStartup)), 0, 1).then(function(){
-					if(mod.load){
-						mod.load(m.args, deferredStartup);
-					}else if(d.fired < 0){
-						d.callback();
-					}
-				});
+		_preload: function(){
+			var m, mods = this._modules;
+			for(m in mods){
+				m = mods[m];
+				if(m.mod.preload){
+					m.mod.preload(m.args);
+				}
 			}
-			return d;
+		},
+
+		_load: function(deferredStartup){
+			var dl = [], m;
+			for(m in this._modules){
+				dl.push(initMod(this, deferredStartup, m));
+			}
+			return new DeferredList(dl, 0, 1);
 		}
 	});
 });

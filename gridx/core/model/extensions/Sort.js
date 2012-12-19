@@ -12,7 +12,6 @@ define([
 
 		constructor: function(model, args){
 			var t = this, bs = args.baseSort;
-			t.clear();
 			t._mixinAPI('sort');
 			if(bs && bs.length){
 				t._baseSort = bs;
@@ -21,8 +20,6 @@ define([
 		},
 
 		//Public--------------------------------------------------------------
-		clear: function(){},
-
 		sort: function(/* sortSpec */){
 			this.model._addCmd({
 				name: '_cmdSort',

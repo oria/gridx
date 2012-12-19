@@ -1,8 +1,6 @@
-define(
-({
+define({     
 	loadingInfo: "Betöltés...",
-	emptyInfo: "Nincsenek megjeleníthető elemek. ",
-	loadFailInfo: "Nem sikerült az adatok betöltése!"
-})
-);
+	emptyInfo: "Nincsenek megjeleníthető elemek.",
+	loadFailInfo: "Az adatok betöltése meghiúsult."
+});
 

@@ -1,8 +1,8 @@
-define(
-({
+define({      
+//begin v1.x content
 	"clearFilterDialogTitle": "필터 지우기",
 	"filterDefDialogTitle": "필터",
-	"defaultRuleTitle": "규칙 ",
+	"defaultRuleTitle": "규칙",
 	"ruleTitleTemplate": "규칙 ${ruleNumber}",
 	"noFilterApplied": "적용된 필터 없음",
 	"defineFilter": "필터 정의",
@@ -23,7 +23,7 @@ define(
 	"conditionBefore": "이전",
 	"conditionAfter": "이후",
 	"conditionRange": "범위",
-	"conditionIsEmpty": "비어있음",
+	"conditionIsEmpty": "다음이 비어있음",
 	"all": "모두",
 	"any": "임의",
 	"relationAll": "모든 규칙",
@@ -62,10 +62,10 @@ define(
 	"statusTipTitleHasFilter": "필터",
 	"statusTipRelPre": "일치",
 	"statusTipRelPost": "규칙",
-	"statusTipHeaderAll": "모든 규칙과 일치.",
-	"statusTipHeaderAny": "임의 규칙과 일치.",
+	"statusTipHeaderAll": "모든 규칙에 일치.",
+	"statusTipHeaderAny": "다음 규칙 중에 일치.",
 	"defaultItemsName": "항목",
-	"filterBarMsgHasFilterTemplate": "${1} ${2}의 ${0}이(가) 표시됩니다.",
+	"filterBarMsgHasFilterTemplate": "${0}/${1} ${2} 표시됨",
 	"filterBarMsgNoFilterTemplate": "적용된 필터 없음",
 	"filterBarDefButton": "필터 정의",
 	"waiFilterBarDefButton": "표 필터링",
@@ -77,13 +77,13 @@ define(
 	"anyColumnOption": "임의의 컬럼",
 	"trueLabel": "True",
 	"falseLabel": "False",
-	"radioTrueLabel": "값 True",
-	"radioFalseLabel": "값 False",
+	"radioTrueLabel": "true 값",
+	"radioFalseLabel": "false 값",
 	"beginTimeRangeLabel": "시간 범위 값 시작",
-	"endTimeRangeLabel": "시간 범위 값 종료",
+	"endTimeRangeLabel": "시간 범위 값 끝",
 	"beginDateRangeLabel": "날짜 범위 값 시작",
-	"endDateRangeLabel": "날짜 범위 값 종료",
+	"endDateRangeLabel": "날짜 범위 값 끝",
 	"startsWithExpr": "${0}*"
-})
-);
+//end v1.x content
+});
 

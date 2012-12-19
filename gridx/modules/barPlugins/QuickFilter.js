@@ -95,13 +95,10 @@ define([
 					g.filterBar.clearFilter(true);
 				}else{
 					g.filterBar.applyFilter({
-						conditions: array.map(cols, function(col){
-							return {
-								colId: col.id,
-								condition: 'contain',
-								value: v
-							};
-						})
+						conditions: [{
+							condition: 'contain',
+							value: v
+						}]
 					});
 				}
 			}else{

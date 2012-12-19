@@ -69,9 +69,13 @@ define([
 			if(data === null){return;}
 			this.sltColumn.set('value', data.colId, null);
 			this._onColumnChange();
-			this.sltCondition.set('value', data.condition, null);
-			this._onConditionChange();
-			this._setValue(data.value);
+			var _this = this;
+			
+			window.setTimeout(function(){
+				_this.sltCondition.set('value', data.condition, null);
+				_this._onConditionChange();
+				_this._setValue(data.value);
+			}, 10);
 		},
 		close: function(){
 			var ac = this._getContainer();
@@ -193,7 +197,7 @@ define([
 				type = this._getType(), condition = this.sltCondition.get('value'),
 				txtNode = this._buttonWidget.titleTextNode;
 			
-			if(value && (condition !== 'range' || (value.start && value.end))){
+			if(this._isValidValue(value) && (condition !== 'range' || (value.start && value.end))){
 				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
 			}else{
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
@@ -262,7 +266,7 @@ define([
 			}
 		},
 		_setValue: function(value){
-			if(!value){return;}
+			if(!this._isValidValue(value)){return;}
 			var type = this._getType(), combo = this._needComboBox();
 			switch(type){
 				case 'Text':
@@ -289,9 +293,14 @@ define([
 					this.ttbEnd.set('value', value.end);
 					break;
 				case 'Radio':
-					this.rbTrue.set('checked', true);
+					if(value){this.rbTrue.set('checked', true);}
+					else{this.rbFalse.set('checked', true);}
 					break;
 			}
+		},
+		
+		_isValidValue: function(value){
+			return value !== null && value != undefined;
 		},
 		
 		uninitialize: function(){

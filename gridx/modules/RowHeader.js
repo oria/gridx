@@ -7,10 +7,11 @@ define([
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-style",
+	"dojo/dom-geometry",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util"
-], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, keys, _Module, util){
+], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
 
 	return declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
 		// summary:
@@ -34,7 +35,7 @@ define([
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',
 				role: 'row',
-				innerHTML: ['<table border="0" cellspacing="0" cellpadding="0" style="width: ', 
+				innerHTML: ['<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: ', 
 					this.arg('width'), 
 					';"><tr><th class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></th></tr></table>'
 				].join('')
@@ -94,10 +95,13 @@ define([
 
 		load: function(args, startup){
 			var t = this,
+				g = t.grid,
 				bn = t.bodyNode;
 			startup.then(function(){
-				var w = bn.offsetWidth || domStyle.get(bn, 'width');
-				bn.style[t.grid.isLeftToRight() ? 'left' : 'right'] = -w + 'px';
+				var w = bn.offsetWidth || domStyle.get(bn, 'width'),
+					ltr = g.isLeftToRight(),
+					mainBorder = domGeo.getBorderExtents(g.mainNode);
+				bn.style[ltr ? 'left' : 'right'] = -(w + (ltr ? mainBorder.l : mainBorder.r)) + 'px';
 				t.loaded.callback();
 			});
 		},
@@ -178,7 +182,7 @@ define([
 			//Use setTimeout to ensure the row header height correct reflects the body row height.
 			//FIXME: This is tricky and may not be working in some special cases.
 			function getHeight(){
-				return sniff('ie') || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
+				return sniff('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			rowHeaderNode.style.height = getHeight();
 			setTimeout(function(){
@@ -208,18 +212,26 @@ define([
 		},
 
 		_onResize: function(){
-			for(var bn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
-				bn && n;
-				bn = bn.nextSibling, n = n.nextSibling){
-				n.firstChild.style.height = bn.firstChild.offsetHeight + 'px';
+			var ie = sniff('ie');
+			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
+				brn && n;
+				brn = brn.nextSibling, n = n.nextSibling){
+				n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(brn.firstChild).height : brn.firstChild.offsetHeight + 'px';
 			}
+			var t = this,
+				g = t.grid,
+				bn = t.bodyNode,
+				w = bn.offsetWidth || domStyle.get(bn, 'width'),
+				ltr = g.isLeftToRight(),
+				mainBorder = domGeo.getBorderExtents(g.mainNode);
+			bn.style[ltr ? 'left' : 'right'] = -(w + (ltr ? mainBorder.l : mainBorder.r)) + 'px';
 		},
 
 		_buildRows: function(start, count){
 			var sb = [];
 			for(var i = 0; i < count; ++i){
 				sb.push('<div class="gridxRowHeaderRow" role="row" visualindex="', start + i,
-					'"><table border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" role="rowheader" tabindex="-1"></td></tr></table></div>');
+					'"><table role="presentation" border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" role="rowheader" tabindex="-1"></td></tr></table></div>');
 			}
 			return sb.join('');
 		},
@@ -310,7 +322,7 @@ define([
 
 		_doFocus: function(evt){
 			if(this._focusRow(this.grid.body._focusCellRow)){
-				util.stopEvent(evt);
+				this.grid.focus.stopEvent(evt);
 				return true;
 			}
 		},
@@ -351,7 +363,7 @@ define([
 			var t = this, g = t.grid;
 			if(g.focus.currentArea() == 'rowHeader' && 
 					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
-				util.stopEvent(evt);
+				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;

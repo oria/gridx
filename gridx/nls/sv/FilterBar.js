@@ -1,16 +1,16 @@
-define(
-({
+define({      
+//begin v1.x content
 	"clearFilterDialogTitle": "Rensa filter",
 	"filterDefDialogTitle": "Filter",
-	"defaultRuleTitle": "Regel ",
+	"defaultRuleTitle": "Regel",
 	"ruleTitleTemplate": "Regel ${ruleNumber}",
 	"noFilterApplied": "Inget filter tillämpat.",
 	"defineFilter": "Definiera filter",
 	"conditionEqual": "lika med",
 	"conditionNotEqual": "inte lika med",
-	"conditionLess": "mindre än",
-	"conditionLessEqual": "mindre än eller lika med",
-	"conditionGreater": "större än",
+	"conditionLess": "är mindre än",
+	"conditionLessEqual": "mindre eller lika med",
+	"conditionGreater": "är större än",
 	"conditionGreaterEqual": "större än eller lika med",
 	"conditionContain": "innehåller",
 	"conditionIs": "är",
@@ -35,15 +35,15 @@ define(
 	"and": "och",
 	"or": "eller",
 	"addRuleButton": "Lägg till regel",
-	"waiAddRuleButton": "Lägg till ny regel",
+	"waiAddRuleButton": "Lägg till en ny regel",
 	"removeRuleButton": "Ta bort regel",
 	"waiRemoveRuleButtonTemplate": "Ta bort regel ${0}",
 	"addRuleButton": "Lägg till filterregel",
 	"cancelButton": "Avbryt",
-	"waiCancelButton": "Stäng dialogrutan",
+	"waiCancelButton": "Avbryt dialogen",
 	"clearButton": "Rensa",
 	"waiClearButton": "Rensa filtret",
-	"filterButton": "Filtrera",
+	"filterButton": "Filter",
 	"waiFilterButton": "Filtrera",
 	"columnSelectLabel": "Kolumn",
 	"waiColumnSelectTemplate": "Kolumn för regel ${0}",
@@ -61,9 +61,9 @@ define(
 	"statusTipTitleNoFilter": "Filterfält",
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Matcha",
-	"statusTipRelPost": "regel/regler.",
+	"statusTipRelPost": "regler.",
 	"statusTipHeaderAll": "Matcha alla regler.",
-	"statusTipHeaderAny": "Matcha någon regel.",
+	"statusTipHeaderAny": "Matcha någon av reglerna.",
 	"defaultItemsName": "objekt",
 	"filterBarMsgHasFilterTemplate": "${0} av ${1} ${2} visas.",
 	"filterBarMsgNoFilterTemplate": "Inget filter tillämpat",
@@ -77,13 +77,13 @@ define(
 	"anyColumnOption": "Någon kolumn",
 	"trueLabel": "Sant",
 	"falseLabel": "Falskt",
-	"radioTrueLabel": "Värde sant",
-	"radioFalseLabel": "Värde falskt",
+	"radioTrueLabel": "Värdet Sant",
+	"radioFalseLabel": "Värdet Falskt",
 	"beginTimeRangeLabel": "Startvärde för tidsintervall",
 	"endTimeRangeLabel": "Slutvärde för tidsintervall",
 	"beginDateRangeLabel": "Startvärde för datumintervall",
 	"endDateRangeLabel": "Slutvärde för datumintervall",
 	"startsWithExpr": "${0}*"
-})
-);
+//end v1.x content
+});
 

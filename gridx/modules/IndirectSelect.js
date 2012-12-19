@@ -197,7 +197,7 @@ define([
 				rowHeader = g.rowHeader,
 				headerCellNode = rowHeader.headerCellNode,
 				focus = function(evt){
-					util.stopEvent(evt);
+					g.focus.stopEvent(evt);
 					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
 					headerCellNode.focus();
 					return true;
@@ -208,7 +208,7 @@ define([
 				};
 			g.focus.registerArea({
 				name: 'selectAll',
-				priority: 0.89,
+				priority: -0.1,
 				focusNode: rowHeader.headerNode,
 				doFocus: focus,
 				doBlur: blur,

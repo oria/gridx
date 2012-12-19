@@ -1,8 +1,6 @@
-define(
-({
-	loadingInfo: "Probíhá načítání...",
+define({     
+	loadingInfo: "Načítání...",
 	emptyInfo: "Nejsou žádné položky k zobrazení.",
-	loadFailInfo: "Načtení dat se nezdařilo!"
-})
-);
+	loadFailInfo: "Data se nepodařilo načíst!"
+});
 

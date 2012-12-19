@@ -1,5 +1,5 @@
-define(
-({
+define({      
+//begin v1.x content
 	"clearFilterDialogTitle": "Ryd filter",
 	"filterDefDialogTitle": "Filter",
 	"defaultRuleTitle": "Regel",
@@ -30,7 +30,7 @@ define(
 	"waiRelAll": "Matcher alle følgende regler:",
 	"relationAny": "vilkårlige regler",
 	"waiRelAny": "Matcher en eller flere af følgende regler:",
-	"relationMsgFront": "Lig med",
+	"relationMsgFront": "Match",
 	"relationMsgTail": "",
 	"and": "og",
 	"or": "eller",
@@ -43,7 +43,7 @@ define(
 	"waiCancelButton": "Annullér denne dialogboks",
 	"clearButton": "Ryd",
 	"waiClearButton": "Ryd filteret",
-	"filterButton": "Filtrér",
+	"filterButton": "Filter",
 	"waiFilterButton": "Send filteret",
 	"columnSelectLabel": "Kolonne",
 	"waiColumnSelectTemplate": "Kolonne for reglen ${0}",
@@ -60,7 +60,7 @@ define(
 	"anycolumn": "vilkårlig kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Lig med",
+	"statusTipRelPre": "Matcher",
 	"statusTipRelPost": "regler.",
 	"statusTipHeaderAll": "Matcher alle regler.",
 	"statusTipHeaderAny": "Matcher en hvilken som helst regel.",
@@ -79,11 +79,11 @@ define(
 	"falseLabel": "Falsk",
 	"radioTrueLabel": "Værdi sand",
 	"radioFalseLabel": "Værdi falsk",
-	"beginTimeRangeLabel": "Start på tidsintervalværdi",
-	"endTimeRangeLabel": "Slut på tidsintervalværdi",
-	"beginDateRangeLabel": "Start på datointervalværdi",
-	"endDateRangeLabel": "Slut på datointervalværdi",
+	"beginTimeRangeLabel": "Startværdi for klokkeslætsinterval",
+	"endTimeRangeLabel": "Slutværdi for klokkeslætsinterval",
+	"beginDateRangeLabel": "Startværdi for datointerval",
+	"endDateRangeLabel": "Slutværdi for datointerval",
 	"startsWithExpr": "${0}*"
-})
-);
+//end v1.x content
+});
 

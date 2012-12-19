@@ -45,9 +45,10 @@ define([
 					dn.style.width = '0px';
 				}
 			}else{
-				var w = metrics.getScrollbar().w + 'px';
-				dn.style.width = w;
-				dn.style[g.isLeftToRight() ? 'right' : 'left'] = -metrics.getScrollbar().w + 'px';
+				var w = metrics.getScrollbar().w,
+					ltr = g.isLeftToRight();
+				dn.style.width = w + 'px';
+				dn.style[ltr ? 'right' : 'left'] = -w + 'px';
 				if(sniff('ie') < 8){
 					t.stubNode.style.width = w;
 				}
@@ -89,6 +90,7 @@ define([
 				});
 			}
 			startup.then(function(){
+				t._updatePos();
 				Deferred.when(t._init(args), function(){
 					t.domNode.style.width = '';
 					t.loaded.callback();
@@ -164,9 +166,18 @@ define([
 					ds.width = '';
 				}
 				ds.display = toShow ? '' : 'none';
-				ds[g.isLeftToRight() ? 'right' : 'left'] = -t.domNode.offsetWidth + 'px';
+				t._updatePos();
 			}
 			g.hLayout.reLayout();
+		},
+
+		_updatePos: function(){
+			var g = this.grid,
+				dn = this.domNode,
+				ds = dn.style,
+				ltr = g.isLeftToRight(),
+				mainBorder = domGeo.getBorderExtents(g.mainNode);
+			ds[ltr ? 'right' : 'left'] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
 		},
 
 		_doScroll: function(){

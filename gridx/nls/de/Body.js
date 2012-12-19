@@ -1,8 +1,6 @@
-define(
-({
-	loadingInfo: "Ladevorgang läuft...",
-	emptyInfo: "Es sind keine anzuzeigenden Elemente vorhanden.",
-	loadFailInfo: "Fehler beim Laden der Daten!"
-})
-);
+define({     
+	loadingInfo: "Laden läuft...",
+	emptyInfo: "Keine Elemente zum Anzeigen vorhanden",
+	loadFailInfo: "Es konnten keine Daten geladen werden!"
+});
 

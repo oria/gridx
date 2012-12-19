@@ -90,10 +90,11 @@ define([
 							//which will then trigger edit apply. But things are complicated because onChange is
 							//fired asynchronously, and maybe sometimes not fired.
 							//FIXME: How to ensure the onChange event does not fire if isInit is true?
-							if(isInit && widget.get('value') !== data){
+							if(isInit && onChange && !onChange._init && widget.get('value') !== data){
 								widget.onChange = function(){
 									widget.onChange = onChange;
 								};
+								widget.onChange._init = true;
 							}
 							if(!t.setCellValue){
 								widget.set('value', data);
@@ -319,7 +320,7 @@ define([
 			var col = cell.column.def(),
 				widget = this._getSpecialWidget(cell);
 			if(!widget){
-				widget = col._backupWidgets.pop();
+				widget = col._backupWidgets.shift();
 				if(!widget){
 					widget = new CellWidget({
 						content: col.userDecorator(),

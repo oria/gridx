@@ -18,6 +18,9 @@ define([
 			this.btnCancel = arr[1];
 			this.connect(this.btnCancel, 'onClick', 'hide');
 			this.connect(this.btnClear, 'onClick', 'onExecute');
+			this.connect(this, 'show', function(){
+				this.btnCancel.focus();
+			});
 		},
 		onExecute: function(){
 			this.execute();

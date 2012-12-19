@@ -1,7 +1,5 @@
-define(
-({
+define({     
 	summary: 'Skupaj: ${0}',
-	summaryWithSelection: 'Skupaj: ${0} Izbrano: ${1}'
-})
-);
+	summaryWithSelection: 'Skupaj: ${0} Izbranih: ${1}'
+});
 

@@ -4,14 +4,13 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/_base/query",
-	"dojo/_base/event",
 	"dojo/dom-class",
 	"dojo/string",
 	"dojo/keys",
 	"../../core/util",
 	"./_PagerBase",
 	"dojo/text!../../templates/PaginationBar.html"
-], function(declare, array, lang, sniff, query, event, domClass, string, keys, util, _PagerBase, barTemplate){
+], function(declare, array, lang, sniff, query, domClass, string, keys, util, _PagerBase, barTemplate){
 
 	var hasClass = domClass.contains,
 		toggle = domClass.toggle,
@@ -309,7 +308,7 @@ define([
 					}else{
 						return;
 					}
-					event.stop(evt);
+					focus.stopEvent(evt);
 				});
 
 				focus.registerArea({
@@ -328,7 +327,7 @@ define([
 					}else{
 						return;
 					}
-					event.stop(evt);
+					focus.stopEvent(evt);
 				});
 
 				focus.registerArea({
@@ -336,7 +335,7 @@ define([
 					priority: fp + 0.002,
 					focusNode: t._gotoBtn,
 					doFocus: function(evt){
-						util.stopEvent(evt);
+						focus.stopEvent(evt);
 						t._gotoBtn.focus();
 						return true;
 					}
@@ -344,17 +343,17 @@ define([
 				t.connect(t._gotoBtn, 'onkeydown', function(evt){
 					if(evt.keyCode == keys.ENTER){
 						t._showGotoDialog();
-						event.stop(evt);
+						focus.stopEvent(evt);
 					}
 				});
 			}
 		},
 
 		_findNextPageSizeSwitch: function(isMove, isLeft, evt){
-			util.stopEvent(evt);
 			var t = this,
 				c = t._sizeSwitchContainer,
 				n = query('[pagesize="' + t._focusPageSize + '"]', c)[0];
+			t.module.grid.focus.stopEvent(evt);
 			n = focus(query('.gridxPagerSizeSwitchBtn', c), n, isMove, isLeft, function(node){
 				return !hasClass(node, 'gridxPagerSizeSwitchBtnActive');
 			});
@@ -365,10 +364,10 @@ define([
 		},
 
 		_findNextPageStepperBtn: function(isMove, isLeft, evt){
-			util.stopEvent(evt);
 			var t = this,
 				c = t._pageStepperContainer,
 				n = query('[pageindex="' + t._focusPageIndex + '"]', c)[0];
+			t.module.grid.focus.stopEvent(evt);
 			n = focus(query('.gridxPagerStepperBtn', c), n, isMove, isLeft, function(node){
 				return !hasClass(node, 'gridxPagerStepperBtnActive') &&
 					!hasClass(node, 'gridxPagerStepperBtnDisable');

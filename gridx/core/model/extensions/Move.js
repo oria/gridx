@@ -122,8 +122,6 @@ define([
 
 		//moveSortInfo: [],
 
-		clear: function(){},
-
 		move: function(start, count, target){
 			// summary
 			//		Move rows by row index.

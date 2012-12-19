@@ -1,9 +1,7 @@
-define(
-({
+define({     
 	filterLabel: 'Фильтр',
-	clearButtonTitle: 'Очистить фильтр',
-	buildFilterMenuLabel: 'Составить фильтр&hellip;',
+	clearButtonTitle: 'Удалить фильтр',
+	buildFilterMenuLabel: 'Потроить фильтр&hellip;',
 	apply: 'Применить фильтр'
-})
-);
+});
 

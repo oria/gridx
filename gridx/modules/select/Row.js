@@ -97,18 +97,22 @@ define([
 		},
 
 /*=====
-		onSelected: function(row){
+		onSelected: function(row, rowId){
 			// summary:
 			//		Fired when a row is selected.
-			// row: gridx.core.Row
-			//		The row object
+			// row: grid.core.Row
+			//		The Row object (null if the row is not yet loaded);
+			// rowId:
+			//		The row ID
 		},
 
-		onDeselected: function(row){
+		onDeselected: function(row, rowId){
 			// summary:
 			//		Fired when a row is deselected.
-			// row: gridx.core.Row
-			//		The row object
+			// row: grid.core.Row
+			//		The Row object (null if the row is not yet loaded);
+			// rowID:
+			//		The row ID
 		},
 
 		onHighlightChange: function(){
@@ -149,10 +153,7 @@ define([
 			if(type == 'select'){
 				var t = this;
 				t._highlight(id, toMark);
-				//Fire event when the row is loaded, so users can use the row directly.
-				t.model.when({id: id}, function(){
-					t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, 1));	//1 as true
-				});
+				t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, 1), id);
 			}
 		},
 		

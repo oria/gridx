@@ -213,7 +213,7 @@ define([
 		},
 
 		_doFocus: function(pos, evt, step){
-			util.stopEvent(evt);
+			this.grid.focus.stopEvent(evt);
 			var elems = a11y._getTabNavigable(this[pos + 'Node']),
 				node = elems[step < 0 ? 'last' : 'first'];
 			if(node){

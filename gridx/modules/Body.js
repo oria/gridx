@@ -3,6 +3,7 @@ define([
 	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
+	"dojo/json",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
@@ -11,7 +12,7 @@ define([
 	"../core/_Module",
 	"../core/util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, array, lang, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
+], function(declare, query, array, lang, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
 	/*=====
 	gridx._RowCellInfo = function(){
@@ -119,6 +120,7 @@ define([
 			//		protected extended
 			this.inherited(arguments);
 			this.domNode.innerHTML = '';
+			this._destroyed = true;
 		},
 	
 		rowMixin: {
@@ -173,6 +175,15 @@ define([
 		//		Default to false, so that only one cell will be re-rendered editing that cell.
 		renderWholeRowOnSet: false,
 
+		// compareOnSet: Function
+		//		When data is changed in store, compare the old data and the new data of grid, return true if
+		//		they are the same, false if not, so that the body can decide whether to refresh the corresponding cell.
+		compareOnSet: function(v1, v2){
+			return typeof v1 == 'object' && typeof v2 == 'object' ? 
+				json.stringify(v1) == json.stringify(v2) : 
+				v1 === v2;
+		},
+
 		getRowNode: function(args){
 			// summary:
 			//		Get the DOM node of a row
@@ -180,8 +191,23 @@ define([
 			//		A row info object containing row index or row id
 			// returns:
 			//		The DOM node of the row. Null if not found.
-			var rowQuery = this._getRowNodeQuery(args);
-			return rowQuery && query('> ' + rowQuery, this.domNode)[0] || null;	//DOMNode|null
+			if(this.model.isId(args.rowId) && sniff('ie')){
+				return this._getRowNode(args.rowId);
+			}else{
+				var rowQuery = this._getRowNodeQuery(args);
+				return rowQuery && query('> ' + rowQuery, this.domNode)[0] || null;	//DOMNode|null
+			}
+		},
+
+		_getRowNode: function(id){
+			//TODO: this should be resolved in dojo.query!
+			//In IE, some special ids (with special charactors in it, e.g. "+") can not be queried out.
+			for(var i = 0, rows = this.domNode.childNodes, row; row = rows[i]; ++i){
+				if(row.getAttribute('rowid') == id){
+					return row;
+				}
+			}
+			return null;
 		},
 
 		getCellNode: function(args){
@@ -199,8 +225,13 @@ define([
 				if(!colId && cols[args.colIndex]){
 					colId = cols[args.colIndex].id;
 				}
-				r += " [colid='" + colId + "'].gridxCell";
-				return query(r, t.domNode)[0] || null;	//DOMNode|null
+				var c = " [colid='" + colId + "'].gridxCell";
+				if(t.model.isId(args.rowId) && sniff('ie')){
+					var rowNode = t._getRowNode(args.rowId);
+					return query(c, rowNode)[0] || null;	//DOMNode|null
+				}else{
+					return query(r + c, t.domNode)[0] || null;	//DOMNode|null
+				}
 			}
 			return null;	//null
 		},
@@ -262,7 +293,6 @@ define([
 						var rows = t._buildRows(start, count, uncachedRows, renderedRows);
 						if(rows){
 							domConstruct.place(rows, n, 'before');
-							array.forEach(renderedRows, t.onAfterRow, t);
 						}
 					}
 					while(n){
@@ -275,6 +305,7 @@ define([
 						}
 						n = tmp;
 					}
+					array.forEach(renderedRows, t.onAfterRow, t);
 					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 						t.onRender(start, count);
 						t.onForcedScroll();
@@ -445,6 +476,13 @@ define([
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
+				if(sniff('ie')){
+					//In IE, setting innerHTML will completely destroy the node,
+					//But CellWidget still need it.
+					while(n.childNodes.length){
+						n.removeChild(n.firstChild);
+					}
+				}
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
@@ -510,6 +548,13 @@ define([
 			//		The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.
 			// count: Integer
 			//		The count of rows that is affected by this rendering. If omitted, all rows from start are affected.
+			
+			//FIX #8746
+			var bn = this.domNode;
+			if(sniff('ie') < 9 && bn.childNodes.length){
+				query('> gridxLastRow', bn).removeClass('gridxLastRow');
+				domClass.add(bn.lastChild, 'gridxLastRow');
+			}
 		},
 
 		onUnrender: function(/* id */){
@@ -675,7 +720,7 @@ define([
 				cell = g.cell(row.id, col.id, 1);
 				cls = (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
 				style = (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-				sb.push('<td aria-describedby="', g.id, '-', col.id, '" class="gridxCell ');
+				sb.push('<td aria-describedby="', (g.id + '-' + col.id).replace(/\s+/, ''), '" class="gridxCell ');
 				if(isPadding){
 					sb.push('gridxPaddingCell');
 				}
@@ -743,7 +788,7 @@ define([
 				g = this.grid,
 				tag;
 			for(; n && n != g.bodyNode; n = n.parentNode){
-				tag = n.tagName.toLowerCase();
+				tag = n.tagName && n.tagName.toLowerCase();
 				if(tag == 'td' && domClass.contains(n, 'gridxCell')){
 					var col = g._columnsById[n.getAttribute('colid')];
 					e.cellNode = n;
@@ -772,30 +817,26 @@ define([
 						oldData = oldCache.data,
 						cols = g._columns,
 						renderWhole = t.arg('renderWholeRowOnSet'),
-						changedCols = [];
-					if(!renderWhole){
-						array.some(cols, function(col){
-							if(curData[col.id] !== oldData[col.id]){
-								changedCols.push(col);
-							}
-							return changedCols.length > 1;
-						});
-					}
-					if(renderWhole || changedCols.length > 1){
+						compareOnSet = t.arg('compareOnSet');
+					if(renderWhole){
 						rowNode.innerHTML = t._buildCells(row);
 						t.onAfterRow(row);
 						t.onSet(row);
 						t.onRender(index, 1);
-					}else if(changedCols.length == 1){
-						var col = changedCols[0],
-							isPadding = g.tree && curData[col.id] === undefined,
-							cell = row.cell(col.id, 1);
-						cell.node().innerHTML = t._buildCellContent(cell, isPadding);
-						t.onAfterCell(cell);
+					}else{
+						array.forEach(cols, function(col){
+							if(!compareOnSet(curData[col.id], oldData[col.id])){
+								var isPadding = g.tree && curData[col.id] === undefined,
+									cell = row.cell(col.id, 1);
+								cell.node().innerHTML = t._buildCellContent(cell, isPadding);
+								t.onAfterCell(cell);
+							}
+						});
 					}
 				}
 			}
 		},
+
 
 		_onDelete: function(id){
 			var t = this;
@@ -828,8 +869,10 @@ define([
 					t.renderCount -= toDelete.length;
 					array.forEach(toDelete, domConstruct.destroy);
 					array.forEach(ids, t.onUnrender, t);
-					if(t.autoChangeSize && t.rootStart === 0 && !pid){
-						t.updateRootRange(0, t.rootCount - 1);
+					//If the body is showing the last a few rows, it should respond to deletion 
+					//no matter pagination is on or not.
+					if(!pid && t.rootStart + t.rootCount >= t.model.size()){
+						t.updateRootRange(t.rootStart, t.rootCount - 1);
 					}
 					t.onDelete(id, start);
 					t.onRender(start, count);
@@ -841,7 +884,14 @@ define([
 			var t = this;
 			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
-				t.refresh();
+				if(t._sizeChangeHandler){
+					clearTimeout(t._sizeChangeHandler);
+				}
+				t._sizeChangeHandler = setTimeout(function(){
+					if(!t._destroyed){
+						t.refresh();
+					}
+				}, 10);
 			}
 		},
 		
@@ -919,9 +969,9 @@ define([
 		},
 
 		_focusCell: function(evt, rowVisIdx, colIdx){
-			util.stopEvent(evt);
 			var t = this,
 				g = t.grid;
+			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
 			var colId = g._columns[colIdx].id,
@@ -960,12 +1010,12 @@ define([
 
 		_moveFocus: function(rowStep, colStep, evt){
 			if(rowStep || colStep){
-				util.stopEvent(evt); //Prevent scrolling the whole page.
 				var r, c,
 					t = this,
 					g = t.grid, 
 					cols = g._columns,
 					vc = t.visualCount;
+				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
 				r = t._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
 				c = t._focusCellCol + colStep;
