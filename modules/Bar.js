@@ -31,7 +31,7 @@ define([
 				init = function(pos, container, priority){
 					if(lang.isArray(t.arg(pos))){
 						var node = pos + 'Node';
-						t[node] = domConstruct.toDom('<table class="gridxBar" border="0" cellspacing="0"></table>');
+						t[node] = domConstruct.toDom('<table class="gridxBar" border="0" cellspacing="0" role="presentation"></table>');
 						t.grid.vLayout.register(t, node, container, priority);
 						plugins[pos] = t._parse(t[pos], t[node]);
 					}
