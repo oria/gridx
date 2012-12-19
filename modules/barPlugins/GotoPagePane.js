@@ -1,13 +1,14 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/event",
 	"dojo/keys",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"dojo/text!../../templates/GotoPagePane.html",
 	"dojo/i18n!../../nls/PaginationBar"
-], function(declare, lang, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, nls){
+], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, nls){
 
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: goToTemplate,
@@ -47,6 +48,7 @@ define([
 		_onKeyDown: function(evt){
 			if(!this.okBtn.get('disabled') && keys.ENTER == evt.keyCode){
 				this._onOK();
+				event.stop(evt);
 			}
 		}
 	});
