@@ -14,7 +14,7 @@ define([
 		// summary:
 		//		This is a grid bar plugin that can be used to switch page sizes using link buttons.
 
-		templateString: '<div class="gridxLinkSizer" role="toolbar" data-dojo-attach-event="onclick: _changePageSize, onmouseover: _onHover, onmouseout: _onHover"></div>',
+		templateString: '<div class="gridxLinkSizer" role="toolbar" aria-label="${pagerWai}" data-dojo-attach-event="onclick: _changePageSize, onmouseover: _onHover, onmouseout: _onHover"></div>',
 
 		postMixInProperties: function(){
 			var t = this;
