@@ -7,8 +7,10 @@ define([
 	"dojo/i18n!../../nls/PaginationBar",
 	"dijit/Dialog",
 	"dijit/form/Button",
-	"dijit/form/NumberTextBox"
-], function(declare, lang, string, _LinkPageBase, GotoPagePane, nls, Dialog, Button, NumberTextBox){
+	"dijit/form/NumberTextBox",
+	"dojo/keys",
+	"dojo/_base/event"
+], function(declare, lang, string, _LinkPageBase, GotoPagePane, nls, Dialog, Button, NumberTextBox, keys, event){
 	
 	return declare(/*===== "gridx.modules.barPlugins.GotoPageButton", =====*/_LinkPageBase, {
 		templateString: "<span class='gridxPagerGotoBtn' tabindex='${_tabIndex}' title='${gotoBtnTitle}' aria-label='${gotoBtnTitle}' data-dojo-attach-event='onclick: _showGotoDialog'><span class='gridxPagerA11yInner'>&#9650;</span></span>",
@@ -53,7 +55,11 @@ define([
 			t._gotoDialog.show();
 		},
 
-		_onKey: function(){
+		_onKey: function(evt){
+			if(evt.keyCode == keys.ENTER){
+				this._showGotoDialog();
+				event.stop(evt);
+			}
 		},
 
 		_focusNextBtn: function(){
