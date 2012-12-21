@@ -7,7 +7,7 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
-	"dojo/i18n!../../nls/PaginationBar"
+	"dojo/i18n!../nls/PaginationBar"
 ], function(declare, lang, array, sniff, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin, nls){
 
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {

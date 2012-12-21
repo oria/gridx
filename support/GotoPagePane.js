@@ -6,8 +6,8 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
-	"dojo/text!../../templates/GotoPagePane.html",
-	"dojo/i18n!../../nls/PaginationBar"
+	"dojo/text!../templates/GotoPagePane.html",
+	"dojo/i18n!../nls/PaginationBar"
 ], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, nls){
 
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {

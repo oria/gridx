@@ -12,9 +12,9 @@ define([
 	'dijit/form/ComboButton',
 	'dijit/Menu',
 	'dijit/MenuItem',
-	'../filter/Filter',
-	'dojo/i18n!../../nls/QuickFilter',
-	'dojo/text!../../templates/QuickFilter.html'
+	'../modules/filter/Filter',
+	'dojo/i18n!../nls/QuickFilter',
+	'dojo/text!../templates/QuickFilter.html'
 ], function(declare, lang, array, domClass, keys,
 	_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, Button, ComboButton, Menu, MenuItem,

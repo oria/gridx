@@ -2,9 +2,9 @@ define([
 	'dojo/_base/declare',
 	'dojo/dom-class',
 	'./_PaginationBarBase',
-	'../barPlugins/LinkPager',
-	'../barPlugins/LinkSizer',
-	'../barPlugins/GotoPageButton'
+	'../../support/LinkPager',
+	'../../support/LinkSizer',
+	'../../support/GotoPageButton'
 ], function(declare, domClass, _PaginationBarBase, LinkPager, LinkSizer, GotoPageButton){
 
 	return declare(_PaginationBarBase, {

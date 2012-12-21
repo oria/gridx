@@ -2,9 +2,8 @@ define([
 	'dojo/_base/declare',
 	'dojo/dom-class',
 	'./_PaginationBarBase',
-	'../barPlugins/DropDownPager',
-	'../barPlugins/DropDownSizer',
-	'../Bar'
+	'../../support/DropDownPager',
+	'../../support/DropDownSizer'
 ], function(declare, domClass, _PaginationBarBase, DropDownPager, DropDownSizer){
 
 	return declare(_PaginationBarBase, {

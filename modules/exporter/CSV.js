@@ -1,10 +1,11 @@
-define([
+define([ 
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
-	"dojo/_base/lang",
 	"../../core/_Module",
-	"./Exporter"
-], function(declare, lang, _Module){
+	"../../support/exporter/toCSV"
+], function(kernel, declare, _Module, exportToCSV){
 
+	kernel.deprecated('gridx/modules/exporter/CSV is deprecated.', 'Use gridx/support/exporter/toCSV instead.', '2.0');
 /*=====
 	dojo.declare('__CSVExportArgs', __ExportArgs, {
 		//seperator: String?
@@ -30,21 +31,10 @@ define([
 	return declare(/*===== "gridx.modules.exporter.CSV", =====*/_Module, {
 		// summary:
 		//		This module provides the API to export grid contents to CSV format string
-
 		name: 'exportCsv',
 
-		forced: ['exporter'],
-
-		getAPIPath: function(){
-			return {
-				exporter: {
-					toCSV: lang.hitch(this, this.toCSV) 
-				}
-			};
-		},
-	
-		//Public ---------------------------------------------------------------------
-		toCSV: function(/* __CSVExportArgs? */ args){
+/*=====
+		toCSV: function(args){
 			// summary:
 			//		Export the grid contents to CSV according to the given args.
 			//		This method should be called through grid.exporter.toCSV();
@@ -53,62 +43,18 @@ define([
 			// returns:
 			//		A deferred object indicating when the export process is completed,
 			//		and then pass the exported CSV string to callbacks.
-			return this.grid.exporter._export(this, args || {});	//dojo.Deferred
-		},
+		}
+=====*/
 
-		//Package --------------------------------------------------------------------
-		initialize: function(/* __CSVExportArgs */ args){
-			// tags:
-			//		private
-			this._s = args.separator || ",";
-			this._n = args.newLine || "\r\n";
-			this._lines = [];
-		},
-
-		beforeHeader: function(){
-			// tags:
-			//		private
-			this._cells = [];
-		},
-
-		handleHeaderCell: function(/* __ExportContext */ context){
-			// tags:
-			//		private
-			this._cells.push(context.column.name());
-		},
-
-		afterHeader: function(){
-			// tags:
-			//		private
-			this._lines.push(this._cells.join(this._s));
-		},
-
-		beforeRow: function(){
-			// tags:
-			//		private
-			this._cells = [];
-		},
-
-		handleCell: function(/* __ExportContext */ context){
-			// tags:
-			//		private
-			var data = String(context.data).replace(/"/g, '""');
-			if(data.indexOf(this._s) >= 0 || data.search(/[" \t\r\n]/) >= 0){
-				data = '"' + data + '"';
-			}
-			this._cells.push(data);
-		},
-
-		afterRow: function(){
-			// tags:
-			//		private
-			this._lines.push(this._cells.join(this._s));
-		},
-
-		getResult: function(){
-			// tags:
-			//		private
-			return this._lines.join(this._n);
+		getAPIPath: function(){
+			var grid = this.grid;
+			return {
+				exporter: {
+					toCSV: function(args){
+						return exportToCSV(grid, args || {});
+					}
+				}
+			};
 		}
 	});
 });
