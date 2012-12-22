@@ -1,5 +1,6 @@
 {
   "name": "gridx",
+  "version": "1.1.0",
   "author": "Xiao Wen Zhu(Oliver), Pei Wang(Nate), Wei Huang(Evan)",
   "description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
   "licenses": [
@@ -14,12 +15,12 @@
   ],
   "repository": {
     "type":"git",
-    "url":"https://github.com/evanhw/gridx"
+    "url":"https://github.com/oria/gridx"
   },
   "dependencies": {
-    "dojo": "1.7.2",
-    "dijit": "1.7.2",
-    "dojox": "1.7.2"
+    "dojo": "1.7.x|1.8.x",
+    "dijit": "1.7.x|1.8.x",
+    "dojox": "1.7.x|1.8.x"
   },
   "main": "./Grid",
   "icon": " ",
