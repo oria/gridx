@@ -121,32 +121,6 @@ define([
 		self.modules = modules;
 	}
 
-	function checkCircle(self){
-		var modules = self.modules, i, m, modName, q, key,
-			getModule = function(modName){
-				for(var j = modules.length - 1; j >= 0; --j){
-					if(modules[j].moduleClass.prototype.name == modName){
-						return modules[j];
-					}
-				}
-				return null;
-			};
-		for(i = modules.length - 1; m = modules[i]; --i){
-			modName = m.moduleClass.prototype.name;
-			q = getDepends(m);
-			while(q.length){
-				key = q.shift();
-				if(key == modName){
-					throw new Error("Module '" + key + "' is in a dependancy circle!");
-				}
-				m = getModule(key);
-				if(m){
-					q = q.concat(getDepends(m));
-				}
-			}
-		}
-	}
-
 	function checkModelExtensions(self){
 		var modules = self.modules,
 			i, modExts;
@@ -365,7 +339,6 @@ define([
 
 		//Private-------------------------------------------------------------------------------------
 		_init: function(){
-			//Reset the grid data model completely. Also used in initialization.
 			var t = this,
 				d = t._deferStartup = new Deferred();
 			t.modules = t.modules || [];
@@ -375,11 +348,10 @@ define([
 			normalizeModules(t);
 			checkForced(t);
 			removeDuplicate(t);
-			checkCircle(t);
 			checkModelExtensions(t);
 			//Create model before module creation, so that all modules can use the logic grid from very beginning.
 			t.model = new Model(t);
-			t.when = lang.hitch(t.model, t.model.when);
+			t.when = hitch(t.model, t.model.when);
 			t._create();
 			t._preload();
 			t._load(d).then(hitch(t, 'onModulesLoaded'));
