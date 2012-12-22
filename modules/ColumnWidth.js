@@ -54,9 +54,9 @@ define([
 		'default': 60,
 
 		// autoResize: Boolean
-		//		If set to true, the column width can only be set to auto or percentage values (if not, it'll be regarded as auto),
-		//		then the column will automatically resize when the grid width is changed (this is the default behavior of an
-		//		HTML table).
+		//		If set to true, the column width should be set to auto or percentage values,
+		//		so that the column can automatically resize when the grid width is changed.
+		//		(This is the default behavior of an	HTML table).
 		autoResize: false,
 
 		onUpdate: function(){
