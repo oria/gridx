@@ -241,14 +241,14 @@ define([
 				});
 			}
 			if(type == 'Select'){
-				if(!this.sltSingle.getOptions().length){
-					this.sltSingle.addOption(array.map(col.enumOptions || [], function(option){
-						return lang.isObject(option) ? option : {
-							label: option,
-							value: option
-						};
-					}));
-				}
+				var sltSingle = this.sltSingle;
+				sltSingle.removeOption(sltSingle.getOptions());
+				sltSingle.addOption(array.map(col.enumOptions || [], function(option){
+					return lang.isObject(option) ? option : {
+						label: option,
+						value: option
+					};
+				}));
 				this._updateTitle();
 			}
 		},
