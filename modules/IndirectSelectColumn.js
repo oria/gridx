@@ -74,8 +74,8 @@ define([
 						t._onSelectAll();
 					}
 				});
-				g.header._build();
 			}
+			g.header._build();
 		},
 
 		_createSelectAllBox: function(){
