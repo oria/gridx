@@ -3,6 +3,7 @@ define([
 	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
+	"dojo/_base/event",
 	"dojo/json",
 	"dojo/dom-construct",
 	"dojo/dom-class",
@@ -12,7 +13,7 @@ define([
 	"../core/_Module",
 	"../core/util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, array, lang, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
+], function(declare, query, array, lang, event, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
 	/*=====
 	gridx._RowCellInfo = function(){
@@ -937,15 +938,26 @@ define([
 					onBlur: t._blurCell
 				});
 				t[c](g.mainNode, 'onkeypress', function(evt){
-					if(focus.currentArea() == 'body' && (!g.tree || !evt.ctrlKey)){
-						focus._noBlur = 1;	//1 as true
-						var dk = keys, arr = {}, dir = ltr ? 1 : -1;
-						arr[dk.LEFT_ARROW] = [0, -dir, evt];
-						arr[dk.RIGHT_ARROW] = [0, dir, evt];
-						arr[dk.UP_ARROW] = [-1, 0, evt];
-						arr[dk.DOWN_ARROW] = [1, 0, evt];
-						t._moveFocus.apply(t, arr[evt.keyCode] || []);
-						focus._noBlur = 0;	//0 as false
+					if(focus.currentArea() == 'body'){
+						var dk = keys;
+						if(evt.keyCode == dk.HOME && !evt.ctrlKey){
+							t._focusCellCol = 0;
+							t._focusCell();
+							event.stop(evt);
+						}else if(evt.keyCode == dk.END && !evt.ctrlKey){
+							t._focusCellCol = g._columns.length - 1;
+							t._focusCell();
+							event.stop(evt);
+						}else if(!g.tree || !evt.ctrlKey){
+							focus._noBlur = 1;	//1 as true
+							var arr = {}, dir = ltr ? 1 : -1;
+							arr[dk.LEFT_ARROW] = [0, -dir, evt];
+							arr[dk.RIGHT_ARROW] = [0, dir, evt];
+							arr[dk.UP_ARROW] = [-1, 0, evt];
+							arr[dk.DOWN_ARROW] = [1, 0, evt];
+							t._moveFocus.apply(t, arr[evt.keyCode] || []);
+							focus._noBlur = 0;	//0 as false
+						}
 					}
 				});
 				t[c](g, 'onCellClick', function(evt){
