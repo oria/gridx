@@ -1060,6 +1060,7 @@ define([
 				}
 			}while(!checker(r, c));
 			g.vScroller.scrollToRow(r).then(function(){
+				g.hScroller.scrollToColumn(g._columns[c].id);
 				d.callback({r: r, c: c});
 			});
 			return d;
