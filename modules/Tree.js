@@ -20,8 +20,6 @@ define([
 			!domClass.contains(n, 'gridxTreeExpandoLoading');
 	}
 
-	_Module._markupAttrs.push('!expandLevel');
-
 	return declare(/*===== "gridx.modules.Tree", =====*/_Module, {
 		// summary:
 		//		Tree Grid module.
