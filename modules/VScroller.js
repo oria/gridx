@@ -229,12 +229,14 @@ define([
 				sn = t.domNode,
 				rowNode;
 			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
-				if(evt.keyCode == keys.HOME){
+				if(evt.keyCode == keys.HOME && evt.ctrlKey){
 					sn[st] = 0;
 					rowNode = bn.firstChild;
-				}else if(evt.keyCode == keys.END){
+					bd._focusCellCol = 0;
+				}else if(evt.keyCode == keys.END && evt.ctrlKey){
 					sn[st] = sn.scrollHeight - sn.offsetHeight;
 					rowNode = bn.lastChild;
+					bd._focusCellCol = g._columns.length - 1;
 				}else if(evt.keyCode == keys.PAGE_UP){
 					if(!sn[st]){
 						rowNode = bn.firstChild;

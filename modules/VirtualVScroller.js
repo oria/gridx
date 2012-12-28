@@ -364,12 +364,16 @@ define([
 				r,
 				fc = '_focusCellRow';
 			if(!focus || focus.currentArea() == 'body'){
-				if(evt.keyCode == keys.HOME){
+				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+					bd._focusCellCol = 0;
 					bd[fc] = 0;
 					sn[st] = 0;
-				}else if(evt.keyCode == keys.END){
+					bd._focusCell();
+				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+					bd._focusCellCol = t.grid._columns.length - 1;
 					bd[fc] = bd.visualCount - 1;
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
+					bd._focusCell();
 				}else if(evt.keyCode == keys.PAGE_UP){
 					r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
 					t.scrollToRow(r);
