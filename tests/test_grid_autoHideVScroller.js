@@ -5,7 +5,7 @@ define([
 	'gridx/tests/support/stores/Memory',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/ContentPane',
-	'gridx/modules/barPlugins/QuickFilter',
+	'gridx/modules/filter/QuickFilter',
 	"gridx/modules/Focus",
 	"gridx/modules/ColumnResizer",
 	"gridx/modules/filter/Filter",
