@@ -1,17 +1,12 @@
-define([
+require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/ContentPane',
-	'gridx/modules/barPlugins/QuickFilter',
-	"gridx/modules/Focus",
-	"gridx/modules/ColumnResizer",
-	"gridx/modules/filter/Filter",
-	"gridx/modules/pagination/Pagination",
-	"gridx/modules/pagination/PaginationBar",
-	"gridx/modules/Bar",
+	'gridx/support/QuickFilter',
+	'gridx/allModules',
 	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory){
 

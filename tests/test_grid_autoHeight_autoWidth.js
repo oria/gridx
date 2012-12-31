@@ -1,11 +1,9 @@
-define([
+require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	"gridx/modules/pagination/Pagination",
-	"gridx/modules/pagination/PaginationBar",
-	"gridx/modules/ColumnResizer"
+	"gridx/allModules"
 ], function(dataSource, storeFactory){
 
 	layout = [

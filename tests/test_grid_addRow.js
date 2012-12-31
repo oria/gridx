@@ -4,18 +4,13 @@ require([
 	'dojo/DeferredList',
 	'dijit/form/RadioButton',
 	'gridx/Grid',
-	'gridx/modules/VirtualVScroller',
-	'gridx/modules/Focus',
-	'gridx/modules/ColumnResizer',
-	'gridx/modules/RowHeader',
-	'gridx/modules/ExtendedSelect/Row',
+	'gridx/allModules',
 	'gridx/tests/support/data/TestData',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
-], function(Deferred, lang, DeferredList, RadioButton, Grid,
-	VirtualVScroller, Focus, ColumnResizer, RowHeader, ExtendedSelectRow,
+], function(Deferred, lang, DeferredList, RadioButton, Grid, modules,
 	dataSource, Cache, storeFactory, TestPane){
 
 
@@ -45,11 +40,11 @@ require([
 				structure: layout,
 				selectRowTriggerOnCell: true,
 				modules: [
-					ExtendedSelectRow,
-					Focus,
-					RowHeader,
-					ColumnResizer,
-					VirtualVScroller
+					modules.ExtendedSelectRow,
+					modules.Focus,
+					modules.RowHeader,
+					modules.ColumnResizer,
+					modules.VirtualVScroller
 				]
 			});
 			grid.placeAt('gridContainer');
