@@ -1,7 +1,7 @@
 define([
 	'dojo/_base/declare',
 	'../../core/_Module',
-	'../barPlugins/QuickFilter',
+	'../../support/QuickFilter',
 	'../Bar'
 ], function(declare, _Module, QuickFilter){
 
