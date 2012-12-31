@@ -217,7 +217,6 @@ define([
 			//	Update the UI for field to show/hide fields.
 			var type = this._getType(), colId = this.sltColumn.get('value');
 			var combo = this._needComboBox();
-			console.debug('value type:', type);
 			
 			array.forEach(['Text','Combo', 'Date', 'Number', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
 				css.remove(this.domNode, 'gridxFilterPane' + k);
