@@ -125,12 +125,13 @@ define([
 				sw = bn.firstChild.offsetWidth + pl,
 				oldDisplay = s.display,
 				newDisplay = (sw <= w) ? 'none' : 'block';
+				
 			s[marginLead] = lead + pl + 'px';
 			s[marginTail] = tail + 'px';
-			//Insure IE does not throw error...
-			if(pl > 0){
+			//Ensure IE does not throw error...
+			try{
 				s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
-			}
+			}catch(e){}
 			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
 			if(oldDisplay != newDisplay){
