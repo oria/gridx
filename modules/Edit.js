@@ -619,7 +619,8 @@ define([
 					//Fix #7627: in chrome evt.target will be the cell node when using CheckBox
 					if(t.isEditing(rowId, colId)/* && n != evt.target*/){
 						t._record(rowId, colId);
-						return true;
+						//If in alwaysEditing mode, should be same as CellWidget, so ignore this "edit" focus area.
+						return !t.grid._columnsById[colId].alwaysEditing;
 					}
 				}
 				return false;
