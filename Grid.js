@@ -22,10 +22,11 @@ define([
 	"./modules/HLayout",
 	"./modules/VScroller",
 	"./modules/HScroller",
-	"./modules/ColumnWidth"
+	"./modules/ColumnWidth",
+	"./modules/Focus"
 ], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
-	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
+	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){};
@@ -54,7 +55,8 @@ define([
 			HLayout,
 			VScroller,
 			HScroller,
-			ColumnWidth
+			ColumnWidth,
+			Focus
 		],
 
 		coreExtensions: [
