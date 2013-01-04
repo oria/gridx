@@ -31,4 +31,3 @@ define({
 	pageLabel: 'Oldal',
 	pageSizeLabel: 'Sorok'
 });
-

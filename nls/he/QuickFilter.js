@@ -4,4 +4,3 @@ define({
 	buildFilterMenuLabel: 'בניית מסנן&hellip;',
 	apply: 'החלת מסנן'
 });
-
