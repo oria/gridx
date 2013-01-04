@@ -18,9 +18,9 @@
     "url":"https://github.com/oria/gridx"
   },
   "dependencies": {
-    "dojo": "1.7.x|1.8.x",
-    "dijit": "1.7.x|1.8.x",
-    "dojox": "1.7.x|1.8.x"
+    "dojo": ["1.7.2", "1.8.0"],
+    "dijit": ["1.7.2", "1.8.0"],
+    "dojox": ["1.7.2", "1.8.0"]
   },
   "main": "./Grid",
   "icon": " "
