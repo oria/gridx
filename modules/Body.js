@@ -878,6 +878,13 @@ define([
 					}
 					t.onDelete(id, start);
 					t.onRender(start, count);
+					if(!t.domNode.childNodes.length){
+						var en = t.grid.emptyNode,
+							emptyInfo = t.arg('emptyInfo', nls.emptyInfo);
+						en.innerHTML = emptyInfo;
+						en.style.zIndex = 1;
+						t.onEmpty();
+					}
 				}
 			}
 		},
