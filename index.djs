@@ -319,7 +319,7 @@
     
     <div class="grid_6 summary">
       <img src="images/summary.png"/>
-      <a href="https://github.com/oria/gridx/tags" class="button button-download">Download v1.0.1</a>
+      <a href="https://github.com/oria/gridx/tags" class="button button-download">Download v1.0.x</a>
       <a href="./demo.html" class="button button-demo">See the demo</a>
     </div>
     <div class="grid_6">
