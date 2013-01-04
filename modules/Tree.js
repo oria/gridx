@@ -270,7 +270,7 @@ define([
 				}, function(){
 					t._logicExpand(id);
 				}).then(function(){
-					Deferred.when(t._updateBody(id, skipUpdateBody), function(){
+					Deferred.when(t._updateBody(id, skipUpdateBody, true), function(){
 						d.callback();
 						t.onExpand(id);
 					});
@@ -558,7 +558,7 @@ define([
 			}
 		},
 	
-		_updateBody: function(id, skip){
+		_updateBody: function(id, skip, refreshPartial){
 			var t = this,
 				body = t.grid.body;
 			body.updateRootRange(body.rootStart, body.rootCount);
@@ -573,8 +573,13 @@ define([
 						domClass.add(n, 'gridxTreeExpandoLoading');
 					}
 				}
-				var visualIndex = id ? t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
-				return body.refresh(visualIndex + 1).then(function(){
+				var visualIndex = refreshPartial && id ? 
+					t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
+				//When collapsing, the row count in current view decrease, if only render partially,
+				//it is possible that the vertical scroll bar disappear, then the upper unrendered rows will be lost.
+				//So refresh the whole body here to make the upper row also visible.
+				//FIXME: need better solution here.
+				return body.refresh(refreshPartial && visualIndex + 1).then(function(){
 					if(n){
 						rowNode.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 						expando.firstChild.innerHTML = isOpen ? '-' : '+';
