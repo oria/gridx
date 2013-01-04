@@ -418,10 +418,11 @@ define([
 			var t = this,
 				rootOpenned = t._openInfo[''].openned,
 				root, i;
+			visualIndex += rootStart;
 			for(i = 0; i < rootOpenned.length; ++i){
 				root = t._openInfo[rootOpenned[i]];
 				if(root.index < rootStart){
-					visualIndex += root.count + 1;
+					visualIndex += root.count;
 				}else{
 					break;
 				}
