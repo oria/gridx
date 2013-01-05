@@ -233,11 +233,13 @@ define([
 					this._dummyCombo = new dijit.form.ComboBox({store: this.grid.store});
 				}
 				//init combobox
-				lang.mixin(this.comboText, {
-					store: this.grid.store,
-					searchAttr: col.field,
-					fetchProperties: {sort:[{attribute: col.field, descending: false}]}
-				});
+				if(col.autoComplete !== false){
+					lang.mixin(this.comboText, {
+						store: this.grid.store,
+						searchAttr: col.field,
+						fetchProperties: {sort:[{attribute: col.field, descending: false}]}
+					});
+				}
 			}
 			if(type == 'Select'){
 				var sltSingle = this.sltSingle;

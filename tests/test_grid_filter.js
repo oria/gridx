@@ -21,7 +21,7 @@ require([
 		{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'enum',
 			enumOptions: ['d', 'e', 'f']
 		},
-		{id: 'Album', field: 'Album', name: 'Album', dataType: 'string'},
+		{id: 'Album', field: 'Album', name: 'Album', dataType: 'string', autoComplete: false},
 		{id: 'Name', field: 'Name', name: 'Name', dataType: 'string'},
 		{id: 'Year', field: 'Year', name: 'Year', dataType: 'number'},
 		{id: 'Length', field: 'Length', name: 'Length', dataType: 'string'},

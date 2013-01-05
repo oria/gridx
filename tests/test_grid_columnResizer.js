@@ -6,11 +6,13 @@ define([
 	'gridx/modules/Focus',
 	'gridx/modules/ColumnResizer',
 	'gridx/modules/RowHeader',
+	'gridx/modules/select/Row',
+	'gridx/modules/IndirectSelect',
 	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory,
-	Focus, ColumnResizer, RowHeader, VirtualVScroller,
+	Focus, ColumnResizer, RowHeader, SelectRow, IndirectSelect, VirtualVScroller,
 	TestPane){
 
 	grid = new Grid({
@@ -25,7 +27,9 @@ define([
 			Focus,
 			ColumnResizer,
 			RowHeader,
-			VirtualVScroller
+			VirtualVScroller,
+			SelectRow,
+			IndirectSelect
 		]
 	});
 	grid.placeAt('gridContainer');

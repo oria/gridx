@@ -111,6 +111,8 @@ define([
 		//		If set to Infinity, then never show the confirm dialog.
 		//		Default value is 2.
 		ruleCountToConfirmClearFilter: 2,
+		
+
 	
 	/*=====
 		// itemsName: String
