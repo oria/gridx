@@ -241,6 +241,7 @@ define([
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 						t._focusEditor(rowId, colId);
 						d.callback(true);
+						g.resize();
 						t.onBegin(g.cell(rowId, colId, 1));
 					});
 				}else{
@@ -326,6 +327,7 @@ define([
 								g.cellWidget.restoreCellDecorator(rowId, colId);
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
+									g.resize();
 									t.onApply(cell, success, e);
 								});
 							}
