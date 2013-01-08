@@ -136,7 +136,6 @@
 	background: -o-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* IE10+ */
 	background: linear-gradient(top,  #f2f9ff 0%,#eaf5ff 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f9ff', endColorstr='#eaf5ff',GradientType=0 ); /* IE6-9 */
 	border-bottom: 1px solid #BFD6EB;
     border-top: 1px solid #BFD6EB;
     padding: 1px 0 0 45px;
