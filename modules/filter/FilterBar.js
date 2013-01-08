@@ -203,11 +203,10 @@ define([
 		applyFilter: function(filterData){
 			// summary:
 			//		Apply the filter data.
-			var F = Filter, exps = [];
-			this.filterData = filterData;
-			var filter = this._createFilterExpr(filterData);
-			this.grid.filter.setFilter(filter);
 			var _this = this;
+			var filter = this._createFilterExpr(filterData);
+			this.filterData = filterData;
+			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
 				_this._currentSize = _this.model.size();
 				_this._totalSize = _this.model._cache.size();
