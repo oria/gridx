@@ -20,10 +20,11 @@ define([
 			doh.is(String(grid.tabIndex), grid.lastFocusNode.getAttribute('tabindex'));
 		}
 	}, {
-		name: '8/10. grid basic WAI-ARIA roles',
+		name: '8/9/10. grid basic WAI-ARIA roles',
 		checker: function(grid, doh){
 			doh.is('grid', grid.domNode.getAttribute('role'));
 			doh.is('alert', grid.emptyNode.getAttribute('role'));
+			doh.t(grid.domNode.hasAttribute('aria-label') || grid.domNode.hasAttribute('aria-labelledby'));
 		}
 	});
 });

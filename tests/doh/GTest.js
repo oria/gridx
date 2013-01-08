@@ -24,22 +24,23 @@ define([
 			t._config = config;
 			t._doh = doh;
 			try{
-				t._create();
-				if(t.grid()){
-					var e = t._testStatus();
-					t._destroy();
-					if(e){
-						finish(false, e);
-					}else{
-						t._testActions().then(function(){
-							finish(true);
-						}, function(e){
+				t._create().then(function(){
+					if(t.grid()){
+						var e = t._testStatus();
+						t._destroy();
+						if(e){
 							finish(false, e);
-						});
+						}else{
+							t._testActions().then(function(){
+								finish(true);
+							}, function(e){
+								finish(false, e);
+							});
+						}
+					}else{
+						finish(false, new Error("Fatal: Grid not created!"));
 					}
-				}else{
-					finish(false, new Error("Fatal: Grid not created!"));
-				}
+				});
 			}catch(e){
 				dohDefer.errback(e);
 			}
@@ -50,14 +51,22 @@ define([
 		},
 
 		//Private-----------------------------
-		_create: function(){
+		_create: function(preStartup){
 			this._destroy();
+			var d = new Deferred();
 			var cfg = this._config;
 			var grid = new Grid(lang.mixin({
 				id: 'grid'
 			}, cfg));
 			grid.placeAt('gridContainer');
+			if(preStartup){
+				preStartup(grid);
+			}
 			grid.startup();
+			setTimeout(function(){
+				d.callback();
+			}, 100);
+			return d;
 		},
 
 		_destroy: function(){
@@ -93,28 +102,43 @@ define([
 		_testSingleAction: function(index, d){
 			var t = this;
 			var item = GTest.actionCheckers[index];
-			if(item){
-				this._create();
-				var grid = this.grid();
-				if(!item.condition || item.condition(grid)){
-					var prepared = item.prepare(grid);
-					Deferred.when(prepared, function(){
-						try{
-							var actionDone = item.action(grid, t._doh);
+			if(item && item.name && item.action){
+				console.debug('Action START: ', item.name);
+				t._create(item.preStartup).then(function(){
+					var grid = t.grid();
+					if(!item.condition || item.condition(grid)){
+						var prepared = new Deferred();
+						if(item.prepare){
+							item.prepare(grid, prepared);
+						}else{
+							prepared.callback();
+						}
+						Deferred.when(prepared, function(){
+							var actionDone = new Deferred();
+							try{
+								item.action(grid, t._doh, actionDone);
+							}catch(e){
+								d.errback(e);
+							}
 							Deferred.when(actionDone, function(){
 								var e = t._testStatus();
 								if(e){
+									console.debug('Action FAIL: ', item.name);
 									d.errback(e);
 								}else{
+									console.debug('Action PASS: ', item.name);
 									t._destroy();
 									t._testSingleAction(index + 1, d);
 								}
+							}, function(e){
+								console.error('Action FAIL: ', item.name);
+								d.errback(e);
 							});
-						}catch(e){
-							d.errback(e);
-						}
-					});
-				}
+						});
+					}else{
+						console.debug('Action SKIP: ', item.name);
+					}
+				});
 			}else{
 				d.callback();
 			}

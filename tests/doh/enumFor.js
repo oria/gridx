@@ -1,6 +1,9 @@
 define([
-	'dojo/_base/lang'
-], function(lang){
+	'dojo/_base/lang',
+	'dojo/_base/array',
+	'dojo/_base/Deferred',
+	'dojo/DeferredList'
+], function(lang, array, Deferred, DeferredList){
 
 	function Context(config){
 		this.arr = config.args;
@@ -60,65 +63,135 @@ define([
 		return dict;
 	};
 
+	function longFor(arr, callback, size){
+		size = size || 100;
+		var dl = [];
+		var count = arr.length / size;
+		var func = function(start, end){
+			var d = new Deferred();
+			setTimeout(function(){
+				for(var i = start; i < end && i < arr.length; ++i){
+					callback(arr[i]);
+				}
+				d.callback();
+			}, 50);
+			return d;
+		};
+		for(var i = 0; i < count; ++i){
+			dl.push(func(i * size, (i + 1) * size));
+		}
+		return new DeferredList(dl);
+	}
+
 	prot.getCombinations = function(arr, size, prevDeps){
+		var d = new Deferred();
 		var prevDepsCount = 0;
 		for(var prevDep in prevDeps){
 			++prevDepsCount;
 		}
 		if(arr.length < size || size < prevDepsCount){
-			return [];
+			d.callback([]);
+			return d;
 		}
 		if(size === 0){
-			return [[]];
+			d.callback([[]]);
+			return d;
 		}
 		var res = [];
-		for(var i = 0; i < arr.length + 1 - size; ++i){
-			var head = arr[i];
-			var headArr = [head];
-			var rest = arr.slice(i + 1);
-			for(var k = rest.length - 1; k >= 0; --k){
-				var nonComp = this.conflicts[head];
-				if(nonComp && nonComp[rest[k]]){
-					rest.splice(k, 1);
+		var t = this;
+		var deferCounter = arr.length + 1 - size;
+		var checkFinish = function(){
+			deferCounter--;
+			if(!deferCounter){
+				d.callback(res);
+			}
+		};
+		var gotComb = function(headArr, key, combs){
+			t._cache[key] = combs;
+			longFor(combs, function(comb){
+				comb = headArr.concat(comb);
+				res.push(comb);
+			}).then(function(){
+				checkFinish();
+			});
+		};
+		setTimeout(function(){
+			for(var i = 0; i < arr.length + 1 - size; ++i){
+				var head = arr[i];
+				var headArr = [head];
+				var rest = arr.slice(i + 1);
+				for(var k = rest.length - 1; k >= 0; --k){
+					var nonComp = t.conflicts[head];
+					if(nonComp && nonComp[rest[k]]){
+						rest.splice(k, 1);
+					}
+				}
+				var deps = t.getDeps(head, rest);
+				var depsSize = 0;
+				lang.mixin(deps, prevDeps);
+				for(var dep in deps){
+					++depsSize;
+				}
+				delete deps[head];
+				if(depsSize <= size){
+					var key = head + size + rest.join(',');
+					var combs = t._cache[key];
+					if(!combs){
+						combs = t.getCombinations(rest, size - 1, deps);
+					}
+					Deferred.when(combs, lang.partial(gotComb, headArr, key));
+				}else{
+					checkFinish();
 				}
 			}
-			var deps = this.getDeps(head, rest);
-			var depsSize = 0;
-			lang.mixin(deps, prevDeps);
-			for(var dep in deps){
-				++depsSize;
-			}
-			delete deps[head];
-			if(depsSize <= size){
-				var key = head + size + rest.join(',');
-				var combs = this._cache[key];
-				if(!combs){
-					combs = this._cache[key] = this.getCombinations(rest, size - 1, deps);
-				}
-				for(var j = 0; j < combs.length; ++j){
-					var comb = headArr.concat(combs[j]);
-					res.push(comb);
-				}
-			}
-		}
-		return res;
+		}, 50);
+		return d;
 	};
 
+	prot.getComb = function(i, callback){
+		var d = new Deferred();
+		var t = this;
+		if(i > t.arr.length){
+			d.callback();
+			return d;
+		}
+		var deferCombs = t.getCombinations(t.arr, i, {});
+		deferCombs.then(function(combs){
+			longFor(combs, function(comb){
+				t._counter++;
+				callback(comb, t._counter);
+			}).then(function(){
+				d.callback();
+			});
+		});
+		return d;
+	};
 	prot.getAllCombs = function(callback){
 		this._counter = 0;
 		this._cache = {};
+		var dl = [];
 		for(var i = 1; i <= this.arr.length; ++i){
-			var combs = this.getCombinations(this.arr, i, {}, callback);
-			for(var j = 0; j < combs.length; ++j){
-				this._counter++;
-				callback(combs[j], this._counter);
-			}
+			this.getComb(i, callback);
 		}
+		return new DeferredList(dl);
+	};
+
+	prot.getSomeCombs = function(callback){
+		this._counter = 0;
+		this._cache = {};
+		var dl = [
+			this.getComb(1, callback),
+			this.getComb(2, callback),
+			this.getComb(3, callback)
+		];
+		return new DeferredList(dl);
 	};
 	
 	function enumFor(config, callback){
+		console.debug('size: ', config.args.length);
 		var context = new Context(config);
-		context.getAllCombs(callback);
+//        return context.getAllCombs(callback);
+		return context.getSomeCombs(callback);
 	}
 
 	return enumFor;
