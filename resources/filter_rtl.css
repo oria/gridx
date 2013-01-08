@@ -11,3 +11,8 @@
 .gridxRtl .gridxFilterBarCloseBtn {
 	float: left;
 }
+
+.dijitRtl .gridxQuickFilterClear {
+	right: auto;
+	left: 5px;
+}
