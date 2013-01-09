@@ -148,7 +148,7 @@ define([
 				g = t.grid;
 			t.inherited(arguments);
 			t.batchConnect(
-				[g, 'onCellMouseDown', function(e){
+				[g, 'onCellClick', function(e){
 					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 				}],
 				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
