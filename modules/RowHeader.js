@@ -201,10 +201,10 @@ define([
 		},
 		
 		_onDelete: function(id, start){
-			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
-				var node = nodes[nodes.length - 1];
-				var pid = node.getAttribute('parentid'),
+				var node = nodes[nodes.length - 1],
+					pid = node.getAttribute('parentid'),
 					pids = {},
 					toDeleteC = 1;
 				pids[id] = 1;
@@ -213,19 +213,18 @@ define([
 					toDeleteC++;
 					pids[rid] = 1;
 				}
-				
 				for(; sn; sn = sn.nextSibling){
 					if(sn.getAttribute('parentid') == pid){
-						sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex')) - 1);
+						sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex'), 10) - 1);
 					}
-					var vidx = parseInt(sn.getAttribute('visualindex'));
+					var vidx = parseInt(sn.getAttribute('visualindex'), 10);
 					sn.setAttribute('visualindex', vidx - toDeleteC);
 				}
 			}
 		},
 		
 		_onUnrender: function(id){
-			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
 				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
 				domConstruct.destroy(nodes[nodes.length - 1]);
