@@ -135,7 +135,7 @@ define([
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.batchConnect(
-				[g, 'onRowMouseDown', function(e){
+				[g, 'onRowClick', function(e){
 					//Have to check whether we are on the 
 					if((t.arg('triggerOnCell') &&
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
