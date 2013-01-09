@@ -69,8 +69,25 @@ define([
 				filterBar: this
 			};
 		},
+		preload: function(){
+			var rules = this.arg('filterData');
+			if(rules){
+				this.grid.filter.setFilter(this._createFilterExpr(rules), 1);
+			}
+		},
 		//Public-----------------------------------------------------------
 		
+/*=====
+		// filterData: Object
+		//		Set the initial filter rules. Format is:
+		//		{
+		//			type: "all",
+		//			conditions: [
+		//				{}
+		//			]
+		//		}
+		filterData: null,
+=====*/
 		// closeButton: Boolean
 		//		TRUE to show a small button on the filter bar for the user to close/hide the filter bar.
 		closeButton: true,
@@ -105,10 +122,11 @@ define([
 		//		Name of all supported conditions.
 		//		Hard coded here or dynamicly generated is up to the implementer. Anyway, users should be able to get this info.
 		conditions: {
-			string: ['equal', 'contain','startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
+			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
 			number: ['equal','greater','less','greaterEqual','lessEqual','notEqual','isEmpty'],
 			date: ['equal','before','after','range','isEmpty'],
 			time: ['equal','before','after','range','isEmpty'],
+			'enum': ['equal', 'notEqual', 'isEmpty'],
 			'boolean': ['equal','isEmpty']
 		},
 		
@@ -160,12 +178,8 @@ define([
 			window.setTimeout(lang.hitch(this, '_hideTooltip'), 10);
 		},
 		
-		applyFilter: function(filterData){
-			// summary:
-			//		Apply the filter data.
+		_createFilterExpr: function(filterData){
 			var F = Filter, exps = [];
-			this.filterData = filterData;
-			
 			array.forEach(filterData.conditions, function(data){
 				var type = 'string';
 				if(data.colId){
@@ -181,7 +195,15 @@ define([
 					exps.push(F.or.apply(F, arr));
 				}
 			}, this);
-			var filter = (filterData.type === 'all' ? F.and : F.or).apply(F, exps);
+			return (filterData.type === 'all' ? F.and : F.or).apply(F, exps);
+		},
+
+		applyFilter: function(filterData){
+			// summary:
+			//		Apply the filter data.
+			var F = Filter, exps = [];
+			this.filterData = filterData;
+			var filter = this._createFilterExpr(filterData);
 			this.grid.filter.setFilter(filter);
 			var _this = this;
 			this.model.when({}).then(function(){

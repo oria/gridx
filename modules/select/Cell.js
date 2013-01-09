@@ -81,7 +81,7 @@ define([
 			return res;
 		},
 		
-		clear: function(){
+		clear: function(notClearCell){
 			// summary:
 			//		Deselected all the selected cells;
 			var t = this, m = t.model;
@@ -91,7 +91,9 @@ define([
 						selected = m.getMarkedIds(markType), 
 						len = selected.length, i;
 					for(i = 0; i < len; ++i){
-						m.markById(selected[i], 0, markType);
+						if(!notClearCell || notClearCell[1] !== col.id || notClearCell[0] !== selected[i]){
+							m.markById(selected[i], 0, markType);
+						}
 					}
 				});
 				m.when();

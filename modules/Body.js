@@ -876,6 +876,13 @@ define([
 					}
 					t.onDelete(id, start);
 					t.onRender(start, count);
+					if(!t.domNode.childNodes.length){
+						var en = t.grid.emptyNode,
+							emptyInfo = t.arg('emptyInfo', nls.emptyInfo);
+						en.innerHTML = emptyInfo;
+						en.style.zIndex = 1;
+						t.onEmpty();
+					}
 				}
 			}
 		},
@@ -1047,6 +1054,7 @@ define([
 				}
 			}while(!checker(r, c));
 			g.vScroller.scrollToRow(r).then(function(){
+				g.hScroller.scrollToColumn(g._columns[c].id);
 				d.callback({r: r, c: c});
 			});
 			return d;

@@ -62,7 +62,7 @@ define([
 				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
 					toSelect = !t._isSelected(item);
 				}else{
-					t.clear();
+					t.clear(item);
 				}
 				connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
 				t._markById(item, toSelect);

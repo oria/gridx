@@ -86,12 +86,14 @@ define([
 			return ids;
 		},
 		
-		clear: function(){
+		clear: function(notClearId){
 			// summary:
 			//		Clear all column selections
 			var columns = this.grid._columns, i, count = columns.length;
 			for(i = 0; i < count; ++i){
-				this._markById(columns[i].id, 0);
+				if(columns[i].id !== notClearId){
+					this._markById(columns[i].id, 0);
+				}
 			}
 		},
 

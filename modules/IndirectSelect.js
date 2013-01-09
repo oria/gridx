@@ -104,9 +104,7 @@ define([
 
 		_onClear: function(){
 			var cls = this._getDijitClass() + 'Checked';
-			query('.' + cls, this.grid.rowHeader.bodyNode).forEach(function(node){
-				domClass.remove(node, cls);
-			});
+			query('.' + cls, this.grid.rowHeader.bodyNode).removeClass(cls);
 		},
 
 		_onHighlightChange: function(target, toHighlight){

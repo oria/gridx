@@ -50,7 +50,7 @@ define([
 				dn.style.width = w + 'px';
 				dn.style[ltr ? 'right' : 'left'] = -w + 'px';
 				if(sniff('ie') < 8){
-					t.stubNode.style.width = w;
+					t.stubNode.style.width = (w + 1) + 'px';
 				}
 			}
 		},
@@ -159,7 +159,10 @@ define([
 					ds = t.domNode.style;
 					scrollBarWidth = metrics.getScrollbar().w + (sniff('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(sniff('ie') < 8){
-					var w = toShow ? scrollBarWidth + 'px' : '0px';
+					//In IE7 if the node is not wider than the scrollbar, 
+					//the scroll bar buttons and the empty space in the scroll bar won't be clickable.
+					//So add some extra px to make it wider. +1 is enough for classic theme. +2 is enough for XP theme.
+					var w = toShow ? (scrollBarWidth + 2) + 'px' : '0px';
 					t.stubNode.style.width = w;
 					ds.width = w;
 				}else{

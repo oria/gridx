@@ -84,13 +84,15 @@ define([
 			return this.model.getMarkedIds();
 		},
 		
-		clear: function(){
+		clear: function(notClearId){
 			// summary:
 			//		Deselected all selected rows;
 			if(this.arg('enabled')){
 				var model = this.model;
 				array.forEach(model.getMarkedIds(), function(id){
-					model.markById(id, 0);
+					if(id !== notClearId){
+						model.markById(id, 0);
+					}
 				});
 				model.when();
 			}
