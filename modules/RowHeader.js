@@ -89,6 +89,7 @@ define([
 				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver']);
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
+			aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
 		},
@@ -199,6 +200,30 @@ define([
 			t._onScroll();
 		},
 
+		_onDelete: function(id, start){
+			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			if(nodes && nodes.length){
+				var node = nodes[nodes.length - 1];
+				var pid = node.getAttribute('parentid'),
+					pids = {},
+					toDeleteC = 1;
+				pids[id] = 1;
+				for(sn = node.nextSibling; sn && pids[sn.getAttribute('parentid')]; sn = sn.nextSibling){
+					rid = sn.getAttribute('rowid');
+					toDeleteC++;
+					pids[rid] = 1;
+				}
+				
+				for(; sn; sn = sn.nextSibling){
+					if(sn.getAttribute('parentid') == pid){
+						sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex')) - 1);
+					}
+					var vidx = parseInt(sn.getAttribute('visualindex'));
+					sn.setAttribute('visualindex', vidx - toDeleteC);
+				}
+			}
+		},
+		
 		_onUnrender: function(id){
 			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
