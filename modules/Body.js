@@ -73,7 +73,6 @@ define([
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
-			t.aspect(m, 'onDelete', '_onDelete');
 			t.aspect(m, 'onSet', '_onSet');
 			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
 			t.aspect(g, 'onCellMouseOver', '_onCellMouseOver');
@@ -105,6 +104,7 @@ define([
 					t.aspect(m, 'onSizeChange', '_onSizeChange');
 					t.loaded.callback();
 				};
+			t.aspect(m, 'onDelete', '_onDelete');
 			//Load the store size
 			m.when({}, function(){
 				t.rootCount = t.rootCount || m.size();
@@ -472,7 +472,9 @@ define([
 				}
 				array.forEach(renderedRows, t.onAfterRow, t);
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
-					en.innerHTML = finalInfo;
+					if(!t._err){
+						en.innerHTML = finalInfo;
+					}
 					t.onRender(start, count);
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
@@ -873,8 +875,12 @@ define([
 					array.forEach(ids, t.onUnrender, t);
 					//If the body is showing the last a few rows, it should respond to deletion 
 					//no matter pagination is on or not.
-					if(!pid && t.rootStart + t.rootCount >= t.model.size()){
-						t.updateRootRange(t.rootStart, t.rootCount - 1);
+					if(t.rootStart + t.rootCount >= t.model.size()){
+						if(pid === ''){
+							t.updateRootRange(t.rootStart, t.rootCount - 1);
+						}else{
+							t.visualCount = t.grid.tree ? t.grid.tree.getVisualSize(t.rootStart, t.rootCount) : t.rootCount;
+						}
 					}
 					t.onDelete(id, start);
 					t.onRender(start, count);

@@ -199,8 +199,8 @@ define([
 			}
 			t._onScroll();
 		},
-		
-		_onDelete: function(id, start){
+
+		_onDelete: function(id){
 			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
 				var node = nodes[nodes.length - 1],

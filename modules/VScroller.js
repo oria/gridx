@@ -50,7 +50,7 @@ define([
 				dn.style.width = w + 'px';
 				dn.style[ltr ? 'right' : 'left'] = -w + 'px';
 				if(sniff('ie') < 8){
-					t.stubNode.style.width = (w + 1) + px;
+					t.stubNode.style.width = (w + 1) + 'px';
 				}
 			}
 		},
@@ -155,7 +155,7 @@ define([
 			if(!g.autoHeight){
 				var bd = g.body,
 					bn = g.bodyNode,
-					toShow = bd.renderCount < bd.visualCount || bn.scrollHeight > bn.clientHeight,
+					toShow = bn.scrollHeight > bn.clientHeight,
 					ds = t.domNode.style;
 					scrollBarWidth = metrics.getScrollbar().w + (sniff('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(sniff('ie') < 8){
