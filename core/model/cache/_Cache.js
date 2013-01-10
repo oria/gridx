@@ -313,7 +313,7 @@ define([
 				path = t.treePath(id);
 			if(path.length){
 				var children, i, j, ids = [id],
-					parentId = path.pop(),
+					parentId = path[path.length - 1],
 					sz = t._size,
 					size = sz[''],
 					index = indexOf(st[parentId], id);
@@ -339,7 +339,7 @@ define([
 				if(i >= 0){
 					t._priority.splice(i, 1);
 				}
-				t.onDelete(id, index - 1);
+				t.onDelete(id, index - 1, path);
 				if(!parentId && size >= 0){
 					sz[''] = size - 1;
 					t.model._onSizeChange();

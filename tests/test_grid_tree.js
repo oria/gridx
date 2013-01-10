@@ -43,17 +43,22 @@ require([
 		cacheClass: Cache,
 		store: store,
 		structure: dataSource.layouts[1],
-		selectRowTriggerOnCell: false,
-		treeExpandLevel: 2,
+		selectRowTriggerOnCell: true,
+		vScrollerLazy: true,
+		vScrollerLazyTimeout: 200,
 		modules: [
-//            mods.Focus,
 			mods.VirtualVScroller,
-			mods.Tree,
 //            mods.ExtendedSelectRow,
-			mods.ColumnResizer,
+//            mods.ColumnResizer,
+//            mods.Filter,
+//            mods.FilterBar,
+//            mods.ColumnResizer,
+//            mods.ExtendedSelectColumn,
+//            mods.SingleSort,
 			mods.SelectRow,
 			mods.RowHeader,
-			mods.IndirectSelect
+			mods.IndirectSelect,
+			mods.Tree
 		]
 	});
 	grid.placeAt('gridContainer');
@@ -68,6 +73,7 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: collapse">Collapse the 3rd row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: expandRec">Recursively expand the 2nd row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: collapseRec">Recursively collapse the 2nd row</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete item-1-1</div><br/>',
 	''].join(''));
 
 	tp.startup();
@@ -87,4 +93,8 @@ function expandRec(){
 
 function collapseRec(){
 	grid.tree.collapseRecursive(grid.row(1).id);
+}
+
+function deleteRow(){
+	grid.store.deleteItem(grid.row('item-1-1').item());
 }

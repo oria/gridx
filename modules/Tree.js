@@ -137,6 +137,7 @@ define([
 			t.batchConnect(
 				[g.body, 'collectCellWrapper', '_createCellWrapper'],
 				[g.body, 'onAfterRow', '_onAfterRow'],
+				[t.model, 'onDelete', '_onDelete'],
 				[g, 'onCellClick', '_onCellClick'],
 				[g, 'setStore', '_clear']);
 			t._initExpandLevel();
@@ -727,6 +728,57 @@ define([
 			var hasChildren = this.model.hasChildren(row.id);
 			if(hasChildren){
 				row.node().setAttribute('aria-expanded', this.isExpanded(row.id));
+			}
+		},
+
+		_onDelete: function(rowId, rowIndex, treePath){
+			var openInfo = this._openInfo,
+				parentOpenInfo = this._parentOpenInfo,
+				info = openInfo[rowId],
+				model = this.model,
+				parentId = treePath.pop(),
+				count = 1,
+				deleteItem = function(id, parentId){
+					var info = openInfo[id],
+						openedChildren = parentOpenInfo[id] || [];
+					array.forEach(openedChildren, function(child){
+						deleteItem(child);
+					});
+					delete parentOpenInfo[id];
+					if(info){
+						delete openInfo[id];
+						parentId = info.parentId;
+					}else if(!model.isId(parentId)){
+						//FIXME: don't know what to do here...
+						return;
+					}
+					var ppoi = parentOpenInfo[parentId],
+						i = array.indexOf(ppoi, id);
+					if(i >= 0){
+						ppoi.splice(i, 1);
+						for(; i < ppoi.length; ++i){
+							openInfo[ppoi[i]].index--;
+						}
+					}else{
+						var index = info ? info.index : rowIndex;
+						for(i = 0; i < ppoi.length; ++i){
+							info = openInfo[ppoi[i]];
+							if(info.index > index){
+								info.index--;
+							}
+						}
+					}
+				};
+			if(info){
+				count += info.count;
+				info = openInfo[info.parentId];
+			}else if(this.model.isId(parentId)){
+				info = openInfo[parentId];
+			}
+			deleteItem(rowId, parentId);
+			while(info){
+				info.count -= count;
+				info = openInfo[info.parentId];
 			}
 		},
 
