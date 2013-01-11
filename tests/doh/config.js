@@ -7,11 +7,19 @@ define([
 	'gridx/tests/doh/status/Header',
 	'gridx/tests/doh/status/Body',
 	'gridx/tests/doh/status/VScroller',
+	'gridx/tests/doh/status/RowHeader',
+	'gridx/tests/doh/status/HScroller',
 	'gridx/tests/doh/actions/VScroller',
 	'gridx/core/model/cache/Sync'
 ], function(lang, storeFactory, dataSource, modules){
 
+	//Config Begin-------------------------------------------------------
 
+	var specialCases = [
+		['VirtualVScroller', 'ColumnResizer', 'SingleSort']
+	];
+
+	//module config => interface name
 	var mods = {
 		VirtualVScroller: "virtualVScroller",
 		ColumnResizer: "columnResizer",
@@ -36,6 +44,7 @@ define([
 		Tree: "tree"
 	};
 
+	//parameter config => [interface name, adder function]
 	var params = {
 		autoHeight: ['autoHeight', function(cfg){
 			cfg.autoHeight = true;
@@ -93,6 +102,7 @@ define([
 		}]
 	};
 
+	//dependencies: config item => depending interface
 	var deps =  {
 		Edit: {
 			cellWidget: 1
@@ -156,6 +166,7 @@ define([
 		}
 	};
 
+	//conflicts: config item => conflicting config item
 	var conflicts = {
 		SingleSort: {
 			NestedSort: 1,
@@ -192,6 +203,35 @@ define([
 		}
 	};
 
+	var caches = [
+		'gridx/core/model/cache/Sync'
+	];
+
+	var stores = [
+		storeFactory({
+			dataSource: dataSource,
+			size: 10
+		})
+	];
+
+	var layouts = [
+		[
+			{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
+			{id: 'number', field: 'number', name: 'Number', dataType: 'number'},
+			{id: 'string', field: 'string', name: 'String', dataType: 'string'},
+			{id: 'date', field: 'date', name: 'Date', dataType: 'date'},
+			{id: 'time', field: 'time', name: 'Time', dataType: 'time'},
+			{id: 'bool', field: 'bool', name: 'Boolean', dataType: 'boolean'}
+		]
+	];
+
+	//Config End-------------------------------------------------------
+
+
+
+
+
+
 	//-----------------------------------------------------------------------------------------
 	function modAdder(name){
 		return function(cfg){
@@ -216,40 +256,14 @@ define([
 	}
 
 	return {
-		cacheClasses: [
-			'gridx/core/model/cache/Sync'
-		],
-		stores: [
-			storeFactory({
-				dataSource: dataSource,
-				size: 10
-			})
-		],
-		structures: [
-			[
-				{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
-				{id: 'number', field: 'number', name: 'Number', dataType: 'number'},
-				{id: 'string', field: 'string', name: 'String', dataType: 'string'},
-				{id: 'date', field: 'date', name: 'Date', dataType: 'date'},
-				{id: 'time', field: 'time', name: 'Time', dataType: 'time'},
-				{id: 'bool', field: 'bool', name: 'Boolean', dataType: 'boolean'}
-			]
-		],
-
+		cacheClasses: caches,
+		stores: stores,
+		structures: layouts,
 		args: paramArgs.concat(modArgs),
-
 		adders: lang.mixin(paramAdders, modAdders),
-
 		argInterfaces: lang.mixin(paramInterfaces, mods),
-
-//        deps: {},
 		deps: deps,
-
-//        conflicts: {},
 		conflicts: conflicts,
-
-		specialCases: [
-			['VirtualVScroller', 'ColumnResizer', 'SingleSort']
-		]
+		specialCases: specialCases
 	};
 });

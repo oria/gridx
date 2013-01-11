@@ -3,7 +3,8 @@ define([
 	'../GTest'
 ], function(domGeo, GTest){
 	GTest.actionCheckers.push({
-		name: '105. when scroll bar is scrolled to top, body should also be scrolled to top',
+		id: 105,
+		name: 'when scroll bar is scrolled to top, body should also be scrolled to top',
 		condition: function(grid){
 			return grid.vScrollerNode.style.display != 'none';
 		},
@@ -20,7 +21,8 @@ define([
 			}, 100);
 		}
 	}, {
-		name: '106. when scroll bar is scrolled to bottom, body should also be scrolled to bottom',
+		id: 106,
+		name: 'when scroll bar is scrolled to bottom, body should also be scrolled to bottom',
 		condition: function(grid){
 			return grid.vScrollerNode.style.display != 'none';
 		},

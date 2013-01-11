@@ -3,42 +3,45 @@ define([
 	'dojo/_base/array',
 	'dojo/_base/lang',
 	'dojo/_base/Deferred',
+	'dojo/dom',
+	'dojo/dom-construct',
 	'gridx/Grid',
 	'dijit/registry'
-], function(declare, array, lang, Deferred, Grid, registry){
+], function(declare, array, lang, Deferred, dom, domConstruct, Grid, registry){
 
 	var GTest = declare([], {
 
-		test: function(config, doh, dohDefer){
+		constructor: function(args){
+			lang.mixin(this, args);
+		},
+
+		test: function(config, doh, dohDefer, configName){
 			var t = this,
 				finish = function(success, err){
 					t._destroy();
 					setTimeout(function(){
-						if(err){
-							dohDefer.errback(err);
-						}else{
-							dohDefer.callback(success);
-						}
+						dohDefer.callback(success);
 					}, 10);
 				};
+			t._errCount = 0;
+			t._name = configName;
 			t._config = config;
 			t._doh = doh;
 			try{
 				t._create().then(function(){
 					if(t.grid()){
-						var e = t._testStatus();
+						t._testStatus();
 						t._destroy();
-						if(e){
-							finish(false, e);
+						if(t._errCount){
+							finish(false);
 						}else{
 							t._testActions().then(function(){
-								finish(true);
-							}, function(e){
-								finish(false, e);
+								finish(t._errCount === 0);
 							});
 						}
 					}else{
-						finish(false, new Error("Fatal: Grid not created!"));
+						t.reportError('Grid not created!');
+						finish(false);
 					}
 				});
 			}catch(e){
@@ -50,49 +53,71 @@ define([
 			return registry.byId('grid');
 		},
 
+		reportError: function(err, id, isStatus, afterAction){
+			this._errCount++;
+			var str = ['<div class="errMsg ',
+					isStatus ? 'statusErr' : 'actionErr',
+				'">', this._name,
+				'<span class="reqId">', id, '</span>',
+				isStatus && afterAction ? '<span class="afterActionId">'+afterAction+'</span>' : '',
+				'<div class="errInfo">', 
+					lang.isString(err) ? err : err.message,
+				'</div></div>'
+			].join('');
+			this.logNode.appendChild(domConstruct.toDom(str));
+		},
+
 		//Private-----------------------------
 		_create: function(preStartup){
 			this._destroy();
 			var d = new Deferred();
 			var cfg = this._config;
-			var grid = new Grid(lang.mixin({
-				id: 'grid'
-			}, cfg));
-			grid.placeAt('gridContainer');
-			if(preStartup){
-				preStartup(grid);
-			}
-			grid.startup();
-			setTimeout(function(){
+			try{
+				var grid = new Grid(lang.mixin({
+					id: 'grid'
+				}, cfg));
+				grid.placeAt('gridContainer');
+				if(preStartup){
+					preStartup(grid);
+				}
+				grid.connect(grid, 'onModulesLoaded', function(){
+					setTimeout(function(){
+						d.callback();
+					}, 100);
+				});
+				grid.startup();
+			}catch(e){
 				d.callback();
-			}, 100);
+			}
 			return d;
 		},
 
 		_destroy: function(){
 			var grid = this.grid();
 			if(grid){
-				grid.destroy();
+				try{
+					grid.destroy();
+				}catch(e){}
 			}
+			dom.byId('gridContainer').innerHTML = '';
 		},
-		_testStatus: function(){
+		_testStatus: function(afterAction){
 			var grid = this.grid();
 			var statusCheckers = GTest.statusCheckers;
 			for(var i = 0; i < statusCheckers.length; ++i){
 				var item = statusCheckers[i];
-				if(!item.condition || item.condition(grid)){
-					try{
+				try{
+					if(!item.condition || item.condition(grid)){
 						item.checker(grid, this._doh);
 						console.debug('StatusCheck PASS: ', item.name);
-					}catch(e){
-						console.error('StatusCheck FAIL: ', item.name);
-						return e;
+					}else{
+						console.debug('StatusCheck SKIP: ', item.name);
 					}
-				}else{
-					console.debug('StatusCheck SKIP: ', item.name);
+				}catch(e){
+					this.reportError(e, item.id, true, afterAction);
+					console.error('StatusCheck FAIL: ', item.name);
 				}
 			}
-			return null;
 		},
 		_testActions: function(){
 			var d = new Deferred();
@@ -106,37 +131,46 @@ define([
 				console.debug('Action START: ', item.name);
 				t._create(item.preStartup).then(function(){
 					var grid = t.grid();
-					if(!item.condition || item.condition(grid)){
-						var prepared = new Deferred();
-						if(item.prepare){
-							item.prepare(grid, prepared);
-						}else{
-							prepared.callback();
-						}
-						Deferred.when(prepared, function(){
-							var actionDone = new Deferred();
-							try{
-								item.action(grid, t._doh, actionDone);
-							}catch(e){
-								d.errback(e);
+					try{
+						if(!item.condition || item.condition(grid)){
+							var prepared = new Deferred();
+							if(item.prepare){
+								item.prepare(grid, prepared);
+							}else{
+								prepared.callback();
 							}
-							Deferred.when(actionDone, function(){
-								var e = t._testStatus();
-								if(e){
-									console.debug('Action FAIL: ', item.name);
-									d.errback(e);
-								}else{
+							Deferred.when(prepared, function(){
+								var actionDone = new Deferred();
+								try{
+									item.action(grid, t._doh, actionDone);
+								}catch(e){
+									t.reportError(e, item.id);
+									t._destroy();
+									d.callback();
+									return;
+								}
+								Deferred.when(actionDone, function(){
 									console.debug('Action PASS: ', item.name);
+									t._testStatus(item.id);
 									t._destroy();
 									t._testSingleAction(index + 1, d);
-								}
-							}, function(e){
-								console.error('Action FAIL: ', item.name);
-								d.errback(e);
+								}, function(e){
+									console.error('Action FAIL: ', item.name);
+									t.reportError(e, item.id);
+									t._destroy();
+									t._testSingleAction(index + 1, d);
+								});
 							});
-						});
-					}else{
-						console.debug('Action SKIP: ', item.name);
+						}else{
+							console.debug('Action SKIP: ', item.name);
+							t._destroy();
+							t._testSingleAction(index + 1, d);
+						}
+					}catch(e){
+						console.error('Action FAIL: ', item.name);
+						t.reportError(e, item.id);
+						t._destroy();
+						t._testSingleAction(index + 1, d);
 					}
 				});
 			}else{

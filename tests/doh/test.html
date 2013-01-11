@@ -3,12 +3,58 @@
 <head>
 	<title>Gridx DOH tests</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-	<link rel='stylesheet' href="../support/common.css" />
 	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../../../dijit/themes/claro/claro.css";
+		@import "../../../dijit/themes/claro/document.css";
+		@import "../../resources/claro/Gridx.css";
+		@import "../../resources/claro/Gridx_rtl.css";
+
+		#sidePane {
+			border: 1px solid red;
+			position: absolute;
+			top: 10px;
+			right: 20px;
+		}
+		#casePane {
+			text-align: center;
+			padding: 10px;
+			background-color: #0033ff;
+			color: #fff;
+		}
+		#caseTotal {
+			margin-right: 20px;
+		}
+		#msg {
+			width: 400px;
+			height: 500px;
+			overflow: auto;
+		}
 		#grid {
 			width: 600px;
 			height: 350px;
 		}
+		.errMsg {
+			padding: 5px;
+			position: relative;
+		}
+		.statusErr {
+			background-color: #ee9900;
+		}
+		.actionErr {
+			background-color: #FF3322;
+		}
+		.errInfo {
+			color: #fff;
+			padding: 0 0 0 15px;
+		}
+		.reqId {
+			background-color: #fff;
+			color: #000;
+			float: right;
+			padding: 8px;
+		}
+
 	</style>
 
 	<script type="text/javascript" src="../../../dojo/dojo.js" 
@@ -20,5 +66,11 @@
 		Gridx DOH tests
 	</h1>
 	<div id='gridContainer'></div>
+	<div id='sidePane'>
+		<div id='casePane'>
+			<span id='caseTotal'></span><span id='caseCounter'></span>
+		</div>
+		<div id='msg'></div>
+	</div>
 </body>
 </html>

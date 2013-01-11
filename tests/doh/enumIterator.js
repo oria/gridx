@@ -10,10 +10,12 @@ define([
 		this.deps = config.deps;
 		this.conflicts = config.conflicts;
 		this.argInterfaces = config.argInterfaces;
+		this.special = config.specialCases;
 
 		this.normConflicts();
 		this.normDeps();
 		this.reset();
+		this.sp = 0;
 	}
 
 	var prot = Context.prototype;
@@ -107,6 +109,7 @@ define([
 		return res;
 	};
 
+	prot.minPackSize = 0;
 	prot.maxPackSize = 0;
 
 	prot.next = function(){
@@ -123,7 +126,9 @@ define([
 			}
 			if(childP < this.arr.length && (!this.maxPackSize || this.packSize < this.maxPackSize)){
 				this.pushStack(childP);
-				return this.getPack();
+				if(!this.minPackSize || this.packSize >= this.minPackSize){
+					return this.getPack();
+				}
 			}else if(this.pstack.length > 1){
 				this.popStack(p);
 				do{
@@ -139,6 +144,34 @@ define([
 		}while(this.pstack.length);
 		this.reset();
 		return null;
+	};
+
+	prot.nextSpecial = function(){
+		if(this.sp < this.special.length){
+			return this.special[this.sp++];
+		}
+		this.sp = 0;
+		return null;
+	};
+
+	prot.calcTotal = function(){
+		var t = this,
+			d = new Deferred(),
+			cnt = 0,
+			f = function(){
+				for(var i = 0; i < 3000; ++i){
+					if(t.next()){
+						cnt++;
+					}else{
+						d.callback(cnt);
+						return;
+					}
+				}
+				d.progress(cnt);
+				setTimeout(f, 5);
+			};
+		f();
+		return d;
 	};
 
 	return Context;
