@@ -24,13 +24,33 @@ require([
 		logNode: dom.byId('msg')
 	});
 
-	ei.calcTotal().then(outputCount, null, outputCount).then(runTest);
+	ei.calcTotal().then(outputCount, null, outputCount).then(function(){
+		document.getElementById('startBtn').removeAttribute('disabled');
+	});
 
 	function outputCount(cnt){
 		document.getElementById('caseTotal').innerHTML = cnt;
 	}
 
-	function runTest(){
+	onClickBtn = function(){
+		var startBtn = document.getElementById('startBtn');
+		var name = startBtn.getAttribute('name');
+		if(name != 'pause'){
+			startBtn.innerHTML = 'Pause';
+			startBtn.setAttribute('name', 'pause');
+			runTest.paused = 0;
+			runTest();
+		}else if(name == 'pause'){
+			startBtn.innerHTML = 'Resume';
+			startBtn.setAttribute('name', 'resume');
+			runTest.paused = 1;
+		}
+	};
+
+	runTest = function(){
+		if(runTest.paused){
+			return;
+		}
 		var args = ei.next();
 //        var args = ei.nextSpecial();
 		if(args){
@@ -79,6 +99,10 @@ require([
 			dom.byId('caseCounter').innerHTML = tsIndex;
 			doh.register(tsIndex++ + ':' + key, cases);
 			doh.run();
+		}else{
+			var startBtn = document.getElementById('startBtn');
+			startBtn.innerHTML = 'Start';
+			startBtn.removeAttribute('name');
 		}
-	}
+	};
 });

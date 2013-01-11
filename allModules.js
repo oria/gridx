@@ -26,6 +26,7 @@ define([
 	'gridx/modules/Edit',
 	'gridx/modules/RowHeader',
 	'gridx/modules/IndirectSelect',
+	'gridx/modules/IndirectSelectColumn',
 	'gridx/modules/Persist',
 	'gridx/modules/exporter/Exporter',
 	'gridx/modules/exporter/CSV',
@@ -50,7 +51,7 @@ define([
 	PaginationBar, PaginationBarDD,
 	Filter, FilterBar,
 	CellWidget, Edit,
-	RowHeader, IndirectSelect,
+	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Exporter, CSV, Table, Printer,
 	Menu, Dod, TitleBar, Tree, RowLock, ToolBar, SummaryBar, Bar){
 return {
@@ -81,6 +82,7 @@ return {
 	Edit: Edit,
 	RowHeader: RowHeader,
 	IndirectSelect: IndirectSelect,
+	IndirectSelectColumn: IndirectSelectColumn,
 	Persist: Persist,
 	Exporter: Exporter,
 	ExportCSV: CSV,
