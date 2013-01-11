@@ -158,7 +158,7 @@ define([
 			t.connect(t.grid, '_onResizeEnd', function(){
 				t._doScroll(0, 1);
 			});
-			t._doScroll(0, 1);
+			t._doScroll(0, 1, 1);
 		},
 	
 		_doVirtualScroll: function(forced){
@@ -258,9 +258,9 @@ define([
 			}
 		},
 		
-		_doScroll: function(e, forced){
+		_doScroll: function(e, forced, noLazy){
 			var t = this;
-			if(t.arg('lazy')){
+			if(!noLazy && t.arg('lazy')){
 				if(t._lazyScrollHandle){
 					clearTimeout(t._lazyScrollHandle);
 				}
