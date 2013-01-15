@@ -688,7 +688,7 @@ define([
 			en.innerHTML = this.arg('loadFailInfo', nls.loadFailInfo);
 			en.style.zIndex = 1;
 			this.domNode.innerHTML = '';
-			this._err = 1;	//1 as true;
+			this._err = e;
 		},
 	
 		_buildRowContent: function(rowInfo){

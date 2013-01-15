@@ -113,6 +113,10 @@ define([
 	prot.maxPackSize = 0;
 
 	prot.next = function(){
+		return this.specialCasesOnly ? this.nextSpecial() : this.nextEnum();
+	};
+
+	prot.nextEnum = function(){
 		do{
 			var p = this.pstack[this.pstack.length - 1];
 			var childP = this.cpstack[this.pstack.length - 1];

@@ -53,6 +53,31 @@ define([
 			return registry.byId('grid');
 		},
 
+		deleteRow: function(grid, rowId){
+			var d = new Deferred();
+			var store = grid.store;
+			if(store.fetchItemByIdentity){
+				store.fetchItemByIdentity({
+					identity: rowId,
+					onItem: function(item){
+						store.deleteItem(item);
+						setTimeout(function(){
+							d.callback();
+						}, 100);
+					}
+				});
+			}else{
+				store.remove(rowId);
+				if(store.notify){
+					store.notify();
+				}
+				setTimeout(function(){
+					d.callback();
+				}, 100);
+			}
+			return d;
+		},
+
 		reportError: function(err, id, isStatus, afterAction){
 			this._errCount++;
 			var str = ['<div class="errMsg ',
@@ -142,7 +167,7 @@ define([
 							Deferred.when(prepared, function(){
 								var actionDone = new Deferred();
 								try{
-									item.action(grid, t._doh, actionDone);
+									item.action(grid, t._doh, actionDone, t);
 								}catch(e){
 									t.reportError(e, item.id);
 									t._destroy();
