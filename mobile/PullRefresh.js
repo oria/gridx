@@ -13,13 +13,13 @@ define([
 		state: 'normal',
 		triggerHeight: 50,
 		
-		//lastId:
-		//	used to store last id value for query, so that server side knows the state of grid
+		// lastId:
+		//		used to store last id value for query, so that server side knows the state of grid
 		lastId: null,
 		
 		buildRendering: function(){
-			//summary:
-			//	Add pull refresh related ui elements, and connect events to them.
+			// summary:
+			//		Add pull refresh related ui elements, and connect events to them.
 			
 			this.inherited(arguments);
 			var self = this;

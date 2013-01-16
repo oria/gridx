@@ -1,20 +1,19 @@
 define([
 	"dojo",
-	"dijit",
+	"dijit/popup",
 	"dojo/_base/declare",
 	"dojo/string",
 	"dojo/i18n!../../nls/FilterBar",
+	"dijit/TooltipDialog",
 	"./Filter",
 	"./FilterDialog",
-	"dijit/TooltipDialog",
-	"dijit/popup",
 	"dijit/Tooltip",
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/html"
-], function(dojo, dijit, declare, string, i18n){
+], function(dojo, popup, declare, string, i18n, TooltipDialog){
 	
-	return declare(dijit.TooltipDialog, {
+	return declare(TooltipDialog, {
 		// summary:
 		//	Show status dialog of filter.
 		grid: null,
@@ -30,7 +29,7 @@ define([
 		},
 		show: function(evt){
 			this.inherited(arguments);
-			dijit.popup.open({
+			popup.open({
 				popup: this,
 				x: evt.pageX,
 				y: evt.pageY,
@@ -39,7 +38,7 @@ define([
 		},
 		hide: function(){
 			this.inherited(arguments);
-			dijit.popup.close(this);
+			popup.close(this);
 		},
 
 		buildContent: function(){

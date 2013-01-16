@@ -45,7 +45,7 @@ define([
 		
 		//Public-----------------------------------------------------------------
 
-		//moveSelected: Boolean
+		// moveSelected: Boolean
 		//		When moving using keyboard, whether to move all selected rows together.
 		moveSelected: true,
 

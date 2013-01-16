@@ -24,26 +24,26 @@ define([
 		// summary:
 		//	A mobile grid that has fixed header, footer and a scrollable body.
 		
-		//autoHeight: boolean
+		// autoHeight: boolean
 		//	If true, it's must be a children of dojox.mobile.View
 		//  and it occupies the rest height of the screen. If false it could be in any container
 		//	using a specified height.
 		autoHeight: true,
 		
-		//showHeader: boolean
+		// showHeader: boolean
 		//	Whether to show the grid header
 		showHeader: false,
 		
-		//vScroller: boolean
+		// vScroller: boolean
 		//	Whether to show the virtical scroller
 		vScroller: true,
 		
-		//hScroller: boolean
+		// hScroller: boolean
 		//	Whether to show the horizontal scroller
 		hScroller: false,
 		
-		//columns: array
-		//	Column definition to show the grid from store
+		// columns: array
+		//		Column definition to show the grid from store
 		columns: null,
 		
 		setColumns: function(columns){

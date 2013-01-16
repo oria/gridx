@@ -7,8 +7,8 @@ define([
 
 /*=====
 	dojo.declare('__TableExportArgs', __ExportArgs, {
-		natualWidth: false
-		columnWidth: Associative array
+		natualWidth: false,
+		columnWidth: {}
 	});
 =====*/
 

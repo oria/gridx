@@ -21,13 +21,13 @@ define([
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
-], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n){
+], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n, ContentPane){
 	var ANY_COLUMN_VALUE = '_gridx_any_column_value_';
 	
 	function isAnyColumn(colid){
 		return colid == ANY_COLUMN_VALUE;
 	}
-	return declare([dijit.layout.ContentPane], {
+	return declare([ContentPane], {
 		//content: template,
 		sltColumn: null,
 		sltCondition: null,
@@ -47,7 +47,7 @@ define([
 	
 		getData: function(){
 			// summary:
-			//	Get the filter defined by this filter pane.
+			//		Get the filter defined by this filter pane.
 			var value = this._getValue(), 
 				colId = this.sltColumn.get('value'),
 				condition = this.sltCondition.get('value');
@@ -65,7 +65,7 @@ define([
 		},
 		setData: function(data){
 			// summary:
-			//	Set the data of the pane to restore UI.
+			//		Set the data of the pane to restore UI.
 			if(data === null){return;}
 			this.sltColumn.set('value', data.colId, null);
 			this._onColumnChange();
@@ -96,7 +96,7 @@ define([
 		},
 		onChange: function(){
 			// summary:
-			//	event: fired when column, condition or value is changed
+			//		event: fired when column, condition or value is changed
 		},
 		_getContainer: function(){
 			return registry.byNode(this.domNode.parentNode.parentNode.parentNode);
@@ -141,8 +141,8 @@ define([
 		},
 		_initCloseButton: function(){
 			// summary:
-			//	Add a close button to the accordion pane.
-			//  Must be called after adding to an accordion container.
+			//		Add a close button to the accordion pane.
+			//		Must be called after adding to an accordion container.
 			var btnWidget = this._buttonWidget;
 			var closeButton = dom.create('span', {
 				className: 'gridxFilterPaneCloseButton',
@@ -185,7 +185,7 @@ define([
 		},
 		_getType: function(){
 			// summary:
-			//	Get current filter type, determined by data type and condition.
+			//		Get current filter type, determined by data type and condition.
 			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', 'enum': 'Select', 'boolean': 'Radio'};
 			var type = mapping[this._getDataType()];
 			if('range' === this.sltCondition.get('value')){type += 'Range';} ;
@@ -208,13 +208,13 @@ define([
 		},
 		_needComboBox: function(){
 			// summary:
-			//	Whether current state needs a combo box for string input, may rewrite to support virtual column
+			//		Whether current state needs a combo box for string input, may rewrite to support virtual column
 			var colId = this.sltColumn.get('value');
 			return this._getType() === 'Text' && !isAnyColumn(colId) && this.grid._columnsById[colId].field;
 		},
 		_updateValueField: function(){
 			// summary:
-			//	Update the UI for field to show/hide fields.
+			//		Update the UI for field to show/hide fields.
 			var type = this._getType(), colId = this.sltColumn.get('value');
 			var combo = this._needComboBox();
 			

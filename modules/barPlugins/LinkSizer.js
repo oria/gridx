@@ -24,11 +24,11 @@ define([
 
 		//Public-----------------------------------------------------------------------------
 		
-		//sizeSpearator: String
+		// sizeSpearator: String
 		//		The string used to separate page sizes.
 		sizeSeparator: '|',
 
-		//sizes: Integer[]
+		// sizes: Integer[]
 		//		An array of available page sizes. Non-positive number means "all"
 		sizes: [10, 25, 50, 100, 0],
 

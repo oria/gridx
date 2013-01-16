@@ -25,7 +25,7 @@ define([
 
 		// description: String
 		//		Any HTML content that will be put before the grid in the printed document.
-		description: ''
+		description: '',
 
 		// customHead: String
 		//		Any HTML <head> content that will be put in the <head> of the printed document.

@@ -30,7 +30,7 @@ define([
 
 		//Public-----------------------------------------------------------------------------
 
-		//grid: gridx.Grid
+		// grid: gridx.Grid
 		//		The grid widget this plugin works for.
 		grid: null,
 

@@ -64,7 +64,7 @@ define([
 		refresh: function(/* Boolean? */skipUpdateBody){
 			// summary:
 			//		Re-filter the grid with current filter. Useful when data is changed.
-			// return
+			// return:
 			//		Deferred when refreshing is completed.
 			var t = this,
 				g = t.grid,

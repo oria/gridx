@@ -39,15 +39,15 @@ define([
 		// dataType: String
 		//		Specify the data type of this column. Should be one of "string", "number", "date", "time", and "boolean".
 		//		Case insensitive. Data type decides which conditions to use in the Filter Definition Dialog.
-		dataType: 'date'
-		storeDatePattern: ''
-		formatter: ''
-		dateParsePatter: 'yyyy/MM/dd HH:mm:ss'
+		dataType: 'date',
+		storeDatePattern: '',
+		formatter: '',
+		dateParsePatter: 'yyyy/MM/dd HH:mm:ss',
 		filterArgs: {
 			trueLabel: '',
 			falseLabel: '',
 			valueDijitArgs: {}
-		}
+		},
 		// dataTypeArgs: Object
 		//		Passing any other special config options for this column. For example, if the column is of type 'date', but the data
 		//		in store is of string type, then a 'converter' function is needed here:
@@ -116,7 +116,8 @@ define([
 		// itemsName: String
 		//		The general name of the items listed in the grid.
 		//		If not provided, then search the language bundle.
-		itemsName: '',=====*/
+		itemsName: '',
+	=====*/
 	
 		// condition:
 		//		Name of all supported conditions.
@@ -132,7 +133,8 @@ define([
 		
 		load: function(args, startup){
 			// summary:
-			//	Init filter bar UI
+			//		Init filter bar UI
+
 			//Add before and after expression for filter.
 			var F = Filter;
 			F.before = F.lessEqual;

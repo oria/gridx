@@ -40,12 +40,12 @@ define([
 	
 		//Public---------------------------------------------------------------------------------------
 
-		//accept: String[]
+		// accept: String[]
 		//		Can drag out what kind of stuff.
 		//		For now can not drag in any columns.
 		accept: [],
 
-		//provide: String[]
+		// provide: String[]
 		//		Can drag out what kind of stuff
 		provide: ['grid/columns'],
 

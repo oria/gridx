@@ -58,21 +58,21 @@ define([
 		//		to get a suitable value from editor.
 		fromEditor: null,
 	
-		//props: String
+		// props: String
 		//		The properties to be used when creating the dijit in a editing cell.
 		//		Just like data-dojo-props for a widget.
-		props: ''
+		props: '',
 
-		//constraints: Object
+		// constraints: Object
 		//		If the editor widget has some constraints, it can be set here instead of in props.
 		constraints: null,
 
-		//useGridData: Boolean
+		// useGridData: Boolean
 		//		Whether to feed the editor with grid data or store data.
 		//		This property is only effective when toEditor is not provided.
 		useGridData: false,
 
-		//valueField: String
+		// valueField: String
 		//		The property name of the editor used to take the data. In most cases it is "value",
 		//		so editor.set('value', ...) can do the job.
 		valueField: 'value'
