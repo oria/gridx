@@ -7,7 +7,7 @@ define([
 
 	kernel.deprecated('gridx/modules/Printer is deprecated.', 'Please use gridx/support/printer instead.', '2.0');
 	/*=====
-	declare('__PrinterArgs', __ExporterArgs, {
+	var __PrinterArgs = declare(__ExporterArgs, {
 		// style: String
 		//		The CSS string for the printed document
 		style: '',
@@ -22,7 +22,7 @@ define([
 
 		// description: String
 		//		Any HTML content that will be put before the grid in the printed document.
-		description: ''
+		description: '',
 
 		// customHead: String
 		//		Any HTML <head> content that will be put in the <head> of the printed document.

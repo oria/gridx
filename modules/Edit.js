@@ -14,70 +14,50 @@ define([
 	"dijit/form/TextBox"
 ], function(declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
 	
-	/*=====
-	var columnDefinitionEditorMixin = {
+/*=====
+	var __GridCellEditorArgs = declare(null, {
+		// toEditor: function(storeData, gridData) return anything
+		//		By default the dijit used in an editing cell will use store value.
+		//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
+		//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
+		// fromEditor: Function(valueInEditor) return anything
+		//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
+		//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
+		//		to get a suitable value from editor.
+		// props: String
+		//		The properties to be used when creating the dijit in a editing cell.
+		//		Just like data-dojo-props for a widget.
+		// constraints: Object
+		//		If the editor widget has some constraints, it can be set here instead of in props.
+		// useGridData: Boolean
+		//		Whether to feed the editor with grid data or store data.
+		//		This property is only effective when toEditor is not provided.
+		// valueField: String
+		//		The property name of the editor used to take the data. In most cases it is "value",
+		//		so editor.set('value', ...) can do the job.
+	});
+
+	var _ColumnDefinitionEditorMixin = declare(null, {
 		// editable: Boolean
 		//		If true then the cells in this column will be editable. Default is false.
-		editable: false, 
-
 		// alwaysEditing: Boolean
 		//		If true then the cells in this column will always be in editing mode. Default is false.
-		alwaysEditing: false,
-	
 		// applyDelay: Integer
 		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
-		applyDelay: 500,
-
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.
 		//		The default dijit is dijit.form.TextBox.
 		//		This attribute can either be the declared class name of a dijit or 
 		//		the class construct function of a dijit (the one that is used behide "new" keyword).
-		editor: "dijit.form.TextBox",
-	
 		// editorArgs: __GridCellEditorArgs
-		editorArgs: null,
-
 		// customApplyEdit: function(cell, value)
 		//		If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
 		//		For example, setting multiple fields of store for a formatted cell.
 		//		Can return a Deferred object if the work can not be done synchronously.
-		customApplyEdit: null
-	};
-	
-	var __GridCellEditorArgs = {
-		// toEditor: Function(storeData, gridData) return anything
-		//		By default the dijit used in an editing cell will use store value.
-		//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
-		//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
-		toEditor: null,
-	
-		// fromEditor: Function(valueInEditor) return anything
-		//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
-		//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
-		//		to get a suitable value from editor.
-		fromEditor: null,
-	
-		//props: String
-		//		The properties to be used when creating the dijit in a editing cell.
-		//		Just like data-dojo-props for a widget.
-		props: ''
+	});
+=====*/
 
-		//constraints: Object
-		//		If the editor widget has some constraints, it can be set here instead of in props.
-		constraints: null,
 
-		//useGridData: Boolean
-		//		Whether to feed the editor with grid data or store data.
-		//		This property is only effective when toEditor is not provided.
-		useGridData: false,
-
-		//valueField: String
-		//		The property name of the editor used to take the data. In most cases it is "value",
-		//		so editor.set('value', ...) can do the job.
-		valueField: 'value'
-	};
-	=====*/
 	function getTypeData(col, storeData, gridData){
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
 			return locale.parse(storeData, col.storePattern);

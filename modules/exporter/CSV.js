@@ -43,7 +43,7 @@ define([
 			// returns:
 			//		A deferred object indicating when the export process is completed,
 			//		and then pass the exported CSV string to callbacks.
-		}
+		},
 =====*/
 
 		getAPIPath: function(){

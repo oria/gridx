@@ -336,17 +336,17 @@ define([
 		// summary:
 		//		Implement lazy-loading for server side store.
 
-		//isAsync: Boolean
+		// isAsync: Boolean
 		//		Whether this cache is for asynchronous(server side) store.
 		isAsync: true,
 
 /*=====
-		//cacheSize: Integer
+		// cacheSize: Integer
 		//		The max cached row count in client side.
 		//		By default, do not clear cache when scrolling, this is the same with DataGrid
 		cacheSize: -1,
 
-		//pageSize: Integer
+		// pageSize: Integer
 		//		The recommended row count for every fetch.
 		pageSize: 100,
 =====*/

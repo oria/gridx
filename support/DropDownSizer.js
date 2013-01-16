@@ -25,19 +25,19 @@ define([
 
 		//Public-----------------------------------------------------------------------------
 
-		//grid: gridx.Grid
+		// grid: gridx.Grid
 		//		The grid widget this plugin works for.
 		grid: null,
 
-		//sizes: Integer[]
+		// sizes: Integer[]
 		//		An array of available page sizes. Non-positive number means "all"
 		sizes: [10, 25, 50, 100, 0],
 
-		//sizerClass: Function
+		// sizerClass: Function
 		//		The constructor of the select widget
 		sizerClass: Select,
 
-		//sizerProps: Object
+		// sizerProps: Object
 		//		The properties passed to select widget when creating it.
 		sizerProps: null,
 

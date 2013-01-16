@@ -31,15 +31,15 @@ define([
 
 		//Public-----------------------------------------------------------------------------
 
-		//grid: gridx.Grid
+		// grid: gridx.Grid
 		//		The grid widget this plugin works for.
 		grid: null,
 
-		//stepperClass: Function
+		// stepperClass: Function
 		//		The constructor of the select widget
 		stepperClass: FilteringSelect,
 
-		//stepperProps: Object
+		// stepperProps: Object
 		//		The properties passed to select widget when creating it.
 		stepperProps: null,
 

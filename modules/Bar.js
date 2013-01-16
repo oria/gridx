@@ -55,7 +55,7 @@ define([
 		//Public---------------------------------------------------------
 
 	/*=====
-		//top: Array
+		// top: Array
 		//		An array of bar content declarations. Located above grid header.
 		//		The top bar is big html table, and every content occupies a cell in it.
 		//		If it is a single demension array, then the top bar will contain only one row.
@@ -79,12 +79,12 @@ define([
 		//		]
 		top: null,
 
-		//bottom: Array
+		// bottom: Array
 		//		An array of bar content declarations. Located below grid horizontal scroller.
 		//		Usage is similar to the "top" attribute.
 		bottom: null,
 
-		//plugins: [readonly]Object
+		// plugins: [readonly]Object
 		//		A place to access to the plugins.
 		//		For plugins in top bar, use plugins.top, which is an array of bar rows.
 		//		e.g.: plugins.top[0][0] is the first plugin the first row of the top bar.

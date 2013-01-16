@@ -44,7 +44,7 @@ define([
 		
 		//public---------------------------------------------------------------
 
-		//moveSelected: Boolean
+		// moveSelected: Boolean
 		//		When moving using keyboard, whether to move all selected columns together.
 		moveSelected: true,
 

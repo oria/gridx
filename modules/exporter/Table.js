@@ -7,9 +7,9 @@ define([
 
 	kernel.deprecated('gridx/modules/exporter/Table is deprecated.', 'Use gridx/support/exporter/toTable instead.', '2.0');
 /*=====
-	dojo.declare('__TableExportArgs', __ExportArgs, {
-		natualWidth: false
-		columnWidth: Associative array
+	var __TableExportArgs = declare(__ExportArgs, {
+		natualWidth: false,
+		columnWidth: {}
 	});
 =====*/
 	return declare(/*===== "gridx.modules.exporter.Table", =====*/_Module, {
@@ -28,7 +28,7 @@ define([
 			//		A deferred object indicating when the export process is completed,
 			//		and then pass the exported HTML table (as string) to callbacks.
 			return this.grid.exporter._export(this, args || {});	//dojo.Deferred
-		}
+		},
 =====*/
 
 		getAPIPath: function(){
