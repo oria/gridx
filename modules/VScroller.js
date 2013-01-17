@@ -83,7 +83,7 @@ define([
 					ds.display = 'none';
 					ds.width = '';
 					if(sniff('ie') < 8){
-						ds.width = t.stub.style.width = '0px';
+						ds.width = t.stubNode.style.width = '0px';
 					}
 					g.hLayout.reLayout();
 					g.hScroller.refresh();
