@@ -68,14 +68,14 @@ define([
 		_cssName: "Column",
 
 		_initHeader: function(){
-			query('.gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
+			query('.gridxCell', this.grid.header.domNode).attr('aria-grabbed', 'false');
 		},
 
 		_onBeginDnd: function(source){
 			var t = this;
 			source.delay = t.arg('delay');
 			array.forEach(t._selectedColIds, function(id){
-				query('[colid="' + id + '"].gridxCell', t.grid.header.domNode).attr('aria-dragged', 'true');
+				query('[colid="' + id + '"].gridxCell', t.grid.header.domNode).attr('aria-grabbed', 'true');
 			});
 		},
 
@@ -84,7 +84,7 @@ define([
 		},
 
 		_onEndDnd: function(){
-			query('[aria-dragged="true"].gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
+			query('[aria-grabbed="true"].gridxCell', this.grid.header.domNode).attr('aria-grabbed', 'false');
 		},
 
 		_buildDndNodes: function(){
