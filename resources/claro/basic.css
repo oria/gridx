@@ -69,12 +69,12 @@
 }
 
 /* Row header */
-.gridxRowHeaderHeader .gridxHeaderCellFocus {
+.claro .gridxRowHeaderHeader .gridxHeaderCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;
 }
 	
-.gridxRowHeaderRow .gridxCellFocus {
+.claro .gridxRowHeaderRow .gridxCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;
 }
