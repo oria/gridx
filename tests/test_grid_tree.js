@@ -73,7 +73,7 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: collapse">Collapse the 3rd row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: expandRec">Recursively expand the 2nd row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: collapseRec">Recursively collapse the 2nd row</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete item-1-1</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete Selected</div><br/>',
 	''].join(''));
 
 	tp.startup();
@@ -96,5 +96,11 @@ function collapseRec(){
 }
 
 function deleteRow(){
-	grid.store.deleteItem(grid.row('item-1-1').item());
+	var selected = grid.select.row.getSelected();
+	for(var i = 0; i < selected.length; ++i){
+		var row = grid.row(selected[i], true);
+		if(row){
+			grid.store.deleteItem(row.item());
+		}
+	}
 }
