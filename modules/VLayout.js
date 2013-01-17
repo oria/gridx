@@ -136,12 +136,14 @@ define([
 				dn = g.domNode,
 				ms = g.mainNode.style;
 			if(g.autoHeight){
-				g.vScroller.loaded.then(function(){
+				function update(){
 					var lastRow = g.bodyNode.lastChild,
 						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : g.emptyNode.offsetHeight;
 					dn.style.height = (bodyHeight + freeHeight) + 'px';
 					ms.height = bodyHeight + "px";
-				});
+				}
+				update();
+				g.vScroller.loaded.then(update);
 			}else if(dn.clientHeight > freeHeight){
 				//If grid height is smaller than freeHeight, IE will throw errer.
 				ms.height = (dn.clientHeight - freeHeight) + "px";
