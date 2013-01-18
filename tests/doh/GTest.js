@@ -203,9 +203,9 @@ define([
 				d.callback();
 			}
 		},
-		emitClick: function(target){
+		emitMouseEvent: function(target, type/*click, mouseover, mouseout...*/){
 			var target = typeof target == 'string'? document.getElementById(target) : target;
-			on.emit(target, 'click', {  
+			on.emit(target, 'type', {  
 				bubbles: true,
 		    	cancelable: true
 			})
@@ -213,39 +213,16 @@ define([
 
 		//emitKey(target, keys.SPACE, false, false, false) to trigger SPACE press event on specific target
 		emitKey: function(target, keyCode, ctrlKeyArg, shiftKeyArg, altKeyArg){
-			var target = typeof target == 'string'? document.getElementById(target) : target,
-				evt = document.createEvent("KeyboardEvent");
-				if(sniff('ff')){
-					evt.initKeyEvent(                                                                                      
-	                 "keypress",        //  in DOMString typeArg,                                                           
-	                  true,             //  in boolean canBubbleArg,                                                        
-	                  true,             //  in boolean cancelableArg,                                                       
-	                  null,             //  in nsIDOMAbstractView viewArg,  Specifies UIEvent.view. This value may be null.     
-					  ctrlKeyArg,       //  in boolean ctrlKeyArg,                                                               
-	                  altKeyArg,        //  in boolean shiftKeyArg,                                                      
-	                  shiftKeyArg,      //  in boolean altKeyArg,                                                        
-	                  false,            //  in boolean metaKeyArg,                                                       
-	                  keyCode,
-					  0);
-				}
-				
-				if(sniff('chrome')){
-				    Object.defineProperty(evt, 'keyCode', {
-		                get : function() {
-		                    return this.keyCodeVal;
-		                }
-				    });     
-				    Object.defineProperty(evt, 'which', {
-		                get : function() {
-		                    return this.keyCodeVal;
-		                }
-				    });
-			        evt.initKeyboardEvent("keypress", true, true, document.defaultView, false, false, false, false, keyCode, keyCode);
-				    evt.keyCodeVal = keyCode;
-				}
-				
-//			    target.dispatchEvent(evt);
-				on.emit(target, 'keypress', evt);
+			var target = typeof target == 'string'? document.getElementById(target) : target;
+			on.emit(target, 'keypress', {
+				ctrlKey: ctrlKeyArg, 
+				altKey: altKeyArg, 
+				shiftKey: shiftKeyArg,
+				charCode: 0,
+				keyCode: keyCode,
+				bubbles: true,
+		    	cancelable: true
+			});
 		}
 		
 	});
