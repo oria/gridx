@@ -6,8 +6,9 @@ define([
 	'dojo/dom',
 	'dojo/dom-construct',
 	'gridx/Grid',
-	'dijit/registry'
-], function(declare, array, lang, Deferred, dom, domConstruct, Grid, registry){
+	'dijit/registry',
+	'dojo/on'
+], function(declare, array, lang, Deferred, dom, domConstruct, Grid, registry, on){
 
 	var GTest = declare([], {
 
@@ -201,7 +202,52 @@ define([
 			}else{
 				d.callback();
 			}
+		},
+		emitClick: function(target){
+			var target = typeof target == 'string'? document.getElementById(target) : target;
+			on.emit(target, 'click', {  
+				bubbles: true,
+		    	cancelable: true
+			})
+		},
+
+		//emitKey(target, keys.SPACE, false, false, false) to trigger SPACE press event on specific target
+		emitKey: function(target, keyCode, ctrlKeyArg, shiftKeyArg, altKeyArg){
+			var target = typeof target == 'string'? document.getElementById(target) : target,
+				evt = document.createEvent("KeyboardEvent");
+				if(sniff('ff')){
+					evt.initKeyEvent(                                                                                      
+	                 "keypress",        //  in DOMString typeArg,                                                           
+	                  true,             //  in boolean canBubbleArg,                                                        
+	                  true,             //  in boolean cancelableArg,                                                       
+	                  null,             //  in nsIDOMAbstractView viewArg,  Specifies UIEvent.view. This value may be null.     
+					  ctrlKeyArg,       //  in boolean ctrlKeyArg,                                                               
+	                  altKeyArg,        //  in boolean shiftKeyArg,                                                      
+	                  shiftKeyArg,      //  in boolean altKeyArg,                                                        
+	                  false,            //  in boolean metaKeyArg,                                                       
+	                  keyCode,
+					  0);
+				}
+				
+				if(sniff('chrome')){
+				    Object.defineProperty(evt, 'keyCode', {
+		                get : function() {
+		                    return this.keyCodeVal;
+		                }
+				    });     
+				    Object.defineProperty(evt, 'which', {
+		                get : function() {
+		                    return this.keyCodeVal;
+		                }
+				    });
+			        evt.initKeyboardEvent("keypress", true, true, document.defaultView, false, false, false, false, keyCode, keyCode);
+				    evt.keyCodeVal = keyCode;
+				}
+				
+//			    target.dispatchEvent(evt);
+				on.emit(target, 'keypress', evt);
 		}
+		
 	});
 
 	GTest.statusCheckers = [];

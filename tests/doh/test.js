@@ -3,7 +3,7 @@ require([
 	'dojo/dom',
 	'doh/runner',
 	'gridx/tests/doh/GTest',
-	'gridx/tests/doh/EnumIterator',
+	'gridx/tests/doh/enumIterator',
 	'gridx/tests/doh/config',
 	'dojo/domReady!'
 ], function(array, dom, doh, GTest, EnumIterator, config){
