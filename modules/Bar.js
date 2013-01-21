@@ -3,11 +3,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
+	"dijit/registry",
 	"dijit/a11y",
 	"dojo/dom-construct",
 	"../core/_Module",
 	"../core/util"
-], function(require, declare, lang, array, a11y, domConstruct, _Module, util){
+], function(require, declare, lang, array, registry, a11y, domConstruct, _Module, util){
 
 	return _Module.register(
 	declare(/*===== "gridx.modules.Bar", =====*/_Module, {
@@ -169,17 +170,20 @@ define([
 					array.forEach(['colSpan', 'rowSpan', 'style'], lang.partial(setAttr, td, def, 0));
 					setAttr(td, def, 'class', 'className');
 					plugin = null;
-					if(def.pluginClass){
-						var cls = def.pluginClass;
-						delete def.pluginClass;
-						try{
+					try{
+						if(def.plugin){
+							plugin = registry.byId(def.plugin);
+							td.appendChild(plugin.domNode);
+						}else if(def.pluginClass){
+							var cls = def.pluginClass;
+							delete def.pluginClass;
 							plugin = new cls(def);
 							td.appendChild(plugin.domNode);
-						}catch(e){
-							console.error(e);
+						}else if(def.content){
+							td.innerHTML = def.content;
 						}
-					}else if(def.content){
-						td.innerHTML = def.content;
+					}catch(e){
+						console.error(e);
 					}
 					pluginRow.push(plugin || td);
 					tr.appendChild(td);
@@ -193,10 +197,17 @@ define([
 
 		_normalizePlugin: function(def){
 			if(!def || !lang.isObject(def) || lang.isFunction(def)){
+				//def is a constructor or class name
 				def = {
 					pluginClass: def
 				};
+			}else if(def.domNode){
+				//def is a widget
+				def = {
+					plugin: def
+				};
 			}else{
+				//def is a configuration object.
 				//Shallow copy, so user's input won't be changed.
 				def = lang.mixin({}, def);
 			}
