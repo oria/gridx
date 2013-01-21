@@ -1,4 +1,4 @@
-define([
+require([
 	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',

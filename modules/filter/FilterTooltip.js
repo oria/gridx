@@ -5,7 +5,6 @@ define([
 	"dojo/string",
 	"dojo/i18n!../../nls/FilterBar",
 	"dijit/TooltipDialog",
-	"./Filter",
 	"./FilterDialog",
 	"dijit/Tooltip",
 	"dojo/_base/array",

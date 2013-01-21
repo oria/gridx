@@ -63,9 +63,9 @@ define([
 		//		If it is a 2 demension array, then every sub-array represents a row.
 		//		For example:
 		//		[
-		//			gridx.barPlugins.QuickFilter,		//can be the constructor of a bar plugin widget.
-		//			"gridx/barPlugins/Summary"			//can also be the MID of a bar plugin widget.
-		//			{pluginClass: gridx.barPlugins.LinkSizer, style: "text-align: center;"}		//or an object with attributes
+		//			gridx.support.QuickFilter,		//can be the constructor of a bar plugin widget.
+		//			"gridx/support/Summary"			//can also be the MID of a bar plugin widget.
+		//			{pluginClass: gridx.support.LinkSizer, style: "text-align: center;"}		//or an object with attributes
 		//		]
 		//		or
 		//		[
@@ -74,7 +74,7 @@ define([
 		//				null	//if null, just an empty cell
 		//			],
 		//			[
-		//				{pluginClass: gridx.barPlugins.LinkPager, 'class': 'myclass'},		//can provide custom class
+		//				{pluginClass: gridx.support.LinkPager, 'class': 'myclass'},		//can provide custom class
 		//				{colSpan: 2, rowSpan: 2}	//can add colSpan and rowSpan
 		//			]
 		//		]

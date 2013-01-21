@@ -4,7 +4,6 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/XQueryReadStore',
 	'gridx/Grid',
-	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
 	'dojo/domReady!'

@@ -10,7 +10,7 @@ define([
 	"dojox/html/ellipsis",
 	"dojox/html/metrics",
 	"./DistinctComboBoxMenu",
-	"./Filter",
+	"../Filter",
 	"dojo/text!../../templates/FilterPane.html",
 	"dojo/i18n!../../nls/FilterBar",
 	"dijit/layout/ContentPane",

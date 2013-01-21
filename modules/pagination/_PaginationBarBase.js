@@ -3,7 +3,7 @@ define([
 	'dojo/_base/lang',
 	'dojo/dom-class',
 	'../../core/_Module',
-	'../barPlugins/Summary',
+	'../../support/Summary',
 	'../Bar'
 ], function(declare, lang, domClass, _Module, Summary){
 

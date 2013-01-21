@@ -23,11 +23,7 @@ require([
 	'dijit/ColorPalette',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/modules/Focus',
-	'gridx/modules/CellWidget',
-	'gridx/modules/Edit',
-	'gridx/modules/pagination/Pagination',
-	'gridx/modules/pagination/PaginationBar',
+	'gridx/allModules',
 	'dojo/domReady!'
 ], function(parser, declare, dataSource, storeFactory, Memory, locale, _Widget, _TemplatedMixin, _WidgetsInTemplateMixin,
 		TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){

@@ -11,7 +11,7 @@ define([
 
 	var hasClass = domClass.contains;
 
-	return declare(/*===== "gridx.modules.barPlugins.LinkPager", =====*/_LinkPageBase, {
+	return declare(/*===== "gridx.support.LinkPager", =====*/_LinkPageBase, {
 		// summary:
 		//		This is a grid bar plugin to switch pages for grid using link buttons.
 

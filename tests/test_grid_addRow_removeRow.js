@@ -15,7 +15,7 @@ require([
 
 	var getNewItem = function(){
 		var item = dataSource.getData(1).items[0];
-		++newID;
+		++newId;
 		item.order = item.id = newId;
 		return item;
 	};
@@ -27,10 +27,7 @@ require([
 	});
 
 	newRow = function(){
-		var btn = document.getElementById('addRowBtn');
-		btn.setAttribute('disabled', true);
 		Deferred.when(grid.store.add(getNewItem()), function(){
-			btn.setAttribute('disabled', false);
 			console.log("A new item is saved to server");
 		});
 	};

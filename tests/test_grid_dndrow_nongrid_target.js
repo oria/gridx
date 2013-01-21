@@ -11,20 +11,11 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
-	'gridx/modules/extendedSelect/Row',
-	'gridx/modules/extendedSelect/Column',
-	'gridx/modules/move/Row',
-	'gridx/modules/move/Column',
-	'gridx/modules/dnd/Row',
-	'gridx/modules/dnd/Column',
-	'gridx/modules/VirtualVScroller',
-	'gridx/modules/ColumnResizer',
+	'gridx/allModules',
 	'dijit/form/Button',
 	'dijit/form/TextBox',
 	'dojo/domReady!'
-], function(lang, html, array, connect, win, dndTarget, dndSource, Grid, Cache, dataSource, storeFactory, TestPane, 
-	ExtendedSelectRow, ExtendedSelectColumn, MoveRow, MoveColumn, DndRow, DndColumn, VirtualVScroller, ColumnResizer
-	){
+], function(lang, html, array, connect, win, dndTarget, dndSource, Grid, Cache, dataSource, storeFactory, TestPane, mods){
 
 	function create(id, container, size, layoutIdx, args){
 		var g = new Grid(lang.mixin({
@@ -37,14 +28,14 @@ require([
 			}),
 			selectRowTriggerOnCell: true,
 			modules: [
-				ExtendedSelectRow,
-				ExtendedSelectColumn,
-				MoveRow,
-				MoveColumn,
-				DndRow,
-				DndColumn,
-				VirtualVScroller,
-				ColumnResizer
+				mods.ExtendedSelectRow,
+				mods.ExtendedSelectColumn,
+				mods.MoveRow,
+				mods.MoveColumn,
+				mods.DndRow,
+				mods.DndColumn,
+				mods.VirtualVScroller,
+				mods.ColumnResizer
 			],
 			structure: dataSource.layouts[layoutIdx]
 		}, args));

@@ -111,7 +111,7 @@ require([
 	mods = [
 		modules.Tree,
 		modules.ColumnResizer,
-		modules.SelectRow,
+		modules.ExtendedSelectRow,
 		modules.CellWidget,
 		modules.RowHeader,
 		modules.IndirectSelect,

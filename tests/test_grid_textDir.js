@@ -6,6 +6,7 @@ require([
 	'dojo/_base/lang',
 	'dojo/_base/array',
 	'dojo/data/ItemFileWriteStore',
+	'gridx/support/printer',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'dojo/store/Memory',
@@ -15,7 +16,7 @@ require([
 	'dijit/form/Select',
 	'dijit/form/Button',
 	'dojo/domReady!'
-], function(parser, registry, runner, dom, lang, array, ItemFileWriteStore){
+], function(parser, registry, runner, dom, lang, array, ItemFileWriteStore, printer){
 
 	var items = [
 		{"TextBox1":"First value!",	"TextBox2": "First value!",	"ComboBox":"First value!", "Select":"First value!"},
@@ -76,7 +77,7 @@ require([
 	};
 
 	printPreview = function(){
-		grid.printer.toHTML({
+		printer.toHTML(grid, {
 			title: "Report",
 			styleSrc: '../support/test_grid_printer.css'
 		}).then(function (result){

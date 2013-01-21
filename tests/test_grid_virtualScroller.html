@@ -23,7 +23,7 @@
 	</h1>
 	<h2>Big Client Store (2000 rows)</h2>
 	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
-		cacheClass: "gridx/core/model/cache/Sync",
+		cacheClass: "gridx/core/model/cache/Async",
 		store: clientStore,
 		structure: layout,
 		modules: [
@@ -40,6 +40,7 @@
 		vScrollerLazy: true,
 		modules: [
 			"gridx/modules/ColumnResizer",
+			"gridx/modules/TouchScroll",
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>

@@ -9,7 +9,7 @@ define([
 	"dijit/form/FilteringSelect"
 ], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, FilteringSelect){
 
-	return declare(/*===== "gridx.modules.barPlugins.DropDownPager", =====*/[_WidgetBase, _FocusMixin, _TemplatedMixin], {
+	return declare(/*===== "gridx.support.DropDownPager", =====*/[_WidgetBase, _FocusMixin, _TemplatedMixin], {
 		// summary:
 		//		This grid bar plugin is to switch pages using select widget.
 

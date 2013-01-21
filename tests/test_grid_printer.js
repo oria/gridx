@@ -1,66 +1,43 @@
 require([
+	'dojo/parser',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
-	'gridx/modules/CellWidget',
-	'gridx/modules/extendedSelect/Row',
-	'gridx/modules/extendedSelect/Column',
-	'gridx/modules/exporter/Table',
-	'gridx/modules/Printer',
-	'gridx/modules/SingleSort',
-	'gridx/modules/NestedSort',
-	'gridx/modules/filter/Filter',
-	'gridx/modules/filter/FilterBar',
-	'gridx/modules/pagination/Pagination',
-	'gridx/modules/pagination/PaginationBar',
-	'gridx/modules/move/Row',
-	'gridx/modules/move/Column',
-	'gridx/modules/dnd/Row',
-	'gridx/modules/dnd/Column',
-	'gridx/modules/VirtualVScroller',	
-	'gridx/tests/support/data/TestData',
+	'gridx/allModules',
+	'gridx/tests/support/data/ComputerData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
 	'dijit/registry',
+	'gridx/support/printer',
 	'dijit/form/CheckBox',
 	'dijit/form/NumberSpinner',
 	'dijit/form/SimpleTextarea',
 	'dijit/form/Button',
 	'dijit/ProgressBar',
 	'dijit/Dialog'
-], function(Grid, Cache, CellWidget, ExtendedSelectRow, ExtendedSelectColumn, ExportTable, Printer, SingleSort, NestedSort,Filter, FilterBar,
-	Pagination, PaginationBar, MoveRow, MoveColumn, DndRow, DndColumn, VirtualVScroller, dataSource, storeFactory, TestPane, registry){
-	grid = new Grid({
-		id: 'grid',
-		cacheClass: Cache,
-		store: storeFactory({
-			path: './support/stores',
-			dataSource: dataSource, 
-			size: 1000
-		}),
-		structure: dataSource.layouts[1],
-		modules: [
-			CellWidget,
-			ExtendedSelectRow,
-			ExtendedSelectColumn,
-			ExportTable,
-			Printer,
-			SingleSort,
-			NestedSort,
-			Filter,
-			FilterBar,
-			Pagination,
-			PaginationBar,
-			MoveRow,
-			MoveColumn,
-			DndRow,
-			DndColumn,
-			VirtualVScroller
-		],
-		autoWidth: false,
-		selectRowTriggerOnCell: true
+], function(parser, Grid, Cache, mods, dataSource, storeFactory, TestPane, registry, printer){
+
+	store = storeFactory({
+		path: './support/stores',
+		dataSource: dataSource, 
+		size: 1000
 	});
-	grid.placeAt('gridContainer');
-	grid.startup();
+	layout = dataSource.layouts[1];
+	modules = [
+		mods.CellWidget,
+		mods.ExtendedSelectRow,
+		mods.ExtendedSelectColumn,
+		mods.SingleSort,
+		mods.NestedSort,
+		mods.Filter,
+		mods.FilterBar,
+		mods.Pagination,
+		mods.PaginationBar,
+		mods.MoveRow,
+		mods.MoveColumn,
+		mods.DndRow,
+		mods.DndColumn,
+		mods.VirtualVScroller
+	];
 
 	function showResult(result){
 		var win = window.open();
@@ -158,11 +135,11 @@ require([
 	}
 
 	printGrid = function(){
-		grid.printer.print(getArgs()).then(null, onError, onProgress);
+		printer(grid, getArgs()).then(null, onError, onProgress);
 	};
 
 	printPreview = function(){
-		grid.printer.toHTML(getArgs()).then(showResult, onError, onProgress);
+		printer.toHTML(grid, getArgs()).then(showResult, onError, onProgress);
 	};
 
 	//Test
@@ -226,94 +203,97 @@ require([
 		'"/><label for="allowColumnWidth">Custom Column Width</label><br />',
 		'<div id="columnwidth" style="padding: 5px; display: none;"><table><tbody>'
 	];
-	tests = tests.concat(grid.columns().map(function(c){
-		return [
-			'<tr><td>',
-			'<input id="allowCW-', c.id, '" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-				'checked: true,',
-				'onChange: toggleSingleColumnWidth',
-			'"/><label for="allowCW-', c.id, '">', c.name(), ':</label></td>',
-			'<td><input id="cw-', c.id, '" type="text" data-dojo-type="dijit.form.TextBox" style="width: 50px;" data-dojo-props="',
-				'value: \'100px\'',
-			'"/></td></tr>'
-		].join('');
-	}));
-	tests.push([
-		'</tbody></table></div>',
-		'<div style="font-weight: bolder; padding: 5px;">Export Arguments</div>',
-		'<input id="allowProgressStep" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-			'onChange: toggleProgressStep',
-		'"/>',
-			'<span id="progressStep" data-dojo-type="dijit.form.NumberSpinner" style="width: 50px;" data-dojo-props="',
-				'value: 20,',
-				'constraints: {min: 1, max: 200},',
-				'disabled: true',
-			'"></span><label for="allowProgressStep">Progress Step</label><br />',
 
-		'<input id="allowStartIndex" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-			'onChange: toggleStartIndex',
-		'"/>',
-			'<span id="startIndex" data-dojo-type="dijit.form.NumberSpinner" style="width: 50px;" data-dojo-props="',
-				'value: 0,',
-				'constraints: {min: 0, max: 999},',
-				'disabled: true',
-			'"></span><label for="allowStartIndex">Start Row Index</label><br />',
+	parser.parse().then(function(){
+		tests = tests.concat(grid.columns().map(function(c){
+			return [
+				'<tr><td>',
+				'<input id="allowCW-', c.id, '" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+					'checked: true,',
+					'onChange: toggleSingleColumnWidth',
+				'"/><label for="allowCW-', c.id, '">', c.name(), ':</label></td>',
+				'<td><input id="cw-', c.id, '" type="text" data-dojo-type="dijit.form.TextBox" style="width: 50px;" data-dojo-props="',
+					'value: \'100px\'',
+				'"/></td></tr>'
+			].join('');
+		}));
+		tests.push([
+			'</tbody></table></div>',
+			'<div style="font-weight: bolder; padding: 5px;">Export Arguments</div>',
+			'<input id="allowProgressStep" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+				'onChange: toggleProgressStep',
+			'"/>',
+				'<span id="progressStep" data-dojo-type="dijit.form.NumberSpinner" style="width: 50px;" data-dojo-props="',
+					'value: 20,',
+					'constraints: {min: 1, max: 200},',
+					'disabled: true',
+				'"></span><label for="allowProgressStep">Progress Step</label><br />',
 
-		'<input id="allowRowCount" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-			'onChange: toggleRowCount',
-		'"/>',
-			'<span id="rowCount" data-dojo-type="dijit.form.NumberSpinner" style="width: 50px;" data-dojo-props="',
-				'value: 100,',
-				'constraints: {min: 1, max: 1000},',
-				'disabled: true',
-			'"></span><label for="allowRowCount">Row Count</label><br />',
+			'<input id="allowStartIndex" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+				'onChange: toggleStartIndex',
+			'"/>',
+				'<span id="startIndex" data-dojo-type="dijit.form.NumberSpinner" style="width: 50px;" data-dojo-props="',
+					'value: 0,',
+					'constraints: {min: 0, max: 999},',
+					'disabled: true',
+				'"></span><label for="allowStartIndex">Start Row Index</label><br />',
 
-		'<input id="omitHeader" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
-			'<label for="omitHeader">Omit Header</label><br />',
+			'<input id="allowRowCount" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+				'onChange: toggleRowCount',
+			'"/>',
+				'<span id="rowCount" data-dojo-type="dijit.form.NumberSpinner" style="width: 50px;" data-dojo-props="',
+					'value: 100,',
+					'constraints: {min: 1, max: 1000},',
+					'disabled: true',
+				'"></span><label for="allowRowCount">Row Count</label><br />',
 
-		'<input id="selectedRows" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
-			'<label for="selectedRows">Selected Rows Only</label><br />',
+			'<input id="omitHeader" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
+				'<label for="omitHeader">Omit Header</label><br />',
 
-		'<input id="filter" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
-			'<label for="filter">Filter "Windows"</label><br />',
+			'<input id="selectedRows" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
+				'<label for="selectedRows">Selected Rows Only</label><br />',
 
-		'<input id="useStoreData" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
-			'<label for="useStoreData">Use Store Data</label><br />',
+			'<input id="filter" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
+				'<label for="filter">Filter "Windows"</label><br />',
 
-		'<input id="allowFormatters" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-			'onChange: toggleFormatters',
-		'"/><label for="allowFormatters">Use Formatters</label><br />',
-		'<div id="formatters" style="padding: 5px; display: none;">',
-			'<input id="formatStatus" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-				'checked: true',
-			'"/><label for="formatStatus">Format Column "Status"</label><br />',
-			'<input id="formatProgress" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-				'checked: true',
-			'"/><label for="formatProgress">Format Column "Progress"</label><br />',
-		'</div>',
+			'<input id="useStoreData" type="checkbox" data-dojo-type="dijit.form.CheckBox"/>',
+				'<label for="useStoreData">Use Store Data</label><br />',
 
-		'<input id="allowChooseColumns" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
-			'onChange: toggleChooseColumns',
-		'"/><label for="allowChooseColumns">Choose Columns</label><br />',
-		'<div id="choosecolumns" style="padding: 5px; display: none;">'
-	].join(''));
-	tests = tests.concat(grid.columns().map(function(c){
-		return [
-			'<input id="col-', c.id,
-			'" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true"/><label for="col-',
-			c.id, '">', c.name(), '</label><br />'
-		].join('');
-	}));
-	tests.push([
-		'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: printPreview">Print Preview</div><br />',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: printGrid">Print</div><br />',
-		'<div id="exportProgress" data-dojo-type="dijit.ProgressBar" style="display: none;" data-dojo-props="',
-			'minimum: 0, maximum: 1',
-		'"></div>'
-	].join(''));
+			'<input id="allowFormatters" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+				'onChange: toggleFormatters',
+			'"/><label for="allowFormatters">Use Formatters</label><br />',
+			'<div id="formatters" style="padding: 5px; display: none;">',
+				'<input id="formatStatus" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+					'checked: true',
+				'"/><label for="formatStatus">Format Column "Status"</label><br />',
+				'<input id="formatProgress" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+					'checked: true',
+				'"/><label for="formatProgress">Format Column "Progress"</label><br />',
+			'</div>',
 
-	var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
-	tp.addTestSet('Print', tests.join(''));
-	tp.startup();
+			'<input id="allowChooseColumns" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="',
+				'onChange: toggleChooseColumns',
+			'"/><label for="allowChooseColumns">Choose Columns</label><br />',
+			'<div id="choosecolumns" style="padding: 5px; display: none;">'
+		].join(''));
+		tests = tests.concat(grid.columns().map(function(c){
+			return [
+				'<input id="col-', c.id,
+				'" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true"/><label for="col-',
+				c.id, '">', c.name(), '</label><br />'
+			].join('');
+		}));
+		tests.push([
+			'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: printPreview">Print Preview</div><br />',
+			'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: printGrid">Print</div><br />',
+			'<div id="exportProgress" data-dojo-type="dijit.ProgressBar" style="display: none;" data-dojo-props="',
+				'minimum: 0, maximum: 1',
+			'"></div>'
+		].join(''));
+
+		var tp = new TestPane({});
+		tp.placeAt('ctrlPane');
+		tp.addTestSet('Print', tests.join(''));
+		tp.startup();
+	});
 });

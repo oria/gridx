@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"./barPlugins/Summary",
+	"../support/Summary",
 	"../core/_Module",
 	"./Bar"
 ], function(declare, Summary, _Module){

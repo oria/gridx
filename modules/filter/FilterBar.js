@@ -14,7 +14,7 @@ define([
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
-	"./Filter",
+	"../Filter",
 	"./FilterDialog",
 	"./FilterConfirmDialog",
 	"./FilterTooltip",

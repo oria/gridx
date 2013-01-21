@@ -1,11 +1,10 @@
 require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/allModules',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, modules, dataSource, storeFactory, TestPane){
+], function(Grid, Cache, dataSource, storeFactory, TestPane){
 
 	var columnSetIdx = 0;
 

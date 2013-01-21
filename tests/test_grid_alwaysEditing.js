@@ -1,4 +1,5 @@
 require([
+	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/stores/ItemFileWriteStore',
@@ -19,8 +20,10 @@ require([
 	'dijit/ColorPalette',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	"gridx/allModules"
-], function(dataSource, storeFactory, IFWSFactory, IFWStore, locale, TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
+	"gridx/allModules",
+	'dojo/domReady!'
+], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale,
+	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
 		res = locale.format(d, {
@@ -177,4 +180,6 @@ require([
 			}
 		}
 	];
+
+	parser.parse();
 });
