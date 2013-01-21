@@ -5,7 +5,7 @@ define([
 	"../../support/exporter/toCSV"
 ], function(kernel, declare, _Module, exportToCSV){
 
-	kernel.deprecated('gridx/modules/exporter/CSV is deprecated.', 'Use gridx/support/exporter/toCSV instead.', '2.0');
+	kernel.deprecated('gridx/modules/exporter/CSV is deprecated.', 'Use gridx/support/exporter/toCSV instead.', '1.2');
 /*=====
 	dojo.declare('__CSVExportArgs', __ExportArgs, {
 		//seperator: String?

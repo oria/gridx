@@ -5,7 +5,7 @@ define([
 	"../support/printer"
 ], function(kernel, _Module, declare, printer){
 
-	kernel.deprecated('gridx/modules/Printer is deprecated.', 'Please use gridx/support/printer instead.', '2.0');
+	kernel.deprecated('gridx/modules/Printer is deprecated.', 'Please use gridx/support/printer instead.', '1.2');
 	/*=====
 	var __PrinterArgs = declare(__ExporterArgs, {
 		// style: String

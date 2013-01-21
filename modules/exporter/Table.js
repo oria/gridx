@@ -5,7 +5,7 @@ define([
 	"../../support/exporter/toTable"
 ], function(kernel, declare, _Module, exportToTabel){
 
-	kernel.deprecated('gridx/modules/exporter/Table is deprecated.', 'Use gridx/support/exporter/toTable instead.', '2.0');
+	kernel.deprecated('gridx/modules/exporter/Table is deprecated.', 'Use gridx/support/exporter/toTable instead.', '1.2');
 /*=====
 	var __TableExportArgs = declare(__ExportArgs, {
 		natualWidth: false,
