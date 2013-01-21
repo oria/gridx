@@ -1,4 +1,5 @@
 require([
+	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/data/TestData',
@@ -17,8 +18,9 @@ require([
 	'dijit/form/TextBox',
 	'dijit/form/NumberTextBox',
 	'dijit/TooltipDialog',
-	'dijit/ColorPalette'
-], function(dataSource1, storeFactory1, dataSource2, storeFactory2){
+	'dijit/ColorPalette',
+	'dojo/domReady!'
+], function(parser, dataSource1, storeFactory1, dataSource2, storeFactory2){
 
 	store1 = storeFactory1({
 		dataSource: dataSource1,
@@ -178,4 +180,6 @@ require([
 			editor: "dijit.form.NumberTextBox"
 		}
 	];
+	
+	parser.parse();
 });

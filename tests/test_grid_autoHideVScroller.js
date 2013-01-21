@@ -1,4 +1,5 @@
 require([
+	'dojo/parser',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
@@ -8,7 +9,7 @@ require([
 	'gridx/support/QuickFilter',
 	'gridx/allModules',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory){
+], function(parser, Grid, Cache, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -64,4 +65,6 @@ require([
 		{id: 'Artist', field: 'Artist', name: 'Artist'},
 		{id: 'Name', field: 'Name', name: 'Name'}
 	];
+
+	parser.parse();
 });

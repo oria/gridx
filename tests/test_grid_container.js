@@ -1,4 +1,5 @@
 require([
+	'dojo/parser',
 	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
@@ -10,7 +11,7 @@ require([
 	'dijit/layout/AccordionContainer',
 	'dijit/layout/ContentPane',
 	'dojo/domReady!'
-], function(array, Grid, Cache, dataSource, storeFactory, mods){
+], function(parser, array, Grid, Cache, dataSource, storeFactory, mods){
 	var createGrid = function(){
 		return new Grid({
 			cacheClass: Cache,
@@ -36,7 +37,7 @@ require([
 		});
 	};
 
-	dojo.ready(function(){
+	parser.parse().then(function(){
 		array.forEach(['centerPane', 'rightPane', 'bottomPane'], function(pane, i){
 			dijit.byId(pane).set('content', createGrid());
 		});

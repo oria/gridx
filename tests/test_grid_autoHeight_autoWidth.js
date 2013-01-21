@@ -1,10 +1,12 @@
 require([
+	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	"gridx/allModules"
-], function(dataSource, storeFactory){
+	"gridx/allModules",
+	'dojo/domReady!'
+], function(parser, dataSource, storeFactory){
 
 	layout = [
 		{id: 'id', field: 'id', name: 'Identity', width: '80px'},
@@ -27,4 +29,5 @@ require([
 		size: 0
 	});
 
+	parser.parse();
 });

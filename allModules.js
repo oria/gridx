@@ -1,5 +1,4 @@
 define([
-	'gridx/modules/Focus',
 	'gridx/modules/VScroller',
 	'gridx/modules/ColumnResizer',
 	'gridx/modules/VirtualVScroller',
@@ -16,7 +15,6 @@ define([
 	'gridx/modules/move/Column',
 	'gridx/modules/dnd/Row',
 	'gridx/modules/dnd/Column',
-	'gridx/modules/AutoScroll',
 	'gridx/modules/Pagination',
 	'gridx/modules/pagination/PaginationBar',
 	'gridx/modules/pagination/PaginationBarDD',
@@ -38,12 +36,12 @@ define([
 	'gridx/modules/Bar',
 	'gridx/modules/TouchScroll'
 ], function(
-	Focus, VScroller, ColumnResizer, VirtualVScroller,
+	VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
 	MoveRow, MoveColumn,
-	DndRow, DndColumn, AutoScroll,
+	DndRow, DndColumn,
 	Pagination,
 	PaginationBar, PaginationBarDD,
 	Filter, FilterBar, QuickFilter,
@@ -52,7 +50,6 @@ define([
 	Persist, Menu, Dod, Tree, RowLock,
 	ToolBar, SummaryBar, Bar, TouchScroll){
 return {
-	Focus: Focus,
 	VScroller: VScroller,
 	ColumnResizer: ColumnResizer, 
 	VirtualVScroller: VirtualVScroller,
@@ -69,7 +66,6 @@ return {
 	MoveColumn: MoveColumn,
 	DndRow: DndRow,
 	DndColumn: DndColumn,
-	AutoScroll: AutoScroll,
 	Pagination: Pagination,
 	PaginationBar: PaginationBar,
 	PaginationBarDD: PaginationBarDD,

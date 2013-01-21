@@ -11,9 +11,7 @@
 			margin-bottom: 20px;
 		}
 	</style>
-
-	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
 	<script type="text/javascript" src='test_grid_autoHideVScroller.js'></script>
 </head>
@@ -21,7 +19,7 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Test Auto-Hide VScroller
 	</h1>
-	<div id='grid1' data-dojo-type='gridx/Grid' data-dojo-props='
+	<div id='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout1,
@@ -37,7 +35,7 @@
 			"gridx/modules/Bar"
 		]
 	'></div>
-	<div id='grid2' data-dojo-type='gridx/Grid' data-dojo-props='
+	<div id='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout2,
@@ -53,7 +51,7 @@
 			"gridx/modules/Bar"
 		]
 	'></div>
-	<div id='grid3' data-dojo-type='gridx/Grid' data-dojo-props='
+	<div id='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout3,
@@ -69,7 +67,7 @@
 			"gridx/modules/Bar"
 		]
 	'></div>
-	<div id='grid4' data-dojo-type='gridx/Grid' data-dojo-props='
+	<div id='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout4,
@@ -85,7 +83,7 @@
 			"gridx/modules/Bar"
 		]
 	'></div>
-	<div id='grid5' data-dojo-type='gridx/Grid' data-dojo-props='
+	<div id='grid5' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout5,
