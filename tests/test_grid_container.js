@@ -1,4 +1,4 @@
-define([
+require([
 	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',

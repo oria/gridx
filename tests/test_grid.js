@@ -1,12 +1,11 @@
 require([
-	'dojo/on',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane'
-], function(on, Grid, Cache, modules, dataSource, storeFactory, TestPane){
+], function(Grid, Cache, modules, dataSource, storeFactory, TestPane){
 
 	var columnSetIdx = 0;
 
@@ -28,8 +27,7 @@ require([
 				id: 'grid',
 				cacheClass: Cache,
 				store: store,
-				structure: layout,
-				selectRowTriggerOnCell: true
+				structure: layout
 			});
 			grid.placeAt('gridContainer');
 			grid.startup();

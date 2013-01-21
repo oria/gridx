@@ -1,11 +1,11 @@
-define([
+require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/ComputerData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/modules/CellWidget',
 	'gridx/modules/extendedSelect/Row',
-	'gridx/modules/exporter/CSV',
+	'gridx/support/exporter/toCSV',
 	'gridx/modules/SingleSort',
 	'gridx/modules/filter/Filter',
 	'gridx/modules/filter/FilterBar',
@@ -21,9 +21,8 @@ define([
 	'dijit/ProgressBar',
 	'dijit/Dialog',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, CellWidget, ExtendedSelectRow, ExportCSV, SingleSort,
-			Filter, FilterBar, Pagination, PaginationBar, VirtualVScroller, TestPane, registry
-	){
+], function(Grid, Cache, dataSource, storeFactory, CellWidget, ExtendedSelectRow, toCSV, SingleSort,
+			Filter, FilterBar, Pagination, PaginationBar, VirtualVScroller, TestPane, registry){
 	grid = new Grid({
 		id: 'grid',
 		cacheClass: Cache,
@@ -36,7 +35,6 @@ define([
 		modules: [
 			CellWidget,
 			ExtendedSelectRow,
-			ExportCSV,
 			SingleSort,
 			Filter,
 			FilterBar,
@@ -121,7 +119,7 @@ define([
 			});
 		}
 		console.log(args);
-		grid.exporter.toCSV(args).then(showResult, onError, onProgress);
+		toCSV(grid, args).then(showResult, onError, onProgress);
 	};
 
 	//Test

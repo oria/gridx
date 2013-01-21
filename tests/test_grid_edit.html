@@ -8,31 +8,42 @@
 		.gridx {
 			width: 1000px;
 			height: 400px;
+			margin-bottom: 20px;
 		}
 	</style>
 
 	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script>
-	require(['gridx/tests/test_grid_edit', 'dojo/domReady!'], function(){});
-	</script>
+	<script type="text/javascript" src='test_grid_edit.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Edit Test 
 	</h1>
 	<p>Double click or press ENTER on a cell to edit</p>
-	<div jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+	<h2>Dijit as editor</h2>
+	<div jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
-		store: store,
-		structure: layout,
+		store: store1,
+		structure: layout1,
 		modules: [
 			"gridx/modules/Focus",
 			"gridx/modules/CellWidget",
 			"gridx/modules/Edit",
 			"gridx/modules/pagination/Pagination",
 			"gridx/modules/pagination/PaginationBar"
+		]
+	'></div>
+	<h2>Custom editor</h2>
+	<div jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store2,
+		structure: layout2,
+		modules: [
+			"gridx/modules/Focus",
+			"gridx/modules/CellWidget",
+			"gridx/modules/Edit"
 		]
 	'></div>
 </body>

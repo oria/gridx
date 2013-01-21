@@ -1,17 +1,11 @@
-define([
-	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+require([
+	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/modules/VirtualVScroller',
-	'gridx/modules/Focus',
-	'gridx/modules/RowHeader',
-	'gridx/modules/extendedSelect/Cell',
-	'gridx/modules/extendedSelect/Column',
-	'gridx/modules/extendedSelect/Row',
-	'gridx/modules/Menu',
+	'gridx/tests/support/stores/Memory',
+	'gridx/allModules',
 	'gridx/tests/support/TestPane',
-
+	'gridx/Grid',
+	'gridx/core/model/cache/Sync',
 	'dijit/Menu',
 	"dijit/MenuItem",
 	"dijit/PopupMenuItem",
@@ -19,31 +13,22 @@ define([
 	"dijit/MenuSeparator",
 	'dijit/form/CheckBox',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, VirtualVScroller,
-			Focus, RowHeader, ExtendedSelectCell, ExtendedSelectColumn, ExtendedSelectRow, Menu, TestPane
-	){
+], function(parser, dataSource, storeFactory, modules, TestPane){
 
-	grid = new Grid({
-		id: 'grid',
-		cacheClass: Cache,
-		store: storeFactory({
-			dataSource: dataSource,
-			size: 100
-		}),
-		structure: dataSource.layouts[0],
-		modules: [
-			VirtualVScroller,
-			Focus,
-			RowHeader,
-			ExtendedSelectCell,
-			ExtendedSelectColumn,
-			ExtendedSelectRow,
-			Menu
-		]
+	store = storeFactory({
+		dataSource: dataSource,
+		size: 100
 	});
-	grid.placeAt('gridContainer');
-	grid.startup();
-	
+	layout = dataSource.layouts[0];
+	mods = [
+		modules.VirtualVScroller,
+		modules.RowHeader,
+		modules.ExtendedSelectCell,
+		modules.ExtendedSelectColumn,
+		modules.ExtendedSelectRow,
+		modules.Menu
+	];
+
 	//Test buttons
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
@@ -61,6 +46,8 @@ define([
 	].join(''));
 	
 	tp.startup();
+
+	parser.parse();
 });
 
 function bindMenu(flag){

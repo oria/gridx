@@ -1,4 +1,4 @@
-define([
+require([
 	'dojo/_base/lang',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',

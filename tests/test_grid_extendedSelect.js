@@ -1,4 +1,4 @@
-define([
+require([
 	'dojo/_base/connect',
 	'dojo/_base/array',
 	'dojo/dom',
@@ -17,10 +17,9 @@ define([
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
 ], function(connect, array, dom, Grid, Cache, dataSource, storeFactory, TestPane, Focus,
-		RowHeader, ColumnResizer, ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell, VirtualVScroller
-	){
+		RowHeader, ColumnResizer, ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell, VirtualVScroller){
 
-	grid = new Grid({
+grid = new Grid({
 	id: 'grid',
 	cacheClass: Cache,
 	store: storeFactory({
