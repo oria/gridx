@@ -453,8 +453,9 @@ define([
 
 		_createExts: function(exts, args){
 			//Ensure the given extensions are valid
-			exts = array.filter(exts, function(ext){
-				ext = typeof ext == 'string' ? require(ext) : ext;
+			exts = array.filter(array.map(exts, function(ext){
+				return typeof ext == 'string' ? require(ext) : ext;
+			}), function(ext){
 				return ext && ext.prototype;
 			});
 			//Sort the extensions by priority
