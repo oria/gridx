@@ -265,6 +265,7 @@ define([
 			var d = new Deferred(),
 				t = this;
 			if(id && !t.isExpanded(id)){
+				t._beginLoading(id);
 				t.model.when({
 					parentId: id, 
 					start: 0
@@ -272,6 +273,7 @@ define([
 					t._logicExpand(id);
 				}).then(function(){
 					Deferred.when(t._updateBody(id, skipUpdateBody, true), function(){
+						t._endLoading(id);
 						d.callback();
 						t.onExpand(id);
 					});
@@ -319,6 +321,7 @@ define([
 			var t = this,
 				m = t.model,
 				d = new Deferred();
+			t._beginLoading(id);
 			t.expand(id, 1).then(function(){
 				var i, dl = [], size = m.size(id);
 				m.when({start: 0, parentId: id}, function(){
@@ -329,6 +332,7 @@ define([
 				}).then(function(){
 					new DeferredList(dl).then(function(){
 						Deferred.when(t._updateBody(id, skipUpdateBody), function(){
+							t._endLoading(id);
 							d.callback();
 						});
 					});
@@ -559,36 +563,47 @@ define([
 				}
 			}
 		},
+
+		_beginLoading: function(id){
+			var body = this.grid.body,
+				rowNode = body.getRowNode({rowId: id});
+			if(rowNode){
+				var n = query('.gridxTreeExpandoCell', rowNode)[0];
+				if(n){
+					var expando = query('.gridxTreeExpandoIcon', n)[0];
+					expando.firstChild.innerHTML = 'o';
+					domClass.add(n, 'gridxTreeExpandoLoading');
+				}
+			}
+		},
+		_endLoading: function(id){
+			var body = this.grid.body,
+				rowNode = body.getRowNode({rowId: id}),
+				isOpen = this.isExpanded(id);
+			if(rowNode){
+				var n = query('.gridxTreeExpandoCell', rowNode)[0];
+				if(n){
+					var expando = query('.gridxTreeExpandoIcon', n)[0];
+					rowNode.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+					expando.firstChild.innerHTML = isOpen ? '-' : '+';
+					domClass.remove(n, 'gridxTreeExpandoLoading');
+					domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
+				}
+			}
+		},
 	
 		_updateBody: function(id, skip, refreshPartial){
 			var t = this,
 				body = t.grid.body;
 			body.updateRootRange(body.rootStart, body.rootCount);
 			if(!skip){
-				var rowNode = body.getRowNode({rowId: id}), n, expando,
-					isOpen = t.isExpanded(id);
-				if(rowNode){
-					n = query('.gridxTreeExpandoCell', rowNode)[0];
-					if(n){
-						expando = query('.gridxTreeExpandoIcon', n)[0];
-						expando.firstChild.innerHTML = 'o';
-						domClass.add(n, 'gridxTreeExpandoLoading');
-					}
-				}
 				var visualIndex = refreshPartial && id ? 
 					t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
 				//When collapsing, the row count in current view decrease, if only render partially,
 				//it is possible that the vertical scroll bar disappear, then the upper unrendered rows will be lost.
 				//So refresh the whole body here to make the upper row also visible.
 				//FIXME: need better solution here.
-				return body.refresh(refreshPartial && visualIndex + 1).then(function(){
-					if(n){
-						rowNode.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-						expando.firstChild.innerHTML = isOpen ? '-' : '+';
-						domClass.remove(n, 'gridxTreeExpandoLoading');
-						domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
-					}
-				});
+				return body.refresh(refreshPartial && visualIndex + 1);
 			}
 			return null;
 		},
