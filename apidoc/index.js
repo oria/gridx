@@ -1,7 +1,7 @@
 var siteName = 'GridX';
 
 // Set currentVersion as a global variable, since it's accessed from api.js
-var currentVersion = '1.0';
+var currentVersion = '1.1';
 
 var page = '';
 

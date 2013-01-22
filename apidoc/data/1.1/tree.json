@@ -18,16 +18,7 @@
 							"id": "gridx/core/_Module",
 							"name": "_Module",
 							"fullname": "gridx/core/_Module",
-							"type": "constructor",
-							"children": [
-								{
-									"id": "gridx/core/_Module._modules",
-									"name": "_modules",
-									"fullname": "gridx/core/_Module._modules",
-									"type": "object",
-									"children": []
-								}
-							]
+							"type": "constructor"
 						},
 						{
 							"id": "gridx/core/Cell",
@@ -199,13 +190,13 @@
 							"id": "gridx/modules/AutoScroll",
 							"name": "AutoScroll",
 							"fullname": "gridx/modules/AutoScroll",
-							"type": "undefined"
+							"type": "constructor"
 						},
 						{
 							"id": "gridx/modules/Bar",
 							"name": "Bar",
 							"fullname": "gridx/modules/Bar",
-							"type": "undefined"
+							"type": "constructor"
 						},
 						{
 							"id": "gridx/modules/barPlugins/",
@@ -303,7 +294,7 @@
 									"id": "gridx/modules/dnd/_Dnd",
 									"name": "_Dnd",
 									"fullname": "gridx/modules/dnd/_Dnd",
-									"type": "undefined"
+									"type": "constructor"
 								},
 								{
 									"id": "gridx/modules/dnd/Avatar",
@@ -353,7 +344,7 @@
 									"id": "gridx/modules/exporter/Exporter",
 									"name": "Exporter",
 									"fullname": "gridx/modules/exporter/Exporter",
-									"type": "undefined"
+									"type": "constructor"
 								},
 								{
 									"id": "gridx/modules/exporter/Table",
@@ -402,6 +393,12 @@
 							]
 						},
 						{
+							"id": "gridx/modules/Filter",
+							"name": "Filter",
+							"fullname": "gridx/modules/Filter",
+							"type": "constructor"
+						},
+						{
 							"id": "gridx/modules/filter/",
 							"name": "filter",
 							"fullname": "gridx/modules/filter",
@@ -417,7 +414,7 @@
 									"id": "gridx/modules/filter/Filter",
 									"name": "Filter",
 									"fullname": "gridx/modules/filter/Filter",
-									"type": "undefined"
+									"type": "constructor"
 								},
 								{
 									"id": "gridx/modules/filter/FilterBar",
@@ -523,6 +520,12 @@
 							"id": "gridx/modules/NestedSort",
 							"name": "NestedSort",
 							"fullname": "gridx/modules/NestedSort",
+							"type": "constructor"
+						},
+						{
+							"id": "gridx/modules/Pagination",
+							"name": "Pagination",
+							"fullname": "gridx/modules/Pagination",
 							"type": "constructor"
 						},
 						{
