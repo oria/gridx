@@ -16,6 +16,30 @@ define([
 	"../core/model/extensions/Sort",
 	"dojo/i18n!../nls/NestedSort"
 ], function(declare, array, connect, event, query, win, sniff, string, domClass, domConstruct, domStyle, domGeometry, keys, _Module, Sort, nls){
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Sort multiple columns in a nested way.
+
+		getSortData: function(){
+		},
+
+		sort: function(sortData){
+		},
+
+		isSorted: function(colId){
+		},
+
+		clear: function(){
+			// summary:
+			//	Clear the sorting state
+		},
+
+		isSortable: function(colId){
+		}
+	});
+=====*/
 	
 	var forEach = array.forEach,
 		filter = array.filter,
@@ -24,7 +48,7 @@ define([
 		removeClass = domClass.remove,
 		addClass = domClass.add;
 
-	return declare(/*===== "gridx.modules.NestedSort", =====*/_Module, {
+	return declare(_Module, {
 		name: 'sort',
 
 		forced: ['header'],
@@ -112,8 +136,6 @@ define([
 		},
 		
 		clear: function(){
-			// summary:
-			//	Clear the sorting state
 			this._sortData.length = 0;
 			this._doSort();
 			this._updateUI();

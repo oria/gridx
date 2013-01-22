@@ -4,6 +4,28 @@ define([
 	'../../core/_Module'
 ], function(declare, connect, _Module){
 
+/*=====
+	return declare(_Module, {
+		// enabled: Boolean
+		//		Whether this module is enabled.
+		enabled: true,
+	
+		// multiple: Boolean
+		//		Whether multiple selectionis allowe.
+		multiple: true,
+	
+		// holdingCtrl: Boolean
+		//		Whether to add to selection all the time (as if the CTRL key is always held).
+		holdingCtrl: false,
+
+		onSelected: function(){},
+
+		onDeselected: function(){},
+
+		onHighlightChange: function(){}
+	});
+=====*/
+
 	return declare(_Module, {
 		getAPIPath: function(){
 			var path = {
@@ -28,17 +50,10 @@ define([
 		},
 
 		//Public--------------------------------------------------------------------
-
-		// enabled: Boolean
-		//		Whether this module is enabled.
 		enabled: true,
 	
-		// multiple: Boolean
-		//		Whether multiple selectionis allowe.
 		multiple: true,
 	
-		// holdingCtrl: Boolean
-		//		Whether to add to selection all the time (as if the CTRL key is always held).
 		holdingCtrl: false,
 
 		//Events----------------------------------------------------------------------
@@ -49,7 +64,6 @@ define([
 		onHighlightChange: function(){},
 
 		//Private---------------------------------------------------------------------
-		
 		_getMarkType: function(){},
 
 		_isSelected: function(){

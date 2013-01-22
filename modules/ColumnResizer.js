@@ -13,6 +13,29 @@ define([
 	"../core/_Module"
 ], function(declare, sniff, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
 
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Column Resizer machinery.
+		// description:
+		//		This module provides a way to resize column width. 
+		
+		// minWidth: Integer
+		//		min column width in px
+		minWidth: 20,
+
+		detectWidth: 5,
+
+		setWidth: function(olId, width){
+			// summary:
+			//		Set width of the target column
+		},
+
+		onResize: function(colId, newWidth, oldWidth){
+		}
+	});
+=====*/
+
 	var removeClass = domClass.remove;
 
 	function getCell(e){
@@ -38,20 +61,11 @@ define([
 		return null;
 	}
 
-	return declare(/*===== "gridx.modules.ColumnResizer", =====*/_Module, {
-		// summary:
-		//		Column Resizer machinery.
-		// description:
-		//		This module provides a way to resize column width. 
-		
-		// name: [readonly] String
-		//		module name
+	return declare(_Module, {
 		name: 'columnResizer',
 
 //		required: ['hScroller'],
 
-		// minWidth: Integer
-		//		min column width in px
 		minWidth: 20,
 
 		detectWidth: 5,
@@ -90,8 +104,6 @@ define([
 
 		//Public---------------------------------------------------------------------
 		setWidth: function(/*String | Integer*/colId, /*Integer*/width){
-			// summary:
-			//		Set width of the target column
 			var t = this,
 				g = t.grid, i,
 				cols = g._columns,

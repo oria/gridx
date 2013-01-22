@@ -11,10 +11,9 @@ define([
 	"dojo/keys",
 	"dojo/_base/event"
 ], function(declare, lang, string, _LinkPageBase, GotoPagePane, nls, Dialog, Button, NumberTextBox, keys, event){
-	
-	return declare(/*===== "gridx.support.GotoPageButton", =====*/_LinkPageBase, {
-		templateString: "<span class='gridxPagerGotoBtn' tabindex='${_tabIndex}' title='${gotoBtnTitle}' aria-label='${gotoBtnTitle}' data-dojo-attach-event='onclick: _showGotoDialog'><span class='gridxPagerA11yInner'>&#9650;</span></span>",
 
+/*=====
+	return declare(_LinkPageBase, {
 		gotoPagePane: GotoPagePane,
 
 		// dialogClass: [private]
@@ -24,6 +23,21 @@ define([
 		buttonClass: Button,
 
 		// numberTextBoxClass: [private]
+		numberTextBoxClass: NumberTextBox,
+
+		refresh: function(){}
+	});
+=====*/
+
+	return declare(_LinkPageBase, {
+		templateString: "<span class='gridxPagerGotoBtn' tabindex='${_tabIndex}' title='${gotoBtnTitle}' aria-label='${gotoBtnTitle}' data-dojo-attach-event='onclick: _showGotoDialog'><span class='gridxPagerA11yInner'>&#9650;</span></span>",
+
+		gotoPagePane: GotoPagePane,
+
+		dialogClass: Dialog,
+
+		buttonClass: Button,
+
 		numberTextBoxClass: NumberTextBox,
 
 		refresh: function(){},

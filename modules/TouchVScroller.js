@@ -7,6 +7,15 @@ define([
 ], function(kernel, declare, domClass, VScroller, Scrollable){
 	kernel.experimental('gridx/modules/TouchVScroller');
 
+/*=====
+	return declare(VScroller, {
+		// summary:
+		//		A vertical scroller only for touch devices.
+		// description:
+		//		Using dojox/mobile/scrollable, and no lazy-rendering (all rows are rendered out).
+	});
+=====*/
+
 	return declare(VScroller, {
 		_init: function(){
 			var g = this.grid,

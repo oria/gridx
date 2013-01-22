@@ -20,19 +20,10 @@ define([
 	TextBox, Button, ComboButton, Menu, MenuItem,
 	F, nls, template){
 
-	return declare(/*===== "gridx.support.QuickFilter", =====*/[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-		templateString: template,
-
-		constructor: function(args){
-			lang.mixin(this, nls);
-			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
-		},
-
-		postCreate: function(){
-			if(this.autoApply){
-				this.connect(this.textBox, 'onInput', '_onInput');
-			}
-		},
+/*=====
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+		// summary:
+		//		Quick filter box.
 
 		// grid: gridx.Grid
 		//		The grid widget this plugin works for.
@@ -56,6 +47,38 @@ define([
 		// delay: Integer
 		//		The time (in ms) delay before applying the filter after each key stroke in the filter box.
 		//		Only effective when autoApply is true, 
+		delay: 700
+	});
+=====*/
+
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+		templateString: template,
+
+		constructor: function(args){
+			lang.mixin(this, nls);
+			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+		},
+
+		postCreate: function(){
+			if(this.autoApply){
+				this.connect(this.textBox, 'onInput', '_onInput');
+			}
+		},
+
+		grid: null,
+
+		textBoxClass: 'dijit.form.TextBox',
+
+		buttonClass: 'dijit.form.Button',
+
+		comboButtonClass: 'dijit.form.ComboButton',
+
+		menuClass: 'dijit.Menu',
+
+		menuItemClass: 'dijit.MenuItem',
+
+		autoApply: true,
+
 		delay: 700,
 
 		//Private--------------------------------------------------------------------

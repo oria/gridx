@@ -14,13 +14,8 @@ define([
 ], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
-	function isExpando(cellNode){
-		var n = cellNode.firstChild;
-		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
-			!domClass.contains(n, 'gridxTreeExpandoLoading');
-	}
-
-	return declare(/*===== "gridx.modules.Tree", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		Tree Grid module.
 		// description:
@@ -108,94 +103,6 @@ define([
 		//	|		{name: "Rebound", field: "rebound"},
 		//	|		{name: "Assistant", field: "assistant"}
 		//	|	];
-		
-		name: "tree",
-
-		constructor: function(){
-			this._clear();
-		},
-	
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				tree: this
-			};
-		},
-	
-		preload: function(){
-			// tags:
-			//		protected extension
-			var t = this,
-				g = t.grid;
-			if(t.model.treeMarkMode){
-				t.model.treeMarkMode('', true);
-			}
-			g.domNode.setAttribute('role', 'treegrid');
-			t.batchConnect(
-				[g.body, 'collectCellWrapper', '_createCellWrapper'],
-				[g.body, 'onAfterRow', '_onAfterRow'],
-				[t.model, 'onDelete', '_onDelete'],
-				[g, 'onCellClick', '_onCellClick'],
-				[g, 'setStore', '_clear']);
-			t._initExpandLevel();
-			t._initFocus();
-			if(g.persist){
-				var id,
-					data = g.persist.registerAndLoad('tree', function(){
-						return {
-							openInfo: t._openInfo, 
-							parentOpenInfo: t._parentOpenInfo
-						};
-					});
-				if(data && data.openInfo && data.parentOpenInfo){
-					var openInfo = t._openInfo = data.openInfo,
-						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
-					for(id in openInfo){
-						openInfo[id].openned = parentOpenInfo[id];
-					}
-					t._persisted = 1;
-				}
-			}
-		},
-
-		load: function(args){
-			// tags:
-			//		protected extension
-			var t = this;
-			if(t._persisted){
-				t.loaded.callback();
-			}else{
-				t.model.when({}, function(){
-					t._openInfo[''].count = t.model.size();
-				}).then(function(){
-					t.loaded.callback();
-				});
-			}
-		},
-
-		rowMixin: {
-			canExpand: function(){
-				return this.grid.tree.canExpand(this.id);
-			},
-			isExpanded: function(){
-				return this.grid.tree.isExpanded(this.id);
-			},
-			expand: function(){
-				return this.grid.tree.expand(this.id);
-			},
-			collapse: function(){
-				return this.grid.tree.collapse(this.id);
-			},
-			expandRecursive: function(){
-				return this.grid.expandRecursive(this.id);
-			},
-			collapseRecursive: function(){
-				return this.grid.collapseRecursive(this.id);
-			}
-		},
-	
-		//Public--------------------------------------------------------------------------------
 
 		// nested: Boolean
 		//		If set to true, the tree nodes can be shown in nested mode.
@@ -235,11 +142,6 @@ define([
 			//		The row ID
 			// returns:
 			//		Whether the row can be expanded.
-			var t = this,
-				m = t.model,
-				level = m.treePath(id).length,
-				expandLevel = t.arg('expandLevel');
-			return m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel);
 		},
 	
 		isExpanded: function(id){
@@ -249,7 +151,6 @@ define([
 			//		The row ID
 			// returns:
 			//		Whether the row is expanded.
-			return !!this._openInfo[id];	//Boolean
 		},
 
 		expand: function(id, skipUpdateBody){
@@ -262,6 +163,188 @@ define([
 			//		so that several grid operations can be executed altogether.
 			// returns:
 			//		A deferred object indicating whether this expanding process has completed.
+		},
+	
+		collapse: function(id, skipUpdateBody){
+			// summary:
+			//		Collapse a row.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this collapsing process has completed.
+		},
+	
+		expandRecursive: function(id, skipUpdateBody){
+			// summary:
+			//		Recursively expand a row and all its descendants.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this expanding process has completed.
+		},
+	
+		collapseRecursive: function(id, skipUpdateBody){
+			// summary:
+			//		Recursively collapse a row recursively and all its descendants.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this collapsing process has completed.
+		},
+
+		refresh: function(){
+			// summary:
+			//		When the row order are changed or rows are filtered, the expand info recorded here will
+			//		be invalid. This method refreshes the expand info by logically re-open all expanded rows,
+			//		and then refresh the grid body.
+			//		When this method is called, no need to call grid.body.refresh() anymore.
+			// returns:
+			//		A Deferred object indicating when this process ends.
+		},
+	
+		getRowInfoByVisualIndex: function(visualIndex, rootStart){
+			// summary:
+			//		Get row info (including row index, row id, parent id, etc) by row visual index.
+			// tags:
+			//		private
+			// visualIndex: Integer
+			// rootStart: Integer
+			// returns:
+			//		A row info object
+		},
+	
+		getVisualIndexByRowInfo: function(parentId, rowIndex, rootStart){
+			// tags:
+			//		private
+		},
+	
+		getVisualSize: function(start, count, parentId){
+			// tags:
+			//		private
+		}
+	});
+=====*/
+
+	function isExpando(cellNode){
+		var n = cellNode.firstChild;
+		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
+			!domClass.contains(n, 'gridxTreeExpandoLoading');
+	}
+
+	return declare(_Module, {
+		name: "tree",
+
+		constructor: function(){
+			this._clear();
+		},
+	
+		getAPIPath: function(){
+			return {
+				tree: this
+			};
+		},
+	
+		preload: function(){
+			var t = this,
+				g = t.grid;
+			if(t.model.treeMarkMode){
+				t.model.treeMarkMode('', true);
+			}
+			g.domNode.setAttribute('role', 'treegrid');
+			t.batchConnect(
+				[g.body, 'collectCellWrapper', '_createCellWrapper'],
+				[g.body, 'onAfterRow', '_onAfterRow'],
+				[t.model, 'onDelete', '_onDelete'],
+				[g, 'onCellClick', '_onCellClick'],
+				[g, 'setStore', '_clear']);
+			t._initExpandLevel();
+			t._initFocus();
+			if(g.persist){
+				var id,
+					data = g.persist.registerAndLoad('tree', function(){
+						return {
+							openInfo: t._openInfo, 
+							parentOpenInfo: t._parentOpenInfo
+						};
+					});
+				if(data && data.openInfo && data.parentOpenInfo){
+					var openInfo = t._openInfo = data.openInfo,
+						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
+					for(id in openInfo){
+						openInfo[id].openned = parentOpenInfo[id];
+					}
+					t._persisted = 1;
+				}
+			}
+		},
+
+		load: function(args){
+			var t = this;
+			if(t._persisted){
+				t.loaded.callback();
+			}else{
+				t.model.when({}, function(){
+					t._openInfo[''].count = t.model.size();
+				}).then(function(){
+					t.loaded.callback();
+				});
+			}
+		},
+
+		rowMixin: {
+			canExpand: function(){
+				return this.grid.tree.canExpand(this.id);
+			},
+			isExpanded: function(){
+				return this.grid.tree.isExpanded(this.id);
+			},
+			expand: function(){
+				return this.grid.tree.expand(this.id);
+			},
+			collapse: function(){
+				return this.grid.tree.collapse(this.id);
+			},
+			expandRecursive: function(){
+				return this.grid.expandRecursive(this.id);
+			},
+			collapseRecursive: function(){
+				return this.grid.collapseRecursive(this.id);
+			}
+		},
+	
+		//Public--------------------------------------------------------------------------------
+		nested: false,
+
+		expandoPadding: 18,
+
+		expandLevel: 1 / 0,
+
+		onExpand: function(id){},
+
+		onCollapse: function(id){},
+
+		canExpand: function(id){
+			var t = this,
+				m = t.model,
+				level = m.treePath(id).length,
+				expandLevel = t.arg('expandLevel');
+			return m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel);
+		},
+	
+		isExpanded: function(id){
+			return !!this._openInfo[id];	//Boolean
+		},
+
+		expand: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				t = this;
 			if(id && !t.isExpanded(id)){
@@ -281,19 +364,10 @@ define([
 			}else{
 				d.callback();
 			}
-			return d;	//dojo.Deferred
+			return d;
 		},
 	
 		collapse: function(id, skipUpdateBody){
-			// summary:
-			//		Collapse a row.
-			// id: String
-			//		The row ID
-			// skipUpdateBody: Boolean
-			//		If set to true the grid will not automatically refresh itself after this method,
-			//		so that several grid operations can be executed altogether.
-			// returns:
-			//		A deferred object indicating whether this collapsing process has completed.
 			var d = new Deferred(),
 				t = this;
 			if(id && t.isExpanded(id)){
@@ -305,19 +379,10 @@ define([
 			}else{
 				d.callback();
 			}
-			return d;	//dojo.Deferred
+			return d;
 		},
 	
 		expandRecursive: function(id, skipUpdateBody){
-			// summary:
-			//		Recursively expand a row and all its descendants.
-			// id: String
-			//		The row ID
-			// skipUpdateBody: Boolean
-			//		If set to true the grid will not automatically refresh itself after this method,
-			//		so that several grid operations can be executed altogether.
-			// returns:
-			//		A deferred object indicating whether this expanding process has completed.
 			var t = this,
 				m = t.model,
 				d = new Deferred();
@@ -342,15 +407,6 @@ define([
 		},
 	
 		collapseRecursive: function(id, skipUpdateBody){
-			// summary:
-			//		Recursively collapse a row recursively and all its descendants.
-			// id: String
-			//		The row ID
-			// skipUpdateBody: Boolean
-			//		If set to true the grid will not automatically refresh itself after this method,
-			//		so that several grid operations can be executed altogether.
-			// returns:
-			//		A deferred object indicating whether this collapsing process has completed.
 			var d = new Deferred(),
 				success = lang.hitch(d, d.callback),
 				fail = lang.hitch(d, d.errback),
@@ -375,13 +431,6 @@ define([
 		},
 
 		refresh: function(){
-			// summary:
-			//		When the row order are changed or rows are filtered, the expand info recorded here will
-			//		be invalid. This method refreshes the expand info by logically re-open all expanded rows,
-			//		and then refresh the grid body.
-			//		When this method is called, no need to call grid.body.refresh() anymore.
-			// returns:
-			//		A Deferred object indicating when this process ends.
 			var t = this,
 				m = t.model,
 				d = new Deferred(),
@@ -412,14 +461,6 @@ define([
 	
 		//Package------------------------------------------------------------------------------
 		getRowInfoByVisualIndex: function(visualIndex, rootStart){
-			// summary:
-			//		Get row info (including row index, row id, parent id, etc) by row visual index.
-			// tags:
-			//		package
-			// visualIndex: Integer
-			// rootStart: Integer
-			// returns:
-			//		A row info object
 			var t = this,
 				rootOpenned = t._openInfo[''].openned,
 				root, i;
@@ -439,19 +480,15 @@ define([
 			while(!info.found){
 				info = t._getChild(visualIndex, info);
 			}
-			return info;	//Object
+			return info;
 		},
 	
 		getVisualIndexByRowInfo: function(parentId, rowIndex, rootStart){
-			// tags:
-			//		package
 			var index = this._getAbsoluteVisualIndex(parentId, rowIndex);
 			return index >= 0 ? index - this._getAbsoluteVisualIndex('', rootStart) : null;
 		},
 	
 		getVisualSize: function(start, count, parentId){
-			// tags:
-			//		package
 			var info = this._openInfo[parentId || ''];
 			if(info){
 				var i, len = info.openned.length, child, size = count;

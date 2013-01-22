@@ -13,7 +13,8 @@ define([
 	"../core/util"
 ], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
 
-	return declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This modules provides a header before each row.
 		// description:
@@ -21,11 +22,31 @@ define([
 		//		cell selection is turned on and selectRowTriggerOnCell is turned off.
 		//		It can also be used as a place to hold the checkbox/radiobutton for IndirectSelect
 
+		// width: String
+		//		The width (CSS value) of a row header.
+		width: '20px',
+
+		onMoveToRowHeaderCell: function(){
+			// summary:
+			//		Fired when focus is moved to a row header using keyboard.
+			// tags:
+			//		callback
+		},
+
+		// headerProvider: Function
+		//		A functionn that returns an HTML string to fill the header cell of row headers.
+		headerProvider: null,
+
+		// cellProvider: Function
+		//		A function that returns an HTML string to fill the body cells of row headers.
+		cellProvider: null
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'rowHeader',
 
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				rowHeader: this
 			};
@@ -46,8 +67,6 @@ define([
 		},
 
 		destroy: function(){
-			// tags:
-			//		protected extension
 			this.inherited(arguments);
 			this._b.remove();
 			domConstruct.destroy(this.headerNode);
@@ -55,8 +74,6 @@ define([
 		},
 
 		preload: function(){
-			// tags:
-			//		protected extension
 			var t = this,
 				rhhn = t.headerNode,
 				rhbn = t.bodyNode,
@@ -108,27 +125,9 @@ define([
 		},
 
 		//Public--------------------------------------------------------------------------
-
-		// width: String
-		//		The width (CSS value) of a row header.
 		width: '20px',
 
-		onMoveToRowHeaderCell: function(){
-			// summary:
-			//		Fired when focus is moved to a row header using keyboard.
-			// tags:
-			//		callback
-		},
-
-	/*=====
-		// headerProvider: Function
-		//		A functionn that returns an HTML string to fill the header cell of row headers.
-		headerProvider: null,
-
-		// cellProvider: Function
-		//		A function that returns an HTML string to fill the body cells of row headers.
-		cellProvider: null,
-	=====*/
+		onMoveToRowHeaderCell: function(){},
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){

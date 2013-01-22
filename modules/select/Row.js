@@ -9,7 +9,8 @@ define([
 	"../../core/_Module"
 ], function(declare, array, sniff, query, domClass, keys, _RowCellBase, _Module){
 
-	return declare(/*===== "gridx.modules.select.Row", =====*/_RowCellBase, {
+/*=====
+	return declare(_RowCellBase, {
 		// summary:
 		//		Provides simple row selection.
 		// description:
@@ -28,31 +29,6 @@ define([
 		//		|	grid.select.row.getSelected();//[]
 		//		|	grid.select.row.clear();
 
-		// name: [readonly] String
-		//		module name
-		name: "selectRow",
-		
-		// rowMixin: Object
-		//		A map of functions to be mixed into grid row object, so that we can use select api on row object directly
-		//		- grid.row(1).select() | deselect() | isSelected();
-		rowMixin: {
-			select: function(){
-				this.grid.select.row.selectById(this.id);
-				return this;
-			},
-
-			deselect: function(){
-				this.grid.select.row.deselectById(this.id);
-				return this;
-			},
-
-			isSelected: function(){
-				return this.grid.select.row.isSelected(this.id);
-			}
-		},
-		
-		//Public API--------------------------------------------------------------------------------
-		
 		// triggerOnCell: [readonly] Boolean
 		//		Whether row will be selected by clicking on cell, false by default
 		triggerOnCell: false,
@@ -61,7 +37,6 @@ define([
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
-/*=====
 		selectById: function(rowId){
 			// summary:
 			//		Select a row by id.
@@ -76,29 +51,17 @@ define([
 			// summary:
 			//		Check if a row is already selected.
 		},
-=====*/
 
 		getSelected: function(){
 			// summary:
 			//		Get id array of all selected rows
-			return this.model.getMarkedIds();
 		},
 		
 		clear: function(notClearId){
 			// summary:
 			//		Deselected all selected rows;
-			if(this.arg('enabled')){
-				var model = this.model;
-				array.forEach(model.getMarkedIds(), function(id){
-					if(id !== notClearId){
-						model.markById(id, 0);
-					}
-				});
-				model.when();
-			}
 		},
 
-/*=====
 		onSelected: function(row, rowId){
 			// summary:
 			//		Fired when a row is selected.
@@ -123,7 +86,48 @@ define([
 			// tags:
 			//		private package
 		},
+	});
 =====*/
+
+	return declare(_RowCellBase, {
+		name: "selectRow",
+		
+		rowMixin: {
+			select: function(){
+				this.grid.select.row.selectById(this.id);
+				return this;
+			},
+
+			deselect: function(){
+				this.grid.select.row.deselectById(this.id);
+				return this;
+			},
+
+			isSelected: function(){
+				return this.grid.select.row.isSelected(this.id);
+			}
+		},
+		
+		//Public API--------------------------------------------------------------------------------
+		triggerOnCell: false,
+
+		treeMode: true,
+
+		getSelected: function(){
+			return this.model.getMarkedIds();
+		},
+		
+		clear: function(notClearId){
+			if(this.arg('enabled')){
+				var model = this.model;
+				array.forEach(model.getMarkedIds(), function(id){
+					if(id !== notClearId){
+						model.markById(id, 0);
+					}
+				});
+				model.when();
+			}
+		},
 
 		//Private--------------------------------------------------------------------------------
 		_type: 'row',

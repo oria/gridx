@@ -8,22 +8,11 @@ define([
 	"./_LinkPageBase"
 ], function(declare, query, event, string, domClass, keys, _LinkPageBase){
 
-	var hasClass = domClass.contains;
-
-	return declare(/*===== "gridx.support.LinkSizer", =====*/_LinkPageBase, {
+/*=====
+	return declare(_LinkPageBase, {
 		// summary:
 		//		This is a grid bar plugin that can be used to switch page sizes using link buttons.
 
-		templateString: '<div class="gridxLinkSizer" role="toolbar" data-dojo-attach-event="onclick: _changePageSize, onmouseover: _onHover, onmouseout: _onHover"></div>',
-
-		postMixInProperties: function(){
-			var t = this;
-			t.inherited(arguments);
-			t.connect(t.grid.pagination, 'onChangePageSize', '_onChange');
-		},
-
-		//Public-----------------------------------------------------------------------------
-		
 		// sizeSpearator: String
 		//		The string used to separate page sizes.
 		sizeSeparator: '|',
@@ -35,6 +24,27 @@ define([
 		refresh: function(){
 			// summary:
 			//		Refresh the UI using current arguments.
+		}
+	});
+=====*/
+
+	var hasClass = domClass.contains;
+
+	return declare(_LinkPageBase, {
+		templateString: '<div class="gridxLinkSizer" role="toolbar" data-dojo-attach-event="onclick: _changePageSize, onmouseover: _onHover, onmouseout: _onHover"></div>',
+
+		postMixInProperties: function(){
+			var t = this;
+			t.inherited(arguments);
+			t.connect(t.grid.pagination, 'onChangePageSize', '_onChange');
+		},
+
+		//Public-----------------------------------------------------------------------------
+		sizeSeparator: '|',
+
+		sizes: [10, 25, 50, 100, 0],
+
+		refresh: function(){
 			var t = this,
 				sb = [],
 				tabIndex = t._tabIndex,

@@ -7,9 +7,62 @@ define([
 	"dojo/_base/lang"
 ], function(_Module, ClientFilter, Query, declare, array, lang){
 
-	var module = declare(/*===== "gridx.modules.filter.Filter", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module makes it possible for user to set arbitrary filter condition to grid.
+
+		name: 'filter',
+
+		serverMode: false,
+
+		setupFilterQuery: function(obj){
+		},
+		
+		setFilter: function(){
+			// summary:
+			//		Apply function *checker* as the filter condition to filter every row.
+			// checker: Function|null|undefined (or anything that is invalid)
+			//		A function only returning TRUE or FALSE. It is used to decide whether a row should survive.
+			//		If it is null (or anything invalid here), then clear the current filter.
+			// skipUpdateBody: Boolean
+			//		Whether to immediately update grid UI after filtering.
+			// return:
+			//		undefined
+			// throw:
+			//		If *skipUpdateBody* is not TRUE, then must not throw, else, only allowed to throw the exceptions
+			//		that are generated from the *checker* function.
+			//		If *checker* is not a function, or null, should not throw.
+		},
+	
+		getFilter: function(){
+			// summary:
+			//		Return the current checker function.
+			// return: Function|null|undefined (or anything that is invalid)
+			//		The current checker function
+			return this._checker;
+		},
+
+		refresh: function(){
+			// summary:
+			//		Re-filter the grid with current filter. Useful when data is changed.
+			// return:
+			//		Deferred when refreshing is completed.
+		},
+
+		column: function(){
+			// this:
+			//		gridx.module.Filter
+		},
+
+		value: function(){
+			// this:
+			//		gridx.module.Filter
+		}
+	});
+=====*/
+
+	var module = declare(_Module, {
 		
 		name: 'filter',
 		
@@ -25,47 +78,24 @@ define([
 			this.setFilter(this.arg('preCondition'), 1);
 		},
 	
-		//Public---------------------------------------------------------
 		serverMode: false,
 
 		setupFilterQuery: function(obj){
 			return obj;
 		},
 		
-		setFilter: function(/* Function|null */checker, /* Boolean? */skipUpdateBody){
-			// summary:
-			//		Apply function *checker* as the filter condition to filter every row.
-			// checker: Function|null|undefined (or anything that is invalid)
-			//		A function only returning TRUE or FALSE. It is used to decide whether a row should survive.
-			//		If it is null (or anything invalid here), then clear the current filter.
-			// skipUpdateBody: Boolean
-			//		Whether to immediately update grid UI after filtering.
-			// return:
-			//		undefined
-			// throw:
-			//		If *skipUpdateBody* is not TRUE, then must not throw, else, only allowed to throw the exceptions
-			//		that are generated from the *checker* function.
-			//		If *checker* is not a function, or null, should not throw.
+		setFilter: function(checker, skipUpdateBody){
 			if(checker != this._checker){
 				this._checker = checker;
 				this.refresh(skipUpdateBody);
 			}
-			//this.model.query({_filter: 'xxx'});//{_filter: 'xxx'});//checker.expr);
 		},
 	
 		getFilter: function(){
-			// summary:
-			//		Return the current checker function.
-			// return: Function|null|undefined (or anything that is invalid)
-			//		The current checker function
 			return this._checker;
 		},
 
-		refresh: function(/* Boolean? */skipUpdateBody){
-			// summary:
-			//		Re-filter the grid with current filter. Useful when data is changed.
-			// return:
-			//		Deferred when refreshing is completed.
+		refresh: function(skipUpdateBody){
 			var t = this,
 				g = t.grid,
 				m = t.model,

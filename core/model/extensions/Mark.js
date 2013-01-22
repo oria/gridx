@@ -1,10 +1,28 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
+	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, array, _Extension){
+], function(declare, array,
+	/*=====Model, =====*/
+	_Extension){
 
-	return declare(/*===== "gridx.core.model.extensions.Mark", =====*/_Extension, {
+/*=====
+	Model.getMark = function(){};
+	Model.getMarkedIds = function(){};
+	Model.markById = function(){};
+	Model.markByIndex = function(){};
+	Model.clearMark = function(){};
+	Model.treeMarkMode = function(){};
+	Model.onMarkChange = function(){};
+
+	return declare(_Extension, {
+		// summary:
+		//		Provide a marking system, mainly used by selection.
+	});
+=====*/
+
+	return declare(_Extension, {
 		name: 'move',
 
 		priority: 5,

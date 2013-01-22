@@ -9,15 +9,36 @@ define([
 	"../core/_Module"
 ], function(declare, domStyle, sniff, Deferred, query, domGeo, metrics, _Module){
 
-	return declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module provides basic horizontal scrolling for grid
 
+		scrollToColumn: function(colId){
+			// summary:
+			//	Scroll the grid to make a column fully visible.
+		},
+
+		refresh: function(){
+			// summary:
+			//		Refresh scroller itself to match grid body
+		},
+
+		scroll: function(left){
+			// summary:
+			//		Scroll the grid horizontally
+			// tags:
+			//		private
+			// left: Number
+			//		The scrollLeft value
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'hScroller',
 
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				hScroller: this
 			};
@@ -34,8 +55,6 @@ define([
 		},
 
 		preload: function(){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid,
 				n = g.hScrollerNode;
@@ -54,15 +73,7 @@ define([
 		},
 		
 		//Public API-----------------------------------------------------------
-
 		scroll: function(left){
-			// summary:
-			//		Scroll the grid horizontally
-			// tags:
-			//		package
-			// left: Number
-			//		The scrollLeft value
-			
 			var dn = this.domNode;
 			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
 				left = dn.scrollWidth - dn.offsetWidth - left;
@@ -74,8 +85,6 @@ define([
 		},
 		
 		scrollToColumn: function(colId){
-			// summary:
-			//	Scroll the grid to make a column fully visible.
 			var hNode = this.grid.header.innerNode,
 				table = query('table', hNode)[0],
 				cells = table.rows[0].cells,
@@ -106,10 +115,6 @@ define([
 		},
 		
 		refresh: function(){
-			// summary:
-			//		Refresh scroller itself to match grid body
-			// tags:
-			//		package
 			var t = this,
 				g = t.grid,
 				ltr = g.isLeftToRight(),

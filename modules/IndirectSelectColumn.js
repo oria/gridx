@@ -12,6 +12,22 @@ define([
 	"./RowHeader"
 ], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util){
 
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Provide a check box (or radio button) column to select rows.
+
+		// position: Integer
+		position: 0,
+
+		// width: String
+		width: '20px',
+
+		// all: Boolean
+		all: true,
+	});
+=====*/
+
 	var indirectSelectColumnId = '__indirectSelect__';
 
 	return declare(_Module, {

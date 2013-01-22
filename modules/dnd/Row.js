@@ -10,6 +10,22 @@ define([
 	"../../core/_Module"
 ], function(declare, array, Deferred, lang, domClass, domGeometry, sniff, _Base, _Module){
 
+/*=====
+	return declare(_Base, {
+		// summary:
+		//		This module provides an implementation of row drag & drop.
+		//		It supports row reordering within grid, dragging out of grid, and dragging into grid.
+
+		// accept: String[]
+		//		Can drag in what kind of stuff
+		accept: [],
+
+		// provide: String[]
+		//		Can drag out what kind of stuff
+		provide: []
+	});
+=====*/
+
 	var hitch = lang.hitch,
 		forEach = array.forEach;
 
@@ -38,11 +54,7 @@ define([
 		}
 	}
 
-	return declare(/*===== "gridx.modules.dnd.Row", =====*/_Base, {
-		// summary:
-		//		This module provides an implementation of row drag & drop.
-		//		It supports row reordering within grid, dragging out of grid, and dragging into grid.
-
+	return declare(_Base, {
 		name: 'dndRow',
 		
 		required: ['_dnd', 'moveRow'],
@@ -56,12 +68,8 @@ define([
 		},
 
 		//Public---------------------------------------------------------------------------
-		// accept: String[]
-		//		Can drag in what kind of stuff
 		accept: ['grid/rows'],
 
-		// provide: String[]
-		//		Can drag out what kind of stuff
 		provide: ['grid/rows'],
 
 		onDraggedOut: function(targetSource){

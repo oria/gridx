@@ -9,7 +9,7 @@ define([
 	"dojo/_base/window"
 ], function(exportToTable, declare, lang, Deferred, xhr, array, sniff, win){
 
-	/*=====
+/*=====
 	declare('__PrinterArgs', __ExporterArgs, {
 		// style: String
 		//		The CSS string for the printed document
@@ -31,7 +31,7 @@ define([
 		//		Any HTML <head> content that will be put in the <head> of the printed document.
 		customHead: ''
 	});
-	=====*/
+=====*/
 
 	var printFrame,
 		hitch = lang.hitch;

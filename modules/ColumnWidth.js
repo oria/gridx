@@ -11,43 +11,10 @@ define([
 	"../core/_Module"
 ], function(declare, array, Deferred, query, sniff, domGeometry, domClass, domStyle, keys, _Module){
 
-	return declare(/*===== "gridx.modules.ColumnWidth", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		Manages column width distribution, allow grid autoWidth and column autoResize.
-
-		name: 'columnWidth',
-	
-		forced: ['hLayout'],
-
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				columnWidth: this
-			};
-		},
-
-		constructor: function(){
-			this._init();
-		},
-
-		preload: function(){
-			// tags:
-			//		protected extension
-			var t = this,
-				g = t.grid;
-			t._ready = new Deferred();
-			t.batchConnect(
-				[g.hLayout, 'onUpdateWidth', '_onUpdateWidth'],
-				[g, 'setColumns', '_onSetColumns']);
-		},
-
-		load: function(){
-			this._adaptWidth();
-			this.loaded.callback();
-		},
-
-		//Public-----------------------------------------------------------------------------
 
 		// default: Number
 		//		Default column width. Applied when it's not possible to decide accurate column width from user's config.
@@ -62,7 +29,45 @@ define([
 		onUpdate: function(){
 			// summary:
 			//		Fired when column widths are updated.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'columnWidth',
+
+		forced: ['hLayout'],
+
+		getAPIPath: function(){
+			return {
+				columnWidth: this
+			};
 		},
+
+		constructor: function(){
+			this._init();
+		},
+
+		preload: function(){
+			var t = this,
+				g = t.grid;
+			t._ready = new Deferred();
+			t.batchConnect(
+				[g.hLayout, 'onUpdateWidth', '_onUpdateWidth'],
+				[g, 'setColumns', '_onSetColumns']);
+		},
+
+		load: function(){
+			this._adaptWidth();
+			this.loaded.callback();
+		},
+
+		//Public-----------------------------------------------------------------------------
+		'default': 60,
+
+		autoResize: false,
+
+		onUpdate: function(){},
 
 		//Private-----------------------------------------------------------------------------
 		_init: function(){

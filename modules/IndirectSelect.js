@@ -12,7 +12,8 @@ define([
 	"./RowHeader"
 ], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util){
 
-	return declare(/*===== "gridx.modules.IndirectSelect", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module shows a checkbox(or radiobutton) on the row header when row selection is used.
 		// description:
@@ -25,13 +26,18 @@ define([
 		//		(which means the "multiple" attribute is set to false). If so, radio button instead of checkbox
 		//		will be used in row headers.
 
+		// all: Boolean
+		//		Whether the "select all" checkbox is allowed to appear.
+		all: true
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'indirectSelect',
 
 		required: ['rowHeader', 'selectRow'],
 
 		preload: function(){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid,
 				focus = g.focus,
@@ -68,8 +74,6 @@ define([
 			}
 		},
 
-		// all: Boolean
-		//		Whether the "select all" checkbox is allowed to appear.
 		all: true,
 
 		//Private----------------------------------------------------------
@@ -221,6 +225,6 @@ define([
 				}
 				event.stop(evt);
 			}
-		}		
+		}
 	});
 });

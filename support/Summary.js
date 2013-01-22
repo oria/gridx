@@ -5,8 +5,20 @@ define([
 	"dijit/_TemplatedMixin",
 	"dojo/i18n!../nls/SummaryBar"
 ], function(declare, string, _WidgetBase, _TemplatedMixin, nls){
-	
-	return declare(/*===== "gridx.support.Summary", =====*/[_WidgetBase, _TemplatedMixin], {
+
+/*=====
+	return declare([_WidgetBase, _TemplatedMixin], {
+		// summary:
+		//		Show total row count and selected row count.
+
+		grid: null,
+
+		refresh: function(){
+		}
+	});
+=====*/
+
+	return declare([_WidgetBase, _TemplatedMixin], {
 		templateString: '<div class="gridxSummary"></div>',
 
 		grid: null,

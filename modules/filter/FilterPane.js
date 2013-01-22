@@ -22,6 +22,12 @@ define([
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
 ], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n, ContentPane){
+
+/*=====
+	return declare([], {
+	});
+=====*/
+
 	var ANY_COLUMN_VALUE = '_gridx_any_column_value_';
 	
 	function isAnyColumn(colid){

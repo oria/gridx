@@ -9,10 +9,9 @@ define([
 	"dojox/html/metrics",
 	"../core/_Module"
 ], function(declare, Deferred, event, sniff, query, domGeo, keys, metrics, _Module){
-	
-	var st = 'scrollTop';
 
-	return declare(/*===== "gridx.modules.VScroller", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
@@ -20,15 +19,33 @@ define([
 		//		So it is very fast for small client side store, and might be extremely slow
 		//		for large server side store.
 
+		scrollToRow: function(rowVisualIndex, toTop){
+			// summary:
+			//		Scroll the grid until the required row is in view.
+			// description:
+			//		This job will be an asynchronous one if the lazy-loading and lazy-rendering are used.
+			// rowVisualIndex: Integer
+			//		The visual index of the row
+			// toTop: Boolean?
+			//		If set this to true, the grid will try to scroll the required row to the top of the view.
+			//		Otherwise, the grid will stop scrolling as soon as the row is visible.
+			// returns:
+			//		A deferred object indicating when the scrolling process is finished. This will be useful
+			//		when using lazy-loading and lazy-rendering.
+		}
+	});
+=====*/
+
+	var st = 'scrollTop';
+
+	return declare(_Module, {
 		name: 'vScroller',
-	
+
 		forced: ['body', 'vLayout', 'columnWidth'],
 
 		optional: ['pagination'],
 	
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				vScroller: this
 			};
@@ -56,14 +73,10 @@ define([
 		},
 
 		preload: function(args){
-			// tags:
-			//		protected extension
 			this.grid.hLayout.register(null, this.domNode, 1);
 		},
 
 		load: function(args, startup){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid,
 				bd = g.body,
@@ -99,20 +112,7 @@ define([
 		},
 	
 		//Public ----------------------------------------------------
-
 		scrollToRow: function(rowVisualIndex, toTop){
-			// summary:
-			//		Scroll the grid until the required row is in view.
-			// description:
-			//		This job will be an asynchronous one if the lazy-loading and lazy-rendering are used.
-			// rowVisualIndex: Integer
-			//		The visual index of the row
-			// toTop: Boolean?
-			//		If set this to true, the grid will try to scroll the required row to the top of the view.
-			//		Otherwise, the grid will stop scrolling as soon as the row is visible.
-			// returns:
-			//		A deferred object indicating when the scrolling process is finished. This will be useful
-			//		when using lazy-loading and lazy-rendering.
 			var d = new Deferred(),
 				bn = this.grid.bodyNode,
 				dn = this.domNode,
@@ -129,19 +129,19 @@ define([
 				if(toTop){
 					dn[st] = no;
 					finish(true);
-					return d;	//dojo.Deferred
+					return d;
 				}else if(no < bs){
 					dif = no - bs;
 				}else if(no + n.offsetHeight > bs + bn.clientHeight){
 					dif = no + n.offsetHeight - bs - bn.clientHeight;
 				}else{
 					finish(true);
-					return d;	//dojo.Deferred
+					return d;
 				}
 				dn[st] += dif;
 			}
 			finish(!!n);
-			return d;	//dojo.Deferred
+			return d;
 		},
 	
 		//Protected -------------------------------------------------
@@ -186,7 +186,7 @@ define([
 		_doScroll: function(){
 			this.grid.bodyNode[st] = this.domNode[st];
 		},
-	
+
 		_onMouseWheel: function(e){
 			if(this.grid.vScrollerNode.style.display != 'none'){
 				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
@@ -194,7 +194,7 @@ define([
 				event.stop(e);
 			}
 		},
-	
+
 		_onBodyChange: function(){
 			var t = this,
 				g = t.grid;
@@ -222,7 +222,7 @@ define([
 				bd.renderRows(0, bd.visualCount);
 			});
 		},
-	
+
 		_onKeyScroll: function(evt){
 			var t = this,
 				g = t.grid,

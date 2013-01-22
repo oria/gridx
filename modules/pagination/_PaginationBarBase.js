@@ -7,15 +7,12 @@ define([
 	'../Bar'
 ], function(declare, lang, domClass, _Module, Summary){
 
+/*=====
 	return declare(_Module, {
-		name: 'paginationBar',
-
-		required: ['bar', 'pagination'],
-
 		// sizeSwitch: Boolean|String
 		//		Whether (and where) to show "size switch" part of the pagination bar UI.
 		//		Can be true/false, or "bottom", or "top"
-		sizes: [10, 25, 50, 100, 0],
+		sizes: [10, 25, 50, 0],
 
 		// position: String
 		//		The position of the pagination bar, can be "bottom" (default), "top" or "both" (any other value means "both")
@@ -29,6 +26,26 @@ define([
 		// stepper: Boolean|String
 		//		Whether (and where) to show "page stepper" part of the pagination bar UI.
 		//		Can be true/false, or "bottom", or "top"
+		stepper: true,
+
+		sizeSwitch: true,
+
+		refresh: function(){
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'paginationBar',
+
+		required: ['bar', 'pagination'],
+
+		sizes: [10, 25, 50, 0],
+
+		position: 'bottom',
+
+		description: true,
+
 		stepper: true,
 
 		sizeSwitch: true,

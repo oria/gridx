@@ -9,9 +9,11 @@ define([
 ], function(dojo, _Module, declare, html, baseFx, fx, query){
 	dojo.experimental('gridx/modules/Dod');
 
-	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
-		name: 'dod',
-		required: ['body'],
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Details on demand.
+
 		// useAnimation: Boolean
 		//		Indicates whether to use animation (slide) when showing/hiding the detail part.
 		useAnimation: true,
@@ -21,10 +23,56 @@ define([
 		duration: 750,
 		
 		defaultShow: false,
+
 		showExpando: true,
 
 		// autoClose: Boolean
 		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
+		autoClose: false,
+
+		show: function(row){
+			// summary:
+			//		Show the detail part of a row, if this row has a detail part.
+			//		Use animation (slide the detail part out) if useAnimation is true.
+			//		Nothing happens if rowId is not valid or the row does not has a detail part.
+			// rowId: String
+			//		The ID of a row.
+			// return: dojo.Deferred.
+			//		A deferred object indicating when the detail is completely shown.
+		},
+
+		hide: function(row){
+			// summary:
+			//		Hide the detail part of a row, if this row has a detail part.
+			//		Use animation (slide the detail part in) if useAnimation is true.
+			//		Nothing happens if rowId is not valid or the row does not has a detail part.
+			// rowId: String
+			//		The ID of a row.
+			// return: dojo.Deferred.
+			//		A deferred object indicating when the detail is completely hidden.
+		},
+
+		toggle: function(row){
+		},
+
+		refresh: function(row){
+		},
+
+		isShown: function(row){
+		},
+
+		onShow: function(row){},
+		onHide: function(row){}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'dod',
+		required: ['body'],
+		useAnimation: true,
+		duration: 750,
+		defaultShow: false,
+		showExpando: true,
 		autoClose: false,
 		load: function(args, deferStartup){
 			this._rowMap = {};
@@ -60,14 +108,6 @@ define([
 		},
 		
 		show: function(row){
-			// summary:
-			//		Show the detail part of a row, if this row has a detail part.
-			//		Use animation (slide the detail part out) if useAnimation is true.
-			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			// rowId: String
-			//		The ID of a row.
-			// return: dojo.Deferred.
-			//		A deferred object indicating when the detail is completely shown.
 			var _row = this._row(row);
 			if(_row.dodShown || _row.inAnim || !row.node()){return;}
 			
@@ -116,14 +156,6 @@ define([
 		},
 		
 		hide: function(row){
-			// summary:
-			//		Hide the detail part of a row, if this row has a detail part.
-			//		Use animation (slide the detail part in) if useAnimation is true.
-			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			// rowId: String
-			//		The ID of a row.
-			// return: dojo.Deferred.
-			//		A deferred object indicating when the detail is completely hidden.
 			var _row = this._row(row), g = this.grid;
 			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
 			html.removeClass(row.node(), 'gridxDodShown');

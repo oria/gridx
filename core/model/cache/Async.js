@@ -7,6 +7,26 @@ define([
 	"./_Cache"
 ], function(declare, array, lang, Deferred, DeferredList, _Cache){
 
+/*=====
+	return declare(_Cache, {
+		// summary:
+		//		Implement lazy-loading for server side store.
+
+		// isAsync: Boolean
+		//		Whether this cache is for asynchronous(server side) store.
+		isAsync: true,
+
+		// cacheSize: Integer
+		//		The max cached row count in client side.
+		//		By default, do not clear cache when scrolling, this is the same with DataGrid
+		cacheSize: -1,
+
+		// pageSize: Integer
+		//		The recommended row count for every fetch.
+		pageSize: 100
+	});
+=====*/
+
 	var hitch = lang.hitch;
 
 	function fetchById(self, args){
@@ -332,24 +352,8 @@ define([
 		return d;
 	}
 
-	return declare(/*===== "gridx.core.model.cache.Async", =====*/_Cache, {
-		// summary:
-		//		Implement lazy-loading for server side store.
-
-		// isAsync: Boolean
-		//		Whether this cache is for asynchronous(server side) store.
+	return declare(_Cache, {
 		isAsync: true,
-
-/*=====
-		// cacheSize: Integer
-		//		The max cached row count in client side.
-		//		By default, do not clear cache when scrolling, this is the same with DataGrid
-		cacheSize: -1,
-
-		// pageSize: Integer
-		//		The recommended row count for every fetch.
-		pageSize: 100,
-=====*/
 		
 		constructor: function(model, args){
 			var cs = args.cacheSize,

@@ -11,10 +11,15 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/html"
 ], function(dojo, popup, declare, string, i18n, TooltipDialog){
-	
-	return declare(TooltipDialog, {
+
+/*=====
+	return declare([], {
 		// summary:
 		//		Show status dialog of filter.
+	});
+=====*/
+
+	return declare(TooltipDialog, {
 		grid: null,
 		filterBar: null,
 		postCreate: function(){

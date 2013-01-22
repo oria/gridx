@@ -9,12 +9,23 @@ define([
 	"dojo/text!../templates/LinkPager.html"
 ], function(declare, query, event, string, domClass, keys, _LinkPageBase, template){
 
-	var hasClass = domClass.contains;
-
-	return declare(/*===== "gridx.support.LinkPager", =====*/_LinkPageBase, {
+/*=====
+	return declare(_LinkPageBase, {
 		// summary:
 		//		This is a grid bar plugin to switch pages for grid using link buttons.
+		
+		// visibleSteppers: Integer
+		//		Number of visible page steppers. If invalid, default to 3.
+		visibleSteppers: 3,
 
+		refresh: function(){
+		}
+	});
+=====*/
+
+	var hasClass = domClass.contains;
+
+	return declare(_LinkPageBase, {
 		templateString: template,
 
 		postMixInProperties: function(){

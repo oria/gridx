@@ -1,9 +1,21 @@
 define([
 	"dojo/_base/declare",
+	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, _Extension){
+], function(declare,
+	/*=====Model, =====*/
+	_Extension){
 
-	return declare(/*===== "gridx.core.model.extensions.Query", =====*/_Extension, {
+/*=====
+	Model.query = function(){};
+
+	return declare(_Extension, {
+		// summary:
+		//		Pass query to store. Using store's query system.
+	});
+=====*/
+
+	return declare(_Extension, {
 		name: 'query',
 
 		priority: 40,

@@ -10,6 +10,11 @@ define([
 	"dojo/i18n!../nls/PaginationBar"
 ], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, nls){
 
+/*=====
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+	});
+=====*/
+
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: goToTemplate,
 	

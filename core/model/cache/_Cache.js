@@ -6,6 +6,13 @@ define([
 	'../_Extension'
 ], function(declare, array, lang, Deferred, _Extension){
 
+/*=====
+	return declare(_Extension, function(){
+		// summary:
+		//		Abstract base cache class, providing cache data structure and some common cache functions.
+	});
+=====*/
+
 	var hitch = lang.hitch,
 		mixin = lang.mixin,
 		indexOf = array.indexOf;
@@ -29,8 +36,6 @@ define([
 	}
 
 	return declare(_Extension, {
-		// summary:
-		//		Abstract base cache class, providing cache data structure and some common cache functions.
 		constructor: function(model, args){
 			var t = this;
 			t.setStore(args.store);

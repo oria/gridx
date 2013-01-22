@@ -11,50 +11,128 @@ define([
 	"../core/util"
 ], function(declare, array, connect, lang, sniff, win, event, keys, _Module, util){
 
-	/*=====
-		gridx.modules.Focus.__FocusArea = function(){
-			// name: String (mandatory)
-			//		The name of this area. Must be unique. Must not be empty.
-			//
-			// priority: Number (mandatory)
-			//		This number decides the position of this area in the TAB sequence.
-			//		Areas with bigger priority number, their position in TAB sequence comes later.
-			//		If two areas have the same priority, then the later registered area is put *above* the earlier one.
-			//		That is, no matter TAB or SHIFT-TAB, the upper area is accessed first.
-			//
-			// focusNode: DOM-Node?
-			//		If provided, this is the node of this area. 
-			//		When this area is focused, *onFocus* will be called. When blurred, *onBlur* will be called.
-			//
-			// scope: anything?
-			//		If provided, all area functions are called on this scope.
-			//
-			// doFocus: Function(evt, step)?
-			//		If provided, will be called when TABing to this area.
-			//		If not provided, default to successful focus.
-			//		Return TRUE if successfully focused. FALSE if not.
-			//
-			// doBlur: Function(evt, step)?
-			//		If provided, will be called when TABing out of this area.
-			//		If not provided, default to successful blur.
-			//		Return TRUE if successfully blurred. FALSE if not.
-			//
-			// onFocus: function(evt)?
-			//		If provided, will be called when the *focusNode* of this area is focused.
-			//		If return TRUE, later areas on this node will be skipped and this area becomes the current focused area.
-			//		If return FALSE, call later areas on this same node.
-			//
-			// onBlur: function(evt)?
-			//		If provided, will be called when the *focusNode* of this area is blurred.
-			//		When *focusNode* is blurred, only the currently focused area will be called.
-		};
-	=====*/
+/*=====
+	gridx.modules.Focus.__FocusArea = function(){
+		// name: String (mandatory)
+		//		The name of this area. Must be unique. Must not be empty.
+		//
+		// priority: Number (mandatory)
+		//		This number decides the position of this area in the TAB sequence.
+		//		Areas with bigger priority number, their position in TAB sequence comes later.
+		//		If two areas have the same priority, then the later registered area is put *above* the earlier one.
+		//		That is, no matter TAB or SHIFT-TAB, the upper area is accessed first.
+		//
+		// focusNode: DOM-Node?
+		//		If provided, this is the node of this area. 
+		//		When this area is focused, *onFocus* will be called. When blurred, *onBlur* will be called.
+		//
+		// scope: anything?
+		//		If provided, all area functions are called on this scope.
+		//
+		// doFocus: Function(evt, step)?
+		//		If provided, will be called when TABing to this area.
+		//		If not provided, default to successful focus.
+		//		Return TRUE if successfully focused. FALSE if not.
+		//
+		// doBlur: Function(evt, step)?
+		//		If provided, will be called when TABing out of this area.
+		//		If not provided, default to successful blur.
+		//		Return TRUE if successfully blurred. FALSE if not.
+		//
+		// onFocus: function(evt)?
+		//		If provided, will be called when the *focusNode* of this area is focused.
+		//		If return TRUE, later areas on this node will be skipped and this area becomes the current focused area.
+		//		If return FALSE, call later areas on this same node.
+		//
+		// onBlur: function(evt)?
+		//		If provided, will be called when the *focusNode* of this area is blurred.
+		//		When *focusNode* is blurred, only the currently focused area will be called.
+	};
 
-	return declare(/*===== "gridx.modules.Focus", =====*/_Module, {
+	return declare(_Module, {
 		// summary
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
 		
+		registerArea: function(area){
+			// summary:
+			//		Register a new focus area, so this area will be included in the TAB sequence.
+			//		If there's an existing area with the same name, it is removed and replaced by the new area.
+			//		This function always succeed. No exception.
+			// tags:
+			//		package
+			// area: __FocusArea
+			//		A focus area definition.
+		},
+
+		focusArea: function(areaName, forced){
+			// summary:
+			//		Focus the area with name of *areaName*.
+			//		If the current area is not this area, blur the current area.
+			//		If the current area is this area, this is a no-op and return TRUE.
+			//		If the area with this name does not exist, this is a no-op and return FALSE.
+			// tags:
+			//		package
+			// return: Boolean
+			//		TRUE if the focus is successful, FALSE if not.	
+		},
+
+		currentArea: function(){
+			// summary:
+			//		Get the name of the current focus area. 
+			// tags:
+			//		package
+			// return: String
+			//		The name of the current Area. Return "" if no area is focused.
+		},
+
+		tab: function(step, evt){
+			// summary:
+			//		Move focus from one area to another.
+			// tags:
+			//		package
+			// step: Integer
+			//		If positive, then move forward along the TAB sequence.
+			//		If negative, then move backward along the TAB sequence (SHIFT-TAB).
+			//		If zero or other invalid values, this is a no-op.
+			//		The absolute value of *step* is the distance between the target area and the current area
+			//		in the whole TAB sequence.
+			// evt: Object
+			//		This can either be a real Event object or a mock object with same information .
+			// return: String
+			//		The name of currently focused area. Return "" if no area is focused.
+		},
+
+		removeArea: function(areaName){
+			// summary:
+			//		Remove the area with name of *areaName*.
+			//		If there's no such area, this is a no-op and return FALSE.
+			//		If currently focused area is removed, then current area becomes empty.
+			// tags:
+			//		package
+			// areaName: String
+			//		The name of the area to be removed.
+			// return: Boolean
+			//		TRUE if this operation is successful, FALSE if not.
+		},
+
+		onFocusArea: function(areaName){
+			// summary:
+			//		Fired when an area is focused.
+			// tags:
+			//		callback
+		},
+
+		onBlurArea: function(areaName){
+			// summary:
+			//		Fired when an area is blurred.
+			// tags:
+			//		callback
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'focus',
 		
 		getAPIPath: function(){

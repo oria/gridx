@@ -11,7 +11,8 @@ define([
 	"./_Base"
 ], function(declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
 
-	return declare(/*===== "gridx.modules.extendedSelect.Column", =====*/_Base, {
+/*=====
+	return declare(_Base, {
 		// summary:
 		//		Provides advanced column selections.
 		// description:
@@ -30,31 +31,6 @@ define([
 		//		|	grid.select.column.getSelected();//[]
 		//		|	grid.select.column.clear();
 
-		// name: [readonly] String
-		//		module name
-		name: 'selectColumn',
-
-//        optional: ['columnResizer'],
-
-		// columnMixin: Object
-		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
-		//		- grid.column(1).select() | deselect() | isSelected();
-		columnMixin: {
-			select: function(){
-				this.grid.select.column.selectById(this.id);
-				return this;
-			},
-			deselect: function(){
-				this.grid.select.column.deselectById(this.id);
-				return this;
-			},
-			isSelected: function(){
-				return !!this.grid._columnsById[this.id]._selected;
-			}
-		},
-
-		//Public-----------------------------------------------------------------
-/*=====
 		selectById: function(columnId){
 			// summary:
 			//		Select a column by id.
@@ -74,11 +50,43 @@ define([
 			// summary:
 			//		Deselect a column by index.
 		},		
-=====*/
 		
 		getSelected: function(){
 			// summary:
 			//		Get id array of all selected columns
+		},
+
+		clear: function(silent){
+			// summary:
+			//		Deselected all selected columns;
+		},
+
+		isSelected: function(){
+			// summary:
+			//		Check if the given column(s) are all selected.
+		}
+	});
+=====*/
+
+	return declare(_Base, {
+		name: 'selectColumn',
+
+		columnMixin: {
+			select: function(){
+				this.grid.select.column.selectById(this.id);
+				return this;
+			},
+			deselect: function(){
+				this.grid.select.column.deselectById(this.id);
+				return this;
+			},
+			isSelected: function(){
+				return !!this.grid._columnsById[this.id]._selected;
+			}
+		},
+
+		//Public-----------------------------------------------------------------
+		getSelected: function(){
 			return array.map(array.filter(this.grid._columns, function(col){
 				return col._selected;
 			}), function(col){
@@ -87,8 +95,6 @@ define([
 		},
 
 		clear: function(silent){
-			// summary:
-			//		Deselected all selected columns;			
 			query(".gridxColumnSelected", this.grid.domNode).forEach(function(node){
 				domClass.remove(node, 'gridxColumnSelected');
 				node.removeAttribute('aria-selected');
@@ -103,8 +109,6 @@ define([
 		},
 
 		isSelected: function(){
-			// summary:
-			//		Check if the given column(s) are all selected.			
 			var cols = this.grid._columnsById;
 			return array.every(arguments, function(id){
 				var col = cols[id];

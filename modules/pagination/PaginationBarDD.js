@@ -6,6 +6,11 @@ define([
 	'../../support/DropDownSizer'
 ], function(declare, domClass, _PaginationBarBase, DropDownPager, DropDownSizer){
 
+/*=====
+	return declare(_PaginationBarBase, {
+	});
+=====*/
+
 	return declare(_PaginationBarBase, {
 		_init: function(pos){
 			var t = this,

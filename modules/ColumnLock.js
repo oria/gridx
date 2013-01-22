@@ -6,9 +6,10 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query"
-], function(dojo, lang, _Module, declare, array, html, query){	
-	
-	return declare(/*===== "gridx.modules.ColumnLock", =====*/_Module, {
+], function(dojo, lang, _Module, declare, array, html, query){
+
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		Column lock machinery.
 		// description:
@@ -39,16 +40,27 @@ define([
 		//		|	// unlock all columns
 		//		|	grid.columnLock.unLock();
 		
-		// name: [readonly] String
-		//		module name			
+		// count: [readonly] Integer
+		//		Number of columns that will be locked by default
+		count: 0,
+
+		lock: function(count){
+			// summary:
+			//		Dynamically lock consecutive #count leading columns.
+		},
+		
+		unlock: function(){
+			// summary:
+			//		Unlock all columns.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'columnLock',
 		
-		// name: [readonly] Array
-		//		Module dependencies			
 		required: ['body'],
 		
-		// count: [readonly] Integer
-		//		Number of columns that will be locked by default			
 		count: 0,
 		
 		load: function(args, deferStartup){
@@ -87,8 +99,6 @@ define([
 		},
 		
 		lock: function(/*Integer*/count){
-			// summary:
-			//		Dynamically lock consecutive #count leading columns.
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			if(count >= this.grid._columns.length){
 				this.count = 0;
@@ -106,8 +116,6 @@ define([
 		},
 		
 		unlock: function(){
-			// summary:
-			//		Unlock all columns.
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			html.removeClass(this.grid.domNode, 'gridxColumnLock');
 			

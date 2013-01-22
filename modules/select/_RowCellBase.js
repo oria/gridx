@@ -5,6 +5,11 @@ define([
 	"../../core/model/extensions/Mark"
 ], function(declare, lang, _Base, Mark){
 
+/*=====
+	return declare(_Base, {
+	});
+=====*/
+
 	return declare(_Base, {
 		modelExtensions: [Mark],
 

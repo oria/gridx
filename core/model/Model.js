@@ -8,70 +8,8 @@ define([
 	"dojo/aspect"
 ], function(require, declare, array, lang, Deferred, DeferredList, aspect){
 
-	var isArrayLike = lang.isArrayLike,
-		isString = lang.isString;
-
-	function isId(it){
-		return it || it === 0;
-	}
-
-	function isIndex(it){
-		return typeof it == 'number' && it >= 0;
-	}
-
-	function isRange(it){
-		return it && isIndex(it.start);
-	}
-
-	function normArgs(self, args){
-		var i, rgs = [], ids = [],
-		res = {
-			range: rgs,
-			id: ids 
-		},
-		f = function(a){
-			if(isRange(a)){
-				rgs.push(a);
-			}else if(isIndex(a)){
-				rgs.push({start: a, count: 1});
-			}else if(isArrayLike(a)){
-				for(i = a.length - 1; i >= 0; --i){
-					if(isIndex(a[i])){
-						rgs.push({
-							start: a[i],
-							count: 1
-						});
-					}else if(isRange(a[i])){
-						rgs.push(a[i]);
-					}else if(isString(a)){
-						ids.push(a[i]);
-					}
-				}
-			}else if(isString(a)){
-				ids.push(a);
-			}
-		};
-		if(args && (args.index || args.range || args.id)){
-			f(args.index);
-			f(args.range);
-			if(isArrayLike(args.id)){
-				for(i = args.id.length - 1; i >= 0; --i){
-					ids.push(args.id[i]);
-				}
-			}else if(isId(args.id)){
-				ids.push(args.id);
-			}
-		}else{
-			f(args);
-		}
-		if(!rgs.length && !ids.length && self.size() < 0){
-			//first time load, try to load a page
-			rgs.push({start: 0, count: self._cache.pageSize || 1});
-		}
-		return res;
-	}
-
-	return declare(/*===== "gridx.core.model.Model", =====*/[], {
+/*=====
+	return declare([], {
 		// summary:
 		//		This class handles all of the data logic in grid.
 		// description:
@@ -81,47 +19,12 @@ define([
 		//		An instance of this class can be regarded as a stand-alone logic grid providing consistent data processing 
 		//		functionalities. This class can even be instanticated alone without any grid UI.
 
-		
-		constructor: function(args){
-			var t = this,
-				cacheClass = args.cacheClass;
-			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
-			t.store = args.store;
-			t._exts = {};
-			t._cmdQueue = [];
-			t._model = t._cache = new cacheClass(t, args);
-			t._createExts(args.modelExtensions || [], args);
-			var m = t._model;
-			t._cnnts = [
-				aspect.after(m, "onDelete", lang.hitch(t, "onDelete"), 1),
-				aspect.after(m, "onNew", lang.hitch(t, "onNew"), 1),
-				aspect.after(m, "onSet", lang.hitch(t, "onSet"), 1)
-			];
-		},
-	
-		destroy: function(){
-			array.forEach(this._cnnts, function(cnnt){
-				cnnt.remove();
-			});
-			for(var n in this._exts){
-				this._exts[n].destroy();
-			}
-		},
-
 		clearCache: function(){
-			this._cache.clear();
 		},
 
-		isId: isId,
-
-		setStore: function(store){
-			this.store = store;
-			this._cache.setStore(store);
+		isId: function(){
 		},
-	
-		//Public-------------------------------------------------------------------
 
-		/*=====
 		byIndex: function(index, parentId){
 			// summary:
 			//		Get the row cache by row index.
@@ -230,9 +133,7 @@ define([
 			// id: String?
 			//		The row ID. If omitted, all kept rows will be freed.
 		},
-		=====*/
 
-		
 		when: function(args, callback, scope){
 			// summary:
 			//		Call this method to make sure all the pending data operations are executed and
@@ -269,14 +170,6 @@ define([
 			// returns:
 			//		A Deferred object indicating when all this process is finished. Note that in this Deferred object,
 			//		The needed rows might not be available since they might be cleared up to reduce memory usage.
-			this._oldSize = this.size();
-			this._addCmd({
-				name: '_cmdRequest',
-				scope: this,
-				args: arguments,
-				async: 1
-			});
-			return this._exec();	//dojo.Deferred
 		},
 
 		scan: function(args, callback){
@@ -289,6 +182,152 @@ define([
 			//		The callback function.
 			// returns:
 			//		If return true in this function, the scan process will end immediately.
+		},
+
+		onDelete: function(){
+			// summary:
+			//		Fired when a row is deleted from store
+			// tags:
+			//		callback
+		},
+
+		onNew: function(){
+			// summary:
+			//		Fired when a row is added to the store
+			// tags:
+			//		callback
+		},
+
+		onSet: function(){
+			// summary:
+			//		Fired when a row's data is changed
+			// tags:
+			//		callback
+		},
+
+		onSizeChange: function(){
+			// summary:
+			//		Fired when the size of the grid model is changed
+			// tags:
+			//		callback
+		}
+	});
+=====*/
+
+	var isArrayLike = lang.isArrayLike,
+		isString = lang.isString;
+
+	function isId(it){
+		return it || it === 0;
+	}
+
+	function isIndex(it){
+		return typeof it == 'number' && it >= 0;
+	}
+
+	function isRange(it){
+		return it && isIndex(it.start);
+	}
+
+	function normArgs(self, args){
+		var i, rgs = [], ids = [],
+		res = {
+			range: rgs,
+			id: ids 
+		},
+		f = function(a){
+			if(isRange(a)){
+				rgs.push(a);
+			}else if(isIndex(a)){
+				rgs.push({start: a, count: 1});
+			}else if(isArrayLike(a)){
+				for(i = a.length - 1; i >= 0; --i){
+					if(isIndex(a[i])){
+						rgs.push({
+							start: a[i],
+							count: 1
+						});
+					}else if(isRange(a[i])){
+						rgs.push(a[i]);
+					}else if(isString(a)){
+						ids.push(a[i]);
+					}
+				}
+			}else if(isString(a)){
+				ids.push(a);
+			}
+		};
+		if(args && (args.index || args.range || args.id)){
+			f(args.index);
+			f(args.range);
+			if(isArrayLike(args.id)){
+				for(i = args.id.length - 1; i >= 0; --i){
+					ids.push(args.id[i]);
+				}
+			}else if(isId(args.id)){
+				ids.push(args.id);
+			}
+		}else{
+			f(args);
+		}
+		if(!rgs.length && !ids.length && self.size() < 0){
+			//first time load, try to load a page
+			rgs.push({start: 0, count: self._cache.pageSize || 1});
+		}
+		return res;
+	}
+
+	return declare([], {
+		constructor: function(args){
+			var t = this,
+				cacheClass = args.cacheClass;
+			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
+			t.store = args.store;
+			t._exts = {};
+			t._cmdQueue = [];
+			t._model = t._cache = new cacheClass(t, args);
+			t._createExts(args.modelExtensions || [], args);
+			var m = t._model;
+			t._cnnts = [
+				aspect.after(m, "onDelete", lang.hitch(t, "onDelete"), 1),
+				aspect.after(m, "onNew", lang.hitch(t, "onNew"), 1),
+				aspect.after(m, "onSet", lang.hitch(t, "onSet"), 1)
+			];
+		},
+	
+		destroy: function(){
+			array.forEach(this._cnnts, function(cnnt){
+				cnnt.remove();
+			});
+			for(var n in this._exts){
+				this._exts[n].destroy();
+			}
+		},
+
+		clearCache: function(){
+			this._cache.clear();
+		},
+
+		isId: isId,
+
+		setStore: function(store){
+			this.store = store;
+			this._cache.setStore(store);
+		},
+	
+		//Public-------------------------------------------------------------------
+		when: function(args, callback, scope){
+			this._oldSize = this.size();
+			this._addCmd({
+				name: '_cmdRequest',
+				scope: this,
+				args: arguments,
+				async: 1
+			});
+			return this._exec();
+		},
+
+		scan: function(args, callback){
 			var d = new Deferred,
 				start = args.start || 0,
 				pageSize = args.pageSize || this._cache.pageSize || 1,
@@ -327,37 +366,17 @@ define([
 					});
 				};
 			f(start);
-			return d;	//dojo.Deferred
+			return d;
 		},
 
 		//Events---------------------------------------------------------------------------------
-		onDelete: function(/*id, index*/){
-			// summary:
-			//		Fired when a row is deleted from store
-			// tags:
-			//		callback
-		},
+		onDelete: function(/*id, index*/){},
 
-		onNew: function(/*id, index, row*/){
-			// summary:
-			//		Fired when a row is added to the store
-			// tags:
-			//		callback
-		},
+		onNew: function(/*id, index, row*/){},
 
-		onSet: function(/*id, index, row*/){
-			// summary:
-			//		Fired when a row's data is changed
-			// tags:
-			//		callback
-		},
+		onSet: function(/*id, index, row*/){},
 
-		onSizeChange: function(/*size, oldSize*/){
-			// summary:
-			//		Fired when the size of the grid model is changed
-			// tags:
-			//		callback
-		},
+		onSizeChange: function(/*size, oldSize*/){},
 
 		//Package----------------------------------------------------------------------------
 		_msg: function(/* msg */){},

@@ -16,6 +16,12 @@ define([
 	"dijit/form/Button",
 	"dijit/layout/AccordionContainer"
 ], function(declare, lang, array, css, string, query, keys, registry, Dialog, metrics, FilterPane, template, i18n){
+
+/*=====
+	return declare([], {
+	});
+=====*/
+
 	return declare(Dialog, {
 		title: i18n.filterDefDialogTitle,
 		cssClass: 'gridxFilterDialog',

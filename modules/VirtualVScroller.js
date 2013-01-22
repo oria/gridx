@@ -10,31 +10,15 @@ define([
 	"./VScroller",
 	"../core/_Module"
 ], function(declare, lang, array, sniff, event, Deferred, query, keys, VScroller, _Module){
-	
-	return declare(/*===== "gridx.modules.VirtualVScroller", =====*/VScroller, {
+
+/*=====
+	return declare(VScroller, {
 		// summary:
 		//		This module implements lazy-rendering when virtically scrolling grid.
 		// description:
 		//		This module takes a DOMNode-based way to implement lazy-rendering.
 		//		It tries to remove all the DOMNodes that are out of the grid body viewport,
 		//		so that the DOMNodes in grid are always limited to a very small number.
-
-		constructor: function(grid, args){
-			if(grid.autoHeight){
-				lang.mixin(this, new VScroller(grid, args));
-			}else{
-				this._scrolls = [];
-			}
-		},
-
-		destroy: function(){
-			this.inherited(arguments);
-			//clear all the timeouts, avoid possible errors.
-			clearTimeout(this._lazyScrollHandle);
-			clearTimeout(this._pVirtual);
-		},
-
-		//Public ----------------------------------------------------
 
 		// buffSize: Integer
 		//		The count row nodes that should be maintained above/below the grid body viewport.
@@ -57,6 +41,34 @@ define([
 			//		Override VScroller.scrollToRow
 			// tags:
 			//		extension
+		},
+	});
+=====*/
+	
+	return declare(VScroller, {
+		constructor: function(grid, args){
+			if(grid.autoHeight){
+				lang.mixin(this, new VScroller(grid, args));
+			}else{
+				this._scrolls = [];
+			}
+		},
+
+		destroy: function(){
+			this.inherited(arguments);
+			//clear all the timeouts, avoid possible errors.
+			clearTimeout(this._lazyScrollHandle);
+			clearTimeout(this._pVirtual);
+		},
+
+		//Public ----------------------------------------------------
+		buffSize: 5,
+		
+		lazy: false,
+		
+		lazyTimeout: 50,
+	
+		scrollToRow: function(rowVisualIndex, toTop){
 			var d = new Deferred(), t = this, s = t._scrolls,
 				f = function(){
 					t._subScrollToRow(rowVisualIndex, d, toTop);

@@ -16,6 +16,13 @@ define([
 ], function(declare, lang, Deferred, domConstruct, domGeometry, domClass, domStyle, dom, win, sniff,
 	Source, DndManager, _Module){
 
+/*=====
+	return declare(_Module, {
+		_fixFF: function(source){
+		}
+	});
+=====*/
+
 	var hitch = lang.hitch;
 
 	return _Module.register(
