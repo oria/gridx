@@ -21,6 +21,7 @@ define([
 	'gridx/tests/doh/status/RowHeader',
 	'gridx/tests/doh/status/HScroller',
 	'gridx/tests/doh/actions/VScroller',
+	'gridx/tests/doh/actions/Header',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async'
 ], function(lang, memoryFactory, IFWSFactory, dataSource, modules){

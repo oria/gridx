@@ -212,9 +212,9 @@ define([
 		},
 
 		//emitKey(target, keys.SPACE, false, false, false) to trigger SPACE press event on specific target
-		emitKey: function(target, keyCode, ctrlKeyArg, shiftKeyArg, altKeyArg){
+		emitKeyEvent: function(target, type/*keyup, keydown, keypress*/, keyCode, ctrlKeyArg, shiftKeyArg, altKeyArg){
 			var target = typeof target == 'string'? document.getElementById(target) : target;
-			on.emit(target, 'keypress', {
+			on.emit(target, type, {
 				ctrlKey: ctrlKeyArg, 
 				altKey: altKeyArg, 
 				shiftKey: shiftKeyArg,

@@ -5,7 +5,8 @@ define([
 	'dojo/dom-geometry',
 	'../GTest'
 ], function(array, query, domClass, domGeo, GTest){
-	GTest.statusCheckers.push({
+	GTest.statusCheckers.push(
+	{
 		id: 51,
 		name: 'if a row is visible (rendered) in body, it is in grid cache',
 		checker: function(grid, doh){
@@ -31,7 +32,38 @@ define([
 				doh.is(headerPos.w, cellPos.w);
 			});
 		}
-	}, {
+	}, 
+	{
+		id: '55',
+		name: '1.a cell is empty.\n2.module parameter "stuffEmptyCell" is true',
+		condition: function(grid){
+			return grid.body.arg('stuffEmptyCell');
+		},
+		checker: function(grid, doh){
+			array.forEach(grid.bodyNode.childNodes, function(rowNode){
+				var row = grid.row(rowNode.getAttribute('rowid'), true),
+					data = row.data();
+				for(var col in data){
+					var cell = grid.cell(row, col, 1);
+					if(cell.column.decorator)
+						return;
+					
+					if(data[col] === '' || data[col] === null || data[col] == undefined){
+						query('.gridxCell', rowNode).forEach(function(cellNode){
+							if(cellNode.getAttribute('colid') == col){
+								console.log(cellNode);
+								doh.is('&nbsp;', cellNode.innerHTML);
+							}
+						});
+					}
+				}
+				doh.t(row);
+			});			
+		}
+		
+		
+	},
+	{
 		id: '56/57',
 		name: 'if no data to show, show empty node',
 		condition: function(grid){
@@ -66,5 +98,6 @@ define([
 				doh.t(parseInt(rowNode.getAttribute('visualindex'), 10) == parseInt(prevRowNode.getAttribute('visualindex'), 10) + 1);
 			}
 		}
-	});
+	}
+	);
 });

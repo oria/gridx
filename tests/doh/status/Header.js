@@ -8,7 +8,11 @@ define([
 		checker: function(grid, doh){
 			query('.gridxCell', grid.header.domNode).forEach(function(headerCellNode, i){
 				var name = grid.structure[i].name;
-				doh.is(name, headerCellNode.childNodes[0].innerHTML);
+				if(headerCellNode.firstChild.firstChild.nodeType != 1){
+					doh.is(name, headerCellNode.childNodes[0].innerHTML);
+				}else{
+					doh.is(name, query('.gridxColCaption', headerCellNode.firstChild)[0].innerHTML);
+				}
 			});
 		}
 	},	{
