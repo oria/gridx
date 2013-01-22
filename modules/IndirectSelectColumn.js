@@ -37,6 +37,9 @@ define([
 					headerStyle: 'text-align: center;',
 					style: 'text-align: center;',
 					rowSelectable: true,
+					sortable: false,
+					filterable: false,
+					editable: false,
 					declaredWidth: w,
 					width: w
 				};

@@ -3,11 +3,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
+	"dijit/registry",
 	"dijit/a11y",
 	"dojo/dom-construct",
 	"../core/_Module",
 	"../core/util"
-], function(require, declare, lang, array, a11y, domConstruct, _Module, util){
+], function(require, declare, lang, array, registry, a11y, domConstruct, _Module, util){
 
 	return _Module.register(
 	declare(/*===== "gridx.modules.Bar", =====*/_Module, {
@@ -62,9 +63,9 @@ define([
 		//		If it is a 2 demension array, then every sub-array represents a row.
 		//		For example:
 		//		[
-		//			gridx.barPlugins.QuickFilter,		//can be the constructor of a bar plugin widget.
-		//			"gridx/barPlugins/Summary"			//can also be the MID of a bar plugin widget.
-		//			{pluginClass: gridx.barPlugins.LinkSizer, style: "text-align: center;"}		//or an object with attributes
+		//			gridx.support.QuickFilter,		//can be the constructor of a bar plugin widget.
+		//			"gridx/support/Summary"			//can also be the MID of a bar plugin widget.
+		//			{pluginClass: gridx.support.LinkSizer, style: "text-align: center;"}		//or an object with attributes
 		//		]
 		//		or
 		//		[
@@ -73,7 +74,7 @@ define([
 		//				null	//if null, just an empty cell
 		//			],
 		//			[
-		//				{pluginClass: gridx.barPlugins.LinkPager, 'class': 'myclass'},		//can provide custom class
+		//				{pluginClass: gridx.support.LinkPager, 'class': 'myclass'},		//can provide custom class
 		//				{colSpan: 2, rowSpan: 2}	//can add colSpan and rowSpan
 		//			]
 		//		]
@@ -169,17 +170,20 @@ define([
 					array.forEach(['colSpan', 'rowSpan', 'style'], lang.partial(setAttr, td, def, 0));
 					setAttr(td, def, 'class', 'className');
 					plugin = null;
-					if(def.pluginClass){
-						var cls = def.pluginClass;
-						delete def.pluginClass;
-						try{
+					try{
+						if(def.plugin){
+							plugin = registry.byId(def.plugin);
+							td.appendChild(plugin.domNode);
+						}else if(def.pluginClass){
+							var cls = def.pluginClass;
+							delete def.pluginClass;
 							plugin = new cls(def);
 							td.appendChild(plugin.domNode);
-						}catch(e){
-							console.error(e);
+						}else if(def.content){
+							td.innerHTML = def.content;
 						}
-					}else if(def.content){
-						td.innerHTML = def.content;
+					}catch(e){
+						console.error(e);
 					}
 					pluginRow.push(plugin || td);
 					tr.appendChild(td);
@@ -193,10 +197,17 @@ define([
 
 		_normalizePlugin: function(def){
 			if(!def || !lang.isObject(def) || lang.isFunction(def)){
+				//def is a constructor or class name
 				def = {
 					pluginClass: def
 				};
+			}else if(def.domNode){
+				//def is a widget
+				def = {
+					plugin: def
+				};
 			}else{
+				//def is a configuration object.
 				//Shallow copy, so user's input won't be changed.
 				def = lang.mixin({}, def);
 			}

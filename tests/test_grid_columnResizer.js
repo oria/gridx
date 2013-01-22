@@ -1,53 +1,25 @@
-define([
-	'gridx/Grid',
-	'gridx/core/model/cache/Async',
+require([
+	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/modules/Focus',
-	'gridx/modules/ColumnResizer',
-	'gridx/modules/RowHeader',
-	'gridx/modules/select/Row',
-	'gridx/modules/IndirectSelect',
-	'gridx/modules/VirtualVScroller',
-	'gridx/tests/support/TestPane',
+	'gridx/tests/support/stores/Memory',
+	'gridx/Grid',
+	'gridx/core/model/cache/Sync',
+	'gridx/allModules',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory,
-	Focus, ColumnResizer, RowHeader, SelectRow, IndirectSelect, VirtualVScroller,
-	TestPane){
+], function(parser, dataSource, storeFactory){
 
-	grid = new Grid({
-		id: 'grid',
-		cacheClass: Cache,
-		store: storeFactory({
-			dataSource: dataSource, 
-			size: 100
-		}),
-		structure: dataSource.layouts[0],
-		modules: [
-			Focus,
-			ColumnResizer,
-			RowHeader,
-			VirtualVScroller,
-			SelectRow,
-			IndirectSelect
-		]
+	store = storeFactory({
+		dataSource: dataSource, 
+		size: 100
 	});
-	grid.placeAt('gridContainer');
-	grid.startup();
 
-	//Test buttons
-	var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
+	layout = dataSource.layouts[0];
 
-	tp.addTestSet('Set Column Width', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setWidth">Set a random width to column "Album"</div><br/>',
-		'<div>Width of column "Album": <span id="colWidthSpan"></span></div>',
-	''].join(''));
-
-	tp.startup();
-
-	update();
+	parser.parse().then(function(){
+		update();
+	});
 });
+
 function setWidth(){
 	var a = 20 + Math.random() * 200;
 	console.log(a);

@@ -9,7 +9,7 @@ define([
 	"dijit/form/Select"
 ], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, Select){
 
-	return declare(/*===== "gridx.modules.barPlugins.DropDownSizer", =====*/[_WidgetBase, _FocusMixin, _TemplatedMixin], {
+	return declare(/*===== "gridx.support.DropDownSizer", =====*/[_WidgetBase, _FocusMixin, _TemplatedMixin], {
 		// summary:
 		//		This grid bar plugin is to switch page sizes using select widget.
 		templateString: '<div class="gridxDropDownSizer"><label class="gridxPagerLabel">${pageSizeLabel}</label></div>',

@@ -2,17 +2,11 @@ require([
 	'dojo/_base/lang',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/modules/Persist',
-	'gridx/modules/select/Column',
-	'gridx/modules/move/Column',
-	'gridx/modules/dnd/Column',
-	'gridx/modules/NestedSort',
-	'gridx/modules/VirtualVScroller',
-	'gridx/modules/ColumnResizer',
+	'gridx/allModules',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane'
-], function(lang, Grid, Cache, Persist, SelectColumn, MoveColumn, DndColumn, NestedSort, VirtualVScroller, ColumnResizer, dataSource, storeFactory, TestPane){
+], function(lang, Grid, Cache, mods, dataSource, storeFactory, TestPane){
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -27,13 +21,13 @@ require([
 				store: store,
 				structure: structure || dataSource.layouts[4],
 				modules: [
-					Persist,
-					SelectColumn,
-					MoveColumn,
-					DndColumn,
-					NestedSort,
-					VirtualVScroller,
-					ColumnResizer
+					mods.Persist,
+					mods.SelectColumn,
+					mods.MoveColumn,
+					mods.DndColumn,
+					mods.NestedSort,
+					mods.VirtualVScroller,
+					mods.ColumnResizer
 				]
 			});
 			grid.placeAt('gridContainer');

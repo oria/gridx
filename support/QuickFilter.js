@@ -12,7 +12,7 @@ define([
 	'dijit/form/ComboButton',
 	'dijit/Menu',
 	'dijit/MenuItem',
-	'../modules/filter/Filter',
+	'../modules/Filter',
 	'dojo/i18n!../nls/QuickFilter',
 	'dojo/text!../templates/QuickFilter.html'
 ], function(declare, lang, array, domClass, keys,
@@ -20,12 +20,12 @@ define([
 	TextBox, Button, ComboButton, Menu, MenuItem,
 	F, nls, template){
 
-	return declare(/*===== "gridx.modules.barPlugins.QuickFilter", =====*/[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+	return declare(/*===== "gridx.support.QuickFilter", =====*/[_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: template,
 
-		postMixInProperties: function(){
+		constructor: function(args){
 			lang.mixin(this, nls);
-			this._hasFilterBar = this.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
 		},
 
 		postCreate: function(){

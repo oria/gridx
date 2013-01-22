@@ -1,27 +1,17 @@
-define([
+require([
+	'dojo/parser',
 	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/modules/Focus',
-	'gridx/modules/VirtualVScroller',
-	'gridx/modules/RowHeader',
-	'gridx/modules/IndirectSelect',
-	'gridx/modules/NestedSort',
-	'gridx/modules/extendedSelect/Row',
-	'gridx/modules/extendedSelect/Column',
-	'gridx/modules/extendedSelect/Cell',
-	'gridx/modules/filter/Filter',
-	'gridx/modules/filter/FilterBar',
-	'gridx/modules/pagination/Pagination',
-	'gridx/modules/pagination/PaginationBar',
+	'gridx/allModules',
 	'dijit/layout/BorderContainer',
 	'dijit/layout/TabContainer',
 	'dijit/layout/AccordionContainer',
 	'dijit/layout/ContentPane',
 	'dojo/domReady!'
-], function(array, Grid, Cache, dataSource, storeFactory, mods){
+], function(parser, array, Grid, Cache, dataSource, storeFactory, mods){
 	var createGrid = function(){
 		return new Grid({
 			cacheClass: Cache,
@@ -32,23 +22,22 @@ define([
 			structure: dataSource.layouts[0],
 			//query: {Genre: 'E*'},
 			modules: [
-				'gridx/modules/Focus',
-				'gridx/modules/VirtualVScroller',
-				'gridx/modules/RowHeader',
-				'gridx/modules/IndirectSelect',
-				'gridx/modules/NestedSort',
-				'gridx/modules/extendedSelect/Row',
-				'gridx/modules/extendedSelect/Column',
-				'gridx/modules/extendedSelect/Cell',
-				'gridx/modules/filter/Filter',
-				'gridx/modules/filter/FilterBar',
-				'gridx/modules/pagination/Pagination',
-				'gridx/modules/pagination/PaginationBar'
+				mods.VirtualVScroller,
+				mods.RowHeader,
+				mods.IndirectSelect,
+				mods.NestedSort,
+				mods.ExtendedSelectRow,
+				mods.ExtendedSelectColumn,
+				mods.ExtendedSelectCell,
+				mods.Filter,
+				mods.FilterBar,
+				mods.Pagination,
+				mods.PaginationBar
 			]
 		});
 	};
 
-	dojo.ready(function(){
+	parser.parse().then(function(){
 		array.forEach(['centerPane', 'rightPane', 'bottomPane'], function(pane, i){
 			dijit.byId(pane).set('content', createGrid());
 		});

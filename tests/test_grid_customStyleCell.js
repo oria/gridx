@@ -1,10 +1,11 @@
-define([
+require([
+	'dojo/parser',
 	'dojo/store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	"gridx/modules/RowHeader",
-	'dojo/parser'
-], function(){
+	'dojo/domReady!'
+], function(parser){
 	function cellStyle(cell){
 		return ["height: 28px; background-color: rgb(",
 			cell.column.index() * 8 % 255, ',',
@@ -32,4 +33,5 @@ define([
 		});
 	}
 
+	parser.parse();
 });

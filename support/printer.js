@@ -126,7 +126,7 @@ define([
 		//		Please refer to `grid.printer.__PrinterArgs`
 		// returns:
 		//		A deferred object indicating when the export process is completed.
-		return printer.toHTML(args).then(_print);	//dojo.Deferred
+		return printer.toHTML(grid, args).then(_print);	//dojo.Deferred
 	}
 
 	printer.toHTML = function(grid, args){

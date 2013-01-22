@@ -1,35 +1,52 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title>Tree Grid (Column) Test</title>
+	<title>Tree Grid</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
-		#gridContainer {
+		.gridx {
 			width: 800px;
-			height: 500px;
-		}
-		#grid {
-			height: 100%;
+			height: 300px;
 		}
 	</style>
-
-	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script>
-		require(['gridx/tests/test_grid_tree']);
-	</script>
+	<script type="text/javascript" src='test_grid_tree.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-		Tree Grid (Column) Test (Experimental)
+		Tree Grid (Experimental)
 	</h1>
-	<table border='0' cellspacing='0' cellpadding='0'><tr>
-		<td class='pane'>
-			<div id='gridContainer'></div>
-		</td>
-		<td id='ctrlPane' class='pane'></td>
-	</tr></table>
+	<h2>All expandoes in one column, sync store</h2>
+	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout1,
+		modules: mods
+	'></div>
+	<h2>All expandoes in one column, async store</h2>
+	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Async",
+		store: storeAsync,
+		structure: layout2,
+		modules: mods
+	'></div>
+	<h2>Expandoes in different columns (nested), async store</h2>
+	<div id='grid3' jsid='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Async",
+		store: storeNested,
+		structure: layout3,
+		treeNested: true,
+		modules: mods
+	'></div>
+	<h2>Customized expando positions (nested), async store</h2>
+	<div id='grid4' jsid='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Async",
+		store: storeNested,
+		structure: layout4,
+		treeNested: true,
+		modules: mods
+	'></div>
 </body>
 </html>

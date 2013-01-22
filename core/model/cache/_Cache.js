@@ -231,17 +231,22 @@ define([
 				d = new Deferred(),
 				s = t.store,
 				row = t.byId(parentId),
-				items = row && s.getChildren && s.getChildren(row.item) || [];
-			Deferred.when(items, function(items){
-				var i = 0,
-					item,
-					len = t._size[parentId] = items.length;
-				for(; i < len; ++i){
-					item = items[i];
-					t._addRow(s.getIdentity(item), i, t._itemToObject(item), item, parentId);
-				}
+				items = t._struct[parentId];
+			if(row && items && (items.length > 1 || !t.hasChildren || !t.hasChildren(parentId))){
 				d.callback();
-			}, hitch(d, d.errback));
+			}else{
+				items = row && s.getChildren && s.getChildren(row.item) || [];
+				Deferred.when(items, function(items){
+					var i = 0,
+						item,
+						len = t._size[parentId] = items.length;
+					for(; i < len; ++i){
+						item = items[i];
+						t._addRow(s.getIdentity(item), i, t._itemToObject(item), item, parentId);
+					}
+					d.callback();
+				}, hitch(d, d.errback));
+			}
 			return d;
 		},
 

@@ -10,7 +10,7 @@ define([
 
 	var hasClass = domClass.contains;
 
-	return declare(/*===== "gridx.modules.barPlugins.LinkSizer", =====*/_LinkPageBase, {
+	return declare(/*===== "gridx.support.LinkSizer", =====*/_LinkPageBase, {
 		// summary:
 		//		This is a grid bar plugin that can be used to switch page sizes using link buttons.
 

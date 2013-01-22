@@ -12,7 +12,7 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/stores/TreeJsonRestStore',
 	'gridx/tests/support/stores/HugeStore',
-	'gridx/tests/support/modules',
+	'gridx/allModules',
 	'dojo/store/Memory',
 	'gridx/tests/support/GridConfig',
 	'dijit/Menu',

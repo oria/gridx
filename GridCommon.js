@@ -8,7 +8,7 @@ define([
 	'./modules/SingleSort',
 	'./modules/TouchScroll',
 	'./modules/extendedSelect/Row',
-	'./modules/filter/Filter',
+	'./modules/Filter',
 	'./modules/move/Row',
 	'./modules/move/Column',
 	'./modules/ColumnLock'
