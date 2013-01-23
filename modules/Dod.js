@@ -134,23 +134,36 @@ define([
 			}
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '+';}
-			_row.inAnim = true;
-			fx.wipeOut({
-				node: _row.dodNode,
-				duration: this.arg('duration'),
-				onEnd: function(){
-					_row.dodShown = false;
-					_row.inAnim = false;
-					g.body.onRender();
-				}
-			}).play();
-			if(this.grid.rowHeader){
-				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-				baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
-					properties: {
-						height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
+
+			if(this.useAnimation){
+				_row.inAnim = true;
+				fx.wipeOut({
+					node: _row.dodNode,
+					duration: this.arg('duration'),
+					onEnd: function(){
+						_row.dodShown = false;
+						_row.inAnim = false;
+						g.body.onRender();
 					}
 				}).play();
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+						properties: {
+							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
+						}
+					}).play();
+				}
+			}else{
+				_row.dodShown = false;
+				_row.inAnim = false;
+				_row.dodNode.style.display = 'none';
+				g.body.onRender();
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					rowHeaderNode.firstChild.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
+				}
+				
 			}
 			
 			_row.defaultShow = false;
@@ -234,23 +247,35 @@ define([
 					html.marginBox(_row.dodNode, {h: html.marginBox(_row.dodLoadingNode).h});
 					html.style(_row.dodNode, 'display', 'block');
 				}
-				_row.inAnim = true;
-				fx.wipeIn({
-					node: _row.dodNode,
-					duration: this.arg('duration'),
-					onEnd: function(){
-						_row.inAnim = false;
-						g.body.onRender();
-					}
-				}).play();
-				
-				if(this.grid.rowHeader){
-					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
-						properties: {
-							height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
+
+				if(this.useAnimation){
+					_row.inAnim = true;
+					fx.wipeIn({
+						node: _row.dodNode,
+						duration: this.arg('duration'),
+						onEnd: function(){
+							_row.inAnim = false;
+							g.body.onRender();
 						}
 					}).play();
+					
+					if(this.grid.rowHeader){
+						var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+						baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+							properties: {
+								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
+							}
+						}).play();
+					}
+				}else{
+					_row.dodNode.style.display = 'block';
+					_row.dodNode.style.height = 'auto';
+					g.body.onRender();
+					if(this.grid.rowHeader){
+						var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+					}
+					
 				}
 			}
 			html.style(_row.dodLoadingNode, 'display', 'none');
