@@ -14,70 +14,138 @@ define([
 	"dijit/form/TextBox"
 ], function(declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
 	
-	/*=====
-	var columnDefinitionEditorMixin = {
+/*=====
+	var __GridCellEditorArgs = declare(null, {
+		// toEditor: function(storeData, gridData) return anything
+		//		By default the dijit used in an editing cell will use store value.
+		//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
+		//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
+		// fromEditor: Function(valueInEditor) return anything
+		//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
+		//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
+		//		to get a suitable value from editor.
+		// props: String
+		//		The properties to be used when creating the dijit in a editing cell.
+		//		Just like data-dojo-props for a widget.
+		// constraints: Object
+		//		If the editor widget has some constraints, it can be set here instead of in props.
+		// useGridData: Boolean
+		//		Whether to feed the editor with grid data or store data.
+		//		This property is only effective when toEditor is not provided.
+		// valueField: String
+		//		The property name of the editor used to take the data. In most cases it is "value",
+		//		so editor.set('value', ...) can do the job.
+	});
+
+	var _ColumnDefinitionEditorMixin = declare(null, {
 		// editable: Boolean
 		//		If true then the cells in this column will be editable. Default is false.
-		editable: false, 
-
 		// alwaysEditing: Boolean
 		//		If true then the cells in this column will always be in editing mode. Default is false.
-		alwaysEditing: false,
-	
 		// applyDelay: Integer
 		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
-		applyDelay: 500,
-
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.
 		//		The default dijit is dijit.form.TextBox.
 		//		This attribute can either be the declared class name of a dijit or 
 		//		the class construct function of a dijit (the one that is used behide "new" keyword).
-		editor: "dijit.form.TextBox",
-	
 		// editorArgs: __GridCellEditorArgs
-		editorArgs: null,
-
 		// customApplyEdit: function(cell, value)
 		//		If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
 		//		For example, setting multiple fields of store for a formatted cell.
 		//		Can return a Deferred object if the work can not be done synchronously.
-		customApplyEdit: null
-	};
-	
-	var __GridCellEditorArgs = {
-		// toEditor: Function(storeData, gridData) return anything
-		//		By default the dijit used in an editing cell will use store value.
-		//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
-		//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
-		toEditor: null,
-	
-		// fromEditor: Function(valueInEditor) return anything
-		//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
-		//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
-		//		to get a suitable value from editor.
-		fromEditor: null,
-	
-		//props: String
-		//		The properties to be used when creating the dijit in a editing cell.
-		//		Just like data-dojo-props for a widget.
-		props: ''
+	});
 
-		//constraints: Object
-		//		If the editor widget has some constraints, it can be set here instead of in props.
-		constraints: null,
+	return declare(_Module, {
+		// summary:
+		//		This module provides editing mode for grid cells.
+		// description:
+		//		This module relies on an implementation of the CellWidget module.
+		//		The editing mode means there will be an editable widget appearing in the grid cell.
+		//		This implementation also covers "alwaysEditing" mode for grid columns,
+		//		which means all the cells in this column are always in editing mode.
 
-		//useGridData: Boolean
-		//		Whether to feed the editor with grid data or store data.
-		//		This property is only effective when toEditor is not provided.
-		useGridData: false,
+		begin: function(rowId, colId){
+			// summary:
+			//		Begin to edit a cell with defined editor widget.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		A deferred object indicating when the cell has completely changed into eidting mode.
+		},
 
-		//valueField: String
-		//		The property name of the editor used to take the data. In most cases it is "value",
-		//		so editor.set('value', ...) can do the job.
-		valueField: 'value'
-	};
-	=====*/
+		cancel: function(rowId, colId){
+			// summary:
+			//		Cancel the edit. And end the editing state.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		A deferred object indicating when the cell value has been successfully restored.
+		},
+
+		apply: function(rowId, colId){
+			// summary:
+			//		Apply the edit value to the grid store. And end the editing state.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		A deferred object indicating when the change has been written back to the store.
+		},
+
+		isEditing: function(rowId, colId){
+			// summary:
+			//		Check whether a cell is in editing mode.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		Whether the cell is in eidting mode.
+		},
+
+		setEditor: function(colId, editor, args){
+			// summary:
+			//		Define the editor widget to edit a column of a grid.
+			//		The widget should have a get and set method to get value and set value.
+			// colId: String
+			//		A column ID
+			// editor: Function|String
+			//		Class constructor or declared name of an editor widget
+			// args: __GridCellEditorArgs?
+			//		Any args that are related to this editor.
+		},
+
+		onBegin: function(cell){
+			// summary:
+			//		Fired when a cells enters editing mode.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
+
+		onApply: function(cell, applySuccess){
+			// summary:
+			//		Fired when the change in a cell is applied to the store.
+			// cell: gridx.core.Cell
+			//		The cell object
+			// applySuccess: Boolean
+			//		Whether the change is successfully applied to the store
+		},
+
+		onCancel: function(cell){
+			// summary:
+			//		Fired when an editing cell is canceled.
+			// cell: gridx.core.Cell
+			//		The cell object
+		}
+	});
+=====*/
+
 	function getTypeData(col, storeData, gridData){
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
 			return locale.parse(storeData, col.storePattern);
@@ -99,15 +167,7 @@ define([
 		};
 	}
 
-	return declare(/*===== "gridx.modules.Edit", =====*/_Module, {
-		// summary:
-		//		This module provides editing mode for grid cells.
-		// description:
-		//		This module relies on an implementation of the CellWidget module.
-		//		The editing mode means there will be an editable widget appearing in the grid cell.
-		//		This implementation also covers "alwaysEditing" mode for grid columns,
-		//		which means all the cells in this column are always in editing mode.
-
+	return declare(_Module, {
 		name: 'edit',
 
 		forced: ['cellWidget'],
@@ -117,16 +177,12 @@ define([
 		},
 
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				edit: this
 			};
 		},
 
 		preload: function(){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid;
 			g.domNode.removeAttribute('aria-readonly');
@@ -216,14 +272,6 @@ define([
 
 		//Public------------------------------------------------------------------------------
 		begin: function(rowId, colId){
-			// summary:
-			//		Begin to edit a cell with defined editor widget.
-			// rowId: String
-			//		The row ID of this cell
-			// colId: String
-			//		The column ID of this cell
-			// returns:
-			//		A deferred object indicating when the cell has completely changed into eidting mode.
 			var d = new Deferred(),
 				t = this,
 				g = t.grid;
@@ -239,6 +287,7 @@ define([
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 						t._focusEditor(rowId, colId);
 						d.callback(true);
+						g.resize();
 						t.onBegin(g.cell(rowId, colId, 1));
 					});
 				}else{
@@ -250,18 +299,10 @@ define([
 				d.callback(true);
 				t.onBegin(g.cell(rowId, colId, 1));
 			}
-			return d;	//dojo.Deferred
+			return d;
 		},
 
 		cancel: function(rowId, colId){
-			// summary:
-			//		Cancel the edit. And end the editing state.
-			// rowId: String
-			//		The row ID of this cell
-			// colId: String
-			//		The column ID of this cell
-			// returns:
-			//		A deferred object indicating when the cell value has been successfully restored.
 			var d = new Deferred(),
 				t = this,
 				g = t.grid,
@@ -289,18 +330,10 @@ define([
 			}else{
 				d.callback();
 			}
-			return d;	//dojo.Deferred
+			return d;
 		},
 
 		apply: function(rowId, colId){
-			// summary:
-			//		Apply the edit value to the grid store. And end the editing state.
-			// rowId: String
-			//		The row ID of this cell
-			// colId: String
-			//		The column ID of this cell
-			// returns:
-			//		A deferred object indicating when the change has been written back to the store.
 			var d = new Deferred(),
 				t = this,
 				g = t.grid,
@@ -324,6 +357,7 @@ define([
 								g.cellWidget.restoreCellDecorator(rowId, colId);
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
+									g.resize();
 									t.onApply(cell, success, e);
 								});
 							}
@@ -352,40 +386,23 @@ define([
 					}catch(e){
 						finish(false, e);
 					}
-					return d;	//dojo.Deferred
+					return d;
 				}
 			}
 			d.callback(false);
-			return d;	//dojo.Deferred
+			return d;
 		},
 
 		isEditing: function(rowId, colId){
-			// summary:
-			//		Check whether a cell is in editing mode.
-			// rowId: String
-			//		The row ID of this cell
-			// colId: String
-			//		The column ID of this cell
-			// returns:
-			//		Whether the cell is in eidting mode.
 			var col = this.grid._columnsById[colId];
 			if(col && col.alwaysEditing){
 				return true;
 			}
 			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
-			return !!widget && !!widget.gridCellEditField;	//Boolean
+			return !!widget && !!widget.gridCellEditField;
 		},
 
 		setEditor: function(colId, editor, args){
-			// summary:
-			//		Define the editor widget to edit a column of a grid.
-			//		The widget should have a get and set method to get value and set value.
-			// colId: String
-			//		A column ID
-			// editor: Function|String
-			//		Class constructor or declared name of an editor widget
-			// args: __GridCellEditorArgs?
-			//		Any args that are related to this editor.
 			var col = this.grid._columnsById[colId],
 				editorArgs = col.editorArgs = col.editorArgs || {};
 			col.editor = editor;
@@ -393,28 +410,11 @@ define([
 		},
 
 		//Events-------------------------------------------------------------------
-		onBegin: function(/* cell */){
-			// summary:
-			//		Fired when a cells enters editing mode.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
+		onBegin: function(/* cell */){},
 
-		onApply: function(/* cell, applySuccess */){
-			// summary:
-			//		Fired when the change in a cell is applied to the store.
-			// cell: gridx.core.Cell
-			//		The cell object
-			// applySuccess: Boolean
-			//		Whether the change is successfully applied to the store
-		},
+		onApply: function(/* cell, applySuccess */){},
 
-		onCancel: function(/* cell */){
-			// summary:
-			//		Fired when an editing cell is canceled.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
+		onCancel: function(/* cell */){},
 
 		//Private------------------------------------------------------------------
 		_init: function(){

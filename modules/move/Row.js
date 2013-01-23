@@ -6,7 +6,8 @@ define([
 	"../../core/model/extensions/Move"
 ], function(declare, array, keys, _Module, Move){
 
-	return declare(/*===== "gridx.modules.move.Row", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module provides some APIs to move rows within grid
 		// description:
@@ -14,6 +15,44 @@ define([
 		//		This module does not include any UI. So different kind of row dnd UI implementations can be built
 		//		upon this module.
 
+		// moveSelected: Boolean
+		//		When moving using keyboard, whether to move all selected rows together.
+		moveSelected: true,
+
+		move: function(rowIndexes, target, skipUpdateBody){
+			// summary:
+			//		Move some rows to target position
+			// rowIndexes: Integer[]
+			//		An array of row indexes
+			// target: Integer
+			//		The rows will be moved to the position before the target row
+			// skipUpdateBody: Boolean?
+			//		If set to true, the grid will not refresh immediately, so that several
+			//		grid operations can be done altogether.
+		},
+		
+		moveRange: function(start, count, target, skipUpdateBody){
+			// summary:
+			//		Move a range of rows to target position
+			// start: Integer
+			//		The index of the first row to be moved
+			// count: Integer
+			//		The count of rows to be moved
+			// skipUpdateBody: Boolean?
+			//		
+		},
+		
+		//Events------------------------------------------------------------------
+		onMoved: function(rowIndexMapping){
+			// summary:
+			//		Fired when row move is performed successfully
+			// tags:
+			//		callback
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'moveRow',
 		
 		modelExtensions: [Move],
@@ -23,8 +62,6 @@ define([
 		},
 	
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				move: {
 					row: this
@@ -44,21 +81,9 @@ define([
 		},
 		
 		//Public-----------------------------------------------------------------
-
-		//moveSelected: Boolean
-		//		When moving using keyboard, whether to move all selected rows together.
 		moveSelected: true,
 
 		move: function(rowIndexes, target, skipUpdateBody){
-			// summary:
-			//		Move some rows to target position
-			// rowIndexes: Integer[]
-			//		An array of row indexes
-			// target: Integer
-			//		The rows will be moved to the position before the target row
-			// skipUpdateBody: Boolean?
-			//		If set to true, the grid will not refresh immediately, so that several
-			//		grid operations can be done altogether.
 			var m = this.model;
 			m.moveIndexes(rowIndexes, target);
 			if(!skipUpdateBody){
@@ -67,14 +92,6 @@ define([
 		},
 		
 		moveRange: function(start, count, target, skipUpdateBody){
-			// summary:
-			//		Move a range of rows to target position
-			// start: Integer
-			//		The index of the first row to be moved
-			// count: Integer
-			//		The count of rows to be moved
-			// skipUpdateBody: Boolean?
-			//		
 			var m = this.model;
 			m.move(start, count, target);
 			if(!skipUpdateBody){
@@ -83,12 +100,7 @@ define([
 		},
 		
 		//Events------------------------------------------------------------------
-		onMoved: function(/* rowIndexMapping */){
-			// summary:
-			//		Fired when row move is performed successfully
-			// tags:
-			//		callback
-		},
+		onMoved: function(/* rowIndexMapping */){},
 		
 		//Private-----------------------------------------------------------------
 		_onMoved: function(){

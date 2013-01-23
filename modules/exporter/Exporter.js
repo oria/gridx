@@ -4,8 +4,8 @@ define([
 	"../../core/_Module",
 	"../../support/exporter/exporter"
 ], function(kernel, declare, _Module, exporter){
+	kernel.deprecated('gridx/modules/exporter/Exporter is deprecated.', 'Use gridx/support/exporter/exporter instead.', '1.2');
 
-	kernel.deprecated('gridx/modules/exporter/Exporter is deprecated.', 'Use gridx/support/exporter/exporter instead.', '2.0');
 /*=====
 	__ExportArgs = function(){
 		//columns: String[]?
@@ -42,9 +42,7 @@ define([
 		//		After each progress, the deferred.progress() is called, so the 
 		//		exporting process can be controlled by the user.
 	};
-=====*/
 
-/*=====
 	var __ExportContext = function(){
 		//columnIds: String[]
 		//		Available for header.
@@ -55,6 +53,21 @@ define([
 		//cell: Grid Cell
 		//		Available for a body cell
 	};
+
+	return declare(_Module, {
+		// summary:
+		//		Deprecated.
+
+		_export: function(writer, args){
+			// summary:
+			//		Go through the grid using the given args and writer implementation.
+			//		Return a dojo.Deferred object. Users can cancel and see progress 
+			//		of the exporting process.
+			//		Pass the exported result to the callback function of the Deferred object.
+			// tags:
+			//		private
+		}
+	});
 =====*/
 
 	return _Module.register(
@@ -66,16 +79,8 @@ define([
 				'exporter': this
 			};
 		},
-	
-		//Package ---------------------------------------------------------------------
+
 		_export: function(writer, /* __ExportArgs */ args){
-			// summary:
-			//		Go through the grid using the given args and writer implementation.
-			//		Return a dojo.Deferred object. Users can cancel and see progress 
-			//		of the exporting process.
-			//		Pass the exported result to the callback function of the Deferred object.
-			// tags:
-			//		private
 			return exporter(this.grid, writer, args);
 		}
 	}));

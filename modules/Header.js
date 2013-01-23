@@ -12,19 +12,52 @@ define([
 	"../core/_Module"
 ], function(declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
-	
-	return declare(/*===== "gridx.modules.Header", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		The header UI of grid
 		// description:
 		//		This module is in charge of the rendering of the grid header. But it should not manage column width,
 		//		which is the responsibility of ColumnWidth module.
 
+		// hidden: Boolean
+		//		Whether the header UI should be hidden.
+		hidden: false,
+
+		getHeaderNode: function(id){
+			// summary:
+			//		Get the header DOM node by column ID.
+			// id: String
+			//		The column ID
+			// returns:
+			//		The header DOM node
+		},
+
+		refresh: function(){
+			// summary:
+			//		Re-build the header UI.
+		},
+
+		onRender: function(){
+			// summary:
+			//		Fired when the header is rendered.
+			// tags:
+			//		callback
+		},
+
+		onMoveToHeaderCell: function(){
+			// summary:
+			//		Fired when the focus is moved to a header cell by keyboard.
+			// tags:
+			//		callback
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'header',
 
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				header: this
 			};
@@ -44,8 +77,6 @@ define([
 		},
 
 		preload: function(args){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid;
 			t.domNode.appendChild(t.innerNode);
@@ -74,8 +105,6 @@ define([
 		},
 
 		destroy: function(){
-			// tags:
-			//		protected extension
 			this.inherited(arguments);
 			domConstruct.destroy(this.domNode);
 		},
@@ -85,47 +114,23 @@ define([
 				return this.grid.header.getHeaderNode(this.id);
 			}
 		},
-	
-		//Public-----------------------------------------------------------------------------
-		
 
-		// hidden: Boolean
-		//		Whether the header UI should be hidden.
+		//Public-----------------------------------------------------------------------------
 		hidden: false,
 
-		
 		getHeaderNode: function(id){
-			// summary:
-			//		Get the header DOM node by column ID.
-			// id: String
-			//		The column ID
-			// returns:
-			//		The header DOM node
-			return query("[colid='" + id + "']", this.domNode)[0];	//DOMNode
+			return query("[colid='" + id + "']", this.domNode)[0];
 		},
-		
-		
+
 		refresh: function(){
-			// summary:
-			//		Re-build the header UI.
 			this._build();
 			this._onHScroll(this._scrollLeft);
 			this.onRender();
 		},
 
-		onRender: function(){
-			// summary:
-			//		Fired when the header is rendered.
-			// tags:
-			//		callback
-		},
+		onRender: function(){},
 
-		onMoveToHeaderCell: function(/* columnId, e */){
-			// summary:
-			//		Fired when the focus is moved to a header cell by keyboard.
-			// tags:
-			//		callback
-		},
+		onMoveToHeaderCell: function(){},
 		
 		//Private-----------------------------------------------------------------------------
 		_scrollLeft: 0,

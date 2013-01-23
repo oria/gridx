@@ -9,10 +9,28 @@ define([
 	"dijit/form/FilteringSelect"
 ], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, FilteringSelect){
 
-	return declare(/*===== "gridx.modules.barPlugins.DropDownPager", =====*/[_WidgetBase, _FocusMixin, _TemplatedMixin], {
+/*=====
+	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
 		// summary:
 		//		This grid bar plugin is to switch pages using select widget.
 
+		// grid: gridx.Grid
+		//		The grid widget this plugin works for.
+		grid: null,
+
+		// stepperClass: Function
+		//		The constructor of the select widget
+		stepperClass: FilteringSelect,
+
+		// stepperProps: Object
+		//		The properties passed to select widget when creating it.
+		stepperProps: null,
+
+		refresh: function(){}
+	});
+=====*/
+
+	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
 		templateString: '<div class="gridxDropDownPager"><label class="gridxPagerLabel">${pageLabel}</label></div>',
 
 		constructor: function(args){
@@ -30,17 +48,10 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------------------
-
-		//grid: gridx.Grid
-		//		The grid widget this plugin works for.
 		grid: null,
 
-		//stepperClass: Function
-		//		The constructor of the select widget
 		stepperClass: FilteringSelect,
 
-		//stepperProps: Object
-		//		The properties passed to select widget when creating it.
 		stepperProps: null,
 
 		refresh: function(){

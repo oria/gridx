@@ -9,7 +9,7 @@ define([
 	"dojo/_base/window"
 ], function(exportToTable, declare, lang, Deferred, xhr, array, sniff, win){
 
-	/*=====
+/*=====
 	declare('__PrinterArgs', __ExporterArgs, {
 		// style: String
 		//		The CSS string for the printed document
@@ -25,13 +25,13 @@ define([
 
 		// description: String
 		//		Any HTML content that will be put before the grid in the printed document.
-		description: ''
+		description: '',
 
 		// customHead: String
 		//		Any HTML <head> content that will be put in the <head> of the printed document.
 		customHead: ''
 	});
-	=====*/
+=====*/
 
 	var printFrame,
 		hitch = lang.hitch;
@@ -126,7 +126,7 @@ define([
 		//		Please refer to `grid.printer.__PrinterArgs`
 		// returns:
 		//		A deferred object indicating when the export process is completed.
-		return printer.toHTML(args).then(_print);	//dojo.Deferred
+		return printer.toHTML(grid, args).then(_print);	//dojo.Deferred
 	}
 
 	printer.toHTML = function(grid, args){

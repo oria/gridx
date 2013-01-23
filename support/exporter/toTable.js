@@ -3,9 +3,9 @@ define([
 ], function(exporter){
 
 /*=====
-	dojo.declare('__TableExportArgs', __ExportArgs, {
-		natualWidth: false
-		columnWidth: Associative array
+	var __TableExportArgs = declare(__ExportArgs, {
+		natualWidth: false,
+		columnWidth: {}
 	});
 =====*/
 

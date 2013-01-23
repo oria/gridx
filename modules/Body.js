@@ -1,4 +1,6 @@
 define([
+/*====="../core/Row",=====*/
+/*====="../core/Cell",=====*/
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
@@ -13,9 +15,9 @@ define([
 	"../core/_Module",
 	"../core/util",
 	"dojo/i18n!../nls/Body"
-], function(declare, query, array, lang, event, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
+], function(/*=====Row, Cell, =====*/declare, query, array, lang, event, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
-	/*=====
+/*=====
 	gridx._RowCellInfo = function(){
 		// summary:
 		//		This structure includes all possible information that can be used to identify a row or a cell, it is used
@@ -41,127 +43,32 @@ define([
 		this.colId = 1;
 		this.colIndex = 0;
 	};
-	=====*/
 
-	return declare(/*===== "gridx.modules.Body", =====*/_Module, {
+	Row.node = function(){
+		// summary:
+		//		Get the dom node of this row.
+		// return:
+		//		DOMNode|null
+	};
+
+	Row.visualIndex = function(){
+		// summary:
+		//		Get the visual index of this row.
+	};
+
+	Cell.node = function(){
+		// summary:
+		//		Get the dom node of this cell.
+		// return:
+		//		DOMNode|null
+	};
+
+	return declare(_Module, {
 		// summary:
 		//		The body UI of grid.
 		// description:
 		//		This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 
 		//		pagination, details on demand, and even tree structure.
-
-		name: "body",
-
-		optional: ['tree'],
-
-		getAPIPath: function(){
-			// tags:
-			//		protected extended
-			return {
-				body: this
-			};
-		},
-
-		constructor: function(){
-			var t = this,
-				m = t.model,
-				g = t.grid,
-				dn = t.domNode = g.bodyNode,
-				refresh = function(){ t.refresh(); };
-			if(t.arg('rowHoverEffect')){
-				domClass.add(dn, 'gridxBodyRowHoverEffect');
-			}
-			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
-			g._connectEvents(dn, '_onMouseEvent', t);
-			t.aspect(m, 'onDelete', '_onDelete');
-			t.aspect(m, 'onSet', '_onSet');
-			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
-			t.aspect(g, 'onCellMouseOver', '_onCellMouseOver');
-			t.aspect(g, 'onCellMouseOut', '_onCellMouseOver');
-			t.connect(g.bodyNode, 'onmouseleave', function(){
-				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-			});
-			t.connect(g.bodyNode, 'onmouseover', function(e){
-				if(e.target == g.bodyNode){
-					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-				}
-			});
-			t.aspect(g, 'setStore', refresh);
-		},
-
-		preload: function(){
-			// tags:
-			//		protected extended
-			this._initFocus();
-		},
-
-		load: function(args){
-			// tags:
-			//		protected extended
-			var t = this,
-				m = t.model,
-				g = t.grid,
-				finish = function(){
-					t.aspect(m, 'onSizeChange', '_onSizeChange');
-					t.loaded.callback();
-				};
-			//Load the store size
-			m.when({}, function(){
-				t.rootCount = t.rootCount || m.size();
-				t.visualCount = g.tree ? g.tree.getVisualSize(t.rootStart, t.rootCount) : t.rootCount;
-				finish();
-			}).then(null, function(e){
-				t._loadFail(e);
-				finish();
-			});
-		},
-
-		destroy: function(){
-			// tags:
-			//		protected extended
-			this.inherited(arguments);
-			this.domNode.innerHTML = '';
-			this._destroyed = true;
-		},
-	
-		rowMixin: {
-			node: function(){
-				// summary:
-				//		Get the dom node of this row.
-				// return:
-				//		DOMNode|null
-				return this.grid.body.getRowNode({
-					rowId: this.id
-				});
-			},
-
-			visualIndex: function(){
-				// summary:
-				//		Get the visual index of this row.
-				var t = this,
-					id = t.id;
-				return t.grid.body.getRowInfo({
-					rowId: id,
-					rowIndex: t.index(),
-					parentId: t.model.parentId(id)
-				}).visualIndex;
-			}
-		},
-
-		cellMixin: {
-			node: function(){
-				// summary:
-				//		Get the dom node of this cell.
-				// return:
-				//		DOMNode|null
-				return this.grid.body.getCellNode({
-					rowId: this.row.id,
-					colId: this.column.id
-				});
-			}
-		},
-
-		//Public-----------------------------------------------------------------------------
 
 		// rowHoverEffect: Boolean
 		//		Whether to show a visual effect when mouse hovering a row.
@@ -179,11 +86,7 @@ define([
 		// compareOnSet: Function
 		//		When data is changed in store, compare the old data and the new data of grid, return true if
 		//		they are the same, false if not, so that the body can decide whether to refresh the corresponding cell.
-		compareOnSet: function(v1, v2){
-			return typeof v1 == 'object' && typeof v2 == 'object' ? 
-				json.stringify(v1) == json.stringify(v2) : 
-				v1 === v2;
-		},
+		compareOnSet: function(v1, v2){},
 
 		getRowNode: function(args){
 			// summary:
@@ -192,6 +95,274 @@ define([
 			//		A row info object containing row index or row id
 			// returns:
 			//		The DOM node of the row. Null if not found.
+		},
+
+		getCellNode: function(args){
+			// summary:
+			//		Get the DOM node of a cell
+			// args: gridx.__RowCellInfo
+			//		A cell info object containing sufficient info
+			// returns:
+			//		The DOM node of the cell. Null if not found.
+		},
+
+		getRowInfo: function(args){
+			// summary:
+			//		Get complete row info by partial row info
+			// args: gridx.__RowCellInfo
+			//		A row info object containing partial row info
+			// returns:
+			//		A row info object containing as complete as possible row info.
+		},
+	
+		refresh: function(start){
+			// summary:
+			//		Refresh the grid body
+			// start: Integer?
+			//		The visual row index to start refresh. If omitted, default to 0.
+			// returns:
+			//		A deferred object indicating when the refreshing process is finished.
+		},
+	
+		refreshCell: function(rowVisualIndex, columnIndex){
+			// summary:
+			//		Refresh a single cell
+			// rowVisualIndex: Integer
+			//		The visual index of the row of this cell
+			// columnIndex: Integer
+			//		The index of the column of this cell
+			// returns:
+			//		A deferred object indicating when this refreshing process is finished.
+		},
+
+		// rootStart: [readonly] Integer
+		//		The row index of the first root row that logically exists in the current body
+		rootStart: 0,
+
+		// rootCount: [readonly] Integer
+		//		The count of root rows that logically exist in thi current body
+		rootCount: 0,
+	
+		// renderStart: [readonly] Integer
+		//		The visual row index of the first renderred row in the current body
+		renderStart: 0,
+		// renderCount: [readonly] Integer
+		//		The count of renderred rows in the current body.
+		renderCount: 0,
+	
+		// visualStart: [readonly] Integer
+		//		The visual row index of the first row that is logically visible in the current body.
+		//		This should be always zero.
+		visualStart: 0, 
+		// visualCount: [readonly] Integer
+		//		The count of rows that are logically visible in the current body
+		visualCount: 0,
+	
+		// autoUpdate: [private] Boolean
+		//		Update grid body automatically when onNew/onSet/onDelete is fired
+		autoUpdate: true,
+
+		// autoChangeSize: [private] Boolean
+		//		Whether to change rootStart and rootCount automatically when store size is changed.
+		//		This need to be turned off when pagination is used.
+		autoChangeSize: true,
+
+		onAfterRow: function(){
+			// summary:
+			//		Fired when a row is created, data is filled in, and its node is inserted into the dom tree.
+			// row: gridx.core.Row
+			//		A row object representing this row.
+		},
+
+		onAfterCell: function(){
+			// summary:
+			//		Fired when a cell is updated by cell editor (or store data change), or by cell refreshing.
+			//		Note this is not fired when rendering the whole grid. Use onAfterRow in that case.
+			// cell: grid.core.Cell
+			//		A cell object representing this cell
+		},
+
+		onRender: function(){
+			// summary:
+			//		Fired everytime the grid body content is rendered or updated.
+			// start: Integer
+			//		The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.
+			// count: Integer
+			//		The count of rows that is affected by this rendering. If omitted, all rows from start are affected.
+		},
+
+		onUnrender: function(){
+			// summary:
+			//		Fired when a row is unrendered (removed from the grid dom tree).
+			//		Usually, this event is only useful when using virtual scrolling.
+			// id: String|Number
+			//		The ID of the row that is unrendered.
+		},
+
+		onDelete: function(){
+			// summary:
+			//		Fired when a row in current view is deleted from the store.
+			//		Note if the deleted row is not visible in current view, this event will not fire.
+			// id: String|Number
+			//		The ID of the deleted row.
+			// index: Integer
+			//		The index of the deleted row.
+		},
+
+		onSet: function(){
+			// summary:
+			//		Fired when a row in current view is updated in store.
+			// row: gridx.core.Row
+			//		A row object representing the updated row.
+		},
+
+		onMoveToCell: function(){
+			// summary:
+			//		Fired when the focus is moved to a body cell by keyboard.
+		},
+
+		onEmpty: function(){
+			// summary:
+			//		Fired when there's no rows in current body view.
+		},
+
+		onForcedScroll: function(){
+			// summary:
+			//		Fired when the body needs to fetch more data, but there's no trigger to the scroller.
+			//		This is an inner mechanism to solve some problems when using virtual scrolling or pagination.
+			//		This event should not be used by grid users.
+			// tags:
+			//		private
+		},
+
+		collectCellWrapper: function(){
+			// summary:
+			//		Fired when a cell is being rendered, so as to collect wrappers for the content in this cell.
+			//		This is currently an inner mechanism used to implement widgets in cell and tree node.
+			// tags:
+			//		private
+			// wrappers: Array
+			//		An array of functions with signature function(cellData, rowId, colId) and should return a string to replace
+			//		cell data. The connectors of this event should push a new wrapper function in this array.
+			//		The functions in this array can also carry a number typed "priority" property.
+			//		The wrappers will be executed in ascending order of this "priority" function.
+			// rowId: String|Number
+			//		The row ID of this cell
+			// colId: String|Number
+			//		The column ID of this cell.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: "body",
+
+		optional: ['tree'],
+
+		getAPIPath: function(){
+			return {
+				body: this
+			};
+		},
+
+		constructor: function(){
+			var t = this,
+				m = t.model,
+				g = t.grid,
+				dn = t.domNode = g.bodyNode,
+				refresh = function(){ t.refresh(); };
+			if(t.arg('rowHoverEffect')){
+				domClass.add(dn, 'gridxBodyRowHoverEffect');
+			}
+			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+			g._connectEvents(dn, '_onMouseEvent', t);
+			t.aspect(m, 'onSet', '_onSet');
+			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
+			t.aspect(g, 'onCellMouseOver', '_onCellMouseOver');
+			t.aspect(g, 'onCellMouseOut', '_onCellMouseOver');
+			t.connect(g.bodyNode, 'onmouseleave', function(){
+				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+			});
+			t.connect(g.bodyNode, 'onmouseover', function(e){
+				if(e.target == g.bodyNode){
+					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+				}
+			});
+			t.aspect(g, 'setStore', refresh);
+		},
+
+		preload: function(){
+			this._initFocus();
+		},
+
+		load: function(args){
+			var t = this,
+				m = t.model,
+				g = t.grid,
+				finish = function(){
+					t.aspect(m, 'onSizeChange', '_onSizeChange');
+					t.loaded.callback();
+				};
+			t.aspect(m, 'onDelete', '_onDelete');
+			//Load the store size
+			m.when({}, function(){
+				t.rootCount = t.rootCount || m.size();
+				t.visualCount = g.tree ? g.tree.getVisualSize(t.rootStart, t.rootCount) : t.rootCount;
+				finish();
+			}).then(null, function(e){
+				t._loadFail(e);
+				finish();
+			});
+		},
+
+		destroy: function(){
+			this.inherited(arguments);
+			this.domNode.innerHTML = '';
+			this._destroyed = true;
+		},
+	
+		rowMixin: {
+			node: function(){
+				return this.grid.body.getRowNode({
+					rowId: this.id
+				});
+			},
+
+			visualIndex: function(){
+				var t = this,
+					id = t.id;
+				return t.grid.body.getRowInfo({
+					rowId: id,
+					rowIndex: t.index(),
+					parentId: t.model.parentId(id)
+				}).visualIndex;
+			}
+		},
+
+		cellMixin: {
+			node: function(){
+				return this.grid.body.getCellNode({
+					rowId: this.row.id,
+					colId: this.column.id
+				});
+			}
+		},
+
+		//Public-----------------------------------------------------------------------------
+
+		rowHoverEffect: true,
+
+		stuffEmptyCell: true,
+
+		renderWholeRowOnSet: false,
+
+		compareOnSet: function(v1, v2){
+			return typeof v1 == 'object' && typeof v2 == 'object' ? 
+				json.stringify(v1) == json.stringify(v2) : 
+				v1 === v2;
+		},
+
+		getRowNode: function(args){
 			if(this.model.isId(args.rowId) && sniff('ie')){
 				return this._getRowNode(args.rowId);
 			}else{
@@ -212,12 +383,6 @@ define([
 		},
 
 		getCellNode: function(args){
-			// summary:
-			//		Get the DOM node of a cell
-			// args: gridx.__RowCellInfo
-			//		A cell info object containing sufficient info
-			// returns:
-			//		The DOM node of the cell. Null if not found.
 			var t = this,
 				colId = args.colId,
 				cols = t.grid._columns,
@@ -229,21 +394,15 @@ define([
 				var c = " [colid='" + colId + "'].gridxCell";
 				if(t.model.isId(args.rowId) && sniff('ie')){
 					var rowNode = t._getRowNode(args.rowId);
-					return query(c, rowNode)[0] || null;	//DOMNode|null
+					return query(c, rowNode)[0] || null;
 				}else{
-					return query(r + c, t.domNode)[0] || null;	//DOMNode|null
+					return query(r + c, t.domNode)[0] || null;
 				}
 			}
-			return null;	//null
+			return null;
 		},
 
 		getRowInfo: function(args){
-			// summary:
-			//		Get complete row info by partial row info
-			// args: gridx.__RowCellInfo
-			//		A row info object containing partial row info
-			// returns:
-			//		A row info object containing as complete as possible row info.
 			var t = this,
 				m = t.model,
 				g = t.grid,
@@ -265,19 +424,13 @@ define([
 					args.rowIndex = t.rootStart + args.visualIndex;
 				} 
 			}else{
-				return args;	//gridx.__RowCellInfo
+				return args;
 			}
 			args.rowId = m.isId(id) ? id : m.indexToId(args.rowIndex, args.parentId);
-			return args;	//gridx.__RowCellInfo
+			return args;
 		},
 	
 		refresh: function(start){
-			// summary:
-			//		Refresh the grid body
-			// start: Integer?
-			//		The visual row index to start refresh. If omitted, default to 0.
-			// returns:
-			//		A deferred object indicating when the refreshing process is finished.
 			var t = this;
 			delete t._err;
 			//Call when to make sure all pending commands are executed
@@ -321,14 +474,6 @@ define([
 		},
 	
 		refreshCell: function(rowVisualIndex, columnIndex){
-			// summary:
-			//		Refresh a single cell
-			// rowVisualIndex: Integer
-			//		The visual index of the row of this cell
-			// columnIndex: Integer
-			//		The index of the column of this cell
-			// returns:
-			//		A deferred object indicating when this refreshing process is finished.
 			var d = new Deferred(),
 				t = this,
 				m = t.model,
@@ -366,41 +511,23 @@ define([
 		
 		//Package--------------------------------------------------------------------------------
 		
-		// rootStart: [readonly] Integer
-		//		The row index of the first root row that logically exists in the current body
 		rootStart: 0,
 
-		// rootCount: [readonly] Integer
-		//		The count of root rows that logically exist in thi current body
 		rootCount: 0,
 	
-		// renderStart: [readonly] Integer
-		//		The visual row index of the first renderred row in the current body
 		renderStart: 0,
-		// renderCount: [readonly] Integer
-		//		The count of renderred rows in the current body.
+
 		renderCount: 0,
 	
-		// visualStart: [readonly] Integer
-		//		The visual row index of the first row that is logically visible in the current body.
-		//		This should be always zero.
 		visualStart: 0, 
-		// visualCount: [readonly] Integer
-		//		The count of rows that are logically visible in the current body
+
 		visualCount: 0,
-	
-		// autoUpdate: [read|write] Boolean
-		//		Update grid body automatically when onNew/onSet/onDelete is fired
+
 		autoUpdate: true,
-	
-		// autoChangeSize: [read|write] Boolean
-		//		Whether to change rootStart and rootCount automatically when store size is changed.
-		//		This need to be turned off when pagination is used.
+
 		autoChangeSize: true,
 
 		updateRootRange: function(start, count){
-			// tags:
-			//		private package
 			var t = this, tree = t.grid.tree,
 				vc = t.visualCount = tree ? tree.getVisualSize(start, count) : count;
 			t.rootStart = start;
@@ -419,8 +546,6 @@ define([
 		},
 
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
-			// tags:
-			//		private package
 			var t = this,
 				g = t.grid,
 				str = '',
@@ -472,7 +597,9 @@ define([
 				}
 				array.forEach(renderedRows, t.onAfterRow, t);
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
-					en.innerHTML = finalInfo;
+					if(!t._err){
+						en.innerHTML = finalInfo;
+					}
 					t.onRender(start, count);
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
@@ -494,8 +621,6 @@ define([
 		},
 	
 		unrenderRows: function(count, preOrPost){
-			// tags:
-			//		private package
 			if(count > 0){
 				//Just remove the nodes from DOM tree instead of destroying them,
 				//in case other logic still needs these nodes.
@@ -527,29 +652,11 @@ define([
 
 		//Events--------------------------------------------------------------------------------
 
-		onAfterRow: function(/* Row */){
-			// summary:
-			//		Fired when a row is created, data is filled in, and its node is inserted into the dom tree.
-			// row: gridx.core.Row
-			//		A row object representing this row.
-		},
+		onAfterRow: function(){/* row */},
 
-		onAfterCell: function(/* Cell */){
-			// summary:
-			//		Fired when a cell is updated by cell editor (or store data change), or by cell refreshing.
-			//		Note this is not fired when rendering the whole grid. Use onAfterRow in that case.
-			// cell: grid.core.Cell
-			//		A cell object representing this cell
-		},
+		onAfterCell: function(){/* cell */},
 
 		onRender: function(/*start, count*/){
-			// summary:
-			//		Fired everytime the grid body content is rendered or updated.
-			// start: Integer
-			//		The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.
-			// count: Integer
-			//		The count of rows that is affected by this rendering. If omitted, all rows from start are affected.
-			
 			//FIX #8746
 			var bn = this.domNode;
 			if(sniff('ie') < 9 && bn.childNodes.length){
@@ -558,67 +665,19 @@ define([
 			}
 		},
 
-		onUnrender: function(/* id */){
-			// summary:
-			//		Fired when a row is unrendered (removed from the grid dom tree).
-			//		Usually, this event is only useful when using virtual scrolling.
-			// id: String|Number
-			//		The ID of the row that is unrendered.
-		},
+		onUnrender: function(/* id */){},
 
-		onDelete: function(/*id, index*/){
-			// summary:
-			//		Fired when a row in current view is deleted from the store.
-			//		Note if the deleted row is not visible in current view, this event will not fire.
-			// id: String|Number
-			//		The ID of the deleted row.
-			// index: Integer
-			//		The index of the deleted row.
-		},
+		onDelete: function(/*id, index*/){},
 
-		onSet: function(/* Row */){
-			// summary:
-			//		Fired when a row in current view is updated in store.
-			// row: gridx.core.Row
-			//		A row object representing the updated row.
-		},
+		onSet: function(/* row */){},
 
-		onMoveToCell: function(){
-			// summary:
-			//		Fired when the focus is moved to a body cell by keyboard.
-		},
+		onMoveToCell: function(){},
 
-		onEmpty: function(){
-			// summary:
-			//		Fired when there's no rows in current body view.
-		},
+		onEmpty: function(){},
 
-		onForcedScroll: function(){
-			// summary:
-			//		Fired when the body needs to fetch more data, but there's no trigger to the scroller.
-			//		This is an inner mechanism to solve some problems when using virtual scrolling or pagination.
-			//		This event should not be used by grid users.
-			// tags:
-			//		private package
-		},
+		onForcedScroll: function(){},
 
-
-		collectCellWrapper: function(/* wrappers, rowId, colId */){
-			// summary:
-			//		Fired when a cell is being rendered, so as to collect wrappers for the content in this cell.
-			//		This is currently an inner mechanism used to implement widgets in cell and tree node.
-			// tags:
-			//		package
-			// wrappers: Array
-			//		An array of functions with signature function(cellData, rowId, colId) and should return a string to replace
-			//		cell data. The connectors of this event should push a new wrapper function in this array.
-			//		The functions in this array can also carry a number typed "priority" property.
-			//		The wrappers will be executed in ascending order of this "priority" function.
-			// rowId: String|Number
-			//		The row ID of this cell
-			// colId: String|Number
-			//		The column ID of this cell.
-		},
+		collectCellWrapper: function(/* wrappers, rowId, colId */){},
 
 		//Private---------------------------------------------------------------------------
 		_getRowNodeQuery: function(args){
@@ -686,7 +745,7 @@ define([
 			en.innerHTML = this.arg('loadFailInfo', nls.loadFailInfo);
 			en.style.zIndex = 1;
 			this.domNode.innerHTML = '';
-			this._err = 1;	//1 as true;
+			this._err = e;
 		},
 	
 		_buildRowContent: function(rowInfo){
@@ -839,7 +898,6 @@ define([
 			}
 		},
 
-
 		_onDelete: function(id){
 			var t = this;
 			if(t.autoUpdate){
@@ -873,8 +931,12 @@ define([
 					array.forEach(ids, t.onUnrender, t);
 					//If the body is showing the last a few rows, it should respond to deletion 
 					//no matter pagination is on or not.
-					if(!pid && t.rootStart + t.rootCount >= t.model.size()){
-						t.updateRootRange(t.rootStart, t.rootCount - 1);
+					if(t.rootStart + t.rootCount >= t.model.size()){
+						if(pid === ''){
+							t.updateRootRange(t.rootStart, t.rootCount - 1);
+						}else{
+							t.visualCount = t.grid.tree ? t.grid.tree.getVisualSize(t.rootStart, t.rootCount) : t.rootCount;
+						}
 					}
 					t.onDelete(id, start);
 					t.onRender(start, count);

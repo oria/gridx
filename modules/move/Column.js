@@ -6,7 +6,8 @@ define([
 	"../../core/_Module"
 ], function(declare, query, array, keys, _Module){
 
-	return declare(/*===== "gridx.modules.move.Column", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module provides several APIs to move columns within grid.
 		// description:
@@ -15,11 +16,41 @@ define([
 		//		But this module does provide a keyboard support for reordering columns. When focus is on a column header,
 		//		pressing CTRL+LEFT/RIGHT ARROW will move the column around within grid.
 
+		// moveSelected: Boolean
+		//		When moving using keyboard, whether to move all selected columns together.
+		moveSelected: true,
+
+		move: function(columnIndexes, target){
+			// summary:
+			//		Move some columns to the given target position
+			// columnIndexes: Integer[]
+			//		The current indexes of columns to move
+			// target: Integer
+			//		The moved columns will be inserted before the column with this index.
+		},
+
+		moveRange: function(start, count, target){
+			// summary:
+			//		Move a range of columns to a given target position
+			// start: Integer
+			//		The index of the first column to move
+			// count: Integer
+			//		The count of columns to move
+		},
+
+		onMoved: function(){
+			// summary:
+			//		Fired when column move is performed successfully
+			// tags:
+			//		callback
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'moveColumn',
 		
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				move: {
 					column: this
@@ -43,18 +74,9 @@ define([
 		},
 		
 		//public---------------------------------------------------------------
-
-		//moveSelected: Boolean
-		//		When moving using keyboard, whether to move all selected columns together.
 		moveSelected: true,
 
 		move: function(columnIndexes, target){
-			// summary:
-			//		Move some columns to the given target position
-			// columnIndexes: Integer[]
-			//		The current indexes of columns to move
-			// target: Integer
-			//		The moved columns will be inserted before the column with this index.
 			if(typeof columnIndexes === 'number'){
 				columnIndexes = [columnIndexes];
 			}
@@ -81,12 +103,6 @@ define([
 		},
 	
 		moveRange: function(start, count, target){
-			// summary:
-			//		Move a range of columns to a given target position
-			// start: Integer
-			//		The index of the first column to move
-			// count: Integer
-			//		The count of columns to move
 			if(target < start || target > start + count){
 				if(target > start + count){
 					target -= count;
@@ -96,12 +112,7 @@ define([
 		},
 		
 		//Events--------------------------------------------------------------------
-		onMoved: function(){
-			// summary:
-			//		Fired when column move is performed successfully
-			// tags:
-			//		callback
-		},
+		onMoved: function(){},
 		
 		//Private-------------------------------------------------------------------
 		_moveComplete: function(movedCols, target){

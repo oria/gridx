@@ -7,6 +7,7 @@ define([
 	'../../support/GotoPageButton'
 ], function(declare, domClass, _PaginationBarBase, LinkPager, LinkSizer, GotoPageButton){
 
+/*=====
 	return declare(_PaginationBarBase, {
 		// visibleSteppers: Integer
 		visibleSteppers: 3,
@@ -15,6 +16,15 @@ define([
 		sizeSeparator: '|',
 
 		// gotoButton: Boolean|String
+		gotoButton: true
+	});
+=====*/
+
+	return declare(_PaginationBarBase, {
+		visibleSteppers: 3,
+
+		sizeSeparator: '|',
+
 		gotoButton: true,
 
 		_init: function(pos){

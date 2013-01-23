@@ -73,7 +73,7 @@ var profile = {
 //                'gridx/modules/pagination/Pagination',
 //                'gridx/modules/pagination/PaginationBar',
 //                'gridx/modules/pagination/PaginationBarDD',
-				'gridx/modules/filter/Filter',
+				'gridx/modules/Filter',
 				'gridx/modules/filter/FilterBar',
 				'gridx/modules/CellWidget',
 				'gridx/modules/Edit',
@@ -92,13 +92,13 @@ var profile = {
 //                'gridx/modules/ToolBar',
 				'gridx/modules/SummaryBar',
 //                'gridx/modules/Bar',
-//                'gridx/modules/barPlugins/DropDownPager',
-//                'gridx/modules/barPlugins/DropDownSizer',
-//                'gridx/modules/barPlugins/GotoPageButton',
-//                'gridx/modules/barPlugins/LinkPager',
-//                'gridx/modules/barPlugins/LinkSizer',
-//                'gridx/modules/barPlugins/QuickFilter',
-//                'gridx/modules/barPlugins/Summary'
+//                'gridx/support/DropDownPager',
+//                'gridx/support/DropDownSizer',
+//                'gridx/support/GotoPageButton',
+//                'gridx/support/LinkPager',
+//                'gridx/support/LinkSizer',
+//                'gridx/support/QuickFilter',
+//                'gridx/support/Summary'
 				'dojo/store/Memory'
 			]
 		}

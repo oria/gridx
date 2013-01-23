@@ -37,13 +37,6 @@ define([
 		// description:
 		//		Gridx is much smaller, faster, more reasonable designed, more powerful and more flexible 
 		//		compared to the old dojo DataGrid/EnhancedGrid.
-		//
-		//		NOTE:
-		//		=====
-		//		The API documents will be updated from time to time. If you encountered an API whose doc is
-		//		not sufficient enough, please refer to the following link for latest API docs:
-		//		http://evanhw.github.com/gridx/doc/gridx.html
-
 		
 		templateString: template,
 

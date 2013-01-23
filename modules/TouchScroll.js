@@ -8,10 +8,14 @@ define([
 	"../core/_Module"
 ], function(declare, win, event, dom, domConstruct, touch, _Module){
 
+/*=====
 	return declare(_Module, {
 		// summary:
 		//		Make desktop grid scrollable by touch in mobile devices.
+	});
+=====*/
 
+	return declare(_Module, {
 		name: 'touchScroll',
 
 		required: ['vScroller', 'hScroller'],

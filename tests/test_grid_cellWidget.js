@@ -1,4 +1,5 @@
-define([
+require([
+	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
@@ -12,12 +13,8 @@ define([
 	'dijit/form/CheckBox',
 	'dijit/form/DropDownButton',
 	'dijit/TooltipDialog',
-	"gridx/modules/Focus",
-	"gridx/modules/CellWidget",
-	"gridx/modules/ColumnResizer",
-	"gridx/modules/pagination/Pagination",
-	"gridx/modules/pagination/PaginationBar"
-], function(dataSource, storeFactory){
+	"gridx/allModules"
+], function(parser, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -165,4 +162,6 @@ define([
 			}
 		}
 	];
+
+	parser.parse();
 });

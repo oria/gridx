@@ -7,7 +7,10 @@ define([
 	"./_Dnd"
 ], function(declare, array, lang, _Module, Avatar){
 
+/*=====
 	return declare(_Module, {
+		// summary:
+		//		Base class for dnd modules.
 
 		// delay: Number
 		//		The time delay before starting dnd after mouse down.
@@ -27,6 +30,15 @@ define([
 
 		// avatar: Function
 		//		The avatar used during dnd.
+		avatar: null
+	});
+=====*/
+
+	return declare(_Module, {
+		delay: 2,
+		enabled: true,
+		canRearrange: true,
+		copyWhenDragOut: false,
 		avatar: Avatar,
 
 		preload: function(args){

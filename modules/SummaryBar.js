@@ -1,10 +1,20 @@
 define([
 	"dojo/_base/declare",
-	"./barPlugins/Summary",
+	"../support/Summary",
 	"../core/_Module",
 	"./Bar"
 ], function(declare, Summary, _Module){
-	
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Add summary bar to the bottom of grid.
+		// description:
+		//		Add summary based on Bar module. This module is only for conveniency and backward compatibility.
+		//		Using Bar module directly is recommended.
+	});
+=====*/
+
 	return declare(_Module, {
 		name: 'summaryBar',
 

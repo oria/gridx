@@ -8,7 +8,8 @@ define([
 	"../../core/_Module"
 ], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
-	return declare(/*===== "gridx.modules.select.Cell", =====*/_RowCellBase, {
+/*=====
+	return declare(_RowCellBase, {
 		// summary:
 		//		Provides simple cell selection.
 		// description:
@@ -27,31 +28,6 @@ define([
 		//		|	grid.select.cell.getSelected();//[]
 		//		|	grid.select.cell.clear();
 
-		// name: [readonly] String
-		//		module name
-		name: "selectCell",
-		
-		// cellMixin: Object
-		//		A map of functions to be mixed into grid cell object, so that we can use select api on cell object directly
-		//		- grid.cell(1,1).select() | deselect() | isSelected();
-		cellMixin: {
-			select: function(){
-				this.grid.select.cell.selectById(this.row.id, this.column.id);
-				return this;
-			},
-			
-			deselect: function(){
-				this.grid.select.cell.deselectById(this.row.id, this.column.id);
-				return this;
-			},
-			
-			isSelected: function(){
-				return this.grid.select.cell.isSelected(this.row.id, this.column.id);
-			}
-		},
-		
-		//Public API--------------------------------------------------------------------------------
-/*=====
 		selectById: function(rowId, columnId){
 			// summary:
 			//		Select a cell by [rowId, columnId].
@@ -66,41 +42,17 @@ define([
 			// summary:
 			//		Check if a cell is already selected.
 		},
-=====*/
 		
 		getSelected: function(){
 			// summary:
 			//		Get arrays of [rowId, columnId] of all the selected cells
-			var t = this, res = [];
-			array.forEach(t.grid._columns, function(col){
-				var ids = t.model.getMarkedIds(t._getMarkType(col.id));
-				res.push.apply(res, array.map(ids, function(rid){
-					return [rid, col.id];
-				}));
-			});
-			return res;
 		},
 		
 		clear: function(notClearCell){
 			// summary:
 			//		Deselected all the selected cells;
-			var t = this, m = t.model;
-			if(t.arg('enabled')){
-				array.forEach(t.grid._columns, function(col){
-					var markType = t._getMarkType(col.id),
-						selected = m.getMarkedIds(markType), 
-						len = selected.length, i;
-					for(i = 0; i < len; ++i){
-						if(!notClearCell || notClearCell[1] !== col.id || notClearCell[0] !== selected[i]){
-							m.markById(selected[i], 0, markType);
-						}
-					}
-				});
-				m.when();
-			}
 		},
 
-	/*=====
 		onSelected: function(cell, rowId, colId){
 			// summary:
 			//		Fired when a cell is selected.
@@ -121,7 +73,6 @@ define([
 			//		The row id
 			// colId: string|number
 			//		The column id
-
 		},
 
 		onHighlightChange: function(){
@@ -129,8 +80,57 @@ define([
 			//		Fired when a cell's highlight is changed.
 			// tags:
 			//		private package
+		}
+	});
+=====*/
+
+	return declare(_RowCellBase, {
+		name: "selectCell",
+		
+		cellMixin: {
+			select: function(){
+				this.grid.select.cell.selectById(this.row.id, this.column.id);
+				return this;
+			},
+			
+			deselect: function(){
+				this.grid.select.cell.deselectById(this.row.id, this.column.id);
+				return this;
+			},
+			
+			isSelected: function(){
+				return this.grid.select.cell.isSelected(this.row.id, this.column.id);
+			}
 		},
-	=====*/
+		
+		//Public API--------------------------------------------------------------------------------
+		getSelected: function(){
+			var t = this, res = [];
+			array.forEach(t.grid._columns, function(col){
+				var ids = t.model.getMarkedIds(t._getMarkType(col.id));
+				res.push.apply(res, array.map(ids, function(rid){
+					return [rid, col.id];
+				}));
+			});
+			return res;
+		},
+		
+		clear: function(notClearCell){
+			var t = this, m = t.model;
+			if(t.arg('enabled')){
+				array.forEach(t.grid._columns, function(col){
+					var markType = t._getMarkType(col.id),
+						selected = m.getMarkedIds(markType), 
+						len = selected.length, i;
+					for(i = 0; i < len; ++i){
+						if(!notClearCell || notClearCell[1] !== col.id || notClearCell[0] !== selected[i]){
+							m.markById(selected[i], 0, markType);
+						}
+					}
+				});
+				m.when();
+			}
+		},
 
 		//Private--------------------------------------------------------------------------------
 		_type: 'cell',
@@ -148,7 +148,7 @@ define([
 				g = t.grid;
 			t.inherited(arguments);
 			t.batchConnect(
-				[g, 'onCellMouseDown', function(e){
+				[g, 'onCellClick', function(e){
 					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 				}],
 				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){

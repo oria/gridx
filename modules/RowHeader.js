@@ -13,7 +13,8 @@ define([
 	"../core/util"
 ], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
 
-	return declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This modules provides a header before each row.
 		// description:
@@ -21,11 +22,31 @@ define([
 		//		cell selection is turned on and selectRowTriggerOnCell is turned off.
 		//		It can also be used as a place to hold the checkbox/radiobutton for IndirectSelect
 
+		// width: String
+		//		The width (CSS value) of a row header.
+		width: '20px',
+
+		onMoveToRowHeaderCell: function(){
+			// summary:
+			//		Fired when focus is moved to a row header using keyboard.
+			// tags:
+			//		callback
+		},
+
+		// headerProvider: Function
+		//		A functionn that returns an HTML string to fill the header cell of row headers.
+		headerProvider: null,
+
+		// cellProvider: Function
+		//		A function that returns an HTML string to fill the body cells of row headers.
+		cellProvider: null
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'rowHeader',
 
 		getAPIPath: function(){
-			// tags:
-			//		protected extension
 			return {
 				rowHeader: this
 			};
@@ -46,8 +67,6 @@ define([
 		},
 
 		destroy: function(){
-			// tags:
-			//		protected extension
 			this.inherited(arguments);
 			this._b.remove();
 			domConstruct.destroy(this.headerNode);
@@ -55,8 +74,6 @@ define([
 		},
 
 		preload: function(){
-			// tags:
-			//		protected extension
 			var t = this,
 				rhhn = t.headerNode,
 				rhbn = t.bodyNode,
@@ -89,6 +106,7 @@ define([
 				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver']);
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
+			aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
 		},
@@ -107,27 +125,9 @@ define([
 		},
 
 		//Public--------------------------------------------------------------------------
-
-		// width: String
-		//		The width (CSS value) of a row header.
 		width: '20px',
 
-		onMoveToRowHeaderCell: function(){
-			// summary:
-			//		Fired when focus is moved to a row header using keyboard.
-			// tags:
-			//		callback
-		},
-
-	/*=====
-		// headerProvider: Function
-		//		A functionn that returns an HTML string to fill the header cell of row headers.
-		headerProvider: null,
-
-		// cellProvider: Function
-		//		A function that returns an HTML string to fill the body cells of row headers.
-		cellProvider: null,
-	=====*/
+		onMoveToRowHeaderCell: function(){},
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){
@@ -199,8 +199,31 @@ define([
 			t._onScroll();
 		},
 
+		_onDelete: function(id){
+			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			if(nodes && nodes.length){
+				var node = nodes[nodes.length - 1],
+					pid = node.getAttribute('parentid'),
+					pids = {},
+					toDeleteC = 1;
+				pids[id] = 1;
+				for(sn = node.nextSibling; sn && pids[sn.getAttribute('parentid')]; sn = sn.nextSibling){
+					rid = sn.getAttribute('rowid');
+					toDeleteC++;
+					pids[rid] = 1;
+				}
+				for(; sn; sn = sn.nextSibling){
+					if(sn.getAttribute('parentid') == pid){
+						sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex'), 10) - 1);
+					}
+					var vidx = parseInt(sn.getAttribute('visualindex'), 10);
+					sn.setAttribute('visualindex', vidx - toDeleteC);
+				}
+			}
+		},
+		
 		_onUnrender: function(id){
-			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
 				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
 				domConstruct.destroy(nodes[nodes.length - 1]);

@@ -5,12 +5,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
-		#gridContainer {
+		.gridx {
 			width: 800px;
 			height: 500px;
-		}
-		#grid {
-			height: 100%;
 		}
 		#config{
 			width: 300px; 
@@ -19,12 +16,9 @@
 		}
 	</style>
 
-	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script>
-	require(['gridx/tests/test_grid_menu'], function(){});
-	</script>
+	<script type="text/javascript" src='test_grid_menu.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
@@ -33,6 +27,12 @@
 	<table border='0' cellspacing='0' cellpadding='0'><tr>
 		<td>
 			<div id='gridContainer'></div>
+			<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+				cacheClass: "gridx/core/model/cache/Sync",
+				store: store,
+				structure: layout,
+				modules: mods
+			'></div>
 		</td>
 		<td id='ctrlPane'></td>
 	</tr></table>

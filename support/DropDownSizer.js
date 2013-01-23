@@ -9,9 +9,32 @@ define([
 	"dijit/form/Select"
 ], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, Select){
 
-	return declare(/*===== "gridx.modules.barPlugins.DropDownSizer", =====*/[_WidgetBase, _FocusMixin, _TemplatedMixin], {
+/*=====
+	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
 		// summary:
 		//		This grid bar plugin is to switch page sizes using select widget.
+
+		// grid: gridx.Grid
+		//		The grid widget this plugin works for.
+		grid: null,
+
+		// sizes: Integer[]
+		//		An array of available page sizes. Non-positive number means "all"
+		sizes: [10, 25, 50, 100, 0],
+
+		// sizerClass: Function
+		//		The constructor of the select widget
+		sizerClass: Select,
+
+		// sizerProps: Object
+		//		The properties passed to select widget when creating it.
+		sizerProps: null,
+
+		refresh: function(){}
+	});
+=====*/
+
+	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
 		templateString: '<div class="gridxDropDownSizer"><label class="gridxPagerLabel">${pageSizeLabel}</label></div>',
 
 		constructor: function(args){
@@ -24,21 +47,12 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------------------
-
-		//grid: gridx.Grid
-		//		The grid widget this plugin works for.
 		grid: null,
 
-		//sizes: Integer[]
-		//		An array of available page sizes. Non-positive number means "all"
 		sizes: [10, 25, 50, 100, 0],
 
-		//sizerClass: Function
-		//		The constructor of the select widget
 		sizerClass: Select,
 
-		//sizerProps: Object
-		//		The properties passed to select widget when creating it.
 		sizerProps: null,
 
 		refresh: function(){

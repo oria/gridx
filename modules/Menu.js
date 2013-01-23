@@ -12,26 +12,50 @@ define([
 
 /*=====
 	var _MenuArgs = function(){
-		//hookPoint: String?
+		// hookPoint: String?
 		//		Indicates from where the menu should occur.
 		//		One of "cell", "headercell", "row", "header", "body", "grid". If invalid, default to "grid".
-		//selected: Boolean?
+		// selected: Boolean?
 		//		Indicates whether to bind this menu only to the selected items. Default is false.
 	};
 
 	var _MenuContext = function(){
-		//grid: Grid
+		// grid: Grid
 		//		This grid that triggers this menu.
-		//column: Column
+		// column: Column
 		//		The column that triggers this menu. Only valid for "headercell" hookpoint.
-		//row: Row
+		// row: Row
 		//		The row that triggers this menu. Only valid for "row" hookpoint.
-		//cell: Cell
+		// cell: Cell
 		//		The cell that triggers this menu. Only valid for "cell" hookpoint.
 	};
+
+	return declare(_Module, {
+		// context: __MenuContext
+		//		An object representing the current context when user triggers a context menu.
+		//		This property is updated everytime a menu of grid is popped up.
+		//		Users can refer to this in their menu action handlers by grid.menu.context.
+		context: null,
+
+		bind: function(menu, args){
+			// summary:
+			//		Bind a memu to grid, according to the provided args
+			// menu: dijit.Menu | ID
+			//		The menu to be binded.
+			// args: __MenuArgs
+			//		Indicates how to bind the menu
+		},
+
+		unbind: function(menu){
+			// summary:
+			//		Unbind a menu from grid.
+			// menu: dijit.Menu | ID
+			//		The menu to be unbinded.
+		}
+	});
 =====*/
 
-	return declare(/*===== "gridx.modules.Menu", =====*/_Module, {
+	return declare(_Module, {
 		name: 'menu',
 
 		getAPIPath: function(){
@@ -45,20 +69,9 @@ define([
 		},
 
 		//Public---------------------------------------------
-
-		//context: __MenuContext
-		//		An object representing the current context when user triggers a context menu.
-		//		This property is updated everytime a menu of grid is popped up.
-		//		Users can refer to this in their menu action handlers by grid.menu.context.
 		context: null,
 
 		bind: function(/* dijit.Menu|ID */ menu, /* __MenuArgs? */ args){
-			// summary:
-			//		Bind a memu to grid, according to the provided args
-			//menu: dijit.Menu | ID
-			//		The menu to be binded.
-			//args: __MenuArgs
-			//		Indicates how to bind the menu
 			args = args || {};
 			var t = this,
 				g = t.grid,
@@ -83,10 +96,6 @@ define([
 		},
 
 		unbind: function(menu){
-			// summary:
-			//		Unbind a menu from grid.
-			//menu: dijit.Menu | ID
-			//		The menu to be unbinded.
 			var type, menus = this._menus, m;
 			menu = registry.byId(menu);
 			for(type in menus){

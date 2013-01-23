@@ -8,11 +8,24 @@ define([
 	"../../core/_Module"
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
-	return declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
+/*=====
+	return declare(_Base, {
 		// summary:
 		//		This module provides an implementation of column drag & drop.
 		//		It supports column reordering within grid, dragging out of grid, and dragging into grid.
 
+		// accept: String[]
+		//		Can drag in what kind of stuff
+		//		For now can not drag in any columns.
+		accept: [],
+
+		// provide: String[]
+		//		Can drag out what kind of stuff
+		provide: []
+	});
+=====*/
+
+	return declare(_Base, {
 		name: 'dndColumn',
 
 		required: ['_dnd', 'selectColumn', 'moveColumn'],
@@ -39,14 +52,8 @@ define([
 		},
 	
 		//Public---------------------------------------------------------------------------------------
-
-		//accept: String[]
-		//		Can drag out what kind of stuff.
-		//		For now can not drag in any columns.
 		accept: [],
 
-		//provide: String[]
-		//		Can drag out what kind of stuff
 		provide: ['grid/columns'],
 
 		//Package--------------------------------------------------------------------------------------
@@ -68,14 +75,14 @@ define([
 		_cssName: "Column",
 
 		_initHeader: function(){
-			query('.gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
+			query('.gridxCell', this.grid.header.domNode).attr('aria-grabbed', 'false');
 		},
 
 		_onBeginDnd: function(source){
 			var t = this;
 			source.delay = t.arg('delay');
 			array.forEach(t._selectedColIds, function(id){
-				query('[colid="' + id + '"].gridxCell', t.grid.header.domNode).attr('aria-dragged', 'true');
+				query('[colid="' + id + '"].gridxCell', t.grid.header.domNode).attr('aria-grabbed', 'true');
 			});
 		},
 
@@ -84,7 +91,7 @@ define([
 		},
 
 		_onEndDnd: function(){
-			query('[aria-dragged="true"].gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
+			query('[aria-grabbed="true"].gridxCell', this.grid.header.domNode).attr('aria-grabbed', 'false');
 		},
 
 		_buildDndNodes: function(){

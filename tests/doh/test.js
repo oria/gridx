@@ -1,62 +1,118 @@
 require([
-	'dojo/_base/lang',
+	'dojo/_base/array',
+	'dojo/dom',
 	'doh/runner',
 	'gridx/tests/doh/GTest',
-	'gridx/tests/doh/enumFor',
+	'gridx/tests/doh/enumIterator',
 	'gridx/tests/doh/config',
 	'dojo/domReady!'
-], function(lang, doh, GTest, enumFor, config){
+], function(array, dom, doh, GTest, EnumIterator, config){
 
-	var gtest = new GTest();
+	var ei = new EnumIterator(config);
 
-	function registerTestSuit(name, cfg){
-		doh.register(name, [
-			{
-				name: name,
-				timeout: 300000,
-				runTest: function(t){
-					var d = new doh.Deferred();
-					try{
-						gtest.test(cfg, t, d);
-					}catch(e){
-						d.errback(e);
-					}
-					return d;
-				}
-			}
-		]);
-	}
+	//Minimal config package size
+	ei.minPackSize = 2;
+	//Maximum config package size
+	ei.maxPackSize = 2;
+	//Run all cases or only special cases
+	ei.specialCasesOnly = true;
 
-	function enumHandler(args, counter){
-		document.body.innerHTML += counter + ': ' + args.join(', ') + "<br />";
-		var cfgCopy = lang.mixin({}, cfg);
-		for(var m = 0; m < args.length; ++m){
-			config.adders[args[m]](cfgCopy);
-		}
-		registerTestSuit('test suit ' + tsIndex, cfgCopy);
-		tsIndex++;
-	}
 
+
+
+	//-----------------------------------------------------------------------------
 	var tsIndex = 1;
-	for(var i = 0; i < config.cacheClasses.length; ++i){
-		var cacheClass = config.cacheClasses[i];
-		for(var j = 0; j < config.stores.length; ++j){
-			var store = config.stores[j];
-			for(var k = 0; k < config.structures.length; ++k){
-				var structure = config.structures[k];
+	var gtest = new GTest({
+		logNode: dom.byId('msg')
+	});
+
+	ei.calcTotal().then(outputCount, null, outputCount).then(function(){
+		document.getElementById('startBtn').removeAttribute('disabled');
+	});
+
+	function outputCount(cnt){
+		document.getElementById('caseTotal').innerHTML = cnt;
+	}
+
+	onClickBtn = function(){
+		var startBtn = document.getElementById('startBtn');
+		var name = startBtn.getAttribute('name');
+		if(name != 'pause'){
+			startBtn.innerHTML = 'Pause';
+			startBtn.setAttribute('name', 'pause');
+			runTest.paused = 0;
+			runTest();
+		}else if(name == 'pause'){
+			startBtn.innerHTML = 'Resume';
+			startBtn.setAttribute('name', 'resume');
+			runTest.paused = 1;
+		}
+	};
+
+	runTest = function(){
+		if(runTest.paused){
+			return;
+		}
+		var args = ei.next();
+		if(args){
+			doh._groups = {};
+			doh._groupCount = 0;
+			doh._testCount = 0;
+			var cases = [];
+			var key = args.join(',');
+			var registerCase = function(cacheClass, store, structure, name){
 				var cfg = {
 					cacheClass: cacheClass,
 					store: store,
 					structure: structure,
 					modules: []
 				};
-//                enumFor(config, enumHandler);
-				for(var m = 0; m < config.specialCases.length; ++m){
-					enumHandler(config.specialCases[m], m + 1);
-				}
-			}
-		}
-	}
+				array.forEach(args, function(arg){
+					config.adders[arg](cfg);
+				});
+				cases.push({
+					name: name,
+					timeout: 120000,
+					runTest: function(t){
+						var d = new doh.Deferred();
+						try{
+							gtest.test(cfg, t, d, name);
+						}catch(e){
+							d.errback(e);
+						}
+						return d;
+					}
+				});
+			};
 
-	doh.run();
+			array.forEach(config.structures, function(structure, k){
+				array.forEach(config.syncCacheClasses, function(cacheClass, i){
+					array.forEach(config.syncStores, function(store, j){
+						var name = ['sync', i, j, k].join(',') + ',' + key;
+						registerCase(cacheClass, store, structure, name);
+					});
+				});
+				array.forEach(config.asyncCacheClasses, function(cacheClass, i){
+					array.forEach(config.asyncStores, function(store, j){
+						var name = ['async', i, j, k].join(',') + ',' + key;
+						registerCase(cacheClass, store, structure, name);
+					});
+				});
+			});
+			cases.push({
+				name: 'finish',
+				runTest: function(){
+					setTimeout(runTest, 100);
+				}
+			});
+
+			dom.byId('caseCounter').innerHTML = tsIndex;
+			doh.register(tsIndex++ + ':' + key, cases);
+			doh.run();
+		}else{
+			var startBtn = document.getElementById('startBtn');
+			startBtn.innerHTML = 'Start';
+			startBtn.removeAttribute('name');
+		}
+	};
 });

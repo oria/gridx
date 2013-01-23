@@ -5,6 +5,11 @@ define([
 	'../Bar'
 ], function(declare, _Module, QuickFilter){
 
+/*=====
+	return declare(_Module, {
+	});
+=====*/
+
 	return declare(_Module, {
 		name: 'quickFilter',
 

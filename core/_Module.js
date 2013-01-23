@@ -7,12 +7,13 @@ define([
 	"dojo/aspect"
 ], function(declare, lang, array, Deferred, connect, aspect){
 
-var isFunc = lang.isFunction,
-	c = 'connect',	//To reduce code size
+/*=====
+	return declare([], {
+		// summary:
+		//		Base class for gridx modules.
+		// description:
+		//		Actually any dojo class can be a gridx module, but this base class provide some useful methods.
 
-	
-	moduleBase = declare(/*===== "gridx.core._Module", =====*/[], {
-	/*=====
 		// name: String
 		//		The API set name of this module. This name represents the API set that this module implements, 
 		//		instead of this module itself. Two different modules can have the same name, so that they provide
@@ -23,18 +24,18 @@ var isFunc = lang.isFunction,
 		//		without re-writing any other modules.
 		//		This property is mandatary.
 		name: "SomeModule",
-		
+
 		// forced: String[] 
 		//		An array of module names. All these modules must exist, and have finished loading before this module loads.
 		//		This property can be omitted.
 		forced: [],
-		
+
 		// optional: String[] 
 		//		An array of module names. These modules can be absent, but if they do exist, 
 		//		they must be loaded before this module loads.
 		//		This property can be omitted.
 		optional: [],
-		
+
 		// required: []
 		//		An array of module names. These modules must exist, but they can be loaded at any time.
 		//		This property can be omitted.
@@ -57,7 +58,6 @@ var isFunc = lang.isFunction,
 			//		This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
 			//		Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
 			//		This function can be omitted.
-			return {}
 		},
 
 		preload: function(args){
@@ -81,7 +81,6 @@ var isFunc = lang.isFunction,
 			//		and existing "optional" modules are loaded. When the loading process of this module is finished (Note that
 			//		this might be an async process), this.loaded.callback() must be called to tell any other modules that
 			//		depend on this module.
-			this.loaded.callback();
 		},
 
 		// grid: gridx.Grid
@@ -95,24 +94,6 @@ var isFunc = lang.isFunction,
 		// loaded: dojo.Deferred
 		//		Indicate when this module is completely loaded.
 		loaded: null,
-	=====*/
-	
-		
-		constructor: function(grid, args){
-			var t = this;
-			t.grid = grid;
-			t.model = grid.model;
-			t.loaded = new Deferred;
-			t._cnnts = [];
-			t._sbscs = [];
-			lang.mixin(t, args);
-		},
-
-		destroy: function(){
-			var f = array.forEach;
-			f(this._cnnts, connect.disconnect);
-			f(this._sbscs, connect.unsubscribe);
-		},
 
 		arg: function(argName, defaultValue, validate){
 			// summary:
@@ -166,29 +147,6 @@ var isFunc = lang.isFunction,
 			//		Note if this function is provided, defaultValue must also be provided.
 			// returns:
 			//		The value of this argument.
-			if(arguments.length == 2 && isFunc(defaultValue)){
-				validate = defaultValue;
-				defaultValue = undefined;
-			}
-			var t = this, g = t.grid, r = t[argName];
-			if(!t.hasOwnProperty(argName)){
-				var gridArgName = t.name + argName.substring(0, 1).toUpperCase() + argName.substring(1);
-				if(g[gridArgName] === undefined){
-					if(defaultValue !== undefined){
-						r = defaultValue;
-					}
-				}else{
-					r = g[gridArgName];
-				}
-			}
-			t[argName] = (validate && !validate(r)) ? defaultValue : r;
-			return r;	//anything
-		},
-
-		aspect: function(obj, e, method, scope, pos){
-			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
-			this._cnnts.push(cnnt);
-			return cnnt;
 		},
 
 		connect: function(obj, e, method, scope, flag){
@@ -207,6 +165,73 @@ var isFunc = lang.isFunction,
 			//		If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.
 			// returns:
 			//		The connect handle
+		},
+
+		batchConnect: function(){
+			// summary:
+			//		Do a lot of connects in a batch.
+			// description:
+			//		This method is used to optimize code size.
+		},
+
+		subscribe: function(topic, method, scope){
+			// summary:
+			//		Subscribe to a topic.
+			// description:
+			//		This is similar to widget.subscribe, except that the "scope" argument in this method is behind the listener function.
+			// returns:
+			//		The subscription handle
+		}
+	});
+=====*/
+
+var isFunc = lang.isFunction,
+	c = 'connect',	//To reduce code size
+
+	moduleBase = declare([], {
+		constructor: function(grid, args){
+			var t = this;
+			t.grid = grid;
+			t.model = grid.model;
+			t.loaded = new Deferred;
+			t._cnnts = [];
+			t._sbscs = [];
+			lang.mixin(t, args);
+		},
+
+		destroy: function(){
+			var f = array.forEach;
+			f(this._cnnts, connect.disconnect);
+			f(this._sbscs, connect.unsubscribe);
+		},
+
+		arg: function(argName, defaultValue, validate){
+			if(arguments.length == 2 && isFunc(defaultValue)){
+				validate = defaultValue;
+				defaultValue = undefined;
+			}
+			var t = this, g = t.grid, r = t[argName];
+			if(!t.hasOwnProperty(argName)){
+				var gridArgName = t.name + argName.substring(0, 1).toUpperCase() + argName.substring(1);
+				if(g[gridArgName] === undefined){
+					if(defaultValue !== undefined){
+						r = defaultValue;
+					}
+				}else{
+					r = g[gridArgName];
+				}
+			}
+			t[argName] = (validate && !validate(r)) ? defaultValue : r;
+			return r;
+		},
+
+		aspect: function(obj, e, method, scope, pos){
+			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
+			this._cnnts.push(cnnt);
+			return cnnt;
+		},
+
+		connect: function(obj, e, method, scope, flag){
 			var t = this,
 				cnnt,
 				g = t.grid,
@@ -226,14 +251,10 @@ var isFunc = lang.isFunction,
 				cnnt = connect[c](obj, e, s, method);
 			}
 			t._cnnts.push(cnnt);
-			return cnnt;	//Object
+			return cnnt;
 		},
 
 		batchConnect: function(){
-			// summary:
-			//		Do a lot of connects in a batch.
-			// description:
-			//		This method is used to optimize code size.
 			for(var i = 0, args = arguments, len = args.length; i < len; ++i){
 				if(lang.isArrayLike(args[i])){
 					this[c].apply(this, args[i]);
@@ -242,15 +263,9 @@ var isFunc = lang.isFunction,
 		},
 
 		subscribe: function(topic, method, scope){
-			// summary:
-			//		Subscribe to a topic.
-			// description:
-			//		This is similar to widget.subscribe, except that the "scope" argument in this method is behind the listener function.
-			// returns:
-			//		The subscription handle
 			var s = connect.subscribe(topic, scope || this, method);
 			this._sbscs.push(s);
-			return s;	//Object
+			return s;
 		}
 	}),
 	mods = moduleBase._modules = {};

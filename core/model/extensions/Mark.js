@@ -1,10 +1,28 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
+	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, array, _Extension){
+], function(declare, array,
+	/*=====Model, =====*/
+	_Extension){
 
-	return declare(/*===== "gridx.core.model.extensions.Mark", =====*/_Extension, {
+/*=====
+	Model.getMark = function(){};
+	Model.getMarkedIds = function(){};
+	Model.markById = function(){};
+	Model.markByIndex = function(){};
+	Model.clearMark = function(){};
+	Model.treeMarkMode = function(){};
+	Model.onMarkChange = function(){};
+
+	return declare(_Extension, {
+		// summary:
+		//		Provide a marking system, mainly used by selection.
+	});
+=====*/
+
+	return declare(_Extension, {
 		name: 'move',
 
 		priority: 5,
@@ -122,17 +140,20 @@ define([
 			}]);
 		},
 
-		_onDelete: function(id){
+		_onDelete: function(id, rowIndex, treePath){
 			var t = this,
 				tp,
-				c = t._byId,
-				s = t._last,
-				z = t._lazy;
-			for(tp in c){
+				byId = t._byId,
+				last = t._last,
+				lazy = t._lazy;
+			for(tp in byId){
 				tp = t._initMark(tp);
-				delete c[tp][id];
-				delete s[tp][id];
-				delete z[tp][id];
+				delete byId[tp][id];
+				delete last[tp][id];
+				delete lazy[tp][id];
+				if(treePath){
+					t._updateParents(treePath, tp);
+				}
 			}
 			t.onDelete.apply(t, arguments);
 		},
@@ -226,8 +247,36 @@ define([
 			}
 		},
 
+		_updateParents: function(treePath, type, noEvent){
+			var t = this,
+				mm = t.model._model,
+				byId = t._byId[type],
+				last = t._last[type];
+			for(var i = treePath.length - 1; i > 0; --i){
+				var pid = treePath[i],
+					oldState = byId[pid],
+					siblings = mm._call('children', [pid]),
+					markCount = array.filter(siblings, function(childId){
+						return last[childId] = byId[childId];
+					}).length,
+					fullCount = array.filter(siblings, function(childId){
+						return byId[childId] == 2;
+					}).length;
+				if(fullCount == siblings.length && oldState != 2){
+					byId[pid] = 2; //none|partial -> all
+				}else if(!markCount && oldState){
+					delete byId[pid]; //all|partial -> none
+				}else if(markCount && fullCount < siblings.length && oldState != 1){
+					byId[pid] = 1; //all|none -> partial
+				}
+				if(!noEvent){
+					t._fireEvent(pid, type, byId[pid], oldState);
+				}
+			}
+		},
+
 		_doMark: function(id, tp, toMark, skipParent, noEvent){
-			var i, ids, children, childId, pid, siblings, markCount, fullCount, treePath,
+			var i, ids, children, childId, treePath,
 				t = this,
 				m = t.model,
 				mm = m._model,
@@ -268,27 +317,7 @@ define([
 				}
 				if(!skipParent){
 					treePath = mm._call('treePath', [id]);
-					for(i = treePath.length - 1; i > 0; --i){
-						pid = treePath[i];
-						oldState = byId[pid];
-						siblings = mm._call('children', [pid]);
-						markCount = array.filter(siblings, function(childId){
-							return last[childId] = byId[childId];
-						}).length;
-						fullCount = array.filter(siblings, function(childId){
-							return byId[childId] == 2;
-						}).length;
-						if(fullCount == siblings.length && oldState != 2){
-							byId[pid] = 2; //none|partial -> all
-						}else if(!markCount && oldState){
-							delete byId[pid]; //all|partial -> none
-						}else if(markCount && fullCount < siblings.length && oldState != 1){
-							byId[pid] = 1; //all|none -> partial
-						}
-						if(!noEvent){
-							t._fireEvent(pid, tp, byId[pid], oldState);
-						}
-					}
+					t._updateParents(treePath, tp, noEvent);
 				}
 			}
 		}

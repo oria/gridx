@@ -10,6 +10,15 @@ define([
 	"dojo/i18n!../nls/PaginationBar"
 ], function(declare, lang, array, sniff, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin, nls){
 
+/*=====
+	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
+
+		// grid: gridx.Grid
+		//		The grid widget this plugin works for.
+		grid: null
+	});
+=====*/
+
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
 		constructor: function(args){
 			var t = this;
@@ -29,9 +38,6 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------------------
-
-		//grid: gridx.Grid
-		//		The grid widget this plugin works for.
 		grid: null,
 
 		//Private----------------------------------------------------------------------------

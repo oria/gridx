@@ -6,6 +6,13 @@ define([
 	'../_Extension'
 ], function(declare, array, lang, Deferred, _Extension){
 
+/*=====
+	return declare(_Extension, function(){
+		// summary:
+		//		Abstract base cache class, providing cache data structure and some common cache functions.
+	});
+=====*/
+
 	var hitch = lang.hitch,
 		mixin = lang.mixin,
 		indexOf = array.indexOf;
@@ -29,8 +36,6 @@ define([
 	}
 
 	return declare(_Extension, {
-		// summary:
-		//		Abstract base cache class, providing cache data structure and some common cache functions.
 		constructor: function(model, args){
 			var t = this;
 			t.setStore(args.store);
@@ -231,17 +236,22 @@ define([
 				d = new Deferred(),
 				s = t.store,
 				row = t.byId(parentId),
-				items = row && s.getChildren && s.getChildren(row.item) || [];
-			Deferred.when(items, function(items){
-				var i = 0,
-					item,
-					len = t._size[parentId] = items.length;
-				for(; i < len; ++i){
-					item = items[i];
-					t._addRow(s.getIdentity(item), i, t._itemToObject(item), item, parentId);
-				}
+				items = t._struct[parentId];
+			if(row && items && (items.length > 1 || !t.hasChildren || !t.hasChildren(parentId))){
 				d.callback();
-			}, hitch(d, d.errback));
+			}else{
+				items = row && s.getChildren && s.getChildren(row.item) || [];
+				Deferred.when(items, function(items){
+					var i = 0,
+						item,
+						len = t._size[parentId] = items.length;
+					for(; i < len; ++i){
+						item = items[i];
+						t._addRow(s.getIdentity(item), i, t._itemToObject(item), item, parentId);
+					}
+					d.callback();
+				}, hitch(d, d.errback));
+			}
 			return d;
 		},
 
@@ -313,7 +323,7 @@ define([
 				path = t.treePath(id);
 			if(path.length){
 				var children, i, j, ids = [id],
-					parentId = path.pop(),
+					parentId = path[path.length - 1],
 					sz = t._size,
 					size = sz[''],
 					index = indexOf(st[parentId], id);
@@ -339,7 +349,7 @@ define([
 				if(i >= 0){
 					t._priority.splice(i, 1);
 				}
-				t.onDelete(id, index - 1);
+				t.onDelete(id, index - 1, path);
 				if(!parentId && size >= 0){
 					sz[''] = size - 1;
 					t.model._onSizeChange();

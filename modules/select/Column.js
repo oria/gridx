@@ -9,7 +9,8 @@ define([
 	"../../core/_Module"
 ], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
 
-	return declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
+/*=====
+	return declare(_Base, {
 		// summary:
 		//		Provides simple column selection.
 		// description:
@@ -29,47 +30,24 @@ define([
 		//		|	grid.select.column.getSelected();//[]
 		//		|	grid.select.column.clear();
 
-		// name: [readonly] String
-		//		module name
-		name: "selectColumn",
-
-		// columnMixin: Object
-		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
-		//		- grid.column(1).select() | deselect() | isSelected();
-		columnMixin: {
-			select: function(){
-				this.grid.select.column._markById(this.id, 1);
-				return this;
-			},
-			deselect: function(){
-				this.grid.select.column._markById(this.id, 0);
-				return this;
-			},
-			isSelected: function(){
-				return this.grid.select.column.isSelected(this.id);
-			}
-		},
-		
-		//Public API----------------------------------------------------------------------
-		selectById: function(/*String*/id){
+		selectById: function(id){
 			// summary:
 			//		Select target column by id
-			this._markById(id, 1);
 		},
-		
-		deselectById: function(/*String*/id){
+
+		deselectById: function(id){
 			// summary:
 			//		Deselect target column by id
 			this._markById(id, 0);
 		},
-		
-		isSelected: function(/*String*/id){
+
+		isSelected: function(id){
 			// summary:
 			//		Check if a column is selected 
 			var c = this.grid._columnsById[id];
 			return !!(c && c._selected);
 		},
-		
+
 		getSelected: function(){
 			// summary:
 			//		Get array of column id of all selected columns
@@ -85,7 +63,7 @@ define([
 			}
 			return ids;
 		},
-		
+
 		clear: function(notClearId){
 			// summary:
 			//		Clear all column selections
@@ -97,7 +75,6 @@ define([
 			}
 		},
 
-	/*=====
 		onSelected: function(col){
 			// summary:
 			//		Fired when a column is selected.
@@ -117,8 +94,63 @@ define([
 			//		Fired when a column's highlight is changed.
 			// tags:
 			//		private package
+		}
+	});
+=====*/
+
+	return declare(_Base, {
+		name: "selectColumn",
+
+		columnMixin: {
+			select: function(){
+				this.grid.select.column._markById(this.id, 1);
+				return this;
+			},
+			deselect: function(){
+				this.grid.select.column._markById(this.id, 0);
+				return this;
+			},
+			isSelected: function(){
+				return this.grid.select.column.isSelected(this.id);
+			}
 		},
-	=====*/
+		
+		//Public API----------------------------------------------------------------------
+		selectById: function(/*String*/id){
+			this._markById(id, 1);
+		},
+		
+		deselectById: function(/*String*/id){
+			this._markById(id, 0);
+		},
+		
+		isSelected: function(/*String*/id){
+			var c = this.grid._columnsById[id];
+			return !!(c && c._selected);
+		},
+		
+		getSelected: function(){
+			var ids = [], i, c,
+				g = this.grid,
+				cols = g._columns,
+				count = cols.length;
+			for(i = 0; i < count; ++i){
+				c = cols[i];
+				if(c._selected){
+					ids.push(c.id);
+				}
+			}
+			return ids;
+		},
+		
+		clear: function(notClearId){
+			var columns = this.grid._columns, i, count = columns.length;
+			for(i = 0; i < count; ++i){
+				if(columns[i].id !== notClearId){
+					this._markById(columns[i].id, 0);
+				}
+			}
+		},
 
 		//Private-------------------------------------------------------------------------------
 		_type: 'column',

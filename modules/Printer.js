@@ -5,9 +5,10 @@ define([
 	"../support/printer"
 ], function(kernel, _Module, declare, printer){
 
-	kernel.deprecated('gridx/modules/Printer is deprecated.', 'Please use gridx/support/printer instead.', '2.0');
-	/*=====
-	declare('__PrinterArgs', __ExporterArgs, {
+	kernel.deprecated('gridx/modules/Printer is deprecated.', 'Please use gridx/support/printer instead.', '1.2');
+
+/*=====
+	var __PrinterArgs = declare(__ExporterArgs, {
 		// style: String
 		//		The CSS string for the printed document
 		style: '',
@@ -22,30 +23,21 @@ define([
 
 		// description: String
 		//		Any HTML content that will be put before the grid in the printed document.
-		description: ''
+		description: '',
 
 		// customHead: String
 		//		Any HTML <head> content that will be put in the <head> of the printed document.
 		customHead: ''
 	});
-	=====*/
 
-	return declare(/*===== "gridx.modules.Printer", =====*/_Module, {
+	return declare(_Module, {
 		// summary:
 		//		This module provides the API to print grid contents or provide print preview
 		// description:
-		//		This module relies on the ExportTable module to produce HTML table from grid.
-		name: 'printer',
+		//		Deprecated. Please use gridx/support/printer instead.
+		// tags:
+		//		deprecated
 
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				printer: this
-			};
-		},
-	
-		//Public-----------------------------------------------------------------
 		print: function(args){
 			// summary:
 			//		Print grid contents.
@@ -53,7 +45,6 @@ define([
 			//		Please refer to `grid.printer.__PrinterArgs`
 			// returns:
 			//		A deferred object indicating when the export process is completed.
-			return printer(this.grid, args);
 		},
 
 		toHTML: function(args){
@@ -63,6 +54,24 @@ define([
 			//		Please refer to `grid.printer.__PrinterArgs`
 			// returns:
 			//		A deferred object indicating when the export process is completed.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'printer',
+
+		getAPIPath: function(){
+			return {
+				printer: this
+			};
+		},
+	
+		print: function(args){
+			return printer(this.grid, args);
+		},
+
+		toHTML: function(args){
 			return printer.toHTML(this.grid, args);
 		}
 	});

@@ -12,7 +12,8 @@ define([
 	"./_RowCellBase"
 ], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
-	return declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
+/*=====
+	return declare(_RowCellBase, {
 		// summary:
 		//		Provides advanced row selections.
 		// description:
@@ -31,31 +32,6 @@ define([
 		//		|	grid.select.row.getSelected();//[]
 		//		|	grid.select.row.clear();
 
-		// name: [readonly] String
-		//		module name		
-		name: 'selectRow',
-
-		// rowMixin: Object
-		//		A map of functions to be mixed into grid row object, so that we can use select api on row object directly
-		//		- grid.row(1).select() | deselect() | isSelected();
-		rowMixin: {
-			select: function(){
-				this.grid.select.row.selectById(this.id);
-				return this;
-			},
-
-			deselect: function(){
-				this.grid.select.row.deselectById(this.id);
-				return this;
-			},
-
-			isSelected: function(){
-				return this.model.getMark(this.id) === true;
-			}
-		},
-		
-		//Public-----------------------------------------------------------------
-		
 		// triggerOnCell: [readonly] Boolean
 		//		Whether row will be selected by clicking on cell, false by default		
 		triggerOnCell: false,
@@ -64,7 +40,6 @@ define([
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
-/*=====
 		selectById: function(rowId){
 			// summary:
 			//		Select a row by id.
@@ -85,24 +60,61 @@ define([
 			//		Deselect a row by index.
 		},
 		
-=====*/
 		getSelected: function(){
 			// summary:
 			//		Get id array of all selected rows
-			return this.model.getMarkedIds();
 		},
 
 		isSelected: function(){
 			// summary:
 			//		Check if the given rows are all selected.
+		},
+
+		clear: function(silent){
+			// summary:
+			//		Deselected all selected rows;			
+		},
+
+		onHighlightChange: function(){
+		}
+	});
+=====*/
+
+	return declare(_RowCellBase, {
+		name: 'selectRow',
+
+		rowMixin: {
+			select: function(){
+				this.grid.select.row.selectById(this.id);
+				return this;
+			},
+
+			deselect: function(){
+				this.grid.select.row.deselectById(this.id);
+				return this;
+			},
+
+			isSelected: function(){
+				return this.model.getMark(this.id) === true;
+			}
+		},
+		
+		//Public-----------------------------------------------------------------
+		triggerOnCell: false,
+
+		treeMode: true,
+
+		getSelected: function(){
+			return this.model.getMarkedIds();
+		},
+
+		isSelected: function(){
 			return array.every(arguments, function(id){
 				return this.model.getMark(id) === true;
 			}, this);
 		},
 
 		clear: function(silent){
-			// summary:
-			//		Deselected all selected rows;			
 			query(".gridxRowSelected", this.grid.mainNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowSelected');
 				node.removeAttribute('aria-selected');

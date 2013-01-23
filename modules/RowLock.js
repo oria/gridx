@@ -7,6 +7,23 @@ define([
 	"dojo/_base/html",
 	"dojo/query"
 ], function(dojo, lang, _Module, declare, array, html, query){
+	dojo.experimental('gridx/modules/RowLock');
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Lock up some rows at the top of the grid body, so that they don't scroll vertically.
+		// description:
+		//		This module is not compatible with VirtualVScroller.
+
+		lock: function(count){
+		},
+
+		unlock: function(){
+		}
+	});
+=====*/
+
 	return declare(_Module, {
 		name: 'rowLock',
 		required: ['vLayout'],
@@ -18,7 +35,6 @@ define([
 			};
 		},
 		load: function(args, deferStartup){
-			dojo.experimental('gridx/modules/RowLock');
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;
 			deferStartup.then(function(){

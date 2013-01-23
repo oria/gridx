@@ -6,6 +6,20 @@ define([
 	'./Bar'
 ], function(declare, lang, Toolbar, _Module){
 
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Add toolbar on top of grid.
+		// description:
+		//		Add toolbar based on Bar module. This module is only for conveniency and backward compatibility.
+		//		Using Bar module directly is recommended.
+
+		widget: null,
+
+		domNode: null
+	});
+=====*/
+
 	return declare(_Module, {
 		name: 'toolBar',
 
