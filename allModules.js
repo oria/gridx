@@ -34,6 +34,7 @@ define([
 	'gridx/modules/ToolBar',
 	'gridx/modules/SummaryBar',
 	'gridx/modules/Bar',
+	'gridx/modules/NavigableCell',
 	'gridx/modules/TouchScroll'
 ], function(
 	VScroller, ColumnResizer, VirtualVScroller,
@@ -48,7 +49,7 @@ define([
 	CellWidget, Edit,
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
-	ToolBar, SummaryBar, Bar, TouchScroll){
+	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll){
 return {
 	VScroller: VScroller,
 	ColumnResizer: ColumnResizer, 
@@ -85,6 +86,7 @@ return {
 	ToolBar: ToolBar,
 	SummaryBar: SummaryBar,
 	Bar: Bar,
+	NavigableCell: NavigableCell,
 	TouchScroll: TouchScroll
 };
 });
