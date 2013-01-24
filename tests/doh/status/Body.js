@@ -51,7 +51,6 @@ define([
 					if(data[col] === '' || data[col] === null || data[col] == undefined){
 						query('.gridxCell', rowNode).forEach(function(cellNode){
 							if(cellNode.getAttribute('colid') == col){
-								console.log(cellNode);
 								doh.is('&nbsp;', cellNode.innerHTML);
 							}
 						});
@@ -87,7 +86,55 @@ define([
 				}
 			}
 		}
-	}, {
+	},
+	{
+		id: '60/61',
+		name: '"class" property is provided as string in column definition\n"class" property is provided as function in column definition',
+		checker: function(grid, doh){
+			var l = [];
+			array.forEach(grid.structure, function(struct, i){
+				if(struct['class']){
+					l.push(i);
+				}
+			});
+
+			array.forEach(grid.bodyNode.childNodes, function(node){
+				var cells = query('.gridxCell', node);
+				array.forEach(l, function(i){
+					var cls = typeof grid.structure[i]['class'] == 'function'?
+								grid.structure[i]['class'](): grid.structure[i]['class'];
+					doh.t(domClass.contains(cells[i], cls));
+				});
+			});
+			
+		}
+	},
+	{
+		id: '62/63',
+		name: '"style" property is provided as string in column definition\n"style" property is provided as function in column definition',
+		checker: function(grid, doh){
+			var l = [];
+			array.forEach(grid.structure, function(struct, i){
+				if(struct['style']){
+					l.push(i);
+				}
+			});
+
+			array.forEach(grid.bodyNode.childNodes, function(node){
+				var cells = query('.gridxCell', node);
+				array.forEach(l, function(i){
+					var sty = typeof grid.structure[i]['style'] == 'function'?
+								grid.structure[i]['style'](): grid.structure[i]['style'];
+								
+					console.log(sty);
+					console.log(cells[i].getAttribute('style'));
+					doh.t(cells[i].getAttribute('style').indexOf(sty) >= 0);
+				});
+			});
+			
+		}
+	},	
+	{
 		id: 505,
 		name: 'visualindex property of every row increase by 1 compared to the previous row',
 		checker: function(grid, doh){

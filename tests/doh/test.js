@@ -5,8 +5,9 @@ require([
 	'gridx/tests/doh/GTest',
 	'gridx/tests/doh/enumIterator',
 	'gridx/tests/doh/config',
+	'dojo/_base/lang',
 	'dojo/domReady!'
-], function(array, dom, doh, GTest, EnumIterator, config){
+], function(array, dom, doh, GTest, EnumIterator, config, lang){
 
 	var ei = new EnumIterator(config);
 
@@ -87,7 +88,7 @@ require([
 
 			array.forEach(config.structures, function(structure, k){
 				array.forEach(config.syncCacheClasses, function(cacheClass, i){
-					array.forEach(config.syncStores, function(store, j){
+					array.forEach(config.syncStores	, function(store, j){
 						var name = ['sync', i, j, k].join(',') + ',' + key;
 						registerCase(cacheClass, store, structure, name);
 					});

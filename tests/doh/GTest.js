@@ -205,7 +205,7 @@ define([
 		},
 		emitMouseEvent: function(target, type/*click, mouseover, mouseout...*/){
 			var target = typeof target == 'string'? document.getElementById(target) : target;
-			on.emit(target, type, {  
+			on.emit(target, type.toLowerCase(), {  
 				bubbles: true,
 		    	cancelable: true
 			})

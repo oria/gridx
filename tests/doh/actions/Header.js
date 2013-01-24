@@ -5,8 +5,9 @@ define([
   	  'dojo/dom-class',
   	  'dojo/DeferredList',
   	  'dojo/_base/connect',
-  	  'dojo/promise/all'
-], function(GTest, Deferred, query, domClass, DeferredList, connect, all){
+  	  'dojo/promise/all',
+  	  'dojo/on'
+], function(GTest, Deferred, query, domClass, DeferredList, connect, all, on){
 	var testTriggerEvent = function(grid, doh, done, gtest, target, type, isKey, keyCode){
 		var flag,
 			eventName = 'on' + (target == 'header'? 'Header' : 'HeaderCell') + type,
@@ -52,7 +53,7 @@ define([
 			});			
 			
 		}
-	}
+	};
 	
 	GTest.actionCheckers.push(
 	{
@@ -80,7 +81,6 @@ define([
 					}
 				})
 			});
-//			var dl = new DeferredList(da);
 			all(da).then(function(){
 				done.callback();
 			}, function(e){
@@ -99,7 +99,6 @@ define([
 		}
 		
 	},
-	
 	{
 		id: 38,
 		name: 'fire header cell events before header events',
@@ -110,28 +109,28 @@ define([
 			var ht,hct,
 				handle = connect.connect(grid, 'onHeaderClick', function(){
 					ht = new Date().getTime();
-					console.log(123, ht);
+					console.log();
 				}),
 				handle2 = connect.connect(grid, 'onHeaderCellClick', function(){
 					hct = new Date().getTime();
-					console.log(456, hct);
+					console.log();
 				});
-			
+				
 			var cell = query('.gridxCell', grid.header.domNode)[0];
 			if(cell){
 				Deferred.when(gtest.emitMouseEvent(cell, 'click'), function(){
-					try{
-						doh.t(hct < ht);
-						connect.disconnect(handle);
-						connect.disconnect(handle2);
-						done.callback();
-					}catch(e){
-						done.errback(e);
-					}
+					setTimeout(function(){
+						try{
+							doh.t(hct < ht);
+							connect.disconnect(handle);
+							connect.disconnect(handle2);
+							done.callback();
+						}catch(e){
+							done.errback(e);
+						}
+					}, 200);	
 				});
 			}
-
-		
 		}
 	},
 	{

@@ -22,6 +22,7 @@ define([
 	'gridx/tests/doh/status/HScroller',
 	'gridx/tests/doh/actions/VScroller',
 	'gridx/tests/doh/actions/Header',
+	'gridx/tests/doh/actions/Body',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async'
 ], function(lang, memoryFactory, IFWSFactory, dataSource, modules){
@@ -242,6 +243,9 @@ define([
 	var layouts = [
 		[
 			{id: 'id', field: 'id', name: 'Identity'}
+		],
+		[
+			{id: 'id', field: 'id', name: 'Identity', class: 'Identity', style: 'font-size: 13px'}
 		],
 		[
 			{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
