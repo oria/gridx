@@ -1,5 +1,5 @@
 define([
-	"dojo/_base/declare",	
+	"dojo/_base/declare",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
@@ -11,10 +11,16 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
-		//		This module makes it possible to efficiently show widgets within a grid cell.
+		//		This module allow the elements in grid cell be focusable.
 		// description:
-		//		Since widget declarations need to be parsed by dojo.parser, it can NOT be directly
-
+		//		When focus is on a cell, press F2 to focus the first focusable element in that cell.
+		//		TAB to move focus to the next focusable element in that cell.
+		//		If there's no more focusable elements in current cell, focus the focusable element in next cell.
+		//		If the current cell is the last cell in current view, move focus to the first cell.
+		//		SHIFT+TAB to move focus to the previous focusable element in that cell.
+		//		If there's no more focusable elements in current cell, focus the focusable element in the previous cell.
+		//		If the current cell is the first cell in current view, move focus to the last cell.
+		//		Press ESC to move focus back to the cell itself.
 	});
 =====*/
 
