@@ -47,6 +47,7 @@ Please also check out [GridX Home Site](http://oria.github.com/gridx) for more d
 ## GridX Team
 * [Xiao Wen Zhu (Oliver) - IBM, CCLA](mailto:zhuxw1984@gmail.com)
 * [Pei Wang (Nate) - IBM, CCLA](mailto:supnate@gmail.com)
+* [Chen Qi (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
 * [Wei Huang (Evan) -  Dojo Committer](mailto:evanhuangwei@gmail.com)
 
 Please contact us if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.
