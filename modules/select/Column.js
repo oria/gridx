@@ -1,4 +1,5 @@
 define([
+/*====="../../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
@@ -7,9 +8,16 @@ define([
 	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
+], function(/*=====Column, =====*/declare, query, array, sniff, domClass, keys, _Base, _Module){
 
 /*=====
+	Column.select = function(){
+	};
+	Column.deselect = function(){
+	};
+	Column.isSelected = function(){
+	};
+
 	return declare(_Base, {
 		// summary:
 		//		Provides simple column selection.
@@ -38,41 +46,21 @@ define([
 		deselectById: function(id){
 			// summary:
 			//		Deselect target column by id
-			this._markById(id, 0);
 		},
 
 		isSelected: function(id){
 			// summary:
 			//		Check if a column is selected 
-			var c = this.grid._columnsById[id];
-			return !!(c && c._selected);
 		},
 
 		getSelected: function(){
 			// summary:
 			//		Get array of column id of all selected columns
-			var ids = [], i, c,
-				g = this.grid,
-				cols = g._columns,
-				count = cols.length;
-			for(i = 0; i < count; ++i){
-				c = cols[i];
-				if(c._selected){
-					ids.push(c.id);
-				}
-			}
-			return ids;
 		},
 
 		clear: function(notClearId){
 			// summary:
 			//		Clear all column selections
-			var columns = this.grid._columns, i, count = columns.length;
-			for(i = 0; i < count; ++i){
-				if(columns[i].id !== notClearId){
-					this._markById(columns[i].id, 0);
-				}
-			}
 		},
 
 		onSelected: function(col){

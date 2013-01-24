@@ -8,26 +8,6 @@ define([
 	kernel.deprecated('gridx/modules/exporter/CSV is deprecated.', 'Use gridx/support/exporter/toCSV instead.', '1.2');
 
 /*=====
-	dojo.declare('__CSVExportArgs', __ExportArgs, {
-		//seperator: String?
-		//		The seperator string used in CSV. Default to comma ','.
-		//newLine: String?
-		//		The new line string used in CSV. Deault to '\r\n';
-	});
-
-	var __ExportContext = function(){
-		//columnIds: String[]
-		//		Available for header.
-		//columnId: String
-		//		Available for header cell or a body cell.
-		//rowIds: String[]
-		//		Available for a progress
-		//rowId: String
-		//		Available for a row or a body cell.
-		//data: Anything
-		//		Available for a body cell
-	};
-
 	Exporter.toCSV = function(args){
 		// summary:
 		//		Export the grid contents to CSV according to the given args.

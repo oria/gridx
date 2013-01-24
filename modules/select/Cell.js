@@ -1,4 +1,5 @@
 define([
+/*====="../../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
@@ -6,9 +7,16 @@ define([
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(declare, array, sniff, domClass, keys, _RowCellBase, _Module){
+], function(/*=====Cell, =====*/declare, array, sniff, domClass, keys, _RowCellBase, _Module){
 
 /*=====
+	Cell.select = function(){
+	};
+	Cell.deselect = function(){
+	};
+	Cell.isSelected = function(){
+	};
+
 	return declare(_RowCellBase, {
 		// summary:
 		//		Provides simple cell selection.

@@ -20,19 +20,15 @@ define([
 		holdingShift: false,
 
 		selectById: function(id){
-			return this._subMark('_markById', arguments, true);
 		},
 
 		deselectById: function(id){
-			return this._subMark('_markById', arguments, false);
 		},
 
 		selectByIndex: function(start, end){
-			return this._subMark('_markByIndex', arguments, true);
 		},
 
 		deselectByIndex: function(start, end){
-			return this._subMark('_markByIndex', arguments, false);
 		},
 
 		onSelectionChange: function(newSelectedIds, oldSelectedIds){

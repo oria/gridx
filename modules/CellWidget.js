@@ -1,4 +1,6 @@
 define([
+/*====="../core/Column", =====*/
+/*====="../core/Cell", =====*/
 	"dojo/_base/declare",	
 	"dojo/_base/query",
 	"dojo/_base/array",
@@ -13,50 +15,11 @@ define([
 	"dijit/_WidgetsInTemplateMixin",
 	"../core/_Module",
 	"./NavigableCell"
-], function(declare, query, array, event, sniff, domClass, keys, 
+], function(/*=====Column, Cell, =====*/declare, query, array, event, sniff, domClass, keys, 
 	registry, a11y, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Module){
 
 /*=====
-	var columnDefinitionCellDijitMixin = {
-		// navigable: Boolean
-		//      If a cell is navigable, that means the focusable elements in the cell can be focused.
-		//      Use F2 to enter navigation mode, ESC to exit navigation mode and return focus back to cell.
-		//      Pressing TAB during navigation mode will focus the next focusalbe element in all cells.
-		//      That means if the current focused element is the last one in the current cell, then pressing TAB
-		//      will focus the first focusable element in the next cell.
-		navigable: true,
-
-		// widgetsInCell: Boolean
-		//		Indicating whether this column should use this CellDijit module.
-		//		CellDijit module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
-		widgetsInCell: false,
-
-		// decorator: Function() return String
-		//		This decorator function is slightly different from the one when this module is not used.
-		//		This function should return a template string (see the doc for template string in dijit._TemplatedMixin
-		//		and dijit._WidgetsInTemplateMixin). 
-		//		In the template string, dijits or widgets can be used and they will be properly set value if they
-		//		have the CSS class 'gridxHasGridCellValue' in their DOM node.
-		//		Since setting value will be done automatically, and the created widgets will be reused between rows,
-		//		so there's no arguments for this function.
-		//		By default the dijits or widgets will be set value using the grid data (the result of the formatter function,
-		//		if there is a formatter function for this column), not the store data (the raw data stored in store).
-		//		If you'd like to use store data in some dijit, you can simly add a CSS class 'gridxUseStoreData' to it.
-		decorator: null,
-
-		// setCellValue: Function(gridData, storeData, cellWidget)
-		//		If the settings in the decorator function can not meet your requirements, you use this function as a kind of complement.
-		//		gridData: anything
-		//				The data shown in grid cell. It's the result of formatter function if that function exists.
-		//		storeData: anything
-		//				The raw data in dojo store.
-		//		cellWidget: CellWidget
-		//				A widget representing the whole cell. This is the container of the templateString returned by decorator.
-		//				So you can access any dojoAttachPoint from it (maybe your special dijit or node, and then set value for them).
-		setCellValue: null
-	};
-
-	return declare(_Module, {
+	var CellWidget = declare(_Module, {
 		// summary:
 		//		This module makes it possible to efficiently show widgets within a grid cell.
 		// description:
@@ -109,7 +72,7 @@ define([
 		onCellWidgetCreated: function(widget, cell){
 			// summary:
 			//		Fired when a cell widget is created.
-			// widget: gridx.__CellWidget
+			// widget: CellWidget.__CellWidget
 			//		The created cell widget.
 			// cell: gridx.core.Cell
 			//		The cell object containing this widget.
@@ -117,6 +80,62 @@ define([
 			//		callback
 		}
 	});
+
+	CellWidget.__CellWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+		// summary:
+		//		The container widget created in a cell.
+
+		// cell: Cell
+		cell: null
+	});
+
+	CellWidget.__ColumnDefinition = declare(Column.__ColumnDefinition, {
+		// summary:
+		//		Column definition parameters defined by CellWidget.
+
+		// navigable: Boolean
+		//		If a cell is navigable, that means the focusable elements in the cell can be focused.
+		//		Use F2 to enter navigation mode, ESC to exit navigation mode and return focus back to cell.
+		//		Pressing TAB during navigation mode will focus the next focusalbe element in all cells.
+		//		That means if the current focused element is the last one in the current cell, then pressing TAB
+		//		will focus the first focusable element in the next cell.
+		navigable: true,
+
+		// widgetsInCell: Boolean
+		//		Indicating whether this column should use this CellDijit module.
+		//		CellDijit module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
+		widgetsInCell: false,
+
+		decorator: function(){
+			// summary:
+			//		This decorator function is slightly different from the one when this module is not used.
+			//		This function should return a template string (see the doc for template string in dijit._TemplatedMixin
+			//		and dijit._WidgetsInTemplateMixin). 
+			//		In the template string, dijits or widgets can be used and they will be properly set value if they
+			//		have the CSS class 'gridxHasGridCellValue' in their DOM node.
+			//		Since setting value will be done automatically, and the created widgets will be reused between rows,
+			//		so there's no arguments for this function.
+			//		By default the dijits or widgets will be set value using the grid data (the result of the formatter function,
+			//		if there is a formatter function for this column), not the store data (the raw data stored in store).
+			//		If you'd like to use store data in some dijit, you can simly add a CSS class 'gridxUseStoreData' to it.
+			// returns:
+			//		html string.
+		},
+
+		setCellValue: function(gridData, storeData, cellWidget){
+			// summary:
+			//		If the settings in the decorator function can not meet your requirements, you use this function as a kind of complement.
+			// gridData: anything
+			//		The data shown in grid cell. It's the result of formatter function if that function exists.
+			// storeData: anything
+			//		The raw data in dojo store.
+			// cellWidget: CellWidget.__CellWidget
+			//		A widget representing the whole cell. This is the container of the templateString returned by decorator.
+			//		So you can access any dojoAttachPoint from it (maybe your special dijit or node, and then set value for them).
+		}
+	});
+
+	return CellWidget;
 =====*/
 
 	var dummyFunc = function(){ return ''; },

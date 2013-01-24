@@ -1,13 +1,39 @@
 define([
+/*====="../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/keys",
 	"../core/model/extensions/Sort",
 	"../core/_Module"
-], function(declare, lang, keys, Sort, _Module){
+], function(/*=====Column, =====*/declare, lang, keys, Sort, _Module){
 
 /*=====
-	return declare(_Module, {
+	Column.sort = function(isDescending, skipUpdateBody){
+		// summary:
+		//		Sort this column.
+	};
+
+	Column.isSorted = function(){
+		// summary:
+		//		Check wheter this column is sorted.
+	};
+
+	Column.clearSort = function(skipUpdateBody){
+		// summary:
+		//		Clear sort on this column
+	};
+
+	Column.isSortable = function(){
+		// summary:
+		//		Check whether this column is sortable.
+	};
+
+	Column.setSortable = function(isSortable){
+		// summary:
+		//		Set sortable for this column
+	};
+
+	var SingleSort = declare(_Module, {
 		// summary:
 		//		This module provides the single column sorting functionality for grid.
 
@@ -29,7 +55,7 @@ define([
 			//		so that several grid operations could be done altogether
 			//		without refreshing the grid over and over.
 		},
-	
+
 		isSorted: function(colId){
 			// summary:
 			//		Check wheter (and how) the grid is sorted on the given column.
@@ -40,7 +66,7 @@ define([
 			//		Negative number if the column is sorted descendingly;
 			//		Zero if the column is not sorted.
 		},
-	
+
 		clear: function(skipUpdateBody){
 			// summary:
 			//		Clear sort.
@@ -57,6 +83,13 @@ define([
 			//		An array containing the sort info
 		}
 	});
+
+	SingleSort.__ColumnDefinition = declare(Column.__ColumnDefinition, {
+		// sortable: Boolean
+		sortable: true
+	});
+
+	return SingleSort;
 =====*/
 
 	return declare(_Module, {

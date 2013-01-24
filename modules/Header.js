@@ -1,4 +1,5 @@
 define([
+/*====="../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
@@ -10,9 +11,14 @@ define([
 	"dojo/keys",
 	"../core/util",
 	"../core/_Module"
-], function(declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
+], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
 
 /*=====
+	Column.headerNode = function(){
+		// summary:
+		//		Get header node of the column.
+	};
+
 	return declare(_Module, {
 		// summary:
 		//		The header UI of grid

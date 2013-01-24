@@ -11,26 +11,7 @@ define([
 ], function(declare, connect, _Module, domClass, keys, event, lang, registry, Menu){
 
 /*=====
-	var _MenuArgs = function(){
-		// hookPoint: String?
-		//		Indicates from where the menu should occur.
-		//		One of "cell", "headercell", "row", "header", "body", "grid". If invalid, default to "grid".
-		// selected: Boolean?
-		//		Indicates whether to bind this menu only to the selected items. Default is false.
-	};
-
-	var _MenuContext = function(){
-		// grid: Grid
-		//		This grid that triggers this menu.
-		// column: Column
-		//		The column that triggers this menu. Only valid for "headercell" hookpoint.
-		// row: Row
-		//		The row that triggers this menu. Only valid for "row" hookpoint.
-		// cell: Cell
-		//		The cell that triggers this menu. Only valid for "cell" hookpoint.
-	};
-
-	return declare(_Module, {
+	var Menu = declare(_Module, {
 		// context: __MenuContext
 		//		An object representing the current context when user triggers a context menu.
 		//		This property is updated everytime a menu of grid is popped up.
@@ -53,6 +34,37 @@ define([
 			//		The menu to be unbinded.
 		}
 	});
+
+	Menu.__MenuArgs = declare([], {
+		// hookPoint: String?
+		//		Indicates from where the menu should occur.
+		//		One of "cell", "headercell", "row", "header", "body", "grid". If invalid, default to "grid".
+		hookPoint: '',
+
+		// selected: Boolean?
+		//		Indicates whether to bind this menu only to the selected items. Default is false.
+		selected: false
+	});
+
+	Menu.__MenuContext = declare([], {
+		// grid: Grid
+		//		This grid that triggers this menu.
+		grid: null,
+
+		// column: Column
+		//		The column that triggers this menu. Only valid for "headercell" hookpoint.
+		column: null,
+
+		// row: Row
+		//		The row that triggers this menu. Only valid for "row" hookpoint.
+		row: null,
+
+		// cell: Cell
+		//		The cell that triggers this menu. Only valid for "cell" hookpoint.
+		cell: null
+	});
+
+	return Menu;
 =====*/
 
 	return declare(_Module, {

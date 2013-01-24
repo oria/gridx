@@ -14,6 +14,11 @@ define([
 ], function(declare, sniff, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
 
 /*=====
+	Column.setWidth = function(width){
+		// summary:
+		//		Set width of the target column
+	};
+
 	return declare(_Module, {
 		// summary:
 		//		Column Resizer machinery.
@@ -85,17 +90,11 @@ define([
 		},
 
 		getAPIPath: function(){
-			// summary:
-			//		Module reference shortcut so that we can 
-			//		quickly locate this module by grid.columnResizer
 			return {
 				columnResizer: this
 			};
 		},
 
-		// columnMixin: Object
-		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
-		//		- grid.column(1).setWidth(300);
 		columnMixin: {
 			setWidth: function(width){
 				this.grid.columnResizer.setWidth(this.id, width);

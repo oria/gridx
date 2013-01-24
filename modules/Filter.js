@@ -12,13 +12,11 @@ define([
 		// summary:
 		//		This module makes it possible for user to set arbitrary filter condition to grid.
 
-		name: 'filter',
-
 		serverMode: false,
 
 		setupFilterQuery: function(obj){
 		},
-		
+
 		setFilter: function(){
 			// summary:
 			//		Apply function *checker* as the filter condition to filter every row.
@@ -34,7 +32,7 @@ define([
 			//		that are generated from the *checker* function.
 			//		If *checker* is not a function, or null, should not throw.
 		},
-	
+
 		getFilter: function(){
 			// summary:
 			//		Return the current checker function.

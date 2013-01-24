@@ -15,31 +15,21 @@ define([
 		// description:
 		//		This module provides a way to lock consecutive leading columns. 
 		//		Columns can be locked in following ways:
-		//
 		// example:
-		//		1. Columns can be locked when Grid is initially rendered
-		//		|	var grid = new Grid({
-		//		|		modules: [
-		//		|			{moduleClass: gridx.modules.ColumnLock, count: 2}, ...
-		//		|		],
-		//		|		...
-		//		|	});
-		//		|
-		//			Or another way to set the lock number:
-		//		|	var grid = new Grid({
-		//		|		columnLockCount: 2
-		//		|		modules: [
-		//		|			gridx.modules.ColumnLock, ...
-		//		|		],
-		//		|	})
-		//
-		//		2. Lock or unlock columns dynamically
-		//		|	// lock 2 leading columns
-		//		|	grid.columnLock.lock(2)
-		//		|	
-		//		|	// unlock all columns
-		//		|	grid.columnLock.unLock();
-		
+		//		Columns can be locked when Grid is initially rendered.
+		//	|		var grid = new Grid({
+		//	|			columnLockCount: 2
+		//	|			modules: [
+		//	|				"gridx.modules.ColumnLock",
+		//	|				...
+		//	|			],
+		//	|		});
+		//		Lock or unlock columns dynamically
+		//	|		// lock 2 leading columns
+		//	|		grid.columnLock.lock(2)
+		//	|		// unlock all columns
+		//	|		grid.columnLock.unLock();
+
 		// count: [readonly] Integer
 		//		Number of columns that will be locked by default
 		count: 0,
@@ -48,7 +38,7 @@ define([
 			// summary:
 			//		Dynamically lock consecutive #count leading columns.
 		},
-		
+
 		unlock: function(){
 			// summary:
 			//		Unlock all columns.

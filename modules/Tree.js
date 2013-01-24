@@ -15,7 +15,20 @@ define([
 	kernel.experimental('gridx/modules/Tree');
 
 /*=====
-	return declare(_Module, {
+	Row.canExpand = function(){
+	};
+	Row.isExpanded = function(){
+	};
+	Row.expand = function(){
+	};
+	Row.collapse = function(){
+	};
+	Row.expandRecursive = function(){
+	};
+	Row.collapseRecursive = function(){
+	};
+
+	var Tree = declare(_Module, {
 		// summary:
 		//		Tree Grid module.
 		// description:
@@ -232,6 +245,14 @@ define([
 			//		private
 		}
 	});
+
+	Tree.__ColumnDefinition = declare(Column.__ColumnDefinition, {
+		// expandLevel: Number
+		//		
+		expandLevel: 0
+	});
+
+	return Tree;
 =====*/
 
 	function isExpando(cellNode){

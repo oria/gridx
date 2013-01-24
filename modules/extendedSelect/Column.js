@@ -1,4 +1,5 @@
 define([
+/*====="../../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/query",
@@ -9,9 +10,16 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_Base"
-], function(declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
+], function(/*=====Column, =====*/declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
 
 /*=====
+	Column.select = function(){
+	};
+	Column.deselect = function(){
+	};
+	Column.isSelected = function(){
+	};
+
 	return declare(_Base, {
 		// summary:
 		//		Provides advanced column selections.

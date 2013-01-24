@@ -8,11 +8,6 @@ define([
 	kernel.deprecated('gridx/modules/exporter/Table is deprecated.', 'Use gridx/support/exporter/toTable instead.', '1.2');
 
 /*=====
-	var __TableExportArgs = declare(__ExportArgs, {
-		natualWidth: false,
-		columnWidth: {}
-	});
-
 	Exporter.toTable = function(args){
 		// summary:
 		//		Export the grid contents to HTML table according to the given args.

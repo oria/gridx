@@ -1,4 +1,6 @@
 define([
+/*====="../core/Column", =====*/
+/*====="../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/query",
@@ -12,51 +14,64 @@ define([
 	"../core/util",
 	"dojo/date/locale",
 	"dijit/form/TextBox"
-], function(declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
-	
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
+
 /*=====
-	var __GridCellEditorArgs = declare(null, {
-		// toEditor: function(storeData, gridData) return anything
-		//		By default the dijit used in an editing cell will use store value.
-		//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
-		//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
-		// fromEditor: Function(valueInEditor) return anything
-		//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
-		//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
-		//		to get a suitable value from editor.
-		// props: String
-		//		The properties to be used when creating the dijit in a editing cell.
-		//		Just like data-dojo-props for a widget.
-		// constraints: Object
-		//		If the editor widget has some constraints, it can be set here instead of in props.
-		// useGridData: Boolean
-		//		Whether to feed the editor with grid data or store data.
-		//		This property is only effective when toEditor is not provided.
-		// valueField: String
-		//		The property name of the editor used to take the data. In most cases it is "value",
-		//		so editor.set('value', ...) can do the job.
-	});
+	Cell.beginEdit = function(){
+		// summary:
+		//		Begin editing mode on this cell
+	};
 
-	var _ColumnDefinitionEditorMixin = declare(null, {
-		// editable: Boolean
-		//		If true then the cells in this column will be editable. Default is false.
-		// alwaysEditing: Boolean
-		//		If true then the cells in this column will always be in editing mode. Default is false.
-		// applyDelay: Integer
-		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
-		// editor: Widget Class (Function) | String
-		//		Set the dijit/widget to be used when a cell is in editing mode.
-		//		The default dijit is dijit.form.TextBox.
-		//		This attribute can either be the declared class name of a dijit or 
-		//		the class construct function of a dijit (the one that is used behide "new" keyword).
-		// editorArgs: __GridCellEditorArgs
-		// customApplyEdit: function(cell, value)
-		//		If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
-		//		For example, setting multiple fields of store for a formatted cell.
-		//		Can return a Deferred object if the work can not be done synchronously.
-	});
+	Cell.cancelEdit = function(){
+		// summary:
+		//		Cancel editing mode on this cell.
+	};
 
-	return declare(_Module, {
+	Cell.applyEdit = function(){
+		// summary:
+		//		Apply change to store for this cell
+	};
+
+	Cell.isEditing = function(){
+		// summary:
+		//		Check whether this cell is in editing mode.
+	};
+
+	Cell.editor = function(){
+		// summary:
+		//		Get the editor in this cell if it is in editing mode.
+	};
+
+	Column.isEditable = function(){
+		// summary:
+		//		Check if the cells in this column are editable.
+	};
+
+	Column.isAlwaysEditing = function(){
+		// summary:
+		//		Check if the cells in this column are always editing.
+	};
+
+	Column.setEditable = function(editable){
+		// summary:
+		//		Set editable to the cells of this column
+	};
+
+	Column.editor = function(){
+		// summary:
+		//		Get predefined editor for cells in this column
+	};
+
+	Column.setEditor = function(dijitClass, args){
+		// summary:
+		//		Set editor for cells in this column
+		// dijitClass:
+		//		The dijit class to be used as the editor.
+		// args: Edit.__EditorArgs
+		//		Any args that are related to this editor.
+	};
+
+	var Edit = declare(_Module, {
 		// summary:
 		//		This module provides editing mode for grid cells.
 		// description:
@@ -144,6 +159,80 @@ define([
 			//		The cell object
 		}
 	});
+
+	Edit.__EditorArgs = declare([], {
+		// summary:
+		//		Arguments for the editor.
+
+		// props: String
+		//		The properties to be used when creating the dijit in a editing cell.
+		//		Just like data-dojo-props for a widget.
+		props: '',
+
+		// constraints: Object
+		//		If the editor widget has some constraints, it can be set here instead of in props.
+		constraints: null,
+
+		// useGridData: Boolean
+		//		Whether to feed the editor with grid data or store data.
+		//		This property is only effective when toEditor is not provided.
+		useGridData: false,
+
+		// valueField: String
+		//		The property name of the editor used to take the data. In most cases it is "value",
+		//		so editor.set('value', ...) can do the job.
+		valueField: 'value',
+
+		toEditor: function(storeData, gridData){
+			// summary:
+			//		By default the dijit used in an editing cell will use store value.
+			//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
+			//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
+		},
+
+		fromEditor: function(valueInEditor){
+			// summary:
+			//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
+			//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
+			//		to get a suitable value from editor.
+		}
+	});
+
+	Edit.__ColumnDefinition = declare(Column.__ColumnDefinition, {
+		// summary:
+		//		Column definition parameters defined by Edit.
+
+		// editable: Boolean
+		//		If true then the cells in this column will be editable. Default is false.
+		editable: false,
+
+		// alwaysEditing: Boolean
+		//		If true then the cells in this column will always be in editing mode. Default is false.
+		alwaysEditing: false,
+
+		// applyDelay: Integer
+		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
+		applyDelay: 500,
+
+		// editor: Widget Class (Function) | String
+		//		Set the dijit/widget to be used when a cell is in editing mode.
+		//		The default dijit is dijit.form.TextBox.
+		//		This attribute can either be the declared class name of a dijit or 
+		//		the class construct function of a dijit (the one that is used behide "new" keyword).
+		editor: '',
+
+		// editorArgs: Edit.__EditorArgs
+		editorArgs: null,
+
+		customApplyEdit: function(cell, value){
+			// summary:
+			//		If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
+			//		For example, setting multiple fields of store for a formatted cell.
+			//		Can return a Deferred object if the work can not be done synchronously.
+		}
+	});
+
+	return Edit;
 =====*/
 
 	function getTypeData(col, storeData, gridData){
@@ -200,32 +289,22 @@ define([
 
 		cellMixin: {
 			beginEdit: function(){
-				// summary:
-				//		Begin editing mode on this cell
 				return this.grid.edit.begin(this.row.id, this.column.id);
 			},
 
 			cancelEdit: function(){
-				// summary:
-				//		Cancel editing mode on this cell.
 				return this.grid.edit.cancel(this.row.id, this.column.id);
 			},
 
 			applyEdit: function(){
-				// summary:
-				//		Apply change to store for this cell
 				return this.grid.edit.apply(this.row.id, this.column.id);
 			},
 
 			isEditing: function(){
-				// summary:
-				//		Check whether this cell is in editing mode.
 				return this.grid.edit.isEditing(this.row.id, this.column.id);
 			},
 
 			editor: function(){
-				// summary:
-				//		Get the editor in this cell if it is in editing mode.
 				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 				return cw && cw.gridCellEditField;
 			}
@@ -233,38 +312,24 @@ define([
 
 		columnMixin: {
 			isEditable: function(){
-				// summary:
-				//		Check if the cells in this column are editable.
 				var col = this.grid._columnsById[this.id];
 				return col.editable;
 			},
 
 			isAlwaysEditing: function(){
-				// summary:
-				//		Check if the cells in this column are always editing.
 				return this.grid._columnsById[this.id].alwaysEditing;
 			},
 
 			setEditable: function(editable){
-				// summary:
-				//		Set editable to the cells of this column
 				this.grid._columnsById[this.id].editable = !!editable;
 				return this;
 			},
 
 			editor: function(){
-				// summary:
-				//		Get predefined editor for cells in this column
 				return this.grid._columnsById[this.id].editor;
 			},
 
 			setEditor: function(/*dijit|short name*/dijitClass, args){
-				// summary:
-				//		Set editor for cells in this column
-				// dijitClass:
-				//		The dijit class to be used as the editor.
-				// args: __GridCellEditorArgs
-				//		Any args that are related to this editor.
 				this.grid.edit.setEditor(this.id, dijitClass, args);
 				return this;
 			}
