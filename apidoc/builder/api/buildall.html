@@ -1,0 +1,35 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>buildall</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<script type="text/javascript" src="../../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript">
+		require([
+			'dojo/request',
+			'dojo/_base/lang'
+		], function(request, lang){
+
+			var version = '1.1';
+
+			function done(item){
+				document.getElementById('result').innerHTML += item.fullname + "<br/>";
+			}
+
+			request('../../data/' + version + '/tree.json', {
+				handleAs: 'json'
+			}).then(function(data){
+				for(var q = [data], item, i = 0; item = q[i]; ++i){
+					q = q.concat(item.children || []);
+					if(item.type != 'folder'){
+						request('item.php?v=' + version + '&p=' + item.fullname).then(lang.partial(done, item));
+					}
+				}
+			});
+		});
+	</script>
+</head>
+<body class='claro'>
+	<div id='result'></div>
+</body>
+</html>

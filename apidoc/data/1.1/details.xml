@@ -207,7 +207,7 @@ and they are also useful when doing store operations.&lt;/p>
 </return-description><summary>&lt;p>Set new raw data of this row into the store&lt;/p>
 </summary></method><method name="node" scope="normal" type="function" from="gridx/modules/Body" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the dom node of this row.&lt;/p>
 </summary></method><method name="visualIndex" scope="normal" type="function" from="gridx/modules/Body" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the visual index of this row.&lt;/p>
-</summary></method></methods><summary>&lt;p>Represents a row of a grid&lt;/p>
+</summary></method><method name="select" scope="normal" type="function" from="gridx/modules/select/Row" extension-module="true"><parameters/><return-types/></method><method name="deselect" scope="normal" type="function" from="gridx/modules/select/Row" extension-module="true"><parameters/><return-types/></method><method name="isSelected" scope="normal" type="function" from="gridx/modules/select/Row" extension-module="true"><parameters/><return-types/></method><method name="moveTo" scope="normal" type="function" from="gridx/modules/move/Row" extension-module="true"><parameters><parameter name="target" type="undefined" usage="required"/><parameter name="skipUpdateBody" type="undefined" usage="required"/></parameters><return-types/></method></methods><summary>&lt;p>Represents a row of a grid&lt;/p>
 </summary><description>&lt;p>An instance of this class represents a grid row.
 This class should not be directly instantiated by users. It should be returned by grid APIs.&lt;/p>
 </description></object><object location="gridx/core/Column" type="constructor" classlike="true"><properties><property name="id" scope="prototype" type="String" from="gridx/core/Column" tags="readonly"><summary>&lt;p>The ID of this column&lt;/p>
@@ -240,10 +240,31 @@ Column names can be anything. Two columns can share one name. But they must have
 It&amp;#39;s possible for a column to have no store field related.&lt;/p>
 </description></method><method name="getWidth" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>The CSS value of column width&lt;/p>
 </return-description><summary>&lt;p>Get the width of this column&lt;/p>
-</summary></method></methods><summary>&lt;p>Represents a column of a grid&lt;/p>
+</summary></method><method name="__ColumnDefinition" scope="normal" type="constructor" from="gridx/core/Column"><parameters/><return-types/></method><method name="headerNode" scope="normal" type="function" from="gridx/modules/Header" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get header node of the column.&lt;/p>
+</summary></method><method name="isEditable" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Check if the cells in this column are editable.&lt;/p>
+</summary></method><method name="isAlwaysEditing" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Check if the cells in this column are always editing.&lt;/p>
+</summary></method><method name="setEditable" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters><parameter name="editable" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Set editable to the cells of this column&lt;/p>
+</summary></method><method name="editor" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get predefined editor for cells in this column&lt;/p>
+</summary></method><method name="setEditor" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters><parameter name="dijitClass" type="undefined" usage="required"><summary>&lt;p>The dijit class to be used as the editor.&lt;/p>
+</summary></parameter><parameter name="args" type="Edit.__EditorArgs" usage="required"><summary>&lt;p>Any args that are related to this editor.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Set editor for cells in this column&lt;/p>
+</summary></method><method name="sort" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters><parameter name="isDescending" type="undefined" usage="required"/><parameter name="skipUpdateBody" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Sort this column.&lt;/p>
+</summary></method><method name="isSorted" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters/><return-types/><summary>&lt;p>Check wheter this column is sorted.&lt;/p>
+</summary></method><method name="clearSort" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters><parameter name="skipUpdateBody" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Clear sort on this column&lt;/p>
+</summary></method><method name="isSortable" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters/><return-types/><summary>&lt;p>Check whether this column is sortable.&lt;/p>
+</summary></method><method name="setSortable" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters><parameter name="isSortable" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Set sortable for this column&lt;/p>
+</summary></method><method name="moveTo" scope="normal" type="function" from="gridx/modules/move/Column" extension-module="true"><parameters><parameter name="target" type="Integer" usage="required"><summary>&lt;p>The target index&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Move this column to the position before the column with index &amp;quot;target&amp;quot;&lt;/p>
+</summary></method><method name="select" scope="normal" type="function" from="gridx/modules/select/Column" extension-module="true"><parameters/><return-types/></method><method name="deselect" scope="normal" type="function" from="gridx/modules/select/Column" extension-module="true"><parameters/><return-types/></method><method name="isSelected" scope="normal" type="function" from="gridx/modules/select/Column" extension-module="true"><parameters/><return-types/></method></methods><summary>&lt;p>Represents a column of a grid&lt;/p>
 </summary><description>&lt;p>An instance of this class represents a grid column.
 This class should not be directly instantiated by users. It should be returned by grid APIs.&lt;/p>
-</description></object><object location="gridx/core/Cell" type="constructor" classlike="true"><properties><property name="row" scope="prototype" type="gridx.core.Row" from="gridx/core/Cell" tags="readonly"><summary>&lt;p>Reference to the row of this cell&lt;/p>
+</description></object><object location="gridx/core/Column.__ColumnDefinition" type="constructor" classlike="true"><properties><property name="id" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column ID, should be unique within grid.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column name, displayed in header cell.&lt;/p>
+</summary></property><property name="field" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>The corresponding field in store.&lt;/p>
+</summary></property><property name="width" scope="prototype" type="string" from="gridx/core/Column"/></properties><methods><method name="formatter" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types/><summary>&lt;p>Format the store data, generate grid data.&lt;/p>
+</summary></method><method name="decorator" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types/><summary>&lt;p>Decorate cell data.&lt;/p>
+</summary></method></methods><summary>&lt;p>Define a column in the structure parameter of gridx.&lt;/p>
+</summary></object><object location="gridx/core/Cell" type="constructor" classlike="true"><properties><property name="row" scope="prototype" type="gridx.core.Row" from="gridx/core/Cell" tags="readonly"><summary>&lt;p>Reference to the row of this cell&lt;/p>
 </summary></property><property name="column" scope="prototype" type="null" from="gridx/core/Cell"/><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/Cell" tags="readonly"><summary>&lt;p>Reference to the grid&lt;/p>
 </summary></property><property name="model" scope="prototype" type="grid.core.model.Model" from="gridx/core/Cell" tags="readonly"><summary>&lt;p>Reference to this grid model&lt;/p>
 </summary></property></properties><methods><method name="data" scope="prototype" type="function" from="gridx/core/Cell"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>The grid data in this cell&lt;/p>
@@ -257,7 +278,12 @@ It can be different from store data (a.k.a. raw data).&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>If using server side store, a Deferred object is returned to indicate when the operation is finished.&lt;/p>
 </return-description><summary>&lt;p>Set new raw data to this cell.&lt;/p>
 </summary></method><method name="node" scope="normal" type="function" from="gridx/modules/Body" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the dom node of this cell.&lt;/p>
-</summary></method></methods><summary>&lt;p>Represents a cell of a grid&lt;/p>
+</summary></method><method name="beginEdit" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Begin editing mode on this cell&lt;/p>
+</summary></method><method name="cancelEdit" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Cancel editing mode on this cell.&lt;/p>
+</summary></method><method name="applyEdit" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Apply change to store for this cell&lt;/p>
+</summary></method><method name="isEditing" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Check whether this cell is in editing mode.&lt;/p>
+</summary></method><method name="editor" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the editor in this cell if it is in editing mode.&lt;/p>
+</summary></method><method name="select" scope="normal" type="function" from="gridx/modules/select/Cell" extension-module="true"><parameters/><return-types/></method><method name="deselect" scope="normal" type="function" from="gridx/modules/select/Cell" extension-module="true"><parameters/><return-types/></method><method name="isSelected" scope="normal" type="function" from="gridx/modules/select/Cell" extension-module="true"><parameters/><return-types/></method></methods><summary>&lt;p>Represents a cell of a grid&lt;/p>
 </summary><description>&lt;p>An instance of this class represents a grid cell.
 This class should not be directly instantiated by users. It should be returned by grid APIs.&lt;/p>
 </description></object><object location="gridx/core/_Module" type="constructor" classlike="true"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
@@ -540,13 +566,13 @@ This property can be omitted.&lt;/p>
 </summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
 </summary></property></properties><methods><method name="compareOnSet" scope="prototype" type="Function" from="gridx/modules/Body"><parameters><parameter name="v1" type="undefined" usage="required"/><parameter name="v2" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>When data is changed in store, compare the old data and the new data of grid, return true if
 they are the same, false if not, so that the body can decide whether to refresh the corresponding cell.&lt;/p>
-</summary></method><method name="getRowNode" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="gridx.__RowCellInfo" usage="required"><summary>&lt;p>A row info object containing row index or row id&lt;/p>
+</summary></method><method name="getRowNode" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="Body.__RowCellInfo" usage="required"><summary>&lt;p>A row info object containing row index or row id&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The DOM node of the row. Null if not found.&lt;/p>
 </return-description><summary>&lt;p>Get the DOM node of a row&lt;/p>
-</summary></method><method name="getCellNode" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="gridx.__RowCellInfo" usage="required"><summary>&lt;p>A cell info object containing sufficient info&lt;/p>
+</summary></method><method name="getCellNode" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="Body.__RowCellInfo" usage="required"><summary>&lt;p>A cell info object containing sufficient info&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The DOM node of the cell. Null if not found.&lt;/p>
 </return-description><summary>&lt;p>Get the DOM node of a cell&lt;/p>
-</summary></method><method name="getRowInfo" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="gridx.__RowCellInfo" usage="required"><summary>&lt;p>A row info object containing partial row info&lt;/p>
+</summary></method><method name="getRowInfo" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="Body.__RowCellInfo" usage="required"><summary>&lt;p>A row info object containing partial row info&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A row info object containing as complete as possible row info.&lt;/p>
 </return-description><summary>&lt;p>Get complete row info by partial row info&lt;/p>
 </summary></method><method name="refresh" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="start" type="Integer" usage="optional"><summary>&lt;p>The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.&lt;/p>
@@ -670,10 +696,21 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>The body UI of grid.&lt;/p>
+</description></method><method name="__RowCellInfo" scope="normal" type="constructor" from="gridx/modules/Body"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>The body UI of grid.&lt;/p>
 </summary><description>&lt;p>This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 
 pagination, details on demand, and even tree structure.&lt;/p>
-</description></object><object location="gridx/modules/VLayout" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+</description></object><object location="gridx/modules/Body.__RowCellInfo" type="constructor" classlike="true"><properties><property name="rowId" scope="prototype" type="String|Number" from="gridx/modules/Body"><summary>&lt;p>The ID of a row.&lt;/p>
+</summary></property><property name="rowIndex" scope="prototype" type="Integer" from="gridx/modules/Body"><summary>&lt;p>The index of a row. It is the index below the parent of this row. The parent of root rows is an imaginary row
+with id &amp;quot;&amp;quot; (empty string).&lt;/p>
+</summary></property><property name="visualIndex" scope="prototype" type="Integer" from="gridx/modules/Body"><summary>&lt;p>The visual index of a row. It represents the visual position of this row in the current body view.
+If there are no pagination, no filtering, no tree structure data, this value is equal to the row index.&lt;/p>
+</summary></property><property name="colId" scope="prototype" type="String|Number" from="gridx/modules/Body"><summary>&lt;p>The ID of a column (should not be false values)&lt;/p>
+</summary></property><property name="colIndex" scope="prototype" type="Integer" from="gridx/modules/Body"><summary>&lt;p>The index of a column.&lt;/p>
+</summary></property></properties><methods/><summary>&lt;p>This structure includes all possible information that can be used to identify a row or a cell, it is used
+to retrieve a row or a cell in grid body.
+Usually user only need to provide some of them that is sufficient to uniquely identify a row or a cell,
+e.g. rowId, or rowIndex and parentId, or visualIndex.&lt;/p>
+</summary></object><object location="gridx/modules/VLayout" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
 For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
@@ -1443,7 +1480,26 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins></object><object location="gridx/GridCommon" type="constructor" classlike="true" superclass="gridx/Grid"><properties><property name="coreModules" scope="prototype" type="undefined" from="gridx/GridCommon"/><property name="templateString" scope="prototype" type="undefined" from="gridx/Grid"/><property name="coreExtensions" scope="prototype" type="Array" from="gridx/Grid"/><property name="autoHeight" scope="prototype" type="Boolean" from="gridx/Grid"><summary>&lt;p>If true, the grid&amp;#39;s height is determined by the total height of the rows in current body view,
+</description></method><method name="__FocusArea" scope="normal" type="constructor" from="gridx/modules/Focus"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins></object><object location="gridx/modules/Focus.__FocusArea" type="constructor" classlike="true"><properties><property name="name" scope="prototype" type="string" from="gridx/modules/Focus"><summary>&lt;p>The name of this area. Must be unique. Must not be empty.&lt;/p>
+</summary></property><property name="priority" scope="prototype" type="number" from="gridx/modules/Focus"><summary>&lt;p>This number decides the position of this area in the TAB sequence.
+Areas with bigger priority number, their position in TAB sequence comes later.
+If two areas have the same priority, then the later registered area is put &lt;em>above&lt;/em> the earlier one.
+That is, no matter TAB or SHIFT-TAB, the upper area is accessed first.&lt;/p>
+</summary></property><property name="focusNode" scope="prototype" type="null" from="gridx/modules/Focus"><summary>&lt;p>If provided, this is the node of this area. 
+When this area is focused, &lt;em>onFocus&lt;/em> will be called. When blurred, &lt;em>onBlur&lt;/em> will be called.&lt;/p>
+</summary></property><property name="scope" scope="prototype" type="anything" from="gridx/modules/Focus"><summary>&lt;p>If provided, all area functions are called on this scope.&lt;/p>
+</summary></property></properties><methods><method name="doFocus" scope="prototype" type="function" from="gridx/modules/Focus"><parameters><parameter name="evt" type="undefined" usage="required"/><parameter name="step" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>If provided, will be called when TABing to this area.
+If not provided, default to successful focus.
+Return TRUE if successfully focused. FALSE if not.&lt;/p>
+</summary></method><method name="doBlur" scope="prototype" type="function" from="gridx/modules/Focus"><parameters><parameter name="evt" type="undefined" usage="required"/><parameter name="step" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>If provided, will be called when TABing out of this area.
+If not provided, default to successful blur.
+Return TRUE if successfully blurred. FALSE if not.&lt;/p>
+</summary></method><method name="onFocus" scope="prototype" type="function" from="gridx/modules/Focus"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>If provided, will be called when the &lt;em>focusNode&lt;/em> of this area is focused.
+If return TRUE, later areas on this node will be skipped and this area becomes the current focused area.
+If return FALSE, call later areas on this same node.&lt;/p>
+</summary></method><method name="onBlur" scope="prototype" type="function" from="gridx/modules/Focus"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>If provided, will be called when the &lt;em>focusNode&lt;/em> of this area is blurred.
+When &lt;em>focusNode&lt;/em> is blurred, only the currently focused area will be called.&lt;/p>
+</summary></method></methods></object><object location="gridx/GridCommon" type="constructor" classlike="true" superclass="gridx/Grid"><properties><property name="coreModules" scope="prototype" type="undefined" from="gridx/GridCommon"/><property name="templateString" scope="prototype" type="undefined" from="gridx/Grid"/><property name="coreExtensions" scope="prototype" type="Array" from="gridx/Grid"/><property name="autoHeight" scope="prototype" type="Boolean" from="gridx/Grid"><summary>&lt;p>If true, the grid&amp;#39;s height is determined by the total height of the rows in current body view,
 so that there will never be vertical scroller bar. And when scrolling the mouse wheel over grid body,
 the whole page will be scrolled. Note if this is false, only the grid body will be scrolled.&lt;/p>
 </summary></property><property name="autoWidth" scope="prototype" type="Boolean" from="gridx/Grid"><summary>&lt;p>If true, the grid&amp;#39;s width is determined by the total width of the columns, so that there will
@@ -1543,7 +1599,7 @@ This property can be omitted.&lt;/p>
 </summary><description>&lt;p>When this module is used, the string returned from decorator function will be
 the template string of a CellWidget. This method gets this widget so that
 more control can be applied to it.&lt;/p>
-</description></method><method name="onCellWidgetCreated" scope="prototype" type="function" from="gridx/modules/CellWidget" tags="callback"><parameters><parameter name="widget" type="gridx.__CellWidget" usage="required"><summary>&lt;p>The created cell widget.&lt;/p>
+</description></method><method name="onCellWidgetCreated" scope="prototype" type="function" from="gridx/modules/CellWidget" tags="callback"><parameters><parameter name="widget" type="CellWidget.__CellWidget" usage="required"><summary>&lt;p>The created cell widget.&lt;/p>
 </summary></parameter><parameter name="cell" type="gridx.core.Cell" usage="required"><summary>&lt;p>The cell object containing this widget.&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a cell widget is created.&lt;/p>
 </summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
@@ -1644,13 +1700,173 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>This module makes it possible to efficiently show widgets within a grid cell.&lt;/p>
+</description></method><method name="__CellWidget" scope="normal" type="constructor" from="gridx/modules/CellWidget"><parameters/><return-types/></method><method name="__ColumnDefinition" scope="normal" type="constructor" from="gridx/modules/CellWidget"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>This module makes it possible to efficiently show widgets within a grid cell.&lt;/p>
 </summary><description>&lt;p>Since widget declarations need to be parsed by dojo.parser, it can NOT be directly
 created by the decorator function. This module takes advantage of the _TemplatedMixin
 and the _WidgetInTemplateMixin so that users can write &amp;quot;templates&amp;quot; containing widgets
 in decorator function.
 This modules also limits the total number of widgets, so that the performance of grid
 can be configured to a tolerable level when there&amp;#39;re lots of widgets in grid.&lt;/p>
+</description></object><object location="gridx/modules/CellWidget.__CellWidget" type="constructor" classlike="true"><properties><property name="cell" scope="prototype" type="null" from="gridx/modules/CellWidget"/></properties><methods/><summary>&lt;p>The container widget created in a cell.&lt;/p>
+</summary></object><object location="gridx/modules/CellWidget.__ColumnDefinition" type="constructor" classlike="true"><properties><property name="navigable" scope="prototype" type="Boolean" from="gridx/modules/CellWidget"><summary>&lt;p>If a cell is navigable, that means the focusable elements in the cell can be focused.
+Use F2 to enter navigation mode, ESC to exit navigation mode and return focus back to cell.
+Pressing TAB during navigation mode will focus the next focusalbe element in all cells.
+That means if the current focused element is the last one in the current cell, then pressing TAB
+will focus the first focusable element in the next cell.&lt;/p>
+</summary></property><property name="widgetsInCell" scope="prototype" type="Boolean" from="gridx/modules/CellWidget"><summary>&lt;p>Indicating whether this column should use this CellDijit module.
+CellDijit module reuses widgets in cell, so if there is no widgets in cell, you don&amp;#39;t need this module at all.&lt;/p>
+</summary></property><property name="id" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column ID, should be unique within grid.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column name, displayed in header cell.&lt;/p>
+</summary></property><property name="field" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>The corresponding field in store.&lt;/p>
+</summary></property><property name="width" scope="prototype" type="string" from="gridx/core/Column"/></properties><methods><method name="decorator" scope="prototype" type="function" from="gridx/modules/CellWidget"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>html string.&lt;/p>
+</return-description><summary>&lt;p>This decorator function is slightly different from the one when this module is not used.
+This function should return a template string (see the doc for template string in dijit._TemplatedMixin
+and dijit._WidgetsInTemplateMixin). 
+In the template string, dijits or widgets can be used and they will be properly set value if they
+have the CSS class &amp;#39;gridxHasGridCellValue&amp;#39; in their DOM node.
+Since setting value will be done automatically, and the created widgets will be reused between rows,
+so there&amp;#39;s no arguments for this function.
+By default the dijits or widgets will be set value using the grid data (the result of the formatter function,
+if there is a formatter function for this column), not the store data (the raw data stored in store).
+If you&amp;#39;d like to use store data in some dijit, you can simly add a CSS class &amp;#39;gridxUseStoreData&amp;#39; to it.&lt;/p>
+</summary></method><method name="setCellValue" scope="prototype" type="function" from="gridx/modules/CellWidget"><parameters><parameter name="gridData" type="anything" usage="required"><summary>&lt;p>The data shown in grid cell. It&amp;#39;s the result of formatter function if that function exists.&lt;/p>
+</summary></parameter><parameter name="storeData" type="anything" usage="required"><summary>&lt;p>The raw data in dojo store.&lt;/p>
+</summary></parameter><parameter name="cellWidget" type="Object" usage="required"><summary>&lt;p>A widget representing the whole cell. This is the container of the templateString returned by decorator.
+So you can access any dojoAttachPoint from it (maybe your special dijit or node, and then set value for them).&lt;/p>
+</summary><description>&lt;p>An object with the following properties:
+
+&lt;/p>
+&lt;ul>
+&lt;li>cell&lt;/li>
+&lt;/ul>
+</description></parameter></parameters><return-types/><summary>&lt;p>If the settings in the decorator function can not meet your requirements, you use this function as a kind of complement.&lt;/p>
+</summary></method><method name="formatter" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types/><summary>&lt;p>Format the store data, generate grid data.&lt;/p>
+</summary></method></methods><summary>&lt;p>Column definition parameters defined by CellWidget.&lt;/p>
+</summary></object><object location="gridx/modules/NavigableCell" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
+</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
+At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+do not need to load can be used here.
+Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
+if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+module B.preload.
+This function can be omitted.&lt;/p>
+</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
+</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
+and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
+this might be an async process), this.loaded.callback() must be called to tell any other modules that
+depend on this module.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>This module allow the elements in grid cell be focusable.&lt;/p>
+</summary><description>&lt;p>When focus is on a cell, press F2 to focus the first focusable element in that cell.
+TAB to move focus to the next focusable element in that cell.
+If there&amp;#39;s no more focusable elements in current cell, focus the focusable element in next cell.
+If the current cell is the last cell in current view, move focus to the first cell.
+SHIFT+TAB to move focus to the previous focusable element in that cell.
+If there&amp;#39;s no more focusable elements in current cell, focus the focusable element in the previous cell.
+If the current cell is the first cell in current view, move focus to the last cell.
+Press ESC to move focus back to the cell itself.&lt;/p>
 </description></object><object location="gridx/modules/Edit" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
@@ -1687,32 +1903,8 @@ This property can be omitted.&lt;/p>
 </return-description><summary>&lt;p>Check whether a cell is in editing mode.&lt;/p>
 </summary></method><method name="setEditor" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="colId" type="String" usage="required"><summary>&lt;p>A column ID&lt;/p>
 </summary></parameter><parameter name="editor" type="Function|String" usage="required"><summary>&lt;p>Class constructor or declared name of an editor widget&lt;/p>
-</summary></parameter><parameter name="args" type="Object" usage="optional"><summary>&lt;p>Any args that are related to this editor.&lt;/p>
-</summary><description>&lt;p>An object with the following properties:
-
-&lt;/p>
-&lt;ul>
-&lt;li>&lt;p>toEditor: &lt;p>By default the dijit used in an editing cell will use store value.
-If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
-while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.&lt;/p>&lt;/p>
-&lt;/li>
-&lt;li>&lt;p>fromEditor: &lt;p>By default when applying an editing cell, the value of the editor dijit will be retreived by get(&amp;#39;value&amp;#39;) and
-directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
-to get a suitable value from editor.&lt;/p>&lt;/p>
-&lt;/li>
-&lt;li>&lt;p>props (String): &lt;p>The properties to be used when creating the dijit in a editing cell.
-Just like data-dojo-props for a widget.&lt;/p>&lt;/p>
-&lt;/li>
-&lt;li>&lt;p>constraints (Object): &lt;p>If the editor widget has some constraints, it can be set here instead of in props.&lt;/p>&lt;/p>
-&lt;/li>
-&lt;li>&lt;p>useGridData (Boolean): &lt;p>Whether to feed the editor with grid data or store data.
-This property is only effective when toEditor is not provided.&lt;/p>&lt;/p>
-&lt;/li>
-&lt;li>&lt;p>valueField (String): &lt;p>The property name of the editor used to take the data. In most cases it is &amp;quot;value&amp;quot;,
-so editor.set(&amp;#39;value&amp;#39;, ...) can do the job.&lt;/p>&lt;/p>
-&lt;/li>
-&lt;/ul>
-</description></parameter></parameters><return-types/><summary>&lt;p>Define the editor widget to edit a column of a grid.
+</summary></parameter><parameter name="args" type="__GridCellEditorArgs" usage="optional"><summary>&lt;p>Any args that are related to this editor.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Define the editor widget to edit a column of a grid.
 The widget should have a get and set method to get value and set value.&lt;/p>
 </summary></method><method name="onBegin" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="cell" type="gridx.core.Cell" usage="required"><summary>&lt;p>The cell object&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a cells enters editing mode.&lt;/p>
@@ -1819,12 +2011,42 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>This module provides editing mode for grid cells.&lt;/p>
+</description></method><method name="__EditorArgs" scope="normal" type="constructor" from="gridx/modules/Edit"><parameters/><return-types/></method><method name="__ColumnDefinition" scope="normal" type="constructor" from="gridx/modules/Edit"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>This module provides editing mode for grid cells.&lt;/p>
 </summary><description>&lt;p>This module relies on an implementation of the CellWidget module.
 The editing mode means there will be an editable widget appearing in the grid cell.
 This implementation also covers &amp;quot;alwaysEditing&amp;quot; mode for grid columns,
 which means all the cells in this column are always in editing mode.&lt;/p>
-</description></object><object location="gridx/modules/ColumnResizer" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="minWidth" scope="prototype" type="Integer" from="gridx/modules/ColumnResizer"><summary>&lt;p>min column width in px&lt;/p>
+</description></object><object location="gridx/modules/Edit.__EditorArgs" type="constructor" classlike="true"><properties><property name="props" scope="prototype" type="String" from="gridx/modules/Edit"><summary>&lt;p>The properties to be used when creating the dijit in a editing cell.
+Just like data-dojo-props for a widget.&lt;/p>
+</summary></property><property name="constraints" scope="prototype" type="Object" from="gridx/modules/Edit"><summary>&lt;p>If the editor widget has some constraints, it can be set here instead of in props.&lt;/p>
+</summary></property><property name="useGridData" scope="prototype" type="Boolean" from="gridx/modules/Edit"><summary>&lt;p>Whether to feed the editor with grid data or store data.
+This property is only effective when toEditor is not provided.&lt;/p>
+</summary></property><property name="valueField" scope="prototype" type="String" from="gridx/modules/Edit"><summary>&lt;p>The property name of the editor used to take the data. In most cases it is &amp;quot;value&amp;quot;,
+so editor.set(&amp;#39;value&amp;#39;, ...) can do the job.&lt;/p>
+</summary></property></properties><methods><method name="toEditor" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="storeData" type="undefined" usage="required"/><parameter name="gridData" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>By default the dijit used in an editing cell will use store value.
+If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
+while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.&lt;/p>
+</summary></method><method name="fromEditor" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="valueInEditor" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>By default when applying an editing cell, the value of the editor dijit will be retreived by get(&amp;#39;value&amp;#39;) and
+directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
+to get a suitable value from editor.&lt;/p>
+</summary></method></methods><summary>&lt;p>Arguments for the editor.&lt;/p>
+</summary></object><object location="gridx/modules/Edit.__ColumnDefinition" type="constructor" classlike="true"><properties><property name="editable" scope="prototype" type="Boolean" from="gridx/modules/Edit"><summary>&lt;p>If true then the cells in this column will be editable. Default is false.&lt;/p>
+</summary></property><property name="alwaysEditing" scope="prototype" type="Boolean" from="gridx/modules/Edit"><summary>&lt;p>If true then the cells in this column will always be in editing mode. Default is false.&lt;/p>
+</summary></property><property name="applyDelay" scope="prototype" type="Integer" from="gridx/modules/Edit"><summary>&lt;p>When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.&lt;/p>
+</summary></property><property name="editor" scope="prototype" type="string" from="gridx/modules/Edit"><summary>&lt;p>Set the dijit/widget to be used when a cell is in editing mode.
+The default dijit is dijit.form.TextBox.
+This attribute can either be the declared class name of a dijit or 
+the class construct function of a dijit (the one that is used behide &amp;quot;new&amp;quot; keyword).&lt;/p>
+</summary></property><property name="editorArgs" scope="prototype" type="null" from="gridx/modules/Edit"/><property name="id" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column ID, should be unique within grid.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column name, displayed in header cell.&lt;/p>
+</summary></property><property name="field" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>The corresponding field in store.&lt;/p>
+</summary></property><property name="width" scope="prototype" type="string" from="gridx/core/Column"/></properties><methods><method name="customApplyEdit" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="cell" type="undefined" usage="required"/><parameter name="value" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
+For example, setting multiple fields of store for a formatted cell.
+Can return a Deferred object if the work can not be done synchronously.&lt;/p>
+</summary></method><method name="formatter" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types/><summary>&lt;p>Format the store data, generate grid data.&lt;/p>
+</summary></method><method name="decorator" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types/><summary>&lt;p>Decorate cell data.&lt;/p>
+</summary></method></methods><summary>&lt;p>Column definition parameters defined by Edit.&lt;/p>
+</summary></object><object location="gridx/modules/ColumnResizer" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="minWidth" scope="prototype" type="Integer" from="gridx/modules/ColumnResizer"><summary>&lt;p>min column width in px&lt;/p>
 </summary></property><property name="detectWidth" scope="prototype" type="number" from="gridx/modules/ColumnResizer"/><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
@@ -2080,8 +2302,13 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>This module provides the single column sorting functionality for grid.&lt;/p>
-</summary></object><object location="gridx/core/model/extensions/Sort" type="constructor" classlike="true" superclass="gridx/core/model/_Extension"><properties/><methods><method name="onNew" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method><method name="onDelete" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method><method name="onSet" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/model/_Extension"/></mixins><summary>&lt;p>Using store&amp;#39;s sorting feature. Can define a base sort order for grid.&lt;/p>
+</description></method><method name="__ColumnDefinition" scope="normal" type="constructor" from="gridx/modules/SingleSort"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>This module provides the single column sorting functionality for grid.&lt;/p>
+</summary></object><object location="gridx/modules/SingleSort.__ColumnDefinition" type="constructor" classlike="true"><properties><property name="sortable" scope="prototype" type="boolean" from="gridx/modules/SingleSort"/><property name="id" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column ID, should be unique within grid.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>Column name, displayed in header cell.&lt;/p>
+</summary></property><property name="field" scope="prototype" type="String" from="gridx/core/Column"><summary>&lt;p>The corresponding field in store.&lt;/p>
+</summary></property><property name="width" scope="prototype" type="string" from="gridx/core/Column"/></properties><methods><method name="formatter" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types/><summary>&lt;p>Format the store data, generate grid data.&lt;/p>
+</summary></method><method name="decorator" scope="prototype" type="function" from="gridx/core/Column"><parameters/><return-types/><summary>&lt;p>Decorate cell data.&lt;/p>
+</summary></method></methods></object><object location="gridx/core/model/extensions/Sort" type="constructor" classlike="true" superclass="gridx/core/model/_Extension"><properties/><methods><method name="onNew" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method><method name="onDelete" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method><method name="onSet" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/model/_Extension"/></mixins><summary>&lt;p>Using store&amp;#39;s sorting feature. Can define a base sort order for grid.&lt;/p>
 </summary></object><object location="gridx/modules/TouchScroll" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
@@ -2199,7 +2426,7 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
 </description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Make desktop grid scrollable by touch in mobile devices.&lt;/p>
-</summary></object><object location="gridx/modules/extendedSelect/Row" type="constructor" classlike="true" superclass="gridx/modules/extendedSelect/_RowCellBase"><properties><property name="triggerOnCell" scope="prototype" type="Boolean" from="gridx/modules/extendedSelect/Row" tags="readonly"><summary>&lt;p>Whether row will be selected by clicking on cell, false by default      &lt;/p>
+</summary></object><object location="gridx/modules/extendedSelect/Row" type="constructor" classlike="true" superclass="gridx/modules/extendedSelect/_RowCellBase"><properties><property name="triggerOnCell" scope="prototype" type="Boolean" from="gridx/modules/extendedSelect/Row" tags="readonly"><summary>&lt;p>Whether row will be selected by clicking on cell, false by default&lt;/p>
 </summary></property><property name="treeMode" scope="prototype" type="Boolean" from="gridx/modules/extendedSelect/Row"><summary>&lt;p>Whether to apply tri-state selection for child rows.&lt;/p>
 </summary></property><property name="enabled" scope="prototype" type="boolean" from="gridx/modules/extendedSelect/_Base"/><property name="holdingCtrl" scope="prototype" type="boolean" from="gridx/modules/extendedSelect/_Base"/><property name="holdingShift" scope="prototype" type="boolean" from="gridx/modules/extendedSelect/_Base"/><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
@@ -2226,8 +2453,8 @@ This property can be omitted.&lt;/p>
 </summary></method><method name="deSelectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/Row"><parameters><parameter name="rowIndex" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Deselect a row by index.&lt;/p>
 </summary></method><method name="getSelected" scope="prototype" type="function" from="gridx/modules/extendedSelect/Row"><parameters/><return-types/><summary>&lt;p>Get id array of all selected rows&lt;/p>
 </summary></method><method name="isSelected" scope="prototype" type="function" from="gridx/modules/extendedSelect/Row"><parameters/><return-types/><summary>&lt;p>Check if the given rows are all selected.&lt;/p>
-</summary></method><method name="clear" scope="prototype" type="function" from="gridx/modules/extendedSelect/Row"><parameters><parameter name="silent" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Deselected all selected rows;           &lt;/p>
-</summary></method><method name="onHighlightChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/Row"><parameters/><return-types/></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
+</summary></method><method name="clear" scope="prototype" type="function" from="gridx/modules/extendedSelect/Row"><parameters><parameter name="silent" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Deselected all selected rows;&lt;/p>
+</summary></method><method name="onHighlightChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/Row"><parameters/><return-types/></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types/></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
 </summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
 </summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
 That is, any property of object type in grid will be preserved. For example, if this function
@@ -2361,7 +2588,7 @@ This property can be omitted.&lt;/p>
 </summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
 </summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
 </summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
-</summary></property></properties><methods><method name="selectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="deselectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="selectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
+</summary></property></properties><methods><method name="selectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types/></method><method name="deselectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types/></method><method name="selectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types/></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types/></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
 </summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
 </summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
 That is, any property of object type in grid will be preserved. For example, if this function
@@ -2478,7 +2705,7 @@ This property can be omitted.&lt;/p>
 </summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
 </summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
 </summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
-</summary></property></properties><methods><method name="selectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="deselectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="selectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
+</summary></property></properties><methods><method name="selectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types/></method><method name="deselectById" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types/></method><method name="selectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types/></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types/></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
 </summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
 </summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
 That is, any property of object type in grid will be preserved. For example, if this function
@@ -2687,9 +2914,17 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
 </description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Automatically scroll the grid body when mouse is on the edge of grid.
 Useful for extended selection or drag and drop.
-This is a registered module, so othe modules can directly depend on it without explicitly declaring it.&lt;/p>
+This is a registered module, so if it is depended by other modules, no need to declare it when creating grid.&lt;/p>
 </summary></object><object location="gridx/core/model/extensions/Mark" type="constructor" classlike="true" superclass="gridx/core/model/_Extension"><properties/><methods><method name="onNew" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method><method name="onDelete" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method><method name="onSet" scope="prototype" type="function" from="gridx/core/model/_Extension"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/model/_Extension"/></mixins><summary>&lt;p>Provide a marking system, mainly used by selection.&lt;/p>
-</summary></object><object location="gridx/modules/Filter" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="string" from="gridx/modules/Filter"/><property name="serverMode" scope="prototype" type="boolean" from="gridx/modules/Filter"/><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+</summary></object><object location="gridx/modules/Filter" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="serverMode" scope="prototype" type="boolean" from="gridx/modules/Filter"/><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
 This property can be omitted.&lt;/p>
 </summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
 they must be loaded before this module loads.
@@ -3183,33 +3418,25 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
 </description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Column lock machinery.&lt;/p>
 </summary><description>&lt;p>This module provides a way to lock consecutive leading columns. 
-Columns can be locked in following ways:
+Columns can be locked in following ways:&lt;/p>
+</description><examples><example>&lt;p>Columns can be locked when Grid is initially rendered.
+
 &lt;/p>
-</description><examples><example>&lt;ol>
-&lt;li>&lt;p>Columns can be locked when Grid is initially rendered&lt;/p>
-&lt;p> var grid = new Grid({&lt;/p>
-&lt;pre>&lt;code> modules: [
-     {moduleClass: gridx.modules.ColumnLock, count: 2}, ...
- ],
- ...&lt;/code>&lt;/pre>
-&lt;p> });&lt;/p>
-&lt;p> Or another way to set the lock number:&lt;/p>
-&lt;/li>
-&lt;/ol>
 &lt;pre>&lt;code>var grid = new Grid({
     columnLockCount: 2
     modules: [
-        gridx.modules.ColumnLock, ...
+        &amp;quot;gridx.modules.ColumnLock&amp;quot;,
+        ...
     ],
-})&lt;/code>&lt;/pre>
-&lt;ol>
-&lt;li>&lt;p>Lock or unlock columns dynamically&lt;/p>
-&lt;p> // lock 2 leading columns
- grid.columnLock.lock(2)&lt;/p>
-&lt;p> // unlock all columns
- grid.columnLock.unLock();&lt;/p>
-&lt;/li>
-&lt;/ol>
+});&lt;/code>&lt;/pre>
+&lt;p>Lock or unlock columns dynamically
+
+
+&lt;/p>
+&lt;pre>&lt;code>// lock 2 leading columns
+grid.columnLock.lock(2)
+// unlock all columns
+grid.columnLock.unLock();&lt;/code>&lt;/pre>
 </example></examples></object><object location="gridx/core/model/cache/Async" type="constructor" classlike="true" superclass="gridx/core/model/cache/_Cache"><properties><property name="isAsync" scope="prototype" type="Boolean" from="gridx/core/model/cache/Async"><summary>&lt;p>Whether this cache is for asynchronous(server side) store.&lt;/p>
 </summary></property><property name="cacheSize" scope="prototype" type="Integer" from="gridx/core/model/cache/Async"><summary>&lt;p>The max cached row count in client side.
 By default, do not clear cache when scrolling, this is the same with DataGrid&lt;/p>
@@ -3258,26 +3485,9 @@ Only support single sort now&lt;/p>
 </summary></method></methods><summary>&lt;p>Provide sort api for the grid
 and provide a single UI in the header like traditional grid sorting.&lt;/p>
 </summary></object><object location="gridx/modules/Bar" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="string" from="gridx/modules/Bar"/><property name="top" scope="prototype" type="Array" from="gridx/modules/Bar"><summary>&lt;p>An array of bar content declarations. Located above grid header.
-The top bar is big html table, and every content occupies a cell in it.
+The top bar is a big html table, and every content occupies a cell in it.
 If it is a single demension array, then the top bar will contain only one row.
-If it is a 2 demension array, then every sub-array represents a row.
-For example:
-[
-    gridx.support.QuickFilter,      //can be the constructor of a bar plugin widget.
-    &amp;quot;gridx/support/Summary&amp;quot;         //can also be the MID of a bar plugin widget.
-    {pluginClass: gridx.support.LinkSizer, style: &amp;quot;text-align: center;&amp;quot;}        //or an object with attributes
-]
-or
-[
-    [       //every sub-array is a table row.
-        {content: &amp;quot;This is &lt;b>a message&lt;/b>&amp;quot;, style: &amp;quot;backgroun-color: blue;&amp;quot;}, //Can add some html
-        null    //if null, just an empty cell
-    ],
-    [
-        {pluginClass: gridx.support.LinkPager, &amp;#39;class&amp;#39;: &amp;#39;myclass&amp;#39;},     //can provide custom class
-        {colSpan: 2, rowSpan: 2}    //can add colSpan and rowSpan
-    ]
-]&lt;/p>
+If it is a 2 demension array, then every sub-array represents a row.&lt;/p>
 </summary></property><property name="bottom" scope="prototype" type="Array" from="gridx/modules/Bar"><summary>&lt;p>An array of bar content declarations. Located below grid horizontal scroller.
 Usage is similar to the &amp;quot;top&amp;quot; attribute.&lt;/p>
 </summary></property><property name="plugins" scope="prototype" type="Object" from="gridx/modules/Bar" tags="readonly"><summary>&lt;p>A place to access to the plugins.
@@ -4139,7 +4349,14 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins></object><object location="gridx/modules/NestedSort" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+</description></method><method name="__MenuArgs" scope="normal" type="constructor" from="gridx/modules/Menu"><parameters/><return-types/></method><method name="__MenuContext" scope="normal" type="constructor" from="gridx/modules/Menu"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins></object><object location="gridx/modules/Menu.__MenuArgs" type="constructor" classlike="true"><properties><property name="hookPoint" scope="prototype" type="String" from="gridx/modules/Menu"><summary>&lt;p>Indicates from where the menu should occur.
+One of &amp;quot;cell&amp;quot;, &amp;quot;headercell&amp;quot;, &amp;quot;row&amp;quot;, &amp;quot;header&amp;quot;, &amp;quot;body&amp;quot;, &amp;quot;grid&amp;quot;. If invalid, default to &amp;quot;grid&amp;quot;.&lt;/p>
+</summary></property><property name="selected" scope="prototype" type="Boolean" from="gridx/modules/Menu"><summary>&lt;p>Indicates whether to bind this menu only to the selected items. Default is false.&lt;/p>
+</summary></property></properties><methods/></object><object location="gridx/modules/Menu.__MenuContext" type="constructor" classlike="true"><properties><property name="grid" scope="prototype" type="Grid" from="gridx/modules/Menu"><summary>&lt;p>This grid that triggers this menu.&lt;/p>
+</summary></property><property name="column" scope="prototype" type="Column" from="gridx/modules/Menu"><summary>&lt;p>The column that triggers this menu. Only valid for &amp;quot;headercell&amp;quot; hookpoint.&lt;/p>
+</summary></property><property name="row" scope="prototype" type="Row" from="gridx/modules/Menu"><summary>&lt;p>The row that triggers this menu. Only valid for &amp;quot;row&amp;quot; hookpoint.&lt;/p>
+</summary></property><property name="cell" scope="prototype" type="Cell" from="gridx/modules/Menu"><summary>&lt;p>The cell that triggers this menu. Only valid for &amp;quot;cell&amp;quot; hookpoint.&lt;/p>
+</summary></property></properties><methods/></object><object location="gridx/modules/NestedSort" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
 For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
@@ -4570,8 +4787,14 @@ This property can be omitted.&lt;/p>
 </summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
 </summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
 </summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
-</summary></property></properties><methods><method name="print" scope="prototype" type="function" from="gridx/modules/Printer"><parameters><parameter name="args" type="Object" usage="required"><summary>&lt;p>Please refer to &lt;code>grid.printer.__PrinterArgs&lt;/code>&lt;/p>
-</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A deferred object indicating when the export process is completed.&lt;/p>
+</summary></property></properties><methods><method name="print" scope="prototype" type="function" from="gridx/modules/Printer"><parameters><parameter name="args" type="Object" usage="required"><summary>&lt;p>Printer args&lt;/p>
+</summary><description>&lt;p>An object with the following properties:
+
+&lt;/p>
+&lt;ul>
+&lt;li>undefined&lt;/li>
+&lt;/ul>
+</description></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A deferred object indicating when the export process is completed.&lt;/p>
 </return-description><summary>&lt;p>Print grid contents.&lt;/p>
 </summary></method><method name="toHTML" scope="prototype" type="function" from="gridx/modules/Printer"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
 </summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
@@ -5455,7 +5678,7 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Tree Grid module.&lt;/p>
+</description></method><method name="__ColumnDefinition" scope="normal" type="constructor" from="gridx/modules/Tree"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Tree Grid module.&lt;/p>
 </summary><description>&lt;p>This module is used for creation, destruction and management of the Tree Grid.
 There are two kind of Tree Grid: columnar or nested, it will be indicated by
 the argument &lt;code>type&lt;/code>, and the layout of the TreeGrid will be defined by extended
@@ -5547,7 +5770,7 @@ A quick sample:
     {name: &amp;quot;Rebound&amp;quot;, field: &amp;quot;rebound&amp;quot;},
     {name: &amp;quot;Assistant&amp;quot;, field: &amp;quot;assistant&amp;quot;}
 ];&lt;/code>&lt;/pre>
-</example></examples></object><object location="gridx/modules/VirtualVScroller" type="constructor" classlike="true" superclass="gridx/modules/VScroller"><properties><property name="buffSize" scope="prototype" type="Integer" from="gridx/modules/VirtualVScroller"><summary>&lt;p>The count row nodes that should be maintained above/below the grid body viewport.
+</example></examples></object><object location="gridx/modules/Tree.__ColumnDefinition" type="constructor" classlike="true"><properties><property name="expandLevel" scope="prototype" type="Number" from="gridx/modules/Tree"/></properties><methods/></object><object location="gridx/modules/VirtualVScroller" type="constructor" classlike="true" superclass="gridx/modules/VScroller"><properties><property name="buffSize" scope="prototype" type="Integer" from="gridx/modules/VirtualVScroller"><summary>&lt;p>The count row nodes that should be maintained above/below the grid body viewport.
 The total count row nodes consists of the count of rows that are visible, and buffSize * 2.&lt;/p>
 </summary></property><property name="lazy" scope="prototype" type="Boolean" from="gridx/modules/VirtualVScroller"><summary>&lt;p>If this argument is set to true, the grid will not fetch data during scrolling.
 Instead, it&amp;#39;ll fetch data after the scrolling process is completed (plus a timeout).
@@ -5572,8 +5795,14 @@ This property can be omitted.&lt;/p>
 </summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
 </summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
 </summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
-</summary></property></properties><methods><method name="scrollToRow" scope="prototype" type="function" from="gridx/modules/VirtualVScroller" tags="extension"><parameters><parameter name="rowVisualIndex" type="undefined" usage="required"/><parameter name="toTop" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Override VScroller.scrollToRow&lt;/p>
-</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary></property></properties><methods><method name="scrollToRow" scope="prototype" type="function" from="gridx/modules/VScroller"><parameters><parameter name="rowVisualIndex" type="Integer" usage="required"><summary>&lt;p>The visual index of the row&lt;/p>
+</summary></parameter><parameter name="toTop" type="Boolean" usage="optional"><summary>&lt;p>If set this to true, the grid will try to scroll the required row to the top of the view.
+Otherwise, the grid will stop scrolling as soon as the row is visible.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A deferred object indicating when the scrolling process is finished. This will be useful
+when using lazy-loading and lazy-rendering.&lt;/p>
+</return-description><summary>&lt;p>Scroll the grid until the required row is in view.&lt;/p>
+</summary><description>&lt;p>This job will be an asynchronous one if the lazy-loading and lazy-rendering are used.&lt;/p>
+</description></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
 </summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
 That is, any property of object type in grid will be preserved. For example, if this function
 returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
@@ -6443,15 +6672,8 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 and then pass the exported CSV string to callbacks.&lt;/p>
 </return-description><summary>&lt;p>Export the grid contents to CSV according to the given args.
 This method should be called through grid.exporter.toCSV();&lt;/p>
-</summary></method><method name="toTable" scope="normal" type="function" from="gridx/modules/exporter/Table" extension-module="true"><parameters><parameter name="args" type="Object" usage="optional"><summary>&lt;p>The args to configure the export result and the export process.&lt;/p>
-</summary><description>&lt;p>An object with the following properties:
-
-&lt;/p>
-&lt;ul>
-&lt;li>natualWidth&lt;/li>
-&lt;li>columnWidth&lt;/li>
-&lt;/ul>
-</description></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A deferred object indicating when the export process is completed,
+</summary></method><method name="toTable" scope="normal" type="function" from="gridx/modules/exporter/Table" extension-module="true"><parameters><parameter name="args" type="__TableExportArgs" usage="optional"><summary>&lt;p>The args to configure the export result and the export process.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A deferred object indicating when the export process is completed,
 and then pass the exported HTML table (as string) to callbacks.&lt;/p>
 </return-description><summary>&lt;p>Export the grid contents to HTML table according to the given args.
 This method should be called through grid.exporter.toCSV();&lt;/p>
@@ -6610,7 +6832,7 @@ This property can be omitted.&lt;/p>
 </summary></method><method name="getSelected" scope="prototype" type="function" from="gridx/modules/extendedSelect/Cell"><parameters/><return-types/><summary>&lt;p>Get an array of selected cells e.g.[[&amp;#39;row1&amp;#39;, &amp;#39;col1&amp;#39;], [&amp;#39;row2&amp;#39;, &amp;#39;col2&amp;#39;]]&lt;/p>
 </summary></method><method name="clear" scope="prototype" type="function" from="gridx/modules/extendedSelect/Cell"><parameters><parameter name="silent" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Deselected all selected cells&lt;/p>
 </summary></method><method name="isSelected" scope="prototype" type="function" from="gridx/modules/extendedSelect/Cell"><parameters><parameter name="rowId" type="undefined" usage="required"/><parameter name="columnId" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Check if the given cell is selected.&lt;/p>
-</summary></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
+</summary></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types/></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
 </summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
 </summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
 That is, any property of object type in grid will be preserved. For example, if this function
@@ -6751,7 +6973,7 @@ This property can be omitted.&lt;/p>
 </summary></method><method name="getSelected" scope="prototype" type="function" from="gridx/modules/extendedSelect/Column"><parameters/><return-types/><summary>&lt;p>Get id array of all selected columns&lt;/p>
 </summary></method><method name="clear" scope="prototype" type="function" from="gridx/modules/extendedSelect/Column"><parameters><parameter name="silent" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Deselected all selected columns;&lt;/p>
 </summary></method><method name="isSelected" scope="prototype" type="function" from="gridx/modules/extendedSelect/Column"><parameters/><return-types/><summary>&lt;p>Check if the given column(s) are all selected.&lt;/p>
-</summary></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
+</summary></method><method name="deselectByIndex" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="start" type="undefined" usage="required"/><parameter name="end" type="undefined" usage="required"/></parameters><return-types/></method><method name="onSelectionChange" scope="prototype" type="function" from="gridx/modules/extendedSelect/_Base"><parameters><parameter name="newSelectedIds" type="undefined" usage="required"/><parameter name="oldSelectedIds" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Event: fired when the selection is changed.&lt;/p>
 </summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
 </summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
 That is, any property of object type in grid will be preserved. For example, if this function
@@ -6867,7 +7089,15 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
  grid.select.column.clear();&lt;/p>
 &lt;/li>
 &lt;/ol>
-</example></examples></object><object location="gridx/modules/filter/DistinctComboBoxMenu" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/Filter" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="string" from="gridx/modules/Filter"/><property name="serverMode" scope="prototype" type="boolean" from="gridx/modules/Filter"/><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+</example></examples></object><object location="gridx/modules/filter/DistinctComboBoxMenu" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/Filter" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="serverMode" scope="prototype" type="boolean" from="gridx/modules/Filter"/><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
 This property can be omitted.&lt;/p>
 </summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
 they must be loaded before this module loads.
@@ -7120,8 +7350,22 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Filter bar module.&lt;/p>
-</summary></object><object location="gridx/modules/filter/FilterDialog" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/FilterPane" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/FilterConfirmDialog" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/FilterTooltip" type="constructor" classlike="true"><properties/><methods/><summary>&lt;p>Show status dialog of filter.&lt;/p>
+</description></method><method name="__DataTypeArgs" scope="normal" type="constructor" from="gridx/modules/filter/FilterBar"><parameters/><return-types/></method><method name="__FilterArgs" scope="normal" type="constructor" from="gridx/modules/filter/FilterBar"><parameters/><return-types/></method><method name="__ColumnDefinition" scope="normal" type="constructor" from="gridx/modules/filter/FilterBar"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Filter bar module.&lt;/p>
+</summary></object><object location="gridx/modules/filter/FilterBar.__DataTypeArgs" type="constructor" classlike="true"><properties><property name="useRawData" scope="prototype" type="boolean" from="gridx/modules/filter/FilterBar"/></properties><methods><method name="converter" scope="prototype" type="function" from="gridx/modules/filter/FilterBar"><parameters><parameter name="v" type="undefined" usage="required"/></parameters><return-types/></method></methods></object><object location="gridx/modules/filter/FilterBar.__FilterArgs" type="constructor" classlike="true"><properties><property name="trueLabel" scope="prototype" type="string" from="gridx/modules/filter/FilterBar"/><property name="falseLabel" scope="prototype" type="string" from="gridx/modules/filter/FilterBar"/><property name="valueDijitArgs" scope="prototype" type="object" from="gridx/modules/filter/FilterBar"/></properties><methods/></object><object location="gridx/modules/filter/FilterBar.__ColumnDefinition" type="constructor" classlike="true"><properties><property name="filterable" scope="prototype" type="Boolean" from="gridx/modules/filter/FilterBar"><summary>&lt;p>If FALSE, then this column should not occur in the Filter Definition Dialog for future rules.
+But this does not influence existing filter rules. Default to be TRUE.&lt;/p>
+</summary></property><property name="disabledConditions" scope="prototype" type="String[]" from="gridx/modules/filter/FilterBar"><summary>&lt;p>If provided, all the listed conditions will not occur in the Filter Definition Dialog for future rules.
+But this does not influence existing filter rules. Default to be an empty array.&lt;/p>
+</summary></property><property name="dataType" scope="prototype" type="String" from="gridx/modules/filter/FilterBar"><summary>&lt;p>Specify the data type of this column. Should be one of &amp;quot;string&amp;quot;, &amp;quot;number&amp;quot;, &amp;quot;date&amp;quot;, &amp;quot;time&amp;quot;, and &amp;quot;boolean&amp;quot;.
+Case insensitive. Data type decides which conditions to use in the Filter Definition Dialog.&lt;/p>
+</summary></property><property name="storeDatePattern" scope="prototype" type="string" from="gridx/modules/filter/FilterBar"/><property name="formatter" scope="prototype" type="string" from="gridx/modules/filter/FilterBar"/><property name="dateParsePatter" scope="prototype" type="string" from="gridx/modules/filter/FilterBar"/><property name="filterArgs" scope="prototype" type="__FilterArgs" from="gridx/modules/filter/FilterBar"/><property name="dataTypeArgs" scope="prototype" type="__DataTypeArgs" from="gridx/modules/filter/FilterBar"><summary>&lt;p>Passing any other special config options for this column. For example, if the column is of type &amp;#39;date&amp;#39;, but the data
+in store is of string type, then a &amp;#39;converter&amp;#39; function is needed here:
+dataTypeArgs: {
+    useRawData: true,
+    converter: function(v){
+        return dojo.date.locale.parse(v, {...});
+    }
+}&lt;/p>
+</summary></property></properties><methods/></object><object location="gridx/modules/filter/FilterDialog" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/FilterPane" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/FilterConfirmDialog" type="constructor" classlike="true"><properties/><methods/></object><object location="gridx/modules/filter/FilterTooltip" type="constructor" classlike="true"><properties/><methods/><summary>&lt;p>Show status dialog of filter.&lt;/p>
 </summary></object><object location="gridx/modules/filter/QuickFilter" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
@@ -8170,8 +8414,8 @@ This property can be omitted.&lt;/p>
 </summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
 </summary></property></properties><methods><method name="selectById" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Select target column by id&lt;/p>
 </summary></method><method name="deselectById" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Deselect target column by id&lt;/p>
-</summary></method><method name="isSelected" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types><summary>&lt;p>Check if a column is selected &lt;/p>
-</summary></method><method name="getSelected" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters/><return-types><return-type type="Array"/></return-types><summary>&lt;p>Get array of column id of all selected columns&lt;/p>
+</summary></method><method name="isSelected" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Check if a column is selected &lt;/p>
+</summary></method><method name="getSelected" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters/><return-types/><summary>&lt;p>Get array of column id of all selected columns&lt;/p>
 </summary></method><method name="clear" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters><parameter name="notClearId" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Clear all column selections&lt;/p>
 </summary></method><method name="onSelected" scope="prototype" type="function" from="gridx/modules/select/Column"><parameters><parameter name="col" type="gridx.core.Column" usage="required"><summary>&lt;p>The column object&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a column is selected.&lt;/p>

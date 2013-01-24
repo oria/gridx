@@ -30,7 +30,16 @@
 							"id": "gridx/core/Column",
 							"name": "Column",
 							"fullname": "gridx/core/Column",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/core/Column.__ColumnDefinition",
+									"name": "__ColumnDefinition",
+									"fullname": "gridx/core/Column.__ColumnDefinition",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/core/Core",
@@ -252,13 +261,38 @@
 							"id": "gridx/modules/Body",
 							"name": "Body",
 							"fullname": "gridx/modules/Body",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Body.__RowCellInfo",
+									"name": "__RowCellInfo",
+									"fullname": "gridx/modules/Body.__RowCellInfo",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/CellWidget",
 							"name": "CellWidget",
 							"fullname": "gridx/modules/CellWidget",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/CellWidget.__CellWidget",
+									"name": "__CellWidget",
+									"fullname": "gridx/modules/CellWidget.__CellWidget",
+									"type": "constructor",
+									"children": []
+								},
+								{
+									"id": "gridx/modules/CellWidget.__ColumnDefinition",
+									"name": "__ColumnDefinition",
+									"fullname": "gridx/modules/CellWidget.__ColumnDefinition",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/ColumnLock",
@@ -326,7 +360,23 @@
 							"id": "gridx/modules/Edit",
 							"name": "Edit",
 							"fullname": "gridx/modules/Edit",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Edit.__ColumnDefinition",
+									"name": "__ColumnDefinition",
+									"fullname": "gridx/modules/Edit.__ColumnDefinition",
+									"type": "constructor",
+									"children": []
+								},
+								{
+									"id": "gridx/modules/Edit.__EditorArgs",
+									"name": "__EditorArgs",
+									"fullname": "gridx/modules/Edit.__EditorArgs",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/exporter/",
@@ -420,7 +470,30 @@
 									"id": "gridx/modules/filter/FilterBar",
 									"name": "FilterBar",
 									"fullname": "gridx/modules/filter/FilterBar",
-									"type": "constructor"
+									"type": "constructor",
+									"children": [
+										{
+											"id": "gridx/modules/filter/FilterBar.__ColumnDefinition",
+											"name": "__ColumnDefinition",
+											"fullname": "gridx/modules/filter/FilterBar.__ColumnDefinition",
+											"type": "constructor",
+											"children": []
+										},
+										{
+											"id": "gridx/modules/filter/FilterBar.__DataTypeArgs",
+											"name": "__DataTypeArgs",
+											"fullname": "gridx/modules/filter/FilterBar.__DataTypeArgs",
+											"type": "constructor",
+											"children": []
+										},
+										{
+											"id": "gridx/modules/filter/FilterBar.__FilterArgs",
+											"name": "__FilterArgs",
+											"fullname": "gridx/modules/filter/FilterBar.__FilterArgs",
+											"type": "constructor",
+											"children": []
+										}
+									]
 								},
 								{
 									"id": "gridx/modules/filter/FilterConfirmDialog",
@@ -458,7 +531,16 @@
 							"id": "gridx/modules/Focus",
 							"name": "Focus",
 							"fullname": "gridx/modules/Focus",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Focus.__FocusArea",
+									"name": "__FocusArea",
+									"fullname": "gridx/modules/Focus.__FocusArea",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/Header",
@@ -494,7 +576,23 @@
 							"id": "gridx/modules/Menu",
 							"name": "Menu",
 							"fullname": "gridx/modules/Menu",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Menu.__MenuArgs",
+									"name": "__MenuArgs",
+									"fullname": "gridx/modules/Menu.__MenuArgs",
+									"type": "constructor",
+									"children": []
+								},
+								{
+									"id": "gridx/modules/Menu.__MenuContext",
+									"name": "__MenuContext",
+									"fullname": "gridx/modules/Menu.__MenuContext",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/move/",
@@ -515,6 +613,12 @@
 									"type": "constructor"
 								}
 							]
+						},
+						{
+							"id": "gridx/modules/NavigableCell",
+							"name": "NavigableCell",
+							"fullname": "gridx/modules/NavigableCell",
+							"type": "constructor"
 						},
 						{
 							"id": "gridx/modules/NestedSort",
@@ -626,7 +730,16 @@
 							"id": "gridx/modules/SingleSort",
 							"name": "SingleSort",
 							"fullname": "gridx/modules/SingleSort",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/SingleSort.__ColumnDefinition",
+									"name": "__ColumnDefinition",
+									"fullname": "gridx/modules/SingleSort.__ColumnDefinition",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/SummaryBar",
@@ -662,7 +775,16 @@
 							"id": "gridx/modules/Tree",
 							"name": "Tree",
 							"fullname": "gridx/modules/Tree",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Tree.__ColumnDefinition",
+									"name": "__ColumnDefinition",
+									"fullname": "gridx/modules/Tree.__ColumnDefinition",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/VirtualVScroller",

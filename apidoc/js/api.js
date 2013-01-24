@@ -121,7 +121,7 @@ paneOnLoad = function(data){
 		// Open tab for specified module
 		var tmp = this.href.replace(/#.*/, "").replace(/\.html$/, '').split("/");
 		console.debug(tmp);
-		var version = tmp[tmp.length - 2];
+		var version = tmp[tmp.length - 3];
 		var page = tmp[tmp.length - 1].replace(/-/g, '/');
 		var pane = addTabPane(page, version);
 
@@ -182,7 +182,8 @@ paneOnLoad = function(data){
 	}
 
 	//	build the toolbar.
-	var link = query("div.jsdoc-permalink", context)[0].innerHTML;
+	// Don't add permalink since we don't have a server.
+	var link = ''; //query("div.jsdoc-permalink", context)[0].innerHTML;
 
 	var tbc = (link ? '<span class="jsdoc-permalink"><a class="jsdoc-link" href="' + link + '">Permalink</a></span>' : '')
 		+ '<label>View options: </label>'
