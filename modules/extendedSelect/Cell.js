@@ -1,4 +1,5 @@
 define([
+/*====="../../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/query",
@@ -10,9 +11,16 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Cell, =====*/declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
+	Cell.select = function(){
+	};
+	Cell.deselect = function(){
+	};
+	Cell.isSelected = function(){
+	};
+
 	return declare(_RowCellBase, {
 		// summary:
 		//		Provides advanced cell selections.

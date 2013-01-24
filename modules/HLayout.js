@@ -48,7 +48,6 @@ define([
 			//		when calling grid.resize().
 		},
 
-		//Event---------------------------------------------------------
 		onUpdateWidth: function(){
 			// summary:
 			//		Fired when the body width is updated.

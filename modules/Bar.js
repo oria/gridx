@@ -22,26 +22,28 @@ define([
 
 		// top: Array
 		//		An array of bar content declarations. Located above grid header.
-		//		The top bar is big html table, and every content occupies a cell in it.
+		//		The top bar is a big html table, and every content occupies a cell in it.
 		//		If it is a single demension array, then the top bar will contain only one row.
 		//		If it is a 2 demension array, then every sub-array represents a row.
-		//		For example:
-		//		[
-		//			gridx.support.QuickFilter,		//can be the constructor of a bar plugin widget.
-		//			"gridx/support/Summary"			//can also be the MID of a bar plugin widget.
-		//			{pluginClass: gridx.support.LinkSizer, style: "text-align: center;"}		//or an object with attributes
-		//		]
+		// example:
+		//	|	[
+		//	|		gridx.support.QuickFilter,		//can be the constructor of a bar plugin widget.
+		//	|		"gridx/support/Summary"			//can also be the MID of a bar plugin widget.
+		//	|		{pluginClass: gridx.support.LinkSizer, style: "text-align: center;"},		//or an object with attributes
+		//	|		MyQuickFilterInstance		//or an instance of a plugin widget
+		//	|		{plugin: MyQuickFilterInstance, style: "color: red;"}		//or with other attributes
+		//	|	]
 		//		or
-		//		[
-		//			[		//every sub-array is a table row.
-		//				{content: "This is <b>a message</b>", style: "backgroun-color: blue;"},	//Can add some html
-		//				null	//if null, just an empty cell
-		//			],
-		//			[
-		//				{pluginClass: gridx.support.LinkPager, 'class': 'myclass'},		//can provide custom class
-		//				{colSpan: 2, rowSpan: 2}	//can add colSpan and rowSpan
-		//			]
-		//		]
+		//	|	[
+		//	|		[		//every sub-array is a table row.
+		//	|			{content: "This is <b>a message</b>", style: "backgroun-color: blue;"},	//Can add some html
+		//	|			null	//if null, just an empty cell
+		//	|		],
+		//	|		[
+		//	|			{pluginClass: gridx.support.LinkPager, 'class': 'myclass'},		//can provide custom class for the plugin
+		//	|			{colSpan: 2, rowSpan: 2}	//can add colSpan and rowSpan
+		//	|		]
+		//	|	]
 		top: null,
 
 		// bottom: Array

@@ -3,7 +3,7 @@ define([
 ], function(declare){
 
 /*=====
-	return declare([], {
+	var Column = declare([], {
 		// summary:
 		//		Represents a column of a grid
 		// description:
@@ -95,6 +95,38 @@ define([
 			//		The CSS value of column width
 		}
 	});
+
+	Column.__ColumnDefinition = declare([], {
+		// summary:
+		//		Define a column in the structure parameter of gridx.
+
+		// id: String
+		//		Column ID, should be unique within grid.
+		id: '',
+
+		// name: String?
+		//		Column name, displayed in header cell.
+		name: '',
+
+		// field: String?
+		//		The corresponding field in store.
+		field: '',
+
+		// width: String?
+		width: '',
+
+		formatter: function(){
+			// summary:
+			//		Format the store data, generate grid data.
+		},
+
+		decorator: function(){
+			// summary:
+			//		Decorate cell data.
+		}
+	});
+
+	return Column;
 =====*/
 
 	

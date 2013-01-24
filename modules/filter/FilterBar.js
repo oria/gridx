@@ -25,47 +25,7 @@ define([
 ], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
-	var ColumnDefinitionFilterMixin = {
-		// filterable: Boolean
-		//		If FALSE, then this column should not occur in the Filter Definition Dialog for future rules.
-		//		But this does not influence existing filter rules. Default to be TRUE.
-		filterable: true,
-	
-		// disabledConditions: String[]
-		//		If provided, all the listed conditions will not occur in the Filter Definition Dialog for future rules.
-		//		But this does not influence existing filter rules. Default to be an empty array.
-		disabledConditions: [],
-	
-		// dataType: String
-		//		Specify the data type of this column. Should be one of "string", "number", "date", "time", and "boolean".
-		//		Case insensitive. Data type decides which conditions to use in the Filter Definition Dialog.
-		dataType: 'date',
-
-		storeDatePattern: '',
-
-		formatter: '',
-
-		dateParsePatter: 'yyyy/MM/dd HH:mm:ss',
-
-		filterArgs: {
-			trueLabel: '',
-			falseLabel: '',
-			valueDijitArgs: {}
-		},
-
-		// dataTypeArgs: Object
-		//		Passing any other special config options for this column. For example, if the column is of type 'date', but the data
-		//		in store is of string type, then a 'converter' function is needed here:
-		//		dataTypeArgs: {
-		//			useRawData: true,
-		//			converter: function(v){
-		//				return dojo.date.locale.parse(v, {...});
-		//			}
-		//		}
-		dataTypeArgs: {}
-	};
-
-	return declare(_Module, {
+	var FilterBar = declare(_Module, {
 		// summary:
 		//		Filter bar module.
 		
@@ -189,6 +149,58 @@ define([
 			//		Show the filter define dialog.
 		}
 	});
+
+	FilterBar.__DataTypeArgs = declare([], {
+		useRawData: true,
+		converter: function(v){
+		}
+	});
+
+	FilterBar.__FilterArgs = declare([], {
+		trueLabel: '',
+		falseLabel: '',
+		valueDijitArgs: {}
+	});
+
+	FilterBar.__ColumnDefinition = declare([], {
+		// filterable: Boolean
+		//		If FALSE, then this column should not occur in the Filter Definition Dialog for future rules.
+		//		But this does not influence existing filter rules. Default to be TRUE.
+		filterable: true,
+	
+		// disabledConditions: String[]
+		//		If provided, all the listed conditions will not occur in the Filter Definition Dialog for future rules.
+		//		But this does not influence existing filter rules. Default to be an empty array.
+		disabledConditions: [],
+	
+		// dataType: String
+		//		Specify the data type of this column. Should be one of "string", "number", "date", "time", and "boolean".
+		//		Case insensitive. Data type decides which conditions to use in the Filter Definition Dialog.
+		dataType: 'date',
+
+		storeDatePattern: '',
+
+		formatter: '',
+
+		dateParsePatter: 'yyyy/MM/dd HH:mm:ss',
+
+		// filterArgs: __FilterArgs
+		//		
+		filterArgs: null,
+
+		// dataTypeArgs: __DataTypeArgs
+		//		Passing any other special config options for this column. For example, if the column is of type 'date', but the data
+		//		in store is of string type, then a 'converter' function is needed here:
+		//		dataTypeArgs: {
+		//			useRawData: true,
+		//			converter: function(v){
+		//				return dojo.date.locale.parse(v, {...});
+		//			}
+		//		}
+		dataTypeArgs: {}
+	});
+
+	return FilterBar;
 =====*/
 
 	return declare(_Module, {

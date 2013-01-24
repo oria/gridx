@@ -34,9 +34,9 @@ GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2
 * [Demo gallery]() (http://oria.github.com/gridx/gallery.html)
 * [Benchmaks]() (in progress)
 * [Tutorial](https://github.com/oria/gridx/wiki) (in progress)
-* [API Doc](http://oria.github.com/gridx/doc/gridx.html) (in progress)
+* [API Doc](http://oria.github.com/gridx/apidoc/index.html) (in progress)
 * [Known limitations]() (in progress)
-* [Release download](https://github.com/oria/gridx/zipball/master)
+* [Release download](https://github.com/oria/gridx/zipball/1.0)
 * [Report bugs](https://github.com/oria/gridx/issues/new)
 
 
@@ -45,8 +45,9 @@ Please also check out [GridX Home Site](http://oria.github.com/gridx) for more d
 
 
 ## GridX Team
-* Xiao Wen Zhu (Oliver) - IBM, CCLA
-* Pei Wang (Nate) - IBM, CCLA
-* Wei Huang (Evan) -  Dojo Committer
+* [Xiao Wen Zhu (Oliver) - IBM, CCLA](mailto:zhuxw1984@gmail.com)
+* [Pei Wang (Nate) - IBM, CCLA](mailto:supnate@gmail.com)
+* [Chen Qi (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
+* [Wei Huang (Evan) -  Dojo Committer](mailto:evanhuangwei@gmail.com)
 
-Please contact [Wei Huang (Evan)](mailto:evanhuangwei@gmail.com) if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.
+Please contact us if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.

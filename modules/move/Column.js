@@ -1,12 +1,20 @@
 define([
+/*====="../../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/keys",
 	"../../core/_Module"
-], function(declare, query, array, keys, _Module){
+], function(/*=====Column, =====*/declare, query, array, keys, _Module){
 
 /*=====
+	Column.moveTo = function(target){
+		// summary:
+		//		Move this column to the position before the column with index "target"
+		// target: Integer
+		//		The target index
+	};
+
 	return declare(_Module, {
 		// summary:
 		//		This module provides several APIs to move columns within grid.
@@ -64,10 +72,6 @@ define([
 
 		columnMixin: {
 			moveTo: function(target){
-				// summary:
-				//		Move this column to the position before the column with index "target"
-				// target: Integer
-				//		The target index
 				this.grid.move.column.moveRange(this.index(), 1, target);
 				return this;
 			}

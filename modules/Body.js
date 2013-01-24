@@ -18,32 +18,6 @@ define([
 ], function(/*=====Row, Cell, =====*/declare, query, array, lang, event, json, domConstruct, domClass, Deferred, sniff, keys, _Module, util, nls){
 
 /*=====
-	gridx._RowCellInfo = function(){
-		// summary:
-		//		This structure includes all possible information that can be used to identify a row or a cell, it is used
-		//		to retrieve a row or a cell in grid body.
-		//		Usually user only need to provide some of them that is sufficient to uniquely identify a row or a cell,
-		//		e.g. rowId, or rowIndex and parentId, or visualIndex.
-		// rowId: String|Number
-		//		The ID of a row.
-		// rowIndex: Integer
-		//		The index of a row. It is the index below the parent of this row. The parent of root rows is an imaginary row
-		//		with id "" (empty string).
-		// visualIndex: Integer
-		//		The visual index of a row. It represents the visual position of this row in the current body view.
-		//		If there are no pagination, no filtering, no tree structure data, this value is equal to the row index.
-		// colId: String|Number
-		//		The ID of a column (should not be false values)
-		// colIndex: Integer
-		//		The index of a column.
-		this.rowId = '';
-		this.rowIndex = 0;
-		this.visualIndex = 0;
-		this.parentId = '';
-		this.colId = 1;
-		this.colIndex = 0;
-	};
-
 	Row.node = function(){
 		// summary:
 		//		Get the dom node of this row.
@@ -63,7 +37,7 @@ define([
 		//		DOMNode|null
 	};
 
-	return declare(_Module, {
+	var Body = declare(_Module, {
 		// summary:
 		//		The body UI of grid.
 		// description:
@@ -91,7 +65,7 @@ define([
 		getRowNode: function(args){
 			// summary:
 			//		Get the DOM node of a row
-			// args: gridx.__RowCellInfo
+			// args: Body.__RowCellInfo
 			//		A row info object containing row index or row id
 			// returns:
 			//		The DOM node of the row. Null if not found.
@@ -100,7 +74,7 @@ define([
 		getCellNode: function(args){
 			// summary:
 			//		Get the DOM node of a cell
-			// args: gridx.__RowCellInfo
+			// args: Body.__RowCellInfo
 			//		A cell info object containing sufficient info
 			// returns:
 			//		The DOM node of the cell. Null if not found.
@@ -109,7 +83,7 @@ define([
 		getRowInfo: function(args){
 			// summary:
 			//		Get complete row info by partial row info
-			// args: gridx.__RowCellInfo
+			// args: Body.__RowCellInfo
 			//		A row info object containing partial row info
 			// returns:
 			//		A row info object containing as complete as possible row info.
@@ -252,6 +226,38 @@ define([
 			//		The column ID of this cell.
 		}
 	});
+
+	Body.__RowCellInfo = declare([], {
+		// summary:
+		//		This structure includes all possible information that can be used to identify a row or a cell, it is used
+		//		to retrieve a row or a cell in grid body.
+		//		Usually user only need to provide some of them that is sufficient to uniquely identify a row or a cell,
+		//		e.g. rowId, or rowIndex and parentId, or visualIndex.
+
+		// rowId: String|Number
+		//		The ID of a row.
+		rowId: '',
+
+		// rowIndex: Integer
+		//		The index of a row. It is the index below the parent of this row. The parent of root rows is an imaginary row
+		//		with id "" (empty string).
+		rowIndex: 0,
+
+		// visualIndex: Integer
+		//		The visual index of a row. It represents the visual position of this row in the current body view.
+		//		If there are no pagination, no filtering, no tree structure data, this value is equal to the row index.
+		visualIndex: 0,
+
+		// colId: String|Number
+		//		The ID of a column (should not be false values)
+		colId: '',
+
+		// colIndex: Integer
+		//		The index of a column.
+		colIndex: 0
+	});
+
+	return Body;
 =====*/
 
 	return declare(_Module, {

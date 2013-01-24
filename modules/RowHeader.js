@@ -262,13 +262,9 @@ define([
 		//Events
 		_onHeaderMouseEvent: function(eventName, e){
 			var g = this.grid,
-				evtCell = 'onRowHeaderHeader' + eventName,
-				evtRow = 'onHeader' + eventName;
+				evtCell = 'onRowHeaderHeader' + eventName;
 			if(g._isConnected(evtCell)){
 				g[evtCell](e);
-			}
-			if(g._isConnected(evtRow)){
-				g[evtRow](e);
 			}
 		},
 

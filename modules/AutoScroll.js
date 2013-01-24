@@ -10,7 +10,7 @@ define([
 		// summary:
 		//		Automatically scroll the grid body when mouse is on the edge of grid.
 		//		Useful for extended selection or drag and drop.
-		//		This is a registered module, so othe modules can directly depend on it without explicitly declaring it.
+		//		This is a registered module, so if it is depended by other modules, no need to declare it when creating grid.
 
 		name: 'autoScroll',
 		enabled: false,

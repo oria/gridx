@@ -24,24 +24,17 @@ define([
 		//		The count row nodes that should be maintained above/below the grid body viewport.
 		//		The total count row nodes consists of the count of rows that are visible, and buffSize * 2.
 		buffSize: 5,
-		
+
 		// lazy: Boolean
 		//		If this argument is set to true, the grid will not fetch data during scrolling.
 		//		Instead, it'll fetch data after the scrolling process is completed (plus a timeout).
 		//		This is useful when a large slow server side data store is used, because frequent
 		//		data fetch requests are avoided.
 		lazy: false,
-		
+
 		// lazyTimeout: Number
 		//		This is the timeout for the "lazy" argument.
-		lazyTimeout: 50,
-	
-		scrollToRow: function(rowVisualIndex, toTop){
-			// summary:
-			//		Override VScroller.scrollToRow
-			// tags:
-			//		extension
-		},
+		lazyTimeout: 50
 	});
 =====*/
 	

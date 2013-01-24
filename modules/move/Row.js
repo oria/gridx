@@ -1,12 +1,16 @@
 define([
+/*====="../../core/Row", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/keys",
 	"../../core/_Module",
 	"../../core/model/extensions/Move"
-], function(declare, array, keys, _Module, Move){
+], function(/*=====Row, =====*/declare, array, keys, _Module, Move){
 
 /*=====
+	Row.moveTo = function(target, skipUpdateBody){
+	};
+
 	return declare(_Module, {
 		// summary:
 		//		This module provides some APIs to move rows within grid
@@ -30,7 +34,7 @@ define([
 			//		If set to true, the grid will not refresh immediately, so that several
 			//		grid operations can be done altogether.
 		},
-		
+
 		moveRange: function(start, count, target, skipUpdateBody){
 			// summary:
 			//		Move a range of rows to target position
@@ -41,8 +45,7 @@ define([
 			// skipUpdateBody: Boolean?
 			//		
 		},
-		
-		//Events------------------------------------------------------------------
+
 		onMoved: function(rowIndexMapping){
 			// summary:
 			//		Fired when row move is performed successfully

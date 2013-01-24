@@ -1,4 +1,5 @@
 define([
+/*====="../../core/Row", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/query",
@@ -10,9 +11,16 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Row, =====*/declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
+	Row.select = function(){
+	};
+	Row.deselect = function(){
+	};
+	Row.isSelected = function(){
+	};
+
 	return declare(_RowCellBase, {
 		// summary:
 		//		Provides advanced row selections.
@@ -33,7 +41,7 @@ define([
 		//		|	grid.select.row.clear();
 
 		// triggerOnCell: [readonly] Boolean
-		//		Whether row will be selected by clicking on cell, false by default		
+		//		Whether row will be selected by clicking on cell, false by default
 		triggerOnCell: false,
 
 		// treeMode: Boolean
@@ -72,7 +80,7 @@ define([
 
 		clear: function(silent){
 			// summary:
-			//		Deselected all selected rows;			
+			//		Deselected all selected rows;
 		},
 
 		onHighlightChange: function(){
