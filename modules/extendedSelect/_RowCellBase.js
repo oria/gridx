@@ -8,6 +8,9 @@ define([
 
 /*=====
 	return declare(_Base, {
+		// summary:
+		//		Base class for extended row selection and cell selection.
+		//		Both can be regarded as marking a row using some tag.
 	});
 =====*/
 

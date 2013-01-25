@@ -15,10 +15,16 @@ define([
 
 /*=====
 	Cell.select = function(){
+		// summary:
+		//		Select this cell.
 	};
 	Cell.deselect = function(){
+		// summary:
+		//		Deselect this cell.
 	};
 	Cell.isSelected = function(){
+		// summary:
+		//		Check if this cell is selected.
 	};
 
 	return declare(_RowCellBase, {
@@ -44,20 +50,39 @@ define([
 			// summary:
 			//		Select a cell by (rowId, columnId)
 		},
-		
-		deselectById: function(columnId){
+
+		deselectById: function(rowId, columnId){
 			// summary:
 			//		Deselect a cell by (rowId, columnId)
 		},
-		
+
 		selectByIndex: function(rowIndex, columnIndex){
 			// summary:
-			//		Select a cess by (rowIndex, columnIndex)
+			//		Select a cell by (rowIndex, columnIndex);
+			//		This function can also be used to select multiple cells:
+			//	|	//Selecting several individual cells:
+			//	|	grid.select.row.selectByIndex([rowIndex1, columnIndex1], [rowIndex2, columnIndex2], [rowIndex3, columnIndex3]);
+			//	|	//Selecting a range of cells:
+			//	|	grid.select.row.selectByIndex(rowStartIndex, columnStartIndex, rowEndIndex, columnEndIndex);
+			//	|	//Selecting several ranges of cells:
+			//	|	grid.select.row.selectByIndex(
+			//	|		[rowStartIndex1, columnStartIndex1, rowEndIndex1, columnEndIndex1],
+			//	|		[rowStartIndex2, columnStartIndex2, rowEndIndex2, columnEndIndex2]
+			//	|	);
+			// rowIndex: Integer
+			//		Row index of this cell
+			// rowIndex: Integer
+			//		Column index of this cell
 		},
-		
+
 		deSelectByIndex: function(rowIndex, columnIndex){
 			// summary:
 			//		Deselect a cell by (rowIndex, columnIndex)
+			//		This function can also be used to deselect multiple cells. Please refer to selectByIndex().
+			// rowIndex: Integer
+			//		Row index of this cell
+			// rowIndex: Integer
+			//		Column index of this cell
 		},
 
 		getSelected: function(){
@@ -65,7 +90,7 @@ define([
 			//		Get an array of selected cells e.g.[['row1', 'col1'], ['row2', 'col2']]
 		},
 
-		clear: function(silent){
+		clear: function(){
 			// summary:
 			//		Deselected all selected cells
 		},
@@ -73,6 +98,12 @@ define([
 		isSelected: function(rowId, columnId){
 			// summary:
 			//		Check if the given cell is selected.
+			// rowId: String|Number
+			//		Row ID of the cell
+			// columnId: String|Number
+			//		Column ID of the cell
+			// returns:
+			//		True if selected, false if not.
 		}
 	});
 =====*/

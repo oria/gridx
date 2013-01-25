@@ -22,6 +22,7 @@ define([
 	return declare(_Module, {
 		// summary:
 		//		This module provides the API to export grid contents to an HTML table, which is mainly used in print.
+		//		This module is deprecated. Use gridx/support/exporter/toTable instead.
 	});
 =====*/
 

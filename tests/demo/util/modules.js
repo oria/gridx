@@ -319,6 +319,14 @@ define([
 			description: '', 
 			icon: 'images/modIcon-DndColumn.png',
 			iconClass: ''
+		},
+		{label: 'Bar', 
+			module: mods.Bar,
+			mid: 'gridx/modules/Bar',
+			name: 'Bar',
+			description: '', 
+			icon: 'images/modIcon-DndColumn.png',
+			iconClass: ''
 		}
 	];
 });

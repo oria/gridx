@@ -14,10 +14,16 @@ define([
 
 /*=====
 	Column.select = function(){
+		// summary:
+		//		Select this column.
 	};
 	Column.deselect = function(){
+		// summary:
+		//		Deselect this column.
 	};
 	Column.isSelected = function(){
+		// summary:
+		//		Check whether this column is selected.
 	};
 
 	return declare(_Base, {
@@ -41,37 +47,50 @@ define([
 
 		selectById: function(columnId){
 			// summary:
-			//		Select a column by id.
+			//		Select columns by id.
 		},
-		
+
 		deselectById: function(columnId){
 			// summary:
-			//		Deselect a column by id.
+			//		Deselect columns by id.
 		},
-		
+
 		selectByIndex: function(columnIndex){
 			// summary:
-			//		Select a column by index
+			//		Select a column by index.
+			//		This function can also select multiple columns.
+			//	|	//Select several individual columns:
+			//	|	gridx.select.column.selectByIndex(columnIndex1, columnIndex2, columnIndex3, ...);
+			//	|	//Select a range of columns:
+			//	|	gridx.select.column.selectByIndex([columnStartIndex, columnEndIndex]);
+			//	|	//Select multiple ranges of columns:
+			//	|	gridx.select.column.selectByIndex([columnStartIndex1, columnEndIndex1], [columnStartIndex2, columnEndIndex2], ...);
 		},
-		
+
 		deSelectByIndex: function(columnIndex){
 			// summary:
 			//		Deselect a column by index.
-		},		
-		
-		getSelected: function(){
-			// summary:
-			//		Get id array of all selected columns
+			//		This function can also deselect multiple columns. Please refer to selectByIndex().
 		},
 
-		clear: function(silent){
+		getSelected: function(){
+			// summary:
+			//		Get id array of all selected column ids.
+		},
+
+		clear: function(){
 			// summary:
 			//		Deselected all selected columns;
 		},
 
-		isSelected: function(){
+		isSelected: function(columnId){
 			// summary:
 			//		Check if the given column(s) are all selected.
+			//		This function can also check if multiple columns are all selected.
+			// columnId: String...
+			//		Column IDs.
+			// returns:
+			//		True if all given columns are selected; false if not.
 		}
 	});
 =====*/
