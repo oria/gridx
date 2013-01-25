@@ -11,30 +11,23 @@ define([
 ], function(require, declare, lang, array, registry, a11y, domConstruct, _Module, util){
 
 /*=====
-	return declare(_Module, {
+	var Bar = declare(_Module, {
 		// module:
 		//		gridx/modules/Bar
 		// summary:
 		//		This is a general-purpose bar for gridx. It can be configured to hold various plugins,
 		//		such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
-
-		name: 'bar',
-
-		// top: Array
-		//		An array of bar content declarations. Located above grid header.
-		//		The top bar is a big html table, and every content occupies a cell in it.
-		//		If it is a single demension array, then the top bar will contain only one row.
-		//		If it is a 2 demension array, then every sub-array represents a row.
 		// example:
-		//	|	[
+		//		Bar with single row:
+		//	|	barTop: [
 		//	|		gridx.support.QuickFilter,		//can be the constructor of a bar plugin widget.
 		//	|		"gridx/support/Summary"			//can also be the MID of a bar plugin widget.
 		//	|		{pluginClass: gridx.support.LinkSizer, style: "text-align: center;"},		//or an object with attributes
 		//	|		MyQuickFilterInstance		//or an instance of a plugin widget
 		//	|		{plugin: MyQuickFilterInstance, style: "color: red;"}		//or with other attributes
 		//	|	]
-		//		or
-		//	|	[
+		//		or multiple rows:
+		//	|	barTop: [
 		//	|		[		//every sub-array is a table row.
 		//	|			{content: "This is <b>a message</b>", style: "backgroun-color: blue;"},	//Can add some html
 		//	|			null	//if null, just an empty cell
@@ -44,9 +37,15 @@ define([
 		//	|			{colSpan: 2, rowSpan: 2}	//can add colSpan and rowSpan
 		//	|		]
 		//	|	]
+
+		// top: __BarItem[]?
+		//		An array of bar content declarations. Located above grid header.
+		//		The top bar is a big html table, and every content occupies a cell in it.
+		//		If it is a single demension array, then the top bar will contain only one row.
+		//		If it is a 2 demension array, then every sub-array represents a row.
 		top: null,
 
-		// bottom: Array
+		// bottom: __BarItem[]?
 		//		An array of bar content declarations. Located below grid horizontal scroller.
 		//		Usage is similar to the "top" attribute.
 		bottom: null,
@@ -58,6 +57,18 @@ define([
 		//		plugin.bottom is similar.
 		plugins: null
 	});
+
+	Bar.__BarItem = declare([], {
+		pluginClass: null,
+		plugin: null,
+		content: '',
+		colSpan: 1,
+		rowSpan: 1,
+		style: '',
+		className: ''
+	});
+
+	return Bar;
 =====*/
 
 	return _Module.register(

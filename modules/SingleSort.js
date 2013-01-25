@@ -84,7 +84,7 @@ define([
 		}
 	});
 
-	SingleSort.__ColumnDefinition = declare(Column.__ColumnDefinition, {
+	SingleSort.__ColumnDefinition = declare([], {
 		// sortable: Boolean
 		sortable: true
 	});

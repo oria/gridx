@@ -198,7 +198,7 @@ define([
 		}
 	});
 
-	Edit.__ColumnDefinition = declare(Column.__ColumnDefinition, {
+	Edit.__ColumnDefinition = declare([], {
 		// summary:
 		//		Column definition parameters defined by Edit.
 

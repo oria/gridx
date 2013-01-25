@@ -1,7 +1,5 @@
 define([
-/*====="../core/Column", =====*/
-/*====="../core/Cell", =====*/
-	"dojo/_base/declare",	
+	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/event",
@@ -15,7 +13,7 @@ define([
 	"dijit/_WidgetsInTemplateMixin",
 	"../core/_Module",
 	"./NavigableCell"
-], function(/*=====Column, Cell, =====*/declare, query, array, event, sniff, domClass, keys, 
+], function(declare, query, array, event, sniff, domClass, keys, 
 	registry, a11y, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Module){
 
 /*=====
@@ -85,11 +83,11 @@ define([
 		// summary:
 		//		The container widget created in a cell.
 
-		// cell: Cell
+		// cell: gridx.core.Cell
 		cell: null
 	});
 
-	CellWidget.__ColumnDefinition = declare(Column.__ColumnDefinition, {
+	CellWidget.__ColumnDefinition = declare([], {
 		// summary:
 		//		Column definition parameters defined by CellWidget.
 

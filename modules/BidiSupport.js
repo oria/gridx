@@ -5,7 +5,7 @@ define([
 ], function(_Module, declare, _BidiSupport){
 
 /*=====
-	return declare(_Module, {
+	var Bidi = declare(_Module, {
 		// module:
 		//		gridx/modules/_BidiSupport
 		// summary:
@@ -39,6 +39,12 @@ define([
 			//		The text to be wrapped.
 		}
 	});
+
+	Bidi.__ColumnDefinition = declare([], {
+		textDir: ''
+	});
+
+	return Bidi;
 =====*/
 		
 	function checkContextual(textDir, text){
