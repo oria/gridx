@@ -141,7 +141,12 @@ define([
 					}
 				});
 			});
-			t._initFocus();
+		},
+
+		load: function(){
+			//Must init focus after cellwidget, to ensure "edit" area is stacked on top of "cellwidget" area.
+			this._initFocus();
+			this.loaded.callback();
 		},
 
 		cellMixin: {
