@@ -22,6 +22,7 @@ define([
 	return declare(_Module, {
 		// summary:
 		//		This module provides the API to export grid contents to CSV format string
+		//		This module is deprecated. Use gridx/support/exporter/toCSV instead.
 	});
 =====*/
 

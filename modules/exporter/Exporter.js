@@ -9,7 +9,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
-		//		Deprecated.
+		//		Deprecated. Use gridx/support/exporter/exporter instead.
 
 		_export: function(writer, args){
 			// summary:

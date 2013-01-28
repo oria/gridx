@@ -31,12 +31,12 @@ define([
 		
 		// filterData: Object
 		//		Set the initial filter rules. Format is:
-		//		{
-		//			type: "all",
-		//			conditions: [
-		//				{}
-		//			]
-		//		}
+		//	|	{
+		//	|		type: "all",
+		//	|		conditions: [
+		//	|			{}
+		//	|		]
+		//	|	}
 		filterData: null,
 
 		// closeButton: Boolean

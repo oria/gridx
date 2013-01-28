@@ -15,10 +15,16 @@ define([
 
 /*=====
 	Row.select = function(){
+		// summary:
+		//		Select this row.
 	};
 	Row.deselect = function(){
+		// summary:
+		//		Deselect this row.
 	};
 	Row.isSelected = function(){
+		// summary:
+		//		Check whether this row is selected.
 	};
 
 	return declare(_RowCellBase, {
@@ -40,7 +46,7 @@ define([
 		//		|	grid.select.row.getSelected();//[]
 		//		|	grid.select.row.clear();
 
-		// triggerOnCell: [readonly] Boolean
+		// triggerOnCell: Boolean
 		//		Whether row will be selected by clicking on cell, false by default
 		triggerOnCell: false,
 
@@ -50,40 +56,64 @@ define([
 
 		selectById: function(rowId){
 			// summary:
-			//		Select a row by id.
+			//		Select rows by id.
+			// rowId: String...
+			//		Row IDs
 		},
-		
+
 		deselectById: function(rowId){
 			// summary:
-			//		Deselect a row by id.
+			//		Deselect rows by id.
+			// rowId: String...
+			//		Row ID
 		},
-		
+
 		selectByIndex: function(rowIndex){
 			// summary:
 			//		Select a row by index
+			//		This function can also select multiple rows.
+			//	|	//Select several individual rows:
+			//	|	gridx.select.row.selectByIndex(rowIndex1, rowIndex2, rowIndex3, ...);
+			//	|	//Select a range of rows:
+			//	|	gridx.select.row.selectByIndex([rowStartIndex, rowEndIndex]);
+			//	|	//Select multiple ranges of rows:
+			//	|	gridx.select.row.selectByIndex([rowStartIndex1, rowEndIndex1], [rowStartIndex2, rowEndIndex2], ...);
+			// rowIndex: Integer...
+			//		Row visual indexes
 		},
-		
+
 		deSelectByIndex: function(rowIndex){
 			// summary:
 			//		Deselect a row by index.
+			//		This function can also deselect multiple rows. Please refer to selectByIndex().
+			// rowIndex: Integer...
+			//		Row visual indexes
 		},
-		
+
 		getSelected: function(){
 			// summary:
-			//		Get id array of all selected rows
+			//		Get id array of all selected row IDs.
 		},
 
-		isSelected: function(){
+		isSelected: function(rowId){
 			// summary:
 			//		Check if the given rows are all selected.
+			// rowId: String...
+			//		Row IDs
+			// returns:
+			//		True if all given columns are selected; false if not.
 		},
 
-		clear: function(silent){
+		clear: function(){
 			// summary:
 			//		Deselected all selected rows;
 		},
 
 		onHighlightChange: function(){
+			// summary:
+			//		Fired when row highlight is changed.
+			// tags:
+			//		private
 		}
 	});
 =====*/

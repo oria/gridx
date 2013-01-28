@@ -13,27 +13,21 @@ define([
 
 /*=====
 	return declare(_Module, {
+		// enabled: true,
+		//		If false, this module is disabled. This parameter is mainly used by DnD to not conflict with selection operations.
 		enabled: true,
 
+		// holdingCtrl:
+		//		If true, when selecting it'll appear as if the CTRL key is held.
 		holdingCtrl: false,
 
+		// holdingShift:
+		//		If true, when selecting it'll appear as if the SHIFT key is held.
 		holdingShift: false,
-
-		selectById: function(id){
-		},
-
-		deselectById: function(id){
-		},
-
-		selectByIndex: function(start, end){
-		},
-
-		deselectByIndex: function(start, end){
-		},
 
 		onSelectionChange: function(newSelectedIds, oldSelectedIds){
 			// summary:
-			//		Event: fired when the selection is changed.
+			//		Fired when the selection is changed.
 		}
 	});
 =====*/
