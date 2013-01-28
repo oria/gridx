@@ -20,6 +20,10 @@ if(!isset($page)){ $page = ""; }
 if(isset($_GET["p"])){ $page = $_GET["p"]; }
 if(isset($_GET["v"])){ $version = $_GET["v"]; }
 
+//	check if there's commandline variables
+if(isset($argv[1])){ $page = $argv[1]; }
+if(isset($argv[2])){ $version = $argv[2]; }
+
 //  sanitize $version and $page so user can't specify a string like ../../...
 $version = preg_replace("/\\.\\.+/", "", $version);
 $page = preg_replace("/\\.\\.+/", "", $page);

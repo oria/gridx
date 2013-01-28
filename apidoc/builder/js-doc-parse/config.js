@@ -1,4 +1,8 @@
-define({
+define([
+	'./cfg'
+], function(cfg){
+
+return {
 	// The execution environment(s) for the script being evaluated. (A minimal EcmaScript 5-compliant environment is
 	// always defined by default.) The following environments are provided by default:
 	//     - amd: An environment with an AMD-compatible loader
@@ -28,7 +32,7 @@ define({
 	//    - id: The module ID of the exporter.
 	//    - config: Arbitrary exporter configuration object, passed as an argument to the exporter function.
 	exporters: [
-		{ id: 'dojov1', config: { details: 'details.xml', tree: 'tree.json' } }
+		{ id: 'dojov1', config: { details: cfg.outputPath + 'details.xml', tree: cfg.outputPath + 'tree.json' } }
 	],
 
 	show: {
@@ -71,4 +75,5 @@ define({
 			/dojox\/lang\/(?:docs|typed)/
 		]
 	}
+};
 });

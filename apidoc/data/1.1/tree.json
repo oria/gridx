@@ -205,7 +205,16 @@
 							"id": "gridx/modules/Bar",
 							"name": "Bar",
 							"fullname": "gridx/modules/Bar",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Bar.__BarItem",
+									"name": "__BarItem",
+									"fullname": "gridx/modules/Bar.__BarItem",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/barPlugins/",
@@ -255,7 +264,16 @@
 							"id": "gridx/modules/BidiSupport",
 							"name": "BidiSupport",
 							"fullname": "gridx/modules/BidiSupport",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/BidiSupport.__ColumnDefinition",
+									"name": "__ColumnDefinition",
+									"fullname": "gridx/modules/BidiSupport.__ColumnDefinition",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/Body",
@@ -446,7 +464,16 @@
 							"id": "gridx/modules/Filter",
 							"name": "Filter",
 							"fullname": "gridx/modules/Filter",
-							"type": "constructor"
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Filter.__FilterExpressionTools",
+									"name": "__FilterExpressionTools",
+									"fullname": "gridx/modules/Filter.__FilterExpressionTools",
+									"type": "object",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/modules/filter/",

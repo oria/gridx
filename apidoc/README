@@ -1,0 +1,7 @@
+1. Place this folder in the same directory as gridx.
+2. Make sure gridx is in a valid branch (not gh-pages).
+3. Run builder/build.bat
+4. Open index.html in browser to verify the result.
+5. Switch gridx to gh-pages branch.
+6. Copy the data folder to gridx/apidoc/ (replace the old one).
+7. Submit and push.
