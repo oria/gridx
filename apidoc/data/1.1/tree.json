@@ -867,7 +867,30 @@
 									"id": "gridx/support/exporter/exporter",
 									"name": "exporter",
 									"fullname": "gridx/support/exporter/exporter",
-									"type": "function"
+									"type": "function",
+									"children": [
+										{
+											"id": "gridx/support/exporter/exporter.__ExportArgs",
+											"name": "__ExportArgs",
+											"fullname": "gridx/support/exporter/exporter.__ExportArgs",
+											"type": "constructor",
+											"children": []
+										},
+										{
+											"id": "gridx/support/exporter/exporter.__ExportContext",
+											"name": "__ExportContext",
+											"fullname": "gridx/support/exporter/exporter.__ExportContext",
+											"type": "object",
+											"children": []
+										},
+										{
+											"id": "gridx/support/exporter/exporter.__Writer",
+											"name": "__Writer",
+											"fullname": "gridx/support/exporter/exporter.__Writer",
+											"type": "constructor",
+											"children": []
+										}
+									]
 								},
 								{
 									"id": "gridx/support/exporter/toCSV",
@@ -876,10 +899,10 @@
 									"type": "function",
 									"children": [
 										{
-											"id": "gridx/support/exporter/toCSV.writer",
-											"name": "writer",
-											"fullname": "gridx/support/exporter/toCSV.writer",
-											"type": "object",
+											"id": "gridx/support/exporter/toCSV.__CSVExportArgs",
+											"name": "__CSVExportArgs",
+											"fullname": "gridx/support/exporter/toCSV.__CSVExportArgs",
+											"type": "constructor",
 											"children": []
 										}
 									]
@@ -891,10 +914,10 @@
 									"type": "function",
 									"children": [
 										{
-											"id": "gridx/support/exporter/toTable.writer",
-											"name": "writer",
-											"fullname": "gridx/support/exporter/toTable.writer",
-											"type": "object",
+											"id": "gridx/support/exporter/toTable.__TableExportArgs",
+											"name": "__TableExportArgs",
+											"fullname": "gridx/support/exporter/toTable.__TableExportArgs",
+											"type": "constructor",
 											"children": []
 										}
 									]
@@ -929,7 +952,16 @@
 							"id": "gridx/support/printer",
 							"name": "printer",
 							"fullname": "gridx/support/printer",
-							"type": "function"
+							"type": "function",
+							"children": [
+								{
+									"id": "gridx/support/printer.__PrinterArgs",
+									"name": "__PrinterArgs",
+									"fullname": "gridx/support/printer.__PrinterArgs",
+									"type": "constructor",
+									"children": []
+								}
+							]
 						},
 						{
 							"id": "gridx/support/QuickFilter",
