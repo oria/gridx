@@ -135,6 +135,28 @@ define([
 		}
 	},	
 	{
+		id: 67,
+		name: '1.module parameter "rowHoverEffect" is false. 2.mouse hover a row there\'s no row hover effect',
+		condition: function(grid){
+			return !grid.body.arg('rowHoverEffect');
+		},
+		checker: function(grid, doh){
+			doh.f(domClass.contains(grid.bodyNode, 'gridxBodyRowHoverEffect'));
+			
+		}
+	},	
+	{
+		id: 68,
+		name: '1.module parameter "rowHoverEffect" is true. 2.mouse hover a row	show row hover effect',
+		condition: function(grid){
+			return grid.body.arg('rowHoverEffect');
+		},
+		checker: function(grid, doh){
+			doh.t(domClass.contains(grid.bodyNode, 'gridxBodyRowHoverEffect'));
+			
+		}
+	},		
+	{
 		id: 505,
 		name: 'visualindex property of every row increase by 1 compared to the previous row',
 		checker: function(grid, doh){
