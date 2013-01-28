@@ -12,6 +12,8 @@ define([
 	return declare(_Module, {
 		// summary:
 		//		Make desktop grid scrollable by touch in mobile devices.
+		// description:
+		//		No bouncing and sliding effect now.
 	});
 =====*/
 

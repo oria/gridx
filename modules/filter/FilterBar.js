@@ -28,7 +28,10 @@ define([
 	var FilterBar = declare(_Module, {
 		// summary:
 		//		Filter bar module.
-		
+		// description:
+		//		Show a filter bar on top of grid header. Clicking the filter bar will show a filter dialog to config conditions.
+		//		This module depends on "filter" module.
+
 		// filterData: Object
 		//		Set the initial filter rules. Format is:
 		//	|	{
@@ -37,45 +40,6 @@ define([
 		//	|			{}
 		//	|		]
 		//	|	}
-		filterData: null,
-
-		// closeButton: Boolean
-		//		TRUE to show a small button on the filter bar for the user to close/hide the filter bar.
-		closeButton: true,
-	
-		// defineFilterButton: Boolean
-		//		FALSE to hide the define filter button on the left side (right side for RTL) of the filter bar.
-		defineFilterButton: true,
-		
-		// tooltipDelay: Number
-		//		Time in mili-seconds of the delay to show the Filter Status Tooltip when mouse is hovering on the filter bar.
-		tooltipDelay: 300,
-	
-		// maxRuleCount: Integer
-		//		Maximum rule count that can be applied in the Filter Definition Dialog.
-		//		If <= 0 or not number, then infinite rules are supported.
-		maxRuleCount: 0,
-		
-		// ruleCountToConfirmClearFilter: Integer | Infinity | null
-		//		If the filter rule count is larger than or equal to this value, then a confirm dialog will show when clearing filter.
-		//		If set to less than 1 or null, then always show the confirm dialog.
-		//		If set to Infinity, then never show the confirm dialog.
-		//		Default value is 2.
-		ruleCountToConfirmClearFilter: 2,
-
-		// itemsName: String
-		//		The general name of the items listed in the grid.
-		//		If not provided, then search the language bundle.
-		itemsName: '',
-
-		// filterData: Object
-		//		Set the initial filter rules. Format is:
-		//		{
-		//			type: "all",
-		//			conditions: [
-		//				{}
-		//			]
-		//		}
 		filterData: null,
 
 		// closeButton: Boolean
@@ -121,18 +85,20 @@ define([
 			// summary:
 			//		Re-draw the filter bar if necessary with the current attributes.
 			// example:
-			//		grid.filterBar.closeButton = true;
-			//		grid.filterBar.refresh();
+			//	|	grid.filterBar.closeButton = true;
+			//	|	grid.filterBar.refresh();
 		},
 
 		isVisible: function(){
+			// summary:
+			//		Whether the filter bar is visible.
 		},
 
 		show: function(){
 			// summary:
 			//		Show the filter bar. (May add animation later)
 		},
-	
+
 		hide: function(){
 			// summary:
 			//		Hide the filter bar. (May add animation later)
@@ -167,22 +133,22 @@ define([
 		//		If FALSE, then this column should not occur in the Filter Definition Dialog for future rules.
 		//		But this does not influence existing filter rules. Default to be TRUE.
 		filterable: true,
-	
+
 		// disabledConditions: String[]
 		//		If provided, all the listed conditions will not occur in the Filter Definition Dialog for future rules.
 		//		But this does not influence existing filter rules. Default to be an empty array.
 		disabledConditions: [],
-	
+
 		// dataType: String
-		//		Specify the data type of this column. Should be one of "string", "number", "date", "time", and "boolean".
+		//		Specify the data type of this column. Should be one of "string", "number", "date", "time", "boolean" and "enum".
 		//		Case insensitive. Data type decides which conditions to use in the Filter Definition Dialog.
 		dataType: 'date',
 
-		storeDatePattern: '',
+		//TODOC?
+		//storeDatePattern: '',
 
-		formatter: '',
-
-		dateParsePatter: 'yyyy/MM/dd HH:mm:ss',
+		//TODOC?
+		//dateParsePattern: 'yyyy/MM/dd HH:mm:ss',
 
 		// filterArgs: __FilterArgs
 		//		

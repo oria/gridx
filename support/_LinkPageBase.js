@@ -13,7 +13,7 @@ define([
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
 
-		// grid: gridx.Grid
+		// grid: [const] gridx.Grid
 		//		The grid widget this plugin works for.
 		grid: null
 	});

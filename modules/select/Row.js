@@ -12,12 +12,16 @@ define([
 
 /*=====
 	Row.select = function(){
+		// summary:
+		//		Select this row.
 	};
-
 	Row.deselect = function(){
+		// summary:
+		//		Deselect this row.
 	};
-
 	Row.isSelected = function(){
+		// summary:
+		//		Whether this row is selected.
 	};
 
 	return declare(_RowCellBase, {
@@ -25,6 +29,7 @@ define([
 		//		Provides simple row selection.
 		// description:
 		//		This module provides a simple way for selecting rows by clicking or SPACE key, or CTRL + Click to select multiple rows.
+		//		This module uses gridx/core/model/extensions/Mark.
 		//
 		// example:
 		//		1. Use select api on grid row object obtained from grid.row(i)
@@ -40,7 +45,7 @@ define([
 		//		|	grid.select.row.clear();
 
 		// triggerOnCell: [readonly] Boolean
-		//		Whether row will be selected by clicking on cell, false by default
+		//		Whether row can be selected by clicking on cell, false by default
 		triggerOnCell: false,
 
 		// treeMode: Boolean
@@ -51,12 +56,12 @@ define([
 			// summary:
 			//		Select a row by id.
 		},
-		
+
 		deselectById: function(rowId){
 			// summary:
 			//		Deselect a row by id.
 		},
-		
+
 		isSelected: function(rowId){
 			// summary:
 			//		Check if a row is already selected.
@@ -66,7 +71,7 @@ define([
 			// summary:
 			//		Get id array of all selected rows
 		},
-		
+
 		clear: function(notClearId){
 			// summary:
 			//		Deselected all selected rows;
@@ -94,7 +99,7 @@ define([
 			// summary:
 			//		Fired when a row's highlight is changed.
 			// tags:
-			//		private package
+			//		private
 		},
 	});
 =====*/

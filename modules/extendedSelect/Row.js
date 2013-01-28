@@ -32,6 +32,7 @@ define([
 		//		Provides advanced row selections.
 		// description:
 		//		This module provides an advanced way for selecting rows by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple rows.
+		//		This module uses gridx/core/model/extensions/Mark.
 		//
 		// example:
 		//		1. Use select api on grid row object obtained from grid.row(i)

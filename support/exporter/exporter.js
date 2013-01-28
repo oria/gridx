@@ -1,58 +1,157 @@
 define([
+/*====="dojo/_base/declare", =====*/
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/array"
-], function(lang, Deferred, array){
+], function(/*=====declare, =====*/lang, Deferred, array){
 
 /*=====
-	__ExportArgs = function(){
-		//columns: String[]?
+	function exporter(grid, writer, args){
+		// summary:
+		//		Go through the grid using the given args and writer implementation.
+		//		Return a dojo.Deferred object. Users can cancel and see progress 
+		//		of the exporting process.
+		//		Pass the exported result to the callback function of the Deferred object.
+		// grid: gridx/Grid
+		//		The grid instance to export
+		// writer: __Writer
+		//		The writer implementation.
+		// args: __ExportArgs
+		//		Export arguments.
+		// returns:
+		//		A deferred object.
+	}
+
+	exporter.__Writer = declare([], {
+		beforeHeader: function(args, context){
+			//summary:
+			//		Triggered before exporting the header cells.
+			//return: Boolean|undefined
+			//		If return false, does not handle following header cells.
+		},
+
+		handleHeaderCell: function(args, context){
+			//summary:
+			//		Triggered when exporting a header cell.
+		},
+
+		afterHeader: function(args, context){
+			//summary:
+			//		Triggered when the header has been exported.
+		},
+
+		beforeBody: function(args, context){
+			//summary:
+			//		Triggered before exporting the grid body.
+			//return: Boolean|undefined
+			//		If return false, does not handle any of the grid body content.
+		},
+
+		beforeRow: function(args, context){
+			//summary:
+			//		Triggered before exporting a row.
+			//return: Boolean|undefined
+			//		If return false, does not handle the cells in this row.
+		},
+
+		handleCell: function(args, context){
+			//summary:
+			//		Triggered when exporting a cell.
+		},
+
+		afterRow: function(args, context){
+			//summary:
+			//		Triggered when a row has been exported.
+		},
+
+		afterBody: function(args, context){
+			//summary:
+			//		Triggered when the grid body has been exported.
+		},
+
+		getResult: function(){
+			//summary:
+			//		This must be implemented.
+			return '';
+		}
+	});
+
+	exporter.__ExportArgs = declare([], {
+		// columns: String[]?
 		//		An array of column ID. Indicates which columns to be exported. 
 		//		If invalid or empty array, export all grid columns.
-		//start: Number?
+		columns: null,
+
+		// start: Number?
 		//		Indicates from which row to start exporting. If invalid, 
 		//		default to 0.
-		//count: Number?
+		start: 0,
+
+		// count: Number?
 		//		Indicates the count of rows export.
 		//		If invalid, export all rows up to the end of grid.
-		//selectedOnly: Boolean?
+		count: 0,
+
+		// selectedOnly: Boolean?
 		//		Whether only export selected rows. This constraint is applied 
 		//		upon the rows specified by start and count parameters.
 		//		This paramter and the filter parameter can be used togetther. 
 		//		Default to false.
-		//filter: Function?
+		selectedOnly: false,
+
+		// filter: Function?
 		//		A predicate function (returns Boolean) to judge whether to 
 		//		export a row. 
 		//		This constraint is applied upon the result rows of the 
 		//		selectedOnly parameter, if provided.
-		//useStoreData: Boolean?
+		filter: null,
+
+		// useStoreData: Boolean?
 		//		Indicates whether to export grid data (formatted data) or 
 		//		store data. Default to false.
-		//formatters: Associative array?
+		useStoreData: false,
+
+		// formatters: Object?
 		//		A customized way to export data, if neither grid data nor store 
 		//		data could meet the requirement. 
 		//		This is an associative array from column id to formatter function. 
 		//		A grid cell object will be passed into that function as an argument.
-		//omitHeader: Boolean?
+		formatter: null,
+
+		// omitHeader: Boolean?
 		//		Indicates whether to export grid header. Default to false.
-		//progressStep: Number?
+		omitHeader: false,
+
+		// progressStep: Number?
 		//		Number of rows in each progress. Default to 0 (invalid means only one progress).
 		//		After each progress, the deferred.progress() is called, so the 
-		//		exporting process can be controlled by the user.
-	};
-=====*/
+		//		exporting process can be viewed by the user.
+		progressStep: 0
+	});
 
-/*=====
-	var __ExportContext = function(){
-		//columnIds: String[]
+	exporter.__ExportContext = {
+		// columnIds: String[]
 		//		Available for header.
-		//column: Grid Column
+		columnIds: null,
+
+		// column: Grid Column
 		//		Available for header cell or a body cell.
-		//row: Grid Row
+		column: null,
+
+		// row: Grid Row
 		//		Available for a row or a body cell.
-		//cell: Grid Cell
+		row: null,
+
+		// cell: Grid Cell
 		//		Available for a body cell
+		cell: null,
+
+		// data: Anything
+		//		Available for a body cell
+		data: null
 	};
+
+	return exporter;
 =====*/
 
 	function check(writer, method, context, args){
@@ -188,11 +287,6 @@ define([
 	}
 
 	function exporter(grid, writer, /* __ExportArgs */ args){
-		// summary:
-		//		Go through the grid using the given args and writer implementation.
-		//		Return a dojo.Deferred object. Users can cancel and see progress 
-		//		of the exporting process.
-		//		Pass the exported result to the callback function of the Deferred object.
 		var d = new Deferred(),
 			model = grid.model,
 			cols = getColumns(grid, args),

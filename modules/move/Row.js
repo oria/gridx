@@ -18,6 +18,9 @@ define([
 		//		This module requires the "Move" model extension.
 		//		This module does not include any UI. So different kind of row dnd UI implementations can be built
 		//		upon this module.
+		//		But this module does provide a keyboard support for reordering rows. When focus is on a row,
+		//		pressing CTRL+UP/DOWN ARROW will move the row around within grid.
+		//		This module uses gridx/core/model/extensions/Move.
 
 		// moveSelected: Boolean
 		//		When moving using keyboard, whether to move all selected rows together.

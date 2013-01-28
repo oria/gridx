@@ -36,7 +36,7 @@ GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2
 * [Tutorial](https://github.com/oria/gridx/wiki) (in progress)
 * [API Doc](http://oria.github.com/gridx/apidoc/index.html) (in progress)
 * [Known limitations]() (in progress)
-* [Release download](https://github.com/oria/gridx/zipball/1.0)
+* [Release download (v1.1)](https://github.com/oria/gridx/zipball/1.1)
 * [Report bugs](https://github.com/oria/gridx/issues/new)
 
 

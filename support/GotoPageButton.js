@@ -25,7 +25,10 @@ define([
 		// numberTextBoxClass: [private]
 		numberTextBoxClass: NumberTextBox,
 
-		refresh: function(){}
+		refresh: function(){
+			// summary:
+			//		TODOC
+		}
 	});
 =====*/
 

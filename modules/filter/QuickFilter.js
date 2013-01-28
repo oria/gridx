@@ -7,6 +7,11 @@ define([
 
 /*=====
 	return declare(_Module, {
+		// summary:
+		//		Directly show gridx/support/QuickFilter in gridx/modules/Bar at the top/right position.
+		// description:
+		//		This module is only for convenience. For other positions or more configurations, please use gridx/modules/Bar directly.
+		//		This module depends on "bar" and "filter" modules.
 	});
 =====*/
 

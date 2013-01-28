@@ -16,6 +16,8 @@ define([
 	return declare(_Module, {
 		// summary:
 		//		Provide a check box (or radio button) column to select rows.
+		// description:
+		//		This module depends on "rowHeader" and "selectRow" modules.
 
 		// position: Integer
 		position: 0,

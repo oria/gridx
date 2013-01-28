@@ -141,14 +141,14 @@ define([
 		//		This need to be turned off when pagination is used.
 		autoChangeSize: true,
 
-		onAfterRow: function(){
+		onAfterRow: function(row){
 			// summary:
 			//		Fired when a row is created, data is filled in, and its node is inserted into the dom tree.
 			// row: gridx.core.Row
 			//		A row object representing this row.
 		},
 
-		onAfterCell: function(){
+		onAfterCell: function(cell){
 			// summary:
 			//		Fired when a cell is updated by cell editor (or store data change), or by cell refreshing.
 			//		Note this is not fired when rendering the whole grid. Use onAfterRow in that case.
@@ -156,7 +156,7 @@ define([
 			//		A cell object representing this cell
 		},
 
-		onRender: function(){
+		onRender: function(start, count){
 			// summary:
 			//		Fired everytime the grid body content is rendered or updated.
 			// start: Integer
@@ -183,7 +183,7 @@ define([
 			//		The index of the deleted row.
 		},
 
-		onSet: function(){
+		onSet: function(row){
 			// summary:
 			//		Fired when a row in current view is updated in store.
 			// row: gridx.core.Row
@@ -193,6 +193,8 @@ define([
 		onMoveToCell: function(){
 			// summary:
 			//		Fired when the focus is moved to a body cell by keyboard.
+			// tags:
+			//		private
 		},
 
 		onEmpty: function(){

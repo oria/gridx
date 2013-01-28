@@ -23,12 +23,18 @@ define([
 		//		Sort multiple columns in a nested way.
 
 		getSortData: function(){
+			// summary:
+			//		TODOC
 		},
 
 		sort: function(sortData){
+			// summary:
+			//		TODOC
 		},
 
 		isSorted: function(colId){
+			// summary:
+			//		TODOC
 		},
 
 		clear: function(){
@@ -37,6 +43,8 @@ define([
 		},
 
 		isSortable: function(colId){
+			// summary:
+			//		TODOC
 		}
 	});
 =====*/

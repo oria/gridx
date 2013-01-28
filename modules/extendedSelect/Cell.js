@@ -32,6 +32,7 @@ define([
 		//		Provides advanced cell selections.
 		// description:
 		//		This module provides an advanced way for selecting cells by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple cell.
+		//		This module uses gridx/core/model/extensions/Mark.
 		//
 		// example:
 		//		1. Use select api on cell object obtained from grid.cell(i,j)

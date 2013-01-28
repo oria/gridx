@@ -14,7 +14,7 @@ define([
 		// summary:
 		//		This grid bar plugin is to switch pages using select widget.
 
-		// grid: gridx.Grid
+		// grid: [const] gridx.Grid
 		//		The grid widget this plugin works for.
 		grid: null,
 

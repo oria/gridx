@@ -1,4 +1,5 @@
 define([
+/*====="./exporter/exporter",=====*/
 	"./exporter/toTable",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
@@ -7,10 +8,28 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/sniff",
 	"dojo/_base/window"
-], function(exportToTable, declare, lang, Deferred, xhr, array, sniff, win){
+], function(/*=====exporter, =====*/exportToTable, declare, lang, Deferred, xhr, array, sniff, win){
 
 /*=====
-	declare('__PrinterArgs', __ExporterArgs, {
+	function printer(grid, args){
+		// summary:
+		//		Print grid contents.
+		// args: __PrinterArgs
+		//		Print args
+		// returns:
+		//		A deferred object indicating when the export process is completed.
+	}
+
+	printer.toHTML = function(grid, args){
+		// summary
+		//		Export to printable html, used for preview
+		// args: __PrinterArgs
+		//		Print args
+		// returns:
+		//		A deferred object indicating when the export process is completed.
+	};
+
+	printer.__PrinterArgs = declare(exporter.__ExporterArgs, {
 		// style: String
 		//		The CSS string for the printed document
 		style: '',
@@ -31,6 +50,8 @@ define([
 		//		Any HTML <head> content that will be put in the <head> of the printed document.
 		customHead: ''
 	});
+
+	return printer;
 =====*/
 
 	var printFrame,
@@ -120,29 +141,17 @@ define([
 	}
 
 	function printer(grid, args){
-		// summary:
-		//		Print grid contents.
-		// args: Object
-		//		Please refer to `grid.printer.__PrinterArgs`
-		// returns:
-		//		A deferred object indicating when the export process is completed.
-		return printer.toHTML(grid, args).then(_print);	//dojo.Deferred
+		return printer.toHTML(grid, args).then(_print);
 	}
 
 	printer.toHTML = function(grid, args){
-		// summary
-		//		Export to printable html, used for preview
-		// args: Object
-		//		Please refer to `grid.printer.__PrinterArgs`
-		// returns:
-		//		A deferred object indicating when the export process is completed.
 		var d = new Deferred();
 		loadStyleFiles(args.styleSrc).then(function(styleSrc){
 			exportToTable(grid, args).then(function(str){
 				d.callback(wrap(grid, args, styleSrc, str));
 			}, hitch(d, d.errback), hitch(d, d.progress));
 		});
-		return d;	//dojo.Deferred
+		return d;
 	};
 
 	return printer;

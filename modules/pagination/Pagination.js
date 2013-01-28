@@ -8,7 +8,7 @@ define([
 /*=====
 	return declare([], {
 		// summary:
-		//		Moved to gridx/modules/Filter. This path is deprecated.
+		//		Moved to gridx/modules/Pagination. This path is deprecated.
 	});
 =====*/
 
