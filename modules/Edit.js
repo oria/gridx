@@ -284,7 +284,11 @@ define([
 					}
 				});
 			});
-			t._initFocus();
+		},
+
+		load: function(){
+			//Must init focus after navigable cell, so that "edit" focus area will be on top of the "navigablecell" focus area.
+			this._initFocus();
 		},
 
 		cellMixin: {
