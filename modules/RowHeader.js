@@ -30,7 +30,7 @@ define([
 			// summary:
 			//		Fired when focus is moved to a row header using keyboard.
 			// tags:
-			//		callback
+			//		private callback
 		},
 
 		// headerProvider: Function

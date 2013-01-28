@@ -9,6 +9,13 @@ define([
 
 /*=====
 	return declare(_PaginationBarBase, {
+		// summary:
+		//		Show link button pagination bar at the bottom of grid.
+		// description:
+		//		This module directly uses gridx/modules/Bar to show gridx/support/Summary, gridx/support/LinkPager, gridx/support/LinkSizer,
+		//		and gridx/support/GotoPageButton.
+		//		This module depends on "bar" and "pagination" modules.
+
 		// visibleSteppers: Integer
 		visibleSteppers: 3,
 

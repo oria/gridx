@@ -19,6 +19,8 @@ define([
 		//		See for reference:	http://w3-03.ibm.com/globalization/page/publish/4353
 
 		getTextDir: function(colId, text){
+			// tags:
+			//		private
 		},
 
 		getTextDirStyle: function(colId, text){
@@ -28,6 +30,8 @@ define([
 			//		Cell text direction
 			// data:
 			//		Cell text content
+			// tags:
+			//		private
 		},
 
 		enforceTextDirWithUcc: function(colId, text){
@@ -37,6 +41,8 @@ define([
 			//		The control text direction
 			// text:
 			//		The text to be wrapped.
+			// tags:
+			//		private
 		}
 	});
 

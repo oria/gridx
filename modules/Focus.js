@@ -200,14 +200,6 @@ define([
 	
 		//Public----------------------------------------------------------
 		registerArea: function(/* __FocusArea */ area){
-			// summary:
-			//		Register a new focus area, so this area will be included in the TAB sequence.
-			//		If there's an existing area with the same name, it is removed and replaced by the new area.
-			//		This function always succeed. No exception.
-			// tags:
-			//		package
-			// area: __FocusArea
-			//		A focus area definition.
 			if(area && area.name && typeof area.priority == 'number'){
 				var t = this,
 					tq = t._tabQueue,
@@ -243,15 +235,6 @@ define([
 		},
 
 		focusArea: function(/* String */ areaName, forced){
-			// summary:
-			//		Focus the area with name of *areaName*.
-			//		If the current area is not this area, blur the current area.
-			//		If the current area is this area, this is a no-op and return TRUE.
-			//		If the area with this name does not exist, this is a no-op and return FALSE.
-			// tags:
-			//		package
-			// return: Boolean
-			//		TRUE if the focus is successful, FALSE if not.	
 			var t = this, area = t._areas[areaName];
 			if(area){
 				var curArea = t._areas[t.currentArea()];
@@ -276,31 +259,11 @@ define([
 		},
 
 		currentArea: function(){
-			// summary:
-			//		Get the name of the current focus area. 
-			// tags:
-			//		package
-			// return: String
-			//		The name of the current Area. Return "" if no area is focused.
 			var a = this._tabQueue[this._queueIdx];
 			return a ? a.stack[this._stackIdx] : '';
 		},
 
 		tab: function(step, evt){
-			// summary:
-			//		Move focus from one area to another.
-			// tags:
-			//		package
-			// step: Integer
-			//		If positive, then move forward along the TAB sequence.
-			//		If negative, then move backward along the TAB sequence (SHIFT-TAB).
-			//		If zero or other invalid values, this is a no-op.
-			//		The absolute value of *step* is the distance between the target area and the current area
-			//		in the whole TAB sequence.
-			// evt: Object
-			//		This can either be a real Event object or a mock object with same information .
-			// return: String
-			//		The name of currently focused area. Return "" if no area is focused.
 			var t = this,
 				areas = t._areas,
 				curArea = areas[t.currentArea()];
@@ -348,16 +311,6 @@ define([
 		},
 
 		removeArea: function(areaName){
-			// summary:
-			//		Remove the area with name of *areaName*.
-			//		If there's no such area, this is a no-op and return FALSE.
-			//		If currently focused area is removed, then current area becomes empty.
-			// tags:
-			//		package
-			// areaName: String
-			//		The name of the area to be removed.
-			// return: Boolean
-			//		TRUE if this operation is successful, FALSE if not.
 			var t = this, area = t._areas[areaName];
 			if(area){
 				if(t.currentArea() === areaName){
@@ -390,19 +343,9 @@ define([
 			}
 		},
 
-		onFocusArea: function(/* String areaName*/){
-			// summary:
-			//		Fired when an area is focused.
-			// tags:
-			//		callback
-		},
+		onFocusArea: function(/* String areaName*/){},
 
-		onBlurArea: function(/* String areaName */){
-			// summary:
-			//		Fired when an area is blurred.
-			// tags:
-			//		callback
-		},
+		onBlurArea: function(/* String areaName */){},
 
 		//Private----------------------------------------------------------
 		//_areas: null,

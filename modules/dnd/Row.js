@@ -14,7 +14,9 @@ define([
 	return declare(_Base, {
 		// summary:
 		//		This module provides an implementation of row drag & drop.
-		//		It supports row reordering within grid, dragging out of grid, and dragging into grid.
+		// description:
+		//		This module supports row reordering within grid, dragging out of grid, and dragging into grid.
+		//		This module depends on "_dnd" and "moveRow" modules.
 
 		// accept: String[]
 		//		Can drag in what kind of stuff

@@ -11,10 +11,16 @@ define([
 
 /*=====
 	Cell.select = function(){
+		// summary:
+		//		Select this cell.
 	};
 	Cell.deselect = function(){
+		// summary:
+		//		Deselect this cell.
 	};
 	Cell.isSelected = function(){
+		// summary:
+		//		Whether this cell is selected.
 	};
 
 	return declare(_RowCellBase, {
@@ -22,6 +28,7 @@ define([
 		//		Provides simple cell selection.
 		// description:
 		//		This module provides a simple way for selecting cells by clicking or SPACE key, or CTRL + Click to select multiple cells.
+		//		This module uses gridx/core/model/extensions/Mark.
 		//
 		// example:
 		//		1. Use select api on grid cell object obtained from grid.cell(i, j)

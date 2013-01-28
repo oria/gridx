@@ -17,8 +17,7 @@ define([
 		// summary:
 		//		This module shows a checkbox(or radiobutton) on the row header when row selection is used.
 		// description:
-		//		This module relies on an implementation of the RowHeader module, and an implementation of
-		//		the SelectRow module.
+		//		This module depends on "rowHeader" and "selectRow" modules.
 		//		This module will check whether the SelectRow module provides the functionality of "select rows by index" 
 		//		(which means the "selectByIndex" method exists). If so, a "select all" checkbox can be provided 
 		//		in the header node of the row header column.

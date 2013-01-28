@@ -15,8 +15,10 @@ define([
 		// module:
 		//		gridx/modules/Bar
 		// summary:
-		//		This is a general-purpose bar for gridx. It can be configured to hold various plugins,
-		//		such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
+		//		This is a general-purpose bar for gridx.
+		// description:
+		//		This module can be configured to hold various plugins, such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
+		//		This is a registered module, so if it is depended by other modules, no need to declare it when creating grid.
 		// example:
 		//		Bar with single row:
 		//	|	barTop: [
@@ -47,7 +49,9 @@ define([
 
 		// bottom: __BarItem[]?
 		//		An array of bar content declarations. Located below grid horizontal scroller.
-		//		Usage is similar to the "top" attribute.
+		//		The bottom bar is a big html table, and every content occupies a cell in it.
+		//		If it is a single demension array, then the bottom bar will contain only one row.
+		//		If it is a 2 demension array, then every sub-array represents a row.
 		bottom: null,
 
 		// plugins: [readonly]Object
@@ -59,12 +63,43 @@ define([
 	});
 
 	Bar.__BarItem = declare([], {
-		pluginClass: null,
-		plugin: null,
+		// summary:
+		//		Configurations for a <td> in the grid bar.
+		//		This configuration object will also be passed to the constructor of the plugin, if "pluginClass" is used,
+		//		so the plugin-related parameters can also be declared here.
+
+		// content: String
+		//		The HTML content in this bar position (<td>)
 		content: '',
+
+		// pluginClass: String|Function
+		//		The class name (MID) or contructor of the plugin. The plugin instance will be created automatically.
+		//		If there's no other configurations, this class name/constructor can be used directly in place 
+		//		of the whole __BarItem configuration object.
+		//		If this parameter exists, the "content" parameter will be ignored.
+		pluginClass: null,
+
+		// plugin: Object
+		//		A plugin instance. If this parameter exists, the "pluginClass" and "content" parameter will be ignored.
+		//		Note that if declared in this way, the same instance can not be used in other bar positions.
+		//		If there's no other configurations, and this plugin has "domNode" attribute, then this instance can be used directly in place 
+		//		of the whole __BarItem configuration object.
+		plugin: null,
+
+		// colSpan: Integer
+		//		Column span of this <td>
 		colSpan: 1,
+
+		// rowSpan: Integer
+		//		Row span of this <td>
 		rowSpan: 1,
+
+		// style: String
+		//		Style of this <td>
 		style: '',
+
+		// className: String
+		//		Class of this <td>
 		className: ''
 	});
 

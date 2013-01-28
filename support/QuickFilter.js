@@ -25,21 +25,10 @@ define([
 		// summary:
 		//		Quick filter box.
 
-		// grid: gridx.Grid
+		// grid: [const] gridx.Grid
 		//		The grid widget this plugin works for.
 		grid: null,
 
-		textBoxClass: 'dijit.form.TextBox',
-
-		buttonClass: 'dijit.form.Button',
-
-		comboButtonClass: 'dijit.form.ComboButton',
-
-		menuClass: 'dijit.Menu',
-
-		menuItemClass: 'dijit.MenuItem',
-
-		//Public-------------------------------------------------------------------
 		// autoApply: Boolean
 		//		If true, the filter will be applied to grid during typing in the filter box.
 		autoApply: true,

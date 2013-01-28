@@ -17,9 +17,13 @@ define([
 		//		This module is not compatible with VirtualVScroller.
 
 		lock: function(count){
+			// summary:
+			//		TODOC
 		},
 
 		unlock: function(){
+			// summary:
+			//		TODOC
 		}
 	});
 =====*/

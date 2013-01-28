@@ -14,8 +14,10 @@ define([
 		//		Add toolbar based on Bar module. This module is only for conveniency and backward compatibility.
 		//		Using Bar module directly is recommended.
 
+		// widget: [readonly] Object
 		widget: null,
 
+		// domNode: [readonly] HTMLElement
 		domNode: null
 	});
 =====*/

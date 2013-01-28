@@ -17,6 +17,8 @@ define([
 	Column.headerNode = function(){
 		// summary:
 		//		Get header node of the column.
+		// returns:
+		//		The header node of this column.
 	};
 
 	return declare(_Module, {

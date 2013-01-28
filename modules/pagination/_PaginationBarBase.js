@@ -9,9 +9,7 @@ define([
 
 /*=====
 	return declare(_Module, {
-		// sizeSwitch: Boolean|String
-		//		Whether (and where) to show "size switch" part of the pagination bar UI.
-		//		Can be true/false, or "bottom", or "top"
+		// sizes: Integer[]
 		sizes: [10, 25, 50, 0],
 
 		// position: String
@@ -28,9 +26,14 @@ define([
 		//		Can be true/false, or "bottom", or "top"
 		stepper: true,
 
+		// sizeSwith: Boolean|String
+		//		Whether (and where) to show "page size switcher" part of the pagination bar UI.
+		//		Can be true/false, or "bottom", or "top"
 		sizeSwitch: true,
 
 		refresh: function(){
+			// summary:
+			//		Redraw the pagination bar using corrent parameters.
 		}
 	});
 =====*/

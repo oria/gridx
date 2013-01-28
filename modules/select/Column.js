@@ -12,10 +12,16 @@ define([
 
 /*=====
 	Column.select = function(){
+		// summary:
+		//		Select this column.
 	};
 	Column.deselect = function(){
+		// summary:
+		//		Deselect this column.
 	};
 	Column.isSelected = function(){
+		// summary:
+		//		Whether this column is selected.
 	};
 
 	return declare(_Base, {
@@ -24,13 +30,11 @@ define([
 		// description:
 		//		This module provides a simple way for selecting columns by clicking or SPACE key, 
 		//		or CTRL + Click to select multiple columns.
-		//
 		// example:
 		//		1. Use select api on grid column object obtained from grid.column(i)
 		//		|	grid.column(1).select();
 		//		|	grid.column(1).deselect();
 		//		|	grid.column(1).isSelected();
-		//
 		//		2. Use select api on select.column module
 		//		|	grid.select.column.selectById(columnId);
 		//		|	grid.select.column.deSelectById(columnId);

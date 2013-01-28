@@ -13,9 +13,13 @@ define([
 		// tags:
 		//		deprecated. Use Bar module instead.
 
+		// label: String
 		label: '',
 
-		setLabel: function(){}
+		setLabel: function(){
+			// summary:
+			//		TODOC
+		}
 	});
 =====*/
 

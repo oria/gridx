@@ -9,7 +9,8 @@ define([
 /*=====
 	return declare(Avatar, {
 		// summary:
-		//		This dnd avatar is in a separated file so it can be (dynamically) overwritten in case of need
+		//		Avatar shown beside mouse during dnd. Inheriting dojo/dnd/Avatar.
+		//		This dnd avatar is in a separated file so that it can be (dynamically) overwritten in case of need
 	});
 =====*/
 

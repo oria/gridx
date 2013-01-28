@@ -16,16 +16,40 @@ define([
 
 /*=====
 	Row.canExpand = function(){
+		// summary:
+		//		Whether this row can be expanded.
+		// returns:
+		//		True if can, false if can not.
 	};
 	Row.isExpanded = function(){
+		// summary:
+		//		Whether this row is expanded.
+		// returns:
+		//		True if expanded. False if not.
 	};
 	Row.expand = function(){
+		// summary:
+		//		Expand this row.
+		// returns:
+		//		A Deferred object
 	};
 	Row.collapse = function(){
+		// summary:
+		//		Collapse this row.
+		// returns:
+		//		A Deferred object
 	};
 	Row.expandRecursive = function(){
+		// summary:
+		//		Recursively expand this row.
+		// returns:
+		//		A Deferred object
 	};
 	Row.collapseRecursive = function(){
+		// summary:
+		//		Recursively collapse this row.
+		// returns:
+		//		A Deferred object
 	};
 
 	var Tree = declare(_Module, {

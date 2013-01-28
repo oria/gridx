@@ -11,9 +11,12 @@ define([
 		// summary:
 		//		Show total row count and selected row count.
 
+		// gridx: [const] gridx/Grid
 		grid: null,
 
 		refresh: function(){
+			// summary:
+			//		Update the summary text.
 		}
 	});
 =====*/

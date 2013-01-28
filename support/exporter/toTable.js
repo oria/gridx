@@ -1,15 +1,10 @@
 define([
+/*====="dojo/_base/declare", =====*/
 	"./exporter"
-], function(exporter){
+], function(/*=====declare, =====*/exporter){
 
 /*=====
-	var __TableExportArgs = declare(__ExportArgs, {
-		natualWidth: false,
-		columnWidth: {}
-	});
-=====*/
-
-	function toTable(grid, /* __TableExportArgs */ args){
+	function toTable(grid, args){
 		// summary:
 		//		Export the grid contents to HTML table according to the given args.
 		// args: __TableExportArgs?
@@ -17,6 +12,20 @@ define([
 		// returns:
 		//		A deferred object indicating when the export process is completed,
 		//		and then pass the exported HTML table (as string) to callbacks.
+	}
+
+	toTable.__TableExportArgs = declare(exporter.__ExportArgs, {
+		// natualWidth: Boolean
+		natualWidth: false,
+
+		// columnWidth: Object
+		columnWidth: {}
+	});
+
+	return toTable;
+=====*/
+
+	function toTable(grid, args){
 		return exporter(grid, toTable.writer, args || {});	//dojo.Deferred
 	}
 

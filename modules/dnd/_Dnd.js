@@ -19,6 +19,9 @@ define([
 /*=====
 	return declare(_Module, {
 		_fixFF: function(source){
+			// summary:
+			//		Fix FireFox not firing onmouseover/onmousemove events during dnd.
+			//		Can use this function when drag to/from non-grid sources.
 		}
 	});
 =====*/

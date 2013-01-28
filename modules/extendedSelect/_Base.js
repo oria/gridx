@@ -28,6 +28,10 @@ define([
 		onSelectionChange: function(newSelectedIds, oldSelectedIds){
 			// summary:
 			//		Fired when the selection is changed.
+			// newSelectedIds: String[]
+			//		Current selected ids.
+			// oldSelectedIds: String[]
+			//		Previous selected ids.
 		}
 	});
 =====*/
