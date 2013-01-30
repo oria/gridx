@@ -407,9 +407,10 @@ define([
 		_addToSelected: function(start, end, toSelect){
 			var t = this,
 				model = t.model,
+				bd = t.grid.body,
 				d = new Deferred(),
 				lastEndItem = t._lastEndItem,
-				a, b, colDir, i, j,
+				a, b, colDir, i, j, rowInfo,
 				packs = [],
 				finish = function(){
 					model.when().then(function(){
@@ -423,8 +424,9 @@ define([
 				if(t._inRange(end.r, start.r, lastEndItem.r)){
 					a = Math.min(end.r, lastEndItem.r);
 					b = Math.max(end.r, lastEndItem.r);
+					rowInfo = bd.getRowInfo({visualIndex: a + 1});
 					packs.push({
-						start: a + 1,
+						start: rowInfo.rowIndex,
 						count: b - a,
 						columnStart: start.c,
 						columnEnd: lastEndItem.c
@@ -434,8 +436,9 @@ define([
 					colDir = end.c < lastEndItem.c ? 1 : -1;
 					a = Math.min(start.r, end.r);
 					b = Math.max(start.r, end.r);
+					rowInfo = bd.getRowInfo({visualIndex: a});
 					packs.push({
-						start: a,
+						start: rowInfo.rowIndex,
 						count: b - a + 1,
 						columnStart: end.c + colDir,
 						columnEnd: lastEndItem.c
@@ -449,7 +452,8 @@ define([
 				a = Math.min(start.r, end.r);
 				b = Math.max(start.r, end.r);
 				for(j = a; j <= b; ++j){
-					model.markByIndex(j, toSelect, type);
+					rowInfo = bd.getRowInfo({visualIndex: j});
+					model.markByIndex(rowInfo.rowIndex, toSelect, type);
 				}
 			}
 			if(packs.length){
