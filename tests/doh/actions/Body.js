@@ -4,7 +4,7 @@ define([
 	'dojo/_base/query',
 	'dojo/dom-class',
 	'../GTest',
-	'../../support/data/TestData',
+	'../../support/data/TestData'
 ], function(domGeo, connect, query, domClass, GTest, dataSource){
 	var newId = 100000;
 	
