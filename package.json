@@ -1,7 +1,7 @@
 {
   "name": "gridx",
-  "version": "1.1.0",
-  "author": "Xiao Wen Zhu(Oliver), Pei Wang(Nate)",
+  "version": "1.2.0",
+  "author": "Xiao Wen Zhu(Oliver), Pei Wang(Nate), Qi Chen(Leslie)",
   "description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
   "licenses": [
      {
