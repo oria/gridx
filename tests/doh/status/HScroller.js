@@ -8,12 +8,12 @@ define([
 		id: 119,
 		name: 'when columns width exceed the width of body, show horizontal scroll bar',
 		condition: function(grid){
-			return !grid.autoWidth && grid.bodyNode.scrollWith > grid.bodyNode.clientWidth;
+			return !grid.autoWidth && grid.bodyNode.scrollWidth > grid.bodyNode.clientWidth;
 		},
 		checker: function(grid, doh){
 			doh.isNot('none', domStyle.get(grid.hScrollerNode, 'display'));
 		}
-	}, {
+	}, { 
 		id: 120,
 		name: 'when columns width do not exceed the width of body, hide horizontal scroll bar',
 		condition: function(grid){
@@ -22,5 +22,15 @@ define([
 		checker: function(grid, doh){
 			doh.is('none', domStyle.get(grid.hScrollerNode, 'display'));
 		}
+	},
+	{
+	    id: 121,
+	    name: 'Horizontal scroll bar is as wide as the body',
+	    condition: function(grid){
+	        return grid.hScrollerNode.style.display !== 'none';
+	    },
+	    checker: function(grid, doh){
+	        doh.is(grid.hScrollerNode.clientWidth, grid.bodyNode.clientWidth);
+	    }
 	});
 });

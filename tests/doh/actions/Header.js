@@ -42,7 +42,7 @@ define([
 					catch(e){
 						def.errback(e);
 					}
-				})
+				});
 			});
 			var dl = new DeferredList(da);
 			dl.then(function(){
@@ -70,7 +70,7 @@ define([
 					var def = new Deferred();
 					def.then(function(){
 						gtest.emitMouseEvent(headerCellNode, 'mouseout');
-					})
+					});
 					da.push(def);
 					try{
 						doh.t(domClass.contains(headerCellNode, 'gridxHeaderCellOver'));
@@ -79,7 +79,7 @@ define([
 					catch(e){
 						def.errback(e);
 					}
-				})
+				});
 			});
 			all(da).then(function(){
 				done.callback();
@@ -163,7 +163,7 @@ define([
 						console.log('error');
 						da[i].errback(e);
 					}
-				})
+				});
 			});
 
 		}

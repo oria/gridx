@@ -2,7 +2,8 @@ define([
 	'dojo/dom-geometry',
 	'../GTest'
 ], function(domGeo, GTest){
-	GTest.actionCheckers.push({
+	GTest.actionCheckers.push(
+	{
 		id: 105,
 		name: 'when scroll bar is scrolled to top, body should also be scrolled to top',
 		condition: function(grid){
@@ -43,5 +44,52 @@ define([
 			}, 100);
 		}
 
+	},
+	{
+	    id: 109,
+	    name: 'mouse wheel scrolling over or dragging vertical scroll bar, scroll the body content accordingly',
+	    condition: function(grid){
+	        return grid.vScrollerNode.style.display !== 'none';
+	    },
+	    action: function(grid, doh, done, gtest){
+            var evt = grid.vScrollerNode.scrollTop == 0 ? {detail: 3} : {detail: -3},
+                initSt = grid.vScrollerNode.scrollTop,
+                initBnSt = grid.bodyNode.scrollTop;
+            gtest.emitMouseEvent(grid.vScrollerNode.firstChild, 'DOMMouseScroll', evt);
+            setTimeout(function(){
+                try{
+                    console.log(initSt, grid.vScrollerNode.scrollTop);
+                    doh.t(initSt !== grid.vScrollerNode.scrollTop);
+                    doh.t(initBnSt !== grid.bodyNode.scrollTop);
+                   done.callback();
+                }catch(e){
+                   done.errback(e);
+                }
+            }, 200);	        
+	    }
+	},
+	{
+	    id: 112,
+	    name: 'mouse wheel scrolling over grid.bodyNode, scroll the body content and the scroll bar together',
+	    condition: function(grid){
+	        return grid.bodyNode && grid.vScrollerNode.style.display !== 'none';
+	    },
+	    action: function(grid, doh, done, gtest){
+	        var evt = grid.vScrollerNode.scrollTop === 0 ? {detail: 3} : {detail: -3},
+	            initSt = grid.vScrollerNode.scrollTop,
+	            initBnSt = grid.bodyNode.scrollTop;
+	        gtest.emitMouseEvent(grid.bodyNode, 'DOMMouseScroll', evt);
+	        setTimeout(function(){
+	            try{
+                    console.log(initSt, grid.vScrollerNode.scrollTop);
+    	            doh.t(initSt !== grid.vScrollerNode.scrollTop);
+    	            doh.t(initBnSt !== grid.bodyNode.scrollTop);
+    	            done.callback();
+	            }catch(e){
+	                done.errback(e);
+	            }
+	        }, 200);
+	        
+	    }
 	});
 });

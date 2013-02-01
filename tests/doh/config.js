@@ -20,9 +20,12 @@ define([
 	'gridx/tests/doh/status/VScroller',
 	'gridx/tests/doh/status/RowHeader',
 	'gridx/tests/doh/status/HScroller',
+	'gridx/tests/doh/status/VLayout',
+
 	'gridx/tests/doh/actions/VScroller',
 	'gridx/tests/doh/actions/Header',
 	'gridx/tests/doh/actions/Body',
+	'gridx/tests/doh/actions/HScroller',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async'
 ], function(lang, memoryFactory, IFWSFactory, dataSource, modules){

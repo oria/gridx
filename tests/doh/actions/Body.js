@@ -4,7 +4,7 @@ define([
 	'dojo/_base/query',
 	'dojo/dom-class',
 	'../GTest',
-	'../../support/data/TestData',
+	'../../support/data/TestData'
 ], function(domGeo, connect, query, domClass, GTest, dataSource){
 	var newId = 100000;
 	
@@ -100,7 +100,11 @@ define([
 			
 				var obj =  grid.store.get(id);
 					
-				grid.store.put? grid.store.put(obj): grid.store.onSet(obj);
+				if(grid.store.put){
+				    grid.store.put(obj);
+				}else{
+				    grid.store.onSet(obj);
+				}
 				setTimeout(function(){
 					try{
 						doh.is(t, 'onSet');
