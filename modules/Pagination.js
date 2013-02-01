@@ -52,8 +52,8 @@ define([
 		firstIndexInPage: function(page){
 			// summary:
 			//		Get the index of the first row in the given page.
-			// page: Integer
-			//		The index of a page.
+			// page: Integer?
+			//		The index of a page. If omitted, default to the current page.
 			// returns:
 			//		The index of the first row in the page. If page is not valid, return -1.
 		},
