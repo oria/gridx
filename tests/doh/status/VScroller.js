@@ -59,7 +59,7 @@ define([
 			doh.is(grid.bodyNode.offsetHeight, grid.vScrollerNode.offsetHeight);
 		}
 	},{
-	    id: 108,
+        id: 108,
 	    name: 'Virtical scroll bar is shown on the left side of body',
 	    condition: function(grid){
 	        return grid.vScrollerNode.style.display != 'none' && !grid.isLeftToRight();
