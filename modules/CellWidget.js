@@ -1,4 +1,5 @@
 define([
+/*====="../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
@@ -13,10 +14,15 @@ define([
 	"dijit/_WidgetsInTemplateMixin",
 	"../core/_Module",
 	"./NavigableCell"
-], function(declare, query, array, event, sniff, domClass, keys, 
+], function(/*=====Cell, =====*/declare, query, array, event, sniff, domClass, keys, 
 	registry, a11y, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Module){
 
 /*=====
+	Cell.widget = function(){
+		// summary:
+		//		Get the cell widget in this cell.
+	};
+
 	var CellWidget = declare(_Module, {
 		// summary:
 		//		This module makes it possible to efficiently show widgets within a grid cell.
@@ -203,8 +209,6 @@ define([
 
 		cellMixin: {
 			widget: function(){
-				// summary:
-				//		Get the cell widget in this cell.
 				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 			}
 		},
