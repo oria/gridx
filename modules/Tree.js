@@ -139,7 +139,13 @@ define([
 				[g.body, 'onAfterRow', '_onAfterRow'],
 				[t.model, 'onDelete', '_onDelete'],
 				[g, 'onCellClick', '_onCellClick'],
-				[g, 'setStore', '_clear']);
+				[g, 'setStore', function(){
+					//If server store changes without notifying grid, expanded rows should remain expanded.
+					//FIXME: this is ugly...
+					if(t.arg('clearOnSetStore')){
+						t._clear();
+					}
+				}]);
 			t._initExpandLevel();
 			t._initFocus();
 			if(g.persist){
