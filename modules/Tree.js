@@ -156,7 +156,7 @@ define([
 
 		//clearOnSetStore: Boolean
 		//		Whether to clear all the recorded expansion info after setStore.
-		clearOnSetStore: false,
+		clearOnSetStore: true,
 
 		onExpand: function(id){
 			// summary:
@@ -382,6 +382,8 @@ define([
 		expandoPadding: 18,
 
 		expandLevel: 1 / 0,
+
+		clearOnSetStore: true,
 
 		onExpand: function(id){},
 
