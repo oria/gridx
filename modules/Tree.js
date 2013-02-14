@@ -411,7 +411,11 @@ define([
 			m.when(ranges, function(){
 				var size = t._openInfo[''].count = m.size();
 				array.forEach(ids, t._logicExpand, t);
+				//Update body visual count manually, so have to change render count too.
 				body.visualCount = t.getVisualSize(0, size);
+				if(body.renderCount > body.visualCount){
+					body.renderCount = body.visualCount;
+				}
 			}).then(function(){
 				body.refresh().then(success, fail);
 			}, fail);
