@@ -39,6 +39,13 @@ define([
 			t.connect(t.grid.pagination, 'onChangePageSize', '_onChange');
 		},
 
+		startup: function(){
+			this.inherited(arguments);
+			//Set initial page size after pagination module is ready.
+			this._onChange(this.grid.pagination.pageSize());
+		},
+
+
 		//Public-----------------------------------------------------------------------------
 		sizeSeparator: '|',
 
