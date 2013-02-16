@@ -152,7 +152,8 @@ define([
 			var t = this,
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
-				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],				nt = n.firstChild,
+				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
+				nt = n.firstChild,
 				cp = t.arg('cellProvider');
 			n.setAttribute('rowid', row.id);
 			n.setAttribute('rowindex', row.index());
