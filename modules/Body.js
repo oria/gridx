@@ -296,7 +296,13 @@ define([
 					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 				}
 			});
-			t.aspect(g, 'setStore', refresh);
+			t.aspect(g, 'setStore', function(){
+				if(g.tree){
+					g.tree.refresh();
+				}else{
+					t.refresh();
+				}
+			});
 		},
 
 		preload: function(){
