@@ -45,6 +45,11 @@ define([
 			this.connect(this.grid.pagination, 'onChangePageSize', '_onChange');
 			this.refresh();
 		},
+		startup: function(){
+			this.inherited(arguments);
+			//Set initial page size after pagination module is ready.
+			this._onChange(this.grid.pagination.pageSize());
+		},
 
 		//Public-----------------------------------------------------------------------------
 		grid: null,
