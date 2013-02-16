@@ -10,7 +10,9 @@ define([
 	"dojo/query",
 	"dojo/keys",
 	"../core/util",
-	"../core/_Module"
+	"../core/_Module",
+	"dojo/NodeList-dom",
+	"dojo/NodeList-traverse"
 ], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
@@ -584,12 +586,11 @@ define([
 				var rowNode = body.getRowNode({rowId: id}), n, expando,
 					isOpen = t.isExpanded(id);
 				if(rowNode){
-					n = query('.gridxTreeExpandoCell', rowNode)[0];
-					if(n){
-						expando = query('.gridxTreeExpandoIcon', n)[0];
-						expando.firstChild.innerHTML = 'o';
-						domClass.add(n, 'gridxTreeExpandoLoading');
-					}
+					n = query('.gridxTreeExpandoCell', rowNode);
+					expando = query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
+						node.firstChild.innerHTML = 'o';
+					});
+					n.addClass('gridxTreeExpandoLoading');
 				}
 				var visualIndex = refreshPartial && id ? 
 					t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
@@ -598,11 +599,15 @@ define([
 				//So refresh the whole body here to make the upper row also visible.
 				//FIXME: need better solution here.
 				return body.refresh(refreshPartial && visualIndex + 1).then(function(){
-					if(n){
-						rowNode.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-						expando.firstChild.innerHTML = isOpen ? '-' : '+';
-						domClass.remove(n, 'gridxTreeExpandoLoading');
-						domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
+					if(rowNode && n.length){
+						rowNode.setAttribute('aria-expanded', String(isOpen));
+						n.removeClass('gridxTreeExpandoLoading').
+							toggleClass('gridxTreeExpandoCellOpen', isOpen).
+							//This is only to make JAWS read.
+							closest('.gridxCell').attr('aria-expanded', String(isOpen));
+						expando.forEach(function(node){
+							node.firstChild.innerHTML = isOpen ? '-' : '+';
+						});
 					}
 				});
 			}
@@ -741,7 +746,11 @@ define([
 		_onAfterRow: function(row){
 			var hasChildren = this.model.hasChildren(row.id);
 			if(hasChildren){
-				row.node().setAttribute('aria-expanded', this.isExpanded(row.id));
+				var rowNode = row.node(),
+					expanded = this.isExpanded();
+				rowNode.setAttribute('aria-expanded', expanded);
+				//This is only to make JAWS read.
+				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').attr('aria-expanded', String(expanded));
 			}
 		},
 
