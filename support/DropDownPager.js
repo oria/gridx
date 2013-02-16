@@ -47,6 +47,12 @@ define([
 			t.refresh();
 		},
 
+		startup: function(){
+			this.inherited(arguments);
+			//Set initial page after pagination module is ready.
+			this._onSwitchPage(this.grid.pagination.currentPage());
+		},
+
 		//Public-----------------------------------------------------------------------------
 		grid: null,
 

@@ -38,6 +38,13 @@ define([
 			t[c](t.grid.model, 'onSizeChange', 'refresh');
 		},
 
+		startup: function(){
+			this.inherited(arguments);
+			//Set initial page after pagination module is ready.
+			//FIXME: this causes 2 times refresh, any better way?
+			this.refresh();
+		},
+
 		//Public-----------------------------------------------------------------------------
 
 		// visibleSteppers: Integer
