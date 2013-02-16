@@ -146,12 +146,12 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
-                        var cell;
-                        if((cell = g.cell(e.rowId, e.columnId))
-                            && cell.isEditing
-                            && cell.isEditing()){ return; }
-                        delete cell;
-                        t._select(e.rowId, g._isCopyEvent(e));
+					var cell;
+					if((cell = g.cell(e.rowId, e.columnId))
+						&& cell.isEditing
+						&& cell.isEditing()){ return; }
+					delete cell;
+					t._select(e.rowId, g._isCopyEvent(e));
 					}
 				}]);
 		},
