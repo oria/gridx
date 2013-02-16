@@ -23,6 +23,12 @@ define([
 			this.refresh();
 		},
 
+		startup: function(){
+			this.inherited(arguments);
+			//Set initial page size after pagination module is ready.
+			this._onChange(this.grid.pagination.pageSize());
+		},
+
 		//Public-----------------------------------------------------------------------------
 
 		// grid: gridx.Grid
@@ -82,7 +88,7 @@ define([
 				size = -1;
 			}
 			if(select && select.get('value') != size){
-				select.set('value', size);
+				select.set('value', String(size));
 			}
 		}
 	});

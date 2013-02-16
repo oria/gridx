@@ -22,6 +22,12 @@ define([
 			t.connect(t.grid.pagination, 'onChangePageSize', '_onChange');
 		},
 
+		startup: function(){
+			this.inherited(arguments);
+			//Set initial page size after pagination module is ready.
+			this._onChange(this.grid.pagination.pageSize());
+		},
+
 		//Public-----------------------------------------------------------------------------
 		
 		// sizeSpearator: String
@@ -69,15 +75,15 @@ define([
 			this._toggleHover(evt, 'gridxPagerSizeSwitchBtn', 'gridxLinkSizer', 'gridxPagerSizeSwitchBtnHover');
 		},
 
-		_onChange: function(size, oldSize){
+		_onChange: function(size){
 			var dn = this.domNode,
-				n = query('[pagesize="' + size + '"]', dn)[0];
-			if(n){
-				domClass.add(n, 'gridxPagerSizeSwitchBtnActive');
-			}
-			n = query('[pagesize="' + oldSize + '"]', dn)[0];
+				n = query('.gridxPagerSizeSwitchBtnActive', dn)[0];
 			if(n){
 				domClass.remove(n, 'gridxPagerSizeSwitchBtnActive');
+			}
+			n = query('[pagesize="' + size + '"]', dn)[0];
+			if(n){
+				domClass.add(n, 'gridxPagerSizeSwitchBtnActive');
 			}
 		},
 
