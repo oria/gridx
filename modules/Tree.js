@@ -10,7 +10,9 @@ define([
 	"dojo/query",
 	"dojo/keys",
 	"../core/util",
-	"../core/_Module"
+	"../core/_Module",
+	"dojo/NodeList-dom",
+	"dojo/NodeList-traverse"
 ], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
@@ -509,7 +511,11 @@ define([
 			m.when(ranges, function(){
 				var size = t._openInfo[''].count = m.size();
 				array.forEach(ids, t._logicExpand, t);
+				//Update body visual count manually, so have to change render count too.
 				body.visualCount = t.getVisualSize(0, size);
+				if(body.renderCount > body.visualCount){
+					body.renderCount = body.visualCount;
+				}
 			}).then(function(){
 				body.refresh().then(success, fail);
 			}, fail);
@@ -659,30 +665,26 @@ define([
 		},
 
 		_beginLoading: function(id){
-			var body = this.grid.body,
-				rowNode = body.getRowNode({rowId: id});
+			var rowNode = this.grid.body.getRowNode({rowId: id});
 			if(rowNode){
-				var n = query('.gridxTreeExpandoCell', rowNode)[0];
-				if(n){
-					var expando = query('.gridxTreeExpandoIcon', n)[0];
-					expando.firstChild.innerHTML = 'o';
-					domClass.add(n, 'gridxTreeExpandoLoading');
-				}
+				query('.gridxTreeExpandoCell', rowNode).addClass('gridxTreeExpandoLoading');
+				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
+					node.firstChild.innerHTML = 'o';
+				});
 			}
 		},
 		_endLoading: function(id){
-			var body = this.grid.body,
-				rowNode = body.getRowNode({rowId: id}),
+			var rowNode = this.grid.body.getRowNode({rowId: id}),
 				isOpen = this.isExpanded(id);
 			if(rowNode){
-				var n = query('.gridxTreeExpandoCell', rowNode)[0];
-				if(n){
-					var expando = query('.gridxTreeExpandoIcon', n)[0];
-					rowNode.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-					expando.firstChild.innerHTML = isOpen ? '-' : '+';
-					domClass.remove(n, 'gridxTreeExpandoLoading');
-					domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
-				}
+				query('.gridxTreeExpandoCell', rowNode).
+					removeClass('gridxTreeExpandoLoading').
+					toggleClass('gridxTreeExpandoCellOpen', isOpen).
+					closest('.gridxCell').attr('aria-expanded', String(isOpen));
+				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
+					node.firstChild.innerHTML = isOpen ? '-' : '+';
+				});
+				rowNode.setAttribute('aria-expanded', String(isOpen));
 			}
 		},
 	
@@ -834,7 +836,11 @@ define([
 		_onAfterRow: function(row){
 			var hasChildren = this.model.hasChildren(row.id);
 			if(hasChildren){
-				row.node().setAttribute('aria-expanded', this.isExpanded(row.id));
+				var rowNode = row.node(),
+					expanded = this.isExpanded();
+				rowNode.setAttribute('aria-expanded', expanded);
+				//This is only to make JAWS read.
+				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').attr('aria-expanded', String(expanded));
 			}
 		},
 
