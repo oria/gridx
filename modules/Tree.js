@@ -587,12 +587,10 @@ define([
 					isOpen = t.isExpanded(id);
 				if(rowNode){
 					n = query('.gridxTreeExpandoCell', rowNode);
-					if(n.length){
-						expando = query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
-							node.firstChild.innerHTML = 'o';
-						});
-						n.addClass('gridxTreeExpandoLoading');
-					}
+					expando = query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
+						node.firstChild.innerHTML = 'o';
+					});
+					n.addClass('gridxTreeExpandoLoading');
 				}
 				var visualIndex = refreshPartial && id ? 
 					t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
@@ -601,7 +599,7 @@ define([
 				//So refresh the whole body here to make the upper row also visible.
 				//FIXME: need better solution here.
 				return body.refresh(refreshPartial && visualIndex + 1).then(function(){
-					if(n.length){
+					if(rowNode && n.length){
 						rowNode.setAttribute('aria-expanded', String(isOpen));
 						n.removeClass('gridxTreeExpandoLoading').
 							toggleClass('gridxTreeExpandoCellOpen', isOpen).
