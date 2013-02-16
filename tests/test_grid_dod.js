@@ -133,6 +133,7 @@ require([
 			}),
 			modules: [
 				VirtualVScroller,
+				//RowHeader,
 				{
 					moduleClass: Dod,
 					defaultShow: defaultShow,
