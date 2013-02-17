@@ -187,10 +187,12 @@ define([
 				});
 			}
 			Deferred.when(d, function(){
-				t._allSelected[t._getPageId()] = allSelected;
-				var node = t.grid.rowHeader.headerCellNode.firstChild;
-				domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
-				node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+				if(t.arg('all')){
+					t._allSelected[t._getPageId()] = allSelected;
+					var node = t.grid.rowHeader.headerCellNode.firstChild;
+					domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+					node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+				}
 			});
 		},
 

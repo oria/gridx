@@ -30,7 +30,8 @@ require([
 				modules.Pagination,
 				modules.PaginationBar,
 				modules.VirtualVScroller
-			].concat(mods) 
+			].concat(mods)
+			//indirectSelectAll: false
 		});
 		g.placeAt('gridContainer');
 		g.startup();
