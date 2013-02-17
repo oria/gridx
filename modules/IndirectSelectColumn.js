@@ -220,10 +220,12 @@ define([
 				});
 			}
 			Deferred.when(d, function(){
-				t._allSelected[t._getPageId()] = allSelected;
-				var newHeader = t._createSelectAllBox();
-				g._columnsById[indirectSelectColumnId].name = newHeader;
-				g.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
+				if(t.arg('all')){
+					t._allSelected[t._getPageId()] = allSelected;
+					var newHeader = t._createSelectAllBox();
+					g._columnsById[indirectSelectColumnId].name = newHeader;
+					g.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
+				}
 			});
 		}
 	});
