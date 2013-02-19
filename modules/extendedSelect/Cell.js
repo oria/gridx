@@ -210,7 +210,7 @@ define([
 				m = t.model,
 				g = t.grid,
 				columns = g._columns,
-				body = g.body,
+				view = g.view,
 				i, j, col, type, rowInfo;
 			array.forEach(args, function(arg){
 				if(arg._range){
@@ -222,7 +222,7 @@ define([
 					for(i = c1; i <= c2; ++i){
 						col = columns[i];
 						if(col){
-							rowInfo = body.getRowInfo({visualIndex: a});
+							rowInfo = view.getRowInfo({visualIndex: a});
 							a = rowInfo.rowIndex;
 							type = t._getMarkType(col.id);
 							for(j = 0; j < n; ++j){
@@ -233,7 +233,7 @@ define([
 				}else{
 					col = columns[arg[1]];
 					if(col){
-						rowInfo = body.getRowInfo({visualIndex: arg[0]});
+						rowInfo = view.getRowInfo({visualIndex: arg[0]});
 						i = rowInfo.rowIndex;
 						m.markByIndex(i, toSelect, t._getMarkType(col.id), rowInfo.parentId);
 					}
@@ -407,7 +407,7 @@ define([
 		_addToSelected: function(start, end, toSelect){
 			var t = this,
 				model = t.model,
-				bd = t.grid.body,
+				view = t.grid.view,
 				d = new Deferred(),
 				lastEndItem = t._lastEndItem,
 				a, b, colDir, i, j, rowInfo,
@@ -424,7 +424,7 @@ define([
 				if(t._inRange(end.r, start.r, lastEndItem.r)){
 					a = Math.min(end.r, lastEndItem.r);
 					b = Math.max(end.r, lastEndItem.r);
-					rowInfo = bd.getRowInfo({visualIndex: a + 1});
+					rowInfo = view.getRowInfo({visualIndex: a + 1});
 					packs.push({
 						start: rowInfo.rowIndex,
 						count: b - a,
@@ -436,7 +436,7 @@ define([
 					colDir = end.c < lastEndItem.c ? 1 : -1;
 					a = Math.min(start.r, end.r);
 					b = Math.max(start.r, end.r);
-					rowInfo = bd.getRowInfo({visualIndex: a});
+					rowInfo = view.getRowInfo({visualIndex: a});
 					packs.push({
 						start: rowInfo.rowIndex,
 						count: b - a + 1,
@@ -452,7 +452,7 @@ define([
 				a = Math.min(start.r, end.r);
 				b = Math.max(start.r, end.r);
 				for(j = a; j <= b; ++j){
-					rowInfo = bd.getRowInfo({visualIndex: j});
+					rowInfo = view.getRowInfo({visualIndex: j});
 					model.markByIndex(rowInfo.rowIndex, toSelect, type);
 				}
 			}

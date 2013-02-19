@@ -157,7 +157,7 @@ define([
 		_calcTargetAnchorPos: function(evt, containerPos){
 			var t = this,
 				node = evt.target,
-				body = t.grid.body,
+				view = t.grid.view,
 				ret = {
 					width: containerPos.w + "px",
 					height: '',
@@ -211,7 +211,7 @@ define([
 					node = node.parentNode;
 				}
 			}
-			var bn = body.domNode,
+			var bn = t.grid.bodyNode,
 				nodes = bn.childNodes;
 			if(!nodes.length){
 				ret.top = '0px';
@@ -227,9 +227,9 @@ define([
 					node = bn.lastChild;
 					idx = getVIdx(node);
 					pos = domGeometry.position(node);
-					if(idx === body.visualCount - 1 && evt.clientY > pos.y + pos.h){
+					if(idx === view.visualCount - 1 && evt.clientY > pos.y + pos.h){
 						ret.top = (pos.y + pos.h - containerPos.y) + 'px';
-						t._target = body.visualCount;
+						t._target = view.visualCount;
 					}else{
 						var rowFound = array.some(nodes, function(rowNode){
 							pos = domGeometry.position(rowNode);
@@ -252,7 +252,7 @@ define([
 					var indexes = array.map(t._selectedRowIds, function(rowId){
 						return t.model.idToIndex(rowId);
 					});
-					g.move.row.move(indexes, g.body.getRowInfo({
+					g.move.row.move(indexes, g.view.getRowInfo({
 						visualIndex: t._target
 					}).rowIndex);
 				});

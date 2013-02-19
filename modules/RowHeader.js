@@ -389,7 +389,7 @@ define([
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;
-				body._focusCellRow = r = r < 0 ? 0 : (r >= body.visualCount ? body.visualCount - 1 : r);
+				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);
 					t.onMoveToRowHeaderCell(r, evt);

@@ -80,6 +80,15 @@ define([
 			//		The DOM node of the cell. Null if not found.
 		},
 
+		getRowInfo: function(args){
+			// summary:
+			//		Get complete row info by partial row info
+			// args: Body.__RowCellInfo
+			//		A row info object containing partial row info
+			// returns:
+			//		A row info object containing as complete as possible row info.
+		},
+	
 		refresh: function(start){
 			// summary:
 			//		Refresh the grid body
@@ -100,17 +109,37 @@ define([
 			//		A deferred object indicating when this refreshing process is finished.
 		},
 
+		// rootStart: [readonly] Integer
+		//		The row index of the first root row that logically exists in the current body
+		rootStart: 0,
+
+		// rootCount: [readonly] Integer
+		//		The count of root rows that logically exist in thi current body
+		rootCount: 0,
+	
 		// renderStart: [readonly] Integer
 		//		The visual row index of the first renderred row in the current body
 		renderStart: 0,
-
 		// renderCount: [readonly] Integer
 		//		The count of renderred rows in the current body.
 		renderCount: 0,
 	
+		// visualStart: [readonly] Integer
+		//		The visual row index of the first row that is logically visible in the current body.
+		//		This should be always zero.
+		visualStart: 0, 
+		// visualCount: [readonly] Integer
+		//		The count of rows that are logically visible in the current body
+		visualCount: 0,
+	
 		// autoUpdate: [private] Boolean
 		//		Update grid body automatically when onNew/onSet/onDelete is fired
 		autoUpdate: true,
+
+		// autoChangeSize: [private] Boolean
+		//		Whether to change rootStart and rootCount automatically when store size is changed.
+		//		This need to be turned off when pagination is used.
+		autoChangeSize: true,
 
 		onAfterRow: function(row){
 			// summary:
@@ -200,13 +229,43 @@ define([
 		}
 	});
 
+	Body.__RowCellInfo = declare([], {
+		// summary:
+		//		This structure includes all possible information that can be used to identify a row or a cell, it is used
+		//		to retrieve a row or a cell in grid body.
+		//		Usually user only need to provide some of them that is sufficient to uniquely identify a row or a cell,
+		//		e.g. rowId, or rowIndex and parentId, or visualIndex.
+
+		// rowId: String|Number
+		//		The ID of a row.
+		rowId: '',
+
+		// rowIndex: Integer
+		//		The index of a row. It is the index below the parent of this row. The parent of root rows is an imaginary row
+		//		with id "" (empty string).
+		rowIndex: 0,
+
+		// visualIndex: Integer
+		//		The visual index of a row. It represents the visual position of this row in the current body view.
+		//		If there are no pagination, no filtering, no tree structure data, this value is equal to the row index.
+		visualIndex: 0,
+
+		// colId: String|Number
+		//		The ID of a column (should not be false values)
+		colId: '',
+
+		// colIndex: Integer
+		//		The index of a column.
+		colIndex: 0
+	});
+
 	return Body;
 =====*/
 
 	return declare(_Module, {
 		name: "body",
 
-		forced: ['view'],
+		optional: ['tree'],
 
 		getAPIPath: function(){
 			return {
@@ -218,15 +277,31 @@ define([
 			var t = this,
 				m = t.model,
 				g = t.grid,
-				dn = t.domNode = g.bodyNode;
+				dn = t.domNode = g.bodyNode,
+				refresh = function(){ t.refresh(); };
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t.aspect(m, 'onSet', '_onSet');
+			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
+			t.aspect(g, 'onCellMouseOver', '_onCellMouseOver');
+			t.aspect(g, 'onCellMouseOut', '_onCellMouseOver');
+			t.connect(g.bodyNode, 'onmouseleave', function(){
+				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+			});
+			t.connect(g.bodyNode, 'onmouseover', function(e){
+				if(e.target == g.bodyNode){
+					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+				}
+			});
 			t.aspect(g, 'setStore', function(){
-				t.refresh();
+				if(g.tree){
+					g.tree.refresh();
+				}else{
+					t.refresh();
+				}
 			});
 		},
 
@@ -237,13 +312,21 @@ define([
 		load: function(args){
 			var t = this,
 				m = t.model,
-				g = t.grid;
+				g = t.grid,
+				finish = function(){
+					t.aspect(m, 'onSizeChange', '_onSizeChange');
+					t.loaded.callback();
+				};
 			t.aspect(m, 'onDelete', '_onDelete');
-			t.aspect(g.view, 'onUpdate', '_onSizeChange');
-			if(g.view._err){
-				t._loadFail(g.view._err);
-			}
-			t.loaded.callback();
+			//Load the store size
+			m.when({}, function(){
+				t.rootCount = t.rootCount || m.size();
+				t.visualCount = g.tree ? g.tree.getVisualSize(t.rootStart, t.rootCount) : t.rootCount;
+				finish();
+			}).then(null, function(e){
+				t._loadFail(e);
+				finish();
+			});
 		},
 
 		destroy: function(){
@@ -262,7 +345,7 @@ define([
 			visualIndex: function(){
 				var t = this,
 					id = t.id;
-				return t.grid.view.getRowInfo({
+				return t.grid.body.getRowInfo({
 					rowId: id,
 					rowIndex: t.index(),
 					parentId: t.model.parentId(id)
@@ -333,22 +416,41 @@ define([
 			return null;
 		},
 
+		getRowInfo: function(args){
+			var t = this,
+				m = t.model,
+				g = t.grid,
+				id = args.rowId;
+			if(m.isId(id)){
+				args.rowIndex = m.idToIndex(id);
+				args.parentId = m.parentId(id);
+			}
+			if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
+				args.visualIndex = g.tree ? 
+					g.tree.getVisualIndexByRowInfo(args.parentId, args.rowIndex, t.rootStart) : 
+					args.rowIndex - t.rootStart;
+			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
+				if(g.tree){
+					var info = g.tree.getRowInfoByVisualIndex(args.visualIndex, t.rootStart);
+					args.rowIndex = info.start;
+					args.parentId = info.parentId;
+				}else{
+					args.rowIndex = t.rootStart + args.visualIndex;
+				} 
+			}else{
+				return args;
+			}
+			args.rowId = m.isId(id) ? id : m.indexToId(args.rowIndex, args.parentId);
+			return args;
+		},
+	
 		refresh: function(start){
 			var t = this;
 			delete t._err;
-			t._beginLoading();
-			t.grid.view.updateVisualCount().then(function(){
+			//Call when to make sure all pending commands are executed
+			return t.model.when({}).then(function(){	//dojo.Deferred
 				var rs = t.renderStart,
-					rc = t.renderCount,
-					vc = t.grid.view.visualCount;
-				if(rs + rc > vc){
-					if(rc < vc){
-						rs = t.renderStart = vc - rc;
-					}else{
-						rs = t.renderStart = 0;
-						rc = vc;
-					}
-				}
+					rc = t.renderCount;
 				if(typeof start == 'number' && start >= 0){
 					start = rs > start ? rs : start;
 					var count = rs + rc - start,
@@ -375,25 +477,14 @@ define([
 					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 						t.onRender(start, count);
 						t.onForcedScroll();
-						t._endLoading();
 					});
 				}else{
 					t.renderRows(rs, rc, 0, 1);
 					t.onForcedScroll();
-					t._endLoading();
 				}
 			}, function(e){
 				t._loadFail(e);
-				t._endLoading();
 			});
-		},
-
-		_beginLoading: function(){
-			domClass.add(this.grid.loadingNode, 'gridxLoading');
-		},
-
-		_endLoading: function(){
-			domClass.remove(this.grid.loadingNode, 'gridxLoading');
 		},
 	
 		refreshCell: function(rowVisualIndex, columnIndex){
@@ -408,7 +499,7 @@ define([
 				});
 			if(cellNode){
 				var rowCache,
-					rowInfo = g.view.getRowInfo({visualIndex: rowVisualIndex}),
+					rowInfo = t.getRowInfo({visualIndex: rowVisualIndex}),
 					idx = rowInfo.rowIndex, pid = rowInfo.parentId;
 				m.when({
 					start: idx,
@@ -418,7 +509,7 @@ define([
 					rowCache = m.byIndex(idx, pid);
 					if(rowCache){
 						rowInfo.rowId = m.indexToId(idx, pid);
-						var isPadding = g.tree && g.tree.isPaddingCell(rowInfo.rowId, col.id);
+						var isPadding = g.tree && rowCache.data[col.id] === undefined;
 						var cell = g.cell(rowInfo.rowId, col.id, 1);
 						cellNode.innerHTML = t._buildCellContent(cell, isPadding);
 						t.onAfterCell(cell);
@@ -433,12 +524,40 @@ define([
 		},
 		
 		//Package--------------------------------------------------------------------------------
+		
+		rootStart: 0,
 
+		rootCount: 0,
+	
 		renderStart: 0,
 
 		renderCount: 0,
+	
+		visualStart: 0, 
+
+		visualCount: 0,
 
 		autoUpdate: true,
+
+		autoChangeSize: true,
+
+		updateRootRange: function(start, count){
+			var t = this, tree = t.grid.tree,
+				vc = t.visualCount = tree ? tree.getVisualSize(start, count) : count;
+			t.rootStart = start;
+			t.rootCount = count;
+			if(t.renderStart + t.renderCount > vc){
+				t.renderStart = vc - t.renderCount;
+				if(t.renderStart < 0){
+					t.renderStart = 0;
+					t.renderCount = vc;
+				}
+			}
+			//If there was nothing shown in the body, should force the scroller to check again.
+			if(!t.renderCount && vc){
+				t.onForcedScroll();
+			}
+		},
 
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
 			var t = this,
@@ -599,7 +718,7 @@ define([
 				m = t.model,
 				w = t.domNode.scrollWidth;
 			for(i = start; i < end; ++i){
-				var rowInfo = g.view.getRowInfo({visualIndex: i}),
+				var rowInfo = t.getRowInfo({visualIndex: i}),
 					row = g.row(rowInfo.rowId, 1);
 				s.push('<div class="gridxRow ', i % 2 ? 'gridxRowOdd' : '',
 					'" role="row" visualindex="', i);
@@ -642,7 +761,7 @@ define([
 			this.domNode.innerHTML = '';
 			this._err = e;
 		},
-
+	
 		_buildRowContent: function(rowInfo){
 			var t = this,
 				n = query('> [visualindex="' + rowInfo.visualIndex + '"]', t.domNode)[0];
@@ -671,7 +790,7 @@ define([
 				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			for(i = 0, len = columns.length; i < len; ++i){
 				col = columns[i];
-				isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id);
+				isPadding = g.tree && rowData[col.id] === undefined;
 				cell = g.cell(row.id, col.id, 1);
 				cls = (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
 				style = g.bidi ? g.bidi.getTextDirStyle(col.id, cell.data()) : '';
@@ -692,7 +811,7 @@ define([
 			}
 			sb.push('</tr></table>');
 			return sb.join('');
-		}, 
+		},
 	
 		_buildCellContent: function(cell, isPadding){
 			var r = '',
@@ -722,7 +841,7 @@ define([
 			}
 			return cellData;
 		},
-
+	
 		//Events-------------------------------------------------------------
 		_onMouseEvent: function(eventName, e){
 			var g = this.grid,
@@ -738,7 +857,7 @@ define([
 				}
 			}
 		},
-
+	
 		_decorateEvent: function(e){
 			var n = e.target || e.originalTarget,
 				g = this.grid,
@@ -782,7 +901,7 @@ define([
 					}else{
 						array.forEach(cols, function(col){
 							if(!compareOnSet(curData[col.id], oldData[col.id])){
-								var isPadding = g.tree && g.tree.isPaddingCell(id, col.id),
+								var isPadding = g.tree && curData[col.id] === undefined,
 									cell = row.cell(col.id, 1);
 								cell.node().innerHTML = t._buildCellContent(cell, isPadding);
 								t.onAfterCell(cell);
@@ -824,6 +943,15 @@ define([
 					t.renderCount -= toDelete.length;
 					array.forEach(toDelete, domConstruct.destroy);
 					array.forEach(ids, t.onUnrender, t);
+					//If the body is showing the last a few rows, it should respond to deletion 
+					//no matter pagination is on or not.
+					if(t.rootStart + t.rootCount >= t.model.size()){
+						if(pid === ''){
+							t.updateRootRange(t.rootStart, t.rootCount - 1);
+						}else{
+							t.visualCount = t.grid.tree ? t.grid.tree.getVisualSize(t.rootStart, t.rootCount) : t.rootCount;
+						}
+					}
 					t.onDelete(id, start);
 					t.onRender(start, count);
 					if(!t.domNode.childNodes.length){
@@ -836,19 +964,40 @@ define([
 				}
 			}
 		},
-
-		_onSizeChange: function(){
+	
+		_onSizeChange: function(size, oldSize){
 			var t = this;
-			if(t._sizeChangeHandler){
-				clearTimeout(t._sizeChangeHandler);
-			}
-			t._sizeChangeHandler = setTimeout(function(){
-				if(!t._destroyed){
-					t.refresh();
+			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
+				t.updateRootRange(0, size);
+				if(t._sizeChangeHandler){
+					clearTimeout(t._sizeChangeHandler);
 				}
-			}, 10);
+				t._sizeChangeHandler = setTimeout(function(){
+					if(!t._destroyed){
+						t.refresh();
+					}
+				}, 10);
+			}
 		},
-
+		
+		//-------------------------------------------------------------------------------------
+		_onRowMouseOver: function(e){
+			var preNode = query('> div.gridxRowOver', this.domNode)[0],
+				rowNode = this.getRowNode({rowId: e.rowId});
+			if(preNode != rowNode){
+				if(preNode){
+					domClass.remove(preNode, 'gridxRowOver');
+				}
+				if(rowNode){
+					domClass.add(rowNode, 'gridxRowOver');
+				}
+			}
+		},
+		
+		_onCellMouseOver: function(e){
+			domClass.toggle(e.cellNode, 'gridxCellOver', e.type == 'mouseover');
+		},
+	
 		//Focus------------------------------------------------------------------------------------------
 		_focusCellCol: 0,
 		_focusCellRow: 0,
@@ -961,7 +1110,7 @@ define([
 					t = this,
 					g = t.grid, 
 					cols = g._columns,
-					vc = g.view.visualCount;
+					vc = t.visualCount;
 				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
 				r = t._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
@@ -978,7 +1127,7 @@ define([
 			var d = new Deferred(),
 				g = this.grid,
 				cc = g._columns.length,
-				rc = g.view.visualCount;
+				rc = this.visualCount;
 			do{
 				c += dir;
 				if(c < 0 || c >= cc){

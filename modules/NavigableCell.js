@@ -69,6 +69,7 @@ define([
 				var t = this,
 					m = t.model,
 					g = t.grid,
+					view = g.view,
 					body = g.body,
 					elems = t._navElems,
 					firstElem = elems.lowest || elems.first,
@@ -77,7 +78,7 @@ define([
 				if(target == (step > 0 ? lastElem : firstElem)){
 					event.stop(evt);
 					m.when({id: t._focusRowId}, function(){
-						var rowIndex = body.getRowInfo({
+						var rowIndex = view.getRowInfo({
 								parentId: m.treePath(t._focusRowId).pop(), 
 								rowIndex: m.idToIndex(t._focusRowId)
 							}).visualIndex,
@@ -89,7 +90,7 @@ define([
 						body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
 							t._focusColId = g._columns[obj.c].id;
 							//This kind of breaks the encapsulation...
-							var rowInfo = body.getRowInfo({visualIndex: obj.r});
+							var rowInfo = view.getRowInfo({visualIndex: obj.r});
 							t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
 							body._focusCellCol = obj.c;
 							body._focusCellRow = obj.r;

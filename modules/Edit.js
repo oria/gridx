@@ -705,10 +705,11 @@ define([
 		_doBlur: function(evt, step){
 			var t = this,
 				g = t.grid,
+				view = g.view,
 				body = g.body;
 			if(t._editing && step){
-				var rowIndex = body.getRowInfo({
-						parentId: t.model.treePath(t._focusCellRow).pop(), 
+				var rowIndex = view.getRowInfo({
+						parentId: t.model.parentId(t._focusCellRow),
 						rowIndex: t.model.idToIndex(t._focusCellRow)
 					}).visualIndex,
 					colIndex = g._columnsById[t._focusCellCol].index,
@@ -720,7 +721,7 @@ define([
 					g.focus.stopEvent(evt);
 					t._applyAll();
 					t._focusCellCol = g._columns[obj.c].id;
-					var rowInfo = body.getRowInfo({visualIndex: obj.r});
+					var rowInfo = view.getRowInfo({visualIndex: obj.r});
 					t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
 					//This breaks encapsulation a little....
 					body._focusCellCol = obj.c;

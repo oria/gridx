@@ -63,6 +63,7 @@ define([
 					mis.push(id);
 				}
 			});
+			console.log(mis);
 			searchRootLevel(self, mis).then(function(ids){
 				if(ids.length && isTree){
 					searchChildLevel(self, ids).then(function(ids){
@@ -94,6 +95,7 @@ define([
 			}
 			return r.start < size;
 		}) : args.range;
+		console.log('ranges: ', ranges);
 		new DeferredList(array.map(ranges, function(r){
 			return self._storeFetch(r);
 		}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
@@ -101,10 +103,16 @@ define([
 	}
 
 	function fetchByParentId(self, args){
-		var d = new Deferred();
-		new DeferredList(array.map(args.pids, function(pid){
-			return self._loadChildren(pid);
-		}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
+		var d = new Deferred(),
+			pidSet = {},
+			dl = [];
+		for(var i = 0; i < args.pids.length; ++i){
+			pidSet[args.pids[i]] = 1;
+		}
+		for(var pid in pidSet){
+			dl.push(self._loadChildren(pid));
+		}
+		new DeferredList(dl, 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
 		return d;
 	}
 

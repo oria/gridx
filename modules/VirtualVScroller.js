@@ -147,7 +147,7 @@ define([
 				dn.scrollTop += dif / t._ratio;
 			}
 			if((istop && bn.firstChild.getAttribute('visualindex') == 0) || 
-					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.body.visualCount - 1)){
+					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.view.visualCount - 1)){
 				finish(false);
 				return;
 			}
@@ -178,8 +178,9 @@ define([
 				var buffSize = t.arg('buffSize'),
 					scrollRange = dn.scrollHeight - dn.offsetHeight,
 					body = t.grid.body,
-					visualStart = body.visualStart,
-					visualEnd = visualStart + body.visualCount,
+					view = t.grid.view,
+					visualStart = view.visualStart,
+					visualEnd = visualStart + view.visualCount,
 					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,
 					firstRowTop = firstRow && firstRow.offsetTop - deltaT,
@@ -302,7 +303,7 @@ define([
 	
 		_syncHeight: function(){
 			var t = this,
-				h = t._avgRowHeight * t.grid.body.visualCount,
+				h = t._avgRowHeight * t.grid.view.visualCount,
 				maxHeight = 1342177;
 			if(sniff('ff')){
 				maxHeight = 17895697;
@@ -363,6 +364,7 @@ define([
 		_onKeyScroll: function(evt){
 			var t = this,
 				bd = t.grid.body,
+				view = t.grid.view,
 				focus = t.grid.focus,
 				sn = t.domNode,
 				st = 'scrollTop',
@@ -376,14 +378,14 @@ define([
 					bd._focusCell();
 				}else if(evt.keyCode == keys.END && evt.ctrlKey){
 					bd._focusCellCol = t.grid._columns.length - 1;
-					bd[fc] = bd.visualCount - 1;
+					bd[fc] = view.visualCount - 1;
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
 					bd._focusCell();
 				}else if(evt.keyCode == keys.PAGE_UP){
 					r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
 					t.scrollToRow(r);
 				}else if(evt.keyCode == keys.PAGE_DOWN){
-					r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
+					r = bd[fc] = Math.min(view.visualCount - 1, bd.renderStart + bd.renderCount);
 					t.scrollToRow(r, 1);	//1 as true
 				}else{
 					return;

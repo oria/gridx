@@ -156,10 +156,6 @@ define([
 		//		If less than 1, then this is not a tree grid at all.
 		expandLevel: 1 / 0,
 
-		//clearOnSetStore: Boolean
-		//		Whether to clear all the recorded expansion info after setStore.
-		clearOnSetStore: true,
-
 		onExpand: function(id){
 			// summary:
 			//		Fired when a row is expanded.
@@ -242,15 +238,44 @@ define([
 			//		so that several grid operations can be executed altogether.
 			// returns:
 			//		A deferred object indicating whether this collapsing process has completed.
+		},
+
+		refresh: function(){
+			// summary:
+			//		When the row order are changed or rows are filtered, the expand info recorded here will
+			//		be invalid. This method refreshes the expand info by logically re-open all expanded rows,
+			//		and then refresh the grid body.
+			//		When this method is called, no need to call grid.body.refresh() anymore.
+			// returns:
+			//		A Deferred object indicating when this process ends.
+		},
+	
+		getRowInfoByVisualIndex: function(visualIndex, rootStart){
+			// summary:
+			//		Get row info (including row index, row id, parent id, etc) by row visual index.
+			// tags:
+			//		private
+			// visualIndex: Integer
+			// rootStart: Integer
+			// returns:
+			//		A row info object
+		},
+	
+		getVisualIndexByRowInfo: function(parentId, rowIndex, rootStart){
+			// tags:
+			//		private
+		},
+	
+		getVisualSize: function(start, count, parentId){
+			// tags:
+			//		private
 		}
 	});
 
 	Tree.__ColumnDefinition = declare(Column.__ColumnDefinition, {
 		// expandLevel: Number
 		//		
-		expandLevel: 0,
-
-		padding: false
+		expandLevel: 0
 	});
 
 	return Tree;
@@ -265,8 +290,10 @@ define([
 	return declare(_Module, {
 		name: "tree",
 
-		forced: ['view'],
-
+		constructor: function(){
+			this._clear();
+		},
+	
 		getAPIPath: function(){
 			return {
 				tree: this
@@ -280,11 +307,50 @@ define([
 				t.model.treeMarkMode('', true);
 			}
 			g.domNode.setAttribute('role', 'treegrid');
-			t.aspect(g.body, 'collectCellWrapper', '_createCellWrapper');
-			t.aspect(g.body, 'onAfterRow', '_onAfterRow');
-			t.aspect(g, 'onCellClick', '_onCellClick');
+			t.batchConnect(
+				[g.body, 'collectCellWrapper', '_createCellWrapper'],
+				[g.body, 'onAfterRow', '_onAfterRow'],
+				[t.model, 'onDelete', '_onDelete'],
+				[g, 'onCellClick', '_onCellClick'],
+				[g, 'setStore', function(){
+					//If server store changes without notifying grid, expanded rows should remain expanded.
+					//FIXME: this is ugly...
+					if(t.arg('clearOnSetStore')){
+						t._clear();
+					}
+				}]);
 			t._initExpandLevel();
 			t._initFocus();
+			if(g.persist){
+				var id,
+					data = g.persist.registerAndLoad('tree', function(){
+						return {
+							openInfo: t._openInfo, 
+							parentOpenInfo: t._parentOpenInfo
+						};
+					});
+				if(data && data.openInfo && data.parentOpenInfo){
+					var openInfo = t._openInfo = data.openInfo,
+						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
+					for(id in openInfo){
+						openInfo[id].openned = parentOpenInfo[id];
+					}
+					t._persisted = 1;
+				}
+			}
+		},
+
+		load: function(args){
+			var t = this;
+			if(t._persisted){
+				t.loaded.callback();
+			}else{
+				t.model.when({}, function(){
+					t._openInfo[''].count = t.model.size();
+				}).then(function(){
+					t.loaded.callback();
+				});
+			}
 		},
 
 		rowMixin: {
@@ -315,8 +381,9 @@ define([
 
 		expandLevel: 1 / 0,
 
+		//clearOnSetStore: Boolean
+		//		Whether to clear all the recorded expansion info after setStore.
 		clearOnSetStore: true,
-
 		onExpand: function(id){},
 
 		onCollapse: function(id){},
@@ -328,23 +395,22 @@ define([
 				expandLevel = t.arg('expandLevel');
 			return m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel);
 		},
-
+	
 		isExpanded: function(id){
-			return !!this.grid.view._openInfo[id];
-		},
-
-		isPaddingCell: function(rowId, colId){
-			var level = this.model.treePath(rowId).length,
-				col = this.grid.column(colId, 1);
-			return this.arg('nested') && level > 1 && col.index() < level - 1 && col.padding !== false;
+			return !!this._openInfo[id];	//Boolean
 		},
 
 		expand: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				t = this;
-			if(id && !t.isExpanded(id) && t.canExpand(id)){
+			if(id && !t.isExpanded(id)){
 				t._beginLoading(id);
-				t.grid.view.logicExpand(id).then(function(){
+				t.model.when({
+					parentId: id, 
+					start: 0
+				}, function(){
+					t._logicExpand(id);
+				}).then(function(){
 					Deferred.when(t._updateBody(id, skipUpdateBody, true), function(){
 						t._endLoading(id);
 						d.callback();
@@ -361,11 +427,10 @@ define([
 			var d = new Deferred(),
 				t = this;
 			if(id && t.isExpanded(id)){
-				t.grid.view.logicCollapse(id).then(function(){
-					Deferred.when(t._updateBody(id, skipUpdateBody), function(){
-						d.callback();
-						t.onCollapse(id);
-					});
+				t._logicCollapse(id);
+				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
+					d.callback();
+					t.onCollapse(id);
 				});
 			}else{
 				d.callback();
@@ -402,8 +467,7 @@ define([
 				success = lang.hitch(d, d.callback),
 				fail = lang.hitch(d, d.errback),
 				t = this,
-				view = t.grid.view,
-				info = view._openInfo[id || ''],
+				info = t._openInfo[id || ''],
 				i, dl = [];
 			if(info){
 				for(i = info.openned.length - 1; i >= 0; --i){
@@ -422,7 +486,104 @@ define([
 			return d;
 		},
 
+		refresh: function(){
+			var t = this,
+				m = t.model,
+				d = new Deferred(),
+				success = lang.hitch(d, d.callback),
+				fail = lang.hitch(d, d.errback),
+				id, ids = [],
+				ranges = [],
+				body = t.grid.body;
+			for(id in t._openInfo){
+				if(m.isId(id)){
+					ids.push(id);
+					ranges.push({
+						parentId: id,
+						start: 0
+					});
+				}
+			}
+			t._clear();
+			m.when(ranges, function(){
+				var size = t._openInfo[''].count = m.size();
+				array.forEach(ids, t._logicExpand, t);
+				//Update body visual count manually, so have to change render count too.
+				body.visualCount = t.getVisualSize(0, size);
+				if(body.renderCount > body.visualCount){
+					body.renderCount = body.visualCount;
+				}
+			}).then(function(){
+				body.refresh().then(success, fail);
+			}, fail);
+			return d;
+		},
+	
+		//Package------------------------------------------------------------------------------
+		getRowInfoByVisualIndex: function(visualIndex, rootStart){
+			var t = this,
+				rootOpenned = t._openInfo[''].openned,
+				root, i;
+			visualIndex += rootStart;
+			for(i = 0; i < rootOpenned.length; ++i){
+				root = t._openInfo[rootOpenned[i]];
+				if(root.index < rootStart){
+					visualIndex += root.count;
+				}else{
+					break;
+				}
+			}
+			var info = {
+				parentId: '',
+				preCount: 0
+			};
+			while(!info.found){
+				info = t._getChild(visualIndex, info);
+			}
+			return info;
+		},
+	
+		getVisualIndexByRowInfo: function(parentId, rowIndex, rootStart){
+			var index = this._getAbsoluteVisualIndex(parentId, rowIndex);
+			return index >= 0 ? index - this._getAbsoluteVisualIndex('', rootStart) : null;
+		},
+	
+		getVisualSize: function(start, count, parentId){
+			var info = this._openInfo[parentId || ''];
+			if(info){
+				var i, len = info.openned.length, child, size = count;
+				for(i = 0; i < len; ++i){
+					child = this._openInfo[info.openned[i]];
+					if(child.index >= start && child.index < start + count){
+						size += child.count;
+					}
+				}
+				return size;
+			}
+			return 0;
+		},
+	
 		//Private-------------------------------------------------------------------------------
+		//_parentOpenInfo: null,
+	
+		//_openInfo: null,
+	
+		_clear: function(){
+			var openned = [];
+			this._openInfo = {
+				'': {
+					id: '',
+					parentId: null,
+					index: -1,
+					count: 0,
+					openned: openned
+				}
+			};
+			this._parentOpenInfo = {
+				'': openned
+			};
+		},
+
 		_initExpandLevel: function(){
 			var cols = this.grid._columns;
 			if(!array.some(cols, function(col){
@@ -485,7 +646,7 @@ define([
 				}
 			}
 		},
-
+	
 		_onCellClick: function(e){
 			if(isExpando(e.cellNode)){
 				var t = this,
@@ -509,7 +670,6 @@ define([
 				});
 			}
 		},
-
 		_endLoading: function(id){
 			var rowNode = this.grid.body.getRowNode({rowId: id}),
 				isOpen = this.isExpanded(id);
@@ -524,17 +684,14 @@ define([
 				rowNode.setAttribute('aria-expanded', String(isOpen));
 			}
 		},
-
+	
 		_updateBody: function(id, skip, refreshPartial){
 			var t = this,
-				view = t.grid.view,
 				body = t.grid.body;
+			body.updateRootRange(body.rootStart, body.rootCount);
 			if(!skip){
 				var visualIndex = refreshPartial && id ? 
-					view.getRowInfo({
-						rowIndex: t.model.idToIndex(id),
-						parentId: t.model.parentId(id)
-					}).visualIndex : -1;
+					t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
 				//When collapsing, the row count in current view decrease, if only render partially,
 				//it is possible that the vertical scroll bar disappear, then the upper unrendered rows will be lost.
 				//So refresh the whole body here to make the upper row also visible.
@@ -542,6 +699,135 @@ define([
 				return body.refresh(refreshPartial && visualIndex + 1);
 			}
 			return null;
+		},
+
+		_getAbsoluteVisualIndex: function(parentId, rowIndex){
+			var info = this._openInfo[parentId || ''];
+			if(info){
+				var preCount = 0,
+					openInfo = this._openInfo,
+					func = function(info){
+						preCount += rowIndex;
+						var child, i;
+						for(i = 0; i < info.openned.length; ++i){
+							child = openInfo[info.openned[i]];
+							if(child.index < rowIndex){
+								preCount += child.count;
+							}else{
+								break;
+							}
+						}
+						rowIndex = info.index;
+						if(info.id){
+							preCount++;
+						}
+						return openInfo[info.parentId];
+					};
+				while(info){
+					info = func(info);
+				}
+				return preCount;
+			}
+			return -1;
+		},
+	
+		_logicExpand: function(id){
+			var t = this,
+				m = t.model,
+				treePath = m.treePath(id),
+				level = treePath.length,
+				expandLevel = t.arg('expandLevel');
+			if(m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel)){
+				var parentId = treePath.pop(),
+					openInfo = t._openInfo,
+					poi = t._parentOpenInfo,
+					parentOpenInfo = poi[parentId] = poi[parentId] || [];
+				poi[id] = poi[id] || [];
+				if(!openInfo[id]){
+					var index = m.idToIndex(id);
+					if(index >= 0){
+						var childCount = m.size(id),
+							i = util.biSearch(parentOpenInfo, function(childId){
+								return openInfo[childId].index - index;
+							});
+						if(parentOpenInfo[i] !== id){
+							parentOpenInfo.splice(i, 0, id);
+						}
+						for(i = poi[id].length - 1; i >= 0; --i){
+							childCount += openInfo[poi[id][i]].count;
+						}
+						openInfo[id] = {
+							id: id,
+							parentId: parentId,
+							index: index,
+							count: childCount,
+							openned: poi[id]
+						};
+						var info = openInfo[parentId];
+						while(info){
+							info.count += childCount;
+							info = openInfo[info.parentId];
+						}
+					}
+				}
+			}
+			//console.log('after expand:', id, dojo.clone(this._openInfo), dojo.clone(this._parentOpenInfo));
+		},
+	
+		_logicCollapse: function(id){
+			var t = this,
+				info = t._openInfo[id];
+			if(info){
+				var openInfo = t._openInfo,
+					parentId = t.model.treePath(id).pop(),
+					parentOpenInfo = t._parentOpenInfo[parentId],
+					i = util.biSearch(parentOpenInfo, function(childId){
+						return openInfo[childId].index - info.index; 
+					}),
+					childCount = info.count;
+				parentOpenInfo.splice(i, 1);
+				info = openInfo[parentId];
+				while(info){
+					info.count -= childCount;
+					info = openInfo[info.parentId];
+				}
+				delete openInfo[id];
+			}
+			//console.log('after collapse:', id,  dojo.clone(this._openInfo), dojo.clone(this._parentOpenInfo));
+		},
+	
+		_getChild: function(visualIndex, info){
+			var item = this._openInfo[info.parentId],
+				i, len, preCount = info.preCount + item.index + 1,
+				commonMixin = {
+					found: true,
+					visualIndex: visualIndex,
+					count: 1
+				};
+	
+			for(i = 0, len = item.openned.length; i < len; ++i){
+				var childId = item.openned[i],
+					child = this._openInfo[childId],
+					vidx = child.index + preCount;
+				if(vidx === visualIndex){
+					return lang.mixin({
+						parentId: item.id,
+						start: child.index
+					}, commonMixin);
+				}else if(vidx > visualIndex){
+					break;
+				}else if(vidx + child.count >= visualIndex){
+					return {
+						parentId: childId, 
+						preCount: preCount 
+					};
+				}
+				preCount += child.count;
+			}
+			return lang.mixin({
+				parentId: item.id,
+				start: visualIndex - preCount
+			}, commonMixin);
 		},
 
 		_onAfterRow: function(row){
@@ -552,6 +838,57 @@ define([
 				rowNode.setAttribute('aria-expanded', expanded);
 				//This is only to make JAWS read.
 				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').attr('aria-expanded', String(expanded));
+			}
+		},
+
+		_onDelete: function(rowId, rowIndex, treePath){
+			var openInfo = this._openInfo,
+				parentOpenInfo = this._parentOpenInfo,
+				info = openInfo[rowId],
+				model = this.model,
+				parentId = treePath.pop(),
+				count = 1,
+				deleteItem = function(id, parentId){
+					var info = openInfo[id],
+						openedChildren = parentOpenInfo[id] || [];
+					array.forEach(openedChildren, function(child){
+						deleteItem(child);
+					});
+					delete parentOpenInfo[id];
+					if(info){
+						delete openInfo[id];
+						parentId = info.parentId;
+					}else if(!model.isId(parentId)){
+						//FIXME: don't know what to do here...
+						return;
+					}
+					var ppoi = parentOpenInfo[parentId],
+						i = array.indexOf(ppoi, id);
+					if(i >= 0){
+						ppoi.splice(i, 1);
+						for(; i < ppoi.length; ++i){
+							openInfo[ppoi[i]].index--;
+						}
+					}else{
+						var index = info ? info.index : rowIndex;
+						for(i = 0; i < ppoi.length; ++i){
+							info = openInfo[ppoi[i]];
+							if(info.index > index){
+								info.index--;
+							}
+						}
+					}
+				};
+			if(info){
+				count += info.count;
+				info = openInfo[info.parentId];
+			}else if(this.model.isId(parentId)){
+				info = openInfo[parentId];
+			}
+			deleteItem(rowId, parentId);
+			while(info){
+				info.count -= count;
+				info = openInfo[info.parentId];
 			}
 		},
 
@@ -589,9 +926,9 @@ define([
 				}
 			}else if(e.ctrlKey && isExpando(e.cellNode)){
 				var ltr = t.grid.isLeftToRight();
-				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t.isExpanded(e.rowId)){
+				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t._openInfo[e.rowId]){
 					t.collapse(e.rowId);
-				}else if(e.keyCode == (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !t.isExpanded(e.rowId)){
+				}else if(e.keyCode == (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !t._openInfo[e.rowId]){
 					t.expand(e.rowId);
 				}
 			}

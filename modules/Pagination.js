@@ -129,7 +129,7 @@ define([
 	return declare(_Module, {
 		name: 'pagination',	
 
-		forced: ['body'],
+		forced: ['view'],
 
 		getAPIPath: function(){
 			return {
@@ -152,7 +152,7 @@ define([
 		},
 
 		preload: function(){
-			this.grid.body.autoChangeSize = false;
+			this.grid.view.paging = true;
 		},
 
 		load: function(){
@@ -265,7 +265,6 @@ define([
 
 		_updateBody: function(noRefresh){
 			var t = this,
-				bd = t.grid.body,
 				size = t.model.size(),
 				count = t.pageSize(),
 				start = t.firstIndexInPage();
@@ -275,9 +274,9 @@ define([
 			}else if(size - start < count){
 				count = size - start;
 			}
-			bd.updateRootRange(start, count);
+			t.grid.view.updateRootRange(start, count);
 			if(!noRefresh){
-				bd.refresh();
+				t.grid.body.refresh();
 			}
 		},
 
@@ -285,7 +284,7 @@ define([
 			var t = this;
 			if(size === 0){
 				t._page = 0;
-				t.grid.body.updateRootRange(0, 0);
+				t.grid.view.updateRootRange(0, 0);
 			}else{
 				var first = t.firstIndexInPage();
 				if(first < 0 && t._page !== 0){

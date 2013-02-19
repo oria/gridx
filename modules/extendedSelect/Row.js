@@ -222,7 +222,7 @@ define([
 		_markByIndex: function(args, toSelect){
 			var g = this.grid,
 				m = this.model,
-				body = g.body,
+				view = g.view,
 				rowInfo;
 			array.forEach(args, function(arg){
 				if(lang.isArrayLike(arg)){
@@ -233,16 +233,16 @@ define([
 						if(end >= start && end < Infinity){
 							count = end - start + 1;
 						}else{
-							count = body.visualCount - start;
+							count = view.visualCount - start;
 						}
-						rowInfo = body.getRowInfo({visualIndex: start});
+						rowInfo = view.getRowInfo({visualIndex: start});
 						start = rowInfo.rowIndex;
 						for(i = 0; i < count; ++i){
 							m.markByIndex(i + start, toSelect, '', rowInfo.parentId);
 						}
 					}
 				}else if(arg >= 0 && arg < Infinity){
-					rowInfo = body.getRowInfo({visualIndex: arg});
+					rowInfo = view.getRowInfo({visualIndex: arg});
 					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
 				}
 			});
@@ -329,7 +329,7 @@ define([
 
 		_addToSelected: function(start, end, toSelect){
 			var t = this,
-				bd = t.grid.body,
+				view = t.grid.view,
 				m = t.model,
 				lastEndItem = t._lastEndItem,
 				a, b, i, d;
@@ -339,8 +339,8 @@ define([
 			if(t._isRange && t._inRange(end.row, start.row, lastEndItem.row)){
 				a = Math.min(end.row, lastEndItem.row);
 				b = Math.max(end.row, lastEndItem.row);
-				start = bd.getRowInfo({visualIndex: a}).rowIndex + 1;
-				end = bd.getRowInfo({visualIndex: b}).rowIndex;
+				start = view.getRowInfo({visualIndex: a}).rowIndex + 1;
+				end = view.getRowInfo({visualIndex: b}).rowIndex;
 				d = new Deferred();
 				m.when({
 					start: start, 
@@ -362,7 +362,7 @@ define([
 				b = Math.max(start.row, end.row);
 
 				for(i = a; i <= b; ++i){
-					var rowInfo = bd.getRowInfo({visualIndex: i});
+					var rowInfo = view.getRowInfo({visualIndex: i});
 					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
 				}
 				return m.when();

@@ -41,7 +41,7 @@ define([
 	return declare(_Module, {
 		name: 'vScroller',
 
-		forced: ['body', 'vLayout', 'columnWidth'],
+		forced: ['view', 'body', 'vLayout', 'columnWidth'],
 
 		optional: ['pagination'],
 	
@@ -214,12 +214,13 @@ define([
 
 		_onForcedScroll: function(){
 			var t = this,
-				bd = t.grid.body;
+				view = t.grid.view,
+				body = t.grid.body;
 			return t.model.when({
-				start: bd.rootStart,
-				count: bd.rootCount
+				start: view.rootStart,
+				count: view.rootCount
 			}, function(){
-				bd.renderRows(0, bd.visualCount);
+				body.renderRows(0, view.visualCount);
 			});
 		},
 

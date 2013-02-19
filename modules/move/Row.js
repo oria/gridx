@@ -132,7 +132,7 @@ define([
 							while(array.indexOf(rowIdxes, target) >= 0){
 								target++;
 							}
-							if(target < g.body.rootStart + g.body.rootCount){
+							if(target < g.view.rootStart + g.view.rootCount){
 								t.move(rowIdxes, target + 1);
 							}
 						}

@@ -35,6 +35,7 @@ require([
 	};
 	storeAsync.getChildren = function(item){
 		var d = new Deferred();
+		console.log('getChildren: ', storeAsync.getIdentity(item));
 		setTimeout(function(){
 			var children = storeAsync.getValues(item, 'children');
 			d.callback(children);
@@ -68,7 +69,7 @@ require([
 
 	layout1 = [
 		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
-		{id: 'id', name: 'id', field: 'id', expandLevel: 'all'},
+		{id: 'id', name: 'id', field: 'id', expandLevel: 'all', width: '200px'},
 		{id: 'number', name: 'number', field: 'number',
 			widgetsInCell: true,
 			decorator: progressDecorator
@@ -110,11 +111,13 @@ require([
 
 	mods = [
 		modules.Tree,
+		modules.Pagination,
+		modules.PaginationBar,
 		modules.ColumnResizer,
 		modules.ExtendedSelectRow,
 		modules.CellWidget,
-		modules.RowHeader,
-		modules.IndirectSelect,
+		modules.IndirectSelectColumn,
+		modules.SingleSort,
 		modules.VirtualVScroller
 	];
 

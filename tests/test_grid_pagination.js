@@ -19,13 +19,13 @@ require([
 		grid1.pagination.gotoPage(0);
 	};
 	last = function(){
-		grid1.pagination.gotoPage(p.pageSize() - 1);
+		grid1.pagination.gotoPage(grid1.pagination.pageSize() - 1);
 	};
 	prev = function(){
-		grid1.pagination.gotoPage(p.currentPage() - 1);
+		grid1.pagination.gotoPage(grid1.pagination.currentPage() - 1);
 	};
 	next = function(){
-		grid1.pagination.gotoPage(p.currentPage() + 1);
+		grid1.pagination.gotoPage(grid1.pagination.currentPage() + 1);
 	};
 
 	parser.parse();

@@ -17,6 +17,7 @@ define([
 	"./core/model/extensions/Query",
 	"./core/_Module",
 	"./modules/Header",
+	"./modules/View",
 	"./modules/Body",
 	"./modules/VLayout",
 	"./modules/HLayout",
@@ -26,7 +27,7 @@ define([
 	"./modules/Focus"
 ], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
-	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus){
+	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){};
@@ -43,6 +44,7 @@ define([
 		coreModules: [
 			//Put default modules here!
 			Header,
+			View,
 			Body,
 			VLayout,
 			HLayout,

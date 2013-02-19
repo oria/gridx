@@ -40,7 +40,7 @@ define([
 			var t = this;
 			t.setStore(args.store);
 			t.columns = args._columnsById;
-			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'parentId',
+			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
 				'hasChildren', 'children', 'keep', 'free');
 		},
 
@@ -124,6 +124,16 @@ define([
 				path.pop();
 			}
 			return path;
+		},
+
+		rootId: function(id){
+			var path = this.treePath(id);
+			if(path.length > 1){
+				return path[1];
+			}else if(!path.length){
+				return null;
+			}
+			return id;
 		},
 
 		parentId: function(id){
@@ -238,6 +248,7 @@ define([
 				row = t.byId(parentId),
 				items = t._struct[parentId];
 			if(row && items && (items.length > 1 || !t.hasChildren || !t.hasChildren(parentId))){
+				console.log('loaded: ', parentId);
 				d.callback();
 			}else{
 				items = row && s.getChildren && s.getChildren(row.item) || [];
@@ -256,11 +267,11 @@ define([
 		},
 
 		_storeFetch: function(options, onFetched){
-//            console.debug("\tFETCH start: ",
-//                    options.start, ", count: ",
-//                    options.count, ", end: ",
-//                    options.count && options.start + options.count - 1, ", options:",
-//                    this.options);
+			console.debug("\tFETCH start: ",
+					options.start, ", count: ",
+					options.count, ", end: ",
+					options.count && options.start + options.count - 1, ", options:",
+					this.options);
 
 			var t = this,
 				s = t.store,

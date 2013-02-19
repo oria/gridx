@@ -58,6 +58,7 @@ define([
 					sortable: false,
 					filterable: false,
 					editable: false,
+					padding: false,
 					declaredWidth: w,
 					width: w
 				};
@@ -104,7 +105,7 @@ define([
 		},
 
 		_getPageId: function(){
-			return this.grid.body.rootStart + ',' + this.grid.body.rootCount;
+			return this.grid.view.rootStart + ',' + this.grid.view.rootCount;
 		},
 
 		_createSelector: function(data, rowId){
@@ -183,22 +184,21 @@ define([
 
 		_onSelectAll: function(){
 			var t = this,
-				g = t.grid,
-				body = g.body;
+				g = t.grid;
 			g.select.row[t._allSelected[t._getPageId()] ? 
 				'deselectByIndex' :
 				'selectByIndex'
-			]([0, body.visualCount - 1]);
+			]([0, g.view.visualCount - 1]);
 		},
 
 		_onSelectionChange: function(selected){
 			var t = this, d,
 				g = t.grid,
 				allSelected,
-				body = g.body,
+				view = g.view,
 				model = t.model,
-				start = body.rootStart,
-				count = body.rootCount;
+				start = view.rootStart,
+				count = view.rootCount;
 			var selectedRoot = array.filter(selected, function(id){
 				return !model.treePath(id).pop();
 			});
