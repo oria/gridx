@@ -9,11 +9,10 @@ define([
 	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
-	"../core/util",
 	"../core/_Module",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
-], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
+], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
 /*=====
@@ -272,7 +271,7 @@ define([
 				tree: this
 			};
 		},
-	
+
 		preload: function(){
 			var t = this,
 				g = t.grid;
@@ -301,14 +300,13 @@ define([
 				return this.grid.tree.collapse(this.id);
 			},
 			expandRecursive: function(){
-				return this.grid.expandRecursive(this.id);
+				return this.grid.tree.expandRecursive(this.id);
 			},
 			collapseRecursive: function(){
-				return this.grid.collapseRecursive(this.id);
+				return this.grid.tree.collapseRecursive(this.id);
 			}
 		},
-	
-		//Public--------------------------------------------------------------------------------
+
 		nested: false,
 
 		expandoPadding: 18,
@@ -356,23 +354,22 @@ define([
 			}
 			return d;
 		},
-	
+
 		collapse: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				t = this;
 			if(id && t.isExpanded(id)){
-				t.grid.view.logicCollapse(id).then(function(){
-					Deferred.when(t._updateBody(id, skipUpdateBody), function(){
-						d.callback();
-						t.onCollapse(id);
-					});
+				t.grid.view.logicCollapse(id);
+				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
+					d.callback();
+					t.onCollapse(id);
 				});
 			}else{
 				d.callback();
 			}
 			return d;
 		},
-	
+
 		expandRecursive: function(id, skipUpdateBody){
 			var t = this,
 				m = t.model,
@@ -396,7 +393,7 @@ define([
 			});
 			return d;
 		},
-	
+
 		collapseRecursive: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				success = lang.hitch(d, d.callback),

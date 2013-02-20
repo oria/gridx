@@ -274,7 +274,7 @@ define([
 			}else if(size - start < count){
 				count = size - start;
 			}
-			t.grid.view.updateRootRange(start, count);
+			t.grid.view.updateRootRange(start, count, 1);
 			if(!noRefresh){
 				t.grid.body.refresh();
 			}

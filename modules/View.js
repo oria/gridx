@@ -1,17 +1,25 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
-	"../core/_Module",
-	"../core/util"
-], function(declare, query, array, lang, Deferred, _Module, util){
+	"../core/_Module"
+], function(declare, array, lang, Deferred, _Module){
 
 /*=====
 	var View = declare(_Module, {
 		// summary:
-		//		
+		//		Manages how many and what rows should be shown in the current grid body.
+		// description:
+		//		This module provides a key concept: visual index, which is the position of a row in current grid body.
+		//		Note the first row in the current grid body always has visual index of zero.
+		//		And visual index has no special meaning for child rows in tree grid, so if a root row has visual index 1
+		//		and it is expanded, then its first child row will have visual index 2. If that root row is collapsed, its child rows
+		//		will have no visual indexes (because not displayed), and its next sibling row will have visual index 2.
+		//		Visual index is important in row rendering because it makes the render logic (or other row related logic)
+		//		indenpendent of the data structure.
+		//		Also note that a row with a valid visual index doesn't have to to rendered out or even loaded, 
+		//		due to the existence of virtual scrolling.
 
 		rootStart: 0,
 		rootCount: 0,
@@ -86,9 +94,9 @@ define([
 			var t = this,
 				m = t.model,
 				g = t.grid,
-				persist = g.persist,
-				persistedData,
-				ranges = {};
+				persistedOpenInfo = g.persist ? g.persist.registerAndLoad('tree', function(){
+					return t._openInfo;
+				}) : [];
 			t._clear();
 			t.aspect(m, 'onSizeChange', '_onSizeChange');
 			t.aspect(m, 'onDelete', '_onDelete');
@@ -98,51 +106,35 @@ define([
 					t._clear();
 				}
 			});
-			if(persist){
-				persistedData = persist.registerAndLoad('tree', function(){
-					var ids = [];
-					for(var id in t._openInfo){
-						if(id !== ''){
-							ids.push(id);
-						}
-					}
-					return ids;
-				});
-				if(persistedData){
-					ranges = array.map(persistedData, function(id){
-						return {
-							parentId: id,
-							start: 0
-						};
-					});
+			t._loadLevels(persistedOpenInfo).then(function(){
+				var size = t._openInfo[''].count = m.size();
+				t.rootCount = t.rootCount || size - t.rootStart;
+				for(var id in persistedOpenInfo){
+					t._expand(id);
 				}
-			}
-			//Load the store size
-			m.when(ranges, function(){
-				if(persistedData){
-					array.forEach(persistedData, t._expand, t);
-				}else{
-					var size = t._openInfo[''].count = m.size();
-					t.rootCount = t.rootCount || size;
-				}
-				t.updateVisualCount().then(function(){
-					t.loaded.callback();
-				}, function(e){
-					t._err = e;
-					t.loaded.callback();
-				});
-			}).then(null, function(e){
+				t._updateVC();
+				t.loaded.callback();
+			}, function(e){
 				t._err = e;
 				t.loaded.callback();
 			});
 		},
 
+		rowMixin: {
+			visualIndex: function(){
+				return this.grid.view.getRowInfo({
+					rowId: this.id
+				}).visualIndex;
+			}
+		},
+
 		rootStart: 0,
+
 		rootCount: 0,
+
 		visualStart: 0,
+
 		visualCount: 0,
-		_parentOpenInfo: null,
-		_openInfo: null,
 
 		getRowInfo: function(args){
 			var t = this,
@@ -187,16 +179,85 @@ define([
 			return args;
 		},
 
-		updateRootRange: function(start, count){
+		//Package------------------------------------------------------------------------------
+		logicExpand: function(id){
+			var t = this,
+				d = new Deferred();
+			t.model.when({
+				parentId: id,
+				start: 0
+			}, function(){
+				if(t._expand(id)){
+					t._updateVC();
+				}
+			}).then(function(){
+				d.callback();
+			}, function(e){
+				d.errback(e);
+			});
+			return d;
+		},
+
+		logicCollapse: function(id){
+			var t = this,
+				openInfo = t._openInfo,
+				info = openInfo[id];
+			if(info){
+				var parentId = t.model.parentId(id),
+					parentOpenInfo = t._parentOpenInfo[parentId],
+					childCount = info.count;
+				parentOpenInfo.splice(array.indexOf(parentOpenInfo, id), 1);
+				info = openInfo[parentId];
+				while(info){
+					info.count -= childCount;
+					info = openInfo[info.parentId];
+				}
+				delete openInfo[id];
+				t.model.free(id, 1);
+				t._updateVC();
+			}
+		},
+
+		updateRootRange: function(start, count, skipUpdate){
 			var t = this;
 			t.rootStart = start;
 			t.rootCount = count;
 			t.updateVisualCount().then(function(){
-				t.onUpdate();
+				if(!skipUpdate){
+					t.onUpdate();
+				}
 			});
 		},
 
+		updateVisualCount: function(){
+			var t = this;
+			return t._loadLevels().then(function(){
+				t._updateVC();
+			});
+		},
+
+		//Event---------------------------------------------------------------------------------
 		onUpdate: function(){},
+
+		//Private-------------------------------------------------------------------------------
+		_parentOpenInfo: null,
+		_openInfo: null,
+
+		_clear: function(){
+			var openned = [];
+			this._openInfo = {
+				'': {
+					id: '',
+					parentId: null,
+					path: [],
+					count: 0,
+					openned: openned
+				}
+			};
+			this._parentOpenInfo = {
+				'': openned
+			};
+		},
 
 		_expand: function(id){
 			var t = this,
@@ -210,6 +271,7 @@ define([
 				if(!openInfo[id]){
 					var index = m.idToIndex(id);
 					if(index >= 0){
+						m.keep(id, 1);
 						if(array.indexOf(parentOpenInfo, id) < 0){
 							parentOpenInfo.push(id);
 						}
@@ -233,120 +295,6 @@ define([
 					}
 				}
 			}
-		},
-
-		logicExpand: function(id){
-			var t = this,
-				opened,
-				d = new Deferred();
-			t.model.when({
-				parentId: id,
-				start: 0
-			}, function(){
-				opened = t._expand(id);
-			}).then(function(){
-				if(opened){
-					t.updateVisualCount().then(function(){
-						d.callback();
-					});
-				}else{
-					d.callback();
-				}
-			}, function(e){
-				d.errback(e);
-			});
-			return d;
-		},
-
-		logicCollapse: function(id){
-			var t = this,
-				openInfo = t._openInfo,
-				info = openInfo[id],
-				d = new Deferred();
-			if(info){
-				var parentId = t.model.parentId(id),
-					parentOpenInfo = t._parentOpenInfo[parentId],
-					i = array.indexOf(parentOpenInfo, id),
-					childCount = info.count;
-				parentOpenInfo.splice(i, 1);
-				info = openInfo[parentId];
-				while(info){
-					info.count -= childCount;
-					info = openInfo[info.parentId];
-				}
-				delete openInfo[id];
-				t.updateVisualCount().then(function(){
-					d.callback();
-				});
-			}else{
-				d.callback();
-			}
-			return d;
-		},
-
-		updateVisualCount: function(){
-			var t = this,
-				m = t.model,
-				openInfo = t._openInfo,
-				info = openInfo[''],
-				len = info.openned.length, 
-				size = t.rootCount,
-				d = new Deferred(),
-				i, child, index, id,
-				levels = [];
-			for(id in openInfo){
-				if(m.isId(id)){
-					var path = openInfo[id].path;
-					for(i = 0; i < path.length; ++i){
-						levels[i] = levels[i] || [];
-						levels[i].push({
-							parentId: path[i],
-							start: 0
-						});
-					}
-				}
-			}
-			var fetchLevel = function(level){
-				if(level < levels.length){
-					m.when(levels[level], function(){
-						fetchLevel(level + 1);
-					});
-				}else{
-					m.when({}, function(){
-						for(i = 0; i < len; ++i){
-							child = openInfo[info.openned[i]];
-							index = m.idToIndex(child.id);
-							if(index >= t.rootStart && index < t.rootStart + t.rootCount){
-								size += child.count;
-							}
-						}
-						t.visualCount = size;
-					}).then(function(){
-						d.callback();
-					}, function(){
-						d.callback();
-					});
-				}
-			};
-			fetchLevel(0);
-			return d;
-		},
-
-		//Private-------------------------------------------------------------------------------
-		_clear: function(){
-			var openned = [];
-			this._openInfo = {
-				'': {
-					id: '',
-					parentId: null,
-					path: [],
-					count: 0,
-					openned: openned
-				}
-			};
-			this._parentOpenInfo = {
-				'': openned
-			};
 		},
 
 		_getVisualIndex: function(parentId, rowIndex){
@@ -391,6 +339,7 @@ define([
 				};
 			//Have to sort the opened rows to calc the visual index.
 			//But if there are too many opened, this sorting will be slow, any better idea?
+			//Note the index can't be maintained since it is changing when sorted or filtered etc.
 			item.openned.sort(function(a, b){
 				return m.idToIndex(a) - m.idToIndex(b);
 			});
@@ -417,6 +366,63 @@ define([
 				parentId: item.id,
 				rowIndex: visualIndex - preCount
 			}, commonMixin);
+		},
+
+		_loadLevels: function(openInfo){
+			openInfo = openInfo || this._openInfo;
+			var m = this.model,
+				d = new Deferred(),
+				id, levels = [];
+			for(id in openInfo){
+				if(m.isId(id)){
+					var i, path = openInfo[id].path;
+					for(i = 0; i < path.length; ++i){
+						levels[i] = levels[i] || [];
+						levels[i].push({
+							parentId: path[i],
+							start: 0
+						});
+					}
+				}
+			}
+			var fetchLevel = function(level){
+				if(level < levels.length){
+					m.when(levels[level], function(){
+						array.forEach(levels[level], function(arg){
+							m.keep(arg.parentId, 1);
+						});
+						fetchLevel(level + 1);
+					}).then(null, function(e){
+						d.errback(e);
+					});
+				}else{
+					m.when({}).then(function(){
+						d.callback();
+					}, function(e){
+						d.errback(e);
+					});
+				}
+			};
+			fetchLevel(0);
+			return d;
+		},
+
+		_updateVC: function(){
+			var t = this,
+				m = t.model,
+				openInfo = t._openInfo,
+				info = openInfo[''],
+				len = info.openned.length, 
+				size = t.rootCount,
+				i, child, index;
+			for(i = 0; i < len; ++i){
+				child = openInfo[info.openned[i]];
+				index = m.idToIndex(child.id);
+				if(index >= t.rootStart && index < t.rootStart + t.rootCount){
+					size += child.count;
+				}
+			}
+			t.visualCount = size;
 		},
 
 		_onSizeChange: function(size, oldSize){

@@ -63,7 +63,6 @@ define([
 					mis.push(id);
 				}
 			});
-			console.log(mis);
 			searchRootLevel(self, mis).then(function(ids){
 				if(ids.length && isTree){
 					searchChildLevel(self, ids).then(function(ids){
@@ -95,7 +94,6 @@ define([
 			}
 			return r.start < size;
 		}) : args.range;
-		console.log('ranges: ', ranges);
 		new DeferredList(array.map(ranges, function(r){
 			return self._storeFetch(r);
 		}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
@@ -403,23 +401,37 @@ define([
 			return d;
 		},
 
-		keep: function(id){
+		keep: function(id, lock){
 			var t = this,
 				k = t._kept;
 			if(t._cache[id] && t._struct[id] && !k[id]){
 				k[id] = 1;
 				++t._keptSize;
 			}
+			if(k[id] && !t._lock[id] && lock){
+				t._lock[id] = 1;
+				++t._lockSize;
+				console.log('lock ', id);
+			}
 		},
 
-		free: function(id){
+		free: function(id, unlock){
 			var t = this;
 			if(!t.model.isId(id)){
-				t._kept = {};
-				t._keptSize = 0;
+				//free all. Not free locked items.
+				t._kept = lang.clone(t._lock);
+				t._keptSize = t._lockSize;
 			}else if(t._kept[id]){
-				delete t._kept[id];
-				--t._keptSize;
+				if(!t._lock[id]){
+					//free unlocked items.
+					delete t._kept[id];
+					--t._keptSize;
+				}else if(unlock){
+					//if explictly unlock an item, only unlock it, but not free it,
+					//so that next time it'll be freed.
+					delete t._lock[id];
+					--t._lockSize;
+				}
 			}
 		},
 
@@ -433,7 +445,9 @@ define([
 			t._requests = [];
 			t._priority = [];
 			t._kept = {};
+			t._lock = {};
 			t._keptSize = 0;
+			t._lockSize = 0;
 		},
 
 		//-----------------------------------------------------------------------------------------------------------
@@ -448,9 +462,9 @@ define([
 				t.clear();
 			}else if(cs >= 0){
 				cs += t._keptSize;
-//                console.warn("### Cache size:", p.length,
-//                        ", To release: ", p.length - cs,
-//                        ", Keep size: ", this._keptSize);
+				console.warn("### Cache size:", p.length,
+						", To release: ", p.length - cs,
+						", Keep size: ", this._keptSize);
 				while(p.length > cs){
 					id = p.shift();
 					if(t._kept[id]){
