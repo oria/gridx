@@ -288,10 +288,10 @@ define([
 			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
 			t.aspect(g, 'onCellMouseOver', '_onCellMouseOver');
 			t.aspect(g, 'onCellMouseOut', '_onCellMouseOver');
-			t.connect(g.bodyNode, 'onmouseleave', function(){
+			t.connect(g.mainNode, 'onmouseleave', function(){
 				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 			});
-			t.connect(g.bodyNode, 'onmouseover', function(e){
+			t.connect(g.mainNode, 'onmouseover', function(e){
 				if(e.target == g.bodyNode){
 					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 				}
