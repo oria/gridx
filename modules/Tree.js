@@ -206,7 +206,7 @@ define([
 			// returns:
 			//		A deferred object indicating whether this expanding process has completed.
 		},
-	
+
 		collapse: function(id, skipUpdateBody){
 			// summary:
 			//		Collapse a row.
@@ -218,7 +218,7 @@ define([
 			// returns:
 			//		A deferred object indicating whether this collapsing process has completed.
 		},
-	
+
 		expandRecursive: function(id, skipUpdateBody){
 			// summary:
 			//		Recursively expand a row and all its descendants.
@@ -230,7 +230,7 @@ define([
 			// returns:
 			//		A deferred object indicating whether this expanding process has completed.
 		},
-	
+
 		collapseRecursive: function(id, skipUpdateBody){
 			// summary:
 			//		Recursively collapse a row recursively and all its descendants.

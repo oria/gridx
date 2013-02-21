@@ -179,7 +179,7 @@ define([
 					scrollRange = dn.scrollHeight - dn.offsetHeight,
 					body = t.grid.body,
 					view = t.grid.view,
-					visualStart = view.visualStart,
+					visualStart = 0,	//visualStart is always zero
 					visualEnd = visualStart + view.visualCount,
 					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,

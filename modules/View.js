@@ -1,39 +1,92 @@
 define([
+/*====="../core/Row",=====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"../core/_Module"
-], function(declare, array, lang, Deferred, _Module){
+], function(/*=====Row, =====*/declare, array, lang, Deferred, _Module){
 
 /*=====
+	Row.visualIndex = function(){
+		// summary:
+		//		Get the visual index (the position in current grid body) of this row.
+		//		See documents of View module for more details on visual index.
+		// returns:
+		//		The visual index of this row.
+	};
+
 	var View = declare(_Module, {
 		// summary:
 		//		Manages how many and what rows should be shown in the current grid body.
 		// description:
-		//		This module provides a key concept: visual index, which is the position of a row in current grid body.
+		//		This module defines a key concept: visual index, which is the position of a row in current grid body.
+		//		Visual index is important in row rendering because it makes the render logic (or other row related logic)
+		//		indenpendent of the data structure. The grid body just asks this View module which row should be rendered
+		//		for position 1, and which for position 2, etc, without worrying about paging or tree expansion.
 		//		Note the first row in the current grid body always has visual index of zero.
 		//		And visual index has no special meaning for child rows in tree grid, so if a root row has visual index 1
 		//		and it is expanded, then its first child row will have visual index 2. If that root row is collapsed, its child rows
 		//		will have no visual indexes (because not displayed), and its next sibling row will have visual index 2.
-		//		Visual index is important in row rendering because it makes the render logic (or other row related logic)
-		//		indenpendent of the data structure.
-		//		Also note that a row with a valid visual index doesn't have to to rendered out or even loaded, 
+		//		Also note that a row with a valid visual index doesn't have to be rendered out or even loaded, 
 		//		due to the existence of virtual scrolling.
 
+		// rootStart: [readonly] Integer
+		//		The row index of the first root row in the current grid body.
 		rootStart: 0,
+
+		// rootCount: [readonly] Integer
+		//		The count of root rows that exist in the current grid body.
 		rootCount: 0,
-		visualStart: 0,
+
+		// visualCount: [readonly] Integer
+		//		The count of rows (including children) that should be shown in the current grid body.
 		visualCount: 0,
 
 		getRowInfo: function(args){
 			// summary:
-			//		Get complete row info by partial row info
-			// args: Body.__RowInfo
+			//		Get complete row info by partial row info. This function can be used to convert between row index and visual index.
+			// args: View.__RowInfo
 			//		A row info object containing partial row info
 			// returns:
 			//		A row info object containing as complete as possible row info.
 		},
+
+		logicExpand: function(id){
+			// summary
+			//		Logically expand a row (fetching children of the row and update visual index)
+			// tags:
+			//		private
+		},
+
+		logicCollapse: function(id){
+			// summary:
+			//		Logically collapse a row (update visual index)
+			// tags:
+			//		private
+		},
+
+		updateRootRange: function(start, count, skipUpdate){
+			// summary:
+			//		Change root range to [start, start + count). Visual index will be updated accordingly.
+			// tags:
+			//		private
+		},
+
+		updateVisualCount: function(){
+			// summary:
+			//		Update the count of the rows that should be rendered (including child rows) in the current grid body.
+			//		This function will fetch all openned rows from store if necessary.
+			// tags:
+			//		private
+		},
+
+		onUpdate: function(){
+			// summary:
+			//		Fired when root range is changed.
+			// tags:
+			//		private
+		}
 	});
 
 	View.__RowInfo = declare([], {
@@ -58,7 +111,8 @@ define([
 
 		// visualIndex: Integer
 		//		The visual index of a row. It represents the visual position of this row in the current body view.
-		//		If there are no pagination, no filtering, no tree structure data, this value is equal to the row index.
+		//		The visual index of the first row in the current grid body is always zero. Visual index of a row might change
+		//		after paging or tree expansion/collapsing, while row index (the index under its parent row) does not.
 		visualIndex: 0
 	});
 
@@ -131,8 +185,6 @@ define([
 		rootStart: 0,
 
 		rootCount: 0,
-
-		visualStart: 0,
 
 		visualCount: 0,
 

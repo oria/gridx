@@ -24,11 +24,6 @@ define([
 		//		DOMNode|null
 	};
 
-	Row.visualIndex = function(){
-		// summary:
-		//		Get the visual index of this row.
-	};
-
 	Cell.node = function(){
 		// summary:
 		//		Get the dom node of this cell.
@@ -44,6 +39,13 @@ define([
 		//		pagination, details on demand, and even tree structure.
 
 		// loadingInfo: String
+		loadingInfo: '',
+
+		// emptyInfo: String
+		emptyInfo: '',
+
+		// loadFailInfo: String
+		loadFailInfo: '',
 
 		// rowHoverEffect: Boolean
 		//		Whether to show a visual effect when mouse hovering a row.
@@ -66,7 +68,7 @@ define([
 		getRowNode: function(args){
 			// summary:
 			//		Get the DOM node of a row
-			// args: Body.__RowCellInfo
+			// args: View.__RowInfo
 			//		A row info object containing row index or row id
 			// returns:
 			//		The DOM node of the row. Null if not found.
@@ -75,7 +77,7 @@ define([
 		getCellNode: function(args){
 			// summary:
 			//		Get the DOM node of a cell
-			// args: Body.__RowCellInfo
+			// args: View.__CellInfo
 			//		A cell info object containing sufficient info
 			// returns:
 			//		The DOM node of the cell. Null if not found.
@@ -89,7 +91,7 @@ define([
 			// returns:
 			//		A deferred object indicating when the refreshing process is finished.
 		},
-	
+
 		refreshCell: function(rowVisualIndex, columnIndex){
 			// summary:
 			//		Refresh a single cell
