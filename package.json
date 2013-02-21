@@ -5,7 +5,7 @@
 		"dijit": "https://github.com/dojo/dijit/zipball/1.8.3",
 		"dojox": "https://github.com/dojo/dojox/zipball/1.8.3"
 	},
-	"version": "1.2.0",
+	"version": "1.2.0dev",
 	"maintainers":[
 		{
 			"name": "Xiao Wen Zhu(Oliver)",
@@ -18,6 +18,16 @@
 			"email": "yurychika@gmail.com"
 		}
 	],
+	"contributors": [
+		{
+			"name": "Wei Huang(Evan)",
+			"email": "evanhuangwei@gmail.com"
+		}
+	],
+	"bugs": {
+		"mail": "zhuxw1984@gmail.com",
+		"web": "http://bugs.dojotoolkit.org/"
+	},
 	"keywords": ["Gridx", "grid", "virtual scroll", "tree grid"],
 	"description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
 	"licenses": [
@@ -30,7 +40,7 @@
 			"url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
 		}
 	],
-	"repository": {
+	"repositories": {
 		"type": "git",
 		"url": "https://github.com/oria/gridx"
 	},
