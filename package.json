@@ -2,7 +2,7 @@
 	"name": "gridx",
 	"mappings": {
 		"dojo": "https://github.com/dojo/dojo/zipball/1.8.3",
-		"dijit": "https://github.com/dojo/dijit/zipball/1.8.3"
+		"dijit": "https://github.com/dojo/dijit/zipball/1.8.3",
 		"dojox": "https://github.com/dojo/dojox/zipball/1.8.3"
 	},
 	"version": "1.2.0",
