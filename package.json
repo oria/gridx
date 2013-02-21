@@ -1,28 +1,40 @@
 {
-  "name": "gridx",
-  "version": "1.2.0",
-  "author": "Xiao Wen Zhu(Oliver), Pei Wang(Nate), Qi Chen(Leslie)",
-  "description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
-  "licenses": [
-     {
-         "type": "AFLv2.1",
-         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
-     },
-     {
-         "type": "BSD",
-         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
-     }
-  ],
-  "repository": {
-    "type":"git",
-    "url":"https://github.com/oria/gridx"
-  },
-  "dependencies": {
-    "dojo": "1.8.0",
-    "dijit": "1.8.0",
-    "dojox": "1.8.0"
-  },
-  "main": "./Grid",
-  "icon": " ",
-  "dojoBuild": "gridx.profile.js"
+	"name": "gridx",
+	"version": "1.2.0",
+	"author": "Xiao Wen Zhu(Oliver), Pei Wang(Nate), Qi Chen(Leslie)",
+	"maintainers":[
+		{
+			"name": "Xiao Wen Zhu(Oliver)",
+			"email": "zhuxw1984@gmail.com"
+		}, {
+			"name": "Pei Wang(Nate)",
+			"email": "supnate@gmail.com"
+		}, {
+			"name": "Qi Chen(Leslie)",
+			"email": "yurychika@gmail.com"
+		}
+	],
+	"description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
+	"licenses": [
+		{
+			"type": "AFLv2.1",
+			"url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
+		},
+		{
+			"type": "BSD",
+			"url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/oria/gridx"
+	},
+	"dependencies": {
+		"dojo": "1.8.0",
+		"dijit": "1.8.0",
+		"dojox": "1.8.0"
+	},
+	"main": "./Grid",
+	"icon": " ",
+	"dojoBuild": "gridx.profile.js"
 }
