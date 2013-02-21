@@ -2,7 +2,7 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/modules/Persist',
-	'gridx/modules/Select/Column',
+	'gridx/modules/select/Column',
 	'gridx/modules/move/Column',
 	'gridx/modules/dnd/Column',
 	'gridx/modules/NestedSort',
