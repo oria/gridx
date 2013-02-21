@@ -1,7 +1,11 @@
 {
 	"name": "gridx",
+	"mappings": {
+		"dojo": "https://github.com/dojo/dojo/zipball/1.8.3",
+		"dijit": "https://github.com/dojo/dijit/zipball/1.8.3"
+		"dojox": "https://github.com/dojo/dojox/zipball/1.8.3"
+	},
 	"version": "1.2.0",
-	"author": "Xiao Wen Zhu(Oliver), Pei Wang(Nate), Qi Chen(Leslie)",
 	"maintainers":[
 		{
 			"name": "Xiao Wen Zhu(Oliver)",
@@ -14,6 +18,7 @@
 			"email": "yurychika@gmail.com"
 		}
 	],
+	"keywords": ["Gridx", "grid", "virtual scroll", "tree grid"],
 	"description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
 	"licenses": [
 		{
