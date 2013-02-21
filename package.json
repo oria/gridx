@@ -34,7 +34,8 @@
 		"dijit": "1.8.0",
 		"dojox": "1.8.0"
 	},
+	"homepage": "http://oria.github.com/gridx",
 	"main": "./Grid",
-	"icon": " ",
+	"icon": "http://oria.github.com/gridx/images/logo.png",
 	"dojoBuild": "gridx.profile.js"
 }
