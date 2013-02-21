@@ -227,6 +227,15 @@ define([
 			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t.aspect(t.model, 'onSet', '_onSet');
+			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
+			t.connect(g.mainNode, 'onmouseleave', function(){
+				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+			});
+			t.connect(g.mainNode, 'onmouseover', function(e){
+				if(e.target == g.bodyNode){
+					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+				}
+			});
 			t.aspect(g, 'setStore', function(){
 				t.refresh();
 			});
@@ -820,6 +829,20 @@ define([
 					t.refresh();
 				}
 			}, 10);
+		},
+
+		//-------------------------------------------------------------------------------------
+		_onRowMouseOver: function(e){
+			var preNode = query('> div.gridxRowOver', this.domNode)[0],
+				rowNode = this.getRowNode({rowId: e.rowId});
+			if(preNode != rowNode){
+				if(preNode){
+					domClass.remove(preNode, 'gridxRowOver');
+				}
+				if(rowNode){
+					domClass.add(rowNode, 'gridxRowOver');
+				}
+			}
 		},
 
 		//Focus------------------------------------------------------------------------------------------

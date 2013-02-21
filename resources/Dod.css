@@ -8,7 +8,7 @@
 	padding: 5px 5px 5px 30px;
 }
 
-.gridxRow:hover .gridxDodNode, .gridxRow:hover .gridxDodLoadNode {
+.gridxRowOver .gridxDodNode, .gridxRowOver .gridxDodLoadNode {
 	/*border-top: 1px solid #E5DAC8;*/
 	/*border-bottom: none;*/
 }
