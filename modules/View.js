@@ -11,7 +11,7 @@ define([
 	Row.visualIndex = function(){
 		// summary:
 		//		Get the visual index (the position in current grid body) of this row.
-		//		See documents of View module for more details on visual index.
+		//		See documents of the View module for more details on visual index.
 		// returns:
 		//		The visual index of this row.
 	};
@@ -79,6 +79,8 @@ define([
 			//		This function will fetch all openned rows from store if necessary.
 			// tags:
 			//		private
+			// returns:
+			//		A Deferred object indicating when the visual count is updated succesfully.
 		},
 
 		onUpdate: function(){

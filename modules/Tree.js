@@ -55,92 +55,59 @@ define([
 
 	var Tree = declare(_Module, {
 		// summary:
-		//		Tree Grid module.
+		//		This module manages row expansion/collapsing in tree grid.
 		// description:
-		//		This module is used for creation, destruction and management of the Tree Grid.
-		//		There are two kind of Tree Grid: columnar or nested, it will be indicated by
-		//		the argument `type`, and the layout of the TreeGrid will be defined by extended
-		//		`structure` argument.
+		//		To use tree grid, the store must have 2 extra methods: hasChildren and getChildren.
+		//		Please refer to Tree.__TreeStoreMixin for more details on these 2 methods.
+		//		
+		//		In tree grid, an expando appears on a row that has child rows. By clicking the expando,
+		//		the row is expanded to show its child rows below it, and the expando becomes expanded status.
+		//		By clicking the expanded expando, the expanded row is then collapsed and all its child rows 
+		//		are hidden. If a descentant row of a collapsed row is expanded, it will appear expanded when that
+		//		collapsed row is expanded (that means the child row expansion status is maintained).
+		//		
+		//		Different levels of expandos can either appear in one column or in several different columns.
+		//		If different expandos appear in different columns, it is called "nested". This can be set using
+		//		the "nested" Boolean parameter.
+		//		
+		//		The default position of the expando is in the first column, but this position can also be changed
+		//		by setting the "expandLevel" parameter in column definition. If "nested" is false, the expandos will 
+		//		appear in the first column with truthy "expandLevel" parameter. If "nested" is true, the expando
+		//		of any 1st level row will be shown in the column with "expandLevel" equal to 1, and the expando of 
+		//		any 2nd level row will be shown in the column width "expandLevel" equal to 2, and so on.
+		//		
+		//		The expansion/collapsing of a row can also be controlled by keyboard when the focus is on the cell 
+		//		with the expando. CTRL+RIGHT_ARROW to expand and CTRL+LEFT_ARROW to collapse. If in RTL mode, the ARROW
+		//		keys are reversed.
 		// example:
-		//		For the columnar Tree Grid, the column which is expandable is indicated by the 
-		//		new added attribute `expandField`, and the value of the `expandField` is one 
-		//		or more attribute names (attributes in the meta data) that specify that item's 
-		//		children.
-		//		See the quick sample below:
-		//
-		//		sample of data source
-		//	|	{ identifier: 'name',
-		//	|	  label: 'name',
-		//	|	  items: [
-		//	|		{ name:'Africa', type:'continent', children: [
-		//	|			{ name:'Egypt', type:'country' }, 
-		//	|			{ name:'Kenya', type:'country', children:[
-		//	|				{ name:'Nairobi', type:'city', adults: 70400, popnum: 2940911 },
-		//	|				{ name:'Mombasa', type:'city', adults: 294091, popnum: 707400 } ]
-		//	|			},
-		//	|			{ name:'Sudan', type:'country', children:
-		//	|				{ name:'Khartoum', type:'city', adults: 480293, popnum: 1200394 } 
-		//	|			} ]
-		//	|		},
-		//	|		{ name:'Asia', type:'continent', children:[
-		//	|			{ name:'China', type:'country' },
-		//	|			{ name:'India', type:'country' },
-		//	|			{ name:'Russia', type:'country' },
-		//	|			{ name:'Mongolia', type:'country' } ]
-		//	|		},
-		//	|		{ name:'Australia', type:'continent', population:'21 million', children:
-		//	|			{ name:'Commonwealth of Australia', type:'country', population:'21 million'}
-		//	|		} ]
-		//	|	}
-		//
-		//		define the grid structure
-		//	|	var structure = [
-		//	|		{name: "Name", field: "name", expandLevel: 'all'},
-		//	|		{name: "Type", field: "type"},
-		//	|		{name: "Population", field: "population"}
-		//	|	];
-		//		
-		//		For the nested TreeGrid, there could be more than one column can be expanded, 
-		//		so the structure might be a little more complicated. There is ONLY one attribute
-		//		name can be assigned to the `expandField` as children, and there would be a 
-		//		attribute called `nestedLevel` to specify the hierarchy of the column.
-		//		A quick sample:
-		//
-		//		sample of data source
-		//		
-		//	|	{ identifier: 'id',
-		//	|	  items: [
-		//	|		{ id: "1", playername: "Player 1", seasons: [
-		//	|			{ id: "2", seasonindex: "Season 1", games: [
-		//	|				{ id: "3", gameindex: "Game 1", quarters: [
-		//	|					{id: "4", point: "3", rebound: "3", assistant: "1"},
-		//	|					{id: "5", point: "5", rebound: "0", assistant: "0"},
-		//	|					{id: "6", point: "0", rebound: "1", assistant: "3"},
-		//	|					{id: "7", point: "2", rebound: "2", assistant: "0"} ]
-		//	|				},
-		//	|				{ id: "8", gameindex: "Game 2", quarters: [
-		//	|					{id: "9", point: "3", rebound: "0", assistant: "2"},
-		//	|					{id: "10", point: "0", rebound: "4", assistant: "1"},
-		//	|					{id: "11", point: "5", rebound: "0", assistant: "1"},
-		//	|					{id: "12", point: "10", rebound: "2", assistant: "0"} ]
-		//	|				} ]
-		//	|			},
-		//	|			{ id: "13", seasonindex: "Season 2" } ]
-		//	|		} ]
-		//	|	}
-		//
-		//		define the tree grid type
-		//	|	treeNested: true;
-		//
-		//		define the grid structure
-		//	|	var structure = [
-		//	|		{name: "Player", field: "playername", expandLevel: 1},
-		//	|		{name: "Season", field: "seasonindex", expandLevel: 2},
-		//	|		{name: "Game", field: "gameindex", expandLevel: 3},
-		//	|		{name: "Point", field: "point"},
-		//	|		{name: "Rebound", field: "rebound"},
-		//	|		{name: "Assistant", field: "assistant"}
-		//	|	];
+		//		Define the hasChildren and getChildren methods for store (suppose the "children" field contains the child rows):
+		//		If the store is ItemFileReadStore:
+		//	|	store.hasChildren = function(id, item){
+		//	|		return item && store.getValues(item, 'children').length;
+		//	|	};
+		//	|	store.getChildren = function(item){
+		//	|		return store.getValues(item, 'children');
+		//	|	};
+		//		If the store is Memory store:
+		//	|	store.hasChildren = function(id, item){
+		//	|		return item && item.children && item.children.length;
+		//	|	};
+		//	|	store.getChildren = function(item){
+		//	|		return item.children;
+		//	|	};
+		//		If the child rows need to be fetched from server side:
+		//	|	store.hasChildren = function(id, item){
+		//	|		return item&& item.children;	//This children field only indicates whether the row has children.
+		//	|	};
+		//	|	store.getChildren = function(item){
+		//	|		var d = new Deferred();
+		//	|		var children = [];
+		//	|		dojo.request(...).then(function(){
+		//	|			//get the child rows here and populate them into an array.
+		//	|			d.callback(children);
+		//	|		});
+		//	|		return d;
+		//	|	};
 
 		// nested: Boolean
 		//		If set to true, the tree nodes can be shown in nested mode.
@@ -195,6 +162,18 @@ define([
 			//		Whether the row is expanded.
 		},
 
+		isPaddingCell: function(rowId, columnId){
+			// summary:
+			//		Check wheter a cell is padding cell. Only meaningful in "nested" tree grid.
+			//		By default, in "nested" tree grid, the cells before the current expando cell are all padding cells.
+			//		A padding cell is an empty cell, nothing is shown in the cell, decorator and formatter functions
+			//		are not called on it either.
+			// rowId: String|Number
+			//		The row ID of the cell
+			// columnId: String|Number
+			//		The column ID of the cell
+		},
+
 		expand: function(id, skipUpdateBody){
 			// summary:
 			//		Expand the row.
@@ -246,10 +225,48 @@ define([
 
 	Tree.__ColumnDefinition = declare(Column.__ColumnDefinition, {
 		// expandLevel: Number
-		//		
+		//		If tree grid is "nested", the expando will be shown in the column whose "expandLevel" equals the
+		//		level of the row. For example, the expando of a root row will be shown in the column whose "expandLevel"
+		//		equals 1. And the child rows of the root row will show their expando in the column with "expandLevel" equals 2,
+		//		and so on.
+		//		If no "expandLevel" is provided for a "nested" tree grid, the first column has "expandLevel" 1, second 2, and so on.
+		//		If tree grid is not "nested", all the expandos will be shown in the first column with truthy "expandLevel".
+		//		If no "expandLevel" is provided for a non-nested tree grid, the first column has all the expandos by default.
 		expandLevel: 0,
 
-		padding: false
+		// padding: Boolean
+		//		By default, in "nested" tree grid, the cells before the current expando cell are all padding cells.
+		//		But if some cell matching this condition should not be padding, then this parameter should be
+		//		explicitly set to false for the column of this cell.
+		padding: undefined
+	});
+
+	Tree.__TreeStoreMixin = declare([], {
+		// summary:
+		//		The extra methods for tree store.
+		// description:
+		//		Since the dojo store does not support tree structure by default, some extra methods should be defined to 
+		//		help grid retrieve the child level items.
+
+		hasChildren: function(id, item){
+			// summary:
+			//		Check whether a row has child rows. This function should not throw any error.
+			// id: String|Number
+			//		The row ID
+			// item: Object
+			//		The store item
+			// returns:
+			//		True if the given row has children, false otherwise.
+		},
+
+		getChildren: function(item){
+			// summary:
+			//		Get an array of the child items of the given row item.
+			// item: Object
+			//		The store item
+			// returns:
+			//		An array of the child items of the given row item.
+		}
 	});
 
 	return Tree;
@@ -332,9 +349,18 @@ define([
 		},
 
 		isPaddingCell: function(rowId, colId){
-			var level = this.model.treePath(rowId).length,
-				col = this.grid.column(colId, 1);
-			return this.arg('nested') && level > 1 && col.index() < level - 1 && col.padding !== false;
+			var t = this,
+				level = t.model.treePath(rowId).length,
+				c = t.grid._columnsById[colId];
+			if(t.arg('nested') && level > 1 && c.padding !== false){
+				for(var i = 0; i < t.grid._columns.length; ++i){
+					var col = t.grid._columns[i];
+					if(col.expandLevel == level){
+						return c.index < col.index;
+					}
+				}
+			}
+			return false;
 		},
 
 		expand: function(id, skipUpdateBody){
@@ -421,7 +447,9 @@ define([
 
 		//Private-------------------------------------------------------------------------------
 		_initExpandLevel: function(){
-			var cols = this.grid._columns;
+			var cols = array.filter(this.grid._columns, function(col){
+				return !col.ignore;
+			});
 			if(!array.some(cols, function(col){
 				return col.expandLevel;
 			})){

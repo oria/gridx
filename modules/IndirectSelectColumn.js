@@ -59,6 +59,7 @@ define([
 					filterable: false,
 					editable: false,
 					padding: false,
+					ignore: true,
 					declaredWidth: w,
 					width: w
 				};

@@ -39,12 +39,15 @@ define([
 		//		pagination, details on demand, and even tree structure.
 
 		// loadingInfo: String
+		//		The loading message shown in grid body. Default to use nls files.
 		loadingInfo: '',
 
 		// emptyInfo: String
+		//		The message shown in grid body when there's no row to show. Default to use nls files.
 		emptyInfo: '',
 
 		// loadFailInfo: String
+		//		The error message shown in grid body when there's some error orrured during loading. Default to use nls files.
 		loadFailInfo: '',
 
 		// rowHoverEffect: Boolean
