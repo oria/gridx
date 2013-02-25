@@ -79,6 +79,9 @@ define([
 				[body, 'onAfterRow', '_onAfterRow'],
 				[body, 'onAfterCell', '_onAfterCell'],
 				[body, 'onUnrender', '_onUnrender'],
+				[body, 'onEmpty', function(){
+					rhbn.innerHTML = '';
+				}],
 				[g.bodyNode, 'onscroll', '_onScroll'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
