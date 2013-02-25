@@ -355,3 +355,7 @@
 	transition-duration: 0.3s;
 }
 
+/* Hidden Columns */
+.gridxHiddenColumn {
+	display: none;
+}

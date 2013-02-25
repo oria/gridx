@@ -36,7 +36,8 @@ define([
 	'gridx/modules/SummaryBar',
 	'gridx/modules/Bar',
 	'gridx/modules/NavigableCell',
-	'gridx/modules/TouchScroll'
+	'gridx/modules/TouchScroll',
+	'gridx/modules/HiddenColumns'
 ], function(
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
@@ -50,7 +51,7 @@ define([
 	CellWidget, Edit,
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
-	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll){
+	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, HiddenColumns){
 return {
 	Focus: Focus,
 	VScroller: VScroller,
@@ -89,6 +90,7 @@ return {
 	SummaryBar: SummaryBar,
 	Bar: Bar,
 	NavigableCell: NavigableCell,
-	TouchScroll: TouchScroll
+	TouchScroll: TouchScroll,
+	HiddenColumns: HiddenColumns
 };
 });
