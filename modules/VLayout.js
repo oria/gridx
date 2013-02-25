@@ -59,6 +59,7 @@ define([
 			});
 			if(g.autoHeight){
 				t.connect(g.body, 'onRender', 'reLayout');
+				t.connect(g.body, 'onEmpty', 'reLayout');
 			}else{
 				t.connect(g, 'setColumns', function(){
 					setTimeout(function(){
