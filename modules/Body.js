@@ -760,6 +760,7 @@ define([
 			en.style.zIndex = 1;
 			this.domNode.innerHTML = '';
 			this._err = e;
+			this.onEmpty();
 		},
 	
 		_buildRowContent: function(rowInfo){
