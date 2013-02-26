@@ -109,12 +109,20 @@ define([
 		
 		rowMixin: {
 			select: function(){
-				this.grid.select.row.selectById(this.id);
+				if(!this.grid.unselectableRow || this.isSelectable()){
+					this.grid.select.row.selectById(this.id);
+				}else{
+					console.warn('row with id:' + this.id + ' is not selectable');
+				}
 				return this;
 			},
 
 			deselect: function(){
-				this.grid.select.row.deselectById(this.id);
+				if(!this.grid.unselectableRow || this.isSelectable()){
+					this.grid.select.row.deselectById(this.id);
+				}else{
+					console.warn('row with id:' + this.id + ' is not selectable');
+				}
 				return this;
 			},
 
@@ -195,16 +203,24 @@ define([
 		},
 
 		_markById: function(id, toMark){
-			var m = this.model;
-			if(m.treeMarkMode() && !m.getMark(id) && toMark){
-				toMark = 'mixed';
+			var t = this,
+				m = t.model,
+				g = t.grid,
+				row = g.row(id);
+			if(!g.unselectableRow || row.isSelectable()){
+				if(m.treeMarkMode() && !m.getMark(id) && toMark){
+					toMark = 'mixed';
+				}
+				m.markById(id, toMark);
+				m.when();
+			}else{
+				console.warn('row with id:' + id + ' is not selectable');
 			}
-			m.markById(id, toMark);
-			m.when();
 		},
 
 		_onRender: function(start, count){
 			var t = this,
+				g = t.grid,
 				model = t.model,
 				end = start + count,
 				i, id, rowNode;
@@ -212,7 +228,7 @@ define([
 				rowNode = t.grid.body.getRowNode({visualIndex: i});
 				if(rowNode){
 					id = rowNode.getAttribute('rowid');
-					t._highlight(id, model.getMark(id));
+					t._highlight(id, model.getMark(id) && (!g.unselectableRow || g.unselectableRow.isSelectable(id, 1)));
 				}
 			}
 		}

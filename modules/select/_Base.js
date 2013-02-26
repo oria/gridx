@@ -71,15 +71,19 @@ define([
 		},
 
 		_select: function(item, extending){
-			var t = this, toSelect = 1;
-			if(t.arg('enabled')){
-				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
-					toSelect = !t._isSelected(item);
-				}else{
-					t.clear(item);
+			var t = this, toSelect = 1, g = t.grid;
+			if(!g.unselectableRow || g.unselectableRow.isSelectable(item)){
+				if(t.arg('enabled')){
+					if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
+						toSelect = !t._isSelected(item);
+					}else{
+						t.clear(item);
+					}
+					connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
+					t._markById(item, toSelect);
 				}
-				connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
-				t._markById(item, toSelect);
+			}else{
+				console.warn('row with id:' + item + ' is not selectable');
 			}
 		}
 	});
