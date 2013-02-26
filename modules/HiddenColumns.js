@@ -1,8 +1,9 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/Deferred",
 	"dojo/_base/array",
 	"../core/_Module"
-], function(declare, array, _Module){
+], function(declare, Deferred, array, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -80,19 +81,23 @@ define([
 
 		load: function(args, startup){
 			var t = this,
+				g = t.grid,
 				ids = t.arg('init', []);
-			if(t.grid.move.column){
-				t.connect(t.grid.move.column, 'onMoved', '_syncOrder');
+			if(g.move && g.move.column){
+				t.connect(g.move.column, 'onMoved', '_syncOrder');
 			}
-			if(t.grid.persist){
-				ids.concat(t.grid.persist.registerAndLoad('hiddenColumns', function(){
+			if(g.persist){
+				ids.concat(g.persist.registerAndLoad('hiddenColumns', function(){
 					return t.get();
 				}) || []);
 			}
 			if(ids.length){
 				startup.then(function(){
 					t.add.apply(t, ids);
+					t.loaded.callback();
 				});
+			}else{
+				t.loaded.callback();
 			}
 		},
 
@@ -100,25 +105,30 @@ define([
 			var t = this,
 				g = t.grid,
 				columnsById = g._columnsById,
+				changed,
 				columns = g._columns;
 			array.forEach(arguments, function(id){
 				id = id && typeof id == "object" ? id.id: id;
 				var col = columnsById[id];
 				if(col){
+					changed = 1;
 					col.hidden = true;
 					delete columnsById[id];
 					columns.splice(array.indexOf(columns, col), 1);
 				}
 			});
-			array.forEach(columns, function(col, i){
-				col.index = i;
-			});
-			return t._refresh();
+			if(changed){
+				array.forEach(columns, function(col, i){
+					col.index = i;
+				});
+			}
+			return t._refresh(changed);
 		},
 
 		remove: function(){
 			var t = this,
-				columns = t.grid._columns;
+				columns = t.grid._columns,
+				changed;
 			array.forEach(arguments, function(id){
 				id = id && typeof id == "object" ? id.id: id;
 				var c,
@@ -136,6 +146,7 @@ define([
 					}
 				}
 				if(i < len){
+					changed = 1;
 					t.grid._columnsById[id] = c;
 					columns.splice(index, 0, c);
 					for(i = index + 1; i < columns.length; ++i){
@@ -143,18 +154,22 @@ define([
 					}
 				}
 			});
-			return t._refresh();
+			return t._refresh(changed);
 		},
 
 		clear: function(){
-			var g = this.grid;
+			var g = this.grid,
+				changed;
 			g._columns = array.map(this._cols, function(col, i){
 				col.index = i;
-				delete col.hidden;
-				g._columnsById[col.id] = col;
+				if(col.hidden){
+					changed = 1;
+					delete col.hidden;
+					g._columnsById[col.id] = col;
+				}
 				return col;
 			});
-			return this._refresh();
+			return this._refresh(changed);
 		},
 
 		get: function(){
@@ -191,11 +206,17 @@ define([
 			}
 		},
 
-		_refresh: function(){
-			var g = this.grid;
-			g.header.refresh();
-			g.columnWidth._adaptWidth();
-			return g.body.refresh();
+		_refresh: function(changed){
+			if(changed){
+				var g = this.grid;
+				g.header.refresh();
+				g.columnWidth._adaptWidth();
+				return g.body.refresh();
+			}else{
+				var d = new Deferred();
+				d.callback();
+				return d;
+			}
 		}
 	});
 });
