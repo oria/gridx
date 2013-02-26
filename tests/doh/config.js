@@ -22,6 +22,7 @@ define([
 	'gridx/tests/doh/status/HScroller',
 	'gridx/tests/doh/status/VLayout',
 
+	'gridx/tests/doh/actions/HiddenColumns',
 	'gridx/tests/doh/actions/VScroller',
 	'gridx/tests/doh/actions/Header',
 	'gridx/tests/doh/actions/Body',
@@ -33,7 +34,7 @@ define([
 	//Config Begin-------------------------------------------------------
 
 	var specialCases = [
-		['VirtualVScroller', 'ColumnResizer', 'SingleSort']
+		['VirtualVScroller', 'ColumnResizer', 'HiddenColumns']
 	];
 
 	//module config => interface name
@@ -58,7 +59,8 @@ define([
 		IndirectSelect: "indirectSelect",
 		IndirectSelectColumn: "indirectSelect",
 		ColumnLock: "columnLock",
-		Tree: "tree"
+		Tree: "tree",
+		HiddenColumns: 'hiddenColumns'
 	};
 
 	//parameter config => [interface name, adder function]
@@ -248,7 +250,7 @@ define([
 			{id: 'id', field: 'id', name: 'Identity'}
 		],
 		[
-			{id: 'id', field: 'id', name: 'Identity', class: 'Identity', style: 'font-size: 13px'}
+			{id: 'id', field: 'id', name: 'Identity', 'class': 'Identity', style: 'font-size: 13px'}
 		],
 		[
 			{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
