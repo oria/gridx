@@ -330,58 +330,69 @@ define([
 
 		refresh: function(start){
 			var t = this,
-				loadingNode = t.grid.loadingNode;
+				loadingNode = t.grid.loadingNode,
+				d = new Deferred();
 			delete t._err;
 			domClass.add(loadingNode, 'gridxLoading');
 			t.grid.view.updateVisualCount().then(function(){
-				var rs = t.renderStart,
-					rc = t.renderCount,
-					vc = t.grid.view.visualCount;
-				if(rs + rc > vc){
-					if(rc < vc){
-						rs = t.renderStart = vc - rc;
+				try{
+					var rs = t.renderStart,
+						rc = t.renderCount,
+						vc = t.grid.view.visualCount;
+					if(rs + rc > vc){
+						if(rc < vc){
+							rs = t.renderStart = vc - rc;
+						}else{
+							rs = t.renderStart = 0;
+							rc = vc;
+						}
+					}
+					if(typeof start == 'number' && start >= 0){
+						start = rs > start ? rs : start;
+						var count = rs + rc - start,
+							n = query('> [visualindex="' + start + '"]', t.domNode)[0],
+							uncachedRows = [],
+							renderedRows = [];
+						if(n){
+							var rows = t._buildRows(start, count, uncachedRows, renderedRows);
+							if(rows){
+								domConstruct.place(rows, n, 'before');
+							}
+						}
+						while(n){
+							var tmp = n.nextSibling,
+								vidx = parseInt(n.getAttribute('visualindex'), 10),
+								id = n.getAttribute('rowid');
+							domConstruct.destroy(n);
+							if(vidx >= start + count){
+								t.onUnrender(id);
+							}
+							n = tmp;
+						}
+						array.forEach(renderedRows, t.onAfterRow, t);
+						Deferred.when(t._buildUncachedRows(uncachedRows), function(){
+							t.onRender(start, count);
+							t.onForcedScroll();
+							domClass.remove(loadingNode, 'gridxLoading');
+							d.callback();
+						});
 					}else{
-						rs = t.renderStart = 0;
-						rc = vc;
-					}
-				}
-				if(typeof start == 'number' && start >= 0){
-					start = rs > start ? rs : start;
-					var count = rs + rc - start,
-						n = query('> [visualindex="' + start + '"]', t.domNode)[0],
-						uncachedRows = [],
-						renderedRows = [];
-					if(n){
-						var rows = t._buildRows(start, count, uncachedRows, renderedRows);
-						if(rows){
-							domConstruct.place(rows, n, 'before');
-						}
-					}
-					while(n){
-						var tmp = n.nextSibling,
-							vidx = parseInt(n.getAttribute('visualindex'), 10),
-							id = n.getAttribute('rowid');
-						domConstruct.destroy(n);
-						if(vidx >= start + count){
-							t.onUnrender(id);
-						}
-						n = tmp;
-					}
-					array.forEach(renderedRows, t.onAfterRow, t);
-					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
-						t.onRender(start, count);
+						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
 						domClass.remove(loadingNode, 'gridxLoading');
-					});
-				}else{
-					t.renderRows(rs, rc, 0, 1);
-					t.onForcedScroll();
+						d.callback();
+					}
+				}catch(e){
+					t._loadFail(e);
 					domClass.remove(loadingNode, 'gridxLoading');
+					d.errback(e);
 				}
 			}, function(e){
 				t._loadFail(e);
 				domClass.remove(loadingNode, 'gridxLoading');
+				d.errback(e);
 			});
+			return d;
 		},
 
 		refreshCell: function(rowVisualIndex, columnIndex){
