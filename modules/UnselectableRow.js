@@ -134,7 +134,11 @@ define([
 				usInfo = t.usInfo;
 			usInfo[id] = t._isUnselectable(row);
 		},
-		
+
+		onSet: function(){},
+		onNew: function(){},
+		onDelete: function(){},
+
 		//private ----------------------------------------------------------------------------
 		_isUnselectable: function(row){
 			var t = this,
@@ -157,16 +161,20 @@ define([
 			var t = this,
 				id = t.grid.store.getIdentity(item);
 			t.addUnselectableInfo(id);
+			t.onSet(id, t.grid.select.row.isSelected(id));
 		},
 		
 		_onNew: function(item){
 			var t = this,
 				id = t.grid.store.getIdentity(item);
 			t.addUnselectableInfo(id);
+			t.onNew(id);
 		},
+		
 		_onDelete: function(item){
-			// var t = this,
-				// id = t.grid.store.getIdentity(item);
+			var t = this,
+				id = t.grid.store.getIdentity(item);
+			t.onDelete(id);
 		}
 	});
 });

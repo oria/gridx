@@ -43,6 +43,9 @@ define([
 				}
 			});
 			t.connect(g.body, 'onRender', '_onRender');
+			if(g.unselectableRow){
+				t.connect(g.unselectableRow, 'onSet', '_highlight');
+			}
 			if(t.arg('multiple')){
 				g.domNode.setAttribute('aria-multiselectable', true);
 			}
