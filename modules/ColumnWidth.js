@@ -26,11 +26,6 @@ define([
 		//		(This is the default behavior of an	HTML table).
 		autoResize: false,
 
-		refresh: function(){
-			// summary:
-			//		
-		},
-
 		onUpdate: function(){
 			// summary:
 			//		Fired when column widths are updated.
@@ -73,15 +68,6 @@ define([
 		autoResize: false,
 
 		onUpdate: function(){},
-
-		refresh: function(){
-			this._adaptWidth();
-			var g = this.grid;
-			query('.gridxCell', g.bodyNode).forEach(function(node){
-				node.style.width = g._columnsById[node.getAttribute('colid')].width;
-			});
-			this.onUpdate();
-		},
 
 		//Private-----------------------------------------------------------------------------
 		_init: function(){

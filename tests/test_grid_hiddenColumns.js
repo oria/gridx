@@ -14,26 +14,35 @@ require([
 	});
 
 	layout = [
-		{id: 'id', field: 'id', name: 'id'},
-		{id: 'Genre', field: 'Genre', name: 'Genre'},
-		{id: 'Artist', field: 'Artist', name: 'Artist'},
-		{id: 'Album', field: 'Album', name: 'Album'},
-		{id: 'Name', field: 'Name', name: 'Name'},
-		{id: 'Year', field: 'Year', name: 'Year'},
-		{id: 'Length', field: 'Length', name: 'Length'},
-		{id: 'Track', field: 'Track', name: 'Track'},
-		{id: 'Composer', field: 'Composer', name: 'Composer'},
-		{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
-		{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
-		{id: 'Heard', field: 'Heard', name: 'Heard'}
+		{id: 'id', field: 'id', name: 'id:1'},
+		{id: 'Genre', field: 'Genre', name: 'Genre:2'},
+		{id: 'Artist', field: 'Artist', name: 'Artist:3'},
+		{id: 'Album', field: 'Album', name: 'Album:4'},
+		{id: 'Name', field: 'Name', name: 'Name:5'},
+		{id: 'Year', field: 'Year', name: 'Year:6'},
+		{id: 'Length', field: 'Length', name: 'Length:7'},
+		{id: 'Track', field: 'Track', name: 'Track:8'},
+		{id: 'Composer', field: 'Composer', name: 'Composer:9'},
+		{id: 'Download Date', field: 'Download Date', name: 'Download Date:10'},
+		{id: 'Last Played', field: 'Last Played', name: 'Last Played:11'},
+		{id: 'Heard', field: 'Heard', name: 'Heard:12'}
 	];
 
 	parser.parse().then(function(){
 		configGrid.connect(configGrid.select.row, 'onSelected', function(row){
+			var t = new Date;
 			grid.hiddenColumns.add(row);
+			console.log('hide: ', new Date - t);
 		});
 		configGrid.connect(configGrid.select.row, 'onDeselected', function(row){
+			var t = new Date;
 			grid.hiddenColumns.remove(row);
+			console.log('show: ', new Date - t);
 		});
 	});
+
+	showAll = function(){
+		grid.hiddenColumns.clear();
+		configGrid.select.row.clear();
+	};
 });

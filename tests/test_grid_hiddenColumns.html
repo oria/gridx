@@ -25,9 +25,12 @@
 					cacheClass: "gridx/core/model/cache/Sync",
 					store: store,
 					structure: layout,
+					hiddenColumnsInit: ["id", "Genre"],
 					modules: [
 						"gridx/modules/HiddenColumns",
 						"gridx/modules/ColumnResizer",
+						"gridx/modules/move/Column",
+						"gridx/modules/ColumnLock",
 						"gridx/modules/VirtualVScroller"
 					]
 				'></div>
@@ -49,6 +52,7 @@
 						{id: "Heard"}
 					]
 				'></div>
+				<h2>Select to hide</h2>
 				<div jsid='configGrid' data-dojo-type='gridx.Grid' data-dojo-props='
 					cacheClass: "gridx/core/model/cache/Sync",
 					store: configStore,
@@ -64,6 +68,7 @@
 						"gridx/modules/select/Row"
 					]
 				'></div>
+				<button style='margin: 10px;' onclick='showAll()'>Show All</button>
 			</td>
 		</tr>
 	</table>
