@@ -23,10 +23,11 @@ define([
 	"./modules/VScroller",
 	"./modules/HScroller",
 	"./modules/ColumnWidth",
-	"./modules/Focus"
+	"./modules/Focus",
+	"dojo/has!dojo-bidi?./modules/BidiSupport"
 ], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
-	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus){
+	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, BidiSupport){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){};
@@ -50,7 +51,7 @@ define([
 			HScroller,
 			ColumnWidth,
 			Focus
-		],
+		].concat(has('dojo-bidi') ? [BidiSupport] : []),
 
 		coreExtensions: [
 			//Put default extensions here!

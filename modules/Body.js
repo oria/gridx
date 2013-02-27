@@ -905,6 +905,9 @@ define([
 								var isPadding = g.tree && curData[col.id] === undefined,
 									cell = row.cell(col.id, 1);
 								cell.node().innerHTML = t._buildCellContent(cell, isPadding);
+								if(g.bidi && 'auto' === (col.textDir || g.textDir)){
+									cell.node().style.direction = g.bidi.getTextDir(col.id ,cell.node().innerHTML);
+								}
 								t.onAfterCell(cell);
 							}
 						});
