@@ -354,3 +354,8 @@
 	-o-transition-duration: 0.3s;
 	transition-duration: 0.3s;
 }
+
+/* CSS Hidden Column */
+.gridxHiddenColumn {
+	display: none;
+}

@@ -1,13 +1,13 @@
 require([
 	'dojo/parser',
+	'dojo/query',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
-	'gridx/modules/CSSHiddenColumns',
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory){
+], function(parser, query, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -30,20 +30,28 @@ require([
 	];
 
 	parser.parse().then(function(){
-		configGrid.connect(configGrid.select.row, 'onSelected', function(row){
-			var t = new Date;
-			grid.hiddenColumns.add(row);
-			console.log('hide: ', new Date - t);
-		});
-		configGrid.connect(configGrid.select.row, 'onDeselected', function(row){
-			var t = new Date;
-			grid.hiddenColumns.remove(row);
-			console.log('show: ', new Date - t);
+		//Adapt height, can be ommited if height is fixed.
+		document.body.style.height = window.innerHeight + 'px';
+		grid.resize();
+
+		var oldWidth = window.outerWidth;
+		grid.connect(window, 'onresize', function(){
+			var t1 = new Date;
+			if(window.outerWidth < oldWidth){
+				//Portrait
+				grid.hiddenColumns.add('Genre', 'Artist', 'Album', 'Name', 'Year', 'Composer');
+			}else if(window.outerWidth > oldWidth){
+				//Lanscape
+				grid.hiddenColumns.clear();
+			}else{
+				//Not changed
+				return;
+			}
+			oldWidth = window.outerWidth;
+			console.log("Time used for changing columns: " + (new Date - t1) + 'ms');
+			//Adapt height, can be ommited if height is fixed.
+//            document.body.style.height = window.innerHeight + 'px';
+//            grid.resize();
 		});
 	});
-
-	showAll = function(){
-		grid.hiddenColumns.clear();
-		configGrid.select.row.clear();
-	};
 });
