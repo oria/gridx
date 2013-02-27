@@ -5,18 +5,17 @@ require([
 	'dojo/dom',
 	'dojo/_base/lang',
 	'dojo/_base/array',
-	'dojo/data/ItemFileWriteStore',
+	'dojo/store/Memory',
 	'gridx/support/printer',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'dojo/store/Memory',
 	'gridx/allModules',
-	'gridx/modules/BidiSupport',
 	'dijit/form/ComboBox',
 	'dijit/form/Select',
 	'dijit/form/Button',
 	'dojo/domReady!'
-], function(parser, registry, runner, dom, lang, array, ItemFileWriteStore, printer){
+], function(parser, registry, runner, dom, lang, array, Memory, printer){
 
 	var items = [
 		{"TextBox1":"First value!",	"TextBox2": "First value!",	"ComboBox":"First value!", "Select":"First value!"},
@@ -33,7 +32,7 @@ require([
 		selectItems.push({id: items[i].Select});
 	}
 
-	comboStore = new ItemFileWriteStore({
+	comboStore = new Memory({
 		data: {
 			identifier: 'id', 
 			label: 'id', 
@@ -41,7 +40,7 @@ require([
 		}
 	});
 
-	selectStore = new ItemFileWriteStore({
+	selectStore = new Memory({
 		data: {
 			identifier: 'id', 
 			label: 'id', 
@@ -94,7 +93,7 @@ require([
 				runTest: function(){
 					var element = registry.byId('dijit_form_TextBox_0');
 					if(element) {
-						runner.is("rtl", element.get("textDir"), "widget 'textDir' property should coinside with that of grid");
+						runner.is("rtl", element.get("textDir"), "TextBox 'textDir' property should coinside with that of grid");
 					}
 					if(grid.column(1).textDir === 'auto'){
 						if(grid.cell(0, 1).data().charCodeAt(0) < 122)
@@ -106,7 +105,7 @@ require([
 
 					element = registry.byId('dijit_form_ComboBox_0');
 					if(element) {
-						runner.is("rtl", element.get("textDir"), "widget 'textDir' property should coinside with that of grid");
+						runner.is("rtl", element.get("textDir"), "ComboBox 'textDir' property should coinside with that of grid");
 					}
 				}
 			}
