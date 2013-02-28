@@ -3,8 +3,8 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/modules/Focus',
 	'gridx/modules/RowHeader',
-	'gridx/modules/select/Row',
-	'gridx/modules/UnselectableRow',
+	// 'gridx/modules/select/Row',
+	'gridx/modules/select/UnselectableRow',
 	'gridx/modules/VirtualVScroller',	
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
@@ -12,7 +12,7 @@ require([
 	'dijit/form/Button',
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
-], function(Grid, Cache, Focus, RowHeader, SelectRow, UnselectableRow, VirtualVScroller, dataSource, storeFactory, TestPane){
+], function(Grid, Cache, Focus, RowHeader, UnselectableRow, VirtualVScroller, dataSource, storeFactory, TestPane){
 
 	grid = new Grid({
 		id: 'grid',
@@ -25,12 +25,12 @@ require([
 		modules: [
 			Focus,
 			RowHeader,
-			SelectRow,
+			// SelectRow,
 			UnselectableRow,
 			VirtualVScroller
 		],
-		unselectableRowEnabled: true,
-		unselectableRowRule: {
+		selectRowUnselectableRowEnabled: true,
+		selectRowUnselectableRowRule: {
 			rules: [
 				function(row){
 					return row.data().Year > 1990 && row.data().Year < 2000; 
@@ -43,19 +43,19 @@ require([
 	
 	//Test functions
 	getRow5Unselectable = function(){
-		alert('row 5 unselectable: ' + grid.unselectableRow.isUnselectable(5));
+		alert('row 5 unselectable: ' + grid.select.row.isUnselectable(5));
 	};
 	
 	getRow6Unselectable = function(){
-		alert('row 6 unselectable: ' + grid.unselectableRow.isUnselectable(6)); 
+		alert('row 6 unselectable: ' + grid.select.row.isUnselectable(6)); 
 	};
 	
 	turnOn = function(){
-		grid.unselectableRow.turnOn();
+		grid.select.row.turnOn();
 	};
 	
 	turnOff = function(){
-		grid.unselectableRow.turnOff();
+		grid.select.row.turnOff();
 	}
 	
 	//Test buttons

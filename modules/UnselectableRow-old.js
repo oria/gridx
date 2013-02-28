@@ -58,9 +58,9 @@ define([
  	})
  =====*/	
 	return declare(_Module, {
-		name: "unselectableRow",
+		name: "selectRow",
 		
-		required: ['selectRow'],
+		// required: ['selectRow'],
 		
 		getAPIPath: function(){
 			return {
