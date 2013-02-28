@@ -43,9 +43,6 @@ define([
 				}
 			});
 			t.connect(g.body, 'onRender', '_onRender');
-			// if(g.unselectableRow){
-				// t.connect(g.unselectableRow, 'onSet', '_highlight');
-			// }
 			if(t.arg('multiple')){
 				g.domNode.setAttribute('aria-multiselectable', true);
 			}
@@ -75,18 +72,14 @@ define([
 
 		_select: function(item, extending){
 			var t = this, toSelect = 1, g = t.grid;
-			if(!g.unselectableRow || g.unselectableRow.isSelectable(item)){
-				if(t.arg('enabled')){
-					if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
-						toSelect = !t._isSelected(item);
-					}else{
-						t.clear(item);
-					}
-					connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
-					t._markById(item, toSelect);
+			if(t.arg('enabled')){
+				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
+					toSelect = !t._isSelected(item);
+				}else{
+					t.clear(item);
 				}
-			}else{
-				console.warn('row with id:' + item + ' is not selectable');
+				connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
+				t._markById(item, toSelect);
 			}
 		}
 	});

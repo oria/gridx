@@ -30,8 +30,7 @@ define([
 		},
 		
 		isSelected: function(rowId, columnId){
-			return this.model.getMark(rowId, this._getMarkType(columnId)) === true 
-				&& (!this.grid.unselectableRow || this.grid.unselectableRow.isSelectable(rowId, 1));	//Mixed status is not selected
+			return this.model.getMark(rowId, this._getMarkType(columnId)) === true		//Mixed status is not selected
 		},
 
 		//Private-----------------------------------------------------------------

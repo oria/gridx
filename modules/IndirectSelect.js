@@ -77,17 +77,20 @@ define([
 
 		//Private----------------------------------------------------------
 		_createSelector: function(row){
+			console.log(this);
 			var rowNode = row.node(),
 				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
+				isUnselectable = this.grid.select.row.isUnselectable? this.grid.select.row.isUnselectable(row.id): false,
 				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
-			return this._createCheckBox(selected, partial);
+			return this._createCheckBox(selected, partial, isUnselectable);
 		},
 
-		_createCheckBox: function(selected, partial){
+		_createCheckBox: function(selected, partial, isUnselectable){
 			var dijitClass = this._getDijitClass();
 			return ['<span role="', this._isSingle() ? 'radio' : 'checkbox',
 				'" class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
 				dijitClass, ' ',
+				isUnselectable? dijitClass + 'Disabled' : '',
 				selected ? dijitClass + 'Checked' : '',
 				partial ? dijitClass + 'Partial' : '',
 				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
