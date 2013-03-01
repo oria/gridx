@@ -8,7 +8,7 @@
 	background:url("../images/row_back.png") #cee6fa repeat-x;
 }
 /* Indirect Select */
-.claro .gridxRowHeaderCell .dijitCheckBoxPartial {
+.claro .gridx .dijitCheckBoxPartial {
 	background: url("../images/checkboxpartial.png");
 	height: 15px;
 }

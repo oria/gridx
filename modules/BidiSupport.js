@@ -66,21 +66,7 @@ define([
 
 		getAPIPath: function(){
 			return {
-				bidi: this,
-				_setTextDirAttr: function(textDir){
-					// summary:
-					//		 Seamlessly changes grid 'textDir' property on the fly.
-					// textDir:
-					//		Grid text direction
-					if(this.textDir != textDir){
-						this.textDir = textDir;
-						this.header.refresh();
-						if(this.edit){
-							this.edit._initAlwaysEdit();
-						}
-						this.body.refresh();
-					}
-				}
+				bidi: this
 			};
 		},
 
