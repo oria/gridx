@@ -11,8 +11,9 @@ define([
 	'dojox/mobile/Pane',
 	'dojox/mobile/ScrollablePane',
 	'dojo/i18n!./nls/common',
-	"dojo/_base/Deferred"
-], function(kernel, declare, lang, array, dom, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n, Deferred){
+	"dojo/_base/Deferred",
+	"dojo/has"
+], function(kernel, declare, lang, array, dom, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n, Deferred, has){
 	// module:
 	//		gridx/mobile/Grid
 	// summary:
@@ -73,12 +74,16 @@ define([
 			}
 			
 			var arr = ['<div class="mobileGridxHeaderRow"><table><tr>'];
+			var _this = this;
 			array.forEach(this.columns, function(col){
+				var textDir = col.textDir || _this.textDir;
 				arr.push(
 					'<th class="mobileGridxHeaderCell ', col.cssClass || ''
 						,col.align ? ' align-' + col.align : ''
 					,col.width? '" style="width:' + col.width + ';"' : ''
-					,'>', col.title, '</th>'
+					,'>'
+					,(has("dojo-bidi") && textDir) ? _this._enforceTextDirWithUcc(col.title, textDir) : col.title
+					,'</th>'
 				);
 			});
 			arr.push('</tr></table></div>');
@@ -109,6 +114,10 @@ define([
 				 '><table><tr>'];
 			array.forEach(this.columns, function(col){
 				var value = this._getCellContent(col, item);
+				var textDir = col.textDir || this.textDir;
+				if(has("dojo-bidi") && textDir){
+					value = this._enforceTextDirWithUcc(value, textDir);
+				}
 				arr.push(
 					'<td class="mobileGridxCell ' 
 					,((col.cssClass || col.align) ? ((col.cssClass || '') + (col.align ? ' align-' + col.align : '')) : '')
@@ -224,7 +233,26 @@ define([
 		},
 		
 		
-				
+		PDF: '\u202C',
+		LRE: '\u202A',
+		RLE: '\u202B',		
+		_enforceTextDirWithUcc: function(text, textDir){
+			// summary:
+			//		Wraps by UCC (Unicode control characters) option's text according to this.textDir
+			// text:
+			//		The text to be wrapped.
+			// textDir:
+			//		Text direction.
+			
+			textDir = (this._checkContextual && text && textDir === "auto") ? this._checkContextual(text.replace(/<[^>]*>/g,"")) : textDir;
+			return ((textDir === "rtl") ? this.RLE : this.LRE) + text + this.PDF;		
+		},
+		_setTextDirAttr: function(textDir){
+			if(this.textDir != textDir){
+				this.textDir = textDir;
+				this.refresh();					
+			}
+		},			
 //		refresh: function(){
 //			//summary:
 //			//	Firstly refresh header, then fetch data from store.
