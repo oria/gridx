@@ -33,7 +33,7 @@ define([
 		_cellattrs: function(grid, args, col, cellContent){
 			var cw = args.columnWidth,
 				w = (cw && cw[col.id]) || (args.natualWidth ? '' : col.getWidth()) || 'auto',
-				dir = grid.bidi ? grid.bidi.getTextDirStyle(col.id, cellContent) : '';
+				dir = grid.getTextDirStyle(col.id, cellContent);
 			return [' colid="', col.id, '" style="', dir, ' width:', w, '"'].join('');
 		},	
 
