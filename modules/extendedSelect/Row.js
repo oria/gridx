@@ -310,7 +310,7 @@ define([
 		_doHighlight: function(target, toHighlight){
 			query('[visualindex="' + target.row + '"]', this.grid.mainNode).forEach(function(node){
 				var selected = toHighlight && toHighlight != 'mixed';
-				domClass.toggle(node, 'gridxRowSelected', toHighlight);
+				domClass.toggle(node, 'gridxRowSelected', selected);
 				domClass.toggle(node, 'gridxRowPartialSelected', toHighlight == 'mixed');
 				node.setAttribute('aria-selected', !!selected);
 			});
