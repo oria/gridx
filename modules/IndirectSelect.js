@@ -102,9 +102,13 @@ define([
 			return this.grid.body.rootStart + ',' + this.grid.body.rootCount;
 		},
 
-		_onClear: function(){
-			var cls = this._getDijitClass() + 'Checked';
-			query('.' + cls, this.grid.rowHeader.bodyNode).removeClass(cls);
+		_onClear: function(reservedRowId){
+			var cls = this._getDijitClass() + 'Checked',
+				g = this.grid;
+			query('.' + cls, g.rowHeader.bodyNode).removeClass(cls);
+			if(g.select.row.isSelected(reservedRowId)){
+				query('[rowid="' + reservedRowId + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
+			}
 		},
 
 		_onHighlightChange: function(target, toHighlight){
