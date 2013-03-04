@@ -25,13 +25,16 @@ define([
 	"./modules/HScroller",
 	"./modules/ColumnWidth",
 	"./modules/Focus",
-	"dojo/has!dojo-bidi?./modules/BidiSupport"
+	"dijit/_BidiSupport"
 ], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
-	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, BidiSupport){
+	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){};
+
+	function checkContextual(textDir, text){
+	}
 
 	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
@@ -42,6 +45,7 @@ define([
 		
 		templateString: template,
 
+		//textDir bidi support begin
 		_setTextDirAttr: function(textDir){
 			// summary:
 			//		 Seamlessly changes grid 'textDir' property on the fly.
@@ -57,6 +61,24 @@ define([
 			}
 		},
 
+		getTextDir: function(colId, text){
+			var col = this._columnsById[colId],
+				textDir = (col && col.textDir) || this.textDir;
+			return textDir = (textDir === "auto") ? _BidiSupport.prototype._checkContextual(text) : textDir;
+		},
+
+		getTextDirStyle: function(colId, text){
+			var textDir = this.getTextDir(colId, text);
+			return textDir ? " direction:" + textDir + ";" : "";
+		},
+
+		enforceTextDirWithUcc: function(colId, text){
+			var textDir = this.getTextDir(colId, text);
+			//var LRE = '\u202A', RLE = '\u202B', PDF = '\u202C';
+			return textDir ? (textDir === "rtl" ? '\u202B' : '\u202A') + text + '\u202C' : text;
+		},
+		//textDir bidi support end
+
 		coreModules: [
 			//Put default modules here!
 			Header,
@@ -68,7 +90,7 @@ define([
 			HScroller,
 			ColumnWidth,
 			Focus
-		].concat(has('dojo-bidi') ? [BidiSupport] : []),
+		],
 
 		coreExtensions: [
 			//Put default extensions here!

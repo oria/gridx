@@ -56,12 +56,11 @@ define([
 			var arr = ['<div class="gridxFilterTooltipTitle"><b>${i18n.statusTipTitleHasFilter}</b> ', 
 				typeString, '</div><table><tr><th>${i18n.statusTipHeaderColumn}</th><th>${i18n.statusTipHeaderCondition}</th></tr>'
 			];
-			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				var colName = this.grid.column(d.colId).name();
-				if(this.grid.bidi){
-					colName = this.grid.bidi.enforceTextDirWithUcc(d.colId, colName);
+				if(d.colId){
+					var colName = this.grid.column(d.colId).name();
+					colName = this.grid.enforceTextDirWithUcc(d.colId, colName);
 				}
 				arr.push('<tr', odd, '><td>', (d.colId ? colName : '${i18n.anyColumnOption}'), 
 					'</td><td class="gridxFilterTooltipValueCell">', 

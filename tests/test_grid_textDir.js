@@ -78,7 +78,7 @@ require([
 	printPreview = function(){
 		printer.toHTML(grid, {
 			title: "Report",
-			styleSrc: '../support/test_grid_printer.css'
+			styleSrc: 'support/test_grid_printer.css'
 		}).then(function (result){
 			var win = window.open();
 			win.document.write(result);
@@ -87,7 +87,7 @@ require([
 	};
 
 	parser.parse().then(function(){
-		runner.register("gridx.tests.bidi.grid_textDir", [
+		runner.register("gridx.tests.grid_textDir", [
 			{
 				name: "GridX , Bidi",
 				runTest: function(){
