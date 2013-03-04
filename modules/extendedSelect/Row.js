@@ -252,10 +252,11 @@ define([
 		_onRender: function(start, count){
 			var t = this, i, end = start + count;
 			for(i = start; i < end; ++i){
-				var item = {row: i};
-				if(t._isSelected(item) || (t._selecting && t._toSelect && 
-					t._inRange(i, t._startItem.row, t._currentItem.row, 1))){	//1 as true
-					t._doHighlight(item, 1);	//1 as true
+				var item = {row: i},
+					toHighlight = t._isSelected(item) || (t._selecting && t._toSelect &&
+						t._inRange(i, t._startItem.row, t._currentItem.row, 1));
+				if(toHighlight){
+					t._doHighlight(item, toHighlight);
 				}
 			}
 		},
@@ -308,8 +309,10 @@ define([
 
 		_doHighlight: function(target, toHighlight){
 			query('[visualindex="' + target.row + '"]', this.grid.mainNode).forEach(function(node){
+				var selected = toHighlight && toHighlight != 'mixed';
 				domClass.toggle(node, 'gridxRowSelected', toHighlight);
-				node.setAttribute('aria-selected', !!toHighlight);
+				domClass.toggle(node, 'gridxRowPartialSelected', toHighlight == 'mixed');
+				node.setAttribute('aria-selected', !!selected);
 			});
 			this.onHighlightChange(target, toHighlight);
 		},
