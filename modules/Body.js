@@ -794,7 +794,7 @@ define([
 				isPadding = g.tree && rowData[col.id] === undefined;
 				cell = g.cell(row.id, col.id, 1);
 				cls = (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
-				style = g.bidi ? g.bidi.getTextDirStyle(col.id, cell.data()) : '';
+				style = g.getTextDirStyle(col.id, cell.data());
 				style += (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
 				sb.push('<td aria-describedby="', (g.id + '-' + col.id).replace(/\s+/, ''), '" class="gridxCell ');
 				if(isPadding){
@@ -905,8 +905,11 @@ define([
 								var isPadding = g.tree && curData[col.id] === undefined,
 									cell = row.cell(col.id, 1);
 								cell.node().innerHTML = t._buildCellContent(cell, isPadding);
-								if(g.bidi && 'auto' === (col.textDir || g.textDir)){
-									cell.node().style.direction = g.bidi.getTextDir(col.id ,cell.node().innerHTML);
+								if('auto' === (col.textDir || g.textDir)){
+									var textDirValue = g.getTextDir(col.id, cell.node().innerHTML);
+									if(textDirValue){
+										cell.node().style.direction = textDirValue;
+									}
 								}
 								t.onAfterCell(cell);
 							}
