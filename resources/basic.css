@@ -359,3 +359,16 @@
 .gridxHiddenColumn {
 	display: none;
 }
+
+
+/*Header Menu*/
+
+.gridxHeaderMenuButton {
+	position: absolute;
+	top: 1px;
+	bottom: 1px;
+	width: 10px;
+	background-color: red;
+	display: none;
+	cursor: pointer;
+}
