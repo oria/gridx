@@ -420,7 +420,7 @@ define([
 						rowInfo.rowId = m.indexToId(idx, pid);
 						var cell = g.cell(rowInfo.rowId, col.id, 1),
 							isPadding = g.tree && g.tree.isPaddingCell(rowInfo.rowId, col.id);
-						cellNode.innerHTML = t._buildCellContent(cell, isPadding);
+						cellNode.innerHTML = t._buildCellContent(cell, rowVisualIndex, isPadding);
 						t.onAfterCell(cell);
 					}
 				}).then(function(){
@@ -606,6 +606,7 @@ define([
 				s = [],
 				g = t.grid,
 				w = t.domNode.scrollWidth,
+				columns = g.columns();
 				i = start;
 			for(; i < end; ++i){
 				var rowInfo = g.view.getRowInfo({visualIndex: i}),
@@ -617,7 +618,7 @@ define([
 					s.push('" rowid="', row.id,
 						'" rowindex="', rowInfo.rowIndex,
 						'" parentid="', rowInfo.parentId,
-						'">', t._buildCells(row),
+						'">', t._buildCells(row, i, columns),
 					'</div>');
 					renderedRows.push(row);
 				}else{
@@ -653,7 +654,7 @@ define([
 					n.setAttribute('rowid', row.id);
 					n.setAttribute('rowindex', rowInfo.rowIndex);
 					n.setAttribute('parentid', rowInfo.parentId || '');
-					n.innerHTML = t._buildCells(row);
+					n.innerHTML = t._buildCells(row, rowInfo.visualIndex);
 					t.onAfterRow(row);
 				}else{
 					throw new Error('Row is not in cache:' + rowInfo.rowIndex);
@@ -661,46 +662,47 @@ define([
 			}
 		},
 
-		_buildCells: function(row){
+		_buildCells: function(row, visualIndex, cols){
 			var t = this,
 				g = t.grid,
 				columns = g._columns,
 				rowData = row.data(),
-				isFocusArea = g.focus && (g.focus.currentArea() == 'body'),
+				isFocusArea = g.focus.currentArea() == 'body',
 				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			for(var i = 0, len = columns.length; i < len; ++i){
 				var col = columns[i],
 					isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
-					cell = g.cell(row.id, col.id, 1),
+					cell = g.cell(row, cols && cols[i] || col.id, 1),
 					cls = col._class || '',
-					style = g.getTextDirStyle(col.id, cell.data());
-				cls += (lang.isFunction(col['class']) ? col['class'](cell) : col['class']) || '';
-				style += (lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-				sb.push('<td aria-describedby="', (g.id + '-' + col.id).replace(/\s+/, ''), '" class="gridxCell ');
+					customCls = col['class'],
+					style = g.getTextDirStyle(col.id, rowData[col.id]);
+				cls += (customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '';
+				style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
+				sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
 				if(isPadding){
 					sb.push('gridxPaddingCell ');
 				}
-				if(isFocusArea && t._focusCellRow === row.visualIndex() && t._focusCellCol === i){
+				if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
 					sb.push('gridxCellFocus ');
 				}
 				sb.push(cls,
 					'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
 					'" style="width: ', col.width,
 					'; ', style,
-					'">', t._buildCellContent(cell, isPadding),
+					'">', t._buildCellContent(cell, visualIndex, isPadding),
 				'</td>');
 			}
 			sb.push('</tr></table>');
 			return sb.join('');
-		}, 
+		},
 
-		_buildCellContent: function(cell, isPadding){
+		_buildCellContent: function(cell, visualIndex, isPadding){
 			var r = '',
 				col = cell.column,
 				row = cell.row,
 				data = cell.data();
 			if(!isPadding){
-				var s = col.decorator ? col.decorator(data, row.id, row.visualIndex()) : data;
+				var s = col.decorator ? col.decorator(data, row.id, visualIndex) : data;
 				r = this._wrapCellData(s, row.id, col.id);
 			}
 			return (r === '' || r === null || r === undefined) && (sniff('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
@@ -773,7 +775,7 @@ define([
 						renderWhole = t.arg('renderWholeRowOnSet'),
 						compareOnSet = t.arg('compareOnSet');
 					if(renderWhole){
-						rowNode.innerHTML = t._buildCells(row);
+						rowNode.innerHTML = t._buildCells(row, row.visualIndex());
 						t.onAfterRow(row);
 						t.onSet(row);
 						t.onRender(index, 1);
@@ -790,7 +792,7 @@ define([
 									}
 								}
 								//Support for Bidi end
-								cell.node().innerHTML = t._buildCellContent(cell, isPadding);
+								cell.node().innerHTML = t._buildCellContent(cell, row.visualIndex(), isPadding);
 								t.onAfterCell(cell);
 							}
 						});

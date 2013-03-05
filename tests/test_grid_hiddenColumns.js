@@ -5,7 +5,6 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
-	'gridx/modules/CSSHiddenColumns',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
 
@@ -33,17 +32,19 @@ require([
 		configGrid.connect(configGrid.select.row, 'onSelected', function(row){
 			var t = new Date;
 			grid.hiddenColumns.add(row);
-			console.log('hide: ', new Date - t);
+			console.log('hide: ' + (new Date - t));
 		});
 		configGrid.connect(configGrid.select.row, 'onDeselected', function(row){
 			var t = new Date;
 			grid.hiddenColumns.remove(row);
-			console.log('show: ', new Date - t);
+			console.log('show: ' + (new Date - t));
 		});
 	});
 
 	showAll = function(){
+		var t = new Date;
 		grid.hiddenColumns.clear();
+		console.log('clear: ' + (new Date - t));
 		configGrid.select.row.clear();
 	};
 });
