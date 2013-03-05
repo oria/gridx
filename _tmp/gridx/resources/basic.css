@@ -1,0 +1,374 @@
+/*Header, Body, Scroller*/
+/*common*/
+.gridx {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid #ddd;
+}
+
+.gridxHeader,
+.gridxFooter {
+	overflow: hidden;
+	background-color: #eee;
+}
+
+.gridxLoad {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.gridxLoading {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: url('images/treeExpand_loading.gif') #ddd center center no-repeat;
+	z-index: 99999;
+	opacity: 0.3;
+}
+
+/* Keep footer at bottom, so the grid won't distort too much when zoomed in/out*/
+.gridxFooter {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+}
+
+.gridxHScrollerInner {
+	display: none;
+}
+
+.gridxMain {
+	position: relative;
+}
+
+.gridxPercentColumnWidth .gridxHeaderRow table,
+.gridxPercentColumnWidth .gridxRow table.gridxRowTable {
+	width: 100%;
+}
+
+/*Header*/
+.gridxHeaderRow {
+	background-color: #eee;
+	border-bottom: 1px solid #ccc;
+	position: relative;
+}
+
+.gridxHeaderRowHidden {
+	height: 0;
+}
+
+.gridxHeaderRowInner {
+	overflow: hidden;
+	border-style: solid;
+	border-color: #ccc;
+	border-width: 0 1px 0 0;
+}
+
+.gridxHeaderRow table {
+	border-collapse: separate;
+	border-spacing: 0;
+	border: none;
+	table-layout: fixed;
+	width: 1px;
+}
+
+.gridxHeaderRow .gridxCell {
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent #ccc transparent transparent;
+	padding: 3px;
+	text-align: left;
+	overflow: hidden;
+	/*box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;*/
+}
+
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxHeaderCellFocus {
+	outline: 1px dashed darkblue;
+	border-top: 1px dashed darkblue;
+	border-bottom: 1px dashed darkblue;
+}
+
+.dijit_a11y .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	border: 1px dashed darkblue;
+}
+
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:first-child {
+	border-left: 1px dashed darkblue;
+}
+
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:last-child {
+	border-right: 1px dashed darkblue;
+}
+
+.gridxHeaderRow :focus {
+	outline: none;
+}
+
+/*Body*/
+.gridxBody {
+	height: 100%;
+	width: 100%;
+    overflow: hidden;
+	position: absolute;
+	top: 0;
+	box-sizing: border-box; /* css3 rec */
+    -moz-box-sizing: border-box; /* ff2 */
+    -ms-box-sizing: border-box; /* ie8 */
+    -webkit-box-sizing: border-box; /* safari3 */
+    -khtml-box-sizing: border-box; /* konqueror */
+}
+
+.gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
+	background-color: #cee8f2;
+}
+
+.gridxRow {
+	background-color: #fff;
+}
+
+.gridxRowHeaderRow table,
+.gridxRow .gridxRowTable {
+	border-collapse: separate;
+	border-spacing: 0;
+	border: none;
+	table-layout: fixed;
+	width: 1px;
+	empty-cells: show;
+}
+
+.gridxRow .gridxCell {
+	border-style: solid;
+	border-color: transparent #ccc #ccc transparent;
+	border-width: 1px;
+	padding: 3px;
+	text-align: left;
+	overflow: hidden;
+	/*box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;*/
+}
+
+.gridxRowDummy {
+	height: 24px;
+	width: 100%;
+	background: url('images/loadingAnimation.gif') no-repeat left;
+	/*background-color: green;
+	border-top: 1px solid red;*/
+}
+
+.gridxBody .gridxCell:focus {
+	outline: none;
+}
+
+.gridx .gridxBody .gridxCellFocus {
+	border: 1px dashed darkblue !important;
+}
+
+.gridxBodyEmpty {
+	width: 100%;
+	height: 100px;
+	padding: 30px 0;
+	text-align: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.gridxBodyEmpty:focus {
+	outline: 1px dotted #aaa;
+}
+
+/*HScroller*/
+.gridxHScrollerInner {
+	overflow: scroll;
+	overflow-y: hidden;
+	border: none;
+	outline: none;
+}
+
+/* ie6 will show the wrong height */
+.dj_ie6 .gridxHScrollerInner {
+	line-height: 0;
+}
+
+
+/*VScroller*/
+.gridxVScroller {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	overflow: scroll; 
+	overflow-x: hidden; 
+	border: none;
+	height: 100%;
+	outline: none;
+}
+
+/*RowHeader*/
+.gridxRowHeaderHeader,
+.gridxRowHeaderBody {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	overflow: hidden;
+	border-right: 1px solid #E5DAC8;
+}
+
+.gridxRowHeaderBody table {
+	width: 100%;
+}
+.gridxRowHeaderHeader table {
+	height: 100%;
+}
+
+.gridxRowHeaderRow {
+	background: url("images/header.png") #EDF2F7 repeat-x bottom;
+	background: #edf2f7; /* Old browsers */
+	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
+	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
+}
+
+.gridxRowHeaderHeader .gridxHeaderCellFocus {
+	border-top: 1px dashed darkblue;
+	border-bottom: 1px dashed darkblue;
+}
+	
+.gridxRowHeaderCell {
+	border-bottom: 1px solid #E5DAC8;
+}
+
+.gridxRowHeaderRow .gridxCellFocus {
+	border: 1px dashed darkblue !important;
+}
+
+/* Firefox can not fire onmouseover when mouse is "dragging" an "overflow: hidden" node. 
+ * This fix is for IndirectSelect working with ExtendedSelect only */
+.dj_gecko .gridx .gridxRowHeaderBody .gridxRowHeaderRow .gridxRowHeaderCell .dijitCheckBox {
+	overflow: visible;
+}
+
+
+/*Column Resizer*/
+/*Column resizing plugin*/
+.gridxColumnResizing {
+	cursor: ew-resize;
+}
+.dj_ie .gridxColumnResizing {
+	cursor: e-resize;
+}
+
+.gridxColumnResizer {
+	position: absolute;
+	height: 100%;
+	width: 2px;
+	background-color: #666;
+	z-index: 1000;
+	top: 0;
+}
+
+/*CellDijit*/
+.gridxCellWidget {
+	width: 100%;
+	height: 100%;
+}
+
+.gridxCellEditor,
+/* in IE dijitTextArea has width auto by default */
+.dj_ie [class~='dijitTextArea'].gridxCellEditor {
+	width: 100%;
+}
+
+[class~='dijitSliderV'].gridxCellEditor {
+	width: auto;
+}
+
+/* TouchVScroller */
+.gridxTouchVScroller .gridxVScroller {
+	display: none;
+}
+
+.gridxTouchVScroller .gridxMain {
+	overflow: hidden;
+}
+.gridxTouchVScroller .gridxBody {
+	height: auto !important;
+	width: auto !important;
+}
+
+.gridxTouchVScroller .gridxHeaderRowInner {
+	position: relative;
+}
+.gridxTouchVScroller .gridxHeaderRowInner > table {
+	position: absolute;
+}
+
+/* TouchScroll */
+.gridxTouchScrollVWrapper {
+    overflow: hidden;
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 5px;
+}
+
+.gridxTouchScrollHWrapper {
+    overflow: hidden;
+    position: absolute;
+	bottom: 2px;
+	left: 2px;
+	height: 5px;
+}
+
+.gridxTouchScrollVBar {
+    background-color: #606060;
+    opacity: 0;
+    position: absolute;
+    z-index: 999;
+    width: 5px;
+}
+
+.gridxTouchScrollHBar {
+    background-color: #606060;
+    opacity: 0;
+    position: absolute;
+    z-index: 999;
+	height: 5px;
+}
+
+.gridxTouchScrollVBar,
+.gridxTouchScrollHBar {
+	-webkit-transition-property: opacity;
+	-moz-transition-property: opacity;
+	-o-transition-property: opacity;
+	transition-property: opacity;
+	-webkit-transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-o-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+}
+
+/* CSS Hidden Column */
+.gridxHiddenColumn {
+	display: none;
+}
+
+
+/*Header Menu*/
+
+.gridxHeaderMenuButton {
+	position: absolute;
+	top: 1px;
+	bottom: 1px;
+	width: 10px;
+	background-color: red;
+	display: none;
+	cursor: pointer;
+}

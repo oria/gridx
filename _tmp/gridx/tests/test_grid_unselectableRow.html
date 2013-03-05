@@ -1,0 +1,66 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Grid Selection Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		#gridContainer {
+			width: 800px;
+			height: 500px;
+		}
+		#grid {
+			height: 100%;
+		}
+		
+		.gridx {
+			width: 800px;
+			height: 500px;
+		}
+		
+		textarea {
+			resize: none;
+		}
+		.testboard {
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+
+		.dj_rtl .testboard {
+			right: auto;
+			left: 0;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript" src='test_grid_unselectableRow.js'></script>
+		<!-- <script type="text/javascript" src='test_grid_indirectSelect.js'></script> -->
+
+</head>
+<body class='claro'>
+	<h1 class='title'>Grid Selection Test</h1>
+	<p>All the row with year between 1990 and 2000 will be unselectable</p>
+	<table border='0' cellspacing='0' cellpadding='0'><tr>
+		<td>
+			<div id='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+				cacheClass: "gridx/core/model/cache/Async",
+				store: store,
+				structure: layout,
+				modules: [
+					"gridx/modules/RowHeader",
+					"gridx/modules/select/Row",
+					"gridx/modules/VirtualVScroller"
+				],
+				selectRowCanSelect: function(rowid, columnid){
+					var row = this.grid.row(rowid, 1);
+					return row.data().Year > 1990;
+				}
+			'></div>
+		</td>
+		<td id='ctrlPane'>
+		</td>
+	</tr></table>
+</body>
+</html>
