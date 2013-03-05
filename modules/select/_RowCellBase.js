@@ -15,7 +15,7 @@ define([
 
 		selectById: function(rowId, columnId){
 			var t = this, m = t.model;
-			if(t.arg('enabled')){
+			if(t.arg('enabled') && t.isSelectable(rowId, columnId)){
 				m.markById(rowId, 1, t._getMarkType(columnId));
 				m.when();
 			}
@@ -23,7 +23,7 @@ define([
 		
 		deselectById: function(rowId, columnId){
 			var t = this, m = t.model;
-			if(t.arg('enabled')){
+			if(t.arg('enabled') && t.isSelectable(rowId, columnId)){
 				m.markById(rowId, 0, t._getMarkType(columnId));
 				m.when();
 			}
@@ -31,6 +31,10 @@ define([
 		
 		isSelected: function(rowId, columnId){
 			return this.model.getMark(rowId, this._getMarkType(columnId)) === true		//Mixed status is not selected
+		},
+		
+		isSelectable: function(rowId, columnId){
+			return this.arg('canSelect').apply(this, arguments);
 		},
 
 		//Private-----------------------------------------------------------------

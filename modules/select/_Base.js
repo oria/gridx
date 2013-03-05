@@ -55,6 +55,10 @@ define([
 		multiple: true,
 	
 		holdingCtrl: false,
+		
+		canSelect: function(){
+			return true;
+		},
 
 		//Events----------------------------------------------------------------------
 		onSelected: function(){},
@@ -69,10 +73,14 @@ define([
 		_isSelected: function(){
 			return this.isSelected.apply(this, arguments);
 		},
-
+		
+		_isSelectable: function(){
+			return this.isSelectable.apply(this, arguments);
+		},
+		
 		_select: function(item, extending){
 			var t = this, toSelect = 1, g = t.grid;
-			if(t.arg('enabled')){
+			if(t.arg('enabled') && t._isSelectable(item)){
 				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
 					toSelect = !t._isSelected(item);
 				}else{
