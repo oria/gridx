@@ -248,7 +248,7 @@ define([
 				row = t.byId(parentId),
 				items = t._struct[parentId];
 			if(row && items && (items.length > 1 || !t.hasChildren || !t.hasChildren(parentId))){
-				console.log('loaded: ', parentId);
+			//	console.log('loaded: ', parentId);
 				d.callback();
 			}else{
 				items = row && s.getChildren && s.getChildren(row.item) || [];

@@ -1,62 +1,37 @@
 require([
+	'dojo/parser',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/modules/Focus',
 	'gridx/modules/RowHeader',
-	// 'gridx/modules/select/Row',
-	'gridx/modules/select/UnselectableRow',
+	'gridx/modules/select/Row',
+	// 'gridx/modules/select/UnselectableRow',
 	'gridx/modules/VirtualVScroller',	
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
 	'dijit/form/Button',
 	'dijit/form/NumberTextBox',
-	'dojo/domReady!'
-], function(Grid, Cache, Focus, RowHeader, UnselectableRow, VirtualVScroller, dataSource, storeFactory, TestPane){
+		//'gridx/allModules',
 
-	grid = new Grid({
-		id: 'grid',
-		store: storeFactory({
-			dataSource: dataSource,
-			size: 100
-		}),
-		structure: dataSource.layouts[0],
-		cacheClass: Cache,
-		modules: [
-			Focus,
-			RowHeader,
-			// SelectRow,
-			UnselectableRow,
-			VirtualVScroller
-		],
-		selectRowUnselectableRowEnabled: true,
-		selectRowUnselectableRowRule: {
-			rules: [
-				function(row){
-					return row.data().Year > 1990 && row.data().Year < 2000; 
-				}
-			]
-		}
+	'dojo/domReady!'
+], function(parser, Grid, Cache, Focus, RowHeader, SelectRow, VirtualVScroller, dataSource, storeFactory, TestPane){
+
+	store = storeFactory({
+		dataSource: dataSource,
+		size: 100
 	});
-	grid.placeAt('gridContainer');
-	grid.startup();	
+	
+	layout = dataSource.layouts[0];
 	
 	//Test functions
 	getRow5Unselectable = function(){
-		alert('row 5 unselectable: ' + grid.select.row.isUnselectable(5));
+		alert('row 5 unselectable: ' + dijit.byId('grid1').select.row.isSelectable(5));
 	};
 	
 	getRow6Unselectable = function(){
-		alert('row 6 unselectable: ' + grid.select.row.isUnselectable(6)); 
+		alert('row 6 unselectable: ' + dijit.byId('grid1').select.row.isSelectable(6)); 
 	};
-	
-	turnOn = function(){
-		grid.select.row.turnOn();
-	};
-	
-	turnOff = function(){
-		grid.select.row.turnOff();
-	}
 	
 	//Test buttons
 	var tp = new TestPane({});
@@ -65,8 +40,8 @@ require([
 	tp.addTestSet('Select Row Actions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow5Unselectable">Get Row 5 Unselectable</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow6Unselectable">Get Row 6 Unselectable</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: turnOn">Turn Unselectable On</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: turnOff">Turn Unselectable Off</div><br/>',
+		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: turnOn">Turn Unselectable On</div><br/>',
+		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: turnOff">Turn Unselectable Off</div><br/>',
 		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: rowClear">Clear row selections</div><br/>',
 		// '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: rowGetSelected">Get selected rows</div><br/>',
 	''].join(''));
@@ -86,4 +61,5 @@ require([
 	// ''].join(''));
 	
 	tp.startup();
+	parser.parse();
 });

@@ -77,10 +77,9 @@ define([
 
 		//Private----------------------------------------------------------
 		_createSelector: function(row){
-			console.log(this);
 			var rowNode = row.node(),
 				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
-				isUnselectable = this.grid.select.row.isUnselectable? this.grid.select.row.isUnselectable(row.id): false,
+				isUnselectable =  !this.grid.select.row.isSelectable(row.id),
 				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
 			return this._createCheckBox(selected, partial, isUnselectable);
 		},
