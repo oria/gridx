@@ -156,8 +156,8 @@ define([
 		},
 
 		_onMouseOver: function(e){
-			if(e.columnId == indirectSelectColumnId){
-				var sr = this.grid.select.row;
+			var sr = this.grid.select.row;
+			if(e.columnId == indirectSelectColumnId || sr.arg('triggerOnCell')){
 				if(!sr.triggerOnCell){
 					this._triggerOnCell = false;
 					sr.triggerOnCell = true;
