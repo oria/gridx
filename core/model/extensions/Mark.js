@@ -142,6 +142,8 @@ define([
 					}
 					if(t._isMarkable(type, id)){
 						t._mark(id, toMark, type);
+					}else{
+						console.log(id + ' is  not markable ');
 					}
 				});
 			}]);

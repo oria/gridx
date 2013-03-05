@@ -135,6 +135,10 @@ define([
 
 			isSelected: function(){
 				return this.model.getMark(this.id) === true;
+			},
+			
+			isSelectable: function(){
+				return 
 			}
 		},
 		
@@ -180,6 +184,7 @@ define([
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
+			t.model.setMarkable('select', lang.hitch(t, t.isSelectable));
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
