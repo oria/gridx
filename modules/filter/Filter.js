@@ -4,8 +4,9 @@ define([
 	"../../core/model/extensions/Query",
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/lang"
-], function(_Module, ClientFilter, Query, declare, array, lang){
+	"dojo/_base/lang",
+	"dojo/_base/Deferred"
+], function(_Module, ClientFilter, Query, declare, array, lang, Deferred){
 
 	var module = declare(/*===== "gridx.modules.filter.Filter", =====*/_Module, {
 		// summary:
@@ -69,6 +70,7 @@ define([
 			var t = this,
 				g = t.grid,
 				m = t.model,
+				d = new Deferred(),
 				checker = t._checker;
 			if(t.arg('serverMode')){
 				m.query(t.setupFilterQuery(checker && checker.expr));
@@ -76,10 +78,16 @@ define([
 				m.filter(checker);
 			}
 			m.clearCache();
-			if(!skipUpdateBody){
-				return g.tree ? g.tree.refresh() : g.body.refresh();	//dojo.Deferred
-			}
-		}
+			Deferred.when(!skipUpdateBody && (g.tree ? g.tree.refresh() : g.body.refresh()), function(){
+				t.onFilter();
+				d.callback();
+			}, function(e){
+				d.errback(e);
+			});
+			return d;
+		},
+
+		onFilter: function(){}
 	});
 	
 	//Util
