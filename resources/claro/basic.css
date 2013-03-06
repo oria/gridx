@@ -49,8 +49,14 @@
 	border-right: 1px solid #FFFFFF;
 }
 
+.claro .gridxGroupHeader {
+	border-color: #EDF2F7 #BCBCBC #BCBCBC #FFFFFF;
+}
 .claro .gridxHeaderRow .gridxCell {
 	border-color: #EDF2F7 #BCBCBC #D0DFEA #FFFFFF;
+}
+.claro .gridxHeaderRow .gridxSubHeader {
+	border-top-color: #FFFFFF;
 }
 
 .claro .gridxHeaderRow {
@@ -66,6 +72,12 @@
 .claro .gridxHeader .gridxHeaderRow .gridxHeaderCellOver {
 	background: #9bcaf7;
 	border-top-color: #9BCAF7;
+}
+.claro .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellOver {
+	border-top-color: #FFFFFF;
+}
+.claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus {
+	border-top-color: darkblue;
 }
 
 /* Row header */
