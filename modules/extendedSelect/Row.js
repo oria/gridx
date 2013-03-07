@@ -26,7 +26,12 @@ define([
 		// summary:
 		//		Check whether this row is selected.
 	};
-
+	
+	Row.isSelectable = funciton(){
+		// summary:
+		//		Check whether this row is selectable.
+	},
+	
 	return declare(_RowCellBase, {
 		// summary:
 		//		Provides advanced row selections.
@@ -138,7 +143,7 @@ define([
 			},
 			
 			isSelectable: function(){
-				return 
+				return this.grid.select.row.isSelectable(this.id);
 			}
 		},
 		
