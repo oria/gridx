@@ -6,18 +6,100 @@ define([
 ], function(declare, lang, domClass, Header){
 
 /*=====
-	return declare(Header, {
+	var GroupHeader = declare(Header, {
 		// summary:
-		//		The header UI of grid. This implementation supports header groups (also called "column groups")
+		//		The header UI of grid. This implementation supports header groups (also called "column groups").
+		//		This module is not compatible with IE7 and below.
 		// description:
 		//		This module inherites the default Header module, adding support of column groups.
 		//		Several adjacent headers can be grouped together by configuring the "groups" parameter of this module.
 		//		Header groups are shown as higher level headers with colspan.
+		// example:
+		//		Simple single level groups:
+		//	|	var grid = new Grid({
+		//	|		......
+		//	|		structure: [
+		//	|			{ id: 'column1', name: 'Column 1' },
+		//	|			{ id: 'column2', name: 'Column 2' },
+		//	|			{ id: 'column3', name: 'Column 3' },
+		//	|			{ id: 'column4', name: 'Column 4' },
+		//	|			{ id: 'column5', name: 'Column 5' },
+		//	|			{ id: 'column6', name: 'Column 6' },
+		//	|			{ id: 'column7', name: 'Column 7' },
+		//	|			{ id: 'column8', name: 'Column 8' },
+		//	|			{ id: 'column9', name: 'Column 9' }
+		//	|		],
+		//	|		headerGroups: [
+		//	|			{ name: "Group 1", children: 3 }, //This group contains 3 real columns (Column1, 2, and 3).
+		//	|			{ name: "Group 2", children: 2 }, //This group contains 2 real columns (Column 4, and 5).
+		//	|			{ name: "Group 3", children: 4 }, //This group contains 4 real columns (Column 6, 7, 8, and 9).
+		//	|		],
+		//	|		modules: [
+		//	|			......
+		//	|			"gridx/modules/GroupHeader"
+		//	|		],
+		//	|		......
+		//	|	});
+		//		Multi-level groups:
+		//		(structure and other settings are the same as the previous sample)
+		//	|	var grid = new Grid({
+		//	|		......
+		//	|		headerGroups: [
+		//	|			{ name: "Group 1", children: [
+		//	|				{ name: "Group 1-1", children: 2},	//Contains Column 1 and 2
+		//	|				{ name: "Group 1-2", children: 2}	//Contains Column 3 and 4
+		//	|			]},
+		//	|			{ name: "Group 2", children: [
+		//	|				{ name: "Group 2-1", children: 2},	//Contains Column 5 and 6
+		//	|				{ name: "Group 2-2", children: 3}	//Contains Column 7, 8, and 9
+		//	|			]}
+		//	|		],
+		//	|		......
+		//	|	});
+		//		Complicated group structure (colspan and rowspan):
+		//		(structure and other settings are the same as the previous sample)
+		//	|	var grid = new Grid({
+		//	|		......
+		//	|		headerGroups: [
+		//	|			1,		//Column 1
+		//	|			{ name: "Group 1", children: [
+		//	|				{ name: "Group 1-1", children: 2 },		//Contains Column 2 and 3
+		//	|				1,		Column 4
+		//	|				{ name: "Group 1-2", children: [
+		//	|					{ name: "Group 1-2-1", children: 2 },	//Contains Column 5 and 6
+		//	|					{ name: "Group 1-2-2", children: 2 }	//Contains Column 7 and 8
+		//	|				]}
+		//	|			]}
+		//	|			//If not all columns are included in previous groups, the remaining are automatically added here.
+		//	|			//So the final is Column 9, same level as Column 1 and "Group 1".
+		//	|		],
+		//	|		......
+		//	|	});
 
-		// groups: []
-		//		
+		// groups: Integer|(Integer|GroupHeader.__HeaderGroup)[]
+		//		Configure the header group structure.
 		groups: null
 	});
+
+	GroupHeader.__HeaderGroup = declare([], {
+		// summary:
+		//		Definition of a header group.
+		// description:
+		//		Defines the content shown in this header group and the children included in this group.
+
+		// name: String
+		//		The content shown in this header group.
+		name: '',
+
+		// children: Integer|(Integer|GroupHeader.__HeaderGroup)[]
+		//		The children included in this header group. Can be other header groups or real columns.
+		//		If to include real columns, a number is given to indicate how many real columns are located here.
+		//		For example: [3, { name: "child group", children: 4 }] means this group includes 3 real columns
+		//		followed by a child group whose "name" is "child group" and whose children is 4 real columns.
+		children: []
+	});
+
+	return GroupHeader;
 =====*/
 
 	return declare(Header, {
