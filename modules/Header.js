@@ -149,12 +149,13 @@ define([
 				f = g.focus,
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			array.forEach(g._columns, function(col){
-				sb.push('<th id="', (g.id + '-' + col.id).replace(/\s+/, ''),
+				col._domId = (g.id + '-' + col.id).replace(/\s+/, '');
+				sb.push('<th id="', col._domId,
 					'" role="columnheader" aria-readonly="true" tabindex="-1" colid="', col.id,
 					'" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
 					(lang.isFunction(col.headerClass) ? col.headerClass(col) : col.headerClass) || '',
-					'" style="width: ', col.width, ';',
+					'" style="width: ', col.width, ';min-width:', col.width,
 					g.getTextDirStyle(col.id, col.name),
 					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
 					'"><div class="gridxSortNode">',

@@ -2,8 +2,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/Deferred",
 	"dojo/_base/array",
+	"dojo/query",
 	"../core/_Module"
-], function(declare, Deferred, array, _Module){
+], function(declare, Deferred, array, query, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -115,6 +116,10 @@ define([
 					col.hidden = true;
 					delete columnsById[id];
 					columns.splice(array.indexOf(columns, col), 1);
+					//Directly remove dom nodes instead of refreshing the whole body to make it faster.
+					query('[colid="' + id + '"].gridxCell', g.domNode).forEach(function(node){
+						node.parentNode.removeChild(node);
+					});
 				}
 			});
 			if(changed){
@@ -122,7 +127,15 @@ define([
 					col.index = i;
 				});
 			}
-			return t._refresh(changed);
+			g.columnWidth._adaptWidth();
+			query('.gridxCell', g.bodyNode).forEach(function(node){
+				node.style.width = columnsById[node.getAttribute('colid')].width;
+			});
+			//FIXME: this seems ugly....
+			if(g.vScroller._doVirtualScroll){
+				g.body.onForcedScroll();
+			}
+			return t._refresh(0);
 		},
 
 		remove: function(){

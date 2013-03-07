@@ -67,6 +67,7 @@ define([
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
+				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
 						columnId: indirectSelectColumnId
@@ -156,8 +157,8 @@ define([
 		},
 
 		_onMouseOver: function(e){
-			if(e.columnId == indirectSelectColumnId){
-				var sr = this.grid.select.row;
+			var sr = this.grid.select.row;
+			if(e.columnId == indirectSelectColumnId || sr.arg('triggerOnCell')){
 				if(!sr.triggerOnCell){
 					this._triggerOnCell = false;
 					sr.triggerOnCell = true;
@@ -200,11 +201,11 @@ define([
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
-			var selectedRoot = array.filter(selected, function(id){
+			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
 				return !model.treePath(id).pop();
 			});
 			if(count === model.size()){
-				allSelected = count == selectedRoot.length;
+				allSelected = count && count == selectedRoot.length;
 			}else{
 				d = new Deferred();
 				model.when({

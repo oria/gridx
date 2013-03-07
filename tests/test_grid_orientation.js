@@ -50,8 +50,8 @@ require([
 			oldWidth = window.outerWidth;
 			console.log("Time used for changing columns: " + (new Date - t1) + 'ms');
 			//Adapt height, can be ommited if height is fixed.
-//            document.body.style.height = window.innerHeight + 'px';
-//            grid.resize();
+            document.body.style.height = window.innerHeight + 'px';
+            grid.resize();
 		});
 	});
 });

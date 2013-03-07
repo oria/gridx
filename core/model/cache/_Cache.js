@@ -248,7 +248,6 @@ define([
 				row = t.byId(parentId),
 				items = t._struct[parentId];
 			if(row && items && (items.length > 1 || !t.hasChildren || !t.hasChildren(parentId))){
-				console.log('loaded: ', parentId);
 				d.callback();
 			}else{
 				items = row && s.getChildren && s.getChildren(row.item) || [];
@@ -267,11 +266,11 @@ define([
 		},
 
 		_storeFetch: function(options, onFetched){
-			console.debug("\tFETCH start: ",
-					options.start, ", count: ",
-					options.count, ", end: ",
-					options.count && options.start + options.count - 1, ", options:",
-					this.options);
+//            console.debug("\tFETCH start: ",
+//                    options.start, ", count: ",
+//                    options.count, ", end: ",
+//                    options.count && options.start + options.count - 1, ", options:",
+//                    this.options);
 
 			var t = this,
 				s = t.store,

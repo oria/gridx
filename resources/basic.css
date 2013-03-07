@@ -73,7 +73,11 @@
 	table-layout: fixed;
 	width: 1px;
 }
+.gridxGH .gridxHeaderRow table {
+	width: auto;
+}
 
+.gridxGroupHeader,
 .gridxHeaderRow .gridxCell {
 	border-width: 1px;
 	border-style: solid;
@@ -138,6 +142,9 @@
 	table-layout: fixed;
 	width: 1px;
 	empty-cells: show;
+}
+.dj_safari .gridxGH .gridxRow .gridxRowTable {
+	width: auto;
 }
 
 .gridxRow .gridxCell {

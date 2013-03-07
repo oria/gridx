@@ -51,6 +51,7 @@ define([
 				[g, 'onRowMouseOut', '_onMouseOut'],
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
+				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				focus && [focus, 'onFocusArea', function(name){
 					if(name == 'rowHeader'){
 						t._onMouseOver();
@@ -77,10 +78,9 @@ define([
 
 		//Private----------------------------------------------------------
 		_createSelector: function(row){
-			console.log(this);
 			var rowNode = row.node(),
 				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
-				isUnselectable = this.grid.select.row.isUnselectable? this.grid.select.row.isUnselectable(row.id): false,
+				isUnselectable =  !this.grid.select.row.isSelectable(row.id),
 				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
 			return this._createCheckBox(selected, partial, isUnselectable);
 		},
@@ -170,11 +170,11 @@ define([
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
-			var selectedRoot = array.filter(selected, function(id){
+			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
 				return !model.treePath(id).pop();
 			});
 			if(count === model.size()){
-				allSelected = count == selectedRoot.length;
+				allSelected = count && count == selectedRoot.length;
 			}else{
 				d = new Deferred();
 				model.when({

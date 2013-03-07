@@ -4,11 +4,12 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/sniff",
 	"dojo/_base/query",
+	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(/*=====Row, =====*/declare, array, sniff, query, domClass, keys, _RowCellBase, _Module){
+], function(/*=====Row, =====*/declare, array, sniff, query, lang, domClass, keys, _RowCellBase, _Module){
 
 /*=====
 	Row.select = function(){
@@ -109,25 +110,21 @@ define([
 		
 		rowMixin: {
 			select: function(){
-				if(!this.grid.unselectableRow || this.isSelectable()){
-					this.grid.select.row.selectById(this.id);
-				}else{
-					console.warn('row with id:' + this.id + ' is not selectable');
-				}
+				this.grid.select.row.selectById(this.id);
 				return this;
 			},
 
 			deselect: function(){
-				if(!this.grid.unselectableRow || this.isSelectable()){
-					this.grid.select.row.deselectById(this.id);
-				}else{
-					console.warn('row with id:' + this.id + ' is not selectable');
-				}
+				this.grid.select.row.deselectById(this.id);
 				return this;
 			},
 
 			isSelected: function(){
 				return this.grid.select.row.isSelected(this.id);
+			},
+			
+			isSelectable: function(){
+				return this.grid.select.row.isSelectable(this.id);
 			}
 		},
 		
@@ -161,6 +158,9 @@ define([
 			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
+			
+			t.model.setMarkable('select', lang.hitch(t, 'isSelectable'));
+
 			t.batchConnect(
 				[g, 'onRowClick', function(e){
 					//Have to check whether we are on the 
@@ -207,15 +207,15 @@ define([
 				m = t.model,
 				g = t.grid,
 				row = g.row(id);
-			if(!g.unselectableRow || row.isSelectable()){
-				if(m.treeMarkMode() && !m.getMark(id) && toMark){
-					toMark = 'mixed';
-				}
-				m.markById(id, toMark);
-				m.when();
-			}else{
-				console.warn('row with id:' + id + ' is not selectable');
+			// if(!g.unselectableRow || row.isSelectable()){
+			if(m.treeMarkMode() && !m.getMark(id) && toMark){
+				toMark = 'mixed';
 			}
+			m.markById(id, toMark);
+			m.when();
+			// }else{
+				// console.warn('row with id:' + id + ' is not selectable');
+			// }
 		},
 
 		_onRender: function(start, count){
@@ -228,7 +228,7 @@ define([
 				rowNode = t.grid.body.getRowNode({visualIndex: i});
 				if(rowNode){
 					id = rowNode.getAttribute('rowid');
-					t._highlight(id, model.getMark(id) && (!g.unselectableRow || g.unselectableRow.isSelectable(id, 1)));
+					t._highlight(id, model.getMark(id));
 				}
 			}
 		}
