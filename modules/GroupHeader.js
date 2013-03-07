@@ -1,15 +1,17 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/array",
 	"dojo/dom-class",
 	"./Header"
-], function(declare, lang, domClass, Header){
+], function(declare, lang, array, domClass, Header){
 
 /*=====
 	var GroupHeader = declare(Header, {
 		// summary:
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
+		//		This module is not compatible with ColumnLock module.
 		// description:
 		//		This module inherites the default Header module, adding support of column groups.
 		//		Several adjacent headers can be grouped together by configuring the "groups" parameter of this module.
@@ -76,8 +78,8 @@ define([
 		//	|		......
 		//	|	});
 
-		// groups: Integer|(Integer|GroupHeader.__HeaderGroup)[]
-		//		Configure the header group structure.
+		// groups: (Integer|GroupHeader.__HeaderGroup)[]
+		//		Configure the header group structure. Must be an array.
 		groups: null
 	});
 
@@ -104,9 +106,11 @@ define([
 
 	return declare(Header, {
 		_parse: function(){
-			var columnCount = this.grid._columns.length,
+			var columns = this.grid._columns,
+				columnCount = columns.length,
 				cnt = 0,
 				maxLevel = 0,
+				groups = this.arg('groups', []),
 				check = function(struct, level){
 					if(!lang.isArrayLike(struct)){
 						struct = [struct];
@@ -149,9 +153,9 @@ define([
 					}
 					return colCount;
 				};
-			check(this.arg('groups', []), 0);
+			check(groups, 0);
 			if(cnt < columnCount){
-				this.groups.push(columnCount - cnt);
+				groups.push(columnCount - cnt);
 			}
 			return maxLevel;
 		},

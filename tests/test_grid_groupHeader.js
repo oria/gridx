@@ -6,6 +6,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
 	'gridx/modules/GroupHeader',
+	'gridx/modules/ColumnResizerNew',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
 

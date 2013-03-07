@@ -121,6 +121,8 @@ define([
 					oldWidth = domStyle.get(cell, 'width');
 				}
 				cell.style.width = width + 'px';
+				cell.style.minWidth = width + 'px';
+				cell.style.maxWidth = width + 'px';
 			});
 			g.body.onRender();
 			g.vLayout.reLayout();
