@@ -1,10 +1,13 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/dom-class",
+	"dojo/query",
 	"./Header"
-], function(declare, lang, array, domClass, Header){
+], function(kernel, declare, lang, array, domClass, query, Header){
+	kernel.experimental('gridx/modules/GroupHeader');
 
 /*=====
 	var GroupHeader = declare(Header, {
@@ -105,6 +108,25 @@ define([
 =====*/
 
 	return declare(Header, {
+		preload: function(args){
+			this.inherited(arguments);
+			var t = this,
+				g = t.grid;
+			if(g.columnResizer){
+				t.aspect(g.columnResizer, 'onResize', function(colId){
+					var w = (query('[colid="' + colId + '"]', g.headerNode)[0].offsetWidth - g.columnWidth._padBorder) + 'px';
+					if(w != g._columnsById[colId].width){
+						query('[colid="' + colId + '"]', g.domNode).forEach(function(cell){
+							var cs = cell.style;
+							cs.width = w;
+							cs.minWidth = w;
+							cs.maxWidth = w;
+						});
+					}
+				});
+			}
+		},
+
 		_parse: function(){
 			var columns = this.grid._columns,
 				columnCount = columns.length,
@@ -195,6 +217,7 @@ define([
 								col.name || '',
 								'</div></th>');
 						}
+						columns[prevColCount + item - 1]._groupLast = 1;
 						columns.splice(prevColCount, item);
 					}else{
 						prevColCount += item.colCount;
