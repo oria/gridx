@@ -172,12 +172,11 @@ define([
 		
 		_initHeader: function(){
 			var t = this,
-				table = t.grid.header.domNode.firstChild.firstChild,
-				tds = table.rows[0].cells;
+				table = t.grid.header.domNode.firstChild.firstChild;
 			if(query('.gridxSortBtn', table).length){
 				return;
 			}
-			forEach(table.rows[0].cells, function(td){
+			query('.gridxCell', table).forEach(function(td){
 				var colid = td.getAttribute('colid');
 				if(t.isSortable(colid)){
 					domConstruct.create('div', {
@@ -265,7 +264,7 @@ define([
 				sortData = t._sortData;
 			removeClass(dn, 'gridxSingleSorted');
 			removeClass(dn, 'gridxNestedSorted');
-			query('th', g.header.domNode).forEach(function(cell){
+			query('th.gridxCell', g.header.domNode).forEach(function(cell){
 				var colid = cell.getAttribute('colid');
 				if(t.isSortable(colid)){
 					forEach(['', 'Desc', 'Asc', 'Main'], function(s){
