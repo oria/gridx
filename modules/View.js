@@ -165,6 +165,9 @@ define([
 			t._loadLevels(persistedOpenInfo).then(function(){
 				var size = t._openInfo[''].count = m.size();
 				t.rootCount = t.rootCount || size - t.rootStart;
+				if(t.rootStart + t.rootCount > size){
+					t.rootCount = size - t.rootStart;
+				}
 				for(var id in persistedOpenInfo){
 					t._expand(id);
 				}
@@ -276,7 +279,7 @@ define([
 			var t = this;
 			t.rootStart = start;
 			t.rootCount = count;
-			t.updateVisualCount().then(function(){
+			return t.updateVisualCount().then(function(){
 				if(!skipUpdate){
 					t.onUpdate();
 				}

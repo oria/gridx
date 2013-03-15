@@ -379,3 +379,11 @@
 	display: none;
 	cursor: pointer;
 }
+
+.gridxLoadMore {
+	padding: 10px;
+	text-align: center;
+}
+.gridxLoadMore button {
+	width: 100%;
+}
