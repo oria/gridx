@@ -2,8 +2,9 @@ require([
 	'dojo/parser',
 	'gridx/tests/support/data/TestData',
 //    'gridx/tests/support/data/TreeColumnarTestData',
-//    'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/tests/support/stores/JsonRest',
+	'gridx/tests/support/stores/ItemFileWriteStore',
+//    'gridx/tests/support/stores/Memory',
+//    'gridx/tests/support/stores/JsonRest',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
@@ -13,6 +14,7 @@ require([
 ], function(parser, dataSource, storeFactory){
 
 	store = storeFactory({
+		isAsync: true,
 		path: './support/stores',
 		dataSource: dataSource,
 		size: 1000

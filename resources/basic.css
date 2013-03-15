@@ -386,4 +386,13 @@
 }
 .gridxLoadMore button {
 	width: 100%;
+	min-height: 28px;
+}
+.gridxLoadingMore {
+	display: inline-block;
+	background-image: url('images/treeExpand_loading.gif');
+	vertical-align: middle;
+	width: 20px;
+	height: 20px;
+	margin: 0 5px;
 }

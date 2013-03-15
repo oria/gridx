@@ -10,7 +10,7 @@ return declare(ItemFileWriteStore, {
 			var t = request.start * 10, _this = this;
 			setTimeout(function(){
 				oldFetch.call(_this, request);
-			}, 200);
+			}, 2000);
 			return request;
 		};
 	}

@@ -3,7 +3,8 @@ define({root:
 	loadingInfo: "Loading...",
 	emptyInfo: "No items to display",
 	loadFailInfo: "Failed to load data!",
-	loadMore: "Load More"
+	loadMore: "Load More",
+	loadMoreLoading: "Loading..."
 }),
 "ar": true,
 "ca": true,

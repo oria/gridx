@@ -2,19 +2,14 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/query",
 	"dojo/_base/array",
-	"dojo/_base/lang",
-	"dojo/json",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
-	"dojo/keys",
-	"../core/_Module",
 	"./Body",
 	"dojo/i18n!../nls/Body",
-	"dojo/touch",
-	"dojo/NodeList-traverse"
-], function(declare, query, array, lang, json, domConstruct, domClass, Deferred, sniff, keys, _Module, Body, nls, touch){
+	"dojo/touch"
+], function(declare, query, array, domConstruct, domClass, Deferred, sniff, Body, nls, touch){
 
 /*=====
 		//NOT compatible with VirtualVScroller, Pagination,
@@ -32,7 +27,6 @@ define([
 			view.paging = 1;
 			view.rootStart = 0;
 			view.rootCount = this.arg('pageSize', t.model._cache.pageSize || 20);
-			g.emptyNode.innerHTML = '';
 			domClass.remove(t.domNode, 'gridxBodyRowHoverEffect');
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
@@ -40,10 +34,9 @@ define([
 			t._moreNode = domConstruct.create('div', {
 				'class': 'gridxLoadMore'
 			});
-			var btn = domConstruct.create('button', {
+			var btn = t._moreBtn = domConstruct.create('button', {
 				innerHTML: t.arg('loadMoreLabel', nls.loadMore)
-			});
-			t._moreNode.appendChild(btn);
+			}, t._moreNode, 'last');
 			t.connect(btn, touch.press, '_loadMore');
 			t.connect(btn, 'onmouseover', function(){
 				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
@@ -58,12 +51,6 @@ define([
 				t._loadFail(view._err);
 			}
 			t.loaded.callback();
-		},
-
-		destroy: function(){
-			this.inherited(arguments);
-			this.domNode.innerHTML = '';
-			this._destroyed = true;
 		},
 
 		refresh: function(start){
@@ -212,6 +199,7 @@ define([
 				start = view.rootStart,
 				count = view.rootCount,
 				pageSize = t.arg('pageSize');
+			t._busy(1);
 			m.when({
 				start: start + count,
 				count: pageSize
@@ -236,9 +224,18 @@ define([
 					}else{
 						t.domNode.removeChild(t._moreNode);
 					}
+					t._busy();
 					t.onRender(start, count);
 				});
 			});
+		},
+
+		_busy: function(begin){
+			var btn = this._moreBtn;
+			btn.innerHTML = begin ?
+				'<span class="gridxLoadingMore"></span>' + this.arg('loadMoreLoadingLabel', nls.loadMoreLoading) :
+				this.arg('loadMoreLabel', nls.loadMore);
+			btn.disabled = !!begin;
 		}
 	});
 });
