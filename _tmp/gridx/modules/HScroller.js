@@ -86,8 +86,7 @@ define([
 		
 		scrollToColumn: function(colId){
 			var hNode = this.grid.header.innerNode,
-				table = query('table', hNode)[0],
-				cells = table.rows[0].cells,
+				cells = query('.gridxCell', hNode),
 				left = 0,
 				right = 0,
 				ltr = this.grid.isLeftToRight(),
@@ -99,11 +98,11 @@ define([
 			scrollLeft = Math.abs(scrollLeft);
 			//get cell's left border and right border position
 			for(var i = 0; i < cells.length; i++){
-				right += cells[i].offsetWidth;
+				left = cells[i].offsetLeft;
+				right = left + cells[i].offsetWidth;
 				if(cells[i].getAttribute('colid') == colId){
 					break;
 				}
-				left += cells[i].offsetWidth;
 			}
 			
 			//if the cell is not visible, scroll to it

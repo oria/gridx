@@ -112,6 +112,8 @@ define([
 							col.declaredWidth == 'auto' ||
 							(/%$/).test(col.declaredWidth)){
 							cellNode.style.width = col.width;
+							cellNode.style.minWidth = col.width;
+							cellNode.style.maxWidth = col.width;
 						}
 					});
 				}
@@ -139,6 +141,7 @@ define([
 				refNode = query('.gridxCell', innerNode)[0],
 				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
 				isGridHidden = !dn.offsetHeight;
+			t._padBorder = padBorder;
 			//FIXME: this is theme dependent. Any better way to do this?
 			if(tailBorder === 0){
 				tailBorder = 1;
@@ -166,6 +169,8 @@ define([
 					var c = g._columnsById[node.getAttribute('colid')];
 					if(c.width == 'auto' || (/%$/).test(c.width)){
 						node.style.width = c.width = w + 'px';
+						node.style.minWidth = c.width;
+						node.style.maxWidth = c.width;
 					}
 				});
 				bs.width = totalWidth + 'px';
@@ -188,7 +193,10 @@ define([
 						if(w < 0){
 							w = 0;
 						}
-						header.getHeaderNode(c.id).style.width = c.width = w + 'px';
+						var node = header.getHeaderNode(c.id);
+						node.style.width = c.width = w + 'px';
+						node.style.minWidth = c.width;
+						node.style.maxWidth = c.width;
 					}
 				});
 				array.forEach(cols, function(c){
@@ -217,7 +225,10 @@ define([
 						ww = 0;
 					}
 					array.forEach(autoCols, function(c, i){
-						header.getHeaderNode(c.id).style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
+						var node = header.getHeaderNode(c.id);
+						node.style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
+						node.style.minWidth = c.width;
+						node.style.maxWidth = c.width;
 					});
 				}
 			}

@@ -116,6 +116,7 @@ define([
 					col.hidden = true;
 					delete columnsById[id];
 					columns.splice(array.indexOf(columns, col), 1);
+					//Directly remove dom nodes instead of refreshing the whole body to make it faster.
 					query('[colid="' + id + '"].gridxCell', g.domNode).forEach(function(node){
 						node.parentNode.removeChild(node);
 					});
@@ -130,6 +131,7 @@ define([
 			query('.gridxCell', g.bodyNode).forEach(function(node){
 				node.style.width = columnsById[node.getAttribute('colid')].width;
 			});
+			//FIXME: this seems ugly....
 			if(g.vScroller._doVirtualScroll){
 				g.body.onForcedScroll();
 			}

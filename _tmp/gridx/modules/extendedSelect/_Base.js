@@ -80,6 +80,10 @@ define([
 		holdingCtrl: false,
 
 		holdingShift: false,
+		
+		canSelect: function(){
+			return true;
+		},
 
 		selectById: function(/* id */){
 			return this._subMark('_markById', arguments, true);
@@ -97,6 +101,10 @@ define([
 			return this._subMark('_markByIndex', arguments, false);
 		},
 
+		isSelectable: function(rowid, columnid){
+			return this.arg('canSelect').apply(this, arguments);	
+		},
+		
 		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
 			// summary:
 			//		Event: fired when the selection is changed.
@@ -214,7 +222,7 @@ define([
 		},
 
 		_highlightSingle: function(target, toHighlight){
-			toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
+			toHighlight = toHighlight ? this._toSelect && this.isSelectable(this._getRowId(target.row)) : this._isSelected(target);
 			this._doHighlight(target, toHighlight);
 		},
 

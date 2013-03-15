@@ -1,10 +1,11 @@
 define([
 	"dojo/_base/kernel",
+	"dojo/_base/sniff",
 	"dojo/_base/declare",
 	"dojo/dom-class",
 	"./VScroller",
 	"dojox/mobile/scrollable"
-], function(kernel, declare, domClass, VScroller, Scrollable){
+], function(kernel, has, declare, domClass, VScroller, Scrollable){
 	kernel.experimental('gridx/modules/TouchVScroller');
 
 /*=====
@@ -18,34 +19,55 @@ define([
 
 	return declare(VScroller, {
 		_init: function(){
-			var g = this.grid,
-				h = g.header.innerNode,
-				scrollable = new Scrollable();
-			domClass.add(g.domNode, 'gridxTouchVScroller');
-			h.style.height = h.firstChild.offsetHeight + 'px';
-			scrollable.init({
-				domNode: g.mainNode,
-				containerNode: g.bodyNode,
-				scrollDir: 'vh',
-				noResize: true
-			});
-			this.batchConnect(
-				[scrollable, 'scrollTo', function(to){
+			if(has('ios') || has('android')){
+				var t = this,
+					g = t.grid,
+					view = g.view,
+					h = g.header.innerNode,
+					mainNode = g.mainNode,
+					bodyNode = g.bodyNode,
+					headerTable = h.firstChild,
+					scrollable = new Scrollable();
+				domClass.add(g.domNode, 'gridxTouchVScroller');
+				h.style.height = headerTable.offsetHeight + 'px';
+				scrollable.init({
+					domNode: mainNode,
+					containerNode: bodyNode,
+					scrollDir: g.hScrollerNode.style.display == 'none' ? 'v' : 'vh',
+					noResize: true
+				});
+				t.aspect(scrollable, 'scrollTo', function(to){
 					if(typeof to.x == "number"){
-						h.firstChild.style.webkitTransform = scrollable.makeTranslateStr({x: to.x});
+						headerTable.style.webkitTransform = scrollable.makeTranslateStr({x: to.x});
 					}
-				}],
-				[scrollable, 'slideTo', function(to, duration, easing){
+				});
+				t.aspect(scrollable, 'slideTo', function(to, duration, easing){
 					scrollable._runSlideAnimation({
 						x: scrollable.getPos().x
 					}, {
 						x: to.x
-					}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
-				}],
-				[scrollable, 'stopAnimation', function(){
-					domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
-				}]);
-			this.inherited(arguments);
+					}, duration, easing, headerTable, 2);	//2 means it's a containerNode
+				});
+				t.aspect(scrollable, 'stopAnimation', function(){
+					domClass.remove(headerTable, 'mblScrollableScrollTo2');
+				});
+				t.aspect(g.hScroller, 'refresh', function(){
+					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
+					scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
+				});
+				t._onBodyChange = function(){
+					t._update();
+				};
+				t._onForcedScroll = function(){};
+				t.model.when({
+					start: view.rootStart,
+					count: view.rootCount
+				}, function(){
+					g.body.renderRows(0, view.visualCount);
+				});
+			}else{
+				this.inherited(arguments);
+			}
 		}
 	});
 });

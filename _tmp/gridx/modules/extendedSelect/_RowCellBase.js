@@ -19,7 +19,7 @@ define([
 
 		_getRowId: function(visualIndex){
 			var node = query('[visualindex="' + visualIndex + '"]', this.grid.bodyNode)[0];
-			return node && node.getAttribute('rowid');
+			return node? node.getAttribute('rowid') : this.grid.view.getRowInfo({visualIndex: visualIndex}).rowId;
 		},
 
 		_init: function(){

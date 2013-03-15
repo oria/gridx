@@ -2,7 +2,9 @@ define({root:
 ({
 	loadingInfo: "Loading...",
 	emptyInfo: "No items to display",
-	loadFailInfo: "Failed to load data!"
+	loadFailInfo: "Failed to load data!",
+	loadMore: "Load More",
+	loadMoreLoading: "Loading..."
 }),
 "ar": true,
 "ca": true,
@@ -13,6 +15,8 @@ define({root:
 "es": true,
 "fi": true,
 "fr": true,
+"he": true,
+"hr": true,
 "hu": true,
 "it": true,
 "ja": true,
@@ -22,6 +26,7 @@ define({root:
 "nl": true,
 "pl": true,
 "pt": true,
+"pt-br": true,
 "pt-pt": true,
 "ro": true,
 "ru": true,

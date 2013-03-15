@@ -25,6 +25,11 @@ define([
 		//		Whether this row is selected.
 	};
 
+	Row.isSelectable = funciton(){
+		// summary:
+		//		Check whether this row is selectable.
+	},
+
 	return declare(_RowCellBase, {
 		// summary:
 		//		Provides simple row selection.
