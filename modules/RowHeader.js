@@ -204,7 +204,7 @@ define([
 		},
 
 		_onDelete: function(id){
-			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
 				var node = nodes[nodes.length - 1],
 					pid = node.getAttribute('parentid'),
@@ -227,7 +227,7 @@ define([
 		},
 		
 		_onUnrender: function(id){
-			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
 				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
 				domConstruct.destroy(nodes[nodes.length - 1]);
@@ -315,14 +315,14 @@ define([
 		},
 
 		_onRowMouseOver: function(e){
-			var rowNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
+			var rowNode = query('> [rowid="' + this.grid._escapeId(e.rowId) + '"].gridxRowHeaderRow', this.bodyNode)[0];
 			if(rowNode){
 				domClass.toggle(rowNode, "gridxRowOver", e.type.toLowerCase() == 'mouseover');
 			}
 		},
 
 		_onCellMouseOver: function(e){
-			var cellNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
+			var cellNode = query('> [rowid="' + this.grid._escapeId(e.rowId) + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
 			if(cellNode){
 				domClass.toggle(cellNode, "gridxRowHeaderCellOver", e.type.toLowerCase() == 'mouseover');
 			}

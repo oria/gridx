@@ -154,7 +154,7 @@ define([
 		
 		_highlight: function(id, toHighlight){
 			var t = this, g = t.grid;
-			query("[colid='" + id + "']", g.bodyNode).forEach(function(node){
+			query("[colid='" + g._escapeId(id) + "']", g.bodyNode).forEach(function(node){
 				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
 				t.onHighlightChange({column: g._columnsById[id].index}, toHighlight);
 			});
@@ -170,7 +170,7 @@ define([
 				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
-					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
+					node = query(['[visualindex="', j, '"] [colid="', g._escapeId(cols[i].id), '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
 				}
 			}

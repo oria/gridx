@@ -163,7 +163,7 @@ define([
 		},
 		
 		_highlight: function(rowId, toHighlight){
-			var nodes = query('[rowid="' + rowId + '"]', this.grid.mainNode),
+			var nodes = query('[rowid="' + this.grid._escapeId(rowId) + '"]', this.grid.mainNode),
 				selected = toHighlight && toHighlight != 'mixed';
 			if(nodes.length){
 				nodes.forEach(function(node){

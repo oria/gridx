@@ -75,7 +75,7 @@ define([
 			var t = this;
 			source.delay = t.arg('delay');
 			array.forEach(t._selectedColIds, function(id){
-				query('[colid="' + id + '"].gridxCell', t.grid.header.domNode).attr('aria-grabbed', 'true');
+				query('[colid="' + t.grid._escapeId(id) + '"].gridxCell', t.grid.header.domNode).attr('aria-grabbed', 'true');
 			});
 		},
 
@@ -120,6 +120,7 @@ define([
 					width: '',
 					top: ''
 				},
+				escapeId = g._escapeId,
 				func = function(n){
 					var id = n.getAttribute('colid'),
 						index = g._columnsById[id].index,
@@ -132,12 +133,12 @@ define([
 						while(firstIdx > 0 && t._selector.isSelected(columns[firstIdx - 1].id)){
 							--firstIdx;
 						}
-						first = query(".gridxHeaderRow [colid='" + columns[firstIdx].id + "']", g.headerNode)[0];
+						first = query(".gridxHeaderRow [colid='" + escapeId(columns[firstIdx].id + "']"), g.headerNode)[0];
 						lastIdx = index;
 						while(lastIdx < columns.length - 1 && t._selector.isSelected(columns[lastIdx + 1].id)){
 							++lastIdx;
 						}
-						last = query(".gridxHeaderRow [colid='" + columns[lastIdx].id + "']", g.headerNode)[0];
+						last = query(".gridxHeaderRow [colid='" + escapeId(columns[lastIdx].id) + "']", g.headerNode)[0];
 					}
 					if(first && last){
 						var firstPos = domGeometry.position(first),

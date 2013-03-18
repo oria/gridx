@@ -241,10 +241,11 @@ define([
 		_onMark: function(id, toMark, oldState, type){
 			var t = this;
 			if(lang.isString(type) && !t._marking && type.indexOf(t._markTypePrefix) === 0){
-				var rowNode = query('[rowid="' + id + '"]', t.grid.bodyNode)[0];
+				var escapeId = t.grid._escapeId,
+					rowNode = query('[rowid="' + escapeId(id) + '"]', t.grid.bodyNode)[0];
 				if(rowNode){
 					var cid = type.substr(t._markTypePrefix.length),
-						node = query('[colid="' + cid + '"]', rowNode)[0];
+						node = query('[colid="' + escapeId(cid) + '"]', rowNode)[0];
 					if(node){
 						domClass.toggle(node, 'gridxCellSelected', toMark);
 					}

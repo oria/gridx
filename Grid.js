@@ -141,7 +141,12 @@ define([
 		//Private-------------------------------------------------------------------------------
 		_onResizeBegin: function(){},
 		_onResizeEnd: function(){},
-		
+
+		_escapeId: function(id){
+			//escape id for dojo/query if it contains "\".
+			return id.replace(/\\/g, "\\\\");
+		},
+
 		//event handling begin
 		_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],
 	

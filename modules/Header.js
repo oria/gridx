@@ -101,7 +101,7 @@ define([
 			//		The column ID
 			// returns:
 			//		The header DOM node
-			return query("[colid='" + id + "']", this.domNode)[0];	//DOMNode
+			return query("[colid='" + this.grid._escapeId(id) + "']", this.domNode)[0];	//DOMNode
 		},
 		
 		

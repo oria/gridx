@@ -186,7 +186,7 @@ define([
 				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
-					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
+					node = query(['[visualindex="', j, '"] [colid="', g._escapeId(cols[i].id), '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
 					node.setAttribute('aria-selected', true);
 				}
@@ -217,7 +217,7 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			query('[colid="' + this.grid._columns[target.column].id + '"].gridxCell', this.grid.domNode).forEach(function(node){
+			query('[colid="' + this.grid._escapeId(this.grid._columns[target.column].id) + '"].gridxCell', this.grid.domNode).forEach(function(node){
 				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
 			});
 		},
@@ -226,7 +226,7 @@ define([
 			var g = this.grid;
 			if(g.focus){
 				//Seems breaking encapsulation...
-				g.header._focusNode(query('[colid="' + g._columns[target.column].id + '"].gridxCell', g.header.domNode)[0]);
+				g.header._focusNode(query('[colid="' + g._escapeId(g._columns[target.column].id) + '"].gridxCell', g.header.domNode)[0]);
 			}
 		},
 
