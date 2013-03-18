@@ -7,14 +7,16 @@ define([
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	'dojo/_base/array',
 	"dojo/DeferredList",
 	"dojo/dom-class",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util",
 	"dojo/date/locale",
+	// 'dijit/focus',
 	"dijit/form/TextBox"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -235,9 +237,13 @@ define([
 	return Edit;
 =====*/
 
-	function getTypeData(col, storeData, gridData){
+	function getTypeData(col, storeData, gridData, lazyData){
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-			return locale.parse(storeData, col.storePattern);
+			if(lazyData !== undefined){
+				return locale.parse(lazyData, col.storePattern);
+			}else{
+				return locale.parse(storeData, col.storePattern);
+			}
 		}
 		return gridData;
 	}
@@ -248,11 +254,11 @@ define([
 	}
 
 	function getEditorValueSetter(toEditor){
-		return toEditor && function(gridData, storeData, cellWidget){
+		return toEditor && function(gridData, storeData, lazyData, cellWidget){
 			var editor = cellWidget.gridCellEditField,
 				cell = cellWidget.cell,
 				editorArgs = cell.column.editorArgs;
-			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
+			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, lazyData, cell, editor));
 		};
 	}
 
@@ -274,6 +280,22 @@ define([
 		preload: function(){
 			var t = this,
 				g = t.grid;
+			if(t.arg('lazy')){
+				lang.mixin(t.cellMixin, {
+					setLazyData: function(v){
+						return this.grid.edit.setLazyData(this.row.id, this.column.id, v);
+					},
+					
+					lazyData: function(){
+						var v = this.grid.edit.getLazyData(this.row.id, this.column.id);
+						if(v !== undefined){
+							//console.log(v, this.rawData());
+							return v;														
+						}
+						return this.rawData();
+					}
+				});
+			}
 			g.domNode.removeAttribute('aria-readonly');
 			t.connect(g, 'onCellDblClick', '_onUIBegin');
 			t.connect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
@@ -285,7 +307,9 @@ define([
 				});
 			});
 		},
-
+		
+		lazy: false,
+		
 		load: function(){
 			//Must init focus after navigable cell, so that "edit" focus area will be on top of the "navigablecell" focus area.
 			this._initFocus();
@@ -313,6 +337,7 @@ define([
 				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 				return cw && cw.gridCellEditField;
 			}
+
 		},
 
 		columnMixin: {
@@ -422,13 +447,13 @@ define([
 							t._erase(rowId, colId);
 							if(cell.column.alwaysEditing){
 								d.callback(success);
-								t.onApply(cell, success, e);
+								t.onApply(cell, success, e, t.arg('lazy'));
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
 									g.resize();
-									t.onApply(cell, success, e);
+									t.onApply(cell, success, e, t.arg('lazy'));
 								});
 							}
 						};
@@ -444,14 +469,23 @@ define([
 							}, function(e){
 								finish(false, e);
 							});
-						}else if(cell.rawData() === v){
+						}else if(cell.rawData() === v && !t.arg('lazy')){
 							finish(true);
 						}else{
-							Deferred.when(cell.setRawData(v), function(){
-								finish(true);
-							}, function(e){
-								finish(false, e);
-							});
+							if(t.arg('lazy') && !t._inCallBackMode){
+								Deferred.when(t.setLazyData(rowId, colId, v, false), function(){
+									finish(true);
+								}, function(e){
+									finish(false, e);
+								});
+							}else{
+								Deferred.when(cell.setRawData(v), function(){
+									finish(true);
+								}, function(e){
+									finish(false, e);
+								});									
+							}			
+						    t._inCallBackMode = false;		
 						}
 					}catch(e){
 						finish(false, e);
@@ -463,6 +497,22 @@ define([
 			return d;
 		},
 
+		save: function(){
+			var t = this;
+			for(var id in this._lazyIds){
+				console.log('id in lazy is: ' + id);
+				var lazyData = t._lazyData[id];
+				Deferred.when(t.grid.row(id, 1).setRawData(lazyData), function(){
+					delete lazyData;
+					delete t._lazyIds[id];
+					console.log('save lazy edit success in rowid: ' + id);
+				}, function(){
+					console.log('save lazy edit fail in rowid: ' + id);
+				});
+			};
+			console.log('let us save the data');
+		},
+		
 		isEditing: function(rowId, colId){
 			var col = this.grid._columnsById[colId];
 			if(col && col.alwaysEditing){
@@ -478,7 +528,56 @@ define([
 			col.editor = editor;
 			lang.mixin(editorArgs, args || {});
 		},
+		
+		getLazyData: function(rowId, colId){
+			var t = this;
+			
+			if(t.arg('lazy')){
+				r = t._lazyDataChangeList[rowId];
+				if(r){
+					return r[colId]? r[colId].list[r[colId].index] : undefined;
+				}
+			}
+			return undefined;
+		},
 
+		setLazyData: function(rowId, colId, value, isRollBack){
+			var t = this,
+				g = t.grid,
+				cache = t.model.byId(rowId),
+				lazyData = t._lazyData[rowId] || {},
+				col = t.grid._columnsById[colId],
+				f = col.field || colId,
+				cell;
+
+			lazyData[f] = value;
+			t._lazyData[rowId] = lazyData;
+			
+			if(!isRollBack){
+				t._addLazyDataChange(rowId, colId, value);
+			}
+			//t._inCallBackMode = false;
+			
+			for(var cid in t.grid._columnsById){
+				var c = t.grid._columnsById[cid],
+					success,
+					e;
+				if(f == c.field){
+					try{
+						cache.data[cid] = c.formatter? c.formatter(lazyData): value;
+						cell = t.grid.cell(rowId, cid, 1); 
+						success = true;
+					}catch(e){
+						success = false;
+					}
+						g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
+							t.onApply(cell, success, e, true);
+						});					
+				}
+			}
+			this._lazyIds[rowId] = 1;
+		},
+		
 		//Events-------------------------------------------------------------------
 		onBegin: function(/* cell */){},
 
@@ -489,6 +588,11 @@ define([
 		//Private------------------------------------------------------------------
 		_init: function(){
 			this._editingCells = {};
+			this._lazyIds = {};
+			this._lazyData = {};
+			this._lazyDataChangeList = {};
+			this._inCallBackMode = false;
+			
 			for(var i = 0, cols = this.grid._columns, len = cols.length; i < len; ++i){
 				var c = cols[i];
 				if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){
@@ -607,7 +711,8 @@ define([
 				props += ', ';
 			}
 			return function(){
-				return ["<div data-dojo-type='", className, "' ",
+				var a =
+				["<div data-dojo-type='", className, "' ",
 					"data-dojo-attach-point='gridCellEditField' ",
 					"class='gridxCellEditor gridxHasGridCellValue ",
 					useGridData ? "" : "gridxUseStoreData",
@@ -615,6 +720,8 @@ define([
 					props, constraints,
 					"'></div>"
 				].join('');
+				console.log(a);
+				return a;
 			};
 		},
 
@@ -643,6 +750,27 @@ define([
 			}
 		},
 
+		_addLazyDataChange: function(rowid, columnid, value){
+			var lazyData,
+				t = this;
+			var rowLazy = t._lazyDataChangeList[rowid];
+			if(!rowLazy){
+				rowLazy = t._lazyDataChangeList[rowid] = {};
+			}
+			
+			var colLazy = rowLazy[columnid];
+			if(!colLazy){
+				colLazy = rowLazy[columnid] = {index: 0, list: [t.grid.cell(rowid, columnid, 1).rawData()]};
+			}
+			if(colLazy.list.length == 5 && colLazy.index == 4){
+				colLazy.list.shift();
+				colLazy.index--;
+			}
+			colLazy.list.splice(colLazy.index + 1, (colLazy.list.length - 1 - colLazy.index), value);
+			// colLazy.index = colLazy.index == 4 ? 4 : colLazy.index + 1;
+		    colLazy.index = colLazy.list.length - 1;
+		},
+		
 		_onUIBegin: function(evt){
 			if(!this.isEditing(evt.rowId, evt.columnId)){
 				this._applyAll();
@@ -759,6 +887,32 @@ define([
 				}
 			}
 		},
+		
+		_undoLazyData: function(rowid, columnid){
+			var t = this,
+				lazyRow = t._lazyDataChangeList[rowid];
+			if(lazyRow && lazyRow[columnid]){
+				if(lazyRow[columnid].index > 0){
+					t._inCallBackMode = true;
+					var index = --lazyRow[columnid].index;
+					var value = lazyRow[columnid].list[index];
+					t.setLazyData(rowid, columnid, value, true);
+				}
+			}
+		},
+		
+		_redoLazyData: function(rowid, columnid){
+			var t = this,
+				lazyRow = t._lazyDataChangeList[rowid];
+			if(lazyRow && lazyRow[columnid]){
+				if(lazyRow[columnid].index < 4){
+					t._inCallBackMode = true;
+					var index = ++lazyRow[columnid].index;
+					var value = lazyRow[columnid].list[index];
+					t.setLazyData(rowid, columnid, value, true);
+				}
+			}
+		},
 
 		_onKey: function(e){
 			var t = this,
@@ -785,6 +939,18 @@ define([
 					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
 						g.focus.focusArea('body');
 					});
+				}else if(e.keyCode == 90 && e.ctrlKey){
+					if(editing && t.arg('lazy')){
+						t._undoLazyData(e.rowId, e.columnId);
+						setTimeout(function(){
+								t._focusEditor(e.rowId, e.columnId);
+						}, 2000);
+					}
+				}else if(e.keyCode == 89 && e.ctrlKey){
+					if(editing && t.arg('lazy')){
+						t._redoLazyData(e.rowId, e.columnId);
+					}
+										
 				}
 			}
 			if(t._editing && e.keyCode !== keys.TAB){

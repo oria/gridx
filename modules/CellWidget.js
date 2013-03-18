@@ -162,7 +162,7 @@ define([
 				});
 			},
 		
-			setValue: function(gridData, storeData, isInit){
+			setValue: function(gridData, storeData, isInit, lazyData){
 				try{
 					var t = this;
 					query('.gridxHasGridCellValue', t.domNode).map(function(node){
@@ -187,8 +187,9 @@ define([
 							}
 						}
 					});
+					console.log('lazy is: ', lazyData);
 					if(t.setCellValue){
-						t.setCellValue(gridData, storeData, t, isInit);
+						t.setCellValue(gridData, storeData, lazyData, t, isInit);
 					}
 				}catch(e){
 					console.error('Can not set cell value: ', e);
@@ -360,7 +361,11 @@ define([
 				col._cellWidgets[cell.row.id] = widget;
 			}
 			widget.cell = cell;
-			widget.setValue(cell.data(), cell.rawData(), true);
+			if(cell.lazyData){
+				widget.setValue(cell.data(), cell.rawData(), true, cell.lazyData());
+			}else{
+				widget.setValue(cell.data(), cell.rawData(), true);
+			}
 			return widget;
 		},
 
