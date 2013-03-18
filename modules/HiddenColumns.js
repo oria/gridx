@@ -117,7 +117,7 @@ define([
 					delete columnsById[id];
 					columns.splice(array.indexOf(columns, col), 1);
 					//Directly remove dom nodes instead of refreshing the whole body to make it faster.
-					query('[colid="' + id + '"].gridxCell', g.domNode).forEach(function(node){
+					query('[colid="' + g._escapeId(id) + '"].gridxCell', g.domNode).forEach(function(node){
 						node.parentNode.removeChild(node);
 					});
 				}

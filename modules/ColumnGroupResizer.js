@@ -97,7 +97,7 @@ define([
 			for(i = 0; i < cols.length; ++i){
 				cols[i].declaredWidth = cols[i].width;
 			}
-			query('[colid="' + colId + '"]', g.domNode).forEach(function(cell){
+			query('[colid="' + g._escapeId(colId) + '"]', g.domNode).forEach(function(cell){
 				if(!oldWidth){
 					oldWidth = domStyle.get(cell, 'width');
 				}
@@ -248,7 +248,7 @@ define([
 				var t = this,
 					g = t.grid,
 					colId = evt.columnId,
-					cellNode = query('[colid="' + colId + '"].gridxCell', g.header.innerNode)[0],
+					cellNode = query('[colid="' + g._escapeId(colId) + '"].gridxCell', g.header.innerNode)[0],
 					step = t.arg('step');
 				step = evt.keyCode == keys.LEFT_ARROW ^ !!g.isLeftToRight() ? step : -step;
 				t.setWidth(colId, domStyle.get(cellNode, 'width') + step);

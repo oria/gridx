@@ -111,12 +111,13 @@ define([
 		preload: function(args){
 			this.inherited(arguments);
 			var t = this,
-				g = t.grid;
+				g = t.grid,
+				escapeId = g._escapeId;
 			if(g.columnResizer){
 				t.aspect(g.columnResizer, 'onResize', function(colId){
-					var w = (query('[colid="' + colId + '"]', g.headerNode)[0].offsetWidth - g.columnWidth._padBorder) + 'px';
+					var w = (query('[colid="' + escapeId(colId) + '"]', g.headerNode)[0].offsetWidth - g.columnWidth._padBorder) + 'px';
 					if(w != g._columnsById[colId].width){
-						query('[colid="' + colId + '"]', g.domNode).forEach(function(cell){
+						query('[colid="' + escapeId(colId) + '"]', g.domNode).forEach(function(cell){
 							var cs = cell.style;
 							cs.width = w;
 							cs.minWidth = w;

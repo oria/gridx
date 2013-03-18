@@ -113,7 +113,7 @@ define([
 				g = this.grid;
 			query('.' + cls, g.rowHeader.bodyNode).removeClass(cls);
 			if(g.select.row.isSelected(reservedRowId)){
-				query('[rowid="' + reservedRowId + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
+				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
 			}
 		},
 

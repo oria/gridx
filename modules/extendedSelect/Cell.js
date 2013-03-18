@@ -278,7 +278,7 @@ define([
 						if(m.getMark(rid, type) || (t._selecting && t._toSelect &&
 							t._inRange(i, t._startItem.c, t._currentItem.c, 1) && //1 as true
 							t._inRange(j, t._startItem.r, t._currentItem.r, 1))){	//1 as true
-							domClass.add(query('[visualindex="' + j + '"] [colid="' + cid + '"]', g.bodyNode)[0], 'gridxCellSelected');
+							domClass.add(query('[visualindex="' + j + '"] [colid="' + g._escapeId(cid) + '"]', g.bodyNode)[0], 'gridxCellSelected');
 						}
 					}
 				}
@@ -288,10 +288,11 @@ define([
 		_onMark: function(id, toMark, oldState, type){
 			var t = this;
 			if(lang.isString(type) && !t._marking && type.indexOf(t._markTypePrefix) === 0){
-				var rowNode = query('[rowid="' + id + '"]', t.grid.bodyNode)[0];
+				var escapeId = t.grid._escapeId,
+					rowNode = query('[rowid="' + escapeId(id) + '"]', t.grid.bodyNode)[0];
 				if(rowNode){
 					var cid = type.substr(t._markTypePrefix.length),
-						node = query('[colid="' + cid + '"]', rowNode)[0];
+						node = query('[colid="' + escapeId(cid) + '"]', rowNode)[0];
 					if(node){
 						domClass.toggle(node, 'gridxCellSelected', toMark);
 					}
