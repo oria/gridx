@@ -53,7 +53,9 @@ define([
 			var t = this,
 				c = 'aspect',
 				old = store.fetch;
-			t.clear();
+			//Disconnect store events.
+			t.destroy();
+			t._cnnts = [];
 			t.store = store;
 			if(!old && store.notify){
 				//The store implements the dojo.store.Observable API
