@@ -568,11 +568,11 @@ define([
 
 		//Private---------------------------------------------------------------------------
 		_getRowNodeQuery: function(args){
-			var r, m = this.model;
+			var r, m = this.model, escapeId = this.grid._escapeId;
 			if(m.isId(args.rowId)){
-				r = "[rowid='" + args.rowId + "']";
+				r = "[rowid='" + escapeId(args.rowId) + "']";
 			}else if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
-				r = "[rowindex='" + args.rowIndex + "']" + (m.isId(args.parentId) ? "[parentid='" + args.parentId + "']" : '');
+				r = "[rowindex='" + args.rowIndex + "']" + (m.isId(args.parentId) ? "[parentid='" + escapeId(args.parentId) + "']" : '');
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				r = "[visualindex='" + args.visualIndex + "']";
 			}
