@@ -144,7 +144,7 @@ define([
 
 		_escapeId: function(id){
 			//escape id for dojo/query if it contains "\".
-			return id.replace(/\\/g, "\\\\");
+			return String(id).replace(/\\/g, "\\\\");
 		},
 
 		//event handling begin
