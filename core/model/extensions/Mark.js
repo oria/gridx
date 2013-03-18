@@ -262,10 +262,9 @@ define([
 			for(var i = treePath.length - 1; i > 0; --i){
 				var pid = treePath[i],
 					oldState = byId[pid],
-					siblings = mm._call('children', [pid]),
-					siblings = array.filter(siblings, function(childId){
+					siblings = array.filter(mm._call('children', [pid]), function(childId){
 						return t._isMarkable(type, childId);
-					});
+					}),
 					markCount = array.filter(siblings, function(childId){
 						return last[childId] = byId[childId];
 					}).length,
@@ -336,9 +335,9 @@ define([
 				}
 			}
 		},
-		
+
 		_isMarkable: function(tp, id){
-			return this._canMark[tp]? this._canMark[tp].apply(null, [id]) : true; 
+			return this._canMark[tp] ? this._canMark[tp](id) : true;
 		}
 	});
 });

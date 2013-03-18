@@ -242,7 +242,8 @@ define([
 				d = new Deferred();
 			t.model.when({
 				parentId: id,
-				start: 0
+				start: 0,
+				count: 1
 			}, function(){
 				if(t._expand(id)){
 					t._updateVC();
@@ -437,7 +438,8 @@ define([
 						levels[i] = levels[i] || [];
 						levels[i].push({
 							parentId: path[i],
-							start: 0
+							start: 0,
+							count: 1
 						});
 					}
 				}
