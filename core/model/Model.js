@@ -80,7 +80,7 @@ define([
 			return [];	//String[]
 		},
 
-		parent: function(id){
+		parentId: function(id){
 			// summary:
 			//		Get the parent ID of the given row.
 			// id: String

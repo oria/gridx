@@ -263,7 +263,7 @@ define([
 
 		_onMark: function(id, toMark, oldState, type){
 			if(type == 'select'){
-				var nodes = query('[rowid="' + id + '"]', this.grid.mainNode);
+				var nodes = query('[rowid="' + this.grid._escapeId(id) + '"]', this.grid.mainNode);
 				if(nodes.length){
 					nodes.forEach(function(node){
 						var selected = toMark && toMark != 'mixed';

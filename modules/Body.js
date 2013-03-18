@@ -695,13 +695,13 @@ define([
 
 		//Private---------------------------------------------------------------------------
 		_getRowNodeQuery: function(args){
-			var r;
+			var r, escapeId = this.grid._escape;
 			if(this.model.isId(args.rowId)){
-				r = "[rowid='" + args.rowId + "']";
+				r = "[rowid='" + escapeId(args.rowId) + "']";
 			}else if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
 				r = "[rowindex='" + args.rowIndex + "']";
 				if(args.parentId){
-					r += "[parentid='" + args.parentId + "']";
+					r += "[parentid='" + escapeId(args.parentId) + "']";
 				}
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				r = "[visualindex='" + args.visualIndex + "']";

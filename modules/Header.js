@@ -127,7 +127,7 @@ define([
 		hidden: false,
 
 		getHeaderNode: function(id){
-			return query("[colid='" + id + "']", this.domNode)[0];
+			return query("[colid='" + this.grid._escapeId(id) + "']", this.domNode)[0];
 		},
 
 		refresh: function(){

@@ -170,7 +170,11 @@ define([
 		//Private-------------------------------------------------------------------------------
 		_onResizeBegin: function(){},
 		_onResizeEnd: function(){},
-		
+
+		_escapeId: function(id){
+			return id.replace(/\\/g, "\\\\");
+		},
+
 		//event handling begin
 		_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],
 	
