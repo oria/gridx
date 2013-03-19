@@ -50,7 +50,6 @@ define({ root:
 	"waiClearButton": "Clear the filter",
 	"filterButton": "Filter",
 	"waiFilterButton": "Submit the filter",
-	"removeRule": "Remove Rule",
 	
 	"columnSelectLabel": "Column",
 	"waiColumnSelectTemplate": "Column for rule ${0}",
