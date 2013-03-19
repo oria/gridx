@@ -177,7 +177,7 @@ define([
 		_onResizeEnd: function(){},
 
 		_escapeId: function(id){
-			return id.replace(/\\/g, "\\\\");
+			return String(id).replace(/\\/g, "\\\\");
 		},
 
 		//event handling begin
