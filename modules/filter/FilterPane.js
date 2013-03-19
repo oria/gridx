@@ -148,7 +148,7 @@ define([
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
 				tabIndex: 0,
-				title: i18n.removeRule || ''
+				title: i18n.removeRuleButton || ''
 			}, btnWidget.domNode, 'last');
 			this.connect(closeButton, 'onclick', 'close');
 			css.add(btnWidget.titleTextNode, 'dojoxEllipsis');
