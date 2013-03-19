@@ -445,46 +445,56 @@ define([
 		},
 	
 		refresh: function(start){
-			var t = this;
+			var t = this,
+				d = new Deferred();
 			delete t._err;
 			//Call when to make sure all pending commands are executed
-			return t.model.when({}).then(function(){	//dojo.Deferred
-				var rs = t.renderStart,
-					rc = t.renderCount;
-				if(typeof start == 'number' && start >= 0){
-					start = rs > start ? rs : start;
-					var count = rs + rc - start,
-						n = query('> [visualindex="' + start + '"]', t.domNode)[0],
-						uncachedRows = [],
-						renderedRows = [];
-					if(n){
-						var rows = t._buildRows(start, count, uncachedRows, renderedRows);
-						if(rows){
-							domConstruct.place(rows, n, 'before');
+			t.model.when({}).then(function(){	//dojo.Deferred
+				try{
+					var rs = t.renderStart,
+						rc = t.renderCount;
+					if(typeof start == 'number' && start >= 0){
+						start = rs > start ? rs : start;
+						var count = rs + rc - start,
+							n = query('> [visualindex="' + start + '"]', t.domNode)[0],
+							uncachedRows = [],
+							renderedRows = [];
+						if(n){
+							var rows = t._buildRows(start, count, uncachedRows, renderedRows);
+							if(rows){
+								domConstruct.place(rows, n, 'before');
+							}
 						}
-					}
-					while(n){
-						var tmp = n.nextSibling,
-							vidx = parseInt(n.getAttribute('visualindex'), 10),
-							id = n.getAttribute('rowid');
-						domConstruct.destroy(n);
-						if(vidx >= start + count){
-							t.onUnrender(id);
+						while(n){
+							var tmp = n.nextSibling,
+								vidx = parseInt(n.getAttribute('visualindex'), 10),
+								id = n.getAttribute('rowid');
+							domConstruct.destroy(n);
+							if(vidx >= start + count){
+								t.onUnrender(id);
+							}
+							n = tmp;
 						}
-						n = tmp;
-					}
-					array.forEach(renderedRows, t.onAfterRow, t);
-					Deferred.when(t._buildUncachedRows(uncachedRows), function(){
-						t.onRender(start, count);
+						array.forEach(renderedRows, t.onAfterRow, t);
+						Deferred.when(t._buildUncachedRows(uncachedRows), function(){
+							t.onRender(start, count);
+							t.onForcedScroll();
+							d.callback();
+						});
+					}else{
+						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
-					});
-				}else{
-					t.renderRows(rs, rc, 0, 1);
-					t.onForcedScroll();
+						d.callback();
+					}
+				}catch(e){
+					t._loadFail(e);
+					d.errback(e);
 				}
 			}, function(e){
 				t._loadFail(e);
+				d.errback(e);
 			});
+			return d;
 		},
 	
 		refreshCell: function(rowVisualIndex, columnIndex){
