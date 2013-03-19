@@ -4,7 +4,9 @@ define({root:
 	emptyInfo: "No items to display",
 	loadFailInfo: "Failed to load data!",
 	loadMore: "Load More",
-	loadMoreLoading: "Loading..."
+	loadMoreLoading: "Loading...",
+	loadPrevious: "Load Previous",
+	loadPreviousLoading: "Loading..."
 }),
 "ar": true,
 "ca": true,
