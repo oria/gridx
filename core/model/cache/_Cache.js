@@ -279,7 +279,7 @@ define([
 				if('total' in results){
 					Deferred.when(results.total, onBegin);
 				}else{
-					onBeing(results.length);
+					onBegin(results.length);
 				}
 				Deferred.when(results, onComplete, onError);
 			}
