@@ -104,13 +104,20 @@ define([
 			if(size > 0){
 				ranges = array.filter(ranges, lang.partial(checkValid, size));
 			}
+			for(var i = 0; i < ranges.length; ++i){
+				ranges[i].parentId = pid;
+			}
 			[].push.apply(toFetch, ranges);
 		}
 		args._req = dl.length && new DeferredList(dl, 0, 1);
 		self._requests.push(args);
-		new DeferredList(array.map(toFetch, function(r){
-			return self._storeFetch(r);
-		}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
+		if(toFetch.length){
+			new DeferredList(array.map(toFetch, function(r){
+				return self._storeFetch(r);
+			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
+		}else{
+			d.callback(args);
+		}
 		return d;
 	}
 
@@ -291,7 +298,7 @@ define([
 				}
 			}
 		}
-		return ranges;
+		return results;
 	}
 
 	function searchRootLevel(self, ids){
