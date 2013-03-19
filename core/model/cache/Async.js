@@ -362,8 +362,8 @@ define([
 		constructor: function(model, args){
 			var cs = args.cacheSize,
 				ps = args.pageSize;
-			this.cacheSize = cs >= 0 ? cs : -1;
-			this.pageSize = ps > 0 ? ps : 100;
+			this.cacheSize = cs >= 0 ? parseInt(cs, 10) : -1;
+			this.pageSize = ps > 0 ? parseInt(ps, 10) : 100;
 		},
 
 		when: function(args, callback){
