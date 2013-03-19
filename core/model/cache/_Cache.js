@@ -260,7 +260,7 @@ define([
 				onComplete = hitch(t, _onComplete, d, parentId, options.start),
 				onError = hitch(d, d.errback),
 				results;
-			t._filled = 1;	//1 as true;
+			t._filled = 1;
 			t.onBeforeFetch(req);
 			if(parentId === ''){
 				if(s.fetch){
@@ -282,6 +282,8 @@ define([
 					onBegin(results.length);
 				}
 				Deferred.when(results, onComplete, onError);
+			}else{
+				d.callback();
 			}
 			d.then(function(){
 				t.onAfterFetch();
