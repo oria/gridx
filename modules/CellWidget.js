@@ -490,6 +490,10 @@ define([
 
 		_endNavigate: function(){
 			this._navigating = false;
+			//FIXME: this breaks encapsulation.
+			if(this.grid.edit){
+				this.grid.edit._applyAll();
+			}
 		},
 
 		_onFocus: function(evt){
