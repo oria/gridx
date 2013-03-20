@@ -15,7 +15,8 @@ define([
 	"../core/util",
 	"dojo/date/locale",
 	// 'dijit/focus',
-	"dijit/form/TextBox"
+	"dijit/form/TextBox",
+	"dojo/NodeList-traverse"
 ], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale){
 
 /*=====
@@ -811,10 +812,7 @@ define([
 		_onFocus: function(evt){
 			var t = this;
 			if(evt){
-				var n = evt.target;
-				while(n && !domClass.contains(n, 'gridxCell')){
-					n = n.parentNode;
-				}
+				var n = query(evt.target).closest('.gridxCell', t.grid.bodyNode)[0];
 				if(n){
 					var colId = n.getAttribute('colid'),
 						rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');

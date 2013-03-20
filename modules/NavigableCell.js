@@ -38,7 +38,7 @@ define([
 				doFocus: t._doFocus,
 				doBlur: t._doBlur,
 				onFocus: t._onFocus,
-				onBlur: t._endNavigate,
+				onBlur: t._onBlur,
 				connects: [
 					t.connect(t.grid, 'onCellKeyDown', '_onKey')
 				]
@@ -126,8 +126,12 @@ define([
 			return false;
 		},
 
-		_endNavigate: function(){
+		_onBlur: function(){
 			this._navigating = false;
+			//FIXME: this breaks encapsulation.
+			if(this.grid.edit){
+				this.grid.edit._applyAll();
+			}
 		},
 
 		_onFocus: function(evt){
