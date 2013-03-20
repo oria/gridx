@@ -16,7 +16,7 @@ define([
 =====*/
 
 	return declare(Body, {
-		maxRowCount: 0,
+		maxPageCount: 1,
 
 		//pageSize: 0,
 
@@ -31,14 +31,26 @@ define([
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
+
 			t._moreNode = domConstruct.create('div', {
 				'class': 'gridxLoadMore'
 			});
-			var btn = t._moreBtn = domConstruct.create('button', {
+			var moreBtn = t._moreBtn = domConstruct.create('button', {
 				innerHTML: t.arg('loadMoreLabel', nls.loadMore)
 			}, t._moreNode, 'last');
-			t.connect(btn, touch.press, '_loadMore');
-			t.connect(btn, 'onmouseover', function(){
+			t.connect(moreBtn, touch.press, '_loadMore');
+			t.connect(moreBtn, 'onmouseover', function(){
+				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+			});
+
+			t._prevNode = domConstruct.create('div', {
+				'class': 'gridxLoadMore'
+			});
+			var prevBtn = t._prevBtn = domConstruct.create('button', {
+				innerHTML: t.arg('loadPreviousLabel', nls.loadPrevious)
+			}, t._prevNode, 'last');
+			t.connect(prevBtn, touch.press, '_loadPrev');
+			t.connect(prevBtn, 'onmouseover', function(){
 				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 			});
 		},
@@ -226,8 +238,79 @@ define([
 					}
 					t._busy();
 					t.onRender(start, count);
+					t._checkSizePrev();
 				});
 			});
+		},
+
+		_loadPrev: function(){
+			var t = this,
+				g = t.grid,
+				m = t.model,
+				view = g.view,
+				start = view.rootStart,
+				count = view.rootCount,
+				oldVisualCount = view.visualCount,
+				pageSize = t.arg('pageSize'),
+				newStart = start < pageSize ? 0 : start - pageSize;
+			t._busy(1);
+			m.when({
+				start: newStart,
+				count: start - newStart
+			}, function(){
+				var totalCount = m.size();
+				var newCount = start + count - newStart;
+				view.updateRootRange(newStart, newCount).then(function(){
+					start = t.renderStart = 0;
+					count = view.visualCount - oldVisualCount;
+					t.renderCount = view.visualCount;
+					if(count){
+						var renderedRows = [];
+						str = t._buildRows(start, count, [], renderedRows);
+						domConstruct.place(str, t._prevNode, 'before');
+						if(!view.rootStart){
+							t.domNode.removeChild(t._prevNode);
+						}
+						array.forEach(renderedRows, t.onAfterRow, t);
+					}else{
+						t.domNode.removeChild(t._prevNode);
+					}
+					t._busy();
+					t.onRender(start, count);
+					t._checkSizePost();
+				});
+			});
+		},
+
+		_checkSizePrev: function(){
+			var t = this,
+				view = t.grid.view,
+				pageSize = t.arg('pageSize'),
+				maxPageCount = t.arg('maxPageCount'),
+				maxRowCount = maxPageCount * pageSize;
+			if(maxPageCount > 0 && t.renderCount > maxRowCount){
+				if(t._prevNode.parentNode){
+					t.domNode.removeChild(t._prevNode);
+				}
+				t.unrenderRows(t.renderCount - maxRowCount);
+				t.domNode.insertBefore(t._prevNode, t.domNode.firstChild);
+				view.updateRootRange(newStart, newCount).then(function(){
+				});
+			}
+		},
+
+		_checkSizePost: function(){
+			var t = this,
+				pageSize = t.arg('pageSize'),
+				maxPageCount = t.arg('maxPageCount'),
+				maxRowCount = maxPageCount * pageSize;
+			if(maxPageCount > 0 && t.renderCount > maxRowCount){
+				if(t._moreNode.parentNode){
+					t.domNode.removeChild(t._moreNode);
+				}
+				t.unrenderRows(t.renderCount - maxRowCount, 'post');
+				t.domNode.appendChild(t._moreNode);
+			}
 		},
 
 		_busy: function(begin){
