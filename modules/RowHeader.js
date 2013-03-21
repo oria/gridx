@@ -110,6 +110,8 @@ define([
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true);
+			aspect.after(t.model, 'onSizeChange', lang.hitch(t, t._onSizeChange));
+			
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
 		},
@@ -149,6 +151,7 @@ define([
 				nd.innerHTML = '';
 			}
 		},
+
 
 		_onAfterRow: function(row){
 			var t = this,
@@ -201,7 +204,17 @@ define([
 			}
 			t._onScroll();
 		},
-
+		
+		_onSizeChange: function(size, oldSize){
+			var t = this,
+				g = t.grid,
+				hp = this.arg('headerProvider');
+			if(!size && hp){
+				t.headerCellNode.innerHTML = '';
+			}
+			t._onScroll();
+		},
+		
 		_onDelete: function(id){
 			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
