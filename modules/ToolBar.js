@@ -21,6 +21,7 @@ define([
 			//Arguments for the dijit.Toolbar widget MUST be provided as module args, instead of grid args.
 			this.widget = new Toolbar(args);
 			this.domNode = this.widget.domNode;
+			this.domNode.setAttribute('aria-label', 'grid toolbar');
 		},
 
 		preload: function(){
