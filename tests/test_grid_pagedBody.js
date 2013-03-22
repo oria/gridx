@@ -14,7 +14,7 @@ require([
 ], function(parser, dataSource, storeFactory){
 
 	store = storeFactory({
-//        isAsync: true,
+		isAsync: true,
 		path: './support/stores',
 		dataSource: dataSource,
 		size: 1000
@@ -39,3 +39,7 @@ require([
 
 	parser.parse();
 });
+
+function deleteRow(){
+	grid.store.deleteItem(grid.row(grid.view.rootStart).item());
+}
