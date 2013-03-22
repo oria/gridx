@@ -91,6 +91,7 @@ define([
 			g.mainNode.appendChild(rhbn);
 			rhbn.style.width = w;
 			g.hLayout.register(null, rhbn);
+			
 			t.batchConnect(
 				[body, 'onRender', '_onRendered'],
 				[body, 'onAfterRow', '_onAfterRow'],
@@ -110,6 +111,8 @@ define([
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true);
+			aspect.after(t.model, 'onSizeChange', lang.hitch(t, t._onSizeChange));
+
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
 		},
@@ -198,6 +201,16 @@ define([
 				hp = t.arg('headerProvider');
 			if(hp){
 				t.headerCellNode.innerHTML = hp();
+			}
+			t._onScroll();
+		},
+		
+		_onSizeChange: function(size, oldSize){
+			var t = this,
+				g = t.grid,
+				hp = this.arg('headerProvider');
+			if(!size && hp){
+				t.headerCellNode.innerHTML = '';
 			}
 			t._onScroll();
 		},

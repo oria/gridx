@@ -16,7 +16,7 @@ define([
 =====*/
 
 	return declare(Body, {
-		maxRowCount: 0,
+		maxPageCount: 3,
 
 		//pageSize: 0,
 
@@ -31,14 +31,30 @@ define([
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
+
 			t._moreNode = domConstruct.create('div', {
 				'class': 'gridxLoadMore'
 			});
-			var btn = t._moreBtn = domConstruct.create('button', {
+			var moreBtn = t._moreBtn = domConstruct.create('button', {
 				innerHTML: t.arg('loadMoreLabel', nls.loadMore)
 			}, t._moreNode, 'last');
-			t.connect(btn, touch.press, '_loadMore');
-			t.connect(btn, 'onmouseover', function(){
+			t.connect(moreBtn, touch.press, function(){
+				t._load(1);
+			});
+			t.connect(moreBtn, 'onmouseover', function(){
+				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+			});
+
+			t._prevNode = domConstruct.create('div', {
+				'class': 'gridxLoadMore'
+			});
+			var prevBtn = t._prevBtn = domConstruct.create('button', {
+				innerHTML: t.arg('loadPreviousLabel', nls.loadPrevious)
+			}, t._prevNode, 'last');
+			t.connect(prevBtn, touch.press, function(){
+				t._load();
+			});
+			t.connect(prevBtn, 'onmouseover', function(){
 				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 			});
 		},
@@ -61,21 +77,10 @@ define([
 			domClass.add(loadingNode, 'gridxLoading');
 			t.grid.view.updateVisualCount().then(function(){
 				try{
-					var rs = t.renderStart,
-						rc = t.renderCount,
-						vc = t.grid.view.visualCount;
-					if(rs + rc > vc){
-						if(rc < vc){
-							rs = t.renderStart = vc - rc;
-						}else{
-							rs = t.renderStart = 0;
-							rc = vc;
-						}
-					}
-					rc = t.renderCount = vc - rs;
+					t.renderStart = 0;
+					var rc = t.renderCount = t.grid.view.visualCount;
 					if(typeof start == 'number' && start >= 0){
-						start = rs > start ? rs : start;
-						var count = rs + rc - start,
+						var count = rc - start,
 							n = query('> [visualindex="' + start + '"]', t.domNode)[0],
 							uncachedRows = [],
 							renderedRows = [],
@@ -100,7 +105,7 @@ define([
 							d.callback();
 						});
 					}else{
-						t.renderRows(rs, rc, 0, 1);
+						t.renderRows(0, rc, 0, 1);
 						domClass.remove(loadingNode, 'gridxLoading');
 						d.callback();
 					}
@@ -120,20 +125,17 @@ define([
 		renderRows: function(start, count, position){
 			var t = this,
 				g = t.grid,
-				str = '',
-				uncachedRows = [], 
+				uncachedRows = [],
 				renderedRows = [],
 				n = t.domNode,
-				en = g.emptyNode,
-				emptyInfo = t.arg('emptyInfo', nls.emptyInfo),
-				finalInfo = '';
+				en = g.emptyNode;
 			if(t._err){
 				return;
 			}
 			if(count > 0){
 				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
 				en.style.zIndex = '';
-				str = t._buildRows(start, count, uncachedRows, renderedRows);
+				var str = t._buildRows(start, count, uncachedRows, renderedRows);
 				t.renderStart = start;
 				t.renderCount = count;
 				n.scrollTop = 0;
@@ -149,7 +151,6 @@ define([
 					n.appendChild(t._moreNode);
 				}
 				n.scrollLeft = g.hScrollerNode.scrollLeft;
-				finalInfo = str ? "" : emptyInfo;
 				if(!str){
 					en.style.zIndex = 1;
 				}else{
@@ -170,7 +171,7 @@ define([
 					}
 				}
 				n.innerHTML = '';
-				en.innerHTML = emptyInfo;
+				en.innerHTML = t.arg('emptyInfo', nls.emptyInfo);
 				en.style.zIndex = 1;
 				t.onUnrender();
 				t.onEmpty();
@@ -178,7 +179,6 @@ define([
 			}
 		},
 
-		//Events--------------------------------------------------------------------------------
 		onRender: function(/*start, count*/){
 			//FIX #8746
 			var bn = this.domNode;
@@ -190,52 +190,125 @@ define([
 			}
 		},
 
-		//Private---------------------------------------------------------------------------
-		_loadMore: function(){
+		_load: function(isPost){
 			var t = this,
 				g = t.grid,
 				m = t.model,
 				view = g.view,
+				pageSize = t.arg('pageSize'),
+				btnNode = isPost ? t._moreNode : t._prevNode,
 				start = view.rootStart,
 				count = view.rootCount,
-				pageSize = t.arg('pageSize');
-			t._busy(1);
+				newRootStart = isPost ? start : start < pageSize ? 0 : start - pageSize,
+				newRootCount = isPost ? count + pageSize : start + count - newRootStart,
+				finish = function(renderStart, renderCount){
+					t._busy(isPost);
+					t._checkSize(!isPost, function(){
+						query('.gridxBodyFirstRow').removeClass('gridxBodyFirstRow');
+						if(t._prevNode.parentNode && t._prevNode.nextSibling != t._moreNode){
+							domClass.add(t._prevNode.nextSibling, 'gridxBodyFirstRow');
+						}
+						t.onRender(renderStart, renderCount);
+					});
+				};
+			t._busy(isPost, 1);
 			m.when({
-				start: start + count,
-				count: pageSize
+				start: isPost ? start + count : newRootStart,
+				count: isPost ? pageSize : start - newRootStart
 			}, function(){
 				var totalCount = m.size();
-				count += pageSize;
-				if(start + count > totalCount){
-					count = totalCount - start;
+				if(isPost && newRootStart + newRootCount > totalCount){
+					newRootCount = totalCount - newRootStart;
 				}
-				view.updateRootRange(start, count).then(function(){
-					start = t.renderStart + t.renderCount;
-					count = view.visualCount - start;
-					if(count){
-						t.renderCount += count;
-						var renderedRows = [];
-						str = t._buildRows(start, count, [], renderedRows);
-						domConstruct.place(str, t._moreNode, 'before');
-						if(view.rootStart + view.rootCount >= totalCount){
-							t.domNode.removeChild(t._moreNode);
+				view.updateRootRange(newRootStart, newRootCount).then(function(){
+					var renderStart = isPost ? t.renderCount : 0,
+						renderCount = view.visualCount - t.renderCount;
+					t.renderStart = 0;
+					t.renderCount = view.visualCount;
+					if(renderCount){
+						var toFetch = [];
+						for(var i = 0; i < renderCount; ++i){
+							var rowInfo = view.getRowInfo({visualIndex: renderStart + i});
+							if(!m.isId(rowInfo.id)){
+								toFetch.push({
+									parentId: rowInfo.parentId,
+									start: rowInfo.rowIndex,
+									count: 1
+								});
+							}
 						}
-						array.forEach(renderedRows, t.onAfterRow, t);
+						m.when(toFetch, function(){
+							var renderedRows = [];
+							str = t._buildRows(renderStart, renderCount, [], renderedRows);
+							domConstruct.place(str, btnNode, isPost ? 'before' : 'after');
+							if(isPost ? view.rootStart + view.rootCount >= totalCount : view.rootStart === 0){
+								t.domNode.removeChild(btnNode);
+							}
+							array.forEach(renderedRows, t.onAfterRow, t);
+							finish(renderStart, renderCount);
+						});
 					}else{
-						t.domNode.removeChild(t._moreNode);
+						t.domNode.removeChild(btnNode);
+						if(!isPost){
+							query('.gridxBodyFirstRow').removeClass('gridxBodyFirstRow');
+						}
+						finish(renderStart, renderCount);
 					}
-					t._busy();
-					t.onRender(start, count);
 				});
 			});
 		},
 
-		_busy: function(begin){
-			var btn = this._moreBtn;
+		_checkSize: function(isPost, onFinish){
+			var t = this,
+				view = t.grid.view,
+				maxPageCount = t.arg('maxPageCount'),
+				maxRowCount = maxPageCount * t.arg('pageSize'),
+				btnNode = isPost ? t._moreNode : t._prevNode;
+			if(maxPageCount > 0 && view.rootCount > maxRowCount){
+				var newRootStart = isPost ? view.rootStart : view.rootStart + view.rootCount - maxRowCount;
+				view.updateRootRange(newRootStart, maxRowCount).then(function(){
+					if(btnNode.parentNode){
+						btnNode.parentNode.removeChild(btnNode);
+					}
+					t.unrenderRows(t.renderCount - view.visualCount, isPost ? 'post' : '');
+					t.renderStart = 0;
+					t.renderCount = view.visualCount;
+					query('.gridxRow', t.domNode).forEach(function(node, i){
+						node.setAttribute('visualindex', i);
+					});
+					domConstruct.place(btnNode, t.domNode, isPost ? 'last' : 'first');
+					t.grid.vScroller.scrollToRow(view.visualCount - 1);
+					onFinish();
+				});
+			}else{
+				onFinish();
+			}
+		},
+
+		_busy: function(isPost, begin){
+			var t = this,
+				btn = isPost ? t._moreBtn : t._prevBtn,
+				cls = isPost ? "More" : "Previous";
 			btn.innerHTML = begin ?
-				'<span class="gridxLoadingMore"></span>' + this.arg('loadMoreLoadingLabel', nls.loadMoreLoading) :
-				this.arg('loadMoreLabel', nls.loadMore);
+				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', nls['load' + cls + 'Loading']) :
+				t.arg('load' + cls + 'Label', nls['load' + cls]);
 			btn.disabled = !!begin;
+		},
+
+		_onDelete: function(id){
+			var t = this,
+				view = t.grid.view;
+			if(t.autoUpdate){
+				var node = t.getRowNode({rowId: id});
+				if(node){
+					var parentId = node.getAttribute('parentid'),
+						rowIndex = parseInt(node.getAttribute('rowindex'), 10);
+					if(parentId === '' && rowIndex >= view.rootStart && rowIndex < view.rootStart + view.rootCount){
+						view.updateRootRange(view.rootStart, view.rootCount - 1);
+					}
+				}
+			}
+			t.inherited(arguments);
 		}
 	});
 });
