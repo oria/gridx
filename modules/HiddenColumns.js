@@ -129,7 +129,8 @@ define([
 			}
 			g.columnWidth._adaptWidth();
 			query('.gridxCell', g.bodyNode).forEach(function(node){
-				node.style.width = columnsById[node.getAttribute('colid')].width;
+				var s = node.style,
+					w = s.width = s.minWidth = s.maxWidth = columnsById[node.getAttribute('colid')].width;
 			});
 			//FIXME: this seems ugly....
 			if(g.vScroller._doVirtualScroll){
