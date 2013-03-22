@@ -662,35 +662,49 @@ define([
 			}
 		},
 
+		onCheckCustomRow: function(row, output){},
+
+		onBuildCustomRow: function(row, output){},
+
 		_buildCells: function(row, visualIndex, cols){
 			var t = this,
 				g = t.grid,
 				columns = g._columns,
 				rowData = row.data(),
 				isFocusArea = g.focus.currentArea() == 'body',
-				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
-			for(var i = 0, len = columns.length; i < len; ++i){
-				var col = columns[i],
-					isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
-					cell = g.cell(row, cols && cols[i] || col.id, 1),
-					cls = col._class || '',
-					customCls = col['class'],
-					style = g.getTextDirStyle(col.id, rowData[col.id]);
-				cls += (customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '';
-				style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-				sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
-				if(isPadding){
-					sb.push('gridxPaddingCell ');
+				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'],
+				output = {};
+			t.onCheckCustomRow(row, output);
+			if(output[row.id]){
+				output = {};
+				t.onBuildCustomRow(row, output);
+				sb.push('<td class="gridxCustomRow" aria-readonly="true" role="gridcell" tabindex="-1">',
+					t._wrapCellData(output[row.id], row.id),
+					'</td>');
+			}else{
+				for(var i = 0, len = columns.length; i < len; ++i){
+					var col = columns[i],
+						isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
+						cell = g.cell(row, cols && cols[i] || col.id, 1),
+						cls = col._class || '',
+						customCls = col['class'],
+						style = g.getTextDirStyle(col.id, rowData[col.id]);
+					cls += (customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '';
+					style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
+					sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
+					if(isPadding){
+						sb.push('gridxPaddingCell ');
+					}
+					if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
+						sb.push('gridxCellFocus ');
+					}
+					sb.push(cls,
+						'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
+						'" style="width:', col.width, ';min-width:', col.width,
+						'; ', style,
+						'">', t._buildCellContent(cell, visualIndex, isPadding),
+					'</td>');
 				}
-				if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
-					sb.push('gridxCellFocus ');
-				}
-				sb.push(cls,
-					'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
-					'" style="width:', col.width, ';min-width:', col.width,
-					'; ', style,
-					'">', t._buildCellContent(cell, visualIndex, isPadding),
-				'</td>');
 			}
 			sb.push('</tr></table>');
 			return sb.join('');
