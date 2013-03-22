@@ -1,6 +1,6 @@
 define({root:
 ({
-	loading: 'Loading...'
-	,loadMore: 'Load More'
+	loading: 'Loading...',
+	loadMore: 'Load More'
 })
 });
