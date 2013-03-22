@@ -246,9 +246,9 @@ define([
 		_storeFetch: function(options, onFetched){
 			console.debug("\tFETCH parent: ",
 					options.parentId, ", start: ",
-					options.start, ", count: ",
+					options.start || 0, ", count: ",
 					options.count, ", end: ",
-					options.count && options.start + options.count - 1, ", options:",
+					options.count && (options.start || 0) + options.count - 1, ", options:",
 					this.options);
 
 			var t = this,
@@ -257,7 +257,7 @@ define([
 				parentId = t.model.isId(options.parentId) ? options.parentId : '',
 				req = mixin({}, t.options || {}, options),
 				onBegin = hitch(t, _onBegin, parentId),
-				onComplete = hitch(t, _onComplete, d, parentId, options.start),
+				onComplete = hitch(t, _onComplete, d, parentId, options.start || 0),
 				onError = hitch(d, d.errback),
 				results;
 			t._filled = 1;
