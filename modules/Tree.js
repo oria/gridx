@@ -298,7 +298,26 @@ define([
 			g.domNode.setAttribute('role', 'treegrid');
 			t.aspect(g.body, 'collectCellWrapper', '_createCellWrapper');
 			t.aspect(g.body, 'onAfterRow', '_onAfterRow');
+			t.aspect(g.body, 'onCheckCustomRow', function(row, output){
+				if(!t.nested && t.mergedParentRow){
+					output[row.id] = row.canExpand();
+				}
+			});
+			t.aspect(g.body, 'onBuildCustomRow', function(row, output){
+				output[row.id] = row.id;
+			});
 			t.aspect(g, 'onCellClick', '_onCellClick');
+			t.aspect(g, 'onRowClick', function(e){
+				if(!t.nested && t.mergedParentRow){
+					if(t.canExpand(e.rowId)){
+						if(t.isExpanded(e.rowId)){
+							t.collapse(e.rowId);
+						}else{
+							t.expand(e.rowId);
+						}
+					}
+				}
+			});
 			t._initExpandLevel();
 			t._initFocus();
 		},
@@ -331,6 +350,8 @@ define([
 		expandLevel: 1 / 0,
 
 		clearOnSetStore: true,
+
+		mergedParentRow: false,
 
 		onExpand: function(id){},
 
@@ -466,11 +487,11 @@ define([
 		_createCellWrapper: function(wrappers, rowId, colId){
 			var t = this,
 				col = t.grid._columnsById[colId];
-			if(col.expandLevel){
+			if(!col || col.expandLevel){
 				var isNested = t.arg('nested'),
 					level = t.model.treePath(rowId).length,
 					expandLevel = t.arg('expandLevel');
-				if((!isNested || col.expandLevel == level) && 
+				if((!isNested || (col && col.expandLevel == level)) && 
 						(!(expandLevel > 0) || level <= expandLevel + 1)){
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
