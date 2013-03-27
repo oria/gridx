@@ -15,6 +15,7 @@ define([
 	Model.clearMark = function(){};
 	Model.treeMarkMode = function(){};
 	Model.onMarkChange = function(){};
+	Model.setMarkable = function(){};
 
 	return declare(_Extension, {
 		// summary:
@@ -316,9 +317,9 @@ define([
 					oldState = byId[childId] || 0;
 				    if(t._isMarkable(tp, childId)){
 						newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
-					}
-					if(!noEvent){
-						t._fireEvent(childId, tp, newState, oldState);
+						if(!noEvent){
+							t._fireEvent(childId, tp, newState, oldState);
+						}
 					}
 					if(mm._call('hasChildren', [childId])){
 						children = mm._call('children', [childId]);

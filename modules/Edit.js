@@ -514,6 +514,12 @@ define([
 			console.log('let us save the data');
 		},
 		
+		clear: function(){
+			t._lazyIds = {};
+			t._lazyData = {};
+			t._lazyDataChangeList = {};
+		},
+		
 		isEditing: function(rowId, colId){
 			var col = this.grid._columnsById[colId];
 			if(col && col.alwaysEditing){
@@ -672,12 +678,12 @@ define([
 			}
 		},
 
-		_focusEditor: function(rowId, colId){
+		_focusEditor: function(rowId, colId, forced){
 			var cw = this.grid.cellWidget,
 				func = function(){
 					var widget = cw.getCellWidget(rowId, colId),
 						editor = widget && widget.gridCellEditField;
-					if(editor && !editor.focused && lang.isFunction(editor.focus)){
+					if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
 						editor.focus();
 					}
 				};
@@ -940,13 +946,14 @@ define([
 				}else if(e.keyCode == 90 && e.ctrlKey){
 					if(editing && t.arg('lazy')){
 						t._undoLazyData(e.rowId, e.columnId);
-						setTimeout(function(){
-								t._focusEditor(e.rowId, e.columnId);
-						}, 2000);
+						// setTimeout(function(){
+						t._focusEditor(e.rowId, e.columnId, true);
+						// }, 2000);
 					}
 				}else if(e.keyCode == 89 && e.ctrlKey){
 					if(editing && t.arg('lazy')){
 						t._redoLazyData(e.rowId, e.columnId);
+						t._focusEditor(e.rowId, e.columnId, true);
 					}
 										
 				}
