@@ -159,9 +159,7 @@ define([
 				return;
 			}
 			setTimeout(function(){
-				console.log(123);
 				t._subScrollToRow(rowVisualIndex, defer, toTop);
-				console.log(456);
 			}, 5);
 		},
 	
