@@ -97,6 +97,13 @@ define([
 				};
 			if(node){
 				var offsetTop = node.offsetTop;
+				if(( offsetTop + node.offsetHeight == bst + bn.clientHeight && !toTop ) ||
+				   ( offsetTop == bst && toTop ) ||
+				   ( bst <= offsetTop && offsetTop + node.offsetHeight <= bst + bn.clientHeight ) ){
+					finish(true);
+					return;
+				   	
+				}
 				if(offsetTop + node.offsetHeight > bst + bn.clientHeight){
 					dif = offsetTop - bst;
 					if(!toTop){
@@ -119,7 +126,7 @@ define([
 					dif = (rowVisualIndex - idx) * rowHeight;
 				}else{
 					n = bn.lastChild;
-					while(n && n.offsetTop + n.offsetHeight > bst + bn.clientHeight){
+					while(n && n.offsetTop + n.offsetHeight > bst + bn.clientHeight && n != bn.firstChild){
 						n = n.previousSibling;
 					}
 					idx = n && n.getAttribute('visualindex');
