@@ -17,6 +17,31 @@ define([
 		//		Get the below row.
 	};
 
+	Row.nextSibling = function(){
+		// summary:
+		//		Get the next sibling row under the same parent.
+	};
+
+	Row.prevSibling = function(){
+		// summary:
+		//		Get the previous sibling row under the same parent.
+	};
+
+	Row.root = function(){
+		// summary:
+		//		Get the root ancestor row.
+	};
+
+	Row.firstCell = function(){
+		// summary:
+		//		Get the first cell of this row.
+	};
+
+	Row.lastCell = function(){
+		// summary:
+		//		Get the last cell of this row.
+	};
+
 	Column.prev = function(){
 		// summary:
 		//		Get the left (right if RTL) column.
@@ -87,6 +112,21 @@ define([
 			},
 			down: function(){
 				return getRow(this, this.grid, 1);
+			},
+			nextSibling: function(){
+				return this.grid.row(this.index() + 1, 0, this.model.parentId(this.id));
+			},
+			prevSibling: function(){
+				return this.grid.row(this.index() - 1, 0, this.model.parentId(this.id));
+			},
+			root: function(){
+				return this.grid.row(this.model.rootId(this.id), 1);
+			},
+			firstCell: function(){
+				return this.cell(0);
+			},
+			lastCell: function(){
+				return this.cell(this.grid.columnCount() - 1);
 			}
 		},
 
@@ -101,12 +141,12 @@ define([
 
 		cellMixin: {
 			up: function(){
-				var upRow = this.row.up();
-				return upRow && upRow.cell(this.column, 1);
+				var row = this.row.up();
+				return row && row.cell(this.column, 1);
 			},
 			down: function(){
-				var downRow = this.row.down();
-				return downRow && downRow.cell(this.column, 1);
+				var row = this.row.down();
+				return row && row.cell(this.column, 1);
 			},
 			prev: function(crossRow){
 				return getCell(this, crossRow, 'prev', 'up', this.grid.columnCount() - 1);
