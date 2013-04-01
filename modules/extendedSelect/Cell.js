@@ -454,7 +454,7 @@ define([
 				b = Math.max(start.r, end.r);
 				for(j = a; j <= b; ++j){
 					rowInfo = view.getRowInfo({visualIndex: j});
-					model.markByIndex(rowInfo.rowIndex, toSelect, type);
+					model.markByIndex(rowInfo.rowIndex, toSelect, type, rowInfo.parentId);
 				}
 			}
 			if(packs.length){

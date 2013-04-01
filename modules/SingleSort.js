@@ -193,6 +193,7 @@ define([
 			if(col && (col.sortable || col.sortable === undefined)){
 				if(t._sortId != colId || t._sortDescend == !isDescending){
 					t._updateHeader(colId, isDescending);
+					g.header.onRender();
 				}
 				t.model.sort([{colId: colId, descending: isDescending}]);
 				if(!skipUpdateBody){

@@ -1032,7 +1032,7 @@ define([
 
 		_onFocus: function(evt){
 			var bn = this.domNode,
-				nl = new query.NodeList(evt.target).closest('.gridxCell', bn);
+				nl = query(evt.target).closest('.gridxCell', bn);
 			if(nl[0]){
 				var colIndex = this.grid._columnsById[nl[0].getAttribute('colid')].index,
 					visualIndex = parseInt(nl.closest('.gridxRow', bn)[0].getAttribute('visualindex'), 10);
