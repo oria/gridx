@@ -623,7 +623,7 @@ define([
 						}
 					}
 					m.when({id: parentId}, function(){
-						visualIndex = grid.body.getVisualIndex({
+						visualIndex = grid.view.getRowInfo({
 							parentId: treePath.pop(), 
 							rowIndex: m.idToIndex(parentId)
 						}).visualIndex;
