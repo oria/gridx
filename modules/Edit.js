@@ -14,10 +14,11 @@ define([
 	"../core/_Module",
 	"../core/util",
 	"dojo/date/locale",
+	'../core/model/extensions/Lazy',
 	// 'dijit/focus',
 	"dijit/form/TextBox",
 	"dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale, Lazy){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -238,35 +239,61 @@ define([
 	return Edit;
 =====*/
 
-	function getTypeData(col, storeData, gridData, lazyData){
+	// function getTypeData(col, storeData, gridData, lazyData){
+		// if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
+			// if(lazyData !== undefined){
+				// return locale.parse(lazyData, col.storePattern);
+			// }else{
+				// return locale.parse(storeData, col.storePattern);
+			// }
+		// }
+		// return gridData;
+	// }
+// 
+	// function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
+		// var d = locale.parse(rawData[field], parseArgs);
+		// return d ? locale.format(d, formatArgs) : rawData[field];
+	// }
+// 
+	// function getEditorValueSetter(toEditor){
+		// return toEditor && function(gridData, storeData, lazyData, cellWidget){
+			// var editor = cellWidget.gridCellEditField,
+				// cell = cellWidget.cell,
+				// editorArgs = cell.column.editorArgs;
+			// editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, lazyData, cell, editor));
+		// };
+	// }
+	
+	function getTypeData(col, storeData, gridData, cell){
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-			if(lazyData !== undefined){
-				return locale.parse(lazyData, col.storePattern);
-			}else{
-				return locale.parse(storeData, col.storePattern);
-			}
+			// if(lang.isFunction(cell.lazyData)){
+				// return locale.parse(cell.lazyData(), col.storePattern);
+			// }
+			return locale.parse(storeData, col.storePattern);
 		}
 		return gridData;
 	}
-
+	
 	function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
 		var d = locale.parse(rawData[field], parseArgs);
 		return d ? locale.format(d, formatArgs) : rawData[field];
 	}
-
+	
 	function getEditorValueSetter(toEditor){
-		return toEditor && function(gridData, storeData, lazyData, cellWidget){
+		return toEditor && function(gridData, storeData, cellWidget){
 			var editor = cellWidget.gridCellEditField,
-				cell = cellWidget.cell,
-				editorArgs = cell.column.editorArgs;
-			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, lazyData, cell, editor));
+			cell = cellWidget.cell,
+			editorArgs = cell.column.editorArgs;
+			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
 		};
-	}
+	}	
 
 	return declare(_Module, {
 		name: 'edit',
 
 		forced: ['cellWidget'],
+		
+		modelExtensions: [Lazy],
 
 		constructor: function(){
 			this._init();
@@ -282,20 +309,21 @@ define([
 			var t = this,
 				g = t.grid;
 			if(t.arg('lazy')){
-				lang.mixin(t.cellMixin, {
-					setLazyData: function(v){
-						return this.grid.edit.setLazyData(this.row.id, this.column.id, v);
-					},
-					
-					lazyData: function(){
-						var v = this.grid.edit.getLazyData(this.row.id, this.column.id);
-						if(v !== undefined){
-							//console.log(v, this.rawData());
-							return v;														
-						}
-						return this.rawData();
-					}
-				});
+				// lang.mixin(t.cellMixin, {
+					// setLazyData: function(v){
+						// return this.grid.edit.setLazyData(this.row.id, this.column.id, v);
+					// },
+// 					
+					// lazyData: function(){
+						// var v = this.grid.edit.getLazyData(this.row.id, this.column.id);
+						// if(v !== undefined){
+							// //console.log(v, this.rawData());
+							// return v;														
+						// }
+						// return this.rawData();
+					// }
+				// });
+				t.model.setLazyable(true);
 			}
 			g.domNode.removeAttribute('aria-readonly');
 			t.connect(g, 'onCellDblClick', '_onUIBegin');
@@ -473,19 +501,19 @@ define([
 						}else if(cell.rawData() === v && !t.arg('lazy')){
 							finish(true);
 						}else{
-							if(t.arg('lazy') && !t._inCallBackMode){
-								Deferred.when(t.setLazyData(rowId, colId, v, false), function(){
-									finish(true);
-								}, function(e){
-									finish(false, e);
-								});
-							}else{
-								Deferred.when(cell.setRawData(v), function(){
+							// if(t.arg('lazy') && !t._inCallBackMode){
+								// Deferred.when(t.setLazyData(rowId, colId, v, false), function(){
+									// finish(true);
+								// }, function(e){
+									// finish(false, e);
+								// });
+							// }else{
+								Deferred.when(cell.setRawData(v, t.arg('lazy')), function(){
 									finish(true);
 								}, function(e){
 									finish(false, e);
 								});									
-							}			
+							// }			
 						    t._inCallBackMode = false;		
 						}
 					}catch(e){
@@ -537,12 +565,13 @@ define([
 		},
 		
 		getLazyData: function(rowId, colId){
-			var t = this;
+			var t = this,
+				f = t.grid._columnsById[colId].field;
 			
 			if(t.arg('lazy')){
 				r = t._lazyDataChangeList[rowId];
 				if(r){
-					return r[colId]? r[colId].list[r[colId].index] : undefined;
+					return r[f]? r[f].list[r[f].index] : undefined;
 				}
 			}
 			return undefined;
@@ -759,15 +788,16 @@ define([
 
 		_addLazyDataChange: function(rowid, columnid, value){
 			var lazyData,
-				t = this;
+				t = this,
+				f = t.grid._columnsById[columnid].field;
 			var rowLazy = t._lazyDataChangeList[rowid];
 			if(!rowLazy){
 				rowLazy = t._lazyDataChangeList[rowid] = {};
 			}
 			
-			var colLazy = rowLazy[columnid];
+			var colLazy = rowLazy[f];
 			if(!colLazy){
-				colLazy = rowLazy[columnid] = {index: 0, list: [t.grid.cell(rowid, columnid, 1).rawData()]};
+				colLazy = rowLazy[f] = {index: 0, list: [t.grid.cell(rowid, columnid, 1).rawData()]};
 			}
 			if(colLazy.list.length == 5 && colLazy.index == 4){
 				colLazy.list.shift();
@@ -894,12 +924,13 @@ define([
 		
 		_undoLazyData: function(rowid, columnid){
 			var t = this,
-				lazyRow = t._lazyDataChangeList[rowid];
-			if(lazyRow && lazyRow[columnid]){
-				if(lazyRow[columnid].index > 0){
+				lazyRow = t._lazyDataChangeList[rowid],
+				f = t.grid._columnsById[columnid].field;
+			if(lazyRow && lazyRow[f]){
+				if(lazyRow[f].index > 0){
 					t._inCallBackMode = true;
-					var index = --lazyRow[columnid].index;
-					var value = lazyRow[columnid].list[index];
+					var index = --lazyRow[f].index;
+					var value = lazyRow[f].list[index];
 					t.setLazyData(rowid, columnid, value, true);
 				}
 			}
@@ -907,12 +938,13 @@ define([
 		
 		_redoLazyData: function(rowid, columnid){
 			var t = this,
-				lazyRow = t._lazyDataChangeList[rowid];
-			if(lazyRow && lazyRow[columnid]){
-				if(lazyRow[columnid].index < 4){
+				lazyRow = t._lazyDataChangeList[rowid],
+				f = t.grid._columnsById[columnid].field;
+			if(lazyRow && lazyRow[f]){
+				if(lazyRow[f].index < 4){
 					t._inCallBackMode = true;
-					var index = ++lazyRow[columnid].index;
-					var value = lazyRow[columnid].list[index];
+					var index = ++lazyRow[f].index;
+					var value = lazyRow[f].list[index];
 					t.setLazyData(rowid, columnid, value, true);
 				}
 			}
