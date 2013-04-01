@@ -209,6 +209,16 @@ define([
 		//		If true then the cells in this column will be editable. Default is false.
 		editable: false,
 
+		canEdit: function(cell){
+			// summary:
+			//		Decide whether a cell is editable.
+			//		This makes it possible to config some cells to be uneditable in an edtibale column.
+			// cell: gridx.core.Cell
+			//		The cell object
+			// returns:
+			//		True if this cell should be editable, false if not.
+		},
+
 		// alwaysEditing: Boolean
 		//		If true then the cells in this column will always be in editing mode. Default is false.
 		alwaysEditing: false,
@@ -223,6 +233,35 @@ define([
 		//		This attribute can either be the declared class name of a dijit or 
 		//		the class construct function of a dijit (the one that is used behide "new" keyword).
 		editor: '',
+
+		onEditorCreated: function(editor, column){
+			// summary:
+			//		Fired when an editor is created.
+			// editor: Widget
+			//		The created editor widget.
+			// column: gridx.core.Column
+			//		The column this cell widget is created for.
+			// tags:
+			//		callback
+		},
+
+		initializeEditor: function(editor, cell){
+			// summary:
+			//		Do special initialization for the current cell.
+			//		Called every time a cell widget is applied into a cell, no matter if it is just created or reused.
+			// editor: Widget
+			//		The created editor widget.
+		},
+
+		uninitializeEditor: function(editor, cell){
+			// summary:
+			//		Called every time a cell widget is reused to a cell.
+			// editor: Widget
+			//		The created editor widget.
+		},
+
+		getEditorConnects: function(editor, cell){
+		},
 
 		// editorArgs: Edit.__EditorArgs
 		editorArgs: null,
@@ -291,7 +330,7 @@ define([
 						var v = this.grid.edit.getLazyData(this.row.id, this.column.id);
 						if(v !== undefined){
 							//console.log(v, this.rawData());
-							return v;														
+							return v;
 						}
 						return this.rawData();
 					}
@@ -300,6 +339,25 @@ define([
 			g.domNode.removeAttribute('aria-readonly');
 			t.connect(g, 'onCellDblClick', '_onUIBegin');
 			t.connect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
+			t.connect(g.cellWidget, 'initializeCellWidget', function(widget, cell){
+				var column = cell.column;
+				if(column.initializeEditor && widget.gridCellEditField){
+					column.initializeEditor(widget.gridCellEditField, cell);
+				}
+			});
+			t.connect(g.cellWidget, 'uninitializeCellWidget', function(widget, cell){
+				var column = cell.column;
+				if(column.uninitializeEditor && widget.gridCellEditField){
+					column.uninitializeEditor(widget.gridCellEditField, cell);
+				}
+			});
+			t.connect(g.cellWidget, 'collectCellWidgetConnects', function(widget, output){
+				var column = widget.cell.column;
+				if(column.getEditorConnects){
+					var cnnts = column.getEditorConnects(widget, widget.cell);
+					output.push.apply(output, cnnts);
+				}
+			});
 			t.connect(g.body, 'onAfterRow', function(row){
 				query('.gridxCell', row.node()).forEach(function(node){
 					if(g._columnsById[node.getAttribute('colid')].editable){
@@ -337,8 +395,12 @@ define([
 			editor: function(){
 				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 				return cw && cw.gridCellEditField;
-			}
+			},
 
+			isEditable: function(){
+				var col = this.column;
+				return col.isEditable() && (!col.canEdit || col.canEdit(this));
+			}
 		},
 
 		columnMixin: {
@@ -374,7 +436,7 @@ define([
 			if(!t.isEditing(rowId, colId)){
 				var row = g.row(rowId, 1),	//1 as true
 					col = g._columnsById[colId];
-				if(row && col.editable){
+				if(row && row.cell(colId, 1).isEditable()){
 					g.cellWidget.setCellDecorator(rowId, colId, 
 						t._getDecorator(colId), 
 						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
@@ -514,6 +576,12 @@ define([
 			console.log('let us save the data');
 		},
 		
+		clear: function(){
+			t._lazyIds = {};
+			t._lazyData = {};
+			t._lazyDataChangeList = {};
+		},
+		
 		isEditing: function(rowId, colId){
 			var col = this.grid._columnsById[colId];
 			if(col && col.alwaysEditing){
@@ -623,11 +691,15 @@ define([
 		},
 
 		_initAlwaysEdit: function(){
-			for(var t = this, cols = t.grid._columns, i = cols.length - 1; i >= 0; --i){
-				var col = cols[i];
+			var t = this;
+			array(t.grid._columns, function(col){
 				if(col.alwaysEditing){
 					col.editable = true;
 					col.navigable = true;
+					var needCellWidget = col.needCellWidget;
+					col.needCellWidget = function(cell){
+						return needCellWidget.apply(col, arguments) && cell.isEditable();
+					};
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
@@ -636,7 +708,7 @@ define([
 					col._cellWidgets = {};
 					col._backupWidgets = [];
 				}
-			}
+			});
 		},
 
 		_getColumnEditor: function(colId){
@@ -650,34 +722,38 @@ define([
 			}
 		},
 
-		_onCellWidgetCreated: function(widget, cell){
+		_onCellWidgetCreated: function(widget, column){
 			var t = this,
-				column = cell.column,
 				editor = widget.gridCellEditField;
-			if(editor && column.alwaysEditing){
-				widget.connect(editor, 'onChange', function(){
-					var rn = widget.domNode.parentNode;
-					while(rn && !domClass.contains(rn, 'gridxRow')){
-						rn = rn.parentNode;
-					}
-					if(rn){
-						//TODO: is 500ms okay?
-						var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
-						clearTimeout(editor._timeoutApply);
-						editor._timeoutApply = setTimeout(function(){
-							t.apply(rn.getAttribute('rowid'), column.id);
-						}, delay);
-					}
-				});
+			if(editor){
+				if(column.alwaysEditing){
+					widget.connect(editor, 'onChange', function(){
+						var rn = widget.domNode.parentNode;
+						while(rn && !domClass.contains(rn, 'gridxRow')){
+							rn = rn.parentNode;
+						}
+						if(rn){
+							//TODO: is 500ms okay?
+							var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
+							clearTimeout(editor._timeoutApply);
+							editor._timeoutApply = setTimeout(function(){
+								t.apply(rn.getAttribute('rowid'), column.id);
+							}, delay);
+						}
+					});
+				}
+				if(column.onEditorCreated){
+					column.onEditorCreated(editor, column);
+				}
 			}
 		},
 
-		_focusEditor: function(rowId, colId){
+		_focusEditor: function(rowId, colId, forced){
 			var cw = this.grid.cellWidget,
 				func = function(){
 					var widget = cw.getCellWidget(rowId, colId),
 						editor = widget && widget.gridCellEditField;
-					if(editor && !editor.focused && lang.isFunction(editor.focus)){
+					if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
 						editor.focus();
 					}
 				};
@@ -940,13 +1016,14 @@ define([
 				}else if(e.keyCode == 90 && e.ctrlKey){
 					if(editing && t.arg('lazy')){
 						t._undoLazyData(e.rowId, e.columnId);
-						setTimeout(function(){
-								t._focusEditor(e.rowId, e.columnId);
-						}, 2000);
+						// setTimeout(function(){
+						t._focusEditor(e.rowId, e.columnId, true);
+						// }, 2000);
 					}
 				}else if(e.keyCode == 89 && e.ctrlKey){
 					if(editing && t.arg('lazy')){
 						t._redoLazyData(e.rowId, e.columnId);
+						t._focusEditor(e.rowId, e.columnId, true);
 					}
 										
 				}

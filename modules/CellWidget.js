@@ -73,13 +73,13 @@ define([
 			//		The column ID of the cell
 		},
 
-		onCellWidgetCreated: function(widget, cell){
+		onCellWidgetCreated: function(widget, column){
 			// summary:
 			//		Fired when a cell widget is created.
 			// widget: CellWidget.__CellWidget
 			//		The created cell widget.
-			// cell: gridx.core.Cell
-			//		The cell object containing this widget.
+			// column: gridx.core.Column
+			//		The column this cell widget is created for.
 			// tags:
 			//		callback
 		}
@@ -106,8 +106,8 @@ define([
 		navigable: true,
 
 		// widgetsInCell: Boolean
-		//		Indicating whether this column should use this CellDijit module.
-		//		CellDijit module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
+		//		Indicating whether this column should use this CellWidget module.
+		//		CellWidget module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
 		widgetsInCell: false,
 
 		decorator: function(){
@@ -136,6 +136,52 @@ define([
 			// cellWidget: CellWidget.__CellWidget
 			//		A widget representing the whole cell. This is the container of the templateString returned by decorator.
 			//		So you can access any dojoAttachPoint from it (maybe your special dijit or node, and then set value for them).
+		},
+
+		onCellWidgetCreated: function(widget, column){
+			// summary:
+			//		Fired when a cell widget is created.
+			// widget: CellWidget.__CellWidget
+			//		The created cell widget.
+			// column: gridx.core.Column
+			//		The column this cell widget is created for.
+			// tags:
+			//		callback
+		},
+
+		initializeCellWidget: function(widget, cell){
+			// summary:
+			//		Do special initialization for the current cell.
+			//		Called every time a cell widget is applied into a cell, no matter if it is just created or reused.
+			// widget: CellWidget.__CellWidget
+			//		The created cell widget.
+		},
+
+		uninitializeCellWidget: function(widget, cell){
+			// summary:
+			//		Called every time a cell widget is reused to a cell.
+			// widget: CellWidget.__CellWidget
+			//		The created cell widget.
+		},
+
+		getCellWidgetConnects: function(widget, cell){
+			// summary:
+			//		Return an array of connection arguments.
+			//		CellWidget will take care of connecting/disconnecting them.
+			//		Called every time a cell widget is applied into a cell, no matter if it is just created or reused.
+			// widget: CellWidget.__CellWidget
+			//		The created cell widget.
+			// returns
+			//		An array of connection arguments.
+		},
+
+		needCellWidget: function(cell){
+			// summary:
+			//		Decide whether this cell should show cell widget.
+			// cell: gridx.core.Cell
+			//		The cell object containing this widget.
+			// returns:
+			//		Boolean
 		}
 	});
 
@@ -145,13 +191,13 @@ define([
 	var dummyFunc = function(){ return ''; },
 
 		CellWidget = declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-		
+
 			content: '',
-		
+
 			setCellValue: null,
 
 			cell: null,
-		
+
 			postMixInProperties: function(){
 				this.templateString = ['<div class="gridxCellWidget">', this.content, '</div>'].join('');
 			},
@@ -160,8 +206,31 @@ define([
 				this.connect(this.domNode, 'onmousedown', function(e){
 					e.cancelBubble = true;
 				});
+				this._cellCnnts = [];
 			},
-		
+
+			startup: function(){
+				var t = this,
+					cell = t.cell,
+					cellWidget = cell.grid.cellWidget,
+					col = cell.column,
+					started = t._started;
+				t.inherited(arguments);
+				array.forEach(t._cellCnnts, t.disconnect, t);
+				if(started){
+					//Do not uninitialized on first creation.
+					cellWidget.uninitializeCellWidget(t, cell);
+				}
+				cellWidget.initializeCellWidget(t, cell);
+				if(col.getCellWidgetConnects){
+					var output = [];
+					cellWidget.collectCellWidgetConnects(t, output);
+					t._cellCnnts = array.map(output, function(cnnt){
+						t.connect.apply(t, cnnt);
+					});
+				}
+			},
+
 			setValue: function(gridData, storeData, isInit, lazyData){
 				try{
 					var t = this;
@@ -201,7 +270,7 @@ define([
 		name: 'cellWidget',
 
 		required: ['navigableCell'],
-	
+
 		getAPIPath: function(){
 			return {
 				cellWidget: this
@@ -213,11 +282,11 @@ define([
 				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
 			}
 		},
-	
+
 		constructor: function(){
 			this._init();
 		},
-	
+
 		preload: function(){
 			var t = this, body = t.grid.body;
 			t.batchConnect(
@@ -225,7 +294,7 @@ define([
 				[body, 'onAfterCell', '_showDijit'],
 				[body, 'onUnrender', '_onUnrenderRow']);
 		},
-	
+
 		destroy: function(){
 			this.inherited(arguments);
 			var i, id, col, cw, columns = this.grid._columns;
@@ -240,7 +309,7 @@ define([
 				}
 			}
 		},
-	
+
 		//Public-----------------------------------------------------------------
 		backupCount: 20,
 
@@ -257,7 +326,7 @@ define([
 			cellDec.setCellValue = setCellValue;
 			cellDec.widget = null;
 		},
-	
+
 		restoreCellDecorator: function(rowId, colId){
 			var rowDecs = this._decorators[rowId];
 			if(rowDecs){
@@ -281,7 +350,7 @@ define([
 				delete rowDecs[colId];
 			}
 		},
-	
+
 		getCellWidget: function(rowId, colId){
 			var cellNode = this.grid.body.getCellNode({
 				rowId: rowId, 
@@ -296,16 +365,41 @@ define([
 			return null;
 		},
 
-		onCellWidgetCreated: function(/* widget, cell */){},
-	
+		onCellWidgetCreated: function(widget, column){
+			if(column.onCellWidgetCreated){
+				column.onCellWidgetCreated(widget, column);
+			}
+		},
+
+		initializeCellWidget: function(widget, cell){
+			var column = cell.column;
+			if(column.initializeCellWidget){
+				column.initializeCellWidget(widget, cell);
+			}
+		},
+
+		uninitializeCellWidget: function(widget, cell){
+			var column = cell.column;
+			if(column.uninitializeCellWidget){
+				column.uninitializeCellWidget(widget, cell);
+			}
+		},
+
+		collectCellWidgetConnects: function(widget, output){
+			var column = widget.cell.column;
+			if(column.getCellWidgetConnects){
+				output.push.apply(output, column.getCellWidgetConnects(widget, widget.cell));
+			}
+		},
+
 		//Private---------------------------------------------------------------
 		_init: function(){
 			this._decorators = {};
 			var i, col, columns = this.grid._columns;
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
-				if(col.decorator && col.widgetsInCell){
-					col.userDecorator = col.decorator;
+				if(col.widgetsInCell){
+					col.userDecorator = col.decorator || dummyFunc;
 					col.decorator = dummyFunc;
 					col._cellWidgets = {};
 					col._backupWidgets = [];
@@ -345,7 +439,7 @@ define([
 				cellWidget.startup();
 			}
 		},
-	
+
 		_prepareCellWidget: function(cell){
 			var col = cell.column.def(),
 				widget = this._getSpecialWidget(cell);
@@ -356,7 +450,10 @@ define([
 						content: col.userDecorator(),
 						setCellValue: col.setCellValue
 					});
-					this.onCellWidgetCreated(widget, cell);
+					this.onCellWidgetCreated(widget, cell.column);
+					if(col.onCellWidgetCreated){
+						col.onCellWidgetCreated(widget, cell.column);
+					}
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}
@@ -396,12 +493,12 @@ define([
 				}
 			}
 		},
-	
+
 		_getSpecialCellDec: function(rowId, colId){
 			var rowDecs = this._decorators[rowId];
 			return rowDecs && rowDecs[colId];
 		},
-	
+
 		_getSpecialWidget: function(cell){
 			var rowDecs = this._decorators[cell.row.id];
 			if(rowDecs){

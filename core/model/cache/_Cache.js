@@ -17,24 +17,6 @@ define([
 		mixin = lang.mixin,
 		indexOf = array.indexOf;
 
-	function _onBegin(parentId, size){
-		//Private function to be called in the scope of cache
-		this._size[parentId] = parseInt(size, 10);
-	}
-
-	function _onComplete(d, parentId, start, items){
-		//Private function to be called in the scope of cache
-		try{
-			var t = this, i = 0, item;
-			for(; item = items[i]; ++i){
-				t._addRow(t.store.getIdentity(item), start + i, t._itemToObject(item), item, parentId);
-			}
-			d.callback();
-		}catch(e){
-			d.errback(e);
-		}
-	}
-
 	return declare(_Extension, {
 		constructor: function(model, args){
 			var t = this;
@@ -256,10 +238,25 @@ define([
 				d = new Deferred(),
 				parentId = t.model.isId(options.parentId) ? options.parentId : '',
 				req = mixin({}, t.options || {}, options),
-				onBegin = hitch(t, _onBegin, parentId),
-				onComplete = hitch(t, _onComplete, d, parentId, options.start || 0),
 				onError = hitch(d, d.errback),
 				results;
+			function onBegin(size){
+				t._size[parentId] = parseInt(size, 10);
+			}
+			function onComplete(items){
+				//Private function to be called in the scope of cache
+				try{
+					var start = options.start || 0,
+						i = 0,
+						item;
+					for(; item = items[i]; ++i){
+						t._addRow(s.getIdentity(item), start + i, t._itemToObject(item), item, parentId);
+					}
+					d.callback();
+				}catch(e){
+					d.errback(e);
+				}
+			}
 			t._filled = 1;
 			t.onBeforeFetch(req);
 			if(parentId === ''){
@@ -307,7 +304,8 @@ define([
 		},
 
 		_onNew: function(item, parentInfo){
-			var t = this, s = t.store,
+			var t = this,
+				s = t.store,
 				row = t._itemToObject(item),
 				parentItem = parentInfo && parentInfo[s.fetch ? 'item' : 'parent'],
 				parentId = parentItem ? s.getIdentity(parentItem) : '',
@@ -325,11 +323,14 @@ define([
 		},
 
 		_onDelete: function(item){
-			var t = this, s = t.store, st = t._struct,
-				id = s.fetch ? s.getIdentity(item) : item, 
+			var t = this,
+				s = t.store,
+				st = t._struct,
+				id = s.fetch ? s.getIdentity(item) : item,
 				path = t.treePath(id);
 			if(path.length){
-				var children, i, j, ids = [id],
+				var children, i, j,
+					ids = [id],
 					parentId = path[path.length - 1],
 					sz = t._size,
 					size = sz[''],

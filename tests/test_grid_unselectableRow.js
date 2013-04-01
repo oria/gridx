@@ -50,8 +50,8 @@ require([
 	tp.placeAt('ctrlPane');
 	
 	tp.addTestSet('Select Row Actions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow5Unselectable">Get Row 5 Unselectable</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow6Unselectable">Get Row 6 Unselectable</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow5Unselectable">Get Row 5 Selectable</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow6Unselectable">Get Row 6 Selectable</div><br/>',
 	''].join(''));
 
 	tp.startup();
