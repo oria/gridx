@@ -1,12 +1,13 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory){
+], function(parser, Deferred, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -28,7 +29,7 @@ require([
 		{id: 'Heard', field: 'Heard', name: 'Heard:12'}
 	];
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		configGrid.connect(configGrid.select.row, 'onSelected', function(row){
 			var t = new Date;
 			grid.hiddenColumns.add(row);

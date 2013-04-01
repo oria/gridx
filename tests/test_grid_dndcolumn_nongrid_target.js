@@ -1,5 +1,6 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'dojo/ready',
 	'dojo/dom',
 	'dojo/_base/array',
@@ -10,7 +11,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
 	'dojo/domReady!'
-], function(parser, ready, dom, array, dataSource, storeFactory, dndTarget){
+], function(parser, Deferred, ready, dom, array, dataSource, storeFactory, dndTarget){
 
 	store = storeFactory({
 		path: './support/stores',
@@ -30,7 +31,7 @@ require([
 		}
 	});
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		//Fix FF not firing onmouseover during dragging.
 		grid.dnd._dnd._fixFF(formTarget, 'songForm');
 	});

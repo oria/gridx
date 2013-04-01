@@ -1,21 +1,22 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'dijit/registry',
 	'doh/runner',
 	'dojo/dom',
 	'dojo/_base/lang',
 	'dojo/_base/array',
+	'dojo/data/ItemFileWriteStore',
 	'dojo/store/Memory',
 	'gridx/support/printer',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'dojo/store/Memory',
 	'gridx/allModules',
 	'dijit/form/ComboBox',
 	'dijit/form/Select',
 	'dijit/form/Button',
 	'dojo/domReady!'
-], function(parser, registry, runner, dom, lang, array, Memory, printer){
+], function(parser, Deferred, registry, runner, dom, lang, array, ItemFileWriteStore, Memory, printer){
 
 	var items = [
 		{"TextBox1":"First value!",	"TextBox2": "First value!",	"ComboBox":"First value!", "Select":"First value!"},
@@ -40,7 +41,7 @@ require([
 		}
 	});
 
-	selectStore = new Memory({
+	selectStore = new ItemFileWriteStore({
 		data: {
 			identifier: 'id', 
 			label: 'id', 
@@ -86,7 +87,7 @@ require([
 		});
 	};
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		runner.register("gridx.tests.grid_textDir", [
 			{
 				name: "GridX , Bidi",
