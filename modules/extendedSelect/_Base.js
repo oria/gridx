@@ -222,7 +222,8 @@ define([
 		},
 
 		_highlightSingle: function(target, toHighlight){
-			toHighlight = toHighlight ? this._toSelect && this.isSelectable(this._getRowId(target.row)) : this._isSelected(target);
+			//toHighlight = toHighlight ? this._toSelect && this.isSelectable(this._getRowId(target.row)) : this._isSelected(target);
+			toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
 			this._doHighlight(target, toHighlight);
 		},
 
