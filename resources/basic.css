@@ -369,16 +369,31 @@
 
 
 /*Header Menu*/
-
-.gridxHeaderMenuButton {
-	position: absolute;
+.gridxHeaderMenu {
+	width: 100px;
+}
+.gridxHeaderMenuBtn {
+	float: right;
 	top: 1px;
 	bottom: 1px;
-	width: 10px;
-	background-color: red;
+	width: 14px;
+	height:12px;
+	border-left: 1px solid #fff;
 	display: none;
 	cursor: pointer;
+	background: transparent url(images/sprite_icons.png) no-repeat -97px 9px;
+	margin-top:-4px;
+	margin-bottom: -4px;
+	margin-right: -3px;
+
 }
+
+.gridxHeaderCellOver .gridxHeaderMenuBtn{
+	display: block;
+}
+/*Header Menu End*/
+
+
 
 .gridxLoadMore {
 	padding: 10px;

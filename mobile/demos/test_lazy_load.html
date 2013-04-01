@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Gridx Mobile</title>
+	<link href="../../../dojox/mobile/themes/iphone/base.css" rel="stylesheet"/>
+	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
+	<link href="../../../dojox/mobile/themes/iphone/Button.css" rel="stylesheet"/>
+	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
+	<script>
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
+				{
+					name: 'gridx',
+					location: '../gridx'
+				}
+			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_lazy_load']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_lazy_load']);
+			}
+		};
+	</script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
+	
+	<style>
+		td, th	{	font-size: 12px; text-align: left;}
+		.mobileGridx th	{	}
+	</style>
+	
+	<script>
+		
+	</script>
+	
+</head>
+
+<body style="visibility:hidden;">
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Lazy Load</h1>
+		<div data-dojo-type="gridx/mobile/Grid" 
+			data-dojo-mixins="gridx/mobile/LazyLoad" 
+			data-dojo-props="rowCount: 50, showHeader: false" 
+			jsId="grid"></div>
+		<ul data-dojo-type="dojox/mobile/TabBar" fixed="bottom" style="border-bottom:none;">
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
+		</ul>
+	</div>
+</body>
+</html>
