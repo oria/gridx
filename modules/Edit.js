@@ -3,7 +3,6 @@ define([
 /*====="../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/array",
 	"dojo/_base/query",
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
@@ -18,7 +17,7 @@ define([
 	// 'dijit/focus',
 	"dijit/form/TextBox",
 	"dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, array, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -693,7 +692,7 @@ define([
 
 		_initAlwaysEdit: function(){
 			var t = this;
-			array(t.grid._columns, function(col){
+			array.forEach(t.grid._columns, function(col){
 				if(col.alwaysEditing){
 					col.editable = true;
 					col.navigable = true;
