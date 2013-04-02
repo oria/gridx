@@ -27,6 +27,7 @@ define([
 	'gridx/tests/doh/actions/Header',
 	'gridx/tests/doh/actions/Body',
 	'gridx/tests/doh/actions/HScroller',
+
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async'
 ], function(lang, memoryFactory, IFWSFactory, dataSource, modules){
@@ -34,7 +35,8 @@ define([
 	//Config Begin-------------------------------------------------------
 
 	var specialCases = [
-		['VirtualVScroller', 'ColumnResizer', 'HiddenColumns']
+//        ['VirtualVScroller', 'ColumnResizer', 'HiddenColumns']
+		['ColumnLock', 'RowHeader']
 	];
 
 	//module config => interface name
@@ -60,7 +62,8 @@ define([
 		IndirectSelectColumn: "indirectSelect",
 		ColumnLock: "columnLock",
 		Tree: "tree",
-		HiddenColumns: 'hiddenColumns'
+		HiddenColumns: 'hiddenColumns',
+		GroupHeader: 'header'
 	};
 
 	//parameter config => [interface name, adder function]
@@ -219,6 +222,13 @@ define([
 		selectRowTriggerOnCell: {
 			SelectCell: 1,
 			ExtendedSelectCell: 1
+		},
+		GroupHeader: {
+			ColumnLock: 1
+		},
+		PagedBody: {
+			Pagination: 1,
+			VirtualVScroller: 1
 		}
 	};
 
