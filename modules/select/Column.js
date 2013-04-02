@@ -95,7 +95,7 @@ define([
 
 		columnMixin: {
 			select: function(){
-				this.grid.select.column._markById(this.id, 1);
+				this.grid.select.column.selectById(this.id);
 				return this;
 			},
 			deselect: function(){
