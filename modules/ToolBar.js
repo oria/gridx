@@ -33,6 +33,7 @@ define([
 				row: 0,
 				col: 0,
 				pluginClass: Toolbar,
+				'aria-label': 'toolbar',
 				className: 'gridxBarToolBar'
 			});
 		},
