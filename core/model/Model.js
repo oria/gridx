@@ -106,6 +106,7 @@ define([
 			for(var n in this._exts){
 				this._exts[n].destroy();
 			}
+			this._cache.destroy();
 		},
 
 		clearCache: function(){
