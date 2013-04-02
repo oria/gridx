@@ -9,9 +9,14 @@ define([
 		modelExtensions: [Mark],
 
 		selectById: function(rowId, columnId){
-			var t = this, m = t.model;
+			var t = this,
+				m = t.model,
+				type = t._getMarkType(columnId);
 			if(t.arg('enabled')){
-				m.markById(rowId, 1, t._getMarkType(columnId));
+				if(!t.arg('multiple')){
+					m.clearMark(type);
+				}
+				m.markById(rowId, 1, type);
 				m.when();
 			}
 		},
