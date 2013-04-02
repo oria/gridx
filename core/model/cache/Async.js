@@ -356,8 +356,8 @@ define([
 		isAsync: true,
 		
 		constructor: function(model, args){
-			var cs = args.cacheSize,
-				ps = args.pageSize;
+			var cs = parseInt(args.cacheSize, 10),
+				ps = parseInt(args.pageSize, 10);
 			this.cacheSize = cs >= 0 ? cs : -1;
 			this.pageSize = ps > 0 ? ps : 100;
 		},
