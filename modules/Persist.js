@@ -127,12 +127,6 @@ define([
 			});
 		},
 	
-		getAPIPath: function(){
-			return {
-				persist: this
-			};
-		},
-		
 		//Public---------------------------------------------------------
 		enabled: true,
 

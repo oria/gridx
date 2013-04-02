@@ -94,9 +94,9 @@ require([
 			}
 		},
 		{ field: "Genre", name:"TextBox", width: '100px', editable: true,
-			editorArgs: {
-				props: 'selectOnClick: true,onFocus:function(){dijit.selectInputText(this.textbox);console.log(123)}',
-			}
+			// editorArgs: {
+				// props: 'selectOnClick: true,onFocus:function(){dijit.selectInputText(this.textbox);console.log(123)}',
+			// }
 		},
 		{ field: "Artist", name:"ComboBox", width: '100px', editable: true,
 			editor: "dijit/form/ComboBox",

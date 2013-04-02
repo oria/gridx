@@ -15,10 +15,10 @@ define([
 	"../core/util",
 	"dojo/date/locale",
 	'../core/model/extensions/Lazy',
-	// 'dijit/focus',
+	'dojo/_base/event',
 	"dijit/form/TextBox",
 	"dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale, Lazy){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale, Lazy, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -278,36 +278,8 @@ define([
 	return Edit;
 =====*/
 
-	// function getTypeData(col, storeData, gridData, lazyData){
-		// if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-			// if(lazyData !== undefined){
-				// return locale.parse(lazyData, col.storePattern);
-			// }else{
-				// return locale.parse(storeData, col.storePattern);
-			// }
-		// }
-		// return gridData;
-	// }
-// 
-	// function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
-		// var d = locale.parse(rawData[field], parseArgs);
-		// return d ? locale.format(d, formatArgs) : rawData[field];
-	// }
-// 
-	// function getEditorValueSetter(toEditor){
-		// return toEditor && function(gridData, storeData, lazyData, cellWidget){
-			// var editor = cellWidget.gridCellEditField,
-				// cell = cellWidget.cell,
-				// editorArgs = cell.column.editorArgs;
-			// editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, lazyData, cell, editor));
-		// };
-	// }
-	
 	function getTypeData(col, storeData, gridData, cell){
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-			// if(lang.isFunction(cell.lazyData)){
-				// return locale.parse(cell.lazyData(), col.storePattern);
-			// }
 			return locale.parse(storeData, col.storePattern);
 		}
 		return gridData;
@@ -348,21 +320,26 @@ define([
 			var t = this,
 				g = t.grid;
 			if(t.arg('lazy')){
-				// lang.mixin(t.cellMixin, {
-					// setLazyData: function(v){
-						// return this.grid.edit.setLazyData(this.row.id, this.column.id, v);
-					// },
-// 					
-					// lazyData: function(){
-						// var v = this.grid.edit.getLazyData(this.row.id, this.column.id);
-						// if(v !== undefined){
-							// //console.log(v, this.rawData());
-							// return v;														
-						// }
-						// return this.rawData();
-					// }
-				// });
 				t.model.setLazyable(true);
+				var _onSetLazyData = function(rowid, columnid, data){
+					var cell = g.cell(rowid, columnid, 1);
+					g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
+						t.onApply(cell, true, null, true);
+					});
+				};
+				var _onRedoUndo = function(rowid, columnid, data){
+					var cell = g.cell(rowid, columnid, 1),
+						w = cell.widget();
+					var fd = cell.column.def().formatter? cell.column.def().formatter(data) : data;
+					console.log(fd);
+					w.setValue(fd, data)
+					
+					//t._inRedoUndoMode = true;
+					
+				};
+				
+				t.connect(t.model, 'onRedoUndo', _onRedoUndo);
+				t.connect(t.model, 'onSetLazyData', _onSetLazyData);
 			}
 			g.domNode.removeAttribute('aria-readonly');
 			t.connect(g, 'onCellDblClick', '_onUIBegin');
@@ -563,13 +540,6 @@ define([
 						}else if(cell.rawData() === v && !t.arg('lazy')){
 							finish(true);
 						}else{
-							// if(t.arg('lazy') && !t._inCallBackMode){
-								// Deferred.when(t.setLazyData(rowId, colId, v, false), function(){
-									// finish(true);
-								// }, function(e){
-									// finish(false, e);
-								// });
-							// }else{
 								Deferred.when(cell.setRawData(v, t.arg('lazy')), function(){
 									finish(true);
 								}, function(e){
@@ -639,43 +609,6 @@ define([
 			return undefined;
 		},
 
-		setLazyData: function(rowId, colId, value, isRollBack){
-			var t = this,
-				g = t.grid,
-				cache = t.model.byId(rowId),
-				lazyData = t._lazyData[rowId] || {},
-				col = t.grid._columnsById[colId],
-				f = col.field || colId,
-				cell;
-
-			lazyData[f] = value;
-			t._lazyData[rowId] = lazyData;
-			
-			if(!isRollBack){
-				t._addLazyDataChange(rowId, colId, value);
-			}
-			//t._inCallBackMode = false;
-			
-			for(var cid in t.grid._columnsById){
-				var c = t.grid._columnsById[cid],
-					success,
-					e;
-				if(f == c.field){
-					try{
-						cache.data[cid] = c.formatter? c.formatter(lazyData): value;
-						cell = t.grid.cell(rowId, cid, 1); 
-						success = true;
-					}catch(e){
-						success = false;
-					}
-						g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
-							t.onApply(cell, success, e, true);
-						});					
-				}
-			}
-			this._lazyIds[rowId] = 1;
-		},
-		
 		//Events-------------------------------------------------------------------
 		onBegin: function(/* cell */){},
 
@@ -856,28 +789,6 @@ define([
 			}
 		},
 
-		_addLazyDataChange: function(rowid, columnid, value){
-			var lazyData,
-				t = this,
-				f = t.grid._columnsById[columnid].field;
-			var rowLazy = t._lazyDataChangeList[rowid];
-			if(!rowLazy){
-				rowLazy = t._lazyDataChangeList[rowid] = {};
-			}
-			
-			var colLazy = rowLazy[f];
-			if(!colLazy){
-				colLazy = rowLazy[f] = {index: 0, list: [t.grid.cell(rowid, columnid, 1).rawData()]};
-			}
-			if(colLazy.list.length == 5 && colLazy.index == 4){
-				colLazy.list.shift();
-				colLazy.index--;
-			}
-			colLazy.list.splice(colLazy.index + 1, (colLazy.list.length - 1 - colLazy.index), value);
-			// colLazy.index = colLazy.index == 4 ? 4 : colLazy.index + 1;
-		    colLazy.index = colLazy.list.length - 1;
-		},
-		
 		_onUIBegin: function(evt){
 			if(!this.isEditing(evt.rowId, evt.columnId)){
 				this._applyAll();
@@ -992,34 +903,6 @@ define([
 			}
 		},
 		
-		_undoLazyData: function(rowid, columnid){
-			var t = this,
-				lazyRow = t._lazyDataChangeList[rowid],
-				f = t.grid._columnsById[columnid].field;
-			if(lazyRow && lazyRow[f]){
-				if(lazyRow[f].index > 0){
-					t._inCallBackMode = true;
-					var index = --lazyRow[f].index;
-					var value = lazyRow[f].list[index];
-					t.setLazyData(rowid, columnid, value, true);
-				}
-			}
-		},
-		
-		_redoLazyData: function(rowid, columnid){
-			var t = this,
-				lazyRow = t._lazyDataChangeList[rowid],
-				f = t.grid._columnsById[columnid].field;
-			if(lazyRow && lazyRow[f]){
-				if(lazyRow[f].index < 4){
-					t._inCallBackMode = true;
-					var index = ++lazyRow[f].index;
-					var value = lazyRow[f].list[index];
-					t.setLazyData(rowid, columnid, value, true);
-				}
-			}
-		},
-
 		_onKey: function(e){
 			var t = this,
 				g = t.grid,
@@ -1047,15 +930,14 @@ define([
 					});
 				}else if(e.keyCode == 90 && e.ctrlKey){
 					if(editing && t.arg('lazy')){
-						t._undoLazyData(e.rowId, e.columnId);
-						// setTimeout(function(){
-						t._focusEditor(e.rowId, e.columnId, true);
-						// }, 2000);
+						event.stop(e);			//FIX ME, the dijit/form/textbox has its own CTRL+Z event
+												//and will stop the propagation of event
+						t.model.undo(e.rowId, e.columnId);
 					}
 				}else if(e.keyCode == 89 && e.ctrlKey){
 					if(editing && t.arg('lazy')){
-						t._redoLazyData(e.rowId, e.columnId);
-						t._focusEditor(e.rowId, e.columnId, true);
+						t.model.redo(e.rowId, e.columnId);
+						//t._focusEditor(e.rowId, e.columnId, true);
 					}
 										
 				}
@@ -1064,5 +946,6 @@ define([
 				e.stopPropagation();
 			}
 		}
+		
 	});
 });

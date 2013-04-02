@@ -77,12 +77,6 @@ define([
 			this._sortData = [];
 		},
 
-		getAPIPath: function(){
-			return {
-				sort: this
-			};
-		},
-
 		preload: function(args){
 			var t = this;
 			t._sortData = t.arg('initialOrder') || t._sortData;

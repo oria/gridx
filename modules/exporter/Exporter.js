@@ -27,12 +27,6 @@ define([
 	declare(_Module, {
 		name: 'exporter',
 
-		getAPIPath: function(){
-			return {
-				'exporter': this
-			};
-		},
-
 		_export: function(writer, /* __ExportArgs */ args){
 			return exporter(this.grid, writer, args);
 		}

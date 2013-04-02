@@ -152,12 +152,6 @@ define([
 	return declare(_Module, {
 		name: 'focus',
 		
-		getAPIPath: function(){
-			return {
-				focus: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid;

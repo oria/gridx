@@ -70,12 +70,6 @@ define([
 	return declare(_Module, {
 		name: 'menu',
 
-		getAPIPath: function(){
-			return {
-				menu: this 
-			};
-		},
-	
 		constructor: function(){
 			this._menus = {};
 		},

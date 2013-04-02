@@ -214,12 +214,6 @@ define([
 
 		forced: ['view'],
 
-		getAPIPath: function(){
-			return {
-				body: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid,

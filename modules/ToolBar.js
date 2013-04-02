@@ -38,12 +38,6 @@ define([
 			});
 		},
 
-		getAPIPath: function(){
-			return {
-				toolBar: this
-			};
-		},
-
 		preload: function(){
 			this.grid.bar.defs.push(this._def);
 		},

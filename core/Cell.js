@@ -80,7 +80,7 @@ define([
 			if(field){
 				obj[field] = rawData;
 				if(isLazy){
-					return this.model.setLazyData(this.row.id, this.column.id, obj);
+					return this.model.setLazyData(this.row.id, this.column.id, rawData, true);
 				}
 				return this.row.setRawData(obj, isLazy);
 			}

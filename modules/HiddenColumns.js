@@ -68,12 +68,6 @@ define([
 	return declare(_Module, {
 		name: 'hiddenColumns',
 
-		getAPIPath: function(){
-			return {
-				hiddenColumns: this
-			};
-		},
-
 		constructor: function(){
 			this._cols = array.map(this.grid._columns, function(col){
 				return col;

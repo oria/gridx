@@ -38,12 +38,6 @@ define([
 	return declare(_Module, {
 		name: 'hScroller',
 
-		getAPIPath: function(){
-			return {
-				hScroller: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid,

@@ -249,12 +249,6 @@ define([
 
 		modelExtensions: [ClientFilter, Query],
 
-		getAPIPath: function(){
-			return {
-				filter: this
-			};
-		},
-
 		constructor: function(){
 			this.setFilter(this.arg('preCondition'), 1);
 		},
