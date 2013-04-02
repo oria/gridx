@@ -2,7 +2,7 @@ define([
 /*====="../core/Row",=====*/
 /*====="../core/Cell",=====*/
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/json",
@@ -14,7 +14,7 @@ define([
 	"../core/_Module",
 	"dojo/i18n!../nls/Body",
 	"dojo/NodeList-traverse"
-], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, sniff, keys, _Module, nls){
+], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module, nls){
 
 /*=====
 	Row.node = function(){
@@ -295,7 +295,7 @@ define([
 		},
 
 		getRowNode: function(args){
-			if(this.model.isId(args.rowId) && sniff('ie')){
+			if(this.model.isId(args.rowId) && has('ie')){
 				return this._getRowNode(args.rowId);
 			}else{
 				var rowQuery = this._getRowNodeQuery(args);
@@ -313,7 +313,7 @@ define([
 					colId = cols[args.colIndex].id;
 				}
 				var c = " [colid='" + colId + "'].gridxCell";
-				if(t.model.isId(args.rowId) && sniff('ie')){
+				if(t.model.isId(args.rowId) && has('ie')){
 					return query(c, t._getRowNode(args.rowId))[0] || null;
 				}else{
 					return query(r + c, t.domNode)[0] || null;
@@ -459,7 +459,7 @@ define([
 					//If is refresh, try to maintain the scroll top
 					var scrollTop = isRefresh ? n.scrollTop : 0;
 					n.scrollTop = 0;
-					if(sniff('ie')){
+					if(has('ie')){
 						//In IE, setting innerHTML will completely destroy the node,
 						//But CellWidget still need it.
 						while(n.childNodes.length){
@@ -486,7 +486,7 @@ define([
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
-				if(sniff('ie')){
+				if(has('ie')){
 					//In IE, setting innerHTML will completely destroy the node,
 					//But CellWidget still need it.
 					while(n.childNodes.length){
@@ -540,7 +540,7 @@ define([
 		onRender: function(/*start, count*/){
 			//FIX #8746
 			var bn = this.domNode;
-			if(sniff('ie') < 9 && bn.childNodes.length){
+			if(has('ie') < 9 && bn.childNodes.length){
 				query('> gridxLastRow', bn).removeClass('gridxLastRow');
 				domClass.add(bn.lastChild, 'gridxLastRow');
 			}
@@ -713,7 +713,7 @@ define([
 				var s = col.decorator ? col.decorator(data, row.id, visualIndex) : data;
 				r = this._wrapCellData(s, row.id, col.id);
 			}
-			return (r === '' || r === null || r === undefined) && (sniff('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
+			return (r === '' || r === null || r === undefined) && (has('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
 		},
 
 		_wrapCellData: function(cellData, rowId, colId){
@@ -958,7 +958,7 @@ define([
 				t._focusCellCol = colIdx;
 				g.header._focusHeaderId = colId;
 				g.hScroller.scrollToColumn(colId);
-				if(sniff('ie') < 8){
+				if(has('ie') < 8){
 					//In IE7 focus cell node will scroll grid to the left most.
 					//So save the scrollLeft first and then set it back.
 					//FIXME: this still makes the grid body shake, any better solution?

@@ -3,7 +3,7 @@ define([
 	"dojo/_base/array",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
-	"dojo/_base/query",
+	"dojo/query",
 	"./_Base",
 	"../../core/_Module"
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){

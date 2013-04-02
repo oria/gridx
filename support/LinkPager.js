@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/event",
 	"dojo/string",
 	"dojo/dom-class",

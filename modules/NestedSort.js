@@ -3,9 +3,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/connect",
 	"dojo/_base/event",
-	"dojo/_base/query",
-	"dojo/_base/window",
-	"dojo/_base/sniff",
+	"dojo/query",
 	"dojo/string",
 	"dojo/dom-class",
 	"dojo/dom-construct",
@@ -15,7 +13,7 @@ define([
 	"../core/_Module",
 	"../core/model/extensions/Sort",
 	"dojo/i18n!../nls/NestedSort"
-], function(declare, array, connect, event, query, win, sniff, string, domClass, domConstruct, domStyle, domGeometry, keys, _Module, Sort, nls){
+], function(declare, array, connect, event, query, string, domClass, domConstruct, domStyle, domGeometry, keys, _Module, Sort, nls){
 
 /*=====
 	return declare(_Module, {

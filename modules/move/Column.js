@@ -1,7 +1,7 @@
 define([
 /*====="../../core/Column", =====*/
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/keys",
 	"../../core/_Module"

@@ -1,5 +1,4 @@
 define([
-	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
@@ -7,7 +6,7 @@ define([
 	"dojo/on",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojox/html/metrics",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
@@ -26,15 +25,12 @@ define([
 	"./modules/ColumnWidth",
 	"./modules/Focus",
 	"dijit/_BidiSupport"
-], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
+], function(declare, array, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
 
 	var forEach = array.forEach,
 		dummyFunc = function(){};
-
-	function checkContextual(textDir, text){
-	}
 
 	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:

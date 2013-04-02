@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/query",
+	"dojo/query",
 	"./_Base",
 	"../../core/model/extensions/Mark"
 ], function(declare, lang, query, _Base, Mark){
