@@ -54,15 +54,15 @@ define([
 		selectById: function(/*String*/id){
 			// summary:
 			//		Select target column by id
+			if(!this.arg('multiple')){
+				this.clear(id);
+			}
 			this._markById(id, 1);
 		},
 		
 		deselectById: function(/*String*/id){
 			// summary:
 			//		Deselect target column by id
-			if(!this.arg('multiple')){
-				this.clear(id);
-			}
 			this._markById(id, 0);
 		},
 		
