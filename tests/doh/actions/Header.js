@@ -106,14 +106,12 @@ define([
 			return grid.header;
 		},
 		action: function(grid, doh, done, gtest){
-			var ht,hct,
+			var s = '',
 				handle = connect.connect(grid, 'onHeaderClick', function(){
-					ht = new Date().getTime();
-					console.log();
+					s += 'a';
 				}),
 				handle2 = connect.connect(grid, 'onHeaderCellClick', function(){
-					hct = new Date().getTime();
-					console.log();
+					s += 'b';
 				});
 				
 			var cell = query('.gridxCell', grid.header.domNode)[0];
@@ -121,14 +119,14 @@ define([
 				Deferred.when(gtest.emitMouseEvent(cell, 'click'), function(){
 					setTimeout(function(){
 						try{
-							doh.t(hct < ht);
+							doh.is('ba', s, 'header events before header cell events');
 							connect.disconnect(handle);
 							connect.disconnect(handle2);
 							done.callback();
 						}catch(e){
 							done.errback(e);
 						}
-					}, 200);	
+					}, 200);
 				});
 			}
 		}

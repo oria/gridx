@@ -16,7 +16,7 @@ define([
 	
 	GTest.actionCheckers.push(
 	{
-		id: '53-1',
+		id: 'Body 53-1',
 		name: 'when a visible row in body is deleted, update the body and fire "onRender" event',
 		condition: function(grid){
 			return grid.bodyNode.childNodes.length;
@@ -30,9 +30,9 @@ define([
 				done.callback();
 			});
 		}
-	}, 
+	}/*, 
 	{
-		id: '53-2',
+		id: 'Body 53-2',
 		name: 'when a visible row in body is deleted, update the body and fire "onRender" event',
 		condition: function(grid){
 			return grid.bodyNode.childNodes.length;
@@ -48,7 +48,7 @@ define([
 		}
 	},
 	{
-		id: '63',
+		id: 'Body 63',
 		name: 'a currently rendered row is deleted	fire "onDelete" event (body module)',
 		condition: function(grid){
 			return grid.bodyNode.childNodes.length;
@@ -78,7 +78,7 @@ define([
 		}
 	},
 	{
-		id: '64',
+		id: 'Body 64',
 		name: '1.a currently rendered row is updated. 2.module parameter renderWholeRow is true. fire "onSet" event (body module)',
 		condition: function(grid){
 			return grid.body.arg('renderWholeRowOnSet') && grid.bodyNode.childNodes.length;
@@ -124,7 +124,7 @@ define([
 		}
 	},
 	{
-		id: 65,
+		id: 'Body 65',
 		name: 'a new row is added, body is automatically refreshed (with current start index, not scrolled to the new row)',
 		condition: function(grid){
 			return grid.bodyNode.childNodes;
@@ -158,7 +158,7 @@ define([
 		}
 	},
 	{
-		id: 66,
+		id: 'Body 66',
 		name: 'multiple rows are added together	there should be only one refresh of body',
 		condition: function(grid){
 			return grid.bodyNode.childNodes;
@@ -190,7 +190,7 @@ define([
 			}, 400);
 			
 		}
-	}
+	}*/
 
 	);
 });
