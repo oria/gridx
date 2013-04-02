@@ -3,6 +3,19 @@ define([
 	'dojo/_base/lang',
 	'../_Extension'
 ], function(declare, lang, _Extension){
+/*=====
+	Model.setLazyable = function(){};
+	Model.isLazy = function(){};
+	Model.setLazyData = function(){};
+	Model.redo = function(){};
+	Model.undo = function(){};
+	
+	return declare(_Extension, {
+		// Summary:
+		//			Give model the ability of lazy edit.
+	});
+=====*/
+	
 	
 	return declare(_Extension, {
 		name: 'lazy',
@@ -54,7 +67,6 @@ define([
 			
 			t._inRedo = t._inUndo = false;
 			m.onSetLazyData(rowId, colId, value);
-			// for(var i in t.grid)
 		},
 		
 		redo: function(rowid, columnid){
@@ -64,7 +76,7 @@ define([
 				f = t._cache.columns[columnid].field;
 			t._inRedo = true;
 			if(lazyRow && lazyRow[f]){
-				if(lazyRow[f].index < 4){
+				if(lazyRow[f].index < lazyRow[f].list.length - 1){
 					t._inCallBackMode = true;
 					var index = ++lazyRow[f].index;
 					var value = lazyRow[f].list[index];
