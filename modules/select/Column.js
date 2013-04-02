@@ -109,6 +109,9 @@ define([
 		
 		//Public API----------------------------------------------------------------------
 		selectById: function(/*String*/id){
+			if(!this.arg('multiple')){
+				this.clear(id);
+			}
 			this._markById(id, 1);
 		},
 		
