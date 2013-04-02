@@ -84,11 +84,6 @@ define([
 			this.loaded.callback();
 			
 		},
-		getAPIPath: function(){
-			return {
-				dod: this
-			};
-		},
 		rowMixin: {
 			showDetail: function(){
 				this.grid.dod.show(this);

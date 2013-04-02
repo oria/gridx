@@ -60,12 +60,6 @@ define([
 	return declare(_Module, {
 		name: 'hLayout',
 
-		getAPIPath: function(){
-			return {
-				hLayout: this
-			};
-		},
-
 		load: function(args, startup){
 			var t = this;
 			t.connect(t.grid, '_onResizeEnd', function(changeSize, ds){

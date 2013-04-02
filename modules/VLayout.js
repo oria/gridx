@@ -39,12 +39,6 @@ define([
 	return declare(_Module, {
 		name: 'vLayout',
 
-		getAPIPath: function(){
-			return {
-				vLayout: this
-			};
-		},
-
 		preload: function(){
 			var t = this,
 				g = t.grid;

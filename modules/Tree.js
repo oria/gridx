@@ -283,12 +283,6 @@ define([
 
 		forced: ['view'],
 
-		getAPIPath: function(){
-			return {
-				tree: this
-			};
-		},
-
 		preload: function(){
 			var t = this,
 				g = t.grid;

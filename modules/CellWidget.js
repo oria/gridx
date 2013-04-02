@@ -271,12 +271,6 @@ define([
 
 		required: ['navigableCell'],
 
-		getAPIPath: function(){
-			return {
-				cellWidget: this
-			};
-		},
-
 		cellMixin: {
 			widget: function(){
 				return this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);

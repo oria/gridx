@@ -108,14 +108,7 @@ define([
 
 	return _Module.register(
 	declare(_Module, {
-
 		name: 'bar',
-
-		getAPIPath: function(){
-			return {
-				bar: this
-			};
-		},
 
 		constructor: function(){
 			this.defs = [];

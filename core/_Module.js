@@ -205,6 +205,12 @@ var isFunc = lang.isFunction,
 			f(this._sbscs, connect.unsubscribe);
 		},
 
+		getAPIPath: function(){
+			var path = {};
+			path[this.name] = this;
+			return path;
+		},
+
 		arg: function(argName, defaultValue, validate){
 			if(arguments.length == 2 && isFunc(defaultValue)){
 				validate = defaultValue;
