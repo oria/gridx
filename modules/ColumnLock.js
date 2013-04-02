@@ -149,6 +149,7 @@ define([
 				return;
 			}
 			
+			var isHeader = html.hasClass(rowNode, 'gridxHeaderRowInner');
 			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
 			for(i = 0; i < this.count; i++){
@@ -158,7 +159,9 @@ define([
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
 			dojo.style(rowNode.firstChild, 'height', h2 + 'px');
-			var pl = 0, cols = this.grid._columns;
+			var lead = isHeader ? this.grid.hLayout.lead : 0,
+				pl = lead,
+				cols = this.grid._columns;
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i];
 				html.addClass(cell, 'gridxLockedCell');
@@ -168,8 +171,8 @@ define([
 				
 				pl += cell.offsetWidth;
 			}
-			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl + 'px';
-			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + 'px';
+			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl - lead + 'px';
+			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
