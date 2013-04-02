@@ -12,13 +12,8 @@ define([
 		constructor: function(model){
 			var t = this;
 			t._cache = model._cache;
-			// t.clear();
-			t._mixinAPI('setLazyable', 'setLazyData');
+			t._mixinAPI('setLazyable', 'setLazyData', 'isLazy');
 			// t.aspect(model, '_msg', '_receiveMsg');
-			// t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
-			// t.aspect(model, 'setStore', 'clear');
-			// model.onMarkChange = function(){};
-			// model._spTypes = {};
 		},
 		
 		setLazyable: function(isLazy){

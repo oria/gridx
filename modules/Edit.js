@@ -278,36 +278,11 @@ define([
 	return Edit;
 =====*/
 
-	// function getTypeData(col, storeData, gridData, lazyData){
-		// if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-			// if(lazyData !== undefined){
-				// return locale.parse(lazyData, col.storePattern);
-			// }else{
-				// return locale.parse(storeData, col.storePattern);
-			// }
-		// }
-		// return gridData;
-	// }
-// 
-	// function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
-		// var d = locale.parse(rawData[field], parseArgs);
-		// return d ? locale.format(d, formatArgs) : rawData[field];
-	// }
-// 
-	// function getEditorValueSetter(toEditor){
-		// return toEditor && function(gridData, storeData, lazyData, cellWidget){
-			// var editor = cellWidget.gridCellEditField,
-				// cell = cellWidget.cell,
-				// editorArgs = cell.column.editorArgs;
-			// editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, lazyData, cell, editor));
-		// };
-	// }
-	
 	function getTypeData(col, storeData, gridData, cell){
+		
+		console.log('pattern data', arguments);
+		
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-			// if(lang.isFunction(cell.lazyData)){
-				// return locale.parse(cell.lazyData(), col.storePattern);
-			// }
 			return locale.parse(storeData, col.storePattern);
 		}
 		return gridData;
@@ -348,20 +323,6 @@ define([
 			var t = this,
 				g = t.grid;
 			if(t.arg('lazy')){
-				// lang.mixin(t.cellMixin, {
-					// setLazyData: function(v){
-						// return this.grid.edit.setLazyData(this.row.id, this.column.id, v);
-					// },
-// 					
-					// lazyData: function(){
-						// var v = this.grid.edit.getLazyData(this.row.id, this.column.id);
-						// if(v !== undefined){
-							// //console.log(v, this.rawData());
-							// return v;														
-						// }
-						// return this.rawData();
-					// }
-				// });
 				t.model.setLazyable(true);
 			}
 			g.domNode.removeAttribute('aria-readonly');
