@@ -7,7 +7,7 @@ define([
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(/*=====Cell, =====*/declare, array, sniff, domClass, keys, _RowCellBase, _Module){
+], function(/*=====Cell, =====*/declare, array, has, domClass, keys, _RowCellBase, _Module){
 
 /*=====
 	Cell.select = function(){
@@ -166,7 +166,7 @@ define([
 				[g, 'onCellClick', function(e){
 					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 				}],
-				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE){
 						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 					}

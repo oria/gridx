@@ -8,7 +8,7 @@ define([
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
 	"dojo/i18n!../nls/PaginationBar"
-], function(declare, lang, array, sniff, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin, nls){
+], function(declare, lang, array, has, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin, nls){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
@@ -23,7 +23,7 @@ define([
 		constructor: function(args){
 			var t = this;
 			lang.mixin(t, nls);
-			if(sniff('ie')){
+			if(has('ie')){
 				//IE does not support inline-block, so have to set tabIndex
 				var gridTabIndex = args.grid.domNode.getAttribute('tabindex');
 				t._tabIndex = gridTabIndex > 0 ? gridTabIndex : 0;
