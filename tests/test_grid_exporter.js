@@ -1,5 +1,6 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'dojo/_base/array',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
@@ -16,7 +17,7 @@ require([
 	'dijit/ProgressBar',
 	'dijit/Dialog',
 	'dojo/domReady!'
-], function(parser, array, Grid, Cache, dataSource, storeFactory, toCSV, mods, TestPane, registry){
+], function(parser, Deferred, array, Grid, Cache, dataSource, storeFactory, toCSV, mods, TestPane, registry){
 
 	store = storeFactory({
 		path: './support/stores',
@@ -197,7 +198,7 @@ require([
 		'<div id="choosecolumns" style="padding: 5px; display: none;">'
 	];
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		tests = tests.concat(array.map(grid.columns(), function(c){
 			return [
 				'<input id="col-', c.id,

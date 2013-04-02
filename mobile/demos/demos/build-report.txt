@@ -1,0 +1,1587 @@
+Build started: Thu Mar 07 2013 10:27:58 GMT+0800 (中国标准时间)
+Build application version: 1.7.0dev (23930)
+Messages:
+info(100) Assumed module uses legacy loader API.
+	module: dojo/OpenAjax
+	module: dojo/_base/configFirefoxExtension
+	module: dojo/_base/configNode
+	module: dojo/_base/configRhino
+	module: dojo/_base/configSpidermonkey
+	module: dijit/themes/claro/compile
+	module: dojox/jq
+	module: dojox/rails
+	module: dojox/data/ItemExplorer
+	module: dojox/data/restListener
+	module: dojox/data/StoreExplorer
+	module: dojox/data/demos/stores/LazyLoadJSIStore
+	module: dojox/data/demos/widgets/FileView
+	module: dojox/data/demos/widgets/FlickrViewList
+	module: dojox/data/demos/widgets/PicasaView
+	module: dojox/data/demos/widgets/PicasaViewList
+	module: dojox/drawing/plugins/drawing/Silverlight
+	module: dojox/editor/plugins/ResizeTableColumn
+	module: dojox/editor/plugins/SpellCheck
+	module: dojox/flash/_base
+	module: dojox/help/console
+	module: dojox/help/_base
+	module: dojox/image/Gallery
+	module: dojox/image/SlideShow
+	module: dojox/image/ThumbnailPicker
+	module: dojox/jsonPath/query
+	module: dojox/lang/aspect
+	module: dojox/lang/async
+	module: dojox/lang/docs
+	module: dojox/lang/observable
+	module: dojox/lang/typed
+	module: dojox/lang/aspect/cflow
+	module: dojox/lang/aspect/counter
+	module: dojox/lang/aspect/memoizer
+	module: dojox/lang/aspect/memoizerGuard
+	module: dojox/lang/aspect/profiler
+	module: dojox/lang/aspect/timer
+	module: dojox/lang/aspect/tracer
+	module: dojox/lang/async/event
+	module: dojox/lang/async/timeout
+	module: dojox/lang/async/topic
+	module: dojox/lang/functional/binrec
+	module: dojox/lang/functional/curry
+	module: dojox/lang/functional/linrec
+	module: dojox/lang/functional/listcomp
+	module: dojox/lang/functional/multirec
+	module: dojox/lang/functional/numrec
+	module: dojox/lang/functional/tailrec
+	module: dojox/lang/functional/util
+	module: dojox/lang/functional/zip
+	module: dojox/lang/oo/aop
+	module: dojox/lang/oo/Decorator
+	module: dojox/lang/oo/Filter
+	module: dojox/lang/oo/general
+	module: dojox/lang/oo/mixin
+	module: dojox/lang/oo/rearrange
+	module: dojox/layout/BorderContainer
+	module: dojox/layout/dnd/Avatar
+	module: dojox/layout/dnd/PlottedDnd
+	module: dojox/layout/ext-dijit/layout/StackContainer-touch
+	module: dojox/mobile/app/AlertDialog
+	module: dojox/mobile/app/compat
+	module: dojox/mobile/app/ImageThumbView
+	module: dojox/mobile/app/ImageView
+	module: dojox/mobile/app/List
+	module: dojox/mobile/app/ListSelector
+	module: dojox/mobile/app/SceneAssistant
+	module: dojox/mobile/app/SceneController
+	module: dojox/mobile/app/StageController
+	module: dojox/mobile/app/TextBox
+	module: dojox/mobile/app/_base
+	module: dojox/mobile/app/_event
+	module: dojox/mobile/app/_FormWidget
+	module: dojox/mobile/app/_Widget
+	module: dojox/mobile/themes/common/compile
+	module: dojox/robot/recorder
+	module: dojox/secure/capability
+	module: dojox/secure/DOM
+	module: dojox/secure/fromJson
+	module: dojox/secure/sandbox
+	module: dojox/socket/Reconnect
+	module: dojox/sql/_base
+	module: dojox/sql/_crypto
+	module: dojox/storage/AirDBStorageProvider
+	module: dojox/storage/AirEncryptedLocalStorageProvider
+	module: dojox/storage/AirFileStorageProvider
+	module: dojox/storage/BehaviorStorageProvider
+	module: dojox/storage/CookieStorageProvider
+	module: dojox/storage/FlashStorageProvider
+	module: dojox/storage/GearsStorageProvider
+	module: dojox/storage/LocalStorageProvider
+	module: dojox/storage/manager
+	module: dojox/storage/Provider
+	module: dojox/storage/WhatWGStorageProvider
+	module: dojox/storage/_common
+	module: dojox/widget/AnalogGauge
+	module: dojox/widget/BarGauge
+	module: dojox/widget/DataPresentation
+	module: dojox/widget/DocTester
+	module: dojox/widget/DynamicTooltip
+	module: dojox/widget/FeedPortlet
+	module: dojox/widget/FilePicker
+	module: dojox/widget/Iterator
+	module: dojox/widget/Loader
+	module: dojox/widget/RollingList
+	module: dojox/widget/SortList
+	module: dojox/widget/gauge/AnalogArcIndicator
+	module: dojox/widget/gauge/AnalogArrowIndicator
+	module: dojox/widget/gauge/AnalogNeedleIndicator
+	module: dojox/widget/gauge/BarIndicator
+	module: dojox/widget/gauge/_Gauge
+	module: dojox/wire/CompositeWire
+	module: dojox/wire/DataWire
+	module: dojox/wire/TableAdapter
+	module: dojox/wire/TextAdapter
+	module: dojox/wire/TreeAdapter
+	module: dojox/wire/Wire
+	module: dojox/wire/XmlWire
+	module: dojox/wire/_base
+	module: dojox/wire/demos/TableContainer
+	module: dojox/wire/demos/WidgetRepeater
+	module: dojox/wire/ml/Action
+	module: dojox/wire/ml/Data
+	module: dojox/wire/ml/DataStore
+	module: dojox/wire/ml/Invocation
+	module: dojox/wire/ml/JsonHandler
+	module: dojox/wire/ml/RestHandler
+	module: dojox/wire/ml/Service
+	module: dojox/wire/ml/Transfer
+	module: dojox/wire/ml/util
+	module: dojox/wire/ml/XmlHandler
+	module: dojox/xmpp/bosh
+	module: dojox/xmpp/ChatService
+	module: dojox/xmpp/PresenceService
+	module: dojox/xmpp/RosterService
+	module: dojox/xmpp/sasl
+	module: dojox/xmpp/TransportSession
+	module: dojox/xmpp/UserService
+	module: dojox/xmpp/util
+	module: dojox/xmpp/xmppSession
+	module: dojox/xmpp/widget/ChatSession
+info(103) Optimizing module complete.
+	E:/workspace/gridx/mobile/demos/test_basic.js (compile time:14.753s)
+	E:/workspace/gridx/mobile/demos/test_lazy_load.js (compile time:15.08s)
+	E:/workspace/gridx/mobile/demos/test_sort.js (compile time:16.5s)
+	E:/workspace/gridx/mobile/demos/test_large_data.js (compile time:19.36s)
+	E:/workspace/gridx/mobile/demos/test_observe_store.js (compile time:19.363s)
+	E:/workspace/gridx/mobile/demos/test_pull_refresh.js (compile time:4.686s)
+	E:/workspace/gridx/mobile/demos/test_chart.js (compile time:2.373s)
+info(104) Optimizer messages.
+	E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:15.08s)
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1216: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1398: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1726: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:3443: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:7617: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15044: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+					if(self.state == 'ready'){}
+					^
+
+0 error(s), 6 warning(s)
+Done (compile time:4.686s)
+E:/workspace/gridx/mobile/demos/test_large_data.js:
+E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:7680: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.36s)
+E:/workspace/gridx/mobile/demos/test_chart.js:
+E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25576: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25579: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25600: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25604: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25803: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25806: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25827: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25832: WARNING - If this if/for/while really shouldnt have a body, use {}
+					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+					^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25857: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25867: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25890: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25933: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25942: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
+			^
+
+0 error(s), 18 warning(s)
+Done (compile time:2.373s)
+
+info(107) Package Version:
+	package: dojo; version: 1.9.0dev
+	package: dijit; version: 1.8.0dev
+	package: dojox; version: 1.9.0dev
+	package: gridx; version: 1.2.0dev
+warn(203) Module tagged as pure AMD yet it contains legacy loader API applications.
+	module: dojo/dojo
+warn(216) dojo/has plugin resource could not be resolved during build-time.
+	plugin resource id: dojo-firebug?./_firebug/firebug; reference module id: dojo/main
+	plugin resource id: dom-addeventlistener?:./aspect; reference module id: dojo/on
+	plugin resource id: host-browser?dom-addeventlistener?:../on:; reference module id: dojo/request/watch
+	plugin resource id: dojo-parser?:dojo/_base/window; reference module id: dojox/mvc/parserExtension
+	plugin resource id: dojo-mobile-parser?:dojo/parser; reference module id: dojox/mvc/parserExtension
+	plugin resource id: dojo-parser?:dojox/mobile/parser; reference module id: dojox/mvc/parserExtension
+	plugin resource id: touch?dojox/gesture/tap; reference module id: dojox/treemap/DrillDownUp
+warn(224) A plugin dependency was encountered but there was no build-time plugin resolver.
+	module: dojo/request; plugin: dojo/request/default
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/node; plugin: dojo/node
+	module: dojo/request/registry; plugin: dojo/request/default
+	module: dojox/mobile/DatePicker; plugin: dojox/mobile/_PickerChooser
+	module: dojox/mobile/TimePicker; plugin: dojox/mobile/_PickerChooser
+error(307) Failed to evaluate module tagged as pure AMD (fell back to processing with regular expressions).
+	module: dojox/widget/AutoRotator; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/Rotator; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/rotator/Controller; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/rotator/Fade; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/rotator/Pan; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/rotator/PanFade; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/rotator/Slide; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/rotator/ThumbnailController; error: SyntaxError: Unexpected token <<
+	module: dojox/widget/rotator/Wipe; error: SyntaxError: Unexpected token <<
+	module: gridx/mobile/util/build_demos; error: TypeError: Cannot read property 'exec' of undefined
+error(311) Missing dependency.
+	module: dojo/robot; dependency: doh/_browserRunner
+	module: dojo/robot; dependency: doh/robot
+	module: dojo/robotx; dependency: doh/main
+Layer Contents:
+test_basic:
+	test_basic
+	gridx/mobile/tests/test_basic
+	dojo/domReady
+	dojo/has
+	dojo/data/ItemFileReadStore
+	dojo/_base/kernel
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/_base/declare
+	dojo/_base/array
+	dojo/_base/xhr
+	dojo/_base/sniff
+	dojo/io-query
+	dojo/dom
+	dojo/_base/window
+	dojo/dom-form
+	dojo/json
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/when
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	dojo/data/util/filter
+	dojo/data/util/simpleFetch
+	dojo/data/util/sorter
+	dojo/date/stamp
+	dojo/store/Memory
+	dojo/store/util/QueryResults
+	dojo/store/util/SimpleQueryEngine
+	dojo/store/JsonRest
+	dojox/mobile/parser
+	dojo/ready
+	gridx/mobile/tests/support/data
+	dojox/mobile
+	dojox/main
+	dojox/mobile/_base
+	dojox/mobile/common
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/dom-style
+	dojo/mouse
+	dojo/keys
+	dojo/dom-class
+	dojo/dom-construct
+	dojo/dom-attr
+	dojo/dom-prop
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	dojox/mobile/sniff
+	dojox/mobile/uacss
+	dojox/mobile/View
+	dijit/_Contained
+	dijit/_Container
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dojox/mobile/ViewController
+	dojox/mobile/ProgressIndicator
+	dojox/mobile/TransitionEvent
+	dojox/mobile/transition
+	dojox/mobile/viewRegistry
+	dojox/mobile/Heading
+	dojox/mobile/ToolBarButton
+	dojox/mobile/_ItemBase
+	dojo/touch
+	dojox/mobile/iconUtils
+	dojox/mobile/RoundRect
+	dojox/mobile/Container
+	dojox/mobile/Pane
+	dojox/mobile/RoundRectCategory
+	dojox/mobile/EdgeToEdgeCategory
+	dojox/mobile/RoundRectList
+	dojox/mobile/EdgeToEdgeList
+	dojox/mobile/ListItem
+	dojox/mobile/Switch
+	dojox/mobile/compat
+	dojox/mobile/ScrollableView
+	dojox/mobile/_ScrollableMixin
+	dojox/mobile/scrollable
+	dojox/mobile/TabBar
+	dojox/mobile/TabBarButton
+	dojox/mobile/Badge
+	gridx/mobile/Grid
+	dojo/string
+	dojox/mobile/_StoreMixin
+	dojox/mobile/ScrollablePane
+	dojo/i18n
+	gridx/mobile/nls/common
+	dojo/selector/acme
+
+test_chart:
+	test_chart
+	gridx/mobile/tests/test_chart
+	dojo/domReady
+	dojo/has
+	dojo/store/Memory
+	dojo/_base/declare
+	dojo/_base/kernel
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/store/util/QueryResults
+	dojo/_base/array
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/when
+	dojo/store/util/SimpleQueryEngine
+	dojox/mobile/parser
+	dojo/_base/window
+	dojo/ready
+	gridx/mobile/tests/support/data
+	dojox/mobile/compat
+	dojo/_base/sniff
+	dojox/mobile/Heading
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/dom
+	dojo/dom-style
+	dojo/mouse
+	dojo/keys
+	dojo/dom-class
+	dojo/dom-construct
+	dojo/dom-attr
+	dojo/dom-prop
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	dijit/_Contained
+	dijit/_Container
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dojox/mobile/ProgressIndicator
+	dojox/mobile/ToolBarButton
+	dojox/mobile/sniff
+	dojox/mobile/_ItemBase
+	dojo/touch
+	dojox/mobile/TransitionEvent
+	dojox/mobile/transition
+	dojox/mobile/iconUtils
+	dojox/mobile/View
+	dojox/mobile/ViewController
+	dojox/mobile/viewRegistry
+	dojox/mobile/common
+	dojox/mobile/uacss
+	dojox/mobile/ScrollableView
+	dojox/mobile/_ScrollableMixin
+	dojox/mobile/scrollable
+	dojox/mobile/TabBar
+	dojox/mobile/TabBarButton
+	dojox/mobile/Badge
+	gridx/mobile/Grid
+	dojo/string
+	dojox/mobile/_StoreMixin
+	dojox/mobile/Pane
+	dojox/mobile/ScrollablePane
+	dojo/i18n
+	dojo/_base/xhr
+	dojo/io-query
+	dojo/dom-form
+	dojo/json
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	gridx/mobile/nls/common
+	dojox/charting/widget/Chart
+	dojo/query
+	dojo/selector/_loader
+	dojox/charting/Chart
+	dojox/main
+	dojo/_base/Color
+	dojox/charting/Element
+	dojox/gfx
+	dojox/gfx/_base
+	dojox/gfx/renderer
+	dojox/gfx/shape
+	dojox/gfx/matrix
+	dojox/charting/SimpleTheme
+	dojox/lang/utils
+	dojox/gfx/gradutils
+	dojox/charting/Series
+	dojox/charting/axis2d/common
+	dojox/lang/functional
+	dojox/lang/functional/lambda
+	dojox/lang/functional/array
+	dojox/lang/functional/object
+	dojox/lang/functional/fold
+	dojox/lang/functional/reversed
+	dojox/charting/plot2d/Pie
+	dojox/charting/plot2d/Base
+	dojox/charting/plot2d/common
+	dojox/charting/scaler/common
+	dojox/charting/plot2d/_PlotEvents
+	gridx/mobile/tests/support/chart-theme
+	dojox/charting/themes/common
+	dojo/selector/acme
+
+test_large_data:
+	test_large_data
+	gridx/mobile/tests/test_large_data
+	dojo/domReady
+	dojo/has
+	dojo/store/Memory
+	dojo/_base/declare
+	dojo/_base/kernel
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/store/util/QueryResults
+	dojo/_base/array
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/when
+	dojo/store/util/SimpleQueryEngine
+	dojox/mobile/parser
+	dojo/_base/window
+	dojo/ready
+	gridx/mobile/tests/support/data
+	dojox/mobile/Heading
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/dom
+	dojo/dom-style
+	dojo/mouse
+	dojo/_base/sniff
+	dojo/keys
+	dojo/dom-class
+	dojo/dom-construct
+	dojo/dom-attr
+	dojo/dom-prop
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	dijit/_Contained
+	dijit/_Container
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dojox/mobile/ProgressIndicator
+	dojox/mobile/ToolBarButton
+	dojox/mobile/sniff
+	dojox/mobile/_ItemBase
+	dojo/touch
+	dojox/mobile/TransitionEvent
+	dojox/mobile/transition
+	dojox/mobile/iconUtils
+	dojox/mobile/View
+	dojox/mobile/ViewController
+	dojox/mobile/viewRegistry
+	dojox/mobile/common
+	dojox/mobile/uacss
+	dojox/mobile/ScrollableView
+	dojox/mobile/_ScrollableMixin
+	dojox/mobile/scrollable
+	dojox/mobile/TabBar
+	dojox/mobile/TabBarButton
+	dojox/mobile/Badge
+	dojox/mobile/compat
+	gridx/mobile/Grid
+	dojo/string
+	dojox/mobile/_StoreMixin
+	dojox/mobile/Pane
+	dojox/mobile/ScrollablePane
+	dojo/i18n
+	dojo/_base/xhr
+	dojo/io-query
+	dojo/dom-form
+	dojo/json
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	gridx/mobile/nls/common
+	dojo/selector/acme
+
+test_lazy_load:
+	test_lazy_load
+	gridx/mobile/tests/test_lazy_load
+	dojo/_base/declare
+	dojo/_base/kernel
+	dojo/has
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/domReady
+	dojo/store/JsonRest
+	dojo/_base/xhr
+	dojo/_base/sniff
+	dojo/io-query
+	dojo/dom
+	dojo/_base/window
+	dojo/dom-form
+	dojo/json
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/_base/array
+	dojo/when
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	dojo/store/util/QueryResults
+	dojox/mobile/parser
+	dojo/ready
+	gridx/mobile/tests/support/data
+	gridx/mobile/Grid
+	dojo/dom-construct
+	dojo/dom-attr
+	dojo/dom-style
+	dojo/dom-prop
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/mouse
+	dojo/keys
+	dojo/string
+	dojo/dom-class
+	dojox/mobile/_StoreMixin
+	dojox/mobile/Pane
+	dijit/_Contained
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dojox/mobile/ScrollablePane
+	dojox/mobile/_ScrollableMixin
+	dojox/mobile/scrollable
+	dojox/mobile/sniff
+	dojo/i18n
+	gridx/mobile/nls/common
+	gridx/mobile/LazyLoad
+	dojo/query
+	dojo/selector/_loader
+	gridx/mobile/nls/LazyLoad
+	dojox/mobile/Heading
+	dijit/_Container
+	dojox/mobile/ProgressIndicator
+	dojox/mobile/ToolBarButton
+	dojox/mobile/_ItemBase
+	dojo/touch
+	dojox/mobile/TransitionEvent
+	dojox/mobile/transition
+	dojox/mobile/iconUtils
+	dojox/mobile/View
+	dojox/mobile/ViewController
+	dojox/mobile/viewRegistry
+	dojox/mobile/common
+	dojox/mobile/uacss
+	dojox/mobile/ScrollableView
+	dojox/mobile/compat
+	dojox/mobile/TabBar
+	dojox/mobile/TabBarButton
+	dojox/mobile/Badge
+	dojo/selector/acme
+
+test_observe_store:
+	test_observe_store
+	gridx/mobile/tests/test_observe_store
+	dojo/_base/declare
+	dojo/_base/kernel
+	dojo/has
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/_base/array
+	dojo/domReady
+	dojo/store/Memory
+	dojo/store/util/QueryResults
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/when
+	dojo/store/util/SimpleQueryEngine
+	dojo/store/Observable
+	dojox/mobile/parser
+	dojo/_base/window
+	dojo/ready
+	gridx/mobile/Grid
+	dojo/dom-construct
+	dojo/dom
+	dojo/dom-attr
+	dojo/dom-style
+	dojo/dom-prop
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/mouse
+	dojo/_base/sniff
+	dojo/keys
+	dojo/string
+	dojo/dom-class
+	dojox/mobile/_StoreMixin
+	dojox/mobile/Pane
+	dijit/_Contained
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dojox/mobile/ScrollablePane
+	dojox/mobile/_ScrollableMixin
+	dojox/mobile/scrollable
+	dojox/mobile/sniff
+	dojo/i18n
+	dojo/_base/xhr
+	dojo/io-query
+	dojo/dom-form
+	dojo/json
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	gridx/mobile/nls/common
+	gridx/mobile/tests/support/data
+	dojox/mobile/Heading
+	dijit/_Container
+	dojox/mobile/ProgressIndicator
+	dojox/mobile/ToolBarButton
+	dojox/mobile/_ItemBase
+	dojo/touch
+	dojox/mobile/TransitionEvent
+	dojox/mobile/transition
+	dojox/mobile/iconUtils
+	dojox/mobile/View
+	dojox/mobile/ViewController
+	dojox/mobile/viewRegistry
+	dojox/mobile/common
+	dojox/mobile/uacss
+	dojox/mobile/ScrollableView
+	dojox/mobile/compat
+	dojox/mobile/TabBar
+	dojox/mobile/TabBarButton
+	dojox/mobile/Badge
+	dojo/selector/acme
+
+test_pull_refresh:
+	test_pull_refresh
+	gridx/mobile/tests/test_pull_refresh
+	dojo/_base/declare
+	dojo/_base/kernel
+	dojo/has
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/domReady
+	dojo/store/JsonRest
+	dojo/_base/xhr
+	dojo/_base/sniff
+	dojo/io-query
+	dojo/dom
+	dojo/_base/window
+	dojo/dom-form
+	dojo/json
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/_base/array
+	dojo/when
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	dojo/store/util/QueryResults
+	dojox/mobile/parser
+	dojo/ready
+	gridx/mobile/tests/support/data
+	gridx/mobile/Grid
+	dojo/dom-construct
+	dojo/dom-attr
+	dojo/dom-style
+	dojo/dom-prop
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/mouse
+	dojo/keys
+	dojo/string
+	dojo/dom-class
+	dojox/mobile/_StoreMixin
+	dojox/mobile/Pane
+	dijit/_Contained
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dojox/mobile/ScrollablePane
+	dojox/mobile/_ScrollableMixin
+	dojox/mobile/scrollable
+	dojox/mobile/sniff
+	dojo/i18n
+	gridx/mobile/nls/common
+	gridx/mobile/PullRefresh
+	dojo/query
+	dojo/selector/_loader
+	gridx/mobile/nls/PullRefresh
+	gridx/mobile/LazyLoad
+	gridx/mobile/nls/LazyLoad
+	dojox/mobile/Heading
+	dijit/_Container
+	dojox/mobile/ProgressIndicator
+	dojox/mobile/ToolBarButton
+	dojox/mobile/_ItemBase
+	dojo/touch
+	dojox/mobile/TransitionEvent
+	dojox/mobile/transition
+	dojox/mobile/iconUtils
+	dojox/mobile/View
+	dojox/mobile/ViewController
+	dojox/mobile/viewRegistry
+	dojox/mobile/common
+	dojox/mobile/uacss
+	dojox/mobile/ScrollableView
+	dojox/mobile/compat
+	dojox/mobile/TabBar
+	dojox/mobile/TabBarButton
+	dojox/mobile/Badge
+	dojo/selector/acme
+
+test_sort:
+	test_sort
+	gridx/mobile/tests/test_sort
+	dojo/_base/declare
+	dojo/_base/kernel
+	dojo/has
+	dojo/_base/config
+	dojo/_base/lang
+	dojo/sniff
+	dojo/domReady
+	dojo/store/Memory
+	dojo/store/util/QueryResults
+	dojo/_base/array
+	dojo/_base/Deferred
+	dojo/Deferred
+	dojo/errors/CancelError
+	dojo/errors/create
+	dojo/promise/Promise
+	dojo/promise/instrumentation
+	dojo/promise/tracer
+	dojo/Evented
+	dojo/aspect
+	dojo/on
+	dojo/when
+	dojo/store/util/SimpleQueryEngine
+	dojox/mobile/parser
+	dojo/_base/window
+	dojo/ready
+	gridx/mobile/tests/support/data
+	gridx/mobile/Grid
+	dojo/dom-construct
+	dojo/dom
+	dojo/dom-attr
+	dojo/dom-style
+	dojo/dom-prop
+	dojo/_base/connect
+	dojo/topic
+	dojo/_base/event
+	dojo/dom-geometry
+	dojo/mouse
+	dojo/_base/sniff
+	dojo/keys
+	dojo/string
+	dojo/dom-class
+	dojox/mobile/_StoreMixin
+	dojox/mobile/Pane
+	dijit/_Contained
+	dijit/registry
+	dojo/_base/unload
+	dijit/main
+	dijit/_WidgetBase
+	dojo/Stateful
+	dijit/Destroyable
+	dojox/mobile/ScrollablePane
+	dojox/mobile/_ScrollableMixin
+	dojox/mobile/scrollable
+	dojox/mobile/sniff
+	dojo/i18n
+	dojo/_base/xhr
+	dojo/io-query
+	dojo/dom-form
+	dojo/json
+	dojo/_base/json
+	dojo/request/watch
+	dojo/request/util
+	dojo/errors/RequestError
+	dojo/errors/RequestTimeoutError
+	dojo/request/xhr
+	dojo/request/handlers
+	gridx/mobile/nls/common
+	gridx/mobile/Sort
+	dojox/mobile/Heading
+	dijit/_Container
+	dojox/mobile/ProgressIndicator
+	dojox/mobile/ToolBarButton
+	dojox/mobile/_ItemBase
+	dojo/touch
+	dojox/mobile/TransitionEvent
+	dojox/mobile/transition
+	dojox/mobile/iconUtils
+	dojox/mobile/View
+	dojox/mobile/ViewController
+	dojox/mobile/viewRegistry
+	dojox/mobile/common
+	dojox/mobile/uacss
+	dojox/mobile/ScrollableView
+	dojox/mobile/compat
+	dojox/mobile/TabBar
+	dojox/mobile/TabBarButton
+	dojox/mobile/Badge
+	dojo/selector/acme
+
+Optimizer Messages:
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:15.08s)
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1216: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1398: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1726: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:3443: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:7617: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15044: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+					if(self.state == 'ready'){}
+					^
+
+0 error(s), 6 warning(s)
+Done (compile time:4.686s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:15.08s)
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1216: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1398: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1726: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:3443: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:7617: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15044: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+					if(self.state == 'ready'){}
+					^
+
+0 error(s), 6 warning(s)
+Done (compile time:4.686s)
+E:/workspace/gridx/mobile/demos/test_large_data.js:
+E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:7680: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.36s)
+E:/workspace/gridx/mobile/demos/test_chart.js:
+E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25576: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25579: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25600: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25604: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25803: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25806: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25827: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25832: WARNING - If this if/for/while really shouldnt have a body, use {}
+					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+					^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25857: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25867: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25890: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25933: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25942: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
+			^
+
+0 error(s), 18 warning(s)
+Done (compile time:2.373s)
+
+
+Process finished normally
+	errors: 13
+	warnings: 16
+	build time: 29.44 seconds

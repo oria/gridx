@@ -107,6 +107,5 @@ require([
 	];
 	headerGroups5 = [];
 
-	parser.parse().then(function(){
-	});
+	parser.parse();
 });

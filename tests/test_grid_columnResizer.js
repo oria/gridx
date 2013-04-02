@@ -1,12 +1,13 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory){
+], function(parser, Deferred, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -15,7 +16,7 @@ require([
 
 	layout = dataSource.layouts[0];
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		update();
 	});
 });

@@ -148,11 +148,15 @@ define([
 			return this.model.byId(this.id).item;
 		},
 
-		setRawData: function(rawData){
+		setRawData: function(rawData, isLazy){
 			var t = this, 
 				s = t.grid.store,
 				item = t.item(),
 				field, d;
+			// if(isLazy){
+				// t.model.setLazyData(t.id, rawData);
+				// return;
+			// }
 			if(s.setValue){
 				d = new Deferred();
 				try{

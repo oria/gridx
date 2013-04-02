@@ -1,5 +1,6 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
@@ -14,7 +15,7 @@ require([
 	'dijit/form/Button',
 	'dijit/ProgressBar',
 	'dijit/Dialog'
-], function(parser, Grid, Cache, mods, dataSource, storeFactory, TestPane, registry, printer){
+], function(parser, Deferred, Grid, Cache, mods, dataSource, storeFactory, TestPane, registry, printer){
 
 	store = storeFactory({
 		path: './support/stores',
@@ -204,7 +205,7 @@ require([
 		'<div id="columnwidth" style="padding: 5px; display: none;"><table><tbody>'
 	];
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		tests = tests.concat(grid.columns().map(function(c){
 			return [
 				'<tr><td>',
