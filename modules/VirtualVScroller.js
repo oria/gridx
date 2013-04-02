@@ -103,11 +103,11 @@ define([
 			if(node){
 				var offsetTop = node.offsetTop;
 				if(( offsetTop + node.offsetHeight == bst + bn.clientHeight && !toTop ) ||
-				   ( offsetTop == bst && toTop ) ||
-				   ( bst <= offsetTop && offsetTop + node.offsetHeight <= bst + bn.clientHeight ) ){
+					( offsetTop == bst && toTop ) ||
+					( bst <= offsetTop && offsetTop + node.offsetHeight <= bst + bn.clientHeight ) ){
 					finish(true);
 					return;
-				   	
+					
 				}
 				if(offsetTop + node.offsetHeight > bst + bn.clientHeight){
 					dif = offsetTop - bst;
