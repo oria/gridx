@@ -5,7 +5,7 @@ define([
 	"dojo/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
-	"dojo/json",
+	"dojo/_base/json",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
@@ -290,7 +290,7 @@ define([
 
 		compareOnSet: function(v1, v2){
 			return typeof v1 == 'object' && typeof v2 == 'object' ?
-				json.stringify(v1) == json.stringify(v2) :
+				json.toJson(v1) == json.toJson(v2) :
 				v1 === v2;
 		},
 

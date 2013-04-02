@@ -4,7 +4,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/query",
-	"dojo/json",
+	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	'dojo/_base/array',
