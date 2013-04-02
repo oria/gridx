@@ -4,7 +4,7 @@ define([
 	'../GTest'
 ], function(query, array, GTest){
 	GTest.actionCheckers.push({
-		id: 1000,
+		id: 'HiddenColumns 1',
 		name: 'Call grid.hiddenColumns.add(col) to hide column.',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount();
@@ -33,7 +33,7 @@ define([
 			func();
 		}
 	}, {
-		id: 1001,
+		id: 'HiddenColumns 2',
 		name: 'call grid.hiddenColumns.add(colId) to hide column.',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount();
@@ -62,7 +62,7 @@ define([
 			func();
 		}
 	}, {
-		id: 1002,
+		id: 'HiddenColumns 3',
 		name: 'call grid.hiddenColumns.add(col1, col2, col3, ...) to hide multiple columns',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount() > 2;
@@ -83,7 +83,7 @@ define([
 			});
 		}
 	}, {
-		id: 1003,
+		id: 'HiddenColumns 4',
 		name: 'after hiding column, the index of the remaining columns are updated.',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount();
@@ -104,7 +104,7 @@ define([
 			});
 		}
 	}, {
-		id: 1004,
+		id: 'HiddenColumns 5',
 		name: 'when calling grid.hiddenColumns.add(), if given column does not exist, there is no error thrown.',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount();
@@ -136,7 +136,7 @@ define([
 			});
 		}
 	}, {
-		id: 1005,
+		id: 'HiddenColumns 6',
 		name: 'Call grid.hiddenColumns.remove(...) to show previously hidden columns.',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount();
@@ -162,7 +162,7 @@ define([
 			});
 		}
 	}, {
-		id: 1006,
+		id: 'HiddenColumns 7',
 		name: 'Call grid.hiddenColumns.remove(col1, col2, col3) to show multiple columns',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount() > 2;
@@ -192,7 +192,7 @@ define([
 			});
 		}
 	}, {
-		id: 1007,
+		id: 'HiddenColumns 8',
 		name: 'Call grid.hiddenColumns.clear() to show all columns',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount() > 2;
@@ -225,7 +225,7 @@ define([
 			});
 		}
 	}, {
-		id: 1008,
+		id: 'HiddenColumns 9',
 		name: 'Call grid.hiddenColumns.get() to get the IDs of all hidden columns',
 		condition: function(grid){
 			return grid.hiddenColumns && grid.columnCount();

@@ -30,7 +30,7 @@ define([
 				done.callback();
 			});
 		}
-	}/*, 
+	},
 	{
 		id: 'Body 53-2',
 		name: 'when a visible row in body is deleted, update the body and fire "onRender" event',
@@ -190,7 +190,6 @@ define([
 			}, 400);
 			
 		}
-	}*/
-
+	}
 	);
 });

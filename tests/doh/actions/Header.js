@@ -1,12 +1,12 @@
 define([
-      '../GTest',
-      'dojo/_base/Deferred',
-      "dojo/_base/query",
-  	  'dojo/dom-class',
-  	  'dojo/DeferredList',
-  	  'dojo/_base/connect',
-  	  'dojo/promise/all',
-  	  'dojo/on'
+	'../GTest',
+	'dojo/_base/Deferred',
+	"dojo/_base/query",
+	'dojo/dom-class',
+	'dojo/DeferredList',
+	'dojo/_base/connect',
+	'dojo/promise/all',
+	'dojo/on'
 ], function(GTest, Deferred, query, domClass, DeferredList, connect, all, on){
 	var testTriggerEvent = function(grid, doh, done, gtest, target, type, isKey, keyCode){
 		var flag,
@@ -57,7 +57,7 @@ define([
 	
 	GTest.actionCheckers.push(
 	{
-		id: 15,
+		id: 'Header 15',
 		name: "mouse hover on header cell",
 		condition: function(grid){
 			return grid.header && !grid.header.arg('hidden');
@@ -89,7 +89,7 @@ define([
 		}
 	},
 	{
-		id: 16,
+		id: 'Header 16',
 		name: 'mouse over on header row',
 		condition: function(grid){
 			return grid.header;
@@ -100,7 +100,7 @@ define([
 		
 	},
 	{
-		id: 38,
+		id: 'Header 38',
 		name: 'fire header cell events before header events',
 		condition: function(grid){
 			return grid.header;
@@ -132,7 +132,7 @@ define([
 		}
 	},
 	{
-		id: '39/40',
+		id: 'Header 39/40',
 		name: 'header cell gets focus',
 		condition: function(grid){
 			return grid.header;
@@ -152,16 +152,15 @@ define([
 			});				
 			
 			query('.gridxCell', grid.header.domNode).forEach(function(headerCellNode, i){
-				Deferred.when(gtest.emitMouseEvent(headerCellNode, 'mousedown'), function(){
-					try{
-						doh.t(domClass.contains(headerCellNode, 'gridxHeaderCellFocus'));
-						da[i].callback();
-					}
-					catch(e){
-						console.log('error');
-						da[i].errback(e);
-					}
-				});
+				gtest.emitMouseEvent(headerCellNode, 'mousedown');
+				try{
+					doh.t(domClass.contains(headerCellNode, 'gridxHeaderCellFocus'));
+					da[i].callback();
+				}
+				catch(e){
+					console.log('error');
+					da[i].errback(e);
+				}
 			});
 
 		}

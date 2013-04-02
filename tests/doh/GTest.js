@@ -93,30 +93,22 @@ define([
 			this.logNode.appendChild(domConstruct.toDom(str));
 		},
 		
-		// emitMouseEvent: function(target, type/*click, mouseover, mouseout...*/){
-			// var target = typeof target == 'string'? document.getElementById(target) : target;
-			// on.emit(target, type.toLowerCase(), {  
-				// bubbles: true,
-		    	// cancelable: true
-			// })
-		// },
-
-        emitMouseEvent: function(target, type, evt){
-            var target = typeof target == 'string'? document.getElementById(target) : target;
-            if(evt){
-                var nativeEvent = document.createEvent("MouseEvents");
-                nativeEvent.initMouseEvent(type, true, true, window,
-                                           evt.detail, evt.screenX, evt.screenY, evt.clientX, evt.clientY, 
-                                           false, false, false, false, 0, null);
-                                           console.log(nativeEvent);
-                return target.dispatchEvent(nativeEvent) && nativeEvent;
-            }
-            on.emit(target, type.toLowerCase(), {bubbles: true, cancelable: true});
-        },
+		emitMouseEvent: function(target, type, evt){
+			target = typeof target == 'string'? document.getElementById(target) : target;
+			if(evt){
+				var nativeEvent = document.createEvent("MouseEvents");
+				nativeEvent.initMouseEvent(type, true, true, window,
+					evt.detail, evt.screenX, evt.screenY, evt.clientX, evt.clientY,
+					false, false, false, false, 0, null);
+				console.log(nativeEvent);
+				target.dispatchEvent(nativeEvent) && nativeEvent;
+			}
+			on.emit(target, type.toLowerCase(), {bubbles: true, cancelable: true});
+		},
 
 		//emitKey(target, keys.SPACE, false, false, false) to trigger SPACE press event on specific target
 		emitKeyEvent: function(target, type/*keyup, keydown, keypress*/, keyCode, ctrlKeyArg, shiftKeyArg, altKeyArg){
-			var target = typeof target == 'string'? document.getElementById(target) : target;
+			target = typeof target == 'string'? document.getElementById(target) : target;
 			on.emit(target, type, {
 				ctrlKey: ctrlKeyArg, 
 				altKey: altKeyArg, 
@@ -124,7 +116,7 @@ define([
 				charCode: 0,
 				keyCode: keyCode,
 				bubbles: true,
-		    	cancelable: true
+				cancelable: true
 			});
 		},
 		

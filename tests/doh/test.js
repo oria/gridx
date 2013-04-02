@@ -16,7 +16,8 @@ require([
 	//Maximum config package size
 	ei.maxPackSize = 2;
 	//Run all cases or only special cases
-	ei.specialCasesOnly = true;
+//    ei.specialCasesOnly = 0;
+	ei.specialCasesOnly = 1;
 
 
 
