@@ -38,12 +38,6 @@ define([
 	return declare(_Module, {
 		name: 'printer',
 
-		getAPIPath: function(){
-			return {
-				printer: this
-			};
-		},
-	
 		print: function(args){
 			return printer(this.grid, args);
 		},

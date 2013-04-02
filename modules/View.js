@@ -140,12 +140,6 @@ define([
 	return declare(_Module, {
 		name: 'view',
 
-		getAPIPath: function(){
-			return {
-				view: this
-			};
-		},
-
 		load: function(args){
 			var t = this,
 				m = t.model,

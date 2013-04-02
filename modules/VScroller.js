@@ -45,12 +45,6 @@ define([
 
 		optional: ['pagination'],
 	
-		getAPIPath: function(){
-			return {
-				vScroller: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid,

@@ -38,12 +38,6 @@ define([
 
 		forced: ['hLayout'],
 
-		getAPIPath: function(){
-			return {
-				columnWidth: this
-			};
-		},
-
 		constructor: function(){
 			this._init();
 		},

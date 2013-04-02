@@ -99,12 +99,6 @@ define([
 
 		modelExtensions: [Sort],
 		
-		getAPIPath: function(){
-			return {
-				sort: this
-			};
-		},
-
 		preload: function(){
 			var t = this,
 				g = t.grid, sort;

@@ -46,12 +46,6 @@ define([
 	return declare(_Module, {
 		name: 'rowHeader',
 
-		getAPIPath: function(){
-			return {
-				rowHeader: this
-			};
-		},
-
 		constructor: function(){
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',

@@ -29,12 +29,6 @@ define([
 			this.connect(win.doc, 'mousemove', '_onMouseMove');
 		},
 
-		getAPIPath: function(){
-			return {
-				autoScroll: this
-			};
-		},
-	
 		//Public ---------------------------------------------------------------------
 		enabled: false,
 

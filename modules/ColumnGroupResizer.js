@@ -63,12 +63,6 @@ define([
 			t.loaded.callback();
 		},
 
-		getAPIPath: function(){
-			return {
-				columnResizer: this
-			};
-		},
-
 		columnMixin: {
 			setWidth: function(width){
 				this.grid.columnResizer.setWidth(this.id, width);

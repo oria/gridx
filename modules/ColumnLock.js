@@ -82,11 +82,6 @@ define([
 				_this.loaded.callback();
 			});
 		},
-		getAPIPath: function(){
-			return {
-				columnLock: this
-			};
-		},
 		
 		lock: function(/*Integer*/count){
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;

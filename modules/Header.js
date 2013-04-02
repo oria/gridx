@@ -65,12 +65,6 @@ define([
 	return declare(_Module, {
 		name: 'header',
 
-		getAPIPath: function(){
-			return {
-				header: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				dn = t.domNode = domConstruct.create('div', {
