@@ -8,7 +8,7 @@ define([
 	"dojo/_base/sniff",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, array, Deferred, lang, domClass, domGeometry, sniff, _Base, _Module){
+], function(declare, array, Deferred, lang, domClass, domGeometry, has, _Base, _Module){
 
 /*=====
 	return declare(_Base, {
@@ -202,7 +202,7 @@ define([
 					}
 					return ret;
 				};
-			if(!sniff('ff')){
+			if(!has('ff')){
 				//In FF, this conflicts with the overflow:hidden css rule for grid row DIV, which is required by ColumnLock.
 				while(node){
 					if(domClass.contains(node, 'gridxRow')){

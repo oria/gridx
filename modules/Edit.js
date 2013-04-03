@@ -3,7 +3,7 @@ define([
 /*====="../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -18,7 +18,7 @@ define([
 	'dojo/_base/event',
 	"dijit/form/TextBox",
 	"dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, keys, _Module, util, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -720,7 +720,7 @@ define([
 						editor.focus();
 					}
 				};
-			if(sniff('webkit')){
+			if(has('webkit')){
 				func();
 			}else{
 				setTimeout(func, 1);
@@ -891,7 +891,7 @@ define([
 			this._editing = false;
 			var focus = this.grid.focus;
 			if(focus){
-				if(sniff('ie')){
+				if(has('ie')){
 					setTimeout(function(){
 						focus.focusArea('body');
 					}, 1);

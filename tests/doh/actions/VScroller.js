@@ -33,7 +33,7 @@ define([
 				var bn = grid.bodyNode;
 				try{
 					doh.is(bn.scrollHeight - bn.clientHeight, bn.scrollTop);
-					doh.is(grid.body.visualCount - 1, parseInt(bn.lastChild.getAttribute('visualindex'), 10));
+					doh.is(grid.view.visualCount - 1, parseInt(bn.lastChild.getAttribute('visualindex'), 10));
 					var lastRowPos = domGeo.position(bn.lastChild);
 					var bodyPos = domGeo.position(bn);
 					doh.is(bodyPos.y + bodyPos.h, lastRowPos.y + lastRowPos.h);

@@ -9,7 +9,7 @@ define([
 	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"
-], function(declare, lang, array, sniff, event, Deferred, query, keys, VScroller, _Module){
+], function(declare, lang, array, has, event, Deferred, query, keys, VScroller, _Module){
 
 /*=====
 	return declare(VScroller, {
@@ -312,9 +312,9 @@ define([
 			var t = this,
 				h = t._avgRowHeight * t.grid.view.visualCount,
 				maxHeight = 1342177;
-			if(sniff('ff')){
+			if(has('ff')){
 				maxHeight = 17895697;
-			}else if(sniff('webkit')){
+			}else if(has('webkit')){
 				maxHeight = 134217726;
 			}
 			if(h > maxHeight){

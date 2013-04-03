@@ -13,7 +13,7 @@ define([
 	"dojo/dnd/Manager",
 	"../../core/_Module",
 	"../AutoScroll"
-], function(declare, lang, Deferred, domConstruct, domGeometry, domClass, domStyle, dom, win, sniff,
+], function(declare, lang, Deferred, domConstruct, domGeometry, domClass, domStyle, dom, win, has,
 	Source, DndManager, _Module){
 
 /*=====
@@ -64,7 +64,7 @@ define([
 				onDropExternal: hitch(t, '_onDropExternal'),
 				onDropInternal: hitch(t, '_onDropInternal')
 			});
-			if(sniff('ff')){
+			if(has('ff')){
 				t._fixFF(t._source, n);
 			}
 			t._source.grid = t.grid;

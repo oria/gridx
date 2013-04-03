@@ -1,14 +1,14 @@
 define([
 /*====="../../core/Column", =====*/
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(/*=====Column, =====*/declare, query, array, sniff, domClass, keys, _Base, _Module){
+], function(/*=====Column, =====*/declare, query, array, has, domClass, keys, _Base, _Module){
 
 /*=====
 	Column.select = function(){
@@ -159,7 +159,7 @@ define([
 						t._select(e.columnId, g._isCopyEvent(e));
 					}
 				}],
-				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
 						t._select(e.columnId, g._isCopyEvent(e));
 					}
