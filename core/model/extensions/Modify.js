@@ -1,8 +1,9 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
+	'dojo/aspect',
 	'../_Extension'
-], function(declare, lang, _Extension){
+], function(declare, lang, aspect, _Extension){
 /*=====
 	Model.setLazyable = function(){};
 	Model.isLazy = function(){};
@@ -16,9 +17,8 @@ define([
 	});
 =====*/
 	
-	
 	return declare(_Extension, {
-		name: 'lazy',
+		name: 'modify',
 
 		priority: 5,
 		
@@ -28,21 +28,26 @@ define([
 			t._lazyDataChangeList = {};
 			
 			t._cache = model._cache;
-			t._mixinAPI('setLazyable', 'setLazyData', 'isLazy', 'redo', 'undo');
+			t._mixinAPI('setLazyData', 'redo', 'undo');
 			model.onSetLazyData = function(){};
-			model.onRedoUndo = function(){};
-			// t.aspect(model, '_msg', '_receiveMsg');
+			model.onRedo = model.onUndo = function(){};
+			
+			//FIX ME:	force byId() and byIndex() return lazyData.
+			//			Does user need to know what is the real data in the store?
+			aspect.after(model, 'byId', function(_cache){
+				var o = lang.clone(_cache);
+				o.rawData = o.lazyData !== undefined ? o.lazyData : o.rawData;
+				return o;
+			});
+			aspect.after(model, 'byIndex', function(_cache){
+				var o = lang.clone(_cache);
+				o.rawData = o.lazyData !== undefined ? o.lazyData : o.rawData ;
+				return o;
+			});
+			// model.onRedoUndo = function(){};
 		},
 		
-		setLazyable: function(isLazy){
-			this._isLazy = isLazy;
-		},
-		
-		isLazy: function(){
-			return this._isLazy;
-		},
-		
-		setLazyData: function(rowId, colId, value, isFresh){
+		setLazyData: function(rowId, colId, value){
 			var t = this,
 				m = t.model,
 				cols = t._cache.columns;
@@ -80,8 +85,7 @@ define([
 					t._inCallBackMode = true;
 					var index = ++lazyRow[f].index;
 					var value = lazyRow[f].list[index];
-					m.onRedoUndo(rowid, columnid, value);
-					// t.setLazyData(rowid, columnid, value, true);
+					m.onRedo(rowid, columnid, value);
 				}
 			}			
 			
@@ -98,8 +102,7 @@ define([
 					t._inCallBackMode = true;
 					var index = --lazyRow[f].index;
 					var value = lazyRow[f].list[index];
-					m.onRedoUndo(rowid, columnid, value);
-					// t.setLazyData(rowid, columnid, value, true);
+					m.onUndo(rowid, columnid, value);
 				}
 			}	
 		},
@@ -120,13 +123,8 @@ define([
 			if(!colLazy){
 				colLazy = rowLazy[f] = {index: 0, list: [t.model.byId(rowid).rawData[f]]};
 			}
-			if(colLazy.list.length == 5 && colLazy.index == 4){
-				colLazy.list.shift();
-				colLazy.index--;
-			}
 			colLazy.list.splice(colLazy.index + 1, (colLazy.list.length - 1 - colLazy.index), value);
-			// colLazy.index = colLazy.index == 4 ? 4 : colLazy.index + 1;
-			colLazy.index = colLazy.list.length - 1;
+			colLazy.index++;
 		},
 		
 	});
