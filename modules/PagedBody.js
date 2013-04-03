@@ -238,9 +238,13 @@ define([
 							}
 						}
 						m.when(toFetch, function(){
-							var renderedRows = [];
+							var renderedRows = [],
+								scrollHeight = g.bodyNode.scrollHeight;
 							str = t._buildRows(renderStart, renderCount, [], renderedRows);
 							domConstruct.place(str, btnNode, isPost ? 'before' : 'after');
+							if(!isPost){
+								g.bodyNode.scrollTop += g.bodyNode.scrollHeight - scrollHeight;
+							}
 							if(isPost ? view.rootStart + view.rootCount >= totalCount : view.rootStart === 0){
 								t.domNode.removeChild(btnNode);
 							}
@@ -277,7 +281,9 @@ define([
 						node.setAttribute('visualindex', i);
 					});
 					domConstruct.place(btnNode, t.domNode, isPost ? 'last' : 'first');
-					t.grid.vScroller.scrollToRow(view.visualCount - 1);
+					if(!isPost){
+						t.grid.vScroller.scrollToRow(view.visualCount - 1);
+					}
 					onFinish();
 				});
 			}else{
