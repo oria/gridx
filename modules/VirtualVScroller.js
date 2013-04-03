@@ -86,33 +86,40 @@ define([
 				dn = t.domNode,
 				bst = bn.scrollTop,
 				dst = dn.scrollTop,
+				bnHeight = bn.clientHeight,
 				node = query('[visualindex="' + rowVisualIndex + '"]', bn)[0],
 				focus = t.grid.focus,
 				finish = function(success){
-					t._scrolls.splice(array.indexOf(t._scrolls, defer), 1);
-					//since we've changed the focus row index, re-focus it.
-					if(focus && focus.currentArea() == 'body'){
-						focus.focusArea('body', 1);	//1 as true
+					if(success && !node.getAttribute('rowid')){
+						//Row is not loaded yet, so row height might still change.
+						defer.scrollContext = [rowVisualIndex, defer, toTop];
+					}else{
+						t._scrolls.splice(array.indexOf(t._scrolls, defer), 1);
+						//since we've changed the focus row index, re-focus it.
+						if(focus && focus.currentArea() == 'body'){
+							focus.focusArea('body', 1);	//1 as true
+						}
+						t.lazy = t._lazy;
+						//wait for the dom nodes to settle down.
+						setTimeout(function(){
+							defer.callback(success);
+						}, 5);
 					}
-					t.lazy = t._lazy;
-					//wait for the dom nodes to settle down.
-					setTimeout(function(){
-						defer.callback(success);
-					}, 5);
 				};
 			if(node){
 				var offsetTop = node.offsetTop;
-				if(( offsetTop + node.offsetHeight == bst + bn.clientHeight && !toTop ) ||
-					( offsetTop == bst && toTop ) ||
-					( bst <= offsetTop && offsetTop + node.offsetHeight <= bst + bn.clientHeight ) ){
-					finish(true);
-					return;
-					
-				}
-				if(offsetTop + node.offsetHeight > bst + bn.clientHeight){
+				if(node.offsetHeight >= bnHeight){
+					//Special check for rows that are higher than grid body.
+					if(offsetTop == bst){
+						finish(true);
+						return;
+					}else{
+						dif = offsetTop - bst;
+					}
+				}else if(offsetTop + node.offsetHeight > bst + bnHeight){
 					dif = offsetTop - bst;
 					if(!toTop){
-						dif += node.offsetHeight - bn.clientHeight;
+						dif += node.offsetHeight - bnHeight;
 					}
 				}else if(offsetTop < bst || (toTop && offsetTop > bst)){
 					dif = offsetTop - bst;
@@ -131,7 +138,7 @@ define([
 					dif = (rowVisualIndex - idx) * rowHeight;
 				}else{
 					n = bn.lastChild;
-					while(n && n.offsetTop + n.offsetHeight > bst + bn.clientHeight && n != bn.firstChild){
+					while(n && n.offsetTop + n.offsetHeight > bst + bnHeight && n != bn.firstChild){
 						n = n.previousSibling;
 					}
 					idx = n && n.getAttribute('visualindex');
@@ -151,9 +158,9 @@ define([
 			if(istop || isbottom){
 				t._doVirtualScroll(1);
 			}else{
-				dn.scrollTop += dif / t._ratio;
+				dn.scrollTop += dif > bn.offsetHeight ? dif / t._ratio : dif;
 			}
-			if((istop && bn.firstChild.getAttribute('visualindex') == 0) || 
+			if((istop && bn.firstChild.getAttribute('visualindex') == 0) ||
 					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.view.visualCount - 1)){
 				finish(false);
 				return;
@@ -292,9 +299,19 @@ define([
 		},
 	
 		_onBodyChange: function(){
-			this._update();
-			this._doScroll(0, 1);
-			this._doVirtual();
+			var t = this;
+			t._update();
+			t._doScroll(0, 1);
+			t._doVirtual();
+			//If some scrollToRow requests are pending, resume them.
+			array.forEach(t._scrolls, function(d){
+				if(d.scrollContext){
+					//delete scrollContext to avoid firing multiple times.
+					var scrollContext = d.scrollContext;
+					delete d.scrollContext;
+					t._subScrollToRow.apply(t, scrollContext);
+				}
+			});
 		},
 	
 		_onForcedScroll: function(){
