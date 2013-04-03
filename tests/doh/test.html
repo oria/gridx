@@ -29,8 +29,14 @@
 		#caseCounter {
 			padding-left: 10px;
 		}
+		.progress {
+			height: 20px;
+			width: 100%;
+			background-color: #ccc;
+			text-align: center;
+		}
 		#msg {
-			width: 400px;
+			width: 600px;
 			height: 500px;
 			overflow: auto;
 		}
@@ -41,6 +47,7 @@
 		.errMsg {
 			padding: 5px;
 			position: relative;
+			border-bottom: 1px solid blue;
 		}
 		.statusErr {
 			background-color: #ee9900;
@@ -58,9 +65,10 @@
 			float: right;
 			padding: 8px;
 		}
-
+		.afterActionId {
+			background-color: blue;
+		}
 	</style>
-
 	<script type="text/javascript" src="../../../dojo/dojo.js" 
 		data-dojo-config="async: true, isDebug: true"></script>
 	<script type="text/javascript" src='test.js'></script>
@@ -75,6 +83,8 @@
 			<label>Total</label><span id='caseTotal'></span><label>Current</label><span id='caseCounter'></span>
 			<button id='startBtn' onclick='onClickBtn()' disabled>Start</button>
 		</div>
+		<div id='combination' class='progress'></div>
+		<div id='progress' class='progress'></div>
 		<div id='msg'></div>
 	</div>
 </body>

@@ -31,6 +31,7 @@ define([
 			try{
 				t._create().then(function(){
 					if(t.grid()){
+						t._beginProgress();
 						t._testStatus();
 						t._destroy();
 						if(t._errCount){
@@ -155,10 +156,24 @@ define([
 			}
 			dom.byId('gridContainer').innerHTML = '';
 		},
+
+		_beginProgress: function(){
+			this._progress = 0;
+			this._total = GTest.statusCheckers.length + GTest.actionCheckers.length;
+		},
+		_updateProgress: function(){
+			var n = document.getElementById('progress');
+			this._progress++;
+			n.innerHTML = this._progress + '/' + this._total;
+		},
+
 		_testStatus: function(afterAction){
 			var grid = this.grid();
 			var statusCheckers = GTest.statusCheckers;
 			for(var i = 0; i < statusCheckers.length; ++i){
+				if(!afterAction){
+					this._updateProgress();
+				}
 				var item = statusCheckers[i];
 				try{
 					if(!item.condition || item.condition(grid)){
@@ -173,14 +188,19 @@ define([
 				}
 			}
 		},
+
 		_testActions: function(){
 			var d = new Deferred();
 			this._testSingleAction(0, d);
 			return d;
 		},
+
 		_testSingleAction: function(index, d){
 			var t = this;
 			var item = GTest.actionCheckers[index];
+			if(index < GTest.actionCheckers.length){
+				this._updateProgress();
+			}
 			if(item && item.name && item.action){
 				console.debug('Action START: ', item.name);
 				t._create(item.preStartup).then(function(){
@@ -231,8 +251,6 @@ define([
 				d.callback();
 			}
 		}
-
-		
 	});
 
 	GTest.statusCheckers = [];

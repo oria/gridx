@@ -135,7 +135,7 @@ define([
 		id: 'Header 39/40',
 		name: 'header cell gets focus',
 		condition: function(grid){
-			return grid.header;
+			return grid.header && !grid.header.arg('hidden');
 		},
 		action: function(grid, doh, done, gtest){
 			var da = [],
@@ -143,28 +143,23 @@ define([
 			for(var i = 0; i < len; i++){
 				da.push(new Deferred());
 			}
-			
 			all(da).then(function(){
 				done.callback();
 			}, function(e){
 				console.log('done error');
 				done.errback(e);
-			});				
-			
+			});
 			query('.gridxCell', grid.header.domNode).forEach(function(headerCellNode, i){
 				gtest.emitMouseEvent(headerCellNode, 'mousedown');
 				try{
 					doh.t(domClass.contains(headerCellNode, 'gridxHeaderCellFocus'));
 					da[i].callback();
-				}
-				catch(e){
+				}catch(e){
 					console.log('error');
 					da[i].errback(e);
 				}
 			});
-
 		}
 	}
 	);
-
 });

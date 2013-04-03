@@ -32,8 +32,8 @@ define([
 			return grid.autoHeight;
 		},
 		checker: function(grid, doh){
-			doh.is(grid.body.visualCount, grid.body.renderCount);
-			doh.is(grid.body.visualCount, grid.bodyNode.childNodes.length);
+			doh.is(grid.view.visualCount, grid.body.renderCount);
+			doh.is(grid.view.visualCount, grid.bodyNode.childNodes.length);
 			doh.is('none', grid.vScrollerNode.style.display);
 		}
 	}, {
