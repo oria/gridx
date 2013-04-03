@@ -170,6 +170,8 @@ define([
 				t._padBorder = domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w;
 				t._initResizer();
 				t._updateResizer(e);
+				//Only mouse down, not moved yet
+				t._moving = 0;
 			}else{
 				t._ismousedown = 1;
 			}
@@ -210,6 +212,8 @@ define([
 				t._width = (ltr ? left - pos.x : pos.x + pos.w - left) - t._padBorder;
 				//subtract the width of the border so that the resizer appears at center.
 				t._resizer.style.left = (left - t._containerPos.x - 2) + 'px';
+				//Now mouse is moving.
+				t._moving = 1;
 			}
 		},
 
@@ -218,12 +222,15 @@ define([
 			t._ismousedown = 0;
 			if(t._resizing){
 				//end resize
-				t._resizing = 0;
-				t._readyToResize = 0;
+				t._resizing = t._readyToResize = 0;
 				domClass.remove(win.body(), 'gridxColumnResizing');
 				dom.setSelectable(t.grid.domNode, true);
 				win.doc.onselectstart = null;
-				t.setWidth(t._targetCell.getAttribute('colid'), t._width + 'px');
+				//Only change width when mouse moved.
+				if(t._moving){
+					t._moving = 0;
+					t.setWidth(t._targetCell.getAttribute('colid'), t._width + 'px');
+				}
 				t._resizer.style.display = 'none';
 				//If mouse is still in header region, should get ready for next resize operation
 				var x = e.clientX,
