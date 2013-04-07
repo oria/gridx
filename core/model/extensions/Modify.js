@@ -43,7 +43,7 @@ define([
 
 		priority: 5,
 		
-		constructor: function(model){
+		constructor: function(model, args){
 			var t = this;
 			t._globalOptList = {index: -1, list: []};
 			// t._globalOptIndex = -1;
@@ -71,15 +71,86 @@ define([
 			});
 			// model.onRedoUndo = function(){};
 		},
-		
-		add: function(data){
-			//to be continue...
+
+		//Public--------------------------------------------------------------
+
+		set: function(rowId, rawData){
+			// summary:
+			//		Set some fields in a row.
+			//		Can set multiple fields altogether.
+			//		This is one single operation.
+			// rowId: String
+			// rawData: object
+			//		{field1: '...', feild2: '...'}
+			
+			//Fire this.onSet();
 		},
-		
-		remove: function(rowId){
-			//to be continue...
+
+		undo: function(){
+			// summary:
+			//		
+			// returns:
+			//		True if successful, false if nothing to undo.
 		},
-		
+
+		redo: function(){
+			// summary:
+			//		
+			// returns:
+			//		True if successful, false if nothing to redo.
+		},
+
+		clear: function(){
+			// summary:
+			//		Undo all. Clear undo list.
+		},
+
+		save: function(){
+			// summary:
+			//		write to store. Clear undo list.
+			// returns:
+			//		A Deferred object
+		},
+
+		isChanged: function(rowId, field){
+			// summary:
+			//		Check whether a field is changed for the given row.
+			// rowId:
+			// field: String?
+			//		If omitted, checked whether any field of the row is changed.
+			// returns:
+			//		True if it does get changed.
+		},
+
+		getChanged: function(){
+			// summary:
+			//		
+			// returns:
+			//		An array of changed row IDs.
+		},
+
+		onSave: function(){
+			// summary:
+			//		Fired when successfully saved to store.
+		},
+
+		onUndo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully undid.
+		},
+
+		onRedo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully redid.
+		},
+
+		//Private-------------------------------------------------------------------
+		_onSet: function(){
+			//clear
+			//fire onSet
+		},
+
+
 		update: function(rowId, colId, value, oldValue){
 			var op = new Operation(),
 				t = this,
