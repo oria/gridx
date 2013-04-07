@@ -9,7 +9,7 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util"
-], function(declare, array, connect, lang, sniff, win, event, keys, _Module, util){
+], function(declare, array, connect, lang, has, win, event, keys, _Module, util){
 
 /*=====
 	var Focus = declare(_Module, {
@@ -160,7 +160,7 @@ define([
 			t._focusNodes = [];
 			t._onDocFocus = function(evt){
 				if(!t._noBlur){
-					if(sniff('ie')){
+					if(has('ie')){
 						evt.target = evt.srcElement;
 					}
 					t._onFocus(evt);
@@ -171,7 +171,7 @@ define([
 				[g.domNode, 'onfocus', '_focus'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
 				[g, 'onBlur', '_doBlur']);
-			if(sniff('ie')){
+			if(has('ie')){
 				win.doc.attachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.addEventListener('focus', t._onDocFocus, true);
@@ -184,7 +184,7 @@ define([
 			t._areaQueue = null;
 			t._focusNodes = [];
 			t._queueIdx = -1;
-			if(sniff('ie')){
+			if(has('ie')){
 				win.doc.detachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.removeEventListener('focus', t._onDocFocus, true);

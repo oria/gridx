@@ -11,7 +11,7 @@ define([
 	"dojo/keys",
 	"dojo/query",
 	"../core/_Module"
-], function(declare, sniff, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
+], function(declare, has, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
 
 /*=====
 	Column.setWidth = function(width){
@@ -259,7 +259,7 @@ define([
 				if(!t.grid.isLeftToRight()){
 					delta = -delta;
 				}
-				var	w = (sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width')) + delta,
+				var	w = (has('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width')) + delta,
 					minWidth = t.arg('minWidth');
 				if(w < minWidth){
 					w = minWidth;
@@ -313,7 +313,7 @@ define([
 				lx += target.offsetLeft;
 			}
 			//Firefox seems have problem to get offsetX for TH
-			if(sniff('ff') && /th/i.test(target.tagName)){
+			if(has('ff') && /th/i.test(target.tagName)){
 				var ltr = this.grid.isLeftToRight();
 				var scrollLeft = -parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, ltr ? 'marginLeft' : 'marginRight'));
 				if(!ltr){

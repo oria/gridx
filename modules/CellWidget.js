@@ -1,7 +1,7 @@
 define([
 /*====="../core/Cell", =====*/
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
@@ -14,7 +14,7 @@ define([
 	"dijit/_WidgetsInTemplateMixin",
 	"../core/_Module",
 	"./NavigableCell"
-], function(/*=====Cell, =====*/declare, query, array, event, sniff, domClass, keys, 
+], function(/*=====Cell, =====*/declare, query, array, event, has, domClass, keys, 
 	registry, a11y, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, _Module){
 
 /*=====
@@ -409,7 +409,7 @@ define([
 					var cellNode = cell.node();
 					if(cellNode){
 						var cellWidget = t._prepareCellWidget(cell);
-						if(sniff('ie')){
+						if(has('ie')){
 							while(cellNode.childNodes.length){
 								cellNode.removeChild(cellNode.firstChild);
 							}

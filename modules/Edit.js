@@ -3,7 +3,7 @@ define([
 /*====="../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -14,11 +14,11 @@ define([
 	"../core/_Module",
 	"../core/util",
 	"dojo/date/locale",
-	'../core/model/extensions/Lazy',
+	'../core/model/extensions/Modify',
 	'dojo/_base/event',
 	"dijit/form/TextBox",
 	"dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, sniff, array, DeferredList, domClass, keys, _Module, util, locale, Lazy, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, keys, _Module, util, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -304,7 +304,7 @@ define([
 
 		forced: ['cellWidget'],
 		
-		modelExtensions: [Lazy],
+		modelExtensions: [Modify],
 
 		constructor: function(){
 			this._init();
@@ -320,25 +320,23 @@ define([
 			var t = this,
 				g = t.grid;
 			if(t.arg('lazy')){
-				t.model.setLazyable(true);
+				// t.model.setLazyable(true);
 				var _onSetLazyData = function(rowid, columnid, data){
 					var cell = g.cell(rowid, columnid, 1);
 					g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 						t.onApply(cell, true, null, true);
 					});
 				};
-				var _onRedoUndo = function(rowid, columnid, data){
+				var _onRedo = _onUndo = function(rowid, columnid, data){
 					var cell = g.cell(rowid, columnid, 1),
 						w = cell.widget();
 					var fd = cell.column.def().formatter? cell.column.def().formatter(data) : data;
-					console.log(fd);
 					w.setValue(fd, data)
-					
-					//t._inRedoUndoMode = true;
 					
 				};
 				
-				t.connect(t.model, 'onRedoUndo', _onRedoUndo);
+				t.connect(t.model, 'onUndo', _onUndo);
+				t.connect(t.model, 'onRedo', _onRedo);
 				t.connect(t.model, 'onSetLazyData', _onSetLazyData);
 			}
 			g.domNode.removeAttribute('aria-readonly');
@@ -537,16 +535,19 @@ define([
 							}, function(e){
 								finish(false, e);
 							});
-						}else if(cell.rawData() === v && !t.arg('lazy')){
+						}else if(cell.rawData() === v){
 							finish(true);
 						}else{
-								Deferred.when(cell.setRawData(v, t.arg('lazy')), function(){
+							if(t.arg('lazy')){
+								t.model.setLazyData(rowId, colId, v);
+								finish(true);
+							}else{
+								Deferred.when(cell.setRawData(v), function(){
 									finish(true);
 								}, function(e){
 									finish(false, e);
-								});									
-							// }			
-						    t._inCallBackMode = false;		
+								});
+							}
 						}
 					}catch(e){
 						finish(false, e);
@@ -719,7 +720,7 @@ define([
 						editor.focus();
 					}
 				};
-			if(sniff('webkit')){
+			if(has('webkit')){
 				func();
 			}else{
 				setTimeout(func, 1);
@@ -750,17 +751,14 @@ define([
 				props += ', ';
 			}
 			return function(){
-				var a =
-				["<div data-dojo-type='", className, "' ",
-					"data-dojo-attach-point='gridCellEditField' ",
-					"class='gridxCellEditor gridxHasGridCellValue ",
-					useGridData ? "" : "gridxUseStoreData",
-					"' data-dojo-props='",
-					props, constraints,
-					"'></div>"
-				].join('');
-				console.log(a);
-				return a;
+				return ["<div data-dojo-type='", className, "' ",
+						"data-dojo-attach-point='gridCellEditField' ",
+						"class='gridxCellEditor gridxHasGridCellValue ",
+						useGridData ? "" : "gridxUseStoreData",
+						"' data-dojo-props='",
+						props, constraints,
+						"'></div>"
+					].join('');
 			};
 		},
 
@@ -893,7 +891,7 @@ define([
 			this._editing = false;
 			var focus = this.grid.focus;
 			if(focus){
-				if(sniff('ie')){
+				if(has('ie')){
 					setTimeout(function(){
 						focus.focusArea('body');
 					}, 1);
@@ -931,7 +929,7 @@ define([
 				}else if(e.keyCode == 90 && e.ctrlKey){
 					if(editing && t.arg('lazy')){
 						event.stop(e);			//FIX ME, the dijit/form/textbox has its own CTRL+Z event
-												//and will stop the propagation of event
+												//and will stop the propagation of event in FF.
 						t.model.undo(e.rowId, e.columnId);
 					}
 				}else if(e.keyCode == 89 && e.ctrlKey){

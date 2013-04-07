@@ -2,7 +2,7 @@ define([
 /*====="../../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -11,7 +11,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Cell, =====*/declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Cell, =====*/declare, array, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
 	Cell.select = function(){
@@ -254,7 +254,7 @@ define([
 				[g, 'onCellMouseOver', function(e){
 					t._highlight(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex));
 				}],
-				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();
@@ -333,7 +333,7 @@ define([
 					t._highlightSingle(target, 1);	//1 as true
 					//In IE, when setSelectable(false), the onfocusin event will not fire on doc, so the focus border is gone.
 					//So refocus it here.
-					if(sniff('ie')){
+					if(has('ie')){
 						t._focus(target);
 					}
 				}else{

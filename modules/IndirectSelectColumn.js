@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/event",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",

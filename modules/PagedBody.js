@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/dom-construct",
 	"dojo/dom-class",
@@ -9,7 +9,7 @@ define([
 	"./Body",
 	"dojo/i18n!../nls/Body",
 	"dojo/touch"
-], function(declare, query, array, domConstruct, domClass, Deferred, sniff, Body, nls, touch){
+], function(declare, query, array, domConstruct, domClass, Deferred, has, Body, nls, touch){
 
 /*=====
 		//NOT compatible with VirtualVScroller, Pagination,
@@ -139,7 +139,7 @@ define([
 				t.renderStart = start;
 				t.renderCount = count;
 				n.scrollTop = 0;
-				if(sniff('ie')){
+				if(has('ie')){
 					//In IE, setting innerHTML will completely destroy the node,
 					//But CellWidget still need it.
 					while(n.childNodes.length){
@@ -163,7 +163,7 @@ define([
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
-				if(sniff('ie')){
+				if(has('ie')){
 					//In IE, setting innerHTML will completely destroy the node,
 					//But CellWidget still need it.
 					while(n.childNodes.length){
@@ -182,7 +182,7 @@ define([
 		onRender: function(/*start, count*/){
 			//FIX #8746
 			var bn = this.domNode;
-			if(sniff('ie') < 9 && bn.childNodes.length){
+			if(has('ie') < 9 && bn.childNodes.length){
 				query('> gridxLastRow', bn).removeClass('gridxLastRow');
 				if(bn.lastChild !== this._moreNode){
 					domClass.add(bn.lastChild, 'gridxLastRow');
@@ -238,9 +238,13 @@ define([
 							}
 						}
 						m.when(toFetch, function(){
-							var renderedRows = [];
+							var renderedRows = [],
+								scrollHeight = g.bodyNode.scrollHeight;
 							str = t._buildRows(renderStart, renderCount, [], renderedRows);
 							domConstruct.place(str, btnNode, isPost ? 'before' : 'after');
+							if(!isPost){
+								g.bodyNode.scrollTop += g.bodyNode.scrollHeight - scrollHeight;
+							}
 							if(isPost ? view.rootStart + view.rootCount >= totalCount : view.rootStart === 0){
 								t.domNode.removeChild(btnNode);
 							}
@@ -277,7 +281,9 @@ define([
 						node.setAttribute('visualindex', i);
 					});
 					domConstruct.place(btnNode, t.domNode, isPost ? 'last' : 'first');
-					t.grid.vScroller.scrollToRow(view.visualCount - 1);
+					if(!isPost){
+						t.grid.vScroller.scrollToRow(view.visualCount - 1);
+					}
 					onFinish();
 				});
 			}else{

@@ -1,13 +1,11 @@
 define([
-	"dojo/_base/kernel",
 	"dojo/_base/declare",
-	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/on",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojox/html/metrics",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
@@ -26,15 +24,11 @@ define([
 	"./modules/ColumnWidth",
 	"./modules/Focus",
 	"dijit/_BidiSupport"
-], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
+], function(declare, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
 
-	var forEach = array.forEach,
-		dummyFunc = function(){};
-
-	function checkContextual(textDir, text){
-	}
+	var dummyFunc = function(){};
 
 	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
@@ -192,13 +186,13 @@ define([
 		],
 	
 		_initEvents: function(objNames, evtNames){
-			var t = this;
-			forEach(objNames, function(comp){
-				forEach(evtNames, function(event){
-					var evtName = 'on' + comp + event;
-					t[evtName] = t[evtName] || dummyFunc;
-				});
-			});
+			var i = 0, j, comp, evt, evtName;
+			while(comp = objNames[i++]){
+				for(j = 0; evt = evtNames[j++];){
+					evtName = 'on' + comp + evt;
+					this[evtName] = this[evtName] || dummyFunc;
+				}
+			}
 		},
 	
 		_connectEvents: function(node, connector, scope){

@@ -3,13 +3,13 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(/*=====Row, =====*/declare, array, sniff, query, lang, domClass, keys, _RowCellBase, _Module){
+], function(/*=====Row, =====*/declare, array, has, query, lang, domClass, keys, _RowCellBase, _Module){
 
 /*=====
 	Row.select = function(){
@@ -176,7 +176,7 @@ define([
 						t._select(e.rowId, g._isCopyEvent(e));
 					}
 				}],
-				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){

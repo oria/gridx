@@ -6,7 +6,7 @@ define([
 	"dojo/keys",
 	"dijit/a11y",
 	"../core/_Module"
-], function(declare, event, sniff, domClass, keys, a11y, _Module){
+], function(declare, event, has, domClass, keys, a11y, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -54,7 +54,7 @@ define([
 							toFocus.focus();
 						}
 					};
-				if(sniff('webkit')){
+				if(has('webkit')){
 					func();
 				}else{
 					setTimeout(func, 5);
@@ -74,7 +74,7 @@ define([
 					elems = t._navElems,
 					firstElem = elems.lowest || elems.first,
 					lastElem = elems.last || elems.highest || firstElem,
-					target = sniff('ie') ? evt.srcElement : evt.target;
+					target = has('ie') ? evt.srcElement : evt.target;
 				if(target == (step > 0 ? lastElem : firstElem)){
 					event.stop(evt);
 					m.when({id: t._focusRowId}, function(){

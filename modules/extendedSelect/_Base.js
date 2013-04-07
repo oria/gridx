@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/connect",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -9,7 +9,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"../AutoScroll"
-], function(declare, query, connect, Deferred, sniff, win, dom, keys, _Module){
+], function(declare, query, connect, Deferred, has, win, dom, keys, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -238,7 +238,7 @@ define([
 		},
 
 		_fixFF: function(isStart){
-			if(sniff('ff')){
+			if(has('ff')){
 				query('.gridxSortNode', this.grid.headerNode).style('overflow', isStart ? 'visible' : '');
 			}
 		}
