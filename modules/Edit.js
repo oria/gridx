@@ -327,12 +327,24 @@ define([
 						t.onApply(cell, true, null, true);
 					});
 				};
-				var _onRedo = _onUndo = function(rowid, columnid, data){
-					var cell = g.cell(rowid, columnid, 1),
-						w = cell.widget();
-					var fd = cell.column.def().formatter? cell.column.def().formatter(data) : data;
-					w.setValue(fd, data)
-					
+				var _onRedo = _onUndo = function(rowid, columnid, value, isCell){
+					if(isCell){
+						var cell = g.cell(rowid, columnid, 1),
+							w = cell.widget(),
+							obj = {},
+							f = cell.column.def().field;
+						obj[f] = value;
+						data = lang.mixin(lang.clone(cell.row.rawData()), obj);
+											console.log('data is', data);
+
+						var fd = cell.column.def().formatter? cell.column.def().formatter(data) : value;
+						if(cell.isEditing()){
+							w.setValue(fd, value)
+						}else{
+							console.log('undo data', value);
+							t.model.update(rowid, columnid, value, cell.rawData());
+						}
+					}
 				};
 				
 				t.connect(t.model, 'onUndo', _onUndo);
@@ -539,7 +551,7 @@ define([
 							finish(true);
 						}else{
 							if(t.arg('lazy')){
-								t.model.setLazyData(rowId, colId, v);
+								t.model.update(rowId, colId, v, cell.rawData());
 								finish(true);
 							}else{
 								Deferred.when(cell.setRawData(v), function(){
@@ -927,17 +939,27 @@ define([
 						g.focus.focusArea('body');
 					});
 				}else if(e.keyCode == 90 && e.ctrlKey){
+					if(t.arg('lazy')){
+						if(editing){
+							event.stop(e);			//FIX ME, the dijit/form/textbox has its own CTRL+Z event
+													//and will stop the propagation of event in FF.
+							t.model.undo(true, e.rowId, e.columnId);
+						}else{
+							console.log('in lazy');
+							t.model.undo();
+						}
+					}
 					if(editing && t.arg('lazy')){
-						event.stop(e);			//FIX ME, the dijit/form/textbox has its own CTRL+Z event
-												//and will stop the propagation of event in FF.
-						t.model.undo(e.rowId, e.columnId);
 					}
 				}else if(e.keyCode == 89 && e.ctrlKey){
-					if(editing && t.arg('lazy')){
-						t.model.redo(e.rowId, e.columnId);
-						//t._focusEditor(e.rowId, e.columnId, true);
+					if(t.arg('lazy')){
+						if(editing){
+							t.model.redo(true, e.rowId, e.columnId);
+						}else{
+							console.log('in lazy');
+							t.model.redo();
+						}
 					}
-										
 				}
 			}
 			if(t._editing && e.keyCode !== keys.TAB){

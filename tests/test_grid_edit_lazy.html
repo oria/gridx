@@ -20,6 +20,18 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Edit Test
 	</h1>
+	<script type='text/javascript'>
+		function undo(){
+			dijit.byId('grid1').model.undo();
+		}
+		
+		function redo(){
+			dijit.byId('grid1').model.redo();
+		}
+		
+	</script>
+	<button onclick='undo()'>undo</button>
+	<button onclick='redo()'>redo</button>
 	<p>Double click or press ENTER on a cell to edit</p>
 	<h2>Dijit as editor</h2>
 	<div id='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
