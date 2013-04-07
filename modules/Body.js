@@ -218,6 +218,7 @@ define([
 			var t = this,
 				g = t.grid,
 				dn = t.domNode = g.bodyNode;
+			t._cellCls = {};
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
@@ -292,6 +293,33 @@ define([
 			return typeof v1 == 'object' && typeof v2 == 'object' ?
 				json.toJson(v1) == json.toJson(v2) :
 				v1 === v2;
+		},
+
+		addClass: function(rowId, colId, cls){
+			var cellCls = this._cellCls,
+				r = cellCls[rowId] = cellCls[rowId] || {},
+				c = r[colId] = r[colId] || [];
+			if(array.indexOf(c, cls) < 0){
+				c.push(cls);
+				domClass.add(this.getCellNode({
+					rowId: rowId,
+					colId: colId
+				}), cls);
+			}
+		},
+
+		removeClass: function(rowId, colId, cls){
+			var cellCls = this._cellCls,
+				r = cellCls[rowId],
+				c = r && r[colId],
+				idx = c && array.indexOf(c, cls);
+			if(idx >= 0){
+				c.splice(idx, 1);
+				domClass.remove(this.getCellNode({
+					rowId: rowId,
+					colId: colId
+				}), cls);
+			}
 		},
 
 		getRowNode: function(args){
@@ -676,14 +704,16 @@ define([
 					t._wrapCellData(output[row.id], row.id),
 					'</td>');
 			}else{
+				var cellCls = t._cellCls[row.id] || {};
 				for(var i = 0, len = columns.length; i < len; ++i){
 					var col = columns[i],
 						isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
 						cell = g.cell(row, cols && cols[i] || col.id, 1),
-						cls = col._class || '',
+						cls = [col._class || ''],
 						customCls = col['class'],
 						style = g.getTextDirStyle(col.id, rowData[col.id]);
-					cls += (customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '';
+					cls.push((customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '');
+					cls = cls.concat(cellCls[col.id] || []);
 					style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
 					sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
 					if(isPadding){
@@ -692,7 +722,7 @@ define([
 					if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
 						sb.push('gridxCellFocus ');
 					}
-					sb.push(cls,
+					sb.push(cls.join(' '),
 						'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
 						'" style="width:', col.width, ';min-width:', col.width,
 						'; ', style,
