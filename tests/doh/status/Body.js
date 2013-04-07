@@ -7,7 +7,7 @@ define([
 ], function(array, query, domClass, domGeo, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 51,
+		id: 'Body status 51',
 		name: 'if a row is visible (rendered) in body, it is in grid cache',
 		checker: function(grid, doh){
 			array.forEach(grid.bodyNode.childNodes, function(rowNode){
@@ -18,7 +18,7 @@ define([
 			});
 		}
 	}, {
-		id: 54,
+		id: 'Body status 54',
 		name: 'cell must align with column header',
 		checker: function(grid, doh){
 			query('.gridxCell', grid.bodyNode).forEach(function(cellNode){
@@ -34,7 +34,7 @@ define([
 		}
 	}, 
 	{
-		id: '55',
+		id: 'Body status 55',
 		name: '1.a cell is empty.\n2.module parameter "stuffEmptyCell" is true',
 		condition: function(grid){
 			return grid.body.arg('stuffEmptyCell');
@@ -47,7 +47,6 @@ define([
 					var cell = grid.cell(row, col, 1);
 					if(cell.column.decorator)
 						return;
-					
 					if(data[col] === '' || data[col] === null || data[col] == undefined){
 						query('.gridxCell', rowNode).forEach(function(cellNode){
 							if(cellNode.getAttribute('colid') == col){
@@ -57,13 +56,11 @@ define([
 					}
 				}
 				doh.t(row);
-			});			
+			});
 		}
-		
-		
 	},
 	{
-		id: '56/57',
+		id: 'Body status 56/57',
 		name: 'if no data to show, show empty node',
 		condition: function(grid){
 			return !grid.bodyNode.childNodes.length;
@@ -73,7 +70,7 @@ define([
 			doh.t(grid.emptyNode.offsetHeight > 0);
 		}
 	}, {
-		id: 58,
+		id: 'Body status 58',
 		name: 'odd visual index row dom nodes have css class "gridxRowOdd"',
 		checker: function(grid, doh){
 			var rowNodes = grid.bodyNode.childNodes;
@@ -88,7 +85,7 @@ define([
 		}
 	},
 	{
-		id: '60/61',
+		id: 'Body status 60/61',
 		name: '"class" property is provided as string in column definition\n"class" property is provided as function in column definition',
 		checker: function(grid, doh){
 			var l = [];
@@ -110,7 +107,7 @@ define([
 		}
 	},
 	{
-		id: '62/63',
+		id: 'Body status 62/63',
 		name: '"style" property is provided as string in column definition\n"style" property is provided as function in column definition',
 		checker: function(grid, doh){
 			var l = [];
@@ -119,7 +116,6 @@ define([
 					l.push(i);
 				}
 			});
-
 			array.forEach(grid.bodyNode.childNodes, function(node){
 				var cells = query('.gridxCell', node);
 				array.forEach(l, function(i){
@@ -135,7 +131,7 @@ define([
 		}
 	},	
 	{
-		id: 67,
+		id: 'Body status 67',
 		name: '1.module parameter "rowHoverEffect" is false. 2.mouse hover a row there\'s no row hover effect',
 		condition: function(grid){
 			return !grid.body.arg('rowHoverEffect');
@@ -146,7 +142,7 @@ define([
 		}
 	},	
 	{
-		id: 68,
+		id: 'Body status 68',
 		name: '1.module parameter "rowHoverEffect" is true. 2.mouse hover a row	show row hover effect',
 		condition: function(grid){
 			return grid.body.arg('rowHoverEffect');
@@ -157,7 +153,7 @@ define([
 		}
 	},		
 	{
-		id: 505,
+		id: 'Body status 505',
 		name: 'visualindex property of every row increase by 1 compared to the previous row',
 		checker: function(grid, doh){
 			var rowNodes = grid.bodyNode.childNodes;

@@ -135,14 +135,12 @@ define([
 					t = 'refresh';
 				}),
 				oldRenderStart = grid.body.renderStart;
-			
 			if(grid.store.add){
 				grid.store.add(getNewItem());
 			}
 			if(grid.store.newItem){
 				grid.store.newItem(getNewItem());
 			}
-
 			setTimeout(function(){
 				try{
 					doh.is(t, 'refresh');
@@ -153,8 +151,7 @@ define([
 				}finally{
 					connect.disconnect(handler);
 				}
-			}, 400);
-			
+			}, 1000);
 		}
 	},
 	{
@@ -187,7 +184,7 @@ define([
 				}finally{
 					connect.disconnect(handler);
 				}
-			}, 400);
+			}, 1000);
 			
 		}
 	}

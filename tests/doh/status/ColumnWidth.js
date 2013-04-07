@@ -5,7 +5,7 @@ define([
 ], function(array, query, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 130,
+		id: 'ColumnWidth status 130',
 		name: 'module parameter "autoResize" is false (default)	fixed column width (non auto non percentage) is set directly to cell',
 		condition: function(grid){
 			return !grid.columnWidth.arg('autoResize');
@@ -20,7 +20,7 @@ define([
 		
 	},
 	{
-		id: 131,
+		id: 'ColumnWidth status 131',
 		name: 'module parameter "autoResize" is false (default)	percentage column width is transfered into px width (body width is 100%) and set to the cell',
 		condition: function(grid){
 			var bol = array.some(grid.structure, function(column){
@@ -37,7 +37,7 @@ define([
 		}
 	},
 	{
-		id: 132,
+		id: 'ColumnWidth status 132',
 		name: '1.module parameter "autoResize" is false (default). 2.grid parameter "autoWidth" is false. 3.the sum of fixed columns width and percentage columns width < body width, auto width columns equally share the remaining width',
 		condition: function(grid){
 			var noneAutoWidth = [],
@@ -81,7 +81,7 @@ define([
 		}
 	},
 	{
-		id: 133,
+		id: 'ColumnWidth status 133',
 		name: '1.module parameter "autoResize" is false (default). 2.grid parameter "autoWidth" is false. 3.the sum of fixed columns width and percentage columns width >= body width	auto width columns use "default" width (module parameter)',
 		condition: function(grid){
 			var noneAutoWidth = [],

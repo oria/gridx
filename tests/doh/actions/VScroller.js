@@ -45,29 +45,28 @@ define([
 		}
 
 	},
-	{
-	    id: 109,
-	    name: 'mouse wheel scrolling over or dragging vertical scroll bar, scroll the body content accordingly',
-	    condition: function(grid){
-	        return grid.vScrollerNode.style.display !== 'none';
-	    },
-	    action: function(grid, doh, done, gtest){
-            var evt = grid.vScrollerNode.scrollTop == 0 ? {detail: 3} : {detail: -3},
-                initSt = grid.vScrollerNode.scrollTop,
-                initBnSt = grid.bodyNode.scrollTop;
-            gtest.emitMouseEvent(grid.vScrollerNode.firstChild, 'DOMMouseScroll', evt);
-            setTimeout(function(){
-                try{
-                    console.log(initSt, grid.vScrollerNode.scrollTop);
-                    doh.t(initSt !== grid.vScrollerNode.scrollTop);
-                    doh.t(initBnSt !== grid.bodyNode.scrollTop);
-                   done.callback();
-                }catch(e){
-                   done.errback(e);
-                }
-            }, 200);	        
-	    }
-	},
+	/*{
+		id: 109,
+		name: 'mouse wheel scrolling over or dragging vertical scroll bar, scroll the body content accordingly',
+		condition: function(grid){
+			return grid.vScrollerNode.style.display !== 'none';
+		},
+		action: function(grid, doh, done, gtest){
+			var evt = grid.vScrollerNode.scrollTop == 0 ? {detail: 3} : {detail: -3},
+				initSt = grid.vScrollerNode.scrollTop,
+				initBnSt = grid.bodyNode.scrollTop;
+			gtest.emitMouseEvent(grid.vScrollerNode.firstChild, 'DOMMouseScroll', evt);
+			setTimeout(function(){
+				try{
+					doh.t(initSt !== grid.vScrollerNode.scrollTop, 'vscroller scrolltop');
+					doh.t(initBnSt !== grid.bodyNode.scrollTop, 'bodyNode scroll top');
+				   done.callback();
+				}catch(e){
+				   done.errback(e);
+				}
+			}, 200);	        
+		}
+	},*/
 	{
 	    id: 112,
 	    name: 'mouse wheel scrolling over grid.bodyNode, scroll the body content and the scroll bar together',

@@ -22,21 +22,27 @@ define([
 	'gridx/tests/doh/status/HScroller',
 	'gridx/tests/doh/status/VLayout',
 
-	'gridx/tests/doh/actions/HiddenColumns',
-	'gridx/tests/doh/actions/VScroller',
-	'gridx/tests/doh/actions/Header',
-	'gridx/tests/doh/actions/Body',
-	'gridx/tests/doh/actions/HScroller',
+//    'gridx/tests/doh/actions/HiddenColumns',
+//    'gridx/tests/doh/actions/VScroller',
+//    'gridx/tests/doh/actions/Header',
+//    'gridx/tests/doh/actions/Body',
+//    'gridx/tests/doh/actions/HScroller',
 
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async'
 ], function(lang, memoryFactory, IFWSFactory, dataSource, modules){
 
 	//Config Begin-------------------------------------------------------
+	//Minimal config package size
+	var minPackSize = 1;
+	//Maximum config package size
+	var maxPackSize = 1;
+	//Run all cases or only special cases
+	var specialCasesOnly = 0;
 
 	var specialCases = [
 //        ['VirtualVScroller', 'ColumnResizer', 'HiddenColumns']
-		['ColumnLock', 'RowHeader']
+//        ['ColumnLock', 'RowHeader']
 	];
 
 	//module config => interface name
@@ -250,16 +256,14 @@ define([
 	var asyncStores = [
 		IFWSFactory({
 			isAsync: 1,
+			asyncTimeout: 50,
 			dataSource: dataSource,
 			size: 10
 		})
 	];
 
 	var layouts = [
-		[
-			{id: 'id', field: 'id', name: 'Identity'}
-		],
-		[
+		/*[
 			{id: 'id', field: 'id', name: 'Identity', 'class': 'Identity', style: 'font-size: 13px'}
 		],
 		[
@@ -277,7 +281,7 @@ define([
 			{id: 'date', field: 'date', name: 'Date', width: 'auto', dataType: 'date'},
 			{id: 'time', field: 'time', name: 'Time', width: '20%', dataType: 'time'},
 			{id: 'bool', field: 'bool', name: 'Boolean', dataType: 'boolean'}
-		],
+		],*/
 		[//cell widgets
 			{id: 'id', field: "id", name:"Index", width: '50px'},
 			{id: 'number', field: "number", name:"Progress", dataType:'number',
@@ -405,6 +409,9 @@ define([
 	}
 
 	return {
+		minPackSize: minPackSize,
+		maxPackSize: maxPackSize,
+		specialCasesOnly: specialCasesOnly,
 		syncCacheClasses: syncCaches,
 		asyncCacheClasses: asyncCaches,
 		syncStores: syncStores,

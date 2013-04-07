@@ -24,7 +24,7 @@ define([
 =====*/
 
 	return declare(_Extension, {
-		name: 'move',
+		name: 'mark',
 
 		priority: 5,
 		

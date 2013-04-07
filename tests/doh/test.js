@@ -12,15 +12,11 @@ require([
 	var ei = new EnumIterator(config);
 
 	//Minimal config package size
-	ei.minPackSize = 2;
+	ei.minPackSize = config.minPackSize;
 	//Maximum config package size
-	ei.maxPackSize = 2;
+	ei.maxPackSize = config.maxPackSize;
 	//Run all cases or only special cases
-//    ei.specialCasesOnly = 0;
-	ei.specialCasesOnly = 1;
-
-
-
+	ei.specialCasesOnly = config.specialCasesOnly;
 
 	//-----------------------------------------------------------------------------
 	var tsIndex = 1;
@@ -51,6 +47,13 @@ require([
 		}
 	};
 
+	beginProgress = function(total){
+	};
+	updateProgress = function(progress, total){
+		var n = document.getElementById('combination');
+		n.innerHTML = progress + '/' + total;
+	};
+
 	runTest = function(){
 		if(runTest.paused){
 			return;
@@ -62,6 +65,11 @@ require([
 			doh._testCount = 0;
 			var cases = [];
 			var key = args.join(',');
+			var total = config.structures.length *
+				(config.syncCacheClasses.length * config.syncStores.length +
+				 config.asyncCacheClasses.length * config.asyncStores.length);
+			beginProgress(total);
+			var p = 0;
 			var registerCase = function(cacheClass, store, structure, name){
 				var cfg = {
 					cacheClass: cacheClass,
@@ -77,6 +85,7 @@ require([
 					timeout: 120000,
 					runTest: function(t){
 						var d = new doh.Deferred();
+						updateProgress(++p, total);
 						try{
 							gtest.test(cfg, t, d, name);
 						}catch(e){

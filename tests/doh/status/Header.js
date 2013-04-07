@@ -2,7 +2,7 @@ define([
 	'dojo/_base/query',
 	'../GTest'
 ], function(query, GTest){
-	GTest.statusCheckers.push({
+	GTest.statusCheckers.push(/*{
 		id: 11,
 		name: "column header cells show the \"name\" property of column definition",
 		checker: function(grid, doh){
@@ -15,7 +15,7 @@ define([
 				}
 			});
 		}
-	},	{
+	},	*/{
 		id: 12,
 		name: 'if headerHidden is true, header height is 0',
 		condition: function(grid){
