@@ -54,8 +54,8 @@ define([
 			this._canMark = {};
 		},
 
-		setMarkable: function(type, func){
-			this._canMark[type] = func;
+		setMarkable: function(func, type){
+			this._canMark[this._initMark(type)] = func;
 		},
 
 		clearMark: function(type){
