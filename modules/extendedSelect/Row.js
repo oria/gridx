@@ -201,6 +201,9 @@ define([
 							g.body._focusCellCol = e.columnIndex;
 						}
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
 					}
 				}],
 				[g, 'onRowMouseOver', function(e){

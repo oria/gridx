@@ -192,6 +192,9 @@ define([
 				[g, 'onHeaderCellMouseDown', function(e){
 					if(mouse.isLeft(e) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
 						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
 					}
 				}],
 				[g, 'onHeaderCellMouseOver', function(e){
