@@ -158,7 +158,18 @@ define([
 			if(istop || isbottom){
 				t._doVirtualScroll(1);
 			}else{
-				dn.scrollTop += dif > bn.offsetHeight ? dif / t._ratio : dif;
+				var oldScrollTop = dn.scrollTop,
+					scrollTop = oldScrollTop + (dif > bn.offsetHeight ? dif / t._ratio : dif);
+				//If scrollTop to too big, the browser will scroll it back to top, so add extra check here.
+				if(scrollTop > dn.scrollHeight){
+					scrollTop = dn.scrollHeight;
+				}
+				dn.scrollTop = scrollTop;
+				//If scrolling has no effect, we are already at the edge and no luck.
+				if(dn.scrollTop == oldScrollTop){
+					finish(false);
+					return;
+				}
 			}
 			if((istop && bn.firstChild.getAttribute('visualindex') == 0) ||
 					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.view.visualCount - 1)){
@@ -184,7 +195,8 @@ define([
 			var t = this,
 				dn = t.domNode,
 				a = dn.scrollTop,
-				deltaT = a - (t._lastScrollTop || 0);
+				deltaT = a - (t._lastScrollTop || 0),
+				neighborhood = 2;
 	
 			if(forced || deltaT){
 				t._lastScrollTop = a;
@@ -236,15 +248,15 @@ define([
 					pos = "clear";
 				}else if(firstRow){
 					//The body and the scroller bar may be mis-matched, so force to sync here.
-					if(a === 0){
+					if(a <= neighborhood){
 						var firstRowIndex = body.renderStart;
 						if(firstRowIndex > visualStart){
 							start = visualStart;
 							end = firstRowIndex;
 							pos = "top";
 //                            console.debug("Recover top", end - start);
-						}	
-					}else if(a === scrollRange){
+						}
+					}else if(Math.abs(a - scrollRange) <= neighborhood){
 						var lastRowIndex = body.renderStart + body.renderCount - 1;
 						if(lastRowIndex < visualEnd - 1){
 							start = lastRowIndex + 1;
@@ -268,9 +280,10 @@ define([
 					}
 				}
 				//Ensure the position when user scrolls to end points
-				if(a === 0){
+				if(a <= neighborhood){
 					bn.scrollTop = 0;
-				}else if(a >= scrollRange){//Have to use >=, because with huge store, a will sometimes be > scrollRange
+				}else if(Math.abs(a - scrollRange) <= neighborhood || a > scrollRange){
+					//Have to use >=, because with huge store, a will sometimes be > scrollRange
 					bn.scrollTop = bn.scrollHeight;
 				}else if(pos != "clear"){
 					bn.scrollTop += deltaT;
