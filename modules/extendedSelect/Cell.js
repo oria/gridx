@@ -249,6 +249,9 @@ define([
 				[g, 'onCellMouseDown', function(e){
 					if(mouse.isLeft(e)){
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
 					}
 				}],
 				[g, 'onCellMouseOver', function(e){

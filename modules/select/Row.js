@@ -164,7 +164,7 @@ define([
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			
-			t.model.setMarkable('select', lang.hitch(t, 'isSelectable'));
+			t.model.setMarkable(lang.hitch(t, 'isSelectable'));
 
 			t.batchConnect(
 				[g, 'onRowClick', function(e){

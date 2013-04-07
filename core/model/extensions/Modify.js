@@ -13,22 +13,47 @@ define([
 	
 	return declare(_Extension, {
 		// Summary:
-		//			Give model the ability of lazy edit.
+		//			Enable model to add, delete update row data without affecting the store.
+		//			It's like a data modifier.
 	});
 =====*/
+	var Operation = declare([], {
+		
+		constructor: function(){
+			this.opType = {
+				0: 'update',
+				1: 'add',
+				2: 'remove'
+			}
+		},
+		
+		type: '',
+		
+		rowId: null,
+		
+		columnId: null,
+		
+		value: null,
+		
+		_oldValue: null
+	});
 	
 	return declare(_Extension, {
 		name: 'modify',
 
 		priority: 5,
 		
-		constructor: function(model){
+		constructor: function(model, args){
 			var t = this;
+			t._globalOptList = {index: -1, list: []};
+			// t._globalOptIndex = -1;
+			t._cellOptList = {};
+			
 			t._lazyData = {};
 			t._lazyDataChangeList = {};
 			
 			t._cache = model._cache;
-			t._mixinAPI('setLazyData', 'redo', 'undo');
+			t._mixinAPI('update', 'redo', 'undo');
 			model.onSetLazyData = function(){};
 			model.onRedo = model.onUndo = function(){};
 			
@@ -46,8 +71,176 @@ define([
 			});
 			// model.onRedoUndo = function(){};
 		},
+
+		//Public--------------------------------------------------------------
+
+		set: function(rowId, rawData){
+			// summary:
+			//		Set some fields in a row.
+			//		Can set multiple fields altogether.
+			//		This is one single operation.
+			// rowId: String
+			// rawData: object
+			//		{field1: '...', feild2: '...'}
+			
+			//Fire this.onSet();
+		},
+
+		undo: function(){
+			// summary:
+			//		
+			// returns:
+			//		True if successful, false if nothing to undo.
+		},
+
+		redo: function(){
+			// summary:
+			//		
+			// returns:
+			//		True if successful, false if nothing to redo.
+		},
+
+		clear: function(){
+			// summary:
+			//		Undo all. Clear undo list.
+		},
+
+		save: function(){
+			// summary:
+			//		write to store. Clear undo list.
+			// returns:
+			//		A Deferred object
+		},
+
+		isChanged: function(rowId, field){
+			// summary:
+			//		Check whether a field is changed for the given row.
+			// rowId:
+			// field: String?
+			//		If omitted, checked whether any field of the row is changed.
+			// returns:
+			//		True if it does get changed.
+		},
+
+		getChanged: function(){
+			// summary:
+			//		
+			// returns:
+			//		An array of changed row IDs.
+		},
+
+		onSave: function(){
+			// summary:
+			//		Fired when successfully saved to store.
+		},
+
+		onUndo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully undid.
+		},
+
+		onRedo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully redid.
+		},
+
+		//Private-------------------------------------------------------------------
+		_onSet: function(){
+			//clear
+			//fire onSet
+		},
+
+
+		update: function(rowId, colId, value, oldValue){
+			var op = new Operation(),
+				t = this,
+				list = t._globalOptList.list,
+				index = t._globalOptList.index;
+			op.type = 0;
+			op.rowId = rowId;
+			op.columnId = colId;
+			op.value = value;
+			op._oldValue = oldValue;
+			
+			if(!t._inRedo && !t._inUndo){	//if undo or redo, not add to operation list
+				list.splice(index + 1, (list.length - 1 - index), op);
+				t._globalOptList.index++;
+				t._addCellOpt(rowId, colId, op);
+			}	
+			t._setLazyData(rowId, colId, value, oldValue);
+		},
 		
-		setLazyData: function(rowId, colId, value){
+		redo: function(inCell, rowId, colId){
+			var t = this;
+			if(!inCell){
+				var opt = t._globalOptList.list[t._globalOptList.index + 1];
+				if(opt){
+					t._globalOptList.index++;
+					t._redo(opt);
+				}
+			}else{
+				var f = t._cache.columns[colId].field,
+					optList = t._cellOptList[rowId]? t._cellOptList[rowId][f] : undefined;
+				if(optList){
+					var opt = optList.list[optList.index + 1];
+					if(opt){
+						optList.index++;
+						t._redo(opt);
+					}
+				}
+			}
+		},
+		
+		undo: function(inCell, rowId, colId){
+			var t = this;
+			if(!inCell){
+				var opt = t._globalOptList.list[t._globalOptList.index];
+				if(opt){
+					t._globalOptList.index--;
+					t._undo(opt);
+				}
+			}else{
+				var f = t._cache.columns[colId].field,
+					optList = t._cellOptList[rowId]? t._cellOptList[rowId][f] : undefined;
+				if(optList){
+					var opt = optList.list[optList.index];
+					if(opt){
+						optList.index--;
+						t._undo(opt);
+					}
+				}
+			}
+		},
+		
+		save: function(){
+			
+		},
+		
+		clear: function(){
+			
+		},
+		//private	----------------------------------------------------------------------
+		_isLazy: false,
+		
+		_addCellOpt: function(rowId, colId, opt){
+			var optList,
+				t = this,
+				f = t._cache.columns[colId].field;
+			if(!t._cellOptList[rowId]){
+				t._cellOptList[rowId] = {};
+			}
+			if(!t._cellOptList[rowId][f]){
+				t._cellOptList[rowId][f] = {
+					index: -1,
+					list: []
+				};
+			}
+			optList = t._cellOptList[rowId][f];
+			optList.list.splice(optList.index + 1, (optList.list.length - 1 - optList.index), opt);
+			optList.index++;
+		},
+		
+		_setLazyData: function(rowId, colId, value){
 			var t = this,
 				m = t.model,
 				cols = t._cache.columns;
@@ -55,9 +248,9 @@ define([
 				c = t._cache._cache[rowId],
 				obj = {};
 			
-			if(!t._inRedo && !t._inUndo){
-				t._addLazyDataChange(rowId, colId, value);
-			}	
+			// if(!t._inRedo && !t._inUndo){
+				// t._addLazyDataChange(rowId, colId, value);
+			// }	
 			obj[f] = value;
 			c.lazyData = c.lazyData? c.lazyData : lang.clone(c.rawData);
 			lang.mixin(c.lazyData, obj);
@@ -74,58 +267,70 @@ define([
 			m.onSetLazyData(rowId, colId, value);
 		},
 		
-		redo: function(rowid, columnid){
+		_redo: function(opt){
 			var t = this,
 				m = t.model,
-				lazyRow = t._lazyDataChangeList[rowid],
-				f = t._cache.columns[columnid].field;
+				ov = opt._oldValue,
+				v = opt.value;
+				r = opt.rowId,
+				c = opt.columnId;
+				
 			t._inRedo = true;
-			if(lazyRow && lazyRow[f]){
-				if(lazyRow[f].index < lazyRow[f].list.length - 1){
-					t._inCallBackMode = true;
-					var index = ++lazyRow[f].index;
-					var value = lazyRow[f].list[index];
-					m.onRedo(rowid, columnid, value);
-				}
-			}			
 			
+			switch(opt.type){
+				case 0:					//update
+					// t._setLazyData(r, c, ov);
+					m.onUndo(r, c, v, true);
+					break;
+				case 1:					//add
+					break;
+				case 2:					//remove
+					break;
+			}
+						
 		},
 		
-		undo: function(rowid, columnid){
+		_undo: function(opt){
 			var t = this,
 				m = t.model,
-				lazyRow = t._lazyDataChangeList[rowid],
-				f = t._cache.columns[columnid].field;
+				ov = opt._oldValue,
+				v = opt.value;
+				r = opt.rowId,
+				c = opt.columnId;
+				
 			t._inUndo = true;
-			if(lazyRow && lazyRow[f]){
-				if(lazyRow[f].index > 0){
-					t._inCallBackMode = true;
-					var index = --lazyRow[f].index;
-					var value = lazyRow[f].list[index];
-					m.onUndo(rowid, columnid, value);
-				}
-			}	
-		},
-		
-		//private	----------------------------------------------------------------------
-		_isLazy: false,
-		
-		_addLazyDataChange: function(rowid, columnid, value){
-			var lazyData,
-				t = this,
-				f = t._cache.columns[columnid].field;
-			var rowLazy = t._lazyDataChangeList[rowid];
-			if(!rowLazy){
-				rowLazy = t._lazyDataChangeList[rowid] = {};
+			
+			switch(opt.type){
+				case 0:					//update
+					// t._setLazyData(r, c, ov);
+					console.log(opt);
+					m.onUndo(r, c, ov, true);
+					break;
+				case 1:					//add
+					break;
+				case 2:					//remove
+					break;
 			}
 			
-			var colLazy = rowLazy[f];
-			if(!colLazy){
-				colLazy = rowLazy[f] = {index: 0, list: [t.model.byId(rowid).rawData[f]]};
-			}
-			colLazy.list.splice(colLazy.index + 1, (colLazy.list.length - 1 - colLazy.index), value);
-			colLazy.index++;
-		},
+		}
+		
+		// _doOmitOpt: function(opt, isUndo){
+			// var t = this;
+// 			
+			// if(opt.type == 0){
+				// if(isUndo){
+					// var f = t._cache.columns[opt.columnId].field;
+					// var optList = t._cellOptList[opt.rowId][f];
+					// if(optList){
+						// var index = optList.list.indexOf(opt);
+						// if(index > optList.index){ 
+							// return true;
+						// }
+					// }
+				// }
+			// }
+// 			
+		// }
 		
 	});
 	
