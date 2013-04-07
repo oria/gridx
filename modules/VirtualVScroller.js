@@ -158,7 +158,18 @@ define([
 			if(istop || isbottom){
 				t._doVirtualScroll(1);
 			}else{
-				dn.scrollTop += dif > bn.offsetHeight ? dif / t._ratio : dif;
+				var oldScrollTop = dn.scrollTop,
+					scrollTop = oldScrollTop + (dif > bn.offsetHeight ? dif / t._ratio : dif);
+				//If scrollTop to too big, the browser will scroll it back to top, so add extra check here.
+				if(scrollTop > dn.scrollHeight){
+					scrollTop = dn.scrollHeight;
+				}
+				dn.scrollTop = scrollTop;
+				//If scrolling has no effect, we are already at the edge and no luck.
+				if(dn.scrollTop == oldScrollTop){
+					finish(false);
+					return;
+				}
 			}
 			if((istop && bn.firstChild.getAttribute('visualindex') == 0) || 
 					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.body.visualCount - 1)){
@@ -184,7 +195,8 @@ define([
 			var t = this,
 				dn = t.domNode,
 				a = dn.scrollTop,
-				deltaT = a - (t._lastScrollTop || 0);
+				deltaT = a - (t._lastScrollTop || 0),
+				neighborhood = 2;
 	
 			if(forced || deltaT){
 				t._lastScrollTop = a;
@@ -204,6 +216,8 @@ define([
 					h = t._avgRowHeight,
 					pageRowCount = Math.ceil(dn.offsetHeight / h) + 2 * buffSize,
 					ratio = t._ratio,
+					nearTop = a <= neighborhood,
+					nearBottom = Math.abs(a - scrollRange) <= neighborhood,
 					start, end, pos, d;
 				if(bnTop == bnBtm && !bnBtm){
 					//The grid is not correctly shown, so we just ignore.
@@ -213,49 +227,44 @@ define([
 					//Add some rows to the front
 					end = body.renderStart;
 					d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
-					start = a === 0 ? visualStart : Math.max(end - d, visualStart);
+					start = nearTop ? visualStart : Math.max(end - d, visualStart);
 					pos = "top";
-//                    console.log('top: ', start, end);
 				}else if(lastRow && lastRowBtm > bnTop && lastRowBtm < bnBtm){
 					//Add some rows to the end
 					start = body.renderStart + body.renderCount;
 					d = Math.ceil((bnBtm - lastRowBtm) * ratio / h) + buffSize;
-					end = a === scrollRange && a ? visualEnd : Math.min(start + d, visualEnd);
+					end = nearBottom && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
-//                    console.log('bottom: ', start, end);
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
 					if(a <= scrollRange / 2){
-						start = a === 0 ? visualStart : visualStart + Math.max(Math.floor(a * ratio / h) - buffSize, 0);
+						start = nearTop ? visualStart : visualStart + Math.max(Math.floor(a * ratio / h) - buffSize, 0);
 						end = Math.min(start + pageRowCount, visualEnd);
 					}else{
-						end = a === scrollRange ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - a) * ratio / h), 0);
+						end = nearBottom ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - a) * ratio / h), 0);
 						start = Math.max(end - pageRowCount, visualStart);
 					}
 					pos = "clear";
 				}else if(firstRow){
 					//The body and the scroller bar may be mis-matched, so force to sync here.
-					if(a === 0){
+					if(nearTop){
 						var firstRowIndex = body.renderStart;
 						if(firstRowIndex > visualStart){
 							start = visualStart;
 							end = firstRowIndex;
 							pos = "top";
-//                            console.debug("Recover top", end - start);
-						}	
-					}else if(a === scrollRange){
+						}
+					}else if(nearBottom){
 						var lastRowIndex = body.renderStart + body.renderCount - 1;
 						if(lastRowIndex < visualEnd - 1){
 							start = lastRowIndex + 1;
 							end = visualEnd;
 							pos = "bottom";
-//                            console.debug("Recover bottom", end - start);
 						}
 					}
 				}
 				
 				if(typeof start == 'number' && typeof end == 'number'){
-//                    console.debug("render: ", start, end, pos, a, scrollRange);
 					//Only need to render when the range is valid
 					body.renderRows(start, end - start, pos);
 					if(a && start < end){
@@ -267,9 +276,10 @@ define([
 					}
 				}
 				//Ensure the position when user scrolls to end points
-				if(a === 0){
+				if(nearTop){
 					bn.scrollTop = 0;
-				}else if(a >= scrollRange){//Have to use >=, because with huge store, a will sometimes be > scrollRange
+				}else if(nearBottom || a > scrollRange){
+					//with huge store, a will sometimes be > scrollRange
 					bn.scrollTop = bn.scrollHeight;
 				}else if(pos != "clear"){
 					bn.scrollTop += deltaT;

@@ -705,7 +705,7 @@ define([
 
 		//Private---------------------------------------------------------------------------
 		_getRowNodeQuery: function(args){
-			var r, escapeId = this.grid._escape;
+			var r, escapeId = this.grid._escapeId;
 			if(this.model.isId(args.rowId)){
 				r = "[rowid='" + escapeId(args.rowId) + "']";
 			}else if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
