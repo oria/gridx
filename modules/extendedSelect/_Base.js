@@ -8,7 +8,7 @@ define([
 	"dojo/dom",
 	"dojo/keys",
 	"../../core/_Module",
-	"dojo/NodeList-dom",
+//    "dojo/NodeList-dom",
 	"../AutoScroll"
 ], function(declare, query, connect, Deferred, has, win, dom, keys, _Module){
 

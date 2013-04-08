@@ -9,8 +9,8 @@ define([
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojo/query",
-	"../core/_Module",
-	"dojo/NodeList-traverse"
+	"../core/_Module"
+//    "dojo/NodeList-traverse"
 ], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
 
 /*=====
