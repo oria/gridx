@@ -24,7 +24,6 @@ define([
 		// summary:
 		//		Whether this row is selected.
 	};
-
 	Row.isSelectable = funciton(){
 		// summary:
 		//		Check whether this row is selectable.
@@ -127,21 +126,25 @@ define([
 			isSelected: function(){
 				return this.grid.select.row.isSelected(this.id);
 			},
-			
+
 			isSelectable: function(){
-				return this.grid.select.row.isSelectable(this.id);
+				return this.grid.select.row.arg('isSelectable').call(this, this.id);
 			}
 		},
-		
+
 		//Public API--------------------------------------------------------------------------------
 		triggerOnCell: false,
 
 		treeMode: true,
 
+		isSelectable: function(){
+			return true;
+		},
+
 		getSelected: function(){
 			return this.model.getMarkedIds();
 		},
-		
+
 		clear: function(notClearId){
 			if(this.arg('enabled')){
 				var model = this.model;
@@ -157,15 +160,17 @@ define([
 		//Private--------------------------------------------------------------------------------
 		_type: 'row',
 
+		_isSelectable: function(rowId){
+			return this.arg('isSelectable').call(this, rowId);
+		},
+
 		_init: function(){
 			var t = this,
 				g = t.grid;
 			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
-			
-			t.model.setMarkable(lang.hitch(t, 'isSelectable'));
-
+			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
 			t.batchConnect(
 				[g, 'onRowClick', function(e){
 					//Have to check whether we are on the 
@@ -193,7 +198,7 @@ define([
 				t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, 1), id);
 			}
 		},
-		
+
 		_highlight: function(rowId, toHighlight){
 			var nodes = query('[rowid="' + this.grid._escapeId(rowId) + '"]', this.grid.mainNode),
 				selected = toHighlight && toHighlight != 'mixed';
@@ -212,15 +217,11 @@ define([
 				m = t.model,
 				g = t.grid,
 				row = g.row(id);
-			// if(!g.unselectableRow || row.isSelectable()){
 			if(m.treeMarkMode() && !m.getMark(id) && toMark){
 				toMark = 'mixed';
 			}
 			m.markById(id, toMark);
 			m.when();
-			// }else{
-				// console.warn('row with id:' + id + ' is not selectable');
-			// }
 		},
 
 		_onRender: function(start, count){

@@ -60,6 +60,9 @@ define([
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
+		isSelectable: function(rowId){
+		},
+
 		selectById: function(rowId){
 			// summary:
 			//		Select rows by id.
@@ -141,16 +144,20 @@ define([
 			isSelected: function(){
 				return this.model.getMark(this.id) === true;
 			},
-			
+
 			isSelectable: function(){
-				return this.grid.select.row.isSelectable(this.id);
+				return this.grid.select.row.arg('isSelectable').call(this, this.id);
 			}
 		},
-		
+
 		//Public-----------------------------------------------------------------
 		triggerOnCell: false,
 
 		treeMode: true,
+
+		isSelectable: function(rowId){
+			return true;
+		},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -178,7 +185,7 @@ define([
 		},
 
 		onHighlightChange: function(){},
-		
+
 		//Private---------------------------------------------------------------------
 		_type: 'row',
 
@@ -189,7 +196,7 @@ define([
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
-			t.model.setMarkable(lang.hitch(t, t.isSelectable));
+			t.model.setMarkable(lang.hitch(t, t.arg('isSelectable')));
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
@@ -384,12 +391,10 @@ define([
 				return m.when();
 			}
 		},
-		
-		_highlightSingle: function(target, toHighlight){	//prevent highlight at UI level if a row is not selectable
-			toHighlight = toHighlight ? this._toSelect && this.isSelectable(this._getRowId(target.row)) : this._isSelected(target);
-			this._doHighlight(target, toHighlight);
-		},
 
-		
+		_highlightSingle: function(target, toHighlight){	//prevent highlight at UI level if a row is not selectable
+			toHighlight = toHighlight ? this._toSelect && this.arg('isSelectable').call(this, this._getRowId(target.row)) : this._isSelected(target);
+			this._doHighlight(target, toHighlight);
+		}
 	});
 });
