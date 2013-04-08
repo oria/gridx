@@ -2,7 +2,6 @@ define([
 	'gridx/modules/Focus',
 	'gridx/modules/VScroller',
 	'gridx/modules/ColumnResizer',
-	'gridx/modules/ColumnGroupResizer',
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/SingleSort',
 	'gridx/modules/NestedSort',
@@ -42,7 +41,7 @@ define([
 	'gridx/modules/GroupHeader',
 	'gridx/modules/PagedBody'
 ], function(
-	Focus, VScroller, ColumnResizer, ColumnGroupResizer, VirtualVScroller,
+	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
@@ -60,7 +59,6 @@ return {
 	Focus: Focus,
 	VScroller: VScroller,
 	ColumnResizer: ColumnResizer,
-	ColumnGroupResizer: ColumnGroupResizer,
 	VirtualVScroller: VirtualVScroller,
 	SingleSort: SingleSort,
 	NestedSort: NestedSort,

@@ -130,7 +130,7 @@ define([
 			var t = this,
 				colId,
 				f = function(){
-					if(t._sortId){
+					if(t._sortId && t.grid._columnsById[t._sortId]){
 						t._updateHeader(t._sortId, t._sortDescend);
 					}
 				};

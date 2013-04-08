@@ -16,13 +16,13 @@ require([
 	});
 
 	layout = [
-		{ field: "id", name:"Index", dataType:"number"},
-		{ field: "Genre", name:"Genre", width: '200px'},
-		{ field: "Artist", name:"Artist", width: '200px'},
-		{ field: "Year", name:"Year", dataType:"number", width: '100px'},
-		{ field: "Album", name:"Album (unsortable)", sortable: false, width: '200px'},
-		{ field: "Name", name:"Name", width: '200px'},
-		{ field: "Download Date", name:"Date",
+		{ id: 'id', field: "id", name:"Index", dataType:"number"},
+		{ id: 'Genre', field: "Genre", name:"Genre", width: '200px'},
+		{ id: 'Artist', field: "Artist", name:"Artist", width: '200px'},
+		{ id: 'Year', field: "Year", name:"Year", dataType:"number", width: '100px'},
+		{ id: 'Album', field: "Album", name:"Album (unsortable)", sortable: false, width: '200px'},
+		{ id: 'Name', field: "Name", name:"Name", width: '200px'},
+		{ id: 'DownloadDate', field: "Download Date", name:"Date",
 			//Need FormatSort extension to make this effective
 			comparator: function(a, b){
 				var d1 = locale.parse(a, {selector: 'date', datePattern: 'yyyy/M/d'});
@@ -30,8 +30,8 @@ require([
 				return d1 - d2;
 			}
 		},
-		{ field: "Last Played", name:"Last Played", width: '100px'},
-		{ name: 'Summary Genre and Year', width: '200px', formatter: function(rawData){
+		{ id: 'LastPlayed', field: "Last Played", name:"Last Played", width: '100px'},
+		{ id: 'Summary', name: 'Summary Genre and Year', width: '200px', formatter: function(rawData){
 			return rawData.Genre + '_' + rawData.Year;
 		}, sortFormatted: true}
 	];
