@@ -12,13 +12,20 @@ define([
 ], function(declare, query, array, domConstruct, domClass, Deferred, has, Body, nls, touch){
 
 /*=====
-		//NOT compatible with VirtualVScroller, Pagination,
+	return declare(Body, {
+		// summary:
+		//		NOT compatible with VirtualVScroller, Pagination,
+
+		// maxPageCount: Integer
+		maxPageCount: 3,
+
+		// pageSize: Integer
+		pageSize: 0,
+	});
 =====*/
 
 	return declare(Body, {
 		maxPageCount: 3,
-
-		//pageSize: 0,
 
 		preload: function(){
 			var t = this,
