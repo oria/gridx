@@ -5,8 +5,6 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
-	'gridx/modules/GroupHeader',
-	'gridx/modules/ColumnGroupResizer',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
 
