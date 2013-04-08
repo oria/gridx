@@ -74,6 +74,7 @@ define([
 			//		Used in filter condition expression to identify a grid column
 			// colId: String|Number
 			//		The id of the grid column, usually string.
+			//		NOTE: If useRawData is set to true, this should be the field name in store instead of the column id.
 			// type: String?
 			//		The data type of the grid column. If omitted, default to "string".
 			// converter: Function?
@@ -81,6 +82,7 @@ define([
 			//		For date or time type, converting to a Date object is enough.
 			// useRawData: Boolean?
 			//		To filter the store data (raw data) or the grid data (formatted data).
+			//		If set to true, colId should be the field name in store.
 			// return: Function
 			//		A filter expression.
 			// example:
