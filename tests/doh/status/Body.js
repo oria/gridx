@@ -16,7 +16,8 @@ define([
 				doh.is(row.index(), parseInt(rowNode.getAttribute('rowindex'), 10));
 			});
 		}
-	}, {
+	},
+	{
 		id: 'Body status 2',
 		name: 'cell must align with column header',
 		checker: function(grid, doh){

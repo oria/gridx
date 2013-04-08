@@ -4,7 +4,7 @@ define([
 ], function(query, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 'Header status 1',
+		id: 'Header 1',
 		name: 'if headerHidden is true, header height is 0',
 		condition: function(grid){
 			return grid.header && grid.header.arg('hidden');
@@ -14,7 +14,7 @@ define([
 		}
 	},
 	{
-		id: 'Header status 2',
+		id: 'Header 2',
 		name: 'if headerHidden is false, header is visible',
 		condition: function(grid){
 			return grid.header && !grid.header.arg('hidden');
@@ -24,7 +24,7 @@ define([
 		}
 	},
 	{
-		id: 'Header status 3',
+		id: 'Header 3',
 		name: 'columns are ordered from right to left',
 		checker: function(grid, doh){
 			query('.gridxCell', grid.header.domNode).forEach(function(headerCellNode, i){
@@ -34,7 +34,7 @@ define([
 		}
 	},
 	{
-		id: 'Header status 4',
+		id: 'Header 4',
 		name: 'grid header WAI-ARIA roles',
 		checker: function(grid, doh){
 			doh.is('row', grid.header.innerNode.getAttribute('role'));
@@ -44,7 +44,7 @@ define([
 		}
 	},
 	{
-		id: 'Header status 5',
+		id: 'Header 5',
 		name: 'grid header cell has unique ID',
 		checker: function(grid, doh){
 			query('.gridxCell', grid.header.domNode).forEach(function(headerCellNode){
