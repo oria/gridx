@@ -1,1 +1,0 @@
-define({outputPath: "../../data/1.1/"});

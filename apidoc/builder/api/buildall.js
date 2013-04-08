@@ -19,11 +19,20 @@ fs.readdirSync(dataPath).forEach(function(version){
 	var detailPath = path.join(dataPath, version, 'details.xml');
 	if(fs.existsSync(treePath) && fs.existsSync(detailPath)){
 		console.log('Generating API doc html page for version: ', version);
+		var dirName = path.join(dataPath, version, 'docs');
+		if(!fs.existsSync(dirName)){
+			fs.mkdirSync(dirName);
+		}
+		fs.readdirSync(dirName).forEach(function(fileName){
+			var filePath = path.join(dirName, fileName);
+			fs.unlinkSync(filePath);
+		});
 		var data = require(treePath);
 		for(var q = [data], item, i = 0; item = q[i]; ++i){
 			q = q.concat(item.children || []);
 			if(item.type != 'folder'){
-				exec('php item.php ' + item.fullname + ' ', version, finish(item, version));
+				console.log(item.fullname, version);
+				exec('php item.php ' + item.fullname + ' ' + version, finish(item, version));
 			}
 		}
 	}

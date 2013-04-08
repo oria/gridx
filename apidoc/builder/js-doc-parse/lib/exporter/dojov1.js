@@ -1,4 +1,6 @@
-define([ '../Module', '../Value', './util', '../console', '../node!fs' ], function (Module, Value, util, console, fs) {
+define([
+	'../Module', '../Value', './util', '../console', '../node!fs', '../node!path'
+], function (Module, Value, util, console, fs, path) {
 	/**
 	 * Takes information from metadata stored alongside a Value and adds it to the output.
 	 * @param node The node to add metadata to.
@@ -185,6 +187,10 @@ define([ '../Module', '../Value', './util', '../console', '../node!fs' ], functi
 	 * Generates a details.xml-compatible file which is used by the API browser.
 	 */
 	function generateDetails(file){
+		var dirName = path.dirname(file);
+		if(!fs.existsSync(dirName)){
+			fs.mkdirSync(dirName);
+		}
 		var fd = fs.openSync(file, 'w', parseInt('0644', 8));
 
 		// “version” attribute is new vs. old php parser
@@ -380,6 +386,10 @@ define([ '../Module', '../Value', './util', '../console', '../node!fs' ], functi
 				}
 			});
 		});
+		var dirName = path.dirname(file);
+		if(!fs.existsSync(dirName)){
+			fs.mkdirSync(dirName);
+		}
 		var fd = fs.openSync(file, 'w', parseInt('0644', 8));
 		fs.writeSync(fd, JSON.stringify(hierarchy, null, "\t"), null);
 		fs.closeSync(fd);

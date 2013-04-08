@@ -65,6 +65,7 @@ return {
 			/\\dijit\\/,
 			/\\dojox\\/,
 			/\\tests\\/,
+			/\\demos\\/,
 			/util/,
 			/nls/,
 			/gallery/,

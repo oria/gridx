@@ -1,1 +1,1 @@
-define({outputPath: "../../data/1.1/"});
+define({outputPath: "../../data/1.2/"});

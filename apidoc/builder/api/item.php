@@ -28,5 +28,10 @@ if(isset($argv[2])){ $version = $argv[2]; }
 $version = preg_replace("/\\.\\.+/", "", $version);
 $page = preg_replace("/\\.\\.+/", "", $page);
 
+$dir = "../../data/".$version."/docs";
+if(!file_exists($dir)){
+	mkdir($dir);
+}
+
 echo get_page($version, $page, $refdoc);
 ?>
