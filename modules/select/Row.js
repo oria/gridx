@@ -24,10 +24,10 @@ define([
 		// summary:
 		//		Whether this row is selected.
 	};
-	Row.isSelectable = funciton(){
+	Row.isSelectable = function(){
 		// summary:
 		//		Check whether this row is selectable.
-	},
+	};
 
 	return declare(_RowCellBase, {
 		// summary:

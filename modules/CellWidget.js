@@ -171,7 +171,7 @@ define([
 			//		Called every time a cell widget is applied into a cell, no matter if it is just created or reused.
 			// widget: CellWidget.__CellWidget
 			//		The created cell widget.
-			// returns
+			// returns:
 			//		An array of connection arguments.
 		},
 
