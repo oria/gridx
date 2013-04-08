@@ -6,18 +6,17 @@ define([
 	GTest.statusCheckers.push(
 	{
 		id: 'ColumnWidth status 130',
-		name: 'module parameter "autoResize" is false (default)	fixed column width (non auto non percentage) is set directly to cell',
+		name: 'module parameter "autoResize" is false (default), fixed column width (non auto non percentage) is set directly to cell',
 		condition: function(grid){
 			return !grid.columnWidth.arg('autoResize');
 		},
 		checker: function(grid, doh){
-			var cells = query('.gridxCell',	grid.body.domNode);
+			var cells = query('.gridxCell', grid.body.domNode);
 			var bool = array.some(cells, function(cell){
-				return cell.style.width === 'auto' || cell.style.width.indexOf('%') > 0; 
+				return cell.style.width === 'auto' || cell.style.width.indexOf('%') > 0;
 			});
 			doh.f(bool);
 		}
-		
 	},
 	{
 		id: 'ColumnWidth status 131',

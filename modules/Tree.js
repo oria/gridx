@@ -9,9 +9,9 @@ define([
 	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
-	"../core/_Module",
-	"dojo/NodeList-dom",
-	"dojo/NodeList-traverse"
+	"../core/_Module"
+//    "dojo/NodeList-dom",
+//    "dojo/NodeList-traverse"
 ], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
@@ -122,7 +122,7 @@ define([
 		//		If less than 1, then this is not a tree grid at all.
 		expandLevel: 1 / 0,
 
-		//clearOnSetStore: Boolean
+		// clearOnSetStore: Boolean
 		//		Whether to clear all the recorded expansion info after setStore.
 		clearOnSetStore: true,
 

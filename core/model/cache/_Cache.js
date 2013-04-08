@@ -21,7 +21,7 @@ define([
 		constructor: function(model, args){
 			var t = this;
 			t.setStore(args.store);
-			t.columns = args._columnsById;
+			t.columns = lang.mixin({}, args._columnsById);
 			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
 				'hasChildren', 'children', 'keep', 'free');
 		},
@@ -158,7 +158,7 @@ define([
 
 		onSetColumns: function(columns){
 			var t = this, id, c, colId, col;
-			t.columns = columns;
+			t.columns = lang.mixin({}, columns);
 			for(id in t._cache){
 				c = t._cache[id];
 				for(colId in columns){

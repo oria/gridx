@@ -7,18 +7,17 @@ define([
 ], function(array, query, domClass, domGeo, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 'Body status 51',
+		id: 'Body status 1',
 		name: 'if a row is visible (rendered) in body, it is in grid cache',
 		checker: function(grid, doh){
 			array.forEach(grid.bodyNode.childNodes, function(rowNode){
 				var row = grid.row(rowNode.getAttribute('rowid'), true);
-				doh.t(row);
-				doh.t(row.data());
+				doh.t(row.data(), 'row not exist');
 				doh.is(row.index(), parseInt(rowNode.getAttribute('rowindex'), 10));
 			});
 		}
 	}, {
-		id: 'Body status 54',
+		id: 'Body status 2',
 		name: 'cell must align with column header',
 		checker: function(grid, doh){
 			query('.gridxCell', grid.bodyNode).forEach(function(cellNode){
@@ -32,10 +31,37 @@ define([
 				doh.is(headerPos.w, cellPos.w);
 			});
 		}
-	}, 
+	},
 	{
-		id: 'Body status 55',
-		name: '1.a cell is empty.\n2.module parameter "stuffEmptyCell" is true',
+		id: 'Body status 3',
+		name: 'odd visual index row dom nodes have css class "gridxRowOdd"',
+		checker: function(grid, doh){
+			var rowNodes = grid.bodyNode.childNodes;
+			for(var i = 0; i < rowNodes.length; ++i){
+				var rowNode = rowNodes[i];
+				if(parseInt(rowNode.getAttribute('visualindex'), 10) % 2){
+					doh.t(domClass.contains(rowNode, 'gridxRowOdd'));
+				}else{
+					doh.f(domClass.contains(rowNode, 'gridxRowOdd'));
+				}
+			}
+		}
+	},
+	{
+		id: 'Body status 4',
+		name: 'visualindex property of every row increase by 1 compared to the previous row',
+		checker: function(grid, doh){
+			var rowNodes = grid.bodyNode.childNodes;
+			for(var i = 1; i < rowNodes.length; ++i){
+				var rowNode = rowNodes[i];
+				var prevRowNode = rowNode.previousSibling;
+				doh.t(parseInt(rowNode.getAttribute('visualindex'), 10) == parseInt(prevRowNode.getAttribute('visualindex'), 10) + 1);
+			}
+		}
+	}
+	/*{
+		id: 'Body status 3',
+		name: 'if module parameter "stuffEmptyCell" is true, empty cells are stuffed with space.',
 		condition: function(grid){
 			return grid.body.arg('stuffEmptyCell');
 		},
@@ -60,7 +86,7 @@ define([
 		}
 	},
 	{
-		id: 'Body status 56/57',
+		id: 'Body status 4',
 		name: 'if no data to show, show empty node',
 		condition: function(grid){
 			return !grid.bodyNode.childNodes.length;
@@ -68,20 +94,6 @@ define([
 		checker: function(grid, doh){
 			doh.t(grid.emptyNode.style.zIndex > (grid.bodyNode.style.zIndex || 0));
 			doh.t(grid.emptyNode.offsetHeight > 0);
-		}
-	}, {
-		id: 'Body status 58',
-		name: 'odd visual index row dom nodes have css class "gridxRowOdd"',
-		checker: function(grid, doh){
-			var rowNodes = grid.bodyNode.childNodes;
-			for(var i = 0; i < rowNodes.length; ++i){
-				var rowNode = rowNodes[i];
-				if(parseInt(rowNode.getAttribute('visualindex'), 10) % 2){
-					doh.t(domClass.contains(rowNode, 'gridxRowOdd'));
-				}else{
-					doh.f(domClass.contains(rowNode, 'gridxRowOdd'));
-				}
-			}
 		}
 	},
 	{
@@ -129,7 +141,7 @@ define([
 			});
 			
 		}
-	},	
+	},
 	{
 		id: 'Body status 67',
 		name: '1.module parameter "rowHoverEffect" is false. 2.mouse hover a row there\'s no row hover effect',
@@ -140,7 +152,7 @@ define([
 			doh.f(domClass.contains(grid.bodyNode, 'gridxBodyRowHoverEffect'));
 			
 		}
-	},	
+	},
 	{
 		id: 'Body status 68',
 		name: '1.module parameter "rowHoverEffect" is true. 2.mouse hover a row	show row hover effect',
@@ -151,18 +163,6 @@ define([
 			doh.t(domClass.contains(grid.bodyNode, 'gridxBodyRowHoverEffect'));
 			
 		}
-	},		
-	{
-		id: 'Body status 505',
-		name: 'visualindex property of every row increase by 1 compared to the previous row',
-		checker: function(grid, doh){
-			var rowNodes = grid.bodyNode.childNodes;
-			for(var i = 1; i < rowNodes.length; ++i){
-				var rowNode = rowNodes[i];
-				var prevRowNode = rowNode.previousSibling;
-				doh.t(parseInt(rowNode.getAttribute('visualindex'), 10) == parseInt(prevRowNode.getAttribute('visualindex'), 10) + 1);
-			}
-		}
-	}
+	},*/
 	);
 });

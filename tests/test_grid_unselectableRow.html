@@ -44,12 +44,9 @@
 		    width: 100%;
 		}		
 	</style>
-
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
 	<script type="text/javascript" src='test_grid_unselectableRow.js'></script>
-		<!-- <script type="text/javascript" src='test_grid_indirectSelect.js'></script> -->
-
 </head>
 <body class='claro'>
 	<h1 class='title'>Grid UnSelectable Row Selection Test</h1>
@@ -65,7 +62,8 @@
 					"gridx/modules/select/Row",
 					"gridx/modules/VirtualVScroller"
 				],
-				selectRowCanSelect: function(rowid, columnid){
+				selectRowTriggerOnCell: true,
+				selectRowIsSelectable: function(rowid){
 					var row = this.grid.row(rowid, 1);
 					return row.data().Year > 1990;
 				}
@@ -91,9 +89,9 @@
 						"gridx/modules/VirtualVScroller",
 					],
 					selectRowTriggerOnCell: true,
-					selectRowCanSelect: function(rowid, columnid){
+					selectRowIsSelectable: function(rowid){
 						 var row = this.grid.row(rowid, 1);
- 						 return row.data().Year > 1990;						
+						 return row.data().Year > 1990;
 					}
 				'></div>
 			</td>

@@ -23,7 +23,9 @@ define([
 	"./modules/HScroller",
 	"./modules/ColumnWidth",
 	"./modules/Focus",
-	"dijit/_BidiSupport"
+	"dijit/_BidiSupport",
+	"dojo/NodeList-dom",
+	"dojo/NodeList-traverse"
 ], function(declare, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){

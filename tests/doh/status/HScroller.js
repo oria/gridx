@@ -4,8 +4,9 @@ define([
 	'dojo/dom-style',
 	'../GTest'
 ], function(query, domGeo, domStyle, GTest){
-	GTest.statusCheckers.push({
-		id: 'HScroller 119',
+	GTest.statusCheckers.push(
+	{
+		id: 'HScroller status 1',
 		name: 'when columns width exceed the width of body, show horizontal scroll bar',
 		condition: function(grid){
 			return !grid.autoWidth && grid.bodyNode.scrollWidth > grid.bodyNode.clientWidth;
@@ -13,7 +14,8 @@ define([
 		checker: function(grid, doh){
 			doh.isNot('none', domStyle.get(grid.hScrollerNode, 'display'));
 		}
-	}, { 
+	},
+	{
 		id: 'HScroller 120',
 		name: 'when columns width do not exceed the width of body, hide horizontal scroll bar',
 		condition: function(grid){

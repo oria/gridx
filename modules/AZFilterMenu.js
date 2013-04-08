@@ -4,8 +4,7 @@ define([
 	"dojo/_base/array",
 	"dijit/Menu",
 	"dijit/CheckedMenuItem",
-	"../Filter"
-
+	"./Filter"
 ], function(declare, lang, array, Menu, CheckedMenuItem, Filter){
 
 	return declare([Menu], {
