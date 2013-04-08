@@ -13,6 +13,7 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"dojo/i18n!../nls/Body",
+	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
 ], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module, nls){
 
