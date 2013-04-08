@@ -29,9 +29,20 @@
 			dijit.byId('grid1').model.redo();
 		}
 		
+		function save(){
+			dijit.byId('grid1').model.save();
+		}
+		
+		function clearLazy(){
+			// console.log(123);
+			dijit.byId('grid1').model.clear();
+		}
+		
 	</script>
 	<button onclick='undo()'>undo</button>
 	<button onclick='redo()'>redo</button>
+	<button onclick='save()'>save</button>
+	<button onclick='clearLazy()'>clear</button>
 	<p>Double click or press ENTER on a cell to edit</p>
 	<h2>Dijit as editor</h2>
 	<div id='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
@@ -45,7 +56,7 @@
 			"gridx/modules/Pagination",
 			"gridx/modules/pagination/PaginationBar"
 		],
-		editLazy: true
+		editLazySave: true
 	'></div>
 	<div>
 		<script type='text/javascript'>

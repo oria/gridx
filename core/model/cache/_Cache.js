@@ -72,22 +72,11 @@ define([
 
 		byIndex: function(index, parentId){
 			this._init('byIndex', arguments);
-			if(this.model.isLazy && this.model.isLazy()){
-				var o = lang.clone(this._cache[this.indexToId(index, parentId)]);
-				o.rawData = o.lazyData !== undefined ? o.lazyData : o.rawData ;
-				return o;
-			}
 			return this._cache[this.indexToId(index, parentId)];
 		},
 
 		byId: function(id){
 			this._init('byId', arguments);
-			if(this.model.isLazy && this.model.isLazy()){
-				var o = lang.clone(this._cache[id]);
-				o.rawData = o.lazyData !== undefined ? o.lazyData : o.rawData ;
-				//return this._cache[id];
-				return o;
-			}
 			return this._cache[id];
 		},
 

@@ -74,12 +74,12 @@ define([
 			return f && t.model.byId(t.row.id).rawData[f];
 		},
 
-		setRawData: function(rawData, isLazy){
+		setRawData: function(rawData){
 			var obj = {},
 				field = this.column.field();
 			if(field){
 				obj[field] = rawData;
-				return this.row.setRawData(obj, isLazy);
+				return this.row.setRawData(obj);
 			}
 		}
 	});

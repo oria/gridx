@@ -319,7 +319,7 @@ define([
 		preload: function(){
 			var t = this,
 				g = t.grid;
-			if(t.arg('lazy')){
+			if(t.arg('lazySave')){
 				// t.model.setLazyable(true);
 				var _onSetLazyData = function(rowid, columnid, data){
 					var cell = g.cell(rowid, columnid, 1);
@@ -382,7 +382,7 @@ define([
 			});
 		},
 		
-		lazy: false,
+		lazySave: true,
 		
 		load: function(){
 			//Must init focus after navigable cell, so that "edit" focus area will be on top of the "navigablecell" focus area.
@@ -550,8 +550,11 @@ define([
 						}else if(cell.rawData() === v){
 							finish(true);
 						}else{
-							if(t.arg('lazy')){
-								t.model.update(rowId, colId, v, cell.rawData());
+							if(t.arg('lazySave')){
+								var f = g._columnsById[colId].field,
+									obj = {};
+																	obj[f] = v;
+								t.model.set(rowId, obj);
 								finish(true);
 							}else{
 								Deferred.when(cell.setRawData(v), function(){
