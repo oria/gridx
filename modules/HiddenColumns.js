@@ -68,21 +68,16 @@ define([
 	return declare(_Module, {
 		name: 'hiddenColumns',
 
-		constructor: function(){
-			this._cols = array.map(this.grid._columns, function(col){
-				return col;
-			});
-		},
-
 		load: function(args, startup){
 			var t = this,
 				g = t.grid,
 				ids = t.arg('init', []);
+			t._cols = g._columns.slice();
 			if(g.move && g.move.column){
 				t.connect(g.move.column, 'onMoved', '_syncOrder');
 			}
 			if(g.persist){
-				ids.concat(g.persist.registerAndLoad('hiddenColumns', function(){
+				ids = ids.concat(g.persist.registerAndLoad('hiddenColumns', function(){
 					return t.get();
 				}) || []);
 			}
