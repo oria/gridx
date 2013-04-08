@@ -14,18 +14,30 @@ define([
 /*=====
 	return declare(Body, {
 		// summary:
-		//		NOT compatible with VirtualVScroller, Pagination,
+		//		This module provides a "load more" button (and a "load previous" button if necessary) inside grid body.
+		// description:
+		//		Page size can be set to indicate how many rows to show in one page. Clicking "load more" button or 
+		//		"load previous" button loads a new page. If the current visible page count exceeds the max allowed page count,
+		//		Some previous pages will be destroyed and "load previous" button will be shown.
+		//		This module is designed especially for mobile devices, so it should almost always be used together with TouchVScroller.
+		//		NOTE: This module is NOT compatible with VirtualVScroller and Pagination.
 
 		// maxPageCount: Integer
-		maxPageCount: 3,
+		//		The max allowed page count. If this value > 0, when visible pages exceeds this value, some previous pages will be destroyed
+		//		and the "load previous" button will be shown. If this value <= 0, grid will never destroy and previous pages, 
+		//		and the "load previous" button will never be shown. Default to 0.
+		maxPageCount: 0,
 
 		// pageSize: Integer
-		pageSize: 0,
+		//		The row count in one page. Default to the pageSize of grid cache. If using cache has no pageSize, default to 20.
+		//		Users can directly set grid parameter pageSize to set both the cache pageSize and the body pageSize.
+		//		If using bodyPageSize, it'll be different from the cache page size, but that's also okay.
+		pageSize: 20,
 	});
 =====*/
 
 	return declare(Body, {
-		maxPageCount: 3,
+		maxPageCount: 0,
 
 		preload: function(){
 			var t = this,
