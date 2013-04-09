@@ -2,10 +2,11 @@ define([
 /*====="../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/dom-class",
 	"dojo/keys",
 	"../core/model/extensions/Sort",
 	"../core/_Module"
-], function(/*=====Column, =====*/declare, lang, keys, Sort, _Module){
+], function(/*=====Column, =====*/declare, lang, domClass, keys, Sort, _Module){
 
 /*=====
 	Column.sort = function(isDescending, skipUpdateBody){
@@ -98,12 +99,12 @@ define([
 		forced: ['header'],
 
 		modelExtensions: [Sort],
-		
+
 		preload: function(){
 			var t = this,
 				g = t.grid, sort;
 			t.connect(g, 'onHeaderCellClick', '_onClick');
-			t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown');
+			t.connect(g, 'onHeaderCellKeyDown', '_onKey');
 			//persistence support
 			if(g.persist){
 				sort = g.persist.registerAndLoad('sort', function(){
@@ -125,69 +126,60 @@ define([
 				t.model.sort([sort]);
 			}
 		},
-	
+
 		load: function(){
 			var t = this,
-				colId,
-				f = function(){
-					if(t._sortId && t.grid._columnsById[t._sortId]){
+				columnsById = t.grid._columnsById,
+				refresh = function(){
+					for(var colId in columnsById){
+						t._initHeader(colId);
+					}
+					if(t._sortId && columnsById[t._sortId]){
 						t._updateHeader(t._sortId, t._sortDescend);
 					}
 				};
-			t.connect(t.grid.header, 'onRender', f);
-			for(colId in t.grid._columnsById){
-				t._initHeader(colId);
-			}
+			t.connect(t.grid.header, 'onRender', refresh);
 			//If presorted, update header UI
-			f();
+			refresh();
 			t.loaded.callback();
 		},
-	
+
 		columnMixin: {
 			sort: function(isDescending, skipUpdateBody){
-				// summary:
-				//		Sort this column.
 				this.grid.sort.sort(this.id, isDescending, skipUpdateBody);
 				return this;
 			},
-	
+
 			isSorted: function(){
-				// summary:
-				//		Check wheter this column is sorted.
 				return this.grid.sort.isSorted(this.id);
 			},
-	
+
 			clearSort: function(skipUpdateBody){
-				// summary:
-				//		Clear sort on this column
 				if(this.isSorted()){
 					this.grid.sort.clear(skipUpdateBody);
 				}
 				return this;
 			},
-	
+
 			isSortable: function(){
-				// summary:
-				//		Check whether this column is sortable.
 				var col = this.grid._columnsById[this.id];
 				return col.sortable || col.sortable === undefined;
 			},
-	
+
 			setSortable: function(isSortable){
-				// summary:
-				//		Set sortable for this column
 				this.grid._columnsById[this.id].sortable = !!isSortable;
 				return this;
 			}
 		},
-	
+
 		//Public--------------------------------------------------------------
 		sort: function(colId, isDescending, skipUpdateBody){
-			var t = this, g = t.grid, col = g._columnsById[colId];
+			var t = this,
+				g = t.grid,
+				col = g._columnsById[colId];
 			if(col && (col.sortable || col.sortable === undefined)){
 				if(t._sortId != colId || t._sortDescend == !isDescending){
 					t._updateHeader(colId, isDescending);
-					g.header.onRender();
 				}
 				t.model.sort([{colId: colId, descending: isDescending}]);
 				if(!skipUpdateBody){
@@ -195,18 +187,21 @@ define([
 				}
 			}
 		},
-	
+
 		isSorted: function(colId){
 			if(colId == this._sortId){
 				return this._sortDescend ? -1 : 1;
 			}
 			return 0;
 		},
-	
+
 		clear: function(skipUpdateBody){
 			var t = this;
 			if(t._sortId !== null){
-				t._initHeader(t._sortId);
+				var headerCell = g.header.getHeaderNode(t._sortId);
+				domClass.remove(headerCell, 'gridxCellSorted');
+				domClass.remove(headerCell, 'gridxCellSortedAsc');
+				domClass.remove(headerCell, 'gridxCellSortedDesc');
 				t._sortId = t._sortDescend = null;
 				t.model.sort();
 				if(!skipUpdateBody){
@@ -221,51 +216,54 @@ define([
 				descending: this._sortDescend
 			}] : null;
 		},
-	
+
 		//Private--------------------------------------------------------------
 		_sortId: null,
 
 		_sortDescend: null,
-		
+
 		_initHeader: function(colId){
 			var g = this.grid,
 				headerCell = g.header.getHeaderNode(colId),
-				col = g.column(colId, 1);	//1 as true
-			headerCell.innerHTML = ["<div class='gridxSortNode'>", col.name(), "</div>"].join('');
+				col = g.column(colId, 1),
+				sb = [];
 			if(col.isSortable()){
+				sb.push("<div role='presentation' class='gridxArrowButtonNode'>",
+					"<div class='gridxArrowButtonCharAsc'>&#9652;</div>",
+					"<div class='gridxArrowButtonCharDesc'>&#9662;</div>",
+				"</div>");
 				headerCell.setAttribute('aria-sort', 'none');
-			}else{
-				headerCell.removeAttribute('aria-sort');
 			}
+			sb.push("<div class='gridxSortNode'>", col.name(), "</div>");
+			headerCell.innerHTML = sb.join('');
 		},
-	
+
 		_updateHeader: function(colId, isDescending){
-			//Change the structure of sorted header
-			var t = this;
+			var t = this,
+				g = t.grid,
+				headerCell;
 			if(t._sortId && t._sortId != colId){
-				t._initHeader(t._sortId);
+				headerCell = g.header.getHeaderNode(t._sortId);
+				domClass.remove(headerCell, 'gridxCellSorted');
+				domClass.remove(headerCell, 'gridxCellSortedAsc');
+				domClass.remove(headerCell, 'gridxCellSortedDesc');
+				headerCell.setAttribute('aria-sort', 'none');
 			}
 			t._sortId = colId;
 			t._sortDescend = !!isDescending;
-			var g = t.grid,
-				headerCell = g.header.getHeaderNode(colId);
-			headerCell.innerHTML = ["<div class='gridxSortNode ",
-				isDescending ? 'gridxSortDown' : 'gridxSortUp',
-				"'><div class='gridxArrowButtonChar'>",
-				isDescending ? "&#9662;" : "&#9652;",
-				"</div><div role='presentation' class='gridxArrowButtonNode'>&nbsp;</div><div class='gridxColCaption'>",
-				g.column(colId, 1).name(),	//1 as true
-				"</div></div>"
-			].join('');
+			headerCell = g.header.getHeaderNode(colId);
+			domClass.add(headerCell, 'gridxCellSorted');
+			domClass.toggle(headerCell, 'gridxCellSortedAsc', !isDescending);
+			domClass.toggle(headerCell, 'gridxCellSortedDesc', isDescending);
 			headerCell.setAttribute('aria-sort', isDescending ? 'descending' : 'ascending');
 			g.vLayout.reLayout();
 		},
-	
+
 		_onClick: function(e){
 			this.sort(e.columnId, this._sortId != e.columnId ? 0 : !this._sortDescend);
 		},
-		
-		_onKeyDown: function(e){
+
+		_onKey: function(e){
 			if(e.keyCode == keys.ENTER){
 				this._onClick(e);
 			}

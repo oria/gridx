@@ -1,82 +1,59 @@
 define([
-
 	"dojo/_base/declare",
-	"dojo/_base/lang",
-	"dojo/_base/array",
-	"dojo/_base/connect",
 	"dojo/_base/event",
-	"dojo/dom-class",
 	"dijit/registry",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
-	"dojo/_base/query",
-	"dojo/_base/sniff",
-	"dojo/keys",
-	"dijit/Menu",
-	"dijit/MenuItem",
-	"../core/util",
+	"dojo/query",
 	"../core/_Module"
-], function(declare, lang, array, connect, event, css, registry,domConstruct, domClass, domGeometry, query, sniff, keys, Menu, MenuItem, util, _Module){
-
+], function(declare, event, registry, domConstruct, domClass, domGeometry, query, _Module){
 
 	return declare(_Module, {
 		name: 'headerMenu',
 		forced: ['header'],
 
-		openMode: 'hover', //hover|click
-		contentNode: null,
-		constructor: function(){
-			
-		},
-
-		getAPIPath: function(){
-			return {
-				headerMenu: this
-			};
-		},
-
-		preload: function(args){
-			
-		},
+//        openMode: 'hover', //hover|click
+//        contentNode: null,
 
 		load: function(){
-			var table = this.grid.header.domNode.firstChild.firstChild;
-			if(query('.gridxHeaderMenuButton', table).length){
-				return;
-			}
-			var h = table.offsetHeight;
-			query('.gridxCell', table).forEach(function(td){
-				var colId = td.getAttribute('colId');
-				var menu = this._getHeaderMenu(colId);
-				if(menu){
-					var btn = domConstruct.create('div', {
-						className: 'gridxHeaderMenuBtn',
-						innerHTML: '<div class="gridxHeaderContentContainer"></div>'
-					}, td, 'first');
-					btn.style.height = h + 'px';
-					connect.connect(btn, 'click', function(e){
-						event.stop(e);
-					});
-					menu.bindDomNode(btn);
-					if(menu.bindGrid){
-						menu.colId = colId;
-						menu.bindGrid(this.grid);
-					}
-					css.add(menu.domNode, 'gridxHeaderMenu');
-				}
-			}, this);
-
-			this.loaded.callback();
+			var t = this;
+			t._btns = {};
+			t._addMenuBtns();
+			t.aspect(t.grid.header, 'onRender', '_addMenuBtns');
+			t.loaded.callback();
 		},
 
-		_getHeaderMenu: function(colId){
-			var col = this.grid._columnsById[colId];
-			if(col.menu){
-				return registry.byId(col.menu);
-			}else{
-				return null;
-			}
+		_addMenuBtns: function(){
+			var t = this,
+				table = t.grid.header.domNode.firstChild.firstChild,
+				h = table.offsetHeight;
+//            if(query('.gridxHeaderMenuButton', table).length){
+//                return;
+//            }
+			query('.gridxCell', table).forEach(function(td){
+				var colId = td.getAttribute('colId'),
+					col = t.grid._columnsById[colId],
+					menu = col && col.menu && registry.byId(col.menu);
+				if(menu){
+					var btn = t._btns[colId];
+					if(!btn){
+						btn = t._btns[colId] = domConstruct.create('div', {
+							className: 'gridxHeaderMenuBtn',
+							innerHTML: '<div class="gridxHeaderContentContainer"></div>'
+						});
+						t.connect(btn, 'onclick', event.stop);
+						domClass.add(menu.domNode, 'gridxHeaderMenu');
+						menu.bindDomNode(btn);
+						if(menu.bindGrid){
+							menu.colId = colId;
+							menu.bindGrid(t.grid);
+						}
+					}
+					domConstruct.place(btn, td, 'first');
+					btn.style.height = h + 'px';
+				}
+			});
 		}
 
 		// _createMenuButton: function(){

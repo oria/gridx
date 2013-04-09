@@ -510,15 +510,15 @@ define([
 							return ["<div class='gridxTreeExpandoCell ",
 								isOpen ? "gridxTreeExpandoCellOpen" : "",
 								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + singlePad, "px;'>",
-								"<span class='gridxTreeExpandoIcon ",
+								"<div class='gridxTreeExpandoIcon ",
 								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
 								"style='margin-", ltr ? 'left' : 'right', ": ", pad, "px;'>",
-								"<span class='gridxTreeExpandoInner'>",
+								"<div class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
-								"</span></span><span class='gridxTreeExpandoContent'>",
+								"</div></div><div class='gridxTreeExpandoContent gridxCellContent'>",
 								cellData,
-								"</span></span>"
+								"</div></div>"
 							].join('');
 						}
 					});

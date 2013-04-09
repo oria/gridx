@@ -5,6 +5,9 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
+	'dijit/form/HorizontalSlider',
+	'dijit/form/HorizontalRule',
+	'dijit/form/HorizontalRuleLabels',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
 
@@ -104,6 +107,12 @@ require([
 		}
 	];
 	headerGroups5 = [];
+
+	onHSliderChange = function(val){
+		grid6.resize({
+			w: val
+		});
+	};
 
 	parser.parse();
 });

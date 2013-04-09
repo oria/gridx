@@ -117,11 +117,11 @@ define([
 				t._navigating = true;
 				t._focusColId = colId;
 				t._focusRowId = rowId;
-				t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
+				var navElems = t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
 					rowId: rowId, 
 					colId: colId
 				}));
-				return true;
+				return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
 			}
 			return false;
 		},

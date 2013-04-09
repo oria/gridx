@@ -149,7 +149,7 @@ define([
 					'" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
 					(lang.isFunction(col.headerClass) ? col.headerClass(col) : col.headerClass) || '',
-					'" style="width: ', col.width, ';min-width:', col.width,
+					'" style="width:', col.width, ';min-width:', col.width, ';',
 					g.getTextDirStyle(col.id, col.name),
 					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
 					'"><div class="gridxSortNode">',
