@@ -942,26 +942,12 @@ define([
 						g.focus.focusArea('body');
 					});
 				}else if(e.keyCode == 90 && e.ctrlKey){
-					if(t.arg('lazy')){
-						if(editing){
-							event.stop(e);			//FIX ME, the dijit/form/textbox has its own CTRL+Z event
-													//and will stop the propagation of event in FF.
-							t.model.undo(true, e.rowId, e.columnId);
-						}else{
-							console.log('in lazy');
-							t.model.undo();
-						}
-					}
-					if(editing && t.arg('lazy')){
+					if(t.arg('lazySave')){
+						t.model.undo();
 					}
 				}else if(e.keyCode == 89 && e.ctrlKey){
-					if(t.arg('lazy')){
-						if(editing){
-							t.model.redo(true, e.rowId, e.columnId);
-						}else{
-							console.log('in lazy');
-							t.model.redo();
-						}
+					if(t.arg('lazySave')){
+						t.model.redo();
 					}
 				}
 			}

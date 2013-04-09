@@ -4,8 +4,9 @@ define([
 	'dojo/aspect',
 	'dojo/DeferredList',
 	'dojo/_base/Deferred',
+	'dojo/_base/array',
 	'../_Extension'
-], function(declare, lang, aspect, DeferredList, Deferred,  _Extension){
+], function(declare, lang, aspect, DeferredList, Deferred, array,  _Extension){
 /*=====
 	Model.setLazyable = function(){};
 	Model.isLazy = function(){};
@@ -152,9 +153,9 @@ define([
 			}
 			
 			t._globalOptList = [];
-			for(rid in cl){
+			array.forEach(cl, function(rid){
 				delete t.inner.byId(rid).lazyData;
-			}
+			});
 		},
 
 		save: function(){
@@ -168,12 +169,15 @@ define([
 				dl;
 
 			if(cl.length){
-				for(var id in cl){
-					var d = t._saveRow(id);
+				array.forEach(cl, function(rid){
+					var d = t._saveRow(rid);
 					da.push(d);
-				}
+				});
 				dl = new DeferredList(da);
 				dl.then(function(){
+					//t.clear();
+					t._globalOptList = [];
+					t._globalOptIndex = -1;
 					console.log('save to store successfully');
 					t.onSave();
 				}, function(){
