@@ -28,6 +28,10 @@ define([
 		// summary:
 		//		Check whether this row is selectable.
 	};
+	Row.setSelectable = function(){
+		// summary:
+		//		Set this row to be selectable or not.
+	};
 
 	return declare(_RowCellBase, {
 		// summary:
@@ -56,6 +60,14 @@ define([
 		// treeMode: Boolean
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
+
+		// selectable: Object
+		//		User can set selectable/unselectable rows in this hash object. The hash key is the row ID.
+		selectable: {},
+
+		// isSelectable: Function(rowId)
+		//		User can provide this function to dynamically decide whether the given row is selectable.
+		isSelectable: function(){},
 
 		selectById: function(rowId){
 			// summary:
@@ -128,7 +140,11 @@ define([
 			},
 
 			isSelectable: function(){
-				return this.grid.select.row.arg('isSelectable').call(this, this.id);
+				return this.grid.select.row._isSelectable(this.id);
+			},
+
+			setSelectable: function(selectable){
+				return this.grid.select.row.selectable[this.id] = selectable;
 			}
 		},
 
@@ -136,10 +152,6 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
-
-		isSelectable: function(){
-			return true;
-		},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -161,7 +173,10 @@ define([
 		_type: 'row',
 
 		_isSelectable: function(rowId){
-			return this.arg('isSelectable').call(this, rowId);
+			var isSelectable = this.arg('isSelectable'),
+				selectable = this.arg('selectable', {});
+			return rowId in selectable ? selectable[rowId] :
+				isSelectable ? isSelectable.call(this, rowId) : true;
 		},
 
 		_init: function(){

@@ -30,6 +30,10 @@ define([
 		// summary:
 		//		Check whether this row is selectable.
 	};
+	Row.setSelectable = function(selectable){
+		// summary:
+		//		Set this row to be selectable or not.
+	};
 	
 	return declare(_RowCellBase, {
 		// summary:
@@ -59,8 +63,13 @@ define([
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
-		isSelectable: function(rowId){
-		},
+		// selectable: Object
+		//		User can set selectable/unselectable rows in this hash object. The hash key is the row ID.
+		selectable: {},
+
+		// isSelectable: Function(rowId)
+		//		User can provide this function to dynamically decide whether the given row is selectable.
+		isSelectable: function(){},
 
 		selectById: function(rowId){
 			// summary:
@@ -145,7 +154,11 @@ define([
 			},
 
 			isSelectable: function(){
-				return this.grid.select.row.arg('isSelectable').call(this, this.id);
+				return this.grid.select.row._isSelectable(this.id);
+			},
+
+			setSelectable: function(selectable){
+				return this.grid.select.row.selectable[this.id] = selectable;
 			}
 		},
 
@@ -153,10 +166,6 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
-
-		isSelectable: function(rowId){
-			return true;
-		},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -188,6 +197,13 @@ define([
 		//Private---------------------------------------------------------------------
 		_type: 'row',
 
+		_isSelectable: function(rowId){
+			var isSelectable = this.arg('isSelectable'),
+				selectable = this.arg('selectable', {});
+			return rowId in selectable ? selectable[rowId] :
+				isSelectable ? isSelectable.call(this, rowId) : true;
+		},
+
 		_init: function(){
 			var t = this,
 				g = t.grid;
@@ -195,7 +211,7 @@ define([
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
-			t.model.setMarkable(lang.hitch(t, t.arg('isSelectable')));
+			t.model.setMarkable(lang.hitch(t, t._isSelectable));
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
@@ -392,7 +408,7 @@ define([
 		},
 
 		_highlightSingle: function(target, toHighlight){	//prevent highlight at UI level if a row is not selectable
-			toHighlight = toHighlight ? this._toSelect && this.arg('isSelectable').call(this, this._getRowId(target.row)) : this._isSelected(target);
+			toHighlight = toHighlight ? this._toSelect && this._isSelectable(this._getRowId(target.row)) : this._isSelected(target);
 			this._doHighlight(target, toHighlight);
 		}
 	});
