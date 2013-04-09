@@ -4,8 +4,9 @@ define([
 	'dojo/dom-geometry',
 	'../GTest'
 ], function(array, query, domGeo, GTest){
-	GTest.statusCheckers.push({
-		id: 175,
+	GTest.statusCheckers.push(
+	{
+		id: 'RowHeader 1',
 		name: 'Row headers should be aligned with rows',
 		condition: function(grid){
 			return grid.rowHeader;
@@ -26,8 +27,9 @@ define([
 				doh.is(row.getAttribute('parentid'), rowHeader.getAttribute('parentid'));
 			});
 		}
-	}, {
-		id: 201,
+	},
+	{
+		id: 'RowHeader 2',
 		name: 'Row header cell has role="rowheader"',
 		condition: function(grid){
 			return grid.rowHeader;
@@ -37,8 +39,9 @@ define([
 				doh.is('rowheader', cell.getAttribute('role'));
 			});
 		}
-	}, {
-		id: 174,
+	},
+	{
+		id: 'RowHeader 3',
 		name: 'row header width is set according to "width"',
 		condition: function(grid){
 			return grid.rowHeader;
@@ -49,5 +52,6 @@ define([
 				doh.is(width, cell.style.width);
 			});
 		}
-	});
+	}
+	);
 });

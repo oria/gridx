@@ -6,7 +6,7 @@ define([
 ], function(query, domGeo, domStyle, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 'HScroller status 1',
+		id: 'HScroller 1',
 		name: 'when columns width exceed the width of body, show horizontal scroll bar',
 		condition: function(grid){
 			return !grid.autoWidth && grid.bodyNode.scrollWidth > grid.bodyNode.clientWidth;
@@ -16,7 +16,7 @@ define([
 		}
 	},
 	{
-		id: 'HScroller 120',
+		id: 'HScroller 2',
 		name: 'when columns width do not exceed the width of body, hide horizontal scroll bar',
 		condition: function(grid){
 			return grid.bodyNode.scrollWidth <= grid.bodyNode.clientWidth;
@@ -26,7 +26,7 @@ define([
 		}
 	},
 	{
-		id: 'HScroller 121',
+		id: 'HScroller 3',
 		name: 'Horizontal scroll bar is as wide as the body',
 		condition: function(grid){
 			return domStyle.get(grid.hScrollerNode, 'display') != 'none';
