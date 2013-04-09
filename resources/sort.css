@@ -1,32 +1,41 @@
-/*Single Sorting*/
 /* Single Sort */
 .gridxSortNode {
-	text-decoration:none;
-	display:block;
 	overflow: hidden;
 }
-
-.gridxArrowButtonChar {
-	display:none;
-	float:right;
+.gridxArrowButtonCharAsc,
+.gridxArrowButtonCharDesc {
+	display: none;
 }
-
-.dijit_a11y .gridxArrowButtonChar {
+.dijit_a11y .gridxCellSoredAsc .gridxArrowButtonCharAsc,
+.dijit_a11y .gridxCellSoredDesc .gridxArrowButtonCharDesc {
 	display: block;
-	margin: 0 4px 0 5px;
+}
+.gridxArrowButtonNode {
+	background: transparent url("images/sprite_icons.png") no-repeat;
+	display: none;
+	float: right;
+	margin-right: 7px;
+	width: 9px;
+	height: 12px;
+}
+.gridxCellSorted .gridxArrowButtonNode {
+	display: block;
+}
+.gridxCellSortedAsc .gridxArrowButtonNode {
+	background-position: -120px 4px;
+}
+.gridxCellSortedDesc .gridxArrowButtonNode {
+	background-position: -100px 4px;
+}
+.gridxHeaderCellOver.gridxCellSortedAsc .gridxArrowButtonNode,
+.gridxHeaderCellFocus.gridxCellSortedAsc .gridxArrowButtonNode {
+	background-position: -140px 4px;
+}
+.gridxHeaderCellOver.gridxCellSortedDesc .gridxArrowButtonNode,
+.gridxHeaderCellFocus.gridxCellSortedDesc .gridxArrowButtonNode {
+	background-position: -160px 4px;
 }
 
-.gridxArrowButtonNode{
-	background:transparent url("images/spriteArrows.png") no-repeat scroll left center;
-	display:block;
-	float:right;
-	margin: 0px 4px 0 5px;
-	padding-left:0;
-	width:7px;
-}
-.gridxSortUp .gridxArrowButtonNode {
-	background-position:-21px 4px;
-}
 
 /*Nested Sorting*/
 .gridxSortBtn {

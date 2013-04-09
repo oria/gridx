@@ -14,7 +14,7 @@ define([
 		// summary:
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
-		//		This module is not compatible with ColumnLock module.
+		//		This module is not compatible with ColumnLock module and move/Column module.
 		// description:
 		//		This module inherites the default Header module, adding support of column groups.
 		//		Several adjacent headers can be grouped together by configuring the "groups" parameter of this module.

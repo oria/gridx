@@ -76,6 +76,7 @@ define([
 			t.connect(prevBtn, 'onmouseover', function(){
 				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 			});
+			t._initFocus();
 		},
 
 		load: function(args){

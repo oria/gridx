@@ -43,11 +43,6 @@
 	position: relative;
 }
 
-.gridxPercentColumnWidth .gridxHeaderRow table,
-.gridxPercentColumnWidth .gridxRow table.gridxRowTable {
-	width: 100%;
-}
-
 /*Header*/
 .gridxHeaderRow {
 	background-color: #eee;
@@ -75,6 +70,10 @@
 }
 .gridxGH .gridxHeaderRow table {
 	width: auto;
+}
+.gridxPercentColumnWidth .gridxHeaderRow table,
+.gridxPercentColumnWidth .gridxRow table.gridxRowTable {
+	width: 100%;
 }
 
 .gridxGroupHeader,
@@ -157,6 +156,11 @@
 	/*box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;*/
+}
+
+.gridxCell.gridxCellChanged{
+	background: url('images/gridxCellChanged.png') no-repeat top right;
+
 }
 
 .gridxRowDummy {

@@ -45,7 +45,7 @@ define([
 			model.onRedo = model.onUndo = function(){};
 			
 			var old = s.fetch;
-			t[c](s, old ? "onSet" : "put", "_onSet");
+			//t[c](s, old ? "onSet" : "put", "_onSet");
 			// t.onSet = function(){
 				// t.model.onSet();
 			// };
@@ -55,14 +55,17 @@ define([
 
 		//Public--------------------------------------------------------------
 		byId: function(id){
-			var d = lang.clone(this.inner._call('byId', arguments));
-			lang.mixin(d.rawData, d.lazyData);
+			// var d = lang.clone(this.inner._call('byId', arguments));
+			// lang.mixin(d.rawData, d.lazyData);
+			
+			var d = lang.mixin({}, this.inner._call('byId', arguments));
+			d.rawData = lang.mixin({}, d.rawData, d.lazyData);			
 			return d;
 		},
 		
 		byIndex: function(index, parentId){
-			var d = lang.clone(this.inner._call('byIndex', arguments));
-			lang.mixin(d.rawData, d.lazyData);
+			var d = lang.mixin({}, this.inner._call('byIndex', arguments));
+			d.rawData = lang.mixin({}, d.rawData, d.lazyData);
 			return d;
 		},
 		
@@ -96,6 +99,7 @@ define([
 			var oldRowData = t.byId(rowId);
 			t._set(rowId, rawData);
 			var newRowData = t.byId(rowId);
+			
 			this.onSet(rowId, index, newRowData, oldRowData);		//trigger model.onset
 			//this.onSet();
 		},
@@ -114,6 +118,7 @@ define([
 					var rowId = opt.rowId,
 						oldData = opt.newData,
 						newData = opt.oldData;
+						
 					t._onUndo(rowId, newData, oldData);
 				}
 				return true;
@@ -129,7 +134,6 @@ define([
 			var t = this,
 				opt = t._globalOptList[t._globalOptIndex + 1];
 			if(opt){
-				console.log(opt);
 				t._globalOptIndex++;
 				if(opt.type == 0){
 					var rowId = opt.rowId,
@@ -139,7 +143,7 @@ define([
 				}
 				return true;
 			}
-			return false;			
+			return false;
 		},
 
 		clear: function(){
@@ -179,7 +183,7 @@ define([
 					t._globalOptList = [];
 					t._globalOptIndex = -1;
 					console.log('save to store successfully');
-					t.onSave();
+					t.onSave(dl);
 				}, function(){
 					console.log('nothing to save');
 				});
@@ -199,7 +203,9 @@ define([
 			var t = this,
 				cache = t._cache.byId(rowId);
 			if(field){
-				return cache.lazyData? cache.lazyData[field] !== cache.rawData[field] : false;
+				if(cache.lazyData){
+					return cache.lazyData[field] ? cache.lazyData[field] !== cache.rawData[field] : false;
+				}
 			}else{
 				if(cache.lazyData){
 					var bool = false;
@@ -208,10 +214,9 @@ define([
 							return true;
 						}
 					}
-					return false;
 				}
-				return false;
 			}
+			return false;
 		},
 
 		getChanged: function(){
@@ -229,9 +234,12 @@ define([
 			return a;
 		},
 
-		onSave: function(){
+		onSave: function(rowids){
 			// summary:
 			//		Fired when successfully saved to store.
+			// rowIds: array
+			//		
+			
 		},
 		
 		onUndo: function(rowId, newData, oldData){
@@ -247,6 +255,12 @@ define([
 		_onSet: function(){
 			//clear
 			//fire onSet
+			var t = this;
+			
+			t._globalOptList = [];
+			t._globalOptIndex = -1;
+
+			t.onSet.apply(t, arguments);
 		},
 		
 		 _onUndo: function(rowId, newData, oldData){
@@ -273,20 +287,23 @@ define([
 		
 		_set: function(rowId, rawData){
 			var t = this,
-				c = t.inner._call('byId', [rowId]);
+				c = t.inner._call('byId', [rowId]),
+				obj = {};
 			
 			if(c.lazyData){
 				lang.mixin(c.lazyData, rawData)
 			}else{
-				c.lazyData = lang.clone(rawData);
+				c.lazyData = lang.mixin({}, rawData);
 			}
 			
 			var columns = t._cache.columns,
-				crd = lang.mixin(lang.clone(c.rawData), c.lazyData);
+				crd = lang.mixin({}, c.rawData, c.lazyData);
 				
+			
 			for(var cid in columns){
-				c.data[cid] = columns[cid].formatter? columns[cid].formatter(crd) : crd[columns[cid].field || cid];
+				obj[cid] = columns[cid].formatter? columns[cid].formatter(crd) : crd[columns[cid].field || cid];
 			}
+			c.data = obj; 
 		},
 
 		_saveRow: function(rowId){

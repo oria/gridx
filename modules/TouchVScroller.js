@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/kernel",
+	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	"dojo/_base/declare",
 	"dojo/query",
 	"dojo/dom-class",
 	"./VScroller",
 	"dojox/mobile/scrollable"
-], function(kernel, has, declare, query, domClass, VScroller, Scrollable){
+], function(kernel, Deferred, has, declare, query, domClass, VScroller, Scrollable){
 	kernel.experimental('gridx/modules/TouchVScroller');
 
 /*=====
@@ -21,14 +22,16 @@ define([
 	return declare(VScroller, {
 		scrollToRow: function(rowVisualIndex, toTop){
 			if(has('ios') || has('android')){
-				var rowNode = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
+				var d = new Deferred(),
+					rowNode = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
 				if(rowNode){
 					console.log('scroll into view: ' + rowNode.getAttribute('rowid'));
 					this._scrollable.scrollIntoView(rowNode, toTop);
 				}
-			}else{
-				this.inherited(arguments);
+				d.callback();
+				return d;
 			}
+			return this.inherited(arguments);
 		},
 
 		_init: function(){

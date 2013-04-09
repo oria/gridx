@@ -9,6 +9,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
 	'dijit/ProgressBar',
+	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
 ], function(parser, Deferred, dataSource, nestedDataSource, storeFactory, modules){
 
@@ -69,11 +70,15 @@ require([
 
 	layout1 = [
 		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
-		{id: 'id', name: 'id', field: 'id', expandLevel: 'all', width: '200px'},
 		{id: 'number', name: 'number', field: 'number',
+			expandLevel: 'all',
+			width: '200px',
 			widgetsInCell: true,
-			decorator: progressDecorator
+			decorator: progressDecorator,
+			editable: true,
+			editor: 'dijit/form/NumberTextBox'
 		},
+		{id: 'id', name: 'id', field: 'id'},
 		{id: 'string', name: 'string', field: 'string'},
 		{id: 'date', name: 'date', field: 'date'},
 		{id: 'time', name: 'time', field: 'time'},
@@ -116,6 +121,7 @@ require([
 		modules.ColumnResizer,
 		modules.ExtendedSelectRow,
 		modules.CellWidget,
+		modules.Edit,
 		modules.IndirectSelectColumn,
 		modules.SingleSort,
 		modules.VirtualVScroller
