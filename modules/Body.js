@@ -726,7 +726,7 @@ define([
 					sb.push(cls.join(' '),
 						'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
 						'" style="width:', col.width, ';min-width:', col.width,
-						'; ', style,
+						';', style,
 						'">', t._buildCellContent(cell, visualIndex, isPadding),
 					'</td>');
 				}
