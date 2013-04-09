@@ -319,37 +319,37 @@ define([
 		preload: function(){
 			var t = this,
 				g = t.grid;
+				
 			if(t.arg('lazySave')){
-				// t.model.setLazyable(true);
-				var _onSetLazyData = function(rowid, columnid, data){
-					var cell = g.cell(rowid, columnid, 1);
-					g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
-						t.onApply(cell, true, null, true);
-					});
-				};
-				var _onRedo = _onUndo = function(rowid, columnid, value, isCell){
-					if(isCell){
-						var cell = g.cell(rowid, columnid, 1),
-							w = cell.widget(),
-							obj = {},
-							f = cell.column.def().field;
-						obj[f] = value;
-						data = lang.mixin(lang.clone(cell.row.rawData()), obj);
-											console.log('data is', data);
-
-						var fd = cell.column.def().formatter? cell.column.def().formatter(data) : value;
-						if(cell.isEditing()){
-							w.setValue(fd, value)
+				var _onSet = function(rowId, index, newData, oldData){
+					console.log('in edit onset');
+					for(var colId in g._columnsById){
+						if(t.model.isChanged(rowId, g._columnsById[colId].field)){
+							g.body.addClass(rowId, colId, 'gridxCellChanged');
 						}else{
-							console.log('undo data', value);
-							t.model.update(rowid, columnid, value, cell.rawData());
+							g.body.removeClass(rowId, colId, 'gridxCellChanged')
 						}
 					}
 				};
 				
-				t.connect(t.model, 'onUndo', _onUndo);
-				t.connect(t.model, 'onRedo', _onRedo);
-				t.connect(t.model, 'onSetLazyData', _onSetLazyData);
+				// _onsave = function(rowIds){
+				// },
+				
+				t.connect(g.body, 'onAfterRow', function(row){
+					var cols = g._columnsById;
+					query('.gridxCell', row.node()).forEach(function(node){
+						var colid = node.getAttribute('colid');
+						if(t.model.isChanged(row.id, cols[colid].field)){
+							g.body.addClass(row.id, colid, 'gridxCellChanged');
+						}else{
+							g.body.removeClass(row.id, colid, 'gridxCellChanged');
+						}
+					});
+				});
+
+				t.connect(t.model, 'onSet', _onSet);
+				// t.connect(t.model, 'onSave', _onSave);
+				// t.connect(t.model, 'onSetLazyData', _onSetLazyData);
 			}
 			g.domNode.removeAttribute('aria-readonly');
 			t.connect(g, 'onCellDblClick', '_onUIBegin');
@@ -375,6 +375,7 @@ define([
 			});
 			t.connect(g.body, 'onAfterRow', function(row){
 				query('.gridxCell', row.node()).forEach(function(node){
+					// var colid = node.getAttribute('colid');
 					if(g._columnsById[node.getAttribute('colid')].editable){
 						node.removeAttribute('aria-readonly');
 					}
@@ -574,28 +575,6 @@ define([
 			return d;
 		},
 
-		save: function(){
-			var t = this;
-			for(var id in this._lazyIds){
-				console.log('id in lazy is: ' + id);
-				var lazyData = t._lazyData[id];
-				Deferred.when(t.grid.row(id, 1).setRawData(lazyData), function(){
-					delete lazyData;
-					delete t._lazyIds[id];
-					console.log('save lazy edit success in rowid: ' + id);
-				}, function(){
-					console.log('save lazy edit fail in rowid: ' + id);
-				});
-			};
-			console.log('let us save the data');
-		},
-		
-		clear: function(){
-			t._lazyIds = {};
-			t._lazyData = {};
-			t._lazyDataChangeList = {};
-		},
-		
 		isEditing: function(rowId, colId){
 			var col = this.grid._columnsById[colId];
 			if(col && col.alwaysEditing){

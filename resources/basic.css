@@ -159,6 +159,11 @@
 	-webkit-box-sizing: border-box;*/
 }
 
+.gridxCell.gridxCellChanged{
+	background: url('images/gridxCellChanged.png') no-repeat top right;
+
+}
+
 .gridxRowDummy {
 	height: 24px;
 	width: 100%;
