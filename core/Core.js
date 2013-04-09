@@ -297,7 +297,10 @@ define([
 		setColumns: function(columns){
 			var t = this;
 			t.structure = columns;
-			t._columns = columns.slice();
+			//make a shalow copy of columns here so one structure can be used in different grids.
+			t._columns = array.map(columns, function(col){
+				return lang.mixin({}, col);
+			});
 			t._columnsById = configColumns(t._columns);
 			if(t.model){
 				t.model._cache.onSetColumns(t._columnsById);

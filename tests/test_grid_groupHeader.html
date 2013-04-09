@@ -66,8 +66,56 @@
 			"gridx/modules/GroupHeader"
 		]
 	'></div>
-	<h2>Degenerated to normal header</h2>
+	<h2>GroupHeader and autoWidth</h2>
 	<div id='grid5' jsid='grid5' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		autoWidth: true,
+		headerGroups: headerGroups4,
+		modules: [
+			"gridx/modules/ColumnResizer",
+			"gridx/modules/GroupHeader"
+		]
+	'></div>
+	<h2>GroupHeader and columnWidthAutoResize</h2>
+	<div id="hslider" data-dojo-type="dijit.form.HorizontalSlider" 
+		style='width: 800px;'
+		data-dojo-props='
+		value:800,
+		minimum:0,
+		maximum:800,
+		pageIncrement:50,
+		showButtons:true,
+		intermediateChanges:true,
+		slideDuration:500,
+		onChange: onHSliderChange
+	'>
+		<div data-dojo-type="dijit.form.HorizontalRule" data-dojo-props='
+			container:"bottomDecoration",
+			count:11,
+			style:{height:"5px"}
+		'></div>
+		<div data-dojo-type="dijit.form.HorizontalRuleLabels" data-dojo-props='
+			container:"bottomDecoration",
+			count:11,
+			maximum:800,
+			constraints:{pattern:"#px"}
+		'></div>
+	</div>
+	<div style='height: 30px;'></div>
+	<div id='grid6' jsid='grid6' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		columnWidthAutoResize: true,
+		headerGroups: headerGroups4,
+		modules: [
+			"gridx/modules/GroupHeader"
+		]
+	'></div>
+	<h2>Degenerated to normal header</h2>
+	<div id='grid7' jsid='grid7' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout,
