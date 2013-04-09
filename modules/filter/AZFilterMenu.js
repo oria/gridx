@@ -1,63 +1,42 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/lang",
 	"dojo/_base/array",
-	"dijit/Menu",
-	"dijit/CheckedMenuItem",
-	"../Filter"
+	"./_FilterMenuBase",
+	"dijit/CheckedMenuItem"
+], function(declare, array, _FilterMenuBase, CheckedMenuItem){
 
-], function(declare, lang, array, Menu, CheckedMenuItem, Filter){
-
-	return declare([Menu], {
-		grid: null
-		,colId: null
-		,leftClickToOpen: true
-		,postCreate: function(){
-			this.inherited(arguments);
-			this._createMenuItems();
-		},
-
-		bindGrid: function(grid){
-			//summary:
-			//	Attach the menu with grid, so that it could do filter actions
-			this.grid = grid;
-		},
-
+	return declare(_FilterMenuBase, {
 		_createMenuItems: function(){
-			var f = lang.hitch(this, '_doFilter');
-			var arr = ['A-F', 'G-L', 'M-R', 'S-Z'];
-
+			var t = this,
+				arr = ['A-F', 'G-L', 'M-R', 'S-Z'];
 			array.forEach(arr, function(item){
-				this.addChild(new CheckedMenuItem({
+				t.addChild(new CheckedMenuItem({
 					label: item,
-					onChange: f
+					onChange: function(){
+						t._addRule();
+					}
 				}));
-			}, this);
+			});
 		},
 
-		_doFilter: function(){
-			var colId = this.colId;
-			var mis = this.getChildren();
-			var reg = '';
-			mis.forEach(function(mi){
+		_addRule: function(){
+			var t = this,
+				key = 'azfilter',
+				reg = '';
+			t.getChildren().forEach(function(mi){
 				if(mi.get('checked')){
 					reg += mi.get('label');
 				}
 			});
-			console.log(reg);
 			if(reg){
-				//maybe reg is empty string
 				reg = new RegExp('^[' + reg + ']', 'i');
+				t._addFilter(key, function(row){
+					return reg.test(String(row.data[t.colId]));
+				});
+			}else{
+				//If reg is empty string, remove this filter
+				t._removeFilter(key);
 			}
-			this.grid.filter.setFilter(function(row){
-				if(!reg || reg.test(row.data[colId])){
-					return true;
-				}else{
-					return false;
-				}
-			});
 		}
-
 	});
-
 });

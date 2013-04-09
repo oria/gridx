@@ -1,44 +1,30 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/lang",
 	"dojo/_base/array",
-	"dijit/Menu",
-	"dijit/CheckedMenuItem",
-	"../Filter"
+	"./_FilterMenuBase",
+	"dijit/CheckedMenuItem"
+], function(declare, array, _FilterMenuBase, CheckedMenuItem){
 
-], function(declare, lang, array, Menu, CheckedMenuItem, Filter){
-
-	return declare([Menu], {
-		grid: null
-		,colId: null
-		,leftClickToOpen: true
-		,numbers: []
-		,postCreate: function(){
-			this.inherited(arguments);
-			this._createMenuItems();
-		},
-
-		bindGrid: function(grid){
-			//summary:
-			//	Attach the menu with grid, so that it could do filter actions
-			this.grid = grid;
-		},
+	return declare(_FilterMenuBase, {
+		numbers: [],
 
 		_createMenuItems: function(){
-			var f = lang.hitch(this, '_doFilter');
-			var arr = [], n = this.numbers.shift();
-			while(this.numbers.length){
+			var t = this,
+				numbers = t.numbers,
+				arr = [],
+				n = numbers.shift();
+			while(numbers.length){
 				if(n === -Infinity){
-					n = this.numbers.shift();
+					n = numbers.shift();
 					arr.push('< ' + n);
 				}else{
 					var s;
-					if(this.numbers[0] === Infinity){
+					if(numbers[0] === Infinity){
 						s = '> ' + n;
-						this.numbers.length = 0;
+						numbers.length = 0;
 					}else{
-						var s = n + ' - ';
-						n = this.numbers.shift();
+						s = n + ' - ';
+						n = numbers.shift();
 						s += n;
 					}
 					arr.push(s);
@@ -46,18 +32,20 @@ define([
 			}
 
 			array.forEach(arr, function(item){
-				this.addChild(new CheckedMenuItem({
+				t.addChild(new CheckedMenuItem({
 					label: item,
-					onChange: f
+					onChange: function(){
+						t._addRule();
+					}
 				}));
-			}, this);
+			});
 		},
 
-		_doFilter: function(){
-			var colId = this.colId;
-			var mis = this.getChildren();
-			var exp = '1>1';
-			mis.forEach(function(mi){
+		_addRule: function(){
+			var colId = this.colId,
+				key = 'numberfilter',
+				exp = '1>1';
+			this.getChildren().forEach(function(mi){
 				if(mi.get('checked')){
 					var label = mi.get('label');
 					if(/\</.test(label)){
@@ -67,23 +55,19 @@ define([
 					}else{
 						var arr = label.split(' ');
 						var low = arr[0], high = arr[2];
-						exp += '|| (value >=' + low + ' && value <=' + high + ')'
+						exp += '|| (value >=' + low + ' && value <=' + high + ')';
 					}
 				}
 			});
 			console.log(exp);
-			var checker = null;
-			if(exp != '1>1')checker = eval('(function(value){return '+exp + ';})');
-
-			this.grid.filter.setFilter(function(row){
-				if(!checker || checker(eval(row.data[colId]))){
-					return true;
-				}else{
-					return false;
-				}
-			});
+			if(exp != '1>1'){
+				var checker = eval('(function(value){return ' + exp + ';})');
+				this._addFilter(key, function(row){
+					return checker(parseFloat(row.data[colId], 10));
+				});
+			}else{
+				this._removeFilter(key);
+			}
 		}
-
 	});
-
 });
