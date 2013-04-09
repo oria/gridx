@@ -297,7 +297,7 @@ define([
 		setColumns: function(columns){
 			var t = this;
 			t.structure = columns;
-			t._columns = lang.clone(columns);
+			t._columns = columns.slice();
 			t._columnsById = configColumns(t._columns);
 			if(t.model){
 				t.model._cache.onSetColumns(t._columnsById);

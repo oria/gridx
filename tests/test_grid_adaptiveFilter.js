@@ -21,14 +21,13 @@ require([
 		size: 100
 	});
 
-
 	var azMenu = new AZFilterMenu({});
 	var numberMenu = new NumberFilterMenu({numbers: [0, 3, 6, 10]});
 	layout = [
 				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
 				{id: 'order', field: 'order', name: 'Order', width: '80px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px', alwaysEditing: true},
-				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px', menu: azMenu.id},
+				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px', menu: azMenu},
 				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},
 				{id: 'Album', field: 'Album', name: 'Album', width: '160px'},
 				{id: 'Name', field: 'Name', name: 'Name', width: '80px'},
