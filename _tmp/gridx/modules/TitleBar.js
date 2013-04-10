@@ -25,12 +25,6 @@ define([
 
 	return declare(_Module, {
 		name: 'titleBar',
-		
-		getAPIPath: function(){
-			return {
-				titleBar: this
-			};
-		},
 
 		constructor: function(){
 			this.domNode = domConstruct.create('div', {

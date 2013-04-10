@@ -131,12 +131,6 @@ define([
 
 		forced: ['view'],
 
-		getAPIPath: function(){
-			return {
-				pagination: this
-			};
-		},
-
 		rowMixin: {
 			getPage: function(){
 				// summary:

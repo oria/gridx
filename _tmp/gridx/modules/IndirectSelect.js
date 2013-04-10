@@ -2,7 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/event",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
@@ -80,7 +80,7 @@ define([
 		_createSelector: function(row){
 			var rowNode = row.node(),
 				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
-				isUnselectable =  !this.grid.select.row.isSelectable(row.id),
+				isUnselectable =  !this.grid.row(row.id, 1).isSelectable(),
 				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
 			return this._createCheckBox(selected, partial, isUnselectable);
 		},
@@ -113,7 +113,7 @@ define([
 				g = this.grid;
 			query('.' + cls, g.rowHeader.bodyNode).removeClass(cls);
 			if(g.select.row.isSelected(reservedRowId)){
-				query('[rowid="' + reservedRowId + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
+				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
 			}
 		},
 

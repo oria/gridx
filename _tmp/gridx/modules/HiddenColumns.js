@@ -68,27 +68,16 @@ define([
 	return declare(_Module, {
 		name: 'hiddenColumns',
 
-		getAPIPath: function(){
-			return {
-				hiddenColumns: this
-			};
-		},
-
-		constructor: function(){
-			this._cols = array.map(this.grid._columns, function(col){
-				return col;
-			});
-		},
-
 		load: function(args, startup){
 			var t = this,
 				g = t.grid,
 				ids = t.arg('init', []);
+			t._cols = g._columns.slice();
 			if(g.move && g.move.column){
 				t.connect(g.move.column, 'onMoved', '_syncOrder');
 			}
 			if(g.persist){
-				ids.concat(g.persist.registerAndLoad('hiddenColumns', function(){
+				ids = ids.concat(g.persist.registerAndLoad('hiddenColumns', function(){
 					return t.get();
 				}) || []);
 			}
@@ -106,42 +95,64 @@ define([
 			var t = this,
 				g = t.grid,
 				columnsById = g._columnsById,
-				changed,
-				columns = g._columns;
-			array.forEach(arguments, function(id){
-				id = id && typeof id == "object" ? id.id: id;
-				var col = columnsById[id];
-				if(col){
-					changed = 1;
-					col.hidden = true;
-					delete columnsById[id];
-					columns.splice(array.indexOf(columns, col), 1);
-					//Directly remove dom nodes instead of refreshing the whole body to make it faster.
-					query('[colid="' + id + '"].gridxCell', g.domNode).forEach(function(node){
-						node.parentNode.removeChild(node);
-					});
+				columns = g._columns,
+				columnLock = g.columnLock,
+				lockCount = 0,
+				cols = array.filter(array.map(arguments, function(id){
+					id = id && typeof id == "object" ? id.id: id;
+					return columnsById[id];
+				}), function(col){
+					return col && !col.ignore && (col.hidable === undefined || col.hidable);
+				});
+			if(columnLock){
+				lockCount = columnLock.count;
+				columnLock.unlock();
+			}
+			array.forEach(cols, function(col){
+				if(col.index < lockCount){
+					//If a locked column is hidden, should unlock it.
+					--lockCount;
 				}
+				col.hidden = true;
+				delete columnsById[col.id];
+				columns.splice(array.indexOf(columns, col), 1);
+				//Directly remove dom nodes instead of refreshing the whole body to make it faster.
+				query('[colid="' + g._escapeId(col.id) + '"].gridxCell', g.domNode).forEach(function(node){
+					node.parentNode.removeChild(node);
+				});
 			});
-			if(changed){
+			if(cols.length){
 				array.forEach(columns, function(col, i){
 					col.index = i;
 				});
 			}
 			g.columnWidth._adaptWidth();
 			query('.gridxCell', g.bodyNode).forEach(function(node){
-				node.style.width = columnsById[node.getAttribute('colid')].width;
+				var s = node.style,
+					w = s.width = s.minWidth = s.maxWidth = columnsById[node.getAttribute('colid')].width;
 			});
 			//FIXME: this seems ugly....
 			if(g.vScroller._doVirtualScroll){
 				g.body.onForcedScroll();
 			}
-			return t._refresh(0);
+			return t._refresh(0).then(function(){
+				if(columnLock && lockCount > 0){
+					columnLock.lock(lockCount);
+				}
+			});
 		},
 
 		remove: function(){
 			var t = this,
-				columns = t.grid._columns,
+				g = t.grid,
+				columns = g._columns,
+				columnLock = g.columnLock,
+				lockCount = 0,
 				changed;
+			if(columnLock){
+				lockCount = columnLock.count;
+				columnLock.unlock();
+			}
 			array.forEach(arguments, function(id){
 				id = id && typeof id == "object" ? id.id: id;
 				var c,
@@ -167,12 +178,22 @@ define([
 					}
 				}
 			});
-			return t._refresh(changed);
+			return t._refresh(changed).then(function(){
+				if(columnLock && lockCount > 0){
+					columnLock.lock(lockCount);
+				}
+			});
 		},
 
 		clear: function(){
 			var g = this.grid,
+				columnLock = g.columnLock,
+				lockCount = 0,
 				changed;
+			if(columnLock){
+				lockCount = columnLock.count;
+				columnLock.unlock();
+			}
 			g._columns = array.map(this._cols, function(col, i){
 				col.index = i;
 				if(col.hidden){
@@ -182,7 +203,11 @@ define([
 				}
 				return col;
 			});
-			return this._refresh(changed);
+			return this._refresh(changed).then(function(){
+				if(columnLock && lockCount > 0){
+					columnLock.lock(lockCount);
+				}
+			});
 		},
 
 		get: function(){

@@ -7,7 +7,7 @@ define([
 	"dojo/dom-geometry",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, sniff, Deferred, query, domGeo, metrics, _Module){
+], function(declare, domStyle, has, Deferred, query, domGeo, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -38,12 +38,6 @@ define([
 	return declare(_Module, {
 		name: 'hScroller',
 
-		getAPIPath: function(){
-			return {
-				hScroller: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid,
@@ -64,7 +58,7 @@ define([
 				t.batchConnect(
 					[g.columnWidth, 'onUpdate', 'refresh'],
 					[n, 'onscroll', '_onScroll']);
-				if(sniff('ie')){
+				if(has('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
 					n.style.height = (metrics.getScrollbar().h + 2) + 'px';
@@ -75,10 +69,10 @@ define([
 		//Public API-----------------------------------------------------------
 		scroll: function(left){
 			var dn = this.domNode;
-			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
+			if((has('webkit') || has('ie') < 8) && !this.grid.isLeftToRight()){
 				left = dn.scrollWidth - dn.offsetWidth - left;
 			}
-			if((sniff('ff')) && !this.grid.isLeftToRight() && left > 0){
+			if((has('ff')) && !this.grid.isLeftToRight() && left > 0){
 				left = -left;
 			}
 			dn.scrollLeft = left;
@@ -92,7 +86,7 @@ define([
 				ltr = this.grid.isLeftToRight(),
 				scrollLeft = this.domNode.scrollLeft;
 			
-			if(!ltr && (sniff('webkit') || sniff('ie') < 8)){
+			if(!ltr && (has('webkit') || has('ie') < 8)){
 				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth;//the value relative to col 0
 			}
 			scrollLeft = Math.abs(scrollLeft);
@@ -150,7 +144,7 @@ define([
 			//	Fired by h-scroller's scrolling event
 			var t = this,
 				s = t.domNode.scrollLeft;
-			if((sniff('webkit') || sniff('ie') < 8) && !t.grid.isLeftToRight()){
+			if((has('webkit') || has('ie') < 8) && !t.grid.isLeftToRight()){
 				s = t.domNode.scrollWidth - t.domNode.offsetWidth - s;
 			}
 			if(t._lastLeft != s){

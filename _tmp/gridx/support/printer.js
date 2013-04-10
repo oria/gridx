@@ -5,10 +5,9 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/xhr",
-	"dojo/_base/array",
 	"dojo/_base/sniff",
 	"dojo/_base/window"
-], function(/*=====exporter, =====*/exportToTable, declare, lang, Deferred, xhr, array, sniff, win){
+], function(/*=====exporter, =====*/exportToTable, declare, lang, Deferred, xhr, has, win){
 
 /*=====
 	function printer(grid, args){
@@ -83,7 +82,7 @@ define([
 		if(!window.print){
 			console.warn('Print function is not available');
 			return;
-		}else if(sniff('chrome') || sniff('opera')){
+		}else if(has('chrome') || has('opera')){
 			//referred from dijit._editor.plugins.Print._print()
 			//In opera and chrome the iframe.contentWindow.print
 			//will also print the outside window. So we must create a
@@ -108,7 +107,7 @@ define([
 				s.right = s.bottom = 0;
 				s.border = 'none';
 				s.overflow = 'hidden';
-				if(!sniff('ie')){
+				if(!has('ie')){
 					s.visibility = 'hidden';
 				}
 				win.body().appendChild(printFrame);

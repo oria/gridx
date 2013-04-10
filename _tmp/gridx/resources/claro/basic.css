@@ -96,3 +96,8 @@
 	background: none;
 	border-bottom: none;
 }
+
+/* PagedBody */
+.claro .gridxBodyFirstRow .gridxCell {
+	border-top-color: #E5DAC8;
+}

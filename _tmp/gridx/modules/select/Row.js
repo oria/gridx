@@ -3,13 +3,13 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(/*=====Row, =====*/declare, array, sniff, query, lang, domClass, keys, _RowCellBase, _Module){
+], function(/*=====Row, =====*/declare, array, has, query, lang, domClass, keys, _RowCellBase, _Module){
 
 /*=====
 	Row.select = function(){
@@ -24,11 +24,14 @@ define([
 		// summary:
 		//		Whether this row is selected.
 	};
-
-	Row.isSelectable = funciton(){
+	Row.isSelectable = function(){
 		// summary:
 		//		Check whether this row is selectable.
-	},
+	};
+	Row.setSelectable = function(){
+		// summary:
+		//		Set this row to be selectable or not.
+	};
 
 	return declare(_RowCellBase, {
 		// summary:
@@ -57,6 +60,14 @@ define([
 		// treeMode: Boolean
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
+
+		// selectable: Object
+		//		User can set selectable/unselectable rows in this hash object. The hash key is the row ID.
+		selectable: {},
+
+		// isSelectable: Function(rowId)
+		//		User can provide this function to dynamically decide whether the given row is selectable.
+		isSelectable: function(){},
 
 		selectById: function(rowId){
 			// summary:
@@ -127,12 +138,16 @@ define([
 			isSelected: function(){
 				return this.grid.select.row.isSelected(this.id);
 			},
-			
+
 			isSelectable: function(){
-				return this.grid.select.row.isSelectable(this.id);
+				return this.grid.select.row._isSelectable(this.id);
+			},
+
+			setSelectable: function(selectable){
+				return this.grid.select.row.selectable[this.id] = selectable;
 			}
 		},
-		
+
 		//Public API--------------------------------------------------------------------------------
 		triggerOnCell: false,
 
@@ -141,7 +156,7 @@ define([
 		getSelected: function(){
 			return this.model.getMarkedIds();
 		},
-		
+
 		clear: function(notClearId){
 			if(this.arg('enabled')){
 				var model = this.model;
@@ -157,15 +172,20 @@ define([
 		//Private--------------------------------------------------------------------------------
 		_type: 'row',
 
+		_isSelectable: function(rowId){
+			var isSelectable = this.arg('isSelectable'),
+				selectable = this.arg('selectable', {});
+			return rowId in selectable ? selectable[rowId] :
+				isSelectable ? isSelectable.call(this, rowId) : true;
+		},
+
 		_init: function(){
 			var t = this,
 				g = t.grid;
 			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
-			
-			t.model.setMarkable('select', lang.hitch(t, 'isSelectable'));
-
+			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
 			t.batchConnect(
 				[g, 'onRowClick', function(e){
 					//Have to check whether we are on the 
@@ -176,7 +196,7 @@ define([
 						t._select(e.rowId, g._isCopyEvent(e));
 					}
 				}],
-				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
@@ -193,9 +213,9 @@ define([
 				t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, 1), id);
 			}
 		},
-		
+
 		_highlight: function(rowId, toHighlight){
-			var nodes = query('[rowid="' + rowId + '"]', this.grid.mainNode),
+			var nodes = query('[rowid="' + this.grid._escapeId(rowId) + '"]', this.grid.mainNode),
 				selected = toHighlight && toHighlight != 'mixed';
 			if(nodes.length){
 				nodes.forEach(function(node){
@@ -212,15 +232,11 @@ define([
 				m = t.model,
 				g = t.grid,
 				row = g.row(id);
-			// if(!g.unselectableRow || row.isSelectable()){
 			if(m.treeMarkMode() && !m.getMark(id) && toMark){
 				toMark = 'mixed';
 			}
 			m.markById(id, toMark);
 			m.when();
-			// }else{
-				// console.warn('row with id:' + id + ' is not selectable');
-			// }
 		},
 
 		_onRender: function(start, count){

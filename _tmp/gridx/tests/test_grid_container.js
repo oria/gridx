@@ -1,6 +1,7 @@
 require([
 	'dojo/parser',
 	'dojo/_base/array',
+	'dojo/_base/Deferred',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
@@ -11,7 +12,7 @@ require([
 	'dijit/layout/AccordionContainer',
 	'dijit/layout/ContentPane',
 	'dojo/domReady!'
-], function(parser, array, Grid, Cache, dataSource, storeFactory, mods){
+], function(parser, array, Deferred, Grid, Cache, dataSource, storeFactory, mods){
 	var createGrid = function(){
 		return new Grid({
 			cacheClass: Cache,
@@ -37,7 +38,7 @@ require([
 		});
 	};
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		array.forEach(['centerPane', 'rightPane', 'bottomPane'], function(pane, i){
 			dijit.byId(pane).set('content', createGrid());
 		});

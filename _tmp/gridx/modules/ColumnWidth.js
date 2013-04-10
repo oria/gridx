@@ -2,14 +2,14 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/Deferred",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/sniff",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"dojo/dom-style",
 	"dojo/keys",
 	"../core/_Module"
-], function(declare, array, Deferred, query, sniff, domGeometry, domClass, domStyle, keys, _Module){
+], function(declare, array, Deferred, query, has, domGeometry, domClass, domStyle, keys, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -37,12 +37,6 @@ define([
 		name: 'columnWidth',
 
 		forced: ['hLayout'],
-
-		getAPIPath: function(){
-			return {
-				columnWidth: this
-			};
-		},
 
 		constructor: function(){
 			this._init();
@@ -162,7 +156,7 @@ define([
 					totalWidth = 0;
 				headers.forEach(function(node){
 					var w = domStyle.get(node, 'width');
-					if(!sniff('safari') || !isGridHidden){
+					if(!has('safari') || !isGridHidden){
 						w += padBorder;
 					}
 					totalWidth += w;
@@ -181,7 +175,7 @@ define([
 				var autoCols = [],
 					cols = g._columns,
 					fixedWidth = 0;
-				if(sniff('safari')){
+				if(has('safari')){
 					padBorder = 0;
 				}
 				array.forEach(cols, function(c){
@@ -202,7 +196,7 @@ define([
 				array.forEach(cols, function(c){
 					if(c.declaredWidth != 'auto'){
 						var headerNode = header.getHeaderNode(c.id),
-							w = sniff('safari') ? parseFloat(headerNode.style.width, 10) :
+							w = has('safari') ? parseFloat(headerNode.style.width, 10) :
 								headerNode.offsetWidth || (domStyle.get(headerNode, 'width') + padBorder);
 						if(/%$/.test(c.declaredWidth)){
 							c.width = (w > padBorder ? w - padBorder : 0) + 'px';

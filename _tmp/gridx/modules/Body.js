@@ -2,32 +2,41 @@ define([
 /*====="../core/Row",=====*/
 /*====="../core/Cell",=====*/
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/_base/lang",
-	"dojo/json",
+	"dojo/_base/json",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	"dojo/keys",
 	"../core/_Module",
-	"dojo/i18n!../nls/Body",
-	"dojo/NodeList-traverse"
-], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, sniff, keys, _Module, nls){
+	"dojo/i18n!../nls/Body"
+//    "dojo/NodeList-dom",
+//    "dojo/NodeList-traverse"
+], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module, nls){
 
 /*=====
 	Row.node = function(){
 		// summary:
 		//		Get the dom node of this row.
-		// return:
+		// returns:
 		//		DOMNode|null
 	};
 
 	Cell.node = function(){
 		// summary:
 		//		Get the dom node of this cell.
-		// return:
+		// returns:
+		//		DOMNode|null
+	};
+
+	Cell.contentNode = function(){
+		// summary:
+		//		Get the dom node in this cell that actually contains data.
+		//		This function is useful if some modules (e.g. Tree) wraps cell data with some extra html.
+		// returns:
 		//		DOMNode|null
 	};
 
@@ -214,16 +223,11 @@ define([
 
 		forced: ['view'],
 
-		getAPIPath: function(){
-			return {
-				body: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid,
 				dn = t.domNode = g.bodyNode;
+			t._cellCls = {};
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
@@ -279,6 +283,10 @@ define([
 					rowId: this.row.id,
 					colId: this.column.id
 				});
+			},
+			contentNode: function(){
+				var node = this.node();
+				return node && (query('.gridxCellContent', node)[0] || node);
 			}
 		},
 
@@ -296,12 +304,39 @@ define([
 
 		compareOnSet: function(v1, v2){
 			return typeof v1 == 'object' && typeof v2 == 'object' ?
-				json.stringify(v1) == json.stringify(v2) :
+				json.toJson(v1) == json.toJson(v2) :
 				v1 === v2;
 		},
 
+		addClass: function(rowId, colId, cls){
+			var cellCls = this._cellCls,
+				r = cellCls[rowId] = cellCls[rowId] || {},
+				c = r[colId] = r[colId] || [];
+			if(array.indexOf(c, cls) < 0){
+				c.push(cls);
+				domClass.add(this.getCellNode({
+					rowId: rowId,
+					colId: colId
+				}), cls);
+			}
+		},
+
+		removeClass: function(rowId, colId, cls){
+			var cellCls = this._cellCls,
+				r = cellCls[rowId],
+				c = r && r[colId],
+				idx = c && array.indexOf(c, cls);
+			if(idx >= 0){
+				c.splice(idx, 1);
+				domClass.remove(this.getCellNode({
+					rowId: rowId,
+					colId: colId
+				}), cls);
+			}
+		},
+
 		getRowNode: function(args){
-			if(this.model.isId(args.rowId) && sniff('ie')){
+			if(this.model.isId(args.rowId) && has('ie')){
 				return this._getRowNode(args.rowId);
 			}else{
 				var rowQuery = this._getRowNodeQuery(args);
@@ -319,7 +354,7 @@ define([
 					colId = cols[args.colIndex].id;
 				}
 				var c = " [colid='" + colId + "'].gridxCell";
-				if(t.model.isId(args.rowId) && sniff('ie')){
+				if(t.model.isId(args.rowId) && has('ie')){
 					return query(c, t._getRowNode(args.rowId))[0] || null;
 				}else{
 					return query(r + c, t.domNode)[0] || null;
@@ -465,7 +500,7 @@ define([
 					//If is refresh, try to maintain the scroll top
 					var scrollTop = isRefresh ? n.scrollTop : 0;
 					n.scrollTop = 0;
-					if(sniff('ie')){
+					if(has('ie')){
 						//In IE, setting innerHTML will completely destroy the node,
 						//But CellWidget still need it.
 						while(n.childNodes.length){
@@ -492,7 +527,7 @@ define([
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
-				if(sniff('ie')){
+				if(has('ie')){
 					//In IE, setting innerHTML will completely destroy the node,
 					//But CellWidget still need it.
 					while(n.childNodes.length){
@@ -546,7 +581,7 @@ define([
 		onRender: function(/*start, count*/){
 			//FIX #8746
 			var bn = this.domNode;
-			if(sniff('ie') < 9 && bn.childNodes.length){
+			if(has('ie') < 9 && bn.childNodes.length){
 				query('> gridxLastRow', bn).removeClass('gridxLastRow');
 				domClass.add(bn.lastChild, 'gridxLastRow');
 			}
@@ -568,11 +603,11 @@ define([
 
 		//Private---------------------------------------------------------------------------
 		_getRowNodeQuery: function(args){
-			var r, m = this.model;
+			var r, m = this.model, escapeId = this.grid._escapeId;
 			if(m.isId(args.rowId)){
-				r = "[rowid='" + args.rowId + "']";
+				r = "[rowid='" + escapeId(args.rowId) + "']";
 			}else if(typeof args.rowIndex == 'number' && args.rowIndex >= 0){
-				r = "[rowindex='" + args.rowIndex + "']" + (m.isId(args.parentId) ? "[parentid='" + args.parentId + "']" : '');
+				r = "[rowindex='" + args.rowIndex + "']" + (m.isId(args.parentId) ? "[parentid='" + escapeId(args.parentId) + "']" : '');
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				r = "[visualindex='" + args.visualIndex + "']";
 			}
@@ -662,35 +697,51 @@ define([
 			}
 		},
 
+		onCheckCustomRow: function(row, output){},
+
+		onBuildCustomRow: function(row, output){},
+
 		_buildCells: function(row, visualIndex, cols){
 			var t = this,
 				g = t.grid,
 				columns = g._columns,
 				rowData = row.data(),
 				isFocusArea = g.focus.currentArea() == 'body',
-				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
-			for(var i = 0, len = columns.length; i < len; ++i){
-				var col = columns[i],
-					isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
-					cell = g.cell(row, cols && cols[i] || col.id, 1),
-					cls = col._class || '',
-					customCls = col['class'],
-					style = g.getTextDirStyle(col.id, rowData[col.id]);
-				cls += (customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '';
-				style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-				sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
-				if(isPadding){
-					sb.push('gridxPaddingCell ');
+				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'],
+				output = {};
+			t.onCheckCustomRow(row, output);
+			if(output[row.id]){
+				output = {};
+				t.onBuildCustomRow(row, output);
+				sb.push('<td class="gridxCustomRow" aria-readonly="true" role="gridcell" tabindex="-1">',
+					t._wrapCellData(output[row.id], row.id),
+					'</td>');
+			}else{
+				var cellCls = t._cellCls[row.id] || {};
+				for(var i = 0, len = columns.length; i < len; ++i){
+					var col = columns[i],
+						isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
+						cell = g.cell(row, cols && cols[i] || col.id, 1),
+						cls = [col._class || ''],
+						customCls = col['class'],
+						style = g.getTextDirStyle(col.id, rowData[col.id]);
+					cls.push((customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '');
+					cls = cls.concat(cellCls[col.id] || []);
+					style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
+					sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
+					if(isPadding){
+						sb.push('gridxPaddingCell ');
+					}
+					if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
+						sb.push('gridxCellFocus ');
+					}
+					sb.push(cls.join(' '),
+						'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
+						'" style="width:', col.width, ';min-width:', col.width,
+						';', style,
+						'">', t._buildCellContent(cell, visualIndex, isPadding),
+					'</td>');
 				}
-				if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
-					sb.push('gridxCellFocus ');
-				}
-				sb.push(cls,
-					'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
-					'" style="width:', col.width, ';min-width:', col.width,
-					'; ', style,
-					'">', t._buildCellContent(cell, visualIndex, isPadding),
-				'</td>');
 			}
 			sb.push('</tr></table>');
 			return sb.join('');
@@ -705,7 +756,7 @@ define([
 				var s = col.decorator ? col.decorator(data, row.id, visualIndex) : data;
 				r = this._wrapCellData(s, row.id, col.id);
 			}
-			return (r === '' || r === null || r === undefined) && (sniff('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
+			return (r === '' || r === null || r === undefined) && (has('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
 		},
 
 		_wrapCellData: function(cellData, rowId, colId){
@@ -950,7 +1001,7 @@ define([
 				t._focusCellCol = colIdx;
 				g.header._focusHeaderId = colId;
 				g.hScroller.scrollToColumn(colId);
-				if(sniff('ie') < 8){
+				if(has('ie') < 8){
 					//In IE7 focus cell node will scroll grid to the left most.
 					//So save the scrollLeft first and then set it back.
 					//FIXME: this still makes the grid body shake, any better solution?
@@ -1018,7 +1069,7 @@ define([
 
 		_onFocus: function(evt){
 			var bn = this.domNode,
-				nl = new query.NodeList(evt.target).closest('.gridxCell', bn);
+				nl = query(evt.target).closest('.gridxCell', bn);
 			if(nl[0]){
 				var colIndex = this.grid._columnsById[nl[0].getAttribute('colid')].index,
 					visualIndex = parseInt(nl.closest('.gridxRow', bn)[0].getAttribute('visualindex'), 10);

@@ -3,12 +3,12 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, sniff, query, domGeo, keys, metrics, _Module){
+], function(declare, Deferred, event, has, query, domGeo, keys, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -45,12 +45,6 @@ define([
 
 		optional: ['pagination'],
 	
-		getAPIPath: function(){
-			return {
-				vScroller: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid,
@@ -58,7 +52,7 @@ define([
 			t.stubNode = dn.firstChild;
 			if(g.autoHeight){
 				dn.style.display = 'none';
-				if(sniff('ie') < 8){
+				if(has('ie') < 8){
 					dn.style.width = '0px';
 				}
 			}else{
@@ -66,7 +60,7 @@ define([
 					ltr = g.isLeftToRight();
 				dn.style.width = w + 'px';
 				dn.style[ltr ? 'right' : 'left'] = -w + 'px';
-				if(sniff('ie') < 8){
+				if(has('ie') < 8){
 					t.stubNode.style.width = (w + 1) + 'px';
 				}
 			}
@@ -86,7 +80,7 @@ define([
 				[t.domNode, 'onscroll', '_doScroll'],
 				[bn, 'onmousewheel', '_onMouseWheel'],
 				[g.mainNode, 'onkeypress', '_onKeyScroll'],
-				sniff('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']);
+				has('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']);
 			t.aspect(g, '_onResizeEnd', '_onBodyChange');
 			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
 			t.aspect(bd, 'onRender', '_onBodyChange');
@@ -95,7 +89,7 @@ define([
 					var ds = dn.style;
 					ds.display = 'none';
 					ds.width = '';
-					if(sniff('ie') < 8){
+					if(has('ie') < 8){
 						ds.width = t.stubNode.style.width = '0px';
 					}
 					g.hLayout.reLayout();
@@ -157,8 +151,8 @@ define([
 					bn = g.bodyNode,
 					toShow = bn.scrollHeight > bn.clientHeight,
 					ds = t.domNode.style;
-					scrollBarWidth = metrics.getScrollbar().w + (sniff('webkit') ? 1 : 0);//Fix a chrome RTL defect
-				if(sniff('ie') < 8){
+					scrollBarWidth = metrics.getScrollbar().w + (has('webkit') ? 1 : 0);//Fix a chrome RTL defect
+				if(has('ie') < 8){
 					//In IE7 if the node is not wider than the scrollbar, 
 					//the scroll bar buttons and the empty space in the scroll bar won't be clickable.
 					//So add some extra px to make it wider. +1 is enough for classic theme. +2 is enough for XP theme.

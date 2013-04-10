@@ -6,7 +6,7 @@ define([
 	"dojo/keys",
 	"dijit/a11y",
 	"../core/_Module"
-], function(declare, event, sniff, domClass, keys, a11y, _Module){
+], function(declare, event, has, domClass, keys, a11y, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -38,7 +38,7 @@ define([
 				doFocus: t._doFocus,
 				doBlur: t._doBlur,
 				onFocus: t._onFocus,
-				onBlur: t._endNavigate,
+				onBlur: t._onBlur,
 				connects: [
 					t.connect(t.grid, 'onCellKeyDown', '_onKey')
 				]
@@ -54,7 +54,7 @@ define([
 							toFocus.focus();
 						}
 					};
-				if(sniff('webkit')){
+				if(has('webkit')){
 					func();
 				}else{
 					setTimeout(func, 5);
@@ -74,7 +74,7 @@ define([
 					elems = t._navElems,
 					firstElem = elems.lowest || elems.first,
 					lastElem = elems.last || elems.highest || firstElem,
-					target = sniff('ie') ? evt.srcElement : evt.target;
+					target = has('ie') ? evt.srcElement : evt.target;
 				if(target == (step > 0 ? lastElem : firstElem)){
 					event.stop(evt);
 					m.when({id: t._focusRowId}, function(){
@@ -117,17 +117,21 @@ define([
 				t._navigating = true;
 				t._focusColId = colId;
 				t._focusRowId = rowId;
-				t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
+				var navElems = t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
 					rowId: rowId, 
 					colId: colId
 				}));
-				return true;
+				return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
 			}
 			return false;
 		},
 
-		_endNavigate: function(){
+		_onBlur: function(){
 			this._navigating = false;
+			//FIXME: this breaks encapsulation.
+			if(this.grid.edit){
+				this.grid.edit._applyAll();
+			}
 		},
 
 		_onFocus: function(evt){

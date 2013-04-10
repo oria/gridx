@@ -2,7 +2,7 @@ define([
 /*====="../../core/Row", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -11,7 +11,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Row, =====*/declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Row, =====*/declare, array, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
 	Row.select = function(){
@@ -26,11 +26,14 @@ define([
 		// summary:
 		//		Check whether this row is selected.
 	};
-	
-	Row.isSelectable = funciton(){
+	Row.isSelectable = function(){
 		// summary:
 		//		Check whether this row is selectable.
-	},
+	};
+	Row.setSelectable = function(selectable){
+		// summary:
+		//		Set this row to be selectable or not.
+	};
 	
 	return declare(_RowCellBase, {
 		// summary:
@@ -59,6 +62,14 @@ define([
 		// treeMode: Boolean
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
+
+		// selectable: Object
+		//		User can set selectable/unselectable rows in this hash object. The hash key is the row ID.
+		selectable: {},
+
+		// isSelectable: Function(rowId)
+		//		User can provide this function to dynamically decide whether the given row is selectable.
+		isSelectable: function(){},
 
 		selectById: function(rowId){
 			// summary:
@@ -141,12 +152,16 @@ define([
 			isSelected: function(){
 				return this.model.getMark(this.id) === true;
 			},
-			
+
 			isSelectable: function(){
-				return this.grid.select.row.isSelectable(this.id);
+				return this.grid.select.row._isSelectable(this.id);
+			},
+
+			setSelectable: function(selectable){
+				return this.grid.select.row.selectable[this.id] = selectable;
 			}
 		},
-		
+
 		//Public-----------------------------------------------------------------
 		triggerOnCell: false,
 
@@ -178,9 +193,16 @@ define([
 		},
 
 		onHighlightChange: function(){},
-		
+
 		//Private---------------------------------------------------------------------
 		_type: 'row',
+
+		_isSelectable: function(rowId){
+			var isSelectable = this.arg('isSelectable'),
+				selectable = this.arg('selectable', {});
+			return rowId in selectable ? selectable[rowId] :
+				isSelectable ? isSelectable.call(this, rowId) : true;
+		},
 
 		_init: function(){
 			var t = this,
@@ -189,7 +211,7 @@ define([
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
-			t.model.setMarkable('select', lang.hitch(t, t.isSelectable));
+			t.model.setMarkable(lang.hitch(t, t._isSelectable));
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
@@ -201,6 +223,9 @@ define([
 							g.body._focusCellCol = e.columnIndex;
 						}
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
 					}
 				}],
 				[g, 'onRowMouseOver', function(e){
@@ -209,7 +234,7 @@ define([
 					}
 					t._highlight({row: e.visualIndex});
 				}],
-				[g, sniff('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if(e.keyCode == keys.SPACE && (!e.columnId ||
 							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
@@ -273,7 +298,7 @@ define([
 
 		_onMark: function(id, toMark, oldState, type){
 			if(type == 'select'){
-				var nodes = query('[rowid="' + id + '"]', this.grid.mainNode);
+				var nodes = query('[rowid="' + this.grid._escapeId(id) + '"]', this.grid.mainNode);
 				if(nodes.length){
 					nodes.forEach(function(node){
 						var selected = toMark && toMark != 'mixed';
@@ -380,6 +405,11 @@ define([
 				}
 				return m.when();
 			}
+		},
+
+		_highlightSingle: function(target, toHighlight){	//prevent highlight at UI level if a row is not selectable
+			toHighlight = toHighlight ? this._toSelect && this._isSelectable(this._getRowId(target.row)) : this._isSelected(target);
+			this._doHighlight(target, toHighlight);
 		}
 	});
 });

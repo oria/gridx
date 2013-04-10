@@ -2,7 +2,7 @@ define([
 /*====="../../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
@@ -10,7 +10,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_Base"
-], function(/*=====Column, =====*/declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
+], function(/*=====Column, =====*/declare, array, query, lang, has, domClass, mouse, keys, _Module, _Base){
 
 /*=====
 	Column.select = function(){
@@ -192,6 +192,9 @@ define([
 				[g, 'onHeaderCellMouseDown', function(e){
 					if(mouse.isLeft(e) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
 						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
 					}
 				}],
 				[g, 'onHeaderCellMouseOver', function(e){
@@ -200,7 +203,7 @@ define([
 				[g, 'onCellMouseOver', function(e){
 					t._highlight({column: e.columnIndex});
 				}],
-				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
 						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
@@ -217,7 +220,7 @@ define([
 				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
-					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
+					node = query(['[visualindex="', j, '"] [colid="', g._escapeId(cols[i].id), '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
 					node.setAttribute('aria-selected', true);
 				}
@@ -248,7 +251,7 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			query('[colid="' + this.grid._columns[target.column].id + '"].gridxCell', this.grid.domNode).forEach(function(node){
+			query('[colid="' + this.grid._escapeId(this.grid._columns[target.column].id) + '"].gridxCell', this.grid.domNode).forEach(function(node){
 				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
 			});
 		},
@@ -257,7 +260,7 @@ define([
 			var g = this.grid;
 			if(g.focus){
 				//Seems breaking encapsulation...
-				g.header._focusNode(query('[colid="' + g._columns[target.column].id + '"].gridxCell', g.header.domNode)[0]);
+				g.header._focusNode(query('[colid="' + g._escapeId(g._columns[target.column].id) + '"].gridxCell', g.header.domNode)[0]);
 			}
 		},
 

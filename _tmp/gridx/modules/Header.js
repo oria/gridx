@@ -6,12 +6,12 @@ define([
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/sniff",
 	"dojo/keys",
 	"../core/util",
 	"../core/_Module"
-], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
+], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, has, keys, util, _Module){
 
 /*=====
 	Column.headerNode = function(){
@@ -65,12 +65,6 @@ define([
 	return declare(_Module, {
 		name: 'header',
 
-		getAPIPath: function(){
-			return {
-				header: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				dn = t.domNode = domConstruct.create('div', {
@@ -97,7 +91,7 @@ define([
 			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
 			//FIXME: sometimes FF will remember the scroll position of the header row, so force aligned with body.
 			//Does not occur in any other browsers.
-			if(sniff('ff')){
+			if(has('ff')){
 				t.aspect(g, 'onModulesLoaded', function(){
 					t._onHScroll(t._scrollLeft);
 				});
@@ -127,7 +121,7 @@ define([
 		hidden: false,
 
 		getHeaderNode: function(id){
-			return query("[colid='" + id + "']", this.domNode)[0];
+			return query("[colid='" + this.grid._escapeId(id) + "']", this.domNode)[0];
 		},
 
 		refresh: function(){
@@ -155,7 +149,7 @@ define([
 					'" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
 					(lang.isFunction(col.headerClass) ? col.headerClass(col) : col.headerClass) || '',
-					'" style="width: ', col.width, ';min-width:', col.width,
+					'" style="width:', col.width, ';min-width:', col.width, ';',
 					g.getTextDirStyle(col.id, col.name),
 					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
 					'"><div class="gridxSortNode">',
@@ -168,7 +162,7 @@ define([
 		},
 
 		_onHScroll: function(left){
-			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
+			if((has('webkit') || has('ie') < 8) && !this.grid.isLeftToRight()){
 				left = this.innerNode.scrollWidth - this.innerNode.offsetWidth - left;
 			}
 			this.innerNode.scrollLeft = this._scrollLeft = left;
@@ -255,11 +249,11 @@ define([
 					setTimeout(function(){
 						//For webkit browsers, when moving column using keyboard, the header cell will lose this focus class,
 						//although it was set correctly before this setTimeout. So re-add it here.
-						if(sniff('webkit')){
+						if(has('webkit')){
 							domClass.add(node, t._focusClass);
 						}
 						node.focus();
-						if(sniff('ie') < 8){
+						if(has('ie') < 8){
 							t.innerNode.scrollLeft = t._scrollLeft;
 						}
 					}, 0);

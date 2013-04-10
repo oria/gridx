@@ -84,11 +84,6 @@ define([
 			this.loaded.callback();
 			
 		},
-		getAPIPath: function(){
-			return {
-				dod: this
-			};
-		},
 		rowMixin: {
 			showDetail: function(){
 				this.grid.dod.show(this);
@@ -141,7 +136,7 @@ define([
 			}
 			
 			if(this.grid.rowHeader){
-				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
 				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') + 'px');
 			}
@@ -156,12 +151,12 @@ define([
 		},
 		
 		hide: function(row){
-			var _row = this._row(row), g = this.grid;
+			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
 			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
-				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
@@ -180,7 +175,7 @@ define([
 					}
 				}).play();
 				if(this.grid.rowHeader){
-					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
 						properties: {
 							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
@@ -193,7 +188,7 @@ define([
 				_row.dodNode.style.display = 'none';
 				g.body.onRender();
 				if(this.grid.rowHeader){
-					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 					rowHeaderNode.firstChild.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
 				}
 				
@@ -268,7 +263,7 @@ define([
 		},
 		
 		_detailLoadComplete: function(row){
-			var _row = this._row(row), g = this.grid;
+			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
 			if(!this.isShown(row)){return;}
 			_row.dodLoaded = true;
 			
@@ -293,7 +288,7 @@ define([
 					}).play();
 					
 					if(this.grid.rowHeader){
-						var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 						baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
 							properties: {
 								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
@@ -305,7 +300,7 @@ define([
 					_row.dodNode.style.height = 'auto';
 					g.body.onRender();
 					if(this.grid.rowHeader){
-						var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
 					}
 					

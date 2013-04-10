@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/aspect",
@@ -11,7 +11,7 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util"
-], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
+], function(declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
 
 /*=====
 	return declare(_Module, {
@@ -45,12 +45,6 @@ define([
 
 	return declare(_Module, {
 		name: 'rowHeader',
-
-		getAPIPath: function(){
-			return {
-				rowHeader: this
-			};
-		},
 
 		constructor: function(){
 			this.headerNode = domConstruct.create('div', {
@@ -91,6 +85,7 @@ define([
 			g.mainNode.appendChild(rhbn);
 			rhbn.style.width = w;
 			g.hLayout.register(null, rhbn);
+			
 			t.batchConnect(
 				[body, 'onRender', '_onRendered'],
 				[body, 'onAfterRow', '_onAfterRow'],
@@ -110,6 +105,8 @@ define([
 			//TODO: need to organize this into connect/disconnect system
 			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true);
+			aspect.after(t.model, 'onSizeChange', lang.hitch(t, t._onSizeChange));
+
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
 		},
@@ -185,7 +182,7 @@ define([
 			//Use setTimeout to ensure the row header height correct reflects the body row height.
 			//FIXME: This is tricky and may not be working in some special cases.
 			function getHeight(){
-				return sniff('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
+				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			rowHeaderNode.style.height = getHeight();
 			setTimeout(function(){
@@ -201,9 +198,19 @@ define([
 			}
 			t._onScroll();
 		},
+		
+		_onSizeChange: function(size, oldSize){
+			var t = this,
+				g = t.grid,
+				hp = this.arg('headerProvider');
+			if(!size && hp){
+				t.headerCellNode.innerHTML = '';
+			}
+			t._onScroll();
+		},
 
 		_onDelete: function(id){
-			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
 				var node = nodes[nodes.length - 1],
 					pid = node.getAttribute('parentid'),
@@ -226,7 +233,7 @@ define([
 		},
 		
 		_onUnrender: function(id){
-			var nodes = this.model.isId(id) && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
+			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
 				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
 				domConstruct.destroy(nodes[nodes.length - 1]);
@@ -238,7 +245,7 @@ define([
 		},
 
 		_onResize: function(){
-			var ie = sniff('ie');
+			var ie = has('ie');
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
@@ -311,14 +318,14 @@ define([
 		},
 
 		_onRowMouseOver: function(e){
-			var rowNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
+			var rowNode = query('> [rowid="' + this.grid._escapeId(e.rowId) + '"].gridxRowHeaderRow', this.bodyNode)[0];
 			if(rowNode){
 				domClass.toggle(rowNode, "gridxRowOver", e.type.toLowerCase() == 'mouseover');
 			}
 		},
 
 		_onCellMouseOver: function(e){
-			var cellNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
+			var cellNode = query('> [rowid="' + this.grid._escapeId(e.rowId) + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
 			if(cellNode){
 				domClass.toggle(cellNode, "gridxRowHeaderCellOver", e.type.toLowerCase() == 'mouseover');
 			}

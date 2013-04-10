@@ -17,29 +17,11 @@ define([
 		mixin = lang.mixin,
 		indexOf = array.indexOf;
 
-	function _onBegin(size){
-		//Private function to be called in the scope of cache
-		this._size[''] = parseInt(size, 10);
-	}
-
-	function _onComplete(d, start, items){
-		//Private function to be called in the scope of cache
-		try{
-			var t = this, i = 0, item;
-			for(; item = items[i]; ++i){
-				t._addRow(t.store.getIdentity(item), start + i, t._itemToObject(item), item);
-			}
-			d.callback();
-		}catch(e){
-			d.errback(e);
-		}
-	}
-
 	return declare(_Extension, {
 		constructor: function(model, args){
 			var t = this;
 			t.setStore(args.store);
-			t.columns = args._columnsById;
+			t.columns = lang.mixin({}, args._columnsById);
 			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
 				'hasChildren', 'children', 'keep', 'free');
 		},
@@ -53,7 +35,9 @@ define([
 			var t = this,
 				c = 'aspect',
 				old = store.fetch;
-			t.clear();
+			//Disconnect store events.
+			t.destroy();
+			t._cnnts = [];
 			t.store = store;
 			if(!old && store.notify){
 				//The store implements the dojo.store.Observable API
@@ -146,7 +130,7 @@ define([
 				c;
 			t._init('hasChildren', arguments);
 			c = t.byId(id);
-			return s.hasChildren && s.hasChildren(id, c && c.item);
+			return s.hasChildren && s.hasChildren(id, c && c.item) && s.getChildren;
 		},
 
 		children: function(parentId){
@@ -174,7 +158,7 @@ define([
 
 		onSetColumns: function(columns){
 			var t = this, id, c, colId, col;
-			t.columns = columns;
+			t.columns = lang.mixin({}, columns);
 			for(id in t._cache){
 				c = t._cache[id];
 				for(colId in columns){
@@ -241,58 +225,68 @@ define([
 			t.onLoadRow(id);
 		},
 
-		_loadChildren: function(parentId){
+		_storeFetch: function(options, onFetched){
+			console.debug("\tFETCH parent: ",
+					options.parentId, ", start: ",
+					options.start || 0, ", count: ",
+					options.count, ", end: ",
+					options.count && (options.start || 0) + options.count - 1, ", options:",
+					this.options);
+
 			var t = this,
-				d = new Deferred(),
 				s = t.store,
-				row = t.byId(parentId),
-				items = t._struct[parentId];
-			if(row && items && (items.length > 1 || !t.hasChildren || !t.hasChildren(parentId))){
-				d.callback();
-			}else{
-				items = row && s.getChildren && s.getChildren(row.item) || [];
-				Deferred.when(items, function(items){
-					var i = 0,
-						item,
-						len = t._size[parentId] = items.length;
-					for(; i < len; ++i){
-						item = items[i];
-						t._addRow(s.getIdentity(item), i, t._itemToObject(item), item, parentId);
+				d = new Deferred(),
+				parentId = t.model.isId(options.parentId) ? options.parentId : '',
+				req = mixin({}, t.options || {}, options),
+				onError = hitch(d, d.errback),
+				results;
+			function onBegin(size){
+				t._size[parentId] = parseInt(size, 10);
+			}
+			function onComplete(items){
+				//Private function to be called in the scope of cache
+				try{
+					var start = options.start || 0,
+						i = 0,
+						item;
+					for(; item = items[i]; ++i){
+						t._addRow(s.getIdentity(item), start + i, t._itemToObject(item), item, parentId);
 					}
 					d.callback();
-				}, hitch(d, d.errback));
+				}catch(e){
+					d.errback(e);
+				}
 			}
-			return d;
-		},
-
-		_storeFetch: function(options, onFetched){
-//            console.debug("\tFETCH start: ",
-//                    options.start, ", count: ",
-//                    options.count, ", end: ",
-//                    options.count && options.start + options.count - 1, ", options:",
-//                    this.options);
-
-			var t = this,
-				s = t.store,
-				d = new Deferred(),
-				req = mixin({}, t.options || {}, options),
-				onBegin = hitch(t, _onBegin),
-				onComplete = hitch(t, _onComplete, d, options.start),
-				onError = hitch(d, d.errback);
-			t._filled = 1;	//1 as true;
+			t._filled = 1;
 			t.onBeforeFetch(req);
-			if(s.fetch){
-				s.fetch(mixin(req, {
-					onBegin: onBegin,
-					onComplete: onComplete,
-					onError: onError
-				}));
-			}else{
-				var results = s.query(req.query || {}, req);
-				Deferred.when(results.total, onBegin);
+			if(parentId === ''){
+				if(s.fetch){
+					s.fetch(mixin(req, {
+						onBegin: onBegin,
+						onComplete: onComplete,
+						onError: onError
+					}));
+				}else{
+					results = s.query(req.query || {}, req);
+					Deferred.when(results.total, onBegin);
+					Deferred.when(results, onComplete, onError);
+				}
+			}else if(t.hasChildren(parentId)){
+				results = s.getChildren(t.byId(parentId).item, req);
+				if('total' in results){
+					Deferred.when(results.total, onBegin);
+				}else{
+					Deferred.when(results, function(results){
+						onBegin(results.length);
+					});
+				}
 				Deferred.when(results, onComplete, onError);
+			}else{
+				d.callback();
 			}
-			d.then(hitch(t, t.onAfterFetch));
+			d.then(function(){
+				t.onAfterFetch();
+			});
 			return d;
 		},
 
@@ -308,9 +302,10 @@ define([
 			}
 			t.onSet(id, index, t._cache[id], old);
 		},
-	
+
 		_onNew: function(item, parentInfo){
-			var t = this, s = t.store,
+			var t = this,
+				s = t.store,
 				row = t._itemToObject(item),
 				parentItem = parentInfo && parentInfo[s.fetch ? 'item' : 'parent'],
 				parentId = parentItem ? s.getIdentity(parentItem) : '',
@@ -326,13 +321,16 @@ define([
 				t.model._onSizeChange();
 			}
 		},
-	
+
 		_onDelete: function(item){
-			var t = this, s = t.store, st = t._struct,
-				id = s.fetch ? s.getIdentity(item) : item, 
+			var t = this,
+				s = t.store,
+				st = t._struct,
+				id = s.fetch ? s.getIdentity(item) : item,
 				path = t.treePath(id);
 			if(path.length){
-				var children, i, j, ids = [id],
+				var children, i, j,
+					ids = [id],
 					parentId = path[path.length - 1],
 					sz = t._size,
 					size = sz[''],
@@ -340,7 +338,7 @@ define([
 				//This must exist, because we've already have treePath
 				st[parentId].splice(index, 1);
 				--sz[parentId];
-	
+
 				for(i = 0; i < ids.length; ++i){
 					children = st[ids[i]];
 					if(children){

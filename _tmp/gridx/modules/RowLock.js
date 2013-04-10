@@ -33,11 +33,6 @@ define([
 		required: ['vLayout'],
 		forced: ['hLayout', 'body'],
 		count: 0,
-		getAPIPath: function(){
-			return {
-				rowLock: this
-			};
-		},
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;

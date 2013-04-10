@@ -1,18 +1,14 @@
 require([
-	'dojo/parser',
-	'dojo/_base/Deferred',
 	'gridx/tests/support/data/TreeColumnarTestData',
-	'gridx/tests/support/data/TreeNestedTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/allModules',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/core/model/cache/Async',
 	'dijit/ProgressBar',
 	'dojo/domReady!'
-], function(parser, Deferred, dataSource, nestedDataSource, storeFactory, modules, Grid, Sync, Async){
+], function(dataSource, storeFactory, modules, Grid, Sync){
 
-	store = storeFactory({
+	var store = storeFactory({
 		dataSource: dataSource, 
 		maxLevel: 4,
 		maxChildrenCount: 10
@@ -24,42 +20,6 @@ require([
 		return store.getValues(item, 'children');
 	};
 
-	storeAsync = storeFactory({
-		isAsync: true,
-		dataSource: dataSource, 
-		maxLevel: 4,
-		maxChildrenCount: 10
-	});
-	storeAsync.hasChildren = function(id, item){
-		return item && storeAsync.getValues(item, 'children').length;
-	};
-	storeAsync.getChildren = function(item){
-		var d = new Deferred();
-		console.log('getChildren: ', storeAsync.getIdentity(item));
-		setTimeout(function(){
-			var children = storeAsync.getValues(item, 'children');
-			d.callback(children);
-		}, 1000);
-		return d;
-	};
-
-	storeNested = storeFactory({
-		dataSource: nestedDataSource, 
-		maxLevel: 4,
-		maxChildrenCount: 10
-	});
-	storeNested.hasChildren = function(id, item){
-		return item && storeNested.getValues(item, 'children').length;
-	};
-	storeNested.getChildren = function(item){
-		var d = new Deferred();
-		setTimeout(function(){
-			var children = storeNested.getValues(item, 'children');
-			d.callback(children);
-		}, 1000);
-		return d;
-	};
-
 	var progressDecorator = function(){
 		return [
 			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 10000' ",
@@ -67,7 +27,7 @@ require([
 		].join('');
 	};
 
-	layout1 = [
+	var layout = [
 		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
 		{id: 'id', name: 'id', field: 'id', expandLevel: 'all', width: '200px'},
 		{id: 'number', name: 'number', field: 'number',
@@ -79,37 +39,8 @@ require([
 		{id: 'time', name: 'time', field: 'time'},
 		{id: 'bool', name: 'bool', field: 'bool'}
 	];
-	layout2 = [
-		//Expandable column defaults to the first one, if no expandLevel provided.
-		{id: 'id', name: 'id', field: 'id'},
-		{id: 'number', name: 'number', field: 'number',
-			widgetsInCell: true,
-			decorator: progressDecorator
-		},
-		{id: 'string', name: 'string', field: 'string'},
-		{id: 'date', name: 'date', field: 'date'},
-		{id: 'time', name: 'time', field: 'time'},
-		{id: 'bool', name: 'bool', field: 'bool'}
-	];
-	layout3 = [
-		{id: 'number', name: 'number', field: 'number'},
-		{id: 'string', name: 'string', field: 'string'},
-		{id: 'date', name: 'date', field: 'date'},
-		{id: 'time', name: 'time', field: 'time'},
-		{id: 'bool', name: 'bool', field: 'bool'},
-		{id: 'id', name: 'id', field: 'id'}
-	];
-	layout4 = [
-		{id: 'id', name: 'id', field: 'id'},
-		{id: 'number', name: 'number *', field: 'number', expandLevel: 1},
-		{id: 'string', name: 'string *', field: 'string', expandLevel: 2},
-		{id: 'date', name: 'date', field: 'date'},
-		{id: 'time', name: 'time *', field: 'time', expandLevel: 3},
-		{id: 'bool', name: 'bool', field: 'bool'}
-	];
 
-
-	mods = [
+	var mods = [
 		modules.Tree,
 		// modules.Pagination,
 		// modules.PaginationBar,
@@ -124,22 +55,16 @@ require([
 		modules.SingleSort,
 		modules.VirtualVScroller
 	];
-	
+
 	grid = new Grid({
 		id: 'grid',
 		store: store,
-		structure: layout1,
+		structure: layout,
 		cacheClass: Sync,
 		modules: mods,
-	    selectRowCanSelect: function(rowid, columnid){
-	        		// console.log(row.data());
-		        	return this.grid.row(rowid, 1).data().bool;
-		        	//console.log(row);
-		        	//return false;
-		        },
-	    selectRowUnselectableRowEnabled: true,
-	});
-	grid.placeAt('grid1');
-	grid.startup();	
-	//parser.parse();
+		selectRowIsSelectable: function(rowid){
+			return this.grid.row(rowid, 1).data().bool;
+		}
+	}, 'grid');
+	grid.startup();
 });

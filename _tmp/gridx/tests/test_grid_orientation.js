@@ -1,5 +1,6 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'dojo/query',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
@@ -7,7 +8,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
 	'dojo/domReady!'
-], function(parser, query, dataSource, storeFactory){
+], function(parser, Deferred, query, dataSource, storeFactory){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -29,7 +30,7 @@ require([
 		{id: 'Heard', field: 'Heard', name: 'Heard:12'}
 	];
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		//Adapt height, can be ommited if height is fixed.
 		document.body.style.height = window.innerHeight + 'px';
 		grid.resize();

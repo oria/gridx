@@ -11,12 +11,16 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane',
+	'gridx/tests/support/data/TreeColumnarTestData',
+	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/core/model/cache/Sync',
 	'dijit/form/Button',
 	'dijit/form/NumberTextBox',
-		'gridx/allModules',
+	'gridx/allModules',
 
 	'dojo/domReady!'
-], function(parser, Grid, Cache, Focus, RowHeader, SelectRow, extendedSelectRow, VirtualVScroller, dataSource, storeFactory, TestPane){
+], function(parser, Grid, Cache, Focus, RowHeader, SelectRow, extendedSelectRow, 
+			VirtualVScroller, dataSource, storeFactory, TestPane, treeDataSource, treeStoreFactory){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -50,8 +54,8 @@ require([
 	tp.placeAt('ctrlPane');
 	
 	tp.addTestSet('Select Row Actions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow5Unselectable">Get Row 5 Unselectable</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow6Unselectable">Get Row 6 Unselectable</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow5Unselectable">Get Row 5 Selectable</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow6Unselectable">Get Row 6 Selectable</div><br/>',
 	''].join(''));
 
 	tp.startup();
@@ -64,5 +68,41 @@ require([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getSelectedRowid">Get Selected Rows id</div><br/>',
 	''].join(''));
 	tp2.startup();
+	
+	//tree gridx config
+	treeStore = treeStoreFactory({
+		dataSource: treeDataSource, 
+		maxLevel: 4,
+		maxChildrenCount: 10
+	});
+	treeStore.hasChildren = function(id, item){
+		return item && treeStore.getValues(item, 'children').length;
+	};
+	treeStore.getChildren = function(item){
+		return treeStore.getValues(item, 'children');
+	};
+
+	var progressDecorator = function(){
+		return [
+			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 10000' ",
+			"class='gridxHasGridCellValue' style='width: 100%;'></div>"
+		].join('');
+	};
+
+	treeLayout = [
+		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
+		{id: 'id', name: 'id', field: 'id', expandLevel: 'all', width: '200px'},
+		{id: 'number', name: 'number', field: 'number',
+			widgetsInCell: true,
+			decorator: progressDecorator
+		},
+		{id: 'string', name: 'string', field: 'string'},
+		{id: 'date', name: 'date', field: 'date'},
+		{id: 'time', name: 'time', field: 'time'},
+		{id: 'bool', name: 'bool', field: 'bool'}
+	];
+	
 	parser.parse();
+
+	
 });

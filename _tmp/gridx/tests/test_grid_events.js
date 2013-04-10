@@ -1,11 +1,12 @@
 require([
 	'dojo/parser',
+	'dojo/_base/Deferred',
 	'dojo/_base/array',
 	'dojo/store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'dojo/domReady!'
-], function(parser, array, Memory){
+], function(parser, Deferred, array, Memory){
 	var comps = ['Header', 'Row', 'HeaderCell', 'Cell'];
 	var events = [
 		'Click', 'DblClick',
@@ -33,7 +34,7 @@ require([
 	});
 	layout.unshift({id: 'id', width: '100px;', field: 'id', style: 'background-color: #'});
 
-	parser.parse().then(function(){
+	Deferred.when(parser.parse(), function(){
 		array.forEach(comps, function(comp){
 			array.forEach(events, function(evt){
 				var evtName = 'on' + comp + evt;

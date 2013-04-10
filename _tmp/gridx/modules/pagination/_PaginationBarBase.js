@@ -53,12 +53,6 @@ define([
 
 		sizeSwitch: true,
 
-		getAPIPath: function(){
-			return {
-				paginationBar: this
-			};
-		},
-
 		preload: function(){
 			for(var t = this, i = 0, positions = ['top', 'bottom']; i < positions.length; ++i){
 				var pos = positions[i];

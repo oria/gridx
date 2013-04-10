@@ -21,7 +21,9 @@ define([
 			};
 		while(pids.length){
 			pid = pids.shift();
-			Deferred.when(self._loadChildren(pid), lang.partial(appendChildren, pid));
+			self._storeFetch({
+				parentId: pid
+			}).then(lang.partial(appendChildren, pid));
 		}
 	}
 

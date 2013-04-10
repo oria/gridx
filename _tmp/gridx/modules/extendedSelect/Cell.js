@@ -2,7 +2,7 @@ define([
 /*====="../../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -11,7 +11,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Cell, =====*/declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Cell, =====*/declare, array, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
 	Cell.select = function(){
@@ -249,12 +249,15 @@ define([
 				[g, 'onCellMouseDown', function(e){
 					if(mouse.isLeft(e)){
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
 					}
 				}],
 				[g, 'onCellMouseOver', function(e){
 					t._highlight(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex));
 				}],
-				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();
@@ -278,7 +281,7 @@ define([
 						if(m.getMark(rid, type) || (t._selecting && t._toSelect &&
 							t._inRange(i, t._startItem.c, t._currentItem.c, 1) && //1 as true
 							t._inRange(j, t._startItem.r, t._currentItem.r, 1))){	//1 as true
-							domClass.add(query('[visualindex="' + j + '"] [colid="' + cid + '"]', g.bodyNode)[0], 'gridxCellSelected');
+							domClass.add(query('[visualindex="' + j + '"] [colid="' + g._escapeId(cid) + '"]', g.bodyNode)[0], 'gridxCellSelected');
 						}
 					}
 				}
@@ -288,10 +291,11 @@ define([
 		_onMark: function(id, toMark, oldState, type){
 			var t = this;
 			if(lang.isString(type) && !t._marking && type.indexOf(t._markTypePrefix) === 0){
-				var rowNode = query('[rowid="' + id + '"]', t.grid.bodyNode)[0];
+				var escapeId = t.grid._escapeId,
+					rowNode = query('[rowid="' + escapeId(id) + '"]', t.grid.bodyNode)[0];
 				if(rowNode){
 					var cid = type.substr(t._markTypePrefix.length),
-						node = query('[colid="' + cid + '"]', rowNode)[0];
+						node = query('[colid="' + escapeId(cid) + '"]', rowNode)[0];
 					if(node){
 						domClass.toggle(node, 'gridxCellSelected', toMark);
 					}
@@ -332,7 +336,7 @@ define([
 					t._highlightSingle(target, 1);	//1 as true
 					//In IE, when setSelectable(false), the onfocusin event will not fire on doc, so the focus border is gone.
 					//So refocus it here.
-					if(sniff('ie')){
+					if(has('ie')){
 						t._focus(target);
 					}
 				}else{
@@ -453,7 +457,7 @@ define([
 				b = Math.max(start.r, end.r);
 				for(j = a; j <= b; ++j){
 					rowInfo = view.getRowInfo({visualIndex: j});
-					model.markByIndex(rowInfo.rowIndex, toSelect, type);
+					model.markByIndex(rowInfo.rowIndex, toSelect, type, rowInfo.parentId);
 				}
 			}
 			if(packs.length){

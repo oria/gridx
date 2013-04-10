@@ -39,3 +39,7 @@ require([
 
 	parser.parse();
 });
+
+function deleteRow(){
+	grid.store.deleteItem(grid.row(grid.view.rootStart).item());
+}

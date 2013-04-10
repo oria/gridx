@@ -37,14 +37,17 @@ define([
 			fail = hitch(d, d.errback),
 			ranges = args.range,
 			isTree = self.store.getChildren;
-		args.pids = [];
+		args.pids = {
+			'': args.range
+		};
 		if(isTree){
 			for(i = ranges.length - 1; i >= 0; --i){
 				r = ranges[i];
 				pid = r.parentId;
 				if(self.model.isId(pid)){
 					args.id.push(pid);
-					args.pids.push(pid);
+					args.pids[pid] = args.pids[pid] || [];
+					args.pids[pid].push(r);
 					ranges.splice(i, 1);
 				}
 			}
@@ -83,51 +86,52 @@ define([
 
 	function fetchByIndex(self, args){
 		var d = new Deferred(),
-			size = self._size[''];
-		args = connectRanges(self,
-			mergePendingRequests(self,
-				findMissingIndexes(self,
-					mergeRanges(args))));
-		var ranges = size > 0 ? array.filter(args.range, function(r){
-			if(r.count > 0 && size < r.start + r.count){
-				r.count = size - r.start;
+			toFetch = [],
+			dl = [],
+			checkValid = function(size, r){
+				if(r.count > 0 && size < r.start + r.count){
+					r.count = size - r.start;
+				}
+				return r.start < size;
+			};
+		for(var pid in args.pids){
+			var size = self._size[pid],
+				ranges = args.pids[pid] =
+					connectRanges(self,
+						mergePendingRequests(self, pid, dl,
+							findMissingIndexes(self, pid,
+								mergeRanges(args.pids[pid]))));
+			if(size > 0){
+				ranges = array.filter(ranges, lang.partial(checkValid, size));
 			}
-			return r.start < size;
-		}) : args.range;
-		new DeferredList(array.map(ranges, function(r){
-			return self._storeFetch(r);
-		}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
+			for(var i = 0; i < ranges.length; ++i){
+				ranges[i].parentId = pid;
+			}
+			[].push.apply(toFetch, ranges);
+		}
+		args._req = dl.length && new DeferredList(dl, 0, 1);
+		self._requests.push(args);
+		if(toFetch.length){
+			new DeferredList(array.map(toFetch, function(r){
+				return self._storeFetch(r);
+			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
+		}else{
+			d.callback(args);
+		}
 		return d;
 	}
 
-	function fetchByParentId(self, args){
-		var d = new Deferred(),
-			pidSet = {},
-			dl = [];
-		for(var i = 0; i < args.pids.length; ++i){
-			pidSet[args.pids[i]] = 1;
-		}
-		for(var pid in pidSet){
-			dl.push(self._loadChildren(pid));
-		}
-		new DeferredList(dl, 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
-		return d;
-	}
-
-	function mergePendingRequests(self, args){
+	function mergePendingRequests(self, parentId, dl, ranges){
 		var i, req,
-			reqs = self._requests,
-			defs = [];
+			reqs = self._requests;
 		for(i = reqs.length - 1; i >= 0; --i){
 			req = reqs[i];
-			args.range = minus(args.range, req.range);
-			if(args.range._overlap){
-				defs.push(req._def);
+			ranges = minus(ranges, req.pids[parentId]);
+			if(ranges._overlap && array.indexOf(dl, req._def) < 0){
+				dl.push(req._def);
 			}
 		}
-		args._req = defs.length && new DeferredList(defs, 0, 1);
-		reqs.push(args);
-		return args;
+		return ranges;
 	}
 
 	function minus(rangesA, rangesB){
@@ -175,9 +179,9 @@ define([
 		return res;
 	}
 
-	function mergeRanges(args){
+	function mergeRanges(r){
 		//Merge index ranges into separate ones.
-		var ranges = [], r = args.range, i, t, a, b, c, merged;
+		var ranges = [], i, t, a, b, c, merged;
 		while(r.length > 0){
 			c = a = r.pop();
 			merged = 0;
@@ -216,21 +220,20 @@ define([
 				ranges.push(c);
 			}
 		}
-		args.range = ranges;
-		return args;
+		return ranges;
 	}
 
-	function connectRanges(self, args){
+	function connectRanges(self, ranges){
 		//Connect small ranges into big ones to reduce request count
 		//FIXME: find a better way to do this!
-		var r = args.range, ranges = [], a, b, ps = self.pageSize;
-		r.sort(function(a, b){
+		var results = [], a, b, ps = self.pageSize;
+		ranges.sort(function(a, b){
 			return a.start - b.start;
 		});
-		while(r.length){
-			a = r.shift();
-			if(r.length){
-				b = r[0];
+		while(ranges.length){
+			a = ranges.shift();
+			if(ranges.length){
+				b = ranges[0];
 				if(b.count && b.count + b.start - a.start <= ps){
 					b.count = b.count + b.start - a.start;
 					b.start = a.start;
@@ -240,14 +243,13 @@ define([
 					continue;
 				}
 			}
-			ranges.push(a);
+			results.push(a);
 		}
 		//Improve performance for most cases
-		if(ranges.length == 1 && ranges[0].count < ps){
-			ranges[0].count = ps;
+		if(results.length == 1 && results[0].count < ps){
+			results[0].count = ps;
 		}
-		args.range = ranges;
-		return args;
+		return results;
 	}
 
 	function findMissingIds(self, ids){
@@ -257,27 +259,28 @@ define([
 		});
 	}
 
-	function findMissingIndexes(self, args){
+	function findMissingIndexes(self, parentId, ranges){
 		//Removed loaded rows from the request index ranges.
 		//generate unsorted range list.
 		var i, j, r, end, newRange,
-			ranges = [],
-			indexMap = self._struct[''],
-			totalSize = self._size[''];
-		for(i = args.range.length - 1; i >= 0; --i){
-			r = args.range[i];
+			results = [],
+			indexMap = self._struct[parentId],
+			totalSize = self._size[parentId];
+		for(i = ranges.length - 1; i >= 0; --i){
+			r = ranges[i];
 			end = r.count ? r.start + r.count : indexMap.length - 1;
 			newRange = 1;
 			for(j = r.start; j < end; ++j){
 				var id = indexMap[j + 1];
 				if(!id || !self._cache[id]){
 					if(newRange){
-						ranges.push({
+						results.push({
+							parentId: parentId,
 							start: j,
 							count: 1
 						});
 					}else{
-						++ranges[ranges.length - 1].count;
+						++results[results.length - 1].count;
 					}
 					newRange = 0;
 				}else{
@@ -286,16 +289,16 @@ define([
 			}
 			if(!r.count){
 				if(!newRange){
-					delete ranges[ranges.length - 1].count;
+					delete results[results.length - 1].count;
 				}else if(totalSize < 0 || j < totalSize){
-					ranges.push({
+					results.push({
+						parentId: parentId,
 						start: j
 					});
 				}
 			}
 		}
-		args.range = ranges;
-		return args;
+		return results;
 	}
 
 	function searchRootLevel(self, ids){
@@ -346,7 +349,9 @@ define([
 			func = function(ids){
 				if(ids.length && parentIds.length){
 					var pid = parentIds.shift();
-					self._loadChildren(pid).then(function(){
+					self._storeFetch({
+						parentId: pid
+					}).then(function(){
 						[].push.apply(parentIds, st[pid].slice(1));
 						func(findMissingIds(self, ids));
 					}, fail);
@@ -360,10 +365,10 @@ define([
 
 	return declare(_Cache, {
 		isAsync: true,
-		
+
 		constructor: function(model, args){
-			var cs = args.cacheSize,
-				ps = args.pageSize;
+			var cs = parseInt(args.cacheSize, 10),
+				ps = parseInt(args.pageSize, 10);
 			this.cacheSize = cs >= 0 ? cs : -1;
 			this.pageSize = ps > 0 ? ps : 100;
 		},
@@ -378,23 +383,21 @@ define([
 				};
 			fetchById(t, args).then(function(args){
 				fetchByIndex(t, args).then(function(args){
-					fetchByParentId(t, args).then(function(args){
-						Deferred.when(args._req, function(){
-							var err;
-							if(callback){
-								try{
-									callback();
-								}catch(e){
-									err = e;
-								}
+					Deferred.when(args._req, function(){
+						var err;
+						if(callback){
+							try{
+								callback();
+							}catch(e){
+								err = e;
 							}
-							t._requests.shift();
-							if(err){
-								d.errback(err);
-							}else{
-								d.callback();
-							}
-						}, innerFail);
+						}
+						t._requests.shift();
+						if(err){
+							d.errback(err);
+						}else{
+							d.callback();
+						}
 					}, innerFail);
 				}, innerFail);
 			}, fail);
@@ -411,7 +414,6 @@ define([
 			if(k[id] && !t._lock[id] && lock){
 				t._lock[id] = 1;
 				++t._lockSize;
-				console.log('lock ', id);
 			}
 		},
 
@@ -462,9 +464,9 @@ define([
 				t.clear();
 			}else if(cs >= 0){
 				cs += t._keptSize;
-				console.warn("### Cache size:", p.length,
-						", To release: ", p.length - cs,
-						", Keep size: ", this._keptSize);
+//                console.warn("### Cache size:", p.length,
+//                        ", To release: ", p.length - cs,
+//                        ", Keep size: ", this._keptSize);
 				while(p.length > cs){
 					id = p.shift();
 					if(t._kept[id]){

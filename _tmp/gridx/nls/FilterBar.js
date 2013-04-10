@@ -50,7 +50,6 @@ define({ root:
 	"waiClearButton": "Clear the filter",
 	"filterButton": "Filter",
 	"waiFilterButton": "Submit the filter",
-	"removeRule": "Remove Rule",
 	
 	"columnSelectLabel": "Column",
 	"waiColumnSelectTemplate": "Column for rule ${0}",
@@ -100,6 +99,7 @@ define({ root:
 }),
 //end v1.x content
 "ar": true,
+"bg": true,
 "ca": true,
 "cs": true,
 "da": true,
@@ -119,7 +119,6 @@ define({ root:
 "nl": true,
 "pl": true,
 "pt": true,
-"pt-br": true,
 "pt-pt": true,
 "ro": true,
 "ru": true,
@@ -128,6 +127,7 @@ define({ root:
 "sv": true,
 "th": true,
 "tr": true,
+"uk": true,
 "zh": true,
 "zh-tw": true
 });

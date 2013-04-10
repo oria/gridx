@@ -8,10 +8,6 @@
 		.gridx {
 			width: 800px;
 			height: 500px;
-			margin-top: 10px;
-		}
-		.gridxCell {
-			vertical-align: top;
 		}
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
@@ -22,19 +18,16 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Adaptive Filter Test
 	</h1>
-	<div>
-
-	</div>
 	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Async",
 		store: store,
 		structure: layout,
-		columnLockCount: 1,
 		modules: [
 			"gridx/modules/CellWidget",
 			"gridx/modules/ColumnResizer",
 			"gridx/modules/SingleSort",
 			"gridx/modules/VirtualVScroller",
+			"gridx/modules/Filter",
 			"gridx/modules/HeaderMenu"
 		]
 	'></div>

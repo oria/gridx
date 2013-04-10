@@ -1,7 +1,7 @@
 define([
 /*====="../../core/Column", =====*/
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/keys",
 	"../../core/_Module"
@@ -132,7 +132,7 @@ define([
 					if(targetId === null){
 						cells.place(tr);
 					}else{
-						cells.place(query('> [colid="' + targetId + '"]', tr)[0], 'before');
+						cells.place(query('> [colid="' + g._escapeId(targetId) + '"]', tr)[0], 'before');
 					}
 				};
 			for(i = movedCols.length - 1; i >= 0; --i){

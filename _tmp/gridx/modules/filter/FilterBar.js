@@ -172,11 +172,6 @@ define([
 	return declare(_Module, {
 		name: 'filterBar',
 		forced: ['filter'],
-		getAPIPath: function(){
-			return {
-				filterBar: this
-			};
-		},
 		preload: function(){
 			var rules = this.arg('filterData');
 			if(rules){

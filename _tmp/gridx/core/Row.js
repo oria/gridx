@@ -153,6 +153,7 @@ define([
 				s = t.grid.store,
 				item = t.item(),
 				field, d;
+				
 			if(s.setValue){
 				d = new Deferred();
 				try{

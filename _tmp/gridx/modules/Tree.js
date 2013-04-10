@@ -9,9 +9,9 @@ define([
 	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
-	"../core/_Module",
-	"dojo/NodeList-dom",
-	"dojo/NodeList-traverse"
+	"../core/_Module"
+//    "dojo/NodeList-dom",
+//    "dojo/NodeList-traverse"
 ], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
@@ -122,7 +122,7 @@ define([
 		//		If less than 1, then this is not a tree grid at all.
 		expandLevel: 1 / 0,
 
-		//clearOnSetStore: Boolean
+		// clearOnSetStore: Boolean
 		//		Whether to clear all the recorded expansion info after setStore.
 		clearOnSetStore: true,
 
@@ -283,12 +283,6 @@ define([
 
 		forced: ['view'],
 
-		getAPIPath: function(){
-			return {
-				tree: this
-			};
-		},
-
 		preload: function(){
 			var t = this,
 				g = t.grid;
@@ -298,7 +292,26 @@ define([
 			g.domNode.setAttribute('role', 'treegrid');
 			t.aspect(g.body, 'collectCellWrapper', '_createCellWrapper');
 			t.aspect(g.body, 'onAfterRow', '_onAfterRow');
+			t.aspect(g.body, 'onCheckCustomRow', function(row, output){
+				if(!t.nested && t.mergedParentRow){
+					output[row.id] = row.canExpand();
+				}
+			});
+			t.aspect(g.body, 'onBuildCustomRow', function(row, output){
+				output[row.id] = row.id;
+			});
 			t.aspect(g, 'onCellClick', '_onCellClick');
+			t.aspect(g, 'onRowClick', function(e){
+				if(!t.nested && t.mergedParentRow){
+					if(t.canExpand(e.rowId)){
+						if(t.isExpanded(e.rowId)){
+							t.collapse(e.rowId);
+						}else{
+							t.expand(e.rowId);
+						}
+					}
+				}
+			});
 			t._initExpandLevel();
 			t._initFocus();
 		},
@@ -331,6 +344,8 @@ define([
 		expandLevel: 1 / 0,
 
 		clearOnSetStore: true,
+
+		mergedParentRow: false,
 
 		onExpand: function(id){},
 
@@ -466,11 +481,11 @@ define([
 		_createCellWrapper: function(wrappers, rowId, colId){
 			var t = this,
 				col = t.grid._columnsById[colId];
-			if(col.expandLevel){
+			if(!col || col.expandLevel){
 				var isNested = t.arg('nested'),
 					level = t.model.treePath(rowId).length,
 					expandLevel = t.arg('expandLevel');
-				if((!isNested || col.expandLevel == level) && 
+				if((!isNested || (col && col.expandLevel == level)) && 
 						(!(expandLevel > 0) || level <= expandLevel + 1)){
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
@@ -495,15 +510,15 @@ define([
 							return ["<div class='gridxTreeExpandoCell ",
 								isOpen ? "gridxTreeExpandoCellOpen" : "",
 								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + singlePad, "px;'>",
-								"<span class='gridxTreeExpandoIcon ",
+								"<div class='gridxTreeExpandoIcon ",
 								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
 								"style='margin-", ltr ? 'left' : 'right', ": ", pad, "px;'>",
-								"<span class='gridxTreeExpandoInner'>",
+								"<div class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
-								"</span></span><span class='gridxTreeExpandoContent'>",
+								"</div></div><div class='gridxTreeExpandoContent gridxCellContent'>",
 								cellData,
-								"</span></span>"
+								"</div></div>"
 							].join('');
 						}
 					});
@@ -602,7 +617,7 @@ define([
 						}
 					}
 					m.when({id: parentId}, function(){
-						visualIndex = grid.body.getVisualIndex({
+						visualIndex = grid.view.getRowInfo({
 							parentId: treePath.pop(), 
 							rowIndex: m.idToIndex(parentId)
 						}).visualIndex;

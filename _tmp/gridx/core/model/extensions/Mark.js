@@ -15,6 +15,7 @@ define([
 	Model.clearMark = function(){};
 	Model.treeMarkMode = function(){};
 	Model.onMarkChange = function(){};
+	Model.setMarkable = function(){};
 
 	return declare(_Extension, {
 		// summary:
@@ -23,7 +24,7 @@ define([
 =====*/
 
 	return declare(_Extension, {
-		name: 'move',
+		name: 'mark',
 
 		priority: 5,
 		
@@ -53,8 +54,8 @@ define([
 			this._canMark = {};
 		},
 
-		setMarkable: function(type, func){
-			this._canMark[type] = func;
+		setMarkable: function(func, type){
+			this._canMark[this._initMark(type)] = func;
 		},
 
 		clearMark: function(type){
@@ -262,10 +263,9 @@ define([
 			for(var i = treePath.length - 1; i > 0; --i){
 				var pid = treePath[i],
 					oldState = byId[pid],
-					siblings = mm._call('children', [pid]),
-					siblings = array.filter(siblings, function(childId){
+					siblings = array.filter(mm._call('children', [pid]), function(childId){
 						return t._isMarkable(type, childId);
-					});
+					}),
 					markCount = array.filter(siblings, function(childId){
 						return last[childId] = byId[childId];
 					}).length,
@@ -317,9 +317,9 @@ define([
 					oldState = byId[childId] || 0;
 				    if(t._isMarkable(tp, childId)){
 						newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
-					}
-					if(!noEvent){
-						t._fireEvent(childId, tp, newState, oldState);
+						if(!noEvent){
+							t._fireEvent(childId, tp, newState, oldState);
+						}
 					}
 					if(mm._call('hasChildren', [childId])){
 						children = mm._call('children', [childId]);
@@ -336,9 +336,9 @@ define([
 				}
 			}
 		},
-		
+
 		_isMarkable: function(tp, id){
-			return this._canMark[tp]? this._canMark[tp].apply(null, [id]) : true; 
+			return this._canMark[tp] ? this._canMark[tp](id) : true;
 		}
 	});
 });

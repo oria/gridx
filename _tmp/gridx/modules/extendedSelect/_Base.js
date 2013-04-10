@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/connect",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -8,20 +8,25 @@ define([
 	"dojo/dom",
 	"dojo/keys",
 	"../../core/_Module",
+//    "dojo/NodeList-dom",
 	"../AutoScroll"
-], function(declare, query, connect, Deferred, sniff, win, dom, keys, _Module){
+], function(declare, query, connect, Deferred, has, win, dom, keys, _Module){
 
 /*=====
 	return declare(_Module, {
-		// enabled: true,
+		// enabled: Boolean
 		//		If false, this module is disabled. This parameter is mainly used by DnD to not conflict with selection operations.
 		enabled: true,
 
-		// holdingCtrl:
+		// canSwept: Boolean
+		//		If false, swept selecting by mouse is disabled. Default to true.
+		canSwept: true,
+
+		// holdingCtrl: Boolean
 		//		If true, when selecting it'll appear as if the CTRL key is held.
 		holdingCtrl: false,
 
-		// holdingShift:
+		// holdingShift: Boolean
 		//		If true, when selecting it'll appear as if the SHIFT key is held.
 		holdingShift: false,
 
@@ -77,6 +82,8 @@ define([
 		//Public ------------------------------------------------------------------
 		enabled: true,
 
+		canSwept: true,
+
 		holdingCtrl: false,
 
 		holdingShift: false,
@@ -101,10 +108,6 @@ define([
 			return this._subMark('_markByIndex', arguments, false);
 		},
 
-		isSelectable: function(rowid, columnid){
-			return this.arg('canSelect').apply(this, arguments);	
-		},
-		
 		onSelectionChange: function(/*newSelectedIds, oldSelectedIds*/){
 			// summary:
 			//		Event: fired when the selection is changed.
@@ -222,7 +225,7 @@ define([
 		},
 
 		_highlightSingle: function(target, toHighlight){
-			toHighlight = toHighlight ? this._toSelect && this.isSelectable(this._getRowId(target.row)) : this._isSelected(target);
+			toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
 			this._doHighlight(target, toHighlight);
 		},
 
@@ -237,7 +240,7 @@ define([
 		},
 
 		_fixFF: function(isStart){
-			if(sniff('ff')){
+			if(has('ff')){
 				query('.gridxSortNode', this.grid.headerNode).style('overflow', isStart ? 'visible' : '');
 			}
 		}

@@ -1,14 +1,14 @@
 define([
 /*====="../../core/Column", =====*/
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(/*=====Column, =====*/declare, query, array, sniff, domClass, keys, _Base, _Module){
+], function(/*=====Column, =====*/declare, query, array, has, domClass, keys, _Base, _Module){
 
 /*=====
 	Column.select = function(){
@@ -95,7 +95,7 @@ define([
 
 		columnMixin: {
 			select: function(){
-				this.grid.select.column._markById(this.id, 1);
+				this.grid.select.column.selectById(this.id);
 				return this;
 			},
 			deselect: function(){
@@ -109,6 +109,9 @@ define([
 		
 		//Public API----------------------------------------------------------------------
 		selectById: function(/*String*/id){
+			if(!this.arg('multiple')){
+				this.clear(id);
+			}
 			this._markById(id, 1);
 		},
 		
@@ -156,7 +159,7 @@ define([
 						t._select(e.columnId, g._isCopyEvent(e));
 					}
 				}],
-				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
 						t._select(e.columnId, g._isCopyEvent(e));
 					}
@@ -178,7 +181,7 @@ define([
 		
 		_highlight: function(id, toHighlight){
 			var t = this, g = t.grid;
-			query("[colid='" + id + "']", g.bodyNode).forEach(function(node){
+			query("[colid='" + g._escapeId(id) + "']", g.bodyNode).forEach(function(node){
 				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
 				t.onHighlightChange({column: g._columnsById[id].index}, toHighlight);
 			});
@@ -194,7 +197,7 @@ define([
 				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
-					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
+					node = query(['[visualindex="', j, '"] [colid="', g._escapeId(cols[i].id), '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
 				}
 			}
