@@ -49,7 +49,6 @@ define([
 			// t.onSet = function(){
 				// t.model.onSet();
 			// };
-// 			
 			// model.onRedoUndo = function(){};
 		},
 
@@ -114,7 +113,7 @@ define([
 				opt = t._globalOptList[t._globalOptIndex];
 			if(opt){
 				t._globalOptIndex--;
-				if(opt.type == 0){
+				if(opt.type === 0){
 					var rowId = opt.rowId,
 						oldData = opt.newData,
 						newData = opt.oldData;
@@ -135,7 +134,7 @@ define([
 				opt = t._globalOptList[t._globalOptIndex + 1];
 			if(opt){
 				t._globalOptIndex++;
-				if(opt.type == 0){
+				if(opt.type === 0){
 					var rowId = opt.rowId,
 						oldData = opt.oldData,
 						newData = opt.newData;
@@ -263,7 +262,7 @@ define([
 			t.onSet.apply(t, arguments);
 		},
 		
-		 _onUndo: function(rowId, newData, oldData){
+		_onUndo: function(rowId, newData, oldData){
 			var index = this._cache.idToIndex(rowId),
 				t = this;
 			
@@ -291,7 +290,7 @@ define([
 				obj = {};
 			
 			if(c.lazyData){
-				lang.mixin(c.lazyData, rawData)
+				lang.mixin(c.lazyData, rawData);
 			}else{
 				c.lazyData = lang.mixin({}, rawData);
 			}
@@ -316,7 +315,7 @@ define([
 			if(s.setValue){
 				d = new Deferred();
 				try{
-					for(field in rawData){
+					for(var field in rawData){
 						s.setValue(item, field, rawData[field]);
 					}
 					s.save({
@@ -332,4 +331,4 @@ define([
 		
 	});
 	
-})
+});
