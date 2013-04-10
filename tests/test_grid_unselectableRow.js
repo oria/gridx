@@ -27,7 +27,7 @@ require([
 		size: 100
 	});
 	
-	layout = dataSource.layouts[0];
+	layout = dataSource.layouts[4];
 	
 	//Test functions
 	getRow5Unselectable = function(){

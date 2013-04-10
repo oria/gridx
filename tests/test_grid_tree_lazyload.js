@@ -22,6 +22,12 @@ require([
 	};
 	store.getChildren = function(item, options){
 		console.log('getChildren: ', store.getIdentity(item), options);
+		var logger = document.getElementById('log');
+		logger.innerHTML += [
+			"Fetch children of row ", item.id,
+			": from ", options.start, " to ", options.start + options.count,
+			'\r\n'
+		].join('');
 		var children = QueryResults(queryEngine(options.query, options)(item.children));
 		return children;
 	};
@@ -44,7 +50,7 @@ require([
 //        modules.ExtendedSelectRow,
 //        modules.CellWidget,
 //        modules.IndirectSelectColumn,
-//        modules.SingleSort,
+		modules.SingleSort,
 		modules.VirtualVScroller
 	];
 
