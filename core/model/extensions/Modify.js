@@ -158,7 +158,7 @@ define([
 			
 			t._globalOptList = [];
 			array.forEach(cl, function(rid){
-				delete t.inner.byId(rid).lazyData;
+				delete t._cache.byId(rid).lazyData;
 			});
 		},
 
@@ -226,7 +226,7 @@ define([
 			//		An array of changed row IDs.
 			var t = this,
 				a = [];
-			for(var rid in t.inner._cache){
+			for(var rid in t._cache._cache){
 				if(t.isChanged(rid)){
 					a.push(rid);
 				}
@@ -264,7 +264,7 @@ define([
 		},
 		
 		 _onUndo: function(rowId, newData, oldData){
-			var index = this.inner.idToIndex(rowId),
+			var index = this._cache.idToIndex(rowId),
 				t = this;
 			
 			var oldRowData = t.byId(rowId);
@@ -275,7 +275,7 @@ define([
 		},
 		
 		_onRedo: function(rowId, newData, oldData){
-			var index = this.inner.idToIndex(rowId),
+			var index = this._cache.idToIndex(rowId),
 				t = this;
 			
 			var oldRowData = t.byId(rowId);
