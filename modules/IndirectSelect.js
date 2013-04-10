@@ -80,7 +80,7 @@ define([
 		_createSelector: function(row){
 			var rowNode = row.node(),
 				selected = rowNode && domClass.contains(rowNode, 'gridxRowSelected'),
-				isUnselectable =  !this.grid.select.row.isSelectable(row.id),
+				isUnselectable =  !this.grid.row(row.id, 1).isSelectable(),
 				partial = rowNode && domClass.contains(rowNode, 'gridxRowPartialSelected');
 			return this._createCheckBox(selected, partial, isUnselectable);
 		},

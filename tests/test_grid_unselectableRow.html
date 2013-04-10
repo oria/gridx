@@ -60,6 +60,7 @@
 				modules: [
 					"gridx/modules/RowHeader",
 					"gridx/modules/select/Row",
+					"gridx/modules/IndirectSelect",
 					"gridx/modules/VirtualVScroller"
 				],
 				selectRowTriggerOnCell: true,
@@ -92,6 +93,36 @@
 					selectRowIsSelectable: function(rowid){
 						 var row = this.grid.row(rowid, 1);
 						 return row.data().Year > 1990;
+					}
+				'></div>
+			</td>
+			<td id='ctrlPane2'>
+			</td>
+		</tr>
+		
+	</table>
+	
+	<h1 class='title'>Grid Tree UnSelectable Row Test</h1>	
+	<table border=0 cellspacing="0" cellpadding="0">
+		<tr>
+			<td>
+			<div id='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+					cacheClass: "gridx/core/model/cache/Sync",
+					store: treeStore,
+					structure: treeLayout,
+					modules: [
+						"gridx/modules/Tree",
+						"gridx/modules/RowHeader",
+						"gridx/modules/select/Row",
+						"gridx/modules/RowHeader",
+						"gridx/modules/CellWidget",
+						"gridx/modules/IndirectSelect",
+						"gridx/modules/VirtualVScroller",
+					],
+					selectRowTriggerOnCell: true,
+					selectRowIsSelectable: function(rowid){
+						 var row = this.grid.row(rowid, 1);
+						 return row.data().bool;
 					}
 				'></div>
 			</td>
