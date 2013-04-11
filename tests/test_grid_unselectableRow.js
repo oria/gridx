@@ -50,24 +50,24 @@ require([
 		alert('selectd rows: ' + dijit.byId('grid2').select.row.getSelected().toString());
 	}
 	//Test buttons
-	var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
-	
-	tp.addTestSet('Select Row Actions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow5Unselectable">Get Row 5 Selectable</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow6Unselectable">Get Row 6 Selectable</div><br/>',
-	''].join(''));
+//    var tp = new TestPane({});
+//    tp.placeAt('ctrlPane');
+//    
+//    tp.addTestSet('Select Row Actions', [
+//        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow5Unselectable">Get Row 5 Selectable</div><br/>',
+//        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getRow6Unselectable">Get Row 6 Selectable</div><br/>',
+//    ''].join(''));
 
-	tp.startup();
-	
-	var tp2 = new TestPane({});
-	tp2.placeAt('ctrlPane2');
-	tp2.addTestSet('Extended Select Row Actions', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: selectRowsByIndex">Select Rows From 1 to 20</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deSelectRowsByIndex">Deselect Rows From 1 to 20</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getSelectedRowid">Get Selected Rows id</div><br/>',
-	''].join(''));
-	tp2.startup();
+//    tp.startup();
+//    
+//    var tp2 = new TestPane({});
+//    tp2.placeAt('ctrlPane2');
+//    tp2.addTestSet('Extended Select Row Actions', [
+//        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: selectRowsByIndex">Select Rows From 1 to 20</div><br/>',
+//        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deSelectRowsByIndex">Deselect Rows From 1 to 20</div><br/>',
+//        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: getSelectedRowid">Get Selected Rows id</div><br/>',
+//    ''].join(''));
+//    tp2.startup();
 	
 	//tree gridx config
 	treeStore = treeStoreFactory({

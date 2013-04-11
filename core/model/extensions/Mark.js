@@ -52,9 +52,10 @@ define([
 			this._lazy = {};
 			this._tree = {};
 			this._canMark = {};
+			this._unmarkable = {};
 		},
 
-		setMarkable: function(func, type){
+		setMarkable: function(rowId, markable, type){
 			this._canMark[this._initMark(type)] = func;
 		},
 
@@ -141,7 +142,7 @@ define([
 					}else{
 						toMark = 0;
 					}
-					if(t._isMarkable(type, id)){
+					if(t.model.isId(id) && t._isMarkable(type, id)){
 						t._mark(id, toMark, type);
 					}
 				});

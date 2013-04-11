@@ -165,16 +165,21 @@ define([
 
 		_onSelectionChange: function(selected){
 			var t = this, d,
+				g = t.grid,
 				allSelected,
 				view = t.grid.view,
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
 			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
-				return !model.treePath(id).pop();
+				return !model.parentId(id);
+			});
+			var unselectableRows = g.select.row._getUnselectableRows();
+			var unselectableRoots = array.filter(unselectableRows, function(id){
+				return !model.parentId(id);
 			});
 			if(count === model.size()){
-				allSelected = count && count == selectedRoot.length;
+				allSelected = count && count - unselectableRoots.length == selectedRoot.length;
 			}else{
 				d = new Deferred();
 				model.when({
@@ -186,7 +191,11 @@ define([
 					}), function(index){
 						return index >= start && index < start + count;
 					});
-					allSelected = count == indexes.length;
+					unselectableRoots = array.filter(unselectableRoots, function(id){
+						var index = model.idToIndex(id);
+						return index >= start && index < start + count;
+					});
+					allSelected = count - unselectableRoots.length == indexes.length;
 					d.callback();
 				});
 			}
