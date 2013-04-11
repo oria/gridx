@@ -187,7 +187,7 @@ define([
 					nodeName = bar + 'Node',
 					node = t[nodeName] = domConstruct.create('div', {
 						'class': "gridxBar " + def.barClass || '',
-						innerHTML: '<table border="0" cellspacing="0"></table>'
+						innerHTML: '<table border="0" cellspacing="0" role="presentation"></table>'
 					});
 				t.grid.vLayout.register(t, nodeName, def.container, def.priority);
 				t._initFocus(bar, def.priority);
