@@ -51,11 +51,14 @@ define([
 			this._last = {};
 			this._lazy = {};
 			this._tree = {};
-			this._canMark = {};
+			this._unmarkable = {};
 		},
 
-		setMarkable: function(func, type){
-			this._canMark[this._initMark(type)] = func;
+		setMarkable: function(rowId, markable, type){
+			type = this._initMark(type);
+			var unmarkable = this._unmarkable,
+				hash = unmarkable[type] = unmarkable[type] || {};
+			hash[rowId] = !markable;
 		},
 
 		clearMark: function(type){
@@ -141,7 +144,7 @@ define([
 					}else{
 						toMark = 0;
 					}
-					if(t._isMarkable(type, id)){
+					if(t.model.isId(id) && t._isMarkable(type, id)){
 						t._mark(id, toMark, type);
 					}
 				});
@@ -315,7 +318,7 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-				    if(t._isMarkable(tp, childId)){
+					if(t._isMarkable(tp, childId)){
 						newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
 						if(!noEvent){
 							t._fireEvent(childId, tp, newState, oldState);
@@ -338,7 +341,7 @@ define([
 		},
 
 		_isMarkable: function(tp, id){
-			return this._canMark[tp] ? this._canMark[tp](id) : true;
+			return this._unmarkable[tp] ? !this._unmarkable[tp][id] : true;
 		}
 	});
 });

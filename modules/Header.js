@@ -87,8 +87,6 @@ define([
 			//Add this.domNode to be a part of the grid header
 			g.vLayout.register(t, 'domNode', 'headerNode');
 			t.aspect(g, 'onHScroll', '_onHScroll');
-			t.aspect(g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver');
-			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
 			//FIXME: sometimes FF will remember the scroll position of the header row, so force aligned with body.
 			//Does not occur in any other browsers.
 			if(has('ff')){
@@ -167,7 +165,7 @@ define([
 			}
 			this.innerNode.scrollLeft = this._scrollLeft = left;
 		},
-	
+
 		_onMouseEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onHeaderCell' + eventName,
@@ -180,7 +178,7 @@ define([
 				g[evtRow](e);
 			}
 		},
-	
+
 		_decorateEvent: function(e){
 			for(var n = e.target, c; n && n !== this.domNode; n = n.parentNode){
 				if(n.tagName && n.tagName.toLowerCase() == 'th'){
@@ -194,11 +192,7 @@ define([
 				}
 			}
 		},
-		
-		_onHeaderCellMouseOver: function(e){
-			domClass.toggle(this.getHeaderNode(e.columnId), 'gridxHeaderCellOver', e.type == 'mouseover');
-		},
-		
+
 		// Focus
 		_focusHeaderId: null,
 

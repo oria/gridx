@@ -144,7 +144,8 @@ define([
 			},
 
 			setSelectable: function(selectable){
-				return this.grid.select.row.selectable[this.id] = selectable;
+				this.grid.select.row.selectable[this.id] = selectable;
+				//update status
 			}
 		},
 
@@ -174,14 +175,27 @@ define([
 
 		_isSelectable: function(rowId){
 			var isSelectable = this.arg('isSelectable'),
-				selectable = this.arg('selectable', {});
-			return rowId in selectable ? selectable[rowId] :
-				isSelectable ? isSelectable.call(this, rowId) : true;
+				selectable = this.arg('selectable'),
+				ret = rowId in selectable ? selectable[rowId] :
+					isSelectable ? isSelectable.call(this, rowId) : true;
+			this._cache[rowId] = ret;
+			return ret;
+		},
+
+		_getUnselectableRows: function(){
+			var ret = [];
+			for(var id in this._cache){
+				if(!this._cache[id]){
+					ret.push(id);
+				}
+			}
+			return ret;
 		},
 
 		_init: function(){
 			var t = this,
 				g = t.grid;
+			t._cache = lang.clone(t.arg('selectable', {}));
 			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;

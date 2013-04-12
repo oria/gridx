@@ -158,7 +158,8 @@ define([
 			},
 
 			setSelectable: function(selectable){
-				return this.grid.select.row.selectable[this.id] = selectable;
+				this.grid.select.row.unselectable[this.id] = !selectable;
+				//refresh
 			}
 		},
 
@@ -198,10 +199,18 @@ define([
 		_type: 'row',
 
 		_isSelectable: function(rowId){
-			var isSelectable = this.arg('isSelectable'),
-				selectable = this.arg('selectable', {});
-			return rowId in selectable ? selectable[rowId] :
-				isSelectable ? isSelectable.call(this, rowId) : true;
+			return !this.arg('unselectable', {})[rowId];
+		},
+
+		_getUnselectableRows: function(){
+			var ret = [],
+				unselectable = this.arg('unselectable');
+			for(var id in unselectable){
+				if(unselectable[id]){
+					ret.push(id);
+				}
+			}
+			return ret;
 		},
 
 		_init: function(){
