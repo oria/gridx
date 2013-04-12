@@ -262,8 +262,8 @@ define([
 					forEach(['', 'Desc', 'Asc', 'Main'], function(s){
 						removeClass(cell, 'gridxCellSorted' + s);
 					});
-					var singleBtn = cell.childNodes[0],
-						nestedBtn = cell.childNodes[1],
+					var singleBtn = query('.gridxSortBtnSingle', cell)[0],
+						nestedBtn = query('.gridxSortBtnNested', cell)[0],
 						a11yText = t._a11yText;
 					singleBtn.title = nls.singleSort + ' - ' + nls.ascending;
 					nestedBtn.title = nls.nestedSort + ' - ' + nls.ascending;
@@ -477,8 +477,8 @@ define([
 			}
 			var a11ySingleLabel = string.substitute(nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]),
 				a11yNestedLabel = string.substitute(nls.waiNestedSortLabel, [columnInfo, orderState, orderAction]);
-			cell.childNodes[0].setAttribute("aria-label", a11ySingleLabel);
-			cell.childNodes[1].setAttribute("aria-label", a11yNestedLabel);
+			query('.gridxSortBtnSingle', cell)[0].setAttribute("aria-label", a11ySingleLabel);
+			query('.gridxSortBtnNested', cell)[0].setAttribute("aria-label", a11yNestedLabel);
 		}
 	});
 });
