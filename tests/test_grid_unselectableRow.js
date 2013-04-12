@@ -31,11 +31,11 @@ require([
 	
 	//Test functions
 	getRow5Unselectable = function(){
-		alert('row 5 unselectable: ' + dijit.byId('grid1').select.row.isSelectable(5));
+		alert('row 5 unselectable: ' + dijit.byId('grid1').row(5, 1).isSelectable());
 	};
 	
 	getRow6Unselectable = function(){
-		alert('row 6 unselectable: ' + dijit.byId('grid1').select.row.isSelectable(6)); 
+		alert('row 6 unselectable: ' + dijit.byId('grid1').row(6, 1).isSelectable()); 
 	};
 	
 	selectRowsByIndex = function(){
@@ -48,7 +48,7 @@ require([
 	
 	getSelectedRowid = function(){
 		alert('selectd rows: ' + dijit.byId('grid2').select.row.getSelected().toString());
-	}
+	};
 	//Test buttons
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');

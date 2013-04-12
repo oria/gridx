@@ -35,7 +35,7 @@
 		
 		function clearLazy(){
 			// console.log(123);
-			dijit.byId('grid1').model.clear();
+			dijit.byId('grid1').model.clearLazyData();
 		}
 		
 	</script>
@@ -54,7 +54,10 @@
 			"gridx/modules/CellWidget",
 			"gridx/modules/Edit",
 			"gridx/modules/Pagination",
-			"gridx/modules/pagination/PaginationBar"
+			"gridx/modules/pagination/PaginationBar",
+			"gridx/modules/SingleSort",
+			"gridx/modules/Filter",
+			"gridx/modules/filter/FilterBar"
 		],
 		editLazySave: true
 	'></div>
@@ -64,7 +67,6 @@
 				var grid = dijit.byId('grid1');
 				grid.edit.save();
 			}
-			
 			
 		</script>
 		<button onclick='saveLazyEdit()'>save</button>		
