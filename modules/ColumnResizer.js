@@ -107,9 +107,7 @@ define([
 		//Private-----------------------------------------------------------
 		_mousemove: function(e){
 			var t = this;
-			if(t._resizing){
-				query('.gridxHeaderCellOver').removeClass('gridxHeaderCellOver');
-			}else if(!t._ismousedown){
+			if(!t._resizing && !t._ismousedown){
 				var detectWidth = t.arg('detectWidth'),
 					g = t.grid,
 					ltr = g.isLeftToRight(),
@@ -125,7 +123,6 @@ define([
 							npos = n && domGeometry.position(n);
 						if(!n || e.clientX <= npos.x + detectWidth || e.clientX >= npos.x + npos.w - detectWidth){
 							domClass.add(body, 'gridxColumnResizing');
-							query('.gridxHeaderCellOver').removeClass('gridxHeaderCellOver');
 							t._targetCell = cellNode;
 							t._cellPos = pos;
 							//Forbid anything else to happen when we are resizing a column!
