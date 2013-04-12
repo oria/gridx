@@ -349,6 +349,9 @@ define([
 				h = maxHeight;
 			}
 			t.stubNode.style.height = h + 'px';
+			if(t._lastScrollTop){
+				t._lastScrollTop = t.domNode.scrollTop;
+			}
 		},
 	
 		_doVirtual: function(){

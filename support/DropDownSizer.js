@@ -81,6 +81,7 @@ define([
 					props = lang.mixin({
 						options: options,
 						'class': 'gridxPagerSizeSwitchWidget',
+						'aria-label': 'switch page size',
 						onChange: function(ps){
 							p.setPageSize(ps < 0 ? 0 : ps);
 						}

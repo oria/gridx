@@ -558,7 +558,7 @@ define([
 							if(t.arg('lazySave')){
 								var f = g._columnsById[colId].field,
 									obj = {};
-																	obj[f] = v;
+									obj[f] = v;
 								t.model.set(rowId, obj);
 								finish(true);
 							}else{
