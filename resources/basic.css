@@ -393,3 +393,18 @@
 	height: 20px;
 	margin: 0 5px;
 }
+
+/* header region */
+.gridxHeaderRegion {
+	float: right;
+	display: none;
+	cursor: pointer;
+}
+.gridxCell:hover .gridxHeaderRegion,
+.gridxHeaderRegionFocus .gridxHeaderRegion {
+	display: block;
+}
+.gridxHeaderRegionFocus .gridxSortNode:focus,
+.gridxHeaderRegionFocus .gridxHeaderRegion:focus {
+	outline: 1px dashed darkblue;
+}
