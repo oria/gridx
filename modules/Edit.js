@@ -558,12 +558,8 @@ define([
 							if(t.arg('lazySave')){
 								var f = g._columnsById[colId].field,
 									obj = {};
-<<<<<<< HEAD
 									
 								obj[f] = v;
-=======
-									obj[f] = v;
->>>>>>> 70bfdacbd870c034735bd9a89d2d43869737f99f
 								t.model.set(rowId, obj);
 								finish(true);
 							}else{
