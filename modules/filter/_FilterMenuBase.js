@@ -20,7 +20,7 @@ define([
 			//summary:
 			//	Attach the menu with grid, so that it could do filter actions
 			this.grid = grid;
-			this.colId = col;
+			this.colId = col.id;
 			grid.filter._rules = grid.filter._rules || {};
 		},
 
