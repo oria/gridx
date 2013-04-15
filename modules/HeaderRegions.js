@@ -12,8 +12,29 @@ define([
 ], function(declare, Deferred, array, query, domConstruct, domClass, domStyle, keys, event, _Module){
 
 /*=====
-return declare(_Module, {
-});
+	return declare(_Module, {
+		// summary:
+		//		This module makes it easy to add custom contents to column header.
+		//		Other modules such as NestedSort or HeaderMenu can be based upon this module.
+
+		add: function(creater, priority, skipRefresh){
+			// summary:
+			//		Add a region to the header.
+			// creater: function(column)
+			//		A function returning a DOM node, which will be used as the region to be added to header.
+			// priority: Number
+			//		A priority value indicating where the region should appear in header.
+			//		The smaller the value, the closer it'll be from the right border of the header (left border if RTL).
+			// skipRefresh: Boolean
+			//		If true, the header won't be automatically refreshed immediately after this function,
+			//		so that user can add multiple regions all at once and then call the "refresh" method to show them all.
+		},
+
+		refresh: function(){
+			// summary:
+			//		Refresh the header so that changes to the regions can be reflected.
+		}
+	});
 =====*/
 
 return _Module.register(
@@ -35,12 +56,11 @@ declare(_Module, {
 		t.loaded.callback();
 	},
 
-	add: function(creater, priority, scope, skipRefresh){
+	add: function(creater, priority, skipRefresh){
 		this._regions.push({
 			c: creater,
 			p: priority || 0,
-			n: {},
-			s: scope || this
+			n: {}
 		});
 		if(!skipRefresh){
 			this.refresh();
@@ -71,7 +91,7 @@ declare(_Module, {
 				array.forEach(regions, function(region){
 					var regionNode = region.n[colId];
 					if(!regionNode){
-						regionNode = region.n[colId] = region.c.call(region.s, col);
+						regionNode = region.n[colId] = region.c(col);
 						if(regionNode){
 							regionNode.setAttribute('tabindex', -1);
 							domClass.add(regionNode, 'gridxHeaderRegion');

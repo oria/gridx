@@ -16,10 +16,11 @@ define([
 			this._createMenuItems();
 		},
 
-		bindGrid: function(grid){
+		bindGrid: function(grid, col){
 			//summary:
 			//	Attach the menu with grid, so that it could do filter actions
 			this.grid = grid;
+			this.colId = col;
 			grid.filter._rules = grid.filter._rules || {};
 		},
 
