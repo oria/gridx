@@ -8,8 +8,6 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
-	'gridx/modules/HeaderMenu-new',
-	'gridx/modules/NestedSort-new',
 	'dijit/form/NumberSpinner',
 	'dijit/form/Button',
 	'gridx/modules/HeaderMenu',

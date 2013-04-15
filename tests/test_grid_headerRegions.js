@@ -8,7 +8,6 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/allModules',
 	'gridx/modules/HeaderRegions',
-	'gridx/modules/NestedSort-new',
 	'dojo/domReady!'
 ], function(parser, Deferred, dataSource, storeFactory, domConstruct){
 
@@ -50,16 +49,16 @@ require([
 				style: 'height: 13px; width: 10px; background-color: red;'
 			});
 		}, 0, 0);
-//        hr.add(function(col){
-//            return domConstruct.create('div', {
-//                style: 'width: 10px; background-color: green;'
-//            });
-//        }, 1, 0);
-//        hr.add(function(col){
-//            return domConstruct.create('div', {
-//                style: 'width: 10px; background-color: blue;'
-//            });
-//        }, 2, 0);
+		hr.add(function(col){
+			return domConstruct.create('div', {
+				style: 'height: 13px; width: 10px; background-color: green;'
+			});
+		}, 1, 0);
+		hr.add(function(col){
+			return domConstruct.create('div', {
+				style: 'height: 13px; width: 10px; background-color: blue;'
+			});
+		}, 2, 0);
 		hr.refresh();
 	});
 });
