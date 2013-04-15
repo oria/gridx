@@ -22,18 +22,18 @@
 	display: block;
 }
 .gridxCellSortedAsc .gridxArrowButtonNode {
-	background-position: -120px 4px;
+	background-position: -120px 5px;
 }
 .gridxCellSortedDesc .gridxArrowButtonNode {
-	background-position: -100px 4px;
+	background-position: -100px 5px;
 }
 .gridxHeaderCellOver.gridxCellSortedAsc .gridxArrowButtonNode,
 .gridxHeaderCellFocus.gridxCellSortedAsc .gridxArrowButtonNode {
-	background-position: -140px 4px;
+	background-position: -140px 5px;
 }
 .gridxHeaderCellOver.gridxCellSortedDesc .gridxArrowButtonNode,
 .gridxHeaderCellFocus.gridxCellSortedDesc .gridxArrowButtonNode {
-	background-position: -160px 4px;
+	background-position: -160px 5px;
 }
 
 
