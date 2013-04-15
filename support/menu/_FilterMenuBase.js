@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"dijit/Menu",
-	"../Filter"
+	"../../modules/Filter"
 ], function(declare, Menu, Filter){
 
 	return declare(Menu, {
