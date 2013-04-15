@@ -152,7 +152,7 @@ define([
 				return;
 			}
 			if(g.autoWidth){
-				var headers = query('th.gridxCell', innerNode),
+				var headers = query('.gridxCell', innerNode),
 					totalWidth = 0;
 				headers.forEach(function(node){
 					var w = domStyle.get(node, 'width');

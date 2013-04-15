@@ -119,7 +119,7 @@ define([
 						col = g._columnsById[cellNode.getAttribute('colid')];
 					//check if in resize range
 					if(x - detectWidth <= e.clientX && x + detectWidth >= e.clientX){
-						var n = query(e.target).closest('th', g.header.innerNode)[0],
+						var n = query(e.target).closest('td', g.header.innerNode)[0],
 							npos = n && domGeometry.position(n);
 						if(!n || e.clientX <= npos.x + detectWidth || e.clientX >= npos.x + npos.w - detectWidth){
 							domClass.add(body, 'gridxColumnResizing');

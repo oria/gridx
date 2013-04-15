@@ -204,7 +204,7 @@ define([
 								style = col.headerStyle,
 								width = col.width;
 							col._domId = (g.id + '-' + col.id).replace(/\s+/, '');
-							sb.push('<th role="columnheader" aria-readonly="true" tabindex="-1" id="', col._domId,
+							sb.push('<td role="columnheader" aria-readonly="true" tabindex="-1" id="', col._domId,
 								'" colid="', col.id,
 								level - currentLevel ? '" rowspan="' + (level - currentLevel + 1) : '',
 								'" class="gridxCell ',
@@ -216,16 +216,15 @@ define([
 								(style && lang.isFunction(style) ? style(col) : style) || '',
 								'"><div class="gridxSortNode">',
 								col.name || '',
-								'</div></th>');
+								'</div></td>');
 						}
-						columns[prevColCount + item - 1]._groupLast = 1;
 						columns.splice(prevColCount, item);
 					}else{
 						prevColCount += item.colCount;
 						q = q.concat(item.children);
-						sb.push('<th colspan="', item.colCount,
+						sb.push('<td colspan="', item.colCount,
 							'" class="gridxGroupHeader', currentLevel ? ' gridxSubHeader' : '',
-							'"><div class="gridxSortNode">', item.name || '', '</div></th>');
+							'"><div class="gridxSortNode">', item.name || '', '</div></td>');
 					}
 				}
 				sb.push('</tr>');

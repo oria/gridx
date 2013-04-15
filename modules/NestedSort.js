@@ -208,7 +208,7 @@ define([
 			}else if(sortData.length > 1){
 				addClass(dn, 'gridxNestedSorted');
 			}
-			query('th.gridxCell', g.header.domNode).forEach(function(cell){
+			query('.gridxCell', g.header.domNode).forEach(function(cell){
 				var colid = cell.getAttribute('colid');
 				if(t.isSortable(colid)){
 					array.forEach(['', 'Desc', 'Asc', 'Main'], function(s){
