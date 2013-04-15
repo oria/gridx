@@ -158,8 +158,11 @@ define([
 			},
 
 			setSelectable: function(selectable){
+				this.grid.model.setMarkable(this.id, selectable);
 				this.grid.select.row.unselectable[this.id] = !selectable;
-				//refresh
+				// this.grid.select.row.onUnselectableChange(this.id, !selectable, this.model.getMark(this.id));
+				this.grid.select.row.onHighlightChange({row: this.visualIndex()}, this.model.getMark(this.id));
+
 			}
 		},
 
@@ -167,6 +170,8 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
+		
+		unselectable: {},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -194,6 +199,8 @@ define([
 		},
 
 		onHighlightChange: function(){},
+		
+		onUnselectableChange: function(){},
 
 		//Private---------------------------------------------------------------------
 		_type: 'row',
@@ -218,6 +225,8 @@ define([
 				g = t.grid;
 			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
+			t._initUnselectable();
+			
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
 			t.model.setMarkable(lang.hitch(t, t._isSelectable));
@@ -253,6 +262,16 @@ define([
 						t._end();
 					}
 				}]);
+		},
+
+		_initUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+				
+			for(var id in unselectable){
+				t.unselectable[id] = unselectable[id];
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 		},
 
 		_markById: function(args, toSelect){
@@ -417,7 +436,13 @@ define([
 		},
 
 		_highlightSingle: function(target, toHighlight){	//prevent highlight at UI level if a row is not selectable
-			toHighlight = toHighlight ? this._toSelect && this._isSelectable(this._getRowId(target.row)) : this._isSelected(target);
+			var rowId = this._getRowId(target.row);
+			if(!this._isSelectable(rowId)){
+				toHighlight = this.model.getMark(rowId);
+			}else{
+				toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
+			}
+			// console.log('to highlight', toHighlight);
 			this._doHighlight(target, toHighlight);
 		}
 	});

@@ -144,8 +144,12 @@ define([
 			},
 
 			setSelectable: function(selectable){
-				this.grid.select.row.selectable[this.id] = selectable;
-				//update status
+				this.model.setMarkable(this.id, selectable);
+				this.grid.select.row.unselectable[this.id] = !selectable; 
+				// this.grid.select.row.onUnselectableChange(this.id, !selectable, this.model.getMark(this.id));
+				this.grid.select.row.onHighlightChange({row: this.visualIndex()}, this.model.getMark(this.id));
+				
+								//update status
 			}
 		},
 
@@ -153,6 +157,8 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
+		
+		unselectable: {},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -169,23 +175,23 @@ define([
 				model.when();
 			}
 		},
+		
+		onUnselectableChange: function(){},
 
 		//Private--------------------------------------------------------------------------------
 		_type: 'row',
 
 		_isSelectable: function(rowId){
-			var isSelectable = this.arg('isSelectable'),
-				selectable = this.arg('selectable'),
-				ret = rowId in selectable ? selectable[rowId] :
-					isSelectable ? isSelectable.call(this, rowId) : true;
-			this._cache[rowId] = ret;
+			var unselectable = this.arg('unselectable'),
+				ret = rowId in unselectable ? !unselectable[rowId] : true;
 			return ret;
 		},
 
 		_getUnselectableRows: function(){
-			var ret = [];
-			for(var id in this._cache){
-				if(!this._cache[id]){
+			var ret = [],
+				unselectable = this.arg('unselectable');
+			for(var id in unselectable){
+				if(this.unselectable[id]){
 					ret.push(id);
 				}
 			}
@@ -195,7 +201,9 @@ define([
 		_init: function(){
 			var t = this,
 				g = t.grid;
-			t._cache = lang.clone(t.arg('selectable', {}));
+				
+			t._initUnselectable();	
+			// t.unselectable = lang.clone(t.arg('unselectable', {}));
 			t.model.treeMarkMode('', t.arg('treeMode'));
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
@@ -219,7 +227,16 @@ define([
 					}
 				}]);
 		},
-
+		
+		_initUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+			for(var id in unselectable){
+				t.unselectable[id] = unselectable[id];
+				t.model.setMarkable(id, !unselectable[id]);
+			}
+		},
+		
 		_onMark: function(id, toMark, oldState, type){
 			if(type == 'select'){
 				var t = this;
