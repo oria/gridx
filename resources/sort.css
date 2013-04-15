@@ -22,18 +22,18 @@
 	display: block;
 }
 .gridxCellSortedAsc .gridxArrowButtonNode {
-	background-position: -120px 4px;
+	background-position: -120px 5px;
 }
 .gridxCellSortedDesc .gridxArrowButtonNode {
-	background-position: -100px 4px;
+	background-position: -100px 5px;
 }
 .gridxHeaderCellOver.gridxCellSortedAsc .gridxArrowButtonNode,
 .gridxHeaderCellFocus.gridxCellSortedAsc .gridxArrowButtonNode {
-	background-position: -140px 4px;
+	background-position: -140px 5px;
 }
 .gridxHeaderCellOver.gridxCellSortedDesc .gridxArrowButtonNode,
 .gridxHeaderCellFocus.gridxCellSortedDesc .gridxArrowButtonNode {
-	background-position: -160px 4px;
+	background-position: -160px 5px;
 }
 
 
@@ -58,38 +58,50 @@
     background-color: #ddd;
 }
 
-.gridxCellSorted .gridxSortBtnSingle, 
+.gridxHeader .gridxCell .gridxSortBtnNested {
+	display: none;
+}
+.gridxCellSorted .gridxSortBtnSingle,
 .gridxNestedSorted .gridxCellSorted .gridxSortBtnNested,
 
-th.gridxCell:hover .gridxSortBtnSingle,
-.gridxSingleSorted th.gridxCell:hover .gridxSortBtn,
-.gridxNestedSorted th.gridxCell:hover .gridxSortBtn,
+.gridxCell:hover .gridxSortBtnSingle,
+.gridxSingleSorted .gridxCell:hover .gridxSortBtn,
+.gridxNestedSorted .gridxCell:hover .gridxSortBtn,
 
-.gridxHeader th.gridxCellSortFocus .gridxSortBtnSingle,
-.gridxSingleSorted th.gridxCellSortFocus .gridxSortBtn,
-.gridxNestedSorted th.gridxCellSortFocus .gridxSortBtn,
+.gridxHeader .gridxCellSortFocus .gridxSortBtnSingle,
+.gridxSingleSorted .gridxCellSortFocus .gridxSortBtn,
+.gridxNestedSorted .gridxCellSortFocus .gridxSortBtn,
+.gridxHeader .gridxHeaderRegionFocus .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderRegionFocus .gridxSortBtn,
+.gridxNestedSorted .gridxHeaderRegionFocus .gridxSortBtn,
 
-.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain .gridxSortBtnNested,
+/*.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain .gridxSortBtnNested,*/
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain .gridxSortBtnNested,
 .gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain .gridxSortBtnNested
 {
 	display: block;
 }
 
-.gridxSingleSorted .gridxHeader th.gridxCellSortedMain:hover .gridxSortBtnNested,
-.gridxSingleSorted .gridxHeader th.gridxCellSortedMain.gridxCellSortFocus .gridxSortBtnNested,
-.gridxSingleSorted .gridxHeaderHover th.gridxCellSortedMain .gridxSortBtnSingle,
-.gridxSingleSorted .gridxHeaderFocus th.gridxCellSortedMain .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeader .gridxCellSortedMain:hover .gridxSortBtnNested,
+.gridxSingleSorted .gridxHeader .gridxCellSortedMain.gridxCellSortFocus .gridxSortBtnNested,
+.gridxSingleSorted .gridxHeader .gridxCellSortedMain.gridxHeaderRegionFocus .gridxSortBtnNested,
+/*.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain .gridxSortBtnSingle,*/
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain .gridxSortBtnSingle,
 .gridxNestedSorted .gridxSortBtnSingle {
 	display: none;
 }
 
-.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain:hover .gridxSortBtnSingle,
-.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain.gridxCellSortFocus .gridxSortBtnSingle {
+/*.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain:hover .gridxSortBtnSingle,*/
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain:hover .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain.gridxCellSortFocus .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain.gridxHeaderRegionFocus .gridxSortBtnSingle {
 	display: block;
 }
 
-th.gridxCell:hover .gridxSortBtn,
-th.gridxCellSortFocus .gridxSortBtn {
+.gridxCell:hover .gridxSortBtn,
+.gridxCellSortFocus .gridxSortBtn,
+.gridxHeaderRegionFocus .gridxSortBtn {
 /*    border-left: 1px solid #bbb;*/
 }
 .gridxCellSortedAsc .gridxSortBtnSingle {
@@ -104,24 +116,29 @@ th.gridxCellSortFocus .gridxSortBtn {
 .gridxCellSortedDesc .gridxSortBtnNested {
 	background-position: -90px 5px;
 }
-th.gridxCell:hover.gridxCellSortedAsc .gridxSortBtnSingle,
-th.gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnSingle {
+.gridxCell:hover.gridxCellSortedAsc .gridxSortBtnSingle,
+.gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnSingle,
+.gridxHeaderRegionFocus.gridxCellSortedAsc .gridxSortBtnSingle {
 	background-position: -140px 5px;
 }
-th.gridxCell:hover.gridxCellSortedAsc .gridxSortBtnNested,
-th.gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnNested {
+.gridxCell:hover.gridxCellSortedAsc .gridxSortBtnNested,
+.gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnNested,
+.gridxHeaderRegionFocus.gridxCellSortedAsc .gridxSortBtnNested {
 	background-position: -130px 5px;
 }
-th.gridxCell:hover.gridxCellSortedDesc .gridxSortBtnSingle,
-th.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnSingle {
+.gridxCell:hover.gridxCellSortedDesc .gridxSortBtnSingle,
+.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnSingle,
+.gridxHeaderRegionFocus.gridxCellSortedDesc .gridxSortBtnSingle {
 	background-position: -180px 5px;
 }
-th.gridxCell:hover.gridxCellSortedDesc .gridxSortBtnNested,
-th.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested {
+.gridxCell:hover.gridxCellSortedDesc .gridxSortBtnNested,
+.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested,
+.gridxHeaderRegionFocus.gridxCellSortedDesc .gridxSortBtnNested {
 	background-position: -170px 5px;
 }
-.gridxNestedSorted th.gridxCell:hover .gridxSortBtnSingle,
-.gridxNestedSorted th.gridxCellSortFocus .gridxSortBtnSingle {
+.gridxNestedSorted .gridxCell:hover .gridxSortBtnSingle,
+.gridxNestedSorted .gridxCellSortFocus .gridxSortBtnSingle,
+.gridxNestedSorted .gridxHeaderRegionFocus .gridxSortBtnSingle {
 	background-position: -159px 5px;
 }
 

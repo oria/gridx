@@ -1,12 +1,19 @@
 define([
 	"dojo/_base/declare",
 	"dijit/Menu",
-	"../Filter"
+	"../../modules/Filter"
 ], function(declare, Menu, Filter){
 
 	return declare(Menu, {
+		// summary:
+		//		
+
+		// grid: gridx/Grid
+		//		
 		grid: null,
 
+		// colId: String
+		//		
 		colId: null,
 
 		leftClickToOpen: true,
@@ -16,10 +23,11 @@ define([
 			this._createMenuItems();
 		},
 
-		bindGrid: function(grid){
+		bindGrid: function(grid, col){
 			//summary:
 			//	Attach the menu with grid, so that it could do filter actions
 			this.grid = grid;
+			this.colId = col.id;
 			grid.filter._rules = grid.filter._rules || {};
 		},
 
