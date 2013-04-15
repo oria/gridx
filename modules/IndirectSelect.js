@@ -129,12 +129,14 @@ define([
 		},
 
 		_onHighlightChange: function(target, toHighlight){
-			var node = query('[visualindex="' + target.row + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
+			var row = query('[visualindex="' + target.row + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0],
+				node = row? query('.gridxIndirectSelectionCheckBox', row)[0] : undefined;
 			if(node){
 				var dijitClass = this._getDijitClass(),
 					partial = toHighlight == 'mixed',
 					selected = toHighlight && !partial,
-					isUnselectable = !this.grid.row(target.row).isSelectable();
+					rowId = row.getAttribute('rowid'),
+					isUnselectable = !this.grid.row(rowId, 1).isSelectable();
 					
 				domClass.toggle(node, dijitClass + 'Checked', selected);
 				domClass.toggle(node, dijitClass + 'Partial', partial);

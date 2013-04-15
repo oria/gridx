@@ -148,12 +148,14 @@ define([
 		},
 
 		_onHighlightChange: function(target, toHighlight){
-			var node = query('[visualindex="' + target.row + '"].gridxRow .gridxIndirectSelectionCheckBox', this.grid.bodyNode)[0];
+			var row =  query('[visualindex="' + target.row + '"].gridxRow', this.grid.bodyNode)[0],
+				node = row? query('.gridxIndirectSelectionCheckBox', row)[0] : undefined;
 			if(node){
 				var dijitClass = this._getDijitClass(),
 					partial = toHighlight == 'mixed',
 					selected = toHighlight && !partial,
-					isUnselectable = !this.grid.row(target.row).isSelectable();
+					rowId = row.getAttribute('rowid');
+					isUnselectable = !this.grid.row(rowId).isSelectable();
 					
 				domClass.toggle(node, dijitClass + 'Checked', selected);
 				domClass.toggle(node, dijitClass + 'Partial', partial);
@@ -229,7 +231,7 @@ define([
 						return model.idToIndex(id);
 					}), function(index){
 						return index >= start && index < start + count;
-					});s
+					});
 					unselectableRoots = array.filter(unselectableRoots, function(id){
 						var index = model.idToIndex(id);
 						return index >= start && index < start + count;
