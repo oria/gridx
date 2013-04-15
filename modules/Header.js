@@ -181,7 +181,7 @@ define([
 
 		_decorateEvent: function(e){
 			var n = query(e.target).closest('.gridxCell', this.domNode)[0],
-				c = this.grid._columnsById[n.getAttribute('colid')];
+				c = n && this.grid._columnsById[n.getAttribute('colid')];
 			if(c){
 				e.headerCellNode = n;
 				e.columnId = c.id;
