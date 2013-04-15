@@ -6,6 +6,11 @@ define([
 ], function(declare, array, _FilterMenuBase, CheckedMenuItem){
 
 	return declare(_FilterMenuBase, {
+		// summary:
+		//		
+
+		// numbers: Integer[]
+		//		
 		numbers: [],
 
 		_createMenuItems: function(){

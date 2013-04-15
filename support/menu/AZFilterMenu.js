@@ -6,6 +6,9 @@ define([
 ], function(declare, array, _FilterMenuBase, CheckedMenuItem){
 
 	return declare(_FilterMenuBase, {
+		// summary:
+		//		
+
 		_createMenuItems: function(){
 			var t = this,
 				arr = ['A-F', 'G-L', 'M-R', 'S-Z'];

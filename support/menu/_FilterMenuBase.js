@@ -5,8 +5,15 @@ define([
 ], function(declare, Menu, Filter){
 
 	return declare(Menu, {
+		// summary:
+		//		
+
+		// grid: gridx/Grid
+		//		
 		grid: null,
 
+		// colId: String
+		//		
 		colId: null,
 
 		leftClickToOpen: true,
