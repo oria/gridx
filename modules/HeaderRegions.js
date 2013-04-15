@@ -59,7 +59,7 @@ declare(_Module, {
 			});
 			t._regionCnnts = [];
 			regions.sort(function(a, b){
-				return a.p - b.p;
+				return b.p - a.p;
 			});
 			query('.gridxCell', g.header.domNode).forEach(function(node){
 				var colId = node.getAttribute('colid'),

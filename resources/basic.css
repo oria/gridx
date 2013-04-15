@@ -355,24 +355,31 @@
 	width: 100px;
 }
 .gridxHeaderMenuBtn {
-	float: right;
-	top: 1px;
-	bottom: 1px;
-	width: 14px;
-	height:12px;
+/*    float: right;*/
+/*    top: 1px;*/
+/*    bottom: 1px;*/
+	width: 10px;
+	height:13px;
 	border-left: 1px solid #fff;
+/*    display: none;*/
+/*    cursor: pointer;*/
+/*    background: transparent url(images/sprite_icons.png) no-repeat -97px 9px;*/
+	background: transparent url(images/sprite_icons.png) no-repeat -98px 5px;
+/*    margin-top:-4px;*/
+/*    margin-bottom: -4px;*/
+/*    margin-right: -3px;*/
+
+}
+.gridxHeaderMenuBtnInner {
 	display: none;
-	cursor: pointer;
-	background: transparent url(images/sprite_icons.png) no-repeat -97px 9px;
-	margin-top:-4px;
-	margin-bottom: -4px;
-	margin-right: -3px;
-
+}
+.dijit_a11y .gridxHeaderMenuBtnInner {
+	display: inline;
 }
 
-.gridxHeaderRow .gridxCell:hover .gridxHeaderMenuBtn{
-	display: block;
-}
+/*.gridxHeaderRow .gridxCell:hover .gridxHeaderMenuBtn{*/
+/*    display: block;*/
+/*}*/
 /*Header Menu End*/
 
 
