@@ -38,7 +38,7 @@ define([
 			var t = this,
 				key = 'azfilter',
 				reg = '';
-			t.getChildren().forEach(function(mi){
+			array.forEach(t.getChildren(), function(mi){
 				if(mi.get('checked')){
 					reg += mi.get('label');
 				}
