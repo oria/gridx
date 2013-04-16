@@ -22,9 +22,7 @@ define([
 
 		constructor: function(model, args){
 			this._mixinAPI('query');
-			if(args.query){
-				this.query(args.query, args.queryOptions);
-			}
+			this.query(args.query, args.queryOptions);
 		},
 
 		//Public--------------------------------------------------------------
@@ -41,7 +39,7 @@ define([
 			var a = arguments,
 				args = a[a.length - 1],
 				m = this.model,
-				c = m._cache, 
+				c = m._cache,
 				op = c.options = c.options || {};
 			op.query = args[0];
 			op.queryOptions = args[1];
