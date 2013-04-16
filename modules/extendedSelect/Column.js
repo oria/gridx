@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
@@ -9,7 +10,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_Base"
-], function(declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
+], function(declare, array, event, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
 
 	return declare(/*===== "gridx.modules.extendedSelect.Column", =====*/_Base, {
 		// summary:
@@ -171,6 +172,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
+						event.stop(e);
 						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}

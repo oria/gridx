@@ -2,12 +2,13 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
+	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(declare, array, sniff, query, domClass, keys, _RowCellBase, _Module){
+], function(declare, array, sniff, event, query, domClass, keys, _RowCellBase, _Module){
 
 	return declare(/*===== "gridx.modules.select.Row", =====*/_RowCellBase, {
 		// summary:
@@ -148,6 +149,7 @@ define([
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
+							event.stop(e);
 							t._select(e.rowId, g._isCopyEvent(e));
 						}
 					}

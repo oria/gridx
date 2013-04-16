@@ -3,11 +3,12 @@ define([
 	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
+	"dojo/_base/event",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
+], function(declare, query, array, sniff, event, domClass, keys, _Base, _Module){
 
 	return declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
 		// summary:
@@ -137,6 +138,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
+						event.stop(e);
 						t._select(e.columnId, g._isCopyEvent(e));
 					}
 				}]

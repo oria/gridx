@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
@@ -10,7 +11,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
+], function(declare, array, event, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
 	var isArrayLike = lang.isArrayLike;
 
@@ -209,6 +210,7 @@ define([
 				}],
 				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
+						event.stop(e);
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}

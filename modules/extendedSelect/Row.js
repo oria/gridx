@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/_base/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
@@ -10,7 +11,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
+], function(declare, array, event, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
 	return declare(/*===== "gridx.modules.extendedSelect.Row", =====*/_RowCellBase, {
 		// summary:
@@ -152,6 +153,7 @@ define([
 					if(e.keyCode == keys.SPACE && (!e.columnId ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+						event.stop(e);
 						t._isOnCell = e.columnId;
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
