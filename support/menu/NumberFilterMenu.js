@@ -5,12 +5,20 @@ define([
 	"dijit/CheckedMenuItem"
 ], function(declare, array, _FilterMenuBase, CheckedMenuItem){
 
+/*=====
 	return declare(_FilterMenuBase, {
 		// summary:
-		//		
+		//		This is a number range adaptive filter sample.
 
 		// numbers: Integer[]
-		//		
+		//		The number ranges for the adaptive filter.
+		// example:
+		//		numbers: [-Infinity, 10, 50, 100] will show the adaptive filter: '< 10', '10 - 50', '50 - 100'
+		numbers: []
+	});
+=====*/
+
+	return declare(_FilterMenuBase, {	
 		numbers: [],
 
 		_createMenuItems: function(){
