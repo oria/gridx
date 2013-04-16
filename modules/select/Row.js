@@ -62,9 +62,9 @@ define([
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
-		// selectable: Object
-		//		User can set selectable/unselectable rows in this hash object. The hash key is the row ID.
-		selectable: {},
+		// unselectable: Object
+		//		User can set unselectable rows in this hash object. The hash key is the row ID.
+		unselectable: {},
 
 		// isSelectable: Function(rowId)
 		//		User can provide this function to dynamically decide whether the given row is selectable.
@@ -145,12 +145,7 @@ define([
 			},
 
 			setSelectable: function(selectable){
-				this.model.setMarkable(this.id, selectable);
-				this.grid.select.row.unselectable[this.id] = !selectable; 
-				// this.grid.select.row.onUnselectableChange(this.id, !selectable, this.model.getMark(this.id));
-				this.grid.select.row.onHighlightChange({row: this.visualIndex()}, this.model.getMark(this.id));
-				
-								//update status
+				this.grid.select.row.setSelectable(this.id, selectable);
 			}
 		},
 
@@ -158,8 +153,21 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
-		
-		unselectable: {},
+
+		//unselectable: null,
+
+		setSelectable: function(rowId, selectable){
+			var t = this,
+				m = t.model,
+				n = t.grid.body.getRowNode({
+					rowId: rowId
+				});
+			m.setMarkable(rowId, selectable);
+			t.unselectable[rowId] = !selectable;
+			if(n){
+				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+			}
+		},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -176,8 +184,6 @@ define([
 				model.when();
 			}
 		},
-		
-		onUnselectableChange: function(){},
 
 		//Private--------------------------------------------------------------------------------
 		_type: 'row',
@@ -201,11 +207,12 @@ define([
 
 		_init: function(){
 			var t = this,
-				g = t.grid;
-				
-			t._initUnselectable();	
-			// t.unselectable = lang.clone(t.arg('unselectable', {}));
+				g = t.grid,
+				unselectable = t.arg('unselectable', {});
 			t.model.treeMarkMode('', t.arg('treeMode'));
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
@@ -229,16 +236,7 @@ define([
 					}
 				}]);
 		},
-		
-		_initUnselectable: function(){
-			var t = this,
-				unselectable = t.arg('unselectable');
-			for(var id in unselectable){
-				t.unselectable[id] = unselectable[id];
-				t.model.setMarkable(id, !unselectable[id]);
-			}
-		},
-		
+
 		_onMark: function(id, toMark, oldState, type){
 			if(type == 'select'){
 				var t = this;
