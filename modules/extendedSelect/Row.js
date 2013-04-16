@@ -2,6 +2,7 @@ define([
 /*====="../../core/Row", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
@@ -11,7 +12,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Row, =====*/declare, array, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Row, =====*/declare, array, event, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
 	Row.select = function(){
@@ -257,6 +258,7 @@ define([
 							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+						event.stop(e);
 						t._isOnCell = e.columnId;
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
