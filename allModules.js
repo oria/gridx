@@ -39,7 +39,8 @@ define([
 	'gridx/modules/TouchScroll',
 	'gridx/modules/HiddenColumns',
 	'gridx/modules/GroupHeader',
-	'gridx/modules/PagedBody'
+	'gridx/modules/PagedBody',
+	'gridx/modules/HeaderMenu'
 ], function(
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
@@ -54,7 +55,7 @@ define([
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
 	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll,
-	HiddenColumns, GroupHeader, PagedBody){
+	HiddenColumns, GroupHeader, PagedBody, HeaderMenu){
 return {
 	Focus: Focus,
 	VScroller: VScroller,
@@ -96,6 +97,7 @@ return {
 	TouchScroll: TouchScroll,
 	HiddenColumns: HiddenColumns,
 	GroupHeader: GroupHeader,
-	PagedBody: PagedBody
+	PagedBody: PagedBody,
+	HeaderMenu: HeaderMenu
 };
 });

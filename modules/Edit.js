@@ -325,7 +325,7 @@ define([
 					console.log('in edit onset');
 					var vi = g.row(rowId, 1).visualIndex();
 					if( vi !== null && 
-						g.body.renderStart <= vi < g.body.renderStart + g.body.renderCount){
+						(g.body.renderStart <= vi) && (vi < g.body.renderStart + g.body.renderCount)){
 						for(var colId in g._columnsById){
 							if(t.model.isChanged(rowId, g._columnsById[colId].field)){
 								g.body.addClass(rowId, colId, 'gridxCellChanged');
@@ -558,7 +558,8 @@ define([
 							if(t.arg('lazySave')){
 								var f = g._columnsById[colId].field,
 									obj = {};
-									obj[f] = v;
+									
+								obj[f] = v;
 								t.model.set(rowId, obj);
 								finish(true);
 							}else{

@@ -84,27 +84,10 @@
 	padding: 3px;
 	text-align: left;
 	overflow: hidden;
-	/*box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;*/
 }
 
-.gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxHeaderCellFocus {
-	outline: 1px dashed darkblue;
-	border-top: 1px dashed darkblue;
-	border-bottom: 1px dashed darkblue;
-}
-
-.dijit_a11y .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
 	border: 1px dashed darkblue;
-}
-
-.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:first-child {
-	border-left: 1px dashed darkblue;
-}
-
-.gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus:last-child {
-	border-right: 1px dashed darkblue;
 }
 
 .gridxHeaderRow :focus {
@@ -115,14 +98,14 @@
 .gridxBody {
 	height: 100%;
 	width: 100%;
-    overflow: hidden;
+	overflow: hidden;
 	position: absolute;
 	top: 0;
 	box-sizing: border-box; /* css3 rec */
-    -moz-box-sizing: border-box; /* ff2 */
-    -ms-box-sizing: border-box; /* ie8 */
-    -webkit-box-sizing: border-box; /* safari3 */
-    -khtml-box-sizing: border-box; /* konqueror */
+	-moz-box-sizing: border-box; /* ff2 */
+	-ms-box-sizing: border-box; /* ie8 */
+	-webkit-box-sizing: border-box; /* safari3 */
+	-khtml-box-sizing: border-box; /* konqueror */
 }
 
 .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
@@ -153,9 +136,6 @@
 	padding: 3px;
 	text-align: left;
 	overflow: hidden;
-	/*box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;*/
 }
 
 .gridxCell.gridxCellChanged{
@@ -167,8 +147,6 @@
 	height: 24px;
 	width: 100%;
 	background: url('images/loadingAnimation.gif') no-repeat left;
-	/*background-color: green;
-	border-top: 1px solid red;*/
 }
 
 .gridxBody .gridxCell:focus {
@@ -377,24 +355,31 @@
 	width: 100px;
 }
 .gridxHeaderMenuBtn {
-	float: right;
-	top: 1px;
-	bottom: 1px;
-	width: 14px;
-	height:12px;
+/*    float: right;*/
+/*    top: 1px;*/
+/*    bottom: 1px;*/
+	width: 10px;
+	height:13px;
 	border-left: 1px solid #fff;
+/*    display: none;*/
+/*    cursor: pointer;*/
+/*    background: transparent url(images/sprite_icons.png) no-repeat -97px 9px;*/
+	background: transparent url(images/sprite_icons.png) no-repeat -98px 5px;
+/*    margin-top:-4px;*/
+/*    margin-bottom: -4px;*/
+/*    margin-right: -3px;*/
+
+}
+.gridxHeaderMenuBtnInner {
 	display: none;
-	cursor: pointer;
-	background: transparent url(images/sprite_icons.png) no-repeat -97px 9px;
-	margin-top:-4px;
-	margin-bottom: -4px;
-	margin-right: -3px;
-
+}
+.dijit_a11y .gridxHeaderMenuBtnInner {
+	display: inline;
 }
 
-.gridxHeaderCellOver .gridxHeaderMenuBtn{
-	display: block;
-}
+/*.gridxHeaderRow .gridxCell:hover .gridxHeaderMenuBtn{*/
+/*    display: block;*/
+/*}*/
 /*Header Menu End*/
 
 
@@ -414,4 +399,19 @@
 	width: 20px;
 	height: 20px;
 	margin: 0 5px;
+}
+
+/* header region */
+.gridxHeaderRegion {
+	float: right;
+	display: none;
+	cursor: pointer;
+}
+.gridxCell:hover .gridxHeaderRegion,
+.gridxHeaderRegionFocus .gridxHeaderRegion {
+	display: block;
+}
+.gridxHeaderRegionFocus .gridxSortNode:focus,
+.gridxHeaderRegionFocus .gridxHeaderRegion:focus {
+	outline: 1px dashed darkblue;
 }

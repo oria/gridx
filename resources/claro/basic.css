@@ -17,6 +17,10 @@
 	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
 
+.claro .gridxBodyRowHoverEffect .gridxRowOver .gridxCellChanged {
+	background:url("../images/row_back_changed.png") top right #ABD6FF repeat-x;
+}
+
 .claro .gridx .gridxBody .gridxRow .gridxCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;
@@ -69,12 +73,17 @@
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
 }
 
-.claro .gridxHeader .gridxHeaderRow .gridxHeaderCellOver {
+.claro .gridxHeader .gridxHeaderRow .gridxCell:hover {
 	background: #9bcaf7;
 	border-top-color: #9BCAF7;
 }
-.claro .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellOver {
+.claro .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover,
+.gridxColumnResizing .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover {
 	border-top-color: #FFFFFF;
+}
+.gridxColumnResizing .gridx .gridxHeader .gridxHeaderRow .gridxCell:hover {
+	background: transparent;
+	border-top-color: transparent;
 }
 .claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus {
 	border-top-color: darkblue;

@@ -2,6 +2,7 @@ define([
 /*====="../../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
@@ -10,7 +11,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_Base"
-], function(/*=====Column, =====*/declare, array, query, lang, has, domClass, mouse, keys, _Module, _Base){
+], function(/*=====Column, =====*/declare, array, event, query, lang, has, domClass, mouse, keys, _Module, _Base){
 
 /*=====
 	Column.select = function(){
@@ -205,6 +206,7 @@ define([
 				}],
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
+						event.stop(e);
 						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}

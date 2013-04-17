@@ -112,16 +112,20 @@ define([
 
 		_createSelector: function(data, rowId){
 			var mark = this.model.getMark(rowId);
-			return this._createCheckBox(mark === true, mark == 'mixed');
+				isUnselectable = !this.grid.row(rowId, 1).isSelectable();
+			return this._createCheckBox(mark === true, mark == 'mixed', isUnselectable);
 		},
 
-		_createCheckBox: function(selected, partial){
+		_createCheckBox: function(selected, partial, isUnselectable){
 			var dijitClass = this._getDijitClass();
 			return ['<span role="', this._isSingle() ? 'radio' : 'checkbox',
 				'" class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
 				dijitClass, ' ',
 				selected ? dijitClass + 'Checked' : '',
 				partial ? dijitClass + 'Partial' : '',
+				isUnselectable && selected ? dijitClass + 'CheckedDisabled' : '',
+				isUnselectable && partial ? dijitClas  + 'PartialDisabled' : '',
+				isUnselectable && !selected && !partial ? dijitClass + 'Disabled' : '',
 				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
 				'"><span class="gridxIndirectSelectionCheckBoxInner">',
 				selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;',
@@ -144,16 +148,23 @@ define([
 		},
 
 		_onHighlightChange: function(target, toHighlight){
-			var node = query('[visualindex="' + target.row + '"].gridxRow .gridxIndirectSelectionCheckBox', this.grid.bodyNode)[0];
+			var row =  query('[visualindex="' + target.row + '"].gridxRow', this.grid.bodyNode)[0],
+				node = row? query('.gridxIndirectSelectionCheckBox', row)[0] : undefined;
 			if(node){
 				var dijitClass = this._getDijitClass(),
 					partial = toHighlight == 'mixed',
-					selected = toHighlight && !partial;
+					selected = toHighlight && !partial,
+					rowId = row.getAttribute('rowid');
+					isUnselectable = !this.grid.row(rowId).isSelectable();
+					
 				domClass.toggle(node, dijitClass + 'Checked', selected);
 				domClass.toggle(node, dijitClass + 'Partial', partial);
+				domClass.toggle(node, dijitClass + 'CheckedDisabled', selected && isUnselectable);
+				domClass.toggle(node, dijitClass + 'PartialDisabled', partial && isUnselectable);
+				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
 				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
-			}
+			}			
 		},
 
 		_onMouseOver: function(e){
@@ -204,8 +215,12 @@ define([
 			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
 				return !model.treePath(id).pop();
 			});
+			var unselectableRows = g.select.row._getUnselectableRows();
+			var unselectableRoots = array.filter(unselectableRows, function(id){
+				return !model.parentId(id) && !g.select.row.isSelected(id);
+			});			
 			if(count === model.size()){
-				allSelected = count && count == selectedRoot.length;
+				allSelected = count && count - unselectableRoots.length == selectedRoot.length;
 			}else{
 				d = new Deferred();
 				model.when({
@@ -217,7 +232,11 @@ define([
 					}), function(index){
 						return index >= start && index < start + count;
 					});
-					allSelected = count == indexes.length;
+					unselectableRoots = array.filter(unselectableRoots, function(id){
+						var index = model.idToIndex(id);
+						return index >= start && index < start + count;
+					});
+					allSelected = count - unselectableRoots.length == indexes.length;
 					d.callback();
 				});
 			}

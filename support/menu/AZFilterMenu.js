@@ -5,10 +5,25 @@ define([
 	"dijit/CheckedMenuItem"
 ], function(declare, array, _FilterMenuBase, CheckedMenuItem){
 
+/*=====
 	return declare(_FilterMenuBase, {
+		// summary:
+		//		This is a sample implementation for the alphatic filter, default
+		//		to ['A-F', 'G-L', 'M-R', 'S-Z'].
+		
+		// alphabeticRanges: String[]
+		//		The ranges of alphabetic filter.
+		alphabeticRanges: ['A-F', 'G-L', 'M-R', 'S-Z']
+	});
+=====*/
+
+	return declare(_FilterMenuBase, {
+		
+		alphabeticRanges: ['A-F', 'G-L', 'M-R', 'S-Z'],
+
 		_createMenuItems: function(){
 			var t = this,
-				arr = ['A-F', 'G-L', 'M-R', 'S-Z'];
+				arr = t.alphabeticRanges;
 			array.forEach(arr, function(item){
 				t.addChild(new CheckedMenuItem({
 					label: item,
@@ -23,7 +38,7 @@ define([
 			var t = this,
 				key = 'azfilter',
 				reg = '';
-			t.getChildren().forEach(function(mi){
+			array.forEach(t.getChildren(), function(mi){
 				if(mi.get('checked')){
 					reg += mi.get('label');
 				}

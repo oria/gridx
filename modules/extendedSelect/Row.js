@@ -2,6 +2,7 @@ define([
 /*====="../../core/Row", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
@@ -11,7 +12,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Row, =====*/declare, array, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Row, =====*/declare, array, event, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
 	Row.select = function(){
@@ -158,8 +159,7 @@ define([
 			},
 
 			setSelectable: function(selectable){
-				this.grid.select.row.unselectable[this.id] = !selectable;
-				//refresh
+				this.grid.select.row.setSelectable(this.id, selectable);
 			}
 		},
 
@@ -167,6 +167,21 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
+
+		//unselectable: null,
+
+		setSelectable: function(rowId, selectable){
+			var t = this,
+				m = t.model,
+				n = t.grid.body.getRowNode({
+					rowId: rowId
+				});
+			m.setMarkable(rowId, selectable);
+			t.unselectable[rowId] = !selectable;
+			if(n){
+				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+			}
+		},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -215,8 +230,12 @@ define([
 
 		_init: function(){
 			var t = this,
-				g = t.grid;
+				g = t.grid,
+				unselectable = t.arg('unselectable', {});
 			t.model.treeMarkMode('', t.arg('treeMode'));
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 			t.inherited(arguments);
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
@@ -248,6 +267,7 @@ define([
 							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+						event.stop(e);
 						t._isOnCell = e.columnId;
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
@@ -417,7 +437,13 @@ define([
 		},
 
 		_highlightSingle: function(target, toHighlight){	//prevent highlight at UI level if a row is not selectable
-			toHighlight = toHighlight ? this._toSelect && this._isSelectable(this._getRowId(target.row)) : this._isSelected(target);
+			var rowId = this._getRowId(target.row);
+			if(!this._isSelectable(rowId)){
+				toHighlight = this.model.getMark(rowId);
+			}else{
+				toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
+			}
+			// console.log('to highlight', toHighlight);
 			this._doHighlight(target, toHighlight);
 		}
 	});

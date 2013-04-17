@@ -8,23 +8,26 @@ define([
 	'../_Extension'
 ], function(declare, lang, aspect, DeferredList, Deferred, array,  _Extension){
 /*=====
-	Model.setLazyable = function(){};
-	Model.isLazy = function(){};
-	Model.setLazyData = function(){};
-	Model.redo = function(){};
+	Model.set = function(){};
 	Model.undo = function(){};
+	Model.redo = function(){};
+	Model.save = function(){};
+	Model.clear = function(){};
+	Model.isChanged = function(){}
+	Model.getChanged = function(){}
 	
 	return declare(_Extension, {
 		// Summary:
-		//			Enable model to add, delete update row data without affecting the store.
-		//			It's like a data modifier.
+		//			Enable model to change data without affecting the store.
+		//			All the changes will be saved in the modify extension.
+		//			The byId and byIndex function will be wrapped in this extension.
 	});
 =====*/
 
 	return declare(_Extension, {
 		name: 'modify',
 
-		priority: 21,
+		priority: 19,
 		
 		constructor: function(model, args){
 			var t = this,
@@ -36,10 +39,10 @@ define([
 			t._cellOptList = {};
 			
 			t._lazyData = {};
-			t._lazyDataChangeList = {};
+			t._lazyRawData = {};
 			
 			t._cache = model._cache;
-			t._mixinAPI('set', 'redo', 'undo', 'isChanged', 'getChanged', 'save', 'clear');
+			t._mixinAPI('set', 'redo', 'undo', 'isChanged', 'getChanged', 'save', 'clearLazyData');
 			
 			model.onSetLazyData = function(){};
 			model.onRedo = model.onUndo = function(){};
@@ -56,15 +59,25 @@ define([
 		byId: function(id){
 			// var d = lang.clone(this.inner._call('byId', arguments));
 			// lang.mixin(d.rawData, d.lazyData);
-			
-			var d = lang.mixin({}, this.inner._call('byId', arguments));
-			d.rawData = lang.mixin({}, d.rawData, d.lazyData);			
+			// return this._cache.byId(id);
+			var t = this,
+				c = t.inner._call('byId', arguments);
+			if(!c){ return c; }
+			var d = lang.mixin({}, c);
+			d.rawData = lang.mixin({}, d.rawData, t._lazyRawData[id]);
+			d.data = lang.mixin({}, d.data, t._lazyData[id]);		
 			return d;
 		},
 		
 		byIndex: function(index, parentId){
-			var d = lang.mixin({}, this.inner._call('byIndex', arguments));
-			d.rawData = lang.mixin({}, d.rawData, d.lazyData);
+			var t = this,
+				c = t.inner._call('byId', arguments),
+				id = t.inner._call('indexToId', arguments);
+			if(!c){ return c; }
+			var d = lang.mixin({}, c);
+			
+			d.rawData = lang.mixin({}, d.rawData, t._lazyRawData[id]);
+			d.data = lang.mixin({}, d.data, t._lazyData[id]);
 			return d;
 		},
 		
@@ -87,7 +100,9 @@ define([
 			opt.newData = rawData;
 			opt.oldData = {};
 			
-			var rd = t.model.byId(rowId).rawData;
+			//var rd = t.inner._call('byId', [rowId]).rawData;
+			
+			var rd = t.byId(rowId).rawData;
 			for(var f in rawData){
 				opt.oldData[f] = rd[f];
 			}
@@ -145,9 +160,10 @@ define([
 			return false;
 		},
 
-		clear: function(){
+		clearLazyData: function(){
 			// summary:
 			//		Undo all. Clear undo list.
+			console.log('in clear');
 			var t = this,
 				cl = t.getChanged();
 			
@@ -156,9 +172,11 @@ define([
 			}
 			
 			t._globalOptList = [];
-			array.forEach(cl, function(rid){
-				delete t._cache.byId(rid).lazyData;
-			});
+			t._lazyRawData = {};
+			t._lazyData = {};
+			// array.forEach(cl, function(rid){
+				// delete t._cache.byId(rid).lazyData;
+			// });
 		},
 
 		save: function(){
@@ -181,6 +199,8 @@ define([
 					//t.clear();
 					t._globalOptList = [];
 					t._globalOptIndex = -1;
+					t._lazyRawData = {};
+					t._lazyData = {};
 					console.log('save to store successfully');
 					t.onSave(dl);
 				}, function(){
@@ -199,17 +219,18 @@ define([
 			//		If omitted, checked whether any field of the row is changed.
 			// returns:
 			//		True if it does get changed.
-			var t = this,
-				cache = t._cache.byId(rowId);
+			var t = this;
+				cache = t.inner._call('byId', [rowId]),
+				ld = t._lazyRawData[rowId];
 			if(field){
-				if(cache.lazyData){
-					return cache.lazyData[field] ? cache.lazyData[field] !== cache.rawData[field] : false;
+				if(ld){
+					return ld[field]? ld[field] !== cache.rawData[field] : false;
 				}
 			}else{
-				if(cache.lazyData){
+				if(ld){
 					var bool = false;
-					for(var f in cache.lazyData){
-						if(cache.lazyData[f] !== cache.rawData[f]){
+					for(var f in ld){
+						if(ld[f] !== cache.rawData[f]){
 							return true;
 						}
 					}
@@ -225,7 +246,7 @@ define([
 			//		An array of changed row IDs.
 			var t = this,
 				a = [];
-			for(var rid in t._cache._cache){
+			for(var rid in t._lazyRawData){
 				if(t.isChanged(rid)){
 					a.push(rid);
 				}
@@ -289,27 +310,31 @@ define([
 				c = t.inner._call('byId', [rowId]),
 				obj = {};
 			
-			if(c.lazyData){
-				lang.mixin(c.lazyData, rawData);
+			if(t._lazyRawData[rowId]){
+				lang.mixin(t._lazyRawData[rowId], rawData);
 			}else{
-				c.lazyData = lang.mixin({}, rawData);
+				t._lazyRawData[rowId] = lang.mixin({}, rawData);
 			}
-			
+			// if(c.lazyData){
+				// lang.mixin(c.lazyData, rawData);
+			// }else{
+				// c.lazyData = lang.mixin({}, rawData);
+			// }
 			var columns = t._cache.columns,
-				crd = lang.mixin({}, c.rawData, c.lazyData);
+				crd = lang.mixin({}, c.rawData, t._lazyRawData[rowId]);
 				
 			
 			for(var cid in columns){
 				obj[cid] = columns[cid].formatter? columns[cid].formatter(crd) : crd[columns[cid].field || cid];
 			}
-			c.data = obj; 
+			t._lazyData[rowId] = obj; 
 		},
 
 		_saveRow: function(rowId){
 			var t = this,
 				s = t.model.store,
 				item = t.byId(rowId).item,
-				rawData = t.byId(rowId).lazyData,
+				rawData = t._lazyRawData[rowId],
 				d;
 
 			if(s.setValue){
@@ -326,7 +351,7 @@ define([
 					d.errback(e);
 				}
 			}
-			return d || Deferred.when(s.put(lang.mixin(lang.clone(item), rawData)));
+			return d || Deferred.when(s.put(lang.mixin({}, item, rawData)));
 		}
 		
 	});

@@ -3,13 +3,14 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
+	"dojo/_base/event",
 	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_RowCellBase",
 	"../../core/_Module"
-], function(/*=====Row, =====*/declare, array, has, query, lang, domClass, keys, _RowCellBase, _Module){
+], function(/*=====Row, =====*/declare, array, has, event, query, lang, domClass, keys, _RowCellBase, _Module){
 
 /*=====
 	Row.select = function(){
@@ -61,9 +62,9 @@ define([
 		//		Whether to apply tri-state selection for child rows.
 		treeMode: true,
 
-		// selectable: Object
-		//		User can set selectable/unselectable rows in this hash object. The hash key is the row ID.
-		selectable: {},
+		// unselectable: Object
+		//		User can set unselectable rows in this hash object. The hash key is the row ID.
+		unselectable: {},
 
 		// isSelectable: Function(rowId)
 		//		User can provide this function to dynamically decide whether the given row is selectable.
@@ -144,8 +145,7 @@ define([
 			},
 
 			setSelectable: function(selectable){
-				this.grid.select.row.selectable[this.id] = selectable;
-				//update status
+				this.grid.select.row.setSelectable(this.id, selectable);
 			}
 		},
 
@@ -153,6 +153,21 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
+
+		//unselectable: null,
+
+		setSelectable: function(rowId, selectable){
+			var t = this,
+				m = t.model,
+				n = t.grid.body.getRowNode({
+					rowId: rowId
+				});
+			m.setMarkable(rowId, selectable);
+			t.unselectable[rowId] = !selectable;
+			if(n){
+				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+			}
+		},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -174,18 +189,16 @@ define([
 		_type: 'row',
 
 		_isSelectable: function(rowId){
-			var isSelectable = this.arg('isSelectable'),
-				selectable = this.arg('selectable'),
-				ret = rowId in selectable ? selectable[rowId] :
-					isSelectable ? isSelectable.call(this, rowId) : true;
-			this._cache[rowId] = ret;
+			var unselectable = this.arg('unselectable'),
+				ret = rowId in unselectable ? !unselectable[rowId] : true;
 			return ret;
 		},
 
 		_getUnselectableRows: function(){
-			var ret = [];
-			for(var id in this._cache){
-				if(!this._cache[id]){
+			var ret = [],
+				unselectable = this.arg('unselectable');
+			for(var id in unselectable){
+				if(this.unselectable[id]){
 					ret.push(id);
 				}
 			}
@@ -194,9 +207,12 @@ define([
 
 		_init: function(){
 			var t = this,
-				g = t.grid;
-			t._cache = lang.clone(t.arg('selectable', {}));
+				g = t.grid,
+				unselectable = t.arg('unselectable', {});
 			t.model.treeMarkMode('', t.arg('treeMode'));
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
@@ -215,6 +231,7 @@ define([
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
 							t._select(e.rowId, g._isCopyEvent(e));
+							event.stop(e);
 						}
 					}
 				}]);

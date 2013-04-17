@@ -87,8 +87,6 @@ define([
 			//Add this.domNode to be a part of the grid header
 			g.vLayout.register(t, 'domNode', 'headerNode');
 			t.aspect(g, 'onHScroll', '_onHScroll');
-			t.aspect(g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver');
-			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
 			//FIXME: sometimes FF will remember the scroll position of the header row, so force aligned with body.
 			//Does not occur in any other browsers.
 			if(has('ff')){
@@ -144,7 +142,7 @@ define([
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			array.forEach(g._columns, function(col){
 				col._domId = (g.id + '-' + col.id).replace(/\s+/, '');
-				sb.push('<th id="', col._domId,
+				sb.push('<td id="', col._domId,
 					'" role="columnheader" aria-readonly="true" tabindex="-1" colid="', col.id,
 					'" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
@@ -154,7 +152,7 @@ define([
 					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
 					'"><div class="gridxSortNode">',
 					col.name || '',
-					'</div></th>');
+					'</div></td>');
 			});
 			sb.push('</tr></table>');
 			t.innerNode.innerHTML = sb.join('');
@@ -167,7 +165,7 @@ define([
 			}
 			this.innerNode.scrollLeft = this._scrollLeft = left;
 		},
-	
+
 		_onMouseEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onHeaderCell' + eventName,
@@ -180,25 +178,17 @@ define([
 				g[evtRow](e);
 			}
 		},
-	
+
 		_decorateEvent: function(e){
-			for(var n = e.target, c; n && n !== this.domNode; n = n.parentNode){
-				if(n.tagName && n.tagName.toLowerCase() == 'th'){
-					c = this.grid._columnsById[n.getAttribute('colid')];
-					if(c){
-						e.headerCellNode = n;
-						e.columnId = c.id;
-						e.columnIndex = c.index;
-					}
-					return;
-				}
+			var n = query(e.target).closest('.gridxCell', this.domNode)[0],
+				c = n && this.grid._columnsById[n.getAttribute('colid')];
+			if(c){
+				e.headerCellNode = n;
+				e.columnId = c.id;
+				e.columnIndex = c.index;
 			}
 		},
-		
-		_onHeaderCellMouseOver: function(e){
-			domClass.toggle(this.getHeaderNode(e.columnId), 'gridxHeaderCellOver', e.type == 'mouseover');
-		},
-		
+
 		// Focus
 		_focusHeaderId: null,
 
@@ -228,7 +218,7 @@ define([
 		_doFocus: function(evt, step){
 			var t = this, 
 				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
-				r = t._focusNode(n || query('th.gridxCell', t.domNode)[0]);
+				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
 			t.grid.focus.stopEvent(r && evt);
 			return r;
 		},
@@ -264,7 +254,7 @@ define([
 		},
 
 		_blurNode: function(){
-			var t = this, n = query('th.' + t._focusClass, t.innerNode)[0];
+			var t = this, n = query('.' + t._focusClass, t.innerNode)[0];
 			if(n){
 				domClass.remove(n, t._focusClass);
 			}
