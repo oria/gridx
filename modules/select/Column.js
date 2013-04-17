@@ -4,11 +4,12 @@ define([
 	"dojo/query",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
+	"dojo/_base/event",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(/*=====Column, =====*/declare, query, array, has, domClass, keys, _Base, _Module){
+], function(/*=====Column, =====*/declare, query, array, has, event, domClass, keys, _Base, _Module){
 
 /*=====
 	Column.select = function(){
@@ -162,6 +163,7 @@ define([
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
 						t._select(e.columnId, g._isCopyEvent(e));
+						event.stop(e);
 					}
 				}]
 			);

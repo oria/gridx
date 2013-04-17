@@ -2,6 +2,7 @@ define([
 /*====="../../core/Row", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
+	"dojo/_base/event",
 	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
@@ -11,7 +12,7 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Row, =====*/declare, array, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
+], function(/*=====Row, =====*/declare, array, event, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
 
 /*=====
 	Row.select = function(){
@@ -158,11 +159,7 @@ define([
 			},
 
 			setSelectable: function(selectable){
-				this.grid.model.setMarkable(this.id, selectable);
-				this.grid.select.row.unselectable[this.id] = !selectable;
-				// this.grid.select.row.onUnselectableChange(this.id, !selectable, this.model.getMark(this.id));
-				this.grid.select.row.onHighlightChange({row: this.visualIndex()}, this.model.getMark(this.id));
-
+				this.grid.select.row.setSelectable(this.id, selectable);
 			}
 		},
 
@@ -170,8 +167,21 @@ define([
 		triggerOnCell: false,
 
 		treeMode: true,
-		
-		unselectable: {},
+
+		//unselectable: null,
+
+		setSelectable: function(rowId, selectable){
+			var t = this,
+				m = t.model,
+				n = t.grid.body.getRowNode({
+					rowId: rowId
+				});
+			m.setMarkable(rowId, selectable);
+			t.unselectable[rowId] = !selectable;
+			if(n){
+				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+			}
+		},
 
 		getSelected: function(){
 			return this.model.getMarkedIds();
@@ -199,8 +209,6 @@ define([
 		},
 
 		onHighlightChange: function(){},
-		
-		onUnselectableChange: function(){},
 
 		//Private---------------------------------------------------------------------
 		_type: 'row',
@@ -222,11 +230,13 @@ define([
 
 		_init: function(){
 			var t = this,
-				g = t.grid;
+				g = t.grid,
+				unselectable = t.arg('unselectable', {});
 			t.model.treeMarkMode('', t.arg('treeMode'));
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 			t.inherited(arguments);
-			t._initUnselectable();
-			
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
 			t.model.setMarkable(lang.hitch(t, t._isSelectable));
@@ -257,21 +267,12 @@ define([
 							(g._columnsById[e.columnId].rowSelectable) ||
 							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
+						event.stop(e);
 						t._isOnCell = e.columnId;
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
 				}]);
-		},
-
-		_initUnselectable: function(){
-			var t = this,
-				unselectable = t.arg('unselectable');
-				
-			for(var id in unselectable){
-				t.unselectable[id] = unselectable[id];
-				t.model.setMarkable(id, !unselectable[id]);
-			}
 		},
 
 		_markById: function(args, toSelect){

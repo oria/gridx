@@ -4,6 +4,32 @@ define([
 	"../../modules/Filter"
 ], function(declare, Menu, Filter){
 
+/*=====
+	return declare(Menu, {
+		// summary
+		//		This menu base is used for adaptive filter.
+
+		// grid: [const] gridx.Grid
+		//		The grid widget this plugin works for.
+		grid: null,
+		
+		// colId: Integer|String
+		// 		The column id the menu attached to.
+		colId: null,
+		
+		// leftClickToOpen: Boolean
+		//		Whether left or right mouse click to open the menu.
+		leftClickToOpen: true,
+
+		bindGrid: function(grid, col){
+			// summary:
+			//		When the menu is created, bind the grid to the menu. So that menu logic
+			//		could do the filter for the grid.
+		},
+
+	});
+=====*/
+
 	return declare(Menu, {
 		// summary:
 		//		

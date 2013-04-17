@@ -3,10 +3,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
+	"dojo/_base/sniff",
 	"dojo/dom-class",
+	"dojo/keys",
 	"dojo/query",
 	"./Header"
-], function(kernel, declare, lang, array, domClass, query, Header){
+], function(kernel, declare, lang, array, has, domClass, keys, query, Header){
 	kernel.experimental('gridx/modules/GroupHeader');
 
 /*=====
@@ -14,7 +16,7 @@ define([
 		// summary:
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
-		//		This module is not compatible with ColumnLock module and move/Column module.
+		//		This module is not compatible with ColumnLock, move/Column and HiddenColumns.
 		// description:
 		//		This module inherites the default Header module, adding support of column groups.
 		//		Several adjacent headers can be grouped together by configuring the "groups" parameter of this module.
@@ -134,7 +136,8 @@ define([
 				cnt = 0,
 				maxLevel = 0,
 				groups = this.arg('groups', []),
-				check = function(struct, level){
+				groupsById = this._groupsById = {},
+				check = function(struct, level, groupId){
 					if(!lang.isArrayLike(struct)){
 						struct = [struct];
 					}
@@ -150,9 +153,12 @@ define([
 						}else if(typeof item == 'number' && item > 0){
 							//After adding some columns, it is overloaded
 							if(cnt + item > columnCount){
-								struct[i] = columnCount - cnt;
+								item = struct[i] = columnCount - cnt;
 							}
-							colCount += struct[i];
+							for(var j = 0; j < item; ++j){
+								columns[cnt + j].groupId = groupId;
+							}
+							colCount += item;
 							cnt += item;
 							++i;
 						}else if(item && lang.isObject(item)){
@@ -160,8 +166,13 @@ define([
 							if(!lang.isArrayLike(item.children)){
 								item.children = [item.children];
 							}
-							var colSpan = check(item.children, level + 1);
+							item.groupId = groupId;
+							item.id = 'group-' + level + '-' + columns[cnt].id;
+							item.level = level;
+							item.start = cnt;
+							var colSpan = check(item.children, level + 1, item.id);
 							if(item.children.length){
+								groupsById[item.id] = item;
 								item.colCount = colSpan;
 								colCount += colSpan;
 								++i;
@@ -224,6 +235,7 @@ define([
 						q = q.concat(item.children);
 						sb.push('<td colspan="', item.colCount,
 							'" class="gridxGroupHeader', currentLevel ? ' gridxSubHeader' : '',
+							'" groupid="', item.id,
 							'"><div class="gridxSortNode">', item.name || '', '</div></td>');
 					}
 				}
@@ -237,6 +249,123 @@ define([
 			t.innerNode.innerHTML = sb.join('');
 			domClass.toggle(t.domNode, 'gridxHeaderRowHidden', t.arg('hidden'));
 			domClass.add(g.domNode, 'gridxGH');
+		},
+
+		_initFocus: function(){
+			var t = this, g = t.grid;
+			if(g.focus){
+				g.focus.registerArea({
+					name: 'header',
+					priority: 0,
+					focusNode: t.innerNode,
+					scope: t,
+					doFocus: t._doFocus,
+					doBlur: t._blurNode,
+					onBlur: t._blurNode,
+					connects: [
+						t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
+						t.connect(g, 'onHeaderCellMouseDown', function(evt){
+							t._focusNode(t.getHeaderNode(evt.columnId));
+						})
+					]
+				});
+			}
+		},
+
+		_doFocus: function(evt, step){
+			var t = this, 
+				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
+				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
+			t.grid.focus.stopEvent(r && evt);
+			return r;
+		},
+		
+		_focusNode: function(node){
+			if(node){
+				var t = this, g = t.grid,
+					fid = t._focusHeaderId = node.getAttribute('colid');
+				if(!fid){
+					fid = t._focusGroupId = node.getAttribute('groupid');
+					var group = t._groupsById[fid];
+					fid = group && g._columns[group.start].id;
+				}
+				if(fid){
+					t._blurNode();
+					if(g.hScroller){
+						g.hScroller.scrollToColumn(fid);
+					}
+					g.body._focusCellCol = g._columnsById[fid].index;
+
+					domClass.add(node, t._focusClass);
+					//If no timeout, the header and body may be mismatch.
+					setTimeout(function(){
+						//For webkit browsers, when moving column using keyboard, the header cell will lose this focus class,
+						//although it was set correctly before this setTimeout. So re-add it here.
+						if(has('webkit')){
+							domClass.add(node, t._focusClass);
+						}
+						node.focus();
+						if(has('ie') < 8){
+							t.innerNode.scrollLeft = t._scrollLeft;
+						}
+					}, 0);
+					return true;
+				}
+			}
+			return false;
+		},
+
+		_blurNode: function(){
+			var t = this, n = query('.' + t._focusClass, t.innerNode)[0];
+			if(n){
+				domClass.remove(n, t._focusClass);
+			}
+			return true;
+		},
+
+		_onKeyDown: function(evt){
+			var t = this, g = t.grid, col;
+			if(!evt.ctrlKey && !evt.altKey &&
+				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
+				//Prevent scrolling the whole page.
+				g.focus.stopEvent(evt);
+				var dir = g.isLeftToRight() ? 1 : -1,
+					delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir;
+				col = g._columnsById[t._focusHeaderId];
+				if(col){
+					var node = t.getHeaderNode(col.id);
+					node = delta < 0 ? node.previouSibling : node.nextSibling;
+					if(node){
+						t._focusNode(node);
+						t.onMoveToHeaderCell(node.getAttribute('colid'), evt);
+					}else{
+						//TODO
+					}
+				}
+			}else if(evt.keyCode == keys.UP_ARROW){
+				//Prevent scrolling the whole page.
+				g.focus.stopEvent(evt);
+				var item = g._columnsById[t._focusHeaderId] || t._groupsById[t._focusGroupId];
+				var group = t._groupsById[item.groupId];
+				if(group){
+					t._focusGroupId = item.groupId;
+					delete t._focusHeaderId;
+					t._focusNode(query('[groupid="' + item.groupId + '"]', t.domNode)[0]);
+				}
+			}else if(evt.keyCode == keys.DOWN_ARROW){
+				//Prevent scrolling the whole page.
+				g.focus.stopEvent(evt);
+				var item = t._groupsById[t._focusGroupId];
+				if(item){
+					var child = item.children[0];
+					if(typeof child == 'number'){
+						col = g._columns[item.start];
+						t._focusNode(t.getHeaderNode(col.id));
+					}else{
+						t._focusNode(query('[groupid="' + child.id + '"]', t.domNode)[0]);
+					}
+				}
+			}
 		}
 	});
 });
