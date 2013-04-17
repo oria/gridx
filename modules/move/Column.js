@@ -28,6 +28,15 @@ define([
 		//		When moving using keyboard, whether to move all selected columns together.
 		moveSelected: true,
 
+		// constraints: Hash-Object
+		//		Define several constraint ranges. Columns within these ranges can not be moved out of the range.
+		//		Columns outside these ranges can not be moved into these ranges.
+		//		Hash key is the starting column index, value is the end column index.
+		//		End index should be always larger than start index.
+		//		For example: { 0: 3 } means the first 4 columns can only be moved within themselves,
+		//		they can not be moved out and other columns can not be moved in.
+		constraints: Object
+
 		move: function(columnIndexes, target){
 			// summary:
 			//		Move some columns to the given target position
