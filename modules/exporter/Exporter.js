@@ -4,7 +4,7 @@ define([
 	"../../core/_Module",
 	"../../support/exporter/exporter"
 ], function(kernel, declare, _Module, exporter){
-	kernel.deprecated('gridx/modules/exporter/Exporter is deprecated.', 'Use gridx/support/exporter/exporter instead.', '1.2');
+	kernel.deprecated('gridx/modules/exporter/Exporter is deprecated.', 'Use gridx/support/exporter/exporter instead.', '1.3');
 
 /*=====
 	return declare(_Module, {

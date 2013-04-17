@@ -203,9 +203,6 @@ define([
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
-			//For backward compatibility
-			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
-			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
 			this._nls = nls;
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, nls),

@@ -5,7 +5,7 @@ define([
 /*====="./Exporter",=====*/
 	"../../support/exporter/toTable"
 ], function(kernel, declare, _Module, /*=====Exporter, =====*/exportToTabel){
-	kernel.deprecated('gridx/modules/exporter/Table is deprecated.', 'Use gridx/support/exporter/toTable instead.', '1.2');
+	kernel.deprecated('gridx/modules/exporter/Table is deprecated.', 'Use gridx/support/exporter/toTable instead.', '1.3');
 
 /*=====
 	Exporter.toTable = function(args){

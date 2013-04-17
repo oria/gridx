@@ -4,7 +4,7 @@ define([
 	"dojo/_base/declare",
 	"../support/printer"
 ], function(kernel, _Module, declare, printer){
-	kernel.deprecated('gridx/modules/Printer is deprecated.', 'Please use gridx/support/printer instead.', '1.2');
+	kernel.deprecated('gridx/modules/Printer is deprecated.', 'Please use gridx/support/printer instead.', '1.3');
 
 /*=====
 	return declare(_Module, {

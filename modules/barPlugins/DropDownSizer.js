@@ -3,7 +3,7 @@ define([
 	"dojo/_base/kernel",
 	"../../support/DropDownSizer"
 ], function(/*=====declare, =====*/kernel, Sizer){
-	kernel.deprecated('DropDownSizer is moved from gridx/modules/barPlugins/ to gridx/support/.', 'Please use the new path.', '1.2');
+	kernel.deprecated('DropDownSizer is moved from gridx/modules/barPlugins/ to gridx/support/.', 'Please use the new path.', '1.3');
 
 /*=====
 	return declare([], {
