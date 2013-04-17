@@ -233,7 +233,7 @@ define([
 					}else{
 						prevColCount += item.colCount;
 						q = q.concat(item.children);
-						sb.push('<td colspan="', item.colCount,
+						sb.push('<td tabindex="-1" colspan="', item.colCount,
 							'" class="gridxGroupHeader', currentLevel ? ' gridxSubHeader' : '',
 							'" groupid="', item.id,
 							'"><div class="gridxSortNode">', item.name || '', '</div></td>');
@@ -266,6 +266,7 @@ define([
 						t.connect(t.domNode, 'onkeydown', '_onKeyDown'),
 						t.connect(t.domNode, 'onmousedown', function(evt){
 							t._focusNode(query(evt.target).closest('td', t.domNode)[0]);
+							g.focus.currentArea();
 						})
 					]
 				});
@@ -304,7 +305,6 @@ define([
 						if(has('webkit')){
 							domClass.add(node, t._focusClass);
 						}
-						console.log('focus: ', node);
 						node.focus();
 						if(has('ie') < 8){
 							t.innerNode.scrollLeft = t._scrollLeft;
