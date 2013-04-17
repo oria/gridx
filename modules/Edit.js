@@ -8,6 +8,7 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	'dojo/_base/array',
+	"dojo/on",
 	"dojo/DeferredList",
 	"dojo/dom-class",
 	"dojo/keys",
@@ -18,7 +19,7 @@ define([
 	'dojo/_base/event',
 	"dijit/form/TextBox"
 //    "dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, keys, _Module, util, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, on, DeferredList, domClass, keys, _Module, util, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -352,8 +353,6 @@ define([
 				});
 
 				t.connect(t.model, 'onSet', _onSet);
-				// t.connect(t.model, 'onSave', _onSave);
-				// t.connect(t.model, 'onSetLazyData', _onSetLazyData);
 			}
 			g.domNode.removeAttribute('aria-readonly');
 			t.connect(g, 'onCellDblClick', '_onUIBegin');
@@ -925,13 +924,18 @@ define([
 					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
 						g.focus.focusArea('body');
 					});
-				}else if(e.keyCode == 90 && e.ctrlKey){
+				}else if(e.keyCode == 'Z'.charCodeAt(0) && e.ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.undo();
 					}
-				}else if(e.keyCode == 89 && e.ctrlKey){
+				}else if(e.keyCode == 'Y'.charCodeAt(0) && e.ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.redo();
+					}
+				}else if(e.keyCode == 'S'.charCodeAt(0) && e.ctrlKey){
+					if(t.arg('lazySave')){
+						t.model.save();
+						e.preventDefault();
 					}
 				}
 			}

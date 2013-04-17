@@ -16,7 +16,7 @@ define([
 		// summary:
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
-		//		This module is not compatible with ColumnLock, move/Column and HiddenColumns.
+		//		This module is not compatible with ColumnLock and HiddenColumns.
 		// description:
 		//		This module inherites the default Header module, adding support of column groups.
 		//		Several adjacent headers can be grouped together by configuring the "groups" parameter of this module.
@@ -194,6 +194,33 @@ define([
 			return maxLevel;
 		},
 
+		_configMoveColumn: function(){
+			var t = this,
+				g = t.grid;
+			if(g.move && g.move.column){
+				//Compatiblity with move/Column
+				var constraints = g.move.column.arg('constraints', {});
+				for(var id in t._groupsById){
+					var group = t._groupsById[id];
+					var end = group.start + group.colCount - 1;
+					if(typeof constraints[group.start] != 'number' || end < constraints[group.start]){
+						constraints[group.start] = end;
+					}
+				}
+				var gPrev = -1,
+					gStart = 0;
+				array.forEach(g._columns, function(col, i){
+					if(!col.groupId){
+						if(i != gPrev + 1){
+							gStart = i;
+						}
+						gPrev = i;
+						constraints[gStart] = i;
+					}
+				});
+			}
+		},
+
 		_build: function(){
 			var t = this,
 				g = t.grid,
@@ -203,6 +230,7 @@ define([
 				level = t._parse(),
 				q = t.groups.slice(),
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0">'];
+			t._configMoveColumn();
 			function build(){
 				sb.push('<tr>');
 				var prevColCount = 0;
@@ -233,7 +261,7 @@ define([
 					}else{
 						prevColCount += item.colCount;
 						q = q.concat(item.children);
-						sb.push('<td colspan="', item.colCount,
+						sb.push('<td tabindex="-1" colspan="', item.colCount,
 							'" class="gridxGroupHeader', currentLevel ? ' gridxSubHeader' : '',
 							'" groupid="', item.id,
 							'"><div class="gridxSortNode">', item.name || '', '</div></td>');
@@ -266,6 +294,7 @@ define([
 						t.connect(t.domNode, 'onkeydown', '_onKeyDown'),
 						t.connect(t.domNode, 'onmousedown', function(evt){
 							t._focusNode(query(evt.target).closest('td', t.domNode)[0]);
+							g.focus.currentArea();
 						})
 					]
 				});
@@ -304,7 +333,6 @@ define([
 						if(has('webkit')){
 							domClass.add(node, t._focusClass);
 						}
-						console.log('focus: ', node);
 						node.focus();
 						if(has('ie') < 8){
 							t.innerNode.scrollLeft = t._scrollLeft;
