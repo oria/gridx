@@ -31,7 +31,7 @@ define([
 		//		or multiple rows:
 		//	|	barTop: [
 		//	|		[		//every sub-array is a table row.
-		//	|			{content: "This is <b>a message</b>", style: "backgroun-color: blue;"},	//Can add some html
+		//	|			{content: "This is <b>a message</b>", style: "background-color: blue;"},	//Can add some html
 		//	|			null	//if null, just an empty cell
 		//	|		],
 		//	|		[
