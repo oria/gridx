@@ -70,6 +70,12 @@ define([
 						t._initFocus();
 					}
 					t.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
+					t.connect(g, 'onRowHeaderHeaderKeyDown', function(evt){
+						if(evt.keyCode == keys.SPACE){
+							event.stop(evt);
+							t._onSelectAll();
+						}
+					});
 				});
 			}
 		},
@@ -253,6 +259,7 @@ define([
 			});
 		},
 		_onKeyDown: function(evt){
+			// CTRL - A
 			if(evt.keyCode == 65 && evt.ctrlKey && !evt.shiftKey){
 				if(!this._allSelected[this._getPageId()]){
 					this._onSelectAll();

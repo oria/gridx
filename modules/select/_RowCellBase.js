@@ -29,7 +29,7 @@ define([
 
 		deselectById: function(rowId, columnId){
 			var t = this,
-				m = t.model;
+				m = t.model,
 				item = t._type == 'row' ? rowId : [rowId, columnId];
 			if(t.arg('enabled') && t._isSelectable(item)){
 				m.markById(rowId, 0, t._getMarkType(columnId));

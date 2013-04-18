@@ -96,7 +96,7 @@ require([
    tp2.placeAt('ctrlPane2');
    tp2.addTestSet('Extended Select Row Actions', [
        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: selectRowsByIndex">Select Rows From 1 to 20</div><br/>',
-       '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deSelectRowsByIndex">Deselect Rows From 1 to 20</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deSelectRowsByIndex">Deselect Rows From 1 to 20</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" onClick="setRowUnselectable(\'grid2\', 5, true)">Set Row 5 Unselectable</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" onClick="setRowUnselectable(\'grid2\', 5, false)">Set Row 5 Selectable</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" onClick="getUnselectable(\'grid2\')">Get Unselectable Rows</div><br/>',

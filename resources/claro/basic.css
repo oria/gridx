@@ -17,6 +17,10 @@
 	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
 
+.claro .gridxBodyRowHoverEffect .gridxRowOver .gridxCellChanged {
+	background:url("../images/row_back_changed.png") top right #ABD6FF repeat-x;
+}
+
 .claro .gridx .gridxBody .gridxRow .gridxCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;

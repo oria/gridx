@@ -3,7 +3,7 @@ define([
 	"dojo/_base/kernel",
 	"../../support/DropDownPager"
 ], function(/*=====declare, =====*/kernel, widget){
-	kernel.deprecated('DropDownPager is moved from gridx/modules/barPlugins/ to gridx/support/.', 'Please use the new path.', '1.2');
+	kernel.deprecated('DropDownPager is moved from gridx/modules/barPlugins/ to gridx/support/.', 'Please use the new path.', '1.3');
 
 /*=====
 	return declare([], {

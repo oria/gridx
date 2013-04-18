@@ -28,6 +28,15 @@ define([
 		//		When moving using keyboard, whether to move all selected columns together.
 		moveSelected: true,
 
+		// constraints: Hash-Object
+		//		Define several constraint ranges. Columns within these ranges can not be moved out of the range.
+		//		Columns outside these ranges can not be moved into these ranges.
+		//		Hash key is the starting column index, value is the end column index.
+		//		End index should be always larger than start index.
+		//		For example: { 0: 3 } means the first 4 columns can only be moved within themselves,
+		//		they can not be moved out and other columns can not be moved in.
+		constraints: Object
+
 		move: function(columnIndexes, target){
 			// summary:
 			//		Move some columns to the given target position
@@ -80,13 +89,30 @@ define([
 		//public---------------------------------------------------------------
 		moveSelected: true,
 
+		//constraints: null,
+
+		_isInConstraints: function(idx, target){
+			var c = this.arg('constraints', {}),
+				outRange = function(a, b, start){
+					return idx >= start && idx <= c[start] && (target < start || target > c[start] + 1);
+				};
+			for(var start in c){
+				if(outRange(idx, target, start) || outRange(target, idx, start)){
+					return 0;
+				}
+			}
+			return 1;
+		},
+
 		move: function(columnIndexes, target){
 			if(typeof columnIndexes === 'number'){
 				columnIndexes = [columnIndexes];
 			}
 			var map = [], i, len, columns = this.grid._columns, pos, movedCols = [];
 			for(i = 0, len = columnIndexes.length; i < len; ++i){
-				map[columnIndexes[i]] = true;
+				if(this._isInConstraints(columnIndexes[i], target)){
+					map[columnIndexes[i]] = true;
+				}
 			}
 			for(i = map.length - 1; i >= 0; --i){
 				if(map[i]){
@@ -108,10 +134,13 @@ define([
 	
 		moveRange: function(start, count, target){
 			if(target < start || target > start + count){
-				if(target > start + count){
-					target -= count;
+				var colsToMove = [];
+				for(var i = 0; i < count; ++i){
+					if(this._isInConstraints(start + i, target)){
+						colsToMove.push(start + i);
+					}
 				}
-				this._moveComplete(this.grid._columns.splice(start, count), target);
+				this.move(colsToMove, target);
 			}
 		},
 		
@@ -132,7 +161,16 @@ define([
 					if(targetId === null){
 						cells.place(tr);
 					}else{
-						cells.place(query('> [colid="' + g._escapeId(targetId) + '"]', tr)[0], 'before');
+						var nextNode = query('> [colid="' + g._escapeId(targetId) + '"]', tr)[0];
+						if(nextNode){
+							cells.place(nextNode, 'before');
+						}else if(target > 0){
+							var tid = columns[target - 1].id;
+							var prevNode = query('> [colid="' + g._escapeId(tid) + '"]', tr)[0];
+							if(prevNode){
+								cells.place(prevNode, 'after');
+							}
+						}
 					}
 				};
 			for(i = movedCols.length - 1; i >= 0; --i){
@@ -143,7 +181,7 @@ define([
 			for(i = columns.length - 1; i >= 0; --i){
 				columns[i].index = i;
 			}
-			update(query('.gridxHeaderRowInner > table > tbody > tr', g.headerNode)[0]);
+			query('.gridxHeaderRowInner > table > tbody > tr', g.headerNode).forEach(update);
 			query('.gridxRow > table > tbody > tr', g.bodyNode).forEach(update);
 			this.onMoved(map);
 		},

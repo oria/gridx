@@ -16,7 +16,7 @@ define([
 		// summary:
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
-		//		This module is not compatible with ColumnLock, move/Column and HiddenColumns.
+		//		This module is not compatible with ColumnLock and HiddenColumns.
 		// description:
 		//		This module inherites the default Header module, adding support of column groups.
 		//		Several adjacent headers can be grouped together by configuring the "groups" parameter of this module.
@@ -194,6 +194,33 @@ define([
 			return maxLevel;
 		},
 
+		_configMoveColumn: function(){
+			var t = this,
+				g = t.grid;
+			if(g.move && g.move.column){
+				//Compatiblity with move/Column
+				var constraints = g.move.column.arg('constraints', {});
+				for(var id in t._groupsById){
+					var group = t._groupsById[id];
+					var end = group.start + group.colCount - 1;
+					if(typeof constraints[group.start] != 'number' || end < constraints[group.start]){
+						constraints[group.start] = end;
+					}
+				}
+				var gPrev = -1,
+					gStart = 0;
+				array.forEach(g._columns, function(col, i){
+					if(!col.groupId){
+						if(i != gPrev + 1){
+							gStart = i;
+						}
+						gPrev = i;
+						constraints[gStart] = i;
+					}
+				});
+			}
+		},
+
 		_build: function(){
 			var t = this,
 				g = t.grid,
@@ -203,6 +230,7 @@ define([
 				level = t._parse(),
 				q = t.groups.slice(),
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0">'];
+			t._configMoveColumn();
 			function build(){
 				sb.push('<tr>');
 				var prevColCount = 0;
@@ -233,7 +261,7 @@ define([
 					}else{
 						prevColCount += item.colCount;
 						q = q.concat(item.children);
-						sb.push('<td colspan="', item.colCount,
+						sb.push('<td tabindex="-1" colspan="', item.colCount,
 							'" class="gridxGroupHeader', currentLevel ? ' gridxSubHeader' : '',
 							'" groupid="', item.id,
 							'"><div class="gridxSortNode">', item.name || '', '</div></td>');
@@ -263,9 +291,10 @@ define([
 					doBlur: t._blurNode,
 					onBlur: t._blurNode,
 					connects: [
-						t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
-						t.connect(g, 'onHeaderCellMouseDown', function(evt){
-							t._focusNode(t.getHeaderNode(evt.columnId));
+						t.connect(t.domNode, 'onkeydown', '_onKeyDown'),
+						t.connect(t.domNode, 'onmousedown', function(evt){
+							t._focusNode(query(evt.target).closest('td', t.domNode)[0]);
+							g.focus.currentArea();
 						})
 					]
 				});
@@ -273,11 +302,10 @@ define([
 		},
 
 		_doFocus: function(evt, step){
-			var t = this, 
-				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
-				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
-			t.grid.focus.stopEvent(r && evt);
-			return r;
+			var t = this,
+				n = t._curNode || query('td', t.domNode)[0];
+			t._focusNode(n);
+			return n;
 		},
 		
 		_focusNode: function(node){
@@ -296,6 +324,7 @@ define([
 					}
 					g.body._focusCellCol = g._columnsById[fid].index;
 
+					t._curNode = node;
 					domClass.add(node, t._focusClass);
 					//If no timeout, the header and body may be mismatch.
 					setTimeout(function(){
@@ -323,48 +352,72 @@ define([
 			return true;
 		},
 
+		_getUpNode: function(node){
+			var colId = node.getAttribute('colid'),
+				groupId = node.getAttribute('groupid'),
+				item = this.grid._columnsById[colId] || this._groupsById[groupId];
+			return item && query('[groupid="' + item.groupId + '"]', this.domNode)[0];
+		},
+
+		_getDownNode: function(node, last){
+			var item = this._groupsById[node.getAttribute('groupid')];
+			if(item){
+				var child = item.children[0];
+				if(typeof child == 'number'){
+					var col = this.grid._columns[item.start];
+					return this.getHeaderNode(col.id);
+				}else{
+					var nodes = query('[groupid="' + child.id + '"]', this.domNode);
+					return last ? nodes[nodes.length - 1] : nodes[0];
+				}
+			}
+		},
+
+		_getPrevNode: function(node){
+			var n = node.previousSibling;
+			if(!n){
+				n = this._getUpNode(node);
+				n = n && this._getPrevNode(n);
+				n = n && this._getDownNode(n, 1) || n;
+			}
+			return n;
+		},
+
+		_getNextNode: function(node){
+			var n = node.nextSibling;
+			if(!n){
+				n = this._getUpNode(node);
+				n = n && this._getNextNode(n);
+				n = n && this._getDownNode(n) || n;
+			}
+			return n;
+		},
+
 		_onKeyDown: function(evt){
-			var t = this, g = t.grid, col;
+			var t = this, g = t.grid, col,
+				node = t._curNode;
 			if(!evt.ctrlKey && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);
-				var dir = g.isLeftToRight() ? 1 : -1,
-					delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir;
-				col = g._columnsById[t._focusHeaderId];
-				if(col){
-					var node = t.getHeaderNode(col.id);
-					node = delta < 0 ? node.previouSibling : node.nextSibling;
-					if(node){
-						t._focusNode(node);
-						t.onMoveToHeaderCell(node.getAttribute('colid'), evt);
-					}else{
-						//TODO
+				var isPrev = g.isLeftToRight() ^ evt.keyCode == keys.RIGHT_ARROW;
+				var n = isPrev ? t._getPrevNode(node) : t._getNextNode(node);
+				if(n){
+					t._focusHeaderId = n.getAttribute('colid');
+					t._focusGroupId = n.getAttribute('groupid');
+					t._focusNode(n);
+					if(t._focusHeaderId){
+						t.onMoveToHeaderCell(t._focusHeaderId, evt);
 					}
 				}
 			}else if(evt.keyCode == keys.UP_ARROW){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);
-				var item = g._columnsById[t._focusHeaderId] || t._groupsById[t._focusGroupId];
-				var group = t._groupsById[item.groupId];
-				if(group){
-					t._focusGroupId = item.groupId;
-					delete t._focusHeaderId;
-					t._focusNode(query('[groupid="' + item.groupId + '"]', t.domNode)[0]);
-				}
+				t._focusNode(t._getUpNode(node));
 			}else if(evt.keyCode == keys.DOWN_ARROW){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);
-				var item = t._groupsById[t._focusGroupId];
-				if(item){
-					var child = item.children[0];
-					if(typeof child == 'number'){
-						col = g._columns[item.start];
-						t._focusNode(t.getHeaderNode(col.id));
-					}else{
-						t._focusNode(query('[groupid="' + child.id + '"]', t.domNode)[0]);
-					}
-				}
+				t._focusNode(t._getDownNode(node));
 			}
 		}
 	});

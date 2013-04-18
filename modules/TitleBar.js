@@ -4,7 +4,7 @@ define([
 	"dojo/dom-construct",
 	"../core/_Module"
 ], function(kernel, declare, domConstruct, _Module){
-	kernel.deprecated('TitleBar is deprecated', 'Use Bar module instead', '1.2');
+	kernel.deprecated('TitleBar is deprecated', 'Use Bar module instead', '1.3');
 
 /*=====
 	return declare(_Module, {
