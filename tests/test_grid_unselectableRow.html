@@ -41,36 +41,36 @@
 </head>
 <body class='claro'>
 	<h1 class='title'>Grid UnSelectable Row Selection Test</h1>
-   <p>All the row with year between 1990 and 2000 are unselectable</p>
-   <table border='0' cellspacing='0' cellpadding='0'><tr>
-       <td>
-           <div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
-               cacheClass: "gridx/core/model/cache/Async",
-               store: store,
-               structure: layout,
-               modules: [
-                   "gridx/modules/RowHeader",
-                   "gridx/modules/select/Row",
-                   "gridx/modules/SingleSort",
-                   "gridx/modules/IndirectSelect",
-                   "gridx/modules/VirtualVScroller"
-               ],
-               selectRowTriggerOnCell: true,
-               selectRowIsSelectable: function(rowid){
-                   var row = this.grid.row(rowid, 1);
-                   return row.data().Year > 1990;
-               },
-               indirectSelectAll: true,
-               selectRowUnselectable:{
-               		0: true,
-               		11: true
-               }
-           '></div>
-       </td>
-       <td id='ctrlPane'>
-       </td>
-   </tr>
-   </table>
+	<p>All the row with year between 1990 and 2000 are unselectable</p>
+	<table border='0' cellspacing='0' cellpadding='0'><tr>
+		<td>
+			<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+				cacheClass: "gridx/core/model/cache/Async",
+				store: store,
+				structure: layout,
+				modules: [
+					"gridx/modules/RowHeader",
+					"gridx/modules/select/Row",
+					"gridx/modules/SingleSort",
+					"gridx/modules/IndirectSelect",
+					"gridx/modules/VirtualVScroller"
+				],
+				selectRowTriggerOnCell: true,
+				selectRowIsSelectable: function(rowid){
+					var row = this.grid.row(rowid, 1);
+					return row.data().Year > 1990;
+				},
+				indirectSelectAll: true,
+				selectRowUnselectable:{
+					0: true,
+					11: true
+				}
+			'></div>
+		</td>
+		<td id='ctrlPane'>
+		</td>
+	</tr>
+	</table>
 	<br />
 	<br />
 	<h1 class='title'>Grid UnSelectable Row extended Selection Test</h1>	

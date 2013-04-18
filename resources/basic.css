@@ -139,8 +139,7 @@
 }
 
 .gridxCell.gridxCellChanged{
-	background: url('images/gridxCellChanged.png') no-repeat top right;
-
+	//background: url('images/gridxCellChanged.png') no-repeat top right;
 }
 
 .gridxRowDummy {
