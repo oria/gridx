@@ -198,7 +198,7 @@ define([
 				if(!g.bodyNode){
 					//fix FF10 - g.bodyNode will be undefined during a quick recreation
 					return;
-				}				
+				}
 				t.stubNode.style.height = g.bodyNode.scrollHeight + 'px';
 				t._doScroll();
 				//FIX IE7 problem:

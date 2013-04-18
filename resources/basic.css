@@ -60,6 +60,10 @@
 	border-color: #ccc;
 	border-width: 0 1px 0 0;
 }
+.dj_ie7 .gridxHeaderRowInner,
+.dj_ie6 .gridxHeaderRowInner {
+	position: relative;
+}
 
 .gridxHeaderRow table {
 	border-collapse: separate;
@@ -128,6 +132,9 @@
 .dj_safari .gridxGH .gridxRow .gridxRowTable {
 	width: auto;
 }
+.dj_safari .gridxPercentColumnWidth .gridxRow .gridxRowTable {
+	width: 100%;
+}
 
 .gridxRow .gridxCell {
 	border-style: solid;
@@ -139,8 +146,7 @@
 }
 
 .gridxCell.gridxCellChanged{
-	background: url('images/gridxCellChanged.png') no-repeat top right;
-
+	//background: url('images/gridxCellChanged.png') no-repeat top right;
 }
 
 .gridxRowDummy {

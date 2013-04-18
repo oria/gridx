@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/lang",
+	"dojo/_base/event",
 	"dojo/query",
 	"dojo/string",
 	"dojo/dom-class",
@@ -11,7 +12,7 @@ define([
 	"../core/model/extensions/Sort",
 	"dojo/i18n!../nls/NestedSort",
 	"./HeaderRegions"
-], function(declare, array, lang, query, string, domClass, domConstruct, keys, _Module, Sort, nls){
+], function(declare, array, lang, event, query, string, domClass, domConstruct, keys, _Module, Sort, nls){
 
 /*=====
 	return declare(_Module, {
@@ -147,6 +148,7 @@ define([
 				});
 				t.connect(btn, 'onkeydown', function(e){
 					if(e.keyCode == keys.ENTER){
+						event.stop(e);
 						t._sort(col, btn, isSingle);
 					}
 				});

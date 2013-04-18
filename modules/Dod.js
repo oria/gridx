@@ -76,6 +76,7 @@ define([
 		autoClose: false,
 		load: function(args, deferStartup){
 			this._rowMap = {};
+			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
 			if(this.grid.columnResizer){
@@ -254,6 +255,13 @@ define([
 				this.show(row);
 			}
 			
+		},
+
+		_onAfterCell: function(cell){
+			//when the first cell's content is changed, update the expando
+			if(this.arg('showExpando') && cell.node().cellIndex == 0){
+				this._onAfterRow(cell.row);
+			}
 		},
 		
 		_onColumnResize: function(){
