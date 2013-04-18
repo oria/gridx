@@ -5,7 +5,7 @@ define([
 /*====="./Exporter",=====*/
 	"../../support/exporter/toCSV"
 ], function(kernel, declare, _Module, /*=====Exporter,=====*/ exportToCSV){
-	kernel.deprecated('gridx/modules/exporter/CSV is deprecated.', 'Use gridx/support/exporter/toCSV instead.', '1.2');
+	kernel.deprecated('gridx/modules/exporter/CSV is deprecated.', 'Use gridx/support/exporter/toCSV instead.', '1.3');
 
 /*=====
 	Exporter.toCSV = function(args){

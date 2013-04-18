@@ -60,6 +60,10 @@
 	border-color: #ccc;
 	border-width: 0 1px 0 0;
 }
+.dj_ie7 .gridxHeaderRowInner,
+.dj_ie6 .gridxHeaderRowInner {
+	position: relative;
+}
 
 .gridxHeaderRow table {
 	border-collapse: separate;
