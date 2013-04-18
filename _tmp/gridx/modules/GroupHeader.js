@@ -3,10 +3,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
+	"dojo/_base/sniff",
 	"dojo/dom-class",
+	"dojo/keys",
 	"dojo/query",
 	"./Header"
-], function(kernel, declare, lang, array, domClass, query, Header){
+], function(kernel, declare, lang, array, has, domClass, keys, query, Header){
 	kernel.experimental('gridx/modules/GroupHeader');
 
 /*=====
@@ -14,7 +16,7 @@ define([
 		// summary:
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
-		//		This module is not compatible with ColumnLock module and move/Column module.
+		//		This module is not compatible with ColumnLock and HiddenColumns.
 		// description:
 		//		This module inherites the default Header module, adding support of column groups.
 		//		Several adjacent headers can be grouped together by configuring the "groups" parameter of this module.
@@ -134,7 +136,8 @@ define([
 				cnt = 0,
 				maxLevel = 0,
 				groups = this.arg('groups', []),
-				check = function(struct, level){
+				groupsById = this._groupsById = {},
+				check = function(struct, level, groupId){
 					if(!lang.isArrayLike(struct)){
 						struct = [struct];
 					}
@@ -150,9 +153,12 @@ define([
 						}else if(typeof item == 'number' && item > 0){
 							//After adding some columns, it is overloaded
 							if(cnt + item > columnCount){
-								struct[i] = columnCount - cnt;
+								item = struct[i] = columnCount - cnt;
 							}
-							colCount += struct[i];
+							for(var j = 0; j < item; ++j){
+								columns[cnt + j].groupId = groupId;
+							}
+							colCount += item;
 							cnt += item;
 							++i;
 						}else if(item && lang.isObject(item)){
@@ -160,8 +166,13 @@ define([
 							if(!lang.isArrayLike(item.children)){
 								item.children = [item.children];
 							}
-							var colSpan = check(item.children, level + 1);
+							item.groupId = groupId;
+							item.id = 'group-' + level + '-' + columns[cnt].id;
+							item.level = level;
+							item.start = cnt;
+							var colSpan = check(item.children, level + 1, item.id);
 							if(item.children.length){
+								groupsById[item.id] = item;
 								item.colCount = colSpan;
 								colCount += colSpan;
 								++i;
@@ -183,6 +194,33 @@ define([
 			return maxLevel;
 		},
 
+		_configMoveColumn: function(){
+			var t = this,
+				g = t.grid;
+			if(g.move && g.move.column){
+				//Compatiblity with move/Column
+				var constraints = g.move.column.arg('constraints', {});
+				for(var id in t._groupsById){
+					var group = t._groupsById[id];
+					var end = group.start + group.colCount - 1;
+					if(typeof constraints[group.start] != 'number' || end < constraints[group.start]){
+						constraints[group.start] = end;
+					}
+				}
+				var gPrev = -1,
+					gStart = 0;
+				array.forEach(g._columns, function(col, i){
+					if(!col.groupId){
+						if(i != gPrev + 1){
+							gStart = i;
+						}
+						gPrev = i;
+						constraints[gStart] = i;
+					}
+				});
+			}
+		},
+
 		_build: function(){
 			var t = this,
 				g = t.grid,
@@ -192,6 +230,7 @@ define([
 				level = t._parse(),
 				q = t.groups.slice(),
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0">'];
+			t._configMoveColumn();
 			function build(){
 				sb.push('<tr>');
 				var prevColCount = 0;
@@ -204,7 +243,7 @@ define([
 								style = col.headerStyle,
 								width = col.width;
 							col._domId = (g.id + '-' + col.id).replace(/\s+/, '');
-							sb.push('<th role="columnheader" aria-readonly="true" tabindex="-1" id="', col._domId,
+							sb.push('<td role="columnheader" aria-readonly="true" tabindex="-1" id="', col._domId,
 								'" colid="', col.id,
 								level - currentLevel ? '" rowspan="' + (level - currentLevel + 1) : '',
 								'" class="gridxCell ',
@@ -216,16 +255,16 @@ define([
 								(style && lang.isFunction(style) ? style(col) : style) || '',
 								'"><div class="gridxSortNode">',
 								col.name || '',
-								'</div></th>');
+								'</div></td>');
 						}
-						columns[prevColCount + item - 1]._groupLast = 1;
 						columns.splice(prevColCount, item);
 					}else{
 						prevColCount += item.colCount;
 						q = q.concat(item.children);
-						sb.push('<th colspan="', item.colCount,
+						sb.push('<td tabindex="-1" colspan="', item.colCount,
 							'" class="gridxGroupHeader', currentLevel ? ' gridxSubHeader' : '',
-							'"><div class="gridxSortNode">', item.name || '', '</div></th>');
+							'" groupid="', item.id,
+							'"><div class="gridxSortNode">', item.name || '', '</div></td>');
 					}
 				}
 				sb.push('</tr>');
@@ -238,6 +277,148 @@ define([
 			t.innerNode.innerHTML = sb.join('');
 			domClass.toggle(t.domNode, 'gridxHeaderRowHidden', t.arg('hidden'));
 			domClass.add(g.domNode, 'gridxGH');
+		},
+
+		_initFocus: function(){
+			var t = this, g = t.grid;
+			if(g.focus){
+				g.focus.registerArea({
+					name: 'header',
+					priority: 0,
+					focusNode: t.innerNode,
+					scope: t,
+					doFocus: t._doFocus,
+					doBlur: t._blurNode,
+					onBlur: t._blurNode,
+					connects: [
+						t.connect(t.domNode, 'onkeydown', '_onKeyDown'),
+						t.connect(t.domNode, 'onmousedown', function(evt){
+							t._focusNode(query(evt.target).closest('td', t.domNode)[0]);
+							g.focus.currentArea();
+						})
+					]
+				});
+			}
+		},
+
+		_doFocus: function(evt, step){
+			var t = this,
+				n = t._curNode || query('td', t.domNode)[0];
+			t._focusNode(n);
+			return n;
+		},
+		
+		_focusNode: function(node){
+			if(node){
+				var t = this, g = t.grid,
+					fid = t._focusHeaderId = node.getAttribute('colid');
+				if(!fid){
+					fid = t._focusGroupId = node.getAttribute('groupid');
+					var group = t._groupsById[fid];
+					fid = group && g._columns[group.start].id;
+				}
+				if(fid){
+					t._blurNode();
+					if(g.hScroller){
+						g.hScroller.scrollToColumn(fid);
+					}
+					g.body._focusCellCol = g._columnsById[fid].index;
+
+					t._curNode = node;
+					domClass.add(node, t._focusClass);
+					//If no timeout, the header and body may be mismatch.
+					setTimeout(function(){
+						//For webkit browsers, when moving column using keyboard, the header cell will lose this focus class,
+						//although it was set correctly before this setTimeout. So re-add it here.
+						if(has('webkit')){
+							domClass.add(node, t._focusClass);
+						}
+						node.focus();
+						if(has('ie') < 8){
+							t.innerNode.scrollLeft = t._scrollLeft;
+						}
+					}, 0);
+					return true;
+				}
+			}
+			return false;
+		},
+
+		_blurNode: function(){
+			var t = this, n = query('.' + t._focusClass, t.innerNode)[0];
+			if(n){
+				domClass.remove(n, t._focusClass);
+			}
+			return true;
+		},
+
+		_getUpNode: function(node){
+			var colId = node.getAttribute('colid'),
+				groupId = node.getAttribute('groupid'),
+				item = this.grid._columnsById[colId] || this._groupsById[groupId];
+			return item && query('[groupid="' + item.groupId + '"]', this.domNode)[0];
+		},
+
+		_getDownNode: function(node, last){
+			var item = this._groupsById[node.getAttribute('groupid')];
+			if(item){
+				var child = item.children[0];
+				if(typeof child == 'number'){
+					var col = this.grid._columns[item.start];
+					return this.getHeaderNode(col.id);
+				}else{
+					var nodes = query('[groupid="' + child.id + '"]', this.domNode);
+					return last ? nodes[nodes.length - 1] : nodes[0];
+				}
+			}
+		},
+
+		_getPrevNode: function(node){
+			var n = node.previousSibling;
+			if(!n){
+				n = this._getUpNode(node);
+				n = n && this._getPrevNode(n);
+				n = n && this._getDownNode(n, 1) || n;
+			}
+			return n;
+		},
+
+		_getNextNode: function(node){
+			var n = node.nextSibling;
+			if(!n){
+				n = this._getUpNode(node);
+				n = n && this._getNextNode(n);
+				n = n && this._getDownNode(n) || n;
+			}
+			return n;
+		},
+
+		_onKeyDown: function(evt){
+			var t = this, g = t.grid, col,
+				node = t._curNode;
+			if(!evt.ctrlKey && !evt.altKey &&
+				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
+				//Prevent scrolling the whole page.
+				g.focus.stopEvent(evt);
+				var isPrev = g.isLeftToRight() ^ evt.keyCode == keys.RIGHT_ARROW;
+				var n = isPrev ? t._getPrevNode(node) : t._getNextNode(node);
+				if(n){
+					t._focusHeaderId = n.getAttribute('colid');
+					t._focusGroupId = n.getAttribute('groupid');
+					t._focusNode(n);
+					if(t._focusHeaderId){
+						t.onMoveToHeaderCell(t._focusHeaderId, evt);
+					}
+				}
+			}else if(evt.keyCode == keys.UP_ARROW){
+				//Prevent scrolling the whole page.
+				g.focus.stopEvent(evt);
+				t._focusNode(t._getUpNode(node));
+			}else if(evt.keyCode == keys.DOWN_ARROW){
+				//Prevent scrolling the whole page.
+				g.focus.stopEvent(evt);
+				t._focusNode(t._getDownNode(node));
+			}
 		}
 	});
 });

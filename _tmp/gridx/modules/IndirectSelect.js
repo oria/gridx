@@ -70,6 +70,12 @@ define([
 						t._initFocus();
 					}
 					t.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
+					t.connect(g, 'onRowHeaderHeaderKeyDown', function(evt){
+						if(evt.keyCode == keys.SPACE){
+							event.stop(evt);
+							t._onSelectAll();
+						}
+					});
 				});
 			}
 		},
@@ -86,11 +92,22 @@ define([
 		},
 
 		_createCheckBox: function(selected, partial, isUnselectable){
-			var dijitClass = this._getDijitClass();
+			var dijitClass = this._getDijitClass(),
+				suffix = '';
+			if(isUnselectable){
+				if(selected){
+					suffix = 'CheckedDisabled';
+				}else if(partial){
+					suffix = 'PartialDisabld';
+				}else{
+					suffix = 'Disabled';
+				}
+			}
+			
 			return ['<span role="', this._isSingle() ? 'radio' : 'checkbox',
 				'" class="gridxIndirectSelectionCheckBox dijitReset dijitInline ',
 				dijitClass, ' ',
-				isUnselectable? dijitClass + 'Disabled' : '',
+				isUnselectable? dijitClass + suffix : '',
 				selected ? dijitClass + 'Checked' : '',
 				partial ? dijitClass + 'Partial' : '',
 				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
@@ -118,18 +135,25 @@ define([
 		},
 
 		_onHighlightChange: function(target, toHighlight){
-			var node = query('[visualindex="' + target.row + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', this.grid.rowHeader.bodyNode)[0];
+			var row = query('[visualindex="' + target.row + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0],
+				node = row? query('.gridxIndirectSelectionCheckBox', row)[0] : undefined;
 			if(node){
 				var dijitClass = this._getDijitClass(),
 					partial = toHighlight == 'mixed',
-					selected = toHighlight && !partial;
+					selected = toHighlight && !partial,
+					rowId = row.getAttribute('rowid'),
+					isUnselectable = !this.grid.row(rowId, 1).isSelectable();
+					
 				domClass.toggle(node, dijitClass + 'Checked', selected);
 				domClass.toggle(node, dijitClass + 'Partial', partial);
+				domClass.toggle(node, dijitClass + 'CheckedDisabled', selected && isUnselectable);
+				domClass.toggle(node, dijitClass + 'PartialDisabled', partial && isUnselectable);
+				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
 				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
 			}
 		},
-
+		
 		_onMouseOver: function(){
 			var sr = this.grid.select.row;
 			if(!sr.holdingCtrl){
@@ -165,16 +189,21 @@ define([
 
 		_onSelectionChange: function(selected){
 			var t = this, d,
+				g = t.grid,
 				allSelected,
 				view = t.grid.view,
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
 			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
-				return !model.treePath(id).pop();
+				return !model.parentId(id);
+			});
+			var unselectableRows = g.select.row._getUnselectableRows();
+			var unselectableRoots = array.filter(unselectableRows, function(id){
+				return !model.parentId(id) && !g.select.row.isSelected(id);
 			});
 			if(count === model.size()){
-				allSelected = count && count == selectedRoot.length;
+				allSelected = count && count - unselectableRoots.length == selectedRoot.length;
 			}else{
 				d = new Deferred();
 				model.when({
@@ -186,7 +215,11 @@ define([
 					}), function(index){
 						return index >= start && index < start + count;
 					});
-					allSelected = count == indexes.length;
+					unselectableRoots = array.filter(unselectableRoots, function(id){
+						var index = model.idToIndex(id);
+						return index >= start && index < start + count;
+					});
+					allSelected = count - unselectableRoots.length == indexes.length;
 					d.callback();
 				});
 			}
@@ -226,6 +259,7 @@ define([
 			});
 		},
 		_onKeyDown: function(evt){
+			// CTRL - A
 			if(evt.keyCode == 65 && evt.ctrlKey && !evt.shiftKey){
 				if(!this._allSelected[this._getPageId()]){
 					this._onSelectAll();

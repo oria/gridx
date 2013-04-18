@@ -2,17 +2,14 @@ require([
 	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-	'gridx/modules/filter/AZFilterMenu',
-	'gridx/modules/filter/NumberFilterMenu',
+	'gridx/support/menu/AZFilterMenu',
+	'gridx/support/menu/NumberFilterMenu',
 	'dijit/Menu',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
 	'dijit/form/NumberSpinner',
 	'dijit/form/Button',
-	'gridx/modules/HeaderMenu',
-	'gridx/modules/Filter',
-	
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory, AZFilterMenu, NumberFilterMenu, Menu){
 

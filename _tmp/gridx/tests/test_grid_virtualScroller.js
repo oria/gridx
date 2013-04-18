@@ -22,6 +22,7 @@ require([
 	layout = [
 		{id: 'id', field: 'id', name: 'Identity'},
 		{id: 'Year', field: 'Year', name: 'Year'},
+		{id: 'Album', field: 'Album', name: 'Album'},
 		{id: 'Length', field: 'Length', name: 'Length'},
 		{id: 'Track', field: 'Track', name: 'Track'},
 		{id: 'Download Date', field: 'Download Date', name: 'Download Date'},

@@ -1,15 +1,18 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/lang",
 	"dojo/query",
 	"dojo/_base/array",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	"dojo/keys",
+	"dijit/a11y",
 	"./Body",
 	"dojo/i18n!../nls/Body",
 	"dojo/touch"
-], function(declare, query, array, domConstruct, domClass, Deferred, has, Body, nls, touch){
+], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, keys, a11y, Body, nls, touch){
 
 /*=====
 	return declare(Body, {
@@ -54,29 +57,92 @@ define([
 			t._moreNode = domConstruct.create('div', {
 				'class': 'gridxLoadMore'
 			});
-			var moreBtn = t._moreBtn = domConstruct.create('button', {
-				innerHTML: t.arg('loadMoreLabel', nls.loadMore)
-			}, t._moreNode, 'last');
-			t.connect(moreBtn, touch.press, function(){
-				t._load(1);
-			});
-			t.connect(moreBtn, 'onmouseover', function(){
-				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-			});
-
+			t.arg('createMoreNode').call(t, t._moreNode);
 			t._prevNode = domConstruct.create('div', {
 				'class': 'gridxLoadMore'
 			});
-			var prevBtn = t._prevBtn = domConstruct.create('button', {
-				innerHTML: t.arg('loadPreviousLabel', nls.loadPrevious)
-			}, t._prevNode, 'last');
-			t.connect(prevBtn, touch.press, function(){
-				t._load();
+			t.arg('createPrevNode').call(t, t._prevNode);
+
+			t.connect(t._moreNode, 'onmouseover', function(){
+				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 			});
-			t.connect(prevBtn, 'onmouseover', function(){
+			t.connect(t._prevNode, 'onmouseover', function(){
 				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 			});
 			t._initFocus();
+		},
+
+		_initFocus: function(){
+			var t = this,
+				focus = t.grid.focus,
+				doFocus = function(node, evt, step){
+					if(node.parentNode){
+						focus.stopEvent(evt);
+						var elems = a11y._getTabNavigable(node),
+							n = elems[step < 0 ? 'last' : 'first'];
+						if(n){
+							n.focus();
+						}
+						return !!n;
+					}else{
+						return false;
+					}
+				},
+				doBlur = function(node, evt, step){
+					if(node.parentNode){
+						var elems = a11y._getTabNavigable(node);
+						return evt ? evt.target == (step < 0 ? elems.first : elems.last) : true;
+					}else{
+						return true;
+					}
+				};
+			t.inherited(arguments);
+			focus.registerArea({
+				name: 'prevBtn',
+				priority: 0.9999,
+				focusNode: t._prevNode,
+				scope: t,
+				doFocus: lang.partial(doFocus, t._prevNode),
+				doBlur: lang.partial(doBlur, t._prevNode)
+			});
+			focus.registerArea({
+				name: 'moreBtn',
+				priority: 1.0001,
+				focusNode: t._moreNode,
+				scope: t,
+				doFocus: lang.partial(doFocus, t._moreNode),
+				doBlur: lang.partial(doBlur, t._moreNode)
+			});
+		},
+
+		createMoreNode: function(moreNode){
+			var t = this,
+				moreBtn = t._moreBtn = domConstruct.create('button', {
+					innerHTML: t.arg('loadMoreLabel', nls.loadMore)
+				}, moreNode, 'last');
+			t.connect(moreBtn, touch.press, function(){
+				t._load(1);
+			});
+			t.connect(moreBtn, 'onkeydown', function(evt){
+				if(evt.keyCode == keys.ENTER){
+					t._load(1);
+				}
+			});
+		},
+
+		createPrevNode: function(prevNode){
+			var t = this,
+				prevBtn = t._prevBtn = domConstruct.create('button', {
+					innerHTML: t.arg('loadPreviousLabel', nls.loadPrevious)
+				}, t._prevNode, 'last');
+			t.connect(prevBtn, touch.press, function(){
+				t._load();
+			});
+			t.connect(prevBtn, 'onkeydown', function(evt){
+				if(evt.keyCode == keys.ENTER){
+					t._load();
+				}
+			});
 		},
 
 		load: function(args){
@@ -225,8 +291,9 @@ define([
 					t._busy(isPost);
 					t._checkSize(!isPost, function(){
 						query('.gridxBodyFirstRow').removeClass('gridxBodyFirstRow');
-						if(t._prevNode.parentNode && t._prevNode.nextSibling != t._moreNode){
-							domClass.add(t._prevNode.nextSibling, 'gridxBodyFirstRow');
+						var firstRow = t._prevNode.nextSibling;
+						if(firstRow && firstRow != t._moreNode){
+							domClass.add(firstRow, 'gridxBodyFirstRow');
 						}
 						t.onRender(renderStart, renderCount);
 					});

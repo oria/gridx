@@ -85,7 +85,6 @@ define([
 				right = 0,
 				ltr = this.grid.isLeftToRight(),
 				scrollLeft = this.domNode.scrollLeft;
-			
 			if(!ltr && (has('webkit') || has('ie') < 8)){
 				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth;//the value relative to col 0
 			}
@@ -98,12 +97,15 @@ define([
 					break;
 				}
 			}
-			
 			//if the cell is not visible, scroll to it
-			if(left < scrollLeft){
+			if(ltr && left < scrollLeft){
 				this.scroll(left);
-			}else if(right > scrollLeft + hNode.offsetWidth){
+			}else if(ltr && right > scrollLeft + hNode.offsetWidth){
 				this.scroll(right - hNode.offsetWidth);
+			}else if(!ltr && right > hNode.scrollWidth - scrollLeft){
+				this.scroll(right - hNode.scrollWidth);
+			}else if(!ltr && left + scrollLeft < hNode.scrollWidth - hNode.offsetWidth){
+				this.scroll(hNode.scrollWidth - hNode.offsetWidth - left);
 			}
 		},
 		

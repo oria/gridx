@@ -52,7 +52,7 @@ define([
 				role: 'row',
 				innerHTML: ['<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: ', 
 					this.arg('width'), 
-					';"><tr><th class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></th></tr></table>'
+					';"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
 				].join('')
 			});
 			this.bodyNode = domConstruct.create('div', {
@@ -79,7 +79,7 @@ define([
 			//modify header
 			g.header.domNode.appendChild(rhhn);
 			rhhn.style.width = w;
-			t.headerCellNode = query('th', rhhn)[0];
+			t.headerCellNode = query('td', rhhn)[0];
 			g._connectEvents(rhhn, '_onHeaderMouseEvent', t);
 			//modify body
 			g.mainNode.appendChild(rhbn);

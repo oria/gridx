@@ -107,9 +107,7 @@ define([
 		//Private-----------------------------------------------------------
 		_mousemove: function(e){
 			var t = this;
-			if(t._resizing){
-				query('.gridxHeaderCellOver').removeClass('gridxHeaderCellOver');
-			}else if(!t._ismousedown){
+			if(!t._resizing && !t._ismousedown){
 				var detectWidth = t.arg('detectWidth'),
 					g = t.grid,
 					ltr = g.isLeftToRight(),
@@ -121,11 +119,10 @@ define([
 						col = g._columnsById[cellNode.getAttribute('colid')];
 					//check if in resize range
 					if(x - detectWidth <= e.clientX && x + detectWidth >= e.clientX){
-						var n = query(e.target).closest('th', g.header.innerNode)[0],
+						var n = query(e.target).closest('td', g.header.innerNode)[0],
 							npos = n && domGeometry.position(n);
-						if(!n || e.clientX <= npos.x + detectWidth || e.clientX >= npos.x + npos.w - detectWidth){
+						if(n && (e.clientX <= npos.x + detectWidth || e.clientX >= npos.x + npos.w - detectWidth)){
 							domClass.add(body, 'gridxColumnResizing');
-							query('.gridxHeaderCellOver').removeClass('gridxHeaderCellOver');
 							t._targetCell = cellNode;
 							t._cellPos = pos;
 							//Forbid anything else to happen when we are resizing a column!
@@ -145,7 +142,8 @@ define([
 		_mouseout: function(e){
 			if(!this._resizing){
 				var pos = domGeometry.position(this.grid.header.domNode);
-				if(e.clientY <= pos.y || e.clientY >= pos.y + pos.h){
+				if(e.clientY <= pos.y || e.clientY >= pos.y + pos.h ||
+					e.clientX <= pos.x || e.clientX >= pos.x + pos.w){
 					this._readyToResize = 0;
 					domClass.remove(win.body(), 'gridxColumnResizing');
 				}

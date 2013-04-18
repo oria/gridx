@@ -62,6 +62,7 @@ define([
 		onDeselected: function(){},
 
 		onHighlightChange: function(){},
+		
 
 		//Private---------------------------------------------------------------------
 		_getMarkType: function(){},

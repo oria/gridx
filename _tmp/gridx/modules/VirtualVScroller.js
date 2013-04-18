@@ -303,7 +303,7 @@ define([
 		_onMouseWheel: function(e){
 			if(this.grid.vScrollerNode.style.display != 'none'){
 				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
-				this.domNode.scrollTop -= rolled / this._ratio;
+				this.domNode.scrollTop -= rolled;
 				event.stop(e);
 			}
 		},
@@ -349,6 +349,9 @@ define([
 				h = maxHeight;
 			}
 			t.stubNode.style.height = h + 'px';
+			if(t._lastScrollTop){
+				t._lastScrollTop = t.domNode.scrollTop;
+			}
 		},
 	
 		_doVirtual: function(){

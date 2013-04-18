@@ -31,7 +31,7 @@ define([
 	var hasClass = domClass.contains;
 
 	return declare(_LinkPageBase, {
-		templateString: '<div class="gridxLinkSizer" role="toolbar" data-dojo-attach-event="onclick: _changePageSize, onmouseover: _onHover, onmouseout: _onHover"></div>',
+		templateString: '<div class="gridxLinkSizer" role="toolbar" aria-label="switch page size" data-dojo-attach-event="onclick: _changePageSize, onmouseover: _onHover, onmouseout: _onHover"></div>',
 
 		postMixInProperties: function(){
 			var t = this;

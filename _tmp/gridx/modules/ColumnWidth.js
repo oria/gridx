@@ -134,6 +134,7 @@ define([
 				bodyWidth = (dn.clientWidth || domStyle.get(dn, 'width')) - lead - tail - headerBorder,
 				refNode = query('.gridxCell', innerNode)[0],
 				padBorder = refNode ? domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w : 0,
+				isGroupHeader = g.header.arg('groups'),
 				isGridHidden = !dn.offsetHeight;
 			t._padBorder = padBorder;
 			//FIXME: this is theme dependent. Any better way to do this?
@@ -152,16 +153,17 @@ define([
 				return;
 			}
 			if(g.autoWidth){
-				var headers = query('th.gridxCell', innerNode),
+				var headers = query('.gridxCell', innerNode),
 					totalWidth = 0;
 				headers.forEach(function(node){
 					var w = domStyle.get(node, 'width');
-					if(!has('safari') || !isGridHidden){
+					if(isGroupHeader || !has('safari') || !isGridHidden){
 						w += padBorder;
 					}
 					totalWidth += w;
 					var c = g._columnsById[node.getAttribute('colid')];
 					if(c.width == 'auto' || (/%$/).test(c.width)){
+						console.log(c.id, w);
 						node.style.width = c.width = w + 'px';
 						node.style.minWidth = c.width;
 						node.style.maxWidth = c.width;
@@ -175,7 +177,7 @@ define([
 				var autoCols = [],
 					cols = g._columns,
 					fixedWidth = 0;
-				if(has('safari')){
+				if(!isGroupHeader && has('safari')){
 					padBorder = 0;
 				}
 				array.forEach(cols, function(c){
@@ -196,7 +198,7 @@ define([
 				array.forEach(cols, function(c){
 					if(c.declaredWidth != 'auto'){
 						var headerNode = header.getHeaderNode(c.id),
-							w = has('safari') ? parseFloat(headerNode.style.width, 10) :
+							w = !isGroupHeader && has('safari') ? parseFloat(headerNode.style.width, 10) :
 								headerNode.offsetWidth || (domStyle.get(headerNode, 'width') + padBorder);
 						if(/%$/.test(c.declaredWidth)){
 							c.width = (w > padBorder ? w - padBorder : 0) + 'px';
@@ -225,6 +227,24 @@ define([
 						node.style.maxWidth = c.width;
 					});
 				}
+			}
+			if(isGroupHeader){
+				// If group header is used, the column width might not be set properly 
+				// (min-width/max-width not working when colspan cells exist).
+				// So the actual width of the node is honored.
+				query('.gridxCell', header.innerNode).forEach(function(node){
+					var col = g._columnsById[node.getAttribute('colid')];
+					if(/px$/.test(col.width)){
+						var width = node.clientWidth - domGeometry.getPadExtents(node).w;
+						if(parseInt(col.width, 10) != width){
+							console.log('here! ', col.width, ', ', width);
+							col.width = width = width + 'px';
+							node.style.width = width;
+							node.style.minWidth = width;
+							node.style.maxWidth = width;
+						}
+					}
+				});
 			}
 			g.hScroller.scroll(0);
 			header._onHScroll(0);
