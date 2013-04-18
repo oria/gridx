@@ -504,6 +504,7 @@ define([
 			if(node && node !== dn){
 				var cellNode = node,
 					colId = node.getAttribute('colid');
+				this.grid.hScroller.scrollToColumn(colId);
 				while(node && !domClass.contains(node, 'gridxRow')){
 					node = node.parentNode;
 				}
