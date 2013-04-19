@@ -351,14 +351,17 @@ define([
 								"class='gridxCellBg' ",
 								"style='position:absolute;'>",
 								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + "../gridx/resources/images/gridxCellChanged.png'>",
-								"<div style='height:5px;width:5px;font-size:5px;'>x</div>",	
+								// "<div style='height:5px;width:5px;font-size:5px;'>x</div>",	
 								'</div>'
 							].join('');
 							
 							cellBgNode = domConstruct.toDom(html);
 							domConstruct.place(cellBgNode, cell.node(), 'first');
 							
-							var currentLeft = parseInt(domStyle.get(cellBgNode, 'left'), 10);
+							// var currentLeft = parseInt(domStyle.get(cellBgNode, 'left'), 10);
+							currentLeft = cellBgNode.offsetLeft;
+							console.log('currentleft', currentLeft);
+							console.log(leftToMove);
 							currentLeft += leftToMove;
 							
 							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
@@ -383,9 +386,11 @@ define([
 						visualIndex = cell.row.visualIndex();
 						
 					if(t.model.isChanged(rowId, g._columnsById[colId].field)){
+						g.body.addClass(rowId, colId, 'gridxCellChanged');
 						_addCellBackground(cell);
 					}else{
-						_removeCellBackground(g.cell(rowId, colId, 1));
+						g.body.removeClass(rowId, colId, 'gridxCellChanged');
+						_removeCellBackground(cell);
 					}
 				};
 				
@@ -396,6 +401,8 @@ define([
 						if(t.model.isChanged(row.id, cols[colid].field)){
 							g.body.addClass(row.id, colid, 'gridxCellChanged');
 							_addCellBackground(g.cell(row.id, colid, 1));
+						}else{
+							g.body.removeClass(row.id, colid, 'gridxCellChanged');
 						}
 					});
 				});
