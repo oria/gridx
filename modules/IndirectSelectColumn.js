@@ -95,6 +95,7 @@ define([
 				});
 				t.connect(g, 'onHeaderCellKeyDown', function(e){
 					if(e.columnId == indirectSelectColumnId && e.keyCode == keys.SPACE){
+						event.stop(e);
 						t._onSelectAll();
 					}
 				});
