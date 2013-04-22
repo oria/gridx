@@ -179,7 +179,7 @@ define([
 			m.setMarkable(rowId, selectable);
 			t.unselectable[rowId] = !selectable;
 			if(n){
-				domClass.toggle(n, 'gridxUnselectable', !selectable);
+				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
 			}
 		},
@@ -259,7 +259,7 @@ define([
 				}],
 				[g.body, 'onAfterRow', function(row){
 					var unselectable = !row.isSelectable();
-					domClass.toggle(row.node(), 'gridxUnselectable', unselectable);
+					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
 				}],
 				[g, 'onRowMouseOver', function(e){
 					if(t._selecting && t.arg('triggerOnCell') && e.columnId){
