@@ -229,7 +229,7 @@ define([
 				}],
 				[g.body, 'onAfterRow', function(row){
 					var unselectable = !row.isSelectable();
-					.toggle(row.node(), 'gridxRowUnselectable', unselectable);
+					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
 				}],
 				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
 					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
