@@ -12,7 +12,7 @@ define([
 	Model.undo = function(){};
 	Model.redo = function(){};
 	Model.save = function(){};
-	Model.clear = function(){};
+	Model.clearLazyData = function(){};
 	Model.isChanged = function(){}
 	Model.getChanged = function(){}
 	
@@ -48,18 +48,10 @@ define([
 			model.onRedo = model.onUndo = function(){};
 			
 			var old = s.fetch;
-			//t[c](s, old ? "onSet" : "put", "_onSet");
-			// t.onSet = function(){
-				// t.model.onSet();
-			// };
-			// model.onRedoUndo = function(){};
 		},
 
 		//Public--------------------------------------------------------------
 		byId: function(id){
-			// var d = lang.clone(this.inner._call('byId', arguments));
-			// lang.mixin(d.rawData, d.lazyData);
-			// return this._cache.byId(id);
 			var t = this,
 				c = t.inner._call('byId', arguments);
 			if(!c){ return c; }
@@ -71,7 +63,7 @@ define([
 		
 		byIndex: function(index, parentId){
 			var t = this,
-				c = t.inner._call('byId', arguments),
+				c = t.inner._call('byIndex', arguments),
 				id = t.inner._call('indexToId', arguments);
 			if(!c){ return c; }
 			var d = lang.mixin({}, c);
@@ -100,7 +92,6 @@ define([
 			opt.newData = rawData;
 			opt.oldData = {};
 			
-			//var rd = t.inner._call('byId', [rowId]).rawData;
 			
 			var rd = t.byId(rowId).rawData;
 			for(var f in rawData){
@@ -115,12 +106,11 @@ define([
 			var newRowData = t.byId(rowId);
 			
 			this.onSet(rowId, index, newRowData, oldRowData);		//trigger model.onset
-			//this.onSet();
 		},
 
 		undo: function(){
 			// summary:
-			//		
+			//		Undo last edit change.
 			// returns:
 			//		True if successful, false if nothing to undo.
 			
@@ -142,7 +132,7 @@ define([
 
 		redo: function(){
 			// summary:
-			//		
+			//		redo next edit change.
 			// returns:
 			//		True if successful, false if nothing to redo.
 			var t = this,
@@ -162,7 +152,11 @@ define([
 
 		clearLazyData: function(){
 			// summary:
-			//		Undo all. Clear undo list.
+			//		Undo all. Clear undo list. The initial name of this function is 'clear'.
+			//		When use grid.model.clear(), this function won't be run because 
+			//		there is a function named 'clear'in ClientFilter.
+			//		So rename this function to clearLazyData which is more in detail about what this 
+			//		function really do.
 			console.log('in clear');
 			var t = this,
 				cl = t.getChanged();
@@ -174,9 +168,6 @@ define([
 			t._globalOptList = [];
 			t._lazyRawData = {};
 			t._lazyData = {};
-			// array.forEach(cl, function(rid){
-				// delete t._cache.byId(rid).lazyData;
-			// });
 		},
 
 		save: function(){
@@ -224,7 +215,7 @@ define([
 				ld = t._lazyRawData[rowId];
 			if(field){
 				if(ld){
-					return ld[field]? ld[field] !== cache.rawData[field] : false;
+					return ld[field] !== undefined? ld[field] !== cache.rawData[field] : false;
 				}
 			}else{
 				if(ld){
@@ -241,7 +232,7 @@ define([
 
 		getChanged: function(){
 			// summary:
-			//		
+			//		Get all the changed rows Ids.
 			// returns:
 			//		An array of changed row IDs.
 			var t = this,
@@ -263,12 +254,25 @@ define([
 		},
 		
 		onUndo: function(rowId, newData, oldData){
-			
+			// summary:
+			//		Fired when successfully undid.
+			//
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from 
 		},
 
 		onRedo: function(rowId, newData, oldData){
 			// summary:
 			//		Fired when successfully redid.
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from
+
 		},
 
 		//Private-------------------------------------------------------------------

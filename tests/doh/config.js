@@ -26,7 +26,8 @@ define([
 //    'gridx/tests/doh/actions/VScroller',
 //    'gridx/tests/doh/actions/Header',
 //    'gridx/tests/doh/actions/Body',
-//    'gridx/tests/doh/actions/HScroller',
+//    'gridx/tests/doh/actions/HScrolsler',
+// 'gridx/tests/doh/actions/SelectRow',
 
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async'

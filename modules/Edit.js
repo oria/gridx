@@ -11,6 +11,9 @@ define([
 	"dojo/on",
 	"dojo/DeferredList",
 	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/dom-construct",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util",
@@ -19,7 +22,7 @@ define([
 	'dojo/_base/event',
 	"dijit/form/TextBox"
 //    "dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, on, DeferredList, domClass, keys, _Module, util, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, on, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, _Module, util, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -322,23 +325,74 @@ define([
 				g = t.grid;
 				
 			if(t.arg('lazySave')){
-				var _onSet = function(rowId, index, newData, oldData){
-					console.log('in edit onset');
-					var vi = g.row(rowId, 1).visualIndex();
-					if( vi !== null && 
-						(g.body.renderStart <= vi) && (vi < g.body.renderStart + g.body.renderCount)){
-						for(var colId in g._columnsById){
-							if(t.model.isChanged(rowId, g._columnsById[colId].field)){
-								g.body.addClass(rowId, colId, 'gridxCellChanged');
-							}else{
-								g.body.removeClass(rowId, colId, 'gridxCellChanged');
-							}
-						}
+				var _removeCellBackground = function(cell){
+					var node = cell.node();
+						cellBgNode = query('.gridxCellBg', node);
+					if(cellBgNode.length){
+						domConstruct.destroy(cellBgNode);
 					}
 				};
 				
-				// _onsave = function(rowIds){
-				// },
+				var _addCellBackground = function(cell){
+					var node = cell.node(),
+						cellBgNode = query('.gridxCellBg', node),
+						rowId = cell.row.id,
+						colId = cell.column.id,
+						visualIndex = cell.row.visualIndex();
+						
+						if(!cellBgNode.length){
+							var computedStyle = domStyle.getComputedStyle(node),
+								cellPadding= parseInt(domGeo.getPadBorderExtents(node, computedStyle).l, 10),
+								leftToMove = node.clientWidth - cellPadding - 5,
+								
+								html = [
+								"<div rowid='" + rowId + "' ",
+								"colid='" + colId + "' ",
+								"class='gridxCellBg' ",
+								"style='position:absolute;'>",
+								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + "../gridx/resources/images/gridxCellChanged.png'>",
+								// "<div style='height:5px;width:5px;font-size:5px;'>x</div>",	
+								'</div>'
+							].join('');
+							
+							cellBgNode = domConstruct.toDom(html);
+							domConstruct.place(cellBgNode, cell.node(), 'first');
+							
+							// var currentLeft = parseInt(domStyle.get(cellBgNode, 'left'), 10);
+							currentLeft = cellBgNode.offsetLeft;
+							console.log('currentleft', currentLeft);
+							console.log(leftToMove);
+							currentLeft += leftToMove;
+							
+							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
+								top = 0;
+							array.forEach(upperRows, function(row){
+								var vi = parseInt(row.getAttribute('visualIndex'), 10);
+								if(vi < visualIndex){
+									top += row.clientHeight;
+								}
+							});
+							
+							domStyle.set(cellBgNode, 'left', currentLeft + 'px');
+							domStyle.set(cellBgNode, 'top', top+ 'px');
+						}
+				};
+				
+				var _onAftercell = function(cell){
+					console.log('in on after cell');
+					var node = cell.node(),
+						rowId = cell.row.id,
+						colId = cell.column.id,
+						visualIndex = cell.row.visualIndex();
+						
+					if(t.model.isChanged(rowId, g._columnsById[colId].field)){
+						g.body.addClass(rowId, colId, 'gridxCellChanged');
+						_addCellBackground(cell);
+					}else{
+						g.body.removeClass(rowId, colId, 'gridxCellChanged');
+						_removeCellBackground(cell);
+					}
+				};
 				
 				t.connect(g.body, 'onAfterRow', function(row){
 					var cols = g._columnsById;
@@ -346,13 +400,15 @@ define([
 						var colid = node.getAttribute('colid');
 						if(t.model.isChanged(row.id, cols[colid].field)){
 							g.body.addClass(row.id, colid, 'gridxCellChanged');
+							_addCellBackground(g.cell(row.id, colid, 1));
 						}else{
 							g.body.removeClass(row.id, colid, 'gridxCellChanged');
 						}
 					});
 				});
 
-				t.connect(t.model, 'onSet', _onSet);
+				// t.connect(t.model, 'onSet', _onSet);
+				t.connect(g.body, 'onAfterCell', _onAftercell);
 			}
 			g.domNode.removeAttribute('aria-readonly');
 			t.connect(g, 'onCellDblClick', '_onUIBegin');

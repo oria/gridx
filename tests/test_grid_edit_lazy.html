@@ -10,6 +10,9 @@
 			height: 400px;
 			margin-bottom: 20px;
 		}
+		button{
+			margin: 5px;
+		}
 	</style>
 
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
@@ -61,16 +64,6 @@
 		],
 		editLazySave: true
 	'></div>
-	<div>
-		<script type='text/javascript'>
-			saveLazyEdit = function(){
-				var grid = dijit.byId('grid1');
-				grid.edit.save();
-			}
-			
-		</script>
-		<button onclick='saveLazyEdit()'>save</button>		
-	</div>
 	<!-- <h2>Custom editor</h2>
 	<div jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",

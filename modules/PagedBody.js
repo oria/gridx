@@ -291,8 +291,9 @@ define([
 					t._busy(isPost);
 					t._checkSize(!isPost, function(){
 						query('.gridxBodyFirstRow').removeClass('gridxBodyFirstRow');
-						if(t._prevNode.parentNode && t._prevNode.nextSibling != t._moreNode){
-							domClass.add(t._prevNode.nextSibling, 'gridxBodyFirstRow');
+						var firstRow = t._prevNode.nextSibling;
+						if(firstRow && firstRow != t._moreNode){
+							domClass.add(firstRow, 'gridxBodyFirstRow');
 						}
 						t.onRender(renderStart, renderCount);
 					});
