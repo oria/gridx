@@ -63,7 +63,7 @@ define([
 		
 		byIndex: function(index, parentId){
 			var t = this,
-				c = t.inner._call('byId', arguments),
+				c = t.inner._call('byIndex', arguments),
 				id = t.inner._call('indexToId', arguments);
 			if(!c){ return c; }
 			var d = lang.mixin({}, c);
