@@ -215,7 +215,7 @@ define([
 				ld = t._lazyRawData[rowId];
 			if(field){
 				if(ld){
-					return ld[field]? ld[field] !== cache.rawData[field] : false;
+					return ld[field] !== undefined? ld[field] !== cache.rawData[field] : false;
 				}
 			}else{
 				if(ld){
