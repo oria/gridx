@@ -78,7 +78,10 @@ define([
 			dn.scrollLeft = left;
 		},
 		
-		scrollToColumn: function(colId){
+		scrollToColumn: function(colId, rowDiv){
+			//when rowDiv has value, it's caused by move focus in Body.js
+			//It's used only for column lock module
+
 			var hNode = this.grid.header.innerNode,
 				cells = query('.gridxCell', hNode),
 				left = 0,
@@ -88,6 +91,17 @@ define([
 			if(!ltr && (has('webkit') || has('ie') < 8)){
 				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth;//the value relative to col 0
 			}
+
+			if(rowDiv && this.grid.columnLock && this.grid.columnLock.count){
+				//for column lock, row scrolls separately
+				scrollLeft = rowDiv.scrollLeft;
+				console.log('scroll left: ', scrollLeft);
+				if(scrollLeft != this.domNode.scrollLeft){
+					this.scroll(scrollLeft);
+					return;
+				}
+			}
+
 			scrollLeft = Math.abs(scrollLeft);
 			//get cell's left border and right border position
 			for(var i = 0; i < cells.length; i++){
@@ -97,6 +111,7 @@ define([
 					break;
 				}
 			}
+
 			//if the cell is not visible, scroll to it
 			if(ltr && left < scrollLeft){
 				this.scroll(left);
