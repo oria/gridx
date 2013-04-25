@@ -307,9 +307,6 @@ define([
 		preload: function(){
 			var t = this,
 				g = t.grid;
-			if(t.model.treeMarkMode){
-				t.model.treeMarkMode('', true);
-			}
 			g.domNode.setAttribute('role', 'treegrid');
 			t.batchConnect(
 				[g.body, 'collectCellWrapper', '_createCellWrapper'],
