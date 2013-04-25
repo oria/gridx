@@ -87,10 +87,6 @@ define([
 		holdingCtrl: false,
 
 		holdingShift: false,
-		
-		canSelect: function(){
-			return true;
-		},
 
 		selectById: function(/* id */){
 			return this._subMark('_markById', arguments, true);
