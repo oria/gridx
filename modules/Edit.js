@@ -177,6 +177,10 @@ define([
 		//		Just like data-dojo-props for a widget.
 		props: '',
 
+		// applyDelay: Integer
+		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
+		applyDelay: 500,
+
 		// constraints: Object
 		//		If the editor widget has some constraints, it can be set here instead of in props.
 		constraints: null,
@@ -227,10 +231,6 @@ define([
 		// alwaysEditing: Boolean
 		//		If true then the cells in this column will always be in editing mode. Default is false.
 		alwaysEditing: false,
-
-		// applyDelay: Integer
-		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
-		applyDelay: 500,
 
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.

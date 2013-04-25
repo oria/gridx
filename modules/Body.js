@@ -394,14 +394,18 @@ define([
 								domConstruct.place(rows, n, 'before');
 							}
 						}
+						var rowIds = {};
+						array.forEach(renderedRows, function(row){
+							rowIds[row.id] = 1;
+						});
 						while(n){
 							var tmp = n.nextSibling,
-								vidx = parseInt(n.getAttribute('visualindex'), 10),
 								id = n.getAttribute('rowid');
-							domConstruct.destroy(n);
-							if(vidx >= start + count){
+							if(!rowIds[id]){
+								//Unrender this row only when it is not being rendered now.
 								t.onUnrender(id);
 							}
+							domConstruct.destroy(n);
 							n = tmp;
 						}
 						array.forEach(renderedRows, t.onAfterRow, t);
