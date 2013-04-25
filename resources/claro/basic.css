@@ -81,7 +81,8 @@
 	background: transparent;
 	border-top-color: transparent;
 }
-.claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus {
+.claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus,
+.claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus:hover {
 	border-top-color: darkblue;
 }
 
