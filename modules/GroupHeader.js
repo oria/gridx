@@ -94,6 +94,12 @@ define([
 		// description:
 		//		Defines the content shown in this header group and the children included in this group.
 
+		// id: String
+		//		The identity of this header group.
+		//		If not provided, default to "group-" + group_level + "-" + id_of_first_column_in_this_group
+		//		where group_level starts from 0 (the highest groups).
+		id: '',
+
 		// name: String
 		//		The content shown in this header group.
 		name: '',
@@ -167,7 +173,7 @@ define([
 								item.children = [item.children];
 							}
 							item.groupId = groupId;
-							item.id = 'group-' + level + '-' + columns[cnt].id;
+							item.id = item.id || 'group-' + level + '-' + columns[cnt].id;
 							item.level = level;
 							item.start = cnt;
 							var colSpan = check(item.children, level + 1, item.id);
