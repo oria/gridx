@@ -315,7 +315,14 @@ define([
 				if(!fid){
 					fid = t._focusGroupId = node.getAttribute('groupid');
 					var group = t._groupsById[fid];
-					fid = group && g._columns[group.start].id;
+					if(group){
+						//If the group node is half visible, should scroll to the farther end column to make it fully visible.
+						//Otherwise, it'll cause header-body mismatch in IE.
+						var colIdx = node.offsetLeft + node.offsetWidth > t.innerNode.scrollLeft + t.innerNode.clientWidth ?
+								group.start + group.colCount - 1 :
+								group.start;
+						fid = g._columns[colIdx].id;
+					}
 				}
 				if(fid){
 					t._blurNode();
