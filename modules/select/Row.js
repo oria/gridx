@@ -150,11 +150,7 @@ define([
 		},
 
 		//Public API--------------------------------------------------------------------------------
-		triggerOnCell: false,
-
 		treeMode: true,
-
-		//unselectable: null,
 
 		setSelectable: function(rowId, selectable){
 			var t = this,

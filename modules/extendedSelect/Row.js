@@ -164,11 +164,7 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------
-		triggerOnCell: false,
-
 		treeMode: true,
-
-		//unselectable: null,
 
 		setSelectable: function(rowId, selectable){
 			var t = this,
