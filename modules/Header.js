@@ -229,9 +229,7 @@ define([
 					fid = t._focusHeaderId = node.getAttribute('colid');
 				if(fid){
 					t._blurNode();
-					if(g.hScroller){
-						g.hScroller.scrollToColumn(fid);
-					}
+					
 					g.body._focusCellCol = g._columnsById[fid].index;
 
 					domClass.add(node, t._focusClass);
@@ -246,7 +244,11 @@ define([
 						if(has('ie') < 8){
 							t.innerNode.scrollLeft = t._scrollLeft;
 						}
+						if(g.hScroller){
+							g.hScroller.scrollToColumn(fid, t.innerNode);
+						}
 					}, 0);
+
 					return true;
 				}
 			}
