@@ -1000,7 +1000,7 @@ define([
 				t._focusCellRow = rowVisIdx;
 				t._focusCellCol = colIdx;
 				g.header._focusHeaderId = colId;
-				g.hScroller.scrollToColumn(colId);
+				
 				if(has('ie') < 8){
 					//In IE7 focus cell node will scroll grid to the left most.
 					//So save the scrollLeft first and then set it back.
@@ -1011,6 +1011,7 @@ define([
 				}else{
 					n.focus();
 				}
+				g.hScroller.scrollToColumn(colId, n.parentNode.parentNode.parentNode.parentNode);//this is for columnlock hack
 			}else if(!g.rowCount()){
 				g.emptyNode.focus();
 				return true;

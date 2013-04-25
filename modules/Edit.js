@@ -351,17 +351,13 @@ define([
 								"class='gridxCellBg' ",
 								"style='position:absolute;'>",
 								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + "../gridx/resources/images/gridxCellChanged.png'>",
-								// "<div style='height:5px;width:5px;font-size:5px;'>x</div>",	
 								'</div>'
 							].join('');
 							
 							cellBgNode = domConstruct.toDom(html);
 							domConstruct.place(cellBgNode, cell.node(), 'first');
 							
-							// var currentLeft = parseInt(domStyle.get(cellBgNode, 'left'), 10);
 							currentLeft = cellBgNode.offsetLeft;
-							console.log('currentleft', currentLeft);
-							console.log(leftToMove);
 							currentLeft += leftToMove;
 							
 							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
@@ -379,7 +375,6 @@ define([
 				};
 				
 				var _onAftercell = function(cell){
-					console.log('in on after cell');
 					var node = cell.node(),
 						rowId = cell.row.id,
 						colId = cell.column.id,
