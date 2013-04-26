@@ -471,13 +471,8 @@ define([
 					t.renderCount = count;
 					var scrollTop = isRefresh ? n.scrollTop : 0;
 					n.scrollTop = 0;
-					if(sniff('ie')){
-						//In IE, setting innerHTML will completely destroy the node,
-						//But CellWidget still need it.
-						while(n.childNodes.length){
-							n.removeChild(n.firstChild);
-						}
-					}
+					//unrender before destroy nodes, so that other modules have a chance to detach nodes.
+					t.onUnrender();
 					n.innerHTML = str;
 					if(scrollTop){
 						n.scrollTop = scrollTop;
@@ -487,7 +482,6 @@ define([
 					if(!str){
 						en.style.zIndex = 1;
 					}
-					t.onUnrender();
 				}
 				array.forEach(renderedRows, t.onAfterRow, t);
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
@@ -498,17 +492,11 @@ define([
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
-				if(sniff('ie')){
-					//In IE, setting innerHTML will completely destroy the node,
-					//But CellWidget still need it.
-					while(n.childNodes.length){
-						n.removeChild(n.firstChild);
-					}
-				}
+				//unrender before destroy nodes, so that other modules have a chance to detach nodes.
+				t.onUnrender();
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
-				t.onUnrender();
 				t.onEmpty();
 				t.model.free();
 			}
@@ -525,8 +513,8 @@ define([
 					for(; i < count && bn.lastChild; ++i){
 						id = bn.lastChild.getAttribute('rowid');
 						t.model.free(id);
-						bn.removeChild(bn.lastChild);
 						t.onUnrender(id);
+						domConstruct.destroy(bn.lastChild);
 					}
 				}else{
 					var tp = bn.scrollTop;
@@ -534,8 +522,8 @@ define([
 						id = bn.firstChild.getAttribute('rowid');
 						t.model.free(id);
 						tp -= bn.firstChild.offsetHeight;
-						bn.removeChild(bn.firstChild);
 						t.onUnrender(id);
+						domConstruct.destroy(bn.firstChild);
 					}
 					t.renderStart += i;
 					bn.scrollTop = tp > 0 ? tp : 0;
