@@ -152,7 +152,6 @@ declare(_Module, {
 				header = g.header.domNode,
 				headerCell = query(region).closest('.gridxCell', header)[0];
 			t._curRegionIdx = array.indexOf(t._regionNodes, region);
-			region.focus();
 			setTimeout(function(){
 				query('.gridxHeaderRegionFocus', header).removeClass('gridxHeaderRegionFocus');
 				domClass.add(headerCell, 'gridxHeaderRegionFocus');
