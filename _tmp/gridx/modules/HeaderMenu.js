@@ -24,6 +24,8 @@ define([
 		//		Any dijit.Menu widget or its ID.
 		menu: null
 	});
+
+	return HeaderMenu;
 =====*/
 
 	return declare(_Module, {

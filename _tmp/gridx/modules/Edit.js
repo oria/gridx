@@ -177,6 +177,10 @@ define([
 		//		Just like data-dojo-props for a widget.
 		props: '',
 
+		// applyDelay: Integer
+		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
+		applyDelay: 500,
+
 		// constraints: Object
 		//		If the editor widget has some constraints, it can be set here instead of in props.
 		constraints: null,
@@ -227,10 +231,6 @@ define([
 		// alwaysEditing: Boolean
 		//		If true then the cells in this column will always be in editing mode. Default is false.
 		alwaysEditing: false,
-
-		// applyDelay: Integer
-		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
-		applyDelay: 500,
 
 		// editor: Widget Class (Function) | String
 		//		Set the dijit/widget to be used when a cell is in editing mode.
@@ -351,14 +351,13 @@ define([
 								"class='gridxCellBg' ",
 								"style='position:absolute;'>",
 								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + "../gridx/resources/images/gridxCellChanged.png'>",
-								"<div style='height:5px;width:5px;font-size:5px;'>x</div>",	
 								'</div>'
 							].join('');
 							
 							cellBgNode = domConstruct.toDom(html);
 							domConstruct.place(cellBgNode, cell.node(), 'first');
 							
-							var currentLeft = parseInt(domStyle.get(cellBgNode, 'left'), 10);
+							currentLeft = cellBgNode.offsetLeft;
 							currentLeft += leftToMove;
 							
 							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
@@ -376,16 +375,17 @@ define([
 				};
 				
 				var _onAftercell = function(cell){
-					console.log('in on after cell');
 					var node = cell.node(),
 						rowId = cell.row.id,
 						colId = cell.column.id,
 						visualIndex = cell.row.visualIndex();
 						
 					if(t.model.isChanged(rowId, g._columnsById[colId].field)){
+						g.body.addClass(rowId, colId, 'gridxCellChanged');
 						_addCellBackground(cell);
 					}else{
-						_removeCellBackground(g.cell(rowId, colId, 1));
+						g.body.removeClass(rowId, colId, 'gridxCellChanged');
+						_removeCellBackground(cell);
 					}
 				};
 				
@@ -396,6 +396,8 @@ define([
 						if(t.model.isChanged(row.id, cols[colid].field)){
 							g.body.addClass(row.id, colid, 'gridxCellChanged');
 							_addCellBackground(g.cell(row.id, colid, 1));
+						}else{
+							g.body.removeClass(row.id, colid, 'gridxCellChanged');
 						}
 					});
 				});

@@ -286,9 +286,6 @@ define([
 		preload: function(){
 			var t = this,
 				g = t.grid;
-			if(t.model.treeMarkMode){
-				t.model.treeMarkMode('', true);
-			}
 			g.domNode.setAttribute('role', 'treegrid');
 			t.aspect(g.body, 'collectCellWrapper', '_createCellWrapper');
 			t.aspect(g.body, 'onAfterRow', '_onAfterRow');

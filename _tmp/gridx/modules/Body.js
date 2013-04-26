@@ -394,14 +394,18 @@ define([
 								domConstruct.place(rows, n, 'before');
 							}
 						}
+						var rowIds = {};
+						array.forEach(renderedRows, function(row){
+							rowIds[row.id] = 1;
+						});
 						while(n){
 							var tmp = n.nextSibling,
-								vidx = parseInt(n.getAttribute('visualindex'), 10),
 								id = n.getAttribute('rowid');
-							domConstruct.destroy(n);
-							if(vidx >= start + count){
+							if(!rowIds[id]){
+								//Unrender this row only when it is not being rendered now.
 								t.onUnrender(id);
 							}
+							domConstruct.destroy(n);
 							n = tmp;
 						}
 						array.forEach(renderedRows, t.onAfterRow, t);
@@ -1000,7 +1004,7 @@ define([
 				t._focusCellRow = rowVisIdx;
 				t._focusCellCol = colIdx;
 				g.header._focusHeaderId = colId;
-				g.hScroller.scrollToColumn(colId);
+				
 				if(has('ie') < 8){
 					//In IE7 focus cell node will scroll grid to the left most.
 					//So save the scrollLeft first and then set it back.
@@ -1011,6 +1015,7 @@ define([
 				}else{
 					n.focus();
 				}
+				g.hScroller.scrollToColumn(colId, n.parentNode.parentNode.parentNode.parentNode);//this is for columnlock hack
 			}else if(!g.rowCount()){
 				g.emptyNode.focus();
 				return true;

@@ -170,12 +170,12 @@ define([
 
 		_onMouseOver: function(e){
 			var sr = this.grid.select.row;
-			if(e.columnId == indirectSelectColumnId || sr.arg('triggerOnCell')){
+			if(sr.arg('triggerOnCell') || e.columnId == indirectSelectColumnId){
 				if(!sr.triggerOnCell){
 					this._triggerOnCell = false;
 					sr.triggerOnCell = true;
 				}
-				if(!sr.holdingCtrl){
+				if(!sr.arg('holdingCtrl')){
 					this._holdingCtrl = false;
 					sr.holdingCtrl = true;
 				}

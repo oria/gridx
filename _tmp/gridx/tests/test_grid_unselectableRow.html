@@ -162,10 +162,10 @@
 						"gridx/modules/VirtualVScroller",
 					],
 					selectRowTriggerOnCell: true,
-					selectRowIsSelectable: function(rowid){
-						 var row = this.grid.row(rowid, 1);
-						 return row.data().bool;
-					}
+					selectRowUnselectable: {
+								"item-1": true,
+					
+					}					
 				'></div>
 			</td>
 			<td id='ctrlPane4'>

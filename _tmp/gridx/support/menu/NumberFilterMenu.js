@@ -58,7 +58,7 @@ define([
 			var colId = this.colId,
 				key = 'numberfilter',
 				exp = '1>1';
-			this.getChildren().forEach(function(mi){
+			array.forEach(this.getChildren(), function(mi){
 				if(mi.get('checked')){
 					var label = mi.get('label');
 					if(/\</.test(label)){
@@ -72,10 +72,11 @@ define([
 					}
 				}
 			});
-			console.log(exp);
+			
 			if(exp != '1>1'){
-				var checker = eval('(function(value){return ' + exp + ';})');
+				eval('var checker = function(value){return ' + exp + ';};');
 				this._addFilter(key, function(row){
+
 					return checker(parseFloat(row.data[colId], 10));
 				});
 			}else{

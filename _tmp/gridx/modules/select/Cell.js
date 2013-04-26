@@ -165,7 +165,10 @@ define([
 			t.inherited(arguments);
 			t.batchConnect(
 				[g, 'onCellClick', function(e){
-					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+					if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner')){
+						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+					}
 				}],
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE){
