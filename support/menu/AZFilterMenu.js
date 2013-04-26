@@ -8,7 +8,7 @@ define([
 /*=====
 	return declare(_FilterMenuBase, {
 		// summary:
-		//		This is a sample implementation for the alphatic filter, default
+		//		This is a sample implementation for the alphabetic filter, default
 		//		to ['A-F', 'G-L', 'M-R', 'S-Z'].
 		
 		// alphabeticRanges: String[]
