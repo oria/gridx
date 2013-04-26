@@ -471,11 +471,12 @@ define([
 						});
 						while(n){
 							var tmp = n.nextSibling,
-								vidx = parseInt(n.getAttribute('visualindex'), 10),
 								id = n.getAttribute('rowid');
 							if(!rowIds[id]){
 								//Unrender this row only when it is not being rendered now.
-								t.onUnrender(id);
+								//Set a special flag so that RowHeader won't destroy its nodes.
+								//FIXME: this is ugly...
+								t.onUnrender(id, 'refresh');
 							}
 							domConstruct.destroy(n);
 							n = tmp;
