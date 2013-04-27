@@ -86,9 +86,16 @@ return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _Wid
 				for(var modName in this.modules){
 					var m = this.modules[modName];
 					for(implName in m){
-						if(array.indexOf(deps, m[implName].prototype.name) >= 0){
-							res.push(modName);
-							break;
+						if(!{
+							// rule out core modules
+							header: 1,
+							body: 1,
+							vScroller: 1
+						}[m[implName].prototype.name]){
+							if(array.indexOf(deps, m[implName].prototype.name) >= 0){
+								res.push(modName);
+								break;
+							}
 						}
 					}
 				}
@@ -179,7 +186,7 @@ return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _Wid
 					sb.push("<select dojoType='dijit.form.Select' id='",
 						this.getID('selectattr', attrName), "' ",
 						attr.defaultCheck ? '' : "disabled='true'",
-						"><option value='ture'>true</option>",
+						"><option value='true'>true</option>",
 						"<option value='false'>false</option>",
 					"</select>");
 					break;
@@ -298,7 +305,11 @@ return declare('gridx.tests.support.GridConfig', [_Widget, _TemplatedMixin, _Wid
 			if(dijit.byId(this.getID('cbattr', attrName)).get('checked')){
 				switch(attr.type){
 					case 'bool':
+						attrs[attrName] = dijit.byId(this.getID('selectattr', attrName)).get('value') == 'true';
+						break;
 					case 'number':
+						attrs[attrName] = parseInt(dijit.byId(this.getID('selectattr', attrName)).get('value'), 10);
+						break;
 					case 'string':
 						attrs[attrName] = dijit.byId(this.getID('selectattr', attrName)).get('value');
 						break;

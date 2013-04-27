@@ -37,6 +37,7 @@ define([
 	'gridx/modules/Bar',
 	'gridx/modules/NavigableCell',
 	'gridx/modules/TouchScroll',
+	'gridx/modules/TouchVScroller',
 	'gridx/modules/HiddenColumns',
 	'gridx/modules/GroupHeader',
 	'gridx/modules/PagedBody',
@@ -54,7 +55,7 @@ define([
 	CellWidget, Edit,
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
-	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll,
+	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, TouchVScroller,
 	HiddenColumns, GroupHeader, PagedBody, HeaderMenu){
 return {
 	Focus: Focus,
@@ -95,6 +96,7 @@ return {
 	Bar: Bar,
 	NavigableCell: NavigableCell,
 	TouchScroll: TouchScroll,
+	TouchVScroller: TouchVScroller,
 	HiddenColumns: HiddenColumns,
 	GroupHeader: GroupHeader,
 	PagedBody: PagedBody,
