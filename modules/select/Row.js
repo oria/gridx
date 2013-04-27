@@ -66,9 +66,9 @@ define([
 		//		User can set unselectable rows in this hash object. The hash key is the row ID.
 		unselectable: {},
 
-		// isSelectable: Function(rowId)
-		//		User can provide this function to dynamically decide whether the given row is selectable.
-		isSelectable: function(){},
+		// setSelectable: Function(rowId, selectable)
+		//		TODOC
+		setSelectable: function(){},
 
 		selectById: function(rowId){
 			// summary:

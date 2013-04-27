@@ -15,7 +15,7 @@ define([
 
 		serverMode: false,
 
-		setupFilterQuery: function(obj){
+		setupQuery: function(obj){
 		},
 
 		setFilter: function(){
@@ -47,6 +47,9 @@ define([
 			//		Re-filter the grid with current filter. Useful when data is changed.
 			// return:
 			//		Deferred when refreshing is completed.
+		},
+
+		onFilter: function(){
 		}
 	});
 
@@ -257,7 +260,7 @@ define([
 
 		serverMode: false,
 
-		setupFilterQuery: function(obj){
+		setupQuery: function(obj){
 			return obj;
 		},
 
@@ -279,7 +282,8 @@ define([
 				d = new Deferred(),
 				checker = t._checker;
 			if(t.arg('serverMode')){
-				m.query(t.setupFilterQuery(checker && checker.expr));
+				var setupQuery = t.arg('setupFilterQuery') || t.arg('setupQuery');
+				m.query(setupQuery.call(t, checker && checker.expr));
 			}else{
 				m.filter(checker);
 			}
