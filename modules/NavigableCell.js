@@ -108,7 +108,7 @@ define([
 
 		_isNavigable: function(colId){
 			var col = this.grid._columnsById[colId];
-			return col && (col.navigable || col.navigable === undefined) && col.decorator;
+			return col && (col.navigable || col.navigable === undefined);
 		},
 
 		_beginNavigate: function(rowId, colId){

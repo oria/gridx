@@ -747,7 +747,7 @@ define([
 				row = cell.row,
 				data = cell.data();
 			if(!isPadding){
-				var s = col.decorator ? col.decorator(data, row.id, visualIndex) : data;
+				var s = col.decorator ? col.decorator(data, row.id, visualIndex, cell) : data;
 				r = this._wrapCellData(s, row.id, col.id);
 			}
 			return (r === '' || r === null || r === undefined) && (has('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;

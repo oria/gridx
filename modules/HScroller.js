@@ -95,7 +95,6 @@ define([
 			if(rowDiv && this.grid.columnLock && this.grid.columnLock.count){
 				//for column lock, row scrolls separately
 				scrollLeft = rowDiv.scrollLeft;
-				console.log('scroll left: ', scrollLeft);
 				if(scrollLeft != this.domNode.scrollLeft){
 					this.scroll(scrollLeft);
 					return;

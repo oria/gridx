@@ -507,7 +507,7 @@ define([
 					if(!cellDec.widget && cellDec.decorator){
 						try{
 							cellDec.widget = new CellWidget({
-								content: cellDec.decorator(cell.data(), cell.row.id, cell.row.visualIndex()),
+								content: cellDec.decorator(cell.data(), cell.row.id, cell.row.visualIndex(), cell),
 								setCellValue: cellDec.setCellValue
 							});
 						}catch(e){

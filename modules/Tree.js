@@ -336,6 +336,8 @@ define([
 
 		nested: false,
 
+		expandoWidth: 16,
+
 		expandoPadding: 18,
 
 		expandLevel: 1 / 0,
@@ -487,6 +489,7 @@ define([
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
 						pad = 0,
+						expandoWidth = t.arg('expandoWidth'),
 						singlePad = t.arg('expandoPadding'),
 						ltr = t.grid.isLeftToRight();
 					if(!isNested){
@@ -506,7 +509,7 @@ define([
 						wrap: function(cellData){
 							return ["<div class='gridxTreeExpandoCell ",
 								isOpen ? "gridxTreeExpandoCellOpen" : "",
-								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + singlePad, "px;'>",
+								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + expandoWidth, "px;'>",
 								"<div class='gridxTreeExpandoIcon ",
 								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
