@@ -198,7 +198,7 @@ define([
 		clear: function(skipUpdateBody){
 			var t = this;
 			if(t._sortId !== null){
-				var headerCell = g.header.getHeaderNode(t._sortId);
+				var headerCell = t.grid.header.getHeaderNode(t._sortId);
 				domClass.remove(headerCell, 'gridxCellSorted');
 				domClass.remove(headerCell, 'gridxCellSortedAsc');
 				domClass.remove(headerCell, 'gridxCellSortedDesc');
