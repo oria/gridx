@@ -143,7 +143,11 @@ define([
 			}
 			
 			var df = new dojo.Deferred(), _this = this;
-			this.detailProvider(this.grid, row.id, _row.dodNode, df);
+			if(this.arg('detailProvider')){
+				this.detailProvider(this.grid, row.id, _row.dodNode, df);
+			}else{
+				df.callback();
+			}
 			df.then(
 				dojo.hitch(this, '_detailLoadComplete', row), 
 				dojo.hitch(this, '_detailLoadError', row)
@@ -164,7 +168,7 @@ define([
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '+';}
 
-			if(this.useAnimation){
+			if(this.arg('useAnimation')){
 				_row.inAnim = true;
 				fx.wipeOut({
 					node: _row.dodNode,
@@ -245,7 +249,7 @@ define([
 				var span = dojo.create('span', {
 					className: 'gridxDodExpando',
 					innerHTML: '<span class="gridxDodExpandoText">' 
-						+ (this.defaultShow ? '-' : '+') + '</span>'
+						+ (this.arg('defaultShow') ? '-' : '+') + '</span>'
 				}, cell, 'first');
 			}
 			
@@ -284,7 +288,7 @@ define([
 					html.style(_row.dodNode, 'display', 'block');
 				}
 
-				if(this.useAnimation){
+				if(this.arg('useAnimation')){
 					_row.inAnim = true;
 					fx.wipeIn({
 						node: _row.dodNode,

@@ -51,7 +51,7 @@ require([
 	};
 	updateProgress = function(progress, total){
 		var n = document.getElementById('combination');
-		n.innerHTML = progress + '/' + total;
+		n.innerHTML = 'store-structure combinations: ' + progress + '/' + total;
 	};
 
 	runTest = function(){
@@ -82,7 +82,7 @@ require([
 				});
 				cases.push({
 					name: name,
-					timeout: 120000,
+					timeout: 10000,
 					runTest: function(t){
 						var d = new doh.Deferred();
 						updateProgress(++p, total);
@@ -118,6 +118,7 @@ require([
 			});
 
 			dom.byId('caseCounter').innerHTML = tsIndex;
+			dom.byId('args').innerHTML += key + '<br />';
 			doh.register(tsIndex++ + ':' + key, cases);
 			doh.run();
 		}else{
