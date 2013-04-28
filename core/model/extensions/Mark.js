@@ -68,9 +68,15 @@ define([
 				children = mm._call('children', [rowId]);
 				if(children.length){	//if has child, let the first child setMark 
 										//to its current mark value to regenerate the mark tree
-					var fc = children[0],
-						mark = this.getMark(fc);
-					this._mark(fc, mark, type);
+					var c = children[0],
+						mark = this._byId[this._initMark(type)][c] || 0;
+					console.log(mark);
+					this._doMark(c, type, mark);
+				}else{
+					
+					var pid = mm._call('parentId', [rowId]),
+						mark = this._byId[this._initMark(type)][pid] || 0;
+					this._doMark(pid, type, mark);
 				}
 			}
 

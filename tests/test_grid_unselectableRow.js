@@ -13,6 +13,9 @@ require([
 	'gridx/tests/support/TestPane',
 	'gridx/tests/support/data/TreeColumnarTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
+	'dojo/NodeList-traverse',
+	'dojo/query',
+	'dojo/dom-class',
 	'gridx/core/model/cache/Sync',
 	'dijit/form/Button',
 	'dijit/form/NumberTextBox',
@@ -20,7 +23,7 @@ require([
 
 	'dojo/domReady!'
 ], function(parser, Grid, Cache, Focus, RowHeader, SelectRow, extendedSelectRow, 
-			VirtualVScroller, dataSource, storeFactory, TestPane, treeDataSource, treeStoreFactory){
+			VirtualVScroller, dataSource, storeFactory, TestPane, treeDataSource, treeStoreFactory, traverse, query, domClass){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -124,6 +127,34 @@ require([
 		].join('');
 	};
 
+	toggleSelectable = function(e){
+		var t = e;
+		var node = e.target;
+		var row = dojo.query(node).closest('.gridxRow')[0];
+		var rowId = row.getAttribute('rowid');
+		var unselectable = domClass.contains(row, 'gridxRowUnselectable');
+		
+		while(!dijit.registry.byNode(node)){
+			node = node.parentNode;
+		}
+		
+		var button = dijit.registry.byNode(node);
+		console.log(button);
+		console.log(button.label);
+		
+		button.set('label', unselectable? 'set unselectable' : 'set selectable');
+		setRowUnselectable('grid4', rowId, !unselectable);
+		
+		
+	};
+	
+	var buttonDecorator = function(){
+		return [
+			// "<div data-dojo-type='dijit.form.Button' data-dojo-props:'label: \"set unselectable\", onClick: \"clickButton()\" '" ,
+			"<div data-dojo-type='dijit.form.Button' data-dojo-props= 'label: \"set unselectable\", onClick: toggleSelectable' " ,
+			"</div>"
+		].join('');
+	};
 	treeLayout = [
 		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
 		{id: 'id', name: 'id', field: 'id', expandLevel: 'all', width: '200px'},
@@ -134,7 +165,10 @@ require([
 		{id: 'string', name: 'string', field: 'string'},
 		{id: 'date', name: 'date', field: 'date'},
 		{id: 'time', name: 'time', field: 'time'},
-		{id: 'bool', name: 'bool', field: 'bool'}
+		{id: 'bool', name: 'bool', field: 'bool',
+			widgetsInCell: true,
+			decorator: buttonDecorator
+		}
 	];
 	
 	parser.parse();
