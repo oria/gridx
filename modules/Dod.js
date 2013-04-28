@@ -268,20 +268,15 @@ define([
 			if(!row){return;}
 			var _row = this._row(row);
 			if(!_row){return;}
-			if(row == 0){
-				console.log('unrendering 0');
-			}
+
 			function _removeNode(node){
 				if(node && node.parentNode){
 					node.parentNode.removeChild(node);
 				}
 			}
 
-			if(_row.dodNode)console.log(row, _row.dodNode);
 			_removeNode(_row.dodNode);
 			_removeNode(_row.dodLoadingNode);
-
-			//console.log('rowmap', row, this._rowMap[row]);
 		},
 
 		_onAfterCell: function(cell){
