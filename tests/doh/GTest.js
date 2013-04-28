@@ -164,7 +164,7 @@ define([
 		_updateProgress: function(){
 			var n = document.getElementById('progress');
 			this._progress++;
-			n.innerHTML = this._progress + '/' + this._total;
+			n.innerHTML = 'test cases: ' + this._progress + '/' + this._total;
 		},
 
 		_testStatus: function(afterAction){

@@ -10,6 +10,15 @@
 		@import "../../resources/claro/Gridx.css";
 		@import "../../resources/claro/Gridx_rtl.css";
 
+		#args {
+			position: absolute;
+			overflow: auto;
+			width: 600px;
+			height: 200px;
+			top: 500px;
+			right: 20px;
+			border: 1px solid blue;
+		}
 		#sidePane {
 			border: 1px solid #0033ff;
 			position: absolute;
@@ -37,7 +46,7 @@
 		}
 		#msg {
 			width: 600px;
-			height: 500px;
+			height: 400px;
 			overflow: auto;
 		}
 		#grid {
@@ -78,6 +87,7 @@
 		Gridx DOH tests
 	</h1>
 	<div id='gridContainer'></div>
+	<div id='args'></div>
 	<div id='sidePane'>
 		<div id='casePane'>
 			<label>Total</label><span id='caseTotal'></span><label>Current</label><span id='caseCounter'></span>
