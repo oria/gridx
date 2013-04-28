@@ -26,10 +26,6 @@ define([
 
 		showExpando: true,
 
-		// autoClose: Boolean
-		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
-		autoClose: false,
-
 		show: function(row){
 			// summary:
 			//		Show the detail part of a row, if this row has a detail part.
@@ -73,7 +69,6 @@ define([
 		duration: 750,
 		defaultShow: false,
 		showExpando: true,
-		autoClose: false,
 		load: function(args, deferStartup){
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
