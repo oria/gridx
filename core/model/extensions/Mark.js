@@ -56,9 +56,24 @@ define([
 
 		setMarkable: function(rowId, markable, type){
 			type = this._initMark(type);
-			var unmarkable = this._unmarkable,
+			var t = this,
+				m = t.model,
+				mm = m._model,
+				unmarkable = this._unmarkable,
 				hash = unmarkable[type] = unmarkable[type] || {};
+				
 			hash[rowId] = !markable;
+			
+			if(markable){
+				children = mm._call('children', [rowId]);
+				if(children.length){	//if has child, let the first child setMark 
+										//to its current mark value to regenerate the mark tree
+					var fc = children[0],
+						mark = this.getMark(fc);
+					this._mark(fc, mark, type);
+				}
+			}
+
 		},
 
 		clearMark: function(type){

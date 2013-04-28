@@ -56,10 +56,6 @@
 					"gridx/modules/VirtualVScroller"
 				],
 				selectRowTriggerOnCell: true,
-				selectRowIsSelectable: function(rowid){
-					var row = this.grid.row(rowid, 1);
-					return row.data().Year > 1990;
-				},
 				indirectSelectAll: true,
 				selectRowUnselectable:{
 					0: true,
@@ -88,10 +84,6 @@
 						"gridx/modules/VirtualVScroller",
 					],
 					selectRowTriggerOnCell: true,
-					selectRowIsSelectable: function(rowid){
-						 var row = this.grid.row(rowid, 1);
-						 return row.data().Year > 1990;
-					},
 					selectRowUnselectable: {
 						0: true,
 						1: true,
@@ -123,10 +115,6 @@
 						"gridx/modules/VirtualVScroller",
 					],
 					selectRowTriggerOnCell: true,
-					selectRowIsSelectable: function(rowid){
-						 var row = this.grid.row(rowid, 1);
-						 return row.data().Year > 1990;
-					},
 					selectRowUnselectable: {
 						0: true,
 						1: true,
@@ -154,8 +142,8 @@
 					modules: [
 						"gridx/modules/Tree",
 						"gridx/modules/RowHeader",
-						//"gridx/modules/select/Row",
-						"gridx/modules/extendedSelect/Row",
+						"gridx/modules/select/Row",
+						//"gridx/modules/extendedSelect/Row",
 						"gridx/modules/RowHeader",
 						"gridx/modules/CellWidget",
 						"gridx/modules/IndirectSelect",
@@ -163,8 +151,7 @@
 					],
 					selectRowTriggerOnCell: true,
 					selectRowUnselectable: {
-								"item-1": true,
-					
+								"item-1": true
 					}					
 				'></div>
 			</td>
