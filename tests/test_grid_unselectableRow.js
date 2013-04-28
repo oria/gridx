@@ -134,13 +134,11 @@ require([
 		var rowId = row.getAttribute('rowid');
 		var unselectable = domClass.contains(row, 'gridxRowUnselectable');
 		
-		while(!dijit.registry.byNode(node)){
+		while(!( button = dijit.registry.byNode(node) ) ){
 			node = node.parentNode;
 		}
 		
 		var button = dijit.registry.byNode(node);
-		console.log(button);
-		console.log(button.label);
 		
 		button.set('label', unselectable? 'set unselectable' : 'set selectable');
 		setRowUnselectable('grid4', rowId, !unselectable);
