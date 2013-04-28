@@ -47,6 +47,7 @@ define([
 					}
 				});
 			}catch(e){
+				t.reportError('Grid creation failed!');
 				dohDefer.errback(e);
 			}
 		},

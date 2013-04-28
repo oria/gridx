@@ -39,11 +39,12 @@ define([
 	//Maximum config package size
 	var maxPackSize = 2;
 	//Run all cases or only special cases
-	var specialCasesOnly = 1;
+	var specialCasesOnly = 0;
 
 	var specialCases = [
 //        ['VirtualVScroller', 'ColumnResizer', 'HiddenColumns']
-		['RowLock', 'rowLockCount']
+//        ['RowLock', 'rowLockCount']
+		['Dod', 'dodDefaultShow']
 	];
 
 	//module config => interface name
@@ -144,7 +145,7 @@ define([
 		dodDefaultShow: ['dodDefaultShow', function(cfg){
 			cfg.dodDefaultShow = true;
 		}, 'dod'],
-		dodShowExpando_false: ['dodDefaultShow', function(cfg){
+		dodShowExpando_false: ['dodShowExpando', function(cfg){
 			cfg.dodShowExpando = false;
 		}, 'dod'],
 		selectRowEnabled: ['selectRowEnabled', function(cfg){
@@ -342,6 +343,9 @@ define([
 			selectRow: 1
 		},
 		FilterBar: {
+			filter: 1
+		},
+		QuickFilter: {
 			filter: 1
 		},
 		PaginationBar: {

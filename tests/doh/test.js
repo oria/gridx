@@ -82,7 +82,7 @@ require([
 				});
 				cases.push({
 					name: name,
-					timeout: 120000,
+					timeout: 10000,
 					runTest: function(t){
 						var d = new doh.Deferred();
 						updateProgress(++p, total);
