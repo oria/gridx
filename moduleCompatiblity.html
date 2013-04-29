@@ -1,0 +1,136 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>The Simplest Grid</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import "dojo/resources/dojo.css";
+		@import "dijit/themes/claro/claro.css";
+		@import "dijit/themes/claro/document.css";
+
+		body {
+			padding: 50px;
+			background: #b7b7b7; /* Old browsers */
+			background: -moz-linear-gradient(top,  #b7b7b7 0%, #ffffff 15%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b7b7b7), color-stop(15%,#ffffff)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  #b7b7b7 0%,#ffffff 15%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  #b7b7b7 0%,#ffffff 15%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top,  #b7b7b7 0%,#ffffff 15%); /* IE10+ */
+			background: linear-gradient(to bottom,  #b7b7b7 0%,#ffffff 15%); /* W3C */
+		}
+
+		.compatTable {
+			border: none;
+			border-collapse: collapse;
+			table-layout: fixed;
+			width: 1px;
+			color: #aaa;
+		}
+		.compatCell {
+			border: 1px solid #ccc;
+			padding: 3px;
+			width: 15px;
+		}
+		.compatTableHeader {
+			transform: translate(50px,0) skew(-45deg);
+			height: 100px;
+		}
+		.compatColHeader {
+			border: 1px solid #ccc;
+			width: 15px;
+			padding: 3px;
+			vertical-align: bottom;
+		}
+		.compatColHeaderInner {
+			transform: skew(45deg) rotate(-45deg);
+		}
+		.compatRowHeader {
+			text-align: right;
+			border: 1px solid #ccc;
+			padding: 3px;
+			width: 150px;
+			border-left-color: transparent;
+		}
+		.compatColHeader {
+			border-top-color: transparent;
+			border-bottom: none;
+		}
+		.compatRowHeader.compatColHeader {
+			vertical-align: middle;
+			text-align: left;
+		}
+		.compatTableTitle {
+			transform: skew(45deg);
+			font-size: 16px;
+			color: #555;
+		}
+		.compatSelf {
+			background-color: #eee;
+		}
+		.compatCompatible {
+			background-color: #fff;
+		}
+		.compatHover {
+			background-color: #eee;
+			color: #000;
+			font-weight: bolder;
+		}
+		.compatLimited {
+			background-color: #e793e0;
+		}
+		.compatIncompatible {
+			background-color: #d91c55;
+		}
+		.compatExclusive {
+			background-color: #ccc;
+		}
+		#tipsContainer {
+			margin: 0px auto 30px auto;
+			width: 400px;
+			font-size: 13px;
+			text-align: center;
+		}
+		#compatRate, #moduleDirectory {
+			font-weight: bolder;
+		}
+		#compatContainer {
+			margin: 0 auto;
+			width: 1100px;
+		}
+		#legend {
+			text-align: left;
+			margin-left: 100px;
+			list-style-type: none;
+		}
+		.legendTitle {
+			font-size: 15px;
+			padding: 5px;
+		}
+		.compatCellDemo {
+			display: inline-block;
+			width: 15px;
+			height: 15px;
+			border: 1px solid #ccc;
+			margin-right: 3px;
+			position: relative;
+			top: 3px;
+		}
+	</style>
+	<script type="text/javascript" src="dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='moduleCompatiblity.js'></script>
+</head>
+<body class='claro'>
+	<div id='tipsContainer'>
+		<label for='compatRate'>Gridx Modules Mutual-Compatibility Rate: </label><span id='compatRate'></span><br/>
+		All modules are located under <span id='moduleDirectory'>gridx/modules/</span> directory.
+	</div>
+	<div id='compatContainer'></div>
+	<ul id='legend'>
+		<div class='legendTitle'>Legend:</div>
+		<li><span class='compatCellDemo compatCompatible'></span>compatible</li>
+		<li><span class='compatCellDemo compatLimited'></span>partially compatible</li>
+		<li><span class='compatCellDemo compatIncompatible'></span>incompatible</li>
+		<li><span class='compatCellDemo compatExclusive'></span>different implementation</li>
+	</ul>
+</body>
+</html>
