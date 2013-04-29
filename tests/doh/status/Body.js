@@ -11,9 +11,11 @@ define([
 		name: 'if a row is visible (rendered) in body, it is in grid cache',
 		checker: function(grid, doh){
 			array.forEach(grid.bodyNode.childNodes, function(rowNode){
-				var row = grid.row(rowNode.getAttribute('rowid'), true);
-				doh.t(row.data(), 'row not exist');
-				doh.is(row.index(), parseInt(rowNode.getAttribute('rowindex'), 10));
+				if(domClass.contains(rowNode, 'gridxRow')){
+					var row = grid.row(rowNode.getAttribute('rowid'), true);
+					doh.t(row.data(), 'row not exist');
+					doh.is(row.index(), parseInt(rowNode.getAttribute('rowindex'), 10));
+				}
 			});
 		}
 	},
@@ -52,7 +54,7 @@ define([
 		id: 'Body status 4',
 		name: 'visualindex property of every row increase by 1 compared to the previous row',
 		checker: function(grid, doh){
-			var rowNodes = grid.bodyNode.childNodes;
+			var rowNodes = query('> .gridxRow', grid.bodyNode);
 			for(var i = 1; i < rowNodes.length; ++i){
 				var rowNode = rowNodes[i];
 				var prevRowNode = rowNode.previousSibling;

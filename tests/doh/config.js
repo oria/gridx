@@ -35,16 +35,17 @@ define([
 
 	//Config Begin-------------------------------------------------------
 	//Minimal config package size
-	var minPackSize = 2;
+	var minPackSize = 3;
 	//Maximum config package size
-	var maxPackSize = 2;
+	var maxPackSize = 3;
 	//Run all cases or only special cases
 	var specialCasesOnly = 0;
 
 	var specialCases = [
 //        ['VirtualVScroller', 'ColumnResizer', 'HiddenColumns']
 //        ['RowLock', 'rowLockCount']
-		['Dod', 'dodDefaultShow']
+//        ['Dod', 'dodDefaultShow']
+		['PagedBody', 'bodyPageSize_2']
 	];
 
 	//module config => interface name
