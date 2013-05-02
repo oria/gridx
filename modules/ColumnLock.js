@@ -5,8 +5,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
-	"dojo/query"
-], function(dojo, lang, _Module, declare, array, html, query){
+	"dojo/query",
+	"dojo/sniff"
+], function(dojo, lang, _Module, declare, array, html, query, sniff){
 
 /*=====
 	return declare(_Module, {
@@ -151,14 +152,24 @@ define([
 			
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
+				
+			if(sniff('ie') > 8){
+				h2++;
+			}	
+				
 			dojo.style(rowNode.firstChild, 'height', h2 + 'px');
 			var lead = isHeader ? this.grid.hLayout.lead : 0,
 				pl = lead,
 				cols = this.grid._columns;
 			for(i = 0; i < this.count; i++){
-				var cell = r.cells[i];
+				var cell = r.cells[i],
+					s;
 				html.addClass(cell, 'gridxLockedCell');
-				var s = {height: h1 + 'px'};
+				if(sniff('ie') > 8){
+					s = {height: h1 + 1 + 'px'};
+				}else{
+					s = {height: h1 + 'px'};
+				}
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				html.style(cell, s);
 				
