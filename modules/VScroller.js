@@ -140,7 +140,7 @@ define([
 	
 		//Protected -------------------------------------------------
 		_init: function(){
-			this._onForcedScroll();
+			return this._onForcedScroll();
 		},
 
 		_update: function(){
