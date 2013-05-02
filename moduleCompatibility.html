@@ -9,7 +9,7 @@
 		@import "dijit/themes/claro/document.css";
 
 		body {
-			padding: 50px;
+			/*padding: 50px;*/
 			background: #b7b7b7; /* Old browsers */
 			background: -moz-linear-gradient(top,  #b7b7b7 0%, #ffffff 15%); /* FF3.6+ */
 			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b7b7b7), color-stop(15%,#ffffff)); /* Chrome,Safari4+ */
@@ -17,6 +17,26 @@
 			background: -o-linear-gradient(top,  #b7b7b7 0%,#ffffff 15%); /* Opera 11.10+ */
 			background: -ms-linear-gradient(top,  #b7b7b7 0%,#ffffff 15%); /* IE10+ */
 			background: linear-gradient(to bottom,  #b7b7b7 0%,#ffffff 15%); /* W3C */
+		}
+		#loading {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 800px;
+			font-size: 5em;
+			padding-top: 200px;
+			color: #555;
+			text-shadow: 2px 2px #eee;
+			z-index: 99;
+			text-align: center;
+			background: #b7b7b7; /* Old browsers */
+			background: -moz-linear-gradient(top,  #b7b7b7 0%, #ffffff 100%); /* FF3.6+ */
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b7b7b7), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+			background: -webkit-linear-gradient(top,  #b7b7b7 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+			background: -o-linear-gradient(top,  #b7b7b7 0%,#ffffff 100%); /* Opera 11.10+ */
+			background: -ms-linear-gradient(top,  #b7b7b7 0%,#ffffff 100%); /* IE10+ */
+			background: linear-gradient(to bottom,  #b7b7b7 0%,#ffffff 100%); /* W3C */
 		}
 
 		.compatTable {
@@ -93,7 +113,7 @@
 			background-color: #ccc;
 		}
 		#tipsContainer {
-			margin: 0px auto 30px auto;
+			margin: 50px auto 30px auto;
 			width: 400px;
 			font-size: 13px;
 			text-align: center;
@@ -107,7 +127,7 @@
 		}
 		#legend {
 			text-align: left;
-			margin-left: 100px;
+			margin-left: 200px;
 			list-style-type: none;
 		}
 		.legendTitle {
@@ -128,6 +148,7 @@
 	<script type="text/javascript" src='moduleCompatibility.js'></script>
 </head>
 <body class='claro'>
+	<div id='loading'>Loading...</div>
 	<div id='tipsContainer'>
 		<label for='compatRate'>Gridx Modules Mutual-Compatibility Rate: </label><span id='compatRate'></span><br/>
 		All modules are located under <span id='moduleDirectory'>gridx/modules/</span> directory.

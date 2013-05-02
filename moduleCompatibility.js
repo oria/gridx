@@ -193,5 +193,6 @@ var container = document.getElementById('compatContainer');
 container.innerHTML = buildTable(modules, normConflicts(conflicts));
 document.getElementById('compatRate').innerHTML = number.round(calcCompatRate(container) * 100, 2) + '%';
 query('.compatTable').on('mouseover', onMouseOver);
+document.getElementById('loading').style.display = 'none';
 
 });
