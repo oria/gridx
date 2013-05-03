@@ -341,6 +341,12 @@ define([
 				backup = function(col, rowId){
 					var w = col._cellWidgets[rowId];
 					if(col._backupWidgets.length < backupCount){
+						//We still need this widget, so if it is still visible, 
+						//we should safely remove it from the DOM tree first,
+						//in case some other logic accidently removes it.
+						if(w.domNode.parentNode){
+							w.domNode.parentNode.removeChild(w.domNode);
+						}
 						col._backupWidgets.push(w);
 					}else{
 						w.destroyRecursive();
@@ -504,6 +510,7 @@ define([
 			if(node && node !== dn){
 				var cellNode = node,
 					colId = node.getAttribute('colid');
+				this.grid.hScroller.scrollToColumn(colId);
 				while(node && !domClass.contains(node, 'gridxRow')){
 					node = node.parentNode;
 				}

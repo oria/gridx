@@ -49,7 +49,6 @@ define([
 			// tags:
 			//		protected extension
 			this.inherited(arguments);
-			this._b.remove();
 			domConstruct.destroy(this.headerNode);
 			domConstruct.destroy(this.bodyNode);
 		},
@@ -89,11 +88,12 @@ define([
 				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
 				g.columnResizer && [g.columnResizer, 'onResize', '_onResize'],
 				[g, 'onRowHeaderCellMouseOver', '_onCellMouseOver'],
-				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver']);
+				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver'],
+				[t.model, 'onSizeChange', '_onSizeChange']);
 			//TODO: need to organize this into connect/disconnect system
-			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
-			aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true);
-			aspect.after(t.model, 'onSizeChange', lang.hitch(t, t._onSizeChange));
+			t._cnnts.push(
+				aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true),
+				aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true));
 			
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
@@ -238,11 +238,14 @@ define([
 			}
 		},
 		
-		_onUnrender: function(id){
-			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
-			if(nodes && nodes.length){
-				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
-				domConstruct.destroy(nodes[nodes.length - 1]);
+		_onUnrender: function(id, refresh){
+			//If this is fired in partial refresh, don't destroy the row header, save if for later use.
+			if(refresh != 'refresh'){
+				var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
+				if(nodes && nodes.length){
+					//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
+					domConstruct.destroy(nodes[nodes.length - 1]);
+				}
 			}
 		},
 
