@@ -74,6 +74,7 @@
 .gridxHeader .gridxHeaderRegionFocus .gridxSortBtnSingle,
 .gridxSingleSorted .gridxHeaderRegionFocus .gridxSortBtn,
 .gridxNestedSorted .gridxHeaderRegionFocus .gridxSortBtn,
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain.gridxHeaderRegionFocus .gridxSortBtnNested,
 
 /*.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain .gridxSortBtnNested,*/
 .gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain .gridxSortBtnNested,
