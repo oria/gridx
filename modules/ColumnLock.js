@@ -160,7 +160,8 @@ define([
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
 				
-			if(sniff('ie') > 8){
+			if(sniff('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
+									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
 				h2++;
 			}
 			dojo.style(rowNode.firstChild, 'height', h2 + 'px');
