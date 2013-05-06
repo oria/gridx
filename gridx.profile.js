@@ -1,9 +1,9 @@
 // from dijit/dijit.profile.js
 var profile = (function(){
-	var testResourceRe = /^gridx\/tests\//;
+	var testResourceRe = /^gridx\/tests\/|^gridx\/mobile\/tests\//;
 	var galleryResourceRe = /^gridx\/gallery\//;
 	var buildResourceRe = /^gridx\/build\//;
-	var utilResourceRe = /^gridx\/util\//;
+	var utilResourceRe = /^gridx\/util\/|^gridx\/mobile\/util\//;
 
 	var	copyOnly = function(filename, mid){
 			var list = {
@@ -38,7 +38,9 @@ var profile = (function(){
 			},
 
 			miniExclude: function(filename, mid){
-				return /^gridx\/bench\//.test(mid) || /^gridx\/themes\/themeTest/.test(mid);
+				return /^gridx\/bench\//.test(mid)
+					|| /^gridx\/themes\/themeTest/.test(mid)
+					|| /^gridx\/mobile\/demos\//.test(mid);
 			}
 		},
 

@@ -1,12 +1,13 @@
 define([
 	"dojo/_base/kernel",
+	"dojo/_base/lang",
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/html",
 	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/query"
-], function(dojo, _Module, declare, html, baseFx, fx, query){
+], function(dojo, lang, _Module, declare, html, baseFx, fx, query){
 	dojo.experimental('gridx/modules/Dod');
 
 /*=====
@@ -25,10 +26,6 @@ define([
 		defaultShow: false,
 
 		showExpando: true,
-
-		// autoClose: Boolean
-		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
-		autoClose: false,
 
 		show: function(row){
 			// summary:
@@ -73,12 +70,12 @@ define([
 		duration: 750,
 		defaultShow: false,
 		showExpando: true,
-		autoClose: false,
 		load: function(args, deferStartup){
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
+			this.connect(this.grid.body, 'onUnrender', '_onBodyUnrender');
 			if(this.grid.columnResizer){
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
@@ -139,14 +136,18 @@ define([
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
-				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') + 'px');
+				html.style(rowHeaderNode.firstChild, 'height', html.style(row.node(), 'height') + 'px');
 			}
 			
 			var df = new dojo.Deferred(), _this = this;
-			this.detailProvider(this.grid, row.id, _row.dodNode, df);
+			if(this.arg('detailProvider')){
+				this.detailProvider(this.grid, row.id, _row.dodNode, df);
+			}else{
+				df.callback();
+			}
 			df.then(
-				dojo.hitch(this, '_detailLoadComplete', row), 
-				dojo.hitch(this, '_detailLoadError', row)
+				lang.hitch(this, '_detailLoadComplete', row), 
+				lang.hitch(this, '_detailLoadError', row)
 			);
 
 		},
@@ -164,7 +165,7 @@ define([
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '+';}
 
-			if(this.useAnimation){
+			if(this.arg('useAnimation')){
 				_row.inAnim = true;
 				fx.wipeOut({
 					node: _row.dodNode,
@@ -223,7 +224,10 @@ define([
 		_rowMap: null,
 		_lastOpen: null, //only useful when autoClose is true.
 		_row: function(/*id|obj*/row){
-			var id = row.id || row;
+			var id = row;
+			if(typeof row === 'object'){
+				id = row.id;
+			}
 			return this._rowMap[id] || (this._rowMap[id] = {});
 		},
 		
@@ -238,6 +242,7 @@ define([
 		},
 		
 		_onAfterRow: function(row){
+
 			var _row = this._row(row);
 			if(this.arg('showExpando')){
 				var tbl = dojo.query('table', row.node())[0];
@@ -245,7 +250,7 @@ define([
 				var span = dojo.create('span', {
 					className: 'gridxDodExpando',
 					innerHTML: '<span class="gridxDodExpandoText">' 
-						+ (this.defaultShow ? '-' : '+') + '</span>'
+						+ (this.arg('defaultShow') ? '-' : '+') + '</span>'
 				}, cell, 'first');
 			}
 			
@@ -255,6 +260,23 @@ define([
 				this.show(row);
 			}
 			
+		},
+
+		_onBodyUnrender: function(row){
+			// Remove the cache for the row when it is destroyed, so that dod recreates
+			// necessary dom nodes when the row is rendered again.
+			if(!row){return;}
+			var _row = this._row(row);
+			if(!_row){return;}
+
+			function _removeNode(node){
+				if(node && node.parentNode){
+					node.parentNode.removeChild(node);
+				}
+			}
+
+			_removeNode(_row.dodNode);
+			_removeNode(_row.dodLoadingNode);
 		},
 
 		_onAfterCell: function(cell){
@@ -284,7 +306,7 @@ define([
 					html.style(_row.dodNode, 'display', 'block');
 				}
 
-				if(this.useAnimation){
+				if(this.arg('useAnimation')){
 					_row.inAnim = true;
 					fx.wipeIn({
 						node: _row.dodNode,
@@ -333,13 +355,9 @@ define([
 			var cell = tbl.rows[0].cells[0];
 			return cell.firstChild;
 		},
-		_hideLoading: function(row){
-			
-		},
 		
 		
 		//Focus
-		
 		
 		endFunc: function(){}
 	});

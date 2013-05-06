@@ -12,3 +12,9 @@
 	background: url("../images/checkboxpartial.png");
 	height: 15px;
 }
+
+
+.claro .gridx .dijitCheckBoxPartialDisabled {
+	background: url("../images/checkboxpartialdisabled.png");
+	height: 15px;	
+}

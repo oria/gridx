@@ -8,20 +8,108 @@ define([
 	'../_Extension'
 ], function(declare, lang, aspect, DeferredList, Deferred, array,  _Extension){
 /*=====
-	Model.set = function(){};
-	Model.undo = function(){};
-	Model.redo = function(){};
-	Model.save = function(){};
-	Model.clearLazyData = function(){};
-	Model.isChanged = function(){}
-	Model.getChanged = function(){}
-	
-	return declare(_Extension, {
+	return declare([], {
 		// Summary:
 		//			Enable model to change data without affecting the store.
 		//			All the changes will be saved in the modify extension.
 		//			The byId and byIndex function will be wrapped in this extension.
-	});
+		
+		set: function(){
+			// summary:
+			//		Set some fields in a row.
+			//		Can set multiple fields altogether.
+			//		This is one single operation.
+			// rowId: String
+			// rawData: object
+			//		{field1: '...', feild2: '...'}
+			
+			//Fire this.onSet();
+			
+		},
+		
+		undo：function(){
+			// summary:
+			//		Undo last edit change.
+			// returns:
+			//		True if successful, false if nothing to undo.
+			return false;	//Boolean
+		},
+		
+		redo： function(){
+			// summary:
+			//		redo next edit change.
+			// returns:
+			//		True if successful, false if nothing to redo.		
+			return false;	//Boolean
+		},
+		
+		save： function(){
+			// summary:
+			//		write to store. Clear undo list.
+			// returns:
+			//		A Deferred object indicating all the store save operation has finished.			
+		},
+		
+		clearLazyData： function(){
+			// summary:
+			//		Undo all. Clear undo list. The initial name of this function is 'clear'.
+			//		When use grid.model.clear(), this function won't be run because 
+			//		there is a function named 'clear'in ClientFilter.
+			//		So rename this function to clearLazyData which is more in detail about what this 
+			//		function really do.			
+			
+		},
+		
+		isChanged： function(){
+			// summary:
+			//		Check whether a field is changed for the given row.
+			// rowId:
+			// field: String?
+			//		If omitted, checked whether any field of the row is changed.
+			// returns:
+			//		True if it does get changed.
+			return false;	//Boolean
+		},
+		
+		getChanged： function(){
+			// summary:
+			//		Get all the changed rows Ids.
+			// returns:
+			//		An array of changed row IDs.
+			return [];	//Array
+		}，
+
+		onSave: function(rowids){
+			// summary:
+			//		Fired when successfully saved to store.
+			// rowIds: array
+			//		
+			
+		},
+		
+		onUndo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully undid.
+			//
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from 
+		},
+
+		onRedo: function(rowId, newData, oldData){
+			// summary:
+			//		Fired when successfully redid.
+			//	rowIds: string
+			//
+			//	newData: the data to change to
+			//	
+			//	oldData: the data change from
+
+		}
+	
+	})
 =====*/
 
 	return declare(_Extension, {
@@ -74,15 +162,6 @@ define([
 		},
 		
 		set: function(rowId, rawData){
-			// summary:
-			//		Set some fields in a row.
-			//		Can set multiple fields altogether.
-			//		This is one single operation.
-			// rowId: String
-			// rawData: object
-			//		{field1: '...', feild2: '...'}
-			
-			//Fire this.onSet();
 			var t = this,
 				opt = {},
 				list = t._globalOptList,
@@ -109,11 +188,6 @@ define([
 		},
 
 		undo: function(){
-			// summary:
-			//		Undo last edit change.
-			// returns:
-			//		True if successful, false if nothing to undo.
-			
 			var t = this,
 				opt = t._globalOptList[t._globalOptIndex];
 			if(opt){
@@ -131,10 +205,6 @@ define([
 		},
 
 		redo: function(){
-			// summary:
-			//		redo next edit change.
-			// returns:
-			//		True if successful, false if nothing to redo.
 			var t = this,
 				opt = t._globalOptList[t._globalOptIndex + 1];
 			if(opt){
@@ -151,12 +221,6 @@ define([
 		},
 
 		clearLazyData: function(){
-			// summary:
-			//		Undo all. Clear undo list. The initial name of this function is 'clear'.
-			//		When use grid.model.clear(), this function won't be run because 
-			//		there is a function named 'clear'in ClientFilter.
-			//		So rename this function to clearLazyData which is more in detail about what this 
-			//		function really do.
 			console.log('in clear');
 			var t = this,
 				cl = t.getChanged();
@@ -171,14 +235,11 @@ define([
 		},
 
 		save: function(){
-			// summary:
-			//		write to store. Clear undo list.
-			// returns:
-			//		A Deferred object
 			var t = this,
 				cl = t.getChanged(),
 				da = [],
-				dl;
+				dl,
+				d = new Deferred();
 
 			if(cl.length){
 				array.forEach(cl, function(rid){
@@ -194,22 +255,19 @@ define([
 					t._lazyData = {};
 					console.log('save to store successfully');
 					t.onSave(dl);
+					d.callback();
 				}, function(){
+					d.errback();
 					console.log('nothing to save');
 				});
 			}else{
+				d.callback();
 				console.log('nothing to save');
 			}
+			return d;
 		},
 
 		isChanged: function(rowId, field){
-			// summary:
-			//		Check whether a field is changed for the given row.
-			// rowId:
-			// field: String?
-			//		If omitted, checked whether any field of the row is changed.
-			// returns:
-			//		True if it does get changed.
 			var t = this;
 				cache = t.inner._call('byId', [rowId]),
 				ld = t._lazyRawData[rowId];
@@ -231,10 +289,6 @@ define([
 		},
 
 		getChanged: function(){
-			// summary:
-			//		Get all the changed rows Ids.
-			// returns:
-			//		An array of changed row IDs.
 			var t = this,
 				a = [];
 			for(var rid in t._lazyRawData){
