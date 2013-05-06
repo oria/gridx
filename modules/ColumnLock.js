@@ -6,7 +6,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query",
-	"dojo/sniff"
+	"dojo/_base/sniff"
 ], function(dojo, lang, _Module, declare, array, html, query, sniff){	
 	
 	return declare(/*===== "gridx.modules.ColumnLock", =====*/_Module, {
