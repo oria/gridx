@@ -347,7 +347,9 @@ define([
 				r = dn.scrollTop / dn.scrollHeight;
 			t.stubNode.style.height = h + 'px';
 			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
-			t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
+			if(t._lastScrollTop){
+				t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
+			}
 		},
 	
 		_doVirtual: function(){
