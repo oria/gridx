@@ -58,6 +58,13 @@ define([
 				accept: t.accept,
 				getSelectedNodes: function(){return [0];},
 				getItem: hitch(t, '_getItem'),
+				onSelectStart: function(){
+					//Source stops text selecting on anything inside its domnode,
+					//but we still need that when not dnding.
+					if(this.notSelectText){
+						Source.prototype.onSelectStart.apply(this, arguments);
+					}
+				},
 				checkAcceptance: hitch(t, '_checkAcceptance'),
 				onDraggingOver: hitch(t, '_onDraggingOver'),
 				onDraggingOut: hitch(t, '_onDraggingOut'),
@@ -155,6 +162,7 @@ define([
 						t.profile = p;
 						t._saveSelectStatus(false);
 						domClass.add(win.body(), 'gridxDnDReadyCursor');
+						t._source.notSelectText = 1;
 						t._dndReady = 1;
 						return;
 					}
@@ -217,6 +225,7 @@ define([
 				dom.setSelectable(t.grid.domNode, true);
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 				t.profile._onEndDnd();
+				t._source.notSelectText = 0;
 				t._loadSelectStatus();
 			}
 		},
