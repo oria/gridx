@@ -710,12 +710,12 @@ define([
 					col.navigable = true;
 					var needCellWidget = col.needCellWidget;
 					col.needCellWidget = function(cell){
-						return needCellWidget.apply(col, arguments) && cell.isEditable();
+						return (!needCellWidget || needCellWidget.apply(col, arguments)) && cell.isEditable();
 					};
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
-					col.decorator = function(){ return ''; };
+					col.decorator = t.grid.cellWidget._dummyDecorator;
 					//FIXME: this breaks encapsulation
 					col._cellWidgets = {};
 					col._backupWidgets = [];

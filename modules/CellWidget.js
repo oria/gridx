@@ -393,19 +393,31 @@ define([
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
 				if(col.widgetsInCell){
+					col._decorator = col.decorator;
 					col.userDecorator = col.decorator || dummyFunc;
-					col.decorator = dummyFunc;
+					col.decorator = this._dummyDecorator;
 					col._cellWidgets = {};
 					col._backupWidgets = [];
 				}
 			}
 		},
 
+		_dummyDecorator: function(data, rowId, visualIndex, cell){
+			var column = cell.column;
+			if(!column.needCellWidget || column.needCellWidget(cell)){
+				return '';
+			}else if(column._decorator){
+				return column._decorator.apply(column, arguments);
+			}
+			return data;
+		},
+
 		_showDijits: function(row){
 			var t = this;
 			array.forEach(row.cells(), function(cell){
 				var col = cell.column.def();
-				if(col.userDecorator || t._getSpecialCellDec(cell.row.id, col.id)){
+				if((!col.needCellWidget || col.needCellWidget(cell)) &&
+					(col.userDecorator || t._getSpecialCellDec(cell.row.id, col.id))){
 					var cellNode = cell.contentNode();
 					if(cellNode){
 						var cellWidget = t._prepareCellWidget(cell);
@@ -425,7 +437,8 @@ define([
 
 		_showDijit: function(cell){
 			var col = cell.column.def();
-			if(col.userDecorator || this._getSpecialCellDec(cell.row.id, col.id)){
+			if((!col.needCellWidget || col.needCellWidget(cell)) &&
+				(col.userDecorator || this._getSpecialCellDec(cell.row.id, col.id))){
 				var cellWidget = this._prepareCellWidget(cell),
 					cellNode = cell.contentNode();
 				cellNode.innerHTML = "";
