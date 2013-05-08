@@ -143,9 +143,13 @@ define([
 			return select.hasOwnProperty('multiple') && !select.arg('multiple');
 		},
 
-		_onClear: function(){
-			var cls = this._getDijitClass() + 'Checked';
+		_onClear: function(reservedRowId){
+			var cls = this._getDijitClass() + 'Checked',
+				g = this.grid;
 			query('.' + cls, this.grid.bodyNode).removeClass(cls);
+			if(g.select.row.isSelected(reservedRowId)){
+				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRow .gridxIndirectSelectionCheckBox', g.bodyNode).addClass(cls);
+			}
 		},
 
 		_onHighlightChange: function(target, toHighlight){
