@@ -17,6 +17,8 @@ require([
 	"dojox/fx/_core",
 	"api/ModuleTreeModel",
 	"api/ModuleTree",
+	"dojo/hash",
+	"dojo/aspect",
 
 	// Modules used by the parser
 	"dijit/layout/BorderContainer",
@@ -24,7 +26,7 @@ require([
 	"dijit/layout/ContentPane",
 	"dijit/layout/AccordionContainer"
 ], function(array, dom, domClass, domConstruct, domStyle, fx, lang, on, parser, query, ready, topic, string,
-			registry, Dialog, Line, ModuleTreeModel, ModuleTree, BorderContainer, TabContainer){
+			registry, Dialog, Line, ModuleTreeModel, ModuleTree, hash, aspect, BorderContainer, TabContainer){
 
 // This file contains the top level javascript code to setup the tree, etc.
 
@@ -298,6 +300,7 @@ addTabPane = function(page, version){
 		parseOnLoad: false,
 		onLoad: lang.hitch(pane, paneOnLoad)
 	});
+	
 	p.addChild(pane);
 	p.selectChild(pane);
 	return pane;
@@ -412,6 +415,28 @@ ready(function(){
 			});
 		}
 	}
+	
+	var hs = hash();
+	if(hs){
+		var path = [];
+		var pathAry = hs.split('/');
+		
+		for(var i = 0, len = pathAry.length; i < len; i++){
+			if(i){
+				path.push(path[i - 1] + pathAry[i] + (i == len - 1? '' : '/'));
+			}else{
+				path.push(pathAry[i] + '/');
+			}
+		}
+		
+		
+		moduleTree.selectAndClick(path);
+	}
+	
+	var tb = registry.byId('content');
+	aspect.after(tb, 'selectChild', function(page){
+		if(page.page){	hash(page.page);	}
+	}, true);
 });
 
 });
