@@ -14,6 +14,7 @@ require([
 	'gridx/tests/support/stores/HugeStore',
 	'gridx/allModules',
 	'dojo/store/Memory',
+	'dojo/store/JsonRest',
 	'gridx/tests/support/GridConfig',
 	'dijit/Menu',
 	'dijit/MenuItem',
@@ -25,7 +26,7 @@ require([
 	SyncCache, AsyncCache,
 	musicData, testData, treeColumnarData, treeNestedData,
 	itemStore, jsonStore, memoryStore, treeJsonStore, hugeStore,
-	mods, Memory, GridConfig){
+	mods, Memory, JsonRest, GridConfig){
 
 var treeStore = itemStore({
 	dataSource: treeColumnarData,
@@ -61,11 +62,29 @@ var stores = {
 			'layout 2': testData.layouts[1]
 		}
 	},
+	"empty store": {
+		store: memoryStore({
+			dataSource: testData,
+			size: 0
+		}), 
+		layouts: {
+			'layout 1': testData.layouts[0],
+			'layout 2': testData.layouts[1]
+		}
+	},
+	"error store": {
+		isServerSide: true,
+		store: new JsonRest({}),
+		layouts: {
+			'layout 1': testData.layouts[0],
+			'layout 2': testData.layouts[1]
+		}
+	},
 	"server store": {
 		isServerSide: true,
 		store: jsonStore({
 			path: './support/stores',
-			size: 10000
+			size: 1000
 		}),
 		layouts: {
 			'layout 1': testData.layouts[0],

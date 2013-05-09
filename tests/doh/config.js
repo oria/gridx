@@ -35,9 +35,9 @@ define([
 
 	//Config Begin-------------------------------------------------------
 	//Minimal config package size
-	var minPackSize = 3;
+	var minPackSize = 2;
 	//Maximum config package size
-	var maxPackSize = 3;
+	var maxPackSize = 2;
 	//Run all cases or only special cases
 	var specialCasesOnly = 0;
 
