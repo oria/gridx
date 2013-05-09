@@ -538,10 +538,24 @@ Store, Grid){
 		});
 	}
 	function gatherAttributes(){
-		return query('.attributeItemUsed', 'attributesConfig').map(function(attrNode){
+		var validAttr = query('.attributeItemUsed', 'attributesConfig').map(function(attrNode){
 			var label = attrNode.getAttribute('data-attr-name');
 			return attrsByName[label];
 		});
+		
+		
+		var curMids = query('.moduleItem', 'modulesLoaded').map(function(modNode){
+			return modNode.getAttribute('data-mod-mid');
+		});
+		
+		console.log('current mods: ', curMids);
+		
+		for(var label in attrsByName){
+			if(attrsByName[label].type == 'shadow' && curMids.indexOf(attrsByName[label].binding) >= 0){
+				validAttr.push(attrsByName[label]);
+			}
+		}
+		return validAttr;
 	}
 	grid = null;
 	function createGrid(){
@@ -622,7 +636,7 @@ Store, Grid){
 		}));
 		sb.push('\t\t],\n');
 		[].push.apply(sb, array.map(attributes, function(attr){
-			return ['\t\t', attr.label, ': ', attr.curValue, ',\n'].join('');
+			return ['\t\t', attr.label, ': ', lang.isObject(attr.curValue)? JSON.stringify(attr.curValue) : attr.curValue, ',\n'].join('');
 		}));
 		sb.push('\t\tmodules: [\n');
 		[].push.apply(sb, array.map(mods, function(mod){

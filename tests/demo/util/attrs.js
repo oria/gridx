@@ -312,12 +312,21 @@ define([
 			unitPost: 'px when dragging mouse to trigger column dnd.',
 			value: 2,
 			description: ''
-		}
+		},
 		//ExporterCSV
 		//Printer
 		//TitleBar
-
-
+		
+		//groupHeader
+		{mod: 'header', name: 'groups', binding: 'gridx/modules/GroupHeader',
+			type: 'shadow',		//not show in attribute editor
+			editor: '',
+			value: [
+				{name: 'Group 1', children: 2},
+				{name: 'Group 2', children: 2}
+			],
+			description: ''
+		}
 
 
 
