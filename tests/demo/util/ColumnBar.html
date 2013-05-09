@@ -61,7 +61,7 @@
 						class='columnBarEditInput'
 						data-dojo-attach-point='sortableBox'
 						data-dojo-type='dijit.form.CheckBox'
-						data-dojo-attach-event='onInput: onSortableChange'
+						data-dojo-attach-event='onChange: onSortableChange'
 						data-dojo-props='
 							checked: true
 						'/></td>
@@ -82,7 +82,9 @@
 						data-dojo-attach-point='editableBox'
 						data-dojo-type='dijit.form.CheckBox'
 						data-dojo-attach-event='onChange: onEditableChange'
-						/></td>
+						data-dojo-props='
+							checked: false
+						'/></td>
 				</tr><tr>
 					<td class='columnAttrLabel'>alwaysEditing</td>
 					<td columnAttr='alwaysEditing'><input 

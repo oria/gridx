@@ -280,6 +280,14 @@ define([
 			icon: 'images/modIcon-RowHeader.png',
 			iconClass: ''
 		},
+		{label: 'Group Header', 
+			module: mods.GroupHeader,
+			mid: 'gridx/modules/GroupHeader',
+			name: 'GroupHeader',
+			description: '', 
+			icon: 'images/modIcon-RowHeader.png',
+			iconClass: ''
+		},		
 		{label: 'Indirect Selection', 
 			module: mods.IndirectSelect,
 			mid: 'gridx/modules/IndirectSelect',

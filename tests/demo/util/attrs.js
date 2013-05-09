@@ -80,6 +80,7 @@ define([
 		{mod: 'edit', name: 'lazySave',
 			type: 'bool',
 			value: true,
+			unitPost: 'save the edited data at client side without write to store immediately.',
 			description: ''
 		},
 		//Sort
