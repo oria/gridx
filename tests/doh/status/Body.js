@@ -7,7 +7,7 @@ define([
 ], function(array, query, domClass, domGeo, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 'Body status 1',
+		id: 'Body 1',
 		name: 'if a row is visible (rendered) in body, it is in grid cache',
 		checker: function(grid, doh){
 			array.forEach(grid.bodyNode.childNodes, function(rowNode){
@@ -20,7 +20,7 @@ define([
 		}
 	},
 	{
-		id: 'Body status 2',
+		id: 'Body 2',
 		name: 'cell must align with column header',
 		checker: function(grid, doh){
 			query('.gridxCell', grid.bodyNode).forEach(function(cellNode){
@@ -36,7 +36,7 @@ define([
 		}
 	},
 	{
-		id: 'Body status 3',
+		id: 'Body 3',
 		name: 'odd visual index row dom nodes have css class "gridxRowOdd"',
 		checker: function(grid, doh){
 			var rowNodes = grid.bodyNode.childNodes;
@@ -51,7 +51,7 @@ define([
 		}
 	},
 	{
-		id: 'Body status 4',
+		id: 'Body 4',
 		name: 'visualindex property of every row increase by 1 compared to the previous row',
 		checker: function(grid, doh){
 			var rowNodes = query('> .gridxRow', grid.bodyNode);
@@ -59,6 +59,33 @@ define([
 				var rowNode = rowNodes[i];
 				var prevRowNode = rowNode.previousSibling;
 				doh.t(parseInt(rowNode.getAttribute('visualindex'), 10) == parseInt(prevRowNode.getAttribute('visualindex'), 10) + 1);
+			}
+		}
+	},
+	{
+		id: 'Body 5',
+		name: 'body.getRowNode() should return existing row node as long as the row is rendered',
+		checker: function(grid, doh){
+			var start = grid.body.renderStart;
+			var end = start + grid.body.renderCount;
+			for(var i = start; i < end; ++i){
+				var rowNode = query('[visualindex="' + i + '"]', grid.body.domNode)[0];
+				var rowNodeByVIdx = grid.body.getRowNode({
+					visualIndex: i
+				});
+				var rowInfo = grid.view.getRowInfo({
+					visualIndex: i
+				});
+				var rowNodeById = grid.body.getRowNode({
+					rowId: rowInfo.rowId
+				});
+				var rowNodeByIndex = grid.body.getRowNode({
+					rowIndex: rowInfo.rowIndex,
+					parentId: rowInfo.parentId
+				});
+				doh.is(rowNode, rowNodeByVIdx);
+				doh.is(rowNode, rowNodeById);
+				doh.is(rowNode, rowNodeByIndex);
 			}
 		}
 	}
