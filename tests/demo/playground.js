@@ -480,8 +480,8 @@ Store, Grid){
 		array.forEach(mod.deps, function(dep){
 			if(!query('[data-mod-name="' + dep + '"].moduleItem', 'modulesLoaded').length){
 				var n = query('[data-mod-name="' + dep + '"].moduleItem', 'modulesAvailable')[0];
-				domClass.remove(n, 'moduleItemHidden');
 				if(n){
+					domClass.remove(n, 'moduleItemHidden');
 					useModule(n);
 				}
 			}

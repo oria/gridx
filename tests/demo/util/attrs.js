@@ -76,6 +76,12 @@ define([
 		//HLayout
 		//VLayout
 		//Focus
+		//Edit
+		{mod: 'edit', name: 'lazySave',
+			type: 'bool',
+			value: true,
+			description: ''
+		},
 		//Sort
 		{mod: 'sort', name: 'initialOrder',
 			type: 'array',
