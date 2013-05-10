@@ -338,7 +338,18 @@ define([
 						cellBgNode = query('.gridxCellBg', node),
 						rowId = cell.row.id,
 						colId = cell.column.id,
-						visualIndex = cell.row.visualIndex();
+						visualIndex = cell.row.visualIndex(),
+						gridxRelaPath = function(){
+							var p= dojo.config.packages || {};
+							
+							for(var i in p){
+								if(p[i].name == 'gridx'){
+									var l = p[i].location;
+									return l[l.length - 1] == '/' ? l : l + '/';
+								}
+							}
+							return '';
+						};
 						
 						if(!cellBgNode.length){
 							var computedStyle = domStyle.getComputedStyle(node),
@@ -350,7 +361,7 @@ define([
 								"colid='" + colId + "' ",
 								"class='gridxCellBg' ",
 								"style='position:absolute;'>",
-								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + "../gridx/resources/images/gridxCellChanged.png'>",
+								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + gridxRelaPath() + "../gridx/resources/images/gridxCellChanged.png'>",
 								'</div>'
 							].join('');
 							
