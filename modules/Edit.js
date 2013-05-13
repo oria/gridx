@@ -726,12 +726,21 @@ define([
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
-					col.decorator = t.grid.cellWidget._dummyDecorator;
+					col.decorator = t._dummyDecorator;
 					//FIXME: this breaks encapsulation
 					col._cellWidgets = {};
 					col._backupWidgets = [];
 				}
 			});
+		},
+
+		//FIXME: this is duplicated code, see CellWidget.
+		_dummyDecorator: function(data, rowId, visualIndex, cell){
+			var column = cell.column;
+			if(!column.needCellWidget || column.needCellWidget(cell)){
+				return '';
+			}
+			return data;
 		},
 
 		_getColumnEditor: function(colId){
