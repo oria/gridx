@@ -338,7 +338,18 @@ define([
 						cellBgNode = query('.gridxCellBg', node),
 						rowId = cell.row.id,
 						colId = cell.column.id,
-						visualIndex = cell.row.visualIndex();
+						visualIndex = cell.row.visualIndex(),
+						gridxRelaPath = function(){
+							var p= dojo.config.packages || {};
+							
+							for(var i in p){
+								if(p[i].name == 'gridx'){
+									var l = p[i].location;
+									return l[l.length - 1] == '/' ? l : l + '/';
+								}
+							}
+							return '';
+						};
 						
 						if(!cellBgNode.length){
 							var computedStyle = domStyle.getComputedStyle(node),
@@ -350,7 +361,7 @@ define([
 								"colid='" + colId + "' ",
 								"class='gridxCellBg' ",
 								"style='position:absolute;'>",
-								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + "../gridx/resources/images/gridxCellChanged.png'>",
+								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + gridxRelaPath() + "../gridx/resources/images/gridxCellChanged.png'>",
 								'</div>'
 							].join('');
 							
@@ -437,7 +448,7 @@ define([
 			});
 		},
 		
-		lazySave: true,
+		lazySave: false,
 		
 		load: function(){
 			//Must init focus after navigable cell, so that "edit" focus area will be on top of the "navigablecell" focus area.
@@ -715,12 +726,21 @@ define([
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
-					col.decorator = t.grid.cellWidget._dummyDecorator;
+					col.decorator = t._dummyDecorator;
 					//FIXME: this breaks encapsulation
 					col._cellWidgets = {};
 					col._backupWidgets = [];
 				}
 			});
+		},
+
+		//FIXME: this is duplicated code, see CellWidget.
+		_dummyDecorator: function(data, rowId, visualIndex, cell){
+			var column = cell.column;
+			if(!column.needCellWidget || column.needCellWidget(cell)){
+				return '';
+			}
+			return data;
 		},
 
 		_getColumnEditor: function(colId){
