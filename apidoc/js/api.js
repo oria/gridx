@@ -293,6 +293,7 @@ addTabPane = function(page, version){
 	}
 	var pane = new dijit.layout.ContentPane({
 		id: page.replace(/[\/.]/g, "_") + "_" + version,
+		v: version,
 		page: page,		// save page because when we select a tab we locate the corresponding TreeNode
 		href: url,
 		title: title,
@@ -373,9 +374,21 @@ versionChange = function(e){
 	//		Change the version displayed.
 
 	var v = this.options[this.selectedIndex].value;
-
-	//	if we reverted, bug out.
+	
+	var h = hash();
+	hash(v + '/' + h);
+	
 	if(currentVersion == v){ return; }
+	
+	// var p = new RegExp(/\d\.\d/);
+// 
+	// if(p.test(h)){
+		// h = h.replace(/\d\.\d/, v);
+	// }else{
+		// h = v + '/' + h;
+	// }
+	// hash(h);
+	//	if we reverted, bug out.
 
 	currentVersion = v;
 
@@ -419,6 +432,21 @@ ready(function(){
 	var hs = hash();
 	if(hs){
 		var path = [];
+		
+		var version = hs.match(/\d+\.\d+/)[0];
+		if(version){
+			currentVersion = version;
+			buildTree();
+			
+			for(var i in s.options){
+				if(s.options[i].value == version){
+					s.options[i].selected = 'true';
+				}
+			}
+
+			hs = hs.replace(/\d+\.\d+/, '').substring(1);
+		}
+		
 		var pathAry = hs.split('/');
 		
 		for(var i = 0, len = pathAry.length; i < len; i++){
@@ -431,11 +459,11 @@ ready(function(){
 		
 		
 		moduleTree.selectAndClick(path);
-	}
+	}	
 	
 	var tb = registry.byId('content');
 	aspect.after(tb, 'selectChild', function(page){
-		if(page.page){	hash(page.page);	}
+		if(page.page){	hash(page.v + '/' + page.page);	}
 	}, true);
 });
 
