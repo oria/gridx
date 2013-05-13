@@ -318,7 +318,8 @@ define([
 		//TitleBar
 		
 		//groupHeader
-		{mod: 'header', name: 'groups', binding: 'gridx/modules/GroupHeader',
+		{mod: 'header', name: 'groups', 
+			binding: 'gridx/modules/GroupHeader',
 			type: 'shadow',		//not show in attribute editor
 			editor: '',
 			value: [

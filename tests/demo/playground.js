@@ -548,7 +548,6 @@ Store, Grid){
 			return modNode.getAttribute('data-mod-mid');
 		});
 		
-		console.log('current mods: ', curMids);
 		
 		for(var label in attrsByName){
 			if(attrsByName[label].type == 'shadow' && curMids.indexOf(attrsByName[label].binding) >= 0){
@@ -582,7 +581,10 @@ Store, Grid){
 			})
 		};
 		array.forEach(attributes, function(attr){
-			cfg[attr.label] = attr.curValue;
+				cfg[attr.label] = lang.clone(attr.curValue);	//clone attribute, some module will write the attribute
+																//don't want the attr change because we need to show it 
+																//in the code way.
+			// }
 		});
 		console.log(cfg);
 		grid = new Grid(cfg);
@@ -593,6 +595,7 @@ Store, Grid){
 		var columns = gatherColumns();
 		var mods = gatherModules();
 		var attributes = gatherAttributes();
+		console.log(attributes);
 		var i, j = 0, sb = [
 			'require([\n',
 				'\t"gridx/Grid",\n',
@@ -636,7 +639,10 @@ Store, Grid){
 		}));
 		sb.push('\t\t],\n');
 		[].push.apply(sb, array.map(attributes, function(attr){
-			return ['\t\t', attr.label, ': ', lang.isObject(attr.curValue)? JSON.stringify(attr.curValue) : attr.curValue, ',\n'].join('');
+			return ['\t\t', attr.label, ': ', 
+					//lang.isObject(attr.curValue)? JSON.stringify(attr.curValue) : attr.curValue, 
+					formatJsCode('\t\t', attr.curValue),
+					',\n'].join('');
 		}));
 		sb.push('\t\tmodules: [\n');
 		[].push.apply(sb, array.map(mods, function(mod){
@@ -691,7 +697,7 @@ Store, Grid){
 
 		sb.push('\t\t],\n');
 		[].push.apply(sb, array.map(attributes, function(attr){
-			return ['\t\t', attr.label, ': ', attr.curValue, ',\n'].join('');
+			return ['\t\t', attr.label, ': ', formatJsCode('\t\t', attr.curValue), ',\n'].join('');
 		}));
 		sb.push('\t\tmodules: [\n');
 		[].push.apply(sb, array.map(mods, function(mod){
@@ -757,6 +763,33 @@ Store, Grid){
 			domClass.remove(dom.byId('clipBtn'), 'clipBtnDown');
 		});
 		clip.glue('clipBtn');
+	}
+	
+	function formatJsCode(prefix, obj){
+		var htmlAry = [];
+		var html = '';
+		
+		if(lang.isArray(obj)){
+			html += '\n' + prefix + '[ \n';
+			// htmlAry.push('[ \n');
+			for(var i in obj){
+				htmlAry.push(formatJsCode(prefix + '\t', obj[i]));
+			}
+			html += htmlAry.join(',\n');
+			html += '\n' + prefix + ']';
+		}else if(lang.isObject(obj)){
+			html += '\n' + prefix + '{ \n';
+			for(var j in obj){
+				htmlAry.push(prefix + '\t' + j + ': ' + formatJsCode(prefix + '\t', obj[j], true));
+			}
+			html += htmlAry.join(',\n');
+			html += '\n' + prefix + '}';
+		}else{
+			html += (typeof obj == 'string' ? "'" + obj + "'" : obj.toString());
+			// htmlAry.push(obj.toString() + '');
+		}
+		// return htmlAry.join('')
+		return html;
 	}
 
 	addColumnBar(null, {
