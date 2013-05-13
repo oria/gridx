@@ -717,6 +717,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	width: 285px;
 	margin: 0 10px;
 }
+#moduleDescApiDocUrl{
+	width: 160px;
+	float: left;
+	width: 285px;
+	margin: 0 10px;	
+}
+
 #moduleDescDependLabel {
 	font-weight: bold;
 	padding-right: 5px;
@@ -732,6 +739,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	margin: 0 10px;
 }
 #moduleDescPathLabel {
+	font-weight: bold;
+	padding-right: 5px;
+}
+#moduleDescApiDocUrlLabelDetail{
+}
+#moduleDescApiDocUrlLabel {
 	font-weight: bold;
 	padding-right: 5px;
 }

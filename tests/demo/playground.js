@@ -464,14 +464,21 @@ Store, Grid){
 
 	function showModuleDetail(mod){
 		query('#moduleDescIcon').style('background', 'url("' + mod.icon + '")');
-		query('#moduleDescLabel').innerHTML(mod.label);
+		query('#moduleDescLabel').innerHTML('<a target="_blank" href="' + getApiDocUrl(mod.mid) + '">' +  mod.label + "</a>");
 		query('#moduleDescName').innerHTML(mod.name);
 		query('#moduleDescPathDetail').innerHTML(mod.mid + '.js');
 		query('#moduleDescDetail').innerHTML(mod.description);
+		query('#moduleDescApiDocUrlLabelDetail').innerHTML('<a target="_blank" href="' + getApiDocUrl(mod.mid) + '">' +  getApiPath(mod.mid) + "</a>");
 		var deps = array.map(mod.deps, function(dep){
 			return ['<span class="moduleDescDependItem">', dep, '</span>'].join('');
 		});
 		query('#moduleDescDependDetail').innerHTML(deps.length ? deps.join('') : 'None');
+	}
+	
+	function getApiDocUrl(mid){
+		var curVersion = '1.2';
+		var prefix = 'http://oria.github.io/gridx/apidoc/index.html';
+		return prefix + '#' + curVersion + '/' + mid;
 	}
 
 	function useModule(itemNode){
