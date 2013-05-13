@@ -393,7 +393,6 @@ define([
 			for(i = columns.length - 1; i >= 0; --i){
 				col = columns[i];
 				if(col.widgetsInCell){
-					col._decorator = col.decorator;
 					col.userDecorator = col.decorator || dummyFunc;
 					col.decorator = this._dummyDecorator;
 					col._cellWidgets = {};
@@ -406,8 +405,6 @@ define([
 			var column = cell.column;
 			if(!column.needCellWidget || column.needCellWidget(cell)){
 				return '';
-			}else if(column._decorator){
-				return column._decorator.apply(column, arguments);
 			}
 			return data;
 		},
