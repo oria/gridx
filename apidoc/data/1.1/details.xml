@@ -3,13 +3,15 @@ so that there will never be vertical scroller bar. And when scrolling the mouse 
 the whole page will be scrolled. Note if this is false, only the grid body will be scrolled.&lt;/p>
 </summary></property><property name="autoWidth" scope="prototype" type="Boolean" from="gridx/Grid"><summary>&lt;p>If true, the grid&amp;#39;s width is determined by the total width of the columns, so that there will
 never be horizontal scroller bar.&lt;/p>
-</summary></property><property name="_compNames" scope="prototype" type="Array" from="gridx/Grid"/><property name="_eventNames" scope="prototype" type="Array" from="gridx/Grid"/></properties><methods><method name="postCreate" scope="prototype" type="function" from="gridx/Grid" tags="protected extension"><parameters/><return-types/><summary>&lt;p>Override to initialize grid modules&lt;/p>
+</summary></property><property name="_compNames" scope="prototype" type="Array" from="gridx/Grid"/><property name="_eventNames" scope="prototype" type="Array" from="gridx/Grid"/></properties><methods><method name="_setTextDirAttr" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="textDir" type="undefined" usage="required"><summary>&lt;p>Grid text direction&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Seamlessly changes grid &amp;#39;textDir&amp;#39; property on the fly.&lt;/p>
+</summary></method><method name="getTextDir" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="getTextDirStyle" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types><return-type type="string"/></return-types></method><method name="enforceTextDirWithUcc" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="postCreate" scope="prototype" type="function" from="gridx/Grid" tags="protected extension"><parameters/><return-types/><summary>&lt;p>Override to initialize grid modules&lt;/p>
 </summary></method><method name="startup" scope="prototype" type="function" from="gridx/Grid" tags="public extension"><parameters/><return-types/><summary>&lt;p>Startup this grid widget&lt;/p>
 </summary></method><method name="destroy" scope="prototype" type="function" from="gridx/Grid" tags="public extension"><parameters/><return-types/><summary>&lt;p>Destroy this grid widget&lt;/p>
 </summary></method><method name="resize" scope="prototype" type="function" from="gridx/Grid" tags="public"><parameters><parameter name="changeSize" type="Object" usage="optional"><summary>&lt;p>An object like {w: ..., h: ...}.
 If omitted, the grid will re-layout itself in current width/height.&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Resize the grid using given width and height.&lt;/p>
-</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCopyEvent" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
+</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_escapeId" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCopyEvent" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
 if you need to implement some handler for Ctrl+click.&lt;/p>
 </summary></method><method name="setStore" scope="prototype" type="function" from="gridx/core/Core"><parameters><parameter name="store" type="undefined" usage="required"><summary>&lt;p>The new data store&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Change the store for grid.&lt;/p>
@@ -112,7 +114,7 @@ web page developers.&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/><return-type type="Array"/></return-types><return-description>&lt;p>An array of parent row IDs, from root to parent.
 Root level rows have parent of id &amp;quot;&amp;quot;(empty string).&lt;/p>
 </return-description><summary>&lt;p>Get tree path of row by row ID&lt;/p>
-</summary></method><method name="parent" scope="prototype" type="function" from="gridx/core/model/Model"><parameters><parameter name="id" type="String" usage="required"><summary>&lt;p>The row ID&lt;/p>
+</summary></method><method name="parentId" scope="prototype" type="function" from="gridx/core/model/Model"><parameters><parameter name="id" type="String" usage="required"><summary>&lt;p>The row ID&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/><return-type type="Array"/></return-types><return-description>&lt;p>The parent ID.&lt;/p>
 </return-description><summary>&lt;p>Get the parent ID of the given row.&lt;/p>
 </summary></method><method name="hasChildren" scope="prototype" type="function" from="gridx/core/model/Model"><parameters><parameter name="id" type="String" usage="required"><summary>&lt;p>The row ID&lt;/p>
@@ -285,6 +287,7 @@ It can be different from store data (a.k.a. raw data).&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>If using server side store, a Deferred object is returned to indicate when the operation is finished.&lt;/p>
 </return-description><summary>&lt;p>Set new raw data to this cell.&lt;/p>
 </summary></method><method name="node" scope="normal" type="function" from="gridx/modules/Body" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the dom node of this cell.&lt;/p>
+</summary></method><method name="widget" scope="normal" type="function" from="gridx/modules/CellWidget" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the cell widget in this cell.&lt;/p>
 </summary></method><method name="beginEdit" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Begin editing mode on this cell&lt;/p>
 </summary></method><method name="cancelEdit" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Cancel editing mode on this cell.&lt;/p>
 </summary></method><method name="applyEdit" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters/><return-types/><summary>&lt;p>Apply change to store for this cell&lt;/p>
@@ -1519,13 +1522,15 @@ so that there will never be vertical scroller bar. And when scrolling the mouse 
 the whole page will be scrolled. Note if this is false, only the grid body will be scrolled.&lt;/p>
 </summary></property><property name="autoWidth" scope="prototype" type="Boolean" from="gridx/Grid"><summary>&lt;p>If true, the grid&amp;#39;s width is determined by the total width of the columns, so that there will
 never be horizontal scroller bar.&lt;/p>
-</summary></property><property name="_compNames" scope="prototype" type="Array" from="gridx/Grid"/><property name="_eventNames" scope="prototype" type="Array" from="gridx/Grid"/></properties><methods><method name="cacheClass" scope="prototype" type="constructor" from="gridx/GridCommon"><parameters/><return-types/></method><method name="postCreate" scope="prototype" type="function" from="gridx/Grid" tags="protected extension"><parameters/><return-types/><summary>&lt;p>Override to initialize grid modules&lt;/p>
+</summary></property><property name="_compNames" scope="prototype" type="Array" from="gridx/Grid"/><property name="_eventNames" scope="prototype" type="Array" from="gridx/Grid"/></properties><methods><method name="cacheClass" scope="prototype" type="constructor" from="gridx/GridCommon"><parameters/><return-types/></method><method name="_setTextDirAttr" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="textDir" type="undefined" usage="required"><summary>&lt;p>Grid text direction&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Seamlessly changes grid &amp;#39;textDir&amp;#39; property on the fly.&lt;/p>
+</summary></method><method name="getTextDir" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="getTextDirStyle" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types><return-type type="string"/></return-types></method><method name="enforceTextDirWithUcc" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="postCreate" scope="prototype" type="function" from="gridx/Grid" tags="protected extension"><parameters/><return-types/><summary>&lt;p>Override to initialize grid modules&lt;/p>
 </summary></method><method name="startup" scope="prototype" type="function" from="gridx/Grid" tags="public extension"><parameters/><return-types/><summary>&lt;p>Startup this grid widget&lt;/p>
 </summary></method><method name="destroy" scope="prototype" type="function" from="gridx/Grid" tags="public extension"><parameters/><return-types/><summary>&lt;p>Destroy this grid widget&lt;/p>
 </summary></method><method name="resize" scope="prototype" type="function" from="gridx/Grid" tags="public"><parameters><parameter name="changeSize" type="Object" usage="optional"><summary>&lt;p>An object like {w: ..., h: ...}.
 If omitted, the grid will re-layout itself in current width/height.&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Resize the grid using given width and height.&lt;/p>
-</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCopyEvent" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
+</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_escapeId" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCopyEvent" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
 if you need to implement some handler for Ctrl+click.&lt;/p>
 </summary></method><method name="setStore" scope="prototype" type="function" from="gridx/core/Core"><parameters><parameter name="store" type="undefined" usage="required"><summary>&lt;p>The new data store&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Change the store for grid.&lt;/p>
@@ -3571,7 +3576,7 @@ using a specified height.&lt;/p>
 </summary></property><property name="columns" scope="prototype" type="Object" from="gridx/mobile/Grid"><summary>&lt;p>Column definition to show the grid from store&lt;/p>
 </summary><description>&lt;p>An object with the following properties:
 &lt;/p>
-</description></property></properties><methods><method name="setColumns" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters><parameter name="columns" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Set columns to show for the grid. 
+</description></property><property name="PDF" scope="prototype" type="string" from="gridx/mobile/Grid"/><property name="LRE" scope="prototype" type="string" from="gridx/mobile/Grid"/><property name="RLE" scope="prototype" type="string" from="gridx/mobile/Grid"/></properties><methods><method name="setColumns" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters><parameter name="columns" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Set columns to show for the grid. 
 Maybe improve performance by adding/removing some columns instead of re-rendering.&lt;/p>
 </summary></method><method name="buildGrid" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters/><return-types/><summary>&lt;p>Build the whole grid&lt;/p>
 </summary></method><method name="_buildHeader" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters/><return-types/><summary>&lt;p>Build the grid header when showHeader is true.&lt;/p>
@@ -3585,7 +3590,10 @@ Maybe improve performance by adding/removing some columns instead of re-renderin
 </summary></method><method name="onError" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters><parameter name="errorData" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>An error handler.&lt;/p>
 </summary></method><method name="onUpdate" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters><parameter name="item" type="undefined" usage="required"/><parameter name="insertedInto" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Adds a new item or updates an existing item.&lt;/p>
 </summary></method><method name="onDelete" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters><parameter name="item" type="undefined" usage="required"/><parameter name="removedFrom" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Deletes an existing item.&lt;/p>
-</summary></method><method name="refresh" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters/><return-types><return-type type="null"/><return-type type="undefined"/></return-types><summary>&lt;p>Fetches the data and generates the list items.&lt;/p>
+</summary></method><method name="_enforceTextDirWithUcc" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters><parameter name="text" type="undefined" usage="required"><summary>&lt;p>The text to be wrapped.&lt;/p>
+</summary></parameter><parameter name="textDir" type="undefined" usage="required"><summary>&lt;p>Text direction.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="number"/></return-types><summary>&lt;p>Wraps by UCC (Unicode control characters) option&amp;#39;s text according to this.textDir&lt;/p>
+</summary></method><method name="_setTextDirAttr" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters><parameter name="textDir" type="undefined" usage="required"/></parameters><return-types/></method><method name="refresh" scope="prototype" type="function" from="gridx/mobile/Grid"><parameters/><return-types><return-type type="null"/><return-type type="undefined"/></return-types><summary>&lt;p>Fetches the data and generates the list items.&lt;/p>
 </summary></method></methods><summary>&lt;p>A mobile grid that has fixed header, footer and a scrollable body.&lt;/p>
 </summary></object><object location="gridx/mobile/LazyLoad" type="constructor" classlike="true"><properties><property name="pageSize" scope="prototype" type="number" from="gridx/mobile/LazyLoad"/><property name="lastId" scope="prototype" type="null" from="gridx/mobile/LazyLoad"/></properties><methods><method name="_buildBody" scope="prototype" type="function" from="gridx/mobile/LazyLoad"><parameters><parameter name="items" type="undefined" usage="required"/></parameters><return-types/></method><method name="loadMore" scope="prototype" type="function" from="gridx/mobile/LazyLoad"><parameters/><return-types/><summary>&lt;p>Called when touch load more button.
 It loads data from server side and create extra rows at the bottom.
@@ -3751,7 +3759,7 @@ This is a registered module, so if it is depended by other modules, no need to d
 &lt;/p>
 &lt;pre>&lt;code>barTop: [
     [       //every sub-array is a table row.
-        {content: &amp;quot;This is &amp;lt;b&amp;gt;a message&amp;lt;/b&amp;gt;&amp;quot;, style: &amp;quot;backgroun-color: blue;&amp;quot;}, //Can add some html
+        {content: &amp;quot;This is &amp;lt;b&amp;gt;a message&amp;lt;/b&amp;gt;&amp;quot;, style: &amp;quot;background-color: blue;&amp;quot;},    //Can add some html
         null    //if null, just an empty cell
     ],
     [
@@ -3775,134 +3783,7 @@ of the whole __BarItem configuration object.&lt;/p>
 </summary></property></properties><methods/><summary>&lt;p>Configurations for a &lt;td> in the grid bar.
 This configuration object will also be passed to the constructor of the plugin, if &amp;quot;pluginClass&amp;quot; is used,
 so the plugin-related parameters can also be declared here.&lt;/p>
-</summary></object><object location="gridx/modules/BidiSupport" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="module" scope="prototype" type="undefined" from="gridx/modules/BidiSupport"><summary>&lt;p>gridx/modules/_BidiSupport&lt;/p>
-</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
-instead of this module itself. Two different modules can have the same name, so that they provide
-two different implementations of this API set.
-For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
-They can be used in two different grids in one page (maybe due to different requirements), 
-without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
-without re-writing any other modules.
-This property is mandatary.&lt;/p>
-</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
-This property can be omitted.&lt;/p>
-</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
-they must be loaded before this module loads.
-This property can be omitted.&lt;/p>
-</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
-This property can be omitted.&lt;/p>
-</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
-</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
-</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
-</summary></property></properties><methods><method name="getTextDir" scope="prototype" type="function" from="gridx/modules/BidiSupport" private="true" tags="private"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types/></method><method name="getTextDirStyle" scope="prototype" type="function" from="gridx/modules/BidiSupport" private="true" tags="private"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Returns input text direction related attributes.&lt;/p>
-</summary></method><method name="enforceTextDirWithUcc" scope="prototype" type="function" from="gridx/modules/BidiSupport" private="true" tags="private"><parameters><parameter name="colId" type="undefined" usage="required"/><parameter name="text" type="undefined" usage="required"><summary>&lt;p>The text to be wrapped.&lt;/p>
-</summary></parameter></parameters><return-types/><summary>&lt;p>Wraps by UCC (Unicode control characters) option&amp;#39;s text according to textDir&lt;/p>
-</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
-</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
-That is, any property of object type in grid will be preserved. For example, if this function
-returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
-grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
-
-&lt;/p>
-&lt;pre>&lt;code>{
-    abc: {
-        jkl: &amp;#39;mno&amp;#39;,
-        def: &amp;#39;ghi&amp;#39;
-    }
-}&lt;/code>&lt;/pre>
-&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
-
-&lt;/p>
-&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
-This function can be omitted.&lt;/p>
-</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
-</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
-At this time point, all the module APIs are already accessable, so all the mothods of those modules that
-do not need to load can be used here.
-Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
-if module A forcedly depends on module B, it is still possible that module A.preload is called before 
-module B.preload.
-This function can be omitted.&lt;/p>
-</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
-</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
-and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
-this might be an async process), this.loaded.callback() must be called to tell any other modules that
-depend on this module.&lt;/p>
-</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
-</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
-</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
-can not pass validation, the default value will be used.
-Note if this function is provided, defaultValue must also be provided.&lt;/p>
-</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
-</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
-</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
-One is to write them in the module declaration object:
-
-&lt;/p>
-&lt;pre>&lt;code>var grid = new Grid({
-    ......
-    modules: [
-        {
-            moduleClass: gridx.modules.Pagination,
-            initialPage: 1      //Put module arguments in module declaration object
-        }
-    ],
-    ......
-});&lt;/code>&lt;/pre>
-&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
-
-&lt;/p>
-&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
-module. This would be too demanding for a grid user, so we need another approach.
-The other way is to treat them as grid arguments:
-
-&lt;/p>
-&lt;pre>&lt;code>var grid = new Grid({
-    ......
-    modules: [
-        gridx.modules.Pagination
-    ],
-    paginationInitialPage: 1,   //Treat module arguments as grid arguments
-    ......
-});&lt;/code>&lt;/pre>
-&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
-
-&lt;/p>
-&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
-front of every module argument:
-    &amp;quot;pagination&amp;quot; -- module name
-&lt;/p>
-&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
----------------------------------
-paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
-&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
-
-&lt;/p>
-&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
-they are declared. The priority of every kinds of declarations are:
-    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
-After this method, the argument will automatically become module argument. But it is still
-recommended to alway access arguments by this.arg(...);&lt;/p>
-</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
-</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
-</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
-</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
-But in this API, the scope argument is placed behind the listener function, so as to
-avoid arguemnt checking logic.
-This method also allows conditional event firing using the flag argument.&lt;/p>
-</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
-</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
-</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
-</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
-</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method><method name="__ColumnDefinition" scope="normal" type="constructor" from="gridx/modules/BidiSupport"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Module that deals with BIDI, special with the auto
-direction if needed without changing the GUI direction.&lt;/p>
-</summary><description>&lt;p>There&amp;#39;s a special need for displaying BIDI text in rtl direction
-in ltr GUI, sometimes needed auto support.
-In creation of widget, if it&amp;#39;s want to activate this class,
-the widget should define the &amp;quot;textDir&amp;quot;.
-See for reference:  &lt;a href=&quot;http://w3-03.ibm.com/globalization/page/publish/4353&quot;>http://w3-03.ibm.com/globalization/page/publish/4353&lt;/a>&lt;/p>
-</description></object><object location="gridx/modules/BidiSupport.__ColumnDefinition" type="constructor" classlike="true"><properties><property name="textDir" scope="prototype" type="string" from="gridx/modules/BidiSupport"/></properties><methods/></object><object location="gridx/modules/Dod" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="useAnimation" scope="prototype" type="Boolean" from="gridx/modules/Dod"><summary>&lt;p>Indicates whether to use animation (slide) when showing/hiding the detail part.&lt;/p>
+</summary></object><object location="gridx/modules/Dod" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="useAnimation" scope="prototype" type="Boolean" from="gridx/modules/Dod"><summary>&lt;p>Indicates whether to use animation (slide) when showing/hiding the detail part.&lt;/p>
 </summary></property><property name="duration" scope="prototype" type="Number" from="gridx/modules/Dod"><summary>&lt;p>The time used to play the animation.&lt;/p>
 </summary></property><property name="defaultShow" scope="prototype" type="boolean" from="gridx/modules/Dod"/><property name="showExpando" scope="prototype" type="boolean" from="gridx/modules/Dod"/><property name="autoClose" scope="prototype" type="Boolean" from="gridx/modules/Dod"><summary>&lt;p>Indicates whether the detail part should be closed automatically when another row&amp;#39;s detail part is shown.&lt;/p>
 </summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
@@ -4674,7 +4555,7 @@ This property can be omitted.&lt;/p>
 </return-description><summary>&lt;p>Get the current count of pages.&lt;/p>
 </summary></method><method name="currentPage" scope="prototype" type="function" from="gridx/modules/Pagination"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>The index of current page.&lt;/p>
 </return-description><summary>&lt;p>Get the index of current page.&lt;/p>
-</summary></method><method name="firstIndexInPage" scope="prototype" type="function" from="gridx/modules/Pagination"><parameters><parameter name="page" type="Integer" usage="required"><summary>&lt;p>The index of a page.&lt;/p>
+</summary></method><method name="firstIndexInPage" scope="prototype" type="function" from="gridx/modules/Pagination"><parameters><parameter name="page" type="Integer" usage="optional"><summary>&lt;p>The index of a page. If omitted, default to the current page.&lt;/p>
 </summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The index of the first row in the page. If page is not valid, return -1.&lt;/p>
 </return-description><summary>&lt;p>Get the index of the first row in the given page.&lt;/p>
 </summary></method><method name="lastIndexInPage" scope="prototype" type="function" from="gridx/modules/Pagination"><parameters><parameter name="page" type="Integer" usage="required"><summary>&lt;p>The index of a page&lt;/p>
@@ -5751,6 +5632,7 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </summary></property><property name="expandoPadding" scope="prototype" type="Integer" from="gridx/modules/Tree"><summary>&lt;p>The padding added for each level of expando. Unit is pixel. Default to 18.&lt;/p>
 </summary></property><property name="expandLevel" scope="prototype" type="Integer" from="gridx/modules/Tree"><summary>&lt;p>The maximum allowed expand level of this tree grid.
 If less than 1, then this is not a tree grid at all.&lt;/p>
+</summary></property><property name="clearOnSetStore" scope="prototype" type="Boolean" from="gridx/modules/Tree"><summary>&lt;p>Whether to clear all the recorded expansion info after setStore.&lt;/p>
 </summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.

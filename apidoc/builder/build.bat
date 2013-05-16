@@ -2,6 +2,7 @@
 
 cd js-doc-parse
 node autoparse.js
+pause
 
 cd ../api
 node buildall.js

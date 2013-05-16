@@ -601,10 +601,9 @@ function _generate_property_output($page, $prop, $name, $docs = array(), $base_u
 		. ($prop["extension-module"] ? 'extension-module':'')
 		. '">'
 		. '<div class="jsdoc-title">'
+		. '<a name="' . $name . '"></a>'
 		. '<span class="' . convert_type($prop["type"]) . 'Icon">'
-		. '<a name="' . $name . '">'
 		. $name
-		. '</a>'
 		. '</span>'
 		. ($prop["visibility"] == "private" ? " <span class='jsdoc-private' title='private'></span>" : "")
 		. '</div>';

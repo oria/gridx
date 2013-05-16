@@ -112,11 +112,10 @@ paneOnLoad = function(data){
 	// After the page has loaded, scroll to specified anchor in the page
 	var anchor = this.href.replace(/.*#/, "");
 	if(anchor){
-		var target = query('a.anchor[name="' + anchor + '"]', context);
-		console.log(target);
-		if(target[0]){
+		var target = query('a[name="' + anchor + '"]', context)[0];
+		if(target){
 			setTimeout(function(){
-				target[0].scrollIntoView();
+				target.scrollIntoView();
 			}, 100);
 		}
 	}

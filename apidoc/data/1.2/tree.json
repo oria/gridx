@@ -208,12 +208,6 @@
 							"type": "constructor"
 						},
 						{
-							"id": "gridx/modules/AZFilterMenu",
-							"name": "AZFilterMenu",
-							"fullname": "gridx/modules/AZFilterMenu",
-							"type": "constructor"
-						},
-						{
 							"id": "gridx/modules/Bar",
 							"name": "Bar",
 							"fullname": "gridx/modules/Bar",
@@ -470,18 +464,6 @@
 							"type": "folder",
 							"children": [
 								{
-									"id": "gridx/modules/filter/AdaptiveFilter",
-									"name": "AdaptiveFilter",
-									"fullname": "gridx/modules/filter/AdaptiveFilter",
-									"type": "undefined"
-								},
-								{
-									"id": "gridx/modules/filter/AZFilterMenu",
-									"name": "AZFilterMenu",
-									"fullname": "gridx/modules/filter/AZFilterMenu",
-									"type": "constructor"
-								},
-								{
 									"id": "gridx/modules/filter/DistinctComboBoxMenu",
 									"name": "DistinctComboBoxMenu",
 									"fullname": "gridx/modules/filter/DistinctComboBoxMenu",
@@ -547,12 +529,6 @@
 									"type": "constructor"
 								},
 								{
-									"id": "gridx/modules/filter/NumberFilterMenu",
-									"name": "NumberFilterMenu",
-									"fullname": "gridx/modules/filter/NumberFilterMenu",
-									"type": "constructor"
-								},
-								{
 									"id": "gridx/modules/filter/QuickFilter",
 									"name": "QuickFilter",
 									"fullname": "gridx/modules/filter/QuickFilter",
@@ -600,6 +576,21 @@
 							"id": "gridx/modules/HeaderMenu",
 							"name": "HeaderMenu",
 							"fullname": "gridx/modules/HeaderMenu",
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/HeaderMenu.__ColumnDefinition",
+									"name": "__ColumnDefinition",
+									"fullname": "gridx/modules/HeaderMenu.__ColumnDefinition",
+									"type": "constructor",
+									"children": []
+								}
+							]
+						},
+						{
+							"id": "gridx/modules/HeaderRegions",
+							"name": "HeaderRegions",
+							"fullname": "gridx/modules/HeaderRegions",
 							"type": "constructor"
 						},
 						{
@@ -1021,6 +1012,32 @@
 							"name": "LinkSizer",
 							"fullname": "gridx/support/LinkSizer",
 							"type": "constructor"
+						},
+						{
+							"id": "gridx/support/menu/",
+							"name": "menu",
+							"fullname": "gridx/support/menu",
+							"type": "folder",
+							"children": [
+								{
+									"id": "gridx/support/menu/_FilterMenuBase",
+									"name": "_FilterMenuBase",
+									"fullname": "gridx/support/menu/_FilterMenuBase",
+									"type": "constructor"
+								},
+								{
+									"id": "gridx/support/menu/AZFilterMenu",
+									"name": "AZFilterMenu",
+									"fullname": "gridx/support/menu/AZFilterMenu",
+									"type": "constructor"
+								},
+								{
+									"id": "gridx/support/menu/NumberFilterMenu",
+									"name": "NumberFilterMenu",
+									"fullname": "gridx/support/menu/NumberFilterMenu",
+									"type": "constructor"
+								}
+							]
 						},
 						{
 							"id": "gridx/support/printer",
