@@ -288,6 +288,14 @@ define([
 			icon: 'images/modIcon-RowHeader.png',
 			iconClass: ''
 		},		
+		{label: 'Hidden Column', 
+			module: mods.HiddenColumns,
+			mid: 'gridx/modules/HiddenColumns',
+			name: 'HiddenColumns',
+			description: '', 
+			icon: 'images/modIcon-RowHeader.png',
+			iconClass: ''
+		},			
 		{label: 'Indirect Selection', 
 			module: mods.IndirectSelect,
 			mid: 'gridx/modules/IndirectSelect',

@@ -362,9 +362,17 @@ define([
 			],
 			unitPost: 'set the structure of the header group when groupHeader module is included.',
 			description: ''
+		},
+		//hiddenColumns
+		{mod: 'hiddenColumns', name: 'init',
+			type: 'other',
+			editor: 'numberTextBox',
+			unitPre: 'Delay',
+			unitPost: 'IDs of columns to be hidden when grid is initially created.',
+			value: [],
+			simpleValue:['column_1'],
+			complexValue: ['column_1', 'column_2'],
+			description: ''
 		}
-
-
-
 	];
 });
