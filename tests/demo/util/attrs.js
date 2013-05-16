@@ -318,13 +318,23 @@ define([
 		//TitleBar
 		
 		//groupHeader
-		{mod: 'header', name: 'groups', 
-			binding: 'gridx/modules/GroupHeader',
-			type: 'shadow',		//not show in attribute editor
+		{mod: 'header', name: 'groups', isModCore: false,
+			// binding: 'gridx/modules/GroupHeader',
+			type: 'other',		//not show in attribute editor
 			editor: '',
-			value: [
+			value: [],
+			simpleValue: [
 				{name: 'Group 1', children: 2},
 				{name: 'Group 2', children: 2}
+			],
+			complexValue: [
+				{name: 'Group 1', children: 
+					[
+						{name: 'Group 1-1', children: 2},
+						{name: 'Group 1-2', children: 2}
+					]
+				}
+				// {name: 'Group 2', children: 2}			
 			],
 			description: ''
 		}

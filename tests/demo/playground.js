@@ -378,10 +378,11 @@ Store, Grid){
 			var name = attr._name = attr.mod ? attr.name.slice(0, 1).toUpperCase() + attr.name.slice(1) : attr.name;
 			attr.label = attr.mod ? attr.mod + name : name;
 			attrsByName[attr.label] = attr;
-			attr.curValue = attr.value;
+			attr.curValue = attr.simpleValue ? attr.simpleValue : attr.value;
 		});
 		loadBoolAttributes();
 		loadNumberAttributes();
+		loadOtherAttributes();
 	}
 	function boolBtn(value){
 		return [
@@ -461,6 +462,44 @@ Store, Grid){
 			});
 		}, 500);
 	}
+	
+	function loadOtherAttributes(){
+		dom.byId('attributesOtherInner').innerHTML = array.map(array.filter(attrs, function(attr){
+			return attr.type == 'other';
+		}), function(attr, i){
+			return ["<div class='attributeOtherItem attributeItem attributeItemUsed ",
+				(attr.mod && array.indexOf(coreMods, attr.mod) < 0 || attr.isModCore === false) ? 'attributeItemDisabled' : '',
+				"' data-attr-mod='", attr.mod,
+				"' data-attr-name='", attr.label, 
+				"'><table><tbody><tr><td style='width: 200px; text-align: center;'>",
+				"<span class='attributeItemMod'>", attr.mod, "</span><span class='attributeItemName'>", attr._name, "</span>",
+				"</td><td>", 
+				"<div><div class='simpleValue valueSelected attributeOtherValue'>simple value</div>",
+				"<div class='complexValue attributeOtherValue'>complex value</div></div>",
+				attr.unitPost,
+			"</td></tr></tbody></table></div>"].join('');
+		}).join('');
+		// parser.parse(dom.byId('attributesNumberInner'));
+		query('.attributeOtherValue', 'attributesOtherInner').on('click', function(evt){
+			var node = this,
+				v = domClass.contains(node, 'simpleValue')? 'simpleValue' : 'complexValue',
+				siblingNode = this.previousSibling? this.previousSibling : this.nextSibling;
+			
+			domClass.toggle(node, 'valueSelected', true);
+			domClass.toggle(siblingNode, 'valueSelected', false);
+			
+			var n = node.parentNode;
+			console.log('n is', n);
+			while(!domClass.contains(n, 'attributeItem')){
+				n = n.parentNode;
+			}
+			
+			var attr = attrsByName[n.getAttribute('data-attr-name')];
+			// domClass.toggle(n, 'attributeItemUsed', attr.curlValue != attr.value);
+			attr.curValue = attr[v];	
+			console.log(attr);	
+		});
+	}
 
 	function showModuleDetail(mod){
 		query('#moduleDescIcon').style('background', 'url("' + mod.icon + '")');
@@ -468,7 +507,7 @@ Store, Grid){
 		query('#moduleDescName').innerHTML(mod.name);
 		query('#moduleDescPathDetail').innerHTML(mod.mid + '.js');
 		query('#moduleDescDetail').innerHTML(mod.description);
-		query('#moduleDescApiDocUrlLabelDetail').innerHTML('<a target="_blank" href="' + getApiDocUrl(mod.mid) + '">' +  getApiPath(mod.mid) + "</a>");
+		query('#moduleDescApiDocUrlLabelDetail').innerHTML('<a target="_blank" href="' + getApiDocUrl(mod.mid) + '">' +  getApiDocUrl(mod.mid) + "</a>");
 		var deps = array.map(mod.deps, function(dep){
 			return ['<span class="moduleDescDependItem">', dep, '</span>'].join('');
 		});
@@ -497,6 +536,7 @@ Store, Grid){
 		var nodes = query('[data-attr-mod="' + mod.module.prototype.name + '"].attributeItem', 'attributesConfig');
 		nodes.removeClass('attributeItemDisabled');
 	}
+	
 	function delModule(itemNode){
 		itemNode.setAttribute('title', 'click to show description, double click to use');
 		var name = itemNode.getAttribute('data-mod-name');
@@ -551,7 +591,7 @@ Store, Grid){
 		});
 		
 		
-		var curMids = query('.moduleItem', 'modulesLoaded').map(function(modNode){
+		/*var curMids = query('.moduleItem', 'modulesLoaded').map(function(modNode){
 			return modNode.getAttribute('data-mod-mid');
 		});
 		
@@ -560,7 +600,7 @@ Store, Grid){
 			if(attrsByName[label].type == 'shadow' && curMids.indexOf(attrsByName[label].binding) >= 0){
 				validAttr.push(attrsByName[label]);
 			}
-		}
+		}*/
 		return validAttr;
 	}
 	grid = null;
