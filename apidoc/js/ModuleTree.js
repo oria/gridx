@@ -29,16 +29,17 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dijit/Tree"], function(declare
 				this._onExpandoClick({node: nodeWidget});
 			}else{
 				// Open the page for this module.
-				addTabPane(item.fullname, this.version);
+				addTabPane(item.fullname, this.version, item.anchor);
 			}
 		},
 
-		selectAndClick: function(path){
+		selectAndClick: function(path, anchor){
 			// summary:
 			//		Helper method used from welcome screen, ex: moduleTree.selectAndClick(["dojo/", "dojo/query"])
 
 			this.set("path", ["root"].concat(path)).then(lang.hitch(this, function(){
 				var node = this.get("selectedNode");
+				node.item.anchor = anchor;
 				this.onClick(node.item, node);
 			}));
 		}

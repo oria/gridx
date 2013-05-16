@@ -109,6 +109,18 @@ TabContainer.prototype.removeChild = function(/*dijit/_WidgetBase*/ page){
 paneOnLoad = function(data){
 	var context = this.domNode;
 
+	// After the page has loaded, scroll to specified anchor in the page
+	var anchor = this.href.replace(/.*#/, "");
+	if(anchor){
+		var target = query('a.anchor[name="' + anchor + '"]', context);
+		console.log(target);
+		if(target[0]){
+			setTimeout(function(){
+				target[0].scrollIntoView();
+			}, 100);
+		}
+	}
+
 	// Setup listener so when you click on links to other modules, it opens a new tab rather than refreshing the
 	// whole page
 	on(context, on.selector("a.jsdoc-link", "click"), function(evt){
@@ -122,7 +134,6 @@ paneOnLoad = function(data){
 
 		// Open tab for specified module
 		var tmp = this.href.replace(/#.*/, "").replace(/\.html$/, '').split("/");
-		console.debug(tmp);
 		var version = tmp[tmp.length - 3];
 		var page = tmp[tmp.length - 1].replace(/-/g, '/');
 		var pane = addTabPane(page, version);
@@ -274,12 +285,15 @@ paneOnLoad = function(data){
 	dom.byId("printBlock").innerHTML = w.domNode.innerHTML;
 };
 
-addTabPane = function(page, version){
+addTabPane = function(page, version, anchor){
 	var p = registry.byId("content");
 
 	// Get the URL to get the tab content.
 	var pageFile = page.replace(/\//g, '-');
 	var url = "./data/" + version + "/docs/" + pageFile + '.html';
+	if(anchor){
+		url += '#' + anchor;
+	}
 
 	var title = page + " (" + version + ")";
 
@@ -446,8 +460,11 @@ ready(function(){
 
 			hs = hs.replace(/\d+\.\d+/, '').substring(1);
 		}
-		
+
 		var pathAry = hs.split('/');
+		//remove the anchor part from path
+		var pathLast = pathAry[pathAry.length - 1].split('#');
+		pathAry[pathAry.length - 1] = pathLast[0];
 		
 		for(var i = 0, len = pathAry.length; i < len; i++){
 			if(i){
@@ -457,13 +474,16 @@ ready(function(){
 			}
 		}
 		
-		
-		moduleTree.selectAndClick(path);
-	}	
+		var anchor = pathLast[1];
+		moduleTree.selectAndClick(path, anchor);
+	}
 	
 	var tb = registry.byId('content');
 	aspect.after(tb, 'selectChild', function(page){
-		if(page.page){	hash(page.v + '/' + page.page);	}
+		if(page.page){
+			var anchor = page.href.split('#')[1];
+			hash(page.v + '/' + page.page + (anchor ? '#' + anchor : ''));
+		}
 	}, true);
 });
 
