@@ -160,12 +160,36 @@ define([
 			value: false,
 			description: ''
 		},
+		{mod: 'selectRow', name: 'unselectable',
+			type: 'other',
+			unitPost: 'Allow selecting multiple rows (holding CTRL).',
+			value: [],
+			simpleValue: (function(){
+				var o = {};
+				for(var i = 0; i < 100; i++){
+					if(i % 5 === 0){
+						o['item-' + i] = true;
+					}
+				}
+				return o;
+			})(),
+			complexValue: (function(){
+				var o = {};
+				for(var i = 0; i < 100; i++){
+					if(i % 5 > 2){
+						o['item-' + i] = true;
+					}
+				}
+				return o;
+			})(),
+			description: ''
+		},
 		{mod: 'selectRow', name: 'multiple',
 			type: 'bool',
 			unitPost: 'Allow selecting multiple rows (holding CTRL).',
 			value: false,
 			description: ''
-		},
+		},		
 		//SelectColumn
 		{mod: 'selectColumn', name: 'multiple',
 			type: 'bool',
@@ -318,7 +342,7 @@ define([
 		//TitleBar
 		
 		//groupHeader
-		{mod: 'header', name: 'groups', isModCore: false,
+		{mod: 'header', name: 'groups', overrideCore: true,
 			// binding: 'gridx/modules/GroupHeader',
 			type: 'other',		//not show in attribute editor
 			editor: '',
@@ -336,6 +360,7 @@ define([
 				}
 				// {name: 'Group 2', children: 2}			
 			],
+			unitPost: 'set the structure of the header group when groupHeader module is included.',
 			description: ''
 		}
 

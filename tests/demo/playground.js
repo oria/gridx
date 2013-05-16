@@ -467,15 +467,15 @@ Store, Grid){
 		dom.byId('attributesOtherInner').innerHTML = array.map(array.filter(attrs, function(attr){
 			return attr.type == 'other';
 		}), function(attr, i){
-			return ["<div class='attributeOtherItem attributeItem attributeItemUsed ",
-				(attr.mod && array.indexOf(coreMods, attr.mod) < 0 || attr.isModCore === false) ? 'attributeItemDisabled' : '',
+			return ["<div class='attributeOtherItem attributeItem ",
+				(attr.mod && array.indexOf(coreMods, attr.mod) < 0 || attr.overrideCore === true) ? 'attributeItemDisabled' : '',
 				"' data-attr-mod='", attr.mod,
 				"' data-attr-name='", attr.label, 
 				"'><table><tbody><tr><td style='width: 200px; text-align: center;'>",
 				"<span class='attributeItemMod'>", attr.mod, "</span><span class='attributeItemName'>", attr._name, "</span>",
-				"</td><td>", 
+				"</td><td style='width:250px'>", 
 				"<div><div class='simpleValue valueSelected attributeOtherValue'>simple value</div>",
-				"<div class='complexValue attributeOtherValue'>complex value</div></div>",
+				"<div class='complexValue attributeOtherValue'>complex value</div></div></td><td>",
 				attr.unitPost,
 			"</td></tr></tbody></table></div>"].join('');
 		}).join('');
@@ -533,7 +533,14 @@ Store, Grid){
 			}
 		});
 		domConstruct.place(itemNode, 'modulesLoaded');
+		console.log(mod.module.prototype.name);
 		var nodes = query('[data-attr-mod="' + mod.module.prototype.name + '"].attributeItem', 'attributesConfig');
+		
+		nodes.forEach(function(node){	//other attribute are able to use once the mod is used
+			if(domClass.contains(node, 'attributeOtherItem')){
+				domClass.add(node, 'attributeItemUsed');
+			}
+		});
 		nodes.removeClass('attributeItemDisabled');
 	}
 	
@@ -633,7 +640,7 @@ Store, Grid){
 																//in the code way.
 			// }
 		});
-		console.log(cfg);
+		// console.log(cfg);
 		grid = new Grid(cfg);
 		grid.placeAt('gridContainer');
 		grid.startup();

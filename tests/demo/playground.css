@@ -1028,6 +1028,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	overflow: auto;
 	margin: 20px 0 20px 60px;
 }
+#attributesOtherInner {
+	width: 700px;
+	height: 480px;
+	overflow: auto;
+	margin: 20px 0 20px 60px;
+}
+
 .attributeNumberItem {
 	width: 600px;
 	padding: 5px 10px;
