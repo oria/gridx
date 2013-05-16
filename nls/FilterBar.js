@@ -51,11 +51,11 @@ define({ root:
 	"filterButton": "Filter",
 	"waiFilterButton": "Submit the filter",
 	
-	"columnSelectLabel": "Column",
+	"columnSelectLabel": "Column:",
 	"waiColumnSelectTemplate": "Column for rule ${0}",
-	"conditionSelectLabel": "Condition",
+	"conditionSelectLabel": "Condition:",
 	"waiConditionSelectTemplate": "Condition for rule ${0}",
-	"valueBoxLabel": "Value",
+	"valueBoxLabel": "Value:",
 	"waiValueBoxTemplate": "Enter value to filter for rule ${0}",
 	
 	"rangeTo": "to",
