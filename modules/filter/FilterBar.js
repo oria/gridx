@@ -621,6 +621,10 @@ define([
 		},
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
+			this.btnFilter.destroy();
+			if(this._tooltip){
+				this._tooltip.destroy();
+			}
 			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}
