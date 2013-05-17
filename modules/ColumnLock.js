@@ -1,13 +1,15 @@
 define([
-	"dojo/_base/kernel",
+	"dojo/dom-style",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
 	"dojo/_base/lang",
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/html",
+	"dojo/_base/window",
 	"dojo/query",
 	"dojo/_base/sniff"
-], function(dojo, lang, _Module, declare, array, html, query, sniff){
+], function(domStyle, domClass, domGeometry, lang, _Module, declare, array, win, query, has){
 
 /*=====
 	return declare(_Module, {
@@ -56,7 +58,7 @@ define([
 		
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
-			var _this = this, g = this.grid, body = html.body();
+			var _this = this, g = this.grid, body = win.body();
 			deferStartup.then(function(){
 				if(!g.columnWidth || !g.columnWidth.arg('autoResize')){
 					_this.connect(g.body, 'onAfterRow', function(row){
@@ -94,7 +96,7 @@ define([
 			this.unlock();
 			
 			if(count){
-				html.addClass(this.grid.domNode, 'gridxColumnLock');
+				domClass.add(this.grid.domNode, 'gridxColumnLock');
 			}
 			
 			this.count = count;
@@ -103,7 +105,7 @@ define([
 		
 		unlock: function(){
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
-			html.removeClass(this.grid.domNode, 'gridxColumnLock');
+			domClass.remove(this.grid.domNode, 'gridxColumnLock');
 			
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
 			this._unlockColumns(rowNode);
@@ -119,8 +121,8 @@ define([
 			var r = rowNode.firstChild.rows[0];
 			for(var i = 0; i < this.count; i++){
 				var cell = r.cells[i];
-				html.removeClass(cell, 'gridxLockedCell');
-				html.style(cell, {height: 'auto'});
+				domClass.remove(cell, 'gridxLockedCell');
+				domStyle.set(cell, {height: 'auto'});
 			}
 			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = '0px';
 			rowNode.style.width = 'auto';
@@ -143,36 +145,36 @@ define([
 				return;
 			}
 			
-			var isHeader = html.hasClass(rowNode, 'gridxHeaderRowInner');
+			var isHeader = domClass.contains(rowNode, 'gridxHeaderRowInner');
 			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
 			for(i = 0; i < this.count; i++){
-				dojo.style(r.cells[i], 'height', 'auto');
+				domStyle.set(r.cells[i], 'height', 'auto');
 			}
 			
-			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
-				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
+			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h, 
+				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
 				
-			if(sniff('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
+			if(has('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
 				h2++;
 			}	
 				
-			dojo.style(rowNode.firstChild, 'height', h2 + 'px');
+			domStyle.set(rowNode.firstChild, 'height', h2 + 'px');
 			var lead = isHeader ? this.grid.hLayout.lead : 0,
 				pl = lead,
 				cols = this.grid._columns;
 			for(i = 0; i < this.count; i++){
 				var cell = r.cells[i],
 					s;
-				html.addClass(cell, 'gridxLockedCell');
-				if(sniff('ie') > 8){
+				domClass.add(cell, 'gridxLockedCell');
+				if(has('ie') > 8){
 					s = {height: h1 + 1 + 'px'};
 				}else{
 					s = {height: h1 + 'px'};
 				}
 				s[ltr ? 'left' : 'right'] = pl + 'px';
-				html.style(cell, s);
+				domStyle.set(cell, s);
 				
 				pl += cell.offsetWidth;
 			}
@@ -223,7 +225,7 @@ define([
 							if(rowNode.style.position == 'absolute'){
 								var l = 0;
 								array.forEach(rowNode.firstChild.rows[0].cells, function(cell){
-									if(dojo.hasClass(cell, 'gridxLockedCell')){
+									if(domClass.contains(cell, 'gridxLockedCell')){
 										cell.style.left = scrollLeft + l + 'px';
 										l += cell.offsetWidth;
 									}
