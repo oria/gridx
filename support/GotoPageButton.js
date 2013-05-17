@@ -4,13 +4,12 @@ define([
 	"dojo/string",
 	"./_LinkPageBase",
 	"./GotoPagePane",
-	"dojo/i18n!../nls/PaginationBar",
 	"dijit/Dialog",
 	"dijit/form/Button",
 	"dijit/form/NumberTextBox",
 	"dojo/keys",
 	"dojo/_base/event"
-], function(declare, lang, string, _LinkPageBase, GotoPagePane, nls, Dialog, Button, NumberTextBox, keys, event){
+], function(declare, lang, string, _LinkPageBase, GotoPagePane, Dialog, Button, NumberTextBox, keys, event){
 
 /*=====
 	return declare(_LinkPageBase, {

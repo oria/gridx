@@ -9,9 +9,8 @@ define([
 	"dojo/dom-style",
 	"dojo/dom-geometry",
 	"dojo/keys",
-	"../core/_Module",
-	"../core/util"
-], function(declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
+	"../core/_Module"
+], function(declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module){
 
 /*=====
 	return declare(_Module, {

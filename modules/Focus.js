@@ -7,9 +7,8 @@ define([
 	"dojo/_base/window",
 	"dojo/_base/event",
 	"dojo/keys",
-	"../core/_Module",
-	"../core/util"
-], function(declare, array, connect, lang, sniff, win, event, keys, _Module, util){
+	"../core/_Module"
+], function(declare, array, connect, lang, has, win, event, keys, _Module){
 
 /*=====
 	var Focus = declare(_Module, {
@@ -149,6 +148,18 @@ define([
 	return Focus;
 =====*/
 
+	function biSearch(arr, comp){
+		var i = 0, j = arr.length, k;
+		for(k = Math.floor((i + j) / 2); i + 1 < j; k = Math.floor((i + j) / 2)){
+			if(comp(arr[k]) > 0){
+				j = k;
+			}else{
+				i = k;
+			}
+		}
+		return arr.length && comp(arr[i]) >= 0 ? i : j;
+	}
+
 	return declare(_Module, {
 		name: 'focus',
 		
@@ -160,7 +171,7 @@ define([
 			t._focusNodes = [];
 			t._onDocFocus = function(evt){
 				if(!t._noBlur){
-					if(sniff('ie')){
+					if(has('ie')){
 						evt.target = evt.srcElement;
 					}
 					t._onFocus(evt);
@@ -171,7 +182,7 @@ define([
 				[g.domNode, 'onfocus', '_focus'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
 				[g, 'onBlur', '_doBlur']);
-			if(sniff('ie') < 9){
+			if(has('ie') < 9){
 				win.doc.attachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.addEventListener('focus', t._onDocFocus, true);
@@ -184,7 +195,7 @@ define([
 			t._areaQueue = null;
 			t._focusNodes = [];
 			t._queueIdx = -1;
-			if(sniff('ie') < 9){
+			if(has('ie') < 9){
 				win.doc.detachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.removeEventListener('focus', t._onDocFocus, true);
@@ -210,7 +221,7 @@ define([
 				area.connects = area.connects || [];
 
 				t._areas[area.name] = area;
-				var i = util.biSearch(tq, function(a){
+				var i = biSearch(tq, function(a){
 					return a.p - area.priority;
 				});
 				//If the priority is the same, put this area above the current one.
@@ -310,7 +321,7 @@ define([
 				if(t.currentArea() === areaName){
 					t._updateCurrentArea();
 				}
-				var i = util.biSearch(t._tabQueue, function(a){
+				var i = biSearch(t._tabQueue, function(a){
 						return a.p - area.priority;
 					}), j, 
 					stack = t._tabQueue[i].stack;
@@ -414,7 +425,7 @@ define([
 		_updateCurrentArea: function(area){
 			var t = this, tq = t._tabQueue;
 			if(area){
-				var i = t._queueIdx = util.biSearch(tq, function(a){
+				var i = t._queueIdx = biSearch(tq, function(a){
 						return a.p - area.priority;
 					}),
 					stack = tq[i].stack;
