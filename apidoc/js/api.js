@@ -388,8 +388,8 @@ versionChange = function(e){
 
 	var v = this.options[this.selectedIndex].value;
 	
-	var h = hash();
-	hash(v + '/' + h);
+	// var h = hash();
+	// hash(v + '/' + h);
 	
 	if(currentVersion == v){ return; }
 	
@@ -467,12 +467,16 @@ ready(function(){
 		
 		for(var i = 0, len = pathAry.length; i < len; i++){
 			if(i){
+				if(pathAry[i].indexOf('.') >= 0 ){
+					path.push(path[i - 1] + pathAry[i].split('.')[0]);
+				}
 				path.push(path[i - 1] + pathAry[i] + (i == len - 1? '' : '/'));
 			}else{
 				path.push(pathAry[i] + '/');
 			}
 		}
 		
+		// console.log('path is', path);
 		var anchor = pathLast[1];
 		moduleTree.selectAndClick(path, anchor);
 	}
