@@ -582,9 +582,10 @@ Store, Grid){
 		return store;
 	}
 	function gatherColumns(){
+		otherModules = {};
 		var cols = query('.columnBar', 'columnsContainer').map(function(columnBarNode){
 			var colBar = registry.byNode(columnBarNode).getColumn();
-			if(colBar.menu && typeof colBar.menu == 'string'){
+			if(colBar.menu && typeof colBar.menu == 'string'){	//FIX ME: ugly
 				var m = dojo.require(colBar.menu);
 				otherModules['gridx/modules/Filter'] = true;
 				colBar.menu = new m();
@@ -607,7 +608,9 @@ Store, Grid){
 		for(var i in otherModules){
 			array.forEach(modules, function(module){
 				if(module.mid == i){
-					mods.push(module);
+					if(mods.indexOf(module) < 0){
+						mods.push(module);
+					}
 				}
 			});
 		}
