@@ -343,6 +343,14 @@ define([
 			description: '', 
 			icon: 'images/modIcon-DndColumn.png',
 			iconClass: ''
+		},
+		{label: 'HeaderMenu', 
+			module: mods.HeaderMenu,
+			mid: 'gridx/modules/HeaderMenu',
+			name: 'Bar',
+			description: '', 
+			icon: 'images/modIcon-DndColumn.png',
+			iconClass: ''
 		}
 	];
 });

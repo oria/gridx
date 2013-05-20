@@ -43,6 +43,7 @@
 		><div class='columnBarFeature columnBarFeatureEditable'>editable</div
 		><div class='columnBarFeature columnBarFeatureAlwaysEditing'>always editing</div
 		><div class='columnBarFeature columnBarFeatureEditor'>custom editor</div
+		><div class='columnBarFeature columnBarFeatureMenu'>custom menu</div
 	></div
 	><div class='columnBarBtns'
 		><div class='columnBarBtn columnBarEditBtn' data-dojo-attach-event='onclick: onEdit'></div
@@ -106,7 +107,20 @@
 						><option value='dijit/form/TimeTextBox'>TimeTextBox</option
 						><option value='dijit/Editor'>Editor</option
 						></select></td>
-			</tr></tbody></table>
+			</tr><tr>
+					<td class='columnAttrLabel'>menu</td>
+					<td columnAttr='menu'><select 
+							class='columnBarEditInput'
+							data-dojo-attach-point='menuBox'
+							data-dojo-type='dijit.form.Select'
+							data-dojo-attach-event='onChange: onMenuChange'
+						><option value='' selected="true">none</option
+						><option value='gridx/support/menu/AZFilterMenu'>AZmenu</option
+						><option value='gridx/support/menu/NumberFilterMenu'>NumberTextBox</option
+						></select></td>
+			</tr>
+			
+			</tbody></table>
 			<div class='columnBarCloseEdit' data-dojo-attach-event='onclick: hideEditPane'>OK</div
 		></div
 	></div

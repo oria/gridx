@@ -26,6 +26,8 @@ define([
 	'dijit/form/NumberSpinner',
 	'dijit/form/Select',
 	'dijit/form/NumberTextBox',
+	'gridx/support/menu/NumberFilterMenu',
+	'gridx/support/menu/AZFilterMenu',
 	'dojo/domReady!'
 ], function(require, ready, parser, lang, query, array, DeferredList,
 	dom, domConstruct, domGeo, domClass, domStyle,
@@ -216,6 +218,8 @@ Store, Grid){
 		}
 	});
 	colScrollHandler = null;
+	otherModules = {};
+	
 	function startScrollColumns(dir){
 		if(!colScrollHandler){
 			colScrollHandler = setInterval(function(){
@@ -579,17 +583,36 @@ Store, Grid){
 	}
 	function gatherColumns(){
 		var cols = query('.columnBar', 'columnsContainer').map(function(columnBarNode){
-			return colBar = registry.byNode(columnBarNode).getColumn();
+			var colBar = registry.byNode(columnBarNode).getColumn();
+			if(colBar.menu && typeof colBar.menu == 'string'){
+				var m = dojo.require(colBar.menu);
+				otherModules['gridx/modules/Filter'] = true;
+				colBar.menu = new m();
+			}
+			return colBar;
+			// return colBar = registry.byNode(columnBarNode).getColumn();
 		});
 		cols.sort(function(col1, col2){
 			return col1.index - col2.index;
 		});
+		
+		
 		return cols;
 	}
 	function gatherModules(){
-		return query('.moduleItem', 'modulesLoaded').map(function(modNode){
+		var mods = query('.moduleItem', 'modulesLoaded').map(function(modNode){
 			return modules[modNode.getAttribute('data-mod-idx')];
 		});
+		
+		for(var i in otherModules){
+			array.forEach(modules, function(module){
+				if(module.mid == i){
+					mods.push(module);
+				}
+			});
+		}
+		
+		return mods;
 	}
 	function gatherAttributes(){
 		var validAttr = query('.attributeItemUsed', 'attributesConfig').map(function(attrNode){
