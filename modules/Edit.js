@@ -359,10 +359,7 @@ define([
 								html = [
 								"<div rowid='" + rowId + "' ",
 								"colid='" + colId + "' ",
-								"class='gridxCellBg' ",
-								"style='position:absolute;'>",
-								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + gridxRelaPath() + "../gridx/resources/images/gridxCellChanged.png'>",
-								'</div>'
+								"class='gridxCellEditedBg'><span>◥</span></div>"
 							].join('');
 							
 							cellBgNode = domConstruct.toDom(html);
