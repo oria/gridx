@@ -586,9 +586,11 @@ Store, Grid){
 		var cols = query('.columnBar', 'columnsContainer').map(function(columnBarNode){
 			var colBar = registry.byNode(columnBarNode).getColumn();
 			if(colBar.menu && typeof colBar.menu == 'string'){	//FIX ME: ugly
-				var m = dojo.require(colBar.menu);
+				console.log('filter menu module is: ', colBar.menu);
+				require([colBar.menu], function(m){
+					colBar.menu = new m({});
+				});
 				otherModules['gridx/modules/Filter'] = true;
-				colBar.menu = new m();
 			}
 			return colBar;
 			// return colBar = registry.byNode(columnBarNode).getColumn();
