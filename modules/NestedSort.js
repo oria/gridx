@@ -84,10 +84,8 @@ define([
 				g.model.sort(t._sortData);
 			}
 			
-			if(t.grid.headerRegions){
-				t.connect(g.headerRegions, 'refresh', t._updateUI);
-			}
-			
+			t.connect(g.headerRegions, 'refresh', t._updateUI);
+
 			g.headerRegions.add(lang.hitch(t, t._createBtn, 1), 10, 1);
 			g.headerRegions.add(lang.hitch(t, t._createBtn, 0), 11, 1);
 		},
