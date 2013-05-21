@@ -26,6 +26,7 @@
 		modelExtensions: [
 			"gridx/core/model/extensions/FormatSort"
 		],
+		baseSort: [{attribute: "Genre", descending: true}],
 		modules: [
 			"gridx/modules/SingleSort",
 			"gridx/modules/ColumnResizer",
@@ -40,6 +41,8 @@
 		modelExtensions: [
 			"gridx/core/model/extensions/FormatSort"
 		],
+		sortInitialOrder: [{colId: "Genre", descending: true},{colId: "Artist", descending: true}],
+
 		modules: [
 			"gridx/modules/NestedSort",
 			"gridx/modules/ColumnResizer",
