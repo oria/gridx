@@ -507,7 +507,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 .modulePreviewItemLabel td {
 	width: 90px;
 	height: 90px;
-	padding: 5px;
+	/*padding: 5px;*/
 	vertical-align: bottom;
 	text-align: center;
 	color: #555;

@@ -285,7 +285,7 @@ define([
 			mid: 'gridx/modules/GroupHeader',
 			name: 'GroupHeader',
 			description: '', 
-			icon: 'images/modIcon-RowHeader.png',
+			icon: 'images/modIcon-GroupHeader.png',
 			iconClass: ''
 		},		
 		{label: 'Hidden Column', 
