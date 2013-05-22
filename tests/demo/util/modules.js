@@ -349,7 +349,7 @@ define([
 			mid: 'gridx/modules/HeaderMenu',
 			name: 'Bar',
 			description: '', 
-			icon: 'images/modIcon-DndColumn.png',
+			icon: 'images/modIcon-HeaderRegion.png',
 			iconClass: ''
 		}
 	];
