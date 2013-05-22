@@ -651,6 +651,7 @@ Store, Grid){
 		}
 		var store = createStore();
 		var columns = gatherColumns();
+		// console.log('columns is: ', columns);
 		var mods = gatherModules();
 		var attributes = gatherAttributes();
 		var isClient = domClass.contains('clientStoreBtn', 'storeConfigBtnSelected');
@@ -847,32 +848,30 @@ Store, Grid){
 		clip.glue('clipBtn');
 	}
 	
-	function formatJsCode(prefix, obj){
-		var htmlAry = [];
-		var html = '';
-		
-		if(lang.isArray(obj)){
-			html += '\n' + prefix + '[ \n';
-			// htmlAry.push('[ \n');
+function formatJsCode(prefix, obj){
+	var html = '',
+	htmlAry = [];
+	if(typeof obj == 'object'){
+		if(obj instanceof Array){
+			html += '[\n';
 			for(var i in obj){
-				htmlAry.push(formatJsCode(prefix + '\t', obj[i]));
+				htmlAry.push(prefix + '\t' +  formatJsCode(prefix + '\t', obj[i]));
 			}
 			html += htmlAry.join(',\n');
 			html += '\n' + prefix + ']';
-		}else if(lang.isObject(obj)){
-			html += '\n' + prefix + '{ \n';
-			for(var j in obj){
-				htmlAry.push(prefix + '\t' + j + ': ' + formatJsCode(prefix + '\t', obj[j], true));
+		}else{
+			html += '{\n';
+			for(var i in obj){
+				htmlAry.push(prefix + '\t' +  i + ': ' + formatJsCode(prefix + '\t', obj[i]));
 			}
 			html += htmlAry.join(',\n');
-			html += '\n' + prefix + '}';
-		}else{
-			html += (typeof obj == 'string' ? "'" + obj + "'" : obj.toString());
-			// htmlAry.push(obj.toString() + '');
+			html += '\n' + prefix + '}'; 
 		}
-		// return htmlAry.join('')
-		return html;
+	}else{
+		html = obj;
 	}
+	return html; 
+}
 
 	addColumnBar(null, {
 		field: 'name',
