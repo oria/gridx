@@ -350,7 +350,7 @@ Store, Grid){
 			var label = attrNode.getAttribute('data-attr-name');
 			var attr = attrsByName[label];
 			return ["<tr><td class='attributePreviewItemLabel'>", label,
-				"</td><td class='attributePreviewItemValue'>", attr.curValue,
+				"</td><td class='attributePreviewItemValue'>", lang.isObject(attr.curValue)? 'Object' : attr.curValue,
 				"</td></tr>"].join('');
 		});
 		query('#attributesConfigPreviewSummary tbody')[0].innerHTML = rows.join('');

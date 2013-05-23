@@ -722,6 +722,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	float: left;
 	width: 285px;
 	margin: 0 10px;	
+	word-wrap: break-word;
 }
 
 #moduleDescDependLabel {
