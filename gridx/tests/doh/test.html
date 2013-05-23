@@ -1,0 +1,101 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Gridx DOH tests</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import "../../../dojo/resources/dojo.css";
+		@import "../../../dijit/themes/claro/claro.css";
+		@import "../../../dijit/themes/claro/document.css";
+		@import "../../resources/claro/Gridx.css";
+		@import "../../resources/claro/Gridx_rtl.css";
+
+		#args {
+			position: absolute;
+			overflow: auto;
+			width: 600px;
+			height: 200px;
+			top: 500px;
+			right: 20px;
+			border: 1px solid blue;
+		}
+		#sidePane {
+			border: 1px solid #0033ff;
+			position: absolute;
+			top: 10px;
+			right: 20px;
+		}
+		#casePane {
+			text-align: center;
+			padding: 10px;
+			background-color: #0033ff;
+			color: #fff;
+		}
+		#caseTotal {
+			padding-left: 10px;
+			margin-right: 20px;
+		}
+		#caseCounter {
+			padding-left: 10px;
+		}
+		.progress {
+			height: 20px;
+			width: 100%;
+			background-color: #ccc;
+			text-align: center;
+		}
+		#msg {
+			width: 600px;
+			height: 400px;
+			overflow: auto;
+		}
+		#grid {
+			width: 600px;
+			height: 350px;
+		}
+		.errMsg {
+			padding: 5px;
+			position: relative;
+			border-bottom: 1px solid blue;
+		}
+		.statusErr {
+			background-color: #ee9900;
+		}
+		.actionErr {
+			background-color: #FF3322;
+		}
+		.errInfo {
+			color: #fff;
+			padding: 0 0 0 15px;
+		}
+		.reqId {
+			background-color: #fff;
+			color: #000;
+			float: right;
+			padding: 8px;
+		}
+		.afterActionId {
+			background-color: blue;
+		}
+	</style>
+	<script type="text/javascript" src="../../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true"></script>
+	<script type="text/javascript" src='test.js'></script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Gridx DOH tests
+	</h1>
+	<div id='gridContainer'></div>
+	<div id='args'></div>
+	<div id='sidePane'>
+		<div id='casePane'>
+			<label>Total</label><span id='caseTotal'></span><label>Current</label><span id='caseCounter'></span>
+			<button id='startBtn' onclick='onClickBtn()' disabled>Start</button>
+		</div>
+		<div id='combination' class='progress'></div>
+		<div id='progress' class='progress'></div>
+		<div id='msg'></div>
+	</div>
+</body>
+</html>

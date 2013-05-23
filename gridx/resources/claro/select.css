@@ -1,0 +1,20 @@
+/* row select */
+.claro .gridxRowSelected .gridxRowTable,
+.claro .gridxRowSelected .gridxCell,
+/* column select */
+.claro .gridxRow .gridxColumnSelected,
+/* cell select */
+.claro .gridxRow .gridxCellSelected {
+	background:url("../images/row_back.png") #cee6fa repeat-x;
+}
+/* Indirect Select */
+.claro .gridx .dijitCheckBoxPartial {
+	background: url("../images/checkboxpartial.png");
+	height: 15px;
+}
+
+
+.claro .gridx .dijitCheckBoxPartialDisabled {
+	background: url("../images/checkboxpartialdisabled.png");
+	height: 15px;	
+}

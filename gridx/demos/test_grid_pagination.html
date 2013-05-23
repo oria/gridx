@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Grid Pagination Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="../tests/support/common.css" />
+	<style type="text/css">
+		.gridx {
+			width: 600px;
+			height: 300px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='../tests/support/common.js'></script>
+	<script type="text/javascript" src='test_grid_pagination.js'></script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Grid Pagination Test
+	</h1>
+	<h2>Pagination Grid with API only</h2>
+	<table style='width: 600px;'>
+		<tr>
+			<td style='text-align: center;'><button data-dojo-type='dijit.form.Button' data-dojo-props='onClick: first'>First Page</button></td>
+			<td style='text-align: center;'><button data-dojo-type='dijit.form.Button' data-dojo-props='onClick: prev'>Prev Page</button></td>
+			<td style='text-align: center;'><button data-dojo-type='dijit.form.Button' data-dojo-props='onClick: next'>Next Page</button></td>
+			<td style='text-align: center;'><button data-dojo-type='dijit.form.Button' data-dojo-props='onClick: last'>Last Page</button></td>
+		</tr>
+	</table>
+	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		modules: [
+			"gridx/modules/Pagination"
+		]
+	'></div>
+	<h2>Link-button style PaginationBar</h2>
+	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		modules: [
+			"gridx/modules/Pagination",
+			"gridx/modules/pagination/PaginationBar"
+		]
+	'></div>
+	<h2>Drop-down style PaginationBar</h2>
+	<div id='grid3' jsid='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		modules: [
+			"gridx/modules/Pagination",
+			"gridx/modules/pagination/PaginationBarDD"
+		]
+	'></div>
+</body>
+</html>

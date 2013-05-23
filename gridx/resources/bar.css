@@ -1,0 +1,24 @@
+.gridxSummaryBar {
+	background: url("images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
+	padding: 3px 9px;
+	border-top: 1px solid #DDDDDD;
+}
+
+.gridxTitleBar {
+	background: url("images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
+	padding: 3px 9px;
+	border-top: 1px solid #FFFFFF;
+}
+
+.gridxBar {
+	background: url("images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
+	border-top: 1px solid #FFFFFF;
+}
+
+.gridxBar > table {
+	width: 100%;
+}
+
+.gridxSummary {
+	padding: 3px 9px;
+}
