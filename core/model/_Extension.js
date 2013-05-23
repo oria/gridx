@@ -1,9 +1,8 @@
 define([
 	'dojo/_base/declare',
 	"dojo/_base/lang",
-	'dojo/_base/array',
 	'dojo/aspect'
-], function(declare, lang, array, aspect){
+], function(declare, lang, aspect){
 
 /*=====
 	return declare([], {
@@ -31,9 +30,9 @@ define([
 		},
 
 		destroy: function(){
-			array.forEach(this._cnnts, function(cnnt){
-				cnnt.remove();
-			});
+			for(var i = 0, len = this._cnnts.length; i < len; ++i){
+				this._cnnts[i].remove();
+			}
 		},
 
 		aspect: function(obj, e, method, scope, pos){

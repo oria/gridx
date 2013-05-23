@@ -27,7 +27,7 @@ define([
 			
 		},
 		
-		undo：function(){
+		undo: function(){
 			// summary:
 			//		Undo last edit change.
 			// returns:
@@ -35,7 +35,7 @@ define([
 			return false;	//Boolean
 		},
 		
-		redo： function(){
+		redo: function(){
 			// summary:
 			//		redo next edit change.
 			// returns:
@@ -43,24 +43,24 @@ define([
 			return false;	//Boolean
 		},
 		
-		save： function(){
+		save:  function(){
 			// summary:
 			//		write to store. Clear undo list.
 			// returns:
 			//		A Deferred object indicating all the store save operation has finished.			
 		},
 		
-		clearLazyData： function(){
+		clearLazyDat: function(){
 			// summary:
 			//		Undo all. Clear undo list. The initial name of this function is 'clear'.
 			//		When use grid.model.clear(), this function won't be run because 
 			//		there is a function named 'clear'in ClientFilter.
 			//		So rename this function to clearLazyData which is more in detail about what this 
 			//		function really do.			
-			
+		
 		},
 		
-		isChanged： function(){
+		isChanged: function(){
 			// summary:
 			//		Check whether a field is changed for the given row.
 			// rowId:
@@ -71,13 +71,13 @@ define([
 			return false;	//Boolean
 		},
 		
-		getChanged： function(){
+		getChanged: function(){
 			// summary:
 			//		Get all the changed rows Ids.
 			// returns:
 			//		An array of changed row IDs.
 			return [];	//Array
-		}，
+		},
 
 		onSave: function(rowids){
 			// summary:

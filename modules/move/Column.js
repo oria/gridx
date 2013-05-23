@@ -35,7 +35,7 @@ define([
 		//		End index should be always larger than start index.
 		//		For example: { 0: 3 } means the first 4 columns can only be moved within themselves,
 		//		they can not be moved out and other columns can not be moved in.
-		constraints: Object
+		constraints: Object,
 
 		move: function(columnIndexes, target){
 			// summary:

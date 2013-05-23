@@ -1,13 +1,12 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/store/Memory",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
 	"dojo/i18n!../nls/PaginationBar",
 	"dijit/form/Select"
-], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, Select){
+], function(declare, lang, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, Select){
 
 /*=====
 	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {

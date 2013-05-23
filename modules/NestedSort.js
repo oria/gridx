@@ -83,6 +83,9 @@ define([
 			if(t._sortData.length){
 				g.model.sort(t._sortData);
 			}
+			
+			t.connect(g.headerRegions, 'refresh', t._updateUI);
+
 			g.headerRegions.add(lang.hitch(t, t._createBtn, 1), 10, 1);
 			g.headerRegions.add(lang.hitch(t, t._createBtn, 0), 11, 1);
 		},

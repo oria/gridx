@@ -8,7 +8,6 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	'dojo/_base/array',
-	"dojo/on",
 	"dojo/DeferredList",
 	"dojo/dom-class",
 	"dojo/dom-style",
@@ -16,13 +15,12 @@ define([
 	"dojo/dom-construct",
 	"dojo/keys",
 	"../core/_Module",
-	"../core/util",
 	"dojo/date/locale",
 	'../core/model/extensions/Modify',
 	'dojo/_base/event',
 	"dijit/form/TextBox"
 //    "dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, on, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, _Module, util, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, _Module, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -359,10 +357,7 @@ define([
 								html = [
 								"<div rowid='" + rowId + "' ",
 								"colid='" + colId + "' ",
-								"class='gridxCellBg' ",
-								"style='position:absolute;'>",
-								"<img style='position:absolute;z-index:10' src='" + dojo.baseUrl + gridxRelaPath() + "../gridx/resources/images/gridxCellChanged.png'>",
-								'</div>'
+								"class='gridxCellEditedBg'><span>◥</span></div>"
 							].join('');
 							
 							cellBgNode = domConstruct.toDom(html);

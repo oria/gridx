@@ -9,9 +9,8 @@ define([
 	"dojo/query",
 	"dojo/_base/sniff",
 	"dojo/keys",
-	"../core/util",
 	"../core/_Module"
-], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, has, keys, util, _Module){
+], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, has, keys, _Module){
 
 /*=====
 	Column.headerNode = function(){

@@ -1,14 +1,18 @@
 define([
 	"dojo/_base/kernel",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
 	"dojo/_base/lang",
+	"dojo/_base/Deferred",
 	"../core/_Module",
 	"dojo/_base/declare",
-	"dojo/_base/html",
 	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/query"
-], function(dojo, lang, _Module, declare, html, baseFx, fx, query){
-	dojo.experimental('gridx/modules/Dod');
+], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, Deferred, _Module, declare, baseFx, fx, query){
+	kernel.experimental('gridx/modules/Dod');
 
 /*=====
 	return declare(_Module, {
@@ -110,36 +114,36 @@ define([
 			
 			var node = row.node(), w = node.scrollWidth;
 			if(!_row.dodLoadingNode){
-				_row.dodLoadingNode = dojo.create('div', {
+				_row.dodLoadingNode = domConstruct.create('div', {
 					className: 'gridxDodLoadNode', 
 					innerHTML: 'Loading...'
 				});
 			}
 			if(!_row.dodNode){
-				_row.dodNode = dojo.create('div', {className: 'gridxDodNode'});
+				_row.dodNode = domConstruct.create('div', {className: 'gridxDodNode'});
 			}
-			html.place(_row.dodLoadingNode, node, 'last');
-			html.place(_row.dodNode, node, 'last');
-			html.style(_row.dodLoadingNode, 'width', w + 'px');
-			html.style(_row.dodNode, 'width', w + 'px');
+			domConstruct.place(_row.dodLoadingNode, node, 'last');
+			domConstruct.place(_row.dodNode, node, 'last');
+			domStyle.set(_row.dodLoadingNode, 'width', w + 'px');
+			domStyle.set(_row.dodNode, 'width', w + 'px');
 			
-			html.addClass(node, 'gridxDodShown');
-			html.style(_row.dodNode, 'display', 'none');
+			domClass.add(node, 'gridxDodShown');
+			domStyle.set(_row.dodNode, 'display', 'none');
 			
 			if(_row.dodLoaded){
 				this._detailLoadComplete(row);
 				return;
 			}else{
-				html.style(_row.dodLoadingNode, 'display', 'block');
+				domStyle.set(_row.dodLoadingNode, 'display', 'block');
 			}
 			
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
-				html.style(rowHeaderNode.firstChild, 'height', html.style(row.node(), 'height') + 'px');
+				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') + 'px');
 			}
 			
-			var df = new dojo.Deferred(), _this = this;
+			var df = new Deferred(), _this = this;
 			if(this.arg('detailProvider')){
 				this.detailProvider(this.grid, row.id, _row.dodNode, df);
 			}else{
@@ -155,11 +159,11 @@ define([
 		hide: function(row){
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
 			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
-			html.removeClass(row.node(), 'gridxDodShown');
-			html.style(_row.dodLoadingNode, 'display', 'none');
+			domClass.remove(row.node(), 'gridxDodShown');
+			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') - 1 + 'px');
+				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
 			var expando = this._getExpando(row);
@@ -232,12 +236,12 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			if(!html.hasClass(e.target, 'gridxDodExpando') && !html.hasClass(e.target, 'gridxDodExpandoText')){return;}
+			if(!domClass.contains(e.target, 'gridxDodExpando') && !domClass.contains(e.target, 'gridxDodExpandoText')){return;}
 			var node = e.target;
-			while(node && !html.hasClass(node, 'gridxRow')){
+			while(node && !domClass.contains(node, 'gridxRow')){
 				node = node.parentNode;
 			}
-			var idx = html.attr(node, 'rowindex');
+			var idx = node.getAttribute('rowindex');
 			this.toggle(this.grid.row(parseInt(idx)));
 		},
 		
@@ -245,9 +249,9 @@ define([
 
 			var _row = this._row(row);
 			if(this.arg('showExpando')){
-				var tbl = dojo.query('table', row.node())[0];
+				var tbl = query('table', row.node())[0];
 				var cell = tbl.rows[0].cells[0];
-				var span = dojo.create('span', {
+				var span = domConstruct.create('span', {
 					className: 'gridxDodExpando',
 					innerHTML: '<span class="gridxDodExpandoText">' 
 						+ (this.arg('defaultShow') ? '-' : '+') + '</span>'
@@ -287,8 +291,8 @@ define([
 		},
 		
 		_onColumnResize: function(){
-			dojo.query('.gridxDodNode', this.grid.bodyNode).forEach(function(node){
-				html.style(node, 'width', node.parentNode.firstChild.offsetWidth + 'px');
+			query('.gridxDodNode', this.grid.bodyNode).forEach(function(node){
+				domStyle.set(node, 'width', node.parentNode.firstChild.offsetWidth + 'px');
 			});
 		},
 		
@@ -298,12 +302,12 @@ define([
 			_row.dodLoaded = true;
 			
 			if(_row.defaultShow){
-				html.style(_row.dodNode, 'display', 'block');
+				domStyle.set(_row.dodNode, 'display', 'block');
 				g.body.onRender();
 			}else{
-				if(dojo.style(_row.dodLoadingNode, 'display') == 'block'){
-					html.marginBox(_row.dodNode, {h: html.marginBox(_row.dodLoadingNode).h});
-					html.style(_row.dodNode, 'display', 'block');
+				if(domStyle.get(_row.dodLoadingNode, 'display') == 'block'){
+					domGeometry.setMarginBox(_row.dodNode, {h: domGeometry.getMarginBox(_row.dodLoadingNode).h});
+					domStyle.set(_row.dodNode, 'display', 'block');
 				}
 
 				if(this.arg('useAnimation')){
@@ -336,7 +340,7 @@ define([
 					
 				}
 			}
-			html.style(_row.dodLoadingNode, 'display', 'none');
+			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 		},
 		_detailLoadError: function(row){
 			var _row = this._row(row);
@@ -351,7 +355,7 @@ define([
 		},
 		_getExpando: function(row){
 			if(!this.showExpando)return null;
-			var tbl = dojo.query('table', row.node())[0];
+			var tbl = query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
 			return cell.firstChild;
 		},

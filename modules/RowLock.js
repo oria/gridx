@@ -4,10 +4,10 @@ define([
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/html",
+	"dojo/dom-class",
 	"dojo/query"
-], function(dojo, lang, _Module, declare, array, html, query){
-	dojo.experimental('gridx/modules/RowLock');
+], function(kernel, lang, _Module, declare, array, domClass, query){
+	kernel.experimental('gridx/modules/RowLock');
 
 /*=====
 	return declare(_Module, {
@@ -49,7 +49,7 @@ define([
 			this.count = count;
 			this._foreachLockedRows(function(node){
 				node.style.position = 'absolute';
-				html.addClass(node, 'gridxLockedRow');
+				domClass.add(node, 'gridxLockedRow');
 			});
 			this._adjustBody();
 			this._updatePosition();
@@ -57,7 +57,7 @@ define([
 		unlock: function(){
 			this._foreachLockedRows(function(node){
 				node.style.position = 'static';
-				html.removeClass(node, 'gridxLockedRow');
+				domClass.remove(node, 'gridxLockedRow');
 			});
 			this.grid.bodyNode.style.paddingTop = '0px';
 			this.count = 0;

@@ -8,9 +8,8 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/keys",
 	"../core/_Module",
-	"../core/util",
 	"./RowHeader"
-], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util){
+], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module){
 
 /*=====
 	return declare(_Module, {

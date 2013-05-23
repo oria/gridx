@@ -6,9 +6,8 @@ define([
 	"dijit/registry",
 	"dijit/a11y",
 	"dojo/dom-construct",
-	"../core/_Module",
-	"../core/util"
-], function(require, declare, lang, array, registry, a11y, domConstruct, _Module, util){
+	"../core/_Module"
+], function(require, declare, lang, array, registry, a11y, domConstruct, _Module){
 
 /*=====
 	var Bar = declare(_Module, {

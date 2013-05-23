@@ -228,6 +228,9 @@
 .gridxQuickFilterInput {
 	width: 150px;
 }
+.gridxQuickFilterInput .dijitInputInner::-ms-clear {
+	display: none;
+}
 
 .gridxQuickFilterClear {
 	background: transparent url(images/sprite_icons.png) no-repeat -178px 5px;

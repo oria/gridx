@@ -20,7 +20,6 @@ define([
 	"./FilterTooltip",
 	"dijit/TooltipDialog",
 	"dijit/popup",
-	"dijit/Tooltip",
 	"dijit/form/Button"
 ], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
@@ -621,6 +620,10 @@ define([
 		},
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
+			this.btnFilter.destroy();
+			if(this._tooltip){
+				this._tooltip.destroy();
+			}
 			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}
