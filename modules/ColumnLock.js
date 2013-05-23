@@ -64,6 +64,7 @@ define([
 					_this.connect(g.body, 'onAfterRow', function(row){
 						_this._lockColumns(row.node());
 					});
+					_this.connect(g.columnWidth, 'onUpdate', '_updateHeader');
 					if(g.columnResizer){
 						//make it compatible with column resizer
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');

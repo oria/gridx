@@ -264,7 +264,7 @@ define([
 		//generate unsorted range list.
 		var i, j, r, end, newRange,
 			results = [],
-			indexMap = self._struct[parentId],
+			indexMap = self._struct[parentId] || [],
 			totalSize = self._size[parentId];
 		for(i = ranges.length - 1; i >= 0; --i){
 			r = ranges[i];
