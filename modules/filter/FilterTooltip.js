@@ -1,16 +1,13 @@
 define([
-	"dojo",
+	"dojo/_base/array",
+	"dojo/_base/event",
+	"dojo/dom-class",
 	"dijit/popup",
 	"dojo/_base/declare",
 	"dojo/string",
 	"dojo/i18n!../../nls/FilterBar",
-	"dijit/TooltipDialog",
-	"./FilterDialog",
-	"dijit/Tooltip",
-	"dojo/_base/array",
-	"dojo/_base/event",
-	"dojo/_base/html"
-], function(dojo, popup, declare, string, i18n, TooltipDialog){
+	"dijit/TooltipDialog"
+], function(array, event, domClass, popup, declare, string, i18n, TooltipDialog){
 
 /*=====
 	return declare([], {
@@ -28,8 +25,8 @@ define([
 			this.connect(this, 'onClick', '_onClick');
 			this.connect(this, 'onMouseEnter', '_onMouseEnter');
 			this.connect(this, 'onMouseLeave', '_onMouseLeave');
-			dojo.addClass(this.domNode, 'gridxFilterTooltip');
-			dojo.addClass(this.domNode, 'dijitTooltipBelow');
+			domClass.add(this.domNode, 'gridxFilterTooltip');
+			domClass.add(this.domNode, 'dijitTooltipBelow');
 		},
 		show: function(evt){
 			this.inherited(arguments);
@@ -56,7 +53,7 @@ define([
 			var arr = ['<div class="gridxFilterTooltipTitle"><b>${i18n.statusTipTitleHasFilter}</b> ', 
 				typeString, '</div><table><tr><th>${i18n.statusTipHeaderColumn}</th><th>${i18n.statusTipHeaderCondition}</th></tr>'
 			];
-			dojo.forEach(data.conditions, function(d, idx){
+			array.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
 				if(d.colId){
 					var colName = this.grid.column(d.colId).name();
@@ -72,7 +69,7 @@ define([
 			arr.push('</table>');
 			this.i18n = i18n;
 			this.set('content', string.substitute(arr.join(''), this));
-			dojo.toggleClass(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
+			domClass.toggle(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},
 		_onMouseEnter: function(e){
 			this.isMouseOn = true;
@@ -88,7 +85,7 @@ define([
 				fb.filterData.conditions.splice(tr.rowIndex - 1, 1);
 				tr.parentNode.removeChild(tr);
 				fb.applyFilter(fb.filterData);
-				dojo.stopEvent(e);
+				event.stop(e);
 			}else{
 				this.filterBar.showFilterDialog();
 				this.hide();

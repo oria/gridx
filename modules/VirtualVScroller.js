@@ -347,7 +347,14 @@ define([
 				t._ratio = h / maxHeight;
 				h = maxHeight;
 			}
+			var dn = t.domNode,
+				//remember the scroll bar position
+				r = dn.scrollTop / dn.scrollHeight;
 			t.stubNode.style.height = h + 'px';
+			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
+			if(t._lastScrollTop){
+				t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
+			}
 		},
 	
 		_doVirtual: function(){

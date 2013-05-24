@@ -156,7 +156,7 @@ define([
 		//		If less than 1, then this is not a tree grid at all.
 		expandLevel: 1 / 0,
 
-		//clearOnSetStore: Boolean
+		// clearOnSetStore: Boolean
 		//		Whether to clear all the recorded expansion info after setStore.
 		clearOnSetStore: true,
 
