@@ -156,11 +156,16 @@ define([
 			}
 			
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
-				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
+				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h,
+				h3 = window.getComputedStyle(rowNode.firstChild, null).getPropertyValue('height');
 				
 			if(sniff('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px				
-				h2++;
+				if(h3.indexOf('.') >= 0){		//decimal
+					h2++;
+					h1++;
+					
+				}
 			}
 			dojo.style(rowNode.firstChild, 'height', h2 + 'px');
 			var lead = isHeader ? this.grid.hLayout.lead : 0,
@@ -170,11 +175,8 @@ define([
 				var cell = r.cells[i],
 					s;
 				html.addClass(cell, 'gridxLockedCell');
-				if(sniff('ie') > 8){
-					s = {height: h1 + 1 + 'px'};
-				}else{
-					s = {height: h1 + 'px'};
-				}
+
+				s = {height: h1 + 'px'};
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				html.style(cell, s);
 				

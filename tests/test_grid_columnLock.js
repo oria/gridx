@@ -15,7 +15,7 @@ require([
 		size: 100
 	});
 
-	layout = dataSource.layouts[0];
+	layout = dataSource.layouts[3];
 
 	lockColumns = function(){
 		var c = dijit.byId('integerspinner').get('value');
