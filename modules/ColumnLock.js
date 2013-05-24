@@ -155,13 +155,21 @@ define([
 			
 			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
-				
+			
+			var h3 = window.getComputedStyle(rowNode.firstChild, null).getPropertyValue('height');
+
 			if(has('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
-				h2++;
-			}	
 				
+				if(h3.toString().indexOf('.') >= 0){		//decimal
+				// if(Math.ceil(parseInt(h3, 10)) !== parseInt(h3, 10)){		//decimal
+					console.log('h3 is: ', h3);
+					h2++;
+					h1++;
+				}
+			}	
 			domStyle.set(rowNode.firstChild, 'height', h2 + 'px');
+			
 			var lead = isHeader ? this.grid.hLayout.lead : 0,
 				pl = lead,
 				cols = this.grid._columns;
@@ -169,11 +177,11 @@ define([
 				var cell = r.cells[i],
 					s;
 				domClass.add(cell, 'gridxLockedCell');
-				if(has('ie') > 8){
-					s = {height: h1 + 1 + 'px'};
-				}else{
+				// if(has('ie') > 8){
+					// s = {height: h1 + 1 + 'px'};
+				// }else{
 					s = {height: h1 + 'px'};
-				}
+				// }
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				domStyle.set(cell, s);
 				
