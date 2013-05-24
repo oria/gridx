@@ -158,7 +158,8 @@ define([
 			var colId = this.sltColumn.get('value');
 			var opt = this.grid.filterBar._getConditionOptions(isAnyColumn(colId) ? '' : colId);
 			var slt = this.sltCondition;
-			if(slt.options && slt.options.length){slt.removeOption(slt.options);}
+			//if(slt.options && slt.options.length){slt.removeOption(slt.options);}
+			slt.set('options', []);
 			slt.addOption(lang.clone(opt));
 			this._updateTitle();
 			this._updateValueField();
