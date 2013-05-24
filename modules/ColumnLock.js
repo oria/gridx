@@ -158,7 +158,7 @@ define([
 			
 			var h3 = window.getComputedStyle(rowNode.firstChild, null).getPropertyValue('height');
 
-			if(has('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
+			if(has('ie') > 8){		//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
 				
 				if(h3.toString().indexOf('.') >= 0){		//decimal
