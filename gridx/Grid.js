@@ -1,13 +1,11 @@
 define([
-	"dojo/_base/kernel",
 	"dojo/_base/declare",
-	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/on",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojox/html/metrics",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
@@ -17,45 +15,77 @@ define([
 	"./core/model/extensions/Query",
 	"./core/_Module",
 	"./modules/Header",
+	"./modules/View",
 	"./modules/Body",
 	"./modules/VLayout",
 	"./modules/HLayout",
 	"./modules/VScroller",
 	"./modules/HScroller",
-	"./modules/ColumnWidth"
-], function(kernel, declare, array, lang, has, on, domClass, domGeometry, query, metrics,
+	"./modules/ColumnWidth",
+	"./modules/Focus",
+	"dijit/_BidiSupport",
+	"dojo/NodeList-dom",
+	"dojo/NodeList-traverse"
+], function(declare, lang, has, on, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
-	Core, Query, _Module, Header, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth){
+	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
 
-	var forEach = array.forEach,
-		dummyFunc = function(){};
+	var dummyFunc = function(){};
 
-	
-	var Grid = declare([_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
+	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
 		//		Gridx is a highly extensible widget providing grid/table functionalities. 
 		// description:
 		//		Gridx is much smaller, faster, more reasonable designed, more powerful and more flexible 
 		//		compared to the old dojo DataGrid/EnhancedGrid.
-		//
-		//		NOTE:
-		//		=====
-		//		The API documents will be updated from time to time. If you encountered an API whose doc is
-		//		not sufficient enough, please refer to the following link for latest API docs:
-		//		http://evanhw.github.com/gridx/doc/gridx.html
-
 		
 		templateString: template,
+
+		//textDir bidi support begin
+		_setTextDirAttr: function(textDir){
+			// summary:
+			//		 Seamlessly changes grid 'textDir' property on the fly.
+			// textDir:
+			//		Grid text direction
+			if(this.textDir != textDir){
+				this.textDir = textDir;
+				this.header.refresh();
+				if(this.edit){
+					this.edit._initAlwaysEdit();
+				}
+				this.body.refresh();
+			}
+		},
+
+		getTextDir: function(colId, text){
+			var col = this._columnsById[colId],
+				textDir = (col && col.textDir) || this.textDir;
+			return textDir = (textDir === "auto") ? _BidiSupport.prototype._checkContextual(text) : textDir;
+		},
+
+		getTextDirStyle: function(colId, text){
+			var textDir = this.getTextDir(colId, text);
+			return textDir ? " direction:" + textDir + ";" : "";
+		},
+
+		enforceTextDirWithUcc: function(colId, text){
+			var textDir = this.getTextDir(colId, text);
+			//var LRE = '\u202A', RLE = '\u202B', PDF = '\u202C';
+			return textDir ? (textDir === "rtl" ? '\u202B' : '\u202A') + text + '\u202C' : text;
+		},
+		//textDir bidi support end
 
 		coreModules: [
 			//Put default modules here!
 			Header,
+			View,
 			Body,
 			VLayout,
 			HLayout,
 			VScroller,
 			HScroller,
-			ColumnWidth
+			ColumnWidth,
+			Focus
 		],
 
 		coreExtensions: [
@@ -141,7 +171,11 @@ define([
 		//Private-------------------------------------------------------------------------------
 		_onResizeBegin: function(){},
 		_onResizeEnd: function(){},
-		
+
+		_escapeId: function(id){
+			return String(id).replace(/\\/g, "\\\\");
+		},
+
 		//event handling begin
 		_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],
 	
@@ -154,13 +188,13 @@ define([
 		],
 	
 		_initEvents: function(objNames, evtNames){
-			var t = this;
-			forEach(objNames, function(comp){
-				forEach(evtNames, function(event){
-					var evtName = 'on' + comp + event;
-					t[evtName] = t[evtName] || dummyFunc;
-				});
-			});
+			var i = 0, j, comp, evt, evtName;
+			while(comp = objNames[i++]){
+				for(j = 0; evt = evtNames[j++];){
+					evtName = 'on' + comp + evt;
+					this[evtName] = this[evtName] || dummyFunc;
+				}
+			}
 		},
 	
 		_connectEvents: function(node, connector, scope){
@@ -187,27 +221,4 @@ define([
 			return has('mac') ? evt.metaKey : evt.ctrlKey;
 		}
 	});
-
-	Grid.markupFactory = function(props, node, ctor){
-		if(!props.structure && node.nodeName.toLowerCase() == "table"){
-			kernel.deprecated('Column declaration in <th> elements is deprecated,', 'use "structure" attribute in data-dojo-props instead', '1.1');
-			var s = props.structure = [];
-			query("thead > tr > th", node).forEach(function(th){
-				var col = {};
-				forEach(_Module._markupAttrs, function(attr){
-					if(attr[0] == '!'){
-						attr = attr.slice(1);
-						col[attr] = eval(th.getAttribute(attr));
-					}else{
-						col[attr] = th.getAttribute(attr);
-					}
-				});
-				col.name = col.name || th.innerHTML;
-				s.push(col);
-			});
-		}
-		return new ctor(props, node);
-	};
-	
-	return Grid;
 });

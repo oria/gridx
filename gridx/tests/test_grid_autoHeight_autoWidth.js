@@ -1,12 +1,12 @@
-define([
+require([
+	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	"gridx/modules/pagination/Pagination",
-	"gridx/modules/pagination/PaginationBar",
-	"gridx/modules/ColumnResizer"
-], function(dataSource, storeFactory){
+	"gridx/allModules",
+	'dojo/domReady!'
+], function(parser, dataSource, storeFactory){
 
 	layout = [
 		{id: 'id', field: 'id', name: 'Identity', width: '80px'},
@@ -29,4 +29,5 @@ define([
 		size: 0
 	});
 
+	parser.parse();
 });

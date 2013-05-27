@@ -6,11 +6,16 @@ define([
 	"dojo/dnd/Avatar"
 ], function(declare, domClass, domConstruct, win, Avatar){
 
+/*=====
+	return declare(Avatar, {
+		// summary:
+		//		Avatar shown beside mouse during dnd. Inheriting dojo/dnd/Avatar.
+		//		This dnd avatar is in a separated file so that it can be (dynamically) overwritten in case of need
+	});
+=====*/
+
 	return declare(Avatar, {
 		construct: function(manager){
-			// summary:
-			//		constructor function;
-			//		it is separate so it can be (dynamically) overwritten in case of need
 			var t = this;
 			t.isA11y = domClass.contains(win.body(), "dijit_a11y");
 			

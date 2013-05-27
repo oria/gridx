@@ -13,14 +13,9 @@
 			height: 100%;
 		}
 	</style>
-
-	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script>
-		require(['gridx/tests/test_grid_persist']);
-	</script>
-	
+	<script type="text/javascript" src='test_grid_persist.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
@@ -32,5 +27,12 @@
 		</td>
 		<td id='ctrlPane'></td>
 	</tr></table>
+	<div>
+		<h2>Notes:</h2>
+		<ul>
+			<li>If new columns are added, column order won't be restored.</li>
+			<li>If some columns are removed but no new columns, column order will still be restored.</li>
+		</ul>
+	</div>
 </body>
 </html>

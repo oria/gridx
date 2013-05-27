@@ -1,38 +1,33 @@
 require([
+	'dojo/_base/lang',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/modules/Persist',
-	'gridx/modules/select/Column',
-	'gridx/modules/move/Column',
-	'gridx/modules/dnd/Column',
-	'gridx/modules/NestedSort',
-	'gridx/modules/VirtualVScroller',
-	'gridx/modules/ColumnResizer',
+	'gridx/allModules',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/tests/support/TestPane'
-], function(Grid, Cache, Persist, SelectColumn, MoveColumn, DndColumn, NestedSort, VirtualVScroller, ColumnResizer, dataSource, storeFactory, TestPane){
+], function(lang, Grid, Cache, mods, dataSource, storeFactory, TestPane){
 
 	store = storeFactory({
 		dataSource: dataSource, 
 		size: 100
 	});
 
-	createGrid = function(){
+	createGrid = function(e, structure){
 		if(!window.grid){
 			grid = new Grid({
 				id: 'grid',
 				cacheClass: Cache,
 				store: store,
-				structure: dataSource.layouts[4],
+				structure: structure || dataSource.layouts[4],
 				modules: [
-					Persist,
-					SelectColumn,
-					MoveColumn,
-					DndColumn,
-					NestedSort,
-					VirtualVScroller,
-					ColumnResizer
+					mods.Persist,
+					mods.SelectColumn,
+					mods.MoveColumn,
+					mods.DndColumn,
+					mods.NestedSort,
+					mods.VirtualVScroller,
+					mods.ColumnResizer
 				]
 			});
 			grid.placeAt('gridContainer');
@@ -40,6 +35,22 @@ require([
 		}
 	};
 	createGrid();
+
+	createNewColGrid = function(){
+		var structure = lang.clone(dataSource.layouts[4]);
+		structure.push({
+			id: 'newCol', field: 'Genre', name: 'New Column'
+		});
+		destroyGrid();
+		createGrid(null, structure);
+	};
+
+	createLessColGrid = function(){
+		var structure = lang.clone(dataSource.layouts[4]);
+		structure.splice(1, 1);
+		destroyGrid();
+		createGrid(null, structure);
+	};
 
 	destroyGrid = function(){
 		if(window.grid){
@@ -66,6 +77,8 @@ require([
 
 	tp.addTestSet('Pesistent Actions', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createGrid">Create Grid</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createNewColGrid">Create Grid with new columns</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createLessColGrid">Create Grid with less columns</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroyGrid">Destroy Grid</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: enablePersist">Enable Persist</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: disablePersist">Disable Persist</div><br/>',

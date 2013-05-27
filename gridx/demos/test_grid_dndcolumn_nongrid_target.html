@@ -5,17 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="../tests/support/common.css" />
 	<style type="text/css">
-		.gridContainer {
+		.gridx {
 			width: 500px;
 			height: 200px;
 			margin: 10px;
 		}
 
-		.gridx {
-			height: 100%;
-		}
-
 		#songForm {
+			width: 500px;
 			border: 3px solid #ccc;
 			radius: 8pt;
 			-moz-border-radius: 8pt 8pt;
@@ -31,34 +28,29 @@
 			margin-left: 30px;
 			font-size: 15px !important;
 		}
-
 	</style>
-
-	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='../tests/support/common.js'></script>
-	<script src="test_grid_dndcolumn_nongrid_target.js"></script>
-	<script>
-	require(['gridx/tests/test_grid_dndcolumn_nongrid_target', 'dojo/domReady!'], function(){});
-	</script>
+	<script type="text/javascript" src='test_grid_dndcolumn_nongrid_target.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title'>Grid Column DnD - Drag to Non-Grid Target</h1>
-	<table border='0' cellspacing='0' cellpadding='0'>
-		<tr>
-			<td>
-				<div id='grid1Container' class='gridContainer'></div>
-			</td>
-		</tr><tr>
-			<td>
-				<div id='draggedRows'>
-					<div id="songForm">
-						<h2>Select and then Drag some columns here:</h2>
-						<div id='draggedColumns'></div>
-					</div>
-				</div>
-			</td>
-		</tr>
-	</table>
+	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		selectRowTriggerOnCell: true,
+		dndColumnCanRearrange: false,
+		modules: [
+			"gridx/modules/extendedSelect/Column",
+			"gridx/modules/move/Column",
+			"gridx/modules/dnd/Column",
+			"gridx/modules/VirtualVScroller"
+		]
+	'></div>
+	<div id="songForm">
+		<h2>Select and then Drag some columns here:</h2>
+		<div id='draggedColumns'></div>
+	</div>
 </body>
 </html>

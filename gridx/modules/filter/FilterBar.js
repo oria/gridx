@@ -14,7 +14,7 @@ define([
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"dojo/i18n!../../nls/FilterBar",
-	"./Filter",
+	"../Filter",
 	"./FilterDialog",
 	"./FilterConfirmDialog",
 	"./FilterTooltip",
@@ -24,31 +24,137 @@ define([
 	"dijit/form/Button"
 ], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
-	/*=====
-	var columnDefinitionFilterMixin = {
+/*=====
+	var FilterBar = declare(_Module, {
+		// summary:
+		//		Filter bar module.
+		// description:
+		//		Show a filter bar on top of grid header. Clicking the filter bar will show a filter dialog to config conditions.
+		//		This module depends on "filter" module.
+
+		// filterData: Object
+		//		Set the initial filter rules. Format is:
+		//	|	{
+		//	|		type: "all",
+		//	|		conditions: [
+		//	|			{}
+		//	|		]
+		//	|	}
+		filterData: null,
+
+		// closeButton: Boolean
+		//		TRUE to show a small button on the filter bar for the user to close/hide the filter bar.
+		closeButton: true,
+
+		// defineFilterButton: Boolean
+		//		FALSE to hide the define filter button on the left side (right side for RTL) of the filter bar.
+		defineFilterButton: true,
+
+		// tooltipDelay: Number
+		//		Time in mili-seconds of the delay to show the Filter Status Tooltip when mouse is hovering on the filter bar.
+		tooltipDelay: 300,
+
+		// maxRuleCount: Integer
+		//		Maximum rule count that can be applied in the Filter Definition Dialog.
+		//		If <= 0 or not number, then infinite rules are supported.
+		maxRuleCount: 0,
+
+		// ruleCountToConfirmClearFilter: Integer | Infinity | null
+		//		If the filter rule count is larger than or equal to this value, then a confirm dialog will show when clearing filter.
+		//		If set to less than 1 or null, then always show the confirm dialog.
+		//		If set to Infinity, then never show the confirm dialog.
+		//		Default value is 2.
+		ruleCountToConfirmClearFilter: 2,
+
+		// itemsName: String
+		//		The general name of the items listed in the grid.
+		//		If not provided, then search the language bundle.
+		itemsName: '',
+
+		// condition:
+		//		Name of all supported conditions.
+		//		Hard coded here or dynamicly generated is up to the implementer. Anyway, users should be able to get this info.
+		conditions: {},
+
+		applyFilter: function(filterData){
+			// summary:
+			//		Apply the filter data.
+		},
+
+		refresh: function(){
+			// summary:
+			//		Re-draw the filter bar if necessary with the current attributes.
+			// example:
+			//	|	grid.filterBar.closeButton = true;
+			//	|	grid.filterBar.refresh();
+		},
+
+		isVisible: function(){
+			// summary:
+			//		Whether the filter bar is visible.
+		},
+
+		show: function(){
+			// summary:
+			//		Show the filter bar. (May add animation later)
+		},
+
+		hide: function(){
+			// summary:
+			//		Hide the filter bar. (May add animation later)
+		},
+
+		onShow: function(){
+		},
+
+		onHide: function(){
+		},
+
+		showFilterDialog: function(){
+			// summary:
+			//		Show the filter define dialog.
+		}
+	});
+
+	FilterBar.__DataTypeArgs = declare([], {
+		useRawData: true,
+		converter: function(v){
+		}
+	});
+
+	FilterBar.__FilterArgs = declare([], {
+		trueLabel: '',
+		falseLabel: '',
+		valueDijitArgs: {}
+	});
+
+	FilterBar.__ColumnDefinition = declare([], {
 		// filterable: Boolean
 		//		If FALSE, then this column should not occur in the Filter Definition Dialog for future rules.
 		//		But this does not influence existing filter rules. Default to be TRUE.
 		filterable: true,
-	
+
 		// disabledConditions: String[]
 		//		If provided, all the listed conditions will not occur in the Filter Definition Dialog for future rules.
 		//		But this does not influence existing filter rules. Default to be an empty array.
 		disabledConditions: [],
-	
+
 		// dataType: String
-		//		Specify the data type of this column. Should be one of "string", "number", "date", "time", and "boolean".
+		//		Specify the data type of this column. Should be one of "string", "number", "date", "time", "boolean" and "enum".
 		//		Case insensitive. Data type decides which conditions to use in the Filter Definition Dialog.
-		dataType: 'date'
-		storeDatePattern: ''
-		formatter: ''
-		dateParsePatter: 'yyyy/MM/dd HH:mm:ss'
-		filterArgs: {
-			trueLabel: '',
-			falseLabel: '',
-			valueDijitArgs: {}
-		}
-		// dataTypeArgs: Object
+		dataType: 'date',
+
+		//TODOC?
+		//storeDatePattern: '',
+
+		//TODOC?
+		//dateParsePattern: 'yyyy/MM/dd HH:mm:ss',
+
+		// filterArgs: __FilterArgs
+		//		
+		filterArgs: null,
+
+		// dataTypeArgs: __DataTypeArgs
 		//		Passing any other special config options for this column. For example, if the column is of type 'date', but the data
 		//		in store is of string type, then a 'converter' function is needed here:
 		//		dataTypeArgs: {
@@ -58,70 +164,45 @@ define([
 		//			}
 		//		}
 		dataTypeArgs: {}
-	};
-	=====*/
-	
-	return declare(/*===== "gridx.modules.filter.FilterBar", =====*/_Module, {
+	});
+
+	return FilterBar;
+=====*/
+
+	return declare(_Module, {
 		name: 'filterBar',
 		forced: ['filter'],
-		getAPIPath: function(){
-			return {
-				filterBar: this
-			};
+		preload: function(){
+			var rules = this.arg('filterData');
+			if(rules){
+				this.grid.filter.setFilter(this._createFilterExpr(rules), 1);
+			}
 		},
 		//Public-----------------------------------------------------------
-		
-		// closeButton: Boolean
-		//		TRUE to show a small button on the filter bar for the user to close/hide the filter bar.
 		closeButton: true,
 	
-		// defineFilterButton: Boolean
-		//		FALSE to hide the define filter button on the left side (right side for RTL) of the filter bar.
 		defineFilterButton: true,
 		
-		// tooltipDelay: Number
-		//		Time in mili-seconds of the delay to show the Filter Status Tooltip when mouse is hovering on the filter bar.
 		tooltipDelay: 300,
 	
-		// maxRuleCount: Integer
-		//		Maximum rule count that can be applied in the Filter Definition Dialog.
-		//		If <= 0 or not number, then infinite rules are supported.
 		maxRuleCount: 0,
 		
-		// ruleCountToConfirmClearFilter: Integer | Infinity | null
-		//		If the filter rule count is larger than or equal to this value, then a confirm dialog will show when clearing filter.
-		//		If set to less than 1 or null, then always show the confirm dialog.
-		//		If set to Infinity, then never show the confirm dialog.
-		//		Default value is 2.
 		ruleCountToConfirmClearFilter: 2,
-	
-	/*=====
-		// itemsName: String
-		//		The general name of the items listed in the grid.
-		//		If not provided, then search the language bundle.
-		itemsName: '',=====*/
-	
-		// condition:
-		//		Name of all supported conditions.
-		//		Hard coded here or dynamicly generated is up to the implementer. Anyway, users should be able to get this info.
+		
 		conditions: {
-			string: ['equal', 'contain','startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
+			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
 			number: ['equal','greater','less','greaterEqual','lessEqual','notEqual','isEmpty'],
 			date: ['equal','before','after','range','isEmpty'],
 			time: ['equal','before','after','range','isEmpty'],
+			'enum': ['equal', 'notEqual', 'isEmpty'],
 			'boolean': ['equal','isEmpty']
 		},
 		
 		load: function(args, startup){
-			// summary:
-			//	Init filter bar UI
 			//Add before and after expression for filter.
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
-			//For backward compatibility
-			kernel.deprecated('FilterBar module property closeFilterBarButton is deprecated.', 'Use closeButton instead', '1.1');
-			this.closeFilterBarButton = this.arg('closeButton', this.arg('closeFilterBarButton'));
 			this._nls = nls;
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, nls),
@@ -160,12 +241,8 @@ define([
 			window.setTimeout(lang.hitch(this, '_hideTooltip'), 10);
 		},
 		
-		applyFilter: function(filterData){
-			// summary:
-			//		Apply the filter data.
+		_createFilterExpr: function(filterData){
 			var F = Filter, exps = [];
-			this.filterData = filterData;
-			
 			array.forEach(filterData.conditions, function(data){
 				var type = 'string';
 				if(data.colId){
@@ -181,9 +258,14 @@ define([
 					exps.push(F.or.apply(F, arr));
 				}
 			}, this);
-			var filter = (filterData.type === 'all' ? F.and : F.or).apply(F, exps);
-			this.grid.filter.setFilter(filter);
+			return (filterData.type === 'all' ? F.and : F.or).apply(F, exps);
+		},
+
+		applyFilter: function(filterData){
 			var _this = this;
+			var filter = this._createFilterExpr(filterData);
+			this.filterData = filterData;
+			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
 				_this._currentSize = _this.model.size();
 				_this._totalSize = _this.model._cache.size();
@@ -248,11 +330,6 @@ define([
 		},
 	
 		refresh: function(){
-			// summary:
-			//		Re-draw the filter bar if necessary with the current attributes.
-			// example:
-			//		grid.filterBar.closeButton = true;
-			//		grid.filterBar.refresh();
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
 			this._currentSize = this.model.size();
@@ -263,30 +340,20 @@ define([
 			return this.domNode.style.display != 'none';
 		},
 		show: function(){
-			// summary:
-			//		Show the filter bar. (May add animation later)
 			this.domNode.style.display = 'block';
 			this.grid.vLayout.reLayout();
 			this.onShow();
 		},
 	
 		hide: function(){
-			// summary:
-			//		Hide the filter bar. (May add animation later)
 			this.domNode.style.display = 'none';
 			this.grid.vLayout.reLayout();
 			this._hideTooltip();
 			this.onHide();
 		},
-		onShow: function(){
-			
-		},
-		onHide: function(){
-			
-		},
+		onShow: function(){},
+		onHide: function(){},
 		showFilterDialog: function(){
-			// summary:
-			//		Show the filter define dialog.
 			var dlg = this._filterDialog;
 			if(!dlg){
 				this._filterDialog = dlg = new FilterDialog({
@@ -554,6 +621,10 @@ define([
 		},
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
+			this.btnFilter.destroy();
+			if(this._tooltip){
+				this._tooltip.destroy();
+			}
 			dom.destroy(this.domNode);
 			this.inherited(arguments);
 		}

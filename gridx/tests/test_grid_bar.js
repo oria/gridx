@@ -1,100 +1,113 @@
-define([
+require([
+	'dojo/parser',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/modules/Focus',
-	'gridx/modules/extendedSelect/Row',
-	'gridx/modules/pagination/Pagination',
-	'gridx/modules/filter/Filter',
-	'gridx/modules/Bar',
-	'gridx/modules/barPlugins/Summary',
-	'gridx/modules/barPlugins/LinkPager',
-	'gridx/modules/barPlugins/LinkSizer',
-	'gridx/modules/barPlugins/DropDownPager',
-	'gridx/modules/barPlugins/DropDownSizer',
-	'gridx/modules/barPlugins/GotoPageButton',
-	'gridx/modules/barPlugins/QuickFilter',
+	'gridx/allModules',
+	'gridx/support/Summary',
+	'gridx/support/LinkPager',
+	'gridx/support/LinkSizer',
+	'gridx/support/DropDownPager',
+	'gridx/support/DropDownSizer',
+	'gridx/support/GotoPageButton',
+	'gridx/support/QuickFilter',
 	'dijit/Toolbar',
 	'dijit/form/Button',
 	'dijit/form/ToggleButton',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory,
-	Focus, ExtendedSelectRow, Pagination, Filter, Bar,
+], function(parser, Grid, Cache, dataSource, storeFactory, modules,
 	Summary, LinkPager, LinkSizer, DropDownPager, DropDownSizer, GotoPageButton, QuickFilter,
 	Toolbar, Button, ToggleButton){
-	
-	grid = new Grid({
-		id: 'grid',
-		cacheClass: Cache,
-		store: storeFactory({
-			dataSource: dataSource,
-			size: 100
-		}),
-		structure: dataSource.layouts[0],
-		modules: [
-			Focus,
-			ExtendedSelectRow,
-			Pagination,
-			Filter,
-			Bar
-		],
-		selectRowTriggerOnCell: true,
-		barTop: [
-			[
-				{pluginClass: 'dijit/Toolbar', colSpan: 2},
-				{pluginClass: QuickFilter, 'className': 'quickFilter'}
-			],
-			[
-				{pluginClass: LinkPager, 'className': 'linkPager'},
-				{content: 'Grid Bar Test', style: 'text-align: center; font-size: 15px; font-weight: bolder; text-shadow: 1px 1px 1px #fff;'},
-				null
-			]
-		],
-		barBottom: [
-			[
-				{pluginClass: Summary, rowSpan: 2},
-				{pluginClass: LinkSizer, style: 'text-align: center;', colSpan: 2}
-			],[
-				{pluginClass: DropDownPager, style: 'text-align: center;'},
-				'gridx/modules/barPlugins/DropDownSizer',
-				GotoPageButton
-			]
-		]
+
+	mods = [
+		modules.ExtendedSelectRow,
+		modules.Pagination,
+		modules.Filter,
+		modules.Bar
+	];
+
+	store = storeFactory({
+		dataSource: dataSource,
+		size: 100
 	});
-	
-	var toolbar = grid.bar.plugins.top[0][0];
-	toolbar.addChild(new Button({
+
+	layout = dataSource.layouts[1];
+
+	var grid1Toolbar = new Toolbar({});
+	grid1Toolbar.addChild(new Button({
 		label: 'cut',
 		showLabel:false,
 		iconClass:"dijitEditorIcon dijitEditorIconCut",
 		onClick: function(){
-			console.log('cut');
+			alert('cut');
 		}
 	}));
-	toolbar.addChild(new Button({
+	grid1Toolbar.addChild(new Button({
 		label: 'copy',
 		iconClass:"dijitEditorIcon dijitEditorIconCopy",
 		showLabel: false,
 		onClick: function(){
-			console.log('copy');
+			alert('copy');
 		}
 	}));
-	toolbar.addChild(new Button({
+	grid1Toolbar.addChild(new Button({
 		label: 'paste',
 		iconClass:"dijitEditorIcon dijitEditorIconPaste",
 		showLabel: false,
 		onClick: function(){
-			console.log('paste');
+			alert('paste');
+		}
+	}));
+	grid1Toolbar.addChild(new ToggleButton({
+		label: 'Bold',
+		iconClass:"dijitEditorIcon dijitEditorIconBold",
+		showLabel: false,
+		onClick: function(){
+			alert('bold');
 		}
 	}));
 
-	toolbar.addChild(new ToggleButton({
-		label: 'Bold',
-		iconClass:"dijitEditorIcon dijitEditorIconBold",
-		showLabel:false
-	}));
+	grid1Top = [
+		grid1Toolbar,
+		{pluginClass: QuickFilter, 'className': 'quickFilter'}
+	];
 
-	grid.placeAt('gridContainer');
-	grid.startup();
+	grid2Bottom = [
+		[
+			{pluginClass: Summary, rowSpan: 2},
+			{pluginClass: LinkSizer, style: 'text-align: center;', colSpan: 2}
+		],
+		[
+			{pluginClass: DropDownPager, style: 'text-align: center;'},
+			'gridx/support/DropDownSizer',
+			GotoPageButton
+		]
+	];
+
+	grid3Top = [
+		[
+			{plugin: 'grid3Toolbar', colSpan: 2},
+			{pluginClass: QuickFilter, 'className': 'quickFilter'}
+		],
+		[
+			{pluginClass: LinkPager, 'className': 'linkPager'},
+			{content: 'Grid Bar Test', style: 'text-align: center; font-size: 15px; font-weight: bolder; text-shadow: 1px 1px 1px #fff;'},
+			null
+		]
+	];
+
+	grid3Bottom = [
+		[
+			{pluginClass: Summary, rowSpan: 2},
+			{pluginClass: LinkSizer, style: 'text-align: center;', colSpan: 2}
+		],
+		[
+			{pluginClass: DropDownPager, style: 'text-align: center;'},
+			'gridx/support/DropDownSizer',
+			GotoPageButton
+		]
+	];
+
+	parser.parse();
 });

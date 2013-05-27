@@ -3,14 +3,28 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
+	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, array, lang, Deferred, _Extension){
+], function(declare, array, lang, Deferred,
+	/*=====Model, =====*/
+	_Extension){
+
+/*=====
+	Model.filter = function(){};
+	Model.hasFilter = function(){};
+	Model.onFilterProgress = function(){};
+	
+	return declare(_Extension, {
+		// summary:
+		//		Filtering grid data at client side.
+	});
+=====*/
 
 	var hitch = lang.hitch,
 		forEach = array.forEach,
 		indexOf = array.indexOf;
 
-	return declare(/*===== "gridx.core.model.extensions.ClientFilter", =====*/_Extension, {
+	return declare(_Extension, {
 		// Not compatible with Map extension!
 		name: 'clientFilter',
 

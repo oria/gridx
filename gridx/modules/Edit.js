@@ -1,107 +1,85 @@
 define([
+/*====="../core/Column", =====*/
+/*====="../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/json",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	'dojo/_base/array',
+	"dojo/on",
 	"dojo/DeferredList",
 	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/dom-construct",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util",
 	"dojo/date/locale",
+	'../core/model/extensions/Modify',
+	'dojo/_base/event',
 	"dijit/form/TextBox"
-], function(declare, lang, query, json, Deferred, sniff, DeferredList, domClass, keys, _Module, util, locale){
-	
-	/*=====
-	var columnDefinitionEditorMixin = {
-		// editable: Boolean
-		//		If true then the cells in this column will be editable. Default is false.
-		editable: false, 
+//    "dojo/NodeList-traverse"
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, on, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, _Module, util, locale, Modify, event){
 
-		// alwaysEditing: Boolean
-		//		If true then the cells in this column will always be in editing mode. Default is false.
-		alwaysEditing: false,
-	
-		// applyDelay: Integer
-		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
-		applyDelay: 500,
-
-		// editor: Widget Class (Function) | String
-		//		Set the dijit/widget to be used when a cell is in editing mode.
-		//		The default dijit is dijit.form.TextBox.
-		//		This attribute can either be the declared class name of a dijit or 
-		//		the class construct function of a dijit (the one that is used behide "new" keyword).
-		editor: "dijit.form.TextBox",
-	
-		// editorArgs: __GridCellEditorArgs
-		editorArgs: null,
-
-		// customApplyEdit: function(cell, value)
-		//		If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
-		//		For example, setting multiple fields of store for a formatted cell.
-		//		Can return a Deferred object if the work can not be done synchronously.
-		customApplyEdit: null
+/*=====
+	Cell.beginEdit = function(){
+		// summary:
+		//		Begin editing mode on this cell
 	};
-	
-	var __GridCellEditorArgs = {
-		// toEditor: Function(storeData, gridData) return anything
-		//		By default the dijit used in an editing cell will use store value.
-		//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
-		//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
-		toEditor: null,
-	
-		// fromEditor: Function(valueInEditor) return anything
-		//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
-		//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
-		//		to get a suitable value from editor.
-		fromEditor: null,
-	
-		//props: String
-		//		The properties to be used when creating the dijit in a editing cell.
-		//		Just like data-dojo-props for a widget.
-		props: ''
 
-		//constraints: Object
-		//		If the editor widget has some constraints, it can be set here instead of in props.
-		constraints: null,
-
-		//useGridData: Boolean
-		//		Whether to feed the editor with grid data or store data.
-		//		This property is only effective when toEditor is not provided.
-		useGridData: false,
-
-		//valueField: String
-		//		The property name of the editor used to take the data. In most cases it is "value",
-		//		so editor.set('value', ...) can do the job.
-		valueField: 'value'
+	Cell.cancelEdit = function(){
+		// summary:
+		//		Cancel editing mode on this cell.
 	};
-	=====*/
-	function getTypeData(col, storeData, gridData){
-		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
-			return locale.parse(storeData, col.storePattern);
-		}
-		return gridData;
-	}
 
-	function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
-		var d = locale.parse(rawData[field], parseArgs);
-		return d ? locale.format(d, formatArgs) : rawData[field];
-	}
+	Cell.applyEdit = function(){
+		// summary:
+		//		Apply change to store for this cell
+	};
 
-	function getEditorValueSetter(toEditor){
-		return toEditor && function(gridData, storeData, cellWidget){
-			var editor = cellWidget.gridCellEditField,
-				cell = cellWidget.cell,
-				editorArgs = cell.column.editorArgs;
-			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
-		};
-	}
+	Cell.isEditing = function(){
+		// summary:
+		//		Check whether this cell is in editing mode.
+	};
 
-	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs', 'applyWhen');
+	Cell.editor = function(){
+		// summary:
+		//		Get the editor in this cell if it is in editing mode.
+	};
 
-	return declare(/*===== "gridx.modules.Edit", =====*/_Module, {
+	Column.isEditable = function(){
+		// summary:
+		//		Check if the cells in this column are editable.
+	};
+
+	Column.isAlwaysEditing = function(){
+		// summary:
+		//		Check if the cells in this column are always editing.
+	};
+
+	Column.setEditable = function(editable){
+		// summary:
+		//		Set editable to the cells of this column
+	};
+
+	Column.editor = function(){
+		// summary:
+		//		Get predefined editor for cells in this column
+	};
+
+	Column.setEditor = function(dijitClass, args){
+		// summary:
+		//		Set editor for cells in this column
+		// dijitClass:
+		//		The dijit class to be used as the editor.
+		// args: Edit.__EditorArgs
+		//		Any args that are related to this editor.
+	};
+
+	var Edit = declare(_Module, {
 		// summary:
 		//		This module provides editing mode for grid cells.
 		// description:
@@ -110,113 +88,6 @@ define([
 		//		This implementation also covers "alwaysEditing" mode for grid columns,
 		//		which means all the cells in this column are always in editing mode.
 
-		name: 'edit',
-
-		forced: ['cellWidget'],
-
-		constructor: function(){
-			this._init();
-		},
-
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				edit: this
-			};
-		},
-
-		preload: function(){
-			// tags:
-			//		protected extension
-			var t = this,
-				g = t.grid;
-			g.domNode.removeAttribute('aria-readonly');
-			t.connect(g, 'onCellDblClick', '_onUIBegin');
-			t.connect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
-			t.connect(g.body, 'onAfterRow', function(row){
-				query('.gridxCell', row.node()).forEach(function(node){
-					if(g._columnsById[node.getAttribute('colid')].editable){
-						node.removeAttribute('aria-readonly');
-					}
-				});
-			});
-			t._initFocus();
-		},
-
-		cellMixin: {
-			beginEdit: function(){
-				// summary:
-				//		Begin editing mode on this cell
-				return this.grid.edit.begin(this.row.id, this.column.id);
-			},
-
-			cancelEdit: function(){
-				// summary:
-				//		Cancel editing mode on this cell.
-				return this.grid.edit.cancel(this.row.id, this.column.id);
-			},
-
-			applyEdit: function(){
-				// summary:
-				//		Apply change to store for this cell
-				return this.grid.edit.apply(this.row.id, this.column.id);
-			},
-
-			isEditing: function(){
-				// summary:
-				//		Check whether this cell is in editing mode.
-				return this.grid.edit.isEditing(this.row.id, this.column.id);
-			},
-
-			editor: function(){
-				// summary:
-				//		Get the editor in this cell if it is in editing mode.
-				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
-				return cw && cw.gridCellEditField;
-			}
-		},
-
-		columnMixin: {
-			isEditable: function(){
-				// summary:
-				//		Check if the cells in this column are editable.
-				var col = this.grid._columnsById[this.id];
-				return col.editable;
-			},
-
-			isAlwaysEditing: function(){
-				// summary:
-				//		Check if the cells in this column are always editing.
-				return this.grid._columnsById[this.id].alwaysEditing;
-			},
-
-			setEditable: function(editable){
-				// summary:
-				//		Set editable to the cells of this column
-				this.grid._columnsById[this.id].editable = !!editable;
-				return this;
-			},
-
-			editor: function(){
-				// summary:
-				//		Get predefined editor for cells in this column
-				return this.grid._columnsById[this.id].editor;
-			},
-
-			setEditor: function(/*dijit|short name*/dijitClass, args){
-				// summary:
-				//		Set editor for cells in this column
-				// dijitClass:
-				//		The dijit class to be used as the editor.
-				// args: __GridCellEditorArgs
-				//		Any args that are related to this editor.
-				this.grid.edit.setEditor(this.id, dijitClass, args);
-				return this;
-			}
-		},
-
-		//Public------------------------------------------------------------------------------
 		begin: function(rowId, colId){
 			// summary:
 			//		Begin to edit a cell with defined editor widget.
@@ -226,33 +97,6 @@ define([
 			//		The column ID of this cell
 			// returns:
 			//		A deferred object indicating when the cell has completely changed into eidting mode.
-			var d = new Deferred(),
-				t = this,
-				g = t.grid;
-			if(!t.isEditing(rowId, colId)){
-				var row = g.row(rowId, 1),	//1 as true
-					col = g._columnsById[colId];
-				if(row && col.editable){
-					g.cellWidget.setCellDecorator(rowId, colId, 
-						t._getDecorator(colId), 
-						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
-							lang.partial(getTypeData, col)));
-					t._record(rowId, colId);
-					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
-						t._focusEditor(rowId, colId);
-						d.callback(true);
-						t.onBegin(g.cell(rowId, colId, 1));
-					});
-				}else{
-					d.callback(false);
-				}
-			}else{
-				t._record(rowId, colId);
-				t._focusEditor(rowId, colId);
-				d.callback(true);
-				t.onBegin(g.cell(rowId, colId, 1));
-			}
-			return d;	//dojo.Deferred
 		},
 
 		cancel: function(rowId, colId){
@@ -264,6 +108,437 @@ define([
 			//		The column ID of this cell
 			// returns:
 			//		A deferred object indicating when the cell value has been successfully restored.
+		},
+
+		apply: function(rowId, colId){
+			// summary:
+			//		Apply the edit value to the grid store. And end the editing state.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		A deferred object indicating when the change has been written back to the store.
+		},
+
+		isEditing: function(rowId, colId){
+			// summary:
+			//		Check whether a cell is in editing mode.
+			// rowId: String
+			//		The row ID of this cell
+			// colId: String
+			//		The column ID of this cell
+			// returns:
+			//		Whether the cell is in eidting mode.
+		},
+
+		setEditor: function(colId, editor, args){
+			// summary:
+			//		Define the editor widget to edit a column of a grid.
+			//		The widget should have a get and set method to get value and set value.
+			// colId: String
+			//		A column ID
+			// editor: Function|String
+			//		Class constructor or declared name of an editor widget
+			// args: __GridCellEditorArgs?
+			//		Any args that are related to this editor.
+		},
+
+		onBegin: function(cell){
+			// summary:
+			//		Fired when a cells enters editing mode.
+			// cell: gridx.core.Cell
+			//		The cell object
+		},
+
+		onApply: function(cell, applySuccess){
+			// summary:
+			//		Fired when the change in a cell is applied to the store.
+			// cell: gridx.core.Cell
+			//		The cell object
+			// applySuccess: Boolean
+			//		Whether the change is successfully applied to the store
+		},
+
+		onCancel: function(cell){
+			// summary:
+			//		Fired when an editing cell is canceled.
+			// cell: gridx.core.Cell
+			//		The cell object
+		}
+	});
+
+	Edit.__EditorArgs = declare([], {
+		// summary:
+		//		Arguments for the editor.
+
+		// props: String
+		//		The properties to be used when creating the dijit in a editing cell.
+		//		Just like data-dojo-props for a widget.
+		props: '',
+
+		// applyDelay: Integer
+		//		When alwaysEditing, this is the timeout to apply changes when onChange event of editor is fired.
+		applyDelay: 500,
+
+		// constraints: Object
+		//		If the editor widget has some constraints, it can be set here instead of in props.
+		constraints: null,
+
+		// useGridData: Boolean
+		//		Whether to feed the editor with grid data or store data.
+		//		This property is only effective when toEditor is not provided.
+		useGridData: false,
+
+		// valueField: String
+		//		The property name of the editor used to take the data. In most cases it is "value",
+		//		so editor.set('value', ...) can do the job.
+		valueField: 'value',
+
+		toEditor: function(storeData, gridData){
+			// summary:
+			//		By default the dijit used in an editing cell will use store value.
+			//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
+			//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
+		},
+
+		fromEditor: function(valueInEditor){
+			// summary:
+			//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
+			//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
+			//		to get a suitable value from editor.
+		}
+	});
+
+	Edit.__ColumnDefinition = declare([], {
+		// summary:
+		//		Column definition parameters defined by Edit.
+
+		// editable: Boolean
+		//		If true then the cells in this column will be editable. Default is false.
+		editable: false,
+
+		canEdit: function(cell){
+			// summary:
+			//		Decide whether a cell is editable.
+			//		This makes it possible to config some cells to be uneditable in an edtibale column.
+			// cell: gridx.core.Cell
+			//		The cell object
+			// returns:
+			//		True if this cell should be editable, false if not.
+		},
+
+		// alwaysEditing: Boolean
+		//		If true then the cells in this column will always be in editing mode. Default is false.
+		alwaysEditing: false,
+
+		// editor: Widget Class (Function) | String
+		//		Set the dijit/widget to be used when a cell is in editing mode.
+		//		The default dijit is dijit.form.TextBox.
+		//		This attribute can either be the declared class name of a dijit or 
+		//		the class construct function of a dijit (the one that is used behide "new" keyword).
+		editor: '',
+
+		onEditorCreated: function(editor, column){
+			// summary:
+			//		Fired when an editor is created.
+			// editor: Widget
+			//		The created editor widget.
+			// column: gridx.core.Column
+			//		The column this cell widget is created for.
+			// tags:
+			//		callback
+		},
+
+		initializeEditor: function(editor, cell){
+			// summary:
+			//		Do special initialization for the current cell.
+			//		Called every time a cell widget is applied into a cell, no matter if it is just created or reused.
+			// editor: Widget
+			//		The created editor widget.
+		},
+
+		uninitializeEditor: function(editor, cell){
+			// summary:
+			//		Called every time a cell widget is reused to a cell.
+			// editor: Widget
+			//		The created editor widget.
+		},
+
+		getEditorConnects: function(editor, cell){
+		},
+
+		// editorArgs: Edit.__EditorArgs
+		editorArgs: null,
+
+		customApplyEdit: function(cell, value){
+			// summary:
+			//		If editing a cell is not as simple as setting a value to a store field, custom logic can be put here.
+			//		For example, setting multiple fields of store for a formatted cell.
+			//		Can return a Deferred object if the work can not be done synchronously.
+		}
+	});
+
+	return Edit;
+=====*/
+
+	function getTypeData(col, storeData, gridData, cell){
+		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
+			return locale.parse(storeData, col.storePattern);
+		}
+		return gridData;
+	}
+	
+	function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
+		var d = locale.parse(rawData[field], parseArgs);
+		return d ? locale.format(d, formatArgs) : rawData[field];
+	}
+	
+	function getEditorValueSetter(toEditor){
+		return toEditor && function(gridData, storeData, cellWidget){
+			var editor = cellWidget.gridCellEditField,
+			cell = cellWidget.cell,
+			editorArgs = cell.column.editorArgs;
+			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
+		};
+	}	
+
+	return declare(_Module, {
+		name: 'edit',
+
+		forced: ['cellWidget'],
+		
+		modelExtensions: [Modify],
+
+		constructor: function(){
+			this._init();
+		},
+
+		getAPIPath: function(){
+			return {
+				edit: this
+			};
+		},
+
+		preload: function(){
+			var t = this,
+				g = t.grid;
+				
+			if(t.arg('lazySave')){
+				var _removeCellBackground = function(cell){
+					var node = cell.node();
+						cellBgNode = query('.gridxCellBg', node);
+					if(cellBgNode.length){
+						domConstruct.destroy(cellBgNode);
+					}
+				};
+				
+				var _addCellBackground = function(cell){
+					var node = cell.node(),
+						cellBgNode = query('.gridxCellBg', node),
+						rowId = cell.row.id,
+						colId = cell.column.id,
+						visualIndex = cell.row.visualIndex(),
+						gridxRelaPath = function(){
+							var p= dojo.config.packages || {};
+							
+							for(var i in p){
+								if(p[i].name == 'gridx'){
+									var l = p[i].location;
+									return l[l.length - 1] == '/' ? l : l + '/';
+								}
+							}
+							return '';
+						};
+						
+						if(!cellBgNode.length){
+							var computedStyle = domStyle.getComputedStyle(node),
+								cellPadding= parseInt(domGeo.getPadBorderExtents(node, computedStyle).l, 10),
+								leftToMove = node.clientWidth - cellPadding - 5,
+								
+								html = [
+								"<div rowid='" + rowId + "' ",
+								"colid='" + colId + "' ",
+								"class='gridxCellEditedBg'><span>◥</span></div>"
+							].join('');
+							
+							cellBgNode = domConstruct.toDom(html);
+							domConstruct.place(cellBgNode, cell.node(), 'first');
+							
+							currentLeft = cellBgNode.offsetLeft;
+							currentLeft += leftToMove;
+							
+							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
+								top = 0;
+							array.forEach(upperRows, function(row){
+								var vi = parseInt(row.getAttribute('visualIndex'), 10);
+								if(vi < visualIndex){
+									top += row.clientHeight;
+								}
+							});
+							
+							domStyle.set(cellBgNode, 'left', currentLeft + 'px');
+							domStyle.set(cellBgNode, 'top', top+ 'px');
+						}
+				};
+				
+				var _onAftercell = function(cell){
+					var node = cell.node(),
+						rowId = cell.row.id,
+						colId = cell.column.id,
+						visualIndex = cell.row.visualIndex();
+						
+					if(t.model.isChanged(rowId, g._columnsById[colId].field)){
+						g.body.addClass(rowId, colId, 'gridxCellChanged');
+						_addCellBackground(cell);
+					}else{
+						g.body.removeClass(rowId, colId, 'gridxCellChanged');
+						_removeCellBackground(cell);
+					}
+				};
+				
+				t.connect(g.body, 'onAfterRow', function(row){
+					var cols = g._columnsById;
+					query('.gridxCell', row.node()).forEach(function(node){
+						var colid = node.getAttribute('colid');
+						if(t.model.isChanged(row.id, cols[colid].field)){
+							g.body.addClass(row.id, colid, 'gridxCellChanged');
+							_addCellBackground(g.cell(row.id, colid, 1));
+						}else{
+							g.body.removeClass(row.id, colid, 'gridxCellChanged');
+						}
+					});
+				});
+
+				// t.connect(t.model, 'onSet', _onSet);
+				t.connect(g.body, 'onAfterCell', _onAftercell);
+			}
+			g.domNode.removeAttribute('aria-readonly');
+			t.connect(g, 'onCellDblClick', '_onUIBegin');
+			t.connect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
+			t.connect(g.cellWidget, 'initializeCellWidget', function(widget, cell){
+				var column = cell.column;
+				if(column.initializeEditor && widget.gridCellEditField){
+					column.initializeEditor(widget.gridCellEditField, cell);
+				}
+			});
+			t.connect(g.cellWidget, 'uninitializeCellWidget', function(widget, cell){
+				var column = cell.column;
+				if(column.uninitializeEditor && widget.gridCellEditField){
+					column.uninitializeEditor(widget.gridCellEditField, cell);
+				}
+			});
+			t.connect(g.cellWidget, 'collectCellWidgetConnects', function(widget, output){
+				var column = widget.cell.column;
+				if(column.getEditorConnects){
+					var cnnts = column.getEditorConnects(widget, widget.cell);
+					output.push.apply(output, cnnts);
+				}
+			});
+			t.connect(g.body, 'onAfterRow', function(row){
+				query('.gridxCell', row.node()).forEach(function(node){
+					// var colid = node.getAttribute('colid');
+					if(g._columnsById[node.getAttribute('colid')].editable){
+						node.removeAttribute('aria-readonly');
+					}
+				});
+			});
+		},
+		
+		lazySave: false,
+		
+		load: function(){
+			//Must init focus after navigable cell, so that "edit" focus area will be on top of the "navigablecell" focus area.
+			this._initFocus();
+			this.loaded.callback();
+		},
+
+		cellMixin: {
+			beginEdit: function(){
+				return this.grid.edit.begin(this.row.id, this.column.id);
+			},
+
+			cancelEdit: function(){
+				return this.grid.edit.cancel(this.row.id, this.column.id);
+			},
+
+			applyEdit: function(){
+				return this.grid.edit.apply(this.row.id, this.column.id);
+			},
+
+			isEditing: function(){
+				return this.grid.edit.isEditing(this.row.id, this.column.id);
+			},
+
+			editor: function(){
+				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
+				return cw && cw.gridCellEditField;
+			},
+
+			isEditable: function(){
+				var col = this.column;
+				return col.isEditable() && (!col.canEdit || col.canEdit(this));
+			}
+		},
+
+		columnMixin: {
+			isEditable: function(){
+				var col = this.grid._columnsById[this.id];
+				return col.editable;
+			},
+
+			isAlwaysEditing: function(){
+				return this.grid._columnsById[this.id].alwaysEditing;
+			},
+
+			setEditable: function(editable){
+				this.grid._columnsById[this.id].editable = !!editable;
+				return this;
+			},
+
+			editor: function(){
+				return this.grid._columnsById[this.id].editor;
+			},
+
+			setEditor: function(/*dijit|short name*/dijitClass, args){
+				this.grid.edit.setEditor(this.id, dijitClass, args);
+				return this;
+			}
+		},
+
+		//Public------------------------------------------------------------------------------
+		begin: function(rowId, colId){
+			var d = new Deferred(),
+				t = this,
+				g = t.grid;
+			if(!t.isEditing(rowId, colId)){
+				var row = g.row(rowId, 1),	//1 as true
+					col = g._columnsById[colId];
+				if(row && row.cell(colId, 1).isEditable()){
+					g.cellWidget.setCellDecorator(rowId, colId, 
+						t._getDecorator(colId), 
+						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
+							lang.partial(getTypeData, col)));
+					t._record(rowId, colId);
+					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
+						t._focusEditor(rowId, colId);
+						d.callback(true);
+						g.resize();
+						t.onBegin(g.cell(rowId, colId, 1));
+					});
+				}else{
+					d.callback(false);
+				}
+			}else{
+				t._record(rowId, colId);
+				t._focusEditor(rowId, colId);
+				d.callback(true);
+				t.onBegin(g.cell(rowId, colId, 1));
+			}
+			return d;
+		},
+
+		cancel: function(rowId, colId){
 			var d = new Deferred(),
 				t = this,
 				g = t.grid,
@@ -291,18 +566,10 @@ define([
 			}else{
 				d.callback();
 			}
-			return d;	//dojo.Deferred
+			return d;
 		},
 
 		apply: function(rowId, colId){
-			// summary:
-			//		Apply the edit value to the grid store. And end the editing state.
-			// rowId: String
-			//		The row ID of this cell
-			// colId: String
-			//		The column ID of this cell
-			// returns:
-			//		A deferred object indicating when the change has been written back to the store.
 			var d = new Deferred(),
 				t = this,
 				g = t.grid,
@@ -321,12 +588,13 @@ define([
 							t._erase(rowId, colId);
 							if(cell.column.alwaysEditing){
 								d.callback(success);
-								t.onApply(cell, success, e);
+								t.onApply(cell, success, e, t.arg('lazy'));
 							}else{
 								g.cellWidget.restoreCellDecorator(rowId, colId);
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
-									t.onApply(cell, success, e);
+									g.resize();
+									t.onApply(cell, success, e, t.arg('lazy'));
 								});
 							}
 						};
@@ -345,82 +613,75 @@ define([
 						}else if(cell.rawData() === v){
 							finish(true);
 						}else{
-							Deferred.when(cell.setRawData(v), function(){
+							if(t.arg('lazySave')){
+								var f = g._columnsById[colId].field,
+									obj = {};
+									
+								obj[f] = v;
+								t.model.set(rowId, obj);
 								finish(true);
-							}, function(e){
-								finish(false, e);
-							});
+							}else{
+								Deferred.when(cell.setRawData(v), function(){
+									finish(true);
+								}, function(e){
+									finish(false, e);
+								});
+							}
 						}
 					}catch(e){
 						finish(false, e);
 					}
-					return d;	//dojo.Deferred
+					return d;
 				}
 			}
 			d.callback(false);
-			return d;	//dojo.Deferred
+			return d;
 		},
 
 		isEditing: function(rowId, colId){
-			// summary:
-			//		Check whether a cell is in editing mode.
-			// rowId: String
-			//		The row ID of this cell
-			// colId: String
-			//		The column ID of this cell
-			// returns:
-			//		Whether the cell is in eidting mode.
 			var col = this.grid._columnsById[colId];
 			if(col && col.alwaysEditing){
 				return true;
 			}
 			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
-			return !!widget && !!widget.gridCellEditField;	//Boolean
+			return !!widget && !!widget.gridCellEditField;
 		},
 
 		setEditor: function(colId, editor, args){
-			// summary:
-			//		Define the editor widget to edit a column of a grid.
-			//		The widget should have a get and set method to get value and set value.
-			// colId: String
-			//		A column ID
-			// editor: Function|String
-			//		Class constructor or declared name of an editor widget
-			// args: __GridCellEditorArgs?
-			//		Any args that are related to this editor.
 			var col = this.grid._columnsById[colId],
 				editorArgs = col.editorArgs = col.editorArgs || {};
 			col.editor = editor;
 			lang.mixin(editorArgs, args || {});
 		},
+		
+		getLazyData: function(rowId, colId){
+			var t = this,
+				f = t.grid._columnsById[colId].field;
+			
+			if(t.arg('lazy')){
+				r = t._lazyDataChangeList[rowId];
+				if(r){
+					return r[f]? r[f].list[r[f].index] : undefined;
+				}
+			}
+			return undefined;
+		},
 
 		//Events-------------------------------------------------------------------
-		onBegin: function(/* cell */){
-			// summary:
-			//		Fired when a cells enters editing mode.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
+		onBegin: function(/* cell */){},
 
-		onApply: function(/* cell, applySuccess */){
-			// summary:
-			//		Fired when the change in a cell is applied to the store.
-			// cell: gridx.core.Cell
-			//		The cell object
-			// applySuccess: Boolean
-			//		Whether the change is successfully applied to the store
-		},
+		onApply: function(/* cell, applySuccess */){},
 
-		onCancel: function(/* cell */){
-			// summary:
-			//		Fired when an editing cell is canceled.
-			// cell: gridx.core.Cell
-			//		The cell object
-		},
+		onCancel: function(/* cell */){},
 
 		//Private------------------------------------------------------------------
 		_init: function(){
 			this._editingCells = {};
+			this._lazyIds = {};
+			this._lazyData = {};
+			this._lazyDataChangeList = {};
+			this._inCallBackMode = false;
+			
 			for(var i = 0, cols = this.grid._columns, len = cols.length; i < len; ++i){
 				var c = cols[i];
 				if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){
@@ -450,20 +711,33 @@ define([
 		},
 
 		_initAlwaysEdit: function(){
-			for(var t = this, cols = t.grid._columns, i = cols.length - 1; i >= 0; --i){
-				var col = cols[i];
+			var t = this;
+			array.forEach(t.grid._columns, function(col){
 				if(col.alwaysEditing){
 					col.editable = true;
 					col.navigable = true;
+					var needCellWidget = col.needCellWidget;
+					col.needCellWidget = function(cell){
+						return (!needCellWidget || needCellWidget.apply(col, arguments)) && cell.isEditable();
+					};
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
-					col.decorator = function(){ return ''; };
+					col.decorator = t._dummyDecorator;
 					//FIXME: this breaks encapsulation
 					col._cellWidgets = {};
 					col._backupWidgets = [];
 				}
+			});
+		},
+
+		//FIXME: this is duplicated code, see CellWidget.
+		_dummyDecorator: function(data, rowId, visualIndex, cell){
+			var column = cell.column;
+			if(!column.needCellWidget || column.needCellWidget(cell)){
+				return '';
 			}
+			return data;
 		},
 
 		_getColumnEditor: function(colId){
@@ -477,38 +751,42 @@ define([
 			}
 		},
 
-		_onCellWidgetCreated: function(widget, cell){
+		_onCellWidgetCreated: function(widget, column){
 			var t = this,
-				column = cell.column,
 				editor = widget.gridCellEditField;
-			if(editor && column.alwaysEditing){
-				widget.connect(editor, 'onChange', function(){
-					var rn = widget.domNode.parentNode;
-					while(rn && !domClass.contains(rn, 'gridxRow')){
-						rn = rn.parentNode;
-					}
-					if(rn){
-						//TODO: is 500ms okay?
-						var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
-						clearTimeout(editor._timeoutApply);
-						editor._timeoutApply = setTimeout(function(){
-							t.apply(rn.getAttribute('rowid'), column.id);
-						}, delay);
-					}
-				});
+			if(editor){
+				if(column.alwaysEditing){
+					widget.connect(editor, 'onChange', function(){
+						var rn = widget.domNode.parentNode;
+						while(rn && !domClass.contains(rn, 'gridxRow')){
+							rn = rn.parentNode;
+						}
+						if(rn){
+							//TODO: is 500ms okay?
+							var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
+							clearTimeout(editor._timeoutApply);
+							editor._timeoutApply = setTimeout(function(){
+								t.apply(rn.getAttribute('rowid'), column.id);
+							}, delay);
+						}
+					});
+				}
+				if(column.onEditorCreated){
+					column.onEditorCreated(editor, column);
+				}
 			}
 		},
 
-		_focusEditor: function(rowId, colId){
+		_focusEditor: function(rowId, colId, forced){
 			var cw = this.grid.cellWidget,
 				func = function(){
 					var widget = cw.getCellWidget(rowId, colId),
 						editor = widget && widget.gridCellEditField;
-					if(editor && !editor.focused && lang.isFunction(editor.focus)){
+					if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
 						editor.focus();
 					}
 				};
-			if(sniff('webkit')){
+			if(has('webkit')){
 				func();
 			}else{
 				setTimeout(func, 1);
@@ -523,24 +801,30 @@ define([
 				useGridData = editorArgs.useGridData,
 				constraints = editorArgs.constraints || {},
 				props = editorArgs.props || '',
-				pattern = col.gridPattern || col.storePattern;
+				pattern = col.gridPattern || col.storePattern,
+				textDir = col.textDir || this.grid.textDir;
 			if(pattern){
 				constraints = lang.mixin({}, pattern, constraints);
 			}
 			constraints = json.toJson(constraints);
 			constraints = constraints.substring(1, constraints.length - 1);
-			if(props && constraints){
+			if(textDir){
+				props += [(props ? ', ' : ''),
+					'dir: "', (this.grid.isLeftToRight() ? 'ltr' : 'rtl'),
+					'", textDir: "', textDir, (constraints ? '", ' : '"')
+				].join('');
+			}else if(props && constraints){
 				props += ', ';
 			}
 			return function(){
 				return ["<div data-dojo-type='", className, "' ",
-					"data-dojo-attach-point='gridCellEditField' ",
-					"class='gridxCellEditor gridxHasGridCellValue ",
-					useGridData ? "" : "gridxUseStoreData",
-					"' data-dojo-props='",
-					props, constraints,
-					"'></div>"
-				].join('');
+						"data-dojo-attach-point='gridCellEditField' ",
+						"class='gridxCellEditor gridxHasGridCellValue ",
+						useGridData ? "" : "gridxUseStoreData",
+						"' data-dojo-props='",
+						props, constraints,
+						"'></div>"
+					].join('');
 			};
 		},
 
@@ -609,17 +893,15 @@ define([
 		_onFocus: function(evt){
 			var t = this;
 			if(evt){
-				var n = evt.target;
-				while(n && !domClass.contains(n, 'gridxCell')){
-					n = n.parentNode;
-				}
+				var n = query(evt.target).closest('.gridxCell', t.grid.bodyNode)[0];
 				if(n){
 					var colId = n.getAttribute('colid'),
 						rowId = n.parentNode.parentNode.parentNode.parentNode.getAttribute('rowid');
 					//Fix #7627: in chrome evt.target will be the cell node when using CheckBox
 					if(t.isEditing(rowId, colId)/* && n != evt.target*/){
 						t._record(rowId, colId);
-						return true;
+						//If in alwaysEditing mode, should be same as CellWidget, so ignore this "edit" focus area.
+						return !t.grid._columnsById[colId].alwaysEditing;
 					}
 				}
 				return false;
@@ -630,10 +912,11 @@ define([
 		_doBlur: function(evt, step){
 			var t = this,
 				g = t.grid,
+				view = g.view,
 				body = g.body;
 			if(t._editing && step){
-				var rowIndex = body.getRowInfo({
-						parentId: t.model.treePath(t._focusCellRow).pop(), 
+				var rowIndex = view.getRowInfo({
+						parentId: t.model.parentId(t._focusCellRow),
 						rowIndex: t.model.idToIndex(t._focusCellRow)
 					}).visualIndex,
 					colIndex = g._columnsById[t._focusCellCol].index,
@@ -645,7 +928,7 @@ define([
 					g.focus.stopEvent(evt);
 					t._applyAll();
 					t._focusCellCol = g._columns[obj.c].id;
-					var rowInfo = body.getRowInfo({visualIndex: obj.r});
+					var rowInfo = view.getRowInfo({visualIndex: obj.r});
 					t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
 					//This breaks encapsulation a little....
 					body._focusCellCol = obj.c;
@@ -674,7 +957,7 @@ define([
 			this._editing = false;
 			var focus = this.grid.focus;
 			if(focus){
-				if(sniff('ie')){
+				if(has('ie')){
 					setTimeout(function(){
 						focus.focusArea('body');
 					}, 1);
@@ -683,7 +966,7 @@ define([
 				}
 			}
 		},
-
+		
 		_onKey: function(e){
 			var t = this,
 				g = t.grid,
@@ -709,11 +992,25 @@ define([
 					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
 						g.focus.focusArea('body');
 					});
+				}else if(e.keyCode == 'Z'.charCodeAt(0) && e.ctrlKey){
+					if(t.arg('lazySave')){
+						t.model.undo();
+					}
+				}else if(e.keyCode == 'Y'.charCodeAt(0) && e.ctrlKey){
+					if(t.arg('lazySave')){
+						t.model.redo();
+					}
+				}else if(e.keyCode == 'S'.charCodeAt(0) && e.ctrlKey){
+					if(t.arg('lazySave')){
+						t.model.save();
+						e.preventDefault();
+					}
 				}
 			}
 			if(t._editing && e.keyCode !== keys.TAB){
 				e.stopPropagation();
 			}
 		}
+		
 	});
 });

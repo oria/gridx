@@ -7,7 +7,10 @@ define([
 	"./_Dnd"
 ], function(declare, array, lang, _Module, Avatar){
 
+/*=====
 	return declare(_Module, {
+		// summary:
+		//		Base class for dnd modules.
 
 		// delay: Number
 		//		The time delay before starting dnd after mouse down.
@@ -18,15 +21,27 @@ define([
 		enabled: true,
 
 		// canRearrange: Boolean
-		//		Whether rearrange within grid using dnd iw allowed.
+		//		Whether rearrange within grid using dnd is allowed.
 		canRearrange: true,
 
 		// copyWhenDragOut: Boolean|Object
 		//		When dragging out, whehter to delete in this grid.
+		//		If it is a boolean value, it is effective for all targets.
+		//		If it is an associative array, it can be set on different drag targets.
+		//		(key is an "accept" string of the dnd target).
 		copyWhenDragOut: false,
 
-		// avatar: Function
-		//		The avatar used during dnd.
+		// avatar: function
+		//		The avatar constructor used during dnd.
+		avatar: null
+	});
+=====*/
+
+	return declare(_Module, {
+		delay: 2,
+		enabled: true,
+		canRearrange: true,
+		copyWhenDragOut: false,
 		avatar: Avatar,
 
 		preload: function(args){

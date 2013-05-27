@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/connect",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -8,8 +8,38 @@ define([
 	"dojo/dom",
 	"dojo/keys",
 	"../../core/_Module",
+//    "dojo/NodeList-dom",
 	"../AutoScroll"
-], function(declare, query, connect, Deferred, sniff, win, dom, keys, _Module){
+], function(declare, query, connect, Deferred, has, win, dom, keys, _Module){
+
+/*=====
+	return declare(_Module, {
+		// enabled: Boolean
+		//		If false, this module is disabled. This parameter is mainly used by DnD to not conflict with selection operations.
+		enabled: true,
+
+		// canSwept: Boolean
+		//		If false, swept selecting by mouse is disabled. Default to true.
+		canSwept: true,
+
+		// holdingCtrl: Boolean
+		//		If true, when selecting it'll appear as if the CTRL key is held.
+		holdingCtrl: false,
+
+		// holdingShift: Boolean
+		//		If true, when selecting it'll appear as if the SHIFT key is held.
+		holdingShift: false,
+
+		onSelectionChange: function(newSelectedIds, oldSelectedIds){
+			// summary:
+			//		Fired when the selection is changed.
+			// newSelectedIds: String[]
+			//		Current selected ids.
+			// oldSelectedIds: String[]
+			//		Previous selected ids.
+		}
+	});
+=====*/
 
 	return declare(_Module, {
 		required: ['autoScroll'],
@@ -51,6 +81,8 @@ define([
 
 		//Public ------------------------------------------------------------------
 		enabled: true,
+
+		canSwept: true,
 
 		holdingCtrl: false,
 
@@ -204,7 +236,7 @@ define([
 		},
 
 		_fixFF: function(isStart){
-			if(sniff('ff')){
+			if(has('ff')){
 				query('.gridxSortNode', this.grid.headerNode).style('overflow', isStart ? 'visible' : '');
 			}
 		}

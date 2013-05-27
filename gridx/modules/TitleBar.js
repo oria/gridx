@@ -1,19 +1,30 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/dom-construct",
 	"../core/_Module"
-], function(declare, domConstruct, _Module){
-	
-	return declare(/*===== "gridx.modules.TitleBar", =====*/_Module, {
+], function(kernel, declare, domConstruct, _Module){
+	kernel.deprecated('TitleBar is deprecated', 'Use Bar module instead', '1.3');
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Add title bar for grid.
+		// tags:
+		//		deprecated. Use Bar module instead.
+
+		// label: String
+		label: '',
+
+		setLabel: function(){
+			// summary:
+			//		TODOC
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'titleBar',
-		
-//        required: ['vLayout'],
-		
-		getAPIPath: function(){
-			return {
-				titleBar: this
-			};
-		},
 
 		constructor: function(){
 			this.domNode = domConstruct.create('div', {

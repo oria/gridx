@@ -1,4 +1,4 @@
-define([
+require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
@@ -41,6 +41,7 @@ define([
 	}
 	window.defaultShow = false;
 	window.showExpando = true;
+	window.useAnimation = true;
 	window.contentType = 'form';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
 		setContent(detailNode);
@@ -133,9 +134,11 @@ define([
 			}),
 			modules: [
 				VirtualVScroller,
+				RowHeader,
 				{
 					moduleClass: Dod,
 					defaultShow: defaultShow,
+					useAnimation: useAnimation,
 					showExpando: showExpando,
 					detailProvider: detailProvider
 				}
@@ -184,6 +187,7 @@ define([
 	
 	tp.addTestSet('DoD types', [
  		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
+ 		'<label><input type="checkbox" checked onchange="useAnimation=this.checked"/> useAnimation</label><br/>',
  		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
  		'<label>Content type: <select onchange="window.contentType=this.value;">',
  		'<option value="text">text</option><option value="form" selected>form</option>',

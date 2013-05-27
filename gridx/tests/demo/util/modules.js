@@ -17,7 +17,7 @@ define([
 		},
 		{label: 'Filter API', 
 			module: mods.Filter,
-			mid: 'gridx/modules/filter/Filter',
+			mid: 'gridx/modules/Filter',
 			name: 'Filter',
 			description: [
 				'Provides filter API for grid, no UI. Also provides a set of useful utility functions to help create ',
@@ -28,7 +28,7 @@ define([
 		},
 		{label: 'Pagination API', 
 			module: mods.Pagination,
-			mid: 'gridx/modules/pagination/Pagination',
+			mid: 'gridx/modules/Pagination',
 			name: 'Pagination',
 			description: [
 				'Provides APIs to show only a part of rows of the store. ',
@@ -280,6 +280,22 @@ define([
 			icon: 'images/modIcon-RowHeader.png',
 			iconClass: ''
 		},
+		{label: 'Group Header', 
+			module: mods.GroupHeader,
+			mid: 'gridx/modules/GroupHeader',
+			name: 'GroupHeader',
+			description: '', 
+			icon: 'images/modIcon-GroupHeader.png',
+			iconClass: ''
+		},		
+		{label: 'Hidden Column', 
+			module: mods.HiddenColumns,
+			mid: 'gridx/modules/HiddenColumns',
+			name: 'HiddenColumns',
+			description: '', 
+			icon: 'images/modIcon-RowHeader.png',
+			iconClass: ''
+		},			
 		{label: 'Indirect Selection', 
 			module: mods.IndirectSelect,
 			mid: 'gridx/modules/IndirectSelect',
@@ -318,6 +334,22 @@ define([
 			name: 'DndRow',
 			description: '', 
 			icon: 'images/modIcon-DndColumn.png',
+			iconClass: ''
+		},
+		{label: 'Bar', 
+			module: mods.Bar,
+			mid: 'gridx/modules/Bar',
+			name: 'Bar',
+			description: '', 
+			icon: 'images/modIcon-DndColumn.png',
+			iconClass: ''
+		},
+		{label: 'HeaderMenu', 
+			module: mods.HeaderMenu,
+			mid: 'gridx/modules/HeaderMenu',
+			name: 'Bar',
+			description: '', 
+			icon: 'images/modIcon-HeaderRegion.png',
 			iconClass: ''
 		}
 	];

@@ -5,31 +5,41 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
-		#gridContainer {
+		.gridx {
 			width: 700px;
-			height: 300px;
-		}
-		#grid {
-			height: 100%;
+			height: 200px;
 		}
 	</style>
-
-	<script type="text/javascript" src="../../dojo/dojo.js" 
-		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script>
-		require(['gridx/tests/test_grid_virtualScroller']);
-	</script>
+	<script type="text/javascript" src='test_grid_virtualScroller.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-		Virtual Scrolling with 1000 rows
+		Virtual Scrolling
 	</h1>
-	<table border='0' cellspacing='0' cellpadding='0'><tr>
-		<td class='pane'>
-			<div id='gridContainer'></div>
-		</td>
-		<td id='ctrlPane' class='pane'></td>
-	</tr></table>
+	<h2>Big Client Store (2000 rows)</h2>
+	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Async",
+		store: clientStore,
+		structure: layout,
+		modules: [
+			"gridx/modules/ColumnResizer",
+			"gridx/modules/VirtualVScroller"
+		]
+	'></div>
+	<h2>Huge Server Store (1000000 rows, lazy scroll)</h2>
+	<p>Please note - All data are loaded from a <a href="http://dojotoolkit.cn/data/?totalSize=1000000&count=200">third party server</a>, so loading speed will be highly dependent on the network and stability of the service.</p>
+	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Async",
+		store: serverStore,
+		structure: layout,
+		vScrollerLazy: true,
+		modules: [
+			"gridx/modules/ColumnResizer",
+			"gridx/modules/TouchScroll",
+			"gridx/modules/VirtualVScroller"
+		]
+	'></div>
 </body>
 </html>

@@ -1,11 +1,11 @@
-define([
+require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/modules/Focus',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/tests/support/TestPane'
-], function(Grid, Cache, Focus, dataSource, storeFactory, TestPane){
+	'gridx/tests/support/TestPane',
+	'gridx/allModules'
+], function(Grid, Cache, dataSource, storeFactory, TestPane, mods){
 
 	var columnSetIdx = 0;
 
@@ -28,10 +28,9 @@ define([
 				cacheClass: Cache,
 				store: store,
 				structure: layout,
-				modules:[
-					Focus
-				],
-				selectRowTriggerOnCell: true
+				modules: [
+					mods.VirtualVScroller
+				]
 			});
 			grid.placeAt('gridContainer');
 			grid.startup();
@@ -69,6 +68,12 @@ define([
 		grid.store.remove(grid.row(0).id);
 	};
 
+	toggleHeader = function(){
+		grid.header.hidden = !grid.header.hidden;
+		grid.header.refresh();
+		grid.vLayout.reLayout();
+	};
+
 	//Test buttons
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
@@ -80,7 +85,8 @@ define([
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setRow">Set Year of the first row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroy">Destroy</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: create">Create</div><br/>'
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: create">Create</div><br/>',
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: toggleHeader">Toggle Header</div><br/>'
 	].join(''));
 
 	tp.startup();

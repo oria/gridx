@@ -101,6 +101,7 @@ define([
 					ret[attr] = editor.get('value');
 				}
 			});
+			console.log('column is: ', ret);
 			return ret;
 		},
 
@@ -148,6 +149,9 @@ define([
 		},
 		onEditorChange: function(){
 			this.onAttrChange(this.editorBox, 'Editor');
+		},
+		onMenuChange: function(){
+			this.onAttrChange(this.menuBox, 'Menu');
 		},
 		onAttrChange: function(widget, featureName){
 			var toUse = widget.editorDefaultValue != widget.get('value');
