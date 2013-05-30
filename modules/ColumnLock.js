@@ -197,7 +197,7 @@ define([
 		_updateHeader: function(){
 			// summary:
 			//	Update the header for column lock
-			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];
+			var rowNode = this.grid.header.innerNode;
 			var sl = rowNode.scrollLeft;
 			this._lockColumns(rowNode);
 			rowNode.scrollLeft = sl;
