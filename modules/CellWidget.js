@@ -226,7 +226,7 @@ define([
 					var output = [];
 					cellWidget.collectCellWidgetConnects(t, output);
 					t._cellCnnts = array.map(output, function(cnnt){
-						t.connect.apply(t, cnnt);
+						return t.connect.apply(t, cnnt);
 					});
 				}
 			},
@@ -305,7 +305,7 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------
-		backupCount: 20,
+		backupCount: 50,
 
 		setCellDecorator: function(rowId, colId, decorator, setCellValue){
 			var rowDecs = this._decorators[rowId];
@@ -462,11 +462,7 @@ define([
 				col._cellWidgets[cell.row.id] = widget;
 			}
 			widget.cell = cell;
-			// if(cell.lazyData){
-				// widget.setValue(cell.data(), cell.rawData(), true, cell.lazyData());
-			// }else{
-				widget.setValue(cell.data(), cell.rawData(), true);
-			// }
+			widget.setValue(cell.data(), cell.rawData(), true);
 			return widget;
 		},
 
@@ -491,9 +487,11 @@ define([
 				var col = cols[i],
 					cellWidgets = col._cellWidgets;
 				if(cellWidgets){
-					if(this.model.isId(id) && cellWidgets[id]){
-						backup(col, id);
-						delete cellWidgets[id];
+					if(this.model.isId(id)){
+						if(cellWidgets[id]){
+							backup(col, id);
+							delete cellWidgets[id];
+						}
 					}else{
 						for(var j in cellWidgets){
 							backup(col, j);
