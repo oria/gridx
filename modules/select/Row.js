@@ -243,6 +243,7 @@ define([
 				var t = this;
 				t._highlight(id, toMark);
 				t[toMark ? 'onSelected' : 'onDeselected'](t.grid.row(id, 1), id);
+				t._onSelectionChange();
 			}
 		},
 

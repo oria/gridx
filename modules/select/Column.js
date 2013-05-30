@@ -177,6 +177,7 @@ define([
 					c._selected = toSelect;
 					t._highlight(id, toSelect);
 					t[toSelect ? "onSelected" : "onDeselected"](t.grid.column(id, 1), id);
+					t._onSelectionChange();
 				}
 			}
 		},

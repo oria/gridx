@@ -189,6 +189,7 @@ define([
 				if(t.grid._columnsById[colId]){
 					t._highlight(rowId, colId, toMark);
 					t[toMark ? 'onSelected' : 'onDeselected'](t.grid.cell(rowId, colId, 1), rowId, colId);
+					t._onSelectionChange();
 				}
 			}
 		},
