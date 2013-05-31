@@ -37,6 +37,7 @@ define([
 
 		preload: function(){
 			var t = this, g = t.grid;
+			t._lastSelectedIds = [];
 			t.subscribe('gridClearSelection_' + g.id, function(type){
 				if(type != t._type){
 					t.clear();
@@ -62,7 +63,8 @@ define([
 		onDeselected: function(){},
 
 		onHighlightChange: function(){},
-		
+
+		onSelectionChange: function(){},
 
 		//Private---------------------------------------------------------------------
 		_getMarkType: function(){},
@@ -73,6 +75,12 @@ define([
 
 		_isSelectable: function(){
 			return true;
+		},
+
+		_onSelectionChange: function(){
+			var t = this, selectedIds = t.getSelected();
+			t.onSelectionChange(selectedIds, t._lastSelectedIds);
+			t._lastSelectedIds = selectedIds;
 		},
 
 		_select: function(item, extending){
