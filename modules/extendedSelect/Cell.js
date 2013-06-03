@@ -261,7 +261,7 @@ define([
 					t._highlight(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex));
 				}],
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
-					if(e.keyCode === keys.SPACE){
+					if(e.keyCode === keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
 						event.stop(e);
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();

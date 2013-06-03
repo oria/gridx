@@ -9,22 +9,13 @@ require([
 	'gridx/allModules',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory, JsonRest){
+	jsonStore = new JsonRest({target: 'support/stores/test_grid_filter.php/'});
 
-	store = storeFactory({
-		dataSource: dataSource, 
-		size: 100
-	});
-	
-
-	layout = [
+	layoutServerSide = [
 		{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
-		{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'enum',
-			enumOptions: ['a', 'b', 'c']
-		},
-		{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'enum',
-			enumOptions: ['d', 'e', 'f']
-		},
-		{id: 'Album', field: 'Album', name: 'Album', dataType: 'string', autoComplete: false},
+		{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'string'},
+		{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'string'},
+		{id: 'Album', field: 'Album', name: 'Album', dataType: 'string'},
 		{id: 'Name', field: 'Name', name: 'Name', dataType: 'string'},
 		{id: 'Year', field: 'Year', name: 'Year', dataType: 'number'},
 		{id: 'Length', field: 'Length', name: 'Length', dataType: 'string'},
@@ -34,6 +25,6 @@ require([
 		{id: 'Last Played', field: 'Last Played', name: 'Last Played', dataType: 'time'},
 		{id: 'Heard', field: 'Heard', name: 'Heard', dataType: 'boolean'}
 	];
-	
+
 	parser.parse();
 });

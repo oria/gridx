@@ -286,7 +286,7 @@ define([
 			},
 			contentNode: function(){
 				var node = this.node();
-				return node && (query('.gridxCellContent', node)[0] || node);
+				return node && query('.gridxCellContent', node)[0] || node;
 			}
 		},
 
@@ -355,7 +355,8 @@ define([
 				}
 				var c = " [colid='" + colId + "'].gridxCell";
 				if(t.model.isId(args.rowId) && has('ie')){
-					return query(c, t._getRowNode(args.rowId))[0] || null;
+					var rowNode = t._getRowNode(args.rowId);
+					return rowNode && query(c, rowNode)[0] || null;
 				}else{
 					return query(r + c, t.domNode)[0] || null;
 				}
@@ -497,9 +498,29 @@ define([
 					t.renderCount += t.renderStart - start;
 					t.renderStart = start;
 					domConstruct.place(str, n, 'first');
+					//unrender out-of-range rows immediately, so that CellWidget can reuse the widgets.
+					//FIXME: need a better solution here!
+					if(g.cellWidget && g.vScroller._updateRowHeight){
+						var oldEnd = t.renderStart + t.renderCount,
+							postCount = g.vScroller._updateRowHeight('post');
+						if(oldEnd - postCount < start + count){
+							count = oldEnd - postCount - start;
+							console.log(start, count);
+						}
+					}
 				}else if(position == 'bottom'){
 					t.renderCount = start + count - t.renderStart;
 					domConstruct.place(str, n, 'last');
+					//unrender out-of-range rows immediately, so that CellWidget can reuse the widgets.
+					//FIXME: need a better solution here!
+					if(g.cellWidget && g.vScroller._updateRowHeight){
+						g.vScroller._updateRowHeight('pre');
+						if(t.renderStart > start){
+							start = t.renderStart;
+							count = t.renderCount;
+							console.log(start, count);
+						}
+					}
 				}else{
 					t.renderStart = start;
 					t.renderCount = count;

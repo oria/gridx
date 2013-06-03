@@ -286,6 +286,7 @@ define([
 					bn.scrollTop += deltaT;
 				}
 			}
+			t._doVirtual();
 		},
 		
 		_doScroll: function(e, forced, noLazy){
@@ -312,7 +313,6 @@ define([
 			var t = this;
 			t._update();
 			t._doScroll(0, 1);
-			t._doVirtual();
 			//If some scrollToRow requests are pending, resume them.
 			array.forEach(t._scrolls, function(d){
 				if(d.scrollContext){
@@ -327,7 +327,6 @@ define([
 		_onForcedScroll: function(){
 			this._rowHeight = {};
 			this._doScroll(0, 1);
-			this._doVirtual();
 		},
 
 		//Private ---------------------------------------------------
@@ -366,7 +365,7 @@ define([
 			}, 100);
 		},
 	
-		_updateRowHeight: function(){
+		_updateRowHeight: function(mode){
 			//Update average row height and unrender rows
 			var t = this,
 				preCount = 0,
@@ -378,7 +377,8 @@ define([
 				st = bn.scrollTop,
 				top = st - buff,
 				bottom = st + bn.clientHeight + buff,
-				rh = t._rowHeight;
+				rh = t._rowHeight,
+				ret = 0;
 	
 			array.forEach(bn.childNodes, function(n){
 				rh[n.getAttribute('rowid')] = n.offsetHeight;
@@ -388,8 +388,14 @@ define([
 					++preCount;
 				}
 			});
-			bd.unrenderRows(preCount);
-			bd.unrenderRows(postCount, 'post');
+			if(mode != 'post'){
+				bd.unrenderRows(preCount);
+				ret = preCount;
+			}
+			if(mode != 'pre'){
+				bd.unrenderRows(postCount, 'post');
+				ret = postCount;
+			}
 	
 			var p, h = 0, c = 0;
 			for(p in rh){
@@ -400,6 +406,7 @@ define([
 				t._avgRowHeight = h / c;
 				t._syncHeight();
 			}
+			return ret;
 		},
 
 		_onKeyScroll: function(evt){

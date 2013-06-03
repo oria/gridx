@@ -29,12 +29,9 @@ define([
 
 	var hitch = lang.hitch;
 
-	function fetchById(self, args){
+	function fetchById(self, args, success, fail){
 		//Although store supports query by id, it does not support get index by id, so must find the index by ourselves.
-		var d = new Deferred(),
-			i, r, len, pid,
-			success = hitch(d, d.callback),
-			fail = hitch(d, d.errback),
+		var i, r, len, pid,
 			ranges = args.range,
 			isTree = self.store.getChildren;
 		args.pids = {
@@ -66,9 +63,9 @@ define([
 					mis.push(id);
 				}
 			});
-			searchRootLevel(self, mis).then(function(ids){
+			searchRootLevel(self, mis, function(ids){
 				if(ids.length && isTree){
-					searchChildLevel(self, ids).then(function(ids){
+					searchChildLevel(self, ids, function(ids){
 						if(ids.length){
 							console.warn('Requested row ids are not found: ', ids);
 						}
@@ -81,12 +78,10 @@ define([
 		}else{
 			success(args);
 		}
-		return d;
 	}
 
-	function fetchByIndex(self, args){
-		var d = new Deferred(),
-			toFetch = [],
+	function fetchByIndex(self, args, success, fail){
+		var toFetch = [],
 			dl = [],
 			checkValid = function(size, r){
 				if(r.count > 0 && size < r.start + r.count){
@@ -114,11 +109,10 @@ define([
 		if(toFetch.length){
 			new DeferredList(array.map(toFetch, function(r){
 				return self._storeFetch(r);
-			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
+			}), 0, 1).then(success, fail);
 		}else{
-			d.callback(args);
+			success(args);
 		}
-		return d;
 	}
 
 	function mergePendingRequests(self, parentId, dl, ranges){
@@ -301,11 +295,9 @@ define([
 		return results;
 	}
 
-	function searchRootLevel(self, ids){
+	function searchRootLevel(self, ids, success, fail){
 		//search root level for missing ids
-		var d = new Deferred(),
-			fail = hitch(d, d.errback),
-			indexMap = self._struct[''],
+		var indexMap = self._struct[''],
 			ranges = [],
 			lastRange,
 			premissing; //Whether the previous item is missing
@@ -333,18 +325,15 @@ define([
 					func(findMissingIds(self, ids));
 				}, fail);
 			}else{
-				d.callback(ids);
+				success(ids);
 			}
 		};
 		func(ids);
-		return d;
 	}
 
-	function searchChildLevel(self, ids){
+	function searchChildLevel(self, ids, success, fail){
 		//Search children level of current level for missing ids
-		var d = new Deferred(),
-			fail = hitch(d, d.errback),
-			st = self._struct,
+		var st = self._struct,
 			parentIds = st[''].slice(1),
 			func = function(ids){
 				if(ids.length && parentIds.length){
@@ -356,11 +345,10 @@ define([
 						func(findMissingIds(self, ids));
 					}, fail);
 				}else{
-					d.callback(ids);
+					success(ids);
 				}
 			};
 		func(ids);
-		return d;
 	}
 
 	return declare(_Cache, {
@@ -381,8 +369,8 @@ define([
 					t._requests.pop();
 					fail(e);
 				};
-			fetchById(t, args).then(function(args){
-				fetchByIndex(t, args).then(function(args){
+			fetchById(t, args, function(args){
+				fetchByIndex(t, args, function(args){
 					Deferred.when(args._req, function(){
 						var err;
 						if(callback){
