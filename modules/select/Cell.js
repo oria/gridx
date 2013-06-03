@@ -171,7 +171,7 @@ define([
 					}
 				}],
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
-					if(e.keyCode == keys.SPACE){
+					if(e.keyCode == keys.SPACE && g.focus.currentArea() == 'body'){
 						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
 						event.stop(e);
 					}
