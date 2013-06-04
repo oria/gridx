@@ -122,7 +122,7 @@ function column($field){
 
 function contain($a, $b){
 	$a = boolToStr($a);
-	return strpos($a, $b) !== FALSE;
+	return stripos($a, $b) !== FALSE;
 }
 
 function logicand(){
@@ -189,8 +189,26 @@ function endWith($a, $b){
 }
 
 function output($data){
-	header("Content-Range: /".count($data));
+	// header("Content-Range: /" . count($GLOBALS['data']));
+	// header("Content-Range:" . 'items 0-' . count($data) . '/' . count($GLOBALS['data']));
+	header("Content-Range: /" . count($data));
+	
+	$data = slice($data);
 	echo json_encode($data);
+}
+
+function slice($data){
+	$range = $_SERVER['HTTP_RANGE'];
+	$range = substr($range, 6);
+	$pairs = explode('-', $range);
+	$start = intval($pairs[0]);
+	$end = intval($pairs[1]);
+	
+	$a = array();
+	for($i = $start; $i <= $end; $i++){
+		$a[] = $data[$i];
+	}
+	return $a;
 }
 
 

@@ -26,17 +26,8 @@
 		selectRowTriggerOnCell: true,
 		filterBarMaxRuleCount: Infinity,
 		filterServerMode: true,
-		filterBarFilterData: {
-			type: "all",
-			conditions: [
-				{
-					colId: "",
-					condition: "contain",
-					type: "Text",
-					value: "Easy"
-				}
-			]
-		},
+		pageSize: 10,
+
 		
 		filterSetupFilterQuery: function(expr){
 			var toExpr = function(expr){
@@ -74,6 +65,8 @@
 			"gridx/modules/SingleSort",
 			"gridx/modules/extendedSelect/Row",
 			"gridx/modules/IndirectSelectColumn",
+			"gridx/modules/Pagination",
+			"gridx/modules/pagination/PaginationBar",
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>
