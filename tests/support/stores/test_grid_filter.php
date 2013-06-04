@@ -105,12 +105,23 @@ $items = <<<EOF
 	]
 EOF;
 
+function boolToStr($a){
+	if($a === TRUE){
+		$a = 'true';	
+	}
+	if($a === FALSE){
+		$a = 'fasle';
+	}
+	return $a;
+}
+
 function column($field){
 	$obj = $GLOBALS['currentItem'];
 	return $obj->$field;
 }
 
 function contain($a, $b){
+	$a = boolToStr($a);
 	return strpos($a, $b) !== FALSE;
 }
 
@@ -132,12 +143,61 @@ function logicor(){
 	return $bool;
 }
 
+function isEmpty($a){
+	return $a === '' || $a === null;
+}
+
+function not($a){
+	return !$a;
+}
+
+function equal($a, $b){
+	// echo $a . '  ' . $b . '<br>';
+	// return strtolower($a) === strtolower($b);
+	// $a = 
+	$a = boolToStr($a);
+	return strtolower($a) === strtolower($b);
+}
+
+function greater($a, $b){
+	return $a > $b;
+}
+
+function less($a, $b){
+	return $a < $b;
+}
+
+function greaterEqual($a, $b){
+	return $a >= $b;
+}
+
+function lessEqual($a, $b){
+	return $a <= $b;
+}
+
+function startWith($a, $b){
+	$a = boolToStr($a);
+	return stripos($a, $b) === 0;
+}
+
+function endWith($a, $b){
+	// if(preg_match($a, $b)){
+		//echo 'match is:' . $a . '<br>';
+	// }
+	$a = boolToStr($a);
+	return preg_match("/{$b}$/", $a);
+}
+
+function output($data){
+	header("Content-Range: /".count($data));
+	echo json_encode($data);
+}
+
 
 $data = json_decode($items);
 $currentItem = null;
 $field;
 // header("Content-Type: " . ($_SERVER["CONTENT_TYPE"] == 'application/json' ? 'application/json' : 'text/plain'));
-header("Content-Range: /".count($data));
 // header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
 
 $i = 0;
@@ -151,21 +211,27 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 	if(isset($query) && !empty($query)){
 		
 		//main filter function entry
-		if(isset($_GET['query'])){	
+		if(isset($_GET['query'])){
 				$query = $_GET['query'];
-				$array = array();
-				foreach ($data as $item) {
-					$currentItem = $item;
-					$query = "\$bool = " . $query;
-					eval($query);
-					if($bool){
-						$array[] = $item;
+			
+				if(empty($query)){
+					$array = $data;
+				}else{
+					$array = array();
+					foreach ($data as $item) {
+						$currentItem = $item;
+						$query = "\$bool = " . $query;
+						eval($query);
+						if($bool){
+							$array[] = $item;
+						}
 					}
 				}
-				echo json_encode($array);
+				// echo json_encode($array);
+				output($array);
 			
 		}else{		//search
-			preg_match('/^(\w*)=\*?(\w)*\*&sort\((\+|-)(\w*)\)$/', $query, $matches);
+			preg_match('/^(\w*)=\*?(\w*)\*&sort\((\+|-)(\w*)\)$/', $query, $matches);
 			if(!empty($matches)){
 				
 				$field = $matches[1];
@@ -173,7 +239,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 				$sort = $matches[3];
 				$sortField = $matches[4];
 				$array = array();
-				
 				
 				if(!empty($key)){
 					foreach($data as $item){
@@ -208,11 +273,14 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 				}else{
 					usort($array, 'cmpDesc');
 				}
-				echo json_encode($array);
+				// echo json_encode($array);
+				output($array);
+				
 			}
 		}
 	}else{
-		echo json_encode($data);
+		// echo json_encode($data);
+		output($data);
 		
 	}
 }

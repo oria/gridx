@@ -40,6 +40,7 @@
 		
 		filterSetupFilterQuery: function(expr){
 			var toExpr = function(expr){
+				if(!expr){ return ""; }
 				if(typeof expr.data != "object"){
 					if(expr.isCol){
 						return "column(\"" + expr.data + "\")";
@@ -62,7 +63,8 @@
 			};
 			console.log("expr is: ", expr);		
 
-			var newExpr = toExpr(expr) + ";";
+			var newExpr = toExpr(expr);
+			if(newExpr){ newExpr += ";"}
 			console.log("expr is: ", newExpr);		
 			return {query: newExpr};	
 		},
