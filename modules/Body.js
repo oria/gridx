@@ -462,7 +462,7 @@ define([
 						rowInfo.rowId = m.indexToId(idx, pid);
 						var cell = g.cell(rowInfo.rowId, col.id, 1),
 							isPadding = g.tree && g.tree.isPaddingCell(rowInfo.rowId, col.id);
-						cellNode.innerHTML = t._buildCellContent(cell, rowVisualIndex, isPadding);
+						cellNode.innerHTML = t._buildCellContent(col, rowInfo.rowId, cell, rowVisualIndex, isPadding);
 						t.onAfterCell(cell);
 					}
 				}).then(function(){
@@ -718,40 +718,44 @@ define([
 
 		_buildCells: function(row, visualIndex, cols){
 			var t = this,
+				rowId = row.id,
 				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'],
 				output = {};
 			t.onCheckCustomRow(row, output);
-			if(output[row.id]){
+			if(output[rowId]){
 				output = {};
 				t.onBuildCustomRow(row, output);
 				sb.push('<td class="gridxCustomRow" aria-readonly="true" role="gridcell" tabindex="-1">',
-					t._wrapCellData(output[row.id], row.id),
+					t._wrapCellData(output[rowId], rowId),
 					'</td>');
 			}else{
 				var g = t.grid,
 					isFocusedRow = g.focus.currentArea() == 'body' && t._focusCellRow === visualIndex,
-					rowData = t.model.byId(row.id).data,
+					rowData = t.model.byId(rowId).data,
 					columns = g._columns,
-					cellCls = t._cellCls[row.id] || {};
+					cellCls = t._cellCls[rowId] || {};
 				for(var i = 0, len = columns.length; i < len; ++i){
 					var col = columns[i],
 						colId = col.id,
 						colWidth = col.width,
-						isPadding = g.tree && g.tree.isPaddingCell(row.id, colId),
-						cell = g.cell(row, cols && cols[i] || colId, 1),
+						isPadding = g.tree && g.tree.isPaddingCell(rowId, colId),
 						customCls = col['class'],
-						cellData = rowData[colId];
+						cellData = rowData[colId],
+						customClsIsFunction = customCls && lang.isFunction(customCls),
+						styleIsFunction = col.style && lang.isFunction(col.style),
+						needCell = customClsIsFunction || styleIsFunction || (!isPadding && col.decorator),
+						cell = needCell && g.cell(row, cols && cols[i] || colId, 1);
 					sb.push('<td aria-readonly="true" role="gridcell" tabindex="-1" aria-describedby="',
 						col._domId,'" colid="', colId, '" class="gridxCell ',
 						isPadding ? 'gridxPaddingCell ' : '',
 						isFocusedRow && t._focusCellCol === i ? 'gridxCellFocus ' : '',
 						col._class || '', ' ',
-						(customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '', ' ',
+						(customClsIsFunction ? customCls(cell) : customCls) || '', ' ',
 						cellCls[colId] ? cellCls[colId].join('') : '',
 						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
 						g.getTextDirStyle(colId, cellData),
-						(col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '',
-						'">', t._buildCellContent(cell, visualIndex, isPadding, cellData),
+						(styleIsFunction ? col.style(cell) : col.style) || '',
+						'">', t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
 					'</td>');
 				}
 			}
@@ -759,14 +763,12 @@ define([
 			return sb.join('');
 		},
 
-		_buildCellContent: function(cell, visualIndex, isPadding, cellData){
+		_buildCellContent: function(col, rowId, cell, visualIndex, isPadding, cellData){
 			var r = '',
-				col = cell.column,
-				row = cell.row,
-				data = cellData || cell.data();
+				data = cellData === undefined && cell ? cell.data() : cellData;
 			if(!isPadding){
-				var s = col.decorator ? col.decorator(data, row.id, visualIndex, cell) : data;
-				r = this._wrapCellData(s, row.id, col.id);
+				var s = col.decorator ? col.decorator(data, rowId, visualIndex, cell) : data;
+				r = this._wrapCellData(s, rowId, col.id);
 			}
 			return (r === '' || r === null || r === undefined) && (has('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
 		},
@@ -855,7 +857,7 @@ define([
 									}
 								}
 								//Support for Bidi end
-								cell.node().innerHTML = t._buildCellContent(cell, row.visualIndex(), isPadding);
+								cell.node().innerHTML = t._buildCellContent(col, id, cell, row.visualIndex(), isPadding);
 								t.onAfterCell(cell);
 							}
 						});
