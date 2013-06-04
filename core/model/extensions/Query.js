@@ -22,7 +22,7 @@ define([
 
 		constructor: function(model, args){
 			this._mixinAPI('query');
-			this.query(args.query, args.queryOptions);
+			this._cmdQuery(0, 0, [args.query, args.queryOptions]);
 		},
 
 		//Public--------------------------------------------------------------
