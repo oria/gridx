@@ -10,7 +10,7 @@ define([
 	"dojox/html/ellipsis",
 	"dojox/html/metrics",
 	"./DistinctComboBoxMenu",
-	"../Filter",
+	"./Filter",
 	"dojo/text!../../templates/FilterPane.html",
 	"dojo/i18n!../../nls/FilterBar",
 	"dijit/layout/ContentPane",
@@ -21,19 +21,13 @@ define([
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
-], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n, ContentPane){
-
-/*=====
-	return declare([], {
-	});
-=====*/
-
+], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n){
 	var ANY_COLUMN_VALUE = '_gridx_any_column_value_';
 	
 	function isAnyColumn(colid){
 		return colid == ANY_COLUMN_VALUE;
 	}
-	return declare([ContentPane], {
+	return declare([dijit.layout.ContentPane], {
 		//content: template,
 		sltColumn: null,
 		sltCondition: null,
@@ -53,7 +47,7 @@ define([
 	
 		getData: function(){
 			// summary:
-			//		Get the filter defined by this filter pane.
+			//	Get the filter defined by this filter pane.
 			var value = this._getValue(), 
 				colId = this.sltColumn.get('value'),
 				condition = this.sltCondition.get('value');
@@ -71,7 +65,7 @@ define([
 		},
 		setData: function(data){
 			// summary:
-			//		Set the data of the pane to restore UI.
+			//	Set the data of the pane to restore UI.
 			if(data === null){return;}
 			this.sltColumn.set('value', data.colId, null);
 			this._onColumnChange();
@@ -102,7 +96,7 @@ define([
 		},
 		onChange: function(){
 			// summary:
-			//		event: fired when column, condition or value is changed
+			//	event: fired when column, condition or value is changed
 		},
 		_getContainer: function(){
 			return registry.byNode(this.domNode.parentNode.parentNode.parentNode);
@@ -141,22 +135,20 @@ define([
 				sltCol = this.sltColumn;
 			array.forEach(this.grid.columns(), function(col){
 				if(!col.isFilterable())return;
-				var colName = col.name();
-				colName = this.grid.enforceTextDirWithUcc(col.id, colName);
-				colOpts.push({value: col.id, label: colName});
+				colOpts.push({value: col.id, label: col.name()});
 			}, this);
 			sltCol.addOption(colOpts);
 		},
 		_initCloseButton: function(){
 			// summary:
-			//		Add a close button to the accordion pane.
-			//		Must be called after adding to an accordion container.
+			//	Add a close button to the accordion pane.
+			//  Must be called after adding to an accordion container.
 			var btnWidget = this._buttonWidget;
 			var closeButton = dom.create('span', {
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
 				tabIndex: 0,
-				title: i18n.removeRuleButton || ''
+				title: 'Close'
 			}, btnWidget.domNode, 'last');
 			this.connect(closeButton, 'onclick', 'close');
 			css.add(btnWidget.titleTextNode, 'dojoxEllipsis');
@@ -166,8 +158,7 @@ define([
 			var colId = this.sltColumn.get('value');
 			var opt = this.grid.filterBar._getConditionOptions(isAnyColumn(colId) ? '' : colId);
 			var slt = this.sltCondition;
-			//if(slt.options && slt.options.length){slt.removeOption(slt.options);}
-			slt.set('options', []);
+			if(slt.options && slt.options.length){slt.removeOption(slt.options);}
 			slt.addOption(lang.clone(opt));
 			this._updateTitle();
 			this._updateValueField();
@@ -194,8 +185,8 @@ define([
 		},
 		_getType: function(){
 			// summary:
-			//		Get current filter type, determined by data type and condition.
-			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', 'enum': 'Select', 'boolean': 'Radio'};
+			//	Get current filter type, determined by data type and condition.
+			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', 'boolean': 'Radio'};
 			var type = mapping[this._getDataType()];
 			if('range' === this.sltCondition.get('value')){type += 'Range';} ;
 			return type;
@@ -217,13 +208,13 @@ define([
 		},
 		_needComboBox: function(){
 			// summary:
-			//		Whether current state needs a combo box for string input, may rewrite to support virtual column
+			//	Whether current state needs a combo box for string input, may rewrite to support virtual column
 			var colId = this.sltColumn.get('value');
 			return this._getType() === 'Text' && !isAnyColumn(colId) && this.grid._columnsById[colId].field;
 		},
 		_updateValueField: function(){
 			// summary:
-			//		Update the UI for field to show/hide fields.
+			//	Update the UI for field to show/hide fields.
 			var type = this._getType(), colId = this.sltColumn.get('value');
 			var combo = this._needComboBox();
 			
@@ -235,31 +226,18 @@ define([
 			var disabled = this.sltCondition.get('value') === 'isEmpty';
 			array.forEach(this._fields, function(f){f.set('disabled', disabled)});
 			
-			var col = this.grid._columnsById[colId];
 			if(combo){
 				if(!this._dummyCombo){
 					//HACK: mixin query, get, etc methods to store, remove from 2.0.
 					this._dummyCombo = new dijit.form.ComboBox({store: this.grid.store});
 				}
 				//init combobox
-				if(col.autoComplete !== false){
-					lang.mixin(this.comboText, {
-						store: this.grid.store,
-						searchAttr: col.field,
-						fetchProperties: {sort:[{attribute: col.field, descending: false}]}
-					});
-				}
-			}
-			if(type == 'Select'){
-				var sltSingle = this.sltSingle;
-				sltSingle.removeOption(sltSingle.getOptions());
-				sltSingle.addOption(array.map(col.enumOptions || [], function(option){
-					return lang.isObject(option) ? option : {
-						label: option,
-						value: option
-					};
-				}));
-				this._updateTitle();
+				var col = this.grid._columnsById[colId];
+				lang.mixin(this.comboText, {
+					store: this.grid.store,
+					searchAttr: col.field,
+					fetchProperties: {sort:[{attribute: col.field, descending: false}]}
+				});
 			}
 		},
 		_getValue: function(){

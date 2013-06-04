@@ -1,6 +1,6 @@
 <?php
-//    require_once('FirePHPCore/fb.php');  
-//    ob_start(); 
+    require_once('FirePHPCore/fb.php');  
+    ob_start(); 
 
 	header("Content-Type: " . ($_SERVER["CONTENT_TYPE"] == 'application/json' ? 'application/json' : 'text/plain'));
 

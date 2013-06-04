@@ -1,32 +1,41 @@
-require([
-	'dojo/parser',
-	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/Memory',
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
-	'gridx/allModules',
-	'dojo/domReady!'
-], function(parser, dataSource, storeFactory){
+	'gridx/tests/support/data/MusicData',
+	'gridx/tests/support/stores/Memory',
+	'gridx/modules/pagination/Pagination'
+], function(Grid, Cache, dataSource, storeFactory, Pagination){
+	
+	grid = new Grid({
+		id: 'grid',
+		cacheClass: Cache,
+		store: storeFactory({
+			dataSource: dataSource,
+			size: 100
+		}),
+		structure: dataSource.layouts[7],
 
-	store = storeFactory({
-		dataSource: dataSource,
-		size: 100
+		autoHeight: true,
+		paginationInitialPageSize: 10,
+		paginationInitialPage: 2,
+		modules: [
+			Pagination
+		]
 	});
+	grid.placeAt('gridContainer');
+	grid.startup();
 
-	layout = dataSource.layouts[7];
-
+	var p = grid.pagination;
 	first = function(){
-		grid1.pagination.gotoPage(0);
+		p.gotoPage(0);
 	};
 	last = function(){
-		grid1.pagination.gotoPage(grid1.pagination.pageSize() - 1);
+		p.gotoPage(p.pageSize() - 1);
 	};
 	prev = function(){
-		grid1.pagination.gotoPage(grid1.pagination.currentPage() - 1);
+		p.gotoPage(p.currentPage() - 1);
 	};
 	next = function(){
-		grid1.pagination.gotoPage(grid1.pagination.currentPage() + 1);
+		p.gotoPage(p.currentPage() + 1);
 	};
-
-	parser.parse();
 });

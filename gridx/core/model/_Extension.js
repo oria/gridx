@@ -5,18 +5,9 @@ define([
 	'dojo/aspect'
 ], function(declare, lang, array, aspect){
 
-/*=====
 	return declare([], {
 		// summary:
 		//		Abstract base class for all model components (including cache)
-
-		onNew: function(){},
-		onDelete: function(){},
-		onSet: function(){}
-	});
-=====*/
-
-	return declare([], {
 		constructor: function(model){
 			var t = this,
 				i = t.inner = model._model;

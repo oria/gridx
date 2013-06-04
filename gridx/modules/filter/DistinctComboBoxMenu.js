@@ -1,13 +1,7 @@
 define([
-	"dojo/_base/declare",
-	'dijit/form/_ComboBoxMenu'
+"dojo/_base/declare",
+'dijit/form/_ComboBoxMenu'
 ], function(declare, _ComboBoxMenu){
-
-/*=====
-	return declare([], {
-	});
-=====*/
-
 	return declare(_ComboBoxMenu, {
 		createOptions: function(results, options, labelFunc){
 			var hash = {};

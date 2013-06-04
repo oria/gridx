@@ -1,4 +1,5 @@
 require([
+	'dojo',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/modules/Focus',
@@ -13,7 +14,7 @@ require([
 	'dijit/form/Button',
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
-], function(Grid, Cache, Focus, RowHeader, SelectRow, SelectColumn, SelectCell, VirtualVScroller, dataSource, storeFactory, TestPane){
+], function(dojo, Grid, Cache, Focus, RowHeader, SelectRow, SelectColumn, SelectCell, VirtualVScroller, dataSource, storeFactory, TestPane){
 
 	grid = new Grid({
 		id: 'grid',

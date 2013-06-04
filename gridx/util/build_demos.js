@@ -51,6 +51,7 @@ function writeDemoHtml(file){
 	console.log('writing demo path: ' + to);
 	var content = fs.readFileSync(path.join(gridxDir, 'tests/' + file), 'utf8');
 	content = content.replace(/"support\//g, '"../tests/support/');
+	content = content.replace(/'support\//g, '\'../tests/support/');
 	content = content.replace('<script>', '<script src="' + file.replace('.html', '.js') + '"></script>\n\t<script>');
 	fs.writeFileSync(to, content, 'utf8');
 }

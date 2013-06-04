@@ -11,9 +11,14 @@
 			margin-bottom: 20px;
 		}
 	</style>
-	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
 	<script type="text/javascript" src='../tests/support/common.js'></script>
-	<script type="text/javascript" src='test_grid_autoHideVScroller.js'></script>
+	<script src="test_grid_autoHideVScroller.js"></script>
+	<script>
+		require(['gridx/tests/test_grid_autoHideVScroller']);
+	</script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
@@ -24,13 +29,14 @@
 		store: store,
 		structure: layout1,
 		barTop: [
-			"gridx/support/QuickFilter",
+			"gridx/modules/barPlugins/QuickFilter",
 			{content: "Grid with fixed column width", style: "font-weight: bold; text-shadow: 1px 1px 1px #fff;"}
 		],
 		modules: [
+			"gridx/modules/Focus",
 			"gridx/modules/ColumnResizer",
-			"gridx/modules/Filter",
-			"gridx/modules/Pagination",
+			"gridx/modules/filter/Filter",
+			"gridx/modules/pagination/Pagination",
 			"gridx/modules/pagination/PaginationBar",
 			"gridx/modules/Bar"
 		]
@@ -40,13 +46,14 @@
 		store: store,
 		structure: layout2,
 		barTop: [
-			"gridx/support/QuickFilter",
+			"gridx/modules/barPlugins/QuickFilter",
 			{content: "Grid with auto column width", style: "font-weight: bold; text-shadow: 1px 1px 1px #fff;"}
 		],
 		modules: [
+			"gridx/modules/Focus",
 			"gridx/modules/ColumnResizer",
-			"gridx/modules/Filter",
-			"gridx/modules/Pagination",
+			"gridx/modules/filter/Filter",
+			"gridx/modules/pagination/Pagination",
 			"gridx/modules/pagination/PaginationBar",
 			"gridx/modules/Bar"
 		]
@@ -56,13 +63,14 @@
 		store: store,
 		structure: layout3,
 		barTop: [
-			"gridx/support/QuickFilter",
+			"gridx/modules/barPlugins/QuickFilter",
 			{content: "Grid with percentage column width", style: "font-weight: bold; text-shadow: 1px 1px 1px #fff;"}
 		],
 		modules: [
 			"gridx/modules/ColumnResizer",
-			"gridx/modules/Filter",
-			"gridx/modules/Pagination",
+			"gridx/modules/Focus",
+			"gridx/modules/filter/Filter",
+			"gridx/modules/pagination/Pagination",
 			"gridx/modules/pagination/PaginationBar",
 			"gridx/modules/Bar"
 		]
@@ -73,12 +81,13 @@
 		structure: layout4,
 		columnWidthAutoResize: true,
 		barTop: [
-			"gridx/support/QuickFilter",
+			"gridx/modules/barPlugins/QuickFilter",
 			{content: "Grid with auto-resize columns", style: "font-weight: bold; text-shadow: 1px 1px 1px #fff;"}
 		],
 		modules: [
-			"gridx/modules/Filter",
-			"gridx/modules/Pagination",
+			"gridx/modules/Focus",
+			"gridx/modules/filter/Filter",
+			"gridx/modules/pagination/Pagination",
 			"gridx/modules/pagination/PaginationBar",
 			"gridx/modules/Bar"
 		]
@@ -88,13 +97,14 @@
 		store: store,
 		structure: layout5,
 		barTop: [
-			"gridx/support/QuickFilter",
+			"gridx/modules/barPlugins/QuickFilter",
 			{content: "AutoWidth grid", style: "font-weight: bold; text-shadow: 1px 1px 1px #fff;"}
 		],
 		autoWidth: true,
 		modules: [
 			"gridx/modules/ColumnResizer",
-			"gridx/modules/Filter",
+			"gridx/modules/Focus",
+			"gridx/modules/filter/Filter",
 			"gridx/modules/Bar"
 		]
 	'></div>

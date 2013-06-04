@@ -1,55 +1,66 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
-	"dojo/_base/lang",
 	'dijit/Toolbar',
-	"../core/_Module",
-	'./Bar'
-], function(declare, lang, Toolbar, _Module){
+	"../core/_Module"
+], function(kernel, declare, Toolbar, _Module){
+	kernel.experimental('gridx/modules/ToolBar');
 
-/*=====
-	return declare(_Module, {
-		// summary:
-		//		Add toolbar on top of grid.
-		// description:
-		//		Add toolbar based on Bar module. This module is only for conveniency and backward compatibility.
-		//		Using Bar module directly is recommended.
-
-		// widget: [readonly] Object
-		widget: null,
-
-		// domNode: [readonly] HTMLElement
-		domNode: null
-	});
-=====*/
-
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.ToolBar", =====*/_Module, {
 		name: 'toolBar',
 
-		required: ['bar'],
+//        required: ['vLayout'],
+		
+		getAPIPath: function(){
+			return {
+				toolBar: this
+			};
+		},
 
 		constructor: function(grid, args){
-			this._def = lang.mixin(args, {
-				bar: 'top',
-				row: 0,
-				col: 0,
-				pluginClass: Toolbar,
-				'aria-label': 'grid toolbar',
-				className: 'gridxBarToolBar'
-			});
+			//Arguments for the dijit.Toolbar widget MUST be provided as module args, instead of grid args.
+			this.widget = new Toolbar(args);
+			this.domNode = this.widget.domNode;
 		},
 
 		preload: function(){
-			this.grid.bar.defs.push(this._def);
+			var t = this,
+				w = t.widget,
+				vLayout = t.grid.vLayout;
+			vLayout.register(t, 'domNode', 'headerNode', -10);
+			t.batchConnect(
+				[w, 'addChild', 'reLayout', vLayout],
+				[w, 'removeChild', 'reLayout', vLayout]
+			);
+			t._initFocus();
 		},
 
-		load: function(){
+		//Focus-----------------------------------------------
+		_initFocus: function(){
 			var t = this,
-				bar = t.grid.bar;
-			bar.loaded.then(function(){
-				t.widget = bar.plugins.top[0][0];
-				t.domNode = t.widget.domNode;
-				t.loaded.callback();
-			});
+				focus = t.grid.focus;
+			if(focus){
+				focus.registerArea({
+					name: t.name,
+					priority: -1,
+					focusNode: t.domNode,
+					scope: t,
+					doFocus: t._doFocus
+				});
+			}
+		},
+
+		_doFocus: function(evt){
+			var children = this.widget.getChildren();
+			if(children[0]){
+				children[0].focus();
+			}
+			return children.length;
+		},
+		
+		destroy: function(){
+			this.inherited(arguments);
+			this.widget.destroyRecursive();
 		}
 	});
 });

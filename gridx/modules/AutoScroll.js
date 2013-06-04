@@ -5,21 +5,6 @@ define([
 	"../core/_Module"
 ], function(declare, win, domGeometry, _Module){
 
-/*=====
-	return declare(_Module, {
-		// summary:
-		//		Automatically scroll the grid body when mouse is on the edge of grid.
-		//		Useful for extended selection or drag and drop.
-		//		This is a registered module, so if it is depended by other modules, no need to declare it when creating grid.
-
-		name: 'autoScroll',
-		enabled: false,
-		vertical: true,
-		horizontal: true,
-		margin: 20
-	});
-=====*/
-
 	return _Module.register(
 	declare(_Module, {
 
@@ -29,6 +14,12 @@ define([
 			this.connect(win.doc, 'mousemove', '_onMouseMove');
 		},
 
+		getAPIPath: function(){
+			return {
+				autoScroll: this
+			};
+		},
+	
 		//Public ---------------------------------------------------------------------
 		enabled: false,
 

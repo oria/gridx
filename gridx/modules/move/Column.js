@@ -1,21 +1,12 @@
 define([
-/*====="../../core/Column", =====*/
 	"dojo/_base/declare",
-	"dojo/query",
+	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/keys",
 	"../../core/_Module"
-], function(/*=====Column, =====*/declare, query, array, keys, _Module){
+], function(declare, query, array, keys, _Module){
 
-/*=====
-	Column.moveTo = function(target){
-		// summary:
-		//		Move this column to the position before the column with index "target"
-		// target: Integer
-		//		The target index
-	};
-
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.move.Column", =====*/_Module, {
 		// summary:
 		//		This module provides several APIs to move columns within grid.
 		// description:
@@ -24,50 +15,11 @@ define([
 		//		But this module does provide a keyboard support for reordering columns. When focus is on a column header,
 		//		pressing CTRL+LEFT/RIGHT ARROW will move the column around within grid.
 
-		// moveSelected: Boolean
-		//		When moving using keyboard, whether to move all selected columns together.
-		moveSelected: true,
-
-		// constraints: Hash-Object
-		//		Define several constraint ranges. Columns within these ranges can not be moved out of the range.
-		//		Columns outside these ranges can not be moved into these ranges.
-		//		Hash key is the starting column index, value is the end column index.
-		//		End index should be always larger than start index.
-		//		For example: { 0: 3 } means the first 4 columns can only be moved within themselves,
-		//		they can not be moved out and other columns can not be moved in.
-		constraints: Object,
-
-		move: function(columnIndexes, target){
-			// summary:
-			//		Move some columns to the given target position
-			// columnIndexes: Integer[]
-			//		The current indexes of columns to move
-			// target: Integer
-			//		The moved columns will be inserted before the column with this index.
-		},
-
-		moveRange: function(start, count, target){
-			// summary:
-			//		Move a range of columns to a given target position
-			// start: Integer
-			//		The index of the first column to move
-			// count: Integer
-			//		The count of columns to move
-		},
-
-		onMoved: function(){
-			// summary:
-			//		Fired when column move is performed successfully
-			// tags:
-			//		callback
-		}
-	});
-=====*/
-
-	return declare(_Module, {
 		name: 'moveColumn',
 		
 		getAPIPath: function(){
+			// tags:
+			//		protected extension
 			return {
 				move: {
 					column: this
@@ -81,38 +33,34 @@ define([
 
 		columnMixin: {
 			moveTo: function(target){
+				// summary:
+				//		Move this column to the position before the column with index "target"
+				// target: Integer
+				//		The target index
 				this.grid.move.column.moveRange(this.index(), 1, target);
 				return this;
 			}
 		},
 		
 		//public---------------------------------------------------------------
+
+		//moveSelected: Boolean
+		//		When moving using keyboard, whether to move all selected columns together.
 		moveSelected: true,
 
-		//constraints: null,
-
-		_isInConstraints: function(idx, target){
-			var c = this.arg('constraints', {}),
-				outRange = function(a, b, start){
-					return idx >= start && idx <= c[start] && (target < start || target > c[start] + 1);
-				};
-			for(var start in c){
-				if(outRange(idx, target, start) || outRange(target, idx, start)){
-					return 0;
-				}
-			}
-			return 1;
-		},
-
 		move: function(columnIndexes, target){
+			// summary:
+			//		Move some columns to the given target position
+			// columnIndexes: Integer[]
+			//		The current indexes of columns to move
+			// target: Integer
+			//		The moved columns will be inserted before the column with this index.
 			if(typeof columnIndexes === 'number'){
 				columnIndexes = [columnIndexes];
 			}
 			var map = [], i, len, columns = this.grid._columns, pos, movedCols = [];
 			for(i = 0, len = columnIndexes.length; i < len; ++i){
-				if(this._isInConstraints(columnIndexes[i], target)){
-					map[columnIndexes[i]] = true;
-				}
+				map[columnIndexes[i]] = true;
 			}
 			for(i = map.length - 1; i >= 0; --i){
 				if(map[i]){
@@ -133,19 +81,27 @@ define([
 		},
 	
 		moveRange: function(start, count, target){
+			// summary:
+			//		Move a range of columns to a given target position
+			// start: Integer
+			//		The index of the first column to move
+			// count: Integer
+			//		The count of columns to move
 			if(target < start || target > start + count){
-				var colsToMove = [];
-				for(var i = 0; i < count; ++i){
-					if(this._isInConstraints(start + i, target)){
-						colsToMove.push(start + i);
-					}
+				if(target > start + count){
+					target -= count;
 				}
-				this.move(colsToMove, target);
+				this._moveComplete(this.grid._columns.splice(start, count), target);
 			}
 		},
 		
 		//Events--------------------------------------------------------------------
-		onMoved: function(){},
+		onMoved: function(){
+			// summary:
+			//		Fired when column move is performed successfully
+			// tags:
+			//		callback
+		},
 		
 		//Private-------------------------------------------------------------------
 		_moveComplete: function(movedCols, target){
@@ -161,16 +117,7 @@ define([
 					if(targetId === null){
 						cells.place(tr);
 					}else{
-						var nextNode = query('> [colid="' + g._escapeId(targetId) + '"]', tr)[0];
-						if(nextNode){
-							cells.place(nextNode, 'before');
-						}else if(target > 0){
-							var tid = columns[target - 1].id;
-							var prevNode = query('> [colid="' + g._escapeId(tid) + '"]', tr)[0];
-							if(prevNode){
-								cells.place(prevNode, 'after');
-							}
-						}
+						cells.place(query('> [colid="' + targetId + '"]', tr)[0], 'before');
 					}
 				};
 			for(i = movedCols.length - 1; i >= 0; --i){
@@ -181,7 +128,7 @@ define([
 			for(i = columns.length - 1; i >= 0; --i){
 				columns[i].index = i;
 			}
-			query('.gridxHeaderRowInner > table > tbody > tr', g.headerNode).forEach(update);
+			update(query('.gridxHeaderRowInner > table > tbody > tr', g.headerNode)[0]);
 			query('.gridxRow > table > tbody > tr', g.bodyNode).forEach(update);
 			this.onMoved(map);
 		},

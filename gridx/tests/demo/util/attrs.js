@@ -76,13 +76,6 @@ define([
 		//HLayout
 		//VLayout
 		//Focus
-		//Edit
-		{mod: 'edit', name: 'lazySave',
-			type: 'bool',
-			value: true,
-			unitPost: 'save the edited data at client side without write to store immediately.',
-			description: ''
-		},
 		//Sort
 		{mod: 'sort', name: 'initialOrder',
 			type: 'array',
@@ -160,36 +153,12 @@ define([
 			value: false,
 			description: ''
 		},
-		{mod: 'selectRow', name: 'unselectable',
-			type: 'other',
-			unitPost: 'Allow selecting multiple rows (holding CTRL).',
-			value: [],
-			simpleValue: (function(){
-				var o = {};
-				for(var i = 0; i < 100; i++){
-					if(i % 5 === 0){
-						o['item-' + i] = true;
-					}
-				}
-				return o;
-			})(),
-			complexValue: (function(){
-				var o = {};
-				for(var i = 0; i < 100; i++){
-					if(i % 5 > 2){
-						o['item-' + i] = true;
-					}
-				}
-				return o;
-			})(),
-			description: ''
-		},
 		{mod: 'selectRow', name: 'multiple',
 			type: 'bool',
 			unitPost: 'Allow selecting multiple rows (holding CTRL).',
 			value: false,
 			description: ''
-		},		
+		},
 		//SelectColumn
 		{mod: 'selectColumn', name: 'multiple',
 			type: 'bool',
@@ -336,43 +305,14 @@ define([
 			unitPost: 'px when dragging mouse to trigger column dnd.',
 			value: 2,
 			description: ''
-		},
+		}
 		//ExporterCSV
 		//Printer
 		//TitleBar
-		
-		//groupHeader
-		{mod: 'header', name: 'groups', overrideCore: true,
-			// binding: 'gridx/modules/GroupHeader',
-			type: 'other',		//not show in attribute editor
-			editor: '',
-			value: [],
-			simpleValue: [
-				{name: 'Group 1', children: 2},
-				{name: 'Group 2', children: 2}
-			],
-			complexValue: [
-				{name: 'Group 1', children: 
-					[
-						{name: 'Group 1-1', children: 2},
-						{name: 'Group 1-2', children: 2}
-					]
-				}
-				// {name: 'Group 2', children: 2}			
-			],
-			unitPost: 'set the structure of the header group when groupHeader module is included.',
-			description: ''
-		},
-		//hiddenColumns
-		{mod: 'hiddenColumns', name: 'init',
-			type: 'other',
-			editor: 'numberTextBox',
-			unitPre: 'Delay',
-			unitPost: 'IDs of columns to be hidden when grid is initially created.',
-			value: [],
-			simpleValue:['column_1'],
-			complexValue: ['column_1', 'column_2'],
-			description: ''
-		}
+
+
+
+
+
 	];
 });

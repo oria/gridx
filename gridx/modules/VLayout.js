@@ -4,8 +4,7 @@ define([
 	"../core/_Module"
 ], function(declare, DeferredList, _Module){
 
-/*=====
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.VLayout", =====*/_Module, {
 		// summary:
 		//		This module manages the vertical layout of all the grid UI parts.
 		// description:
@@ -16,30 +15,19 @@ define([
 		//		grid UI parts. The reLayout function in this module will be called everytime the
 		//		grid size is changed.
 
-		register: function(mod, nodeName, hookPoint, priority, deferReady){
-			// summary:
-			//		When the 'mod' is loaded or "ready", hook 'mod'['nodeName'] to grid['hookPoint'] with priority 'priority'
-			// mod: Object
-			//		The module object
-			// nodeName: String
-			//		The name of the node to be hooked. Must be able to be accessed by mod[nodeName]
-			// hookPoint: String
-			//		The name of a hook point in grid.
-			// priority: Number?
-			//		The priority of the hook node. If less than 0, then it's above the base node, larger than 0, below the base node.
-		},
-
-		reLayout: function(){
-			// summary:
-			//		Virtically re-layout all the grid UI parts.
-		}
-	});
-=====*/
-
-	return declare(_Module, {
 		name: 'vLayout',
 
+		getAPIPath: function(){
+			// tags:
+			//		protected extension
+			return {
+				vLayout: this
+			};
+		},
+
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this,
 				g = t.grid;
 			t.connect(g, '_onResizeEnd', function(changeSize, ds){
@@ -53,7 +41,6 @@ define([
 			});
 			if(g.autoHeight){
 				t.connect(g.body, 'onRender', 'reLayout');
-				t.connect(g.body, 'onEmpty', 'reLayout');
 			}else{
 				t.connect(g, 'setColumns', function(){
 					setTimeout(function(){
@@ -64,6 +51,8 @@ define([
 		},
 	
 		load: function(args, startup){
+			// tags:
+			//		protected extension
 			var t = this;
 			startup.then(function(){
 				if(t._defs && t._mods){
@@ -79,6 +68,16 @@ define([
 	
 		//Public ---------------------------------------------------------------------
 		register: function(mod, nodeName, hookPoint, priority, deferReady){
+			// summary:
+			//		When the 'mod' is loaded or "ready", hook 'mod'['nodeName'] to grid['hookPoint'] with priority 'priority'
+			// mod: Object
+			//		The module object
+			// nodeName: String
+			//		The name of the node to be hooked. Must be able to be accessed by mod[nodeName]
+			// hookPoint: String
+			//		The name of a hook point in grid.
+			// priority: Number?
+			//		The priority of the hook node. If less than 0, then it's above the base node, larger than 0, below the base node.
 			var t = this;
 			t._defs = t._defs || [];
 			t._mods = t._mods || {};
@@ -92,6 +91,8 @@ define([
 		},
 		
 		reLayout: function(){
+			// summary:
+			//		Virtically re-layout all the grid UI parts.
 			var t = this,
 				freeHeight = 0,
 				hookPoint, n;
@@ -135,14 +136,12 @@ define([
 				dn = g.domNode,
 				ms = g.mainNode.style;
 			if(g.autoHeight){
-				function update(){
+				g.vScroller.loaded.then(function(){
 					var lastRow = g.bodyNode.lastChild,
 						bodyHeight = lastRow ? lastRow.offsetTop + lastRow.offsetHeight : g.emptyNode.offsetHeight;
 					dn.style.height = (bodyHeight + freeHeight) + 'px';
 					ms.height = bodyHeight + "px";
-				}
-				update();
-				g.vScroller.loaded.then(update);
+				});
 			}else if(dn.clientHeight > freeHeight){
 				//If grid height is smaller than freeHeight, IE will throw errer.
 				ms.height = (dn.clientHeight - freeHeight) + "px";

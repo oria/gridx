@@ -84,11 +84,11 @@
 
 .gridxPagerGoto {
 	width: 20px;
-	text-align: center;
+	text-align: right;
 }
 
 .gridxPagerGotoBtn {
-	background-position: -78px 3px;
+	background-position: -79px 4px;
 	cursor: pointer;
 }
 
@@ -124,19 +124,8 @@
 
 /* LinkPage in GridBar */
 .gridxLinkPager {
-	padding: 5px 0;
+	padding: 5px;
 }
 .gridxLinkSizer {
-	padding: 5px 0;
+	padding: 5px;
 }
-
-.gridxPaginationBar {
-	padding-right: 9px;
-}
-
-.gridxDropDownPager,
-.gridxDropDownSizer {
-	padding-top: 3px;
-	padding-bottom: 3px;
-}
-

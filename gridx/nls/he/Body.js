@@ -1,11 +1,6 @@
-define(
-({
-	loadingInfo: "טעינה בביצוע...",
+define({     
+	loadingInfo: "טוען...",
 	emptyInfo: "אין פריטים להצגה",
-	loadFailInfo: "כשל בטעינת הנתונים!",
-	loadMore: "טעינת עוד",
-	loadMoreLoading: "טעינה בביצוע...",
-	loadPrevious: "טעינת הקודם ",
-	loadPreviousLoading: "טעינה בביצוע..."
-})
-);
+	loadFailInfo: "טעינת הנתונים נכשלה!"
+});
+

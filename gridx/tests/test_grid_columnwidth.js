@@ -1,16 +1,17 @@
-require([
-	'dojo/parser',
-	'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/stores/Memory',
-	'gridx/allModules',
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
+	'gridx/tests/support/data/MusicData',
+	'gridx/tests/support/stores/Memory',
+	'gridx/modules/ColumnResizer',
+	'gridx/modules/RowHeader',
+	'gridx/modules/VirtualVScroller',
 	'dijit/layout/BorderContainer',
-	'dijit/layout/TabContainer',
 	'dijit/layout/ContentPane',
-	'dijit/Dialog',
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory, modules){
+], function(Grid, Cache, dataSource, storeFactory, ColumnResizer, RowHeader, VirtualVScroller){
+
+	cache = Cache;
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -18,9 +19,9 @@ require([
 	}); 
 
 	mods = [
-		modules.ColumnResizer,
-		modules.RowHeader,
-		modules.VirtualVScroller
+		ColumnResizer,
+//        modules.RowHeader,
+		VirtualVScroller
 	];
 
 	layout1 = [
@@ -115,6 +116,4 @@ require([
 		{id: 'Name', field: 'Name', name: 'Name', width: '30%'},
 		{id: 'Length', field: 'Length', name: 'Length'}
 	];
-
-	parser.parse();
 });

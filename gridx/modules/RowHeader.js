@@ -1,6 +1,6 @@
 define([
 	"dojo/_base/declare",
-	"dojo/query",
+	"dojo/_base/query",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/aspect",
@@ -11,10 +11,9 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util"
-], function(declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
+], function(declare, query, lang, sniff, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module, util){
 
-/*=====
-	return declare(_Module, {
+	return declare(/*===== "gridx.modules.RowHeader", =====*/_Module, {
 		// summary:
 		//		This modules provides a header before each row.
 		// description:
@@ -22,29 +21,15 @@ define([
 		//		cell selection is turned on and selectRowTriggerOnCell is turned off.
 		//		It can also be used as a place to hold the checkbox/radiobutton for IndirectSelect
 
-		// width: String
-		//		The width (CSS value) of a row header.
-		width: '20px',
-
-		onMoveToRowHeaderCell: function(){
-			// summary:
-			//		Fired when focus is moved to a row header using keyboard.
-			// tags:
-			//		private callback
-		},
-
-		// headerProvider: Function
-		//		A functionn that returns an HTML string to fill the header cell of row headers.
-		headerProvider: null,
-
-		// cellProvider: Function
-		//		A function that returns an HTML string to fill the body cells of row headers.
-		cellProvider: null
-	});
-=====*/
-
-	return declare(_Module, {
 		name: 'rowHeader',
+
+		getAPIPath: function(){
+			// tags:
+			//		protected extension
+			return {
+				rowHeader: this
+			};
+		},
 
 		constructor: function(){
 			this.headerNode = domConstruct.create('div', {
@@ -52,7 +37,7 @@ define([
 				role: 'row',
 				innerHTML: ['<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: ', 
 					this.arg('width'), 
-					';"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
+					';"><tr><th class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></th></tr></table>'
 				].join('')
 			});
 			this.bodyNode = domConstruct.create('div', {
@@ -61,12 +46,17 @@ define([
 		},
 
 		destroy: function(){
+			// tags:
+			//		protected extension
 			this.inherited(arguments);
+			this._b.remove();
 			domConstruct.destroy(this.headerNode);
 			domConstruct.destroy(this.bodyNode);
 		},
 
 		preload: function(){
+			// tags:
+			//		protected extension
 			var t = this,
 				rhhn = t.headerNode,
 				rhbn = t.bodyNode,
@@ -78,21 +68,17 @@ define([
 			//modify header
 			g.header.domNode.appendChild(rhhn);
 			rhhn.style.width = w;
-			t.headerCellNode = query('td', rhhn)[0];
+			t.headerCellNode = query('th', rhhn)[0];
 			g._connectEvents(rhhn, '_onHeaderMouseEvent', t);
 			//modify body
 			g.mainNode.appendChild(rhbn);
 			rhbn.style.width = w;
 			g.hLayout.register(null, rhbn);
-			
 			t.batchConnect(
 				[body, 'onRender', '_onRendered'],
 				[body, 'onAfterRow', '_onAfterRow'],
 				[body, 'onAfterCell', '_onAfterCell'],
 				[body, 'onUnrender', '_onUnrender'],
-				[body, 'onEmpty', function(){
-					rhbn.innerHTML = '';
-				}],
 				[g.bodyNode, 'onscroll', '_onScroll'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
@@ -100,13 +86,9 @@ define([
 				g.columnWidth && [g.columnWidth, 'onUpdate', '_onResize'],
 				g.columnResizer && [g.columnResizer, 'onResize', '_onResize'],
 				[g, 'onRowHeaderCellMouseOver', '_onCellMouseOver'],
-				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver'],
-				[t.model, 'onSizeChange', '_onSizeChange']);
+				[g, 'onRowHeaderCellMouseOut', '_onCellMouseOver']);
 			//TODO: need to organize this into connect/disconnect system
-			t._cnnts.push(
-				aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true),
-				aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true));
-
+			t._b = aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true);
 			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
 			t._initFocus();
 		},
@@ -125,9 +107,27 @@ define([
 		},
 
 		//Public--------------------------------------------------------------------------
+
+		// width: String
+		//		The width (CSS value) of a row header.
 		width: '20px',
 
-		onMoveToRowHeaderCell: function(){},
+		onMoveToRowHeaderCell: function(){
+			// summary:
+			//		Fired when focus is moved to a row header using keyboard.
+			// tags:
+			//		callback
+		},
+
+	/*=====
+		// headerProvider: Function
+		//		A functionn that returns an HTML string to fill the header cell of row headers.
+		headerProvider: null,
+
+		// cellProvider: Function
+		//		A function that returns an HTML string to fill the body cells of row headers.
+		cellProvider: null,
+	=====*/
 
 		//Private-------------------------------------------------------
 		_onRenderRows: function(start, count, position){
@@ -151,7 +151,7 @@ define([
 			var t = this,
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
-				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
+				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
 				nt = n.firstChild,
 				cp = t.arg('cellProvider');
 			n.setAttribute('rowid', row.id);
@@ -182,7 +182,7 @@ define([
 			//Use setTimeout to ensure the row header height correct reflects the body row height.
 			//FIXME: This is tricky and may not be working in some special cases.
 			function getHeight(){
-				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
+				return sniff('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
 			rowHeaderNode.style.height = getHeight();
 			setTimeout(function(){
@@ -198,48 +198,12 @@ define([
 			}
 			t._onScroll();
 		},
-		
-		_onSizeChange: function(size, oldSize){
-			var t = this,
-				g = t.grid,
-				hp = this.arg('headerProvider');
-			if(!size && hp){
-				t.headerCellNode.innerHTML = '';
-			}
-			t._onScroll();
-		},
 
-		_onDelete: function(id){
-			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
+		_onUnrender: function(id){
+			var nodes = id && query('[rowid="' + id + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
-				var node = nodes[nodes.length - 1],
-					pid = node.getAttribute('parentid'),
-					pids = {},
-					toDeleteC = 1;
-				pids[id] = 1;
-				for(sn = node.nextSibling; sn && pids[sn.getAttribute('parentid')]; sn = sn.nextSibling){
-					rid = sn.getAttribute('rowid');
-					toDeleteC++;
-					pids[rid] = 1;
-				}
-				for(; sn; sn = sn.nextSibling){
-					if(sn.getAttribute('parentid') == pid){
-						sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex'), 10) - 1);
-					}
-					var vidx = parseInt(sn.getAttribute('visualindex'), 10);
-					sn.setAttribute('visualindex', vidx - toDeleteC);
-				}
-			}
-		},
-		
-		_onUnrender: function(id, refresh){
-			//If this is fired in partial refresh, don't destroy the row header, save if for later use.
-			if(refresh != 'refresh'){
-				var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
-				if(nodes && nodes.length){
-					//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
-					domConstruct.destroy(nodes[nodes.length - 1]);
-				}
+				//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
+				domConstruct.destroy(nodes[nodes.length - 1]);
 			}
 		},
 
@@ -248,14 +212,11 @@ define([
 		},
 
 		_onResize: function(){
-			var ie = has('ie');
+			var ie = sniff('ie');
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
-					var bn = this.grid.dod? brn : brn.firstChild;
-					n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
-					
-					// n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(brn.firstChild).height : brn.firstChild.offsetHeight + 'px';
+				n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(brn.firstChild).height : brn.firstChild.offsetHeight + 'px';
 			}
 			var t = this,
 				g = t.grid,
@@ -278,9 +239,13 @@ define([
 		//Events
 		_onHeaderMouseEvent: function(eventName, e){
 			var g = this.grid,
-				evtCell = 'onRowHeaderHeader' + eventName;
+				evtCell = 'onRowHeaderHeader' + eventName,
+				evtRow = 'onHeader' + eventName;
 			if(g._isConnected(evtCell)){
 				g[evtCell](e);
+			}
+			if(g._isConnected(evtRow)){
+				g[evtRow](e);
 			}
 		},
 
@@ -321,14 +286,14 @@ define([
 		},
 
 		_onRowMouseOver: function(e){
-			var rowNode = query('> [rowid="' + this.grid._escapeId(e.rowId) + '"].gridxRowHeaderRow', this.bodyNode)[0];
+			var rowNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow', this.bodyNode)[0];
 			if(rowNode){
 				domClass.toggle(rowNode, "gridxRowOver", e.type.toLowerCase() == 'mouseover');
 			}
 		},
 
 		_onCellMouseOver: function(e){
-			var cellNode = query('> [rowid="' + this.grid._escapeId(e.rowId) + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
+			var cellNode = query('> [rowid="' + e.rowId + '"].gridxRowHeaderRow .gridxRowHeaderCell', this.bodyNode)[0];
 			if(cellNode){
 				domClass.toggle(cellNode, "gridxRowHeaderCellOver", e.type.toLowerCase() == 'mouseover');
 			}
@@ -402,7 +367,7 @@ define([
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;
-				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+				body._focusCellRow = r = r < 0 ? 0 : (r >= body.visualCount ? body.visualCount - 1 : r);
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);
 					t.onMoveToRowHeaderCell(r, evt);

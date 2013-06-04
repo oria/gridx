@@ -1,33 +1,14 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/array',
-	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, array,
-	/*=====Model, =====*/
-	_Extension){
+], function(declare, array, _Extension){
 
-/*=====
-	Model.getMark = function(){};
-	Model.getMarkedIds = function(){};
-	Model.markById = function(){};
-	Model.markByIndex = function(){};
-	Model.clearMark = function(){};
-	Model.treeMarkMode = function(){};
-	Model.onMarkChange = function(){};
-	Model.setMarkable = function(){};
-
-	return declare(_Extension, {
-		// summary:
-		//		Provide a marking system, mainly used by selection.
-	});
-=====*/
-
-	return declare(_Extension, {
-		name: 'mark',
+	return declare(/*===== "gridx.core.model.extensions.Mark", =====*/_Extension, {
+		name: 'move',
 
 		priority: 5,
-		
+
 		constructor: function(model){
 			var t = this;
 			t.mixed = 'mixed';
@@ -37,7 +18,7 @@ define([
 				2: true
 			};
 			t.clear();
-			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode', 'setMarkable');
+			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode');
 			t.aspect(model, '_msg', '_receiveMsg');
 			t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
 			t.aspect(model, 'setStore', 'clear');
@@ -51,37 +32,6 @@ define([
 			this._last = {};
 			this._lazy = {};
 			this._tree = {};
-			this._unmarkable = {};
-		},
-
-		setMarkable: function(rowId, markable, type){
-			type = this._initMark(type);
-			var t = this,
-				m = t.model,
-				mm = m._model,
-				unmarkable = this._unmarkable,
-				hash = unmarkable[type] = unmarkable[type] || {};
-				
-			hash[rowId] = !markable;
-			
-			if(markable){
-				var children = mm._call('children', [rowId]),
-					mark;
-				if(children.length){	//if has child, let the first child setMark 
-										//to its current mark value to regenerate the mark tree
-					var c = children[0];
-					mark = this._byId[this._initMark(type)][c] || 0;
-
-					this._doMark(c, type, mark);
-				}else{
-					
-					var pid = mm._call('parentId', [rowId]);
-					mark = this._byId[this._initMark(type)][pid] || 0;
-
-					this._doMark(pid, type, mark);
-				}
-			}
-
 		},
 
 		clearMark: function(type){
@@ -137,7 +87,7 @@ define([
 			var tm = this._tree;
 			return toEnable === undefined ? tm[type] : (tm[type] = toEnable);
 		},
-		
+
 		//Private----------------------------------------------------------------
 		_cmdMark: function(){
 			var t = this,
@@ -167,27 +117,22 @@ define([
 					}else{
 						toMark = 0;
 					}
-					if(t.model.isId(id) && t._isMarkable(type, id)){
-						t._mark(id, toMark, type);
-					}
+					t._mark(id, toMark, type);
 				});
 			}]);
 		},
 
-		_onDelete: function(id, rowIndex, treePath){
+		_onDelete: function(id){
 			var t = this,
 				tp,
-				byId = t._byId,
-				last = t._last,
-				lazy = t._lazy;
-			for(tp in byId){
+				c = t._byId,
+				s = t._last,
+				z = t._lazy;
+			for(tp in c){
 				tp = t._initMark(tp);
-				delete byId[tp][id];
-				delete last[tp][id];
-				delete lazy[tp][id];
-				if(treePath){
-					t._updateParents(treePath, tp);
-				}
+				delete c[tp][id];
+				delete s[tp][id];
+				delete z[tp][id];
 			}
 			t.onDelete.apply(t, arguments);
 		},
@@ -281,47 +226,14 @@ define([
 			}
 		},
 
-		_updateParents: function(treePath, type, noEvent){
-			var t = this,
-				mm = t.model._model,
-				byId = t._byId[type],
-				last = t._last[type];
-			for(var i = treePath.length - 1; i > 0; --i){
-				var pid = treePath[i],
-					oldState = byId[pid],
-					siblings = array.filter(mm._call('children', [pid]), function(childId){
-						return t._isMarkable(type, childId);
-					}),
-					markCount = array.filter(siblings, function(childId){
-						return last[childId] = byId[childId];
-					}).length,
-					fullCount = array.filter(siblings, function(childId){
-						return byId[childId] == 2;
-					}).length;
-				if(t._isMarkable(type, pid)){
-					if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
-						byId[pid] = 2; //none|partial -> all
-					}else if(!markCount && oldState){
-						delete byId[pid]; //all|partial -> none
-					}else if(markCount && fullCount < siblings.length && oldState != 1){
-						byId[pid] = 1; //all|none -> partial
-					}
-					if(!noEvent){
-						t._fireEvent(pid, type, byId[pid], oldState);
-					}
-				}
-			}
-		},
-
 		_doMark: function(id, tp, toMark, skipParent, noEvent){
-			var i, ids, children, childId, treePath,
+			var i, ids, children, childId, pid, siblings, markCount, fullCount, treePath,
 				t = this,
 				m = t.model,
 				mm = m._model,
 				byId = t._byId[tp],
 				last = t._last[tp],
 				lazy = t._lazy[tp],
-				// selectable = t._byId['selectable'],
 				oldState = byId[id] || 0,
 				newState;
 			if(t._tree[tp]){
@@ -341,11 +253,9 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					if(t._isMarkable(tp, childId)){
-						newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
-						if(!noEvent){
-							t._fireEvent(childId, tp, newState, oldState);
-						}
+					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
+					if(!noEvent){
+						t._fireEvent(childId, tp, newState, oldState);
 					}
 					if(mm._call('hasChildren', [childId])){
 						children = mm._call('children', [childId]);
@@ -358,13 +268,29 @@ define([
 				}
 				if(!skipParent){
 					treePath = mm._call('treePath', [id]);
-					t._updateParents(treePath, tp, noEvent);
+					for(i = treePath.length - 1; i > 0; --i){
+						pid = treePath[i];
+						oldState = byId[pid];
+						siblings = mm._call('children', [pid]);
+						markCount = array.filter(siblings, function(childId){
+							return last[childId] = byId[childId];
+						}).length;
+						fullCount = array.filter(siblings, function(childId){
+							return byId[childId] == 2;
+						}).length;
+						if(fullCount == siblings.length && oldState != 2){
+							byId[pid] = 2; //none|partial -> all
+						}else if(!markCount && oldState){
+							delete byId[pid]; //all|partial -> none
+						}else if(markCount && fullCount < siblings.length && oldState != 1){
+							byId[pid] = 1; //all|none -> partial
+						}
+						if(!noEvent){
+							t._fireEvent(pid, tp, byId[pid], oldState);
+						}
+					}
 				}
 			}
-		},
-
-		_isMarkable: function(tp, id){
-			return this._unmarkable[tp] ? !this._unmarkable[tp][id] : true;
 		}
 	});
 });

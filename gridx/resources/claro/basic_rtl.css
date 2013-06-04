@@ -2,12 +2,6 @@
 .claro .gridxRtl .gridxHeaderRow .gridxCell {
 	border-color: transparent #FFFFFF transparent #BCBCBC ;
 }
-.claro .gridxRtl .gridxGroupHeader {
-	border-color: transparent #FFFFFF #BCBCBC #BCBCBC;
-}
-.claro .gridxRtl .gridxHeaderRow .gridxSubHeader {
-	border-top-color: #FFFFFF;
-}
 
 .claro .gridxRtl .gridxHeaderRowInner {
 	background-position: left;

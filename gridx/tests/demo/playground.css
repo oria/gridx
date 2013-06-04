@@ -507,7 +507,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 .modulePreviewItemLabel td {
 	width: 90px;
 	height: 90px;
-	/*padding: 5px;*/
+	padding: 5px;
 	vertical-align: bottom;
 	text-align: center;
 	color: #555;
@@ -717,14 +717,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	width: 285px;
 	margin: 0 10px;
 }
-#moduleDescApiDocUrl{
-	width: 160px;
-	float: left;
-	width: 285px;
-	margin: 0 10px;	
-	word-wrap: break-word;
-}
-
 #moduleDescDependLabel {
 	font-weight: bold;
 	padding-right: 5px;
@@ -740,12 +732,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	margin: 0 10px;
 }
 #moduleDescPathLabel {
-	font-weight: bold;
-	padding-right: 5px;
-}
-#moduleDescApiDocUrlLabelDetail{
-}
-#moduleDescApiDocUrlLabel {
 	font-weight: bold;
 	padding-right: 5px;
 }
@@ -880,8 +866,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	float: left;
 }
 .attributesPaneSelected {
-	/*width: 900px;*/
-	width: 850px;
+	width: 900px;
 }
 #attributesBool {
 }
@@ -920,22 +905,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 .attributeItem:hover {
 	background-color: #eee;
 }
-.attributeItem .simpleValue, .attributeItem .complexValue{
-	margin: 0px 5px;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	padding: 7px;
-	font-size: 15px;
-	display: inline-block;
-	cursor: pointer;
-	color: #555;
-}
-
-.attributeItem .valueSelected{
-	background: #AAAAAA;
-	color: #EEEEEE;
-}
-
 .attributeItemUsed {
 	background-color: #ccffff;
 }
@@ -1029,13 +998,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	overflow: auto;
 	margin: 20px 0 20px 60px;
 }
-#attributesOtherInner {
-	width: 700px;
-	height: 480px;
-	overflow: auto;
-	margin: 20px 0 20px 60px;
-}
-
 .attributeNumberItem {
 	width: 600px;
 	padding: 5px 10px;

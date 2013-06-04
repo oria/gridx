@@ -3,31 +3,16 @@ define([
 	"dojo/_base/array",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
-	"dojo/query",
+	"dojo/_base/query",
 	"./_Base",
 	"../../core/_Module"
 ], function(declare, array, domGeometry, domClass, query, _Base, _Module){
 
-/*=====
-	return declare(_Base, {
+	return declare(/*===== "gridx.modules.dnd.Column", =====*/_Base, {
 		// summary:
 		//		This module provides an implementation of column drag & drop.
-		// description:
-		//		This module supports column reordering within grid, dragging out of grid, and dragging into grid.
-		//		This module depends on "_dnd", "selectColumn" and "moveColumn" modules.
+		//		It supports column reordering within grid, dragging out of grid, and dragging into grid.
 
-		// accept: String[]
-		//		Can drag in what kind of stuff
-		//		For now can not drag in any columns.
-		accept: [],
-
-		// provide: String[]
-		//		Can drag out what kind of stuff
-		provide: []
-	});
-=====*/
-
-	return declare(_Base, {
 		name: 'dndColumn',
 
 		required: ['_dnd', 'selectColumn', 'moveColumn'],
@@ -54,8 +39,14 @@ define([
 		},
 	
 		//Public---------------------------------------------------------------------------------------
+
+		//accept: String[]
+		//		Can drag out what kind of stuff.
+		//		For now can not drag in any columns.
 		accept: [],
 
+		//provide: String[]
+		//		Can drag out what kind of stuff
 		provide: ['grid/columns'],
 
 		//Package--------------------------------------------------------------------------------------
@@ -77,14 +68,14 @@ define([
 		_cssName: "Column",
 
 		_initHeader: function(){
-			query('.gridxCell', this.grid.header.domNode).attr('aria-grabbed', 'false');
+			query('.gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
 		},
 
 		_onBeginDnd: function(source){
 			var t = this;
 			source.delay = t.arg('delay');
 			array.forEach(t._selectedColIds, function(id){
-				query('[colid="' + t.grid._escapeId(id) + '"].gridxCell', t.grid.header.domNode).attr('aria-grabbed', 'true');
+				query('[colid="' + id + '"].gridxCell', t.grid.header.domNode).attr('aria-dragged', 'true');
 			});
 		},
 
@@ -93,7 +84,7 @@ define([
 		},
 
 		_onEndDnd: function(){
-			query('[aria-grabbed="true"].gridxCell', this.grid.header.domNode).attr('aria-grabbed', 'false');
+			query('[aria-dragged="true"].gridxCell', this.grid.header.domNode).attr('aria-dragged', 'false');
 		},
 
 		_buildDndNodes: function(){
@@ -129,7 +120,6 @@ define([
 					width: '',
 					top: ''
 				},
-				escapeId = g._escapeId,
 				func = function(n){
 					var id = n.getAttribute('colid'),
 						index = g._columnsById[id].index,
@@ -142,12 +132,12 @@ define([
 						while(firstIdx > 0 && t._selector.isSelected(columns[firstIdx - 1].id)){
 							--firstIdx;
 						}
-						first = query(".gridxHeaderRow [colid='" + escapeId(columns[firstIdx].id) + "']", g.headerNode)[0];
+						first = query(".gridxHeaderRow [colid='" + columns[firstIdx].id + "']", g.headerNode)[0];
 						lastIdx = index;
 						while(lastIdx < columns.length - 1 && t._selector.isSelected(columns[lastIdx + 1].id)){
 							++lastIdx;
 						}
-						last = query(".gridxHeaderRow [colid='" + escapeId(columns[lastIdx].id) + "']", g.headerNode)[0];
+						last = query(".gridxHeaderRow [colid='" + columns[lastIdx].id + "']", g.headerNode)[0];
 					}
 					if(first && last){
 						var firstPos = domGeometry.position(first),

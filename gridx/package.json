@@ -1,53 +1,27 @@
 {
-	"name": "gridx",
-	"mappings": {
-		"dojo": "https://github.com/dojo/dojo/zipball/1.8.3",
-		"dijit": "https://github.com/dojo/dijit/zipball/1.8.3",
-		"dojox": "https://github.com/dojo/dojox/zipball/1.8.3"
-	},
-	"version": "1.2.0dev",
-	"maintainers":[
-		{
-			"name": "Xiao Wen Zhu(Oliver)",
-			"email": "zhuxw1984@gmail.com"
-		}, {
-			"name": "Pei Wang(Nate)",
-			"email": "supnate@gmail.com"
-		}, {
-			"name": "Qi Chen(Leslie)",
-			"email": "yurychika@gmail.com"
-		}
-	],
-	"contributors": [
-		{
-			"name": "Wei Huang(Evan)",
-			"email": "evanhuangwei@gmail.com"
-		}
-	],
-	"bugs": "mailto:zhuxw1984@gmail.com",
-	"keywords": ["Gridx", "grid", "virtual scroll", "tree grid"],
-	"description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
-	"licenses": [
-		{
-			"type": "AFLv2.1",
-			"url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
-		},
-		{
-			"type": "BSD",
-			"url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
-		}
-	],
-	"repositories": {
-		"type": "git",
-		"url": "https://github.com/oria/gridx"
-	},
-	"dependencies": {
-		"dojo": "1.8.0",
-		"dijit": "1.8.0",
-		"dojox": "1.8.0"
-	},
-	"homepage": "http://oria.github.com/gridx",
-	"main": "./Grid",
-	"icon": "http://oria.github.com/gridx/images/logo.png",
-	"dojoBuild": "gridx.profile.js"
+  "name": "gridx",
+  "author": "Xiao Wen Zhu(Oliver), Pei Wang(Nate), Wei Huang(Evan)",
+  "description": "A fast rendering, well modularized and plugin architecture based Grid. Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset larger than millions of rows.",
+  "licenses": [
+     {
+         "type": "AFLv2.1",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
+     },
+     {
+         "type": "BSD",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
+     }
+  ],
+  "repository": {
+    "type":"git",
+    "url":"https://github.com/evanhw/gridx"
+  },
+  "dependencies": {
+    "dojo": "1.7.2",
+    "dijit": "1.7.2",
+    "dojox": "1.7.2"
+  },
+  "main": "./Grid",
+  "icon": " "
+  
 }

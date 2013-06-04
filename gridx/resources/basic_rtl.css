@@ -29,9 +29,3 @@
 	border-right: none;
 	border-left: 1px solid #E5DAC8;
 }
-
-/* HeaderRegion */
-.gridxRtl .gridxHeaderRegion {
-	float: left;
-}
-

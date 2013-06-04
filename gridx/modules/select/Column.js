@@ -1,41 +1,27 @@
 define([
-/*====="../../core/Column", =====*/
 	"dojo/_base/declare",
-	"dojo/query",
+	"dojo/_base/query",
 	"dojo/_base/array",
 	"dojo/_base/sniff",
-	"dojo/_base/event",
 	"dojo/dom-class",
 	"dojo/keys",
 	"./_Base",
 	"../../core/_Module"
-], function(/*=====Column, =====*/declare, query, array, has, event, domClass, keys, _Base, _Module){
+], function(declare, query, array, sniff, domClass, keys, _Base, _Module){
 
-/*=====
-	Column.select = function(){
-		// summary:
-		//		Select this column.
-	};
-	Column.deselect = function(){
-		// summary:
-		//		Deselect this column.
-	};
-	Column.isSelected = function(){
-		// summary:
-		//		Whether this column is selected.
-	};
-
-	return declare(_Base, {
+	return declare(/*===== "gridx.modules.select.Column", =====*/_Base, {
 		// summary:
 		//		Provides simple column selection.
 		// description:
 		//		This module provides a simple way for selecting columns by clicking or SPACE key, 
 		//		or CTRL + Click to select multiple columns.
+		//
 		// example:
 		//		1. Use select api on grid column object obtained from grid.column(i)
 		//		|	grid.column(1).select();
 		//		|	grid.column(1).deselect();
 		//		|	grid.column(1).isSelected();
+		//
 		//		2. Use select api on select.column module
 		//		|	grid.select.column.selectById(columnId);
 		//		|	grid.select.column.deSelectById(columnId);
@@ -43,31 +29,73 @@ define([
 		//		|	grid.select.column.getSelected();//[]
 		//		|	grid.select.column.clear();
 
-		selectById: function(id){
+		// name: [readonly] String
+		//		module name
+		name: "selectColumn",
+
+		// columnMixin: Object
+		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
+		//		- grid.column(1).select() | deselect() | isSelected();
+		columnMixin: {
+			select: function(){
+				this.grid.select.column._markById(this.id, 1);
+				return this;
+			},
+			deselect: function(){
+				this.grid.select.column._markById(this.id, 0);
+				return this;
+			},
+			isSelected: function(){
+				return this.grid.select.column.isSelected(this.id);
+			}
+		},
+		
+		//Public API----------------------------------------------------------------------
+		selectById: function(/*String*/id){
 			// summary:
 			//		Select target column by id
+			this._markById(id, 1);
 		},
-
-		deselectById: function(id){
+		
+		deselectById: function(/*String*/id){
 			// summary:
 			//		Deselect target column by id
+			this._markById(id, 0);
 		},
-
-		isSelected: function(id){
+		
+		isSelected: function(/*String*/id){
 			// summary:
 			//		Check if a column is selected 
+			var c = this.grid._columnsById[id];
+			return !!(c && c._selected);
 		},
-
+		
 		getSelected: function(){
 			// summary:
 			//		Get array of column id of all selected columns
+			var ids = [], i, c,
+				g = this.grid,
+				cols = g._columns,
+				count = cols.length;
+			for(i = 0; i < count; ++i){
+				c = cols[i];
+				if(c._selected){
+					ids.push(c.id);
+				}
+			}
+			return ids;
 		},
-
-		clear: function(notClearId){
+		
+		clear: function(){
 			// summary:
 			//		Clear all column selections
+			var columns = this.grid._columns, i, count = columns.length;
+			for(i = 0; i < count; ++i){
+				this._markById(columns[i].id, 0);
+			}
 		},
 
+	/*=====
 		onSelected: function(col){
 			// summary:
 			//		Fired when a column is selected.
@@ -87,66 +115,8 @@ define([
 			//		Fired when a column's highlight is changed.
 			// tags:
 			//		private package
-		}
-	});
-=====*/
-
-	return declare(_Base, {
-		name: "selectColumn",
-
-		columnMixin: {
-			select: function(){
-				this.grid.select.column.selectById(this.id);
-				return this;
-			},
-			deselect: function(){
-				this.grid.select.column._markById(this.id, 0);
-				return this;
-			},
-			isSelected: function(){
-				return this.grid.select.column.isSelected(this.id);
-			}
 		},
-		
-		//Public API----------------------------------------------------------------------
-		selectById: function(/*String*/id){
-			if(!this.arg('multiple')){
-				this.clear(id);
-			}
-			this._markById(id, 1);
-		},
-		
-		deselectById: function(/*String*/id){
-			this._markById(id, 0);
-		},
-		
-		isSelected: function(/*String*/id){
-			var c = this.grid._columnsById[id];
-			return !!(c && c._selected);
-		},
-		
-		getSelected: function(){
-			var ids = [], i, c,
-				g = this.grid,
-				cols = g._columns,
-				count = cols.length;
-			for(i = 0; i < count; ++i){
-				c = cols[i];
-				if(c._selected){
-					ids.push(c.id);
-				}
-			}
-			return ids;
-		},
-		
-		clear: function(notClearId){
-			var columns = this.grid._columns, i, count = columns.length;
-			for(i = 0; i < count; ++i){
-				if(columns[i].id !== notClearId){
-					this._markById(columns[i].id, 0);
-				}
-			}
-		},
+	=====*/
 
 		//Private-------------------------------------------------------------------------------
 		_type: 'column',
@@ -160,10 +130,9 @@ define([
 						t._select(e.columnId, g._isCopyEvent(e));
 					}
 				}],
-				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
 						t._select(e.columnId, g._isCopyEvent(e));
-						event.stop(e);
 					}
 				}]
 			);
@@ -183,7 +152,7 @@ define([
 		
 		_highlight: function(id, toHighlight){
 			var t = this, g = t.grid;
-			query("[colid='" + g._escapeId(id) + "']", g.bodyNode).forEach(function(node){
+			query("[colid='" + id + "']", g.bodyNode).forEach(function(node){
 				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
 				t.onHighlightChange({column: g._columnsById[id].index}, toHighlight);
 			});
@@ -199,7 +168,7 @@ define([
 				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
-					node = query(['[visualindex="', j, '"] [colid="', g._escapeId(cols[i].id), '"]'].join(''), bn)[0];
+					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
 				}
 			}

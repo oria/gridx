@@ -1,20 +1,15 @@
 define([
 	"dojo/_base/kernel",
-	"dojo/_base/lang",
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/html",
 	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/query"
-], function(dojo, lang, _Module, declare, html, baseFx, fx, query){
-	dojo.experimental('gridx/modules/Dod');
-
-/*=====
-	return declare(_Module, {
-		// summary:
-		//		Details on demand.
-
+], function(dojo, _Module, declare, html, baseFx, fx, query){
+	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
+		name: 'dod',
+		required: ['body'],
 		// useAnimation: Boolean
 		//		Indicates whether to use animation (slide) when showing/hiding the detail part.
 		useAnimation: true,
@@ -24,63 +19,26 @@ define([
 		duration: 750,
 		
 		defaultShow: false,
-
 		showExpando: true,
 
-		show: function(row){
-			// summary:
-			//		Show the detail part of a row, if this row has a detail part.
-			//		Use animation (slide the detail part out) if useAnimation is true.
-			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			// rowId: String
-			//		The ID of a row.
-			// return: dojo.Deferred.
-			//		A deferred object indicating when the detail is completely shown.
-		},
-
-		hide: function(row){
-			// summary:
-			//		Hide the detail part of a row, if this row has a detail part.
-			//		Use animation (slide the detail part in) if useAnimation is true.
-			//		Nothing happens if rowId is not valid or the row does not has a detail part.
-			// rowId: String
-			//		The ID of a row.
-			// return: dojo.Deferred.
-			//		A deferred object indicating when the detail is completely hidden.
-		},
-
-		toggle: function(row){
-		},
-
-		refresh: function(row){
-		},
-
-		isShown: function(row){
-		},
-
-		onShow: function(row){},
-		onHide: function(row){}
-	});
-=====*/
-
-	return declare(_Module, {
-		name: 'dod',
-		required: ['body'],
-		useAnimation: true,
-		duration: 750,
-		defaultShow: false,
-		showExpando: true,
+		// autoClose: Boolean
+		//		Indicates whether the detail part should be closed automatically when another row's detail part is shown.
+		autoClose: false,
 		load: function(args, deferStartup){
+			dojo.experimental('gridx/modules/Dod');
 			this._rowMap = {};
-			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
-			this.connect(this.grid.body, 'onUnrender', '_onBodyUnrender');
 			if(this.grid.columnResizer){
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
 			this.loaded.callback();
 			
+		},
+		getAPIPath: function(){
+			return {
+				dod: this
+			};
 		},
 		rowMixin: {
 			showDetail: function(){
@@ -101,6 +59,14 @@ define([
 		},
 		
 		show: function(row){
+			// summary:
+			//		Show the detail part of a row, if this row has a detail part.
+			//		Use animation (slide the detail part out) if useAnimation is true.
+			//		Nothing happens if rowId is not valid or the row does not has a detail part.
+			// rowId: String
+			//		The ID of a row.
+			// return: dojo.Deferred.
+			//		A deferred object indicating when the detail is completely shown.
 			var _row = this._row(row);
 			if(_row.dodShown || _row.inAnim || !row.node()){return;}
 			
@@ -134,66 +100,57 @@ define([
 			}
 			
 			if(this.grid.rowHeader){
-				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
-				html.style(rowHeaderNode.firstChild, 'height', html.style(row.node(), 'height') + 'px');
+				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') + 'px');
 			}
 			
 			var df = new dojo.Deferred(), _this = this;
-			if(this.arg('detailProvider')){
-				this.detailProvider(this.grid, row.id, _row.dodNode, df);
-			}else{
-				df.callback();
-			}
+			this.detailProvider(this.grid, row.id, _row.dodNode, df);
 			df.then(
-				lang.hitch(this, '_detailLoadComplete', row), 
-				lang.hitch(this, '_detailLoadError', row)
+				dojo.hitch(this, '_detailLoadComplete', row), 
+				dojo.hitch(this, '_detailLoadError', row)
 			);
 
 		},
 		
 		hide: function(row){
-			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
+			// summary:
+			//		Hide the detail part of a row, if this row has a detail part.
+			//		Use animation (slide the detail part in) if useAnimation is true.
+			//		Nothing happens if rowId is not valid or the row does not has a detail part.
+			// rowId: String
+			//		The ID of a row.
+			// return: dojo.Deferred.
+			//		A deferred object indicating when the detail is completely hidden.
+			var _row = this._row(row), g = this.grid;
 			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
-				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				dojo.style(rowHeaderNode.firstChild, 'height', dojo.style(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '+';}
-
-			if(this.arg('useAnimation')){
-				_row.inAnim = true;
-				fx.wipeOut({
-					node: _row.dodNode,
-					duration: this.arg('duration'),
-					onEnd: function(){
-						_row.dodShown = false;
-						_row.inAnim = false;
-						g.body.onRender();
+			_row.inAnim = true;
+			fx.wipeOut({
+				node: _row.dodNode,
+				duration: this.arg('duration'),
+				onEnd: function(){
+					_row.dodShown = false;
+					_row.inAnim = false;
+					g.body.onRender();
+				}
+			}).play();
+			if(this.grid.rowHeader){
+				var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+					properties: {
+						height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 					}
 				}).play();
-				if(this.grid.rowHeader){
-					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
-						properties: {
-							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
-						}
-					}).play();
-				}
-			}else{
-				_row.dodShown = false;
-				_row.inAnim = false;
-				_row.dodNode.style.display = 'none';
-				g.body.onRender();
-				if(this.grid.rowHeader){
-					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-					rowHeaderNode.firstChild.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
-				}
-				
 			}
 			
 			_row.defaultShow = false;
@@ -224,10 +181,7 @@ define([
 		_rowMap: null,
 		_lastOpen: null, //only useful when autoClose is true.
 		_row: function(/*id|obj*/row){
-			var id = row;
-			if(typeof row === 'object'){
-				id = row.id;
-			}
+			var id = row.id || row;
 			return this._rowMap[id] || (this._rowMap[id] = {});
 		},
 		
@@ -242,7 +196,6 @@ define([
 		},
 		
 		_onAfterRow: function(row){
-
 			var _row = this._row(row);
 			if(this.arg('showExpando')){
 				var tbl = dojo.query('table', row.node())[0];
@@ -250,7 +203,7 @@ define([
 				var span = dojo.create('span', {
 					className: 'gridxDodExpando',
 					innerHTML: '<span class="gridxDodExpandoText">' 
-						+ (this.arg('defaultShow') ? '-' : '+') + '</span>'
+						+ (this.defaultShow ? '-' : '+') + '</span>'
 				}, cell, 'first');
 			}
 			
@@ -261,30 +214,6 @@ define([
 			}
 			
 		},
-
-		_onBodyUnrender: function(row){
-			// Remove the cache for the row when it is destroyed, so that dod recreates
-			// necessary dom nodes when the row is rendered again.
-			if(!row){return;}
-			var _row = this._row(row);
-			if(!_row){return;}
-
-			function _removeNode(node){
-				if(node && node.parentNode){
-					node.parentNode.removeChild(node);
-				}
-			}
-
-			_removeNode(_row.dodNode);
-			_removeNode(_row.dodLoadingNode);
-		},
-
-		_onAfterCell: function(cell){
-			//when the first cell's content is changed, update the expando
-			if(this.arg('showExpando') && cell.node().cellIndex == 0){
-				this._onAfterRow(cell.row);
-			}
-		},
 		
 		_onColumnResize: function(){
 			dojo.query('.gridxDodNode', this.grid.bodyNode).forEach(function(node){
@@ -293,7 +222,7 @@ define([
 		},
 		
 		_detailLoadComplete: function(row){
-			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
+			var _row = this._row(row), g = this.grid;
 			if(!this.isShown(row)){return;}
 			_row.dodLoaded = true;
 			
@@ -305,35 +234,23 @@ define([
 					html.marginBox(_row.dodNode, {h: html.marginBox(_row.dodLoadingNode).h});
 					html.style(_row.dodNode, 'display', 'block');
 				}
-
-				if(this.arg('useAnimation')){
-					_row.inAnim = true;
-					fx.wipeIn({
-						node: _row.dodNode,
-						duration: this.arg('duration'),
-						onEnd: function(){
-							_row.inAnim = false;
-							g.body.onRender();
+				_row.inAnim = true;
+				fx.wipeIn({
+					node: _row.dodNode,
+					duration: this.arg('duration'),
+					onEnd: function(){
+						_row.inAnim = false;
+						g.body.onRender();
+					}
+				}).play();
+				
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + row.id + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+						properties: {
+							height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
 						}
 					}).play();
-					
-					if(this.grid.rowHeader){
-						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-						baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
-							properties: {
-								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
-							}
-						}).play();
-					}
-				}else{
-					_row.dodNode.style.display = 'block';
-					_row.dodNode.style.height = 'auto';
-					g.body.onRender();
-					if(this.grid.rowHeader){
-						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
-					}
-					
 				}
 			}
 			html.style(_row.dodLoadingNode, 'display', 'none');
@@ -355,9 +272,13 @@ define([
 			var cell = tbl.rows[0].cells[0];
 			return cell.firstChild;
 		},
+		_hideLoading: function(row){
+			
+		},
 		
 		
 		//Focus
+		
 		
 		endFunc: function(){}
 	});

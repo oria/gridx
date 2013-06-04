@@ -3,23 +3,8 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, lang, Deferred, DeferredList,
-	/*=====Model, =====*/
-	_Extension){
-
-/*=====
-	Model.move = function(){};
-	Model.moveIndexes = function(){};
-	Model.insert = function(){};
-	Model.onMoved = function(){};
-
-	return declare(_Extension, {
-		// summary:
-		//		Move rows by means of sorting a special field (default to "order").
-	});
-=====*/
+], function(declare, lang, Deferred, DeferredList, _Extension){
 
 	var hitch = lang.hitch;
 
@@ -104,7 +89,7 @@ define([
 			}
 		}
 	}
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Move", =====*/_Extension, {
 		// Not compatible with Sort and Map extensions!
 		name: 'move',
 

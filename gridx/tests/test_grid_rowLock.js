@@ -2,10 +2,8 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/modules/RowLock',
-//    'gridx/tests/support/data/MusicData',
-	'gridx/tests/support/data/TestData',
+	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
-//    'gridx/tests/support/stores/JsonRest',
 	'gridx/tests/support/TestPane',
 	'dijit/form/NumberSpinner'
 ], function(Grid, Cache, RowLock, dataSource, storeFactory, TestPane){
@@ -13,7 +11,6 @@ require([
 		id: 'grid',
 		cacheClass: Cache,
 		store: storeFactory({
-			path: './support/stores',
 			dataSource: dataSource, 
 			size: 100
 		}),

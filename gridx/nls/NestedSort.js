@@ -11,7 +11,6 @@ define({ root:
 	waiNestedSortLabel:"${0} - is nested sorted by ${1}. Choose to nested sort by ${2}"
 }),
 "ar": true,
-"bg": true,
 "ca": true,
 "cs": true,
 "da": true,
@@ -20,8 +19,6 @@ define({ root:
 "es": true,
 "fi": true,
 "fr": true,
-"he": true,
-"hr": true,
 "hu": true,
 "it": true,
 "ja": true,
@@ -39,7 +36,6 @@ define({ root:
 "sv": true,
 "th": true,
 "tr": true,
-"uk": true,
 "zh": true,
 "zh-tw": true
 });

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Tree/Column state persistence demo</title>
+	</head>
+	<style type="text/css">
+		@import "../../dojo/resources/dojo.css";
+		@import "../../dijit/themes/claro/claro.css";
+		@import "../resources/claro/Gridx.css";
+		
+		body {
+			font-family: arial;
+			padding-left: 20px;
+		}
+		
+		#gridDiv{
+			margin: 20px 0 0 20px;
+			width: 70em;
+		}
+		
+		#grid{
+			width: 70em;
+			height: 400px;
+		}
+		
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" djConfig="isDebug:false, parseOnLoad: true"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript" src="../../tests/enhanced/support/test_write_store_music.js"></script>
+	<script type="text/javascript">
+		dojo.require("dojo.data.ItemFileWriteStore");
+		dojo.require("gridx.tests.GridConfig");
+		dojo.require('gridx.core.model.AsyncTreeCache');
+		dojo.require('gridx.core.model.SyncTreeCache');
+		dojo.require("gridx.Grid");
+		dojo.require('gridx.modules.Tree');
+		dojo.require('gridx.modules.Focus');
+		dojo.require('gridx.modules.Header');
+		dojo.require('gridx.modules.Body');
+		dojo.require('gridx.modules.Layout');
+		dojo.require('gridx.modules.HScroller');
+		dojo.require('gridx.modules.VScroller');
+		dojo.require('gridx.modules.VirtualVScroller');
+		dojo.require('gridx.modules.SingleSort');
+		dojo.require('gridx.modules.select.Row');
+		dojo.require('gridx.modules.select.Column');
+		dojo.require('gridx.modules.select.Cell');
+		dojo.require('gridx.modules.move.Row');
+		dojo.require('gridx.modules.move.Column');
+		dojo.require('gridx.modules.move.Cell');
+		dojo.require('gridx.modules.dnd.Row');
+		dojo.require('gridx.modules.dnd.Column');
+		dojo.require('gridx.modules.dnd.Cell');
+		dojo.require('gridx.modules.ColumnResizer');
+		dojo.require('gridx.modules.LeftColumnLock');
+		dojo.require('gridx.modules.Pagination');
+		dojo.require('gridx.modules.PaginationBar');
+		dojo.require('gridx.modules.NestedSorting');
+		dojo.require('gridx.modules.filter.Filter');
+		dojo.require('gridx.modules.filter.FilterBar');
+		dojo.require('gridx.modules.CellDijit');
+		dojo.require('gridx.modules.Persist');
+		dojo.require('gridx.modules.Edit');
+
+		//dojo.require('dijit.form.TextBox');
+		dojo.require('dijit.form.ToggleButton');
+	
+		var store = new dojo.data.ItemFileWriteStore({
+			url: '../../tests/support/countryStore.json'
+		});
+		
+		var treeCountryLayout = [
+			{id: '1', name: 'Name', field: 'name', expandField: 'children'},
+			{id: '2', name: 'Type', field: 'type'},
+			{id: '3', name: 'Adults', field: 'adults'},
+			{id: '4', name: 'Population', field: 'popnum'}
+		];
+
+		var mr = gridx.modules;
+		var grid;
+		
+		function createGrid(){
+			destroyGrid();
+			grid = new gridx.Grid({
+				id: 'grid',
+				isSync: true,
+				store: store,
+				structure: treeCountryLayout,
+				modules: [
+					mr.Tree,
+					mr.VirtualVScroller,
+					mr.ColumnResizer,
+					mr.move.Column,
+					mr.dnd.Column,
+					mr.Persist
+				],
+				cacheClass: gridx.core.model.AsyncTreeCache,
+				autoHeight: false,
+				height: '400px'
+			});
+			dojo.byId('gridContainer').appendChild(grid.domNode);
+			grid.startup();
+		}
+		
+		function destroyGrid(){
+			if(grid){
+				grid.destroyRecursive();
+				grid = null;
+			}
+		}
+		
+		dojo.ready(createGrid);
+		
+	</script>
+	<body class='claro'>
+		<h1>Tree Column state persistence demo</h1>
+		<br/>
+		<button id='btn1' data-dojo-type="dijit.form.Button" onclick="createGrid()">Create Grid</button>
+		<button id='btn2' data-dojo-type="dijit.form.Button" onclick="destroyGrid()">Destroy Grid</button>
+		<button id="toggle1" checked data-dojo-type="dijit.form.ToggleButton" data-dojo-props='
+			onChange:function(val){
+				grid.persist._setEnable("column", val);
+				this.set("label", val ? "Disable Column state persistence " : "Enable Column state persistence ");
+			}'>
+			Disable Column state persistence 
+		</button>
+		<button id="toggle2" checked data-dojo-type="dijit.form.ToggleButton" data-dojo-props='
+			onChange:function(val){
+				grid.persist._setEnable("tree", val);
+				this.set("label", val ? "Disable Tree state persistence" : "Enable Tree state persistence");
+			}'>
+			Disable Tree state persistence 
+		</button>
+		<br/><br/>
+		<div id="gridContainer"></div>
+		
+	</body>
+</html>

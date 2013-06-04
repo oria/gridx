@@ -1,5 +1,4 @@
 require([
-	'dojo/parser',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/data/TestData',
@@ -7,7 +6,13 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
-	"gridx/allModules",
+	"gridx/modules/Focus",
+	"gridx/modules/RowHeader",
+	"gridx/modules/Edit",
+	"gridx/modules/CellWidget",
+	"gridx/modules/pagination/Pagination",
+	"gridx/modules/pagination/PaginationBar",
+	"gridx/modules/VirtualVScroller",
 	'dijit/form/ComboButton',
 	'dijit/Menu',
 	'dijit/MenuItem',
@@ -18,9 +23,8 @@ require([
 	'dijit/form/TextBox',
 	'dijit/form/NumberTextBox',
 	'dijit/TooltipDialog',
-	'dijit/ColorPalette',
-	'dojo/domReady!'
-], function(parser, dataSource1, storeFactory1, dataSource2, storeFactory2){
+	'dijit/ColorPalette'
+], function(dataSource1, storeFactory1, dataSource2, storeFactory2){
 
 	store1 = storeFactory1({
 		dataSource: dataSource1,
@@ -180,6 +184,4 @@ require([
 			editor: "dijit.form.NumberTextBox"
 		}
 	];
-	
-	parser.parse();
 });

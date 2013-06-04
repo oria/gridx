@@ -2,22 +2,10 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/json",
-	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, lang, json,
-	/*=====Model, =====*/
-	_Extension){
+], function(declare, lang, json, _Extension){
 
-/*=====
-	Model.sort = function(){};
-
-	return declare(_Extension, {
-		// summary:
-		//		Using store's sorting feature. Can define a base sort order for grid.
-	});
-=====*/
-
-	return declare(_Extension, {
+	return declare(/*===== "gridx.core.model.extensions.Sort", =====*/_Extension, {
 		name: 'sort',
 
 		priority: 30,

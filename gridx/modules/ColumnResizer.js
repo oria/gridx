@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/sniff",
 	"dojo/_base/window",
 	"dojo/_base/event",
 	"dojo/dom",
@@ -10,55 +11,77 @@ define([
 	"dojo/keys",
 	"dojo/query",
 	"../core/_Module"
-//    "dojo/NodeList-traverse"
-], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
+], function(declare, sniff, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
 
-/*=====
-	Column.setWidth = function(width){
-		// summary:
-		//		Set width of the target column
-	};
+	var removeClass = domClass.remove;
 
-	return declare(_Module, {
+	function getCell(e){
+		var node = e.target;
+		if(node){
+			if(/table/i.test(node.tagName)){
+				var m = e.offsetX || e.layerX || 0,
+					i = 0,
+					cells = node.rows[0].cells;
+				while(m > 0 && cells[i]){
+					m -= cells[i].offsetWidth;
+					i++;
+				}
+				return cells[i] || null;
+			}
+			while(node && node.tagName){
+				if(node.tagName.toLowerCase() == 'th'){
+					return node;
+				}
+				node = node.parentNode;
+			}
+		}
+		return null;
+	}
+
+	return declare(/*===== "gridx.modules.ColumnResizer", =====*/_Module, {
 		// summary:
 		//		Column Resizer machinery.
 		// description:
 		//		This module provides a way to resize column width. 
 		
+		// name: [readonly] String
+		//		module name
+		name: 'columnResizer',
+
+//		required: ['hScroller'],
+
 		// minWidth: Integer
 		//		min column width in px
 		minWidth: 20,
 
 		detectWidth: 5,
 
-		step: 2,
-
-		setWidth: function(olId, width){
-			// summary:
-			//		Set width of the target column
-		},
-
-		onResize: function(colId, newWidth, oldWidth){
-		}
-	});
-=====*/
-
-	return declare(_Module, {
-		name: 'columnResizer',
-
-		load: function(){
+		load: function(args){
 			var t = this,
 				g = t.grid;
 			t.batchConnect(
-				[g.header.domNode, 'onmousemove', '_mousemove'],
+				[g.header.innerNode, 'mousemove', '_mousemove'],
 				[g, 'onHeaderMouseOut', '_mouseout'],
 				[g, 'onHeaderMouseDown', '_mousedown', t, t.name],
 				[g, 'onHeaderKeyDown', '_keydown'],
-				[win.doc, 'onmousemove', '_updateResizer'],
-				[win.doc, 'onmouseup', '_mouseup']);
+				[win.doc, 'mousemove', '_docMousemove'],
+				[win.doc, 'onmouseup', '_mouseup']
+			);
 			t.loaded.callback();
 		},
 
+		getAPIPath: function(){
+			// summary:
+			//		Module reference shortcut so that we can 
+			//		quickly locate this module by grid.columnResizer
+			return {
+				columnResizer: this
+			};
+		},
+
+		// columnMixin: Object
+		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
+		//		- grid.column(1).setWidth(300);
 		columnMixin: {
 			setWidth: function(width){
 				this.grid.columnResizer.setWidth(this.id, width);
@@ -66,38 +89,31 @@ define([
 		},
 
 		//Public---------------------------------------------------------------------
-		minWidth: 20,
-
-		detectWidth: 5,
-
-		step: 2,
-
-		setWidth: function(colId, width){
+		setWidth: function(/*String | Integer*/colId, /*Integer*/width){
+			// summary:
+			//		Set width of the target column
 			var t = this,
 				g = t.grid, i,
 				cols = g._columns,
-				col = g._columnsById[colId],
 				minWidth = t.arg('minWidth'),
 				oldWidth;
 			width = parseInt(width, 10);
 			if(width < minWidth){
 				width = minWidth;
 			}
-			col.width = width + 'px';
+			g._columnsById[colId].width = width + 'px';
 			for(i = 0; i < cols.length; ++i){
 				cols[i].declaredWidth = cols[i].width;
 			}
-			query('[colid="' + g._escapeId(colId) + '"]', g.domNode).forEach(function(cell){
+			query('[colid="' + colId + '"]', g.domNode).forEach(function(cell){
 				if(!oldWidth){
 					oldWidth = domStyle.get(cell, 'width');
 				}
-				var cs = cell.style;
-				cs.width = width + 'px';
-				cs.minWidth = width + 'px';
-				cs.maxWidth = width + 'px';
+				cell.style.width = width + 'px';
 			});
 			g.body.onRender();
 			g.vLayout.reLayout();
+			
 			t.onResize(colId, width, oldWidth);
 		},
 
@@ -106,152 +122,203 @@ define([
 
 		//Private-----------------------------------------------------------
 		_mousemove: function(e){
-			var t = this;
-			if(!t._resizing && !t._ismousedown){
-				var detectWidth = t.arg('detectWidth'),
-					g = t.grid,
-					ltr = g.isLeftToRight(),
-					body = win.body(),
-					flags = g._eventFlags;
-				if(!query('.gridxCell', g.header.innerNode).some(function(cellNode){
-					var pos = domGeometry.position(cellNode),
-						x = ltr ? pos.x + pos.w : pos.x,
-						col = g._columnsById[cellNode.getAttribute('colid')];
-					//check if in resize range
-					if(x - detectWidth <= e.clientX && x + detectWidth >= e.clientX){
-						var n = query(e._target || e.target).closest('td', g.header.innerNode)[0],
-							npos = n && domGeometry.position(n);
-						if(n && (e.clientX <= npos.x + detectWidth || e.clientX >= npos.x + npos.w - detectWidth)){
-							domClass.add(body, 'gridxColumnResizing');
-							t._targetCell = cellNode;
-							t._cellPos = pos;
-							//Forbid anything else to happen when we are resizing a column!
-							flags.onHeaderMouseDown = t.name;
-							return t._readyToResize = 1;//Intentional assignment
-						}
-					}
-				})){
-					//Not in resize region.
-					flags.onHeaderMouseDown = undefined;
-					domClass.remove(body, 'gridxColumnResizing');
+			var t = this,
+				cell = getCell(e),
+				flags = t.grid._eventFlags;
+			if(cell){
+				if(t._resizing){
+					removeClass(cell, 'gridxHeaderCellOver');
 				}
-				flags.onHeaderCellMouseDown  = flags.onHeaderMouseDown;
+				if(t._resizing || !cell || t._ismousedown){
+					return;
+				}
+				var ready = t._readyToResize = t._isInResizeRange(e);
+				//Forbid anything else to happen when we are resizing a column!
+				flags.onHeaderMouseDown = flags.onHeaderCellMouseDown = ready ? t.name : undefined;
+
+				domClass.toggle(win.body(), 'gridxColumnResizing', ready);
+				if(ready){
+					removeClass(cell, 'gridxHeaderCellOver');
+				}
+			}
+		},
+
+		_docMousemove: function(e){
+			if(this._resizing){
+				this._updateResizerPosition(e);
 			}
 		},
 
 		_mouseout: function(e){
 			if(!this._resizing){
-				var pos = domGeometry.position(this.grid.header.domNode);
-				if(e.clientY <= pos.y || e.clientY >= pos.y + pos.h ||
-					e.clientX <= pos.x || e.clientX >= pos.x + pos.w){
-					this._readyToResize = 0;
-					domClass.remove(win.body(), 'gridxColumnResizing');
-				}
+				this._readyToResize = 0;	//0 as false
+				removeClass(win.body(), 'gridxColumnResizing');
 			}
 		},
-
-		_mousedown: function(e){
-			var t = this;
-			if(t._readyToResize){
-				//begin resize
-				t._resizing = 1;
-				var g = t.grid,
-					refNode = query('.gridxCell', g.header.innerNode)[0];
-				dom.setSelectable(g.domNode, false);
-				win.doc.onselectstart = function(){
-					return false;
-				};
-				t._containerPos = domGeometry.position(g.domNode);
-				t._headerPos = domGeometry.position(g.header.domNode);
-				t._padBorder = domGeometry.getMarginBox(refNode).w - domGeometry.getContentBox(refNode).w;
-				t._initResizer();
-				t._updateResizer(e);
-				//Only mouse down, not moved yet
-				t._moving = 0;
-			}else{
-				t._ismousedown = 1;
-			}
-		},
-
-		_initResizer: function(){
-			var t = this,
-				g = t.grid,
-				hs = g.hScroller,
-				n = hs && hs.container.offsetHeight ? hs.container : g.bodyNode,
-				headerTop = g.header.domNode.offsetTop,
-				h = n.parentNode.offsetTop + n.offsetHeight - g.header.domNode.offsetTop,
-				resizer = t._resizer;
-			if(!resizer){
-				resizer = t._resizer = domConstruct.create('div', {
-					className: 'gridxColumnResizer'
-				}, g.domNode, 'last');
-				t.connect(resizer, 'mouseup', '_mouseup');
-			}
-			var rs = resizer.style;
-			rs.top = headerTop + 'px';
-			rs.height = h + 'px';
-			rs.display = 'block';
-		},
-
-		_updateResizer: function(e){
-			var t = this;
-			if(t._resizing){
-				var ltr = t.grid.isLeftToRight(),
-					minWidth = t.arg('minWidth') + t._padBorder,
-					pos = t._cellPos,
-					left = e.clientX,
-					limit = ltr ? pos.x + minWidth : pos.x + pos.w - minWidth;
-				if(ltr ? left < limit : left > limit){
-					//Column is narrower than minWidth, the resizer should not move further.
-					left = limit;
-				}
-				t._width = (ltr ? left - pos.x : pos.x + pos.w - left) - t._padBorder;
-				//subtract the width of the border so that the resizer appears at center.
-				t._resizer.style.left = (left - t._containerPos.x - 2) + 'px';
-				//Now mouse is moving.
-				t._moving = 1;
-			}
-		},
-
-		_mouseup: function(e){
-			var t = this;
-			t._ismousedown = 0;
-			if(t._resizing){
-				//end resize
-				t._resizing = t._readyToResize = 0;
-				domClass.remove(win.body(), 'gridxColumnResizing');
-				dom.setSelectable(t.grid.domNode, true);
-				win.doc.onselectstart = null;
-				//Only change width when mouse moved.
-				if(t._moving){
-					t._moving = 0;
-					t.setWidth(t._targetCell.getAttribute('colid'), t._width + 'px');
-				}
-				t._resizer.style.display = 'none';
-				//If mouse is still in header region, should get ready for next resize operation
-				var x = e.clientX,
-					y = e.clientY,
-					headerPos = t._headerPos;
-				if(x >= headerPos.x && x <= headerPos.x + headerPos.w &&
-					y >= headerPos.y && y <= headerPos.y + headerPos.h){
-					e._target = t._targetCell;
-					t._mousemove(e);
-				}
-			}
-		},
-
+		
 		_keydown: function(evt){
 			//support keyboard to resize a column
 			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && evt.ctrlKey && evt.shiftKey){
-				var t = this,
-					g = t.grid,
-					colId = evt.columnId,
-					cellNode = query('[colid="' + g._escapeId(colId) + '"].gridxCell', g.header.innerNode)[0],
-					step = t.arg('step');
-				step = evt.keyCode == keys.LEFT_ARROW ^ !!g.isLeftToRight() ? step : -step;
-				t.setWidth(colId, domStyle.get(cellNode, 'width') + step);
-				event.stop(evt);
+				var colId = evt.columnId,
+					g = this.grid,
+					dir = g.isLeftToRight() ? 1 : -1,
+					step = dir * 2;
+				query('[colid="' + colId + '"]', g.header.domNode).forEach(function(cell){
+					var width = domStyle.get(cell, 'width');
+					if(evt.keyCode == keys.LEFT_ARROW){width -= step;}
+					else {width += step;}
+					this.setWidth(colId, width);
+					event.stop(evt);
+				}, this);
 			}
+		},
+		
+		_updateResizerPosition: function(e){
+			var t = this,
+				delta = e.pageX - t._startX,
+				cell = t._targetCell,
+				g = t.grid,
+				hs = g.hScroller,
+				h = 0,
+				n,
+				left = e.pageX - t._gridX,
+				minWidth = t.arg('minWidth'),
+				ltr = this.grid.isLeftToRight();
+			if(!ltr){
+				delta = -delta;
+			}
+			if(cell.offsetWidth + delta < minWidth){
+				if(ltr){
+					left = t._startX - t._gridX - cell.offsetWidth + minWidth;
+				}else{
+					left = t._startX - t._gridX + (cell.offsetWidth - minWidth);
+				}
+			}
+			n = hs && hs.container.offsetHeight ? hs.container : g.bodyNode;
+			h = n.parentNode.offsetTop + n.offsetHeight - g.header.domNode.offsetTop;
+			domStyle.set(t._resizer, {
+				top: g.header.domNode.offsetTop + 'px',
+				left: left + 'px',
+				height: h + 'px'
+			});
+		},
+
+		_showResizer: function(e){
+			var t = this;
+			if(!t._resizer){
+				t._resizer = domConstruct.create('div', {
+					className: 'gridxColumnResizer'}, 
+					t.grid.domNode, 'last');
+				t.connect(t._resizer, 'mouseup', '_mouseup');
+			}
+			t._resizer.style.display = 'block';
+			t._updateResizerPosition(e);
+		},
+
+		_hideResizer: function(){
+			this._resizer.style.display = 'none';
+		},
+
+		_mousedown: function(e){
+			//begin resize
+			var t = this;
+			if(!t._readyToResize){
+				t._ismousedown = 1;	//1 as true
+				return;
+			}
+			dom.setSelectable(t.grid.domNode, false);
+			win.doc.onselectstart = function(){
+				return false;
+			};
+			t._resizing = 1;	//1 as true
+			t._startX = e.pageX;
+			t._gridX = domGeometry.position(t.grid.domNode).x;
+			t._showResizer(e);
+		},
+
+		_mouseup: function(e){
+			//end resize
+			var t = this;
+			t._ismousedown = 0;	//0 as false
+			if(t._resizing){
+				t._resizing = 0;	//0 as false
+				t._readyToResize = 0;	//0 as false
+				removeClass(win.body(), 'gridxColumnResizing');
+				dom.setSelectable(t.grid.domNode, true);
+				win.doc.onselectstart = null;
+				
+				var cell = t._targetCell,
+					delta = e.pageX - t._startX;
+				if(!t.grid.isLeftToRight()){
+					delta = -delta;
+				}
+				var	w = (sniff('webkit') ? cell.offsetWidth : domStyle.get(cell, 'width')) + delta,
+					minWidth = t.arg('minWidth');
+				if(w < minWidth){
+					w = minWidth;
+				}
+				t.setWidth(cell.getAttribute('colid'), w);
+				t._hideResizer();
+				
+			}
+		},
+		
+		_isInResizeRange: function(e){
+			var t = this,
+				cell = getCell(e),
+				x = t._getCellX(e),
+				detectWidth = t.arg('detectWidth'),
+				ltr = t.grid.isLeftToRight();
+			if(x < detectWidth){
+				//If !t._targetCell, the first cell is not able to be resize
+				if(ltr){
+					return !!(t._targetCell = cell.previousSibling);
+				}else{
+					t._targetCell = cell;
+					return 1;
+				}
+			}else if(x > cell.offsetWidth - detectWidth && x <= cell.offsetWidth){
+				if(ltr){
+					t._targetCell = cell;
+					return 1;	//1 as true
+				}else{
+					return !!(t._targetCell = cell.previousSibling);
+				}
+			}
+			return 0;	//0 as false
+		},
+
+		_getCellX: function(e){
+			var target = e.target,
+				cell = getCell(e);
+			if(!cell){
+				return 100000;
+			}
+			
+			if(/table/i.test(target.tagName)){
+				return 0;
+			}
+			var lx = e.offsetX;
+			if(lx == undefined){
+				lx = e.layerX;
+			}
+			if(!/th/i.test(target.tagName)){
+				lx += target.offsetLeft;
+			}
+			//Firefox seems have problem to get offsetX for TH
+			if(sniff('ff') && /th/i.test(target.tagName)){
+				var ltr = this.grid.isLeftToRight();
+				var scrollLeft = -parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, ltr ? 'marginLeft' : 'marginRight'));
+				if(!ltr){
+					scrollLeft = this.grid.header.domNode.firstChild.scrollWidth - scrollLeft - this.grid.header.innerNode.offsetWidth;
+				}
+				var d = lx - (cell.offsetLeft - scrollLeft);
+				if(d >= 0){
+					lx = d;
+				}
+				if(lx >= cell.offsetWidth)lx = 0;
+			}
+			return lx;
 		}
 	});
 });

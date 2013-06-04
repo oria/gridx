@@ -34,12 +34,3 @@ body {
 #mainPane {
 	vertical-align: top;
 }
-
-.apiTester {
-}
-.apiTesterLog {
-	overflow: auto;
-	width: 300px;
-	height: 200px;
-	border: 1px solid blue;
-}

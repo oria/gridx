@@ -1,4 +1,4 @@
-require([
+define([
 	'dojo/_base/lang',
 	'dojo/_base/html',
 	'dojo/_base/array',

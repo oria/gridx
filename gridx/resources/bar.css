@@ -11,12 +11,9 @@
 }
 
 .gridxBar {
+	width: 100%;
 	background: url("images/header_shadow.png") repeat-x scroll center bottom #E5EDF4;
 	border-top: 1px solid #FFFFFF;
-}
-
-.gridxBar > table {
-	width: 100%;
 }
 
 .gridxSummary {

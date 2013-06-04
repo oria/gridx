@@ -9,10 +9,9 @@ define([
 	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"
-], function(declare, lang, array, has, event, Deferred, query, keys, VScroller, _Module){
-
-/*=====
-	return declare(VScroller, {
+], function(declare, lang, array, sniff, event, Deferred, query, keys, VScroller, _Module){
+	
+	return declare(/*===== "gridx.modules.VirtualVScroller", =====*/VScroller, {
 		// summary:
 		//		This module implements lazy-rendering when virtically scrolling grid.
 		// description:
@@ -20,25 +19,6 @@ define([
 		//		It tries to remove all the DOMNodes that are out of the grid body viewport,
 		//		so that the DOMNodes in grid are always limited to a very small number.
 
-		// buffSize: Integer
-		//		The count row nodes that should be maintained above/below the grid body viewport.
-		//		The total count row nodes consists of the count of rows that are visible, and buffSize * 2.
-		buffSize: 5,
-
-		// lazy: Boolean
-		//		If this argument is set to true, the grid will not fetch data during scrolling.
-		//		Instead, it'll fetch data after the scrolling process is completed (plus a timeout).
-		//		This is useful when a large slow server side data store is used, because frequent
-		//		data fetch requests are avoided.
-		lazy: false,
-
-		// lazyTimeout: Number
-		//		This is the timeout for the "lazy" argument.
-		lazyTimeout: 50
-	});
-=====*/
-	
-	return declare(VScroller, {
 		constructor: function(grid, args){
 			if(grid.autoHeight){
 				lang.mixin(this, new VScroller(grid, args));
@@ -55,13 +35,28 @@ define([
 		},
 
 		//Public ----------------------------------------------------
+
+		// buffSize: Integer
+		//		The count row nodes that should be maintained above/below the grid body viewport.
+		//		The total count row nodes consists of the count of rows that are visible, and buffSize * 2.
 		buffSize: 5,
 		
+		// lazy: Boolean
+		//		If this argument is set to true, the grid will not fetch data during scrolling.
+		//		Instead, it'll fetch data after the scrolling process is completed (plus a timeout).
+		//		This is useful when a large slow server side data store is used, because frequent
+		//		data fetch requests are avoided.
 		lazy: false,
 		
+		// lazyTimeout: Number
+		//		This is the timeout for the "lazy" argument.
 		lazyTimeout: 50,
 	
 		scrollToRow: function(rowVisualIndex, toTop){
+			// summary:
+			//		Override VScroller.scrollToRow
+			// tags:
+			//		extension
 			var d = new Deferred(), t = this, s = t._scrolls,
 				f = function(){
 					t._subScrollToRow(rowVisualIndex, d, toTop);
@@ -86,40 +81,26 @@ define([
 				dn = t.domNode,
 				bst = bn.scrollTop,
 				dst = dn.scrollTop,
-				bnHeight = bn.clientHeight,
 				node = query('[visualindex="' + rowVisualIndex + '"]', bn)[0],
 				focus = t.grid.focus,
 				finish = function(success){
-					if(success && !node.getAttribute('rowid')){
-						//Row is not loaded yet, so row height might still change.
-						defer.scrollContext = [rowVisualIndex, defer, toTop];
-					}else{
-						t._scrolls.splice(array.indexOf(t._scrolls, defer), 1);
-						//since we've changed the focus row index, re-focus it.
-						if(focus && focus.currentArea() == 'body'){
-							focus.focusArea('body', 1);	//1 as true
-						}
-						t.lazy = t._lazy;
-						//wait for the dom nodes to settle down.
-						setTimeout(function(){
-							defer.callback(success);
-						}, 5);
+					t._scrolls.splice(array.indexOf(t._scrolls, defer), 1);
+					//since we've changed the focus row index, re-focus it.
+					if(focus && focus.currentArea() == 'body'){
+						focus.focusArea('body', 1);	//1 as true
 					}
+					t.lazy = t._lazy;
+					//wait for the dom nodes to settle down.
+					setTimeout(function(){
+						defer.callback(success);
+					}, 5);
 				};
 			if(node){
 				var offsetTop = node.offsetTop;
-				if(node.offsetHeight >= bnHeight){
-					//Special check for rows that are higher than grid body.
-					if(offsetTop == bst){
-						finish(true);
-						return;
-					}else{
-						dif = offsetTop - bst;
-					}
-				}else if(offsetTop + node.offsetHeight > bst + bnHeight){
+				if(offsetTop + node.offsetHeight > bst + bn.clientHeight){
 					dif = offsetTop - bst;
 					if(!toTop){
-						dif += node.offsetHeight - bnHeight;
+						dif += node.offsetHeight - bn.clientHeight;
 					}
 				}else if(offsetTop < bst || (toTop && offsetTop > bst)){
 					dif = offsetTop - bst;
@@ -138,7 +119,7 @@ define([
 					dif = (rowVisualIndex - idx) * rowHeight;
 				}else{
 					n = bn.lastChild;
-					while(n && n.offsetTop + n.offsetHeight > bst + bnHeight && n != bn.firstChild){
+					while(n && n.offsetTop + n.offsetHeight > bst + bn.clientHeight){
 						n = n.previousSibling;
 					}
 					idx = n && n.getAttribute('visualindex');
@@ -158,21 +139,10 @@ define([
 			if(istop || isbottom){
 				t._doVirtualScroll(1);
 			}else{
-				var oldScrollTop = dn.scrollTop,
-					scrollTop = oldScrollTop + (dif > bn.offsetHeight ? dif / t._ratio : dif);
-				//If scrollTop to too big, the browser will scroll it back to top, so add extra check here.
-				if(scrollTop > dn.scrollHeight){
-					scrollTop = dn.scrollHeight;
-				}
-				dn.scrollTop = scrollTop;
-				//If scrolling has no effect, we are already at the edge and no luck.
-				if(dn.scrollTop == oldScrollTop){
-					finish(false);
-					return;
-				}
+				dn.scrollTop += dif / t._ratio;
 			}
-			if((istop && bn.firstChild.getAttribute('visualindex') == 0) ||
-					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.view.visualCount - 1)){
+			if((istop && bn.firstChild.getAttribute('visualindex') == 0) || 
+					(isbottom && bn.lastChild.getAttribute('visualindex') == t.grid.body.visualCount - 1)){
 				finish(false);
 				return;
 			}
@@ -188,15 +158,14 @@ define([
 			t.connect(t.grid, '_onResizeEnd', function(){
 				t._doScroll(0, 1);
 			});
-			t._doScroll(0, 1, 1);
+			t._doScroll(0, 1);
 		},
 	
 		_doVirtualScroll: function(forced){
 			var t = this,
 				dn = t.domNode,
 				a = dn.scrollTop,
-				deltaT = a - (t._lastScrollTop || 0),
-				neighborhood = 2;
+				deltaT = a - (t._lastScrollTop || 0);
 	
 			if(forced || deltaT){
 				t._lastScrollTop = a;
@@ -204,9 +173,8 @@ define([
 				var buffSize = t.arg('buffSize'),
 					scrollRange = dn.scrollHeight - dn.offsetHeight,
 					body = t.grid.body,
-					view = t.grid.view,
-					visualStart = 0,	//visualStart is always zero
-					visualEnd = visualStart + view.visualCount,
+					visualStart = body.visualStart,
+					visualEnd = visualStart + body.visualCount,
 					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,
 					firstRowTop = firstRow && firstRow.offsetTop - deltaT,
@@ -217,8 +185,6 @@ define([
 					h = t._avgRowHeight,
 					pageRowCount = Math.ceil(dn.offsetHeight / h) + 2 * buffSize,
 					ratio = t._ratio,
-					nearTop = a <= neighborhood,
-					nearBottom = Math.abs(a - scrollRange) <= neighborhood,
 					start, end, pos, d;
 				if(bnTop == bnBtm && !bnBtm){
 					//The grid is not correctly shown, so we just ignore.
@@ -228,44 +194,49 @@ define([
 					//Add some rows to the front
 					end = body.renderStart;
 					d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
-					start = nearTop ? visualStart : Math.max(end - d, visualStart);
+					start = a === 0 ? visualStart : Math.max(end - d, visualStart);
 					pos = "top";
+//                    console.log('top: ', start, end);
 				}else if(lastRow && lastRowBtm > bnTop && lastRowBtm < bnBtm){
 					//Add some rows to the end
 					start = body.renderStart + body.renderCount;
 					d = Math.ceil((bnBtm - lastRowBtm) * ratio / h) + buffSize;
-					end = nearBottom && a ? visualEnd : Math.min(start + d, visualEnd);
+					end = a === scrollRange && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
+//                    console.log('bottom: ', start, end);
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
 					if(a <= scrollRange / 2){
-						start = nearTop ? visualStart : visualStart + Math.max(Math.floor(a * ratio / h) - buffSize, 0);
+						start = a === 0 ? visualStart : visualStart + Math.max(Math.floor(a * ratio / h) - buffSize, 0);
 						end = Math.min(start + pageRowCount, visualEnd);
 					}else{
-						end = nearBottom ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - a) * ratio / h), 0);
+						end = a === scrollRange ? visualEnd : visualEnd + Math.min(pageRowCount - Math.floor((scrollRange - a) * ratio / h), 0);
 						start = Math.max(end - pageRowCount, visualStart);
 					}
 					pos = "clear";
 				}else if(firstRow){
 					//The body and the scroller bar may be mis-matched, so force to sync here.
-					if(nearTop){
+					if(a === 0){
 						var firstRowIndex = body.renderStart;
 						if(firstRowIndex > visualStart){
 							start = visualStart;
 							end = firstRowIndex;
 							pos = "top";
-						}
-					}else if(nearBottom){
+//                            console.debug("Recover top", end - start);
+						}	
+					}else if(a === scrollRange){
 						var lastRowIndex = body.renderStart + body.renderCount - 1;
 						if(lastRowIndex < visualEnd - 1){
 							start = lastRowIndex + 1;
 							end = visualEnd;
 							pos = "bottom";
+//                            console.debug("Recover bottom", end - start);
 						}
 					}
 				}
 				
 				if(typeof start == 'number' && typeof end == 'number'){
+//                    console.debug("render: ", start, end, pos, a, scrollRange);
 					//Only need to render when the range is valid
 					body.renderRows(start, end - start, pos);
 					if(a && start < end){
@@ -277,10 +248,9 @@ define([
 					}
 				}
 				//Ensure the position when user scrolls to end points
-				if(nearTop){
+				if(a === 0){
 					bn.scrollTop = 0;
-				}else if(nearBottom || a > scrollRange){
-					//with huge store, a will sometimes be > scrollRange
+				}else if(a >= scrollRange){//Have to use >=, because with huge store, a will sometimes be > scrollRange
 					bn.scrollTop = bn.scrollHeight;
 				}else if(pos != "clear"){
 					bn.scrollTop += deltaT;
@@ -288,9 +258,9 @@ define([
 			}
 		},
 		
-		_doScroll: function(e, forced, noLazy){
+		_doScroll: function(e, forced){
 			var t = this;
-			if(!noLazy && t.arg('lazy')){
+			if(t.arg('lazy')){
 				if(t._lazyScrollHandle){
 					clearTimeout(t._lazyScrollHandle);
 				}
@@ -303,25 +273,15 @@ define([
 		_onMouseWheel: function(e){
 			if(this.grid.vScrollerNode.style.display != 'none'){
 				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
-				this.domNode.scrollTop -= rolled;
+				this.domNode.scrollTop -= rolled / this._ratio;
 				event.stop(e);
 			}
 		},
 	
 		_onBodyChange: function(){
-			var t = this;
-			t._update();
-			t._doScroll(0, 1);
-			t._doVirtual();
-			//If some scrollToRow requests are pending, resume them.
-			array.forEach(t._scrolls, function(d){
-				if(d.scrollContext){
-					//delete scrollContext to avoid firing multiple times.
-					var scrollContext = d.scrollContext;
-					delete d.scrollContext;
-					t._subScrollToRow.apply(t, scrollContext);
-				}
-			});
+			this._update();
+			this._doScroll(0, 1);
+			this._doVirtual();
 		},
 	
 		_onForcedScroll: function(){
@@ -337,25 +297,18 @@ define([
 	
 		_syncHeight: function(){
 			var t = this,
-				h = t._avgRowHeight * t.grid.view.visualCount,
+				h = t._avgRowHeight * t.grid.body.visualCount,
 				maxHeight = 1342177;
-			if(has('ff')){
+			if(sniff('ff')){
 				maxHeight = 17895697;
-			}else if(has('webkit')){
+			}else if(sniff('webkit')){
 				maxHeight = 134217726;
 			}
 			if(h > maxHeight){
 				t._ratio = h / maxHeight;
 				h = maxHeight;
 			}
-			var dn = t.domNode,
-				//remember the scroll bar position
-				r = dn.scrollTop / dn.scrollHeight;
 			t.stubNode.style.height = h + 'px';
-			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
-			if(t._lastScrollTop){
-				t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
-			}
 		},
 	
 		_doVirtual: function(){
@@ -405,28 +358,23 @@ define([
 		_onKeyScroll: function(evt){
 			var t = this,
 				bd = t.grid.body,
-				view = t.grid.view,
 				focus = t.grid.focus,
 				sn = t.domNode,
 				st = 'scrollTop',
 				r,
 				fc = '_focusCellRow';
 			if(!focus || focus.currentArea() == 'body'){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
-					bd._focusCellCol = 0;
+				if(evt.keyCode == keys.HOME){
 					bd[fc] = 0;
 					sn[st] = 0;
-					bd._focusCell();
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
-					bd._focusCellCol = t.grid._columns.length - 1;
-					bd[fc] = view.visualCount - 1;
+				}else if(evt.keyCode == keys.END){
+					bd[fc] = bd.visualCount - 1;
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
-					bd._focusCell();
 				}else if(evt.keyCode == keys.PAGE_UP){
 					r = bd[fc] = Math.max(bd.renderStart - bd.renderCount, 0);
 					t.scrollToRow(r);
 				}else if(evt.keyCode == keys.PAGE_DOWN){
-					r = bd[fc] = Math.min(view.visualCount - 1, bd.renderStart + bd.renderCount);
+					r = bd[fc] = Math.min(bd.visualCount - 1, bd.renderStart + bd.renderCount);
 					t.scrollToRow(r, 1);	//1 as true
 				}else{
 					return;

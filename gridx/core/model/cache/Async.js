@@ -7,26 +7,6 @@ define([
 	"./_Cache"
 ], function(declare, array, lang, Deferred, DeferredList, _Cache){
 
-/*=====
-	return declare(_Cache, {
-		// summary:
-		//		Implement lazy-loading for server side store.
-
-		// isAsync: Boolean
-		//		Whether this cache is for asynchronous(server side) store.
-		isAsync: true,
-
-		// cacheSize: Integer
-		//		The max cached row count in client side.
-		//		By default, do not clear cache when scrolling, this is the same with DataGrid
-		cacheSize: -1,
-
-		// pageSize: Integer
-		//		The recommended row count for every fetch.
-		pageSize: 100
-	});
-=====*/
-
 	var hitch = lang.hitch;
 
 	function fetchById(self, args){
@@ -37,17 +17,14 @@ define([
 			fail = hitch(d, d.errback),
 			ranges = args.range,
 			isTree = self.store.getChildren;
-		args.pids = {
-			'': args.range
-		};
+		args.pids = [];
 		if(isTree){
 			for(i = ranges.length - 1; i >= 0; --i){
 				r = ranges[i];
 				pid = r.parentId;
 				if(self.model.isId(pid)){
 					args.id.push(pid);
-					args.pids[pid] = args.pids[pid] || [];
-					args.pids[pid].push(r);
+					args.pids.push(pid);
 					ranges.splice(i, 1);
 				}
 			}
@@ -86,52 +63,45 @@ define([
 
 	function fetchByIndex(self, args){
 		var d = new Deferred(),
-			toFetch = [],
-			dl = [],
-			checkValid = function(size, r){
-				if(r.count > 0 && size < r.start + r.count){
-					r.count = size - r.start;
-				}
-				return r.start < size;
-			};
-		for(var pid in args.pids){
-			var size = self._size[pid],
-				ranges = args.pids[pid] =
-					connectRanges(self,
-						mergePendingRequests(self, pid, dl,
-							findMissingIndexes(self, pid,
-								mergeRanges(args.pids[pid]))));
-			if(size > 0){
-				ranges = array.filter(ranges, lang.partial(checkValid, size));
+			size = self._size[''];
+		args = connectRanges(self,
+			mergePendingRequests(self,
+				findMissingIndexes(self,
+					mergeRanges(args))));
+		var ranges = size > 0 ? array.filter(args.range, function(r){
+			if(r.count > 0 && size < r.start + r.count){
+				r.count = size - r.start;
 			}
-			for(var i = 0; i < ranges.length; ++i){
-				ranges[i].parentId = pid;
-			}
-			[].push.apply(toFetch, ranges);
-		}
-		args._req = dl.length && new DeferredList(dl, 0, 1);
-		self._requests.push(args);
-		if(toFetch.length){
-			new DeferredList(array.map(toFetch, function(r){
-				return self._storeFetch(r);
-			}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
-		}else{
-			d.callback(args);
-		}
+			return r.start < size;
+		}) : args.range;
+		new DeferredList(array.map(ranges, function(r){
+			return self._storeFetch(r);
+		}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
 		return d;
 	}
 
-	function mergePendingRequests(self, parentId, dl, ranges){
+	function fetchByParentId(self, args){
+		var d = new Deferred();
+		new DeferredList(array.map(args.pids, function(pid){
+			return self._loadChildren(pid);
+		}), 0, 1).then(hitch(d, d.callback, args), hitch(d, d.errback));
+		return d;
+	}
+
+	function mergePendingRequests(self, args){
 		var i, req,
-			reqs = self._requests;
+			reqs = self._requests,
+			defs = [];
 		for(i = reqs.length - 1; i >= 0; --i){
 			req = reqs[i];
-			ranges = minus(ranges, req.pids[parentId]);
-			if(ranges._overlap && array.indexOf(dl, req._def) < 0){
-				dl.push(req._def);
+			args.range = minus(args.range, req.range);
+			if(args.range._overlap){
+				defs.push(req._def);
 			}
 		}
-		return ranges;
+		args._req = defs.length && new DeferredList(defs, 0, 1);
+		reqs.push(args);
+		return args;
 	}
 
 	function minus(rangesA, rangesB){
@@ -179,9 +149,9 @@ define([
 		return res;
 	}
 
-	function mergeRanges(r){
+	function mergeRanges(args){
 		//Merge index ranges into separate ones.
-		var ranges = [], i, t, a, b, c, merged;
+		var ranges = [], r = args.range, i, t, a, b, c, merged;
 		while(r.length > 0){
 			c = a = r.pop();
 			merged = 0;
@@ -220,20 +190,21 @@ define([
 				ranges.push(c);
 			}
 		}
-		return ranges;
+		args.range = ranges;
+		return args;
 	}
 
-	function connectRanges(self, ranges){
+	function connectRanges(self, args){
 		//Connect small ranges into big ones to reduce request count
 		//FIXME: find a better way to do this!
-		var results = [], a, b, ps = self.pageSize;
-		ranges.sort(function(a, b){
+		var r = args.range, ranges = [], a, b, ps = self.pageSize;
+		r.sort(function(a, b){
 			return a.start - b.start;
 		});
-		while(ranges.length){
-			a = ranges.shift();
-			if(ranges.length){
-				b = ranges[0];
+		while(r.length){
+			a = r.shift();
+			if(r.length){
+				b = r[0];
 				if(b.count && b.count + b.start - a.start <= ps){
 					b.count = b.count + b.start - a.start;
 					b.start = a.start;
@@ -243,13 +214,14 @@ define([
 					continue;
 				}
 			}
-			results.push(a);
+			ranges.push(a);
 		}
 		//Improve performance for most cases
-		if(results.length == 1 && results[0].count < ps){
-			results[0].count = ps;
+		if(ranges.length == 1 && ranges[0].count < ps){
+			ranges[0].count = ps;
 		}
-		return results;
+		args.range = ranges;
+		return args;
 	}
 
 	function findMissingIds(self, ids){
@@ -259,28 +231,27 @@ define([
 		});
 	}
 
-	function findMissingIndexes(self, parentId, ranges){
+	function findMissingIndexes(self, args){
 		//Removed loaded rows from the request index ranges.
 		//generate unsorted range list.
 		var i, j, r, end, newRange,
-			results = [],
-			indexMap = self._struct[parentId],
-			totalSize = self._size[parentId];
-		for(i = ranges.length - 1; i >= 0; --i){
-			r = ranges[i];
+			ranges = [],
+			indexMap = self._struct[''],
+			totalSize = self._size[''];
+		for(i = args.range.length - 1; i >= 0; --i){
+			r = args.range[i];
 			end = r.count ? r.start + r.count : indexMap.length - 1;
 			newRange = 1;
 			for(j = r.start; j < end; ++j){
 				var id = indexMap[j + 1];
 				if(!id || !self._cache[id]){
 					if(newRange){
-						results.push({
-							parentId: parentId,
+						ranges.push({
 							start: j,
 							count: 1
 						});
 					}else{
-						++results[results.length - 1].count;
+						++ranges[ranges.length - 1].count;
 					}
 					newRange = 0;
 				}else{
@@ -289,16 +260,16 @@ define([
 			}
 			if(!r.count){
 				if(!newRange){
-					delete results[results.length - 1].count;
+					delete ranges[ranges.length - 1].count;
 				}else if(totalSize < 0 || j < totalSize){
-					results.push({
-						parentId: parentId,
+					ranges.push({
 						start: j
 					});
 				}
 			}
 		}
-		return results;
+		args.range = ranges;
+		return args;
 	}
 
 	function searchRootLevel(self, ids){
@@ -349,9 +320,7 @@ define([
 			func = function(ids){
 				if(ids.length && parentIds.length){
 					var pid = parentIds.shift();
-					self._storeFetch({
-						parentId: pid
-					}).then(function(){
+					self._loadChildren(pid).then(function(){
 						[].push.apply(parentIds, st[pid].slice(1));
 						func(findMissingIds(self, ids));
 					}, fail);
@@ -363,12 +332,28 @@ define([
 		return d;
 	}
 
-	return declare(_Cache, {
+	return declare(/*===== "gridx.core.model.cache.Async", =====*/_Cache, {
+		// summary:
+		//		Implement lazy-loading for server side store.
+
+		//isAsync: Boolean
+		//		Whether this cache is for asynchronous(server side) store.
 		isAsync: true,
 
+/*=====
+		//cacheSize: Integer
+		//		The max cached row count in client side.
+		//		By default, do not clear cache when scrolling, this is the same with DataGrid
+		cacheSize: -1,
+
+		//pageSize: Integer
+		//		The recommended row count for every fetch.
+		pageSize: 100,
+=====*/
+		
 		constructor: function(model, args){
-			var cs = parseInt(args.cacheSize, 10),
-				ps = parseInt(args.pageSize, 10);
+			var cs = args.cacheSize,
+				ps = args.pageSize;
 			this.cacheSize = cs >= 0 ? cs : -1;
 			this.pageSize = ps > 0 ? ps : 100;
 		},
@@ -383,57 +368,46 @@ define([
 				};
 			fetchById(t, args).then(function(args){
 				fetchByIndex(t, args).then(function(args){
-					Deferred.when(args._req, function(){
-						var err;
-						if(callback){
-							try{
-								callback();
-							}catch(e){
-								err = e;
+					fetchByParentId(t, args).then(function(args){
+						Deferred.when(args._req, function(){
+							var err;
+							if(callback){
+								try{
+									callback();
+								}catch(e){
+									err = e;
+								}
 							}
-						}
-						t._requests.shift();
-						if(err){
-							d.errback(err);
-						}else{
-							d.callback();
-						}
+							t._requests.shift();
+							if(err){
+								d.errback(err);
+							}else{
+								d.callback();
+							}
+						}, innerFail);
 					}, innerFail);
 				}, innerFail);
 			}, fail);
 			return d;
 		},
 
-		keep: function(id, lock){
+		keep: function(id){
 			var t = this,
 				k = t._kept;
 			if(t._cache[id] && t._struct[id] && !k[id]){
 				k[id] = 1;
 				++t._keptSize;
 			}
-			if(k[id] && !t._lock[id] && lock){
-				t._lock[id] = 1;
-				++t._lockSize;
-			}
 		},
 
-		free: function(id, unlock){
+		free: function(id){
 			var t = this;
 			if(!t.model.isId(id)){
-				//free all. Not free locked items.
-				t._kept = lang.clone(t._lock);
-				t._keptSize = t._lockSize;
+				t._kept = {};
+				t._keptSize = 0;
 			}else if(t._kept[id]){
-				if(!t._lock[id]){
-					//free unlocked items.
-					delete t._kept[id];
-					--t._keptSize;
-				}else if(unlock){
-					//if explictly unlock an item, only unlock it, but not free it,
-					//so that next time it'll be freed.
-					delete t._lock[id];
-					--t._lockSize;
-				}
+				delete t._kept[id];
+				--t._keptSize;
 			}
 		},
 
@@ -447,9 +421,7 @@ define([
 			t._requests = [];
 			t._priority = [];
 			t._kept = {};
-			t._lock = {};
 			t._keptSize = 0;
-			t._lockSize = 0;
 		},
 
 		//-----------------------------------------------------------------------------------------------------------

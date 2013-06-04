@@ -5,41 +5,27 @@ define([
 	"../../core/model/extensions/Mark"
 ], function(declare, lang, _Base, Mark){
 
-/*=====
-	return declare(_Base, {
-	});
-=====*/
-
 	return declare(_Base, {
 		modelExtensions: [Mark],
 
 		selectById: function(rowId, columnId){
-			var t = this,
-				m = t.model,
-				type = t._getMarkType(columnId),
-				item = t._type == 'row' ? rowId : [rowId, columnId];
-			if(t.arg('enabled') && t._isSelectable(item)){
-				if(!t.arg('multiple')){
-					m.clearMark(type);
-				}
-				m.markById(rowId, 1, type);
+			var t = this, m = t.model;
+			if(t.arg('enabled')){
+				m.markById(rowId, 1, t._getMarkType(columnId));
 				m.when();
 			}
 		},
-
+		
 		deselectById: function(rowId, columnId){
-			var t = this,
-				m = t.model,
-				item = t._type == 'row' ? rowId : [rowId, columnId];
-			if(t.arg('enabled') && t._isSelectable(item)){
+			var t = this, m = t.model;
+			if(t.arg('enabled')){
 				m.markById(rowId, 0, t._getMarkType(columnId));
 				m.when();
 			}
 		},
-
+		
 		isSelected: function(rowId, columnId){
-			//Mixed status is not selected
-			return this.model.getMark(rowId, this._getMarkType(columnId)) === true;
+			return this.model.getMark(rowId, this._getMarkType(columnId)) === true;	//Mixed status is not selected
 		},
 
 		//Private-----------------------------------------------------------------

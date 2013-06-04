@@ -26,8 +26,6 @@ define([
 	'dijit/form/NumberSpinner',
 	'dijit/form/Select',
 	'dijit/form/NumberTextBox',
-	'gridx/support/menu/NumberFilterMenu',
-	'gridx/support/menu/AZFilterMenu',
 	'dojo/domReady!'
 ], function(require, ready, parser, lang, query, array, DeferredList,
 	dom, domConstruct, domGeo, domClass, domStyle,
@@ -218,8 +216,6 @@ Store, Grid){
 		}
 	});
 	colScrollHandler = null;
-	otherModules = {};
-	
 	function startScrollColumns(dir){
 		if(!colScrollHandler){
 			colScrollHandler = setInterval(function(){
@@ -350,7 +346,7 @@ Store, Grid){
 			var label = attrNode.getAttribute('data-attr-name');
 			var attr = attrsByName[label];
 			return ["<tr><td class='attributePreviewItemLabel'>", label,
-				"</td><td class='attributePreviewItemValue'>", lang.isObject(attr.curValue)? 'Object' : attr.curValue,
+				"</td><td class='attributePreviewItemValue'>", attr.curValue,
 				"</td></tr>"].join('');
 		});
 		query('#attributesConfigPreviewSummary tbody')[0].innerHTML = rows.join('');
@@ -382,11 +378,10 @@ Store, Grid){
 			var name = attr._name = attr.mod ? attr.name.slice(0, 1).toUpperCase() + attr.name.slice(1) : attr.name;
 			attr.label = attr.mod ? attr.mod + name : name;
 			attrsByName[attr.label] = attr;
-			attr.curValue = attr.simpleValue ? attr.simpleValue : attr.value;
+			attr.curValue = attr.value;
 		});
 		loadBoolAttributes();
 		loadNumberAttributes();
-		loadOtherAttributes();
 	}
 	function boolBtn(value){
 		return [
@@ -466,62 +461,17 @@ Store, Grid){
 			});
 		}, 500);
 	}
-	
-	function loadOtherAttributes(){
-		dom.byId('attributesOtherInner').innerHTML = array.map(array.filter(attrs, function(attr){
-			return attr.type == 'other';
-		}), function(attr, i){
-			return ["<div class='attributeOtherItem attributeItem ",
-				(attr.mod && array.indexOf(coreMods, attr.mod) < 0 || attr.overrideCore === true) ? 'attributeItemDisabled' : '',
-				"' data-attr-mod='", attr.mod,
-				"' data-attr-name='", attr.label, 
-				"'><table><tbody><tr><td style='width: 200px; text-align: center;'>",
-				"<span class='attributeItemMod'>", attr.mod, "</span><span class='attributeItemName'>", attr._name, "</span>",
-				"</td><td style='width:250px'>", 
-				"<div><div class='simpleValue valueSelected attributeOtherValue'>simple value</div>",
-				"<div class='complexValue attributeOtherValue'>complex value</div></div></td><td>",
-				attr.unitPost,
-			"</td></tr></tbody></table></div>"].join('');
-		}).join('');
-		// parser.parse(dom.byId('attributesNumberInner'));
-		query('.attributeOtherValue', 'attributesOtherInner').on('click', function(evt){
-			var node = this,
-				v = domClass.contains(node, 'simpleValue')? 'simpleValue' : 'complexValue',
-				siblingNode = this.previousSibling? this.previousSibling : this.nextSibling;
-			
-			domClass.toggle(node, 'valueSelected', true);
-			domClass.toggle(siblingNode, 'valueSelected', false);
-			
-			var n = node.parentNode;
-			console.log('n is', n);
-			while(!domClass.contains(n, 'attributeItem')){
-				n = n.parentNode;
-			}
-			
-			var attr = attrsByName[n.getAttribute('data-attr-name')];
-			// domClass.toggle(n, 'attributeItemUsed', attr.curlValue != attr.value);
-			attr.curValue = attr[v];	
-			console.log(attr);	
-		});
-	}
 
 	function showModuleDetail(mod){
 		query('#moduleDescIcon').style('background', 'url("' + mod.icon + '")');
-		query('#moduleDescLabel').innerHTML('<a target="_blank" href="' + getApiDocUrl(mod.mid) + '">' +  mod.label + "</a>");
+		query('#moduleDescLabel').innerHTML(mod.label);
 		query('#moduleDescName').innerHTML(mod.name);
 		query('#moduleDescPathDetail').innerHTML(mod.mid + '.js');
 		query('#moduleDescDetail').innerHTML(mod.description);
-		query('#moduleDescApiDocUrlLabelDetail').innerHTML('<a target="_blank" href="' + getApiDocUrl(mod.mid) + '">' +  getApiDocUrl(mod.mid) + "</a>");
 		var deps = array.map(mod.deps, function(dep){
 			return ['<span class="moduleDescDependItem">', dep, '</span>'].join('');
 		});
 		query('#moduleDescDependDetail').innerHTML(deps.length ? deps.join('') : 'None');
-	}
-	
-	function getApiDocUrl(mid){
-		var curVersion = '1.2';
-		var prefix = 'http://oria.github.io/gridx/apidoc/index.html';
-		return prefix + '#' + curVersion + '/' + mid;
 	}
 
 	function useModule(itemNode){
@@ -530,24 +480,16 @@ Store, Grid){
 		array.forEach(mod.deps, function(dep){
 			if(!query('[data-mod-name="' + dep + '"].moduleItem', 'modulesLoaded').length){
 				var n = query('[data-mod-name="' + dep + '"].moduleItem', 'modulesAvailable')[0];
+				domClass.remove(n, 'moduleItemHidden');
 				if(n){
-					domClass.remove(n, 'moduleItemHidden');
 					useModule(n);
 				}
 			}
 		});
 		domConstruct.place(itemNode, 'modulesLoaded');
-		console.log(mod.module.prototype.name);
 		var nodes = query('[data-attr-mod="' + mod.module.prototype.name + '"].attributeItem', 'attributesConfig');
-		
-		nodes.forEach(function(node){	//other attribute are able to use once the mod is used
-			if(domClass.contains(node, 'attributeOtherItem')){
-				domClass.add(node, 'attributeItemUsed');
-			}
-		});
 		nodes.removeClass('attributeItemDisabled');
 	}
-	
 	function delModule(itemNode){
 		itemNode.setAttribute('title', 'click to show description, double click to use');
 		var name = itemNode.getAttribute('data-mod-name');
@@ -582,61 +524,24 @@ Store, Grid){
 		return store;
 	}
 	function gatherColumns(){
-		otherModules = {};
 		var cols = query('.columnBar', 'columnsContainer').map(function(columnBarNode){
-			var colBar = registry.byNode(columnBarNode).getColumn();
-			if(colBar.menu && typeof colBar.menu == 'string'){	//FIX ME: ugly
-				console.log('filter menu module is: ', colBar.menu);
-				require([colBar.menu], function(m){
-					colBar.menu = new m({});
-				});
-				otherModules['gridx/modules/Filter'] = true;
-			}
-			return colBar;
-			// return colBar = registry.byNode(columnBarNode).getColumn();
+			return colBar = registry.byNode(columnBarNode).getColumn();
 		});
 		cols.sort(function(col1, col2){
 			return col1.index - col2.index;
 		});
-		
-		
 		return cols;
 	}
 	function gatherModules(){
-		var mods = query('.moduleItem', 'modulesLoaded').map(function(modNode){
+		return query('.moduleItem', 'modulesLoaded').map(function(modNode){
 			return modules[modNode.getAttribute('data-mod-idx')];
 		});
-		
-		for(var i in otherModules){
-			array.forEach(modules, function(module){
-				if(module.mid == i){
-					if(mods.indexOf(module) < 0){
-						mods.push(module);
-					}
-				}
-			});
-		}
-		
-		return mods;
 	}
 	function gatherAttributes(){
-		var validAttr = query('.attributeItemUsed', 'attributesConfig').map(function(attrNode){
+		return query('.attributeItemUsed', 'attributesConfig').map(function(attrNode){
 			var label = attrNode.getAttribute('data-attr-name');
 			return attrsByName[label];
 		});
-		
-		
-		/*var curMids = query('.moduleItem', 'modulesLoaded').map(function(modNode){
-			return modNode.getAttribute('data-mod-mid');
-		});
-		
-		
-		for(var label in attrsByName){
-			if(attrsByName[label].type == 'shadow' && curMids.indexOf(attrsByName[label].binding) >= 0){
-				validAttr.push(attrsByName[label]);
-			}
-		}*/
-		return validAttr;
 	}
 	grid = null;
 	function createGrid(){
@@ -651,7 +556,6 @@ Store, Grid){
 		}
 		var store = createStore();
 		var columns = gatherColumns();
-		// console.log('columns is: ', columns);
 		var mods = gatherModules();
 		var attributes = gatherAttributes();
 		var isClient = domClass.contains('clientStoreBtn', 'storeConfigBtnSelected');
@@ -664,12 +568,9 @@ Store, Grid){
 			})
 		};
 		array.forEach(attributes, function(attr){
-				cfg[attr.label] = lang.clone(attr.curValue);	//clone attribute, some module will write the attribute
-																//don't want the attr change because we need to show it 
-																//in the code way.
-			// }
+			cfg[attr.label] = attr.curValue;
 		});
-		// console.log(cfg);
+		console.log(cfg);
 		grid = new Grid(cfg);
 		grid.placeAt('gridContainer');
 		grid.startup();
@@ -678,7 +579,6 @@ Store, Grid){
 		var columns = gatherColumns();
 		var mods = gatherModules();
 		var attributes = gatherAttributes();
-		console.log(attributes);
 		var i, j = 0, sb = [
 			'require([\n',
 				'\t"gridx/Grid",\n',
@@ -722,10 +622,7 @@ Store, Grid){
 		}));
 		sb.push('\t\t],\n');
 		[].push.apply(sb, array.map(attributes, function(attr){
-			return ['\t\t', attr.label, ': ', 
-					//lang.isObject(attr.curValue)? JSON.stringify(attr.curValue) : attr.curValue, 
-					formatJsCode('\t\t', attr.curValue),
-					',\n'].join('');
+			return ['\t\t', attr.label, ': ', attr.curValue, ',\n'].join('');
 		}));
 		sb.push('\t\tmodules: [\n');
 		[].push.apply(sb, array.map(mods, function(mod){
@@ -780,7 +677,7 @@ Store, Grid){
 
 		sb.push('\t\t],\n');
 		[].push.apply(sb, array.map(attributes, function(attr){
-			return ['\t\t', attr.label, ': ', formatJsCode('\t\t', attr.curValue), ',\n'].join('');
+			return ['\t\t', attr.label, ': ', attr.curValue, ',\n'].join('');
 		}));
 		sb.push('\t\tmodules: [\n');
 		[].push.apply(sb, array.map(mods, function(mod){
@@ -847,31 +744,6 @@ Store, Grid){
 		});
 		clip.glue('clipBtn');
 	}
-	
-function formatJsCode(prefix, obj){
-	var html = '',
-	htmlAry = [];
-	if(typeof obj == 'object'){
-		if(obj instanceof Array){
-			html += '[\n';
-			for(var i in obj){
-				htmlAry.push(prefix + '\t' +  formatJsCode(prefix + '\t', obj[i]));
-			}
-			html += htmlAry.join(',\n');
-			html += '\n' + prefix + ']';
-		}else{
-			html += '{\n';
-			for(var i in obj){
-				htmlAry.push(prefix + '\t' +  i + ': ' + formatJsCode(prefix + '\t', obj[i]));
-			}
-			html += htmlAry.join(',\n');
-			html += '\n' + prefix + '}'; 
-		}
-	}else{
-		html = obj;
-	}
-	return html; 
-}
 
 	addColumnBar(null, {
 		field: 'name',

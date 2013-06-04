@@ -1,13 +1,17 @@
-require([
-	'dojo/parser',
-	'dojo/_base/Deferred',
-	'dojo/_base/array',
+define([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/ComputerData',
 	'gridx/tests/support/stores/Memory',
-	'gridx/support/exporter/toCSV',
-	'gridx/allModules',
+	'gridx/modules/CellWidget',
+	'gridx/modules/extendedSelect/Row',
+	'gridx/modules/exporter/CSV',
+	'gridx/modules/SingleSort',
+	'gridx/modules/filter/Filter',
+	'gridx/modules/filter/FilterBar',
+	'gridx/modules/pagination/Pagination',
+	'gridx/modules/pagination/PaginationBar',
+	'gridx/modules/VirtualVScroller',
 	'gridx/tests/support/TestPane',
 	'dijit/registry',
 	'dijit/form/CheckBox',
@@ -17,24 +21,34 @@ require([
 	'dijit/ProgressBar',
 	'dijit/Dialog',
 	'dojo/domReady!'
-], function(parser, Deferred, array, Grid, Cache, dataSource, storeFactory, toCSV, mods, TestPane, registry){
-
-	store = storeFactory({
-		path: './support/stores',
-		dataSource: dataSource,
-		size: 1000
+], function(Grid, Cache, dataSource, storeFactory, CellWidget, ExtendedSelectRow, ExportCSV, SingleSort,
+			Filter, FilterBar, Pagination, PaginationBar, VirtualVScroller, TestPane, registry
+	){
+	grid = new Grid({
+		id: 'grid',
+		cacheClass: Cache,
+		store: storeFactory({
+			path: './support/stores',
+			dataSource: dataSource,
+			size: 1000
+		}),
+		structure: dataSource.layouts[1],
+		modules: [
+			CellWidget,
+			ExtendedSelectRow,
+			ExportCSV,
+			SingleSort,
+			Filter,
+			FilterBar,
+			Pagination,
+			PaginationBar,
+			VirtualVScroller
+		],
+		autoWidth: true,
+		selectRowTriggerOnCell: true
 	});
-	layout = dataSource.layouts[1];
-	modules = [
-		mods.CellWidget,
-		mods.ExtendedSelectRow,
-		mods.SingleSort,
-		mods.Filter,
-		mods.FilterBar,
-		mods.Pagination,
-		mods.PaginationBar,
-		mods.VirtualVScroller
-	];
+	grid.placeAt('gridContainer');
+	grid.startup();
 
 	function showResult(result){
 		registry.byId('resultArea').set('value', result);
@@ -107,7 +121,7 @@ require([
 			});
 		}
 		console.log(args);
-		toCSV(grid, args).then(showResult, onError, onProgress);
+		grid.exporter.toCSV(args).then(showResult, onError, onProgress);
 	};
 
 	//Test
@@ -197,25 +211,22 @@ require([
 		'"/><label for="allowChooseColumns">Choose Columns</label><br />',
 		'<div id="choosecolumns" style="padding: 5px; display: none;">'
 	];
+	tests = tests.concat(grid.columns().map(function(c){
+		return [
+			'<input id="col-', c.id,
+			'" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true"/><label for="col-',
+			c.id, '">', c.name(), '</label><br />'
+		].join('');
+	}));
+	tests.push([
+		'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportCSV">Export to CSV</div>',
+		'<div id="exportProgress" data-dojo-type="dijit.ProgressBar" style="display: none;" data-dojo-props="',
+			'minimum: 0, maximum: 1',
+		'"></div>'
+	].join(''));
 
-	Deferred.when(parser.parse(), function(){
-		tests = tests.concat(array.map(grid.columns(), function(c){
-			return [
-				'<input id="col-', c.id,
-				'" type="checkbox" data-dojo-type="dijit.form.CheckBox" data-dojo-props="checked: true"/><label for="col-',
-				c.id, '">', c.name(), '</label><br />'
-			].join('');
-		}));
-		tests.push([
-			'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportCSV">Export to CSV</div>',
-			'<div id="exportProgress" data-dojo-type="dijit.ProgressBar" style="display: none;" data-dojo-props="',
-				'minimum: 0, maximum: 1',
-			'"></div>'
-		].join(''));
-
-		var tp = new TestPane({});
-		tp.placeAt('ctrlPane');
-		tp.addTestSet('Export', tests.join(''));
-		tp.startup();
-	});
+	var tp = new TestPane({});
+	tp.placeAt('ctrlPane');
+	tp.addTestSet('Export', tests.join(''));
+	tp.startup();
 });

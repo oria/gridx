@@ -1,4 +1,4 @@
-require([
+define([
 	'dojo/_base/connect',
 	'dojo/_base/array',
 	'dojo/dom',
@@ -14,13 +14,13 @@ require([
 	'gridx/modules/extendedSelect/Column',
 	'gridx/modules/extendedSelect/Cell',
 	'gridx/modules/VirtualVScroller',
-	'dojo/parser',
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
 ], function(connect, array, dom, Grid, Cache, dataSource, storeFactory, TestPane, Focus,
-		RowHeader, ColumnResizer, ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell, VirtualVScroller, parser){
+		RowHeader, ColumnResizer, ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell, VirtualVScroller
+	){
 
-grid = new Grid({
+	grid = new Grid({
 	id: 'grid',
 	cacheClass: Cache,
 	store: storeFactory({
@@ -56,7 +56,7 @@ connect.connect(grid.select.cell, 'onSelectionChange', function(selected){
 	});
 	dom.byId('cellStatus').value = selected.join("\n");
 });
-parser.parse();
+
 });
 function selectRow(toSelect){
 	var start = dijit.byId('rowStart').get('value');
@@ -105,4 +105,3 @@ function selectAllCell(toSelect){
 		grid.select.cell.clear();
 	}
 }
-

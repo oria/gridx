@@ -12,9 +12,8 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/stores/TreeJsonRestStore',
 	'gridx/tests/support/stores/HugeStore',
-	'gridx/allModules',
+	'gridx/tests/support/modules',
 	'dojo/store/Memory',
-	'dojo/store/JsonRest',
 	'gridx/tests/support/GridConfig',
 	'dijit/Menu',
 	'dijit/MenuItem',
@@ -26,19 +25,7 @@ require([
 	SyncCache, AsyncCache,
 	musicData, testData, treeColumnarData, treeNestedData,
 	itemStore, jsonStore, memoryStore, treeJsonStore, hugeStore,
-	mods, Memory, JsonRest, GridConfig){
-
-var treeStore = itemStore({
-	dataSource: treeColumnarData,
-	maxLevel: 3,
-	maxChildrenCount: 10
-});
-treeStore.hasChildren = function(id, item){
-	return item && treeStore.getValues(item, 'children').length;
-};
-treeStore.getChildren = function(item){
-	return treeStore.getValues(item, 'children');
-};
+	mods, Memory, GridConfig){
 
 var stores = {
 	"music store": {
@@ -62,29 +49,11 @@ var stores = {
 			'layout 2': testData.layouts[1]
 		}
 	},
-	"empty store": {
-		store: memoryStore({
-			dataSource: testData,
-			size: 0
-		}), 
-		layouts: {
-			'layout 1': testData.layouts[0],
-			'layout 2': testData.layouts[1]
-		}
-	},
-	"error store": {
-		isServerSide: true,
-		store: new JsonRest({}),
-		layouts: {
-			'layout 1': testData.layouts[0],
-			'layout 2': testData.layouts[1]
-		}
-	},
 	"server store": {
 		isServerSide: true,
 		store: jsonStore({
 			path: './support/stores',
-			size: 1000
+			size: 10000
 		}),
 		layouts: {
 			'layout 1': testData.layouts[0],
@@ -113,8 +82,12 @@ var stores = {
 		}
 	},
 	"tree columnar store": {
-		store: treeStore,
-		layouts: {
+		store: itemStore({
+			dataSource: treeColumnarData,
+			maxLevel: 3,
+			maxChildrenCount: 10
+		}),
+		layouts: { 
 			'layout 1': treeColumnarData.layouts[0]
 		},
 		onChange: function(checked, cfg){
@@ -161,108 +134,19 @@ var caches = {
 };
 
 var gridAttrs = {
-	cacheSize: {
-		type: 'number',
-		value: -1
-	},
-	pageSize: {
-		type: 'number',
-		value: 100
-	},
-	baseSort: {
-		type: 'json',
-		value: '[{attribute: "Genre", descending: true}]'
-	},
-	moveFieldDescending: {
-		type: 'bool'
-	},
+	//Grid
 	autoWidth: {
 		type: 'bool'
 	},
 	autoHeight: {
 		type: 'bool'
 	},
-	autoScrollMargin: {
-		type: 'number',
-		value: 40
-	},
-	headerHidden: {
-		type: 'bool'
-	},
-	headerGroups: {
-		type: 'json',
-		value: '[{name: "group 1", children: 3}, {name: "group 2", children: 2}]'
-	},
-	bodyRowHoverEffect: {
-		type: 'bool'
-	},
-	bodyStuffEmptyCell: {
-		type: 'bool'
-	},
-	bodyRenderWholeRowOnSet: {
-		type: 'bool'
-	},
-	bodyLoadingInfo: {
-		type: 'string',
-		value: "I am loading very hard......"
-	},
-	bodyLoadFailInfo: {
-		type: 'string',
-		value: "!! something is wrong !!"
-	},
-	bodyEmptyInfo: {
-		type: 'string',
-		value: "==EMPTY=="
-	},
-	bodyMaxPageCount: {
-		type: 'number',
-		value: 1
-	},
-	bodyPageSize: {
-		type: 'number',
-		value: 5
-	},
-	bodyLoadMoreLabel: {
-		type: 'string',
-		value: '===Next Page==='
-	},
-	bodyLoadPreviousLabel: {
-		type: 'string',
-		value: '===Previous Page==='
-	},
-	columnWidthDefault: {
+	//Header
+	headerDefaultColumnWidth: {
 		type: 'number',
 		value: 50
 	},
-	columnWidthAutoResize: {
-		type: 'bool'
-	},
-	moveColumnMoveSelected: {
-		type: 'bool'
-	},
-	moveRowMoveSelected: {
-		type: 'bool'
-	},
-	dndColumnDelay: {
-		type: 'number',
-		value: 1000
-	},
-	dndColumnEnabled: {
-		type: 'bool'
-	},
-	dndColumnCanRearrange: {
-		type: 'bool'
-	},
-	dndRowDelay: {
-		type: 'number',
-		value: 1000
-	},
-	dndRowEnabled: {
-		type: 'bool'
-	},
-	dndRowCanRearrange: {
-		type: 'bool'
-	},
+	//VScroller
 	vScrollerLazy: {
 		type: 'bool'
 	},
@@ -274,6 +158,7 @@ var gridAttrs = {
 		type: 'number',
 		value: 5
 	},
+	//ColumnResizer
 	columnResizerMinWidth: {
 		type: 'number',
 		value: 10
@@ -282,33 +167,16 @@ var gridAttrs = {
 		type: 'number',
 		value: 20
 	},
-	columnResizerStep: {
-		type: 'number',
-		value: 10
-	},
+	//Tree
 	treeNested: {
 		type: 'bool'
 	},
-	treeExpandoPadding: {
-		type: 'number',
-		value: 5
-	},
-	treeExpandLevel: {
+	//ColumnLock
+	columnLockCount: {
 		type: 'number',
 		value: 1
 	},
-	columnLockCount: {
-		type: 'number',
-		value: 2
-	},
-	rowLockCount: {
-		type: 'number',
-		value: 2
-	},
-	hiddenColumnsInit: {
-		type: 'json',
-		value: '["1", "2"]'
-	},
+	//Dod
 	dodUseAnimation: {
 		type: 'bool'
 	},
@@ -325,19 +193,18 @@ var gridAttrs = {
 	dodAutoClose: {
 		type: 'bool'
 	},
-	cellWidgetBackupCount: {
-		type: 'number',
-		value: 0
-	},
-	sortInitialOrder: {
+	//Sort
+	sortPreSort: {
 		type: 'json',
-		value: '[{colId: "id", descending: true}]'
+		value: '[{colId: "1", descending: true}]'
 	},
+	//filterBar
 	filterBarMaxRuleCount: {
 		type: 'number',
 		value:0
 	},
-	filterBarCloseButton:{
+	
+	filterBarCloseFilterBarButton:{
 		type: 'bool',
 		value: true
 	},
@@ -353,10 +220,8 @@ var gridAttrs = {
 		type: 'number',
 		value: 2
 	},
-	filterBarItemsName: {
-		type: 'string',
-		value: 'things'
-	},
+	
+	//Pagination
 	paginationInitialPage: {
 		type: 'number',
 		value: 0
@@ -365,14 +230,18 @@ var gridAttrs = {
 		type: 'number',
 		value: 10
 	},
+
+	//PaginationBar
 	paginationBarVisibleSteppers: {
 		type: 'number',
 		value: 5
 	},
+
 	paginationBarSizeSeparator: {
 		type: 'string',
 		value: '|'
 	},
+
 	paginationBarPosition: {
 		type: 'enum',
 		values: {
@@ -380,94 +249,58 @@ var gridAttrs = {
 			'bottom': 'bottom'
 		}
 	},
+
 	paginationBarSizes: {
 		type: 'json',
 		value: '[10, 20, 40, 80, 0]'
 	},
+
 	paginationBarDescription: {
 		type: 'bool'
 	},
+
 	paginationBarSizeSwitch: {
 		type: 'bool'
 	},
+
 	paginationBarStepper: {
 		type: 'bool'
 	},
+
 	paginationBarGotoButton: {
 		type: 'bool'
 	},
+
+	//RowHeader
 	rowHeaderWidth: {
 		type: 'string',
 		value: '20px'
 	},
-	persistEnabled: {
-		type: 'bool'
-	},
-	persistKey: {
-		type: 'string',
-		value: 'my-grid-persist'
-	},
-	indirectSelectAll: {
-		type: 'bool'
-	},
-	indirectSelectWidth: {
-		type: 'string',
-		value: '40px'
-	},
-	indirectSelectPosition: {
-		type: 'number',
-		value: 2
-	},
+
+	//SelectRow
 	selectRowTriggerOnCell: {
-		type: 'bool'
-	},
-	selectRowTreeMode: {
 		type: 'bool'
 	},
 	selectRowMultiple: {
 		type: 'bool'
 	},
-	selectRowEnabled: {
-		type: 'bool'
-	},
-	selectRowCanSwept: {
-		type: 'bool'
-	},
-	selectRowHoldingCtrl: {
-		type: 'bool'
-	},
-	selectRowHoldingShift: {
-		type: 'bool'
-	},
+	//SelectColumn
 	selectColumnMultiple: {
 		type: 'bool'
 	},
-	selectColumnEnabled: {
-		type: 'bool'
-	},
-	selectColumnCanSwept: {
-		type: 'bool'
-	},
-	selectColumnHoldingCtrl: {
-		type: 'bool'
-	},
-	selectColumnHoldingShift: {
-		type: 'bool'
-	},
-	selectCellEnabled: {
-		type: 'bool'
-	},
+	//SelectCell
 	selectCellMultiple: {
 		type: 'bool'
 	},
-	selectCellCanSwept: {
+
+	//MoveCell
+	moveCellCopy: {
 		type: 'bool'
 	},
-	selectCellHoldingCtrl: {
-		type: 'bool'
-	},
-	selectCellHoldingShift: {
-		type: 'bool'
+	//TitleBar
+	titleBarLabel:{
+		type: 'string',
+		value: 'All in one grid'
 	}
 };
 
@@ -476,96 +309,105 @@ var modelExts = {
 };
 
 var modules = {
-	vScroller: {
+	"vertical scroll": {
 		//defaultCheck: true,
 		virtual: mods.VirtualVScroller,
-		touch: mods.TouchVScroller
+		"non virtual": mods.VScroller
+	},
+	focus: {
+//        defaultCheck: true,
+		'default': mods.Focus
 	},
 	columnResizer: {
 		'default': mods.ColumnResizer
 	},
-	persist: {
+	persistence: {
 		'default': mods.Persist
+	},
+	toolBar: {
+		'default': mods.ToolBar
 	},
 	sort: {
 		single: mods.SingleSort,
 		nested: mods.NestedSort
 	},
-	columnLock: {
+	"export CSV": {
+		"default": mods.ExportCSV
+	},
+	"export Table": {
+		"default": mods.ExportTable
+	},
+	"print": {
+		"default": mods.Printer
+	},
+	"column lock": {
 		"default": mods.ColumnLock
 	},
-	rowLock: {
-		"default": mods.RowLock
-	},
-	dod: {
-		"default": mods.Dod
-	},
-	header: {
-		"groups": mods.GroupHeader
-	},
-	headerMenu: {
-		"default": mods.HeaderMenu
-	},
-	body: {
-		"paged": mods.PagedBody
-	},
-	hiddenColumns: {
-		"default": mods.HiddenColumns
-	},
-	rowHeader: {
+	"row header": {
 		"defalt": mods.RowHeader
 	},
-	indirectSelection: {
-		"as row header": mods.IndirectSelect,
-		"as column": mods.IndirectSelectColumn
+	"indirect selection": {
+		"defalt": mods.IndirectSelect
 	},
-	selectRow: {
+	"row select": {
 		basic: mods.SelectRow,
 		extended: mods.ExtendedSelectRow
 	},
-	selectColumn: {
+	"column select": {
 		basic: mods.SelectColumn,
 		extended: mods.ExtendedSelectColumn
 	},
-	selectCell: {
+	"cell select": {
 		basic: mods.SelectCell,
 		extended: mods.ExtendedSelectCell
 	},
-	moveRow: {
+	"row move api": {
 		"default": mods.MoveRow
 	},
-	moveColumn: {
+	"column move api": {
 		"default": mods.MoveColumn
 	},
-	dndRow: {
+//    "cell move api": {
+//        "default": mods.MoveCell
+//    },
+	"row dnd": {
 		"default": mods.DndRow
 	},
-	dndColumn: {
+	"column dnd": {
 		"default": mods.DndColumn
 	},
-	pagination: {
+//    "cell dnd": {
+//        "default": mods.DndCell
+//    },
+	"pagination api": {
 		"default": mods.Pagination
 	},
-	paginationBar: {
-		"link button": mods.PaginationBar,
+	"pagination bar": {
+		"default": mods.PaginationBar,
 		"drop down": mods.PaginationBarDD
 	},
-	filter: {
+	"filter api": {
 		"default": mods.Filter
 	},
-	filterBar: {
+	"filter bar": {
 		"default": mods.FilterBar
 	},
-	cellWidget: {
+	"widget in cell": {
 		"default": mods.CellWidget
 	},
-	edit: {
+	"edit": {
 		"default": mods.Edit
 	},
-	tree: {
+	"title bar": {
+		"default": mods.TitleBar
+	},
+	"tree": {
 		"default": mods.Tree
 	},
-	menu: {
+	"summary bar": {
+		"default": mods.SummaryBar
+	},
+	'menu': {
 		"default": mods.Menu
 	}
 };

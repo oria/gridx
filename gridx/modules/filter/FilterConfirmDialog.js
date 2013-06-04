@@ -6,11 +6,6 @@ define([
 	"dojo/i18n!../../nls/FilterBar"
 ], function(declare, string, Dialog, template, i18n){
 
-/*=====
-	return declare([], {
-	});
-=====*/
-
 	return declare(Dialog, {
 		title: i18n.clearFilterDialogTitle,
 		cssClass: 'gridxFilterConfirmDialog',

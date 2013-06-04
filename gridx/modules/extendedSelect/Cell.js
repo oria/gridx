@@ -1,9 +1,7 @@
 define([
-/*====="../../core/Cell", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/event",
-	"dojo/query",
+	"dojo/_base/query",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
@@ -12,28 +10,24 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_RowCellBase"
-], function(/*=====Cell, =====*/declare, array, event, query, lang, Deferred, has, domClass, mouse, keys, _Module, _RowCellBase){
+], function(declare, array, query, lang, Deferred, sniff, domClass, mouse, keys, _Module, _RowCellBase){
 
-/*=====
-	Cell.select = function(){
-		// summary:
-		//		Select this cell.
-	};
-	Cell.deselect = function(){
-		// summary:
-		//		Deselect this cell.
-	};
-	Cell.isSelected = function(){
-		// summary:
-		//		Check if this cell is selected.
-	};
+	var isArrayLike = lang.isArrayLike;
 
-	return declare(_RowCellBase, {
+	function createItem(rowId, visualIndex, columnId, columnIndex){
+		return {
+			rid: rowId,
+			r: visualIndex,
+			cid: columnId,
+			c: columnIndex
+		};
+	}
+
+	return declare(/*===== "gridx.modules.extendedSelect.Cell", =====*/_RowCellBase, {
 		// summary:
 		//		Provides advanced cell selections.
 		// description:
 		//		This module provides an advanced way for selecting cells by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple cell.
-		//		This module uses gridx/core/model/extensions/Mark.
 		//
 		// example:
 		//		1. Use select api on cell object obtained from grid.cell(i,j)
@@ -48,82 +42,13 @@ define([
 		//		|	grid.select.cell.getSelected();//[]
 		//		|	grid.select.cell.clear();
 
-		selectById: function(rowId, columnId){
-			// summary:
-			//		Select a cell by (rowId, columnId)
-		},
-
-		deselectById: function(rowId, columnId){
-			// summary:
-			//		Deselect a cell by (rowId, columnId)
-		},
-
-		selectByIndex: function(rowIndex, columnIndex){
-			// summary:
-			//		Select a cell by (rowIndex, columnIndex);
-			//		This function can also be used to select multiple cells:
-			//	|	//Selecting several individual cells:
-			//	|	grid.select.row.selectByIndex([rowIndex1, columnIndex1], [rowIndex2, columnIndex2], [rowIndex3, columnIndex3]);
-			//	|	//Selecting a range of cells:
-			//	|	grid.select.row.selectByIndex(rowStartIndex, columnStartIndex, rowEndIndex, columnEndIndex);
-			//	|	//Selecting several ranges of cells:
-			//	|	grid.select.row.selectByIndex(
-			//	|		[rowStartIndex1, columnStartIndex1, rowEndIndex1, columnEndIndex1],
-			//	|		[rowStartIndex2, columnStartIndex2, rowEndIndex2, columnEndIndex2]
-			//	|	);
-			// rowIndex: Integer
-			//		Row index of this cell
-			// rowIndex: Integer
-			//		Column index of this cell
-		},
-
-		deSelectByIndex: function(rowIndex, columnIndex){
-			// summary:
-			//		Deselect a cell by (rowIndex, columnIndex)
-			//		This function can also be used to deselect multiple cells. Please refer to selectByIndex().
-			// rowIndex: Integer
-			//		Row index of this cell
-			// rowIndex: Integer
-			//		Column index of this cell
-		},
-
-		getSelected: function(){
-			// summary:
-			//		Get an array of selected cells e.g.[['row1', 'col1'], ['row2', 'col2']]
-		},
-
-		clear: function(){
-			// summary:
-			//		Deselected all selected cells
-		},
-
-		isSelected: function(rowId, columnId){
-			// summary:
-			//		Check if the given cell is selected.
-			// rowId: String|Number
-			//		Row ID of the cell
-			// columnId: String|Number
-			//		Column ID of the cell
-			// returns:
-			//		True if selected, false if not.
-		}
-	});
-=====*/
-
-	var isArrayLike = lang.isArrayLike;
-
-	function createItem(rowId, visualIndex, columnId, columnIndex){
-		return {
-			rid: rowId,
-			r: visualIndex,
-			cid: columnId,
-			c: columnIndex
-		};
-	}
-
-	return declare(_RowCellBase, {
+		// name: [readonly] String
+		//		module name
 		name: 'selectCell',
 
+		// cellMixin: Object
+		//		A map of functions to be mixed into grid cell object, so that we can use select api on column object directly
+		//		- grid.cell(1,1).select() | deselect() | isSelected();
 		cellMixin: {
 			select: function(){
 				this.grid.select.cell.selectByIndex(this.row.index(), this.column.index());
@@ -139,7 +64,30 @@ define([
 		},
 		
 		//Public-----------------------------------------------------------------
+/*=====
+		selectById: function(rowId, columnId){
+			// summary:
+			//		Select a cell by (rowId, columnId)
+		},
+		
+		deselectById: function(columnId){
+			// summary:
+			//		Deselect a cell by (rowId, columnId)
+		},
+		
+		selectByIndex: function(rowIndex, columnIndex){
+			// summary:
+			//		Select a cess by (rowIndex, columnIndex)
+		},
+		
+		deSelectByIndex: function(rowIndex, columnIndex){
+			// summary:
+			//		Deselect a cell by (rowIndex, columnIndex)
+		},		
+=====*/
 		getSelected: function(){
+			// summary:
+			//		Get an array of selected cells e.g.[['row1', 'col1'], ['row2', 'col2']]
 			var t = this, res = [];
 			array.forEach(t.grid._columns, function(col){
 				var ids = t.model.getMarkedIds(t._getMarkType(col.id));
@@ -151,6 +99,8 @@ define([
 		},
 
 		clear: function(silent){
+			// summary:
+			//		Deselected all selected cells	
 			var t = this;
 			query(".gridxCellSelected", t.grid.bodyNode).forEach(function(node){
 				domClass.remove(node, 'gridxCellSelected');
@@ -166,6 +116,8 @@ define([
 		},
 
 		isSelected: function(rowId, columnId){
+			// summary:
+			//		Check if the given cell is selected.			
 			return this.model.getMark(rowId, this._getMarkType(columnId));
 		},
 		
@@ -211,7 +163,7 @@ define([
 				m = t.model,
 				g = t.grid,
 				columns = g._columns,
-				view = g.view,
+				body = g.body,
 				i, j, col, type, rowInfo;
 			array.forEach(args, function(arg){
 				if(arg._range){
@@ -223,7 +175,7 @@ define([
 					for(i = c1; i <= c2; ++i){
 						col = columns[i];
 						if(col){
-							rowInfo = view.getRowInfo({visualIndex: a});
+							rowInfo = body.getRowInfo({visualIndex: a});
 							a = rowInfo.rowIndex;
 							type = t._getMarkType(col.id);
 							for(j = 0; j < n; ++j){
@@ -234,7 +186,7 @@ define([
 				}else{
 					col = columns[arg[1]];
 					if(col){
-						rowInfo = view.getRowInfo({visualIndex: arg[0]});
+						rowInfo = body.getRowInfo({visualIndex: arg[0]});
 						i = rowInfo.rowIndex;
 						m.markByIndex(i, toSelect, t._getMarkType(col.id), rowInfo.parentId);
 					}
@@ -248,21 +200,15 @@ define([
 			t.inherited(arguments);
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
-					if(mouse.isLeft(e) && (
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner'))){
+					if(mouse.isLeft(e)){
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
-						if(!e.shiftKey && !t.arg('canSwept')){
-							t._end();
-						}
 					}
 				}],
 				[g, 'onCellMouseOver', function(e){
 					t._highlight(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex));
 				}],
-				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
+				[g, sniff('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE){
-						event.stop(e);
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
@@ -285,7 +231,7 @@ define([
 						if(m.getMark(rid, type) || (t._selecting && t._toSelect &&
 							t._inRange(i, t._startItem.c, t._currentItem.c, 1) && //1 as true
 							t._inRange(j, t._startItem.r, t._currentItem.r, 1))){	//1 as true
-							domClass.add(query('[visualindex="' + j + '"] [colid="' + g._escapeId(cid) + '"]', g.bodyNode)[0], 'gridxCellSelected');
+							domClass.add(query('[visualindex="' + j + '"] [colid="' + cid + '"]', g.bodyNode)[0], 'gridxCellSelected');
 						}
 					}
 				}
@@ -295,11 +241,10 @@ define([
 		_onMark: function(id, toMark, oldState, type){
 			var t = this;
 			if(lang.isString(type) && !t._marking && type.indexOf(t._markTypePrefix) === 0){
-				var escapeId = t.grid._escapeId,
-					rowNode = query('[rowid="' + escapeId(id) + '"]', t.grid.bodyNode)[0];
+				var rowNode = query('[rowid="' + id + '"]', t.grid.bodyNode)[0];
 				if(rowNode){
 					var cid = type.substr(t._markTypePrefix.length),
-						node = query('[colid="' + escapeId(cid) + '"]', rowNode)[0];
+						node = query('[colid="' + cid + '"]', rowNode)[0];
 					if(node){
 						domClass.toggle(node, 'gridxCellSelected', toMark);
 					}
@@ -340,7 +285,7 @@ define([
 					t._highlightSingle(target, 1);	//1 as true
 					//In IE, when setSelectable(false), the onfocusin event will not fire on doc, so the focus border is gone.
 					//So refocus it here.
-					if(has('ie')){
+					if(sniff('ie')){
 						t._focus(target);
 					}
 				}else{
@@ -415,10 +360,9 @@ define([
 		_addToSelected: function(start, end, toSelect){
 			var t = this,
 				model = t.model,
-				view = t.grid.view,
 				d = new Deferred(),
 				lastEndItem = t._lastEndItem,
-				a, b, colDir, i, j, rowInfo,
+				a, b, colDir, i, j,
 				packs = [],
 				finish = function(){
 					model.when().then(function(){
@@ -432,9 +376,8 @@ define([
 				if(t._inRange(end.r, start.r, lastEndItem.r)){
 					a = Math.min(end.r, lastEndItem.r);
 					b = Math.max(end.r, lastEndItem.r);
-					rowInfo = view.getRowInfo({visualIndex: a + 1});
 					packs.push({
-						start: rowInfo.rowIndex,
+						start: a + 1,
 						count: b - a,
 						columnStart: start.c,
 						columnEnd: lastEndItem.c
@@ -444,9 +387,8 @@ define([
 					colDir = end.c < lastEndItem.c ? 1 : -1;
 					a = Math.min(start.r, end.r);
 					b = Math.max(start.r, end.r);
-					rowInfo = view.getRowInfo({visualIndex: a});
 					packs.push({
-						start: rowInfo.rowIndex,
+						start: a,
 						count: b - a + 1,
 						columnStart: end.c + colDir,
 						columnEnd: lastEndItem.c
@@ -460,8 +402,7 @@ define([
 				a = Math.min(start.r, end.r);
 				b = Math.max(start.r, end.r);
 				for(j = a; j <= b; ++j){
-					rowInfo = view.getRowInfo({visualIndex: j});
-					model.markByIndex(rowInfo.rowIndex, toSelect, type, rowInfo.parentId);
+					model.markByIndex(j, toSelect, type);
 				}
 			}
 			if(packs.length){

@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>New Grid Menu Test</title>
+	</head>
+	<style type="text/css">
+		@import "../../../util/doh/robot/robot.css";
+	</style>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript">
+		require(['dojo'], function(dojo){
+			dojo.ready(function(){
+				doh.robot.initRobot('../test_grid_menu.html');
+				
+				doh.register("GridX.Menu", [
+					{name: 'a', timeout: 10000, runTest: function(t){
+					}}
+				]);
+				doh.run();
+			});
+		});
+	</script>
+	<body class='claro'>
+	</body>
+</html>
+

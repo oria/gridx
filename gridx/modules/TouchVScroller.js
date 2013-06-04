@@ -1,89 +1,28 @@
 define([
 	"dojo/_base/kernel",
-	"dojo/_base/Deferred",
-	"dojo/_base/sniff",
 	"dojo/_base/declare",
-	"dojo/query",
-	"dojo/dom-class",
+	"dojo/dom-style",
+	"../core/_Module",
 	"./VScroller",
-	"dojox/mobile/scrollable"
-], function(kernel, Deferred, has, declare, query, domClass, VScroller, Scrollable){
+	"dojox/mobile/_ScrollableMixin"
+], function(kernel, declare, domStyle, _Module, VScroller){
 	kernel.experimental('gridx/modules/TouchVScroller');
 
-/*=====
 	return declare(VScroller, {
-		// summary:
-		//		A vertical scroller only for touch devices.
-		// description:
-		//		Using dojox/mobile/scrollable, and no lazy-rendering (all rows are rendered out).
-	});
-=====*/
-
-	return declare(VScroller, {
-		scrollToRow: function(rowVisualIndex, toTop){
-			if(has('ios') || has('android')){
-				var d = new Deferred(),
-					rowNode = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
-				if(rowNode){
-					console.log('scroll into view: ' + rowNode.getAttribute('rowid'));
-					this._scrollable.scrollIntoView(rowNode, toTop);
-				}
-				d.callback();
-				return d;
-			}
-			return this.inherited(arguments);
-		},
-
 		_init: function(){
-			if(has('ios') || has('android')){
-				var t = this,
-					g = t.grid,
-					view = g.view,
-					h = g.header.innerNode,
-					mainNode = g.mainNode,
-					bodyNode = g.bodyNode,
-					headerTable = h.firstChild,
-					scrollable = t._scrollable = new Scrollable();
-				domClass.add(g.domNode, 'gridxTouchVScroller');
-				h.style.height = headerTable.offsetHeight + 'px';
-				scrollable.init({
-					domNode: mainNode,
-					containerNode: bodyNode,
-					scrollDir: g.hScrollerNode.style.display == 'none' ? 'v' : 'vh',
-					noResize: true
-				});
-				t.aspect(scrollable, 'scrollTo', function(to){
-					if(typeof to.x == "number"){
-						headerTable.style.webkitTransform = scrollable.makeTranslateStr({x: to.x});
-					}
-				});
-				t.aspect(scrollable, 'slideTo', function(to, duration, easing){
-					scrollable._runSlideAnimation({
-						x: scrollable.getPos().x
-					}, {
-						x: to.x
-					}, duration, easing, headerTable, 2);	//2 means it's a containerNode
-				});
-				t.aspect(scrollable, 'stopAnimation', function(){
-					domClass.remove(headerTable, 'mblScrollableScrollTo2');
-				});
-				t.aspect(g.hScroller, 'refresh', function(){
-					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
-					scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
-				});
-				t._onBodyChange = function(){
-					t._update();
-				};
-				t._onForcedScroll = function(){};
-				t.model.when({
-					start: view.rootStart,
-					count: view.rootCount
-				}, function(){
-					g.body.renderRows(0, view.visualCount);
-				});
-			}else{
-				this.inherited(arguments);
-			}
+			var g = this.grid,
+				mn = g.mainNode,
+				bn = g.bodyNode,
+				scrollable = new dojox.mobile.scrollable(dojo, dojox);
+			domStyle.set(this.domNode, "display", "none");
+			domStyle.set(mn, "overflow", "hidden");
+			domStyle.set(bn, "height", "auto");
+			domStyle.set(g.headerNode.firstChild.firstChild, "margin-right", "0px"); // FIXME: Header assumes VScroller
+			scrollable.init({
+				domNode: mn, 
+				containerNode: bn, 
+				noResize: true
+			});
 		}
 	});
 });

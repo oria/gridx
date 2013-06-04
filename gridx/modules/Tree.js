@@ -9,105 +9,194 @@ define([
 	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
+	"../core/util",
 	"../core/_Module"
-//    "dojo/NodeList-dom",
-//    "dojo/NodeList-traverse"
-], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
+], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
 	kernel.experimental('gridx/modules/Tree');
 
-/*=====
-	Row.canExpand = function(){
-		// summary:
-		//		Whether this row can be expanded.
-		// returns:
-		//		True if can, false if can not.
-	};
-	Row.isExpanded = function(){
-		// summary:
-		//		Whether this row is expanded.
-		// returns:
-		//		True if expanded. False if not.
-	};
-	Row.expand = function(){
-		// summary:
-		//		Expand this row.
-		// returns:
-		//		A Deferred object
-	};
-	Row.collapse = function(){
-		// summary:
-		//		Collapse this row.
-		// returns:
-		//		A Deferred object
-	};
-	Row.expandRecursive = function(){
-		// summary:
-		//		Recursively expand this row.
-		// returns:
-		//		A Deferred object
-	};
-	Row.collapseRecursive = function(){
-		// summary:
-		//		Recursively collapse this row.
-		// returns:
-		//		A Deferred object
-	};
+	function isExpando(cellNode){
+		var n = cellNode.firstChild;
+		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
+			!domClass.contains(n, 'gridxTreeExpandoLoading');
+	}
 
-	var Tree = declare(_Module, {
+	_Module._markupAttrs.push('!expandLevel');
+
+	return declare(/*===== "gridx.modules.Tree", =====*/_Module, {
 		// summary:
-		//		This module manages row expansion/collapsing in tree grid.
+		//		Tree Grid module.
 		// description:
-		//		To use tree grid, the store must have 2 extra methods: hasChildren and getChildren.
-		//		Please refer to Tree.__TreeStoreMixin for more details on these 2 methods.
-		//		
-		//		In tree grid, an expando appears on a row that has child rows. By clicking the expando,
-		//		the row is expanded to show its child rows below it, and the expando becomes expanded status.
-		//		By clicking the expanded expando, the expanded row is then collapsed and all its child rows 
-		//		are hidden. If a descentant row of a collapsed row is expanded, it will appear expanded when that
-		//		collapsed row is expanded (that means the child row expansion status is maintained).
-		//		
-		//		Different levels of expandos can either appear in one column or in several different columns.
-		//		If different expandos appear in different columns, it is called "nested". This can be set using
-		//		the "nested" Boolean parameter.
-		//		
-		//		The default position of the expando is in the first column, but this position can also be changed
-		//		by setting the "expandLevel" parameter in column definition. If "nested" is false, the expandos will 
-		//		appear in the first column with truthy "expandLevel" parameter. If "nested" is true, the expando
-		//		of any 1st level row will be shown in the column with "expandLevel" equal to 1, and the expando of 
-		//		any 2nd level row will be shown in the column width "expandLevel" equal to 2, and so on.
-		//		
-		//		The expansion/collapsing of a row can also be controlled by keyboard when the focus is on the cell 
-		//		with the expando. CTRL+RIGHT_ARROW to expand and CTRL+LEFT_ARROW to collapse. If in RTL mode, the ARROW
-		//		keys are reversed.
+		//		This module is used for creation, destruction and management of the Tree Grid.
+		//		There are two kind of Tree Grid: columnar or nested, it will be indicated by
+		//		the argument `type`, and the layout of the TreeGrid will be defined by extended
+		//		`structure` argument.
 		// example:
-		//		Define the hasChildren and getChildren methods for store (suppose the "children" field contains the child rows):
-		//		If the store is ItemFileReadStore:
-		//	|	store.hasChildren = function(id, item){
-		//	|		return item && store.getValues(item, 'children').length;
-		//	|	};
-		//	|	store.getChildren = function(item){
-		//	|		return store.getValues(item, 'children');
-		//	|	};
-		//		If the store is Memory store:
-		//	|	store.hasChildren = function(id, item){
-		//	|		return item && item.children && item.children.length;
-		//	|	};
-		//	|	store.getChildren = function(item){
-		//	|		return item.children;
-		//	|	};
-		//		If the child rows need to be fetched from server side:
-		//	|	store.hasChildren = function(id, item){
-		//	|		return item&& item.children;	//This children field only indicates whether the row has children.
-		//	|	};
-		//	|	store.getChildren = function(item){
-		//	|		var d = new Deferred();
-		//	|		var children = [];
-		//	|		dojo.request(...).then(function(){
-		//	|			//get the child rows here and populate them into an array.
-		//	|			d.callback(children);
-		//	|		});
-		//	|		return d;
-		//	|	};
+		//		For the columnar Tree Grid, the column which is expandable is indicated by the 
+		//		new added attribute `expandField`, and the value of the `expandField` is one 
+		//		or more attribute names (attributes in the meta data) that specify that item's 
+		//		children.
+		//		See the quick sample below:
+		//
+		//		sample of data source
+		//	|	{ identifier: 'name',
+		//	|	  label: 'name',
+		//	|	  items: [
+		//	|		{ name:'Africa', type:'continent', children: [
+		//	|			{ name:'Egypt', type:'country' }, 
+		//	|			{ name:'Kenya', type:'country', children:[
+		//	|				{ name:'Nairobi', type:'city', adults: 70400, popnum: 2940911 },
+		//	|				{ name:'Mombasa', type:'city', adults: 294091, popnum: 707400 } ]
+		//	|			},
+		//	|			{ name:'Sudan', type:'country', children:
+		//	|				{ name:'Khartoum', type:'city', adults: 480293, popnum: 1200394 } 
+		//	|			} ]
+		//	|		},
+		//	|		{ name:'Asia', type:'continent', children:[
+		//	|			{ name:'China', type:'country' },
+		//	|			{ name:'India', type:'country' },
+		//	|			{ name:'Russia', type:'country' },
+		//	|			{ name:'Mongolia', type:'country' } ]
+		//	|		},
+		//	|		{ name:'Australia', type:'continent', population:'21 million', children:
+		//	|			{ name:'Commonwealth of Australia', type:'country', population:'21 million'}
+		//	|		} ]
+		//	|	}
+		//
+		//		define the grid structure
+		//	|	var structure = [
+		//	|		{name: "Name", field: "name", expandLevel: 'all'},
+		//	|		{name: "Type", field: "type"},
+		//	|		{name: "Population", field: "population"}
+		//	|	];
+		//		
+		//		For the nested TreeGrid, there could be more than one column can be expanded, 
+		//		so the structure might be a little more complicated. There is ONLY one attribute
+		//		name can be assigned to the `expandField` as children, and there would be a 
+		//		attribute called `nestedLevel` to specify the hierarchy of the column.
+		//		A quick sample:
+		//
+		//		sample of data source
+		//		
+		//	|	{ identifier: 'id',
+		//	|	  items: [
+		//	|		{ id: "1", playername: "Player 1", seasons: [
+		//	|			{ id: "2", seasonindex: "Season 1", games: [
+		//	|				{ id: "3", gameindex: "Game 1", quarters: [
+		//	|					{id: "4", point: "3", rebound: "3", assistant: "1"},
+		//	|					{id: "5", point: "5", rebound: "0", assistant: "0"},
+		//	|					{id: "6", point: "0", rebound: "1", assistant: "3"},
+		//	|					{id: "7", point: "2", rebound: "2", assistant: "0"} ]
+		//	|				},
+		//	|				{ id: "8", gameindex: "Game 2", quarters: [
+		//	|					{id: "9", point: "3", rebound: "0", assistant: "2"},
+		//	|					{id: "10", point: "0", rebound: "4", assistant: "1"},
+		//	|					{id: "11", point: "5", rebound: "0", assistant: "1"},
+		//	|					{id: "12", point: "10", rebound: "2", assistant: "0"} ]
+		//	|				} ]
+		//	|			},
+		//	|			{ id: "13", seasonindex: "Season 2" } ]
+		//	|		} ]
+		//	|	}
+		//
+		//		define the tree grid type
+		//	|	treeNested: true;
+		//
+		//		define the grid structure
+		//	|	var structure = [
+		//	|		{name: "Player", field: "playername", expandLevel: 1},
+		//	|		{name: "Season", field: "seasonindex", expandLevel: 2},
+		//	|		{name: "Game", field: "gameindex", expandLevel: 3},
+		//	|		{name: "Point", field: "point"},
+		//	|		{name: "Rebound", field: "rebound"},
+		//	|		{name: "Assistant", field: "assistant"}
+		//	|	];
+		
+		name: "tree",
+
+		constructor: function(){
+			this._clear();
+		},
+	
+		getAPIPath: function(){
+			// tags:
+			//		protected extension
+			return {
+				tree: this
+			};
+		},
+	
+		preload: function(){
+			// tags:
+			//		protected extension
+			var t = this,
+				g = t.grid;
+			if(t.model.treeMarkMode){
+				t.model.treeMarkMode('', true);
+			}
+			g.domNode.setAttribute('role', 'treegrid');
+			t.batchConnect(
+				[g.body, 'collectCellWrapper', '_createCellWrapper'],
+				[g.body, 'onAfterRow', '_onAfterRow'],
+				[g, 'onCellClick', '_onCellClick'],
+				[g, 'setStore', '_clear']);
+			t._initExpandLevel();
+			t._initFocus();
+			if(g.persist){
+				var id,
+					data = g.persist.registerAndLoad('tree', function(){
+						return {
+							openInfo: t._openInfo, 
+							parentOpenInfo: t._parentOpenInfo
+						};
+					});
+				if(data && data.openInfo && data.parentOpenInfo){
+					var openInfo = t._openInfo = data.openInfo,
+						parentOpenInfo = t._parentOpenInfo = data.parentOpenInfo;
+					for(id in openInfo){
+						openInfo[id].openned = parentOpenInfo[id];
+					}
+					t._persisted = 1;
+				}
+			}
+		},
+
+		load: function(args){
+			// tags:
+			//		protected extension
+			var t = this;
+			if(t._persisted){
+				t.loaded.callback();
+			}else{
+				t.model.when({}, function(){
+					t._openInfo[''].count = t.model.size();
+				}).then(function(){
+					t.loaded.callback();
+				});
+			}
+		},
+
+		rowMixin: {
+			canExpand: function(){
+				return this.grid.tree.canExpand(this.id);
+			},
+			isExpanded: function(){
+				return this.grid.tree.isExpanded(this.id);
+			},
+			expand: function(){
+				return this.grid.tree.expand(this.id);
+			},
+			collapse: function(){
+				return this.grid.tree.collapse(this.id);
+			},
+			expandRecursive: function(){
+				return this.grid.expandRecursive(this.id);
+			},
+			collapseRecursive: function(){
+				return this.grid.collapseRecursive(this.id);
+			}
+		},
+	
+		//Public--------------------------------------------------------------------------------
 
 		// nested: Boolean
 		//		If set to true, the tree nodes can be shown in nested mode.
@@ -121,10 +210,6 @@ define([
 		//		The maximum allowed expand level of this tree grid.
 		//		If less than 1, then this is not a tree grid at all.
 		expandLevel: 1 / 0,
-
-		// clearOnSetStore: Boolean
-		//		Whether to clear all the recorded expansion info after setStore.
-		clearOnSetStore: true,
 
 		onExpand: function(id){
 			// summary:
@@ -151,6 +236,11 @@ define([
 			//		The row ID
 			// returns:
 			//		Whether the row can be expanded.
+			var t = this,
+				m = t.model,
+				level = m.treePath(id).length,
+				expandLevel = t.arg('expandLevel');
+			return m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel);
 		},
 	
 		isExpanded: function(id){
@@ -160,18 +250,7 @@ define([
 			//		The row ID
 			// returns:
 			//		Whether the row is expanded.
-		},
-
-		isPaddingCell: function(rowId, columnId){
-			// summary:
-			//		Check wheter a cell is padding cell. Only meaningful in "nested" tree grid.
-			//		By default, in "nested" tree grid, the cells before the current expando cell are all padding cells.
-			//		A padding cell is an empty cell, nothing is shown in the cell, decorator and formatter functions
-			//		are not called on it either.
-			// rowId: String|Number
-			//		The row ID of the cell
-			// columnId: String|Number
-			//		The column ID of the cell
+			return !!this._openInfo[id];	//Boolean
 		},
 
 		expand: function(id, skipUpdateBody){
@@ -184,8 +263,26 @@ define([
 			//		so that several grid operations can be executed altogether.
 			// returns:
 			//		A deferred object indicating whether this expanding process has completed.
+			var d = new Deferred(),
+				t = this;
+			if(id && !t.isExpanded(id)){
+				t.model.when({
+					parentId: id, 
+					start: 0
+				}, function(){
+					t._logicExpand(id);
+				}).then(function(){
+					Deferred.when(t._updateBody(id, skipUpdateBody), function(){
+						d.callback();
+						t.onExpand(id);
+					});
+				});
+			}else{
+				d.callback();
+			}
+			return d;	//dojo.Deferred
 		},
-
+	
 		collapse: function(id, skipUpdateBody){
 			// summary:
 			//		Collapse a row.
@@ -196,8 +293,20 @@ define([
 			//		so that several grid operations can be executed altogether.
 			// returns:
 			//		A deferred object indicating whether this collapsing process has completed.
+			var d = new Deferred(),
+				t = this;
+			if(id && t.isExpanded(id)){
+				t._logicCollapse(id);
+				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
+					d.callback();
+					t.onCollapse(id);
+				});
+			}else{
+				d.callback();
+			}
+			return d;	//dojo.Deferred
 		},
-
+	
 		expandRecursive: function(id, skipUpdateBody){
 			// summary:
 			//		Recursively expand a row and all its descendants.
@@ -208,213 +317,9 @@ define([
 			//		so that several grid operations can be executed altogether.
 			// returns:
 			//		A deferred object indicating whether this expanding process has completed.
-		},
-
-		collapseRecursive: function(id, skipUpdateBody){
-			// summary:
-			//		Recursively collapse a row recursively and all its descendants.
-			// id: String
-			//		The row ID
-			// skipUpdateBody: Boolean
-			//		If set to true the grid will not automatically refresh itself after this method,
-			//		so that several grid operations can be executed altogether.
-			// returns:
-			//		A deferred object indicating whether this collapsing process has completed.
-		}
-	});
-
-	Tree.__ColumnDefinition = declare(Column.__ColumnDefinition, {
-		// expandLevel: Number
-		//		If tree grid is "nested", the expando will be shown in the column whose "expandLevel" equals the
-		//		level of the row. For example, the expando of a root row will be shown in the column whose "expandLevel"
-		//		equals 1. And the child rows of the root row will show their expando in the column with "expandLevel" equals 2,
-		//		and so on.
-		//		If no "expandLevel" is provided for a "nested" tree grid, the first column has "expandLevel" 1, second 2, and so on.
-		//		If tree grid is not "nested", all the expandos will be shown in the first column with truthy "expandLevel".
-		//		If no "expandLevel" is provided for a non-nested tree grid, the first column has all the expandos by default.
-		expandLevel: 0,
-
-		// padding: Boolean
-		//		By default, in "nested" tree grid, the cells before the current expando cell are all padding cells.
-		//		But if some cell matching this condition should not be padding, then this parameter should be
-		//		explicitly set to false for the column of this cell.
-		padding: undefined
-	});
-
-	Tree.__TreeStoreMixin = declare([], {
-		// summary:
-		//		The extra methods for tree store.
-		// description:
-		//		Since the dojo store does not support tree structure by default, some extra methods should be defined to 
-		//		help grid retrieve the child level items.
-
-		hasChildren: function(id, item){
-			// summary:
-			//		Check whether a row has child rows. This function should not throw any error.
-			// id: String|Number
-			//		The row ID
-			// item: Object
-			//		The store item
-			// returns:
-			//		True if the given row has children, false otherwise.
-		},
-
-		getChildren: function(item){
-			// summary:
-			//		Get an array of the child items of the given row item.
-			// item: Object
-			//		The store item
-			// returns:
-			//		An array of the child items of the given row item.
-		}
-	});
-
-	return Tree;
-=====*/
-
-	function isExpando(cellNode){
-		var n = cellNode.firstChild;
-		return n && n.className && domClass.contains(n, 'gridxTreeExpandoCell') &&
-			!domClass.contains(n, 'gridxTreeExpandoLoading');
-	}
-
-	return declare(_Module, {
-		name: "tree",
-
-		forced: ['view'],
-
-		preload: function(){
-			var t = this,
-				g = t.grid;
-			g.domNode.setAttribute('role', 'treegrid');
-			t.aspect(g.body, 'collectCellWrapper', '_createCellWrapper');
-			t.aspect(g.body, 'onAfterRow', '_onAfterRow');
-			t.aspect(g.body, 'onCheckCustomRow', function(row, output){
-				if(!t.nested && t.mergedParentRow){
-					output[row.id] = row.canExpand();
-				}
-			});
-			t.aspect(g.body, 'onBuildCustomRow', function(row, output){
-				output[row.id] = row.id;
-			});
-			t.aspect(g, 'onCellClick', '_onCellClick');
-			t.aspect(g, 'onRowClick', function(e){
-				if(!t.nested && t.mergedParentRow){
-					if(t.canExpand(e.rowId)){
-						if(t.isExpanded(e.rowId)){
-							t.collapse(e.rowId);
-						}else{
-							t.expand(e.rowId);
-						}
-					}
-				}
-			});
-			t._initExpandLevel();
-			t._initFocus();
-		},
-
-		rowMixin: {
-			canExpand: function(){
-				return this.grid.tree.canExpand(this.id);
-			},
-			isExpanded: function(){
-				return this.grid.tree.isExpanded(this.id);
-			},
-			expand: function(){
-				return this.grid.tree.expand(this.id);
-			},
-			collapse: function(){
-				return this.grid.tree.collapse(this.id);
-			},
-			expandRecursive: function(){
-				return this.grid.tree.expandRecursive(this.id);
-			},
-			collapseRecursive: function(){
-				return this.grid.tree.collapseRecursive(this.id);
-			}
-		},
-
-		nested: false,
-
-		expandoWidth: 16,
-
-		expandoPadding: 18,
-
-		expandLevel: 1 / 0,
-
-		clearOnSetStore: true,
-
-		mergedParentRow: false,
-
-		onExpand: function(id){},
-
-		onCollapse: function(id){},
-
-		canExpand: function(id){
-			var t = this,
-				m = t.model,
-				level = m.treePath(id).length,
-				expandLevel = t.arg('expandLevel');
-			return m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel);
-		},
-
-		isExpanded: function(id){
-			return !!this.grid.view._openInfo[id];
-		},
-
-		isPaddingCell: function(rowId, colId){
-			var t = this,
-				level = t.model.treePath(rowId).length,
-				c = t.grid._columnsById[colId];
-			if(t.arg('nested') && level > 1 && c.padding !== false){
-				for(var i = 0; i < t.grid._columns.length; ++i){
-					var col = t.grid._columns[i];
-					if(col.expandLevel == level){
-						return c.index < col.index;
-					}
-				}
-			}
-			return false;
-		},
-
-		expand: function(id, skipUpdateBody){
-			var d = new Deferred(),
-				t = this;
-			if(id && !t.isExpanded(id) && t.canExpand(id)){
-				t._beginLoading(id);
-				t.grid.view.logicExpand(id).then(function(){
-					Deferred.when(t._updateBody(id, skipUpdateBody, true), function(){
-						t._endLoading(id);
-						d.callback();
-						t.onExpand(id);
-					});
-				});
-			}else{
-				d.callback();
-			}
-			return d;
-		},
-
-		collapse: function(id, skipUpdateBody){
-			var d = new Deferred(),
-				t = this;
-			if(id && t.isExpanded(id)){
-				t.grid.view.logicCollapse(id);
-				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
-					d.callback();
-					t.onCollapse(id);
-				});
-			}else{
-				d.callback();
-			}
-			return d;
-		},
-
-		expandRecursive: function(id, skipUpdateBody){
 			var t = this,
 				m = t.model,
 				d = new Deferred();
-			t._beginLoading(id);
 			t.expand(id, 1).then(function(){
 				var i, dl = [], size = m.size(id);
 				m.when({start: 0, parentId: id}, function(){
@@ -425,7 +330,6 @@ define([
 				}).then(function(){
 					new DeferredList(dl).then(function(){
 						Deferred.when(t._updateBody(id, skipUpdateBody), function(){
-							t._endLoading(id);
 							d.callback();
 						});
 					});
@@ -433,14 +337,22 @@ define([
 			});
 			return d;
 		},
-
+	
 		collapseRecursive: function(id, skipUpdateBody){
+			// summary:
+			//		Recursively collapse a row recursively and all its descendants.
+			// id: String
+			//		The row ID
+			// skipUpdateBody: Boolean
+			//		If set to true the grid will not automatically refresh itself after this method,
+			//		so that several grid operations can be executed altogether.
+			// returns:
+			//		A deferred object indicating whether this collapsing process has completed.
 			var d = new Deferred(),
 				success = lang.hitch(d, d.callback),
 				fail = lang.hitch(d, d.errback),
 				t = this,
-				view = t.grid.view,
-				info = view._openInfo[id || ''],
+				info = t._openInfo[id || ''],
 				i, dl = [];
 			if(info){
 				for(i = info.openned.length - 1; i >= 0; --i){
@@ -459,11 +371,120 @@ define([
 			return d;
 		},
 
+		refresh: function(){
+			// summary:
+			//		When the row order are changed or rows are filtered, the expand info recorded here will
+			//		be invalid. This method refreshes the expand info by logically re-open all expanded rows,
+			//		and then refresh the grid body.
+			//		When this method is called, no need to call grid.body.refresh() anymore.
+			// returns:
+			//		A Deferred object indicating when this process ends.
+			var t = this,
+				m = t.model,
+				d = new Deferred(),
+				success = lang.hitch(d, d.callback),
+				fail = lang.hitch(d, d.errback),
+				id, ids = [],
+				ranges = [],
+				body = t.grid.body;
+			for(id in t._openInfo){
+				if(m.isId(id)){
+					ids.push(id);
+					ranges.push({
+						parentId: id,
+						start: 0
+					});
+				}
+			}
+			t._clear();
+			m.when(ranges, function(){
+				var size = t._openInfo[''].count = m.size();
+				array.forEach(ids, t._logicExpand, t);
+				body.visualCount = t.getVisualSize(0, size);
+			}).then(function(){
+				body.refresh().then(success, fail);
+			}, fail);
+			return d;
+		},
+	
+		//Package------------------------------------------------------------------------------
+		getRowInfoByVisualIndex: function(visualIndex, rootStart){
+			// summary:
+			//		Get row info (including row index, row id, parent id, etc) by row visual index.
+			// tags:
+			//		package
+			// visualIndex: Integer
+			// rootStart: Integer
+			// returns:
+			//		A row info object
+			var t = this,
+				rootOpenned = t._openInfo[''].openned,
+				root, i;
+			for(i = 0; i < rootOpenned.length; ++i){
+				root = t._openInfo[rootOpenned[i]];
+				if(root.index < rootStart){
+					visualIndex += root.count + 1;
+				}else{
+					break;
+				}
+			}
+			var info = {
+				parentId: '',
+				preCount: 0
+			};
+			while(!info.found){
+				info = t._getChild(visualIndex, info);
+			}
+			return info;	//Object
+		},
+	
+		getVisualIndexByRowInfo: function(parentId, rowIndex, rootStart){
+			// tags:
+			//		package
+			var index = this._getAbsoluteVisualIndex(parentId, rowIndex);
+			return index >= 0 ? index - this._getAbsoluteVisualIndex('', rootStart) : null;
+		},
+	
+		getVisualSize: function(start, count, parentId){
+			// tags:
+			//		package
+			var info = this._openInfo[parentId || ''];
+			if(info){
+				var i, len = info.openned.length, child, size = count;
+				for(i = 0; i < len; ++i){
+					child = this._openInfo[info.openned[i]];
+					if(child.index >= start && child.index < start + count){
+						size += child.count;
+					}
+				}
+				return size;
+			}
+			return 0;
+		},
+	
 		//Private-------------------------------------------------------------------------------
+		//_parentOpenInfo: null,
+	
+		//_openInfo: null,
+	
+		_clear: function(){
+			var openned = [];
+			this._openInfo = {
+				'': {
+					id: '',
+					parentId: null,
+					index: -1,
+					count: 0,
+					openned: openned
+				}
+			};
+			this._parentOpenInfo = {
+				'': openned
+			};
+		},
+
 		_initExpandLevel: function(){
-			var cols = array.filter(this.grid._columns, function(col){
-				return !col.ignore;
-			});
+			var cols = this.grid._columns;
 			if(!array.some(cols, function(col){
 				return col.expandLevel;
 			})){
@@ -480,16 +501,15 @@ define([
 		_createCellWrapper: function(wrappers, rowId, colId){
 			var t = this,
 				col = t.grid._columnsById[colId];
-			if(!col || col.expandLevel){
+			if(col.expandLevel){
 				var isNested = t.arg('nested'),
 					level = t.model.treePath(rowId).length,
 					expandLevel = t.arg('expandLevel');
-				if((!isNested || (col && col.expandLevel == level)) && 
+				if((!isNested || col.expandLevel == level) && 
 						(!(expandLevel > 0) || level <= expandLevel + 1)){
 					var hasChildren = t.model.hasChildren(rowId),
 						isOpen = t.isExpanded(rowId),
 						pad = 0,
-						expandoWidth = t.arg('expandoWidth'),
 						singlePad = t.arg('expandoPadding'),
 						ltr = t.grid.isLeftToRight();
 					if(!isNested){
@@ -509,23 +529,23 @@ define([
 						wrap: function(cellData){
 							return ["<div class='gridxTreeExpandoCell ",
 								isOpen ? "gridxTreeExpandoCellOpen" : "",
-								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + expandoWidth, "px;'>",
-								"<div class='gridxTreeExpandoIcon ",
+								"' style='padding-", ltr ? 'left' : 'right', ": ", pad + singlePad, "px;'>",
+								"<span class='gridxTreeExpandoIcon ",
 								hasChildren ? '' : 'gridxTreeExpandoIconNoChildren',
 								"' ",
 								"style='margin-", ltr ? 'left' : 'right', ": ", pad, "px;'>",
-								"<div class='gridxTreeExpandoInner'>",
+								"<span class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
-								"</div></div><div class='gridxTreeExpandoContent gridxCellContent'>",
+								"</span></span><span class='gridxTreeExpandoContent'>",
 								cellData,
-								"</div></div>"
+								"</span></span>"
 							].join('');
 						}
 					});
 				}
 			}
 		},
-
+	
 		_onCellClick: function(e){
 			if(isExpando(e.cellNode)){
 				var t = this,
@@ -539,59 +559,168 @@ define([
 				}
 			}
 		},
-
-		_beginLoading: function(id){
-			var rowNode = this.grid.body.getRowNode({rowId: id});
-			if(rowNode){
-				query('.gridxTreeExpandoCell', rowNode).addClass('gridxTreeExpandoLoading');
-				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
-					node.firstChild.innerHTML = 'o';
-				});
-			}
-		},
-
-		_endLoading: function(id){
-			var rowNode = this.grid.body.getRowNode({rowId: id}),
-				isOpen = this.isExpanded(id);
-			if(rowNode){
-				query('.gridxTreeExpandoCell', rowNode).
-					removeClass('gridxTreeExpandoLoading').
-					toggleClass('gridxTreeExpandoCellOpen', isOpen).
-					closest('.gridxCell').attr('aria-expanded', String(isOpen));
-				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
-					node.firstChild.innerHTML = isOpen ? '-' : '+';
-				});
-				rowNode.setAttribute('aria-expanded', String(isOpen));
-			}
-		},
-
-		_updateBody: function(id, skip, refreshPartial){
+	
+		_updateBody: function(id, skip){
 			var t = this,
-				view = t.grid.view,
 				body = t.grid.body;
+			body.updateRootRange(body.rootStart, body.rootCount);
 			if(!skip){
-				var visualIndex = refreshPartial && id ? 
-					view.getRowInfo({
-						rowIndex: t.model.idToIndex(id),
-						parentId: t.model.parentId(id)
-					}).visualIndex : -1;
-				//When collapsing, the row count in current view decrease, if only render partially,
-				//it is possible that the vertical scroll bar disappear, then the upper unrendered rows will be lost.
-				//So refresh the whole body here to make the upper row also visible.
-				//FIXME: need better solution here.
-				return body.refresh(refreshPartial && visualIndex + 1);
+				var rowNode = body.getRowNode({rowId: id}), n, expando,
+					isOpen = t.isExpanded(id);
+				if(rowNode){
+					n = query('.gridxTreeExpandoCell', rowNode)[0];
+					if(n){
+						expando = query('.gridxTreeExpandoIcon', n)[0];
+						expando.firstChild.innerHTML = 'o';
+						domClass.add(n, 'gridxTreeExpandoLoading');
+					}
+				}
+				var visualIndex = id ? t.getVisualIndexByRowInfo(t.model.treePath(id).pop(), t.model.idToIndex(id), body.rootStart) : -1;
+				return body.refresh(visualIndex + 1).then(function(){
+					if(n){
+						rowNode.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+						expando.firstChild.innerHTML = isOpen ? '-' : '+';
+						domClass.remove(n, 'gridxTreeExpandoLoading');
+						domClass.toggle(n, 'gridxTreeExpandoCellOpen', isOpen);
+					}
+				});
 			}
 			return null;
+		},
+
+		_getAbsoluteVisualIndex: function(parentId, rowIndex){
+			var info = this._openInfo[parentId || ''];
+			if(info){
+				var preCount = 0,
+					openInfo = this._openInfo,
+					func = function(info){
+						preCount += rowIndex;
+						var child, i;
+						for(i = 0; i < info.openned.length; ++i){
+							child = openInfo[info.openned[i]];
+							if(child.index < rowIndex){
+								preCount += child.count;
+							}else{
+								break;
+							}
+						}
+						rowIndex = info.index;
+						if(info.id){
+							preCount++;
+						}
+						return openInfo[info.parentId];
+					};
+				while(info){
+					info = func(info);
+				}
+				return preCount;
+			}
+			return -1;
+		},
+	
+		_logicExpand: function(id){
+			var t = this,
+				m = t.model,
+				treePath = m.treePath(id),
+				level = treePath.length,
+				expandLevel = t.arg('expandLevel');
+			if(m.hasChildren(id) && (!(expandLevel > 0) || level <= expandLevel)){
+				var parentId = treePath.pop(),
+					openInfo = t._openInfo,
+					poi = t._parentOpenInfo,
+					parentOpenInfo = poi[parentId] = poi[parentId] || [];
+				poi[id] = poi[id] || [];
+				if(!openInfo[id]){
+					var index = m.idToIndex(id);
+					if(index >= 0){
+						var childCount = m.size(id),
+							i = util.biSearch(parentOpenInfo, function(childId){
+								return openInfo[childId].index - index;
+							});
+						if(parentOpenInfo[i] !== id){
+							parentOpenInfo.splice(i, 0, id);
+						}
+						for(i = poi[id].length - 1; i >= 0; --i){
+							childCount += openInfo[poi[id][i]].count;
+						}
+						openInfo[id] = {
+							id: id,
+							parentId: parentId,
+							index: index,
+							count: childCount,
+							openned: poi[id]
+						};
+						var info = openInfo[parentId];
+						while(info){
+							info.count += childCount;
+							info = openInfo[info.parentId];
+						}
+					}
+				}
+			}
+			//console.log('after expand:', id, dojo.clone(this._openInfo), dojo.clone(this._parentOpenInfo));
+		},
+	
+		_logicCollapse: function(id){
+			var t = this,
+				info = t._openInfo[id];
+			if(info){
+				var openInfo = t._openInfo,
+					parentId = t.model.treePath(id).pop(),
+					parentOpenInfo = t._parentOpenInfo[parentId],
+					i = util.biSearch(parentOpenInfo, function(childId){
+						return openInfo[childId].index - info.index; 
+					}),
+					childCount = info.count;
+				parentOpenInfo.splice(i, 1);
+				info = openInfo[parentId];
+				while(info){
+					info.count -= childCount;
+					info = openInfo[info.parentId];
+				}
+				delete openInfo[id];
+			}
+			//console.log('after collapse:', id,  dojo.clone(this._openInfo), dojo.clone(this._parentOpenInfo));
+		},
+	
+		_getChild: function(visualIndex, info){
+			var item = this._openInfo[info.parentId],
+				i, len, preCount = info.preCount + item.index + 1,
+				commonMixin = {
+					found: true,
+					visualIndex: visualIndex,
+					count: 1
+				};
+	
+			for(i = 0, len = item.openned.length; i < len; ++i){
+				var childId = item.openned[i],
+					child = this._openInfo[childId],
+					vidx = child.index + preCount;
+				if(vidx === visualIndex){
+					return lang.mixin({
+						parentId: item.id,
+						start: child.index
+					}, commonMixin);
+				}else if(vidx > visualIndex){
+					break;
+				}else if(vidx + child.count >= visualIndex){
+					return {
+						parentId: childId, 
+						preCount: preCount 
+					};
+				}
+				preCount += child.count;
+			}
+			return lang.mixin({
+				parentId: item.id,
+				start: visualIndex - preCount
+			}, commonMixin);
 		},
 
 		_onAfterRow: function(row){
 			var hasChildren = this.model.hasChildren(row.id);
 			if(hasChildren){
-				var rowNode = row.node(),
-					expanded = this.isExpanded();
-				rowNode.setAttribute('aria-expanded', expanded);
-				//This is only to make JAWS read.
-				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').attr('aria-expanded', String(expanded));
+				row.node().setAttribute('aria-expanded', this.isExpanded(row.id));
 			}
 		},
 
@@ -617,7 +746,7 @@ define([
 						}
 					}
 					m.when({id: parentId}, function(){
-						visualIndex = grid.view.getRowInfo({
+						visualIndex = grid.body.getVisualIndex({
 							parentId: treePath.pop(), 
 							rowIndex: m.idToIndex(parentId)
 						}).visualIndex;
@@ -629,9 +758,9 @@ define([
 				}
 			}else if(e.ctrlKey && isExpando(e.cellNode)){
 				var ltr = t.grid.isLeftToRight();
-				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t.isExpanded(e.rowId)){
+				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t._openInfo[e.rowId]){
 					t.collapse(e.rowId);
-				}else if(e.keyCode == (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !t.isExpanded(e.rowId)){
+				}else if(e.keyCode == (ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW) && !t._openInfo[e.rowId]){
 					t.expand(e.rowId);
 				}
 			}
