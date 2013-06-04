@@ -226,12 +226,12 @@ define([
 		},
 
 		_storeFetch: function(options, onFetched){
-			console.debug("\tFETCH parent: ",
-					options.parentId, ", start: ",
-					options.start || 0, ", count: ",
-					options.count, ", end: ",
-					options.count && (options.start || 0) + options.count - 1, ", options:",
-					this.options);
+//            console.debug("\tFETCH parent: ",
+//                    options.parentId, ", start: ",
+//                    options.start || 0, ", count: ",
+//                    options.count, ", end: ",
+//                    options.count && (options.start || 0) + options.count - 1, ", options:",
+//                    this.options);
 
 			var t = this,
 				s = t.store,

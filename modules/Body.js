@@ -656,7 +656,7 @@ define([
 				s = [],
 				g = t.grid,
 				w = t.domNode.scrollWidth,
-				columns = g.columns();
+				columns = g.columns(),
 				i = start;
 			for(; i < end; ++i){
 				var rowInfo = g.view.getRowInfo({visualIndex: i}),
@@ -718,10 +718,6 @@ define([
 
 		_buildCells: function(row, visualIndex, cols){
 			var t = this,
-				g = t.grid,
-				columns = g._columns,
-				rowData = row.data(),
-				isFocusArea = g.focus.currentArea() == 'body',
 				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'],
 				output = {};
 			t.onCheckCustomRow(row, output);
@@ -732,29 +728,30 @@ define([
 					t._wrapCellData(output[row.id], row.id),
 					'</td>');
 			}else{
-				var cellCls = t._cellCls[row.id] || {};
+				var g = t.grid,
+					isFocusedRow = g.focus.currentArea() == 'body' && t._focusCellRow === visualIndex,
+					rowData = t.model.byId(row.id).data,
+					columns = g._columns,
+					cellCls = t._cellCls[row.id] || {};
 				for(var i = 0, len = columns.length; i < len; ++i){
 					var col = columns[i],
-						isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
-						cell = g.cell(row, cols && cols[i] || col.id, 1),
-						cls = [col._class || ''],
+						colId = col.id,
+						colWidth = col.width,
+						isPadding = g.tree && g.tree.isPaddingCell(row.id, colId),
+						cell = g.cell(row, cols && cols[i] || colId, 1),
 						customCls = col['class'],
-						style = g.getTextDirStyle(col.id, rowData[col.id]);
-					cls.push((customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '');
-					cls = cls.concat(cellCls[col.id] || []);
-					style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-					sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
-					if(isPadding){
-						sb.push('gridxPaddingCell ');
-					}
-					if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
-						sb.push('gridxCellFocus ');
-					}
-					sb.push(cls.join(' '),
-						'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
-						'" style="width:', col.width, ';min-width:', col.width, ';max-width:', col.width,
-						';', style,
-						'">', t._buildCellContent(cell, visualIndex, isPadding),
+						cellData = rowData[colId];
+					sb.push('<td aria-readonly="true" role="gridcell" tabindex="-1" aria-describedby="',
+						col._domId,'" colid="', colId, '" class="gridxCell ',
+						isPadding ? 'gridxPaddingCell ' : '',
+						isFocusedRow && t._focusCellCol === i ? 'gridxCellFocus ' : '',
+						col._class || '', ' ',
+						(customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '', ' ',
+						cellCls[colId] ? cellCls[colId].join('') : '',
+						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
+						g.getTextDirStyle(colId, cellData),
+						(col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '',
+						'">', t._buildCellContent(cell, visualIndex, isPadding, cellData),
 					'</td>');
 				}
 			}
@@ -762,11 +759,11 @@ define([
 			return sb.join('');
 		},
 
-		_buildCellContent: function(cell, visualIndex, isPadding){
+		_buildCellContent: function(cell, visualIndex, isPadding, cellData){
 			var r = '',
 				col = cell.column,
 				row = cell.row,
-				data = cell.data();
+				data = cellData || cell.data();
 			if(!isPadding){
 				var s = col.decorator ? col.decorator(data, row.id, visualIndex, cell) : data;
 				r = this._wrapCellData(s, row.id, col.id);
