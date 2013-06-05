@@ -514,7 +514,6 @@ define([
 							postCount = g.vScroller._updateRowHeight('post');
 						if(oldEnd - postCount < start + count){
 							count = oldEnd - postCount - start;
-							console.log(start, count);
 						}
 					}
 				}else if(position == 'bottom'){
@@ -527,7 +526,6 @@ define([
 						if(t.renderStart > start){
 							start = t.renderStart;
 							count = t.renderCount;
-							console.log(start, count);
 						}
 					}
 				}else{
