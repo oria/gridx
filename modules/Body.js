@@ -255,8 +255,7 @@ define([
 		load: function(args){
 			var t = this,
 				view = t.grid.view;
-			t.aspect(t.model, 'onDelete', '_onDelete');
-			t.aspect(view, 'onUpdate', '_onSizeChange');
+			t.aspect(view, 'onUpdate', 'lazyRefresh');
 			if(view._err){
 				t._loadFail(view._err);
 			}
@@ -472,6 +471,16 @@ define([
 			}
 			d.callback(false);
 			return d;
+		},
+
+		lazyRefresh: function(){
+			var t = this;
+			clearTimeout(t._sizeChangeHandler);
+			t._sizeChangeHandler = setTimeout(function(){
+				if(!t._destroyed){
+					t.refresh();
+				}
+			}, 10);
 		},
 
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
@@ -707,7 +716,7 @@ define([
 					n.innerHTML = t._buildCells(row, rowInfo.visualIndex);
 					t.onAfterRow(row);
 				}else{
-					throw new Error('Row is not in cache:' + rowInfo.rowIndex);
+					console.error('Error in Body._buildRowContent: Row is not in cache: ' + rowInfo.rowIndex);
 				}
 			}
 		},
@@ -864,62 +873,6 @@ define([
 					}
 				}
 			}
-		},
-
-		_onDelete: function(id){
-			var t = this;
-			if(t.autoUpdate){
-				var node = t.getRowNode({rowId: id});
-				if(node){
-					var sn, count = 0,
-						start = parseInt(node.getAttribute('rowindex'), 10),
-						pid = node.getAttribute('parentid'),
-						pids = {},
-						toDelete = [node],
-						rid, ids = [id],
-						vidx;
-					pids[id] = 1;
-					for(sn = node.nextSibling; sn && pids[sn.getAttribute('parentid')]; sn = sn.nextSibling){
-						rid = sn.getAttribute('rowid');
-						ids.push(rid);
-						toDelete.push(sn);
-						pids[rid] = 1;
-					}
-					for(; sn; sn = sn.nextSibling){
-						if(sn.getAttribute('parentid') == pid){
-							sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex'), 10) - 1);
-						}
-						vidx = parseInt(sn.getAttribute('visualindex'), 10) - toDelete.length;
-						sn.setAttribute('visualindex', vidx);
-						domClass.toggle(sn, 'gridxRowOdd', vidx % 2);
-						++count;
-					}
-					t.renderCount -= toDelete.length;
-					array.forEach(ids, t.onUnrender, t);
-					array.forEach(toDelete, domConstruct.destroy);
-					t.onDelete(id, start);
-					t.onRender(start, count);
-					if(!t.domNode.childNodes.length){
-						var en = t.grid.emptyNode,
-							emptyInfo = t.arg('emptyInfo', nls.emptyInfo);
-						en.innerHTML = emptyInfo;
-						en.style.zIndex = 1;
-						t.onEmpty();
-					}
-				}
-			}
-		},
-
-		_onSizeChange: function(){
-			var t = this;
-			if(t._sizeChangeHandler){
-				clearTimeout(t._sizeChangeHandler);
-			}
-			t._sizeChangeHandler = setTimeout(function(){
-				if(!t._destroyed){
-					t.refresh();
-				}
-			}, 10);
 		},
 
 		//-------------------------------------------------------------------------------------
