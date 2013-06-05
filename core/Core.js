@@ -128,8 +128,7 @@ define([
 	var delegate = lang.delegate,
 		isFunc = lang.isFunction,
 		isString = lang.isString,
-		hitch = lang.hitch,
-		forEach = array.forEach;
+		hitch = lang.hitch;
 
 	function getDepends(mod){
 		var p = mod.moduleClass.prototype;
@@ -165,8 +164,10 @@ define([
 
 	function normalizeModules(self){
 		var mods = [],
-			coreModCount = self.coreModules.length;
-		forEach(self.modules, function(m, i){
+			modules = self.modules,
+			len = modules.length;
+		for(var i = 0; i < len; ++i){
+			var m = modules[i];
 			if(isFunc(m) || isString(m)){
 				m = {
 					moduleClass: m
@@ -183,12 +184,12 @@ define([
 				}
 				if(isFunc(mc)){
 					mods.push(m);
-					return;
+					continue;
 				}
 			}
-			console.error("The " + (i + 1 - coreModCount) +
+			console.error("The " + (i + 1 - self.coreModules.length) +
 				"-th declared module can NOT be found, please require it before using it");
-		});
+		}
 		self.modules = mods;
 	}
 	
@@ -224,10 +225,10 @@ define([
 	}
 
 	function removeDuplicate(self){
-		var i, mods = {}, modules = [];
-		forEach(self.modules, function(m){
+		var i = 0, m, mods = {}, modules = [];
+		for(; m = self.modules[i]; ++i){
 			mods[m.moduleClass.prototype.name] = m;
-		});
+		}
 		for(i in mods){
 			modules.push(mods[i]);
 		}
@@ -390,7 +391,9 @@ define([
 			t.when = hitch(t.model, t.model.when);
 			t._create();
 			t._preload();
-			t._load(d).then(hitch(t, 'onModulesLoaded'));
+			t._load(d).then(function(){
+				t.onModulesLoaded();
+			});
 		},
 
 		_uninit: function(){
@@ -405,20 +408,22 @@ define([
 
 		_create: function(){
 			var t = this,
+				i = 0, mod,
 				mods = t._modules = {};
-			forEach(t.modules, function(mod){
-				var m, key = mod.moduleClass.prototype.name;
+			for(; mod = t.modules[i]; ++i){
+				var m, cls = mod.moduleClass,
+					key = cls.prototype.name;
 				if(!mods[key]){
 					mods[key] = {
 						args: mod,
-						mod: m = new mod.moduleClass(t, mod),
+						mod: m = new cls(t, mod),
 						deps: getDepends(mod)
 					};
 					if(m.getAPIPath){
 						mixinAPI(t, m.getAPIPath());
 					}
 				}
-			});
+			}
 		},
 
 		_preload: function(){

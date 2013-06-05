@@ -5,8 +5,10 @@ require([
 	'dojo/DeferredList',
 	'gridx/Grid',
 	'gridx/tests/support/data/TestData',
+//    'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/stores/Memory',
+//    'gridx/tests/support/stores/JsonRest',
 	'gridx/allModules',
 	'dojo/domReady!'
 ], function(parser, Deferred, lang, DeferredList, Grid, dataSource, Cache, storeFactory){
@@ -41,7 +43,28 @@ require([
 			dl.push(d);
 		}
 		new DeferredList(dl).then(function(){
-			console.debug('ok');
+			console.debug('add ok');
+		});
+	};
+
+	deleteSomeRows = function(){
+		grid.model.when({start: 0, count: 10}, function(){
+			var i, rowIds = [], dl = [];
+			for(i = 0; i < 10; ++i){
+				if(grid.row(i)){
+					rowIds.push(grid.row(i).id);
+				}
+			}
+			for(i = 0; i < rowIds.length; ++i){
+				var d = new Deferred();
+				Deferred.when(grid.store.remove(rowIds[i]), lang.hitch(d, d.callback));
+				dl.push(d);
+			}
+			if(dl.length){
+				new DeferredList(dl).then(function(){
+					console.debug('delete ok');
+				});
+			}
 		});
 	};
 
