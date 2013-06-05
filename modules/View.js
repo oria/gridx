@@ -486,45 +486,51 @@ define([
 		},
 
 		_onDelete: function(rowId, rowIndex, treePath){
-			var t = this,
-				openInfo = t._openInfo,
-				parentOpenInfo = t._parentOpenInfo,
-				info = openInfo[rowId],
-				model = t.model,
-				parentId = treePath.pop(),
-				count = 1,
-				deleteItem = function(id, parentId){
-					var info = openInfo[id],
-						openedChildren = parentOpenInfo[id] || [];
-					array.forEach(openedChildren, function(child){
-						deleteItem(child);
-					});
-					delete parentOpenInfo[id];
-					if(info){
-						delete openInfo[id];
-						parentId = info.parentId;
-					}else if(!model.isId(parentId)){
-						//FIXME: don't know what to do here...
-						return;
-					}
-					var ppoi = parentOpenInfo[parentId],
-						i = array.indexOf(ppoi, id);
-					if(i >= 0){
-						ppoi.splice(i, 1);
-					}
-				};
-			if(info){
-				count += info.count;
-				info = openInfo[info.parentId];
-			}else if(model.isId(parentId)){
-				info = openInfo[parentId];
+			if(treePath){
+				var t = this,
+					openInfo = t._openInfo,
+					parentOpenInfo = t._parentOpenInfo,
+					info = openInfo[rowId],
+					model = t.model,
+					parentId = treePath.pop(),
+					count = 1,
+					deleteItem = function(id, parentId){
+						var info = openInfo[id],
+							openedChildren = parentOpenInfo[id] || [];
+						array.forEach(openedChildren, function(child){
+							deleteItem(child);
+						});
+						delete parentOpenInfo[id];
+						if(info){
+							delete openInfo[id];
+							parentId = info.parentId;
+						}else if(!model.isId(parentId)){
+							//FIXME: don't know what to do here...
+							return;
+						}
+						var ppoi = parentOpenInfo[parentId],
+							i = array.indexOf(ppoi, id);
+						if(i >= 0){
+							ppoi.splice(i, 1);
+						}
+					};
+				if(info){
+					count += info.count;
+					info = openInfo[info.parentId];
+				}else if(model.isId(parentId)){
+					info = openInfo[parentId];
+				}
+				deleteItem(rowId, parentId);
+				while(info){
+					info.count -= count;
+					info = openInfo[info.parentId];
+				}
+				t.visualCount -= count;
+			}else{
+				//FIXME: what to do if some unknown row is deleted?
+				this._clear();
+				this.grid.body.lazyRefresh();
 			}
-			deleteItem(rowId, parentId);
-			while(info){
-				info.count -= count;
-				info = openInfo[info.parentId];
-			}
-			t.visualCount -= count;
 		}
 	});
 });

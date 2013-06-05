@@ -12,6 +12,11 @@ GridX is consisted of:
 
 GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://dojofoundation.org/about/cla) with the same [BSD/AFLv2 license] (http://dojotoolkit.org/license)
 
+### Current Versions:
+* [1.2 (LTS)](https://github.com/oria/gridx/tree/1.2)
+* [1.1](https://github.com/oria/gridx/tree/1.1)
+* [1.0 (LTS)](https://github.com/oria/gridx/tree/1.0)
+
 ## Installation
 
 1.  [CPM installation](https://github.com/kriszyp/cpm) with the following command:

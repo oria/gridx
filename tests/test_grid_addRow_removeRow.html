@@ -29,15 +29,16 @@
 		],
 		selectRowTriggerOnCell: true,
 		modules: [
-			"gridx/modules/extendedSelect/Row",
 			"gridx/modules/RowHeader",
 			"gridx/modules/ColumnResizer",
-			"gridx/modules/VirtualVScroller"
+			"gridx/modules/VirtualVScroller",
+			"gridx/modules/extendedSelect/Row"
 		]
 	'></div>
 	<div>
 		<button id='addRowBtn' onclick='newRow()'>Add One Row</button>
 		<button onclick='addSomeRows()'>Add 10 Rows</button>
+		<button onclick='deleteSomeRows()'>Delete 10 Rows</button>
 		<button onclick='deleteFirstRow()'>Delete First Row</button>
 		<button onclick='deleteLastRow()'>Delete Last Row</button>
 	</div>
