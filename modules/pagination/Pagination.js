@@ -243,7 +243,7 @@ define([
 			}
 			bd.updateRootRange(start, count);
 			if(!noRefresh){
-				bd.refresh();
+				bd.lazyRefresh();
 			}
 		},
 

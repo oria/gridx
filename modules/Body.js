@@ -109,7 +109,7 @@ define([
 					t.aspect(m, 'onSizeChange', '_onSizeChange');
 					t.loaded.callback();
 				};
-			t.aspect(m, 'onDelete', '_onDelete');
+//            t.aspect(m, 'onDelete', '_onDelete');
 			//Load the store size
 			m.when({}, function(){
 				t.rootCount = t.rootCount || m.size();
@@ -384,6 +384,19 @@ define([
 			d.callback(false);
 			return d;	//dojo.Deferred
 		},
+
+		lazyRefresh: function(){
+			var t = this;
+			if(t._sizeChangeHandler){
+				clearTimeout(t._sizeChangeHandler);
+			}
+			t._sizeChangeHandler = setTimeout(function(){
+				if(!t._destroyed){
+					t.refresh();
+				}
+			}, 10);
+		},
+
 		
 		//Package--------------------------------------------------------------------------------
 		
@@ -714,7 +727,7 @@ define([
 					n.innerHTML = t._buildCells(row);
 					t.onAfterRow(row);
 				}else{
-					throw new Error('Row is not in cache:' + rowInfo.rowIndex);
+					console.error('Error in Body._buildRowContent: Row is not in cache:' + rowInfo.rowIndex);
 				}
 			}
 		},
@@ -908,14 +921,7 @@ define([
 			var t = this;
 			if(t.autoChangeSize && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
-				if(t._sizeChangeHandler){
-					clearTimeout(t._sizeChangeHandler);
-				}
-				t._sizeChangeHandler = setTimeout(function(){
-					if(!t._destroyed){
-						t.refresh();
-					}
-				}, 10);
+				t.lazyRefresh();
 			}
 		},
 		
