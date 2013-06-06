@@ -203,8 +203,11 @@ define([
 			},
 
 			postCreate: function(){
-				this.connect(this.domNode, 'onmousedown', function(e){
-					e.cancelBubble = true;
+				var dn = this.domNode;
+				this.connect(dn, 'onmousedown', function(e){
+					if(e.target != dn){
+						e.cancelBubble = true;
+					}
 				});
 				this._cellCnnts = [];
 			},
