@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Gridx Mobile Demos</title>
+	<style>
+		body						{	margin: 20px 0 0 100px; font-family: arial;}
+		ul, li 						{	list-style: none; margin: 0; padding: 0;width: 200px;}
+		.left						{	float: left;}
+		.demo-links					{	margin-right: 150px; margin-top:50px; }
+		.demo-links	a
+		, .demo-links a:visited		{	color: #2175bc; text-decoration: none;}
+		.demo-links a:hover			{	color: red; text-decoration: underline;}
+		.demo-links li				{	border-bottom: 1px solid #ddd; padding: 5px;}
+		.demo-links li.current		{	background-color: #00B0F0; }
+		.demo-links li.current a	{	color: #fff; font-weight: bold;}
+		.demo-container				{	float: left; position: relative;width: 600px; height: 800px;}
+		.iphone-frame				{	width: 330px; position: absolute; top:0;left: 0;}
+		.demo-container iframe		{	position: absolute; width: 271px; height: 407px; top: 115px; left: 28px;}
+		.footer						{	color: #bbb; clear: both; margin-top: 50px; font-size: 12px; line-height: 150%;}
+		.footer a					{	color: #aaa;}
+	</style>
+	<script>
+		function each(arr, callback){for(var i = 0; i < arr.length; i++)callback(arr[i]);}
+		function setCurrent(evt){
+			var a = evt.target;
+			if(!/a/i.test(a.tagName))return;
+			var li = a.parentNode;
+			each(li.parentNode.childNodes, function(node){node.className = '';});
+			li.className = 'current';
+		}
+	</script>
+</head>
+
+<body>
+	
+	<div class="left">
+		<ul class="demo-links" onclick="setCurrent(event)">
+			<li class="current"><a href="./test_basic.html" target="demoIframe">iPhone Weather</a></li>
+			<li><a href="./test_observe_store.html" target="demoIframe">Stock Observer</a></li>
+			<li><a href="./test_sort.html" target="demoIframe">Sortable Grid</a></li>
+			<li><a href="./test_lazy_load.html" target="demoIframe">Lazy Load</a></li>
+			<li><a href="./test_pull_refresh.html" target="demoIframe">Pull Refresh</a></li>
+			<li><a href="./test_large_data.html" target="demoIframe">Grid with Wide Landscape</a></li>
+			<li><a href="./test_chart.html" target="demoIframe">Chart and Grid</a></li>
+		</ul>
+	</div>
+	<div class="demo-container">
+		<img src="../tests/images/iphone.png" class="iphone-frame"/>
+		<iframe name="demoIframe" width="300px" height="500px" src="test_basic.html" style="border: none;"></iframe>
+	</div>
+	
+	</body>
+</html>

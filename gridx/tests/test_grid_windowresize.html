@@ -1,0 +1,44 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Virtual Scrolling</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			width: 80%;
+			height: 500px;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, isDebug: true, parseOnLoad: false,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script>
+		require(['dojo/parser', 'dojo/ready', 'gridx/tests/test_grid_windowresize'], function(parser, ready){
+			ready(function(){
+				parser.parse();
+			});
+		});		
+	</script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Window Resize
+	</h1>
+	<div jsid='grid' data-dojo-type='gridx/Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		columnWidthAutoResize: true,
+		autoHeight: false,
+		structure: [
+			{id: "id", field: "id", name: "Identity", width: "30%"},
+			{id: "order", field: "order", name: "Order", width: "30%"},
+			{id: "Genre", field: "Genre", name: "Genre", width: "40%"}
+		],
+		modules: [
+			"gridx/modules/ColumnResizer"
+		]
+	'></div>
+</body>
+</html>

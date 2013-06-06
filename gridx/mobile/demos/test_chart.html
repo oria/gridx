@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Gridx Mobile</title>
+	<link href="../../../dojox/mobile/themes/iphone/base.css" rel="stylesheet"/>
+	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
+	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
+	<script>
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
+				{
+					name: 'gridx',
+					location: '../gridx'
+				}
+			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_chart']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_chart']);
+			}
+		};
+	</script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
+	<style>
+		body				{	background-color: #fff!important;}
+		.mobileGridx		{	width: 95%; margin-left: auto; margin-right: auto;}
+		.mobileGridxBody	{	height: 150px;}
+		.mobileGridxRow		{	border-bottom: 1px solid #ddd;}
+		.mobileGridxRowOdd	{	background-color: #fff;}
+		.mobileGridxCell	{	font-size: 12px; padding: 5px;}
+		.color	span 		{	float: left; width:12px; height: 12px;}
+	</style>
+</head>
+
+<body style="visibility:hidden;">
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Patent Filed</h1>
+		<div data-dojo-type="dojox/mobile/Pane">
+			<div data-dojo-type="dojox/charting/widget/Chart" id="chart3" theme="dojox.charting.themes.MobileGridx"
+							 style="width: 100%; height: 190px;">
+				<div class="plot" name="default" type="Pie" radius="80" fontColor="white"></div>
+				<div class="series" name="Series B" array="seriesB"></div>
+			</div>
+		</div>
+		<div data-dojo-type="gridx/mobile/Grid"
+			data-dojo-props="autoHeight: true, showHeader: false" jsId="grid">
+		</div>
+	</div>
+
+</body>
+</html>

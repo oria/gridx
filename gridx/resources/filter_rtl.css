@@ -1,0 +1,13 @@
+.gridxRtl .gridxFilterBar .dijitButton {
+	float: right;
+}
+.gridxRtl .gridxFilterBar .dijitButton .dijitButtonNode {
+}
+
+.gridxRtl .gridxFilterBarStatus {
+    padding: 1px 45px 0 0;
+}
+
+.gridxRtl .gridxFilterBarCloseBtn {
+	float: left;
+}

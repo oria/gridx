@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Gridx Mobile</title>
+	<link href="../../../dojox/mobile/themes/iphone/base.css" rel="stylesheet"/>
+	<link href="../../../dojox/mobile/themes/iphone/TabBar.css" rel="stylesheet"/>
+	<link href="../themes/iphone/Grid.css" rel="stylesheet"/>
+	<script>
+		var dojoConfig = {
+			async: true
+			,mblAlwaysHideAddressBar: true
+			,isDebug: true
+			,packages: [
+				{
+					name: 'gridx',
+					location: '../gridx'
+				}
+			]
+			,deps: /demos/.test(document.location)?['gridx/mobile/demos/test_observe_store']:[]
+			,callback: function(){
+				require(['gridx/mobile/tests/test_observe_store']);
+			}
+		};
+	</script>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug: true, parseOnLoad: false, mblAlwaysHideAddressBar: true"></script>
+	
+	<style>
+		.mobileGridxBody {	
+			background-color: #889FC2;
+			-webkit-background-size: 8px 5px;
+		    background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(.32, rgba(255, 255, 255, .09)), color-stop(.32, transparent), to(transparent));
+		}
+		.mobileGridxHeaderCell			{	text-align: right;}
+		.mobileGridxHeaderCell.comp		{	text-align: left;}
+		.mobileGridxCell				{	text-align: center; text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0; font-weight: bold; color: #fff; font-size: 20px;  font-family: arial;}
+		.mobileGridxCell.comp			{	text-align: left;}
+		
+		.change.mobileGridxCell > span	{	display:block; border-radius: 5px; border: 2px solid #ddd;}
+		.change.mobileGridxCell .down	{	border-color: #973737; background-color: #B02D27;}
+		.change.mobileGridxCell .up		{	border-color: #497F39; background-color: #55982E; }
+		
+		.mobileGridxRow {
+			background-color: #889FC2;
+			-webkit-background-size: 8px 5px;
+		    background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(.32, rgba(255, 255, 255, .09)), color-stop(.32, transparent), to(transparent));
+		}
+		.mobileGridxRow:nth-child(even) {
+		    background-color: #A9B2C7;
+		}
+	</style>
+</head>
+
+<body style="visibility:hidden;">
+	<div id="group1" data-dojo-type="dojox/mobile/View" selected="true">
+		<h1 data-dojo-type="dojox/mobile/Heading">Stock Observer</h1>
+		<div data-dojo-type="gridx/mobile/Grid" jsId="grid" 
+			data-dojo-props="hScroller: false, showHeader: false"></div>
+		<ul data-dojo-type="dojox/mobile/TabBar" fixed="bottom" style="border-bottom:none;">
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-16.png" icon2="../../../dojox/mobile/tests/images/tab-icon-16h.png" selected="true" moveTo="group1">Featured</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-15.png" icon2="../../../dojox/mobile/tests/images/tab-icon-15h.png" moveTo="categ">Categories</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-10.png" icon2="../../../dojox/mobile/tests/images/tab-icon-10h.png" moveTo="top25">Top 25</li>
+			<li data-dojo-type="dojox/mobile/TabBarButton" icon1="../../../dojox/mobile/tests/images/tab-icon-11.png" icon2="../../../dojox/mobile/tests/images/tab-icon-11h.png" moveTo="search">Search</li>
+		</ul>
+	</div>
+
+</body>
+</html>

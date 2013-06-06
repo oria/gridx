@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>New Grid Nested Sorting Test</title>
+	</head>
+	<style type="text/css">
+		@import "../../../util/doh/robot/robot.css";
+	</style>
+	<script type="text/javascript" src="../../../dojo/dojo.js" djConfig="isDebug:true"></script>
+	<script type="text/javascript" src="common.js"></script>
+	<script type="text/javascript">
+		require(['dojo'], function(dojo){
+			dojo.ready(function(){
+				doh.robot.initRobot('../test_grid_nestedSort.html');
+				
+				doh.register("GridX.NestedSort", [
+					function getSortData(t){
+						var d = grid().nestedSorting.getSortData();
+						//when preSort is enabled:					
+						//shoudl be [{colId: '2', descending: true}, {colId: '4', descending: false}]
+						t.is('2', d[0].colId, 'getSortData()[0].colId inconsistent!');
+						t.t(d[0].descending, 'getSortData()[0].descending inconsistent!');
+						t.is('4', d[1].colId, 'getSortData()[1].colId inconsistent!');
+						t.t(!d[1].descending, 'getSortData()[1].descending inconsistent!');
+					}
+				]);
+				doh.run();
+			});
+		});
+	</script>
+	<body class='claro'>
+	</body>
+</html>
