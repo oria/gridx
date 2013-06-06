@@ -6,6 +6,13 @@ define([
 	"../_Extension"
 ], function(declare, array, lang, sorter, _Extension){
 
+/*=====
+	return declare(_Extension, {
+		// summary:
+		//		Make formatted data sortable
+	});
+=====*/
+
 	function createSortFunc(attr, dir, comp, store){
 		return function(itemA, itemB){
 			return store.getValue ?
@@ -31,7 +38,7 @@ define([
 		};
 	}
 
-	return declare(/*===== "gridx.core.model.extensions.FormatSort", =====*/_Extension, {
+	return declare(_Extension, {
 		name: 'formatSort',
 
 		priority: 50,
@@ -79,8 +86,8 @@ define([
 					comp = col.comparator;
 				}
 				var formatter = col && col.sortFormatted && col.formatter;
-				sortFunctions.push(formatter ? 
-					createFormatSortFunc(attr, dir, comp, store, c, formatter) : 
+				sortFunctions.push(formatter ?
+					createFormatSortFunc(attr, dir, comp, store, c, formatter) :
 					createSortFunc(attr, dir, comp, store)
 				);
 			});
@@ -89,7 +96,7 @@ define([
 				for(i = 0, len = sortFunctions.length; !ret && i < len; ++i){
 					ret = sortFunctions[i](rowA, rowB);
 				}
-				return ret;  
+				return ret;
 			};
 		}
 	});

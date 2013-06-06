@@ -1,17 +1,25 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/query",
+	"dojo/query",
 	"./_Base",
 	"../../core/model/extensions/Mark"
 ], function(declare, lang, query, _Base, Mark){
+
+/*=====
+	return declare(_Base, {
+		// summary:
+		//		Base class for extended row selection and cell selection.
+		//		Both can be regarded as marking a row using some tag.
+	});
+=====*/
 
 	return declare(_Base, {
 		modelExtensions: [Mark],
 
 		_getRowId: function(visualIndex){
 			var node = query('[visualindex="' + visualIndex + '"]', this.grid.bodyNode)[0];
-			return node && node.getAttribute('rowid');
+			return node? node.getAttribute('rowid') : this.grid.view.getRowInfo({visualIndex: visualIndex}).rowId;
 		},
 
 		_init: function(){

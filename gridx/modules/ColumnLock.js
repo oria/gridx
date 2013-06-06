@@ -5,50 +5,53 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
-	"dojo/query"
-], function(dojo, lang, _Module, declare, array, html, query){	
-	
-	return declare(/*===== "gridx.modules.ColumnLock", =====*/_Module, {
+	"dojo/query",
+	"dojo/_base/sniff"
+], function(dojo, lang, _Module, declare, array, html, query, sniff){
+
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		Column lock machinery.
 		// description:
 		//		This module provides a way to lock consecutive leading columns. 
 		//		Columns can be locked in following ways:
-		//
 		// example:
-		//		1. Columns can be locked when Grid is initially rendered
-		//		|	var grid = new Grid({
-		//		|		modules: [
-		//		|			{moduleClass: gridx.modules.ColumnLock, count: 2}, ...
-		//		|		],
-		//		|		...
-		//		|	});
-		//		|
-		//			Or another way to set the lock number:
-		//		|	var grid = new Grid({
-		//		|		columnLockCount: 2
-		//		|		modules: [
-		//		|			gridx.modules.ColumnLock, ...
-		//		|		],
-		//		|	})
-		//
-		//		2. Lock or unlock columns dynamically
-		//		|	// lock 2 leading columns
-		//		|	grid.columnLock.lock(2)
-		//		|	
-		//		|	// unlock all columns
-		//		|	grid.columnLock.unLock();
-		
-		// name: [readonly] String
-		//		module name			
+		//		Columns can be locked when Grid is initially rendered.
+		//	|		var grid = new Grid({
+		//	|			columnLockCount: 2
+		//	|			modules: [
+		//	|				"gridx.modules.ColumnLock",
+		//	|				...
+		//	|			],
+		//	|		});
+		//		Lock or unlock columns dynamically
+		//	|		// lock 2 leading columns
+		//	|		grid.columnLock.lock(2)
+		//	|		// unlock all columns
+		//	|		grid.columnLock.unLock();
+
+		// count: [readonly] Integer
+		//		Number of columns that will be locked by default
+		count: 0,
+
+		lock: function(count){
+			// summary:
+			//		Dynamically lock consecutive #count leading columns.
+		},
+
+		unlock: function(){
+			// summary:
+			//		Unlock all columns.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'columnLock',
 		
-		// name: [readonly] Array
-		//		Module dependencies			
 		required: ['body'],
 		
-		// count: [readonly] Integer
-		//		Number of columns that will be locked by default			
 		count: 0,
 		
 		load: function(args, deferStartup){
@@ -80,15 +83,8 @@ define([
 				_this.loaded.callback();
 			});
 		},
-		getAPIPath: function(){
-			return {
-				columnLock: this
-			};
-		},
 		
 		lock: function(/*Integer*/count){
-			// summary:
-			//		Dynamically lock consecutive #count leading columns.
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			if(count >= this.grid._columns.length){
 				this.count = 0;
@@ -106,8 +102,6 @@ define([
 		},
 		
 		unlock: function(){
-			// summary:
-			//		Unlock all columns.
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			html.removeClass(this.grid.domNode, 'gridxColumnLock');
 			
@@ -149,6 +143,7 @@ define([
 				return;
 			}
 			
+			var isHeader = html.hasClass(rowNode, 'gridxHeaderRowInner');
 			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
 			for(i = 0; i < this.count; i++){
@@ -157,19 +152,32 @@ define([
 			
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h;
+				
+			if(sniff('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
+									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
+				h2++;
+			}	
+				
 			dojo.style(rowNode.firstChild, 'height', h2 + 'px');
-			var pl = 0, cols = this.grid._columns;
+			var lead = isHeader ? this.grid.hLayout.lead : 0,
+				pl = lead,
+				cols = this.grid._columns;
 			for(i = 0; i < this.count; i++){
-				var cell = r.cells[i];
+				var cell = r.cells[i],
+					s;
 				html.addClass(cell, 'gridxLockedCell');
-				var s = {height: h1 + 'px'};
+				if(sniff('ie') > 8){
+					s = {height: h1 + 1 + 'px'};
+				}else{
+					s = {height: h1 + 'px'};
+				}
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				html.style(cell, s);
 				
 				pl += cell.offsetWidth;
 			}
-			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl + 'px';
-			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + 'px';
+			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl - lead + 'px';
+			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;

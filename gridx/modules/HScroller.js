@@ -7,21 +7,36 @@ define([
 	"dojo/dom-geometry",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, sniff, Deferred, query, domGeo, metrics, _Module){
+], function(declare, domStyle, has, Deferred, query, domGeo, metrics, _Module){
 
-	return declare(/*===== "gridx.modules.HScroller", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module provides basic horizontal scrolling for grid
 
-		name: 'hScroller',
-
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				hScroller: this
-			};
+		scrollToColumn: function(colId){
+			// summary:
+			//	Scroll the grid to make a column fully visible.
 		},
+
+		refresh: function(){
+			// summary:
+			//		Refresh scroller itself to match grid body
+		},
+
+		scroll: function(left){
+			// summary:
+			//		Scroll the grid horizontally
+			// tags:
+			//		private
+			// left: Number
+			//		The scrollLeft value
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'hScroller',
 
 		constructor: function(){
 			var t = this,
@@ -34,8 +49,6 @@ define([
 		},
 
 		preload: function(){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid,
 				n = g.hScrollerNode;
@@ -45,71 +58,72 @@ define([
 				t.batchConnect(
 					[g.columnWidth, 'onUpdate', 'refresh'],
 					[n, 'onscroll', '_onScroll']);
-				if(sniff('ie')){
+				if(has('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
-					n.style.height = (metrics.getScrollbar().h + 1) + 'px';
+					n.style.height = (metrics.getScrollbar().h + 2) + 'px';
 				}
 			}
 		},
 		
 		//Public API-----------------------------------------------------------
-
 		scroll: function(left){
-			// summary:
-			//		Scroll the grid horizontally
-			// tags:
-			//		package
-			// left: Number
-			//		The scrollLeft value
-			
 			var dn = this.domNode;
-			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
+			if((has('webkit') || has('ie') < 8) && !this.grid.isLeftToRight()){
 				left = dn.scrollWidth - dn.offsetWidth - left;
 			}
-			if((sniff('ff')) && !this.grid.isLeftToRight() && left > 0){
+			if((has('ff')) && !this.grid.isLeftToRight() && left > 0){
 				left = -left;
 			}
 			dn.scrollLeft = left;
 		},
 		
-		scrollToColumn: function(colId){
-			// summary:
-			//	Scroll the grid to make a column fully visible.
+		scrollToColumn: function(colId, rowDiv){
+			//when rowDiv has value, it's caused by move focus in Body.js
+			//It's used only for column lock module
+
 			var hNode = this.grid.header.innerNode,
-				table = query('table', hNode)[0],
-				cells = table.rows[0].cells,
+				cells = query('.gridxCell', hNode),
 				left = 0,
 				right = 0,
 				ltr = this.grid.isLeftToRight(),
 				scrollLeft = this.domNode.scrollLeft;
-			
-			if(!ltr && (sniff('webkit') || sniff('ie') < 8)){
+			if(!ltr && (has('webkit') || has('ie') < 8)){
 				scrollLeft = this.domNode.scrollWidth - scrollLeft - hNode.offsetWidth;//the value relative to col 0
 			}
+
+			if(rowDiv && this.grid.columnLock && this.grid.columnLock.count){
+				//for column lock, row scrolls separately
+				scrollLeft = rowDiv.scrollLeft;
+				if(scrollLeft != this.domNode.scrollLeft){
+					this.scroll(scrollLeft);
+					return;
+				}
+			}
+
 			scrollLeft = Math.abs(scrollLeft);
 			//get cell's left border and right border position
 			for(var i = 0; i < cells.length; i++){
-				right += cells[i].offsetWidth;
+				left = cells[i].offsetLeft;
+				right = left + cells[i].offsetWidth;
 				if(cells[i].getAttribute('colid') == colId){
 					break;
 				}
-				left += cells[i].offsetWidth;
 			}
-			
+
 			//if the cell is not visible, scroll to it
-			if(left < scrollLeft){
+			if(ltr && left < scrollLeft){
 				this.scroll(left);
-			}else if(right > scrollLeft + hNode.offsetWidth){
+			}else if(ltr && right > scrollLeft + hNode.offsetWidth){
 				this.scroll(right - hNode.offsetWidth);
+			}else if(!ltr && right > hNode.scrollWidth - scrollLeft){
+				this.scroll(right - hNode.scrollWidth);
+			}else if(!ltr && left + scrollLeft < hNode.scrollWidth - hNode.offsetWidth){
+				this.scroll(hNode.scrollWidth - hNode.offsetWidth - left);
 			}
 		},
 		
 		refresh: function(){
-			// summary:
-			//		Refresh scroller itself to match grid body
-			// tags:
-			//		package
 			var t = this,
 				g = t.grid,
 				ltr = g.isLeftToRight(),
@@ -125,12 +139,13 @@ define([
 				sw = bn.firstChild.offsetWidth + pl,
 				oldDisplay = s.display,
 				newDisplay = (sw <= w) ? 'none' : 'block';
+				
 			s[marginLead] = lead + pl + 'px';
 			s[marginTail] = tail + 'px';
-			//Insure IE does not throw error...
-			if(pl > 0){
+			//Ensure IE does not throw error...
+			try{
 				s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
-			}
+			}catch(e){}
 			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
 			if(oldDisplay != newDisplay){
@@ -145,7 +160,7 @@ define([
 			//	Fired by h-scroller's scrolling event
 			var t = this,
 				s = t.domNode.scrollLeft;
-			if((sniff('webkit') || sniff('ie') < 8) && !t.grid.isLeftToRight()){
+			if((has('webkit') || has('ie') < 8) && !t.grid.isLeftToRight()){
 				s = t.domNode.scrollWidth - t.domNode.offsetWidth - s;
 			}
 			if(t._lastLeft != s){

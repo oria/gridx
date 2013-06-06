@@ -45,7 +45,7 @@ fs.readdir(testsDir, function(error, files){
 			writeDemoHtml(file);
 		}
 	});
-	var profile = fs.readFileSync(path.join(gridxDir, 'mobile/util/demos.profile.tpl.js'), 'utf8');
+	var profile = fs.readFileSync(path.join(gridxDir, 'mobile/util/demos.profile.js.tpl'), 'utf8');
 	var to = path.join(gridxDir, 'mobile/demos/profile.js');
 	profile = profile.replace('${layers}', layers.join(','));
 	fs.writeFileSync(to, profile, 'utf8');

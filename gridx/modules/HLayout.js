@@ -7,7 +7,8 @@ define([
 	"../core/_Module"
 ], function(declare, Deferred, array, domStyle, DeferredList, _Module){
 
-	return declare(/*===== "gridx.modules.HLayout", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module manages the horizontal layout of all grid UI parts.
 		// description:
@@ -17,19 +18,49 @@ define([
 		//		This module calculates grid body width by collecting width from all the registered
 		//		grid UI parts. It is assumed that the width of these UI parts will not change when grid is resized.
 
+		// lead: [private readonly] Number
+		//		The pixel size of the total width of all the UI parts that are before(LTR: left, RTL: right) the grid body.
+		lead: 0,
+
+		// tail: [private readonly] Number
+		//		The pixel size of the total width of all the UI parts that are after(LTR: right, RTL: left) the grid body.
+		tail: 0,
+
+		register: function(ready, refNode, isTail){
+			// summary:
+			//		Register a 'refNode' so this module can calculate its width when it is 'ready'
+			// tags:
+			//		private
+			// ready: dojo.Deferred|null
+			//		A deferred object indicating when the DOM node is ready for width calculation.
+			//		If omitted, it means the refNode can be calculated at any time.
+			// refNode: DOMNode
+			//		The DOM node that represents a UI part in grid.
+			// isTail: Boolean?
+			//		If the 'refNode' appears after(LTR: right, RTL: left) the grid body, set this to true.
+		},
+
+		reLayout: function(){
+			// summary:
+			//		Re-layout the grid horizontally. This means calculated the width of all registered
+			//		grid UI components except the grid body. Then update the grid body width.
+			//		Usually there's no need for users to call this method. It'll be automatically called
+			//		when calling grid.resize().
+		},
+
+		onUpdateWidth: function(){
+			// summary:
+			//		Fired when the body width is updated.
+			// tags:
+			//		private
+		}
+	});
+=====*/
+
+	return declare(_Module, {
 		name: 'hLayout',
 
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				hLayout: this
-			};
-		},
-	
 		load: function(args, startup){
-			// tags:
-			//		protected extension
 			var t = this;
 			t.connect(t.grid, '_onResizeEnd', function(changeSize, ds){
 				var d, dl = [];
@@ -45,28 +76,11 @@ define([
 			});
 		},
 
-		//Package--------------------------------------------------------
-
-		// lead: [package readonly] Number
-		//		The pixel size of the total width of all the UI parts that are before(LTR: left, RTL: right) the grid body.
 		lead: 0,
 
-		// tail: [package readonly] Number
-		//		The pixel size of the total width of all the UI parts that are after(LTR: right, RTL: left) the grid body.
 		tail: 0,
-	
+
 		register: function(ready, refNode, isTail){
-			// summary:
-			//		Register a 'refNode' so this module can calculate its width when it is 'ready'
-			// tags:
-			//		package
-			// ready: dojo.Deferred|null
-			//		A deferred object indicating when the DOM node is ready for width calculation.
-			//		If omitted, it means the refNode can be calculated at any time.
-			// refNode: DOMNode
-			//		The DOM node that represents a UI part in grid.
-			// isTail: Boolean?
-			//		If the 'refNode' appears after(LTR: right, RTL: left) the grid body, set this to true.
 			var r = this._regs = this._regs || [];
 			if(!ready){
 				ready = new Deferred();
@@ -76,11 +90,6 @@ define([
 		},
 
 		reLayout: function(){
-			// summary:
-			//		Re-layout the grid horizontally. This means calculated the width of all registered
-			//		grid UI components except the grid body. Then update the grid body width.
-			//		Usually there's no need for users to call this method. It'll be automatically called
-			//		when calling grid.resize().
 			var t = this,
 				r = t._regs,
 				lead = 0,
@@ -100,15 +109,8 @@ define([
 			}
 		},
 
-		//Event---------------------------------------------------------
-		onUpdateWidth: function(){
-			// summary:
-			//		Fired when the body width is updated.
-			// tags:
-			//		package
-		},
+		onUpdateWidth: function(){},
 
-		//Private-------------------------------------------------------
 		_layout: function(){
 			var t = this, r = t._regs;
 			if(r){

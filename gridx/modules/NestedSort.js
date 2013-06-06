@@ -1,62 +1,76 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/connect",
+	"dojo/_base/lang",
 	"dojo/_base/event",
-	"dojo/_base/query",
-	"dojo/_base/window",
-	"dojo/_base/sniff",
+	"dojo/query",
 	"dojo/string",
 	"dojo/dom-class",
 	"dojo/dom-construct",
-	"dojo/dom-style",
-	"dojo/dom-geometry",
 	"dojo/keys",
 	"../core/_Module",
 	"../core/model/extensions/Sort",
-	"dojo/i18n!../nls/NestedSort"
-], function(declare, array, connect, event, query, win, sniff, string, domClass, domConstruct, domStyle, domGeometry, keys, _Module, Sort, nls){
+	"dojo/i18n!../nls/NestedSort",
+	"./HeaderRegions"
+], function(declare, array, lang, event, query, string, domClass, domConstruct, keys, _Module, Sort, nls){
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		Sort multiple columns in a nested way.
+
+		getSortData: function(){
+			// summary:
+			//		TODOC
+		},
+
+		sort: function(sortData){
+			// summary:
+			//		TODOC
+		},
+
+		isSorted: function(colId){
+			// summary:
+			//		TODOC
+		},
+
+		clear: function(){
+			// summary:
+			//	Clear the sorting state
+		},
+
+		isSortable: function(colId){
+			// summary:
+			//		TODOC
+		}
+	});
+=====*/
 	
-	var forEach = array.forEach,
-		filter = array.filter,
+	var filter = array.filter,
 		indexOf = array.indexOf,
-		hasClass = domClass.contains,
 		removeClass = domClass.remove,
-		addClass = domClass.add;
-
-	return declare(/*===== "gridx.modules.NestedSort", =====*/_Module, {
-		name: 'sort',
-
-		forced: ['header'],
-
-//		required: ['vLayout'],
-
-		modelExtensions: [Sort],
-
-		_a11yText: {
+		addClass = domClass.add,
+		a11yText = {
 			'dojoxGridDescending': '<span class="gridxNestedSortBtnText">&#9662;</span>',
 			'dojoxGridAscending': '<span class="gridxNestedSortBtnText">&#9652;</span>',
 			'dojoxGridAscendingTip': '<span class="gridxNestedSortBtnText">&#1784;</span>',
 			'dojoxGridDescendingTip': '<span class="gridxNestedSortBtnText">&#1783;</span>',
 			'dojoxGridUnsortedTip': '<span class="gridxNestedSortBtnText">x</span>' //'&#10006;'
-		},
+		};
 
-		constructor: function(){
-			this._sortData = [];
-		},
+	return declare(_Module, {
+		name: 'sort',
 
-		getAPIPath: function(){
-			return {
-				sort: this
-			};
-		},
+		required: ['headerRegions'],
+
+		modelExtensions: [Sort],
 
 		preload: function(args){
-			var t = this;
-			t._sortData = t.arg('initialOrder') || t._sortData;
-			//persistence support
-			if(t.grid.persist){
-				var d = t.grid.persist.registerAndLoad('sort', function(){
+			var t = this,
+				g = t.grid;
+			t._sortData = t.arg('initialOrder', []);
+			if(g.persist){
+				var d = g.persist.registerAndLoad('sort', function(){
 					return t._sortData;
 				});
 				if(d){
@@ -67,13 +81,13 @@ define([
 				return t.isSortable(d.colId);
 			});
 			if(t._sortData.length){
-				t.grid.model.sort(t._sortData);
+				g.model.sort(t._sortData);
 			}
-		},
+			
+			t.connect(g.headerRegions, 'refresh', t._updateUI);
 
-		load: function(args){
-			this._init();
-			this.loaded.callback();
+			g.headerRegions.add(lang.hitch(t, t._createBtn, 1), 10, 1);
+			g.headerRegions.add(lang.hitch(t, t._createBtn, 0), 11, 1);
 		},
 
 		columnMixin: {
@@ -84,39 +98,28 @@ define([
 				return this.grid.sort.isSortable(this.id);
 			}
 		},
-		
+
 		getSortData: function(){
 			return this._sortData;
 		},
-		
+
 		sort: function(sortData){
 			var t = this;
 			t._sortData = filter(sortData, function(d){
 				return t.isSortable(d.colId);
 			});
 			t._doSort();
-			t._updateUI();
-		},
-		
-		isSorted: function(colId){
-			return array.some(this._sortData, function(d){
-				return d.colId == colId;
-			});
 		},
 
-		_doSort: function(){
-			var g = this.grid,
-				d = this._sortData;
-			g.model.sort(d.length ? d : null);
-			g.body.refresh();
-		},
-		
-		clear: function(){
-			// summary:
-			//	Clear the sorting state
-			this._sortData.length = 0;
-			this._doSort();
-			this._updateUI();
+		isSorted: function(colId){
+			var ret = 0;
+			array.some(this._sortData, function(d){
+				if(d.colId == colId){
+					ret = d.descending ? -1 : 1;
+					return 1;
+				}
+			});
+			return ret;
 		},
 
 		isSortable: function(colId){
@@ -124,110 +127,80 @@ define([
 			return col && (col.sortable || col.sortable === undefined);
 		},
 
+		clear: function(){
+			this._sortData.length = 0;
+			this._doSort();
+		},
+
 		//Private---------------------------------------------------------------------------
-		_init: function(){
-			var t = this,
-				n = t.grid.header.domNode,
-				f = function(){
-					t._initHeader();
-					t._initFocus();
-					t._updateUI();
-				};
-			t.connect(n, 'onclick', '_onHeaderClick');
-			t.connect(n, 'onmouseover', '_onMouseOver');
-			t.connect(n, 'onmouseout', '_onMouseOver');
-			t.connect(t.grid.header, 'onRender', f);
-			f();
+		_createBtn: function(isSingle, col){
+			var t = this;
+			if(t.isSortable(col.id)){
+				var btn = domConstruct.create('div', {
+					'class': 'gridxSortBtn gridxSortBtn' + (isSingle ? 'Single' : 'Nested'),
+					tabIndex: -1,
+					title: isSingle ?
+						nls.singleSort + ' - ' + nls.ascending :
+						nls.nestedSort + ' - ' + nls.ascending,
+					innerHTML: isSingle ?
+						a11yText.dojoxGridAscendingTip + '&nbsp;' :
+						t._sortData.length + 1 + a11yText.dojoxGridAscendingTip
+				});
+				t.connect(btn, 'onmousedown', function(){
+					t._sort(col, btn, isSingle);
+				});
+				t.connect(btn, 'onkeydown', function(e){
+					if(e.keyCode == keys.ENTER){
+						event.stop(e);
+						t._sort(col, btn, isSingle);
+					}
+				});
+				return btn;
+			}
 		},
-		
-		_initHeader: function(){
-			var t = this,
-				table = t.grid.header.domNode.firstChild.firstChild,
-				tds = table.rows[0].cells;
-			if(query('.gridxSortBtn', table).length){
-				return;
-			}
-			forEach(table.rows[0].cells, function(td){
-				var colid = td.getAttribute('colid');
-				if(t.isSortable(colid)){
-					domConstruct.create('div', {
-						className: 'gridxSortBtn gridxSortBtnNested'
-					}, td, 'first');
-					domConstruct.create('div', {
-						className: 'gridxSortBtn gridxSortBtnSingle'
-					}, td, 'first');
-				}
-			});
-		},
-		
-		_onHeaderClick: function(e){
-			var t = this,
-				btn = e.target,
-				sortData = t._sortData,
-				colid;
-			if(hasClass(btn, 'gridxNestedSortBtnText')){
-				btn = btn.parentNode;
-			}
-			t._markFocus(e);
-			if(hasClass(btn, 'gridxSortBtn')){
-				colid = btn.parentNode.getAttribute('colid');
-			}else{
-				return;
-			}
-			if(hasClass(btn, 'gridxSortBtnSingle')){
-				//single sort
+
+		_sort: function(col, btn, isSingle){
+			var t = this, d,
+				sortData = t._sortData;
+			if(isSingle){
 				if(sortData.length > 1){
 					sortData.length = 0;
 				}
-				var d = filter(sortData, function(data){
-					return data.colId === colid;
+				d = filter(sortData, function(data){
+					return data.colId === col.id;
 				})[0];
 				sortData.length = 0;
 				if(d){
 					sortData.push(d);
 				}
-				t._sortColumn(colid);
-			}else if(hasClass(btn, 'gridxSortBtnNested')){
-				//nested sort
-				t._sortColumn(colid);
+			}else{
+				d = filter(sortData, function(d){
+					return d.colId === col.id;
+				})[0];
 			}
-			event.stop(e);
-		},
-		
-		_onMouseOver: function(e){
-			var g = this.grid;
-			domClass.toggle(g.header.domNode, 'gridxHeaderHover', e.type == 'mouseover');
-			//FIXME: this is ugly...
-			if(g.autoHeight){
-				g.vLayout.reLayout();
+			if(d){
+				if(d.descending){
+					sortData.splice(indexOf(sortData, d), 1);
+				}
+				d.descending = !d.descending;
+			}else{
+				d = {
+					colId: col.id,
+					descending: false
+				};
+				sortData.push(d);
 			}
+			t._doSort();
 		},
 
-		_sortColumn: function(colid){
-			// summary:
-			//	Sort one column in nested sorting state
-			var t = this,
-				sortData = t._sortData;
-			if(t.isSortable(colid)){
-				var d = filter(sortData, function(d){
-					return d.colId === colid;
-				})[0];
-				if(d){
-					if(d.descending){
-						sortData.splice(indexOf(sortData, d), 1);
-					}
-					d.descending = !d.descending;
-				}else{
-					sortData.push({
-						colId: colid,
-						descending: false
-					});
-				}
-				t._doSort();
-				t._updateUI();
-			}
+		_doSort: function(){
+			var g = this.grid,
+				d = this._sortData;
+			this._updateUI();
+			g.model.sort(d.length ? d : null);
+			g.body.refresh();
 		},
-		
+
 		_updateUI: function(){
 			var t = this,
 				g = t.grid,
@@ -235,15 +208,19 @@ define([
 				sortData = t._sortData;
 			removeClass(dn, 'gridxSingleSorted');
 			removeClass(dn, 'gridxNestedSorted');
-			query('th', g.header.domNode).forEach(function(cell){
+			if(sortData.length == 1){
+				addClass(dn, 'gridxSingleSorted');
+			}else if(sortData.length > 1){
+				addClass(dn, 'gridxNestedSorted');
+			}
+			query('.gridxCell', g.header.domNode).forEach(function(cell){
 				var colid = cell.getAttribute('colid');
 				if(t.isSortable(colid)){
-					forEach(['', 'Desc', 'Asc', 'Main'], function(s){
+					array.forEach(['', 'Desc', 'Asc', 'Main'], function(s){
 						removeClass(cell, 'gridxCellSorted' + s);
 					});
-					var singleBtn = cell.childNodes[0],
-						nestedBtn = cell.childNodes[1],
-						a11yText = t._a11yText;
+					var singleBtn = query('.gridxSortBtnSingle', cell)[0],
+						nestedBtn = query('.gridxSortBtnNested', cell)[0];
 					singleBtn.title = nls.singleSort + ' - ' + nls.ascending;
 					nestedBtn.title = nls.nestedSort + ' - ' + nls.ascending;
 					singleBtn.innerHTML = a11yText.dojoxGridAscendingTip + '&nbsp;';
@@ -281,171 +258,8 @@ define([
 					}
 				}
 			});
-			if(sortData.length == 1){
-				addClass(dn, 'gridxSingleSorted');
-			}else if(sortData.length > 1){
-				addClass(dn, 'gridxNestedSorted');
-			}
-		},
-		
-		//Focus and keyboard support---------------------------------------------------------------------------
-		_initFocus: function(){
-			var t = this,
-				g = t.grid,
-				headerNode = g.header.domNode;
-			if(g.focus){
-				t._initRegions();
-				g.focus.registerArea({
-					name: 'header',
-					priority: 0,
-					focusNode: headerNode,
-					scope: t,
-					doFocus: t._doFocus,
-					doBlur: t._blurNode,
-					onBlur: t._blurNode,
-					connects: [
-						t.connect(headerNode, 'onkeypress', '_onKeyPress')
-					]
-				});
-			}
 		},
 
-		_doFocus: function(e){
-			this._focusRegion(this._getCurrentRegion() || this._focusRegions[0]);
-			return true;
-		},
-
-		_blurNode: function(e){
-			return true;
-		},
-
-		_onKeyPress: function(e){
-			if(!e.ctrlKey && !e.shiftKey && !e.altKey){
-				var t = this,
-					ltr = t.grid.isLeftToRight(),
-					nextKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW,
-					previousKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW;
-				switch(e.keyCode){
-					case previousKey:
-						t._focusPrevious();
-						break;
-					case nextKey:
-						t._focusNext();
-						break;
-					case keys.ENTER:
-					case keys.SPACE:
-						t._onHeaderClick(e);
-						break;
-				}
-				event.stop(e);
-			}
-		},
-
-		_onBlur: function(e){
-			this._blurRegion(e.target);
-		},
-
-		_focusNext: function(){
-			var t = this,
-				i = t._currRegionIdx,
-				rs = t._focusRegions;
-			while(rs[i+1] && domStyle.get(rs[++i], 'display') === 'none'){}
-			if(rs[i]){
-				t._focusRegion(rs[i]);
-			}
-		},
-
-		_focusPrevious: function(){
-			var t = this,
-				i = t._currRegionIdx,
-				rs = t._focusRegions;
-			while(rs[i-1] && (domStyle.get(rs[--i], 'display') === 'none')){}
-			if(rs[i]){
-				t._focusRegion(rs[i]);
-			}
-		},
-
-		_markFocus: function(e){
-			var region = e.target,
-				i = indexOf(this._focusRegions, region);
-			if(i >= 0){
-				this._focusRegion(region);
-			}
-		},
-
-		_initRegions: function(){
-			var t = this;
-			forEach(t._nconns, connect.disconnect);
-			t._focusRegions = [];
-			t._nconns = [];
-			query('.gridxCell', t.grid.header.domNode).forEach(function(cell){
-				var children = cell.childNodes;
-				forEach([2, 1, 0], function(i){
-					if(children[i]){
-						children[i].setAttribute('tabindex', '-1');
-						t._focusRegions.push(children[i]);
-						t._nconns.push(t.connect(children[i], 'onblur', '_onBlur'));
-						return;
-					}
-				});
-			});
-			t._currRegionIdx = -1;
-		},
-
-		_focusRegion: function(region){
-			// summary
-			//		Focus the given region
-			if(region){
-				var t = this,
-					g = t.grid,
-					header = t._getRegionHeader(region);
-				region.focus();
-				
-				
-				window.setTimeout(function(){
-					//make it asnyc so that IE will not lost focus
-					addClass(header, 'gridxCellSortFocus');
-					if(hasClass(region, 'gridxSortNode')){
-						addClass(region, 'gridxSortNodeFocus');
-					}else if(hasClass(region, 'gridxSortBtn')){
-						addClass(region, 'gridxSortBtnFocus');
-					}
-					addClass(t.grid.header.domNode, 'gridxHeaderFocus');
-					t._currRegionIdx = indexOf(t._focusRegions, region);
-					
-					//firefox and ie will lost focus when region is invisible, focus it again.
-					region.focus();
-					
-					if(g.hScroller){
-						g.hScroller.scrollToColumn(header.getAttribute('colid'));
-					}
-				}, 0);
-				
-			}
-		},
-
-		_blurRegion: function(region){
-			if(region){
-				var header = this._getRegionHeader(region);
-				removeClass(header, 'gridxCellSortFocus');
-				removeClass(region, 'gridxSortNodeFocus');
-				removeClass(region, 'gridxSortBtnFocus');
-				removeClass(this.grid.header.domNode, 'gridxHeaderFocus');
-			}
-		},
-
-		_getCurrentRegion: function(){
-			return this._currRegionIdx === -1 ? null : this._focusRegions[this._currRegionIdx];
-		},
-
-		_getRegionHeader: function(region){
-			while(region && !hasClass(region, 'gridxCell')){
-				region = region.parentNode;
-			}
-			return region;
-		},
-		
-		//a11y support ----------------------------
 		_setWaiState: function(cell, colid, data){
 			var col = this.grid.column(colid),
 				columnInfo = 'Column ' + col.name(),
@@ -456,8 +270,8 @@ define([
 			}
 			var a11ySingleLabel = string.substitute(nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]),
 				a11yNestedLabel = string.substitute(nls.waiNestedSortLabel, [columnInfo, orderState, orderAction]);
-			cell.childNodes[0].setAttribute("aria-label", a11ySingleLabel);
-			cell.childNodes[1].setAttribute("aria-label", a11yNestedLabel);
+			query('.gridxSortBtnSingle', cell)[0].setAttribute("aria-label", a11ySingleLabel);
+			query('.gridxSortBtnNested', cell)[0].setAttribute("aria-label", a11yNestedLabel);
 		}
 	});
 });

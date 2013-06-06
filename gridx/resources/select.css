@@ -19,6 +19,11 @@
 	opacity: 0.8;
 }
 
+.dijit_a11y .gridxRowUnselectable {
+	opacity: 0.5;
+}
+
+
 /*IndirectSelection*/
 .gridxRowHeaderHeaderCell,
 .gridxRowHeaderCell {

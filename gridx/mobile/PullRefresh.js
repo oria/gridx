@@ -13,13 +13,13 @@ define([
 		state: 'normal',
 		triggerHeight: 50,
 		
-		//lastId:
-		//	used to store last id value for query, so that server side knows the state of grid
+		// lastId:
+		//		used to store last id value for query, so that server side knows the state of grid
 		lastId: null,
 		
 		buildRendering: function(){
-			//summary:
-			//	Add pull refresh related ui elements, and connect events to them.
+			// summary:
+			//		Add pull refresh related ui elements, and connect events to them.
 			
 			this.inherited(arguments);
 			var self = this;
@@ -51,8 +51,8 @@ define([
 		},
 		loadNew: function(){
 			// summary:
-			//	Called when pull refresh triggers.
-			//	It loads data from server side and create extra rows at the top.
+			//		Called when pull refresh triggers.
+			//		It loads data from server side and create extra rows at the top.
 			
 			var q = lang.mixin({
 				'lastId': this.lastId
@@ -64,7 +64,7 @@ define([
 		},
 		_loadNewComplete: function(results){
 			// summary:
-			//	Called after store finishes fetching data from server side.
+			//		Called after store finishes fetching data from server side.
 			
 			var items = results.items || results, arr = [];
 			if(items.length){
@@ -80,9 +80,9 @@ define([
 		},
 		_setPullRefreshState: function(state){
 			// summary:
-			//	Set state of the grid
+			//		Set state of the grid
 			// state:
-			//	normal|ready|loading
+			//		normal|ready|loading
 			var wrapper = this.pullRefreshWrapper, labelNode = wrapper.lastChild;
 			css.remove(wrapper, 'releaseToRefresh');
 			css.remove(wrapper, 'inLoading');

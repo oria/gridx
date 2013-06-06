@@ -1,0 +1,38 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Simple Gird</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<style type="text/css">
+		@import url('../resources/basic.css');
+		@import url('../resources/sort.css');
+		@import url('../resources/select.css');
+		@import url('../resources/claro/basic.css');
+		@import url('../resources/claro/select.css');
+		@import url('../resources/claro/sort.css');		
+		body {
+			margin: 5em;
+			font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
+		}		
+		.title {
+			font-size: large;
+			font-weight: bolder;
+		}
+		#gridContainer {
+			width: 700px;
+			height: 350px;
+		}
+		.gridx {
+			height: 100%;
+		}
+	</style>
+
+	<script type="text/javascript" src="../../dojo/dojo.js" 
+		data-dojo-config="async: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>	
+	<script type="text/javascript" src='demo_mini_grid.js'></script>
+</head>
+<body class='claro'>
+	<h1 class='title'>The simplest Grid</h1>
+	<div id='gridContainer'></div>
+</body>
+</html>

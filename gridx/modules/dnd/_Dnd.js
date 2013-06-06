@@ -13,8 +13,18 @@ define([
 	"dojo/dnd/Manager",
 	"../../core/_Module",
 	"../AutoScroll"
-], function(declare, lang, Deferred, domConstruct, domGeometry, domClass, domStyle, dom, win, sniff,
+], function(declare, lang, Deferred, domConstruct, domGeometry, domClass, domStyle, dom, win, has,
 	Source, DndManager, _Module){
+
+/*=====
+	return declare(_Module, {
+		_fixFF: function(source){
+			// summary:
+			//		Fix FireFox not firing onmouseover/onmousemove events during dnd.
+			//		Can use this function when drag to/from non-grid sources.
+		}
+	});
+=====*/
 
 	var hitch = lang.hitch;
 
@@ -48,13 +58,20 @@ define([
 				accept: t.accept,
 				getSelectedNodes: function(){return [0];},
 				getItem: hitch(t, '_getItem'),
+				onSelectStart: function(){
+					//Source stops text selecting on anything inside its domnode,
+					//but we still need that when not dnding.
+					if(this.notSelectText){
+						Source.prototype.onSelectStart.apply(this, arguments);
+					}
+				},
 				checkAcceptance: hitch(t, '_checkAcceptance'),
 				onDraggingOver: hitch(t, '_onDraggingOver'),
 				onDraggingOut: hitch(t, '_onDraggingOut'),
 				onDropExternal: hitch(t, '_onDropExternal'),
 				onDropInternal: hitch(t, '_onDropInternal')
 			});
-			if(sniff('ff')){
+			if(has('ff')){
 				t._fixFF(t._source, n);
 			}
 			t._source.grid = t.grid;
@@ -145,6 +162,7 @@ define([
 						t.profile = p;
 						t._saveSelectStatus(false);
 						domClass.add(win.body(), 'gridxDnDReadyCursor');
+						t._source.notSelectText = 1;
 						t._dndReady = 1;
 						return;
 					}
@@ -207,6 +225,7 @@ define([
 				dom.setSelectable(t.grid.domNode, true);
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 				t.profile._onEndDnd();
+				t._source.notSelectText = 0;
 				t._loadSelectStatus();
 			}
 		},

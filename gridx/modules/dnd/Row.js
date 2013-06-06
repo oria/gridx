@@ -8,7 +8,25 @@ define([
 	"dojo/_base/sniff",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, array, Deferred, lang, domClass, domGeometry, sniff, _Base, _Module){
+], function(declare, array, Deferred, lang, domClass, domGeometry, has, _Base, _Module){
+
+/*=====
+	return declare(_Base, {
+		// summary:
+		//		This module provides an implementation of row drag & drop.
+		// description:
+		//		This module supports row reordering within grid, dragging out of grid, and dragging into grid.
+		//		This module depends on "_dnd" and "moveRow" modules.
+
+		// accept: String[]
+		//		Can drag in what kind of stuff
+		accept: [],
+
+		// provide: String[]
+		//		Can drag out what kind of stuff
+		provide: []
+	});
+=====*/
 
 	var hitch = lang.hitch,
 		forEach = array.forEach;
@@ -38,11 +56,7 @@ define([
 		}
 	}
 
-	return declare(/*===== "gridx.modules.dnd.Row", =====*/_Base, {
-		// summary:
-		//		This module provides an implementation of row drag & drop.
-		//		It supports row reordering within grid, dragging out of grid, and dragging into grid.
-
+	return declare(_Base, {
 		name: 'dndRow',
 		
 		required: ['_dnd', 'moveRow'],
@@ -56,12 +70,8 @@ define([
 		},
 
 		//Public---------------------------------------------------------------------------
-		// accept: String[]
-		//		Can drag in what kind of stuff
 		accept: ['grid/rows'],
 
-		// provide: String[]
-		//		Can drag out what kind of stuff
 		provide: ['grid/rows'],
 
 		onDraggedOut: function(targetSource){
@@ -147,7 +157,7 @@ define([
 		_calcTargetAnchorPos: function(evt, containerPos){
 			var t = this,
 				node = evt.target,
-				body = t.grid.body,
+				view = t.grid.view,
 				ret = {
 					width: containerPos.w + "px",
 					height: '',
@@ -192,7 +202,7 @@ define([
 					}
 					return ret;
 				};
-			if(!sniff('ff')){
+			if(!has('ff')){
 				//In FF, this conflicts with the overflow:hidden css rule for grid row DIV, which is required by ColumnLock.
 				while(node){
 					if(domClass.contains(node, 'gridxRow')){
@@ -201,7 +211,7 @@ define([
 					node = node.parentNode;
 				}
 			}
-			var bn = body.domNode,
+			var bn = t.grid.bodyNode,
 				nodes = bn.childNodes;
 			if(!nodes.length){
 				ret.top = '0px';
@@ -217,9 +227,9 @@ define([
 					node = bn.lastChild;
 					idx = getVIdx(node);
 					pos = domGeometry.position(node);
-					if(idx === body.visualCount - 1 && evt.clientY > pos.y + pos.h){
+					if(idx === view.visualCount - 1 && evt.clientY > pos.y + pos.h){
 						ret.top = (pos.y + pos.h - containerPos.y) + 'px';
-						t._target = body.visualCount;
+						t._target = view.visualCount;
 					}else{
 						var rowFound = array.some(nodes, function(rowNode){
 							pos = domGeometry.position(rowNode);
@@ -242,7 +252,7 @@ define([
 					var indexes = array.map(t._selectedRowIds, function(rowId){
 						return t.model.idToIndex(rowId);
 					});
-					g.move.row.move(indexes, g.body.getRowInfo({
+					g.move.row.move(indexes, g.view.getRowInfo({
 						visualIndex: t._target
 					}).rowIndex);
 				});

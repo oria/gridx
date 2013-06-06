@@ -3,16 +3,15 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, sniff, query, domGeo, keys, metrics, _Module){
-	
-	var st = 'scrollTop';
+], function(declare, Deferred, event, has, query, domGeo, keys, metrics, _Module){
 
-	return declare(/*===== "gridx.modules.VScroller", =====*/_Module, {
+/*=====
+	return declare(_Module, {
 		// summary:
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
@@ -20,20 +19,32 @@ define([
 		//		So it is very fast for small client side store, and might be extremely slow
 		//		for large server side store.
 
+		scrollToRow: function(rowVisualIndex, toTop){
+			// summary:
+			//		Scroll the grid until the required row is in view.
+			// description:
+			//		This job will be an asynchronous one if the lazy-loading and lazy-rendering are used.
+			// rowVisualIndex: Integer
+			//		The visual index of the row
+			// toTop: Boolean?
+			//		If set this to true, the grid will try to scroll the required row to the top of the view.
+			//		Otherwise, the grid will stop scrolling as soon as the row is visible.
+			// returns:
+			//		A deferred object indicating when the scrolling process is finished. This will be useful
+			//		when using lazy-loading and lazy-rendering.
+		}
+	});
+=====*/
+
+	var st = 'scrollTop';
+
+	return declare(_Module, {
 		name: 'vScroller',
-	
-		forced: ['body', 'vLayout', 'columnWidth'],
+
+		forced: ['view', 'body', 'vLayout', 'columnWidth'],
 
 		optional: ['pagination'],
 	
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				vScroller: this
-			};
-		},
-
 		constructor: function(){
 			var t = this,
 				g = t.grid,
@@ -41,7 +52,7 @@ define([
 			t.stubNode = dn.firstChild;
 			if(g.autoHeight){
 				dn.style.display = 'none';
-				if(sniff('ie') < 8){
+				if(has('ie') < 8){
 					dn.style.width = '0px';
 				}
 			}else{
@@ -49,21 +60,17 @@ define([
 					ltr = g.isLeftToRight();
 				dn.style.width = w + 'px';
 				dn.style[ltr ? 'right' : 'left'] = -w + 'px';
-				if(sniff('ie') < 8){
-					t.stubNode.style.width = w;
+				if(has('ie') < 8){
+					t.stubNode.style.width = (w + 1) + 'px';
 				}
 			}
 		},
 
 		preload: function(args){
-			// tags:
-			//		protected extension
 			this.grid.hLayout.register(null, this.domNode, 1);
 		},
 
 		load: function(args, startup){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid,
 				bd = g.body,
@@ -73,7 +80,7 @@ define([
 				[t.domNode, 'onscroll', '_doScroll'],
 				[bn, 'onmousewheel', '_onMouseWheel'],
 				[g.mainNode, 'onkeypress', '_onKeyScroll'],
-				sniff('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']);
+				has('ff') && [bn, 'DOMMouseScroll', '_onMouseWheel']);
 			t.aspect(g, '_onResizeEnd', '_onBodyChange');
 			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
 			t.aspect(bd, 'onRender', '_onBodyChange');
@@ -82,8 +89,8 @@ define([
 					var ds = dn.style;
 					ds.display = 'none';
 					ds.width = '';
-					if(sniff('ie') < 8){
-						ds.width = t.stub.style.width = '0px';
+					if(has('ie') < 8){
+						ds.width = t.stubNode.style.width = '0px';
 					}
 					g.hLayout.reLayout();
 					g.hScroller.refresh();
@@ -99,20 +106,7 @@ define([
 		},
 	
 		//Public ----------------------------------------------------
-
 		scrollToRow: function(rowVisualIndex, toTop){
-			// summary:
-			//		Scroll the grid until the required row is in view.
-			// description:
-			//		This job will be an asynchronous one if the lazy-loading and lazy-rendering are used.
-			// rowVisualIndex: Integer
-			//		The visual index of the row
-			// toTop: Boolean?
-			//		If set this to true, the grid will try to scroll the required row to the top of the view.
-			//		Otherwise, the grid will stop scrolling as soon as the row is visible.
-			// returns:
-			//		A deferred object indicating when the scrolling process is finished. This will be useful
-			//		when using lazy-loading and lazy-rendering.
 			var d = new Deferred(),
 				bn = this.grid.bodyNode,
 				dn = this.domNode,
@@ -129,24 +123,24 @@ define([
 				if(toTop){
 					dn[st] = no;
 					finish(true);
-					return d;	//dojo.Deferred
+					return d;
 				}else if(no < bs){
 					dif = no - bs;
 				}else if(no + n.offsetHeight > bs + bn.clientHeight){
 					dif = no + n.offsetHeight - bs - bn.clientHeight;
 				}else{
 					finish(true);
-					return d;	//dojo.Deferred
+					return d;
 				}
 				dn[st] += dif;
 			}
 			finish(!!n);
-			return d;	//dojo.Deferred
+			return d;
 		},
 	
 		//Protected -------------------------------------------------
 		_init: function(){
-			this._onForcedScroll();
+			return this._onForcedScroll();
 		},
 
 		_update: function(){
@@ -155,11 +149,14 @@ define([
 			if(!g.autoHeight){
 				var bd = g.body,
 					bn = g.bodyNode,
-					toShow = bd.renderCount < bd.visualCount || bn.scrollHeight > bn.clientHeight,
+					toShow = bn.scrollHeight > bn.clientHeight,
 					ds = t.domNode.style;
-					scrollBarWidth = metrics.getScrollbar().w + (sniff('webkit') ? 1 : 0);//Fix a chrome RTL defect
-				if(sniff('ie') < 8){
-					var w = toShow ? scrollBarWidth + 'px' : '0px';
+					scrollBarWidth = metrics.getScrollbar().w + (has('webkit') ? 1 : 0);//Fix a chrome RTL defect
+				if(has('ie') < 8){
+					//In IE7 if the node is not wider than the scrollbar, 
+					//the scroll bar buttons and the empty space in the scroll bar won't be clickable.
+					//So add some extra px to make it wider. +1 is enough for classic theme. +2 is enough for XP theme.
+					var w = toShow ? (scrollBarWidth + 2) + 'px' : '0px';
 					t.stubNode.style.width = w;
 					ds.width = w;
 				}else{
@@ -183,7 +180,7 @@ define([
 		_doScroll: function(){
 			this.grid.bodyNode[st] = this.domNode[st];
 		},
-	
+
 		_onMouseWheel: function(e){
 			if(this.grid.vScrollerNode.style.display != 'none'){
 				var rolled = typeof e.wheelDelta === "number" ? e.wheelDelta / 3 : (-40 * e.detail); 
@@ -191,7 +188,7 @@ define([
 				event.stop(e);
 			}
 		},
-	
+
 		_onBodyChange: function(){
 			var t = this,
 				g = t.grid;
@@ -201,7 +198,7 @@ define([
 				if(!g.bodyNode){
 					//fix FF10 - g.bodyNode will be undefined during a quick recreation
 					return;
-				}				
+				}
 				t.stubNode.style.height = g.bodyNode.scrollHeight + 'px';
 				t._doScroll();
 				//FIX IE7 problem:
@@ -211,15 +208,16 @@ define([
 
 		_onForcedScroll: function(){
 			var t = this,
-				bd = t.grid.body;
+				view = t.grid.view,
+				body = t.grid.body;
 			return t.model.when({
-				start: bd.rootStart,
-				count: bd.rootCount
+				start: view.rootStart,
+				count: view.rootCount
 			}, function(){
-				bd.renderRows(0, bd.visualCount);
+				body.renderRows(0, view.visualCount);
 			});
 		},
-	
+
 		_onKeyScroll: function(evt){
 			var t = this,
 				g = t.grid,
@@ -229,12 +227,14 @@ define([
 				sn = t.domNode,
 				rowNode;
 			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
-				if(evt.keyCode == keys.HOME){
+				if(evt.keyCode == keys.HOME && evt.ctrlKey){
 					sn[st] = 0;
 					rowNode = bn.firstChild;
-				}else if(evt.keyCode == keys.END){
+					bd._focusCellCol = 0;
+				}else if(evt.keyCode == keys.END && evt.ctrlKey){
 					sn[st] = sn.scrollHeight - sn.offsetHeight;
 					rowNode = bn.lastChild;
+					bd._focusCellCol = g._columns.length - 1;
 				}else if(evt.keyCode == keys.PAGE_UP){
 					if(!sn[st]){
 						rowNode = bn.firstChild;

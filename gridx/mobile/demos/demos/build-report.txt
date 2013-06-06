@@ -1,4 +1,4 @@
-Build started: Mon Nov 05 2012 14:42:17 GMT+0800 (China Standard Time)
+Build started: Thu Mar 07 2013 10:27:58 GMT+0800 (中国标准时间)
 Build application version: 1.7.0dev (23930)
 Messages:
 info(100) Assumed module uses legacy loader API.
@@ -144,112 +144,83 @@ info(100) Assumed module uses legacy loader API.
 	module: dojox/xmpp/xmppSession
 	module: dojox/xmpp/widget/ChatSession
 info(103) Optimizing module complete.
-	E:/workspace/gridx/mobile/demos/test_lazy_load.js (compile time:13.166s)
-	E:/workspace/gridx/mobile/demos/test_chart.js (compile time:15.353s)
-	E:/workspace/gridx/mobile/demos/test_large_data.js (compile time:17.392s)
-	E:/workspace/gridx/mobile/demos/test_sort.js (compile time:6.262s)
-	E:/workspace/gridx/mobile/demos/test_observe_store.js (compile time:19.596s)
-	E:/workspace/gridx/mobile/demos/test_basic.js (compile time:19.919s)
-	E:/workspace/gridx/mobile/demos/test_pull_refresh.js (compile time:1.518s)
+	E:/workspace/gridx/mobile/demos/test_basic.js (compile time:14.753s)
+	E:/workspace/gridx/mobile/demos/test_lazy_load.js (compile time:15.08s)
+	E:/workspace/gridx/mobile/demos/test_sort.js (compile time:16.5s)
+	E:/workspace/gridx/mobile/demos/test_large_data.js (compile time:19.36s)
+	E:/workspace/gridx/mobile/demos/test_observe_store.js (compile time:19.363s)
+	E:/workspace/gridx/mobile/demos/test_pull_refresh.js (compile time:4.686s)
+	E:/workspace/gridx/mobile/demos/test_chart.js (compile time:2.373s)
 info(104) Optimizer messages.
-	E:/workspace/gridx/mobile/demos/test_chart.js:
-E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
+	E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
 	if(! 1 ){
 	        ^
 
-E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
 	if( 0 ){
 	       ^
 
-E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
 	}else{
 	     ^
 
-E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
 	}else{
 	     ^
 
-E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25479: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25482: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25503: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25507: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25706: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25709: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25730: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25735: WARNING - If this if/for/while really shouldnt have a body, use {}
-					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-					^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25760: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25770: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25793: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25836: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25845: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
-			^
-
-0 error(s), 18 warning(s)
-Done (compile time:15.353s)
-E:/workspace/gridx/mobile/demos/test_large_data.js:
-E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
 	if( 0 ){
 	       ^
 
-E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
 	}else{
 	     ^
 
-E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
 	}else{
 	     ^
 
-E:/workspace/gridx/mobile/demos/test_large_data.js:7671: WARNING - unreachable code
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
 	if(! 1 ){
 	        ^
 
 0 error(s), 5 warning(s)
-Done (compile time:17.392s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
 E:/workspace/gridx/mobile/demos/test_lazy_load.js:
 E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
 	if( 0 ){
@@ -272,76 +243,7 @@ E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable co
 	     ^
 
 0 error(s), 5 warning(s)
-Done (compile time:13.166s)
-E:/workspace/gridx/mobile/demos/test_sort.js:
-E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:8438: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:6.262s)
-E:/workspace/gridx/mobile/demos/test_observe_store.js:
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:8529: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:19.596s)
-E:/workspace/gridx/mobile/demos/test_basic.js:
-E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
-	}else{
-	     ^
-
-0 error(s), 5 warning(s)
-Done (compile time:19.919s)
+Done (compile time:15.08s)
 E:/workspace/gridx/mobile/demos/test_pull_refresh.js:
 E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1216: WARNING - unreachable code
 	if( 0 ){
@@ -363,17 +265,116 @@ E:/workspace/gridx/mobile/demos/test_pull_refresh.js:7617: WARNING - unreachable
 	}else{
 	     ^
 
-E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15013: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15044: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 					if(self.state == 'ready'){}
 					^
 
 0 error(s), 6 warning(s)
-Done (compile time:1.518s)
+Done (compile time:4.686s)
+E:/workspace/gridx/mobile/demos/test_large_data.js:
+E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:7680: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.36s)
+E:/workspace/gridx/mobile/demos/test_chart.js:
+E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25576: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25579: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25600: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25604: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25803: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25806: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25827: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25832: WARNING - If this if/for/while really shouldnt have a body, use {}
+					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+					^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25857: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25867: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25890: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25933: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25942: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
+			^
+
+0 error(s), 18 warning(s)
+Done (compile time:2.373s)
 
 info(107) Package Version:
 	package: dojo; version: 1.9.0dev
 	package: dijit; version: 1.8.0dev
 	package: dojox; version: 1.9.0dev
+	package: gridx; version: 1.2.0dev
 warn(203) Module tagged as pure AMD yet it contains legacy loader API applications.
 	module: dojo/dojo
 warn(216) dojo/has plugin resource could not be resolved during build-time.
@@ -404,7 +405,6 @@ error(307) Failed to evaluate module tagged as pure AMD (fell back to processing
 	module: dojox/widget/rotator/ThumbnailController; error: SyntaxError: Unexpected token <<
 	module: dojox/widget/rotator/Wipe; error: SyntaxError: Unexpected token <<
 	module: gridx/mobile/util/build_demos; error: TypeError: Cannot read property 'exec' of undefined
-	module: gridx/mobile/util/demos.profile.tpl; error: SyntaxError: Unexpected token {
 error(311) Missing dependency.
 	module: dojo/robot; dependency: doh/_browserRunner
 	module: dojo/robot; dependency: doh/robot
@@ -1105,657 +1105,6 @@ test_sort:
 	dojo/selector/acme
 
 Optimizer Messages:
-E:/workspace/gridx/mobile/demos/test_chart.js:
-E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25479: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25482: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25503: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25507: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25706: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25709: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25730: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25735: WARNING - If this if/for/while really shouldnt have a body, use {}
-					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-					^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25760: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25770: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25793: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25836: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25845: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
-			^
-
-0 error(s), 18 warning(s)
-Done (compile time:15.353s)
-E:/workspace/gridx/mobile/demos/test_chart.js:
-E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25479: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25482: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25503: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25507: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25706: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25709: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25730: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25735: WARNING - If this if/for/while really shouldnt have a body, use {}
-					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-					^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25760: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25770: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25793: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25836: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25845: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
-			^
-
-0 error(s), 18 warning(s)
-Done (compile time:15.353s)
-E:/workspace/gridx/mobile/demos/test_large_data.js:
-E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:7671: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:17.392s)
-E:/workspace/gridx/mobile/demos/test_chart.js:
-E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25479: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25482: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25503: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25507: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25706: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25709: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25730: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25735: WARNING - If this if/for/while really shouldnt have a body, use {}
-					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-					^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25760: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25770: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25793: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25836: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25845: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
-			^
-
-0 error(s), 18 warning(s)
-Done (compile time:15.353s)
-E:/workspace/gridx/mobile/demos/test_large_data.js:
-E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:7671: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:17.392s)
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
-	}else{
-	     ^
-
-0 error(s), 5 warning(s)
-Done (compile time:13.166s)
-E:/workspace/gridx/mobile/demos/test_sort.js:
-E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:8438: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:6.262s)
-E:/workspace/gridx/mobile/demos/test_chart.js:
-E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25479: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25482: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25503: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25507: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25706: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25709: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25730: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25735: WARNING - If this if/for/while really shouldnt have a body, use {}
-					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-					^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25760: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25770: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25793: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25836: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25845: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
-			^
-
-0 error(s), 18 warning(s)
-Done (compile time:15.353s)
-E:/workspace/gridx/mobile/demos/test_large_data.js:
-E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:7671: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:17.392s)
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
-	}else{
-	     ^
-
-0 error(s), 5 warning(s)
-Done (compile time:13.166s)
-E:/workspace/gridx/mobile/demos/test_sort.js:
-E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:8438: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:6.262s)
-E:/workspace/gridx/mobile/demos/test_observe_store.js:
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:8529: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:19.596s)
-E:/workspace/gridx/mobile/demos/test_chart.js:
-E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25479: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25482: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25503: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25507: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25706: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25709: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25730: WARNING - If this if/for/while really shouldnt have a body, use {}
-				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
-				^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25735: WARNING - If this if/for/while really shouldnt have a body, use {}
-					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
-					^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25760: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25770: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25793: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25836: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
-			^
-
-E:/workspace/gridx/mobile/demos/test_chart.js:25845: WARNING - If this if/for/while really shouldnt have a body, use {}
-			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
-			^
-
-0 error(s), 18 warning(s)
-Done (compile time:15.353s)
-E:/workspace/gridx/mobile/demos/test_large_data.js:
-E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_large_data.js:7671: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:17.392s)
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
-	}else{
-	     ^
-
-0 error(s), 5 warning(s)
-Done (compile time:13.166s)
-E:/workspace/gridx/mobile/demos/test_sort.js:
-E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_sort.js:8438: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:6.262s)
-E:/workspace/gridx/mobile/demos/test_observe_store.js:
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
-	if( 0 ){
-	       ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
-	}else{
-	     ^
-
-E:/workspace/gridx/mobile/demos/test_observe_store.js:8529: WARNING - unreachable code
-	if(! 1 ){
-	        ^
-
-0 error(s), 5 warning(s)
-Done (compile time:19.596s)
 E:/workspace/gridx/mobile/demos/test_basic.js:
 E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
 	if(! 1 ){
@@ -1778,7 +1127,214 @@ E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
 	     ^
 
 0 error(s), 5 warning(s)
-Done (compile time:19.919s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:15.08s)
 E:/workspace/gridx/mobile/demos/test_pull_refresh.js:
 E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1216: WARNING - unreachable code
 	if( 0 ){
@@ -1800,15 +1356,232 @@ E:/workspace/gridx/mobile/demos/test_pull_refresh.js:7617: WARNING - unreachable
 	}else{
 	     ^
 
-E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15013: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15044: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
 					if(self.state == 'ready'){}
 					^
 
 0 error(s), 6 warning(s)
-Done (compile time:1.518s)
+Done (compile time:4.686s)
+E:/workspace/gridx/mobile/demos/test_basic.js:
+E:/workspace/gridx/mobile/demos/test_basic.js:149: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1399: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:1733: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:4553: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_basic.js:9424: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:14.753s)
+E:/workspace/gridx/mobile/demos/test_sort.js:
+E:/workspace/gridx/mobile/demos/test_sort.js:1217: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1399: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:1727: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:5554: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_sort.js:8469: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:16.5s)
+E:/workspace/gridx/mobile/demos/test_observe_store.js:
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1244: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1426: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:1754: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:5771: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_observe_store.js:8560: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.363s)
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1215: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1397: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:1725: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:3442: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_lazy_load.js:7616: WARNING - unreachable code
+	}else{
+	     ^
+
+0 error(s), 5 warning(s)
+Done (compile time:15.08s)
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1216: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1398: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:1726: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:3443: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:7617: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_pull_refresh.js:15044: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+					if(self.state == 'ready'){}
+					^
+
+0 error(s), 6 warning(s)
+Done (compile time:4.686s)
+E:/workspace/gridx/mobile/demos/test_large_data.js:
+E:/workspace/gridx/mobile/demos/test_large_data.js:178: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:1689: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:2023: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:5583: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_large_data.js:7680: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+0 error(s), 5 warning(s)
+Done (compile time:19.36s)
+E:/workspace/gridx/mobile/demos/test_chart.js:
+E:/workspace/gridx/mobile/demos/test_chart.js:152: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1663: WARNING - unreachable code
+	if( 0 ){
+	       ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:1997: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5557: WARNING - unreachable code
+	}else{
+	     ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:5759: WARNING - unreachable code
+	if(! 1 ){
+	        ^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25576: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25579: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); f.call(o, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25600: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; i < n; t[i] = f.call(o, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25604: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); t.push(f.call(o, a.next(), i++, a)));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25803: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25806: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 0; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25827: WARNING - If this if/for/while really shouldnt have a body, use {}
+				for(i = 1, n = a.length; i < n; z = f.call(o, z, a[i], i, a), ++i);
+				^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25832: WARNING - If this if/for/while really shouldnt have a body, use {}
+					for(i = 1; a.hasNext(); z = f.call(o, z, a.next(), i++, a));
+					^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25857: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25867: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i > 0; --i, z = f.call(o, z, a[i], i, a));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25890: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; !pr.call(o, z); t.push(f.call(o, z)), z = g.call(o, z));
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25933: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(var i = a.length - 1; i >= 0; f.call(o, a[i], i, a), --i);
+			^
+
+E:/workspace/gridx/mobile/demos/test_chart.js:25942: WARNING - If this if/for/while really shouldnt have a body, use {}
+			for(; i >= 0; t[j++] = f.call(o, a[i], i, a), --i);
+			^
+
+0 error(s), 18 warning(s)
+Done (compile time:2.373s)
 
 
 Process finished normally
-	errors: 14
+	errors: 13
 	warnings: 16
-	build time: 25.32 seconds
+	build time: 29.44 seconds

@@ -5,6 +5,13 @@ define([
 	"./_Cache"
 ], function(declare, lang, Deferred, _Cache){
 
+/*=====
+	return declare(_Cache, {
+		// summary:
+		//		Implement a cache for client side store.
+	});
+=====*/
+
 	function fetchChildren(self){
 		var s = self._struct,
 			pids = s[''].slice(1),
@@ -14,11 +21,13 @@ define([
 			};
 		while(pids.length){
 			pid = pids.shift();
-			Deferred.when(self._loadChildren(pid), lang.partial(appendChildren, pid));
+			self._storeFetch({
+				parentId: pid
+			}).then(lang.partial(appendChildren, pid));
 		}
 	}
 
-	return declare(/*===== "gridx.core.model.cache.Async", =====*/_Cache, {
+	return declare(_Cache, {
 		keep: function(){},
 		free: function(){},
 

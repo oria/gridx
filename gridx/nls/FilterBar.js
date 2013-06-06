@@ -31,7 +31,7 @@ define({ root:
 	"any": "any",
 	"relationAll": "all rules",
 	"waiRelAll": "Match all of the following rules:",
-	"relationAny": "any rules",
+	"relationAny": "any rule",
 	"waiRelAny": "Match any of the following rules:",
 	"relationMsgFront": "Match",
 	"relationMsgTail": "",
@@ -51,11 +51,11 @@ define({ root:
 	"filterButton": "Filter",
 	"waiFilterButton": "Submit the filter",
 	
-	"columnSelectLabel": "Column",
+	"columnSelectLabel": "Column:",
 	"waiColumnSelectTemplate": "Column for rule ${0}",
-	"conditionSelectLabel": "Condition",
+	"conditionSelectLabel": "Condition:",
 	"waiConditionSelectTemplate": "Condition for rule ${0}",
-	"valueBoxLabel": "Value",
+	"valueBoxLabel": "Value:",
 	"waiValueBoxTemplate": "Enter value to filter for rule ${0}",
 	
 	"rangeTo": "to",
@@ -99,6 +99,7 @@ define({ root:
 }),
 //end v1.x content
 "ar": true,
+"bg": true,
 "ca": true,
 "cs": true,
 "da": true,
@@ -107,6 +108,8 @@ define({ root:
 "es": true,
 "fi": true,
 "fr": true,
+"he": true,
+"hr": true,
 "hu": true,
 "it": true,
 "ja": true,
@@ -124,6 +127,7 @@ define({ root:
 "sv": true,
 "th": true,
 "tr": true,
+"uk": true,
 "zh": true,
 "zh-tw": true
 });

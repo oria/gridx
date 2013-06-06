@@ -1,22 +1,25 @@
 define([
 	"dojo",
-	"dijit",
+	"dijit/popup",
 	"dojo/_base/declare",
 	"dojo/string",
 	"dojo/i18n!../../nls/FilterBar",
-	"./Filter",
-	"./FilterDialog",
 	"dijit/TooltipDialog",
-	"dijit/popup",
+	"./FilterDialog",
 	"dijit/Tooltip",
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/_base/html"
-], function(dojo, dijit, declare, string, i18n){
-	
-	return declare(dijit.TooltipDialog, {
+], function(dojo, popup, declare, string, i18n, TooltipDialog){
+
+/*=====
+	return declare([], {
 		// summary:
-		//	Show status dialog of filter.
+		//		Show status dialog of filter.
+	});
+=====*/
+
+	return declare(TooltipDialog, {
 		grid: null,
 		filterBar: null,
 		postCreate: function(){
@@ -30,7 +33,7 @@ define([
 		},
 		show: function(evt){
 			this.inherited(arguments);
-			dijit.popup.open({
+			popup.open({
 				popup: this,
 				x: evt.pageX,
 				y: evt.pageY,
@@ -39,12 +42,12 @@ define([
 		},
 		hide: function(){
 			this.inherited(arguments);
-			dijit.popup.close(this);
+			popup.close(this);
 		},
 
 		buildContent: function(){
 			// summary:
-			//	Build the status of current filter.
+			//		Build the status of current filter.
 			
 			var fb = this.filterBar, nls = fb._nls, data = fb.filterData;
 			if(!data || !data.conditions.length){return;}
@@ -53,10 +56,13 @@ define([
 			var arr = ['<div class="gridxFilterTooltipTitle"><b>${i18n.statusTipTitleHasFilter}</b> ', 
 				typeString, '</div><table><tr><th>${i18n.statusTipHeaderColumn}</th><th>${i18n.statusTipHeaderCondition}</th></tr>'
 			];
-			
 			dojo.forEach(data.conditions, function(d, idx){
 				var odd = idx%2 ? ' class="gridxFilterTooltipOddRow"' : '';
-				arr.push('<tr', odd, '><td>', (d.colId ? this.grid.column(d.colId).name() : '${i18n.anyColumnOption}'), 
+				if(d.colId){
+					var colName = this.grid.column(d.colId).name();
+					colName = this.grid.enforceTextDirWithUcc(d.colId, colName);
+				}
+				arr.push('<tr', odd, '><td>', (d.colId ? colName : '${i18n.anyColumnOption}'), 
 					'</td><td class="gridxFilterTooltipValueCell">', 
 					'<div>',
 					fb._getRuleString(d.condition, d.value, d.type),
@@ -90,7 +96,7 @@ define([
 		},
 		_getTr: function(e){
 			// summary:
-			//	Get table row of status
+			//		Get table row of status
 			var tr = e.target;
 			while(tr && !/^tr$/i.test(tr.tagName) && tr !== this.domNode){
 				tr = tr.parentNode;

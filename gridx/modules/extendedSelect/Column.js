@@ -1,7 +1,9 @@
 define([
+/*====="../../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/array",
-	"dojo/_base/query",
+	"dojo/_base/event",
+	"dojo/query",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/dom-class",
@@ -9,9 +11,23 @@ define([
 	"dojo/keys",
 	"../../core/_Module",
 	"./_Base"
-], function(declare, array, query, lang, sniff, domClass, mouse, keys, _Module, _Base){
+], function(/*=====Column, =====*/declare, array, event, query, lang, has, domClass, mouse, keys, _Module, _Base){
 
-	return declare(/*===== "gridx.modules.extendedSelect.Column", =====*/_Base, {
+/*=====
+	Column.select = function(){
+		// summary:
+		//		Select this column.
+	};
+	Column.deselect = function(){
+		// summary:
+		//		Deselect this column.
+	};
+	Column.isSelected = function(){
+		// summary:
+		//		Check whether this column is selected.
+	};
+
+	return declare(_Base, {
 		// summary:
 		//		Provides advanced column selections.
 		// description:
@@ -30,15 +46,59 @@ define([
 		//		|	grid.select.column.getSelected();//[]
 		//		|	grid.select.column.clear();
 
-		// name: [readonly] String
-		//		module name
+		selectById: function(columnId){
+			// summary:
+			//		Select columns by id.
+		},
+
+		deselectById: function(columnId){
+			// summary:
+			//		Deselect columns by id.
+		},
+
+		selectByIndex: function(columnIndex){
+			// summary:
+			//		Select a column by index.
+			//		This function can also select multiple columns.
+			//	|	//Select several individual columns:
+			//	|	gridx.select.column.selectByIndex(columnIndex1, columnIndex2, columnIndex3, ...);
+			//	|	//Select a range of columns:
+			//	|	gridx.select.column.selectByIndex([columnStartIndex, columnEndIndex]);
+			//	|	//Select multiple ranges of columns:
+			//	|	gridx.select.column.selectByIndex([columnStartIndex1, columnEndIndex1], [columnStartIndex2, columnEndIndex2], ...);
+		},
+
+		deSelectByIndex: function(columnIndex){
+			// summary:
+			//		Deselect a column by index.
+			//		This function can also deselect multiple columns. Please refer to selectByIndex().
+		},
+
+		getSelected: function(){
+			// summary:
+			//		Get id array of all selected column ids.
+		},
+
+		clear: function(){
+			// summary:
+			//		Deselected all selected columns;
+		},
+
+		isSelected: function(columnId){
+			// summary:
+			//		Check if the given column(s) are all selected.
+			//		This function can also check if multiple columns are all selected.
+			// columnId: String...
+			//		Column IDs.
+			// returns:
+			//		True if all given columns are selected; false if not.
+		}
+	});
+=====*/
+
+	return declare(_Base, {
 		name: 'selectColumn',
 
-//        optional: ['columnResizer'],
-
-		// columnMixin: Object
-		//		A map of functions to be mixed into grid column object, so that we can use select api on column object directly
-		//		- grid.column(1).select() | deselect() | isSelected();
 		columnMixin: {
 			select: function(){
 				this.grid.select.column.selectById(this.id);
@@ -54,31 +114,7 @@ define([
 		},
 
 		//Public-----------------------------------------------------------------
-/*=====
-		selectById: function(columnId){
-			// summary:
-			//		Select a column by id.
-		},
-		
-		deselectById: function(columnId){
-			// summary:
-			//		Deselect a column by id.
-		},
-		
-		selectByIndex: function(columnIndex){
-			// summary:
-			//		Select a column by index
-		},
-		
-		deSelectByIndex: function(columnIndex){
-			// summary:
-			//		Deselect a column by index.
-		},		
-=====*/
-		
 		getSelected: function(){
-			// summary:
-			//		Get id array of all selected columns
 			return array.map(array.filter(this.grid._columns, function(col){
 				return col._selected;
 			}), function(col){
@@ -87,8 +123,6 @@ define([
 		},
 
 		clear: function(silent){
-			// summary:
-			//		Deselected all selected columns;			
 			query(".gridxColumnSelected", this.grid.domNode).forEach(function(node){
 				domClass.remove(node, 'gridxColumnSelected');
 				node.removeAttribute('aria-selected');
@@ -103,8 +137,6 @@ define([
 		},
 
 		isSelected: function(){
-			// summary:
-			//		Check if the given column(s) are all selected.			
 			var cols = this.grid._columnsById;
 			return array.every(arguments, function(id){
 				var col = cols[id];
@@ -161,6 +193,9 @@ define([
 				[g, 'onHeaderCellMouseDown', function(e){
 					if(mouse.isLeft(e) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
 						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
 					}
 				}],
 				[g, 'onHeaderCellMouseOver', function(e){
@@ -169,8 +204,9 @@ define([
 				[g, 'onCellMouseOver', function(e){
 					t._highlight({column: e.columnIndex});
 				}],
-				[g, sniff('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
+				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
+						event.stop(e);
 						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
@@ -186,7 +222,7 @@ define([
 				});
 			for(i = cols.length - 1; i >= 0; --i){
 				for(j = start; j < end; ++j){
-					node = query(['[visualindex="', j, '"] [colid="', cols[i].id, '"]'].join(''), bn)[0];
+					node = query(['[visualindex="', j, '"] [colid="', g._escapeId(cols[i].id), '"]'].join(''), bn)[0];
 					domClass.add(node, 'gridxColumnSelected');
 					node.setAttribute('aria-selected', true);
 				}
@@ -217,7 +253,7 @@ define([
 		},
 
 		_doHighlight: function(target, toHighlight){
-			query('[colid="' + this.grid._columns[target.column].id + '"].gridxCell', this.grid.domNode).forEach(function(node){
+			query('[colid="' + this.grid._escapeId(this.grid._columns[target.column].id) + '"].gridxCell', this.grid.domNode).forEach(function(node){
 				domClass.toggle(node, 'gridxColumnSelected', toHighlight);
 			});
 		},
@@ -226,7 +262,7 @@ define([
 			var g = this.grid;
 			if(g.focus){
 				//Seems breaking encapsulation...
-				g.header._focusNode(query('[colid="' + g._columns[target.column].id + '"].gridxCell', g.header.domNode)[0]);
+				g.header._focusNode(query('[colid="' + g._escapeId(g._columns[target.column].id) + '"].gridxCell', g.header.domNode)[0]);
 			}
 		},
 

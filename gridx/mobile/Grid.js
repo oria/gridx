@@ -11,52 +11,53 @@ define([
 	'dojox/mobile/Pane',
 	'dojox/mobile/ScrollablePane',
 	'dojo/i18n!./nls/common',
-	"dojo/_base/Deferred"
-], function(kernel, declare, lang, array, dom, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n, Deferred){
+	"dojo/_base/Deferred",
+	"dojo/has"
+], function(kernel, declare, lang, array, dom, aspect, string, css, _StoreMixin, Pane, ScrollablePane, i18n, Deferred, has){
 	// module:
-	//	gridx/mobile/Grid
+	//		gridx/mobile/Grid
 	// summary:
-	//	A mobile grid that has fixed header, footer and a scrollable body.
+	//		A mobile grid that has fixed header, footer and a scrollable body.
 	
 	kernel.experimental('gridx/mobile/Grid');
 	
 	return declare('gridx.mobile.Grid', [Pane, _StoreMixin], {
 		// summary:
-		//	A mobile grid that has fixed header, footer and a scrollable body.
+		//		A mobile grid that has fixed header, footer and a scrollable body.
 		
-		//autoHeight: boolean
-		//	If true, it's must be a children of dojox.mobile.View
-		//  and it occupies the rest height of the screen. If false it could be in any container
-		//	using a specified height.
+		// autoHeight: boolean
+		//		If true, it's must be a children of dojox.mobile.View
+		//		and it occupies the rest height of the screen. If false it could be in any container
+		//		using a specified height.
 		autoHeight: true,
 		
-		//showHeader: boolean
-		//	Whether to show the grid header
+		// showHeader: boolean
+		//		Whether to show the grid header
 		showHeader: false,
 		
-		//vScroller: boolean
-		//	Whether to show the virtical scroller
+		// vScroller: boolean
+		//		Whether to show the virtical scroller
 		vScroller: true,
 		
-		//hScroller: boolean
-		//	Whether to show the horizontal scroller
+		// hScroller: boolean
+		//		Whether to show the horizontal scroller
 		hScroller: false,
 		
-		//columns: array
-		//	Column definition to show the grid from store
+		// columns: array
+		//		Column definition to show the grid from store
 		columns: null,
 		
 		setColumns: function(columns){
 			// summary:
-			//	Set columns to show for the grid. 
-			//  Maybe improve performance by adding/removing some columns instead of re-rendering.
+			//		Set columns to show for the grid. 
+			//		Maybe improve performance by adding/removing some columns instead of re-rendering.
 			this.columns = columns;
 			this.refresh();
 		},
 		
 		buildGrid: function(){
 			// summary:
-			//	Build the whole grid
+			//		Build the whole grid
 			if(this.columns)this._buildHeader();
 			if(this.store)this._buildBody();
 			this.resize();
@@ -64,7 +65,7 @@ define([
 		
 		_buildHeader: function(){
 			// summary:
-			//	Build the grid header when showHeader is true.
+			//		Build the grid header when showHeader is true.
 			if(!this.showHeader){
 				this.headerNode.style.display = 'none';
 				return;
@@ -73,12 +74,16 @@ define([
 			}
 			
 			var arr = ['<div class="mobileGridxHeaderRow"><table><tr>'];
+			var _this = this;
 			array.forEach(this.columns, function(col){
+				var textDir = col.textDir || _this.textDir;
 				arr.push(
 					'<th class="mobileGridxHeaderCell ', col.cssClass || ''
 						,col.align ? ' align-' + col.align : ''
 					,col.width? '" style="width:' + col.width + ';"' : ''
-					,'>', col.title, '</th>'
+					,'>'
+					,(has("dojo-bidi") && textDir) ? _this._enforceTextDirWithUcc(col.title, textDir) : col.title
+					,'</th>'
 				);
 			});
 			arr.push('</tr></table></div>');
@@ -87,7 +92,7 @@ define([
 		
 		_buildBody: function(items){
 			// summary:
-			//	Build the grid body
+			//		Build the grid body
 			console.log('building body');
 			if(items && items.length){
 				var arr = [];
@@ -102,13 +107,17 @@ define([
 		
 		_createRow: function(item){
 			// summary:
-			//	Create a grid row by object store item.
+			//		Create a grid row by object store item.
 			var rowId = this.store.getIdentity(item);
 			var arr = ['<div class="mobileGridxRow"',
 				rowId ? ' rowId="' + rowId + '"' : '',
 				 '><table><tr>'];
 			array.forEach(this.columns, function(col){
 				var value = this._getCellContent(col, item);
+				var textDir = col.textDir || this.textDir;
+				if(has("dojo-bidi") && textDir){
+					value = this._enforceTextDirWithUcc(value, textDir);
+				}
 				arr.push(
 					'<td class="mobileGridxCell ' 
 					,((col.cssClass || col.align) ? ((col.cssClass || '') + (col.align ? ' align-' + col.align : '')) : '')
@@ -123,8 +132,8 @@ define([
 		
 		_getCellContent: function(col, item){
 			// summary:
-			//	Get a cell content by the column definition.
-			//	* Currently only support string content, will add support for widget in future.
+			//		Get a cell content by the column definition.
+			//		* Currently only support string content, will add support for widget in future.
 			var f = col.formatter;
 			if(col.template){
 				return string.substitute(col.template, item);
@@ -135,7 +144,7 @@ define([
 		
 		buildRendering: function(){
 			// summary:
-			//	Build the grid dom structure.
+			//		Build the grid dom structure.
 			this.inherited(arguments);
 			css.add(this.domNode, 'mobileGridx');
 			this.domNode.innerHTML = '<div class="mobileGridxHeader"></div><div class="mobileGridxBody"></div><div class="mobileGridxFooter"></div>';
@@ -171,7 +180,7 @@ define([
 		
 		resize: function(){
 			// summary:
-			//	Calculate the height of grid body according to the autoHeight property.
+			//		Calculate the height of grid body according to the autoHeight property.
 			this.inherited(arguments);
 			var h = this.domNode.offsetHeight;
 			if(this.autoHeight){
@@ -190,11 +199,12 @@ define([
 		
 		startup: function(){
 			//summary:
-			//	Start up the body pane, and fetch data from store.
+			//		Start up the body pane, and fetch data from store.
 			
 			this.bodyPane.startup();
 			this.inherited(arguments);
 			this.refresh();
+			this.resize();
 		},
 
 		
@@ -223,7 +233,26 @@ define([
 		},
 		
 		
-				
+		PDF: '\u202C',
+		LRE: '\u202A',
+		RLE: '\u202B',		
+		_enforceTextDirWithUcc: function(text, textDir){
+			// summary:
+			//		Wraps by UCC (Unicode control characters) option's text according to this.textDir
+			// text:
+			//		The text to be wrapped.
+			// textDir:
+			//		Text direction.
+			
+			textDir = (this._checkContextual && text && textDir === "auto") ? this._checkContextual(text.replace(/<[^>]*>/g,"")) : textDir;
+			return ((textDir === "rtl") ? this.RLE : this.LRE) + text + this.PDF;		
+		},
+		_setTextDirAttr: function(textDir){
+			if(this.textDir != textDir){
+				this.textDir = textDir;
+				this.refresh();					
+			}
+		},			
 //		refresh: function(){
 //			//summary:
 //			//	Firstly refresh header, then fetch data from store.
@@ -263,6 +292,7 @@ define([
 			}, function(error){
 				_this.onError(error);
 			});
+			this.resize();
 			return promise;
 		}
 	});

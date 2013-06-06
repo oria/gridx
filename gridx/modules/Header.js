@@ -1,34 +1,69 @@
 define([
+/*====="../core/Column", =====*/
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
 	"dojo/dom-construct",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
-	"dojo/_base/query",
+	"dojo/query",
 	"dojo/_base/sniff",
 	"dojo/keys",
 	"../core/util",
 	"../core/_Module"
-], function(declare, lang, array, domConstruct, domClass, domGeometry, query, sniff, keys, util, _Module){
+], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, has, keys, util, _Module){
 
-	
-	return declare(/*===== "gridx.modules.Header", =====*/_Module, {
+/*=====
+	Column.headerNode = function(){
+		// summary:
+		//		Get header node of the column.
+		// returns:
+		//		The header node of this column.
+	};
+
+	return declare(_Module, {
 		// summary:
 		//		The header UI of grid
 		// description:
 		//		This module is in charge of the rendering of the grid header. But it should not manage column width,
 		//		which is the responsibility of ColumnWidth module.
 
-		name: 'header',
+		// hidden: Boolean
+		//		Whether the header UI should be hidden.
+		hidden: false,
 
-		getAPIPath: function(){
-			// tags:
-			//		protected extension
-			return {
-				header: this
-			};
+		getHeaderNode: function(id){
+			// summary:
+			//		Get the header DOM node by column ID.
+			// id: String
+			//		The column ID
+			// returns:
+			//		The header DOM node
 		},
+
+		refresh: function(){
+			// summary:
+			//		Re-build the header UI.
+		},
+
+		onRender: function(){
+			// summary:
+			//		Fired when the header is rendered.
+			// tags:
+			//		callback
+		},
+
+		onMoveToHeaderCell: function(){
+			// summary:
+			//		Fired when the focus is moved to a header cell by keyboard.
+			// tags:
+			//		callback
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: 'header',
 
 		constructor: function(){
 			var t = this,
@@ -44,8 +79,6 @@ define([
 		},
 
 		preload: function(args){
-			// tags:
-			//		protected extension
 			var t = this,
 				g = t.grid;
 			t.domNode.appendChild(t.innerNode);
@@ -54,11 +87,9 @@ define([
 			//Add this.domNode to be a part of the grid header
 			g.vLayout.register(t, 'domNode', 'headerNode');
 			t.aspect(g, 'onHScroll', '_onHScroll');
-			t.aspect(g, 'onHeaderCellMouseOver', '_onHeaderCellMouseOver');
-			t.aspect(g, 'onHeaderCellMouseOut', '_onHeaderCellMouseOver');
 			//FIXME: sometimes FF will remember the scroll position of the header row, so force aligned with body.
 			//Does not occur in any other browsers.
-			if(sniff('ff')){
+			if(has('ff')){
 				t.aspect(g, 'onModulesLoaded', function(){
 					t._onHScroll(t._scrollLeft);
 				});
@@ -74,8 +105,6 @@ define([
 		},
 
 		destroy: function(){
-			// tags:
-			//		protected extension
 			this.inherited(arguments);
 			domConstruct.destroy(this.domNode);
 		},
@@ -85,47 +114,23 @@ define([
 				return this.grid.header.getHeaderNode(this.id);
 			}
 		},
-	
-		//Public-----------------------------------------------------------------------------
-		
 
-		// hidden: Boolean
-		//		Whether the header UI should be hidden.
+		//Public-----------------------------------------------------------------------------
 		hidden: false,
 
-		
 		getHeaderNode: function(id){
-			// summary:
-			//		Get the header DOM node by column ID.
-			// id: String
-			//		The column ID
-			// returns:
-			//		The header DOM node
-			return query("[colid='" + id + "']", this.domNode)[0];	//DOMNode
+			return query("[colid='" + this.grid._escapeId(id) + "']", this.domNode)[0];
 		},
-		
-		
+
 		refresh: function(){
-			// summary:
-			//		Re-build the header UI.
 			this._build();
 			this._onHScroll(this._scrollLeft);
 			this.onRender();
 		},
 
-		onRender: function(){
-			// summary:
-			//		Fired when the header is rendered.
-			// tags:
-			//		callback
-		},
+		onRender: function(){},
 
-		onMoveToHeaderCell: function(/* columnId, e */){
-			// summary:
-			//		Fired when the focus is moved to a header cell by keyboard.
-			// tags:
-			//		callback
-		},
+		onMoveToHeaderCell: function(){},
 		
 		//Private-----------------------------------------------------------------------------
 		_scrollLeft: 0,
@@ -136,16 +141,18 @@ define([
 				f = g.focus,
 				sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			array.forEach(g._columns, function(col){
-				sb.push('<th id="', (g.id + '-' + col.id).replace(/\s+/, ''),
+				col._domId = (g.id + '-' + col.id).replace(/\s+/, '');
+				sb.push('<td id="', col._domId,
 					'" role="columnheader" aria-readonly="true" tabindex="-1" colid="', col.id,
 					'" class="gridxCell ',
 					f && f.currentArea() == 'header' && col.id == t._focusHeaderId ? t._focusClass : '',
 					(lang.isFunction(col.headerClass) ? col.headerClass(col) : col.headerClass) || '',
-					'" style="width: ', col.width, ';',
+					'" style="width:', col.width, ';min-width:', col.width, ';',
+					g.getTextDirStyle(col.id, col.name),
 					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
 					'"><div class="gridxSortNode">',
 					col.name || '',
-					'</div></th>');
+					'</div></td>');
 			});
 			sb.push('</tr></table>');
 			t.innerNode.innerHTML = sb.join('');
@@ -153,12 +160,12 @@ define([
 		},
 
 		_onHScroll: function(left){
-			if((sniff('webkit') || sniff('ie') < 8) && !this.grid.isLeftToRight()){
+			if((has('webkit') || has('ie') < 8) && !this.grid.isLeftToRight()){
 				left = this.innerNode.scrollWidth - this.innerNode.offsetWidth - left;
 			}
 			this.innerNode.scrollLeft = this._scrollLeft = left;
 		},
-	
+
 		_onMouseEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onHeaderCell' + eventName,
@@ -171,25 +178,17 @@ define([
 				g[evtRow](e);
 			}
 		},
-	
+
 		_decorateEvent: function(e){
-			for(var n = e.target, c; n && n !== this.domNode; n = n.parentNode){
-				if(n.tagName && n.tagName.toLowerCase() == 'th'){
-					c = this.grid._columnsById[n.getAttribute('colid')];
-					if(c){
-						e.headerCellNode = n;
-						e.columnId = c.id;
-						e.columnIndex = c.index;
-					}
-					return;
-				}
+			var n = query(e.target).closest('.gridxCell', this.domNode)[0],
+				c = n && this.grid._columnsById[n.getAttribute('colid')];
+			if(c){
+				e.headerCellNode = n;
+				e.columnId = c.id;
+				e.columnIndex = c.index;
 			}
 		},
-		
-		_onHeaderCellMouseOver: function(e){
-			domClass.toggle(this.getHeaderNode(e.columnId), 'gridxHeaderCellOver', e.type == 'mouseover');
-		},
-		
+
 		// Focus
 		_focusHeaderId: null,
 
@@ -219,7 +218,7 @@ define([
 		_doFocus: function(evt, step){
 			var t = this, 
 				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
-				r = t._focusNode(n || query('th.gridxCell', t.domNode)[0]);
+				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
 			t.grid.focus.stopEvent(r && evt);
 			return r;
 		},
@@ -230,9 +229,7 @@ define([
 					fid = t._focusHeaderId = node.getAttribute('colid');
 				if(fid){
 					t._blurNode();
-					if(g.hScroller){
-						g.hScroller.scrollToColumn(fid);
-					}
+					
 					g.body._focusCellCol = g._columnsById[fid].index;
 
 					domClass.add(node, t._focusClass);
@@ -240,14 +237,18 @@ define([
 					setTimeout(function(){
 						//For webkit browsers, when moving column using keyboard, the header cell will lose this focus class,
 						//although it was set correctly before this setTimeout. So re-add it here.
-						if(sniff('webkit')){
+						if(has('webkit')){
 							domClass.add(node, t._focusClass);
 						}
 						node.focus();
-						if(sniff('ie') < 8){
+						if(has('ie') < 8){
 							t.innerNode.scrollLeft = t._scrollLeft;
 						}
+						if(g.hScroller){
+							g.hScroller.scrollToColumn(fid, t.innerNode);
+						}
 					}, 0);
+
 					return true;
 				}
 			}
@@ -255,7 +256,7 @@ define([
 		},
 
 		_blurNode: function(){
-			var t = this, n = query('th.' + t._focusClass, t.innerNode)[0];
+			var t = this, n = query('.' + t._focusClass, t.innerNode)[0];
 			if(n){
 				domClass.remove(n, t._focusClass);
 			}
