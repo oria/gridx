@@ -97,28 +97,30 @@ class JsonRestStore{
 	}
 
 	private function query($items){
-		$keys = array_keys($items[0]);
-		$querys = array();
-		foreach($keys as $key){
-			if(array_key_exists($key, $_REQUEST)){
-				$q = $_REQUEST[$key];
-				if (strlen($q) && $q[strlen($q)-1]=="*") {
-					$q = substr($q, 0, strlen($q)-1);
-				}
-				$querys[$key] = $q;
-			}
-		}
-		if(count($querys)){
-			$ret = array();
-			foreach ($items as $item) {
-				if($this->match($item, $querys)){
-					$ret[] = $item;
+		if(count($items) > 0){
+			$keys = array_keys($items[0]);
+			$querys = array();
+			foreach($keys as $key){
+				if(array_key_exists($key, $_REQUEST)){
+					$q = $_REQUEST[$key];
+					if (strlen($q) && $q[strlen($q)-1]=="*") {
+						$q = substr($q, 0, strlen($q)-1);
+					}
+					$querys[$key] = $q;
 				}
 			}
-			$items = $ret;
-		}
+			if(count($querys)){
+				$ret = array();
+				foreach ($items as $item) {
+					if($this->match($item, $querys)){
+						$ret[] = $item;
+					}
+				}
+				$items = $ret;
+			}
 //        fb($items, 'query');
 //        fb(count($items), 'query');
+		}
 		return $items;
 	}
 

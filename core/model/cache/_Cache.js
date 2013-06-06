@@ -202,13 +202,13 @@ define([
 				ids = st[pid],
 				i;
 			if(!ids){
-				throw new Error("Fatal error of cache._addRow: parent item " + pid + " of " + id + " is not loaded");
+				throw new Error("Fatal error of _Cache._addRow: parent item " + pid + " of " + id + " is not loaded");
 			}
-			if(!ids[index + 1]){
-				ids[index + 1] = id;
-			}else if(ids[index + 1] !== id){
-				throw new Error("Fatal error of cache._addRow: different row id " + id + " and " + ids[index + 1] + " for same row index " + index);
+			var oldId = ids[index + 1];
+			if(t.model.isId(oldId) && oldId !== id){
+				console.error("Error of _Cache._addRow: different row id " + id + " and " + ids[index + 1] + " for same row index " + index);
 			}
+			ids[index + 1] = id;
 			st[id] = st[id] || [pid];
 			if(pid === ''){
 				i = indexOf(pr, id);
@@ -226,12 +226,12 @@ define([
 		},
 
 		_storeFetch: function(options, onFetched){
-			console.debug("\tFETCH parent: ",
-					options.parentId, ", start: ",
-					options.start || 0, ", count: ",
-					options.count, ", end: ",
-					options.count && (options.start || 0) + options.count - 1, ", options:",
-					this.options);
+//            console.debug("\tFETCH parent: ",
+//                    options.parentId, ", start: ",
+//                    options.start || 0, ", count: ",
+//                    options.count, ", end: ",
+//                    options.count && (options.start || 0) + options.count - 1, ", options:",
+//                    this.options);
 
 			var t = this,
 				s = t.store,
@@ -244,7 +244,6 @@ define([
 				t._size[parentId] = parseInt(size, 10);
 			}
 			function onComplete(items){
-				//Private function to be called in the scope of cache
 				try{
 					var start = options.start || 0,
 						i = 0,
@@ -363,6 +362,8 @@ define([
 					t.model._onSizeChange();
 				}
 			}else{
+				//FIXME: Don't know what to do if the deleted row was not loaded.
+				t.clear();
 				t.onDelete(id);
 //                var onBegin = hitch(t, _onBegin),
 //                    req = mixin({}, t.options || {}, {

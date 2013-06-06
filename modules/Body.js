@@ -255,8 +255,7 @@ define([
 		load: function(args){
 			var t = this,
 				view = t.grid.view;
-			t.aspect(t.model, 'onDelete', '_onDelete');
-			t.aspect(view, 'onUpdate', '_onSizeChange');
+			t.aspect(view, 'onUpdate', 'lazyRefresh');
 			if(view._err){
 				t._loadFail(view._err);
 			}
@@ -462,7 +461,7 @@ define([
 						rowInfo.rowId = m.indexToId(idx, pid);
 						var cell = g.cell(rowInfo.rowId, col.id, 1),
 							isPadding = g.tree && g.tree.isPaddingCell(rowInfo.rowId, col.id);
-						cellNode.innerHTML = t._buildCellContent(cell, rowVisualIndex, isPadding);
+						cellNode.innerHTML = t._buildCellContent(col, rowInfo.rowId, cell, rowVisualIndex, isPadding);
 						t.onAfterCell(cell);
 					}
 				}).then(function(){
@@ -472,6 +471,16 @@ define([
 			}
 			d.callback(false);
 			return d;
+		},
+
+		lazyRefresh: function(){
+			var t = this;
+			clearTimeout(t._sizeChangeHandler);
+			t._sizeChangeHandler = setTimeout(function(){
+				if(!t._destroyed){
+					t.refresh();
+				}
+			}, 10);
 		},
 
 		renderRows: function(start, count, position/*?top|bottom*/, isRefresh){
@@ -505,7 +514,6 @@ define([
 							postCount = g.vScroller._updateRowHeight('post');
 						if(oldEnd - postCount < start + count){
 							count = oldEnd - postCount - start;
-							console.log(start, count);
 						}
 					}
 				}else if(position == 'bottom'){
@@ -518,7 +526,6 @@ define([
 						if(t.renderStart > start){
 							start = t.renderStart;
 							count = t.renderCount;
-							console.log(start, count);
 						}
 					}
 				}else{
@@ -656,7 +663,7 @@ define([
 				s = [],
 				g = t.grid,
 				w = t.domNode.scrollWidth,
-				columns = g.columns();
+				columns = g.columns(),
 				i = start;
 			for(; i < end; ++i){
 				var rowInfo = g.view.getRowInfo({visualIndex: i}),
@@ -707,7 +714,7 @@ define([
 					n.innerHTML = t._buildCells(row, rowInfo.visualIndex);
 					t.onAfterRow(row);
 				}else{
-					throw new Error('Row is not in cache:' + rowInfo.rowIndex);
+					console.error('Error in Body._buildRowContent: Row is not in cache: ' + rowInfo.rowIndex);
 				}
 			}
 		},
@@ -718,43 +725,44 @@ define([
 
 		_buildCells: function(row, visualIndex, cols){
 			var t = this,
-				g = t.grid,
-				columns = g._columns,
-				rowData = row.data(),
-				isFocusArea = g.focus.currentArea() == 'body',
+				rowId = row.id,
 				sb = ['<table class="gridxRowTable" role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'],
 				output = {};
 			t.onCheckCustomRow(row, output);
-			if(output[row.id]){
+			if(output[rowId]){
 				output = {};
 				t.onBuildCustomRow(row, output);
 				sb.push('<td class="gridxCustomRow" aria-readonly="true" role="gridcell" tabindex="-1">',
-					t._wrapCellData(output[row.id], row.id),
+					t._wrapCellData(output[rowId], rowId),
 					'</td>');
 			}else{
-				var cellCls = t._cellCls[row.id] || {};
+				var g = t.grid,
+					isFocusedRow = g.focus.currentArea() == 'body' && t._focusCellRow === visualIndex,
+					rowData = t.model.byId(rowId).data,
+					columns = g._columns,
+					cellCls = t._cellCls[rowId] || {};
 				for(var i = 0, len = columns.length; i < len; ++i){
 					var col = columns[i],
-						isPadding = g.tree && g.tree.isPaddingCell(row.id, col.id),
-						cell = g.cell(row, cols && cols[i] || col.id, 1),
-						cls = [col._class || ''],
+						colId = col.id,
+						colWidth = col.width,
+						isPadding = g.tree && g.tree.isPaddingCell(rowId, colId),
 						customCls = col['class'],
-						style = g.getTextDirStyle(col.id, rowData[col.id]);
-					cls.push((customCls && lang.isFunction(customCls) ? customCls(cell) : customCls) || '');
-					cls = cls.concat(cellCls[col.id] || []);
-					style += (col.style && lang.isFunction(col.style) ? col.style(cell) : col.style) || '';
-					sb.push('<td aria-describedby="', col._domId, '" class="gridxCell ');
-					if(isPadding){
-						sb.push('gridxPaddingCell ');
-					}
-					if(isFocusArea && t._focusCellRow === visualIndex && t._focusCellCol === i){
-						sb.push('gridxCellFocus ');
-					}
-					sb.push(cls.join(' '),
-						'" aria-readonly="true" role="gridcell" tabindex="-1" colid="', col.id, 
-						'" style="width:', col.width, ';min-width:', col.width, ';max-width:', col.width,
-						';', style,
-						'">', t._buildCellContent(cell, visualIndex, isPadding),
+						cellData = rowData[colId],
+						customClsIsFunction = customCls && lang.isFunction(customCls),
+						styleIsFunction = col.style && lang.isFunction(col.style),
+						needCell = customClsIsFunction || styleIsFunction || (!isPadding && col.decorator),
+						cell = needCell && g.cell(row, cols && cols[i] || colId, 1);
+					sb.push('<td aria-readonly="true" role="gridcell" tabindex="-1" aria-describedby="',
+						col._domId,'" colid="', colId, '" class="gridxCell ',
+						isPadding ? 'gridxPaddingCell ' : '',
+						isFocusedRow && t._focusCellCol === i ? 'gridxCellFocus ' : '',
+						col._class || '', ' ',
+						(customClsIsFunction ? customCls(cell) : customCls) || '', ' ',
+						cellCls[colId] ? cellCls[colId].join('') : '',
+						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
+						g.getTextDirStyle(colId, cellData),
+						(styleIsFunction ? col.style(cell) : col.style) || '',
+						'">', t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
 					'</td>');
 				}
 			}
@@ -762,14 +770,12 @@ define([
 			return sb.join('');
 		},
 
-		_buildCellContent: function(cell, visualIndex, isPadding){
+		_buildCellContent: function(col, rowId, cell, visualIndex, isPadding, cellData){
 			var r = '',
-				col = cell.column,
-				row = cell.row,
-				data = cell.data();
+				data = cellData === undefined && cell ? cell.data() : cellData;
 			if(!isPadding){
-				var s = col.decorator ? col.decorator(data, row.id, visualIndex, cell) : data;
-				r = this._wrapCellData(s, row.id, col.id);
+				var s = col.decorator ? col.decorator(data, rowId, visualIndex, cell) : data;
+				r = this._wrapCellData(s, rowId, col.id);
 			}
 			return (r === '' || r === null || r === undefined) && (has('ie') < 8 || this.arg('stuffEmptyCell')) ? '&nbsp;' : r;
 		},
@@ -858,69 +864,13 @@ define([
 									}
 								}
 								//Support for Bidi end
-								cell.node().innerHTML = t._buildCellContent(cell, row.visualIndex(), isPadding);
+								cell.node().innerHTML = t._buildCellContent(col, id, cell, row.visualIndex(), isPadding);
 								t.onAfterCell(cell);
 							}
 						});
 					}
 				}
 			}
-		},
-
-		_onDelete: function(id){
-			var t = this;
-			if(t.autoUpdate){
-				var node = t.getRowNode({rowId: id});
-				if(node){
-					var sn, count = 0,
-						start = parseInt(node.getAttribute('rowindex'), 10),
-						pid = node.getAttribute('parentid'),
-						pids = {},
-						toDelete = [node],
-						rid, ids = [id],
-						vidx;
-					pids[id] = 1;
-					for(sn = node.nextSibling; sn && pids[sn.getAttribute('parentid')]; sn = sn.nextSibling){
-						rid = sn.getAttribute('rowid');
-						ids.push(rid);
-						toDelete.push(sn);
-						pids[rid] = 1;
-					}
-					for(; sn; sn = sn.nextSibling){
-						if(sn.getAttribute('parentid') == pid){
-							sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex'), 10) - 1);
-						}
-						vidx = parseInt(sn.getAttribute('visualindex'), 10) - toDelete.length;
-						sn.setAttribute('visualindex', vidx);
-						domClass.toggle(sn, 'gridxRowOdd', vidx % 2);
-						++count;
-					}
-					t.renderCount -= toDelete.length;
-					array.forEach(ids, t.onUnrender, t);
-					array.forEach(toDelete, domConstruct.destroy);
-					t.onDelete(id, start);
-					t.onRender(start, count);
-					if(!t.domNode.childNodes.length){
-						var en = t.grid.emptyNode,
-							emptyInfo = t.arg('emptyInfo', nls.emptyInfo);
-						en.innerHTML = emptyInfo;
-						en.style.zIndex = 1;
-						t.onEmpty();
-					}
-				}
-			}
-		},
-
-		_onSizeChange: function(){
-			var t = this;
-			if(t._sizeChangeHandler){
-				clearTimeout(t._sizeChangeHandler);
-			}
-			t._sizeChangeHandler = setTimeout(function(){
-				if(!t._destroyed){
-					t.refresh();
-				}
-			}, 10);
 		},
 
 		//-------------------------------------------------------------------------------------

@@ -270,7 +270,7 @@ define([
 			}
 			t.grid.view.updateRootRange(start, count, 1);
 			if(!noRefresh){
-				t.grid.body.refresh();
+				t.grid.body.lazyRefresh();
 			}
 		},
 
