@@ -40,9 +40,8 @@ define([
 		constructor: function(){
 			var t = this,
 				g = t.grid,
-				n = g.hScrollerNode;
+				n = t.domNode = g.hScrollerNode;
 			g._initEvents(['H'], ['Scroll']);
-			t.domNode = n;
 			t.container = n.parentNode;
 			t.stubNode = n.firstChild;
 		},
@@ -54,9 +53,8 @@ define([
 			if(!g.autoWidth){
 				g.vLayout.register(t, 'container', 'footerNode', 0);
 				n.style.display = 'block';
-				t.batchConnect(
-					[g.columnWidth, 'onUpdate', 'refresh'],
-					[n, 'onscroll', '_onScroll']);
+				t.aspect(g.columnWidth, 'onUpdate', 'refresh');
+				t.connect(n, 'onscroll', '_onScroll');
 				if(has('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
