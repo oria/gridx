@@ -127,12 +127,9 @@ define([
 			var t = this,
 				g = t.grid,
 				ltr = g.isLeftToRight(),
-				marginLead = ltr ? 'marginLeft' : 'marginRight',
-				marginTail = ltr ? 'marginRight' : 'marginLeft',
 				lead = g.hLayout.lead,
 				tail = g.hLayout.tail,
 				w = (g.domNode.clientWidth || domStyle.get(g.domNode, 'width')) - lead - tail,
-				headerBorder = domGeo.getBorderExtents(g.header.domNode).w,
 				bn = g.header.innerNode,
 				pl = domStyle.get(bn, ltr ? 'paddingLeft' : 'paddingRight') || 0,	//TODO: It is special for column lock now.
 				s = t.domNode.style,
@@ -140,12 +137,10 @@ define([
 				oldDisplay = s.display,
 				newDisplay = (sw <= w) ? 'none' : 'block';
 				
-			s[marginLead] = lead + pl + 'px';
-			s[marginTail] = tail + 'px';
+			s[ltr ? 'marginLeft' : 'marginRight'] = lead + pl + 'px';
+			s[ltr ? 'marginRight' : 'marginLeft'] = tail + 'px';
 			//Ensure IE does not throw error...
-			try{
-				s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
-			}catch(e){}
+			s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
 			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
 			if(oldDisplay != newDisplay){
