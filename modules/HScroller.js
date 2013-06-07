@@ -4,10 +4,9 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/Deferred",
 	"dojo/query",
-	"dojo/dom-geometry",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, has, Deferred, query, domGeo, metrics, _Module){
+], function(declare, domStyle, has, Deferred, query, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
