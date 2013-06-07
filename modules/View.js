@@ -146,7 +146,7 @@ define([
 				g = t.grid,
 				persistedOpenInfo = g.persist ? g.persist.registerAndLoad('tree', function(){
 					return t._openInfo;
-				}) : [];
+				}) : {};
 			t._clear();
 			t.aspect(m, 'onSizeChange', '_onSizeChange');
 			t.aspect(m, 'onDelete', '_onDelete');
