@@ -271,7 +271,13 @@ define([
 				}));
 			}else{
 				var results = s.query(req.query || {}, req);
-				Deferred.when(results.total, onBegin);
+				if('total' in results){
+					Deferred.when(results.total, onBegin);
+				}else{
+					Deferred.when(results, function(results){
+						onBegin(results.length);
+					});
+				}
 				Deferred.when(results, onComplete, onError);
 			}
 			d.then(hitch(t, t.onAfterFetch));
