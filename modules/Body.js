@@ -559,7 +559,7 @@ define([
 				t.onUnrender();
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
-				en.style.zIndex = 1;
+				en.style.zIndex = '';
 				t.onEmpty();
 				t.model.free();
 			}
