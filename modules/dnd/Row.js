@@ -13,6 +13,7 @@ define([
 /*=====
 	return declare(_Base, {
 		// summary:
+		//		module name: dndRow.
 		//		This module provides an implementation of row drag & drop.
 		// description:
 		//		This module supports row reordering within grid, dragging out of grid, and dragging into grid.

@@ -18,6 +18,7 @@ define([
 
 	var View = declare(_Module, {
 		// summary:
+		//		module name: view.
 		//		Manages how many and what rows should be shown in the current grid body.
 		// description:
 		//		This module defines a key concept: visual index, which is the position of a row in current grid body.

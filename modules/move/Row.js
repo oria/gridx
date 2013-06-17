@@ -13,6 +13,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: moveRow.
 		//		This module provides some APIs to move rows within grid
 		// description:
 		//		This module requires the "Move" model extension.

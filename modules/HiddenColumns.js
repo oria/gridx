@@ -9,6 +9,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hiddenColumns.
 		//		Hide columns.
 		// description:
 		//		Hide columns and change the column array at the same time so that other grid features 

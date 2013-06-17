@@ -21,6 +21,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: columnResizer.
 		//		Column Resizer machinery.
 		// description:
 		//		This module provides a way to resize column width. 

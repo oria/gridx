@@ -14,6 +14,7 @@ define([
 /*=====
 	var GroupHeader = declare(Header, {
 		// summary:
+		//		module name: header.
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
 		//		This module is not compatible with ColumnLock and HiddenColumns.

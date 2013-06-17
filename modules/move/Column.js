@@ -17,6 +17,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: moveColumn.
 		//		This module provides several APIs to move columns within grid.
 		// description:
 		//		This module does not include any UI. So different kind of column dnd UI implementations can be built

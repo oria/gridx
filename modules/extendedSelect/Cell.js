@@ -30,6 +30,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectCell.
 		//		Provides advanced cell selections.
 		// description:
 		//		This module provides an advanced way for selecting cells by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple cell.

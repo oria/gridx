@@ -13,6 +13,7 @@ define([
 /*=====
 	var Focus = declare(_Module, {
 		// summary
+		//		module name: focus.
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
 

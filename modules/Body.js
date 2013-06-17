@@ -42,6 +42,7 @@ define([
 
 	var Body = declare(_Module, {
 		// summary:
+		//		module name: body.
 		//		The body UI of grid.
 		// description:
 		//		This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 

@@ -12,6 +12,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: rowLock.
 		//		Lock up some rows at the top of the grid body, so that they don't scroll vertically.
 		// description:
 		//		This module is not compatible with VirtualVScroller.

@@ -22,6 +22,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: header.
 		//		The header UI of grid
 		// description:
 		//		This module is in charge of the rendering of the grid header. But it should not manage column width,

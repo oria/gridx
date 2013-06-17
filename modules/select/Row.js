@@ -36,6 +36,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectRow.
 		//		Provides simple row selection.
 		// description:
 		//		This module provides a simple way for selecting rows by clicking or SPACE key, or CTRL + Click to select multiple rows.

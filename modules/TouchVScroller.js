@@ -13,6 +13,7 @@ define([
 /*=====
 	return declare(VScroller, {
 		// summary:
+		//		module name: vScroller.
 		//		A vertical scroller only for touch devices.
 		// description:
 		//		Using dojox/mobile/scrollable, and no lazy-rendering (all rows are rendered out).

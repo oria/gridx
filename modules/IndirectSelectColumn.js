@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: indirectSelect.
 		//		Provide a check box (or radio button) column to select rows.
 		// description:
 		//		This module depends on "rowHeader" and "selectRow" modules.

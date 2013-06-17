@@ -13,6 +13,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: vScroller.
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
 		//		This module will make the grid body render all rows without paging.

@@ -36,6 +36,7 @@ define([
 
 	var SingleSort = declare(_Module, {
 		// summary:
+		//		module name: sort.
 		//		This module provides the single column sorting functionality for grid.
 
 		// initialOrder: Object|Array

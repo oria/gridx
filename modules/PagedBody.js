@@ -17,6 +17,7 @@ define([
 /*=====
 	return declare(Body, {
 		// summary:
+		//		module name: body.
 		//		This module provides a "load more" button (and a "load previous" button if necessary) inside grid body.
 		// description:
 		//		Page size can be set to indicate how many rows to show in one page. Clicking "load more" button or 

@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: columnWidth.
 		//		Manages column width distribution, allow grid autoWidth and column autoResize.
 
 		// default: Number

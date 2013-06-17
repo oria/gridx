@@ -38,6 +38,7 @@ define([
 	
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectRow.
 		//		Provides advanced row selections.
 		// description:
 		//		This module provides an advanced way for selecting rows by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple rows.

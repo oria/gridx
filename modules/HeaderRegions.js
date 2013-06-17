@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: headerRegions.
 		//		This module makes it easy to add custom contents to column header.
 		//		Other modules such as NestedSort or HeaderMenu can be based upon this module.
 

@@ -26,6 +26,7 @@ define([
 /*=====
 	var FilterBar = declare(_Module, {
 		// summary:
+		//		module name: filterBar.
 		//		Filter bar module.
 		// description:
 		//		Show a filter bar on top of grid header. Clicking the filter bar will show a filter dialog to config conditions.

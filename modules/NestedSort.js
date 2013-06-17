@@ -17,6 +17,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: sort.
 		//		Sort multiple columns in a nested way.
 
 		getSortData: function(){

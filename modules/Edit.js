@@ -79,6 +79,7 @@ define([
 
 	var Edit = declare(_Module, {
 		// summary:
+		//		module name: edit.
 		//		This module provides editing mode for grid cells.
 		// description:
 		//		This module relies on an implementation of the CellWidget module.

@@ -11,6 +11,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: touchScroll.
 		//		Make desktop grid scrollable by touch in mobile devices.
 		// description:
 		//		No bouncing and sliding effect now.

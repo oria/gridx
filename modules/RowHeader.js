@@ -15,6 +15,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: rowHeader.
 		//		This modules provides a header before each row.
 		// description:
 		//		Row header can be used as a UI handler for row selection, especially when

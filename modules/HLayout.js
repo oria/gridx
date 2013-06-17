@@ -10,6 +10,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hLayout.
 		//		This module manages the horizontal layout of all grid UI parts.
 		// description:
 		//		When a user creates a grid with a given width, it means the width of the whole grid,

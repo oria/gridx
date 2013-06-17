@@ -29,6 +29,7 @@ define([
 
 	return declare(_Base, {
 		// summary:
+		//		module name: selectColumn.
 		//		Provides advanced column selections.
 		// description:
 		//		This module provides an advanced way for selecting columns by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple columns.

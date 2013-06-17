@@ -12,7 +12,11 @@ define([
 
 /*=====
 	var Menu = declare(_Module, {
-		// context: __MenuContext
+		// summary:
+		//		module name: menu.
+		//		Manage context menu for grid.
+
+		// context: [readonly] __MenuContext
 		//		An object representing the current context when user triggers a context menu.
 		//		This property is updated everytime a menu of grid is popped up.
 		//		Users can refer to this in their menu action handlers by grid.menu.context.

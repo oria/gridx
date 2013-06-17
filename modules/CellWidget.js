@@ -25,6 +25,7 @@ define([
 
 	var CellWidget = declare(_Module, {
 		// summary:
+		//		module name: cellWidget.
 		//		This module makes it possible to efficiently show widgets within a grid cell.
 		// description:
 		//		Since widget declarations need to be parsed by dojo.parser, it can NOT be directly

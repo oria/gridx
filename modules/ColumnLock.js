@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: columnLock.
 		//		Column lock machinery.
 		// description:
 		//		This module provides a way to lock consecutive leading columns. 

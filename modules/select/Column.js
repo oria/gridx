@@ -27,6 +27,7 @@ define([
 
 	return declare(_Base, {
 		// summary:
+		//		module name: selectColumn.
 		//		Provides simple column selection.
 		// description:
 		//		This module provides a simple way for selecting columns by clicking or SPACE key, 

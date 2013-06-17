@@ -55,6 +55,7 @@ define([
 
 	var Tree = declare(_Module, {
 		// summary:
+		//		module name: tree.
 		//		This module manages row expansion/collapsing in tree grid.
 		// description:
 		//		To use tree grid, the store must have 2 extra methods: hasChildren and getChildren.

@@ -11,6 +11,7 @@ define([
 /*=====
 	return declare(_Base, {
 		// summary:
+		//		module name: dndColumn.
 		//		This module provides an implementation of column drag & drop.
 		// description:
 		//		This module supports column reordering within grid, dragging out of grid, and dragging into grid.

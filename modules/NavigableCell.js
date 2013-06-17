@@ -11,6 +11,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: navigableCell.
 		//		This module allow the elements in grid cell be focusable.
 		// description:
 		//		When focus is on a cell, press F2 to focus the first focusable element in that cell.

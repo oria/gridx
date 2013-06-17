@@ -11,9 +11,8 @@ define([
 
 /*=====
 	var Bar = declare(_Module, {
-		// module:
-		//		gridx/modules/Bar
 		// summary:
+		//		module name: bar.
 		//		This is a general-purpose bar for gridx.
 		// description:
 		//		This module can be configured to hold various plugins, such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
