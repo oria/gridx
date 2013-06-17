@@ -120,7 +120,7 @@ define([
 				dw = grid.columnWidth.arg('default');
 			query('.gridxCell', grid.body.domNode.firstChild).forEach(function(cell, i){
 				if(array.indexOf(autoWidth, cell.getAttribute('colid')) >= 0){
-					doh.is(parseInt(cell.style.width), dw);
+					doh.is(parseInt(cell.style.width, 10), dw);
 				}
 			});			
 		}
@@ -144,7 +144,7 @@ define([
 			var	dw = grid.columnWidth.arg('default');
 			query('.gridxCell', grid.body.domNode.firstChild).forEach(function(cell, i){
 				if(array.indexOf(autoWidth, cell.getAttribute('colid')) >= 0){
-					doh.is(parseInt(cell.style.width), dw);
+					doh.is(parseInt(cell.style.width, 10), dw);
 				}
 			});				
 		}

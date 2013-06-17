@@ -75,13 +75,35 @@ define([
 		}
 	},
 	{
-		id: 'VScroller 6',
+		id: 'VScroller 7',
 		name: 'If vscroll bar is at bottom, the last row is fully visible.',
 		condition: function(grid){
-			return grid.vScrollerNode.scrollTop >= grid.vScrollerNode.scrollHeight - grid.vScrollerNode.offsetHeight;
+			return grid.vScrollerNode.style.display != 'none' &&
+				grid.vScrollerNode.scrollHeight > grid.vScrollerNode.offsetHeight &&
+				grid.vScrollerNode.scrollTop >= grid.vScrollerNode.scrollHeight - grid.vScrollerNode.offsetHeight;
 		},
 		checker: function(grid, doh){
-			
+			var lastRow = grid.bodyNode.lastChild;
+			if(lastRow){
+				var lastRowPos = domGeo.position(lastRow);
+				var containerPos = domGeo.position(grid.bodyNode);
+				doh.t(lastRowPos.y + lastRowPos.h <= containerPos.y + containerPos.h, 'last row is not at bottom');
+			}
+		}
+	},
+	{
+		id: 'VScroller 8',
+		name: 'If vscroll bar is at bottom, the last row is fully visible.',
+		condition: function(grid){
+			return grid.vScrollerNode.style.display != 'none' && grid.vScrollerNode.scrollTop === 0;
+		},
+		checker: function(grid, doh){
+			var firstRow = grid.bodyNode.firstChild;
+			if(firstRow){
+				var firstRowPos = domGeo.position(firstRow);
+				var containerPos = domGeo.position(grid.bodyNode);
+				doh.t(firstRowPos.y >= containerPos.y, 'first row is not fully visible');
+			}
 		}
 	}
 	);

@@ -88,111 +88,47 @@ define([
 				doh.is(rowNode, rowNodeByIndex);
 			}
 		}
+	},
+	{
+		id: 'Body 6',
+		name: 'rowindex property of every row increase by 1 compared to the previous row if their parentid are the same',
+		checker: function(grid, doh){
+			var rowNodes = query('> .gridxRow', grid.bodyNode);
+			for(var i = 1; i < rowNodes.length; ++i){
+				var rowNode = rowNodes[i];
+				var prevRowNode = rowNodes[i - 1];
+				if(rowNode.getAttribute('parentid') == prevRowNode.getAttribute('parentid')){
+					doh.t(parseInt(rowNode.getAttribute('rowindex'), 10) == parseInt(prevRowNode.getAttribute('rowindex'), 10) + 1);
+				}
+			}
+		}
+	},
+	{
+		id: 'Body 7',
+		name: 'getCellNode() should return correct cell node as long as the row is rendered.',
+		checker: function(grid, doh){
+			var start = grid.body.renderStart;
+			var end = start + grid.body.renderCount;
+			for(var i = start; i < end; ++i){
+				var rowNode = query('[visualindex="' + i + '"]', grid.body.domNode)[0];
+				var rowId = rowNode.getAttribute('rowid');
+				var columns = grid._columns;
+				for(var j = 0; j < columns.length; ++j){
+					var col = columns[j];
+					var colId = col.id;
+					var cellNode = query('[colid="' + colId + '"]', rowNode)[0];
+					var cellNodeById = grid.body.getCellNode({
+						rowId: rowId,
+						colId: colId
+					});
+					var cellNodeByVIdx = grid.body.getCellNode({
+						visualIndex: i,
+						colIndex: j
+					});
+					doh.is(cellNodeById, cellNodeByVIdx);
+				}
+			}
+		}
 	}
-	/*{
-		id: 'Body status 3',
-		name: 'if module parameter "stuffEmptyCell" is true, empty cells are stuffed with space.',
-		condition: function(grid){
-			return grid.body.arg('stuffEmptyCell');
-		},
-		checker: function(grid, doh){
-			array.forEach(grid.bodyNode.childNodes, function(rowNode){
-				var row = grid.row(rowNode.getAttribute('rowid'), true),
-					data = row.data();
-				for(var col in data){
-					var cell = grid.cell(row, col, 1);
-					if(cell.column.decorator)
-						return;
-					if(data[col] === '' || data[col] === null || data[col] == undefined){
-						query('.gridxCell', rowNode).forEach(function(cellNode){
-							if(cellNode.getAttribute('colid') == col){
-								doh.is('&nbsp;', cellNode.innerHTML);
-							}
-						});
-					}
-				}
-				doh.t(row);
-			});
-		}
-	},
-	{
-		id: 'Body status 4',
-		name: 'if no data to show, show empty node',
-		condition: function(grid){
-			return !grid.bodyNode.childNodes.length;
-		},
-		checker: function(grid, doh){
-			doh.t(grid.emptyNode.style.zIndex > (grid.bodyNode.style.zIndex || 0));
-			doh.t(grid.emptyNode.offsetHeight > 0);
-		}
-	},
-	{
-		id: 'Body status 60/61',
-		name: '"class" property is provided as string in column definition\n"class" property is provided as function in column definition',
-		checker: function(grid, doh){
-			var l = [];
-			array.forEach(grid.structure, function(struct, i){
-				if(struct['class']){
-					l.push(i);
-				}
-			});
-
-			array.forEach(grid.bodyNode.childNodes, function(node){
-				var cells = query('.gridxCell', node);
-				array.forEach(l, function(i){
-					var cls = typeof grid.structure[i]['class'] == 'function'?
-								grid.structure[i]['class'](): grid.structure[i]['class'];
-					doh.t(domClass.contains(cells[i], cls));
-				});
-			});
-			
-		}
-	},
-	{
-		id: 'Body status 62/63',
-		name: '"style" property is provided as string in column definition\n"style" property is provided as function in column definition',
-		checker: function(grid, doh){
-			var l = [];
-			array.forEach(grid.structure, function(struct, i){
-				if(struct['style']){
-					l.push(i);
-				}
-			});
-			array.forEach(grid.bodyNode.childNodes, function(node){
-				var cells = query('.gridxCell', node);
-				array.forEach(l, function(i){
-					var sty = typeof grid.structure[i]['style'] == 'function'?
-								grid.structure[i]['style'](): grid.structure[i]['style'];
-								
-					console.log(sty);
-					console.log(cells[i].getAttribute('style'));
-					doh.t(cells[i].getAttribute('style').indexOf(sty) >= 0);
-				});
-			});
-			
-		}
-	},
-	{
-		id: 'Body status 67',
-		name: '1.module parameter "rowHoverEffect" is false. 2.mouse hover a row there\'s no row hover effect',
-		condition: function(grid){
-			return !grid.body.arg('rowHoverEffect');
-		},
-		checker: function(grid, doh){
-			doh.f(domClass.contains(grid.bodyNode, 'gridxBodyRowHoverEffect'));
-			
-		}
-	},
-	{
-		id: 'Body status 68',
-		name: '1.module parameter "rowHoverEffect" is true. 2.mouse hover a row	show row hover effect',
-		condition: function(grid){
-			return grid.body.arg('rowHoverEffect');
-		},
-		checker: function(grid, doh){
-			doh.t(domClass.contains(grid.bodyNode, 'gridxBodyRowHoverEffect'));
-			
-		}
-	},*/
 	);
 });

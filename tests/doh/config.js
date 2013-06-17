@@ -35,9 +35,9 @@ define([
 
 	//Config Begin-------------------------------------------------------
 	//Minimal config package size
-	var minPackSize = 2;
+	var minPackSize = 0;
 	//Maximum config package size
-	var maxPackSize = 2;
+	var maxPackSize = 0;
 	//Run all cases or only special cases
 	var specialCasesOnly = 0;
 
@@ -50,43 +50,43 @@ define([
 
 	//module config => interface name
 	var mods = {
-		VirtualVScroller: "virtualVScroller",
-		ColumnResizer: "columnResizer",
-		NavigableCell: "navigableCell",
+//        ColumnResizer: "columnResizer",
+//        NavigableCell: "navigableCell",
 		CellWidget: "cellWidget",
-		Edit: "edit",
-		SingleSort: "sort",
-		NestedSort: "sort",
-		Pagination: "pagination",
-		PaginationBar: "paginationBar",
-		PaginationBarDD: "paginationBar",
-		Filter: "filter",
-		FilterBar: "filterBar",
-		QuickFilter: "quickFilter",
-		SelectRow: "selectRow",
-		SelectColumn: "selectColumn",
-		SelectCell: "selectCell",
-		ExtendedSelectRow: "selectRow",
-		ExtendedSelectColumn: "selectColumn",
-		ExtendedSelectCell: "selectCell",
-		MoveRow: "moveRow",
-		MoveColumn: "moveColumn",
-		RowHeader: "rowHeader",
-		IndirectSelect: "indirectSelect",
-		IndirectSelectColumn: "indirectSelect",
-		ColumnLock: "columnLock",
-		RowLock: "rowLock",
+//        Edit: "edit",
+//        SingleSort: "sort",
+//        NestedSort: "sort",
+//        Pagination: "pagination",
+//        PaginationBar: "paginationBar",
+//        PaginationBarDD: "paginationBar",
+//        Filter: "filter",
+//        FilterBar: "filterBar",
+//        QuickFilter: "quickFilter",
+//        SelectRow: "selectRow",
+//        SelectColumn: "selectColumn",
+//        SelectCell: "selectCell",
+//        ExtendedSelectRow: "selectRow",
+//        ExtendedSelectColumn: "selectColumn",
+//        ExtendedSelectCell: "selectCell",
+//        MoveRow: "moveRow",
+//        MoveColumn: "moveColumn",
+//        RowHeader: "rowHeader",
+//        IndirectSelect: "indirectSelect",
+//        IndirectSelectColumn: "indirectSelect",
+//        ColumnLock: "columnLock",
+//        RowLock: "rowLock",
 		Tree: "tree",
-		HiddenColumns: 'hiddenColumns',
-		GroupHeader: 'groupHeader',
-		TouchVScroller: 'vScroller',
-		PagedBody: 'pagedBody',
-		Dod: 'dod'
+//        HiddenColumns: 'hiddenColumns',
+//        GroupHeader: 'groupHeader',
+//        TouchVScroller: 'vScroller',
+//        PagedBody: 'pagedBody',
+//        Dod: 'dod'
+		VirtualVScroller: "virtualVScroller"
 	};
 
 	//parameter config => [interface name, adder function]
 	var params = {
-		cacheSize_0: ['cacheSize', function(cfg){
+		/*cacheSize_0: ['cacheSize', function(cfg){
 			cfg.cacheSize = 0;
 		}],
 		cacheSize_20: ['cacheSize', function(cfg){
@@ -328,7 +328,7 @@ define([
 		}, 'indirectSelect'],
 		editLazySave: ['editLazySave', function(cfg){
 			cfg.editLazySave = true;
-		}, 'editLazySave']
+		}, 'editLazySave']*/
 	};
 
 	//dependencies: config item => depending interface
