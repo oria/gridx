@@ -147,6 +147,7 @@ define([
 
 		preload: function(){
 			this.grid.view.paging = true;
+			this._pageSize = this.arg('initialPageSize') || this._pageSize;
 		},
 
 		load: function(){
@@ -156,7 +157,6 @@ define([
 					t.connect(t.model, 'onSizeChange', '_onSizeChange');
 					t.loaded.callback();
 				};
-			t._pageSize = t.arg('initialPageSize') || t._pageSize;
 			t._page = t.arg('initialPage', t._page, function(arg){
 				return arg >= 0;
 			});
