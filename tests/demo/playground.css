@@ -907,6 +907,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	height: 100%;
 	width: 50px;
 }
+
+.attributesLabel{
+	transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	font-size: 36px;
+	position:relative;
+	top:32px;
+	color:#555	
+}
+
 #attributesBool .attributesConfigLabel {
 	background: url('images/boolean.png') no-repeat;
 }

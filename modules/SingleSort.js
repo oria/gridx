@@ -129,7 +129,6 @@ define([
 
 		load: function(){
 			var t = this,
-				columnsById = t.grid._columnsById,
 				refresh = function(){
 					var columnsById = t.grid._columnsById;
 					for(var colId in columnsById){
