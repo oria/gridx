@@ -4,11 +4,12 @@ define([
 	'dojo/_base/lang',
 	'dojo/_base/Deferred',
 	'dojo/dom',
+	'dojo/query',
 	'dojo/dom-construct',
 	'gridx/Grid',
 	'dijit/registry',
 	'dojo/on'
-], function(declare, array, lang, Deferred, dom, domConstruct, Grid, registry, on){
+], function(declare, array, lang, Deferred, dom, query, domConstruct, Grid, registry, on){
 
 	var GTest = declare([], {
 
@@ -88,11 +89,26 @@ define([
 				'">', this._name,
 				'<span class="reqId">', id, '</span>',
 				isStatus && afterAction ? '<span class="afterActionId">'+afterAction+'</span>' : '',
-				'<div class="errInfo">', 
+				'<div class="errInfo">',
 					lang.isString(err) ? err : err.message,
 				'</div></div>'
 			].join('');
-			this.logNode.appendChild(domConstruct.toDom(str));
+			var node = domConstruct.toDom(str);
+			var btn = query('.reqId', node)[0];
+			var t = this;
+			on(btn, 'click', function(){
+				var cfg = t._config;
+				var grid = registry.byId('testgrid');
+				if(grid){
+					grid.destroy();
+				}
+				grid = new Grid(lang.mixin({
+					id: 'testgrid'
+				}, cfg));
+				grid.placeAt('testgridContainer');
+				grid.startup();
+			});
+			this.logNode.appendChild(node);
 		},
 		
 		emitMouseEvent: function(target, type, evt){

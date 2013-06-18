@@ -204,8 +204,11 @@ define([
 			},
 
 			postCreate: function(){
-				this.connect(this.domNode, 'onmousedown', function(e){
-					e.cancelBubble = true;
+				var dn = this.domNode;
+				this.connect(dn, 'onmousedown', function(e){
+					if(e.target != dn){
+						e.cancelBubble = true;
+					}
 				});
 				this._cellCnnts = [];
 			},
@@ -241,17 +244,21 @@ define([
 						if(widget){
 							var useStoreData = domClass.contains(widget.domNode, 'gridxUseStoreData'),
 								data = useStoreData ? storeData : gridData,
-								onChange = widget.onChange;
+								handleOnChange = widget._handleOnChange;
 							//If we are just rendering this cell, setting widget value should not trigger onChange event,
 							//which will then trigger edit apply. But things are complicated because onChange is
 							//fired asynchronously, and maybe sometimes not fired.
 							//FIXME: How to ensure the onChange event does not fire if isInit is true?
+							/*var onChange = widget.onChange;
 							if(isInit && onChange && !onChange._init && widget.get('value') !== data){
 								widget.onChange = function(){
 									widget.onChange = onChange;
 								};
 								widget.onChange._init = true;
-							}
+							}*/
+							widget._handleOnChange = function(){
+								widget._handleOnChange = handleOnChange;
+							};
 							if(!t.setCellValue){
 								widget.set('value', data);
 							}

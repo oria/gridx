@@ -43,18 +43,13 @@ define([
 			this._init();
 		},
 
-		preload: function(){
+		load: function(){
 			var t = this,
 				g = t.grid;
-			t._ready = new Deferred();
-			t.batchConnect(
-				[g.hLayout, 'onUpdateWidth', '_onUpdateWidth'],
-				[g, 'setColumns', '_onSetColumns']);
-		},
-
-		load: function(){
-			this._adaptWidth();
-			this.loaded.callback();
+			t.aspect(g.hLayout, 'onUpdateWidth', '_onUpdateWidth');
+			t.aspect(g, 'setColumns', '_onSetColumns');
+			t._adaptWidth();
+			t.loaded.callback();
 		},
 
 		//Public-----------------------------------------------------------------------------
@@ -68,26 +63,20 @@ define([
 		_init: function(){
 			var t = this,
 				g = t.grid,
-				dn = g.domNode,
-				cols = g._columns;
-			array.forEach(cols, function(col){
+				autoResize = t.arg('autoResize'),
+				defaultWidth = t.arg('default') + 'px';
+			array.forEach(g._columns, function(col){
 				if(!col.hasOwnProperty('declaredWidth')){
 					col.declaredWidth = col.width = col.width || 'auto';
 				}
+				if(g.autoWidth && col.declaredWidth == 'auto'){
+					col.width = defaultWidth;
+				}else if(autoResize && !(/%$/).test(col.declaredWidth)){
+					col.width = 'auto';
+				}
 			});
-			if(g.autoWidth){
-				array.forEach(cols, function(c){
-					if(c.declaredWidth == 'auto'){
-						c.width = t.arg('default') + 'px';
-					}
-				});
-			}else if(t.arg('autoResize')){
-				domClass.add(dn, 'gridxPercentColumnWidth');
-				array.forEach(cols, function(c){
-					if(!(/%$/).test(c.declaredWidth)){
-						c.width = 'auto';
-					}
-				});
+			if(autoResize){
+				domClass.add(g.domNode, 'gridxPercentColumnWidth');
 			}
 		},
 
@@ -97,18 +86,19 @@ define([
 			if(g.autoWidth){
 				t._adaptWidth();
 			}else{
-				var noHScroller = g.hScrollerNode.style.display == 'none';
+				var noHScroller = g.hScrollerNode.style.display == 'none',
+					autoResize = t.autoResize;
 				t._adaptWidth(!noHScroller, 1);	//1 as true
-				if(!t.arg('autoResize') && noHScroller){
+				if(!autoResize && noHScroller){
 					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
-						var col = g._columnsById[cellNode.getAttribute('colId')];
-						if(t.arg('autoResize') ||
-							!col.declaredWidth ||
-							col.declaredWidth == 'auto' ||
-							(/%$/).test(col.declaredWidth)){
-							cellNode.style.width = col.width;
-							cellNode.style.minWidth = col.width;
-							cellNode.style.maxWidth = col.width;
+						var col = g._columnsById[cellNode.getAttribute('colId')],
+							declaredWidth = col.declaredWidth;
+						if(autoResize || !declaredWidth || declaredWidth == 'auto' || (/%$/).test(declaredWidth)){
+							var s = cellNode.style,
+								w = col.width;
+							s.width = w;
+							s.minWidth = w;
+							s.maxWidth = w;
 						}
 					});
 				}

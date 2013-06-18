@@ -1,7 +1,9 @@
 define([
 	'dojo/_base/query',
+	'dojo/_base/array',
+	'dojo/dom-class',
 	'../GTest'
-], function(query, GTest){
+], function(query, array, domClass, GTest){
 	GTest.statusCheckers.push(
 	{
 		id: 'Header 1',
@@ -51,20 +53,29 @@ define([
 				doh.t(headerCellNode.hasAttribute('id'));
 			});
 		}
-	}
-	/*{
-		id: 11,
-		name: "column header cells show the \"name\" property of column definition",
+	},
+	{
+		id: 'Header 6',
+		name: 'getHeaderNode return correct cell node when parameter is valid',
 		checker: function(grid, doh){
-			query('.gridxCell', grid.header.domNode).forEach(function(headerCellNode, i){
-				var name = grid.structure[i].name;
-				if(headerCellNode.firstChild.firstChild.nodeType != 1){
-					doh.is(name, headerCellNode.childNodes[0].innerHTML);
-				}else{
-					doh.is(name, query('.gridxColCaption', headerCellNode.firstChild)[0].innerHTML);
-				}
+			array.forEach(grid.columns(), function(col){
+				var headerNode1 = grid.header.getHeaderNode(col.id);
+				var headerNode2 = col.headerNode();
+				doh.is(col.id, headerNode1.getAttribute('colid'), 'getHeaderNode() not returning correct header node');
+				doh.is(headerNode1, headerNode2, 'header.getHeaderNode() is not equivalent to col.headerNode()');
+				doh.t(domClass.contains(headerNode1, 'gridxCell'), 'header cell css class wrong');
 			});
 		}
-	},	*/
+	},
+	{
+		id: 'Header 7',
+		name: 'getHeaderNode return null when parameter is invalid',
+		checker: function(grid, doh){
+			doh.is(null, grid.header.getHeaderNode(null));
+			doh.is(null, grid.header.getHeaderNode(undefined));
+			doh.is(null, grid.header.getHeaderNode(Infinity));
+			doh.is(null, grid.header.getHeaderNode(''));
+		}
+	}
 	);
 });

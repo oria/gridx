@@ -4,10 +4,9 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/Deferred",
 	"dojo/query",
-	"dojo/dom-geometry",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, domStyle, has, Deferred, query, domGeo, metrics, _Module){
+], function(declare, domStyle, has, Deferred, query, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -42,9 +41,8 @@ define([
 		constructor: function(){
 			var t = this,
 				g = t.grid,
-				n = g.hScrollerNode;
+				n = t.domNode = g.hScrollerNode;
 			g._initEvents(['H'], ['Scroll']);
-			t.domNode = n;
 			t.container = n.parentNode;
 			t.stubNode = n.firstChild;
 		},
@@ -56,9 +54,8 @@ define([
 			if(!g.autoWidth){
 				g.vLayout.register(t, 'container', 'footerNode', 0);
 				n.style.display = 'block';
-				t.batchConnect(
-					[g.columnWidth, 'onUpdate', 'refresh'],
-					[n, 'onscroll', '_onScroll']);
+				t.aspect(g.columnWidth, 'onUpdate', 'refresh');
+				t.connect(n, 'onscroll', '_onScroll');
 				if(has('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
@@ -128,12 +125,9 @@ define([
 			var t = this,
 				g = t.grid,
 				ltr = g.isLeftToRight(),
-				marginLead = ltr ? 'marginLeft' : 'marginRight',
-				marginTail = ltr ? 'marginRight' : 'marginLeft',
 				lead = g.hLayout.lead,
 				tail = g.hLayout.tail,
 				w = (g.domNode.clientWidth || domStyle.get(g.domNode, 'width')) - lead - tail,
-				headerBorder = domGeo.getBorderExtents(g.header.domNode).w,
 				bn = g.header.innerNode,
 				pl = domStyle.get(bn, ltr ? 'paddingLeft' : 'paddingRight') || 0,	//TODO: It is special for column lock now.
 				s = t.domNode.style,
@@ -141,12 +135,10 @@ define([
 				oldDisplay = s.display,
 				newDisplay = (sw <= w) ? 'none' : 'block';
 				
-			s[marginLead] = lead + pl + 'px';
-			s[marginTail] = tail + 'px';
+			s[ltr ? 'marginLeft' : 'marginRight'] = lead + pl + 'px';
+			s[ltr ? 'marginRight' : 'marginLeft'] = tail + 'px';
 			//Ensure IE does not throw error...
-			try{
-				s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
-			}catch(e){}
+			s.width = (w - pl < 0 ? 0 : w - pl) + 'px';
 			t.stubNode.style.width = (sw - pl < 0 ? 0 : sw - pl) + 'px';
 			s.display = newDisplay;
 			if(oldDisplay != newDisplay){

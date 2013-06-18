@@ -1,12 +1,11 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/aspect',
 	'dojo/DeferredList',
 	'dojo/_base/Deferred',
 	'dojo/_base/array',
 	'../_Extension'
-], function(declare, lang, aspect, DeferredList, Deferred, array,  _Extension){
+], function(declare, lang, DeferredList, Deferred, array, _Extension){
 /*=====
 	return declare([], {
 		// Summary:
@@ -119,7 +118,6 @@ define([
 		
 		constructor: function(model, args){
 			var t = this,
-				c = 'aspect',
 				s = model.store;
 			
 			t._globalOptList = [];
@@ -221,7 +219,6 @@ define([
 		},
 
 		clearLazyData: function(){
-			console.log('in clear');
 			var t = this,
 				cl = t.getChanged();
 			
@@ -253,22 +250,19 @@ define([
 					t._globalOptIndex = -1;
 					t._lazyRawData = {};
 					t._lazyData = {};
-					console.log('save to store successfully');
 					t.onSave(dl);
 					d.callback();
 				}, function(){
 					d.errback();
-					console.log('nothing to save');
 				});
 			}else{
 				d.callback();
-				console.log('nothing to save');
 			}
 			return d;
 		},
 
 		isChanged: function(rowId, field){
-			var t = this;
+			var t = this,
 				cache = t.inner._call('byId', [rowId]),
 				ld = t._lazyRawData[rowId];
 			if(field){
