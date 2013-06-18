@@ -131,6 +131,7 @@ define([
 			var t = this,
 				columnsById = t.grid._columnsById,
 				refresh = function(){
+					var columnsById = t.grid._columnsById;
 					for(var colId in columnsById){
 						t._initHeader(colId);
 					}
