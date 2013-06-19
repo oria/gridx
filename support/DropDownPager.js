@@ -39,18 +39,17 @@ define([
 
 		postCreate: function(){
 			var t = this,
+				g = t.grid,
 				c = 'connect',
-				p = t.grid.pagination;
+				p = g.pagination;
 			t[c](p, 'onSwitchPage', '_onSwitchPage');
 			t[c](p, 'onChangePageSize', 'refresh');
-			t[c](t.grid.model, 'onSizeChange', 'refresh');
-			t.refresh();
-		},
-
-		startup: function(){
-			this.inherited(arguments);
-			//Set initial page after pagination module is ready.
-			this._onSwitchPage(this.grid.pagination.currentPage());
+			t[c](g.model, 'onSizeChange', 'refresh');
+			g.pagination.loaded.then(function(){
+				t.refresh();
+				//Set initial page after pagination module is ready.
+				t._onSwitchPage(g.pagination.currentPage());
+			});
 		},
 
 		//Public-----------------------------------------------------------------------------
