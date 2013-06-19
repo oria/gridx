@@ -516,8 +516,8 @@ Store, Grid){
 		attributeOtherValues.on('mouseover', function(evt){
 			var title = query('.valueHoverTitle', this)[0];
 			title.style.display = 'block';
-			title.style.top = '50px';
-			title.style.left = '100px';
+			title.style.top = '40px';
+			title.style.left = '80px';
 			console.log('this is the mouse hover');
 		});
 		
