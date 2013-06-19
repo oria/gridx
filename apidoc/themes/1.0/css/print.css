@@ -1,0 +1,7 @@
+#header, #navFoot, #foot {
+    display:none;
+}
+
+#intro .line {
+    padding-top:0px; /* less space on top of a printed page */
+}

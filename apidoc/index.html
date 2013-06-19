@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>GridX API Documentation</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="gridx, grid, datagrid, table, treegrid, treetable" />
+		<meta name="description" content="GridX - The Next Generation of Dojo Grid" />
+
+		<link rel="stylesheet" href="../dojo/resources/dojo.css" />
+		<link rel="stylesheet" href="../dijit/themes/claro/claro.css" />
+		<link rel="stylesheet" href="css/jsdoc.css" type="text/css" media="all" />
+		<link rel="stylesheet" href="css/jsdoc-print.css" type="text/css" media="print" />
+		<link rel="stylesheet" href="themes/1.0/theme.css" type="text/css" media="all" />
+		<style type="text/css">
+			#navigation {
+				width: 300px;
+			}
+			#versionSelector {
+				width: auto;
+			}
+			.iconDemos {
+				height:18px;
+				background-color:#f2f2f2;
+				border-top:1px solid #dedede;
+				padding:0 2px 4px 48px;
+				position:relative;
+				overflow:hidden;
+			}
+			.legend {
+				font-size:11px;
+			}
+		</style>
+		<script type="text/javascript" src="../dojo/dojo.js" data-dojo-config='
+			isDebug: false,
+			async: true,
+			packages: [{
+				name: "api",
+				location: "../apidoc/js"
+			}]
+		'></script>
+
+		<!-- SyntaxHighlighter -->
+		<script type="text/javascript" src="js/syntaxhighlighter/scripts/shCore.js"></script>
+		<script type="text/javascript" src="js/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+		<script type="text/javascript" src="js/syntaxhighlighter/scripts/shBrushXml.js"></script>
+		<link rel="stylesheet" href="js/syntaxhighlighter/styles/shCore.css" type="text/css" />
+		<link rel="stylesheet" href="js/syntaxhighlighter/styles/shThemeDefault.css" type="text/css" />
+
+		<script type="text/javascript" src='index.js'></script>
+	</head>
+	<body class="claro">
+		<div id="loader"><div id="loaderInner"></div></div>
+		<div id="printBlock"></div>
+
+		<div id="main" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="liveSplitters: false">
+			<div id="navigation" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="
+				minSize: 20,
+				region: 'leading',
+				splitter: true,
+				gutters: false
+			">
+				<div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Search', region:'top'">
+					<div style="padding: 4px;">
+						<label for="versionSelector">Version: </label>
+						<select id="versionSelector">
+							<option value="1.0">1.0</option>
+							<option value="1.1">1.1</option>
+							<option value="1.2" selected="true">1.2</option>
+						</select>
+					</div>
+				</div>
+				<div data-dojo-type="dijit.layout.AccordionContainer" data-dojo-props="region: 'center'">
+					<div id="moduleTreePane" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title: 'By Module', selected: true"></div>
+				</div>
+				<div class="iconDemos" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'bottom'">
+					<span class="legend">Legend: </span>
+					<img src="css/icons/16x16/array.png" align="middle" title="Array" alt="Array" border="0" />
+					<img src="css/icons/16x16/boolean.png" align="middle" title="Boolean" alt="Boolean" border="0" />
+					<img src="css/icons/16x16/constructor.png" align="middle" title="Constructor" alt="Constructor" border="0" />
+					<img src="css/icons/16x16/date.png" align="middle" title="Date" alt="Date" border="0" />
+					<img src="css/icons/16x16/domnode.png" align="middle" title="DomNode" alt="DomNode" border="0" />
+					<img src="css/icons/16x16/error.png" align="middle" title="Error" alt="Error" border="0" />
+					<img src="css/icons/16x16/function.png" align="middle" title="Function" alt="Function" border="0" />
+					<img src="css/icons/16x16/number.png" align="middle" title="Number" alt="Number" border="0" />
+					<img src="css/icons/16x16/object.png" align="middle" title="Object" alt="Object" border="0" />
+					<img src="css/icons/16x16/regexp.png" align="middle" title="RegExp" alt="RegExp" border="0" />
+					<img src="css/icons/16x16/singleton.png" align="middle" title="Singleton" alt="Singleton" border="0" />
+					<img src="css/icons/16x16/string.png" align="middle" title="String" alt="String" border="0" />
+				</div>
+			</div>
+			<div id="content" data-dojo-type="dijit.layout.TabContainer" data-dojo-props="region: 'center', tabStrip: true">
+				<div id="baseTab" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title: 'Welcome'"></div>
+			</div>
+		</div>
+	</body>
+</html>

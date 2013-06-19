@@ -1,0 +1,155 @@
+<h1>GridX API</h1>
+<p class="dtk-intro">
+	Welcome to the GridX API documentation.  You are browsing version <strong>1.0</strong> of GridX. 
+	Use the selector to the left to change versions.
+</p>
+<p class="dtk-intro">
+	To find the object you're interested in, use the tree to the left...or use the quick links below.
+	To print the documentation, simply navigate to the object of your choice and hit Print.
+</p>
+<div class="dtk-objects">
+	<h2>Main Classes of GridX</h2>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-grid"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/Grid"]);'>Grid</a>
+		</div>
+		<div class="dtk-object-description">
+			Pure GridX with only core modules.
+		</div>
+	</div>
+	<div class="clear"></div>
+	<h2>Modules of GridX</h2>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-virtualvscroller"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/VirtualVScroller"]);'>VirtualVScroller</a>
+		</div>
+		<div class="dtk-object-description">
+			Provide row lazy-rendering during vertical scrolling. Suitable for large data set.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-filter-filterbar"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/filter/", "gridx/modules/filter/FilterBar"]);'>FilterBar</a>
+		</div>
+		<div class="dtk-object-description">
+			A filter bar on top of grid, can show filter dialog when clicked on it.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-cellwidget"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/CellWidget"]);'>CellWidget</a>
+		</div>
+		<div class="dtk-object-description">
+			Show widgets in grid cell. Reuse these widgets across rows to improve efficiency.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-extendedselect-row"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/extendedSelect/", "gridx/modules/extendedSelect/Row"]);'>extendedSelect/Row</a>
+		</div>
+		<div class="dtk-object-description">
+			Select row using mouse or keyboard. Support swipe-selection, CTRL-selection, and SHIFT-selection.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-indirectselectcolumn"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/IndirectSelect"]);'>IndirectSelect</a>
+		</div>
+		<div class="dtk-object-description">
+			Provide a check-box/radio-button column for row selection.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-dnd-row"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/dnd/", "gridx/modules/dnd/Row"]);'>dnd/Row</a>
+		</div>
+		<div class="dtk-object-description">
+			Drag-and-Drop rows within grid, across grid or to/from other widgets.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-tree"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/Tree"]);'>Tree</a>
+		</div>
+		<div class="dtk-object-description">
+			Tree grid.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-columnlock"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/ColumnLock"]);'>ColumnLock</a>
+		</div>
+		<div class="dtk-object-description">
+			Lockup leading columns.
+		</div>
+	</div>
+	<div class="dtk-object">
+		<div class="dtk-object-image gridx-modules-columnlock"></div>
+		<div class="dtk-object-title">
+			<a href='javascript:moduleTree.selectAndClick(["gridx/", "gridx/modules/", "gridx/modules/pagination", "gridx/modules/pagination/PaginationBar"]);'>PaginationBar</a>
+		</div>
+		<div class="dtk-object-description">
+			Paging Grid. An alternative to the virtual scroller.
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+</div>
+
+<style type="text/css">
+.dtk-intro { 
+	margin-top: 1.25em;
+}
+.dtk-intro strong {
+	font-size: 1.5em;
+}
+.dtk-objects { }
+.dtk-objects h2 {
+	margin-top: 1.5em;
+}
+.clear { clear: both }
+.dtk-object {
+	float: left;
+	width: 160px;
+	min-height: 100px;
+	position: relative;
+	margin: 6px;
+	padding-left: 100px;
+}
+.dtk-object-image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 90px;
+	height: 90px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-image: url(themes/1.0/images/gridxlogo.png);
+}
+.dtk-object-title { font-size: 1.25em; }
+.dtk-object-description { font-size: 0.85em; }
+.dtk-doc-tools {
+	font-size: 0.85em;
+	margin: 0.5em;
+	margin-top: 2em;
+	text-align: right;
+}
+
+.gridx-modules-virtualvscroller { background-image: url(themes/1.0/images/moduleIcons/modIcon-VirtualVScroller.png); }
+.gridx-modules-filter-filterbar { background-image: url(themes/1.0/images/moduleIcons/modIcon-FilterBar.png); }
+.gridx-modules-cellwidget { background-image: url(themes/1.0/images/moduleIcons/modIcon-CellWidget.png); }
+.gridx-modules-extendedselect-row { background-image: url(themes/1.0/images/moduleIcons/modIcon-ExtendedSelectRow.png); }
+.gridx-modules-indirectselectcolumn { background-image: url(themes/1.0/images/moduleIcons/modIcon-IndirectSelect.png); }
+.gridx-modules-dnd-row { background-image: url(themes/1.0/images/moduleIcons/modIcon-DndRow.png); }
+.gridx-modules-tree { background-image: url(themes/1.0/images/moduleIcons/modIcon-Tree.png); }
+.gridx-modules-columnlock { background-image: url(themes/1.0/images/moduleIcons/modIcon-ColumnLock.png); }
+</style>

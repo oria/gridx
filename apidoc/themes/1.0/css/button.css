@@ -1,0 +1,54 @@
+/**
+ * Buttons
+ */
+
+.btn {
+    display: inline-block;
+    /*float: left;*/
+}
+
+.btn span {
+    display: inline-block;
+}
+
+.go {
+    background: transparent url('../images/buttons/goR.png') no-repeat scroll top right;
+    padding-right: 34px; /* 34px: sliding doors padding */
+    color: white;
+    font-size: 14px;
+    line-height: 41px;
+    text-decoration: none;
+}
+
+.go span {
+    background: transparent url('../images/buttons/goL.png') no-repeat;
+    padding: 0 10px 0 20px;
+    line-height: 41px;
+    height:41px;
+    cursor:pointer;
+}
+
+.go:hover, .go:hover span {
+    text-decoration:underline;
+}
+
+.link {
+    background: transparent url('../images/buttons/linkR.png') no-repeat scroll top right;
+    padding-right: 24px; /* 34px: sliding doors padding */
+    color:#323F48;
+    font-size: 11px;
+    line-height: 26px;
+    text-decoration: none;
+}
+
+.link span {
+    background: transparent url('../images/buttons/linkL.png') no-repeat;
+    padding: 0 10px 0 15px;
+    line-height: 26px;
+    height:26px;
+    cursor:pointer;
+}
+
+.link:hover, .link:hover span {
+    text-decoration:underline;
+}
