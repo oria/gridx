@@ -1,0 +1,3 @@
+[submodule "src/dojo"]
+	path = src/dojo
+	url = git@github.com:dojo/dojo.git
