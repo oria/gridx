@@ -93,6 +93,7 @@ Store, Grid){
 		}
 		if(n && domClass.contains(n, 'moduleItem')){
 			useModule(n);
+			attributesSummary();
 			dom.byId('modulesLoadedCover').style.display = 'none';
 		}
 	});
