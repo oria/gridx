@@ -42,8 +42,11 @@ define([
 		},
 
 		postCreate: function(){
-			this.connect(this.grid.pagination, 'onChangePageSize', '_onChange');
-			this.refresh();
+			var t = this;
+			t.connect(t.grid.pagination, 'onChangePageSize', '_onChange');
+			t.grid.pagination.loaded.then(function(){
+				t.refresh();
+			});
 		},
 		startup: function(){
 			this.inherited(arguments);
