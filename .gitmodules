@@ -7,3 +7,6 @@
 [submodule "src/dojox"]
 	path = src/dojox
 	url = git@github.com:dojo/dojox
+[submodule "src/gridx"]
+	path = src/gridx
+	url = git@github.com:oria/gridx
