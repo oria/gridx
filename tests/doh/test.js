@@ -3,20 +3,13 @@ require([
 	'dojo/dom',
 	'doh/runner',
 	'gridx/tests/doh/GTest',
-	'gridx/tests/doh/enumIterator',
+	'gridx/tests/doh/GridConfigEnumerator',
 	'gridx/tests/doh/config',
 	'dojo/_base/lang',
 	'dojo/domReady!'
-], function(array, dom, doh, GTest, EnumIterator, config, lang){
+], function(array, dom, doh, GTest, GridConfigEnumerator, config, lang){
 
-	var ei = new EnumIterator(config);
-
-	//Minimal config package size
-	ei.minPackSize = config.minPackSize;
-	//Maximum config package size
-	ei.maxPackSize = config.maxPackSize;
-	//Run all cases or only special cases
-	ei.specialCasesOnly = config.specialCasesOnly;
+	var ei = new GridConfigEnumerator(config);
 
 	//-----------------------------------------------------------------------------
 	var tsIndex = 1;

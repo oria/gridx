@@ -34,10 +34,10 @@ define([
 ], function(lang, memoryFactory, IFWSFactory, dataSource, modules){
 
 	//Config Begin-------------------------------------------------------
-	//Minimal config package size
-	var minPackSize = 0;
-	//Maximum config package size
-	var maxPackSize = 0;
+	var minModuleCount = 2;
+	var maxModuleCount = 2;
+	var minParamCount = 1;
+	var maxParamCount = 1;
 	//Run all cases or only special cases
 	var specialCasesOnly = 0;
 
@@ -48,45 +48,53 @@ define([
 		['PagedBody', 'bodyPageSize_2']
 	];
 
+	var mandatoryModules = [
+		'CellWidget'
+	];
+
+	var mandatoryParams = [
+		'autoHeight'
+	];
+
 	//module config => interface name
 	var mods = {
-//        ColumnResizer: "columnResizer",
+		ColumnResizer: "columnResizer",
 //        NavigableCell: "navigableCell",
 		CellWidget: "cellWidget",
-//        Edit: "edit",
-//        SingleSort: "sort",
-//        NestedSort: "sort",
-//        Pagination: "pagination",
-//        PaginationBar: "paginationBar",
-//        PaginationBarDD: "paginationBar",
-//        Filter: "filter",
-//        FilterBar: "filterBar",
-//        QuickFilter: "quickFilter",
-//        SelectRow: "selectRow",
-//        SelectColumn: "selectColumn",
-//        SelectCell: "selectCell",
-//        ExtendedSelectRow: "selectRow",
-//        ExtendedSelectColumn: "selectColumn",
-//        ExtendedSelectCell: "selectCell",
+		Edit: "edit",
+		SingleSort: "sort",
+		NestedSort: "sort",
+		Pagination: "pagination",
+		PaginationBar: "paginationBar",
+		PaginationBarDD: "paginationBar",
+		Filter: "filter",
+		FilterBar: "filterBar",
+		QuickFilter: "quickFilter",
+		SelectRow: "selectRow",
+		SelectColumn: "selectColumn",
+		SelectCell: "selectCell",
+		ExtendedSelectRow: "selectRow",
+		ExtendedSelectColumn: "selectColumn",
+		ExtendedSelectCell: "selectCell",
 //        MoveRow: "moveRow",
 //        MoveColumn: "moveColumn",
-//        RowHeader: "rowHeader",
-//        IndirectSelect: "indirectSelect",
-//        IndirectSelectColumn: "indirectSelect",
-//        ColumnLock: "columnLock",
-//        RowLock: "rowLock",
+		RowHeader: "rowHeader",
+		IndirectSelect: "indirectSelect",
+		IndirectSelectColumn: "indirectSelect",
+		ColumnLock: "columnLock",
+		RowLock: "rowLock",
 		Tree: "tree",
-//        HiddenColumns: 'hiddenColumns',
-//        GroupHeader: 'groupHeader',
-//        TouchVScroller: 'vScroller',
+		HiddenColumns: 'hiddenColumns',
+		GroupHeader: 'groupHeader',
+		TouchVScroller: 'vScroller',
 //        PagedBody: 'pagedBody',
-//        Dod: 'dod'
+//        Dod: 'dod',
 		VirtualVScroller: "virtualVScroller"
 	};
 
 	//parameter config => [interface name, adder function]
 	var params = {
-		/*cacheSize_0: ['cacheSize', function(cfg){
+		cacheSize_0: ['cacheSize', function(cfg){
 			cfg.cacheSize = 0;
 		}],
 		cacheSize_20: ['cacheSize', function(cfg){
@@ -155,12 +163,12 @@ define([
 		selectRowCanSwept_false: ['selectRowCanSwept', function(cfg){
 			cfg.selectRowEnabled = false;
 		}, 'selectRow'],
-		selectRowHoldingCtrl: ['selectRowHoldingCtrl', function(cfg){
-			cfg.selectRowHoldingCtrl = true;
-		}, 'selectRow'],
-		selectRowHoldingShift: ['selectRowHoldingShift', function(cfg){
-			cfg.selectRowHoldingShift = true;
-		}, 'selectRow'],
+//        selectRowHoldingCtrl: ['selectRowHoldingCtrl', function(cfg){
+//            cfg.selectRowHoldingCtrl = true;
+//        }, 'selectRow'],
+//        selectRowHoldingShift: ['selectRowHoldingShift', function(cfg){
+//            cfg.selectRowHoldingShift = true;
+//        }, 'selectRow'],
 		selectRowMultiple_false: ['selectRowMultiple', function(cfg){
 			cfg.selectRowMultiple = false;
 		}, 'selectRow'],
@@ -184,12 +192,12 @@ define([
 		selectColumnCanSwept_false: ['selectColumnCanSwept', function(cfg){
 			cfg.selectColumnCanSwept = false;
 		}, 'selectColumn'],
-		selectColumnHoldingCtrl: ['selectColumnHoldingCtrl', function(cfg){
-			cfg.selectColumnHoldingCtrl = true;
-		}, 'selectColumn'],
-		selectColumnHoldingShift: ['selectColumnHoldingShift', function(cfg){
-			cfg.selectColumnHoldingShift = true;
-		}, 'selectColumn'],
+//        selectColumnHoldingCtrl: ['selectColumnHoldingCtrl', function(cfg){
+//            cfg.selectColumnHoldingCtrl = true;
+//        }, 'selectColumn'],
+//        selectColumnHoldingShift: ['selectColumnHoldingShift', function(cfg){
+//            cfg.selectColumnHoldingShift = true;
+//        }, 'selectColumn'],
 		selectColumnMultiple_false: ['selectColumnMultiple', function(cfg){
 			cfg.selectColumnMultiple = false;
 		}, 'selectColumn'],
@@ -199,12 +207,12 @@ define([
 		selectCellCanSwept_false: ['selectColumnCanSwept', function(cfg){
 			cfg.selectColumnCanSwept = false;
 		}, 'selectCell'],
-		selectCellHoldingCtrl: ['selectColumnHoldingCtrl', function(cfg){
-			cfg.selectColumnHoldingCtrl = true;
-		}, 'selectCell'],
-		selectCellHoldingShift: ['selectColumnHoldingShift', function(cfg){
-			cfg.selectColumnHoldingShift = true;
-		}, 'selectCell'],
+//        selectCellHoldingCtrl: ['selectColumnHoldingCtrl', function(cfg){
+//            cfg.selectColumnHoldingCtrl = true;
+//        }, 'selectCell'],
+//        selectCellHoldingShift: ['selectColumnHoldingShift', function(cfg){
+//            cfg.selectColumnHoldingShift = true;
+//        }, 'selectCell'],
 		selectCellMultiple_false: ['selectCellMultiple', function(cfg){
 			cfg.selectCellMultiple = false;
 		}, 'selectCell'],
@@ -328,7 +336,7 @@ define([
 		}, 'indirectSelect'],
 		editLazySave: ['editLazySave', function(cfg){
 			cfg.editLazySave = true;
-		}, 'editLazySave']*/
+		}, 'editLazySave']
 	};
 
 	//dependencies: config item => depending interface
@@ -585,15 +593,21 @@ define([
 	}
 
 	return {
-		minPackSize: minPackSize,
-		maxPackSize: maxPackSize,
+		minModuleCount: minModuleCount,
+		maxModuleCount: maxModuleCount,
+		minParamCount: minParamCount,
+		maxParamCount: maxParamCount,
+		mandatoryModules: mandatoryModules,
+		mandatoryParams: mandatoryParams,
 		specialCasesOnly: specialCasesOnly,
 		syncCacheClasses: syncCaches,
 		asyncCacheClasses: asyncCaches,
 		syncStores: syncStores,
 		asyncStores: asyncStores,
 		structures: layouts,
-		args: paramArgs.concat(modArgs),
+//        args: paramArgs.concat(modArgs),
+		paramArgs: paramArgs,
+		modArgs: modArgs,
 		adders: lang.mixin(paramAdders, modAdders),
 		argInterfaces: lang.mixin(paramInterfaces, mods),
 		deps: deps,
