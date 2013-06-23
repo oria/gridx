@@ -1,0 +1,4 @@
+1. Place this folder in the same directory as gridx.
+2. Make sure gridx is in a valid branch (not gh-pages).
+3. Edit config.js to setup proper configuration.
+3. Run test.html
