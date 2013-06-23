@@ -6,26 +6,6 @@ define([
 ], function(query, array, domClass, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 'Header 1',
-		name: 'if headerHidden is true, header height is 0',
-		condition: function(grid){
-			return grid.header && grid.header.arg('hidden');
-		},
-		checker: function(grid, doh){
-			doh.is(0, grid.header.domNode.clientHeight);
-		}
-	},
-	{
-		id: 'Header 2',
-		name: 'if headerHidden is false, header is visible',
-		condition: function(grid){
-			return grid.header && !grid.header.arg('hidden');
-		},
-		checker: function(grid, doh){
-			doh.t(grid.header.domNode.clientHeight > 0);
-		}
-	},
-	{
 		id: 'Header 3',
 		name: 'columns are ordered from right to left',
 		checker: function(grid, doh){

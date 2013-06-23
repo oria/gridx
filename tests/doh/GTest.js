@@ -96,8 +96,8 @@ define([
 			var node = domConstruct.toDom(str);
 			var btn = query('.reqId', node)[0];
 			var t = this;
+			var cfg = this._config;
 			on(btn, 'click', function(){
-				var cfg = t._config;
 				var grid = registry.byId('testgrid');
 				if(grid){
 					grid.destroy();
@@ -107,6 +107,7 @@ define([
 				}, cfg));
 				grid.placeAt('testgridContainer');
 				grid.startup();
+				window.grid = grid;
 			});
 			this.logNode.appendChild(node);
 		},
@@ -235,9 +236,10 @@ define([
 								try{
 									item.action(grid, t._doh, actionDone, t);
 								}catch(e){
+									console.error('Action FAIL: ', item.name);
 									t.reportError(e, item.id);
 									t._destroy();
-									d.callback();
+									t._testSingleAction(index + 1, d);
 									return;
 								}
 								Deferred.when(actionDone, function(){

@@ -1,8 +1,8 @@
 define([
 	'dojo/_base/lang',
-	'../support/stores/Memory',
-	'../support/stores/ItemFileWriteStore',
-	'../support/data/TestData',
+	'gridx/tests/support/stores/Memory',
+	'gridx/tests/support/stores/ItemFileWriteStore',
+	'gridx/tests/support/data/TestData',
 	'gridx/allModules',
 
 	'dijit/form/ComboButton',
@@ -22,6 +22,23 @@ define([
 	'gridx/tests/doh/status/HScroller',
 	'gridx/tests/doh/status/VLayout',
 
+	'gridx/tests/doh/status/autoHeight',
+	'gridx/tests/doh/status/autoWidth',
+	'gridx/tests/doh/status/headerHidden',
+	'gridx/tests/doh/actions/headerHidden',
+	'gridx/tests/doh/status/sortInitialOrder',
+	'gridx/tests/doh/status/hiddenColumnsInit',
+	'gridx/tests/doh/status/indirectSelectAll',
+	'gridx/tests/doh/status/indirectSelectPosition',
+	'gridx/tests/doh/status/indirectSelectWidth',
+	'gridx/tests/doh/status/rowHeaderWidth',
+	'gridx/tests/doh/status/columnLockCount',
+	'gridx/tests/doh/status/filterBarFilterData',
+	'gridx/tests/doh/status/filterBarCloseButton',
+	'gridx/tests/doh/actions/filterBarCloseButton',
+	'gridx/tests/doh/status/filterBarDefineFilterButton',
+	'gridx/tests/doh/actions/filterBarDefineFilterButton',
+
 //    'gridx/tests/doh/actions/HiddenColumns',
 //    'gridx/tests/doh/actions/VScroller',
 //    'gridx/tests/doh/actions/Header',
@@ -34,10 +51,10 @@ define([
 ], function(lang, memoryFactory, IFWSFactory, dataSource, modules){
 
 	//Config Begin-------------------------------------------------------
-	var minModuleCount = 2;
-	var maxModuleCount = 2;
-	var minParamCount = 1;
-	var maxParamCount = 1;
+	var minModuleCount = 3;
+	var maxModuleCount = 3;
+	var minParamCount = 2;
+	var maxParamCount = 2;
 	//Run all cases or only special cases
 	var specialCasesOnly = 0;
 
@@ -49,12 +66,12 @@ define([
 	];
 
 	var mandatoryModules = [
-		'CellWidget'
-	];
+		'FilterBar',
+	0];
 
 	var mandatoryParams = [
-		'autoHeight'
-	];
+		'filterBarDefineFilterButton_false',
+	0];
 
 	//module config => interface name
 	var mods = {
@@ -229,11 +246,11 @@ define([
 				]
 			};
 		}, 'filterBar'],
-		filterBarCloseButton: ['filterBarCloseButton', function(cfg){
-			cfg.filterBarCloseButton = true;
+		filterBarCloseButton_false: ['filterBarCloseButton', function(cfg){
+			cfg.filterBarCloseButton = false;
 		}, 'filterBar'],
-		filterBarDefineFilterButton: ['filterBarDefineFilterButton', function(cfg){
-			cfg.filterBarDefineFilterButton = true;
+		filterBarDefineFilterButton_false: ['filterBarDefineFilterButton', function(cfg){
+			cfg.filterBarDefineFilterButton = false;
 		}, 'filterBar'],
 		filterBarMaxRuleCount_1: ['filterBarMaxRuleCount', function(cfg){
 			cfg.filterBarMaxRuleCount = 1;
@@ -415,6 +432,10 @@ define([
 	];
 
 	var syncStores = [
+		memoryFactory({
+			dataSource: dataSource,
+			size: 0
+		}),
 		memoryFactory({
 			dataSource: dataSource,
 			size: 10

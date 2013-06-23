@@ -27,7 +27,7 @@ return declare([], {
 
 	hasMandatory: function(){
 		return array.every(this.mandatory, function(item){
-			return this.pack[item];
+			return !item || this.pack[item];
 		}, this);
 	},
 

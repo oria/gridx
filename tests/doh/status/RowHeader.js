@@ -39,19 +39,6 @@ define([
 				doh.is('rowheader', cell.getAttribute('role'));
 			});
 		}
-	},
-	{
-		id: 'RowHeader 3',
-		name: 'row header width is set according to "width"',
-		condition: function(grid){
-			return grid.rowHeader;
-		},
-		checker: function(grid, doh){
-			var width = grid.rowHeader.arg('width');
-			query('.grixRowHeaderCell', grid.mainNode).forEach(function(cell){
-				doh.is(width, cell.style.width);
-			});
-		}
 	}
 	);
 });
