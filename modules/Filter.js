@@ -18,13 +18,13 @@ define([
 		setupQuery: function(obj){
 		},
 
-		setFilter: function(){
+		setFilter: function(checker, skipUpdateBody){
 			// summary:
 			//		Apply function *checker* as the filter condition to filter every row.
 			// checker: Function(rowCache, rowId)|null|undefined (or anything that is invalid)
 			//		A function only returning TRUE or FALSE. It is used to decide whether a row should survive.
 			//		If it is null (or anything invalid here), then clear the current filter.
-			// skipUpdateBody: Boolean
+			// skipUpdateBody: Boolean?
 			//		Whether to immediately update grid UI after filtering.
 			// return:
 			//		undefined
