@@ -129,7 +129,6 @@ define([
 
 		load: function(){
 			var t = this,
-				columnsById = t.grid._columnsById,
 				refresh = function(){
 					var columnsById = t.grid._columnsById;
 					for(var colId in columnsById){
@@ -251,7 +250,7 @@ define([
 				headerCell.setAttribute('aria-sort', 'none');
 			}
 			t._sortId = colId;
-			t._sortDescend = !!isDescending;
+			t._sortDescend = isDescending = !!isDescending;
 			headerCell = g.header.getHeaderNode(colId);
 			domClass.add(headerCell, 'gridxCellSorted');
 			domClass.toggle(headerCell, 'gridxCellSortedAsc', !isDescending);

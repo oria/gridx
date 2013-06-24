@@ -31,10 +31,13 @@ define([
 		},
 
 		postCreate: function(){
-			this.domNode.setAttribute('tabIndex', this.grid.domNode.getAttribute('tabIndex'));
-			this.refresh();
-			this.connect(this, 'onFocus', '_onFocus');
-			this.connect(this.domNode, 'onkeydown', '_onKey');
+			var t = this;
+			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
+			t.connect(t, 'onFocus', '_onFocus');
+			t.connect(t.domNode, 'onkeydown', '_onKey');
+			t.grid.pagination.loaded.then(function(){
+				t.refresh();
+			});
 		},
 
 		//Public-----------------------------------------------------------------------------
