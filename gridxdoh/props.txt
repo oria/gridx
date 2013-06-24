@@ -89,12 +89,12 @@ filterBarItemsName
 filterBarConditions
 paginationBarVisibleSteppers
 paginationBarSizeSeparator
-paginationBarGotoButton
 paginationBarSizes
 paginationBarPosition
 paginationBarDescription
 paginationBarStepper
-paginationBarSizeSwitch
+
+
 
 ===========================
 autoHeight
@@ -110,3 +110,5 @@ columnLockCount
 filterBarFilterData
 filterBarCloseButton
 filterBarDefineFilterButton
+paginationBarGotoButton
+paginationBarSizeSwitch

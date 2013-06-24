@@ -1,7 +1,7 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'gridxdoh/Enumerator'
+	'./Enumerator'
 ], function(declare, lang, Enumerator){
 
 return declare([], {

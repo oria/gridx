@@ -38,6 +38,10 @@ define([
 	'gridxdoh/actions/filterBarCloseButton',
 	'gridxdoh/status/filterBarDefineFilterButton',
 	'gridxdoh/actions/filterBarDefineFilterButton',
+	'gridxdoh/status/paginationBarGotoButton',
+	'gridxdoh/actions/paginationBarGotoButton',
+	'gridxdoh/status/paginationBarSizeSwitch',
+	'gridxdoh/actions/paginationBarSizeSwitch',
 
 //    'gridxdoh/actions/HiddenColumns',
 //    'gridxdoh/actions/VScroller',
@@ -53,8 +57,8 @@ define([
 	//Config Begin-------------------------------------------------------
 	var minModuleCount = 3;
 	var maxModuleCount = 3;
-	var minParamCount = 2;
-	var maxParamCount = 2;
+	var minParamCount = 1;
+	var maxParamCount = 1;
 	//Run all cases or only special cases
 	var specialCasesOnly = 0;
 
@@ -66,11 +70,11 @@ define([
 	];
 
 	var mandatoryModules = [
-		'FilterBar',
+		'PaginationBar',
 	0];
 
 	var mandatoryParams = [
-		'filterBarDefineFilterButton_false',
+		'paginationBarSizeSwitch_false',
 	0];
 
 	//module config => interface name
@@ -303,7 +307,7 @@ define([
 		paginationBarVisibleSteppers_5: ['paginationBarVisibleSteppers', function(cfg){
 			cfg.paginationBarVisibleSteppers = 5;
 		}, 'paginationBar'],
-		paginationBarVisibleGotoButton_false: ['paginationBarVisibleSteppers', function(cfg){
+		paginationBarGotoButton_false: ['paginationBarVisibleSteppers', function(cfg){
 			cfg.paginationBarGotoButton = false;
 		}, 'paginationBar'],
 		bodyRowHoverEffect_false: ['bodyRowHoverEffect', function(cfg){
