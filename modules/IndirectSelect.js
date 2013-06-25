@@ -110,6 +110,8 @@ define([
 			if(g.select.row.isSelected(reservedRowId)){
 				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
 			}
+			query('.' + cls, g.rowHeader.headerCellNode).removeClass(cls).attr('aria-checked', 'false');
+			this._allSelected = {};
 		},
 
 		_onHighlightChange: function(target, toHighlight){
