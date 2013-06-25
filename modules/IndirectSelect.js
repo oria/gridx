@@ -126,12 +126,17 @@ define([
 		},
 
 		_onClear: function(reservedRowId){
-			var cls = this._getDijitClass() + 'Checked',
+			var dijitCls = this._getDijitClass(),
+				cls = dijitCls + 'Checked',
+				partialCls = dijitCls + 'Partial',
 				g = this.grid;
 			query('.' + cls, g.rowHeader.bodyNode).removeClass(cls);
+			query('.' + partialCls, g.rowHeader.bodyNode).removeClass(partialCls);
 			if(g.select.row.isSelected(reservedRowId)){
 				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
 			}
+			query('.' + cls, g.rowHeader.headerCellNode).removeClass(cls).attr('aria-checked', 'false');
+			this._allSelected = {};
 		},
 
 		_onHighlightChange: function(target, toHighlight){
@@ -223,14 +228,16 @@ define([
 					d.callback();
 				});
 			}
-			Deferred.when(d, function(){
-				if(t.arg('all')){
+			if(t.arg('all')){
+				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
 					var node = t.grid.rowHeader.headerCellNode.firstChild;
-					domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
-					node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
-				}
-			});
+					if(node){
+						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+					}
+				});
+			}
 		},
 
 		//Focus------------------------------------------------------

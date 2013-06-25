@@ -150,7 +150,12 @@ define([
 			if(!g.autoHeight){
 				var bd = g.body,
 					bn = g.bodyNode,
-					toShow = bn.scrollHeight > bn.clientHeight,
+					toShow = (bn.scrollHeight > bn.clientHeight) ||
+						//This is to fix some rare issue that vscroller missing. #10267
+						//Logically this should not happen because virtual scroller has buffers.
+						//And this logic should not be put in non-virtual scroller either.
+						//FIXME: need more investigation.
+						(bn.scrollHeight == bn.clientHeight && bd.renderCount < g.view.visualCount),
 					ds = t.domNode.style;
 					scrollBarWidth = metrics.getScrollbar().w + (has('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(has('ie') < 8){

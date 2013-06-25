@@ -907,6 +907,31 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	height: 100%;
 	width: 50px;
 }
+
+.attributesLabel{
+	transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	font-size: 36px;
+	position:relative;
+	top:32px;
+	color:#555	
+}
+
+.valueHoverTitle{
+	background: white;
+	border-radius: 5px;
+	color: #555;
+	float: left;
+	display: none;
+	font-size: 10px;
+	left: 0px;
+	padding: 8px;
+	position: absolute;
+	top: 0px;
+	/*width: 200px;*/
+	z-index: 10;
+}
+
 #attributesBool .attributesConfigLabel {
 	background: url('images/boolean.png') no-repeat;
 }
@@ -921,14 +946,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 	background-color: #eee;
 }
 .attributeItem .simpleValue, .attributeItem .complexValue{
-	margin: 0px 5px;
 	border: 1px solid #ccc;
 	border-radius: 6px;
-	padding: 7px;
-	font-size: 15px;
-	display: inline-block;
 	cursor: pointer;
 	color: #555;
+	display: inline-block;
+	font-size: 15px;
+	margin: 0px 5px;
+	padding: 7px;
+	position: relative;
 }
 
 .attributeItem .valueSelected{
@@ -1032,7 +1058,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', e
 #attributesOtherInner {
 	width: 700px;
 	height: 480px;
-	overflow: auto;
+	overflow: visible;
 	margin: 20px 0 20px 60px;
 }
 

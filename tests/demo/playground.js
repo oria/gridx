@@ -93,6 +93,7 @@ Store, Grid){
 		}
 		if(n && domClass.contains(n, 'moduleItem')){
 			useModule(n);
+			attributesSummary();
 			dom.byId('modulesLoadedCover').style.display = 'none';
 		}
 	});
@@ -478,8 +479,14 @@ Store, Grid){
 				"'><table><tbody><tr><td style='width: 200px; text-align: center;'>",
 				"<span class='attributeItemMod'>", attr.mod, "</span><span class='attributeItemName'>", attr._name, "</span>",
 				"</td><td style='width:250px'>", 
-				"<div><div class='simpleValue valueSelected attributeOtherValue'>simple value</div>",
-				"<div class='complexValue attributeOtherValue'>complex value</div></div></td><td>",
+				"<div><div class='simpleValue valueSelected attributeOtherValue'>",
+					"simple value",
+					"<div class='valueHoverTitle'><pre>" + formatJsCode('', attr.simpleValue) +"</pre></div>",
+				"</div>",
+				"<div class='complexValue attributeOtherValue'>",
+					"complex value",
+					"<div class='valueHoverTitle'><pre>" + formatJsCode('', attr.complexValue) + "</pre></div>",
+				"</div></div></td><td>",
 				attr.unitPost,
 			"</td></tr></tbody></table></div>"].join('');
 		}).join('');
@@ -503,6 +510,25 @@ Store, Grid){
 			attr.curValue = attr[v];	
 			console.log(attr);	
 		});
+		
+		var attributeOtherValues = query('.attributeOtherValue');
+		
+		attributeOtherValues.on('mouseover', function(evt){
+			var title = query('.valueHoverTitle', this)[0];
+			title.style.display = 'block';
+			title.style.top = '40px';
+			title.style.left = '80px';
+			console.log('this is the mouse hover');
+		});
+		
+		attributeOtherValues.on('mouseout', function(evt){
+			var title = query('.valueHoverTitle', this)[0];
+			title.style.display = 'none';
+			console.log('this is the mouse out');
+		});		
+		
+		// attributeOtherValues.on('mousemove', function(evt){
+		// });
 	}
 
 	function showModuleDetail(mod){
@@ -587,8 +613,15 @@ Store, Grid){
 			var colBar = registry.byNode(columnBarNode).getColumn();
 			if(colBar.menu && typeof colBar.menu == 'string'){	//FIX ME: ugly
 				console.log('filter menu module is: ', colBar.menu);
+				var config;
+				if(colBar.menu.indexOf('AZFilterMenu') >= 0){
+					config = {};
+				}
+				if(colBar.menu.indexOf('NumberFilterMenu') >= 0){
+					config = {numbers: [0, 3, 6, 10]};
+				}
 				require([colBar.menu], function(m){
-					colBar.menu = new m({});
+					colBar.menu = new m(config);
 				});
 				otherModules['gridx/modules/Filter'] = true;
 			}

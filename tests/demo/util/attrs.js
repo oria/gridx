@@ -175,8 +175,8 @@ define([
 			})(),
 			complexValue: (function(){
 				var o = {};
-				for(var i = 0; i < 100; i++){
-					if(i % 5 > 2){
+				for(var i = 0; i < 50; i++){
+					if(i % 3 === 0){
 						o['item-' + i] = true;
 					}
 				}
