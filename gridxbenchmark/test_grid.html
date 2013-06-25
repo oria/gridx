@@ -1,0 +1,115 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Grid Benchmark Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel='stylesheet' href="../gridx/tests/support/common.css" />
+	<style type="text/css">
+		#gridxContainer {
+			width: 800px;
+			height: 500px;
+			/*display: none;*/
+		}
+		#progress{
+			margin-top: 10px;
+			display: none;
+		}
+		
+		#progressBarWrapper{
+			display: block;
+			padding: 2px;
+			border: 1px solid #ccc;
+		}
+		#progressBar{
+			background-color: indianred;
+			height: 20px;
+			width: 0%;
+		}
+		#singleModuleResultContainer{
+			width: 100%;
+			display: none;
+		}
+		#doubleModuleResultContainer{
+			width: 100%;
+			display: none;
+		}
+		#dataGridContainer {
+			width: 800px;
+			height: 500px
+		}
+		
+		#grid {
+			width: 100%;
+			height: 100%;
+		}
+		#doubleModuleResultGrid{
+			width: 100%;
+			height: 100%;
+		}
+		#ctrlPane .dijitAccordionContainer {
+			height: auto;
+		}
+		.gridxCell.empty{
+			background: #ccc !important;
+		}		
+		.gridxCell.colHover{
+			background: #ABD6FF !important;
+		}
+	</style>
+	<script type="text/javascript" src="../dojo/dojo.js"
+			data-dojo-config="async: true,
+								packages: [
+									{
+										name: 'gridx',
+										location: '../gridx'
+									}
+								]
+			
+	"></script>
+	<script type='text/javascript'>
+		require(['dojo/parser'], function(parser){
+			parser.parse();
+		});
+	</script>
+	<script type="text/javascript" src='test_grid.js'></script>
+</head>
+<body class='claro'>
+	<div>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Gridx Benchmark Page
+	</h1>
+	<div id='benchConfig'>
+		<!-- <div>
+			<span>Select Grids: </span>
+			<span>
+				<input id='gridxChbx'name='gridx' type='checkbox' data-dojo-type='dijit/form/CheckBox'><label for="gridx">gridx</label>			
+				<input id='datagridChbx' name='datagridChbx' type='checkbox' data-dojo-type='dijit/form/CheckBox'><label for="datagrid">datagrid</label>			
+			</span>
+		</div> -->
+		<p id='description' style='font-size: 10px; color: #555;'>
+			Press the start button to run the benchmark of gridx. The whole process may take several minutes to finish.
+		</p>
+		<button id='benchBtn'>Start</button>
+	</div>
+	<table border='0' cellspacing='0' cellpadding='0' width="100%"><tr>
+		<td class='pane'>
+			<div id='gridxContainer'></div>
+			<div id='progress'>
+				<div id='progressBarWrapper'>
+					<div id='progressBar'></div>
+				</div>
+				<div id='progressNumber'>0%	</div>
+				
+			</div>
+			<p>Single Module</p>
+			<div id='singleModuleResultContainer'></div>
+			<br>
+			<br>
+			<p>Double Modules</p>
+			<div id='doubleModuleResultContainer'></div>
+			
+		</td>
+	</tr></table>
+	</div>
+</body>
+</html>
