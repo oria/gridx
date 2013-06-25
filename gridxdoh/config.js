@@ -42,6 +42,10 @@ define([
 	'gridxdoh/actions/paginationBarGotoButton',
 	'gridxdoh/status/paginationBarSizeSwitch',
 	'gridxdoh/actions/paginationBarSizeSwitch',
+	'gridxdoh/status/paginationBarStepper',
+	'gridxdoh/actions/paginationBarStepper',
+	'gridxdoh/status/paginationBarDescription',
+	'gridxdoh/actions/paginationBarDescription',
 
 //    'gridxdoh/actions/HiddenColumns',
 //    'gridxdoh/actions/VScroller',
@@ -70,11 +74,11 @@ define([
 	];
 
 	var mandatoryModules = [
-		'PaginationBar',
+//        'PaginationBarDD',
 	0];
 
 	var mandatoryParams = [
-		'paginationBarSizeSwitch_false',
+//        'paginationBarDescription_false',
 	0];
 
 	//module config => interface name
