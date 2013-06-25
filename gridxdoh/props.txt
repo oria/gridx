@@ -91,8 +91,9 @@ paginationBarVisibleSteppers
 paginationBarSizeSeparator
 paginationBarSizes
 paginationBarPosition
-paginationBarDescription
-paginationBarStepper
+
+
+
 
 
 
@@ -112,3 +113,5 @@ filterBarCloseButton
 filterBarDefineFilterButton
 paginationBarGotoButton
 paginationBarSizeSwitch
+paginationBarStepper
+paginationBarDescription
