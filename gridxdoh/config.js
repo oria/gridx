@@ -46,6 +46,8 @@ define([
 	'gridxdoh/actions/paginationBarStepper',
 	'gridxdoh/status/paginationBarDescription',
 	'gridxdoh/actions/paginationBarDescription',
+	'gridxdoh/status/paginationBarSizes',
+
 
 //    'gridxdoh/actions/HiddenColumns',
 //    'gridxdoh/actions/VScroller',

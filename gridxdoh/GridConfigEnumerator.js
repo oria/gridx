@@ -51,8 +51,8 @@ return declare([], {
 
 	//Private---------------------------------------------------------------------------
 	_nextSpecial: function(){
-		if(this.sp < this.special.length){
-			return this.special[this.sp++];
+		if(this.sp < this.specialCases.length){
+			return this.specialCases[this.sp++];
 		}
 		this.sp = 0;
 		return null;
