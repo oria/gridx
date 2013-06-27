@@ -28,9 +28,11 @@
 	border-bottom: 1px solid #FFFFFF;
 	clear: both;
 }
+@media screen and (min-device-width: 1024px) {
 .claro .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;
+}
 }
 
 .claro .gridxHeaderRowHidden {
@@ -69,9 +71,11 @@
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
 }
 
+@media screen and (min-device-width: 1024px) {
 .claro .gridxHeader .gridxHeaderRow .gridxCell:hover {
-	background: #9bcaf7;
+	background: #9BCAF7;
 	border-top-color: #9BCAF7;
+}
 }
 .claro .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover,
 .gridxColumnResizing .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover {
@@ -81,15 +85,19 @@
 	background: transparent;
 	border-top-color: transparent;
 }
+@media screen and (min-device-width: 1024px) {
 .claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus,
 .claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus:hover {
 	border-top-color: darkblue;
 }
+}
 
 /* Row header */
+@media screen and (min-device-width: 1024px) {
 .claro .gridxRowHeaderHeader .gridxHeaderCellFocus {
 	outline: none;
 	border: 1px dashed darkblue;
+}
 }
 	
 .claro .gridxRowHeaderRow .gridxCellFocus {

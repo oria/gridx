@@ -39,7 +39,7 @@ define([
 
 		position: 0,
 
-		width: '20px',
+		width: '23px',
 
 		all: true,
 
