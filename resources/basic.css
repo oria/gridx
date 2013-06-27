@@ -4,6 +4,8 @@
 	position: relative;
 	overflow: hidden;
 	border: 1px solid #ddd;
+	/* disable tap highlight on touch devices */
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .gridxHeader,
@@ -79,6 +81,9 @@
 .gridxPercentColumnWidth .gridxRow table.gridxRowTable {
 	width: 100%;
 }
+.gridxPercentColumnWidth .gridxRow {
+	width: 100%;
+}
 
 .gridxGroupHeader,
 .gridxHeaderRow .gridxCell {
@@ -90,8 +95,10 @@
 	overflow: hidden;
 }
 
+@media screen and (min-device-width: 1024px) {
 .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
 	border: 1px dashed darkblue;
+}
 }
 
 .gridxHeaderRow :focus {
@@ -189,6 +196,22 @@
 	line-height: 0;
 }
 
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar {
+	-webkit-appearance:none !important;
+	height:11px !important;
+}
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb {
+	border-radius:8px !important;
+	border:2px solid white !important;
+	background-color:rgba(100,100,100,.5) !important;
+}
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:hover,
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:active,
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:focus {
+	background-color: rgba(0,0,0,.5) !important;
+}
+
+
 
 /*VScroller*/
 .gridxVScroller {
@@ -201,6 +224,23 @@
 	height: 100%;
 	outline: none;
 }
+
+.gridxMac .gridxVScroller::-webkit-scrollbar {
+	-webkit-appearance:none !important;
+	width:11px !important;
+	background-color: #eee !important;
+}
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb {
+	border-radius:8px !important;
+	border:2px solid white !important;
+	background-color:rgba(100,100,100,.5) !important;
+}
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb:hover,
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb:active,
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb:focus {
+	background-color: rgba(0,0,0,.5) !important;
+}
+
 
 /*RowHeader*/
 .gridxRowHeaderHeader,
@@ -231,11 +271,12 @@
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
 }
 
+@media screen and (min-device-width: 1024px) {
 .gridxRowHeaderHeader .gridxHeaderCellFocus {
 	border-top: 1px dashed darkblue;
 	border-bottom: 1px dashed darkblue;
 }
-	
+}
 .gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }
@@ -296,6 +337,9 @@
 .gridxTouchVScroller .gridxBody {
 	height: auto !important;
 	width: auto !important;
+}
+.gridxPercentColumnWidth.gridxTouchVScroller .gridxBody {
+	width: 100% !important;
 }
 
 .gridxTouchVScroller .gridxHeaderRowInner {
