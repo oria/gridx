@@ -1,5 +1,7 @@
 require([
 	'dojo/parser',
+	'dojo/query',
+	'dojo/dom-style',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'dojo/date/locale',
@@ -7,8 +9,9 @@ require([
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/extensions/FormatSort',
 	'gridx/allModules',
+	'gridx/modules/Sort',
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory, locale){
+], function(parser, query, domStyle, dataSource, storeFactory, locale){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -18,8 +21,8 @@ require([
 	layout = [
 		{ id: 'id', field: "id", name:"Index", dataType:"number"},
 		{ id: 'Genre', field: "Genre", name:"Genre", width: '200px'},
-		{ id: 'Artist', field: "Artist", name:"Artist", width: '200px'},
-		{ id: 'Year', field: "Year", name:"Year", dataType:"number", width: '100px'},
+		{ id: 'Artist', field: "Artist", name:"Artist", width: '200px', sortable: 'descend'},
+		{ id: 'Year', field: "Year", name:"Year", dataType:"number", width: '100px', sortable: 'ascend'},
 		{ id: 'Album', field: "Album", name:"Album (unsortable)", sortable: false, width: '200px'},
 		{ id: 'Name', field: "Name", name:"Name", width: '200px'},
 		{ id: 'DownloadDate', field: "Download Date", name:"Date",
@@ -36,5 +39,7 @@ require([
 		}, sortFormatted: true}
 	];
 
-	parser.parse();
+	parser.parse().then(function(){
+//        alert(domStyle.get(grid.vScrollerNode, 'width'));
+	});
 });

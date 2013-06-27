@@ -151,4 +151,90 @@
 	display: inline;
 }
 
+/* Sort */
+.gridxSort .gridxArrowButtonNode {
+	background-image: url("images/gridx_sprite.png");
+	background-repeat: no-repeat;
+	height: 9px;
+	margin: 3px 7px 0 0;
+	width: 9px;
+	display: none;
+}
+.gridxSort .gridxSortUp .gridxArrowButtonNode {
+	display: block;
+	background-position: -51px -4px;
+}
+.gridxSort .gridxSortDown .gridxArrowButtonNode {
+	display: block;
+	background-position: -19px -4px;
+}
+.gridxSort .gridxSortSingle {
+	display: none;
+}
+.gridxSort .gridxArrowButtonChar {
+	display: none;
+}
+.dijit_a11y .gridxSort .gridxArrowButtonChar {
+	display: block;
+}
+.gridxSort .gridxSortNested {
+	display: block;
+	margin: 2px 5px;
+	float: right;
+	font-size: 10px;
+}
+.gridxSort .gridxHeaderRow .gridxCell:hover .gridxArrowButtonNode,
+.gridxSort .gridxHeaderCellFocus .gridxArrowButtonNode {
+	display: block;
+	background-position: -67px -3px;
+}
+.gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortUp .gridxArrowButtonNode,
+.gridxSort .gridxHeaderCellFocus .gridxSortUp .gridxArrowButtonNode {
+	background-position: -83px -3px;
+}
+.gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortDown .gridxArrowButtonNode,
+.gridxSort .gridxHeaderCellFocus .gridxSortDown .gridxArrowButtonNode {
+	background-position: -99px -3px;
+}
+.gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortAscendOnly,
+.gridxSort .gridxHeaderCellFocus .gridxSortAscendOnly {
+	background-position: -35px -3px;
+}
+.gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortDescendOnly,
+.gridxSort .gridxHeaderCellFocus .gridxSortDescendOnly {
+	background-position: -3px -4px;
+}
+.gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortUp .gridxSortAscendOnly,
+.gridxSort .gridxHeaderCellFocus .gridxSortUp .gridxSortAscendOnly {
+	background-position: -51px -4px;
+}
+.gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortDown .gridxSortDescendOnly,
+.gridxSort .gridxHeaderCellFocus .gridxSortDown .gridxSortDescendOnly {
+	background-position: -19px -4px;
+}
 
+/* for mobile devices */
+@media only screen and (min-device-width : 320px) and (max-device-width : 1024px) {
+	.gridxSort .gridxHeaderRow .gridxCell .gridxArrowButtonNode {
+		display: block;
+		background-position: -67px -3px;
+	}
+	.gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxArrowButtonNode {
+		background-position: -83px -3px;
+	}
+	.gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxArrowButtonNode {
+		background-position: -99px -3px;
+	}
+	.gridxSort .gridxHeaderRow .gridxCell .gridxSortAscendOnly {
+		background-position: -35px -3px;
+	}
+	.gridxSort .gridxHeaderRow .gridxCell .gridxSortDescendOnly {
+		background-position: -3px -4px;
+	}
+	.gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxSortAscendOnly {
+		background-position: -51px -4px;
+	}
+	.gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxSortDescendOnly {
+		background-position: -19px -4px;
+	}
+}
