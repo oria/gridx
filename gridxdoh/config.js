@@ -50,7 +50,8 @@ define([
 	'gridxdoh/actions/paginationBarSizes',
 	'gridxdoh/status/paginationBarSizeSeparator',
 	'gridxdoh/actions/paginationBarSizeSeparator',
-
+	'gridxdoh/status/paginationBarPosition',
+	'gridxdoh/actions/filterBarMaxRuleCount',
 
 //    'gridxdoh/actions/HiddenColumns',
 //    'gridxdoh/actions/VScroller',

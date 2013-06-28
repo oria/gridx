@@ -83,7 +83,6 @@ selectColumnHoldingCtrl
 selectColumnHoldingShift
 selectColumnMultiple
 filterBarTooltipDelay
-filterBarMaxRuleCount
 filterBarRuleCountToConfirmClearFilter
 filterBarItemsName
 filterBarConditions
@@ -108,6 +107,7 @@ columnLockCount
 filterBarFilterData
 filterBarCloseButton
 filterBarDefineFilterButton
+filterBarMaxRuleCount
 paginationBarGotoButton
 paginationBarSizeSwitch
 paginationBarStepper
