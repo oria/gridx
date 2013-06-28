@@ -47,6 +47,9 @@ define([
 	'gridxdoh/status/paginationBarDescription',
 	'gridxdoh/actions/paginationBarDescription',
 	'gridxdoh/status/paginationBarSizes',
+	'gridxdoh/actions/paginationBarSizes',
+	'gridxdoh/status/paginationBarSizeSeparator',
+	'gridxdoh/actions/paginationBarSizeSeparator',
 
 
 //    'gridxdoh/actions/HiddenColumns',

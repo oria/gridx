@@ -88,8 +88,6 @@ filterBarRuleCountToConfirmClearFilter
 filterBarItemsName
 filterBarConditions
 paginationBarVisibleSteppers
-paginationBarSizeSeparator
-paginationBarSizes
 paginationBarPosition
 
 
@@ -115,3 +113,5 @@ paginationBarGotoButton
 paginationBarSizeSwitch
 paginationBarStepper
 paginationBarDescription
+paginationBarSizeSeparator
+paginationBarSizes
