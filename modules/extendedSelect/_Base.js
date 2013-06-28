@@ -61,12 +61,12 @@ define([
 				[doc, 'onmouseup', '_end'],
 				[doc, 'onkeydown', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(g.domNode, false);
+						dom.setSelectable(sniff('ie') > 9 ? doc.body : g.domNode, false);
 					}
 				}],
 				[doc, 'onkeyup', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(g.domNode, true);
+						dom.setSelectable(sniff('ie') > 9 ? doc.body : g.domNode, true);
 					}
 				}]
 			);
