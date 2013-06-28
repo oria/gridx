@@ -163,12 +163,30 @@ define([
 	}
 
 	function normalizeModules(self){
-		var mods = [],
-			modules = self.modules,
-			len = modules.length;
-		for(var i = 0; i < len; ++i){
-			var m = modules[i];
-			if(isFunc(m) || isString(m)){
+		var mods = self.modules,
+			len = mods.length,
+			modules = [],
+			i, m;
+		for(i = 0; i < len; ++i){
+			m = mods[i];
+			if(isString(m)){
+				try{
+					m = require(m);
+				}catch(e){
+					console.error(e);
+				}
+			}
+			if(lang.isArray(m)){
+				modules = modules.concat(m);
+			}else{
+				modules.push(m);
+			}
+		}
+		mods = [];
+		len = modules.length;
+		for(i = 0; i < len; ++i){
+			m = modules[i];
+			if(isFunc(m)){
 				m = {
 					moduleClass: m
 				};

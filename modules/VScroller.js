@@ -6,10 +6,11 @@ define([
 	"dojo/query",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
+	"dojo/dom-style",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, has, query, domGeo, domClass, keys, metrics, _Module){
+], function(declare, Deferred, event, has, query, domGeo, domClass, domStyle, keys, metrics, _Module){
 
 /*=====
 	return declare(_Module, {

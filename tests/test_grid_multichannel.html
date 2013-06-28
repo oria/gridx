@@ -1,7 +1,7 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title>Grid PagedBody Test</title>
+	<title>Grid MultiChannel Test</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
@@ -20,10 +20,8 @@
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-		Grid PagedBody Test
+		Grid MultiChannel Test
 	</h1>
-<!--    <button onclick='deleteRow()'>Delete First Row</button>-->
-	<h2>Auto Load</h2>
 	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Async",
 		store: store,
@@ -31,22 +29,8 @@
 		pageSize: 20,
 		bodyMaxPageCount: 3,
 		modules: [
-			"gridx/modules/TouchVScroller",
-			"gridx/modules/ColumnResizer",
-			"gridx/modules/AutoPagedBody"
-		]
-	'></div>
-	<h2>Manual Load</h2>
-	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
-		cacheClass: "gridx/core/model/cache/Async",
-		store: store,
-		structure: layout,
-		pageSize: 20,
-		bodyMaxPageCount: 3,
-		modules: [
-			"gridx/modules/TouchVScroller",
-			"gridx/modules/ColumnResizer",
-			"gridx/modules/PagedBody"
+			"gridx/modules/MultiChannelScroller",
+			"gridx/modules/ColumnResizer"
 		]
 	'></div>
 </body>

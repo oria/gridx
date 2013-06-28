@@ -33,6 +33,7 @@ define([
 		}
 	});
 =====*/
+	var needHackPadBorder = has('safari') || (has('webkit') && has('ios'));
 
 	return declare(_Module, {
 		name: 'columnWidth',
@@ -148,7 +149,7 @@ define([
 					totalWidth = 0;
 				headers.forEach(function(node){
 					var w = domStyle.get(node, 'width');
-					if(isGroupHeader || !has('safari') || !isGridHidden){
+					if(isGroupHeader || !needHackPadBorder || !isGridHidden){
 						w += padBorder;
 					}
 					totalWidth += w;
@@ -168,7 +169,7 @@ define([
 				var autoCols = [],
 					cols = g._columns,
 					fixedWidth = 0;
-				if(!isGroupHeader && has('safari')){
+				if(!isGroupHeader && needHackPadBorder){
 					padBorder = 0;
 				}
 				array.forEach(cols, function(c){
@@ -189,7 +190,7 @@ define([
 				array.forEach(cols, function(c){
 					if(c.declaredWidth != 'auto'){
 						var headerNode = header.getHeaderNode(c.id),
-							w = !isGroupHeader && has('safari') ? parseFloat(headerNode.style.width, 10) :
+							w = !isGroupHeader && needHackPadBorder ? parseFloat(headerNode.style.width, 10) :
 								headerNode.offsetWidth || (domStyle.get(headerNode, 'width') + padBorder);
 						if(/%$/.test(c.declaredWidth)){
 							c.width = (w > padBorder ? w - padBorder : 0) + 'px';

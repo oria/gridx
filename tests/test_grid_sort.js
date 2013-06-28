@@ -40,6 +40,5 @@ require([
 	];
 
 	parser.parse().then(function(){
-//        alert(domStyle.get(grid.vScrollerNode, 'width'));
 	});
 });

@@ -112,11 +112,19 @@
 	overflow: hidden;
 	position: absolute;
 	top: 0;
-	box-sizing: border-box; /* css3 rec */
 	-moz-box-sizing: border-box; /* ff2 */
 	-ms-box-sizing: border-box; /* ie8 */
 	-webkit-box-sizing: border-box; /* safari3 */
 	-khtml-box-sizing: border-box; /* konqueror */
+	box-sizing: border-box; /* css3 rec */
+}
+
+.gridxCell {
+	-moz-box-sizing: content-box; /* ff2 */
+	-ms-box-sizing: content-box; /* ie8 */
+	-webkit-box-sizing: content-box; /* safari3 */
+	-khtml-box-sizing: content-box; /* konqueror */
+	box-sizing: content-box; /* css3 rec */
 }
 
 .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
@@ -434,11 +442,13 @@
 
 
 
-.gridxLoadMore {
+.gridxBodyTop,
+.gridxBodyBottom {
 	padding: 10px;
 	text-align: center;
 }
-.gridxLoadMore button {
+.gridxBodyTop button,
+.gridxBodyBottom button {
 	width: 100%;
 	min-height: 28px;
 }

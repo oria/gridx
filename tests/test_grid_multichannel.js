@@ -10,7 +10,7 @@ require([
 	'gridx/allModules',
 	'gridx/modules/PagedBody',
 	'gridx/modules/AutoPagedBody',
-	'gridx/modules/TouchVScroller',
+	'gridx/modules/MultiChannelScroller',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
 
