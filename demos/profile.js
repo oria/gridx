@@ -2,28 +2,220 @@ profile = {
 	stripConsole: "normal"
 	,layerOptimize: 'closure'
 	,optimize: 'closure'
-	,releaseDir: './'
+	,releaseDir: './demos'
 	,packages: [
 		{
 			name: 'dojo'
-			,location: '../src/dojo'
+			,location: '../../dojo'
 		},{
 			name: 'dijit'
-			,location: '../src/dijit' 	//always relative to profile path
+			,location: '../../dijit' 	//always relative to profile path
 		},{
 			name: 'dojox'
-			,location: '../src/dojox' 	//always relative to profile path
+			,location: '../../dojox' 	//always relative to profile path
 		},{
 			name: 'gridx'
-			,location: '../src/gridx'
+			,location: '../'
 		}
 	]
 	,layers: {
-	
-		'gridx/demos/test_grid_columnLock_layer': {boot: false,customBase: true,include: [
-			'gridx/demos/test_grid_columnLock'
+		
+		'demo_grid': {boot: false,customBase: true,include: [
+			'gridx/tests/demo_grid'
 			,'dojo/selector/acme'
 		]},
+		'demo_mobile_grid': {boot: false,customBase: true,include: [
+			'gridx/tests/demo_mobile_grid'
+			,'dojo/selector/acme'
+		]},
+		'test_datagrid_compatible': {boot: false,customBase: true,include: [
+			'gridx/tests/test_datagrid_compatible'
+			,'dojo/selector/acme'
+		]},
+		'test_grid': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_adaptiveFilter': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_adaptiveFilter'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_addRow_removeRow': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_addRow_removeRow'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_alwaysEditing': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_alwaysEditing'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_autoHeight_autoWidth': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_autoHeight_autoWidth'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_autoHideVScroller': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_autoHideVScroller'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_bar': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_bar'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_cellWidget': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_cellWidget'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_columnLock': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_columnLock'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_columnResizer': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_columnResizer'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_columnwidth': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_columnwidth'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_container': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_container'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_customStyleCell': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_customStyleCell'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_dnd_rearrange': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_dnd_rearrange'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_dndcolumn_nongrid_target': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_dndcolumn_nongrid_target'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_dndrow_betweengrids': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_dndrow_betweengrids'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_dndrow_nongrid_source': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_dndrow_nongrid_source'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_dndrow_nongrid_target': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_dndrow_nongrid_target'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_dod': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_dod'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_edit': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_edit'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_edit_lazy': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_edit_lazy'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_events': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_events'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_exporter': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_exporter'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_extendedSelect': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_extendedSelect'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_filter': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_filter'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_filter_serverside': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_filter_serverside'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_groupHeader': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_groupHeader'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_headerRegions': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_headerRegions'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_hiddenColumns': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_hiddenColumns'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_indirectSelect': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_indirectSelect'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_menu': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_menu'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_orientation': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_orientation'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_pagedBody': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_pagedBody'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_pagination': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_pagination'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_persist': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_persist'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_printer': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_printer'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_resize': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_resize'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_rowHeader': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_rowHeader'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_rowLock': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_rowLock'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_select': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_select'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_sort': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_sort'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_textDir': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_textDir'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_tree': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_tree'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_tree_lazyload': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_tree_lazyload'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_unselectableRow': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_unselectableRow'
+			,'dojo/selector/acme'
+		]},
+		'test_grid_virtualScroller': {boot: false,customBase: true,include: [
+			'gridx/tests/test_grid_virtualScroller'
+			,'dojo/selector/acme'
+		]}
 	}
 	
 	,transformJobs:[

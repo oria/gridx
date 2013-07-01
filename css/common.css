@@ -2,7 +2,7 @@ body {
   color: #666;
   font-family: arial;
   font-size: 12px;
-  background: url(../images/header_bg.png) 0 0 repeat-x;
+  /*background: url(../images/header_bg.png) 0 0 repeat-x;*/
   text-align: center;
 }
 div.container_12 {

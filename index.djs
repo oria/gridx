@@ -12,7 +12,7 @@
       color: #666;
       font-family: arial;
       font-size: 12px;
-      background: url(images/header_bg.png) 0 0 repeat-x;
+      /*background: url(images/header_bg.png) 0 0 repeat-x;*/
       text-align: center;
     }
     div.container_12 {
@@ -48,7 +48,7 @@
     .logo {
     	padding: 20px 0 0 0;
     	margin-top: 10px;
-    	margin-bottom: 40px;
+    	margin-bottom: 20px;
     }
     
     .search {
@@ -296,6 +296,30 @@
 	.dots .dojoxRotatorSelected a{
 		background:url(images/rotator_dots.png) no-repeat 0 -10px;
 	}
+
+  .summary {
+    /*background: url(images/paper.png);*/
+    background-color: #2175bc;
+    /*background: transparent url(images/bg.jpg) no-repeat;*/
+  }
+
+
+  .slogan {
+    font-size: 42px;
+    font-family: Arial;
+    color: #fff;
+    float: left;
+    width: 60%;
+    margin: 30px;
+    text-align: center;
+    text-shadow: 1px 1px 2px #666;
+  }
+
+  .button-download{
+    margin-top: 20px;
+    display: inline-block;
+    margin-left: 0;
+  }
 	
   </style>
   <script>
@@ -317,34 +341,16 @@
   <div class="container_12" style="background: none;">
     {{header|safe}}
     
-    <div class="grid_6 summary">
-      <img src="images/summary.png"/>
-      <a href="https://github.com/oria/gridx/tags" class="button button-download">Download v1.0.x</a>
-      <a href="./demo.html" class="button button-demo">See the demo</a>
+    <div class="grid_12 summary">
+      <p class="slogan">
+        A fast rendering, well modularized and plugin architecture based Grid.
+        <br/>
+        <a href="https://github.com/oria/gridx/tags" class="button button-download">Download v1.0.x</a>
+      </p>
+      
+
     </div>
-    <div class="grid_6">
-      <div class="slider">
-        <div class="slider-img-container rotator" dojoType="dojox.widget.AutoRotator" jsId="myRotator"
-        	 transition="dojox.widget.rotator.crossFade" duration="5000">
-    	  <div class="pane">
-    	    <img src="images/f1.png"/>
-    	  </div>
-    	  <div class="pane">
-    	    <img src="images/f2.png"/>
-    	  </div>
-    	  <div class="pane">
-    	  	<h3 class="description">New smart scroller</h3>
-    	    <img src="images/f3.png"/>
-    	  </div>
-    	  
-        </div>
-        
-        <div class="slider-toolbar">
-          <div dojoType="dojox.widget.rotator.Controller" class="dots" rotator="myRotator" commands="#"></div>
-          <div class="clear"></div>
-        </div>
-      </div>
-    </div>
+
     <div class="clear"></div>
     
     <div class="grid_3 news">
