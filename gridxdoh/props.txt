@@ -112,6 +112,6 @@ paginationBarGotoButton
 paginationBarSizeSwitch
 paginationBarStepper
 paginationBarDescription
-paginationBarSizeSeparator
 paginationBarSizes
+paginationBarSizeSeparator
 paginationBarPosition

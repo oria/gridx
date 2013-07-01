@@ -52,6 +52,8 @@ define([
 	'gridxdoh/actions/paginationBarSizeSeparator',
 	'gridxdoh/status/paginationBarPosition',
 	'gridxdoh/actions/filterBarMaxRuleCount',
+	'gridx/doh/actions/filterBarRuleCountToConfirmClearFilter',
+
 
 //    'gridxdoh/actions/HiddenColumns',
 //    'gridxdoh/actions/VScroller',
@@ -269,6 +271,9 @@ define([
 		filterBarMaxRuleCount_1: ['filterBarMaxRuleCount', function(cfg){
 			cfg.filterBarMaxRuleCount = 1;
 		}, 'filterBar'],
+		filterBarMaxRuleCount_5: ['filterBarMaxRuleCount', function(cfg){
+			cfg.filterBarMaxRuleCount = 5;
+		}, 'filterBar'],	
 		filterBarMaxRuleCount_infinite: ['filterBarMaxRuleCount', function(cfg){
 			cfg.filterBarMaxRuleCount = 0;
 		}, 'filterBar'],
