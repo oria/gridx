@@ -620,6 +620,7 @@ define([
 		},
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
+			this._cfmDlg && this._cfmDlg.destroy();
 			this.btnFilter.destroy();
 			if(this._tooltip){
 				this._tooltip.destroy();
