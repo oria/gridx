@@ -17,7 +17,7 @@ define([
 			grid.paginationBar.sizes = [10, 20, 0];
 			grid.paginationBar.refresh();
 			doh.t(grid.paginationBar.arg('sizes').length == query('.gridxPagerSizeSwitchTD .gridxPagerSizeSwitchBtn', grid.domNode).length, 
-					'switch buttons still have the same count as sizes');
+					'switch buttons do not have the same count as sizes');
 			done.callback();
 		}		
 	},
@@ -33,7 +33,7 @@ define([
 						
 			var selectDijit = dijit.byNode(query('.gridxPagerSizeSwitchTD .dijitSelect ', grid.domNode)[0]);
 			doh.t(grid.paginationBar.arg('sizes').length == selectDijit.getOptions().length, 
-					'switch buttons have the same count as sizes');
+					'switch buttons do not have the same count as sizes');
 			done.callback();
 		}
 	},	
@@ -53,7 +53,7 @@ define([
 					return node.innerHTML === 'All';
 				} 
 				return node.innerHTML == sizes[i];
-			}), 'switch buttons number can be mapped to sizes arugment');
+			}), 'switch buttons number can not be mapped to sizes arugment');
 			done.callback();
 		}
 	},
@@ -75,7 +75,7 @@ define([
 					return option.label === 'All';
 				} 
 				return parseInt(option.label, 10) === sizes[i];
-			}), 'switch buttons number can be mapped to sizes arugment');
+			}), 'switch buttons number can not be mapped to sizes arugment');
 			done.callback();
 		}
 	}

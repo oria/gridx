@@ -16,25 +16,25 @@ define([
 			switch(p.toLowerCase()){
 				case 'bottom':
 					doh.t(query('.gridxPaginationBar', grid.footerNode).length, 
-						'paginationbar locate in the footer');
+						'paginationbar does not locate in the footer');
 					doh.f(query('.gridxPaginationBar', grid.headerNode).length, 
-						'paginationbar should not locate in the header');						
+						'paginationbar locate in the header');						
 					break;
 
 				case 'top':
 					doh.t(query('.gridxPaginationBar', grid.headerNode).length, 
-						'paginationbar locate in the header');
+						'paginationbar does no locate in the header');
 					doh.f(query('.gridxPaginationBar', grid.footerNode).length, 
-						'paginationbar should not locate in the footer');
+						'paginationbar not locate in the footer');
 					
 					break;
 				
 				case 'both':
 					doh.t(query('.gridxPaginationBar', grid.footerNode).length, 
-						'paginationbar locate in the footer');
+						'paginationbar does not locate in the footer');
 
 					doh.t(query('.gridxPaginationBar', grid.headerNode).length, 
-						'paginationbar locate in the header');
+						'paginationbar does not locate in the header');
 					
 					break;				
 			}

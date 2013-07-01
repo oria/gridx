@@ -19,7 +19,7 @@ define([
 			
 			doh.t(query('.gridxPagerSizeSwitchTD .gridxPagerSizeSwitchSeparator', grid.domNode).every(function(node){
 				return node.innerHTML == grid.paginationBar.arg('sizeSeparator');
-			}), 'page sizes links should be seperated by sizeSeparator');
+			}), 'page sizes links can not be seperated by sizeSeparator');
 			done.callback();
 		}
 	}
