@@ -80,10 +80,17 @@ define([
 			var t = this,
 				g = t.grid, sort;
 			domClass.add(g.domNode, 'gridxSort');
-			t.aspect(g, 'onHeaderCellMouseDown', '_onClick');
+			t.aspect(g, 'onHeaderCellClick', '_onClick');
 			t.aspect(g, 'onHeaderCellMouseOver', 'reLayout', g.vLayout);
 			t.aspect(g, 'onHeaderCellMouseOut', 'reLayout', g.vLayout);
 			t.aspect(g.header, 'onRender', '_update');
+			t.connect(g, 'onHeaderCellTouchStart', function(evt){
+				query('.gridxHeaderCellTouch', g.header.domNode).removeClass('gridxHeaderCellTouch');
+				domClass.add(evt.headerCellNode, 'gridxHeaderCellTouch');
+			});
+			t.connect(g, 'onHeaderCellTouchEnd', function(evt){
+				domClass.remove(evt.headerCellNode, 'gridxHeaderCellTouch');
+			});
 			//persistence support
 			if(g.persist){
 				sort = g.persist.registerAndLoad('sort', function(){

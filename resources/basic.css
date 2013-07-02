@@ -161,13 +161,14 @@
 }
 
 .gridxCell.gridxCellChanged{
-	//background: url('images/gridxCellChanged.png') no-repeat top right;
+/*    background: url('images/gridxCellChanged.png') no-repeat top right;*/
 }
 
 .gridxRowDummy {
 	height: 24px;
 	width: 100%;
-	background: url('images/loadingAnimation.gif') no-repeat left;
+	border-bottom: 1px solid #E5DAC8;
+/*    background: url('images/loadingAnimation.gif') no-repeat left;*/
 }
 
 .gridxBody .gridxCell:focus {

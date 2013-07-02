@@ -184,6 +184,7 @@ define([
 	
 		_init: function(args){
 			var t = this;
+			t._avgRowHeight = t.grid.body.arg('defaultRowHeight') || 24;
 			t._rowHeight = {};
 			t._syncHeight();
 			t.connect(t.grid, '_onResizeEnd', function(){

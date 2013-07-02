@@ -180,7 +180,8 @@ define([
 		_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],
 	
 		_eventNames: [
-			'Click', 'DblClick', 
+			'TouchStart', 'TouchEnd',
+			'Click', 'DblClick',
 			'MouseDown', 'MouseUp', 
 			'MouseOver', 'MouseOut', 
 			'MouseMove', 'ContextMenu',

@@ -77,6 +77,13 @@
 	border-top-color: #9BCAF7;
 }
 }
+@media screen and (max-device-width: 1024px) {
+.claro .gridxHeader .gridxHeaderRow .gridxHeaderCellTouch {
+	background: #9BCAF7;
+	border-top-color: #9BCAF7;
+}
+}
+
 .claro .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover,
 .gridxColumnResizing .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover {
 	border-top-color: #FFFFFF;
@@ -112,6 +119,7 @@
 }
 
 /* PagedBody */
+.claro .gridxRow:first-child .gridxCell,
 .claro .gridxBodyFirstRow .gridxCell {
 	border-top-color: #E5DAC8;
 }

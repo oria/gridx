@@ -11,14 +11,19 @@ require([
 	'gridx/modules/PagedBody',
 	'gridx/modules/AutoPagedBody',
 	'gridx/modules/MultiChannelScroller',
+	'gridx/modules/TouchVScroller',
+	'gridx/modules/HiddenColumns',
+	'gridx/modules/StructureSwitch',
+	'gridx/modules/Sort',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
 
 	store = storeFactory({
 		isAsync: true,
+		asyncTimeout: 1000,
 		path: './support/stores',
 		dataSource: dataSource,
-		size: 100
+		size: 1000
 //        maxLevel: 4,
 //        maxChildrenCount: 10
 	});
@@ -32,13 +37,19 @@ require([
 	layout = [
 		{id: 'id', name: 'id', field: 'id'},
 		{id: 'number', name: 'number', field: 'number'},
-		{id: 'string', name: 'string', field: 'string'}
-//        {id: 'id', name: 'id', field: 'id', width: '300px'},
-//        {id: 'number', name: 'number', field: 'number', width: '300px'},
-//        {id: 'string', name: 'string', field: 'string', width: '300px'}
+		{id: 'string', name: 'string', field: 'string'},
+		{id: 'date', field: 'date', name: 'Date', width: '10%'},
+		{id: 'time', field: 'time', name: 'Time', width: '20%'},
+		{id: 'bool', field: 'bool', name: 'Boolean', width: '30%'}
 	];
 
-	parser.parse();
+	portrait = ['id', 'number', 'string'];
+
+	parser.parse().then(function(){
+		grid.connect(window, 'onresize', function(){
+			grid.resize();
+		});
+	});
 });
 
 function deleteRow(){

@@ -4,12 +4,13 @@ define([
 	"dojo/query",
 	"dojo/_base/array",
 	"dojo/dom-construct",
+	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	"dijit/a11y",
 	"dojo/i18n!../nls/Body"
-], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, a11y, nls){
+], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, a11y, nls){
 
 /*=====
 	return declare([], {
@@ -31,11 +32,14 @@ define([
 				view = g.view;
 			view.paging = 1;
 			view.rootStart = 0;
-			view.rootCount = this.arg('pageSize', t.model._cache.pageSize || 20);
+			t._autoPageSize = t.arg('pageSize') == 'auto' || g.pageSize == 'auto';
+			t.pageSize = t.pageSize || t.model._cache.pageSize || 20;
+			view.rootCount = t.pageSize;
 			domClass.remove(t.domNode, 'gridxBodyRowHoverEffect');
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
+			t.connect(g, '_onResizeEnd', '_checkSpace');
 
 			if(t.arg('createBottom')){
 				t._bottomNode = domConstruct.create('div', {
@@ -105,13 +109,20 @@ define([
 			}
 		},
 
-		load: function(args){
+		load: function(args, startup){
 			var t = this,
 				view = t.grid.view;
 			if(view._err){
 				t._loadFail(view._err);
 			}
-			t.loaded.callback();
+			startup.then(function(){
+				if(t._autoPageSize){
+					var rowCount = parseInt(t.grid.mainNode.offsetHeight / t.arg('defaultRowHeight', 24) * 1.5, 10);
+					t.pageSize = rowCount;
+					view.updateRootRange(0, rowCount);
+				}
+				t.loaded.callback();
+			});
 		},
 
 		refresh: function(start){
@@ -233,6 +244,17 @@ define([
 				query('> gridxLastRow', bn).removeClass('gridxLastRow');
 				if(bn.lastChild !== this._bottomNode){
 					domClass.add(bn.lastChild, 'gridxLastRow');
+				}
+			}
+			this._checkSpace();
+		},
+
+		_checkSpace: function(){
+			var bn = this.domNode;
+			if(bn.lastChild == this._bottomNode){
+				var containerPos = domGeo.position(this.grid.mainNode);
+				if(domGeo.position(bn.lastChild).y < containerPos.y + containerPos.h){
+					this._load(1);
 				}
 			}
 		},
