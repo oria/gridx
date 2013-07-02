@@ -164,13 +164,15 @@ define([
 			var t = this,
 				g = t.grid;
 			t.inherited(arguments);
+			var doSelect = function(e){
+				if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+					!domClass.contains(e.target, 'gridxTreeExpandoInner')){
+					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+				}
+			};
 			t.batchConnect(
-				[g, 'onCellClick', function(e){
-					if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
-					}
-				}],
+				[g, 'onCellClick', doSelect],
+				[g, 'onCellTouchStart', doSelect],
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
 						t._select([e.rowId, e.columnId], g._isCopyEvent(e));

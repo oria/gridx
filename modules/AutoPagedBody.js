@@ -59,6 +59,28 @@ define([
 			bottomNode.innerHTML = '<span class="gridxLoadingMore"></span>' + this.arg('loadMoreLoadingLabel', nls.loadMoreLoading);
 		},
 
+		refresh: function(){
+			var inherited = lang.hitch(this, this.inherited, arguments);
+			if(this.arg('quickRefresh')){
+				var scrollable = this.grid.vScroller._scrollable;
+				if(scrollable){
+					var pos = scrollable.getPos();
+					scrollable.scrollTo({x: pos.x, y: 0});
+				}
+				var d = new Deferred();
+				this.grid.view.updateRootRange(0, this.pageSize).then(function(){
+					inherited().then(function(){
+						d.callback();
+					}, function(e){
+						d.errback(e);
+					});
+				});
+				return d;
+			}else{
+				return inherited();
+			}
+		},
+
 		_busy: function(){},
 
 		_onLoadFinish: function(isPost, start, count, callback){

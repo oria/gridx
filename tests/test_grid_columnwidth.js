@@ -20,6 +20,7 @@ require([
 	mods = [
 		modules.ColumnResizer,
 		modules.RowHeader,
+		modules.TouchScroll,
 		modules.VirtualVScroller
 	];
 

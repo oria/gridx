@@ -224,6 +224,14 @@ define([
 						t._select(e.rowId, g._isCopyEvent(e));
 					}
 				}],
+				[g, 'onRowTouchStart', function(e){
+					if((t.arg('triggerOnCell') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
+						!e.columnId || e.columnId === '__indirectSelect__'){
+						t._select(e.rowId, g._isCopyEvent(e) || e.columnId === '__indirectSelect__');
+					}
+				}],
 				[g.body, 'onAfterRow', function(row){
 					var unselectable = !row.isSelectable();
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);

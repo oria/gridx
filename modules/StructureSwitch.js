@@ -74,7 +74,7 @@ define([
 			if(t.arg('orientation')){
 				if(Math.abs(window.orientation) == 90){
 					t.to('landscape');
-				}else{
+				}else if('orientation' in window){
 					t.to('portrait');
 				}
 			}

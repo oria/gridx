@@ -34,15 +34,22 @@
 		store: store,
 		structure: layout,
 		pageSize: "auto",
+		selectRowMultiple: true,
+		selectRowTriggerOnCell: false,
 		structureSwitchPortrait: portrait,
 		modules: [
-			"gridx/modules/MultiChannelScroller",
+			"gridx/modules/AutoPagedBody",
+			"gridx/modules/TouchVScroller",
 			"gridx/modules/Sort",
+			"gridx/modules/extendedSelect/Row",
+			"gridx/modules/IndirectSelectColumn",
 			"gridx/modules/HiddenColumns",
 			"gridx/modules/StructureSwitch",
 			"gridx/modules/ColumnResizer"
 		]
 	'></div>
-
+			"gridx/modules/MultiChannelScroller",
+			"gridx/modules/select/Cell",
+			"gridx/modules/select/Column",
 </body>
 </html>

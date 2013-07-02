@@ -9,11 +9,16 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
 	'gridx/modules/PagedBody',
-	'gridx/modules/AutoPagedBody',
 	'gridx/modules/MultiChannelScroller',
-	'gridx/modules/TouchVScroller',
 	'gridx/modules/HiddenColumns',
 	'gridx/modules/StructureSwitch',
+	"gridx/modules/select/Row",
+	"gridx/modules/select/Cell",
+	"gridx/modules/select/Column",
+	"gridx/modules/extendedSelect/Row",
+	"gridx/modules/extendedSelect/Cell",
+	"gridx/modules/extendedSelect/Column",
+	"gridx/modules/IndirectSelectColumn",
 	'gridx/modules/Sort',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
@@ -35,6 +40,9 @@ require([
 //    };
 
 	layout = [
+//        {id: 'id', name: 'id', field: 'id', width: '200px'},
+//        {id: 'number', name: 'number', field: 'number', width: '200px'},
+//        {id: 'string', name: 'string', field: 'string', width: '200px'},
 		{id: 'id', name: 'id', field: 'id'},
 		{id: 'number', name: 'number', field: 'number'},
 		{id: 'string', name: 'string', field: 'string'},

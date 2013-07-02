@@ -250,6 +250,22 @@ define([
 						}
 					}
 				}],
+				[g, 'onRowTouchStart', function(e){
+					if(((t.arg('triggerOnCell') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
+						!e.columnId || e.columnId === '__indirectSelect__')){
+						t._isOnCell = e.columnId;
+						if(t._isOnCell){
+							g.body._focusCellCol = e.columnIndex;
+						}
+						t._start({row: e.visualIndex}, g._isCopyEvent(e) || e.columnId === '__indirectSelect__', e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
+					}
+				}],
+				[g, 'onRowTouchEnd', '_end'],
 				[g.body, 'onAfterRow', function(row){
 					var unselectable = !row.isSelectable();
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);

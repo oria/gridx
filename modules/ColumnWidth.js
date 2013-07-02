@@ -33,7 +33,8 @@ define([
 		}
 	});
 =====*/
-	var needHackPadBorder = has('safari') || (has('webkit') && has('ios'));
+
+	var needHackPadBorder = has('safari') < 6 || (!has('safari') && has('webkit') && has('ios'));
 
 	return declare(_Module, {
 		name: 'columnWidth',
