@@ -7,8 +7,9 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
 	"dojo/text!../templates/GotoPagePane.html",
+	"dojo/i18n",
 	"dojo/i18n!../nls/PaginationBar"
-], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, nls){
+], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, i18n){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -26,7 +27,7 @@ define([
 	
 		postMixInProperties: function(){
 			var t = this;
-			lang.mixin(t, nls);
+			lang.mixin(t, i18n.getLocalization('gridx', 'PaginationBar', t.pagination.grid.lang));
 			t.numberTextBoxClass = t.pager.numberTextBoxClass.prototype.declaredClass;
 			t.buttonClass = t.pager.buttonClass.prototype.declaredClass;
 			t.connect(t.domNode, 'onkeydown', '_onKeyDown');

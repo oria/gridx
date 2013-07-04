@@ -10,9 +10,10 @@ define([
 	"dojo/keys",
 	"dijit/a11y",
 	"./Body",
-	"dojo/i18n!../nls/Body",
-	"dojo/touch"
-], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, keys, a11y, Body, nls, touch){
+	"dojo/touch",
+	"dojo/i18n",
+	"dojo/i18n!../nls/Body"
+], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, keys, a11y, Body, touch, i18n){
 
 /*=====
 	return declare(Body, {
@@ -46,6 +47,7 @@ define([
 			var t = this,
 				g = t.grid,
 				view = g.view;
+			t._nls = i18n.getLocalization('gridx', 'Body', g.lang);
 			view.paging = 1;
 			view.rootStart = 0;
 			view.rootCount = this.arg('pageSize', t.model._cache.pageSize || 20);
@@ -118,7 +120,7 @@ define([
 		createMoreNode: function(moreNode){
 			var t = this,
 				moreBtn = t._moreBtn = domConstruct.create('button', {
-					innerHTML: t.arg('loadMoreLabel', nls.loadMore)
+					innerHTML: t.arg('loadMoreLabel', t._nls.loadMore)
 				}, moreNode, 'last');
 			t.connect(moreBtn, touch.press, function(){
 				t._load(1);
@@ -133,7 +135,7 @@ define([
 		createPrevNode: function(prevNode){
 			var t = this,
 				prevBtn = t._prevBtn = domConstruct.create('button', {
-					innerHTML: t.arg('loadPreviousLabel', nls.loadPrevious)
+					innerHTML: t.arg('loadPreviousLabel', t._nls.loadPrevious)
 				}, t._prevNode, 'last');
 			t.connect(prevBtn, touch.press, function(){
 				t._load();
@@ -219,7 +221,7 @@ define([
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+				en.innerHTML = t.arg('loadingInfo', t._nls.loadingInfo);
 				en.style.zIndex = '';
 				var str = t._buildRows(start, count, uncachedRows, renderedRows);
 				t.renderStart = start;
@@ -257,7 +259,7 @@ define([
 					}
 				}
 				n.innerHTML = '';
-				en.innerHTML = t.arg('emptyInfo', nls.emptyInfo);
+				en.innerHTML = t.arg('emptyInfo', t._nls.emptyInfo);
 				en.style.zIndex = 1;
 				t.onUnrender();
 				t.onEmpty();
@@ -383,8 +385,8 @@ define([
 				btn = isPost ? t._moreBtn : t._prevBtn,
 				cls = isPost ? "More" : "Previous";
 			btn.innerHTML = begin ?
-				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', nls['load' + cls + 'Loading']) :
-				t.arg('load' + cls + 'Label', nls['load' + cls]);
+				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', t._nls['load' + cls + 'Loading']) :
+				t.arg('load' + cls + 'Label', t._nls['load' + cls]);
 			btn.disabled = !!begin;
 		},
 

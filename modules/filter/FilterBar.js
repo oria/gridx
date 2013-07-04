@@ -13,15 +13,16 @@ define([
 	"dojo/query",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
-	"dojo/i18n!../../nls/FilterBar",
+	"dojo/i18n",
 	"../Filter",
 	"./FilterDialog",
 	"./FilterConfirmDialog",
 	"./FilterTooltip",
 	"dijit/TooltipDialog",
 	"dijit/popup",
-	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+	"dijit/form/Button",
+	"dojo/i18n!../../nls/FilterBar"
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, i18n, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -202,9 +203,9 @@ define([
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
-			this._nls = nls;
+			this._nls = i18n.getLocalization('gridx', 'FilterBar', this.grid.lang);
 			this.domNode = dom.create('div', {
-				innerHTML: string.substitute(template, nls),
+				innerHTML: string.substitute(template, this._nls),
 				'class': 'gridxFilterBar'
 			});
 			parser.parse(this.domNode);
@@ -276,7 +277,10 @@ define([
 			var max = this.arg('ruleCountToConfirmClearFilter');
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!this._cfmDlg){
-					this._cfmDlg = new FilterConfirmDialog();
+					this._cfmDlg = new FilterConfirmDialog({
+						title: this._nls.clearFilterDialogTitle,
+						_nls: this._nls
+					});
 				}
 				this._cfmDlg.execute = lang.hitch(scope, callback);
 				this._cfmDlg.show();
@@ -356,6 +360,7 @@ define([
 			var dlg = this._filterDialog;
 			if(!dlg){
 				this._filterDialog = dlg = new FilterDialog({
+					title: this._nls.filterDefDialogTitle,
 					grid: this.grid
 				});
 			}
@@ -437,13 +442,13 @@ define([
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			if(!this.filterData || !this.filterData.conditions.length){
-				this.statusNode.innerHTML = this.arg('noFilterMessage', nls.filterBarMsgNoFilterTemplate);
+				this.statusNode.innerHTML = this.arg('noFilterMessage', this._nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
-				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + nls.filterBarClearButton + '">'
-					 + nls.filterBarClearButton + '</a>';
+			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', this._nls.filterBarMsgHasFilterTemplate),
+				[this._currentSize, this._totalSize, this._nls.defaultItemsName]) + 
+				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + this._nls.filterBarClearButton + '">'
+					 + this._nls.filterBarClearButton + '</a>';
 			this._buildTooltip();
 		},
 		_buildTooltip: function(){
@@ -483,7 +488,7 @@ define([
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', nls.rangeTemplate);
+					var tpl = this.arg('rangeTemplate', this._nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -495,7 +500,7 @@ define([
 		},
 		_getConditionDisplayName: function(c){
 			var k = c.charAt(0).toUpperCase() + c.substring(1);
-			return this.arg('condition' + k, nls['condition' + k]);
+			return this.arg('condition' + k, this._nls['condition' + k]);
 		},
 		_getConditionOptions: function(colId){
 			var cache = this._conditionOptions = this._conditionOptions || {};
@@ -504,7 +509,7 @@ define([
 				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({
-						label: this.arg('condition' + k, nls['condition' + k]),
+						label: this.arg('condition' + k, this._nls['condition' + k]),
 						value: s
 					});
 				}, this);

@@ -11,11 +11,10 @@ define([
 	"dojox/html/metrics",
 	"./FilterPane",
 	"dojo/text!../../templates/FilterDialog.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"dijit/form/Select",
 	"dijit/form/Button",
 	"dijit/layout/AccordionContainer"
-], function(declare, lang, array, css, string, query, keys, registry, Dialog, metrics, FilterPane, template, i18n){
+], function(declare, lang, array, css, string, query, keys, registry, Dialog, metrics, FilterPane, template){
 
 /*=====
 	return declare([], {
@@ -23,13 +22,12 @@ define([
 =====*/
 
 	return declare(Dialog, {
-		title: i18n.filterDefDialogTitle,
 		cssClass: 'gridxFilterDialog',
 		grid: null,
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.i18n = i18n;
+			this._nls = this.grid.filterBar._nls;
 			this.set('content', string.substitute(template, this));
 			this._initWidgets();
 			css.add(this.domNode, 'gridxFilterDialog');
@@ -100,7 +98,7 @@ define([
 				ac._contentBox.w -= metrics.getScrollbar().w;
 			}
 			var nextRuleNumber = ac.getChildren().length + 1;
-			var ruleTitle = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
+			var ruleTitle = string.substitute(this._nls.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
 			var fp = new FilterPane({grid: this.grid, title: ruleTitle});
 			ac.addChild(fp);
 			ac.selectChild(fp);
