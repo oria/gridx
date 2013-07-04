@@ -27,7 +27,7 @@ define([
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this._nls = this.grid.filterBar._nls;
+			this.i18n = this.grid.filterBar._nls;
 			this.set('content', string.substitute(template, this));
 			this._initWidgets();
 			css.add(this.domNode, 'gridxFilterDialog');
@@ -98,7 +98,7 @@ define([
 				ac._contentBox.w -= metrics.getScrollbar().w;
 			}
 			var nextRuleNumber = ac.getChildren().length + 1;
-			var ruleTitle = string.substitute(this._nls.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
+			var ruleTitle = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: nextRuleNumber});
 			var fp = new FilterPane({grid: this.grid, title: ruleTitle});
 			ac.addChild(fp);
 			ac.selectChild(fp);
