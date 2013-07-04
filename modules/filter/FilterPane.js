@@ -40,8 +40,8 @@ define([
 		grid: null,
 		postCreate: function(){
 			this.inherited(arguments);
-			this._nls = this.grid.filterBar._nls;
-			this.set('title', this._nls.defaultRuleTitle);
+			this.i18n = this.grid.filterBar._nls;
+			this.set('title', this.i18n.defaultRuleTitle);
 			this.set('content', string.substitute(template, this));
 			this._initFields();
 			this._initSltCol();
@@ -136,7 +136,7 @@ define([
 			}, this);
 		},
 		_initSltCol: function(){
-			var colOpts = [{label: this._nls.anyColumnOption, value: ANY_COLUMN_VALUE}],
+			var colOpts = [{label: this.i18n.anyColumnOption, value: ANY_COLUMN_VALUE}],
 				fb = this.grid.filterBar, 
 				sltCol = this.sltColumn;
 			array.forEach(this.grid.columns(), function(col){
@@ -156,7 +156,7 @@ define([
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
 				tabIndex: 0,
-				title: this._nls.removeRuleButton || ''
+				title: this.i18n.removeRuleButton || ''
 			}, btnWidget.domNode, 'last');
 			this.connect(closeButton, 'onclick', 'close');
 			css.add(btnWidget.titleTextNode, 'dojoxEllipsis');
@@ -210,7 +210,7 @@ define([
 				title = this.sltColumn.get('displayedValue') + ' ' + this.grid.filterBar._getRuleString(condition, value, type);
 			}else{
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
-				title = string.substitute(this._nls.ruleTitleTemplate, {ruleNumber: ruleNumber});
+				title = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
 			}
 			txtNode.innerHTML = title;
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');
