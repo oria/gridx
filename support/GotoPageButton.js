@@ -79,6 +79,14 @@ define([
 		},
 
 		_focusNextBtn: function(){
+		},
+		
+		destroy: function(){
+			var t = this;
+			if(t._gotoDialog){
+				t._gotoDialog.destroy();
+			}
+			t.inherited(arguments);
 		}
 	});
 });
