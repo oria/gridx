@@ -340,9 +340,12 @@ define([
 		refresh: function(){
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
-			this._currentSize = this.model.size();
-			this._totalSize = this.model._cache.size();
-			this._buildFilterState();
+			var _this = this;
+			this.model.when({}).then(function(){
+				_this._currentSize = _this.model.size();
+				_this._totalSize = _this.model._cache.size();
+				_this._buildFilterState();
+			});
 		},
 		isVisible: function(){
 			return this.domNode.style.display != 'none';

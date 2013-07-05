@@ -283,7 +283,8 @@ define([
 				d = new Deferred(),
 				checker = t._checker;
 			if(t.arg('serverMode')){
-				m.query(t.setupFilterQuery(checker && checker.expr));
+				var setupQuery = t.arg('setupFilterQuery');
+				m.query(setupQuery(checker && checker.expr));
 			}else{
 				m.filter(checker);
 			}
