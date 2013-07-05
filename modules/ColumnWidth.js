@@ -145,6 +145,20 @@ define([
 				t.onUpdate();
 				return;
 			}
+			if(!t.arg('autoResize')){
+				if(needHackPadBorder){
+					query('.gridxCell', innerNode).forEach(function(node){
+						var c = g._columnsById[node.getAttribute('colid')];
+						if(/px$/.test(c.declaredWidth)){
+							var w = parseInt(c.declaredWidth, 10) + padBorder;
+							w = c.width = w + 'px';
+							node.style.width = w;
+							node.style.minWidth = w;
+							node.style.maxWidth = w;
+						}
+					});
+				}
+			}
 			if(g.autoWidth){
 				var headers = query('.gridxCell', innerNode),
 					totalWidth = 0;
@@ -153,10 +167,12 @@ define([
 					if(isGroupHeader || !needHackPadBorder || !isGridHidden){
 						w += padBorder;
 					}
+					if(w < c.minWidth){
+						w = c.minWidth;
+					}
 					totalWidth += w;
 					var c = g._columnsById[node.getAttribute('colid')];
 					if(c.width == 'auto' || (/%$/).test(c.width)){
-						console.log(c.id, w);
 						node.style.width = c.width = w + 'px';
 						node.style.minWidth = c.width;
 						node.style.maxWidth = c.width;
@@ -181,6 +197,9 @@ define([
 						//Check if less than zero, prevent error in IE.
 						if(w < 0){
 							w = 0;
+						}
+						if(w < c.minWidth){
+							w = c.minWidth;
 						}
 						var node = header.getHeaderNode(c.id);
 						node.style.width = c.width = w + 'px';
@@ -215,9 +234,14 @@ define([
 					}
 					array.forEach(autoCols, function(c, i){
 						var node = header.getHeaderNode(c.id);
-						node.style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
-						node.style.minWidth = c.width;
-						node.style.maxWidth = c.width;
+						var w = i < autoCols.length - 1 ? w : ww;
+						if(w < c.minWidth){
+							w = c.minWidth;
+						}
+						w += 'px';
+						node.style.width = c.width = w;
+						node.style.minWidth = w;
+						node.style.maxWidth = w;
 					});
 				}
 			}
@@ -230,7 +254,6 @@ define([
 					if(/px$/.test(col.width)){
 						var width = node.clientWidth - domGeometry.getPadExtents(node).w;
 						if(parseInt(col.width, 10) != width){
-							console.log('here! ', col.width, ', ', width);
 							col.width = width = width + 'px';
 							node.style.width = width;
 							node.style.minWidth = width;

@@ -239,14 +239,23 @@ define([
 
 		onRender: function(/*start, count*/){
 			//FIX #8746
-			var bn = this.domNode;
-			if(has('ie') < 9 && bn.childNodes.length){
-				query('> gridxLastRow', bn).removeClass('gridxLastRow');
-				if(bn.lastChild !== this._bottomNode){
-					domClass.add(bn.lastChild, 'gridxLastRow');
+			var t = this;
+			var bn = t.domNode;
+			query('.gridxBodyFirstRow', bn).removeClass('gridxBodyFirstRow');
+			if(t._topNode){
+				var firstRow = t._topNode.nextSibling;
+				if(firstRow && firstRow != t._bottomNode){
+					domClass.add(firstRow, 'gridxBodyFirstRow');
 				}
 			}
-			this._checkSpace();
+			query('.gridxBodyLastRow', bn).removeClass('gridxBodyLastRow');
+			if(t._bottomNode){
+				var lastRow = t._bottomNode.previousSibling;
+				if(lastRow && lastRow != t._topNode){
+					domClass.add(lastRow, 'gridxBodyLastRow');
+				}
+			}
+			t._checkSpace();
 		},
 
 		_checkSpace: function(){
@@ -273,14 +282,11 @@ define([
 				finish = function(renderStart, renderCount){
 					t._busy(isPost);
 					t._onLoadFinish(!isPost, renderStart, renderCount, function(){
-						query('.gridxBodyFirstRow').removeClass('gridxBodyFirstRow');
-						if(t._topNode){
-							var firstRow = t._topNode.nextSibling;
-							if(firstRow && firstRow != t._bottomNode){
-								domClass.add(firstRow, 'gridxBodyFirstRow');
-							}
-						}
 						t.onRender(renderStart, renderCount);
+						if(g.indirectSelect){
+							//FIXME: this breaks encapsulation!
+							g.indirectSelect._onSelectionChange();
+						}
 					});
 				};
 			t._busy(isPost, 1);

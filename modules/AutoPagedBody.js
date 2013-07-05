@@ -62,6 +62,7 @@ define([
 		refresh: function(){
 			var inherited = lang.hitch(this, this.inherited, arguments);
 			if(this.arg('quickRefresh')){
+				domClass.add(this.grid.loadingNode, 'gridxLoading');
 				var scrollable = this.grid.vScroller._scrollable;
 				if(scrollable){
 					var pos = scrollable.getPos();
