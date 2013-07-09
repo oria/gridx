@@ -2,7 +2,8 @@ define({root:
 ({
 	loadingInfo: "Loading...",
 	emptyInfo: "No items to display",
-	loadFailInfo: "Failed to load data!"
+	loadFailInfo: "Failed to load data!",
+	indirectSelectAll: "select all"
 }),
 "ar": true,
 "ca": true,
