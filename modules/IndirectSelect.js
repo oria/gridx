@@ -68,6 +68,12 @@ define([
 						t._initFocus();
 					}
 					t.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
+					t.connect(g, 'onRowHeaderHeaderKeyDown', function(evt){
+						if(evt.keyCode == keys.SPACE){
+							event.stop(evt);
+							t._onSelectAll();
+						}
+					});
 				});
 			}
 		},
