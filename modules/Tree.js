@@ -554,10 +554,13 @@ define([
 			var rowNode = this.grid.body.getRowNode({rowId: id}),
 				isOpen = this.isExpanded(id);
 			if(rowNode){
+				var nls = this.grid.body._nls;
 				query('.gridxTreeExpandoCell', rowNode).
 					removeClass('gridxTreeExpandoLoading').
 					toggleClass('gridxTreeExpandoCellOpen', isOpen).
-					closest('.gridxCell').attr('aria-expanded', String(isOpen));
+					closest('.gridxCell').
+					attr('aria-expanded', String(isOpen)).
+					attr('aria-label', isOpen ? nls.treeExpanded : nls.treeCollapsed);
 				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
 					node.firstChild.innerHTML = isOpen ? '-' : '+';
 				});
@@ -590,8 +593,11 @@ define([
 				var rowNode = row.node(),
 					expanded = this.isExpanded();
 				rowNode.setAttribute('aria-expanded', expanded);
-				//This is only to make JAWS read.
-				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').attr('aria-expanded', String(expanded));
+				//This is only to make JAWS readk
+				var nls = this.grid.body._nls;
+				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').
+					attr('aria-expanded', String(expanded)).
+					attr('aria-label', expanded ? nls.treeExpanded : nls.treeCollapsed);
 			}
 		},
 

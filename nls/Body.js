@@ -7,8 +7,10 @@ define({root:
 	loadMoreLoading: "Loading...",
 	loadPrevious: "Load Previous",
 	loadPreviousLoading: "Loading...",
-	indirectSelectAll: "Press SPACE to select all",
-	indirectDeselectAll: "Press SPACE to deselect all"
+	indirectSelectAll: "Press SPACE to select all.",
+	indirectDeselectAll: "Press SPACE to deselect all.",
+	treeExpanded: "Control + left arrow key to collapse this row.",
+	treeCollapsed: "Control + right arrow key to expand this row."
 }),
 "ar": true,
 "bg": true,
