@@ -290,7 +290,9 @@ define([
 				}
 				Deferred.when(results, onComplete, onError);
 			}
-			d.then(hitch(t, t.onAfterFetch));
+			d.then(function(){
+				t.onAfterFetch();
+			});
 			return d;
 		},
 
