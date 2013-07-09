@@ -3,8 +3,8 @@ define({root:
 	loadingInfo: "Loading...",
 	emptyInfo: "No items to display",
 	loadFailInfo: "Failed to load data!",
-	indirectSelectAll: "select all",
-	indirectDeselectAll: "deselect all"
+	indirectSelectAll: "Press SPACE to select all",
+	indirectDeselectAll: "Press SPACE to deselect all"
 }),
 "ar": true,
 "ca": true,
