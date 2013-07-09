@@ -11,9 +11,10 @@ define([
 	"dojo/keys",
 	"../core/util",
 	"../core/_Module",
+	"dojo/i18n!../nls/Body",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
-], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module){
+], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, util, _Module, nls){
 	kernel.experimental('gridx/modules/Tree');
 
 	function isExpando(cellNode){
@@ -601,7 +602,9 @@ define([
 						n.removeClass('gridxTreeExpandoLoading').
 							toggleClass('gridxTreeExpandoCellOpen', isOpen).
 							//This is only to make JAWS read.
-							closest('.gridxCell').attr('aria-expanded', String(isOpen));
+							closest('.gridxCell').
+							attr('aria-expanded', String(isOpen)).
+							attr('aria-label', isOpen ? nls.treeExpanded : nls.treeCollapsed);
 						expando.forEach(function(node){
 							node.firstChild.innerHTML = isOpen ? '-' : '+';
 						});
@@ -747,7 +750,9 @@ define([
 					expanded = this.isExpanded();
 				rowNode.setAttribute('aria-expanded', expanded);
 				//This is only to make JAWS read.
-				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').attr('aria-expanded', String(expanded));
+				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').
+					attr('aria-expanded', String(expanded)).
+					attr('aria-label', expanded ? nls.treeExpanded : nls.treeCollapsed);
 			}
 		},
 
