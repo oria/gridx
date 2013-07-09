@@ -456,7 +456,9 @@ define([
 					});
 				}
 			};
-			fetchLevel(0);
+			m.when({}, function(){
+				fetchLevel(0);
+			});
 			return d;
 		},
 
