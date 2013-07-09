@@ -12,10 +12,11 @@ define([
 	"dojo/_base/sniff",
 	"dojo/keys",
 	"../core/_Module",
+	"dojo/i18n",
 	"dojo/i18n!../nls/Body"
 //    "dojo/NodeList-dom",
 //    "dojo/NodeList-traverse"
-], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module, nls){
+], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module, i18n){
 
 /*=====
 	Row.node = function(){
@@ -228,10 +229,11 @@ define([
 				g = t.grid,
 				dn = t.domNode = g.bodyNode;
 			t._cellCls = {};
+			t._nls = i18n.getLocalization('gridx', 'Body', g.lang);
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
-			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+			g.emptyNode.innerHTML = t.arg('loadingInfo', t._nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t.aspect(t.model, 'onSet', '_onSet');
 			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
@@ -491,13 +493,13 @@ define([
 				renderedRows = [],
 				n = t.domNode,
 				en = g.emptyNode,
-				emptyInfo = t.arg('emptyInfo', nls.emptyInfo),
+				emptyInfo = t.arg('emptyInfo', t._nls.emptyInfo),
 				finalInfo = '';
 			if(t._err){
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+				en.innerHTML = t.arg('loadingInfo', t._nls.loadingInfo);
 				en.style.zIndex = '';
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
@@ -650,7 +652,7 @@ define([
 		_loadFail: function(e){
 			console.error(e);
 			var en = this.grid.emptyNode;
-			en.innerHTML = this.arg('loadFailInfo', nls.loadFailInfo);
+			en.innerHTML = this.arg('loadFailInfo', this._nls.loadFailInfo);
 			en.style.zIndex = 1;
 			this.domNode.innerHTML = '';
 			this._err = e;

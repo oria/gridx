@@ -28,7 +28,17 @@
 		filterServerMode: true,
 		pageSize: 10,
 
-		
+		filterBarFilterData: {
+			type: "all",
+			conditions: [
+				{
+					colId: "",
+					condition: "contain",
+					type: "Text",
+					value: "Easy"
+				}
+			]
+		},
 		filterSetupFilterQuery: function(expr){
 			var toExpr = function(expr){
 				if(!expr){ return ""; }

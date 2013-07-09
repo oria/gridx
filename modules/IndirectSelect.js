@@ -199,35 +199,35 @@ define([
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
-			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
-				return !model.parentId(id);
-			});
-			var unselectableRows = g.select.row._getUnselectableRows();
-			var unselectableRoots = array.filter(unselectableRows, function(id){
-				return !model.parentId(id) && !g.select.row.isSelected(id);
-			});
-			if(count === model.size()){
-				allSelected = count && count - unselectableRoots.length == selectedRoot.length;
-			}else{
-				d = new Deferred();
-				model.when({
-					start: start,
-					count: count
-				}, function(){
-					var indexes = array.filter(array.map(selectedRoot, function(id){
-						return model.idToIndex(id);
-					}), function(index){
-						return index >= start && index < start + count;
-					});
-					unselectableRoots = array.filter(unselectableRoots, function(id){
-						var index = model.idToIndex(id);
-						return index >= start && index < start + count;
-					});
-					allSelected = count - unselectableRoots.length == indexes.length;
-					d.callback();
+			if(g.select.row.selectByIndex && t.arg('all')){
+				var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+					return !model.parentId(id);
 				});
-			}
-			if(t.arg('all')){
+				var unselectableRows = g.select.row._getUnselectableRows();
+				var unselectableRoots = array.filter(unselectableRows, function(id){
+					return !model.parentId(id) && !g.select.row.isSelected(id);
+				});
+				if(count === model.size()){
+					allSelected = count && count - unselectableRoots.length == selectedRoot.length;
+				}else{
+					d = new Deferred();
+					model.when({
+						start: start,
+						count: count
+					}, function(){
+						var indexes = array.filter(array.map(selectedRoot, function(id){
+							return model.idToIndex(id);
+						}), function(index){
+							return index >= start && index < start + count;
+						});
+						unselectableRoots = array.filter(unselectableRoots, function(id){
+							var index = model.idToIndex(id);
+							return index >= start && index < start + count;
+						});
+						allSelected = count - unselectableRoots.length == indexes.length;
+						d.callback();
+					});
+				}
 				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
 					var node = t.grid.rowHeader.headerCellNode.firstChild;
