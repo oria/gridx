@@ -6,7 +6,9 @@ define({root:
 	loadMore: "Load More",
 	loadMoreLoading: "Loading...",
 	loadPrevious: "Load Previous",
-	loadPreviousLoading: "Loading..."
+	loadPreviousLoading: "Loading...",
+	indirectSelectAll: "Press SPACE to select all",
+	indirectDeselectAll: "Press SPACE to deselect all"
 }),
 "ar": true,
 "bg": true,
