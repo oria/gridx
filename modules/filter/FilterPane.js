@@ -14,6 +14,7 @@ define([
 	"dojo/text!../../templates/FilterPane.html",
 	"dojo/i18n!../../nls/FilterBar",
 	"dijit/layout/ContentPane",
+	"dijit/_BidiSupport",
 	"dijit/form/Select",
 	"dijit/form/TextBox",
 	"dijit/form/DateTextBox",
@@ -21,7 +22,7 @@ define([
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
-], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n, ContentPane){
+], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n, ContentPane, _BidiSupport){
 
 /*=====
 	return declare([], {
@@ -179,6 +180,9 @@ define([
 			this.onChange();
 		},
 		_onValueChange: function(){
+			if(this.grid.textDir && this.grid.textDir == 'auto'){
+				this.tbSingle.focusNode.dir = _BidiSupport.prototype._checkContextual(this._getValue());
+			}
 			this._updateTitle();
 			this.onChange();
 		},
