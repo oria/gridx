@@ -9,8 +9,10 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util",
+	"dojo/i18n",
+	"dojo/i18n!../nls/Body",
 	"./RowHeader"
-], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util){
+], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util, i18n){
 
 	return declare(/*===== "gridx.modules.IndirectSelect", =====*/_Module, {
 		// summary:
@@ -96,6 +98,8 @@ define([
 		},
 
 		_createSelectAllBox: function(){
+			var nls = i18n.getLocalization('gridx', 'Body', this.grid.lang);
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', nls.indirectSelectAll || 'select all');
 			return this._createCheckBox(this._allSelected[this._getPageId()]);
 		},
 
