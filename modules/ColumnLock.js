@@ -65,7 +65,7 @@ define([
 						_this._lockColumns(row.node());
 					});
 					_this.connect(g.columnWidth, 'onUpdate', '_updateHeader');
-					_this.connect(grid, 'resize', '_updateUI');
+					_this.connect(g, 'resize', '_updateUI');
 					if(g.columnResizer){
 						//make it compatible with column resizer
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
