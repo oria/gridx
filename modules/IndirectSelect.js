@@ -43,6 +43,7 @@ define([
 				focus = g.focus,
 				sr = g.select.row,
 				rowHeader = g.rowHeader;
+			t._nls = i18n.getLocalization('gridx', 'Body', g.lang);
 			rowHeader.cellProvider = lang.hitch(t, t._createSelector);
 			t.batchConnect(
 				[sr,'onHighlightChange', '_onHighlightChange' ],
@@ -119,9 +120,9 @@ define([
 		},
 
 		_createSelectAllBox: function(){
-			var nls = i18n.getLocalization('gridx', 'Body', this.grid.lang);
-			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', nls.indirectSelectAll || 'select all');
-			return this._createCheckBox(this._allSelected[this._getPageId()]);
+			var allSelected = this._allSelected[this._getPageId()];
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this._nls.indirectDeselectAll : this._nls.indirectSelectAll);
+			return this._createCheckBox(allSelected);
 		},
 
 		_getPageId: function(){
@@ -238,6 +239,8 @@ define([
 					if(node){
 						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
 						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+						t.grid.rowHeader.headerCellNode.setAttribute('aria-label',
+							allSelected ? t._nls.indirectDeselectAll : t._nls.indirectSelectAll);
 					}
 				});
 			}
