@@ -22,7 +22,7 @@ define([
 
 	return declare(VScroller, {
 		scrollToRow: function(rowVisualIndex, toTop){
-			if(has('ios') || has('android')){
+			if(has('ios') || has('android') || this.arg('touch')){
 				var d = new Deferred(),
 					rowNode = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
 				if(rowNode){
@@ -36,7 +36,7 @@ define([
 		},
 
 		_init: function(){
-			if(has('ios') || has('android')){
+			if(has('ios') || has('android') || this.arg('touch')){
 				var t = this,
 					g = t.grid,
 					view = g.view,

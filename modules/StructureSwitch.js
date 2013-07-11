@@ -11,20 +11,36 @@ define([
 		name: "structureSwitch",
 		required: ['hiddenColumns'],
 		'default': '',
+		auto: true,
 		orientation: true,
 
 		constructor: function(){
 			var t = this,
 				config = t.arg('config', {}),
+				condition = t.arg('condition', {}),
 				portrait = t.arg('portrait'),
 				landscape = t.arg('landscape');
+			t.arg('auto');
 			if(portrait){
 				config.portrait = portrait;
 			}
 			if(landscape){
 				config.landscape = landscape;
 			}
+			if(t.arg('orientation')){
+				if(config.portrait){
+					condition.portrait = function(){
+						return 'orientation' in window && window.orientation === 0;
+					};
+				}
+				if(config.landscape){
+					condition.portrait = function(){
+						return Math.abs(window.orientation) == 90;
+					};
+				}
+			}
 			t.connect(window, 'orientationchange', '_check');
+			t.connect(window, 'onresize', '_check');
 		},
 
 		preload: function(){
@@ -71,12 +87,14 @@ define([
 		//Private-----------------------------------------------------------------------------
 		_check: function(){
 			var t = this;
-			if(t.arg('orientation')){
-				if(Math.abs(window.orientation) == 90){
-					t.to('landscape');
-				}else if('orientation' in window){
-					t.to('portrait');
+			if(t.auto){
+				for(var name in t.condition){
+					if(t.condition[name](t.grid)){
+						t.to(name);
+						break;
+					}
 				}
+				t.grid.resize();
 			}
 		}
 	});
