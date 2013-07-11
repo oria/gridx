@@ -940,6 +940,7 @@ define([
 
 		_onBlur: function(){
 			this._applyAll();
+			this._editing = false;
 			return true;
 		},
 
