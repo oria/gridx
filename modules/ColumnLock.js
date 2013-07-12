@@ -6,8 +6,9 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/html",
 	"dojo/query",
-	"dojo/_base/sniff"
-], function(dojo, lang, _Module, declare, array, html, query, sniff){
+	"dojo/_base/sniff",
+	"dojo/dom-style"
+], function(dojo, lang, _Module, declare, array, html, query, sniff, domStyle){
 
 /*=====
 	return declare(_Module, {
@@ -158,7 +159,7 @@ define([
 			
 			var h1 = dojo.contentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = dojo.marginBox(r.cells[r.cells.length - 1]).h,
-				h3 = window.getComputedStyle(rowNode.firstChild, null).getPropertyValue('height');
+				h3 = domStyle.getComputedStyle(rowNode.firstChild).height;
 				
 			if(sniff('ie') > 8){	//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px				
