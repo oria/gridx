@@ -167,10 +167,14 @@ define([
 				}else{
 					ds.width = '';
 				}
-				ds.display = toShow ? '' : 'none';
-				t._updatePos();
+				var display = toShow ? '' : 'none';
+				var changed = display != ds.display;
+				ds.display = display;
+				if(changed){
+					t._updatePos();
+					g.hLayout.reLayout();
+				}
 			}
-			g.hLayout.reLayout();
 		},
 
 		_updatePos: function(){
