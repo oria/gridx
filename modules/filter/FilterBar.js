@@ -18,11 +18,12 @@ define([
 	"./FilterDialog",
 	"./FilterConfirmDialog",
 	"./FilterTooltip",
+	"dijit/_BidiSupport",
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/Tooltip",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip, _BidiSupport){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -502,6 +503,13 @@ define([
 				}
 			}else{
 				valueString = value;
+			}
+			if(this.grid.textDir){
+				var resolvedTextDir = this.grid.textDir;
+				if(resolvedTextDir == "auto"){
+					resolvedTextDir = _BidiSupport.prototype._checkContextual(valueString);
+				}
+				valueString = '<span dir="' + resolvedTextDir + '">' + valueString + '</span>';
 			}
 			return '<span style="font-style:italic">' + this._getConditionDisplayName(condition) + '</span> ' + valueString;
 		},
