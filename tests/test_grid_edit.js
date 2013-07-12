@@ -86,7 +86,7 @@ require([
 					data
 				].join('');
 			},
-			editor: 'dijit/ColorPalette',
+			editor: 'dijit.ColorPalette',
 			editorArgs: {
 				fromEditor: function(v, cell){
 					return v || cell.data(); //If no color selected, use the orginal one.
@@ -95,7 +95,7 @@ require([
 		},
 		{ field: "Genre", name:"TextBox", width: '100px', editable: true},
 		{ field: "Artist", name:"ComboBox", width: '100px', editable: true,
-			editor: "dijit/form/ComboBox",
+			editor: "dijit.form.ComboBox",
 			editorArgs: {
 				props: 'store: mystore, searchAttr: "Artist"'
 			}
@@ -117,14 +117,14 @@ require([
 			}
 		},
 		{ field: "Progress", name:"HorizontalSlider", width: '100px', editable: true,
-			editor: "dijit/form/HorizontalSlider",
+			editor: "dijit.form.HorizontalSlider",
 			editorArgs: {
 				props: 'minimum: 0, maximum: 1'
 			}
 		},
 		{ field: "Track", name:"Number Spinner", width: '100px', editable: true,
 			width: '50px',
-			editor: "dijit/form/NumberSpinner"
+			editor: "dijit.form.NumberSpinner"
 		},
 		{ field: "Heard", name:"Check Box", width: '30px', editable: true,
 			editor: "dijit.form.CheckBox",
@@ -143,7 +143,7 @@ require([
 			dataType: 'date',
 			storePattern: 'yyyy/M/d',
 			gridPattern: 'yyyy/MMMM/dd',
-			editor: 'dijit/Calendar',
+			editor: 'dijit.Calendar',
 			editorArgs: {
 				fromEditor: getDate
 			}
