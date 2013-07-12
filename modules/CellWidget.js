@@ -475,6 +475,7 @@ define([
 		},
 
 		_onUnrenderRow: function(id){
+			console.log('onUnrenderRow: ', id);
 			var cols = this.grid._columns,
 				backupCount = this.arg('backupCount'),
 				backup = function(col, rowId){

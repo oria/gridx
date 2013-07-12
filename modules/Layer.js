@@ -20,24 +20,23 @@ define([
 		constructor: function(){
 			var n = this._tmpBodyNode = document.createElement('div');
 			n.setAttribute('class', 'gridxBody');
-			n.style.zIndex = 0;
 		},
 
 		down: function(id){
-			if(this.model.parentId(id) === this.model.layerId()){
+			if(this.model.hasChildren(id) && this.model.parentId(id) === this.model.layerId()){
 				this.model.setLayer(id);
-				this._slideRefresh();
+				this._slideDown();
 			}
 		},
 
 		up: function(){
-			if(this.model.layerId()){
+			if(this.model.isId(this.model.layerId())){
 				this.model.layerUp();
-				this._slideRefresh(1);
+				this._slideUp();
 			}
 		},
 
-		_slideRefresh: function(fromLeft){
+		_slideDown: function(){
 			var grid = this.grid;
 			var mainNode = grid.mainNode;
 			var bn = grid.bodyNode;
@@ -47,12 +46,17 @@ define([
 				tmpBn.appendChild(bn.firstChild);
 			}
 			mainNode.appendChild(tmpBn);
-			bn.style.left = (fromLeft ? -w : w) + 'px';
+			bn.style.left = w + 'px';
 			bn.style.zIndex = 1;
-			grid.body.refresh();
+			tmpBn.style.left = 0;
+			tmpBn.style.zIndex = 0;
 			domClass.add(bn, 'gridxSlideRefresh');
+			domClass.add(tmpBn, 'gridxSlideRefresh');
+			grid.body.refresh();
 			bn.style.left = 0;
+			tmpBn.style.left = -w + 'px';
 			setTimeout(function(){
+				domClass.remove(tmpBn, 'gridxSlideRefresh');
 				mainNode.removeChild(tmpBn);
 				domClass.remove(bn, 'gridxSlideRefresh');
 				for(var i = 0; i < tmpBn.childNodes.length; ++i){
@@ -60,7 +64,38 @@ define([
 					grid.body.onUnrender(rowId);
 				}
 				tmpBn.innerHTML = '';
-			}, 1000);
+			}, 2000);
+		},
+
+		_slideUp: function(rtl){
+			var grid = this.grid;
+			var mainNode = grid.mainNode;
+			var bn = grid.bodyNode;
+			var w = bn.offsetWidth;
+			var tmpBn = this._tmpBodyNode;
+			while(bn.childNodes.length){
+				tmpBn.appendChild(bn.firstChild);
+			}
+			mainNode.appendChild(tmpBn);
+			bn.style.left = -w + 'px';
+			bn.style.zIndex = 0;
+			tmpBn.style.left = 0;
+			tmpBn.style.zIndex = 1;
+			domClass.add(bn, 'gridxSlideRefresh');
+			domClass.add(tmpBn, 'gridxSlideRefresh');
+			grid.body.refresh();
+			bn.style.left = 0;
+			tmpBn.style.left = w + 'px';
+			setTimeout(function(){
+				domClass.remove(tmpBn, 'gridxSlideRefresh');
+				mainNode.removeChild(tmpBn);
+				domClass.remove(bn, 'gridxSlideRefresh');
+				for(var i = 0; i < tmpBn.childNodes.length; ++i){
+					var rowId = tmpBn.childNodes[i].getAttribute('rowid');
+					grid.body.onUnrender(rowId);
+				}
+				tmpBn.innerHTML = '';
+			}, 2000);
 		}
 	});
 });

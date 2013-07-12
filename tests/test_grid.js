@@ -4,8 +4,9 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
+	'dojo/i18n!../nls/Body',
 	'gridx/allModules'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, mods){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, nls, mods){
 
 	var columnSetIdx = 0;
 

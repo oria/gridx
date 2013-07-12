@@ -104,7 +104,6 @@ define([
 						}
 					});
 				}
-				console.log('onUpdateWidth');
 				t.onUpdate();
 			}
 		},

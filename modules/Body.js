@@ -369,6 +369,7 @@ define([
 				loadingNode = t.grid.loadingNode,
 				d = new Deferred();
 			delete t._err;
+			clearTimeout(t._sizeChangeHandler);
 			domClass.add(loadingNode, 'gridxLoading');
 			t.grid.view.updateVisualCount().then(function(){
 				try{
@@ -536,7 +537,11 @@ define([
 					var scrollTop = isRefresh ? n.scrollTop : 0;
 					n.scrollTop = 0;
 					//unrender before destroy nodes, so that other modules have a chance to detach nodes.
-					t.onUnrender();
+					if(n.firstChild){
+						console.log(n.childNodes.length);
+						//only when we do have something to unrender
+						t.onUnrender();
+					}
 					n.innerHTML = str;
 					if(scrollTop){
 						n.scrollTop = scrollTop;
@@ -557,7 +562,10 @@ define([
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
 				//unrender before destroy nodes, so that other modules have a chance to detach nodes.
-				t.onUnrender();
+				if(n.firstChild){
+					//only when we do have something to unrender
+					t.onUnrender();
+				}
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = '';

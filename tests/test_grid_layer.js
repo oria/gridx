@@ -129,5 +129,10 @@ require([
 		modules.VirtualVScroller
 	];
 
-	parser.parse();
+	Deferred.when(parser.parse(), function(){
+		grid1.connect(grid1, 'onRowClick', function(e){
+			var rowId = e.rowId;
+			grid1.layer.down(rowId);
+		});
+	});
 });
