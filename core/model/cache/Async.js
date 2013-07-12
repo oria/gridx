@@ -34,13 +34,15 @@ define([
 		var i, r, len, pid,
 			ranges = args.range,
 			isTree = self.store.getChildren;
-		args.pids = {
-			'': args.range
-		};
+		args.pids = {};
+		args.pids[self.layerId()] = args.range;
 		if(isTree){
 			for(i = ranges.length - 1; i >= 0; --i){
 				r = ranges[i];
 				pid = r.parentId;
+				if(!self.model.isId(pid)){
+					pid = self.layerId();
+				}
 				if(self.model.isId(pid)){
 					args.id.push(pid);
 					args.pids[pid] = args.pids[pid] || [];

@@ -23,7 +23,7 @@ define([
 			t.setStore(args.store);
 			t.columns = lang.mixin({}, args._columnsById);
 			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
-				'hasChildren', 'children', 'keep', 'free');
+				'hasChildren', 'children', 'keep', 'free', 'layerId', 'setLayer', 'layerUp');
 		},
 
 		destroy: function(){
@@ -68,6 +68,22 @@ define([
 			//virtual root node, with id ''.
 			t._struct[''] = [];
 			t._size[''] = -1;
+			t._layer = '';
+		},
+
+		layerId: function(){
+			return this._layer;
+		},
+
+		setLayer: function(id){
+			this._layer = id;
+			this.model._msg('storeChange');
+			this.model._onSizeChange();
+		},
+
+		layerUp: function(){
+			var pid = this.parentId(this._layer);
+			this.setLayer(pid);
 		},
 
 		byIndex: function(index, parentId){
@@ -82,7 +98,7 @@ define([
 
 		indexToId: function(index, parentId){
 			this._init('indexToId', arguments);
-			var items = this._struct[this.model.isId(parentId) ? parentId : ''];
+			var items = this._struct[this.model.isId(parentId) ? parentId : this.layerId()];
 			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
 		},
 
@@ -147,7 +163,7 @@ define([
 
 		size: function(parentId){
 			this._init('size', arguments);
-			var s = this._size[this.model.isId(parentId) ? parentId : ''];
+			var s = this._size[this.model.isId(parentId) ? parentId : this.layerId()];
 			return s >= 0 ? s : -1;
 		},
 

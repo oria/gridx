@@ -104,6 +104,7 @@ define([
 						}
 					});
 				}
+				console.log('onUpdateWidth');
 				t.onUpdate();
 			}
 		},
@@ -163,6 +164,7 @@ define([
 				var headers = query('.gridxCell', innerNode),
 					totalWidth = 0;
 				headers.forEach(function(node){
+					var c = g._columnsById[node.getAttribute('colid')];
 					var w = domStyle.get(node, 'width');
 					if(isGroupHeader || !needHackPadBorder || !isGridHidden){
 						w += padBorder;
@@ -171,7 +173,6 @@ define([
 						w = c.minWidth;
 					}
 					totalWidth += w;
-					var c = g._columnsById[node.getAttribute('colid')];
 					if(c.width == 'auto' || (/%$/).test(c.width)){
 						node.style.width = c.width = w + 'px';
 						node.style.minWidth = c.width;
@@ -198,7 +199,7 @@ define([
 						if(w < 0){
 							w = 0;
 						}
-						if(w < c.minWidth){
+						if(typeof c.minWidth == 'number' && w < c.minWidth){
 							w = c.minWidth;
 						}
 						var node = header.getHeaderNode(c.id);
@@ -234,14 +235,14 @@ define([
 					}
 					array.forEach(autoCols, function(c, i){
 						var node = header.getHeaderNode(c.id);
-						var w = i < autoCols.length - 1 ? w : ww;
-						if(w < c.minWidth){
-							w = c.minWidth;
+						var cw = i < autoCols.length - 1 ? w : ww;
+						if(typeof c.minWidth == 'number' && cw < c.minWidth){
+							cw = c.minWidth;
 						}
-						w += 'px';
-						node.style.width = c.width = w;
-						node.style.minWidth = w;
-						node.style.maxWidth = w;
+						cw += 'px';
+						node.style.width = c.width = cw;
+						node.style.minWidth = cw;
+						node.style.maxWidth = cw;
 					});
 				}
 			}
