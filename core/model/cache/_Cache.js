@@ -205,13 +205,13 @@ define([
 				ids = st[pid],
 				i;
 			if(!ids){
-				throw new Error("Fatal error of cache._addRow: parent item " + pid + " of " + id + " is not loaded");
+				throw new Error("Fatal error of _Cache._addRow: parent item " + pid + " of " + id + " is not loaded");
 			}
-			if(!ids[index + 1]){
-				ids[index + 1] = id;
-			}else if(ids[index + 1] !== id){
-				throw new Error("Fatal error of cache._addRow: different row id " + id + " and " + ids[index + 1] + " for same row index " + index);
+			var oldId = ids[index + 1];
+			if(t.model.isId(oldId) && oldId !== id){
+				console.error("Error of _Cache._addRow: different row id " + id + " and " + oldId + " for same row index " + index);
 			}
+			ids[index + 1] = id;
 			st[id] = st[id] || [pid];
 			if(pid === ''){
 				i = indexOf(pr, id);
@@ -271,7 +271,13 @@ define([
 				}));
 			}else{
 				var results = s.query(req.query || {}, req);
-				Deferred.when(results.total, onBegin);
+				if('total' in results){
+					Deferred.when(results.total, onBegin);
+				}else{
+					Deferred.when(results, function(results){
+						onBegin(results.length);
+					});
+				}
 				Deferred.when(results, onComplete, onError);
 			}
 			d.then(hitch(t, t.onAfterFetch));

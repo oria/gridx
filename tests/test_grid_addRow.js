@@ -6,8 +6,8 @@ require([
 	'gridx/Grid',
 	'gridx/tests/support/data/TestData',
 	'gridx/core/model/cache/Async',
-	'gridx/tests/support/stores/JsonRest',
-//    'gridx/tests/support/stores/Memory',
+//    'gridx/tests/support/stores/JsonRest',
+	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/modules',
 	'gridx/tests/support/TestPane',
 	'dojo/domReady!'
@@ -42,13 +42,13 @@ require([
 				selectRowTriggerOnCell: true,
 				modules: [
 //                    modules.SingleSort,
+					modules.VirtualVScroller,
 					modules.ExtendedSelectRow,
-					modules.Focus,
 					modules.RowHeader,
 					modules.ColumnResizer,
 //                    modules.Pagination,
-//                    modules.PaginationBarDD,
-					modules.VirtualVScroller
+//                    modules.PaginationBar,
+					modules.Focus
 				]
 			});
 			grid.placeAt('gridContainer');
@@ -95,6 +95,28 @@ require([
 		});
 	};
 
+	window.deleteSomeRows = function(){
+		grid.model.when({start: 0, count: 10}, function(){
+			var rowIds = [];
+			for(var i = 0; i < 10; ++i){
+				if(grid.row(i)){
+					rowIds.push(grid.row(i).id);
+				}
+			}
+			var dl = [];
+			for(i = 0; i < rowIds.length; ++i){
+				var d = new Deferred();
+				Deferred.when(grid.store.remove(rowIds[i]), lang.hitch(d, d.callback));
+				dl.push(d);
+			}
+			if(dl.length){
+				new DeferredList(dl).then(function(){
+					console.log('delete ok');
+				});
+			}
+		});
+	};
+
 	window.deleteFirstRow = function(){
 		grid.model.when(0, function(){
 			if(grid.row(0)){
@@ -118,6 +140,7 @@ require([
 	tp.addTestSet('Tests', [
 		'<div id="addRowBtn" data-dojo-type="dijit.form.Button" data-dojo-props="onClick: newRow">Add row</div>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: addSomeRows">Add 10 rows</div>',
+//        '<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteSomeRows">Delete 10 rows</div>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteFirstRow">Delete First Row</div>',
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteLastRow">Delete Last Row</div>',
 		'<br/>',

@@ -1,9 +1,9 @@
-define('gridx/tests/MockServerStore', [
-'dojo',
+define([
+'dojo/_base/declare',
 'dojo/data/ItemFileWriteStore'
-], function(dojo){
+], function(declare, ItemFileWriteStore){
 
-return dojo.declare('gridx.tests.MockServerStore', dojo.data.ItemFileWriteStore, {
+return declare(ItemFileWriteStore, {
 	constructor: function(){
 		var oldFetch = this.fetch;
 		this.fetch = function(request){
@@ -12,7 +12,7 @@ return dojo.declare('gridx.tests.MockServerStore', dojo.data.ItemFileWriteStore,
 				oldFetch.call(_this, request);
 			}, 200);
 			return request;
-		}
+		};
 	}
 });
 });

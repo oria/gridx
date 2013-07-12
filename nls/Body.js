@@ -2,7 +2,11 @@ define({root:
 ({
 	loadingInfo: "Loading...",
 	emptyInfo: "No items to display",
-	loadFailInfo: "Failed to load data!"
+	loadFailInfo: "Failed to load data!",
+	indirectSelectAll: "Press SPACE to select all.",
+	indirectDeselectAll: "Press SPACE to deselect all.",
+	treeExpanded: "Control + left arrow key to collapse this row.",
+	treeCollapsed: "Control + right arrow key to expand this row."
 }),
 "ar": true,
 "ca": true,

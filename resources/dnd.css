@@ -49,7 +49,15 @@
 /* dnd row */
 .gridxDnDAnchorRow {
 	left: 0;
-	height: 2px;
+	height: 1px;
+}
+.gridxDnDAnchorRow:before {
+	content: '';
+	position: absolute;
+	top: -1px;
+	height: 1px;
+	width: 100%;
+	background-color: gray;
 }
 .gridxDnDIconRowSingle {
 	background-position: -256px 7px;

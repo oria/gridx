@@ -9,8 +9,10 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"../core/util",
+	"dojo/i18n",
+	"dojo/i18n!../nls/Body",
 	"./RowHeader"
-], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util){
+], function(declare, array, event, query, lang, domClass, Deferred, keys, _Module, util, i18n){
 
 	return declare(/*===== "gridx.modules.IndirectSelect", =====*/_Module, {
 		// summary:
@@ -37,6 +39,7 @@ define([
 				focus = g.focus,
 				sr = g.select.row,
 				rowHeader = g.rowHeader;
+			t._nls = i18n.getLocalization('gridx', 'Body', g.lang);
 			rowHeader.cellProvider = lang.hitch(t, t._createSelector);
 			t.batchConnect(
 				[sr,'onHighlightChange', '_onHighlightChange' ],
@@ -65,6 +68,12 @@ define([
 						t._initFocus();
 					}
 					t.connect(g, 'onRowHeaderHeaderMouseDown', '_onSelectAll');
+					t.connect(g, 'onRowHeaderHeaderKeyDown', function(evt){
+						if(evt.keyCode == keys.SPACE){
+							event.stop(evt);
+							t._onSelectAll();
+						}
+					});
 				});
 			}
 		},
@@ -96,7 +105,9 @@ define([
 		},
 
 		_createSelectAllBox: function(){
-			return this._createCheckBox(this._allSelected[this._getPageId()]);
+			var allSelected = this._allSelected[this._getPageId()];
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this._nls.indirectDeselectAll : this._nls.indirectSelectAll);
+			return this._createCheckBox(allSelected);
 		},
 
 		_getPageId: function(){
@@ -110,6 +121,8 @@ define([
 			if(g.select.row.isSelected(reservedRowId)){
 				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
 			}
+			query('.' + cls, g.rowHeader.headerCellNode).removeClass(cls).attr('aria-checked', 'false');
+			this._allSelected = {};
 		},
 
 		_onHighlightChange: function(target, toHighlight){
@@ -186,14 +199,18 @@ define([
 					d.callback();
 				});
 			}
-			Deferred.when(d, function(){
-				if(t.arg('all')){
+			if(t.arg('all')){
+				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
 					var node = t.grid.rowHeader.headerCellNode.firstChild;
-					domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
-					node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
-				}
-			});
+					if(node){
+						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+						t.grid.rowHeader.headerCellNode.setAttribute('aria-label',
+							allSelected ? t._nls.indirectDeselectAll : t._nls.indirectSelectAll);
+					}
+				});
+			}
 		},
 
 		//Focus------------------------------------------------------

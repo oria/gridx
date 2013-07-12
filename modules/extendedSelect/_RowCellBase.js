@@ -18,7 +18,8 @@ define([
 			var t = this, m = t.model;
 			t.batchConnect(
 				[t.grid.body, 'onMoveToCell', '_onMoveToCell'],
-				[m, 'onMarkChange', '_onMark']
+				[m, 'onMarkChange', '_onMark'],
+				[m, 'setStore', 'clear']
 			);
 		}
 	});

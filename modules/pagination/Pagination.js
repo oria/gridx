@@ -243,7 +243,7 @@ define([
 			}
 			bd.updateRootRange(start, count);
 			if(!noRefresh){
-				bd.refresh();
+				bd.lazyRefresh();
 			}
 		},
 
@@ -252,6 +252,7 @@ define([
 			if(size === 0){
 				t._page = 0;
 				t.grid.body.updateRootRange(0, 0);
+				t.grid.body.lazyRefresh();
 			}else{
 				var first = t.firstIndexInPage();
 				if(first < 0 && t._page !== 0){
