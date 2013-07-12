@@ -36,8 +36,17 @@ define([
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;
+			this.connect(g.body, 'onRender', function(){
+				_this.lock(_this.count);
+			});
+			
 			deferStartup.then(function(){
+				
 				if(_this.grid.vScroller)_this.connect(g.vScrollerNode, 'onscroll', function(){
+					_this._updatePosition();
+				});
+				
+				if(_this.grid.vScroller)_this.connect(g.vScroller, '_doScroll', function(){
 					_this._updatePosition();
 				});
 				_this.lock(_this.count);
@@ -86,7 +95,8 @@ define([
 		_foreachLockedRows: function(callback){
 			var nodes = this.grid.bodyNode.childNodes;
 			for(var i = 0; i < this.count; i++){
-				callback(nodes[i]);
+				if(nodes[i])
+					callback(nodes[i]);
 			}
 		}
 	});
