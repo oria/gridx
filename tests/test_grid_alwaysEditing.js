@@ -89,6 +89,12 @@ require([
 		{ field: "id", name:"ID", width: '20px'},
 		{ field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
 		{ field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
+			decorator: function(data){
+				return "<b>" + data + "</b>";
+			},
+			canEdit: function(cell){
+				return cell.row.index() % 2;
+			},
 			editor: "dijit.form.ComboBox",
 			editorArgs: {
 				props: 'store: mystore, searchAttr: "Artist"'
