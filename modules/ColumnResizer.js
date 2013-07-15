@@ -138,6 +138,7 @@ define([
 				flags = t.grid._eventFlags;
 			if(cell){
 				if(t._resizing){
+					console.log('in resizing');
 					removeClass(cell, 'gridxHeaderCellOver');
 				}
 				if(t._resizing || !cell || t._ismousedown){
@@ -150,6 +151,8 @@ define([
 				domClass.toggle(win.body(), 'gridxColumnResizing', ready);
 				if(ready){
 					removeClass(cell, 'gridxHeaderCellOver');
+				}else{
+					domClass.add(cell, 'gridxHeaderCellOver');
 				}
 			}
 		},
