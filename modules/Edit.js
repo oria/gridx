@@ -718,6 +718,7 @@ define([
 					col.needCellWidget = function(cell){
 						return (!needCellWidget || needCellWidget.apply(col, arguments)) && cell.isEditable();
 					};
+					col._userDec = col.decorator;
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
@@ -734,6 +735,10 @@ define([
 			var column = cell.column;
 			if(!column.needCellWidget || column.needCellWidget(cell)){
 				return '';
+			}
+			//If not editable, make user decorator take effect.
+			if(col._userDec){
+				return col._userDec(data, rowId, visualIndex, cell);
 			}
 			return data;
 		},
