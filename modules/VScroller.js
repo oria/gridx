@@ -160,7 +160,7 @@ define([
 						//Logically this should not happen because virtual scroller has buffers.
 						//And this logic should not be put in non-virtual scroller either.
 						//FIXME: need more investigation.
-						(bn.scrollHeight == bn.clientHeight && bd.renderCount < g.view.visualCount),
+						(bn.scrollHeight == bn.clientHeight && bd.renderCount < bd.visualCount),
 					ds = t.domNode.style;
 					scrollBarWidth = metrics.getScrollbar().w + (sniff('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(sniff('ie') < 8){
@@ -173,10 +173,14 @@ define([
 				}else{
 					ds.width = '';
 				}
-				ds.display = toShow ? '' : 'none';
-				t._updatePos();
+				var display = toShow ? '' : 'none';
+				var changed = display != ds.display;
+				ds.display = display;
+				if(changed){
+					t._updatePos();
+					g.hLayout.reLayout();
+				}
 			}
-			g.hLayout.reLayout();
 		},
 
 		_updatePos: function(){
