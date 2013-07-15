@@ -139,6 +139,8 @@ define([
 				domClass.toggle(win.body(), 'gridxColumnResizing', ready);
 				if(ready){
 					removeClass(cell, 'gridxHeaderCellOver');
+				}else{
+					domClass.add(cell, 'gridxHeaderCellOver');
 				}
 			}
 		},
