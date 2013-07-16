@@ -246,13 +246,14 @@ define([
 		},
 
 		_refresh: function(changed){
+			var g = this.grid;
 			if(changed){
-				var g = this.grid;
 				g.header.refresh();
 				g.columnWidth._adaptWidth();
 				return g.body.refresh();
 			}else{
 				var d = new Deferred();
+				g.header.onRender();
 				d.callback();
 				return d;
 			}

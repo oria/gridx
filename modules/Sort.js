@@ -1,6 +1,7 @@
 define([
 /*====="gridx/core/Column",=====*/
 	"dojo/_base/declare",
+	"dojo/_base/array",
 	"dojo/query",
 	"dojo/_base/event",
 	"dojo/_base/sniff",
@@ -11,7 +12,7 @@ define([
 	"../core/model/extensions/Sort",
 	"../core/_Module",
 	"dojo/i18n!../nls/Sort"
-], function(/*=====Column, =====*/declare, query, event, has, string, keys, dom, domClass, Sort, _Module, nls){
+], function(/*=====Column, =====*/declare, array, query, event, has, string, keys, dom, domClass, Sort, _Module, nls){
 
 /*=====
 	Column.sort = function(isDescending, isAdd){
@@ -268,8 +269,11 @@ define([
 			query('[aria-sort]', g.header.domNode).forEach(function(n){
 				this._initHeader(g.column(n.getAttribute('colid'), 1));
 			}, this);
-			for(var i = 0, len = this._sortData.length; i < len; ++i){
-				var s = this._sortData[i],
+			var sortData = array.filter(this._sortData, function(s){
+				return g._columnsById[s.colId];
+			});
+			for(var i = 0, len = sortData.length; i < len; ++i){
+				var s = sortData[i],
 					col = g.column(s.colId, 1),
 					n = col.headerNode();
 				n.innerHTML = ["<div class='gridxSortNode ",
