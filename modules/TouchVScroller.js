@@ -75,7 +75,7 @@ define([
 				t._onBodyChange = function(){
 					t._update();
 				};
-				t._onForcedScroll = function(){};
+//                t._onForcedScroll = function(){};
 				t.model.when({
 					start: view.rootStart,
 					count: view.rootCount
