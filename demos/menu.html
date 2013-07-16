@@ -1,57 +1,43 @@
 <!DOCTYPE html> 
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
-		<title>Grid Demo</title>
-		<link rel='stylesheet' href="../build/gridx/tests/support/common.css" />
-		<link rel='stylesheet' href="../build/gridx/tests/support/GridConfig.css" />
-		<style type="text/css">
-			.viewport {
-				margin: 0 20px;
-				width: 100%;
-			}
-			#gridContainer {
-				width: 800px;
-				height: 600px;
-			}
-			#grid {
-				height: 100%;
-			}
-		</style>
-		<script type="text/javascript" src="../build/gridx/tests/../../dojo/dojo.js" 
-			data-dojo-config="async: true, isDebug: true, parseOnLoad: true,  packages:[{name: 'gridx', location:'../gridx'}]"></script>
+<head>
+	<title>Grid Context Menu Test</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="../build/gridx/tests/support/common.css" />
+	<style type="text/css">
+		.gridx {
+			width: 800px;
+			height: 500px;
+		}
+		#config{
+			width: 300px; 
+			height: 400px; 
+			float: left;
+		}
+	</style>
+
+	<script type="text/javascript" src="../build/gridx/tests/../../dojo/dojo.js" data-dojo-config="async: true"></script>
 <script src="../build/gridx/tests/allInOne.js"></script>
 
-		<script type="text/javascript" src="../build/gridx/tests/support/common.js"></script>
-		<script type="text/javascript" src="../build/gridx/tests/demo_grid.js"></script>
-	</head>
-	<body class='claro'>
-		<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-			Grid All-In-One Test Page
-		</h1>
-		<table class='viewport' border='0' cellspacing='0' cellpadding='0'><tr>
-			<td class='pane'>
-				<div id='gridContainer'>
-					<div id="tutor">
-						<ol>
-							<li>[Optional step] Select a store</li>
-							<li>[Optional step] Select a column structure for the store</li>
-							<li>[Optional step] Select a proper cache for grid</li>
-							<li>[Optional step] Select any attributes for grid</li>
-							<li>[Optional step] Select any extensions for grid model</li>
-							<li>[Optional step] Select any features/plugins for grid</li>
-							<li>Hit the&nbsp;<span style='font-weight: bolder;'>Create Grid</span>&nbsp;button and see the grid</li>
-							<li>[Optional step] Go back to step 1</li>
-						</ol>
-					</div>
-				</div>
-			</td>
-			<td id='ctrlPane' class='pane'>
-				<div id="gridConfig"></div>
-			</td>
-		</tr></table>
-
-
+	<script type="text/javascript" src="../build/gridx/tests/support/common.js"></script>
+	<script type="text/javascript" src="../build/gridx/tests/test_grid_menu.js"></script>
+</head>
+<body class='claro'>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Grid Context Menu Test
+	</h1>
+	<table border='0' cellspacing='0' cellpadding='0'><tr>
+		<td>
+			<div id='gridContainer'></div>
+			<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+				cacheClass: "gridx/core/model/cache/Sync",
+				store: store,
+				structure: layout,
+				modules: mods
+			'></div>
+		</td>
+		<td id='ctrlPane'></td>
+	</tr></table>
 	
 	<div dojoType="dijit.Menu" id="headerMenu"  style="display: none;">
 		<div dojoType="dijit.MenuItem" onclick='showInfo()'>Menu Context Info</div>
@@ -289,5 +275,5 @@
 		<div data-dojo-type="dijit.CheckedMenuItem" >Not Checked</div>
 		<div data-dojo-type="dijit.CheckedMenuItem" data-dojo-props='checked:true, disabled:true'>Checked Disabled</div>
 		</div>
-	</body>
+</body>
 </html>

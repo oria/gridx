@@ -6,6 +6,9 @@ body {
   color: #666;
   font-family: arial;
   font-size: 12px;
+
+  /*background: url(../images/header_bg.png) 0 0 repeat-x;*/
+
   text-align: center;
   background: #eee url(../images/noise.png);
 }

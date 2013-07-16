@@ -21,43 +21,58 @@ function run(cmd, callback){
 	});
 }
 
-//Generate the profile
-var layers = [];
-
 fs.readdir(testsDir, function(error, files){
 	//get all tests javascript files
 	files.forEach(function(file){
-		if(file.match(/\.js$/)){
-			var name = '' + file.replace(/\.js$/, '');
-			layers.push(
-					"\n\t\t'" + name + "': {boot: false,customBase: true,include: ["
-						+ "\n\t\t\t'gridx/tests/" + name + "'"
-						+ "\n\t\t\t,'dojo/selector/acme'"
-					+ "\n\t\t]}"
-			);
-		}else if(file.match(/\.html$/)){
+		if(file.match(/\.html$/)){
 			writeDemoHtml(file);
 		}
 	});
-	var profile = fs.readFileSync(path.join(sitePath, 'demos.profile.tpl.js'), 'utf8');
-	var to = path.join(sitePath, 'demos/profile.js');
-	profile = profile.replace('${layers}', layers.join(','));
-	fs.writeFileSync(to, profile, 'utf8');
 	
 	var dojopath = path.join(sitePath, 'src/dojo/dojo.js');
-	//run('node ' + dojopath + ' load=build action=release profile=' + to);
+	run('node ' + dojopath + ' load=build action=release profile=' + to);
 });
 
 function writeDemoHtml(file){
 	//summary:
 	//  Copy test case files from 'tests/' folder to 'demos/' folder and convert paths and import the built layer.
-	
-	var to = path.join(sitePath, 'demos/' + file);
+	var to = path.join(sitePath, 'demos/' + file.replace(/^test_grid_/, ''));
 	console.log('writing demo path: ' + to);
 	var content = fs.readFileSync(path.join(testsDir, file), 'utf8');
-	//content = content.replace(/"support\//g, '"../tests/support/');
-	//content = content.replace(/'support\//g, '\'../tests/support/');
-	//content = content.replace('<script>', '<script src="' + file.replace('.html', '.js') + '"></script>\n\t<script>');
+	var arr = ['tests', 'gridx'];
+	content = content.replace(/(href=|src=)['"]([^'"]+)['"]/g, function(m1, m2, m3){
+		console.log('replace: ', m1, m2, m3);
+		m3 = '../build/gridx/tests/' + m3;
+		return m2 + '"' + m3 + '"';
+	});
+
+	//add built all in one
+	content = content.replace(/<\/script>/, '</script>\r\n<script src="../build/gridx/tests/allInOne.js"></script>\r\n');
+
 	fs.writeFileSync(to, content, 'utf8');
 }
+
+function copyTests(){
+
+}
+
+function copyFolder(src, dest){
+	fs.readdir(src, function(error, files){
+		files.forEach(function(file){
+
+		});
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
 

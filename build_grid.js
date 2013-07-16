@@ -1,0 +1,1 @@
+node ../../dojo/dojo.js load=build action=release profile=profile.js

@@ -1,31 +1,37 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title>The Simplest Grid</title>
+	<title>Grid Row Lock Test</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="../build/gridx/tests/support/common.css" />
 	<style type="text/css">
+		#ctrlPane .dijitAccordionContainer {
+			height: auto;
+		}
+		#ctrlPane .dijitSpinner {
+			width: 50px;
+		}
 		#gridContainer {
 			width: 800px;
 			height: 500px;
 		}
 		#grid {
-			width: 100%;
 			height: 100%;
 		}
-		#ctrlPane .dijitAccordionContainer {
-			height: auto;
+		/*Row Lock*/
+		.gridx .gridxBody .gridxLockedRow .gridxRowTable{
+			background-color: #ffffe0;
 		}
 	</style>
 	<script type="text/javascript" src="../build/gridx/tests/../../dojo/dojo.js" data-dojo-config="async: true"></script>
 <script src="../build/gridx/tests/allInOne.js"></script>
 
 	<script type="text/javascript" src="../build/gridx/tests/support/common.js"></script>
-	<script type="text/javascript" src="../build/gridx/tests/test_grid.js"></script>
+	<script type="text/javascript" src="../build/gridx/tests/test_grid_rowLock.js"></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
-		The Simplest Grid
+		Grid Row Lock Test (Experimental)
 	</h1>
 	<table border='0' cellspacing='0' cellpadding='0'><tr>
 		<td class='pane'>

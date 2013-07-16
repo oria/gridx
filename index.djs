@@ -9,6 +9,7 @@
   <meta name="keywords" content="dojo,grid,best,dijit,datagrid" />
   
   <style>
+
    
   .button {
     margin-left: 42px;
@@ -21,6 +22,7 @@
   .summary img {
     margin: 40px 30px 0 30px;
   }
+
 
   .grid_3 li {
     list-style: square;
@@ -76,6 +78,7 @@
   .news h2, .features h2 {
     color: #888;
   }
+
 
   li a {
     color: #999;
@@ -137,6 +140,7 @@
   <div class="container_12" >
     {{header|safe}}
     
+
     <div class="grid_12 summary mainBanner">
       <img src="images/home1.png"/>
       <p>
@@ -147,7 +151,7 @@
       <span class="browsers"><span>Supporting</span><img src="images/browsers.png" class="browsers"/></span>
       <div class="clear"></div>
     </div>
-    
+  
     <div class="clear"></div>
     
     <div class="grid_4 blockLink blockLink1">
