@@ -1,0 +1,49 @@
+/*
+ * Licensed Materials - Property of IBM
+ * (C) Copyright IBM Corp. 2010, 2012 All Rights Reserved
+ * US Government Users Restricted Rights - Use, duplication or
+ * disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+.oneui .gridxDnDAnchor {
+	background-color: #333;
+}
+
+.oneui .gridxDndAvatar {
+	background: none;
+	border: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	z-index: 999;
+}
+
+.oneui .gridxDndAvatar .gridxDnDItemCount {
+	position: relative;
+	top: -7px;
+	left: 4px;
+	padding: 10px;
+	background-color: black;
+	background-color: rgba(0,0,0,8);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	font-style: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	color: #f3f3f3;
+}
+
+.oneui .gridxDnDIcon {
+	top: -7px;
+	left: -11px;
+}
+
+.oneui.dojoDndMove .gridxDnDIcon {
+	background: url('images/dndSource_16px.png');
+}
+
+.oneui.dojoDndCopy .gridxDnDIcon,
+.oneui.dojoDndMove .dojoDndAvatarCanDrop .gridxDnDIcon,
+.oneui.dojoDndCopy .dojoDndAvatarCanDrop .gridxDnDIcon {
+	background: none;
+}

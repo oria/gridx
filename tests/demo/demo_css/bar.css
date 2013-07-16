@@ -1,0 +1,92 @@
+/*
+ * Licensed Materials - Property of IBM
+ * (C) Copyright IBM Corp. 2010, 2012 All Rights Reserved
+ * US Government Users Restricted Rights - Use, duplication or
+ * disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+
+/* TitleBar */
+.oneui .gridxTitleBar {
+	background: none;
+	border-top: none;
+	padding: 5px 7px;
+}
+
+/*SummaryBar*/
+.oneui .gridxSummaryBar {
+	background: none;
+	border-top: none;
+	padding: 5px 7px;
+	font-family: Georgia;
+	font-style: italic;
+	font-size: 12px;
+	color: #777;
+}
+
+
+/*ToolBar*/
+.oneui .gridxHeader .dijitToolbar {
+	background: none;
+	border: none;
+	padding: 5px;
+	padding-left: 0px;
+}
+
+.oneui .gridx .dijitToolbar .dijitButton span {
+	padding: 0;
+	margin: 0;
+}
+
+.oneui .gridx .dijitToolbar .dijitButtonHover,
+.oneui .gridx .dijitToolbar .dijitButtonActive {
+	background: none;
+}
+
+.oneui .gridx .dijitToolbar .dijitButton .dijitButtonNode {
+	padding: 5px !important;
+}
+
+.oneui .gridx .dijitToolbar .dijitButtonHover .dijitButtonNode,
+.oneui .gridx .dijitToolbar .dijitButtonActive .dijitButtonNode {
+	padding: 4px !important;
+	border-radius: 3px;
+}
+
+.oneui .gridx .dijitToolbar .dijitButtonHover .dijitButtonNode {
+	background: #fefefe; /* Old browsers */
+	background: -moz-linear-gradient(top,  #fefefe 0%, #cccccc 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fefefe), color-stop(100%,#cccccc)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #fefefe 0%,#cccccc 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #fefefe 0%,#cccccc 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #fefefe 0%,#cccccc 100%); /* IE10+ */
+	background: linear-gradient(top,  #fefefe 0%,#cccccc 100%); /* W3C */
+}
+
+.oneui .gridx .dijitToolbar .dijitButtonActive .dijitButtonNode {
+	background: #dbdbdb; /* Old browsers */
+	background: -moz-linear-gradient(top,  #dbdbdb 0%, #f4f4f4 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dbdbdb), color-stop(100%,#f4f4f4)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #dbdbdb 0%,#f4f4f4 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #dbdbdb 0%,#f4f4f4 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #dbdbdb 0%,#f4f4f4 100%); /* IE10+ */
+	background: linear-gradient(top,  #dbdbdb 0%,#f4f4f4 100%); /* W3C */
+}
+
+/* Should these be placed here? Or just application specific? */
+.oneui .dijitToolbar .gridxIconNew {
+	width: 30px;
+	height: 25px;
+	margin: 0;
+	background: transparent url(images/spriteIcons.png) no-repeat 0px -60px;
+}
+.oneui .dijitToolbar .gridxIconEdit {
+	width: 30px;
+	height: 25px;
+	background: transparent url(images/spriteIcons.png) no-repeat -29px -60px;
+}
+.oneui .dijitToolbar .gridxIconDelete {
+	width: 30px;
+	height: 25px;
+	background: transparent url(images/spriteIcons.png) no-repeat -60px -60px;
+}
+

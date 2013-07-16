@@ -1,0 +1,39 @@
+/*
+ * Licensed Materials - Property of IBM
+ * (C) Copyright IBM Corp. 2010, 2012 All Rights Reserved
+ * US Government Users Restricted Rights - Use, duplication or
+ * disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+
+.oneui .gridxRtl .gridxHeaderRow .gridxCell {
+	border-left: 1px solid #ccc;
+	border-right-color: transparent;
+	text-align: right;
+}
+
+.oneui .gridxRtl .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	border-left: 1px solid #ccc;
+	border-right-color: transparent;
+}
+
+.oneui .gridxRtl .gridxRow .gridxCell {
+	border-color: transparent transparent #d9d9d9 #d9d9d9;
+}
+
+.oneui .gridxRtl .gridxBodyRowHoverEffect .gridxRowOver .gridxCell {
+	border-top-color: transparent;
+	border-bottom-color: #bbb;
+}
+
+.oneui .gridxRtl .gridxBodyRowHoverEffect .gridxRowOver + .gridxRow .gridxCell {
+	border-top-color: transparent;
+}
+
+.oneui .gridxRtl .gridxHeaderRowInner {
+	border-width: 0 0 0 1px;
+}
+
+.oneui .gridxRtl .gridxVScroller {
+	border-right: none;
+	border-left: 1px solid #d9d9d9;
+}

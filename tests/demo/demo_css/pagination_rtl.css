@@ -1,0 +1,51 @@
+/*
+ * Licensed Materials - Property of IBM
+ * (C) Copyright IBM Corp. 2010, 2012 All Rights Reserved
+ * US Government Users Restricted Rights - Use, duplication or
+ * disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+
+/* Pagination RTL */
+
+.oneui .gridxRtl .gridxPagerDescription {
+	text-align: right;
+}
+
+.oneui .gridxRtl .gridxPagerSizeSwitchTD,
+.oneui .gridxRtl .gridxPager .gridxPagerGoto,
+.oneui .gridxRtl .gridxGotoPage .gridxGotoPageBtns {
+	text-align: left;
+}
+.oneui .gridxRtl .gridxPagerFirstPage {
+	background-position: -40px 4px;
+}
+.oneui .gridxRtl .gridxPagerFirstPageDisable {
+	background-position: -40px -16px;
+}
+
+.oneui .gridxRtl .gridxPagerPrevPage {
+	background-position: -19px 4px;
+}
+.oneui .gridxRtl .gridxPagerPrevPageDisable {
+	background-position: -19px -16px;
+}
+
+.oneui .gridxRtl .gridxPagerNextPage {
+	background-position: 1px 4px;
+}
+.oneui .gridxRtl .gridxPagerNextPageDisable {
+	background-position: 1px -16px;
+}
+
+.oneui .gridxRtl .gridxPagerLastPage {
+	background-position: -60px 4px;
+}
+
+.oneui .gridxRtl .gridxPagerLastPageDisable {
+	background-position: -60px -16px;
+}
+
+/* PaginationBarDD */
+.oneui .gridxRtl .gridxPagerSizeSwitchDD {
+	text-align: left;
+}

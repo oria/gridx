@@ -1,22 +1,31 @@
+/* Google Fonts */
+@import url(http://fonts.googleapis.com/css?family=Dosis:400,200,300,500,600,700,800);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,800italic,800,700italic,700,600italic,600,400italic,300italic,300);
+
 body {
   color: #666;
   font-family: arial;
   font-size: 12px;
-  background: url(../images/header_bg.png) 0 0 repeat-x;
   text-align: center;
+  background: #eee url(../images/noise.png);
 }
+
 div.container_12 {
   text-align: left;
-  background: none;
+  margin-top: 0;
+  background: #fff url(images/noise2.png);
+  padding: 30px;
+  padding-top: 5px;
+  box-shadow: #999;
+  -webkit-box-shadow:  0px 0px 12px 4px rgba(0, 0, 0, 0.4);
+  box-shadow:  0px 0px 12px 4px rgba(0, 0, 0, 0.4);
 }
 h2 {
-  font-size: 14px;
-  padding: 3px;
-  border-bottom: 1px solid #ddd;
-  margin: 0;
+  font-size: 18px;
+      padding: 3px;
+      margin: 0;
 }
 div{
-  
   margin: 5px 0;
 }
 
@@ -37,9 +46,9 @@ li a {
 }
 
 .logo {
-	padding: 20px 0 0 0;
+	padding: 30px 0 0 0;
 	margin-top: 10px;
-	margin-bottom: 40px;
+
 }
 
 .search {
@@ -67,13 +76,15 @@ li a {
   font-weight: bold;
   color: #888;
   text-decoration: none;
-  margin-left: 15px;
-  text-shadow: 1px 1px 1px #fff;
+  margin: 0 5px;
+  padding: 5px;
+  /*text-shadow: 1px 1px 1px #fff;*/
 }
 
 .menu a.current
 ,.menu a:hover {
-  color: #f90;
+  color: #fff;
+  background-color: #45A29B;
 }
 
 .button {

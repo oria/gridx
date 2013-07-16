@@ -1,0 +1,262 @@
+
+.myTheme .gridx {
+	border: none;
+}
+
+.myTheme .gridxHeader, .myTheme .gridxFooter {
+	background: none;
+}
+
+.myTheme .gridx .dijitButton .dijitButtonNode {
+	min-width: 0px;
+}
+
+.myTheme .gridxGotoPage .gridxGotoPageInputBox .dijitTextBox {
+	width: 70px;
+}
+
+/*Header*/
+.myTheme .gridxHeaderRow {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	clear: both;
+
+	background: #ededed; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ffffff 0%, #ededed 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ededed)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#ededed 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ffffff 0%,#ededed 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ffffff 0%,#ededed 100%); /* IE10+ */
+	background: linear-gradient(top,  #ffffff 0%,#ededed 100%); /* W3C */
+/*    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); |+ IE6-9 +|*/
+}
+
+.myTheme .gridxHeaderRowInner {
+	background: none;
+	border-color: transparent;
+	border-width: 0 2px 0 0;
+}
+
+/*.myTheme .gridxHeaderRowInner table {*/
+/*    border-collapse: collapse;*/
+/*}*/
+
+/*.myTheme .gridxHeaderRowInner table tr:last-child {*/
+/*    border: none;*/
+/*}*/
+
+.myTheme .gridxHeaderRow .gridxCell {
+	border-top: none;
+	border-bottom: none;
+	border-right: 1px solid #ccc;
+	padding: 13px 7px;
+	font-weight: bold;
+	font-size: 12px;
+	color: #444;
+	vertical-align: top;
+	text-shadow: 1px 1px 1px #fff;
+/*    filter: dropshadow(color=#fff, offx=1, offy=1);*/
+}
+
+.dijit_a11y.myTheme .gridxHeaderRow .gridxCell {
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+}
+
+
+
+.myTheme .gridxHeaderRow .gridxHeaderRowInner .gridxCell:hover {
+	background: #fafafa; /* Old browsers */
+	background: -moz-linear-gradient(top,  #fafafa 0%, #dbdbdb 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#dbdbdb)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* IE10+ */
+	background: linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* W3C */
+/*    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#dbdbdb',GradientType=0 ); |+ IE6-9 +|*/
+}
+
+.myTheme .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	border-top: none;
+	border-bottom: none;
+	border-left: 1px solid transparent;
+	border-right: 1px solid #ccc;
+	outline: none;
+
+	background: #fafafa; /* Old browsers */
+	background: -moz-linear-gradient(top,  #fafafa 0%, #dbdbdb 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#dbdbdb)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* IE10+ */
+	background: linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* W3C */
+/*    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#dbdbdb',GradientType=0 ); |+ IE6-9 +|*/
+}
+
+.dijit_a11y.myTheme .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	border: 1px dashed darkblue;
+}
+
+/*RowHeader*/
+.myTheme .gridxRowHeaderCell {
+	border-bottom: 1px solid transparent;
+	border-top: 1px solid #d9d9d9;
+}
+.myTheme .gridxRowHeaderRow:first-child .gridxRowHeaderCell {
+	border-top-color: transparent;
+}
+.myTheme .gridxRowHeaderHeader {
+	border-right-color: #d9d9d9;
+}
+
+.myTheme .gridxRowHeaderHeader,
+.myTheme .gridxRowHeaderRow {
+	background: #ededed; /* Old browsers */
+	background: -moz-linear-gradient(top,  #ffffff 0%, #ededed 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ededed)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #ffffff 0%,#ededed 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #ffffff 0%,#ededed 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #ffffff 0%,#ededed 100%); /* IE10+ */
+	background: linear-gradient(top,  #ffffff 0%,#ededed 100%); /* W3C */
+/*    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed',GradientType=0 ); |+ IE6-9 +|*/
+}
+
+.myTheme .gridxRowHeaderBody {
+	border-left: 1px solid #d9d9d9;
+	border-right-width: 0px;
+}
+.myTheme .gridxRowHeaderBody .gridxRowOver {
+	background: #fafafa; /* Old browsers */
+	background: -moz-linear-gradient(top,  #fafafa 0%, #dbdbdb 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fafafa), color-stop(100%,#dbdbdb)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* IE10+ */
+	background: linear-gradient(top,  #fafafa 0%,#dbdbdb 100%); /* W3C */
+/*    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafafa', endColorstr='#dbdbdb',GradientType=0 ); |+ IE6-9 +|*/
+}
+
+/*Body*/
+.myTheme .gridxRow {
+	background: none;
+}
+
+.myTheme .gridxMain {
+	border-left: 1px solid #d9d9d9;
+	border-right: 1px solid #d9d9d9;
+}
+
+.myTheme .gridxVScroller {
+	border-right: 1px solid #d9d9d9;
+}
+
+.myTheme .gridxMain .gridxBody {
+/*    border-right: 1px solid #d9d9d9;*/
+}
+
+.myTheme .gridxRow .gridxRowTable {
+	background-color: #ffffff;
+	border-left: none;
+}
+
+.myTheme .gridxRow .gridxCell {
+	padding: 10px 7px;
+	border-width: 1px;
+	border-color: #d9d9d9 #d9d9d9 transparent transparent;
+	font-style: Arial;
+	font-size: 12px;
+	color: #333;
+	background: none;
+	vertical-align: top;
+}
+
+.myTheme .gridx .gridxRow:first-child .gridxCell {
+	border-top-color: transparent;
+}
+
+.dj_webkit .myTheme .gridx .gridxRow:first-child .gridxCellFocus,
+.dj_ie7 .myTheme .gridx .gridxRow:first-child .gridxCellFocus {
+	border-top-color: darkblue;
+}
+
+.dj_ie .myTheme .gridxRow .gridxCellFocus {
+	border-bottom: 1px dashed darkblue;
+}
+
+.myTheme .gridxAlternatingRows .gridxRowOdd .gridxRowTable {
+	background-color: #f7f7f7;
+}
+
+.myTheme .gridxBodyRowHoverEffect .gridxRowOver .gridxCell {
+	border-top-color: #bbbbbb;
+}
+
+.myTheme .gridx .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
+	background: none;
+	background-color: #cce8f2;
+}
+.myTheme .gridx .gridxBodyRowHoverEffect .gridxRowOver .gridxCell {
+	background: none;
+}
+
+.myTheme .gridxRow:last-child .gridxCell {
+	border-bottom: 1px solid #d9d9d9;
+}
+
+.myTheme .gridxBodyRowHoverEffect .gridxRowOver + .gridxRow .gridxCell {
+	border-top-color: #bbb;
+}
+
+.myTheme .gridxAlternatingRows .gridxBody .gridxRow .gridxCell {
+	border-top-color: #ffffff;
+}
+
+.myTheme .gridx .gridxRow .gridxRowTable,
+.myTheme .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
+	transition-property: background-color;
+	-webkit-transition-property: background-color;
+	-moz-transition-property: background-color;
+	-o-transition-property: background-color;
+	transition-duration: 0.3s;
+	-webkit-transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-o-transition-duration: 0.3s;
+}
+
+/* WholeRow -- No Column Borders */
+.myTheme .gridxWholeRow .gridxBody .gridxRow .gridxCell {
+	border-left-color: transparent;
+	border-right-color: transparent;
+}
+
+/*HScroller*/
+.myTheme .gridxHScroller{
+	border-style: solid;
+	border-color: #d9d9d9;
+	border-width: 0 1px 1px 1px;
+}
+
+/* compact */
+.myTheme .compact .gridxHeaderRow .gridxCell {
+	padding: 10px 7px;
+	font-size: 11px;
+}
+
+.myTheme .compact .gridxBody .gridxCell {
+	padding: 7px;
+	font-size: 11px;
+}
+
+/* Full Page */
+.myTheme .gridxFullPage .gridxHeader .gridxHeaderRow {
+	border-top-color: #dadada;
+	border-bottom: 1px solid #ccc;
+}
+
+.myTheme .gridxFullPage .gridxHeader .gridxHeaderRow,
+.myTheme .gridxFullPage .gridxMain,
+.myTheme .gridxFullPage .gridxHeader .gridxHeaderRow .gridxCell,
+.myTheme .gridxFullPage .gridxBody .gridxRow .gridxCell {
+	border-left-color: transparent;
+	border-right-color: transparent;
+}

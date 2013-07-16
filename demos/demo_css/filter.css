@@ -1,0 +1,153 @@
+/*
+ * Licensed Materials - Property of IBM
+ * (C) Copyright IBM Corp. 2010, 2012 All Rights Reserved
+ * US Government Users Restricted Rights - Use, duplication or
+ * disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+
+/*FilterBar*/
+.oneui .gridxFilterBar {
+	border: 1px solid #ccc;
+	border-bottom: none;
+	padding: 0;
+	width: auto;
+	background-color: #f7f7f7;
+	padding: 3px 0;
+	position: relative;
+}
+
+.oneui .gridxFilterBarStatus {
+	border: none;
+	font: italic 12px Georgia;
+	color: #222;
+	background: none;
+}
+
+.oneui .gridxFilterBarCloseBtn {
+	width: 7px;
+	height: 7px;
+	background: transparent url(images/spriteIcons.png) no-repeat -214px -4px;
+	margin-top: 4px;
+	margin-right: 5px;
+}
+
+.oneui .gridxFilterBarCloseBtn:hover {
+	background-position: -244px -4px;
+}
+
+.oneui .gridxFilterBar .dijitButton {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.oneui .gridxFilterBar .dijitButton .gridxFilterBarBtnIcon{
+	width: 20px;
+	height: 20px;
+	background: transparent url(images/spriteIcons.png) no-repeat 0px -32px;
+}
+.oneui .gridx .gridxFilterBar .dijitButton span {
+	margin: 0;
+	padding: 0;
+}
+.oneui .gridxFilterBar .dijitButton .dijitArrowButtonInner {
+	height: 25px;
+	width: 9px;
+	background: transparent url(images/spriteIcons.png) no-repeat -4px 6px;
+}
+
+.oneui .gridx .gridxFilterBar .dijitButton .dijitButtonNode {
+	border: none;
+	background: none;
+	padding: 0;
+}
+.oneui .gridx .gridxFilterBar .dijitButton .dijitButtonText {
+	display: none;
+}
+
+
+/*QuickFilter*/
+.oneui .gridxQuickFilterTextBox,
+.oneui .gridxQuickFilterDropDownButton,
+.oneui .gridxQuickFilterButton {
+	float: right;
+}
+
+/*.oneui .gridxQuickFilterButton {*/
+/*    margin-top: -3px;*/
+/*}*/
+
+.oneui .gridxQuickFilterTextBox {
+	border: 1px solid #ccc;
+	position: relative;
+	margin-top: 4px;
+}
+
+.oneui .gridxQuickFilterIcon {
+	width: 16px;
+	height: 16px;
+	background: transparent url(images/spriteIcons.png) no-repeat -5px -36px;
+}
+
+.oneui .gridxQuickFilterTextBox .dijitInputContainer {
+	padding: 0 14px 0 5px;
+	
+}
+
+.oneui .gridxQuickFilterTextBox .gridxQuickFilterClearIcon {
+	position: absolute;
+	right: 5px;
+	top: 8px;
+	width: 7px;
+	height: 7px;
+	background: transparent url(images/spriteIcons.png) no-repeat -214px -4px;
+}
+
+.oneui .gridxQuickFilterTextBox .gridxQuickFilterClearIcon:hover {
+	background-position: -244px -4px;
+}
+
+.oneui .gridxQuickFilterTextBoxEmpty .gridxQuickFilterClearIcon {
+	display: none;
+}
+
+.oneui .gridx .gridxHeader .gridxQuickFilterTextBox .dijitInputInner {
+	height: 23px;
+	padding:0;
+	padding-left: 3px;
+	color: #666;
+	font: 12px Myriad,Helvetica,Tahoma,Arial,clean,sans-serif;
+}
+
+/*Make input text vertical middle aligned for IE6-8*/
+.dj_ie .oneui .gridx .gridxHeader .gridxQuickFilterTextBox .dijitInputInner{
+	height: auto;
+	padding:4px 3px;
+	vertical-align: middle;
+}
+.oneui .gridx .gridxHeader .gridxQuickFilterTextBoxEmpty .dijitInputInner {
+	color: #ccc;
+}
+
+.oneui .gridxQuickFilterDropDownButton,
+.oneui .gridx .gridxHeader .gridxQuickFilterDropDownButton span {
+	margin: 0;
+	padding: 0;
+}
+.oneui .gridxQuickFilterDropDownButton .dijitArrowButtonInner {
+	height: 25px;
+	width: 9px;
+	background: transparent url(images/spriteIcons.png) no-repeat -4px 6px;
+}
+
+.oneui .gridx .gridxHeader .dijitToolbar .gridxQuickFilterDropDownButton .dijitButtonNode {
+	border: none;
+	background: none;
+	padding: 0;
+}
+
+/* oneui specific a11y fix - move to filter_rtl.css in the future*/
+.oneui .gridxRtl .gridxQuickFilterTextBox,
+.oneui .gridxRtl .gridxQuickFilterDropDownButton,
+.oneui .gridxRtl .gridxQuickFilterButton {
+	float: left;
+}

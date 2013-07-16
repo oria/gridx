@@ -1,0 +1,82 @@
+/*
+ * Licensed Materials - Property of IBM
+ * (C) Copyright IBM Corp. 2010, 2012 All Rights Reserved
+ * US Government Users Restricted Rights - Use, duplication or
+ * disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+
+/* pagination bar */
+.oneui .gridxPager {
+	background: transparent;
+	padding: 0 7px;
+	height: 32px;
+	border: none;
+}
+
+.oneui .gridxPagerInner {
+	height: 100%;
+}
+
+.oneui .gridxPagerNodeFocus {
+	border: 1px dotted darkblue;
+}
+
+.oneui .gridxPagerDescription{
+	font: italic 12px Georgia;
+	color: #777;
+}
+
+.oneui .gridxPager .gridxPagerStepper {
+	text-align: center;
+}
+
+.oneui .gridxPagerStepperBtn,	
+.oneui .gridxPagerSizeSwitchBtn {
+	margin: 0 5px;
+	font: normal 12px arial;
+	color: #00649d;
+}
+
+.oneui .gridxPagerStepperBtn:focus,
+.oneui .gridxPagerSizeSwitchBtn:focus {
+	outline: 1px dotted darkblue;
+}
+
+.oneui .gridxPagerSizeSwitchBtn:last-child {
+	margin-right: 0;
+}
+
+.oneui .gridxPagerStepperBtnHover,
+.oneui .gridxPagerSizeSwitchBtnHover {
+	text-decoration: underline;
+	color: #05386b;
+}
+
+.oneui .gridxPagerStepperBtnActive,
+.oneui .gridxPagerSizeSwitchBtnActive {
+	font: bold 12px arial;
+	color: #222;
+}
+
+.oneui .gridxPagerSizeSwitchSeparator {
+	color: #666;
+}
+
+/*DD*/
+.oneui .gridxPager .gridxPagerSizeSwitchDD {
+	text-align: right;
+}
+
+.oneui .gridxPager .gridxPagerStepperDD {
+	text-align: center;
+}
+
+.oneui .gridxPager .gridxPagerLabel {
+	font: italic 12px Georgia;
+	color: #777;
+	margin: 0 5px;
+}
+
+.oneui .gridxGotoPageDialog {
+	width: 300px;
+}

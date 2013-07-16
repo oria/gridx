@@ -1,0 +1,44 @@
+/*
+ * Licensed Materials - Property of IBM
+ * (C) Copyright IBM Corp. 2010, 2012 All Rights Reserved
+ * US Government Users Restricted Rights - Use, duplication or
+ * disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+ */
+
+/* row select */
+.oneui .gridx .gridxRowSelected .gridxCell {
+	border-top-color: #bbb;
+	background: none;
+	background-color: transparent;
+}
+
+.oneui .gridx .gridxRowSelected:first-child .gridxCell {
+	border-top-color: transparent;
+}
+
+.oneui .gridxRowSelected + .gridxRow .gridxCell {
+	border-top-color: #bbb;
+}
+
+.oneui .gridx .gridxRowSelected .gridxRowTable {
+	background-color: #ddf2f9;
+}
+
+/* column select */
+.oneui .gridx .gridxRow .gridxColumnSelected {
+	background-color: #ddf2f9;
+}
+
+/* cell select */
+.oneui .gridx .gridxRow .gridxCellSelected {
+	background-color: #ddf2f9;
+}
+
+/* Indirect Select */
+.oneui .gridxIndirectSelectionCheckBox {
+	margin: 0;
+}
+
+.oneui .gridx .gridxHeader .gridxRowHeaderHeader .gridxHeaderCellFocus {
+	border-color: transparent;
+}

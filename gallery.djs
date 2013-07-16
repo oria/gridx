@@ -4,133 +4,10 @@
   <link rel="stylesheet" href="css/960/reset.css" />
   <link rel="stylesheet" href="css/960/text.css" />
   <link rel="stylesheet" href="css/960/960.css" />
+  <link rel="stylesheet" href="css/common.css" />
 
   <style>
-    body {
-      color: #666;
-      font-family: arial;
-      font-size: 12px;
-      background: url(images/header_bg.png) 0 0 repeat-x;
-      text-align: center;
-    }
-    div.container_12 {
-      text-align: left;
-    }
-    h2 {
-      font-size: 14px;
-      padding: 3px;
-      border-bottom: 1px solid #ddd;
-      margin: 0;
-    }
-    div{
-      
-      margin: 5px 0;
-    }
-    
-    ul,li {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    
-    li {
-      padding: 3px;
-      
-    }
-    
-    li a {
-      color: #666;
-      text-decoration: none;
-    }
-    
-    .logo {
-    	padding: 20px 0 0 0;
-    	margin-top: 10px;
-    	margin-bottom: 40px;
-    }
-    
-    .search {
-      text-align: right;
-      margin-top:20px;
-    }
-    
-    .search input {
-      border: 1px solid #ddd;
-      width: 200px;
-      background: #fff url(images/icon_search.png) 178px 4px no-repeat;
-      color: #777;
-      padding: 3px;
-      border-radius: 3px;
-      
-    }
-    .menu {
-      text-align: right;
-      padding: 3px 0;
-      margin-top: 10px;
-    }
-    
-    .menu a {
-      font-size: 14px;
-      font-weight: bold;
-      color: #888;
-      text-decoration: none;
-      margin-left: 15px;
-      text-shadow: 1px 1px 1px #fff;
-    }
-    
-    .menu a.current
-    ,.menu a:hover {
-      color: #f90;
-    }
 
-    .summary {
-      margin-bottom: 20px;
-    }
-    .summary img {
-      margin: 30px;
-    }
-    
-    .button {
-    	font-size: 12px;
-    	color: #555;
-    	padding: 4px 16px;
-    	margin-right: 10px;
-    	cursor: pointer;
-    	text-decoration: none;
-    	
-    	/*From OneUI*/
-    	background-color: #F4F4F4;
-		background-image: -moz-linear-gradient(top, #F4F4F4, #DBDBDB);
-		background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#F4F4F4),to(#DBDBDB));
-		background-image: -webkit-linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
-		background-image: -o-linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
-		background-image: -ms-linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
-		background-image: linear-gradient(top, #F4F4F4 0%,#DBDBDB 100%);
-		border: 1px solid #C3C3C3;
-		-moz-border-radius: 3px;
-		-webkit-border-radius: 3px;
-		border-radius: 3px;
-		-webkit-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
-		-moz-box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
-		box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.1);
-		text-shadow: 0px 1px 0px white;
-		font-weight: bold;
-    }
-    
-    .button:hover {
-		-webkit-transition-duration: 0.2s;
-		-moz-transition-duration: 0.2s;
-		transition-duration: 0.2s;
-		background-color: #E5E5E5;
-		background-image: -moz-linear-gradient(top, #FEFEFE, #CCC);
-		background-image: -webkit-gradient(linear,0% 0%,0% 100%,from(#FEFEFE),to(#CCC));
-		background-image: -webkit-linear-gradient(top, #FEFEFE 0%, #CCC 100%);
-		background-image: -o-linear-gradient(top, #FEFEFE 0%, #CCC 100%);
-		background-image: -ms-linear-gradient(top, #FEFEFE 0%, #CCC 100%);
-		background-image: linear-gradient(top, #FEFEFE 0%, #CCC 100%);
-		border: 1px solid -moz-linear-gradient(top, #FDFDFD, #E4E4E4);
-		border: 1px solid -webkit-gradient(linear,0% 0%,100% 100%,from(#FDFDFD),to(#E4E4E4));
-    }
     
     .button-demo {
       background-color: #008ABF;
@@ -206,30 +83,50 @@
     .gallery-item .button {
     }
     
-    .footer {
+    
+    .grid_12 h1 {
+      background: #eee;
+      color: #45A29B;
+      font-family: "DOSIS", sans-serif;
+      padding: 5px 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .grid_12.demosHead {
+        margin-top: 15px;
+    }
+
+    .demoLink {
       text-align: center;
-      border-top: 1px solid #ddd;
-      padding: 5px 0;
-      margin-top: 30px;
-      color: #999;
-      font-weight: bold;
     }
-    
-    
-    .footer a{
-      margin: 10px;
-      color: #999;
-      text-decoration: none;
+
+    .demoLink img {
+        width: 280px;
+        height: 208px;
+        -webkit-box-shadow: #999 3px 3px 3px;
+        -moz-box-shadow: #999 3px 3px 3px;
+        box-shadow: #999 3px 3px 3px;
     }
-    
-    .footer a.git-link {
-      color: #2175bc;
+    .demoLink h2 {
+        padding: 15px;
     }
-    
-    .grid_3 {
-    
+    .demoLink a {
+        display: block;
+        color: #666;
+        text-decoration: none;
     }
-    
+    .demoLink a:hover {
+        text-decoration: underline;
+    }
+
+    #linkTop {
+        text-decoration: none;
+        color: #555;
+
+    }
+    #linkTop:hover {
+        text-decoration: underline;
+    }
+
   </style>
   
   <style type="text/css">
@@ -239,9 +136,34 @@
 </head>
 
 <body>
-  <div class="container_12" style="background: none;">
+    <a name="top"></a>
+  <div class="container_12">
     {{header|safe}}
-    
+    <div class="grid_12 demosHead">
+        <h1>DEMOS</h1>
+    </div>
+    <div class="grid_4 demoLink">
+        <a href="demos/demo_features.html">
+            <img src="images/demo_features.png"/>
+            <h2>Powerful features</h2>
+        </a>
+    </div>
+    <div class="grid_4 demoLink">
+        <a href="demos/demo_style.html">
+            <img src="images/demo_style.png"/>
+            <h2>Custom look &amp; feel</h2>
+        </a>
+    </div>
+    <div class="grid_4 demoLink">
+        <a href="demos/demo_dynamic.html">
+            <img src="images/demo_store.png"/>
+            <h2>Dynamical store</h2>
+        </a>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_12">
+        <h1>GALLERY</h1>
+    </div>
     <div class="grid_3">
     	<div id="gallery-nav">
     		<ul>
@@ -304,6 +226,7 @@
     {{footer|safe}}
     
   </div>
+  <a href="#top" style="position: fixed; right: 10px; bottom: 10px;" id="linkTop">Go Top</a>
 </body>
 
 </html>

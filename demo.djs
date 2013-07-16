@@ -11,7 +11,19 @@
 <body class='claro'>
   <div class="container_12">
     {{header|safe}}
-    
+    <div class="grid_4">
+        <img src="images/gallery/editableCell.jpg"/>
+        <h2>Powerful Features</h2>
+    </div>
+    <div class="grid_4">
+        <img src="images/gallery/editableCell.jpg"/>
+        <h2>Powerful Features</h2>
+    </div>
+    <div class="grid_4">
+        <img src="images/gallery/editableCell.jpg"/>
+        <h2>Powerful Features</h2>
+    </div>
+    <div class="clear"></div>
     <div class="grid_12" style="padding-left: 120px;">
     	<div style="padding: 5px; margin-right: 240px; margin-bottom: 20px; line-height: 150%;">
     		This is a simple GridX demo which demostrates some key features of GridX, such as: Virtual Scrolling, Sorting, Column Resizer, Selection, Filter etc.
