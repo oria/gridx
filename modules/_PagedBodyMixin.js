@@ -214,7 +214,9 @@ define([
 				}else{
 					en.innerHTML = '';
 				}
-				t.onUnrender();
+				if(!t._skipUnrender){
+					t.onUnrender();
+				}
 				array.forEach(renderedRows, t.onAfterRow, t);
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 					t.onRender(start, count);
@@ -231,7 +233,9 @@ define([
 				n.innerHTML = '';
 				en.innerHTML = t.arg('emptyInfo', nls.emptyInfo);
 				en.style.zIndex = 1;
-				t.onUnrender();
+				if(!t._skipUnrender){
+					t.onUnrender();
+				}
 				t.onEmpty();
 				t.model.free();
 			}

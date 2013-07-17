@@ -4,8 +4,7 @@ define([
 ], function(Store, MockServerStore){
 
 return function(args){
-	var data = args.maxLevel ? args.dataSource.getData(args.maxLevel, args.maxChildrenCount) :
-		args.dataSource.getData(args.size);
+	var data = args.dataSource.getData(args);
 	var store = new (args.isAsync ? MockServerStore : Store)({
 		data: data
 	});

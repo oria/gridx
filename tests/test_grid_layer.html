@@ -9,13 +9,6 @@
 			width: 800px;
 			height: 300px;
 		}
-		.gridxSlideRefresh {
-			transition: left 1s;
-			-webkit-transition: left 1s;
-			background: #fff;
-			border-left: 1px solid #dbdbdb;
-			border-right: 1px solid #dbdbdb;
-		}
 		.hasParent {
 		}
 		.hasChildren {
@@ -32,11 +25,13 @@
 	<h2>All expandoes in one column, sync store</h2>
 	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Async",
-		store: storeAsync,
+		store: store,
 		structure: layout1,
 		paginationBarSizes: [1, 2, 0],
 		selectRowTriggerOnCell: false,
 		vScrollerTouch: true,
+		focusEnabled: false,
+		bodyRowHoverEffect: false,
 		modules: mods
 	'></div>
 </body>

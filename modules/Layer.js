@@ -25,6 +25,8 @@ define([
 
 		down: function(id){
 			if(this.model.hasChildren(id) && this.model.parentId(id) === this.model.layerId()){
+				this._paging = this.grid.view.paging;
+				this.grid.view.paging = 0;
 				this.model.setLayer(id);
 				this._slideDown();
 			}
@@ -32,6 +34,9 @@ define([
 
 		up: function(){
 			if(this.model.isId(this.model.layerId())){
+				//FIXME
+				this._paging = this.grid.view.paging;
+				this.grid.view.paging = 0;
 				this.model.layerUp();
 				this._slideUp();
 			}
@@ -46,6 +51,7 @@ define([
 				mainNode.removeChild(tmpBn);
 				domClass.remove(tmpBn, 'gridxSlideRefresh');
 				domClass.remove(bn, 'gridxSlideRefresh');
+				bn.style.zIndex = '';
 				for(var i = 0; i < tmpBn.childNodes.length; ++i){
 					var rowId = tmpBn.childNodes[i].getAttribute('rowid');
 					grid.body.onUnrender(rowId);
@@ -73,6 +79,7 @@ define([
 			tmpBn.style.zIndex = 0;
 			grid.body._skipUnrender = 1;
 			grid.body.refresh().then(function(){
+				grid.view.paging = t._paging;
 				setTimeout(function(){
 					domClass.add(bn, 'gridxSlideRefresh');
 					domClass.add(tmpBn, 'gridxSlideRefresh');
@@ -81,7 +88,7 @@ define([
 					setTimeout(function(){
 						t._onTransitionEnd();
 					}, 1000);
-				}, 0);
+				}, 10);
 			});
 		},
 
@@ -103,6 +110,7 @@ define([
 			bn.style.zIndex = 0;
 			grid.body._skipUnrender = 1;
 			grid.body.refresh().then(function(){
+				grid.view.paging = t._paging;
 				setTimeout(function(){
 					domClass.add(bn, 'gridxSlideRefresh');
 					domClass.add(tmpBn, 'gridxSlideRefresh');

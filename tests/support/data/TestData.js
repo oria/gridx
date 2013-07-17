@@ -40,8 +40,8 @@ define([], function(){
 			seed = 9973;
 		},
 
-		getData: function(size){
-			size = size === undefined ? 100 : size;
+		getData: function(args){
+			var size = args.size === undefined ? 100 : args.size;
 			var data = {
 				identifier: 'id', 
 				label: 'id', 

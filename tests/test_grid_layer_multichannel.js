@@ -17,9 +17,9 @@ require([
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		maxLevel: 4,
-		maxChildrenCount: 10,
-		minChildrenCount: 10
+		maxLevel: 3,
+		maxChildrenCount: 20,
+		minChildrenCount: 0
 	});
 	store.hasChildren = function(id, item){
 		return item && store.getValues(item, 'children').length;
@@ -109,22 +109,29 @@ require([
 //        modules.Pagination,
 //        modules.PaginationBar,
 //        modules.ColumnResizer,
-		modules.ExtendedSelectRow,
+//        modules.ExtendedSelectRow,
 		modules.CellWidget,
 //        modules.Edit,
-		modules.IndirectSelectColumn,
+//        modules.IndirectSelectColumn,
+		modules.SummaryBar,
 //        modules.SingleSort,
 //        modules.VirtualVScroller,
 //        modules.MultiChannelScroller,
+		modules.TouchVScroller,
+		modules.AutoPagedBody,
 		Layer
 	];
 
 	Deferred.when(parser.parse(), function(){
-		grid1.connect(grid1, has('ios') || has('android') ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
+		grid.connect(window, 'onresize', function(){
+			alert('resize');
+			grid.resize();
+		});
+		grid.connect(grid, has('ios') || has('android') ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
 			if(e.columnId == 'prevLevel' && e.cellNode.childNodes.length){
-				grid1.layer.up();
+				grid.layer.up();
 			}else if(e.columnId == 'nextLevel' && e.cellNode.childNodes.length){
-				grid1.layer.down(e.rowId);
+				grid.layer.down(e.rowId);
 			}
 		});
 	});
