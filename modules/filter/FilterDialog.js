@@ -25,6 +25,7 @@ define([
 		cssClass: 'gridxFilterDialog',
 		grid: null,
 		autofocus: false,
+		
 		postCreate: function(){
 			this.inherited(arguments);
 			this.i18n = this.grid.filterBar._nls;
@@ -113,7 +114,7 @@ define([
 			}catch(e){}
 			css.toggle(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
 			
-			this.connect(fp, 'onChange', '_updateButtons');
+			fp.connect(fp, 'onChange', lang.hitch(this, '_updateButtons'));
 			this._updateButtons();
 			this._updateAccordionContainerHeight();
 			//scroll to bottom when add a rule
@@ -171,7 +172,6 @@ define([
 			ac.resize();
 		},
 		uninitialize: function(){
-			console.log('bbb');
 			this.inherited(arguments);
 		}
 		
