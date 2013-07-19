@@ -76,5 +76,32 @@
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>
+    <h2>FilterBar and QuickFilter with converted column value</h2>
+	<div id='grid4' jsid='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout_w_converter,
+		selectRowTriggerOnCell: true,
+    	filterBarFilterData: {
+			type: "all",
+			conditions: [
+				{
+					colId: "Length",
+					condition: "contain",
+					type: "Text",
+					value: "TEST"
+				}
+			]
+		},        
+		modules: [
+			"gridx/modules/Filter",
+			"gridx/modules/filter/FilterBar",
+			"gridx/modules/filter/QuickFilter",
+			"gridx/modules/SingleSort",
+			"gridx/modules/extendedSelect/Row",
+			"gridx/modules/IndirectSelectColumn",
+			"gridx/modules/VirtualVScroller"
+		]
+	'></div>
 </body>
 </html>
