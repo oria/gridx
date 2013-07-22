@@ -49,6 +49,9 @@ return declare([], {
 				this._justReset = 0;
 				return this.getPack();
 			}
+			if(this.maxPackSize === 0){
+				break;
+			}
 			var p = this.pstack[this.pstack.length - 1];
 			var childP = this.cpstack[this.pstack.length - 1];
 			if(childP === undefined){

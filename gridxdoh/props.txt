@@ -9,16 +9,11 @@ moveFieldDescending
 bodyLoadingInfo
 bodyEmptyInfo
 bodyLoadFailInfo
-bodyRowHoverEffect
-bodyStuffEmptyCell
 bodyRenderWholeRowOnSet
 bodyCompareOnSet
 columnWidthDefault
 columnWidthAutoResize
 cellWidgetBackupCount
-columnResizerMinWidth
-columnResizerDetectWidth
-columnResizerStep
 autoScrollEnabled
 autoScrollVertical
 autoScrollHorizontal
@@ -44,7 +39,6 @@ persistKey
 persistPut
 persistGet
 treeNested
-treeExpandoPadding
 treeExpandLevel
 treeClearOnSetStore
 vScrollerBuffSize
@@ -64,7 +58,6 @@ dndRowEnabled
 dndRowCanRearrange
 dndRowCopyWhenDragOut
 dndRowAvatar
-selectRowTriggerOnCell
 selectRowTreeMode
 selectRowUnselectable
 selectRowEnabled
@@ -88,12 +81,23 @@ filterBarItemsName
 filterBarConditions
 paginationBarVisibleSteppers
 
+============================By Hand Only
+bodyRowHoverEffect
+bodyStuffEmptyCell
+columnResizerMinWidth
+columnResizerDetectWidth
+columnResizerStep
+treeExpandoPadding
+selectRowTriggerOnCell
 
 
 
 
 
-===========================
+
+
+
+===========================Auto Tested
 autoHeight
 autoWidth
 headerHidden

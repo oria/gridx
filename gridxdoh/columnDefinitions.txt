@@ -1,0 +1,15 @@
+id
+name
+field
+formatter
+decorator
+width
+minWidth
+editable
+alwaysEditing
+widgetsInCell
+setCellValue
+expandLevel
+filterable
+dataType
+dataTypeArgs
