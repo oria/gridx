@@ -215,7 +215,7 @@
     		<h4>{{m.name}}</h4>
     		<div class="description">{{m.description}}</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#{{m.id}}">API Reference</a>
-    		<a class="button button-demo" href="gridx/demos/{{m.demo}}">See the Demo</a>
+    		<a class="button button-demo" href="demos/{{m.demo}}">See the Demo</a>
     		<div class="clear"></div>
     	</div>
     	{% endfor %}

@@ -42,6 +42,7 @@ define([
 	        			id: 'singleSort'
 	        			,name: 'Single Sort'
 	        			,description: 'This module provides the single column sorting functionality for grid.'
+	        			,demo: 'sort.html'
 	        		}
 	        	]
 	        	,basic: [
@@ -52,20 +53,19 @@ define([
 							The editing mode means there will be an editable widget appearing in the grid cell.\
 							This implementation also covers "alwaysEditing" mode for grid columns,\
 							which means all the cells in this column are always in editing mode.'
-	        			,demo: 'test_grid_edit.html'
+	        			,demo: 'edit.html'
 	        		},{
 	        			id: 'pagination'
 	        			,name: 'Pagination'
 	        			,description: 'This module does not include any UI buttons for pagination, so that various\
 							kinds of pagination UI implementations can benifit from this module.'
-	        			,demo: 'test_grid_paginationBar.html'
 	        		},{
 	        			id: 'simpleSelect'
 	        			,name: 'Simple Select'
 	        			,description: 'There are three modules for simple row/column/cell select.\
 			    			These modules only allow to select a single row/column/cell in one time.\
 			    			If need multi select, use extendedSelect instead.'
-	        			,demo: 'test_grid_select.html'
+	        			,demo: 'select.html'
 	        		},{
 	        			id: 'indirectSelect'
 	        			,name: 'Indirect Select'
@@ -74,17 +74,21 @@ define([
 							(which means the "selectByIndex" method exists). If so, a "select all" checkbox can be provided \
 							in the header node of the row header column.'
 	        		},{
+	        			id: 'unselectableRow'
+	        			,name: 'Unselectable Row'
+	        			,description: 'This module allows to disable selection for some of rows.'
+	        		},{
 	        			id: 'rowDnd'
 	        			,name: 'Row DnD'
 	        			,description: 'This module provides an implementation of row drag & drop. '
 							+ 'It supports row reordering within grid, dragging out of grid, and dragging into grid.'
-	        			,demo: 'test_grid_dndrow_nongrid_source.html'
+	        			,demo: 'dnd_rearrange.html'
 	        		},{
 	        			id: 'columnDnd'
 	        			,name: 'Column DnD'
 	        			,description: 'This module provides an implementation of column drag & drop. '
 							+ 'It supports column reordering within grid, dragging out of grid, and dragging into grid.'
-	        			,demo: 'test_grid_dnd_rearrange.html'
+	        			,demo: 'dnd_rearrange.html'
 	        		},{
 	        			id: 'filter'
 	        			,name: 'Filter'
@@ -117,10 +121,16 @@ define([
 	        			,description: 'This module provides the API to print grid contents or provide print preview'
 	        			,demo: 'test_grid_exporter.html'
 	        		},{
+	        			id: 'groupHeader'
+	        			,name: 'Group Header'
+	        			,description: 'This module allows to show group headers, which means a hierarchical structure of the header'
+	        			,demo: 'groupHeader.html'
+	        		},{
 	        			id: 'nestedSort'
 	        			,name: 'Nested Sort'
 	        			,description: 'This module provides the UI to sort the grid by multi columns.' 
 	        				+ ' Each column header shows a number indicating the sort order.'
+	        			,demo: 'sort.html'
 	        		},{
 	        			id: 'columnLock'
 	        			,name: 'Column Lock'
@@ -145,7 +155,7 @@ define([
 							+ ' There are two kind of Tree Grid: columnar or nested, it will be indicated by'
 							+ ' the argument `type`, and the layout of the TreeGrid will be defined by extended'
 							+ ' structure` argument.'
-	        			,demo: 'test_grid_tree.html'
+	        			,demo: 'tree.html'
 	        		}
 	        	]
 	        	,mobile: [
@@ -160,7 +170,7 @@ define([
 	        	]
 	        };
 	        context.all = context.core.concat(context.basic).concat(context.advanced).concat(context.mobile);
-	        context.all.forEach(function(m){if(!m.demo)m.demo = 'test_grid_' + m.id + '.html';});
+	        context.all.forEach(function(m){if(!m.demo)m.demo = '' + m.id + '.html';});
 	        return context;
 	    }
     });

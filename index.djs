@@ -154,15 +154,16 @@
   
     <div class="clear"></div>
     
-    <div class="grid_4 blockLink blockLink1">
-      <a href="./playground.html">
-      <h2>Playground</h2>
-      <p>Play GridX with interactive user interface to learn how to customize GridX with various modules and stores.
-    </div>
+    
     <div class="grid_4 blockLink blockLink2">
       <a href="./gallery.html">
       <h2>Demos &amp; Gallery</h2>
       <p>See the demos for typical GridX customization and look for a module usage from the gallery.</p>
+    </div>
+    <div class="grid_4 blockLink blockLink1">
+      <a href="./playground.html">
+      <h2>Playground</h2>
+      <p>Play GridX with interactive user interface to learn how to customize GridX with various modules and stores.
     </div>
     <div class="grid_4 blockLink blockLink3">
       <a href="https://github.com/oria/gridx/wiki">
