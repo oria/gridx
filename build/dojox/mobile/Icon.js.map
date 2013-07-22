@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Icon.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kHAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAwBC,CAAxB,CAAkCC,CAAlC,CAAgDC,CAAhD,QAKKJ,EAAA,2EA8COK,QAAAA,CAAoBC,CAApBD,CAAsCE,CAAtCF,EAOTC,CAPSD,EAQXJ,CAAAO,MAAA,MAAiBF,CAAjB,CAEDG,aAVYJ,CAUGE,CAVHF,EAUWF,CAAAO,OAAA,CAAoBC,QAApB,CACvBP,EAAAQ,WAAA,CAAqBC,SAArB,CAAgCC,YAAhC,MAAoDC,QAApD,CAA8DN,YAA9D,CAXYJ,CA9CP,EALL,CANH;",
+"sources":["Icon.js.uncompressed.js"],
+"names":["define","declare","lang","domClass","domConstruct","iconUtils","constructor","args","node","mixin","domNode","create","tag","createIcon","icon","iconPos","alt"]
+}

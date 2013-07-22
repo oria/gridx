@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"HTML5.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,wCAA+C,QAAA,GAC9CC,OAAAC,KAAA,sIAD8C,UAA/C;",
+"sources":["HTML5.js.uncompressed.js"],
+"names":["define","console","warn"]
+}

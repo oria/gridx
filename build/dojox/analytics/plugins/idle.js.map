@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"idle.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,gCAAuC,qFAAA,MAAA,KAAvC,CAEG,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAoBC,CAApB,CAA4BC,CAA5B,CAAmCC,CAAnC,CAA2CC,CAA3C,QAGMJ,EAAAK,QAAAC,KAHN,CAGyB,IAAK,QAAA,GAC/BC,YAD+B,CAChBR,CAAAS,MAAA,CAAWR,CAAX,kBACfS,cAF+B,CAEfR,CAAA,SAFe,KAG/BK,UAH+B,GAK/BI,aAL+B,CAKhBC,QAAAA,GACdJ,YAAA,UACAD,UAFcK,IAMfT,EAAA,CAAMH,CAAAS,MAAA,MAAiB,QAAA,WAClBI,kDADkB,CAEdC,GAFc,CAERA,CAFQ,CAEJD,CAAAE,OAFI,CAEcD,CAFd,GAGrBV,CAAAY,MAAA,CAAaX,CAAAY,IAAb,CAAwBJ,CAAA,CAAWC,CAAX,CAAxB,CAAsCd,CAAAS,MAAA,MAAiB,QAAA,CAASS,CAAT,EACnDX,SADmD,EAErDA,SAFqD;GAGrDC,YAAA,YAHqD,EAMrDW,YAAA,CAAaC,cAAb,CAFAA,eAJqD,CAIpCC,UAAA,CAAWrB,CAAAS,MAAA,gBAAX,CAAuCC,aAAvC,CAJoC,CAAjB,CAAtC,IAHqB,CAAjB,CAAN,CAX+B,CAH9B,CAFH;",
+"sources":["idle.js.uncompressed.js"],
+"names":["define","lang","dxa","config","ready","aspect","window","plugins","idle","addData","hitch","idleTime","setIdle","this.setIdle","idleResets","i","length","after","doc","e","clearTimeout","idleTimer","setTimeout"]
+}

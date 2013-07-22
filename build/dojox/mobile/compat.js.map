@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"compat.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,wDAGG,QAAA,CAASC,CAAT,CAAeC,CAAf,MAIEC,EAAKF,CAAAG,UAAA,mBAMJF,EAAA,UAVH,MAUoBA,CAAA,MAVpB,EAYDG,OAAA,0BAZC,OAoDKF,EApDL,CAHH;",
+"sources":["compat.js.uncompressed.js"],
+"names":["define","lang","has","dm","getObject","require"]
+}

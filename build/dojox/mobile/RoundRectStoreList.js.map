@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"RoundRectStoreList.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,gGAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAiCC,CAAjC,QAKKF,EAAA,oCAA4CC,CAA5C,CAA2DC,CAA3D,KALL,CAJH;",
+"sources":["RoundRectStoreList.js.uncompressed.js"],
+"names":["define","declare","RoundRectList","StoreListMixin"]
+}

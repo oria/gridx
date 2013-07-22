@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"CalendarViews.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oDAEG,QAAA,CAASC,CAAT,EACFA,CAAAC,aAAA,8BADE,UAFH;",
+"sources":["CalendarViews.js.uncompressed.js"],
+"names":["define","kernel","experimental"]
+}

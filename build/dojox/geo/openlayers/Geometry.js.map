@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Geometry.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,wDAEG,QAAA,CAASC,CAAT,QAEKA,EAAA,+EAoBOC,QAAAA,CAASC,CAATD,EAMZE,gBANYF,CAMOC,CANPD,CApBP,EAFL,CAFH;",
+"sources":["Geometry.js.uncompressed.js"],
+"names":["define","declare","constructor","coords","coordinates"]
+}

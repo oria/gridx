@@ -1,0 +1,4 @@
+//>>built
+define("dojox/help/console",["dojo","dijit","dojox","dojo/require!dojox/help/_base"],function(b,m,d){b.provide("dojox.help.console");b.require("dojox.help._base");b.mixin(d.help,{_plainText:function(b){return b.replace(/(<[^>]*>|&[^;]{2,6};)/g,"")},_displayLocated:function(d){b.forEach(d,function(b){})},_displayHelp:function(l,e){if(l)for(var f="Help for: "+e.name,a=0;a<f.length;a++);else if(e)for(f in e)if(a=e[f],!("returns"==f&&"Function"!=e.type&&"Constructor"!=e.type)&&a&&(!b.isArray(a)||a.length))if(a=
+b.isString(a)?d.help._plainText(a):a,"returns"==f)b.map(a.types||[],"return item.title;").join("|"),a.summary&&d.help._plainText(a.summary);else if("parameters"==f)for(var h=0,g;g=a[h];h++){b.map(g.types,"return item.title").join("|");var c="";g.optional&&(c+="Optional. ");g.repating&&(c+="Repeating. ");if(c+=d.help._plainText(g.summary))for(var c="  - "+c,k=0;k<g.name.length;k++)c=" "+c}}});d.help.init()});
+//@ sourceMappingURL=console.js.map

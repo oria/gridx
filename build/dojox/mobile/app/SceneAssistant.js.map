@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"SceneAssistant.js",
+"lineCount":2,
+"mappings":"A,SACAA,MAAA,4DAAoE,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EACpEF,CAAAG,QAAA,mCACAH,EAAAI,aAAA,mCAEAJ,EAAAK,QAAA,qDAIcC,QAAAA,IAJd,OAQQC,QAAAA,IARR,UAcWC,QAAAA,CAASC,CAATD,GAdX,YAwBaE,QAAAA,IAxBb,SA+BUC,QAAAA,OAEJC,EACHZ,CAAAa,MAAA,mBAA2BC,kBAA3B,CAAAC,IAAA,CAAmDd,CAAAe,OAAnD,CACDhB,EAAAiB,QAAA,CAAaL,CAAb,CAAuB,QAAA,CAASM,CAAT,EAAiBA,CAAAC,iBAAA,EAAjB,CAAvB,CAEAC,gBAAA,EANQT,CA/BV,SAwCUU,QAAAA,CAASC,CAATD,CAAcE,CAAdF,CAAsBG,CAAtBH,EACJI,cADIJ;CAEPI,cAFOJ,IAIRI,eAAAC,KAAA,CAAoB1B,CAAAqB,QAAA,CAAaC,CAAb,CAAkBC,CAAlB,CAA0BC,CAA1B,CAApB,CAJQH,CAxCV,YA+CaD,QAAAA,GACXpB,CAAAiB,QAAA,CAAaQ,cAAb,CAA6BzB,CAAAoB,WAA7B,CACAK,eAFWL,IA/Cb,EAJoE,CAApE;",
+"sources":["SceneAssistant.js.uncompressed.js"],
+"names":["define","dojo","dijit","dojox","provide","experimental","declare","constructor","setup","activate","params","deactivate","destroy","children","query","containerNode","map","byNode","forEach","child","destroyRecursive","disconnect","connect","obj","method","callback","_connects","push"]
+}

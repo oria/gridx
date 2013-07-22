@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Midwest.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,+DAAwE,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EACvEA,CAAAC,QADuE,CACxD,IAAIF,CAAJ,8DADwD,OAUhEC,EAAAC,QAVgE,CAAxE;",
+"sources":["Midwest.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Midwest"]
+}

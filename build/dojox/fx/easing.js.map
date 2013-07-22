@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"easing.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,4EACE,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAqBC,CAArB,EACDD,CAAAE,WAAA,wEADC,OAEWH,EAAAI,UAAAC,eACZH,OAHC,CAGcA,CAHd,CADF;",
+"sources":["easing.js.uncompressed.js"],
+"names":["define","lang","kernel","easing","deprecated","getObject","fxExt"]
+}

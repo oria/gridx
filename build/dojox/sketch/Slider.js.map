@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Slider.js",
+"lineCount":3,
+"mappings":"A,SAAAA,MAAA,8HAMG,QAAA,CAASC,CAAT,EACFA,CAAAC,UAAA,aAA+BC,KAA/B,CACAF,EAAAG,QAAA,uBAAoCD,KAAAE,OAAAC,QAApC,cACcC,QAAAA,GACZC,WADYD,CACA,IAAIE,KAAAC,KAAAC,iBAAJ,kFACZH,YAAAI,SAAAC,KAAAC,MAFYP,gCAGZQ,aAAA,CAAaP,WAAb,uBACAO,aAAA,CAAaP,WAAAQ,aAAb;0BAJYT,CADd,YAOaU,QAAAA,OACPC,EAAEC,WAAAC,OAAA,EACNZ,YAAAa,KAAA,SAAyBb,WAAAc,QAAzB,CAA6CJ,CAA7C,CAA+CV,WAAAc,QAA/C,CAAoEd,WAAAe,QAApE,CAAwFL,CAAxF,CAA0FV,WAAAe,QAA1F,CAA8GL,CAA9G,CAFWD,CAPb,UAWWO,QAAAA,CAASC,CAATD,EACNC,CADMD,EACDL,WADCK,EAERL,WAAAO,KAAA,CAAiBD,CAAjB,CAFQD,CAXX,OAgBQG,QAAAA,GAENnB,WAAAa,KAAA,SAAyBb,WAAAc,QAAzB,CACAL,gBAAA,EAHMU,CAhBR,YAqBaC,QAAAA,CAASC,CAATD,EACXrB,gBAAA,EACAsB,EAAAC,SAAA,CAAWtB,WAAX,CACIqB,EAAAE,YAHOH,GAIVC,CAAAE,YAJUH,IAKVb,YAAA,CAAac,CAAb,iBALUD,EArBb,EA+BAzB,MAAAE,OAAA2B,aAAA,UAAoC7B,KAAAE,OAAA4B,OAApC,CAjCE;MAkCK9B,MAAAE,OAAA4B,OAlCL,CANH;",
+"sources":["Slider.js.uncompressed.js"],
+"names":["define","dojo","getObject","dojox","declare","sketch","_Plugin","_initButton","slider","dijit","form","HorizontalSlider","_movable","node","title","connect","sliderHandle","_zoomToFit","r","figure","getFit","attr","maximum","minimum","_setZoom","v","zoom","reset","setToolbar","t","addChild","_reset2Zoom","registerTool","Slider"]
+}

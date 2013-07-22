@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"StoreCarousel.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kFAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,QAKKF,EAAA,+BAAuCC,CAAvC,CAAiDC,CAAjD,KALL,CAJH;",
+"sources":["StoreCarousel.js.uncompressed.js"],
+"names":["define","declare","Carousel","StoreMixin"]
+}

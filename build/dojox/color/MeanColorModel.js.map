@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"MeanColorModel.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8FACC,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAuBC,CAAvB,QAEOD,EAAA,8BAAsCC,CAAtC,cAKOC,QAAAA,CAASC,CAATD,CAAqBE,CAArBF,GALP,gBAYUG,QAAAA,CAASC,CAATD,CAAcE,CAAdF,CAAmBG,CAAnBH,CAAwBI,CAAxBJ,KAYZI,CAAAC,OAZYL,GAcbM,CAdaN,GAaXI,CAAAC,OAbWL,CAcJG,CAdIH,CAcEI,CAAAC,OAdFL,KAeJI,CAAAC,OAfIL,KAgBHI,CAAA,CAAOA,CAAAC,OAAP,KAhBGL,CAgB6BI,CAAA,CAAOA,CAAAC,OAAP,GAhB7BL,IAkBJI,CAAA,CAAOG,IAAAC,MAAA,CAAWJ,CAAAC,OAAX,GAAP,CAlBIL,QAqBRM,EArBQN,CAZV,EAFP,CADD;",
+"sources":["MeanColorModel.js.uncompressed.js"],
+"names":["define","arr","declare","NeutralColorModel","constructor","startColor","endColor","computeNeutral","min","max","sum","values","length","median","Math","floor"]
+}

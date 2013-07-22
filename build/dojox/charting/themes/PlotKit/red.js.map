@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"red.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8DAAuE,QAAA,CAASC,CAAT,CAAaC,CAAb,EACtED,CAAAE,IADsE,CAC7DF,CAAAG,KAAAC,MAAA,EACTJ,EAAAE,IAAAG,MAAAC,KAFsE,CAElDN,CAAAE,IAAAK,SAAAD,KAFkD,UAGtEN,EAAAE,IAAAM,OAHsE,CAGtDP,CAAAQ,aAAA,sCAHsD,OAK/DT,EAAAE,IAL+D,CAAvE;",
+"sources":["red.js.uncompressed.js"],
+"names":["define","pk","Theme","red","base","clone","chart","fill","plotarea","colors","defineColors"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Areas.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kEACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEMD,EAAA,+BAAuCC,CAAvC,cAGOC,QAAAA,GAGZC,QAAAC,MAHYF,GAIZC,SAAAE,MAJYH,IAHP,EAFN,CADF;",
+"sources":["Areas.js.uncompressed.js"],
+"names":["define","declare","Default","constructor","opt","lines","areas"]
+}

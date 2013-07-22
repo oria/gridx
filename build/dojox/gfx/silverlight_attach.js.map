@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"silverlight_attach.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kGACE,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAAuBC,CAAvB,CAA0BC,CAA1B,EACDF,CAAAG,UAAA,mCACAJ,EAAAK,aAAA,gCAEAF,EAAAG,WAJC,CAIeC,QAAAA,CAASC,CAATD,cAQhBJ,EAAAM,cAZC,CAYkBC,QAAAA,CAASF,CAATE,cAZlB,OAoBMP,EApBN,CADF;",
+"sources":["silverlight_attach.js.uncompressed.js"],
+"names":["define","kernel","lang","g","sl","getObject","experimental","attachNode","sl.attachNode","node","attachSurface","sl.attachSurface"]
+}

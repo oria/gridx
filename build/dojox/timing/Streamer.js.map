@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Streamer.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,qCAA6C,QAAA,GAC5CC,IAAAC,aAAA,yBAD4C,OAGrCC,MAAAC,OAAAC,SAHqC,CAGbC,QAAAA,CAChBC,CADgBD,CAEhBE,CAFgBF,CAGrBG,CAHqBH,CAIrBI,CAJqBJ,CAKnBK,CALmBL,MAsB1BM,IAGJH,cAzB8BH,CAyBdG,CAzBcH,KA0B9BO,iBA1B8BP,CA0BXI,CA1BWJ,IA2B9BQ,mBA3B8BR,CA2BTC,CA3BSD,EA2BA,QAAA,CAASS,CAAT,GAC9BC,oBA5B8BV,CA4BRE,CA5BQF,EA4BE,QAAA,CAASW,CAAT,GA5BFX,KA+B1BY,EAAQ,IAAIf,KAAAC,OAAAe,MAAJ,CAAuBV,aAAvB,CAyBZW,iBAxD8Bd,CAwDXe,QAAAA,CAAkBC,CAAlBD,EAGlBZ,aAHkBY,CAGFC,CAChBJ,EAAAE,YAAA,CAAkBE,CAAlB,CAJkBD,CAOnBE,YA/D8BjB,CA+DhBkB,QAAAA,CAAoCC,CAApCD,GAEdE,WAjE8BpB,CAiEjBqB,QAAAA,wBAGFb,mBAHEa,oBAG0CX,oBAH1CW,CAIXT,CAAAQ,MAAA,EAJWC;UAOFC,MAAJ,wEAPMD,EASbE,aA1E8BvB,CA0EfwB,QAAAA,IACfC,UA3E8BzB,CA2ElB0B,QAAAA,GAGXd,CAAAa,KAAA,EAHWC,CAKZC,YAhF8B3B,CAgFhB4B,QAAAA,IAGdhB,EAAAK,OAnF8BjB,CAmFf6B,SACfjB,EAAAW,QApF8BvB,CAoFduB,YAChBX,EAAAe,OArF8B3B,CAqFf2B,WACZtB,EAtF2BL,EAuF7BM,CAAAwB,OAAA,CAAazB,CAAb,CAvF6BL,CAHa,CAA7C;",
+"sources":["Streamer.js.uncompressed.js"],
+"names":["define","dojo","experimental","dojox","timing","Streamer","dojox.timing.Streamer","input","output","interval","minimum","initialData","queue","minimumSize","inputFunction","q","outputFunction","point","timer","Timer","setInterval","this.setInterval","ms","onTick","this.onTick","obj","start","this.start","Error","onStart","this.onStart","stop","this.stop","onStop","this.onStop","tick","concat"]
+}

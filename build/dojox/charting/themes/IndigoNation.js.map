@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"IndigoNation.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oEAA6E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAG5EA,CAAAC,aAH4E,CAGtD,IAAIF,CAAJ,8DAHsD,OAYrEC,EAAAC,aAZqE,CAA7E;",
+"sources":["IndigoNation.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","IndigoNation"]
+}

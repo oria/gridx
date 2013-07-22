@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Chart2D.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iCAAwC,4JAAA,MAAA,KAAxC,CAEuE,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAAuBC,CAAvB,EACtEF,CAAAG,WAAA,4HADsE,OAE/DF,EAAAG,UAAA,iCAAgDF,CAAhD,CAF+D,CAFvE;",
+"sources":["Chart2D.js.uncompressed.js"],
+"names":["define","kernel","lang","Chart","deprecated","setObject"]
+}

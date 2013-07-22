@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Chart3D.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,sGACC,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,CAAqCC,CAArC,QAGOH,EAAA,6CAYMI,QAAAA,CAASC,CAATD,CAAeE,CAAfF,CAAuBG,CAAvBH,CAA+BI,CAA/BJ,CAAsCK,CAAtCL,EAcPM,CAdON,MAeRF,EAAAS,IAAA,CAAYN,CAAZ,aAfQD,GAgBVM,CAhBUN,CAgBCF,CAAAU,IAAA,CAAYP,CAAZ,aAhBDD,CAkBXS,wBAlBWT,CAkBeK,CAlBfL,CAkB2BK,CAlB3BL,CAkBuCM,CAlBvCN,CAZN,UAgCIU,QAAAA,GACTC,cAAA,CAAeC,SAAf,CACAC,gBAFSH,gBAhCJ,gBAqCUI,QAAAA,CAASC,CAATD,CAAeE,CAAfF,CAAoBG,CAApBH,EAIZD,eAJYC,EAKdf,CAAAmB,cAAA,CAAoBH,CAApB,CAA0BC,CAA1B,CAA+BC,CAA/B,QAAwCE,QAAxC,CAGDtB,EAAAuB,IAAA,CAAanB,SAAb,mBARea,aArCV,QAgDEO,QAAAA,CAASF,CAATE;AAOJF,CAPIE,SAOYF,CAPZE,CAQHF,QARGE,EAQSF,CARTE,GASLR,eATKQ,KAWNF,QAXME,CAWKF,CAXLE,aAhDF,eA+DSC,QAAAA,gBAMPH,QANOG,CA/DT,EAHP,CADD;",
+"sources":["Chart3D.js.uncompressed.js"],
+"names":["define","declare","domStyle","domAttr","utils","postscript","node","lights","camera","theme","direction","chartDir","has","get","chartBaseDirection","generate","inherited","arguments","isMirrored","applyMirroring","plot","dim","offsets","reverseMatrix","dir","set","setDir","isRightToLeft"]
+}

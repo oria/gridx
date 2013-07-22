@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"SpinWheel.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,2HAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAyBC,CAAzB,CAAuCC,CAAvC,QAKKH,EAAA,0BAAkCG,CAAlC,0CAWUC,QAAAA,GACfC,cAAA,CAAeC,SAAf,CACAJ,EAAAK,OAAA,qCAA2DC,YAA3D,CAFeJ,CAXV,SAgBGK,QAAAA,GACLC,aADKD,GAERE,cAFQF,CAESG,IAAAC,MAAA,CAAWL,YAAAM,aAAX,GAFTL,CAGRJ,cAAA,CAAeC,SAAf,CAHQG,EAhBH,QAsBEM,QAAAA,GACPJ,cADOI,CACUH,IAAAC,MAAA,CAAWL,YAAAM,aAAX;EACjBb,EAAAe,QAAA,CAAcC,gBAAA,EAAd,CAAkC,QAAA,CAASC,CAAT,EACjCA,CAAAH,OADiC,EACjBG,CAAAH,OAAA,EADiB,CAAlC,CAFOA,CAtBF,UA6BII,QAAAA,CAAoBC,CAApBD,CAAqCE,CAArCF,EACTd,cAAA,CAAeC,SAAf,CACGI,cAFMS,EAGRC,CAAAE,gBAAA,EAHQH,CA7BJ,EALL,CANH;",
+"sources":["SpinWheel.js.uncompressed.js"],
+"names":["define","declare","array","domConstruct","PickerBase","buildRendering","inherited","arguments","create","domNode","startup","_started","centerPos","Math","round","offsetHeight","resize","forEach","getChildren","child","addChild","widget","insertIndex","setInitialValue"]
+}

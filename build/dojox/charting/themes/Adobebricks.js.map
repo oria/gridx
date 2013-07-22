@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Adobebricks.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,mEAA4E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAC3EA,CAAAC,YAD2E,CACtD,IAAIF,CAAJ,8DADsD,OAUpEC,EAAAC,YAVoE,CAA5E;",
+"sources":["Adobebricks.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Adobebricks"]
+}

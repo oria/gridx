@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"japanese.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,8BAGC,mBAHD,aAIC,cAJD,WAKC,wBALD,gBAMC,YAND,SAOC,yBAPD,iBAQC,uBARD,WASC,uBATD,cAUC,YAVD,QAWC,uBAXD,eAYC,uBAZD,sBAaC,cAbD,UAcC,wBAdD,gBAeC,sBAfD,SAgBC,YAhBD,UAiBC,sBAjBD;AAkBC,iBAlBD,eAmBC,sBAnBD,mBAoBC,WApBD,OAqBC,wBArBD,gBAsBC,wBAtBD,uBAuBC,iBAvBD,oBAwBC,aAxBD,SAyBC,kBAzBD,kBA0BC,WA1BD,UA2BC,uBA3BD,eA4BC,uBA5BD,sBA6BC,iBA7BD,qBA8BC,eA9BD,aA+BC,YA/BD;",
+"sources":["japanese.js.uncompressed.js"],
+"names":["define"]
+}

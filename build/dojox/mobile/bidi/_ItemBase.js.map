@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_ItemBase.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,iEAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAKKD,EAAA,qBAOSE,QAAAA,CAAoBC,CAApBD,EACdE,SAAA,SAAmBD,CAAnB,CACAE,eAAAC,UAFcJ,CAEaK,QAFbL,CAEwBK,QAAA,CAASJ,CAAT,CAFxBD,CAEyCC,CAClDK,aAHSN,GAKbM,YALaN,EAITO,CAJSP,CAILQ,cAAA,EAJKR,GAKOO,CAAAE,IAAA,WALPT,CAK0BO,CAAAE,IAAA,WAL1BT,IAOdG,eAAAC,UAPcJ,CAOaD,CAAAW,sBAAA,CAA6BP,cAAAC,UAA7B,CAAuDE,YAAvD,CAPbN,CAPT,iBAgBWW,QAAAA,CAAoBL,CAApBK,MACZC,aADYD,EACKL,YADLK,GACsBL,CADtBK,CAEfT,SAAA,WAAqBI,CAArB,CAFeK,CAGfR,cAAAC,UAHeO,CAGYZ,CAAAW,sBAAA,CAA6BX,CAAAc,kBAAA,CAAyBV,cAAAC,UAAzB,CAA7B;AAAiFE,YAAjF,CAHZK,CAIZG,aAJYH,EAIKG,aAAAC,WAJLJ,EAIgCG,aAAAC,WAAA,CAAyBT,CAAzB,CAJhCK,CAhBX,cAuBQK,QAAAA,OACTC,EAAOC,cAAA,CAAeC,SAAf,CACPC,mBAAA,EAFSJ,GAGZC,CAAAI,cAHYL,YAKNC,EALMD,CAvBR,EALL,CAHH;",
+"sources":["_ItemBase.js.uncompressed.js"],
+"names":["define","declare","common","_setLabelAttr","text","_set","labelNode","innerHTML","_cv","textDir","p","getParent","get","enforceTextDirWithUcc","_setTextDirAttr","_created","removeUCCFromText","badgeObj","setTextDir","getTransOpts","opts","inherited","arguments","isLeftToRight","transitionDir"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"DataCarousel.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oGAKG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAA0BC,CAA1B,CAAoCC,CAApC,EAKFH,CAAAI,WAAA,wEALE,OAMKH,EAAA,8BAAsCC,CAAtC,CAAgDC,CAAhD,KANL,CALH;",
+"sources":["DataCarousel.js.uncompressed.js"],
+"names":["define","kernel","declare","Carousel","DataMixin","deprecated"]
+}

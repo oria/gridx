@@ -1,0 +1,4 @@
+//>>built
+define("dojox/mobile/dh/HtmlContentHandler","dojo/_base/kernel dojo/_base/array dojo/_base/declare dojo/_base/Deferred dojo/dom-class dojo/dom-construct dijit/registry ../lazyLoadUtils".split(" "),function(n,p,f,g,h,k,l,m){return f("dojox.mobile.dh.HtmlContentHandler",null,{parse:function(a,d,e){this.execScript&&(a=this.execScript(a));var b=k.create("div",{innerHTML:a,style:{visibility:"hidden"}});d.insertBefore(b,e);return g.when(m.instantiateLazyWidgets(b),function(){var c;i=0;for(len=b.childNodes.length;i<
+len;i++){var a=b.firstChild;!c&&1===a.nodeType&&(c=l.byNode(a));d.insertBefore(b.firstChild,e)}d.removeChild(b);return!c||!h.contains(c.domNode,"mblView")?null:c.id})}})});
+//@ sourceMappingURL=HtmlContentHandler.js.map

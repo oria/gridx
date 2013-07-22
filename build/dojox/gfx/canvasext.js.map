@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"canvasext.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8CAGC,QAAA,CAASC,CAAT,CAAcC,CAAd,MAUIC,EAAMF,CAAAG,UAAND,GAEJD,EAAAG,QAAAC,OAAA,eAEeC,QAAAA,CAASC,CAATD,0BAQZE,YAAA,IARYF,OAUNG,aAAAC,WAAA,MAAAJ,aAAA,CAA2CC,CAAAI,EAA3C,CAAmDJ,CAAAK,EAAnD,CAA2DL,CAAAM,MAA3D,CAAuEN,CAAAO,OAAvE,CAVMR,CAFf,YAeaI,QAAAA,SAGJD,aAAAC,WAAA,MAHIA,CAfb,EAZA,OAkCOR,EAlCP,CAHD;",
+"sources":["canvasext.js.uncompressed.js"],
+"names":["define","gfx","canvas","ext","canvasext","Surface","extend","getImageData","rect","_render","rawNode","getContext","x","y","width","height"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ColorModel.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qDACC,QAAA,CAASC,CAAT,QAEOA,EAAA,gDAIOC,QAAAA,IAJP,YASMC,QAAAA,CAASC,CAATD,CAAgBE,CAAhBF,GATN,UAmBIG,QAAAA,CAASC,CAATD,GAnBJ,EAFP,CADD;",
+"sources":["ColorModel.js.uncompressed.js"],
+"names":["define","declare","constructor","initialize","items","colorFunc","getColor","value"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Feature.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,qFAIG,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAwBC,CAAxB,QAEKD,EAAA,kDAMOE,QAAAA,GAGZC,WAHYD,KAIZE,eAJYF,CAIKD,CAAAI,SAJLH,CANP,qBAaeI,QAAAA,SAKbF,eALaE,CAbf,qBAqBeC,QAAAA,CAAoCC,CAApCD,EAKpBH,cALoBG,CAKHC,CALGD,CArBf,UA6BIE,QAAAA,SAKFN,YALEM,CA7BJ,WAqCKC,QAAAA,CAAyCC,CAAzCD,EAOVP,WAPUO,CAOIC,CAPJD,CArCL,QA+CEE,QAAAA,IA/CF,QAoDEC,QAAAA,IApDF,aA0DOC,QAAAA,CAASC,CAATD,MAORE,EAAID,CAAAC,EACJC,EARQH,CAQJC,CAAAE,EARIH,KASRI,EAAQT,aAAA,EATAK;AAURK,EAAaD,CAAAE,QAAAC,IAAAC,cAAA,EAVLR,CAWRS,EAASL,CAAAE,QAAAI,UAAA,EAXDV,QAYFE,CAZEF,CAYEK,CAZFL,EAYiBS,CAAAE,KAZjBX,CAY+BK,CAZ/BL,CAaDS,CAAAG,IAbCZ,CAaYK,CAbZL,CAa0BG,CAb1BH,CAa8BK,CAb9BL,EA1DP,EAFL,CAJH;",
+"sources":["Feature.js.uncompressed.js"],
+"names":["define","dojo","declare","openlayers","constructor","_layer","_coordSys","EPSG4326","getCoordinateSystem","setCoordinateSystem","cs","getLayer","_setLayer","l","render","remove","_getLocalXY","p","x","y","layer","resolution","olLayer","map","getResolution","extent","getExtent","left","top"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_Plugin.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,uDACA,QAAA,CAASC,CAAT,CAAeC,CAAf,QAGOA,EAAAC,QAAA,CACN,QAAA,CAASC,CAAT,EACCC,UADD,GAECJ,EAAAK,MAAA,MAAiBF,CAAjB,CACGG,YAHJ,EAGmBC,YAHnB,EAIEC,YAAA,CAAaF,WAAb,0BAJF,CADM,wJAyBIE,QAAAA,GACRJ,UAAAK,KAAA,CAAgBT,CAAAQ,QAAAE,MAAA,CAAmBV,CAAnB,CAAyBW,SAAzB,CAAhB,CADQH,CAzBJ,YA4BOI,QAAAA,CAA0BC,CAA1BD,EAIPC,CAJOD,GAKPZ,CAAAc,QAAA,CAAaD,CAAb,CALOD,GAKiBC,CALjBD,EAK0BC,CAL1BD,GAMXZ,CAAAe,QAAA,CAAaF,CAAb,CAAsBb,CAAAY,WAAtB,CAAuCZ,CAAvC,CANWY,EA5BP,EAHP,CADA;",
+"sources":["_Plugin.js.uncompressed.js"],
+"names":["define","dojo","oo","declare","options","_cons","mixin","button","onClick","connect","push","apply","arguments","disconnect","handles","isArray","forEach"]
+}

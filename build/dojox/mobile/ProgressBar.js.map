@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ProgressBar.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,6GAKG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,CAA0CC,CAA1C,QAKKH,EAAA,4BAAoCG,CAApC,2EA2BUC,QAAAA,GACfC,cAAA,CAAeC,SAAf,CACAC,kBAFeH,CAEKF,CAAAM,OAAA,4CAEjBC,YAFiB,CAGpBC,aALeN,CAKAF,CAAAM,OAAA,uCAEZC,YAFY,CALAL,CA3BV,eAqCSO,QAAAA,CAAmBC,CAAnBD,EAKdC,CALcD,IAMdE,UAAA,SAAmBD,CAAnB,CANcD,KAQVG,EAAUC,IAAAC,IAAA;IAAeJ,CAAAK,QAAA,KAAf,CACbC,UAAA,CAAWN,CAAX,CADa,CACOO,YADP,KAC4BP,CAD5B,CACoCO,YADpC,GAEdZ,kBAAAa,MAAAC,MAVcV,CAUkBG,CAVlBH,IAWdV,EAAAqB,OAAA,CAAgBf,iBAAhB,6BAAgEO,CAAhE,CACAb,EAAAqB,OAAA,CAAgBf,iBAAhB,+BAA6DO,CAA7D,CACAS,cAAA,CAAcX,CAAd,CAAqBO,YAArB,CAAmCL,CAAnC,CAbcH,CArCT,eAqDSa,QAAAA,CAASC,CAATD,EAKdd,YAAAgB,UALcF,CAKWC,CALXD,CArDT,UA6DID,QAAAA,IA7DJ,EALL,CALH;",
+"sources":["ProgressBar.js.uncompressed.js"],
+"names":["define","declare","domClass","domConstruct","WidgetBase","buildRendering","inherited","arguments","progressNode","create","domNode","msgNode","_setValueAttr","value","_set","percent","Math","min","indexOf","parseFloat","maximum","style","width","toggle","onChange","_setLabelAttr","label","innerHTML"]
+}

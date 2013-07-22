@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"SuffixFileTypeMap.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,yDAEG,QAAA,CAASC,CAAT,MAKEC,IAKJD,EAAAE,UAAA,qCAAoDD,CAApD,CAEAA,EAAAE,IAZE,0BAiBFF,EAAAG,IAjBE,CAiBMC,QAAAA,CAAoBC,CAApBD,CAAoCE,CAApCF,EAGPF,QAAA,CAASG,CAAT,CAHOD,CAGSE,CAHTF,CAMRJ,EAAAO,eAvBE,CAuBiBC,QAAAA,CAAoBC,CAApBD,EAGdE,CAHcF,CAGFG,CAAAF,CAAAE,aAAA,WAHEH,OAIXN,SAAA,CAASQ,CAAT,CAJWF,CAvBjB,OA8BKR,EA9BL,CAFH;",
+"sources":["SuffixFileTypeMap.js.uncompressed.js"],
+"names":["define","lang","o","setObject","map","add","o.add","key","contentType","getContentType","o.getContentType","fileName","fileType","replace"]
+}

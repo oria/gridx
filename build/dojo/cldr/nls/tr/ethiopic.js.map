@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ethiopic.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,8BAGC,cAHD,UAIC,wBAJD,uBAKC,YALD,SAMC,yBAND,iBAOC,uBAPD,YAQC,uBARD,oBASC,YATD,YAUC,uBAVD,YAWC,uBAXD,iBAYC,cAZD,UAaC,wBAbD,oBAcC,sBAdD,cAeC,YAfD,QAgBC,sBAhBD;AAiBC,sBAjBD,2BAkBC,WAlBD,YAmBC,wBAnBD,SAoBC,wBApBD,cAqBC,iBArBD,wBAsBC,aAtBD,MAuBC,oBAvBD,CAuBuB,6FAAA,MAAA,KAvBvB,CAsCC,WAtCD,qBAuCC,uBAvCD,eAwCC,uBAxCD,oBAyCC,eAzCD,gCA0CC,YA1CD;",
+"sources":["ethiopic.js.uncompressed.js"],
+"names":["define"]
+}

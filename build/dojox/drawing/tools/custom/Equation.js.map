@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Equation.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oHACA,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAmBC,CAAnB,CAA6BC,CAA7B,EAEIC,CAFJ,CAEeH,CAAAI,QAAA,CAKdF,CALc,CAMd,QAAA,CAASG,CAAT,GANc,yBAefN,EAAAO,UAAA,uCAAsDH,CAAtD,CACAA,EAAAI,MAlBA,wFA0BAN,EAAAO,SAAA,CAAkBL,CAAAI,MAAlB,QA1BA,OA4BOJ,EA5BP,CADA;",
+"sources":["Equation.js.uncompressed.js"],
+"names":["define","lang","oo","registry","TextBlock","Equation","declare","options","setObject","setup","register"]
+}

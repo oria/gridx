@@ -1,0 +1,3 @@
+//>>built
+define("dojox/charting/axis2d/Base",["dojo/_base/declare","../Element"],function(b,c){return b("dojox.charting.axis2d.Base",c,{constructor:function(d,a){this.vertical=a&&a.vertical;this.opt={};this.opt.min=a&&a.min;this.opt.max=a&&a.max},clear:function(){return this},initialized:function(){return!1},calculate:function(d,a,b){return this},getScaler:function(){return null},getTicks:function(){return null},getOffsets:function(){return{l:0,r:0,t:0,b:0}},render:function(b,a){this.dirty=!1;return this}})});
+//@ sourceMappingURL=Base.js.map

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Container.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6EAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA6BC,CAA7B,QAKKF,EAAA,2BAAmCE,CAAnC,CAAyCD,CAAzC,6BALL,CAJH;",
+"sources":["Container.js.uncompressed.js"],
+"names":["define","declare","Container","Pane"]
+}

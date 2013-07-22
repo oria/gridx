@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"math.js",
+"lineCount":1,
+"mappings":"A,SACAA,MAAA,kDAA4D,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAsBC,CAAtB,EAC3DF,CAAAG,UAAA,WAA6BF,CAA7B,CAD2D,OAWpDA,EAAAC,KAXoD,CAA5D;",
+"sources":["math.js.uncompressed.js"],
+"names":["define","dojo","dojox","math","getObject"]
+}

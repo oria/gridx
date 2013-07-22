@@ -1,0 +1,4 @@
+//>>built
+define("dojox/gauges/TextIndicator",["dojo/_base/declare","./_Indicator"],function(c,d){return c("dojox.gauges.TextIndicator",[d],{x:0,y:0,align:"middle",fixedPrecision:!0,precision:0,draw:function(c,d){var a=this.value;a<this._gauge.min&&(a=this._gauge.min);a>this._gauge.max&&(a=this._gauge.max);var b=this._gauge?this._gauge._getNumberModule():null,a=b?this.fixedPrecision?b.format(a,{places:this.precision}):b.format(a):this.fixedPrecision?a.toFixed(this.precision):a.toString(),b=this.x?this.x:0,
+e=this.y?this.y:0,f=this.align?this.align:"middle";this.shape?this.shape.setShape({x:b,y:e,text:a,align:f}):this.shape=c.createText({x:b,y:e,text:a,align:f});this.shape.setFill(this.color);this.font&&this.shape.setFont(this.font)}})});
+//@ sourceMappingURL=TextIndicator.js.map

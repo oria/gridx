@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"BorderContainer.js",
+"lineCount":1,
+"mappings":"A,SACAA,MAAA,yDAAiE,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EACjEF,CAAAG,QAAA,gCAEAC,QAAAC,MAAA,sEAHiE,CAAjE;",
+"sources":["BorderContainer.js.uncompressed.js"],
+"names":["define","dojo","dijit","dojox","provide","console","error"]
+}

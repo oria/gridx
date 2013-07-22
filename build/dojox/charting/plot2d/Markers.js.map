@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Markers.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oEAA6E,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAErED,EAAA,iCAAyCC,CAAzC,cAGOC,QAAAA,GAGZC,QAAAC,QAHYF,IAHP,EAFqE,CAA7E;",
+"sources":["Markers.js.uncompressed.js"],
+"names":["define","declare","Default","constructor","opt","markers"]
+}

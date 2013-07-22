@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"VerticalRule.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qEAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAKKD,EAAA,2BAAmCC,CAAnC,gMALL,CAHH;",
+"sources":["VerticalRule.js.uncompressed.js"],
+"names":["define","declare","HorizontalRule"]
+}

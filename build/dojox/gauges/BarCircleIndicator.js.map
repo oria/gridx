@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"BarCircleIndicator.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,2FACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAuBC,CAAvB,QAEKF,EAAA,oCAA4CE,CAA5C,cAKMC,QAAAA,CAASC,CAATD,MAGPE,EAAQA,UAARA,CAAqBA,UAArBA,QAHOF,CAKPG,SADcC,gBACdD,CADiCC,gBACjCD,CADoDD,CACpDC,SAIAD,WAAAG,KATOL,GASaI,gBATbJ,GAUVG,CAAAD,MAVUF,CAUKE,UAAAI,OAAA,GAAAJ,MAVLF,MAYPO,EAAIC,WAAAC,MAAJF,CAAwBG,WAAxBH,CAAsCI,WAAtCJ,EAZOP,CAaPY,EAAIC,UACJD,EAdOZ,CAcHQ,WAAAM,IAdGd,GAeVY,CAfUZ,CAeNQ,WAAAM,IAfMd,CAiBPY,EAjBOZ,CAiBHQ,WAAAO,IAjBGf,GAkBVY,CAlBUZ,CAkBNQ,WAAAO,IAlBMf,CAoBPgB,EApBOhB,CAoBDQ,WAAAS,aAAA,CAAyBL,CAAzB,CAENM;CAtBOlB,EAsBGC,CAAAkB,aAAA,UAETZ,CAFS,GAGVI,WAHU,IAAAS,QAAA,CAIHlB,CAJG,CAAAmB,UAAA,CAIclB,CAJd,CAtBHH,CA4BXkB,EAAA,GAAAI,aAAA,CAAuBxB,CAAAyB,OAAAC,UAAA,CAAqBR,CAArB,GAAvB,CA5BWhB,OA6BJkB,EA7BIlB,CALN,EAFL,CADF;",
+"sources":["BarCircleIndicator.js.uncompressed.js"],
+"names":["define","declare","gfx","BarLineIndicator","_getShapes","group","color","stroke","strokeColor","type","colors","y","_gauge","dataY","offset","length","v","value","min","max","pos","_getPosition","shapes","createCircle","setFill","setStroke","setTransform","matrix","translate"]
+}

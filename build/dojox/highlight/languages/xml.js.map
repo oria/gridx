@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"xml.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,8CAAsD,QAAA,CAASC,CAAT,MAEjDC,oDAFiD,CAOjDC,oFAPiD,CAajDC,uCAMJH,EAAAI,UAAAC,IAnBqD,+IA8BnDJ,CA9BmD;sPAqDnDC,CArDmD,CAsDnDC,CAtDmD,cAyDvCF,CAzDuC,UA0D1CC,CA1D0C,WA2DzCC,CA3DyC,QA8D9CH,EAAAI,UAAAC,IA9D8C,CAAtD;",
+"sources":["xml.js.uncompressed.js"],
+"names":["define","dh","XML_COMMENT","XML_ATTR","XML_VALUE","languages","xml"]
+}

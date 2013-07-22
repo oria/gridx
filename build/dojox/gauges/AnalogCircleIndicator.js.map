@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"AnalogCircleIndicator.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qFACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEKD,EAAA,uCAA+CC,CAA/C,cAOMC,QAAAA,CAASC,CAATD,MAGPE,EAAQA,UAARA,CAAqBA,UAArBA,QAHOF,CAKPG,SADcC,gBACdD,CADiCC,gBACjCD,CADoDD,CACpDC,SAIAD,WAAAG,KATOL,GASaI,gBATbJ,GAUVG,CAAAD,MAVUF,CAUKE,UAAAI,OAAA,GAAAJ,MAVLF,SAaHC,CAAAM,aAAA,WAEFC,WAFE,GAGJC,WAHI,EAAAC,QAAA,CAIGR,CAJH,CAAAS,UAAA,CAIoBR,CAJpB,CAbGH,EAPN,EAFL,CADF;",
+"sources":["AnalogCircleIndicator.js.uncompressed.js"],
+"names":["define","declare","AnalogIndicatorBase","_getShapes","group","color","stroke","strokeColor","type","colors","createCircle","offset","length","setFill","setStroke"]
+}

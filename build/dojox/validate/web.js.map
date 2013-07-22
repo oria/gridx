@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"web.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,6CAAsD,QAAA,CAASC,CAAT,CAAmBC,CAAnB,EAEtDD,CAAAE,YAFsD,CAE/BC,QAAAA,CAASC,CAATD,CAAgBE,CAAhBF,QAoBTG,OAAJC,KAAiBN,CAAAO,UAAA,CAAkBH,CAAlB,CAAjBE,SACFE,KAAA,CAAQL,CAAR,CArBeD,CAyBvBH,EAAAU,MA3BsD,CA2BrCC,QAAAA,CAASP,CAATO,CAAgBN,CAAhBM,QAWHL,OAAJC,KAAiBN,CAAAW,IAAA,CAAYP,CAAZ,CAAjBE,SACFE,KAAA,CAAQL,CAAR,CAZSO,CAejBX,EAAAa,eA1CsD,CA0C5BC,QAAAA,CAASV,CAATU,CAAgBT,CAAhBS,QAUZR,OAAJC,KAAiBN,CAAAc,aAAA,CAAqBV,CAArB,CAAjBE,SACFE,KAAA,CAAQL,CAAR,CAXkBU,CAc1Bd,EAAAgB,mBAxDsD,CAwDxBC,QAAAA,CAASb,CAATa,CAAgBZ,CAAhBY,QAWhBX,OAAJC,KAAiBN,CAAAiB,iBAAA,CAAyBb,CAAzB,CAAjBE,SACFE,KAAA,CAAQL,CAAR,CAZsBa,CAe9BjB,EAAAmB,oBAvEsD,CAuEvBC,QAAAA,CAAShB,CAATgB,CAAgBf,CAAhBe,EAQ1Bf,CAR0Be,GAQjBf,CARiBe,IAS1Bf,EAAAgB,cAT0BD,GASHf,CAAAgB,cATGD,gBAWzBpB,EAAAgB,mBAAA,CAA4BZ,CAA5B;AAAmCC,CAAnC,CAXyBe,CAYtBhB,CAAAkB,MAAA,CAAgBhB,MAAJ,SAAqBD,CAAAgB,cAArB,SAAZ,CAZsBD,IAvEuB,OAwF/CpB,EAxF+C,CAAtD;",
+"sources":["web.js.uncompressed.js"],
+"names":["define","validate","xregexp","isIpAddress","validate.isIpAddress","value","flags","RegExp","re","ipAddress","test","isUrl","validate.isUrl","url","isEmailAddress","validate.isEmailAddress","emailAddress","isEmailAddressList","validate.isEmailAddressList","emailAddressList","getEmailAddressList","validate.getEmailAddressList","listSeparator","split"]
+}

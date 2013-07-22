@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ProxiedPath.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8DAAwE,QAAA,CAASC,CAAT,CAAeC,CAAf,EAExEA,CAAAC,IAAAC,iBAAAC,SAAA,gBACgB,QAAA,CAASC,CAAT,wBAAqBA,CAArB,CADhB,YAEYC,QAAAA,CAASC,CAATD,CAAcE,CAAdF,CAAsBG,CAAtBH,MACLI,CADKJ,CAELK,EAASV,CAAAC,IAAAU,UAAA,CAAoBL,CAApB,CAAyBC,CAAzB,CAFJF,IAGNN,CAAAa,QAAA,CAAaJ,CAAb,CAHMH,KAIJI,CAJIJ,GAIGI,CAJHJ,CAIOG,CAAAK,OAJPR,CAImBI,CAJnBJ,GAKPK,CALOL,aAKUG,CAAA,CAAKC,CAAL,CALVJ,IAKiCG,CAAA,CAAKC,CAAL,CALjCJ,WAQJI,CARIJ,GAQCG,EARDH,CASPK,CATOL,MASSI,CATTJ,KASmBG,CAAA,CAAKC,CAAL,CATnBJ,wBAcCE,CAAAO,SAdDT,EAcoBC,CAAAQ,SAdpBT,aAc8CU,kBAAA,CAAmBL,CAAnB,CAd9CL,EAFZ,aAmBcW,QAAAA,CAASC,CAATD,QACJC,EADID,CAnBd,EAFwE,CAAxE;",
+"sources":["ProxiedPath.js.uncompressed.js"],
+"names":["define","dojo","dojox","rpc","envelopeRegistry","register","str","serialize","smd","method","data","i","target","getTarget","isArray","length","proxyUrl","encodeURIComponent","deserialize","results"]
+}

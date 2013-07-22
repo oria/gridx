@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Pane.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,sGAKG,QAAA,CAASC,CAAT,CAAgBC,CAAhB,CAAyBC,CAAzB,CAAoCC,CAApC,QAKKF,EAAA,sBAA8BE,CAA9B,CAA0CD,CAA1C,sCAWUE,QAAAA,GACfC,cAAA,CAAeC,SAAf,CACIC,mBAFWH,GAIdG,kBAJcH,CAIOI,YAJPJ,EAXV,QAmBEK,QAAAA,GAGPT,CAAAU,QAAA,CAAcC,gBAAA,EAAd,CAAkC,QAAA,CAASC,CAAT,EAC9BA,CAAAH,OAD8B,EACfG,CAAAH,OAAA,EADe,CAAlC,CAHOA,CAnBF,EALL,CALH;",
+"sources":["Pane.js.uncompressed.js"],
+"names":["define","array","declare","Contained","WidgetBase","buildRendering","inherited","arguments","containerNode","domNode","resize","forEach","getChildren","child"]
+}

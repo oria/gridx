@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"DropIndicator.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,6HAKG,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAwBC,CAAxB,CAAkCC,CAAlC,EACEC,CADF,CACOH,CAAA,wDAWKI,QAAAA,OAERC,EAAgBC,QAAAC,cAAA,OAFRH,CAGRI,EAAmBF,QAAAC,cAAA,OACvBF,EAAAI,YAAA,CAA0BD,CAA1B,CACAP,EAAAS,IAAA,CAAaL,CAAb,iBACAM,UANYP,CAMAC,CANAD,CAXL,OAoBDQ,QAAAA,CAAiBC,CAAjBD,CAA+BE,CAA/BF,CAAkDG,CAAlDH,EAaHG,CAbGH,GAcLD,SAAAK,MAAAC,OAdKL,CAcoBG,CAAAG,EAdpBN,iBAiBFE,EAjBEF,CAkBJC,CAAAM,aAAA,CAAkBR,SAAlB,CAA6BG,CAA7B,CAlBIF,CAsBJC,CAAAJ,YAAA,CAAiBE,SAAjB,CAtBIC,CAwBED,SAxBFC,OAyBCQ,CAzBDR,eApBC,QAkDAS,QAAAA,GAKJV,SALIU;CAONV,SAAAK,MAAAC,OAPMI,IAQHV,SAAAW,WARGD,EASLV,SAAAW,WAAAC,YAAA,CAAiCZ,SAAjC,CATKU,EAlDA,SAgECG,QAAAA,GAKLb,SALKa,GAMJb,SAAAW,WANIE,EAONb,SAAAW,WAAAC,YAAA,CAAiCZ,SAAjC,CAPMa,CASPtB,CAAAsB,QAAA,CAAqBb,SAArB,CATOa,QAUAb,SAVAa,EAhED,EA+ETC,MAAAC,KAAAC,YAAA,EAAAC,eAhFE,CAgFwC,IAAIH,KAAAC,KAAAG,cAhF5C,OAkFK1B,EAlFL,CALH;",
+"sources":["DropIndicator.js.uncompressed.js"],
+"names":["define","dojo","declare","domClass","domConstruct","di","constructor","dropIndicator","document","createElement","subDropIndicator","appendChild","add","node","place","area","nodeRef","size","style","height","h","insertBefore","e","remove","parentNode","removeChild","destroy","dojox","mdnd","areaManager","_dropIndicator","DropIndicator"]
+}

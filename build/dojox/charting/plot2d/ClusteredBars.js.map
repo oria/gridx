@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ClusteredBars.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kFACC,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAwBC,CAAxB,QAEOF,EAAA,uCAA+CC,CAA/C,mBAGYE,QAAAA,OACbC,EAAIF,CAAAG,iBAAA,CAAoBC,aAAAC,OAAAC,MAApB,CAAgDC,QAAhD,CAA0DC,WAAAC,OAA1D,CADSR,YAEJC,CAAAQ,IAFIT,QAEWC,CAAAS,KAFXV,WAE8BC,CAAAS,KAF9BV,EAHZ,EAFP,CADD;",
+"sources":["ClusteredBars.js.uncompressed.js"],
+"names":["define","declare","Bars","dc","getBarProperties","f","calculateBarSize","_vScaler","bounds","scale","opt","series","length","gap","size"]
+}

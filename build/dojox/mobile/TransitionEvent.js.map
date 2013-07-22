@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"TransitionEvent.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iEAA0E,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAElED,EAAA,kDAIOE,QAAAA,CAAoBC,CAApBD,CAAsCE,CAAtCF,CAAmEG,CAAnEH,EASZE,sBATYF,CASaE,CACzBD,YAVYD,CAUEC,CACdE,kBAXYH,CAWQG,CAXRH,OAJP,UAkBII,QAAAA,GAICL,CAAAM,KAAA,CAAQJ,WAAR,oDADyCC,sBACzC,cAD+EC,iBAC/E,EAJDC,CAlBJ,EAFkE,CAA1E;",
+"sources":["TransitionEvent.js.uncompressed.js"],
+"names":["define","declare","on","constructor","target","transitionOptions","triggerEvent","dispatch","emit"]
+}

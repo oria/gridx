@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"html.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,+BAAuC,QAAA,CAAUC,CAAV,QAQ/BA,EAR+B,CAAvC;",
+"sources":["html.js.uncompressed.js"],
+"names":["define","html"]
+}

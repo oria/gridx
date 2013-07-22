@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Destroyable.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6EAIG,QAAA,CAASC,CAAT,CAAgBC,CAAhB,CAAwBC,CAAxB,QAKKA,EAAA,mCAQGC,QAAAA,CAAqBC,CAArBD,EAGRE,eAHQF,IARH,KAcDG,QAAAA,GAUJN,CAAAO,QAAA,CAAcC,SAAd,CAAyB,QAAA,CAASC,CAAT,MACpBC,sBACmBD,EADnBC,+BAEWD,EAFXC,mBADoB,CAUpBC,EAAMV,CAAAW,OAAA,gBAA+B,QAAA,CAASR,CAAT,EACxCK,CAAA,CAAOC,CAAP,CAAA,CAA0BN,CAA1B,CADwC,CAA/B,CAVc,CAepBS,EAAMZ,CAAAa,MAAA,CAAaL,CAAb,CAAqBC,CAArB,CAAwC,QAAA,GACjDC,CAAAI,OAAA,EACAF,EAAAE,OAAA,EAFiD,CAAxC,IAfc,CAAzB,MAVIT,OA+BGE,UA/BHF,CAdC,EALL,CAJH;",
+"sources":["Destroyable.js.uncompressed.js"],
+"names":["define","array","aspect","declare","destroy","preserveDom","_destroyed","own","forEach","arguments","handle","destroyMethodName","odh","before","hdh","after","remove"]
+}

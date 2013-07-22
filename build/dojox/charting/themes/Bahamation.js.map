@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Bahamation.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kEAA2E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAC1EA,CAAAC,WAD0E,CACtD,IAAIF,CAAJ,8DADsD,OAUnEC,EAAAC,WAVmE,CAA3E;",
+"sources":["Bahamation.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Bahamation"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Distinctive.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,mEAA4E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAC3EA,CAAAC,YAD2E,CACtD,IAAIF,CAAJ,SACZ,iQAAA,MAAA,KADY,EADsD,OAsCpEC,EAAAC,YAtCoE,CAA5E;",
+"sources":["Distinctive.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Distinctive"]
+}

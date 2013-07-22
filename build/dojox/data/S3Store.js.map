@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"S3Store.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,gGACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAiCC,CAAjC,QACKF,EAAA,sBAA8BC,CAA9B,kBAKaE,QAAAA,CAASC,CAATD,EAEbE,CAFaF,CAECC,CAAAE,qBAAA,OAFDH,SAGbI,IAHaJ,CAIbK,MAJaL,CAKTM,GALSN,CAKJM,CALIN,CAKDE,CAAAK,OALCP,CAKkBM,CALlBN,QAQZQ,eACW,QAAA,CAASC,CAAT,CAAaD,CAAb,QACN,SAAA,CAASE,CAAT,SAECC,gBACPN,EAAAO,QAAA,CAAaH,CAAb,CAAAI,YAAA,CAA8BH,CAA9B,CAHM,CADM,CAAA,CAHER,CAAAY,CAAYR,CAAZQ,CASbC,WAAAC,UANW,CAMqBR,CANrB,CADXA,CASJJ,EAAAa,KAAA,CAAeT,CAAf,CAjBgBR,mBAoBEI,CAAAG,OApBFP,OAoB2BI,CApB3BJ,EALb,EADL,CADF;",
+"sources":["S3Store.js.uncompressed.js"],
+"names":["define","declare","JsonRestStore","ProxiedPath","_processResults","results","keyElements","getElementsByTagName","jsResults","self","i","length","val","key","callback","_loadObject","service","addCallback","keyElement","firstChild","nodeValue","push"]
+}

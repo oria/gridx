@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ca.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qEACC,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAyBC,CAAzB,CAAkCC,CAAlC,MAEGC,EAAKJ,CAAAK,UAAA,SAA2BJ,CAA3B,CAQTD,EAAAM,MAAA,CAAWF,CAAX,gBAEgBG,QAAAA,CAAqBC,CAArBD,QAGPJ,EAAAI,cAAA,CAAiBC,CAAjB,CAHOD,CAFhB,YAQaE,QAAAA,CAAwBD,CAAxBC,QAGEC,OAAJC,KAAiBT,CAAAE,GAAAQ,SAAA,EAAjBD,SACFE,KAAA,CAAQL,CAAR,CAJIC,CARb,yBAe0BK,QAAAA,CAAqBN,CAArBM,QASjBb,EAAAc,eAAA,CAAwBP,CAAxB,oDATiBM,CAf1B,cA2BeE,QAAAA,CAASR,CAATQ,QAQAN,OAAJC,KAAiBT,CAAAE,GAAAa,WAAA,EAAjBN,SACFE,KAAA,CAAQL,CAAR,CATMQ,CA3Bf,EAVC,OAmDMZ,EAnDN,CADD;",
+"sources":["ca.js.uncompressed.js"],
+"names":["define","lang","validate","xregexp","us","ca","getObject","mixin","isPhoneNumber","value","isProvince","RegExp","re","province","test","isSocialInsuranceNumber","isNumberFormat","isPostalCode","postalCode"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Carousel.js",
+"lineCount":3,
+"mappings":"A,SAAAA,MAAA,iFAIG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAAyBC,CAAzB,QAKKF,EAAA,sBAQUG,QAAAA,GACfC,cAAA,CAAeC,SAAf,CAEKC,mBAAA,EAHUH,GAIXI,cAJWJ,GAKbD,CAAAM,IAAA,CAAaC,qBAAb,gBALaN,CAMbO,eAAA,CAAgBC,gBAAhB,CANaR,CAObO,eAAA,CAAgBE,gBAAhB,CAPaT,CAQbQ,gBARaR,CAQMU,YAAA,CAAaC,gBAAb,4BARNX,CASbS,gBATaT,CASMU,YAAA,CAAaE,gBAAb,4BATNZ,EAYXa,kBAZWb,EAabD,CAAAM,IAAA,CAAaS,QAAb;eAbad,EARV,eAyBSe,QAAAA,CAASC,CAATD,EACdE,cAAAC,UADcH,CACaI,QADbJ,CACwBI,QAAA,CAASH,CAAT,CADxBD,CAC0CC,CACxDI,UAAA,SAAmBJ,CAAnB,CACGK,aAHWN,GAIbE,cAAAC,UAJaH,CAIcjB,CAAAwB,sBAAA,CAA6BL,cAAAC,UAA7B,CAAuDG,YAAvD,CAJdN,CAKbE,cAAAM,MAAAC,UALaT,SAKqBU,QAAAC,YAAA,EALrBX,iBAzBT,iBAiCWY,QAAAA,CAASN,CAATM,KACbN,CADaM,EACFN,YADEM,GACeN,CADfM,GAEfN,YAFeM,CAEAN,CAFAM,CAGfV,cAAAC,UAHeS,CAGY7B,CAAA8B,kBAAA,CAAyBX,cAAAC,UAAzB,CAHZS,CAIfV,cAAAC,UAJeS,CAIY7B,CAAAwB,sBAAA,CAA6BL,cAAAC,UAA7B;AAAuDG,YAAvD,CAJZM,GAKZE,UAAAC,OALYH,EAMdI,eAAA,CAAgBF,UAAhB,CANcF,CAjCX,EALL,CAJH;",
+"sources":["Carousel.js.uncompressed.js"],
+"names":["define","declare","common","domStyle","buildRendering","inherited","arguments","isLeftToRight","navButton","set","btnContainerNode","disconnect","_prevHandle","_nextHandle","connect","prevBtnNode","nextBtnNode","pageIndicator","piw","_setTitleAttr","title","titleNode","innerHTML","_cv","_set","textDir","enforceTextDirWithUcc","style","textAlign","dir","toLowerCase","_setTextDirAttr","removeUCCFromText","items","length","onComplete"]
+}

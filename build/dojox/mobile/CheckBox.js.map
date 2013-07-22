@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"CheckBox.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,4HAOC,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAgCC,CAAhC,CAA+CC,CAA/C,CAA6DC,CAA7D,QAEOJ,EAAA,0BAAkCG,CAAlC,CAAgDD,CAAhD,wCAWQG,QAAAA,IAXR,gBAaUC,QAAAA,IACXC,mBADWD,GACaE,eADbF,GAIdE,eAJcF,CAIIL,CAAAQ,OAAA,eAAoCC,SAApC,EAJJJ,CAMfK,eAAA,CAAeC,SAAf,CACIL,oBAPWD,GASdO,cATcP,CASGQ,YATHR,KAYZF,CAAA,iBAZYE,MAaVS,EAAWd,CAAAQ,OAAA,iDACfM;CAAAC,YAAA,CAAqBF,YAAAG,UAAA,EAArB,CACAC,eAfcZ,CAeGL,CAAAQ,OAAA,iDAAuEM,CAAvE,CACjBD,aAhBcR,CAgBCS,CACfF,eAjBcP,CAiBGS,CAAAI,WAjBHb,EAbV,eAkCSc,QAAAA,SAGNC,aAHMD,CAGSE,UAHTF,IAlCT,EAFP,CAPD;",
+"sources":["CheckBox.js.uncompressed.js"],
+"names":["define","declare","domConstruct","CheckBoxMixin","ToggleButton","has","_setTypeAttr","buildRendering","templateString","srcNodeRef","create","type","inherited","arguments","focusNode","domNode","rootNode","appendChild","cloneNode","labelNode","firstChild","_getValueAttr","checked","value"]
+}

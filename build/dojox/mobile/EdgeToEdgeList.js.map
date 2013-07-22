@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"EdgeToEdgeList.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,wEAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAKKD,EAAA,+BAAuCC,CAAvC,qEAcUC,QAAAA,GACfC,cAAA,CAAeC,SAAf,CACAC,aAAAC,UAFeJ,qBAdV,EALL,CAHH;",
+"sources":["EdgeToEdgeList.js.uncompressed.js"],
+"names":["define","declare","RoundRectList","buildRendering","inherited","arguments","domNode","className"]
+}

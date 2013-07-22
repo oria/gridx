@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"AnalogLineIndicator.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,mFACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEKD,EAAA,qCAA6CC,CAA7C,cAMMC,QAAAA,CAA6BC,CAA7BD,MAKPE,EAASA,WALFF,WAIKG,cAJLH,GAOVE,CAPUF,EAOCE,CAPDF,SASHC,CAAAG,WAAA,WAA8BC,WAA9B,UAAuDH,CAAvD,CAA8DG,WAA9D,EAAAC,UAAA,QACcC,UADd,OACiCC,UADjC,EATGR,EANN,EAFL,CADF;",
+"sources":["AnalogLineIndicator.js.uncompressed.js"],
+"names":["define","declare","AnalogIndicatorBase","_getShapes","group","length","direction","createLine","offset","setStroke","color","width"]
+}

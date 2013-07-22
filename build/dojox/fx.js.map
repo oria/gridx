@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"fx.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,2BAAmC,QAAA,CAASC,CAAT,QAQ3BA,EAR2B,CAAnC;",
+"sources":["fx.js.uncompressed.js"],
+"names":["define","DojoxFx"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_IconItemPane.js",
+"lineCount":3,
+"mappings":"A,SAAAA,MAAA,2GAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAgCC,CAAhC,CAAsCC,CAAtC,CAAiDC,CAAjD,QAKKJ,EAAA,8BAAsCE,CAAtC,oLAqCUG,QAAAA,GACfC,cAAA,CAAeC,SAAf,CACAC,UAAA,EACAC,qBAHeJ,CAGQJ,CAAAS,OAAA,2CAAgEC,YAAhE,CACvBC,mBAJeP;AAIMJ,CAAAS,OAAA,6CAEdG,kBAFc,OAGbC,mBAHa,EAIlBL,oBAJkB,CAKrBM,eATeV,CASEJ,CAAAS,OAAA,2CAAgED,oBAAhE,CACjBO,mBAVeX,CAUMJ,CAAAS,OAAA,gCAAqDC,YAArD,CAVNN,CArCV,MAkDAY,QAAAA,GAGLN,YAAAO,MAAAC,QAHKF,IAlDA,MAwDAT,QAAAA,GAGLG,YAAAO,MAAAC,QAHKX,QAxDA,QA8DEY,QAAAA,CAASC,CAATD,iBAGAT,YAAAO,MAAAC,QAHAC,CA9DF,eAoESE,QAAAA,CAAmBC,CAAnBD,EAGdE,SAAA,SAAmBD,CAAnB,CACAR,eAAAU,UAJcH;AAIaI,QAJbJ,CAIwBI,QAAA,CAASH,CAAT,CAJxBD,CAIyCC,CAJzCD,CApET,mBA2EaK,QAAAA,CAASC,CAATD,EAGlBH,SAAA,aAAuBI,CAAvB,CACAhB,mBAJkBe,CAIGxB,CAAA0B,QAAA,CAAkBD,CAAlB,CAAwBE,YAAxB,CAAsClB,kBAAtC,MAAgEH,oBAAhE,CAElBL,EAAA,iBANeuB,OAMSb,mBANTa,GAOjBI,oBAPiBJ,CAOM1B,CAAAS,OAAA,wDAA6EI,mBAA7E,yBACKF,kBADL,CAPNe,EA3Eb,EALL,CANH;",
+"sources":["_IconItemPane.js.uncompressed.js"],
+"names":["define","declare","domConstruct","Pane","iconUtils","has","buildRendering","inherited","arguments","hide","closeHeaderNode","create","domNode","closeIconNode","closeIconRole","closeIconTitle","labelNode","containerNode","show","style","display","isOpen","e","_setLabelAttr","text","_set","innerHTML","_cv","_setCloseIconAttr","icon","setIcon","iconPos","closeButtonNode"]
+}

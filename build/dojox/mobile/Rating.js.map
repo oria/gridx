@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Rating.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,uHAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAwBC,CAAxB,CAAsCC,CAAtC,CAAkDC,CAAlD,QAKKJ,EAAA,uBAA+BG,CAA/B,0EA8BUE,QAAAA,GACfC,cAAA,CAAeC,SAAf,CACAC,aAAAC,MAAAC,QAFeL,oBAGXM,EAAMC,YAAND,CAAqBT,CAAAW,OAAA,OACzBC,aAAA,CAAaH,CAAb,UACCV,CAAAc,MAAA,MAAiB,QAAA,GAAYC,QAAA,SAAkBC,UAAlB,CAAZ,CAAjB,CADD,CAEAb,EAAAc,WAAA,CAAqBC,UAArB,MAAuCR,CAAvC,CANeN,CA9BV,eAuCSe,QAAAA,CAAmBH,CAAnBG,EAKdC,SAAA;AAAmBJ,CAAnB,CALcG,KAMVE,EAAIV,YAAAW,OANMH,OAOXE,CAPWF,EAQdlB,CAAAsB,MAAA,CAAmBhB,YAAnB,CARcY,KASVK,CATUL,CASPM,CATON,CASDO,EAAIf,YAAAgB,MAAJD,EATCP,KAUVK,CAVUL,GAUHK,CAVGL,CAUCS,aAVDT,CAUgBK,CAVhBL,IAYZM,CAZYN,CAWVK,CAXUL,EAWLH,CAXKG,KAaJK,CAbIL,EAaCH,CAbDG,CAcLO,CAdKP,GAgBLO,CAhBKP,KAkBTU,EAAS5B,CAAAW,OAAA,eACJ,OADI,UAEVL,YAFU,CAGbJ,EAAAc,WAAA,CAAqBC,UAArB,MACQO,CADR,KACqBC,CADrB,KAC+BL,CAD/B,MACwCS,QADxC,CACkDD,CADlD,CArBaV,GAvCT,EALL,CANH;",
+"sources":["Rating.js.uncompressed.js"],
+"names":["define","declare","lang","domConstruct","WidgetBase","iconUtils","buildRendering","inherited","arguments","domNode","style","display","img","imgNode","create","connect","hitch","set","value","createIcon","image","_setValueAttr","_set","h","height","empty","i","left","w","width","numStars","parent","alt"]
+}

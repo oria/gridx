@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"PrimaryColors.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qFAA+F,QAAA,CAASC,CAAT,CAAgBC,CAAhB,CAAmCC,CAAnC,EAK9FA,CAAAC,cAL8F,CAKvE,IAAIH,CAAJ,eACRC,CAAAG,kBAAA,CAJFC,wCAAAA,MAAAA,KAIE,6DADQ,EALuE,OASvFH,EAAAC,cATuF,CAA/F;",
+"sources":["PrimaryColors.js.uncompressed.js"],
+"names":["define","Theme","gradientGenerator","themes","PrimaryColors","generateMiniTheme","colors"]
+}

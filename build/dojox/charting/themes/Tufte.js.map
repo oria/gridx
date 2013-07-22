@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Tufte.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,gFAA0F,QAAA,CAASC,CAAT,CAAsBC,CAAtB,CAA6BC,CAA7B,EAKzFA,CAAAC,MALyF,CAK1E,IAAIH,CAAJ,0TA6BF,IAAIC,CAAJ,iBA7BE;qHAwCbA,CAAAG,QAAA,WAxCa,CAyCbH,CAAAG,QAAA,WAzCa,CA0CbH,CAAAG,QAAA,WA1Ca,CA2CbH,CAAAG,QAAA,WA3Ca,CA4CbH,CAAAG,QAAA,WA5Ca,GAL0E,OAoDlFF,EAAAC,MApDkF,CAA1F;",
+"sources":["Tufte.js.uncompressed.js"],
+"names":["define","SimpleTheme","Color","themes","Tufte","fromHex"]
+}

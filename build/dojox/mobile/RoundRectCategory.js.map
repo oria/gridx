@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"RoundRectCategory.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,kCAAyC,4JAAA,MAAA,KAAzC,CAQG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAuBC,CAAvB,CAAqCC,CAArC,CAAgDC,CAAhD,CAA4DC,CAA5D,CAAiEC,CAAjE,EAKEC,CALF,CAKsBP,CAAA,CAAQK,CAAA,aAAR,2EAAwGD,CAAxG,CAAoHD,CAApH,qEAmBPK,QAAAA,OACXC,EAAUA,YAAVA,CAAyBC,kBAAzBD,CAA8CE,eAA9CF,EAAiEP,CAAAU,OAAA,CAAoBC,QAApB,CACrEC,eAAA,CAAeC,SAAf,CAFeP;CAGXQ,UAHWR,OAGGC,CAAAQ,WAAAC,OAHHV,MAGsCC,CAAAU,WAAAC,SAHtCZ,IAKdQ,UALcR,CAKDC,CAAAU,WAAAE,UALCb,EAnBO,eA4BRc,QAAAA,CAAmBN,CAAnBM,EAKdN,UALcM,CAKDN,CACbP,aAAAc,UANcD,CAMWE,QANXF,CAMsBE,QAAA,CAASR,CAAT,CANtBM,CAMwCN,CANxCM,CA5BQ,EALtB,OA2CKjB,EAAA,aA3CL,CA2CwBL,CAAA,mCAA2CO,CAA3C,CAA8DD,CAA9D,EA3CxB,CA2CgHC,CA3ChH,CARH;",
+"sources":["RoundRectCategory.js.uncompressed.js"],
+"names":["define","declare","win","domConstruct","Contained","WidgetBase","has","BidiRoundRectCategory","RoundRectCategory","buildRendering","domNode","containerNode","srcNodeRef","create","tag","inherited","arguments","label","childNodes","length","firstChild","nodeType","nodeValue","_setLabelAttr","innerHTML","_cv"]
+}

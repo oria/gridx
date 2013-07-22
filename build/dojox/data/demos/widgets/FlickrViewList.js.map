@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"FlickrViewList.js",
+"lineCount":2,
+"mappings":"A,SACAA,MAAA,sHAA8H,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC9HF,CAAAG,QAAA,2CACAH,EAAAI,QAAA,wBACAJ,EAAAI,QAAA,iBAEAJ,EAAAK,QAAA,4CACGJ,CAAAK,QADH,CACkBJ,CAAAK,IAAAC,WADlB,wCAMkBR,CAAAS,MAAA,yuBANlB;MAQSC,QAAAA,CAASC,CAATD,EACNC,CAAAC,WADMF,CACeV,CAAAa,MAAA,mBACrBF,EAAAG,QAFMJ,CAEYV,CAAAa,MAAA,gBAFZH,OAGCK,WAAAL,MAAA,CAAiBC,CAAjB,CAHDD,CART,SAcWI,QAAAA,GAERE,UAFQF,GAGRG,YAAA,EAHQH,CAdX,YAoBcF,QAAAA,CAASI,CAATJ,CAAgBD,CAAhBC,EACXI,UADWJ,CACEI,CADFJ,IAEXK,YAAA,EAFWL,CApBd,EAL8H,CAA9H;",
+"sources":["FlickrViewList.js.uncompressed.js"],
+"names":["define","dojo","dijit","dojox","provide","require","declare","_Widget","dtl","_Templated","cache","fetch","request","onComplete","hitch","onError","store","items","render"]
+}

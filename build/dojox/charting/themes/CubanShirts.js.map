@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"CubanShirts.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,mEAA4E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAG3EA,CAAAC,YAH2E,CAGtD,IAAIF,CAAJ,8DAHsD,OAYpEC,EAAAC,YAZoE,CAA5E;",
+"sources":["CubanShirts.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","CubanShirts"]
+}

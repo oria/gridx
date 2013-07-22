@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"GroupLabel.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,yFACC,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAgCC,CAAhC,QAEOF,EAAA,iDAKUG,QAAAA,CAASC,CAATD,CAAeE,CAAfF,CAAsBG,CAAtBH,MACXI,EAAWC,cAAA,CAAeC,SAAf,CADAN,eAEZG,CAFYH,UAESG,CAFTH,MAGVO,EAAIT,CAAAU,OAAA,OACRT,EAAAU,IAAA,CAAaF,CAAb,8FAQAT,EAAAY,MAAA,CAAmBH,CAAnB,CAAsBH,CAAtB,CAZcJ,OAcRI,EAdQJ,CALV,eAsBSW,QAAAA,CAASP,CAATO,CAAmBV,CAAnBU,CAAyBT,CAAzBS,CAAgCR,CAAhCQ,SACPR,CADOQ,cAGZZ,CAAAU,IAAA,CAAaL,CAAb,cAAqCQ,oBAAA,CAAqBX,CAArB,CAAAY,MAAA,EAArC,CAHYF,gBAMXP,CAAAU,WAAAC,UANWJ;GAKTT,CALSS,CAMqBK,oBAAA,CAAqBf,CAArB,CANrBU,0BAYZZ,CAAAU,IAAA,CAAaL,CAAb,kBAZYO,EAtBT,EAFP,CADD;",
+"sources":["GroupLabel.js.uncompressed.js"],
+"names":["define","declare","domConstruct","domStyle","createRenderer","item","level","kind","renderer","inherited","arguments","p","create","set","place","styleRenderer","getColorForItem","toHex","firstChild","innerHTML","getLabelForItem"]
+}

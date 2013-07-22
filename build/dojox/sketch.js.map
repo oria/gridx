@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"sketch.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,gBAAuB,uGAAA,MAAA,KAAvB,CAOG,QAAA,CAASC,CAAT,EACFA,CAAAC,UAAA,aAA+BC,KAA/B,CADE,OAUKA,MAAAC,OAVL,CAPH;",
+"sources":["sketch.js.uncompressed.js"],
+"names":["define","dojo","getObject","dojox","sketch"]
+}

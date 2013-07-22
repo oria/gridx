@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_FormSelectWidget.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,uGAIG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAAuBC,CAAvB,EACFF,CAAAG,WAAA,iFAEAF,EAAAG,UAAA,gCAA+CF,CAA/C,CAHE,OAIKA,EAJL,CAJH;",
+"sources":["_FormSelectWidget.js.uncompressed.js"],
+"names":["define","kernel","lang","_FormSelectWidget","deprecated","setObject"]
+}

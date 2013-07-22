@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Video.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oEAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAuBC,CAAvB,QAIKF,EAAA,sBAA8BE,CAA9B,4DAyBWC,QAAAA,SACTF,EAAA,MADSE,kBAEZF,CAAA,MAFYE,qBAzBX,EAJL,CAJH;",
+"sources":["Video.js.uncompressed.js"],
+"names":["define","declare","has","Audio","_getEmbedRegExp"]
+}

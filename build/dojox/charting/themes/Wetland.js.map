@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Wetland.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,+DAAwE,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EACvEA,CAAAC,QADuE,CACtD,IAAIF,CAAJ,8DADsD,OAUhEC,EAAAC,QAVgE,CAAxE;",
+"sources":["Wetland.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Wetland"]
+}

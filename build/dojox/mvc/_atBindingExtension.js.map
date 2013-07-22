@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_atBindingExtension.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6GAKG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAAsBC,CAAtB,CAAmCC,CAAnC,EACFF,CAAAG,IAAA,4BAAqCC,CAAAL,CAAA,IAAAK,wBAArC,CACIJ,EAAA,4BAFF,EAGDE,CAAA,CAAmBD,CAAAI,UAAnB,CAHC,CALH;",
+"sources":["_atBindingExtension.js.uncompressed.js"],
+"names":["define","config","has","_WidgetBase","atBindingExtension","add","extensionPerWidget","prototype"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"xquery.js",
+"lineCount":3,
+"mappings":"A,SAAAA,MAAA,iDAAyD,QAAA,CAASC,CAAT,MAMpDC,mDAiCJD,EAAAE,UAAAC,OAvCwD,2CAsC9CH,CAAAI,UAIEC,SA1C4C,uEAaxC,kBAbwC,2CAevD,UAfuD,GAexC,gBAfwC,QAeV,MAfU,kEAiBtB,iBAjBsB,aAkBzC,SAlByC,gBAkBV,oBAlBU;8BAmBb,eAnBa,aAoBzC,MApByC,WAoBlB,gBApBkB,2DAsBvC,mBAtBuC,GAsBf,KAtBe,GAsBL,UAtBK,+BAuBX,IAvBW,GAuBF,QAvBE,GAwBvD,IAxBuD,qHA2BvD,YA3BuD,GA2BtC,aA3BsC,wEA6BvC,mBA7BuC,cA8BvD,wBA9BuD;AA8B1B,QA9B0B,wBA+B1C,kBA/B0C,GA+BnB,gBA/BmB,kKAiDrDJ,CAjDqD,iBAmDvCA,CAnDuC,QAsDjDD,EAAAE,UAAAC,OAtDiD,CAAzD;",
+"sources":["xquery.js.uncompressed.js"],
+"names":["define","dh","XQUERY_COMMENT","languages","xquery","constants","IDENT_RE"]
+}

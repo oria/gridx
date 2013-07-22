@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"BidiSupport3D.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,sDACE,QAAA,CAASC,CAAT,EACAA,CAAAC,WAAA,8HADA,CADF;",
+"sources":["BidiSupport3D.js.uncompressed.js"],
+"names":["define","kernel","deprecated"]
+}

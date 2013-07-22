@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"WatersEdge.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kEAA2E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAC1EA,CAAAC,WAD0E,CACtD,IAAIF,CAAJ,8DADsD,OAUlEC,EAAAC,WAVkE,CAA3E;",
+"sources":["WatersEdge.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","WatersEdge"]
+}

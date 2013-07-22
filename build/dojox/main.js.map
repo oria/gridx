@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"main.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oCAA4C,QAAA,CAASC,CAAT,QAYpCA,EAAAC,MAZoC,CAA5C;",
+"sources":["main.js.uncompressed.js"],
+"names":["define","dojo","dojox"]
+}

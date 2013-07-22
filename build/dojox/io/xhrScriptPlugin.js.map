@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"xhrScriptPlugin.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oIAAgJ,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAuBC,CAAvB,CAA+BC,CAA/B,CAA2CC,CAA3C,EAChJJ,CAAAK,UAAA,yBAA2CC,KAA3C,CAEAA,MAAAC,GAAAC,gBAHgJ,CAGrHC,QAAAA,CAAmBC,CAAnBD,CAAkCE,CAAlCF,CAAkEG,CAAlEH,EAW1BN,CAAAU,SAAA,UAEC,QAAA,CAASC,CAAT,CAAgBC,CAAhB,aACSA,CAAAC,KADT,UAEGF,CAFH,EAEsBF,CAFtB,GAGGG,CAAAL,IAAAO,UAAA,GAAqBP,CAAAQ,OAArB,CAHH,EAGuCR,CAHvC,CAFD,CAOC,QAAA,CAASI,CAAT,CAAgBC,CAAhB,CAAqBI,CAArB,MACKC,EAAOA,QAAAA,GACVL,CAAAJ,kBADUS,CACeT,CACtBX,EAAAqB,KAAA,EAFOD,GAGTL,CAAAO,SAHSF,SAGiBG,IAAAC,OAAA,EAHjBJ,QAKHlB,EAAAuB,IAAA,CAAWV,CAAX,CALGK,CADZ,OAQS,CAAAR,CAAA,CAAcA,CAAA,CAAYQ,CAAZ,IAAd,CAAwCA,CAAxC,EAA8CN,CAA9C,CAAsDC,CAAtD,CAA4DI,CAA5D,CART,CAPD,CAX0BV,CAHqH,OAkCzIH,MAAAC,GAAAC,gBAlCyI,CAAhJ;",
+"sources":["xhrScriptPlugin.js.uncompressed.js"],
+"names":["define","dojo","window","script","xhrPlugins","scriptFrame","getObject","dojox","io","xhrScriptPlugin","dojox.io.xhrScriptPlugin","url","callbackParamName","httpAdapter","register","method","args","sync","substring","length","hasBody","send","body","frameDoc","Math","random","get"]
+}

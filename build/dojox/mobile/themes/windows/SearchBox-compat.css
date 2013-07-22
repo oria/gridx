@@ -1,0 +1,40 @@
+@import url("TextBox-compat.css");
+.mblToolBarButtonHasArrow-styles {
+  width: 27px;
+  height: 27px;
+  border-radius: 20px;
+  border: 2px solid #ffffff;
+  padding: 0px;
+  margin: 0px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background-image: url("images/dark/back.png");
+  background-position: 50% 50%;
+  background-size: 27px 27px;
+  background-repeat: no-repeat;
+}
+/* dojox.mobile.SearchBox */
+.mblSearchBox {
+  height: auto;
+}
+/* CSS class for the parent DIV of the dojox/mobile/SearchBox used for filtering a 
+  dojox/mobile/RoundRectList or subclass. This class is set by dojox/mobile/FilteredListMixin 
+  only if the mixin creates the SearchBox by itself. */
+.mblFilteredRoundRectListSearchBox {
+  width: 100%;
+  padding-left: 9px;
+  padding-right: 9px;
+  -moz-box-sizing: border-box;
+}
+.mblFilteredRoundRectListSearchBox > input {
+  width: 100%;
+}
+/* CSS class for the parent DIV of the dojox/mobile/SearchBox used for filtering a 
+  dojox/mobile/EdgeToEdgeList or subclass. This class is set by dojox/mobile/FilteredListMixin 
+  only if the mixin creates the SearchBox by itself. */
+.mblFilteredEdgeToEdgeListSearchBox {
+  width: 100%;
+}
+.mblFilteredEdgeToEdgeListSearchBox > input {
+  width: 100%;
+}

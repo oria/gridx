@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"SwapView.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qDAEG,QAAA,CAASC,CAAT,QAKKA,EAAA,uCAOIC,QAAAA,CAAoBC,CAApBD,KAENE,kBAAA,EAFMF,EAEkBG,wBAFlBH,OAGRG,yBAHQH,IAIDI,cAAA,CAAeC,SAAf,CAEPF,yBANQH,UAODM,kBAAA,CAAkBL,CAAlB,CAPCD,CAPJ,cAiBQM,QAAAA,CAAoBL,CAApBK,KAEVJ,kBAAA,EAFUI,EAEcH,wBAFdG,OAGZH,yBAHYG,IAILF,cAAA,CAAeC,SAAf,CAEPF,yBANYG,UAOLN,cAAA,CAAcC,CAAd,CAPKK,CAjBR,EALL,CAFH;",
+"sources":["SwapView.js.uncompressed.js"],
+"names":["define","declare","nextView","node","isLeftToRight","_callParentFunction","inherited","arguments","previousView"]
+}

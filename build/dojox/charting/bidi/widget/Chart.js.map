@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Chart.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,2DACC,QAAA,CAASC,CAAT,QAOOA,EAAA,2BACeC,QAAAA,GAIpBC,YAJoBD,CAILE,WAAA,QAJKF,CAIoBE,WAAA,QAJpBF,CAI6CE,WAAA,IAJ7CF,CADf,iBAQWG,QAAAA,CAAoBF,CAApBE,YAXVC,uBAAA,CAYaH,CAZb,CAWUE,CACGF,CADHE,OAEfE,SAAA,WAAqBJ,CAArB,CAFeE,CAGfG,UAAAC,WAAA,CAAsBN,CAAtB,CAHeE,CARX,aAeOK,QAAAA,CAAoBC,CAApBD,EACZH,SAAA,OAAiBI,CAAjB,CACAH,WAAAI,OAAA,CAAkBD,CAAlB,CAFYD,CAfP,EAPP,CADD;",
+"sources":["Chart.js.uncompressed.js"],
+"names":["define","declare","postMixInProperties","textDir","params","_setTextDirAttr","test","_set","chart","setTextDir","_setDirAttr","dir","setDir"]
+}

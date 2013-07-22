@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"RoyalPurples.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oEAA6E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAC5EA,CAAAC,aAD4E,CACtD,IAAIF,CAAJ,8DADsD,OAUrEC,EAAAC,aAVqE,CAA7E;",
+"sources":["RoyalPurples.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","RoyalPurples"]
+}

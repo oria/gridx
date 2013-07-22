@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_ComboBoxMenu.js",
+"lineCount":4,
+"mappings":"A,SAAAA,MAAA,8BAAqC,mNAAA,MAAA,KAArC,CAYC,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAwBC,CAAxB,CAAkCC,CAAlC,CAAgDC,CAAhD,CAAmEC,CAAnE,CAA+EC,CAA/E,CAA+FC,CAA/F,CAA2GC,CAA3G,CAAgHC,CAAhH,EAIIC,CAJJ,CAIoBT,CAAA,CAAQO,CAAA,aAAR,mEAAgGH,CAAhG,CAA4GC,CAA5G,CAA4HF,CAA5H,0DAkBHO,QAAAA,GACfC,YADeD,CACAE,cADAF,CACiBR,CAAAW,OAAA,QAA6B,OAA7B,aAChCC;kBAFeJ,CAEMR,CAAAW,OAAA,kDAA8EF,YAA9E,CACrBI,oBAHeL,CAGOR,CAAAW,OAAA,QAA6B,OAA7B,6EAAoHC,kBAApH,CACtBE,gBAJeN,CAIGR,CAAAW,OAAA,QAA6B,OAA7B,yEAAgHC,kBAAhH,CAClBG,eAAA,CAAeC,SAAf,CALeR,CAlBG,iBA0BFS,QAAAA,SAETjB,EAAAW,OAAA,QACN,OADM,iCACoCO,kBAAA,EADpC;6CAFSD,CA1BE,UAkCTE,QAAAA,CAAqBC,CAArBD,EAGTpB,CAAAsB,IAAA,CAAaD,CAAb,+BAHSD,CAlCS,YAwCPG,QAAAA,CAAqBF,CAArBE,EAGXvB,CAAAwB,OAAA,CAAgBH,CAAhB,+BAHWE,CAxCO,QA8CXE,QAAAA,GAGPC,eAAAC,KAAA,UACUjB,YADV,eAEgBG,kBAFhB,EAIAa,gBAAAE,SAAA,WAPOH,CA9CW,SAwDVI,QAAAA,GAGRH,eAAAI,QAAA,EAHQD,CAxDU,kBA8DDE,QAAAA,GACjBC,aADiBD,GAEjBf,eAAA,CAAeC,SAAf,CAFiBc,CA9DC,YAmEPE,QAAAA,GACXjB,cAAA,CAAeC,SAAf,CACAS,gBAFWO,CAEO,IAAI5B,CACtBqB,gBAAAQ,OAHWD;AAGcE,QAAAA,IAHdF,CAnEO,EAJpB,OA6EO3B,EAAA,aA7EP,CA6E0BP,CAAA,+BAAuCS,CAAvC,CAAsDD,CAAtD,EA7E1B,CA6EqGC,CA7ErG,CAZD;",
+"sources":["_ComboBoxMenu.js.uncompressed.js"],
+"names":["define","dojo","declare","domClass","domConstruct","ComboBoxMenuMixin","WidgetBase","ListTouchMixin","Scrollable","has","BidiComboBoxMenu","_ComboBoxMenu","buildRendering","domNode","focusNode","create","containerNode","previousButton","nextButton","inherited","arguments","_createMenuItem","isLeftToRight","onSelect","node","add","onDeselect","remove","onOpen","scrollable","init","scrollTo","onClose","cleanup","destroyRendering","bgIframe","postCreate","resize","this.scrollable.resize"]
+}

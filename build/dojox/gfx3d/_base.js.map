@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_base.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,yCAAgD,QAAA,CAASC,CAAT,MAC3CC,EAAQD,CAAAE,UAAA,kBACZF,EAAAG,MAAA,CAAYF,CAAZ;4CAF+C,OAgBxCA,EAhBwC,CAAhD;",
+"sources":["_base.js.uncompressed.js"],
+"names":["define","lang","gfx3d","getObject","mixin"]
+}

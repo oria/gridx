@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"SpinWheelSlot.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,iIAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAuBC,CAAvB,CAA8BC,CAA9B,CAA4CC,CAA5C,QAKKJ,EAAA,kBAMMK,QAAAA,GACXC,cAAA,CAAeC,SAAf,CADWF,EAEPG,YAFOH,GAESI,cAAA,EAFTJ,EAE6BI,cAAA,EAAAC,IAAA,WAF7BL,GAGVM,QAAA,WAAoBF,cAAA,EAAAC,IAAA,WAApB,CAHUL,CANN,iBAaWO,QAAAA,CAASJ,CAATI,KACbJ,CADaI,IACAC,aADAD,EACiBJ,YADjBI,GACkCJ,CADlCI,EAEfJ,YAFeI,CAEAJ,CAFAI,CAGfE,uBAAA,CAAwBN,YAAxB,CAHeI,CAbX,oBAoBcE,QAAAA,CAASN,CAATM,EACnBZ,CAAAa,QAAA,CAAcC,eAAd;AAA+B,QAAA,CAASC,CAAT,EAC9Bf,CAAAa,QAAA,CAAcE,CAAAC,WAAd,CAAgC,QAAA,CAASC,CAAT,CAAeC,CAAf,EAC/BD,CAAAE,UAD+B,CACdjB,CAAAkB,kBAAA,CAAyBH,CAAAE,UAAzB,CACjBF,EAAAE,UAF+B,CAEdjB,CAAAmB,sBAAA,CAA6BJ,CAAAE,UAA7B,CAA6Cb,YAA7C,CACjBW,EAAAK,MAAAC,UAH+B,SAGPC,QAAAC,YAAA,EAHO,gBAAhC,MAD8B,CAA/B,MADmBb,CApBd,EALL,CANH;",
+"sources":["SpinWheelSlot.js.uncompressed.js"],
+"names":["define","declare","win","array","domConstruct","common","postCreate","inherited","arguments","textDir","getParent","get","set","_setTextDirAttr","_created","_setTextDirToNodes","forEach","panelNodes","panel","childNodes","node","i","innerHTML","removeUCCFromText","enforceTextDirWithUcc","style","textAlign","dir","toLowerCase"]
+}

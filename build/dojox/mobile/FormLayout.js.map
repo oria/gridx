@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"FormLayout.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iFAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,QAKKF,EAAA,2BAAmCE,CAAnC,wEAyDUC,QAAAA,GACfC,cAAA,CAAeC,SAAf,CADeF,SAEZG,YAFYH,CAGdF,CAAAM,IAAA,CAAaC,YAAb,qBAHcL,WAING,YAJMH,CAKdF,CAAAM,IAAA,CAAaC,YAAb,0BALcL,QAMNG,YANMH,EAOdF,CAAAM,IAAA,CAAaC,YAAb,uBAEEC,gBATYN,EAUdF,CAAAM,IAAA,CAAaC,YAAb,2BAVcL,CAzDV,EALL,CAJH;",
+"sources":["FormLayout.js.uncompressed.js"],
+"names":["define","declare","domClass","Container","buildRendering","inherited","arguments","columns","add","domNode","rightAlign"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Badge.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6DAAsE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAK9DD,EAAA,2BAeIE,QAAAA,CAAmBC,CAAnBD,EACTE,YAAAC,WAAAC,UADSJ,CAC2BD,CAAAM,sBAAA,CAA6BJ,CAA7B,CAAoCK,YAApC,CAD3BN,CAfJ,YAmBMO,QAAAA,CAAmBD,CAAnBC,EACPD,YADOC,GACUD,CADVC,GAEVD,YAFUC,CAEKD,CAFLC,CAGVL,YAAAC,WAAAC,UAHUG,CAG0BR,CAAAM,sBAAA,CAA6BN,CAAAS,kBAAA,CAAyBN,YAAAC,WAAAC,UAAzB,CAA7B,CAA0FE,YAA1F,CAH1BC,EAnBN,EAL8D,CAAtE;",
+"sources":["Badge.js.uncompressed.js"],
+"names":["define","declare","common","setValue","value","domNode","firstChild","innerHTML","enforceTextDirWithUcc","textDir","setTextDir","removeUCCFromText"]
+}

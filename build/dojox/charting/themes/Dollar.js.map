@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Dollar.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8DAAuE,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EACtEA,CAAAC,OADsE,CACtD,IAAIF,CAAJ,8DADsD,OAU/DC,EAAAC,OAV+D,CAAvE;",
+"sources":["Dollar.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Dollar"]
+}

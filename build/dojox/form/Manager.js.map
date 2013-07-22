@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Manager.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,sBAA6B,yOAAA,MAAA,KAA7B,CAYG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAgCC,CAAhC,CAAyDC,CAAzD,CAAiEC,CAAjE,CAA6EC,CAA7E,CAAyFC,CAAzF,CAAsGC,CAAtG,CAAoHC,CAApH,CAAmIC,CAAnI,CAAgJC,CAAhJ,QAEIA,EAAA,uBAAgCV,CAAhC,CAAyCE,CAAzC,CAAkED,CAAlE,CAAgFE,CAAhF,CAAwFC,CAAxF,CAAoGC,CAApG,CAAgHC,CAAhH,CAA6HC,CAA7H,CAA2IC,CAA3I,CAA0JC,CAA1J,yCAYUE,QAAAA,GACXC,kBADWD,GAGdC,kBAHcD,CAGOE,eAHPF,CAKfG,eAAA,CAAeC,SAAf,CALeJ,CAZV,EAFJ,CAZH;",
+"sources":["Manager.js.uncompressed.js"],
+"names":["define","_Widget","_AttachMixin","_WidgetsInTemplateMixin","_Mixin","_NodeMixin","_FormMixin","_ValueMixin","_EnableMixin","_DisplayMixin","_ClassMixin","declare","buildRendering","containerNode","srcNodeRef","inherited","arguments"]
+}

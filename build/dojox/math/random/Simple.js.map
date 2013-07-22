@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Simple.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qCAA6C,QAAA,CAASC,CAAT,QAErCA,EAAAC,QAAA,0CAKGC,QAAAA,IALH,WAUKC,QAAAA,CAAqBC,CAArBD,UAMFE,GANEF,CAMKG,EAAIF,CAAAG,OANTJ,CAM2BE,CAN3BF,CAM+BG,CAN/BH,GAMoCE,CANpCF,CAOTC,CAAA,CAAUC,CAAV,CAPSF,CAOMK,IAAAC,MAAA,KAAiBD,IAAAE,OAAA,EAAjB,CAPNP,CAVL,EAFqC,CAA7C;",
+"sources":["Simple.js.uncompressed.js"],
+"names":["define","dojo","declare","destroy","nextBytes","byteArray","i","l","length","Math","floor","random"]
+}

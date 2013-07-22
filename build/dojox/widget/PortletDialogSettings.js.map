@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"PortletDialogSettings.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,qIAMI,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA0BC,CAA1B,CAAoCC,CAApC,CAAqDC,CAArD,QAEIJ,EAAA,uCAA+CG,CAA/C,+BASQE,QAAAA,CAASC,CAATD,CAAgBE,CAAhBF,EACZG,eADYH,CACMC,CAAAE,WADNH,YATR,QAaGI,QAAAA,GAIHC,WAJGD,GAMNC,WANMD,CAMQ,IAAIL,CAAJ,QAAmBO,UAAnB,EANRF,CAQNR,CAAAW,KAAA,EAAAC,YAAA,CAA0BH,WAAAI,QAA1B,CARML,CAWNC,WAAAK,cAAAF,YAAA,CAAsCC,YAAtC,CAXML,CAaNP,CAAAc,IAAA,CAAaN,WAAAI,QAAb,QACWN,eAAA,GADX;YAEYA,eAAA,GAFZ,OAbMC,CAiBNP,CAAAc,IAAA,CAAaF,YAAb,cAjBML,CAmBJC,YAAAO,KAnBIR,CAoBNC,WAAAQ,KAAA,EApBMT,CAsBNC,WAAAS,KAAA,CAAiBL,YAAjB,CAtBML,CAbH,EAFJ,CANJ;",
+"sources":["PortletDialogSettings.js.uncompressed.js"],
+"names":["define","declare","window","domStyle","PortletSettings","Dialog","constructor","props","node","dimensions","toggle","dialog","title","body","appendChild","domNode","containerNode","set","open","hide","show"]
+}

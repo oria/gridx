@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"JsonHandler.js",
+"lineCount":2,
+"mappings":"A,SACAA,MAAA,mIAA2I,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC3IF,CAAAG,QAAA,6BAEAH,EAAAI,QAAA,6BACAJ,EAAAI,QAAA,oBACAJ,EAAAI,QAAA,sBAGAJ,EAAAK,QAAA,6BAA0CH,CAAAI,KAAAC,GAAAC,YAA1C,gFAScC,QAAAA,CAAmBC,CAAnBD,CAAoCE,CAApCF,MAYRG,MAZQH,YAaTC,CAbSD,SAaWC,CAbXD,MAcPI,EAAKF,CAALE,CAAkBF,CAAA,GAAlBE,OACDA;CAfQJ,GAiBTG,CAjBSH,CAgBPT,CAAAc,SAAA,CAAcD,CAAd,CAhBOJ,CAiBCI,CAjBDJ,CAmBCT,CAAAe,OAAA,CAAYF,CAAZ,CAnBDJ,QAuBLG,EAvBKH,CATd,EAR2I,CAA3I;",
+"sources":["JsonHandler.js.uncompressed.js"],
+"names":["define","dojo","dijit","dojox","provide","require","declare","wire","ml","RestHandler","_getContent","method","parameters","content","p","isString","toJson"]
+}

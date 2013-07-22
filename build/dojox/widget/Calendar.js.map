@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Calendar.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8HAMG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAA0BC,CAA1B,CAAyCC,CAAzC,CAAuDC,CAAvD,EACFJ,CAAAK,aAAA,yBADE,OAGKJ,EAAA,0BAAkCC,CAAlC,CAAiDC,CAAjD,CAA+DC,CAA/D,KAHL,CANH;",
+"sources":["Calendar.js.uncompressed.js"],
+"names":["define","kernel","declare","_CalendarBase","_CalendarDay","_CalendarMonthYear","experimental"]
+}

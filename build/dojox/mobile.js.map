@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"mobile.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6DAIG,QAAA,CAASC,CAAT,CAAgBC,CAAhB,CAAsBC,CAAtB,EACFD,CAAAE,UAAA,aAA+BH,CAA/B,CADE,OASKA,EAAAI,OATL,CAJH;",
+"sources":["mobile.js.uncompressed.js"],
+"names":["define","dojox","lang","base","getObject","mobile"]
+}

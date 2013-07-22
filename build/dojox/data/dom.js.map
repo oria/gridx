@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"dom.js",
+"lineCount":3,
+"mappings":"A,SAAAA,MAAA,6EACE,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAAuBC,CAAvB,EAmBFC,IAAAC,WAAA,wDAEIC,EArBF,CAqBYJ,CAAAK,UAAA,qBAEdD,EAAAE,eAvBE,CAuBuBC,QAAAA,CAAqBC,CAArBD,CAAsCE,CAAtCF,EAQxBL,IAAAC,WAAA,iFARwBI,WAUhBN,EAAAS,MAAA,CAAgBF,CAAhB,CAAoBC,CAApB,CAVgBF,OAWjBI,CAXiBJ,eAiBzBH,EAAAQ,YAxCE,CAwCoBC,QAAAA,CAAiBC,CAAjBD,CAAkCE,CAAlCF,EAWrBX,IAAAC,WAAA;MAXqBU,UAYlBG,SAAAC,OAZkBJ,CAabZ,CAAAW,YAAA,CAAsBE,CAAtB,CAA4BC,CAA5B,CAbaF,CAebZ,CAAAW,YAAA,CAAsBE,CAAtB,CAfaD,CAmBtBT,EAAAc,gBA3DE,CA2DwBC,QAAAA,CAAoBL,CAApBK,CAAyCC,CAAzCD,EAYzBjB,IAAAC,WAAA,4FACAF,EAAAiB,gBAAA,CAA0BJ,CAA1B,CAAgCM,CAAhC,CAbyBD,CAgB1Bf,EAAAiB,eA3EE,CA2EuBC,QAAAA,CAAoBR,CAApBQ,EAOxBpB,IAAAC,WAAA,0FAPwBmB,OAQjBC,MAAAC,IAAAC,OAAAJ,eAAA,CAAgCP,CAAhC,CARiBQ,CAWzBlB,EAAAsB,SAtFE,CAsFiBC,QAAAA,CAAiBb,CAAjBa,EAKlBzB,IAAAC,WAAA;MALkBwB,OAMX1B,EAAAyB,SAAA,CAAmBZ,CAAnB,CANWa,CAtFjB,OA+FKvB,EA/FL,CADF;",
+"sources":["dom.js.uncompressed.js"],
+"names":["define","kernel","lang","xmlParser","dojo","deprecated","dataDom","getObject","createDocument","dataDom.createDocument","str","mimetype","parse","e","textContent","dataDom.textContent","node","text","arguments","length","replaceChildren","dataDom.replaceChildren","newChildren","removeChildren","dataDom.removeChildren","dojox","xml","parser","innerXML","dataDom.innerXML"]
+}

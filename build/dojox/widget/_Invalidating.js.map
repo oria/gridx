@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_Invalidating.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,uFACC,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAwBC,CAAxB,QAEOF,EAAA,8BAAsCE,CAAtC,6DAaMC,QAAAA,CAASC,CAATD,EACXE,cAAA,CAAeC,SAAf,CADWH,IAERI,2BAFQJ,SAGNK,EAAQD,2BAHFJ,CAIFM,GAJEN,CAIKM,CAJLN,CAISK,CAAAE,OAJTP,CAIuBM,CAJvBN,GAKTQ,UAAA,CAAWH,CAAA,CAAMC,CAAN,CAAX,CAAqBR,CAAAW,MAAA,MAAiBC,wBAAjB,CAArB,CALSV,CAMNC,CANMD,EAMGK,CAAA,CAAMC,CAAN,CANHN,EAMeC,EANfD,EAQRU,wBAAA,EARQV,CAbN,2BA0BqBW,QAAAA,CAAsBC,CAAtBD,EAO1BP,2BAP0BO,CAOIP,2BAPJO;AAOgCP,2BAAAS,OAAA,CAAmCD,CAAnC,CAPhCD,CAO+EC,CAP/ED,CA1BrB,qBAmCeD,QAAAA,GAGhBI,qBAHgBJ,GAInBI,qBAJmBJ,IAKnBK,UAAA,CAAWjB,CAAAW,MAAA,MAAiBO,sBAAjB,CAAX,GALmBN,EAnCf,mBA2CaM,QAAAA,GAKfF,qBALeE,GAMjBC,qBAAA,EANiBD,CAOjBF,qBAPiBE,KA3Cb,kBAqDYC,QAAAA,IArDZ,EAFP,CADD;",
+"sources":["_Invalidating.js.uncompressed.js"],
+"names":["define","declare","lang","Stateful","postscript","mixin","inherited","arguments","invalidatingProperties","props","i","length","watch","hitch","invalidateRendering","addInvalidatingProperties","properties","concat","invalidRendering","setTimeout","validateRendering","refreshRendering"]
+}

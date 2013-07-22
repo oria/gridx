@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"canvas_attach.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,sFAA+F,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAqBC,CAArB,EAC9FF,CAAAG,UAAA,8BACAF,EAAAG,aAAA,2BAGAF,EAAAG,cAL8F,CAKvEH,CAAAI,WALuE,CAKnDC,QAAAA,eALmD,OASvFL,EATuF,CAA/F;",
+"sources":["canvas_attach.js.uncompressed.js"],
+"names":["define","lang","kernel","canvas","getObject","experimental","attachSurface","attachNode","canvas.attachNode"]
+}

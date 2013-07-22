@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"delegate.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,2GAKG,QAAA,CAASC,CAAT,CAAeC,CAAf,MAKCC,EAAWD,CAAAC,SAEfF,EAAAG,OAAA,CAAYD,CAAZ,WACWE,QAAAA,CAAoBC,CAApBD,CAAyCE,CAAzCF,CAAiEG,CAAjEH,QA0CFI,aAAA,CAAaF,CAAb,CAAwB,QAAA,CAASG,CAAT,MAC1BC,EAAUT,CAAA,CAAMQ,CAAAE,OAAN,CAAAD,QAAA,CAA0BL,CAA1B,MACXK,EAAAE,OAF2B,EAG7BL,CAAAM,KAAA,CAAQH,CAAA,GAAR,CAAoBD,CAApB,CAH6B,CAAxB,CA1CEL,CADX,EAPG,OA2DIF,EA3DJ,CALH;",
+"sources":["delegate.js.uncompressed.js"],
+"names":["define","lang","query","NodeList","extend","delegate","selector","eventName","fn","connect","evt","closest","target","length","call"]
+}

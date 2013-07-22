@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"PatternFileTypeMap.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,0DAEG,QAAA,CAASC,CAAT,MAKEC,IAKJD,EAAAE,UAAA,sCAAqDD,CAArD,CAEAA,EAAAE,IAZE,EAaD,SAbC,QAcD,SAdC,QAiBFF,EAAAG,IAjBE,CAiBMC,QAAAA,CAAoBC,CAApBD,CAAoCE,CAApCF,EAGPF,QAAA,CAASG,CAAT,CAHOD,CAGSE,CAHTF,CAMRJ,EAAAO,eAvBE,CAuBiBC,QAAAA,CAAoBC,CAApBD,UAGVH,CAHUG,GAGHN,SAHGM,IAITE,MAAJ,CAAWL,CAAX,CAAAM,KAAA,CAAsBF,CAAtB,CAJaD,OAKTN,SAAA,CAASG,CAAT,CALSG,aAvBjB,OAkCKR,EAlCL,CAFH;",
+"sources":["PatternFileTypeMap.js.uncompressed.js"],
+"names":["define","lang","o","setObject","map","add","o.add","key","contentType","getContentType","o.getContentType","fileName","RegExp","test"]
+}

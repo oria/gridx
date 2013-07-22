@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"CalendarFisheye.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,mFAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,QACKF,EAAA,iCAA0CC,CAA1C,CAAoDC,CAApD,KADL,CAJH;",
+"sources":["CalendarFisheye.js.uncompressed.js"],
+"names":["define","declare","Calendar","_FisheyeFX"]
+}

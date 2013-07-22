@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"transition.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,uEAGG,QAAA,CAASC,CAAT,CAAmBC,CAAnB,KAUCA,CAAA,kBAVD,MAYGC,EAAkB,IAAIF,CAC1BG,QAAA,EAASF,CAAA,kBAAT,EAAuC,QAAA,CAASG,CAAT,EACtCF,CAAAG,QAAA,CAAwBD,CAAxB,CADsC,CAAvC,CAbC,OAgBMF,EAhBN,aAHH;",
+"sources":["transition.js.uncompressed.js"],
+"names":["define","Deferred","config","transitDeferred","require","transit","resolve"]
+}

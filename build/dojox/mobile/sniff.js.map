@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"sniff.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,yDAGG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,EAEFD,CAAAE,WAAA,qDAGAD,EAAAE,IAAA,UAAkBF,CAAA,OAAlB,CALE,OAgBKA,EAhBL,CAHH;",
+"sources":["sniff.js.uncompressed.js"],
+"names":["define","kernel","has","deprecated","add"]
+}

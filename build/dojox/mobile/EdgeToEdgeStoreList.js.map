@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"EdgeToEdgeStoreList.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kGAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAkCC,CAAlC,QAKKF,EAAA,qCAA6CC,CAA7C,CAA6DC,CAA7D,KALL,CAJH;",
+"sources":["EdgeToEdgeStoreList.js.uncompressed.js"],
+"names":["define","declare","EdgeToEdgeList","StoreListMixin"]
+}

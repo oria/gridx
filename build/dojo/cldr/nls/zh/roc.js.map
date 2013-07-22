@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"roc.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,yBAGC,cAHD,gBAIC,wBAJD,gBAKC,YALD,UAMC,yBAND,sBAOC,uBAPD,gBAQC,uBARD,gBASC,YATD,UAUC,uBAVD,gBAWC,uBAXD,gBAYC,cAZD,gBAaC,wBAbD,gBAcC,sBAdD,gBAeC,YAfD,gBAgBC,sBAhBD;AAiBC,sBAjBD,gBAkBC,WAlBD,UAmBC,wBAnBD,gBAoBC,wBApBD,sBAqBC,iBArBD,6BAsBC,aAtBD,UAuBC,WAvBD,gBAwBC,uBAxBD,gBAyBC,uBAzBD,8DA8BC,eA9BD,gBA+BC,YA/BD;",
+"sources":["roc.js.uncompressed.js"],
+"names":["define"]
+}

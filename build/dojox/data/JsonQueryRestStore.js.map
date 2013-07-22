@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"JsonQueryRestStore.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,4JAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAiCC,CAAjC,QAQIF,EAAA,kCAAyCC,CAAzC,CAAwDC,CAAxD,gBACQC,QAAAA,CAASC,CAATD,CAAcE,CAAdF,QACNC,EAAAE,KADMH,MACQC,CAAAE,KAAAC,QAAA,KADRJ,EACyCK,cAAA,CAAeC,SAAf,CADzCN,CADR,EARJ,CAJH;",
+"sources":["JsonQueryRestStore.js.uncompressed.js"],
+"names":["define","declare","JsonRestStore","JsonQuery","matchesQuery","item","request","__id","indexOf","inherited","arguments"]
+}

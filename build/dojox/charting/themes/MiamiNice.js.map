@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"MiamiNice.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iEAA0E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EACzEA,CAAAC,UADyE,CACtD,IAAIF,CAAJ,8DADsD,OAUlEC,EAAAC,UAVkE,CAA1E;",
+"sources":["MiamiNice.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","MiamiNice"]
+}

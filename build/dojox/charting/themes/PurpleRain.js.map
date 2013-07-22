@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"PurpleRain.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kEAA2E,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAG1EA,CAAAC,WAH0E,CAGtD,IAAIF,CAAJ,8DAHsD,OAYnEC,EAAAC,WAZmE,CAA3E;",
+"sources":["PurpleRain.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","PurpleRain"]
+}

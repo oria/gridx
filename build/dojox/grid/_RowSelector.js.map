@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_RowSelector.js",
+"lineCount":3,
+"mappings":"A,SAAAA,MAAA,4DAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEID,EAAA,2BAAmCC,CAAnC,iEAMUC,QAAAA,GACfC,cAAA,kBAAiCC,SAAjC,CACAC,mBAAAC,MAAAC,SAFeL,SAGfM,gBAAAF,MAAAG,WAHeP,UANV,UAWIQ,QAAAA,SACFC,eADED,EACgBE,iBADhBF,CAXJ,iBAcWG,QAAAA,CAASC,CAATD,CAAqBE,CAArBF,EAEhBE,CAAAC,UAFgBH,+DACRI,iBADQJ;qMAdX,cAkBQK,QAAAA,IAlBR,WAoBKC,QAAAA,IApBL,QAsBEC,QAAAA,GACPC,gBAAA,EADOD,CAtBF,YAyBME,QAAAA,8BAEqBC,gBAFrBD,IAEyCC,gBAAAC,YAFzCF,IAGVL,iBAHUK,CAGUC,gBAAAC,YAHVF,CAGyCG,mBAHzCH,EAzBN,gBAgCUI,QAAAA,CAASZ,CAATY,CAAqBX,CAArBW,MACXC,gDACDC;SAAAC,KAAAC,OAAA,CAAsBhB,CAAtB,CAFYY,EAGdC,CAAAI,KAAA,uBAEEH,UAAAI,UAAAC,WAAA,CAA+BnB,CAA/B,CALYY,EAMdC,CAAAI,KAAA,2BAEDhB,EAAAmB,UAReR,CAQOC,CAAAQ,KAAA,KARPT,CAhCV,aA2COU,QAAAA,CAASC,CAATD,EACZR,SAAAU,eAAA,CAAyBD,CAAzB,CADYD,CA3CP,YA8CMG,QAAAA,CAASF,CAATE,MACPC,oBAAA,CAAqBH,CAArB,CADOE,CAEVX,SAAAa,cAAA,CAAwBJ,CAAxB,CAFUE,CA9CN,EAFJ,CAHH;",
+"sources":["_RowSelector.js.uncompressed.js"],
+"names":["define","declare","_View","buildRendering","inherited","arguments","scrollboxNode","style","overflow","headerNode","visibility","getWidth","viewWidth","defaultWidth","buildRowContent","inRowIndex","inRowNode","innerHTML","contentWidth","renderHeader","updateRow","resize","adaptHeight","adaptWidth","contentNode","offsetWidth","padBorderWidth","doStyleRowNode","n","grid","rows","isOver","push","selection","isSelected","className","join","domouseover","e","onMouseOverRow","domouseout","isIntraRowEvent","onMouseOutRow"]
+}

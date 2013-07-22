@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"RoundRectCategory.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,yEAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAKKD,EAAA,qBAOSE,QAAAA,CAASC,CAATD,EACXE,YADWF,GAEbC,CAFaD,CAEND,CAAAI,sBAAA,CAA6BF,CAA7B,CAAmCC,YAAnC,CAFMF,CAIdI,eAAA,CAAeC,SAAf,CAJcL,CAPT,iBAaWM,QAAAA,CAASJ,CAATI,EACbJ,CADaI,EACFJ,YADEI,GACeJ,CADfI,GAEfJ,YAFeI,CAEAJ,CAFAI,CAGfC,UAHeD,CAGFP,CAAAS,kBAAA,CAAyBD,UAAzB,CAHED,CAIfG,QAAA,SAAkBF,UAAlB,CAJeD,EAbX,EALL,CAHH;",
+"sources":["RoundRectCategory.js.uncompressed.js"],
+"names":["define","declare","common","_setLabelAttr","text","textDir","enforceTextDirWithUcc","inherited","arguments","_setTextDirAttr","label","removeUCCFromText","set"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"coptic.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,4BAGC,cAHD,gBAIC,wBAJD,eAKC,YALD,iCAMC,yBAND,qBAOC,uBAPD,QAQC,uBARD,mBASC,YATD,MAUC,uBAVD,oCAWC,uBAXD,qCAYC,cAZD,SAaC,wBAbD,yCAcC,sBAdD;AAeC,YAfD,YAgBC,sBAhBD,cAiBC,sBAjBD,iBAkBC,WAlBD,MAmBC,wBAnBD,gBAoBC,wBApBD,iBAqBC,iBArBD,kBAsBC,aAtBD,aAuBC,WAvBD,YAwBC,uBAxBD,eAyBC,uBAzBD,eA0BC,eA1BD,kCA2BC,YA3BD;",
+"sources":["coptic.js.uncompressed.js"],
+"names":["define"]
+}

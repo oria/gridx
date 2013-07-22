@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"generateRandomUuid.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6CAAqD,QAAA,GAErDC,KAAAC,KAAAC,mBAFqD,CAErBC,QAAAA,GA0B/BC,QAASA,EAATA,WAIKC,EADoBC,IAAAC,MAAAC,CAAaF,IAAAG,OAAA,EAAbD,GAAkCF,IAAAI,IAAA,MAAlCF,CACMG,SAAA,CAA2BC,CAA3B,CAJ/BR,GAKOC,CAAAQ,OALPT,EAMEC,CANFD,KAMkCC,CANlCD,OAQQC,EARRD,CA1B+BD,IAwB3BS,IAxB2BT,CAwC3BW,EAAIV,CAAA,EAxCuBD,CAyC3BY,EAAIX,CAAA,EAzCuBD,CA0C/BY,EAAIA,CAAAC,UAAA,KAAJD,MAAwEA,CAAAC,UAAA,KA1CzCb,CA2C3Bc,EAAIb,CAAA,EA3CuBD,CA4C/Bc,MAA6BA,CAAAD,UAAA,KAA7BC,KAA0DA,CAAAD,UAAA,KA5C3Bb,CA6C3Be,EAAId,CAAA,EA7CuBD,OA+C/BgB,EA/C+BhB,CA+CjBiB,CADIN,CACJM,KADiBL,CACjBK,KAD8BH,CAC9BG,CADkCF,CAClCE,aAAA,EA/CiBjB,CAFqB,OAqD9CH,MAAAC,KAAAC,mBArD8C,CAArD;",
+"sources":["generateRandomUuid.js.uncompressed.js"],
+"names":["define","dojox","uuid","generateRandomUuid","dojox.uuid.generateRandomUuid","_generateRandomEightCharacterHexString","eightCharacterHexString","Math","floor","random32bitNumber","random","pow","toString","HEX_RADIX","length","a","b","substring","c","d","returnValue","toLowerCase"]
+}

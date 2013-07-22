@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"timing.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,mCAA2C,QAAA,CAASC,CAAT,QAQnCA,EARmC,CAA3C;",
+"sources":["timing.js.uncompressed.js"],
+"names":["define","timing"]
+}

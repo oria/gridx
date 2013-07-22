@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"FileInputBlind.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,4EAGG,QAAA,CAASC,CAAT,CAAeC,CAAf,EAGFD,CAAAE,UAAA,6BAA4CD,CAA5C,CAHE,OAIKA,EAJL,CAHH;",
+"sources":["FileInputBlind.js.uncompressed.js"],
+"names":["define","lang","FileInputAuto","setObject"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"common.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,sEAA+E,QAAA,CAASC,CAAT,CAAgBC,CAAhB,QAS7EC,OAT6E,wBAU9CC,QAAAA,CAASC,CAATD,CAAeE,CAAfF,QAW3BE,EAX2BF,EAY7BE,CAZ6BF,UAYlBE,CAZkBF,CAYIF,CAAAK,UAAAC,iBAAA,CAAwCH,CAAxC,CAZJD,CAYoDE,CAZpDF,UAapBE,CAboBF,CAaCD,MAAAM,KAAAC,IAbDN,CAamBD,MAAAM,KAAAE,IAbnBP,EAasCC,CAbtCD,CAa6CD,MAAAM,KAAAG,IAb7CR,EAevBC,CAfuBD,CAV8C,mBA4BlDS,QAAAA,CAASR,CAATQ,SAKrBR,CALqBQ,CAMlBR,CANkBQ,CAQnBR,CAAAS,QAAA,4BARmBD,CA5BkD,sBAuC/CE,QAAAA,CAASC,CAATD,MAKzBE,EAAWD,CAAAE,YAAA,EACXD,EANyBF,EAMbC,CAAAV,QANaS,EAO5Bd,CAAAkB,QAAA,CAAcF,CAAd,CAAwB,QAAA,CAASG,CAAT,EACvBA,CAAAC,IAAA,WAAkBL,CAAAV,QAAlB,CADuB,CAAxB,CAEGU,CAFH,CAP4BD,CAvC+C;eAA/E;",
+"sources":["common.js.uncompressed.js"],
+"names":["define","array","_BidiSupport","common","common.enforceTextDirWithUcc","text","textDir","prototype","_checkContextual","MARK","RLE","LRE","PDF","common.removeUCCFromText","replace","common.setTextDirForButtons","widget","children","getChildren","forEach","ch","set"]
+}

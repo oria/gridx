@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_patches.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iGAIG,QAAA,IAJH;",
+"sources":["_patches.js.uncompressed.js"],
+"names":["define"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"app.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oCAEG,QAAA,CAASC,CAAT,QAUKA,EAVL,CAFH;",
+"sources":["app.js.uncompressed.js"],
+"names":["define","appBase"]
+}

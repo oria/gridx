@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Shrooms.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,+DAAwE,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAGvEA,CAAAC,QAHuE,CAGtD,IAAIF,CAAJ,SACR,iGAAA,MAAA,KADQ,EAHsD,OAmBhEC,EAAAC,QAnBgE,CAAxE;",
+"sources":["Shrooms.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Shrooms"]
+}

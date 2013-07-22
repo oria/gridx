@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"TextBox.js",
+"lineCount":1,
+"mappings":"A,SACAA,MAAA,yFAAiG,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EACjGF,CAAAG,QAAA,4BACAH,EAAAI,WAAA,uGAEAJ,EAAAK,QAAA,wBAEAH,EAAAI,OAAAC,IAAAC,QANiG,CAMtEN,CAAAI,OAAAE,QANsE,CAAjG;",
+"sources":["TextBox.js.uncompressed.js"],
+"names":["define","dojo","dijit","dojox","provide","deprecated","require","mobile","app","TextBox"]
+}

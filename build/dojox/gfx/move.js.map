@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"move.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6DACE,QAAA,CAASC,CAAT,QAAuBA,EAAAC,UAAA,qBAAvB,CADF;",
+"sources":["move.js.uncompressed.js"],
+"names":["define","lang","getObject"]
+}

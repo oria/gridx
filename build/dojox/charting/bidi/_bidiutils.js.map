@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_bidiutils.js",
+"lineCount":1,
+"mappings":"A,SAAEA,MAAA,iDACeC,QAAAA,CAASC,CAATD,CAAeE,CAAfF,CAAoBG,CAApBH,CAA6BI,CAA7BJ,MASVK,EAAQF,CAAAG,EAARD,CAAoBF,CAAAI,EACpBC,EAVUR,CAULI,CAVKJ,UAWVS,GAXUT,CAYVU,GAZUV,CAaVW,GACAC,EAdUZ,CAcLI,CAdKJ,CAcAE,CAAAW,MAdAb,CAcYK,CAdZL,EAeVc,EAfUd,EAgBXC,EAAAc,OAhBWf,GAiBbQ,CAjBaR,EAiBHgB,IAAAC,IAAA,CAAShB,CAAAc,OAAAP,GAAT,CAjBGR,CAkBbW,CAlBaX,CAkBRC,CAAAc,OAAAJ,GAlBQX,CAmBbS,CAnBaT,CAmBRC,CAAAc,OAAAN,GAnBQT,CAoBbU,CApBaV,CAoBRC,CAAAc,OAAAL,GApBQV,CAqBbc,CArBad,CAqBRC,CAAAc,OAAAN,GArBQT,CAuBdC,EAAAiB,aAAA,KAAuBV,CAAvB,IAA+BC,CAA/B,IAAuCC,CAAvC,IAA+CC,CAA/C,IAAuDC,CAAvD,IAA+DE,CAA/D,EAvBcd,CADf;",
+"sources":["_bidiutils.js.uncompressed.js"],
+"names":["define","reverseMatrix","plot","dim","offsets","rtl","shift","l","r","xx","xy","yx","yy","dx","width","dy","matrix","Math","abs","setTransform"]
+}

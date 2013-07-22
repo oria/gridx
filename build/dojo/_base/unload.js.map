@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"unload.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,mDAA6D,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAqBC,CAArB,MAKzDC,EAAMC,MALmD,CAOzDC,qBAIgBC,QAAAA,CAA8BC,CAA9BD,CAAwDE,CAAxDF,EAoBbN,CAAAS,eApBaH,EAqBjBJ,CAAA,CAAGC,CAAH,UAAmBH,CAAAS,eAAnB,CAAyCC,QAAAA,IAAzC,CAYDR,EAAA,CAAGC,CAAH,UAAkBF,CAAAU,MAAA,CAAWJ,CAAX,CAAgBC,CAAhB,CAAlB,CAjCkBF,CAJhBD,aAwCUO,QAAAA,CAA+BL,CAA/BK,CAAyDJ,CAAzDI,EAyBZV,CAAA,CAAGC,CAAH,gBAAwBF,CAAAU,MAAA,CAAWJ,CAAX,CAAgBC,CAAhB,CAAxB,CAzBYI,CAxCVP,CAqEJL,EAAAM,kBA5E6D,CA4EpCD,CAAAC,kBACzBN,EAAAY,YA7E6D,CA6E1CP,CAAAO,YA7E0C,OA+EtDP,EA/EsD,CAA7D;",
+"sources":["unload.js.uncompressed.js"],
+"names":["define","dojo","lang","on","win","window","unload","addOnWindowUnload","obj","functionName","windowUnloaded","dojo.windowUnloaded","hitch","addOnUnload"]
+}

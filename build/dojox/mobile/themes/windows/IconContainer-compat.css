@@ -1,0 +1,27 @@
+@import url("../common/domButtons/DomButtonColorButtons-compat.css");
+
+@import url("../common/domButtons/DomButtonBlackCircleCross-compat.css");
+.mblToolBarButtonHasArrow-styles {
+  width: 27px;
+  height: 27px;
+  border-radius: 20px;
+  border: 2px solid #ffffff;
+  padding: 0px;
+  margin: 0px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background-image: url("images/dark/back.png");
+  background-position: 50% 50%;
+  background-size: 27px 27px;
+  background-repeat: no-repeat;
+}
+/* dojox.mobile.IconContainer */
+.mblIconItemPaneHeading {
+  background-image: url(compat/icon-content-heading-bg.png);
+}
+.dj_gecko .mblIconItemPaneHeading {
+  background-image: -moz-linear-gradient(top, #e0e4e7 0%, #c4ccd2 50%, #bfc8ce 50%, #b4bec6 100%);
+}
+.dj_ie7 .mblIconAreaInner {
+  font-size: 60px;
+}

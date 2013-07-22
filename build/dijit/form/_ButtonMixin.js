@@ -1,0 +1,5 @@
+//>>built
+define("dijit/form/_ButtonMixin",["dojo/_base/declare","dojo/dom","dojo/has","../registry"],function(d,f,e,g){var b=d("dijit.form._ButtonMixin"+(e("dojo-bidi")?"_NoBidi":""),null,{label:"",type:"button",__onClick:function(a){a.stopPropagation();a.preventDefault();this.disabled||this.valueNode.click(a);return!1},_onClick:function(a){if(this.disabled)return a.stopPropagation(),a.preventDefault(),!1;!1===this.onClick(a)&&a.preventDefault();cancelled=a.defaultPrevented;if(!cancelled&&"submit"==this.type&&
+!(this.valueNode||this.focusNode).form)for(var c=this.domNode;c.parentNode;c=c.parentNode){var b=g.byNode(c);if(b&&"function"==typeof b._onSubmit){b._onSubmit(a);a.preventDefault();cancelled=!0;break}}return!cancelled},postCreate:function(){this.inherited(arguments);f.setSelectable(this.focusNode,!1)},onClick:function(){return!0},_setLabelAttr:function(a){this._set("label",a);(this.containerNode||this.focusNode).innerHTML=a}});e("dojo-bidi")&&(b=d("dijit.form._ButtonMixin",b,{_setLabelAttr:function(){this.inherited(arguments);
+this.applyTextDir(this.containerNode||this.focusNode)}}));return b});
+//@ sourceMappingURL=_ButtonMixin.js.map

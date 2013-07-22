@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Minty.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6DAAsE,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EACrEA,CAAAC,MADqE,CACtD,IAAIF,CAAJ,8DADsD,OAU9DC,EAAAC,MAV8D,CAAtE;",
+"sources":["Minty.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Minty"]
+}

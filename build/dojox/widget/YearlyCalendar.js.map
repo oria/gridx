@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"YearlyCalendar.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,0FAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAiCC,CAAjC,QACKF,EAAA,gCAAwCC,CAAxC,CAAuDC,CAAvD,aAGKC,QAAAA,CAASC,CAATD,MACNE,EAAM,IAAIC,IACdD,EAAAE,YAAA,CAAgBH,CAAhB,CAFUD,OAGHE,EAHGF,CAHL,EADL,CAJH;",
+"sources":["YearlyCalendar.js.uncompressed.js"],
+"names":["define","declare","_CalendarBase","_CalendarYear","_makeDate","value","now","Date","setFullYear"]
+}

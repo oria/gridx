@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"RoundRectDataList.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kHAKG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAA0BC,CAA1B,CAAyCC,CAAzC,EAKFH,CAAAI,WAAA,sFALE,OAQKH,EAAA,mCAA2CC,CAA3C,CAA0DC,CAA1D,KARL,CALH;",
+"sources":["RoundRectDataList.js.uncompressed.js"],
+"names":["define","kernel","declare","RoundRectList","DataListMixin","deprecated"]
+}

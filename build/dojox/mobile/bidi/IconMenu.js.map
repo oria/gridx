@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"IconMenu.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,gEAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAKKD,EAAA,uBAOWE,QAAAA,CAAoBC,CAApBD,MACZE,aADYF,EACKC,YADLD,GACsBC,CADtBD,CAEfG,SAAA,WAAqBF,CAArB,CAFeD,CAGfD,CAAAK,qBAAA,MAHeJ,CAPX,EALL,CAHH;",
+"sources":["IconMenu.js.uncompressed.js"],
+"names":["define","declare","common","_setTextDirAttr","textDir","_created","_set","setTextDirForButtons"]
+}

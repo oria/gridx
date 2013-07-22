@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Point.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,kEAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEKD,EAAA,8BAAsCC,CAAtC,WAIIC,QAAAA,CAASC,CAATD,EAKTE,gBALSF,CAKUC,CALVD,CAJJ,UAYIG,QAAAA,SAKFD,iBALEC,CAZJ,EAFL,CAHH;",
+"sources":["Point.js.uncompressed.js"],
+"names":["define","declare","Geometry","setPoint","p","coordinates","getPoint"]
+}

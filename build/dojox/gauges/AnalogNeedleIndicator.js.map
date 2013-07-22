@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"AnalogNeedleIndicator.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,qFACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEKD,EAAA,uCAA+CC,CAA/C,cAKMC,QAAAA,CAASC,CAATD,MAGPE,WAHOF,iBAMPG,EAAIC,IAAAC,MAAA,CAAWC,UAAX,GANGN,CAOPO,IAPOP,CASPQ,EAAQA,UAARA,CAAqBA,UAArBA,QATOR,CAaPS,SAHcC,gBAGdD,CAHiCC,gBAGjCD,CAHoDD,CAGpDC,OAFcE,gBAEdF,CAFiCE,gBAEjCF,GAKAD,EAAAI,KAlBOZ,GAkBQU,gBAlBRV,GAmBVS,CAAAD,MAnBUR,CAmBKQ,CAAAK,OAAA,GAAAL,MAnBLR,MAsBPc,EAAMV,IAAAW,KAAA,GAAND,CAAsBX,CAC1BI,EAAA,GAvBWP,CAuBCC,CAAAe,WAAA,EAAAC,UAAA,CACER,CADF,CAAAS,QAAA,CACkBV,CADlB,CAAAW,OAAA,CAEDL,CAFC,EAEIA,CAFJ,CAAAM,MAAA;AAEiBjB,CAFjB,GAEwBA,CAFxB,QAEsCW,CAFtC,EAE2CA,CAF3C,CAAAO,OAAA,IAGGC,WAHH,CAAAC,UAAA,EAIZhB,EAAA,GA3BWP,CA2BCC,CAAAuB,aAAA,cAAqClB,UAArC,EAAAW,UAAA,CACER,CADF,CAAAS,QAAA,CAEAV,CAFA,CA3BDR,OA8BJO,EA9BIP,CALN,EAFL,CADF;",
+"sources":["AnalogNeedleIndicator.js.uncompressed.js"],
+"names":["define","declare","AnalogIndicatorBase","_getShapes","group","_gauge","x","Math","floor","width","shapes","color","stroke","strokeColor","strokeWidth","type","colors","xy","sqrt","createPath","setStroke","setFill","moveTo","arcTo","lineTo","length","closePath","createCircle"]
+}

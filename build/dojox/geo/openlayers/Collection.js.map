@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Collection.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,uEAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEKD,EAAA,mCAA2CC,CAA3C,iCAQSC,QAAAA,CAASC,CAATD,EAKdE,gBALcF,CAKKC,CALLD,CART,eAgBSG,QAAAA,SAKPD,iBALOC,CAhBT,EAFL,CAHH;",
+"sources":["Collection.js.uncompressed.js"],
+"names":["define","declare","Geometry","setGeometries","g","coordinates","getGeometries"]
+}

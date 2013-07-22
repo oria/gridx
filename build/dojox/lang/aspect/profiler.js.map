@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"profiler.js",
+"lineCount":1,
+"mappings":"A,SACAA,MAAA,uDAA+D,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC/DF,CAAAG,QAAA,8BAEC,UAAA,OACIC,EAAMF,CAAAG,KAAAC,OADV,CAIIC,EAAWA,QAAAA,CAASC,CAATD,EACdE,SADcF,CACFC,CADED,EACOC,CADPD,IAEdG,YAFcH,GAIfP,EAAAW,OAAA,CAAYJ,CAAZ,SACSK,QAAAA,GACFF,WADEE,IAENC,OAAAC,QAAAC,MAAA,CAAsBF,OAAtB,CAA+BJ,SAA/B,CAFMG,CADT,OAMQI,QAAAA,KACAN,WADAM,CANR,EAaAZ,EAAAa,SArBA,CAqBeC,QAAAA,CAAqBV,CAArBU,QAOP,KAAIX,CAAJ,CAAaC,CAAb,CAPOU,CArBf,EAAA,EAH8D,CAA/D;",
+"sources":["profiler.js.uncompressed.js"],
+"names":["define","dojo","dijit","dojox","provide","aop","lang","aspect","Profiler","title","args","inCall","extend","before","console","profile","apply","after","profiler","aop.profiler"]
+}

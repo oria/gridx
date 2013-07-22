@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Range.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6DACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEKD,EAAA,uBAA+BC,CAA/B,mDA2DGC,QAAAA,GACRC,UADQD,CACKC,UADLD,CACoBC,UAAAA,MADpBD,EACwCC,UADxCD,SA3DH,EAFL,CADF;",
+"sources":["Range.js.uncompressed.js"],
+"names":["define","declare","Widget","startup","color"]
+}

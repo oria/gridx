@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"MarkersOnly.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,wEAAiF,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAEzED,EAAA,qCAA6CC,CAA7C,cAGOC,QAAAA,GAGZC,QAAAC,MAHYF,GAIZC,SAAAE,QAJYH,IAHP,EAFyE,CAAjF;",
+"sources":["MarkersOnly.js.uncompressed.js"],
+"names":["define","declare","Default","constructor","opt","lines","markers"]
+}

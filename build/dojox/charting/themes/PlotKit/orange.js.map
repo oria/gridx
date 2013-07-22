@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"orange.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iEAA0E,QAAA,CAASC,CAAT,CAAaC,CAAb,EACzED,CAAAE,OADyE,CAC7DF,CAAAG,KAAAC,MAAA,EACZJ,EAAAE,OAAAG,MAAAC,KAFyE,CAElDN,CAAAE,OAAAK,SAAAD,KAFkD,UAGzEN,EAAAE,OAAAM,OAHyE,CAGtDP,CAAAQ,aAAA,uCAHsD,OAKlET,EAAAE,OALkE,CAA1E;",
+"sources":["orange.js.uncompressed.js"],
+"names":["define","pk","Theme","orange","base","clone","chart","fill","plotarea","colors","defineColors"]
+}

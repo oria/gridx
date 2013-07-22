@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"UrlDataSource.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,2FAIG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAwBC,CAAxB,QAKKF,EAAA,mEAQOG,QAAAA,CAAoBC,CAApBD,EAGZE,SAHYF,CAGAC,CAHAD,CARP,SAcGG,QAAAA,OAGJC,EAAML,CAAAM,IAAA,MACJH,SADI,kBAIVE,EAAAE,YAAA,CAAgBR,CAAAS,MAAA,MAAiB,QAAA,CAASC,CAAT,CAAmBC,CAAnB,EAChCC,SADgC,CACpBF,CADoB,CAAjB,CAAhB,CAGAJ,EAAAO,WAAA,CAAe,QAAA,CAASC,CAAT,GAAf,CAVQT,OAaDC,EAbCD,CAdH,EALL,CAJH;",
+"sources":["UrlDataSource.js.uncompressed.js"],
+"names":["define","declare","lang","xhr","constructor","url","_url","getData","obj","get","addCallback","hitch","response","ioArgs","text","addErrback","error"]
+}

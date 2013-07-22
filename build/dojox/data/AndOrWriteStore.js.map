@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"AndOrWriteStore.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,uGACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAsCC,CAAtC,QAOKF,EAAA,+BAAuCC,CAAvC,CAA2DC,CAA3D,KAPL,CADF;",
+"sources":["AndOrWriteStore.js.uncompressed.js"],
+"names":["define","declare","ItemFileWriteStore","AndOrReadStore"]
+}

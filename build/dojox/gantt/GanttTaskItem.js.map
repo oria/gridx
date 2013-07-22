@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"GanttTaskItem.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,0FAIG,QAAA,CAASC,CAAT,CAA2BC,CAA3B,QACKA,EAAA,6CACOC,QAAAA,CAASC,CAATD,EAEZE,OAFYF,CAEFC,CAAAC,GACVC,UAHYH,CAGAC,CAAAE,KAHAH,EAGsBE,OAClCE,eAJYJ,CAIKC,CAAAG,UAJLJ,EAIgC,IAAIK,IAChDC,cALYN,CAKIC,CAAAK,SALJN,GAMZO,gBANYP,CAMMC,CAAAM,WANNP,GAOZQ,oBAPYR,CAOUC,CAAAO,eAPVR,IAQZS,eARYT,CAQKC,CAAAQ,UARLT,IASZU,cATYV,GAUZW,iBAVYX,GAiBZY,wBAjBYZ,CAgBZa,mBAhBYb,CAeZc,sBAfYd,CAcZe,kBAdYf;AAaZgB,YAbYhB,CAYZiB,iBAZYjB,CAWZkB,eAXYlB,MADP,cAoBQmB,QAAAA,CAASC,CAATD,EACbT,aAAAW,KAAA,CAAmBD,CAAnB,CACAA,EAAAF,WAFaC,MApBR,YAwBMG,QAAAA,CAASN,CAATM,EACXN,YADWM,CACIN,CADJM,SAEHC,GAFGD,CAEIC,CAFJD,CAEQZ,aAAAc,OAFRF,CAE8BC,CAF9BD,GAGVZ,aAAA,CAAca,CAAd,CAAAD,WAAA,CAA4BN,CAA5B,CAHUM,CAxBN,EADL,CAJH;",
+"sources":["GanttTaskItem.js.uncompressed.js"],
+"names":["define","GanttTaskControl","declare","constructor","configuration","id","name","startTime","Date","duration","percentage","previousTaskId","taskOwner","cldTasks","cldPreTasks","previousParentTask","nextParentTask","previousChildTask","nextChildTask","project","previousTask","parentTask","addChildTask","task","push","setProject","j","length"]
+}

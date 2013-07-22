@@ -1,0 +1,4 @@
+//>>built
+define("dojox/widget/rotator/Wipe",["dojo/_base/lang","dojo/_base/fx","dojo/dom-style"],function(g,r,h){function s(a,b,c,e){var d=[0,b,0,0];a==l?d=[0,b,c,b]:a==m?d=[c,b,c,0]:a==k&&(d=[0,0,c,0]);null!=e&&(d[a]=a==n||a==k?e:(a%2?b:c)-e);return d}function p(a,b,c,e,d){h.set(a,"clip",null==b?"auto":"rect("+s(b,c,e,d).join("px,")+"px)")}function f(a,b){var c=b.next.node,e=b.rotatorBox.w,d=b.rotatorBox.h;h.set(c,{display:"",zIndex:(h.get(b.current.node,"zIndex")||1)+1});p(c,a,e,d);return new r.Animation(g.mixin({node:c,
+curve:[0,a%2?e:d],onAnimate:function(b){p(c,a,e,d,parseInt(b))}},b))}var n=2,l=3,m=0,k=1,q={wipeDown:function(a){return f(n,a)},wipeRight:function(a){return f(l,a)},wipeUp:function(a){return f(m,a)},wipeLeft:function(a){return f(k,a)}};g.mixin(g.getObject("dojox.widget.rotator"),q);return q});
+//@ sourceMappingURL=Wipe.js.map

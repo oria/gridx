@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Heading.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,+DAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAKKD,EAAA,qBAOSE,QAAAA,CAASC,CAATD,EACdE,cAAA,CAAeC,SAAf,CADcH,SAEXI,eAAA,CAAgBH,CAAhB,CAFWD,GAEwBK,YAAAC,MAAAC,UAFxBP,OAGdQ,kBAAAC,UAHcT,CAGgBD,CAAAW,sBAAA,CAA6BF,iBAAAC,UAA7B,CAA0DE,YAA1D,CAHhBX,CAPT,cAaQY,QAAAA,CAASC,CAATD,EACbV,cAAA,CAAeC,SAAf,CACAW,gBAAAC,UAAAN,UAFaG,CAEyBb,CAAAW,sBAAA,CAA6BI,eAAAC,UAAAN,UAA7B,CAAkEE,YAAlE,CACtCI,eAAAN,UAHaG,CAGcJ,iBAAAC,UAHdG,CAbR;gBAmBWI,QAAAA,CAAUL,CAAVK,MACZC,aADYD,EACKL,YADLK,EACqBL,CADrBK,CAEfE,SAAA,WAAqBP,CAArB,CAFeK,SAGZZ,eAAA,CAAgBI,iBAAAC,UAAhB,CAHYO,GAG6CX,YAAAC,MAAAC,UAH7CS,QAIfR,iBAAAC,UAJeO,CAIejB,CAAAW,sBAAA,CAA6BX,CAAAoB,kBAAA,CAAyBX,iBAAAC,UAAzB,CAA7B,CAAoFE,YAApF,CAJfK,CAKfjB,CAAAqB,qBAAA,MALeJ,CAnBX,EALL,CAHH;",
+"sources":["Heading.js.uncompressed.js"],
+"names":["define","declare","common","_setLabelAttr","label","inherited","arguments","getTextDir","domNode","style","direction","labelDivNode","innerHTML","enforceTextDirWithUcc","textDir","_setBackAttr","back","backButton","labelNode","_setTextDirAttr","_created","_set","removeUCCFromText","setTextDirForButtons"]
+}

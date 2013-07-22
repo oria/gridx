@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"generic.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,gCAGC,6BAHD,gBAIC,sBAJD,WAKC,wBALD,UAMC,uBAND,YAOC,yBAPD,iBAQC,0BARD,eASC,uBATD,kBAUC,yBAVD,iBAWC,sBAXD,eAYC,qBAZD,qBAaC,0BAbD,wBAcC,wBAdD;AAeC,2BAfD,2BAgBC,kBAhBD,WAiBC,sBAjBD,YAkBC,qBAlBD,qBAmBC,yBAnBD,YAoBC,qBApBD,QAqBC,YArBD;",
+"sources":["generic.js.uncompressed.js"],
+"names":["define"]
+}

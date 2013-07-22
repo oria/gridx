@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"EdgeToEdgeDataList.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,oHAKG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAA0BC,CAA1B,CAA0CC,CAA1C,EAKFH,CAAAI,WAAA,wFALE,OAQKH,EAAA,oCAA4CC,CAA5C,CAA4DC,CAA5D,KARL,CALH;",
+"sources":["EdgeToEdgeDataList.js.uncompressed.js"],
+"names":["define","kernel","declare","EdgeToEdgeList","DataListMixin","deprecated"]
+}

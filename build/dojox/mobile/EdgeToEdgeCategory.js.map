@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"EdgeToEdgeCategory.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,gFAGG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAKKD,EAAA,mCAA2CC,CAA3C,iBAGUC,QAAAA,GACfC,cAAA,CAAeC,SAAf,CACAC,aAAAC,UAFeJ,wBAIZK,UAJYL,UAICK,SAJDL,GAKdG,YAAAC,UALcJ,gCAHV,EALL,CAHH;",
+"sources":["EdgeToEdgeCategory.js.uncompressed.js"],
+"names":["define","declare","RoundRectCategory","buildRendering","inherited","arguments","domNode","className","type"]
+}

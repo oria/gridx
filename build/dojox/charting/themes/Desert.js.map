@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Desert.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8DAAuE,QAAA,CAASC,CAAT,CAAsBC,CAAtB,EAGtEA,CAAAC,OAHsE,CAGtD,IAAIF,CAAJ,8DAHsD,OAY/DC,EAAAC,OAZ+D,CAAvE;",
+"sources":["Desert.js.uncompressed.js"],
+"names":["define","SimpleTheme","themes","Desert"]
+}

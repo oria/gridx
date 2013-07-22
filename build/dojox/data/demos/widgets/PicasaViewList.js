@@ -1,0 +1,4 @@
+//>>built
+define("dojox/data/demos/widgets/PicasaViewList",["dojo","dijit","dojox","dojo/require!dijit/_Templated,dijit/_Widget,dojox/data/demos/widgets/PicasaView"],function(b,c,d){b.provide("dojox.data.demos.widgets.PicasaViewList");b.require("dijit._Templated");b.require("dijit._Widget");b.require("dojox.data.demos.widgets.PicasaView");b.declare("dojox.data.demos.widgets.PicasaViewList",[c._Widget,c._Templated],{templateString:b.cache("dojox","data/demos/widgets/templates/PicasaViewList.html",'\x3cdiv dojoAttachPoint\x3d"list"\x3e\x3c/div\x3e\r\n\r\n'),
+listNode:null,postCreate:function(){this.fViewWidgets=[]},clearList:function(){for(;this.list.firstChild;)this.list.removeChild(this.list.firstChild);for(var a=0;a<this.fViewWidgets.length;a++)this.fViewWidgets[a].destroy();this.fViewWidgets=[]},addView:function(a){a=new d.data.demos.widgets.PicasaView(a);this.fViewWidgets.push(a);this.list.appendChild(a.domNode)}})});
+//@ sourceMappingURL=PicasaViewList.js.map

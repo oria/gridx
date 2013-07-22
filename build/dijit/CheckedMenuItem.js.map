@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"CheckedMenuItem.js",
+"lineCount":3,
+"mappings":"A,SAAAA,OAAA,SACA,0CADA,g5BAEAC;MAAA,qIAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,CAAsCC,CAAtC,QAKKH,EAAA,yBAAiCE,CAAjC,kDAMUC,CANV,4BAWWC,QAAAA,CAAqBC,CAArBD,EAIhBH,CAAAK,OAAA,CAAgBC,YAAhB,CAA8BC,cAA9B,WAA0DH,CAA1D,CACAE,aAAAE,aAAA,gBAA0CJ,CAA1C,gBACAK,UAAA,WAAqBL,CAArB,CANgBD,CAXX,yEA4BIO,QAAAA,IA5BJ,UAmCIC,QAAAA,CAASC,CAATD,EAKLE,aALKF;CAMRG,QAAA,YAAqBV,YAArB,CANQO,CAORD,aAAA,CAAcN,YAAd,CAPQO,CASTI,aAAA,CAAaH,CAAb,CATSD,CAnCJ,EALL,CANH;",
+"sources":["CheckedMenuItem.js.uncompressed.js"],
+"names":["require","define","declare","domClass","MenuItem","template","_setCheckedAttr","checked","toggle","domNode","baseClass","setAttribute","_set","onChange","_onClick","evt","disabled","set","onClick"]
+}

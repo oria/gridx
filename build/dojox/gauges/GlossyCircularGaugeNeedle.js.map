@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"GlossyCircularGaugeNeedle.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,4GACE,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAyBC,CAAzB,QAGKF,EAAA,2CAAmDE,CAAnD,sDAiBMC,QAAAA,CAASC,CAATD,MAIPE,EAAcJ,CAAAK,YAAA,CAAkB,IAAIL,CAAJ,CAAUM,UAAV,CAAlB,CAAyC,IAAIN,CAAJ,SAAzC,KAJPE,KAMNK,WANML,iBASPM,IACJA,EAAA,GAVWN,CAUCC,CAAAM,YAAA,EACRC,EAXOR,CAWCS,IAAAC,IAAA,CAAUL,WAAAM,MAAV,CAA8BN,WAAAO,aAA9B,CAA0DP,WAAAQ,OAA1D,CAA+ER,WAAAS,cAA/E,CACZR,EAAA,GAAAC,YAAA,EAAAQ,aAAA,KACKP,CADL;aAIKA,CAJL,YAQAF,EAAA,GAAAU,SAAA,GAAAC,WAAA,sFAAAF,aAAA,0DAAAG,QAAA,CASWd,UATX,CAAAe,UAAA,QAUQjB,CAVR,2CApBWF,OAoCJM,EApCIN,CAjBN,EAHL,CADF;",
+"sources":["GlossyCircularGaugeNeedle.js.uncompressed.js"],
+"names":["define","declare","Color","AnalogIndicatorBase","_getShapes","group","darkerColor","blendColors","color","_gauge","shapes","createGroup","scale","Math","min","width","_designWidth","height","_designHeight","setTransform","children","createPath","setFill","setStroke"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ClusteredColumns.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,wFACC,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA2BC,CAA3B,QAEOF,EAAA,0CAAkDC,CAAlD,mBAGYE,QAAAA,OACbC,EAAIF,CAAAG,iBAAA,CAAoBC,aAAAC,OAAAC,MAApB,CAAgDC,QAAhD,CAA0DC,WAAAC,OAA1D,CADSR,YAEJC,CAAAQ,IAFIT,OAEUC,CAAAS,KAFVV,WAE6BC,CAAAS,KAF7BV,EAHZ,EAFP,CADD;",
+"sources":["ClusteredColumns.js.uncompressed.js"],
+"names":["define","declare","Columns","dc","getBarProperties","f","calculateBarSize","_hScaler","bounds","scale","opt","series","length","gap","size"]
+}

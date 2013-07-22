@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_base.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,4CAAoD,QAAA,CAASC,CAAT,QAC5CA,EAAAC,UAAA,2BAD4C,CAApD;",
+"sources":["_base.js.uncompressed.js"],
+"names":["define","lang","getObject"]
+}

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"StackedAreas.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,yEAAkF,QAAA,CAASC,CAAT,CAAkBC,CAAlB,QAE1ED,EAAA,sCAA8CC,CAA9C,cAGOC,QAAAA,GAGZC,QAAAC,MAHYF,GAIZC,SAAAE,MAJYH,IAHP,EAF0E,CAAlF;",
+"sources":["StackedAreas.js.uncompressed.js"],
+"names":["define","declare","Stacked","constructor","opt","lines","areas"]
+}

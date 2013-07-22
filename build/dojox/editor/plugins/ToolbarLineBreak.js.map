@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"ToolbarLineBreak.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,yCAAgD,+FAAA,MAAA,KAAhD,CAQG,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAsBC,CAAtB,CAA6BC,CAA7B,CAAsCC,CAAtC,CAAuDC,CAAvD,CAAgEC,CAAhE,MAECC,EAAmBD,CAAA,0CACpBH,CADoB,CACXC,CADW,+FAOVI,QAAAA,GACXR,CAAAS,cAAA,CAAmBC,YAAnB,IADWF,CAPU,aAUTG,QAAAA,YAVS,EAqBvBX,EAAAY,UAAA,CAAeX,CAAAY,WAAf,0BAA2D,QAAA,CAASC,CAAT,MACvDA,CAAAC,OADuD,MAEtDC,EAAOF,CAAAG,KAAAD,KAAAE,YAAA,EAF+C;UAGvDF,CAHuD,uBAGrCA,CAHqC,CAIzDF,CAAAC,OAJyD,CAI9C,IAAIV,CAAJ,SACF,IAAIE,CADF,WAECY,QAAAA,CAASC,CAATD,EACVC,WADUD,CACIC,CADJD,CAFD,EAJ8C,EAA3D,CAvBG,OAoCIZ,EApCJ,CARH;",
+"sources":["ToolbarLineBreak.js.uncompressed.js"],
+"names":["define","dojo","dijit","dojox","_Widget","_TemplatedMixin","_Plugin","declare","ToolbarLineBreak","postCreate","setSelectable","domNode","isFocusable","subscribe","_scopeName","o","plugin","name","args","toLowerCase","setEditor","editor"]
+}

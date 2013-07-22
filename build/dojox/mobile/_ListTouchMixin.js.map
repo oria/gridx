@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"_ListTouchMixin.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,qGAKG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAyBC,CAAzB,CAA8BC,CAA9B,QAEKH,EAAA,gCAAyCG,CAAzC,aASMC,QAAAA,GACXC,cAAA,CAAeC,SAAf,CADWF,QAKNF,CAAA,MALME,sBAKoBG,UALpBH,EAQVI,iBAAA,CAAkBP,CAAAQ,MAAlB,YARUL,KAUNM,MAVMN,CAWTO,EAAa,IAAIJ,SAXRH,CAYTQ,CAEDC,cAdUT,CAcMU,QAAAA,CAASC,CAATD,EACfH,CAAAC,OADeE,CACKJ,CAAAM,QACpBL,EAAAM,WAAA,CAAsBF,CAAAG,UAAtB,CACAN,EAHeE,CAGNC,CAAAH,OAHME,CAMhBK,QAAA,gBAAwB,QAAA,CAASJ,CAAT,EACvBL,CAAAU,SAAA,CAAcL,CAAd,CAAiBH,CAAjB,CADuB,CAAxB,CApBUR,KAMVI,kBAAA,oBANUJ,CATN;SAmCIgB,QAAAA,CAAmBC,CAAnBD,CAAoCR,CAApCQ,EACTE,qBAAA,CAAsBV,CAAtB,CACAW,aAAA,CAAaX,CAAb,CAFSQ,CAnCJ,EAFL,CALH;",
+"sources":["_ListTouchMixin.js.uncompressed.js"],
+"names":["define","declare","touch","has","ListBase","postCreate","inherited","arguments","MSGesture","_listConnect","press","self","tapGesture","target","_onPress","this._onPress","e","domNode","addPointer","pointerId","on","_onClick","evt","_setSelectedAttr","onClick"]
+}

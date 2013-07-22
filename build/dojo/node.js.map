@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"node.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,uBAA+B,QAAA,CAASC,CAAT,OAEnBC,MAAJ,iEAFuB,EAA/B;",
+"sources":["node.js.uncompressed.js"],
+"names":["define","has","Error"]
+}

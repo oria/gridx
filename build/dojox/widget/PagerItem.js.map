@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"PagerItem.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,0BAAiC,yGAAA,MAAA,KAAjC,CACI,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,CAAmCC,CAAnC,CAA2CC,CAA3C,CAAwDC,CAAxD,QAEGL,EAAA,4BACFI,CADE,CACWC,CADX,wHAMaC,QAAAA,OACRC,EAAMN,CAAAO,aAAA,CAAsBC,kBAAtB,CACVP,EAAAQ,IAAA,CAAUD,kBAAAE,WAAV,QACWJ,CAAAK,EADX,aAEYL,CAAAM,EAFZ,OAFYP,CANb,eAcYQ,QAAAA,GACXX,CAAAY,MAAA,CAAaN,kBAAb,CADWK,CAdZ,EAFH,CADJ;",
+"sources":["PagerItem.js.uncompressed.js"],
+"names":["define","declare","geometry","style","parser","_WidgetBase","_TemplatedMixin","resizeChildren","box","getMarginBox","containerNode","set","firstChild","w","h","parseChildren","parse"]
+}

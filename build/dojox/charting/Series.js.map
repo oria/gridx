@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Series.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8EACC,QAAA,CAASC,CAAT,CAAeC,CAAf,CAAwBC,CAAxB,QASOD,EAAA,yBAAiCC,CAAjC,cAGOC,QAAAA,CAASC,CAATD,CAAgBE,CAAhBF,CAAsBG,CAAtBH,EAYZH,CAAAO,MAAA,MAAiBD,CAAjB,CAZYH,iBAaFK,UAbEL,GAasBK,SAbtBL,WAcZM,YAAA,CAAYJ,CAAZ,CAdYF,CAHP,OAoBCO,QAAAA,GAGNC,QAHMD,IApBD,QA0BED,QAAAA,CAASJ,CAATI,EAQJT,CAAAY,QAAA,CAAaP,CAAb,CARII,CASNJ,SATMI,CASMJ,CATNI,EAWNI,WAXMJ,CAWQJ,CAXRI,CAYNJ,SAZMI,CAYMI,WAAAR,KAZNI,CAaHI,WAAAC,gBAbGL,EAcLI,WAAAC,gBAAA,MAdKL,CAiBPM,WAjBON,GAkBPC,WAAA,EAlBOD,CA1BF,EATP,CADD;",
+"sources":["Series.js.uncompressed.js"],
+"names":["define","lang","declare","Element","constructor","chart","data","kwArgs","mixin","plot","update","clear","dyn","isArray","source","setSeriesObject","dirty"]
+}
