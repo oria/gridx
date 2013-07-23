@@ -1,15 +1,15 @@
 [submodule "src/dojo"]
 	path = src/dojo
-	url = git@github.com:dojo/dojo.git
+	url = git://github.com:dojo/dojo.git
 [submodule "src/dijit"]
 	path = src/dijit
-	url = git@github.com:dojo/dijit
+	url = git://github.com:dojo/dijit
 [submodule "src/dojox"]
 	path = src/dojox
-	url = git@github.com:dojo/dojox
+	url = git://github.com:dojo/dojox
 [submodule "src/gridx"]
 	path = src/gridx
-	url = git@github.com:oria/gridx
+	url = git://github.com:oria/gridx
 [submodule "src/util"]
 	path = src/util
-	url = git@github.com:dojo/util
+	url = git://github.com:dojo/util
