@@ -98,7 +98,7 @@ require([
 
 	layout7 = [
 		{id: 'id', field: 'id', name: 'Identity', width: '50px'},
-		{id: 'Genre', field: 'Genre', name: 'Genre', width: '180px'},
+		{id: 'Genre', field: 'Genre', name: 'Genre', width: '30%'},
 		{id: 'Artist', field: 'Artist', name: 'Artist', width: '200px'},
 		{id: 'Year', field: 'Year', name: 'Year', width: '50px'},
 		{id: 'Album', field: 'Album', name: 'Album', width: '230px'},
