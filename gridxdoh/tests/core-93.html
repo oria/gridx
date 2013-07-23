@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-93</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+		#output {
+			width: 500px;
+			height: 200px;
+			border: 1px solid red;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, dataSource, storeFactory, Grid, Sync, Async, mods){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 100
+			});
+
+			layout = [
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Length', field: 'Length', name: 'Length'},
+				{id: 'Track', field: 'Track', name: 'Track'},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
+				{id: 'Heard', field: 'Heard', name: 'Heard'}
+			];
+
+			grid = new Grid({
+				cacheClass: Sync,
+				store: store,
+				structure: layout,
+				modules: []
+			});
+
+			count = 0;
+
+			grid.connect(grid.body, 'onAfterRow', function(row){
+				var output = document.getElementById('output');
+				var fail = 0;
+				if(!row.data()){
+					output.innerHTML += ['<br/>', row.id, ': data not in cache!<br/>'].join('');
+					fail = 1;
+				}
+				if(!row.node()){
+					output.innerHTML += ['<br/>', row.id, ': row node not available!<br/>'].join('');
+					fail = 1;
+				}
+				if(!fail){
+					output.innerHTML += '.';
+				}
+				++count;
+				document.getElementById('counter').innerHTML = count;
+			});
+
+			grid.placeAt('gridContainer');
+
+			grid.startup();
+		});
+	</script>
+</head>
+<body class='claro' style="height: 1000px;">
+	<h2>grid创建时，当一行由body完成渲染后触发onAfterRow事件，该事件中行node可用，行cache在客户端</h2>
+	<div id='gridContainer'></div>
+	<p>
+		Successful row is marked as a dot. Failed row prints a report.
+	</p>
+	<div id='output'></div>
+	<div>Processed row count: <span id='counter'>0</span></div>
+</body>
+</html>

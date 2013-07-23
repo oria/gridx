@@ -7,7 +7,7 @@ define([
 ], function(array, query, domClass, domGeo, GTest){
 	GTest.statusCheckers.push(
 	{
-		id: 'Body 1',
+		id: 'core-94',
 		name: 'if a row is visible (rendered) in body, it is in grid cache',
 		checker: function(grid, doh){
 			array.forEach(grid.bodyNode.childNodes, function(rowNode){

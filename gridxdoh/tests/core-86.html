@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-86</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'dijit/registry',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, registry, dataSource, storeFactory){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 100
+			});
+
+			layout = [
+				{id: 'id', field: 'id', name: 'Identity(id)'},
+				{field: 'Year', name: 'Year'},
+				{id: 'Length', field: 'Length', name: 'Length(Length)'},
+				{field: 'Track', name: 'Track'},
+				{field: 'Download Date', name: 'Download Date'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played(Last Played)'},
+				{id: 'Heard', field: 'Heard', name: 'Heard(Heard)'}
+			];
+
+			Deferred.when(parser.parse(), function(){
+				var ids = [];
+				var grid = registry.byId('grid');
+				var cols = grid.columns();
+				for(var i = 0; i < cols.length; ++i){
+					ids.push(cols[i].id);
+				}
+				document.getElementById('output').innerHTML = ids.join(', ');
+			});
+		});
+	</script>
+</head>
+<body class='claro'>
+	<h2>对于列声明中没有指定ID的列，自动按序添加ID：1, 2, 3, ....</h2>
+	<div id='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+		modules: [
+		]
+	'></div>
+	<h2>column ids:</h2>
+	<div id='output'></div>
+</body>
+</html>

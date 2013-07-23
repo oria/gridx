@@ -23,8 +23,8 @@ for(var i = 1; i < lines.length; ++i){
 	var line = lines[i].split(/,(?=([^\"]*\"[^\"]*\")*[^\"]*$)/).filter(function(part){
 		return part !== undefined;
 	});
-	sb.push(['<a href="', line[1], '" target="_blank"><span class="feature_id">',
-		line[4], '</span>', esc(line[0]), '</a><br/>'].join(''));
+	sb.push(['<a href="', line[2], '" target="_blank"><span class="feature_id">',
+		line[0], '</span>', esc(line[1]), '</a><br/>'].join(''));
 }
 
 var str = sb.join(os.EOL, '</body>', '</html>');

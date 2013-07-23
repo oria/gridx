@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-87-88</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, dataSource, storeFactory){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 100
+			});
+
+			layout = [
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'formatted',
+					formatter: function(rawData){
+						return rawData.Year + ', ' + rawData['Download Date'];
+					}
+				},
+				{id: 'Heard', field: 'Heard', name: 'Heard'}
+			];
+
+			Deferred.when(parser.parse(), function(){
+			});
+		});
+	</script>
+</head>
+<body class='claro'>
+	<h2>列声明不指定field，但指定了formatter函数，则grid数据由formatter函数产生(例如计算两列之和)</h2>
+	<p></p>
+	<div id='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+		modules: [
+		]
+	'></div>
+</body>
+</html>

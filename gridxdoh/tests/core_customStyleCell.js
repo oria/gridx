@@ -7,7 +7,7 @@ require([
 	'dojo/domReady!'
 ], function(parser){
 	function cellStyle(cell){
-		return ["height: 28px; background-color: rgb(",
+		return ["height: 20px; background-color: rgb(",
 			cell.column.index() * 8 % 255, ',',
 			cell.row.index() * 28 % 255, ',',
 			cell.column.index() * cell.row.index(),
