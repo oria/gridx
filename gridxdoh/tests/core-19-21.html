@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-19-21</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, dataSource, storeFactory){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 10
+			});
+
+			layout = [
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Length', field: 'Length', name: 'Length'},
+				{id: 'Track', field: 'Track', name: 'Track'},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '200px'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
+				{id: 'Heard', field: 'Heard', name: 'Heard'}
+			];
+			
+			Deferred.when(parser.parse(), function(){
+			});
+		});
+	</script>
+</head>
+<body class='claro' style="height: 1000px;">
+	<h2>当鼠标悬浮在某header单元格时，高亮该header单元格</h2>
+	<br>
+	<div id='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+	'></div>
+	<h2>当鼠标悬浮在某一行时，高亮该行</h2>
+	<br>
+	<div id='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+	'></div>	
+	<h2>当bodyRowHoverEffect为false时，不高亮鼠标经过的行</h2>
+	<br>
+	<div id='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+		bodyRowHoverEffect: false
+	'></div>	
+</body>
+</html>
