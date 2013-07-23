@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"QuickFilter.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,qHAKG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA2BC,CAA3B,QAYKF,EAAA,CAAQC,CAAR,uDAKGE,QAAAA,GACRC,SAAAC,IAAAC,KAAAC,KAAA,oCAIcL,CAJd,kCADQC,CALH,EAZL,CALH;",
+"sources":["QuickFilter.js.uncompressed.js"],
+"names":["define","declare","_Module","QuickFilter","preload","grid","bar","defs","push"]
+}

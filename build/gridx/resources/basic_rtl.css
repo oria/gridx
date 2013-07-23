@@ -1,0 +1,37 @@
+/* In IE7, if not set relative position, the margins can not be nagative.*/
+.dj_ie7 .gridxRtl .gridxHeaderRow table {
+	position: relative;
+}
+
+/* Body */
+.gridxRtl .gridxRow .gridxCell {
+	border-color: transparent transparent #ccc #ccc;
+	text-align: right;
+}
+
+/* VScroller */
+.gridxRtl .gridxVScroller {
+	right: auto;
+	left: 0;
+}
+
+/* some browsers do not automatically move the scroll bar to left, so we move for them */
+.dj_ff3 .gridxRtl .gridxVScroller,
+.dj_webkit .gridxRtl .gridxVScroller {
+	left: -1px;
+}
+
+/* RowHeader */
+.gridxRtl .gridxRowHeaderHeader,
+.gridxRtl .gridxRowHeaderBody {
+	right: 0;
+	left: auto;
+	border-right: none;
+	border-left: 1px solid #E5DAC8;
+}
+
+/* HeaderRegion */
+.gridxRtl .gridxHeaderRegion {
+	float: left;
+}
+

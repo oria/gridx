@@ -1,0 +1,3 @@
+//>>built
+define("gridx/modules/ToolBar",["dojo/_base/declare","dojo/_base/lang","dijit/Toolbar","../core/_Module","./Bar"],function(c,d,e,f){return c(f,{name:"toolBar",required:["bar"],constructor:function(a,b){this._def=d.mixin(b,{bar:"top",row:0,col:0,pluginClass:e,"aria-label":"grid toolbar",className:"gridxBarToolBar"})},preload:function(){this.grid.bar.defs.push(this._def)},load:function(){var a=this,b=a.grid.bar;b.loaded.then(function(){a.widget=b.plugins.top[0][0];a.domNode=a.widget.domNode;a.loaded.callback()})}})});
+//@ sourceMappingURL=ToolBar.js.map

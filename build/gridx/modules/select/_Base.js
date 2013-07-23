@@ -1,0 +1,5 @@
+//>>built
+define("gridx/modules/select/_Base",["dojo/_base/declare","dojo/_base/connect","../../core/_Module"],function(d,e,f){return d(f,{getAPIPath:function(){var a={select:{}};a.select[this._type]=this;return a},preload:function(){var a=this,b=a.grid;a._lastSelectedIds=[];a.subscribe("gridClearSelection_"+b.id,function(b){b!=a._type&&a.clear()});a.connect(b.body,"onRender","_onRender");a.arg("multiple")&&b.domNode.setAttribute("aria-multiselectable",!0);a._init()},enabled:!0,multiple:!0,holdingCtrl:!1,onSelected:function(){},
+onDeselected:function(){},onHighlightChange:function(){},onSelectionChange:function(){},_getMarkType:function(){},_isSelected:function(){return this.isSelected.apply(this,arguments)},_isSelectable:function(){return!0},_onSelectionChange:function(){var a=this.getSelected();this.onSelectionChange(a,this._lastSelectedIds);this._lastSelectedIds=a},_select:function(a,b){var c=1;this.arg("enabled")&&this._isSelectable(a)&&(this.arg("multiple")&&(b||this.arg("holdingCtrl"))?c=!this._isSelected(a):this.clear(a),
+e.publish("gridClearSelection_"+this.grid.id,[this._type]),this._markById(a,c))}})});
+//@ sourceMappingURL=_Base.js.map

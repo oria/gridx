@@ -1,0 +1,3 @@
+//>>built
+define("gridx/nls/ja/Body",{loadingInfo:"\u30ed\u30fc\u30c9\u4e2d...",emptyInfo:"\u8868\u793a\u3059\u308b\u9805\u76ee\u304c\u3042\u308a\u307e\u305b\u3093",loadFailInfo:"\u30c7\u30fc\u30bf\u306e\u30ed\u30fc\u30c9\u306b\u5931\u6557\u3057\u307e\u3057\u305f!",loadMore:"\u3055\u3089\u306b\u30ed\u30fc\u30c9",loadMoreLoading:"\u30ed\u30fc\u30c9\u4e2d...",loadPrevious:"\u524d\u306e\u9805\u76ee\u3092\u30ed\u30fc\u30c9",loadPreviousLoading:"\u30ed\u30fc\u30c9\u4e2d..."});
+//@ sourceMappingURL=Body.js.map

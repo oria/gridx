@@ -1,0 +1,4 @@
+//>>built
+define("gridx/nls/ca/PaginationBar",{pagerWai:"Buscapersones",pageIndex:"${0}",pageIndexTitle:"P\u00e0gina ${0}",firstPageTitle:"Primera p\u00e0gina",prevPageTitle:"P\u00e0gina anterior",nextPageTitle:"P\u00e0gina seg\u00fcent",lastPageTitle:"Darrera p\u00e0gina",pageSize:"${0}",pageSizeTitle:"${0} elements per p\u00e0gina",pageSizeAll:"Tots",pageSizeAllTitle:"Tots els elements",description:"${0} - ${1} de ${2} elements.",descriptionEmpty:"La graella est\u00e0 buida.",summary:"Total: ${0}",summaryWithSelection:"Total: ${0} Seleccionat: ${1}",
+gotoBtnTitle:"V\u00e9s a una p\u00e0gina espec\u00edfica",gotoDialogTitle:"V\u00e9s a p\u00e0gina",gotoDialogMainMsg:"Especifiqueu el n\u00famero de p\u00e0gina:",gotoDialogPageCount:" (${0} p\u00e0gines)",gotoDialogOKBtn:"V\u00e9s-hi",gotoDialogCancelBtn:"Cancel\u00b7la",pageLabel:"P\u00e0gina",pageSizeLabel:"Files"});
+//@ sourceMappingURL=PaginationBar.js.map

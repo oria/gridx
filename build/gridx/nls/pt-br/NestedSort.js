@@ -1,0 +1,3 @@
+//>>built
+define("gridx/nls/pt-br/NestedSort",{singleSort:"Classifica\u00e7\u00e3o \u00danica",nestedSort:"Classifica\u00e7\u00e3o Aninhada",ascending:"Clique para classificar em ordem crescente",descending:"Clique para classificar em ordem decrescente",sortingState:"${0} - ${1}",unsorted:"N\u00e3o classificar esta coluna",waiSingleSortLabel:"${0} - est\u00e1 classificado por ${1}. Escolher classificar por ${2}",waiNestedSortLabel:"${0} - est\u00e1 aninhado classificado por ${1}. Escolher aninhar classifica\u00e7\u00e3o por ${2}"});
+//@ sourceMappingURL=NestedSort.js.map

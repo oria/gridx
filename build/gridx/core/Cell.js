@@ -1,0 +1,3 @@
+//>>built
+define("gridx/core/Cell",["dojo/_base/declare"],function(d){return d([],{constructor:function(a,b,c){this.grid=a;this.model=a.model;this.row=b;this.column=c},data:function(){return this.model.byId(this.row.id).data[this.column.id]},rawData:function(){var a=this.column.field();return a&&this.model.byId(this.row.id).rawData[a]},setRawData:function(a){var b={},c=this.column.field();if(c)return b[c]=a,this.row.setRawData(b)}})});
+//@ sourceMappingURL=Cell.js.map

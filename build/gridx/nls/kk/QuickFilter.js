@@ -1,0 +1,3 @@
+//>>built
+define("gridx/nls/kk/QuickFilter",{filterLabel:"\u0421\u04af\u0437\u0433\u0456",clearButtonTitle:"\u0421\u04af\u0437\u0433\u0456\u043d\u0456 \u0442\u0430\u0437\u0430\u043b\u0430\u0443",buildFilterMenuLabel:"\u0421\u04af\u0437\u0433\u0456 \u0436\u0430\u0441\u0430\u0443\x26hellip;",apply:"\u0421\u04af\u0437\u0433\u0456 \u049b\u043e\u043b\u0434\u0430\u043d\u0443"});
+//@ sourceMappingURL=QuickFilter.js.map

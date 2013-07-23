@@ -1,0 +1,38 @@
+.gridxRtl .gridxFilterBar .dijitButton {
+	float: right;
+}
+.gridxRtl .gridxFilterBar .dijitButton .dijitButtonNode {
+}
+.dijitRtl .gridxFilterDialog .dijitAccordionTitleFocus{
+	margin-right: 0px;
+	margin-left: 16px;
+}
+
+.gridxRtl .gridxFilterBarStatus {
+    padding: 1px 45px 0 0;
+}
+
+.gridxRtl .gridxFilterBarCloseBtn {
+	float: left;
+}
+
+.gridxRtl .gridxBarQuickFilter {
+	text-align: left;
+}
+
+.dijitRtl .gridxFilterPaneCloseButton{
+	float: left;
+}
+
+.dijitRtl .gridxFilterDialog .gridxFilterDialogButtons {
+	text-align: left;
+}
+
+.dijitRtl .gridxFilterDialog .gridxFilterDialogButtons .gridxFilterDialogBtnAdd {
+	float:right;
+}
+
+.dijitRtl .gridxQuickFilterClear {
+	right: auto;
+	left: 5px;
+}

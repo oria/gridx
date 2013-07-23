@@ -1,0 +1,3 @@
+//>>built
+define("gridx/nls/ro/NestedSort",{singleSort:"Sortare unic\u0103",nestedSort:"Sortare imbricat\u0103",ascending:"Face\u0163i clic pentru sortare Cresc\u0103toare",descending:"Face\u0163i clic pentru sortare Descresc\u0103toare",sortingState:"${0} - ${1}",unsorted:"S\u0103 nu fie sortar\u0103 aceast\u0103 coloan\u0103",waiSingleSortLabel:"${0} - este sortat\u0103 dup\u0103 ${1}. Alege\u0163i sortarea dup\u0103 ${2}",waiNestedSortLabel:"${0} - este sortat\u0103 imbricat dup\u0103 ${1}. Alege\u0163i sortarea imbricat\u0103 dup\u0103 ${2}"});
+//@ sourceMappingURL=NestedSort.js.map

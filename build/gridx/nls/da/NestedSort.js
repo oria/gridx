@@ -1,0 +1,3 @@
+//>>built
+define("gridx/nls/da/NestedSort",{singleSort:"Enkelt sortering",nestedSort:"Indlejret sortering",ascending:"Klik for at sortere stigende",descending:"Klik for at sortere faldende",sortingState:"${0} - ${1}",unsorted:"Sort\u00e9r ikke denne kolonne",waiSingleSortLabel:"${0} - er sorteret efter ${1}. V\u00e6lg for at sortere efter ${2}",waiNestedSortLabel:"${0} - er sorteret indlejret efter ${1}. V\u00e6lg for at sortere indlejret efter ${2}"});
+//@ sourceMappingURL=NestedSort.js.map

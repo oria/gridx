@@ -1,0 +1,4 @@
+//>>built
+define("gridx/modules/TitleBar",["dojo/_base/kernel","dojo/_base/declare","dojo/dom-construct","../core/_Module"],function(b,c,a,d){b.deprecated("TitleBar is deprecated","Use Bar module instead","1.3");return c(d,{name:"titleBar",constructor:function(){this.domNode=a.create("div",{"class":"gridxTitleBar",innerHTML:this.arg("label")})},preload:function(){this.grid.vLayout.register(this,"domNode","headerNode",-15)},destroy:function(){this.inherited(arguments);a.destroy(this.domNode)},label:"",setLabel:function(a){this.domNode.innerHTML=
+this.label=a}})});
+//@ sourceMappingURL=TitleBar.js.map

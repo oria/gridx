@@ -1,0 +1,4 @@
+//>>built
+define("gridx/nls/sv/PaginationBar",{pagerWai:"Sidindelning",pageIndex:"${0}",pageIndexTitle:"Sida ${0}",firstPageTitle:"F\u00f6rsta sidan",prevPageTitle:"F\u00f6reg\u00e5ende sida",nextPageTitle:"N\u00e4sta sida",lastPageTitle:"Sista sidan",pageSize:"${0}",pageSizeTitle:"${0} objekt per sida",pageSizeAll:"Alla",pageSizeAllTitle:"Alla objekt",description:"${0} - ${1} av ${2} objekt.",descriptionEmpty:"Rutn\u00e4tet \u00e4r tomt.",summary:"Totalt: ${0}",summaryWithSelection:"Totalt: ${0} Valda: ${1}",
+gotoBtnTitle:"G\u00e5 till en viss sida",gotoDialogTitle:"G\u00e5 till sidan",gotoDialogMainMsg:"Ange sidnumret:",gotoDialogPageCount:" (${0} sidor)",gotoDialogOKBtn:"G\u00e5",gotoDialogCancelBtn:"Avbryt",pageLabel:"Sida",pageSizeLabel:"Rader"});
+//@ sourceMappingURL=PaginationBar.js.map

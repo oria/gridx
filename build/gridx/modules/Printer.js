@@ -1,0 +1,3 @@
+//>>built
+define("gridx/modules/Printer",["dojo/_base/kernel","../core/_Module","dojo/_base/declare","../support/printer"],function(c,d,e,b){c.deprecated("gridx/modules/Printer is deprecated.","Please use gridx/support/printer instead.","1.3");return e(d,{name:"printer",print:function(a){return b(this.grid,a)},toHTML:function(a){return b.toHTML(this.grid,a)}})});
+//@ sourceMappingURL=Printer.js.map

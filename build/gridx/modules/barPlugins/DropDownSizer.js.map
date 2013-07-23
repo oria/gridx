@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"DropDownSizer.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,8FAIG,QAAA,CAAgCC,CAAhC,CAAwCC,CAAxC,EACFD,CAAAE,WAAA,6GADE,OAUKD,EAVL,CAJH;",
+"sources":["DropDownSizer.js.uncompressed.js"],
+"names":["define","kernel","Sizer","deprecated"]
+}

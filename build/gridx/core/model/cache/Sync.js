@@ -1,0 +1,4 @@
+//>>built
+define("gridx/core/model/cache/Sync",["dojo/_base/declare","dojo/_base/lang","dojo/_base/Deferred","./_Cache"],function(d,f,g,h){function k(e){for(var c=e._struct,a=c[""].slice(1),b,d=function(b){[].push.apply(a,c[b].slice(1))};a.length;)b=a.shift(),e._storeFetch({parentId:b}).then(f.partial(d,b))}return d(h,{keep:function(){},free:function(){},when:function(d,c){var a=new g;try{c&&c(),a.callback()}catch(b){a.errback(b)}return a},_init:function(){this._filled||(this._storeFetch({start:0}),this.store.getChildren&&
+k(this),this.model._onSizeChange())}})});
+//@ sourceMappingURL=Sync.js.map

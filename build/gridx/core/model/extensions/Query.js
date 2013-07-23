@@ -1,0 +1,3 @@
+//>>built
+define("gridx/core/model/extensions/Query",["dojo/_base/declare","../_Extension"],function(e,f){return e(f,{name:"query",priority:40,constructor:function(a,b){this._mixinAPI("query");this._cmdQuery(0,0,[b.query,b.queryOptions])},query:function(){this.model._addCmd({name:"_cmdQuery",scope:this,args:arguments})},_cmdQuery:function(){var a=arguments,a=a[a.length-1],b=this.model,c=b._cache,d=c.options=c.options||{};d.query=a[0];d.queryOptions=a[1];b._msg("storeChange");c.clear()}})});
+//@ sourceMappingURL=Query.js.map

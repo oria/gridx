@@ -1,0 +1,4 @@
+//>>built
+define("gridx/support/menu/_FilterMenuBase",["dojo/_base/declare","dijit/Menu","../../modules/Filter"],function(c,d,e){return c(d,{grid:null,colId:null,leftClickToOpen:!0,postCreate:function(){this.inherited(arguments);this._createMenuItems()},bindGrid:function(a,b){this.grid=a;this.colId=b.id;a.filter._rules=a.filter._rules||{}},_addFilter:function(a,b){this.grid.filter._rules[a]=b;this._doFilter()},_removeFilter:function(a){delete this.grid.filter._rules[a];this._doFilter()},_doFilter:function(){var a=
+this.grid.filter,b=a._rules;a.setFilter(function(a){for(var c in b)if(!b[c](a))return 0;return 1})}})});
+//@ sourceMappingURL=_FilterMenuBase.js.map

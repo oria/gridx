@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"GotoPageButton.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,gGAIG,QAAA,CAAgCC,CAAhC,CAAwCC,CAAxC,EACFD,CAAAE,WAAA,8GADE,OAUKD,EAVL,CAJH;",
+"sources":["GotoPageButton.js.uncompressed.js"],
+"names":["define","kernel","widget","deprecated"]
+}

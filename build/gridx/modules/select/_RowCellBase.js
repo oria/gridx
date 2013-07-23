@@ -1,0 +1,4 @@
+//>>built
+define("gridx/modules/select/_RowCellBase",["dojo/_base/declare","dojo/_base/lang","./_Base","../../core/model/extensions/Mark"],function(e,h,f,g){return e(f,{modelExtensions:[g],selectById:function(a,b){var c=this.model,d=this._getMarkType(b),e="row"==this._type?a:[a,b];this.arg("enabled")&&this._isSelectable(e)&&(this.arg("multiple")||c.clearMark(d),c.markById(a,1,d),c.when())},deselectById:function(a,b){var c=this.model,d="row"==this._type?a:[a,b];this.arg("enabled")&&this._isSelectable(d)&&(c.markById(a,
+0,this._getMarkType(b)),c.when())},isSelected:function(a,b){return!0===this.model.getMark(a,this._getMarkType(b))},_init:function(){this.connect(this.model,"onMarkChange","_onMark")}})});
+//@ sourceMappingURL=_RowCellBase.js.map

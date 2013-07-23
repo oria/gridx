@@ -1,0 +1,4 @@
+//>>built
+define("gridx/modules/HeaderMenu","dojo/_base/declare dojo/_base/event dijit/registry dojo/dom-construct dojo/dom-class dojo/keys ../core/_Module ./HeaderRegions".split(" "),function(f,g,h,k,l,m,n){return f(n,{name:"headerMenu",forced:["headerRegions"],preload:function(){var d=this,e=d.grid;e.headerRegions.add(function(a){var b=a.menu&&h.byId(a.menu);if(b){var c=k.create("div",{className:"gridxHeaderMenuBtn",tabIndex:-1,innerHTML:'\x3cspan class\x3d"gridxHeaderMenuBtnInner"\x3e\x26#9662;\x3c/span\x3e\x26nbsp;'});
+l.add(b.domNode,"gridxHeaderMenu");b.bindDomNode(c);d.connect(c,"onkeydown",function(a){a.keyCode==m.ENTER&&(g.stop(a),b._scheduleOpen(c))});b.bindGrid&&b.bindGrid(e,a);return c}},0,1)}})});
+//@ sourceMappingURL=HeaderMenu.js.map

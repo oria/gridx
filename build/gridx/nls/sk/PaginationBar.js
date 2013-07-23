@@ -1,0 +1,4 @@
+//>>built
+define("gridx/nls/sk/PaginationBar",{pagerWai:"Str\u00e1nky",pageIndex:"${0}",pageIndexTitle:"Strana ${0}",firstPageTitle:"Prv\u00e1 strana",prevPageTitle:"Predo\u0161l\u00e1 strana",nextPageTitle:"\u010eal\u0161ia strana",lastPageTitle:"Posledn\u00e1 strana",pageSize:"${0}",pageSizeTitle:"${0} polo\u017eiek na strane",pageSizeAll:"V\u0161etky",pageSizeAllTitle:"V\u0161etky polo\u017eky",description:"${0} - ${1} z ${2} polo\u017eiek.",descriptionEmpty:"Mrie\u017eka je pr\u00e1zdna.",summary:"Celkovo: ${0}",
+summaryWithSelection:"Celkovo: ${0}, vybrat\u00fdch: ${1}",gotoBtnTitle:"Prejs\u0165 na \u0161pecifick\u00fa stranu",gotoDialogTitle:"Prejs\u0165 na stranu",gotoDialogMainMsg:"Zadajte \u010d\u00edslo strany:",gotoDialogPageCount:"(${0} str\u00e1n)",gotoDialogOKBtn:"Prejs\u0165",gotoDialogCancelBtn:"Zru\u0161i\u0165",pageLabel:"Strana",pageSizeLabel:"Riadky"});
+//@ sourceMappingURL=PaginationBar.js.map

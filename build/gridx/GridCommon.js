@@ -1,0 +1,3 @@
+//>>built
+define("gridx/GridCommon","dojo/_base/declare ./Grid ./core/model/cache/Sync ./modules/CellWidget ./modules/Edit ./modules/ColumnResizer ./modules/SingleSort ./modules/TouchScroll ./modules/extendedSelect/Row ./modules/Filter ./modules/move/Row ./modules/move/Column ./modules/ColumnLock".split(" "),function(b,a,c,d,e,f,g,h,k,l,m,n,p){return b(a,{cacheClass:c,coreModules:a.prototype.coreModules.concat([d,e,f,g,h,k,l,m,n,p])})});
+//@ sourceMappingURL=GridCommon.js.map

@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Avatar.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,+HAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,CAA0CC,CAA1C,CAA+CC,CAA/C,QAUKJ,EAAA,CAAQI,CAAR,YACKC,QAAAA,CAASC,CAATD,EAEVE,WAFUF,CAECJ,CAAAO,SAAA,CAAkBL,CAAAM,KAAA,EAAlB,cAEXC,UAJUL,CAIDH,CAAAS,MAAA,CAAmBC,sNAIzBL,WAJyBK;CAIYN,YAAAO,KAJZD,gFAMME,kBAAA,EANNF,uEAOcG,kBAAA,EAPdH,wEAAA,IAAnB,CAJCP,CADL,eAiBSS,QAAAA,OACVE,EAAOV,YAAAW,SADGH,OAEPF,gBAAiBI,CAAAE,QAAjBN,KAA+BI,CAAAG,MAA/BP,uBAAA,IAFOE,CAjBT,eAsBSC,QAAAA,aAGDT,YAAAW,SAAAE,MAHCJ,KAtBT,EAVL,CANH;",
+"sources":["Avatar.js.uncompressed.js"],
+"names":["define","declare","domClass","domConstruct","win","Avatar","construct","manager","isA11y","contains","body","node","toDom","join","copy","_getIconClass","_generateText","info","_dndInfo","cssName","count"]
+}

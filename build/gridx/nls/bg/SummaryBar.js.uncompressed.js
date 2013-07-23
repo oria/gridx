@@ -1,0 +1,6 @@
+define(
+"gridx/nls/bg/SummaryBar", ({
+	summary: 'Общо: ${0}',
+	summaryWithSelection: 'Общо: ${0} Избрани: ${1}'
+})
+);

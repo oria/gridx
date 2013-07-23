@@ -1,0 +1,4 @@
+//>>built
+define("gridx/support/Summary",["dojo/_base/declare","dojo/string","dijit/_WidgetBase","dijit/_TemplatedMixin","dojo/i18n!../nls/SummaryBar"],function(b,e,f,g,d){return b([f,g],{templateString:'\x3cdiv class\x3d"gridxSummary"\x3e\x3c/div\x3e',grid:null,postCreate:function(){var a=this.grid.model;this.connect(a,"onSizeChange","refresh");this.connect(a,"onMarkChange","refresh");this.refresh()},refresh:function(){var a=this.grid,c=a.select&&a.select.row,a=a.model.size(),b=c?c.getSelected().length:0;
+this.domNode.innerHTML=e.substitute(c?d.summaryWithSelection:d.summary,[a,b])}})});
+//@ sourceMappingURL=Summary.js.map

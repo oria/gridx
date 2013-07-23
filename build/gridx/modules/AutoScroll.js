@@ -1,0 +1,5 @@
+//>>built
+define("gridx/modules/AutoScroll",["dojo/_base/declare","dojo/_base/window","dojo/dom-geometry","../core/_Module"],function(k,l,m,h){return h.register(k(h,{name:"autoScroll",constructor:function(){this.connect(l.doc,"mousemove","_onMouseMove")},enabled:!1,vertical:!0,horizontal:!0,margin:20,_timeout:100,_step:10,_maxMargin:100,_onMouseMove:function(c){if(this.arg("enabled")){var b,a,e=this.grid,f=this.arg("margin"),d=m.position(e.bodyNode);this.arg("vertical")&&e.vScroller&&(b=c.clientY-d.y-f,a=b+
+2*f-d.h,this._vdir=0>b?b:0<a?a:0);this.arg("horizontal")&&e.hScroller&&(b=c.clientX-d.x-f,a=b+2*f-d.w,this._hdir=0>b?b:0<a?a:0);this._handler||this._scroll()}},_scroll:function(){var c=this;if(c.arg("enabled")){var b,a,e=c.grid,f=c._maxMargin,d=c._step;a=c._vdir;var g=c._hdir;c.arg("vertical")&&a&&(b=0<a?1:-1,a=Math.min(f,Math.abs(a))/d,e.vScroller.domNode.scrollTop+=(1>a?1:a)*d*b,b=1);c.arg("horizontal")&&g&&(b=0<g?1:-1,a=Math.min(f,Math.abs(g))/d,a=(1>a?1:a)*d*b,e.hScroller.domNode.scrollLeft+=
+a,b=1);if(b){c._handler=setTimeout(function(){c._scroll()},c._timeout);return}}delete c._handler}}))});
+//@ sourceMappingURL=AutoScroll.js.map

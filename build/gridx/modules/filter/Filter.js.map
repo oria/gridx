@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Filter.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iEAIG,QAAA,CAAgCC,CAAhC,CAAwCC,CAAxC,EACFD,CAAAE,WAAA,+GADE,OAUKD,EAVL,CAJH;",
+"sources":["Filter.js.uncompressed.js"],
+"names":["define","kernel","Filter","deprecated"]
+}

@@ -1,0 +1,3 @@
+//>>built
+define("gridx/nls/cs/Body",{loadingInfo:"Prob\u00edh\u00e1 na\u010d\u00edt\u00e1n\u00ed...",emptyInfo:"Nejsou \u017e\u00e1dn\u00e9 polo\u017eky k zobrazen\u00ed.",loadFailInfo:"Na\u010dten\u00ed dat se nezda\u0159ilo!",loadMore:"Na\u010d\u00edst dal\u0161\u00ed",loadMoreLoading:"Prob\u00edh\u00e1 na\u010d\u00edt\u00e1n\u00ed...",loadPrevious:"Na\u010d\u00edst p\u0159edchoz\u00ed",loadPreviousLoading:"Prob\u00edh\u00e1 na\u010d\u00edt\u00e1n\u00ed..."});
+//@ sourceMappingURL=Body.js.map

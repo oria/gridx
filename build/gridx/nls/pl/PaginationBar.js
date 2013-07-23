@@ -1,0 +1,4 @@
+//>>built
+define("gridx/nls/pl/PaginationBar",{pagerWai:"Program stronicuj\u0105cy",pageIndex:"${0}",pageIndexTitle:"Strona ${0}",firstPageTitle:"Pierwsza strona",prevPageTitle:"Poprzednia strona",nextPageTitle:"Nast\u0119pna strona",lastPageTitle:"Ostatnia strona",pageSize:"${0}",pageSizeTitle:"${0} element\u00f3w na stron\u0119",pageSizeAll:"Wszystko",pageSizeAllTitle:"Wszystkie elementy",description:"${0} - elementy ${1} z ${2}. ",descriptionEmpty:"Siatka jest pusta.",summary:"\u0141\u0105cznie: ${0}",summaryWithSelection:"\u0141\u0105cznie: ${0} Wybranych: ${1}",
+gotoBtnTitle:"Id\u017a do okre\u015blonej strony",gotoDialogTitle:"Id\u017a do strony",gotoDialogMainMsg:"Podaj numer strony:",gotoDialogPageCount:"(${0} stron)",gotoDialogOKBtn:"Id\u017a",gotoDialogCancelBtn:"Anuluj",pageLabel:"Strona",pageSizeLabel:"Wiersze"});
+//@ sourceMappingURL=PaginationBar.js.map

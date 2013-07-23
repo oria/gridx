@@ -1,0 +1,154 @@
+/* Single Sort */
+.gridxSortNode {
+	overflow: hidden;
+}
+.gridxArrowButtonCharAsc,
+.gridxArrowButtonCharDesc {
+	display: none;
+}
+.dijit_a11y .gridxCellSoredAsc .gridxArrowButtonCharAsc,
+.dijit_a11y .gridxCellSoredDesc .gridxArrowButtonCharDesc {
+	display: block;
+}
+.gridxArrowButtonNode {
+	background: transparent url("images/sprite_icons.png") no-repeat;
+	display: none;
+	float: right;
+	margin-right: 7px;
+	width: 9px;
+	height: 12px;
+}
+.gridxCellSorted .gridxArrowButtonNode {
+	display: block;
+}
+.gridxCellSortedAsc .gridxArrowButtonNode {
+	background-position: -120px 5px;
+}
+.gridxCellSortedDesc .gridxArrowButtonNode {
+	background-position: -100px 5px;
+}
+.gridxHeaderCellOver.gridxCellSortedAsc .gridxArrowButtonNode,
+.gridxHeaderCellFocus.gridxCellSortedAsc .gridxArrowButtonNode {
+	background-position: -140px 5px;
+}
+.gridxHeaderCellOver.gridxCellSortedDesc .gridxArrowButtonNode,
+.gridxHeaderCellFocus.gridxCellSortedDesc .gridxArrowButtonNode {
+	background-position: -160px 5px;
+}
+
+
+/*Nested Sorting*/
+.gridxSortBtn {
+	background: transparent url(images/sprite_icons.png) no-repeat -159px 5px;
+	float: right;
+	cursor: pointer;
+	width: 10px;
+	display: none;
+}
+.gridxSortNodeFocus {
+	background: #ddd;
+}
+.gridxSortBtnNested {
+	width: 20px;
+	background-position: -149px 5px;
+}
+
+.gridxSortBtn:hover,
+.gridxSortBtnFocus {
+    background-color: #ddd;
+}
+
+.gridxHeader .gridxCell .gridxSortBtnNested {
+	display: none;
+}
+.gridxCellSorted .gridxSortBtnSingle,
+.gridxNestedSorted .gridxCellSorted .gridxSortBtnNested,
+
+.gridxCell:hover .gridxSortBtnSingle,
+.gridxSingleSorted .gridxCell:hover .gridxSortBtn,
+.gridxNestedSorted .gridxCell:hover .gridxSortBtn,
+
+.gridxHeader .gridxCellSortFocus .gridxSortBtnSingle,
+.gridxSingleSorted .gridxCellSortFocus .gridxSortBtn,
+.gridxNestedSorted .gridxCellSortFocus .gridxSortBtn,
+.gridxHeader .gridxHeaderRegionFocus .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderRegionFocus .gridxSortBtn,
+.gridxNestedSorted .gridxHeaderRegionFocus .gridxSortBtn,
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain.gridxHeaderRegionFocus .gridxSortBtnNested,
+
+/*.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain .gridxSortBtnNested,*/
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain .gridxSortBtnNested,
+.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain .gridxSortBtnNested
+{
+	display: block;
+}
+
+.gridxSingleSorted .gridxHeader .gridxCellSortedMain:hover .gridxSortBtnNested,
+.gridxSingleSorted .gridxHeader .gridxCellSortedMain.gridxCellSortFocus .gridxSortBtnNested,
+.gridxSingleSorted .gridxHeader .gridxCellSortedMain.gridxHeaderRegionFocus .gridxSortBtnNested,
+/*.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain .gridxSortBtnSingle,*/
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain .gridxSortBtnSingle,
+.gridxNestedSorted .gridxSortBtnSingle {
+	display: none;
+}
+
+/*.gridxSingleSorted .gridxHeaderHover .gridxCellSortedMain:hover .gridxSortBtnSingle,*/
+.gridxSingleSorted .gridxHeaderRow:hover .gridxCellSortedMain:hover .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain.gridxCellSortFocus .gridxSortBtnSingle,
+.gridxSingleSorted .gridxHeaderFocus .gridxCellSortedMain.gridxHeaderRegionFocus .gridxSortBtnSingle {
+	display: block;
+}
+
+.gridxCell:hover .gridxSortBtn,
+.gridxCellSortFocus .gridxSortBtn,
+.gridxHeaderRegionFocus .gridxSortBtn {
+/*    border-left: 1px solid #bbb;*/
+}
+.gridxCellSortedAsc .gridxSortBtnSingle {
+	background-position: -120px 5px;
+}
+.gridxCellSortedAsc .gridxSortBtnNested {
+	background-position: -110px 5px;
+}
+.gridxCellSortedDesc .gridxSortBtnSingle {
+	background-position: -100px 5px;
+}
+.gridxCellSortedDesc .gridxSortBtnNested {
+	background-position: -90px 5px;
+}
+.gridxCell:hover.gridxCellSortedAsc .gridxSortBtnSingle,
+.gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnSingle,
+.gridxHeaderRegionFocus.gridxCellSortedAsc .gridxSortBtnSingle {
+	background-position: -140px 5px;
+}
+.gridxCell:hover.gridxCellSortedAsc .gridxSortBtnNested,
+.gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnNested,
+.gridxHeaderRegionFocus.gridxCellSortedAsc .gridxSortBtnNested {
+	background-position: -130px 5px;
+}
+.gridxCell:hover.gridxCellSortedDesc .gridxSortBtnSingle,
+.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnSingle,
+.gridxHeaderRegionFocus.gridxCellSortedDesc .gridxSortBtnSingle {
+	background-position: -180px 5px;
+}
+.gridxCell:hover.gridxCellSortedDesc .gridxSortBtnNested,
+.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested,
+.gridxHeaderRegionFocus.gridxCellSortedDesc .gridxSortBtnNested {
+	background-position: -170px 5px;
+}
+.gridxNestedSorted .gridxCell:hover .gridxSortBtnSingle,
+.gridxNestedSorted .gridxCellSortFocus .gridxSortBtnSingle,
+.gridxNestedSorted .gridxHeaderRegionFocus .gridxSortBtnSingle {
+	background-position: -159px 5px;
+}
+
+
+.gridxNestedSortBtnText {
+	display: none;
+}
+.dijit_a11y .gridxNestedSortBtnText {
+	display: inline;
+}
+
+

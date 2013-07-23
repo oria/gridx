@@ -1,0 +1,109 @@
+/*common*/
+.claro .gridx {
+	background-color: #fff;
+	border: 1px solid #DBDBDB;
+	color: #131313;
+}
+
+/*Body*/
+.claro .gridxCell{
+	border-color: transparent #E5DAC8 #E5DAC8 transparent;
+}
+.claro .gridxRowOdd .gridxRowTable {
+	background-color: #f1f8ff;
+}
+.claro .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable,
+.claro .gridxBodyRowHoverEffect .gridxRowOver .gridxCell {
+	background:url("../images/row_back.png") #ABD6FF repeat-x;
+}
+
+.claro .gridx .gridxBody .gridxRow .gridxCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+
+/*Header*/
+.claro .gridxHeaderRow {
+	border-top: 1px solid #FFFFFF;
+	border-bottom: 1px solid #FFFFFF;
+	clear: both;
+}
+.claro .gridx .gridxHeader .gridxHeaderRow .gridxHeaderCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+
+.claro .gridxHeaderRowHidden {
+	height: 0;
+	border-width: 0;
+}
+
+.dj_ie7 .claro .gridxRowHeaderRow table {
+	border-collapse: collapse;
+}
+
+.claro .gridxHeaderRowInner {
+	background-image: url('../images/claro-grid-header-onepixel.bmp');
+	background-position: right;
+	background-repeat: repeat-y;
+	border-right: 1px solid #FFFFFF;
+}
+
+.claro .gridxGroupHeader {
+	border-color: #EDF2F7 #BCBCBC #BCBCBC #FFFFFF;
+}
+.claro .gridxHeaderRow .gridxCell {
+	border-color: #EDF2F7 #BCBCBC #D0DFEA #FFFFFF;
+}
+.claro .gridxHeaderRow .gridxSubHeader {
+	border-top-color: #FFFFFF;
+}
+
+.claro .gridxHeaderRow {
+	background: #edf2f7; /* Old browsers */
+	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#edf2f7), color-stop(100%,#d0dfea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
+	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
+}
+
+.claro .gridxHeader .gridxHeaderRow .gridxCell:hover {
+	background: #9bcaf7;
+	border-top-color: #9BCAF7;
+}
+.claro .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover,
+.gridxColumnResizing .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxCell:hover {
+	border-top-color: #FFFFFF;
+}
+.gridxColumnResizing .gridx .gridxHeader .gridxHeaderRow .gridxCell:hover {
+	background: transparent;
+	border-top-color: transparent;
+}
+.claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus,
+.claro .gridx .gridxHeader .gridxHeaderRow .gridxSubHeader.gridxHeaderCellFocus:hover {
+	border-top-color: darkblue;
+}
+
+/* Row header */
+.claro .gridxRowHeaderHeader .gridxHeaderCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+	
+.claro .gridxRowHeaderRow .gridxCellFocus {
+	outline: none;
+	border: 1px dashed darkblue;
+}
+
+/* toolbar */
+.claro .gridxBarToolBar .dijitToolbar {
+	background: none;
+	border-bottom: none;
+}
+
+/* PagedBody */
+.claro .gridxBodyFirstRow .gridxCell {
+	border-top-color: #E5DAC8;
+}

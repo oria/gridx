@@ -1,0 +1,51 @@
+/*Single Sorting*/
+.gridxRtl .gridxArrowButtonNode {
+	float: left;
+	margin-right: 0;
+	margin-left: 7px;
+}
+
+/* NestedSorting */
+.dijitRtl .gridxSortNode {
+	text-align: right;
+}
+
+.dijitRtl .gridxSortBtn {
+	float: left;
+}
+
+.dijitRtl .gridxSortBtnNested {
+	width: 20px;
+	background-position: -156px 5px;
+	text-align: right;
+}
+
+.dijitRtl .gridxCell:hover .gridxSortBtn,
+.dijitRtl .gridxCellSortFocus .gridxSortBtn {
+	border-right: 1px solid #bbb;
+	border-left: none;
+}
+.dijitRtl .gridxCellSortedAsc .gridxSortBtnNested {
+	background-position: -117px 5px;
+}
+.dijitRtl .gridxCellSortedDesc .gridxSortBtnNested {
+	background-position: -97px 5px;
+}
+.dijitRtl .gridxCell:hover.gridxCellSortedAsc .gridxSortBtnNested,
+.dijitRtl .gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnNested {
+	background-position: -137px 5px;
+}
+.dijitRtl .gridxCell:hover.gridxCellSortedDesc .gridxSortBtnNested,
+.dijitRtl .gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested {
+	background-position: -177px 5px;
+}
+.dijitRtl .gridxNestedSorted .gridxCell:hover .gridxSortBtnSingle,
+.dijitRtl .gridxNestedSorted .gridxCellSortFocus .gridxSortBtnSingle {
+	background-position: -159px 5px;
+}
+
+
+
+
+
+

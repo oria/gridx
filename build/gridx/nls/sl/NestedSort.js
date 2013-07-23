@@ -1,0 +1,3 @@
+//>>built
+define("gridx/nls/sl/NestedSort",{singleSort:"Enostavno razvr\u0161\u010danje",nestedSort:"Ugnezdeno razvr\u0161\u010danje",ascending:"Kliknite, \u010de \u017eelite zagnati nara\u0161\u010dajo\u010de razvr\u0161\u010danje",descending:"Kliknite, \u010de \u017eelite zagnati padajo\u010de razvr\u0161\u010danje",sortingState:"${0} - ${1}",unsorted:"Ne razvr\u0161\u010daj tega stolpca",waiSingleSortLabel:"${0} - je razvr\u0161\u010den glede na ${1}. Izberi razvr\u0161\u010danje glede na ${2}",waiNestedSortLabel:"${0} - je ugnezden glede na ${1}. Izberi ugnezditev glede na ${2}"});
+//@ sourceMappingURL=NestedSort.js.map

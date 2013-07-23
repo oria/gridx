@@ -1,0 +1,3 @@
+//>>built
+define("gridx/modules/exporter/Table",["dojo/_base/kernel","dojo/_base/declare","../../core/_Module","../../support/exporter/toTable"],function(a,b,c,d){a.deprecated("gridx/modules/exporter/Table is deprecated.","Use gridx/support/exporter/toTable instead.","1.3");return b(c,{name:"exportTable",getAPIPath:function(){return{exporter:{toTable:function(a){return exportToTable(grid,a||{})}}}}})});
+//@ sourceMappingURL=Table.js.map

@@ -1,0 +1,5 @@
+//>>built
+require({cache:{"url:gridx/templates/FilterConfirmDialog.html":'\x3cdiv class\x3d"gridxFilterConfirmDialogMessage"\x3e${clearFilterMsg}\x3c/div\r\n\x3e\x3cdiv class\x3d"gridxFilterConfirmDialogButtons"\r\n\t\x3e\x3cinput type\x3d"button" data-dojo-type\x3d"dijit.form.Button" label\x3d"${clearButton}"\r\n\t/\x3e\x3cinput type\x3d"button" data-dojo-type\x3d"dijit.form.Button" label\x3d"${cancelButton}"\r\n/\x3e\x3c/div\x3e\r\n'}});
+define("gridx/modules/filter/FilterConfirmDialog",["dojo/_base/declare","dojo/string","dijit/Dialog","dojo/text!../../templates/FilterConfirmDialog.html","dojo/i18n!../../nls/FilterBar"],function(c,d,e,f,a){return c(e,{title:a.clearFilterDialogTitle,cssClass:"gridxFilterConfirmDialog",autofocus:!1,postCreate:function(){this.inherited(arguments);this.set("content",d.substitute(f,a));var b=dijit.findWidgets(this.domNode);this.btnClear=b[0];this.btnCancel=b[1];this.connect(this.btnCancel,"onClick","hide");
+this.connect(this.btnClear,"onClick","onExecute");this.connect(this,"show",function(){this.btnCancel.focus()})},onExecute:function(){this.execute()},execute:function(){}})});
+//@ sourceMappingURL=FilterConfirmDialog.js.map

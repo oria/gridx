@@ -1,0 +1,39 @@
+/* row select */
+.gridxRowSelected .gridxRowTable {
+	background-color: #BFD6EB;
+}
+
+/* column select */
+.gridxRow .gridxColumnSelected {
+	background-color: #BFD6EB;
+}
+/* cell select */
+.gridxCellSelected {
+	background-color: #BFD6EB;
+}
+
+/* high contrast */
+.dijit_a11y .gridxRowSelected,
+.dijit_a11y .gridxRow .gridxColumnSelected,
+.dijit_a11y .gridxCellSelected {
+	opacity: 0.8;
+}
+
+.dijit_a11y .gridxRowUnselectable {
+	opacity: 0.5;
+}
+
+
+/*IndirectSelection*/
+.gridxRowHeaderHeaderCell,
+.gridxRowHeaderCell {
+	text-align: center;
+}
+
+.gridxIndirectSelectionCheckBoxInner {
+	display: none;
+}
+
+.dijit_a11y .gridxIndirectSelectionCheckBoxInner {
+	display: inline;
+}

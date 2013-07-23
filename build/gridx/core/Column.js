@@ -1,0 +1,4 @@
+//>>built
+define("gridx/core/Column",["dojo/_base/declare"],function(h){return h([],{constructor:function(a,b){this.grid=a;this.model=a.model;this.id=b},index:function(){var a=this.def();return a?a.index:-1},def:function(){return this.grid._columnsById[this.id]},cell:function(a,b,c){return this.grid.cell(a,this,b,c)},cells:function(a,b,c){var e=this.grid,f=[],g=e.rowCount(c),d=a||0;for(a=0<=b?a+b:g;d<a&&d<g;++d)f.push(e.cell(d,this,0,c));return f},name:function(){return this.def().name||""},setName:function(a){this.def().name=
+a;return this},field:function(){return this.def().field||null},getWidth:function(){return this.def().width}})});
+//@ sourceMappingURL=Column.js.map

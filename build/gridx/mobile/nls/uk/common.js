@@ -1,0 +1,3 @@
+//>>built
+define("gridx/mobile/nls/uk/common",{noDataMsg:"\u041d\u0435\u043c\u0430\u0454 \u0435\u043b\u0435\u043c\u0435\u043d\u0442\u0456\u0432 \u0434\u043b\u044f \u0432\u0456\u0434\u043e\u0431\u0440\u0430\u0436\u0435\u043d\u043d\u044f."});
+//@ sourceMappingURL=common.js.map

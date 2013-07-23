@@ -1,0 +1,4 @@
+//>>built
+define("gridx/support/menu/AZFilterMenu",["dojo/_base/declare","dojo/_base/array","./_FilterMenuBase","dijit/CheckedMenuItem"],function(d,c,e,f){return d(e,{alphabeticRanges:["A-F","G-L","M-R","S-Z"],_createMenuItems:function(){var a=this;c.forEach(a.alphabeticRanges,function(b){a.addChild(new f({label:b,onChange:function(){a._addRule()}}))})},_addRule:function(){var a=this,b="";c.forEach(a.getChildren(),function(a){a.get("checked")&&(b+=a.get("label"))});b?(b=RegExp("^["+b+"]","i"),a._addFilter("azfilter",
+function(c){return b.test(String(c.data[a.colId]))})):a._removeFilter("azfilter")}})});
+//@ sourceMappingURL=AZFilterMenu.js.map

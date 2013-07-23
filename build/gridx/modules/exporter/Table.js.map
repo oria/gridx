@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"Table.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,iIAMG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAA0BC,CAA1B,CAA2DC,CAA3D,EACFH,CAAAI,WAAA,mGADE,OAsBKH,EAAA,CAAQC,CAAR,gCAGMG,QAAAA,4BAGAC,QAAAA,CAASC,CAATD,QACDE,cAAA,CAAcC,IAAd,CAAoBF,CAApB,KADCD,CAHAD,GAHN,EAtBL,CANH;",
+"sources":["Table.js.uncompressed.js"],
+"names":["define","kernel","declare","_Module","exportToTabel","deprecated","getAPIPath","toTable","args","exportToTable","grid"]
+}

@@ -1,0 +1,5 @@
+//>>built
+define("gridx/nls/ja/PaginationBar",{pagerWai:"\u30da\u30fc\u30b8\u30e3\u30fc",pageIndex:"${0}",pageIndexTitle:"\u30da\u30fc\u30b8 ${0}",firstPageTitle:"\u6700\u521d\u306e\u30da\u30fc\u30b8",prevPageTitle:"\u524d\u306e\u30da\u30fc\u30b8",nextPageTitle:"\u6b21\u306e\u30da\u30fc\u30b8",lastPageTitle:"\u6700\u5f8c\u306e\u30da\u30fc\u30b8",pageSize:"${0}",pageSizeTitle:"\u30da\u30fc\u30b8\u5f53\u305f\u308a ${0} \u9805\u76ee",pageSizeAll:"\u3059\u3079\u3066",pageSizeAllTitle:"\u3059\u3079\u3066\u306e\u9805\u76ee",
+description:"${0} - ${1}/${2} \u9805\u76ee\u3002",descriptionEmpty:"\u30b0\u30ea\u30c3\u30c9\u304c\u7a7a\u3067\u3059\u3002",summary:"\u5408\u8a08: ${0}",summaryWithSelection:"\u5408\u8a08: ${0} \u9078\u629e\u6e08\u307f: ${1}",gotoBtnTitle:"\u7279\u5b9a\u306e\u30da\u30fc\u30b8\u306b\u79fb\u52d5",gotoDialogTitle:"\u30da\u30fc\u30b8\u306b\u79fb\u52d5",gotoDialogMainMsg:"\u30da\u30fc\u30b8\u756a\u53f7\u306e\u6307\u5b9a:",gotoDialogPageCount:" (${0} \u30da\u30fc\u30b8)",gotoDialogOKBtn:"\u79fb\u52d5",
+gotoDialogCancelBtn:"\u30ad\u30e3\u30f3\u30bb\u30eb",pageLabel:"\u30da\u30fc\u30b8",pageSizeLabel:"\u884c"});
+//@ sourceMappingURL=PaginationBar.js.map

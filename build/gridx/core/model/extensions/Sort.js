@@ -1,0 +1,4 @@
+//>>built
+define("gridx/core/model/extensions/Sort",["dojo/_base/declare","dojo/_base/lang","dojo/_base/json","../_Extension"],function(m,k,l,n){return m(n,{name:"sort",priority:30,constructor:function(a,e){var c=e.baseSort;this._mixinAPI("sort");c&&c.length&&(this._baseSort=c,this._sort())},sort:function(){this.model._addCmd({name:"_cmdSort",scope:this,args:arguments})},_cmdSort:function(){var a=arguments;this._sort.apply(this,a[a.length-1])},_sort:function(a){var e=this.model,c=this._baseSort,d=e._cache,
+f=d.options=d.options||{},g,b,h;if(k.isArrayLike(a)){for(g=0;g<a.length;++g)b=a[g],b.colId?b.attribute=d.columns?d.columns[b.colId].field||b.colId:b.colId:b.colId=b.attribute;c&&(a=a.concat(c))}else a=c;f.sort&&f.sort.length?l.toJson(f.sort)!==l.toJson(a)&&(h=1):a&&a.length&&(h=1);f.sort=k.clone(a);h&&d.clear();e._msg("storeChange")}})});
+//@ sourceMappingURL=Sort.js.map

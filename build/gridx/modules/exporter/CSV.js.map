@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"CSV.js",
+"lineCount":1,
+"mappings":"A,SAAAA,MAAA,6HAMG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAA0BC,CAA1B,CAA2DC,CAA3D,EACFH,CAAAI,WAAA,+FADE,OAsBKH,EAAA,CAAQC,CAAR,8BAGMG,QAAAA,OACPC,EAAOA,SADAD,wBAIFE,QAAAA,CAASC,CAATD,QACCJ,EAAA,CAAYG,CAAZ,CAAkBE,CAAlB,KADDD,CAJEF,GAHN,EAtBL,CANH;",
+"sources":["CSV.js.uncompressed.js"],
+"names":["define","kernel","declare","_Module","exportToCSV","deprecated","getAPIPath","grid","toCSV","args"]
+}

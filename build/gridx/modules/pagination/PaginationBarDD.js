@@ -1,0 +1,4 @@
+//>>built
+define("gridx/modules/pagination/PaginationBarDD",["dojo/_base/declare","dojo/dom-class","./_PaginationBarBase","../../support/DropDownPager","../../support/DropDownSizer"],function(f,b,g,d,e){return f(g,{_init:function(a){var c=d.prototype,b=e.prototype;this._add(d,1,a,"stepper",{className:"gridxPagerStepperTD",visibleSteppers:this.arg("visibleSteppers"),stepperClass:this.arg("stepperClass")||c.stepperClass,stepperProps:this.arg("stepperProps")||c.stepperProps});this._add(e,2,a,"sizeSwitch",{className:"gridxPagerSizeSwitchTD",
+sizes:this.arg("sizes"),sizeSeparator:this.arg("sizeSeparator"),sizerClass:this.arg("sizerClass")||b.sizerClass,sizerProps:this.arg("sizerProps")||b.sizerProps})},_refresh:function(a,c){b.toggle(a[1].domNode,"dijitHidden",!this._exist(c,"stepper"));b.toggle(a[2].domNode,"dijitHidden",!this._exist(c,"sizeSwitch"));a[2].sizes=this.arg("sizes")}})});
+//@ sourceMappingURL=PaginationBarDD.js.map

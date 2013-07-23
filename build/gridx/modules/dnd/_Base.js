@@ -1,0 +1,3 @@
+//>>built
+define("gridx/modules/dnd/_Base","dojo/_base/declare dojo/_base/array dojo/_base/lang ../../core/_Module ./Avatar ./_Dnd".split(" "),function(c,d,e,f,g){return c(f,{delay:2,enabled:!0,canRearrange:!0,copyWhenDragOut:!1,avatar:g,preload:function(a){a=this.grid.dnd._dnd;a.register(this.name,this);a.avatar=this.arg("avatar")},checkArg:function(a,c){var b=this.arg(a);return b&&e.isObject(b)?d.some(c,function(a){return b[a]}):b}})});
+//@ sourceMappingURL=_Base.js.map

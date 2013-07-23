@@ -1,0 +1,5 @@
+//>>built
+define("gridx/support/_LinkPageBase","dojo/_base/declare dojo/_base/lang dojo/_base/array dojo/_base/sniff dojo/dom-class dijit/_WidgetBase dijit/_FocusMixin dijit/_TemplatedMixin dojo/i18n!../nls/PaginationBar".split(" "),function(g,h,k,l,e,m,n,p,q){return g([m,p,n],{constructor:function(a){h.mixin(this,q);l("ie")&&(a=a.grid.domNode.getAttribute("tabindex"),this._tabIndex=0<a?a:0)},postCreate:function(){this.domNode.setAttribute("tabIndex",this.grid.domNode.getAttribute("tabIndex"));this.refresh();
+this.connect(this,"onFocus","_onFocus");this.connect(this.domNode,"onkeydown","_onKey")},grid:null,_tabIndex:-1,_findNodeByEvent:function(a,b,c){a=a.target;for(var d=e.contains;!d(a,b);){if(d(a,c))return null;a=a.parentNode}return a},_toggleHover:function(a,b,c,d){(b=this._findNodeByEvent(a,b,c))&&e.toggle(b,d,"mouseover"==a.type)},_focus:function(a,b,c,d,e){var f=d?-1:1;b=b?k.indexOf(a,b)+(c?f:0):d?a.length-1:0;c=function(b,c){for(;a[b]&&!e(a[b]);)b+=c;return a[b]};(b=c(b,f)||c(b-f,-f))&&b.focus();
+return b},_onFocus:function(){this._focusNextBtn()}})});
+//@ sourceMappingURL=_LinkPageBase.js.map

@@ -1,0 +1,4 @@
+//>>built
+define("gridx/nls/fi/PaginationBar",{pagerWai:"Sivutustoiminto",pageIndex:"${0}",pageIndexTitle:"Sivu ${0}",firstPageTitle:"Ensimm\u00e4inen sivu",prevPageTitle:"Edellinen sivu",nextPageTitle:"Seuraava sivu",lastPageTitle:"Viimeinen sivu",pageSize:"${0}",pageSizeTitle:"${0} nimikett\u00e4 sivua kohti",pageSizeAll:"Kaikki",pageSizeAllTitle:"Kaikki nimikkeet",description:"${0} - ${1} / ${2} nimikett\u00e4.",descriptionEmpty:"Ruudukko on tyhj\u00e4.",summary:"Yhteens\u00e4: ${0}",summaryWithSelection:"Yhteens\u00e4: ${0} Valittu: ${1}",
+gotoBtnTitle:"Siirry tietylle sivulle",gotoDialogTitle:"Siirry sivulle",gotoDialogMainMsg:"M\u00e4\u00e4rit\u00e4 sivunumero:",gotoDialogPageCount:" (${0} sivua)",gotoDialogOKBtn:"Siirry",gotoDialogCancelBtn:"Peruuta",pageLabel:"Sivu",pageSizeLabel:"Rivit"});
+//@ sourceMappingURL=PaginationBar.js.map
