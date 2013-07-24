@@ -178,6 +178,100 @@ define([
 		}
 	},	
 	{
+		id: 'core-74',
+		name:'when body.renderWholeRowOnSet is false, after update store, the data in cell will be compared by compareOnSet() function',
+		condition: function(grid){
+			return !grid.body.arg('renderWholeRowOnSet') && grid.body.arg('compareOnSet') && grid.bodyNode.childNodes.length;
+			//return true;
+		},
+		action: function(grid, doh, done, gtest){
+			grid.body.renderWholeRowOnSet = true;
+			var flag,
+			handler = connect.connect(grid.body, 'compareOnSet', function(){
+				flag = 'inCompareOnSet';
+			});
+			var ran = Math.floor(grid.bodyNode.childNodes.length * Math.random());
+			var id = grid.bodyNode.childNodes[ran].getAttribute('rowid');
+			try{
+				if(!grid.store.get){
+					done.callback();
+					return;
+				}
+			
+				var obj = grid.store.get(id);
+					
+				if(grid.store.put){
+					grid.store.put(obj);
+				}else{
+					grid.store.onSet(obj);
+				}
+				setTimeout(function(){
+					try{
+						doh.is(flag, 'inCompareOnSet');
+						done.callback();
+					}catch(e){
+						console.log(e);
+						done.errback(e);
+					}finally{
+						connect.disconnect(handler);
+					}
+				}, 400);
+			}catch(e){
+				console.log(e);
+				done.errback(e);
+			}
+			
+		}
+	},	
+	{
+		id: 'core-76',
+		name:'when body.renderWholeRowOnSet is false, after update store, the data in cell will be compared by compareOnSet() function',
+		condition: function(grid){
+			return !grid.body.arg('renderWholeRowOnSet') && grid.bodyNode.childNodes.length;
+			//return true;
+		},
+		action: function(grid, doh, done, gtest){
+			grid.body.renderWholeRowOnSet = function(){
+				return false; 
+			};
+			var count = 0,
+			handler = connect.connect(grid.body, 'onAfterCell', function(){
+				count++;
+			});
+			var ran = Math.floor(grid.bodyNode.childNodes.length * Math.random());
+			var id = grid.bodyNode.childNodes[ran].getAttribute('rowid');
+			try{
+				if(!grid.store.get){
+					done.callback();
+					return;
+				}
+			
+				var obj = grid.store.get(id);
+					
+				if(grid.store.put){
+					grid.store.put(obj);
+				}else{
+					grid.store.onSet(obj);
+				}
+				setTimeout(function(){
+					try{
+						doh.is(count, grid._columns.length);
+						done.callback();
+					}catch(e){
+						console.log(e);
+						done.errback(e);
+					}finally{
+						connect.disconnect(handler);
+					}
+				}, 400);
+			}catch(e){
+				console.log(e);
+				done.errback(e);
+			}
+			
+		}
+	},			
+	{
 		id: 'Body 65',
 		name: 'a new row is added, body is automatically refreshed (with current start index, not scrolled to the new row)',
 		condition: function(grid){

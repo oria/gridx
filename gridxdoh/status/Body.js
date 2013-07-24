@@ -20,6 +20,23 @@ define([
 		}
 	},
 	{
+		id: 'core-75',
+		name: 'when compareOnSet is still its default value, if the new and old value of cell are all objects, compare their toJson value, otherwise, compare their values',
+		checker: function(grid, doh){
+			var func = grid.body.__proto__.compareOnSet;
+			doh.t(func(1, 1));
+			doh.t(func('11', '11'));
+			doh.t(func({name: 'gridx', version: 1.1}, 
+						{name: 'gridx', version: 1.1})
+				);
+			doh.f(func(1, '1'));
+			doh.t(func({name: 'gridx', version: 1.0}, 
+						{name: 'gridx', version: 1.1})
+				);	
+			doh.f(func(1, {name: 'gridx', version: 1.1}));
+		}
+	},	
+	{
 		id: 'Body 2',
 		name: 'cell must align with column header',
 		checker: function(grid, doh){
