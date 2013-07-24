@@ -78,17 +78,17 @@ define([
 		}
 	},
 	{
-		id: 'Body 64',
-		name: '1.a currently rendered row is updated. 2.module parameter renderWholeRow is true. fire "onSet" event (body module)',
+		id: 'core-71',
+		name:'when body.renderWholeRowOnSet is true, after update store, the whole row will be rendered and the onAfterRow event will be triggered',
 		condition: function(grid){
 			return grid.body.arg('renderWholeRowOnSet') && grid.bodyNode.childNodes.length;
 			//return true;
 		},
 		action: function(grid, doh, done, gtest){
 			grid.body.renderWholeRowOnSet = true;
-			var t,
-			handler = connect.connect(grid.body, 'onSet', function(){
-				t = 'onSet';
+			var flag,
+			handler = connect.connect(grid.body, 'onAfterRow', function(){
+				flag = 'onAfterRow';
 			});
 			var ran = Math.floor(grid.bodyNode.childNodes.length * Math.random());
 			var id = parseInt(grid.bodyNode.childNodes[ran].getAttribute('rowid'), 10) + 1;
@@ -98,16 +98,16 @@ define([
 					return;
 				}
 			
-				var obj =  grid.store.get(id);
+				var obj = grid.store.get(id);
 					
 				if(grid.store.put){
-				    grid.store.put(obj);
+					grid.store.put(obj);
 				}else{
-				    grid.store.onSet(obj);
+					grid.store.onSet(obj);
 				}
 				setTimeout(function(){
 					try{
-						doh.is(t, 'onSet');
+						doh.is(flag, 'onAfterRow');
 						done.callback();
 					}catch(e){
 						console.log(e);
@@ -123,6 +123,60 @@ define([
 			
 		}
 	},
+	{
+		id: 'core-72',
+		name:'when body.renderWholeRowOnSet is false, after update store, the specific cell will be rendered and the onAfterCell event will be triggered',
+		// name: '1.a currently rendered row is updated. 2.module parameter renderWholeRow is true. fire "onSet" event (body module)',
+		condition: function(grid){
+			return !grid.body.arg('renderWholeRowOnSet') && grid.bodyNode.childNodes.length;
+			//return true;
+		},
+		action: function(grid, doh, done, gtest){
+			grid.body.renderWholeRowOnSet = true;
+			var flag,
+			handler = connect.connect(grid.body, 'onAfterCell', function(){
+				flag = 'onAfterCell';
+			});
+			var ran = Math.floor(grid.bodyNode.childNodes.length * Math.random());
+			var id = parseInt(grid.bodyNode.childNodes[ran].getAttribute('rowid'), 10) + 1;
+			try{
+				if(!grid.store.get){
+					done.callback();
+					return;
+				}
+			
+				var obj = grid.store.get(id);
+				for(var i in obj){
+					if(typeof obj[i] == 'string'){
+						obj[i] += ' ';
+					}else if(typeof obj[i] == 'number'){
+						obj[i] += 1;
+					}
+				}
+					
+				if(grid.store.put){
+					grid.store.put(obj);
+				}else{
+					grid.store.onSet(obj);
+				}
+				setTimeout(function(){
+					try{
+						doh.is(flag, 'onAfterCell');
+						done.callback();
+					}catch(e){
+						console.log(e);
+						done.errback(e);
+					}finally{
+						connect.disconnect(handler);
+					}
+				}, 400);
+			}catch(e){
+				console.log(e);
+				done.errback(e);
+			}
+			
+		}
+	},	
 	{
 		id: 'Body 65',
 		name: 'a new row is added, body is automatically refreshed (with current start index, not scrolled to the new row)',

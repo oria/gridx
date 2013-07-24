@@ -48,13 +48,14 @@ define([
 		}
 	},
 	{
-		id: 'Header 7',
-		name: 'getHeaderNode return null when parameter is invalid',
+		id: 'core-4',
+		name: 'getHeaderNode return undefined when parameter is invalid or columnId does not exist',
 		checker: function(grid, doh){
 			doh.is(null, grid.header.getHeaderNode(null));
 			doh.is(null, grid.header.getHeaderNode(undefined));
 			doh.is(null, grid.header.getHeaderNode(Infinity));
 			doh.is(null, grid.header.getHeaderNode(''));
+			doh.is(null, grid.header.getHeaderNode('blablabla'));
 		}
 	}
 	);
