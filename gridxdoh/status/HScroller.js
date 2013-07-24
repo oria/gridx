@@ -26,7 +26,7 @@ define([
 		}
 	},
 	{
-		id: 'core-15',
+		id: 'HScroller 3',
 		name: 'Horizontal scroll bar is as wide as the body',
 		condition: function(grid){
 			return domStyle.get(grid.hScrollerNode, 'display') != 'none';
