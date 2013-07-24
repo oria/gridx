@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-50</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, dataSource, storeFactory){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 100
+			});
+
+			layout = [
+				{id: 'id', field: 'id', name: 'Identity (min 100px)', minWidth: 100},
+				{id: 'Genre', field: 'Genre', name: 'Genre (min 200px)', width: '10%', minWidth: 200},
+				{id: 'Artist', field: 'Artist', name: 'Artist (min 300px)', minWidth: 300},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Album', field: 'Album', name: 'Album'},
+				{id: 'Name', field: 'Name', name: 'Name'},
+				{id: 'Heard', field: 'Heard', name: 'Heard'}
+			];
+
+			Deferred.when(parser.parse(), function(){
+			});
+		});
+	</script>
+</head>
+<body class='claro'>
+	<h2>autoWidth: false, columnWidthAutoResize: false, 若auto或%列计算出的宽度小于列的minWidth，采用minWidth</h2>
+	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+		modules: [
+		]
+	'></div>
+</body>
+</html>
