@@ -1,114 +1,113 @@
-Feature,Coverred By,Since Version,Related to,ID
-header单元格与对应列中的body单元格始终保持对齐,,,Header,core-1
-[header] 当有水平滚动条时，header.refresh应该保持refresh前后的header scrollLeft一致,,,Header.refresh(),core-2
-[header] 设置header.hidden之后，header.refresh应该相应的去显示或者隐藏header,,,Header.hidden,core-3
-[header] getHeaderNode在columnId不存在时返回undefined，不应产生错误,,,Header.getHeaderNode(),core-4
-非auto非百分比的固定列宽直接赋值给单元格的style.width，不包含padding和border,core_columnwidth.html,,ColumnWidth,core-5
-百分比列宽按body部分宽度为100%计算，包含padding和border，换算成px值后赋值给单元格，因此若所有列都是百分比列宽，且列宽之和等于100%，则恰好不出现横向滚动条,core_columnwidth.html,,,core-6
-当固定列宽和百分比列宽的总和小于body总宽度时，auto列平均分配剩余宽度,core_columnwidth.html,,,core-7
-当固定列宽和百分比列宽的总和大于body总宽度时，auto列为默认列宽columnWidthDefault,core_columnwidth.html,,,core-8
-当columnWidthAutoResize为true，只接受百分比列宽和auto列宽，固定列宽被强制替换为auto列宽，所有列宽直接赋值给单元格，因此当grid宽度变化时列宽可自动变化,,,,core-9
-纵向滚动条的宽度不包含在body宽度内，其高度等于body高度,,,,core-10
-若初始行数不足以填满整个body区域，则不显示纵向滚动条,,,,core-11
-若初始行数超出body区域，则显示纵向滚动条,,,,core-12
-若初始有纵向滚动条，当可显示行数不足以填满整个body区域时，纵向滚动条消失，且body宽度增大以适应grid宽度，所有百分比列宽和auto列宽重新计算,core_autoHideVScroller.html,,,core-13
-若初始无纵向滚动条，当可显示行数超出body区域时，纵向滚动条出现，且body宽度减小以适应grid宽度，所有百分比列宽和auto列宽重新计算,core_autoHideVScroller.html,,,core-14
-横向滚动条的高度不包含在body高度内，其宽度等于body宽度,,,,core-15
-若列不足以填满整个body区域，则不显示横向滚动条,,,,core-16
-若列超出body区域，则显示横向滚动条,,,,core-17
-初始创建grid时，若headerHidden为true，不显示header,,,,core-18
-当鼠标悬浮在某header单元格时，高亮该header单元格,,,,core-19
-当鼠标悬浮在某一行时，高亮该行,,,,core-20
-当bodyRowHoverEffect为false时，不高亮鼠标经过的行,,,,core-21
-[bodyLoadingInfo] 在body render好之前body应该显示loadingInfo,,,,core-22
-[bodyEmptyInfo] 如果gridx行数为0，body显示empty info，如果此时向store中添加行，body应该不显示empty info，而显示行,,,body.emptyInfo,core-23
-"[bodyEmptyInfo] 如果gridx行数不为0，删除store中数据行直到为0，此时body应该显示empty info
+ID,Feature,Coverred By,Since Version,Related to
+core-1,header单元格与对应列中的body单元格始终保持对齐,doh/status/Body,,Header
+core-2,[header] 当有水平滚动条时，header.refresh应该保持refresh前后的header scrollLeft一致,core-2.html,,Header.refresh()
+core-3,[header] 设置header.hidden之后，header.refresh应该相应的去显示或者隐藏header,core-3.html,,Header.hidden
+core-4,[header] getHeaderNode在columnId不存在时返回undefined，不应产生错误,doh/status/Header,,Header.getHeaderNode()
+core-5,非auto非百分比的固定列宽直接赋值给单元格的style.width，不包含padding和border,core_columnwidth.html,,ColumnWidth
+core-6,百分比列宽按body部分宽度为100%计算，包含padding和border，换算成px值后赋值给单元格，因此若所有列都是百分比列宽，且列宽之和等于100%，则恰好不出现横向滚动条,core_columnwidth.html,,ColumnWidth
+core-7,当固定列宽和百分比列宽的总和小于body总宽度时，auto列平均分配剩余宽度,core_columnwidth.html,,ColumnWidth
+core-8,当固定列宽和百分比列宽的总和大于body总宽度时，auto列为默认列宽columnWidthDefault,core_columnwidth.html,,ColumnWidth
+core-9,当columnWidthAutoResize为true，只接受百分比列宽和auto列宽，固定列宽被强制替换为auto列宽，所有列宽直接赋值给单元格，因此当grid宽度变化时列宽可自动变化,core_columnwidth.html,,ColumnWidth
+core-10,纵向滚动条的宽度不包含在body宽度内，其高度等于body高度,,,hLayout
+core-11,若初始行数不足以填满整个body区域，则不显示纵向滚动条,core-11.html,,vScroller
+core-12,若初始行数超出body区域，则显示纵向滚动条,core-12.html,,vScroller
+core-13,若初始有纵向滚动条，当可显示行数不足以填满整个body区域时，纵向滚动条消失，且body宽度增大以适应grid宽度，所有百分比列宽和auto列宽重新计算,core_autoHideVScroller.html,,vScroller
+core-14,若初始无纵向滚动条，当可显示行数超出body区域时，纵向滚动条出现，且body宽度减小以适应grid宽度，所有百分比列宽和auto列宽重新计算,core_autoHideVScroller.html,,VScroller
+core-15,横向滚动条的高度不包含在body高度内，其宽度等于body宽度,doh/status/HScroller,,
+core-16,若列不足以填满整个body区域，则不显示横向滚动条,core-16.html,,
+core-17,若列超出body区域，则显示横向滚动条,core-17.html,,
+core-18,初始创建grid时，若headerHidden为true，不显示header,,,header
+core-19,当鼠标悬浮在某header单元格时，高亮该header单元格,core-19-21.html,,
+core-20,当鼠标悬浮在某一行时，高亮该行,core-19-21.html,,
+core-21,当bodyRowHoverEffect为false时，不高亮鼠标经过的行,core-19-21.html,,body
+core-22,[bodyLoadingInfo] 在body render好之前body应该显示loadingInfo,core-22.html,,body
+core-23,[bodyEmptyInfo] 如果gridx行数为0，body显示empty info，如果此时向store中添加行，body应该不显示empty info，而显示行,core-23-25.html,,body.emptyInfo
+core-24,"[bodyEmptyInfo] 如果gridx行数不为0，删除store中数据行直到为0，此时body应该显示empty info
 
-",,,body.emptyInfo,core-24
-[bodyEmptyInfo]   如果gridx 行数部位0，为grid设置一个全新的空store， 此时body应该显示empty info,,,body.emptyInfo,core-25
-当某一行没有任何数据时，自动在单元格内填入空格以保证该行有正常高度,,,body.stuffEmptyCell,core-26
-当bodyStuffEmptyCell为false是，不自动填充空行,,,body.stuffEmptyCell,core-27
-当autoWidth为true时，自动调整grid宽度以保证所有列都同时可见，auto列赋予默认列宽columnWidthDefault,core_autoHeight_autoWidth.html,,autoWidth,core-28
-当autoHeight为true时，自动调整grid高度以保证当前视图中的所有行同时可见,core_autoHeight_autoWidth.html,,autoHeight,core-29
-当store中新增一行时，grid自动刷新body以响应更改，但不自动滚动到新行,core_addRow_removeRow.html,,onAdd,core-30
-当store中删除一行时，grid自动刷新body以响应更改,core_addRow_removeRow.html,,onDelete,core-31
-当store中连续删除多行时，grid只自动刷新一次,core_addRow_removeRow.html,,onAdd,core-32
-当store中连续增加多行时，grid只自动刷新一次,core_addRow_removeRow.html,,onDelete,core-33
-当store中改变某一field的值时，grid自动刷新该field所在的行以响应更改,,,onSet,core-34
-[body] body refresh前后 如果存在hScrollerBar或者vScrollerBar，scroll position应该保持一致,,,body.refresh,core-35
-[body] body.getRowNode若取不到相应的行时，应返回null且不会发生错误,,,body.getRowNode,core-36
-[body] body.getCellNode若取不到相应的单元格时，应返回null且不会发生错误,,,body.getCellNode,core-37
-[body] body.refreshCell 在对应的cell存在时应该刷新cell数据，且触发onAfterRow()事件,,,,core-38
-[body] body.refreshCell 在对应的cell不存在不触发onAfterRow()事件,,,,core-39
-当鼠标在body上时，滚动滚轮可纵向滚动body中的内容,,,,core-40
-[Focus]当header单元格获得焦点时，出现虚线边框,,,Focus,core-41
-[Focus]当body单元格获得焦点时，出现虚线边框,,,Focus,core-42
-[Focus]当焦点在header单元格时，左右键移动焦点,,,Focus,core-43
-[Focus]当焦点在body单元格时，上下左右键移动焦点，PageUp/PageDown向上/向下翻一屏，焦点移到该列在该屏的单元格，若已经在最后一屏，则焦点移到第一行/最后一行该列单元格,,,Focus,core-44
-[Focus]body的tab序在header之后。,,,Focus,core-45
-structure = [] | null | undefined. no error thrown. No column.,,,,core-46
-"structure = [ {} ]; 1 column, id is 1. Show empty data """".",,,,core-47
-query: { id: '1*' } ,,,,core-48
-queryOptions: { deep: true },,,,core-49
-"autoWidth: false, columnWidthAutoResize: false, 若auto或%列计算出的宽度小于列的minWidth，采用minWidth",,1.3,,core-50
-grid.body.refresh(start),,,grid.refresh(),core-51
-grid.body.refresh() ,,,grid.refresh(),core-52
-"grid.resize({ h: ..., w: ... });",,,grid.resize(),core-53
-grid.resize({ h: ... });,core_resize.html,,grid.resize(),core-54
-grid.resize({ w: ... });,core_resize.html,,grid.resize(),core-55
-grid.resize(); fit parent size,,,grid.resize(),core-56
-"autoHeight grid, grid.resize(), height still auto",,,grid.resize(),core-57
-"autoWidth grid, grid.resize(), width still auto",,,grid.resize(),core-58
-"columnWidthAutoResize, grid.resize()",core_columnwidth.html,,grid.resize(),core-59
-grid.setStore(emptyStore); 从非空store设置到空store,,,grid.setStore(),core-60
-grid.setStore(moreDataStore);,,,grid.setStore(),core-61
-grid.setStore(lessDataStore);,,,grid.setStore(),core-62
-grid.setStore(grid.store); // do nothing,,,grid.setStore(),core-63
-"grid.setStore(grid.store, true); // force change store.",,1.3,grid.setStore(),core-63
-"grid.setColumns(emptyStructure); // or undefined, or null 从正常列设置到空列",,,grid.setColumns(),core-64
-从没有横向滚动条的列布局设置到有横向滚动条的列布局,,,grid.setColumns(),core-65
-grid.setColumns(grid.structure); // restore column settings,,,grid.setColumns(),core-66
-空store，autoHeight，grid的高度由emptyInfo决定,,,,core-67
-从空列设置到正常列,,,,core-68
-从有横向滚动条的列布局设置到没有横向滚动条的列布局,,,body.renderWholeRowOnSet,core-69
-body.renderWholeRowOnSet为true时，set store之后重新render整行，并且触发对应行的onAfterRow事件,,,body.renderWholeRowOnSet,core-70
-body.renderWholeRowOnSet为false时，set store之后只会render有变更的cell，并且会触发相应cell的onAfterCell事件,,,,core-71
-非%非auto的固定列宽不受minWidth影响(以width为准),,1.3,,core-72
-body.compareOnSet可以被用户自定义，当renderWholRowOnSet为false时，set store之后cell数据的比较将使用compareOnSet,,,body.compareOnSet,core-73
-"对于默认compareOnSet，如果cell的新老值都是object,比较toJson的值。反之则直接比较cell的新老值。",,,body.compareOnSet,core-74
-"对于自定义的compareOnset, 如function(){ return false; }, set store之后应该rerender所有的cell",,,body.compareOnSet,core-75
-vScroller.scrollToRow() 向下滚动到指定的行，只要该行出现在可视区域内即可,,,,core-76
-vScroller.scrollToRow() 向上滚动到指定的行，只要该行出现在可视区域内即可,,,,core-77
-vScroller.scrollToRow() 若指定行号过大，滚动到最后一行,,,,core-78
-vScroller.scrollToRow() 若第二参数为真值，试图保证目标行出现在可视区域顶部,,,,core-79
-vScroller.scrollToRow() 目标行的高度大于grid高度,,,,core-80
-body.stuffEmptyCell为true时，对于内容为空的cell，应该用&nbsp;填充,,,,core-81
-hScroller.scrollToColumn() 向右滚动到指定列,,,,core-82
-hScroller.scrollToColumn() 若目标列不存在，no op,,,,core-83
-当所有模块加载完毕时触发onModulesLoaded事件,,,,core-84
-"对于列声明中没有指定ID的列，自动按序添加ID：1, 2, 3, ....",,,,core-85
-列声明不指定name，则header上不显示任何列名,,,,core-86
-列声明不指定field，但指定了formatter函数，则grid数据由formatter函数产生(例如计算两列之和),,,,core-87
-列声明style参数为cell添加style,,,,core-88
-列声明class参数为cell添加class,,,,core-89
-列声明style可以是函数,,,,core-90
-列声明class可以是函数,,,,core-91
-当一行由body完成渲染后触发onAfterRow事件，该事件中行node可用，行cache在客户端,,,,core-92
-显示出来的行的cache一定在客户端,,,,core-93
-当鼠标悬浮在body上滚动滚轮时，vScrller纵向滚动,,,,core-94
-当鼠标拖动vScroller bar时，滚动grid,,,,core-95
-当鼠标点击vScroller bar空白区域时，滚动grid,,,,core-96
-当鼠标点击vScroller bar两端按钮时，滚动grid,,,,core-97
-当鼠标拖动hScroller bar时，横向滚动,,,,core-98
-当鼠标点击hScroller bar空白区域时，横向滚动,,,,core-99
-当鼠标点击hScroller bar两端按钮时，横向滚动grid,,,,core-100
-[RTL]vScroller bar出现在左侧,,,,core-101
-若modules中有未加载的模块，console输出警告，但不影响grid创建,,,,core-102
-若modules中有未加载的被强制依赖的模块，console输出警告，grid放弃创建,,,,core-103
-若modules中有多个name相同的模块，则只加载最后一个,,,,core-104
-grid能够在display:none的情况下创建，在display:block时resize()即可正常显示,,,,core-105
-当autoHeight时，鼠标在body上滚动滚轮将滚动整个页面,,,,core-106
-,,,,core-107
-,,,,core-108
-,,,,core-109
-,,,,core-110
+",core-23-25.html,,body.emptyInfo
+core-25,[bodyEmptyInfo]   如果gridx行数不为0，为grid设置一个全新的空store， 此时body应该显示empty info,core-23-25.html,,body.emptyInfo
+core-26,当bodyStuffEmptyCell为true时， 某一行没有任何数据时，自动在单元格内填入空格以保证该行有正常高度,core-26-27.html,,body.stuffEmptyCell
+core-27,当bodyStuffEmptyCell为false是，不自动填充空行,core-26-27.html,,body.stuffEmptyCell
+core-28,当autoWidth为true时，自动调整grid宽度以保证所有列都同时可见，auto列赋予默认列宽columnWidthDefault,core_autoHeight_autoWidth.html,,autoWidth
+core-29,当autoHeight为true时，自动调整grid高度以保证当前视图中的所有行同时可见,core_autoHeight_autoWidth.html,,autoHeight
+core-30,当store中新增一行时，grid自动刷新body以响应更改，但不自动滚动到新行,core_addRow_removeRow.html,,onAdd
+core-31,当store中删除一行时，grid自动刷新body以响应更改,core_addRow_removeRow.html,,onDelete
+core-32,当store中连续删除多行时，grid只自动刷新一次,core_addRow_removeRow.html,,onAdd
+core-33,当store中连续增加多行时，grid只自动刷新一次,core_addRow_removeRow.html,,onDelete
+core-34,当store中改变某一field的值时，grid自动刷新该field所在的行以响应更改,core-34.html,,onSet
+core-35,[body] body refresh前后 如果存在hScrollerBar或者vScrollerBar，scroll position应该保持一致,core-35.html,,body.refresh
+core-36,[body] body.getRowNode若取不到相应的行时，应返回null且不会发生错误,doh/status/Body,,body.getRowNode
+core-37,[body] body.getCellNode若取不到相应的单元格时，应返回null且不会发生错误,doh/status/Body,,body.getCellNode
+core-38,[body] body.refreshCell 在对应的cell存在时应该刷新cell数据，且触发onAfterRow()事件,core-38-39.html,,body
+core-39,[body] body.refreshCell 在对应的cell不存在不触发onAfterRow()事件,core-38-39.html,,body
+core-40,当鼠标在body上时，滚动滚轮可纵向滚动body中的内容,core-40.html,,vScroller
+core-41,[Focus]当header单元格获得焦点时，出现虚线边框,core-41-45.html,,Focus
+core-42,[Focus]当body单元格获得焦点时，出现虚线边框,core-41-45.html,,Focus
+core-43,[Focus]当焦点在header单元格时，左右键移动焦点,core-41-45.html,,Focus
+core-44,[Focus]当焦点在body单元格时，上下左右键移动焦点，PageUp/PageDown向上/向下翻一屏，焦点移到该列在该屏的单元格，若已经在最后一屏，则焦点移到第一行/最后一行该列单元格,core-41-45.html,,Focus
+core-45,[Focus]body的tab序在header之后。,core-41-45.html,,Focus
+core-46,structure = [] | null | undefined. no error thrown. No column.,core-46.html,,core 
+core-47,"structure = [ {} ]; 1 column, id is 1. Show empty data """".",core-46.html,,core 
+core-48,query: { id: '1*' } ,,,core 
+core-49,queryOptions: { deep: true },,,core 
+core-50,"autoWidth: false, columnWidthAutoResize: false, 若auto或%列计算出的宽度小于列的minWidth，采用minWidth",core-50.html,1.3,core 
+core-51,grid.body.refresh(start),,,grid.refresh()
+core-52,grid.body.refresh() ,,,grid.refresh()
+core-53,"grid.resize({ h: ..., w: ... });",core-53.html,,grid.resize()
+core-54,grid.resize({ h: ... });,core_resize.html,,grid.resize()
+core-55,grid.resize({ w: ... });,core_resize.html,,grid.resize()
+core-56,grid.resize(); fit parent size,core_resize.html,,grid.resize()
+core-57,"autoHeight grid, grid.resize(), height still auto",,,grid.resize()
+core-58,"autoWidth grid, grid.resize(), width still auto",,,grid.resize()
+core-59,"columnWidthAutoResize, grid.resize()",core_columnwidth.html,,grid.resize()
+core-60,grid.setStore(emptyStore)从非空store设置到空store,core-60.html,,grid.setStore()
+core-61,grid.setStore(moreDataStore);,core-60.html,,grid.setStore()
+core-62,grid.setStore(lessDataStore);,core-60.html,,grid.setStore()
+core-63,grid.setStore(grid.store); // do nothing,core-60.html,,grid.setStore()
+core-64,"grid.setStore(grid.store, true); // force reload store",,1.3,grid.setStore()
+core-65,从正常列设置到空列,core-46.html,,grid.setColumns()
+core-66,从无横向滚动条列布局设置到有横向滚动条列布局,core-66.html,,grid.setColumns()
+core-67,从有横向滚动条列布局设置到无横向滚动条列布局,core-66.html,,grid.setColumns()
+core-68,grid.setColumns(grid.structure),,,grid.setColumns()
+core-69,从空列设置到正常列,core-46.html,,grid.setColumns()
+core-70,从空store设置到非空store,core-60.html,,body.renderWholeRowOnSet
+core-71,body.renderWholeRowOnSet为true时，set store之后重新render整行，并且触发对应行的onAfterRow事件,,,body.renderWholeRowOnSet
+core-72,body.renderWholeRowOnSet为false时，set store之后只会render有变更的cell，并且会触发相应cell的onAfterCell事件,,,body.renderWholeRowOnSet
+core-73,非%非auto的固定列宽不受minWidth影响(以width为准),core-73.html,1.3,columnWidth
+core-74,body.compareOnSet可以被用户自定义，当renderWholRowOnSet为false时，set store之后cell数据的比较将使用compareOnSet,,,body.compareOnSet
+core-75,"对于默认compareOnSet，如果cell的新老值都是object,比较toJson的值。反之则直接比较cell的新老值。",,,body.compareOnSet
+core-76,"对于自定义的compareOnset, 如function(){ return false; }, set store之后应该rerender所有的cell",,,body.compareOnSet
+core-77,vScroller.scrollToRow() 向下滚动到指定的行，只要该行出现在可视区域内即可,core-77-80.html,,vScoller
+core-78,vScroller.scrollToRow() 向上滚动到指定的行，只要该行出现在可视区域内即可,core-77-80.html,,
+core-79,vScroller.scrollToRow() 若指定行号过大，滚动到最后一行,core-77-80.html,,
+core-80,vScroller.scrollToRow() 若第二参数为真值，试图保证目标行出现在可视区域顶部,core-77-80.html,,
+core-81,vScroller.scrollToRow() 目标行的高度大于grid高度,core-81.html,,
+core-82,body.stuffEmptyCell为true时，对于内容为空的cell，应该用&nbsp;填充,core-82.html,,
+core-83,hScroller.scrollToColumn() 滚动到指定列,core-83-84.html,,
+core-84,hScroller.scrollToColumn() 若目标列不存在，no op,core-83-84.html,,
+core-85,当所有模块加载完毕时触发onModulesLoaded事件,,,event
+core-86,"对于列声明中没有指定ID的列，自动按序添加ID：1, 2, 3, ....",core-86.html,,core
+core-87,列声明不指定name，则header上不显示任何列名,core-87-88.html,,
+core-88,列声明不指定field，但指定了formatter函数，则grid数据由formatter函数产生(例如计算两列之和),core-87-88.html,,
+core-89,列声明style参数为cell添加style,core-89-90.html,,
+core-90,列声明class参数为cell添加class,core-89-90.html,,
+core-91,列声明style可以是函数,core-91.html,,
+core-92,列声明class可以是函数,core-92.html,,
+core-93,grid创建时，当一行由body完成渲染后触发onAfterRow事件，该事件中行node可用，行cache在客户端,core-93.html,,
+core-94,显示出来的行的cache一定在客户端,doh/status/Body,,
+core-95,当鼠标悬浮在body上滚动滚轮时，vScrller纵向滚动,core-95-101.html,,
+core-96,当鼠标拖动vScroller bar时，滚动grid,core-95-101.html,,
+core-97,当鼠标点击vScroller bar空白区域时，滚动grid,core-95-101.html,,
+core-98,当鼠标点击vScroller bar两端按钮时，滚动grid,core-95-101.html,,
+core-99,当鼠标拖动hScroller bar时，横向滚动,core-95-101.html,,
+core-100,当鼠标点击hScroller bar空白区域时，横向滚动,core-95-101.html,,
+core-101,当鼠标点击hScroller bar两端按钮时，横向滚动grid,core-95-101.html,,
+core-102,[RTL]vScroller bar出现在左侧,core-102.html,,
+core-103,若modules中有未加载的模块，console输出警告，但不影响grid创建,core-103.html,,
+core-104,若modules中有未加载的被强制依赖的模块，console输出警告，grid放弃创建,core-104.html,,
+core-105,若modules中有多个name相同的模块，则只加载最后一个,core-105.html,,
+core-106,grid能够在display:none的情况下创建，在display:block时resize()，'auto' 宽度和%宽度列计算正确,core-106.html,,
+core-107,当autoHeight时，鼠标在body上滚动滚轮将滚动整个页面,core-107.html,,
+core-108,,,,
+core-109,,,,
+core-110,,,,

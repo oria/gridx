@@ -16,7 +16,7 @@ var data = fs.readFileSync(path.join(__dirname, 'support', 'features.csv'));
 var lines = String(data).split('\n');
 
 function esc(str){
-	return str.replace(/^"/, '').replace(/"$/, '').replace(/""/g, '"');
+	return String(str).replace(/^"/, '').replace(/"$/, '').replace(/""/g, '"');
 }
 console.log(lines.length - 1);
 for(var i = 1; i < lines.length; ++i){
