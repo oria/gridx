@@ -63,8 +63,8 @@ define([
 		}
 	},
 	{
-		id: 'Body 5',
-		name: 'body.getRowNode() should return existing row node as long as the row is rendered',
+		id: 'core-36',
+		name: 'body.getRowNode() should return existing row, or null if specific row does not exist and no error will occur',
 		checker: function(grid, doh){
 			var start = grid.body.renderStart;
 			var end = start + grid.body.renderCount;
@@ -83,9 +83,14 @@ define([
 					rowIndex: rowInfo.rowIndex,
 					parentId: rowInfo.parentId
 				});
+				var illegalRowNodeByIndex = grid.body.getRowNode({
+					rowId: 'blabla'
+				});						
 				doh.is(rowNode, rowNodeByVIdx);
 				doh.is(rowNode, rowNodeById);
 				doh.is(rowNode, rowNodeByIndex);
+				doh.is(null, illegalRowNodeByIndex);
+				
 			}
 		}
 	},
@@ -104,8 +109,8 @@ define([
 		}
 	},
 	{
-		id: 'Body 7',
-		name: 'getCellNode() should return correct cell node as long as the row is rendered.',
+		id: 'core-37',
+		name: 'getCellNode() should return correct cell node, or null when specific cell node does not exist and no error will occur',
 		checker: function(grid, doh){
 			var start = grid.body.renderStart;
 			var end = start + grid.body.renderCount;
@@ -125,7 +130,12 @@ define([
 						visualIndex: i,
 						colIndex: j
 					});
+					var illegalCellNodeById = grid.body.getCellNode({
+						rowId: 'blabla',
+						colId: 'blabla'
+					});								
 					doh.is(cellNodeById, cellNodeByVIdx);
+					doh.is(null, illegalCellNodeById);
 				}
 			}
 		}

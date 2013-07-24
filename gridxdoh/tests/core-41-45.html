@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-41-45</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, dataSource, storeFactory){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 25
+			});			
+			
+			layout = [
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Length', field: 'Length', name: 'Length'},
+				{id: 'Track', field: 'Track', name: 'Track'},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '200px'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
+				{id: 'Heard', field: 'Heard', name: 'Heard'}
+			];
+			
+			Deferred.when(parser.parse(), function(){
+			});
+		});
+	</script>
+</head>
+<body class='claro' style="height: 1000px;">
+	<h2>body的tab序在header之后</h2>
+	<br>
+	<div id='grid5' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+	'></div>
+
+	<h2>当header单元格获得焦点时，出现虚线边框</h2>
+	<br>
+	<div id='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+	'></div>
+	<h2>当body单元格获得焦点时，出现虚线边框</h2>
+	<br>
+	<div id='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+	'></div>
+	<h2>当焦点在header单元格时，左右键移动焦点</h2>
+	<br>
+	<div id='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+	'></div>	
+	<h2>当焦点在body单元格时，上下左右键移动焦点，PageUp/PageDown向上/向下翻一屏，焦点移到该列在该屏的单元格，若已经在最后一屏，则焦点移到第一行/最后一行该列单元格</h2>
+	<br>
+	<div id='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+	'></div>
+</body>
+</html>
