@@ -20,11 +20,16 @@ function esc(str){
 }
 console.log(lines.length - 1);
 for(var i = 1; i < lines.length; ++i){
-	var line = lines[i].split(/,(?=([^\"]*\"[^\"]*\")*[^\"]*$)/).filter(function(part){
-		return part !== undefined;
+	var line = lines[i].split(/,(?=([^"]*"[^"]*")*[^"]*$)/).filter(function(part, j){
+		return !(j % 2);
 	});
-	sb.push(['<a href="', line[2], '" target="_blank"><span class="feature_id">',
-		line[0], '</span>', esc(line[1]), '</a><br/>'].join(''));
+	if(/\.html\s*$/.test(line[2])){
+		sb.push(['<a href="', line[2], '" target="_blank"><span class="feature_id">',
+			line[0], '</span>', esc(line[1]), '</a><br/>'].join(''));
+	}else{
+		sb.push(['<div><span class="feature_id">',
+			line[0], '</span>', esc(line[1]), '</div>'].join(''));
+	}
 }
 
 var str = sb.join(os.EOL, '</body>', '</html>');

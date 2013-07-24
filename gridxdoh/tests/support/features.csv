@@ -22,9 +22,7 @@ core-20,当鼠标悬浮在某一行时，高亮该行,core-19-21.html,,
 core-21,当bodyRowHoverEffect为false时，不高亮鼠标经过的行,core-19-21.html,,body
 core-22,[bodyLoadingInfo] 在body render好之前body应该显示loadingInfo,core-22.html,,body
 core-23,[bodyEmptyInfo] 如果gridx行数为0，body显示empty info，如果此时向store中添加行，body应该不显示empty info，而显示行,core-23-25.html,,body.emptyInfo
-core-24,"[bodyEmptyInfo] 如果gridx行数不为0，删除store中数据行直到为0，此时body应该显示empty info
-
-",core-23-25.html,,body.emptyInfo
+core-24,[bodyEmptyInfo] 如果gridx行数不为0，删除store中数据行直到为0，此时body应该显示empty info,core-23-25.html,,body.emptyInfo
 core-25,[bodyEmptyInfo]   如果gridx行数不为0，为grid设置一个全新的空store， 此时body应该显示empty info,core-23-25.html,,body.emptyInfo
 core-26,当bodyStuffEmptyCell为true时， 某一行没有任何数据时，自动在单元格内填入空格以保证该行有正常高度,core-26-27.html,,body.stuffEmptyCell
 core-27,当bodyStuffEmptyCell为false是，不自动填充空行,core-26-27.html,,body.stuffEmptyCell
@@ -47,7 +45,7 @@ core-43,[Focus]当焦点在header单元格时，左右键移动焦点,core-41-45
 core-44,[Focus]当焦点在body单元格时，上下左右键移动焦点，PageUp/PageDown向上/向下翻一屏，焦点移到该列在该屏的单元格，若已经在最后一屏，则焦点移到第一行/最后一行该列单元格,core-41-45.html,,Focus
 core-45,[Focus]body的tab序在header之后。,core-41-45.html,,Focus
 core-46,structure = [] | null | undefined. no error thrown. No column.,core-46.html,,core 
-core-47,"structure = [ {} ]; 1 column, id is 1. Show empty data """".",core-46.html,,core 
+core-47,"structure = [ {} ]; 1 column; id is 1. Show empty data",core-46.html,,core
 core-48,query: { id: '1*' } ,,,core 
 core-49,queryOptions: { deep: true },,,core 
 core-50,"autoWidth: false, columnWidthAutoResize: false, 若auto或%列计算出的宽度小于列的minWidth，采用minWidth",core-50.html,1.3,core 
@@ -71,8 +69,8 @@ core-67,从有横向滚动条列布局设置到无横向滚动条列布局,core-
 core-68,grid.setColumns(grid.structure),,,grid.setColumns()
 core-69,从空列设置到正常列,core-46.html,,grid.setColumns()
 core-70,从空store设置到非空store,core-60.html,,body.renderWholeRowOnSet
-core-71,body.renderWholeRowOnSet为true时，set store之后重新render整行，并且触发对应行的onAfterRow事件,,,body.renderWholeRowOnSet
-core-72,body.renderWholeRowOnSet为false时，set store之后只会render有变更的cell，并且会触发相应cell的onAfterCell事件,,,body.renderWholeRowOnSet
+core-71,body.renderWholeRowOnSet为true时，set store之后重新render整行，并且触发对应行的onAfterRow事件,doh/action/Body,,body.renderWholeRowOnSet
+core-72,body.renderWholeRowOnSet为false时，set store之后只会render有变更的cell，并且会触发相应cell的onAfterCell事件,doh/action/Body,,body.renderWholeRowOnSet
 core-73,非%非auto的固定列宽不受minWidth影响(以width为准),core-73.html,1.3,columnWidth
 core-74,body.compareOnSet可以被用户自定义，当renderWholRowOnSet为false时，set store之后cell数据的比较将使用compareOnSet,,,body.compareOnSet
 core-75,"对于默认compareOnSet，如果cell的新老值都是object,比较toJson的值。反之则直接比较cell的新老值。",,,body.compareOnSet
