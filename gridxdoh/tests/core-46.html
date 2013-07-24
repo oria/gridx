@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-46</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, dataSource, storeFactory){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 100
+			});
+
+			Deferred.when(parser.parse(), function(){
+			});
+		});
+
+		function setNormalStructure(){
+			var layout = [
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Length', field: 'Length', name: 'Length'},
+				{id: 'Track', field: 'Track', name: 'Track'},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
+				{id: 'Heard', field: 'Heard', name: 'Heard'}
+			];
+			grid1.setColumns(layout);
+			grid2.setColumns(layout);
+			grid3.setColumns(layout);
+			grid4.setColumns(layout);
+		}
+
+		function setEmptyStructure(){
+			grid1.setColumns([]);
+			grid2.setColumns(null);
+			grid3.setColumns();
+			grid4.setColumns([{}]);
+		}
+	</script>
+</head>
+<body class='claro'>
+	<h2>structure = [] | null | undefined. no error thrown. No column.</h2>
+	<h2>structure = [ {} ]; 1 column, id is 1. Show empty data "".</h2>
+	<h2>从空列设置到正常列</h2>
+	<h2>从正常列设置到空列</h2>
+	<input type="button" value="Set Normal Structure" onclick="setNormalStructure()" />
+	<input type="button" value="Restore" onclick="setEmptyStructure()" />
+	<h2>structure = []</h2>
+	<div jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: [],
+		store: store,
+		modules: [
+		]
+	'></div>
+	<h2>structure = null</h2>
+	<div jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: null,
+		store: store,
+		modules: [
+		]
+	'></div>
+	<h2>structure = undefined</h2>
+	<div jsid='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		modules: [
+		]
+	'></div>
+	<h2>structure = [{}]</h2>
+	<div jsid='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: [{}],
+		store: store,
+		modules: [
+		]
+	'></div>
+</body>
+</html>

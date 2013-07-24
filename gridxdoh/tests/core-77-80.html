@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-77-80</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 300px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'gridx/tests/support/data/MusicData',
+			'gridx/tests/support/stores/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, dataSource, storeFactory){
+
+			store = storeFactory({
+				dataSource: dataSource,
+				size: 1000
+			});
+
+			layout = [
+				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
+				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px', alwaysEditing: true},
+				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px'},
+				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},
+				{id: 'Album', field: 'Album', name: 'Album', width: '160px'},
+				{id: 'Name', field: 'Name', name: 'Name', width: '80px'},
+				{id: 'Length', field: 'Length', name: 'Length', width: '80px'},
+				{id: 'Track', field: 'Track', name: 'Track', width: '80px'},
+				{id: 'Composer', field: 'Composer', name: 'Composer', width: '160px'},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '160px'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played', width: '120px'},
+				{id: 'Heard', field: 'Heard', name: 'Heard', width: '80px'}
+			];
+
+			Deferred.when(parser.parse(), function(){
+			});
+		});
+
+		function scrollTo(){
+			var idx = document.getElementById('targetIdx').value;
+			idx = parseInt(idx, 10);
+			grid.vScroller.scrollToRow(idx, true);
+		}
+	</script>
+</head>
+<body class='claro'>
+	<h2>vScroller.scrollToRow() 若第二参数为真值，试图保证目标行出现在可视区域顶部</h2>
+	<p>
+		test 50, 100, 999, 10, 0
+	</p>
+	<input type="button" value="scrollToRow" onclick="scrollTo()" />
+	<input id='targetIdx' type="text" value="50" />
+	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+		modules: [
+		]
+	'></div>
+</body>
+</html>

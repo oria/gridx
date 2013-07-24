@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gridx Test: core-81</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		.gridx {
+			height: 100px;
+			width: 600px;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript" src='support/common.js'></script>
+	<script type="text/javascript">
+		require([
+			'dojo/parser',
+			'dojo/_base/Deferred',
+			'dojo/store/Memory',
+			'gridx/Grid',
+			'gridx/core/model/cache/Sync',
+			'gridx/core/model/cache/Async',
+			'gridx/allModules'
+		], function(parser, Deferred, Memory){
+
+			var data = [];
+			for(var i = 0; i < 100; ++i){
+				data.push({
+					id: i
+				});
+			}
+			store = new Memory({
+				data: data
+			});
+
+			layout = [
+				{id: 'id', field: 'id', name: 'id'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Length', field: 'Length', name: 'Length'},
+				{id: 'Track', field: 'Track', name: 'Track',
+					style: function(cell){
+						if(cell.row.id > 20){
+							return "height: 80px";
+						}
+					}
+				},
+				{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
+				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
+				{id: 'Heard', field: 'Heard', name: 'Heard'}
+			];
+
+			Deferred.when(parser.parse(), function(){
+			});
+		});
+
+		function scrollTo(){
+			grid.vScroller.scrollToRow(50, true);
+		}
+	</script>
+</head>
+<body class='claro'>
+	<h2>vScroller.scrollToRow() 目标行的高度大于grid高度</h2>
+	<input type="button" value="scrollToRow index 50" onclick="scrollTo()" />
+	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		structure: layout,
+		store: store,
+		modules: [
+		]
+	'></div>
+</body>
+</html>
