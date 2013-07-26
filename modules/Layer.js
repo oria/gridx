@@ -1,20 +1,19 @@
 define([
-	"dojo/_base/kernel",
 	"dojo/_base/declare",
-	"dojo/_base/array",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
-	"dojo/_base/lang",
-	"dojo/_base/Deferred",
-	"dojo/DeferredList",
 	"dojo/query",
 	"dojo/keys",
 	"../core/_Module"
-//    "dojo/NodeList-dom",
-//    "dojo/NodeList-traverse"
-], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
+], function(declare, domClass, domGeometry, query, keys, _Module){
 
 	var transitionDuration = 700;
+
+	function moveNodes(bn, tmpBn){
+		while(bn.childNodes.length){
+			tmpBn.appendChild(bn.firstChild);
+		}
+	}
 
 	return declare(_Module, {
 		name: "layer",
@@ -54,72 +53,36 @@ define([
 				m = t.model;
 			if(!t._lock && m.hasChildren(id) && m.parentId(id) === m.layerId()){
 				t._lock = 1;
-				//prepare parent row node
 				var g = t.grid,
-					body = g.body,
-					mainNode = g.mainNode,
 					bn = g.bodyNode,
 					w = bn.offsetWidth,
 					tmpBn = t._tmpBodyNode,
-					contextNode = t._contextNode,
 					wrapper1 = t._wrapper1,
 					wrapper2 = t._wrapper2,
-					parentRowNode = body.getRowNode({ rowId: id }),
+					parentRowNode = g.body.getRowNode({ rowId: id }),
 					pos = domGeometry.position(parentRowNode),
-					refPos = domGeometry.position(contextNode),
-					top = pos.y - refPos.y,
-					cloneParent = parentRowNode.cloneNode(true),
-					frag = document.createDocumentFragment();
+					refPos = domGeometry.position(t._contextNode),
+					cloneParent = parentRowNode.cloneNode(true);
 
 				wrapper2.appendChild(cloneParent);
 				t._parentStack.push(cloneParent);
-
-				while(bn.childNodes.length){
-					tmpBn.appendChild(bn.firstChild);
-				}
+				moveNodes(bn, tmpBn);
 
 				bn.style.left = w + 'px';
 				bn.style.zIndex = 1;
 				tmpBn.style.left = 0;
 				tmpBn.style.zIndex = 0;
-				wrapper2.style.top = top + 'px';
+				wrapper2.style.top = (pos.y - refPos.y) + 'px';
 				wrapper2.style.zIndex = 9999;
-				contextNode.style.height = 0;
 
-				frag.appendChild(tmpBn);
-				frag.appendChild(wrapper1);
-				frag.appendChild(wrapper2);
-				mainNode.appendChild(frag);
-				tmpBn.style.paddingTop = wrapper1.offsetHeight + 'px';
-				bn.style.paddingTop = wrapper2.offsetHeight + 'px';
-
-				//change layer at data level
 				m.setLayer(id);
-
-				//prepare before refresh
-				t._paging = g.view.paging; //temparary disable paging
-				g.view.paging = 0;
-				body._skipUnrender = 1;
-
-				g.vLayout.reLayout();
-				//refresh
-				body.refresh().then(function(){
-					g.view.paging = t._paging;
-					setTimeout(function(){
-						domClass.add(bn, 'gridxSlideRefresh');
-						domClass.add(tmpBn, 'gridxSlideRefresh');
-						domClass.add(wrapper1, 'gridxLayerHSlide');
-						domClass.add(wrapper2, 'gridxLayerVSlide');
-
-						bn.style.left = 0;
-						tmpBn.style.left = -w + 'px';
-						wrapper1.style.left = -w + 'px';
-						wrapper2.style.top = 0;
-
-						setTimeout(function(){
-							t._onTransitionEnd();
-						}, transitionDuration);
-					}, 10);
+				t._refresh(function(){
+					domClass.add(wrapper1, 'gridxLayerHSlide');
+					domClass.add(wrapper2, 'gridxLayerVSlide');
+					bn.style.left = 0;
+					tmpBn.style.left = -w + 'px';
+					wrapper1.style.left = -w + 'px';
+					wrapper2.style.top = 0;
 				});
 			}
 		},
@@ -130,75 +93,53 @@ define([
 			if(!t._lock && m.isId(m.layerId())){
 				t._lock = 1;
 				var g = t.grid,
-					body = g.body,
-					mainNode = g.mainNode,
 					bn = g.bodyNode,
 					tmpBn = t._tmpBodyNode,
 					w = bn.offsetWidth,
-					contextNode = t._contextNode,
 					wrapper1 = t._wrapper1,
 					wrapper2 = t._wrapper2,
 					parentRowNode = t._parentStack[t._parentStack.length - 2],
-					frag = document.createDocumentFragment();
+					currentParentRowNode = t._parentStack.pop();
+					parentId = currentParentRowNode.getAttribute('rowid');
 
-				t._parentStack.pop();
 				if(parentRowNode){
 					wrapper2.appendChild(parentRowNode);
 				}
-
-				while(bn.childNodes.length){
-					tmpBn.appendChild(bn.firstChild);
-				}
+				moveNodes(bn, tmpBn);
 
 				bn.style.left = -w + 'px';
 				bn.style.zIndex = 0;
 				tmpBn.style.left = 0;
 				tmpBn.style.zIndex = 1;
-				wrapper1.style.left = 0;
+				wrapper1.style.top = 0;
 				wrapper1.style.zIndex = 2;
 				wrapper2.style.left = -w + 'px';
-				contextNode.style.height = 0;
-
-				frag.appendChild(tmpBn);
-				frag.appendChild(wrapper1);
-				frag.appendChild(wrapper2);
-				mainNode.appendChild(frag);
-				tmpBn.style.paddingTop = wrapper1.offsetHeight + 'px';
-				bn.style.paddingTop = wrapper2.offsetHeight + 'px';
 
 				m.layerUp();
-
-				t._paging = g.view.paging;
-				g.view.paging = 0;
-				body._skipUnrender = 1;
-
-				g.vLayout.reLayout();
-				body.refresh().then(function(){
-					g.view.paging = t._paging;
-					setTimeout(function(){
-						domClass.add(bn, 'gridxSlideRefresh');
-						domClass.add(tmpBn, 'gridxSlideRefresh');
-						domClass.add(wrapper1, 'gridxLayerHSlide');
-						domClass.add(wrapper2, 'gridxLayerHSlide');
-
-						bn.style.left = 0;
-						tmpBn.style.left = w + 'px';
-						wrapper1.style.left = w + 'px';
-						wrapper2.style.left = 0;
-
-						setTimeout(function(){
-							t._onTransitionEnd();
-						}, transitionDuration);
-					}, 0);
+				t._refresh(function(){
+					if(currentParentRowNode){
+						var pos = domGeometry.position(g.body.getRowNode({
+							rowId: parentId
+						}));
+						var refPos = domGeometry.position(t._contextNode);
+					}
+					domClass.add(wrapper1, 'gridxLayerVSlide');
+					domClass.add(wrapper2, 'gridxLayerHSlide');
+					bn.style.left = 0;
+					tmpBn.style.left = w + 'px';
+					if(currentParentRowNode){
+						wrapper1.style.top = (pos.y - refPos.y) + 'px';
+					}
+					wrapper2.style.left = 0;
 				});
 			}
 		},
 
+		//Private--------------------------------------------------------------------
 		_onTransitionEnd: function(){
 			var t = this,
 				m = t.model,
 				g = t.grid,
-				body = g.body,
 				mainNode = g.mainNode,
 				bn = g.bodyNode,
 				tmpBn = t._tmpBodyNode,
@@ -206,7 +147,6 @@ define([
 				contextNode = t._contextNode,
 				wrapper1 = t._wrapper1,
 				wrapper2 = t._wrapper2;
-
 			if(t._lock){
 				mainNode.removeChild(tmpBn);
 				mainNode.removeChild(wrapper1);
@@ -215,12 +155,10 @@ define([
 				domClass.remove(tmpBn, 'gridxSlideRefresh');
 				domClass.remove(bn, 'gridxSlideRefresh');
 				domClass.remove(wrapper1, 'gridxLayerHSlide');
+				domClass.remove(wrapper1, 'gridxLayerVSlide');
 				domClass.remove(wrapper2, 'gridxLayerHSlide');
 				domClass.remove(wrapper2, 'gridxLayerVSlide');
-
-				if(wrapper1.firstChild){
-					wrapper1.removeChild(wrapper1.firstChild);
-				}
+				wrapper1.innerHTML = '';
 
 				var tmp = t._wrapper1;
 				t._wrapper1 = t._wrapper2;
@@ -238,12 +176,45 @@ define([
 				g.vLayout.reLayout();
 				for(var i = 0; i < tmpBn.childNodes.length; ++i){
 					var rowId = tmpBn.childNodes[i].getAttribute('rowid');
-					body.onUnrender(rowId);
+					if(m.isId(rowId)){
+						g.body.onUnrender(rowId);
+					}
 				}
 				tmpBn.innerHTML = '';
-				body._skipUnrender = 0;
+				g.body._skipUnrender = 0;
 				t._lock = 0;
 			}
+		},
+
+		_refresh: function(callback){
+			var t = this,
+				g = t.grid,
+				bn = g.bodyNode,
+				tmpBn = t._tmpBodyNode,
+				frag = document.createDocumentFragment();
+			frag.appendChild(tmpBn);
+			frag.appendChild(t._wrapper1);
+			frag.appendChild(t._wrapper2);
+			g.mainNode.appendChild(frag);
+			tmpBn.style.paddingTop = t._wrapper1.offsetHeight + 'px';
+			bn.style.paddingTop = t._wrapper2.offsetHeight + 'px';
+			t._contextNode.style.height = 0;
+			//temparary disable paging
+			t._paging = g.view.paging;
+			g.view.paging = 0;
+			g.vLayout.reLayout();
+			g.body._skipUnrender = 1;
+			g.body.refresh().then(function(){
+				g.view.paging = t._paging;
+				setTimeout(function(){
+					domClass.add(bn, 'gridxSlideRefresh');
+					domClass.add(tmpBn, 'gridxSlideRefresh');
+					callback();
+					setTimeout(function(){
+						t._onTransitionEnd();
+					}, transitionDuration);
+				}, 10);
+			});
 		}
 	});
 });
