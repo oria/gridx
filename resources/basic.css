@@ -501,10 +501,26 @@
 
 /* mobile tree grid slide effect */
 .gridxSlideRefresh {
-	transition: left 1s;
-	-webkit-transition: left 1s;
+	transition: left 700ms;
+	-webkit-transition: left 700ms;
 	background: #fff;
 	border-left: 1px solid #dbdbdb;
 	border-right: 1px solid #dbdbdb;
 }
-
+.gridxLayerContext {
+	position: relative;
+}
+.gridxLayerWrapper {
+	position: absolute;
+}
+.gridxLayerHSlide {
+	transition: left 700ms;
+	-webkit-transition: left 700ms;
+}
+.gridxLayerVSlide {
+	transition: top 700ms;
+	-webkit-transition: top 700ms;
+}
+.gridxLayerWrapper .gridxRow .gridxCell {
+	background-color: blue;
+}

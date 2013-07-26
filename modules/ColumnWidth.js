@@ -224,6 +224,8 @@ define([
 					if(bodyWidth > fixedWidth){
 						ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
 					}
+					console.log('padBorder:' + padBorder);
+					console.log('fixedWidth: ' + fixedWidth);
 					w = parseInt(w, 10);
 					//Check if less than zero, prevent error in IE.
 					if(w < 0){

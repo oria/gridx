@@ -72,18 +72,18 @@ require([
 	};
 
 	layout1 = [
-		{id: 'prevLevel', width: '20px', sortable: false,
-			decorator: function(data, rowId, visualIndex, cell){
-				if(cell.row.parent()){
-					return '<div class="hasParent">&lt;</div>';
-				}
-				return '';
-			}
-		},
+//        {id: 'prevLevel', width: '20px', sortable: false,
+//            decorator: function(data, rowId, visualIndex, cell){
+//                if(cell.row.parent()){
+//                    return '<div class="hasParent">&lt;</div>';
+//                }
+//                return '';
+//            }
+//        },
 		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
 		{id: 'number', name: 'number', field: 'number',
 			expandLevel: 'all',
-			width: '200px',
+//            width: '200px',
 			widgetsInCell: true,
 			decorator: progressDecorator,
 			editable: true,
@@ -109,13 +109,14 @@ require([
 //        modules.Pagination,
 //        modules.PaginationBar,
 //        modules.ColumnResizer,
-		modules.ExtendedSelectRow,
+//        modules.ExtendedSelectRow,
 		modules.CellWidget,
 //        modules.Edit,
-		modules.IndirectSelectColumn,
+//        modules.IndirectSelectColumn,
 //        modules.SingleSort,
 //        modules.VirtualVScroller,
 //        modules.MultiChannelScroller,
+		modules.TouchVScroller,
 		Layer
 	];
 

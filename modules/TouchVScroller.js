@@ -21,6 +21,13 @@ define([
 =====*/
 
 	return declare(VScroller, {
+		constructor: function(){
+			if(has('ios') || has('android') || this.arg('touch')){
+				domClass.add(this.grid.domNode, 'gridxTouchVScroller');
+				this.domNode.style.width = '';
+			}
+		},
+
 		scrollToRow: function(rowVisualIndex, toTop){
 			if(has('ios') || has('android') || this.arg('touch')){
 				var d = new Deferred(),
@@ -45,7 +52,6 @@ define([
 					bodyNode = g.bodyNode,
 					headerTable = h.firstChild,
 					scrollable = t._scrollable = new Scrollable();
-				domClass.add(g.domNode, 'gridxTouchVScroller');
 				h.style.height = headerTable.offsetHeight + 'px';
 				scrollable.init({
 					domNode: mainNode,

@@ -174,7 +174,7 @@ define([
 					ds.width = '';
 				}
 				var display = toShow ? '' : 'none';
-				var changed = display != ds.display;
+				var changed = display != domStyle.get(t.domNode, 'display');
 				ds.display = display;
 				if(changed){
 					t._updatePos();
