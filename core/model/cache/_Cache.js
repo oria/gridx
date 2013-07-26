@@ -28,6 +28,7 @@ define([
 
 		destroy: function(){
 			this.inherited(arguments);
+			this._layer = '';
 			this.clear();
 		},
 
@@ -68,7 +69,6 @@ define([
 			//virtual root node, with id ''.
 			t._struct[''] = [];
 			t._size[''] = -1;
-			t._layer = '';
 		},
 
 		layerId: function(){

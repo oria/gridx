@@ -76,7 +76,7 @@ define([
 				});
 				t.aspect(g.hScroller, 'refresh', function(){
 					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
-					scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
+//                    scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
 				});
 				t._onBodyChange = function(){
 					t._update();

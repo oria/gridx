@@ -105,7 +105,7 @@ require([
 		modules.CellWidget,
 //        modules.Edit,
 //        modules.IndirectSelectColumn,
-//        modules.SingleSort,
+		modules.SingleSort,
 //        modules.VirtualVScroller,
 //        modules.MultiChannelScroller,
 		modules.TouchVScroller,

@@ -87,7 +87,9 @@ define([
 					wrapper1.style.left = -w + 'px';
 					wrapper2.style.top = 0;
 				}, {
-					parentRowNode: parentRowNode
+					isDown: true,
+					rowId: id,
+					parentRowNode: cloneParent
 				});
 			}
 		},
@@ -136,7 +138,9 @@ define([
 						wrapper1.style.top = (pos.y - refPos.y) + 'px';
 					}
 					wrapper2.style.left = 0;
-				}, {});
+				}, {
+					parentRowNode: currentParentRowNode
+				});
 			}
 		},
 
