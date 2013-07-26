@@ -48,6 +48,9 @@ define([
 			this.grid.vLayout.register(this, '_contextNode', 'headerNode', 10);
 		},
 
+		onReady: function(){},
+		onFinish: function(){},
+
 		down: function(id){
 			var t = this,
 				m = t.model;
@@ -203,6 +206,7 @@ define([
 			t._paging = g.view.paging;
 			g.view.paging = 0;
 			g.vLayout.reLayout();
+			t.onReady();
 			g.body._skipUnrender = 1;
 			g.body.refresh().then(function(){
 				g.view.paging = t._paging;
@@ -212,6 +216,7 @@ define([
 					callback();
 					setTimeout(function(){
 						t._onTransitionEnd();
+						t.onFinish();
 					}, transitionDuration);
 				}, 10);
 			});
