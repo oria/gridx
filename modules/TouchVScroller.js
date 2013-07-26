@@ -42,6 +42,22 @@ define([
 			return this.inherited(arguments);
 		},
 
+		scroll: function(top){
+			if(has('ios') || has('android') || this.arg('touch')){
+				this._scrollable.scrollTo({ y: top });
+			}else{
+				this.inherited(arguments);
+			}
+		},
+
+		position: function(){
+			if(has('ios') || has('android') || this.arg('touch')){
+				return this._scrollable.getPos().y;
+			}else{
+				return this.inherited(arguments);
+			}
+		},
+
 		_init: function(){
 			if(has('ios') || has('android') || this.arg('touch')){
 				var t = this,

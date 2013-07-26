@@ -18,15 +18,16 @@ require([
 	store = storeFactory({
 		dataSource: dataSource, 
 		maxLevel: 4,
+		tree: true,
 		maxChildrenCount: 10,
 		minChildrenCount: 10
 	});
-	store.hasChildren = function(id, item){
-		return item && store.getValues(item, 'children').length;
-	};
-	store.getChildren = function(item){
-		return store.getValues(item, 'children');
-	};
+//    store.hasChildren = function(id, item){
+//        return item && store.getValues(item, 'children').length;
+//    };
+//    store.getChildren = function(item){
+//        return store.getValues(item, 'children');
+//    };
 
 	storeAsync = storeFactory({
 		isAsync: true,
@@ -108,7 +109,7 @@ require([
 		modules.SingleSort,
 //        modules.VirtualVScroller,
 //        modules.MultiChannelScroller,
-		modules.TouchVScroller,
+//        modules.TouchVScroller,
 		Layer
 	];
 

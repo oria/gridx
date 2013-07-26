@@ -143,6 +143,14 @@ define([
 			finish(!!n);
 			return d;
 		},
+
+		scroll: function(top){
+			this.domNode.scrollTop = top;
+		},
+
+		position: function(){
+			return this.domNode.scrollTop;
+		},
 	
 		//Protected -------------------------------------------------
 		_init: function(){

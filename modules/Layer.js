@@ -69,6 +69,7 @@ define([
 
 				wrapper2.appendChild(cloneParent);
 				t._parentStack.push(cloneParent);
+				cloneParent._pos = g.vScroller.position();
 				moveNodes(bn, tmpBn);
 
 				bn.style.left = w + 'px';
@@ -80,6 +81,7 @@ define([
 
 				m.setLayer(id);
 				t._refresh(function(){
+					g.vScroller.scroll(0);
 					domClass.add(wrapper1, 'gridxLayerHSlide');
 					domClass.add(wrapper2, 'gridxLayerVSlide');
 					bn.style.left = 0;
@@ -125,6 +127,7 @@ define([
 				m.layerUp();
 				t._refresh(function(){
 					if(currentParentRowNode){
+						g.vScroller.scroll(currentParentRowNode._pos);
 						var pos = domGeometry.position(g.body.getRowNode({
 							rowId: parentId
 						}));
