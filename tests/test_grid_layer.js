@@ -72,14 +72,6 @@ require([
 	};
 
 	layout1 = [
-//        {id: 'prevLevel', width: '20px', sortable: false,
-//            decorator: function(data, rowId, visualIndex, cell){
-//                if(cell.row.parent()){
-//                    return '<div class="hasParent">&lt;</div>';
-//                }
-//                return '';
-//            }
-//        },
 		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
 		{id: 'number', name: 'number', field: 'number',
 			expandLevel: 'all',
@@ -122,9 +114,7 @@ require([
 
 	Deferred.when(parser.parse(), function(){
 		grid1.connect(grid1, has('ios') || has('android') ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
-			if(e.columnId == 'prevLevel' && e.cellNode.childNodes.length){
-				grid1.layer.up();
-			}else if(e.columnId == 'nextLevel' && e.cellNode.childNodes.length){
+			if(e.columnId == 'nextLevel' && e.cellNode.childNodes.length){
 				grid1.layer.down(e.rowId);
 			}
 		});

@@ -31,21 +31,16 @@ define([
 			wrapper2.setAttribute('class', 'gridxLayerWrapper');
 			t._parentStack = [];
 			t.connect(cn, 'onmousedown', 'up');
+			function updateColumnWidth(node){
+				var columnId = node.getAttribute('colid');
+				var headerNode = t.grid.header.getHeaderNode(columnId);
+				node.style.width = headerNode.style.width;
+				node.style.minWidth = headerNode.style.minWidth;
+				node.style.maxWidth = headerNode.style.maxWidth;
+			}
 			t.connect(t.grid.columnWidth, 'onUpdate', function(){
-				query('.gridxCell', wrapper1).forEach(function(node){
-					var columnId = node.getAttribute('colid');
-					var headerNode = t.grid.header.getHeaderNode(columnId);
-					node.style.width = headerNode.style.width;
-					node.style.minWidth = headerNode.style.minWidth;
-					node.style.maxWidth = headerNode.style.maxWidth;
-				});
-				query('.gridxCell', wrapper2).forEach(function(node){
-					var columnId = node.getAttribute('colid');
-					var headerNode = t.grid.header.getHeaderNode(columnId);
-					node.style.width = headerNode.style.width;
-					node.style.minWidth = headerNode.style.minWidth;
-					node.style.maxWidth = headerNode.style.maxWidth;
-				});
+				query('.gridxCell', wrapper1).forEach(updateColumnWidth);
+				query('.gridxCell', wrapper2).forEach(updateColumnWidth);
 			});
 //            this.connect(this.grid.bodyNode, 'ontransitionend', '_onTransitionEnd');
 		},
