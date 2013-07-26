@@ -86,6 +86,8 @@ define([
 					tmpBn.style.left = -w + 'px';
 					wrapper1.style.left = -w + 'px';
 					wrapper2.style.top = 0;
+				}, {
+					parentRowNode: parentRowNode
 				});
 			}
 		},
@@ -134,7 +136,7 @@ define([
 						wrapper1.style.top = (pos.y - refPos.y) + 'px';
 					}
 					wrapper2.style.left = 0;
-				});
+				}, {});
 			}
 		},
 
@@ -157,10 +159,8 @@ define([
 				contextNode.style.height = wrapper2.offsetHeight + 'px';
 				domClass.remove(tmpBn, 'gridxSlideRefresh');
 				domClass.remove(bn, 'gridxSlideRefresh');
-				domClass.remove(wrapper1, 'gridxLayerHSlide');
-				domClass.remove(wrapper1, 'gridxLayerVSlide');
-				domClass.remove(wrapper2, 'gridxLayerHSlide');
-				domClass.remove(wrapper2, 'gridxLayerVSlide');
+				domClass.remove(wrapper1, 'gridxLayerHSlide gridxLayerVSlide');
+				domClass.remove(wrapper2, 'gridxLayerHSlide gridxLayerVSlide');
 				wrapper1.innerHTML = '';
 
 				var tmp = t._wrapper1;
@@ -189,7 +189,7 @@ define([
 			}
 		},
 
-		_refresh: function(callback){
+		_refresh: function(callback, args){
 			var t = this,
 				g = t.grid,
 				bn = g.bodyNode,
@@ -206,7 +206,7 @@ define([
 			t._paging = g.view.paging;
 			g.view.paging = 0;
 			g.vLayout.reLayout();
-			t.onReady();
+			t.onReady(args);
 			g.body._skipUnrender = 1;
 			g.body.refresh().then(function(){
 				g.view.paging = t._paging;
@@ -216,7 +216,7 @@ define([
 					callback();
 					setTimeout(function(){
 						t._onTransitionEnd();
-						t.onFinish();
+						t.onFinish(args);
 					}, transitionDuration);
 				}, 10);
 			});
