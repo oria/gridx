@@ -5,10 +5,12 @@ define([
 	"dojo/_base/sniff",
 	"dojo/query",
 	"dojo/dom-geometry",
+	"dojo/dom-class",
+	"dojo/dom-style",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, has, query, domGeo, keys, metrics, _Module){
+], function(declare, Deferred, event, has, query, domGeo, domClass, domStyle, keys, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -63,6 +65,9 @@ define([
 				if(has('ie') < 8){
 					t.stubNode.style.width = (w + 1) + 'px';
 				}
+			}
+			if(has('mac')){
+				domClass.add(g.domNode, 'gridxMac');
 			}
 		},
 
@@ -168,7 +173,7 @@ define([
 					ds.width = '';
 				}
 				var display = toShow ? '' : 'none';
-				var changed = display != ds.display;
+				var changed = display != domStyle.get(t.domNode, 'display');
 				ds.display = display;
 				if(changed){
 					t._updatePos();

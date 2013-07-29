@@ -189,6 +189,22 @@
 	line-height: 0;
 }
 
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar {
+	-webkit-appearance:none !important;
+	height:11px !important;
+}
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb {
+	border-radius:8px !important;
+	border:2px solid white !important;
+	background-color:rgba(100,100,100,.5) !important;
+}
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:hover,
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:active,
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:focus {
+	background-color: rgba(0,0,0,.5) !important;
+}
+
+
 
 /*VScroller*/
 .gridxVScroller {
@@ -201,6 +217,23 @@
 	height: 100%;
 	outline: none;
 }
+
+.gridxMac .gridxVScroller::-webkit-scrollbar {
+	-webkit-appearance:none !important;
+	width:11px !important;
+	background-color: #eee !important;
+}
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb {
+	border-radius:8px !important;
+	border:2px solid white !important;
+	background-color:rgba(100,100,100,.5) !important;
+}
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb:hover,
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb:active,
+.gridxMac .gridxVScroller::-webkit-scrollbar-thumb:focus {
+	background-color: rgba(0,0,0,.5) !important;
+}
+
 
 /*RowHeader*/
 .gridxRowHeaderHeader,

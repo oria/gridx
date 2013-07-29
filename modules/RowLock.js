@@ -89,8 +89,9 @@ define([
 		_foreachLockedRows: function(callback){
 			var nodes = this.grid.bodyNode.childNodes;
 			for(var i = 0; i < this.count; i++){
-				if(nodes[i])
+				if(nodes[i]){
 					callback(nodes[i]);
+				}
 			}
 		}
 	});

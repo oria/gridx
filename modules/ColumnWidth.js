@@ -33,6 +33,8 @@ define([
 	});
 =====*/
 
+	var needHackPadBorder = has('safari') < 6 || (!has('safari') && has('webkit') && has('ios'));
+
 	return declare(_Module, {
 		name: 'columnWidth',
 
@@ -142,18 +144,34 @@ define([
 				t.onUpdate();
 				return;
 			}
+			if(!t.arg('autoResize')){
+				if(needHackPadBorder){
+					query('.gridxCell', innerNode).forEach(function(node){
+						var c = g._columnsById[node.getAttribute('colid')];
+						if(/px$/.test(c.declaredWidth)){
+							var w = parseInt(c.declaredWidth, 10) + padBorder;
+							w = c.width = w + 'px';
+							node.style.width = w;
+							node.style.minWidth = w;
+							node.style.maxWidth = w;
+						}
+					});
+				}
+			}
 			if(g.autoWidth){
 				var headers = query('.gridxCell', innerNode),
 					totalWidth = 0;
 				headers.forEach(function(node){
+					var c = g._columnsById[node.getAttribute('colid')];
 					var w = domStyle.get(node, 'width');
-					if(isGroupHeader || !has('safari') || !isGridHidden){
+					if(isGroupHeader || !needHackPadBorder || !isGridHidden){
 						w += padBorder;
 					}
+					if(w < c.minWidth){
+						w = c.minWidth;
+					}
 					totalWidth += w;
-					var c = g._columnsById[node.getAttribute('colid')];
 					if(c.width == 'auto' || (/%$/).test(c.width)){
-						console.log(c.id, w);
 						node.style.width = c.width = w + 'px';
 						node.style.minWidth = c.width;
 						node.style.maxWidth = c.width;
@@ -167,7 +185,7 @@ define([
 				var autoCols = [],
 					cols = g._columns,
 					fixedWidth = 0;
-				if(!isGroupHeader && has('safari')){
+				if(!isGroupHeader && needHackPadBorder){
 					padBorder = 0;
 				}
 				array.forEach(cols, function(c){
@@ -179,6 +197,9 @@ define([
 						if(w < 0){
 							w = 0;
 						}
+						if(typeof c.minWidth == 'number' && w < c.minWidth){
+							w = c.minWidth;
+						}
 						var node = header.getHeaderNode(c.id);
 						node.style.width = c.width = w + 'px';
 						node.style.minWidth = c.width;
@@ -188,7 +209,7 @@ define([
 				array.forEach(cols, function(c){
 					if(c.declaredWidth != 'auto'){
 						var headerNode = header.getHeaderNode(c.id),
-							w = !isGroupHeader && has('safari') ? parseFloat(headerNode.style.width, 10) :
+							w = !isGroupHeader && needHackPadBorder ? parseFloat(headerNode.style.width, 10) :
 								headerNode.offsetWidth || (domStyle.get(headerNode, 'width') + padBorder);
 						if(/%$/.test(c.declaredWidth)){
 							c.width = (w > padBorder ? w - padBorder : 0) + 'px';
@@ -212,9 +233,14 @@ define([
 					}
 					array.forEach(autoCols, function(c, i){
 						var node = header.getHeaderNode(c.id);
-						node.style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
-						node.style.minWidth = c.width;
-						node.style.maxWidth = c.width;
+						var cw = i < autoCols.length - 1 ? w : ww;
+						if(typeof c.minWidth == 'number' && cw < c.minWidth){
+							cw = c.minWidth;
+						}
+						cw += 'px';
+						node.style.width = c.width = cw;
+						node.style.minWidth = cw;
+						node.style.maxWidth = cw;
 					});
 				}
 			}
@@ -227,7 +253,6 @@ define([
 					if(/px$/.test(col.width)){
 						var width = node.clientWidth - domGeometry.getPadExtents(node).w;
 						if(parseInt(col.width, 10) != width){
-							console.log('here! ', col.width, ', ', width);
 							col.width = width = width + 'px';
 							node.style.width = width;
 							node.style.minWidth = width;

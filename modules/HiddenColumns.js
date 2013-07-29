@@ -73,6 +73,9 @@ define([
 				g = t.grid,
 				ids = t.arg('init', []);
 			t._cols = g._columns.slice();
+			t.aspect(g, 'setColumns', function(){
+				t._cols = g._columns.slice();
+			});
 			if(g.move && g.move.column){
 				t.connect(g.move.column, 'onMoved', '_syncOrder');
 			}
