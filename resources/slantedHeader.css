@@ -1,0 +1,15 @@
+.gridxSlantedHeader .gridxHeaderRow {
+
+	-webkit-transform:translate(40px,0px) skew(-45deg,0deg); /* Safari and Chrome */
+
+}
+
+.gridxSlantedHeader .gridxHeaderRow .gridxCell{
+	height: 70px;
+
+}
+
+.gridxSlantedHeader .gridxHeaderRow .gridxCell .gridxSortNode {
+	width: 70px;
+	-webkit-transform:translate(-20px, 0) skew(45deg,0deg) rotate(-45deg); /* Safari and Chrome */
+}

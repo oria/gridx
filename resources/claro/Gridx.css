@@ -8,9 +8,11 @@
 @import url('../dnd.css');
 @import url('../filter.css');
 @import url('../pagination.css');
+@import url('../slantedHeader.css');
 
 @import url('basic.css');
 @import url('filter.css');
 @import url('lock.css');
 @import url('select.css');
 @import url('pagination.css');
+

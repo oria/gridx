@@ -43,7 +43,8 @@ define([
 	'gridx/modules/PagedBody',
 	'gridx/modules/AutoPagedBody',
 	'gridx/modules/MultiChannelScroller',
-	'gridx/modules/HeaderMenu'
+	'gridx/modules/HeaderMenu',
+	'gridx/modules/SlantedHeader'
 ], function(
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
