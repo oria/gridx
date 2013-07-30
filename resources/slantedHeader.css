@@ -1,7 +1,11 @@
-.gridxSlantedHeader .gridxHeaderRow {
 
-	-webkit-transform:translate(40px,0px) skew(-45deg,0deg); /* Safari and Chrome */
 
+.gridxSlantedHeader {
+	overflow: visible;
+}
+
+.gridxSlantedHeader .gridxHeader{
+	overflow: visible;
 }
 
 .gridxSlantedHeader .gridxHeaderRow .gridxCell{
@@ -9,7 +13,19 @@
 
 }
 
-.gridxSlantedHeader .gridxHeaderRow .gridxCell .gridxSortNode {
-	width: 70px;
-	-webkit-transform:translate(-20px, 0) skew(45deg,0deg) rotate(-45deg); /* Safari and Chrome */
+.gridxSlantedHeader .gridxHeaderRow .gridxCell {
+	vertical-align: bottom;
+
 }
+.gridxSlantedHeader .gridxHeaderRow .gridxCell .gridxSortNode {
+	overflow: visible;
+	margin-bottom: 8px;
+	-webkit-transform:skew(45deg,0deg) rotate(-45deg); /* Safari and Chrome */
+}
+.gridxSlantedHeader .gridxHeaderRow .gridxGroupHeader .gridxSortNode {
+	text-align: center;
+	-webkit-transform:skew(45deg,0deg); /* Safari and Chrome */
+}
+
+
+

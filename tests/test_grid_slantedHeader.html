@@ -6,7 +6,7 @@
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
 		.gridx {
-			width: 800px;
+			
 			height: 300px;
 		}
 		.gridxCell {
@@ -27,9 +27,11 @@
 		store: store,
 		structure: layout,
 		headerGroups: headerGroups1,
+		autoWidth: true,
 		modules: [
-
+			"gridx/modules/GroupHeader",
 			"gridx/modules/SlantedHeader"
+			,"gridx/modules/ColumnResizer"
 		]
 	'></div>
 	

@@ -22,19 +22,25 @@ define([
 	});
 =====*/
 	
-
 	return declare(_Module, {
 		name: 'slantedheader',
 
 		required: ['headerRegions'],
 
-
-		preload: function(args){
-
-		},
-
 		load: function(args, deferStartup){
 			domClass.add(this.grid.domNode, 'gridxSlantedHeader');
+
+			//Skew the header node, and use translate to align columns
+			var n = this.grid.header.domNode;	
+			var headerHeight = n.offsetHeight;
+			var translateX = headerHeight/2 - 1; //TODO: 1 is the top border width
+			n.style.transform = n.style.msTransform = n.style.mozTransform
+				= n.style.webkitTransform = 'translate(' + translateX
+				 + 'px, 0px) skew(-45deg,0deg)';
+
+			//Rotate the column title
+
+
 			this.loaded.callback();
 		}
 
