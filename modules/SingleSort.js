@@ -199,9 +199,11 @@ define([
 			var t = this;
 			if(t._sortId !== null){
 				var headerCell = t.grid.header.getHeaderNode(t._sortId);
-				domClass.remove(headerCell, 'gridxCellSorted');
-				domClass.remove(headerCell, 'gridxCellSortedAsc');
-				domClass.remove(headerCell, 'gridxCellSortedDesc');
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+				}
 				t._sortId = t._sortDescend = null;
 				t.model.sort();
 				if(!skipUpdateBody){
