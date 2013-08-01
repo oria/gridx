@@ -28,13 +28,14 @@ grid = new Grid({
 		size: 200
 	}),
 	structure: dataSource.layouts[0],
+	selectRowTriggerOnCell: true,
 	modules: [
 		Focus,
 		RowHeader,
 		ColumnResizer,
 		ExtendedSelectRow,
-		ExtendedSelectColumn,
-		ExtendedSelectCell,
+//        ExtendedSelectColumn,
+//        ExtendedSelectCell,
 		VirtualVScroller
 	]
 });

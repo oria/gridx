@@ -1,0 +1,19 @@
+.barTest .dropDownSizer,
+.gridxRtl .linkPager,
+.gridxRtl .linkSizer,
+.barTest .quickFilter {
+	text-align: right;
+}
+
+.barTest .dijitToolbar {
+	background: none !important;
+	border-bottom: none !important;
+}
+
+.gridxRtl .dropDownSizer,
+.barTest .linkPager,
+.barTest .linkSizer,
+.gridxRtl .quickFilter {
+	text-align: left;
+}
+

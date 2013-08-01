@@ -7,7 +7,7 @@
 body {
 	background:#fff url("../../../dijit/tests/images/testsBodyBg.gif") repeat-x top left;
 	padding:2em 2em 2em 2em;
-	margin: 5em;
+/*    margin: 5em;*/
 }
 
 .title {

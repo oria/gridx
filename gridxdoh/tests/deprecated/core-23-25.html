@@ -34,12 +34,6 @@
 				size: 5
 			});			
 
-			store3 = storeFactory({
-				dataSource: dataSource,
-				size: 5
-			});			
-		
-
 			layout = [
 				{id: 'id', field: 'id', name: 'Identity'},
 				{id: 'Year', field: 'Year', name: 'Year'},
@@ -102,7 +96,7 @@
 	<div id='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		structure: layout,
-		store: store3,
+		store: store,
 		bodyRowHoverEffect: false
 	'></div>	
 </body>

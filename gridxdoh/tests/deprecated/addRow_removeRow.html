@@ -13,12 +13,19 @@
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
-	<script type="text/javascript" src='core_addRow_removeRow.js'></script>
+	<script type="text/javascript" src='addRow_removeRow.js'></script>
 </head>
 <body class='claro'>
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Add Row / Remove Row Test
 	</h1>
+	<div>
+		<button id='addRowBtn' onclick='newRow()'>Add One Row</button>
+		<button onclick='addSomeRows()'>Add 10 Rows</button>
+		<button onclick='deleteSomeRows()'>Delete 10 Rows</button>
+		<button onclick='deleteFirstRow()'>Delete First Row</button>
+		<button onclick='deleteLastRow()'>Delete Last Row</button>
+	</div>
 	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Async",
 		store: store,
@@ -35,12 +42,5 @@
 			"gridx/modules/extendedSelect/Row"
 		]
 	'></div>
-	<div>
-		<button id='addRowBtn' onclick='newRow()'>Add One Row</button>
-		<button onclick='addSomeRows()'>Add 10 Rows</button>
-		<button onclick='deleteSomeRows()'>Delete 10 Rows</button>
-		<button onclick='deleteFirstRow()'>Delete First Row</button>
-		<button onclick='deleteLastRow()'>Delete Last Row</button>
-	</div>
 </body>
 </html>

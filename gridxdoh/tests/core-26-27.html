@@ -31,12 +31,13 @@
 			
 			var d = store.get(1);
 			for(var i in d){
-				d[i] = '';
+				if(i != 'id'){
+					d[i] = '';
+				}
 			}
 			store.put(d);
 
 			layout = [
-				{id: 'id', field: 'id', name: 'Identity'},
 				{id: 'Year', field: 'Year', name: 'Year'},
 				{id: 'Length', field: 'Length', name: 'Length'},
 				{id: 'Track', field: 'Track', name: 'Track'},
