@@ -1,4 +1,6 @@
 var testcases = [
+	'./cases/events',
+	'./cases/lock',
 	'./cases/special',
 	'./cases/autoHideVScroller',
 	'./cases/bar',

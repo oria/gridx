@@ -20,6 +20,9 @@
 		.dj_rtl #guide {
 			float: left;
 		}
+		#casePanel {
+			margin: 5px 0;
+		}
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="
 		async: true,
@@ -100,16 +103,15 @@
 			var grid = window.grid;
 			if(grid){
 				grid.destroy();
+				document.getElementById('casePanel').innerHTML = '';
 				window.grid = null;
 			}
 		};
 
 		var newId = 1000000;
 		function createGrid(args){
-			var grid = window.grid;
-			if(grid){
-				grid.destroy();
-			}
+			destroyGrid();
+			var grid;
 			dataSource.resetSeed();
 			//document.getElementById('testCaseSummary').innerHTML = args.title;
 			document.getElementById('caseFile').innerHTML = args.mid;
@@ -120,17 +122,22 @@
 			document.getElementById('guide').innerHTML = (args.guide || []).join('<br />');
 
 			newId = 1000000;
-			var storeFactory = {
-				memory: memoryFactory,
-				mockserver: memoryFactory,
-				jsonrest: jsonrestFactory
-			}[args.store];
-			var store = storeFactory(lang.mixin({
-				isAsync: args.store == 'mockserver',
-				asyncTimeout: 1000,
-				dataSource: dataSource,
-				size: args.size
-			}, args.storeArgs || {}));
+			var store;
+			if(lang.isString(args.store)){
+				var storeFactory = {
+					memory: memoryFactory,
+					mockserver: memoryFactory,
+					jsonrest: jsonrestFactory
+				}[args.store];
+				store = storeFactory(lang.mixin({
+					isAsync: args.store == 'mockserver',
+					asyncTimeout: 1000,
+					dataSource: dataSource,
+					size: args.size
+				}, args.storeArgs || {}));
+			}else{
+				store = args.store;
+			}
 			grid = new Grid(lang.mixin({
 				id: 'grid',
 				cacheClass: args.cache,
@@ -388,25 +395,25 @@
 <!--    <h4 id='testCaseSummary'></h4>-->
 	<div id='guide'></div>
 	<div id='gridContainer'></div>
+	<div id='casePanel'></div>
+	<hr/>
 	<div>
 		<input type='button' value='create display:none' onclick='createDisplayNone()' />
+		<input type='button' value='taller' onclick='resizeGrid({h: 1.1})' />
+		<input type='button' value='shorter' onclick='resizeGrid({h: 0.9})' />
+		<input type='button' value='wider' onclick='resizeGrid({w: 1.1})' />
+		<input type='button' value='narrower' onclick='resizeGrid({w: 0.9})' />
+		<input type='button' value='taller & wider' onclick='resizeGrid({h: 1.1, w: 1.1})' />
+		<input type='button' value='shorter & narrower' onclick='resizeGrid({h: 0.9, w: 0.9})' />
 	</div>
 	<div>
 		<input type='button' value='set empty store' onclick='setEmptyStore()' />
 		<input type='button' value='set 10-row store' onclick='setStore(10)' />
 		<input type='button' value='set 100-row store' onclick='setStore(100)' />
 		<input type='button' value='restore store' onclick='restoreStore()' />
-	</div>
-	<div>
 		<input type='button' value='set empty columns' onclick='setEmptyColumns()' />
 		<input type='button' value='set columns' onclick='setColumns()' />
 		<input type='button' value='restore columns' onclick='restoreColumns()' />
-	</div>
-	<div>
-		<input type='button' value='toggle header' onclick='toggleHeader()' />
-		<input type='button' value='toggle bodyStuffEmptyCell' onclick='toggleStuffEmptyCell()' />
-		<input type='button' value='toggle bodyRowHoverEffect' onclick='toggleRowHoverEffect()' />
-		<input type='button' value='toggle selectRowTriggerOnCell' onclick='toggleSelectRowTriggerOnCell()' />
 	</div>
 	<div>
 		<input type='button' value='add 1 row' onclick='addRow()' />
@@ -419,12 +426,10 @@
 		<input type='button' value='remove 10th row' onclick='removeRow(9)' />
 	</div>
 	<div>
-		<input type='button' value='taller' onclick='resizeGrid({h: 1.1})' />
-		<input type='button' value='shorter' onclick='resizeGrid({h: 0.9})' />
-		<input type='button' value='wider' onclick='resizeGrid({w: 1.1})' />
-		<input type='button' value='narrower' onclick='resizeGrid({w: 0.9})' />
-		<input type='button' value='taller & wider' onclick='resizeGrid({h: 1.1, w: 1.1})' />
-		<input type='button' value='shorter & narrower' onclick='resizeGrid({h: 0.9, w: 0.9})' />
+		<input type='button' value='toggle header' onclick='toggleHeader()' />
+		<input type='button' value='toggle bodyStuffEmptyCell' onclick='toggleStuffEmptyCell()' />
+		<input type='button' value='toggle bodyRowHoverEffect' onclick='toggleRowHoverEffect()' />
+		<input type='button' value='toggle selectRowTriggerOnCell' onclick='toggleSelectRowTriggerOnCell()' />
 	</div>
 </body>
 </html>

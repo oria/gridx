@@ -1,6 +1,7 @@
 define([
+	'./_util',
 	'gridx/allModules'
-], function(modules){
+], function(util, modules){
 
 	return [
 		{
@@ -37,6 +38,14 @@ define([
 				columnLockCount: 1
 			},
 			onCreated: function(grid){
+				var input = util.addInput('text', 1);
+				util.addButton('lock', function(){
+					var lockCount = parseInt(input.value, 10);
+					grid.columnLock.lock(lockCount);
+				});
+				util.addButton('unlock', function(){
+					grid.columnLock.unlock();
+				});
 			}
 		}
 	];

@@ -1,4 +1,5 @@
 define([
+	'./_util',
 	'dojo/_base/declare',
 	'dojo/date/locale',
 	'dojo/store/Memory',
@@ -21,7 +22,7 @@ define([
 	'dijit/form/ToggleButton',
 	'dijit/Calendar',
 	'dijit/ColorPalette'
-], function(declare, locale, Memory, modules, dataSource, storeFactory,
+], function(util, declare, locale, Memory, modules, dataSource, storeFactory,
 	_Widget, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect,
 	Select, HorizontalSlider, NumberSpinner, CheckBox, ToggleButton, Calendar, ColorPalette){
@@ -329,6 +330,133 @@ define([
 				modules.Pagination,
 				"gridx/modules/pagination/PaginationBar"
 			]
+		},
+		{
+			version: 1.2,
+			title: 'lazy edit',
+			cache: "gridx/core/model/cache/Sync",
+			store: 'memory',
+			size: 100,
+			structure: [
+				{ field: "id", name:"ID", width: '20px'},
+				{ field: "Color", name:"Color Palatte", width: '205px', editable: true,
+					decorator: function(data){
+						return [
+							'<div style="display: inline-block; border: 1px solid black; ',
+							'width: 20px; height: 20px; background-color: ',
+							data,
+							'"></div>',
+							data
+						].join('');
+					},
+					editor: 'dijit.ColorPalette',
+					editorArgs: {
+						fromEditor: function(v, cell){
+							return v || cell.data(); //If no color selected, use the orginal one.
+						}
+					}
+				},
+				{ field: "Genre", name:"TextBox", width: '100px', editable: true},
+				{ field: "Artist", name:"ComboBox", width: '100px', editable: true,
+					editor: "dijit.form.ComboBox",
+					editorArgs: {
+						props: 'store: mystore, searchAttr: "Artist"'
+					}
+				},
+				{ field: "Year", name:"NumberTextBox", width: '100px', editable: true,
+					editor: "dijit.form.NumberTextBox"
+				},
+				{ field: "Album", name:"FilteringSelect", width: '100px', editable: true,
+					editor: FilteringSelect,
+					editorArgs: {
+						props: 'store: fsStore, searchAttr: "id"'
+					}
+				},
+				{ field: "Length", name:"Select", width: '100px', editable: true,
+					//FIXME: this is still buggy, hard to set width
+					editor: Select,
+					editorArgs: {
+						props: 'store: selectStore, labelAttr: "id"'
+					}
+				},
+				{ field: "progress", name:"HorizontalSlider", width: '100px', editable: true,
+					editor: "dijit.form.HorizontalSlider",
+					editorArgs: {
+						props: 'minimum: 0, maximum: 1'
+					}
+				},
+				{ field: "Track", name:"Number Spinner", width: '100px', editable: true,
+					width: '50px',
+					editor: "dijit.form.NumberSpinner"
+				},
+				{ field: "Heard", name:"Check Box", width: '30px', editable: true,
+					editor: "dijit.form.CheckBox",
+					editorArgs: {
+						props: 'value: true'
+					}
+				},
+				{ field: "Heard", name:"ToggleButton", width: '100px', editable: true,
+					editor: "dijit.form.ToggleButton",
+					editorArgs: {
+						valueField: 'checked',
+						props: 'label: "Press me"'
+					}
+				},
+				{ field: "Download Date", name:"Calendar", width: '180px', editable: true,
+					dataType: 'date',
+					storePattern: 'yyyy/M/d',
+					gridPattern: 'yyyy/MMMM/dd',
+					editor: 'dijit.Calendar',
+					editorArgs: {
+						fromEditor: getDate
+					}
+				},
+				{ field: "Download Date", name:"DateTextBox", width: '100px', editable: true,
+					dataType: 'date',
+					storePattern: 'yyyy/M/d',
+					gridPattern: 'yyyy--MM--dd',
+					editor: DateTextBox,
+					editorArgs: {
+						fromEditor: getDate
+					}
+				},
+				//FIXME: this is still buggy, can not TAB out.
+		//        { field: "Composer", name:"Editor", width: '200px', editable: true,
+		//            editor: "dijit/Editor"
+		//        },
+				{ field: "Last Played", name:"TimeTextBox", width: '100px', editable: true,
+					dataType: "time",
+					storePattern: 'HH:mm:ss',
+					formatter: 'hh:mm a',
+					editor: TimeTextBox,
+					editorArgs: {
+						fromEditor: getTime
+					}
+				}
+			],
+			modules: [
+				"gridx/modules/CellWidget",
+				"gridx/modules/Edit",
+				modules.Pagination,
+				"gridx/modules/pagination/PaginationBar"
+			],
+			props: {
+				editLazySave: true
+			},
+			onCreated: function(grid){
+				util.addButton('undo', function(){
+					grid.model.undo();
+				});
+				util.addButton('redo', function(){
+					grid.model.redo();
+				});
+				util.addButton('save', function(){
+					grid.model.save();
+				});
+				util.addButton('discard unsaved changes', function(){
+					grid.model.clearLazyData();
+				});
+			}
 		}
 	];
 });
