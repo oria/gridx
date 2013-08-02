@@ -1,5 +1,4 @@
 define([
-	'./_cases',
 	'gridx/allModules',
 	'dojo/date/locale',
 	'dojo/has!gridx1.2?gridx/support/menu/AZFilterMenu',
@@ -16,68 +15,9 @@ define([
 	'dijit/TooltipDialog',
 	'dijit/ColorPalette',
 	'gridx/core/model/extensions/FormatSort'
-], function(cases, modules, locale, AZFilterMenu, NumberFilterMenu){
+], function(modules, locale, AZFilterMenu, NumberFilterMenu){
 
-	cases.push(
-		{
-			title: "null structure",
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 100
-		},
-		{
-			title: "empty structure",
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 100,
-			structure: []
-		},
-		{
-			title: 'empty store and empty column structure',
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 0,
-			structure: []
-		},
-		{
-			title: 'single cell',
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 1,
-			structure: [{name: 'One Cell'}],
-			props: {
-				autoHeight: true,
-				autoWidth: true
-			}
-		},
-		{
-			title: "special column definitions",
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 100,
-			structure: [
-				{},
-				{name: 'name'},
-				{field: 'Genre'},
-				{id: 'myCol', name: 'Another Genre', field: 'Genre'},
-				{formatter: function(rawData){ return rawData.Year + ' - ' + rawData.Length; }},
-				{field: 'Name', decorator: function(data){ return '<b style="color: red;">' + data + '</b>'; }},
-				{name: 'very long column header content', headerClass: 'myHeaderClass'},
-				{name: 'very long column header content', headerStyle: 'color: red; font-weight: bolder;'}
-			]
-		},
-		{
-			title: 'empty store and no horizontal scroll bar',
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 0,
-			structure: [
-				{id: 'Year', field: 'Year', name: 'Year'},
-				{id: 'Genre', field: 'Genre', name: 'Genre'},
-				{id: 'Artist', field: 'Artist', name: 'Artist'},
-				{id: 'Name', field: 'Name', name: 'Name'}
-			]
-		},
+	var cases = [
 		{
 			title: 'empty store and horizontal scroll bar',
 			cache: "gridx/core/model/cache/Sync",
@@ -576,7 +516,7 @@ define([
 				]
 			}
 		}
-	);
+	];
 
 	var azMenu = AZFilterMenu && new AZFilterMenu({});
 	var numberMenuId = NumberFilterMenu && new NumberFilterMenu({numbers: [0, 3, 6, 10]}).id;

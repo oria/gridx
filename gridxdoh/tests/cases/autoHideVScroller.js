@@ -1,11 +1,13 @@
 define([
-	'./_cases',
 	'gridx/allModules'
-], function(cases, modules){
+], function(modules){
 
-	cases.push(
+	return [
 		{
 			title: 'many fixed column width, filter/paging, auto-hide/show vertical scroller',
+			guide: [
+				''
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -74,7 +76,7 @@ define([
 				modules.Pagination,
 				'gridx/modules/pagination/PaginationBar',
 				modules.Filter,
-				'gridx/modules/filter/QuickFilter'
+				'gridx/modules/filter/FilterBar'
 			],
 			props: {
 				columnWidthAutoResize: true,
@@ -102,7 +104,7 @@ define([
 				modules.Pagination,
 				'gridx/modules/pagination/PaginationBar',
 				modules.Filter,
-				'gridx/modules/filter/QuickFilter'
+				'gridx/modules/filter/FilterBar'
 			],
 			props: {
 				autoWidth: true,
@@ -110,7 +112,5 @@ define([
 				paginationInitialPageSize: 5
 			}
 		}
-	);
-
-	return cases;
+	];
 });

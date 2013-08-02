@@ -1,5 +1,4 @@
 define([
-	'./_cases',
 	'dojo/_base/declare',
 	'dojo/date/locale',
 	'dojo/store/Memory',
@@ -22,7 +21,7 @@ define([
 	'dijit/form/ToggleButton',
 	'dijit/Calendar',
 	'dijit/ColorPalette'
-], function(cases, declare, locale, Memory, modules, dataSource, storeFactory,
+], function(declare, locale, Memory, modules, dataSource, storeFactory,
 	_Widget, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect,
 	Select, HorizontalSlider, NumberSpinner, CheckBox, ToggleButton, Calendar, ColorPalette){
@@ -43,7 +42,9 @@ define([
 	}
 
 	function createSelectStore(field){
-		var data = dataSource.getData(100).items;
+		var data = dataSource.getData({
+			size: 100
+		}).items;
 		//Make the items unique
 		var res = {};
 		for(var i = 0; i < data.length; ++i){
@@ -101,8 +102,9 @@ define([
 		}
 	});
 
-	cases.push(
+	return [
 		{
+			title: 'dijit editor',
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -248,8 +250,85 @@ define([
 				"gridx/modules/CellWidget",
 				"gridx/modules/Edit"
 			]
+		},
+		{
+			title: 'alwaysEditing',
+			cache: "gridx/core/model/cache/Sync",
+			store: 'memory',
+			size: 100,
+			structure: [
+				{ field: "id", name:"ID", width: '20px'},
+				{ field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
+				{ field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
+					editor: "dijit.form.ComboBox",
+					editorArgs: {
+						props: 'store: mystore, searchAttr: "Artist"'
+					}
+				},
+				{ field: "Year", name:"NumberTextBox", width: '100px', alwaysEditing: true,
+					editor: "dijit.form.NumberTextBox"
+				},
+				{ field: "Album", name:"FilteringSelect", width: '100px', alwaysEditing: true,
+					editor: FilteringSelect,
+					editorArgs: {
+						props: 'store: fsStore, searchAttr: "id"'
+					}
+				},
+				{ field: "Length", name:"Select", width: '100px', alwaysEditing: true,
+					//FIXME: this is still buggy, hard to set width properly
+					editor: Select,
+					editorArgs: {
+						props: 'store: selectStore, labelAttr: "id"'
+					}
+				},
+				{ field: "Progress", name:"HorizontalSlider", width: '100px', alwaysEditing: true,
+					editor: "dijit.form.HorizontalSlider",
+					editorArgs: {
+						props: 'minimum: 0, maximum: 1'
+					}
+				},
+				{ field: "Track", name:"Number Spinner", width: '100px', alwaysEditing: true,
+					width: '50px',
+					editor: "dijit.form.NumberSpinner"
+				},
+				{ field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
+					editor: "dijit.form.CheckBox",
+					editorArgs: {
+						props: 'value: true'
+					}
+				},
+				{ field: "Heard", name:"ToggleButton", width: '100px', alwaysEditing: true,
+					editor: "dijit.form.ToggleButton",
+					editorArgs: {
+						valueField: 'checked',
+						props: 'label: "Press me"'
+					}
+				},
+				{ field: "Download Date", name:"DateTextBox", width: '100px', alwaysEditing: true,
+					dataType: 'date',
+					storePattern: 'yyyy/M/d',
+					gridPattern: 'yyyy--MM--dd',
+					editor: DateTextBox,
+					editorArgs: {
+						fromEditor: getDate
+					}
+				},
+				{ field: "Last Played", name:"TimeTextBox", width: '100px', alwaysEditing: true,
+					dataType: "time",
+					storePattern: 'HH:mm:ss',
+					formatter: 'hh:mm a',
+					editor: TimeTextBox,
+					editorArgs: {
+						fromEditor: getTime
+					}
+				}
+			],
+			modules: [
+				"gridx/modules/CellWidget",
+				"gridx/modules/Edit",
+				modules.Pagination,
+				"gridx/modules/pagination/PaginationBar"
+			]
 		}
-	);
-
-	return cases;
+	];
 });

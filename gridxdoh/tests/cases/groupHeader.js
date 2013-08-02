@@ -1,8 +1,7 @@
 define([
-	'./_cases'
-], function(cases){
+], function(){
 
-	cases.push(
+	return [
 		{
 			version: 1.2,
 			title: "1 layer of groups, all columns in group",
@@ -292,8 +291,6 @@ define([
 				headerGroups: []
 			}
 		}
-	);
-
-	return cases;
+	];
 });
 

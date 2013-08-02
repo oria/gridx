@@ -1,8 +1,7 @@
 define([
-	'./_cases'
-], function(cases){
+], function(){
 
-	cases.push(
+	return [
 		{
 			title: 'fixed column width',
 			cache: "gridx/core/model/cache/Sync",
@@ -114,9 +113,9 @@ define([
 			structure: [
 				{id: 'id', field: 'id', name: 'Identity'},
 				{id: 'Genre', field: 'Genre', name: 'Genre'},
-				{id: 'Artist', field: 'Artist', name: 'Artist', minWidth: 200},
+				{id: 'Artist', field: 'Artist', name: 'Artist (min 200px)', minWidth: 200},
 				{id: 'Year', field: 'Year', name: 'Year'},
-				{id: 'Album', field: 'Album', name: 'Album', minWidth: 200},
+				{id: 'Album', field: 'Album', name: 'Album (min 200px)', minWidth: 200},
 				{id: 'Name', field: 'Name', name: 'Name'},
 				{id: 'Length', field: 'Length', name: 'Length'},
 				{id: 'Track', field: 'Track', name: 'Track'},
@@ -164,7 +163,5 @@ define([
 				{id: 'id', field: 'id', name: 'Identity', width: '100%'}
 			]
 		}
-	);
-
-	return cases;
+	];
 });

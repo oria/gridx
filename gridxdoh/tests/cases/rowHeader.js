@@ -1,5 +1,4 @@
 define([
-	'./_cases',
 	'gridx/allModules',
 	'dijit/form/ComboButton',
 	'dijit/Menu',
@@ -12,9 +11,9 @@ define([
 	'dijit/form/NumberTextBox',
 	'dijit/TooltipDialog',
 	'dijit/ColorPalette'
-], function(cases, modules){
+], function(modules){
 
-	cases.push(
+	return [
 		{
 			title: 'rowHeader, sync cache, filter, paging, columnResizer',
 			cache: "gridx/core/model/cache/Sync",
@@ -60,13 +59,16 @@ define([
 				'gridx/modules/ColumnResizer',
 				'gridx/modules/VirtualVScroller',
 				'gridx/modules/RowHeader'
-			]
+			],
+			props: {
+				pageSize: 20
+			}
 		},
 		{
-			title: 'rowHeader and cellWidget',
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 100,
+			title: 'rowHeader, cellWidget and async cache',
+			cache: "gridx/core/model/cache/Async",
+			store: 'mockserver',
+			size: 1000,
 			structure: [
 				{ field: "id", name:"Index", width: '30px'},
 				{ field: "progress", name:"Progress", dataType:'number', width: '200px',
@@ -165,7 +167,10 @@ define([
 				'gridx/modules/CellWidget',
 				'gridx/modules/VirtualVScroller',
 				'gridx/modules/RowHeader'
-			]
+			],
+			props: {
+				pageSize: 20
+			}
 		},
 		{
 			title: 'rowHeader and Editable cell',
@@ -207,7 +212,5 @@ define([
 				autoWidth: true
 			}
 		}
-	);
-
-	return cases;
+	];
 });

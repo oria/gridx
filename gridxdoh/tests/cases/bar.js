@@ -1,5 +1,4 @@
 define([
-	'./_cases',
 	'dojo/has!gridx1.1?gridx/support/Summary',
 	'dojo/has!gridx1.1?gridx/support/LinkPager',
 	'dojo/has!gridx1.1?gridx/support/LinkSizer',
@@ -10,7 +9,7 @@ define([
 	'dijit/Toolbar',
 	'dijit/form/Button',
 	'dijit/form/ToggleButton'
-], function(cases, Summary, LinkPager, LinkSizer, DropDownPager, DropDownSizer, GotoPageButton, QuickFilter,
+], function(Summary, LinkPager, LinkSizer, DropDownPager, DropDownSizer, GotoPageButton, QuickFilter,
 	Toolbar, Button, ToggleButton){
 
 	function createToolbar(id){
@@ -53,7 +52,7 @@ define([
 	}
 	var toolbar = createToolbar('toolbar1');
 
-	cases.push(
+	var cases = [
 		{
 			version: 1.1,
 			title: "Top Bar Only",
@@ -185,7 +184,7 @@ define([
 				selectRowTriggerOnCell: true
 			}
 		}
-	);
+	];
 
 	return cases;
 });

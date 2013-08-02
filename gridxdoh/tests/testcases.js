@@ -1,12 +1,22 @@
-define([
-	'./cases/edit',
+var testcases = [
+	'./cases/special',
+	'./cases/autoHideVScroller',
 	'./cases/bar',
 	'./cases/columnWidth',
-	'./cases/autoHideVScroller',
-	'./cases/rowHeader',
+	'./cases/edit',
 	'./cases/groupHeader',
 	'./cases/indirectSelect',
+	'./cases/rowHeader',
+	'./cases/tree',
 	'./cases/other'
-], function(cases){
+];
+define(testcases, function(){
+	var cases = [];
+	for(var i = 0; i < arguments.length; ++i){
+		for(var j = 0; j < arguments[i].length; ++j){
+			arguments[i][j].mid = testcases[i].mid;
+		}
+		cases = cases.concat(arguments[i]);
+	}
 	return cases;
 });

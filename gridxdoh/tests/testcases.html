@@ -4,11 +4,21 @@
 	<title></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
-	<link rel='stylesheet' href="cases/bar.css" />
+	<link rel='stylesheet' href="cases/_cases_css.css" />
 	<style type="text/css">
+		#gridContainer {
+			margin: 30px 0;
+		}
 		.gridx {
 			width: 800px;
 			height: 300px;
+		}
+		#guide {
+			float: right;
+			margin-top: 30px;
+		}
+		.dj_rtl #guide {
+			float: left;
 		}
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="
@@ -25,6 +35,8 @@
 		'dojo/has',
 		'dojo/_base/array',
 		'dojo/json',
+		'dojo/store/Memory',
+		'dijit/form/FilteringSelect',
 		'dojo/text!gridx/package.json',
 		'dojo/_base/Deferred',
 		'dojo/DeferredList',
@@ -36,7 +48,8 @@
 		'gridx/core/model/cache/Sync',
 		'gridx/core/model/cache/Async',
 		'dojo/domReady!'
-	], function(lang, has, array, JSON, packageInfo, Deferred, DeferredList, dataSource, memoryFactory, jsonrestFactory, Grid){
+	], function(lang, has, array, JSON, Memory, FilteringSelect,
+		packageInfo, Deferred, DeferredList, dataSource, memoryFactory, jsonrestFactory, Grid){
 
 		packageInfo = JSON.parse(packageInfo);
 		var version = parseFloat(packageInfo.version, 10);
@@ -54,6 +67,35 @@
 				(!c.belowVersion || c.belowVersion >= version);
 		});
 
+		var casesTitleStore = new Memory({
+			data: array.map(cases, function(c, i){
+				return {
+					id: c.title,
+					idx: i
+				};
+			})
+		});
+		var allowOnChange = 1;
+		var casesSelect = new FilteringSelect({
+			style: 'width: 600px;',
+			store: casesTitleStore,
+			searchAttr: 'id',
+			onChange: function(value){
+				if(allowOnChange){
+					for(var i = 0; i < cases.length; ++i){
+						if(cases[i].title === value){
+							document.getElementById('caseId').value = i + 1;
+							setTimeout(gotoCase, 0);
+							break;
+						}
+					}
+				}
+				allowOnChange = 1;
+			}
+		});
+		casesSelect.placeAt('casesSelect');
+		casesSelect.startup();
+
 		window.destroyGrid = function(){
 			var grid = window.grid;
 			if(grid){
@@ -69,7 +111,14 @@
 				grid.destroy();
 			}
 			dataSource.resetSeed();
-			document.getElementById('testCaseSummary').innerHTML = args.title;
+			//document.getElementById('testCaseSummary').innerHTML = args.title;
+			document.getElementById('caseFile').innerHTML = args.mid;
+			if(casesSelect.get('value') !== args.title){
+				allowOnChange = 0;
+				casesSelect.set('value', args.title);
+			}
+			document.getElementById('guide').innerHTML = (args.guide || []).join('<br />');
+
 			newId = 1000000;
 			var storeFactory = {
 				memory: memoryFactory,
@@ -231,6 +280,9 @@
 			destroyGrid();
 			document.getElementById('gridContainer').style.display = 'none';
 			gotoCase();
+			setTimeout(function(){
+				showGrid();
+			}, 1000);
 		};
 
 		window.showGrid = function(){
@@ -280,14 +332,14 @@
 			}));
 		};
 
-		window.setStore = function(){
+		window.setStore = function(size){
 			if(!window.grid){return;}
 			if(!store){
 				store = grid.store;
 			}
 			grid.setStore(memoryFactory({
 				dataSource: dataSource,
-				size: 10
+				size: size
 			}));
 		};
 
@@ -296,6 +348,24 @@
 			if(store){
 				grid.setStore(store);
 			}
+		};
+
+		window.toggleStuffEmptyCell = function(){
+			if(!window.grid){return;}
+			grid.body.stuffEmptyCell = !grid.body.stuffEmptyCell;
+			grid.body.refresh();
+		};
+
+		window.toggleRowHoverEffect = function(){
+			if(!window.grid){return;}
+			grid.body.rowHoverEffect = !grid.body.rowHoverEffect;
+			grid.body.refresh();
+		};
+
+		window.toggleSelectRowTriggerOnCell = function(){
+			if(!window.grid){return;}
+			if(!grid.select || !grid.select.row){return;}
+			grid.select.row.triggerOnCell = !grid.select.row.triggerOnCell;
 		};
 
 		document.getElementById('totalCaseCount').innerHTML = cases.length;
@@ -312,23 +382,31 @@
 	<input type='button' value='destroy' onclick='destroyGrid()' />
 	<input type='button' value='previous' onclick='gotoCase(-1)' />
 	<input type='button' value='next' onclick='gotoCase(1)' />
-	<h4 id='testCaseSummary'></h4>
+	<div>
+	<span id='casesSelect'></span><span id='caseFile'></span>
+	</div>
+<!--    <h4 id='testCaseSummary'></h4>-->
+	<div id='guide'></div>
 	<div id='gridContainer'></div>
-	<br/>
 	<div>
 		<input type='button' value='create display:none' onclick='createDisplayNone()' />
-		<input type='button' value='show' onclick='showGrid()' />
 	</div>
 	<div>
 		<input type='button' value='set empty store' onclick='setEmptyStore()' />
-		<input type='button' value='set 10-row store' onclick='setStore()' />
+		<input type='button' value='set 10-row store' onclick='setStore(10)' />
+		<input type='button' value='set 100-row store' onclick='setStore(100)' />
 		<input type='button' value='restore store' onclick='restoreStore()' />
 	</div>
 	<div>
 		<input type='button' value='set empty columns' onclick='setEmptyColumns()' />
 		<input type='button' value='set columns' onclick='setColumns()' />
 		<input type='button' value='restore columns' onclick='restoreColumns()' />
+	</div>
+	<div>
 		<input type='button' value='toggle header' onclick='toggleHeader()' />
+		<input type='button' value='toggle bodyStuffEmptyCell' onclick='toggleStuffEmptyCell()' />
+		<input type='button' value='toggle bodyRowHoverEffect' onclick='toggleRowHoverEffect()' />
+		<input type='button' value='toggle selectRowTriggerOnCell' onclick='toggleSelectRowTriggerOnCell()' />
 	</div>
 	<div>
 		<input type='button' value='add 1 row' onclick='addRow()' />

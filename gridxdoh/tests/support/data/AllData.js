@@ -597,6 +597,7 @@ define([
 			Length: randomNumber(24) + ':' + randomNumber(60),
 			Heard: randomNumber(10) < 5,
 			Color: new Color([randomNumber(255), randomNumber(255), randomNumber(255)]).toHex(),
+			Progress: getRandom(progresses),
 
 			name: getRandom(names),
 			server: getRandom(servers),
