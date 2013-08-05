@@ -101,12 +101,21 @@ define([
 				columns = g._columns,
 				columnLock = g.columnLock,
 				lockCount = 0,
-				cols = array.filter(array.map(arguments, function(id){
-					id = id && typeof id == "object" ? id.id: id;
-					return columnsById[id];
-				}), function(col){
-					return col && !col.ignore && (col.hidable === undefined || col.hidable);
-				});
+				hash = {},
+				cols = [];
+			//remove duplicated arguments.
+			for(var i = 0, len = arguments.length; i < len; ++i){
+				hash[arguments[i]] = 1;
+			}
+			for(var arg in hash){
+				cols.push(arg);
+			}
+			cols = array.filter(array.map(cols, function(id){
+				id = id && typeof id == "object" ? id.id: id;
+				return columnsById[id];
+			}), function(col){
+				return col && !col.ignore && (col.hidable === undefined || col.hidable);
+			});
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();
@@ -248,13 +257,14 @@ define([
 		},
 
 		_refresh: function(changed){
+			var g = this.grid;
 			if(changed){
-				var g = this.grid;
 				g.header.refresh();
 				g.columnWidth._adaptWidth();
 				return g.body.refresh();
 			}else{
 				var d = new Deferred();
+				g.header.onRender();
 				d.callback();
 				return d;
 			}
