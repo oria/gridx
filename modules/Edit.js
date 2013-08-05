@@ -641,8 +641,7 @@ define([
 			if(col && col.alwaysEditing){
 				return true;
 			}
-			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
-			return !!widget && !!widget.gridCellEditField;
+			return !!this.getEditor(rowId, colId);
 		},
 
 		setEditor: function(colId, editor, args){
@@ -650,6 +649,11 @@ define([
 				editorArgs = col.editorArgs = col.editorArgs || {};
 			col.editor = editor;
 			lang.mixin(editorArgs, args || {});
+		},
+
+		getEditor: function(rowId, colId){
+			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
+			return widget && widget.gridCellEditField;
 		},
 		
 		getLazyData: function(rowId, colId){
@@ -781,11 +785,13 @@ define([
 		},
 
 		_focusEditor: function(rowId, colId, forced){
-			var cw = this.grid.cellWidget,
+			var t = this,
+				cw = t.grid.cellWidget,
 				func = function(){
 					var widget = cw.getCellWidget(rowId, colId),
 						editor = widget && widget.gridCellEditField;
 					if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
+						t.grid.hScroller.scrollToColumn(colId);
 						editor.focus();
 					}
 				};
