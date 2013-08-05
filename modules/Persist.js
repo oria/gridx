@@ -224,8 +224,7 @@ define([
 		_restoreColumnState: function(){
 			var t = this,
 				grid = t.grid,
-				col, cols = [], colHash = {},
-				notPersistOrder,
+				colHash = {},
 				columns = t.registerAndLoad('column', t._columnStateSaver, t);
 			if(lang.isArray(columns)){
 				array.forEach(columns, function(c){
@@ -234,30 +233,23 @@ define([
 				//persist column width
 				array.forEach(grid._columns, function(col){
 					var c = colHash[col.id];
-					if(!c){
-						//If there exists some column that is not in the persisted column array,
-						//don't restore column order
-						notPersistOrder = true;
-					}else if(c.id == col.id){
+					if(c && c.id == col.id){
 						col.declaredWidth = col.width = c.width;
 					}
 				});
-				if(notPersistOrder){
-					cols = grid._columns;
-				}else{
-					//persist column order
-					array.forEach(grid._columns, function(col){
-						var c = colHash[col.id];
-						cols[c.index] = col;
-					});
-					//remove possible holes if the current columns are less.
-					for(var i = cols.length - 1; i >= 0; --i){
-						if(!cols[i]){
-							cols.splice(i, 1);
-						}
+				grid._columns.sort(function(ca, cb){
+					var c1 = colHash[ca.id];
+					var c2 = colHash[cb.id];
+					if(c1 && c2){
+						return c1.index - c2.index;
+					}else if(!c1 && c2){
+						return 1;
+					}else if(c1 && !c2){
+						return -1;
 					}
-				}
-				grid.setColumns(cols);
+					return ca.index - cb.index;
+				});
+				grid.setColumns(grid._columns);
 			}
 		},
 		
