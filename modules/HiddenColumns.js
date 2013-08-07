@@ -105,13 +105,15 @@ define([
 				cols = [];
 			//remove duplicated arguments.
 			for(var i = 0, len = arguments.length; i < len; ++i){
-				hash[arguments[i]] = 1;
+				var col = arguments[i];
+				var k = col && typeof col === 'object'? col.id : col;
+				hash[k] = 1;
 			}
 			for(var arg in hash){
 				cols.push(arg);
 			}
 			cols = array.filter(array.map(cols, function(id){
-				id = id && typeof id == "object" ? id.id: id;
+				// id = id && typeof id == "object" ? id.id: id;
 				return columnsById[id];
 			}), function(col){
 				return col && !col.ignore && (col.hidable === undefined || col.hidable);
