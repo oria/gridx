@@ -66,6 +66,7 @@ define([
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
+				g.pagination && [g.pagination, 'setPageSize', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
 						columnId: indirectSelectColumnId
@@ -210,7 +211,7 @@ define([
 				model = t.model,
 				start = body.rootStart,
 				count = body.rootCount;
-			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+			var selectedRoot = array.filter((lang.isArray(selected) && selected) || g.select.row.getSelected(), function(id){
 				return !model.treePath(id).pop();
 			});
 			if(count === model.size()){
