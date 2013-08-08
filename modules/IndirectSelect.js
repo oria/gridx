@@ -54,6 +54,8 @@ define([
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
+				//FIX ME, may have performance issue
+				g.pagination && [g.pagination, 'setPageSize', '_onSelectionChange'],
 				focus && [focus, 'onFocusArea', function(name){
 					if(name == 'rowHeader'){
 						t._onMouseOver();
@@ -205,7 +207,7 @@ define([
 				start = view.rootStart,
 				count = view.rootCount;
 			if(g.select.row.selectByIndex && t.arg('all')){
-				var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+				var selectedRoot = array.filter((lang.isArray(selected) && selected) || g.select.row.getSelected(), function(id){
 					return !model.parentId(id);
 				});
 				var unselectableRows = g.select.row._getUnselectableRows();

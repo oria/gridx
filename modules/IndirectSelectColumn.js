@@ -67,6 +67,7 @@ define([
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
+				g.pagination && [g.pagination, 'setPageSize', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
 						columnId: indirectSelectColumnId
@@ -222,7 +223,7 @@ define([
 				start = view.rootStart,
 				count = view.rootCount;
 			if(g.select.row.selectByIndex && t.arg('all')){
-				var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+				var selectedRoot = array.filter((lang.isArray(selected) && selected )|| g.select.row.getSelected(), function(id){
 					return !model.treePath(id).pop();
 				});
 				var unselectableRows = g.select.row._getUnselectableRows();
