@@ -172,6 +172,7 @@ define([
 			var t = this, d,
 				g = t.grid,
 				allSelected,
+				g = t.grid,
 				body = t.grid.body,
 				model = t.model,
 				start = body.rootStart,
