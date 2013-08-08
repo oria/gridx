@@ -67,6 +67,7 @@ define([
 				[sr, 'clear', '_onClear'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				g.pagination && [g.pagination, 'setPageSize', '_onSelectionChange'],
+				g.pagination && [g.pagination, 'gotoPage', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
 						columnId: indirectSelectColumnId
@@ -202,7 +203,7 @@ define([
 				'selectByIndex'
 			]([0, body.visualCount - 1]);
 		},
-
+		
 		_onSelectionChange: function(selected){
 			var t = this, d,
 				g = t.grid,
