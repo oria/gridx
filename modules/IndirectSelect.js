@@ -52,6 +52,7 @@ define([
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
+				g.pagination && [g.pagination, 'setPageSize', '_onSelectionChange'],
 				focus && [focus, 'onFocusArea', function(name){
 					if(name == 'rowHeader'){
 						t._onMouseOver();
@@ -170,11 +171,12 @@ define([
 		_onSelectionChange: function(selected){
 			var t = this, d,
 				allSelected,
+				g = t.grid,
 				body = t.grid.body,
 				model = t.model,
 				start = body.rootStart,
 				count = body.rootCount;
-			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+			var selectedRoot = array.filter((lang.isArray(selected) && selected) || g.select.row.getSelected(), function(id){
 				return !model.treePath(id).pop();
 			});
 			if(count === model.size()){
