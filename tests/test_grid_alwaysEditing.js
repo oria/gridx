@@ -4,6 +4,7 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'dojo/data/ItemFileWriteStore',
+	'dojo/store/Memory',
 	'dojo/date/locale',
 	'dijit/form/TextBox',
 	'dijit/form/ComboBox',
@@ -22,7 +23,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	"gridx/allModules",
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale,
+], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, Memory, locale,
 	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
@@ -73,12 +74,15 @@ require([
 				id: d
 			});
 		}
-		return new IFWStore({
-			data: {
-				identifier: 'id',
-				label: 'id',
-				items: data
-			}
+		// return new IFWStore({
+			// data: {
+				// identifier: 'id',
+				// label: 'id',
+				// items: data
+			// }
+		// });
+		return new Memory({
+			"data": data
 		});
 	}
 
