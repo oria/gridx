@@ -56,6 +56,7 @@ define([
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				//FIX ME, may have performance issue
 				g.pagination && [g.pagination, 'setPageSize', '_onSelectionChange'],
+				g.pagination && [g.pagination, 'gotoPage', '_onSelectionChange'],
 				focus && [focus, 'onFocusArea', function(name){
 					if(name == 'rowHeader'){
 						t._onMouseOver();
