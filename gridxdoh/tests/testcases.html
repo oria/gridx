@@ -401,6 +401,7 @@
 	<div id='casePanel'></div>
 	<hr/>
 	<div>
+		<span>Display/Size</span>
 		<input type='button' value='create display:none' onclick='createDisplayNone()' />
 		<input type='button' value='taller' onclick='resizeGrid({h: 1.1})' />
 		<input type='button' value='shorter' onclick='resizeGrid({h: 0.9})' />
@@ -410,6 +411,7 @@
 		<input type='button' value='shorter & narrower' onclick='resizeGrid({h: 0.9, w: 0.9})' />
 	</div>
 	<div>
+		<span>Store/Column</span>
 		<input type='button' value='set empty store' onclick='setEmptyStore()' />
 		<input type='button' value='set 10-row store' onclick='setStore(10)' />
 		<input type='button' value='set 100-row store' onclick='setStore(100)' />
@@ -419,6 +421,7 @@
 		<input type='button' value='restore columns' onclick='restoreColumns()' />
 	</div>
 	<div>
+		<span>Add/Remove row</span>
 		<input type='button' value='add 1 row' onclick='addRow()' />
 		<input type='button' value='add 10 rows' onclick='addSomeRows()' />
 		<input type='button' value='add 1 empty row' onclick='addEmptyRow()' />
@@ -429,6 +432,7 @@
 		<input type='button' value='remove 10th row' onclick='removeRow(9)' />
 	</div>
 	<div>
+		<span>Properties</span>
 		<input type='button' value='toggle header' onclick='toggleHeader()' />
 		<input type='button' value='toggle bodyStuffEmptyCell' onclick='toggleStuffEmptyCell()' />
 		<input type='button' value='toggle bodyRowHoverEffect' onclick='toggleRowHoverEffect()' />
