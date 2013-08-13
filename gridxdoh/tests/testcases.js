@@ -1,11 +1,11 @@
 var testcases = [
-	'./cases/events',
-	'./cases/lock',
 	'./cases/special',
+	'./cases/lock',
 	'./cases/autoHideVScroller',
 	'./cases/bar',
 	'./cases/columnWidth',
 	'./cases/edit',
+	'./cases/events',
 	'./cases/groupHeader',
 	'./cases/indirectSelect',
 	'./cases/rowHeader',

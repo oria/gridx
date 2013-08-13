@@ -6,6 +6,12 @@ define([
 	return [
 		{
 			title: 'column lock',
+			guide: [
+				'locked columns should align with unlocked columns',
+				'lock the column with widgets',
+				'unlock columns',
+				'set columns when some columns are locked'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
 			size: 100,
