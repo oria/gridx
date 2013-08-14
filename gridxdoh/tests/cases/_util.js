@@ -1,9 +1,16 @@
 define([
-], function(){
+	'dojo/dom-construct'
+], function(domConstruct){
 
 	return {
 		panel: function(){
 			return document.getElementById('casePanel');
+		},
+		add: function(){
+			var node = domConstruct.create.apply(domConstruct, arguments);
+			var casePanel = document.getElementById('casePanel');
+			casePanel.appendChild(node);
+			return node;
 		},
 		addInput: function(type, value){
 			var casePanel = document.getElementById('casePanel');

@@ -14,11 +14,23 @@
 			height: 300px;
 		}
 		#guideContainer {
+			position: absolute;
+			right: 0;
+			top: 30px;
+		}
+		#guideContainer > input {
 			float: right;
-			margin-top: 30px;
 		}
 		.dj_rtl #guideContainer {
+			left: 0;
+			right: auto;
+		}
+		.dj_rtl #guideContainer > input {
 			float: left;
+		}
+		#guide {
+			max-width: 500px;
+			overflow: hidden;
 		}
 		#casePanel {
 			margin: 5px 0;
@@ -113,13 +125,16 @@
 			destroyGrid();
 			var grid;
 			dataSource.resetSeed();
-			//document.getElementById('testCaseSummary').innerHTML = args.title;
+
 			document.getElementById('caseFile').innerHTML = args.mid;
 			if(casesSelect.get('value') !== args.title){
 				allowOnChange = 0;
 				casesSelect.set('value', args.title);
 			}
-			document.getElementById('guide').innerHTML = (args.guide || []).join('<br />');
+			var guides = array.map(args.guide || [], function(line, i){
+				return (i + 1) + '. ' + line;
+			});
+			document.getElementById('guide').innerHTML = guides.join('<br />');
 
 			newId = 1000000;
 			var store;
@@ -149,6 +164,12 @@
 				args.onCreated(grid);
 			}
 
+			grid.connect(grid, 'onModulesLoaded', function(){
+				if(args.onModulesLoaded){
+					args.onModulesLoaded(grid);
+				}
+			});
+
 			grid.placeAt('gridContainer');
 
 			grid.startup();
@@ -169,6 +190,15 @@
 				caseIdInput.value = caseId + 1;
 				var args = cases[caseId];
 				window.grid = createGrid(args);
+			}
+		};
+
+		window.toggleGuide = function(){
+			var guide = document.getElementById('guide');
+			if(guide.clientHeight){
+				guide.style.height = 0;
+			}else{
+				guide.style.height = '';
 			}
 		};
 
@@ -311,6 +341,27 @@
 			]);
 		};
 
+		window.setManyColumns = function(){
+			if(!window.grid){return;}
+			if(!columns){
+				columns = grid.structure;
+			}
+			grid.setColumns([
+				{field: 'id', name: 'Identity', width: '20px'},
+				{field: 'number', name: 'Number', width: '10em'},
+				{field: 'string', name: 'String', width: '200px'},
+				{field: 'date', name: 'Date', width: '10%'},
+				{field: 'time', name: 'Time', width: '20%'},
+				{field: 'bool', name: 'Boolean', width: '30%'},
+				{field: 'id', name: 'Identity', width: '20px'},
+				{field: 'number', name: 'Number', width: '10em'},
+				{field: 'string', name: 'String', width: '200px'},
+				{field: 'date', name: 'Date', width: '10%'},
+				{field: 'time', name: 'Time', width: '20%'},
+				{field: 'bool', name: 'Boolean', width: '30%'}
+			]);
+		};
+
 		window.setEmptyColumns = function(){
 			if(!window.grid){return;}
 			if(!columns){
@@ -392,9 +443,8 @@
 	<div>
 	<span id='casesSelect'></span><span id='caseFile'></span>
 	</div>
-<!--    <h4 id='testCaseSummary'></h4>-->
 	<div id='guideContainer'>
-		<h2>Test Guide:</h2>
+		<input type='button' value='Test Guide' onclick='toggleGuide()' />
 		<div id='guide'></div>
 	</div>
 	<div id='gridContainer'></div>
@@ -418,6 +468,7 @@
 		<input type='button' value='restore store' onclick='restoreStore()' />
 		<input type='button' value='set empty columns' onclick='setEmptyColumns()' />
 		<input type='button' value='set columns' onclick='setColumns()' />
+		<input type='button' value='set many columns' onclick='setManyColumns()' />
 		<input type='button' value='restore columns' onclick='restoreColumns()' />
 	</div>
 	<div>

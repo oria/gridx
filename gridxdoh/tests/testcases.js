@@ -1,4 +1,6 @@
 var testcases = [
+	'./cases/persist',
+	'./cases/unselectableRows',
 	'./cases/special',
 	'./cases/lock',
 	'./cases/autoHideVScroller',
