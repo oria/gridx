@@ -1083,7 +1083,7 @@ define([
 			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
-			var colId = g._columns[colIdx].id,
+			var colId = g._columns[colIdx]? g._columns[colIdx].id : undefined,
 				n = t.getCellNode({
 					visualIndex: rowVisIdx,
 					colId: colId
