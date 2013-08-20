@@ -448,6 +448,8 @@ define([
 			var t = this,
 				d = new Deferred();
 			delete t._err;
+			
+			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
 			//Call when to make sure all pending commands are executed
 			t.model.when({}).then(function(){	//dojo.Deferred
 				try{
