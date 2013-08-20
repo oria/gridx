@@ -29,6 +29,7 @@
 			float: left;
 		}
 		#guide {
+			min-width: 200px;
 			max-width: 500px;
 			overflow: hidden;
 		}
@@ -152,6 +153,9 @@
 				}, args.storeArgs || {}));
 			}else{
 				store = args.store;
+			}
+			if(args.onBeforeCreate){
+				args.onBeforeCreate(args);
 			}
 			grid = new Grid(lang.mixin({
 				id: 'grid',
@@ -435,7 +439,7 @@
 </head>
 <body class='claro'>
 	<h1>Gridx tests</h1>
-	<input id='caseId' type='text' value='1' />/<span id='totalCaseCount'></span>
+	<input id='caseId' type='text' value='1'/>/<span id='totalCaseCount'></span>
 	<input type='button' value='create' onclick='gotoCase()' />
 	<input type='button' value='destroy' onclick='destroyGrid()' />
 	<input type='button' value='previous' onclick='gotoCase(-1)' />

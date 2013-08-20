@@ -50,12 +50,14 @@ define([
 		}));
 		return gridToolbar;
 	}
-	var toolbar = createToolbar('toolbar1');
 
 	var cases = [
 		{
 			version: 1.1,
 			title: "Top Bar Only",
+			guide: [
+				'keyboard order (TAB order) on gridx bar should be correct'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -74,16 +76,21 @@ define([
 			],
 			props: {
 				'class': 'barTest',
-				barTop: [
-					toolbar,
-					{pluginClass: QuickFilter, 'className': 'quickFilter'}
-				],
 				selectRowTriggerOnCell: true
+			},
+			onBeforeCreate: function(args){
+				args.props.barTop = [
+					createToolbar('toolbar1'),
+					{pluginClass: QuickFilter, 'className': 'quickFilter'}
+				];
 			}
 		},
 		{
 			version: 1.1,
 			title: "Bottom Bar Only",
+			guide: [
+				'keyboard order (TAB order) on gridx bar should be correct'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -119,6 +126,10 @@ define([
 		{
 			version: 1.1,
 			title: "Top and Bottom Bar",
+			guide: [
+				'keyboard order (TAB order) on gridx bar should be correct',
+				'bottom summary bar are correctly renderred out.'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -133,13 +144,14 @@ define([
 				'gridx/modules/extendedSelect/Row',
 				'gridx/modules/Pagination',
 				'gridx/modules/Filter',
-				'gridx/modules/Bar'
+				'gridx/modules/Bar',
+				"gridx/modules/SummaryBar"
 			],
 			props: {
 				'class': 'barTest',
 				barTop: [
 					[
-						{colSpan: 2},
+						{pluginClass: Summary, colSpan: 2},
 						{pluginClass: QuickFilter, 'className': 'quickFilter'}
 					],
 					[
@@ -150,37 +162,12 @@ define([
 				],
 				barBottom: [
 					[
-						{pluginClass: Summary, rowSpan: 2},
-						{pluginClass: LinkSizer, style: 'text-align: center;', colSpan: 2}
-					],
-					[
+						{pluginClass: LinkSizer, style: 'text-align: center;'},
 						{pluginClass: DropDownPager, style: 'text-align: center;'},
 						'gridx/support/DropDownSizer',
 						GotoPageButton
 					]
 				],
-				selectRowTriggerOnCell: true
-			}
-		},
-		{
-			version: 1.1,
-			title: "SummaryBar as a module",
-			cache: "gridx/core/model/cache/Sync",
-			store: 'memory',
-			size: 100,
-			structure: [
-				{id: 'id', field: 'id', name: 'Identity'},
-				{id: 'Year', field: 'Year', name: 'Year'},
-				{id: 'Genre', field: 'Genre', name: 'Genre'},
-				{id: 'Artist', field: 'Artist', name: 'Artist'},
-				{id: 'Name', field: 'Name', name: 'Name'}
-			],
-			modules: [
-				"gridx/modules/extendedSelect/Row",
-				"gridx/modules/IndirectSelectColumn",
-				"gridx/modules/SummaryBar"
-			],
-			props: {
 				selectRowTriggerOnCell: true
 			}
 		}

@@ -16,6 +16,13 @@ define([
 	return [
 		{
 			title: 'rowHeader, sync cache, filter, paging, columnResizer',
+			guide: [
+				'row header is correct during scrolling',
+				'row header is correct during page switching',
+				'row header is correct during filtering',
+				'row header is correct during column resizing',
+				'TAB order: header -> row header -> body'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -41,6 +48,9 @@ define([
 		},
 		{
 			title: 'rowHeader, async cache, virtual scroll',
+			guide: [
+				'row header is correct during scrolling'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'mockserver',
 			size: 100,
@@ -66,6 +76,9 @@ define([
 		},
 		{
 			title: 'rowHeader, cellWidget and async cache',
+			guide: [
+				'row header is correct during scrolling'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'mockserver',
 			size: 1000,
@@ -174,6 +187,9 @@ define([
 		},
 		{
 			title: 'rowHeader and Editable cell',
+			guide: [
+				'row header is correct when entering editting mode or exiting editing mode'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,

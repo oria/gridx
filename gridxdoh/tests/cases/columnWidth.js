@@ -4,6 +4,16 @@ define([
 	return [
 		{
 			title: 'fixed column width',
+			guide: [
+				'focus on a header cell, left/right arrow keys to navigate columns',
+				'focus on a cell, ARROW keys to navigate through cells',
+				'focus on a cell, press HOME move focus to the first cell in this row.',
+				'focus on a cell, press END move focus to the last cell in this row.',
+				'focus on a cell, press PAGE_DOWN, scrolls down a page',
+				'focus on a cell, press PAGE_UP, scrolls up a page',
+				'if already on the first page, press PAGE_UP, move focus to the first row.',
+				'if already on the last page, press PAGE_DOWN, move focus to the last row.'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -24,6 +34,9 @@ define([
 		},
 		{
 			title: 'some fixed, others auto',
+			guide: [
+				'columns exactly fit the grid width, no horizontal scroll bar'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -40,6 +53,9 @@ define([
 		},
 		{
 			title: 'too many fixed, others auto',
+			guide: [
+				'has horizontal scroll bar, auto width columns have default width'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -60,6 +76,9 @@ define([
 		},
 		{
 			title: 'auto and percentage width',
+			guide: [
+				'columns exactly fit the grid width, no horizontal scroll bar'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -73,6 +92,9 @@ define([
 		},
 		{
 			title: 'too much percentage',
+			guide: [
+				'has horizontal scroll bar, auto width columns have default width'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -90,6 +112,9 @@ define([
 		},
 		{
 			title: 'px em percentage auto',
+			guide: [
+				'columns exactly fit the grid width, no horizontal scroll bar'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -107,6 +132,10 @@ define([
 		},
 		{
 			title: 'auto and minWidth',
+			guide: [
+				'Artist and Album are auto, but they appear 200px wide because minWidth = 200px',
+				'Other column width keeps auto, so should not show horizontal scroll bar'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -124,6 +153,9 @@ define([
 		},
 		{
 			title: 'percentage and minWidth',
+			guide: [
+				'Artist and Album are also 20%, but they appear 200px wide because minWidth = 200px'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -137,16 +169,21 @@ define([
 		},
 		{
 			title: 'fixed & percentage width, not enough columns',
+			guide: [
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
 			structure: [
-				{id: 'id', field: 'id', name: 'Identity', width: '50px'},
-				{id: 'Genre', field: 'Genre', name: 'Genre', width: '20%'}
+				{id: 'id', field: 'id', name: 'id (50px)', width: '100px'},
+				{id: 'Genre', field: 'Genre', name: 'Genre (25%)', width: '25%'}
 			]
 		},
 		{
 			title: 'single auto column',
+			guide: [
+				'column exactly fit the grid width, no horizontal scroll bar'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -156,6 +193,9 @@ define([
 		},
 		{
 			title: 'single 100% width column',
+			guide: [
+				'column exactly fit the grid width, no horizontal scroll bar'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
