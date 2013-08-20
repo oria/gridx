@@ -37,7 +37,7 @@ define([
 			return [' colid="', col.id, '" style="', dir, ' width:', w, '"'].join('');
 		},	
 
-		initialize: function(/* __TableExportArgs */ args){
+		initialize: function(context, /* __TableExportArgs */ args){
 			this._rst = ['<table class="grid"',
 				args.natualWidth ? '' : ' style="table-layout:fixed;"',
 				' border="0" cellpadding="0" cellspacing="0">'
