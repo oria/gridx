@@ -21,6 +21,7 @@ require([
     'dojox/charting/plot2d/Candlesticks',
     'dojox/charting/plot2d/OHLC',
     'dojox/charting/plot2d/Pie',
+    'dijit/form/Button',
 	'dojo/domReady!'
 ], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
 	function random(start, end){
@@ -73,6 +74,9 @@ require([
 	}
 	
 	function setTextContent(node){
+		// node.innerHTML = '<button data-dojo-type="dijit/form/Button" data-dojo-props="label: 123">cut</button>';
+		// dojo.parser.parse(node);
+		
 		node.innerHTML = '<div style="color: #777; padding:5px">' 
 			+ getDummyText(20,140) + '</div>';
 	}
@@ -88,7 +92,7 @@ require([
 				'	<td><input /></td>',
 				'</tr>',
 				'<tr>',
-				'	<td><label for="birth">Birthdate (before 2006-12-31):</label><br><br><br><br></td>',
+				'	<td><label for="birth">Birthdate (before 2006-12-31):</label></td>',
 				'	<td><div><input data-dojo-type="dijit.form.DateTextBox" data-dojo-props=\'value:"2000-01-01",',
 				'		required:true, name:"birth", constraints:{min:"1900-01-01", max:"2006-12-31"} \'/> <br>',
 				'	</div></td>',
