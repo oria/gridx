@@ -376,6 +376,8 @@ define([
 				d = new Deferred();
 			delete t._err;
 			domClass.add(loadingNode, 'gridxLoading');
+			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
+
 			t.grid.view.updateVisualCount().then(function(){
 				try{
 					var rs = t.renderStart,
