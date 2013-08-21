@@ -91,7 +91,7 @@ require([
 				'	<td><input /></td>',
 				'</tr>',
 				'<tr>',
-				'	<td><label for="birth">Birthdate (before 2006-12-31):</label><br><br><br><br></td>',
+				'	<td><label for="birth">Birthdate (before 2006-12-31):</label></td>',
 				'	<td><div><input data-dojo-type="dijit.form.DateTextBox" data-dojo-props=\'value:"2000-01-01",',
 				'		required:true, name:"birth", constraints:{min:"1900-01-01", max:"2006-12-31"} \'/> <br>',
 				'	</div></td>',
