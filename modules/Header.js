@@ -126,6 +126,7 @@ define([
 			this._build();
 			this._onHScroll(this._scrollLeft);
 			this.onRender();
+			this.grid.vLayout.reLayout();
 		},
 
 		onRender: function(){},
