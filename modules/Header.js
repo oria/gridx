@@ -101,6 +101,12 @@ define([
 					}
 				});
 			}
+			t.aspect(g, 'onHeaderCellMouseOver', function(){
+				g.vLayout.reLayout();
+			});
+			t.aspect(g, 'onHeaderCellMouseOut', function(){
+				g.vLayout.reLayout();
+			});
 			t._initFocus();
 		},
 
