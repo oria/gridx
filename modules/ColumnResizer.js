@@ -98,6 +98,9 @@ define([
 			});
 			g.body.onRender();
 			g.vLayout.reLayout();
+			if(g.autoWidth){
+				g.hLayout.reLayout();
+			}
 			t.onResize(colId, width, oldWidth);
 		},
 
