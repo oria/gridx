@@ -6,7 +6,10 @@ define([
 		{
 			title: 'many fixed column width, filter/paging, auto-hide/show vertical scroller',
 			guide: [
-				''
+				'change to 20 rows per page, vertical scroller should appear',
+				'change back to 5 rows per page, verticall scroller disappear',
+				'change to 20 rows per page, apply filter "Any column contains Voodoo", verticall scroller disapper',
+				'clear filter, vertical scroller appear'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
@@ -38,6 +41,12 @@ define([
 		},
 		{
 			title: 'auto and percentage column width, filter/paging, auto-hide/show vertical scroller',
+			guide: [
+				'change to 20 rows per page, vertical scroller should appear, but still no horizontal scroller',
+				'change back to 5 rows per page, verticall scroller disappear, column width are proper',
+				'change to 20 rows per page, apply filter "Any column contains Voodoo", verticall scroller disapper',
+				'clear filter, vertical scroller appear'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -62,6 +71,12 @@ define([
 		},
 		{
 			title: 'columnWidthAutoResize, filter/paging, auto-hide/show vertical scroller',
+			guide: [
+				'change to 20 rows per page, vertical scroller should appear, but still no horizontal scroller',
+				'change back to 5 rows per page, verticall scroller disappear, column width are proper',
+				'change to 20 rows per page, apply filter "Any column contains Voodoo", verticall scroller disapper',
+				'clear filter, vertical scroller appear'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -86,6 +101,12 @@ define([
 		},
 		{
 			title: 'autoWidth, filter/paging, auto-hide/show vertical scroller',
+			guide: [
+				'change to 20 rows per page, vertical scroller should appear, column width no change, grid becomes a bit wider',
+				'change back to 5 rows per page, verticall scroller disappear, grid becomes narrower',
+				'change to 20 rows per page, apply filter "Any column contains Voodoo", verticall scroller disapper',
+				'clear filter, vertical scroller appear'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,

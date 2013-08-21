@@ -12,7 +12,18 @@ define([
 
 	return [
 		{
-			title: 'All expandoes in one column, sync store',
+			title: 'All expandoes in one column, sync store, virtual scroller',
+			guide: [
+				'expand some rows, scroll down and scroll back, the rendering should be correct',
+				'expand to third level, collapse first level, expand again, the deeper levels should remain expanded',
+				'show 1 row per page, goto 1st page, expand row, goto 2nd page, go back to 1st page, row remain expanded',
+				'select a parent row, all child rows are selected',
+				'select a child row, the parent row is partially selected',
+				'if all child rows are selected, the parent row should appear selected',
+				'if all child rows are deselected, the parent row should appear deselected',
+				'select all checkbox selects everything',
+				'select some child rows, collapse the parent row, expand again, the selection status should remain correct'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 4,
@@ -56,6 +67,10 @@ define([
 		},
 		{
 			title: 'All expandoes in one column, async store',
+			guide: [
+				'when expanding a row, a waiting icon should be shown',
+				'if a row has been expanded before, re-expand it should not wait'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'mockserver',
 			size: 4,
@@ -95,6 +110,9 @@ define([
 		},
 		{
 			title: 'Expandoes in different columns (nested), async store',
+			guide: [
+				'cells before expando are padding cells, should be empty'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'mockserver',
 			size: 4,
@@ -131,6 +149,9 @@ define([
 		},
 		{
 			title: 'Customized expando positions (nested), async store',
+			guide: [
+				'expandoes only occur at columns with *'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'mockserver',
 			size: 4,

@@ -5,6 +5,10 @@ define([
 		{
 			version: 1.2,
 			title: "1 layer of groups, all columns in group",
+			guide: [
+				'resize columns',
+				'resize group headers'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -38,6 +42,10 @@ define([
 		{
 			version: 1.2,
 			title: '1 layer of groups, some columns not in group',
+			guide: [
+				'resize columns',
+				'resize group headers'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -73,6 +81,10 @@ define([
 		{
 			version: 1.2,
 			title: "multiple layers of groups",
+			guide: [
+				'resize columns',
+				'resize group headers'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -135,6 +147,12 @@ define([
 		{
 			version: 1.2,
 			title: "multiple layers of groups, has rowspan",
+			guide: [
+				'resize columns',
+				'resize group headers',
+				'use up/down arrow keys to navigate to/from group header',
+				'use left/right arrow keys to navigate among group headers or columns in the save level'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -178,6 +196,10 @@ define([
 		{
 			version: 1.2,
 			title: "GroupHeader and autoWidth",
+			guide: [
+				'resize columns',
+				'resize group headers'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -222,6 +244,9 @@ define([
 		{
 			version: 1.2,
 			title: "GroupHeader and columnWidthAutoResize",
+			guide: [
+				'make grid wider/narrower'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -265,6 +290,9 @@ define([
 		{
 			version: 1.2,
 			title: "GroupHeader Degenerated to normal header",
+			guide: [
+				'resize columns'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,

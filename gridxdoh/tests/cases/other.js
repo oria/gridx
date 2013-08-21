@@ -20,6 +20,12 @@ define([
 	var cases = [
 		{
 			title: 'empty store and horizontal scroll bar',
+			guide: [
+				'empty message is correctly shown',
+				'empty message does not scroll with horizontal scroller',
+				'set a non empty store',
+				'set back to empty store'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 0,
@@ -40,6 +46,11 @@ define([
 		},
 		{
 			title: 'autoHeight, some rows and horizontal scroller',
+			guide: [
+				'when scrolling mouse wheel on autoHeight grid body, the whole page scrolls instead of the grid content.',
+				'horizontal scroller scrolls correctly',
+				'resize height (taller, shorter) should not have effect'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 10,
@@ -63,6 +74,9 @@ define([
 		},
 		{
 			title: 'autoHeight and empty store',
+			guide: [
+				'autoHeight empty grid should still show complete empty message'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 0,
@@ -86,6 +100,11 @@ define([
 		},
 		{
 			title: 'autoWidth, fixed column width, percentage column width and minWidth',
+			guide: [
+				'Genre column should be 150px wide',
+				'Year column should have default width (60px)',
+				'Length column should have default width (60px)'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -93,10 +112,10 @@ define([
 				{id: 'id', field: 'id', name: 'Identity', width: '50px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre(25%, min 150px)', width: '25%', minWidth: 150},
 				{id: 'Artist', field: 'Artist', name: 'Artist(7em)', width: '7em'},
-				{id: 'Year', field: 'Year', name: 'Year', width: '10%'},
+				{id: 'Year', field: 'Year', name: 'Year (10%)', width: '10%'},
 				{id: 'Album', field: 'Album', name: 'Album', width: '150px'},
 				{id: 'Name', field: 'Name', name: 'Name', width: '160px'},
-				{id: 'Length', field: 'Length', name: 'Length', width: '80px'},
+				{id: 'Length', field: 'Length', name: 'Length (auto)'},
 				{id: 'Track', field: 'Track', name: 'Track', width: '50px'},
 				{id: 'Composer', field: 'Composer', name: 'Composer(10em)', width: '10em'},
 				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '80px'},
@@ -109,6 +128,9 @@ define([
 		},
 		{
 			title: 'autoWidth and columnResizer',
+			guide: [
+				'resize column, the grid width should change accordingly'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 10,
@@ -135,6 +157,9 @@ define([
 		},
 		{
 			title: 'autoWidth and autoHeight and columnResizer',
+			guide: [
+				'resize column, the grid width should change accordingly'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 10,
@@ -162,6 +187,10 @@ define([
 		},
 		{
 			title: 'autoHeight and filterBar and paginationBar',
+			guide: [
+				'filter the grid, the grid height should change accordingly.',
+				'switch pages, the grid height should change accordingly.'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -191,6 +220,8 @@ define([
 		},
 		{
 			title: 'sync cache, as many features as possible',
+			guide: [
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -300,6 +331,9 @@ define([
 		{
 			version: 1.1,
 			title: 'client side filter, filter bar and quick filter',
+			guide: [
+				'do some filter in quick filter, the filter bar and filter dialog should also be updated'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -337,6 +371,10 @@ define([
 		{
 			version: 1.2,
 			title: 'customized header regions',
+			guide: [
+				'when mouse over or focus header, the header regions are shown',
+				'use left/right arrow keys to navigate through regions (including NestedSort)'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -375,6 +413,11 @@ define([
 		},
 		{
 			title: 'cellWidget and pagination',
+			guide: [
+				'Go to different pages, cell widgets should render correctly',
+				'focus any cell in the Button column, press F2 to move focus to the button in the cell.',
+				'when focus is on a button, press ESC to return focus back to cell'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -482,6 +525,13 @@ define([
 		},
 		{
 			title: 'put singlesort and nestedsort together, only the latter one (nestedsort) takes effect',
+			guide: [
+				'initial sorting order is correct',
+				'The last column (Summary Genre and Year) can be correctly sorted',
+				'The Date column can be correctly sorted',
+				'The Time column can be correctly sorted',
+				'NestedSort is used, instead of SingleSort'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -524,6 +574,12 @@ define([
 		{
 			version: 1.2,
 			title: 'Adaptive filter implemented by HeaderMenu',
+			guide: [
+				'A-Z filter can work correctly (different filter items use "or" relation)',
+				'number filter can work correctly',
+				'A-Z filter and number filter can work together (different columns use "and" relation")',
+				'Adaptive filter is accessible by arrow keys, and press ENTER on it to show dropdown menu'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
 			size: 100,
@@ -553,6 +609,11 @@ define([
 		{
 			version: 1.2,
 			title: 'paged body',
+			guide: [
+				'scroll to bottom, click load more button, it should show loading info',
+				'load 3 times, then the first page (0 - 20) should be gone. There is a Load Previous button instead.',
+				'Load Previous and Load More buttons are accessable using TAB'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'mockserver',
 			size: 1000,
@@ -574,6 +635,21 @@ define([
 		},
 		{
 			title: 'Drag and drop (dnd) rearrange',
+			guide: [
+				'select some rows, mouse hover cells of selected rows should show draggable cursor',
+				'Start dragging, the avatar should be shown',
+				'If droppable, the avatar shows green arrow icon',
+				'If not droppable, the avatar shows red stop icon',
+				'the avatar shows how many rows is being dragged',
+				'If only one row is being dragged, the middle icon is only one row, otherwise, the middle icon show 2 rows',
+				'During dragging, when the mouse is at the upper part of a selection range or a row, the target bar is at the upper border',
+				'During dragging, when the mouse is at the lower part of a selection range or a row, the target bar is at the bottom border',
+				'show 50 rows per page, drag some rows to bottom, the grid should scroll automatically',
+				'select some columns, mouse hover cells of selected columns should show draggable cursor',
+				'start dragging columns, check avatar and target bar',
+				'focus on any selected row, CTRL+Up/Down Arrow key to move selected rows',
+				'focus on any selected column, CTRL+LEFT/Right Arrow key to move selected columns'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
 			size: 100,
@@ -613,6 +689,13 @@ define([
 		},
 		{
 			title: "Multiple Focusable Elements in Cell",
+			guide: [
+				'put focus on a cell, press F2 to focus the first button in the cell',
+				'when focus is on the first button in the cell, press TAB to move focus to the next button in the same cell',
+				'when focus is on the last button in a cell, press TAB to move focus to the first button in the next cell',
+				'when focus is on the first button in a cell, press SHIFT+TAB to move focus to the last button in the previous cell',
+				'when focus is in cell, press ESC to move focus back to cell'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,

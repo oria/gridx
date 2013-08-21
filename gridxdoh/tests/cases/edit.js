@@ -106,6 +106,17 @@ define([
 	return [
 		{
 			title: 'dijit editor',
+			guide: [
+				'every column is editable except ID column',
+				'double click cell to enter editing mode',
+				'click anywhere else (lose focus) to apply editted content to store',
+				'when focus on editable cell, press ENTER to enter editing mode',
+				'when in editing mode, press ESC to cancel editing',
+				'when in editing mode, press ENTER to apply editted content to store',
+				'when in editing mode, press TAB to enter next cell\'s editing mode',
+				'when in editing mode of the last cell in the last row, press TAB to enter editing mode of the first cell in the first row.',
+				'when in editing mode of the first cell in the first row, press SHIFT+TAB to enter editing mode of the last cell in the last row.'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -215,6 +226,16 @@ define([
 		},
 		{
 			title: 'custom editor',
+			guide: [
+				'double click cell to enter editing mode',
+				'click anywhere else (lose focus) to apply editted content to store',
+				'when focus on editable cell, press ENTER to enter editing mode',
+				'when in editing mode, press ESC to cancel editing',
+				'when in editing mode, press ENTER to apply editted content to store',
+				'when in editing mode, press TAB to enter next focusable element in the cell, if no such element, go the next cell\'s editing mode',
+				'when in editing mode of the last cell in the last row, press TAB to enter editing mode of the first cell in the first row.',
+				'when in editing mode of the first cell in the first row, press SHIFT+TAB to enter editing mode of the last cell in the last row.'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -254,6 +275,14 @@ define([
 		},
 		{
 			title: 'alwaysEditing',
+			guide: [
+				'Use mouse to focus to the editor in cell to begin editing.',
+				'click anywhere else (lose focus) to apply editted content to store',
+				'Switch to another page, and switch back, to make sure the editted content is really applied to store.',
+				'when focus is on cell, press ENTER to move focus to the editor in cell',
+				'when focus is on cell, press F2 to move focus to the editor in cell',
+				'when focus is on the editor in cell, press ESC to move focus back to cell'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -334,6 +363,13 @@ define([
 		{
 			version: 1.2,
 			title: 'lazy edit',
+			guide: [
+				'when apply editting, a green triangle appears at the right top corner of the cell',
+				'click undo the undo the last unsaved editing',
+				'click redo the redo the last cancelled editing',
+				'click save to save changes to store',
+				'click discard unsaved changes to undo everything'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,

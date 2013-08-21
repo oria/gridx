@@ -10,6 +10,14 @@ define([
 	return [
 		{
 			title: 'unselectable row + select/Row',
+			guide: [
+				'initially unselectable rows are unselectable',
+				'toggle selectable row to unselectable',
+				'toggle unselectable row to selectable',
+				'select a row, then set it to unselectable',
+				'scroll to bottom, then scroll back, unselectable rows are still unselectable',
+				'sort grid, unselectable rows are correct'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
 			size: 100,
@@ -47,6 +55,13 @@ define([
 						row.setSelectable(!selectable);
 					}
 				});
+				util.add('div', {
+					innerHTML: 'Initially unselectable rows:'
+				});
+				util.add('div', {
+					innerHTML: [1, 2, 5, 6, 10, 15, 80, 88, 99].join(', ')
+				});
+
 				util.addButton('Get Selected Rows', function(){
 					alert('Selected Rows:' + grid.select.row.getSelected());
 				});
@@ -54,6 +69,13 @@ define([
 		},
 		{
 			title: 'unselectable row + extendedSelect/Row',
+			guide: [
+				'initially unselectable rows are unselectable',
+				'select first 20 rows',
+				'deselect first 20 rows',
+				'select last 20 rows',
+				'deselect last 20 rows'
+			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
 			size: 100,
@@ -64,7 +86,11 @@ define([
 				{id: 'Track', field: 'Track', name: 'Track'},
 				{id: 'Download Date', field: 'Download Date', name: 'Download Date'},
 				{id: 'Last Played', field: 'Last Played', name: 'Last Played'},
-				{id: 'Heard', field: 'Heard', name: 'Heard'}
+				{id: 'setSelectable', name: 'Set Selectable', width: '150px',
+					decorator: function(data, rowId){
+						return '<button class="toggleSelectableButton">Toggle Selectable</button>';
+					}
+				}
 			],
 			modules: [
 				"gridx/modules/RowHeader",
@@ -81,21 +107,37 @@ define([
 					5: true,
 					6: true,
 					10: true,
-					15: true
+					15: true,
+					80: true,
+					88: true,
+					99: true
 				}
 			},
 			onCreated: function(grid){
-				util.addButton('Select rows from 1 to 20', function(){
-					dijit.byId('grid2').select.row.selectByIndex([1, 20]);
+				grid.connect(grid, 'onCellClick', function(evt){
+					if(domClass.contains(evt.target, 'toggleSelectableButton')){
+						var row = grid.row(evt.rowId, true);
+						var selectable = row.isSelectable();
+						row.setSelectable(!selectable);
+					}
 				});
-				util.addButton('Deselect rows from 1 to 20', function(){
-					dijit.byId('grid2').select.row.deselectByIndex([1,20]);
+				util.add('div', {
+					innerHTML: 'Initially unselectable rows:'
 				});
-				util.addButton('Set Row 5 unselectable', function(){
-					grid.row(5,1).setSelectable(0);
+				util.add('div', {
+					innerHTML: [1, 2, 5, 6, 10, 15, 80, 88, 99].join(', ')
 				});
-				util.addButton('Set Row 5 selectable', function(){
-					grid.row(5,1).setSelectable(1);
+				util.addButton('Select first 20 rows', function(){
+					grid.select.row.selectByIndex([0, 19]);
+				});
+				util.addButton('Deselect first 20 rows', function(){
+					grid.select.row.deselectByIndex([0, 19]);
+				});
+				util.addButton('Select last 20 rows', function(){
+					grid.select.row.selectByIndex([79, 99]);
+				});
+				util.addButton('Deselect last 20 rows', function(){
+					grid.select.row.deselectByIndex([79, 99]);
 				});
 				util.addButton('Get selected rows', function(){
 					alert('selectd rows: ' + grid.select.row.getSelected().toString());
@@ -103,7 +145,11 @@ define([
 			}
 		},
 		{
-			title: 'unselectable rows in tree grid',
+			title: 'unselectable rows in tree grid (tree mode selection is true)',
+			guide: [
+				'set item 1-1 to unselectable, select/deselect its children, item 1-1 status should also change',
+				'set item 1-1-1 to unselectable, select/deselect item 1-1, item 1-1-1 status should also change'
+			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 4,
