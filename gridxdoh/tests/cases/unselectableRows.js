@@ -16,7 +16,8 @@ define([
 				'toggle unselectable row to selectable',
 				'select a row, then set it to unselectable',
 				'scroll to bottom, then scroll back, unselectable rows are still unselectable',
-				'sort grid, unselectable rows are correct'
+				'sort grid, unselectable rows are correct',
+				'set empty columns, there should be no rowHeader shown.'
 			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',

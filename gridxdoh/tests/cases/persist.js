@@ -92,7 +92,8 @@ define([
 				'persist sort order only',
 				'persist hidden columns only',
 				'not persist anything',
-				'[10860]sort one column, resize another column to min width, mouse over header, grid should vertically relayout'
+				'[10860]sort one column, resize another column to min width, mouse over header, grid should vertically relayout',
+				'[10940]scroll to bottom, add an empty row, the alwaysEditing column should display empty editor.'
 			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
