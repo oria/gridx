@@ -272,6 +272,7 @@
 }
 
 .gridxRowHeaderRow {
+	overflow: hidden;
 	background: url("images/header.png") #EDF2F7 repeat-x bottom;
 	background: #edf2f7; /* Old browsers */
 	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
