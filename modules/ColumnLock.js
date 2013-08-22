@@ -177,7 +177,7 @@ define([
 				var cell = r.cells[i],
 					s;
 				domClass.add(cell, 'gridxLockedCell');
-				
+
 				s = {height: h1 + 'px'};
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				domStyle.set(cell, s);
