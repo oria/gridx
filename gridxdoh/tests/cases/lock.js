@@ -65,7 +65,8 @@ define([
 				'Locked row should be over unlocked rows when vertical scrolling',
 				'RowHeader should align with locked rows during vertical scrolling',
 				'unlock rows',
-				'Edit some cell in locked row to make it higher, the rows should keep align well'
+				'Edit some cell in locked row to make it higher, the rows should keep align well',
+				'[10911]scroll down a bit, the text in the always editing cells in the unlocked rows are invisible'
 			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
