@@ -19,7 +19,7 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://do
 
 ## Installation
 
-1.  [CPM installation](https://github.com/kriszyp/cpm) with the following command:
+1.  [CPM installation](https://github.com/kriszyp/cpm) with the following command [WARNING: CURRENTLY NOT AVAILABLE]:
 
     ``cpm install gridx``
 
