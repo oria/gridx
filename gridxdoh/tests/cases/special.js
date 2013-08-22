@@ -9,7 +9,8 @@ define([
 				'no error',
 				'grid show empty info',
 				'set column to show header',
-				'set store to show data'
+				'set store to show data',
+				'[10861]click grid dom node, throw no error'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
@@ -24,7 +25,9 @@ define([
 				'add row',
 				'toggle bodyStuffEmptyCell',
 				'toggle bodyRowHoverEffect',
-				'remove row to empty'
+				'remove row to empty',
+				'[10909]click toggle bodyRowHoverEffect, row hover effect should be off, click toggle bodyRowHoverEffect again, row hover effect should be on agian',
+				'[10862]toggle header, grid should grow taller when header becomes visible; shorter when invisible.'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',

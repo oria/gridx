@@ -189,7 +189,9 @@ define([
 			title: 'autoHeight and filterBar and paginationBar',
 			guide: [
 				'filter the grid, the grid height should change accordingly.',
-				'switch pages, the grid height should change accordingly.'
+				'switch pages, the grid height should change accordingly.',
+				'[10741]open filter dialog, set column to "year", set condition to "isEmpty", click filter, open filter dialog again, the value combobox should be empty, not "1970-01-01"',
+				'[10968]click "toggle header" twice times, horizontal scroll the bar and check column header, header column should be aligned'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',

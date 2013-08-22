@@ -13,7 +13,8 @@ define([
 				'unlock columns',
 				'set columns when some columns are locked',
 				'lock some columns, resize columns until there is no horizontal scroller',
-				'resize columns show horizontal scroller again'
+				'resize columns show horizontal scroller again',
+				'[10911]scroll down a bit, the text in the always editing cells in the unlocked rows are still visible through locked rows.'
 			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',
