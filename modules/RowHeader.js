@@ -152,15 +152,14 @@ define([
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
-				nt = n.firstChild,
 				cp = t.arg('cellProvider');
 			n.setAttribute('rowid', row.id);
 			n.setAttribute('rowindex', row.index());
 			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');
 			if(cp){
-				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
+				n.firstChild.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
 			}
-			t._syncRowHeight(nt, bn);
+			t._syncRowHeight(n, bn);
 		},
 
 		_onAfterCell: function(cell){
@@ -169,7 +168,7 @@ define([
 				visualIndex = cell.row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
-			t._syncRowHeight(n.firstChild, bn);
+			t._syncRowHeight(n, bn);
 		},
 
 		_syncRowHeight: function(rowHeaderNode, bodyNode){
