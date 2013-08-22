@@ -64,6 +64,8 @@ define([
 					_this.connect(g.body, 'onAfterRow', function(row){
 						_this._lockColumns(row.node());
 					});
+					
+					_this.connect(g.header, 'onRender', '_updateHeader');
 					_this.connect(g.columnWidth, 'onUpdate', '_updateHeader');
 					_this.connect(g, 'resize', '_updateUI');
 					if(g.columnResizer){
