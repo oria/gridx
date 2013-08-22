@@ -102,7 +102,7 @@ define([
 				if(!col.hasOwnProperty('declaredWidth')){
 					col.declaredWidth = col.width = col.width || 'auto';
 				}
-				if(g.autoWidth && col.declaredWidth == 'auto'){
+				if(g.autoWidth && (col.declaredWidth == 'auto' || /%$/.test(col.declaredWidth))){
 					col.width = defaultWidth;
 				}else if(autoResize && !(/%$/).test(col.declaredWidth)){
 					col.width = 'auto';
