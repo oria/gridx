@@ -1,5 +1,5 @@
 define([
-	'gridx/modules/Focus',
+	
 	'gridx/modules/VScroller',
 	'gridx/modules/ColumnResizer',
 	'gridx/modules/VirtualVScroller',
@@ -44,9 +44,10 @@ define([
 	'gridx/modules/AutoPagedBody',
 	'gridx/modules/MultiChannelScroller',
 	'gridx/modules/HeaderMenu',
-	'gridx/modules/SlantedHeader'
+	'gridx/modules/SlantedHeader',
+	'gridx/modules/ExpandableColumn'
 ], function(
-	Focus, VScroller, ColumnResizer, VirtualVScroller,
+	VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
@@ -59,9 +60,9 @@ define([
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
 	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, TouchVScroller,
-	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody, MultiChannelScroller, HeaderMenu){
+	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody, MultiChannelScroller, HeaderMenu, SlantedHeader, ExpandableColumn){
 return {
-	Focus: Focus,
+	//Focus: Focus,
 	VScroller: VScroller,
 	ColumnResizer: ColumnResizer,
 	VirtualVScroller: VirtualVScroller,
@@ -105,6 +106,8 @@ return {
 	PagedBody: PagedBody,
 	AutoPagedBody: AutoPagedBody,
 	MultiChannelScroller: MultiChannelScroller,
-	HeaderMenu: HeaderMenu
+	HeaderMenu: HeaderMenu,
+	SlantedHeader: SlantedHeader,
+	ExpandableColumn: ExpandableColumn
 };
 });

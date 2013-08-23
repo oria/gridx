@@ -6,7 +6,7 @@
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
 		.gridx {
-			
+			width: 400px;
 			height: 300px;
 		}
 		.gridxCell {
@@ -26,12 +26,14 @@
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout,
-		headerGroups: headerGroups1,
-		autoWidth: true,
+		
+		autoWidth: false,
 		modules: [
-			"gridx/modules/GroupHeader",
+
 			"gridx/modules/SlantedHeader"
-			,"gridx/modules/ColumnResizer"
+			,"gridx/modules/GroupHeader"
+			,"gridx/modules/ExpandableColumn"
+
 		]
 	'></div>
 	
