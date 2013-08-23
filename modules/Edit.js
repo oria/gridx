@@ -471,8 +471,7 @@ define([
 			},
 
 			editor: function(){
-				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
-				return cw && cw.gridCellEditField;
+				return this.grid.edit.getEditor(this.row.id, this.column.id);
 			},
 
 			isEditable: function(){
