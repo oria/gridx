@@ -462,9 +462,9 @@ define([
 						setCellValue: col.setCellValue
 					});
 					this.onCellWidgetCreated(widget, cell.column);
-					// if(col.onCellWidgetCreated){
-						// col.onCellWidgetCreated(widget, cell.column);
-					// }
+					if(col.onCellWidgetCreated){
+						col.onCellWidgetCreated(widget, cell.column);
+					}
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}

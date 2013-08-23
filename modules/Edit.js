@@ -470,8 +470,7 @@ define([
 			},
 
 			editor: function(){
-				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
-				return cw && cw.gridCellEditField;
+				return this.grid.edit.getEditor(this.row.id, this.column.id);
 			},
 
 			isEditable: function(){
@@ -520,9 +519,9 @@ define([
 							lang.partial(getTypeData, col)));
 					t._record(rowId, colId);
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
+						g.resize();
 						t._focusEditor(rowId, colId);
 						d.callback(true);
-						g.resize();
 						t.onBegin(g.cell(rowId, colId, 1));
 					});
 				}else{
@@ -735,15 +734,14 @@ define([
 			});
 		},
 
-		//FIXME: this is duplicated code, see CellWidget.
 		_dummyDecorator: function(data, rowId, visualIndex, cell){
 			var column = cell.column;
 			if(!column.needCellWidget || column.needCellWidget(cell)){
 				return '';
 			}
-			//If not editable, make user decorator take effect.
-			if(col._userDec){
-				return col._userDec(data, rowId, visualIndex, cell);
+			//If not editable, allow user decorator to take effect.
+			if(column._userDec){
+				return column._userDec(data, rowId, visualIndex, cell);
 			}
 			return data;
 		},
@@ -786,20 +784,10 @@ define([
 		},
 
 		_focusEditor: function(rowId, colId, forced){
-			var t = this,
-				cw = t.grid.cellWidget,
-				func = function(){
-					var widget = cw.getCellWidget(rowId, colId),
-						editor = widget && widget.gridCellEditField;
-					if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
-						t.grid.hScroller.scrollToColumn(colId);
-						editor.focus();
-					}
-				};
-			if(has('webkit')){
-				func();
-			}else{
-				setTimeout(func, 1);
+			var editor = this.getEditor(rowId, colId);
+			if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
+				this.grid.hScroller.scrollToColumn(colId);
+				editor.focus();
 			}
 		},
 
@@ -925,6 +913,7 @@ define([
 				view = g.view,
 				body = g.body;
 			if(t._editing && step){
+				g.focus.stopEvent(evt);
 				var rowIndex = view.getRowInfo({
 						parentId: t.model.parentId(t._focusCellRow),
 						rowIndex: t.model.idToIndex(t._focusCellRow)
@@ -935,7 +924,6 @@ define([
 						return g._columns[c].editable;
 					};
 				body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-					g.focus.stopEvent(evt);
 					t._applyAll();
 					t._focusCellCol = g._columns[obj.c].id;
 					var rowInfo = view.getRowInfo({visualIndex: obj.r});
