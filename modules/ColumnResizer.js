@@ -75,34 +75,45 @@ define([
 
 		setWidth: function(colId, width){
 			var t = this,
-				g = t.grid, i,
-				cols = g._columns,
-				col = g._columnsById[colId],
-				minWidth = t.arg('minWidth'),
-				oldWidth;
-			width = parseInt(width, 10);
-			if(width < minWidth){
-				width = minWidth;
-			}
-			col.width = width + 'px';
-			for(i = 0; i < cols.length; ++i){
-				cols[i].declaredWidth = cols[i].width;
-			}
-			query('[colid="' + g._escapeId(colId) + '"]', g.domNode).forEach(function(cell){
-				if(!oldWidth){
-					oldWidth = domStyle.get(cell, 'width');
+				g = t.grid,
+				col = g._columnsById[colId];
+			if(col){
+				var headerNode = g.header.getHeaderNode(colId),
+					headerNodeStyle = headerNode.style,
+					oldWidth = domStyle.get(headerNode, 'width'),
+					minWidth = t.arg('minWidth'),
+					cols = g._columns;
+
+				width = parseInt(width, 10);
+				if(width < minWidth){
+					width = minWidth;
 				}
-				var cs = cell.style;
-				cs.width = width + 'px';
-				cs.minWidth = width + 'px';
-				cs.maxWidth = width + 'px';
-			});
-			g.body.onRender();
-			g.vLayout.reLayout();
-			if(g.autoWidth){
-				g.hLayout.reLayout();
+				headerNodeStyle.width = width + 'px';
+				headerNodeStyle.minWidth = width + 'px';
+				headerNodeStyle.maxWidth = width + 'px';
+				width = headerNode.clientWidth;
+				//set again in case actual effect is different from what we expect.
+				headerNodeStyle.width = width + 'px';
+				headerNodeStyle.minWidth = width + 'px';
+				headerNodeStyle.maxWidth = width + 'px';
+				//Use actual width as our new column width
+				col.width = width + 'px';
+				for(var i = 0, len = cols.length; i < len; ++i){
+					cols[i].declaredWidth = cols[i].width;
+				}
+				query('[colid="' + g._escapeId(colId) + '"]', g.bodyNode).forEach(function(cell){
+					var cs = cell.style;
+					cs.width = width + 'px';
+					cs.minWidth = width + 'px';
+					cs.maxWidth = width + 'px';
+				});
+				g.body.onRender();
+				g.vLayout.reLayout();
+				if(g.autoWidth){
+					g.hLayout.reLayout();
+				}
+				t.onResize(colId, width, oldWidth);
 			}
-			t.onResize(colId, width, oldWidth);
 		},
 
 		//Event--------------------------------------------------------------
