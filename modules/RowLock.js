@@ -12,7 +12,6 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
-		//		module name: rowLock.
 		//		Lock up some rows at the top of the grid body, so that they don't scroll vertically.
 		// description:
 		//		This module is not compatible with VirtualVScroller.
@@ -37,33 +36,44 @@ define([
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;
+			
 			deferStartup.then(function(){
+				
 				if(_this.grid.vScroller)_this.connect(g.vScrollerNode, 'onscroll', function(){
 					_this._updatePosition();
 				});
+				
 				_this.lock(_this.count);
 				_this.loaded.callback();
 			});
 		},
+		
 		lock: function(count){
 			this.unlock();
 			this.count = count;
 			this._foreachLockedRows(function(node){
 				node.style.position = 'absolute';
 				domClass.add(node, 'gridxLockedRow');
+			}, function(rowHeaderNode){
+				rowHeaderNode.style.position = 'absolute';
 			});
+			
 			this._adjustBody();
 			this._updatePosition();
 		},
+		
 		unlock: function(){
 			this._foreachLockedRows(function(node){
 				node.style.position = 'static';
 				domClass.remove(node, 'gridxLockedRow');
+			}, function(rowHeaderNode){
+				rowHeaderNode.style.position = 'static';
 			});
 			this.grid.bodyNode.style.paddingTop = '0px';
 			this.count = 0;
 			
 		},
+		
 		_adjustBody: function(){
 			// summary:
 			//	Called after content is changed or column width is resized, which
@@ -71,9 +81,15 @@ define([
 			var h = 0;
 			this._foreachLockedRows(function(node){
 				h += node.offsetHeight;
+			}, function(rowHeaderNode){
+				
 			});
 			this.grid.bodyNode.style.paddingTop = h + 'px';
+			if(this.grid.rowHeader){
+				this.grid.rowHeader.bodyNode.style.paddingTop = h + 'px';			
+			} 
 		},
+		
 		_updatePosition: function(){
 			// summary:
 			//	Update position of locked rows so that they look like locked.
@@ -82,13 +98,24 @@ define([
 			this._foreachLockedRows(function(node){
 				node.style.top = t + h + 'px';
 				h += node.offsetHeight;
+			}, function(rowHeaderNode){
+				rowHeaderNode.style.top = t + h + 'px';
 			});
 		},
-		_foreachLockedRows: function(callback){
+		
+		_foreachLockedRows: function(callback, rowHeaderCallback){
+			rowHeaderCallback = rowHeaderCallback? rowHeaderCallback : callback;
 			var nodes = this.grid.bodyNode.childNodes;
+			var rowHeaderNodes = this.grid.rowHeader? this.grid.rowHeader.bodyNode.childNodes : [];
 			for(var i = 0; i < this.count; i++){
-				callback(nodes[i]);
+				if(rowHeaderNodes[i]){
+					rowHeaderCallback(rowHeaderNodes[i]);
+				}
+				if(nodes[i]){
+					callback(nodes[i]);
+				}
 			}
 		}
+		
 	});
 });

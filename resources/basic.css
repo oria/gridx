@@ -262,6 +262,11 @@
 	height: 100%;
 	overflow: hidden;
 	border-right: 1px solid #E5DAC8;
+	box-sizing: border-box; /* css3 rec */
+	-moz-box-sizing: border-box; /* ff2 */
+	-ms-box-sizing: border-box; /* ie8 */
+	-webkit-box-sizing: border-box; /* safari3 */
+	-khtml-box-sizing: border-box; /* konqueror */  
 }
 
 .gridxRowHeaderBody table {
