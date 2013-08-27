@@ -49,7 +49,6 @@ define([
 				[sr,'onHighlightChange', '_onHighlightChange' ],
 				[sr,'clear', '_onClear' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
-				[sr, 'setSelectable', '_onSelectionChange'],
 				[g, 'onRowMouseOver', '_onMouseOver'],
 				[g, 'onRowMouseOut', '_onMouseOut'],
 				[g, 'onRowKeyDown', '_onKeyDown'],
