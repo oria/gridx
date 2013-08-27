@@ -280,6 +280,7 @@ define([
 					bn.scrollTop += deltaT;
 				}
 			}
+			t._doVirtual();
 		},
 		
 		_doScroll: function(e, forced){
@@ -306,7 +307,6 @@ define([
 			var t = this;
 			t._update();
 			t._doScroll(0, 1);
-			t._doVirtual();
 			//If some scrollToRow requests are pending, resume them.
 			array.forEach(t._scrolls, function(d){
 				if(d.scrollContext){
@@ -321,7 +321,6 @@ define([
 		_onForcedScroll: function(){
 			this._rowHeight = {};
 			this._doScroll(0, 1);
-			this._doVirtual();
 		},
 
 		//Private ---------------------------------------------------
@@ -390,7 +389,7 @@ define([
 				h += rh[p];
 				++c;
 			}
-			if(c){
+			if(h && c){
 				t._avgRowHeight = h / c;
 				t._syncHeight();
 			}
