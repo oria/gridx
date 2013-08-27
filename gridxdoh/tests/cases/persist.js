@@ -15,7 +15,7 @@ define([
 			}
 		};
 		util.add('label', {
-			innerHTML: 'Persist ' + (name || 'Everything')
+			innerHTML: 'Persist ' + (name || 'enabled')
 		});
 		util.add('br');
 	}

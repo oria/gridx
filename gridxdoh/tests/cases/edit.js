@@ -356,6 +356,7 @@ define([
 			modules: [
 				"gridx/modules/CellWidget",
 				"gridx/modules/Edit",
+				"gridx/modules/VirtualVScroller",
 				modules.Pagination,
 				"gridx/modules/pagination/PaginationBar"
 			]
