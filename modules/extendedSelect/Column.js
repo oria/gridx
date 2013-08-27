@@ -244,13 +244,11 @@ define([
 		},
 
 		_beginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollV = autoScroll.vertical;
-			autoScroll.vertical = false;
+			this.grid.autoScroll.vertical = false;
 		},
 
 		_endAutoScroll: function(){
-			this.grid.autoScroll.vertical = this._autoScrollV;
+			this.grid.autoScroll.vertical = true;
 		},
 
 		_doHighlight: function(target, toHighlight){

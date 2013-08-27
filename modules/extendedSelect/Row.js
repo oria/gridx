@@ -379,13 +379,11 @@ define([
 		},
 
 		_beginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollH = autoScroll.horizontal;
-			autoScroll.horizontal = false;
+			this.grid.autoScroll.horizontal = false;
 		},
 
 		_endAutoScroll: function(){
-			this.grid.autoScroll.horizontal = this._autoScrollH;
+			this.grid.autoScroll.horizontal = true;
 		},
 
 		_doHighlight: function(target, toHighlight){
