@@ -404,7 +404,7 @@ define([
 				h += rh[p];
 				++c;
 			}
-			if(c){
+			if(h && c){
 				t._avgRowHeight = h / c;
 				t._syncHeight();
 			}
