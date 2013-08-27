@@ -164,6 +164,7 @@ define([
 			if(n){
 				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+				t.onSelectionChange();
 			}
 		},
 
