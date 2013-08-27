@@ -194,9 +194,10 @@ define([
 
 		_getUnselectableRows: function(){
 			var ret = [],
+				t = this,
 				unselectable = this.arg('unselectable');
 			for(var id in unselectable){
-				if(this.unselectable[id]){
+				if(this.unselectable[id] && t.model.byId(id)){
 					ret.push(id);
 				}
 			}
@@ -244,7 +245,9 @@ define([
 							event.stop(e);
 						}
 					}
-				}]);
+				}],
+				[g, 'setStore', '_syncUnselectable']
+				);
 		},
 
 		_onMark: function(id, toMark, oldState, type){
@@ -293,6 +296,14 @@ define([
 					id = rowNode.getAttribute('rowid');
 					t._highlight(id, model.getMark(id));
 				}
+			}
+		},
+		
+		_syncUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
 			}
 		}
 	});
