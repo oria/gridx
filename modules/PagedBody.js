@@ -84,6 +84,7 @@ define([
 					t.renderCount = view.visualCount;
 					query('.gridxRow', t.domNode).forEach(function(node, i){
 						node.setAttribute('visualindex', i);
+						domClass.toggle(node, 'gridxRowOdd', i % 2);
 					});
 					domConstruct.place(btnNode, t.domNode, isPost ? 'last' : 'first');
 					if(!isPost){
@@ -104,6 +105,10 @@ define([
 				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', nls['load' + cls + 'Loading']) :
 				t.arg('load' + cls + 'Label', nls['load' + cls]);
 			btn.disabled = !!begin;
+		},
+
+		_checkSpace: function(){
+			return this.inherited(arguments) && this.renderCount < this.arg('maxPageCount') * this.arg('pageSize');
 		}
 	});
 });
