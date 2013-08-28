@@ -183,9 +183,9 @@ define([
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			rowHeaderNode.style.height = getHeight();
+			rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 			setTimeout(function(){
-				rowHeaderNode.style.height = getHeight();
+				rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 			}, 0);
 		},
 
@@ -251,10 +251,9 @@ define([
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
-					var bn = this.grid.dod? brn : brn.firstChild;
-					n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
-					
-					// n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(brn.firstChild).height : brn.firstChild.offsetHeight + 'px';
+					var bn = this.grid.dod ? brn : brn.firstChild;
+					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
+					n.style.height = n.firstChild.style.height = h;
 			}
 			var t = this,
 				g = t.grid,
