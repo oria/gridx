@@ -48,7 +48,7 @@ define([
 				sr = g.select.row,
 				columns = g._columns,
 				w = t.arg('width'),
-				col = {
+				col = t._col = {
 					id: indirectSelectColumnId,
 					decorator: lang.hitch(this, '_createSelector'),
 					headerStyle: 'text-align: center;',
@@ -63,6 +63,7 @@ define([
 					width: w
 				};
 			t.batchConnect(
+				[g, 'setColumns', '_onSetColumns'],
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
@@ -81,11 +82,7 @@ define([
 				}],
 				[g, 'onCellMouseOver', '_onMouseOver'],
 				[g, 'onCellMouseOut', '_onMouseOut']);
-			columns.splice(t.arg('position'), 0, col);
-			g._columnsById[col.id] = col;
-			array.forEach(columns, function(c, i){
-				c.index = i;
-			});
+			t._onSetColumns();
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				col.name = t._createSelectAllBox();
@@ -102,6 +99,17 @@ define([
 				});
 			}
 			g.header._build();
+		},
+
+		_onSetColumns: function(){
+			var g = this.grid,
+				columns = g._columns,
+				col = this._col;
+			columns.splice(this.arg('position'), 0, col);
+			g._columnsById[col.id] = col;
+			array.forEach(columns, function(c, i){
+				c.index = i;
+			});
 		},
 
 		_createSelectAllBox: function(){
