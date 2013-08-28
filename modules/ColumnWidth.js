@@ -103,7 +103,8 @@ define([
 					col.declaredWidth = col.width = col.width || 'auto';
 				}
 				if(g.autoWidth && (col.declaredWidth == 'auto' || /%$/.test(col.declaredWidth))){
-					col.width = defaultWidth;
+					//If minWidth exists, check it
+					col.width = t['default'] < col.minWidth ? col.minWidth + 'px' : defaultWidth;
 				}else if(autoResize && !(/%$/).test(col.declaredWidth)){
 					col.width = 'auto';
 				}
