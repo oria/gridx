@@ -97,13 +97,12 @@
 	overflow: hidden;
 }
 
-.dj_ie .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
-	border: 1px dashed darkblue;
-}
-@media screen and (min-device-width: 1024px) {
 .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
 	border: 1px dashed darkblue;
 }
+.dj_android .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus,
+.dj_ios .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
+	border-color: transparent;
 }
 
 .gridxHeaderRow :focus {
@@ -291,17 +290,15 @@
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
 }
 
-.dj_ie .gridxRowHeaderHeader .gridxHeaderCellFocus {
-	border-top: 1px dashed darkblue;
-	border-bottom: 1px dashed darkblue;
-}
-
-@media screen and (min-device-width: 1024px) {
 .gridxRowHeaderHeader .gridxHeaderCellFocus {
 	border-top: 1px dashed darkblue;
 	border-bottom: 1px dashed darkblue;
 }
+.dj_android .gridxRowHeaderHeader .gridxHeaderCellFocus,
+.dj_ios .gridxRowHeaderHeader .gridxHeaderCellFocus {
+	border-color: transparent;
 }
+
 .gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }
