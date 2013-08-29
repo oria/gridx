@@ -47,21 +47,10 @@ define([
 				[sr,'onHighlightChange', '_onHighlightChange' ],
 				[sr,'clear', '_onClear' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
-				[g, 'onRowMouseOver', '_onMouseOver'],
-				[g, 'onRowMouseOut', '_onMouseOut'],
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
-				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
-				focus && [focus, 'onFocusArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOver();
-					}
-				}],
-				focus && [focus, 'onBlurArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOut();
-					}
-				}]);
+				g.filter && [g.filter, 'onFilter', '_onSelectionChange']);
+			g.select.row.holdingCtrl = true;
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
@@ -156,21 +145,6 @@ define([
 				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
 				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
-			}
-		},
-		
-		_onMouseOver: function(){
-			var sr = this.grid.select.row;
-			if(!sr.holdingCtrl){
-				this._holdingCtrl = false;
-				sr.holdingCtrl = true;
-			}
-		},
-
-		_onMouseOut: function(){
-			if(this.hasOwnProperty('_holdingCtrl')){
-				this.grid.select.row.holdingCtrl = false;
-				delete this._holdingCtrl;
 			}
 		},
 

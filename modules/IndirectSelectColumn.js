@@ -62,6 +62,7 @@ define([
 					declaredWidth: w,
 					width: w
 				};
+			sr.holdingCtrl = true;
 			t.batchConnect(
 				[g, 'setColumns', '_onSetColumns'],
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
@@ -198,10 +199,6 @@ define([
 					this._triggerOnCell = false;
 					sr.triggerOnCell = true;
 				}
-				if(!sr.arg('holdingCtrl')){
-					this._holdingCtrl = false;
-					sr.holdingCtrl = true;
-				}
 			}else{
 				this._onMouseOut();
 			}
@@ -212,10 +209,6 @@ define([
 			if(this.hasOwnProperty('_triggerOnCell')){
 				sr.triggerOnCell = false;
 				delete this._triggerOnCell;
-			}
-			if(this.hasOwnProperty('_holdingCtrl')){
-				sr.holdingCtrl = false;
-				delete this._holdingCtrl;
 			}
 		},
 
