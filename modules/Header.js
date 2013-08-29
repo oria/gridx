@@ -131,8 +131,8 @@ define([
 		refresh: function(){
 			this._build();
 			this._onHScroll(this._scrollLeft);
-			this.onRender();
 			this.grid.vLayout.reLayout();
+			this.onRender();
 		},
 
 		onRender: function(){},
