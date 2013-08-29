@@ -78,6 +78,7 @@ define([
 						t._onMouseOut();
 					}
 				}],
+				[g.body, 'onRender', '_updateSelectAll'],
 				[g, 'onCellMouseOver', '_onMouseOver'],
 				[g, 'onCellMouseOut', '_onMouseOut']);
 			t._onSetColumns();
@@ -108,6 +109,12 @@ define([
 			array.forEach(columns, function(c, i){
 				c.index = i;
 			});
+		},
+
+		_updateSelectAll: function(){
+			var newHeader = this._createSelectAllBox();
+			this.grid._columnsById[indirectSelectColumnId].name = newHeader;
+			this.grid.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
 		},
 
 		_createSelectAllBox: function(){
@@ -260,9 +267,7 @@ define([
 				}
 				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
-					var newHeader = t._createSelectAllBox();
-					g._columnsById[indirectSelectColumnId].name = newHeader;
-					g.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
+					t._updateSelectAll();
 				});
 			}
 		}
