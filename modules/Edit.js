@@ -14,13 +14,14 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-construct",
 	"dojo/keys",
+	"dijit/a11y",
 	"../core/_Module",
 	"dojo/date/locale",
 	'../core/model/extensions/Modify',
 	'dojo/_base/event',
 	"dijit/form/TextBox"
 //    "dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, _Module, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, a11y, _Module, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -79,6 +80,7 @@ define([
 
 	var Edit = declare(_Module, {
 		// summary:
+		//		module name: edit.
 		//		This module provides editing mode for grid cells.
 		// description:
 		//		This module relies on an implementation of the CellWidget module.
@@ -655,7 +657,7 @@ define([
 			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
 			return widget && widget.gridCellEditField;
 		},
-		
+
 		getLazyData: function(rowId, colId){
 			var t = this,
 				f = t.grid._columnsById[colId].field;
@@ -913,26 +915,33 @@ define([
 				view = g.view,
 				body = g.body;
 			if(t._editing && step){
-				g.focus.stopEvent(evt);
-				var rowIndex = view.getRowInfo({
-						parentId: t.model.parentId(t._focusCellRow),
-						rowIndex: t.model.idToIndex(t._focusCellRow)
-					}).visualIndex,
-					colIndex = g._columnsById[t._focusCellCol].index,
-					dir = step > 0 ? 1 : -1,
-					checker = function(r, c){
-						return g._columns[c].editable;
-					};
-				body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-					t._applyAll();
-					t._focusCellCol = g._columns[obj.c].id;
-					var rowInfo = view.getRowInfo({visualIndex: obj.r});
-					t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-					//This breaks encapsulation a little....
-					body._focusCellCol = obj.c;
-					body._focusCellRow = obj.r;
-					t.begin(t._focusCellRow, t._focusCellCol);
+				var cellNode = g.body.getCellNode({
+					rowId: t._focusCellRow,
+					colId: t._focusCellCol
 				});
+				var elems = a11y._getTabNavigable(cellNode);
+				if(evt && evt.target == (step < 0 ? elems.first : elems.last)){
+					g.focus.stopEvent(evt);
+					var rowIndex = view.getRowInfo({
+							parentId: t.model.parentId(t._focusCellRow),
+							rowIndex: t.model.idToIndex(t._focusCellRow)
+						}).visualIndex,
+						colIndex = g._columnsById[t._focusCellCol].index,
+						dir = step > 0 ? 1 : -1,
+						checker = function(r, c){
+							return g._columns[c].editable;
+						};
+					body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
+						t._applyAll();
+						t._focusCellCol = g._columns[obj.c].id;
+						var rowInfo = view.getRowInfo({visualIndex: obj.r});
+						t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+						//This breaks encapsulation a little....
+						body._focusCellCol = obj.c;
+						body._focusCellRow = obj.r;
+						t.begin(t._focusCellRow, t._focusCellCol);
+					});
+				}
 				return false;
 			}
 			return true;
