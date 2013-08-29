@@ -68,6 +68,7 @@ define([
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
+				[g.body, 'onRender', '_onSelectionChange'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
@@ -79,7 +80,6 @@ define([
 						t._onMouseOut();
 					}
 				}],
-				[g.body, 'onRender', '_updateSelectAll'],
 				[g, 'onCellMouseOver', '_onMouseOver'],
 				[g, 'onCellMouseOut', '_onMouseOut']);
 			t._onSetColumns();
@@ -221,7 +221,7 @@ define([
 			]([0, g.view.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 			var t = this, d,
 				g = t.grid,
 				allSelected,
@@ -230,7 +230,7 @@ define([
 				start = view.rootStart,
 				count = view.rootCount;
 			if(g.select.row.selectByIndex && t.arg('all')){
-				var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
 					return !model.treePath(id).pop();
 				});
 				var unselectableRows = g.select.row._getUnselectableRows();
