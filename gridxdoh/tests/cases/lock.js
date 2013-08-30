@@ -26,7 +26,7 @@ define([
 				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px', editable: true},
 				{id: 'Year', field: 'Year', name: 'Year', width: '80px', editable: true},
 				{id: 'Album', field: 'Album', name: 'Album', width: '160px', editable: true},
-				{id: 'Name', field: 'Name', name: 'Name', width: '80px', editable: true},
+				{id: 'Name', field: 'Name', name: 'Name', width: '150px', alwaysEditing: true},
 				{id: 'Length', field: 'Length', name: 'Length', width: '80px', editable: true},
 				{id: 'Track', field: 'Track', name: 'Track', width: '80px', editable: true},
 				{id: 'Composer', field: 'Composer', name: 'Composer', width: '160px', editable: true},

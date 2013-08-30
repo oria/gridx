@@ -317,19 +317,20 @@
 		};
 
 		window.createDisplayNone = function(){
-			if(!window.grid){return;}
 			destroyGrid();
 			document.getElementById('gridContainer').style.display = 'none';
 			gotoCase();
-			setTimeout(function(){
-				showGrid();
-			}, 1000);
 		};
 
 		window.showGrid = function(){
 			if(!window.grid){return;}
 			document.getElementById('gridContainer').style.display = '';
 			grid.resize();
+		};
+
+		window.hideGrid = function(){
+			if(!window.grid){return;}
+			document.getElementById('gridContainer').style.display = 'none';
 		};
 
 		var columns;
@@ -451,12 +452,19 @@
 		<input type='button' value='Test Guide' onclick='toggleGuide()' />
 		<div id='guide'></div>
 	</div>
+	<h2 tabindex='0' onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler before grid #</h2>
 	<div id='gridContainer'></div>
+	<h2 tabindex='0' onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler after grid #</h2>
 	<div id='casePanel'></div>
 	<hr/>
 	<div>
-		<span>Display/Size</span>
+		<span>Display</span>
 		<input type='button' value='create display:none' onclick='createDisplayNone()' />
+		<input type='button' value='show grid' onclick='showGrid()' />
+		<input type='button' value='hide grid' onclick='hideGrid()' />
+	</div>
+	<div>
+		<span>Size</span>
 		<input type='button' value='taller' onclick='resizeGrid({h: 1.1})' />
 		<input type='button' value='shorter' onclick='resizeGrid({h: 0.9})' />
 		<input type='button' value='wider' onclick='resizeGrid({w: 1.1})' />

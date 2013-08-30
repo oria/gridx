@@ -154,7 +154,7 @@ define([
 		{
 			title: 'percentage and minWidth',
 			guide: [
-				'Artist and Album are also 20%, but they appear 200px wide because minWidth = 200px'
+				'Artist and Album are also 20%, but they appear 300px wide because minWidth = 300px'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',

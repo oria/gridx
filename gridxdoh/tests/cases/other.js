@@ -636,6 +636,31 @@ define([
 			}
 		},
 		{
+			version: 1.2,
+			title: 'paged body with page size == 1',
+			guide: [
+				'grid should automatically load 3 pages on start up'
+			],
+			cache: "gridx/core/model/cache/Async",
+			store: 'mockserver',
+			size: 1000,
+			structure: [
+				{id: 'id', name: 'id', field: 'id'},
+				{id: 'number', name: 'number', field: 'number'},
+				{id: 'string', name: 'string', field: 'string'}
+			],
+			modules: [
+				"gridx/modules/TouchVScroller",
+				"gridx/modules/ColumnResizer",
+				"gridx/modules/PagedBody"
+			],
+			props: {
+				style: 'width: 500px;',
+				pageSize: 1,
+				bodyMaxPageCount: 3
+			}
+		},
+		{
 			title: 'Drag and drop (dnd) rearrange',
 			guide: [
 				'select some rows, mouse hover cells of selected rows should show draggable cursor',

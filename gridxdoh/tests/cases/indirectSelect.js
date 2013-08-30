@@ -34,6 +34,7 @@ define([
 				{id: 'Name', field: 'Name', name: 'Name'}
 			],
 			modules: [
+				"gridx/modules/Focus",
 				"gridx/modules/IndirectSelect",
 				"gridx/modules/extendedSelect/Row",
 				"gridx/modules/ColumnResizer",
@@ -50,7 +51,8 @@ define([
 				'mouse click another checkbox to add to selection',
 				'mouse click a checked checkbox to deselect a row',
 				'focus on a row header, press SPACE to select the row',
-				'focus on a checked row header, press SPACE to deselect the row'
+				'focus on a checked row header, press SPACE to deselect the row',
+				'[10996]turn on selectRowTriggerOnCell, click checkbox to select some rows, click on any cell in body, other selected rows should not be deselected'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',

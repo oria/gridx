@@ -60,7 +60,7 @@ define([
 					innerHTML: 'Initially unselectable rows:'
 				});
 				util.add('div', {
-					innerHTML: [1, 2, 5, 6, 10, 15, 80, 88, 99].join(', ')
+					innerHTML: [1, 11].join(', ')
 				});
 
 				util.addButton('Get Selected Rows', function(){
@@ -149,7 +149,8 @@ define([
 			title: 'unselectable rows in tree grid (tree mode selection is true)',
 			guide: [
 				'set item 1-1 to unselectable, select/deselect its children, item 1-1 status should also change',
-				'set item 1-1-1 to unselectable, select/deselect item 1-1, item 1-1-1 status should also change'
+				'set item 1-1-1 to unselectable, select/deselect item 1-1, item 1-1-1 status should also change',
+				'resize grid (make wider/narrower), row header should align well'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
@@ -174,6 +175,7 @@ define([
 			],
 			modules: [
 				"gridx/modules/Tree",
+				"gridx/modules/ColumnResizer",
 				"gridx/modules/RowHeader",
 				"gridx/modules/select/Row",
 				"gridx/modules/RowHeader",

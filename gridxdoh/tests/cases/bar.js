@@ -70,7 +70,6 @@ define([
 			],
 			modules: [
 				'gridx/modules/extendedSelect/Row',
-				'gridx/modules/Pagination',
 				'gridx/modules/Filter',
 				'gridx/modules/Bar'
 			],
