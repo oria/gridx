@@ -9,9 +9,10 @@ define([
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojo/query",
+	"dojo/sniff",
 	"../core/_Module"
 //    "dojo/NodeList-traverse"
-], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
+], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, sniff, _Module){
 
 /*=====
 	Column.setWidth = function(width){
@@ -157,6 +158,12 @@ define([
 		_mouseout: function(e){
 			if(!this._resizing){
 				var pos = domGeometry.position(this.grid.header.domNode);
+				if(sniff('chrome')){
+					for(var i in pos){
+						pos[i] = Math.floor(pos[i]);
+					}
+				}
+				
 				if(e.clientY <= pos.y || e.clientY >= pos.y + pos.h ||
 					e.clientX <= pos.x || e.clientX >= pos.x + pos.w){
 					this._readyToResize = 0;
