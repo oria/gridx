@@ -1014,9 +1014,9 @@ define([
 					}
 				}
 			}
-			if(t._editing && e.keyCode !== keys.TAB){
-				e.stopPropagation();
-			}
+//            if(t._editing && e.keyCode !== keys.TAB){
+//                e.stopPropagation();
+//            }
 		}
 		
 	});
