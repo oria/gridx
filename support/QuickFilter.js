@@ -13,12 +13,11 @@ define([
 	'dijit/Menu',
 	'dijit/MenuItem',
 	'../modules/Filter',
-	'dojo/i18n!../nls/QuickFilter',
 	'dojo/text!../templates/QuickFilter.html'
 ], function(declare, lang, array, domClass, keys,
 	_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, Button, ComboButton, Menu, MenuItem,
-	F, nls, template){
+	F, template){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -44,7 +43,7 @@ define([
 		templateString: template,
 
 		constructor: function(args){
-			lang.mixin(this, nls);
+			lang.mixin(this, args.grid.nls);
 			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
 		},
 

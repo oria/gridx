@@ -5,9 +5,8 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
-	"dojo/i18n!../nls/PaginationBar",
 	"dijit/form/FilteringSelect"
-], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, FilteringSelect){
+], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, FilteringSelect){
 
 /*=====
 	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
@@ -34,7 +33,7 @@ define([
 		templateString: '<div class="gridxDropDownPager"><label class="gridxPagerLabel">${pageLabel}</label></div>',
 
 		constructor: function(args){
-			lang.mixin(this, nls);
+			lang.mixin(this, args.grid.nls);
 		},
 
 		postCreate: function(){

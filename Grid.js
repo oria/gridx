@@ -3,6 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/on",
+	"dojo/i18n",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
@@ -24,9 +25,10 @@ define([
 	"./modules/ColumnWidth",
 	"./modules/Focus",
 	"dijit/_BidiSupport",
+	"dojo/i18n!./nls/gridx",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
-], function(declare, lang, has, on, domClass, domGeometry, query, metrics,
+], function(declare, lang, has, on, i18n, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
 
@@ -100,6 +102,7 @@ define([
 			//		protected extension
 			var t = this;
 			t.inherited(arguments);
+			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang);
 			t._eventFlags = {};
 			t.modules = t.coreModules.concat(t.modules || []);
 			t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);

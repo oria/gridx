@@ -8,9 +8,8 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
-	"dijit/a11y",
-	"dojo/i18n!../nls/Body"
-], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, a11y, nls){
+	"dijit/a11y"
+], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, a11y){
 
 /*=====
 	return declare([], {
@@ -195,7 +194,7 @@ define([
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+				en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 				en.style.zIndex = '';
 				var str = t._buildRows(start, count, uncachedRows, renderedRows);
 				t.renderStart = start;
@@ -235,7 +234,7 @@ define([
 					}
 				}
 				n.innerHTML = '';
-				en.innerHTML = t.arg('emptyInfo', nls.emptyInfo);
+				en.innerHTML = t.arg('emptyInfo', g.nls.emptyInfo);
 				en.style.zIndex = 1;
 				if(!t._skipUnrender){
 					t.onUnrender();

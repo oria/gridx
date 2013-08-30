@@ -10,9 +10,8 @@ define([
 	"dojo/dom",
 	"dojo/dom-class",
 	"../core/model/extensions/Sort",
-	"../core/_Module",
-	"dojo/i18n!../nls/Sort"
-], function(/*=====Column, =====*/declare, array, query, event, has, string, keys, dom, domClass, Sort, _Module, nls){
+	"../core/_Module"
+], function(/*=====Column, =====*/declare, array, query, event, has, string, keys, dom, domClass, Sort, _Module){
 
 /*=====
 	Column.sort = function(isDescending, isAdd){
@@ -258,7 +257,7 @@ define([
 		_setTitle: function(headerCellNode, col){
 			if(col.isSortable()){
 				headerCellNode.setAttribute('title', string.substitute(
-					this.arg('nested') ? nls.helpMsg : nls.singleHelpMsg,
+					this.arg('nested') ? this.grid.nls.helpMsg : this.grid.nls.singleHelpMsg,
 				//If column name includes HTML tags, can provide tooltip instead.
 				[col.def().tooltip || col.name()]));
 			}
@@ -291,7 +290,7 @@ define([
 				n.setAttribute('aria-sort', s.descending ? 'descending' : 'ascending');
 				//FIXME: it there any better way to set aria sort priority?
 				if(this.arg('nested')){
-					var priority = string.substitute(nls.priorityOrder, [i + 1]);
+					var priority = string.substitute(g.nls.priorityOrder, [i + 1]);
 					n.setAttribute('aria-label', (col.def().tooltip || col.name()) + ', ' + priority);
 				}
 			}

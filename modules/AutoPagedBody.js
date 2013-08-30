@@ -12,9 +12,8 @@ define([
 	"dijit/a11y",
 	"./Body",
 	"./_PagedBodyMixin",
-	"dojo/i18n!../nls/Body",
 	"dojo/touch"
-], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, keys, a11y, Body, _PagedBodyMixin, nls, touch){
+], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, keys, a11y, Body, _PagedBodyMixin, touch){
 
 /*=====
 	return declare(Body, {
@@ -56,7 +55,7 @@ define([
 		},
 
 		createBottom: function(bottomNode){
-			bottomNode.innerHTML = '<span class="gridxLoadingMore"></span>' + this.arg('loadMoreLoadingLabel', nls.loadMoreLoading);
+			bottomNode.innerHTML = '<span class="gridxLoadingMore"></span>' + this.arg('loadMoreLoadingLabel', this.grid.nls.loadMoreLoading);
 		},
 
 		refresh: function(){
