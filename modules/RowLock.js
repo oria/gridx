@@ -5,8 +5,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/dom-class",
+	"dojo/aspect",
 	"dojo/query"
-], function(kernel, lang, _Module, declare, array, domClass, query){
+], function(kernel, lang, _Module, declare, array, domClass, aspect, query){
 	kernel.experimental('gridx/modules/RowLock');
 
 /*=====
@@ -45,6 +46,18 @@ define([
 				
 				_this.lock(_this.count);
 				_this.loaded.callback();
+			});
+			
+			aspect.before(g.body, 'refresh', function(){
+				_this.grid.bodyNode.style.paddingTop = '0px';
+			});
+
+			this.connect(g.body, 'refresh', function(){
+				//FIX ME
+				//the lock can't run before vscroll._doScroll()
+				setTimeout(function(){
+					_this.lock(_this.count);
+				}, 0);
 			});
 		},
 		
