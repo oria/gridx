@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: indirectSelect.
 		//		Provide a check box (or radio button) column to select rows.
 		// description:
 		//		This module depends on "rowHeader" and "selectRow" modules.
@@ -46,9 +47,8 @@ define([
 			var t = this,
 				g = t.grid,
 				sr = g.select.row,
-				columns = g._columns,
 				w = t.arg('width'),
-				col = {
+				col = t._col = {
 					id: indirectSelectColumnId,
 					decorator: lang.hitch(this, '_createSelector'),
 					headerStyle: 'text-align: center;',
@@ -63,6 +63,7 @@ define([
 					width: w
 				};
 			t.batchConnect(
+				[g, 'setColumns', '_onSetColumns'],
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
@@ -79,13 +80,10 @@ define([
 						t._onMouseOut();
 					}
 				}],
+				[g.body, 'onRender', '_updateSelectAll'],
 				[g, 'onCellMouseOver', '_onMouseOver'],
 				[g, 'onCellMouseOut', '_onMouseOut']);
-			columns.splice(t.arg('position'), 0, col);
-			g._columnsById[col.id] = col;
-			array.forEach(columns, function(c, i){
-				c.index = i;
-			});
+			t._onSetColumns();
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				col.name = t._createSelectAllBox();
@@ -102,6 +100,23 @@ define([
 				});
 			}
 			g.header._build();
+		},
+
+		_onSetColumns: function(){
+			var g = this.grid,
+				columns = g._columns,
+				col = this._col;
+			columns.splice(this.arg('position'), 0, col);
+			g._columnsById[col.id] = col;
+			array.forEach(columns, function(c, i){
+				c.index = i;
+			});
+		},
+
+		_updateSelectAll: function(){
+			var newHeader = this._createSelectAllBox();
+			this.grid._columnsById[indirectSelectColumnId].name = newHeader;
+			this.grid.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
 		},
 
 		_createSelectAllBox: function(){
@@ -175,7 +190,7 @@ define([
 				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
 				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
-			}			
+			}
 		},
 
 		_onMouseOver: function(e){
@@ -230,7 +245,7 @@ define([
 				var unselectableRows = g.select.row._getUnselectableRows();
 				var unselectableRoots = array.filter(unselectableRows, function(id){
 					return !model.parentId(id) && !g.select.row.isSelected(id);
-				});			
+				});
 				if(count === model.size()){
 					allSelected = count && count - unselectableRoots.length == selectedRoot.length;
 				}else{
@@ -254,9 +269,7 @@ define([
 				}
 				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
-					var newHeader = t._createSelectAllBox();
-					g._columnsById[indirectSelectColumnId].name = newHeader;
-					g.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
+					t._updateSelectAll();
 				});
 			}
 		}
