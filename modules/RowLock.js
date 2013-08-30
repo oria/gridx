@@ -5,8 +5,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/html",
+	"dojo/aspect",
 	"dojo/query"
-], function(dojo, lang, _Module, declare, array, html, query){
+], function(dojo, lang, _Module, declare, array, html, aspect, query){
 	return declare(_Module, {
 		name: 'rowLock',
 		required: ['vLayout'],
@@ -27,6 +28,19 @@ define([
 				});
 				_this.lock(_this.count);
 				_this.loaded.callback();
+			});
+			
+			aspect.before(g.body, 'refresh', function(){
+				_this.grid.bodyNode.style.paddingTop = '0px';
+			});
+
+			this.connect(g.body, 'refresh', function(){
+				//FIX ME
+				//the lock can't run before vscroll._doScroll()
+				_this.grid.bodyNode.style.paddingTop = '0px';
+				setTimeout(function(){
+					_this.lock(_this.count);
+				}, 0);
 			});
 		},
 		lock: function(count){
