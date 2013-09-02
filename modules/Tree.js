@@ -603,7 +603,7 @@ define([
 
 		//Focus------------------------------------------------------------------
 		_initFocus: function(){
-			this.connect(this.grid, 'onCellKeyPress', '_onKey'); 
+			this.connect(this.grid, 'onCellKeyDown', '_onKey'); 
 		},
 
 		_onKey: function(e){
