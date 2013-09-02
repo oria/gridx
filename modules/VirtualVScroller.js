@@ -351,11 +351,12 @@ define([
 			}
 			var dn = t.domNode,
 				//remember the scroll bar position
-				r = dn.scrollTop / dn.scrollHeight;
+				oldScrollTop = dn.scrollTop;
 			t.stubNode.style.height = h + 'px';
 			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
 			if(t._lastScrollTop){
-				t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
+				dn.scrollTop = oldScrollTop;
+				t._lastScrollTop = dn.scrollTop;
 			}
 		},
 	
