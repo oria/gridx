@@ -66,6 +66,7 @@ define([
 						_this._lockColumns(row.node());
 					});
 					_this.connect(g.columnWidth, 'onUpdate', '_updateHeader');
+					_this.connect(g.header, 'onRender', '_updateHeader');
 					if(g.columnResizer){
 						//make it compatible with column resizer
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
@@ -156,19 +157,17 @@ define([
 			
 			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
-			
-			var h3 = window.getComputedStyle(rowNode.firstChild, null).getPropertyValue('height');
 
-			if(has('ie') > 8){		//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
-									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
-				
-				if(h3.toString().indexOf('.') >= 0){		//decimal
-				// if(Math.ceil(parseInt(h3, 10)) !== parseInt(h3, 10)){		//decimal
-					console.log('h3 is: ', h3);
+			if(has('ie') > 8){
+				//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
+				//so that the locked cells will have different height with the unlocked ones.
+				//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
+				var h3 = domStyle.getComputedStyle(rowNode.firstChild).height;
+				if(String(h3).toString().indexOf('.') >= 0){		//decimal
 					h2++;
 					h1++;
 				}
-			}	
+			}
 			domStyle.set(rowNode.firstChild, 'height', h2 + 'px');
 			
 			var lead = isHeader ? this.grid.hLayout.lead : 0,
@@ -178,11 +177,8 @@ define([
 				var cell = r.cells[i],
 					s;
 				domClass.add(cell, 'gridxLockedCell');
-				// if(has('ie') > 8){
-					// s = {height: h1 + 1 + 'px'};
-				// }else{
-					s = {height: h1 + 'px'};
-				// }
+
+				s = {height: h1 + 'px'};
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				domStyle.set(cell, s);
 				

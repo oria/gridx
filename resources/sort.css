@@ -214,27 +214,34 @@
 }
 
 /* for mobile devices */
-@media only screen and (min-device-width : 320px) and (max-device-width : 1024px) {
-	.gridxSort .gridxHeaderRow .gridxCell .gridxArrowButtonNode {
-		display: block;
-		background-position: -67px -3px;
-	}
-	.gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxArrowButtonNode {
-		background-position: -83px -3px;
-	}
-	.gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxArrowButtonNode {
-		background-position: -99px -3px;
-	}
-	.gridxSort .gridxHeaderRow .gridxCell .gridxSortAscendOnly {
-		background-position: -35px -3px;
-	}
-	.gridxSort .gridxHeaderRow .gridxCell .gridxSortDescendOnly {
-		background-position: -3px -4px;
-	}
-	.gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxSortAscendOnly {
-		background-position: -51px -4px;
-	}
-	.gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxSortDescendOnly {
-		background-position: -19px -4px;
-	}
+
+.dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxArrowButtonNode,
+.dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxArrowButtonNode {
+	display: block;
+	background-position: -67px -3px;
 }
+.dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxArrowButtonNode,
+.dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxArrowButtonNode {
+	background-position: -83px -3px;
+}
+.dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxArrowButtonNode,
+.dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxArrowButtonNode {
+	background-position: -99px -3px;
+}
+.dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortAscendOnly,
+.dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortAscendOnly {
+	background-position: -35px -3px;
+}
+.dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortDescendOnly,
+.dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortDescendOnly {
+	background-position: -3px -4px;
+}
+.dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxSortAscendOnly,
+.dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxSortAscendOnly {
+	background-position: -51px -4px;
+}
+.dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxSortDescendOnly,
+.dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxSortDescendOnly {
+	background-position: -19px -4px;
+}
+

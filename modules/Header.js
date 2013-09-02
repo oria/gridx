@@ -101,6 +101,12 @@ define([
 					}
 				});
 			}
+			t.aspect(g, 'onHeaderCellMouseOver', function(){
+				g.vLayout.reLayout();
+			});
+			t.aspect(g, 'onHeaderCellMouseOut', function(){
+				g.vLayout.reLayout();
+			});
 			t._initFocus();
 		},
 
@@ -125,6 +131,7 @@ define([
 		refresh: function(){
 			this._build();
 			this._onHScroll(this._scrollLeft);
+			this.grid.vLayout.reLayout();
 			this.onRender();
 		},
 

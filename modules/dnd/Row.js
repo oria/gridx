@@ -141,13 +141,11 @@ define([
 		},
 
 		_onBeginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollH = autoScroll.horizontal;
-			autoScroll.horizontal = false;
+			this.grid.autoScroll.horizontal = false;
 		},
 
 		_onEndAutoScroll: function(){
-			this.grid.autoScroll.horizontal = this._autoScrollH;
+			this.grid.autoScroll.horizontal = true;
 		},
 
 		_getItemData: function(id){

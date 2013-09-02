@@ -74,6 +74,9 @@ define([
 				g = t.grid,
 				ids = t.arg('init', []);
 			t._cols = g._columns.slice();
+			t.aspect(g, 'setColumns', function(){
+				t._cols = g._columns.slice();
+			});
 			if(g.move && g.move.column){
 				t.connect(g.move.column, 'onMoved', '_syncOrder');
 			}
@@ -99,12 +102,21 @@ define([
 				columns = g._columns,
 				columnLock = g.columnLock,
 				lockCount = 0,
-				cols = array.filter(array.map(arguments, function(id){
-					id = id && typeof id == "object" ? id.id: id;
-					return columnsById[id];
-				}), function(col){
-					return col && !col.ignore && (col.hidable === undefined || col.hidable);
-				});
+				hash = {},
+				cols = [];
+			//remove duplicated arguments.
+			for(var i = 0, len = arguments.length; i < len; ++i){
+				hash[arguments[i]] = 1;
+			}
+			for(var arg in hash){
+				cols.push(arg);
+			}
+			cols = array.filter(array.map(cols, function(id){
+				id = id && typeof id == "object" ? id.id: id;
+				return columnsById[id];
+			}), function(col){
+				return col && !col.ignore && (col.hidable === undefined || col.hidable);
+			});
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();

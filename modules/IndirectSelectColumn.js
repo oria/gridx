@@ -47,9 +47,8 @@ define([
 			var t = this,
 				g = t.grid,
 				sr = g.select.row,
-				columns = g._columns,
 				w = t.arg('width'),
-				col = {
+				col = t._col = {
 					id: indirectSelectColumnId,
 					decorator: lang.hitch(this, '_createSelector'),
 					headerStyle: 'text-align: center;',
@@ -63,10 +62,13 @@ define([
 					declaredWidth: w,
 					width: w
 				};
+			sr.holdingCtrl = true;
 			t.batchConnect(
+				[g, 'setColumns', '_onSetColumns'],
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
+				[g.body, 'onRender', '_onSelectionChange'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
@@ -80,11 +82,7 @@ define([
 				}],
 				[g, 'onCellMouseOver', '_onMouseOver'],
 				[g, 'onCellMouseOut', '_onMouseOut']);
-			columns.splice(t.arg('position'), 0, col);
-			g._columnsById[col.id] = col;
-			array.forEach(columns, function(c, i){
-				c.index = i;
-			});
+			t._onSetColumns();
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				col.name = t._createSelectAllBox();
@@ -101,6 +99,23 @@ define([
 				});
 			}
 			g.header._build();
+		},
+
+		_onSetColumns: function(){
+			var g = this.grid,
+				columns = g._columns,
+				col = this._col;
+			columns.splice(this.arg('position'), 0, col);
+			g._columnsById[col.id] = col;
+			array.forEach(columns, function(c, i){
+				c.index = i;
+			});
+		},
+
+		_updateSelectAll: function(){
+			var newHeader = this._createSelectAllBox();
+			this.grid._columnsById[indirectSelectColumnId].name = newHeader;
+			this.grid.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
 		},
 
 		_createSelectAllBox: function(){
@@ -184,10 +199,6 @@ define([
 					this._triggerOnCell = false;
 					sr.triggerOnCell = true;
 				}
-				if(!sr.arg('holdingCtrl')){
-					this._holdingCtrl = false;
-					sr.holdingCtrl = true;
-				}
 			}else{
 				this._onMouseOut();
 			}
@@ -198,10 +209,6 @@ define([
 			if(this.hasOwnProperty('_triggerOnCell')){
 				sr.triggerOnCell = false;
 				delete this._triggerOnCell;
-			}
-			if(this.hasOwnProperty('_holdingCtrl')){
-				sr.holdingCtrl = false;
-				delete this._holdingCtrl;
 			}
 		},
 
@@ -214,7 +221,7 @@ define([
 			]([0, g.view.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 			var t = this, d,
 				g = t.grid,
 				allSelected,
@@ -223,7 +230,7 @@ define([
 				start = view.rootStart,
 				count = view.rootCount;
 			if(g.select.row.selectByIndex && t.arg('all')){
-				var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
 					return !model.treePath(id).pop();
 				});
 				var unselectableRows = g.select.row._getUnselectableRows();
@@ -253,9 +260,7 @@ define([
 				}
 				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
-					var newHeader = t._createSelectAllBox();
-					g._columnsById[indirectSelectColumnId].name = newHeader;
-					g.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
+					t._updateSelectAll();
 				});
 			}
 		}

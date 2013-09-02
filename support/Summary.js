@@ -2,9 +2,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/string",
 	"dijit/_WidgetBase",
-	"dijit/_TemplatedMixin",
-	"dojo/i18n!../nls/SummaryBar"
-], function(declare, string, _WidgetBase, _TemplatedMixin, nls){
+	"dijit/_TemplatedMixin"
+], function(declare, string, _WidgetBase, _TemplatedMixin){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin], {
@@ -40,7 +39,7 @@ define([
 				sr = g.select && g.select.row,
 				size = g.model.size(),
 				selected = sr ? sr.getSelected().length : 0,
-				tpl = sr ? nls.summaryWithSelection : nls.summary;
+				tpl = sr ? g.nls.summaryWithSelection : g.nls.summary;
 			this.domNode.innerHTML = string.substitute(tpl, [size, selected]);
 		}
 	});

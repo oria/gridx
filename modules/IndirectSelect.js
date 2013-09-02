@@ -47,21 +47,11 @@ define([
 				[sr,'onHighlightChange', '_onHighlightChange' ],
 				[sr,'clear', '_onClear' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
-				[g, 'onRowMouseOver', '_onMouseOver'],
-				[g, 'onRowMouseOut', '_onMouseOut'],
+				[g.body, 'onRender', '_onSelectionChange'],
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
-				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
-				focus && [focus, 'onFocusArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOver();
-					}
-				}],
-				focus && [focus, 'onBlurArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOut();
-					}
-				}]);
+				g.filter && [g.filter, 'onFilter', '_onSelectionChange']);
+			g.select.row.holdingCtrl = true;
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
@@ -158,21 +148,6 @@ define([
 				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
 			}
 		},
-		
-		_onMouseOver: function(){
-			var sr = this.grid.select.row;
-			if(!sr.holdingCtrl){
-				this._holdingCtrl = false;
-				sr.holdingCtrl = true;
-			}
-		},
-
-		_onMouseOut: function(){
-			if(this.hasOwnProperty('_holdingCtrl')){
-				this.grid.select.row.holdingCtrl = false;
-				delete this._holdingCtrl;
-			}
-		},
 
 		_getDijitClass: function(){
 			return this._isSingle() ? 'dijitRadio' : 'dijitCheckBox';
@@ -192,7 +167,7 @@ define([
 			]([0, g.view.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 				var t = this, d,
 					g = t.grid,
 					allSelected,
@@ -201,7 +176,7 @@ define([
 					start = view.rootStart,
 					count = view.rootCount;
 			if(g.select.row.selectByIndex && t.arg('all')){
-				var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
 					return !model.parentId(id);
 				});
 				var unselectableRows = g.select.row._getUnselectableRows();

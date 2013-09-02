@@ -174,6 +174,7 @@ define([
 			if(n){
 				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+				t.onSelectionChange();
 			}
 		},
 
@@ -213,9 +214,10 @@ define([
 
 		_getUnselectableRows: function(){
 			var ret = [],
+				t = this,
 				unselectable = this.arg('unselectable');
 			for(var id in unselectable){
-				if(unselectable[id]){
+				if(unselectable[id] && t.model.byId(id)){
 					ret.push(id);
 				}
 			}
@@ -286,7 +288,8 @@ define([
 						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
 						t._end();
 					}
-				}]);
+				}],
+				[g, 'setStore', '_syncUnselectable']);
 		},
 
 		_markById: function(args, toSelect){
@@ -376,13 +379,11 @@ define([
 		},
 
 		_beginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollH = autoScroll.horizontal;
-			autoScroll.horizontal = false;
+			this.grid.autoScroll.horizontal = false;
 		},
 
 		_endAutoScroll: function(){
-			this.grid.autoScroll.horizontal = this._autoScrollH;
+			this.grid.autoScroll.horizontal = true;
 		},
 
 		_doHighlight: function(target, toHighlight){
@@ -459,6 +460,14 @@ define([
 			}
 			// console.log('to highlight', toHighlight);
 			this._doHighlight(target, toHighlight);
+		},
+		
+		_syncUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 		}
 	});
 });

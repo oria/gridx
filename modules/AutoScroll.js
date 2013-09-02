@@ -1,9 +1,11 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/Deferred",
 	"dojo/_base/window",
+	"dojo/query",
 	"dojo/dom-geometry",
 	"../core/_Module"
-], function(declare, win, domGeometry, _Module){
+], function(declare, Deferred, win, query, domGeometry, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -36,15 +38,11 @@ define([
 
 		horizontal: true,
 
-		margin: 20,
+		margin: 30,
 
 		//Private ---------------------------------------------------------------------
 
-		_timeout: 100,
-
-		_step: 10,
-
-		_maxMargin: 100,
+		_timeout: 300,
 
 		_onMouseMove: function(e){
 			var t = this;
@@ -70,31 +68,92 @@ define([
 		_scroll: function(){
 			var t = this;
 			if(t.arg('enabled')){
-				var dir, a, needScroll, g = t.grid,
-					m = t._maxMargin, s = t._step,
-					v = t._vdir, h = t._hdir;
+				var dir,
+					needScroll,
+					g = t.grid,
+					v = t._vdir,
+					h = t._hdir;
 				if(t.arg('vertical') && v){
 					dir = v > 0 ? 1 : -1;
-					a = Math.min(m, Math.abs(v)) / s;
-					a = (a < 1 ? 1 : a) * s * dir;
-					g.vScroller.domNode.scrollTop += a;
-					needScroll = 1;
+					var rowNode = t._findNode(g.bodyNode.childNodes, function(node){
+						if(dir > 0){
+							if(node.offsetTop >= g.bodyNode.scrollTop + g.bodyNode.offsetHeight){
+								return -1;
+							}else if(node.offsetTop + node.offsetHeight < g.bodyNode.scrollTop + g.bodyNode.offsetHeight){
+								return 1;
+							}
+							return 0;
+						}else{
+							if(node.offsetTop > g.bodyNode.scrollTop){
+								return -1;
+							}else if(node.offsetTop + node.offsetHeight <= g.bodyNode.scrollTop){
+								return 1;
+							}
+							return 0;
+						}
+					});
+					if(rowNode){
+						var vidx = parseInt(rowNode.getAttribute('visualindex'), 10);
+						needScroll = g.vScroller.scrollToRow(vidx + dir);
+					}
 				}
 				if(t.arg('horizontal') && h){
 					dir = h > 0 ? 1 : -1;
-					a = Math.min(m, Math.abs(h)) / s;
-					a = (a < 1 ? 1 : a) * s * dir;
-					g.hScroller.domNode.scrollLeft += a;
-					needScroll = 1;
+					var headerNode = t._findNode(query('.gridxCell', g.header.domNode), function(node){
+						if(dir > 0){
+							if(node.offsetLeft >= g.hScrollerNode.scrollLeft + g.hScrollerNode.offsetWidth){
+								return -1;
+							}else if(node.offsetLeft + node.offsetWidth < g.hScrollerNode.scrollLeft + g.hScrollerNode.offsetWidth){
+								return 1;
+							}
+							return 0;
+						}else{
+							if(node.offsetLeft > g.hScrollerNode.scrollLeft){
+								return -1;
+							}else if(node.offsetLeft + node.offsetHeight <= g.vScrollerNode.scrollLeft){
+								return 1;
+							}
+							return 0;
+						}
+					});
+					if(headerNode){
+						var col = g._columnsById[headerNode.getAttribute('colid')];
+						var nextCol = g._columns[col.index + dir] || col;
+						g.hScroller.scrollToColumn(nextCol.id);
+						needScroll = needScroll || 1;
+					}
 				}
+				t._handler = needScroll;
 				if(needScroll){
-					t._handler = setTimeout(function(){
-						t._scroll();
-					}, t._timeout);
-					return;
+					//scroll to row can be async
+					Deferred.when(needScroll, function(){
+						t._handler = setTimeout(function(){
+							t._scroll();
+						}, t._timeout);
+					});
+				}
+			}else{
+				delete t._handler;
+			}
+		},
+
+		_findNode: function(nodes, checker){
+			var start = 0,
+				end = nodes.length,
+				idx = Math.floor((start + end) / 2);
+			while(start < end && start != idx){
+				var dir = checker(nodes[idx]);
+				if(dir < 0){
+					end = idx;
+					idx = Math.floor((start + end) / 2);
+				}else if(dir > 0){
+					start = idx;
+					idx = Math.floor((start + end) / 2);
+				}else{
+					break;
 				}
 			}
-			delete t._handler;
+			return nodes[idx];
 		}
 	}));
 });

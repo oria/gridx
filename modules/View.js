@@ -156,7 +156,7 @@ define([
 				if(t.arg('clearOnSetStore')){
 					t._clear();
 				}
-			});
+			}, t, 'before');
 			t._loadLevels(persistedOpenInfo).then(function(){
 				var size = t._openInfo[''].count = m.size();
 				t.rootCount = t.rootCount || size - t.rootStart;
@@ -181,6 +181,8 @@ define([
 				}).visualIndex;
 			}
 		},
+
+		clearOnSetStore: true,
 
 		rootStart: 0,
 

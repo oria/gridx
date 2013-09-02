@@ -97,10 +97,12 @@
 	overflow: hidden;
 }
 
-@media screen and (min-device-width: 1024px) {
 .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
 	border: 1px dashed darkblue;
 }
+.dj_android .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus,
+.dj_ios .gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
+	border-color: transparent;
 }
 
 .gridxHeaderRow :focus {
@@ -262,6 +264,11 @@
 	height: 100%;
 	overflow: hidden;
 	border-right: 1px solid #E5DAC8;
+	box-sizing: border-box; /* css3 rec */
+	-moz-box-sizing: border-box; /* ff2 */
+	-ms-box-sizing: border-box; /* ie8 */
+	-webkit-box-sizing: border-box; /* safari3 */
+	-khtml-box-sizing: border-box; /* konqueror */  
 }
 
 .gridxRowHeaderBody table {
@@ -272,6 +279,7 @@
 }
 
 .gridxRowHeaderRow {
+	overflow: hidden;
 	background: url("images/header.png") #EDF2F7 repeat-x bottom;
 	background: #edf2f7; /* Old browsers */
 	background: -moz-linear-gradient(top,  #edf2f7 0%, #d0dfea 100%); /* FF3.6+ */
@@ -282,12 +290,15 @@
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
 }
 
-@media screen and (min-device-width: 1024px) {
 .gridxRowHeaderHeader .gridxHeaderCellFocus {
 	border-top: 1px dashed darkblue;
 	border-bottom: 1px dashed darkblue;
 }
+.dj_android .gridxRowHeaderHeader .gridxHeaderCellFocus,
+.dj_ios .gridxRowHeaderHeader .gridxHeaderCellFocus {
+	border-color: transparent;
 }
+
 .gridxRowHeaderCell {
 	border-bottom: 1px solid #E5DAC8;
 }

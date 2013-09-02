@@ -90,6 +90,7 @@ define([
 			t.aspect(g, '_onResizeEnd', '_onBodyChange');
 			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
 			t.aspect(bd, 'onRender', '_onBodyChange');
+			t.aspect(g.header, 'onRender', '_onBodyChange');
 			if(!g.autoHeight){
 				t.aspect(bd, 'onEmpty', function(){
 					var ds = dn.style;

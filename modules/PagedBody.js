@@ -10,9 +10,8 @@ define([
 	"dojo/keys",
 	"dijit/a11y",
 	"./Body",
-	"./_PagedBodyMixin",
-	"dojo/i18n!../nls/Body"
-], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, keys, a11y, Body, _PagedBodyMixin, nls){
+	"./_PagedBodyMixin"
+], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, keys, a11y, Body, _PagedBodyMixin){
 
 /*=====
 	return declare(Body, {
@@ -40,7 +39,7 @@ define([
 		createBottom: function(bottomNode){
 			var t = this,
 				moreBtn = t._moreBtn = domConstruct.create('button', {
-					innerHTML: t.arg('loadMoreLabel', nls.loadMore)
+					innerHTML: t.arg('loadMoreLabel', t.grid.nls.loadMore)
 				}, bottomNode, 'last');
 			t.connect(moreBtn, 'onclick', function(){
 				t._load(1);
@@ -55,7 +54,7 @@ define([
 		createTop: function(topNode){
 			var t = this,
 				prevBtn = t._prevBtn = domConstruct.create('button', {
-					innerHTML: t.arg('loadPreviousLabel', nls.loadPrevious)
+					innerHTML: t.arg('loadPreviousLabel', t.grid.nls.loadPrevious)
 				}, topNode, 'last');
 			t.connect(prevBtn, 'onclick', function(){
 				t._load();
@@ -84,6 +83,7 @@ define([
 					t.renderCount = view.visualCount;
 					query('.gridxRow', t.domNode).forEach(function(node, i){
 						node.setAttribute('visualindex', i);
+						domClass.toggle(node, 'gridxRowOdd', i % 2);
 					});
 					domConstruct.place(btnNode, t.domNode, isPost ? 'last' : 'first');
 					if(!isPost){
@@ -101,9 +101,13 @@ define([
 				btn = isPost ? t._moreBtn : t._prevBtn,
 				cls = isPost ? "More" : "Previous";
 			btn.innerHTML = begin ?
-				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', nls['load' + cls + 'Loading']) :
-				t.arg('load' + cls + 'Label', nls['load' + cls]);
+				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', t.grid.nls['load' + cls + 'Loading']) :
+				t.arg('load' + cls + 'Label', t.grid.nls['load' + cls]);
 			btn.disabled = !!begin;
+		},
+
+		_checkSpace: function(){
+			return this.inherited(arguments) && this.renderCount < this.arg('maxPageCount') * this.arg('pageSize');
 		}
 	});
 });

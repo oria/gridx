@@ -8,9 +8,8 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
-	"dijit/a11y",
-	"dojo/i18n!../nls/Body"
-], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, a11y, nls){
+	"dijit/a11y"
+], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, a11y){
 
 /*=====
 	return declare([], {
@@ -39,7 +38,11 @@ define([
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
-			t.connect(g, '_onResizeEnd', '_checkSpace');
+			t.connect(g, '_onResizeEnd', function(){
+				if(t._checkSpace()){
+					t._load(1);
+				}
+			});
 
 			if(t.arg('createBottom')){
 				t._bottomNode = domConstruct.create('div', {
@@ -191,7 +194,7 @@ define([
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+				en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 				en.style.zIndex = '';
 				var str = t._buildRows(start, count, uncachedRows, renderedRows);
 				t.renderStart = start;
@@ -231,7 +234,7 @@ define([
 					}
 				}
 				n.innerHTML = '';
-				en.innerHTML = t.arg('emptyInfo', nls.emptyInfo);
+				en.innerHTML = t.arg('emptyInfo', g.nls.emptyInfo);
 				en.style.zIndex = 1;
 				if(!t._skipUnrender){
 					t.onUnrender();
@@ -259,17 +262,14 @@ define([
 					domClass.add(lastRow, 'gridxBodyLastRow');
 				}
 			}
-			t._checkSpace();
+			if(t._checkSpace()){
+				t._load(1);
+			}
 		},
 
 		_checkSpace: function(){
 			var bn = this.domNode;
-			if(bn.lastChild == this._bottomNode){
-				var containerPos = domGeo.position(this.grid.mainNode);
-				if(domGeo.position(bn.lastChild).y < containerPos.y + containerPos.h){
-					this._load(1);
-				}
-			}
+			return bn.lastChild == this._bottomNode && bn.lastChild.offsetTop + bn.lastChild.offsetHeight < bn.scrollTop + bn.offsetHeight;
 		},
 
 		_load: function(isPost){

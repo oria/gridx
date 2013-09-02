@@ -14,13 +14,14 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-construct",
 	"dojo/keys",
+	"dijit/a11y",
 	"../core/_Module",
 	"dojo/date/locale",
 	'../core/model/extensions/Modify',
 	'dojo/_base/event',
 	"dijit/form/TextBox"
 //    "dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, _Module, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, a11y, _Module, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -285,7 +286,8 @@ define([
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
 			return locale.parse(storeData, col.storePattern);
 		}
-		return gridData;
+		//Some editor like textbox will ignre setting undefined value.
+		return gridData === undefined ? null : gridData;
 	}
 	
 	function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
@@ -470,8 +472,7 @@ define([
 			},
 
 			editor: function(){
-				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
-				return cw && cw.gridCellEditField;
+				return this.grid.edit.getEditor(this.row.id, this.column.id);
 			},
 
 			isEditable: function(){
@@ -520,9 +521,9 @@ define([
 							lang.partial(getTypeData, col)));
 					t._record(rowId, colId);
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
+						g.resize();
 						t._focusEditor(rowId, colId);
 						d.callback(true);
-						g.resize();
 						t.onBegin(g.cell(rowId, colId, 1));
 					});
 				}else{
@@ -642,8 +643,7 @@ define([
 			if(col && col.alwaysEditing){
 				return true;
 			}
-			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
-			return !!widget && !!widget.gridCellEditField;
+			return !!this.getEditor(rowId, colId);
 		},
 
 		setEditor: function(colId, editor, args){
@@ -652,7 +652,12 @@ define([
 			col.editor = editor;
 			lang.mixin(editorArgs, args || {});
 		},
-		
+
+		getEditor: function(rowId, colId){
+			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
+			return widget && widget.gridCellEditField;
+		},
+
 		getLazyData: function(rowId, colId){
 			var t = this,
 				f = t.grid._columnsById[colId].field;
@@ -781,18 +786,10 @@ define([
 		},
 
 		_focusEditor: function(rowId, colId, forced){
-			var cw = this.grid.cellWidget,
-				func = function(){
-					var widget = cw.getCellWidget(rowId, colId),
-						editor = widget && widget.gridCellEditField;
-					if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
-						editor.focus();
-					}
-				};
-			if(has('webkit')){
-				func();
-			}else{
-				setTimeout(func, 1);
+			var editor = this.getEditor(rowId, colId);
+			if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
+				this.grid.hScroller.scrollToColumn(colId);
+				editor.focus();
 			}
 		},
 
@@ -918,26 +915,33 @@ define([
 				view = g.view,
 				body = g.body;
 			if(t._editing && step){
-				var rowIndex = view.getRowInfo({
-						parentId: t.model.parentId(t._focusCellRow),
-						rowIndex: t.model.idToIndex(t._focusCellRow)
-					}).visualIndex,
-					colIndex = g._columnsById[t._focusCellCol].index,
-					dir = step > 0 ? 1 : -1,
-					checker = function(r, c){
-						return g._columns[c].editable;
-					};
-				body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-					g.focus.stopEvent(evt);
-					t._applyAll();
-					t._focusCellCol = g._columns[obj.c].id;
-					var rowInfo = view.getRowInfo({visualIndex: obj.r});
-					t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-					//This breaks encapsulation a little....
-					body._focusCellCol = obj.c;
-					body._focusCellRow = obj.r;
-					t.begin(t._focusCellRow, t._focusCellCol);
+				var cellNode = g.body.getCellNode({
+					rowId: t._focusCellRow,
+					colId: t._focusCellCol
 				});
+				var elems = a11y._getTabNavigable(cellNode);
+				if(evt && evt.target == (step < 0 ? elems.first : elems.last)){
+					g.focus.stopEvent(evt);
+					var rowIndex = view.getRowInfo({
+							parentId: t.model.parentId(t._focusCellRow),
+							rowIndex: t.model.idToIndex(t._focusCellRow)
+						}).visualIndex,
+						colIndex = g._columnsById[t._focusCellCol].index,
+						dir = step > 0 ? 1 : -1,
+						checker = function(r, c){
+							return g._columns[c].editable;
+						};
+					body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
+						t._applyAll();
+						t._focusCellCol = g._columns[obj.c].id;
+						var rowInfo = view.getRowInfo({visualIndex: obj.r});
+						t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+						//This breaks encapsulation a little....
+						body._focusCellCol = obj.c;
+						body._focusCellRow = obj.r;
+						t.begin(t._focusCellRow, t._focusCellCol);
+					});
+				}
 				return false;
 			}
 			return true;
@@ -1010,9 +1014,9 @@ define([
 					}
 				}
 			}
-			if(t._editing && e.keyCode !== keys.TAB){
-				e.stopPropagation();
-			}
+//            if(t._editing && e.keyCode !== keys.TAB){
+//                e.stopPropagation();
+//            }
 		}
 		
 	});

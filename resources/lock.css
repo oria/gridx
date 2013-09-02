@@ -4,6 +4,10 @@
 	z-index: 1;
 }
 
+.gridxLockedRow{
+	z-index: 1;
+}
+
 /*Column Lock*/
 .gridxColumnLock .gridxRow {
 	overflow: hidden;
