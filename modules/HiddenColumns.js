@@ -9,6 +9,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hiddenColumns.
 		//		Hide columns.
 		// description:
 		//		Hide columns and change the column array at the same time so that other grid features 
@@ -102,22 +103,20 @@ define([
 				columnLock = g.columnLock,
 				lockCount = 0,
 				hash = {},
-				cols = [];
+				cols = array.filter(array.map(arguments, function(id){
+					id = id && typeof id == "object" ? id.id : id;
+					return columnsById[id];
+				}), function(col){
+					return col && !col.ignore && (col.hidable === undefined || col.hidable);
+				});
 			//remove duplicated arguments.
-			for(var i = 0, len = arguments.length; i < len; ++i){
-				var col = arguments[i];
-				var k = col && typeof col === 'object'? col.id : col;
-				hash[k] = 1;
+			for(var i = 0, len = cols.length; i < len; ++i){
+				hash[cols[i].id] = cols[i];
 			}
+			cols = [];
 			for(var arg in hash){
-				cols.push(arg);
+				cols.push(hash[arg]);
 			}
-			cols = array.filter(array.map(cols, function(id){
-				// id = id && typeof id == "object" ? id.id: id;
-				return columnsById[id];
-			}), function(col){
-				return col && !col.ignore && (col.hidable === undefined || col.hidable);
-			});
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();
@@ -168,7 +167,7 @@ define([
 				columnLock.unlock();
 			}
 			array.forEach(arguments, function(id){
-				id = id && typeof id == "object" ? id.id: id;
+				id = id && typeof id == "object" ? id.id : id;
 				var c,
 					index = -1,
 					i = 0,
