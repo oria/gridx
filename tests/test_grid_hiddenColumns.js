@@ -32,12 +32,12 @@ require([
 	Deferred.when(parser.parse(), function(){
 		configGrid.connect(configGrid.select.row, 'onSelected', function(row){
 			var t = new Date;
-			grid.hiddenColumns.add(row.id);
+			grid.hiddenColumns.add(row);
 			console.log('hide: ' + (new Date - t));
 		});
 		configGrid.connect(configGrid.select.row, 'onDeselected', function(row){
 			var t = new Date;
-			grid.hiddenColumns.remove(row.id);
+			grid.hiddenColumns.remove(row);
 			console.log('show: ' + (new Date - t));
 		});
 	});
