@@ -5,9 +5,8 @@ define([
 	"dijit/popup",
 	"dojo/_base/declare",
 	"dojo/string",
-	"dojo/i18n!../../nls/FilterBar",
 	"dijit/TooltipDialog"
-], function(array, event, domClass, popup, declare, string, i18n, TooltipDialog){
+], function(array, event, domClass, popup, declare, string, TooltipDialog){
 
 /*=====
 	return declare([], {
@@ -67,7 +66,7 @@ define([
 					' class="gridxFilterTooltipRemoveBtn"><span class="gridxFilterTooltipRemoveBtnText">x</span></span></div></td></tr>');
 			}, this);
 			arr.push('</table>');
-			this.i18n = i18n;
+			this.i18n = this.grid.nls;
 			this.set('content', string.substitute(arr.join(''), this));
 			domClass.toggle(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},

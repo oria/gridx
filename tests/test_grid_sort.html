@@ -28,17 +28,16 @@
 		],
 		baseSort: [{attribute: "Genre", descending: true}],
 		modules: [
-			"gridx/modules/SingleSort",
+			"gridx/modules/Sort",
 			"gridx/modules/ColumnResizer",
 			"gridx/modules/extendedSelect/Row",
 			"gridx/modules/IndirectSelectColumn",
-			"gridx/modules/TouchVScroller"
-		]
-	'></div>
-		columnWidthAutoResize: true,
+			"gridx/modules/TouchVScroller",
 			"gridx/modules/RowHeader",
 			"gridx/modules/VirtualVScroller"
-	<!--h2>Single Sort</h2>
+		]
+	'></div>
+	<h2>Single Sort</h2>
 	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
@@ -67,6 +66,6 @@
 			"gridx/modules/ColumnResizer",
 			"gridx/modules/VirtualVScroller"
 		]
-	'></div-->
+	'></div>
 </body>
 </html>

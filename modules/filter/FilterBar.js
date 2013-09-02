@@ -13,7 +13,6 @@ define([
 	"dojo/query",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"../Filter",
 	"./FilterDialog",
 	"./FilterConfirmDialog",
@@ -21,7 +20,7 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -203,9 +202,9 @@ define([
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
-			this._nls = nls;
+			this._nls = this.grid.nls;
 			this.domNode = dom.create('div', {
-				innerHTML: string.substitute(template, nls),
+				innerHTML: string.substitute(template, this._nls),
 				'class': 'gridxFilterBar'
 			});
 			parser.parse(this.domNode);
@@ -277,7 +276,9 @@ define([
 			var max = this.arg('ruleCountToConfirmClearFilter');
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!this._cfmDlg){
-					this._cfmDlg = new FilterConfirmDialog();
+					this._cfmDlg = new FilterConfirmDialog({
+						grid: this.grid
+					});
 				}
 				this._cfmDlg.execute = lang.hitch(scope, callback);
 				this._cfmDlg.show();
@@ -438,13 +439,13 @@ define([
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			if(!this.filterData || !this.filterData.conditions.length){
-				this.statusNode.innerHTML = this.arg('noFilterMessage', nls.filterBarMsgNoFilterTemplate);
+				this.statusNode.innerHTML = this.arg('noFilterMessage', this.grid.nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
-				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + nls.filterBarClearButton + '">'
-					 + nls.filterBarClearButton + '</a>';
+			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', this.grid.nls.filterBarMsgHasFilterTemplate),
+				[this._currentSize, this._totalSize, this.grid.nls.defaultItemsName]) + 
+				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + this.grid.nls.filterBarClearButton + '">'
+					 + this.grid.nls.filterBarClearButton + '</a>';
 			this._buildTooltip();
 		},
 		_buildTooltip: function(){
@@ -484,7 +485,7 @@ define([
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', nls.rangeTemplate);
+					var tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -496,7 +497,7 @@ define([
 		},
 		_getConditionDisplayName: function(c){
 			var k = c.charAt(0).toUpperCase() + c.substring(1);
-			return this.arg('condition' + k, nls['condition' + k]);
+			return this.arg('condition' + k, this.grid.nls['condition' + k]);
 		},
 		_getConditionOptions: function(colId){
 			var cache = this._conditionOptions = this._conditionOptions || {};
@@ -505,7 +506,7 @@ define([
 				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({
-						label: this.arg('condition' + k, nls['condition' + k]),
+						label: this.arg('condition' + k, this.grid.nls['condition' + k]),
 						value: s
 					});
 				}, this);

@@ -185,7 +185,9 @@ define([
 			}
 			rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 			setTimeout(function(){
-				rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
+				if(rowHeaderNode && rowHeaderNode.firstChild){
+					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
+				}
 			}, 0);
 		},
 

@@ -40,6 +40,10 @@ define([
 
 		margin: 30,
 
+		rowStep: 1,
+
+		columnStep: 1,
+
 		//Private ---------------------------------------------------------------------
 
 		_timeout: 300,
@@ -94,7 +98,7 @@ define([
 					});
 					if(rowNode){
 						var vidx = parseInt(rowNode.getAttribute('visualindex'), 10);
-						needScroll = g.vScroller.scrollToRow(vidx + dir);
+						needScroll = g.vScroller.scrollToRow(vidx + dir * t.arg('rowStep'));
 					}
 				}
 				if(t.arg('horizontal') && h){
@@ -118,7 +122,13 @@ define([
 					});
 					if(headerNode){
 						var col = g._columnsById[headerNode.getAttribute('colid')];
-						var nextCol = g._columns[col.index + dir] || col;
+						var colIdx = col.index + dir * t.arg('columnStep');
+						if(colIdx >= g._columns.length){
+							colIdx = g._columns.length - 1;
+						}else if(colIdx < 0){
+							colIdx = 0;
+						}
+						var nextCol = g._columns[colIdx];
 						g.hScroller.scrollToColumn(nextCol.id);
 						needScroll = needScroll || 1;
 					}
