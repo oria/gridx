@@ -28,7 +28,7 @@ require([
 	layout = [
 		{id: 'id', field: 'id', name: 'id:1', width: '30px'},
 		{field: 'value', name: 'Genre:1', width: '30px'},
-		{id: 'expCol', field: 'value', name: 'Genre:2', width: '30px', expanded: true},
+		{id: 'expCol', field: 'value', name: 'Genre:2', width: '30px', expanded: false},
 		// , children: [
 		// 	{field: 'value', name: 'Genre:3', width: '30px'},
 		// 	{field: 'value', name: 'Genre:4', width: '30px'},

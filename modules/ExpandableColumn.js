@@ -71,11 +71,13 @@ define([
 					toHide.push(col.id);
 				}else if(col._parentColumn){
 					var parentCol = this._colById(col._parentColumn);
+
 					if(!parentCol.expanded){
-						parentCol._expandable = true;
 						toHide.push(col.id);
+						parentCol.expanded = false;	//Force expanded false for later use.
+						//parentCol._expandable = true;
 					}else{
-						parentCol._expandable = false;
+						//parentCol._expandable = false;
 					}
 				}
 			}, this);
@@ -94,6 +96,10 @@ define([
 		columnMixin: {
 			isExpandable: function(){
 				return this.grid.expandableColumn.isExpandable(this.id);
+			},
+
+			isCollapsable: function(){
+				return this.grid.expandableColumn.isCollapsable(this.id);
 			}
 		},
 
@@ -104,7 +110,7 @@ define([
 			
 			this.add(colId);
 			this.remove.apply(this, children);
-
+			this._colById(colId).expanded = true;
 			this._refreshHeader();
 
 		},
@@ -113,19 +119,38 @@ define([
 			var children = array.filter(this._cols, function(col){
 				return col._parentColumn == colId;
 			});
+
 			this.remove(colId);
 			this.add.apply(this, children);
-
+			this._colById(colId).expanded = false;
 			this._refreshHeader();
 		},
 
 		isExpandable: function(colId){
-
+			var col = this._colById(colId);
+			return col.expanded == false;
 		},
+
+		isCollapsable: function(colId){
+			var col = this._colById(colId);
+			return col.expanded;
+		},
+
+
 
 		_createExpandNode: function(i, col){
 			//var col = this._colById(colId);
-			var div = domConstruct.create('div', {innerHTML: '<span class="gridxColumnExpandNodeIcon"></span>', className: 'gridxColumnExpandNode'});
+			var div = domConstruct.create('div', {innerHTML: '', className: 'gridxColumnExpandNode'});
+			if(this.isExpandable(col.id)){
+				div.innerHTML = '<span class="gridxColumnExpandNodeIcon"></span>';
+				var self = this;
+				div.onclick = function(){
+					self.expand(col.id);
+				}
+			}else{
+				return null;
+				div.innerHTML = '';
+			}
 			return div;
 		},
 
@@ -162,6 +187,19 @@ define([
 			delete this.grid.header.groups;
 			this.grid.headerGroups = headerGroups;
 			this.grid.header.refresh();
+
+			//add expand arrow the the group header
+			var self = this;
+			query('.gridxGroupHeader', this.grid.headerNode).forEach(function(td){
+				var div = domConstruct.create('div', {innerHTML: '<span class="gridxColumnCollapseNodeIcon"></span>', className: 'gridxColumnCollapseNode'});
+				div.onclick = function(){
+					var colId = this.parentNode.getAttribute('groupid').split('-').pop();
+					colId = self._colById(colId)._parentColumn;
+					console.log(colId);
+					self.collapse(colId);
+				}
+				td.insertBefore(div, td.firstChild);
+			});
 		},
 
 		_colById: function(id){
