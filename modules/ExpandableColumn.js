@@ -70,7 +70,7 @@ define([
 				if(col.expanded){
 					toHide.push(col.id);
 				}else if(col._parentColumn){
-					var parentCol = this._colById(col._parentColumn);//g._columnsById[col._parentColumn];
+					var parentCol = this._colById(col._parentColumn);
 					if(!parentCol.expanded){
 						parentCol._expandable = true;
 						toHide.push(col.id);
@@ -88,6 +88,12 @@ define([
 				});
 			}else{
 				t.loaded.callback();
+			}
+		},
+
+		columnMixin: {
+			isExpandable: function(){
+				return this.grid.expandableColumn.isExpandable(this.id);
 			}
 		},
 
@@ -111,6 +117,10 @@ define([
 			this.add.apply(this, children);
 
 			this._refreshHeader();
+		},
+
+		isExpandable: function(colId){
+
 		},
 
 		_createExpandNode: function(i, col){
