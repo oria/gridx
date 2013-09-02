@@ -1,0 +1,44 @@
+.gridxTreeExpandoCell {
+	height: 100%;
+	position: relative;
+	min-height: 16px;
+}
+
+.gridxTreeExpandoIcon {
+	.icon(treeExpandoClosed);
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+
+	&:hover {
+		.icon(treeExpandoClosedHover)
+	}
+	.gridxTreeExpandoCellOpen & {
+		.icon(treeExpandoOpen);
+
+		&:hover {
+			.icon(treeExpandoOpenHover);
+		}
+	}
+
+	.gridx .gridxTreeExpandoLoading & {
+		background-image: url('images/treeExpand_loading.gif');
+		background-position: 0 0;
+	}
+}
+
+.gridxTreeExpandoIconNoChildren {
+	visibility: hidden;
+}
+
+.gridxTreeExpandoInner {
+	visibility: hidden;
+	text-align: center;
+
+	.dijit_a11y & {
+		visibility: visible;
+	}
+}
+
+

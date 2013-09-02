@@ -1,0 +1,56 @@
+//@import "sort_less.less";
+
+.gridxRtl {
+	/*Single Sorting*/
+	.gridxArrowButtonNode {
+		float: left;
+		margin-right: 0;
+		margin-left: 7px;
+	}
+
+	/* NestedSorting */
+	.gridxSortNode {
+		text-align: right;
+	}
+
+	.gridxSortBtn {
+		float: left;
+	}
+
+	.gridxSortBtnNested {
+		.sortIcon(arrowUpHollowBlack);
+		//background-position: -156px 5px;
+		text-align: right;
+	}
+
+	.gridxCell:hover, .gridxCellSortFocus {
+		.gridxSortBtn {
+			border-right: 1px solid #bbb;
+			border-left: none;
+		}
+	}
+
+	.gridxCellSortedAsc .gridxSortBtnNested {
+		.sortIcon(arrowUpSolidBlack);
+		//background-position: -117px 5px;
+	}
+	.gridxCellSortedDesc .gridxSortBtnNested {
+		.sortIcon(arrowDownSolidBlack);
+		//background-position: -97px 5px;
+	}
+	.gridxCell:hover.gridxCellSortedAsc .gridxSortBtnNested,
+	.gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnNested {
+		.sortIcon(arrowDownHollowBlack);
+		//background-position: -137px 5px;
+	}
+	.gridxCell:hover.gridxCellSortedDesc .gridxSortBtnNested,
+	.gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested {
+		.sortIcon(crossBlack);
+		//background-position: -177px 5px;
+	}
+	.gridxNestedSorted .gridxCell:hover .gridxSortBtnSingle,
+	.gridxNestedSorted .gridxCellSortFocus .gridxSortBtnSingle {
+		.sortIcon(arrowUpHollowBlack);
+		//background-position: -159px 5px;
+	}
+}
