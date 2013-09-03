@@ -1544,11 +1544,11 @@
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxHeaderRowInner {
   overflow: hidden;
-  padding-bottom: 10px;
+  padding-bottom: 0px;
   margin-bottom: 0px;
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxHeaderRowInner table {
-  height: 90px;
+  height: 130px;
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxHeaderRowInner .gridxGroupHeader {
   height: 16px;
@@ -1560,7 +1560,7 @@
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxCell .gridxSortNode {
   overflow: visible;
-  margin-bottom: 8px;
+  margin-bottom: 15px;
   -webkit-transform: skew(45deg, 0deg) rotate(-45deg);
   /* Safari and Chrome */
 
@@ -1577,6 +1577,7 @@
   text-align: center;
 }
 .gridxColumnExpandNodeIcon {
+  -webkit-transform: skew(45deg, 0deg);
   display: block;
   margin: 1px auto;
   background-image: url("images/sprite.png");
@@ -1584,35 +1585,33 @@
   background-position: -126px -26px;
   height: 8px;
   width: 8px;
+  background-image: url(../images/sprite.png);
 }
 .gridxColumnExpandNode {
-  -webkit-transform: skew(45deg, 0deg);
   display: block;
   float: none;
   position: absolute;
   height: 11px;
-  left: 4px;
-  bottom: -11px;
-  right: -6px;
-  background-color: #d0dfea;
-  border-right: 1px solid #BCBCBC;
-  border-left: 1px solid #fff;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
 }
 .gridxColumnCollapseNode {
-  -webkit-transform: skew(45deg, 0deg);
-  display: block;
-  float: right;
+  display: inline-block;
   height: 10px;
   width: 10px;
+  padding-right: 3px;
+  cursor: pointer;
 }
-.gridxColumnCollapseNode .gridxColumnCollapseNodeIcon {
+.gridxColumnCollapseNodeIcon {
   display: block;
   margin: 1px auto;
   background-image: url("images/sprite.png");
   background-repeat: no-repeat;
-  background-position: -126px -26px;
+  background-position: -26px -6px;
   height: 8px;
   width: 8px;
+  background-image: url(../images/sprite.png);
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxCell:hover .gridxColumnExpandNode {
   background-color: #9BCAF7;
@@ -1693,7 +1692,6 @@ body .gridxSlantedHeader .gridxHeaderRow {
 }
 .gridxRtl .gridxCell:hover .gridxSortBtn,
 .gridxRtl .gridxCellSortFocus .gridxSortBtn {
-  border-right: 1px solid #bbb;
   border-left: none;
 }
 .gridxRtl .gridxCellSortedAsc .gridxSortBtnNested {

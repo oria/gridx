@@ -1,5 +1,4 @@
 define([
-	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/dom-class",
@@ -12,8 +11,7 @@ define([
 	"../core/_Module"
 //    "dojo/NodeList-dom",
 //    "dojo/NodeList-traverse"
-], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
-	kernel.experimental('gridx/modules/Tree');
+], function(declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
 
 /*=====
 	Row.canExpand = function(){

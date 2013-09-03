@@ -7,10 +7,56 @@
 	<style type="text/css">
 		.gridx {
 			width: 400px;
-			height: 300px;
+			height: 500px;
+		}
+		.gridxHeader {
+			background: #edf2f7;
+			background: -moz-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #edf2f7), color-stop(100%, #d0dfea));
+			background: -webkit-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
+			background: -o-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
+			background: -ms-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
+			background: linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
+		}
+
+		.gridxHeaderRow tr:first-child .gridxCell:first-child {
+			border-left: none;
+		}
+		.gridxHeaderRow tr:first-child .gridxCell:first-child .gridxSortNode {
+			-webkit-transform:skew(45deg,0deg) rotate(0deg)!important;
+			margin-bottom: 3px!important;
+			margin-left: 0px;
 		}
 		.gridxCell {
-			
+			text-align: center!important;
+		}
+
+		.gridxCell:first-child {
+			text-align: left!important;
+		}
+
+		.gridxCell .mark {
+			display: inline-block;
+			width: 8px;
+			height: 8px;
+		}
+
+		.gridxCell .mark-normal {
+			background-color: #77AF77;
+			-webkit-transform:rotate(-45deg);
+		}
+
+		.gridxCell .mark-warning {
+			width: 0px;
+			height: 0px;
+			border: none;
+			border-bottom: 8px solid #C7CC5A;
+			border-left: 6px solid rgba(0,0,0,0);
+			border-right: 6px solid rgba(0,0,0,0);
+		}
+
+		.gridxCell .mark-critical {
+			background-color: #B84A4A;
 		}
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
@@ -27,7 +73,8 @@
 		store: store,
 		structure: layout,
 		
-		autoWidth: false,
+		autoWidth: true,
+		autoHeight: true,
 		modules: [
 
 			"gridx/modules/SlantedHeader"

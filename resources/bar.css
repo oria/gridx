@@ -1,0 +1,5 @@
+.gridxSummaryBar{padding:3px 9px;border-top:1px solid #ddd}
+.gridxTitleBar{padding:3px 9px;border-top:1px solid #fff}
+.gridxBar{border-top:1px solid #fff}.gridxBar>table{width:100%}
+.gridxSummaryBar,.gridxTitleBar,.gridxBar{background:url("images/headershadow.png") repeat-x scroll center bottom #e5edf4}
+.gridxSummary{padding:3px 9px}

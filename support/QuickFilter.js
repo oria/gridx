@@ -86,6 +86,14 @@ define([
 			}
 		},
 
+		_onKey: function(evt){
+			if(evt.keyCode == keys.ENTER){
+				this.grid.focus.stopEvent(evt);
+				this._clear();
+				this.textBox.focus();
+			}
+		},
+
 		_clear: function(){
 			this.textBox.set('value', '');
 			domClass.remove(this.domNode, 'gridxQuickFilterActive');

@@ -168,8 +168,13 @@ define([
 						headerGroups.push(c);
 						c = 0;
 					}
-					if(!currentGroup){
+					if(!currentGroup || currentGroup._colId != col._parentColumn){
+						if(currentGroup && currentGroup._colId != col._parentColumn){
+							headerGroups.push(currentGroup);
+						}
+
 						currentGroup = {
+							_colId: col._parentColumn,
 							name: this._colById(col._parentColumn).name,
 							children: 0
 						};
@@ -193,12 +198,12 @@ define([
 			query('.gridxGroupHeader', this.grid.headerNode).forEach(function(td){
 				var div = domConstruct.create('div', {innerHTML: '<span class="gridxColumnCollapseNodeIcon"></span>', className: 'gridxColumnCollapseNode'});
 				div.onclick = function(){
-					var colId = this.parentNode.getAttribute('groupid').split('-').pop();
+					var colId = this.parentNode.parentNode.getAttribute('groupid').split('-').pop();
 					colId = self._colById(colId)._parentColumn;
 					console.log(colId);
 					self.collapse(colId);
 				}
-				td.insertBefore(div, td.firstChild);
+				td.firstChild.insertBefore(div, td.firstChild.firstChild);
 			});
 		},
 
