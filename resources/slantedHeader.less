@@ -10,10 +10,10 @@
 }
 
 .gridxSlantedHeader .gridxHeaderRow .gridxHeaderRowInner {
-	overflow: hidden;
+	overflow: visible;
 
 	padding-bottom: 0px;
-	margin-bottom: 0px;
+	margin-bottom: 10px;
 
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxHeaderRowInner table{
@@ -44,8 +44,22 @@
 	text-align: center;
 }
 
-.gridxColumnExpandNodeIcon {
+.gridxColumnExpandNode {
 	-webkit-transform:skew(45deg,0deg);
+	display: block;
+	float: none;
+	position: absolute;
+	height: 11px;
+	left:3px;
+	bottom: -11px;
+	right: -6px;
+	background-color: #d0dfea;
+	border-right: 1px solid #BCBCBC;
+	border-left: 1px solid #fff;
+}
+
+.gridxColumnExpandNodeIcon {
+	
 	display: block;
 	//width: 8px;
 	//height: 8px;
@@ -59,19 +73,7 @@
 
 }
 
-.gridxColumnExpandNode {
-	
-	display: block;
-	float: none;
-	position: absolute;
-	height: 11px;
-	left:0px;
-	bottom: 0px;
-	right: 0px;
-	//background-color: #d0dfea;
-	//border-right: 1px solid #BCBCBC;
-	//border-left: 1px solid #fff;
-}
+
 
 .gridxColumnCollapseNode {
 

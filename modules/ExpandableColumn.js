@@ -15,6 +15,7 @@ define([
 
 	return declare(HiddenColumns, {
 		name: 'expandedColumn',
+		_parentCols: null,
 
 		required: [],
 
@@ -62,7 +63,7 @@ define([
 			var t = this,
 				g = t.grid;
 			t._cols = g._columns.slice();
-
+			t._parentCols = {};
 			//TODO: support persist and column move
 
 			var toHide = [];
@@ -70,14 +71,13 @@ define([
 				if(col.expanded){
 					toHide.push(col.id);
 				}else if(col._parentColumn){
+					t._parentCols[col._parentColumn] = 1;
 					var parentCol = this._colById(col._parentColumn);
 
 					if(!parentCol.expanded){
 						toHide.push(col.id);
 						parentCol.expanded = false;	//Force expanded false for later use.
-						//parentCol._expandable = true;
 					}else{
-						//parentCol._expandable = false;
 					}
 				}
 			}, this);
@@ -90,16 +90,6 @@ define([
 				});
 			}else{
 				t.loaded.callback();
-			}
-		},
-
-		columnMixin: {
-			isExpandable: function(){
-				return this.grid.expandableColumn.isExpandable(this.id);
-			},
-
-			isCollapsable: function(){
-				return this.grid.expandableColumn.isCollapsable(this.id);
 			}
 		},
 
@@ -126,29 +116,18 @@ define([
 			this._refreshHeader();
 		},
 
-		isExpandable: function(colId){
-			var col = this._colById(colId);
-			return col.expanded == false;
-		},
-
-		isCollapsable: function(colId){
-			var col = this._colById(colId);
-			return col.expanded;
-		},
-
-
-
 		_createExpandNode: function(i, col){
 			//var col = this._colById(colId);
+			console.log('creating expand node for:', col.id);
 			var div = domConstruct.create('div', {innerHTML: '', className: 'gridxColumnExpandNode'});
-			if(this.isExpandable(col.id)){
+			if(this._parentCols[col.id]){
 				div.innerHTML = '<span class="gridxColumnExpandNodeIcon"></span>';
 				var self = this;
 				div.onclick = function(){
 					self.expand(col.id);
 				}
 			}else{
-				return null;
+				console.log(col.id, ' is not expandable');
 				div.innerHTML = '';
 			}
 			return div;
@@ -200,7 +179,6 @@ define([
 				div.onclick = function(){
 					var colId = this.parentNode.parentNode.getAttribute('groupid').split('-').pop();
 					colId = self._colById(colId)._parentColumn;
-					console.log(colId);
 					self.collapse(colId);
 				}
 				td.firstChild.insertBefore(div, td.firstChild.firstChild);
