@@ -109,10 +109,8 @@ define([
 					cs.maxWidth = width + 'px';
 				});
 				g.body.onRender();
+				g.hLayout.reLayout();
 				g.vLayout.reLayout();
-				if(g.autoWidth){
-					g.hLayout.reLayout();
-				}
 				t.onResize(colId, width, oldWidth);
 			}
 		},

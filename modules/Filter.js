@@ -325,7 +325,7 @@ define([
 				d.setFullYear(2000);
 				return d.getTime();
 			default: //string
-				return String(d);
+				return (d === null || d === undefined) ? '' : String(d);
 		}
 	}
 
