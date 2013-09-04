@@ -269,7 +269,7 @@ define([
 				case 'Text':
 					return (combo ? this.comboText : this.tbSingle).get('value') || null;
 				case 'Number':
-					return isNaN(this.tbNumber.get('value')) ? null : this.tbNumber.get('value');
+					return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
 				case 'Select':
 					return this.sltSingle.get('value') || null;
 				case 'Date':
