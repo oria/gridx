@@ -72,6 +72,9 @@ define([
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
 						_this.connect(g.columnResizer, 'onResize', '_updateBody');
 					}
+
+					_this.connect(g, '_onResizeEnd', '_updateHeader');
+					_this.connect(g, '_onResizeEnd', '_updateBody');
 					if(g.header){
 						g.header.loaded.then(function(){
 							_this._updateHeader();

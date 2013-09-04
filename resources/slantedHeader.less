@@ -32,10 +32,19 @@
 	overflow: visible;
 	margin-bottom: 15px;
 	-webkit-transform:skew(45deg,0deg) rotate(-45deg); /* Safari and Chrome */
+	-moz-transform:skew(45deg,0deg) rotate(-45deg);
+	-o-transform:skew(45deg,0deg) rotate(-45deg);
+	-ms-transform:skew(45deg,0deg) rotate(-45deg);
+	transform:skew(45deg,0deg) rotate(-45deg);
+
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxGroupHeader .gridxSortNode {
 	text-align: center;
 	-webkit-transform:skew(45deg,0deg); /* Safari and Chrome */
+	-moz-transform:skew(45deg,0deg);
+	-o-transform:skew(45deg,0deg);
+	-ms-transform:skew(45deg,0deg);
+	transform:skew(45deg,0deg);
 }
 
 .gridxSlantedHeaderActionAreaHolder {
@@ -46,6 +55,10 @@
 
 .gridxColumnExpandNode {
 	-webkit-transform:skew(45deg,0deg);
+	-moz-transform: skew(45deg,0deg);
+	-o-transform: skew(45deg,0deg);
+	-ms-transform: skew(45deg,0deg);
+	transform: skew(45deg,0deg);
 	display: block;
 	float: none;
 	position: absolute;
@@ -66,7 +79,7 @@
 	margin: 1px auto;
 	.icon(arrowRightDarkGrey; 8px; 8px);
 	//background: transparent url(images/gridx_sprite.png) no-repeat -132px -5px;
-	background-image: url(../images/sprite.png);
+	//background-image: url(../images/sprite.png);
 }
 
 .gridxColumnExpandNodeIcon:hover{
@@ -89,7 +102,7 @@
 	display: block;
 	margin: 1px auto;
 	.icon(arrowDownSolidShadow; 8px; 8px);
-	background-image: url(../images/sprite.png);
+	//background-image: url(../images/sprite.png);
 }
 
 .gridxSlantedHeader .gridxHeaderRow .gridxCell:hover .gridxColumnExpandNode{

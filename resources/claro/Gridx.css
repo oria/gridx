@@ -20,7 +20,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  background: url('images/treeExpand_loading.gif') #dddddd center center no-repeat;
+  background: url('../images/treeExpand_loading.gif') #dddddd center center no-repeat;
   z-index: 99999;
   opacity: 0.3;
 }
@@ -96,36 +96,26 @@
   top: 0;
   -moz-box-sizing: border-box;
   /* ff2 */
-
   -ms-box-sizing: border-box;
   /* ie8 */
-
   -webkit-box-sizing: border-box;
   /* safari3 */
-
   -khtml-box-sizing: border-box;
   /* konqueror */
-
   box-sizing: border-box;
   /* css3 rec */
-
 }
 .gridxCell {
   -moz-box-sizing: content-box;
   /* ff2 */
-
   -ms-box-sizing: content-box;
   /* ie8 */
-
   -webkit-box-sizing: content-box;
   /* safari3 */
-
   -khtml-box-sizing: content-box;
   /* konqueror */
-
   box-sizing: content-box;
   /* css3 rec */
-
 }
 .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
   background-color: #cee8f2;
@@ -189,7 +179,6 @@
   border: none;
   outline: none;
   /* ie6 will show the wrong height */
-
 }
 .dj_ie6 .gridxHScrollerInner {
   line-height: 0;
@@ -241,19 +230,14 @@
   border-right: 1px solid #E5DAC8;
   -moz-box-sizing: border-box;
   /* ff2 */
-
   -ms-box-sizing: border-box;
   /* ie8 */
-
   -webkit-box-sizing: border-box;
   /* safari3 */
-
   -khtml-box-sizing: border-box;
   /* konqueror */
-
   box-sizing: border-box;
   /* css3 rec */
-
 }
 .gridxRowHeaderBody table {
   width: 100%;
@@ -265,25 +249,18 @@
   overflow: hidden;
   background: #edf2f7;
   /* Old browsers */
-
   background: -moz-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #edf2f7), color-stop(100%, #d0dfea));
   /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* Opera 11.10+ */
-
   background: -ms-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* IE10+ */
-
   background: linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* W3C */
-
 }
 .gridxRowHeaderHeader .gridxHeaderCellFocus {
   border-top: 1px dashed darkblue;
@@ -327,7 +304,6 @@
 .gridxCellEditor {
   width: 100%;
   /* in IE dijitTextArea has width auto by default */
-
 }
 .dj_ie [class~='dijitTextArea'].gridxCellEditor {
   width: 100%;
@@ -401,7 +377,7 @@
 }
 .gridxHeaderMenuBtn {
   border-left: 1px solid #fff;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -25px -23.5px;
   height: 13px;
@@ -425,7 +401,7 @@
 }
 .gridxLoadingMore {
   display: inline-block;
-  background-image: url('images/treeExpand_loading.gif');
+  background-image: url('../images/treeExpand_loading.gif');
   vertical-align: middle;
   width: 20px;
   height: 20px;
@@ -446,7 +422,7 @@
   outline: 1px dashed darkblue;
 }
 .gridxCellEditedBg {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -147px -127px;
   height: 6px;
@@ -523,30 +499,30 @@
   display: block;
 }
 .gridxCellSortedAsc .gridxArrowButtonNode {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -5px -23px;
 }
 .gridxArrowButtonNode .gridxCellSortedDesc {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -25px -23px;
 }
 .gridxHeaderCellOver.gridxCellSortedAsc .gridxArrowButtonNode,
 .gridxHeaderCellFocus.gridxCellSortedAsc .gridxArrowButtonNode {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -65px -23px;
 }
 .gridxHeaderCellOver.gridxCellSortedDesc .gridxArrowButtonNode,
 .gridxHeaderCellFocus.gridxCellSortedDesc .gridxArrowButtonNode {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -45px -23px;
 }
 /*Nested Sorting*/
 .gridxSortBtn {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -65px -23px;
   float: right;
@@ -559,7 +535,7 @@
 }
 .gridxSortBtnNested {
   width: 20px;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -55px -23px;
 }
@@ -600,57 +576,57 @@
   display: block;
 }
 .gridxCellSortedAsc .gridxSortBtnSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -5px -23px;
 }
 .gridxCellSortedAsc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: 5px -23px;
 }
 .gridxCellSortedDesc .gridxSortBtnSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -25px -23px;
 }
 .gridxCellSortedDesc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -15px -23px;
 }
 .gridxCell:hover.gridxCellSortedAsc .gridxSortBtnSingle,
 .gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnSingle,
 .gridxHeaderRegionFocus.gridxCellSortedAsc .gridxSortBtnSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -45px -23px;
 }
 .gridxCell:hover.gridxCellSortedAsc .gridxSortBtnNested,
 .gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnNested,
 .gridxHeaderRegionFocus.gridxCellSortedAsc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -35px -23px;
 }
 .gridxCell:hover.gridxCellSortedDesc .gridxSortBtnSingle,
 .gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnSingle,
 .gridxHeaderRegionFocus.gridxCellSortedDesc .gridxSortBtnSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -85px -23px;
 }
 .gridxCell:hover.gridxCellSortedDesc .gridxSortBtnNested,
 .gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested,
 .gridxHeaderRegionFocus.gridxCellSortedDesc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -75px -23px;
 }
 .gridxNestedSorted .gridxCell:hover .gridxSortBtnSingle,
 .gridxNestedSorted .gridxCellSortFocus .gridxSortBtnSingle,
 .gridxNestedSorted .gridxHeaderRegionFocus .gridxSortBtnSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -65px -23px;
 }
@@ -684,13 +660,13 @@
 }
 .gridxSort .gridxSortUp .gridxArrowButtonNode {
   display: block;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -5px -5px;
 }
 .gridxSort .gridxSortDown .gridxArrowButtonNode {
   display: block;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -25px -5px;
 }
@@ -701,86 +677,86 @@
 .gridxSort .gridxHeaderRow .gridxCell:hover .gridxArrowButtonNode,
 .gridxSort .gridxHeaderCellFocus .gridxArrowButtonNode {
   display: block;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -85px -5px;
 }
 .gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortUp .gridxArrowButtonNode,
 .gridxSort .gridxHeaderCellFocus .gridxSortUp .gridxArrowButtonNode {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -105px -5px;
 }
 .gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortDown .gridxArrowButtonNode,
 .gridxSort .gridxHeaderCellFocus .gridxSortDown .gridxArrowButtonNode {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -125px -5px;
 }
 .gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortAscendOnly,
 .gridxSort .gridxHeaderCellFocus .gridxSortAscendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -65px -5px;
 }
 .gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortDescendOnly,
 .gridxSort .gridxHeaderCellFocus .gridxSortDescendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -45px -5px;
 }
 .gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortUp .gridxSortAscendOnly,
 .gridxSort .gridxHeaderCellFocus .gridxSortUp .gridxSortAscendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -5px -5px;
 }
 .gridxSort .gridxHeaderRow .gridxCell:hover .gridxSortDown .gridxSortDescendOnly,
 .gridxSort .gridxHeaderCellFocus .gridxSortDown .gridxSortDescendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -25px -5px;
 }
 .dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxArrowButtonNode,
 .dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxArrowButtonNode {
   display: block;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -85px -5px;
 }
 .dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxArrowButtonNode,
 .dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxArrowButtonNode {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -105px -5px;
 }
 .dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxArrowButtonNode,
 .dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxArrowButtonNode {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -125px -5px;
 }
 .dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortAscendOnly,
 .dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortAscendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -65px -5px;
 }
 .dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortDescendOnly,
 .dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortDescendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -45px -5px;
 }
 .dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxSortAscendOnly,
 .dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortUp .gridxSortAscendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -5px -5px;
 }
 .dj_android .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxSortDescendOnly,
 .dj_ios .gridxSort .gridxHeaderRow .gridxCell .gridxSortDown .gridxSortDescendOnly {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -25px -5px;
 }
@@ -804,7 +780,7 @@
   min-height: 16px;
 }
 .gridxTreeExpandoIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -2px -122px;
   height: 16px;
@@ -815,28 +791,28 @@
   cursor: pointer;
 }
 .gridxTreeExpandoIcon:hover {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -22px -122px;
   height: 16px;
   width: 16px;
 }
 .gridxTreeExpandoCellOpen .gridxTreeExpandoIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -42px -122px;
   height: 16px;
   width: 16px;
 }
 .gridxTreeExpandoCellOpen .gridxTreeExpandoIcon:hover {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -62px -122px;
   height: 16px;
   width: 16px;
 }
 .gridx .gridxTreeExpandoLoading .gridxTreeExpandoIcon {
-  background-image: url('images/treeExpand_loading.gif');
+  background-image: url('../images/treeExpand_loading.gif');
   background-position: 0 0;
 }
 .gridxTreeExpandoIconNoChildren {
@@ -855,7 +831,7 @@
   overflow: auto;
 }
 .gridxDodLoadNode {
-  background: transparent url(images/loadingAnimation.gif) no-repeat 5px 2px;
+  background: transparent url(../images/loadingAnimation.gif) no-repeat 5px 2px;
   padding: 5px 5px 5px 30px;
 }
 /*
@@ -865,7 +841,7 @@
 }
 */
 .gridxDodExpando {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -82px -82px;
   height: 16px;
@@ -879,7 +855,7 @@
   visibility: visible;
 }
 .gridxDodShown .gridxDodExpando {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -82px -102px;
   height: 16px;
@@ -943,7 +919,7 @@
 .gridxSummaryBar,
 .gridxTitleBar,
 .gridxBar {
-  background: url("images/headershadow.png") repeat-x scroll center bottom #e5edf4;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAPCAYAAAAlH6X5AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QkBDyst7ytGZAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAF0lEQVQI12NggAJGJgYGBgYmGIt0ggEABXAAJ5rKjIAAAAAASUVORK5CYII=') repeat-x scroll center bottom #e5edf4;
 }
 .gridxSummary {
   padding: 3px 9px;
@@ -974,28 +950,28 @@
   border-spacing: 3px;
 }
 .dojoDndMove .gridxDnDIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -182px -102px;
   height: 16px;
   width: 16px;
 }
 .dojoDndMove .dojoDndAvatarCanDrop .gridxDnDIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -182px -82px;
   height: 16px;
   width: 16px;
 }
 .dojoDndCopy .gridxDnDIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -162px -102px;
   height: 16px;
   width: 16px;
 }
 .dojoDndCopy .dojoDndAvatarCanDrop .gridxDnDIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -162px -82px;
   height: 16px;
@@ -1015,14 +991,14 @@
   background-color: gray;
 }
 .gridxDnDIconRowSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -122px -82px;
   height: 16px;
   width: 16px;
 }
 .gridxDnDIconRowMulti {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -122px -102px;
   height: 16px;
@@ -1034,14 +1010,14 @@
   width: 2px;
 }
 .gridxDnDIconColumnSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -142px -82px;
   height: 16px;
   width: 16px;
 }
 .gridxDnDIconColumnMulti {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -142px -102px;
   height: 16px;
@@ -1131,7 +1107,7 @@
   margin-top: -15px;
 }
 .gridxFilterPaneCloseButton img {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -202px -22px;
   height: 16px;
@@ -1139,7 +1115,7 @@
   cursor: pointer;
 }
 .gridxFilterPaneCloseButton img:hover {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -202px -2px;
   height: 16px;
@@ -1149,21 +1125,21 @@
   display: none;
 }
 .gridxFilterBtnAddRule {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -182px -2px;
   height: 16px;
   width: 16px;
 }
 .dijitButtonDisabled .gridxFilterBtnAddRule {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -182px -22px;
   height: 16px;
   width: 16px;
 }
 .gridxFilterBarBtnIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -142.5px -42.5px;
   height: 15px;
@@ -1206,25 +1182,18 @@
 .gridxFilterBarStatus {
   background: #f2f9ff;
   /* Old browsers */
-
   background: -moz-linear-gradient(top, #f2f9ff 0%, #eaf5ff 100%);
   /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f2f9ff), color-stop(100%, #eaf5ff));
   /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(top, #f2f9ff 0%, #eaf5ff 100%);
   /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(top, #f2f9ff 0%, #eaf5ff 100%);
   /* Opera 11.10+ */
-
   background: -ms-linear-gradient(top, #f2f9ff 0%, #eaf5ff 100%);
   /* IE10+ */
-
   background: linear-gradient(top, #f2f9ff 0%, #eaf5ff 100%);
   /* W3C */
-
   border-bottom: 1px solid #BFD6EB;
   border-top: 1px solid #BFD6EB;
   padding: 1px 0 0 45px;
@@ -1233,7 +1202,7 @@
   padding-left: 5px;
 }
 .gridxFilterBarCloseBtn {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -83px -123px;
   height: 14px;
@@ -1249,7 +1218,7 @@
   display: none;
 }
 .gridxFilterBarCloseBtn:hover {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -103px -123px;
   height: 14px;
@@ -1278,7 +1247,7 @@
   margin-bottom: 8px;
 }
 .gridxFilterTooltip .gridxFilterTooltipRemoveBtn {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -202px -22px;
   height: 16px;
@@ -1290,7 +1259,7 @@
   border: none;
 }
 .gridxFilterTooltip .gridxFilterTooltipRemoveBtn:hover {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -202px -2px;
   height: 16px;
@@ -1318,7 +1287,7 @@
   display: none;
 }
 .gridxQuickFilterClear {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -82px -22px;
   height: 16px;
@@ -1336,7 +1305,7 @@
   display: block;
 }
 .gridxQuickFilterIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -142px -42px;
   height: 16px;
@@ -1415,14 +1384,14 @@
   cursor: default;
 }
 .gridxPagerFirstPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -42px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxPagerFirstPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -42px -62px;
   height: 16px;
@@ -1431,14 +1400,14 @@
   opacity: 0.8;
 }
 .gridxPagerPrevPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -2px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxPagerPrevPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -2px -62px;
   height: 16px;
@@ -1447,14 +1416,14 @@
   opacity: 0.8;
 }
 .gridxPagerNextPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -22px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxPagerNextPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -22px -62px;
   height: 16px;
@@ -1463,14 +1432,14 @@
   opacity: 0.8;
 }
 .gridxPagerLastPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -62px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxPagerLastPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -62px -62px;
   height: 16px;
@@ -1494,7 +1463,7 @@
   text-align: center;
 }
 .gridxPagerGotoBtn {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -85px -42px;
   height: 16px;
@@ -1563,13 +1532,19 @@
   margin-bottom: 15px;
   -webkit-transform: skew(45deg, 0deg) rotate(-45deg);
   /* Safari and Chrome */
-
+  -moz-transform: skew(45deg, 0deg) rotate(-45deg);
+  -o-transform: skew(45deg, 0deg) rotate(-45deg);
+  -ms-transform: skew(45deg, 0deg) rotate(-45deg);
+  transform: skew(45deg, 0deg) rotate(-45deg);
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxGroupHeader .gridxSortNode {
   text-align: center;
   -webkit-transform: skew(45deg, 0deg);
   /* Safari and Chrome */
-
+  -moz-transform: skew(45deg, 0deg);
+  -o-transform: skew(45deg, 0deg);
+  -ms-transform: skew(45deg, 0deg);
+  transform: skew(45deg, 0deg);
 }
 .gridxSlantedHeaderActionAreaHolder {
   background-color: #d0dfea;
@@ -1578,6 +1553,10 @@
 }
 .gridxColumnExpandNode {
   -webkit-transform: skew(45deg, 0deg);
+  -moz-transform: skew(45deg, 0deg);
+  -o-transform: skew(45deg, 0deg);
+  -ms-transform: skew(45deg, 0deg);
+  transform: skew(45deg, 0deg);
   display: block;
   float: none;
   position: absolute;
@@ -1592,12 +1571,11 @@
 .gridxColumnExpandNodeIcon {
   display: block;
   margin: 1px auto;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -126px -26px;
   height: 8px;
   width: 8px;
-  background-image: url(../images/sprite.png);
 }
 .gridxColumnCollapseNode {
   display: inline-block;
@@ -1609,12 +1587,11 @@
 .gridxColumnCollapseNodeIcon {
   display: block;
   margin: 1px auto;
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -26px -6px;
   height: 8px;
   width: 8px;
-  background-image: url(../images/sprite.png);
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxCell:hover .gridxColumnExpandNode {
   background-color: #9BCAF7;
@@ -1630,15 +1607,10 @@ body .gridxSlantedHeader .gridxHeaderRow {
 }
 .gridxRtl {
   /* In IE7, if not set relative position, the margins can not be nagative.*/
-
   /* Body */
-
   /* VScroller */
-
   /* RowHeader */
-
   /* HeaderRegion */
-
 }
 .dj_ie7 .gridxRtl .gridxHeaderRow table {
   position: relative;
@@ -1654,7 +1626,6 @@ body .gridxSlantedHeader .gridxHeaderRow {
 .gridxRtl .dj_ff3,
 .gridxRtl .dj_webkit {
   /* some browsers do not automatically move the scroll bar to left, so we move for them */
-
 }
 .gridxRtl .dj_ff3 .gridxVScroller,
 .gridxRtl .dj_webkit .gridxVScroller {
@@ -1672,9 +1643,7 @@ body .gridxSlantedHeader .gridxHeaderRow {
 }
 .gridxRtl {
   /*Single Sorting*/
-
   /* NestedSorting */
-
 }
 .gridxRtl .gridxArrowButtonNode {
   float: left;
@@ -1688,7 +1657,7 @@ body .gridxSlantedHeader .gridxHeaderRow {
   float: left;
 }
 .gridxRtl .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -65px -23px;
   text-align: right;
@@ -1698,30 +1667,30 @@ body .gridxSlantedHeader .gridxHeaderRow {
   border-left: none;
 }
 .gridxRtl .gridxCellSortedAsc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -5px -23px;
 }
 .gridxRtl .gridxCellSortedDesc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -25px -23px;
 }
 .gridxRtl .gridxCell:hover.gridxCellSortedAsc .gridxSortBtnNested,
 .gridxRtl .gridxCellSortFocus.gridxCellSortedAsc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -45px -23px;
 }
 .gridxRtl .gridxCell:hover.gridxCellSortedDesc .gridxSortBtnNested,
 .gridxRtl .gridxCellSortFocus.gridxCellSortedDesc .gridxSortBtnNested {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -85px -23px;
 }
 .gridxRtl .gridxNestedSorted .gridxCell:hover .gridxSortBtnSingle,
 .gridxRtl .gridxNestedSorted .gridxCellSortFocus .gridxSortBtnSingle {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -65px -23px;
 }
@@ -1737,56 +1706,56 @@ body .gridxSlantedHeader .gridxHeaderRow {
   text-align: left;
 }
 .gridxRtl .gridxPagerFirstPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -62px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxRtl .gridxPagerFirstPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -62px -62px;
   height: 16px;
   width: 16px;
 }
 .gridxRtl .gridxPagerPrevPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -22px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxRtl .gridxPagerPrevPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -22px -62px;
   height: 16px;
   width: 16px;
 }
 .gridxRtl .gridxPagerNextPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -2px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxRtl .gridxPagerNextPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -2px -62px;
   height: 16px;
   width: 16px;
 }
 .gridxRtl .gridxPagerLastPage {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -42px -42px;
   height: 16px;
   width: 16px;
 }
 .gridxRtl .gridxPagerLastPageDisable {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -42px -62px;
   height: 16px;
@@ -1810,7 +1779,7 @@ body .gridxSlantedHeader .gridxHeaderRow {
   float: right;
 }
 .gridxRtl .gridxFilterBarBtnIcon {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -142.5px -62.5px;
   height: 15px;
@@ -1844,17 +1813,11 @@ body .gridxSlantedHeader .gridxHeaderRow {
 }
 .claro {
   /*common*/
-
   /*Body*/
-
   /*Header*/
-
   /* Row header */
-
   /* toolbar */
-
   /* PagedBody */
-
 }
 .claro .gridx {
   background-color: #fff;
@@ -1869,7 +1832,7 @@ body .gridxSlantedHeader .gridxHeaderRow {
 }
 .claro .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable,
 .claro .gridxBodyRowHoverEffect .gridxRowOver .gridxCell {
-  background: url("../images/rowback.png") #abd6ff repeat-x;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABkCAYAAABHLFpgAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QgfCgczp3jbXgAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAARElEQVQY02P4////VYb////7MjEwMIjBCSEmBgYGBiYGBoY/cOInnPUXVeIPEwMDw28srF9wLrEEmgFoxF8EwTAKyAUAMSQmGGxBkFgAAAAASUVORK5CYII=') #abd6ff repeat-x;
 }
 .claro .gridx .gridxBody .gridxRow .gridxCellFocus {
   outline: none;
@@ -1896,7 +1859,7 @@ body .gridxSlantedHeader .gridxHeaderRow {
   border-collapse: collapse;
 }
 .claro .gridxHeaderRowInner {
-  background-image: url('../images/claro-grid-header-onepixel.bmp');
+  background-image: url('data:image/bmp;base64,Qk06AAAAAAAAADYAAAAoAAAAAQAAAAEAAAABABgAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAvLy8AA==');
   background-position: right;
   background-repeat: repeat-y;
   border-right: 1px solid #FFFFFF;
@@ -1913,25 +1876,18 @@ body .gridxSlantedHeader .gridxHeaderRow {
 .claro .gridxHeaderRow {
   background: #edf2f7;
   /* Old browsers */
-
   background: -moz-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #edf2f7), color-stop(100%, #d0dfea));
   /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* Opera 11.10+ */
-
   background: -ms-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* IE10+ */
-
   background: linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* W3C */
-
 }
 .claro .gridxHeader .gridxHeaderRow .gridxCell:hover,
 .claro .gridxHeader .gridxHeaderRow .gridxHeaderCellTouch {
@@ -1974,7 +1930,6 @@ body .gridxSlantedHeader .gridxHeaderRow {
 }
 .claro {
   /* Quick Filter */
-
 }
 .claro .gridxQuickFilter {
   padding: 2px;
@@ -2026,31 +1981,22 @@ body .gridxSlantedHeader .gridxHeaderRow {
   border-top-color: #edf2f7;
   background: #edf2f7;
   /* Old browsers */
-
   background: -moz-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* FF3.6+ */
-
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #edf2f7), color-stop(100%, #d0dfea));
   /* Chrome,Safari4+ */
-
   background: -webkit-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* Chrome10+,Safari5.1+ */
-
   background: -o-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* Opera 11.10+ */
-
   background: -ms-linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* IE10+ */
-
   background: linear-gradient(top, #edf2f7 0%, #d0dfea 100%);
   /* W3C */
-
 }
 .claro {
   /* row select */
-
   /* Indirect Select */
-
 }
 .claro .gridxRowSelected .gridxRowTable,
 .claro .gridxRowSelected .gridxCell,
@@ -2059,14 +2005,14 @@ body .gridxSlantedHeader .gridxHeaderRow {
   background: url("../images/rowback.png") #cee6fa repeat-x;
 }
 .claro .gridx .dijitCheckBoxPartial {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -202px -82px;
   height: 16px;
   width: 16px;
 }
 .claro .gridx .dijitCheckBoxPartialDisabled {
-  background-image: url("images/sprite.png");
+  background-image: url("../images/sprite.png");
   background-repeat: no-repeat;
   background-position: -202px -102px;
   height: 16px;
@@ -2074,7 +2020,6 @@ body .gridxSlantedHeader .gridxHeaderRow {
 }
 .claro {
   /* pagination bar */
-
 }
 .claro .gridxPager {
   background-color: #eaf1f6;
@@ -2104,7 +2049,6 @@ body .gridxSlantedHeader .gridxHeaderRow {
 /* Header */
 .claro .gridxRtl {
   /* Body */
-
 }
 .claro .gridxRtl .gridxGroupHeader {
   border-color: transparent #FFFFFF #BCBCBC #BCBCBC;
