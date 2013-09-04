@@ -48,8 +48,8 @@ define([
 					//make it compatible with column resizer
 					_this.connect(g.columnResizer, 'onResize', '_adjustBody');
 					_this.connect(g.columnResizer, 'onResize', '_updatePosition');
-					
 				}
+
 
 				
 				_this.lock(_this.count);
@@ -81,6 +81,8 @@ define([
 			
 			this._adjustBody();
 			this._updatePosition();
+
+			
 		},
 		
 		unlock: function(){
@@ -108,7 +110,7 @@ define([
 			this.grid.bodyNode.style.paddingTop = h + 'px';
 			if(this.grid.rowHeader){
 				this.grid.rowHeader.bodyNode.style.paddingTop = h + 'px';			
-			} 
+			}
 		},
 		
 		_updatePosition: function(){

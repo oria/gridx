@@ -1974,8 +1974,8 @@ body .gridxSlantedHeader .gridxHeaderRow {
 .claro .gridxRowOdd .gridxLockedCell {
   background-color: #f1f8ff;
 }
-.claro .gridxRowOver .gridxLockedCell {
-  background: url("../images/row_back.png") #abd6ff repeat-x;
+.claro .gridxBodyRowHoverEffect .gridxRowOver .gridxLockedCell {
+  background: url("../images/rowback.png") #abd6ff repeat-x;
 }
 .claro .gridxHeaderRow .gridxLockedCell,
 .claro.gridxColumnResizing .gridx .gridxHeader .gridxHeaderRow .gridxLockedCell:hover {
