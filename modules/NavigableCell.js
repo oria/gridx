@@ -114,14 +114,14 @@ define([
 		_beginNavigate: function(rowId, colId){
 			var t = this;
 			if(t._isNavigable(colId)){
-				t._navigating = true;
 				t._focusColId = colId;
 				t._focusRowId = rowId;
 				var navElems = t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
-					rowId: rowId, 
+					rowId: rowId,
 					colId: colId
 				}));
-				return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+				//Intentional assignment
+				return t._navigating = (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
 			}
 			return false;
 		},
