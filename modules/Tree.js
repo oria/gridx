@@ -508,7 +508,7 @@ define([
 					array.forEach(cols, function(col, i){
 						col.expandLevel = i + 1;
 					});
-				}else{
+				}else if(cols.length){
 					cols[0].expandLevel = 1;
 				}
 			}
