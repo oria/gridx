@@ -471,7 +471,7 @@ define([
 					array.forEach(cols, function(col, i){
 						col.expandLevel = i + 1;
 					});
-				}else{
+				}else if(cols.length){
 					cols[0].expandLevel = 1;
 				}
 			}
@@ -603,7 +603,7 @@ define([
 
 		//Focus------------------------------------------------------------------
 		_initFocus: function(){
-			this.connect(this.grid, 'onCellKeyPress', '_onKey'); 
+			this.connect(this.grid, 'onCellKeyDown', '_onKey'); 
 		},
 
 		_onKey: function(e){
