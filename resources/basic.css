@@ -267,6 +267,8 @@
 	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
+	width: 100%;
+	
 }
 
 .gridxRowHeaderHeader .gridxHeaderCellFocus {
