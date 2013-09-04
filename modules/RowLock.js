@@ -43,6 +43,14 @@ define([
 				if(_this.grid.vScroller)_this.connect(g.vScrollerNode, 'onscroll', function(){
 					_this._updatePosition();
 				});
+
+				if(g.columnResizer){
+					//make it compatible with column resizer
+					_this.connect(g.columnResizer, 'onResize', '_adjustBody');
+					_this.connect(g.columnResizer, 'onResize', '_updatePosition');
+					
+				}
+
 				
 				_this.lock(_this.count);
 				_this.loaded.callback();
