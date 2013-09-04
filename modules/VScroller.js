@@ -58,7 +58,7 @@ define([
 				if(has('ie') < 8){
 					dn.style.width = '0px';
 				}
-			}else{
+			}else if(!has('mac')){
 				var w = metrics.getScrollbar().w,
 					ltr = g.isLeftToRight();
 				dn.style.width = w + 'px';
@@ -66,8 +66,7 @@ define([
 				if(has('ie') < 8){
 					t.stubNode.style.width = (w + 1) + 'px';
 				}
-			}
-			if(has('mac')){
+			}else{
 				domClass.add(g.domNode, 'gridxMac');
 			}
 		},
