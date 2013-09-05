@@ -1,11 +1,13 @@
 define([
 	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
 	"dojo/keys",
 	"../core/_Module"
-], function(declare, domClass, domGeometry, query, keys, _Module){
+], function(declare, lang, has, domClass, domGeometry, query, keys, _Module){
 
 	var transitionDuration = 700;
 
@@ -15,11 +17,18 @@ define([
 		}
 	}
 
+	var nextLevelButtonColumnId = '__nextLevelButton__';
+
 	return declare(_Module, {
 		name: "layer",
 
+		buttonColumnWidth: '20px',
+
+		buttonColumnArgs: null,
+
 		constructor: function(){
 			var t = this,
+				g = t.grid,
 				n = t._tmpBodyNode = document.createElement('div'),
 				cn = t._contextNode = document.createElement('div'),
 				wrapper1 = t._wrapper1 = document.createElement('div'),
@@ -32,17 +41,66 @@ define([
 			t.connect(cn, 'onmousedown', 'up');
 			function updateColumnWidth(node){
 				var columnId = node.getAttribute('colid');
-				var headerNode = t.grid.header.getHeaderNode(columnId);
+				var headerNode = g.header.getHeaderNode(columnId);
 				node.style.width = headerNode.style.width;
 				node.style.minWidth = headerNode.style.minWidth;
 				node.style.maxWidth = headerNode.style.maxWidth;
 			}
-			t.connect(t.grid.columnWidth, 'onUpdate', function(){
+			t.aspect(g.columnWidth, 'onUpdate', function(){
 				query('.gridxCell', wrapper1).forEach(updateColumnWidth);
 				query('.gridxCell', wrapper2).forEach(updateColumnWidth);
 			});
-//            this.connect(this.grid.bodyNode, 'ontransitionend', '_onTransitionEnd');
+
+			var w = t.arg('buttonColumnWidth');
+			var col = t._col = lang.mixin({
+				id: nextLevelButtonColumnId,
+				headerStyle: 'text-align:center;',
+				style: function(cell){
+					return 'text-align:center;' + (cell.model.hasChildren(cell.row.id) ? 'cursor:pointer;' : '');
+				},
+				rowSelectable: false,
+				sortable: false,
+				filterable: false,
+				editable: false,
+				padding: false,
+				ignore: true,
+				declaredWidth: w,
+				width: w,
+				decorator: function(data, rowId){
+					if(t.model.hasChildren(rowId)){
+						return '<div class="gridxLayerHasChildren"></div>';
+					}
+					return '';
+				}
+			}, t.arg('buttonColumnArgs', {}));
+			t._onSetColumns();
+			t.aspect(g, 'setColumns', '_onSetColumns');
+
+			t.aspect(g, has('ios') || has('android') ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
+				if(e.columnId == nextLevelButtonColumnId && e.cellNode.childNodes.length){
+					t.down(e.rowId);
+				}
+			});
+			t.aspect(t, 'onReady', function(args){
+				if(args.isDown){
+					query('.gridxLayerHasChildren', args.parentRowNode).
+						removeClass('gridxLayerHasChildren').
+						addClass('gridxLayerLevelUp');
+				}else if(args.parentRowNode){
+					query('.gridxLayerLevelUp', args.parentRowNode).
+						removeClass('gridxLayerLevelUp').
+						addClass('gridxLayerHasChildren');
+				}
+			});
 		},
+
+		_onSetColumns: function(){
+			var g = this.grid,
+				col = this._col;
+			g._columns.push(col);
+			g._columnsById[col.id] = col;
+		},
+
 
 		preload: function(){
 			this.grid.vLayout.register(this, '_contextNode', 'headerNode', 10);
@@ -78,6 +136,7 @@ define([
 				tmpBn.style.zIndex = 0;
 				wrapper2.style.top = (pos.y - refPos.y) + 'px';
 				wrapper2.style.zIndex = 9999;
+				g.vScrollerNode.style.zIndex = 9999;
 
 				m.setLayer(id);
 				t._refresh(function(){
@@ -123,6 +182,7 @@ define([
 				wrapper1.style.top = 0;
 				wrapper1.style.zIndex = 2;
 				wrapper2.style.left = -w + 'px';
+				g.vScrollerNode.style.zIndex = 9999;
 
 				m.layerUp();
 				t._refresh(function(){
@@ -182,6 +242,7 @@ define([
 				bn.style.zIndex = '';
 				tmpBn.style.paddingTop = 0;
 				tmpBn.style.zIndex = '';
+				g.vScrollerNode.style.zIndex = '';
 
 				g.vLayout.reLayout();
 				for(var i = 0; i < tmpBn.childNodes.length; ++i){

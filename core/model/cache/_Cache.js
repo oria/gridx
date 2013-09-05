@@ -197,15 +197,15 @@ define([
 			return item;
 		},
 
-		_formatCell: function(colId, rawData){
+		_formatCell: function(rawData, rowId, colId){
 			var col = this.columns[colId];
-			return col.formatter ? col.formatter(rawData) : rawData[col.field || colId];
+			return col.formatter ? col.formatter(rawData, rowId) : rawData[col.field || colId];
 		},
 
-		_formatRow: function(rowData){
+		_formatRow: function(rowData, rowId){
 			var cols = this.columns, res = {}, colId;
 			for(colId in cols){
-				res[colId] = this._formatCell(colId, rowData);
+				res[colId] = this._formatCell(rowData, rowId, colId);
 			}
 			return res;
 		},
@@ -234,7 +234,7 @@ define([
 				pr.push(id);
 			}
 			t._cache[id] = {
-				data: t._formatRow(rowData),
+				data: t._formatRow(rowData, id),
 				rawData: rowData,
 				item: item
 			};
@@ -324,10 +324,11 @@ define([
 				row = t._itemToObject(item),
 				parentItem = parentInfo && parentInfo[s.fetch ? 'item' : 'parent'],
 				parentId = parentItem ? s.getIdentity(parentItem) : '',
+				id = s.getIdentity(item),
 				size = t._size[''];
 			t.clear();
-			t.onNew(s.getIdentity(item), 0, {
-				data: t._formatRow(row),
+			t.onNew(id, 0, {
+				data: t._formatRow(row, id),
 				rawData: row,
 				item: item
 			});
