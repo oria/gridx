@@ -66,18 +66,14 @@ define([
 		//Public----------------------------------------------------------------------------
 		to: function(name){
 			var g = this.grid;
-			var structure = this.config[name] || array.map(g.structure, function(col){
-				return col.id;
-			});
+			var structure = this.config[name] || g.structure;
 			if(structure){
 				var hiddenColumns = g.hiddenColumns;
-				var toHide = array.filter(array.map(g._columns, function(col){
-					return col.id;
-				}), function(id){
-					return array.indexOf(structure, id) < 0;
+				var toHide = array.filter(g._columns, function(col){
+					return array.indexOf(structure, col.id) < 0;
 				});
-				var toShow = array.filter(structure, function(id){
-					return !g._columnsById[id];
+				var toShow = array.filter(structure, function(col){
+					return !g._columnsById[col.id];
 				});
 				hiddenColumns.add.apply(hiddenColumns, toHide);
 				hiddenColumns.remove.apply(hiddenColumns, toShow);
