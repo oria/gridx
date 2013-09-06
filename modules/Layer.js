@@ -112,7 +112,7 @@ define([
 		down: function(id){
 			var t = this,
 				m = t.model;
-			if(!t._lock && m.hasChildren(id) && m.parentId(id) === m.layerId()){
+			if(!t._lock && m.hasChildren(id) && String(m.parentId(id)) === String(m.layerId())){
 				t._lock = 1;
 				var g = t.grid,
 					bn = g.bodyNode,
