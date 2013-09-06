@@ -528,12 +528,18 @@ define([
 					info.count -= count;
 					info = openInfo[info.parentId];
 				}
-				t.visualCount -= count;
+				if(parentId === '' && rowIndex >= t.rootStart && rowIndex < t.rootStart + t.rootCount){
+					t.rootCount--;
+				}
+				var rootIndex = model.idToIndex(model.rootId(rowId));
+				if(rootIndex >= t.rootStart && rootIndex < t.rootStart + t.rootCount){
+					t.visualCount -= count;
+				}
 			}else{
 				//FIXME: what to do if some unknown row is deleted?
 				this._clear();
-				this.grid.body.lazyRefresh();
 			}
+			this.grid.body.lazyRefresh();
 		}
 	});
 });

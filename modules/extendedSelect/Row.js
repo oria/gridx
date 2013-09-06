@@ -236,12 +236,18 @@ define([
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
 			t.model.setMarkable(lang.hitch(t, t._isSelectable));
+			function canSelect(e){
+				if(e.columnId && t.arg('triggerOnCell')){
+					return g._columnsById[e.columnId].rowSelectable !== false &&
+						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				}
+				return !columnId;
+			}
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if(mouse.isLeft(e) && ((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) || !e.columnId)){
+					if(mouse.isLeft(e) && canSelect(e)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
@@ -253,10 +259,7 @@ define([
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
-					if(((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
-						!e.columnId || e.columnId === '__indirectSelect__')){
+					if(canSelect(e)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
