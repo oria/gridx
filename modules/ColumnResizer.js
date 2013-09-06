@@ -138,7 +138,6 @@ define([
 				flags = t.grid._eventFlags;
 			if(cell){
 				if(t._resizing){
-					console.log('in resizing');
 					removeClass(cell, 'gridxHeaderCellOver');
 				}
 				if(t._resizing || !cell || t._ismousedown){
@@ -305,6 +304,7 @@ define([
 		_getCellX: function(e){
 			var target = e.target,
 				cell = getCell(e);
+				
 			if(!cell){
 				return 100000;
 			}
@@ -313,14 +313,24 @@ define([
 				return 0;
 			}
 			var lx = e.offsetX;
+
 			if(lx == undefined){
 				lx = e.layerX;
 			}
 			if(!/th/i.test(target.tagName)){
 				lx += target.offsetLeft;
 			}
+			
+			
 			//Firefox seems have problem to get offsetX for TH
 			if(sniff('ff') && /th/i.test(target.tagName)){
+				if(this.grid.columnLock && !domClass.contains(target, 'gridxLockedCell')){
+					var r = query(target).closest('.gridxHeaderRowInner');
+						pl = r? parseInt(r[0].style.paddingLeft, 10) : 0;
+					
+					lx -= pl;
+				}
+				
 				var ltr = this.grid.isLeftToRight();
 				var scrollLeft = -parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, ltr ? 'marginLeft' : 'marginRight'));
 				if(!ltr){
