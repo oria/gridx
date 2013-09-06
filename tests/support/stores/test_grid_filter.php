@@ -199,6 +199,7 @@ function output($data){
 
 function slice($data){
 	$range = $_SERVER['HTTP_RANGE'];
+	// var_dump($range);
 	$range = substr($range, 6);
 	$pairs = explode('-', $range);
 	$start = intval($pairs[0]);
@@ -206,7 +207,9 @@ function slice($data){
 	
 	$a = array();
 	for($i = $start; $i <= $end; $i++){
-		$a[] = $data[$i];
+		if(array_key_exists($i, $data)){
+			$a[] = $data[$i];
+		}	
 	}
 	return $a;
 }
