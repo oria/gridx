@@ -1,9 +1,10 @@
 define([
+	'dojo/_base/kernel',
 	'dojo/_base/declare',
 	'dojo/_base/array',
 	'../core/_Module'
-], function(declare, array, _Module){
-
+], function(kernel, declare, array, _Module){
+	kernel.experimental('gridx/modules/structureSwitch');
 /*=====
 =====*/
 
