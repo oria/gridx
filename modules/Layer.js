@@ -9,7 +9,7 @@ define([
 	"dojo/keys",
 	"../core/_Module"
 ], function(kernel, declare, lang, has, domClass, domGeometry, query, keys, _Module){
-	kernel.experimental('gridx/modules/Dod');
+	kernel.experimental('gridx/modules/Layer');
 
 	var transitionDuration = 700;
 
@@ -130,6 +130,8 @@ define([
 					refPos = domGeometry.position(t._contextNode),
 					cloneParent = parentRowNode.cloneNode(true);
 
+				domClass.add(parentRowNode, 'gridxLayerLoading');
+
 				wrapper2.appendChild(cloneParent);
 				t._parentStack.push(cloneParent);
 				cloneParent._pos = g.vScroller.position();
@@ -140,11 +142,13 @@ define([
 				tmpBn.style.left = 0;
 				tmpBn.style.zIndex = 0;
 				wrapper2.style.top = (pos.y - refPos.y) + 'px';
-				wrapper2.style.zIndex = 9999;
+				wrapper2.style.zIndex = -1;
 				g.vScrollerNode.style.zIndex = 9999;
 
 				m.setLayer(id);
 				t._refresh(function(){
+					domClass.remove(parentRowNode, 'gridxLayerLoading');
+					wrapper2.style.zIndex = 9999;
 					g.vScroller.scroll(0);
 					domClass.add(wrapper1, 'gridxLayerHSlide');
 					domClass.add(wrapper2, 'gridxLayerVSlide');
