@@ -309,6 +309,13 @@ define([
 			}
 			//Firefox seems have problem to get offsetX for TH
 			if(sniff('ff') && /th/i.test(target.tagName)){
+				if(this.grid.columnLock && !domClass.contains(target, 'gridxLockedCell')){
+					var r = query(target).closest('.gridxHeaderRowInner');
+						pl = r? parseInt(r[0].style.paddingLeft, 10) : 0;
+					
+					lx -= pl;
+				}
+				
 				var ltr = this.grid.isLeftToRight();
 				var scrollLeft = -parseInt(domStyle.get(cell.parentNode.parentNode.parentNode, ltr ? 'marginLeft' : 'marginRight'));
 				if(!ltr){
