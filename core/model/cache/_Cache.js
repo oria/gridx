@@ -69,6 +69,7 @@ define([
 			//virtual root node, with id ''.
 			t._struct[''] = [];
 			t._size[''] = -1;
+			t.totalSize = undefined;
 		},
 
 		layerId: function(){
@@ -260,6 +261,15 @@ define([
 				t._size[parentId] = parseInt(size, 10);
 			}
 			function onComplete(items){
+				//FIXME: store does not support getting total size after filter/query, so we must change the protocal a little.
+				if(items.ioArgs && items.ioArgs.xhr){
+					var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
+					if(range && (range = range.match(/(.+)\//))){
+						t.totalSize = +range[1];
+					}else{
+						t.totalSize = undefined;
+					}
+				}
 				try{
 					var start = options.start || 0,
 						i = 0,
@@ -334,6 +344,9 @@ define([
 			});
 			if(!parentItem && size >= 0){
 				t._size[''] = size + 1;
+				if(t.totalSize >= 0){
+					t.totalSize = size + 1;
+				}
 				t.model._onSizeChange();
 			}
 		},
@@ -376,6 +389,9 @@ define([
 				t.onDelete(id, index - 1, path);
 				if(!parentId && size >= 0){
 					sz[''] = size - 1;
+					if(t.totalSize >= 0){
+						t.totalSize = size - 1;
+					}
 					t.model._onSizeChange();
 				}
 			}else{
