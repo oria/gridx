@@ -1,4 +1,5 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
@@ -7,7 +8,8 @@ define([
 	"dojo/query",
 	"dojo/keys",
 	"../core/_Module"
-], function(declare, lang, has, domClass, domGeometry, query, keys, _Module){
+], function(kernel, declare, lang, has, domClass, domGeometry, query, keys, _Module){
+	kernel.experimental('gridx/modules/Dod');
 
 	var transitionDuration = 700;
 
@@ -78,7 +80,10 @@ define([
 
 			t.aspect(g, has('ios') || has('android') ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
 				if(e.columnId == nextLevelButtonColumnId && e.cellNode.childNodes.length){
-					t.down(e.rowId);
+					g.focus.focusArea('header');
+					setTimeout(function(){
+						t.down(e.rowId);
+					}, 0);
 				}
 			});
 			t.aspect(t, 'onReady', function(args){
@@ -236,8 +241,10 @@ define([
 
 				wrapper1.style.left = 0;
 				wrapper1.style.zIndex = '';
+				wrapper1.style.top = 0;
 				wrapper2.style.left = 0;
 				wrapper2.style.zIndex = '';
+				wrapper2.style.top = 0;
 				bn.style.paddingTop = 0;
 				bn.style.zIndex = '';
 				tmpBn.style.paddingTop = 0;
