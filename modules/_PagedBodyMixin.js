@@ -38,11 +38,6 @@ define([
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
-			t.connect(g, '_onResizeEnd', function(){
-				if(t._checkSpace()){
-					t._load(1);
-				}
-			});
 
 			if(t.arg('createBottom')){
 				t._bottomNode = domConstruct.create('div', {
@@ -234,13 +229,17 @@ define([
 					}
 				}
 				n.innerHTML = '';
-				en.innerHTML = t.arg('emptyInfo', g.nls.emptyInfo);
-				en.style.zIndex = 1;
 				if(!t._skipUnrender){
 					t.onUnrender();
 				}
-				t.onEmpty();
-				t.model.free();
+				if(!t.model.size()){
+					en.innerHTML = t.arg('emptyInfo', g.nls.emptyInfo);
+					en.style.zIndex = 1;
+					t.onEmpty();
+					t.model.free();
+				}else{
+					n.appendChild(t._bottomNode);
+				}
 			}
 		},
 
@@ -262,14 +261,6 @@ define([
 					domClass.add(lastRow, 'gridxBodyLastRow');
 				}
 			}
-			if(t._checkSpace()){
-				t._load(1);
-			}
-		},
-
-		_checkSpace: function(){
-			var bn = this.domNode;
-			return bn.lastChild == this._bottomNode && bn.lastChild.offsetTop + bn.lastChild.offsetHeight < bn.scrollTop + bn.offsetHeight;
 		},
 
 		_load: function(isPost){
