@@ -180,7 +180,7 @@ define([
 				c = t._cache[id];
 				for(colId in columns){
 					col = columns[colId];
-					c.data[colId] = t._formatCell(col.id, c.rawData);
+					c.data[colId] = t._formatCell(c.rawData, id, col.id);
 				}
 			}
 		},
