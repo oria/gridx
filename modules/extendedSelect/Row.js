@@ -242,7 +242,7 @@ define([
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
 						!domClass.contains(e.target, 'gridxTreeExpandoInner');
 				}
-				return !columnId;
+				return !e.columnId;
 			}
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
