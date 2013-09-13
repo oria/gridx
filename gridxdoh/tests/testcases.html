@@ -457,13 +457,13 @@
 	<h2 tabindex='0' onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler after grid #</h2>
 	<div id='casePanel'></div>
 	<hr/>
-	<div>
+	<div id='displayBtnGroup'>
 		<span>Display</span>
 		<input type='button' value='create display:none' onclick='createDisplayNone()' />
 		<input type='button' value='show grid' onclick='showGrid()' />
 		<input type='button' value='hide grid' onclick='hideGrid()' />
 	</div>
-	<div>
+	<div id='sizeBtnGroup'>
 		<span>Size</span>
 		<input type='button' value='taller' onclick='resizeGrid({h: 1.1})' />
 		<input type='button' value='shorter' onclick='resizeGrid({h: 0.9})' />
@@ -472,7 +472,7 @@
 		<input type='button' value='taller & wider' onclick='resizeGrid({h: 1.1, w: 1.1})' />
 		<input type='button' value='shorter & narrower' onclick='resizeGrid({h: 0.9, w: 0.9})' />
 	</div>
-	<div>
+	<div id='storeColumnBtnGroup'>
 		<span>Store/Column</span>
 		<input type='button' value='set empty store' onclick='setEmptyStore()' />
 		<input type='button' value='set 10-row store' onclick='setStore(10)' />
@@ -483,7 +483,7 @@
 		<input type='button' value='set many columns' onclick='setManyColumns()' />
 		<input type='button' value='restore columns' onclick='restoreColumns()' />
 	</div>
-	<div>
+	<div id='addRemoveBtnGroup'>
 		<span>Add/Remove row</span>
 		<input type='button' value='add 1 row' onclick='addRow()' />
 		<input type='button' value='add 10 rows' onclick='addSomeRows()' />
@@ -494,7 +494,7 @@
 		<input type='button' value='remove last 10 rows' onclick='removeLastSomeRows()' />
 		<input type='button' value='remove 10th row' onclick='removeRow(9)' />
 	</div>
-	<div>
+	<div id='propertiesBtnGroup'>
 		<span>Properties</span>
 		<input type='button' value='toggle header' onclick='toggleHeader()' />
 		<input type='button' value='toggle bodyStuffEmptyCell' onclick='toggleStuffEmptyCell()' />
