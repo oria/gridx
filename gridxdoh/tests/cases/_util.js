@@ -21,7 +21,7 @@ define([
 			return input;
 		},
 		addButton: function(name, onClick){
-			var casePanel = document.getElementById('casePanel');
+			var casePanel = document.getElementById('casePanelBtnGroup');
 			var btn = document.createElement('input');
 			btn.setAttribute('type', 'button');
 			btn.setAttribute('value', name);
