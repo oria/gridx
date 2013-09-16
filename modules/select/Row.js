@@ -225,7 +225,7 @@ define([
 				return !e.columnId;
 			}
 			t.batchConnect(
-				[g, 'onRowClick', function(e){
+				[g, 'onRowMouseDown', function(e){
 					//Have to check whether we are on the 
 					if(canSelect(e)){
 						t._select(e.rowId, g._isCopyEvent(e));
