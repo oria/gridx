@@ -110,6 +110,8 @@ define([
 		//		CellWidget module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
 		widgetsInCell: false,
 
+		allowEventBubble: false,
+
 		decorator: function(){
 			// summary:
 			//		This decorator function is slightly different from the one when this module is not used.
@@ -203,13 +205,14 @@ define([
 			},
 
 			postCreate: function(){
-				var dn = this.domNode;
-				this.connect(dn, 'onmousedown', function(e){
-					if(e.target != dn){
+				var t = this,
+					dn = t.domNode;
+				t.connect(dn, 'onmousedown', function(e){
+					if(e.target != dn && !t.cell.column.allowEventBubble){
 						e.cancelBubble = true;
 					}
 				});
-				this._cellCnnts = [];
+				t._cellCnnts = [];
 			},
 
 			startup: function(){

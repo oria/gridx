@@ -216,7 +216,7 @@ define([
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
 			t.batchConnect(
-				[g, 'onRowClick', function(e){
+				[g, 'onRowMouseDown', function(e){
 					//Have to check whether we are on the 
 					if((t.arg('triggerOnCell') &&
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
