@@ -86,7 +86,8 @@ define([
 							colIndex = g._columnsById[t._focusColId].index,
 							dir = step > 0 ? 1 : -1,
 							checker = function(r, c){
-								return t._isNavigable(g._columns[c].id);
+								//If there's no decorator, we assume there's no focusable elements in this column
+								return t._isNavigable(g._columns[c].id) && g._columns[c].decorator;
 							};
 						body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
 							t._focusColId = g._columns[obj.c].id;
