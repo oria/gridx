@@ -167,7 +167,7 @@ define([
 			var doSelect = function(e){
 				if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
 					!domClass.contains(e.target, 'gridxTreeExpandoInner')){
-					t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+					t._select([e.rowId, e.columnId], g._isCtrlKey(e));
 				}
 			};
 			t.batchConnect(
@@ -175,7 +175,7 @@ define([
 				[g, 'onCellTouchStart', doSelect],
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+						t._select([e.rowId, e.columnId], g._isCtrlKey(e));
 						event.stop(e);
 					}
 				}]);

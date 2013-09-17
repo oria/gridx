@@ -252,7 +252,7 @@ define([
 					if(mouse.isLeft(e) && (
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
 						!domClass.contains(e.target, 'gridxTreeExpandoInner'))){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -264,7 +264,7 @@ define([
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
 						event.stop(e);
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}]
@@ -314,7 +314,7 @@ define([
 					g = t.grid,
 					rid = t._getRowId(rowVisIndex),
 					cid = g._columns[colIndex].id;
-				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
+				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},

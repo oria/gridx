@@ -35,6 +35,7 @@ require([
 		{ field: "Artist", name:"Button", 
 			widgetsInCell: true,
 			navigable: true,
+			allowEventBubble: true,
 			decorator: function(){
 				//Generate cell widget template string
 				return [

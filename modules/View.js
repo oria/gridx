@@ -151,7 +151,7 @@ define([
 			t._clear();
 			t.aspect(m, 'onSizeChange', '_onSizeChange');
 			t.aspect(m, 'onDelete', '_onDelete');
-			t.aspect(g, 'setStore', function(){
+			t.aspect(m, 'setStore', function(){
 				//If server store changes without notifying grid, expanded rows should remain expanded.
 				if(t.arg('clearOnSetStore')){
 					t._clear();
@@ -528,12 +528,18 @@ define([
 					info.count -= count;
 					info = openInfo[info.parentId];
 				}
-				t.visualCount -= count;
+				if(parentId === '' && rowIndex >= t.rootStart && rowIndex < t.rootStart + t.rootCount){
+					t.rootCount--;
+				}
+				var rootIndex = model.idToIndex(model.rootId(rowId));
+				if(rootIndex >= t.rootStart && rootIndex < t.rootStart + t.rootCount){
+					t.visualCount -= count;
+				}
 			}else{
 				//FIXME: what to do if some unknown row is deleted?
 				this._clear();
-				this.grid.body.lazyRefresh();
 			}
+			this.grid.body.lazyRefresh();
 		}
 	});
 });

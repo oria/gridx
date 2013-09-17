@@ -236,32 +236,35 @@ define([
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
 			t.model.setMarkable(lang.hitch(t, t._isSelectable));
+			function canSelect(e){
+				if(e.columnId && t.arg('triggerOnCell')){
+					return g._columnsById[e.columnId].rowSelectable !== false &&
+						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				}
+				return !e.columnId;
+			}
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if(mouse.isLeft(e) && ((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) || !e.columnId)){
+					if(mouse.isLeft(e) && canSelect(e)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
-					if(((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
-						!e.columnId || e.columnId === '__indirectSelect__')){
+					if(canSelect(e)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCopyEvent(e) || e.columnId === '__indirectSelect__', e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCtrlKey(e) || e.columnId === '__indirectSelect__', e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -285,11 +288,11 @@ define([
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						event.stop(e);
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}],
-				[g, 'setStore', '_syncUnselectable']);
+				[g.model, 'setStore', '_syncUnselectable']);
 		},
 
 		_markById: function(args, toSelect){
@@ -360,14 +363,14 @@ define([
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
 			var t = this;
 			if(t.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				t._start({row: rowVisIndex}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({row: rowVisIndex}, t.grid._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},
 
 		_onMoveToRowHeaderCell: function(rowVisIndex, e){
 			if(e.shiftKey){
-				this._start({row: rowVisIndex}, this.grid._isCopyEvent(e), 1);	//1 as true
+				this._start({row: rowVisIndex}, this.grid._isCtrlKey(e), 1);	//1 as true
 				this._end();
 			}
 		},

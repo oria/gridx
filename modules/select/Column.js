@@ -158,12 +158,12 @@ define([
 			t.batchConnect(
 				[g, 'onHeaderCellClick', function(e){
 					if(!domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, g._isCtrlKey(e));
 					}
 				}],
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, g._isCtrlKey(e));
 						event.stop(e);
 					}
 				}]

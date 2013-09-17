@@ -104,10 +104,10 @@ define([
 				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', t.grid.nls['load' + cls + 'Loading']) :
 				t.arg('load' + cls + 'Label', t.grid.nls['load' + cls]);
 			btn.disabled = !!begin;
-		},
+		}/*,
 
 		_checkSpace: function(){
 			return this.inherited(arguments) && this.renderCount < this.arg('maxPageCount') * this.arg('pageSize');
-		}
+		}*/
 	});
 });

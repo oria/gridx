@@ -242,7 +242,7 @@ define([
 		},
 		_onKeyDown: function(evt){
 			// CTRL - A
-			if(evt.keyCode == 65 && evt.ctrlKey && !evt.shiftKey){
+			if(evt.keyCode == 65 && this.grid._isCtrlKey(evt) && !evt.shiftKey){
 				if(!this._allSelected[this._getPageId()]){
 					this._onSelectAll();
 				}

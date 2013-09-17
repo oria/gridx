@@ -187,6 +187,8 @@ define([
 		maxRuleCount: 0,
 		
 		ruleCountToConfirmClearFilter: 2,
+
+		//useShortMessage: false,
 		
 		conditions: {
 			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
@@ -217,6 +219,10 @@ define([
 			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
 			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
+			this.aspect(this.grid.model, 'setStore', function(){
+				this.filterData = null;
+				this._buildFilterState();
+			});
 			this.loaded.callback();
 		},
 		onDomClick: function(e){
@@ -267,7 +273,7 @@ define([
 			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
 				_this._currentSize = _this.model.size();
-				_this._totalSize = _this.model._cache.size();
+				_this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
 				_this._buildFilterState();
 			});
 		},
@@ -334,7 +340,7 @@ define([
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
 			this._currentSize = this.model.size();
-			this._totalSize = this.model._cache.size();
+			this._totalSize = this.model._cache.totalSize >= 0 ? this.model._cache.totalSize : this.model._cache.size();
 			this._buildFilterState();
 		},
 		isVisible: function(){
@@ -442,7 +448,8 @@ define([
 				this.statusNode.innerHTML = this.arg('noFilterMessage', this.grid.nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', this.grid.nls.filterBarMsgHasFilterTemplate),
+			this.statusNode.innerHTML = string.substitute(
+				this.arg('hasFilterMessage', this.arg('useShortMessage') ? this.grid.nls.summary : this.grid.nls.filterBarMsgHasFilterTemplate),
 				[this._currentSize, this._totalSize, this.grid.nls.defaultItemsName]) + 
 				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + this.grid.nls.filterBarClearButton + '">'
 					 + this.grid.nls.filterBarClearButton + '</a>';

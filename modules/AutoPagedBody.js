@@ -41,6 +41,11 @@ define([
 					t._loadHandler = setTimeout(load, 10);
 				}
 			});
+			t.connect(g, '_onResizeEnd', function(){
+				if(t._checkSpace()){
+					t._load(1);
+				}
+			});
 			g.vScroller.loaded.then(function(){
 				var scrollable = g.vScroller._scrollable;
 				if(scrollable){
@@ -52,6 +57,19 @@ define([
 					});
 				}
 			});
+		},
+
+		_checkSpace: function(){
+			var bn = this.domNode;
+			return bn.lastChild == this._bottomNode && bn.lastChild.offsetTop + bn.lastChild.offsetHeight < bn.scrollTop + bn.offsetHeight;
+		},
+
+		onRender: function(/*start, count*/){
+			var t = this;
+			t.inherited(arguments);
+			if(t._checkSpace()){
+				t._load(1);
+			}
 		},
 
 		createBottom: function(bottomNode){

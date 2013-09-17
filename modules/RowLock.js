@@ -93,6 +93,9 @@ define([
 				rowHeaderNode.style.position = 'static';
 			});
 			this.grid.bodyNode.style.paddingTop = '0px';
+			if(this.grid.rowHeader){
+				this.grid.rowHeader.bodyNode.style.paddingTop = '0px';
+			}
 			this.count = 0;
 			
 		},

@@ -626,7 +626,7 @@ define([
 						});
 					});
 				}
-			}else if(e.ctrlKey && isExpando(e.cellNode)){
+			}else if(t.grid._isCtrlKey(e) && isExpando(e.cellNode)){
 				var ltr = t.grid.isLeftToRight();
 				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t.isExpanded(e.rowId)){
 					t.collapse(e.rowId);

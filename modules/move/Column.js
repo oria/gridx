@@ -194,7 +194,7 @@ define([
 				ltr = g.isLeftToRight(),
 				preKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW,
 				postKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW;
-			if(e.ctrlKey && !e.shiftKey && !e.altKey && (e.keyCode == preKey || e.keyCode == postKey)){
+			if(g._isCtrlKey(e) && !e.shiftKey && !e.altKey && (e.keyCode == preKey || e.keyCode == postKey)){
 				var target = e.columnIndex,
 					colIdxes = selector && selector.isSelected(e.columnId) ?
 						array.map(selector.getSelected(), function(id){

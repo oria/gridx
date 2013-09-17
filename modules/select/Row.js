@@ -216,22 +216,24 @@ define([
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
-			t.batchConnect(
-				[g, 'onRowClick', function(e){
-					//Have to check whether we are on the 
-					if((t.arg('triggerOnCell') &&
+			function canSelect(e){
+				if(e.columnId && t.arg('triggerOnCell')){
+					return g._columnsById[e.columnId].rowSelectable !== false &&
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
-						!e.columnId){
-						t._select(e.rowId, g._isCopyEvent(e));
+						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				}
+				return !e.columnId;
+			}
+			t.batchConnect(
+				[g, 'onRowMouseDown', function(e){
+					//Have to check whether we are on the 
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e));
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
-					if((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
-						!e.columnId || e.columnId === '__indirectSelect__'){
-						t._select(e.rowId, g._isCopyEvent(e) || e.columnId === '__indirectSelect__');
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e) || e.columnId === '__indirectSelect__');
 					}
 				}],
 				[g.body, 'onAfterRow', function(row){
@@ -239,15 +241,18 @@ define([
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
 				}],
 				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
+					if(e.keyCode == keys.SPACE && (!e.columnId ||
+							(g._columnsById[e.columnId].rowSelectable) ||
+							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
-							t._select(e.rowId, g._isCopyEvent(e));
+							t._select(e.rowId, g._isCtrlKey(e));
 							event.stop(e);
 						}
 					}
 				}],
-				[g, 'setStore', '_syncUnselectable']
+				[g.model, 'setStore', '_syncUnselectable']
 				);
 		},
 

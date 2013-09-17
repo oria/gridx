@@ -22,12 +22,6 @@ require([
 		maxChildrenCount: 10,
 		minChildrenCount: 10
 	});
-//    store.hasChildren = function(id, item){
-//        return item && store.getValues(item, 'children').length;
-//    };
-//    store.getChildren = function(item){
-//        return store.getValues(item, 'children');
-//    };
 
 	storeAsync = storeFactory({
 		isAsync: true,
@@ -86,15 +80,7 @@ require([
 		{id: 'string', name: 'string', field: 'string'},
 		{id: 'date', name: 'date', field: 'date'},
 		{id: 'time', name: 'time', field: 'time'},
-		{id: 'bool', name: 'bool', field: 'bool'},
-		{id: 'nextLevel', width: '20px', sortable: false,
-			decorator: function(data, rowId, visualIndex, cell){
-				if(cell.model.hasChildren(rowId)){
-					return '<div class="hasChildren">&gt;</div>';
-				}
-				return '';
-			}
-		}
+		{id: 'bool', name: 'bool', field: 'bool'}
 	];
 
 	mods = [
@@ -113,11 +99,5 @@ require([
 		Layer
 	];
 
-	Deferred.when(parser.parse(), function(){
-		grid1.connect(grid1, has('ios') || has('android') ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
-			if(e.columnId == 'nextLevel' && e.cellNode.childNodes.length){
-				grid1.layer.down(e.rowId);
-			}
-		});
-	});
+	parser.parse();
 });

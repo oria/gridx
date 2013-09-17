@@ -257,6 +257,9 @@ define([
 
 		constructor: function(){
 			this.setFilter(this.arg('preCondition'), 1);
+			this.aspect(this.grid.model, 'setStore', function(){
+				this._checker = null;
+			});
 		},
 
 		serverMode: false,
