@@ -280,7 +280,7 @@ define([
 			var t = this, g = t.grid, col,
 				dir = g.isLeftToRight() ? 1 : -1,
 				delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir;
-			if(t._focusHeaderId && !evt.ctrlKey && !evt.altKey &&
+			if(t._focusHeaderId && !g._isCtrlKey(evt) && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);

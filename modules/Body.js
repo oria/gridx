@@ -916,16 +916,17 @@ define([
 			});
 			t.connect(g.mainNode, 'onkeydown', function(evt){
 				if(focus.currentArea() == 'body'){
-					var dk = keys;
-					if(evt.keyCode == dk.HOME && !evt.ctrlKey){
+					var dk = keys,
+						ctrlKey = g._isCtrlKey(evt);
+					if(evt.keyCode == dk.HOME && !ctrlKey){
 						t._focusCellCol = 0;
 						t._focusCell();
 						focus.stopEvent(evt);
-					}else if(evt.keyCode == dk.END && !evt.ctrlKey){
+					}else if(evt.keyCode == dk.END && !ctrlKey){
 						t._focusCellCol = g._columns.length - 1;
 						t._focusCell();
 						focus.stopEvent(evt);
-					}else if(!g.tree || !evt.ctrlKey){
+					}else if(!g.tree || !ctrlKey){
 						focus._noBlur = 1;	//1 as true
 						var arr = {}, dir = g.isLeftToRight() ? 1 : -1;
 						arr[dk.LEFT_ARROW] = [0, -dir, evt];

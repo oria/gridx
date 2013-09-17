@@ -418,16 +418,17 @@ define([
 				view = t.grid.view,
 				focus = t.grid.focus,
 				sn = t.domNode,
+				ctrlKey = t.grid._isCtrlKey(evt),
 				st = 'scrollTop',
 				r,
 				fc = '_focusCellRow';
 			if(!focus || focus.currentArea() == 'body'){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					bd._focusCellCol = 0;
 					bd[fc] = 0;
 					sn[st] = 0;
 					bd._focusCell();
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					bd._focusCellCol = t.grid._columns.length - 1;
 					bd[fc] = view.visualCount - 1;
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;

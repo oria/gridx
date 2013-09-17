@@ -977,6 +977,7 @@ define([
 		_onKey: function(e){
 			var t = this,
 				g = t.grid,
+				ctrlKey = g._isCtrlKey(e),
 				col = g._columnsById[e.columnId];
 			if(col.editable){
 				var editing = t.isEditing(e.rowId, e.columnId);
@@ -999,15 +1000,15 @@ define([
 					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
 						g.focus.focusArea('body');
 					});
-				}else if(e.keyCode == 'Z'.charCodeAt(0) && e.ctrlKey){
+				}else if(e.keyCode == 'Z'.charCodeAt(0) && ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.undo();
 					}
-				}else if(e.keyCode == 'Y'.charCodeAt(0) && e.ctrlKey){
+				}else if(e.keyCode == 'Y'.charCodeAt(0) && ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.redo();
 					}
-				}else if(e.keyCode == 'S'.charCodeAt(0) && e.ctrlKey){
+				}else if(e.keyCode == 'S'.charCodeAt(0) && ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.save();
 						e.preventDefault();

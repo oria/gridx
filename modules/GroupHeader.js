@@ -410,7 +410,7 @@ define([
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid, col,
 				node = t._curNode;
-			if(!evt.ctrlKey && !evt.altKey &&
+			if(!g._isCtrlKey(evt) && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);

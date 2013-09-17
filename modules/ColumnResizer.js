@@ -261,11 +261,11 @@ define([
 		},
 
 		_keydown: function(evt){
+			var t = this,
+				g = t.grid;
 			//support keyboard to resize a column
-			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && evt.ctrlKey && evt.shiftKey){
-				var t = this,
-					g = t.grid,
-					colId = evt.columnId,
+			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && g._isCtrlKey(evt) && evt.shiftKey){
+				var colId = evt.columnId,
 					cellNode = query('[colid="' + g._escapeId(colId) + '"].gridxCell', g.header.innerNode)[0],
 					step = t.arg('step');
 				step = evt.keyCode == keys.LEFT_ARROW ^ !!g.isLeftToRight() ? step : -step;

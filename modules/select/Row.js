@@ -228,12 +228,12 @@ define([
 				[g, 'onRowMouseDown', function(e){
 					//Have to check whether we are on the 
 					if(canSelect(e)){
-						t._select(e.rowId, g._isCopyEvent(e));
+						t._select(e.rowId, g._isCtrlKey(e));
 					}
 				}],
 				[g, 'onRowTouchStart', function(e){
 					if(canSelect(e)){
-						t._select(e.rowId, g._isCopyEvent(e) || e.columnId === '__indirectSelect__');
+						t._select(e.rowId, g._isCtrlKey(e) || e.columnId === '__indirectSelect__');
 					}
 				}],
 				[g.body, 'onAfterRow', function(row){
@@ -247,7 +247,7 @@ define([
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
-							t._select(e.rowId, g._isCopyEvent(e));
+							t._select(e.rowId, g._isCtrlKey(e));
 							event.stop(e);
 						}
 					}

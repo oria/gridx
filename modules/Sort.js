@@ -179,7 +179,7 @@ define([
 
 		_onClick: function(e){
 			event.stop(e);
-			this._sort(e.columnId, domClass.contains(e.target, 'gridxArrowButtonNode'), e.ctrlKey);
+			this._sort(e.columnId, domClass.contains(e.target, 'gridxArrowButtonNode'), this.grid._isCtrlKey(e));
 		},
 
 		_sort: function(id, isSortArrow, isNested){
@@ -323,7 +323,7 @@ define([
 				}else{
 					this.connect(g, 'onHeaderCellKeyDown', function(evt){
 						if(evt.keyCode == keys.ENTER || evt.keyCode == keys.SPACE){
-							this._sort(evt.columnId, false, evt.ctrlKey);
+							this._sort(evt.columnId, false, g._isCtrlKey(evt));
 						}
 					});
 				}
@@ -357,7 +357,7 @@ define([
 					break;
 				case keys.ENTER:
 				case keys.SPACE:
-					this._sort(this._focusHeaderId, this._focusSortArrow, e.ctrlKey);
+					this._sort(this._focusHeaderId, this._focusSortArrow, this.grid._isCtrlKey(e));
 			}
 		},
 

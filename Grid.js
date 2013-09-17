@@ -218,7 +218,7 @@ define([
 		},
 		//event handling end
 
-		_isCopyEvent: function(evt){
+		_isCtrlKey: function(evt){
 			// summary:
 			//		On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
 			//		if you need to implement some handler for Ctrl+click.

@@ -248,13 +248,14 @@ define([
 				bn = g.bodyNode,
 				focus = g.focus,
 				sn = t.domNode,
+				ctrlKey = g._isCtrlKey(evt),
 				rowNode;
 			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					sn[st] = 0;
 					rowNode = bn.firstChild;
 					bd._focusCellCol = 0;
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					sn[st] = sn.scrollHeight - sn.offsetHeight;
 					rowNode = bn.lastChild;
 					bd._focusCellCol = g._columns.length - 1;

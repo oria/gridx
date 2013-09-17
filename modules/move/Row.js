@@ -119,7 +119,7 @@ define([
 			var t = this,
 				g = t.grid,
 				selector = g.select && g.select.row;
-			if(e.ctrlKey && !e.shiftKey && !e.altKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
+			if(g._isCtrlKey(e) && !e.shiftKey && !e.altKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
 				var target = e.rowIndex,
 					doMove = function(rowIdxes){
 						if(e.keyCode == keys.UP_ARROW){
