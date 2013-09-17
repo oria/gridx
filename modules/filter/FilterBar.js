@@ -219,6 +219,10 @@ define([
 			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
 			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
+			this.aspect(this.grid, 'setStore', function(){
+				this.filterData = null;
+				this._buildFilterState();
+			});
 			this.loaded.callback();
 		},
 		onDomClick: function(e){

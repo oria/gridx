@@ -43,8 +43,13 @@ define([
 		templateString: template,
 
 		constructor: function(args){
-			lang.mixin(this, args.grid.nls);
-			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			var t = this;
+			lang.mixin(t, args.grid.nls);
+			t._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			t.connect(args.grid, 'setStore', function(){
+				t.textBox.set('value', '');
+				domClass.remove(t.domNode, 'gridxQuickFilterActive');
+			});
 		},
 
 		postCreate: function(){
