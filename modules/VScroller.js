@@ -184,8 +184,8 @@ define([
 				var display = toShow ? 'block' : 'none';
 				var changed = display != (domStyle.get(t.domNode, 'display') || 'block');
 				ds.display = display;
+				t._updatePos();
 				if(changed){
-					t._updatePos();
 					g.hLayout.reLayout();
 				}
 			}
