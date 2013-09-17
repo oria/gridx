@@ -1,4 +1,5 @@
 var testcases = [
+	'./cases/mobile',
 	'./cases/persist',
 	'./cases/unselectableRows',
 	'./cases/special',
