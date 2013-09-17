@@ -964,13 +964,7 @@ define([
 			this._editing = false;
 			var focus = this.grid.focus;
 			if(focus){
-				if(has('ie')){
-					setTimeout(function(){
-						focus.focusArea('body');
-					}, 1);
-				}else{
-					focus.focusArea('body');
-				}
+				focus.focusArea('body');
 			}
 		},
 		
