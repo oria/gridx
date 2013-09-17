@@ -243,7 +243,7 @@ define([
 					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 				}
 			});
-			t.aspect(g, 'setStore', function(){
+			t.aspect(g.model, 'setStore', function(){
 				t.refresh();
 			});
 		},

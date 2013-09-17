@@ -252,7 +252,7 @@ define([
 						}
 					}
 				}],
-				[g, 'setStore', '_syncUnselectable']
+				[g.model, 'setStore', '_syncUnselectable']
 				);
 		},
 

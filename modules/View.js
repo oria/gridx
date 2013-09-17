@@ -151,7 +151,7 @@ define([
 			t._clear();
 			t.aspect(m, 'onSizeChange', '_onSizeChange');
 			t.aspect(m, 'onDelete', '_onDelete');
-			t.aspect(g, 'setStore', function(){
+			t.aspect(m, 'setStore', function(){
 				//If server store changes without notifying grid, expanded rows should remain expanded.
 				if(t.arg('clearOnSetStore')){
 					t._clear();

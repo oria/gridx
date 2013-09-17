@@ -292,7 +292,7 @@ define([
 						t._end();
 					}
 				}],
-				[g, 'setStore', '_syncUnselectable']);
+				[g.model, 'setStore', '_syncUnselectable']);
 		},
 
 		_markById: function(args, toSelect){
