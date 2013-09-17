@@ -415,7 +415,12 @@ define([
 				t.connect(g.body, 'onAfterCell', _onAftercell);
 			}
 			g.domNode.removeAttribute('aria-readonly');
-			t.connect(g, 'onCellDblClick', '_onUIBegin');
+			t.connect(g, 'onCellDblClick', function(evt){
+				if(!domClass.contains(evt.target, 'gridxTreeExpandoIcon') &&
+					!domClass.contains(evt.target, 'gridxTreeExpandoInner')){
+					t._onUIBegin(evt);
+				}
+			});
 			t.connect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
 			t.connect(g.cellWidget, 'initializeCellWidget', function(widget, cell){
 				var column = cell.column;
