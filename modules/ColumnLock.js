@@ -132,6 +132,7 @@ define([
 			}
 			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = '0px';
 			rowNode.style.width = 'auto';
+			rowNode.firstChild.style.height = 'auto';
 		},
 		
 		_updateUI: function(){
@@ -154,6 +155,7 @@ define([
 			var isHeader = domClass.contains(rowNode, 'gridxHeaderRowInner');
 			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
+			rowNode.firstChild.style.height = 'auto';	//Remove the height of the last locked state.
 			for(i = 0; i < this.count; i++){
 				domStyle.set(r.cells[i], 'height', 'auto');
 			}
