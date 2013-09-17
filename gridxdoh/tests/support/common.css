@@ -2,7 +2,7 @@
 @import "../../../dijit/themes/claro/claro.css";
 @import "../../../dijit/themes/claro/document.css";
 @import "../../../gridx/resources/claro/Gridx.css";
-@import "../../../gridx/resources/claro/Gridx_rtl.css";
+/*@import "../../../gridx/resources/claro/Gridx_rtl.css";*/
 
 body {
 	background:#fff url("../../../dijit/tests/images/testsBodyBg.gif") repeat-x top left;

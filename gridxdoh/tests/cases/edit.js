@@ -87,8 +87,9 @@ define([
 			'</td></tr></table>'
 		].join(''),
 		_setValueAttr: function(value){
-			this.composer.set('value', value[0]);
-			this.songName.set('value', value[1]);
+			console.log(value);
+			this.composer.set('value', value[0] || '');
+			this.songName.set('value', value[1] || '');
 			this.year.set('value', parseInt(value[2], 10));
 		},
 		_getValueAttr: function(value){

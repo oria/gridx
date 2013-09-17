@@ -112,8 +112,10 @@
 		casesSelect.placeAt('casesSelect');
 		casesSelect.startup();
 
+		var columns;
 		window.destroyGrid = function(){
 			var grid = window.grid;
+			columns = null;
 			if(grid){
 				grid.destroy();
 				document.getElementById('casePanel').innerHTML = '';

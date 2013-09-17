@@ -14,12 +14,7 @@ define([
 				'set columns when some columns are locked',
 				'lock some columns, resize columns until there is no horizontal scroller',
 				'resize columns show horizontal scroller again',
-				'[10911]scroll down a bit, the text in the always editing cells in the unlocked rows are still visible through locked rows.',
-				'[11100]row lock should work after add a row',
-				'[11101]row lock should work after sorting',
-				'[11094]row lock should work after toggle bodyHoverEffect',
-				'[11092]row lock should work after set column/set store',
-				'[11091]the following row should be locked after remove a row that is already locked'
+				'[10911]scroll down a bit, the text in the always editing cells in the unlocked rows are still visible through locked rows.'
 			],
 			cache: "gridx/core/model/cache/Async",
 			store: 'memory',

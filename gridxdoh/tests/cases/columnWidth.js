@@ -175,7 +175,7 @@ define([
 			store: 'memory',
 			size: 100,
 			structure: [
-				{id: 'id', field: 'id', name: 'id (50px)', width: '100px'},
+				{id: 'id', field: 'id', name: 'id (100px)', width: '100px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre (25%)', width: '25%'}
 			]
 		},

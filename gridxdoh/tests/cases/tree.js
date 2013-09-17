@@ -23,7 +23,8 @@ define([
 				'if all child rows are deselected, the parent row should appear deselected',
 				'select all checkbox selects everything',
 				'select some child rows, collapse the parent row, expand again, the selection status should remain correct',
-				'set another set of columns, the IndirectSelectColumn (checkboxes) should remain.'
+				'set another set of columns, the IndirectSelectColumn (checkboxes) should remain.',
+				'[11172]set empty columns, no error should occur'
 			],
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
