@@ -774,7 +774,10 @@ define([
 							var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
 							clearTimeout(editor._timeoutApply);
 							editor._timeoutApply = setTimeout(function(){
-								t.apply(rn.getAttribute('rowid'), column.id);
+								var rowId = rn.getAttribute('rowid');
+								t.apply(rowId, column.id).then(function(){
+									t._focusEditor(rowId, column.id);
+								});
 							}, delay);
 						}
 					});
