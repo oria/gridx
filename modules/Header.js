@@ -106,6 +106,12 @@ define([
 			});
 			t.aspect(g, 'onHeaderCellMouseOut', function(){
 				g.vLayout.reLayout();
+				//When mouse leave a very narrow nested sorting header, sometimes this reLayout happens before the header height change.
+				//So set a timeout to ensure this gets relayout.
+				//FIXME: need investigate why
+				setTimeout(function(){
+					g.vLayout.reLayout();
+				}, 0);
 			});
 			t._initFocus();
 		},
