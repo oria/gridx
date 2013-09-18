@@ -184,8 +184,7 @@ define([
 				var display = toShow ? 'block' : 'none';
 				var changed = display != (domStyle.get(t.domNode, 'display') || 'block');
 				ds.display = display;
-				t._updatePos();
-				if(changed){
+				if(t._updatePos() || changed){
 					g.hLayout.reLayout();
 				}
 			}
@@ -196,8 +195,11 @@ define([
 				dn = this.domNode,
 				ds = dn.style,
 				ltr = g.isLeftToRight(),
-				mainBorder = domGeo.getBorderExtents(g.mainNode);
-			ds[ltr ? 'right' : 'left'] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+				mainBorder = domGeo.getBorderExtents(g.mainNode),
+				attr = ltr ? 'right' : 'left';
+				oldValue = ds[attr];
+			ds[attr] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+			return oldValue != ds[attr];
 		},
 
 		_doScroll: function(){
