@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: headerRegions.
 		//		This module makes it easy to add custom contents to column header.
 		//		Other modules such as NestedSort or HeaderMenu can be based upon this module.
 
@@ -172,7 +173,7 @@ declare(_Module, {
 	},
 
 	_onKey: function(e){
-		if(!e.ctrlKey && !e.shiftKey && !e.altKey){
+		if(!this.grid._isCtrlKey(e) && !e.shiftKey && !e.altKey){
 			var ltr = this.grid.isLeftToRight(),
 				nextKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW,
 				prevKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW;

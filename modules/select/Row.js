@@ -36,6 +36,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectRow.
 		//		Provides simple row selection.
 		// description:
 		//		This module provides a simple way for selecting rows by clicking or SPACE key, or CTRL + Click to select multiple rows.
@@ -215,14 +216,24 @@ define([
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
+			function canSelect(e){
+				if(e.columnId && t.arg('triggerOnCell')){
+					return g._columnsById[e.columnId].rowSelectable !== false &&
+						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				}
+				return !e.columnId;
+			}
 			t.batchConnect(
 				[g, 'onRowMouseDown', function(e){
 					//Have to check whether we are on the 
-					if((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
-						!e.columnId){
-						t._select(e.rowId, g._isCopyEvent(e));
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e));
+					}
+				}],
+				[g, 'onRowTouchStart', function(e){
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e) || e.columnId === '__indirectSelect__');
 					}
 				}],
 				[g.body, 'onAfterRow', function(row){
@@ -230,15 +241,18 @@ define([
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
 				}],
 				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
+					if(e.keyCode == keys.SPACE && (!e.columnId ||
+							(g._columnsById[e.columnId].rowSelectable) ||
+							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
-							t._select(e.rowId, g._isCopyEvent(e));
+							t._select(e.rowId, g._isCtrlKey(e));
 							event.stop(e);
 						}
 					}
 				}],
-				[g, 'setStore', '_syncMarkable']
+				[g.model, 'setStore', '_syncUnselectable']
 				);
 		},
 
@@ -290,13 +304,13 @@ define([
 				}
 			}
 		},
-	
-		_syncMarkable: function(){
+		
+		_syncUnselectable: function(){
 			var t = this,
-				unselectable = this.arg('unselectable');
+				unselectable = t.arg('unselectable');
 			for(var id in unselectable){
 				t.model.setMarkable(id, !unselectable[id]);
-			}	
+			}
 		}
 	});
 });

@@ -11,6 +11,7 @@ define([
 /*=====
 	return declare(_Base, {
 		// summary:
+		//		module name: dndColumn.
 		//		This module provides an implementation of column drag & drop.
 		// description:
 		//		This module supports column reordering within grid, dragging out of grid, and dragging into grid.
@@ -104,13 +105,11 @@ define([
 		},
 	
 		_onBeginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollV = autoScroll.vertical;
-			autoScroll.vertical = false;
+			this.grid.autoScroll.vertical = false;
 		},
 
 		_onEndAutoScroll: function(){
-			this.grid.autoScroll.vertical = this._autoScrollV;
+			this.grid.autoScroll.vertical = true;
 		},
 
 		_getItemData: function(id){

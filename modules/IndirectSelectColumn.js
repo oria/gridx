@@ -62,14 +62,14 @@ define([
 					declaredWidth: w,
 					width: w
 				};
+			sr.holdingCtrl = true;
 			t.batchConnect(
 				[g, 'setColumns', '_onSetColumns'],
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
+				[g.body, 'onRender', '_onSelectionChange'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
-				g.pagination && [g.pagination, 'setPageSize', '_onSelectionChange'],
-				g.pagination && [g.pagination, 'gotoPage', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
 						columnId: indirectSelectColumnId
@@ -80,7 +80,6 @@ define([
 						t._onMouseOut();
 					}
 				}],
-				[g.body, 'onRender', '_updateSelectAll'],
 				[g, 'onCellMouseOver', '_onMouseOver'],
 				[g, 'onCellMouseOut', '_onMouseOut']);
 			t._onSetColumns();
@@ -200,10 +199,6 @@ define([
 					this._triggerOnCell = false;
 					sr.triggerOnCell = true;
 				}
-				if(!sr.arg('holdingCtrl')){
-					this._holdingCtrl = false;
-					sr.holdingCtrl = true;
-				}
 			}else{
 				this._onMouseOut();
 			}
@@ -214,10 +209,6 @@ define([
 			if(this.hasOwnProperty('_triggerOnCell')){
 				sr.triggerOnCell = false;
 				delete this._triggerOnCell;
-			}
-			if(this.hasOwnProperty('_holdingCtrl')){
-				sr.holdingCtrl = false;
-				delete this._holdingCtrl;
 			}
 		},
 
@@ -230,7 +221,7 @@ define([
 			]([0, g.view.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 			var t = this, d,
 				g = t.grid,
 				allSelected,
@@ -239,7 +230,7 @@ define([
 				start = view.rootStart,
 				count = view.rootCount;
 			if(g.select.row.selectByIndex && t.arg('all')){
-				var selectedRoot = array.filter((lang.isArray(selected) && selected )|| g.select.row.getSelected(), function(id){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
 					return !model.treePath(id).pop();
 				});
 				var unselectableRows = g.select.row._getUnselectableRows();

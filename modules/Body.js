@@ -43,6 +43,7 @@ define([
 
 	var Body = declare(_Module, {
 		// summary:
+		//		module name: body.
 		//		The body UI of grid.
 		// description:
 		//		This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 
@@ -250,7 +251,7 @@ define([
 					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
 				}
 			});
-			t.aspect(g, 'setStore', function(){
+			t.aspect(g.model, 'setStore', function(){
 				t.refresh();
 			});
 		},
@@ -544,7 +545,10 @@ define([
 					var scrollTop = isRefresh ? n.scrollTop : 0;
 					n.scrollTop = 0;
 					//unrender before destroy nodes, so that other modules have a chance to detach nodes.
-					t.onUnrender();
+					if(!t._skipUnrender){
+						//only when we do have something to unrender
+						t.onUnrender();
+					}
 					n.innerHTML = str;
 					if(scrollTop){
 						n.scrollTop = scrollTop;
@@ -565,7 +569,10 @@ define([
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
 				//unrender before destroy nodes, so that other modules have a chance to detach nodes.
-				t.onUnrender();
+				if(!t._skipUnrender){
+					//only when we do have something to unrender
+					t.onUnrender();
+				}
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = '';
@@ -919,16 +926,17 @@ define([
 			});
 			t.connect(g.mainNode, 'onkeydown', function(evt){
 				if(focus.currentArea() == 'body'){
-					var dk = keys;
-					if(evt.keyCode == dk.HOME && !evt.ctrlKey){
+					var dk = keys,
+						ctrlKey = g._isCtrlKey(evt);
+					if(evt.keyCode == dk.HOME && !ctrlKey){
 						t._focusCellCol = 0;
 						t._focusCell();
 						focus.stopEvent(evt);
-					}else if(evt.keyCode == dk.END && !evt.ctrlKey){
+					}else if(evt.keyCode == dk.END && !ctrlKey){
 						t._focusCellCol = g._columns.length - 1;
 						t._focusCell();
 						focus.stopEvent(evt);
-					}else if(!g.tree || !evt.ctrlKey){
+					}else if(!g.tree || !ctrlKey){
 						focus._noBlur = 1;	//1 as true
 						var arr = {}, dir = g.isLeftToRight() ? 1 : -1;
 						arr[dk.LEFT_ARROW] = [0, -dir, evt];

@@ -7,6 +7,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: pagination.
 		//		This module provides (logical) pagination functionality for grid.
 		// description:
 		//		This module does not include any UI buttons for pagination, so that various

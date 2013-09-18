@@ -55,6 +55,7 @@ define([
 
 	var Tree = declare(_Module, {
 		// summary:
+		//		module name: tree.
 		//		This module manages row expansion/collapsing in tree grid.
 		// description:
 		//		To use tree grid, the store must have 2 extra methods: hasChildren and getChildren.
@@ -633,7 +634,7 @@ define([
 						});
 					});
 				}
-			}else if(e.ctrlKey && isExpando(e.cellNode)){
+			}else if(t.grid._isCtrlKey(e) && isExpando(e.cellNode)){
 				var ltr = t.grid.isLeftToRight();
 				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t.isExpanded(e.rowId)){
 					t.collapse(e.rowId);

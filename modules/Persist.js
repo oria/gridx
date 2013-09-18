@@ -11,6 +11,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: persist.
 		//		Provide a mechanism to persist various grid features when the grid is destroyed,
 		//		so that when a new grid with the same id (or the same persist key) is created,
 		//		all these features will be restored.

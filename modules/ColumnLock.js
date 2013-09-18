@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: columnLock.
 		//		Column lock machinery.
 		// description:
 		//		This module provides a way to lock consecutive leading columns. 
@@ -64,15 +65,16 @@ define([
 					_this.connect(g.body, 'onAfterRow', function(row){
 						_this._lockColumns(row.node());
 					});
-					
-					_this.connect(g.header, 'onRender', '_updateHeader');
 					_this.connect(g.columnWidth, 'onUpdate', '_updateHeader');
-					_this.connect(g, 'resize', '_updateUI');
+					_this.connect(g.header, 'onRender', '_updateHeader');
 					if(g.columnResizer){
 						//make it compatible with column resizer
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
 						_this.connect(g.columnResizer, 'onResize', '_updateBody');
 					}
+
+					_this.connect(g, '_onResizeEnd', '_updateHeader');
+					_this.connect(g, '_onResizeEnd', '_updateBody');
 					if(g.header){
 						g.header.loaded.then(function(){
 							_this._updateHeader();
@@ -130,6 +132,7 @@ define([
 			}
 			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = '0px';
 			rowNode.style.width = 'auto';
+			rowNode.firstChild.style.height = 'auto';
 		},
 		
 		_updateUI: function(){
@@ -152,6 +155,7 @@ define([
 			var isHeader = domClass.contains(rowNode, 'gridxHeaderRowInner');
 			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
+			rowNode.firstChild.style.height = 'auto';	//Remove the height of the last locked state.
 			for(i = 0; i < this.count; i++){
 				domStyle.set(r.cells[i], 'height', 'auto');
 			}
@@ -159,17 +163,16 @@ define([
 			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
 
-			if(has('ie') > 8){		
+			if(has('ie') > 8){
 				//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 				//so that the locked cells will have different height with the unlocked ones.
 				//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
-				
-				h3 = domStyle.getComputedStyle(rowNode.firstChild).height;
+				var h3 = domStyle.getComputedStyle(rowNode.firstChild).height;
 				if(String(h3).toString().indexOf('.') >= 0){		//decimal
 					h2++;
 					h1++;
 				}
-			}	
+			}
 			domStyle.set(rowNode.firstChild, 'height', h2 + 'px');
 			
 			var lead = isHeader ? this.grid.hLayout.lead : 0,
@@ -179,11 +182,8 @@ define([
 				var cell = r.cells[i],
 					s;
 				domClass.add(cell, 'gridxLockedCell');
-				// if(has('ie') > 8){
-					// s = {height: h1 + 1 + 'px'};
-				// }else{
-					s = {height: h1 + 'px'};
-				// }
+
+				s = {height: h1 + 'px'};
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				domStyle.set(cell, s);
 				

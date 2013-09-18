@@ -8,6 +8,8 @@ define([
 
 /*=====
 	return declare(_PaginationBarBase, {
+		// summary:
+		//		module name: paginationBar.
 	});
 =====*/
 

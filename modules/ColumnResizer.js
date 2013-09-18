@@ -9,10 +9,10 @@ define([
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojo/query",
-	'dojo/sniff',
+	"dojo/_base/sniff",
 	"../core/_Module"
 //    "dojo/NodeList-traverse"
-], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, sniff,  _Module){
+], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, has, _Module){
 
 /*=====
 	Column.setWidth = function(width){
@@ -22,6 +22,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: columnResizer.
 		//		Column Resizer machinery.
 		// description:
 		//		This module provides a way to resize column width. 
@@ -108,10 +109,8 @@ define([
 					cs.maxWidth = width + 'px';
 				});
 				g.body.onRender();
+				g.hLayout.reLayout();
 				g.vLayout.reLayout();
-				if(g.autoWidth){
-					g.hLayout.reLayout();
-				}
 				t.onResize(colId, width, oldWidth);
 			}
 		},
@@ -157,7 +156,7 @@ define([
 		_mouseout: function(e){
 			if(!this._resizing){
 				var pos = domGeometry.position(this.grid.header.domNode);
-				if(sniff('chrome')){
+				if(has('chrome')){
 					for(var i in pos){
 						pos[i] = Math.floor(pos[i]);
 					}
@@ -262,11 +261,11 @@ define([
 		},
 
 		_keydown: function(evt){
+			var t = this,
+				g = t.grid;
 			//support keyboard to resize a column
-			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && evt.ctrlKey && evt.shiftKey){
-				var t = this,
-					g = t.grid,
-					colId = evt.columnId,
+			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && g._isCtrlKey(evt) && evt.shiftKey){
+				var colId = evt.columnId,
 					cellNode = query('[colid="' + g._escapeId(colId) + '"].gridxCell', g.header.innerNode)[0],
 					step = t.arg('step');
 				step = evt.keyCode == keys.LEFT_ARROW ^ !!g.isLeftToRight() ? step : -step;
