@@ -1,9 +1,9 @@
 {
 	"name": "gridx",
 	"mappings": {
-		"dojo": "https://github.com/dojo/dojo/zipball/1.8.3",
-		"dijit": "https://github.com/dojo/dijit/zipball/1.8.3",
-		"dojox": "https://github.com/dojo/dojox/zipball/1.8.3"
+		"dojo": "https://github.com/dojo/dojo/zipball/1.9.1",
+		"dijit": "https://github.com/dojo/dijit/zipball/1.9.1",
+		"dojox": "https://github.com/dojo/dojox/zipball/1.9.1"
 	},
 	"version": "1.3.0dev",
 	"maintainers":[
@@ -44,9 +44,9 @@
 		}
 	],
 	"dependencies": {
-		"dojo": "1.8.0",
-		"dijit": "1.8.0",
-		"dojox": "1.8.0"
+		"dojo": "1.9.1",
+		"dijit": "1.9.1",
+		"dojox": "1.9.1"
 	},
 	"homepage": "http://oria.github.com/gridx",
 	"main": "./Grid",
