@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: columnWidth.
 		//		Manages column width distribution, allow grid autoWidth and column autoResize.
 
 		// default: Number
@@ -34,6 +35,37 @@ define([
 =====*/
 
 	var needHackPadBorder = has('safari') < 6 || (!has('safari') && has('webkit') && has('ios'));
+
+	function calcAutoWidth(autoCols, freeWidth, padBorder){
+		autoCols.sort(function(c1, c2){
+			return (c1.minWidth || 0) - (c2.minWidth || 0);
+		});
+		var i = autoCols.length - 1, c;
+		for(; i >= 0; --i){
+			c = autoCols[i];
+			if(c.minWidth && (c.minWidth + padBorder) * (i + 1) > freeWidth){
+				c.width = c.minWidth + 'px';
+				freeWidth -= c.minWidth + padBorder;
+			}else{
+				break;
+			}
+		}
+		var len = i + 1;
+		if(len){
+			var w = Math.floor(freeWidth / len - padBorder);
+			var ww = freeWidth - (w + padBorder) * (len - 1) - padBorder;
+			if(w < 0){
+				w = 0;
+			}
+			if(ww < 0){
+				ww = 0;
+			}
+			for(i = 0; i < len; ++i){
+				c = autoCols[i];
+				c.width = (i ? w : ww) + 'px';
+			}
+		}
+	}
 
 	return declare(_Module, {
 		name: 'columnWidth',
@@ -70,8 +102,9 @@ define([
 				if(!col.hasOwnProperty('declaredWidth')){
 					col.declaredWidth = col.width = col.width || 'auto';
 				}
-				if(g.autoWidth && col.declaredWidth == 'auto'){
-					col.width = defaultWidth;
+				if(g.autoWidth && (col.declaredWidth == 'auto' || /%$/.test(col.declaredWidth))){
+					//If minWidth exists, check it
+					col.width = t['default'] < col.minWidth ? col.minWidth + 'px' : defaultWidth;
 				}else if(autoResize && !(/%$/).test(col.declaredWidth)){
 					col.width = 'auto';
 				}
@@ -218,29 +251,24 @@ define([
 					}
 				});
 				if(autoCols.length){
-					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
-						ww = parseInt(w, 10);
-					if(bodyWidth > fixedWidth){
-						ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
-					}
-					w = parseInt(w, 10);
-					//Check if less than zero, prevent error in IE.
-					if(w < 0){
-						w = 0;
-					}
-					if(ww < 0){
-						ww = 0;
+					var freeWidth = bodyWidth - fixedWidth;
+					if(freeWidth > 0){
+						calcAutoWidth(autoCols, freeWidth, padBorder);
+					}else{
+						var w = t.arg('default');
+						array.forEach(autoCols, function(c, i){
+							var cw = w;
+							if(typeof c.minWidth == 'number' && cw < c.minWidth){
+								cw = c.minWidth;
+							}
+							c.width = cw + 'px';
+						});
 					}
 					array.forEach(autoCols, function(c, i){
 						var node = header.getHeaderNode(c.id);
-						var cw = i < autoCols.length - 1 ? w : ww;
-						if(typeof c.minWidth == 'number' && cw < c.minWidth){
-							cw = c.minWidth;
-						}
-						cw += 'px';
-						node.style.width = c.width = cw;
-						node.style.minWidth = cw;
-						node.style.maxWidth = cw;
+						node.style.width = c.width;
+						node.style.minWidth = c.width;
+						node.style.maxWidth = c.width;
 					});
 				}
 			}
@@ -273,7 +301,8 @@ define([
 			var t = this,
 				g = t.grid;
 			t._init();
-			g.header.refresh();
+			//Now header and body can be different, so we should not trigger any onRender event at this inconsistent stage,
+			g.header._build();
 			t._adaptWidth();
 			//FIXME: Is there any more elegant way to do this?
 			if(g.cellWidget){

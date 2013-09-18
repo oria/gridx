@@ -11,6 +11,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: navigableCell.
 		//		This module allow the elements in grid cell be focusable.
 		// description:
 		//		When focus is on a cell, press F2 to focus the first focusable element in that cell.
@@ -85,7 +86,8 @@ define([
 							colIndex = g._columnsById[t._focusColId].index,
 							dir = step > 0 ? 1 : -1,
 							checker = function(r, c){
-								return t._isNavigable(g._columns[c].id);
+								//If there's no decorator, we assume there's no focusable elements in this column
+								return t._isNavigable(g._columns[c].id) && g._columns[c].decorator;
 							};
 						body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
 							t._focusColId = g._columns[obj.c].id;
@@ -114,14 +116,14 @@ define([
 		_beginNavigate: function(rowId, colId){
 			var t = this;
 			if(t._isNavigable(colId)){
-				t._navigating = true;
 				t._focusColId = colId;
 				t._focusRowId = rowId;
 				var navElems = t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
-					rowId: rowId, 
+					rowId: rowId,
 					colId: colId
 				}));
-				return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+				//Intentional assignment
+				return t._navigating = (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
 			}
 			return false;
 		},

@@ -200,6 +200,7 @@ define([
 					cssName: p._cssName,
 					count: p._getDndCount()
 				};
+				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
 				dom.setSelectable(t.grid.domNode, false);	
 			}

@@ -244,6 +244,11 @@
 	height: 100%;
 	overflow: hidden;
 	border-right: 1px solid #E5DAC8;
+	box-sizing: border-box; /* css3 rec */
+	-moz-box-sizing: border-box; /* ff2 */
+	-ms-box-sizing: border-box; /* ie8 */
+	-webkit-box-sizing: border-box; /* safari3 */
+	-khtml-box-sizing: border-box; /* konqueror */	
 }
 
 .gridxRowHeaderBody table {
@@ -262,6 +267,8 @@
 	background: -o-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* IE10+ */
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
+	width: 100%;
+	
 }
 
 .gridxRowHeaderHeader .gridxHeaderCellFocus {

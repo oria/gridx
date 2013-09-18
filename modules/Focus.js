@@ -13,6 +13,7 @@ define([
 /*=====
 	var Focus = declare(_Module, {
 		// summary
+		//		module name: focus.
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
 
@@ -162,7 +163,9 @@ define([
 
 	return declare(_Module, {
 		name: 'focus',
-		
+
+		enabled: !has('ios') && !has('android'),
+
 		constructor: function(){
 			var t = this,
 				g = t.grid;
@@ -360,7 +363,7 @@ define([
 		_stackIdx: 0,
 
 		_onTabDown: function(evt){
-			if(evt.keyCode === keys.TAB){
+			if(this.arg('enabled') && evt.keyCode === keys.TAB){
 				this.tab(evt.shiftKey ? -1 : 1, evt);
 			}
 		},
@@ -371,54 +374,60 @@ define([
 				dn = t.grid.domNode,
 				n = evt.target,
 				currentArea = t._areas[t.currentArea()];
-			while(n && n !== dn){
-				i = array.indexOf(t._focusNodes, n);
-				if(i >= 0){
-					stack = t._tabQueue[i].stack;
-					for(j = 0; j < stack.length; ++j){
-						area = t._areas[stack[j]];
-						if(area.onFocus(evt)){
-							if(currentArea && currentArea.name !== area.name){
-								currentArea.onBlur(evt);
-								t.onBlurArea(currentArea.name);
+			if(t.arg('enabled')){
+				while(n && n !== dn){
+					i = array.indexOf(t._focusNodes, n);
+					if(i >= 0){
+						stack = t._tabQueue[i].stack;
+						for(j = 0; j < stack.length; ++j){
+							area = t._areas[stack[j]];
+							if(area.onFocus(evt)){
+								if(currentArea && currentArea.name !== area.name){
+									currentArea.onBlur(evt);
+									t.onBlurArea(currentArea.name);
+								}
+								t.onFocusArea(area.name);
+								t._queueIdx = i;
+								t._stackIdx = j;
+								return;
 							}
-							t.onFocusArea(area.name);
-							t._queueIdx = i;
-							t._stackIdx = j;
-							return;
 						}
+						return;
 					}
-					return;
+					n = n.parentNode;
 				}
-				n = n.parentNode;
-			}
-			if(n == dn && currentArea){
-				t._doBlur(evt, currentArea);
+				if(n == dn && currentArea){
+					t._doBlur(evt, currentArea);
+				}
 			}
 		},
 
 		_focus: function(evt){
 			var t = this;
-			if(t._tabingOut){
-				t._tabingOut = 0;
-			}else if(evt.target == t.grid.domNode){
-				t._queueIdx = -1;
-				t.tab(1);
-			}else if(evt.target === t.grid.lastFocusNode){
-				t._queueIdx = t._tabQueue.length;
-				t.tab(-1);
+			if(t.arg('enabled')){
+				if(t._tabingOut){
+					t._tabingOut = 0;
+				}else if(evt.target == t.grid.domNode){
+					t._queueIdx = -1;
+					t.tab(1);
+				}else if(evt.target === t.grid.lastFocusNode){
+					t._queueIdx = t._tabQueue.length;
+					t.tab(-1);
+				}
 			}
 		},
 
 		_doBlur: function(evt, area){
 			var t = this;
-			if(!area && t.currentArea()){
-				area = t._areas[t.currentArea()];
-			}
-			if(area){
-				area.onBlur(evt);
-				t.onBlurArea(area.name);
-				t._updateCurrentArea();
+			if(t.arg('enabled')){
+				if(!area && t.currentArea()){
+					area = t._areas[t.currentArea()];
+				}
+				if(area){
+					area.onBlur(evt);
+					t.onBlurArea(area.name);
+					t._updateCurrentArea();
+				}
 			}
 		},
 

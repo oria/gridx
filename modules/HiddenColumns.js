@@ -9,6 +9,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hiddenColumns.
 		//		Hide columns.
 		// description:
 		//		Hide columns and change the column array at the same time so that other grid features 
@@ -101,12 +102,21 @@ define([
 				columns = g._columns,
 				columnLock = g.columnLock,
 				lockCount = 0,
+				hash = {},
 				cols = array.filter(array.map(arguments, function(id){
-					id = id && typeof id == "object" ? id.id: id;
+					id = id && typeof id == "object" ? id.id : id;
 					return columnsById[id];
 				}), function(col){
 					return col && !col.ignore && (col.hidable === undefined || col.hidable);
 				});
+			//remove duplicated arguments.
+			for(var i = 0, len = cols.length; i < len; ++i){
+				hash[cols[i].id] = cols[i];
+			}
+			cols = [];
+			for(var arg in hash){
+				cols.push(hash[arg]);
+			}
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();
@@ -157,7 +167,7 @@ define([
 				columnLock.unlock();
 			}
 			array.forEach(arguments, function(id){
-				id = id && typeof id == "object" ? id.id: id;
+				id = id && typeof id == "object" ? id.id : id;
 				var c,
 					index = -1,
 					i = 0,
@@ -248,13 +258,14 @@ define([
 		},
 
 		_refresh: function(changed){
+			var g = this.grid;
 			if(changed){
-				var g = this.grid;
 				g.header.refresh();
 				g.columnWidth._adaptWidth();
 				return g.body.refresh();
 			}else{
 				var d = new Deferred();
+				g.header.onRender();
 				d.callback();
 				return d;
 			}

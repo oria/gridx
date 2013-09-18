@@ -45,8 +45,13 @@ define([
 		templateString: template,
 
 		constructor: function(args){
-			lang.mixin(this, i18n.getLocalization('gridx', 'QuickFilter', args.grid.lang));
-			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			var t = this;
+			lang.mixin(t, i18n.getLocalization('gridx', 'QuickFilter', args.grid.lang));
+			t._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			t.connect(args.grid.model, 'setStore', function(){
+				t.textBox.set('value', '');
+				domClass.remove(t.domNode, 'gridxQuickFilterActive');
+			});
 		},
 
 		postCreate: function(){
@@ -85,6 +90,14 @@ define([
 				t._handle = setTimeout(function(){
 					t._filter();
 				}, key == keys.ENTER ? 0 : t.delay);
+			}
+		},
+
+		_onKey: function(evt){
+			if(evt.keyCode == keys.ENTER){
+				this.grid.focus.stopEvent(evt);
+				this._clear();
+				this.textBox.focus();
 			}
 		},
 

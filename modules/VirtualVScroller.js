@@ -14,6 +14,7 @@ define([
 /*=====
 	return declare(VScroller, {
 		// summary:
+		//		module name: vScroller.
 		//		This module implements lazy-rendering when virtically scrolling grid.
 		// description:
 		//		This module takes a DOMNode-based way to implement lazy-rendering.
@@ -183,6 +184,7 @@ define([
 	
 		_init: function(args){
 			var t = this;
+			t._avgRowHeight = t.grid.body.arg('defaultRowHeight') || 24;
 			t._rowHeight = {};
 			t._syncHeight();
 			t.connect(t.grid, '_onResizeEnd', function(){
@@ -349,11 +351,12 @@ define([
 			}
 			var dn = t.domNode,
 				//remember the scroll bar position
-				r = dn.scrollTop / dn.scrollHeight;
+				oldScrollTop = dn.scrollTop;
 			t.stubNode.style.height = h + 'px';
 			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
 			if(t._lastScrollTop){
-				t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
+				dn.scrollTop = oldScrollTop;
+				t._lastScrollTop = dn.scrollTop;
 			}
 		},
 	
@@ -402,7 +405,7 @@ define([
 				h += rh[p];
 				++c;
 			}
-			if(c){
+			if(h && c){
 				t._avgRowHeight = h / c;
 				t._syncHeight();
 			}
@@ -415,16 +418,17 @@ define([
 				view = t.grid.view,
 				focus = t.grid.focus,
 				sn = t.domNode,
+				ctrlKey = t.grid._isCtrlKey(evt),
 				st = 'scrollTop',
 				r,
 				fc = '_focusCellRow';
 			if(!focus || focus.currentArea() == 'body'){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					bd._focusCellCol = 0;
 					bd[fc] = 0;
 					sn[st] = 0;
 					bd._focusCell();
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					bd._focusCellCol = t.grid._columns.length - 1;
 					bd[fc] = view.visualCount - 1;
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;

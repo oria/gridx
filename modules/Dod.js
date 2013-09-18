@@ -17,6 +17,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: dod.
 		//		Details on demand.
 
 		// useAnimation: Boolean

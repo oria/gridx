@@ -114,7 +114,7 @@ define([
 			}catch(e){}
 			css.toggle(ac.domNode, 'gridxFilterSingleRule', ac.getChildren().length === 1);
 			
-			fp.connect(fp, 'onChange', lang.hitch(this, '_updateButtons'));
+			this.connect(fp, 'onChange', '_updateButtons');
 			this._updateButtons();
 			this._updateAccordionContainerHeight();
 			//scroll to bottom when add a rule

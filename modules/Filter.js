@@ -11,6 +11,7 @@ define([
 /*=====
 	var Filter = declare(_Module, {
 		// summary:
+		//		module name: filter.
 		//		This module makes it possible for user to set arbitrary filter condition to grid.
 
 		serverMode: false,
@@ -53,7 +54,7 @@ define([
 		}
 	});
 
-	Filter.__FilterExpressionTools = {
+	Filter.__FilterExpressionTools = declare([], {
 		// summary:
 		//		A filter expression is just a function returning TRUE/FALSE.
 		//		Here provides a set of useful expression tools to help construct complicated filter expressions for grid.
@@ -243,7 +244,7 @@ define([
 			// return: Function
 			//		A filter expression.
 		}
-	};
+	});
 
 	return Filter;
 =====*/
@@ -256,6 +257,9 @@ define([
 
 		constructor: function(){
 			this.setFilter(this.arg('preCondition'), 1);
+			this.aspect(this.grid.model, 'setStore', function(){
+				this._checker = null;
+			});
 		},
 
 		serverMode: false,
@@ -324,7 +328,7 @@ define([
 				d.setFullYear(2000);
 				return d.getTime();
 			default: //string
-				return String(d);
+				return (d === null || d === undefined) ? '' : String(d);
 		}
 	}
 

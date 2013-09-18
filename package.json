@@ -37,10 +37,12 @@
 			"url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
 		}
 	],
-	"repositories": {
-		"type": "git",
-		"url": "https://github.com/oria/gridx"
-	},
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/oria/gridx"
+		}
+	],
 	"dependencies": {
 		"dojo": "1.8.0",
 		"dijit": "1.8.0",

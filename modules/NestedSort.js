@@ -18,6 +18,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: sort.
 		//		Sort multiple columns in a nested way.
 
 		getSortData: function(){
@@ -208,7 +209,9 @@ define([
 				nls = t._nls,
 				g = t.grid,
 				dn = g.domNode,
-				sortData = t._sortData;
+				sortData = array.filter(t._sortData, function(s){
+					return g._columnsById[s.colId];
+				});
 			removeClass(dn, 'gridxSingleSorted');
 			removeClass(dn, 'gridxNestedSorted');
 			if(sortData.length == 1){

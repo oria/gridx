@@ -63,7 +63,10 @@ define([
 				return {
 					colId: isAnyColumn(colId) ? '' : colId,
 					condition: condition,
-					value: condition === 'isEmpty' ? '' : value,
+					//fix defect #10741
+					//set('value', '') on DateTimeBox will set date to 1/1/1970
+					//so, set('value', null) when condition is empty on a DateTimeBoxs
+					value: condition === 'isEmpty'? ( this._getType() === 'Date'? null : '') : value,
 					type: this._getType()
 				};
 			}else{
@@ -274,7 +277,7 @@ define([
 				case 'Text':
 					return (combo ? this.comboText : this.tbSingle).get('value') || null;
 				case 'Number':
-					return isNaN(this.tbNumber.get('value')) ? null : this.tbNumber.get('value');
+					return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
 				case 'Select':
 					return this.sltSingle.get('value') || null;
 				case 'Date':

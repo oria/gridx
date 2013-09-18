@@ -38,6 +38,7 @@ define([
 	
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectRow.
 		//		Provides advanced row selections.
 		// description:
 		//		This module provides an advanced way for selecting rows by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple rows.
@@ -173,6 +174,7 @@ define([
 			if(n){
 				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+				t.onSelectionChange();
 			}
 		},
 
@@ -212,9 +214,10 @@ define([
 
 		_getUnselectableRows: function(){
 			var ret = [],
+				t = this,
 				unselectable = this.arg('unselectable');
 			for(var id in unselectable){
-				if(unselectable[id]){
+				if(unselectable[id] && t.model.byId(id)){
 					ret.push(id);
 				}
 			}
@@ -233,22 +236,41 @@ define([
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
 			t.model.setMarkable(lang.hitch(t, t._isSelectable));
+			function canSelect(e){
+				if(e.columnId && t.arg('triggerOnCell')){
+					return g._columnsById[e.columnId].rowSelectable !== false &&
+						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				}
+				return !e.columnId;
+			}
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if(mouse.isLeft(e) && ((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) || !e.columnId)){
+					if(mouse.isLeft(e) && canSelect(e)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
 					}
 				}],
+				[g, 'onRowTouchStart', function(e){
+					if(canSelect(e)){
+						t._isOnCell = e.columnId;
+						if(t._isOnCell){
+							g.body._focusCellCol = e.columnIndex;
+						}
+						t._start({row: e.visualIndex}, g._isCtrlKey(e) || e.columnId === '__indirectSelect__', e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
+					}
+				}],
+				[g, 'onRowTouchEnd', '_end'],
 				[g.body, 'onAfterRow', function(row){
 					var unselectable = !row.isSelectable();
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
@@ -266,10 +288,11 @@ define([
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						event.stop(e);
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
-				}]);
+				}],
+				[g.model, 'setStore', '_syncUnselectable']);
 		},
 
 		_markById: function(args, toSelect){
@@ -340,14 +363,14 @@ define([
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
 			var t = this;
 			if(t.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				t._start({row: rowVisIndex}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({row: rowVisIndex}, t.grid._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},
 
 		_onMoveToRowHeaderCell: function(rowVisIndex, e){
 			if(e.shiftKey){
-				this._start({row: rowVisIndex}, this.grid._isCopyEvent(e), 1);	//1 as true
+				this._start({row: rowVisIndex}, this.grid._isCtrlKey(e), 1);	//1 as true
 				this._end();
 			}
 		},
@@ -359,13 +382,11 @@ define([
 		},
 
 		_beginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollH = autoScroll.horizontal;
-			autoScroll.horizontal = false;
+			this.grid.autoScroll.horizontal = false;
 		},
 
 		_endAutoScroll: function(){
-			this.grid.autoScroll.horizontal = this._autoScrollH;
+			this.grid.autoScroll.horizontal = true;
 		},
 
 		_doHighlight: function(target, toHighlight){
@@ -442,6 +463,14 @@ define([
 			}
 			// console.log('to highlight', toHighlight);
 			this._doHighlight(target, toHighlight);
+		},
+		
+		_syncUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 		}
 	});
 });

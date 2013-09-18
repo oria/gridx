@@ -26,6 +26,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectCell.
 		//		Provides simple cell selection.
 		// description:
 		//		This module provides a simple way for selecting cells by clicking or SPACE key, or CTRL + Click to select multiple cells.
@@ -163,16 +164,18 @@ define([
 			var t = this,
 				g = t.grid;
 			t.inherited(arguments);
+			var doSelect = function(e){
+				if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+					!domClass.contains(e.target, 'gridxTreeExpandoInner')){
+					t._select([e.rowId, e.columnId], g._isCtrlKey(e));
+				}
+			};
 			t.batchConnect(
-				[g, 'onCellClick', function(e){
-					if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
-					}
-				}],
+				[g, 'onCellClick', doSelect],
+				[g, 'onCellTouchStart', doSelect],
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+						t._select([e.rowId, e.columnId], g._isCtrlKey(e));
 						event.stop(e);
 					}
 				}]);

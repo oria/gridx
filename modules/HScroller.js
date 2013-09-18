@@ -11,6 +11,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hScroller.
 		//		This module provides basic horizontal scrolling for grid
 
 		scrollToColumn: function(colId){

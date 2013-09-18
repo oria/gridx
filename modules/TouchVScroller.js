@@ -13,6 +13,7 @@ define([
 /*=====
 	return declare(VScroller, {
 		// summary:
+		//		module name: vScroller.
 		//		A vertical scroller only for touch devices.
 		// description:
 		//		Using dojox/mobile/scrollable, and no lazy-rendering (all rows are rendered out).
@@ -20,8 +21,15 @@ define([
 =====*/
 
 	return declare(VScroller, {
+		constructor: function(){
+			if(has('ios') || has('android') || this.arg('touch')){
+				domClass.add(this.grid.domNode, 'gridxTouchVScroller');
+				this.domNode.style.width = '';
+			}
+		},
+
 		scrollToRow: function(rowVisualIndex, toTop){
-			if(has('ios') || has('android')){
+			if(has('ios') || has('android') || this.arg('touch')){
 				var d = new Deferred(),
 					rowNode = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
 				if(rowNode){
@@ -34,8 +42,24 @@ define([
 			return this.inherited(arguments);
 		},
 
+		scroll: function(top){
+			if(has('ios') || has('android') || this.arg('touch')){
+				this._scrollable.scrollTo({ y: top });
+			}else{
+				this.inherited(arguments);
+			}
+		},
+
+		position: function(){
+			if(has('ios') || has('android') || this.arg('touch')){
+				return this._scrollable.getPos().y;
+			}else{
+				return this.inherited(arguments);
+			}
+		},
+
 		_init: function(){
-			if(has('ios') || has('android')){
+			if(has('ios') || has('android') || this.arg('touch')){
 				var t = this,
 					g = t.grid,
 					view = g.view,
@@ -44,7 +68,6 @@ define([
 					bodyNode = g.bodyNode,
 					headerTable = h.firstChild,
 					scrollable = t._scrollable = new Scrollable();
-				domClass.add(g.domNode, 'gridxTouchVScroller');
 				h.style.height = headerTable.offsetHeight + 'px';
 				scrollable.init({
 					domNode: mainNode,
@@ -69,12 +92,12 @@ define([
 				});
 				t.aspect(g.hScroller, 'refresh', function(){
 					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
-					scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
+//                    scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
 				});
 				t._onBodyChange = function(){
 					t._update();
 				};
-				t._onForcedScroll = function(){};
+//                t._onForcedScroll = function(){};
 				t.model.when({
 					start: view.rootStart,
 					count: view.rootCount

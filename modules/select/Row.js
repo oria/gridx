@@ -36,6 +36,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectRow.
 		//		Provides simple row selection.
 		// description:
 		//		This module provides a simple way for selecting rows by clicking or SPACE key, or CTRL + Click to select multiple rows.
@@ -163,6 +164,7 @@ define([
 			if(n){
 				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+				t.onSelectionChange();
 			}
 		},
 
@@ -193,9 +195,10 @@ define([
 
 		_getUnselectableRows: function(){
 			var ret = [],
-				unselectable = this.arg('unselectable');
+				t = this,
+				unselectable = t.arg('unselectable');
 			for(var id in unselectable){
-				if(this.unselectable[id]){
+				if(t.unselectable[id] && t.model.byId(id)){
 					ret.push(id);
 				}
 			}
@@ -213,14 +216,24 @@ define([
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
-			t.batchConnect(
-				[g, 'onRowClick', function(e){
-					//Have to check whether we are on the 
-					if((t.arg('triggerOnCell') &&
+			function canSelect(e){
+				if(e.columnId && t.arg('triggerOnCell')){
+					return g._columnsById[e.columnId].rowSelectable !== false &&
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
-						!e.columnId){
-						t._select(e.rowId, g._isCopyEvent(e));
+						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				}
+				return !e.columnId;
+			}
+			t.batchConnect(
+				[g, 'onRowMouseDown', function(e){
+					//Have to check whether we are on the 
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e));
+					}
+				}],
+				[g, 'onRowTouchStart', function(e){
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e) || e.columnId === '__indirectSelect__');
 					}
 				}],
 				[g.body, 'onAfterRow', function(row){
@@ -228,14 +241,19 @@ define([
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
 				}],
 				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
+					if(e.keyCode == keys.SPACE && (!e.columnId ||
+							(g._columnsById[e.columnId].rowSelectable) ||
+							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
-							t._select(e.rowId, g._isCopyEvent(e));
+							t._select(e.rowId, g._isCtrlKey(e));
 							event.stop(e);
 						}
 					}
-				}]);
+				}],
+				[g.model, 'setStore', '_syncUnselectable']
+				);
 		},
 
 		_onMark: function(id, toMark, oldState, type){
@@ -284,6 +302,14 @@ define([
 					id = rowNode.getAttribute('rowid');
 					t._highlight(id, model.getMark(id));
 				}
+			}
+		},
+		
+		_syncUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
 			}
 		}
 	});

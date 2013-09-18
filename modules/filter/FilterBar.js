@@ -28,6 +28,7 @@ define([
 /*=====
 	var FilterBar = declare(_Module, {
 		// summary:
+		//		module name: filterBar.
 		//		Filter bar module.
 		// description:
 		//		Show a filter bar on top of grid header. Clicking the filter bar will show a filter dialog to config conditions.
@@ -219,6 +220,10 @@ define([
 			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
 			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
+			this.aspect(this.grid.model, 'setStore', function(){
+				this.filterData = null;
+				this._buildFilterState();
+			});
 			this.loaded.callback();
 		},
 		onDomClick: function(e){
@@ -269,7 +274,7 @@ define([
 			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
 				_this._currentSize = _this.model.size();
-				_this._totalSize = _this.model._cache.size();
+				_this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
 				_this._buildFilterState();
 			});
 		},
@@ -336,12 +341,9 @@ define([
 		refresh: function(){
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
-			var _this = this;
-			this.model.when({}).then(function(){
-				_this._currentSize = _this.model.size();
-				_this._totalSize = _this.model._cache.size();
-				_this._buildFilterState();
-			});
+			this._currentSize = this.model.size();
+			this._totalSize = this.model._cache.totalSize >= 0 ? this.model._cache.totalSize : this.model._cache.size();
+			this._buildFilterState();
 		},
 		isVisible: function(){
 			return this.domNode.style.display != 'none';

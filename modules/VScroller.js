@@ -15,6 +15,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: vScroller.
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
 		//		This module will make the grid body render all rows without paging.
@@ -57,7 +58,7 @@ define([
 				if(has('ie') < 8){
 					dn.style.width = '0px';
 				}
-			}else{
+			}else if(!has('mac')){
 				var w = metrics.getScrollbar().w,
 					ltr = g.isLeftToRight();
 				dn.style.width = w + 'px';
@@ -65,8 +66,7 @@ define([
 				if(has('ie') < 8){
 					t.stubNode.style.width = (w + 1) + 'px';
 				}
-			}
-			if(has('mac')){
+			}else{
 				domClass.add(g.domNode, 'gridxMac');
 			}
 		},
@@ -89,6 +89,7 @@ define([
 			t.aspect(g, '_onResizeEnd', '_onBodyChange');
 			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
 			t.aspect(bd, 'onRender', '_onBodyChange');
+			t.aspect(g.header, 'onRender', '_onBodyChange');
 			if(!g.autoHeight){
 				t.aspect(bd, 'onEmpty', function(){
 					var ds = dn.style;
@@ -142,6 +143,14 @@ define([
 			finish(!!n);
 			return d;
 		},
+
+		scroll: function(top){
+			this.domNode.scrollTop = top;
+		},
+
+		position: function(){
+			return this.domNode.scrollTop;
+		},
 	
 		//Protected -------------------------------------------------
 		_init: function(){
@@ -172,11 +181,10 @@ define([
 				}else{
 					ds.width = '';
 				}
-				var display = toShow ? '' : 'none';
-				var changed = display != domStyle.get(t.domNode, 'display');
+				var display = toShow ? 'block' : 'none';
+				var changed = display != (domStyle.get(t.domNode, 'display') || 'block');
 				ds.display = display;
-				if(changed){
-					t._updatePos();
+				if(t._updatePos() || changed){
 					g.hLayout.reLayout();
 				}
 			}
@@ -187,8 +195,11 @@ define([
 				dn = this.domNode,
 				ds = dn.style,
 				ltr = g.isLeftToRight(),
-				mainBorder = domGeo.getBorderExtents(g.mainNode);
-			ds[ltr ? 'right' : 'left'] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+				mainBorder = domGeo.getBorderExtents(g.mainNode),
+				attr = ltr ? 'right' : 'left';
+				oldValue = ds[attr];
+			ds[attr] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+			return oldValue != ds[attr];
 		},
 
 		_doScroll: function(){
@@ -239,13 +250,14 @@ define([
 				bn = g.bodyNode,
 				focus = g.focus,
 				sn = t.domNode,
+				ctrlKey = g._isCtrlKey(evt),
 				rowNode;
 			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					sn[st] = 0;
 					rowNode = bn.firstChild;
 					bd._focusCellCol = 0;
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					sn[st] = sn.scrollHeight - sn.offsetHeight;
 					rowNode = bn.lastChild;
 					bd._focusCellCol = g._columns.length - 1;
