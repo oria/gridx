@@ -108,7 +108,9 @@ define([
 		},
 
 		_createSelectAllBox: function(){
-			return this._createCheckBox(this._allSelected[this._getPageId()]);
+			var allSelected = this._allSelected[this._getPageId()];
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this._nls.indirectDeselectAll : this._nls.indirectSelectAll);
+			return this._createCheckBox(allSelected);
 		},
 
 		_getPageId: function(){
@@ -168,13 +170,13 @@ define([
 		},
 
 		_onSelectionChange: function(){
-				var t = this, d,
-					g = t.grid,
-					allSelected,
-					view = t.grid.view,
-					model = t.model,
-					start = view.rootStart,
-					count = view.rootCount;
+			var t = this, d,
+				g = t.grid,
+				allSelected,
+				view = t.grid.view,
+				model = t.model,
+				start = view.rootStart,
+				count = view.rootCount;
 			if(g.select.row.selectByIndex && t.arg('all')){
 				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
 					return !model.parentId(id);
@@ -210,6 +212,8 @@ define([
 					if(node){
 						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
 						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+						t.grid.rowHeader.headerCellNode.setAttribute('aria-label',
+							allSelected ? g.nls.indirectDeselectAll : g.nls.indirectSelectAll);
 					}
 				});
 			}

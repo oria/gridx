@@ -11,6 +11,7 @@ define([
 	"dojo/string",
 	"dojo/parser",
 	"dojo/query",
+	"dijit/_BidiSupport",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
 	"../Filter",
@@ -20,7 +21,7 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -500,6 +501,13 @@ define([
 			}else{
 				valueString = value;
 			}
+			if(this.grid.textDir){
+				var resolvedTextDir = this.grid.textDir;
+				if(resolvedTextDir == "auto"){
+					resolvedTextDir = _BidiSupport.prototype._checkContextual(valueString);
+				}
+				valueString = '<span dir="' + resolvedTextDir + '">' + valueString + '</span>';
+			}
 			return '<span style="font-style:italic">' + this._getConditionDisplayName(condition) + '</span> ' + valueString;
 		},
 		_getConditionDisplayName: function(c){
@@ -629,6 +637,7 @@ define([
 		},
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
+			this._cfmDlg && this._cfmDlg.destroy();
 			this.btnFilter.destroy();
 			if(this._tooltip){
 				this._tooltip.destroy();

@@ -188,6 +188,11 @@ define([
 			//		Fired when there's no rows in current body view.
 		},
 
+		onLoadFail: function(){
+			// summary:
+			//		Fire when there's an error occured when loading data.
+		},
+
 		onForcedScroll: function(){
 			// summary:
 			//		Fired when the body needs to fetch more data, but there's no trigger to the scroller.
@@ -628,6 +633,8 @@ define([
 
 		onEmpty: function(){},
 
+		onLoadFail: function(){},
+
 		onForcedScroll: function(){},
 
 		collectCellWrapper: function(/* wrappers, rowId, colId */){},
@@ -664,6 +671,7 @@ define([
 			this.domNode.innerHTML = '';
 			this._err = e;
 			this.onEmpty();
+			this.onLoadFail(e);
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){

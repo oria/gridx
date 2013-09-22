@@ -200,9 +200,11 @@ define([
 			var t = this;
 			if(t._sortId !== null){
 				var headerCell = t.grid.header.getHeaderNode(t._sortId);
-				domClass.remove(headerCell, 'gridxCellSorted');
-				domClass.remove(headerCell, 'gridxCellSortedAsc');
-				domClass.remove(headerCell, 'gridxCellSortedDesc');
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+				}
 				t._sortId = t._sortDescend = null;
 				t.model.sort();
 				if(!skipUpdateBody){
@@ -245,10 +247,12 @@ define([
 				headerCell;
 			if(t._sortId && t._sortId != colId){
 				headerCell = g.header.getHeaderNode(t._sortId);
-				domClass.remove(headerCell, 'gridxCellSorted');
-				domClass.remove(headerCell, 'gridxCellSortedAsc');
-				domClass.remove(headerCell, 'gridxCellSortedDesc');
-				headerCell.setAttribute('aria-sort', 'none');
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+					headerCell.setAttribute('aria-sort', 'none');
+				}
 			}
 			t._sortId = colId;
 			t._sortDescend = isDescending = !!isDescending;

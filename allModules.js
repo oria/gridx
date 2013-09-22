@@ -1,4 +1,5 @@
 define([
+	'gridx/modules/Focus',
 	'gridx/modules/VScroller',
 	'gridx/modules/ColumnResizer',
 	'gridx/modules/VirtualVScroller',
@@ -48,7 +49,7 @@ define([
 	'gridx/modules/Layer',
 	'gridx/modules/StructureSwitch'
 ], function(
-	VScroller, ColumnResizer, VirtualVScroller,
+	Focus, VScroller, ColumnResizer, VirtualVScroller,
 	SingleSort, NestedSort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
@@ -65,7 +66,7 @@ define([
 	HeaderMenu, SlantedHeader, ExpandableColumn,
 	Layer, StructureSwitch){
 return {
-	//Focus: Focus,
+	Focus: Focus,
 	VScroller: VScroller,
 	ColumnResizer: ColumnResizer,
 	VirtualVScroller: VirtualVScroller,

@@ -172,7 +172,6 @@ define([
 			ac.resize();
 		},
 		uninitialize: function(){
-			console.log('bbb');
 			this.inherited(arguments);
 		}
 		

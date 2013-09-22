@@ -297,7 +297,6 @@ define([
 			}
 		},
 
-
 		_onSetColumns: function(){
 			var t = this,
 				g = t.grid;
