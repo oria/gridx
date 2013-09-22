@@ -604,6 +604,7 @@ define([
 							}
 						};
 					try{
+						v = (isNaN(v) && typeof v === 'number')? '' : v;
 						if(editorArgs && editorArgs.fromEditor){
 							v = editorArgs.fromEditor(v, widget.cell);
 						}else if(cell.column.storePattern){
