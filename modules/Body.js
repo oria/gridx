@@ -109,7 +109,7 @@ define([
 					t.aspect(m, 'onSizeChange', '_onSizeChange');
 					t.loaded.callback();
 				};
-//            t.aspect(m, 'onDelete', '_onDelete');
+			t.aspect(m, 'onDelete', '_onDelete');
 			//Load the store size
 			m.when({}, function(){
 				t.rootCount = t.rootCount || m.size();
@@ -866,57 +866,11 @@ define([
 			}
 		},
 
-
-		_onDelete: function(id){
+		_onDelete: function(id, rowIndex, treePath){
 			var t = this;
-			if(t.autoUpdate){
-				var node = t.getRowNode({rowId: id});
-				if(node){
-					var sn, count = 0,
-						start = parseInt(node.getAttribute('rowindex'), 10),
-						pid = node.getAttribute('parentid'),
-						pids = {},
-						toDelete = [node],
-						rid, ids = [id],
-						vidx;
-					pids[id] = 1;
-					for(sn = node.nextSibling; sn && pids[sn.getAttribute('parentid')]; sn = sn.nextSibling){
-						rid = sn.getAttribute('rowid');
-						ids.push(rid);
-						toDelete.push(sn);
-						pids[rid] = 1;
-					}
-					for(; sn; sn = sn.nextSibling){
-						if(sn.getAttribute('parentid') == pid){
-							sn.setAttribute('rowindex', parseInt(sn.getAttribute('rowindex'), 10) - 1);
-						}
-						vidx = parseInt(sn.getAttribute('visualindex'), 10) - toDelete.length;
-						sn.setAttribute('visualindex', vidx);
-						domClass.toggle(sn, 'gridxRowOdd', vidx % 2);
-						++count;
-					}
-					t.renderCount -= toDelete.length;
-					array.forEach(ids, t.onUnrender, t);
-					array.forEach(toDelete, domConstruct.destroy);
-					//If the body is showing the last a few rows, it should respond to deletion 
-					//no matter pagination is on or not.
-					if(t.rootStart + t.rootCount >= t.model.size()){
-						if(pid === ''){
-							t.updateRootRange(t.rootStart, t.rootCount - 1);
-						}else{
-							t.visualCount = t.grid.tree ? t.grid.tree.getVisualSize(t.rootStart, t.rootCount) : t.rootCount;
-						}
-					}
-					t.onDelete(id, start);
-					t.onRender(start, count);
-					if(!t.domNode.childNodes.length){
-						var en = t.grid.emptyNode,
-							emptyInfo = t.arg('emptyInfo', nls.emptyInfo);
-						en.innerHTML = emptyInfo;
-						en.style.zIndex = 1;
-						t.onEmpty();
-					}
-				}
+			//only necessary for child row deletion
+			if(treePath && treePath.length > 1){
+				t.lazyRefresh();
 			}
 		},
 	
