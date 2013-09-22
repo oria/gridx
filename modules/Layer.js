@@ -51,6 +51,9 @@ define([
 			t.aspect(g.columnWidth, 'onUpdate', function(){
 				query('.gridxCell', wrapper1).forEach(updateColumnWidth);
 				query('.gridxCell', wrapper2).forEach(updateColumnWidth);
+				if(cn.firstChild){
+					cn.style.height = cn.firstChild.offsetHeight + 'px';
+				}
 			});
 
 			var w = t.arg('buttonColumnWidth');
