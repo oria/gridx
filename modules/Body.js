@@ -526,21 +526,25 @@ define([
 			if(count > 0){
 				//Just remove the nodes from DOM tree instead of destroying them,
 				//in case other logic still needs these nodes.
-				var t = this, i = 0, id, bn = t.domNode;
+				var t = this, m = t.model, i = 0, id, bn = t.domNode;
 				if(preOrPost == 'post'){
 					for(; i < count && bn.lastChild; ++i){
 						id = bn.lastChild.getAttribute('rowid');
-						t.model.free(id);
-						t.onUnrender(id);
+						if(m.isId(id)){
+							m.free(id);
+							t.onUnrender(id);
+						}
 						domConstruct.destroy(bn.lastChild);
 					}
 				}else{
 					var tp = bn.scrollTop;
 					for(; i < count && bn.firstChild; ++i){
 						id = bn.firstChild.getAttribute('rowid');
-						t.model.free(id);
 						tp -= bn.firstChild.offsetHeight;
-						t.onUnrender(id);
+						if(m.isId(id)){
+							m.free(id);
+							t.onUnrender(id);
+						}
 						domConstruct.destroy(bn.firstChild);
 					}
 					t.renderStart += i;
@@ -548,7 +552,7 @@ define([
 				}
 				t.renderCount -= i;
 				//Force check cache size
-				t.model.when();
+				m.when();
 			}
 		},
 
