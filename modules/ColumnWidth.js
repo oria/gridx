@@ -223,7 +223,8 @@ define([
 			var t = this,
 				g = t.grid;
 			t._init();
-			g.header.refresh();
+			//Now header and body can be different, so we should not trigger any onRender event at this inconsistent stage,
+			g.header._build();
 			t._adaptWidth();
 			//FIXME: Is there any more elegant way to do this?
 			if(g.cellWidget){
@@ -236,6 +237,8 @@ define([
 				g.tree._initExpandLevel();
 			}
 			g.body.refresh();
+			//Now header and body are matched, so we can fire onRender.
+			g.header.onRender();
 		}
 	});
 });
