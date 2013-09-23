@@ -102,6 +102,9 @@ define([
 			//		protected extension
 			var t = this;
 			t.inherited(arguments);
+			if(t.touch !== undefined){
+				t.touch = has('ios') || has('android');
+			}
 			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang);
 			t._eventFlags = {};
 			t.modules = t.coreModules.concat(t.modules || []);
@@ -146,6 +149,11 @@ define([
 		//		If true, the grid's width is determined by the total width of the columns, so that there will
 		//		never be horizontal scroller bar.
 		autoWidth: false,
+
+		// touch: Boolean
+		//		Whether grid is run in touch environment
+		//		If undefined, automatically set to true on mobile devices (like ios or android)
+		touch: undefined,
 	=====*/
 
 		
