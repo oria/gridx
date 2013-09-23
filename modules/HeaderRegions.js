@@ -57,10 +57,11 @@ declare(_Module, {
 		t.loaded.callback();
 	},
 
-	add: function(creater, priority, skipRefresh){
+	add: function(creater, priority, skipRefresh, skipFocus){
 		this._regions.push({
 			c: creater,
 			p: priority || 0,
+			f: !skipFocus,
 			n: {}
 		});
 		if(!skipRefresh){
@@ -83,27 +84,41 @@ declare(_Module, {
 				return b.p - a.p;
 			});
 			query('.gridxCell', g.header.domNode).forEach(function(node){
+				domClass.remove(node, 'gridxCellRegion');
 				var colId = node.getAttribute('colid'),
 					col = g.column(colId, 1),
-					nameNode = query('.gridxSortNode', node)[0];
-				regionNodes.push(nameNode);
-				nameNode.setAttribute('tabindex', -1);
-				t._regionCnnts.push(t.connect(nameNode, 'onblur', '_onRegionBlur'));
+					tmpArr = [];
 				array.forEach(regions, function(region){
 					var regionNode = region.n[colId];
 					if(!regionNode){
 						regionNode = region.n[colId] = region.c(col);
 						if(regionNode){
-							regionNode.setAttribute('tabindex', -1);
 							domClass.add(regionNode, 'gridxHeaderRegion');
-							t.connect(regionNode, 'onblur', '_onRegionBlur');
+							if(region.f){
+								domClass.add(regionNode, 'gridxHeaderRegionFocusable');
+								regionNode.setAttribute('tabindex', -1);
+								t.connect(regionNode, 'onblur', '_onRegionBlur');
+							}
 						}
 					}
 					if(regionNode){
 						domConstruct.place(regionNode, node, 'first');
-						regionNodes.push(regionNode);
+						if(region.f){
+							tmpArr.push(regionNode);
+						}
 					}
 				});
+				if(tmpArr.length){
+					var nameNode = query('.gridxSortNode', node)[0];
+					regionNodes.push(nameNode);
+					nameNode.setAttribute('tabindex', -1);
+					t._regionCnnts.push(t.connect(nameNode, 'onblur', '_onRegionBlur'));
+				}else{
+					regionNodes.push(node);
+					domClass.add(node, 'gridxCellRegion');
+					t._regionCnnts.push(t.connect(node, 'onblur', '_onRegionBlur'));
+				}
+				regionNodes.push.apply(regionNodes, tmpArr);
 			});
 			if(!regionNodes[t._curRegionIdx]){
 				t._curRegionIdx = 0;

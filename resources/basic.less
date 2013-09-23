@@ -94,12 +94,15 @@
 	overflow: hidden;
 }
 
-.gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell.gridxHeaderCellFocus {
-	border: 1px dashed darkblue;
+.gridx .gridxHeader .gridxHeaderRow .gridxHeaderRowInner .gridxCell {
+	&.gridxHeaderCellFocus,
+	&.gridxCellRegion.gridxHeaderRegionFocus {
+		border: 1px dashed darkblue;
 
-	.dj_android &,
-	.dj_ios & {
-		border-color: transparent;
+		.dj_android &,
+		.dj_ios & {
+			border-color: transparent;
+		}
 	}
 }
 
@@ -443,6 +446,8 @@
 .gridxHeaderRegion {
 	float: right;
 	display: none;
+}
+.gridxHeaderRegionFocusable {
 	cursor: pointer;
 }
 .gridxCell:hover, .gridxHeaderRegionFocus {
