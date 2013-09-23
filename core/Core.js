@@ -321,6 +321,11 @@ define([
 				return lang.mixin({}, col);
 			});
 			t._columnsById = configColumns(t._columns);
+			
+			if(t.edit){			//FIX ME: this is ugly
+								//this will not run in the first setColumns function
+				t.edit._init();
+			}
 			if(t.model){
 				t.model._cache.onSetColumns(t._columnsById);
 			}
