@@ -929,7 +929,7 @@ define([
 					colId: t._focusCellCol
 				});
 				var elems = a11y._getTabNavigable(cellNode);
-				if(evt && evt.target == (step < 0 ? elems.first : elems.last)){
+				if(evt && ((!elems.first && !elems.last) || evt.target == (step < 0 ? elems.first : elems.last))){
 					g.focus.stopEvent(evt);
 					var rowIndex = view.getRowInfo({
 							parentId: t.model.parentId(t._focusCellRow),
