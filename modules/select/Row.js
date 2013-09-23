@@ -196,9 +196,9 @@ define([
 		_getUnselectableRows: function(){
 			var ret = [],
 				t = this,
-				unselectable = this.arg('unselectable');
+				unselectable = t.arg('unselectable');
 			for(var id in unselectable){
-				if(this.unselectable[id] && t.model.byId(id)){
+				if(t.unselectable[id] && t.model.byId(id)){
 					ret.push(id);
 				}
 			}

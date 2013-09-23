@@ -286,7 +286,7 @@ define([
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
 			return locale.parse(storeData, col.storePattern);
 		}
-		//Some editor like textbox will ignre setting undefined value.
+		//Some editor like textbox will ignore setting undefined value.
 		return gridData === undefined ? null : gridData;
 	}
 	
@@ -958,6 +958,7 @@ define([
 
 		_onBlur: function(){
 			this._applyAll();
+			this._editing = false;
 			return true;
 		},
 

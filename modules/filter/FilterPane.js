@@ -7,6 +7,7 @@ define([
 	"dojo/string",
 	"dojo/query",
 	"dijit/registry",
+	"dijit/_BidiSupport",
 	"dojox/html/ellipsis",
 	"dojox/html/metrics",
 	"./DistinctComboBoxMenu",
@@ -20,7 +21,7 @@ define([
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
-], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, ContentPane){
+], function(declare, lang, array, dom, css, string, query, registry, _BidiSupport, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, ContentPane){
 
 /*=====
 	return declare([], {
@@ -61,7 +62,10 @@ define([
 				return {
 					colId: isAnyColumn(colId) ? '' : colId,
 					condition: condition,
-					value: condition === 'isEmpty' ? '' : value,
+					//fix defect #10741
+					//set('value', '') on DateTimeBox will set date to 1/1/1970
+					//so, set('value', null) when condition is empty on a DateTimeBoxs
+					value: condition === 'isEmpty'? ( this._getType() === 'Date'? null : '') : value,
 					type: this._getType()
 				};
 			}else{
@@ -178,6 +182,9 @@ define([
 			this.onChange();
 		},
 		_onValueChange: function(){
+			if(this.grid.textDir && this.grid.textDir == 'auto'){
+				this.tbSingle.focusNode.dir = _BidiSupport.prototype._checkContextual(this._getValue());
+			}
 			this._updateTitle();
 			this.onChange();
 		},

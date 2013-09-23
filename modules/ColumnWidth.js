@@ -297,7 +297,6 @@ define([
 			}
 		},
 
-
 		_onSetColumns: function(){
 			var t = this,
 				g = t.grid;
@@ -316,6 +315,8 @@ define([
 				g.tree._initExpandLevel();
 			}
 			g.body.refresh();
+			//Now header and body are matched, so we can fire onRender.
+			g.header.onRender();
 		}
 	});
 });
