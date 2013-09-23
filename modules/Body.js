@@ -238,7 +238,7 @@ define([
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
-			t.aspect(t.model, 'onSet', '_onDelete');
+			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
 			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
 			t.connect(g.mainNode, 'onmouseleave', function(){
