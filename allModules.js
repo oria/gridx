@@ -5,6 +5,7 @@ define([
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/SingleSort',
 	'gridx/modules/NestedSort',
+	'gridx/modules/Sort',
 	'gridx/modules/ColumnLock',
 	'gridx/modules/select/Row',
 	'gridx/modules/select/Column',
@@ -50,7 +51,7 @@ define([
 	'gridx/modules/StructureSwitch'
 ], function(
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
-	SingleSort, NestedSort, ColumnLock,
+	SingleSort, NestedSort, Sort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
 	MoveRow, MoveColumn,
@@ -72,6 +73,7 @@ return {
 	VirtualVScroller: VirtualVScroller,
 	SingleSort: SingleSort,
 	NestedSort: NestedSort,
+	Sort: Sort,
 	ColumnLock: ColumnLock,
 	SelectRow: SelectRow,
 	SelectColumn: SelectColumn,
