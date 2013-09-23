@@ -241,6 +241,7 @@ define([
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', t._nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
+			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
 			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
 			t.connect(g.mainNode, 'onmouseleave', function(){
@@ -853,6 +854,14 @@ define([
 		},
 
 		//Store Notification-------------------------------------------------------------------
+		_onDelete: function(id, index, treePath){
+			var t = this;
+			//only necessary for child row deletion.
+			if(treePath && treePath.length > 1){
+				t.lazyRefresh();
+			}
+		},
+
 		_onSet: function(id, index, rowCache, oldCache){
 			var t = this;
 			if(t.autoUpdate && rowCache){
