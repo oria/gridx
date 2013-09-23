@@ -11,6 +11,7 @@ define([
 	"dojo/string",
 	"dojo/parser",
 	"dojo/query",
+	"dojo/keys",
 	"dijit/_BidiSupport",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
@@ -21,7 +22,7 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, keys, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -438,6 +439,7 @@ define([
 		_initWidgets: function(){
 			this.btnFilter = registry.byNode(query('.dijitButton', this.domNode)[0]);
 			this.btnClose = query('.gridxFilterBarCloseBtn', this.domNode)[0];
+			this.connect(this.btnClose, 'onkeydown', '_onCloseKey');
 			this.statusNode = query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
 			domAttr.remove(this.btnFilter.focusNode, 'aria-labelledby');
 		},
@@ -635,6 +637,12 @@ define([
 		_doBlur: function(){
 			return true;
 		},
+		_onCloseKey: function(evt){
+			if(evt.keyCode === keys.ENTER){
+				this.hide();
+			}
+		},
+
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
 			this._cfmDlg && this._cfmDlg.destroy();
