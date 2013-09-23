@@ -377,7 +377,7 @@ define([
 			clearTimeout(t._sizeChangeHandler);
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
 			
-//            domClass.add(loadingNode, 'gridxLoading');
+			domClass.add(loadingNode, 'gridxLoading');
 			t.grid.view.updateVisualCount().then(function(){
 				try{
 					var rs = t.renderStart,
