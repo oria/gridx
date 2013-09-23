@@ -206,25 +206,31 @@ define([
 				args.visualIndex = t._getVisualIndex(args.parentId, args.rowIndex);
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				//Given visual index, get row index and parent id.
-				var rootOpenned = t._openInfo[''].openned,
-					vi = t.rootStart + args.visualIndex;
-				for(var i = 0; i < rootOpenned.length; ++i){
-					var root = t._openInfo[rootOpenned[i]];
-					if(m.idToIndex(root.id) < t.rootStart){
-						vi += root.count;
-					}else{
-						break;
+				var layerId = m.layerId();
+				if(m.isId(layerId)){
+					args.rowIndex = args.visualIndex;
+					args.parentId = layerId;
+				}else{
+					var rootOpenned = t._openInfo[''].openned,
+						vi = t.rootStart + args.visualIndex;
+					for(var i = 0; i < rootOpenned.length; ++i){
+						var root = t._openInfo[rootOpenned[i]];
+						if(m.idToIndex(root.id) < t.rootStart){
+							vi += root.count;
+						}else{
+							break;
+						}
 					}
+					var info = {
+						parentId: '',
+						preCount: 0
+					};
+					while(!info.found){
+						info = t._getChild(vi, info);
+					}
+					args.rowIndex = info.rowIndex;
+					args.parentId = info.parentId;
 				}
-				var info = {
-					parentId: '',
-					preCount: 0
-				};
-				while(!info.found){
-					info = t._getChild(vi, info);
-				}
-				args.rowIndex = info.rowIndex;
-				args.parentId = info.parentId;
 			}else{
 				//Nothing we can do here...
 				return args;
@@ -528,7 +534,8 @@ define([
 					info.count -= count;
 					info = openInfo[info.parentId];
 				}
-				if(parentId === '' && rowIndex >= t.rootStart && rowIndex < t.rootStart + t.rootCount){
+				//sometimes number typed ID can be accidentally changed to string type.
+				if(String(parentId) == String(model.layerId()) && rowIndex >= t.rootStart && rowIndex < t.rootStart + t.rootCount){
 					t.rootCount--;
 				}
 				var rootIndex = model.idToIndex(model.rootId(rowId));
