@@ -590,17 +590,21 @@ define([
 				if(preOrPost == 'post'){
 					for(; i < count && bn.lastChild; ++i){
 						id = bn.lastChild.getAttribute('rowid');
-						m.free(id);
-						t.onUnrender(id);
+						if(m.isId(id)){
+							m.free(id);
+							t.onUnrender(id);
+						}
 						domConstruct.destroy(bn.lastChild);
 					}
 				}else{
 					var tp = bn.scrollTop;
 					for(; i < count && bn.firstChild; ++i){
 						id = bn.firstChild.getAttribute('rowid');
-						m.free(id);
 						tp -= bn.firstChild.offsetHeight;
-						t.onUnrender(id);
+						if(m.isId(id)){
+							m.free(id);
+							t.onUnrender(id);
+						}
 						domConstruct.destroy(bn.firstChild);
 					}
 					t.renderStart += i;
