@@ -351,11 +351,13 @@ define([
 			}
 			var dn = t.domNode,
 				//remember the scroll bar position
-				oldScrollTop = dn.scrollTop;
+				oldScrollTop = dn.scrollTop,
+				isBottom = oldScrollTop >= dn.scrollHeight - dn.offsetHeight;
 			t.stubNode.style.height = h + 'px';
 			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
 			if(t._lastScrollTop){
-				dn.scrollTop = oldScrollTop;
+				//If we were at bottom, should keep us at bottom after height change.
+				dn.scrollTop = isBottom ? dn.scrollHeight : oldScrollTop;
 				t._lastScrollTop = dn.scrollTop;
 			}
 		},
