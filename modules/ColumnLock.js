@@ -95,7 +95,6 @@ define([
 		lock: function(/*Integer*/count){
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			if(count >= this.grid._columns.length){
-				this.count = 0;
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
 				return;
 			}
@@ -148,7 +147,6 @@ define([
 			// summary:
 			//	Lock columns for one row
 			if(!this.count || this.count >= this.grid._columns.length){
-				this.count = 0;
 				return;
 			}
 			
