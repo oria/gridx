@@ -262,8 +262,8 @@ define([
 				},
 				{ field: "Artist", name:"Artist", width: '200px', editable: true },
 				{ field: "Album", name:"Album", width: '200px', alwaysEditing: true },
-				{ field: "Genre", name:"ComboButton", width: '200px' },
-				{ field: "Name", name:"DropDown Button", width: '200px' }
+				{ field: "Genre", name:"Genre", width: '200px' },
+				{ field: "Name", name:"Name", width: '200px' }
 			],
 			modules: [
 				'gridx/modules/ColumnResizer',

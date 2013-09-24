@@ -43,6 +43,7 @@ define([
 	}
 
 	function createSelectStore(field){
+		dataSource.resetSeed();
 		var data = dataSource.getData({
 			size: 100
 		}).items;
