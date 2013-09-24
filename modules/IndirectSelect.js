@@ -109,7 +109,7 @@ define([
 
 		_createSelectAllBox: function(){
 			var allSelected = this._allSelected[this._getPageId()];
-			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this._nls.indirectDeselectAll : this._nls.indirectSelectAll);
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this.grid.nls.indirectDeselectAll : this.grid.nls.indirectSelectAll);
 			return this._createCheckBox(allSelected);
 		},
 
@@ -225,7 +225,6 @@ define([
 				rowHeader = g.rowHeader,
 				headerCellNode = rowHeader.headerCellNode,
 				focus = function(evt){
-					g.focus.stopEvent(evt);
 					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
 					headerCellNode.focus();
 					return true;
