@@ -333,6 +333,35 @@
 	}
 }
 
+.gridxEditButtons {
+	height: 20px;
+	position: relative;
+	
+}
+.gridxAlwaysEdit {
+	display: none;
+}
+.gridxEditFocus {
+	display: block;
+}
+
+.gridxEditOK,
+.gridxEditCancel {
+	display: inline-block;
+	float: right;
+	cursor: pointer;
+
+	&:hover {
+		background-color: #9bcaf7;
+	}
+}
+.gridxEditOK {
+	.icon(CheckerGrey);
+}
+.gridxEditCancel {
+	.icon(CrossGrey);
+}
+
 
 /* TouchVScroller */
 .gridxTouchVScroller {

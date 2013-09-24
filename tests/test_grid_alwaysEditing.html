@@ -18,11 +18,11 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid AlwaysEditing Test 
 	</h1>
-	<h2>Narrow rows</h2>
+	<h2>Apply on blur</h2>
 	<div jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store1,
-		structure: layout1,
+		structure: layout,
 		modules: [
 			"gridx/modules/CellWidget",
 			"gridx/modules/Edit",
@@ -30,12 +30,12 @@
 			"gridx/modules/pagination/PaginationBar"
 		]
 	'></div>
-	<h2>Tall rows</h2>
+	<h2>Edit Buttons</h2>
 	<div jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store2,
-		structure: layout2,
-		autoWidth: true,
+		structure: layout,
+		editButtons: true,
 		modules: [
 			"gridx/modules/CellWidget",
 			"gridx/modules/Edit",
