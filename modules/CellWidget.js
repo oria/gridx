@@ -78,6 +78,21 @@ define([
 					}
 				});
 			},
+
+			startup: function(){
+				var t = this,
+					cell = t.cell,
+					cellWidget = cell.grid.cellWidget,
+					col = cell.column,
+					started = t._started;
+				t.inherited(arguments);
+				array.forEach(t._cellCnnts, t.disconnect, t);
+				if(started){
+					//Do not uninitialized on first creation.
+					cellWidget.uninitializeCellWidget(t, cell);
+				}
+				cellWidget.initializeCellWidget(t, cell);
+			},
 		
 			setValue: function(gridData, storeData, isInit){
 				try{
@@ -274,6 +289,20 @@ define([
 			// tags:
 			//		callback
 		},
+
+		initializeCellWidget: function(widget, cell){
+			var column = cell.column;
+			if(column.initializeCellWidget){
+				column.initializeCellWidget(widget, cell);
+			}
+		},
+
+		uninitializeCellWidget: function(widget, cell){
+			var column = cell.column;
+			if(column.uninitializeCellWidget){
+				column.uninitializeCellWidget(widget, cell);
+			}
+		},
 	
 		//Private---------------------------------------------------------------
 		_init: function(){
@@ -322,7 +351,7 @@ define([
 				cellWidget.startup();
 			}
 		},
-	
+
 		_prepareCellWidget: function(cell){
 			var col = cell.column.def(),
 				widget = this._getSpecialWidget(cell);
@@ -334,6 +363,9 @@ define([
 						setCellValue: col.setCellValue
 					});
 					this.onCellWidgetCreated(widget, cell);
+					if(col.onCellWidgetCreated){
+						col.onCellWidgetCreated(widget, cell.column);
+					}
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}
@@ -375,12 +407,12 @@ define([
 				}
 			}
 		},
-	
+
 		_getSpecialCellDec: function(rowId, colId){
 			var rowDecs = this._decorators[rowId];
 			return rowDecs && rowDecs[colId];
 		},
-	
+
 		_getSpecialWidget: function(cell){
 			var rowDecs = this._decorators[cell.row.id];
 			if(rowDecs){
