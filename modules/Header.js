@@ -229,11 +229,14 @@ define([
 		},
 
 		_doFocus: function(evt, step){
-			var t = this, 
-				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
-				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
-			t.grid.focus.stopEvent(r && evt);
-			return r;
+			var t = this;
+			if(!t.hidden){
+				var n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
+					r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
+				t.grid.focus.stopEvent(r && evt);
+				return r;
+			}
+			return false;
 		},
 		
 		_focusNode: function(node){

@@ -102,7 +102,7 @@ define([
 			//		protected extension
 			var t = this;
 			t.inherited(arguments);
-			if(t.touch !== undefined){
+			if(t.touch === undefined){
 				t.touch = has('ios') || has('android');
 			}
 			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang);
@@ -153,10 +153,9 @@ define([
 		// touch: Boolean
 		//		Whether grid is run in touch environment
 		//		If undefined, automatically set to true on mobile devices (like ios or android)
-		touch: undefined,
+		//touch: undefined,
 	=====*/
 
-		
 		resize: function(changeSize){
 			// summary:
 			//		Resize the grid using given width and height.

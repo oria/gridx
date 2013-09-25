@@ -368,7 +368,9 @@ define([
 			while(node != t.bodyNode){
 				if(domClass.contains(node, 'gridxRowHeaderRow')){
 					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
-					t._focusRow(r);
+					t.grid.vScroller.scrollToRow(r).then(function(){
+						t._focusRow(r);
+					});
 					return true;
 				}
 				node = node.parentNode;
