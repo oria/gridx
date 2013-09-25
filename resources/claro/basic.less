@@ -11,12 +11,11 @@
 	.gridxCell{
 		border-color: transparent #E5DAC8 #E5DAC8 transparent;
 	}
-	.gridxRowOdd .gridxRowTable {
+	.gridxRowOdd>.gridxRowTable {
 		background-color: #f1f8ff;
 	}
 	.gridxBodyRowHoverEffect .gridxRowOver {
-		.gridxRowTable,
-		.gridxCell {
+		>.gridxRowTable .gridxCell {
 			background: data-uri("../images/rowback.png") #ABD6FF repeat-x;
 		}
 	}
@@ -124,7 +123,7 @@
 	}
 
 	/* PagedBody */
-	.gridxRow:first-child .gridxCell,
+	.gridxRow:first-child>.gridxRowTable .gridxCell,
 	.gridxBodyFirstRow .gridxCell {
 		border-top-color: #E5DAC8;
 	}

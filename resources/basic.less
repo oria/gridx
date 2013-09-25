@@ -125,7 +125,7 @@
 	.boxSizing(content-box);
 }
 
-.gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
+.gridxBodyRowHoverEffect .gridxRowOver>.gridxRowTable {
 	background-color: #cee8f2;
 }
 
@@ -331,6 +331,36 @@
 	[class~='dijitSliderV']& {
 		width: auto;
 	}
+}
+
+.gridxEditButtons {
+	height: 20px;
+	position: relative;
+	
+}
+.gridxAlwaysEdit {
+	display: none;
+}
+.gridxEditFocus {
+	display: block;
+}
+
+.gridxEditOK,
+.gridxEditCancel {
+	display: inline-block;
+	float: right;
+	cursor: pointer;
+	margin-left: 5px;
+
+	&:hover {
+		background-color: #9bcaf7;
+	}
+}
+.gridxEditOK {
+	.icon(CheckerGrey);
+}
+.gridxEditCancel {
+	.icon(CrossGrey);
 }
 
 

@@ -2,7 +2,8 @@ define([
 /*====="../core/Row",=====*/
 /*====="../core/Cell",=====*/
 	"dojo/_base/declare",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query/query',
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/json",
@@ -834,18 +835,29 @@ define([
 		},
 
 		_decorateEvent: function(e){
+			//clean decorates from bubble
+			//need to re-decorate the event when bubbling
+			var atrs = ['rowId', 'columnId', 'rowIndex', 'visualIndex', 'columnIndex', 'parentId', 'cellNode'];
+			array.forEach(atrs, function(atr){
+				if(atr in e){ 
+					delete e[atr]; 
+				}
+			});
+			
 			var n = e.target || e.originalTarget,
 				g = this.grid,
 				tag;
 			for(; n && n != g.bodyNode; n = n.parentNode){
 				tag = n.tagName && n.tagName.toLowerCase();
-				if(tag == 'td' && domClass.contains(n, 'gridxCell')){
+				if(tag == 'td' && domClass.contains(n, 'gridxCell') && 
+					n.parentNode.parentNode.parentNode.parentNode.parentNode === g.bodyNode){
+						
 					var col = g._columnsById[n.getAttribute('colid')];
 					e.cellNode = n;
 					e.columnId = col.id;
 					e.columnIndex = col.index;
 				}
-				if(tag == 'div' && domClass.contains(n, 'gridxRow')){
+				if(tag == 'div' && domClass.contains(n, 'gridxRow') && n.parentNode === g.bodyNode){
 					e.rowId = n.getAttribute('rowid');
 					e.parentId = n.getAttribute('parentid');
 					e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);
@@ -915,6 +927,14 @@ define([
 					domClass.add(rowNode, 'gridxRowOver');
 				}
 			}
+		},
+		//GridInGrid-------------------------------------------------------------------------------------
+		_isDescendantRowNode: function(node){
+			return node.parentNode === this.grid.bodyNode;
+		},
+		
+		_isDescendantCellNode: function(node){
+			return node.parentNode.parentNode.parentNode.parentNode.parentNode === this.grid.bodyNode;
 		},
 
 		//Focus------------------------------------------------------------------------------------------
@@ -1067,7 +1087,7 @@ define([
 		_onFocus: function(evt){
 			var bn = this.domNode,
 				nl = query(evt.target).closest('.gridxCell', bn);
-			if(nl[0]){
+			if(nl[0] && this._isDescendantCellNode(nl[0])){
 				var colIndex = this.grid._columnsById[nl[0].getAttribute('colid')].index,
 					visualIndex = parseInt(nl.closest('.gridxRow', bn)[0].getAttribute('visualindex'), 10);
 				return this._focusCell(0, visualIndex, colIndex);
