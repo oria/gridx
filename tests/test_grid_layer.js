@@ -93,6 +93,8 @@ require([
 //        modules.Edit,
 //        modules.IndirectSelectColumn,
 		modules.SingleSort,
+		modules.Filter,
+		modules.QuickFilter,
 //        modules.VirtualVScroller,
 //        modules.MultiChannelScroller,
 //        modules.TouchVScroller,
