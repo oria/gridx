@@ -241,7 +241,9 @@
 	cursor: pointer;
 	display: none;
 }
-
+.gridxQuickFilterInput .dijitInputInner::-ms-clear {
+	display: none;
+}
 .dj_ie7 .gridxQuickFilterClear {
 	top: 5px;
 }
