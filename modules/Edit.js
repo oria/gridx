@@ -421,7 +421,7 @@ define([
 			}
 			g.domNode.removeAttribute('aria-readonly');
 			if(g.touch){
-				t.connect(g.bodyNode, tap.hold, function(evt){
+				t.connect(g.bodyNode, tap.doubletap, function(evt){
 					var cellNode = query(evt.target).closest('.gridxCell', g.bodyNode);
 					var rowNode = cellNode.closest('.gridxRow', g.bodyNode)[0];
 					cellNode = cellNode[0];
@@ -430,6 +430,13 @@ define([
 							rowId: rowNode.getAttribute('rowid'),
 							columnId: cellNode.getAttribute('colid')
 						});
+					}
+				});
+				t.aspect(g, 'onCellTouchEnd', function(evt){
+					var col = g._columnsById[evt.columnId];
+					query('.gridxEditFocus', g.bodyNode).removeClass('gridxEditFocus');
+					if(col.alwaysEditing){
+						t._showButtons(evt.rowId, evt.columnId);
 					}
 				});
 			}else{
@@ -791,7 +798,8 @@ define([
 				editor = widget.gridCellEditField;
 			if(editor){
 				if(widget.btns){
-					widget.connect(widget.btnOK, 'onclick', function(){
+					function onOK(evt){
+						evt.stopPropogate();
 						widget.cell.applyEdit().then(function(success){
 							if(success){
 								domClass.remove(widget.btns, 'gridxEditFocus');
@@ -799,14 +807,19 @@ define([
 								t._blur();
 							}
 						});
-					});
-					widget.connect(widget.btnCancel, 'onclick', function(){
+					}
+					function onCancel(evt){
+						evt.stopPropogate();
 						widget.cell.cancelEdit().then(function(){
 							domClass.remove(widget.btns, 'gridxEditFocus');
 							t.grid.body.onRender();
 							t._blur();
 						});
-					});
+					}
+					widget.connect(widget.btnOK, 'onclick', onOK);
+					widget.connect(widget.btnOK, 'ontouchend', onOK);
+					widget.connect(widget.btnCancel, 'onclick', onCancel);
+					widget.connect(widget.btnCancel, 'ontouchend', onCancel);
 				}else if(column.alwaysEditing){
 					widget.connect(editor, 'onChange', function(){
 						var rowId = widget.cell.row.id;

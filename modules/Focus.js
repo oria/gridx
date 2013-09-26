@@ -244,7 +244,7 @@ define([
 
 		focusArea: function(/* String */ areaName, forced){
 			var t = this, area = t._areas[areaName];
-			if(area){
+			if(area && t.arg('enabled')){
 				var curArea = t._areas[t.currentArea()];
 				if(curArea && curArea.name === areaName){
 					if(forced){
