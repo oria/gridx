@@ -168,7 +168,9 @@ require([
 // 					
 					// }
 				// }
-				renderred.callback();
+				// setTimeout(function(){
+					renderred.callback();
+				// }, 2000)
 			});
 	}
 	function setChartContent(node){
@@ -196,7 +198,7 @@ require([
 			}),
 			modules: [
 				// VirtualVScroller,
-				RowHeader,
+				// RowHeader,
 				{
 					moduleClass: Dod,
 					defaultShow: defaultShow,
