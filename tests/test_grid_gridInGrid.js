@@ -136,6 +136,7 @@ require([
 				'	</select></td>',
 				'</tr>',
 			'</table></div>',
+			// '<div style="height: 300px"></div>',
 			'<div data-dojo-type="gridx/Grid" style="width: 100%"',
 			'			data-dojo-props="cacheClass:globalCache,',
 			'							store: globalStore,',
@@ -197,8 +198,8 @@ require([
 				size: 100
 			}),
 			modules: [
-				// VirtualVScroller,
-				// RowHeader,
+				VirtualVScroller,
+				RowHeader,
 				{
 					moduleClass: Dod,
 					defaultShow: defaultShow,
