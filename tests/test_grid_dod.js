@@ -140,7 +140,7 @@ require([
 				size: 100
 			}),
 			modules: [
-				// VirtualVScroller,
+				VirtualVScroller,
 				RowHeader,
 				{
 					moduleClass: Dod,

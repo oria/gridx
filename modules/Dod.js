@@ -297,7 +297,7 @@ define([
 			
 			if(_row.defaultShow){
 				domStyle.set(_row.dodNode, 'display', 'block');
-				g.body.onRender();
+				//g.body.onRender();
 			}else{
 				if(domStyle.get(_row.dodLoadingNode, 'display') == 'block'){
 					domGeometry.setMarginBox(_row.dodNode, {h: domGeometry.getMarginBox(_row.dodLoadingNode).h});
@@ -307,7 +307,8 @@ define([
 			
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 
-			if(this.arg('useAnimation')){
+			if(this.arg('useAnimation') && !_row.defaultShow){		//no need to use animation in
+																	// defaultShow which will has bad performance
 				_row.inAnim = true;
 				fx.wipeIn({
 					node: _row.dodNode,
@@ -324,7 +325,6 @@ define([
 				_row.dodNode.style.height = 'auto';
 				g.body.onRender();
 				this._syncRowheaderHeight(row);
-
 			}
 			
 		},
