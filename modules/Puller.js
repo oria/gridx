@@ -53,7 +53,6 @@ define([
 									}else if(h > t._height){
 										h = t._height;
 									}
-									t.innerNode.style.bottom = 0;
 									delta = h - oldh;
 									t._pos = to;
 									t.node.style.height = h + 'px';
@@ -91,7 +90,6 @@ define([
 		},
 
 		_slide: function(toShow){
-			console.log(toShow ? 'show' : 'hide');
 			var t = this;
 			var g = t.grid;
 			var targetHeight = toShow ? t._height : 0;

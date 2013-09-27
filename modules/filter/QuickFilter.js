@@ -33,7 +33,12 @@ define([
 					row: 0,
 					col: 3,
 					pluginClass: QuickFilter,
-					className: 'gridxBarQuickFilter'
+					className: 'gridxBarQuickFilter',
+					textBoxClass: t.arg('textBoxClass', 'dijit.form.TextBox'),
+					buttonClass: t.arg('buttonClass', 'dijit.form.Button'),
+					comboButtonClass: t.arg('comboButtonClass', 'dijit.form.ComboButton'),
+					menuClass: t.arg('menuClass', 'dijit.Menu'),
+					menuItemClass: t.arg('menuItemClass', 'dijit.MenuItem')
 				};
 			if(g.touch){
 				args.bar = 'quickFilter';
