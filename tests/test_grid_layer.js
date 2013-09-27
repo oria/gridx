@@ -7,13 +7,14 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/allModules',
 	'gridx/modules/Layer',
+	'gridx/modules/Puller',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
 	'dijit/ProgressBar',
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
-], function(parser, has, Deferred, dataSource, nestedDataSource, storeFactory, modules, Layer){
+], function(parser, has, Deferred, dataSource, nestedDataSource, storeFactory, modules, Layer, Puller){
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -92,10 +93,13 @@ require([
 		modules.CellWidget,
 //        modules.Edit,
 //        modules.IndirectSelectColumn,
-		modules.SingleSort,
+//        modules.SingleSort,
+		modules.Filter,
+		modules.QuickFilter,
 //        modules.VirtualVScroller,
 //        modules.MultiChannelScroller,
-//        modules.TouchVScroller,
+		modules.TouchVScroller,
+		Puller,
 		Layer
 	];
 

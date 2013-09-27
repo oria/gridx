@@ -217,10 +217,14 @@ define([
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
 			function canSelect(e){
-				if(e.columnId && t.arg('triggerOnCell')){
-					return g._columnsById[e.columnId].rowSelectable !== false &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				if(e.columnId){
+					var col = g._columnsById[e.columnId];
+					if(t.arg('triggerOnCell')){
+						return col.rowSelectable !== false &&
+							!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+							!domClass.contains(e.target, 'gridxTreeExpandoInner');
+					}
+					return col.rowSelectable;
 				}
 				return !e.columnId;
 			}

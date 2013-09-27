@@ -125,7 +125,7 @@
 	.boxSizing(content-box);
 }
 
-.gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
+.gridxBodyRowHoverEffect .gridxRowOver>.gridxRowTable {
 	background-color: #cee8f2;
 }
 
@@ -350,6 +350,7 @@
 	display: inline-block;
 	float: right;
 	cursor: pointer;
+	margin-left: 5px;
 
 	&:hover {
 		background-color: #9bcaf7;
@@ -549,3 +550,15 @@
 }
 
 
+//Puller
+.gridxPuller {
+	overflow: hidden !important;
+	position: relative !important;
+}
+.gridxPullerInner {
+	position: absolute !important;
+	bottom: 0px !important;
+}
+.gridxPullerAnim {
+	.transition(height, 300ms);
+}

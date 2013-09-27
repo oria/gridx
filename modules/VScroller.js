@@ -130,7 +130,7 @@ define([
 					dn[st] = no;
 					finish(true);
 					return d;
-				}else if(no < bs){
+				}else if(no <= bs){
 					dif = no - bs;
 				}else if(no + n.offsetHeight > bs + bn.clientHeight){
 					dif = no + n.offsetHeight - bs - bn.clientHeight;

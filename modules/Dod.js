@@ -10,14 +10,19 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/fx",
 	"dojo/fx",
-	"dojo/query"
-], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, Deferred, _Module, declare, baseFx, fx, query){
+	"dojo/keys",
+	// "dojo/query",
+	'gridx/support/query/query',
+	'dijit/a11y',
+	'dojo/_base/event',
+	'dojo/_base/sniff'
+], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, 
+			Deferred, _Module, declare, baseFx, fx, keys, query, a11y, event, has){
 	kernel.experimental('gridx/modules/Dod');
 
 /*=====
 	return declare(_Module, {
 		// summary:
-		//		module name: dod.
 		//		Details on demand.
 
 		// useAnimation: Boolean
@@ -75,12 +80,19 @@ define([
 		duration: 750,
 		defaultShow: false,
 		showExpando: true,
+		
+		preload: function(){
+			this.initFocus();
+		},
+		
 		load: function(args, deferStartup){
+			query.isGridInGrid = true;
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
 			this.connect(this.grid.body, 'onUnrender', '_onBodyUnrender');
+			this.connect(this.grid, 'onCellKeyDown', '_onCellKeyDown');
 			if(this.grid.columnResizer){
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
@@ -142,6 +154,7 @@ define([
 				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') + 'px');
 			}
 			
 			var df = new Deferred(), _this = this;
@@ -165,6 +178,7 @@ define([
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
 			var expando = this._getExpando(row);
@@ -188,16 +202,22 @@ define([
 							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 						}
 					}).play();
+					baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+						properties: {
+							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
+						}
+					}).play();					
 				}
 			}else{
 				_row.dodShown = false;
 				_row.inAnim = false;
-				_row.dodNode.style.display = 'none';
-				g.body.onRender();
 				if(this.grid.rowHeader){
 					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 					rowHeaderNode.firstChild.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
+					rowHeaderNode.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
 				}
+				_row.dodNode.style.display = 'none';
+				g.body.onRender();
 				
 			}
 			
@@ -224,6 +244,24 @@ define([
 		
 		onShow: function(row){},
 		onHide: function(row){},
+		
+		initFocus: function(){
+			var t = this,
+				focus = t.grid.focus;
+			focus.registerArea({
+				name: 'navigabledod',
+				priority: 1,
+				scope: t,
+				doFocus: t._doFocus,
+				doBlur: t._doBlur,
+				onFocus: t._onFocus,
+				onBlur: t._onBlur,
+				connects: [
+					t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
+					t.connect(t.grid, 'onRowKeyDown', '_onRowKeyDown')
+				]
+			});	
+		},
 		
 		//private
 		_rowMap: null,
@@ -305,6 +343,12 @@ define([
 			if(_row.defaultShow){
 				domStyle.set(_row.dodNode, 'display', 'block');
 				g.body.onRender();
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+					rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+	
+				}
 			}else{
 				if(domStyle.get(_row.dodLoadingNode, 'display') == 'block'){
 					domGeometry.setMarginBox(_row.dodNode, {h: domGeometry.getMarginBox(_row.dodLoadingNode).h});
@@ -329,6 +373,11 @@ define([
 								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
 							}
 						}).play();
+						baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+							properties: {
+								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
+							}
+						}).play();						
 					}
 				}else{
 					_row.dodNode.style.display = 'block';
@@ -337,11 +386,18 @@ define([
 					if(this.grid.rowHeader){
 						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+						rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+
 					}
 					
 				}
 			}
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
+			// console.log('scroll to row')
+			// console.log(row.visualIndex())
+			// setTimeout(function(){
+				// g.vScroller.scrollToRow(row.visualIndex());
+			// }, 0);
 		},
 		_detailLoadError: function(row){
 			var _row = this._row(row);
@@ -361,9 +417,119 @@ define([
 			return cell.firstChild;
 		},
 		
+		_onCellKeyDown: function(e){
+			var t = this,
+				grid = t.grid,
+				focus = grid.focus,
+				row = grid.row(e.rowId, 1);
+			if(e.keyCode == keys.DOWN_ARROW && e.ctrlKey){
+				t.show(row);
+				e.stopPropagation();
+			}else if(e.keyCode == keys.UP_ARROW && e.ctrlKey){
+				t.hide(row);
+				e.stopPropagation();
+			}
+		
+			if(e.keyCode == keys.F4 && !t._navigating && focus.currentArea() == 'body'){
+				if(t._beginNavigate(e.rowId, e.columnId)){
+					event.stop(e);
+					focus.focusArea('navigabledod');
+				}
+			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+				t._navigating = false;
+				console.log('focus back to body')
+				focus.focusArea('body');
+			}
+		},
 		
 		//Focus
+		_onRowKeyDown: function(e){
+			var t = this,
+				focus = t.grid.focus;
+
+			console.log('on row key down')
+			if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+				t._navigating = false;
+				console.log('focus back to body')
+				focus.focusArea('body');
+			}
+		},
 		
+		_beginNavigate: function(rowId){
+			console.log('in dod begin navigate')
+			
+			var t = this,
+				row = t.grid.row(rowId, 1),
+				_row = t._row(rowId);
+			if(!_row.dodShown){
+				return false;
+			}
+			t._navigating = true;
+			// t._focusColId = colId;
+			t._focusRowId = rowId;
+			var navElems = t._navElems = a11y._getTabNavigable(row.node());
+			return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+			return false;
+			
+		},
+		
+		_doFocus: function(evt, step){
+			if(this._navigating){
+				var elems = this._navElems,
+					func = function(){
+						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
+						if(toFocus){
+							toFocus.focus();
+						}
+					};
+				if(has('webkit')){
+					func();
+				}else{
+					setTimeout(func, 5);
+				}
+				return true;
+			}
+			return false;
+		},
+		_onFocus: function(evt){
+			var node = evt.target, dn = this.grid.domNode;
+			while(node && node !== dn && !domClass.contains(node, 'gridxDodNode')){
+				node = node.parentNode;
+			}
+			if(node && node !== dn){
+				var dodNode = node,
+					rowNode = dodNode.parentNode;
+				// this.grid.hScroller.scrollToColumn(colId);
+				if(rowNode){
+					console.log('in dod on focus');
+					var rowId = rowNode.getAttribute('rowid');
+					return dodNode !== evt.target && this._beginNavigate(rowId);
+				}
+			}
+			return false;
+		},		
+		
+		_doBlur: function(evt, step){
+			if(evt){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem;
+					target = has('ie') ? evt.srcElement : evt.target;
+
+				if(target == (step > 0 ? lastElem : firstElem)){
+					event.stop(evt);
+				}
+				return false;
+			}else{
+				this._navigating = false;
+				return true;
+			}
+		},
+		
+		_onBlur: function(evt){
+			this._navigating = false;
+		},
+
 		endFunc: function(){}
 	});
 });

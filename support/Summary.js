@@ -40,7 +40,7 @@ define([
 				size = g.model.size(),
 				selected = sr ? sr.getSelected().length : 0,
 				tpl = sr ? g.nls.summaryWithSelection : g.nls.summary;
-			this.domNode.innerHTML = string.substitute(tpl, [size, selected]);
+			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected]);
 		}
 	});
 });

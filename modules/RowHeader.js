@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query/query',
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/aspect",
