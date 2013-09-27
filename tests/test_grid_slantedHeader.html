@@ -66,6 +66,8 @@
 		.gridxCell .mark-critical {
 			background-color: #B84A4A;
 		}
+
+		
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
 	<script type="text/javascript" src='support/common.js'></script>
@@ -88,6 +90,24 @@
 			"gridx/modules/SlantedHeader"
 			,"gridx/modules/GroupHeader"
 			,"gridx/modules/ExpandableColumn"
+
+		]
+	'></div>
+
+	<h1 style="margin-top: 40px">Slanted Header for Tree Grid</h1>
+	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: treeStore,
+		structure: treeLayout,
+		
+		autoWidth: true,
+		autoHeight: true,
+		modules: [
+
+			"gridx/modules/SlantedHeader"
+			,"gridx/modules/GroupHeader"
+			,"gridx/modules/ExpandableColumn"
+			,"gridx/modules/Tree"
 
 		]
 	'></div>
