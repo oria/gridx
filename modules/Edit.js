@@ -799,7 +799,7 @@ define([
 			if(editor){
 				if(widget.btns){
 					function onOK(evt){
-						evt.stopPropogate();
+						evt.stopPropagation();
 						widget.cell.applyEdit().then(function(success){
 							if(success){
 								domClass.remove(widget.btns, 'gridxEditFocus');
@@ -809,7 +809,7 @@ define([
 						});
 					}
 					function onCancel(evt){
-						evt.stopPropogate();
+						evt.stopPropagation();
 						widget.cell.cancelEdit().then(function(){
 							domClass.remove(widget.btns, 'gridxEditFocus');
 							t.grid.body.onRender();
