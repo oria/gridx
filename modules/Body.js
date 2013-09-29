@@ -1041,7 +1041,9 @@ define([
 					t = this,
 					g = t.grid, 
 					columnCount = g._columns.length,
-					vc = g.view.visualCount;
+					vc = g.view.visualCount,
+					//IE8 will destroy this event object after setTimeout
+					e = has('ie') < 9 ? lang.mixin({}, evt) : evt;
 				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
 				r = t._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
@@ -1049,7 +1051,7 @@ define([
 				c = c < 0 ? 0 : (c >= columnCount ? columnCount - 1 : c);
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusCell(0, r, c);
-					t.onMoveToCell(r, c, evt);
+					t.onMoveToCell(r, c, e);
 				});
 			}
 		},
