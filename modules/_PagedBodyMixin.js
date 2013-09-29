@@ -203,6 +203,13 @@ define([
 					}
 				}
 				n.innerHTML = str;
+				if(t._topNode && g.view.rootStart > 0){
+					if(str){
+						n.insertBefore(t._topNode, n.firstChild);
+					}else{
+						n.appendChild(t._topNode);
+					}
+				}
 				if(t._bottomNode && g.view.rootStart + g.view.rootCount < g.model.size()){
 					n.appendChild(t._bottomNode);
 				}
