@@ -289,9 +289,10 @@ define([
 			for(var i = treePath.length - 1; i > 0; --i){
 				var pid = treePath[i],
 					oldState = byId[pid],
-					siblings = array.filter(mm._call('children', [pid]), function(childId){
-						return t._isMarkable(type, childId);
-					}),
+					// siblings = array.filter(mm._call('children', [pid]), function(childId){
+						// return t._isMarkable(type, childId);
+					// }),
+					siblings = mm._call('children', [pid]),
 					markCount = array.filter(siblings, function(childId){
 						return last[childId] = byId[childId];
 					}).length,
