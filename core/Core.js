@@ -405,6 +405,13 @@ define([
 			t.modelExtensions = t.modelExtensions || [];
 			t.setColumns(t.structure);
 
+			if(t.touch){
+				if(t.touchModules){
+					t.modules = t.modules.concat(t.touchModules);
+				}
+			}else if(t.desktopModules){
+				t.modules = t.modules.concat(t.desktopModules);
+			}
 			normalizeModules(t);
 			checkForced(t);
 			removeDuplicate(t);
