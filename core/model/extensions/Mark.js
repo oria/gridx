@@ -289,26 +289,23 @@ define([
 			for(var i = treePath.length - 1; i > 0; --i){
 				var pid = treePath[i],
 					oldState = byId[pid],
-					siblings = array.filter(mm._call('children', [pid]), function(childId){
-						return t._isMarkable(type, childId);
-					}),
+					siblings = mm._call('children', [pid]),
 					markCount = array.filter(siblings, function(childId){
 						return last[childId] = byId[childId];
 					}).length,
 					fullCount = array.filter(siblings, function(childId){
 						return byId[childId] == 2;
 					}).length;
-				if(t._isMarkable(type, pid)){
-					if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
-						byId[pid] = 2; //none|partial -> all
-					}else if(!markCount && oldState){
-						delete byId[pid]; //all|partial -> none
-					}else if(markCount && fullCount < siblings.length && oldState != 1){
-						byId[pid] = 1; //all|none -> partial
-					}
-					if(!noEvent){
-						t._fireEvent(pid, type, byId[pid], oldState);
-					}
+				// if(t._isMarkable(type, pid)){
+				if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
+					byId[pid] = 2; //none|partial -> all
+				}else if(!markCount && oldState){
+					delete byId[pid]; //all|partial -> none
+				}else if(markCount && fullCount < siblings.length && oldState != 1){
+					byId[pid] = 1; //all|none -> partial
+				}
+				if(!noEvent){
+					t._fireEvent(pid, type, byId[pid], oldState);
 				}
 			}
 		},
@@ -341,11 +338,9 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					if(t._isMarkable(tp, childId)){
-						newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
-						if(!noEvent){
-							t._fireEvent(childId, tp, newState, oldState);
-						}
+					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
+					if(!noEvent){
+						t._fireEvent(childId, tp, newState, oldState);
 					}
 					if(mm._call('hasChildren', [childId])){
 						children = mm._call('children', [childId]);
