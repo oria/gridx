@@ -93,7 +93,8 @@ define([
 				[body, 'onEmpty', function(){
 					rhbn.innerHTML = '';
 				}],
-				has('webkit')?[g.vScroller, '_doScroll', '_onScroll'] : [g.bodyNode, 'onscroll', '_onScroll'],
+				[g.bodyNode, 'onscroll', '_onScroll'],
+				// has('webkit')?[g.vScroller, '_doScroll', '_onScroll'] : [g.bodyNode, 'onscroll', '_onScroll'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
