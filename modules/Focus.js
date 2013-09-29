@@ -17,6 +17,10 @@ define([
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
 
+		// enabled: Boolean
+		//		Whether keyboar support is enabled for gridx. Default to true on desktop, false on touch device.
+		enabled: true,
+
 		registerArea: function(area){
 			// summary:
 			//		Register a new focus area, so this area will be included in the TAB sequence.
@@ -164,8 +168,6 @@ define([
 	return declare(_Module, {
 		name: 'focus',
 
-		enabled: !has('ios') && !has('android'),
-
 		constructor: function(){
 			var t = this,
 				g = t.grid;
@@ -180,6 +182,7 @@ define([
 					t._onFocus(evt);
 				}
 			};
+			t.arg('enabled', !g.touch);
 			t.batchConnect(
 				[g.domNode, 'onkeydown', '_onTabDown'],
 				[g.domNode, 'onfocus', '_focus'],
@@ -207,6 +210,9 @@ define([
 		},
 	
 		//Public----------------------------------------------------------
+
+		//enabled: true,
+
 		registerArea: function(/* __FocusArea */ area){
 			if(area && area.name && typeof area.priority == 'number'){
 				var t = this,
