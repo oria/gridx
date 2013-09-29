@@ -1,6 +1,7 @@
 define([
 	'./_util',
 	'dojo/_base/declare',
+	'dojo/_base/lang',
 	'dojo/date/locale',
 	'dojo/store/Memory',
 	'gridx/allModules',
@@ -22,7 +23,7 @@ define([
 	'dijit/form/ToggleButton',
 	'dijit/Calendar',
 	'dijit/ColorPalette'
-], function(util, declare, locale, Memory, modules, dataSource, storeFactory,
+], function(util, declare, lang, locale, Memory, modules, dataSource, storeFactory,
 	_Widget, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect,
 	Select, HorizontalSlider, NumberSpinner, CheckBox, ToggleButton, Calendar, ColorPalette){
@@ -254,9 +255,9 @@ define([
 						//Feed our editor with proper values
 						toEditor: function(storeData, gridData){
 							return [
-								gridData.split(':')[0].trim(),
-								gridData.split('[')[0].split(':')[1].trim(),
-								gridData.split('[')[1].split(']')[0]
+								lang.trim(gridData.split(':')[0]),
+								lang.trim(gridData.split('[')[0].split(':')[1]),
+								lang.trim(gridData.split('[')[1].split(']')[0])
 							];
 						}
 					},
