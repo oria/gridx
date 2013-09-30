@@ -384,6 +384,20 @@ define([
 				}
 			}, "isEmpty", [expr]);
 		},
+		
+		//Is not Empty check
+		//Currently it will only appear in serverMode of filter for string-typed column
+		//It has no NLS, and it is not recommended to use if you need fully nls support
+		isNotEmpty: function(expr, notEmptyValues){
+			return wrap(function(){
+				var v = expr.apply(0, arguments);
+				if(notEmptyValues){
+					return array.indexOf(notEmptyValues, v) >= 0;
+				}else{
+					return v !== "" && v !== null && v !== undefined;
+				}
+			}, "isNotEmpty", [expr]);
+		},	
 
 		//Logic operations
 		and: function(/* filter expressions */){
