@@ -1080,6 +1080,7 @@ define([
 						t._onUIBegin(e);
 					}
 				}else if(e.keyCode == keys.ESCAPE && editing){
+					g.focus.stopEvent(e);
 					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
 						t._hideButtons();
 						g.focus.focusArea('body');
