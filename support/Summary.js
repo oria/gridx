@@ -25,6 +25,8 @@ define([
 
 		grid: null,
 
+		//message: 'Total: ${0} Selected: ${1}',
+
 		postCreate: function(){
 			var t = this,
 				c = 'connect',
@@ -39,7 +41,7 @@ define([
 				sr = g.select && g.select.row,
 				size = g.model.size(),
 				selected = sr ? sr.getSelected().length : 0,
-				tpl = sr ? g.nls.summaryWithSelection : g.nls.summary;
+				tpl = this.message || (sr ? g.nls.summaryWithSelection : g.nls.summary);
 			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected]);
 		}
 	});

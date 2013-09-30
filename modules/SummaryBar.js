@@ -21,13 +21,16 @@ define([
 
 		required: ['bar'],
 
+		//message: ''
+
 		preload: function(){
 			this.grid.bar.defs.push({
 				bar: 'bottom',
 				row: 0,
 				col: 0,
 				pluginClass: Summary,
-				className: 'gridxBarSummary'
+				className: 'gridxBarSummary',
+				message: this.arg('message')
 			});
 		}
 	});
