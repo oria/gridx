@@ -393,12 +393,23 @@ define([
 				}
 			}
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
-			// console.log('scroll to row')
-			// console.log(row.visualIndex())
-			// setTimeout(function(){
-				// g.vScroller.scrollToRow(row.visualIndex());
-			// }, 0);
+			
+			//for *** grid in grid ****
+			var gridNodes = dojo.query('.gridx', _row.dodNode);
+			var ws = [];
+			for(var i = 0; i < gridNodes.length; i++){
+				var gig = dijit.byNode(gridNodes[i]);
+				ws.push(gig);
+				if(!gig._refreshForDod){
+					gig._refreshForDod = true;
+					gig.body.refresh();
+				}
+				// console.log(w.body);
+				// console.log(w.domNode);
+			};
+			// console.log(ws.domNode);
 		},
+		
 		_detailLoadError: function(row){
 			var _row = this._row(row);
 			_row.dodLoaded = false;

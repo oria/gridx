@@ -171,6 +171,20 @@ require([
 				// }
 				// setTimeout(function(){
 					renderred.callback();
+					// setTimeout(function(){
+						var gridNodes = dojo.query('.gridx', node);
+						var ws = [];
+						for(var i = 0; i < gridNodes.length; i++){
+							var w = dijit.byNode(gridNodes[i]);
+							ws.push(w);
+							console.log(w.body)
+							w.body.refresh();
+							console.log(w.domNode)
+						};
+						console.log(ws.domNode);
+						
+					// }, 0)
+					
 				// }, 2000)
 			});
 	}
