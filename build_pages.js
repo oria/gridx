@@ -32,12 +32,12 @@ function writeHTML(path, to){
 }
 
 var pages = [
-	{path: '/oria/gridx/index.djs', to: 'index.html'}
-	,{path: '/oria/gridx/gallery.djs', to: 'gallery.html'}
-	,{path: '/oria/gridx/license.djs', to: 'license.html'}
-	,{path: '/oria/gridx/playground.djs', to: 'playground.html'}
-	,{path: '/oria/gridx/about.djs', to: 'about.html'}
-	,{path: '/oria/gridx/demo.djs', to: 'demo.html'}
+	{path: '/gridx_site/gridx/index.djs', to: 'index.html'}
+	,{path: '/gridx_site/gridx/gallery.djs', to: 'gallery.html'}
+	,{path: '/gridx_site/gridx/license.djs', to: 'license.html'}
+	,{path: '/gridx_site/gridx/playground.djs', to: 'playground.html'}
+	,{path: '/gridx_site/gridx/about.djs', to: 'about.html'}
+	,{path: '/gridx_site/gridx/demo.djs', to: 'demo.html'}
 ];
 
 pages.forEach(function(page){
