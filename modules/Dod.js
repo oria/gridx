@@ -404,10 +404,7 @@ define([
 					gig._refreshForDod = true;
 					gig.body.refresh();
 				}
-				// console.log(w.body);
-				// console.log(w.domNode);
 			};
-			// console.log(ws.domNode);
 		},
 		
 		_detailLoadError: function(row){
