@@ -30,7 +30,9 @@ define([
 				col: 0,
 				pluginClass: Summary,
 				className: 'gridxBarSummary',
-				message: this.arg('message')
+				message: this.arg('message'),
+				hookPoint: this,
+				hookName: 'summary'
 			});
 		}
 	});
