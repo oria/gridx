@@ -29,20 +29,32 @@ define([
 
 		postCreate: function(){
 			var t = this,
-				c = 'connect',
 				m = t.grid.model;
-			t[c](m, 'onSizeChange', 'refresh');
-			t[c](m, 'onMarkChange', 'refresh');
+			t.connect(m, 'onSizeChange', 'refresh');
+			t.connect(m, 'onMarkChange', 'refresh');
+			if(t.grid.pagination){
+				t.connect(t.grid.pagination, 'onSwitchPage', 'refresh');
+				t.connect(t.grid.pagination, 'onChangePageSize', 'refresh');
+			}
 			t.refresh();
 		},
 
 		refresh: function(){
 			var g = this.grid,
 				sr = g.select && g.select.row,
+				pagination = g.pagination,
 				size = g.model.size(),
 				selected = sr ? sr.getSelected().length : 0,
 				tpl = this.message || (sr ? g.nls.summaryWithSelection : g.nls.summary);
-			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected]);
+			if(g.getSummaryMessage){
+				tpl = g.getSummaryMessage();
+			}
+			if(pagination){
+				var cp = pagination.currentPage(),
+					firstIdx = pagination.firstIndexInPage(cp) + 1,
+					lastIdx = pagination.lastIndexInPage(cp) + 1;
+			}
+			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected, firstIdx, lastIdx]);
 		}
 	});
 });
