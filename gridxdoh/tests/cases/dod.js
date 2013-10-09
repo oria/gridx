@@ -124,12 +124,13 @@ define([
 			},
 			onCreated: function(grid){
 				var input = util.addInput('text', 1);
-				util.addButton('lock', function(){
-					var lockCount = parseInt(input.value, 10);
-					grid.columnLock.lock(lockCount);
+				util.addButton('show detail', function(){
+					var rowId = parseInt(input.value, 10);
+					grid.dod.show(grid.row(rowId, 1));
 				});
-				util.addButton('unlock', function(){
-					grid.columnLock.unlock();
+				util.addButton('hide detail', function(){
+					var rowId = parseInt(input.value, 10);
+					grid.dod.hide(grid.row(rowId, 1));
 				});
 			}
 		},
