@@ -119,9 +119,12 @@ define([
 		
 		show: function(row){
 			var _row = this._row(row);
-			if(_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
+			
+			if(!row.node()){ return; }
+
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '-';}
 			
@@ -172,7 +175,13 @@ define([
 		
 		hide: function(row){
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(!_row.dodShown || _row.inAnim){return;}
+			
+			if(!row.node()){
+				_row.dodShown = false;
+				return;
+			}
+			
 			domClass.remove(row.node(), 'gridxDodShown');
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
