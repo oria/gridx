@@ -732,7 +732,7 @@ define([
 				modules.Pagination,
 				"gridx/modules/pagination/PaginationBar"
 			]
-		},
+		}
 	);
 
 	return cases;

@@ -1,7 +1,8 @@
 define([
 	'./_util',
+	'dojo/parser',
 	'gridx/allModules'
-], function(util, modules){
+], function(util, parser, modules){
 	
 	defaultShow = false;
 	showExpando = true;
@@ -108,7 +109,7 @@ define([
 				// "gridx/modules/ColumnResizer",
 				"gridx/modules/RowHeader",
 				// "gridx/modules/SingleSort",
-				"gridx/modules/extendedSelect/Cell",
+				// "gridx/modules/extendedSelect/Cell",
 				{
 					moduleClass: modules.Dod,
 					defaultShow: defaultShow,
