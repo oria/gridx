@@ -101,10 +101,9 @@ require([
 		{field: 'alerts', name: 'Alerts', width: '30px', formatter: formatter},
 		{field: 'violations', name: 'Violations', width: '30px', formatter: formatter}
 	];
-	
+
 	var treeData = lang.clone(data);
 	var dummyRow = treeData.pop();
-	dummyRow.datasource = 'Dummy Row';
 	var topLevel = array.filter(treeData, function(item){
 		return /Production|Test|Development/.test(item.datasource);
 	});
@@ -119,7 +118,13 @@ require([
 	};
 
 	treeStore.getChildren = function(item){
-		return childrenMap[item.datasource] || [dummyRow, dummyRow, dummyRow];
+		var dummyChildren = [];
+		for(var i = 0; i < 3; i++){
+			dummyRow = lang.clone(dummyRow);
+			dummyRow.id = Math.random();
+			dummyChildren.push(dummyRow);
+		}
+		return childrenMap[item.datasource] || dummyChildren;
 	};
 
 	treeLayout = [
