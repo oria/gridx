@@ -51,10 +51,7 @@ define([
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',
 				role: 'row',
-				innerHTML: ['<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: ', 
-					this.arg('width'), 
-					';"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
-				].join('')
+				innerHTML: '<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: 100%;"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
 			});
 			this.bodyNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderBody'

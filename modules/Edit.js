@@ -198,14 +198,14 @@ define([
 		//		so editor.set('value', ...) can do the job.
 		valueField: 'value',
 
-		toEditor: function(storeData, gridData){
+		toEditor: function(storeData, gridData, cell){
 			// summary:
 			//		By default the dijit used in an editing cell will use store value.
 			//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
 			//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
 		},
 
-		fromEditor: function(valueInEditor){
+		fromEditor: function(valueInEditor, cell){
 			// summary:
 			//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
 			//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
@@ -1080,6 +1080,7 @@ define([
 						t._onUIBegin(e);
 					}
 				}else if(e.keyCode == keys.ESCAPE && editing){
+					g.focus.stopEvent(e);
 					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
 						t._hideButtons();
 						g.focus.focusArea('body');

@@ -40,9 +40,17 @@ define([
 			
 			deferStartup.then(function(){
 				
-				if(_this.grid.vScroller)_this.connect(g.vScrollerNode, 'onscroll', function(){
-					_this._updatePosition();
-				});
+				if(_this.grid.vScroller){
+					_this.connect(g.vScrollerNode, 'onscroll', function(){
+						_this._updateRowPosition();
+					});
+				}
+				
+				if(_this.grid.vScroller && _this.grid.rowHeader){
+					_this.connect(g.bodyNode, 'onscroll', function(){
+						_this._updateRowHeaderPosition();
+					});
+				}
 
 				if(g.columnResizer){
 					//make it compatible with column resizer
@@ -119,25 +127,43 @@ define([
 		_updatePosition: function(){
 			// summary:
 			//	Update position of locked rows so that they look like locked.
+			this._updateRowPosition();
+			if(this.grid.rowHeader){
+				this._updateRowHeaderPosition();
+			}
+		},
+		
+		_updateRowPosition: function(){
+			// summary:
+			//	Update position of locked rows so that they look like locked.
 			if(!this.count){return;}
 			var t = this.grid.bodyNode.scrollTop, h = 0, _this = this;
 			this._foreachLockedRows(function(node){
 				node.style.top = t + h + 'px';
 				h += node.offsetHeight;
-			}, function(rowHeaderNode){
-				rowHeaderNode.style.top = t + h + 'px';
-			});
+			}, null);
 		},
 		
+		_updateRowHeaderPosition: function(){
+			// summary:
+			//	Update position of locked rowHeaders so that they look like locked.
+			if(!this.count){return;}
+			var t = this.grid.bodyNode.scrollTop, h = 0, _this = this;
+			this._foreachLockedRows(null, function(rowHeaderNode){
+				rowHeaderNode.style.top = t + h + 'px';
+				h += rowHeaderNode.offsetHeight;
+			});
+		},
+				
 		_foreachLockedRows: function(callback, rowHeaderCallback){
-			rowHeaderCallback = rowHeaderCallback? rowHeaderCallback : callback;
+			// rowHeaderCallback = rowHeaderCallback? rowHeaderCallback : callback;
 			var nodes = this.grid.bodyNode.childNodes;
 			var rowHeaderNodes = this.grid.rowHeader? this.grid.rowHeader.bodyNode.childNodes : [];
 			for(var i = 0; i < this.count; i++){
-				if(rowHeaderNodes[i]){
+				if(rowHeaderNodes[i] && rowHeaderCallback){
 					rowHeaderCallback(rowHeaderNodes[i]);
 				}
-				if(nodes[i]){
+				if(nodes[i] && callback){
 					callback(nodes[i]);
 				}
 			}

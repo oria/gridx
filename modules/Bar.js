@@ -229,6 +229,9 @@ define([
 					}catch(e){
 						console.error(e);
 					}
+					if(def.hookPoint && def.hookName){
+						def.hookPoint[def.hookName] = plugin || td;
+					}
 					pluginRow.push(plugin || td);
 					tr.appendChild(td);
 				}

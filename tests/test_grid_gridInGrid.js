@@ -83,13 +83,13 @@ require([
 	function setContent(node, renderred){
 		switch(contentType){
 			case 'text':
-				setTextContent(node);
+				setTextContent(node, renderred);
 				break;
 			case 'form':
 				setFormContent(node, renderred);
 				break;
 			case 'chart':
-				setChartContent(node);
+				setChartContent(node, renderred);
 				break;
 			default:
 				alert('error: unkonw content type: ' + contentType);
@@ -97,12 +97,16 @@ require([
 		}
 	}
 	
-	function setTextContent(node){
+	function setTextContent(node, renderred){
 		// node.innerHTML = '<button data-dojo-type="dijit/form/Button" data-dojo-props="label: 123">cut</button>';
 		// dojo.parser.parse(node);
 		
 		node.innerHTML = '<div style="color: #777; padding:5px">' 
 			+ getDummyText(20,140) + '</div>';
+		
+		if(renderred){
+			renderred.callback();
+		}
 	}
 	function setFormContent(node, renderred){
 		node.innerHTML = [
@@ -171,10 +175,24 @@ require([
 				// }
 				// setTimeout(function(){
 					renderred.callback();
+					// setTimeout(function(){
+						var gridNodes = dojo.query('.gridx', node);
+						var ws = [];
+						for(var i = 0; i < gridNodes.length; i++){
+							var w = dijit.byNode(gridNodes[i]);
+							ws.push(w);
+							console.log(w.body)
+							w.body.refresh();
+							console.log(w.domNode)
+						};
+						console.log(ws.domNode);
+						
+					// }, 0)
+					
 				// }, 2000)
 			});
 	}
-	function setChartContent(node){
+	function setChartContent(node, renderred){
 		var container = domConstruct.create('div', {}, node, 'last'), div = domConstruct.create('div', {}, container, 'last');
 		container.style.margin = '10px';
 		container.style.backgroundColor = 'white';
@@ -187,6 +205,11 @@ require([
 			addSeries("Series C", [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]).
 			setTheme(JulieTheme).render()
 			;
+		
+		if(renderred){
+			renderred.callback();
+		}
+		
 	}
 	window.createGrid = function(){
 		if(window.grid){window.grid.destroy();}

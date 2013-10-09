@@ -53,12 +53,15 @@ define([
 
 		sizeSwitch: true,
 
+		//message: '',
+
 		preload: function(){
 			for(var t = this, i = 0, positions = ['top', 'bottom']; i < positions.length; ++i){
 				var pos = positions[i];
 				if(t._exist(pos)){
 					t._add(Summary, 0, pos, 'description', {
-						className: 'gridxPagerDescriptionTD'
+						className: 'gridxPagerDescriptionTD',
+						message: t.arg('message')
 					});
 					t._init(pos);
 				}

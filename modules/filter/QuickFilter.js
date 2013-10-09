@@ -34,6 +34,8 @@ define([
 					col: 3,
 					pluginClass: QuickFilter,
 					className: 'gridxBarQuickFilter',
+					hookPoint: this,
+					hookName: 'quickFilter',
 					textBoxClass: t.arg('textBoxClass', 'dijit.form.TextBox'),
 					buttonClass: t.arg('buttonClass', 'dijit.form.Button'),
 					comboButtonClass: t.arg('comboButtonClass', 'dijit.form.ComboButton'),

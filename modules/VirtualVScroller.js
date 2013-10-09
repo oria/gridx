@@ -5,7 +5,8 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query/query',
 	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"

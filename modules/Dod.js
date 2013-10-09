@@ -119,9 +119,12 @@ define([
 		
 		show: function(row){
 			var _row = this._row(row);
-			if(_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
+			
+			if(!row.node()){ return; }
+
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '-';}
 			
@@ -172,7 +175,13 @@ define([
 		
 		hide: function(row){
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(!_row.dodShown || _row.inAnim){return;}
+			
+			if(!row.node()){
+				_row.dodShown = false;
+				return;
+			}
+			
 			domClass.remove(row.node(), 'gridxDodShown');
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
@@ -393,12 +402,20 @@ define([
 				}
 			}
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
-			// console.log('scroll to row')
-			// console.log(row.visualIndex())
-			// setTimeout(function(){
-				// g.vScroller.scrollToRow(row.visualIndex());
-			// }, 0);
+			
+			//for *** grid in grid ****
+			var gridNodes = dojo.query('.gridx', _row.dodNode);
+			var ws = [];
+			for(var i = 0; i < gridNodes.length; i++){
+				var gig = dijit.byNode(gridNodes[i]);
+				ws.push(gig);
+				if(!gig._refreshForDod){
+					gig._refreshForDod = true;
+					gig.body.refresh();
+				}
+			};
 		},
+		
 		_detailLoadError: function(row){
 			var _row = this._row(row);
 			_row.dodLoaded = false;
