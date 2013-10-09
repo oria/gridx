@@ -101,7 +101,7 @@ require([
 		{field: 'alerts', name: 'Alerts', width: '30px', formatter: formatter},
 		{field: 'violations', name: 'Violations', width: '30px', formatter: formatter}
 	];
-
+	
 	var treeData = lang.clone(data);
 	var dummyRow = treeData.pop();
 	dummyRow.datasource = 'Dummy Row';
