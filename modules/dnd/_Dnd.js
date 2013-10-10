@@ -197,6 +197,7 @@ define([
 					};
 				}
 				m._dndInfo = {
+					grid: t.grid,
 					cssName: p._cssName,
 					count: p._getDndCount()
 				};

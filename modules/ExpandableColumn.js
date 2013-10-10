@@ -55,7 +55,7 @@ define([
 		},
 
 		preload: function(){
-			this.grid.headerRegions.add(lang.hitch(this, this._createExpandNode, 1), 10, 1);
+			//this.grid.headerRegions.add(lang.hitch(this, this._createExpandNode, 1), 10, 1);
 			this.inherited(arguments);
 		},
 
@@ -80,6 +80,58 @@ define([
 					}else{
 					}
 				}
+			}, this);
+
+			this.expandoBar = domConstruct.create('div', {className: 'gridxColumnExpandoBar'});
+
+			this.connect(g.columnWidth, 'onUpdate', '_updateUI');
+			this.grid.vLayout.register(this, 'expandoBar', 'headerNode', 1);
+
+			this.connect(g, 'onHeaderCellMouseOver', function(evt){
+				domClass.add(this._expandoCellByColumnId(evt.columnId), 'gridxColumnExpandoHighlight');
+			}, this);
+
+			this.connect(g, 'onHeaderCellMouseOut', function(evt){
+				domClass.remove(this._expandoCellByColumnId(evt.columnId), 'gridxColumnExpandoHighlight');
+			}, this);
+
+			this.connect(this.expandoBar, 'onmouseover', function(evt){
+				var expandoCell = null;
+				if(/td/i.test(evt.target.tagName)){
+					expandoCell = evt.target;
+				}else if(domClass.contains(evt.target, 'gridxColumnExpando')){
+					expandoCell = evt.target.parentNode;
+				}
+				if(expandoCell){
+					var colId = expandoCell.getAttribute('data-column-id');
+					domClass.add(expandoCell, 'gridxColumnExpandoHighlight');
+					domClass.add(this._headerCellByColumnId(colId), 'gridxCellHighlight');
+				}
+			}, this);
+
+			this.connect(this.expandoBar, 'onmouseout', function(evt){
+				var expandoCell = null;
+				if(/td/i.test(evt.target.tagName)){
+					expandoCell = evt.target;
+				}else if(domClass.contains(evt.target, 'gridxColumnExpando')){
+					expandoCell = evt.target.parentNode;
+				}
+				if(expandoCell){
+					var colId = expandoCell.getAttribute('data-column-id');
+					domClass.remove(expandoCell, 'gridxColumnExpandoHighlight');
+					domClass.remove(this._headerCellByColumnId(colId), 'gridxCellHighlight');
+				}
+			}, this);
+
+			this.connect(this.expandBar, 'onclick', function(evt){
+				if(domClass.contains(evt.target, 'gridxColumnExpando')){
+					var colId = evt.target.parentNode.getAttribute('data-column-id');
+					this.expand(colId);
+				}
+			}, this);
+
+			this.connect(this.grid, 'onHScroll', function(left){
+				this.expandoBar.scrollLeft = left;
 			}, this);
 
 			if(toHide.length){
@@ -116,6 +168,39 @@ define([
 			this._refreshHeader();
 		},
 
+		_updateUI: function(){
+			// summary:
+			//	Called when the header is changed, need to sync expando bar.
+
+			console.log('rebuilding column expando bar');
+			//Build expando bar
+			var sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
+			array.forEach(this.grid._columns, function(col){
+				sb.push('<td data-column-id="', col.id,'" aria-readonly="true" tabindex="-1" class="gridxColumnExpandoCell">');
+				if(this._parentCols[col.id]){
+					//expandable
+					sb.push('<span class="gridxColumnExpando"></span>');
+				}
+				sb.push('</td>');
+			}, this);
+
+			sb.push('</tr></table>');
+			this.expandoBar.innerHTML = sb.join('');
+			this.expandoBar.style.marginRight = this.grid.header.innerNode.style.marginRight;
+			this.expandoBar.style.marginLeft = this.grid.header.innerNode.style.marginLeft;
+			//Adjust width of the expando cells
+			var headerCells = query('table', this.grid.headerNode)[0].rows[0].cells
+				,expandoCells = this.expandoBar.firstChild.rows[0].cells;
+
+			array.forEach(expandoCells, function(cell, i){
+				var colId = cell.getAttribute('data-column-id')
+					,col = this.grid._columnsById[colId];
+				cell.style.width = col.width;
+				cell.style.minWidth = col.width;
+				cell.style.maxWidth = col.width;
+			}, this);
+		},
+
 		_createExpandNode: function(i, col){
 			//var col = this._colById(colId);
 			console.log('creating expand node for:', col.id);
@@ -131,6 +216,14 @@ define([
 				div.innerHTML = '';
 			}
 			return div;
+		},
+
+		_headerCellByColumnId: function(colId){
+			return query('td[colid="' + colId + '"]', this.grid.headerNode)[0];
+		},
+
+		_expandoCellByColumnId: function(colId){
+			return query('td[data-column-id="' + colId + '"]', this.expandoBar)[0];
 		},
 
 		_refreshHeader: function(){
