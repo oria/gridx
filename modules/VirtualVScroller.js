@@ -200,7 +200,7 @@ define([
 				a = dn.scrollTop,
 				deltaT = a - (t._lastScrollTop || 0),
 				neighborhood = 2;
-	
+			
 			if(forced || deltaT){
 				t._lastScrollTop = a;
 	
@@ -223,6 +223,7 @@ define([
 					nearTop = a <= neighborhood,
 					nearBottom = Math.abs(a - scrollRange) <= neighborhood,
 					start, end, pos, d;
+					
 				if(bnTop == bnBtm && !bnBtm){
 					//The grid is not correctly shown, so we just ignore.
 					return;
@@ -239,6 +240,18 @@ define([
 					d = Math.ceil((bnBtm - lastRowBtm) * ratio / h) + buffSize;
 					end = nearBottom && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
+					
+					if(deltaT === 0 && start == visualEnd){
+						//If the last row in the grid has very big height and then change 
+						//to normal or very small height, need to add rows to the front.
+						//this usually appear in DOD, especially GridInGrid mode
+						
+						console.log('in add to bottom diverse')
+						end = body.renderStart;
+						d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
+						start = nearTop ? visualStart : Math.max(end - d, visualStart);
+						pos = "top";
+					}
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
 					if(a <= scrollRange / 2){
