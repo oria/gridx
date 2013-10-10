@@ -109,7 +109,7 @@ require([
 				'		<option value="blue">Blue</option>',
 				'	</select></td>',
 				'</tr>',
-			'</table></div>'].join('');
+			'</table></div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'].join('');
 		parser.parse(node);
 	}
 	function setChartContent(node){
