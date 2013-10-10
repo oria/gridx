@@ -11,6 +11,7 @@ require([
 	"gridx/modules/SlantedHeader",
 	"gridx/modules/HeaderRegions",
 	"gridx/modules/ExpandableColumn",
+	"gridx/modules/SingleSort",
 	"gridx/modules/Tree",
 
 	//'gridx/allModules',

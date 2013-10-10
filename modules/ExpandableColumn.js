@@ -20,43 +20,7 @@ define([
 
 		required: ['header'],
 
-		constructor: function(){
-
-			// aspect.before(this.grid, 'setColumns', function(cols){
-			// 	console.log(cols);
-			// 	for(var i = 0; i < cols.length; i++){
-			// 		var col = cols[i];
-			// 		delete col.declaredWidth;
-			// 		delete col.index;
-			// 		if(col.children){
-			// 			var arr = col.children;
-			// 			array.forEach(arr, function(childCol){
-			// 				childCol._parentColumn = col.id;
-			// 			});
-			// 			arr.splice(0, 0, i, 0);
-			// 			cols.splice.apply(cols, arr);
-			// 			delete col.children;
-			// 		}
-			// 	}
-
-			// 	// array.forEach(cols, function(col){
-			// 	// 	newCols.push(col);
-			// 	// 	if(col.children){
-			// 	// 		array.forEach(col.children, function(childCol){
-			// 	// 			childCol._parentColumn = col.id;
-			// 	// 			newCols.push(childCol);
-			// 	// 		});
-			// 	// 		delete col.children;
-			// 	// 	}
-			// 	// });
-			// });
-
-			// this.grid.setColumns(this.grid._columns);
-
-		},
-
 		preload: function(){
-			//this.grid.headerRegions.add(lang.hitch(this, this._createExpandNode, 1), 10, 1);
 			this.inherited(arguments);
 		},
 
@@ -65,7 +29,6 @@ define([
 				g = t.grid;
 			t._cols = g._columns.slice();
 			t._parentCols = {};
-			//TODO: support persist and column move
 
 			var toHide = [];
 			array.forEach(t._cols, function(col){
@@ -132,18 +95,22 @@ define([
 			}, this);
 
 			this.connect(this.grid.header.innerNode, 'onkeyup', function(evt){
-				//Bind short cut key to expand/coallapse the column
+				//Bind short cut key to expand/coallapse the column: shift + ctrl + e
 
 				if(evt.keyCode == 69 && evt.shiftKey && evt.ctrlKey){
 					var node = evt.target;
 					if(domClass.contains(node, 'gridxGroupHeader')){
 						var colId = node.getAttribute('groupid').split('-').pop();
+						colId = this._colById(colId)._parentColumn;
 						this.collapse(colId);
+						this._focusById(colId);
+
 					}else if(domClass.contains(node, 'gridxCell')){
 						var colId = node.getAttribute('colid');
 						if(this._parentCols[colId]){
 							//expandable
 							this.expand(colId);
+							this._focusById(colId);
 						}
 					}
 				}
@@ -221,7 +188,6 @@ define([
 		},
 
 		_createExpandNode: function(i, col){
-			//var col = this._colById(colId);
 			console.log('creating expand node for:', col.id);
 			var div = domConstruct.create('div', {innerHTML: '', className: 'gridxColumnExpandNode'});
 			if(this._parentCols[col.id]){
@@ -238,7 +204,11 @@ define([
 		},
 
 		_headerCellByColumnId: function(colId){
-			return query('td[colid="' + colId + '"]', this.grid.headerNode)[0];
+			var cell = query('td[colid="' + colId + '"]', this.grid.headerNode)[0];
+			if(!cell){
+				cell = query('td[data-map-column-id="' + colId + '"]', this.grid.headerNode)[0];
+			}
+			return cell;
 		},
 
 		_expandoCellByColumnId: function(colId){
@@ -287,10 +257,15 @@ define([
 			//add expand arrow the the group header
 			var self = this;
 			query('.gridxGroupHeader', this.grid.headerNode).forEach(function(td){
-				var div = domConstruct.create('div', {innerHTML: '<span class="gridxColumnCollapseNodeIcon"></span>', className: 'gridxColumnCollapseNode'});
+				var colId = td.getAttribute('groupid').split('-').pop();
+				colId = self._colById(colId)._parentColumn;
+				td.setAttribute('data-map-column-id', colId);
+
+				var div = domConstruct.create('div', {
+					innerHTML: '<span class="gridxColumnCollapseNodeIcon"></span>', 
+					className: 'gridxColumnCollapseNode'});
+
 				div.onclick = function(){
-					var colId = this.parentNode.parentNode.getAttribute('groupid').split('-').pop();
-					colId = self._colById(colId)._parentColumn;
 					self.collapse(colId);
 				}
 				td.firstChild.insertBefore(div, td.firstChild.firstChild);
@@ -301,6 +276,16 @@ define([
 			return this.grid._columnsById[id] || array.filter(this._cols, function(col){
 				return col.id == id;
 			})[0];
+		},
+
+		_focusById: function(colId){
+			// summary:
+			//	Focus the column header cell by column id
+
+			var headerCell = this._headerCellByColumnId(colId);
+			if(headerCell){
+				this.grid.header._focusNode(headerCell);
+			}
 		}
 	});
 });

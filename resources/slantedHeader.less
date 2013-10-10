@@ -31,15 +31,33 @@
 		background-color: #9BCAF7;
 	}
 }
-.gridxSlantedHeader .gridxHeaderRow .gridxCell .gridxSortNode {
-	overflow: visible;
-	margin-bottom: 5px;
-	-webkit-transform:skew(45deg,0deg) rotate(-45deg); /* Safari and Chrome */
-	-moz-transform:skew(45deg,0deg) rotate(-45deg);
-	-o-transform:skew(45deg,0deg) rotate(-45deg);
-	-ms-transform:skew(45deg,0deg) rotate(-45deg);
-	transform:skew(45deg,0deg) rotate(-45deg);
+.gridxSlantedHeader .gridxHeaderRow .gridxCell {
+	.gridxSortNode {
+		overflow: visible;
+		margin-bottom: 5px;
+		-webkit-transform:skew(45deg,0deg) rotate(-45deg); /* Safari and Chrome */
+		-moz-transform:skew(45deg,0deg) rotate(-45deg);
+		-o-transform:skew(45deg,0deg) rotate(-45deg);
+		-ms-transform:skew(45deg,0deg) rotate(-45deg);
+		transform:skew(45deg,0deg) rotate(-45deg);
+	}
 
+	.gridxArrowButtonNode{
+		float: none;
+		display: inline-block;
+		margin-bottom: 60px;
+		margin-left: 8px;
+		-webkit-transform:skew(45deg,0deg) rotate(0deg);
+		-moz-transform:skew(45deg,0deg) rotate(0deg);
+		-ms-transform:skew(45deg,0deg) rotate(0deg);
+		-o-transform:skew(45deg,0deg) rotate(0deg);
+		transform:skew(45deg,0deg) rotate(0deg);
+
+	}
+}
+
+.gridxSlantedHeader .gridxHeaderRow .gridxCell.gridxHeaderCellFocus .gridxSortNode {
+	margin-bottom: 4px;
 }
 .gridxSlantedHeader .gridxHeaderRow .gridxGroupHeader .gridxSortNode {
 	text-align: center;
