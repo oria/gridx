@@ -3,6 +3,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/event",
+	"dojo/keys",
 	"dojo/aspect",
 	"dojo/query",
 	"dojo/string",
@@ -11,13 +12,13 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"./HiddenColumns"
-], function(declare, array, lang, event, aspect, query, string, domClass, domConstruct, keys, _Module, HiddenColumns, Sort, nls){
+], function(declare, array, lang, event, keys, aspect, query, string, domClass, domConstruct, keys, _Module, HiddenColumns, Sort, nls){
 
 	return declare(HiddenColumns, {
 		name: 'expandedColumn',
 		_parentCols: null,
 
-		required: [],
+		required: ['header'],
 
 		constructor: function(){
 
@@ -127,6 +128,24 @@ define([
 				if(domClass.contains(evt.target, 'gridxColumnExpando')){
 					var colId = evt.target.parentNode.getAttribute('data-column-id');
 					this.expand(colId);
+				}
+			}, this);
+
+			this.connect(this.grid.header.innerNode, 'onkeyup', function(evt){
+				//Bind short cut key to expand/coallapse the column
+
+				if(evt.keyCode == 69 && evt.shiftKey && evt.ctrlKey){
+					var node = evt.target;
+					if(domClass.contains(node, 'gridxGroupHeader')){
+						var colId = node.getAttribute('groupid').split('-').pop();
+						this.collapse(colId);
+					}else if(domClass.contains(node, 'gridxCell')){
+						var colId = node.getAttribute('colid');
+						if(this._parentCols[colId]){
+							//expandable
+							this.expand(colId);
+						}
+					}
 				}
 			}, this);
 
