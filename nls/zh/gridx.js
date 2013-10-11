@@ -150,7 +150,7 @@ define({
 
 //SummaryBar
 	summaryTotal: '总计：${0}',
-	summarySelected: '已选择：${1}',
+	summarySelected: '已选择：${0}',
 	summaryRange: 'Range: ${0}-${1}',	//need translation
 
 //Other

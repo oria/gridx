@@ -144,7 +144,7 @@ define({
 
 //SummaryBar
 	summary: 'Celkovo: ${0}',
-	summarySelected: 'Vybratých: ${1}',
+	summarySelected: 'Vybratých: ${0}',
 	summaryRange: 'Range: ${0}-${1}',	//need translation
 
 //Other
