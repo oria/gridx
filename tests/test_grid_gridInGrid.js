@@ -27,12 +27,14 @@ require([
 	'dojo/domReady!',
 	'gridx/allModules'
 ], function(domConstruct, parser,
-	Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
+			Grid, Cache, dataSource, storeFactory,
+			TestPane, focus, VirtualVScroller, Dod, 
+			SelectRow, RowHeader, IndirectSelect, JulieTheme){
 	
 	globalCache = Cache;
 	globalStore = storeFactory({
 				dataSource: dataSource, 
-				size: 20
+				size: 50
 	});
 	globalStructure = dataSource.layouts[1].slice(10);
 	globalStructure =[
@@ -66,6 +68,8 @@ require([
 	window.defaultShow = false;
 	window.showExpando = true;
 	window.useAnimation = true;
+	window.isP = true;
+	
 	window.contentType = 'form';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
 		// renderred.callback();
@@ -74,19 +78,29 @@ require([
 			// renderred.callback();
 		// }, 2000);
 		return renderred;
-	}
+	};
+	
+	window.gigDetailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
+		setFormContentDeclaritively(node, renderred);
+		return renderred;
+	};	
+	
 	window.syncDetailProvider = function(grid, rowId, detailNode, renderred){
 		setContent(detailNode);
 		renderred.callback();
 		return renderred;
-	}
+	};
 	function setContent(node, renderred){
 		switch(contentType){
 			case 'text':
 				setTextContent(node, renderred);
 				break;
 			case 'form':
-				setFormContent(node, renderred);
+				if(!isP){
+					setFormContentDeclaritively(node, renderred);
+				}else{
+					setFormContentProgrammatically(node, renderred);
+				}
 				break;
 			case 'chart':
 				setChartContent(node, renderred);
@@ -108,7 +122,64 @@ require([
 			renderred.callback();
 		}
 	}
-	function setFormContent(node, renderred){
+	function setFormContentProgrammatically(node, renderred){
+		node.innerHTML = '<br><br><br><br>';
+		var rowNode = node.parentNode;
+		var rowId = rowNode.getAttribute('rowid');
+		
+		
+		
+		if(rowId % 2){		//odd
+			var num = 3;
+			var width = (100 / num - 1) + '%';
+			
+			for(var i = 0; i < num; i++){
+				var grid = new Grid({
+					cacheClass:globalCache,
+					store: globalStore,
+					structure: globalStructure,
+					modules: [	'gridx/modules/Pagination',
+								'gridx/modules/pagination/PaginationBar',
+								'gridx/modules/RowHeader',
+								'gridx/modules/Filter',
+								'gridx/modules/filter/FilterBar'
+					],
+					style: 'width: ' + width + '; float: left'
+				});
+				grid.placeAt(node);
+				grid.startup();
+			}
+			
+		}else{		//even
+			var grid = new Grid({
+				cacheClass:globalCache,
+				store: globalStore,
+				structure: globalStructure,
+				modules: [	'gridx/modules/Pagination',
+							'gridx/modules/pagination/PaginationBar',
+							'gridx/modules/RowHeader',
+							'gridx/modules/Filter',
+							'gridx/modules/filter/FilterBar',
+							{
+								moduleClass: Dod,
+								defaultShow: defaultShow,
+								useAnimation: useAnimation,
+								showExpando: showExpando,
+								detailProvider: detailProvider
+							}
+							
+				],
+				style: 'width: ' + width + '; float: left'
+			});
+			grid.placeAt(node);
+			grid.startup();		
+		}
+		setTimeout(function(){
+			renderred.callback();
+		}, 1000);
+	}
+	
+	function setFormContentDeclaritively(node, renderred){
 		node.innerHTML = [
 			'<div style="margin: 10px; background:white;padding: 10px;"><table style="width:400px">',
 				'<tr>',
@@ -141,7 +212,8 @@ require([
 				'</tr>',
 			'</table></div>',
 			// '<div style="height: 300px"></div>',
-			'<div data-dojo-type="gridx/Grid" style="width: 100%"',
+			// '<table><tr><td>',
+			'<div data-dojo-type="gridx/Grid" style="width: 49%; float: left"',
 			'			data-dojo-props="cacheClass:globalCache,',
 			'							store: globalStore,',
 			'							structure: globalStructure,',
@@ -149,9 +221,19 @@ require([
 			'								\'gridx/modules/Pagination\',',
 			'								\'gridx/modules/pagination/PaginationBar\',',
 			'								\'gridx/modules/RowHeader\'',
-			']"',
-			'></div>'
-			
+			']"></div>',
+			// '</td>',
+			// '<td>',
+			'<div data-dojo-type="gridx/Grid" style="width: 49%; float: left"',
+			'			data-dojo-props="cacheClass:globalCache,',
+			'							store: globalStore,',
+			'							structure: globalStructure,',
+			'							modules: [',
+			'								\'gridx/modules/Pagination\',',
+			'								\'gridx/modules/pagination/PaginationBar\',',
+			'								\'gridx/modules/RowHeader\'',
+			']"></div>',
+			// '</td></tr></table>'
 			].join('');
 			
 			
@@ -277,12 +359,15 @@ require([
  		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
  		'<label><input type="checkbox" checked onchange="useAnimation=this.checked"/> useAnimation</label><br/>',
  		'<label><input type="checkbox" checked onchange="showExpando = this.checked"/> showExpando</label><br/>',
+ 		'<label><input type="checkbox" checked onchange="isP = this.checked"/>dod programmatically</label><br/>',
+ 		
  		'<label>Content type: <select onchange="window.contentType=this.value;">',
  		'<option value="text">text</option><option value="form" selected>form</option>',
  		'<option value="chart" >chart</option></select></label><br/>',
  		'<select onchange="detailProvider=window[this.value]"><option value="syncDetailProvider">sync detailProvider</option>' 
  			+ '<option value="asyncDetailProvider" selected>async detailProvider</option></select><br/>',
  		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: createGrid">Re Create Grid</div>'
+
  	].join(''));
 
 	tp.addTestSet('Dod APIs', [
