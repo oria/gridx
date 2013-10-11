@@ -97,7 +97,7 @@ define([
 			this.connect(this.grid.header.innerNode, 'onkeyup', function(evt){
 				//Bind short cut key to expand/coallapse the column: shift + ctrl + e
 
-				if(evt.keyCode == 69 && evt.shiftKey && evt.ctrlKey){
+				if(evt.keyCode == 77 && evt.ctrlKey){
 					var node = evt.target;
 					if(domClass.contains(node, 'gridxGroupHeader')){
 						var colId = node.getAttribute('groupid').split('-').pop();
@@ -113,6 +113,7 @@ define([
 							this._focusById(colId);
 						}
 					}
+					event.stop(evt);
 				}
 			}, this);
 
