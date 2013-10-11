@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: '建置過濾器&hellip;',
 	apply: '套用過濾器',
 
+//Sort
+	helpMsg: '${0} - 按一下以進行排序，或按住 Ctrl 同時用滑鼠按一下以新增至排序',
+	singleHelpMsg: '${0} - 按一下以進行排序',
+	priorityOrder: '排序優先順序 ${0} ',
+
 //SummaryBar
-	summary: '總計：${0}',
-	summaryWithSelection: '總計：${0} 已選取：${1}'
+	summaryTotal: '總計：${0}',
+	summarySelected: '已選取：${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

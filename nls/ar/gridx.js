@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'بناء مرشح البيانات&hellip;',
 	apply: 'تطبيق مرشح البيانات',
 
+//Sort
+	helpMsg: '${0} - اضغط للفرز أو اضغط control- للاضافة للفرز',
+	singleHelpMsg: '${0} - اضغط للفرز',
+	priorityOrder: 'أولوية الفرز ${0}',
+
 //SummaryBar
-	summary: 'الاجمالى: ${0}',
-	summaryWithSelection: 'الاجمالى: ${0} المحدد: ${1}'
+	summaryTotal: 'الاجمالى: ${0}',
+	summarySelected: 'المحدد: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

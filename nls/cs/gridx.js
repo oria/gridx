@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Sestavit filtr&hellip;',
 	apply: 'Použít filtr',
 
+//Sort
+	helpMsg: '${0}: Klepnutím položky seřadíte, klepnutím s podržením klávesy Ctrl můžete položky přidávat do řazení.',
+	singleHelpMsg: '${0}: Klepnutím položky seřadíte.',
+	priorityOrder: 'priorita řazení ${0}',
+
 //SummaryBar
-	summary: 'Celkem: ${0}',
-	summaryWithSelection: 'Celkem: ${0}, vybráno: ${1}'
+	summaryTotal: 'Celkem: ${0}',
+	summarySelect: 'Vybráno: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

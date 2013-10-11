@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Filter bouwen&hellip;',
 	apply: 'Filter toepassen',
 
+//Sort
+	helpMsg: '${0} - Klik om te sorteren of houdt Ctrl ingedrukt en klik om toe te voegen aan sorteren',
+	singleHelpMsg: '${0} - Klik om te sorteren',
+	priorityOrder: 'sorteervolgorde ${0}',
+
 //SummaryBar
-	summary: 'Totaal: ${0}',
-	summaryWithSelection: 'Totaal: ${0} Geselecteerd: ${1}'
+	summaryTotal: 'Totaal: ${0}',
+	summarySelected: 'Geselecteerd: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Δημιουργία φίλτρου&hellip;',
 	apply: 'Εφαρμογή φίλτρου',
 
+//Sort
+	helpMsg: '${0} - Πατήστε για ταξινόμηση της στήλης ή κρατήστε πατημένο το πλήκτρο Control και πατήστε για να την προσθέσετε στις στήλες ταξινόμησης',
+	singleHelpMsg: '${0} - Πατήστε για ταξινόμηση',
+	priorityOrder: 'προτεραιότητα ταξινόμησης ${0}',
+
 //SummaryBar
-	summary: 'Σύνολο: ${0}',
-	summaryWithSelection: 'Σύνολο: ${0} Επιλογή: ${1}'
+	summaryTotal: 'Σύνολο: ${0}',
+	summarySelected: 'Επιλογή: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Byg filter&hellip;',
 	apply: 'Anvend filter',
 
+//Sort
+	helpMsg: '${0} - Klik for at sortere, eller hold Ctrl-tasten nede og klik for at tilføje til sortering',
+	singleHelpMsg: '${0} - Klik for at sortere',
+	priorityOrder: 'sorteringsrækkefølge ${0}',
+
 //SummaryBar
-	summary: 'I alt: ${0}',
-	summaryWithSelection: 'I alt: ${0} Valgt: ${1}'
+	summaryTotal: 'I alt: ${0}',
+	summarySelected: 'Valgt: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

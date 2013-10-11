@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Filter erstellen&hellip;',
 	apply: 'Filter anwenden',
 
+//Sort
+	helpMsg: '${0} - Klicken Sie zum Sortieren der Tabelle auf den Spaltennamen, oder klicken Sie bei gedrückter Steuertaste auf den Spaltennamen, um die Spalte der verschachtelten Sortierung hinzuzufügen.',
+	singleHelpMsg: '${0} Klicken Sie zum Sortieren der Tabelle auf den Spaltennamen.',
+	priorityOrder: 'Sortierpriorität ${0}',
+
 //SummaryBar
-	summary: 'Gesamt: ${0}',
-	summaryWithSelection: 'Gesamt: ${0} Ausgewählt: ${1}'
+	summaryTotal: 'Gesamt: ${0}',
+	summarySelected: 'Ausgewählt: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

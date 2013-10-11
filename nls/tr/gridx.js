@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Süzgeç Oluştur&hellip;',
 	apply: 'Süzgeci Uygula',
 
+//Sort
+	helpMsg: '${0} - Sıralamak için tıklatın ya da sıralamaya eklemek için Ctrl tuşunu basılı tutarak tıklatın.',
+	singleHelpMsg: '${0} - Sıralamak için tıklatın',
+	priorityOrder: 'sıralama önceliği ${0}',
+
 //SummaryBar
 	summary: 'Toplam: ${0}',
-	summaryWithSelection: 'Toplam: ${0} Seçilen: ${1}'
+	summaryWithSelection: 'Seçilen: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

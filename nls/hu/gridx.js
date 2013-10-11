@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Szűrő összeállítása&hellip;',
 	apply: 'Szűrő alkalmazása',
 
+//Sort
+	helpMsg: '${0} - Kattintson ide a rendezéshez, vagy használja a Ctrl-kattintás kombinációt a rendezéshez hozzáadáshoz',
+	singleHelpMsg: '${0} - Kattintson ide a rendezéshez',
+	priorityOrder: 'rendezési prioritás: ${0}',
+
 //SummaryBar
-	summary: 'Összesen: ${0}',
-	summaryWithSelection: 'Összesen: ${0} Kiválasztott: ${1}'
+	summaryTotal: 'Összesen: ${0}',
+	summarySelected: 'Kiválasztott: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

@@ -137,7 +137,19 @@ define({
 	buildFilterMenuLabel: 'Vytvoriť filter&hellip;',
 	apply: 'Použiť filter',
 
+//Sort
+	helpMsg: '${0} - kliknutie = zoradiť, Ctrl + kliknutie = pridať do zoradenia',
+	singleHelpMsg: '${0} - Kliknutím zoraďte',
+	priorityOrder: 'priorita zoradenia ${0}',
+
 //SummaryBar
 	summary: 'Celkovo: ${0}',
-	summaryWithSelection: 'Celkovo: ${0}, vybratých: ${1}'
+	summarySelected: 'Vybratých: ${1}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

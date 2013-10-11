@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Construir Filtro&hellip;',
 	apply: 'Aplicar Filtro',
 
+//Sort
+	helpMsg: '${0} - Click to sort or control-click to add to sort',	//need translation
+	singleHelpMsg: '${0} - Click to sort',	//need translation
+	priorityOrder: 'sort priority ${0}',	//need translation
+
 //SummaryBar
-	summary: 'Total: ${0}',
-	summaryWithSelection: 'Total: ${0} Selecionado: ${1}'
+	summaryTotal: 'Total: ${0}',
+	summarySelected: 'Selecionado: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });
