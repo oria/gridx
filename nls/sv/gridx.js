@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Bygg filter&hellip;',
 	apply: 'Tillämpa filter',
 
+//Sort
+	helpMsg: '${0} - Klicka om du vill sortera eller Ctrl-klicka om du vill lägga till till sorteringen',
+	singleHelpMsg: '${0} - Klicka om du vill sortera',
+	priorityOrder: 'sorteringsprioritet ${0}',
+
 //SummaryBar
-	summary: 'Totalt: ${0}',
-	summaryWithSelection: 'Totalt: ${0} Valda: ${1}'
+	summaryTotal: 'Totalt: ${0}',
+	summarySelected: 'Valda: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

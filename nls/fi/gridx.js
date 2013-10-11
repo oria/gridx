@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Muodosta suodatin&hellip;',
 	apply: 'Käytä suodatinta',
 
+//Sort
+	helpMsg: '${0} - Lajittele napsauttamalla tai lisää lajitteluehtoihin pitämällä Ctrl-näppäintä painettuna ja napsauttamalla',
+	singleHelpMsg: '${0} - Lajittele napsauttamalla',
+	priorityOrder: 'lajitteluprioriteetti ${0}',
+
 //SummaryBar
-	summary: 'Yhteensä: ${0}',
-	summaryWithSelection: 'Yhteensä: ${0} Valittu: ${1}'
+	summaryTotal: 'Yhteensä: ${0}',
+	summarySelected: 'Valittu: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

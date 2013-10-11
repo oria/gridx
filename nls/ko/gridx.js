@@ -143,7 +143,23 @@ define({
 	buildFilterMenuLabel: '필터 빌드&hellip;',
 	apply: '필터 적용',
 
+	helpMsg: '${0} - 정렬하려면 클릭하거나 정렬에 추가하려면 Ctrl키와 함께 클릭',
+	singleHelpMsg: '${0} - 정렬하려면 클릭',
+	priorityOrder: '정렬 우선순위 ${0}',
+
+//Sort
+	helpMsg: '${0} - 정렬하려면 클릭하거나 정렬에 추가하려면 Ctrl키와 함께 클릭',
+	singleHelpMsg: '${0} - 정렬하려면 클릭',
+	priorityOrder: '정렬 우선순위 ${0}',
+
 //SummaryBar
-	summary: '총계: ${0}',
-	summaryWithSelection: '총계: ${0} 선택됨: ${1}'
+	summaryTotal: '총계: ${0}',
+	summarySelected: '선택됨: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Kreiranje filtera&hellip;',
 	apply: 'Primjena filtera',
 
+//Sort
+	helpMsg: '${0} - Click to sort or control-click to add to sort',	//need translation
+	singleHelpMsg: '${0} - Click to sort',	//need translation
+	priorityOrder: 'sort priority ${0}',	//need translation
+
 //SummaryBar
-	summary: 'Ukupno: ${0}',
-	summaryWithSelection: 'Ukupno: ${0} Odabrano: ${1}'
+	summaryTotal: 'Ukupno: ${0}',
+	summarySelected: 'Odabrano: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

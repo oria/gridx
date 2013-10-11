@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'フィルターの作成&hellip;',
 	apply: 'フィルターの適用',
 
+//Sort
+	helpMsg: '${0} - ソートするにはクリック、ソート項目に追加するには Ctrl とクリック',
+	singleHelpMsg: '${0} - ソートするにはクリック',
+	priorityOrder: 'ソート優先順位 ${0}',
+
 //SummaryBar
-	summary: '合計: ${0}',
-	summaryWithSelection: '合計: ${0} 選択済み: ${1}'
+	summaryTotal: '合計: ${0}',
+	summarySelected: '選択済み: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

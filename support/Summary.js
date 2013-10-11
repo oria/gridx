@@ -45,14 +45,25 @@ define([
 				pagination = g.pagination,
 				size = g.model.size(),
 				selected = sr ? sr.getSelected().length : 0,
-				tpl = this.message || (sr ? g.nls.summaryWithSelection : g.nls.summary);
-			if(g.getSummaryMessage){
-				tpl = g.getSummaryMessage();
-			}
+				tpl = this.message;
 			if(pagination){
 				var cp = pagination.currentPage(),
 					firstIdx = pagination.firstIndexInPage(cp) + 1,
 					lastIdx = pagination.lastIndexInPage(cp) + 1;
+			}
+			if(g.getSummaryMessage){
+				tpl = g.getSummaryMessage();
+			}
+			if(!tpl){
+				tpl = [];
+				if(pagination){
+					tpl.push(string.substitute(g.nls.summaryRange, [firstIdx, lastIdx]));
+				}
+				tpl.push(string.substitute(g.nls.summaryTotal, [size >= 0 ? size : 0]));
+				if(sr){
+					tpl.push(string.substitute(g.nls.summarySelected, [selected]));
+				}
+				tpl = tpl.join(' ');
 			}
 			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected, firstIdx, lastIdx]);
 		}

@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'สร้างตัวกรอง&hellip;',
 	apply: 'ใช้ตัวกรอง',
 
+//Sort
+	helpMsg: '${0} - คลิกเพื่อเรียง หรือ control-คลิก เพื่อเพิ่มการเรียง',
+	singleHelpMsg: '${0} - คลิกเพื่อเรียง',
+	priorityOrder: 'เรียงลำดับความสำคัญ ${0}',
+
 //SummaryBar
-	summary: 'ทั้งหมด: ${0}',
-	summaryWithSelection: 'ทั้งหมด: ${0} ที่เลือก: ${1}'
+	summaryTotal: 'ทั้งหมด: ${0}',
+	summarySelected: 'ที่เลือก: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

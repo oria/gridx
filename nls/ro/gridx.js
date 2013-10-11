@@ -137,7 +137,19 @@ define({
 	buildFilterMenuLabel: 'Construire filtru&hellip;',
 	apply: 'Aplicare filtru',
 
+//Sort
+	helpMsg: '${0} - Faceţi clic pentru a sorta sau faceţi control-clic pentru a adăuga la sortare',
+	singleHelpMsg: '${0} - Faceţi clic pentru a sorta',
+	priorityOrder: 'prioritate sortare ${0}',
+
 //SummaryBar
-	summary: 'Total: ${0}',
-	summaryWithSelection: 'Total: ${0} Selectate: ${1}'
+	summaryTotal: 'Total: ${0}',
+	summarySelected: 'Selectate: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });
