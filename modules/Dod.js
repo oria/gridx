@@ -284,17 +284,26 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			if(!domClass.contains(e.target, 'gridxDodExpando') && !domClass.contains(e.target, 'gridxDodExpandoText')){return;}
+			console.log('event target')
+			console.log(e.target);
+			if(!domClass.contains(e.target, 'gridxDodExpando') 
+			&& !domClass.contains(e.target, 'gridxDodExpandoText') 
+			|| this.grid.domNode != query(e.target).closest('.gridx')[0]){return;}
 			var node = e.target;
 			while(node && !domClass.contains(node, 'gridxRow')){
 				node = node.parentNode;
 			}
+			
+			// event.stop(e);
 			var idx = node.getAttribute('rowindex');
+			
+			console.log('in dod trigger event')
+			
 			this.toggle(this.grid.row(parseInt(idx)));
+			console.log(this.grid.domNode);
 		},
 		
 		_onAfterRow: function(row){
-
 			var _row = this._row(row);
 			if(this.arg('showExpando')){
 				var tbl = query('table', row.node())[0];

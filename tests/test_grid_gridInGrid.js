@@ -123,11 +123,8 @@ require([
 		}
 	}
 	function setFormContentProgrammatically(node, renderred){
-		node.innerHTML = '<br><br><br><br>';
 		var rowNode = node.parentNode;
 		var rowId = rowNode.getAttribute('rowid');
-		
-		
 		
 		if(rowId % 2){		//odd
 			var num = 3;
@@ -169,7 +166,7 @@ require([
 							}
 							
 				],
-				style: 'width: ' + width + '; float: left'
+				style: 'width: 70%; float: left'
 			});
 			grid.placeAt(node);
 			grid.startup();		
