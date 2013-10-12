@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+	<title>Stack Overflow with Grid in TabContainer on IE</title>
+	<style type="text/css">
+	@import "../../dojo/resources/dojo.css";
+	@import "../../dijit/themes/claro/claro.css";
+	@import "../../gridx/resources/claro/Gridx.css";
+	#tabContainer {
+		width: 400px;
+		height: 200px;
+	}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript">
+	require([
+		"dojo/ready",
+		"dojo/store/Memory",
+ 		"dijit/registry",
+		"gridx/Grid",
+		"gridx/core/model/cache/Sync",
+		"gridx/modules/VirtualVScroller",
+		"dijit/form/Button",
+		"dijit/layout/ContentPane",
+		"dijit/layout/TabContainer"
+	], function(ready, Memory, registry, Grid, Sync, VirtualVScroller) {
+		ready(function(){
+			var modules = [
+				VirtualVScroller
+			];
+			var structure = [
+				{field: "id", name: "ID", width: '50%'},
+				{field: "name", name: "Name", width: '50%'}
+			];
+			var grid = new Grid({cacheClass: Sync, modules: modules, structure: structure, store: new Memory()});
+			var contentPane = registry.byId("contentPane");
+			contentPane.addChild(grid);
+			var tabContainer = registry.byId("tabContainer");
+			tabContainer.selectChild(contentPane);
+
+			var button = registry.byId("button");
+			button.on("click", function(){
+				grid.setStore(new Memory({data: [
+					{id: 1, name: "a"},
+					{id: 2, name: "b"},
+					{id: 3, name: "c"},
+					{id: 4, name: "d"},
+					{id: 5, name: "e"}
+				]}));
+				tabContainer.selectChild(contentPane);
+			});
+		});
+	});
+	</script>
+</head>
+<body class="claro">
+	<div data-dojo-type="dijit/layout/TabContainer" id="tabContainer">
+		<div data-dojo-type="dijit/layout/ContentPane" title="Tab 1">
+			<button data-dojo-type="dijit/form/Button" id="button">Run</button>
+		</div>
+		<div data-dojo-type="dijit/layout/ContentPane" id="contentPane" title="Tab 2"></div>
+	</div>
+</body>
+</html>

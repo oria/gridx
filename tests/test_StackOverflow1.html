@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+	<title>Stack Overflow with Grid in Dialog on IE</title>
+	<style type="text/css">
+	@import "../../dojo/resources/dojo.css";
+	@import "../../dijit/themes/claro/claro.css";
+	@import "../../gridx/resources/claro/Gridx.css";
+	#grid {
+		width: 400px;
+		height: 200px;
+	}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true, isDebug: true, parseOnLoad: true"></script>
+	<script type="text/javascript">
+	require([
+		"dojo/ready",
+		"dojo/store/Memory",
+		"dijit/Dialog",
+ 		"dijit/registry",
+		"gridx/Grid",
+		"gridx/core/model/cache/Sync",
+		"gridx/modules/VirtualVScroller",
+		"dijit/form/Button"
+	], function(ready, Memory, Dialog, registry, Grid, Sync, VirtualVScroller) {
+		ready(function(){
+			var modules = [
+				VirtualVScroller
+			];
+			var structure = [
+				{field: "id", name: "ID", width: '50%'},
+				{field: "name", name: "Name", width: '50%'}
+			];
+			var grid = new Grid({id: "grid", cacheClass: Sync, modules: modules, structure: structure, store: new Memory()});
+			var dialog = new Dialog({title: "Dialog", content: grid});
+			dialog.show();
+
+			var button = registry.byId("button");
+			button.on("click", function(){
+				var store = new Memory({data: [
+					{id: 1, name: "a"},
+					{id: 2, name: "b"},
+					{id: 3, name: "c"},
+					{id: 4, name: "d"},
+					{id: 5, name: "e"}
+				]});
+				grid.setStore(store);
+				dialog.show();
+			});
+		});
+	});
+	</script>
+</head>
+<body class="claro">
+	<button data-dojo-type="dijit/form/Button" id="button">Run</button>
+</body>
+</html>

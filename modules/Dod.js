@@ -430,7 +430,7 @@ define([
 		_showLoading: function(row){
 			var _row = this._row(row);
 			var node = _row.dodLoadingNode;
-			node.innerHTML = 'Loading...';
+			node.innerHTML = this.grid.nls.loadingInfo;
 		},
 		_getExpando: function(row){
 			if(!this.showExpando)return null;
