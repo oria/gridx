@@ -327,7 +327,7 @@ define([
 			t._doScroll(0, 1);
 			//If some scrollToRow requests are pending, resume them.
 			array.forEach(t._scrolls, function(d){
-				if(d.scrollContext){
+				if(d && d.scrollContext){
 					//delete scrollContext to avoid firing multiple times.
 					var scrollContext = d.scrollContext;
 					delete d.scrollContext;

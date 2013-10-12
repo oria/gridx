@@ -366,9 +366,8 @@ define([
 			while(node != t.bodyNode){
 				if(domClass.contains(node, 'gridxRowHeaderRow')){
 					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
-					t.grid.vScroller.scrollToRow(r).then(function(){
-						t._focusRow(r);
-					});
+					t._focusRow(r);
+					t._onScroll();
 					return true;
 				}
 				node = node.parentNode;
@@ -396,15 +395,17 @@ define([
 
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid;
-			if(g.focus.currentArea() == 'rowHeader' && 
+			if(!t._busy && g.focus.currentArea() == 'rowHeader' && 
 					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
 				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;
 				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+				t._busy = 1;
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);
+					t._busy = 0;
 					t.onMoveToRowHeaderCell(r, evt);
 				});
 			}
