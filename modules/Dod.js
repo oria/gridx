@@ -284,8 +284,6 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			console.log('event target')
-			console.log(e.target);
 			if(!domClass.contains(e.target, 'gridxDodExpando') 
 			&& !domClass.contains(e.target, 'gridxDodExpandoText') 
 			|| this.grid.domNode != query(e.target).closest('.gridx')[0]){return;}
@@ -297,10 +295,8 @@ define([
 			// event.stop(e);
 			var idx = node.getAttribute('rowindex');
 			
-			console.log('in dod trigger event')
 			
 			this.toggle(this.grid.row(parseInt(idx)));
-			console.log(this.grid.domNode);
 		},
 		
 		_onAfterRow: function(row){

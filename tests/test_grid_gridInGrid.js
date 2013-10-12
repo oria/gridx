@@ -321,8 +321,6 @@ require([
 	createGrid();
 	
 	
-	var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
 	
 	
 
@@ -351,6 +349,8 @@ require([
 	window.isRow3DetailShownOnRow = function(){
 		alert(grid.row('1').isDetailShown());
 	}
+/*	var tp = new TestPane({});
+	tp.placeAt('ctrlPane');
 	
 	tp.addTestSet('DoD types', [
  		'<label><input type="checkbox" onchange="defaultShow=this.checked"/> defaultShow</label><br/>',
@@ -389,5 +389,5 @@ require([
 			+ 'isRow3DetailShownOnRow">grid.row(\'1\').isDetailShown()</div><br/>'
 	].join(''));
 	
-	tp.startup();
+	tp.startup();*/
 });
