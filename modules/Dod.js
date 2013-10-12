@@ -425,7 +425,7 @@ define([
 			var _row = this._row(row);
 			_row.dodLoaded = false;
 			if(!this.isShown(row)){return;}
-			_row.dodLoadingNode.innerHTML = 'Error: failed to load detail.';
+			_row.dodLoadingNode.innerHTML = this.grid.nls.loadFailInfo;
 		},
 		_showLoading: function(row){
 			var _row = this._row(row);
