@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Потроить фильтр&hellip;',
 	apply: 'Применить фильтр',
 
+//Sort
+	helpMsg: '${0} - Щелкните, чтобы отсортировать, или щелкните при нажатой клавише Ctrl, чтобы добавить к сортировке',
+	singleHelpMsg: '${0} - Щелкните, чтобы отсортировать',
+	priorityOrder: 'приоритет сортировки ${0}',
+
 //SummaryBar
-	summary: 'Всего: ${0}',
-	summaryWithSelection: 'Всего: ${0} Выбрано: ${1}'
+	summaryTotal: 'Всего: ${0}',
+	summarySelected: 'Выбрано: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

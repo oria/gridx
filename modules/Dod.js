@@ -132,7 +132,7 @@ define([
 			if(!_row.dodLoadingNode){
 				_row.dodLoadingNode = domConstruct.create('div', {
 					className: 'gridxDodLoadNode', 
-					innerHTML: 'Loading...'
+					innerHTML: this.grid.nls.loadingInfo
 				});
 			}
 			if(!_row.dodNode){

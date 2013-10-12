@@ -137,7 +137,24 @@ define({
 	buildFilterMenuLabel: 'Сүзгі жасау&hellip;',
 	apply: 'Сүзгі қолдану',
 
+//Sort
+	helpMsg: '${0} - Сұрыптау мақсатында қосу үшін сұрыптау түймешігін немесе басқару элементін басыңыз',
+	singleHelpMsg: '${0} - Сұрыптау үшін басыңыз',
+	priorityOrder: 'Басымдылықты сұрыптау ${0}',
+
+//Sort
+	helpMsg: '${0} - Сұрыптау мақсатында қосу үшін сұрыптау түймешігін немесе басқару элементін басыңыз',
+	singleHelpMsg: '${0} - Сұрыптау үшін басыңыз',
+	priorityOrder: 'Басымдылықты сұрыптау ${0}',
+
 //SummaryBar
-	summary: 'Барлығы: ${0}',
-	summaryWithSelection: 'Барлығы: ${0} Таңдалды: ${1}'
+	summaryTotal: 'Барлығы: ${0}',
+	summarySelected: 'Таңдалды: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: 'Bygg filter&hellip;',
 	apply: 'Bruk filter',
 
+//Sort
+	helpMsg: '${0} - Klikk for å sortere eller Ctrl+klikk for å legge til sortering',
+	singleHelpMsg: '${0} - Klikk for å sortere',
+	priorityOrder: 'sorteringsprioritet ${0}',
+
 //SummaryBar
-	summary: 'Totalt: ${0}',
-	summaryWithSelection: 'Totalt: ${0} Valgt: ${1}'
+	summaryTotal: 'Totalt: ${0}',
+	summarySelected: 'Valgt: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

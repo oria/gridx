@@ -136,7 +136,19 @@ define({
 	buildFilterMenuLabel: 'Изгради филтър&hellip;',
 	apply: 'Приложи филтър',
 
+//Sort
+	helpMsg: '${0} - Click to sort or control-click to add to sort',	//need translation
+	singleHelpMsg: '${0} - Click to sort',	//need translation
+	priorityOrder: 'sort priority ${0}',	//need translation
+
 //SummaryBar
-	summary: 'Общо: ${0}',
-	summaryWithSelection: 'Общо: ${0} Избрани: ${1}'
+	summaryTotal: 'Общо: ${0}',
+	summarySelected: 'Избрани: ${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });

@@ -143,7 +143,19 @@ define({
 	buildFilterMenuLabel: '构建过滤器&hellip;',
 	apply: '应用过滤器',
 
+//Sort
+	helpMsg: '${0} - 单击以排序，或者按 Ctrl 键并单击以添加到排序项',
+	singleHelpMsg: '${0} - 单击以排序',
+	priorityOrder: '排序优先级 ${0}',
+
 //SummaryBar
-	summary: '总计：${0}',
-	summaryWithSelection: '总计：${0} 已选择：${1}'
+	summaryTotal: '总计：${0}',
+	summarySelected: '已选择：${0}',
+	summaryRange: 'Range: ${0}-${1}',	//need translation
+
+//Other
+	indirectSelectAll: "Press SPACE to select all.",	//need translation
+	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
+	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
+	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
 });
