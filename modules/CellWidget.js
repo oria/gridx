@@ -267,7 +267,6 @@ define([
 							}
 						}
 					});
-					// console.log('lazy is: ', lazyData);
 					if(t.setCellValue){
 						t.setCellValue(gridData, storeData, t, isInit);
 					}

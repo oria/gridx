@@ -465,7 +465,6 @@ define([
 			}else{
 				toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
 			}
-			// console.log('to highlight', toHighlight);
 			this._doHighlight(target, toHighlight);
 		},
 		

@@ -459,7 +459,6 @@ define([
 				}
 			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
 				t._navigating = false;
-				console.log('focus back to body')
 				focus.focusArea('body');
 			}
 		},
@@ -469,16 +468,13 @@ define([
 			var t = this,
 				focus = t.grid.focus;
 
-			console.log('on row key down')
 			if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
 				t._navigating = false;
-				console.log('focus back to body')
 				focus.focusArea('body');
 			}
 		},
 		
 		_beginNavigate: function(rowId){
-			console.log('in dod begin navigate')
 			
 			var t = this,
 				row = t.grid.row(rowId, 1),
@@ -523,7 +519,6 @@ define([
 					rowNode = dodNode.parentNode;
 				// this.grid.hScroller.scrollToColumn(colId);
 				if(rowNode){
-					console.log('in dod on focus');
 					var rowId = rowNode.getAttribute('rowid');
 					return dodNode !== evt.target && this._beginNavigate(rowId);
 				}

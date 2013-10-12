@@ -276,7 +276,6 @@ define([
 				if(!toMark){
 					delete t._byId[type][id];
 				}
-				//console.log('mark change: ', id, ', state: ', oldState, ' => ', toMark);
 				m.onMarkChange(id, t.states[toMark || 0], t.states[oldState || 0], type);
 			}
 		},

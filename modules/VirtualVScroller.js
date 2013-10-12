@@ -246,7 +246,6 @@ define([
 						//to normal or very small height, need to add rows to the front.
 						//this usually appear in DOD, especially GridInGrid mode
 						
-						console.log('in add to bottom diverse')
 						end = body.renderStart;
 						d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
 						start = nearTop ? visualStart : Math.max(end - d, visualStart);
