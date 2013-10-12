@@ -102,10 +102,7 @@ define([
 							focus.focusArea('body', 1);	//1 as true
 						}
 						t.lazy = t._lazy;
-						//wait for the dom nodes to settle down.
-						setTimeout(function(){
-							defer.callback(success);
-						}, 5);
+						defer.callback(success);
 					}
 				};
 			if(node){
