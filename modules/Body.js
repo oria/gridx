@@ -241,15 +241,17 @@ define([
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
-			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
-			t.connect(g.mainNode, 'onmouseleave', function(){
-				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-			});
-			t.connect(g.mainNode, 'onmouseover', function(e){
-				if(e.target == g.bodyNode){
+			if(!g.touch){
+				t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
+				t.connect(g.mainNode, 'onmouseleave', function(){
 					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-				}
-			});
+				});
+				t.connect(g.mainNode, 'onmouseover', function(e){
+					if(e.target == g.bodyNode){
+						query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+					}
+				});
+			}
 			t.aspect(g.model, 'setStore', function(){
 				t.refresh();
 			});
