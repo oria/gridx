@@ -261,7 +261,7 @@ define([
 			//		The row ID
 			// returns:
 			//		Whether the row is expanded.
-			return !!this._openInfo[id];	//Boolean
+			return this.model.isId(id) && !!this._openInfo[id];	//Boolean
 		},
 
 		expand: function(id, skipUpdateBody){
@@ -276,7 +276,7 @@ define([
 			//		A deferred object indicating whether this expanding process has completed.
 			var d = new Deferred(),
 				t = this;
-			if(id && !t.isExpanded(id)){
+			if(!t.isExpanded(id)){
 				t.model.when({
 					parentId: id, 
 					start: 0
@@ -306,7 +306,7 @@ define([
 			//		A deferred object indicating whether this collapsing process has completed.
 			var d = new Deferred(),
 				t = this;
-			if(id && t.isExpanded(id)){
+			if(t.isExpanded(id)){
 				t._logicCollapse(id);
 				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
 					d.callback();
