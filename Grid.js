@@ -107,6 +107,8 @@ define([
 			}
 			if(t.touch){
 				domClass.add(t.domNode, 'gridxTouch');
+			}else{
+				domClass.add(t.domNode, 'gridxDesktop');
 			}
 			if(!t.isLeftToRight()){
 				domClass.add(t.domNode, 'gridxRtl');
