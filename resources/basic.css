@@ -461,13 +461,18 @@
 .gridxHeaderRegionFocus .gridxHeaderRegion:focus {
 	outline: 1px dashed darkblue;
 }
-
+.gridxCellEditedBgWrapper{
+	position: relative;
+	display: block;
+}
 .gridxCellEditedBg{
 	background-image: url('images/gridxCellChanged.png');
 	height: 6px;
 	width: 6px;
 	position:absolute;
-	z-index:10
+	z-index:10;
+	top: 0px;
+	right: 0px;
 }
 .gridxCellEditedBg span{
 	display: none;
