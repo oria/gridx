@@ -217,14 +217,21 @@ define([
 					scope: t,
 					doFocus: t._doFocus,
 					doBlur: t._blurNode,
-					onBlur: t._blurNode,
-					connects: [
-						t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
-						t.connect(g, 'onHeaderCellMouseDown', function(evt){
-							t._focusNode(t.getHeaderNode(evt.columnId));
-						})
-					]
+					onBlur: t._blurNode
 				});
+				if(g.touch){
+					t.aspect(g, 'onHeaderCellTouchStart', function(evt){
+						domClass.add(evt.headerCellNode, t._focusClass);
+					});
+					t.aspect(g, 'onHeaderCellTouchEnd', function(evt){
+						domClass.remove(evt.headerCellNode, t._focusClass);
+					});
+				}else{
+					t.aspect(g, 'onHeaderCellKeyDown', '_onKeyDown');
+					t.aspect(g, 'onHeaderCellMouseDown', function(evt){
+						t._focusNode(t.getHeaderNode(evt.columnId));
+					});
+				}
 			}
 		},
 

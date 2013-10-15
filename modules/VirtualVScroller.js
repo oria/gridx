@@ -102,10 +102,7 @@ define([
 							focus.focusArea('body', 1);	//1 as true
 						}
 						t.lazy = t._lazy;
-						//wait for the dom nodes to settle down.
-						setTimeout(function(){
-							defer.callback(success);
-						}, 5);
+						defer.callback(success);
 					}
 				};
 			if(node){
@@ -223,8 +220,8 @@ define([
 					nearTop = a <= neighborhood,
 					nearBottom = Math.abs(a - scrollRange) <= neighborhood,
 					start, end, pos, d;
-					
-				if(bnTop == bnBtm && !bnBtm){
+				//In IE7 offsetTop will be -1 when grid is hidden
+				if((bnTop == bnBtm && !bnBtm) || (lastRow && lastRow.offsetTop < 0)){
 					//The grid is not correctly shown, so we just ignore.
 					return;
 				}
@@ -246,7 +243,6 @@ define([
 						//to normal or very small height, need to add rows to the front.
 						//this usually appear in DOD, especially GridInGrid mode
 						
-						console.log('in add to bottom diverse')
 						end = body.renderStart;
 						d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
 						start = nearTop ? visualStart : Math.max(end - d, visualStart);
@@ -331,7 +327,7 @@ define([
 			t._doScroll(0, 1);
 			//If some scrollToRow requests are pending, resume them.
 			array.forEach(t._scrolls, function(d){
-				if(d.scrollContext){
+				if(d && d.scrollContext){
 					//delete scrollContext to avoid firing multiple times.
 					var scrollContext = d.scrollContext;
 					delete d.scrollContext;

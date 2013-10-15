@@ -284,8 +284,6 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			console.log('event target')
-			console.log(e.target);
 			if(!domClass.contains(e.target, 'gridxDodExpando') 
 			&& !domClass.contains(e.target, 'gridxDodExpandoText') 
 			|| this.grid.domNode != query(e.target).closest('.gridx')[0]){return;}
@@ -297,10 +295,8 @@ define([
 			// event.stop(e);
 			var idx = node.getAttribute('rowindex');
 			
-			console.log('in dod trigger event')
 			
 			this.toggle(this.grid.row(parseInt(idx)));
-			console.log(this.grid.domNode);
 		},
 		
 		_onAfterRow: function(row){
@@ -429,12 +425,12 @@ define([
 			var _row = this._row(row);
 			_row.dodLoaded = false;
 			if(!this.isShown(row)){return;}
-			_row.dodLoadingNode.innerHTML = 'Error: failed to load detail.';
+			_row.dodLoadingNode.innerHTML = this.grid.nls.loadFailInfo;
 		},
 		_showLoading: function(row){
 			var _row = this._row(row);
 			var node = _row.dodLoadingNode;
-			node.innerHTML = 'Loading...';
+			node.innerHTML = this.grid.nls.loadingInfo;
 		},
 		_getExpando: function(row){
 			if(!this.showExpando)return null;
@@ -463,7 +459,6 @@ define([
 				}
 			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
 				t._navigating = false;
-				console.log('focus back to body')
 				focus.focusArea('body');
 			}
 		},
@@ -473,16 +468,13 @@ define([
 			var t = this,
 				focus = t.grid.focus;
 
-			console.log('on row key down')
 			if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
 				t._navigating = false;
-				console.log('focus back to body')
 				focus.focusArea('body');
 			}
 		},
 		
 		_beginNavigate: function(rowId){
-			console.log('in dod begin navigate')
 			
 			var t = this,
 				row = t.grid.row(rowId, 1),
@@ -527,7 +519,6 @@ define([
 					rowNode = dodNode.parentNode;
 				// this.grid.hScroller.scrollToColumn(colId);
 				if(rowNode){
-					console.log('in dod on focus');
 					var rowId = rowNode.getAttribute('rowid');
 					return dodNode !== evt.target && this._beginNavigate(rowId);
 				}
