@@ -72,11 +72,21 @@ define([
 					scrollDir: g.hScrollerNode.style.display == 'none' ? 'v' : 'vh',
 					noResize: true
 				});
+				function getLayerParent(){
+					var layerParent = g.layer && g.layer._wrapper1.firstChild;
+					return layerParent && layerParent.firstChild;
+				}
 				t.aspect(scrollable, 'scrollTo', function(to){
 					if(typeof to.x == "number"){
 						var translateStr = scrollable.makeTranslateStr({x: to.x});
 						h.firstChild.style.webkitTransform = translateStr;
 						h.firstChild.style.transform = translateStr;
+
+						var layerParent = getLayerParent();
+						if(layerParent){
+							layerParent.style.webkitTransform = translateStr;
+							layerParent.style.transform = translateStr;
+						}
 					}
 				});
 				t.aspect(scrollable, 'slideTo', function(to, duration, easing){
@@ -85,9 +95,23 @@ define([
 					}, {
 						x: to.x
 					}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
+
+					var layerParent = getLayerParent();
+					if(layerParent){
+						scrollable._runSlideAnimation({
+							x: scrollable.getPos().x
+						}, {
+							x: to.x
+						}, duration, easing, layerParent, 2);	//2 means it's a containerNode
+					}
 				});
 				t.aspect(scrollable, 'stopAnimation', function(){
 					domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
+
+					var layerParent = getLayerParent();
+					if(layerParent){
+						domClass.remove(layerParent, 'mblScrollableScrollTo2');
+					}
 				});
 				t.aspect(g.hScroller, 'refresh', function(){
 					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
