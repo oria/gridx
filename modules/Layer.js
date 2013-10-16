@@ -2,14 +2,70 @@ define([
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/_base/sniff",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
 	"dojo/keys",
 	"../core/_Module"
-], function(kernel, declare, lang, has, domClass, domGeometry, query, keys, _Module){
+], function(kernel, declare, lang, domClass, domGeometry, query, keys, _Module){
 	kernel.experimental('gridx/modules/Layer');
+
+/*=====
+	var Layer = declare(_Module, {
+		// summary:
+		//		module name: Layer.
+		//		A drill-down version of tree grid.
+		// description:
+		//		Add a drill-down button to every row that has children.
+		//		Once clicked this button, child level rows slides in and current level rows slides out,
+		//		while the parent row slides up and gets locked.
+		//		Clicking anywhere in the locked parent row will reverse the above process so as to go back to the parent level.
+		//		Especially suitable for mobile tree grid.
+
+		// buttonColumnWidth: String
+		//		Width of the drill-down column. Same format as column width in column definition.
+		buttonColumnWidth: '20px',
+
+		// buttonColumnArgs: Object
+		//		The drill-down column can be customized by providing extra column definition parameters here.
+		buttonColumnArgs: null,
+
+		down: function(id){
+			// summary:
+			//		Drill down one level on the row with the given ID.
+			//		Only works if the given row exists in current layer.
+			// id: String
+			//		A parent row ID.
+		},
+
+		up: function(){
+			// summary:
+			//		Drill up one level, i.e.: go to the parent layer.
+		},
+
+		onFinish: function(args){
+			// summary:
+			//		Fired when a layer operation (down or up) is done.
+			// args: __LayerOperationArgs
+			//		Some args indicating whether it is drilling down or up, and on which row.
+		}
+	});
+
+	Layer.__LayerOperationArgs = declare([], {
+		// summary:
+		//		Some context info for layer operations.
+
+		// isDown: Boolean
+		//		If true, the operation is drilling down, otherwise, it is drilling up.
+		isDown: true,
+
+		// rowId: String
+		//		Only available when isDown is true. Indicating on which row it is drilling down.
+		rowId: ''
+	});
+
+	return Layer;
+=====*/
 
 	var transitionDuration = 700;
 
@@ -25,8 +81,6 @@ define([
 		name: "layer",
 
 		buttonColumnWidth: '20px',
-
-		buttonColumnArgs: null,
 
 		constructor: function(){
 			var t = this,
@@ -77,11 +131,11 @@ define([
 					}
 					return '';
 				}
-			}, t.arg('buttonColumnArgs', {}));
+			}, t.arg('buttonColumnArgs') || {});
 			t._onSetColumns();
 			t.aspect(g, 'setColumns', '_onSetColumns');
 
-			t.aspect(g, has('ios') || has('android') ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
+			t.aspect(g, g.touch ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
 				if(e.columnId == nextLevelButtonColumnId && e.cellNode.childNodes.length){
 					g.focus.focusArea('header');
 					setTimeout(function(){
@@ -89,26 +143,7 @@ define([
 					}, 0);
 				}
 			});
-			t.aspect(t, 'onReady', function(args){
-				if(args.isDown){
-					query('.gridxLayerHasChildren', args.parentRowNode).
-						removeClass('gridxLayerHasChildren').
-						addClass('gridxLayerLevelUp');
-				}else if(args.parentRowNode){
-					query('.gridxLayerLevelUp', args.parentRowNode).
-						removeClass('gridxLayerLevelUp').
-						addClass('gridxLayerHasChildren');
-				}
-			});
 		},
-
-		_onSetColumns: function(){
-			var g = this.grid,
-				col = this._col;
-			g._columns.push(col);
-			g._columnsById[col.id] = col;
-		},
-
 
 		preload: function(){
 			this.grid.vLayout.register(this, '_contextNode', 'headerNode', 10);
@@ -220,6 +255,13 @@ define([
 		},
 
 		//Private--------------------------------------------------------------------
+		_onSetColumns: function(){
+			var g = this.grid,
+				col = this._col;
+			g._columns.push(col);
+			g._columnsById[col.id] = col;
+		},
+
 		_onTransitionEnd: function(){
 			var t = this,
 				m = t.model,
@@ -288,6 +330,15 @@ define([
 			t._paging = g.view.paging;
 			g.view.paging = 0;
 			g.vLayout.reLayout();
+			if(args.isDown){
+				query('.gridxLayerHasChildren', args.parentRowNode).
+					removeClass('gridxLayerHasChildren').
+					addClass('gridxLayerLevelUp');
+			}else if(args.parentRowNode){
+				query('.gridxLayerLevelUp', args.parentRowNode).
+					removeClass('gridxLayerLevelUp').
+					addClass('gridxLayerHasChildren');
+			}
 			t.onReady(args);
 			g.body._skipUnrender = 1;
 			g.body.refresh().then(function(){
