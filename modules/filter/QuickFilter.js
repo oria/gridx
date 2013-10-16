@@ -36,6 +36,8 @@ define([
 					className: 'gridxBarQuickFilter',
 					hookPoint: this,
 					hookName: 'quickFilter',
+					autoApply: t.arg('autoApply'),
+					delay: t.arg('delay'),
 					textBoxClass: t.arg('textBoxClass', 'dijit.form.TextBox'),
 					buttonClass: t.arg('buttonClass', 'dijit.form.Button'),
 					comboButtonClass: t.arg('comboButtonClass', 'dijit.form.ComboButton'),
