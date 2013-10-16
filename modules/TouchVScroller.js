@@ -64,9 +64,8 @@ define([
 					h = g.header.innerNode,
 					mainNode = g.mainNode,
 					bodyNode = g.bodyNode,
-					headerTable = h.firstChild,
 					scrollable = t._scrollable = new Scrollable();
-				h.style.height = headerTable.offsetHeight + 'px';
+				h.style.height = h.firstChild.offsetHeight + 'px';
 				scrollable.init({
 					domNode: mainNode,
 					containerNode: bodyNode,
@@ -75,7 +74,9 @@ define([
 				});
 				t.aspect(scrollable, 'scrollTo', function(to){
 					if(typeof to.x == "number"){
-						headerTable.style.webkitTransform = scrollable.makeTranslateStr({x: to.x});
+						var translateStr = scrollable.makeTranslateStr({x: to.x});
+						h.firstChild.style.webkitTransform = translateStr;
+						h.firstChild.style.transform = translateStr;
 					}
 				});
 				t.aspect(scrollable, 'slideTo', function(to, duration, easing){
@@ -83,10 +84,10 @@ define([
 						x: scrollable.getPos().x
 					}, {
 						x: to.x
-					}, duration, easing, headerTable, 2);	//2 means it's a containerNode
+					}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
 				});
 				t.aspect(scrollable, 'stopAnimation', function(){
-					domClass.remove(headerTable, 'mblScrollableScrollTo2');
+					domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
 				});
 				t.aspect(g.hScroller, 'refresh', function(){
 					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
