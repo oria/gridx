@@ -166,7 +166,7 @@ require([
 							}
 							
 				],
-				style: 'width: 70%; float: left'
+				style: 'width: 85%; float: left'
 			});
 			grid.placeAt(node);
 			grid.startup();		
