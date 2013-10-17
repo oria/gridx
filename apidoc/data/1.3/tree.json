@@ -202,6 +202,18 @@
 					"type": "folder",
 					"children": [
 						{
+							"id": "gridx/modules/_PagedBodyMixin",
+							"name": "_PagedBodyMixin",
+							"fullname": "gridx/modules/_PagedBodyMixin",
+							"type": "constructor"
+						},
+						{
+							"id": "gridx/modules/AutoPagedBody",
+							"name": "AutoPagedBody",
+							"fullname": "gridx/modules/AutoPagedBody",
+							"type": "constructor"
+						},
+						{
 							"id": "gridx/modules/AutoScroll",
 							"name": "AutoScroll",
 							"fullname": "gridx/modules/AutoScroll",
@@ -333,6 +345,12 @@
 									"children": []
 								}
 							]
+						},
+						{
+							"id": "gridx/modules/ExpandableColumn",
+							"name": "ExpandableColumn",
+							"fullname": "gridx/modules/ExpandableColumn",
+							"type": "constructor"
 						},
 						{
 							"id": "gridx/modules/extendedSelect/",
@@ -548,6 +566,21 @@
 							"type": "constructor"
 						},
 						{
+							"id": "gridx/modules/Layer",
+							"name": "Layer",
+							"fullname": "gridx/modules/Layer",
+							"type": "constructor",
+							"children": [
+								{
+									"id": "gridx/modules/Layer.__LayerOperationArgs",
+									"name": "__LayerOperationArgs",
+									"fullname": "gridx/modules/Layer.__LayerOperationArgs",
+									"type": "constructor",
+									"children": []
+								}
+							]
+						},
+						{
 							"id": "gridx/modules/Menu",
 							"name": "Menu",
 							"fullname": "gridx/modules/Menu",
@@ -646,6 +679,12 @@
 							"type": "constructor"
 						},
 						{
+							"id": "gridx/modules/Puller",
+							"name": "Puller",
+							"fullname": "gridx/modules/Puller",
+							"type": "undefined"
+						},
+						{
 							"id": "gridx/modules/RowHeader",
 							"name": "RowHeader",
 							"fullname": "gridx/modules/RowHeader",
@@ -709,6 +748,24 @@
 									"children": []
 								}
 							]
+						},
+						{
+							"id": "gridx/modules/SlantedHeader",
+							"name": "SlantedHeader",
+							"fullname": "gridx/modules/SlantedHeader",
+							"type": "constructor"
+						},
+						{
+							"id": "gridx/modules/Sort",
+							"name": "Sort",
+							"fullname": "gridx/modules/Sort",
+							"type": "constructor"
+						},
+						{
+							"id": "gridx/modules/StructureSwitch",
+							"name": "StructureSwitch",
+							"fullname": "gridx/modules/StructureSwitch",
+							"type": "constructor"
 						},
 						{
 							"id": "gridx/modules/SummaryBar",
@@ -957,6 +1014,20 @@
 									"fullname": "gridx/support/printer.__PrinterArgs",
 									"type": "constructor",
 									"children": []
+								}
+							]
+						},
+						{
+							"id": "gridx/support/query/",
+							"name": "query",
+							"fullname": "gridx/support/query",
+							"type": "folder",
+							"children": [
+								{
+									"id": "gridx/support/query/query",
+									"name": "query",
+									"fullname": "gridx/support/query/query",
+									"type": "function"
 								}
 							]
 						},

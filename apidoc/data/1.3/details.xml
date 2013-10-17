@@ -11,7 +11,7 @@ never be horizontal scroller bar.&lt;/p>
 </summary></method><method name="resize" scope="prototype" type="function" from="gridx/Grid" tags="public"><parameters><parameter name="changeSize" type="Object" usage="optional"><summary>&lt;p>An object like {w: ..., h: ...}.
 If omitted, the grid will re-layout itself in current width/height.&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Resize the grid using given width and height.&lt;/p>
-</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_escapeId" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCopyEvent" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
+</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_escapeId" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCtrlKey" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
 if you need to implement some handler for Ctrl+click.&lt;/p>
 </summary></method><method name="setStore" scope="prototype" type="function" from="gridx/core/Core"><parameters><parameter name="store" type="undefined" usage="required"><summary>&lt;p>The new data store&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Change the store for grid.&lt;/p>
@@ -266,12 +266,7 @@ It&amp;#39;s possible for a column to have no store field related.&lt;/p>
 </summary></method><method name="setEditor" scope="normal" type="function" from="gridx/modules/Edit" extension-module="true"><parameters><parameter name="dijitClass" type="undefined" usage="required"><summary>&lt;p>The dijit class to be used as the editor.&lt;/p>
 </summary></parameter><parameter name="args" type="Edit.__EditorArgs" usage="required"><summary>&lt;p>Any args that are related to this editor.&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Set editor for cells in this column&lt;/p>
-</summary></method><method name="sort" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters><parameter name="isDescending" type="undefined" usage="required"/><parameter name="skipUpdateBody" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Sort this column.&lt;/p>
-</summary></method><method name="isSorted" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters/><return-types/><summary>&lt;p>Check wheter this column is sorted.&lt;/p>
-</summary></method><method name="clearSort" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters><parameter name="skipUpdateBody" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Clear sort on this column&lt;/p>
-</summary></method><method name="isSortable" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters/><return-types/><summary>&lt;p>Check whether this column is sortable.&lt;/p>
-</summary></method><method name="setSortable" scope="normal" type="function" from="gridx/modules/SingleSort" extension-module="true"><parameters><parameter name="isSortable" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Set sortable for this column&lt;/p>
-</summary></method><method name="moveTo" scope="normal" type="function" from="gridx/modules/move/Column" extension-module="true"><parameters><parameter name="target" type="Integer" usage="required"><summary>&lt;p>The target index&lt;/p>
+</summary></method><method name="sort" scope="normal" type="function" from="gridx/modules/Sort" extension-module="true"><parameters><parameter name="isDescending" type="undefined" usage="required"/><parameter name="isAdd" type="undefined" usage="required"/></parameters><return-types/></method><method name="isSorted" scope="normal" type="function" from="gridx/modules/Sort" extension-module="true"><parameters/><return-types/></method><method name="clearSort" scope="normal" type="function" from="gridx/modules/Sort" extension-module="true"><parameters/><return-types/></method><method name="isSortable" scope="normal" type="function" from="gridx/modules/Sort" extension-module="true"><parameters/><return-types/></method><method name="setSortable" scope="normal" type="function" from="gridx/modules/Sort" extension-module="true"><parameters><parameter name="sortable" type="undefined" usage="required"/></parameters><return-types/></method><method name="moveTo" scope="normal" type="function" from="gridx/modules/move/Column" extension-module="true"><parameters><parameter name="target" type="Integer" usage="required"><summary>&lt;p>The target index&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Move this column to the position before the column with index &amp;quot;target&amp;quot;&lt;/p>
 </summary></method><method name="prev" scope="normal" type="function" from="gridx/modules/Traverse" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the left (right if RTL) column.&lt;/p>
 </summary></method><method name="next" scope="normal" type="function" from="gridx/modules/Traverse" extension-module="true"><parameters/><return-types/><summary>&lt;p>Get the right (left if RTL) column.&lt;/p>
@@ -797,6 +792,7 @@ Note if the deleted row is not visible in current view, this event will not fire
 </summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a row in current view is updated in store.&lt;/p>
 </summary></method><method name="onMoveToCell" scope="prototype" type="function" from="gridx/modules/Body" private="true" tags="private"><parameters/><return-types/><summary>&lt;p>Fired when the focus is moved to a body cell by keyboard.&lt;/p>
 </summary></method><method name="onEmpty" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fired when there&amp;#39;s no rows in current body view.&lt;/p>
+</summary></method><method name="onLoadFail" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fire when there&amp;#39;s an error occured when loading data.&lt;/p>
 </summary></method><method name="onForcedScroll" scope="prototype" type="function" from="gridx/modules/Body" private="true" tags="private"><parameters/><return-types/><summary>&lt;p>Fired when the body needs to fetch more data, but there&amp;#39;s no trigger to the scroller.
 This is an inner mechanism to solve some problems when using virtual scrolling or pagination.
 This event should not be used by grid users.&lt;/p>
@@ -904,7 +900,7 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 The body UI of grid.&lt;/p>
 </summary><description>&lt;p>This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 
 pagination, details on demand, and even tree structure.&lt;/p>
-</description></object><object location="gridx/modules/VLayout" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+</description></object><object location="gridx/support/query/query" type="function"><properties><property name="isGridInGrid" scope="normal" type="boolean" from="gridx/modules/Dod" extension-module="true"/></properties><methods><method name="constructor" scope="prototype" type="function" from="gridx/support/query/query"><parameters><parameter name="selector" type="undefined" usage="required"/><parameter name="context" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method></methods><parameters><parameter name="selector" type="undefined" usage="required"/><parameter name="context" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></object><object location="gridx/modules/VLayout" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
 For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
@@ -1541,7 +1537,8 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
 </description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: columnWidth.
 Manages column width distribution, allow grid autoWidth and column autoResize.&lt;/p>
-</summary></object><object location="gridx/modules/Focus" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+</summary></object><object location="gridx/modules/Focus" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="enabled" scope="prototype" type="Boolean" from="gridx/modules/Focus"><summary>&lt;p>Whether keyboar support is enabled for gridx. Default to true on desktop, false on touch device.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
 For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
@@ -1711,7 +1708,7 @@ never be horizontal scroller bar.&lt;/p>
 </summary></method><method name="resize" scope="prototype" type="function" from="gridx/Grid" tags="public"><parameters><parameter name="changeSize" type="Object" usage="optional"><summary>&lt;p>An object like {w: ..., h: ...}.
 If omitted, the grid will re-layout itself in current width/height.&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Resize the grid using given width and height.&lt;/p>
-</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_escapeId" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCopyEvent" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
+</summary></method><method name="_onResizeBegin" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_onResizeEnd" scope="prototype" type="function" from="gridx/Grid"><parameters/><return-types/></method><method name="_escapeId" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_initEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="objNames" type="undefined" usage="required"/><parameter name="evtNames" type="undefined" usage="required"/></parameters><return-types/></method><method name="_connectEvents" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="node" type="undefined" usage="required"/><parameter name="connector" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types/></method><method name="_isConnected" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="eventName" type="undefined" usage="required"/></parameters><return-types><return-type type="boolean"/></return-types></method><method name="_isCtrlKey" scope="prototype" type="function" from="gridx/Grid"><parameters><parameter name="evt" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types><summary>&lt;p>On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
 if you need to implement some handler for Ctrl+click.&lt;/p>
 </summary></method><method name="setStore" scope="prototype" type="function" from="gridx/core/Core"><parameters><parameter name="store" type="undefined" usage="required"><summary>&lt;p>The new data store&lt;/p>
 </summary></parameter></parameters><return-types/><summary>&lt;p>Change the store for grid.&lt;/p>
@@ -1917,7 +1914,7 @@ That means if the current focused element is the last one in the current cell, t
 will focus the first focusable element in the next cell.&lt;/p>
 </summary></property><property name="widgetsInCell" scope="prototype" type="Boolean" from="gridx/modules/CellWidget"><summary>&lt;p>Indicating whether this column should use this CellWidget module.
 CellWidget module reuses widgets in cell, so if there is no widgets in cell, you don&amp;#39;t need this module at all.&lt;/p>
-</summary></property></properties><methods><method name="decorator" scope="prototype" type="function" from="gridx/modules/CellWidget"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>html string.&lt;/p>
+</summary></property><property name="allowEventBubble" scope="prototype" type="boolean" from="gridx/modules/CellWidget"/></properties><methods><method name="decorator" scope="prototype" type="function" from="gridx/modules/CellWidget"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>html string.&lt;/p>
 </return-description><summary>&lt;p>This decorator function is slightly different from the one when this module is not used.
 This function should return a template string (see the doc for template string in dijit._TemplatedMixin
 and dijit._WidgetsInTemplateMixin). 
@@ -2264,10 +2261,10 @@ Just like data-dojo-props for a widget.&lt;/p>
 This property is only effective when toEditor is not provided.&lt;/p>
 </summary></property><property name="valueField" scope="prototype" type="String" from="gridx/modules/Edit"><summary>&lt;p>The property name of the editor used to take the data. In most cases it is &amp;quot;value&amp;quot;,
 so editor.set(&amp;#39;value&amp;#39;, ...) can do the job.&lt;/p>
-</summary></property></properties><methods><method name="toEditor" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="storeData" type="undefined" usage="required"/><parameter name="gridData" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>By default the dijit used in an editing cell will use store value.
+</summary></property></properties><methods><method name="toEditor" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="storeData" type="undefined" usage="required"/><parameter name="gridData" type="undefined" usage="required"/><parameter name="cell" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>By default the dijit used in an editing cell will use store value.
 If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
 while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.&lt;/p>
-</summary></method><method name="fromEditor" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="valueInEditor" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>By default when applying an editing cell, the value of the editor dijit will be retreived by get(&amp;#39;value&amp;#39;) and
+</summary></method><method name="fromEditor" scope="prototype" type="function" from="gridx/modules/Edit"><parameters><parameter name="valueInEditor" type="undefined" usage="required"/><parameter name="cell" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>By default when applying an editing cell, the value of the editor dijit will be retreived by get(&amp;#39;value&amp;#39;) and
 directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
 to get a suitable value from editor.&lt;/p>
 </summary></method></methods><summary>&lt;p>Arguments for the editor.&lt;/p>
@@ -3268,7 +3265,10 @@ This property can be omitted.&lt;/p>
 </summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
 </summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
 </summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
-</summary></property><property name="before" scope="normal" type="undefined" from="gridx/modules/filter/FilterBar" extension-module="true"/><property name="after" scope="normal" type="undefined" from="gridx/modules/filter/FilterBar" extension-module="true"/></properties><methods><method name="setupQuery" scope="prototype" type="function" from="gridx/modules/Filter"><parameters><parameter name="obj" type="undefined" usage="required"/></parameters><return-types/></method><method name="setFilter" scope="prototype" type="function" from="gridx/modules/Filter"><parameters/><return-types/><summary>&lt;p>Apply function &lt;em>checker&lt;/em> as the filter condition to filter every row.&lt;/p>
+</summary></property><property name="before" scope="normal" type="undefined" from="gridx/modules/filter/FilterBar" extension-module="true"/><property name="after" scope="normal" type="undefined" from="gridx/modules/filter/FilterBar" extension-module="true"/></properties><methods><method name="setupQuery" scope="prototype" type="function" from="gridx/modules/Filter"><parameters><parameter name="obj" type="undefined" usage="required"/></parameters><return-types/></method><method name="setFilter" scope="prototype" type="function" from="gridx/modules/Filter"><parameters><parameter name="checker" type="undefined" usage="required"><summary>&lt;p>A function only returning TRUE or FALSE. It is used to decide whether a row should survive.
+If it is null (or anything invalid here), then clear the current filter.&lt;/p>
+</summary></parameter><parameter name="skipUpdateBody" type="Boolean" usage="optional"><summary>&lt;p>Whether to immediately update grid UI after filtering.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Apply function &lt;em>checker&lt;/em> as the filter condition to filter every row.&lt;/p>
 </summary></method><method name="getFilter" scope="prototype" type="function" from="gridx/modules/Filter"><parameters/><return-types><return-type type="undefined"/></return-types><summary>&lt;p>Return the current checker function.&lt;/p>
 </summary></method><method name="refresh" scope="prototype" type="function" from="gridx/modules/Filter"><parameters/><return-types/><summary>&lt;p>Re-filter the grid with current filter. Useful when data is changed.&lt;/p>
 </summary></method><method name="onFilter" scope="prototype" type="function" from="gridx/modules/Filter"><parameters/><return-types/></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
@@ -3901,7 +3901,175 @@ It loads data from server side and create extra rows at the top.&lt;/p>
 Only support single sort now&lt;/p>
 </summary></method></methods><summary>&lt;p>Provide sort api for the grid
 and provide a single UI in the header like traditional grid sorting.&lt;/p>
-</summary></object><object location="gridx/modules/Bar" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="top" scope="prototype" type="__BarItem[]" from="gridx/modules/Bar"><summary>&lt;p>An array of bar content declarations. Located above grid header.
+</summary></object><object location="gridx/modules/AutoPagedBody" type="constructor" classlike="true" superclass="gridx/modules/Body"><properties><property name="loadingInfo" scope="prototype" type="String" from="gridx/modules/Body"><summary>&lt;p>The loading message shown in grid body. Default to use nls files.&lt;/p>
+</summary></property><property name="emptyInfo" scope="prototype" type="String" from="gridx/modules/Body"><summary>&lt;p>The message shown in grid body when there&amp;#39;s no row to show. Default to use nls files.&lt;/p>
+</summary></property><property name="loadFailInfo" scope="prototype" type="String" from="gridx/modules/Body"><summary>&lt;p>The error message shown in grid body when there&amp;#39;s some error orrured during loading. Default to use nls files.&lt;/p>
+</summary></property><property name="rowHoverEffect" scope="prototype" type="Boolean" from="gridx/modules/Body"><summary>&lt;p>Whether to show a visual effect when mouse hovering a row.&lt;/p>
+</summary></property><property name="stuffEmptyCell" scope="prototype" type="Boolean" from="gridx/modules/Body"><summary>&lt;p>Whether to stuff a cell with &amp;nbsp; if it is empty.&lt;/p>
+</summary></property><property name="renderWholeRowOnSet" scope="prototype" type="Boolean" from="gridx/modules/Body"><summary>&lt;p>If true, the whole row will be re-rendered even if only one field has changed.
+Default to false, so that only one cell will be re-rendered editing that cell.&lt;/p>
+</summary></property><property name="renderStart" scope="prototype" type="Integer" from="gridx/modules/Body" tags="readonly"><summary>&lt;p>The visual row index of the first renderred row in the current body&lt;/p>
+</summary></property><property name="renderCount" scope="prototype" type="Integer" from="gridx/modules/Body" tags="readonly"><summary>&lt;p>The count of renderred rows in the current body.&lt;/p>
+</summary></property><property name="autoUpdate" scope="prototype" type="Boolean" from="gridx/modules/Body" private="true" tags="private"><summary>&lt;p>Update grid body automatically when onNew/onSet/onDelete is fired&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="compareOnSet" scope="prototype" type="Function" from="gridx/modules/Body"><parameters><parameter name="v1" type="undefined" usage="required"/><parameter name="v2" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>When data is changed in store, compare the old data and the new data of grid, return true if
+they are the same, false if not, so that the body can decide whether to refresh the corresponding cell.&lt;/p>
+</summary></method><method name="getRowNode" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="View.__RowInfo" usage="required"><summary>&lt;p>A row info object containing row index or row id&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The DOM node of the row. Null if not found.&lt;/p>
+</return-description><summary>&lt;p>Get the DOM node of a row&lt;/p>
+</summary></method><method name="getCellNode" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="args" type="View.__CellInfo" usage="required"><summary>&lt;p>A cell info object containing sufficient info&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The DOM node of the cell. Null if not found.&lt;/p>
+</return-description><summary>&lt;p>Get the DOM node of a cell&lt;/p>
+</summary></method><method name="refresh" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="start" type="Integer" usage="optional"><summary>&lt;p>The visual row index to start refresh. If omitted, default to 0.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A deferred object indicating when the refreshing process is finished.&lt;/p>
+</return-description><summary>&lt;p>Refresh the grid body&lt;/p>
+</summary></method><method name="refreshCell" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="rowVisualIndex" type="Integer" usage="required"><summary>&lt;p>The visual index of the row of this cell&lt;/p>
+</summary></parameter><parameter name="columnIndex" type="Integer" usage="required"><summary>&lt;p>The index of the column of this cell&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>A deferred object indicating when this refreshing process is finished.&lt;/p>
+</return-description><summary>&lt;p>Refresh a single cell&lt;/p>
+</summary></method><method name="onAfterRow" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="row" type="gridx.core.Row" usage="required"><summary>&lt;p>A row object representing this row.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a row is created, data is filled in, and its node is inserted into the dom tree.&lt;/p>
+</summary></method><method name="onAfterCell" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="cell" type="grid.core.Cell" usage="required"><summary>&lt;p>A cell object representing this cell&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a cell is updated by cell editor (or store data change), or by cell refreshing.
+Note this is not fired when rendering the whole grid. Use onAfterRow in that case.&lt;/p>
+</summary></method><method name="onRender" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="start" type="Integer" usage="required"><summary>&lt;p>The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.&lt;/p>
+</summary></parameter><parameter name="count" type="Integer" usage="required"><summary>&lt;p>The count of rows that is affected by this rendering. If omitted, all rows from start are affected.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Fired everytime the grid body content is rendered or updated.&lt;/p>
+</summary></method><method name="onUnrender" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fired when a row is unrendered (removed from the grid dom tree).
+Usually, this event is only useful when using virtual scrolling.&lt;/p>
+</summary></method><method name="onDelete" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fired when a row in current view is deleted from the store.
+Note if the deleted row is not visible in current view, this event will not fire.&lt;/p>
+</summary></method><method name="onSet" scope="prototype" type="function" from="gridx/modules/Body"><parameters><parameter name="row" type="gridx.core.Row" usage="required"><summary>&lt;p>A row object representing the updated row.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a row in current view is updated in store.&lt;/p>
+</summary></method><method name="onMoveToCell" scope="prototype" type="function" from="gridx/modules/Body" private="true" tags="private"><parameters/><return-types/><summary>&lt;p>Fired when the focus is moved to a body cell by keyboard.&lt;/p>
+</summary></method><method name="onEmpty" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fired when there&amp;#39;s no rows in current body view.&lt;/p>
+</summary></method><method name="onLoadFail" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fire when there&amp;#39;s an error occured when loading data.&lt;/p>
+</summary></method><method name="onForcedScroll" scope="prototype" type="function" from="gridx/modules/Body" private="true" tags="private"><parameters/><return-types/><summary>&lt;p>Fired when the body needs to fetch more data, but there&amp;#39;s no trigger to the scroller.
+This is an inner mechanism to solve some problems when using virtual scrolling or pagination.
+This event should not be used by grid users.&lt;/p>
+</summary></method><method name="collectCellWrapper" scope="prototype" type="function" from="gridx/modules/Body" private="true" tags="private"><parameters/><return-types/><summary>&lt;p>Fired when a cell is being rendered, so as to collect wrappers for the content in this cell.
+This is currently an inner mechanism used to implement widgets in cell and tree node.&lt;/p>
+</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
+</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
+At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+do not need to load can be used here.
+Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
+if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+module B.preload.
+This function can be omitted.&lt;/p>
+</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
+</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
+and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
+this might be an async process), this.loaded.callback() must be called to tell any other modules that
+depend on this module.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/modules/Body"/></mixins><summary>&lt;p>module name: body.
+&lt;/p>
+</summary></object><object location="gridx/modules/_PagedBodyMixin" type="constructor" classlike="true"><properties><property name="pageSize" scope="prototype" type="Integer" from="gridx/modules/_PagedBodyMixin"><summary>&lt;p>The row count in one page. Default to the pageSize of grid cache. If using cache has no pageSize, default to 20.
+Users can directly set grid parameter pageSize to set both the cache pageSize and the body pageSize.
+If using bodyPageSize, it&amp;#39;ll be different from the cache page size, but that&amp;#39;s also okay.&lt;/p>
+</summary></property></properties><methods/></object><object location="gridx/modules/Bar" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="top" scope="prototype" type="__BarItem[]" from="gridx/modules/Bar"><summary>&lt;p>An array of bar content declarations. Located above grid header.
 The top bar is a big html table, and every content occupies a cell in it.
 If it is a single demension array, then the top bar will contain only one row.
 If it is a 2 demension array, then every sub-array represents a row.&lt;/p>
@@ -4197,9 +4365,272 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: dod.
-Details on demand.&lt;/p>
-</summary></object><object location="gridx/modules/GroupHeader" type="constructor" classlike="true" superclass="gridx/modules/Header"><properties><property name="groups" scope="prototype" type="null" from="gridx/modules/GroupHeader"><summary>&lt;p>Configure the header group structure. Must be an array.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Details on demand.&lt;/p>
+</summary></object><object location="gridx/modules/ExpandableColumn" type="constructor" classlike="true" superclass="gridx/modules/HiddenColumns"><properties><property name="name" scope="prototype" type="string" from="gridx/modules/ExpandableColumn"/><property name="_parentCols" scope="prototype" type="null" from="gridx/modules/ExpandableColumn"/><property name="required" scope="prototype" type="Array" from="gridx/modules/ExpandableColumn"/><property name="init" scope="prototype" type="String[]" from="gridx/modules/HiddenColumns"><summary>&lt;p>IDs of columns to be hidden when grid is initially created.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="preload" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters/><return-types/></method><method name="load" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="startup" type="undefined" usage="required"/></parameters><return-types/></method><method name="expand" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="colId" type="undefined" usage="required"/></parameters><return-types/></method><method name="collapse" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="colId" type="undefined" usage="required"/></parameters><return-types/></method><method name="_updateUI" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters/><return-types/><summary>&lt;p>Called when the header is changed, need to sync expando bar.&lt;/p>
+</summary></method><method name="_createExpandNode" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="i" type="undefined" usage="required"/><parameter name="col" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_headerCellByColumnId" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="colId" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_expandoCellByColumnId" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="colId" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_refreshHeader" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters/><return-types/></method><method name="_colById" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="id" type="undefined" usage="required"/></parameters><return-types><return-type type="undefined"/></return-types></method><method name="_focusById" scope="prototype" type="function" from="gridx/modules/ExpandableColumn"><parameters><parameter name="colId" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Focus the column header cell by column id&lt;/p>
+</summary></method><method name="add" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters><parameter name="colId" type="String|gridx.core.Column..." usage="required"><summary>&lt;p>Column IDs can be provided directly as arguments.
+gridx.core.Column object can also be provided.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Hide all the given columns in arguments.&lt;/p>
+</summary><examples><example>&lt;pre>&lt;code>//Hide columnA
+grid.hiddenColumns.add(&amp;quot;columnA&amp;quot;);
+//Hide columnB, columnC and columnD
+grid.hiddenColumns.add(&amp;quot;columnB&amp;quot;, &amp;quot;columnC&amp;quot;, &amp;quot;columnD&amp;quot;);
+//Column object is also acceptable.
+var col = grid.column(&amp;quot;columnA&amp;quot;);
+grid.hiddenColumns.add(col);&lt;/code>&lt;/pre>
+</example></examples></method><method name="remove" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters><parameter name="colId" type="String|gridx.core.Column..." usage="required"><summary>&lt;p>Column IDs can be provided directly as arguments.
+gridx.core.Column object can also be provided.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Show all the given columns in arguments.&lt;/p>
+</summary><examples><example>&lt;pre>&lt;code>//show columnA
+grid.hiddenColumns.remove(&amp;quot;columnA&amp;quot;);
+//show columnB, columnC and columnD
+grid.hiddenColumns.remove(&amp;quot;columnB&amp;quot;, &amp;quot;columnC&amp;quot;, &amp;quot;columnD&amp;quot;);
+//Column object is also acceptable.
+var col = { id: &amp;quot;columnA&amp;quot;, ...};    //Can also be a column object retreived before it is hidden.
+grid.hiddenColumns.remove(col);&lt;/code>&lt;/pre>
+</example></examples></method><method name="clear" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters/><return-types/><summary>&lt;p>Show all hidden columns.&lt;/p>
+</summary></method><method name="get" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>An array of current hidden column IDs.&lt;/p>
+</return-description><summary>&lt;p>Get an array of current hidden column IDs.&lt;/p>
+</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/modules/HiddenColumns"/></mixins></object><object location="gridx/modules/HiddenColumns" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="init" scope="prototype" type="String[]" from="gridx/modules/HiddenColumns"><summary>&lt;p>IDs of columns to be hidden when grid is initially created.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="add" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters><parameter name="colId" type="String|gridx.core.Column..." usage="required"><summary>&lt;p>Column IDs can be provided directly as arguments.
+gridx.core.Column object can also be provided.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Hide all the given columns in arguments.&lt;/p>
+</summary><examples><example>&lt;pre>&lt;code>//Hide columnA
+grid.hiddenColumns.add(&amp;quot;columnA&amp;quot;);
+//Hide columnB, columnC and columnD
+grid.hiddenColumns.add(&amp;quot;columnB&amp;quot;, &amp;quot;columnC&amp;quot;, &amp;quot;columnD&amp;quot;);
+//Column object is also acceptable.
+var col = grid.column(&amp;quot;columnA&amp;quot;);
+grid.hiddenColumns.add(col);&lt;/code>&lt;/pre>
+</example></examples></method><method name="remove" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters><parameter name="colId" type="String|gridx.core.Column..." usage="required"><summary>&lt;p>Column IDs can be provided directly as arguments.
+gridx.core.Column object can also be provided.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Show all the given columns in arguments.&lt;/p>
+</summary><examples><example>&lt;pre>&lt;code>//show columnA
+grid.hiddenColumns.remove(&amp;quot;columnA&amp;quot;);
+//show columnB, columnC and columnD
+grid.hiddenColumns.remove(&amp;quot;columnB&amp;quot;, &amp;quot;columnC&amp;quot;, &amp;quot;columnD&amp;quot;);
+//Column object is also acceptable.
+var col = { id: &amp;quot;columnA&amp;quot;, ...};    //Can also be a column object retreived before it is hidden.
+grid.hiddenColumns.remove(col);&lt;/code>&lt;/pre>
+</example></examples></method><method name="clear" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters/><return-types/><summary>&lt;p>Show all hidden columns.&lt;/p>
+</summary></method><method name="get" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>An array of current hidden column IDs.&lt;/p>
+</return-description><summary>&lt;p>Get an array of current hidden column IDs.&lt;/p>
+</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
+</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
+At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+do not need to load can be used here.
+Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
+if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+module B.preload.
+This function can be omitted.&lt;/p>
+</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
+</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
+and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
+this might be an async process), this.loaded.callback() must be called to tell any other modules that
+depend on this module.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: hiddenColumns.
+Hide columns.&lt;/p>
+</summary><description>&lt;p>Hide columns and change the column array at the same time so that other grid features 
+are not affected by hidden columns. That means, hidden columns can no longer be accessed 
+through grid.columns() function.&lt;/p>
+</description></object><object location="gridx/modules/GroupHeader" type="constructor" classlike="true" superclass="gridx/modules/Header"><properties><property name="groups" scope="prototype" type="null" from="gridx/modules/GroupHeader"><summary>&lt;p>Configure the header group structure. Must be an array.&lt;/p>
 </summary></property><property name="hidden" scope="prototype" type="Boolean" from="gridx/modules/Header"><summary>&lt;p>Whether the header UI should be hidden.&lt;/p>
 </summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
@@ -4658,152 +5089,7 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: headerRegions.
 This module makes it easy to add custom contents to column header.
 Other modules such as NestedSort or HeaderMenu can be based upon this module.&lt;/p>
-</summary></object><object location="gridx/modules/HiddenColumns" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="init" scope="prototype" type="String[]" from="gridx/modules/HiddenColumns"><summary>&lt;p>IDs of columns to be hidden when grid is initially created.&lt;/p>
-</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
-instead of this module itself. Two different modules can have the same name, so that they provide
-two different implementations of this API set.
-For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
-They can be used in two different grids in one page (maybe due to different requirements), 
-without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
-without re-writing any other modules.
-This property is mandatary.&lt;/p>
-</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
-This property can be omitted.&lt;/p>
-</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
-they must be loaded before this module loads.
-This property can be omitted.&lt;/p>
-</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
-This property can be omitted.&lt;/p>
-</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
-</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
-</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
-</summary></property></properties><methods><method name="add" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters><parameter name="colId" type="String|gridx.core.Column..." usage="required"><summary>&lt;p>Column IDs can be provided directly as arguments.
-gridx.core.Column object can also be provided.&lt;/p>
-</summary></parameter></parameters><return-types/><summary>&lt;p>Hide all the given columns in arguments.&lt;/p>
-</summary><examples><example>&lt;pre>&lt;code>//Hide columnA
-grid.hiddenColumns.add(&amp;quot;columnA&amp;quot;);
-//Hide columnB, columnC and columnD
-grid.hiddenColumns.add(&amp;quot;columnB&amp;quot;, &amp;quot;columnC&amp;quot;, &amp;quot;columnD&amp;quot;);
-//Column object is also acceptable.
-var col = grid.column(&amp;quot;columnA&amp;quot;);
-grid.hiddenColumns.add(col);&lt;/code>&lt;/pre>
-</example></examples></method><method name="remove" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters><parameter name="colId" type="String|gridx.core.Column..." usage="required"><summary>&lt;p>Column IDs can be provided directly as arguments.
-gridx.core.Column object can also be provided.&lt;/p>
-</summary></parameter></parameters><return-types/><summary>&lt;p>Show all the given columns in arguments.&lt;/p>
-</summary><examples><example>&lt;pre>&lt;code>//show columnA
-grid.hiddenColumns.remove(&amp;quot;columnA&amp;quot;);
-//show columnB, columnC and columnD
-grid.hiddenColumns.remove(&amp;quot;columnB&amp;quot;, &amp;quot;columnC&amp;quot;, &amp;quot;columnD&amp;quot;);
-//Column object is also acceptable.
-var col = { id: &amp;quot;columnA&amp;quot;, ...};    //Can also be a column object retreived before it is hidden.
-grid.hiddenColumns.remove(col);&lt;/code>&lt;/pre>
-</example></examples></method><method name="clear" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters/><return-types/><summary>&lt;p>Show all hidden columns.&lt;/p>
-</summary></method><method name="get" scope="prototype" type="function" from="gridx/modules/HiddenColumns"><parameters/><return-types><return-type type="any"/></return-types><return-description>&lt;p>An array of current hidden column IDs.&lt;/p>
-</return-description><summary>&lt;p>Get an array of current hidden column IDs.&lt;/p>
-</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
-</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
-That is, any property of object type in grid will be preserved. For example, if this function
-returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
-grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
-
-&lt;/p>
-&lt;pre>&lt;code>{
-    abc: {
-        jkl: &amp;#39;mno&amp;#39;,
-        def: &amp;#39;ghi&amp;#39;
-    }
-}&lt;/code>&lt;/pre>
-&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
-
-&lt;/p>
-&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
-This function can be omitted.&lt;/p>
-</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
-</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
-At this time point, all the module APIs are already accessable, so all the mothods of those modules that
-do not need to load can be used here.
-Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
-if module A forcedly depends on module B, it is still possible that module A.preload is called before 
-module B.preload.
-This function can be omitted.&lt;/p>
-</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
-</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
-and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
-this might be an async process), this.loaded.callback() must be called to tell any other modules that
-depend on this module.&lt;/p>
-</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
-</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
-</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
-can not pass validation, the default value will be used.
-Note if this function is provided, defaultValue must also be provided.&lt;/p>
-</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
-</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
-</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
-One is to write them in the module declaration object:
-
-&lt;/p>
-&lt;pre>&lt;code>var grid = new Grid({
-    ......
-    modules: [
-        {
-            moduleClass: gridx.modules.Pagination,
-            initialPage: 1      //Put module arguments in module declaration object
-        }
-    ],
-    ......
-});&lt;/code>&lt;/pre>
-&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
-
-&lt;/p>
-&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
-module. This would be too demanding for a grid user, so we need another approach.
-The other way is to treat them as grid arguments:
-
-&lt;/p>
-&lt;pre>&lt;code>var grid = new Grid({
-    ......
-    modules: [
-        gridx.modules.Pagination
-    ],
-    paginationInitialPage: 1,   //Treat module arguments as grid arguments
-    ......
-});&lt;/code>&lt;/pre>
-&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
-
-&lt;/p>
-&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
-front of every module argument:
-    &amp;quot;pagination&amp;quot; -- module name
-&lt;/p>
-&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
----------------------------------
-paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
-&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
-
-&lt;/p>
-&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
-they are declared. The priority of every kinds of declarations are:
-    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
-After this method, the argument will automatically become module argument. But it is still
-recommended to alway access arguments by this.arg(...);&lt;/p>
-</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
-</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
-</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
-</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
-But in this API, the scope argument is placed behind the listener function, so as to
-avoid arguemnt checking logic.
-This method also allows conditional event firing using the flag argument.&lt;/p>
-</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
-</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
-</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
-</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
-</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: hiddenColumns.
-Hide columns.&lt;/p>
-</summary><description>&lt;p>Hide columns and change the column array at the same time so that other grid features 
-are not affected by hidden columns. That means, hidden columns can no longer be accessed 
-through grid.columns() function.&lt;/p>
-</description></object><object location="gridx/modules/IndirectSelect" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="all" scope="prototype" type="Boolean" from="gridx/modules/IndirectSelect"><summary>&lt;p>Whether the &amp;quot;select all&amp;quot; checkbox is allowed to appear.&lt;/p>
+</summary></object><object location="gridx/modules/IndirectSelect" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="all" scope="prototype" type="Boolean" from="gridx/modules/IndirectSelect"><summary>&lt;p>Whether the &amp;quot;select all&amp;quot; checkbox is allowed to appear.&lt;/p>
 </summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
@@ -5173,7 +5459,141 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: indirectSelect.
 Provide a check box (or radio button) column to select rows.&lt;/p>
 </summary><description>&lt;p>This module depends on &amp;quot;rowHeader&amp;quot; and &amp;quot;selectRow&amp;quot; modules.&lt;/p>
-</description></object><object location="gridx/modules/Menu" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="context" scope="prototype" type="__MenuContext" from="gridx/modules/Menu" tags="readonly"><summary>&lt;p>An object representing the current context when user triggers a context menu.
+</description></object><object location="gridx/modules/Layer" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="buttonColumnWidth" scope="prototype" type="String" from="gridx/modules/Layer"><summary>&lt;p>Width of the drill-down column. Same format as column width in column definition.&lt;/p>
+</summary></property><property name="buttonColumnArgs" scope="prototype" type="Object" from="gridx/modules/Layer"><summary>&lt;p>The drill-down column can be customized by providing extra column definition parameters here.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="down" scope="prototype" type="function" from="gridx/modules/Layer"><parameters><parameter name="id" type="String" usage="required"><summary>&lt;p>A parent row ID.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Drill down one level on the row with the given ID.
+Only works if the given row exists in current layer.&lt;/p>
+</summary></method><method name="up" scope="prototype" type="function" from="gridx/modules/Layer"><parameters/><return-types/><summary>&lt;p>Drill up one level, i.e.: go to the parent layer.&lt;/p>
+</summary></method><method name="onFinish" scope="prototype" type="function" from="gridx/modules/Layer"><parameters><parameter name="args" type="__LayerOperationArgs" usage="required"><summary>&lt;p>Some args indicating whether it is drilling down or up, and on which row.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a layer operation (down or up) is done.&lt;/p>
+</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
+</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
+At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+do not need to load can be used here.
+Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
+if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+module B.preload.
+This function can be omitted.&lt;/p>
+</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
+</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
+and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
+this might be an async process), this.loaded.callback() must be called to tell any other modules that
+depend on this module.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method><method name="__LayerOperationArgs" scope="normal" type="constructor" from="gridx/modules/Layer"><parameters/><return-types/></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: Layer.
+A drill-down version of tree grid.&lt;/p>
+</summary><description>&lt;p>Add a drill-down button to every row that has children.
+Once clicked this button, child level rows slides in and current level rows slides out,
+while the parent row slides up and gets locked.
+Clicking anywhere in the locked parent row will reverse the above process so as to go back to the parent level.
+Especially suitable for mobile tree grid.&lt;/p>
+</description></object><object location="gridx/modules/Layer.__LayerOperationArgs" type="constructor" classlike="true"><properties><property name="isDown" scope="prototype" type="Boolean" from="gridx/modules/Layer"><summary>&lt;p>If true, the operation is drilling down, otherwise, it is drilling up.&lt;/p>
+</summary></property><property name="rowId" scope="prototype" type="String" from="gridx/modules/Layer"><summary>&lt;p>Only available when isDown is true. Indicating on which row it is drilling down.&lt;/p>
+</summary></property></properties><methods/><summary>&lt;p>Some context info for layer operations.&lt;/p>
+</summary></object><object location="gridx/modules/Menu" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="context" scope="prototype" type="__MenuContext" from="gridx/modules/Menu" tags="readonly"><summary>&lt;p>An object representing the current context when user triggers a context menu.
 This property is updated everytime a menu of grid is popped up.
 Users can refer to this in their menu action handlers by grid.menu.context.&lt;/p>
 </summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
@@ -5432,9 +5852,6 @@ Sort multiple columns in a nested way.&lt;/p>
 </summary></object><object location="gridx/modules/PagedBody" type="constructor" classlike="true" superclass="gridx/modules/Body"><properties><property name="maxPageCount" scope="prototype" type="Integer" from="gridx/modules/PagedBody"><summary>&lt;p>The max allowed page count. If this value &amp;gt; 0, when visible pages exceeds this value, some previous pages will be destroyed
 and the &amp;quot;load previous&amp;quot; button will be shown. If this value &amp;lt;= 0, grid will never destroy and previous pages, 
 and the &amp;quot;load previous&amp;quot; button will never be shown. Default to 0.&lt;/p>
-</summary></property><property name="pageSize" scope="prototype" type="Integer" from="gridx/modules/PagedBody"><summary>&lt;p>The row count in one page. Default to the pageSize of grid cache. If using cache has no pageSize, default to 20.
-Users can directly set grid parameter pageSize to set both the cache pageSize and the body pageSize.
-If using bodyPageSize, it&amp;#39;ll be different from the cache page size, but that&amp;#39;s also okay.&lt;/p>
 </summary></property><property name="loadingInfo" scope="prototype" type="String" from="gridx/modules/Body"><summary>&lt;p>The loading message shown in grid body. Default to use nls files.&lt;/p>
 </summary></property><property name="emptyInfo" scope="prototype" type="String" from="gridx/modules/Body"><summary>&lt;p>The message shown in grid body when there&amp;#39;s no row to show. Default to use nls files.&lt;/p>
 </summary></property><property name="loadFailInfo" scope="prototype" type="String" from="gridx/modules/Body"><summary>&lt;p>The error message shown in grid body when there&amp;#39;s some error orrured during loading. Default to use nls files.&lt;/p>
@@ -5494,6 +5911,7 @@ Note if the deleted row is not visible in current view, this event will not fire
 </summary></parameter></parameters><return-types/><summary>&lt;p>Fired when a row in current view is updated in store.&lt;/p>
 </summary></method><method name="onMoveToCell" scope="prototype" type="function" from="gridx/modules/Body" private="true" tags="private"><parameters/><return-types/><summary>&lt;p>Fired when the focus is moved to a body cell by keyboard.&lt;/p>
 </summary></method><method name="onEmpty" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fired when there&amp;#39;s no rows in current body view.&lt;/p>
+</summary></method><method name="onLoadFail" scope="prototype" type="function" from="gridx/modules/Body"><parameters/><return-types/><summary>&lt;p>Fire when there&amp;#39;s an error occured when loading data.&lt;/p>
 </summary></method><method name="onForcedScroll" scope="prototype" type="function" from="gridx/modules/Body" private="true" tags="private"><parameters/><return-types/><summary>&lt;p>Fired when the body needs to fetch more data, but there&amp;#39;s no trigger to the scroller.
 This is an inner mechanism to solve some problems when using virtual scrolling or pagination.
 This event should not be used by grid users.&lt;/p>
@@ -5901,7 +6319,7 @@ all these features will be restored.
 By default use cookie, but users can also provide custom put and get functions.
 Note: since dojox.storage is still experimental, and with HTML5 we will hardly need
 things like gears or behavior storage, so we aren&amp;#39;t supporting dojox.storage by default.&lt;/p>
-</summary></object><object location="gridx/modules/RowLock" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+</summary></object><object location="gridx/modules/Puller" type="undefined"><properties/><methods/></object><object location="gridx/modules/RowLock" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
 For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
@@ -6019,9 +6437,391 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: rowLock.
-Lock up some rows at the top of the grid body, so that they don&amp;#39;t scroll vertically.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>Lock up some rows at the top of the grid body, so that they don&amp;#39;t scroll vertically.&lt;/p>
 </summary><description>&lt;p>This module is not compatible with VirtualVScroller.&lt;/p>
+</description></object><object location="gridx/modules/SlantedHeader" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
+</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
+At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+do not need to load can be used here.
+Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
+if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+module B.preload.
+This function can be omitted.&lt;/p>
+</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
+</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
+and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
+this might be an async process), this.loaded.callback() must be called to tell any other modules that
+depend on this module.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: slantedheader.
+Slant headers including group headers.&lt;/p>
+</summary></object><object location="gridx/modules/Sort" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="initialOrder" scope="prototype" type="Object[]" from="gridx/modules/Sort"><summary>&lt;p>The initial sort order when grid is created.
+This is of the same format of the sort argument of the store fetch function.&lt;/p>
+</summary></property><property name="nested" scope="prototype" type="Boolean" from="gridx/modules/Sort"><summary>&lt;p>Whether nested sort is allowed.
+If true, CTRL+click does nested sort.
+If false, only single sort.&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="sort" scope="prototype" type="function" from="gridx/modules/Sort"><parameters><parameter name="sortData" type="undefined" usage="required"/></parameters><return-types/></method><method name="isSorted" scope="prototype" type="function" from="gridx/modules/Sort"><parameters><parameter name="colId" type="undefined" usage="required"/></parameters><return-types/></method><method name="clear" scope="prototype" type="function" from="gridx/modules/Sort"><parameters/><return-types/></method><method name="getSortData" scope="prototype" type="function" from="gridx/modules/Sort"><parameters/><return-types/></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
+</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
+At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+do not need to load can be used here.
+Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
+if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+module B.preload.
+This function can be omitted.&lt;/p>
+</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
+</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
+and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
+this might be an async process), this.loaded.callback() must be called to tell any other modules that
+depend on this module.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: sort.
+A sort module suitable for both nested sort and single sort.&lt;/p>
+</summary></object><object location="gridx/modules/StructureSwitch" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="default" scope="prototype" type="String" from="gridx/modules/StructureSwitch"><summary>&lt;p>The name of the default structure profile. Should exist in the config parameter.
+If not, every column will be shown.&lt;/p>
+</summary></property><property name="orientation" scope="prototype" type="Boolean" from="gridx/modules/StructureSwitch"><summary>&lt;p>If true, gridx automatically checks which profile to use on every &amp;quot;orientationchange&amp;quot; event.&lt;/p>
+</summary></property><property name="config" scope="prototype" type="Object" from="gridx/modules/StructureSwitch"><summary>&lt;p>An association array to define column structure profiles.
+Key is profile name. Value is an array of column IDs.&lt;/p>
+</summary></property><property name="condition" scope="prototype" type="Object" from="gridx/modules/StructureSwitch"><summary>&lt;p>An association array to define trigger-conditions for every profile.
+Key is profile name (should exists in the config parameter).
+Value is a predicate function accepting grid as its parameter:
+For example:
+function(grid){
+    return Math.abs(window.orientation) == 90;
+}&lt;/p>
+</summary></property><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
+instead of this module itself. Two different modules can have the same name, so that they provide
+two different implementations of this API set.
+For example, simple row selection and extended row selection are two modules implementing a same set of APIs.
+They can be used in two different grids in one page (maybe due to different requirements), 
+without worrying about conflicting with eachother. And any module of grid can be replaced by a new implementation
+without re-writing any other modules.
+This property is mandatary.&lt;/p>
+</summary></property><property name="forced" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. All these modules must exist, and have finished loading before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="optional" scope="prototype" type="String[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules can be absent, but if they do exist, 
+they must be loaded before this module loads.
+This property can be omitted.&lt;/p>
+</summary></property><property name="required" scope="prototype" type="[]" from="gridx/core/_Module"><summary>&lt;p>An array of module names. These modules must exist, but they can be loaded at any time.
+This property can be omitted.&lt;/p>
+</summary></property><property name="grid" scope="prototype" type="gridx.Grid" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid&lt;/p>
+</summary></property><property name="model" scope="prototype" type="gridx.core.model.Model" from="gridx/core/_Module"><summary>&lt;p>Reference to the grid model&lt;/p>
+</summary></property><property name="loaded" scope="prototype" type="dojo.Deferred" from="gridx/core/_Module"><summary>&lt;p>Indicate when this module is completely loaded.&lt;/p>
+</summary></property></properties><methods><method name="to" scope="prototype" type="function" from="gridx/modules/StructureSwitch"><parameters><parameter name="profileName" type="String" usage="required"><summary>&lt;p>The name of the target profile.
+If set to empty string &amp;quot;&amp;quot;, switch to show all columns.
+If invalid, no-op.&lt;/p>
+</summary></parameter></parameters><return-types/><summary>&lt;p>Switch to a column structure indicated by the profileName.
+Returns true if switched to the target profile, false if not.&lt;/p>
+</summary></method><method name="check" scope="prototype" type="function" from="gridx/modules/StructureSwitch"><parameters/><return-types/><summary>&lt;p>Checks every pre-defined condition predicate, if any of them returns true,
+and the corresponding profile exists, switch to that profile.
+Returns the name of the profile if found a match, null if not.&lt;/p>
+</summary></method><method name="getAPIPath" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>This function defines how to access this module&amp;#39;s methods from the grid object.&lt;/p>
+</summary><description>&lt;p>The returned object of this function will be &amp;quot;recursively&amp;quot; mixed into the grid object.
+That is, any property of object type in grid will be preserved. For example, if this function
+returns { abc: { def: &amp;#39;ghi&amp;#39;} }, and the grid already has a property called &amp;quot;abc&amp;quot;, and 
+grid.abc is { jkl: &amp;#39;mno&amp;#39;}. Then after mixin, grid.abc will still have this jkl property:
+
+&lt;/p>
+&lt;pre>&lt;code>{
+    abc: {
+        jkl: &amp;#39;mno&amp;#39;,
+        def: &amp;#39;ghi&amp;#39;
+    }
+}&lt;/code>&lt;/pre>
+&lt;p>This mechanism makes it possible for different modules to provide APIs to a same sub-API object.
+
+&lt;/p>
+&lt;p>Sub-API object is used to provide structures for grid APIs, so as to avoid API conflicts as much as possible.
+This function can be omitted.&lt;/p>
+</description></method><method name="preload" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Preload this module.&lt;/p>
+</summary><description>&lt;p>If this function exists, it is called after all modules are created (&amp;quot;new&amp;quot;-ed), but not yet loaded.
+At this time point, all the module APIs are already accessable, so all the mothods of those modules that
+do not need to load can be used here.
+Note that this function is not the &amp;quot;load&amp;quot; process, so the module dependancy is not honored. For example,
+if module A forcedly depends on module B, it is still possible that module A.preload is called before 
+module B.preload.
+This function can be omitted.&lt;/p>
+</description></method><method name="load" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="args" type="undefined" usage="required"/><parameter name="deferStartup" type="undefined" usage="required"/></parameters><return-types/><summary>&lt;p>Completely load this module.&lt;/p>
+</summary><description>&lt;p>This is the formal loading process of this module. This function will not be called until all the &amp;quot;forced&amp;quot;
+and existing &amp;quot;optional&amp;quot; modules are loaded. When the loading process of this module is finished (Note that
+this might be an async process), this.loaded.callback() must be called to tell any other modules that
+depend on this module.&lt;/p>
+</description></method><method name="arg" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="argName" type="String" usage="required"><summary>&lt;p>The name of this argument. This is the &amp;quot;short&amp;quot; name, not the name prefixed with module name.&lt;/p>
+</summary></parameter><parameter name="defaultValue" type="anything" usage="optional"><summary>&lt;p>This value will by asigned to the argument if there&amp;#39;s no user provided values.&lt;/p>
+</summary></parameter><parameter name="validate" type="Function" usage="optional"><summary>&lt;p>This is a validation function and it must return a boolean value. If the user provided value
+can not pass validation, the default value will be used.
+Note if this function is provided, defaultValue must also be provided.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The value of this argument.&lt;/p>
+</return-description><summary>&lt;p>This method provides a normalized way to access module arguments.&lt;/p>
+</summary><description>&lt;p>There are two ways to provide module arguments when creating grid.
+One is to write them in the module declaration object:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        {
+            moduleClass: gridx.modules.Pagination,
+            initialPage: 1      //Put module arguments in module declaration object
+        }
+    ],
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>This way is straightforward, but quite verbose. And if user would like to set arguments 
+
+&lt;/p>
+&lt;p>for pre-included core modules (e.g. Header, Body), he&amp;#39;d have to explictly declare the
+module. This would be too demanding for a grid user, so we need another approach.
+The other way is to treat them as grid arguments:
+
+&lt;/p>
+&lt;pre>&lt;code>var grid = new Grid({
+    ......
+    modules: [
+        gridx.modules.Pagination
+    ],
+    paginationInitialPage: 1,   //Treat module arguments as grid arguments
+    ......
+});&lt;/code>&lt;/pre>
+&lt;p>In this way, there&amp;#39;s no need to provide a module declaration object, but one has to tell
+
+&lt;/p>
+&lt;p>grid for which module the arguments is applied. One can simply put the module name at the
+front of every module argument:
+    &amp;quot;pagination&amp;quot; -- module name
+&lt;/p>
+&lt;pre>&lt;code>&amp;quot;initialPage&amp;quot; -- module argument
+---------------------------------
+paginationInitialPage -- module argument treated as grid argument&lt;/code>&lt;/pre>
+&lt;p>Note the first letter of the module arugment must be capitalized in the combined argument.
+
+&lt;/p>
+&lt;p>This &amp;quot;arg&amp;quot; method makes it possible to access module arguments without worring about where
+they are declared. The priority of every kinds of declarations are:
+    Module argument &amp;gt; Grid argument &amp;gt; default value &amp;gt; Base class argument (inherited)
+After this method, the argument will automatically become module argument. But it is still
+recommended to alway access arguments by this.arg(...);&lt;/p>
+</description></method><method name="connect" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="obj" type="Object" usage="required"/><parameter name="e" type="String" usage="required"/><parameter name="method" type="String|Function" usage="required"/><parameter name="scope" type="Object" usage="optional"/><parameter name="flag" type="Anything" usage="required"><summary>&lt;p>If provided, the listener will only be triggered when grid._eventFlags[e] is set to flag.&lt;/p>
+</summary></parameter></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The connect handle&lt;/p>
+</return-description><summary>&lt;p>Connect an event handler to an event or function.&lt;/p>
+</summary><description>&lt;p>Similar to widget.connect, the scope of the listener will be default to this module.
+But in this API, the scope argument is placed behind the listener function, so as to
+avoid arguemnt checking logic.
+This method also allows conditional event firing using the flag argument.&lt;/p>
+</description></method><method name="batchConnect" scope="prototype" type="function" from="gridx/core/_Module"><parameters/><return-types/><summary>&lt;p>Do a lot of connects in a batch.&lt;/p>
+</summary><description>&lt;p>This method is used to optimize code size.&lt;/p>
+</description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
+</return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
+</summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: structureSwitch.
+Switch column structure by means of hidden columns.&lt;/p>
+</summary><description>&lt;p>All possible columns are declared on creation of gridx, but only a few of them are shown at a time.
+Column structure profiles are defined, each profile defines which columns to show.
+Switch profiles through API of this module, which is done by means of the HiddenColumns module.
+Especially suitable for orientation change on mobile device.&lt;/p>
 </description></object><object location="gridx/modules/SummaryBar" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="name" scope="prototype" type="String" from="gridx/core/_Module"><summary>&lt;p>The API set name of this module. This name represents the API set that this module implements, 
 instead of this module itself. Two different modules can have the same name, so that they provide
 two different implementations of this API set.
