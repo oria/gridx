@@ -43,7 +43,6 @@ define([
 	'gridx/modules/GroupHeader',
 	'gridx/modules/PagedBody',
 	'gridx/modules/AutoPagedBody',
-	'gridx/modules/MultiChannelScroller',
 	'gridx/modules/HeaderMenu',
 	'gridx/modules/SlantedHeader',
 	'gridx/modules/ExpandableColumn',
@@ -63,7 +62,7 @@ define([
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
 	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, TouchVScroller,
-	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody, MultiChannelScroller,
+	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody,
 	HeaderMenu, SlantedHeader, ExpandableColumn,
 	Layer, StructureSwitch){
 return {
@@ -111,7 +110,6 @@ return {
 	GroupHeader: GroupHeader,
 	PagedBody: PagedBody,
 	AutoPagedBody: AutoPagedBody,
-	MultiChannelScroller: MultiChannelScroller,
 	HeaderMenu: HeaderMenu,
 	SlantedHeader: SlantedHeader,
 	ExpandableColumn: ExpandableColumn,

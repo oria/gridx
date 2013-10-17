@@ -1,17 +1,12 @@
 define([
 	"dojo/_base/declare",
-	"dojo/_base/lang",
 	"dojo/query",
-	"dojo/_base/array",
 	"dojo/dom-construct",
 	"dojo/dom-class",
-	"dojo/_base/Deferred",
-	"dojo/_base/sniff",
 	"dojo/keys",
-	"dijit/a11y",
 	"./Body",
 	"./_PagedBodyMixin"
-], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, keys, a11y, Body, _PagedBodyMixin){
+], function(declare, query, domConstruct, domClass, keys, Body, _PagedBodyMixin){
 
 /*=====
 	return declare(Body, {

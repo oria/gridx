@@ -1,27 +1,19 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
-	"dojo/query",
-	"dojo/_base/array",
-	"dojo/dom-construct",
-	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
-	"dojo/_base/sniff",
-	"dojo/keys",
-	"dijit/a11y",
 	"./Body",
-	"./_PagedBodyMixin",
-	"dojo/touch"
-], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, keys, a11y, Body, _PagedBodyMixin, touch){
+	"./_PagedBodyMixin"
+], function(declare, lang, domClass, Deferred, Body, _PagedBodyMixin){
 
 /*=====
 	return declare(Body, {
 		// summary:
 		//		module name: body.
+		//		
 		// description:
-
-		pageSize: 20,
+		//		
 	});
 =====*/
 
@@ -41,7 +33,7 @@ define([
 					t._loadHandler = setTimeout(load, 10);
 				}
 			});
-			t.connect(g, '_onResizeEnd', function(){
+			t.aspect(g, '_onResizeEnd', function(){
 				if(t._checkSpace()){
 					t._load(1);
 				}
