@@ -37,29 +37,38 @@ define([
 
 	return declare(_Module, {
 		// summary:
-		//		
+		//		module name: sort.
+		//		A sort module suitable for both nested sort and single sort.
 
-		//initialOrder: Object[]
+		// initialOrder: Object[]
 		//		The initial sort order when grid is created.
 		//		This is of the same format of the sort argument of the store fetch function.
 		initialOrder: null,
 
-		//nested: Boolean
+		// nested: Boolean
 		//		Whether nested sort is allowed.
 		//		If true, CTRL+click does nested sort.
 		//		If false, only single sort.
 		nested: true,
 
 		sort: function(sortData){
+			// summary:
+			//		
 		},
 
 		isSorted: function(colId){
+			// summary:
+			//		
 		},
 
 		clear: function(){
+			// summary:
+			//		
 		},
 
 		getSortData: function(){
+			// summary:
+			//		
 		}
 	});
 =====*/
