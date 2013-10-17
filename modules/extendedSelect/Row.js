@@ -166,7 +166,7 @@ define([
 			array.forEach(args, function(arg){
 				m.markById(arg, toSelect);
 			});
-			m.when();
+			return m.when();
 		},
 
 		_markByIndex: function(args, toSelect){

@@ -173,35 +173,35 @@ define([
 			]([0, body.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 			var t = this, d,
 				allSelected,
 				body = t.grid.body,
 				model = t.model,
 				start = body.rootStart,
 				count = body.rootCount;
-			var selectedRoot = array.filter((lang.isArray(selected) && selected)|| t.grid.select.row.getSelected(), function(id){
-				return !model.treePath(id).pop();
-			});
-			
-			if(count === model.size()){
-				allSelected = count && count == selectedRoot.length;
-			}else{
-				d = new Deferred();
-				model.when({
-					start: start,
-					count: count
-				}, function(){
-					var indexes = array.filter(array.map(selectedRoot, function(id){
-						return model.idToIndex(id);
-					}), function(index){
-						return index >= start && index < start + count;
-					});
-					allSelected = count == indexes.length;
-					d.callback();
+			if(t.grid.select.row.selectByIndex && t.arg('all')){
+				var selectedRoot = array.filter(t.grid.select.row.getSelected(), function(id){
+					return !model.treePath(id).pop();
 				});
-			}
-			if(t.arg('all')){
+				
+				if(count === model.size()){
+					allSelected = count && count == selectedRoot.length;
+				}else{
+					d = new Deferred();
+					model.when({
+						start: start,
+						count: count
+					}, function(){
+						var indexes = array.filter(array.map(selectedRoot, function(id){
+							return model.idToIndex(id);
+						}), function(index){
+							return index >= start && index < start + count;
+						});
+						allSelected = count == indexes.length;
+						d.callback();
+					});
+				}
 				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
 					var node = t.grid.rowHeader.headerCellNode.firstChild;
