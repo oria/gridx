@@ -5,8 +5,9 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/aspect"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect){
+	"dojo/aspect",
+	"./cache/Sync"
+], function(require, declare, array, lang, Deferred, DeferredList, aspect, Sync){
 
 /*=====
 	return declare([], {
@@ -280,7 +281,7 @@ define([
 	return declare([], {
 		constructor: function(args){
 			var t = this,
-				cacheClass = args.cacheClass;
+				cacheClass = args.cacheClass || Sync;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
 			t._exts = {};

@@ -4,11 +4,11 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"./_Cache"
-], function(declare, array, lang, Deferred, DeferredList, _Cache){
+	"./Sync"
+], function(declare, array, lang, Deferred, DeferredList, Sync){
 
 /*=====
-	return declare(_Cache, {
+	return declare(Sync, {
 		// summary:
 		//		Implement lazy-loading for server side store.
 
@@ -353,7 +353,7 @@ define([
 		func(ids);
 	}
 
-	return declare(_Cache, {
+	return declare(Sync, {
 		isAsync: true,
 
 		constructor: function(model, args){
