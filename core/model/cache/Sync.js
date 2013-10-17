@@ -36,7 +36,7 @@ define([
 		constructor: function(model, args){
 			var t = this;
 			t.setStore(args.store);
-			t.columns = lang.mixin({}, args._columnsById);
+			t.columns = lang.mixin({}, args.columnsById || args._columnsById);
 			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
 				'hasChildren', 'children', 'keep', 'free', 'layerId', 'setLayer', 'layerUp');
 		},
@@ -85,9 +85,6 @@ define([
 			}
 			return d;
 		},
-
-		//Private---------------------------------------------
-
 
 		//Public----------------------------------------------
 		clear: function(){
