@@ -359,18 +359,19 @@ define([
 								
 								html = [
 									"<div class='gridxCellEditedBgWrapper'>",
-										"<div 	rowid='" + rowId + "' ",
+										"<div	rowid='" + rowId + "' ",
 												"colid='" + colId + "' ",
 												"class='gridxCellEditedBg'><span>◥</span>",
 										"</div>",
 									"</div>"
 								].join('');
 							
-							cellBgNode = domConstruct.toDom(html);
-							domConstruct.place(cellBgNode, cell.node(), 'first');
+							wrapper = domConstruct.toDom(html);
+							cellBgNode = wrapper.firstChild;
+							domConstruct.place(wrapper, cell.node(), 'first');
 							
-							cellBgNode.style.top = 1 - cellBgNode.offsetTop + 'px';
-							cellBgNode.style.left = cellPadding - 1 + 'px';
+							wrapper.style.top = - ( node.clientHeight - cellPadding * 2 - cellBgNode.clientHeight) / 2 + 'px';
+							wrapper.style.left = cellPadding - 1 + 'px';
 							
 						}
 				};
