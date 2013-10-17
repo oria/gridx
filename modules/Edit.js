@@ -363,28 +363,24 @@ define([
 								leftToMove = node.clientWidth - cellPadding - 5,
 								
 								html = [
-								"<div rowid='" + rowId + "' ",
-								"colid='" + colId + "' ",
-								"class='gridxCellEditedBg'><span>◥</span></div>"
+									"<div class='gridxCellEditedBgWrapper'>",
+										"<div	rowid='" + rowId + "' ",
+												"colid='" + colId + "' ",
+												"class='gridxCellEditedBg'><span>◥</span>",
+										"</div>",
+									"</div>"
 							].join('');
 							
-							cellBgNode = domConstruct.toDom(html);
-							domConstruct.place(cellBgNode, cell.node(), 'first');
+							wrapper= domConstruct.toDom(html);
+							cellBgNode = wrapper.firstChild;
+							domConstruct.place(wrapper, cell.node(), 'first');
 							
-							currentLeft = cellBgNode.offsetLeft;
-							currentLeft += leftToMove;
+							wrapperPosition= domGeo.position(cellBgNode);
+							nodePosition = domGeo.position(node);
 							
-							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
-								top = 0;
-							array.forEach(upperRows, function(row){
-								var vi = parseInt(row.getAttribute('visualIndex'), 10);
-								if(vi < visualIndex){
-									top += row.clientHeight;
-								}
-							});
+							wrapper.style.top = nodePosition.y - wrapperPosition. y + 'px';
+							wrapper.style.left = cellPadding + 'px';
 							
-							domStyle.set(cellBgNode, 'left', currentLeft + 'px');
-							domStyle.set(cellBgNode, 'top', top+ 'px');
 						}
 				};
 				
