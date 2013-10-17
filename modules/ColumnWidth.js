@@ -3,7 +3,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/Deferred",
 	// "dojo/query",
-	'gridx/support/query/query',
+	'gridx/support/query',
 	"dojo/_base/sniff",
 	"dojo/dom-geometry",
 	"dojo/dom-class",

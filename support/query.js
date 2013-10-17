@@ -9,11 +9,11 @@ define([
 	var _query = function(selector, context){
 		
 		var nlist = query.apply(null, arguments);
-		if(!_query.isGridInGrid || typeof selector === 'object'){
+		if(!_query.isGridInGrid || !context || typeof selector === 'object'){
 			return nlist;
 		}
 
-		var currentGrid = context? query(context).closest('.gridx')[0] : query('.gridx')[0];
+		var currentGrid = query(context).closest('.gridx')[0];
 
 		return nlist.filter(function(n){
 			return query(n).closest('.gridx')[0] === currentGrid;
@@ -25,8 +25,6 @@ define([
 	_query.isGridInGrid = false;
 	
 	lang.mixin(_query, query);
-	// global = {};
-	// global.query = _query;
 	return _query;
 
 });

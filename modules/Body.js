@@ -3,7 +3,7 @@ define([
 /*====="../core/Cell",=====*/
 	"dojo/_base/declare",
 	// "dojo/query",
-	'gridx/support/query/query',
+	'gridx/support/query',
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/json",

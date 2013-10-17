@@ -12,7 +12,7 @@ define([
 	"dojo/fx",
 	"dojo/keys",
 	// "dojo/query",
-	'gridx/support/query/query',
+	'gridx/support/query',
 	'dijit/a11y',
 	'dojo/_base/event',
 	'dojo/_base/sniff'
