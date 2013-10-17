@@ -93,12 +93,14 @@ define([
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
 			this.connect(this.grid.body, 'onUnrender', '_onBodyUnrender');
 			this.connect(this.grid, 'onCellKeyDown', '_onCellKeyDown');
+			this.connect(this.grid.body, '_onRowMouseOver', '_onRowMouseOver');
 			if(this.grid.columnResizer){
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
 			this.loaded.callback();
 			
 		},
+		
 		rowMixin: {
 			showDetail: function(){
 				this.grid.dod.show(this);
@@ -297,6 +299,21 @@ define([
 			
 			
 			this.toggle(this.grid.row(parseInt(idx)));
+		},
+		
+		_onRowMouseOver: function(e){
+			var target = e.target;
+			var dodNode = this._rowMap[e.rowId]? this._rowMap[e.rowId].dodNode : undefined;
+			
+			if(dodNode){
+				while(target && target !== dodNode){
+					target = target.parentNode;
+				}
+				if(target){
+					domClass.remove(dodNode.parentNode, 'gridxRowOver');
+					event.stop(e);
+				}
+			}
 		},
 		
 		_onAfterRow: function(row){
