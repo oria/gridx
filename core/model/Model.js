@@ -50,7 +50,7 @@ define([
 
 		indexToId: function(index, parentId){
 			// summary:
-			//		Transform row index to row ID
+			//		Transform row index to row ID. If not exist, return undefined.
 			// index: Integer
 			//		The row index
 			// parentId: String?
@@ -62,7 +62,7 @@ define([
 
 		idToIndex: function(id){
 			// summary:
-			//		Transform row ID to row index
+			//		Transform row ID to row index. If not exist, return -1.
 			// id: String
 			//		The row ID
 			// returns:
