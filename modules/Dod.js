@@ -86,7 +86,6 @@ define([
 		},
 		
 		load: function(args, deferStartup){
-			query.isGridInGrid = true;
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
@@ -425,12 +424,17 @@ define([
 			}
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			
-			//for *** grid in grid ****
+			//***for nested grid in grid ****
 			var gridNodes = dojo.query('.gridx', _row.dodNode);
-			var ws = [];
+			
+			if(gridNodes.length){
+				query.isGridInGrid[this.grid.id] = true;
+			}
+			
+			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){
 				var gig = dijit.byNode(gridNodes[i]);
-				ws.push(gig);
+				gs.push(gig);
 				if(!gig._refreshForDod){
 					gig._refreshForDod = true;
 					gig.body.refresh();

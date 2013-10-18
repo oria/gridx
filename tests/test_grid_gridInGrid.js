@@ -148,6 +148,7 @@ require([
 			}
 			
 		}else{		//even
+			var subSt = new Date().getTime();
 			var grid = new Grid({
 				cacheClass:globalCache,
 				store: globalStore,
@@ -170,6 +171,8 @@ require([
 			});
 			grid.placeAt(node);
 			grid.startup();		
+			console.log('sub grid start time is:');
+			console.log(new Date().getTime() - subSt);
 		}
 		setTimeout(function(){
 			renderred.callback();
@@ -291,7 +294,10 @@ require([
 		
 	}
 	window.createGrid = function(){
-		if(window.grid){window.grid.destroy();}
+		if(window.grid){
+			window.grid.destroy();
+		}
+		var st = new Date().getTime();
 		grid = new Grid({
 			id: 'grid',
 			cacheClass: Cache,
@@ -314,6 +320,9 @@ require([
 		});
 		grid.placeAt('gridContainer');
 		grid.startup();
+		
+		console.log('start time is');
+		console.log(new Date().getTime() - st);
 		
 		window.dod = grid.dod;
 	}
