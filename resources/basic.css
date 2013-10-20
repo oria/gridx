@@ -112,7 +112,7 @@
 	-khtml-box-sizing: border-box; /* konqueror */
 }
 
-.gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable {
+.gridxBodyRowHoverEffect .gridxRowOver > .gridxRowTable {
 	background-color: #cee8f2;
 }
 

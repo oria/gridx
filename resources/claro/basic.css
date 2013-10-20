@@ -12,8 +12,8 @@
 .claro .gridxRowOdd .gridxRowTable {
 	background-color: #f1f8ff;
 }
-.claro .gridxBodyRowHoverEffect .gridxRowOver .gridxRowTable,
-.claro .gridxBodyRowHoverEffect .gridxRowOver .gridxCell {
+.claro .gridxBodyRowHoverEffect .gridxRowOver > .gridxRowTable,
+.claro .gridxBodyRowHoverEffect .gridxRowOver > .gridxCell {
 	background:url("../images/row_back.png") #ABD6FF repeat-x;
 }
 
