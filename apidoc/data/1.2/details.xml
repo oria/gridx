@@ -570,7 +570,8 @@ This method also allows conditional event firing using the flag argument.&lt;/p>
 </description></method><method name="subscribe" scope="prototype" type="function" from="gridx/core/_Module"><parameters><parameter name="topic" type="undefined" usage="required"/><parameter name="method" type="undefined" usage="required"/><parameter name="scope" type="undefined" usage="required"/></parameters><return-types><return-type type="any"/></return-types><return-description>&lt;p>The subscription handle&lt;/p>
 </return-description><summary>&lt;p>Subscribe to a topic.&lt;/p>
 </summary><description>&lt;p>This is similar to widget.subscribe, except that the &amp;quot;scope&amp;quot; argument in this method is behind the listener function.&lt;/p>
-</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>The header UI of grid&lt;/p>
+</description></method></methods><mixins><mixin location="gridx/core/_Module"/></mixins><summary>&lt;p>module name: header.
+The header UI of grid&lt;/p>
 </summary><description>&lt;p>This module is in charge of the rendering of the grid header. But it should not manage column width,
 which is the responsibility of ColumnWidth module.&lt;/p>
 </description></object><object location="gridx/modules/View" type="constructor" classlike="true" superclass="gridx/core/_Module"><properties><property name="rootStart" scope="prototype" type="Integer" from="gridx/modules/View" tags="readonly"><summary>&lt;p>The row index of the first root row in the current grid body.&lt;/p>
