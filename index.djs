@@ -147,7 +147,7 @@
       FAST RENDERING<br/>WELL MODULARIZED<br/>PLUGIN ARCHITECTURE
       <br/><span>The next generation of Dojo data grid.</span>
       </p>
-      <a href="https://github.com/oria/gridx/tags" class="button button-download">Download for Free</a>
+      <a href="https://github.com/oria/gridx/releases" class="button button-download">Download for Free</a>
       <span class="browsers"><span>Supporting</span><img src="images/browsers.png" class="browsers"/></span>
       <div class="clear"></div>
     </div>
