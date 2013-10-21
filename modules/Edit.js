@@ -221,7 +221,7 @@ define([
 		canEdit: function(cell){
 			// summary:
 			//		Decide whether a cell is editable.
-			//		This makes it possible to config some cells to be uneditable in an edtibale column.
+			//		This makes it possible to config some cells to be uneditable in an editable column.
 			// cell: gridx.core.Cell
 			//		The cell object
 			// returns:
