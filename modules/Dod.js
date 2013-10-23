@@ -448,16 +448,18 @@ define([
 			if(!this.isShown(row)){return;}
 			_row.dodLoadingNode.innerHTML = this.grid.nls.loadFailInfo;
 		},
+		
 		_showLoading: function(row){
 			var _row = this._row(row);
 			var node = _row.dodLoadingNode;
 			node.innerHTML = this.grid.nls.loadingInfo;
 		},
+		
 		_getExpando: function(row){
-			if(!this.showExpando)return null;
+			if(!this.showExpando) return null;
 			var tbl = query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
-			return cell.firstChild;
+			return cell? cell.firstChild : null;
 		},
 		
 		_onCellKeyDown: function(e){
