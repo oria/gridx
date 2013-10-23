@@ -958,7 +958,7 @@ define([
 				onBlur: t._blurCell
 			});
 			t.connect(g.mainNode, 'onkeydown', function(evt){
-				if(focus.currentArea() == 'body'){
+				if(focus.arg('enabled') && focus.currentArea() == 'body'){
 					var dk = keys,
 						ctrlKey = g._isCtrlKey(evt);
 					if(evt.keyCode == dk.HOME && !ctrlKey){
@@ -986,7 +986,8 @@ define([
 				t._focusCellCol = evt.columnIndex;
 			});
 			t.aspect(t, 'onRender', function(start, count){
-				if(t._focusCellRow >= start &&
+				if(focus.arg('enabled') &&
+					t._focusCellRow >= start &&
 					t._focusCellRow < start + count &&
 					focus.currentArea() == 'body'){
 					t._focusCell();
@@ -1007,7 +1008,7 @@ define([
 			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
-			var colId = g._columns[colIdx]? g._columns[colIdx].id : undefined,
+			var colId = g._columns[colIdx] ? g._columns[colIdx].id : undefined,
 				n = t.getCellNode({
 					visualIndex: rowVisIdx,
 					colId: colId
