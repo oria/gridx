@@ -986,11 +986,16 @@ define([
 				t._focusCellCol = evt.columnIndex;
 			});
 			t.aspect(t, 'onRender', function(start, count){
-				if(focus.arg('enabled') &&
-					t._focusCellRow >= start &&
-					t._focusCellRow < start + count &&
-					focus.currentArea() == 'body'){
-					t._focusCell();
+				var currentArea = focus.currentArea();
+				if(focus.arg('enabled')){
+					if(currentArea == 'body'){
+						if(t._focusCellRow >= start &&
+							t._focusCellRow < start + count){
+							t._focusCell();
+						}
+					}else{
+						focus.focusArea(currentArea, 1);
+					}
 				}
 			});
 			t.connect(g.emptyNode, 'onfocus', function(){
