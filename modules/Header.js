@@ -228,7 +228,7 @@ define([
 					});
 				}else{
 					t.aspect(g, 'onHeaderCellKeyDown', '_onKeyDown');
-					t.aspect(g, 'onHeaderCellMouseDown', function(evt){
+					t.connect(g, 'onHeaderCellMouseDown', function(evt){
 						t._focusNode(t.getHeaderNode(evt.columnId));
 					});
 				}

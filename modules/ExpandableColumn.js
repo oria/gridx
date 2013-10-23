@@ -14,6 +14,24 @@ define([
 	"./HiddenColumns"
 ], function(declare, array, lang, event, keys, aspect, query, string, domClass, domConstruct, keys, _Module, HiddenColumns, Sort, nls){
 
+	/*=====
+	return declare(HiddenColumns, {
+		// summary:
+		//		module name: expandableColumn.
+		//		Expandable column including group headers.
+
+		expand: function(colId){
+			// summary:
+			//		Expand a column by id.
+
+		},
+		collapse: function(colId){
+			// summary:
+			//		Collapse a column by id.
+		}
+	});
+=====*/
+
 	return declare(HiddenColumns, {
 		name: 'expandedColumn',
 		_parentCols: null,
@@ -34,9 +52,9 @@ define([
 			array.forEach(t._cols, function(col){
 				if(col.expanded){
 					toHide.push(col.id);
-				}else if(col._parentColumn){
-					t._parentCols[col._parentColumn] = 1;
-					var parentCol = this._colById(col._parentColumn);
+				}else if(col.parentColumn){
+					t._parentCols[col.parentColumn] = 1;
+					var parentCol = this._colById(col.parentColumn);
 
 					if(!parentCol.expanded){
 						toHide.push(col.id);
@@ -101,7 +119,7 @@ define([
 					var node = evt.target;
 					if(domClass.contains(node, 'gridxGroupHeader')){
 						var colId = node.getAttribute('groupid').split('-').pop();
-						colId = this._colById(colId)._parentColumn;
+						colId = this._colById(colId).parentColumn;
 						this.collapse(colId);
 						this._focusById(colId);
 
@@ -134,7 +152,7 @@ define([
 
 		expand: function(colId){
 			var children = array.filter(this._cols, function(col){
-				return col._parentColumn == colId;
+				return col.parentColumn == colId;
 			});
 			
 			this.add(colId);
@@ -146,7 +164,7 @@ define([
 
 		collapse: function(colId){
 			var children = array.filter(this._cols, function(col){
-				return col._parentColumn == colId;
+				return col.parentColumn == colId;
 			});
 
 			this.remove(colId);
@@ -224,20 +242,20 @@ define([
 
 			for(var i = 0; i < cols.length; i++){
 				var col = cols[i];
-				if(col._parentColumn){
+				if(col.parentColumn){
 					//if column has parent
 					if(c > 0){
 						headerGroups.push(c);
 						c = 0;
 					}
-					if(!currentGroup || currentGroup._colId != col._parentColumn){
-						if(currentGroup && currentGroup._colId != col._parentColumn){
+					if(!currentGroup || currentGroup._colId != col.parentColumn){
+						if(currentGroup && currentGroup._colId != col.parentColumn){
 							headerGroups.push(currentGroup);
 						}
 
 						currentGroup = {
-							_colId: col._parentColumn,
-							name: this._colById(col._parentColumn).name,
+							_colId: col.parentColumn,
+							name: this._colById(col.parentColumn).name,
 							children: 0
 						};
 					}
@@ -259,7 +277,7 @@ define([
 			var self = this;
 			query('.gridxGroupHeader', this.grid.headerNode).forEach(function(td){
 				var colId = td.getAttribute('groupid').split('-').pop();
-				colId = self._colById(colId)._parentColumn;
+				colId = self._colById(colId).parentColumn;
 				td.setAttribute('data-map-column-id', colId);
 
 				var div = domConstruct.create('div', {
