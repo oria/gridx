@@ -84,20 +84,20 @@ require([
 		{field: 'datasource', name: 'Data Sources', width: '130px'},
 
 		{id: 'total', field: 'total', name: 'Total', width: '30px', expanded: true},
-		{field: 'critical', name: 'Critical', width: '30px', _parentColumn: 'total'},
-		{field: 'warning', name: 'Warning', width: '30px', _parentColumn: 'total'},
+		{field: 'critical', name: 'Critical', width: '30px', parentColumn: 'total'},
+		{field: 'warning', name: 'Warning', width: '30px', parentColumn: 'total'},
 
 		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', formatter: formatter},
-		{field: 'monitoring', name: 'Monitoring', width: '30px', _parentColumn: 'governance', formatter: formatter},
-		{field: 'policy', name: 'Policy', width: '30px', _parentColumn: 'governance', formatter: formatter},
-		{field: 'process', name: 'Process', width: '30px', _parentColumn: 'governance', formatter: formatter},
+		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', formatter: formatter},
+		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', formatter: formatter},
+		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', formatter: formatter},
 
 		{id: 'vulnerability', field: 'vulnerability', name: 'Vulnerability', width: '30px', expanded: true, formatter: formatter},
-		{field: 'configuration', name: 'Configuration', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'patches', name: 'Patches', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'authentication', name: 'Authentication', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'privileges', name: 'Privileges', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'filesystem', name: 'FileSystem', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'configuration', name: 'Configuration', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'patches', name: 'Patches', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'authentication', name: 'Authentication', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'privileges', name: 'Privileges', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'filesystem', name: 'FileSystem', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
 
 		{field: 'alerts', name: 'Alerts', width: '30px', formatter: formatter},
 		{field: 'violations', name: 'Violations', width: '30px', formatter: formatter}
@@ -132,20 +132,20 @@ require([
 		{field: 'datasource', name: 'Data Sources', width: '130px', expandLevel: 'all'},
 
 		{id: 'total', field: 'total', name: 'Total', width: '30px', expanded: true},
-		{field: 'critical', name: 'Critical', width: '30px', _parentColumn: 'total'},
-		{field: 'warning', name: 'Warning', width: '30px', _parentColumn: 'total'},
+		{field: 'critical', name: 'Critical', width: '30px', parentColumn: 'total'},
+		{field: 'warning', name: 'Warning', width: '30px', parentColumn: 'total'},
 
 		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', formatter: formatter},
-		{field: 'monitoring', name: 'Monitoring', width: '30px', _parentColumn: 'governance', formatter: formatter},
-		{field: 'policy', name: 'Policy', width: '30px', _parentColumn: 'governance', formatter: formatter},
-		{field: 'process', name: 'Process', width: '30px', _parentColumn: 'governance', formatter: formatter},
+		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', formatter: formatter},
+		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', formatter: formatter},
+		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', formatter: formatter},
 
 		{id: 'vulnerability', field: 'vulnerability', name: 'Vulnerability', width: '30px', expanded: true, formatter: formatter},
-		{field: 'configuration', name: 'Configuration', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'patches', name: 'Patches', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'authentication', name: 'Authentication', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'privileges', name: 'Privileges', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'filesystem', name: 'FileSystem', width: '30px', _parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'configuration', name: 'Configuration', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'patches', name: 'Patches', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'authentication', name: 'Authentication', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'privileges', name: 'Privileges', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{field: 'filesystem', name: 'FileSystem', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
 
 		{field: 'alerts', name: 'Alerts', width: '30px', formatter: formatter},
 		{field: 'violations', name: 'Violations', width: '30px', formatter: formatter}
