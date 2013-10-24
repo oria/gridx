@@ -1,13 +1,27 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<title></title>
+	<title>Gridx Test Cases</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel='stylesheet' href="support/common.css" />
 	<link rel='stylesheet' href="cases/_cases_css.css" />
 	<style type="text/css">
+		body {
+			padding: 20px;
+		}
+		.screenshot {
+			width: 984px;
+			height: 728px;
+		}
 		#gridContainer {
-			margin: 30px 0;
+		}
+		.only {
+			position: absolute;
+			width: 984px;
+			overflow: hidden;
+			top: 20px;
+			left: 20px;
+			right: 20px;
 		}
 		.gridx {
 			width: 800px;
@@ -36,6 +50,9 @@
 		#casePanel {
 			margin: 5px 0;
 		}
+		.prevFocusHandler {
+			margin-top: 0 !important;
+		}
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="
 		async: true,
@@ -48,6 +65,8 @@
 	<script type="text/javascript">
 	require([
 		'dojo/_base/lang',
+		'dojo/io-query',
+		'dojo/query',
 		'dojo/has',
 		'dojo/_base/array',
 		'dojo/json',
@@ -64,7 +83,7 @@
 		'gridx/core/model/cache/Sync',
 		'gridx/core/model/cache/Async',
 		'dojo/domReady!'
-	], function(lang, has, array, JSON, Memory, FilteringSelect,
+	], function(lang, ioQuery, query, has, array, JSON, Memory, FilteringSelect,
 		packageInfo, Deferred, DeferredList, dataSource, memoryFactory, jsonrestFactory, Grid){
 
 		packageInfo = JSON.parse(packageInfo);
@@ -74,6 +93,13 @@
 		has.add('gridx1.2', version >= 1.2);
 		has.add('gridx1.1', version >= 1.1);
 
+		var uri = document.URL;
+		var pos = uri.indexOf("?");
+		if(pos > 0){
+			var initCase = ioQuery.queryToObject(uri.substring(pos + 1));
+			initCase = initCase && initCase.c && decodeURIComponent(initCase.c);
+		}
+
 		require([
 			'gridxdoh/tests/testcases'
 		], function(cases){
@@ -81,6 +107,14 @@
 		cases = array.filter(cases, function(c){
 			return (!c.version || c.version <= version) &&
 				(!c.belowVersion || c.belowVersion >= version);
+		});
+
+		if(!initCase){
+			initCase = cases[0] && cases[0].title;
+		}
+
+		var foundInitCase = array.some(cases, function(c){
+			return c.title == initCase;
 		});
 
 		var casesTitleStore = new Memory({
@@ -111,6 +145,21 @@
 		});
 		casesSelect.placeAt('casesSelect');
 		casesSelect.startup();
+
+		window.showMiscellany = function(){
+			query('.miscellany').forEach(function(node){
+				node.style.display = '';
+			});
+			query('#gridContainer').removeClass('only');
+			query('body').removeClass('screenshot');
+		};
+		window.hideMiscellany = function(){
+			query('.miscellany').forEach(function(node){
+				node.style.display = 'none';
+			});
+			query('#gridContainer').addClass('only');
+			query('body').addClass('screenshot');
+		};
 
 		var columns;
 		window.destroyGrid = function(){
@@ -435,32 +484,39 @@
 		};
 
 		document.getElementById('totalCaseCount').innerHTML = cases.length;
-		gotoCase();
+		//gotoCase();
+
+		if(foundInitCase){
+			casesSelect.set('value', initCase);
+		}
 
 		});
 	});
 	</script>
 </head>
 <body class='claro'>
-	<h1>Gridx tests</h1>
+<div class='miscellany'>
+	<h2 tabindex='0' class='prevFocusHandler' style="position: absolute; top: 0;" onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler before grid #</h2>
+</div>
+	<div id='gridContainer'></div>
+<div class='miscellany'>
+	<h2 tabindex='0' class='postFocusHandler' onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler after grid #</h2>
+	<div id='casePanel'></div>
+	<div id='casePanelBtnGroup'></div>
+	<hr/>
 	<input id='caseId' type='text' value='1'/>/<span id='totalCaseCount'></span>
 	<input type='button' value='create' onclick='gotoCase()' />
 	<input type='button' value='destroy' onclick='destroyGrid()' />
 	<input type='button' value='previous' onclick='gotoCase(-1)' />
 	<input type='button' value='next' onclick='gotoCase(1)' />
 	<div>
-	<span id='casesSelect'></span><span id='caseFile'></span>
+		<span id='casesSelect'></span><span id='caseFile'></span>
 	</div>
+	<hr/>
 	<div id='guideContainer'>
 		<input type='button' value='Test Guide' onclick='toggleGuide()' />
-		<div id='guide'></div>
+		<div id='guide' style='height: 0;'></div>
 	</div>
-	<h2 tabindex='0' onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler before grid #</h2>
-	<div id='gridContainer'></div>
-	<h2 tabindex='0' onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler after grid #</h2>
-	<div id='casePanel'></div>
-	<div id='casePanelBtnGroup'></div>
-	<hr/>
 	<div id='displayBtnGroup'>
 		<span>Display</span>
 		<input type='button' value='create display:none' onclick='createDisplayNone()' />
@@ -505,5 +561,6 @@
 		<input type='button' value='toggle bodyRowHoverEffect' onclick='toggleRowHoverEffect()' />
 		<input type='button' value='toggle selectRowTriggerOnCell' onclick='toggleSelectRowTriggerOnCell()' />
 	</div>
+</div>
 </body>
 </html>

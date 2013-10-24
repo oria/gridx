@@ -3,10 +3,12 @@ define([
 	'./util'
 ], function(doh, util){
 
-//------------------------------------------------------------------
-doh.ts('syncListStore');
+doh.prefix = 'byIndex';
 
-doh.td('byIndex', function(t){
+//------------------------------------------------------------------
+doh.ts('list_data');
+
+doh.td('exist', function(t){
 	var model = util.createModel(false, {
 		size: 100
 	});
@@ -18,7 +20,7 @@ doh.td('byIndex', function(t){
 	}
 });
 
-doh.td('byIndex not exist', function(t){
+doh.td('not exist', function(t){
 	var model = util.createModel(false, {
 		size: 100
 	});
@@ -29,45 +31,11 @@ doh.td('byIndex not exist', function(t){
 	t.f(model.byIndex(null));
 });
 
-doh.td('byId', function(t){
-	var model = util.createModel(false, {
-		size: 100
-	});
-	for(var i = 0; i < 100; ++i){
-		var rowCache = model.byId(i + 1);
-		t.is(i + 1, rowCache.data.id);
-		t.is(i + 1, rowCache.rawData.id);
-		t.is(i + 1, rowCache.item.id);
-		t.is(i, rowCache.item.order);
-	}
-});
 
-doh.td('byId not exist', function(t){
-	var model = util.createModel(false, {
-		size: 100
-	});
-	t.f(model.byId(-1));
-	t.f(model.byId(1000));
-	t.f(model.byId('abc'));
-	t.f(model.byId());
-	t.f(model.byId(null));
-});
+//------------------------------------------------------------------
+doh.ts('tree_data');
 
-doh.td('byId zero based', function(t){
-	var model = util.createModel(false, {
-		size: 100,
-		baseId: 0
-	});
-	t.is(0, model.byId(0).data.id);
-	t.is(0, model.byId('0').data.id);
-});
-
-
-
-//---------------------------------------------------------
-doh.ts('syncTreeStore');
-
-doh.td('byIndex', function(t){
+doh.td('exist', function(t){
 	var model = util.createModel(false, {
 		size: 5,
 		baseId: 'item',
@@ -82,7 +50,7 @@ doh.td('byIndex', function(t){
 	t.is('item-3-1-5', model.byIndex(4, 'item-3-1').data.id);
 });
 
-doh.td('byIndex not exist', function(t){
+doh.td('not exist', function(t){
 	var model = util.createModel(false, {
 		size: 10,
 		baseId: 'item',
@@ -102,10 +70,8 @@ doh.td('byIndex not exist', function(t){
 
 
 doh.go(
-	'syncListStore',
-	'syncTreeStore',
-//    'everything',
+	'list_data',
+	'tree_data',
 0);
-
 });
 

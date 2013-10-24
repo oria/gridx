@@ -19,7 +19,7 @@ define([
 
 	var cases = [
 		{
-			title: 'empty store and horizontal scroll bar',
+			title: 'grid with empty store and horizontal scroll bar',
 			guide: [
 				'empty message is correctly shown',
 				'empty message does not scroll with horizontal scroller',
@@ -45,7 +45,7 @@ define([
 			]
 		},
 		{
-			title: 'autoHeight, some rows and horizontal scroller',
+			title: 'autoHeight grid with some rows and horizontal scroller',
 			guide: [
 				'when scrolling mouse wheel on autoHeight grid body, the whole page scrolls instead of the grid content.',
 				'horizontal scroller scrolls correctly',
@@ -73,7 +73,7 @@ define([
 			}
 		},
 		{
-			title: 'autoHeight and empty store',
+			title: 'autoHeight grid with empty store',
 			guide: [
 				'autoHeight empty grid should still show complete empty message'
 			],
@@ -99,7 +99,7 @@ define([
 			}
 		},
 		{
-			title: 'autoWidth, fixed column width, percentage column width and minWidth',
+			title: 'autoWidth grid with fixed and percentage column width and minWidth',
 			guide: [
 				'Genre column should be 150px wide',
 				'Year column should have default width (60px)',
@@ -127,7 +127,7 @@ define([
 			}
 		},
 		{
-			title: 'autoWidth and columnResizer',
+			title: 'autoWidth grid with columnResizer',
 			guide: [
 				'resize column, the grid width should change accordingly'
 			],

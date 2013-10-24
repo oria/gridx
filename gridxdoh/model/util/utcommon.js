@@ -19,6 +19,7 @@ define([
 
 	doh.tt = function(name, test, args){
 		// summary:
+		//		tt = test timeout
 		//		Register a test case that might have timeouts
 		// name: String
 		//		The test name
@@ -48,6 +49,7 @@ define([
 
 	doh.td = function(name, test, args){
 		// summary:
+		//		td = test directly
 		//		Register a test case that does not include any timeouts
 		// name: String
 		//		The test name
@@ -66,6 +68,14 @@ define([
 		}
 	};
 
+	doh.safe = function(defer, callback){
+		try{
+			callback();
+		}catch(e){
+			defer.errback(e);
+		}
+	};
+
 	doh.go = function(){
 		// summary:
 		//		Start the given test sets
@@ -81,7 +91,8 @@ define([
 		for(i = 0; i < doh.__testSets.length; ++i){
 			var ts = doh.__testSets[i];
 			if(!tsnames || tsnames[ts.name]){
-				doh.register((doh.prefix || '') + ts.name, ts.funcs);
+				var prefix = doh.prefix ? doh.prefix + ' - ' : '';
+				doh.register(prefix + ts.name, ts.funcs);
 			}
 		}
 		doh.__testSets = [];
