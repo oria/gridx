@@ -173,6 +173,7 @@ define([
 				wrapper2.appendChild(cloneParent);
 				t._parentStack.push(cloneParent);
 				cloneParent._pos = g.vScroller.position();
+				t._bodyScrollTop = bn.scrollTop;
 				moveNodes(bn, tmpBn);
 
 				bn.style.left = w + 'px';
@@ -220,6 +221,7 @@ define([
 				if(parentRowNode){
 					wrapper2.appendChild(parentRowNode);
 				}
+				t._bodyScrollTop = bn.scrollTop;
 				moveNodes(bn, tmpBn);
 
 				bn.style.left = -w + 'px';
@@ -258,6 +260,7 @@ define([
 		_onSetColumns: function(){
 			var g = this.grid,
 				col = this._col;
+			col.index = g._columns.length;
 			g._columns.push(col);
 			g._columnsById[col.id] = col;
 		},
@@ -323,6 +326,7 @@ define([
 			frag.appendChild(t._wrapper1);
 			frag.appendChild(t._wrapper2);
 			g.mainNode.appendChild(frag);
+			tmpBn.scrollTop = t._bodyScrollTop;
 			tmpBn.style.paddingTop = t._wrapper1.offsetHeight + 'px';
 			bn.style.paddingTop = t._wrapper2.offsetHeight + 'px';
 			t._contextNode.style.height = 0;
@@ -341,7 +345,13 @@ define([
 			}
 			t.onReady(args);
 			g.body._skipUnrender = 1;
+			if(args.isDown){
+				g.vScroller._lock = 1;
+			}
+			focusEnabled = g.focus.enabled;
+			g.focus.enabled = 0;
 			g.body.refresh().then(function(){
+				g.vScroller._lock = 0;
 				g.view.paging = t._paging;
 				setTimeout(function(){
 					domClass.add(bn, 'gridxSlideRefresh');
@@ -349,6 +359,11 @@ define([
 					callback();
 					setTimeout(function(){
 						t._onTransitionEnd();
+						g.vLayout.reLayout();
+						g.focus.enabled = focusEnabled;
+						g.body._focusCellRow = 0;
+						g.body._focusCellCol = 0;
+						g.focus.focusArea('body');
 						t.onFinish(args);
 					}, transitionDuration);
 				}, 10);

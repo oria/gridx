@@ -53,9 +53,7 @@ define([
 		},
 
 		postCreate: function(){
-			if(this.autoApply){
-				this.connect(this.textBox, 'onInput', '_onInput');
-			}
+			this.connect(this.textBox, 'onInput', '_onInput');
 		},
 
 		grid: null,
@@ -83,7 +81,7 @@ define([
 			setTimeout(function(){
 				domClass.toggle(dn, 'gridxQuickFilterActive', tb.get('value'));
 			}, 0);
-			if(key != keys.TAB){
+			if(t.autoApply && key != keys.TAB){
 				clearTimeout(t._handle);
 				t._handle = setTimeout(function(){
 					t._filter();

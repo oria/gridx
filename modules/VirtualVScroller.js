@@ -303,13 +303,17 @@ define([
 		
 		_doScroll: function(e, forced, noLazy){
 			var t = this;
-			if(!noLazy && t.arg('lazy')){
-				if(t._lazyScrollHandle){
-					clearTimeout(t._lazyScrollHandle);
+			//FIXME: this _lock flag is ugly. This flag is only to avoid accidentlly triggering onscroll event handling
+			// especially when using Layer.js to drill down.
+			if(!t._lock || forced){
+				if(!noLazy && t.arg('lazy') && !forced){
+					if(t._lazyScrollHandle){
+						clearTimeout(t._lazyScrollHandle);
+					}
+					t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
+				}else{
+					t._doVirtualScroll(forced);
 				}
-				t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
-			}else{
-				t._doVirtualScroll(forced);
 			}
 		},
 	

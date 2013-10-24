@@ -24,10 +24,15 @@ define([
 
 		required: ['bar', 'filter', 'puller'],
 
+		autoApply: true,
+
+		delay: 700,
+
 		preload: function(){
 			var t = this,
 				g = t.grid,
 				bar = g.bar,
+				prot = QuickFilter.prototype,
 				args = {
 					bar: 'top',
 					row: 0,
