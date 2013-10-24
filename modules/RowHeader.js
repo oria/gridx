@@ -243,7 +243,18 @@ define([
 		},
 
 		_onScroll: function(){
-			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
+			var t = this;
+			
+			t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			
+			//scrollTop to be set must not exceeds scrollTopMax
+			if(t.bodyNode.scrollHeight - t.bodyNode.clientHeigh >= t.grid.bodyNode.scrollTop){
+				t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			}else{
+				setTimeout(function(){
+					t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+				}, 0);
+			}
 		},
 
 		_onResize: function(){
