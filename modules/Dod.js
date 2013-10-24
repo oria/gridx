@@ -350,7 +350,7 @@ define([
 			if(!this.showExpando)return null;
 			var tbl = query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
-			return cell.firstChild;
+			return cell? cell.firstChild : null;
 		},
 		
 		_syncRowheaderHeight: function(row, isAnim, isHide){
