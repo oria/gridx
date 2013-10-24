@@ -367,10 +367,14 @@ define([
 								].join('');
 							
 							wrapper = domConstruct.toDom(html);
+					
+							
 							cellBgNode = wrapper.firstChild;
 							domConstruct.place(wrapper, cell.node(), 'first');
+							var nodePosition = domGeo.position(node);
+							var wrapperPosition = domGeo.position(wrapper);
 							
-							wrapper.style.top = - ( node.clientHeight - cellPadding * 2 - cellBgNode.clientHeight) / 2 + 'px';
+							wrapper.style.top = nodePosition.y - wrapperPosition.y + 'px';
 							wrapper.style.left = cellPadding - 1 + 'px';
 							
 						}
