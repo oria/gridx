@@ -87,7 +87,7 @@ require([
 		{field: 'critical', name: 'Critical', width: '30px', parentColumn: 'total'},
 		{field: 'warning', name: 'Warning', width: '30px', parentColumn: 'total'},
 
-		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', formatter: formatter},
+		{id: 'governance', field: 'governance', name: 'Governace', width: '80px', formatter: formatter},
 		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', formatter: formatter},
 		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', formatter: formatter},
 		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', formatter: formatter},
@@ -135,7 +135,7 @@ require([
 		{field: 'critical', name: 'Critical', width: '30px', parentColumn: 'total'},
 		{field: 'warning', name: 'Warning', width: '30px', parentColumn: 'total'},
 
-		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', formatter: formatter},
+		{id: 'governance', field: 'governance', name: 'Governace', width: '80px', formatter: formatter},
 		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', formatter: formatter},
 		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', formatter: formatter},
 		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', formatter: formatter},
