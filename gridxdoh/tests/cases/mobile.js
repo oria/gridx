@@ -49,10 +49,10 @@ define([
 				modules.CellWidget,
 				modules.Edit,
 //                modules.IndirectSelectColumn,
-				modules.SingleSort,
-				modules.VirtualVScroller
+				modules.SingleSort
 			],
 			props: {
+				touch: true,
 				paginationBarSizes: [1, 2, 0],
 				selectRowTriggerOnCell: true
 			}

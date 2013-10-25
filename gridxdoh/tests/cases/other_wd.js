@@ -1,83 +1,94 @@
-module.exports = {
+define({
 	"grid with empty store and horizontal scroll bar": {
-		"should show empty message": function(browser, wd, util){
-			util.assertScreenshot();
+		"should show empty message": function(){
+			return this.assertScreenshot();
 		},
-		"should not scroll empty message together with horizontal scroller": function(browser, wd, util){
-			util.hScroll(3, 300);
-			util.assertScreenshot();
+		"should not scroll empty message together with horizontal scroller": function(){
+			return this.hScrollGridx(3, 300).assertScreenshot();
 		},
-		"should work after setting a non-empty store": function(browser, wd, util){
-			browser.execute('setStore(100);');
-			util.assertScreenshot();
+		"should work after setting a non-empty store": function(){
+			return this.execute('setStore(100);').assertScreenshot();
 		},
-		"should work after setting back to empty store": function(browser, wd, util){
-			browser.execute('setStore(100);');
-			browser.execute('restoreStore();');
-			util.assertScreenshot();
+		"should work after setting back to empty store": function(){
+			return this.execute('setStore(100);').
+				execute('restoreStore();').
+				assertScreenshot();
 		},
-		"should show effect when hover header": function(browser, wd, util){
-			var element = browser.elementByCss('.gridxHeader [colid="Genre"].gridxCell');
-			browser.moveTo(element);
-			util.assertScreenshot();
+		"should show effect when hover header": function(){
+			return this.elementByCss('.gridxHeader [colid="Genre"].gridxCell').
+				moveTo().
+				assertScreenshot();
 		},
-		"should clear previous header effect when move to another header": function(browser, wd, util){
-			var element1 = browser.elementByCss('.gridxHeader [colid="Genre"].gridxCell');
-			var element2 = browser.elementByCss('.gridxHeader [colid="Album"].gridxCell');
-			browser.moveTo(element1);
-			browser.moveTo(element2);
-			util.assertScreenshot();
+		"should clear previous header effect when move to another header": function(){
+			return this.elementByCss('.gridxHeader [colid="Genre"].gridxCell').
+				moveTo().
+				end().
+				elementByCss('.gridxHeader [colid="Album"].gridxCell').
+				moveTo().
+				assertScreenshot();
 		},
-		"should clear header effect when move out of header": function(browser, wd, util){
-			var element = browser.elementByCss('.gridxHeader [colid="Genre"].gridxCell');
-			var body = browser.elementByCss('.gridxBody');
-			browser.moveTo(element);
-			browser.moveTo(body);
-			util.assertScreenshot();
+		"should clear header effect when move out of header": function(){
+			return this.elementByCss('.gridxHeader [colid="Genre"].gridxCell').
+				moveTo().
+				end().
+				elementByCss('.gridxBody').
+				moveTo().
+				assertScreenshot();
 		}
 	},
 
 	"autoHeight grid with some rows and horizontal scroller": {
-		"should be able to scroll horizontally": function(browser, wd, util){
-			util.hScroll(3, 400);
-			util.assertScreenshot();
+		"should be able to scroll horizontally": function(){
+			return this.hScrollGridx(3, 400).assertScreenshot();
 		},
-		"should not be able to resize vertically": function(browser, wd, util){
-			var pic1 = util.takeScreenshot('before resize');
-			browser.execute('resizeGrid({h: 1.1});');
-			var pic2 = util.takeScreenshot('after resize');
-			pic1.should.equal(pic2);
+		"should not be able to resize vertically": function(){
+			var pic1;
+			return this.saveScreenshot('before resize').
+				then(function(pic){
+					pic1 = pic;
+				}).
+				execute('resizeGrid({h: 1.1});').
+				saveScreenshot('after resize').
+				then(function(pic){
+					(pic1 == pic).should.be.ok;
+				});
 		}
 	},
 
 	"autoHeight grid with empty store": {
-		"should show empty message correctly": function(browser, wd, util){
-			util.assertScreenshot();
+		"should show empty message correctly": function(){
+			return this.assertScreenshot();
 		}
 	},
 
 	"autoWidth grid with fixed and percentage column width and minWidth": {
-		"should have 150px Genre column": function(browser, wd, util){
-			util.assertScreenshot();
-			var genreColumnWidth = browser.execute('return grid.column("Genre").headerNode().style.width;');
-			"150px".should.equal(genreColumnWidth);
+		"should have 150px Genre column": function(){
+			return this.assertScreenshot().
+				execute('return grid.column("Genre").headerNode().style.width;').
+				then(function(genreColumnWidth){
+					"150px".should.equal(genreColumnWidth);
+				});
 		}
 	},
 
 	"autoWidth grid with columnResizer": {
-		"should be able to resize column": function(browser, wd, util){
-			var element = browser.elementByCss('.gridxHeader [colid="Album"].gridxCell');
-			browser.moveTo(element, 0, 10);
-			var isHovering = browser.execute('return /gridxColumnResizing/.test(document.body.className);');
-			var readyToResize = browser.execute('return grid.columnResizer._readyToResize');
-			isHovering.should.be.ok;
-			readyToResize.should.be.ok;
-			browser.buttonDown();
-			util.assertScreenshot('mouse down');
-			browser.moveTo(element, 100, 10);
-			util.assertScreenshot('move');
-			browser.buttonUp();
-			util.assertScreenshot('mouse up');
+		"should be able to resize column": function(){
+			return this.elementByCss('.gridxHeader [colid="Album"].gridxCell').
+				moveTo(0, 10).
+				execute('return /gridxColumnResizing/.test(document.body.className);').
+				then(function(isHovering){
+					isHovering.should.be.ok;
+				}).
+				execute('return grid.columnResizer._readyToResize').
+				then(function(readyToResize){
+					readyToResize.should.be.ok;
+				}).
+				buttonDown().
+				assertScreenshot('mouse down').
+				moveTo(100, 10).
+				assertScreenshot('move').
+				buttonUp().
+				assertScreenshot('mouse up');
 		}
 	}
-};
+});

@@ -15,8 +15,8 @@ define([
 ], function(lang, modules, mods, params, deps, conflicts, stores, layouts){
 
 	//Config Begin-------------------------------------------------------
-	var minModuleCount = 1;
-	var maxModuleCount = 1;
+	var minModuleCount = 2;
+	var maxModuleCount = 2;
 	var minParamCount = 0;
 	var maxParamCount = 0;
 	//Run all cases or only special cases
