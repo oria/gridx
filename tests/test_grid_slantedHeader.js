@@ -71,10 +71,10 @@ require([
 
 	store = new MemoryStore({data: data});
 
-	function formatter(item){
-		var mark, data = eval(item[this.field]);
-		if(data < 7)mark = 'normal';
-		else if(data < 9)mark = 'warning';
+	function decorator(value){
+		var mark;
+		if(value < 7)mark = 'normal';
+		else if(value < 9)mark = 'warning';
 		else mark = 'critical';
 
 		return '<span class="mark mark-' + mark + '"></span>';
@@ -87,20 +87,20 @@ require([
 		{field: 'critical', name: 'Critical', width: '30px', parentColumn: 'total'},
 		{field: 'warning', name: 'Warning', width: '30px', parentColumn: 'total'},
 
-		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', formatter: formatter},
-		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', formatter: formatter},
-		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', formatter: formatter},
-		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', formatter: formatter},
+		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', decorator: decorator},
+		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', decorator: decorator},
+		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', decorator: decorator},
+		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', decorator: decorator},
 
-		{id: 'vulnerability', field: 'vulnerability', name: 'Vulnerability', width: '30px', expanded: true, formatter: formatter},
-		{field: 'configuration', name: 'Configuration', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'patches', name: 'Patches', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'authentication', name: 'Authentication', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'privileges', name: 'Privileges', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'filesystem', name: 'FileSystem', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{id: 'vulnerability', field: 'vulnerability', name: 'Vulnerability', width: '30px', expanded: true, decorator: decorator},
+		{field: 'configuration', name: 'Configuration', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'patches', name: 'Patches', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'authentication', name: 'Authentication', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'privileges', name: 'Privileges', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'filesystem', name: 'FileSystem', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
 
-		{field: 'alerts', name: 'Alerts', width: '30px', formatter: formatter},
-		{field: 'violations', name: 'Violations', width: '30px', formatter: formatter}
+		{field: 'alerts', name: 'Alerts', width: '30px', decorator: decorator},
+		{field: 'violations', name: 'Violations', width: '30px', decorator: decorator}
 	];
 
 	var treeData = lang.clone(data);
@@ -135,20 +135,20 @@ require([
 		{field: 'critical', name: 'Critical', width: '30px', parentColumn: 'total'},
 		{field: 'warning', name: 'Warning', width: '30px', parentColumn: 'total'},
 
-		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', formatter: formatter},
-		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', formatter: formatter},
-		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', formatter: formatter},
-		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', formatter: formatter},
+		{id: 'governance', field: 'governance', name: 'Governace', width: '30px', decorator: decorator},
+		{field: 'monitoring', name: 'Monitoring', width: '30px', parentColumn: 'governance', decorator: decorator},
+		{field: 'policy', name: 'Policy', width: '30px', parentColumn: 'governance', decorator: decorator},
+		{field: 'process', name: 'Process', width: '30px', parentColumn: 'governance', decorator: decorator},
 
-		{id: 'vulnerability', field: 'vulnerability', name: 'Vulnerability', width: '30px', expanded: true, formatter: formatter},
-		{field: 'configuration', name: 'Configuration', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'patches', name: 'Patches', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'authentication', name: 'Authentication', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'privileges', name: 'Privileges', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
-		{field: 'filesystem', name: 'FileSystem', width: '30px', parentColumn: 'vulnerability', formatter: formatter},
+		{id: 'vulnerability', field: 'vulnerability', name: 'Vulnerability', width: '30px', expanded: true, decorator: decorator},
+		{field: 'configuration', name: 'Configuration', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'patches', name: 'Patches', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'authentication', name: 'Authentication', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'privileges', name: 'Privileges', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
+		{field: 'filesystem', name: 'FileSystem', width: '30px', parentColumn: 'vulnerability', decorator: decorator},
 
-		{field: 'alerts', name: 'Alerts', width: '30px', formatter: formatter},
-		{field: 'violations', name: 'Violations', width: '30px', formatter: formatter}
+		{field: 'alerts', name: 'Alerts', width: '30px', decorator: decorator},
+		{field: 'violations', name: 'Violations', width: '30px', decorator: decorator}
 	];
 
 	parser.parse();

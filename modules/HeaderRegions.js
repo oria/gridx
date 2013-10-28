@@ -53,7 +53,6 @@ declare(_Module, {
 		t.refresh();
 		t._initFocus();
 		t.aspect(t.grid.header, 'onRender', 'refresh');
-		t.aspect(t.grid, 'onHeaderKeyDown', '_onKey');
 		t.loaded.callback();
 	},
 
@@ -142,7 +141,10 @@ declare(_Module, {
 			focusNode: g.header.domNode,
 			scope: t,
 			doFocus: t._doFocus,
-			onFocus: t._onFocus
+			onFocus: t._onFocus,
+			connects: [
+				t.aspect(g, 'onHeaderKeyDown', '_onKey')
+			]
 		});
 	},
 

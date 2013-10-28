@@ -213,7 +213,7 @@ define([
 			});
 			parser.parse(this.domNode);
 			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.arg('closeButton'));
-			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
+			this.grid.vLayout.register(this, 'domNode', 'headerNode', -0.5);
 			this._initWidgets();
 			this._initFocus();
 			this.refresh();
