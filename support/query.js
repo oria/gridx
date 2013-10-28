@@ -7,7 +7,7 @@ define([
 	var _query = function(selector, context){
 		
 		var nlist = query.apply(null, arguments);
-		return nlist;
+		// return nlist;
 		
 		
 		if(!context || typeof selector === 'object'
