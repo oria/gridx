@@ -12,6 +12,15 @@
 	float: left;
 }
 
+.dijitRtl .gridxFilterPaneCloseButton {
+	float: left;
+}
+
+.dijitRtl .gridxFilterDialog .dijitAccordionTitleFocus {
+	margin-right: auto;
+	margin-left: 16px;
+}
+
 .dijitRtl .gridxQuickFilterClear {
 	right: auto;
 	left: 5px;
