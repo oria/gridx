@@ -218,6 +218,11 @@ define([
 		//		If true then the cells in this column will be editable. Default is false.
 		editable: false,
 
+		// editorIgnoresEnter: Boolean
+		//		If true then the editor will ignore ENTER keypresses. Default is false.
+		//		This makes it possible to use Textarea widgets.
+		editorIgnoresEnter: false,
+
 		canEdit: function(cell){
 			// summary:
 			//		Decide whether a cell is editable.
@@ -981,7 +986,7 @@ define([
 				col = g._columnsById[e.columnId];
 			if(col.editable){
 				var editing = t.isEditing(e.rowId, e.columnId);
-				if(e.keyCode == keys.ENTER){
+				if(e.keyCode == keys.ENTER && !col.editorIgnoresEnter){
 					if(editing){
 						t.apply(e.rowId, e.columnId).then(function(success){
 							if(success){
