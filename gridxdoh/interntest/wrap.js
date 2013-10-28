@@ -1,8 +1,10 @@
 define([
 	"intern/node_modules/dojo/node!fs",
 	"intern/node_modules/dojo/node!path",
-	"intern/node_modules/dojo/node!./config.js"
-], function(fs, path, config){
+	"intern/node_modules/dojo/node!./config.js",
+	"intern/node_modules/dojo/node!wd",
+	"intern/chai!assert"
+], function(fs, path, config, wd, assert){
 
 	if(!fs.existsSync(config.screenshotDir)){
 		fs.mkdirSync(config.screenshotDir);
@@ -69,7 +71,7 @@ define([
 				}
 				fs.writeFileSync(picPaths.picPath, picData, 'base64');
 				if(needCompare){
-					picsAreEqual.should.be.ok;
+					assert(picsAreEqual, 'screenshot changed');
 				}
 				return picData;
 			});
@@ -117,6 +119,7 @@ define([
 			remote.assertScreenshot = assertScreenshot;
 			remote.vScrollGridx = vScroll;
 			remote.hScrollGridx = hScroll;
+			remote.SPECIAL_KEYS = wd.SPECIAL_KEYS;
 			return cb && cb.apply(this, arguments);
 		};
 	}

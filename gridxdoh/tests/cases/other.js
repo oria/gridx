@@ -138,14 +138,9 @@ define([
 				{id: 'id', field: 'id', name: 'Identity', width: '50px'},
 				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px'},
 				{id: 'Artist', field: 'Artist', name: 'Artist', width: '100px'},
-				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},
 				{id: 'Album', field: 'Album', name: 'Album', width: '150px'},
-				{id: 'Name', field: 'Name', name: 'Name', width: '160px'},
-				{id: 'Length', field: 'Length', name: 'Length', width: '80px'},
+				{id: 'Year', field: 'Year', name: 'Year', width: '80px'},
 				{id: 'Track', field: 'Track', name: 'Track', width: '50px'},
-				{id: 'Composer', field: 'Composer', name: 'Composer', width: '100px'},
-				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '100px'},
-				{id: 'Last Played', field: 'Last Played', name: 'Last Played', width: '100px'},
 				{id: 'Heard', field: 'Heard', name: 'Heard', width: '80px'}
 			],
 			modules: [
@@ -156,7 +151,7 @@ define([
 			}
 		},
 		{
-			title: 'autoWidth and autoHeight and columnResizer',
+			title: 'autoWidth autoHeight grid with columnResizer',
 			guide: [
 				'resize column, the grid width should change accordingly'
 			],
@@ -186,7 +181,7 @@ define([
 			}
 		},
 		{
-			title: 'autoHeight and filterBar and paginationBar',
+			title: 'autoHeight grid with filterBar and paginationBar',
 			guide: [
 				'filter the grid, the grid height should change accordingly.',
 				'switch pages, the grid height should change accordingly.',
@@ -217,11 +212,12 @@ define([
 				'gridx/modules/filter/FilterBar'
 			],
 			props: {
-				autoHeight: true
+				autoHeight: true,
+				paginationBarSizes: [5, 10, 25, 0]
 			}
 		},
 		{
-			title: 'sync cache, as many features as possible',
+			title: 'sync cache grid with as many features as possible',
 			guide: [
 			],
 			cache: "gridx/core/model/cache/Sync",
@@ -295,7 +291,7 @@ define([
 			}
 		},
 		{
-			title: 'client side filter, filter bar',
+			title: 'grid with client side filter and filter bar',
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -332,7 +328,7 @@ define([
 		},
 		{
 			version: 1.1,
-			title: 'client side filter, filter bar and quick filter',
+			title: 'grid with client side filter, filter bar and quick filter',
 			guide: [
 				'do some filter in quick filter, the filter bar and filter dialog should also be updated',
 				'input something in quick filter, the clear filter button (x) should show up',
@@ -377,7 +373,7 @@ define([
 		},
 		{
 			version: 1.2,
-			title: 'customized header regions',
+			title: 'grid with customized header regions',
 			guide: [
 				'when mouse over or focus header, the header regions are shown',
 				'use left/right arrow keys to navigate through regions (including NestedSort)'
@@ -419,7 +415,7 @@ define([
 			}
 		},
 		{
-			title: 'cellWidget and pagination',
+			title: 'grid with cellWidget and pagination',
 			guide: [
 				'Go to different pages, cell widgets should render correctly',
 				'focus any cell in the Button column, press F2 to move focus to the button in the cell.',
@@ -531,7 +527,7 @@ define([
 			]
 		},
 		{
-			title: 'put singlesort and nestedsort together, only the latter one (nestedsort) takes effect',
+			title: 'grid with nestedsort overriding singlesort',
 			guide: [
 				'initial sorting order is correct',
 				'The last column (Summary Genre and Year) can be correctly sorted',
@@ -580,7 +576,7 @@ define([
 	cases.push(
 		{
 			version: 1.2,
-			title: 'Adaptive filter implemented by HeaderMenu',
+			title: 'grid with adaptive filter implemented by HeaderMenu',
 			guide: [
 				'A-Z filter can work correctly (different filter items use "or" relation)',
 				'number filter can work correctly',

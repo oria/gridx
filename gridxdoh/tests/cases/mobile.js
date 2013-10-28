@@ -52,7 +52,6 @@ define([
 				modules.SingleSort
 			],
 			props: {
-				touch: true,
 				paginationBarSizes: [1, 2, 0],
 				selectRowTriggerOnCell: true
 			}

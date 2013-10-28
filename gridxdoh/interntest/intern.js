@@ -15,21 +15,21 @@ define({
 	// Note that the `build` capability will be filled in with the current commit ID from the Travis CI environment
 	// automatically
 	capabilities: {
-		'selenium-version': '2.35.0'
+		'selenium-version': '2.37.0'
 	},
 
 	// Browsers to run integration testing against. Note that version numbers must be strings if used with Sauce
 	// OnDemand. Options that will be permutated are browserName, version, platform, and platformVersion; any other
 	// capabilities options specified for an environment will be copied as-is
 	environments: [
-		/*{ browserName: 'internet explorer', version: '10', platform: 'Windows 8' },
-		{ browserName: 'internet explorer', version: '9', platform: 'Windows 7' },
-		{ browserName: 'firefox', version: '23', platform: [ 'Linux', 'Windows 7' ] },
-		{ browserName: 'firefox', version: '21', platform: 'Mac 10.6' },
-		{ browserName: 'chrome', platform: [ 'Linux', 'Mac 10.8', 'Windows 7' ] },
-		{ browserName: 'safari', version: '6', platform: 'Mac 10.8' }*/
-//        { browserName: 'internet explorer' }
-		{ browserName: 'firefox' }
+//        { browserName: 'internet explorer', version: '10', platform: 'Windows 8' },
+//        { browserName: 'internet explorer', version: '9', platform: 'Windows 7' },
+//        { browserName: 'firefox', version: '23', platform: [ 'Linux', 'Windows 7' ] },
+//        { browserName: 'firefox', version: '21', platform: 'Mac 10.6' },
+//        { browserName: 'chrome', platform: [ 'Linux', 'Mac 10.8', 'Windows 7' ] },
+//        { browserName: 'safari', version: '6', platform: 'Mac 10.8' }
+		{ browserName: 'internet explorer' }
+//        { browserName: 'firefox' }
 //        { browserName: 'chrome' }
 	],
 
@@ -43,6 +43,8 @@ define({
 	// in the SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables unless you are sure you will NEVER be
 	// publishing this configuration file somewhere
 	webdriver: {
+		username: 'zhuxw',
+		accessKey: 'f466b77d-730c-4d17-bab6-8b66088a0907',
 		host: 'localhost',
 		port: 4444
 	},
@@ -53,6 +55,8 @@ define({
 		// Packages that should be registered with the loader in each testing environment
 		packages: [ { name: 'interntest', location: './interntest' } ]
 	},
+
+	reporters: ['console', 'runner'],
 
 	// Non-functional test suite(s) to run in each browser
 	suites: [],

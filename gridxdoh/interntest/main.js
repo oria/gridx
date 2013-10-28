@@ -2,34 +2,42 @@ define([
 	'require',
 	'./wrap',
 	"intern!bdd",
-	"intern/node_modules/dojo/node!./config.js",
-	"intern/chai!should"
+	"intern/node_modules/dojo/node!./config.js"
 ], function(require, wrap, bdd, config){
 
 require(config.cases, function(){
 
-	var testcases = arguments;
-
-	function findOnlyCase(){
+	function findSuites(testcases){
+		var suites = {};
+		var found = 0;
+		for(var i = 0; i < testcases.length; ++i){
+			for(var suiteName in testcases[i]){
+				if(/^!/.test(suiteName)){
+					suites[suiteName.substring(1)] = testcases[i][suiteName];
+					found = 1;
+				}
+			}
+		}
+		return found ? [suites] : testcases;
+	}
+	function findCases(testcases){
+		var suites = {};
+		var found = 0;
 		for(var i = 0; i < testcases.length; ++i){
 			for(var suiteName in testcases[i]){
 				var cases = testcases[i][suiteName];
 				for(var caseName in cases){
 					if(/^!/.test(caseName)){
-						var suites = {};
-						var onlySuite = suites[suiteName] = {};
-						onlySuite[caseName.substring(1)] = cases[caseName];
-						return [suites];
+						var suite = suites[suiteName] = suites[suiteName] || {};
+						suite[caseName.substring(1)] = cases[caseName];
+						found = 1;
 					}
 				}
 			}
 		}
-		return null;
+		return found ? [suites] : testcases;
 	}
-	var onlyCase = findOnlyCase();
-	if(onlyCase){
-		testcases = onlyCase;
-	}
+	var testcases = findCases(findSuites(arguments));
 
 	with(bdd){
 		describe('gridx', function(){
@@ -46,11 +54,12 @@ require(config.cases, function(){
 
 				it(caseName, wrap(function(){
 					wrap.context = [suiteName, caseName];
+					this.async(Math.max(config.testCaseTimeout, config.gridxCreationTimeout) || 5 * 60 * 1000);
 					var d = this.remote.
 						deleteAllCookies().
 						setWindowSize(1024, 768).
 						get(url).
-						waitForElementByClassName('gridx', 10000);
+						waitForElementByClassName('gridx', config.gridxCreationTimeout || 2 * 60 * 1000);
 					return caseFunc.call(d, d);
 				}));
 			}
