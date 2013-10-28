@@ -1,11 +1,11 @@
-define({
+define({     
 //Body
 	loadingInfo: "Φόρτωση...",
-	emptyInfo: "Δεν υπάρχουν στοιχεία για εμφάνιση.",
-	loadFailInfo: "Απέτυχε η φόρτωση δεδομένων!",
-	loadMore: "Φόρτωση περισσοτέρων",
+	emptyInfo: "Δεν υπάρχουν στοιχεία προς εμφάνιση",
+	loadFailInfo: "Αποτυχία φόρτωσης των δεδομένων!",
+	loadMore: "Φόρτωση περισσότερων",
 	loadMoreLoading: "Φόρτωση...",
-	loadPrevious: "Φόρτωση προηγούμενου",
+	loadPrevious: "Φόρτωση προηγούμενων",
 	loadPreviousLoading: "Φόρτωση...",
 
 //FilterBar
@@ -15,26 +15,26 @@ define({
 	"ruleTitleTemplate": "Κανόνας ${ruleNumber}",
 	"noFilterApplied": "Δεν έχει εφαρμοστεί φίλτρο.",
 	"defineFilter": "Ορισμός φίλτρου",
-	"conditionEqual": "ίσο",
-	"conditionNotEqual": "όχι ίσο",
-	"conditionLess": "μικρότερο από",
-	"conditionLessEqual": "μικρότερο από ή ίσο",
-	"conditionGreater": "μεγαλύτερο από",
-	"conditionGreaterEqual": "μεγαλύτερο από ή ίσο",
+	"conditionEqual": "ίσο με",
+	"conditionNotEqual": "δεν είναι ίσο με",
+	"conditionLess": "είναι μικρότερο από",
+	"conditionLessEqual": "μικρότερο από ή ίσο με",
+	"conditionGreater": "είναι μεγαλύτερο από",
+	"conditionGreaterEqual": "μεγαλύτερο από ή ίσο με",
 	"conditionContain": "περιέχει",
 	"conditionIs": "είναι",
-	"conditionStartWith": "αρχίζει από",
+	"conditionStartWith": "αρχίζει με",
 	"conditionEndWith": "τελειώνει σε",
 	"conditionNotContain": "δεν περιέχει",
 	"conditionIsNot": "δεν είναι",
-	"conditionNotStartWith": "δεν αρχίζει από",
+	"conditionNotStartWith": "δεν αρχίζει με",
 	"conditionNotEndWith": "δεν τελειώνει σε",
 	"conditionBefore": "πριν από",
-	"conditionAfter": "μετά",
+	"conditionAfter": "μετά από",
 	"conditionRange": "εύρος",
 	"conditionIsEmpty": "είναι κενό",
-	"all": "όλα",
-	"any": "οποιοδήποτε",
+	"all": "όλες",
+	"any": "οποιαδήποτε",
 	"relationAll": "όλοι οι κανόνες",
 	"waiRelAll": "Ικανοποίηση όλων των ακόλουθων κανόνων:",
 	"relationAny": "οποιοσδήποτε κανόνας",
@@ -46,26 +46,26 @@ define({
 	"addRuleButton": "Προσθήκη κανόνα",
 	"waiAddRuleButton": "Προσθήκη νέου κανόνα",
 	"removeRuleButton": "Αφαίρεση κανόνα",
-	"waiRemoveRuleButtonTemplate": "Αφαίρεση κανόνα ${0}",
+	"waiRemoveRuleButtonTemplate": "Αφαίρεση του κανόνα ${0}",
 	"addRuleButton": "Προσθήκη κανόνα φιλτραρίσματος",
 	"cancelButton": "Ακύρωση",
 	"waiCancelButton": "Ακύρωση του πλαισίου διαλόγου",
-	"clearButton": "Εκκαθάριση ",
+	"clearButton": "Εκκαθάριση",
 	"waiClearButton": "Εκκαθάριση του φίλτρου",
 	"filterButton": "Φίλτρο",
 	"waiFilterButton": "Υποβολή του φίλτρου",
-	"columnSelectLabel": "Στήλη",
+	"columnSelectLabel": "Στήλη:",
 	"waiColumnSelectTemplate": "Στήλη για τον κανόνα ${0}",
-	"conditionSelectLabel": "Συνθήκη",
+	"conditionSelectLabel": "Συνθήκη:",
 	"waiConditionSelectTemplate": "Συνθήκη για τον κανόνα ${0}",
-	"valueBoxLabel": "Τιμή",
+	"valueBoxLabel": "Τιμή:",
 	"waiValueBoxTemplate": "Καταχωρήστε τιμή για φιλτράρισμα για τον κανόνα ${0}",
 	"rangeTo": "έως",
 	"rangeTemplate": "από ${0} έως ${1}",
 	"statusTipHeaderColumn": "Στήλη",
 	"statusTipHeaderCondition": "Κανόνες",
 	"statusTipTitle": "Γραμμή φίλτρου",
-	"statusTipMsg": "Πατήστε στη γραμμή φίλτρου για να φιλτράρετε με βάση τιμές στο ${0}.",
+	"statusTipMsg": "Πατήστε στη γραμμή φίλτρου για να φιλτράρετε τις τιμές σε ${0}.",
 	"anycolumn": "οποιαδήποτε στήλη",
 	"statusTipTitleNoFilter": "Γραμμή φίλτρου",
 	"statusTipTitleHasFilter": "Φίλτρο",
@@ -74,7 +74,7 @@ define({
 	"statusTipHeaderAll": "Ικανοποίηση όλων των κανόνων.",
 	"statusTipHeaderAny": "Ικανοποίηση οποιουδήποτε κανόνα.",
 	"defaultItemsName": "στοιχεία",
-	"filterBarMsgHasFilterTemplate": "Εμφανίζονται ${0} από ${1} ${2}.",
+	"filterBarMsgHasFilterTemplate": "${0} από ${1} ${2} εμφανίζονται.",
 	"filterBarMsgNoFilterTemplate": "Δεν έχει εφαρμοστεί φίλτρο",
 	"filterBarDefButton": "Ορισμός φίλτρου",
 	"waiFilterBarDefButton": "Φιλτράρισμα του πίνακα",
@@ -82,12 +82,12 @@ define({
 	"filterBarClearButton": "Εκκαθάριση φίλτρου",
 	"waiFilterBarClearButton": "Εκκαθάριση του φίλτρου",
 	"closeFilterBarBtn": "Κλείσιμο γραμμής φίλτρου",
-	"clearFilterMsg": "Το φίλτρο θα αφαιρεθεί και θα εμφανιστούν όλες οι διαθέσιμες εγγραφές.",
+	"clearFilterMsg": "Αφαιρεί το φίλτρο και εμφανίζει όλες τις διαθέσιμες εγγραφές.",
 	"anyColumnOption": "Οποιαδήποτε στήλη",
-	"trueLabel": "Αληθές",
-	"falseLabel": "Ψευδές",
-	"radioTrueLabel": "Τιμή Αληθές",
-	"radioFalseLabel": "Τιμή Ψευδές",
+	"trueLabel": "True",
+	"falseLabel": "False",
+	"radioTrueLabel": "Τιμή True",
+	"radioFalseLabel": "Τιμή False",
 	"beginTimeRangeLabel": "Αρχική τιμή εύρους ωρών",
 	"endTimeRangeLabel": "Τελική τιμή εύρους ωρών",
 	"beginDateRangeLabel": "Αρχική τιμή εύρους ημερομηνιών",
@@ -95,14 +95,14 @@ define({
 	"startsWithExpr": "${0}*",
 
 //NestedSort
-	singleSort: "Ταξινόμηση ενός επιπέδου",
-	nestedSort: "Ταξινόμηση πολλαπλών επιπέδων",
-	ascending: "Πατήστε για ταξινόμηση με αύξουσα σειρά",
-	descending: "Πατήστε για ταξινόμηση με φθίνουσα σειρά",
+	singleSort: "Απλή ταξινόμηση",
+	nestedSort: "Σύνθετη ταξινόμηση",
+	ascending: "Πατήστε εδώ για αύξουσα ταξινόμηση",
+	descending: "Πατήστε εδώ για φθίνουσα ταξινόμηση",
 	sortingState: "${0} - ${1}",
-	unsorted: "Να μη γίνει ταξινόμηση σε αυτή τη στήλη",
-	waiSingleSortLabel: "${0} - έχει ταξινομηθεί κατά ${1}. Επιλέξτε για ταξινόμηση κατά ${2}",
-	waiNestedSortLabel:"${0} - έχει γίνει ταξινόμηση πολλαπλών επιπέδων κατά ${1}. Επιλέξτε ταξινόμηση πολλαπλών επιπέδων κατά ${2}.",
+	unsorted: "Να μην ταξινομηθεί αυτή η στήλη",
+	waiSingleSortLabel: "${0} - έχει ταξινομηθεί κατά ${1}. Επιλέξτε την ταξινόμηση κατά ${2}",
+	waiNestedSortLabel:"${0} - έχει εφαρμοστεί σύνθετη ταξινόμηση κατά ${1}. Επιλέξτε τη σύνθετη ταξινόμηση κατά ${2}",
 
 //PaginationBar
 	pagerWai: 'Σελιδοποίηση',
@@ -124,7 +124,7 @@ define({
 	descriptionEmpty: 'Το πλέγμα είναι κενό.',
 
 	summary: 'Σύνολο: ${0}',
-	summaryWithSelection: 'Σύνολο: ${0} Επιλογή: ${1}',
+	summaryWithSelection: 'Σύνολο: ${0}, Επιλεγμένα: ${1}',
 
 	gotoBtnTitle: 'Μετάβαση σε συγκεκριμένη σελίδα',
 
@@ -150,12 +150,13 @@ define({
 
 //SummaryBar
 	summaryTotal: 'Σύνολο: ${0}',
-	summarySelected: 'Επιλογή: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summarySelected: 'Επιλεγμένα: ${0}',
+	summaryRange: 'Εύρος: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα επιλέξετε όλα. ",	//need translation
+	indirectDeselectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα αποεπιλέξετε όλα. ",	//need translation
+	treeExpanded: "Πατήστε Control + αριστερό βέλος για να συμπτύξετε αυτή τη γραμμή.",	//need translation
+	treeCollapsed: "Πατήστε Control + δεξί βέλος για να αναπτύξετε αυτή τη γραμμή."	//need translation
 });
+

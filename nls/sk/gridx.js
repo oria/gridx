@@ -1,15 +1,15 @@
-define({
+define({     
 //Body
-	loadingInfo: "Načítavanie...",
+	loadingInfo: "Načítava sa...",
 	emptyInfo: "Žiadne položky na zobrazenie",
 	loadFailInfo: "Zlyhalo načítavanie údajov!",
 	loadMore: "Načítať viac",
-	loadMoreLoading: "Načítavanie...",
+	loadMoreLoading: "Načítava sa...",
 	loadPrevious: "Načítať predošlé",
-	loadPreviousLoading: "Načítavanie...",
+	loadPreviousLoading: "Načítava sa...",
 
 //FilterBar
-	"clearFilterDialogTitle": "Zrušiť filter",
+	"clearFilterDialogTitle": "Vymazať filter",
 	"filterDefDialogTitle": "Filter",
 	"defaultRuleTitle": "Pravidlo",
 	"ruleTitleTemplate": "Pravidlo ${ruleNumber}",
@@ -37,7 +37,7 @@ define({
 	"any": "žiadne",
 	"relationAll": "všetky pravidlá",
 	"waiRelAll": "Vyhovovať všetkým týmto pravidlám:",
-	"relationAny": "ľubovoľné pravidlá",
+	"relationAny": "ľubovoľné pravidlo",
 	"waiRelAny": "Vyhovovať ľubovoľným z týchto pravidiel:",
 	"relationMsgFront": "Vyhovieť",
 	"relationMsgTail": "",
@@ -50,15 +50,15 @@ define({
 	"addRuleButton": "Pridať filtrovacie pravidlo",
 	"cancelButton": "Zrušiť",
 	"waiCancelButton": "Zrušiť toto dialógové okno",
-	"clearButton": "Zrušiť",
-	"waiClearButton": "Zrušiť filter",
+	"clearButton": "Vymazať",
+	"waiClearButton": "Vymazať filter",
 	"filterButton": "Filter",
 	"waiFilterButton": "Odoslať filter",
-	"columnSelectLabel": "Stĺpec",
+	"columnSelectLabel": "Stĺpec:",
 	"waiColumnSelectTemplate": "Stĺpec pre pravidlo ${0}",
-	"conditionSelectLabel": "Podmienka",
+	"conditionSelectLabel": "Podmienka:",
 	"waiConditionSelectTemplate": "Podmienka pre pravidlo ${0}",
-	"valueBoxLabel": "Hodnota",
+	"valueBoxLabel": "Hodnota:",
 	"waiValueBoxTemplate": "Zadajte hodnotu na filtrovanie pre pravidlo ${0}",
 	"rangeTo": "do",
 	"rangeTemplate": "od ${0} do ${1}",
@@ -80,12 +80,12 @@ define({
 	"waiFilterBarDefButton": "Filtrovať tabuľku",
 	"a11yFilterBarDefButton": "Filtrovať...",
 	"filterBarClearButton": "Zrušiť filter",
-	"waiFilterBarClearButton": "Zrušiť filter",
+	"waiFilterBarClearButton": "Vymazať filter",
 	"closeFilterBarBtn": "Zatvoriť lištu filtra",
 	"clearFilterMsg": "Toto odstráni filter a zobrazí všetky dostupné záznamy",
 	"anyColumnOption": "Ľubovoľný stĺpec",
-	"trueLabel": "Pravda",
-	"falseLabel": "Nepravda",
+	"trueLabel": "Áno",
+	"falseLabel": "Nie",
 	"radioTrueLabel": "Hodnota pravda",
 	"radioFalseLabel": "Hodnota nepravda",
 	"beginTimeRangeLabel": "Začiatočná hodnota rozsahu časov",
@@ -97,8 +97,8 @@ define({
 //NestedSort
 	singleSort: "Jednoduché triedenie",
 	nestedSort: "Vnorené triedenie",
-	ascending: "Kliknutím aktivujete vzostupné zoradenie",
-	descending: "Kliknutím aktivujete zostupné zoradenie",
+	ascending: "Kliknite pre vzostupné triedenie",
+	descending: "Kliknite pre zostupné triedenie",
 	sortingState: "${0} - ${1}",
 	unsorted: "Netriediť tento stĺpec",
 	waiSingleSortLabel: "${0} - je zoradené podľa ${1}. Vyberte zoradenie podľa ${2}",
@@ -106,34 +106,40 @@ define({
 
 //PaginationBar
 	pagerWai: 'Stránky',
+
 	pageIndex: '${0}',
 	pageIndexTitle: 'Strana ${0}',
+
 	firstPageTitle: 'Prvá strana',
 	prevPageTitle: 'Predošlá strana',
 	nextPageTitle: 'Ďalšia strana',
 	lastPageTitle: 'Posledná strana',
+
 	pageSize: '${0}',
 	pageSizeTitle: '${0} položiek na strane',
 	pageSizeAll: 'Všetky',
 	pageSizeAllTitle: 'Všetky položky',
+
 	description: '${0} - ${1} z ${2} položiek.',
 	descriptionEmpty: 'Mriežka je prázdna.',
-	// OneUI blueprint
+
 	summary: 'Celkovo: ${0}',
 	summaryWithSelection: 'Celkovo: ${0}, vybratých: ${1}',
+
 	gotoBtnTitle: 'Prejsť na špecifickú stranu',
+
 	gotoDialogTitle: 'Prejsť na stranu',
 	gotoDialogMainMsg: 'Zadajte číslo strany:',
 	gotoDialogPageCount: '(${0} strán)',
 	gotoDialogOKBtn: 'Prejsť',
 	gotoDialogCancelBtn: 'Zrušiť',
 	// for drop down pagination bar
-	pageLabel: 'Strana',
+	pageLabel: 'Stránka',
 	pageSizeLabel: 'Riadky',
 
 //QuickFilter
 	filterLabel: 'Filter',
-	clearButtonTitle: 'Zrušiť filter',
+	clearButtonTitle: 'Vymazať filter',
 	buildFilterMenuLabel: 'Vytvoriť filter&hellip;',
 	apply: 'Použiť filter',
 
@@ -143,13 +149,14 @@ define({
 	priorityOrder: 'priorita zoradenia ${0}',
 
 //SummaryBar
-	summary: 'Celkovo: ${0}',
-	summarySelected: 'Vybratých: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summaryTotal: 'Celkovo: ${0}',
+	summarySelected: 'Vybraté: ${0}',
+	summaryRange: 'Rozsah: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Ak chcete vybrať všetko, stlačte medzerník.",	//need translation
+	indirectDeselectAll: "Ak chcete zrušiť celý výber, stlačte medzerník.",	//need translation
+	treeExpanded: "Ak chcete zvinúť tento riadok, stlačte Control + šípka doľava.",	//need translation
+	treeCollapsed: "Ak chcete rozvinúť tento riadok, stlačte Control + šípka doprava."	//need translation
 });
+

@@ -1,4 +1,4 @@
-define({
+define({     
 //Body
 	loadingInfo: "Завантаження...",
 	emptyInfo: "Немає елементів для відображення",
@@ -37,7 +37,7 @@ define({
 	"any": "будь-яке",
 	"relationAll": "всі правила",
 	"waiRelAll": "Відповідає всім наступним правилам:",
-	"relationAny": "будь-які правила",
+	"relationAny": "Будь-яке правило",
 	"waiRelAny": "Відповідає будь-якому з наступних правил:",
 	"relationMsgFront": "Відповідає",
 	"relationMsgTail": "",
@@ -54,11 +54,11 @@ define({
 	"waiClearButton": "Очистити фільтр",
 	"filterButton": "Фільтр",
 	"waiFilterButton": "Застосувати фільтр",
-	"columnSelectLabel": "Стовпчик",
+	"columnSelectLabel": "Стовпець:",
 	"waiColumnSelectTemplate": "Стовпчик для правила ${0}",
-	"conditionSelectLabel": "Умова",
+	"conditionSelectLabel": "Умова:",
 	"waiConditionSelectTemplate": "Умова правила ${0}",
-	"valueBoxLabel": "Значення",
+	"valueBoxLabel": "Значення:",
 	"waiValueBoxTemplate": "Введіть значення для фільтрації за правилом ${0}",
 	"rangeTo": "до",
 	"rangeTemplate": "з ${0} до ${1}",
@@ -106,21 +106,28 @@ define({
 
 //PaginationBar
 	pagerWai: 'Пейджер',
+
 	pageIndex: '${0}',
 	pageIndexTitle: 'Сторінка ${0}',
+
 	firstPageTitle: 'Перша сторінка',
 	prevPageTitle: 'Попередня сторінка',
 	nextPageTitle: 'Наступна сторінка',
 	lastPageTitle: 'Остання сторінка',
+
 	pageSize: '${0}',
 	pageSizeTitle: '${0} елементів на сторінці',
 	pageSizeAll: 'Всі',
 	pageSizeAllTitle: 'Усі елементи',
+
 	description: '${0} - ${1} з ${2} елементів.',
 	descriptionEmpty: 'Матриця порожня.',
+
 	summary: 'Всього: ${0}',
 	summaryWithSelection: 'Всього: ${0} Вибрано: ${1}',
+
 	gotoBtnTitle: 'Перейти до вказаної сторінки',
+
 	gotoDialogTitle: 'Перейти до сторінки',
 	gotoDialogMainMsg: 'Вкажіть номер сторінки:',
 	gotoDialogPageCount: '(${0} сторінок)',
@@ -137,18 +144,19 @@ define({
 	apply: 'Застосувати фільтр',
 
 //Sort
-	helpMsg: '${0} - Click to sort or control-click to add to sort',	//need translation
-	singleHelpMsg: '${0} - Click to sort',	//need translation
-	priorityOrder: 'sort priority ${0}',	//need translation
+	helpMsg: '${0} - Клацніть для сортування або клацніть, утримуючи клавішу control, для додання до списку сортування',
+	singleHelpMsg: '${0} - Клацніть для сортування',
+	priorityOrder: 'Пріоритет сортування ${0}',
 
 //SummaryBar
 	summaryTotal: 'Всього: ${0}',
-	summarySelected: 'Вибрано: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summarySelected: 'Виділено: ${0}',
+	summaryRange: 'Діапазон: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Натисніть SPACE, щоб вибрати всі.",	//need translation
+	indirectDeselectAll: "Натисніть SPACE, щоб скасувати вибір всіх.",	//need translation
+	treeExpanded: "Натисніть Control + стрілка вліво для згортання рядка.",	//need translation
+	treeCollapsed: "Натисніть Control + стрілка вправо для розгортання рядка."	//need translation
 });
+

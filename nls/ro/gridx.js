@@ -1,26 +1,26 @@
-define({
+define({     
 //Body
 	loadingInfo: "Încărcare...",
-	emptyInfo: "Nu există articole de afişat",
-	loadFailInfo: "Încărcarea datelor a eşuat!",
+	emptyInfo: "Niciun articol de afişat",
+	loadFailInfo: "A eşuat încărcarea datelor!",
 	loadMore: "Încărcare mai multe",
 	loadMoreLoading: "Încărcare...",
-	loadPrevious: "Încărcare anterioare",
+	loadPrevious: "Încărcare anterior",
 	loadPreviousLoading: "Încărcare...",
 
 //FilterBar
-	"clearFilterDialogTitle": "Ştergere filtru",
+	"clearFilterDialogTitle": "Curăţare filtru",
 	"filterDefDialogTitle": "Filtru",
 	"defaultRuleTitle": "Regulă",
-	"ruleTitleTemplate": "Regulă ${ruleNumber}",
+	"ruleTitleTemplate": "Regula ${ruleNumber}",
 	"noFilterApplied": "Nu este aplicat niciun filtru.",
 	"defineFilter": "Definire filtru",
 	"conditionEqual": "egal",
 	"conditionNotEqual": "nu este egal",
 	"conditionLess": "este mai mic decât",
-	"conditionLessEqual": "mai mic sau egal",
+	"conditionLessEqual": "mai mic sau egal cu",
 	"conditionGreater": "este mai mare decât",
-	"conditionGreaterEqual": "mai mare sau egal",
+	"conditionGreaterEqual": "mai mare sau egal cu",
 	"conditionContain": "conţine",
 	"conditionIs": "este",
 	"conditionStartWith": "începe cu",
@@ -29,58 +29,58 @@ define({
 	"conditionIsNot": "nu este",
 	"conditionNotStartWith": "nu începe cu",
 	"conditionNotEndWith": "nu se termină cu",
-	"conditionBefore": "înaintea",
+	"conditionBefore": "înainte",
 	"conditionAfter": "după",
 	"conditionRange": "interval",
 	"conditionIsEmpty": "este gol",
 	"all": "toate",
 	"any": "oricare",
 	"relationAll": "toate regulile",
-	"waiRelAll": "Răspundeţi tuturor regulilor următoare:",
-	"relationAny": "oricare reguli",
-	"waiRelAny": "Răspundeţi oricărei dintre regulile următoare:",
-	"relationMsgFront": "Răspuns",
+	"waiRelAll": "Potrivire cu toate regulile următoare:",
+	"relationAny": "orice regulă",
+	"waiRelAny": "Potrivire cu oricare din regulile următoare:",
+	"relationMsgFront": "Potrivire",
 	"relationMsgTail": "",
 	"and": "şi",
 	"or": "sau",
 	"addRuleButton": "Adăugare regulă",
 	"waiAddRuleButton": "Adăugare regulă nouă",
 	"removeRuleButton": "Înlăturare regulă",
-	"waiRemoveRuleButtonTemplate": "Înlăturare regulă ${0}",
-	"addRuleButton": "Adăugare regulă filtru",
+	"waiRemoveRuleButtonTemplate": "Înlăturare regula ${0}",
+	"addRuleButton": "Adăugare regulă de filtru",
 	"cancelButton": "Anulare",
-	"waiCancelButton": "Anulaţi acest dialog",
-	"clearButton": "Ştergere",
-	"waiClearButton": "Ştergeţi filtrul",
+	"waiCancelButton": "Anulare acest dialog",
+	"clearButton": "Curăţare",
+	"waiClearButton": "Curăţare filtru",
 	"filterButton": "Filtru",
-	"waiFilterButton": "Lansaţi în execuţie filtrul",
-	"columnSelectLabel": "Coloană",
-	"waiColumnSelectTemplate": "Coloană pentru regulă ${0}",
-	"conditionSelectLabel": "Condiţie",
+	"waiFilterButton": "Lansare filtru",
+	"columnSelectLabel": "Coloană:",
+	"waiColumnSelectTemplate": "Coloană pentru regula ${0}",
+	"conditionSelectLabel": "Condiţie:",
 	"waiConditionSelectTemplate": "Condiţie pentru regula ${0}",
-	"valueBoxLabel": "Valoare",
-	"waiValueBoxTemplate": "Introduceţi valoarea pentru filtrarea pentru regulă ${0}",
+	"valueBoxLabel": "Valoare:",
+	"waiValueBoxTemplate": "Introduceţi valoarea de filtrat pentru regula ${0}",
 	"rangeTo": "la",
-	"rangeTemplate": "din ${0} la ${1}",
+	"rangeTemplate": "de la ${0} la ${1}",
 	"statusTipHeaderColumn": "Coloană",
 	"statusTipHeaderCondition": "Reguli",
 	"statusTipTitle": "Bară de filtru",
-	"statusTipMsg": "Faceţi clic pe bara de filtru aici pentru a filtra valorile în ${0}.",
+	"statusTipMsg": "Faceţi clic aici pe bara de filtru pentru a filtra valorile din ${0}.",
 	"anycolumn": "orice coloană",
 	"statusTipTitleNoFilter": "Bară de filtru",
 	"statusTipTitleHasFilter": "Filtru",
-	"statusTipRelPre": "Răspuns",
+	"statusTipRelPre": "Potrivire",
 	"statusTipRelPost": "reguli.",
 	"statusTipHeaderAll": "Potrivire cu toate regulile.",
-	"statusTipHeaderAny": "Potrivire cu orice regulă.",
+	"statusTipHeaderAny": "Potrivire cu orice reguli.",
 	"defaultItemsName": "articole",
 	"filterBarMsgHasFilterTemplate": "${0} din ${1} ${2} afişate.",
-	"filterBarMsgNoFilterTemplate": "Niciun filtru nu este aplicat",
+	"filterBarMsgNoFilterTemplate": "Nu este aplicat niciun filtru",
 	"filterBarDefButton": "Definire filtru",
-	"waiFilterBarDefButton": "Filtrare tabelă",
-	"a11yFilterBarDefButton": "Filtru...",
-	"filterBarClearButton": "Ştergere filtru",
-	"waiFilterBarClearButton": "Ştergeţi filtrul",
+	"waiFilterBarDefButton": "Filtrare tabel",
+	"a11yFilterBarDefButton": "Filtrare...",
+	"filterBarClearButton": "Curăţare filtru",
+	"waiFilterBarClearButton": "Curăţare filtru",
 	"closeFilterBarBtn": "Închidere bară de filtru",
 	"clearFilterMsg": "Aceasta va înlătura filtrul şi va afişa toate înregistrările disponibile.",
 	"anyColumnOption": "Orice coloană",
@@ -88,44 +88,50 @@ define({
 	"falseLabel": "Fals",
 	"radioTrueLabel": "Valoare Adevărat",
 	"radioFalseLabel": "Valoare Fals",
-	"beginTimeRangeLabel": "Valoare de început interval timp",
-	"endTimeRangeLabel": "Valoare de sfârşit interval timp",
-	"beginDateRangeLabel": "Valoare de început interval dată",
-	"endDateRangeLabel": "Valoare de sfârşit interval dată",
+	"beginTimeRangeLabel": "Valoare de început interval de ore",
+	"endTimeRangeLabel": "Valoare de sfârşit interval de ore",
+	"beginDateRangeLabel": "Valoare de început interval de date",
+	"endDateRangeLabel": "Valoare de sfârşit interval de date",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
-	singleSort: "Sortare unică",
+	singleSort: "Sortare singulară",
 	nestedSort: "Sortare imbricată",
-	ascending: "Faceţi clic pentru sortare Crescătoare",
-	descending: "Faceţi clic pentru sortare Descrescătoare",
+	ascending: "Faceţi clic pentru a sorta crescător",
+	descending: "Faceţi clic pentru a sorta descrescător",
 	sortingState: "${0} - ${1}",
-	unsorted: "Să nu fie sortară această coloană",
+	unsorted: "Nu se sortează această coloană",
 	waiSingleSortLabel: "${0} - este sortată după ${1}. Alegeţi sortarea după ${2}",
 	waiNestedSortLabel:"${0} - este sortată imbricat după ${1}. Alegeţi sortarea imbricată după ${2}",
 
 //PaginationBar
 	pagerWai: 'Paginator',
+
 	pageIndex: '${0}',
 	pageIndexTitle: 'Pagina ${0}',
+
 	firstPageTitle: 'Prima pagină',
 	prevPageTitle: 'Pagina anterioară',
 	nextPageTitle: 'Pagina următoare',
 	lastPageTitle: 'Ultima pagină',
+
 	pageSize: '${0}',
-	pageSizeTitle: '${0} articole pe pagină',
+	pageSizeTitle: '${0} articole per pagină',
 	pageSizeAll: 'Toate',
 	pageSizeAllTitle: 'Toate articolele',
+
 	description: '${0} - ${1} din ${2} articole.',
 	descriptionEmpty: 'Grila este goală.',
-	// OneUI blueprint
+
 	summary: 'Total: ${0}',
 	summaryWithSelection: 'Total: ${0} Selectate: ${1}',
-	gotoBtnTitle: 'Deplasare la o pagină anumită',
+
+	gotoBtnTitle: 'Deplasare la o anumită pagină',
+
 	gotoDialogTitle: 'Deplasare la pagină',
 	gotoDialogMainMsg: 'Specificaţi numărul de pagină:',
 	gotoDialogPageCount: '(${0} pagini)',
-	gotoDialogOKBtn: 'Deplasare',
+	gotoDialogOKBtn: 'Salt',
 	gotoDialogCancelBtn: 'Anulare',
 	// for drop down pagination bar
 	pageLabel: 'Pagina',
@@ -133,23 +139,24 @@ define({
 
 //QuickFilter
 	filterLabel: 'Filtru',
-	clearButtonTitle: 'Ştergere filtru',
+	clearButtonTitle: 'Curăţare filtru',
 	buildFilterMenuLabel: 'Construire filtru&hellip;',
 	apply: 'Aplicare filtru',
 
 //Sort
-	helpMsg: '${0} - Faceţi clic pentru a sorta sau faceţi control-clic pentru a adăuga la sortare',
+	helpMsg: '${0} - Faceţi clic pentru a sorta sau control-clic pentru a adăuga la sortare',
 	singleHelpMsg: '${0} - Faceţi clic pentru a sorta',
 	priorityOrder: 'prioritate sortare ${0}',
 
 //SummaryBar
 	summaryTotal: 'Total: ${0}',
 	summarySelected: 'Selectate: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summaryRange: 'Interval: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Apăsaţi bara de spaţiu pentru a selecta tot.",	//need translation
+	indirectDeselectAll: "Apăsaţi bara de spaţiu pentru a deselecta tot.",	//need translation
+	treeExpanded: "Control + tasta cu săgeata la stânga pentru a restrânge acest rând.",	//need translation
+	treeCollapsed: "Control + tasta cu săgeata la dreapta pentru a expanda acest rând."	//need translation
 });
+
