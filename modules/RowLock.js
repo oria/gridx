@@ -45,6 +45,10 @@ define([
 					_this.connect(g.vScrollerNode, 'onscroll', function(){
 						_this._updateRowPosition();
 					});
+					
+					_this.connect(g.bodyNode, 'onscroll', function(){
+						_this._updateRowPosition();
+					});
 				}
 				
 				if(_this.grid.vScroller && _this.grid.rowHeader){
