@@ -1,12 +1,12 @@
-define({
+define({     
 //Body
 	loadingInfo: "Indlæser...",
 	emptyInfo: "Der er ingen elementer at vise",
 	loadFailInfo: "Kan ikke indlæse data.",
-	loadMore: "Indlæs mere",
-	loadMoreLoading: "Indlæser...",
-	loadPrevious: "Indlæs forrige",
-	loadPreviousLoading: "Indlæser...",
+	loadMore: "Load More",
+	loadMoreLoading: "Loading...",
+	loadPrevious: "Load Previous",
+	loadPreviousLoading: "Loading...",
 
 //FilterBar
 	"clearFilterDialogTitle": "Ryd filter",
@@ -16,7 +16,7 @@ define({
 	"noFilterApplied": "Intet filter anvendt.",
 	"defineFilter": "Definér filter",
 	"conditionEqual": "lig med",
-	"conditionNotEqual": "er forskellig fra",
+	"conditionNotEqual": "er ikke lig med",
 	"conditionLess": "er mindre end",
 	"conditionLessEqual": "mindre end eller lig med",
 	"conditionGreater": "er større end",
@@ -39,14 +39,14 @@ define({
 	"waiRelAll": "Matcher alle følgende regler:",
 	"relationAny": "vilkårlige regler",
 	"waiRelAny": "Matcher en eller flere af følgende regler:",
-	"relationMsgFront": "Match",
+	"relationMsgFront": "Matcher",
 	"relationMsgTail": "",
 	"and": "og",
 	"or": "eller",
 	"addRuleButton": "Tilføj regel",
 	"waiAddRuleButton": "Tilføj en ny regel",
 	"removeRuleButton": "Fjern regel",
-	"waiRemoveRuleButtonTemplate": "Fjern reglen ${0}",
+	"waiRemoveRuleButtonTemplate": "Fjern regel ${0}",
 	"addRuleButton": "Tilføj filterregel",
 	"cancelButton": "Annullér",
 	"waiCancelButton": "Annullér denne dialogboks",
@@ -54,18 +54,18 @@ define({
 	"waiClearButton": "Ryd filteret",
 	"filterButton": "Filter",
 	"waiFilterButton": "Send filteret",
-	"columnSelectLabel": "Kolonne",
-	"waiColumnSelectTemplate": "Kolonne for reglen ${0}",
-	"conditionSelectLabel": "Betingelse",
-	"waiConditionSelectTemplate": "Betingelse for reglen ${0}",
-	"valueBoxLabel": "Værdi",
-	"waiValueBoxTemplate": "Angiv værdi, der skal filtreres efter for reglen ${0}",
+	"columnSelectLabel": "Kolonne:",
+	"waiColumnSelectTemplate": "Kolonne for regel ${0}",
+	"conditionSelectLabel": "Betingelse:",
+	"waiConditionSelectTemplate": "Betingelse for regel ${0}",
+	"valueBoxLabel": "Værdi:",
+	"waiValueBoxTemplate": "Enter value to filter for rule ${0}",
 	"rangeTo": "til",
 	"rangeTemplate": "fra ${0} til ${1}",
 	"statusTipHeaderColumn": "Kolonne",
 	"statusTipHeaderCondition": "Regler",
 	"statusTipTitle": "Filterlinje",
-	"statusTipMsg": "Klik på filterlinjen for at filtrere efter værdier i ${0}.",
+	"statusTipMsg": "Click the filter bar here to filter on values in ${0}.",
 	"anycolumn": "vilkårlig kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
 	"statusTipTitleHasFilter": "Filter",
@@ -74,73 +74,73 @@ define({
 	"statusTipHeaderAll": "Matcher alle regler.",
 	"statusTipHeaderAny": "Matcher en hvilken som helst regel.",
 	"defaultItemsName": "elementer",
-	"filterBarMsgHasFilterTemplate": "${0} af ${1} ${2} vist.",
-	"filterBarMsgNoFilterTemplate": "Intet filter anvendt",
-	"filterBarDefButton": "Definér filter",
-	"waiFilterBarDefButton": "Filtrér tabellen",
-	"a11yFilterBarDefButton": "Filtrér...",
-	"filterBarClearButton": "Ryd filter",
+	"filterBarMsgHasFilterTemplate": "${0} of ${1} ${2} shown.",
+	"filterBarMsgNoFilterTemplate": "No filter applied",
+	"filterBarDefButton": "Define filter",
+	"waiFilterBarDefButton": "Filter the table",
+	"a11yFilterBarDefButton": "Filter...",
+	"filterBarClearButton": "Clear filter",
 	"waiFilterBarClearButton": "Ryd filteret",
-	"closeFilterBarBtn": "Luk filterlinje",
-	"clearFilterMsg": "Denne funktion fjerner filteret og viser alle tilgængelige records.",
-	"anyColumnOption": "Vilkårlig kolonne",
+	"closeFilterBarBtn": "Close filter bar",
+	"clearFilterMsg": "This will remove the filter and show all available records.",
+	"anyColumnOption": "Any Column",
 	"trueLabel": "Sand",
 	"falseLabel": "Falsk",
-	"radioTrueLabel": "Værdi sand",
-	"radioFalseLabel": "Værdi falsk",
-	"beginTimeRangeLabel": "Startværdi for klokkeslætsinterval",
-	"endTimeRangeLabel": "Slutværdi for klokkeslætsinterval",
-	"beginDateRangeLabel": "Startværdi for datointerval",
-	"endDateRangeLabel": "Slutværdi for datointerval",
+	"radioTrueLabel": "Value True",
+	"radioFalseLabel": "Value False",
+	"beginTimeRangeLabel": "Time Range Value Start",
+	"endTimeRangeLabel": "Time Range Value End",
+	"beginDateRangeLabel": "Date Range Value Start",
+	"endDateRangeLabel": "Date Range Value End",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
-	singleSort: "Enkelt sortering",
-	nestedSort: "Indlejret sortering",
+	singleSort: "Single Sort",
+	nestedSort: "Nested Sort",
 	ascending: "Klik for at sortere stigende",
 	descending: "Klik for at sortere faldende",
 	sortingState: "${0} - ${1}",
-	unsorted: "Sortér ikke denne kolonne",
-	waiSingleSortLabel: "${0} - er sorteret efter ${1}. Vælg for at sortere efter ${2}",
-	waiNestedSortLabel:"${0} - er sorteret indlejret efter ${1}. Vælg for at sortere indlejret efter ${2}",
+	unsorted: "Do not sort this column",
+	waiSingleSortLabel: "${0} - is sorted by ${1}. Choose to sort by ${2}",
+	waiNestedSortLabel:"${0} - is nested sorted by ${1}. Choose to nested sort by ${2}",
 
 //PaginationBar
-	pagerWai: 'Sideinddeling',
+	pagerWai: 'Pager',
 
 	pageIndex: '${0}',
-	pageIndexTitle: 'Side ${0}',
+	pageIndexTitle: 'Page ${0}',
 
-	firstPageTitle: 'Første side',
-	prevPageTitle: 'Forrige side',
-	nextPageTitle: 'Næste side',
-	lastPageTitle: 'Sidste side',
+	firstPageTitle: 'First page',
+	prevPageTitle: 'Previous page',
+	nextPageTitle: 'Next page',
+	lastPageTitle: 'Last page',
 
 	pageSize: '${0}',
-	pageSizeTitle: '${0} elementer pr. side',
+	pageSizeTitle: '${0} items per page',
 	pageSizeAll: 'Alle',
-	pageSizeAllTitle: 'Alle elementer',
+	pageSizeAllTitle: 'All items',
 
-	description: '${0} - ${1} af ${2} elementer.',
-	descriptionEmpty: 'Gitter er tomt.',
+	description: '${0} - ${1} of ${2} items.',
+	descriptionEmpty: 'Grid is empty.',
 
-	summary: 'I alt: ${0}',
-	summaryWithSelection: 'I alt: ${0} Valgt: ${1}',
+	summary: 'Total: ${0}',
+	summaryWithSelection: 'Total: ${0} Selected: ${1}',
 
-	gotoBtnTitle: 'Gå til en bestemt side',
+	gotoBtnTitle: 'Go to a specific page',
 
-	gotoDialogTitle: 'Gå til side',
-	gotoDialogMainMsg: 'Angiv sidenummeret:',
-	gotoDialogPageCount: ' (${0} sider)',
-	gotoDialogOKBtn: 'Udfør',
+	gotoDialogTitle: 'Go to Page',
+	gotoDialogMainMsg: 'Specify the page number:',
+	gotoDialogPageCount: '(${0} pages)',
+	gotoDialogOKBtn: 'Go',
 	gotoDialogCancelBtn: 'Annullér',
 	// for drop down pagination bar
 	pageLabel: 'Side',
-	pageSizeLabel: 'Rækker',
+	pageSizeLabel: 'Rows',
 
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Ryd filter',
-	buildFilterMenuLabel: 'Byg filter&hellip;',
+	buildFilterMenuLabel: 'Build Filter&hellip;',
 	apply: 'Anvend filter',
 
 //Sort
@@ -149,13 +149,14 @@ define({
 	priorityOrder: 'sorteringsrækkefølge ${0}',
 
 //SummaryBar
-	summaryTotal: 'I alt: ${0}',
-	summarySelected: 'Valgt: ${0}',
+	summaryTotal: 'Total: ${0}',
+	summarySelected: 'Selected: ${0}',
 	summaryRange: 'Range: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Tryk på mellemrumstasten for at markere alle.",	//need translation
+	indirectDeselectAll: "Tryk på mellemrumstasten for at ophæve markeringen af alle.",	//need translation
+	treeExpanded: "Ctrl + venstre piltast for at skjule denne række.",	//need translation
+	treeCollapsed: "Ctrl + højre piltast for at udvide denne række."	//need translation
 });
+

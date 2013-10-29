@@ -1,7 +1,7 @@
-define({
+define({     
 //Body
 	loadingInfo: "Carregando...",
-	emptyInfo: "Nenhum item a exibir",
+	emptyInfo: "Nenhum item para exibir",
 	loadFailInfo: "Falha ao carregar dados!",
 	loadMore: "Carregar Mais",
 	loadMoreLoading: "Carregando...",
@@ -30,15 +30,15 @@ define({
 	"conditionNotStartWith": "não inicia com",
 	"conditionNotEndWith": "não termina com",
 	"conditionBefore": "antes",
-	"conditionAfter": "depois",
+	"conditionAfter": "após",
 	"conditionRange": "intervalo",
 	"conditionIsEmpty": "está vazio",
 	"all": "todos",
 	"any": "qualquer",
 	"relationAll": "todas as regras",
-	"waiRelAll": "Corresponder a todas as seguintes regras:",
+	"waiRelAll": "Corresponder a todas as regras a seguir:",
 	"relationAny": "qualquer regra",
-	"waiRelAny": "Corresponder a qualquer uma das seguintes regras:",
+	"waiRelAny": "Corresponder a uma das regras a seguir:",
 	"relationMsgFront": "Corresponder",
 	"relationMsgTail": "",
 	"and": "e",
@@ -47,82 +47,88 @@ define({
 	"waiAddRuleButton": "Incluir uma nova regra",
 	"removeRuleButton": "Remover Regra",
 	"waiRemoveRuleButtonTemplate": "Remover regra ${0}",
-	"addRuleButton": "Incluir Regra de Filtragem",
+	"addRuleButton": "Incluir Regra de Filtro",
 	"cancelButton": "Cancelar",
 	"waiCancelButton": "Cancelar este diálogo",
 	"clearButton": "Limpar",
 	"waiClearButton": "Limpar o filtro",
 	"filterButton": "Filtro",
-	"waiFilterButton": "Enviar o filtro",
-	"columnSelectLabel": "Coluna",
-	"waiColumnSelectTemplate": "Coluna para a regra ${0}",
-	"conditionSelectLabel": "Condição",
+	"waiFilterButton": "Submeter o filtro",
+	"columnSelectLabel": "Coluna:",
+	"waiColumnSelectTemplate": "Coluna para regra ${0}",
+	"conditionSelectLabel": "Condição:",
 	"waiConditionSelectTemplate": "Condição para a regra ${0}",
-	"valueBoxLabel": "Valor",
-	"waiValueBoxTemplate": "Insira o valor para filtragem da regra ${0}",
-	"rangeTo": "para",
-	"rangeTemplate": "de ${0} a ${1}",
+	"valueBoxLabel": "Valor:",
+	"waiValueBoxTemplate": "Insira valor para filtrar para a regra ${0}",
+	"rangeTo": "até",
+	"rangeTemplate": "de ${0} até ${1}",
 	"statusTipHeaderColumn": "Coluna",
 	"statusTipHeaderCondition": "Regras",
-	"statusTipTitle": "Barra de Filtragem",
-	"statusTipMsg": "Clique na barra de filtragem aqui para filtrar os valores de ${0}.",
+	"statusTipTitle": "Barra de Filtro",
+	"statusTipMsg": "Clique na barra de filtro aqui para filtrar valores em ${0}.",
 	"anycolumn": "qualquer coluna",
-	"statusTipTitleNoFilter": "Barra de Filtragem",
+	"statusTipTitleNoFilter": "Barra de Filtro",
 	"statusTipTitleHasFilter": "Filtro",
 	"statusTipRelPre": "Corresponder",
 	"statusTipRelPost": "regras.",
 	"statusTipHeaderAll": "Corresponder a todas as regras.",
 	"statusTipHeaderAny": "Corresponder a quaisquer regras.",
 	"defaultItemsName": "itens",
-	"filterBarMsgHasFilterTemplate": "${0} de ${1} ${2} mostrados.",
+	"filterBarMsgHasFilterTemplate": "${0} de ${1} ${2} mostrado(s).",
 	"filterBarMsgNoFilterTemplate": "Nenhum filtro aplicado",
 	"filterBarDefButton": "Definir filtro",
 	"waiFilterBarDefButton": "Filtrar a tabela",
 	"a11yFilterBarDefButton": "Filtrar...",
 	"filterBarClearButton": "Limpar filtro",
 	"waiFilterBarClearButton": "Limpar o filtro",
-	"closeFilterBarBtn": "Fechar a barra de filtragem",
+	"closeFilterBarBtn": "Fechar a barra de filtro",
 	"clearFilterMsg": "Isso removerá o filtro e mostrará todos os registros disponíveis.",
 	"anyColumnOption": "Qualquer Coluna",
-	"trueLabel": "True",
+	"trueLabel": "Verdadeiro",
 	"falseLabel": "Falso",
-	"radioTrueLabel": "Valor True",
-	"radioFalseLabel": "Valor False",
+	"radioTrueLabel": "Valor Verdadeiro",
+	"radioFalseLabel": "Valor Falso",
 	"beginTimeRangeLabel": "Início do Valor do Intervalo de Tempo",
-	"endTimeRangeLabel": "Término do Valor do Intervalo de Tempo",
-	"beginDateRangeLabel": "Início do Valor do Intervalo de Data",
-	"endDateRangeLabel": "Término do Valor do Intervalo de Data",
+	"endTimeRangeLabel": "Final do Valor do Intervalo de Tempo",
+	"beginDateRangeLabel": "Início do Valor do Intervalo de Datas",
+	"endDateRangeLabel": "Final do Valor do Intervalo de Datas",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
 	singleSort: "Classificação Única",
 	nestedSort: "Classificação Aninhada",
-	ascending: "Clique para classificar de modo Crescente",
-	descending: "Clique para classificar de modo Decrescente",
+	ascending: "Clique para classificar Ascendente",
+	descending: "Clique para classificar Descendente",
 	sortingState: "${0} - ${1}",
 	unsorted: "Não classificar esta coluna",
 	waiSingleSortLabel: "${0} - é classificado por ${1}. Escolha classificar por ${2}",
-	waiNestedSortLabel:"${0} - é classificado aninhado por ${1}. Escolha classificar aninhado por ${2}",
+	waiNestedSortLabel:"${0} - é classificação aninhada por ${1}. Escolha classificação aninhada por ${2}",
 
 //PaginationBar
-	pagerWai: 'Pager',
+	pagerWai: 'Paginação',
+
 	pageIndex: '${0}',
 	pageIndexTitle: 'Página ${0}',
+
 	firstPageTitle: 'Primeira página',
 	prevPageTitle: 'Página anterior',
 	nextPageTitle: 'Próxima página',
 	lastPageTitle: 'Última página',
+
 	pageSize: '${0}',
 	pageSizeTitle: '${0} itens por página',
 	pageSizeAll: 'Todos',
 	pageSizeAllTitle: 'Todos os itens',
+
 	description: '${0} - ${1} de ${2} itens.',
 	descriptionEmpty: 'A grade está vazia.',
-	// OneUI blueprint
+
 	summary: 'Total: ${0}',
 	summaryWithSelection: 'Total: ${0} Selecionado: ${1}',
-	gotoBtnTitle: 'Acesse uma página específica',
-	gotoDialogTitle: 'Acesse a Página',
+
+	gotoBtnTitle: 'Acessar uma página específica',
+
+	gotoDialogTitle: 'Acessar Página',
 	gotoDialogMainMsg: 'Especifique o número da página:',
 	gotoDialogPageCount: '(${0} páginas)',
 	gotoDialogOKBtn: 'Ir',
@@ -145,11 +151,12 @@ define({
 //SummaryBar
 	summaryTotal: 'Total: ${0}',
 	summarySelected: 'Selecionado: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summaryRange: 'Intervalo: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Pressione ESPAÇO para selecionar todos.",	//need translation
+	indirectDeselectAll: "Pressione ESPAÇO para cancelar seleção de todos.",	//need translation
+	treeExpanded: "Control + tecla de seta para a esquerda para reduzir esta linha.",	//need translation
+	treeCollapsed: "Control + tecla de seta para a direita para expandir esta linha."	//need translation
 });
+
