@@ -249,9 +249,10 @@ define([
 			t.inherited(arguments);
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
-					if(mouse.isLeft(e) && (
+					if(mouse.isLeft(e) &&
+						(!g.select.row || !g.select.row.arg('triggerOnCell')) &&
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner'))){
+						!domClass.contains(e.target, 'gridxTreeExpandoInner')){
 						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
