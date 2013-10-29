@@ -90,8 +90,8 @@ define({
 	"radioFalseLabel": "Valor falso",
 	"beginTimeRangeLabel": "Inicio de valores de rango de tiempo",
 	"endTimeRangeLabel": "Fin de valores de rango de tiempo",
-	"beginDateRangeLabel": "Inicio de valores de rango de fecha",
-	"endDateRangeLabel": "Fin de valores de rango de fecha",
+	"beginDateRangeLabel": "Inicio de valores de rango de fechas",
+	"endDateRangeLabel": "Fin de valores de rango de fechas",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
@@ -140,7 +140,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filtrar',
 	clearButtonTitle: 'Borrar filtro',
-	buildFilterMenuLabel: 'Compilar filtro&hellip;',
+	buildFilterMenuLabel: 'Crear filtro&hellip;',
 	apply: 'Aplicar filtro',
 
 //Sort
@@ -150,7 +150,7 @@ define({
 
 //SummaryBar
 	summaryTotal: 'Total: ${0}',
-	summarySelected: 'Seleccionado: ${0}',
+	summarySelected: 'Seleccionados: ${0}',
 	summaryRange: 'Rango: ${0}-${1}',	//need translation
 
 //Other

@@ -150,7 +150,7 @@ define({
 
 //SummaryBar
 	summaryTotal: 'Total: ${0}',
-	summarySelected: 'Seleccionat: ${0}',
+	summarySelected: 'Seleccionats: ${0}',
 	summaryRange: 'Interval: ${0}-${1}',	//need translation
 
 //Other
