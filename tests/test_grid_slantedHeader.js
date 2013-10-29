@@ -13,6 +13,7 @@ require([
 	"gridx/modules/ExpandableColumn",
 	"gridx/modules/SingleSort",
 	"gridx/modules/Tree",
+	"gridx/modules/ColumnLock",
 
 	//'gridx/allModules',
 	'dojo/domReady!'
