@@ -10,6 +10,7 @@ var testcases = [
 	'./cases/edit',
 	'./cases/events',
 	'./cases/groupHeader',
+	'./cases/slantedHeader',
 	'./cases/indirectSelect',
 	'./cases/rowHeader',
 	'./cases/tree',
