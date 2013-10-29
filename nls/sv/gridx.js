@@ -1,4 +1,4 @@
-define({
+define({     
 //Body
 	loadingInfo: "Läser in...",
 	emptyInfo: "Det finns inga objekt att visa",
@@ -17,9 +17,9 @@ define({
 	"defineFilter": "Definiera filter",
 	"conditionEqual": "lika med",
 	"conditionNotEqual": "inte lika med",
-	"conditionLess": "är mindre än",
-	"conditionLessEqual": "mindre eller lika med",
-	"conditionGreater": "är större än",
+	"conditionLess": "mindre än",
+	"conditionLessEqual": "mindre än eller lika med",
+	"conditionGreater": "större än",
 	"conditionGreaterEqual": "större än eller lika med",
 	"conditionContain": "innehåller",
 	"conditionIs": "är",
@@ -44,21 +44,21 @@ define({
 	"and": "och",
 	"or": "eller",
 	"addRuleButton": "Lägg till regel",
-	"waiAddRuleButton": "Lägg till en ny regel",
+	"waiAddRuleButton": "Lägg till ny regel",
 	"removeRuleButton": "Ta bort regel",
 	"waiRemoveRuleButtonTemplate": "Ta bort regel ${0}",
 	"addRuleButton": "Lägg till filterregel",
 	"cancelButton": "Avbryt",
-	"waiCancelButton": "Avbryt dialogen",
+	"waiCancelButton": "Stäng dialogrutan",
 	"clearButton": "Rensa",
 	"waiClearButton": "Rensa filtret",
-	"filterButton": "Filter",
+	"filterButton": "Filtrera",
 	"waiFilterButton": "Filtrera",
-	"columnSelectLabel": "Kolumn",
+	"columnSelectLabel": "Kolumn:",
 	"waiColumnSelectTemplate": "Kolumn för regel ${0}",
-	"conditionSelectLabel": "Villkor",
+	"conditionSelectLabel": "Villkor:",
 	"waiConditionSelectTemplate": "Villkor för regel ${0}",
-	"valueBoxLabel": "Värde",
+	"valueBoxLabel": "Värde:",
 	"waiValueBoxTemplate": "Ange värde för filtrering efter regeln ${0}",
 	"rangeTo": "till",
 	"rangeTemplate": "från ${0} till ${1}",
@@ -70,9 +70,9 @@ define({
 	"statusTipTitleNoFilter": "Filterfält",
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Matcha",
-	"statusTipRelPost": "regler.",
+	"statusTipRelPost": "regel/regler.",
 	"statusTipHeaderAll": "Matcha alla regler.",
-	"statusTipHeaderAny": "Matcha någon av reglerna.",
+	"statusTipHeaderAny": "Matcha någon regel.",
 	"defaultItemsName": "objekt",
 	"filterBarMsgHasFilterTemplate": "${0} av ${1} ${2} visas.",
 	"filterBarMsgNoFilterTemplate": "Inget filter tillämpat",
@@ -86,8 +86,8 @@ define({
 	"anyColumnOption": "Någon kolumn",
 	"trueLabel": "Sant",
 	"falseLabel": "Falskt",
-	"radioTrueLabel": "Värdet Sant",
-	"radioFalseLabel": "Värdet Falskt",
+	"radioTrueLabel": "Värde sant",
+	"radioFalseLabel": "Värde falskt",
 	"beginTimeRangeLabel": "Startvärde för tidsintervall",
 	"endTimeRangeLabel": "Slutvärde för tidsintervall",
 	"beginDateRangeLabel": "Startvärde för datumintervall",
@@ -101,11 +101,11 @@ define({
 	descending: "Klicka för att sortera i fallande ordning",
 	sortingState: "${0} - ${1}",
 	unsorted: "Sortera inte den här kolumnen",
-	waiSingleSortLabel: "${0} - är sorterad efter ${1}. Välj att sortera efter ${2}",
-	waiNestedSortLabel:"${0} - är sorterat nästlat efter ${1}. Välj att sortera nästlat efter ${2}",
+	waiSingleSortLabel: "${0} - sorteras efter ${1}. Välj för att sortera efter ${2}",
+	waiNestedSortLabel:"${0} - är nästlat sorterat efter ${1}. Välj för nästlad sortering efter ${2}",
 
 //PaginationBar
-	pagerWai: 'Sidindelning',
+	pagerWai: 'Bläddrare',
 
 	pageIndex: '${0}',
 	pageIndexTitle: 'Sida ${0}',
@@ -129,7 +129,7 @@ define({
 	gotoBtnTitle: 'Gå till en viss sida',
 
 	gotoDialogTitle: 'Gå till sidan',
-	gotoDialogMainMsg: 'Ange sidnumret:',
+	gotoDialogMainMsg: 'Ange sidnummer:',
 	gotoDialogPageCount: ' (${0} sidor)',
 	gotoDialogOKBtn: 'Gå',
 	gotoDialogCancelBtn: 'Avbryt',
@@ -141,7 +141,7 @@ define({
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Rensa filter',
 	buildFilterMenuLabel: 'Bygg filter&hellip;',
-	apply: 'Tillämpa filter',
+	apply: 'Använd filter',
 
 //Sort
 	helpMsg: '${0} - Klicka om du vill sortera eller Ctrl-klicka om du vill lägga till till sorteringen',
@@ -150,12 +150,13 @@ define({
 
 //SummaryBar
 	summaryTotal: 'Totalt: ${0}',
-	summarySelected: 'Valda: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summarySelected: 'Valt: ${0}',
+	summaryRange: 'Intervall: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Tryck på MELLANSLAG för att markera alla.",	//need translation
+	indirectDeselectAll: "Tryck på MELLANSLAG för att avmarkera alla.",	//need translation
+	treeExpanded: "Ctrl + vänster piltangent för att komprimera raden.",	//need translation
+	treeCollapsed: "Ctrl + höger piltangent för att expandera raden."	//need translation
 });
+

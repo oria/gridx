@@ -715,7 +715,9 @@ define([
 			this._lazyData = {};
 			this._lazyDataChangeList = {};
 			this._inCallBackMode = false;
-			
+			if(this.grid.touch){
+				this.buttons = 1;
+			}
 			for(var i = 0, cols = this.grid._columns, len = cols.length; i < len; ++i){
 				var c = cols[i];
 				if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){

@@ -1,26 +1,26 @@
-define({
+define({     
 //Body
 	loadingInfo: "กำลังโหลด...",
-	emptyInfo: "ไม่มีไอเท็มแสดง",
-	loadFailInfo: "ล้มเหลวในการโหลดข้อมูล!",
-	loadMore: "โหลดเพิ่มเติม   ",
+	emptyInfo: "ไม่มีไอเท็มที่จะแสดง",
+	loadFailInfo: "ไม่สามารถโหลดข้อมูล!",
+	loadMore: "โหลดเพิ่มเติม",
 	loadMoreLoading: "กำลังโหลด...",
-	loadPrevious: "โหลดก่อนหน้า",
+	loadPrevious: "โหลดก่อนหน้านี้",
 	loadPreviousLoading: "กำลังโหลด...",
 
 //FilterBar
-	"clearFilterDialogTitle": "ล้างตัวกรอง",
+	"clearFilterDialogTitle": "เคลียร์ตัวกรอง",
 	"filterDefDialogTitle": "ตัวกรอง",
-	"defaultRuleTitle": "กฎ",
+	"defaultRuleTitle": "กฏ",
 	"ruleTitleTemplate": "กฎ ${ruleNumber}",
 	"noFilterApplied": "ไม่ได้ใช้ตัวกรอง",
 	"defineFilter": "กำหนดตัวกรอง",
-	"conditionEqual": "เท่ากัน",
-	"conditionNotEqual": "ไม่เท่ากัน",
+	"conditionEqual": "เท่ากับ",
+	"conditionNotEqual": "ไม่เท่ากับ",
 	"conditionLess": "น้อยกว่า",
-	"conditionLessEqual": "น้อยกว่าหรือเท่ากัน",
+	"conditionLessEqual": "น้อยกว่าหรือเท่ากับ",
 	"conditionGreater": "มากกว่า",
-	"conditionGreaterEqual": "มากกว่าหรือเท่ากัน",
+	"conditionGreaterEqual": "มากกว่าหรือเท่ากับ",
 	"conditionContain": "มี",
 	"conditionIs": "เป็น",
 	"conditionStartWith": "เริ่มต้นด้วย",
@@ -29,7 +29,7 @@ define({
 	"conditionIsNot": "ไม่เป็น",
 	"conditionNotStartWith": "ไม่ได้เริ่มต้นด้วย",
 	"conditionNotEndWith": "ไม่ได้สิ้นสุดด้วย",
-	"conditionBefore": "ก่อน",
+	"conditionBefore": "ก่อนหน้า",
 	"conditionAfter": "หลังจาก",
 	"conditionRange": "ช่วง",
 	"conditionIsEmpty": "ว่าง",
@@ -43,23 +43,23 @@ define({
 	"relationMsgTail": "",
 	"and": "และ",
 	"or": "หรือ",
-	"addRuleButton": "เพิ่มกฎ",
+	"addRuleButton": "เพิ่มกฏ",
 	"waiAddRuleButton": "เพิ่มกฎใหม่",
 	"removeRuleButton": "ลบกฎ",
 	"waiRemoveRuleButtonTemplate": "ลบกฎ ${0}",
 	"addRuleButton": "เพิ่มกฎตัวกรอง",
 	"cancelButton": "ยกเลิก",
 	"waiCancelButton": "ยกเลิกไดอะล็อกนี้",
-	"clearButton": "ล้าง",
-	"waiClearButton": "ล้างตัวกรอง",
+	"clearButton": "เคลียร์",
+	"waiClearButton": "เคลียร์ตัวกรอง",
 	"filterButton": "ตัวกรอง",
 	"waiFilterButton": "ส่งตัวกรอง",
-	"columnSelectLabel": "คอลัมน์",
+	"columnSelectLabel": "คอลัมน์:",
 	"waiColumnSelectTemplate": "คอลัมน์สำหรับกฎ ${0}",
-	"conditionSelectLabel": "เงื่อนไข",
+	"conditionSelectLabel": "เงื่อนไข:",
 	"waiConditionSelectTemplate": "เงื่อนไขสำหรับกฎ ${0}",
-	"valueBoxLabel": "ค่า",
-	"waiValueBoxTemplate": "ป้อนค่าตัวกรองสำหรับกฎ ${0}",
+	"valueBoxLabel": "ค่า:",
+	"waiValueBoxTemplate": "ป้อนค่าที่จะกรองสำหรับกฎ ${0}",
 	"rangeTo": "ถึง",
 	"rangeTemplate": "จาก ${0} ถึง ${1}",
 	"statusTipHeaderColumn": "คอลัมน์",
@@ -78,11 +78,11 @@ define({
 	"filterBarMsgNoFilterTemplate": "ไม่ได้ใช้ตัวกรอง",
 	"filterBarDefButton": "กำหนดตัวกรอง",
 	"waiFilterBarDefButton": "กรองตาราง",
-	"a11yFilterBarDefButton": "กรอง...",
-	"filterBarClearButton": "ล้างตัวกรอง",
-	"waiFilterBarClearButton": "ล้างตัวกรอง",
+	"a11yFilterBarDefButton": "ตัวกรอง...",
+	"filterBarClearButton": "เคลียร์ตัวกรอง",
+	"waiFilterBarClearButton": "เคลียร์ตัวกรอง",
 	"closeFilterBarBtn": "ปิดแถบตัวกรอง",
-	"clearFilterMsg": "สิ่งนี้จะลบตัวกรองและแสดงเร็กคอร์ดที่มีอยู่ทั้งหมด",
+	"clearFilterMsg": "ซึ่งจะลบตัวกรอง และแสดงเร็กคอร์ดที่พร้อมใช้งานทั้งหมด",
 	"anyColumnOption": "คอลัมน์ใดๆ",
 	"trueLabel": "จริง",
 	"falseLabel": "เท็จ",
@@ -95,14 +95,14 @@ define({
 	"startsWithExpr": "${0}*",
 
 //NestedSort
-	singleSort: "การเรียงลำดับชั้นเดียว",
-	nestedSort: "การเรียงลำดับที่มีกลุ่มย่อย",
+	singleSort: "เรียงลำดับระดับเดียว",
+	nestedSort: "เรียงลำดับที่ซ้อนใน",
 	ascending: "คลิกเพื่อเรียงลำดับจากน้อยไปมาก",
 	descending: "คลิกเพื่อเรียงลำดับจากมากไปน้อย",
 	sortingState: "${0} - ${1}",
 	unsorted: "อย่าเรียงลำดับคอลัมน์นี้",
-	waiSingleSortLabel: "${0} - เรียงลำดับตาม ${1} เลือกเพื่อเรียงลำดับตาม ${2}",
-	waiNestedSortLabel:"${0} - เรียงลำดับที่มีกลุ่มย่อยตาม ${1} เลือกเพื่อเรียงลำดับที่มีกลุ่มย่อยตาม ${2}",
+	waiSingleSortLabel: "${0} - มีการเรียงลำดับตาม ${1} เลือกเพื่อเรียงลำดับตาม ${2}",
+	waiNestedSortLabel:"${0} - มีการเรียงลำดับที่ซ้อนในตาม ${1} เลือกเพื่อเรียงลำดับที่ซ้อนในตาม ${2}",
 
 //PaginationBar
 	pagerWai: 'เพเจอร์',
@@ -113,7 +113,7 @@ define({
 	firstPageTitle: 'หน้าแรก',
 	prevPageTitle: 'หน้าก่อนหน้านี้',
 	nextPageTitle: 'หน้าถัดไป',
-	lastPageTitle: 'หน้าหลังสุด',
+	lastPageTitle: 'หน้าสุดท้าย',
 
 	pageSize: '${0}',
 	pageSizeTitle: '${0} ไอเท็มต่อหน้า',
@@ -139,7 +139,7 @@ define({
 
 //QuickFilter
 	filterLabel: 'ตัวกรอง',
-	clearButtonTitle: 'ล้างตัวกรอง',
+	clearButtonTitle: 'เคลียร์ตัวกรอง',
 	buildFilterMenuLabel: 'สร้างตัวกรอง&hellip;',
 	apply: 'ใช้ตัวกรอง',
 
@@ -151,11 +151,12 @@ define({
 //SummaryBar
 	summaryTotal: 'ทั้งหมด: ${0}',
 	summarySelected: 'ที่เลือก: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summaryRange: 'ช่วง: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "กด SPACE เพื่อเลือกทั้งหมด",	//need translation
+	indirectDeselectAll: "กด SPACE เพื่อยกเลิกการเลือกทั้งหมด",	//need translation
+	treeExpanded: "Control + แป้นลูกศรซ้ายเพื่อยุบแถวนี้",	//need translation
+	treeCollapsed: "Control + แป้นลูกศรขวาเพื่อขยายแถวนี้"	//need translation
 });
+

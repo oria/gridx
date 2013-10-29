@@ -1,4 +1,4 @@
-define({
+define({     
 //Body
 	loadingInfo: "Nalaganje ...",
 	emptyInfo: "Ni postavk za prikaz",
@@ -14,31 +14,31 @@ define({
 	"defaultRuleTitle": "Pravilo",
 	"ruleTitleTemplate": "Pravilo ${ruleNumber}",
 	"noFilterApplied": "Uporabljen ni noben filter.",
-	"defineFilter": "Definiraj filter",
+	"defineFilter": "Določi filter",
 	"conditionEqual": "je enako",
 	"conditionNotEqual": "ni enako",
-	"conditionLess": "je manjše kot",
-	"conditionLessEqual": "je manjše kot ali enako",
-	"conditionGreater": "je večje kot",
-	"conditionGreaterEqual": "je večje kot ali enako",
+	"conditionLess": "je manjše od",
+	"conditionLessEqual": "je manjše od ali enako",
+	"conditionGreater": "je večje od",
+	"conditionGreaterEqual": "je večje od ali enako",
 	"conditionContain": "vsebuje",
 	"conditionIs": "je",
-	"conditionStartWith": "se začne s",
-	"conditionEndWith": "se konča s",
+	"conditionStartWith": "se začne z",
+	"conditionEndWith": "se konča z",
 	"conditionNotContain": "ne vsebuje",
 	"conditionIsNot": "ni",
-	"conditionNotStartWith": "se ne začne s",
-	"conditionNotEndWith": "se ne konča s",
+	"conditionNotStartWith": "se ne začne z",
+	"conditionNotEndWith": "se ne konča z",
 	"conditionBefore": "pred",
-	"conditionAfter": "za",
+	"conditionAfter": "po",
 	"conditionRange": "obseg",
 	"conditionIsEmpty": "je prazno",
 	"all": "vse",
-	"any": "kateri koli",
+	"any": "katero koli",
 	"relationAll": "vsa pravila",
-	"waiRelAll": "Ujema se z vsemi od naslednjih pravil:",
-	"relationAny": "katerakoli pravila",
-	"waiRelAny": "Ujema se s katerimkoli od naslednjih pravil:",
+	"waiRelAll": "Zagotovi ujemanje z vsemi naslednjimi pravili:",
+	"relationAny": "katero koli pravilo",
+	"waiRelAny": "Zagotovi ujemanje s katerim koli od naslednjih pravil:",
 	"relationMsgFront": "Ujemanje",
 	"relationMsgTail": "",
 	"and": "in",
@@ -53,37 +53,37 @@ define({
 	"clearButton": "Počisti",
 	"waiClearButton": "Počisti filter",
 	"filterButton": "Filter",
-	"waiFilterButton": "Predloži filter",
-	"columnSelectLabel": "Stolpec",
+	"waiFilterButton": "Pošlji filter",
+	"columnSelectLabel": "Stolpec:",
 	"waiColumnSelectTemplate": "Stolpec za pravilo ${0}",
-	"conditionSelectLabel": "Pogoj",
+	"conditionSelectLabel": "Pogoj:",
 	"waiConditionSelectTemplate": "Pogoj za pravilo ${0}",
-	"valueBoxLabel": "Vrednost",
-	"waiValueBoxTemplate": "Vnesite vrednost za filter pravila ${0}",
+	"valueBoxLabel": "Vrednost:",
+	"waiValueBoxTemplate": "Vnesite vrednost, ki jo boste filtrirali za pravilo ${0}",
 	"rangeTo": "do",
 	"rangeTemplate": "od ${0} do ${1}",
 	"statusTipHeaderColumn": "Stolpec",
 	"statusTipHeaderCondition": "Pravila",
-	"statusTipTitle": "Vrstica za filtriranje",
-	"statusTipMsg": "Kliknite vrstico za filtriranje tukaj, da prefiltrirate vrednosti v ${0}.",
-	"anycolumn": "katerikoli stolpec",
-	"statusTipTitleNoFilter": "Vrstica za filtriranje",
+	"statusTipTitle": "Vrstica filtra",
+	"statusTipMsg": "Tukaj kliknite vrstico filtra, da filtrirate po vrednostih v ${0}.",
+	"anycolumn": "kateri koli stolpec",
+	"statusTipTitleNoFilter": "Vrstica filtra",
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Ujemanje",
-	"statusTipRelPost": "pravil.",
-	"statusTipHeaderAll": "Ujemanje vseh pravil.",
-	"statusTipHeaderAny": "Ujemanje vseh pravil.",
+	"statusTipRelPost": "pravila.",
+	"statusTipHeaderAll": "Zagotovi ujemanje z vsemi pravili.",
+	"statusTipHeaderAny": "Zagotovi ujemanje s katerim koli pravilom.",
 	"defaultItemsName": "postavke",
-	"filterBarMsgHasFilterTemplate": "Prikazanih je ${0} od ${1} ${2}.",
-	"filterBarMsgNoFilterTemplate": "Uveljavljen ni noben filter.",
-	"filterBarDefButton": "Definiraj filter",
+	"filterBarMsgHasFilterTemplate": "${0} od ${1} ${2} je prikazano.",
+	"filterBarMsgNoFilterTemplate": "Uporabljen ni noben filter",
+	"filterBarDefButton": "Določi filter",
 	"waiFilterBarDefButton": "Filtriraj tabelo",
 	"a11yFilterBarDefButton": "Filtriraj ...",
 	"filterBarClearButton": "Počisti filter",
 	"waiFilterBarClearButton": "Počisti filter",
-	"closeFilterBarBtn": "Zapri vrstico za filtriranje",
-	"clearFilterMsg": "S tem boste odstranili filter in prikazali se bodo vsi razpoložljivi zapisi.",
-	"anyColumnOption": "Katerikoli stolpec",
+	"closeFilterBarBtn": "Zapri vrstico filtra",
+	"clearFilterMsg": "S tem boste odstranili filter in prikazali vse razpoložljive zapise.",
+	"anyColumnOption": "Kateri koli stolpec",
 	"trueLabel": "True",
 	"falseLabel": "False",
 	"radioTrueLabel": "Vrednost True",
@@ -95,14 +95,14 @@ define({
 	"startsWithExpr": "${0}*",
 
 //NestedSort
-	singleSort: "Enostavno razvrščanje",
+	singleSort: "Posamezno razvrščanje",
 	nestedSort: "Ugnezdeno razvrščanje",
-	ascending: "Kliknite, če želite zagnati naraščajoče razvrščanje",
-	descending: "Kliknite, če želite zagnati padajoče razvrščanje",
+	ascending: "Kliknite za naraščajoče razvrščanje",
+	descending: "Kliknite za padajoče razvrščanje",
 	sortingState: "${0} - ${1}",
 	unsorted: "Ne razvrščaj tega stolpca",
-	waiSingleSortLabel: "${0} - je razvrščen glede na ${1}. Izberi razvrščanje glede na ${2}",
-	waiNestedSortLabel:"${0} - je ugnezden glede na ${1}. Izberi ugnezditev glede na ${2}",
+	waiSingleSortLabel: "${0} – je razvrščeno po ${1}. Izberite, če želite razvrščati po ${2}",
+	waiNestedSortLabel:"${0} – je ugnezdeno razvrščeno po ${1}. Izberite, če želite ugnezdeno razvrščati po ${2}",
 
 //PaginationBar
 	pagerWai: 'Pozivnik',
@@ -120,16 +120,16 @@ define({
 	pageSizeAll: 'Vse',
 	pageSizeAllTitle: 'Vse postavke',
 
-	description: '${0}-${1} od ${2} postavk.',
+	description: '${0} – ${1} od ${2} postavk.',
 	descriptionEmpty: 'Mreža je prazna.',
 
 	summary: 'Skupaj: ${0}',
-	summaryWithSelection: 'Skupaj: ${0} Izbranih: ${1}',
+	summaryWithSelection: 'Skupaj: ${0} Izbrano: ${1}',
 
-	gotoBtnTitle: 'Pojdi na specifično stran',
+	gotoBtnTitle: 'Pojdi na določeno stran',
 
 	gotoDialogTitle: 'Pojdi na stran',
-	gotoDialogMainMsg: 'Navedite številko strani:',
+	gotoDialogMainMsg: 'Določite številko strani:',
 	gotoDialogPageCount: '(${0} strani)',
 	gotoDialogOKBtn: 'Pojdi',
 	gotoDialogCancelBtn: 'Prekliči',
@@ -140,8 +140,8 @@ define({
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Počisti filter',
-	buildFilterMenuLabel: 'Ustvari filter&hellip;',
-	apply: 'Uporabi filter',
+	buildFilterMenuLabel: 'Izgradi filter&hellip;',
+	apply: 'Uveljavi filter',
 
 //Sort
 	helpMsg: '${0} - Kliknite za razvrščanje ali pa pritisnite ctrl in kliknite, da dodate v razvrščanje',
@@ -150,12 +150,13 @@ define({
 
 //SummaryBar
 	summaryTotal: 'Skupaj: ${0}',
-	summarySelected: 'Izbranih: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summarySelected: 'Izbrano: ${0}',
+	summaryRange: 'Obseg: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Pritisnite PRESLEDNICO, da izberete vse.",	//need translation
+	indirectDeselectAll: "Pritisnite PRESLEDNICO, da prekličete izbiro vsega.",	//need translation
+	treeExpanded: "Pritisnite Control + levo puščično tipko, da strnete to vrstico.",	//need translation
+	treeCollapsed: "Pritisnite Control + desno puščično tipko, da razširite to vrstico."	//need translation
 });
+

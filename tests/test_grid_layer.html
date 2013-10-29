@@ -23,12 +23,14 @@
 		store: store,
 		structure: layout1,
 		touch: true,
-		paginationBarSizes: [1, 2, 0],
-		selectRowTriggerOnCell: false,
-		vScrollerTouch: true,
-		focusEnabled: false,
 		bodyRowHoverEffect: false,
-		modules: mods
+		modules: [
+			"gridx/modules/CellWidget",
+			"gridx/modules/Filter",
+			"gridx/modules/filter/QuickFilter",
+			"gridx/modules/TouchVScroller",
+			"gridx/modules/Layer"
+		]
 	'></div>
 </body>
 </html>

@@ -38,6 +38,7 @@ define([
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
+			t.aspect(t.model, 'onSizeChange', '_onSizeChange');
 
 			if(t.arg('createBottom')){
 				t._bottomNode = domConstruct.create('div', {
@@ -58,6 +59,10 @@ define([
 				});
 			}
 			t._initFocus();
+		},
+
+		_onSizeChange: function(size){
+			this.grid.view.updateRootRange(0, size < this.pageSize ? size : this.pageSize);
 		},
 
 		_initFocus: function(){

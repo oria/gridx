@@ -53,7 +53,6 @@ declare(_Module, {
 		t.refresh();
 		t._initFocus();
 		t.aspect(t.grid.header, 'onRender', 'refresh');
-		t.aspect(t.grid, 'onHeaderKeyDown', '_onKey');
 		t.loaded.callback();
 	},
 
@@ -142,7 +141,10 @@ declare(_Module, {
 			focusNode: g.header.domNode,
 			scope: t,
 			doFocus: t._doFocus,
-			onFocus: t._onFocus
+			onFocus: t._onFocus,
+			connects: [
+				t.aspect(g, 'onHeaderKeyDown', '_onKey')
+			]
 		});
 	},
 
@@ -162,10 +164,13 @@ declare(_Module, {
 	},
 
 	_focusRegion: function(region){
-		if(region){
-			var t = this,
-				g = t.grid,
-				header = g.header.domNode,
+		var t = this,
+			g = t.grid;
+		if(region && !t._lock){
+			//focus fires onFocus, which triggers _focusRegion recursively.
+			//Add a lock to avoid recursion.
+			t._lock = 1;
+			var header = g.header.domNode,
 				headerCell = query(region).closest('.gridxCell', header)[0];
 			t._curRegionIdx = array.indexOf(t._regionNodes, region);
 			try{
@@ -183,6 +188,7 @@ declare(_Module, {
 				if(g.hScroller){
 					g.hScroller.scrollToColumn(headerCell.getAttribute('colid'));
 				}
+				t._lock = 0;
 			}, 0);
 		}
 	},

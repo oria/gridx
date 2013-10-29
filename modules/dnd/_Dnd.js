@@ -32,6 +32,8 @@ define([
 	declare(_Module, {
 		name: '_dnd',
 
+		optional: ['selectRow', 'selectColumn'],
+
 		constructor: function(){
 			var t = this,
 				g = t.grid,
@@ -45,7 +47,16 @@ define([
 				[g, 'onCellMouseOut', '_dismissDndReady'],
 				[g, 'onCellMouseDown', '_beginDnd'],
 				[doc, 'onmouseup', '_endDnd'],
-				[doc, 'onmousemove', '_onMouseMove']
+				[doc, 'onmousemove', '_onMouseMove'],
+				[g, 'onCellMouseUp', function(evt){
+					//FIXME: this is ugly.
+					//selection end event fires on document, so it always after onCellMouseUp.
+					//But dnd should check the selection result in order to show dnd cursor,
+					//so do some setTimeout here.
+					setTimeout(function(){
+						t._checkDndReady(evt);
+					}, 0);
+				}]
 			);
 			t.subscribe("/dnd/cancel", '_endDnd');
 		},

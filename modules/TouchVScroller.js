@@ -118,7 +118,8 @@ define([
 //                    scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
 				});
 				t._onBodyChange = function(){
-					t._update();
+					g.hLayout.reLayout();
+					g.vLayout.reLayout();
 				};
 //                t._onForcedScroll = function(){};
 				t.model.when({

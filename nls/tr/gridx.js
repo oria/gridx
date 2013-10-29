@@ -1,26 +1,26 @@
-define({
+define({     
 //Body
 	loadingInfo: "Yükleniyor...",
 	emptyInfo: "Görüntülenecek öğe yok",
 	loadFailInfo: "Veriler yüklenemedi!",
-	loadMore: "Daha Fazla Yükle",
+	loadMore: "Diğerlerini Yükle",
 	loadMoreLoading: "Yükleniyor...",
 	loadPrevious: "Öncekini Yükle",
 	loadPreviousLoading: "Yükleniyor...",
 
 //FilterBar
-	"clearFilterDialogTitle": "Süzgeci Kaldır",
+	"clearFilterDialogTitle": "Süzgeci Temizle",
 	"filterDefDialogTitle": "Süzgeç",
 	"defaultRuleTitle": "Kural",
 	"ruleTitleTemplate": "Kural ${ruleNumber}",
 	"noFilterApplied": "Süzgeç uygulanmadı.",
-	"defineFilter": "Süzgeç tanımla",
+	"defineFilter": "Süzgeci tanımla",
 	"conditionEqual": "eşittir",
 	"conditionNotEqual": "eşit değildir",
 	"conditionLess": "küçüktür",
-	"conditionLessEqual": "küçüktür veya eşittir",
+	"conditionLessEqual": "küçüktür ya da eşittir",
 	"conditionGreater": "büyüktür",
-	"conditionGreaterEqual": "büyüktür veya eşittir",
+	"conditionGreaterEqual": "büyüktür ya da eşittir",
 	"conditionContain": "içerir",
 	"conditionIs": "şudur",
 	"conditionStartWith": "şununla başlar",
@@ -32,66 +32,66 @@ define({
 	"conditionBefore": "önce",
 	"conditionAfter": "sonra",
 	"conditionRange": "aralık",
-	"conditionIsEmpty": "boş",
+	"conditionIsEmpty": "boştur",
 	"all": "tümü",
 	"any": "herhangi biri",
 	"relationAll": "tüm kurallar",
-	"waiRelAll": "Aşağıdaki tüm kurallarla eşleştir",
-	"relationAny": "kuralların herhangi biri",
-	"waiRelAny": "Aşağıdaki kuralların herhangi biri ile eşleştir",
+	"waiRelAll": "Aşağıdaki kuralların tümüyle eşleştir:",
+	"relationAny": "herhangi bir kural",
+	"waiRelAny": "Aşağıdaki kuralların herhangi biriyle eşleştir:",
 	"relationMsgFront": "Eşleştir",
 	"relationMsgTail": "",
 	"and": "ve",
 	"or": "veya",
 	"addRuleButton": "Kural Ekle",
-	"waiAddRuleButton": "Yeni bir kural ekle",
-	"removeRuleButton": "Kuralı Kaldır",
+	"waiAddRuleButton": "Yeni kural ekle",
+	"removeRuleButton": "Kuralı kaldır",
 	"waiRemoveRuleButtonTemplate": "${0} kuralını kaldır",
 	"addRuleButton": "Süzgeç Kuralı Ekle",
 	"cancelButton": "İptal",
 	"waiCancelButton": "Bu iletişim kutusunu iptal et",
-	"clearButton": "Kaldır",
-	"waiClearButton": "Süzgeci kaldır",
+	"clearButton": "Temizle",
+	"waiClearButton": "Süzgeci temizler",
 	"filterButton": "Süzgeç",
 	"waiFilterButton": "Süzgeci gönder",
-	"columnSelectLabel": "Sütun",
+	"columnSelectLabel": "Sütun:",
 	"waiColumnSelectTemplate": "${0} kuralı için sütun",
-	"conditionSelectLabel": "Koşul",
+	"conditionSelectLabel": "Koşul:",
 	"waiConditionSelectTemplate": "${0} kuralı için koşul",
-	"valueBoxLabel": "Değer",
+	"valueBoxLabel": "Değer:",
 	"waiValueBoxTemplate": "${0} kuralı için süzülecek değeri girin",
 	"rangeTo": "bitiş",
-	"rangeTemplate": "${0} - ${1}",
+	"rangeTemplate": "başlangıç: ${0} bitiş: ${1}",
 	"statusTipHeaderColumn": "Sütun",
 	"statusTipHeaderCondition": "Kurallar",
 	"statusTipTitle": "Süzgeç Çubuğu",
-	"statusTipMsg": "${0} içindeki değerlere göre süzmek için burada süzgeç çubuğunu tıklatın.",
+	"statusTipMsg": "${0} içindeki değerlere göre süzmek için burada süzme çubuğunu tıklatın.",
 	"anycolumn": "herhangi bir sütun",
 	"statusTipTitleNoFilter": "Süzgeç Çubuğu",
 	"statusTipTitleHasFilter": "Süzgeç",
 	"statusTipRelPre": "Eşleştir",
-	"statusTipRelPost": "kural.",
-	"statusTipHeaderAll": "Tüm kuralları eşleştir.",
-	"statusTipHeaderAny": "Herhangi bir kuralı eşleştir.",
+	"statusTipRelPost": "kurallar.",
+	"statusTipHeaderAll": "Kuralların tümüyle eşleştir.",
+	"statusTipHeaderAny": "Kuralların herhangi biriyle eşleştir.",
 	"defaultItemsName": "öğe",
-	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} gösteriliyor.",
+	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} gösteriliyor. ",
 	"filterBarMsgNoFilterTemplate": "Süzgeç uygulanmadı",
-	"filterBarDefButton": "Süzgeç tanımla",
+	"filterBarDefButton": "Süzgeci tanımla",
 	"waiFilterBarDefButton": "Tabloyu süz",
 	"a11yFilterBarDefButton": "Süz...",
 	"filterBarClearButton": "Süzgeci kaldır",
 	"waiFilterBarClearButton": "Süzgeci kaldır",
 	"closeFilterBarBtn": "Süzgeç çubuğunu kapat",
-	"clearFilterMsg": "Bu seçenek süzgeci kaldırır ve tüm kullanılabilir kayıtları gösterir.",
+	"clearFilterMsg": "Bu süzgeci kaldıracak ve kullanılabilir tüm kayıtları görüntüleyecektir. ",
 	"anyColumnOption": "Herhangi Bir Sütun",
 	"trueLabel": "Doğru",
 	"falseLabel": "Yanlış",
 	"radioTrueLabel": "Değer Doğru",
 	"radioFalseLabel": "Değer Yanlış",
-	"beginTimeRangeLabel": "Saat Aralığı Başlangıç Değeri",
-	"endTimeRangeLabel": "Saat Aralığı Bitiş Değeri",
-	"beginDateRangeLabel": "Tarih Aralığı Başlangıç Değeri",
-	"endDateRangeLabel": "Tarih Aralığı Bitiş Değeri",
+	"beginTimeRangeLabel": "Saat Aralığı Değeri Başlangıcı",
+	"endTimeRangeLabel": "Saat Aralığı Değeri Sonu",
+	"beginDateRangeLabel": "Tarih Aralığı Değeri Başlangıcı",
+	"endDateRangeLabel": "Tarih Aralığı Değeri Sonu",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
@@ -101,8 +101,8 @@ define({
 	descending: "Azalan düzende sıralamak için tıklatın",
 	sortingState: "${0} - ${1}",
 	unsorted: "Bu sütunu sıralama",
-	waiSingleSortLabel: "${0} - ${1} öğesine göre sıralı. ${2} öğesine göre sıralamak için bu seçeneği belirleyin",
-	waiNestedSortLabel:"${0} - ${1} öğesine göre iç içe sıralı. ${2} öğesine göre iç içe sıralamak için bu seçeneği belirleyin",
+	waiSingleSortLabel: "${0} - ${1} öğesine göre sıralı. ${2} öğesine göre sıralamak için seçin. ",
+	waiNestedSortLabel:"${0} - ${1} öğesine göre iç içe sıralı. ${2} öğesine göre iç içe sıralamak için seçin.",
 
 //PaginationBar
 	pagerWai: 'Sayfalayıcı',
@@ -139,8 +139,8 @@ define({
 
 //QuickFilter
 	filterLabel: 'Süzgeç',
-	clearButtonTitle: 'Süzgeci Kaldır',
-	buildFilterMenuLabel: 'Süzgeç Oluştur&hellip;',
+	clearButtonTitle: 'Süzgeci Temizle',
+	buildFilterMenuLabel: 'Oluşturma Süzgeci&hellip;',
 	apply: 'Süzgeci Uygula',
 
 //Sort
@@ -149,13 +149,14 @@ define({
 	priorityOrder: 'sıralama önceliği ${0}',
 
 //SummaryBar
-	summary: 'Toplam: ${0}',
-	summaryWithSelection: 'Seçilen: ${0}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summaryTotal: 'Toplam: ${0}',
+	summarySelected: 'Seçilen: ${0}',
+	summaryRange: 'Aralık: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Tümünü seçmek için ARA ÇUBUĞU tuşuna basın. ",	//need translation
+	indirectDeselectAll: "Tüm seçimi kaldırmak için ARA ÇUBUĞU tuşuna basın.",	//need translation
+	treeExpanded: "Bu satırı daraltmak için Control + sol ok tuşlarına basın. ",	//need translation
+	treeCollapsed: "Bu satırı genişletmek için Control + sağ ok tuşlarına basın."	//need translation
 });
+
