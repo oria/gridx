@@ -277,7 +277,9 @@ define([
 				min: 1, 
 				max: pageCount
 			});
+			pane.pageInputBox.set('value', t.pagination.currentPage() + 1);
 			t._gotoDialog.show();
+			pane.pageInputBox.focusNode.select();
 		},
 
 		//Focus--------------------------------------------------------------------------------

@@ -50,7 +50,9 @@ define([
 				min: 1,
 				max: pageCount
 			};
+			pane.pageInputBox.set('value', pane.pagination.currentPage() + 1);
 			t._gotoDialog.show();
+			pane.pageInputBox.focusNode.select();
 		},
 
 		_onKey: function(){
