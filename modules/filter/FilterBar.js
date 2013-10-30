@@ -174,9 +174,21 @@ define([
 		name: 'filterBar',
 		forced: ['filter'],
 		preload: function(){
-			var rules = this.arg('filterData');
+			var t = this,
+				g = t.grid,
+				rules;
+			if(g.persist){
+				rules = g.persist.registerAndLoad('filterBar', function(){
+					return t.filterData;
+				});
+			}
 			if(rules){
-				this.grid.filter.setFilter(this._createFilterExpr(rules), 1);
+				t.filterData = rules;
+			}else{
+				rules = t.arg('filterData');
+			}
+			if(rules){
+				g.filter.setFilter(t._createFilterExpr(rules), 1);
 			}
 		},
 		//Public-----------------------------------------------------------

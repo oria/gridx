@@ -27,6 +27,8 @@ require([
 					mods.DndColumn,
 					mods.NestedSort,
 					mods.VirtualVScroller,
+					mods.Filter,
+					mods.FilterBar,
 					mods.ColumnResizer
 				]
 			});
