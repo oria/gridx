@@ -85,9 +85,14 @@ define([
 				}
 			});
 			t.aspect(g, 'setStore', function(){
-				if(g.tree){
+				//If server store changes without notifying grid, expanded rows should remain expanded.
+				//FIXME: this is ugly...
+				if(g.tree && !g.tree.arg('clearOnSetStore')){
 					g.tree.refresh();
 				}else{
+					if(g.tree){
+						g.tree._clear();
+					}
 					t.refresh();
 				}
 			});
