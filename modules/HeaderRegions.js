@@ -164,10 +164,13 @@ declare(_Module, {
 	},
 
 	_focusRegion: function(region){
-		if(region){
-			var t = this,
-				g = t.grid,
-				header = g.header.domNode,
+		var t = this,
+			g = t.grid;
+		if(region && !t._lock){
+			//focus fires onFocus, which triggers _focusRegion recursively.
+			//Add a lock to avoid recursion.
+			t._lock = 1;
+			var header = g.header.domNode,
 				headerCell = query(region).closest('.gridxCell', header)[0];
 			t._curRegionIdx = array.indexOf(t._regionNodes, region);
 			try{
@@ -185,6 +188,7 @@ declare(_Module, {
 				if(g.hScroller){
 					g.hScroller.scrollToColumn(headerCell.getAttribute('colid'));
 				}
+				t._lock = 0;
 			}, 0);
 		}
 	},

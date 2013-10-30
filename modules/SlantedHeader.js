@@ -38,7 +38,7 @@ define([
 				var n = self.grid.header.domNode;	
 				var headerHeight = n.offsetHeight;
 				console.log('header height: ', headerHeight);
-				var translateX = headerHeight/2 - 1; //TODO: 1 is the top border width
+				var translateX = Math.round(headerHeight/2) - 1; //TODO: 1 is the top border width
 				n.style.transform = n.style.msTransform = n.style.mozTransform
 					= n.style.webkitTransform = 'translate(' + translateX
 					 + 'px, 0px) skew(-45deg,0deg)';

@@ -135,14 +135,18 @@ define([
 			t._onSetColumns();
 			t.aspect(g, 'setColumns', '_onSetColumns');
 
-			t.aspect(g, g.touch ? 'onCellTouchStart' : 'onCellMouseDown', function(e){
+			function onDrillDown(e){
 				if(e.columnId == nextLevelButtonColumnId && e.cellNode.childNodes.length){
 					g.focus.focusArea('header');
 					setTimeout(function(){
 						t.down(e.rowId);
 					}, 0);
 				}
-			});
+			}
+			if(g.touch){
+				t.aspect(g, 'onCellTouchStart', onDrillDown);
+			}
+			t.aspect(g, 'onCellMouseDown', onDrillDown);
 		},
 
 		preload: function(){

@@ -206,7 +206,7 @@ define([
 				}
 			}
 			console.error("The " + (i + 1 - self.coreModules.length) +
-				"-th declared module can NOT be found, please require it before using it");
+				"-th declared module can NOT be found, please require it before using it:", m);
 		}
 		self.modules = mods;
 	}

@@ -423,6 +423,7 @@ define([
 					delete t._cache[j];
 					delete st[j];
 					delete sz[j];
+					t.onDelete(j);
 				}
 				i = indexOf(t._priority, id);
 				if(i >= 0){

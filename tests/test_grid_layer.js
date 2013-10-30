@@ -6,15 +6,13 @@ require([
 	'gridx/tests/support/data/TreeNestedTestData',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/allModules',
-	'gridx/modules/Layer',
-	'gridx/modules/Puller',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'gridx/core/model/cache/Async',
 	'dijit/ProgressBar',
 	'dijit/form/NumberTextBox',
 	'dojo/domReady!'
-], function(parser, has, Deferred, dataSource, nestedDataSource, storeFactory, modules, Layer, Puller){
+], function(parser, has, Deferred, dataSource, nestedDataSource, storeFactory, modules){
 
 	store = storeFactory({
 		dataSource: dataSource, 
@@ -82,25 +80,6 @@ require([
 		{id: 'date', name: 'date', field: 'date'},
 		{id: 'time', name: 'time', field: 'time'},
 		{id: 'bool', name: 'bool', field: 'bool'}
-	];
-
-	mods = [
-//        modules.Tree,
-//        modules.Pagination,
-//        modules.PaginationBar,
-//        modules.ColumnResizer,
-//        modules.ExtendedSelectRow,
-		modules.CellWidget,
-//        modules.Edit,
-//        modules.IndirectSelectColumn,
-//        modules.SingleSort,
-		modules.Filter,
-		modules.QuickFilter,
-//        modules.VirtualVScroller,
-//        modules.MultiChannelScroller,
-		modules.TouchVScroller,
-		Puller,
-		Layer
 	];
 
 	parser.parse();

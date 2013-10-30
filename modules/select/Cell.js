@@ -165,7 +165,8 @@ define([
 				g = t.grid;
 			t.inherited(arguments);
 			var doSelect = function(e){
-				if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+				if((!g.select.row || !g.select.row.arg('triggerOnCell')) &&
+					!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
 					!domClass.contains(e.target, 'gridxTreeExpandoInner')){
 					t._select([e.rowId, e.columnId], g._isCtrlKey(e));
 				}
