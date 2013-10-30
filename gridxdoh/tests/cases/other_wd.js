@@ -8,7 +8,7 @@ return {
 		},
 		"should not scroll empty message together with horizontal scroller": function(){
 			return this.hScrollGridx(3, 300).assertScreenshot();
-		}/*,
+		},
 		"should work after setting a non-empty store": function(){
 			return this.execute('setStore(100);').assertScreenshot();
 		},
@@ -340,7 +340,7 @@ return {
 				assertScreenshot();
 		}
 	},
-	"grid with drag and drop (dnd) rearrange": {*/
+	"grid with drag and drop (dnd) rearrange": {
 	}
 };
 });

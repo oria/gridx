@@ -28,8 +28,8 @@ define({
 //        { browserName: 'firefox', version: '21', platform: 'Mac 10.6' },
 //        { browserName: 'chrome', platform: [ 'Linux', 'Mac 10.8', 'Windows 7' ] },
 //        { browserName: 'safari', version: '6', platform: 'Mac 10.8' }
-		{ browserName: 'internet explorer' }
-//        { browserName: 'firefox' }
+//        { browserName: 'internet explorer' }
+		{ browserName: 'firefox' }
 //        { browserName: 'chrome' }
 	],
 

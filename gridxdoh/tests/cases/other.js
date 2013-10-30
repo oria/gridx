@@ -467,7 +467,7 @@ define([
 					setCellValue: function(data){
 						//"this" is the cell widget
 						this.lbl.innerHTML = data;
-						this.cb.set('value', data.length % 2);
+						this.cb.set('value', data ? data.length % 2 : 0);
 					}
 				},
 				{ field: "Genre", name:"ComboButton", width: '200px',
