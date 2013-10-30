@@ -14,7 +14,8 @@ var testcases = [
 	'./cases/indirectSelect',
 	'./cases/rowHeader',
 	'./cases/tree',
-	'./cases/other'
+	'./cases/other',
+	'./cases/dod'
 ];
 
 define(testcases, function(){
