@@ -156,7 +156,7 @@ define({
 //Other
 	indirectSelectAll: "Valitse kaikki painamalla välinäppäintä.",	//need translation
 	indirectDeselectAll: "Poista kaikkien valinta painamalla välinäppäintä.",	//need translation
-	treeExpanded: "Pienennä tämä rivi painamalla Control- ja vasenta nuolinäppäintä.",	//need translation
-	treeCollapsed: "Laajenna tämä rivi painamalla Control- ja oikeaa nuolinäppäintä."	//need translation
+	treeExpanded: "Pienennä tämä rivi painamalla Ctrl- ja vasenta nuolinäppäintä.",	//need translation
+	treeCollapsed: "Laajenna tämä rivi painamalla Ctrl- ja oikeaa nuolinäppäintä."	//need translation
 });
 
