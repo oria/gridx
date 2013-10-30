@@ -225,7 +225,8 @@ define([
 					if(c.declaredWidth == 'auto'){
 						autoCols.push(c);
 					}else if(/%$/.test(c.declaredWidth)){
-						var w = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - padBorder, 10);
+						//use parseFloat here to keep accuracy 
+						var w = parseFloat(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - padBorder, 10);
 						//Check if less than zero, prevent error in IE.
 						if(w < 0){
 							w = 0;
@@ -243,7 +244,9 @@ define([
 					if(c.declaredWidth != 'auto'){
 						var headerNode = header.getHeaderNode(c.id),
 							w = !isGroupHeader && needHackPadBorder ? parseFloat(headerNode.style.width, 10) :
-								headerNode.offsetWidth || (domStyle.get(headerNode, 'width') + padBorder);
+								//user offsetWidth will lose accuracy
+								//so use style directly
+								(domStyle.get(headerNode, 'width') + padBorder);
 						if(/%$/.test(c.declaredWidth)){
 							c.width = (w > padBorder ? w - padBorder : 0) + 'px';
 						}

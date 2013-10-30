@@ -71,7 +71,13 @@ require([
 		{id: 'Artist', field: 'Artist', name: 'Artist (20%)', width: '20%'},
 		{id: 'Name', field: 'Name', name: 'Name (30%)', width: '30%'}
 	];
-
+	layout4_1 = [
+		{id: 'id', field: 'id', name: 'Identity (30%)', width: '30%'},
+		{id: 'Year', field: 'Year', name: 'Year (30%)', width: '30%'},
+		{id: 'Genre', field: 'Genre', name: 'Genre (20%)', width: '20%'},
+		{id: 'Artist', field: 'Artist', name: 'Artist (20%)', width: '20%'},
+		{id: 'Name', field: 'Name', name: 'Name (auto)', width: 'auto'}
+	];
 	layout5 = [
 		{id: 'id', field: 'id', name: 'Identity', width: '50px'},
 		{id: 'Name', field: 'Name', name: 'Name (30%)', width: '30%'},
