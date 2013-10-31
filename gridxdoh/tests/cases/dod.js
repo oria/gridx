@@ -404,6 +404,6 @@ define([
 					grid.dod.hide(grid.row(rowId, 1));
 				});
 			}
-		},
+		}
 	];
 });
