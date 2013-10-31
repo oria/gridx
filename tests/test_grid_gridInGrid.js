@@ -127,7 +127,7 @@ require([
 		var rowId = rowNode.getAttribute('rowid');
 		
 		if(rowId % 2){		//odd
-			var num = 3;
+			var num = 2;
 			var width = (100 / num - 1) + '%';
 			
 			for(var i = 0; i < num; i++){
@@ -145,6 +145,7 @@ require([
 				});
 				grid.placeAt(node);
 				grid.startup();
+				// break;
 			}
 			
 		}else{		//even

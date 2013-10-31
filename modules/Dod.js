@@ -437,7 +437,7 @@ define([
 				gs.push(gig);
 				if(!gig._refreshForDod){
 					gig._refreshForDod = true;
-					gig.body.refresh();
+					gig.resize();
 				}
 			};
 		},
