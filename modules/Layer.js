@@ -289,7 +289,9 @@ define([
 				domClass.remove(bn, 'gridxSlideRefresh');
 				domClass.remove(wrapper1, 'gridxLayerHSlide gridxLayerVSlide');
 				domClass.remove(wrapper2, 'gridxLayerHSlide gridxLayerVSlide');
-				wrapper1.innerHTML = '';
+				if(wrapper1.childNodes.length){
+					wrapper1.removeChild(wrapper1.firstChild);
+				}
 
 				var tmp = t._wrapper1;
 				t._wrapper1 = t._wrapper2;
