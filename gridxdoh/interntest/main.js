@@ -2,10 +2,11 @@ define([
 	'require',
 	'./wrap',
 	"intern!bdd",
-	"intern/node_modules/dojo/node!./config.js"
-], function(require, wrap, bdd, config){
+	"intern/node_modules/dojo/node!./config.js",
+	"intern/node_modules/dojo/node!./cases.js"
+], function(require, wrap, bdd, config, casefiles){
 
-require(config.cases, function(){
+require(casefiles, function(){
 
 	function findSuites(testcases){
 		var suites = {};
