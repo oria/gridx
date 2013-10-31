@@ -40,6 +40,7 @@ define([
 		var picPaths = getPicPaths(name, this);
 		var picData;
 		return this.execute('hideMiscellany();').
+			wait(50).
 			takeScreenshot().
 			then(function(pic){
 				picData = pic;
@@ -55,6 +56,7 @@ define([
 		var picPaths = getPicPaths(name, this);
 		var picData;
 		return this.execute('hideMiscellany();').
+			wait(50).
 			takeScreenshot().
 			then(function(pic){
 				picData = pic;
@@ -85,31 +87,71 @@ define([
 	}
 
 	function vScroll(start, distance){
-		var scroll = getScrollArgs(this);
-		return this.end().
-			elementByCss('.gridxVScroller').
-			moveTo(scroll.offsetH, scroll.offsetW + start).
-			buttonDown().
-			moveTo(scroll.offsetH, scroll.offsetW + start + distance).
-			buttonUp().
-			end().
-			elementByTagName('body').
-			moveTo(0, 0).
-			end();
+		var browserName = this._desiredEnvironment.browserName;
+		if(browserName == 'internet explorer'){
+			var t = this;
+			return this.end().
+				execute('return [grid.vScrollerNode.clientHeight, grid.vScrollerNode.scrollHeight, grid.vScrollerNode.scrollTop];').
+				then(function(res){
+					var totalScrollLength = res[1] - res[0];
+					var draggableLength = totalScrollLength / res[1] * res[0];
+					var d = Math.floor(distance / draggableLength * totalScrollLength);
+					return t.execute('return grid.vScrollerNode.scrollTop += ' + d);
+				});
+		}else{
+			var scroll = getScrollArgs(this);
+			return this.end().
+				elementByClassName('gridxVScroller').
+				moveTo(scroll.offsetH, scroll.offsetW + start).
+				buttonDown().
+				moveTo(scroll.offsetH, scroll.offsetW + start + distance).
+				buttonUp().
+				end().
+				elementByTagName('body').
+				moveTo(0, 0).
+				end();
+		}
 	}
 
 	function hScroll(start, distance){
-		var scroll = getScrollArgs(this);
+		var browserName = this._desiredEnvironment.browserName;
+		if(browserName == 'internet explorer'){
+			var t = this;
+			return this.end().
+				execute('return [grid.hScrollerNode.clientWidth, grid.hScrollerNode.scrollWidth, grid.hScrollerNode.scrollLeft];').
+				then(function(res){
+					var totalScrollLength = res[1] - res[0];
+					var draggableLength = totalScrollLength / res[1] * res[0];
+					var d = Math.floor(distance / draggableLength * totalScrollLength);
+					return t.execute('return grid.hScrollerNode.scrollLeft += ' + d);
+				});
+		}else{
+			var scroll = getScrollArgs(this);
+			return this.end().
+				elementByClassName('gridxHScrollerInner').
+				getSize().
+				then(function(size){
+					console.log(size);
+				}).
+				moveTo(scroll.offsetW + start, scroll.offsetH).
+				buttonDown().
+				moveTo(scroll.offsetW + start + distance, scroll.offsetH).
+				buttonUp().
+				end().
+				elementByTagName('body').
+				moveTo(0, 0).
+				end();
+		}
+	}
+
+	function cellById(rowId, colId){
 		return this.end().
-			elementByCss('.gridxHScrollerInner').
-			moveTo(scroll.offsetW + start, scroll.offsetH).
-			buttonDown().
-			moveTo(scroll.offsetW + start + distance, scroll.offsetH).
-			buttonUp().
-			end().
-			elementByTagName('body').
-			moveTo(0, 0).
-			end();
+			elementByCss('[rowid="' + rowId + '"].gridxRow [colid="' + colId + '"].gridxCell');
+	}
+
+	function headerCellById(colId){
+		return this.end().
+			elementByCss('.gridxHeader [colid="' + colId + '"].gridxCell');
 	}
 
 	function wrap(cb){
@@ -119,6 +161,8 @@ define([
 			remote.assertScreenshot = assertScreenshot;
 			remote.vScrollGridx = vScroll;
 			remote.hScrollGridx = hScroll;
+			remote.cellById = cellById;
+			remote.headerCellById = headerCellById;
 			remote.SPECIAL_KEYS = wd.SPECIAL_KEYS;
 			return cb && cb.apply(this, arguments);
 		};

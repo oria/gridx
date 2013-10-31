@@ -610,7 +610,7 @@ define([
 			]
 		},
 		{
-			title: 'Drag and drop (dnd) rearrange',
+			title: 'grid with drag and drop (dnd) rearrange',
 			guide: [
 				'select some rows, mouse hover cells of selected rows should show draggable cursor',
 				'Start dragging, the avatar should be shown',

@@ -18,23 +18,22 @@ return {
 				assertScreenshot();
 		},
 		"should show effect when hover header": function(){
-			return this.elementByCss('.gridxHeader [colid="Genre"].gridxCell').
+			return this.headerCellById('Genre').
 				moveTo().
 				assertScreenshot();
 		},
 		"should clear previous header effect when move to another header": function(){
-			return this.elementByCss('.gridxHeader [colid="Genre"].gridxCell').
+			return this.headerCellById('Genre').
 				moveTo().
-				end().
-				elementByCss('.gridxHeader [colid="Album"].gridxCell').
+				headerCellById('Album').
 				moveTo().
 				assertScreenshot();
 		},
 		"should clear header effect when move out of header": function(){
-			return this.elementByCss('.gridxHeader [colid="Genre"].gridxCell').
+			return this.headerCellById('Genre').
 				moveTo().
 				end().
-				elementByCss('.gridxBody').
+				elementByClassName('gridxBody').
 				moveTo().
 				assertScreenshot();
 		}
@@ -76,7 +75,7 @@ return {
 
 	"autoWidth grid with columnResizer": {
 		"should be able to resize column": function(){
-			return this.elementByCss('.gridxHeader [colid="Album"].gridxCell').
+			return this.headerCellById('Album').
 				moveTo(0, 10).
 				execute('return /gridxColumnResizing/.test(document.body.className);').
 				then(function(isHovering){
@@ -96,18 +95,16 @@ return {
 	},
 	"autoWidth autoHeight grid with columnResizer": {
 		"grid size should change accordingly after column resize": function(){
-			return this.elementByCss('.gridxHeader [colid="Name"].gridxCell').
+			return this.headerCellById('Name').
 				moveTo(0, 10).
 				buttonDown().
 				moveTo(-200, 10).
 				buttonUp().
-				end().
-				elementByCss('.gridxHeader [colid="Length"].gridxCell').
+				headerCellById('Length').
 				moveTo(0, 10).
 				buttonDown().
 				moveTo(-200, 10).
 				buttonUp().
-				end().
 				assertScreenshot();
 		}
 	},
@@ -217,13 +214,13 @@ return {
 	},
 	"grid with customized header regions": {
 		"should show header regions when mouse over or focus header": function(){
-			return this.elementByCss('.gridxHeader [colid="id"].gridxCell').
+			return this.headerCellById('id').
 				moveTo(10, 10).
 				assertScreenshot();
 		},
 		"should navigate through header regions by arrow button": function(){
 			var pic1;
-			return this.elementByCss('.gridxHeader [colid="id"].gridxCell').
+			return this.headerCellById('id').
 				moveTo(10, 10).
 				buttonDown().
 				buttonUp().
@@ -256,7 +253,7 @@ return {
 				assertScreenshot("after change page");
 		},
 		"press F2 when focus on cell should put focus on the widget inside cell": function(){
-			return this.elementByCss('[rowid="4"].gridxRow [colid="3"].gridxCell').
+			return this.cellById(4, 3).
 				moveTo(150, 15).
 				buttonDown().
 				buttonUp().
@@ -273,9 +270,9 @@ return {
 		},
 		"column 'Summary Genre and Year' should be sortable": function(){
 			return this.hScrollGridx(3, 600).
-				elementByCss('.gridxHeader [colid="Summary"].gridxCell').
+				headerCellById('Summary').
 				moveTo(195, 6).
-				wait(1000).
+				wait(2000).
 				assertScreenshot("show tooltip").
 				buttonDown().
 				buttonUp().
@@ -284,7 +281,7 @@ return {
 	},
 	"grid with adaptive filter implemented by HeaderMenu": {
 		"A-Z filter can work correctly": function(){
-			return this.elementByCss('.gridxHeader [colid="Artist"].gridxCell').
+			return this.headerCellById('Artist').
 				moveTo(118, 5).
 				buttonDown().
 				buttonUp().
@@ -303,7 +300,7 @@ return {
 				assertScreenshot("update filter result");
 		},
 		"number filter can work correctly": function(){
-			return this.elementByCss('.gridxHeader [colid="Track"].gridxCell').
+			return this.headerCellById('Track').
 				moveTo(78, 5).
 				buttonDown().
 				buttonUp().
@@ -322,15 +319,14 @@ return {
 				assertScreenshot("update filter result");
 		},
 		"A-Z filter and number filter can work together": function(){
-			return this.elementByCss('.gridxHeader [colid="Artist"].gridxCell').
+			return this.headerCellById('Artist').
 				moveTo(118, 5).
 				buttonDown().
 				buttonUp().
 				moveTo(128, 10).
 				buttonDown().
 				buttonUp().
-				end().
-				elementByCss('.gridxHeader [colid="Track"].gridxCell').
+				headerCellById('Track').
 				moveTo(78, 5).
 				buttonDown().
 				buttonUp().
@@ -341,6 +337,59 @@ return {
 		}
 	},
 	"grid with drag and drop (dnd) rearrange": {
+		"should show draggable cursor after select rows": function(){
+			return this.cellById(3, 'Artist').
+				click().
+				end().
+				elementByClassName('gridxDnDReadyCursor').
+				getTagName().
+				then(function(tagName){
+					assert(tagName.toLowerCase() == 'body', 'body should have class "gridxDnDReadyCursor"');
+				});
+		},
+		"should show normal cursor when mouse over unselected rows": function(){
+			return this.cellById(3, 'Artist').
+				click().
+				cellById(4, 'Artist').
+				moveTo().
+				end().
+				elementByClassNameOrNull('gridxDnDReadyCursor').
+				then(function(element){
+					assert(!element, 'body should not have class "gridxDnDReadyCursor"');
+				});
+		},
+		"should be able to move the just selected row": function(){
+			return this.cellById(3, 'Artist').
+				click().
+				buttonDown().
+				cellById(7, 'Artist').
+				moveTo(54, 20).
+				assertScreenshot('during dnd').
+				buttonUp().
+				wait(100).
+				assertScreenshot('after dnd');
+		},
+		"should be able to move multiple rows": function(){
+			return this.cellById(3, 'Artist').
+				moveTo().
+				buttonDown().
+				cellById(7, 'Artist').
+				moveTo().
+				buttonUp().
+				buttonDown().
+				cellById(6, 'Artist').
+				moveTo().
+				assertScreenshot('anchor line at selected bottom').
+				cellById(4, 'Artist').
+				moveTo().
+				assertScreenshot('anchor line at selected top').
+				cellById(1, 'id').
+				moveTo(10, 10).
+				assertScreenshot('anchor line at body top').
+				buttonUp().
+				wait(100).
+				assertScreenshot('after dnd');
+		}
 	}
 };
 });

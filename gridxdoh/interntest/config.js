@@ -5,6 +5,7 @@ module.exports = {
 	testCaseTimeout: 5 * 60 * 1000,
 	gridxCreationTimeout: 2 * 60 * 1000,
 	cases: [
-		'../tests/cases/other_wd.js'
+		'../tests/cases/other_wd.js',
+		'../tests/cases/mobile_wd.js'
 	]
 };
