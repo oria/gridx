@@ -182,7 +182,7 @@ define([
 		},
 		
 		_dismissDndReady: function(){
-			if(this._dndReady){
+			if(this._dndReady && !this._dndBegun){
 				this._loadSelectStatus();
 				this._dndReady = 0;	//0 as false
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
@@ -195,6 +195,7 @@ define([
 			if(t._dndReady){
 				var p = t.profile,
 					m = DndManager.manager();
+				t._dndBegun = 1;
 				t._source.isSource = true;
 				t._source.canNotDragOut = !p.arg('provide').length;
 				t._node.innerHTML = p._buildDndNodes();
@@ -214,7 +215,7 @@ define([
 				};
 				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
-				dom.setSelectable(t.grid.domNode, false);	
+				dom.setSelectable(t.grid.domNode, false);
 			}
 		},
 
@@ -223,6 +224,7 @@ define([
 				m = DndManager.manager();
 			t._source.isSource = false;
 			t._alreadyIn = 0;	//0 as false
+			t._dndBegun = 0;
 			delete m._dndInfo;
 			if(t._oldStartDrag){
 				m.startDrag = t._oldStartDrag;
