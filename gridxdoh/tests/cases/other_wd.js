@@ -45,14 +45,14 @@ return {
 		},
 		"should not be able to resize vertically": function(){
 			var pic1;
-			return this.saveScreenshot('before resize').
+			return this.getScreenshot().
 				then(function(pic){
 					pic1 = pic;
 				}).
 				execute('resizeGrid({h: 1.1});').
-				saveScreenshot('after resize').
+				getScreenshot().
 				then(function(pic){
-					assert(pic1 == pic, 'grid size should not change after resize');
+					this.assertEqualShots(pic1, pic2, 'grid size should not change after resize');
 				});
 		}
 	},
@@ -240,9 +240,9 @@ return {
 				keys(this.SPECIAL_KEYS["Right arrow"]).
 				assertScreenshot("focus on next header text").
 				keys(this.SPECIAL_KEYS["Left arrow"]).
-				saveScreenshot("back to first header text").
+				getScreenshot().
 				then(function(pic){
-					assert(pic1 == pic, 'focus back to first header text');
+					this.assertEqualShots(pic1, pic, 'focus back to first header text');
 				});
 		}
 	},

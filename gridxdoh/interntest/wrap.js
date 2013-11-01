@@ -36,20 +36,29 @@ define([
 		};
 	}
 
-	function saveScreenshot(name){
-		var picPaths = getPicPaths(name, this);
+	function getScreenshot(){
 		var picData;
 		return this.execute('hideMiscellany();').
 			wait(50).
 			takeScreenshot().
 			then(function(pic){
 				picData = pic;
-				fs.writeFileSync(picPaths.picPath, pic, "base64");
 			}).
 			execute('showMiscellany();').
 			then(function(){
 				return picData;
 			});
+	}
+
+	function assertEqualShots(pic1, pic2, name){
+		var isEqual = pic1 == pic2;
+		if(!isEqual){
+			var picPath1 = getPicPaths(name + '-1', this).picPath;
+			var picPath2 = getPicPaths(name + '-2', this).picPath;
+			fs.writeFileSync(picPath1, pic1, 'base64');
+			fs.writeFileSync(picPath2, pic2, 'base64');
+		}
+		assert(isEqual, name);
 	}
 
 	function assertScreenshot(name){
@@ -68,10 +77,14 @@ define([
 					needCompare = 1;
 					var refPic = fs.readFileSync(picPaths.refPicPath, 'base64');
 					var picsAreEqual = picData == refPic;
+					if(!picsAreEqual){
+						fs.writeFileSync(picPaths.picPath, picData, 'base64');
+					}else if(fs.existsSync(picPaths.picPath)){
+						fs.unlinkSync(picPaths.picPath);
+					}
 				}else{
 					fs.writeFileSync(picPaths.refPicPath, picData, 'base64');
 				}
-				fs.writeFileSync(picPaths.picPath, picData, 'base64');
 				if(needCompare){
 					assert(picsAreEqual, 'screenshot changed');
 				}
@@ -157,7 +170,7 @@ define([
 	function wrap(cb){
 		return function(){
 			var remote = this.remote;
-			remote.saveScreenshot = saveScreenshot;
+			remote.getScreenshot = getScreenshot;
 			remote.assertScreenshot = assertScreenshot;
 			remote.vScrollGridx = vScroll;
 			remote.hScrollGridx = hScroll;
