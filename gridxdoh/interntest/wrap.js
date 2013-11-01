@@ -150,9 +150,6 @@ define([
 			return this.end().
 				elementByClassName('gridxHScrollerInner').
 				getSize().
-				then(function(size){
-					console.log(size);
-				}).
 				moveTo(scroll.offsetW + start, scroll.offsetH).
 				buttonDown().
 				moveTo(scroll.offsetW + start + distance, scroll.offsetH).
