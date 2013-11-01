@@ -44,7 +44,7 @@ return {
 			return this.hScrollGridx(3, 400).assertScreenshot();
 		},
 		"should not be able to resize vertically": function(){
-			var pic1;
+			var pic1, pic2;
 			return this.getScreenshot().
 				then(function(pic){
 					pic1 = pic;
@@ -52,7 +52,10 @@ return {
 				execute('resizeGrid({h: 1.1});').
 				getScreenshot().
 				then(function(pic){
-					this.assertEqualShots(pic1, pic2, 'grid size should not change after resize');
+					pic2 = pic;
+				}).
+				assertEqualShots(function(){
+					return [pic1, pic2, 'grid size should not change after resize'];
 				});
 		}
 	},
@@ -219,7 +222,7 @@ return {
 				assertScreenshot();
 		},
 		"should navigate through header regions by arrow button": function(){
-			var pic1;
+			var pic1, pic2;
 			return this.headerCellById('id').
 				moveTo(10, 10).
 				buttonDown().
@@ -242,7 +245,10 @@ return {
 				keys(this.SPECIAL_KEYS["Left arrow"]).
 				getScreenshot().
 				then(function(pic){
-					this.assertEqualShots(pic1, pic, 'focus back to first header text');
+					pic2 = pic;
+				}).
+				assertEqualShots(function(){
+					return [pic1, pic2, 'focus back to first header text'];
 				});
 		}
 	},

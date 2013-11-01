@@ -50,15 +50,22 @@ define([
 			});
 	}
 
-	function assertEqualShots(pic1, pic2, name){
-		var isEqual = pic1 == pic2;
-		if(!isEqual){
-			var picPath1 = getPicPaths(name + '-1', this).picPath;
-			var picPath2 = getPicPaths(name + '-2', this).picPath;
-			fs.writeFileSync(picPath1, pic1, 'base64');
-			fs.writeFileSync(picPath2, pic2, 'base64');
-		}
-		assert(isEqual, name);
+	function assertEqualShots(cb){
+		var t = this;
+		return t.then(function(){
+			var pics = cb.apply(t, arguments);
+			var pic1 = pics[0];
+			var pic2 = pics[1];
+			var name = pics[2];
+			var isEqual = pic1 == pic2;
+			if(!isEqual){
+				var picPath1 = getPicPaths(name + '-1', t).picPath;
+				var picPath2 = getPicPaths(name + '-2', t).picPath;
+				fs.writeFileSync(picPath1, pic1, 'base64');
+				fs.writeFileSync(picPath2, pic2, 'base64');
+			}
+			assert(isEqual, name);
+		});
 	}
 
 	function assertScreenshot(name){
@@ -171,6 +178,7 @@ define([
 		return function(){
 			var remote = this.remote;
 			remote.getScreenshot = getScreenshot;
+			remote.assertEqualShots = assertEqualShots;
 			remote.assertScreenshot = assertScreenshot;
 			remote.vScrollGridx = vScroll;
 			remote.hScrollGridx = hScroll;
