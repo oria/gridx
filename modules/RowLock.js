@@ -48,6 +48,15 @@ define([
 					_this.connect(g.bodyNode, 'onscroll', function(){
 						_this._updateRowPosition();
 					});
+					
+					_this.connect(g.body, 'onAfterCell', function(cell){
+						if(cell.row.visualIndex() < _this.count){
+							_this._adjustBody();
+							_this._updatePosition();
+
+						}
+					});
+
 				}
 				
 				if(_this.grid.vScroller && _this.grid.rowHeader){
