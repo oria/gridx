@@ -127,7 +127,7 @@ define([
 			}
 		},
 		{
-			title: 'autoWidth-columnResizer',
+			title: 'autoWidth-ColumnResizer',
 			guide: [
 				'resize column, the grid width should change accordingly'
 			],
