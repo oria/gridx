@@ -19,7 +19,7 @@ define([
 
 	var cases = [
 		{
-			title: 'grid with empty store and horizontal scroll bar',
+			title: 'empty store-hscroller',
 			guide: [
 				'empty message is correctly shown',
 				'empty message does not scroll with horizontal scroller',
@@ -45,7 +45,7 @@ define([
 			]
 		},
 		{
-			title: 'autoHeight grid with some rows and horizontal scroller',
+			title: 'autoHeight-hscroller',
 			guide: [
 				'when scrolling mouse wheel on autoHeight grid body, the whole page scrolls instead of the grid content.',
 				'horizontal scroller scrolls correctly',
@@ -73,7 +73,7 @@ define([
 			}
 		},
 		{
-			title: 'autoHeight grid with empty store',
+			title: 'autoHeight-empty store',
 			guide: [
 				'autoHeight empty grid should still show complete empty message'
 			],
@@ -99,7 +99,7 @@ define([
 			}
 		},
 		{
-			title: 'autoWidth grid with fixed and percentage column width and minWidth',
+			title: 'autoWidth-fixed and percentage column width-minWidth',
 			guide: [
 				'Genre column should be 150px wide',
 				'Year column should have default width (60px)',
@@ -127,7 +127,7 @@ define([
 			}
 		},
 		{
-			title: 'autoWidth grid with columnResizer',
+			title: 'autoWidth-columnResizer',
 			guide: [
 				'resize column, the grid width should change accordingly'
 			],
@@ -151,7 +151,7 @@ define([
 			}
 		},
 		{
-			title: 'autoWidth autoHeight grid with columnResizer',
+			title: 'autoWidth-autoHeight-ColumnResizer',
 			guide: [
 				'resize column, the grid width should change accordingly'
 			],
@@ -181,7 +181,7 @@ define([
 			}
 		},
 		{
-			title: 'autoHeight grid with filterBar and paginationBar',
+			title: 'autoHeight-FilterBar-PaginationBar',
 			guide: [
 				'filter the grid, the grid height should change accordingly.',
 				'switch pages, the grid height should change accordingly.',
@@ -217,7 +217,7 @@ define([
 			}
 		},
 		{
-			title: 'sync cache grid with as many features as possible',
+			title: 'sync-many features',
 			guide: [
 			],
 			cache: "gridx/core/model/cache/Sync",
@@ -291,7 +291,7 @@ define([
 			}
 		},
 		{
-			title: 'grid with client side filter and filter bar',
+			title: 'client filter-FilterBar',
 			cache: "gridx/core/model/cache/Sync",
 			store: 'memory',
 			size: 100,
@@ -328,7 +328,7 @@ define([
 		},
 		{
 			version: 1.1,
-			title: 'grid with client side filter, filter bar and quick filter',
+			title: 'client filter-FilterBar-QuickFilter',
 			guide: [
 				'do some filter in quick filter, the filter bar and filter dialog should also be updated',
 				'input something in quick filter, the clear filter button (x) should show up',
@@ -373,7 +373,7 @@ define([
 		},
 		{
 			version: 1.2,
-			title: 'grid with customized header regions',
+			title: 'HeaderRegions',
 			guide: [
 				'when mouse over or focus header, the header regions are shown',
 				'use left/right arrow keys to navigate through regions (including NestedSort)'
@@ -415,7 +415,7 @@ define([
 			}
 		},
 		{
-			title: 'grid with cellWidget and pagination',
+			title: 'CellWidget-Pagination',
 			guide: [
 				'Go to different pages, cell widgets should render correctly',
 				'focus any cell in the Button column, press F2 to move focus to the button in the cell.',
@@ -527,7 +527,7 @@ define([
 			]
 		},
 		{
-			title: 'grid with nestedsort overriding singlesort',
+			title: 'NestedSort overriding SingleSort',
 			guide: [
 				'initial sorting order is correct',
 				'The last column (Summary Genre and Year) can be correctly sorted',
@@ -576,7 +576,7 @@ define([
 	cases.push(
 		{
 			version: 1.2,
-			title: 'grid with adaptive filter implemented by HeaderMenu',
+			title: 'adaptive filter',
 			guide: [
 				'A-Z filter can work correctly (different filter items use "or" relation)',
 				'number filter can work correctly',
@@ -610,7 +610,7 @@ define([
 			]
 		},
 		{
-			title: 'grid with drag and drop (dnd) rearrange',
+			title: 'dnd rearrange',
 			guide: [
 				'select some rows, mouse hover cells of selected rows should show draggable cursor',
 				'Start dragging, the avatar should be shown',

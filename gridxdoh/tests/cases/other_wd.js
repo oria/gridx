@@ -2,7 +2,7 @@ define([
 	'intern/chai!assert'
 ], function(assert){
 return {
-	"grid with empty store and horizontal scroll bar": {
+	"empty store-hscroller": {
 		"should show empty message": function(){
 			return this.assertScreenshot();
 		},
@@ -39,7 +39,7 @@ return {
 		}
 	},
 
-	"autoHeight grid with some rows and horizontal scroller": {
+	"autoHeight-hscroller": {
 		"should be able to scroll horizontally": function(){
 			return this.hScrollGridx(3, 400).assertScreenshot();
 		},
@@ -57,13 +57,13 @@ return {
 		}
 	},
 
-	"autoHeight grid with empty store": {
+	"autoHeight-empty store": {
 		"should show empty message correctly": function(){
 			return this.assertScreenshot();
 		}
 	},
 
-	"autoWidth grid with fixed and percentage column width and minWidth": {
+	"autoWidth-fixed and percentage column width-minWidth": {
 		"should have 150px Genre column": function(){
 			return this.assertScreenshot().
 				execute('return grid.column("Genre").headerNode().style.width;').
@@ -73,7 +73,7 @@ return {
 		}
 	},
 
-	"autoWidth grid with columnResizer": {
+	"autoWidth-ColumnResizer": {
 		"should be able to resize column": function(){
 			return this.headerCellById('Album').
 				moveTo(0, 10).
@@ -93,7 +93,7 @@ return {
 				assertScreenshot('mouse up');
 		}
 	},
-	"autoWidth autoHeight grid with columnResizer": {
+	"autoWidth-autoHeight-ColumnResizer": {
 		"grid size should change accordingly after column resize": function(){
 			return this.headerCellById('Name').
 				moveTo(0, 10).
@@ -108,7 +108,7 @@ return {
 				assertScreenshot();
 		}
 	},
-	"autoHeight grid with filterBar and paginationBar": {
+	"autoHeight-FilterBar-PaginationBar": {
 		"should change grid height after filtering": function(){
 			return this.elementByClassName('gridxFilterBar').
 				click().
@@ -154,12 +154,12 @@ return {
 				assertScreenshot();
 		}
 	},
-	"sync cache grid with as many features as possible": {
+	"sync-many features": {
 	},
-	"grid with client side filter and filter bar": {
+	"client filter-FilterBar": {
 	},
-	"grid with client side filter, filter bar and quick filter": {
-		"filter bar and filter dialog should be updated after filtering in quick filter": function(){
+	"client filter-FilterBar-QuickFilter": {
+		"filterbar and filterdialog should update after quick filter": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
 				type("king").
 				wait(1000).
@@ -212,7 +212,7 @@ return {
 				assertScreenshot("filter cleared");
 		}
 	},
-	"grid with customized header regions": {
+	"HeaderRegions": {
 		"should show header regions when mouse over or focus header": function(){
 			return this.headerCellById('id').
 				moveTo(10, 10).
@@ -246,7 +246,7 @@ return {
 				});
 		}
 	},
-	"grid with cellWidget and pagination": {
+	"CellWidget-Pagination": {
 		"should render cell widgets correctly when switching pages": function(){
 			return this.assertScreenshot("before change page").
 				execute("return grid.pagination.gotoPage(1);").
@@ -264,7 +264,7 @@ return {
 				assertScreenshot("after Escape");
 		}
 	},
-	"grid with nestedsort overriding singlesort": {
+	"NestedSort overriding SingleSort": {
 		"initial sorting order should be correct": function(){
 			return this.assertScreenshot();
 		},
@@ -279,7 +279,7 @@ return {
 				assertScreenshot("sort result");
 		}
 	},
-	"grid with adaptive filter implemented by HeaderMenu": {
+	"adaptive filter": {
 		"A-Z filter can work correctly": function(){
 			return this.headerCellById('Artist').
 				moveTo(118, 5).
@@ -336,7 +336,7 @@ return {
 				assertScreenshot();
 		}
 	},
-	"grid with drag and drop (dnd) rearrange": {
+	"dnd rearrange": {
 		"should show draggable cursor after select rows": function(){
 			return this.cellById(3, 'Artist').
 				click().
