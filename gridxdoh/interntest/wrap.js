@@ -39,7 +39,7 @@ define([
 	function getScreenshot(){
 		var picData;
 		return this.execute('hideMiscellany();').
-			wait(50).
+			wait(200).
 			takeScreenshot().
 			then(function(pic){
 				picData = pic;
@@ -72,7 +72,7 @@ define([
 		var picPaths = getPicPaths(name, this);
 		var picData;
 		return this.execute('hideMiscellany();').
-			wait(50).
+			wait(200).
 			takeScreenshot().
 			then(function(pic){
 				picData = pic;
