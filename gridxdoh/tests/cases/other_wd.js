@@ -147,7 +147,7 @@ return {
 				end().
 				elementByCss('#dijit_layout_ContentPane_0_ConditionSelect_menu [aria-label="is empty "].dijitMenuItem').
 				click().
-				wait(500).
+				resetMouse().
 				assertScreenshot();
 		},
 		"should keep header body aligned after toggle header twice": function(){
@@ -263,6 +263,7 @@ return {
 				moveTo(150, 15).
 				buttonDown().
 				buttonUp().
+				resetMouse().
 				assertScreenshot("before F2").
 				keys(this.SPECIAL_KEYS.F2).
 				assertScreenshot("after F2").

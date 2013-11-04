@@ -171,6 +171,14 @@ define([
 			elementByCss('.gridxHeader [colid="' + colId + '"].gridxCell');
 	}
 
+	function resetMouse(){
+		return this.end().
+			elementByTagName('body').
+			moveTo(0, 0).
+			end().
+			wait(500);
+	}
+
 	function wrap(cb){
 		return function(){
 			var remote = this.remote;
@@ -180,6 +188,7 @@ define([
 			remote.vScrollGridx = vScroll;
 			remote.hScrollGridx = hScroll;
 			remote.cellById = cellById;
+			remote.resetMouse = resetMouse;
 			remote.headerCellById = headerCellById;
 			remote.SPECIAL_KEYS = wd.SPECIAL_KEYS;
 			return cb && cb.apply(this, arguments);
