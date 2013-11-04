@@ -18,10 +18,6 @@ fs.readdirSync(picsDir).forEach(function(browser){
 	}
 	fs.readdirSync(picsBrowserDir).forEach(function(pic){
 		var cmd = ['robocopy "', refsBrowserDir, '" "', targetBrowserDir, '" "', pic, '"'].join('');
-		exec(cmd, function(err, stdout, stderr){
-			if(err){
-				console.log(stderr);
-			}
-		});
+		exec(cmd);
 	});
 });
