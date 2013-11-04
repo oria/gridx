@@ -52,7 +52,7 @@ define({
 	"waiCancelButton": "Prekliči to pogovorno okno",
 	"clearButton": "Počisti",
 	"waiClearButton": "Počisti filter",
-	"filterButton": "Filter",
+	"filterButton": "Filtriraj",
 	"waiFilterButton": "Pošlji filter",
 	"columnSelectLabel": "Stolpec:",
 	"waiColumnSelectTemplate": "Stolpec za pravilo ${0}",
