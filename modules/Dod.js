@@ -152,6 +152,7 @@ define([
 				return;
 			}else{
 				domStyle.set(_row.dodLoadingNode, 'display', 'block');
+				_row.inLoading = true;
 			}
 			
 			if(this.grid.rowHeader){
@@ -176,7 +177,7 @@ define([
 		
 		hide: function(row){
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim){return;}
+			if(!_row.dodShown || _row.inAnim || _row.inLoading){return;}
 			
 			if(!row.node()){
 				_row.dodShown = false;
@@ -423,6 +424,7 @@ define([
 				}
 			}
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
+			_row.inLoading = false;
 			
 			//***for nested grid in grid ****
 			var gridNodes = dojo.query('.gridx', _row.dodNode);
