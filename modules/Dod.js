@@ -477,8 +477,12 @@ define([
 		
 			if(e.keyCode == keys.F4 && !t._navigating && focus.currentArea() == 'body'){
 				if(t._beginNavigate(e.rowId, e.columnId)){
-					event.stop(e);
 					focus.focusArea('navigabledod');
+					if(has('ie') < 9){
+						e.returnValue = false;
+						return false;
+					}
+					event.stop(e);
 				}
 			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
 				t._navigating = false;
