@@ -3,7 +3,7 @@ define([
 ], function(assert){
 return {
 	"layer tree grid": {
-		"@should clear layer when set store": function(){
+		"should clear layer when set store": function(){
 			return this.cellById(4, '__nextLevelButton__').
 				click().
 				end().

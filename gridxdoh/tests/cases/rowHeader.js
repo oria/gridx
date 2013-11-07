@@ -15,7 +15,7 @@ define([
 
 	return [
 		{
-			title: 'rowHeader, sync cache, filter, paging, columnResizer',
+			title: 'rowHeader-sync cache-filter-paging-columnResizer',
 			guide: [
 				'row header is correct during scrolling',
 				'row header is correct during page switching',
