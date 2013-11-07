@@ -188,6 +188,10 @@ define([
 				t._updateResizer(e);
 				//Only mouse down, not moved yet
 				t._moving = 0;
+				//If column resizing should not cause any part of grid to be focused
+				setTimeout(function(){
+					g.focus.blur();
+				}, 0);
 			}else{
 				t._ismousedown = 1;
 			}
