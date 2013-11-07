@@ -52,7 +52,11 @@ define([
 					func = function(){
 						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
 						if(toFocus){
-							toFocus.focus();
+							try{
+								toFocus.focus();
+							}catch(e){
+								//FIXME: avoid error in IE.
+							}
 						}
 					};
 				if(has('webkit')){
