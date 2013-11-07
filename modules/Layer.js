@@ -134,6 +134,15 @@ define([
 			}, t.arg('buttonColumnArgs') || {});
 			t._onSetColumns();
 			t.aspect(g, 'setColumns', '_onSetColumns');
+			t.aspect(g, 'setStore', function(){
+				t._parentStack = [];
+				wrapper1.innerHTML = wrapper2.innerHTML = '';
+				if(cn.firstChild){
+					cn.removeChild(cn.firstChild);
+					cn.style.height = 0;
+					g.vLayout.reLayout();
+				}
+			});
 
 			function onDrillDown(e){
 				if(e.columnId == nextLevelButtonColumnId && e.cellNode.childNodes.length){
