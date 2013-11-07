@@ -25,12 +25,12 @@ smtpTransport.sendMail({
 	subject: "Gridx automatic test is finished", // Subject line
 	generateTextFromHTML: true,
 	html: content
-});
+}, onSent);
 
-smtpTransport.sendMail({
+/*smtpTransport.sendMail({
 	from: "gridxadmin@cn.ibm.com", // sender address
 	to: "zhuxw1984@gmail.com", // list of receivers
 	subject: "Gridx automatic test is finished", // Subject line
 	generateTextFromHTML: true,
 	html: content
-});
+});*/

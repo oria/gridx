@@ -2,7 +2,7 @@ define([
 	'intern/chai!assert'
 ], function(assert){
 return {
-	"empty store-hscroller": {
+	/*"empty store-hscroller": {
 		"should show empty message": function(){
 			return this.assertScreenshot();
 		},
@@ -96,6 +96,7 @@ return {
 				assertScreenshot('mouse up');
 		}
 	},
+
 	"autoWidth-autoHeight-ColumnResizer": {
 		"grid size should change accordingly after column resize": function(){
 			return this.headerCellById('Name').
@@ -118,7 +119,7 @@ return {
 				wait(500).
 				active().
 				type("1942").
-				keys(this.SPECIAL_KEYS.Enter).
+				type(this.SPECIAL_KEYS.Enter).
 				wait(500).
 				assertScreenshot();
 		},
@@ -187,7 +188,7 @@ return {
 					}).
 				end().
 				elementByCss('.gridxQuickFilterInput .dijitInputInner').
-					keys(this.SPECIAL_KEYS["Back space"]).
+					type(this.SPECIAL_KEYS["Back space"]).
 					end().
 				elementByClassName('gridxQuickFilterClear').
 					isDisplayed().
@@ -203,8 +204,8 @@ return {
 		"should be able to TAB from quick filter textbox to clear filter button": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
 				type("king" + this.SPECIAL_KEYS.Enter).
-				keys(this.SPECIAL_KEYS.Tab).
-				keys(this.SPECIAL_KEYS.Enter).
+				type(this.SPECIAL_KEYS.Tab).
+				type(this.SPECIAL_KEYS.Enter).
 				assertScreenshot("filter cleared");
 		},
 		"should clear filter after setting store": function(){
@@ -232,17 +233,17 @@ return {
 				then(function(pic){
 					pic1 = pic;
 				}).
-				keys(this.SPECIAL_KEYS["Right arrow"]).
+				type(this.SPECIAL_KEYS["Right arrow"]).
 				assertScreenshot("focus on nested sort").
-				keys(this.SPECIAL_KEYS["Right arrow"]).
+				type(this.SPECIAL_KEYS["Right arrow"]).
 				assertScreenshot("focus on blue region").
-				keys(this.SPECIAL_KEYS["Right arrow"]).
+				type(this.SPECIAL_KEYS["Right arrow"]).
 				assertScreenshot("focus on green region").
-				keys(this.SPECIAL_KEYS["Right arrow"]).
+				type(this.SPECIAL_KEYS["Right arrow"]).
 				assertScreenshot("focus on red region").
-				keys(this.SPECIAL_KEYS["Right arrow"]).
+				type(this.SPECIAL_KEYS["Right arrow"]).
 				assertScreenshot("focus on next header text").
-				keys(this.SPECIAL_KEYS["Left arrow"]).
+				type(this.SPECIAL_KEYS["Left arrow"]).
 				getScreenshot().
 				then(function(pic){
 					pic2 = pic;
@@ -265,9 +266,9 @@ return {
 				buttonUp().
 				resetMouse().
 				assertScreenshot("before F2").
-				keys(this.SPECIAL_KEYS.F2).
+				type(this.SPECIAL_KEYS.F2).
 				assertScreenshot("after F2").
-				keys(this.SPECIAL_KEYS.Escape).
+				type(this.SPECIAL_KEYS.Escape).
 				assertScreenshot("after Escape");
 		}
 	},
@@ -342,7 +343,7 @@ return {
 				buttonUp().
 				assertScreenshot();
 		}
-	},
+	},*/
 	"dnd rearrange": {
 		"should show draggable cursor after select rows": function(){
 			return this.cellById(3, 'Artist').
@@ -365,6 +366,43 @@ return {
 					assert(!element, 'body should not have class "gridxDnDReadyCursor"');
 				});
 		},
+		"can move up current focused row by keyboard": function(){
+			return this.cellById(6, 'Genre').
+				click().
+				type(this.SPECIAL_KEYS.Control + this.SPECIAL_KEYS['Up arrow']).
+				execute("return grid.row('6').visualIndex()").
+				then(function(vidx){
+					assert(vidx === 4, "move up 1 step");
+				});
+		},
+		"can move down current focused row by keyboard": function(){
+			return this.cellById(1, 'Genre').
+				click().
+				type(this.SPECIAL_KEYS.Control + this.SPECIAL_KEYS['Down arrow']).
+				execute("return grid.row('1').visualIndex()").
+				then(function(vidx){
+					assert(vidx === 1, "move down 1 step");
+				});
+		},
+		"first row can not move to previous page": function(){
+			return this.execute('grid.pagination.gotoPage(1);').
+				cellById(11, 'Genre').
+				click().
+				type(this.SPECIAL_KEYS.Control + this.SPECIAL_KEYS['Up arrow']).
+				execute("return grid.row('11').visualIndex()").
+				then(function(vidx){
+					assert(vidx === 0, "first row can not move to prev page");
+				});
+		},
+		"last row can not move to next page": function(){
+			return this.cellById(10, 'Genre').
+				click().
+				type(this.SPECIAL_KEYS.Control + this.SPECIAL_KEYS['Down arrow']).
+				execute("return grid.row('10').visualIndex()").
+				then(function(vidx){
+					assert(vidx === 9, "last row can not move to next page");
+				});
+		}/*,
 		"should be able to move the just selected row": function(){
 			return this.cellById(3, 'Artist').
 				click().
@@ -396,7 +434,7 @@ return {
 				buttonUp().
 				wait(100).
 				assertScreenshot('after dnd');
-		}
+		}*/
 	}
 };
 });

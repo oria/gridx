@@ -3,7 +3,7 @@ define([
 ], function(assert){
 return {
 	"layer tree grid": {
-		"should show parent row when drill down and restore previous level when drill up": function(){
+		/*"should show parent row when drill down and restore previous level when drill up": function(){
 			return this.assertScreenshot('root level').
 				cellById(4, '__nextLevelButton__').
 				click().
@@ -32,7 +32,7 @@ return {
 				click().
 				wait(1000).
 				assertScreenshot('back to root level');
-		}
+		}*/
 	}
 };
 });
