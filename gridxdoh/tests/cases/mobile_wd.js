@@ -3,6 +3,23 @@ define([
 ], function(assert){
 return {
 	"layer tree grid": {
+		"@should clear layer when set store": function(){
+			return this.cellById(4, '__nextLevelButton__').
+				click().
+				end().
+				wait(1000).
+				execute('setStore(10);').
+				wait(300).
+				elementByClassName('gridxLayerContext').
+				getSize().
+				then(function(size){
+					assert(size.height === 0, "should not show layer parent");
+				}).
+				execute('return grid.model.layerId();').
+				then(function(layerId){
+					assert(layerId === "", "should return to root level");
+				});
+		}
 		/*"should show parent row when drill down and restore previous level when drill up": function(){
 			return this.assertScreenshot('root level').
 				cellById(4, '__nextLevelButton__').
