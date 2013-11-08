@@ -21,6 +21,10 @@ define([
 		//		Users can directly set grid parameter pageSize to set both the cache pageSize and the body pageSize.
 		//		If using bodyPageSize, it'll be different from the cache page size, but that's also okay.
 		pageSize: 20,
+
+		// quickRefresh: Boolean
+		//		When refresh, scroll to top first
+		quickRefresh: false
 	});
 =====*/
 

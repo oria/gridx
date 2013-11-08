@@ -475,8 +475,17 @@ define([
 				openInfo = t._openInfo,
 				info = openInfo[''],
 				len = info.openned.length, 
-				size = t.rootCount,
+				size = m.size(),
 				i, child, index;
+			if(size < t.rootStart + t.rootCount){
+				if(size > t.rootStart){
+					t.rootCount = size - t.rootStart;
+				}else{
+					t.rootStart = 0;
+					t.rootCount = size;
+				}
+			}
+			size = t.rootCount;
 			for(i = 0; i < len; ++i){
 				child = openInfo[info.openned[i]];
 				index = m.idToIndex(child.id);
