@@ -360,7 +360,7 @@ define([
 		},
 
 		isExpanded: function(id){
-			return !!this.grid.view._openInfo[id];
+			return this.model.isId(id) && !!this.grid.view._openInfo[id];
 		},
 
 		isPaddingCell: function(rowId, colId){
@@ -381,7 +381,7 @@ define([
 		expand: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				t = this;
-			if(id && !t.isExpanded(id) && t.canExpand(id)){
+			if(!t.isExpanded(id) && t.canExpand(id)){
 				t._beginLoading(id);
 				t.grid.view.logicExpand(id).then(function(){
 					Deferred.when(t._updateBody(id, skipUpdateBody, true), function(){
@@ -399,7 +399,7 @@ define([
 		collapse: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				t = this;
-			if(id && t.isExpanded(id)){
+			if(t.isExpanded(id)){
 				t.grid.view.logicCollapse(id);
 				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
 					d.callback();

@@ -222,7 +222,8 @@ define([
 					nearTop = a <= neighborhood,
 					nearBottom = Math.abs(a - scrollRange) <= neighborhood,
 					start, end, pos, d;
-				if(bnTop == bnBtm && !bnBtm){
+				//In IE7 offsetTop will be -1 when grid is hidden
+				if((bnTop == bnBtm && !bnBtm) || (lastRow && lastRow.offsetTop < 0)){
 					//The grid is not correctly shown, so we just ignore.
 					return;
 				}

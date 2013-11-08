@@ -221,7 +221,7 @@ define([
 		canEdit: function(cell){
 			// summary:
 			//		Decide whether a cell is editable.
-			//		This makes it possible to config some cells to be uneditable in an edtibale column.
+			//		This makes it possible to config some cells to be uneditable in an editable column.
 			// cell: gridx.core.Cell
 			//		The cell object
 			// returns:
@@ -358,28 +358,25 @@ define([
 								leftToMove = node.clientWidth - cellPadding - 5,
 								
 								html = [
-								"<div rowid='" + rowId + "' ",
-								"colid='" + colId + "' ",
-								"class='gridxCellEditedBg'><span>◥</span></div>"
-							].join('');
+									"<div class='gridxCellEditedBgWrapper'>",
+										"<div	rowid='" + rowId + "' ",
+												"colid='" + colId + "' ",
+												"class='gridxCellEditedBg'><span>◥</span>",
+										"</div>",
+									"</div>"
+								].join('');
 							
-							cellBgNode = domConstruct.toDom(html);
-							domConstruct.place(cellBgNode, cell.node(), 'first');
+							wrapper = domConstruct.toDom(html);
+					
 							
-							currentLeft = cellBgNode.offsetLeft;
-							currentLeft += leftToMove;
+							cellBgNode = wrapper.firstChild;
+							domConstruct.place(wrapper, cell.node(), 'first');
+							var nodePosition = domGeo.position(node);
+							var wrapperPosition = domGeo.position(wrapper);
 							
-							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
-								top = 0;
-							array.forEach(upperRows, function(row){
-								var vi = parseInt(row.getAttribute('visualIndex'), 10);
-								if(vi < visualIndex){
-									top += row.clientHeight;
-								}
-							});
+							wrapper.style.top = nodePosition.y - wrapperPosition.y + 'px';
+							wrapper.style.left = cellPadding - 1 + 'px';
 							
-							domStyle.set(cellBgNode, 'left', currentLeft + 'px');
-							domStyle.set(cellBgNode, 'top', top+ 'px');
 						}
 				};
 				

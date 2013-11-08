@@ -107,9 +107,11 @@ define([
 		
 		show: function(row){
 			var _row = this._row(row);
-			if(_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
+			if(!row.node()){ return; }
+			
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '-';}
 			
@@ -142,6 +144,8 @@ define([
 				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') + 'px');
+
 			}
 			
 			var df = new Deferred(), _this = this;
@@ -159,12 +163,18 @@ define([
 		
 		hide: function(row){
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(!_row.dodShown || _row.inAnim){return;}
+			
+			if(!row.node()){
+				_row.dodShown = false;
+				return;
+			}
 			domClass.remove(row.node(), 'gridxDodShown');
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
 			var expando = this._getExpando(row);
@@ -181,24 +191,14 @@ define([
 						g.body.onRender();
 					}
 				}).play();
-				if(this.grid.rowHeader){
-					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-					baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
-						properties: {
-							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
-						}
-					}).play();
-				}
+				this._syncRowheaderHeight(row, true/*isAnim*/, true/*isHide*/);
+
 			}else{
 				_row.dodShown = false;
 				_row.inAnim = false;
-				_row.dodNode.style.display = 'none';
 				g.body.onRender();
-				if(this.grid.rowHeader){
-					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-					rowHeaderNode.firstChild.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
-				}
-				
+				_row.dodNode.style.display = 'none';
+				this._syncRowheaderHeight(row);
 			}
 			
 			_row.defaultShow = false;
@@ -304,44 +304,36 @@ define([
 			
 			if(_row.defaultShow){
 				domStyle.set(_row.dodNode, 'display', 'block');
-				g.body.onRender();
+				//g.body.onRender();
 			}else{
 				if(domStyle.get(_row.dodLoadingNode, 'display') == 'block'){
 					domGeometry.setMarginBox(_row.dodNode, {h: domGeometry.getMarginBox(_row.dodLoadingNode).h});
 					domStyle.set(_row.dodNode, 'display', 'block');
 				}
-
-				if(this.arg('useAnimation')){
-					_row.inAnim = true;
-					fx.wipeIn({
-						node: _row.dodNode,
-						duration: this.arg('duration'),
-						onEnd: function(){
-							_row.inAnim = false;
-							g.body.onRender();
-						}
-					}).play();
-					
-					if(this.grid.rowHeader){
-						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-						baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
-							properties: {
-								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
-							}
-						}).play();
-					}
-				}else{
-					_row.dodNode.style.display = 'block';
-					_row.dodNode.style.height = 'auto';
-					g.body.onRender();
-					if(this.grid.rowHeader){
-						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
-					}
-					
-				}
 			}
+			
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
+
+			if(this.arg('useAnimation') && !_row.defaultShow){		//no need to use animation in
+																	// defaultShow which will has bad performance
+				_row.inAnim = true;
+				fx.wipeIn({
+					node: _row.dodNode,
+					duration: this.arg('duration'),
+					onEnd: function(){
+						_row.inAnim = false;
+						g.body.onRender();
+					}
+				}).play();
+				
+				this._syncRowheaderHeight(row, true);
+			}else{
+				_row.dodNode.style.display = 'block';
+				_row.dodNode.style.height = 'auto';
+				g.body.onRender();
+				this._syncRowheaderHeight(row);
+			}
+			
 		},
 		_detailLoadError: function(row){
 			var _row = this._row(row);
@@ -358,9 +350,37 @@ define([
 			if(!this.showExpando)return null;
 			var tbl = query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
-			return cell.firstChild;
+			return cell? cell.firstChild : null;
 		},
 		
+		_syncRowheaderHeight: function(row, isAnim, isHide){
+			if(!this.grid.rowHeader){ return; }
+			
+			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
+			// var dir = isHide? -1 : 1;
+			
+			
+			if(isAnim){
+				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				var endHeight = isHide? row.node().firstChild.offsetHeight : row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 1;
+				
+				baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+					properties: {
+						height: { start:rowHeaderNode.offsetHeight, end: endHeight, units:"px" }
+					}
+				}).play();
+				baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+					properties: {
+						height: { start:rowHeaderNode.offsetHeight, end: endHeight, units:"px" }
+					}
+				}).play();
+				
+			}else{
+				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+				// rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.offsetHeight + 'px';
+				rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = row.node().offsetHeight + 'px';
+			}
+		},
 		
 		//Focus
 		
