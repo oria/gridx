@@ -110,11 +110,11 @@
 	width: 100%;
 	font-family: arial;
 }
-.gridxFilterBar a{
+.gridxFilterBar [action="clear"]{
 	color: #5B83B6;
 	text-decoration: none;
 }
-.gridxFilterBar a:hover{
+.gridxFilterBar [action="clear"]:hover{
 	text-decoration: underline;
 }
 .gridxFilterBar .dijitButton {

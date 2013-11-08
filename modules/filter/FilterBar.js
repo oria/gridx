@@ -403,8 +403,8 @@ define([
 			}
 			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
 				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + nls.filterBarClearButton + '">'
-					 + nls.filterBarClearButton + '</a>';
+				'&nbsp; &nbsp; <span action="clear" title="' + nls.filterBarClearButton + '">'
+					 + nls.filterBarClearButton + '</span>';
 			this._buildTooltip();
 		},
 		_buildTooltip: function(){
@@ -569,7 +569,7 @@ define([
 		},
 		_doFocusClearLink: function(evt){
 			this.btnFilter.focus();
-			var link = query('a[action="clear"]')[0];
+			var link = query('span[action="clear"]')[0];
 			if(link){
 				link.focus();
 				if(evt){event.stop(evt);}
