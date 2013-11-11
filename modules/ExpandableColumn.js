@@ -135,6 +135,16 @@ define([
 				}
 			}, this);
 
+			this.connect(this.grid.header, 'refresh', function(){
+				if(g.header.hidden){
+					g.header.domNode.parentNode.style.overflow = 'hidden';
+					this.expandoBar.style.display = 'none';
+				}else{
+					g.header.domNode.parentNode.style.overflow = 'visible';
+					this.expandoBar.style.display = 'block';
+				}
+			});
+
 			this.connect(this.grid, 'onHScroll', function(left){
 				this.expandoBar.scrollLeft = left;
 			}, this);
