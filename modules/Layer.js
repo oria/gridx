@@ -371,6 +371,9 @@ define([
 				setTimeout(function(){
 					domClass.add(bn, 'gridxSlideRefresh');
 					domClass.add(tmpBn, 'gridxSlideRefresh');
+					if(g.vScroller._scrollable){
+						g.vScroller._scrollable.scrollTo({x: 0});
+					}
 					callback();
 					setTimeout(function(){
 						t._onTransitionEnd();
