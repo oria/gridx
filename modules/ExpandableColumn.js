@@ -187,7 +187,6 @@ define([
 			// summary:
 			//	Called when the header is changed, need to sync expando bar.
 
-			console.log('rebuilding column expando bar');
 			//Build expando bar
 			var sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
 			array.forEach(this.grid._columns, function(col){
@@ -201,6 +200,10 @@ define([
 
 			sb.push('</tr></table>');
 			this.expandoBar.innerHTML = sb.join('');
+			if(!this.grid._columns.length){
+				//empty columns
+				return;
+			}
 			this.expandoBar.style.marginRight = this.grid.header.innerNode.style.marginRight;
 			this.expandoBar.style.marginLeft = this.grid.header.innerNode.style.marginLeft;
 			//Adjust width of the expando cells
