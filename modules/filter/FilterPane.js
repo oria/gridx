@@ -218,7 +218,7 @@ define([
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
 				title = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
 			}
-			txtNode.innerHTML = title;
+			txtNode.innerHTML = title.replace(/&/g, '&amp;');
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');
 		},
 		_needComboBox: function(){

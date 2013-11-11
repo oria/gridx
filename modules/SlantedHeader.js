@@ -35,15 +35,20 @@ define([
 			window.setTimeout(function(){
 				//Need a timeout so that the header height is available.
 				//Skew the header node, and use translate to align columns
-				var n = self.grid.header.domNode;	
-				var headerHeight = n.offsetHeight;
-				console.log('header height: ', headerHeight);
-				var translateX = Math.round(headerHeight/2) - 1; //TODO: 1 is the top border width
-				n.style.transform = n.style.msTransform = n.style.mozTransform
-					= n.style.webkitTransform = 'translate(' + translateX
-					 + 'px, 0px) skew(-45deg,0deg)';
+				self._updateTransform();
 			},0);
+			this.connect(this.grid, 'resize', '_updateTransform')
 			this.loaded.callback();
+		}
+
+		,_updateTransform: function(){
+			var n = this.grid.header.domNode;	
+			var headerHeight = n.offsetHeight;
+			console.log('header height: ', headerHeight);
+			var translateX = Math.round(headerHeight/2) - 1; //TODO: 1 is the top border width
+			n.style.transform = n.style.msTransform = n.style.mozTransform
+				= n.style.webkitTransform = 'translate(' + translateX
+				 + 'px, 0px) skew(-45deg,0deg)';
 		}
 	});
 });
