@@ -440,6 +440,7 @@ define([
 				if(!gig._refreshForDod){
 					gig._refreshForDod = true;
 					gig.resize();
+					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
 				}
 			};
 		},
@@ -520,6 +521,21 @@ define([
 			
 		},
 		
+		_lastNodeFocus: function(evt){
+			if(evt){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+	
+				if(target == lastElem){
+					this._doFocus(evt, 1);
+					event.stop(evt);
+				}
+				return false;
+			}
+		},
+		
 		_doFocus: function(evt, step){
 			if(this._navigating){
 				var elems = this._navElems,
@@ -538,6 +554,7 @@ define([
 			}
 			return false;
 		},
+		
 		_onFocus: function(evt){
 			var node = evt.target, dn = this.grid.domNode;
 			while(node && node !== dn && !domClass.contains(node, 'gridxDodNode')){
@@ -559,7 +576,7 @@ define([
 			if(evt){
 				var navElems = this._navElems,
 					firstElem = navElems.lowest || navElems.first,
-					lastElem = navElems.highest || navElems.last ||firstElem;
+					lastElem = navElems.highest || navElems.last ||firstElem,
 					target = has('ie') ? evt.srcElement : evt.target;
 
 				if(target == (step > 0 ? lastElem : firstElem)){
