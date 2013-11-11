@@ -195,7 +195,6 @@ define({root:
 "pl": true,
 "pt": true,
 "pt-pt": true,
-"pt-br": true,
 "ro": true,
 "ru": true,
 "sk": true,
