@@ -407,7 +407,11 @@ define([
 				ret = 0;
 	
 			array.forEach(bn.childNodes, function(n){
-				rh[n.getAttribute('rowid')] = n.offsetHeight;
+				var oh = n.offsetHeight;
+				rh[n.getAttribute('rowid')] = oh;
+				// Save the offsetHeight of this row so that we don't have to get offsetHeight again during
+				// Body::unrenderRows(), which is a very expensive operation
+				n.setAttribute("data-rowHeight", oh);
 				if(n.offsetTop > bottom){
 					++postCount;
 				}else if(n.offsetTop + n.offsetHeight < top){

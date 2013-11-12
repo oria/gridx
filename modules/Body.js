@@ -598,7 +598,8 @@ define([
 					var tp = bn.scrollTop;
 					for(; i < count && bn.firstChild; ++i){
 						id = bn.firstChild.getAttribute('rowid');
-						tp -= bn.firstChild.offsetHeight;
+						var rh = bn.firstChild.getAttribute("data-rowHeight");
+						tp -= rh ? parseInt(rh, 10) : bn.firstChild.offsetHeight;
 						if(m.isId(id)){
 							m.free(id);
 							t.onUnrender(id);
