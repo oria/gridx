@@ -1,0 +1,53 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>The Simplest Grid</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+<!--    <link rel='stylesheet' href="support/common.css" />-->
+	<style type="text/css">
+		@import "../resources/Gridx.css";
+
+		#grid {
+			width: 500px;
+			height: 300px;
+		}
+	</style>
+	<script type="text/javascript" src="../../gridx-release/dojo/dojo.js" data-dojo-config="async: true"></script>
+	<script type="text/javascript">
+		require([
+			'dojo/store/Memory',
+			'gridx/Grid',
+			'gridx/modules/VirtualVScroller',
+			'gridx/modules/select/Row'
+		], function(Memory, Grid, VirtualVScroller, SelectRow){
+
+			var store = new Memory({
+				data: [
+					{id: 1},
+					{id: 2},
+					{id: 3},
+					{id: 4}
+				]
+			});
+
+			var grid = new Grid({
+				store: store,
+				structure: [
+					{ id: 'col1', name: 'My Column', field: 'id' }
+				],
+				selectRowTriggerOnCell: true,
+				modules: [
+					VirtualVScroller,
+					SelectRow
+				]
+			});
+
+			grid.placeAt('grid');
+			grid.startup();
+		});
+	</script>
+</head>
+<body class='claro'>
+	<div id='grid'></div>
+</body>
+</html>

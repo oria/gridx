@@ -159,9 +159,22 @@ return {
 		}
 	},
 	"sync-many features": {
-	},
+	},*/
 	"client filter-FilterBar": {
-	},
+		"body scroll position should be correct after set store[11369]": function(){
+			return this.vScrollGridx(3, 100).
+				execute('setStore(10)').
+				wait(1000).
+				execute('return grid.vScrollerNode.scrollTop >= grid.vScrollerNode.scrollHeight - grid.vScrollerNode.offsetHeight;').
+				then(function(vScrollerIsAtBottom){
+					assert(vScrollerIsAtBottom, 'vscroller should be scrolled to bottom');
+				}).
+				execute('return grid.bodyNode.scrollTop >= grid.bodyNode.scrollHeight - grid.bodyNode.offsetHeight;').
+				then(function(bodyIsAtBottom){
+					assert(bodyIsAtBottom, 'body should be scrolled to bottom');
+				});
+		}
+	},/*
 	"client filter-FilterBar-QuickFilter": {
 		"filterbar and filterdialog should update after quick filter": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
