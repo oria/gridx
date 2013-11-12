@@ -466,7 +466,7 @@ define([
 			this.statusNode.innerHTML = string.substitute(
 				this.arg('hasFilterMessage', this.arg('useShortMessage') ? this.grid.nls.summary : this.grid.nls.filterBarMsgHasFilterTemplate),
 				[this._currentSize, this._totalSize, this.grid.nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <span action="clear" title="' + this.grid.nls.filterBarClearButton + '">'
+				'&nbsp; &nbsp; <span action="clear" tabindex="-1" title="' + this.grid.nls.filterBarClearButton + '">'
 					 + this.grid.nls.filterBarClearButton + '</span>';
 			this._buildTooltip();
 		},
