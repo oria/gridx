@@ -403,7 +403,7 @@ define([
 			}
 			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
 				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <span action="clear" title="' + nls.filterBarClearButton + '">'
+				'&nbsp; &nbsp; <span action="clear" tabindex="-1" title="' + nls.filterBarClearButton + '">'
 					 + nls.filterBarClearButton + '</span>';
 			this._buildTooltip();
 		},
