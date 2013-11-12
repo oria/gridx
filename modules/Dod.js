@@ -440,7 +440,10 @@ define([
 				if(!gig._refreshForDod){
 					gig._refreshForDod = true;
 					gig.resize();
+					this.connect(gig.focus, 'tab', '_tab');
 					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
+					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
+					
 				}
 			};
 		},
@@ -520,17 +523,39 @@ define([
 			return false;
 			
 		},
+		_tab: function(step, evt){
+			this._step = step;
+		},
+		
+		_domNodeFocus: function(evt){
+			if(evt && this._step === -1){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+				
+				if(target == firstElem){
+					// this._doFocus(evt, -1);
+					lastElem.focus();
+				}
+				return false;
+			}			
+		},
 		
 		_lastNodeFocus: function(evt){
-			if(evt){
+			if(evt && this._step === 1){
 				var navElems = this._navElems,
 					firstElem = navElems.lowest || navElems.first,
 					lastElem = navElems.highest || navElems.last ||firstElem,
 					target = has('ie') ? evt.srcElement : evt.target;
 	
 				if(target == lastElem){
-					this._doFocus(evt, 1);
-					event.stop(evt);
+					// this._onBlur();
+					setTimeout(function(){
+						firstElem.focus();
+					}, 1);
+					// event.stop(evt);
+					// this.focus.tab(evt, 1);
 				}
 				return false;
 			}
