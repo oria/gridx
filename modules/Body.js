@@ -545,16 +545,13 @@ define([
 					t.renderCount = count;
 					//If is refresh, try to maintain the scroll top
 					var scrollTop = isRefresh ? n.scrollTop : 0;
-					n.scrollTop = 0;
 					//unrender before destroy nodes, so that other modules have a chance to detach nodes.
 					if(!t._skipUnrender){
 						//only when we do have something to unrender
 						t.onUnrender();
 					}
 					n.innerHTML = str;
-					if(scrollTop){
-						n.scrollTop = scrollTop;
-					}
+					n.scrollTop = scrollTop;
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
 					finalInfo = str ? "" : emptyInfo;
 					if(!str){
