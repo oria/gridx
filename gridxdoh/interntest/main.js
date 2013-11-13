@@ -60,8 +60,14 @@ require(casefiles, function(){
 						deleteAllCookies().
 						setWindowSize(1024, 768).
 						get(url).
-						waitForElementByClassName('gridx', config.gridxCreationTimeout || 2 * 60 * 1000);
-					return caseFunc.call(d, d);
+						hasElementById('notestcase').
+						then(function(notestcase){
+							if(!notestcase){
+								var dd = d.waitForElementByClassName('gridx', config.gridxCreationTimeout || 60 * 1000);
+								return caseFunc.call(d, d);
+							}
+						});
+					return d;
 				}));
 			}
 

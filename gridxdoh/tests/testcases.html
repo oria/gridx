@@ -488,6 +488,10 @@
 
 		if(foundInitCase){
 			casesSelect.set('value', initCase);
+		}else{
+			var flagDiv = document.createElement('div');
+			flagDiv.setAttribute('id', "notestcase");
+			document.body.appendChild(flagDiv);
 		}
 
 		});
