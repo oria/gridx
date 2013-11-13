@@ -60,7 +60,8 @@ require(casefiles, function(){
 						deleteAllCookies().
 						setWindowSize(1024, 768).
 						get(url).
-						hasElementById('notestcase').
+						waitForElementById('loadFinishFlag', 10000).
+						hasElementByClassName('loadFinishFlagFail').
 						then(function(notestcase){
 							if(!notestcase){
 								var dd = d.waitForElementByClassName('gridx', config.gridxCreationTimeout || 60 * 1000);

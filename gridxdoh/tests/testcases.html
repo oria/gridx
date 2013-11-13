@@ -486,13 +486,15 @@
 		document.getElementById('totalCaseCount').innerHTML = cases.length;
 		//gotoCase();
 
+		var flagDiv = document.createElement('div');
+		flagDiv.setAttribute('id', "loadFinishFlag");
 		if(foundInitCase){
 			casesSelect.set('value', initCase);
+			flagDiv.setAttribute('class', 'loadFinishFlagSuccess');
 		}else{
-			var flagDiv = document.createElement('div');
-			flagDiv.setAttribute('id', "notestcase");
-			document.body.appendChild(flagDiv);
+			flagDiv.setAttribute('class', 'loadFinishFlagFail');
 		}
+		document.body.appendChild(flagDiv);
 
 		});
 	});
