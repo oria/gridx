@@ -135,7 +135,7 @@ define([
 			var t = this,
 				g = t.grid,
 				m = g.model;
-
+				
 			if(!t._selecting && !t._marking && t.arg('enabled')){
 				dom.setSelectable(t.grid.domNode, false);
 				t._fixFF(1);
@@ -149,16 +149,15 @@ define([
 				}else{
 					t._startItem = item;
 					t._currentItem = null;
+					
 					if(extending || t.arg('holdingCtrl')){
 						t._toSelect = !isSelected;
-						if(g.select.row && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
-							// toMark = 'mixed';
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
 							t._toSelect = 'mixed';
 						}
 					}else{
 						t._toSelect = 1;	//1 as true
-						if(g.select.row && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
-							// toMark = 'mixed';
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
 							t._toSelect = 'mixed';
 						}
 						t.clear(1);
