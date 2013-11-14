@@ -137,6 +137,11 @@ define([
 			}
 		},
 
+		refresh: function(){
+			this.inherited(arguments);
+			this._curNode = 0;
+		},
+
 		_parse: function(){
 			var columns = this.grid._columns,
 				columnCount = columns.length,
