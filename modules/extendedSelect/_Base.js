@@ -151,12 +151,12 @@ define([
 					t._currentItem = null;
 					if(extending || t.arg('holdingCtrl')){
 						t._toSelect = !isSelected;
-						if(m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+						if(g.select.row && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
 							t._toSelect = 'mixed';
 						}
 					}else{
 						t._toSelect = 1;	//1 as true
-						if(m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+						if(g.select.row && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
 							t._toSelect = 'mixed';
 						}
 						t.clear(1);
