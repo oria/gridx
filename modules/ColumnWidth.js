@@ -291,6 +291,15 @@ define([
 						}
 					}
 				});
+				if(g.autoWidth){
+					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
+						var w = g._columnsById[cellNode.getAttribute('colId')].width,
+							s = cellNode.style;
+						s.width = w;
+						s.minWidth = w;
+						s.maxWidth = w;
+					});
+				}
 			}
 			g.hScroller.scroll(0);
 			header._onHScroll(0);
