@@ -38,6 +38,7 @@ define([
 				{id: 'Heard', field: 'Heard', name: 'Heard', width: '80px'}
 			],
 			modules: [
+				'gridx/modules/Focus',
 				'gridx/modules/ColumnResizer',
 				'gridx/modules/RowHeader',
 				modules.Pagination,
