@@ -351,6 +351,7 @@ define([
 				h = maxHeight;
 			}
 			var dn = t.domNode,
+				bn = t.grid.bodyNode,
 				//remember the scroll bar position
 				oldScrollTop = dn.scrollTop;
 			t.stubNode.style.height = h + 'px';
@@ -358,6 +359,12 @@ define([
 			if(t._lastScrollTop){
 				dn.scrollTop = oldScrollTop;
 				t._lastScrollTop = dn.scrollTop;
+			}
+			//Force body scrollTop to sync with vscroller
+			if(dn.scrollTop >= dn.scrollHeight - dn.offsetHeight){
+				bn.scrollTop = bn.scrollHeight;
+			}else if(!dn.scrollTop){
+				bn.scrollTop = 0;
 			}
 		},
 	
