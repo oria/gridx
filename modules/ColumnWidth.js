@@ -146,6 +146,7 @@ define([
 				g = t.grid,
 				dn = g.domNode,
 				header = g.header,
+				autoResize = t.arg('autoResize'),
 				ltr = g.isLeftToRight(),
 				marginLead = ltr ? 'marginLeft' : 'marginRight',
 				marginTail = ltr ? 'marginRight' : 'marginLeft',
@@ -178,7 +179,7 @@ define([
 				t.onUpdate();
 				return;
 			}
-			if(!t.arg('autoResize')){
+			if(autoResize){
 				if(needHackPadBorder){
 					query('.gridxCell', innerNode).forEach(function(node){
 						var c = g._columnsById[node.getAttribute('colid')];
@@ -213,7 +214,7 @@ define([
 				});
 				bs.width = totalWidth + 'px';
 				dn.style.width = (lead + tail + totalWidth + mainBorder) + 'px';
-			}else if(t.arg('autoResize')){
+			}else if(autoResize){
 				hs.borderWidth = g.vScrollerNode.style.display == 'none' ? 0 : '';
 			}else{
 				var autoCols = [],
@@ -289,6 +290,15 @@ define([
 						}
 					}
 				});
+				if(g.autoWidth){
+					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
+						var w = g._columnsById[cellNode.getAttribute('colId')].width,
+							s = cellNode.style;
+						s.width = w;
+						s.minWidth = w;
+						s.maxWidth = w;
+					});
+				}
 			}
 			g.hScroller.scroll(0);
 			header._onHScroll(0);
