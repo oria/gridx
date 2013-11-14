@@ -266,6 +266,16 @@ define([
 			return false;
 		},
 
+		blur: function(){
+			var t = this,
+				curArea = t._areas[t.currentArea()];
+			if(curArea){
+				curArea.doBlur();
+			}
+			t._queueIdx = -1;
+			t._stackIdx = 0;
+		},
+
 		currentArea: function(){
 			var a = this._tabQueue[this._queueIdx];
 			return a ? a.stack[this._stackIdx] : '';
