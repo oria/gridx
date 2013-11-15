@@ -1,4 +1,13 @@
 #################
+## Gridx specific
+#################
+err.txt
+log.txt
+node_modules/
+pics/
+refs/
+
+#################
 ## Eclipse
 #################
 

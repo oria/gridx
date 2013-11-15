@@ -1,6 +1,6 @@
 module.exports = [
-	'../tests/cases/other_wd.js',
-	'../tests/cases/mobile_wd.js',
-	'../tests/cases/rowHeader_wd.js',
-	'../tests/cases/groupHeader_wd.js'
+	'../cases/other_wd.js',
+	'../cases/mobile_wd.js',
+	'../cases/rowHeader_wd.js',
+	'../cases/groupHeader_wd.js'
 ];

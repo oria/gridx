@@ -1,5 +1,5 @@
 module.exports = {
-	testPageUrl: "http://localhost/git/dojoprjs/gridxdoh/tests/testcases.html",
+	testPageUrl: "http://localhost/git/dojoprjs/gridxtest/test.html",
 	screenshotDir: __dirname + "/../pics",
 	refScreenshotDir: __dirname + "/../refs",
 	testCaseTimeout: 5 * 60 * 1000,
