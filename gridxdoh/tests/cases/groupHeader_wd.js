@@ -3,7 +3,7 @@ define([
 ], function(assert){
 return {
 	"GroupHeader and autoWidth": {
-		'@should have correct cell width when created display none': function(){
+		'should have correct cell width when created display none': function(){
 			var headerCellWidth;
 			return this.execute("createDisplayNone();").
 				wait(100).
