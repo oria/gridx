@@ -292,11 +292,14 @@ define([
 				});
 				if(g.autoWidth){
 					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
-						var w = g._columnsById[cellNode.getAttribute('colId')].width,
+						var col = g._columnsById[cellNode.getAttribute('colId')],
+							w = col && col.width,
 							s = cellNode.style;
-						s.width = w;
-						s.minWidth = w;
-						s.maxWidth = w;
+						if(w){
+							s.width = w;
+							s.minWidth = w;
+							s.maxWidth = w;
+						}
 					});
 				}
 			}
