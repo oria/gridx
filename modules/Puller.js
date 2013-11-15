@@ -1,4 +1,5 @@
 define([
+	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/query",
 	"dojo/_base/lang",
@@ -10,7 +11,8 @@ define([
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"../core/_Module"
-], function(declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module){
+], function(kernel, declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module){
+	kernel.experimental('gridx/modules/Puller');
 
 	return _Module.register(
 	declare(_Module, {

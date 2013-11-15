@@ -4,7 +4,7 @@ define([
 	'dojo/_base/array',
 	'../core/_Module'
 ], function(kernel, declare, array, _Module){
-	kernel.experimental('gridx/modules/structureSwitch');
+	kernel.experimental('gridx/modules/StructureSwitch');
 
 /*=====
 	return declare(_Module, {
