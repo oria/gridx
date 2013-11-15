@@ -37,6 +37,7 @@ define([
 				2: true
 			};
 			t.clear();
+			t._tree = {};
 			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode', 'setMarkable');
 			t.aspect(model, '_msg', '_receiveMsg');
 			t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
@@ -50,7 +51,6 @@ define([
 			this._byId = {};
 			this._last = {};
 			this._lazy = {};
-			this._tree = {};
 			this._unmarkable = {};
 		},
 
@@ -276,7 +276,6 @@ define([
 				if(!toMark){
 					delete t._byId[type][id];
 				}
-				//console.log('mark change: ', id, ', state: ', oldState, ' => ', toMark);
 				m.onMarkChange(id, t.states[toMark || 0], t.states[oldState || 0], type);
 			}
 		},
@@ -289,9 +288,6 @@ define([
 			for(var i = treePath.length - 1; i > 0; --i){
 				var pid = treePath[i],
 					oldState = byId[pid],
-					// siblings = array.filter(mm._call('children', [pid]), function(childId){
-						// return t._isMarkable(type, childId);
-					// }),
 					siblings = mm._call('children', [pid]),
 					markCount = array.filter(siblings, function(childId){
 						return last[childId] = byId[childId];
@@ -301,11 +297,11 @@ define([
 					}).length;
 				// if(t._isMarkable(type, pid)){
 				if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
-					byId[pid] = 2;		//none|partial -> all
+					byId[pid] = 2; //none|partial -> all
 				}else if(!markCount && oldState){
-					delete byId[pid];		//all|partial -> none
+					delete byId[pid]; //all|partial -> none
 				}else if(markCount && fullCount < siblings.length && oldState != 1){
-					byId[pid] = 1;		//all|none -> partial
+					byId[pid] = 1; //all|none -> partial
 				}
 				if(!noEvent){
 					t._fireEvent(pid, type, byId[pid], oldState);
@@ -341,12 +337,10 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					// if(t._isMarkable(tp, childId)){
 					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
 					if(!noEvent){
 						t._fireEvent(childId, tp, newState, oldState);
 					}
-					// }
 					if(mm._call('hasChildren', [childId])){
 						children = mm._call('children', [childId]);
 						if(children.length){

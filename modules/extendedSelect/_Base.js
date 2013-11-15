@@ -149,6 +149,7 @@ define([
 				}else{
 					t._startItem = item;
 					t._currentItem = null;
+					
 					if(extending || t.arg('holdingCtrl')){
 						t._toSelect = !isSelected;
 						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){

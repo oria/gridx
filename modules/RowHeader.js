@@ -1,6 +1,7 @@
 define([
 	"dojo/_base/declare",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/aspect",
@@ -50,10 +51,7 @@ define([
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',
 				role: 'row',
-				innerHTML: ['<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: ', 
-					this.arg('width'), 
-					';"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
-				].join('')
+				innerHTML: '<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: 100%;"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
 			});
 			this.bodyNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderBody'
@@ -94,7 +92,6 @@ define([
 					rhbn.innerHTML = '';
 				}],
 				[g.bodyNode, 'onscroll', '_onScroll'],
-				// has('webkit')?[g.vScroller, '_doScroll', '_onScroll'] : [g.bodyNode, 'onscroll', '_onScroll'],
 				[g, 'onRowMouseOver', '_onRowMouseOver'],
 				[g, 'onRowMouseOut', '_onRowMouseOver'],
 				[g, '_onResizeEnd', '_onResize'],
@@ -246,7 +243,18 @@ define([
 		},
 
 		_onScroll: function(){
-			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
+			var t = this;
+			
+			t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			
+			//scrollTop to be set must not exceeds scrollTopMax
+			if(t.bodyNode.scrollHeight - t.bodyNode.clientHeigh >= t.grid.bodyNode.scrollTop){
+				t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			}else{
+				setTimeout(function(){
+					t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+				}, 0);
+			}
 		},
 
 		_onResize: function(){
@@ -370,6 +378,7 @@ define([
 				if(domClass.contains(node, 'gridxRowHeaderRow')){
 					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
 					t._focusRow(r);
+					t._onScroll();
 					return true;
 				}
 				node = node.parentNode;
@@ -397,15 +406,17 @@ define([
 
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid;
-			if(g.focus.currentArea() == 'rowHeader' && 
+			if(!t._busy && g.focus.currentArea() == 'rowHeader' && 
 					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
 				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;
 				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+				t._busy = 1;
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);
+					t._busy = 0;
 					t.onMoveToRowHeaderCell(r, evt);
 				});
 			}

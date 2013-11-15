@@ -3,6 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/on",
+	"dojo/i18n",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
@@ -24,9 +25,10 @@ define([
 	"./modules/ColumnWidth",
 	"./modules/Focus",
 	"dijit/_BidiSupport",
+	"dojo/i18n!./nls/gridx",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
-], function(declare, lang, has, on, domClass, domGeometry, query, metrics,
+], function(declare, lang, has, on, i18n, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
 
@@ -100,10 +102,21 @@ define([
 			//		protected extension
 			var t = this;
 			t.inherited(arguments);
+			if(t.touch === undefined){
+				t.touch = has('ios') || has('android');
+			}
+			if(t.touch){
+				domClass.add(t.domNode, 'gridxTouch');
+			}else{
+				domClass.add(t.domNode, 'gridxDesktop');
+			}
+			if(!t.isLeftToRight()){
+				domClass.add(t.domNode, 'gridxRtl');
+			}
+			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang);
 			t._eventFlags = {};
 			t.modules = t.coreModules.concat(t.modules || []);
 			t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
-			domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
 			t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 			t._initEvents(t._compNames, t._eventNames);
 			t._init();
@@ -143,9 +156,13 @@ define([
 		//		If true, the grid's width is determined by the total width of the columns, so that there will
 		//		never be horizontal scroller bar.
 		autoWidth: false,
+
+		// touch: Boolean
+		//		Whether grid is run in touch environment
+		//		If undefined, automatically set to true on mobile devices (like ios or android)
+		//touch: undefined,
 	=====*/
 
-		
 		resize: function(changeSize){
 			// summary:
 			//		Resize the grid using given width and height.

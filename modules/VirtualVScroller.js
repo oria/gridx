@@ -5,7 +5,8 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"
@@ -101,10 +102,7 @@ define([
 							focus.focusArea('body', 1);	//1 as true
 						}
 						t.lazy = t._lazy;
-						//wait for the dom nodes to settle down.
-						setTimeout(function(){
-							defer.callback(success);
-						}, 5);
+						defer.callback(success);
 					}
 				};
 			if(node){
@@ -199,7 +197,7 @@ define([
 				a = dn.scrollTop,
 				deltaT = a - (t._lastScrollTop || 0),
 				neighborhood = 2;
-	
+			
 			if(forced || deltaT){
 				t._lastScrollTop = a;
 	
@@ -211,7 +209,7 @@ define([
 					visualEnd = visualStart + view.visualCount,
 					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,
-					firstRowTop = firstRow && firstRow.offsetTop - deltaT,
+					firstRowTop = firstRow && firstRow.clientTop - deltaT,
 					lastRow = bn.lastChild,
 					lastRowBtm = lastRow && lastRow.offsetTop - deltaT + lastRow.offsetHeight,
 					bnTop = bn.scrollTop,
@@ -239,6 +237,17 @@ define([
 					d = Math.ceil((bnBtm - lastRowBtm) * ratio / h) + buffSize;
 					end = nearBottom && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
+					
+					if(deltaT === 0 && start == visualEnd){
+						//If the last row in the grid has very big height and then change 
+						//to normal or very small height, need to add rows to the front.
+						//this usually appear in DOD, especially GridInGrid mode
+						
+						end = body.renderStart;
+						d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
+						start = nearTop ? visualStart : Math.max(end - d, visualStart);
+						pos = "top";
+					}
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
 					if(a <= scrollRange / 2){
@@ -294,13 +303,17 @@ define([
 		
 		_doScroll: function(e, forced, noLazy){
 			var t = this;
-			if(!noLazy && t.arg('lazy')){
-				if(t._lazyScrollHandle){
-					clearTimeout(t._lazyScrollHandle);
+			//FIXME: this _lock flag is ugly. This flag is only to avoid accidentlly triggering onscroll event handling
+			// especially when using Layer.js to drill down.
+			if(!t._lock || forced){
+				if(!noLazy && t.arg('lazy') && !forced){
+					if(t._lazyScrollHandle){
+						clearTimeout(t._lazyScrollHandle);
+					}
+					t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
+				}else{
+					t._doVirtualScroll(forced);
 				}
-				t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
-			}else{
-				t._doVirtualScroll(forced);
 			}
 		},
 	
@@ -318,7 +331,7 @@ define([
 			t._doScroll(0, 1);
 			//If some scrollToRow requests are pending, resume them.
 			array.forEach(t._scrolls, function(d){
-				if(d.scrollContext){
+				if(d && d.scrollContext){
 					//delete scrollContext to avoid firing multiple times.
 					var scrollContext = d.scrollContext;
 					delete d.scrollContext;
@@ -353,11 +366,13 @@ define([
 			var dn = t.domNode,
 				bn = t.grid.bodyNode,
 				//remember the scroll bar position
-				oldScrollTop = dn.scrollTop;
+				oldScrollTop = dn.scrollTop,
+				isBottom = oldScrollTop >= dn.scrollHeight - dn.offsetHeight;
 			t.stubNode.style.height = h + 'px';
 			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
 			if(t._lastScrollTop){
-				dn.scrollTop = oldScrollTop;
+				//If we were at bottom, should keep us at bottom after height change.
+				dn.scrollTop = isBottom ? dn.scrollHeight : oldScrollTop;
 				t._lastScrollTop = dn.scrollTop;
 			}
 			//Force body scrollTop to sync with vscroller

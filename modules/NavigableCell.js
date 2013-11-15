@@ -52,7 +52,11 @@ define([
 					func = function(){
 						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
 						if(toFocus){
-							toFocus.focus();
+							try{
+								toFocus.focus();
+							}catch(e){
+								//FIXME: avoid error in IE.
+							}
 						}
 					};
 				if(has('webkit')){
@@ -89,16 +93,23 @@ define([
 								//If there's no decorator, we assume there's no focusable elements in this column
 								return t._isNavigable(g._columns[c].id) && g._columns[c].decorator;
 							};
-						body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-							t._focusColId = g._columns[obj.c].id;
-							//This kind of breaks the encapsulation...
-							var rowInfo = view.getRowInfo({visualIndex: obj.r});
-							t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-							body._focusCellCol = obj.c;
-							body._focusCellRow = obj.r;
-							t._beginNavigate(t._focusRowId, t._focusColId);
-							t._doFocus(null, step);
-						});
+						function focusNextCell(r, c){
+							body._nextCell(r, c, dir, checker).then(function(obj){
+								t._focusColId = g._columns[obj.c].id;
+								//This kind of breaks the encapsulation...
+								var rowInfo = view.getRowInfo({visualIndex: obj.r});
+								t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+								if(t._beginNavigate(t._focusRowId, t._focusColId)){
+									body._focusCellCol = obj.c;
+									body._focusCellRow = obj.r;
+									t._doFocus(null, step);
+								}else{
+									//FIXME: to avoid infinite loop
+									focusNextCell(obj.r, obj.c);
+								}
+							});
+						}
+						focusNextCell(rowIndex, colIndex);
 					});
 				}
 				return false;

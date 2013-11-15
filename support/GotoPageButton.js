@@ -64,7 +64,7 @@ define([
 				pane = t._gotoDialog.content;
 			pane.pageCountMsgNode.innerHTML = string.substitute(t.gotoDialogPageCount, [pageCount]);
 			pane.pageInputBox.constraints = {
-				fractional: false, 
+				fractional: false,
 				min: 1,
 				max: pageCount
 			};

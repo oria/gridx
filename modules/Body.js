@@ -2,7 +2,8 @@ define([
 /*====="../core/Row",=====*/
 /*====="../core/Cell",=====*/
 	"dojo/_base/declare",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/json",
@@ -11,12 +12,10 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	"dojo/keys",
-	"../core/_Module",
-	"dojo/i18n",
-	"dojo/i18n!../nls/Body"
+	"../core/_Module"
 //    "dojo/NodeList-dom",
 //    "dojo/NodeList-traverse"
-], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module, i18n){
+], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module){
 
 /*=====
 	Row.node = function(){
@@ -235,23 +234,24 @@ define([
 				g = t.grid,
 				dn = t.domNode = g.bodyNode;
 			t._cellCls = {};
-			t._nls = i18n.getLocalization('gridx', 'Body', g.lang);
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
-			g.emptyNode.innerHTML = t.arg('loadingInfo', t._nls.loadingInfo);
+			g.emptyNode.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
 			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
-			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
-			t.connect(g.mainNode, 'onmouseleave', function(){
-				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-			});
-			t.connect(g.mainNode, 'onmouseover', function(e){
-				if(e.target == g.bodyNode){
+			if(!g.touch){
+				t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
+				t.connect(g.mainNode, 'onmouseleave', function(){
 					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-				}
-			});
+				});
+				t.connect(g.mainNode, 'onmouseover', function(e){
+					if(e.target == g.bodyNode){
+						query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+					}
+				});
+			}
 			t.aspect(g.model, 'setStore', function(){
 				t.refresh();
 			});
@@ -377,9 +377,10 @@ define([
 				loadingNode = t.grid.loadingNode,
 				d = new Deferred();
 			delete t._err;
-			domClass.add(loadingNode, 'gridxLoading');
+			clearTimeout(t._sizeChangeHandler);
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
-
+			
+			domClass.add(loadingNode, 'gridxLoading');
 			t.grid.view.updateVisualCount().then(function(){
 				try{
 					var rs = t.renderStart,
@@ -502,13 +503,13 @@ define([
 				renderedRows = [],
 				n = t.domNode,
 				en = g.emptyNode,
-				emptyInfo = t.arg('emptyInfo', t._nls.emptyInfo),
+				emptyInfo = t.arg('emptyInfo', g.nls.emptyInfo),
 				finalInfo = '';
 			if(t._err){
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', t._nls.loadingInfo);
+				en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 				en.style.zIndex = '';
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
@@ -544,16 +545,13 @@ define([
 					t.renderCount = count;
 					//If is refresh, try to maintain the scroll top
 					var scrollTop = isRefresh ? n.scrollTop : 0;
-					n.scrollTop = 0;
 					//unrender before destroy nodes, so that other modules have a chance to detach nodes.
 					if(!t._skipUnrender){
 						//only when we do have something to unrender
 						t.onUnrender();
 					}
 					n.innerHTML = str;
-					if(scrollTop){
-						n.scrollTop = scrollTop;
-					}
+					n.scrollTop = scrollTop;
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
 					finalInfo = str ? "" : emptyInfo;
 					if(!str){
@@ -674,7 +672,7 @@ define([
 		_loadFail: function(e){
 			console.error(e);
 			var en = this.grid.emptyNode;
-			en.innerHTML = this.arg('loadFailInfo', this._nls.loadFailInfo);
+			en.innerHTML = this.arg('loadFailInfo', this.grid.nls.loadFailInfo);
 			en.style.zIndex = 1;
 			this.domNode.innerHTML = '';
 			this._err = e;
@@ -837,18 +835,29 @@ define([
 		},
 
 		_decorateEvent: function(e){
+			//clean decorates from bubble
+			//need to re-decorate the event when bubbling
+			var atrs = ['rowId', 'columnId', 'rowIndex', 'visualIndex', 'columnIndex', 'parentId', 'cellNode'];
+			array.forEach(atrs, function(atr){
+				if(atr in e){ 
+					delete e[atr]; 
+				}
+			});
+			
 			var n = e.target || e.originalTarget,
 				g = this.grid,
 				tag;
 			for(; n && n != g.bodyNode; n = n.parentNode){
 				tag = n.tagName && n.tagName.toLowerCase();
-				if(tag == 'td' && domClass.contains(n, 'gridxCell')){
+				if(tag == 'td' && domClass.contains(n, 'gridxCell') && 
+					n.parentNode.parentNode.parentNode.parentNode.parentNode === g.bodyNode){
+						
 					var col = g._columnsById[n.getAttribute('colid')];
 					e.cellNode = n;
 					e.columnId = col.id;
 					e.columnIndex = col.index;
 				}
-				if(tag == 'div' && domClass.contains(n, 'gridxRow')){
+				if(tag == 'div' && domClass.contains(n, 'gridxRow') && n.parentNode === g.bodyNode){
 					e.rowId = n.getAttribute('rowid');
 					e.parentId = n.getAttribute('parentid');
 					e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);
@@ -919,6 +928,14 @@ define([
 				}
 			}
 		},
+		//GridInGrid-------------------------------------------------------------------------------------
+		_isDescendantRowNode: function(node){
+			return node.parentNode === this.grid.bodyNode;
+		},
+		
+		_isDescendantCellNode: function(node){
+			return node.parentNode.parentNode.parentNode.parentNode.parentNode === this.grid.bodyNode;
+		},
 
 		//Focus------------------------------------------------------------------------------------------
 		_focusCellCol: 0,
@@ -939,7 +956,7 @@ define([
 				onBlur: t._blurCell
 			});
 			t.connect(g.mainNode, 'onkeydown', function(evt){
-				if(focus.currentArea() == 'body'){
+				if(focus.arg('enabled') && focus.currentArea() == 'body'){
 					var dk = keys,
 						ctrlKey = g._isCtrlKey(evt);
 					if(evt.keyCode == dk.HOME && !ctrlKey){
@@ -967,10 +984,16 @@ define([
 				t._focusCellCol = evt.columnIndex;
 			});
 			t.aspect(t, 'onRender', function(start, count){
-				if(t._focusCellRow >= start &&
-					t._focusCellRow < start + count &&
-					focus.currentArea() == 'body'){
-					t._focusCell();
+				var currentArea = focus.currentArea();
+				if(focus.arg('enabled')){
+					if(currentArea == 'body'){
+						if(t._focusCellRow >= start &&
+							t._focusCellRow < start + count){
+							t._focusCell();
+						}
+					}else{
+						focus.focusArea(currentArea, 1);
+					}
 				}
 			});
 			t.connect(g.emptyNode, 'onfocus', function(){
@@ -988,7 +1011,7 @@ define([
 			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
-			var colId = g._columns[colIdx]? g._columns[colIdx].id : undefined,
+			var colId = g._columns[colIdx] ? g._columns[colIdx].id : undefined,
 				n = t.getCellNode({
 					visualIndex: rowVisIdx,
 					colId: colId
@@ -1024,7 +1047,9 @@ define([
 					t = this,
 					g = t.grid, 
 					columnCount = g._columns.length,
-					vc = g.view.visualCount;
+					vc = g.view.visualCount,
+					//IE8 will destroy this event object after setTimeout
+					e = has('ie') < 9 ? lang.mixin({}, evt) : evt;
 				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
 				r = t._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
@@ -1032,7 +1057,7 @@ define([
 				c = c < 0 ? 0 : (c >= columnCount ? columnCount - 1 : c);
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusCell(0, r, c);
-					t.onMoveToCell(r, c, evt);
+					t.onMoveToCell(r, c, e);
 				});
 			}
 		},
@@ -1070,7 +1095,7 @@ define([
 		_onFocus: function(evt){
 			var bn = this.domNode,
 				nl = query(evt.target).closest('.gridxCell', bn);
-			if(nl[0]){
+			if(nl[0] && this._isDescendantCellNode(nl[0])){
 				var colIndex = this.grid._columnsById[nl[0].getAttribute('colid')].index,
 					visualIndex = parseInt(nl.closest('.gridxRow', bn)[0].getAttribute('visualindex'), 10);
 				return this._focusCell(0, visualIndex, colIndex);

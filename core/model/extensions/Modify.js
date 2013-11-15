@@ -140,11 +140,7 @@ define([
 		byId: function(id){
 			var t = this,
 				c = t.inner._call('byId', arguments);
-				
-			if(!c || !t._lazyRawData[id]){ 
-				return c; 
-			}
-			
+			if(!c){ return c; }
 			var d = lang.mixin({}, c);
 			d.rawData = lang.mixin({}, d.rawData, t._lazyRawData[id]);
 			d.data = lang.mixin({}, d.data, t._lazyData[id]);		
@@ -155,12 +151,9 @@ define([
 			var t = this,
 				c = t.inner._call('byIndex', arguments),
 				id = t.inner._call('indexToId', arguments);
-
-			if(!c || !t._lazyRawData[id]){ 
-				return c; 
-			}
-			
+			if(!c){ return c; }
 			var d = lang.mixin({}, c);
+			
 			d.rawData = lang.mixin({}, d.rawData, t._lazyRawData[id]);
 			d.data = lang.mixin({}, d.data, t._lazyData[id]);
 			return d;

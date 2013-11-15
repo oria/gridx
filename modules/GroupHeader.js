@@ -336,7 +336,7 @@ define([
 						fid = g._columns[colIdx].id;
 					}
 				}
-				if(fid){
+				if(fid && g._columnsById[fid]){
 					t._blurNode();
 					if(g.hScroller){
 						g.hScroller.scrollToColumn(fid);

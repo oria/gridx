@@ -6,10 +6,8 @@ define([
 	"dojo/dom-class",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
-	"dijit/_TemplatedMixin",
-	"dojo/i18n",
-	"dojo/i18n!../nls/PaginationBar"
-], function(declare, lang, array, has, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin, i18n){
+	"dijit/_TemplatedMixin"
+], function(declare, lang, array, has, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
@@ -23,7 +21,7 @@ define([
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
 		constructor: function(args){
 			var t = this;
-			lang.mixin(t, i18n.getLocalization('gridx', 'PaginationBar'));
+			lang.mixin(t, args.grid.nls);
 			if(has('ie')){
 				//IE does not support inline-block, so have to set tabIndex
 				var gridTabIndex = args.grid.domNode.getAttribute('tabindex');

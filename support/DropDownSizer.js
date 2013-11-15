@@ -4,10 +4,8 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
-	"dojo/i18n",
-	"dijit/form/Select",
-	"dojo/i18n!../nls/PaginationBar"
-], function(declare, lang, _WidgetBase, _FocusMixin, _TemplatedMixin, i18n, Select){
+	"dijit/form/Select"
+], function(declare, lang, _WidgetBase, _FocusMixin, _TemplatedMixin, Select){
 
 /*=====
 	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
@@ -38,7 +36,7 @@ define([
 		templateString: '<div class="gridxDropDownSizer"><label class="gridxPagerLabel">${pageSizeLabel}</label></div>',
 
 		constructor: function(args){
-			lang.mixin(this, i18n.getLocalization('gridx', 'PaginationBar', this.lang || args.grid.lang));
+			lang.mixin(this, args.grid.nls);
 		},
 
 		postCreate: function(){

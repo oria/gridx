@@ -11,11 +11,13 @@ define([
 =====*/
 
 	return declare(Dialog, {
+		grid: null,
 		cssClass: 'gridxFilterConfirmDialog',
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.set('content', string.substitute(template, this._nls));
+			this.set('title', this.grid.nls.clearFilterDialogTitle);
+			this.set('content', string.substitute(template, this.grid.nls));
 			var arr = dijit.findWidgets(this.domNode);
 			this.btnClear = arr[0];
 			this.btnCancel = arr[1];

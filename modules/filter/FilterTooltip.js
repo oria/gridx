@@ -66,7 +66,7 @@ define([
 					' class="gridxFilterTooltipRemoveBtn"><span class="gridxFilterTooltipRemoveBtnText">x</span></span></div></td></tr>');
 			}, this);
 			arr.push('</table>');
-			this.i18n = this.grid.filterBar._nls;
+			this.i18n = this.grid.nls;
 			this.set('content', string.substitute(arr.join(''), this));
 			domClass.toggle(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},

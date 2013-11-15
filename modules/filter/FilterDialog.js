@@ -25,10 +25,10 @@ define([
 		cssClass: 'gridxFilterDialog',
 		grid: null,
 		autofocus: false,
-		
 		postCreate: function(){
 			this.inherited(arguments);
-			this.i18n = this.grid.filterBar._nls;
+			this.i18n = this.grid.nls;
+			this.set('title', this.grid.nls.filterDefDialogTitle);
 			this.set('content', string.substitute(template, this));
 			this._initWidgets();
 			css.add(this.domNode, 'gridxFilterDialog');

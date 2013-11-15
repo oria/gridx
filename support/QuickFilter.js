@@ -13,13 +13,11 @@ define([
 	'dijit/Menu',
 	'dijit/MenuItem',
 	'../modules/Filter',
-	'dojo/i18n',
-	'dojo/text!../templates/QuickFilter.html',
-	'dojo/i18n!../nls/QuickFilter'
+	'dojo/text!../templates/QuickFilter.html'
 ], function(declare, lang, array, domClass, keys,
 	_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, Button, ComboButton, Menu, MenuItem,
-	F, i18n, template){
+	F, template){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -46,7 +44,7 @@ define([
 
 		constructor: function(args){
 			var t = this;
-			lang.mixin(t, i18n.getLocalization('gridx', 'QuickFilter', args.grid.lang));
+			lang.mixin(t, args.grid.nls);
 			t._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
 			t.connect(args.grid.model, 'setStore', function(){
 				t.textBox.set('value', '');
@@ -55,9 +53,7 @@ define([
 		},
 
 		postCreate: function(){
-			if(this.autoApply){
-				this.connect(this.textBox, 'onInput', '_onInput');
-			}
+			this.connect(this.textBox, 'onInput', '_onInput');
 		},
 
 		grid: null,
@@ -85,7 +81,7 @@ define([
 			setTimeout(function(){
 				domClass.toggle(dn, 'gridxQuickFilterActive', tb.get('value'));
 			}, 0);
-			if(key != keys.TAB){
+			if(t.autoApply && key != keys.TAB){
 				clearTimeout(t._handle);
 				t._handle = setTimeout(function(){
 					t._filter();

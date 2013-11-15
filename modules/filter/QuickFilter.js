@@ -1,9 +1,12 @@
 define([
 	'dojo/_base/declare',
+	'dojo/dom-class',
+	'dojox/gesture/tap',
 	'../../core/_Module',
 	'../../support/QuickFilter',
+	'../Puller',
 	'../Bar'
-], function(declare, _Module, QuickFilter){
+], function(declare, domClass, tap, _Module, QuickFilter){
 
 /*=====
 	return declare(_Module, {
@@ -19,16 +22,41 @@ define([
 	return declare(_Module, {
 		name: 'quickFilter',
 
-		required: ['bar', 'filter'],
+		required: ['bar', 'filter', 'puller'],
+
+		autoApply: true,
+
+		delay: 700,
 
 		preload: function(){
-			this.grid.bar.defs.push({
-				bar: 'top',
-				row: 0,
-				col: 3,
-				pluginClass: QuickFilter,
-				className: 'gridxBarQuickFilter'
-			});
+			var t = this,
+				g = t.grid,
+				bar = g.bar,
+				prot = QuickFilter.prototype,
+				args = {
+					bar: 'top',
+					row: 0,
+					col: 3,
+					pluginClass: QuickFilter,
+					className: 'gridxBarQuickFilter',
+					hookPoint: this,
+					hookName: 'quickFilter',
+					autoApply: t.arg('autoApply'),
+					delay: t.arg('delay'),
+					textBoxClass: t.arg('textBoxClass', 'dijit.form.TextBox'),
+					buttonClass: t.arg('buttonClass', 'dijit.form.Button'),
+					comboButtonClass: t.arg('comboButtonClass', 'dijit.form.ComboButton'),
+					menuClass: t.arg('menuClass', 'dijit.Menu'),
+					menuItemClass: t.arg('menuItemClass', 'dijit.MenuItem')
+				};
+			if(g.touch){
+				args.bar = 'quickFilter';
+				args.priority = 0.5;
+				bar.loaded.then(function(){
+					g.puller.bind(bar.quickFilterNode);
+				});
+			}
+			bar.defs.push(args);
 		}
 	});
 });

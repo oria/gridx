@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<title>Grid MultiChannel Test</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+	<link rel='stylesheet' href="support/common.css" />
+	<style type="text/css">
+		html {
+			height: 100%;
+		}
+		body {
+			margin: 0;
+			padding: 0;
+			background: none;
+			height: 100%;
+		}
+		.gridx {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="
+		async: true,
+		mblAlwaysHideAddressBar: true
+	"></script>
+<!--    <script type="text/javascript" src='support/common.js'></script>-->
+	<script type="text/javascript" src='test_grid_multichannel.js'></script>
+</head>
+<body class='claro'>
+	<div id='grid' data-dojo-id='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Async",
+		store: store,
+		structure: layout,
+		pageSize: "auto",
+		selectRowMultiple: true,
+		selectRowTriggerOnCell: false,
+		structureSwitchPortrait: portrait,
+		modules: [
+			"gridx/modules/AutoPagedBody",
+			"gridx/modules/TouchVScroller",
+			"gridx/modules/Sort",
+			"gridx/modules/extendedSelect/Row",
+			"gridx/modules/IndirectSelectColumn",
+			"gridx/modules/HiddenColumns",
+			"gridx/modules/StructureSwitch",
+			"gridx/modules/ColumnResizer"
+		]
+	'></div>
+			"gridx/modules/MultiChannelScroller",
+			"gridx/modules/select/Cell",
+			"gridx/modules/select/Column",
+</body>
+</html>

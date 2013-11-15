@@ -32,6 +32,8 @@ define([
 	declare(_Module, {
 		name: '_dnd',
 
+		optional: ['selectRow', 'selectColumn'],
+
 		constructor: function(){
 			var t = this,
 				g = t.grid,
@@ -45,7 +47,16 @@ define([
 				[g, 'onCellMouseOut', '_dismissDndReady'],
 				[g, 'onCellMouseDown', '_beginDnd'],
 				[doc, 'onmouseup', '_endDnd'],
-				[doc, 'onmousemove', '_onMouseMove']
+				[doc, 'onmousemove', '_onMouseMove'],
+				[g, 'onCellMouseUp', function(evt){
+					//FIXME: this is ugly.
+					//selection end event fires on document, so it always after onCellMouseUp.
+					//But dnd should check the selection result in order to show dnd cursor,
+					//so do some setTimeout here.
+					setTimeout(function(){
+						t._checkDndReady(evt);
+					}, 0);
+				}]
 			);
 			t.subscribe("/dnd/cancel", '_endDnd');
 		},
@@ -171,7 +182,7 @@ define([
 		},
 		
 		_dismissDndReady: function(){
-			if(this._dndReady){
+			if(this._dndReady && !this._dndBegun){
 				this._loadSelectStatus();
 				this._dndReady = 0;	//0 as false
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
@@ -184,6 +195,7 @@ define([
 			if(t._dndReady){
 				var p = t.profile,
 					m = DndManager.manager();
+				t._dndBegun = 1;
 				t._source.isSource = true;
 				t._source.canNotDragOut = !p.arg('provide').length;
 				t._node.innerHTML = p._buildDndNodes();
@@ -197,12 +209,13 @@ define([
 					};
 				}
 				m._dndInfo = {
+					grid: t.grid,
 					cssName: p._cssName,
 					count: p._getDndCount()
 				};
 				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
-				dom.setSelectable(t.grid.domNode, false);	
+				dom.setSelectable(t.grid.domNode, false);
 			}
 		},
 
@@ -211,6 +224,7 @@ define([
 				m = DndManager.manager();
 			t._source.isSource = false;
 			t._alreadyIn = 0;	//0 as false
+			t._dndBegun = 0;
 			delete m._dndInfo;
 			if(t._oldStartDrag){
 				m.startDrag = t._oldStartDrag;

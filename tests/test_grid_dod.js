@@ -23,7 +23,6 @@ require([
     'dojox/charting/plot2d/Candlesticks',
     'dojox/charting/plot2d/OHLC',
     'dojox/charting/plot2d/Pie',
-    'dijit/form/Button',
 	'dojo/domReady!'
 ], function(domConstruct, parser,
 	Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
@@ -77,9 +76,6 @@ require([
 	}
 	
 	function setTextContent(node){
-		// node.innerHTML = '<button data-dojo-type="dijit/form/Button" data-dojo-props="label: 123">cut</button>';
-		// dojo.parser.parse(node);
-		
 		node.innerHTML = '<div style="color: #777; padding:5px">' 
 			+ getDummyText(20,140) + '</div>';
 	}
@@ -113,7 +109,7 @@ require([
 				'		<option value="blue">Blue</option>',
 				'	</select></td>',
 				'</tr>',
-			'</table></div>'].join('');
+			'</table></div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>'].join('');
 		parser.parse(node);
 	}
 	function setChartContent(node){

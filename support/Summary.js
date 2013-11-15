@@ -2,10 +2,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/string",
 	"dijit/_WidgetBase",
-	"dijit/_TemplatedMixin",
-	"dojo/i18n",
-	"dojo/i18n!../nls/SummaryBar"
-], function(declare, string, _WidgetBase, _TemplatedMixin, i18n){
+	"dijit/_TemplatedMixin"
+], function(declare, string, _WidgetBase, _TemplatedMixin){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin], {
@@ -27,23 +25,47 @@ define([
 
 		grid: null,
 
+		//message: 'Total: ${0} Selected: ${1}',
+
 		postCreate: function(){
 			var t = this,
-				c = 'connect',
 				m = t.grid.model;
-			t[c](m, 'onSizeChange', 'refresh');
-			t[c](m, 'onMarkChange', 'refresh');
-			t._nls = i18n.getLocalization('gridx', 'SummaryBar', t.lang || t.grid.lang);
+			t.connect(m, 'onSizeChange', 'refresh');
+			t.connect(m, 'onMarkChange', 'refresh');
+			if(t.grid.pagination){
+				t.connect(t.grid.pagination, 'onSwitchPage', 'refresh');
+				t.connect(t.grid.pagination, 'onChangePageSize', 'refresh');
+			}
 			t.refresh();
 		},
 
 		refresh: function(){
 			var g = this.grid,
 				sr = g.select && g.select.row,
+				pagination = g.pagination,
 				size = g.model.size(),
 				selected = sr ? sr.getSelected().length : 0,
-				tpl = sr ? this._nls.summaryWithSelection : this._nls.summary;
-			this.domNode.innerHTML = string.substitute(tpl, [size, selected]);
+				tpl = this.message;
+			if(pagination){
+				var cp = pagination.currentPage(),
+					firstIdx = pagination.firstIndexInPage(cp) + 1,
+					lastIdx = pagination.lastIndexInPage(cp) + 1;
+			}
+			if(g.getSummaryMessage){
+				tpl = g.getSummaryMessage();
+			}
+			if(!tpl){
+				tpl = [];
+				if(pagination){
+					tpl.push(string.substitute(g.nls.summaryRange, [firstIdx, lastIdx]));
+				}
+				tpl.push(string.substitute(g.nls.summaryTotal, [size >= 0 ? size : 0]));
+				if(sr){
+					tpl.push(string.substitute(g.nls.summarySelected, [selected]));
+				}
+				tpl = tpl.join(' ');
+			}
+			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected, firstIdx, lastIdx]);
 		}
 	});
 });

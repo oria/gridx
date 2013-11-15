@@ -267,7 +267,6 @@ define([
 							}
 						}
 					});
-					// console.log('lazy is: ', lazyData);
 					if(t.setCellValue){
 						t.setCellValue(gridData, storeData, t, isInit);
 					}
@@ -525,10 +524,14 @@ define([
 				if(cellDec){
 					if(!cellDec.widget && cellDec.decorator){
 						try{
-							cellDec.widget = new CellWidget({
+							var widget = cellDec.widget = new CellWidget({
 								content: cellDec.decorator(cell.data(), cell.row.id, cell.row.visualIndex(), cell),
 								setCellValue: cellDec.setCellValue
 							});
+							this.onCellWidgetCreated(widget, cell.column);
+							if(cell.column.onCellWidgetCreated){
+								cell.column.onCellWidgetCreated(widget, cell.column);
+							}
 						}catch(e){
 							console.error('Edit:', e);
 						}

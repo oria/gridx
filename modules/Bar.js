@@ -229,6 +229,9 @@ define([
 					}catch(e){
 						console.error(e);
 					}
+					if(def.hookPoint && def.hookName){
+						def.hookPoint[def.hookName] = plugin || td;
+					}
 					pluginRow.push(plugin || td);
 					tr.appendChild(td);
 				}
@@ -307,6 +310,7 @@ define([
 			this.grid.focus.stopEvent(evt);
 			var elems = a11y._getTabNavigable(node),
 				n = elems[step < 0 ? 'last' : 'first'];
+
 			if(n){
 				n.focus();
 			}
@@ -314,8 +318,17 @@ define([
 		},
 
 		_doBlur: function(node, evt, step){
+			function isChild(child, parent){
+				if(!child || !parent){ return false; }
+				var n = child;
+				while(n && n != parent){
+					n = n.parentNode;
+				}
+				return !!n;
+			}
 			var elems = a11y._getTabNavigable(node);
-			return evt ? evt.target == (step < 0 ? elems.first : elems.last) : true;
+			return evt ? (evt.target == (step < 0 ? elems.first : elems.last) 
+						|| isChild(evt.target, step < 0 ? elems.first : elems.last)) : true;
 		}
 	}));
 });

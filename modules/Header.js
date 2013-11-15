@@ -218,8 +218,15 @@ define([
 					doFocus: t._doFocus,
 					doBlur: t._blurNode,
 					onBlur: t._blurNode,
-					connects: [
-						t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
+					connects: g.touch ? [
+						t.aspect(g, 'onHeaderCellTouchStart', function(evt){
+							domClass.add(evt.headerCellNode, t._focusClass);
+						}),
+						t.aspect(g, 'onHeaderCellTouchEnd', function(evt){
+							domClass.remove(evt.headerCellNode, t._focusClass);
+						})
+					] : [
+						t.aspect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
 						t.connect(g, 'onHeaderCellMouseDown', function(evt){
 							t._focusNode(t.getHeaderNode(evt.columnId));
 						})
@@ -229,11 +236,14 @@ define([
 		},
 
 		_doFocus: function(evt, step){
-			var t = this, 
-				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
-				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
-			t.grid.focus.stopEvent(r && evt);
-			return r;
+			var t = this;
+			if(!t.hidden){
+				var n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
+					r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
+				t.grid.focus.stopEvent(r && evt);
+				return r;
+			}
+			return false;
 		},
 		
 		_focusNode: function(node){

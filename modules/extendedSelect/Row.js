@@ -237,10 +237,14 @@ define([
 			t.model._spTypes.select = 1;	//1 as true
 			t.model.setMarkable(lang.hitch(t, t._isSelectable));
 			function canSelect(e){
-				if(e.columnId && t.arg('triggerOnCell')){
-					return g._columnsById[e.columnId].rowSelectable !== false &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner');
+				if(e.columnId){
+					var col = g._columnsById[e.columnId];
+					if(t.arg('triggerOnCell')){
+						return col.rowSelectable !== false &&
+							!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+							!domClass.contains(e.target, 'gridxTreeExpandoInner');
+					}
+					return col.rowSelectable;
 				}
 				return !e.columnId;
 			}
@@ -461,7 +465,6 @@ define([
 			}else{
 				toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
 			}
-			// console.log('to highlight', toHighlight);
 			this._doHighlight(target, toHighlight);
 		},
 		

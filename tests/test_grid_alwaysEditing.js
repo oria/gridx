@@ -4,7 +4,6 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'dojo/data/ItemFileWriteStore',
-	'dojo/store/Memory',
 	'dojo/date/locale',
 	'dijit/form/TextBox',
 	'dijit/form/ComboBox',
@@ -23,7 +22,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	"gridx/allModules",
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, Memory, locale,
+], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale,
 	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
@@ -46,14 +45,17 @@ require([
 		size: 100
 	});
 
-	//Monitor writing store
-	dojo.connect(store1, 'put', function(){
-		console.log('put:', arguments);
-	});
-
 	store2 = storeFactory({
 		dataSource: dataSource, 
 		size: 100
+	});
+
+	//Monitor writing store
+	dojo.connect(store1, 'put', function(){
+		console.log('put store1:', arguments);
+	});
+	dojo.connect(store2, 'put', function(){
+		console.log('put store2:', arguments);
 	});
 
 	mystore = IFWSFactory({
@@ -74,25 +76,28 @@ require([
 				id: d
 			});
 		}
-		// return new IFWStore({
-			// data: {
-				// identifier: 'id',
-				// label: 'id',
-				// items: data
-			// }
-		// });
-		return new Memory({
-			"data": data
+		return new IFWStore({
+			data: {
+				identifier: 'id',
+				label: 'id',
+				items: data
+			}
 		});
 	}
 
 	fsStore = createSelectStore('Album');
 	selectStore = createSelectStore('Length');
 
-	layout1 = [
+	layout = [
 		{ field: "id", name:"ID", width: '20px'},
 		{ field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
 		{ field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
+			decorator: function(data){
+				return "<b>" + data + "</b>";
+			},
+			canEdit: function(cell){
+				return cell.row.index() % 2;
+			},
 			editor: "dijit.form.ComboBox",
 			editorArgs: {
 				props: 'store: mystore, searchAttr: "Artist"'
@@ -153,34 +158,6 @@ require([
 			editor: TimeTextBox,
 			editorArgs: {
 				fromEditor: getTime
-			}
-		}
-	];
-
-	layout2 = [
-		{ field: "id", name:"ID", width: '20px'},
-		{ field: "Color", name:"Color Palatte", width: '210px', alwaysEditing: true,
-			editor: 'dijit.ColorPalette',
-			editorArgs: {
-				fromEditor: function(v, cell){
-					return v || cell.data(); //If no color selected, use the orginal one.
-				}
-			}
-		},
-		{ field: "Download Date", name:"Calendar", width: '210px', alwaysEditing: true,
-			dataType: 'date',
-			storePattern: 'yyyy/M/d',
-			gridPattern: 'yyyy/MMMM/dd',
-			editor: 'dijit.Calendar',
-			editorArgs: {
-				fromEditor: getDate
-			}
-		},
-		{ field: "Composer", name:"Editor", width: '500px', alwaysEditing: true,
-			//FIXME: this is still buggy, can not TAB out.
-			editor: "dijit.Editor",
-			editorArgs: {
-				props: 'height: 20'
 			}
 		}
 	];

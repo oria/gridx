@@ -163,12 +163,30 @@ define([
 	}
 
 	function normalizeModules(self){
-		var mods = [],
-			modules = self.modules,
-			len = modules.length;
-		for(var i = 0; i < len; ++i){
-			var m = modules[i];
-			if(isFunc(m) || isString(m)){
+		var mods = self.modules,
+			len = mods.length,
+			modules = [],
+			i, m;
+		for(i = 0; i < len; ++i){
+			m = mods[i];
+			if(isString(m)){
+				try{
+					m = require(m);
+				}catch(e){
+					console.error(e);
+				}
+			}
+			if(lang.isArray(m)){
+				modules = modules.concat(m);
+			}else{
+				modules.push(m);
+			}
+		}
+		mods = [];
+		len = modules.length;
+		for(i = 0; i < len; ++i){
+			m = modules[i];
+			if(isFunc(m)){
 				m = {
 					moduleClass: m
 				};
@@ -188,7 +206,7 @@ define([
 				}
 			}
 			console.error("The " + (i + 1 - self.coreModules.length) +
-				"-th declared module can NOT be found, please require it before using it");
+				"-th declared module can NOT be found, please require it before using it:", m);
 		}
 		self.modules = mods;
 	}
@@ -303,6 +321,11 @@ define([
 				return lang.mixin({}, col);
 			});
 			t._columnsById = configColumns(t._columns);
+			
+			if(t.edit){			//FIX ME: this is ugly
+								//this will not run in the first setColumns function
+				t.edit._init();
+			}
 			if(t.model){
 				t.model._cache.onSetColumns(t._columnsById);
 			}
@@ -382,6 +405,13 @@ define([
 			t.modelExtensions = t.modelExtensions || [];
 			t.setColumns(t.structure);
 
+			if(t.touch){
+				if(t.touchModules){
+					t.modules = t.modules.concat(t.touchModules);
+				}
+			}else if(t.desktopModules){
+				t.modules = t.modules.concat(t.desktopModules);
+			}
 			normalizeModules(t);
 			checkForced(t);
 			removeDuplicate(t);
