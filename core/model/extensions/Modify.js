@@ -1,11 +1,12 @@
 define([
 	'dojo/_base/declare',
 	'dojo/_base/lang',
-	'dojo/DeferredList',
+	'dojo/promise/all',
 	'dojo/_base/Deferred',
 	'dojo/_base/array',
+	'dojox/uuid/generateRandomUuid',
 	'../_Extension'
-], function(declare, lang, DeferredList, Deferred, array, _Extension){
+], function(declare, lang, all, Deferred, array, generateRandomUuid, _Extension){
 /*=====
 	return declare([], {
 		// Summary:
@@ -126,14 +127,17 @@ define([
 			
 			t._lazyData = {};
 			t._lazyRawData = {};
+			t._lazySize = {};
+			t._lazySize[''] = 0;
 			
 			t._cache = model._cache;
-			t._mixinAPI('set', 'redo', 'undo', 'isChanged', 'getChanged', 'save', 'clearLazyData');
+			t._mixinAPI('set', 'add', 'redo', 'undo', 'isChanged', 'getChanged', 'save', 'clearLazyData');
 			
 			model.onSetLazyData = function(){};
 			model.onRedo = model.onUndo = function(){};
 			
 			var old = s.fetch;
+			t.aspect(model._cache, 'onAfterFetch', '_onAfterFetch');
 		},
 
 		//Public--------------------------------------------------------------
@@ -141,7 +145,7 @@ define([
 			var t = this,
 				c = t.inner._call('byId', arguments);
 				
-			if(!c || !t._lazyRawData[id]){ 
+			if(!t._lazyRawData[id]){
 				return c; 
 			}
 			
@@ -156,7 +160,7 @@ define([
 				c = t.inner._call('byIndex', arguments),
 				id = t.inner._call('indexToId', arguments);
 
-			if(!c || !t._lazyRawData[id]){ 
+			if(!t._lazyRawData[id]){
 				return c; 
 			}
 			
@@ -166,6 +170,17 @@ define([
 			return d;
 		},
 		
+		size: function(parentId){
+			var t = this,
+				s = t.inner._call('size', arguments);
+			if (s >= 0) {
+				var ls = this._lazySize[this.model.isId(parentId) ? parentId : ''] || 0;
+				return s + ls;
+			} else {
+				return -1
+			}
+		},
+
 		set: function(rowId, rawData){
 			var t = this,
 				opt = {},
@@ -175,7 +190,6 @@ define([
 			opt.rowId = rowId;
 			opt.newData = rawData;
 			opt.oldData = {};
-			
 			
 			var rd = t.byId(rowId).rawData;
 			for(var f in rawData){
@@ -192,6 +206,23 @@ define([
 			this.onSet(rowId, index, newRowData, oldRowData);		//trigger model.onset
 		},
 
+		add: function(rawData, parentId){
+			var t = this,
+				opt = {},
+				list = t._globalOptList,
+				index = t._globalOptIndex,
+				rowId = t.model.store.getIdentity(rawData) || generateRandomUuid();
+			opt.type = 1;			//add row
+			opt.rowId = rowId;
+			opt.newData = rawData;
+			opt.parentId = parentId;
+
+			list.splice(index + 1, (list.length - 1 - index), opt);
+			t._globalOptIndex++;
+
+			t._addLazyRow(rowId, rawData, parentId);
+		},
+
 		undo: function(){
 			var t = this,
 				opt = t._globalOptList[t._globalOptIndex];
@@ -203,6 +234,9 @@ define([
 						newData = opt.oldData;
 						
 					t._onUndo(rowId, newData, oldData);
+				} else if(opt.type === 1){
+					var rowId = opt.rowId;
+					t._removeLazyRow(rowId);
 				}
 				return true;
 			}
@@ -219,6 +253,11 @@ define([
 						oldData = opt.oldData,
 						newData = opt.newData;
 					t._onRedo(rowId, newData, oldData);
+				} else if(opt.type === 1){
+					var rowId = opt.rowId,
+						newData = opt.newData,
+						parentId = opt.parentId;
+					t._addLazyRow(rowId, newData, parentId);
 				}
 				return true;
 			}
@@ -236,28 +275,44 @@ define([
 			t._globalOptList = [];
 			t._lazyRawData = {};
 			t._lazyData = {};
+			t._lazySize = {};
+			t._lazySize[''] = 0;
 		},
 
 		save: function(){
 			var t = this,
 				cl = t.getChanged(),
 				da = [],
-				dl,
 				d = new Deferred();
 
 			if(cl.length){
 				array.forEach(cl, function(rid){
 					var d = t._saveRow(rid);
+					d.then(function(item){		//only clear lazy data for succesful updates
+						if (t.isLazyRow(rid)) {
+							var options = t._getLazyAddOptions(rid),
+								parentId = t.model.isId(options.parentId) ? options.parentId : '',
+								s = t.model.store,
+								newId = s.getIdentity(item),
+								i = t.inner,
+								st = i._struct,
+								parentInfo = {}
+								index = array.indexOf(st[parentId], rid);
+							parentInfo[s.fetch ? 'item' : 'parent'] = parentId;
+							t._removeLazyRow(rid);
+							i._call('_addRow', [newId, index, i._itemToObject(item), item, parentId]);
+							i._call('_onNew', [item, parentInfo]);
+						} else {
+							delete t._lazyRawData[rid];
+							delete t._lazyData[rid];
+						}
+						t._removeFromOpts(rid);
+					});
 					da.push(d);
 				});
-				dl = new DeferredList(da);
-				dl.then(function(){
+				all(da).then(function(results){
 					//t.clear();
-					t._globalOptList = [];
-					t._globalOptIndex = -1;
-					t._lazyRawData = {};
-					t._lazyData = {};
-					t.onSave(dl);
+					t.onSave(results);
 					d.callback();
 				}, function(){
 					d.errback();
@@ -272,6 +327,7 @@ define([
 			var t = this,
 				cache = t.inner._call('byId', [rowId]),
 				ld = t._lazyRawData[rowId];
+			if (t.isLazyRow(rowId)) return true;
 			if(field){
 				if(ld){
 					return ld[field] !== undefined? ld[field] !== cache.rawData[field] : false;
@@ -287,6 +343,10 @@ define([
 				}
 			}
 			return false;
+		},
+
+		isLazyRow: function(rowId, field){
+			return !this.inner._call('byId', [rowId]);
 		},
 
 		getChanged: function(){
@@ -331,17 +391,6 @@ define([
 		},
 
 		//Private-------------------------------------------------------------------
-		_onSet: function(){
-			//clear
-			//fire onSet
-			var t = this;
-			
-			t._globalOptList = [];
-			t._globalOptIndex = -1;
-
-			t.onSet.apply(t, arguments);
-		},
-		
 		_onUndo: function(rowId, newData, oldData){
 			var index = this._cache.idToIndex(rowId),
 				t = this;
@@ -363,7 +412,29 @@ define([
 			this.onSet(rowId, index, newRowData, oldRowData);		//trigger model.onset
 			this.onRedo(rowId, newData, oldData);
 		},
-		
+
+		_getLazyAddOptions: function(id){
+			var t = this,
+				opts = t._globalOptList;
+			for(var i=0; i<opts.length; i++){
+				if(opts[i].type === 1 && opts[i].rowId === id) return opts[i]
+			}
+		},
+
+		_onAfterFetch: function(){
+			var t = this,
+				sz = t._lazySize = {};
+			sz[''] = 0;
+			for(var id in t._lazyRawData){
+				if (t.isLazyRow(id)){
+					var opt = t._getLazyAddOptions(id);
+					var pid = t.model.isId(opt.parentId) ? opt.parentId : '';
+					t._addToCacheStructure(id, pid);
+					sz[pid] = (sz[pid] || 0) + 1;
+				}
+			}
+		},
+
 		_set: function(rowId, rawData){
 			var t = this,
 				c = t.inner._call('byId', [rowId]),
@@ -380,13 +451,103 @@ define([
 				// c.lazyData = lang.mixin({}, rawData);
 			// }
 			var columns = t._cache.columns,
-				crd = lang.mixin({}, c.rawData, t._lazyRawData[rowId]);
+				crd = lang.mixin({}, c ? c.rawData : {}, t._lazyRawData[rowId]);
 				
 			
 			for(var cid in columns){
 				obj[cid] = columns[cid].formatter? columns[cid].formatter(crd) : crd[columns[cid].field || cid];
 			}
 			t._lazyData[rowId] = obj; 
+		},
+
+		_addLazyRow: function(id, rawData, parentId){
+			var t = this,
+				i = t.inner,
+				pid = t.model.isId(parentId) ? parentId : '',
+				sz = t._lazySize,
+				obj = {},
+				columns = t._cache.columns;
+
+			t._addToCacheStructure(id, pid);
+
+			t._lazyRawData[id] = lang.mixin({}, rawData);
+			var row = i._formatRow(rawData, id);
+			t._lazyData[id] = row;
+
+			sz[pid] = (sz[pid] || 0) + 1;
+			if(pid) {
+				//TODO trigger refresh for parent node
+			} else {
+				t.model._onSizeChange();
+			}
+		},
+
+		_addToCacheStructure: function(id, pid, index) {
+			var t = this,
+				i = t.inner,
+				st = i._struct,
+				ids = st[pid];
+			index = index >= 0 ? index : t.size(pid);	//add at the end
+			if(index < 0){
+				throw new Error("Error of Modify._addToCacheStructure: could not get new index - possibly not loaded yet");
+			}
+			if(!ids){
+				throw new Error("Fatal error of Modify._addToCacheStructure: parent item " + pid + " of " + id + " is not loaded");
+			}
+			var oldId = ids[index + 1];
+			if(t.model.isId(oldId) && oldId !== id){
+				console.error("Error of Modify._addToCacheStructure: different row id " + id + " and " + ids[index + 1] + " for same row index " + index);
+			}
+			ids[index + 1] = id;
+			st[id] = st[id] || [pid];
+		},
+
+		_removeFromOpts: function(rid){
+			var t = this,
+				idx = t._globalOptIndex,
+				opts = t._globalOptList.slice(0, idx + 1);
+			t._globalOptList = array.filter(opts, function(opt){return (opt.rowId != rid);});
+			t._globalOptIndex = t._globalOptList.length - 1
+		},
+
+		_removeLazyRow: function(id){
+			var t = this,
+				i = t.inner,
+				st = i._struct,
+				sz = t._lazySize,
+				obj = {},
+				columns = t._cache.columns,
+				path = i.treePath(id);
+			if(path.length){
+				var children, n, j,
+					ids = [id],
+					parentId = path[path.length - 1],
+					size = t.size(parentId),
+					index = array.indexOf(st[parentId], id);
+				st[parentId].splice(index, 1);
+				--sz[parentId];
+
+				for(n = 0; n < ids.length; ++n){
+					children = st[ids[n]];
+					if(children){
+						for(j = children.length - 1; j > 0; --j){
+							ids.push(children[j]);
+						}
+					}
+				}
+				for(n = ids.length - 1; n >= 0; --n){
+					j = ids[n];
+					delete st[j];
+					delete sz[j];
+				}
+
+				delete t._lazyRawData[id];
+				delete t._lazyData[id];
+
+				if(size >= 0){
+					t.model._onSizeChange();
+				}
+			}
 		},
 
 		_saveRow: function(rowId){
