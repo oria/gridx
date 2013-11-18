@@ -324,7 +324,7 @@ define([
 			array.forEach(row.cells(), function(cell){
 				var col = cell.column.def();
 				if(col.userDecorator || t._getSpecialCellDec(cell.row.id, col.id)){
-					var cellNode = cell.node();
+					var cellNode = cell.contentNode();
 					if(cellNode){
 						var cellWidget = t._prepareCellWidget(cell);
 						if(sniff('ie')){
@@ -345,7 +345,7 @@ define([
 			var col = cell.column.def();
 			if(col.userDecorator || this._getSpecialCellDec(cell.row.id, col.id)){
 				var cellWidget = this._prepareCellWidget(cell),
-					cellNode = cell.node();
+					cellNode = cell.contentNode();
 				cellNode.innerHTML = "";
 				cellWidget.placeAt(cellNode);
 				cellWidget.startup();

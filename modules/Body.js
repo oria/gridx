@@ -168,6 +168,10 @@ define([
 					rowId: this.row.id,
 					colId: this.column.id
 				});
+			},
+			contentNode: function(){
+				var node = this.node();
+				return node && query('.gridxCellContent', node)[0] || node;
 			}
 		},
 

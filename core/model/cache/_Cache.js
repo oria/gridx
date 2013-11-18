@@ -233,7 +233,7 @@ define([
 				d = new Deferred(),
 				s = t.store,
 				row = t.byId(parentId),
-				items = row && s.getChildren && s.getChildren(row.item) || [];
+				items = row && s.getChildren && (!s.hasChildren || s.hasChildren(parentId, row && row.item)) && s.getChildren(row.item) || [];
 			Deferred.when(items, function(items){
 				var i = 0,
 					item,

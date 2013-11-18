@@ -545,7 +545,7 @@ define([
 								"style='margin-", ltr ? 'left' : 'right', ": ", pad, "px;'>",
 								"<span class='gridxTreeExpandoInner'>",
 								isOpen ? "-" : "+",
-								"</span></span><span class='gridxTreeExpandoContent'>",
+								"</span></span><span class='gridxTreeExpandoContent gridxCellContent'>",
 								cellData,
 								"</span></span>"
 							].join('');
