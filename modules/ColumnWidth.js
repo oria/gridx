@@ -291,6 +291,18 @@ define([
 						}
 					}
 				});
+				if(g.autoWidth){
+					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
+						var col = g._columnsById[cellNode.getAttribute('colId')],
+							w = col && col.width,
+							s = cellNode.style;
+						if(w){
+							s.width = w;
+							s.minWidth = w;
+							s.maxWidth = w;
+						}
+					});
+				}
 			}
 			g.hScroller.scroll(0);
 			header._onHScroll(0);
