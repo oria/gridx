@@ -37,6 +37,7 @@ define([
 				2: true
 			};
 			t.clear();
+			t._tree = {};
 			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode', 'setMarkable');
 			t.aspect(model, '_msg', '_receiveMsg');
 			t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
@@ -50,7 +51,6 @@ define([
 			this._byId = {};
 			this._last = {};
 			this._lazy = {};
-			this._tree = {};
 			this._unmarkable = {};
 		},
 
