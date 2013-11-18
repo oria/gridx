@@ -317,7 +317,7 @@ require([
 					detailProvider: detailProvider
 				}
 			],
-			structure: dataSource.layouts[1]
+			structure: dataSource.layouts[0]
 		});
 		grid.placeAt('gridContainer');
 		grid.startup();
