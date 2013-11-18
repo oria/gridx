@@ -57,8 +57,9 @@ define([
 				modules.ColumnResizer,
 				modules.ExtendedSelectRow,
 				modules.CellWidget,
+				modules.RowHeader,
+				modules.IndirectSelect,
 				modules.Edit,
-				modules.IndirectSelectColumn,
 				modules.SingleSort,
 				modules.VirtualVScroller
 			],

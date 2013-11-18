@@ -379,7 +379,7 @@ return {
 					assert(!element, 'body should not have class "gridxDnDReadyCursor"');
 				});
 		},
-		"can move up current focused row by keyboard": function(){
+		"can move up current focused row by keyboard[IE_wd_ignore]": function(){
 			return this.cellById(6, 'Genre').
 				click().
 				type(this.SPECIAL_KEYS.Control + this.SPECIAL_KEYS['Up arrow']).
@@ -388,7 +388,7 @@ return {
 					assert(vidx === 4, "move up 1 step");
 				});
 		},
-		"can move down current focused row by keyboard": function(){
+		"can move down current focused row by keyboard[IE_wd_ignore]": function(){
 			return this.cellById(1, 'Genre').
 				click().
 				type(this.SPECIAL_KEYS.Control + this.SPECIAL_KEYS['Down arrow']).
