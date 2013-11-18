@@ -107,7 +107,7 @@ define([
 							while(array.indexOf(rowIdxes, target) >= 0){
 								target--;
 							}
-							if(target >= 0){
+							if(target >= g.body.rootStart){
 								t.move(rowIdxes, target);
 							}
 						}else{
