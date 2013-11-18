@@ -446,7 +446,8 @@ define([
 					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
 					
 				}
-			};
+			}
+			g.vLayout.reLayout();
 		},
 		
 		_detailLoadError: function(row){
