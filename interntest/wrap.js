@@ -19,7 +19,7 @@ define([
 			names.push(name);
 		}
 		var browserName = remote._desiredEnvironment.browserName;
-		var picName = names.join('-') + '.png';
+		var picName = names.join('~') + '.png';
 
 		var screenshotDir = path.join(config.screenshotDir, browserName);
 		if(!fs.existsSync(screenshotDir)){

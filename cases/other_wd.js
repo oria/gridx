@@ -2,13 +2,13 @@ define([
 	'intern/chai!assert'
 ], function(assert){
 return {
-	/*"empty store-hscroller": {
+	"empty store-hscroller": {
 		"should show empty message": function(){
 			return this.assertScreenshot();
 		},
 		"should not scroll empty message together with horizontal scroller": function(){
 			return this.hScrollGridx(3, 300).assertScreenshot();
-		},
+		}/*,
 		"should work after setting a non-empty store": function(){
 			return this.execute('setStore(100);').assertScreenshot();
 		},
@@ -36,8 +36,8 @@ return {
 				elementByClassName('gridxBody').
 				moveTo().
 				assertScreenshot();
-		}
-	},
+		}*/
+	},/*
 
 	"autoHeight-hscroller": {
 		"should be able to scroll horizontally": function(){
