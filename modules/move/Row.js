@@ -126,7 +126,7 @@ define([
 							while(array.indexOf(rowIdxes, target) >= 0){
 								target--;
 							}
-							if(target >= 0){
+							if(target >= g.view.rootStart){
 								t.move(rowIdxes, target);
 							}
 						}else{
