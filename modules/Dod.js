@@ -14,10 +14,11 @@ define([
 	// "dojo/query",
 	'gridx/support/query',
 	'dijit/a11y',
+	'dijit/registry',
 	'dojo/_base/event',
 	'dojo/_base/sniff'
 ], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, 
-			Deferred, _Module, declare, baseFx, fx, keys, query, a11y, event, has){
+			Deferred, _Module, declare, baseFx, fx, keys, query, a11y, registry, event, has){
 	kernel.experimental('gridx/modules/Dod');
 
 /*=====
@@ -435,7 +436,7 @@ define([
 			
 			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){
-				var gig = dijit.byNode(gridNodes[i]);
+				var gig = registry.byNode(gridNodes[i]);
 				gs.push(gig);
 				if(!gig._refreshForDod){
 					gig._refreshForDod = true;
