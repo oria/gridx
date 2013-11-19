@@ -84,7 +84,10 @@ define([
 			window.setTimeout(function(){
 				_this.sltCondition.set('value', data.condition, null);
 				_this._onConditionChange();
-				_this._setValue(data.value);
+				window.setTimeout(function(){
+					//FIXME: Need another set timeout since something has became async for the new dijit.
+					_this._setValue(data.value);
+				},50);
 			}, 10);
 		},
 		close: function(){
