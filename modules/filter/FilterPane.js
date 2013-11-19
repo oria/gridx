@@ -57,7 +57,6 @@ define([
 			var value = this._getValue(), 
 				colId = this.sltColumn.get('value'),
 				condition = this.sltCondition.get('value');
-			
 			if(condition === 'isEmpty' || (value !== null && (condition !== 'range' || (value.start && value.end)))){
 				return {
 					colId: isAnyColumn(colId) ? '' : colId,
@@ -83,7 +82,11 @@ define([
 			window.setTimeout(function(){
 				_this.sltCondition.set('value', data.condition, null);
 				_this._onConditionChange();
-				_this._setValue(data.value);
+				window.setTimeout(function(){
+					//FIXME: Need another set timeout since something has became async for the new dijit.
+					_this._setValue(data.value);
+				},50);
+				// _this._setValue(data.value);
 			}, 10);
 		},
 		close: function(){
@@ -294,6 +297,7 @@ define([
 			}
 		},
 		_setValue: function(value){
+
 			if(!this._isValidValue(value)){return;}
 			var type = this._getType(), combo = this._needComboBox();
 			switch(type){
