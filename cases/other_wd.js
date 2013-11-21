@@ -159,7 +159,7 @@ return {
 		}
 	},
 	"sync-many features": {
-	},*/
+	},
 	"client filter-FilterBar": {
 		"body scroll position should be correct after set store[11369]": function(){
 			return this.vScrollGridx(3, 100).
@@ -174,7 +174,7 @@ return {
 					assert(bodyIsAtBottom, 'body should be scrolled to bottom');
 				});
 		}
-	},/*
+	},
 	"client filter-FilterBar-QuickFilter": {
 		"filterbar and filterdialog should update after quick filter": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
@@ -358,7 +358,7 @@ return {
 		}
 	},*/
 	"dnd rearrange": {
-		"@should show draggable cursor after select rows": function(){
+		"should show draggable cursor after select rows": function(){
 			return this.cellById(3, 'Artist').
 				click().
 				end().
