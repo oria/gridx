@@ -36,13 +36,18 @@ define([
 		};
 	}
 
-	function getScreenshot(){
+	function getScreenshot(name){
 		var picData;
+		var t = this;
 		return this.execute('hideMiscellany();').
 			wait(200).
 			takeScreenshot().
 			then(function(pic){
 				picData = pic;
+				if(name){
+					t._screenshots = t._screenshots || {};
+					t._screenshots[name] = pic;
+				}
 			}).
 			execute('showMiscellany();').
 			then(function(){
@@ -50,21 +55,21 @@ define([
 			});
 	}
 
-	function assertEqualShots(cb){
+	function assertEqualShots(name1, name2, comment){
 		var t = this;
 		return t.then(function(){
-			var pics = cb.apply(t, arguments);
-			var pic1 = pics[0];
-			var pic2 = pics[1];
-			var name = pics[2];
-			var isEqual = pic1 == pic2;
-			if(!isEqual){
-				var picPath1 = getPicPaths(name + '-1', t).picPath;
-				var picPath2 = getPicPaths(name + '-2', t).picPath;
-				fs.writeFileSync(picPath1, pic1, 'base64');
-				fs.writeFileSync(picPath2, pic2, 'base64');
+			if(t._screenshots){
+				var pic1 = t._screenshots[name1];
+				var pic2 = t._screenshots[name2];
+				var isEqual = pic1 === pic2;
+				if(!isEqual){
+					var picPath1 = getPicPaths(name1, t).picPath;
+					var picPath2 = getPicPaths(name2, t).picPath;
+					fs.writeFileSync(picPath1, pic1, 'base64');
+					fs.writeFileSync(picPath2, pic2, 'base64');
+				}
+				assert(isEqual, comment);
 			}
-			assert(isEqual, name);
 		});
 	}
 
