@@ -3,9 +3,9 @@ define([
 ], function(assert){
 return {
 	"empty store-hscroller": {
-		"@should show empty message[IE_wd_ignore][111]": function(){
+		/*"should show empty message[IE_wd_ignore][111]": function(){
 			return this.assertScreenshot();
-		}/*,
+		},
 		"should not scroll empty message together with horizontal scroller": function(){
 			return this.hScrollGridx(3, 300).assertScreenshot();
 		},
