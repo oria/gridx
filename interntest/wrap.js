@@ -6,6 +6,44 @@ define([
 	"intern/chai!assert"
 ], function(fs, path, config, wd, assert){
 
+/*=====
+function getScreenshot(name){
+	// take a screen shot and save to memory, name it to "name"
+}
+
+function assertEqualShots(name1, name2, comment){
+	// compare previously saved 2 screen shots, if not equal, raise exception and save both screenshots to disk
+}
+
+function assertScreenshot(name){
+	// take a screen shot and compare it to the reference screenshot
+	// If no reference screenshot, meke this one be the reference screenshot
+}
+
+function vScrollGridx(startPos, moveDistance){
+	// use mouse to drag the scroll bar to scroll the grid virtically
+	// can not know where the scroll bar is, so must provide start position
+}
+
+function hScrollGridx(startPos, moveDistance){
+	// use mouse to drag the scroll bar to scroll the grid horizontally
+	// can not know where the scroll bar is, so must provide start position
+}
+
+function cellById(rowId, columnId){
+	// convenient way to get a grid cell
+}
+
+function headerCellById(columnId){
+	// convenient way to get a grid header cell
+}
+
+function resetMouse(){
+	// move mouse to the up-right cornor of page.
+}
+
+=====*/
+
 	if(!fs.existsSync(config.screenshotDir)){
 		fs.mkdirSync(config.screenshotDir);
 	}
