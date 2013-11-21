@@ -368,7 +368,7 @@ return {
 					assert(tagName.toLowerCase() == 'body', 'body should have class "gridxDnDReadyCursor"');
 				});
 		},
-		"@should show normal cursor when mouse over unselected rows": function(){
+		"should show normal cursor when mouse over unselected rows": function(){
 			return this.cellById(3, 'Artist').
 				click().
 				cellById(4, 'Artist').
