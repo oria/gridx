@@ -358,7 +358,7 @@ return {
 		}
 	},*/
 	"dnd rearrange": {
-		"@should show draggable cursor after select rows": function(){
+		"should show draggable cursor after select rows": function(){
 			return this.cellById(3, 'Artist').
 				click().
 				end().
