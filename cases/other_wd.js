@@ -3,12 +3,12 @@ define([
 ], function(assert){
 return {
 	"empty store-hscroller": {
-		"should show empty message": function(){
+		/*"should show empty message": function(){
 			return this.assertScreenshot();
 		},
 		"should not scroll empty message together with horizontal scroller": function(){
 			return this.hScrollGridx(3, 300).assertScreenshot();
-		}/*,
+		},
 		"should work after setting a non-empty store": function(){
 			return this.execute('setStore(100);').assertScreenshot();
 		},
@@ -358,7 +358,7 @@ return {
 		}
 	},*/
 	"dnd rearrange": {
-		"should show draggable cursor after select rows": function(){
+		"@should show draggable cursor after select rows": function(){
 			return this.cellById(3, 'Artist').
 				click().
 				end().
