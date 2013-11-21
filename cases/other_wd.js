@@ -3,9 +3,9 @@ define([
 ], function(assert){
 return {
 	"empty store-hscroller": {
-		/*"should show empty message": function(){
+		"@should show empty message": function(){
 			return this.assertScreenshot();
-		},
+		}/*,
 		"should not scroll empty message together with horizontal scroller": function(){
 			return this.hScrollGridx(3, 300).assertScreenshot();
 		},
@@ -43,7 +43,7 @@ return {
 //        "should be able to scroll horizontally": function(){
 //            return this.hScrollGridx(3, 400).assertScreenshot();
 //        },
-		"@should not be able to resize vertically": function(){
+		"should not be able to resize vertically": function(){
 			return this.getScreenshot('before resize').
 				execute('resizeGrid({h: 1.1});').
 				getScreenshot('after resize').
