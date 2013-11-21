@@ -54,6 +54,10 @@ require(casefiles, function(){
 				var url = config.testPageUrl + "?c=" + encodeURIComponent(suiteName);
 
 				it(caseName, wrap(function(){
+					var pos = caseName.indexOf('[');
+					if(pos >= 0){
+						caseName = caseName.substring(0, pos);
+					}
 					wrap.context = [suiteName, caseName];
 					this.async(Math.max(config.testCaseTimeout, config.gridxCreationTimeout) || 5 * 60 * 1000);
 					var d = this.remote.
