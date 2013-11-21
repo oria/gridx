@@ -44,19 +44,10 @@ return {
 //            return this.hScrollGridx(3, 400).assertScreenshot();
 //        },
 		"@should not be able to resize vertically": function(){
-			var pic1, pic2;
-			return this.getScreenshot().
-				then(function(pic){
-					pic1 = pic;
-				}).
+			return this.getScreenshot('before resize').
 				execute('resizeGrid({h: 1.1});').
-				getScreenshot().
-				then(function(pic){
-					pic2 = pic;
-				}).
-				assertEqualShots(function(){
-					return [pic1, pic2, 'grid size should not change after resize'];
-				});
+				getScreenshot('after resize').
+				assertEqualShots('before resize', 'after resize', 'grid size should not change after resize');
 		}
 	},/*
 
