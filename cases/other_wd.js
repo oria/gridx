@@ -37,13 +37,13 @@ return {
 				moveTo().
 				assertScreenshot();
 		}*/
-	},/*
+	},
 
 	"autoHeight-hscroller": {
-		"should be able to scroll horizontally": function(){
-			return this.hScrollGridx(3, 400).assertScreenshot();
-		},
-		"should not be able to resize vertically": function(){
+//        "should be able to scroll horizontally": function(){
+//            return this.hScrollGridx(3, 400).assertScreenshot();
+//        },
+		"@should not be able to resize vertically": function(){
 			var pic1, pic2;
 			return this.getScreenshot().
 				then(function(pic){
@@ -58,7 +58,7 @@ return {
 					return [pic1, pic2, 'grid size should not change after resize'];
 				});
 		}
-	},
+	},/*
 
 	"autoHeight-empty store": {
 		"should show empty message correctly": function(){
