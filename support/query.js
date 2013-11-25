@@ -1,8 +1,9 @@
 define([
 	'dojo/query',
 	'dojo/_base/array',
-	'dojo/_base/lang'
-], function(query, array, lang){
+	'dojo/_base/lang',
+	'dojo/dom-class'
+], function(query, array, lang, domClass){
 	
 	var _query = function(selector, context){
 		
@@ -32,6 +33,9 @@ define([
 		}
 		
 		return nlist.filter(function(n){
+			if(domClass.contains(n, 'gridx')){
+				n = n.parentNode? n.parentNode : null;
+			}
 			return query(n).closest('.gridx')[0] === currentGrid;
 		});
 		
