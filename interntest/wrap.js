@@ -8,15 +8,15 @@ define([
 ], function(fs, path, config, wd, assert, Deferred){
 
 /*=====
-function getScreenshot(name){
+function getSnapshot(name){
 	// take a screen shot and save to memory, name it to "name"
 }
 
-function assertEqualScreenshots(name1, name2, comment){
+function assertEqualSnapshots(name1, name2, comment){
 	// compare previously saved 2 screen shots, if not equal, raise exception and save both screenshots to disk
 }
 
-function assertScreenshot(name){
+function assertSnapshot(name){
 	// take a screen shot and compare it to the reference screenshot
 	// If no reference screenshot, meke this one be the reference screenshot
 }
@@ -213,8 +213,10 @@ function resetMouse(){
 	}
 
 	function headerCellById(colId){
+		var selector = '.gridxHeader [colid="' + colId + '"].gridxCell';
 		return this.end().
-			elementByCss('.gridxHeader [colid="' + colId + '"].gridxCell');
+			waitForElementByCss(selector, 2000).
+			elementByCss(selector);
 	}
 
 	function resetMouse(){

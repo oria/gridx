@@ -39,7 +39,7 @@ return {
 		}*/
 	},
 
-	"autoHeight-hscroller": {
+	"@autoHeight-hscroller": {
 		"should be able to scroll horizontally": function(){
 			return this.hScrollGridx(3, 400).assertSnapshot();
 		},
