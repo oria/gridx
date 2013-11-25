@@ -2,25 +2,25 @@ define([
 	'intern/chai!assert'
 ], function(assert){
 return {
-	"empty store-hscroller": {
-		/*"should show empty message[IE_wd_ignore][111]": function(){
-			return this.assertScreenshot();
+	"@empty store-hscroller": {
+		"should show empty message[IE_wd_ignore][111]": function(){
+			return this.assertSnapshot();
 		},
 		"should not scroll empty message together with horizontal scroller": function(){
-			return this.hScrollGridx(3, 300).assertScreenshot();
+			return this.hScrollGridx(3, 300).assertSnapshot();
 		},
 		"should work after setting a non-empty store": function(){
-			return this.execute('setStore(100);').assertScreenshot();
+			return this.execute('setStore(100);').assertSnapshot();
 		},
 		"should work after setting back to empty store": function(){
 			return this.execute('setStore(100);').
 				execute('restoreStore();').
-				assertScreenshot();
-		},
+				assertSnapshot();
+		}/*,
 		"should show effect when hover header": function(){
 			return this.headerCellById('Genre').
 				moveTo().
-				assertScreenshot();
+				assertSnapshot();
 		},
 		"should clear previous header effect when move to another header": function(){
 			return this.headerCellById('Genre').
@@ -40,32 +40,32 @@ return {
 	},
 
 	"autoHeight-hscroller": {
-//        "should be able to scroll horizontally": function(){
-//            return this.hScrollGridx(3, 400).assertScreenshot();
-//        },
+		"should be able to scroll horizontally": function(){
+			return this.hScrollGridx(3, 400).assertSnapshot();
+		},
 		"should not be able to resize vertically": function(){
-			return this.getScreenshot('before resize').
+			return this.getSnapshot('before resize').
 				execute('resizeGrid({h: 1.1});').
-				getScreenshot('after resize').
-				assertEqualShots('before resize', 'after resize', 'grid size should not change after resize');
+				getSnapshot('after resize').
+				assertEqualSnapshots('before resize', 'after resize', 'grid size should not change after resize');
 		}
-	},/*
+	},
 
 	"autoHeight-empty store": {
 		"should show empty message correctly": function(){
-			return this.assertScreenshot();
+			return this.assertSnapshot();
 		}
 	},
 
 	"autoWidth-fixed and percentage column width-minWidth": {
 		"should have 150px Genre column": function(){
-			return this.assertScreenshot().
+			return this.assertSnapshot().
 				execute('return grid.column("Genre").headerNode().style.width;').
 				then(function(genreColumnWidth){
 					assert("150px" == genreColumnWidth, 'Column Genre width should be 150px');
 				});
 		}
-	},
+	},/*
 
 	"autoWidth-ColumnResizer": {
 		"should be able to resize column": function(){

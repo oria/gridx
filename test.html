@@ -53,6 +53,9 @@
 		.prevFocusHandler {
 			margin-top: 0 !important;
 		}
+		#loadFinishFlag {
+			display: none;
+		}
 	</style>
 	<script type="text/javascript" src="../dojo/dojo.js" data-dojo-config="
 		async: true,
@@ -67,6 +70,8 @@
 		'dojo/_base/lang',
 		'dojo/io-query',
 		'dojo/query',
+		'dojo/dom-geometry',
+		'dojo/dom-style',
 		'dojo/has',
 		'dojo/_base/array',
 		'dojo/json',
@@ -83,7 +88,7 @@
 		'gridx/core/model/cache/Sync',
 		'gridx/core/model/cache/Async',
 		'dojo/domReady!'
-	], function(lang, ioQuery, query, has, array, JSON, Memory, FilteringSelect,
+	], function(lang, ioQuery, query, domGeo, domStyle, has, array, JSON, Memory, FilteringSelect,
 		packageInfo, Deferred, DeferredList, dataSource, memoryFactory, jsonrestFactory, Grid){
 
 		packageInfo = JSON.parse(packageInfo);
@@ -481,6 +486,29 @@
 			if(!window.grid){return;}
 			if(!grid.select || !grid.select.row){return;}
 			grid.select.row.triggerOnCell = !grid.select.row.triggerOnCell;
+		};
+
+		function getDomSnapshot(node, res, origin){
+			var pos = domGeo.position(node);
+			pos.x -= origin.x;
+			pos.y -= origin.y;
+			res.pos = pos;
+			for(var i = 0; i < node.childNodes.length; ++i){
+				var child = node.childNodes[i];
+				if(child.nodeType == 1 && domStyle.get(child, 'display') != 'none'){
+					var childRes = {};
+					res.children = res.children || [];
+					res.children.push(childRes);
+					getDomSnapshot(child, childRes, origin);
+				}
+			}
+		};
+
+		window.getSnapshot = function(){
+			var res = {};
+			var origin = domGeo.position(grid.domNode);
+			getDomSnapshot(document.body, res, origin);
+			return JSON.stringify(res);
 		};
 
 		document.getElementById('totalCaseCount').innerHTML = cases.length;
