@@ -9,10 +9,9 @@ define([
 	"dojo/string",
 	"dojo/dom-class",
 	"dojo/dom-construct",
-	"dojo/keys",
 	"../core/_Module",
 	"./HiddenColumns"
-], function(declare, array, lang, event, keys, aspect, query, string, domClass, domConstruct, keys, _Module, HiddenColumns, Sort, nls){
+], function(declare, array, lang, event, keys, aspect, query, string, domClass, domConstruct, _Module, HiddenColumns, Sort, nls){
 
 	/*=====
 	return declare(HiddenColumns, {
