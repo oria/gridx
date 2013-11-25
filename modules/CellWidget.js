@@ -465,9 +465,6 @@ define([
 						setCellValue: col.setCellValue
 					});
 					this.onCellWidgetCreated(widget, cell.column);
-					if(col.onCellWidgetCreated){
-						col.onCellWidgetCreated(widget, cell.column);
-					}
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}
@@ -529,9 +526,6 @@ define([
 								setCellValue: cellDec.setCellValue
 							});
 							this.onCellWidgetCreated(widget, cell.column);
-							if(cell.column.onCellWidgetCreated){
-								cell.column.onCellWidgetCreated(widget, cell.column);
-							}
 						}catch(e){
 							console.error('Edit:', e);
 						}

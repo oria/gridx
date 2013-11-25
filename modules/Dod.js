@@ -11,7 +11,6 @@ define([
 	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/keys",
-	// "dojo/query",
 	'gridx/support/query',
 	'dijit/a11y',
 	'dijit/registry',
@@ -372,6 +371,12 @@ define([
 			if(!this.isShown(row)){return;}
 			_row.dodLoaded = true;
 			
+			var gridNodes = query('.gridx', _row.dodNode);
+			if(gridNodes.length){		//flag gridInGrid to query
+				query.isGridInGrid[this.grid.id] = true;
+			}
+	
+			
 			if(_row.defaultShow){
 				domStyle.set(_row.dodNode, 'display', 'block');
 				g.body.onRender();
@@ -419,7 +424,6 @@ define([
 						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
 						rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
-
 					}
 					
 				}
@@ -428,11 +432,7 @@ define([
 			_row.inLoading = false;
 			
 			//***for nested grid in grid ****
-			var gridNodes = dojo.query('.gridx', _row.dodNode);
-			
-			if(gridNodes.length){
-				query.isGridInGrid[this.grid.id] = true;
-			}
+	
 			
 			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){
