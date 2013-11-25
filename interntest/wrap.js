@@ -206,8 +206,10 @@ function resetMouse(){
 	}
 
 	function cellById(rowId, colId){
+		var selector = '[rowid="' + rowId + '"].gridxRow [colid="' + colId + '"].gridxCell';
 		return this.end().
-			elementByCss('[rowid="' + rowId + '"].gridxRow [colid="' + colId + '"].gridxCell');
+			waitForElementByCss(selector, 2000).
+			elementByCss(selector);
 	}
 
 	function headerCellById(colId){
