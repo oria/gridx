@@ -279,10 +279,10 @@ function resetMouse(){
 				picData = pic;
 			}).
 			execute('return getSnapshot()').
-			execute('showMiscellany();').
 			then(function(res){
 				snapshot = res;
 			}).
+			execute('showMiscellany();').
 			then(function(){
 				var needCompare = 0;
 				if(fs.existsSync(picPaths.refPicPath) &&
@@ -294,6 +294,7 @@ function resetMouse(){
 					var picsAreEqual = snapshot == refSnapshot;
 					if(!picsAreEqual){
 						fs.writeFileSync(picPaths.picPath, picData, 'base64');
+						fs.writeFileSync(picPaths.picPath + '.json', snapshot);
 					}else if(fs.existsSync(picPaths.picPath)){
 						fs.unlinkSync(picPaths.picPath);
 					}

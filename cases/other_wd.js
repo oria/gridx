@@ -2,7 +2,7 @@ define([
 	'intern/chai!assert'
 ], function(assert){
 return {
-	"@empty store-hscroller": {
+	"empty store-hscroller": {
 		"should show empty message[IE_wd_ignore][111]": function(){
 			return this.assertSnapshot();
 		},
