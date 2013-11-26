@@ -106,7 +106,7 @@ return {
 				}).
 				assertSnapshot();
 		}
-	},/*
+	},
 	"autoHeight-FilterBar-PaginationBar": {
 		"should change grid height after filtering": function(){
 			return this.elementByClassName('gridxFilterBar').
@@ -116,45 +116,45 @@ return {
 				type("1942").
 				type(this.SPECIAL_KEYS.Enter).
 				wait(500).
-				assertScreenshot();
+				assertSnapshot();
 		},
 		"should change grid height after switching page": function(){
 			return this.elementByCss('[pageindex="2"].gridxPagerStepperBtn').
 				click().
-				assertScreenshot();
+				assertSnapshot();
 		},
 		"should change grid height after changing page size": function(){
 			return this.elementByCss('[pagesize="5"].gridxPagerSizeSwitchBtn').
 				click().
-				assertScreenshot();
-		},
+				assertSnapshot();
+		},/*
 		"filter dialog value box should be empty when condition is isEmpty": function(){
 			return this.elementByClassName('gridxFilterBar').
 				click().
 				end().
-				elementByCss('.gridxFilterPaneForm [name="sltColumn"] .dijitDownArrowButton').
+				waitUntilElementByCss('.gridxFilterPaneForm [name="sltColumn"] .dijitDownArrowButton', 2000).
 				click().
 				end().
-				elementByCss('#dijit_layout_ContentPane_0_ColumnSelect_menu [aria-label="Year "].dijitMenuItem').
+				waitUntilElementByCss('#dijit_layout_ContentPane_0_ColumnSelect_menu [aria-label="Year "].dijitMenuItem', 2000).
 				click().
 				end().
-				elementByCss('.gridxFilterPaneForm [name="sltCondition"] .dijitDownArrowButton').
+				waitUntilElementByCss('.gridxFilterPaneForm [name="sltCondition"] .dijitDownArrowButton', 2000).
 				click().
 				end().
-				elementByCss('#dijit_layout_ContentPane_0_ConditionSelect_menu [aria-label="is empty "].dijitMenuItem').
+				waitUntilElementByCss('#dijit_layout_ContentPane_0_ConditionSelect_menu [aria-label="is empty "].dijitMenuItem', 2000).
 				click().
 				resetMouse().
-				assertScreenshot();
-		},
+				assertSnapshot();
+		},*/
 		"should keep header body aligned after toggle header twice": function(){
 			return this.execute('toggleHeader()').
 				execute('toggleHeader()').
 				hScrollGridx(3, 400).
-				assertScreenshot();
+				assertSnapshot();
 		}
-	},
+	},/*
 	"sync-many features": {
-	},
+	},*/
 	"client filter-FilterBar": {
 		"body scroll position should be correct after set store[11369]": function(){
 			return this.vScrollGridx(3, 100).
@@ -171,7 +171,7 @@ return {
 		}
 	},
 	"client filter-FilterBar-QuickFilter": {
-		"filterbar and filterdialog should update after quick filter": function(){
+		/*"filterbar and filterdialog should update after quick filter": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
 				type("king").
 				wait(1000).
@@ -184,7 +184,7 @@ return {
 				click().
 				wait(500).
 				assertScreenshot("filter dialog is updated");
-		},
+		},*/
 		"the clear filter button (x) should show up when typing in quick filter": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
 					type("a").
@@ -207,23 +207,23 @@ return {
 		"should filter immediately when ENTER in quick filter": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
 				type("king" + this.SPECIAL_KEYS.Enter).
-				assertScreenshot();
+				assertSnapshot();
 		},
 		"should be able to TAB from quick filter textbox to clear filter button": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
 				type("king" + this.SPECIAL_KEYS.Enter).
 				type(this.SPECIAL_KEYS.Tab).
 				type(this.SPECIAL_KEYS.Enter).
-				assertScreenshot("filter cleared");
+				assertSnapshot("filter cleared");
 		},
 		"should clear filter after setting store": function(){
 			return this.elementByCss('.gridxQuickFilterInput .dijitInputInner').
 				type("asdf" + this.SPECIAL_KEYS.Enter).
-				assertScreenshot("filter applied").
+				assertSnapshot("filter applied").
 				execute("setStore(10);").
-				assertScreenshot("filter cleared");
+				assertSnapshot("filter cleared");
 		}
-	},
+	},/*
 	"HeaderRegions": {
 		"should show header regions when mouse over or focus header": function(){
 			return this.headerCellById('id').

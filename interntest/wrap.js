@@ -313,9 +313,14 @@ function resetMouse(){
 			});
 	}
 
+	function waitUntilElementByCss(css, timeout){
+		return this.waitForElementByCss(css, timeout).elementByCss(css);
+	}
+
 	function wrap(cb){
 		return function(){
 			var remote = this.remote;
+			remote.waitUntilElementByCss = waitUntilElementByCss;
 			remote.getSnapshot = getSnapshot;
 			remote.assertEqualSnapshots = assertEqualSnapshots;
 			remote.assertSnapshot = assertSnapshot;
