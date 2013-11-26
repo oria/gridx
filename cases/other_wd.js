@@ -65,7 +65,7 @@ return {
 					assert("150px" == genreColumnWidth, 'Column Genre width should be 150px');
 				});
 		}
-	},/*
+	},
 
 	"autoWidth-ColumnResizer": {
 		"should be able to resize column": function(){
@@ -80,29 +80,33 @@ return {
 					assert(readyToResize, 'grid should be ready to resize when hovering at right place');
 				}).
 				buttonDown().
-				assertScreenshot('mouse down').
+				assertSnapshot('mouse down').
 				moveTo(100, 10).
-				assertScreenshot('move').
+				assertSnapshot('move').
 				buttonUp().
-				assertScreenshot('mouse up');
+				assertSnapshot('mouse up');
 		}
 	},
 
 	"autoWidth-autoHeight-ColumnResizer": {
 		"grid size should change accordingly after column resize": function(){
-			return this.headerCellById('Name').
+			var widthBeforeResize;
+			return this.execute('return grid.domNode.offsetWidth;').
+				then(function(width){
+					widthBeforeResize = width;
+				}).
+				headerCellById('Name').
 				moveTo(0, 10).
 				buttonDown().
 				moveTo(-200, 10).
 				buttonUp().
-				headerCellById('Length').
-				moveTo(0, 10).
-				buttonDown().
-				moveTo(-200, 10).
-				buttonUp().
-				assertScreenshot();
+				execute('return grid.domNode.offsetWidth;').
+				then(function(width){
+					assert(width < widthBeforeResize, "grid width not shrink");
+				}).
+				assertSnapshot();
 		}
-	},
+	},/*
 	"autoHeight-FilterBar-PaginationBar": {
 		"should change grid height after filtering": function(){
 			return this.elementByClassName('gridxFilterBar').
