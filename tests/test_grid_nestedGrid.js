@@ -108,9 +108,9 @@ require([
 			grid.placeAt(node);
 			grid.startup();		
 		}
-		// setTimeout(function(){
-		renderred.callback();
-		// }, 1000);
+		setTimeout(function(){
+			renderred.callback();
+		}, 1000);
 	}
 	
 	function setFormContentDeclaritively(node, renderred){

@@ -141,11 +141,18 @@ define([
 			}
 			domConstruct.place(_row.dodLoadingNode, node, 'last');
 			domConstruct.place(_row.dodNode, node, 'last');
+			// domConstruct.place(_row.dodNode, _row.dodLoadingNode, 'last');
+
+			
 			domStyle.set(_row.dodLoadingNode, 'width', w + 'px');
 			domStyle.set(_row.dodNode, 'width', w + 'px');
+			domStyle.set(_row.dodNode, 'visibility', 'hidden');
+			domStyle.set(_row.dodNode, 'overflow', 'hidden');
+			domStyle.set(_row.dodNode, 'height', '0px');
+
 			
 			domClass.add(node, 'gridxDodShown');
-			domStyle.set(_row.dodNode, 'display', 'none');
+			//domStyle.set(_row.dodNode, 'display', 'none');
 			
 			if(_row.dodLoaded){
 				this._detailLoadComplete(row);
@@ -418,6 +425,7 @@ define([
 					}
 				}else{
 					_row.dodNode.style.display = 'block';
+					_row.dodNode.style.visibility = 'visible';
 					_row.dodNode.style.height = 'auto';
 					g.body.onRender();
 					if(this.grid.rowHeader){
@@ -432,7 +440,6 @@ define([
 			_row.inLoading = false;
 			
 			//***for nested grid in grid ****
-	
 			
 			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){
@@ -440,7 +447,8 @@ define([
 				gs.push(gig);
 				if(!gig._refreshForDod){
 					gig._refreshForDod = true;
-					gig.resize();
+					// gig.resize();
+					// gig.vLayout.reLayout();
 					this.connect(gig.focus, 'tab', '_tab');
 					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
 					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
