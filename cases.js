@@ -1,6 +1,7 @@
 var testcases = [
 	'./cases/mobile',
 	'./cases/persist',
+	'./cases/filter',
 	'./cases/unselectableRows',
 	'./cases/special',
 	'./cases/lock',
