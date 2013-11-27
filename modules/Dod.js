@@ -119,7 +119,8 @@ define([
 		},
 		
 		show: function(row){
-			var _row = this._row(row);
+			var _row = this._row(row), 
+				g = this.grid;
 			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
@@ -159,6 +160,9 @@ define([
 				return;
 			}else{
 				domStyle.set(_row.dodLoadingNode, 'display', 'block');
+				if(g.autoHeight){
+					g.vLayout.reLayout();
+				}
 				_row.inLoading = true;
 			}
 			
@@ -362,7 +366,7 @@ define([
 
 		_onAfterCell: function(cell){
 			//when the first cell's content is changed, update the expando
-			if(this.arg('showExpando') && cell.node().cellIndex == 0){
+			if(this.arg('showExpando') && cell.node().cellIndex === 0){
 				this._onAfterRow(cell.row);
 			}
 		},
@@ -472,7 +476,9 @@ define([
 		},
 		
 		_getExpando: function(row){
-			if(!this.showExpando) return null;
+			if(!this.showExpando){
+				return null;
+			}
 			var tbl = query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
 			return cell? cell.firstChild : null;
@@ -530,7 +536,6 @@ define([
 			t._focusRowId = rowId;
 			var navElems = t._navElems = a11y._getTabNavigable(row.node());
 			return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
-			return false;
 			
 		},
 		_tab: function(step, evt){
