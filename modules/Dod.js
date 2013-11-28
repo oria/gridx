@@ -309,7 +309,7 @@ define([
 			var idx = node.getAttribute('rowindex');
 			
 			
-			this.toggle(this.grid.row(parseInt(idx)));
+			this.toggle(this.grid.row(parseInt(idx, 10)));
 		},
 		
 		_onRowMouseOver: function(e){
