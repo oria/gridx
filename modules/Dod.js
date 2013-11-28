@@ -389,7 +389,10 @@ define([
 	
 			
 			if(_row.defaultShow){
-				domStyle.set(_row.dodNode, 'display', 'block');
+				// domStyle.set(_row.dodNode, 'display', 'block');
+				_row.dodNode.style.display = 'block';
+				_row.dodNode.style.visibility = 'visible';
+				_row.dodNode.style.height = 'auto';
 				g.body.onRender();
 				if(this.grid.rowHeader){
 					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
