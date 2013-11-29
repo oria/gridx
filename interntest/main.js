@@ -11,11 +11,13 @@ require(casefiles, function(){
 	function findSuites(testcases){
 		var suites = {};
 		var found = 0;
-		for(var i = 0; i < testcases.length; ++i){
-			for(var suiteName in testcases[i]){
-				if(/^@/.test(suiteName)){
-					suites[suiteName.substring(1)] = testcases[i][suiteName];
-					found = 1;
+		if(!config.alwaysRunAll){
+			for(var i = 0; i < testcases.length; ++i){
+				for(var suiteName in testcases[i]){
+					if(/^@/.test(suiteName)){
+						suites[suiteName.substring(1)] = testcases[i][suiteName];
+						found = 1;
+					}
 				}
 			}
 		}
@@ -24,14 +26,16 @@ require(casefiles, function(){
 	function findCases(testcases){
 		var suites = {};
 		var found = 0;
-		for(var i = 0; i < testcases.length; ++i){
-			for(var suiteName in testcases[i]){
-				var cases = testcases[i][suiteName];
-				for(var caseName in cases){
-					if(/^@/.test(caseName)){
-						var suite = suites[suiteName] = suites[suiteName] || {};
-						suite[caseName.substring(1)] = cases[caseName];
-						found = 1;
+		if(!config.alwaysRunAll){
+			for(var i = 0; i < testcases.length; ++i){
+				for(var suiteName in testcases[i]){
+					var cases = testcases[i][suiteName];
+					for(var caseName in cases){
+						if(/^@/.test(caseName)){
+							var suite = suites[suiteName] = suites[suiteName] || {};
+							suite[caseName.substring(1)] = cases[caseName];
+							found = 1;
+						}
 					}
 				}
 			}
