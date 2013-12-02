@@ -11,6 +11,7 @@ define("gridx/modules/NavigableCell", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: navigableCell.
 		//		This module allow the elements in grid cell be focusable.
 		// description:
 		//		When focus is on a cell, press F2 to focus the first focusable element in that cell.
@@ -51,7 +52,11 @@ define("gridx/modules/NavigableCell", [
 					func = function(){
 						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
 						if(toFocus){
-							toFocus.focus();
+							try{
+								toFocus.focus();
+							}catch(e){
+								//FIXME: avoid error in IE.
+							}
 						}
 					};
 				if(has('webkit')){
@@ -85,18 +90,26 @@ define("gridx/modules/NavigableCell", [
 							colIndex = g._columnsById[t._focusColId].index,
 							dir = step > 0 ? 1 : -1,
 							checker = function(r, c){
-								return t._isNavigable(g._columns[c].id);
+								//If there's no decorator, we assume there's no focusable elements in this column
+								return t._isNavigable(g._columns[c].id) && g._columns[c].decorator;
 							};
-						body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-							t._focusColId = g._columns[obj.c].id;
-							//This kind of breaks the encapsulation...
-							var rowInfo = view.getRowInfo({visualIndex: obj.r});
-							t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-							body._focusCellCol = obj.c;
-							body._focusCellRow = obj.r;
-							t._beginNavigate(t._focusRowId, t._focusColId);
-							t._doFocus(null, step);
-						});
+						function focusNextCell(r, c){
+							body._nextCell(r, c, dir, checker).then(function(obj){
+								t._focusColId = g._columns[obj.c].id;
+								//This kind of breaks the encapsulation...
+								var rowInfo = view.getRowInfo({visualIndex: obj.r});
+								t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+								if(t._beginNavigate(t._focusRowId, t._focusColId)){
+									body._focusCellCol = obj.c;
+									body._focusCellRow = obj.r;
+									t._doFocus(null, step);
+								}else{
+									//FIXME: to avoid infinite loop
+									focusNextCell(obj.r, obj.c);
+								}
+							});
+						}
+						focusNextCell(rowIndex, colIndex);
 					});
 				}
 				return false;
@@ -114,14 +127,14 @@ define("gridx/modules/NavigableCell", [
 		_beginNavigate: function(rowId, colId){
 			var t = this;
 			if(t._isNavigable(colId)){
-				t._navigating = true;
 				t._focusColId = colId;
 				t._focusRowId = rowId;
 				var navElems = t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
-					rowId: rowId, 
+					rowId: rowId,
 					colId: colId
 				}));
-				return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+				//Intentional assignment
+				return t._navigating = (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
 			}
 			return false;
 		},

@@ -8,6 +8,7 @@ define("gridx/modules/SummaryBar", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: summaryBar.
 		//		Add summary bar to the bottom of grid.
 		// description:
 		//		Add summary based on Bar module. This module is only for conveniency and backward compatibility.
@@ -20,13 +21,18 @@ define("gridx/modules/SummaryBar", [
 
 		required: ['bar'],
 
+		//message: ''
+
 		preload: function(){
 			this.grid.bar.defs.push({
 				bar: 'bottom',
 				row: 0,
 				col: 0,
 				pluginClass: Summary,
-				className: 'gridxBarSummary'
+				className: 'gridxBarSummary',
+				message: this.arg('message'),
+				hookPoint: this,
+				hookName: 'summary'
 			});
 		}
 	});

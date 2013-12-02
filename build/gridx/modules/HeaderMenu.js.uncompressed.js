@@ -12,6 +12,7 @@ define("gridx/modules/HeaderMenu", [
 /*=====
 	var HeaderMenu = declare(_Module, {
 		// summary:
+		//		module name: headerMenu.
 		//		Add a dropdown menu button on header cell.
 		// description:
 		//		Add a dropdown menu button on the header of any column that has a "menu" defined in structure.

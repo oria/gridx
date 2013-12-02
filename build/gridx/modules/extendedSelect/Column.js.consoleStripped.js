@@ -29,6 +29,7 @@ define("gridx/modules/extendedSelect/Column", [
 
 	return declare(_Base, {
 		// summary:
+		//		module name: selectColumn.
 		//		Provides advanced column selections.
 		// description:
 		//		This module provides an advanced way for selecting columns by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple columns.
@@ -192,7 +193,7 @@ define("gridx/modules/extendedSelect/Column", [
 			t.batchConnect(
 				[g, 'onHeaderCellMouseDown', function(e){
 					if(mouse.isLeft(e) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({column: e.columnIndex}, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -207,7 +208,7 @@ define("gridx/modules/extendedSelect/Column", [
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
 						event.stop(e);
-						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({column: e.columnIndex}, g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}],
@@ -232,7 +233,7 @@ define("gridx/modules/extendedSelect/Column", [
 		_onMoveToHeaderCell: function(columnId, e){
 			if(e.shiftKey && (e.keyCode == keys.LEFT_ARROW || e.keyCode == keys.RIGHT_ARROW)){
 				var t = this, col = t.grid._columnsById[columnId];
-				t._start({column: col.index}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({column: col.index}, t.grid._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},
@@ -243,13 +244,11 @@ define("gridx/modules/extendedSelect/Column", [
 		},
 
 		_beginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollV = autoScroll.vertical;
-			autoScroll.vertical = false;
+			this.grid.autoScroll.vertical = false;
 		},
 
 		_endAutoScroll: function(){
-			this.grid.autoScroll.vertical = this._autoScrollV;
+			this.grid.autoScroll.vertical = true;
 		},
 
 		_doHighlight: function(target, toHighlight){

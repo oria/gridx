@@ -1,5 +1,5 @@
 require({cache:{
-'url:gridx/templates/FilterBar.html':"<input type=\"button\" data-dojo-type=\"dijit.form.Button\" data-dojo-props=\"\r\n\ticonClass: 'gridxFilterBarBtnIcon',\r\n\tlabel: '...',\r\n\ttitle: '${defineFilter}'\" aria-label='${defineFilter}'\r\n/><div class=\"gridxFilterBarStatus\"\r\n\t><span>${noFilterApplied}</span\r\n\t><span class=\"gridxFilterBarCloseBtn\" tabindex=\"-1\" title=\"${closeFilterBarBtn}\"><span class=\"gridxFilterBarCloseBtnText\">x</span></span\r\n></div>\r\n"}});
+'url:gridx/templates/FilterBar.html':"<input type=\"button\" data-dojo-type=\"dijit.form.Button\" data-dojo-props=\"\r\n\ticonClass: 'gridxFilterBarBtnIcon',\r\n\tlabel: '...',\r\n\ttitle: &quot;${defineFilter}&quot;\" aria-label=\"${defineFilter}\"\r\n/><div class=\"gridxFilterBarStatus\"\r\n\t><span>${noFilterApplied}</span\r\n\t><span class=\"gridxFilterBarCloseBtn\" tabindex=\"-1\" title=\"${closeFilterBarBtn}\"><span class=\"gridxFilterBarCloseBtnText\">x</span></span\r\n></div>\r\n"}});
 define("gridx/modules/filter/FilterBar", [
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
@@ -13,9 +13,10 @@ define("gridx/modules/filter/FilterBar", [
 	"dojo/string",
 	"dojo/parser",
 	"dojo/query",
+	"dojo/keys",
+	"dijit/_BidiSupport",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"../Filter",
 	"./FilterDialog",
 	"./FilterConfirmDialog",
@@ -23,11 +24,12 @@ define("gridx/modules/filter/FilterBar", [
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, keys, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
 		// summary:
+		//		module name: filterBar.
 		//		Filter bar module.
 		// description:
 		//		Show a filter bar on top of grid header. Clicking the filter bar will show a filter dialog to config conditions.
@@ -174,9 +176,21 @@ define("gridx/modules/filter/FilterBar", [
 		name: 'filterBar',
 		forced: ['filter'],
 		preload: function(){
-			var rules = this.arg('filterData');
+			var t = this,
+				g = t.grid,
+				rules;
+			if(g.persist){
+				rules = g.persist.registerAndLoad('filterBar', function(){
+					return t.filterData;
+				});
+			}
 			if(rules){
-				this.grid.filter.setFilter(this._createFilterExpr(rules), 1);
+				t.filterData = rules;
+			}else{
+				rules = t.arg('filterData');
+			}
+			if(rules){
+				g.filter.setFilter(t._createFilterExpr(rules), 1);
 			}
 		},
 		//Public-----------------------------------------------------------
@@ -189,6 +203,8 @@ define("gridx/modules/filter/FilterBar", [
 		maxRuleCount: 0,
 		
 		ruleCountToConfirmClearFilter: 2,
+
+		//useShortMessage: false,
 		
 		conditions: {
 			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
@@ -204,14 +220,14 @@ define("gridx/modules/filter/FilterBar", [
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
-			this._nls = nls;
+			this._nls = this.grid.nls;
 			this.domNode = dom.create('div', {
-				innerHTML: string.substitute(template, nls),
+				innerHTML: string.substitute(template, this._nls),
 				'class': 'gridxFilterBar'
 			});
 			parser.parse(this.domNode);
 			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.arg('closeButton'));
-			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
+			this.grid.vLayout.register(this, 'domNode', 'headerNode', -0.5);
 			this._initWidgets();
 			this._initFocus();
 			this.refresh();
@@ -219,6 +235,10 @@ define("gridx/modules/filter/FilterBar", [
 			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
 			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
+			this.aspect(this.grid.model, 'setStore', function(){
+				this.filterData = null;
+				this._buildFilterState();
+			});
 			this.loaded.callback();
 		},
 		onDomClick: function(e){
@@ -269,7 +289,7 @@ define("gridx/modules/filter/FilterBar", [
 			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
 				_this._currentSize = _this.model.size();
-				_this._totalSize = _this.model._cache.size();
+				_this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
 				_this._buildFilterState();
 			});
 		},
@@ -278,7 +298,9 @@ define("gridx/modules/filter/FilterBar", [
 			var max = this.arg('ruleCountToConfirmClearFilter');
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!this._cfmDlg){
-					this._cfmDlg = new FilterConfirmDialog();
+					this._cfmDlg = new FilterConfirmDialog({
+						grid: this.grid
+					});
 				}
 				this._cfmDlg.execute = lang.hitch(scope, callback);
 				this._cfmDlg.show();
@@ -334,7 +356,7 @@ define("gridx/modules/filter/FilterBar", [
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
 			this._currentSize = this.model.size();
-			this._totalSize = this.model._cache.size();
+			this._totalSize = this.model._cache.totalSize >= 0 ? this.model._cache.totalSize : this.model._cache.size();
 			this._buildFilterState();
 		},
 		isVisible: function(){
@@ -431,6 +453,7 @@ define("gridx/modules/filter/FilterBar", [
 		_initWidgets: function(){
 			this.btnFilter = registry.byNode(query('.dijitButton', this.domNode)[0]);
 			this.btnClose = query('.gridxFilterBarCloseBtn', this.domNode)[0];
+			this.connect(this.btnClose, 'onkeydown', '_onCloseKey');
 			this.statusNode = query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
 			domAttr.remove(this.btnFilter.focusNode, 'aria-labelledby');
 		},
@@ -439,13 +462,14 @@ define("gridx/modules/filter/FilterBar", [
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			if(!this.filterData || !this.filterData.conditions.length){
-				this.statusNode.innerHTML = this.arg('noFilterMessage', nls.filterBarMsgNoFilterTemplate);
+				this.statusNode.innerHTML = this.arg('noFilterMessage', this.grid.nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
-				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + nls.filterBarClearButton + '">'
-					 + nls.filterBarClearButton + '</a>';
+			this.statusNode.innerHTML = string.substitute(
+				this.arg('hasFilterMessage', this.arg('useShortMessage') ? this.grid.nls.summary : this.grid.nls.filterBarMsgHasFilterTemplate),
+				[this._currentSize, this._totalSize, this.grid.nls.defaultItemsName]) + 
+				'&nbsp; &nbsp; <span action="clear" tabindex="-1" title="' + this.grid.nls.filterBarClearButton + '">'
+					 + this.grid.nls.filterBarClearButton + '</span>';
 			this._buildTooltip();
 		},
 		_buildTooltip: function(){
@@ -485,7 +509,7 @@ define("gridx/modules/filter/FilterBar", [
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', nls.rangeTemplate);
+					var tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -493,11 +517,18 @@ define("gridx/modules/filter/FilterBar", [
 			}else{
 				valueString = value;
 			}
+			if(this.grid.textDir){
+				var resolvedTextDir = this.grid.textDir;
+				if(resolvedTextDir == "auto"){
+					resolvedTextDir = _BidiSupport.prototype._checkContextual(valueString);
+				}
+				valueString = '<span dir="' + resolvedTextDir + '">' + valueString + '</span>';
+			}
 			return '<span style="font-style:italic">' + this._getConditionDisplayName(condition) + '</span> ' + valueString;
 		},
 		_getConditionDisplayName: function(c){
 			var k = c.charAt(0).toUpperCase() + c.substring(1);
-			return this.arg('condition' + k, nls['condition' + k]);
+			return this.arg('condition' + k, this.grid.nls['condition' + k]);
 		},
 		_getConditionOptions: function(colId){
 			var cache = this._conditionOptions = this._conditionOptions || {};
@@ -506,7 +537,7 @@ define("gridx/modules/filter/FilterBar", [
 				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({
-						label: this.arg('condition' + k, nls['condition' + k]),
+						label: this.arg('condition' + k, this.grid.nls['condition' + k]),
 						value: s
 					});
 				}, this);
@@ -603,7 +634,7 @@ define("gridx/modules/filter/FilterBar", [
 		},
 		_doFocusClearLink: function(evt){
 			this.btnFilter.focus();
-			var link = query('a[action="clear"]')[0];
+			var link = query('span[action="clear"]')[0];
 			if(link){
 				link.focus();
 				if(evt){event.stop(evt);}
@@ -620,8 +651,15 @@ define("gridx/modules/filter/FilterBar", [
 		_doBlur: function(){
 			return true;
 		},
+		_onCloseKey: function(evt){
+			if(evt.keyCode === keys.ENTER){
+				this.hide();
+			}
+		},
+
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
+			this._cfmDlg && this._cfmDlg.destroy();
 			this.btnFilter.destroy();
 			if(this._tooltip){
 				this._tooltip.destroy();

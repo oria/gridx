@@ -18,6 +18,7 @@ define("gridx/modules/View", [
 
 	var View = declare(_Module, {
 		// summary:
+		//		module name: view.
 		//		Manages how many and what rows should be shown in the current grid body.
 		// description:
 		//		This module defines a key concept: visual index, which is the position of a row in current grid body.
@@ -150,12 +151,12 @@ define("gridx/modules/View", [
 			t._clear();
 			t.aspect(m, 'onSizeChange', '_onSizeChange');
 			t.aspect(m, 'onDelete', '_onDelete');
-			t.aspect(g, 'setStore', function(){
+			t.aspect(m, 'setStore', function(){
 				//If server store changes without notifying grid, expanded rows should remain expanded.
 				if(t.arg('clearOnSetStore')){
 					t._clear();
 				}
-			});
+			}, t, 'before');
 			t._loadLevels(persistedOpenInfo).then(function(){
 				var size = t._openInfo[''].count = m.size();
 				t.rootCount = t.rootCount || size - t.rootStart;
@@ -181,6 +182,8 @@ define("gridx/modules/View", [
 			}
 		},
 
+		clearOnSetStore: true,
+
 		rootStart: 0,
 
 		rootCount: 0,
@@ -203,25 +206,31 @@ define("gridx/modules/View", [
 				args.visualIndex = t._getVisualIndex(args.parentId, args.rowIndex);
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				//Given visual index, get row index and parent id.
-				var rootOpenned = t._openInfo[''].openned,
-					vi = t.rootStart + args.visualIndex;
-				for(var i = 0; i < rootOpenned.length; ++i){
-					var root = t._openInfo[rootOpenned[i]];
-					if(m.idToIndex(root.id) < t.rootStart){
-						vi += root.count;
-					}else{
-						break;
+				var layerId = m.layerId();
+				if(m.isId(layerId)){
+					args.rowIndex = args.visualIndex;
+					args.parentId = layerId;
+				}else{
+					var rootOpenned = t._openInfo[''].openned,
+						vi = t.rootStart + args.visualIndex;
+					for(var i = 0; i < rootOpenned.length; ++i){
+						var root = t._openInfo[rootOpenned[i]];
+						if(m.idToIndex(root.id) < t.rootStart){
+							vi += root.count;
+						}else{
+							break;
+						}
 					}
+					var info = {
+						parentId: '',
+						preCount: 0
+					};
+					while(!info.found){
+						info = t._getChild(vi, info);
+					}
+					args.rowIndex = info.rowIndex;
+					args.parentId = info.parentId;
 				}
-				var info = {
-					parentId: '',
-					preCount: 0
-				};
-				while(!info.found){
-					info = t._getChild(vi, info);
-				}
-				args.rowIndex = info.rowIndex;
-				args.parentId = info.parentId;
 			}else{
 				//Nothing we can do here...
 				return args;
@@ -466,8 +475,17 @@ define("gridx/modules/View", [
 				openInfo = t._openInfo,
 				info = openInfo[''],
 				len = info.openned.length, 
-				size = t.rootCount,
+				size = m.size(),
 				i, child, index;
+			if(size < t.rootStart + t.rootCount){
+				if(size > t.rootStart){
+					t.rootCount = size - t.rootStart;
+				}else{
+					t.rootStart = 0;
+					t.rootCount = size;
+				}
+			}
+			size = t.rootCount;
 			for(i = 0; i < len; ++i){
 				child = openInfo[info.openned[i]];
 				index = m.idToIndex(child.id);
@@ -525,12 +543,19 @@ define("gridx/modules/View", [
 					info.count -= count;
 					info = openInfo[info.parentId];
 				}
-				t.visualCount -= count;
+				//sometimes number typed ID can be accidentally changed to string type.
+				if(String(parentId) == String(model.layerId()) && rowIndex >= t.rootStart && rowIndex < t.rootStart + t.rootCount){
+					t.rootCount--;
+				}
+				var rootIndex = model.idToIndex(model.rootId(rowId));
+				if(rootIndex >= t.rootStart && rootIndex < t.rootStart + t.rootCount){
+					t.visualCount -= count;
+				}
 			}else{
 				//FIXME: what to do if some unknown row is deleted?
 				this._clear();
-				this.grid.body.lazyRefresh();
 			}
+			this.grid.body.lazyRefresh();
 		}
 	});
 });

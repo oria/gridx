@@ -1584,6 +1584,9 @@ return function(query, options){
 				for(var sort, i=0; sort = sortSet[i]; i++){
 					var aValue = a[sort.attribute];
 					var bValue = b[sort.attribute];
+					// valueOf enables proper comparison of dates
+					aValue = aValue != null ? aValue.valueOf() : aValue;
+					bValue = bValue != null ? bValue.valueOf() : bValue;
 					if (aValue != bValue){
 						return !!sort.descending == (aValue == null || aValue > bValue) ? -1 : 1;
 					}
@@ -2872,7 +2875,7 @@ define(["./_base/kernel", "require", "./has", "./_base/array", "./_base/config",
 			// summary:
 			//		get the root bundle which instructs which other bundles are required to construct the localized bundle
 			require([bundlePathAndName], function(root){
-				var current = lang.clone(root.root),
+				var current = lang.clone(root.root || root.ROOT),// 1.6 built bundle defined ROOT
 					availableLocales = getAvailableLocales(!root._v1x && root, locale, bundlePath, bundleName);
 				require(availableLocales, function(){
 					for (var i = 1; i<availableLocales.length; i++){
@@ -3566,7 +3569,7 @@ string.trim = String.prototype.trim ?
 	 //		Returns the trimmed string
 	 // description:
 	 //		This version of trim() was taken from [Steven Levithan's blog](http://blog.stevenlevithan.com/archives/faster-trim-javascript).
-	 //		The short yet performant version of this function is dojo.trim(),
+	 //		The short yet performant version of this function is dojo/_base/lang.trim(),
 	 //		which is part of Dojo base.  Uses String.prototype.trim instead, if available.
 	 return "";	// String
  };
@@ -5329,11 +5332,13 @@ return declare("dojo.Stateful", null, {
 	//		would have a custom getter of _fooGetter and a custom setter of _fooSetter.
 	//
 	// example:
-	//	|	var obj = new dojo.Stateful();
-	//	|	obj.watch("foo", function(){
-	//	|		0 && console.log("foo changed to " + this.get("foo"));
+	//	|	require(["dojo/Stateful", function(Stateful) {
+	//	|		var obj = new Stateful();
+	//	|		obj.watch("foo", function(){
+	//	|			0 && console.log("foo changed to " + this.get("foo"));
+	//	|		});
+	//	|		obj.set("foo","bar");
 	//	|	});
-	//	|	obj.set("foo","bar");
 
 	// _attrPairNames: Hash
 	//		Used across all instances a hash to cache attribute names and their getter 
@@ -5378,10 +5383,12 @@ return declare("dojo.Stateful", null, {
 		//		Get a named property on a Stateful object. The property may
 		//		potentially be retrieved via a getter method in subclasses. In the base class
 		//		this just retrieves the object's property.
-		//		For example:
-		//	|	stateful = new dojo.Stateful({foo: 3});
-		//	|	stateful.get("foo") // returns 3
-		//	|	stateful.foo // returns 3
+		// example:
+		//	|	require(["dojo/Stateful", function(Stateful) {
+		//	|		var stateful = new Stateful({foo: 3});
+		//	|		stateful.get("foo") // returns 3
+		//	|		stateful.foo // returns 3
+		//	|	});
 
 		return this._get(name, this._getAttrNames(name)); //Any
 	},
@@ -5397,18 +5404,19 @@ return declare("dojo.Stateful", null, {
 		// description:
 		//		Sets named properties on a stateful object and notifies any watchers of
 		//		the property. A programmatic setter may be defined in subclasses.
-		//		For example:
-		//	|	stateful = new dojo.Stateful();
-		//	|	stateful.watch(function(name, oldValue, value){
-		//	|		// this will be called on the set below
-		//	|	}
-		//	|	stateful.set(foo, 5);
-		//
+		// example:
+		//	|	require(["dojo/Stateful", function(Stateful) {
+		//	|		var stateful = new Stateful();
+		//	|		stateful.watch(function(name, oldValue, value){
+		//	|			// this will be called on the set below
+		//	|		}
+		//	|		stateful.set(foo, 5);
 		//	set() may also be called with a hash of name/value pairs, ex:
-		//	|	myObj.set({
-		//	|		foo: "Howdy",
-		//	|		bar: 3
-		//	|	})
+		//	|		stateful.set({
+		//	|			foo: "Howdy",
+		//	|			bar: 3
+		//	|		});
+		//	|	});
 		//	This is equivalent to calling set(foo, "Howdy") and set(bar, 3)
 
 		// If an object is used, iterate through object
@@ -5774,7 +5782,16 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 
 	var ios4 = has("ios") < 5;
 	
-	var msPointer = navigator.msPointerEnabled;
+	var msPointer = navigator.pointerEnabled || navigator.msPointerEnabled,
+		pointer = (function () {
+			var pointer = {};
+			for (var type in { down: 1, move: 1, up: 1, cancel: 1, over: 1, out: 1 }) {
+				pointer[type] = !navigator.pointerEnabled ?
+					"MSPointer" + type.charAt(0).toUpperCase() + type.slice(1) :
+					"pointer" + type;
+			}
+			return pointer;
+		})();
 
 	// Click generation variables
 	var clicksInited, clickTracker, clickTarget, clickX, clickY, clickDx, clickDy, clickTime;
@@ -5817,7 +5834,7 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 	function marked(/*DOMNode*/ node){
 		// Test if a node or its ancestor has been marked with the dojoClick property to indicate special processing,
 		do{
-			if(node.dojoClick){ return node.dojoClick; }
+			if(node.dojoClick !== undefined){ return node.dojoClick; }
 		}while(node = node.parentNode);
 	}
 	
@@ -5826,7 +5843,9 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		//		Setup touch listeners to generate synthetic clicks immediately (rather than waiting for the browser
 		//		to generate clicks after the double-tap delay) and consistently (regardless of whether event.preventDefault()
 		//		was called in an event listener. Synthetic clicks are generated only if a node or one of its ancestors has
-		//		its dojoClick property set to truthy.
+		//      its dojoClick property set to truthy. If a node receives synthetic clicks because one of its ancestors has its
+		//      dojoClick property set to truthy, you can disable synthetic clicks on this node by setting its own dojoClick property
+		//      to falsy.
 		
 		clickTracker  = !e.target.disabled && marked(e.target); // click threshold = true, number or x/y object
 		if(clickTracker){
@@ -5907,8 +5926,8 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		if(msPointer){
 			 // MSPointer (IE10+) already has support for over and out, so we just need to init click support
 			domReady(function(){
-				win.doc.addEventListener("MSPointerDown", function(evt){
-					doClicks(evt, "MSPointerMove", "MSPointerUp");
+				win.doc.addEventListener(pointer.down, function(evt){
+					doClicks(evt, pointer.move, pointer.up);
 				}, true);
 			});		
 		}else{
@@ -5985,7 +6004,11 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 
 						// Unlike a listener on "touchmove", on(node, "dojotouchmove", listener) fires when the finger
 						// drags over the specified node, regardless of which node the touch started on.
-						on.emit(newNode, "dojotouchmove", copyEventProps(evt));
+						if(!on.emit(newNode, "dojotouchmove", copyEventProps(evt))){
+							// emit returns false when synthetic event "dojotouchmove" is cancelled, so we prevent the
+							// default behavior of the underlying native event "touchmove".
+							evt.preventDefault();
+						}
 					}
 				});
 
@@ -6006,14 +6029,14 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 
 	//device neutral events - touch.press|move|release|cancel/over/out
 	var touch = {
-		press: dualEvent("mousedown", "touchstart", "MSPointerDown"),
-		move: dualEvent("mousemove", "dojotouchmove", "MSPointerMove"),
-		release: dualEvent("mouseup", "dojotouchend", "MSPointerUp"),
-		cancel: dualEvent(mouse.leave, "touchcancel", hasTouch?"MSPointerCancel":null),
-		over: dualEvent("mouseover", "dojotouchover", "MSPointerOver"),
-		out: dualEvent("mouseout", "dojotouchout", "MSPointerOut"),
-		enter: mouse._eventHandler(dualEvent("mouseover","dojotouchover", "MSPointerOver")),
-		leave: mouse._eventHandler(dualEvent("mouseout", "dojotouchout", "MSPointerOut"))
+		press: dualEvent("mousedown", "touchstart", pointer.down),
+		move: dualEvent("mousemove", "dojotouchmove", pointer.move),
+		release: dualEvent("mouseup", "dojotouchend", pointer.up),
+		cancel: dualEvent(mouse.leave, "touchcancel", hasTouch ? pointer.cancel : null),
+		over: dualEvent("mouseover", "dojotouchover", pointer.over),
+		out: dualEvent("mouseout", "dojotouchout", pointer.out),
+		enter: mouse._eventHandler(dualEvent("mouseover","dojotouchover", pointer.over)),
+		leave: mouse._eventHandler(dualEvent("mouseout", "dojotouchout", pointer.out))
 	};
 
 	/*=====
@@ -6022,13 +6045,13 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		//		This module provides unified touch event handlers by exporting
 		//		press, move, release and cancel which can also run well on desktop.
 		//		Based on http://dvcs.w3.org/hg/webevents/raw-file/tip/touchevents.html
-		//		Also, if the dojoClick property is set to true on a DOM node, dojo/touch generates
-		//		click events immediately for this node and its descendants, to avoid the
-		//		delay before native browser click events, and regardless of whether evt.preventDefault()
-		//		was called in a touch.press event listener.
+		//      Also, if the dojoClick property is set to truthy on a DOM node, dojo/touch generates
+		//      click events immediately for this node and its descendants (except for descendants that
+		//      have a dojoClick property set to falsy), to avoid the delay before native browser click events,
+		//      and regardless of whether evt.preventDefault() was called in a touch.press event listener.
 		//
 		// example:
-		//		Used with dojo.on
+		//		Used with dojo/on
 		//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
 		//		|		on(node, touch.press, function(e){});
 		//		|		on(node, touch.move, function(e){});
@@ -6049,7 +6072,9 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		// example:
 		//		Have dojo/touch generate clicks without delay, with a move threshold of 50 pixels horizontally and 10 pixels vertically
 		//		|	node.dojoClick = {x:50, y:5};
-		
+		// example:
+		//    Disable clicks without delay generated by dojo/touch on a node that has an ancestor with property dojoClick set to truthy
+		//    |  node.dojoClick = false;		
 
 		press: function(node, listener){
 			// summary:
@@ -6703,7 +6728,7 @@ define(["./_base/lang", "./sniff", "./_base/window", "./dom", "./dom-geometry", 
 					isWK = has("webkit");
 				// if an untested browser, then use the native method
 				if(node == body || node == html){ return; }
-				if(!(has("mozilla") || isIE || isWK || has("opera")) && ("scrollIntoView" in node)){
+				if(!(has("mozilla") || isIE || isWK || has("opera") || has("trident")) && ("scrollIntoView" in node)){
 					node.scrollIntoView(false); // short-circuit to native if possible
 					return;
 				}
@@ -7422,6 +7447,7 @@ define(["./_base/kernel", "require", "./has", "./request"], function(dojo, requi
 		//		"dojo.cache" style of call):
 		//		| //If template.html contains "<h1>Hello</h1>" that will be
 		//		| //the value for the text variable.
+		//		| //Note: This is pre-AMD, deprecated syntax
 		//		| var text = dojo["cache"]("my.module", "template.html");
 		// example:
 		//		To ask dojo.cache to fetch content and store it in the cache, and sanitize the input
@@ -7430,12 +7456,14 @@ define(["./_base/kernel", "require", "./has", "./request"], function(dojo, requi
 		//		dojo.cache calls, use the "dojo.cache" style of call):
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
 		//		| //text variable will contain just "<h1>Hello</h1>".
+		//		| //Note: This is pre-AMD, deprecated syntax
 		//		| var text = dojo["cache"]("my.module", "template.html", {sanitize: true});
 		// example:
 		//		Same example as previous, but demonstrates how an object can be passed in as
 		//		the first argument, then the value argument can then be the second argument.
 		//		| //If template.html contains "<html><body><h1>Hello</h1></body></html>", the
 		//		| //text variable will contain just "<h1>Hello</h1>".
+		//		| //Note: This is pre-AMD, deprecated syntax
 		//		| var text = dojo["cache"](new dojo._Url("my/module/template.html"), {sanitize: true});
 
 		//	 * (string string [value]) => (module, url, value)
@@ -20314,7 +20342,7 @@ exports.isFormElement = function(/*Event*/ e){
 	if(t.nodeType == 3 /*TEXT_NODE*/){
 		t = t.parentNode;
 	}
-	return " button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
+	return " a button textarea input select option ".indexOf(" " + t.tagName.toLowerCase() + " ") >= 0;	// Boolean
 };
 
 return exports;
@@ -22300,6 +22328,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/on",
+	"dojo/i18n",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
@@ -22321,9 +22350,10 @@ define([
 	"./modules/ColumnWidth",
 	"./modules/Focus",
 	"dijit/_BidiSupport",
+	"dojo/i18n!./nls/gridx",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
-], function(declare, lang, has, on, domClass, domGeometry, query, metrics,
+], function(declare, lang, has, on, i18n, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
 
@@ -22397,10 +22427,21 @@ define([
 			//		protected extension
 			var t = this;
 			t.inherited(arguments);
+			if(t.touch === undefined){
+				t.touch = has('ios') || has('android');
+			}
+			if(t.touch){
+				domClass.add(t.domNode, 'gridxTouch');
+			}else{
+				domClass.add(t.domNode, 'gridxDesktop');
+			}
+			if(!t.isLeftToRight()){
+				domClass.add(t.domNode, 'gridxRtl');
+			}
+			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang);
 			t._eventFlags = {};
 			t.modules = t.coreModules.concat(t.modules || []);
 			t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
-			domClass.toggle(t.domNode, 'gridxRtl', !t.isLeftToRight());
 			t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 			t._initEvents(t._compNames, t._eventNames);
 			t._init();
@@ -22440,9 +22481,13 @@ define([
 		//		If true, the grid's width is determined by the total width of the columns, so that there will
 		//		never be horizontal scroller bar.
 		autoWidth: false,
+
+		// touch: Boolean
+		//		Whether grid is run in touch environment
+		//		If undefined, automatically set to true on mobile devices (like ios or android)
+		//touch: undefined,
 	=====*/
 
-		
 		resize: function(changeSize){
 			// summary:
 			//		Resize the grid using given width and height.
@@ -22477,7 +22522,8 @@ define([
 		_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],
 	
 		_eventNames: [
-			'Click', 'DblClick', 
+			'TouchStart', 'TouchEnd',
+			'Click', 'DblClick',
 			'MouseDown', 'MouseUp', 
 			'MouseOver', 'MouseOut', 
 			'MouseMove', 'ContextMenu',
@@ -22511,7 +22557,7 @@ define([
 		},
 		//event handling end
 
-		_isCopyEvent: function(evt){
+		_isCtrlKey: function(evt){
 			// summary:
 			//		On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
 			//		if you need to implement some handler for Ctrl+click.
@@ -22868,12 +22914,30 @@ define([
 	}
 
 	function normalizeModules(self){
-		var mods = [],
-			modules = self.modules,
-			len = modules.length;
-		for(var i = 0; i < len; ++i){
-			var m = modules[i];
-			if(isFunc(m) || isString(m)){
+		var mods = self.modules,
+			len = mods.length,
+			modules = [],
+			i, m;
+		for(i = 0; i < len; ++i){
+			m = mods[i];
+			if(isString(m)){
+				try{
+					m = require(m);
+				}catch(e){
+					console.error(e);
+				}
+			}
+			if(lang.isArray(m)){
+				modules = modules.concat(m);
+			}else{
+				modules.push(m);
+			}
+		}
+		mods = [];
+		len = modules.length;
+		for(i = 0; i < len; ++i){
+			m = modules[i];
+			if(isFunc(m)){
 				m = {
 					moduleClass: m
 				};
@@ -22893,7 +22957,7 @@ define([
 				}
 			}
 			console.error("The " + (i + 1 - self.coreModules.length) +
-				"-th declared module can NOT be found, please require it before using it");
+				"-th declared module can NOT be found, please require it before using it:", m);
 		}
 		self.modules = mods;
 	}
@@ -23008,6 +23072,11 @@ define([
 				return lang.mixin({}, col);
 			});
 			t._columnsById = configColumns(t._columns);
+			
+			if(t.edit){			//FIX ME: this is ugly
+								//this will not run in the first setColumns function
+				t.edit._init();
+			}
 			if(t.model){
 				t.model._cache.onSetColumns(t._columnsById);
 			}
@@ -23087,6 +23156,13 @@ define([
 			t.modelExtensions = t.modelExtensions || [];
 			t.setColumns(t.structure);
 
+			if(t.touch){
+				if(t.touchModules){
+					t.modules = t.modules.concat(t.touchModules);
+				}
+			}else if(t.desktopModules){
+				t.modules = t.modules.concat(t.desktopModules);
+			}
 			normalizeModules(t);
 			checkForced(t);
 			removeDuplicate(t);
@@ -23247,8 +23323,9 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/aspect"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect){
+	"dojo/aspect",
+	"./cache/Sync"
+], function(require, declare, array, lang, Deferred, DeferredList, aspect, Sync){
 
 /*=====
 	return declare([], {
@@ -23291,7 +23368,7 @@ define([
 
 		indexToId: function(index, parentId){
 			// summary:
-			//		Transform row index to row ID
+			//		Transform row index to row ID. If not exist, return undefined.
 			// index: Integer
 			//		The row index
 			// parentId: String?
@@ -23303,7 +23380,7 @@ define([
 
 		idToIndex: function(id){
 			// summary:
-			//		Transform row ID to row index
+			//		Transform row ID to row index. If not exist, return -1.
 			// id: String
 			//		The row ID
 			// returns:
@@ -23522,7 +23599,7 @@ define([
 	return declare([], {
 		constructor: function(args){
 			var t = this,
-				cacheClass = args.cacheClass;
+				cacheClass = args.cacheClass || Sync;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
 			t._exts = {};
@@ -23731,6 +23808,558 @@ define([
 					var ext = new exts[i](this, args);
 					this._exts[ext.name] = ext;
 				}
+			}
+		}
+	});
+});
+
+},
+'gridx/core/model/cache/Sync':function(){
+define([
+	'dojo/_base/declare',
+	'dojo/_base/array',
+	'dojo/_base/lang',
+	'dojo/_base/Deferred',
+	'../_Extension'
+], function(declare, array, lang, Deferred, _Extension){
+
+/*=====
+	return declare(_Extension, function(){
+		// summary:
+		//		Abstract base cache class, providing cache data structure and some common cache functions.
+	});
+=====*/
+
+	var hitch = lang.hitch,
+		mixin = lang.mixin,
+		indexOf = array.indexOf;
+
+	function fetchChildren(self){
+		var s = self._struct,
+			pids = s[''].slice(1),
+			pid,
+			appendChildren = function(pid){
+				[].push.apply(pids, s[pid].slice(1));
+			};
+		while(pids.length){
+			pid = pids.shift();
+			self._storeFetch({
+				parentId: pid
+			}).then(lang.partial(appendChildren, pid));
+		}
+	}
+
+	return declare(_Extension, {
+		constructor: function(model, args){
+			var t = this;
+			t.setStore(args.store);
+			t.columns = lang.mixin({}, args.columnsById || args._columnsById);
+			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
+				'hasChildren', 'children', 'keep', 'free', 'layerId', 'setLayer', 'layerUp');
+		},
+
+		destroy: function(){
+			this.inherited(arguments);
+			this._layer = '';
+			this.clear();
+		},
+
+		setStore: function(store){
+			var t = this,
+				c = 'aspect',
+				old = store.fetch;
+			//Disconnect store events.
+			t.destroy();
+			t._cnnts = [];
+			t.store = store;
+			if(!old && store.notify){
+				//The store implements the dojo.store.Observable API
+				t[c](store, 'notify', function(item, id){
+					if(item === undefined){
+						t._onDelete(id);
+					}else if(id === undefined){
+						t._onNew(item);
+					}else{
+						t._onSet(item);
+					}
+				});
+			}else{
+				t[c](store, old ? "onSet" : "put", "_onSet");
+				t[c](store, old ? "onNew" : "add", "_onNew");
+				t[c](store, old ? "onDelete" : "remove", "_onDelete");
+			}
+		},
+
+		when: function(args, callback){
+			var d = new Deferred();
+			try{
+				if(callback){
+					callback();
+				}
+				d.callback();
+			}catch(e){
+				d.errback(e);
+			}
+			return d;
+		},
+
+		//Public----------------------------------------------
+		clear: function(){
+			var t = this;
+			t._filled = 0;
+			t._priority = [];
+			t._struct = {};
+			t._cache = {};
+			t._size = {};
+			//virtual root node, with id ''.
+			t._struct[''] = [];
+			t._size[''] = -1;
+			t.totalSize = undefined;
+		},
+
+		layerId: function(){
+			return this._layer;
+		},
+
+		setLayer: function(id){
+			this._layer = id;
+			this.model._msg('storeChange');
+			this.model._onSizeChange();
+		},
+
+		layerUp: function(){
+			var pid = this.parentId(this._layer);
+			this.setLayer(pid);
+		},
+
+		byIndex: function(index, parentId){
+			this._init();
+			return this._cache[this.indexToId(index, parentId)];
+		},
+
+		byId: function(id){
+			this._init();
+			return this._cache[id];
+		},
+
+		indexToId: function(index, parentId){
+			this._init();
+			var items = this._struct[this.model.isId(parentId) ? parentId : this.layerId()];
+			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
+		},
+
+		idToIndex: function(id){
+			this._init();
+			var s = this._struct,
+				pid = s[id] && s[id][0],
+				index = indexOf(s[pid] || [], id);
+			return index > 0 ? index - 1 : -1;
+		},
+
+		treePath: function(id){
+			this._init();
+			var s = this._struct,
+				path = [];
+			while(id !== undefined){
+				path.unshift(id);
+				id = s[id] && s[id][0];
+			}
+			if(path[0] !== ''){
+				path = [];
+			}else{
+				path.pop();
+			}
+			return path;
+		},
+
+		rootId: function(id){
+			var path = this.treePath(id);
+			if(path.length > 1){
+				return path[1];
+			}else if(!path.length){
+				return null;
+			}
+			return id;
+		},
+
+		parentId: function(id){
+			return this.treePath(id).pop();
+		},
+
+		hasChildren: function(id){
+			var t = this,
+				s = t.store,
+				c;
+			t._init();
+			c = t.byId(id);
+			return s.hasChildren && s.hasChildren(id, c && c.item) && s.getChildren;
+		},
+
+		children: function(parentId){
+			this._init();
+			parentId = this.model.isId(parentId) ? parentId : '';
+			var size = this._size[parentId],
+				children = [],
+				i = 0;
+			for(; i < size; ++i){
+				children.push(this.indexToId(i, parentId));
+			}
+			return children;
+		},
+
+		size: function(parentId){
+			this._init();
+			var s = this._size[this.model.isId(parentId) ? parentId : this.layerId()];
+			return s >= 0 ? s : -1;
+		},
+
+		keep: function(){},
+		free: function(){},
+
+		//Events--------------------------------------------
+		onBeforeFetch: function(){},
+		onAfterFetch: function(){},
+		onLoadRow: function(){},
+
+		onSetColumns: function(columns){
+			var t = this, id, c, colId, col;
+			t.columns = lang.mixin({}, columns);
+			for(id in t._cache){
+				c = t._cache[id];
+				for(colId in columns){
+					col = columns[colId];
+					c.data[colId] = t._formatCell(c.rawData, id, col.id);
+				}
+			}
+		},
+
+		//Protected-----------------------------------------
+		_init: function(){
+			var t = this;
+			if(!t._filled){
+				t._storeFetch({ start: 0 });
+				if(t.store.getChildren){
+					fetchChildren(t);
+				}
+				t.model._onSizeChange();
+			}
+		},
+
+		_itemToObject: function(item){
+			var s = this.store,
+				obj = {};
+			if(s.fetch){
+				array.forEach(s.getAttributes(item), function(attr){
+					obj[attr] = s.getValue(item, attr);
+				});
+				return obj;	
+			}
+			return item;
+		},
+
+		_formatCell: function(rawData, rowId, colId){
+			var col = this.columns[colId];
+			return col.formatter ? col.formatter(rawData, rowId) : rawData[col.field || colId];
+		},
+
+		_formatRow: function(rowData, rowId){
+			var cols = this.columns, res = {}, colId;
+			for(colId in cols){
+				res[colId] = this._formatCell(rowData, rowId, colId);
+			}
+			return res;
+		},
+
+		_addRow: function(id, index, rowData, item, parentId){
+			var t = this,
+				st = t._struct,
+				pr = t._priority,
+				pid = t.model.isId(parentId) ? parentId : '',
+				ids = st[pid],
+				i;
+			if(!ids){
+				throw new Error("Fatal error of _Cache._addRow: parent item " + pid + " of " + id + " is not loaded");
+			}
+			var oldId = ids[index + 1];
+			if(t.model.isId(oldId) && oldId !== id){
+				console.error("Error of _Cache._addRow: different row id " + id + " and " + ids[index + 1] + " for same row index " + index);
+			}
+			ids[index + 1] = id;
+			st[id] = st[id] || [pid];
+			if(pid === ''){
+				i = indexOf(pr, id);
+				if(i >= 0){
+					pr.splice(i, 1);
+				}
+				pr.push(id);
+			}
+			t._cache[id] = {
+				data: t._formatRow(rowData, id),
+				rawData: rowData,
+				item: item
+			};
+			t.onLoadRow(id);
+		},
+
+		_storeFetch: function(options, onFetched){
+//            0 && console.debug("\tFETCH parent: ",
+//                    options.parentId, ", start: ",
+//                    options.start || 0, ", count: ",
+//                    options.count, ", end: ",
+//                    options.count && (options.start || 0) + options.count - 1, ", options:",
+//                    this.options);
+
+			var t = this,
+				s = t.store,
+				d = new Deferred(),
+				parentId = t.model.isId(options.parentId) ? options.parentId : '',
+				req = mixin({}, t.options || {}, options),
+				onError = hitch(d, d.errback),
+				results;
+			function onBegin(size){
+				t._size[parentId] = parseInt(size, 10);
+			}
+			function onComplete(items){
+				//FIXME: store does not support getting total size after filter/query, so we must change the protocal a little.
+				if(items.ioArgs && items.ioArgs.xhr){
+					var range = results.ioArgs.xhr.getResponseHeader("Content-Range");
+					if(range && (range = range.match(/(.+)\//))){
+						t.totalSize = +range[1];
+					}else{
+						t.totalSize = undefined;
+					}
+				}
+				try{
+					var start = options.start || 0,
+						i = 0,
+						item;
+					for(; item = items[i]; ++i){
+						t._addRow(s.getIdentity(item), start + i, t._itemToObject(item), item, parentId);
+					}
+					d.callback();
+				}catch(e){
+					d.errback(e);
+				}
+			}
+			t._filled = 1;
+			t.onBeforeFetch(req);
+			if(parentId === ''){
+				if(s.fetch){
+					s.fetch(mixin(req, {
+						onBegin: onBegin,
+						onComplete: onComplete,
+						onError: onError
+					}));
+				}else{
+					results = s.query(req.query || {}, req);
+					Deferred.when(results.total, onBegin);
+					Deferred.when(results, onComplete, onError);
+				}
+			}else if(t.hasChildren(parentId)){
+				results = s.getChildren(t.byId(parentId).item, req);
+				if('total' in results){
+					Deferred.when(results.total, onBegin);
+				}else{
+					Deferred.when(results, function(results){
+						onBegin(results.length);
+					});
+				}
+				Deferred.when(results, onComplete, onError);
+			}else{
+				d.callback();
+			}
+			d.then(function(){
+				t.onAfterFetch();
+			});
+			return d;
+		},
+
+		//--------------------------------------------------------------------------
+		_onSet: function(item){
+			var t = this,
+				id = t.store.getIdentity(item),
+				index = t.idToIndex(id),
+				path = t.treePath(id),
+				old = t._cache[id];
+			if(path.length){
+				t._addRow(id, index, t._itemToObject(item), item, path.pop());
+			}
+			t.onSet(id, index, t._cache[id], old);
+		},
+
+		_onNew: function(item, parentInfo){
+			var t = this,
+				s = t.store,
+				row = t._itemToObject(item),
+				parentItem = parentInfo && parentInfo[s.fetch ? 'item' : 'parent'],
+				parentId = parentItem ? s.getIdentity(parentItem) : '',
+				id = s.getIdentity(item),
+				size = t._size[''];
+			t.clear();
+			t.onNew(id, 0, {
+				data: t._formatRow(row, id),
+				rawData: row,
+				item: item
+			});
+			if(!parentItem && size >= 0){
+				t._size[''] = size + 1;
+				if(t.totalSize >= 0){
+					t.totalSize = size + 1;
+				}
+				t.model._onSizeChange();
+			}
+		},
+
+		_onDelete: function(item){
+			var t = this,
+				s = t.store,
+				st = t._struct,
+				id = s.fetch ? s.getIdentity(item) : item,
+				path = t.treePath(id);
+			if(path.length){
+				var children, i, j,
+					ids = [id],
+					parentId = path[path.length - 1],
+					sz = t._size,
+					size = sz[''],
+					index = indexOf(st[parentId], id);
+				//This must exist, because we've already have treePath
+				st[parentId].splice(index, 1);
+				--sz[parentId];
+
+				for(i = 0; i < ids.length; ++i){
+					children = st[ids[i]];
+					if(children){
+						for(j = children.length - 1; j > 0; --j){
+							ids.push(children[j]);
+						}
+					}
+				}
+				for(i = ids.length - 1; i >= 0; --i){
+					j = ids[i];
+					delete t._cache[j];
+					delete st[j];
+					delete sz[j];
+					t.onDelete(j);
+				}
+				i = indexOf(t._priority, id);
+				if(i >= 0){
+					t._priority.splice(i, 1);
+				}
+				t.onDelete(id, index - 1, path);
+				if(!parentId && size >= 0){
+					sz[''] = size - 1;
+					if(t.totalSize >= 0){
+						t.totalSize = size - 1;
+					}
+					t.model._onSizeChange();
+				}
+			}else{
+				//FIXME: Don't know what to do if the deleted row was not loaded.
+				t.clear();
+				t.onDelete(id);
+//                var onBegin = hitch(t, _onBegin),
+//                    req = mixin({}, t.options || {}, {
+//                        start: 0,
+//                        count: 1
+//                    });
+//                setTimeout(function(){
+//                    if(s.fetch){
+//                        s.fetch(mixin(req, {
+//                            onBegin: onBegin
+//                        }));
+//                    }else{
+//                        var results = s.query(req.query, req);
+//                        Deferred.when(results.total, onBegin);
+//                    }
+//                }, 10);
+			}
+		}
+	});
+});
+
+},
+'gridx/core/model/_Extension':function(){
+define([
+	'dojo/_base/declare',
+	"dojo/_base/lang",
+	'dojo/aspect'
+], function(declare, lang, aspect){
+
+/*=====
+	return declare([], {
+		// summary:
+		//		Abstract base class for all model components (including cache)
+
+		onNew: function(){},
+		onDelete: function(){},
+		onSet: function(){}
+	});
+=====*/
+
+	return declare([], {
+		constructor: function(model){
+			var t = this,
+				i = t.inner = model._model;
+			t._cnnts = [];
+			t.model = model;
+			model._model = t;
+			if(i){
+				t.aspect(i, 'onDelete', '_onDelete');
+				t.aspect(i, 'onNew', '_onNew');
+				t.aspect(i, 'onSet', '_onSet');
+			}
+		},
+
+		destroy: function(){
+			for(var i = 0, len = this._cnnts.length; i < len; ++i){
+				this._cnnts[i].remove();
+			}
+		},
+
+		aspect: function(obj, e, method, scope, pos){
+			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
+			this._cnnts.push(cnnt);
+			return cnnt;
+		},
+
+		//Events----------------------------------------------------------------------
+		//Make sure every extension has the oppotunity to decide when to fire an event at its level.
+		_onNew: function(){
+			this.onNew.apply(this, arguments);
+		},
+
+		_onSet: function(){
+			this.onSet.apply(this, arguments);
+		},
+
+		_onDelete: function(){
+			this.onDelete.apply(this, arguments);
+		},
+
+		onNew: function(){},
+		onDelete: function(){},
+		onSet: function(){},
+
+		//Protected-----------------------------------------------------------------
+		_call: function(method, args){
+			var t = this,
+				m = t[method],
+				n = t.inner;
+			return m ? m.apply(t, args || []) : n && n._call(method, args);
+		},
+
+		_mixinAPI: function(){
+			var i,
+				m = this.model,
+				args = arguments,
+				api = function(method){
+					return function(){
+						return m._model._call(method, arguments);
+					};
+				};
+			for(i = args.length - 1; i >= 0; --i){
+				m[args[i]] = api(args[i]);
 			}
 		}
 	});
@@ -24347,7 +24976,7 @@ define([
 			// description:
 			//		Similar to widget.connect, the scope of the listener will be default to this module.
 			//		But in this API, the scope argument is placed behind the listener function, so as to
-			//		avoid arguemnt checking logic.
+			//		avoid argument checking logic.
 			//		This method also allows conditional event firing using the flag argument.
 			// obj: Object
 			// e: String
@@ -24530,93 +25159,6 @@ define([
 });
 
 },
-'gridx/core/model/_Extension':function(){
-define([
-	'dojo/_base/declare',
-	"dojo/_base/lang",
-	'dojo/aspect'
-], function(declare, lang, aspect){
-
-/*=====
-	return declare([], {
-		// summary:
-		//		Abstract base class for all model components (including cache)
-
-		onNew: function(){},
-		onDelete: function(){},
-		onSet: function(){}
-	});
-=====*/
-
-	return declare([], {
-		constructor: function(model){
-			var t = this,
-				i = t.inner = model._model;
-			t._cnnts = [];
-			t.model = model;
-			model._model = t;
-			if(i){
-				t.aspect(i, 'onDelete', '_onDelete');
-				t.aspect(i, 'onNew', '_onNew');
-				t.aspect(i, 'onSet', '_onSet');
-			}
-		},
-
-		destroy: function(){
-			for(var i = 0, len = this._cnnts.length; i < len; ++i){
-				this._cnnts[i].remove();
-			}
-		},
-
-		aspect: function(obj, e, method, scope, pos){
-			var cnnt = aspect[pos || 'after'](obj, e, lang.hitch(scope || this, method), 1);
-			this._cnnts.push(cnnt);
-			return cnnt;
-		},
-
-		//Events----------------------------------------------------------------------
-		//Make sure every extension has the oppotunity to decide when to fire an event at its level.
-		_onNew: function(){
-			this.onNew.apply(this, arguments);
-		},
-
-		_onSet: function(){
-			this.onSet.apply(this, arguments);
-		},
-
-		_onDelete: function(){
-			this.onDelete.apply(this, arguments);
-		},
-
-		onNew: function(){},
-		onDelete: function(){},
-		onSet: function(){},
-
-		//Protected-----------------------------------------------------------------
-		_call: function(method, args){
-			var t = this,
-				m = t[method],
-				n = t.inner;
-			return m ? m.apply(t, args || []) : n && n._call(method, args);
-		},
-
-		_mixinAPI: function(){
-			var i,
-				m = this.model,
-				args = arguments,
-				api = function(method){
-					return function(){
-						return m._model._call(method, arguments);
-					};
-				};
-			for(i = args.length - 1; i >= 0; --i){
-				m[args[i]] = api(args[i]);
-			}
-		}
-	});
-});
-
-},
 'gridx/modules/Header':function(){
 define([
 /*====="../core/Column", =====*/
@@ -24642,6 +25184,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: header.
 		//		The header UI of grid
 		// description:
 		//		This module is in charge of the rendering of the grid header. But it should not manage column width,
@@ -24720,6 +25263,18 @@ define([
 					}
 				});
 			}
+			t.aspect(g, 'onHeaderCellMouseOver', function(){
+				g.vLayout.reLayout();
+			});
+			t.aspect(g, 'onHeaderCellMouseOut', function(){
+				g.vLayout.reLayout();
+				//When mouse leave a very narrow nested sorting header, sometimes this reLayout happens before the header height change.
+				//So set a timeout to ensure this gets relayout.
+				//FIXME: need investigate why
+				setTimeout(function(){
+					g.vLayout.reLayout();
+				}, 0);
+			});
 			t._initFocus();
 		},
 
@@ -24744,6 +25299,7 @@ define([
 		refresh: function(){
 			this._build();
 			this._onHScroll(this._scrollLeft);
+			this.grid.vLayout.reLayout();
 			this.onRender();
 		},
 
@@ -24824,8 +25380,15 @@ define([
 					doFocus: t._doFocus,
 					doBlur: t._blurNode,
 					onBlur: t._blurNode,
-					connects: [
-						t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
+					connects: g.touch ? [
+						t.aspect(g, 'onHeaderCellTouchStart', function(evt){
+							domClass.add(evt.headerCellNode, t._focusClass);
+						}),
+						t.aspect(g, 'onHeaderCellTouchEnd', function(evt){
+							domClass.remove(evt.headerCellNode, t._focusClass);
+						})
+					] : [
+						t.aspect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
 						t.connect(g, 'onHeaderCellMouseDown', function(evt){
 							t._focusNode(t.getHeaderNode(evt.columnId));
 						})
@@ -24835,11 +25398,14 @@ define([
 		},
 
 		_doFocus: function(evt, step){
-			var t = this, 
-				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
-				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
-			t.grid.focus.stopEvent(r && evt);
-			return r;
+			var t = this;
+			if(!t.hidden){
+				var n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
+					r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
+				t.grid.focus.stopEvent(r && evt);
+				return r;
+			}
+			return false;
 		},
 		
 		_focusNode: function(node){
@@ -24886,7 +25452,7 @@ define([
 			var t = this, g = t.grid, col,
 				dir = g.isLeftToRight() ? 1 : -1,
 				delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir;
-			if(t._focusHeaderId && !evt.ctrlKey && !evt.altKey &&
+			if(t._focusHeaderId && !g._isCtrlKey(evt) && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);
@@ -24923,6 +25489,7 @@ define([
 
 	var View = declare(_Module, {
 		// summary:
+		//		module name: view.
 		//		Manages how many and what rows should be shown in the current grid body.
 		// description:
 		//		This module defines a key concept: visual index, which is the position of a row in current grid body.
@@ -25055,12 +25622,12 @@ define([
 			t._clear();
 			t.aspect(m, 'onSizeChange', '_onSizeChange');
 			t.aspect(m, 'onDelete', '_onDelete');
-			t.aspect(g, 'setStore', function(){
+			t.aspect(m, 'setStore', function(){
 				//If server store changes without notifying grid, expanded rows should remain expanded.
 				if(t.arg('clearOnSetStore')){
 					t._clear();
 				}
-			});
+			}, t, 'before');
 			t._loadLevels(persistedOpenInfo).then(function(){
 				var size = t._openInfo[''].count = m.size();
 				t.rootCount = t.rootCount || size - t.rootStart;
@@ -25086,6 +25653,8 @@ define([
 			}
 		},
 
+		clearOnSetStore: true,
+
 		rootStart: 0,
 
 		rootCount: 0,
@@ -25108,25 +25677,31 @@ define([
 				args.visualIndex = t._getVisualIndex(args.parentId, args.rowIndex);
 			}else if(typeof args.visualIndex == 'number' && args.visualIndex >= 0){
 				//Given visual index, get row index and parent id.
-				var rootOpenned = t._openInfo[''].openned,
-					vi = t.rootStart + args.visualIndex;
-				for(var i = 0; i < rootOpenned.length; ++i){
-					var root = t._openInfo[rootOpenned[i]];
-					if(m.idToIndex(root.id) < t.rootStart){
-						vi += root.count;
-					}else{
-						break;
+				var layerId = m.layerId();
+				if(m.isId(layerId)){
+					args.rowIndex = args.visualIndex;
+					args.parentId = layerId;
+				}else{
+					var rootOpenned = t._openInfo[''].openned,
+						vi = t.rootStart + args.visualIndex;
+					for(var i = 0; i < rootOpenned.length; ++i){
+						var root = t._openInfo[rootOpenned[i]];
+						if(m.idToIndex(root.id) < t.rootStart){
+							vi += root.count;
+						}else{
+							break;
+						}
 					}
+					var info = {
+						parentId: '',
+						preCount: 0
+					};
+					while(!info.found){
+						info = t._getChild(vi, info);
+					}
+					args.rowIndex = info.rowIndex;
+					args.parentId = info.parentId;
 				}
-				var info = {
-					parentId: '',
-					preCount: 0
-				};
-				while(!info.found){
-					info = t._getChild(vi, info);
-				}
-				args.rowIndex = info.rowIndex;
-				args.parentId = info.parentId;
 			}else{
 				//Nothing we can do here...
 				return args;
@@ -25371,8 +25946,17 @@ define([
 				openInfo = t._openInfo,
 				info = openInfo[''],
 				len = info.openned.length, 
-				size = t.rootCount,
+				size = m.size(),
 				i, child, index;
+			if(size < t.rootStart + t.rootCount){
+				if(size > t.rootStart){
+					t.rootCount = size - t.rootStart;
+				}else{
+					t.rootStart = 0;
+					t.rootCount = size;
+				}
+			}
+			size = t.rootCount;
 			for(i = 0; i < len; ++i){
 				child = openInfo[info.openned[i]];
 				index = m.idToIndex(child.id);
@@ -25430,12 +26014,19 @@ define([
 					info.count -= count;
 					info = openInfo[info.parentId];
 				}
-				t.visualCount -= count;
+				//sometimes number typed ID can be accidentally changed to string type.
+				if(String(parentId) == String(model.layerId()) && rowIndex >= t.rootStart && rowIndex < t.rootStart + t.rootCount){
+					t.rootCount--;
+				}
+				var rootIndex = model.idToIndex(model.rootId(rowId));
+				if(rootIndex >= t.rootStart && rootIndex < t.rootStart + t.rootCount){
+					t.visualCount -= count;
+				}
 			}else{
 				//FIXME: what to do if some unknown row is deleted?
 				this._clear();
-				this.grid.body.lazyRefresh();
 			}
+			this.grid.body.lazyRefresh();
 		}
 	});
 });
@@ -25446,7 +26037,8 @@ define([
 /*====="../core/Row",=====*/
 /*====="../core/Cell",=====*/
 	"dojo/_base/declare",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/json",
@@ -25455,11 +26047,10 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
 	"dojo/keys",
-	"../core/_Module",
-	"dojo/i18n!../nls/Body"
+	"../core/_Module"
 //    "dojo/NodeList-dom",
 //    "dojo/NodeList-traverse"
-], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module, nls){
+], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module){
 
 /*=====
 	Row.node = function(){
@@ -25486,6 +26077,7 @@ define([
 
 	var Body = declare(_Module, {
 		// summary:
+		//		module name: body.
 		//		The body UI of grid.
 		// description:
 		//		This module is in charge of row rendering. It should be compatible with virtual/non-virtual scroll, 
@@ -25632,6 +26224,11 @@ define([
 			//		Fired when there's no rows in current body view.
 		},
 
+		onLoadFail: function(){
+			// summary:
+			//		Fire when there's an error occured when loading data.
+		},
+
 		onForcedScroll: function(){
 			// summary:
 			//		Fired when the body needs to fetch more data, but there's no trigger to the scroller.
@@ -25675,19 +26272,22 @@ define([
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
-			g.emptyNode.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+			g.emptyNode.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 			g._connectEvents(dn, '_onMouseEvent', t);
+			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
-			t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
-			t.connect(g.mainNode, 'onmouseleave', function(){
-				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-			});
-			t.connect(g.mainNode, 'onmouseover', function(e){
-				if(e.target == g.bodyNode){
+			if(!g.touch){
+				t.aspect(g, 'onRowMouseOver', '_onRowMouseOver');
+				t.connect(g.mainNode, 'onmouseleave', function(){
 					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-				}
-			});
-			t.aspect(g, 'setStore', function(){
+				});
+				t.connect(g.mainNode, 'onmouseover', function(e){
+					if(e.target == g.bodyNode){
+						query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+					}
+				});
+			}
+			t.aspect(g.model, 'setStore', function(){
 				t.refresh();
 			});
 		},
@@ -25812,6 +26412,9 @@ define([
 				loadingNode = t.grid.loadingNode,
 				d = new Deferred();
 			delete t._err;
+			clearTimeout(t._sizeChangeHandler);
+			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
+			
 			domClass.add(loadingNode, 'gridxLoading');
 			t.grid.view.updateVisualCount().then(function(){
 				try{
@@ -25935,13 +26538,13 @@ define([
 				renderedRows = [],
 				n = t.domNode,
 				en = g.emptyNode,
-				emptyInfo = t.arg('emptyInfo', nls.emptyInfo),
+				emptyInfo = t.arg('emptyInfo', g.nls.emptyInfo),
 				finalInfo = '';
 			if(t._err){
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+				en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 				en.style.zIndex = '';
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
@@ -25977,13 +26580,13 @@ define([
 					t.renderCount = count;
 					//If is refresh, try to maintain the scroll top
 					var scrollTop = isRefresh ? n.scrollTop : 0;
-					n.scrollTop = 0;
 					//unrender before destroy nodes, so that other modules have a chance to detach nodes.
-					t.onUnrender();
-					n.innerHTML = str;
-					if(scrollTop){
-						n.scrollTop = scrollTop;
+					if(!t._skipUnrender){
+						//only when we do have something to unrender
+						t.onUnrender();
 					}
+					n.innerHTML = str;
+					n.scrollTop = scrollTop;
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
 					finalInfo = str ? "" : emptyInfo;
 					if(!str){
@@ -26000,7 +26603,10 @@ define([
 			}else if(!{top: 1, bottom: 1}[position]){
 				n.scrollTop = 0;
 				//unrender before destroy nodes, so that other modules have a chance to detach nodes.
-				t.onUnrender();
+				if(!t._skipUnrender){
+					//only when we do have something to unrender
+					t.onUnrender();
+				}
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = '';
@@ -26017,17 +26623,22 @@ define([
 				if(preOrPost == 'post'){
 					for(; i < count && bn.lastChild; ++i){
 						id = bn.lastChild.getAttribute('rowid');
-						m.free(id);
-						t.onUnrender(id);
+						if(m.isId(id)){
+							m.free(id);
+							t.onUnrender(id);
+						}
 						domConstruct.destroy(bn.lastChild);
 					}
 				}else{
 					var tp = bn.scrollTop;
 					for(; i < count && bn.firstChild; ++i){
 						id = bn.firstChild.getAttribute('rowid');
-						m.free(id);
-						tp -= bn.firstChild.offsetHeight;
-						t.onUnrender(id);
+						var rh = bn.firstChild.getAttribute("data-rowHeight");
+						tp -= rh ? parseInt(rh, 10) : bn.firstChild.offsetHeight;
+						if(m.isId(id)){
+							m.free(id);
+							t.onUnrender(id);
+						}
 						domConstruct.destroy(bn.firstChild);
 					}
 					t.renderStart += i;
@@ -26063,6 +26674,8 @@ define([
 
 		onEmpty: function(){},
 
+		onLoadFail: function(){},
+
 		onForcedScroll: function(){},
 
 		collectCellWrapper: function(/* wrappers, rowId, colId */){},
@@ -26094,11 +26707,12 @@ define([
 		_loadFail: function(e){
 			console.error(e);
 			var en = this.grid.emptyNode;
-			en.innerHTML = this.arg('loadFailInfo', nls.loadFailInfo);
+			en.innerHTML = this.arg('loadFailInfo', this.grid.nls.loadFailInfo);
 			en.style.zIndex = 1;
 			this.domNode.innerHTML = '';
 			this._err = e;
 			this.onEmpty();
+			this.onLoadFail(e);
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){
@@ -26256,18 +26870,29 @@ define([
 		},
 
 		_decorateEvent: function(e){
+			//clean decorates from bubble
+			//need to re-decorate the event when bubbling
+			var atrs = ['rowId', 'columnId', 'rowIndex', 'visualIndex', 'columnIndex', 'parentId', 'cellNode'];
+			array.forEach(atrs, function(atr){
+				if(atr in e){ 
+					delete e[atr]; 
+				}
+			});
+			
 			var n = e.target || e.originalTarget,
 				g = this.grid,
 				tag;
 			for(; n && n != g.bodyNode; n = n.parentNode){
 				tag = n.tagName && n.tagName.toLowerCase();
-				if(tag == 'td' && domClass.contains(n, 'gridxCell')){
+				if(tag == 'td' && domClass.contains(n, 'gridxCell') && 
+					n.parentNode.parentNode.parentNode.parentNode.parentNode === g.bodyNode){
+						
 					var col = g._columnsById[n.getAttribute('colid')];
 					e.cellNode = n;
 					e.columnId = col.id;
 					e.columnIndex = col.index;
 				}
-				if(tag == 'div' && domClass.contains(n, 'gridxRow')){
+				if(tag == 'div' && domClass.contains(n, 'gridxRow') && n.parentNode === g.bodyNode){
 					e.rowId = n.getAttribute('rowid');
 					e.parentId = n.getAttribute('parentid');
 					e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);
@@ -26278,6 +26903,14 @@ define([
 		},
 
 		//Store Notification-------------------------------------------------------------------
+		_onDelete: function(id, index, treePath){
+			var t = this;
+			//only necessary for child row deletion.
+			if(treePath && treePath.length > 1){
+				t.lazyRefresh();
+			}
+		},
+
 		_onSet: function(id, index, rowCache, oldCache){
 			var t = this;
 			if(t.autoUpdate && rowCache){
@@ -26330,6 +26963,14 @@ define([
 				}
 			}
 		},
+		//GridInGrid-------------------------------------------------------------------------------------
+		_isDescendantRowNode: function(node){
+			return node.parentNode === this.grid.bodyNode;
+		},
+		
+		_isDescendantCellNode: function(node){
+			return node.parentNode.parentNode.parentNode.parentNode.parentNode === this.grid.bodyNode;
+		},
 
 		//Focus------------------------------------------------------------------------------------------
 		_focusCellCol: 0,
@@ -26350,17 +26991,18 @@ define([
 				onBlur: t._blurCell
 			});
 			t.connect(g.mainNode, 'onkeydown', function(evt){
-				if(focus.currentArea() == 'body'){
-					var dk = keys;
-					if(evt.keyCode == dk.HOME && !evt.ctrlKey){
+				if(focus.arg('enabled') && focus.currentArea() == 'body'){
+					var dk = keys,
+						ctrlKey = g._isCtrlKey(evt);
+					if(evt.keyCode == dk.HOME && !ctrlKey){
 						t._focusCellCol = 0;
 						t._focusCell();
 						focus.stopEvent(evt);
-					}else if(evt.keyCode == dk.END && !evt.ctrlKey){
+					}else if(evt.keyCode == dk.END && !ctrlKey){
 						t._focusCellCol = g._columns.length - 1;
 						t._focusCell();
 						focus.stopEvent(evt);
-					}else if(!g.tree || !evt.ctrlKey){
+					}else if(!g.tree || !ctrlKey){
 						focus._noBlur = 1;	//1 as true
 						var arr = {}, dir = g.isLeftToRight() ? 1 : -1;
 						arr[dk.LEFT_ARROW] = [0, -dir, evt];
@@ -26377,10 +27019,16 @@ define([
 				t._focusCellCol = evt.columnIndex;
 			});
 			t.aspect(t, 'onRender', function(start, count){
-				if(t._focusCellRow >= start &&
-					t._focusCellRow < start + count &&
-					focus.currentArea() == 'body'){
-					t._focusCell();
+				var currentArea = focus.currentArea();
+				if(focus.arg('enabled')){
+					if(currentArea == 'body'){
+						if(t._focusCellRow >= start &&
+							t._focusCellRow < start + count){
+							t._focusCell();
+						}
+					}else{
+						focus.focusArea(currentArea, 1);
+					}
 				}
 			});
 			t.connect(g.emptyNode, 'onfocus', function(){
@@ -26398,7 +27046,7 @@ define([
 			g.focus.stopEvent(evt);
 			colIdx = colIdx >= 0 ? colIdx : t._focusCellCol;
 			rowVisIdx = rowVisIdx >= 0 ? rowVisIdx : t._focusCellRow;
-			var colId = g._columns[colIdx].id,
+			var colId = g._columns[colIdx] ? g._columns[colIdx].id : undefined,
 				n = t.getCellNode({
 					visualIndex: rowVisIdx,
 					colId: colId
@@ -26434,7 +27082,9 @@ define([
 					t = this,
 					g = t.grid, 
 					columnCount = g._columns.length,
-					vc = g.view.visualCount;
+					vc = g.view.visualCount,
+					//IE8 will destroy this event object after setTimeout
+					e = has('ie') < 9 ? lang.mixin({}, evt) : evt;
 				g.focus.stopEvent(evt); //Prevent scrolling the whole page.
 				r = t._focusCellRow + rowStep;
 				r = r < 0 ? 0 : (r >= vc ? vc - 1 : r);
@@ -26442,7 +27092,7 @@ define([
 				c = c < 0 ? 0 : (c >= columnCount ? columnCount - 1 : c);
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusCell(0, r, c);
-					t.onMoveToCell(r, c, evt);
+					t.onMoveToCell(r, c, e);
 				});
 			}
 		},
@@ -26480,7 +27130,7 @@ define([
 		_onFocus: function(evt){
 			var bn = this.domNode,
 				nl = query(evt.target).closest('.gridxCell', bn);
-			if(nl[0]){
+			if(nl[0] && this._isDescendantCellNode(nl[0])){
 				var colIndex = this.grid._columnsById[nl[0].getAttribute('colid')].index,
 					visualIndex = parseInt(nl.closest('.gridxRow', bn)[0].getAttribute('visualindex'), 10);
 				return this._focusCell(0, visualIndex, colIndex);
@@ -26488,6 +27138,60 @@ define([
 			return false;
 		}
 	});
+});
+
+},
+'gridx/support/query':function(){
+define([
+	'dojo/query',
+	'dojo/_base/array',
+	'dojo/_base/lang',
+	'dojo/dom-class'
+], function(query, array, lang, domClass){
+	
+	var _query = function(selector, context){
+		
+		var nlist = query.apply(null, arguments);
+		// return nlist;
+		
+		
+		if(!context || typeof selector === 'object'
+			||(typeof selector === 'string' && /^[^>]*>\s*[^>\s]*$/.test(selector))
+		){
+			return nlist;
+		}
+		
+		var currentGrid = query(context).closest('.gridx')[0];
+		
+		if(currentGrid){
+			var id = currentGrid.getAttribute('id');
+			
+			if(!_query.isGridInGrid[id] || !query('.gridx', currentGrid).length
+				|| !currentGrid.childNodes[2].childNodes[1].contains(context)
+			){
+				return nlist;
+			}
+			
+		}else{
+			return nlist;
+		}
+		
+		return nlist.filter(function(n){
+			if(domClass.contains(n, 'gridx')){
+				n = n.parentNode? n.parentNode : null;
+			}
+			return query(n).closest('.gridx')[0] === currentGrid;
+		});
+		
+		//return new query.NodeList(nlist);
+	};
+	
+	_query.isGridInGrid = {};
+
+	lang.mixin(_query, query);
+	// gq = _query;
+	return _query;
+
 });
 
 },
@@ -26501,6 +27205,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: vLayout.
 		//		This module manages the vertical layout of all the grid UI parts.
 		// description:
 		//		When user creates a grid with a given height, it means the height of the whole grid,
@@ -26659,6 +27364,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hLayout.
 		//		This module manages the horizontal layout of all grid UI parts.
 		// description:
 		//		When a user creates a grid with a given width, it means the width of the whole grid,
@@ -26796,14 +27502,17 @@ define([
 	"dojo/_base/sniff",
 	"dojo/query",
 	"dojo/dom-geometry",
+	"dojo/dom-class",
+	"dojo/dom-style",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, has, query, domGeo, keys, metrics, _Module){
+], function(declare, Deferred, event, has, query, domGeo, domClass, domStyle, keys, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: vScroller.
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
 		//		This module will make the grid body render all rows without paging.
@@ -26846,7 +27555,7 @@ define([
 				if(has('ie') < 8){
 					dn.style.width = '0px';
 				}
-			}else{
+			}else if(!has('mac')){
 				var w = metrics.getScrollbar().w,
 					ltr = g.isLeftToRight();
 				dn.style.width = w + 'px';
@@ -26854,6 +27563,8 @@ define([
 				if(has('ie') < 8){
 					t.stubNode.style.width = (w + 1) + 'px';
 				}
+			}else{
+				domClass.add(g.domNode, 'gridxMac');
 			}
 		},
 
@@ -26875,6 +27586,7 @@ define([
 			t.aspect(g, '_onResizeEnd', '_onBodyChange');
 			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
 			t.aspect(bd, 'onRender', '_onBodyChange');
+			t.aspect(g.header, 'onRender', '_onBodyChange');
 			if(!g.autoHeight){
 				t.aspect(bd, 'onEmpty', function(){
 					var ds = dn.style;
@@ -26915,7 +27627,7 @@ define([
 					dn[st] = no;
 					finish(true);
 					return d;
-				}else if(no < bs){
+				}else if(no <= bs){
 					dif = no - bs;
 				}else if(no + n.offsetHeight > bs + bn.clientHeight){
 					dif = no + n.offsetHeight - bs - bn.clientHeight;
@@ -26927,6 +27639,14 @@ define([
 			}
 			finish(!!n);
 			return d;
+		},
+
+		scroll: function(top){
+			this.domNode.scrollTop = top;
+		},
+
+		position: function(){
+			return this.domNode.scrollTop;
 		},
 	
 		//Protected -------------------------------------------------
@@ -26940,7 +27660,12 @@ define([
 			if(!g.autoHeight){
 				var bd = g.body,
 					bn = g.bodyNode,
-					toShow = bn.scrollHeight > bn.clientHeight,
+					toShow = (bn.scrollHeight > bn.clientHeight) ||
+						//This is to fix some rare issue that vscroller missing. #10267
+						//Logically this should not happen because virtual scroller has buffers.
+						//And this logic should not be put in non-virtual scroller either.
+						//FIXME: need more investigation.
+						(bn.scrollHeight == bn.clientHeight && bd.renderCount < g.view.visualCount),
 					ds = t.domNode.style;
 					scrollBarWidth = metrics.getScrollbar().w + (has('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(has('ie') < 8){
@@ -26953,10 +27678,13 @@ define([
 				}else{
 					ds.width = '';
 				}
-				ds.display = toShow ? '' : 'none';
-				t._updatePos();
+				var display = toShow ? 'block' : 'none';
+				var changed = display != (domStyle.get(t.domNode, 'display') || 'block');
+				ds.display = display;
+				if(t._updatePos() || changed){
+					g.hLayout.reLayout();
+				}
 			}
-			g.hLayout.reLayout();
 		},
 
 		_updatePos: function(){
@@ -26964,8 +27692,11 @@ define([
 				dn = this.domNode,
 				ds = dn.style,
 				ltr = g.isLeftToRight(),
-				mainBorder = domGeo.getBorderExtents(g.mainNode);
-			ds[ltr ? 'right' : 'left'] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+				mainBorder = domGeo.getBorderExtents(g.mainNode),
+				attr = ltr ? 'right' : 'left';
+				oldValue = ds[attr];
+			ds[attr] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+			return oldValue != ds[attr];
 		},
 
 		_doScroll: function(){
@@ -27016,13 +27747,14 @@ define([
 				bn = g.bodyNode,
 				focus = g.focus,
 				sn = t.domNode,
+				ctrlKey = g._isCtrlKey(evt),
 				rowNode;
 			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					sn[st] = 0;
 					rowNode = bn.firstChild;
 					bd._focusCellCol = 0;
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					sn[st] = sn.scrollHeight - sn.offsetHeight;
 					rowNode = bn.lastChild;
 					bd._focusCellCol = g._columns.length - 1;
@@ -27132,6 +27864,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hScroller.
 		//		This module provides basic horizontal scrolling for grid
 
 		scrollToColumn: function(colId){
@@ -27176,6 +27909,15 @@ define([
 				n.style.display = 'block';
 				t.aspect(g.columnWidth, 'onUpdate', 'refresh');
 				t.connect(n, 'onscroll', '_onScroll');
+				
+				//In dod, tab focus in the dodNode will sometimes
+				//scroll the bodyNode of gridx horizontally,
+				//so need to syn scrollLeft with hscroller
+				if(g.dod){
+					t.connect(g.bodyNode, 'onscroll', function(){
+						t.domNode.scrollLeft = g.bodyNode.scrollLeft;
+					});
+				}
 				if(has('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
@@ -27199,7 +27941,7 @@ define([
 		scrollToColumn: function(colId, rowDiv){
 			//when rowDiv has value, it's caused by move focus in Body.js
 			//It's used only for column lock module
-
+			
 			var hNode = this.grid.header.innerNode,
 				cells = query('.gridxCell', hNode),
 				left = 0,
@@ -27298,7 +28040,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/_base/Deferred",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/_base/sniff",
 	"dojo/dom-geometry",
 	"dojo/dom-class",
@@ -27310,6 +28053,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: columnWidth.
 		//		Manages column width distribution, allow grid autoWidth and column autoResize.
 
 		// default: Number
@@ -27328,6 +28072,39 @@ define([
 		}
 	});
 =====*/
+
+	var needHackPadBorder = has('safari') < 6 || (!has('safari') && has('webkit') && has('ios'));
+
+	function calcAutoWidth(autoCols, freeWidth, padBorder){
+		autoCols.sort(function(c1, c2){
+			return (c1.minWidth || 0) - (c2.minWidth || 0);
+		});
+		var i = autoCols.length - 1, c;
+		for(; i >= 0; --i){
+			c = autoCols[i];
+			if(c.minWidth && (c.minWidth + padBorder) * (i + 1) > freeWidth){
+				c.width = c.minWidth + 'px';
+				freeWidth -= c.minWidth + padBorder;
+			}else{
+				break;
+			}
+		}
+		var len = i + 1;
+		if(len){
+			var w = Math.floor(freeWidth / len - padBorder);
+			var ww = freeWidth - (w + padBorder) * (len - 1) - padBorder;
+			if(w < 0){
+				w = 0;
+			}
+			if(ww < 0){
+				ww = 0;
+			}
+			for(i = 0; i < len; ++i){
+				c = autoCols[i];
+				c.width = (i ? w : ww) + 'px';
+			}
+		}
+	}
 
 	return declare(_Module, {
 		name: 'columnWidth',
@@ -27364,8 +28141,9 @@ define([
 				if(!col.hasOwnProperty('declaredWidth')){
 					col.declaredWidth = col.width = col.width || 'auto';
 				}
-				if(g.autoWidth && col.declaredWidth == 'auto'){
-					col.width = defaultWidth;
+				if(g.autoWidth && (col.declaredWidth == 'auto' || /%$/.test(col.declaredWidth))){
+					//If minWidth exists, check it
+					col.width = t['default'] < col.minWidth ? col.minWidth + 'px' : defaultWidth;
 				}else if(autoResize && !(/%$/).test(col.declaredWidth)){
 					col.width = 'auto';
 				}
@@ -27406,6 +28184,7 @@ define([
 				g = t.grid,
 				dn = g.domNode,
 				header = g.header,
+				autoResize = t.arg('autoResize'),
 				ltr = g.isLeftToRight(),
 				marginLead = ltr ? 'marginLeft' : 'marginRight',
 				marginTail = ltr ? 'marginRight' : 'marginLeft',
@@ -27438,18 +28217,34 @@ define([
 				t.onUpdate();
 				return;
 			}
+			if(autoResize){
+				if(needHackPadBorder){
+					query('.gridxCell', innerNode).forEach(function(node){
+						var c = g._columnsById[node.getAttribute('colid')];
+						if(/px$/.test(c.declaredWidth)){
+							var w = parseInt(c.declaredWidth, 10) + padBorder;
+							w = c.width = w + 'px';
+							node.style.width = w;
+							node.style.minWidth = w;
+							node.style.maxWidth = w;
+						}
+					});
+				}
+			}
 			if(g.autoWidth){
 				var headers = query('.gridxCell', innerNode),
 					totalWidth = 0;
 				headers.forEach(function(node){
+					var c = g._columnsById[node.getAttribute('colid')];
 					var w = domStyle.get(node, 'width');
-					if(isGroupHeader || !has('safari') || !isGridHidden){
+					if(isGroupHeader || !needHackPadBorder || !isGridHidden){
 						w += padBorder;
 					}
+					if(w < c.minWidth){
+						w = c.minWidth;
+					}
 					totalWidth += w;
-					var c = g._columnsById[node.getAttribute('colid')];
 					if(c.width == 'auto' || (/%$/).test(c.width)){
-						0 && console.log(c.id, w);
 						node.style.width = c.width = w + 'px';
 						node.style.minWidth = c.width;
 						node.style.maxWidth = c.width;
@@ -27457,23 +28252,26 @@ define([
 				});
 				bs.width = totalWidth + 'px';
 				dn.style.width = (lead + tail + totalWidth + mainBorder) + 'px';
-			}else if(t.arg('autoResize')){
+			}else if(autoResize){
 				hs.borderWidth = g.vScrollerNode.style.display == 'none' ? 0 : '';
 			}else{
 				var autoCols = [],
 					cols = g._columns,
 					fixedWidth = 0;
-				if(!isGroupHeader && has('safari')){
+				if(!isGroupHeader && needHackPadBorder){
 					padBorder = 0;
 				}
 				array.forEach(cols, function(c){
 					if(c.declaredWidth == 'auto'){
 						autoCols.push(c);
 					}else if(/%$/.test(c.declaredWidth)){
-						var w = parseInt(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - padBorder, 10);
+						var w = parseFloat(bodyWidth * parseFloat(c.declaredWidth, 10) / 100 - padBorder, 10);
 						//Check if less than zero, prevent error in IE.
 						if(w < 0){
 							w = 0;
+						}
+						if(typeof c.minWidth == 'number' && w < c.minWidth){
+							w = c.minWidth;
 						}
 						var node = header.getHeaderNode(c.id);
 						node.style.width = c.width = w + 'px';
@@ -27484,8 +28282,8 @@ define([
 				array.forEach(cols, function(c){
 					if(c.declaredWidth != 'auto'){
 						var headerNode = header.getHeaderNode(c.id),
-							w = !isGroupHeader && has('safari') ? parseFloat(headerNode.style.width, 10) :
-								headerNode.offsetWidth || (domStyle.get(headerNode, 'width') + padBorder);
+							w = !isGroupHeader && needHackPadBorder ? parseFloat(headerNode.style.width, 10) :
+								(domStyle.get(headerNode, 'width') + padBorder);
 						if(/%$/.test(c.declaredWidth)){
 							c.width = (w > padBorder ? w - padBorder : 0) + 'px';
 						}
@@ -27493,22 +28291,22 @@ define([
 					}
 				});
 				if(autoCols.length){
-					var w = bodyWidth > fixedWidth ? ((bodyWidth - fixedWidth) / autoCols.length - padBorder) : t.arg('default'),
-						ww = parseInt(w, 10);
-					if(bodyWidth > fixedWidth){
-						ww = bodyWidth - fixedWidth - (ww + padBorder) * (autoCols.length - 1) - padBorder;
-					}
-					w = parseInt(w, 10);
-					//Check if less than zero, prevent error in IE.
-					if(w < 0){
-						w = 0;
-					}
-					if(ww < 0){
-						ww = 0;
+					var freeWidth = bodyWidth - fixedWidth;
+					if(freeWidth > 0){
+						calcAutoWidth(autoCols, freeWidth, padBorder);
+					}else{
+						var w = t.arg('default');
+						array.forEach(autoCols, function(c, i){
+							var cw = w;
+							if(typeof c.minWidth == 'number' && cw < c.minWidth){
+								cw = c.minWidth;
+							}
+							c.width = cw + 'px';
+						});
 					}
 					array.forEach(autoCols, function(c, i){
 						var node = header.getHeaderNode(c.id);
-						node.style.width = c.width = (i < autoCols.length - 1 ? w : ww) + 'px';
+						node.style.width = c.width;
 						node.style.minWidth = c.width;
 						node.style.maxWidth = c.width;
 					});
@@ -27523,7 +28321,6 @@ define([
 					if(/px$/.test(col.width)){
 						var width = node.clientWidth - domGeometry.getPadExtents(node).w;
 						if(parseInt(col.width, 10) != width){
-							0 && console.log('here! ', col.width, ', ', width);
 							col.width = width = width + 'px';
 							node.style.width = width;
 							node.style.minWidth = width;
@@ -27531,6 +28328,18 @@ define([
 						}
 					}
 				});
+				if(g.autoWidth){
+					query('.gridxCell', g.bodyNode).forEach(function(cellNode){
+						var col = g._columnsById[cellNode.getAttribute('colId')],
+							w = col && col.width,
+							s = cellNode.style;
+						if(w){
+							s.width = w;
+							s.minWidth = w;
+							s.maxWidth = w;
+						}
+					});
+				}
 			}
 			g.hScroller.scroll(0);
 			header._onHScroll(0);
@@ -27544,7 +28353,8 @@ define([
 			var t = this,
 				g = t.grid;
 			t._init();
-			g.header.refresh();
+			//Now header and body can be different, so we should not trigger any onRender event at this inconsistent stage,
+			g.header._build();
 			t._adaptWidth();
 			//FIXME: Is there any more elegant way to do this?
 			if(g.cellWidget){
@@ -27557,6 +28367,8 @@ define([
 				g.tree._initExpandLevel();
 			}
 			g.body.refresh();
+			//Now header and body are matched, so we can fire onRender.
+			g.header.onRender();
 		}
 	});
 });
@@ -27578,8 +28390,13 @@ define([
 /*=====
 	var Focus = declare(_Module, {
 		// summary
+		//		module name: focus.
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
+
+		// enabled: Boolean
+		//		Whether keyboar support is enabled for gridx. Default to true on desktop, false on touch device.
+		enabled: true,
 
 		registerArea: function(area){
 			// summary:
@@ -27727,7 +28544,7 @@ define([
 
 	return declare(_Module, {
 		name: 'focus',
-		
+
 		constructor: function(){
 			var t = this,
 				g = t.grid;
@@ -27742,6 +28559,7 @@ define([
 					t._onFocus(evt);
 				}
 			};
+			t.arg('enabled', !g.touch);
 			t.batchConnect(
 				[g.domNode, 'onkeydown', '_onTabDown'],
 				[g.domNode, 'onfocus', '_focus'],
@@ -27769,6 +28587,9 @@ define([
 		},
 	
 		//Public----------------------------------------------------------
+
+		//enabled: true,
+
 		registerArea: function(/* __FocusArea */ area){
 			if(area && area.name && typeof area.priority == 'number'){
 				var t = this,
@@ -27806,7 +28627,7 @@ define([
 
 		focusArea: function(/* String */ areaName, forced){
 			var t = this, area = t._areas[areaName];
-			if(area){
+			if(area && t.arg('enabled')){
 				var curArea = t._areas[t.currentArea()];
 				if(curArea && curArea.name === areaName){
 					if(forced){
@@ -27826,6 +28647,16 @@ define([
 				}
 			}
 			return false;
+		},
+
+		blur: function(){
+			var t = this,
+				curArea = t._areas[t.currentArea()];
+			if(curArea){
+				curArea.doBlur();
+			}
+			t._queueIdx = -1;
+			t._stackIdx = 0;
 		},
 
 		currentArea: function(){
@@ -27925,7 +28756,7 @@ define([
 		_stackIdx: 0,
 
 		_onTabDown: function(evt){
-			if(evt.keyCode === keys.TAB){
+			if(this.arg('enabled') && evt.keyCode === keys.TAB){
 				this.tab(evt.shiftKey ? -1 : 1, evt);
 			}
 		},
@@ -27936,54 +28767,60 @@ define([
 				dn = t.grid.domNode,
 				n = evt.target,
 				currentArea = t._areas[t.currentArea()];
-			while(n && n !== dn){
-				i = array.indexOf(t._focusNodes, n);
-				if(i >= 0){
-					stack = t._tabQueue[i].stack;
-					for(j = 0; j < stack.length; ++j){
-						area = t._areas[stack[j]];
-						if(area.onFocus(evt)){
-							if(currentArea && currentArea.name !== area.name){
-								currentArea.onBlur(evt);
-								t.onBlurArea(currentArea.name);
+			if(t.arg('enabled')){
+				while(n && n !== dn){
+					i = array.indexOf(t._focusNodes, n);
+					if(i >= 0){
+						stack = t._tabQueue[i].stack;
+						for(j = 0; j < stack.length; ++j){
+							area = t._areas[stack[j]];
+							if(area.onFocus(evt)){
+								if(currentArea && currentArea.name !== area.name){
+									currentArea.onBlur(evt);
+									t.onBlurArea(currentArea.name);
+								}
+								t.onFocusArea(area.name);
+								t._queueIdx = i;
+								t._stackIdx = j;
+								return;
 							}
-							t.onFocusArea(area.name);
-							t._queueIdx = i;
-							t._stackIdx = j;
-							return;
 						}
+						return;
 					}
-					return;
+					n = n.parentNode;
 				}
-				n = n.parentNode;
-			}
-			if(n == dn && currentArea){
-				t._doBlur(evt, currentArea);
+				if(n == dn && currentArea){
+					t._doBlur(evt, currentArea);
+				}
 			}
 		},
 
 		_focus: function(evt){
 			var t = this;
-			if(t._tabingOut){
-				t._tabingOut = 0;
-			}else if(evt.target == t.grid.domNode){
-				t._queueIdx = -1;
-				t.tab(1);
-			}else if(evt.target === t.grid.lastFocusNode){
-				t._queueIdx = t._tabQueue.length;
-				t.tab(-1);
+			if(t.arg('enabled')){
+				if(t._tabingOut){
+					t._tabingOut = 0;
+				}else if(evt.target == t.grid.domNode){
+					t._queueIdx = -1;
+					t.tab(1);
+				}else if(evt.target === t.grid.lastFocusNode){
+					t._queueIdx = t._tabQueue.length;
+					t.tab(-1);
+				}
 			}
 		},
 
 		_doBlur: function(evt, area){
 			var t = this;
-			if(!area && t.currentArea()){
-				area = t._areas[t.currentArea()];
-			}
-			if(area){
-				area.onBlur(evt);
-				t.onBlurArea(area.name);
-				t._updateCurrentArea();
+			if(t.arg('enabled')){
+				if(!area && t.currentArea()){
+					area = t._areas[t.currentArea()];
+				}
+				if(area){
+					area.onBlur(evt);
+					t.onBlurArea(area.name);
+					t._updateCurrentArea();
+				}
 			}
 		},
 
@@ -28199,7 +29036,7 @@ define(["./query", "./_base/lang", "./_base/array"], function(dquery, lang, arra
 /*=====
 return function(){
 	// summary:
-	//		Adds chainable methods to dojo.query() / NodeList instances for traversing the DOM
+	//		Adds chainable methods to dojo/query() / NodeList instances for traversing the DOM
 };
 =====*/
 
@@ -28229,7 +29066,7 @@ lang.extend(NodeList, {
 		var ary = [];
 		//Using for loop for better speed.
 		for(var i = 0, node; node = nodes[i]; i++){
-			//Should be a faster way to do this. dojo.query has a private
+			//Should be a faster way to do this. dojo/query has a private
 			//_zip function that may be inspirational, but there are pathways
 			//in query that force nozip?
 			if(node.nodeType == 1 && array.indexOf(ary, node) == -1){
@@ -28278,7 +29115,10 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".container").children();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".container").children();
+		//	|	});
 		//		returns the four divs that are children of the container div.
 		//		Running this code:
 		//	|	dojo.query(".container").children(".red");
@@ -28312,7 +29152,10 @@ lang.extend(NodeList, {
 		//	|		<div class="blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".red").closest(".container");
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".red").closest(".container");
+		//	|	});
 		//		returns the div with class "container".
 		return this._getRelatedUniqueNodes(null, function(node, ary){
 			do{
@@ -28344,10 +29187,13 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue"><span class="text">Blue Two</span></div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".text").parent();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".text").parent();
+		//	|	});
 		//		returns the two divs with class "blue".
 		//		Running this code:
-		//	|	dojo.query(".text").parent(".first");
+		//	|		query(".text").parent(".first");
 		//		returns the one div with class "blue" and "first".
 		return this._getRelatedUniqueNodes(query, function(node, ary){
 			return node.parentNode;
@@ -28374,11 +29220,14 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue"><span class="text">Blue Two</span></div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".text").parents();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".text").parents();
+		//	|	});
 		//		returns the two divs with class "blue", the div with class "container",
 		// 	|	the body element and the html element.
 		//		Running this code:
-		//	|	dojo.query(".text").parents(".container");
+		//	|		query(".text").parents(".container");
 		//		returns the one div with class "container".
 		return this._getRelatedUniqueNodes(query, function(node, ary){
 			var pary = [];
@@ -28411,11 +29260,14 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".first").siblings();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".first").siblings();
+		//	|	});
 		//		returns the two divs with class "red" and the other div
 		// 	|	with class "blue" that does not have "first".
 		//		Running this code:
-		//	|	dojo.query(".first").siblings(".red");
+		//	|		query(".first").siblings(".red");
 		//		returns the two div with class "red".
 		return this._getRelatedUniqueNodes(query, function(node, ary){
 			var pary = [];
@@ -28450,7 +29302,10 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue last">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".first").next();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".first").next();
+		//	|	});
 		//		returns the div with class "red" and has innerHTML of "Red Two".
 		//		Running this code:
 		//	|	dojo.query(".last").next(".red");
@@ -28485,10 +29340,13 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue next">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".first").nextAll();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".first").nextAll();
+		//	|	});
 		//		returns the two divs with class of "next".
 		//		Running this code:
-		//	|	dojo.query(".first").nextAll(".red");
+		//	|		query(".first").nextAll(".red");
 		//		returns the one div with class "red" and innerHTML "Red Two".
 		return this._getRelatedUniqueNodes(query, function(node, ary){
 			var pary = [];
@@ -28523,10 +29381,13 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".first").prev();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".first").prev();
+		//	|	});
 		//		returns the div with class "red" and has innerHTML of "Red One".
 		//		Running this code:
-		//	|	dojo.query(".first").prev(".blue");
+		//	|		query(".first").prev(".blue");
 		//		does not return any elements.
 		return this._getRelatedUniqueNodes(query, function(node, ary){
 			var prev = node.previousSibling;
@@ -28560,10 +29421,13 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".second").prevAll();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".second").prevAll();
+		//	|	});
 		//		returns the two divs with class of "prev".
 		//		Running this code:
-		//	|	dojo.query(".first").prevAll(".red");
+		//	|		query(".first").prevAll(".red");
 		//		returns the one div with class "red prev" and innerHTML "Red One".
 		return this._getRelatedUniqueNodes(query, function(node, ary){
 			var pary = [];
@@ -28593,7 +29457,10 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".second").prevAll().andSelf();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".second").prevAll().andSelf();
+		//	|	});
 		//		returns the two divs with class of "prev", as well as the div with class "second".
 		return this.concat(this._parent);	// dojo/NodeList
 	},
@@ -28616,7 +29483,10 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue last">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".blue").first();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".blue").first();
+		//	|	});
 		//		returns the div with class "blue" and "first".
 		return this._wrap(((this[0] && [this[0]]) || []), this); // dojo/NodeList
 	},
@@ -28638,7 +29508,10 @@ lang.extend(NodeList, {
 		// 	|		<div class="blue last">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".blue").last();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|	query(".blue").last();
+		//	|	});
 		//		returns the last div with class "blue",
 		return this._wrap((this.length ? [this[this.length - 1]] : []), this); // dojo/NodeList
 	},
@@ -28660,7 +29533,10 @@ lang.extend(NodeList, {
 		// 	|		<div class="interior blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".interior").even();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".interior").even();
+		//	|	});
 		//		returns the two divs with class "blue"
 		return this.filter(function(item, i){
 			return i % 2 != 0;
@@ -28684,7 +29560,10 @@ lang.extend(NodeList, {
 		// 	|		<div class="interior blue">Blue Two</div>
 		//	|	</div>
 		//		Running this code:
-		//	|	dojo.query(".interior").odd();
+		//	|	require(["dojo/query", "dojo/NodeList-traverse"
+		//	|	], function(query){
+		//	|		query(".interior").odd();
+		//	|	});
 		//		returns the two divs with class "red"
 		return this.filter(function(item, i){
 			return i % 2 == 0;
@@ -28696,457 +29575,6 @@ return NodeList;
 });
 
 },
-'gridx/core/model/cache/Sync':function(){
-define([
-	"dojo/_base/declare",
-	"dojo/_base/lang",
-	"dojo/_base/Deferred",
-	"./_Cache"
-], function(declare, lang, Deferred, _Cache){
-
-/*=====
-	return declare(_Cache, {
-		// summary:
-		//		Implement a cache for client side store.
-	});
-=====*/
-
-	function fetchChildren(self){
-		var s = self._struct,
-			pids = s[''].slice(1),
-			pid,
-			appendChildren = function(pid){
-				[].push.apply(pids, s[pid].slice(1));
-			};
-		while(pids.length){
-			pid = pids.shift();
-			self._storeFetch({
-				parentId: pid
-			}).then(lang.partial(appendChildren, pid));
-		}
-	}
-
-	return declare(_Cache, {
-		keep: function(){},
-		free: function(){},
-
-		when: function(args, callback){
-			var d = new Deferred();
-			try{
-				if(callback){
-					callback();
-				}
-				d.callback();
-			}catch(e){
-				d.errback(e);
-			}
-			return d;
-		},
-
-		//Private---------------------------------------------
-		_init: function(/*method, args*/){
-			var t = this;
-			if(!t._filled){
-				t._storeFetch({ start: 0 });
-				if(t.store.getChildren){
-					fetchChildren(t);
-				}
-				t.model._onSizeChange();
-			}
-		}
-	});
-});
-
-},
-'gridx/core/model/cache/_Cache':function(){
-define([
-	'dojo/_base/declare',
-	'dojo/_base/array',
-	'dojo/_base/lang',
-	'dojo/_base/Deferred',
-	'../_Extension'
-], function(declare, array, lang, Deferred, _Extension){
-
-/*=====
-	return declare(_Extension, function(){
-		// summary:
-		//		Abstract base cache class, providing cache data structure and some common cache functions.
-	});
-=====*/
-
-	var hitch = lang.hitch,
-		mixin = lang.mixin,
-		indexOf = array.indexOf;
-
-	return declare(_Extension, {
-		constructor: function(model, args){
-			var t = this;
-			t.setStore(args.store);
-			t.columns = lang.mixin({}, args._columnsById);
-			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
-				'hasChildren', 'children', 'keep', 'free');
-		},
-
-		destroy: function(){
-			this.inherited(arguments);
-			this.clear();
-		},
-
-		setStore: function(store){
-			var t = this,
-				c = 'aspect',
-				old = store.fetch;
-			//Disconnect store events.
-			t.destroy();
-			t._cnnts = [];
-			t.store = store;
-			if(!old && store.notify){
-				//The store implements the dojo.store.Observable API
-				t[c](store, 'notify', function(item, id){
-					if(item === undefined){
-						t._onDelete(id);
-					}else if(id === undefined){
-						t._onNew(item);
-					}else{
-						t._onSet(item);
-					}
-				});
-			}else{
-				t[c](store, old ? "onSet" : "put", "_onSet");
-				t[c](store, old ? "onNew" : "add", "_onNew");
-				t[c](store, old ? "onDelete" : "remove", "_onDelete");
-			}
-		},
-
-		//Public----------------------------------------------
-		clear: function(){
-			var t = this;
-			t._filled = 0;
-			t._priority = [];
-			t._struct = {};
-			t._cache = {};
-			t._size = {};
-			//virtual root node, with id ''.
-			t._struct[''] = [];
-			t._size[''] = -1;
-		},
-
-		byIndex: function(index, parentId){
-			this._init('byIndex', arguments);
-			return this._cache[this.indexToId(index, parentId)];
-		},
-
-		byId: function(id){
-			this._init('byId', arguments);
-			return this._cache[id];
-		},
-
-		indexToId: function(index, parentId){
-			this._init('indexToId', arguments);
-			var items = this._struct[this.model.isId(parentId) ? parentId : ''];
-			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
-		},
-
-		idToIndex: function(id){
-			this._init('idToIndex', arguments);
-			var s = this._struct,
-				pid = s[id] && s[id][0],
-				index = indexOf(s[pid] || [], id);
-			return index > 0 ? index - 1 : -1;
-		},
-
-		treePath: function(id){
-			this._init('treePath', arguments);
-			var s = this._struct,
-				path = [];
-			while(id !== undefined){
-				path.unshift(id);
-				id = s[id] && s[id][0];
-			}
-			if(path[0] !== ''){
-				path = [];
-			}else{
-				path.pop();
-			}
-			return path;
-		},
-
-		rootId: function(id){
-			var path = this.treePath(id);
-			if(path.length > 1){
-				return path[1];
-			}else if(!path.length){
-				return null;
-			}
-			return id;
-		},
-
-		parentId: function(id){
-			return this.treePath(id).pop();
-		},
-
-		hasChildren: function(id){
-			var t = this,
-				s = t.store,
-				c;
-			t._init('hasChildren', arguments);
-			c = t.byId(id);
-			return s.hasChildren && s.hasChildren(id, c && c.item) && s.getChildren;
-		},
-
-		children: function(parentId){
-			this._init('children', arguments);
-			parentId = this.model.isId(parentId) ? parentId : '';
-			var size = this._size[parentId],
-				children = [],
-				i = 0;
-			for(; i < size; ++i){
-				children.push(this.indexToId(i, parentId));
-			}
-			return children;
-		},
-
-		size: function(parentId){
-			this._init('size', arguments);
-			var s = this._size[this.model.isId(parentId) ? parentId : ''];
-			return s >= 0 ? s : -1;
-		},
-
-		//Events--------------------------------------------
-		onBeforeFetch: function(){},
-		onAfterFetch: function(){},
-		onLoadRow: function(){},
-
-		onSetColumns: function(columns){
-			var t = this, id, c, colId, col;
-			t.columns = lang.mixin({}, columns);
-			for(id in t._cache){
-				c = t._cache[id];
-				for(colId in columns){
-					col = columns[colId];
-					c.data[colId] = t._formatCell(col.id, c.rawData);
-				}
-			}
-		},
-
-		//Protected-----------------------------------------
-		_itemToObject: function(item){
-			var s = this.store,
-				obj = {};
-			if(s.fetch){
-				array.forEach(s.getAttributes(item), function(attr){
-					obj[attr] = s.getValue(item, attr);
-				});
-				return obj;	
-			}
-			return item;
-		},
-
-		_formatCell: function(colId, rawData){
-			var col = this.columns[colId];
-			return col.formatter ? col.formatter(rawData) : rawData[col.field || colId];
-		},
-
-		_formatRow: function(rowData){
-			var cols = this.columns, res = {}, colId;
-			for(colId in cols){
-				res[colId] = this._formatCell(colId, rowData);
-			}
-			return res;
-		},
-
-		_addRow: function(id, index, rowData, item, parentId){
-			var t = this,
-				st = t._struct,
-				pr = t._priority,
-				pid = t.model.isId(parentId) ? parentId : '',
-				ids = st[pid],
-				i;
-			if(!ids){
-				throw new Error("Fatal error of _Cache._addRow: parent item " + pid + " of " + id + " is not loaded");
-			}
-			var oldId = ids[index + 1];
-			if(t.model.isId(oldId) && oldId !== id){
-				console.error("Error of _Cache._addRow: different row id " + id + " and " + ids[index + 1] + " for same row index " + index);
-			}
-			ids[index + 1] = id;
-			st[id] = st[id] || [pid];
-			if(pid === ''){
-				i = indexOf(pr, id);
-				if(i >= 0){
-					pr.splice(i, 1);
-				}
-				pr.push(id);
-			}
-			t._cache[id] = {
-				data: t._formatRow(rowData),
-				rawData: rowData,
-				item: item
-			};
-			t.onLoadRow(id);
-		},
-
-		_storeFetch: function(options, onFetched){
-//            0 && console.debug("\tFETCH parent: ",
-//                    options.parentId, ", start: ",
-//                    options.start || 0, ", count: ",
-//                    options.count, ", end: ",
-//                    options.count && (options.start || 0) + options.count - 1, ", options:",
-//                    this.options);
-
-			var t = this,
-				s = t.store,
-				d = new Deferred(),
-				parentId = t.model.isId(options.parentId) ? options.parentId : '',
-				req = mixin({}, t.options || {}, options),
-				onError = hitch(d, d.errback),
-				results;
-			function onBegin(size){
-				t._size[parentId] = parseInt(size, 10);
-			}
-			function onComplete(items){
-				try{
-					var start = options.start || 0,
-						i = 0,
-						item;
-					for(; item = items[i]; ++i){
-						t._addRow(s.getIdentity(item), start + i, t._itemToObject(item), item, parentId);
-					}
-					d.callback();
-				}catch(e){
-					d.errback(e);
-				}
-			}
-			t._filled = 1;
-			t.onBeforeFetch(req);
-			if(parentId === ''){
-				if(s.fetch){
-					s.fetch(mixin(req, {
-						onBegin: onBegin,
-						onComplete: onComplete,
-						onError: onError
-					}));
-				}else{
-					results = s.query(req.query || {}, req);
-					Deferred.when(results.total, onBegin);
-					Deferred.when(results, onComplete, onError);
-				}
-			}else if(t.hasChildren(parentId)){
-				results = s.getChildren(t.byId(parentId).item, req);
-				if('total' in results){
-					Deferred.when(results.total, onBegin);
-				}else{
-					Deferred.when(results, function(results){
-						onBegin(results.length);
-					});
-				}
-				Deferred.when(results, onComplete, onError);
-			}else{
-				d.callback();
-			}
-			d.then(function(){
-				t.onAfterFetch();
-			});
-			return d;
-		},
-
-		//--------------------------------------------------------------------------
-		_onSet: function(item){
-			var t = this,
-				id = t.store.getIdentity(item),
-				index = t.idToIndex(id),
-				path = t.treePath(id),
-				old = t._cache[id];
-			if(path.length){
-				t._addRow(id, index, t._itemToObject(item), item, path.pop());
-			}
-			t.onSet(id, index, t._cache[id], old);
-		},
-
-		_onNew: function(item, parentInfo){
-			var t = this,
-				s = t.store,
-				row = t._itemToObject(item),
-				parentItem = parentInfo && parentInfo[s.fetch ? 'item' : 'parent'],
-				parentId = parentItem ? s.getIdentity(parentItem) : '',
-				size = t._size[''];
-			t.clear();
-			t.onNew(s.getIdentity(item), 0, {
-				data: t._formatRow(row),
-				rawData: row,
-				item: item
-			});
-			if(!parentItem && size >= 0){
-				t._size[''] = size + 1;
-				t.model._onSizeChange();
-			}
-		},
-
-		_onDelete: function(item){
-			var t = this,
-				s = t.store,
-				st = t._struct,
-				id = s.fetch ? s.getIdentity(item) : item,
-				path = t.treePath(id);
-			if(path.length){
-				var children, i, j,
-					ids = [id],
-					parentId = path[path.length - 1],
-					sz = t._size,
-					size = sz[''],
-					index = indexOf(st[parentId], id);
-				//This must exist, because we've already have treePath
-				st[parentId].splice(index, 1);
-				--sz[parentId];
-
-				for(i = 0; i < ids.length; ++i){
-					children = st[ids[i]];
-					if(children){
-						for(j = children.length - 1; j > 0; --j){
-							ids.push(children[j]);
-						}
-					}
-				}
-				for(i = ids.length - 1; i >= 0; --i){
-					j = ids[i];
-					delete t._cache[j];
-					delete st[j];
-					delete sz[j];
-				}
-				i = indexOf(t._priority, id);
-				if(i >= 0){
-					t._priority.splice(i, 1);
-				}
-				t.onDelete(id, index - 1, path);
-				if(!parentId && size >= 0){
-					sz[''] = size - 1;
-					t.model._onSizeChange();
-				}
-			}else{
-				//FIXME: Don't know what to do if the deleted row was not loaded.
-				t.clear();
-				t.onDelete(id);
-//                var onBegin = hitch(t, _onBegin),
-//                    req = mixin({}, t.options || {}, {
-//                        start: 0,
-//                        count: 1
-//                    });
-//                setTimeout(function(){
-//                    if(s.fetch){
-//                        s.fetch(mixin(req, {
-//                            onBegin: onBegin
-//                        }));
-//                    }else{
-//                        var results = s.query(req.query, req);
-//                        Deferred.when(results.total, onBegin);
-//                    }
-//                }, 10);
-			}
-		}
-	});
-});
-
-},
 'gridx/allModules':function(){
 define([
 	'gridx/modules/Focus',
@@ -29155,6 +29583,7 @@ define([
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/SingleSort',
 	'gridx/modules/NestedSort',
+	'gridx/modules/Sort',
 	'gridx/modules/ColumnLock',
 	'gridx/modules/select/Row',
 	'gridx/modules/select/Column',
@@ -29191,10 +29620,15 @@ define([
 	'gridx/modules/HiddenColumns',
 	'gridx/modules/GroupHeader',
 	'gridx/modules/PagedBody',
-	'gridx/modules/HeaderMenu'
+	'gridx/modules/AutoPagedBody',
+	'gridx/modules/HeaderMenu',
+	'gridx/modules/SlantedHeader',
+	'gridx/modules/ExpandableColumn',
+	'gridx/modules/Layer',
+	'gridx/modules/StructureSwitch'
 ], function(
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
-	SingleSort, NestedSort, ColumnLock,
+	SingleSort, NestedSort, Sort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
 	MoveRow, MoveColumn,
@@ -29206,7 +29640,9 @@ define([
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
 	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, TouchVScroller,
-	HiddenColumns, GroupHeader, PagedBody, HeaderMenu){
+	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody,
+	HeaderMenu, SlantedHeader, ExpandableColumn,
+	Layer, StructureSwitch){
 return {
 	Focus: Focus,
 	VScroller: VScroller,
@@ -29214,6 +29650,7 @@ return {
 	VirtualVScroller: VirtualVScroller,
 	SingleSort: SingleSort,
 	NestedSort: NestedSort,
+	Sort: Sort,
 	ColumnLock: ColumnLock,
 	SelectRow: SelectRow,
 	SelectColumn: SelectColumn,
@@ -29250,7 +29687,12 @@ return {
 	HiddenColumns: HiddenColumns,
 	GroupHeader: GroupHeader,
 	PagedBody: PagedBody,
-	HeaderMenu: HeaderMenu
+	AutoPagedBody: AutoPagedBody,
+	HeaderMenu: HeaderMenu,
+	SlantedHeader: SlantedHeader,
+	ExpandableColumn: ExpandableColumn,
+	Layer: Layer,
+	StructureSwitch: StructureSwitch
 };
 });
 
@@ -29267,9 +29709,10 @@ define([
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojo/query",
+	"dojo/_base/sniff",
 	"../core/_Module"
 //    "dojo/NodeList-traverse"
-], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
+], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, has, _Module){
 
 /*=====
 	Column.setWidth = function(width){
@@ -29279,6 +29722,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: columnResizer.
 		//		Column Resizer machinery.
 		// description:
 		//		This module provides a way to resize column width. 
@@ -29332,31 +29776,45 @@ define([
 
 		setWidth: function(colId, width){
 			var t = this,
-				g = t.grid, i,
-				cols = g._columns,
-				col = g._columnsById[colId],
-				minWidth = t.arg('minWidth'),
-				oldWidth;
-			width = parseInt(width, 10);
-			if(width < minWidth){
-				width = minWidth;
-			}
-			col.width = width + 'px';
-			for(i = 0; i < cols.length; ++i){
-				cols[i].declaredWidth = cols[i].width;
-			}
-			query('[colid="' + g._escapeId(colId) + '"]', g.domNode).forEach(function(cell){
-				if(!oldWidth){
-					oldWidth = domStyle.get(cell, 'width');
+				g = t.grid,
+				col = g._columnsById[colId];
+			if(col){
+				var headerNode = g.header.getHeaderNode(colId),
+					headerNodeStyle = headerNode.style,
+					oldWidth = domStyle.get(headerNode, 'width'),
+					minWidth = t.arg('minWidth'),
+					padExtents = domGeometry.getPadExtents(headerNode),
+					pads = padExtents.l + padExtents.r,
+					cols = g._columns;
+
+				width = parseInt(width, 10);
+				if(width < minWidth){
+					width = minWidth;
 				}
-				var cs = cell.style;
-				cs.width = width + 'px';
-				cs.minWidth = width + 'px';
-				cs.maxWidth = width + 'px';
-			});
-			g.body.onRender();
-			g.vLayout.reLayout();
-			t.onResize(colId, width, oldWidth);
+				headerNodeStyle.width = width + 'px';
+				headerNodeStyle.minWidth = width + 'px';
+				headerNodeStyle.maxWidth = width + 'px';
+				width = headerNode.clientWidth - pads;
+				//set again in case actual effect is different from what we expect.
+				headerNodeStyle.width = width + 'px';
+				headerNodeStyle.minWidth = width + 'px';
+				headerNodeStyle.maxWidth = width + 'px';
+				//Use actual width as our new column width
+				col.width = width + 'px';
+				for(var i = 0, len = cols.length; i < len; ++i){
+					cols[i].declaredWidth = cols[i].width;
+				}
+				query('[colid="' + g._escapeId(colId) + '"]', g.bodyNode).forEach(function(cell){
+					var cs = cell.style;
+					cs.width = width + 'px';
+					cs.minWidth = width + 'px';
+					cs.maxWidth = width + 'px';
+				});
+				g.body.onRender();
+				g.hLayout.reLayout();
+				g.vLayout.reLayout();
+				t.onResize(colId, width, oldWidth);
+			}
 		},
 
 		//Event--------------------------------------------------------------
@@ -29400,6 +29858,12 @@ define([
 		_mouseout: function(e){
 			if(!this._resizing){
 				var pos = domGeometry.position(this.grid.header.domNode);
+				if(has('chrome')){
+					for(var i in pos){
+						pos[i] = Math.floor(pos[i]);
+					}
+				}
+				
 				if(e.clientY <= pos.y || e.clientY >= pos.y + pos.h ||
 					e.clientX <= pos.x || e.clientX >= pos.x + pos.w){
 					this._readyToResize = 0;
@@ -29426,6 +29890,10 @@ define([
 				t._updateResizer(e);
 				//Only mouse down, not moved yet
 				t._moving = 0;
+				//If column resizing should not cause any part of grid to be focused
+				setTimeout(function(){
+					g.focus.blur();
+				}, 0);
 			}else{
 				t._ismousedown = 1;
 			}
@@ -29499,11 +29967,11 @@ define([
 		},
 
 		_keydown: function(evt){
+			var t = this,
+				g = t.grid;
 			//support keyboard to resize a column
-			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && evt.ctrlKey && evt.shiftKey){
-				var t = this,
-					g = t.grid,
-					colId = evt.columnId,
+			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && g._isCtrlKey(evt) && evt.shiftKey){
+				var colId = evt.columnId,
 					cellNode = query('[colid="' + g._escapeId(colId) + '"].gridxCell', g.header.innerNode)[0],
 					step = t.arg('step');
 				step = evt.keyCode == keys.LEFT_ARROW ^ !!g.isLeftToRight() ? step : -step;
@@ -29523,7 +29991,8 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"
@@ -29532,6 +30001,7 @@ define([
 /*=====
 	return declare(VScroller, {
 		// summary:
+		//		module name: vScroller.
 		//		This module implements lazy-rendering when virtically scrolling grid.
 		// description:
 		//		This module takes a DOMNode-based way to implement lazy-rendering.
@@ -29618,10 +30088,7 @@ define([
 							focus.focusArea('body', 1);	//1 as true
 						}
 						t.lazy = t._lazy;
-						//wait for the dom nodes to settle down.
-						setTimeout(function(){
-							defer.callback(success);
-						}, 5);
+						defer.callback(success);
 					}
 				};
 			if(node){
@@ -29701,6 +30168,7 @@ define([
 	
 		_init: function(args){
 			var t = this;
+			t._avgRowHeight = t.grid.body.arg('defaultRowHeight') || 24;
 			t._rowHeight = {};
 			t._syncHeight();
 			t.connect(t.grid, '_onResizeEnd', function(){
@@ -29715,7 +30183,7 @@ define([
 				a = dn.scrollTop,
 				deltaT = a - (t._lastScrollTop || 0),
 				neighborhood = 2;
-	
+			
 			if(forced || deltaT){
 				t._lastScrollTop = a;
 	
@@ -29727,7 +30195,7 @@ define([
 					visualEnd = visualStart + view.visualCount,
 					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,
-					firstRowTop = firstRow && firstRow.offsetTop - deltaT,
+					firstRowTop = firstRow && firstRow.clientTop - deltaT,
 					lastRow = bn.lastChild,
 					lastRowBtm = lastRow && lastRow.offsetTop - deltaT + lastRow.offsetHeight,
 					bnTop = bn.scrollTop,
@@ -29738,7 +30206,8 @@ define([
 					nearTop = a <= neighborhood,
 					nearBottom = Math.abs(a - scrollRange) <= neighborhood,
 					start, end, pos, d;
-				if(bnTop == bnBtm && !bnBtm){
+				//In IE7 offsetTop will be -1 when grid is hidden
+				if((bnTop == bnBtm && !bnBtm) || (lastRow && lastRow.offsetTop < 0)){
 					//The grid is not correctly shown, so we just ignore.
 					return;
 				}
@@ -29754,6 +30223,17 @@ define([
 					d = Math.ceil((bnBtm - lastRowBtm) * ratio / h) + buffSize;
 					end = nearBottom && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
+					
+					if(deltaT === 0 && start == visualEnd){
+						//If the last row in the grid has very big height and then change 
+						//to normal or very small height, need to add rows to the front.
+						//this usually appear in DOD, especially GridInGrid mode
+						
+						end = body.renderStart;
+						d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
+						start = nearTop ? visualStart : Math.max(end - d, visualStart);
+						pos = "top";
+					}
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
 					if(a <= scrollRange / 2){
@@ -29809,13 +30289,17 @@ define([
 		
 		_doScroll: function(e, forced, noLazy){
 			var t = this;
-			if(!noLazy && t.arg('lazy')){
-				if(t._lazyScrollHandle){
-					clearTimeout(t._lazyScrollHandle);
+			//FIXME: this _lock flag is ugly. This flag is only to avoid accidentlly triggering onscroll event handling
+			// especially when using Layer.js to drill down.
+			if(!t._lock || forced){
+				if(!noLazy && t.arg('lazy') && !forced){
+					if(t._lazyScrollHandle){
+						clearTimeout(t._lazyScrollHandle);
+					}
+					t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
+				}else{
+					t._doVirtualScroll(forced);
 				}
-				t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
-			}else{
-				t._doVirtualScroll(forced);
 			}
 		},
 	
@@ -29833,7 +30317,7 @@ define([
 			t._doScroll(0, 1);
 			//If some scrollToRow requests are pending, resume them.
 			array.forEach(t._scrolls, function(d){
-				if(d.scrollContext){
+				if(d && d.scrollContext){
 					//delete scrollContext to avoid firing multiple times.
 					var scrollContext = d.scrollContext;
 					delete d.scrollContext;
@@ -29866,12 +30350,22 @@ define([
 				h = maxHeight;
 			}
 			var dn = t.domNode,
+				bn = t.grid.bodyNode,
 				//remember the scroll bar position
-				r = dn.scrollTop / dn.scrollHeight;
+				oldScrollTop = dn.scrollTop,
+				isBottom = oldScrollTop >= dn.scrollHeight - dn.offsetHeight;
 			t.stubNode.style.height = h + 'px';
 			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
 			if(t._lastScrollTop){
-				t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
+				//If we were at bottom, should keep us at bottom after height change.
+				dn.scrollTop = isBottom ? dn.scrollHeight : oldScrollTop;
+				t._lastScrollTop = dn.scrollTop;
+			}
+			//Force body scrollTop to sync with vscroller
+			if(dn.scrollTop >= dn.scrollHeight - dn.offsetHeight){
+				bn.scrollTop = bn.scrollHeight;
+			}else if(!dn.scrollTop){
+				bn.scrollTop = 0;
 			}
 		},
 	
@@ -29899,7 +30393,11 @@ define([
 				ret = 0;
 	
 			array.forEach(bn.childNodes, function(n){
-				rh[n.getAttribute('rowid')] = n.offsetHeight;
+				var oh = n.offsetHeight;
+				rh[n.getAttribute('rowid')] = oh;
+				// Save the offsetHeight of this row so that we don't have to get offsetHeight again during
+				// Body::unrenderRows(), which is a very expensive operation
+				n.setAttribute("data-rowHeight", oh);
 				if(n.offsetTop > bottom){
 					++postCount;
 				}else if(n.offsetTop + n.offsetHeight < top){
@@ -29920,7 +30418,7 @@ define([
 				h += rh[p];
 				++c;
 			}
-			if(c){
+			if(h && c){
 				t._avgRowHeight = h / c;
 				t._syncHeight();
 			}
@@ -29933,16 +30431,17 @@ define([
 				view = t.grid.view,
 				focus = t.grid.focus,
 				sn = t.domNode,
+				ctrlKey = t.grid._isCtrlKey(evt),
 				st = 'scrollTop',
 				r,
 				fc = '_focusCellRow';
 			if(!focus || focus.currentArea() == 'body'){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					bd._focusCellCol = 0;
 					bd[fc] = 0;
 					sn[st] = 0;
 					bd._focusCell();
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					bd._focusCellCol = t.grid._columns.length - 1;
 					bd[fc] = view.visualCount - 1;
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;
@@ -30002,6 +30501,7 @@ define([
 
 	var SingleSort = declare(_Module, {
 		// summary:
+		//		module name: sort.
 		//		This module provides the single column sorting functionality for grid.
 
 		// initialOrder: Object|Array
@@ -30095,7 +30595,6 @@ define([
 
 		load: function(){
 			var t = this,
-				columnsById = t.grid._columnsById,
 				refresh = function(){
 					var columnsById = t.grid._columnsById;
 					for(var colId in columnsById){
@@ -30166,9 +30665,11 @@ define([
 			var t = this;
 			if(t._sortId !== null){
 				var headerCell = t.grid.header.getHeaderNode(t._sortId);
-				domClass.remove(headerCell, 'gridxCellSorted');
-				domClass.remove(headerCell, 'gridxCellSortedAsc');
-				domClass.remove(headerCell, 'gridxCellSortedDesc');
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+				}
 				t._sortId = t._sortDescend = null;
 				t.model.sort();
 				if(!skipUpdateBody){
@@ -30211,13 +30712,15 @@ define([
 				headerCell;
 			if(t._sortId && t._sortId != colId){
 				headerCell = g.header.getHeaderNode(t._sortId);
-				domClass.remove(headerCell, 'gridxCellSorted');
-				domClass.remove(headerCell, 'gridxCellSortedAsc');
-				domClass.remove(headerCell, 'gridxCellSortedDesc');
-				headerCell.setAttribute('aria-sort', 'none');
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+					headerCell.setAttribute('aria-sort', 'none');
+				}
 			}
 			t._sortId = colId;
-			t._sortDescend = !!isDescending;
+			t._sortDescend = isDescending = !!isDescending;
 			headerCell = g.header.getHeaderNode(colId);
 			domClass.add(headerCell, 'gridxCellSorted');
 			domClass.toggle(headerCell, 'gridxCellSortedAsc', !isDescending);
@@ -30336,13 +30839,13 @@ define([
 	"dojo/keys",
 	"../core/_Module",
 	"../core/model/extensions/Sort",
-	"dojo/i18n!../nls/NestedSort",
 	"./HeaderRegions"
-], function(declare, array, lang, event, query, string, domClass, domConstruct, keys, _Module, Sort, nls){
+], function(declare, array, lang, event, query, string, domClass, domConstruct, keys, _Module, Sort){
 
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: sort.
 		//		Sort multiple columns in a nested way.
 
 		getSortData: function(){
@@ -30460,7 +30963,8 @@ define([
 
 		//Private---------------------------------------------------------------------------
 		_createBtn: function(isSingle, col){
-			var t = this;
+			var t = this,
+				nls = t.grid.nls;
 			if(t.isSortable(col.id)){
 				var btn = domConstruct.create('div', {
 					'class': 'gridxSortBtn gridxSortBtn' + (isSingle ? 'Single' : 'Nested'),
@@ -30530,8 +31034,11 @@ define([
 		_updateUI: function(){
 			var t = this,
 				g = t.grid,
+				nls = g.nls,
 				dn = g.domNode,
-				sortData = t._sortData;
+				sortData = array.filter(t._sortData, function(s){
+					return g._columnsById[s.colId];
+				});
 			removeClass(dn, 'gridxSingleSorted');
 			removeClass(dn, 'gridxNestedSorted');
 			if(sortData.length == 1){
@@ -30594,8 +31101,8 @@ define([
 				orderState = data.descending ? 'descending' : 'ascending';
 				orderAction = data.descending ? 'none' : 'descending';
 			}
-			var a11ySingleLabel = string.substitute(nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]),
-				a11yNestedLabel = string.substitute(nls.waiNestedSortLabel, [columnInfo, orderState, orderAction]);
+			var a11ySingleLabel = string.substitute(this.grid.nls.waiSingleSortLabel, [columnInfo, orderState, orderAction]),
+				a11yNestedLabel = string.substitute(this.grid.nls.waiNestedSortLabel, [columnInfo, orderState, orderAction]);
 			query('.gridxSortBtnSingle', cell)[0].setAttribute("aria-label", a11ySingleLabel);
 			query('.gridxSortBtnNested', cell)[0].setAttribute("aria-label", a11yNestedLabel);
 		}
@@ -30620,6 +31127,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: headerRegions.
 		//		This module makes it easy to add custom contents to column header.
 		//		Other modules such as NestedSort or HeaderMenu can be based upon this module.
 
@@ -30658,14 +31166,14 @@ declare(_Module, {
 		t.refresh();
 		t._initFocus();
 		t.aspect(t.grid.header, 'onRender', 'refresh');
-		t.aspect(t.grid, 'onHeaderKeyDown', '_onKey');
 		t.loaded.callback();
 	},
 
-	add: function(creater, priority, skipRefresh){
+	add: function(creater, priority, skipRefresh, skipFocus){
 		this._regions.push({
 			c: creater,
 			p: priority || 0,
+			f: !skipFocus,
 			n: {}
 		});
 		if(!skipRefresh){
@@ -30688,27 +31196,41 @@ declare(_Module, {
 				return b.p - a.p;
 			});
 			query('.gridxCell', g.header.domNode).forEach(function(node){
+				domClass.remove(node, 'gridxCellRegion');
 				var colId = node.getAttribute('colid'),
 					col = g.column(colId, 1),
-					nameNode = query('.gridxSortNode', node)[0];
-				regionNodes.push(nameNode);
-				nameNode.setAttribute('tabindex', -1);
-				t._regionCnnts.push(t.connect(nameNode, 'onblur', '_onRegionBlur'));
+					tmpArr = [];
 				array.forEach(regions, function(region){
 					var regionNode = region.n[colId];
 					if(!regionNode){
 						regionNode = region.n[colId] = region.c(col);
 						if(regionNode){
-							regionNode.setAttribute('tabindex', -1);
 							domClass.add(regionNode, 'gridxHeaderRegion');
-							t.connect(regionNode, 'onblur', '_onRegionBlur');
+							if(region.f){
+								domClass.add(regionNode, 'gridxHeaderRegionFocusable');
+								regionNode.setAttribute('tabindex', -1);
+								t.connect(regionNode, 'onblur', '_onRegionBlur');
+							}
 						}
 					}
 					if(regionNode){
 						domConstruct.place(regionNode, node, 'first');
-						regionNodes.push(regionNode);
+						if(region.f){
+							tmpArr.push(regionNode);
+						}
 					}
 				});
+				if(tmpArr.length){
+					var nameNode = query('.gridxSortNode', node)[0];
+					regionNodes.push(nameNode);
+					nameNode.setAttribute('tabindex', -1);
+					t._regionCnnts.push(t.connect(nameNode, 'onblur', '_onRegionBlur'));
+				}else{
+					regionNodes.push(node);
+					domClass.add(node, 'gridxCellRegion');
+					t._regionCnnts.push(t.connect(node, 'onblur', '_onRegionBlur'));
+				}
+				regionNodes.push.apply(regionNodes, tmpArr);
 			});
 			if(!regionNodes[t._curRegionIdx]){
 				t._curRegionIdx = 0;
@@ -30732,7 +31254,10 @@ declare(_Module, {
 			focusNode: g.header.domNode,
 			scope: t,
 			doFocus: t._doFocus,
-			onFocus: t._onFocus
+			onFocus: t._onFocus,
+			connects: [
+				t.aspect(g, 'onHeaderKeyDown', '_onKey')
+			]
 		});
 	},
 
@@ -30752,10 +31277,13 @@ declare(_Module, {
 	},
 
 	_focusRegion: function(region){
-		if(region){
-			var t = this,
-				g = t.grid,
-				header = g.header.domNode,
+		var t = this,
+			g = t.grid;
+		if(region && !t._lock){
+			//focus fires onFocus, which triggers _focusRegion recursively.
+			//Add a lock to avoid recursion.
+			t._lock = 1;
+			var header = g.header.domNode,
 				headerCell = query(region).closest('.gridxCell', header)[0];
 			t._curRegionIdx = array.indexOf(t._regionNodes, region);
 			try{
@@ -30773,12 +31301,13 @@ declare(_Module, {
 				if(g.hScroller){
 					g.hScroller.scrollToColumn(headerCell.getAttribute('colid'));
 				}
+				t._lock = 0;
 			}, 0);
 		}
 	},
 
 	_onKey: function(e){
-		if(!e.ctrlKey && !e.shiftKey && !e.altKey){
+		if(!this.grid._isCtrlKey(e) && !e.shiftKey && !e.altKey){
 			var ltr = this.grid.isLeftToRight(),
 				nextKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW,
 				prevKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW;
@@ -30807,6 +31336,426 @@ declare(_Module, {
 });
 
 },
+'gridx/modules/Sort':function(){
+define([
+/*====="gridx/core/Column",=====*/
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/query",
+	"dojo/_base/event",
+	"dojo/_base/sniff",
+	"dojo/string",
+	"dojo/keys",
+	"dojo/dom",
+	"dojo/dom-class",
+	"../core/model/extensions/Sort",
+	"../core/_Module"
+], function(/*=====Column, =====*/declare, array, query, event, has, string, keys, dom, domClass, Sort, _Module){
+
+/*=====
+	Column.sort = function(isDescending, isAdd){
+		// summary:
+		//		
+	};
+	Column.isSorted = function(){
+		// summary:
+		//		
+	};
+	Column.clearSort = function(){
+		// summary:
+		//		
+	};
+	Column.isSortable = function(){
+		// summary:
+		//		
+	};
+	Column.setSortable = function(sortable){
+		// summary:
+		//		
+	};
+
+	return declare(_Module, {
+		// summary:
+		//		module name: sort.
+		//		A sort module suitable for both nested sort and single sort.
+
+		// initialOrder: Object[]
+		//		The initial sort order when grid is created.
+		//		This is of the same format of the sort argument of the store fetch function.
+		initialOrder: null,
+
+		// nested: Boolean
+		//		Whether nested sort is allowed.
+		//		If true, CTRL+click does nested sort.
+		//		If false, only single sort.
+		nested: true,
+
+		sort: function(sortData){
+			// summary:
+			//		
+		},
+
+		isSorted: function(colId){
+			// summary:
+			//		
+		},
+
+		clear: function(){
+			// summary:
+			//		
+		},
+
+		getSortData: function(){
+			// summary:
+			//		
+		}
+	});
+=====*/
+
+	return _Module.register(
+	declare(_Module, {
+		name: 'sort',
+
+		forced: ['header'],
+
+		modelExtensions: [Sort],
+
+		constructor: function(){
+			this._sortData = [];
+		},
+
+		preload: function(){
+			var t = this,
+				g = t.grid, sort;
+			domClass.add(g.domNode, 'gridxSort');
+			t.aspect(g, 'onHeaderCellClick', '_onClick');
+			t.aspect(g, 'onHeaderCellMouseOver', 'reLayout', g.vLayout);
+			t.aspect(g, 'onHeaderCellMouseOut', 'reLayout', g.vLayout);
+			t.aspect(g.header, 'onRender', '_update');
+			t.connect(g, 'onHeaderCellTouchStart', function(evt){
+				query('.gridxHeaderCellTouch', g.header.domNode).removeClass('gridxHeaderCellTouch');
+				domClass.add(evt.headerCellNode, 'gridxHeaderCellTouch');
+			});
+			t.connect(g, 'onHeaderCellTouchEnd', function(evt){
+				domClass.remove(evt.headerCellNode, 'gridxHeaderCellTouch');
+			});
+			//persistence support
+			if(g.persist){
+				sort = g.persist.registerAndLoad('sort', function(){
+					return t._sortData;
+				});
+			}
+			//Presort...
+			sort = sort || t.arg('initialOrder');
+			if(sort && sort.length){
+				t._sortData = sort;
+				//sort here so the body can render correctly.
+				t.model.sort(sort);
+			}
+		},
+
+		load: function(){
+			var t = this,
+				g = t.grid;
+			t._update();
+			if(has('ff')){
+				//Only in FF, there will be a selection border on the header node when clicking it holding CTRL.
+				dom.setSelectable(g.header.domNode, false);
+			}
+			t._initFocus();
+			t.loaded.callback();
+		},
+
+		columnMixin: {
+			sort: function(isDescending, isAdd){
+				var sort = this.grid.sort;
+				sort._prepareSortData(this.id, isAdd);
+				return sort.sort(sort._sortData);
+			},
+
+			isSorted: function(){
+				return this.grid.sort.isSorted(this.id);
+			},
+
+			clearSort: function(){
+				this.grid.sort.clear();
+				return this;
+			},
+
+			isSortable: function(){
+				var col = this.grid._columnsById[this.id];
+				return col.sortable || col.sortable === undefined;
+			},
+
+			setSortable: function(isSortable){
+				this.grid._columnsById[this.id].sortable = isSortable;
+				return this;
+			}
+		},
+
+		//Public--------------------------------------------------------------
+		nested: true,
+
+		sort: function(sortData){
+			//A column is always sortable programmatically. The sortable attribute is only meaningful for UI
+			this._sortData = sortData || [];
+			this.model.sort(sortData);
+			this._updateHeader();
+			return this.grid.body.refresh();
+		},
+
+		isSorted: function(colId){
+			for(var i = this._sortData.length - 1; i >= 0; --i){
+				var s = this._sortData[i];
+				if(s.colId === colId){
+					return s.decending ? -1 : 1;
+				}
+			}
+			return 0;
+		},
+
+		clear: function(){
+			this.sort();
+		},
+
+		getSortData: function(){
+			return this._sortData;
+		},
+
+		//Private--------------------------------------------------------------
+		_sortData: null,
+
+		_onClick: function(e){
+			event.stop(e);
+			this._sort(e.columnId, domClass.contains(e.target, 'gridxArrowButtonNode'), this.grid._isCtrlKey(e));
+		},
+
+		_sort: function(id, isSortArrow, isNested){
+			var g = this.grid;
+			this._focusHeaderId = id;
+			this._focusSortArrow = isSortArrow;
+			if(g.column(id, 1).isSortable() && (isSortArrow || !g.select || !g.select.column)){
+				this._prepareSortData(id,  isNested);
+				this.sort(this._sortData);
+			}
+		},
+
+		_prepareSortData: function(colId, isAdd){
+			var t = this,
+				oneway = true,
+				desc = false,
+				sortable = t.grid._columnsById[colId].sortable;
+			isAdd = t.arg('nested') && isAdd;
+			if(sortable == 'descend'){
+				desc = true;
+			}else if(sortable != 'ascend'){
+				oneway = false;
+			}
+			for(var s, i = t._sortData.length - 1; i >= 0; --i, s = 0){
+				s = t._sortData[i];
+				if(s.colId === colId){
+					s.descending = oneway ? desc : !s.descending;
+					break;
+				}
+			}
+			if(!s){
+				s = {
+					colId: colId,
+					descending: oneway && desc
+				};
+				t._sortData.push(s);
+			}
+			if(!isAdd){
+				t._sortData = [s];
+			}
+		},
+
+		_getSortModeCls: function(col){
+			return {
+				ascend: 'gridxSortAscendOnly',
+				descend: 'gridxSortDescendOnly'
+			}[col.isSortable()] || '';
+		},
+
+		_initHeader: function(col){
+			var	n = col.headerNode();
+			n.innerHTML = ["<div class='gridxSortNode'><div role='presentation' tabindex='0' class='gridxArrowButtonNode ",
+				this._getSortModeCls(col),
+				"'></div><div class='gridxColCaption'>",
+				col.name(),
+				"</div></div>"
+			].join('');
+			n.removeAttribute('aria-sort');
+			this._setTitle(n, col);
+		},
+
+		_update: function(){
+			var t = this,
+				g = t.grid;
+			query('.gridxCell', g.header.domNode).forEach(function(node){
+				var col = g.column(node.getAttribute('colid'), 1);
+				if(col.isSortable()){
+					t._initHeader(col);
+				}
+				t._setTitle(node, col);
+			});
+			t._updateHeader();
+		},
+
+		_setTitle: function(headerCellNode, col){
+			if(col.isSortable()){
+				headerCellNode.setAttribute('title', string.substitute(
+					this.arg('nested') ? this.grid.nls.helpMsg : this.grid.nls.singleHelpMsg,
+				//If column name includes HTML tags, can provide tooltip instead.
+				[col.def().tooltip || col.name()]));
+			}
+		},
+
+		_updateHeader: function(){
+			var g = this.grid;
+			query('[aria-sort]', g.header.domNode).forEach(function(n){
+				this._initHeader(g.column(n.getAttribute('colid'), 1));
+			}, this);
+			var sortData = array.filter(this._sortData, function(s){
+				return g._columnsById[s.colId];
+			});
+			for(var i = 0, len = sortData.length; i < len; ++i){
+				var s = sortData[i],
+					col = g.column(s.colId, 1),
+					n = col.headerNode();
+				n.innerHTML = ["<div class='gridxSortNode ",
+					(s.descending ? 'gridxSortDown' : 'gridxSortUp'),
+					"'><div role='presentation' tabindex='0' class='gridxArrowButtonNode ",
+					this._getSortModeCls(col), "'>",
+					"<div class='gridxArrowButtonChar'>",
+					(s.descending ? "&#9662;" : "&#9652;"),
+					"</div></div><div class='",
+					len == 1 ? "gridxSortSingle" : "gridxSortNested",
+					"'>", i + 1,
+					"</div><div class='gridxColCaption'>", col.name(),
+					"</div></div>"
+				].join('');
+				n.setAttribute('aria-sort', s.descending ? 'descending' : 'ascending');
+				//FIXME: it there any better way to set aria sort priority?
+				if(this.arg('nested')){
+					var priority = string.substitute(g.nls.priorityOrder, [i + 1]);
+					n.setAttribute('aria-label', (col.def().tooltip || col.name()) + ', ' + priority);
+				}
+			}
+			g.vLayout.reLayout();
+			if(g.focus && g.focus.currentArea() == 'header'){
+				this._focus(this._focusHeaderId);
+			}
+		},
+
+		//Keyboard support-----------------------------------------------------------------
+		_focusHeaderId: null,
+
+		_focusSortArrow: false,
+
+		_initFocus: function(){
+			var g = this.grid, focus = g.focus;
+			if(focus){
+				if(g.select && g.select.column){
+					focus.registerArea({
+						name: 'header',
+						priority: 0,
+						focusNode: g.header.domNode,
+						scope: this,
+						doFocus: this._doFocus,
+						onFocus: this._onFocus,
+//                        doBlur: hitch(this, this._doBlur),
+//                        onBlur: hitch(this, this._onBlur),
+						connects: [this.connect(g, 'onHeaderCellKeyPress', '_onKeyPress')]
+					});
+				}else{
+					this.connect(g, 'onHeaderCellKeyDown', function(evt){
+						if(evt.keyCode == keys.ENTER || evt.keyCode == keys.SPACE){
+							this._sort(evt.columnId, false, g._isCtrlKey(evt));
+						}
+					});
+				}
+			}
+		},
+
+		_doFocus: function(evt){
+			var id = this._focusHeaderId = this._focusHeaderId || this.grid._columns[0].id;
+			this._focus(id, evt);
+			return true;
+		},
+
+		_onFocus: function(evt){
+			this._focusSortArrow = false;
+			return true;
+		},
+
+//        _doBlur: function(){
+//            return true;
+//        },
+
+//        _onBlur: function(){
+//            return true;
+//        },
+
+		_onKeyPress: function(e){
+			switch(e.keyCode){
+				case keys.RIGHT_ARROW:
+				case keys.LEFT_ARROW:
+					this._moveFocus(e);
+					break;
+				case keys.ENTER:
+				case keys.SPACE:
+					this._sort(this._focusHeaderId, this._focusSortArrow, this.grid._isCtrlKey(e));
+			}
+		},
+
+		_moveFocus: function(evt){
+			if(this._focusHeaderId){	//Only need to move focus when we are already focusing on a column
+				var col, g = this.grid, dir = g.isLeftToRight() ? 1 : -1,
+					delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir,
+					focusSortArrow = this._focusSortArrow;
+				event.stop(evt);	//Prevent scrolling the whole page.
+				col = g.column(this._focusHeaderId, 1);
+				var sortable = col.isSortable();
+				if(!sortable || focusSortArrow ^ (delta < 0)){
+					col = g.column(col.index() + delta);
+				}
+				if(col){
+					this._focusHeaderId = col.id;
+					this._focusSortArrow = col.isSortable() && (sortable || delta < 0) && !focusSortArrow;
+					this._focus(col.id, evt);
+				}
+			}
+		},
+
+		_focus: function(id, evt){
+			var header = this.grid.header,
+				headerNode = header.getHeaderNode(id);
+			header._focusNode(headerNode);
+			if(evt){
+				header.onMoveToHeaderCell(id, evt);
+			}
+			this._focusArrow(id);
+		},
+
+		_focusArrow: function(id){
+			var header = this.grid.header;
+			query('.gridxArrowButtonFocus', header.domNode).forEach(function(node){
+				domClass.remove(node, 'gridxArrowButtonFocus');
+			});
+			if(this._focusSortArrow){
+				var arrowNode = query('.gridxArrowButtonNode', header.getHeaderNode(id))[0];
+				if(arrowNode){
+					domClass.add(arrowNode, 'gridxArrowButtonFocus');
+					arrowNode.focus();
+				}
+			}
+		}
+	}));
+});
+
+
+},
 'gridx/modules/ColumnLock':function(){
 define([
 	"dojo/dom-style",
@@ -30824,6 +31773,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: columnLock.
 		//		Column lock machinery.
 		// description:
 		//		This module provides a way to lock consecutive leading columns. 
@@ -30875,11 +31825,16 @@ define([
 						_this._lockColumns(row.node());
 					});
 					_this.connect(g.columnWidth, 'onUpdate', '_updateHeader');
+					_this.connect(g.header, 'onRender', '_updateHeader');
+					_this.connect(g.body, 'onRender', '_updateBody');
 					if(g.columnResizer){
 						//make it compatible with column resizer
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
 						_this.connect(g.columnResizer, 'onResize', '_updateBody');
 					}
+
+					_this.connect(g, '_onResizeEnd', '_updateHeader');
+					_this.connect(g, '_onResizeEnd', '_updateBody');
 					if(g.header){
 						g.header.loaded.then(function(){
 							_this._updateHeader();
@@ -30900,7 +31855,6 @@ define([
 		lock: function(/*Integer*/count){
 			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
 			if(count >= this.grid._columns.length){
-				this.count = 0;
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
 				return;
 			}
@@ -30937,6 +31891,7 @@ define([
 			}
 			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = '0px';
 			rowNode.style.width = 'auto';
+			rowNode.firstChild.style.height = 'auto';
 		},
 		
 		_updateUI: function(){
@@ -30952,32 +31907,30 @@ define([
 			// summary:
 			//	Lock columns for one row
 			if(!this.count || this.count >= this.grid._columns.length){
-				this.count = 0;
 				return;
 			}
 			
 			var isHeader = domClass.contains(rowNode, 'gridxHeaderRowInner');
 			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
+			rowNode.firstChild.style.height = 'auto';	//Remove the height of the last locked state.
 			for(i = 0; i < this.count; i++){
 				domStyle.set(r.cells[i], 'height', 'auto');
 			}
 			
 			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
-			
-			var h3 = window.getComputedStyle(rowNode.firstChild, null).getPropertyValue('height');
 
-			if(has('ie') > 8){		//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
-									//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
-				
-				if(h3.toString().indexOf('.') >= 0){		//decimal
-				// if(Math.ceil(parseInt(h3, 10)) !== parseInt(h3, 10)){		//decimal
-					0 && console.log('h3 is: ', h3);
+			if(has('ie') > 8){
+				//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
+				//so that the locked cells will have different height with the unlocked ones.
+				//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px
+				var h3 = domStyle.getComputedStyle(rowNode.firstChild).height;
+				if(String(h3).toString().indexOf('.') >= 0){		//decimal
 					h2++;
 					h1++;
 				}
-			}	
+			}
 			domStyle.set(rowNode.firstChild, 'height', h2 + 'px');
 			
 			var lead = isHeader ? this.grid.hLayout.lead : 0,
@@ -30987,11 +31940,8 @@ define([
 				var cell = r.cells[i],
 					s;
 				domClass.add(cell, 'gridxLockedCell');
-				// if(has('ie') > 8){
-					// s = {height: h1 + 1 + 'px'};
-				// }else{
-					s = {height: h1 + 'px'};
-				// }
+
+				s = {height: h1 + 'px'};
 				s[ltr ? 'left' : 'right'] = pl + 'px';
 				domStyle.set(cell, s);
 				
@@ -31101,6 +32051,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectRow.
 		//		Provides simple row selection.
 		// description:
 		//		This module provides a simple way for selecting rows by clicking or SPACE key, or CTRL + Click to select multiple rows.
@@ -31228,6 +32179,7 @@ define([
 			if(n){
 				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+				t.onSelectionChange();
 			}
 		},
 
@@ -31258,9 +32210,10 @@ define([
 
 		_getUnselectableRows: function(){
 			var ret = [],
-				unselectable = this.arg('unselectable');
+				t = this,
+				unselectable = t.arg('unselectable');
 			for(var id in unselectable){
-				if(this.unselectable[id]){
+				if(t.unselectable[id] && t.model.byId(id)){
 					ret.push(id);
 				}
 			}
@@ -31278,14 +32231,28 @@ define([
 			t.inherited(arguments);
 			t.model._spTypes.select = 1;
 			t.model.setMarkable(lang.hitch(t, '_isSelectable'));
+			function canSelect(e){
+				if(e.columnId){
+					var col = g._columnsById[e.columnId];
+					if(t.arg('triggerOnCell')){
+						return col.rowSelectable !== false &&
+							!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+							!domClass.contains(e.target, 'gridxTreeExpandoInner');
+					}
+					return col.rowSelectable;
+				}
+				return !e.columnId;
+			}
 			t.batchConnect(
-				[g, 'onRowClick', function(e){
+				[g, 'onRowMouseDown', function(e){
 					//Have to check whether we are on the 
-					if((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) ||
-						!e.columnId){
-						t._select(e.rowId, g._isCopyEvent(e));
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e));
+					}
+				}],
+				[g, 'onRowTouchStart', function(e){
+					if(canSelect(e)){
+						t._select(e.rowId, g._isCtrlKey(e) || e.columnId === '__indirectSelect__');
 					}
 				}],
 				[g.body, 'onAfterRow', function(row){
@@ -31293,14 +32260,19 @@ define([
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
 				}],
 				[g, has('ff') < 4 ? 'onRowKeyUp' : 'onRowKeyDown', function(e){
-					if((t.arg('triggerOnCell') || !e.columnId) && e.keyCode == keys.SPACE){
+					if(e.keyCode == keys.SPACE && (!e.columnId ||
+							(g._columnsById[e.columnId].rowSelectable) ||
+							//When trigger on cell, check if we are navigating on body, reducing the odds of conflictions.
+							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						var cell = g.cell(e.rowId, e.columnId);
 						if(!(cell && cell.isEditing && cell.isEditing())){
-							t._select(e.rowId, g._isCopyEvent(e));
+							t._select(e.rowId, g._isCtrlKey(e));
 							event.stop(e);
 						}
 					}
-				}]);
+				}],
+				[g.model, 'setStore', '_syncUnselectable']
+				);
 		},
 
 		_onMark: function(id, toMark, oldState, type){
@@ -31349,6 +32321,14 @@ define([
 					id = rowNode.getAttribute('rowid');
 					t._highlight(id, model.getMark(id));
 				}
+			}
+		},
+		
+		_syncUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
 			}
 		}
 	});
@@ -31551,6 +32531,7 @@ define([
 				2: true
 			};
 			t.clear();
+			t._tree = {};
 			t._mixinAPI('getMark', 'getMarkedIds', 'markById', 'markByIndex', 'clearMark', 'treeMarkMode', 'setMarkable');
 			t.aspect(model, '_msg', '_receiveMsg');
 			t.aspect(model._cache, 'onLoadRow', '_onLoadRow');
@@ -31564,7 +32545,6 @@ define([
 			this._byId = {};
 			this._last = {};
 			this._lazy = {};
-			this._tree = {};
 			this._unmarkable = {};
 		},
 
@@ -31790,7 +32770,6 @@ define([
 				if(!toMark){
 					delete t._byId[type][id];
 				}
-				//0 && console.log('mark change: ', id, ', state: ', oldState, ' => ', toMark);
 				m.onMarkChange(id, t.states[toMark || 0], t.states[oldState || 0], type);
 			}
 		},
@@ -31803,26 +32782,23 @@ define([
 			for(var i = treePath.length - 1; i > 0; --i){
 				var pid = treePath[i],
 					oldState = byId[pid],
-					siblings = array.filter(mm._call('children', [pid]), function(childId){
-						return t._isMarkable(type, childId);
-					}),
+					siblings = mm._call('children', [pid]),
 					markCount = array.filter(siblings, function(childId){
 						return last[childId] = byId[childId];
 					}).length,
 					fullCount = array.filter(siblings, function(childId){
 						return byId[childId] == 2;
 					}).length;
-				if(t._isMarkable(type, pid)){
-					if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
-						byId[pid] = 2; //none|partial -> all
-					}else if(!markCount && oldState){
-						delete byId[pid]; //all|partial -> none
-					}else if(markCount && fullCount < siblings.length && oldState != 1){
-						byId[pid] = 1; //all|none -> partial
-					}
-					if(!noEvent){
-						t._fireEvent(pid, type, byId[pid], oldState);
-					}
+				// if(t._isMarkable(type, pid)){
+				if(fullCount != 0 && fullCount == siblings.length && oldState != 2){
+					byId[pid] = 2; //none|partial -> all
+				}else if(!markCount && oldState){
+					delete byId[pid]; //all|partial -> none
+				}else if(markCount && fullCount < siblings.length && oldState != 1){
+					byId[pid] = 1; //all|none -> partial
+				}
+				if(!noEvent){
+					t._fireEvent(pid, type, byId[pid], oldState);
 				}
 			}
 		},
@@ -31855,11 +32831,9 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					if(t._isMarkable(tp, childId)){
-						newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
-						if(!noEvent){
-							t._fireEvent(childId, tp, newState, oldState);
-						}
+					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
+					if(!noEvent){
+						t._fireEvent(childId, tp, newState, oldState);
 					}
 					if(mm._call('hasChildren', [childId])){
 						children = mm._call('children', [childId]);
@@ -31914,6 +32888,7 @@ define([
 
 	return declare(_Base, {
 		// summary:
+		//		module name: selectColumn.
 		//		Provides simple column selection.
 		// description:
 		//		This module provides a simple way for selecting columns by clicking or SPACE key, 
@@ -32044,12 +33019,12 @@ define([
 			t.batchConnect(
 				[g, 'onHeaderCellClick', function(e){
 					if(!domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, g._isCtrlKey(e));
 					}
 				}],
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, g._isCtrlKey(e));
 						event.stop(e);
 					}
 				}]
@@ -32125,6 +33100,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectCell.
 		//		Provides simple cell selection.
 		// description:
 		//		This module provides a simple way for selecting cells by clicking or SPACE key, or CTRL + Click to select multiple cells.
@@ -32262,16 +33238,19 @@ define([
 			var t = this,
 				g = t.grid;
 			t.inherited(arguments);
+			var doSelect = function(e){
+				if((!g.select.row || !g.select.row.arg('triggerOnCell')) &&
+					!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+					!domClass.contains(e.target, 'gridxTreeExpandoInner')){
+					t._select([e.rowId, e.columnId], g._isCtrlKey(e));
+				}
+			};
 			t.batchConnect(
-				[g, 'onCellClick', function(e){
-					if(!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
-					}
-				}],
+				[g, 'onCellClick', doSelect],
+				[g, 'onCellTouchStart', doSelect],
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
-						t._select([e.rowId, e.columnId], g._isCopyEvent(e));
+						t._select([e.rowId, e.columnId], g._isCtrlKey(e));
 						event.stop(e);
 					}
 				}]);
@@ -32369,6 +33348,7 @@ define([
 	
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectRow.
 		//		Provides advanced row selections.
 		// description:
 		//		This module provides an advanced way for selecting rows by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple rows.
@@ -32504,6 +33484,7 @@ define([
 			if(n){
 				domClass.toggle(n, 'gridxRowUnselectable', !selectable);
 				t.onHighlightChange({row: parseInt(n.getAttribute('visualindex'), 10)}, m.getMark(rowId));
+				t.onSelectionChange();
 			}
 		},
 
@@ -32543,9 +33524,10 @@ define([
 
 		_getUnselectableRows: function(){
 			var ret = [],
+				t = this,
 				unselectable = this.arg('unselectable');
 			for(var id in unselectable){
-				if(unselectable[id]){
+				if(unselectable[id] && t.model.byId(id)){
 					ret.push(id);
 				}
 			}
@@ -32564,22 +33546,45 @@ define([
 			//Use special types to make filtered out rows unselected
 			t.model._spTypes.select = 1;	//1 as true
 			t.model.setMarkable(lang.hitch(t, t._isSelectable));
+			function canSelect(e){
+				if(e.columnId){
+					var col = g._columnsById[e.columnId];
+					if(t.arg('triggerOnCell')){
+						return col.rowSelectable !== false &&
+							!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
+							!domClass.contains(e.target, 'gridxTreeExpandoInner');
+					}
+					return col.rowSelectable;
+				}
+				return !e.columnId;
+			}
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if(mouse.isLeft(e) && ((t.arg('triggerOnCell') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner')) || !e.columnId)){
+					if(mouse.isLeft(e) && canSelect(e)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;
 						}
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
 					}
 				}],
+				[g, 'onRowTouchStart', function(e){
+					if(canSelect(e)){
+						t._isOnCell = e.columnId;
+						if(t._isOnCell){
+							g.body._focusCellCol = e.columnIndex;
+						}
+						t._start({row: e.visualIndex}, g._isCtrlKey(e) || e.columnId === '__indirectSelect__', e.shiftKey);
+						if(!e.shiftKey && !t.arg('canSwept')){
+							t._end();
+						}
+					}
+				}],
+				[g, 'onRowTouchEnd', '_end'],
 				[g.body, 'onAfterRow', function(row){
 					var unselectable = !row.isSelectable();
 					domClass.toggle(row.node(), 'gridxRowUnselectable', unselectable);
@@ -32597,10 +33602,11 @@ define([
 							(t.arg('triggerOnCell') && (!g.focus || g.focus.currentArea() == 'body')))){
 						event.stop(e);
 						t._isOnCell = e.columnId;
-						t._start({row: e.visualIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({row: e.visualIndex}, g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
-				}]);
+				}],
+				[g.model, 'setStore', '_syncUnselectable']);
 		},
 
 		_markById: function(args, toSelect){
@@ -32671,14 +33677,14 @@ define([
 		_onMoveToCell: function(rowVisIndex, colIndex, e){
 			var t = this;
 			if(t.arg('triggerOnCell') && e.shiftKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
-				t._start({row: rowVisIndex}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({row: rowVisIndex}, t.grid._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},
 
 		_onMoveToRowHeaderCell: function(rowVisIndex, e){
 			if(e.shiftKey){
-				this._start({row: rowVisIndex}, this.grid._isCopyEvent(e), 1);	//1 as true
+				this._start({row: rowVisIndex}, this.grid._isCtrlKey(e), 1);	//1 as true
 				this._end();
 			}
 		},
@@ -32690,13 +33696,11 @@ define([
 		},
 
 		_beginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollH = autoScroll.horizontal;
-			autoScroll.horizontal = false;
+			this.grid.autoScroll.horizontal = false;
 		},
 
 		_endAutoScroll: function(){
-			this.grid.autoScroll.horizontal = this._autoScrollH;
+			this.grid.autoScroll.horizontal = true;
 		},
 
 		_doHighlight: function(target, toHighlight){
@@ -32771,8 +33775,15 @@ define([
 			}else{
 				toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
 			}
-			// 0 && console.log('to highlight', toHighlight);
 			this._doHighlight(target, toHighlight);
+		},
+		
+		_syncUnselectable: function(){
+			var t = this,
+				unselectable = t.arg('unselectable');
+			for(var id in unselectable){
+				t.model.setMarkable(id, !unselectable[id]);
+			}
 		}
 	});
 });
@@ -32807,7 +33818,8 @@ define([
 			var t = this, m = t.model;
 			t.batchConnect(
 				[t.grid.body, 'onMoveToCell', '_onMoveToCell'],
-				[m, 'onMarkChange', '_onMark']
+				[m, 'onMarkChange', '_onMark'],
+				[m, 'setStore', 'clear']
 			);
 		}
 	});
@@ -32884,12 +33896,12 @@ define([
 				[doc, 'onmouseup', '_end'],
 				[doc, 'onkeydown', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(g.domNode, false);
+						dom.setSelectable(has('ie') > 9 ? doc.body : g.domNode, false);
 					}
 				}],
 				[doc, 'onkeyup', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(g.domNode, true);
+						dom.setSelectable(has('ie') > 9 ? doc.body : g.domNode, true);
 					}
 				}]
 			);
@@ -32950,11 +33962,14 @@ define([
 		},
 
 		_start: function(item, extending, isRange){
-			var t = this;
+			var t = this,
+				g = t.grid,
+				m = g.model;
+				
 			if(!t._selecting && !t._marking && t.arg('enabled')){
 				dom.setSelectable(t.grid.domNode, false);
 				t._fixFF(1);
-				var isSelected = t._isSelected(item);
+				var isSelected = t._isSelected(item) === true;
 				isRange = isRange || t.arg('holdingShift');
 				if(isRange && t._lastStartItem){
 					t._isRange = 1;	//1 as true
@@ -32964,10 +33979,17 @@ define([
 				}else{
 					t._startItem = item;
 					t._currentItem = null;
+					
 					if(extending || t.arg('holdingCtrl')){
 						t._toSelect = !isSelected;
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+							t._toSelect = 'mixed';
+						}
 					}else{
 						t._toSelect = 1;	//1 as true
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+							t._toSelect = 'mixed';
+						}
 						t.clear(1);
 					}
 				}
@@ -33065,19 +34087,21 @@ define([
 'gridx/modules/AutoScroll':function(){
 define([
 	"dojo/_base/declare",
+	"dojo/_base/Deferred",
 	"dojo/_base/window",
+	"dojo/query",
 	"dojo/dom-geometry",
 	"../core/_Module"
-], function(declare, win, domGeometry, _Module){
+], function(declare, Deferred, win, query, domGeometry, _Module){
 
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: autoScroll.
 		//		Automatically scroll the grid body when mouse is on the edge of grid.
 		//		Useful for extended selection or drag and drop.
 		//		This is a registered module, so if it is depended by other modules, no need to declare it when creating grid.
 
-		name: 'autoScroll',
 		enabled: false,
 		vertical: true,
 		horizontal: true,
@@ -33101,15 +34125,15 @@ define([
 
 		horizontal: true,
 
-		margin: 20,
+		margin: 30,
+
+		rowStep: 1,
+
+		columnStep: 1,
 
 		//Private ---------------------------------------------------------------------
 
-		_timeout: 100,
-
-		_step: 10,
-
-		_maxMargin: 100,
+		_timeout: 300,
 
 		_onMouseMove: function(e){
 			var t = this;
@@ -33135,31 +34159,98 @@ define([
 		_scroll: function(){
 			var t = this;
 			if(t.arg('enabled')){
-				var dir, a, needScroll, g = t.grid,
-					m = t._maxMargin, s = t._step,
-					v = t._vdir, h = t._hdir;
+				var dir,
+					needScroll,
+					g = t.grid,
+					v = t._vdir,
+					h = t._hdir;
 				if(t.arg('vertical') && v){
 					dir = v > 0 ? 1 : -1;
-					a = Math.min(m, Math.abs(v)) / s;
-					a = (a < 1 ? 1 : a) * s * dir;
-					g.vScroller.domNode.scrollTop += a;
-					needScroll = 1;
+					var rowNode = t._findNode(g.bodyNode.childNodes, function(node){
+						if(dir > 0){
+							if(node.offsetTop >= g.bodyNode.scrollTop + g.bodyNode.offsetHeight){
+								return -1;
+							}else if(node.offsetTop + node.offsetHeight < g.bodyNode.scrollTop + g.bodyNode.offsetHeight){
+								return 1;
+							}
+							return 0;
+						}else{
+							if(node.offsetTop > g.bodyNode.scrollTop){
+								return -1;
+							}else if(node.offsetTop + node.offsetHeight <= g.bodyNode.scrollTop){
+								return 1;
+							}
+							return 0;
+						}
+					});
+					if(rowNode){
+						var vidx = parseInt(rowNode.getAttribute('visualindex'), 10);
+						needScroll = g.vScroller.scrollToRow(vidx + dir * t.arg('rowStep'));
+					}
 				}
 				if(t.arg('horizontal') && h){
 					dir = h > 0 ? 1 : -1;
-					a = Math.min(m, Math.abs(h)) / s;
-					a = (a < 1 ? 1 : a) * s * dir;
-					g.hScroller.domNode.scrollLeft += a;
-					needScroll = 1;
+					var headerNode = t._findNode(query('.gridxCell', g.header.domNode), function(node){
+						if(dir > 0){
+							if(node.offsetLeft >= g.hScrollerNode.scrollLeft + g.hScrollerNode.offsetWidth){
+								return -1;
+							}else if(node.offsetLeft + node.offsetWidth < g.hScrollerNode.scrollLeft + g.hScrollerNode.offsetWidth){
+								return 1;
+							}
+							return 0;
+						}else{
+							if(node.offsetLeft > g.hScrollerNode.scrollLeft){
+								return -1;
+							}else if(node.offsetLeft + node.offsetHeight <= g.vScrollerNode.scrollLeft){
+								return 1;
+							}
+							return 0;
+						}
+					});
+					if(headerNode){
+						var col = g._columnsById[headerNode.getAttribute('colid')];
+						var colIdx = col.index + dir * t.arg('columnStep');
+						if(colIdx >= g._columns.length){
+							colIdx = g._columns.length - 1;
+						}else if(colIdx < 0){
+							colIdx = 0;
+						}
+						var nextCol = g._columns[colIdx];
+						g.hScroller.scrollToColumn(nextCol.id);
+						needScroll = needScroll || 1;
+					}
 				}
+				t._handler = needScroll;
 				if(needScroll){
-					t._handler = setTimeout(function(){
-						t._scroll();
-					}, t._timeout);
-					return;
+					//scroll to row can be async
+					Deferred.when(needScroll, function(){
+						t._handler = setTimeout(function(){
+							t._scroll();
+						}, t._timeout);
+					});
+				}
+			}else{
+				delete t._handler;
+			}
+		},
+
+		_findNode: function(nodes, checker){
+			var start = 0,
+				end = nodes.length,
+				idx = Math.floor((start + end) / 2);
+			while(start < end && start != idx){
+				var dir = checker(nodes[idx]);
+				if(dir < 0){
+					end = idx;
+					idx = Math.floor((start + end) / 2);
+				}else if(dir > 0){
+					start = idx;
+					idx = Math.floor((start + end) / 2);
+				}else{
+					break;
 				}
 			}
-			delete t._handler;
+			return nodes[idx];
 		}
 	}));
 });
@@ -33197,6 +34288,7 @@ define([
 
 	return declare(_Base, {
 		// summary:
+		//		module name: selectColumn.
 		//		Provides advanced column selections.
 		// description:
 		//		This module provides an advanced way for selecting columns by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple columns.
@@ -33360,7 +34452,7 @@ define([
 			t.batchConnect(
 				[g, 'onHeaderCellMouseDown', function(e){
 					if(mouse.isLeft(e) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({column: e.columnIndex}, g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -33375,7 +34467,7 @@ define([
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
 						event.stop(e);
-						t._start({column: e.columnIndex}, g._isCopyEvent(e), e.shiftKey);
+						t._start({column: e.columnIndex}, g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}],
@@ -33400,7 +34492,7 @@ define([
 		_onMoveToHeaderCell: function(columnId, e){
 			if(e.shiftKey && (e.keyCode == keys.LEFT_ARROW || e.keyCode == keys.RIGHT_ARROW)){
 				var t = this, col = t.grid._columnsById[columnId];
-				t._start({column: col.index}, t.grid._isCopyEvent(e), 1);	//1 as true
+				t._start({column: col.index}, t.grid._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},
@@ -33411,13 +34503,11 @@ define([
 		},
 
 		_beginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollV = autoScroll.vertical;
-			autoScroll.vertical = false;
+			this.grid.autoScroll.vertical = false;
 		},
 
 		_endAutoScroll: function(){
-			this.grid.autoScroll.vertical = this._autoScrollV;
+			this.grid.autoScroll.vertical = true;
 		},
 
 		_doHighlight: function(target, toHighlight){
@@ -33491,6 +34581,7 @@ define([
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectCell.
 		//		Provides advanced cell selections.
 		// description:
 		//		This module provides an advanced way for selecting cells by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple cell.
@@ -33709,10 +34800,11 @@ define([
 			t.inherited(arguments);
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
-					if(mouse.isLeft(e) && (
+					if(mouse.isLeft(e) &&
+						(!g.select.row || !g.select.row.arg('triggerOnCell')) &&
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner'))){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						!domClass.contains(e.target, 'gridxTreeExpandoInner')){
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -33724,7 +34816,7 @@ define([
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
 						event.stop(e);
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}]
@@ -33774,7 +34866,7 @@ define([
 					g = t.grid,
 					rid = t._getRowId(rowVisIndex),
 					cid = g._columns[colIndex].id;
-				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
+				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},
@@ -33968,6 +35060,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: moveRow.
 		//		This module provides some APIs to move rows within grid
 		// description:
 		//		This module requires the "Move" model extension.
@@ -34073,14 +35166,14 @@ define([
 			var t = this,
 				g = t.grid,
 				selector = g.select && g.select.row;
-			if(e.ctrlKey && !e.shiftKey && !e.altKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
+			if(g._isCtrlKey(e) && !e.shiftKey && !e.altKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
 				var target = e.rowIndex,
 					doMove = function(rowIdxes){
 						if(e.keyCode == keys.UP_ARROW){
 							while(array.indexOf(rowIdxes, target) >= 0){
 								target--;
 							}
-							if(target >= 0){
+							if(target >= g.view.rootStart){
 								t.move(rowIdxes, target);
 							}
 						}else{
@@ -34561,6 +35654,7 @@ define([
 
 	return declare(_Module, {
 		// summary:
+		//		module name: moveColumn.
 		//		This module provides several APIs to move columns within grid.
 		// description:
 		//		This module does not include any UI. So different kind of column dnd UI implementations can be built
@@ -34737,7 +35831,7 @@ define([
 				ltr = g.isLeftToRight(),
 				preKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW,
 				postKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW;
-			if(e.ctrlKey && !e.shiftKey && !e.altKey && (e.keyCode == preKey || e.keyCode == postKey)){
+			if(g._isCtrlKey(e) && !e.shiftKey && !e.altKey && (e.keyCode == preKey || e.keyCode == postKey)){
 				var target = e.columnIndex,
 					colIdxes = selector && selector.isSelected(e.columnId) ?
 						array.map(selector.getSelected(), function(id){
@@ -34783,6 +35877,7 @@ define([
 /*=====
 	return declare(_Base, {
 		// summary:
+		//		module name: dndRow.
 		//		This module provides an implementation of row drag & drop.
 		// description:
 		//		This module supports row reordering within grid, dragging out of grid, and dragging into grid.
@@ -34910,13 +36005,11 @@ define([
 		},
 
 		_onBeginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollH = autoScroll.horizontal;
-			autoScroll.horizontal = false;
+			this.grid.autoScroll.horizontal = false;
 		},
 
 		_onEndAutoScroll: function(){
-			this.grid.autoScroll.horizontal = this._autoScrollH;
+			this.grid.autoScroll.horizontal = true;
 		},
 
 		_getItemData: function(id){
@@ -35137,7 +36230,7 @@ define([
 =====*/
 
 	return declare(Avatar, {
-		construct: function(manager){
+		construct: function(){
 			var t = this;
 			t.isA11y = domClass.contains(win.body(), "dijit_a11y");
 			
@@ -35327,6 +36420,8 @@ define([
 	declare(_Module, {
 		name: '_dnd',
 
+		optional: ['selectRow', 'selectColumn'],
+
 		constructor: function(){
 			var t = this,
 				g = t.grid,
@@ -35340,7 +36435,16 @@ define([
 				[g, 'onCellMouseOut', '_dismissDndReady'],
 				[g, 'onCellMouseDown', '_beginDnd'],
 				[doc, 'onmouseup', '_endDnd'],
-				[doc, 'onmousemove', '_onMouseMove']
+				[doc, 'onmousemove', '_onMouseMove'],
+				[g, 'onCellMouseUp', function(evt){
+					//FIXME: this is ugly.
+					//selection end event fires on document, so it always after onCellMouseUp.
+					//But dnd should check the selection result in order to show dnd cursor,
+					//so do some setTimeout here.
+					setTimeout(function(){
+						t._checkDndReady(evt);
+					}, 0);
+				}]
 			);
 			t.subscribe("/dnd/cancel", '_endDnd');
 		},
@@ -35466,7 +36570,7 @@ define([
 		},
 		
 		_dismissDndReady: function(){
-			if(this._dndReady){
+			if(this._dndReady && !this._dndBegun){
 				this._loadSelectStatus();
 				this._dndReady = 0;	//0 as false
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
@@ -35479,6 +36583,7 @@ define([
 			if(t._dndReady){
 				var p = t.profile,
 					m = DndManager.manager();
+				t._dndBegun = 1;
 				t._source.isSource = true;
 				t._source.canNotDragOut = !p.arg('provide').length;
 				t._node.innerHTML = p._buildDndNodes();
@@ -35492,11 +36597,13 @@ define([
 					};
 				}
 				m._dndInfo = {
+					grid: t.grid,
 					cssName: p._cssName,
 					count: p._getDndCount()
 				};
+				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
-				dom.setSelectable(t.grid.domNode, false);	
+				dom.setSelectable(t.grid.domNode, false);
 			}
 		},
 
@@ -35505,6 +36612,7 @@ define([
 				m = DndManager.manager();
 			t._source.isSource = false;
 			t._alreadyIn = 0;	//0 as false
+			t._dndBegun = 0;
 			delete m._dndInfo;
 			if(t._oldStartDrag){
 				m.startDrag = t._oldStartDrag;
@@ -37218,6 +38326,7 @@ define([
 /*=====
 	return declare(_Base, {
 		// summary:
+		//		module name: dndColumn.
 		//		This module provides an implementation of column drag & drop.
 		// description:
 		//		This module supports column reordering within grid, dragging out of grid, and dragging into grid.
@@ -37311,13 +38420,11 @@ define([
 		},
 	
 		_onBeginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollV = autoScroll.vertical;
-			autoScroll.vertical = false;
+			this.grid.autoScroll.vertical = false;
 		},
 
 		_onEndAutoScroll: function(){
-			this.grid.autoScroll.vertical = this._autoScrollV;
+			this.grid.autoScroll.vertical = true;
 		},
 
 		_getItemData: function(id){
@@ -37427,6 +38534,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: pagination.
 		//		This module provides (logical) pagination functionality for grid.
 		// description:
 		//		This module does not include any UI buttons for pagination, so that various
@@ -37726,6 +38834,7 @@ define([
 /*=====
 	return declare(_PaginationBarBase, {
 		// summary:
+		//		module name: paginationBar.
 		//		Show link button pagination bar at the bottom of grid.
 		// description:
 		//		This module directly uses gridx/modules/Bar to show gridx/support/Summary, gridx/support/LinkPager, gridx/support/LinkSizer,
@@ -37840,12 +38949,15 @@ define([
 
 		sizeSwitch: true,
 
+		//message: '',
+
 		preload: function(){
 			for(var t = this, i = 0, positions = ['top', 'bottom']; i < positions.length; ++i){
 				var pos = positions[i];
 				if(t._exist(pos)){
 					t._add(Summary, 0, pos, 'description', {
-						className: 'gridxPagerDescriptionTD'
+						className: 'gridxPagerDescriptionTD',
+						message: t.arg('message')
 					});
 					t._init(pos);
 				}
@@ -37897,9 +39009,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/string",
 	"dijit/_WidgetBase",
-	"dijit/_TemplatedMixin",
-	"dojo/i18n!../nls/SummaryBar"
-], function(declare, string, _WidgetBase, _TemplatedMixin, nls){
+	"dijit/_TemplatedMixin"
+], function(declare, string, _WidgetBase, _TemplatedMixin){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin], {
@@ -37921,22 +39032,47 @@ define([
 
 		grid: null,
 
+		//message: 'Total: ${0} Selected: ${1}',
+
 		postCreate: function(){
 			var t = this,
-				c = 'connect',
 				m = t.grid.model;
-			t[c](m, 'onSizeChange', 'refresh');
-			t[c](m, 'onMarkChange', 'refresh');
+			t.connect(m, 'onSizeChange', 'refresh');
+			t.connect(m, 'onMarkChange', 'refresh');
+			if(t.grid.pagination){
+				t.connect(t.grid.pagination, 'onSwitchPage', 'refresh');
+				t.connect(t.grid.pagination, 'onChangePageSize', 'refresh');
+			}
 			t.refresh();
 		},
 
 		refresh: function(){
 			var g = this.grid,
 				sr = g.select && g.select.row,
+				pagination = g.pagination,
 				size = g.model.size(),
 				selected = sr ? sr.getSelected().length : 0,
-				tpl = sr ? nls.summaryWithSelection : nls.summary;
-			this.domNode.innerHTML = string.substitute(tpl, [size, selected]);
+				tpl = this.message;
+			if(pagination){
+				var cp = pagination.currentPage(),
+					firstIdx = pagination.firstIndexInPage(cp) + 1,
+					lastIdx = pagination.lastIndexInPage(cp) + 1;
+			}
+			if(g.getSummaryMessage){
+				tpl = g.getSummaryMessage();
+			}
+			if(!tpl){
+				tpl = [];
+				if(pagination){
+					tpl.push(string.substitute(g.nls.summaryRange, [firstIdx, lastIdx]));
+				}
+				tpl.push(string.substitute(g.nls.summaryTotal, [size >= 0 ? size : 0]));
+				if(sr){
+					tpl.push(string.substitute(g.nls.summarySelected, [selected]));
+				}
+				tpl = tpl.join(' ');
+			}
+			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected, firstIdx, lastIdx]);
 		}
 	});
 });
@@ -37956,9 +39092,8 @@ define([
 
 /*=====
 	var Bar = declare(_Module, {
-		// module:
-		//		gridx/modules/Bar
 		// summary:
+		//		module name: bar.
 		//		This is a general-purpose bar for gridx.
 		// description:
 		//		This module can be configured to hold various plugins, such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
@@ -38175,6 +39310,9 @@ define([
 					}catch(e){
 						console.error(e);
 					}
+					if(def.hookPoint && def.hookName){
+						def.hookPoint[def.hookName] = plugin || td;
+					}
 					pluginRow.push(plugin || td);
 					tr.appendChild(td);
 				}
@@ -38253,6 +39391,7 @@ define([
 			this.grid.focus.stopEvent(evt);
 			var elems = a11y._getTabNavigable(node),
 				n = elems[step < 0 ? 'last' : 'first'];
+
 			if(n){
 				n.focus();
 			}
@@ -38260,8 +39399,17 @@ define([
 		},
 
 		_doBlur: function(node, evt, step){
+			function isChild(child, parent){
+				if(!child || !parent){ return false; }
+				var n = child;
+				while(n && n != parent){
+					n = n.parentNode;
+				}
+				return !!n;
+			}
 			var elems = a11y._getTabNavigable(node);
-			return evt ? evt.target == (step < 0 ? elems.first : elems.last) : true;
+			return evt ? (evt.target == (step < 0 ? elems.first : elems.last) 
+						|| isChild(evt.target, step < 0 ? elems.first : elems.last)) : true;
 		}
 	}));
 });
@@ -38459,9 +39607,8 @@ define([
 	"dojo/dom-class",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
-	"dijit/_TemplatedMixin",
-	"dojo/i18n!../nls/PaginationBar"
-], function(declare, lang, array, has, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin, nls){
+	"dijit/_TemplatedMixin"
+], function(declare, lang, array, has, domClass, _WidgetBase, _FocusMixin, _TemplatedMixin){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
@@ -38475,7 +39622,7 @@ define([
 	return declare([_WidgetBase, _TemplatedMixin, _FocusMixin], {
 		constructor: function(args){
 			var t = this;
-			lang.mixin(t, nls);
+			lang.mixin(t, args.grid.nls);
 			if(has('ie')){
 				//IE does not support inline-block, so have to set tabIndex
 				var gridTabIndex = args.grid.domNode.getAttribute('tabindex');
@@ -38484,10 +39631,13 @@ define([
 		},
 
 		postCreate: function(){
-			this.domNode.setAttribute('tabIndex', this.grid.domNode.getAttribute('tabIndex'));
-			this.refresh();
-			this.connect(this, 'onFocus', '_onFocus');
-			this.connect(this.domNode, 'onkeydown', '_onKey');
+			var t = this;
+			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
+			t.connect(t, 'onFocus', '_onFocus');
+			t.connect(t.domNode, 'onkeydown', '_onKey');
+			t.grid.pagination.loaded.then(function(){
+				t.refresh();
+			});
 		},
 
 		//Public-----------------------------------------------------------------------------
@@ -38749,11 +39899,13 @@ define([
 				pane = t._gotoDialog.content;
 			pane.pageCountMsgNode.innerHTML = string.substitute(t.gotoDialogPageCount, [pageCount]);
 			pane.pageInputBox.constraints = {
-				fractional: false, 
+				fractional: false,
 				min: 1,
 				max: pageCount
 			};
+			pane.pageInputBox.set('value', pane.pagination.currentPage() + 1);
 			t._gotoDialog.show();
+			pane.pageInputBox.focusNode.select();
 		},
 
 		_onKey: function(evt){
@@ -38764,6 +39916,14 @@ define([
 		},
 
 		_focusNextBtn: function(){
+		},
+		
+		destroy: function(){
+			var t = this;
+			if(t._gotoDialog){
+				t._gotoDialog.destroy();
+			}
+			t.inherited(arguments);
 		}
 	});
 });
@@ -38778,9 +39938,8 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
-	"dojo/text!../templates/GotoPagePane.html",
-	"dojo/i18n!../nls/PaginationBar"
-], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, nls){
+	"dojo/text!../templates/GotoPagePane.html"
+], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -38798,7 +39957,7 @@ define([
 	
 		postMixInProperties: function(){
 			var t = this;
-			lang.mixin(t, nls);
+			lang.mixin(t, t.pagination.grid.nls);
 			t.numberTextBoxClass = t.pager.numberTextBoxClass.prototype.declaredClass;
 			t.buttonClass = t.pager.buttonClass.prototype.declaredClass;
 			t.connect(t.domNode, 'onkeydown', '_onKeyDown');
@@ -41331,74 +42490,63 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 	// module:
 	//		dojo/html
 
-	var html = {
-		// summary:
-		//		TODOC
-	};
-	lang.setObject("dojo.html", html);
-
 	// the parser might be needed..
 
 	// idCounter is incremented with each instantiation to allow assignment of a unique id for tracking, logging purposes
 	var idCounter = 0;
 
-	html._secureForInnerHtml = function(/*String*/ cont){
+	var html = {
 		// summary:
-		//		removes !DOCTYPE and title elements from the html string.
-		//
-		//		khtml is picky about dom faults, you can't attach a style or `<title>` node as child of body
-		//		must go into head, so we need to cut out those tags
-		// cont:
-		//		An html string for insertion into the dom
-		//
-		return cont.replace(/(?:\s*<!DOCTYPE\s[^>]+>|<title[^>]*>[\s\S]*?<\/title>)/ig, ""); // String
-	};
+		//		TODOC
 
-	html._emptyNode = domConstruct.empty;
-	/*=====
-	 dojo.html._emptyNode = function(node){
-		 // summary:
-		 //		Removes all child nodes from the given node.   Deprecated, should use dojo/dom-constuct.empty() directly
-		 //		instead.
-		 // node: DOMNode
-		 //		the parent element
-	 };
-	 =====*/
+		_secureForInnerHtml: function(/*String*/ cont){
+			// summary:
+			//		removes !DOCTYPE and title elements from the html string.
+			//
+			//		khtml is picky about dom faults, you can't attach a style or `<title>` node as child of body
+			//		must go into head, so we need to cut out those tags
+			// cont:
+			//		An html string for insertion into the dom
+			//
+			return cont.replace(/(?:\s*<!DOCTYPE\s[^>]+>|<title[^>]*>[\s\S]*?<\/title>)/ig, ""); // String
+		},
 
-		html._setNodeContent = function(/*DomNode*/ node, /*String|DomNode|NodeList*/ cont){
-		// summary:
-		//		inserts the given content into the given node
-		// node:
-		//		the parent element
-		// content:
-		//		the content to be set on the parent element.
-		//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
+		// Deprecated, should use dojo/dom-constuct.empty() directly, remove in 2.0.
+		_emptyNode: domConstruct.empty,
 
-		// always empty
-		domConstruct.empty(node);
+		_setNodeContent: function(/*DomNode*/ node, /*String|DomNode|NodeList*/ cont){
+			// summary:
+			//		inserts the given content into the given node
+			// node:
+			//		the parent element
+			// content:
+			//		the content to be set on the parent element.
+			//		This can be an html string, a node reference or a NodeList, dojo/NodeList, Array or other enumerable list of nodes
 
-		if(cont){
-			if(typeof cont == "string"){
-				cont = domConstruct.toDom(cont, node.ownerDocument);
-			}
-			if(!cont.nodeType && lang.isArrayLike(cont)){
-				// handle as enumerable, but it may shrink as we enumerate it
-				for(var startlen=cont.length, i=0; i<cont.length; i=startlen==cont.length ? i+1 : 0){
-					domConstruct.place( cont[i], node, "last");
+			// always empty
+			domConstruct.empty(node);
+
+			if(cont){
+				if(typeof cont == "string"){
+					cont = domConstruct.toDom(cont, node.ownerDocument);
 				}
-			}else{
-				// pass nodes, documentFragments and unknowns through to dojo.place
-				domConstruct.place(cont, node, "last");
+				if(!cont.nodeType && lang.isArrayLike(cont)){
+					// handle as enumerable, but it may shrink as we enumerate it
+					for(var startlen=cont.length, i=0; i<cont.length; i=startlen==cont.length ? i+1 : 0){
+						domConstruct.place( cont[i], node, "last");
+					}
+				}else{
+					// pass nodes, documentFragments and unknowns through to dojo.place
+					domConstruct.place(cont, node, "last");
+				}
 			}
-		}
 
-		// return DomNode
-		return node;
-	};
+			// return DomNode
+			return node;
+		},
 
-	// we wrap up the content-setting operation in a object
-	html._ContentSetter = declare("dojo.html._ContentSetter", null,
-		{
+		// we wrap up the content-setting operation in a object
+		_ContentSetter: declare("dojo.html._ContentSetter", null, {
 			// node: DomNode|String
 			//		An node which will be the parent element that we set content into
 			node: "",
@@ -41516,7 +42664,7 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			empty: function(){
 				// summary:
 				//		cleanly empty out existing content
-				
+
 				// If there is a parse in progress, cancel it.
 				if(this.parseDeferred){
 					if(!this.parseDeferred.isResolved()){
@@ -41637,10 +42785,10 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 						inherited: inherited,
 						scope: this.parserScope
 					}).then(function(results){
-						return self.parseResults = results;
-					}, function(e){
-						self._onError('Content', e, "Error parsing in _ContentSetter#" + this.id);
-					});
+							return self.parseResults = results;
+						}, function(e){
+							self._onError('Content', e, "Error parsing in _ContentSetter#" + this.id);
+						});
 				}catch(e){
 					this._onError('Content', e, "Error parsing in _ContentSetter#" + this.id);
 				}
@@ -41657,17 +42805,20 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 					html._setNodeContent(this.node, errText, true);
 				}
 			}
-	}); // end declare()
+		}), // end declare()
 
-	html.set = function(/*DomNode*/ node, /*String|DomNode|NodeList*/ cont, /*Object?*/ params){
+		set: function(/*DomNode*/ node, /*String|DomNode|NodeList*/ cont, /*Object?*/ params){
 			// summary:
-			//		inserts (replaces) the given content into the given node. dojo.place(cont, node, "only")
+			//		inserts (replaces) the given content into the given node. dojo/dom-construct.place(cont, node, "only")
 			//		may be a better choice for simple HTML insertion.
 			// description:
 			//		Unless you need to use the params capabilities of this method, you should use
-			//		dojo.place(cont, node, "only"). dojo.place() has more robust support for injecting
+			//		dojo/dom-construct.place(cont, node, "only"). dojo/dom-construct..place() has more robust support for injecting
 			//		an HTML string into the DOM, but it only handles inserting an HTML string as DOM
-			//		elements, or inserting a DOM node. dojo.place does not handle NodeList insertions
+			//		elements, or inserting a DOM node. dojo/dom-construct..place does not handle NodeList insertions
+			//		dojo/dom-construct.place(cont, node, "only"). dojo/dom-construct.place() has more robust support for injecting
+			//		an HTML string into the DOM, but it only handles inserting an HTML string as DOM
+			//		elements, or inserting a DOM node. dojo/dom-construct.place does not handle NodeList insertions
 			//		or the other capabilities as defined by the params object for this method.
 			// node:
 			//		the parent element that will receive the content
@@ -41682,23 +42833,25 @@ define(["./_base/kernel", "./_base/lang", "./_base/array", "./_base/declare", ".
 			//	|	html.set(node, "some string");
 			//	|	html.set(node, contentNode, {options});
 			//	|	html.set(node, myNode.childNodes, {options});
-		if(undefined == cont){
-			console.warn("dojo.html.set: no cont argument provided, using empty string");
-			cont = "";
-		}
-		if(!params){
-			// simple and fast
-			return html._setNodeContent(node, cont, true);
-		}else{
-			// more options but slower
-			// note the arguments are reversed in order, to match the convention for instantiation via the parser
-			var op = new html._ContentSetter(lang.mixin(
+			if(undefined == cont){
+				console.warn("dojo.html.set: no cont argument provided, using empty string");
+				cont = "";
+			}
+			if(!params){
+				// simple and fast
+				return html._setNodeContent(node, cont, true);
+			}else{
+				// more options but slower
+				// note the arguments are reversed in order, to match the convention for instantiation via the parser
+				var op = new html._ContentSetter(lang.mixin(
 					params,
 					{ content: cont, node: node }
-			));
-			return op.set();
+				));
+				return op.set();
+			}
 		}
 	};
+	lang.setObject("dojo.html", html);
 
 	return html;
 });
@@ -41715,6 +42868,8 @@ define([
 
 /*=====
 	return declare(_PaginationBarBase, {
+		// summary:
+		//		module name: paginationBar.
 	});
 =====*/
 
@@ -41755,9 +42910,8 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
-	"dojo/i18n!../nls/PaginationBar",
 	"dijit/form/FilteringSelect"
-], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, FilteringSelect){
+], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, FilteringSelect){
 
 /*=====
 	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
@@ -41784,23 +42938,22 @@ define([
 		templateString: '<div class="gridxDropDownPager"><label class="gridxPagerLabel">${pageLabel}</label></div>',
 
 		constructor: function(args){
-			lang.mixin(this, nls);
+			lang.mixin(this, args.grid.nls);
 		},
 
 		postCreate: function(){
 			var t = this,
+				g = t.grid,
 				c = 'connect',
-				p = t.grid.pagination;
+				p = g.pagination;
 			t[c](p, 'onSwitchPage', '_onSwitchPage');
 			t[c](p, 'onChangePageSize', 'refresh');
-			t[c](t.grid.model, 'onSizeChange', 'refresh');
-			t.refresh();
-		},
-
-		startup: function(){
-			this.inherited(arguments);
-			//Set initial page after pagination module is ready.
-			this._onSwitchPage(this.grid.pagination.currentPage());
+			t[c](g.model, 'onSizeChange', 'refresh');
+			g.pagination.loaded.then(function(){
+				t.refresh();
+				//Set initial page after pagination module is ready.
+				t._onSwitchPage(g.pagination.currentPage());
+			});
 		},
 
 		//Public-----------------------------------------------------------------------------
@@ -41868,9 +43021,8 @@ define([
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
-	"dojo/i18n!../nls/PaginationBar",
 	"dijit/form/Select"
-], function(declare, lang, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, Select){
+], function(declare, lang, _WidgetBase, _FocusMixin, _TemplatedMixin, Select){
 
 /*=====
 	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
@@ -41901,12 +43053,15 @@ define([
 		templateString: '<div class="gridxDropDownSizer"><label class="gridxPagerLabel">${pageSizeLabel}</label></div>',
 
 		constructor: function(args){
-			lang.mixin(this, nls);
+			lang.mixin(this, args.grid.nls);
 		},
 
 		postCreate: function(){
-			this.connect(this.grid.pagination, 'onChangePageSize', '_onChange');
-			this.refresh();
+			var t = this;
+			t.connect(t.grid.pagination, 'onChangePageSize', '_onChange');
+			t.grid.pagination.loaded.then(function(){
+				t.refresh();
+			});
 		},
 		startup: function(){
 			this.inherited(arguments);
@@ -41934,7 +43089,7 @@ define([
 				var pageSize = sizes[i],
 					isAll = !(pageSize > 0);
 				options.push({
-					label: String(isAll ? nls.pageSizeAll : pageSize),
+					label: String(isAll ? t.pageSizeAll : pageSize),
 					value: String(isAll ? -1 : pageSize),
 					selected: currentSize == pageSize || (isAll && p.isAll())
 				});
@@ -41986,6 +43141,7 @@ define([
 /*=====
 	var Filter = declare(_Module, {
 		// summary:
+		//		module name: filter.
 		//		This module makes it possible for user to set arbitrary filter condition to grid.
 
 		serverMode: false,
@@ -41993,13 +43149,13 @@ define([
 		setupQuery: function(obj){
 		},
 
-		setFilter: function(){
+		setFilter: function(checker, skipUpdateBody){
 			// summary:
 			//		Apply function *checker* as the filter condition to filter every row.
 			// checker: Function(rowCache, rowId)|null|undefined (or anything that is invalid)
 			//		A function only returning TRUE or FALSE. It is used to decide whether a row should survive.
 			//		If it is null (or anything invalid here), then clear the current filter.
-			// skipUpdateBody: Boolean
+			// skipUpdateBody: Boolean?
 			//		Whether to immediately update grid UI after filtering.
 			// return:
 			//		undefined
@@ -42028,7 +43184,7 @@ define([
 		}
 	});
 
-	Filter.__FilterExpressionTools = {
+	Filter.__FilterExpressionTools = declare([], {
 		// summary:
 		//		A filter expression is just a function returning TRUE/FALSE.
 		//		Here provides a set of useful expression tools to help construct complicated filter expressions for grid.
@@ -42218,7 +43374,7 @@ define([
 			// return: Function
 			//		A filter expression.
 		}
-	};
+	});
 
 	return Filter;
 =====*/
@@ -42231,6 +43387,9 @@ define([
 
 		constructor: function(){
 			this.setFilter(this.arg('preCondition'), 1);
+			this.aspect(this.grid.model, 'setStore', function(){
+				this._checker = null;
+			});
 		},
 
 		serverMode: false,
@@ -42299,7 +43458,7 @@ define([
 				d.setFullYear(2000);
 				return d.getTime();
 			default: //string
-				return String(d);
+				return (d === null || d === undefined) ? '' : String(d);
 		}
 	}
 
@@ -42355,6 +43514,20 @@ define([
 				}
 			}, "isEmpty", [expr]);
 		},
+		
+		//Is not Empty check
+		//Currently it will only appear in serverMode of filter for string-typed column
+		//It has no NLS, and it is not recommended to use if you need fully nls support
+		isNotEmpty: function(expr, notEmptyValues){
+			return wrap(function(){
+				var v = expr.apply(0, arguments);
+				if(notEmptyValues){
+					return array.indexOf(notEmptyValues, v) >= 0;
+				}else{
+					return v !== "" && v !== null && v !== undefined;
+				}
+			}, "isNotEmpty", [expr]);
+		},	
 
 		//Logic operations
 		and: function(/* filter expressions */){
@@ -42777,9 +43950,10 @@ define([
 	"dojo/string",
 	"dojo/parser",
 	"dojo/query",
+	"dojo/keys",
+	"dijit/_BidiSupport",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"../Filter",
 	"./FilterDialog",
 	"./FilterConfirmDialog",
@@ -42787,11 +43961,12 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, _Module, template, nls, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, keys, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
 		// summary:
+		//		module name: filterBar.
 		//		Filter bar module.
 		// description:
 		//		Show a filter bar on top of grid header. Clicking the filter bar will show a filter dialog to config conditions.
@@ -42938,9 +44113,21 @@ define([
 		name: 'filterBar',
 		forced: ['filter'],
 		preload: function(){
-			var rules = this.arg('filterData');
+			var t = this,
+				g = t.grid,
+				rules;
+			if(g.persist){
+				rules = g.persist.registerAndLoad('filterBar', function(){
+					return t.filterData;
+				});
+			}
 			if(rules){
-				this.grid.filter.setFilter(this._createFilterExpr(rules), 1);
+				t.filterData = rules;
+			}else{
+				rules = t.arg('filterData');
+			}
+			if(rules){
+				g.filter.setFilter(t._createFilterExpr(rules), 1);
 			}
 		},
 		//Public-----------------------------------------------------------
@@ -42953,6 +44140,8 @@ define([
 		maxRuleCount: 0,
 		
 		ruleCountToConfirmClearFilter: 2,
+
+		//useShortMessage: false,
 		
 		conditions: {
 			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
@@ -42968,14 +44157,14 @@ define([
 			var F = Filter;
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
-			this._nls = nls;
+			this._nls = this.grid.nls;
 			this.domNode = dom.create('div', {
-				innerHTML: string.substitute(template, nls),
+				innerHTML: string.substitute(template, this._nls),
 				'class': 'gridxFilterBar'
 			});
 			parser.parse(this.domNode);
 			css.toggle(this.domNode, 'gridxFilterBarHideCloseBtn', !this.arg('closeButton'));
-			this.grid.vLayout.register(this, 'domNode', 'headerNode', -1);
+			this.grid.vLayout.register(this, 'domNode', 'headerNode', -0.5);
 			this._initWidgets();
 			this._initFocus();
 			this.refresh();
@@ -42983,6 +44172,10 @@ define([
 			this.connect(this.domNode, 'onmouseover', 'onDomMouseOver');
 			this.connect(this.domNode, 'onmousemove', 'onDomMouseMove');
 			this.connect(this.domNode, 'onmouseout', 'onDomMouseOut');
+			this.aspect(this.grid.model, 'setStore', function(){
+				this.filterData = null;
+				this._buildFilterState();
+			});
 			this.loaded.callback();
 		},
 		onDomClick: function(e){
@@ -43033,7 +44226,7 @@ define([
 			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
 				_this._currentSize = _this.model.size();
-				_this._totalSize = _this.model._cache.size();
+				_this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
 				_this._buildFilterState();
 			});
 		},
@@ -43042,7 +44235,9 @@ define([
 			var max = this.arg('ruleCountToConfirmClearFilter');
 			if(this.filterData && (this.filterData.conditions.length >= max || max <= 0)){
 				if(!this._cfmDlg){
-					this._cfmDlg = new FilterConfirmDialog();
+					this._cfmDlg = new FilterConfirmDialog({
+						grid: this.grid
+					});
 				}
 				this._cfmDlg.execute = lang.hitch(scope, callback);
 				this._cfmDlg.show();
@@ -43098,7 +44293,7 @@ define([
 			this.btnClose.style.display = this.closeButton ? '': 'none';
 			this.btnFilter.domNode.style.display = this.arg('defineFilterButton') ? '': 'none';
 			this._currentSize = this.model.size();
-			this._totalSize = this.model._cache.size();
+			this._totalSize = this.model._cache.totalSize >= 0 ? this.model._cache.totalSize : this.model._cache.size();
 			this._buildFilterState();
 		},
 		isVisible: function(){
@@ -43195,6 +44390,7 @@ define([
 		_initWidgets: function(){
 			this.btnFilter = registry.byNode(query('.dijitButton', this.domNode)[0]);
 			this.btnClose = query('.gridxFilterBarCloseBtn', this.domNode)[0];
+			this.connect(this.btnClose, 'onkeydown', '_onCloseKey');
 			this.statusNode = query('.gridxFilterBarStatus', this.domNode)[0].firstChild;
 			domAttr.remove(this.btnFilter.focusNode, 'aria-labelledby');
 		},
@@ -43203,13 +44399,14 @@ define([
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
 			if(!this.filterData || !this.filterData.conditions.length){
-				this.statusNode.innerHTML = this.arg('noFilterMessage', nls.filterBarMsgNoFilterTemplate);
+				this.statusNode.innerHTML = this.arg('noFilterMessage', this.grid.nls.filterBarMsgNoFilterTemplate);
 				return;
 			}
-			this.statusNode.innerHTML = string.substitute(this.arg('hasFilterMessage', nls.filterBarMsgHasFilterTemplate),
-				[this._currentSize, this._totalSize, nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <a href="javascript:void(0);" action="clear" title="' + nls.filterBarClearButton + '">'
-					 + nls.filterBarClearButton + '</a>';
+			this.statusNode.innerHTML = string.substitute(
+				this.arg('hasFilterMessage', this.arg('useShortMessage') ? this.grid.nls.summary : this.grid.nls.filterBarMsgHasFilterTemplate),
+				[this._currentSize, this._totalSize, this.grid.nls.defaultItemsName]) + 
+				'&nbsp; &nbsp; <span action="clear" tabindex="-1" title="' + this.grid.nls.filterBarClearButton + '">'
+					 + this.grid.nls.filterBarClearButton + '</span>';
 			this._buildTooltip();
 		},
 		_buildTooltip: function(){
@@ -43249,7 +44446,7 @@ define([
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', nls.rangeTemplate);
+					var tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -43257,11 +44454,18 @@ define([
 			}else{
 				valueString = value;
 			}
+			if(this.grid.textDir){
+				var resolvedTextDir = this.grid.textDir;
+				if(resolvedTextDir == "auto"){
+					resolvedTextDir = _BidiSupport.prototype._checkContextual(valueString);
+				}
+				valueString = '<span dir="' + resolvedTextDir + '">' + valueString + '</span>';
+			}
 			return '<span style="font-style:italic">' + this._getConditionDisplayName(condition) + '</span> ' + valueString;
 		},
 		_getConditionDisplayName: function(c){
 			var k = c.charAt(0).toUpperCase() + c.substring(1);
-			return this.arg('condition' + k, nls['condition' + k]);
+			return this.arg('condition' + k, this.grid.nls['condition' + k]);
 		},
 		_getConditionOptions: function(colId){
 			var cache = this._conditionOptions = this._conditionOptions || {};
@@ -43270,7 +44474,7 @@ define([
 				array.forEach(this._getColumnConditions(colId), function(s){
 					var k = s.charAt(0).toUpperCase() + s.substring(1);
 					arr.push({
-						label: this.arg('condition' + k, nls['condition' + k]),
+						label: this.arg('condition' + k, this.grid.nls['condition' + k]),
 						value: s
 					});
 				}, this);
@@ -43367,7 +44571,7 @@ define([
 		},
 		_doFocusClearLink: function(evt){
 			this.btnFilter.focus();
-			var link = query('a[action="clear"]')[0];
+			var link = query('span[action="clear"]')[0];
 			if(link){
 				link.focus();
 				if(evt){event.stop(evt);}
@@ -43384,8 +44588,15 @@ define([
 		_doBlur: function(){
 			return true;
 		},
+		_onCloseKey: function(evt){
+			if(evt.keyCode === keys.ENTER){
+				this.hide();
+			}
+		},
+
 		destroy: function(){
 			this._filterDialog && this._filterDialog.destroy();
+			this._cfmDlg && this._cfmDlg.destroy();
 			this.btnFilter.destroy();
 			if(this._tooltip){
 				this._tooltip.destroy();
@@ -43412,11 +44623,10 @@ define([
 	"dojox/html/metrics",
 	"./FilterPane",
 	"dojo/text!../../templates/FilterDialog.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"dijit/form/Select",
 	"dijit/form/Button",
 	"dijit/layout/AccordionContainer"
-], function(declare, lang, array, css, string, query, keys, registry, Dialog, metrics, FilterPane, template, i18n){
+], function(declare, lang, array, css, string, query, keys, registry, Dialog, metrics, FilterPane, template){
 
 /*=====
 	return declare([], {
@@ -43424,13 +44634,13 @@ define([
 =====*/
 
 	return declare(Dialog, {
-		title: i18n.filterDefDialogTitle,
 		cssClass: 'gridxFilterDialog',
 		grid: null,
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.i18n = i18n;
+			this.i18n = this.grid.nls;
+			this.set('title', this.grid.nls.filterDefDialogTitle);
 			this.set('content', string.substitute(template, this));
 			this._initWidgets();
 			css.add(this.domNode, 'gridxFilterDialog');
@@ -43574,7 +44784,6 @@ define([
 			ac.resize();
 		},
 		uninitialize: function(){
-			0 && console.log('bbb');
 			this.inherited(arguments);
 		}
 		
@@ -43592,12 +44801,12 @@ define([
 	"dojo/string",
 	"dojo/query",
 	"dijit/registry",
+	"dijit/_BidiSupport",
 	"dojox/html/ellipsis",
 	"dojox/html/metrics",
 	"./DistinctComboBoxMenu",
 	"../Filter",
 	"dojo/text!../../templates/FilterPane.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"dijit/layout/ContentPane",
 	"dijit/form/Select",
 	"dijit/form/TextBox",
@@ -43606,7 +44815,7 @@ define([
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
-], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n, ContentPane){
+], function(declare, lang, array, dom, css, string, query, registry, _BidiSupport, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, ContentPane){
 
 /*=====
 	return declare([], {
@@ -43623,10 +44832,10 @@ define([
 		sltColumn: null,
 		sltCondition: null,
 		grid: null,
-		title: i18n.defaultRuleTitle,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.i18n = i18n;
+			this.i18n = this.grid.nls;
+			this.set('title', this.grid.nls.defaultRuleTitle);
 			this.set('content', string.substitute(template, this));
 			this._initFields();
 			this._initSltCol();
@@ -43642,12 +44851,14 @@ define([
 			var value = this._getValue(), 
 				colId = this.sltColumn.get('value'),
 				condition = this.sltCondition.get('value');
-			
 			if(condition === 'isEmpty' || (value !== null && (condition !== 'range' || (value.start && value.end)))){
 				return {
 					colId: isAnyColumn(colId) ? '' : colId,
 					condition: condition,
-					value: condition === 'isEmpty' ? '' : value,
+					//fix defect #10741
+					//set('value', '') on DateTimeBox will set date to 1/1/1970
+					//so, set('value', null) when condition is empty on a DateTimeBoxs
+					value: condition === 'isEmpty'? ( this._getType() === 'Date'? null : '') : value,
 					type: this._getType()
 				};
 			}else{
@@ -43665,7 +44876,11 @@ define([
 			window.setTimeout(function(){
 				_this.sltCondition.set('value', data.condition, null);
 				_this._onConditionChange();
-				_this._setValue(data.value);
+				window.setTimeout(function(){
+					//FIXME: Need another set timeout since something has became async for the new dijit.
+					_this._setValue(data.value);
+				},50);
+				// _this._setValue(data.value);
 			}, 10);
 		},
 		close: function(){
@@ -43721,7 +44936,7 @@ define([
 			}, this);
 		},
 		_initSltCol: function(){
-			var colOpts = [{label: i18n.anyColumnOption, value: ANY_COLUMN_VALUE}],
+			var colOpts = [{label: this.i18n.anyColumnOption, value: ANY_COLUMN_VALUE}],
 				fb = this.grid.filterBar, 
 				sltCol = this.sltColumn;
 			array.forEach(this.grid.columns(), function(col){
@@ -43741,7 +44956,7 @@ define([
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
 				tabIndex: 0,
-				title: i18n.removeRuleButton || ''
+				title: this.i18n.removeRuleButton || ''
 			}, btnWidget.domNode, 'last');
 			this.connect(closeButton, 'onclick', 'close');
 			css.add(btnWidget.titleTextNode, 'dojoxEllipsis');
@@ -43764,6 +44979,9 @@ define([
 			this.onChange();
 		},
 		_onValueChange: function(){
+			if(this.grid.textDir && this.grid.textDir == 'auto'){
+				this.tbSingle.focusNode.dir = _BidiSupport.prototype._checkContextual(this._getValue());
+			}
 			this._updateTitle();
 			this.onChange();
 		},
@@ -43797,7 +45015,7 @@ define([
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
 				title = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
 			}
-			txtNode.innerHTML = title;
+			txtNode.innerHTML = title.replace(/&/g, '&amp;');
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');
 		},
 		_needComboBox: function(){
@@ -43855,7 +45073,7 @@ define([
 				case 'Text':
 					return (combo ? this.comboText : this.tbSingle).get('value') || null;
 				case 'Number':
-					return isNaN(this.tbNumber.get('value')) ? null : this.tbNumber.get('value');
+					return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
 				case 'Select':
 					return this.sltSingle.get('value') || null;
 				case 'Date':
@@ -43873,6 +45091,7 @@ define([
 			}
 		},
 		_setValue: function(value){
+
 			if(!this._isValidValue(value)){return;}
 			var type = this._getType(), combo = this._needComboBox();
 			switch(type){
@@ -45495,9 +46714,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/string",
 	"dijit/Dialog",
-	"dojo/text!../../templates/FilterConfirmDialog.html",
-	"dojo/i18n!../../nls/FilterBar"
-], function(declare, string, Dialog, template, i18n){
+	"dojo/text!../../templates/FilterConfirmDialog.html"
+], function(declare, string, Dialog, template){
 
 /*=====
 	return declare([], {
@@ -45505,12 +46723,13 @@ define([
 =====*/
 
 	return declare(Dialog, {
-		title: i18n.clearFilterDialogTitle,
+		grid: null,
 		cssClass: 'gridxFilterConfirmDialog',
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.set('content', string.substitute(template, i18n));
+			this.set('title', this.grid.nls.clearFilterDialogTitle);
+			this.set('content', string.substitute(template, this.grid.nls));
 			var arr = dijit.findWidgets(this.domNode);
 			this.btnClear = arr[0];
 			this.btnCancel = arr[1];
@@ -45536,9 +46755,8 @@ define([
 	"dijit/popup",
 	"dojo/_base/declare",
 	"dojo/string",
-	"dojo/i18n!../../nls/FilterBar",
 	"dijit/TooltipDialog"
-], function(array, event, domClass, popup, declare, string, i18n, TooltipDialog){
+], function(array, event, domClass, popup, declare, string, TooltipDialog){
 
 /*=====
 	return declare([], {
@@ -45598,7 +46816,7 @@ define([
 					' class="gridxFilterTooltipRemoveBtn"><span class="gridxFilterTooltipRemoveBtnText">x</span></span></div></td></tr>');
 			}, this);
 			arr.push('</table>');
-			this.i18n = i18n;
+			this.i18n = this.grid.nls;
 			this.set('content', string.substitute(arr.join(''), this));
 			domClass.toggle(this.domNode, 'gridxFilterTooltipSingleRule', data.conditions.length === 1);
 		},
@@ -45839,14 +47057,18 @@ define([
 'gridx/modules/filter/QuickFilter':function(){
 define([
 	'dojo/_base/declare',
+	'dojo/dom-class',
+	'dojox/gesture/tap',
 	'../../core/_Module',
 	'../../support/QuickFilter',
+	'../Puller',
 	'../Bar'
-], function(declare, _Module, QuickFilter){
+], function(declare, domClass, tap, _Module, QuickFilter){
 
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: quickFilter.
 		//		Directly show gridx/support/QuickFilter in gridx/modules/Bar at the top/right position.
 		// description:
 		//		This module is only for convenience. For other positions or more configurations, please use gridx/modules/Bar directly.
@@ -45857,20 +47079,585 @@ define([
 	return declare(_Module, {
 		name: 'quickFilter',
 
-		required: ['bar', 'filter'],
+		required: ['bar', 'filter', 'puller'],
+
+		autoApply: true,
+
+		delay: 700,
 
 		preload: function(){
-			this.grid.bar.defs.push({
-				bar: 'top',
-				row: 0,
-				col: 3,
-				pluginClass: QuickFilter,
-				className: 'gridxBarQuickFilter'
-			});
+			var t = this,
+				g = t.grid,
+				bar = g.bar,
+				prot = QuickFilter.prototype,
+				args = {
+					bar: 'top',
+					row: 0,
+					col: 3,
+					pluginClass: QuickFilter,
+					className: 'gridxBarQuickFilter',
+					hookPoint: this,
+					hookName: 'quickFilter',
+					autoApply: t.arg('autoApply'),
+					delay: t.arg('delay'),
+					textBoxClass: t.arg('textBoxClass', 'dijit.form.TextBox'),
+					buttonClass: t.arg('buttonClass', 'dijit.form.Button'),
+					comboButtonClass: t.arg('comboButtonClass', 'dijit.form.ComboButton'),
+					menuClass: t.arg('menuClass', 'dijit.Menu'),
+					menuItemClass: t.arg('menuItemClass', 'dijit.MenuItem')
+				};
+			if(g.touch){
+				args.bar = 'quickFilter';
+				args.priority = 0.5;
+				bar.loaded.then(function(){
+					g.puller.bind(bar.quickFilterNode);
+				});
+			}
+			bar.defs.push(args);
 		}
 	});
 });
 
+},
+'dojox/gesture/tap':function(){
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"./Base",
+	"../main"
+], function(kernel, declare, lang, Base, dojox){
+// module:
+//		dojox/gesture/tap
+	
+/*=====
+	dojox.gesture.tap = {
+		// summary:
+		//		This module provides tap gesture event handlers:
+		//
+		//		1. dojox.gesture.tap: 'tap' event
+		//
+		//		2. dojox.gesture.tap.hold: 'tap.hold' event
+		//
+		//		3. dojox.gesture.tap.doubletap: 'tap.doubletap' event
+		//
+		// example:
+		//		A. Used with dojo.connect()
+		//		|	dojo.connect(node, dojox.gesture.tap, function(e){});
+		//		|	dojo.connect(node, dojox.gesture.tap.hold, function(e){});
+		//		|	dojo.connect(node, dojox.gesture.tap.doubletap, function(e){});
+		//
+		//		B. Used with dojo.on
+		//		|	define(['dojo/on', 'dojox/gesture/tap'], function(on, tap){
+		//		|		on(node, tap, function(e){});
+		//		|		on(node, tap.hold, function(e){});
+		//		|		on(node, tap.doubletap, function(e){});
+		//
+		//		C. Used with dojox.gesture.tap.* directly
+		//		|	dojox.gesture.tap(node, function(e){});
+		//		|	dojox.gesture.tap.hold(node, function(e){});
+		//		|	dojox.gesture.tap.doubletap(node, function(e){});
+		//
+		//		Though there is always a default gesture instance after being required, e.g
+		//		|	require(['dojox/gesture/tap'], function(){...});
+		//
+		//		It's possible to create a new one with different parameter setting:
+		//		|	var myTap = new dojox.gesture.tap.Tap({holdThreshold: 300});
+		//		|	dojo.connect(node, myTap, function(e){});
+		//		|	dojo.connect(node, myTap.hold, function(e){});
+		//		|	dojo.connect(node, myTap.doubletap, function(e){});
+	};
+=====*/
+
+kernel.experimental("dojox.gesture.tap");
+
+// Declare an internal anonymous class which will only be exported
+// by module return value e.g. dojox.gesture.tap.Tap
+var clz = declare(/*===== "dojox.gesture.tap", =====*/Base, {
+	// defaultEvent: [readonly] String
+	//		Default event - 'tap'
+	defaultEvent: "tap",
+
+	// subEvents: [readonly] Array
+	//		List of sub events, used by being
+	//		combined with defaultEvent as 'tap.hold', 'tap.doubletap'.
+	subEvents: ["hold", "doubletap"],
+
+	// holdThreshold: Integer
+	//		Threshold(in milliseconds) for 'tap.hold'
+	holdThreshold: 500,
+
+	// holdThreshold: Integer
+	//		Timeout (in milliseconds) for 'tap.doubletap'
+	doubleTapTimeout: 250,
+
+	// tapRadius: Integer
+	//		Valid tap radius from previous touch point
+	tapRadius: 10,
+
+	press: function(/*Object*/data, /*Event*/e){
+		// summary:
+		//		Overwritten, record initial tap info and register a timeout checker for 'tap.hold'
+		if(e.touches && e.touches.length >= 2){
+			//tap gesture is only for single touch
+			clearTimeout(data.tapTimeOut); 
+			delete data.context;
+			return;
+		}
+		var target = e.target;
+		this._initTap(data, e);
+		data.tapTimeOut = setTimeout(lang.hitch(this, function(){
+			if(this._isTap(data, e)){
+				this.fire(target, {type: "tap.hold"});
+			}
+			delete data.context;
+		}), this.holdThreshold);
+	},
+	release: function(/*Object*/data, /*Event*/e){
+		// summary:
+		//		Overwritten, fire matched 'tap' or 'tap.doubletap' during touchend
+		if(!data.context){
+			clearTimeout(data.tapTimeOut);
+			return;
+		}
+		if(this._isTap(data, e)){
+			switch(data.context.c){
+			case 1: 
+				this.fire(e.target, {type: "tap"});
+				break;
+			case 2:
+				this.fire(e.target, {type: "tap.doubletap"});
+				break;
+			}
+		}
+		clearTimeout(data.tapTimeOut);
+	},
+	_initTap: function(/*Object*/data, /*Event*/e){
+		// summary:
+		//		Update the gesture data with new tap info 
+		if(!data.context){
+			data.context = {x: 0, y: 0, t: 0, c: 0};
+		}
+		var ct = new Date().getTime();
+		if(ct - data.context.t <= this.doubleTapTimeout){
+			data.context.c++;
+		}else{
+			data.context.c = 1;
+			data.context.x = e.screenX;
+			data.context.y = e.screenY;
+		}
+		data.context.t = ct;
+	},
+	_isTap: function(/*Object*/data, /*Event*/e){
+		// summary:
+		//		Check whether it's an valid tap
+		var dx = Math.abs(data.context.x - e.screenX);
+		var dy = Math.abs(data.context.y - e.screenY);
+		return dx <= this.tapRadius && dy <= this.tapRadius;
+	}
+});
+
+// the default tap instance for handy use
+dojox.gesture.tap = new clz();
+// Class for creating a new Tap instance
+dojox.gesture.tap.Tap = clz;
+
+return dojox.gesture.tap;
+
+});
+},
+'dojox/gesture/Base':function(){
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/dom",
+	"dojo/on",
+	"dojo/touch",
+	"dojo/has",
+	"../main"
+], function(kernel, declare, array, lang, dom, on, touch, has, dojox){
+	// module:
+	//		dojox/gesture/Base
+	// summary:
+	//		This module provides an abstract parental class for various gesture implementations.
+	
+/*=====
+	dojox.gesture.Base = {
+		// summary:
+		//		An abstract parental class for various gesture implementations.
+		//
+		//		It's mainly responsible for:
+		//
+		//		1. Binding on() listening handlers for supported gesture events.
+		//
+		//		2. Monitoring underneath events and process different phases - 'press'|'move'|'release'|'cancel'.
+		//
+		//		3. Firing and bubbling gesture events with on() API.
+		//
+		//		A gesture implementation only needs to extend this class and overwrite appropriate phase handlers:
+		//
+		//		- press()|move()|release()|cancel for recognizing and firing gestures
+		//
+		// example:
+		//		1. A typical gesture implementation.
+		//
+		//		Suppose we have dojox/gesture/a which provides 3 gesture events:"a", "a.x", "a.y" to be used as:
+		//		|	dojo.connect(node, dojox.gesture.a, function(e){});
+		//		|	dojo.connect(node, dojox.gesture.a.x, function(e){});
+		//		|	dojo.connect(node, dojox.gesture.a.y, function(e){});
+		//
+		//		The definition of the gesture "a" may look like:
+		//		|	define([..., "./Base"], function(..., Base){
+		//		|		var clz = declare(Base, {
+		//		|			defaultEvent: "a",
+		//		|
+		//		|			subEvents: ["x", "y"],
+		//		|			
+		//		|			press: function(data, e){
+		//		|				this.fire(node, {type: "a.x", ...});
+		//		|			},
+		//		|			move: function(data, e){
+		//		|				this.fire(node, {type: "a.y", ...});
+		//		|			},
+		//		|			release: function(data, e){
+		//		|				this.fire(node, {type: "a", ...});
+		//		|			},
+		//		|			cancel: function(data, e){
+		//		|				// clean up
+		//		|			}
+		//		|		});
+		//		|
+		//		|		// in order to have a default instance for handy use
+		//		|		dojox.gesture.a = new clz();
+		//		|
+		//		|		// so that we can create new instances like
+		//		|		// var mine = new dojox.gesture.a.A({...})
+		//		|		dojox.gesture.a.A = clz;
+		//		|
+		//		|		return dojox.gesture.a;
+		//		|	});
+		//
+		//		2. A gesture can be used in the following ways(taking dojox.gesture.tap for example):
+		//
+		//		A. Used with dojo.connect()
+		//		|	dojo.connect(node, dojox.gesture.tap, function(e){});
+		//		|	dojo.connect(node, dojox.gesture.tap.hold, function(e){});
+		//		|	dojo.connect(node, dojox.gesture.tap.doubletap, function(e){});		
+		//
+		//		B. Used with dojo.on
+		//		|	define(["dojo/on", "dojox/gesture/tap"], function(on, tap){
+		//		|		on(node, tap, function(e){});
+		//		|		on(node, tap.hold, function(e){});
+		//		|		on(node, tap.doubletap, function(e){});
+		//
+		//		C. Used with dojox.gesture.tap directly
+		//		|	dojox.gesture.tap(node, function(e){});
+		//		|	dojox.gesture.tap.hold(node, function(e){});
+		//		|	dojox.gesture.tap.doubletap(node, function(e){});
+		//
+		//		Though there is always a default gesture instance after being required, e.g 
+		//		|	require(["dojox/gesture/tap"], function(){...});
+		//
+		//		It's possible to create a new one with different parameter setting:
+		//		|	var myTap = new dojox.gesture.tap.Tap({holdThreshold: 300});
+		//		|	dojo.connect(node, myTap, function(e){});
+		//		|	dojo.connect(node, myTap.hold, function(e){});
+		//		|	dojo.connect(node, myTap.doubletap, function(e){});
+		//		
+		//		Please refer to dojox/gesture/ for more gesture usages
+	};
+=====*/
+	kernel.experimental("dojox.gesture.Base");
+	
+	lang.getObject("gesture", true, dojox);
+
+	// Declare an internal anonymous class which will only be exported by module return value
+	return declare(/*===== "dojox.gesture.Base", =====*/null, {
+
+		// defaultEvent: [readonly] String
+		//		Default event e.g. 'tap' is a default event of dojox.gesture.tap
+		defaultEvent: " ",
+
+		// subEvents: [readonly] Array
+		//		A list of sub events e.g ['hold', 'doubletap'],
+		//		used by being combined with defaultEvent like 'tap.hold', 'tap.doubletap' etc.
+		subEvents: [],
+
+		// touchOnly: boolean
+		//		Whether the gesture is touch-device only
+		touchOnly : false,
+
+		// _elements: Array
+		//		List of elements that wraps target node and gesture data
+		_elements: null,
+
+		/*=====
+		// _lock: Dom
+		//		The dom node whose descendants are all locked for processing
+		_lock: null,
+		
+		// _events: [readonly] Array
+		//		The complete list of supported gesture events with full name space
+		//		e.g ['tap', 'tap.hold', 'tap.doubletap']
+		_events: null,
+		=====*/
+
+		constructor: function(args){
+			lang.mixin(this, args);
+			this.init();
+		},
+		init: function(){
+			// summary:
+			//		Initialization works
+			this._elements = [];
+
+			if(!has("touch") && this.touchOnly){
+				console.warn("Gestures:[", this.defaultEvent, "] is only supported on touch devices!");
+				return;
+			}
+
+			// bind on() handlers for various events
+			var evt = this.defaultEvent;
+			this.call = this._handle(evt);
+
+			this._events = [evt];
+			array.forEach(this.subEvents, function(subEvt){
+				this[subEvt] = this._handle(evt + '.' + subEvt);
+				this._events.push(evt + '.' + subEvt);
+			}, this);
+		},
+		_handle: function(/*String*/eventType){
+			// summary:
+			//		Bind listen handler for the given gesture event(e.g. 'tap', 'tap.hold' etc.)
+			//		the returned handle will be used internally by dojo/on
+			var self = this;
+			//called by dojo/on
+			return function(node, listener){
+				// normalize, arguments might be (null, node, listener)
+				var a = arguments;
+				if(a.length > 2){
+					node = a[1];
+					listener = a[2];
+				}
+				var isNode = node && (node.nodeType || node.attachEvent || node.addEventListener);
+				if(!isNode){
+					return on(node, eventType, listener);
+				}else{
+					var onHandle = self._add(node, eventType, listener);
+					// FIXME - users are supposed to explicitly call either
+					// disconnect(signal) or signal.remove() to release resources
+					var signal = {
+						remove: function(){
+							onHandle.remove();
+							self._remove(node, eventType);
+						}
+					};
+					return signal;
+				}
+			}; // dojo/on handle
+		},
+		_add: function(/*Dom*/node, /*String*/type, /*function*/listener){
+			// summary:
+			//		Bind dojo/on handlers for both gesture event(e.g 'tab.hold')
+			//		and underneath 'press'|'move'|'release' events
+			var element = this._getGestureElement(node);
+			if(!element){
+				// the first time listening to the node
+				element = {
+					target: node,
+					data: {},
+					handles: {}
+				};
+
+				var _press = lang.hitch(this, "_process", element, "press");
+				var _move = lang.hitch(this, "_process", element, "move");
+				var _release = lang.hitch(this, "_process", element, "release");
+				var _cancel = lang.hitch(this, "_process", element, "cancel");
+
+				var handles = element.handles;
+				if(this.touchOnly){
+					handles.press = on(node, 'touchstart', _press);
+					handles.move = on(node, 'touchmove', _move);
+					handles.release = on(node, 'touchend', _release);
+					handles.cancel = on(node, 'touchcancel', _cancel);
+				}else{
+					handles.press = touch.press(node, _press);
+					handles.move = touch.move(node, _move);
+					handles.release = touch.release(node, _release);
+					handles.cancel = touch.cancel(node, _cancel);
+				}
+				this._elements.push(element);
+			}
+			// track num of listeners for the gesture event - type
+			// so that we can release element if no more gestures being monitored
+			element.handles[type] = !element.handles[type] ? 1 : ++element.handles[type];
+
+			return on(node, type, listener); //handle
+		},
+		_getGestureElement: function(/*Dom*/node){
+			// summary:
+			//		Obtain a gesture element for the give node
+			var i = 0, element;
+			for(; i < this._elements.length; i++){
+				element = this._elements[i];
+				if(element.target === node){
+					return element;
+				}
+			}
+		},
+		_process: function(element, phase, e){
+			// summary:
+			//		Process and dispatch to appropriate phase handlers.
+			//		Also provides the machinery for managing gesture bubbling.
+			// description:
+			//		1. e._locking is used to make sure only the most inner node
+			//		will be processed for the same gesture, suppose we have:
+			//	|	on(inner, dojox.gesture.tap, func1);
+			//	|	on(outer, dojox.gesture.tap, func2);
+			//		only the inner node will be processed by tap gesture, once matched,
+			//		the 'tap' event will be bubbled up from inner to outer, dojo.StopEvent(e)
+			//		can be used at any level to stop the 'tap' event.
+			//
+			//		2. Once a node starts being processed, all it's descendant nodes will be locked.
+			//		The same gesture won't be processed on its descendant nodes until the lock is released.
+			// element: Object
+			//		Gesture element
+			// phase: String
+			//		Phase of a gesture to be processed, might be 'press'|'move'|'release'|'cancel'
+			// e: Event
+			//		Native event
+			e._locking = e._locking || {};
+			if(e._locking[this.defaultEvent] || this.isLocked(e.currentTarget)){
+				return;
+			}
+			// invoking gesture.press()|move()|release()|cancel()
+			// #16900: same condition as in dojo/touch, to avoid breaking the editing of input fields.
+			if((e.target.tagName != "INPUT" || e.target.type == "radio" || e.target.type == "checkbox")
+				&& e.target.tagName != "TEXTAREA"){
+				e.preventDefault(); 
+			}
+			e._locking[this.defaultEvent] = true;
+			this[phase](element.data, e);
+		},
+		press: function(data, e){
+			// summary:
+			//		Process the 'press' phase of a gesture
+		},
+		move: function(data, e){
+			// summary:
+			//		Process the 'move' phase of a gesture
+		},
+		release: function(data, e){
+			// summary:
+			//		Process the 'release' phase of a gesture
+		},
+		cancel: function(data, e){
+			// summary:
+			//		Process the 'cancel' phase of a gesture
+		},
+		fire: function(node, event){
+			// summary:
+			//		Fire a gesture event and invoke registered listeners
+			//		a simulated GestureEvent will also be sent along
+			// node: DomNode
+			//		Target node to fire the gesture
+			// event: Object
+			//		An object containing specific gesture info e.g {type: 'tap.hold'|'swipe.left'), ...}
+			//		all these properties will be put into a simulated GestureEvent when fired.
+			//		Note - Default properties in a native Event won't be overwritten, see on.emit() for more details.
+			if(!node || !event){
+				return;
+			}
+			event.bubbles = true;
+			event.cancelable = true;
+			on.emit(node, event.type, event);
+		},
+		_remove: function(/*Dom*/node, /*String*/type){
+			// summary:
+			//		Check and remove underneath handlers if node
+			//		is not being listened for 'this' gesture anymore,
+			//		this happens when user removed all previous on() handlers.
+			var element = this._getGestureElement(node);
+			if(!element || !element.handles){ return; }
+			
+			element.handles[type]--;
+
+			var handles = element.handles;
+			if(!array.some(this._events, function(evt){
+				return handles[evt] > 0;
+			})){
+				// clean up if node is not being listened anymore
+				this._cleanHandles(handles);
+				var i = array.indexOf(this._elements, element);
+				if(i >= 0){
+					this._elements.splice(i, 1);
+				}
+			}
+		},
+		_cleanHandles: function(/*Object*/handles){
+			// summary:
+			//		Clean up on handles
+			for(var x in handles){
+				//remove handles for "press"|"move"|"release"|"cancel"
+				if(handles[x].remove){
+					handles[x].remove();
+				}
+				delete handles[x];
+			}
+		},
+		lock: function(/*Dom*/node){
+			// summary:
+			//		Lock all descendants of the node.
+			// tags:
+			//		protected
+			this._lock = node;
+		},
+		unLock: function(){
+			// summary:
+			//		Release the lock
+			// tags:
+			//		protected
+			this._lock = null;
+		},
+		isLocked: function(node){
+			// summary:
+			//		Check if the node is locked, isLocked(node) means
+			//		whether it's a descendant of the currently locked node.
+			// tags:
+			//		protected
+			if(!this._lock || !node){
+				return false;
+			}
+			return this._lock !== node && dom.isDescendant(node, this._lock);
+		},
+		destroy: function(){
+			// summary:
+			//		Release all handlers and resources
+			array.forEach(this._elements, function(element){
+				this._cleanHandles(element.handles);
+			}, this);
+			this._elements = null;
+		}
+	});
+});
+},
+'dojox/main':function(){
+define(["dojo/_base/kernel"], function(dojo) {
+	// module:
+	//		dojox/main
+
+	/*=====
+	return {
+		// summary:
+		//		The dojox package main module; dojox package is somewhat unusual in that the main module currently just provides an empty object.
+		//		Apps should require modules from the dojox packages directly, rather than loading this module.
+	};
+	=====*/
+
+	return dojo.dojox;
+});
 },
 'gridx/support/QuickFilter':function(){
 define([
@@ -45888,12 +47675,11 @@ define([
 	'dijit/Menu',
 	'dijit/MenuItem',
 	'../modules/Filter',
-	'dojo/i18n!../nls/QuickFilter',
 	'dojo/text!../templates/QuickFilter.html'
 ], function(declare, lang, array, domClass, keys,
 	_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, Button, ComboButton, Menu, MenuItem,
-	F, nls, template){
+	F, template){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -45919,14 +47705,17 @@ define([
 		templateString: template,
 
 		constructor: function(args){
-			lang.mixin(this, nls);
-			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			var t = this;
+			lang.mixin(t, args.grid.nls);
+			t._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			t.connect(args.grid.model, 'setStore', function(){
+				t.textBox.set('value', '');
+				domClass.remove(t.domNode, 'gridxQuickFilterActive');
+			});
 		},
 
 		postCreate: function(){
-			if(this.autoApply){
-				this.connect(this.textBox, 'onInput', '_onInput');
-			}
+			this.connect(this.textBox, 'onInput', '_onInput');
 		},
 
 		grid: null,
@@ -45954,11 +47743,19 @@ define([
 			setTimeout(function(){
 				domClass.toggle(dn, 'gridxQuickFilterActive', tb.get('value'));
 			}, 0);
-			if(key != keys.TAB){
+			if(t.autoApply && key != keys.TAB){
 				clearTimeout(t._handle);
 				t._handle = setTimeout(function(){
 					t._filter();
 				}, key == keys.ENTER ? 0 : t.delay);
+			}
+		},
+
+		_onKey: function(evt){
+			if(evt.keyCode == keys.ENTER){
+				this.grid.focus.stopEvent(evt);
+				this._clear();
+				this.textBox.focus();
 			}
 		},
 
@@ -46457,6 +48254,124 @@ define([
 });
 
 },
+'gridx/modules/Puller':function(){
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/query",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/aspect",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/keys",
+	"../core/_Module"
+], function(kernel, declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module){
+	kernel.experimental('gridx/modules/Puller');
+
+	return _Module.register(
+	declare(_Module, {
+		name: 'puller',
+
+		forced: ['vScroller'],
+		//node: null,
+
+		load: function(){
+			this.bind(this.arg('node'));
+			this.loaded.callback();
+		},
+
+		bind: function(node){
+			var t = this;
+			var g = t.grid;
+			t.unbind();
+			if(node && node != t.node){
+				t.node = node;
+				t.innerNode = node.firstChild;
+				g.vScroller.loaded.then(function(){
+					var scrollable = g.vScroller._scrollable;
+					if(scrollable){
+						t._height = t.node.clientHeight;
+						t._binds = [
+							t.aspect(scrollable, 'onTouchStart', function(){
+								t.node.style.height = t.node.clientHeight + 'px';
+								domClass.add(t.node, 'gridxPuller');
+								domClass.add(t.innerNode, 'gridxPullerInner');
+								t._pos = scrollable.getPos();
+								t._stage = 1;
+							}),
+							t.aspect(scrollable, 'scrollTo', function(to){
+								if(typeof to.y == 'number' && t._stage == 1){
+									var delta = to.y - t._pos.y;
+									var oldh = t.node.clientHeight;
+									var h = oldh + delta;
+									if(h < 0){
+										h = 0;
+									}else if(h > t._height){
+										h = t._height;
+									}
+									delta = h - oldh;
+									t._pos = to;
+									t.node.style.height = h + 'px';
+									g.mainNode.style.height = (g.mainNode.clientHeight - delta) + 'px';
+									g.vLayout.reLayout();
+								}
+							}),
+							t.aspect(scrollable, 'onTouchEnd', function(){
+								if(t.node.clientHeight < t._height / 2){
+									t._slide(0);
+								}else if(t.node.clientHeight >= t._height / 2){
+									t._slide(1);
+								}else{
+									t._stage = 0;
+								}
+							}, t, 'before')
+						];
+					}
+				});
+			}
+		},
+
+		unbind: function(){
+			var t = this;
+			if(t._binds){
+				for(var i = 0; i < t._binds.length; ++i){
+					t._binds[i].remove();
+				}
+				domClass.remove(t.node, 'gridxPuller');
+				domClass.remove(t.innerNode, 'gridxPullerInner');
+				t.node.style.height = '';
+				t.grid.vLayout.reLayout();
+				t._binds = t.node = null;
+			}
+		},
+
+		_slide: function(toShow){
+			var t = this;
+			var g = t.grid;
+			var targetHeight = toShow ? t._height : 0;
+			t._stage = 2;
+			domClass.add(t.node, 'gridxPullerAnim');
+			domClass.add(g.mainNode, 'gridxPullerAnim');
+			setTimeout(function(){
+				var h = t.node.offsetHeight - targetHeight;
+				t.node.style.height = targetHeight + 'px';
+				g.mainNode.style.height = (g.mainNode.clientHeight + h) + 'px';
+				setTimeout(function(){
+					domClass.remove(t.node, 'gridxPullerAnim');
+					domClass.remove(g.mainNode, 'gridxPullerAnim');
+					g.vLayout.reLayout();
+					t._stage = 0;
+				}, 500);
+			}, 10);
+		}
+	}));
+
+});
+
+},
 'gridx/modules/CellWidget':function(){
 define([
 /*====="../core/Cell", =====*/
@@ -46485,6 +48400,7 @@ define([
 
 	var CellWidget = declare(_Module, {
 		// summary:
+		//		module name: cellWidget.
 		//		This module makes it possible to efficiently show widgets within a grid cell.
 		// description:
 		//		Since widget declarations need to be parsed by dojo.parser, it can NOT be directly
@@ -46569,6 +48485,8 @@ define([
 		//		Indicating whether this column should use this CellWidget module.
 		//		CellWidget module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
 		widgetsInCell: false,
+
+		allowEventBubble: false,
 
 		decorator: function(){
 			// summary:
@@ -46663,13 +48581,14 @@ define([
 			},
 
 			postCreate: function(){
-				var dn = this.domNode;
-				this.connect(dn, 'onmousedown', function(e){
-					if(e.target != dn){
+				var t = this,
+					dn = t.domNode;
+				t.connect(dn, 'onmousedown', function(e){
+					if(e.target != dn && !t.cell.column.allowEventBubble){
 						e.cancelBubble = true;
 					}
 				});
-				this._cellCnnts = [];
+				t._cellCnnts = [];
 			},
 
 			startup: function(){
@@ -46723,7 +48642,6 @@ define([
 							}
 						}
 					});
-					// 0 && console.log('lazy is: ', lazyData);
 					if(t.setCellValue){
 						t.setCellValue(gridData, storeData, t, isInit);
 					}
@@ -46922,9 +48840,6 @@ define([
 						setCellValue: col.setCellValue
 					});
 					this.onCellWidgetCreated(widget, cell.column);
-					if(col.onCellWidgetCreated){
-						col.onCellWidgetCreated(widget, cell.column);
-					}
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}
@@ -46981,10 +48896,11 @@ define([
 				if(cellDec){
 					if(!cellDec.widget && cellDec.decorator){
 						try{
-							cellDec.widget = new CellWidget({
+							var widget = cellDec.widget = new CellWidget({
 								content: cellDec.decorator(cell.data(), cell.row.id, cell.row.visualIndex(), cell),
 								setCellValue: cellDec.setCellValue
 							});
+							this.onCellWidgetCreated(widget, cell.column);
 						}catch(e){
 							console.error('Edit:', e);
 						}
@@ -47012,6 +48928,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: navigableCell.
 		//		This module allow the elements in grid cell be focusable.
 		// description:
 		//		When focus is on a cell, press F2 to focus the first focusable element in that cell.
@@ -47052,7 +48969,11 @@ define([
 					func = function(){
 						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
 						if(toFocus){
-							toFocus.focus();
+							try{
+								toFocus.focus();
+							}catch(e){
+								//FIXME: avoid error in IE.
+							}
 						}
 					};
 				if(has('webkit')){
@@ -47086,18 +49007,26 @@ define([
 							colIndex = g._columnsById[t._focusColId].index,
 							dir = step > 0 ? 1 : -1,
 							checker = function(r, c){
-								return t._isNavigable(g._columns[c].id);
+								//If there's no decorator, we assume there's no focusable elements in this column
+								return t._isNavigable(g._columns[c].id) && g._columns[c].decorator;
 							};
-						body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-							t._focusColId = g._columns[obj.c].id;
-							//This kind of breaks the encapsulation...
-							var rowInfo = view.getRowInfo({visualIndex: obj.r});
-							t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-							body._focusCellCol = obj.c;
-							body._focusCellRow = obj.r;
-							t._beginNavigate(t._focusRowId, t._focusColId);
-							t._doFocus(null, step);
-						});
+						function focusNextCell(r, c){
+							body._nextCell(r, c, dir, checker).then(function(obj){
+								t._focusColId = g._columns[obj.c].id;
+								//This kind of breaks the encapsulation...
+								var rowInfo = view.getRowInfo({visualIndex: obj.r});
+								t._focusRowId = m.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+								if(t._beginNavigate(t._focusRowId, t._focusColId)){
+									body._focusCellCol = obj.c;
+									body._focusCellRow = obj.r;
+									t._doFocus(null, step);
+								}else{
+									//FIXME: to avoid infinite loop
+									focusNextCell(obj.r, obj.c);
+								}
+							});
+						}
+						focusNextCell(rowIndex, colIndex);
 					});
 				}
 				return false;
@@ -47115,14 +49044,14 @@ define([
 		_beginNavigate: function(rowId, colId){
 			var t = this;
 			if(t._isNavigable(colId)){
-				t._navigating = true;
 				t._focusColId = colId;
 				t._focusRowId = rowId;
 				var navElems = t._navElems = a11y._getTabNavigable(t.grid.body.getCellNode({
-					rowId: rowId, 
+					rowId: rowId,
 					colId: colId
 				}));
-				return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+				//Intentional assignment
+				return t._navigating = (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
 			}
 			return false;
 		},
@@ -47188,13 +49117,17 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-construct",
 	"dojo/keys",
+	"dojox/gesture/tap",
+	"dijit/a11y",
 	"../core/_Module",
 	"dojo/date/locale",
 	'../core/model/extensions/Modify',
 	'dojo/_base/event',
+	"dijit/form/Button",
+	"dijit/Toolbar",
 	"dijit/form/TextBox"
 //    "dojo/NodeList-traverse"
-], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, _Module, locale, Modify, event){
+], function(/*=====Column, Cell, =====*/declare, lang, query, json, Deferred, has, array, DeferredList, domClass, domStyle, domGeo, domConstruct, keys, tap, a11y, _Module, locale, Modify, event){
 
 /*=====
 	Cell.beginEdit = function(){
@@ -47253,6 +49186,7 @@ define([
 
 	var Edit = declare(_Module, {
 		// summary:
+		//		module name: edit.
 		//		This module provides editing mode for grid cells.
 		// description:
 		//		This module relies on an implementation of the CellWidget module.
@@ -47367,14 +49301,14 @@ define([
 		//		so editor.set('value', ...) can do the job.
 		valueField: 'value',
 
-		toEditor: function(storeData, gridData){
+		toEditor: function(storeData, gridData, cell){
 			// summary:
 			//		By default the dijit used in an editing cell will use store value.
 			//		If this default behavior can not meet the requirement (for example, store data is freely formatted date string,
 			//		while the dijit is dijit.form.DateTextBox, which requires a Date object), this function can be used.
 		},
 
-		fromEditor: function(valueInEditor){
+		fromEditor: function(valueInEditor, cell){
 			// summary:
 			//		By default when applying an editing cell, the value of the editor dijit will be retreived by get('value') and
 			//		directly set back to the store. If this can not meet the requirement, this getEditorValue function can be used
@@ -47458,7 +49392,8 @@ define([
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
 			return locale.parse(storeData, col.storePattern);
 		}
-		return gridData;
+		//Some editor like textbox will ignore setting undefined value.
+		return gridData === undefined ? null : gridData;
 	}
 	
 	function dateTimeFormatter(field, parseArgs, formatArgs, rawData){
@@ -47473,7 +49408,9 @@ define([
 			editorArgs = cell.column.editorArgs;
 			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
 		};
-	}	
+	}
+
+
 
 	return declare(_Module, {
 		name: 'edit',
@@ -47529,28 +49466,24 @@ define([
 								leftToMove = node.clientWidth - cellPadding - 5,
 								
 								html = [
-								"<div rowid='" + rowId + "' ",
-								"colid='" + colId + "' ",
-								"class='gridxCellEditedBg'><span>◥</span></div>"
+									"<div class='gridxCellEditedBgWrapper'>",
+										"<div	rowid='" + rowId + "' ",
+												"colid='" + colId + "' ",
+												"class='gridxCellEditedBg'><span>◥</span>",
+										"</div>",
+									"</div>"
 							].join('');
 							
-							cellBgNode = domConstruct.toDom(html);
-							domConstruct.place(cellBgNode, cell.node(), 'first');
+							wrapper= domConstruct.toDom(html);
+							cellBgNode = wrapper.firstChild;
+							domConstruct.place(wrapper, cell.node(), 'first');
 							
-							currentLeft = cellBgNode.offsetLeft;
-							currentLeft += leftToMove;
+							wrapperPosition= domGeo.position(cellBgNode);
+							nodePosition = domGeo.position(node);
 							
-							var upperRows = query('.gridxRow[visualIndex]', g.bodyNode),
-								top = 0;
-							array.forEach(upperRows, function(row){
-								var vi = parseInt(row.getAttribute('visualIndex'), 10);
-								if(vi < visualIndex){
-									top += row.clientHeight;
-								}
-							});
+							wrapper.style.top = nodePosition.y - wrapperPosition. y + 'px';
+							wrapper.style.left = cellPadding + 'px';
 							
-							domStyle.set(cellBgNode, 'left', currentLeft + 'px');
-							domStyle.set(cellBgNode, 'top', top+ 'px');
 						}
 				};
 				
@@ -47586,28 +49519,54 @@ define([
 				t.connect(g.body, 'onAfterCell', _onAftercell);
 			}
 			g.domNode.removeAttribute('aria-readonly');
-			t.connect(g, 'onCellDblClick', '_onUIBegin');
-			t.connect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
-			t.connect(g.cellWidget, 'initializeCellWidget', function(widget, cell){
+			if(g.touch){
+				t.connect(g.bodyNode, tap.doubletap, function(evt){
+					var cellNode = query(evt.target).closest('.gridxCell', g.bodyNode);
+					var rowNode = cellNode.closest('.gridxRow', g.bodyNode)[0];
+					cellNode = cellNode[0];
+					if(rowNode && cellNode){
+						t._onUIBegin({
+							rowId: rowNode.getAttribute('rowid'),
+							columnId: cellNode.getAttribute('colid')
+						});
+					}
+				});
+				t.aspect(g, 'onCellTouchEnd', function(evt){
+					var col = g._columnsById[evt.columnId];
+					query('.gridxEditFocus', g.bodyNode).removeClass('gridxEditFocus');
+					if(col.alwaysEditing){
+						t._showButtons(evt.rowId, evt.columnId);
+					}
+				});
+			}else{
+				t.aspect(g, 'onCellDblClick', function(evt){
+					if(!domClass.contains(evt.target, 'gridxTreeExpandoIcon') &&
+						!domClass.contains(evt.target, 'gridxTreeExpandoInner')){
+						t._onUIBegin(evt);
+					}
+				});
+			}
+			t.aspect(g.cellWidget, 'onCellWidgetCreated', '_onCellWidgetCreated');
+			t.aspect(g.cellWidget, 'initializeCellWidget', function(widget, cell){
 				var column = cell.column;
 				if(column.initializeEditor && widget.gridCellEditField){
 					column.initializeEditor(widget.gridCellEditField, cell);
 				}
 			});
-			t.connect(g.cellWidget, 'uninitializeCellWidget', function(widget, cell){
+			t.aspect(g.cellWidget, 'uninitializeCellWidget', function(widget, cell){
 				var column = cell.column;
 				if(column.uninitializeEditor && widget.gridCellEditField){
 					column.uninitializeEditor(widget.gridCellEditField, cell);
 				}
 			});
-			t.connect(g.cellWidget, 'collectCellWidgetConnects', function(widget, output){
+			t.aspect(g.cellWidget, 'collectCellWidgetConnects', function(widget, output){
 				var column = widget.cell.column;
 				if(column.getEditorConnects){
 					var cnnts = column.getEditorConnects(widget, widget.cell);
 					output.push.apply(output, cnnts);
 				}
 			});
-			t.connect(g.body, 'onAfterRow', function(row){
+			t.aspect(g.body, 'onAfterRow', function(row){
 				query('.gridxCell', row.node()).forEach(function(node){
 					// var colid = node.getAttribute('colid');
 					if(g._columnsById[node.getAttribute('colid')].editable){
@@ -47616,9 +49575,11 @@ define([
 				});
 			});
 		},
-		
+
 		lazySave: false,
-		
+
+		//buttons: false,
+
 		load: function(){
 			//Must init focus after navigable cell, so that "edit" focus area will be on top of the "navigablecell" focus area.
 			this._initFocus();
@@ -47643,8 +49604,7 @@ define([
 			},
 
 			editor: function(){
-				var cw = this.grid.cellWidget.getCellWidget(this.row.id, this.column.id);
-				return cw && cw.gridCellEditField;
+				return this.grid.edit.getEditor(this.row.id, this.column.id);
 			},
 
 			isEditable: function(){
@@ -47693,9 +49653,9 @@ define([
 							lang.partial(getTypeData, col)));
 					t._record(rowId, colId);
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
+						g.resize();
 						t._focusEditor(rowId, colId);
 						d.callback(true);
-						g.resize();
 						t.onBegin(g.cell(rowId, colId, 1));
 					});
 				}else{
@@ -47771,6 +49731,7 @@ define([
 							}
 						};
 					try{
+						v = (isNaN(v) && typeof v === 'number')? '' : v;
 						if(editorArgs && editorArgs.fromEditor){
 							v = editorArgs.fromEditor(v, widget.cell);
 						}else if(cell.column.storePattern){
@@ -47815,8 +49776,7 @@ define([
 			if(col && col.alwaysEditing){
 				return true;
 			}
-			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
-			return !!widget && !!widget.gridCellEditField;
+			return !!this.getEditor(rowId, colId);
 		},
 
 		setEditor: function(colId, editor, args){
@@ -47825,7 +49785,12 @@ define([
 			col.editor = editor;
 			lang.mixin(editorArgs, args || {});
 		},
-		
+
+		getEditor: function(rowId, colId){
+			var widget = this.grid.cellWidget.getCellWidget(rowId, colId);
+			return widget && widget.gridCellEditField;
+		},
+
 		getLazyData: function(rowId, colId){
 			var t = this,
 				f = t.grid._columnsById[colId].field;
@@ -47853,7 +49818,9 @@ define([
 			this._lazyData = {};
 			this._lazyDataChangeList = {};
 			this._inCallBackMode = false;
-			
+			if(this.grid.touch){
+				this.buttons = 1;
+			}
 			for(var i = 0, cols = this.grid._columns, len = cols.length; i < len; ++i){
 				var c = cols[i];
 				if(c.storePattern && c.field && (c.dataType == 'date' || c.dataType == 'time')){
@@ -47892,6 +49859,7 @@ define([
 					col.needCellWidget = function(cell){
 						return (!needCellWidget || needCellWidget.apply(col, arguments)) && cell.isEditable();
 					};
+					col._userDec = col.decorator;
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
@@ -47903,11 +49871,14 @@ define([
 			});
 		},
 
-		//FIXME: this is duplicated code, see CellWidget.
 		_dummyDecorator: function(data, rowId, visualIndex, cell){
 			var column = cell.column;
 			if(!column.needCellWidget || column.needCellWidget(cell)){
 				return '';
+			}
+			//If not editable, allow user decorator to take effect.
+			if(column._userDec){
+				return column._userDec(data, rowId, visualIndex, cell);
 			}
 			return data;
 		},
@@ -47927,20 +49898,38 @@ define([
 			var t = this,
 				editor = widget.gridCellEditField;
 			if(editor){
-				if(column.alwaysEditing){
+				if(widget.btns){
+					function onOK(evt){
+						evt.stopPropagation();
+						widget.cell.applyEdit().then(function(success){
+							if(success){
+								domClass.remove(widget.btns, 'gridxEditFocus');
+								t.grid.body.onRender();
+								t._blur();
+							}
+						});
+					}
+					function onCancel(evt){
+						evt.stopPropagation();
+						widget.cell.cancelEdit().then(function(){
+							domClass.remove(widget.btns, 'gridxEditFocus');
+							t.grid.body.onRender();
+							t._blur();
+						});
+					}
+					widget.connect(widget.btnOK, 'onclick', onOK);
+					widget.connect(widget.btnOK, 'ontouchend', onOK);
+					widget.connect(widget.btnCancel, 'onclick', onCancel);
+					widget.connect(widget.btnCancel, 'ontouchend', onCancel);
+				}else if(column.alwaysEditing){
 					widget.connect(editor, 'onChange', function(){
-						var rn = widget.domNode.parentNode;
-						while(rn && !domClass.contains(rn, 'gridxRow')){
-							rn = rn.parentNode;
-						}
-						if(rn){
-							//TODO: is 500ms okay?
-							var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
-							clearTimeout(editor._timeoutApply);
-							editor._timeoutApply = setTimeout(function(){
-								t.apply(rn.getAttribute('rowid'), column.id);
-							}, delay);
-						}
+						var rowId = widget.cell.row.id;
+						//TODO: is 500ms okay?
+						var delay = column.editorArgs && column.editorArgs.applyDelay || 500;
+						clearTimeout(editor._timeoutApply);
+						editor._timeoutApply = setTimeout(function(){
+							t.apply(rowId, column.id);
+						}, delay);
 					});
 				}
 				if(column.onEditorCreated){
@@ -47950,19 +49939,29 @@ define([
 		},
 
 		_focusEditor: function(rowId, colId, forced){
-			var cw = this.grid.cellWidget,
-				func = function(){
-					var widget = cw.getCellWidget(rowId, colId),
-						editor = widget && widget.gridCellEditField;
-					if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
-						editor.focus();
-					}
-				};
-			if(has('webkit')){
-				func();
-			}else{
-				setTimeout(func, 1);
+			var editor = this.getEditor(rowId, colId);
+			if(editor && !editor.focused && lang.isFunction(editor.focus) || forced){
+				this.grid.hScroller.scrollToColumn(colId);
+				editor.focus();
 			}
+		},
+
+		_showButtons: function(rowId, colId){
+			var g = this.grid;
+			var alwaysEditing = g._columnsById[colId].alwaysEditing;
+			if(alwaysEditing){
+				query('.gridxEditFocus', g.bodyNode).removeClass('gridxEditFocus');
+				var cw = g.cellWidget.getCellWidget(rowId, colId);
+				if(cw && cw.btns){
+					domClass.add(cw.btns, 'gridxEditFocus');
+				}
+				g.body.onRender();
+			}
+		},
+
+		_hideButtons: function(){
+			query('.gridxEditFocus', this.grid.bodyNode).removeClass('gridxEditFocus');
+			this.grid.body.onRender();
 		},
 
 		_getDecorator: function(colId){
@@ -47988,15 +49987,23 @@ define([
 			}else if(props && constraints){
 				props += ', ';
 			}
+			var t = this;
 			return function(){
-				return ["<div data-dojo-type='", className, "' ",
-						"data-dojo-attach-point='gridCellEditField' ",
-						"class='gridxCellEditor gridxHasGridCellValue ",
-						useGridData ? "" : "gridxUseStoreData",
-						"' data-dojo-props='",
-						props, constraints,
-						"'></div>"
-					].join('');
+				return [
+					t.arg('buttons') ?  ["<div class='gridxEditButtons ",
+						col.alwaysEditing ? 'gridxAlwaysEdit' : '',
+						"' data-dojo-attach-point='btns'>",
+						"<div tabindex='0' class='gridxEditOK' data-dojo-attach-point='btnOK'></div>",
+						"<div tabindex='0' class='gridxEditCancel' data-dojo-attach-point='btnCancel'></div>",
+					"</div>"].join('') : '',
+					"<div data-dojo-type='", className, "' ",
+					"data-dojo-attach-point='gridCellEditField' ",
+					"class='gridxCellEditor gridxHasGridCellValue ",
+					useGridData ? "" : "gridxUseStoreData",
+					"' data-dojo-props='",
+					props, constraints,
+					"'></div>"
+				].join('');
 			};
 		},
 
@@ -48047,13 +50054,23 @@ define([
 					onFocus: t._onFocus,
 					onBlur: t._onBlur,
 					connects: [
-						t.connect(g, 'onCellKeyDown', '_onKey'),
-						t.connect(t, '_focusEditor', '_focus')
+						t.aspect(g, 'onCellKeyDown', '_onKey'),
+						t.aspect(t, '_focusEditor', '_focus'),
+						t.aspect(g.focus, 'onFocusArea', function(area){
+							if(area == 'navigablecell'){
+								t._showButtons(g.navigableCell._focusRowId, g.navigableCell._focusColId);
+							}
+						}),
+						t.aspect(g.focus, 'onBlurArea', function(area){
+							if(area == 'navigablecell'){
+								t._hideButtons();
+							}
+						})
 					]
 				});
 			}else{
 				//If not keyboard support, at least single clicking on other cells should apply the changes.
-				t.connect(g, 'onCellMouseDown', function(e){
+				t.aspect(g, 'onCellMouseDown', function(e){
 					var cells = t._editingCells;
 					if(!cells[e.rowId] || !cells[e.rowId][e.columnId]){
 						t._applyAll();
@@ -48087,26 +50104,33 @@ define([
 				view = g.view,
 				body = g.body;
 			if(t._editing && step){
-				var rowIndex = view.getRowInfo({
-						parentId: t.model.parentId(t._focusCellRow),
-						rowIndex: t.model.idToIndex(t._focusCellRow)
-					}).visualIndex,
-					colIndex = g._columnsById[t._focusCellCol].index,
-					dir = step > 0 ? 1 : -1,
-					checker = function(r, c){
-						return g._columns[c].editable;
-					};
-				body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
-					g.focus.stopEvent(evt);
-					t._applyAll();
-					t._focusCellCol = g._columns[obj.c].id;
-					var rowInfo = view.getRowInfo({visualIndex: obj.r});
-					t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
-					//This breaks encapsulation a little....
-					body._focusCellCol = obj.c;
-					body._focusCellRow = obj.r;
-					t.begin(t._focusCellRow, t._focusCellCol);
+				var cellNode = g.body.getCellNode({
+					rowId: t._focusCellRow,
+					colId: t._focusCellCol
 				});
+				var elems = a11y._getTabNavigable(cellNode);
+				if(evt && ((!elems.first && !elems.last) || evt.target == (step < 0 ? elems.first : elems.last))){
+					g.focus.stopEvent(evt);
+					var rowIndex = view.getRowInfo({
+							parentId: t.model.parentId(t._focusCellRow),
+							rowIndex: t.model.idToIndex(t._focusCellRow)
+						}).visualIndex,
+						colIndex = g._columnsById[t._focusCellCol].index,
+						dir = step > 0 ? 1 : -1,
+						checker = function(r, c){
+							return g._columns[c].editable;
+						};
+					body._nextCell(rowIndex, colIndex, dir, checker).then(function(obj){
+						t._applyAll();
+						t._focusCellCol = g._columns[obj.c].id;
+						var rowInfo = view.getRowInfo({visualIndex: obj.r});
+						t._focusCellRow = t.model.indexToId(rowInfo.rowIndex, rowInfo.parentId);
+						//This breaks encapsulation a little....
+						body._focusCellCol = obj.c;
+						body._focusCellRow = obj.r;
+						t.begin(t._focusCellRow, t._focusCellCol);
+					});
+				}
 				return false;
 			}
 			return true;
@@ -48114,6 +50138,7 @@ define([
 
 		_onBlur: function(){
 			this._applyAll();
+			this._editing = false;
 			return true;
 		},
 
@@ -48129,30 +50154,25 @@ define([
 			this._editing = false;
 			var focus = this.grid.focus;
 			if(focus){
-				if(has('ie')){
-					setTimeout(function(){
-						focus.focusArea('body');
-					}, 1);
-				}else{
-					focus.focusArea('body');
-				}
+				focus.focusArea('body');
 			}
 		},
 		
 		_onKey: function(e){
 			var t = this,
 				g = t.grid,
+				ctrlKey = g._isCtrlKey(e),
 				col = g._columnsById[e.columnId];
 			if(col.editable){
 				var editing = t.isEditing(e.rowId, e.columnId);
 				if(e.keyCode == keys.ENTER){
 					if(editing){
 						t.apply(e.rowId, e.columnId).then(function(success){
-							if(success){
-								t._blur();
-							}
 							if(col.alwaysEditing){
 								t._focusEditor(e.rowId, e.columnId);
+								t._showButtons(e.rowId, e.columnId);
+							}else if(success){
+								t._blur();
 							}
 						});
 					}else if(g.focus.currentArea() == 'body'){
@@ -48161,26 +50181,25 @@ define([
 						t._onUIBegin(e);
 					}
 				}else if(e.keyCode == keys.ESCAPE && editing){
+					g.focus.stopEvent(e);
 					t.cancel(e.rowId, e.columnId).then(lang.hitch(t, t._blur)).then(function(){
+						t._hideButtons();
 						g.focus.focusArea('body');
 					});
-				}else if(e.keyCode == 'Z'.charCodeAt(0) && e.ctrlKey){
+				}else if(e.keyCode == 'Z'.charCodeAt(0) && ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.undo();
 					}
-				}else if(e.keyCode == 'Y'.charCodeAt(0) && e.ctrlKey){
+				}else if(e.keyCode == 'Y'.charCodeAt(0) && ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.redo();
 					}
-				}else if(e.keyCode == 'S'.charCodeAt(0) && e.ctrlKey){
+				}else if(e.keyCode == 'S'.charCodeAt(0) && ctrlKey){
 					if(t.arg('lazySave')){
 						t.model.save();
 						e.preventDefault();
 					}
 				}
-			}
-			if(t._editing && e.keyCode !== keys.TAB){
-				e.stopPropagation();
 			}
 		}
 		
@@ -48602,10 +50621,56 @@ define([
 });
 
 },
+'dijit/Toolbar':function(){
+define([
+	"require",
+	"dojo/_base/declare", // declare
+	"dojo/has",
+	"dojo/keys", // keys.LEFT_ARROW keys.RIGHT_ARROW
+	"dojo/ready",
+	"./_Widget",
+	"./_KeyNavContainer",
+	"./_TemplatedMixin"
+], function(require, declare, has, keys, ready, _Widget, _KeyNavContainer, _TemplatedMixin){
+
+	// module:
+	//		dijit/Toolbar
+
+
+	// Back compat w/1.6, remove for 2.0
+	if(has("dijit-legacy-requires")){
+		ready(0, function(){
+			var requires = ["dijit/ToolbarSeparator"];
+			require(requires);	// use indirection so modules not rolled into a build
+		});
+	}
+
+	return declare("dijit.Toolbar", [_Widget, _TemplatedMixin, _KeyNavContainer], {
+		// summary:
+		//		A Toolbar widget, used to hold things like `dijit/Editor` buttons
+
+		templateString:
+			'<div class="dijit" role="toolbar" tabIndex="${tabIndex}" data-dojo-attach-point="containerNode">' +
+			'</div>',
+
+		baseClass: "dijitToolbar",
+
+		_onLeftArrow: function(){
+			this.focusPrev();
+		},
+
+		_onRightArrow: function(){
+			this.focusNext();
+		}
+	});
+});
+
+},
 'gridx/modules/RowHeader':function(){
 define([
 	"dojo/_base/declare",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/aspect",
@@ -48620,6 +50685,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: rowHeader.
 		//		This modules provides a header before each row.
 		// description:
 		//		Row header can be used as a UI handler for row selection, especially when
@@ -48654,10 +50720,7 @@ define([
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',
 				role: 'row',
-				innerHTML: ['<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: ', 
-					this.arg('width'), 
-					';"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
-				].join('')
+				innerHTML: '<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: 100%;"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
 			});
 			this.bodyNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderBody'
@@ -48756,15 +50819,14 @@ define([
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
-				nt = n.firstChild,
 				cp = t.arg('cellProvider');
 			n.setAttribute('rowid', row.id);
 			n.setAttribute('rowindex', row.index());
 			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');
 			if(cp){
-				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
+				n.firstChild.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
 			}
-			t._syncRowHeight(nt, bn);
+			t._syncRowHeight(n, bn);
 		},
 
 		_onAfterCell: function(cell){
@@ -48773,7 +50835,7 @@ define([
 				visualIndex = cell.row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
-			t._syncRowHeight(n.firstChild, bn);
+			t._syncRowHeight(n, bn);
 		},
 
 		_syncRowHeight: function(rowHeaderNode, bodyNode){
@@ -48788,9 +50850,11 @@ define([
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			rowHeaderNode.style.height = getHeight();
+			rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 			setTimeout(function(){
-				rowHeaderNode.style.height = getHeight();
+				if(rowHeaderNode && rowHeaderNode.firstChild){
+					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
+				}
 			}, 0);
 		},
 
@@ -48848,7 +50912,18 @@ define([
 		},
 
 		_onScroll: function(){
-			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
+			var t = this;
+			
+			t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			
+			//scrollTop to be set must not exceeds scrollTopMax
+			if(t.bodyNode.scrollHeight - t.bodyNode.clientHeigh >= t.grid.bodyNode.scrollTop){
+				t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			}else{
+				setTimeout(function(){
+					t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+				}, 0);
+			}
 		},
 
 		_onResize: function(){
@@ -48856,10 +50931,9 @@ define([
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
-					var bn = this.grid.dod? brn : brn.firstChild;
-					n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
-					
-					// n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(brn.firstChild).height : brn.firstChild.offsetHeight + 'px';
+					var bn = this.grid.dod ? brn : brn.firstChild;
+					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
+					n.style.height = n.firstChild.style.height = h;
 			}
 			var t = this,
 				g = t.grid,
@@ -48973,6 +51047,7 @@ define([
 				if(domClass.contains(node, 'gridxRowHeaderRow')){
 					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
 					t._focusRow(r);
+					t._onScroll();
 					return true;
 				}
 				node = node.parentNode;
@@ -49000,15 +51075,17 @@ define([
 
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid;
-			if(g.focus.currentArea() == 'rowHeader' && 
+			if(!t._busy && g.focus.currentArea() == 'rowHeader' && 
 					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
 				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;
 				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+				t._busy = 1;
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);
+					t._busy = 0;
 					t.onMoveToRowHeaderCell(r, evt);
 				});
 			}
@@ -49034,6 +51111,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: indirectSelect.
 		//		This module shows a checkbox(or radiobutton) on the row header when row selection is used.
 		// description:
 		//		This module depends on "rowHeader" and "selectRow" modules.
@@ -49066,21 +51144,11 @@ define([
 				[sr,'onHighlightChange', '_onHighlightChange' ],
 				[sr,'clear', '_onClear' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
-				[g, 'onRowMouseOver', '_onMouseOver'],
-				[g, 'onRowMouseOut', '_onMouseOut'],
+				[g.body, 'onRender', '_onSelectionChange'],
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
-				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
-				focus && [focus, 'onFocusArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOver();
-					}
-				}],
-				focus && [focus, 'onBlurArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOut();
-					}
-				}]);
+				g.filter && [g.filter, 'onFilter', '_onSelectionChange']);
+			g.select.row.holdingCtrl = true;
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
@@ -49131,13 +51199,17 @@ define([
 				partial ? dijitClass + 'Partial' : '',
 				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
 				'"><span class="gridxIndirectSelectionCheckBoxInner">',
-				selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;',
+				//in high contrast mode, change to radio-liked character for single select mode
+				this._isSingle()? (selected? '&#x25C9;' : '&#x25CC;'):
+									(selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;'),
 				'</span></span>'
 			].join('');
 		},
 
 		_createSelectAllBox: function(){
-			return this._createCheckBox(this._allSelected[this._getPageId()]);
+			var allSelected = this._allSelected[this._getPageId()];
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this.grid.nls.indirectDeselectAll : this.grid.nls.indirectSelectAll);
+			return this._createCheckBox(allSelected);
 		},
 
 		_getPageId: function(){
@@ -49145,12 +51217,17 @@ define([
 		},
 
 		_onClear: function(reservedRowId){
-			var cls = this._getDijitClass() + 'Checked',
+			var dijitCls = this._getDijitClass(),
+				cls = dijitCls + 'Checked',
+				partialCls = dijitCls + 'Partial',
 				g = this.grid;
 			query('.' + cls, g.rowHeader.bodyNode).removeClass(cls);
+			query('.' + partialCls, g.rowHeader.bodyNode).removeClass(partialCls);
 			if(g.select.row.isSelected(reservedRowId)){
 				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
 			}
+			query('.' + cls, g.rowHeader.headerCellNode).removeClass(cls).attr('aria-checked', 'false');
+			this._allSelected = {};
 		},
 
 		_onHighlightChange: function(target, toHighlight){
@@ -49169,22 +51246,11 @@ define([
 				domClass.toggle(node, dijitClass + 'PartialDisabled', partial && isUnselectable);
 				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
-				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
-			}
-		},
-		
-		_onMouseOver: function(){
-			var sr = this.grid.select.row;
-			if(!sr.holdingCtrl){
-				this._holdingCtrl = false;
-				sr.holdingCtrl = true;
-			}
-		},
-
-		_onMouseOut: function(){
-			if(this.hasOwnProperty('_holdingCtrl')){
-				this.grid.select.row.holdingCtrl = false;
-				delete this._holdingCtrl;
+				if(this._isSingle()){
+					node.firstChild.innerHTML = selected ? '&#x25C9' : '&#x25CC';
+				}else{
+					node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
+				}
 			}
 		},
 
@@ -49206,7 +51272,7 @@ define([
 			]([0, g.view.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 			var t = this, d,
 				g = t.grid,
 				allSelected,
@@ -49214,42 +51280,46 @@ define([
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
-			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
-				return !model.parentId(id);
-			});
-			var unselectableRows = g.select.row._getUnselectableRows();
-			var unselectableRoots = array.filter(unselectableRows, function(id){
-				return !model.parentId(id) && !g.select.row.isSelected(id);
-			});
-			if(count === model.size()){
-				allSelected = count && count - unselectableRoots.length == selectedRoot.length;
-			}else{
-				d = new Deferred();
-				model.when({
-					start: start,
-					count: count
-				}, function(){
-					var indexes = array.filter(array.map(selectedRoot, function(id){
-						return model.idToIndex(id);
-					}), function(index){
-						return index >= start && index < start + count;
-					});
-					unselectableRoots = array.filter(unselectableRoots, function(id){
-						var index = model.idToIndex(id);
-						return index >= start && index < start + count;
-					});
-					allSelected = count - unselectableRoots.length == indexes.length;
-					d.callback();
+			if(g.select.row.selectByIndex && t.arg('all')){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
+					return !model.parentId(id);
 				});
-			}
-			Deferred.when(d, function(){
-				if(t.arg('all')){
+				var unselectableRows = g.select.row._getUnselectableRows();
+				var unselectableRoots = array.filter(unselectableRows, function(id){
+					return !model.parentId(id) && !g.select.row.isSelected(id);
+				});
+				if(count === model.size()){
+					allSelected = count && count - unselectableRoots.length == selectedRoot.length;
+				}else{
+					d = new Deferred();
+					model.when({
+						start: start,
+						count: count
+					}, function(){
+						var indexes = array.filter(array.map(selectedRoot, function(id){
+							return model.idToIndex(id);
+						}), function(index){
+							return index >= start && index < start + count;
+						});
+						unselectableRoots = array.filter(unselectableRoots, function(id){
+							var index = model.idToIndex(id);
+							return index >= start && index < start + count;
+						});
+						allSelected = count - unselectableRoots.length == indexes.length;
+						d.callback();
+					});
+				}
+				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
 					var node = t.grid.rowHeader.headerCellNode.firstChild;
-					domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
-					node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
-				}
-			});
+					if(node){
+						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+						t.grid.rowHeader.headerCellNode.setAttribute('aria-label',
+							allSelected ? g.nls.indirectDeselectAll : g.nls.indirectSelectAll);
+					}
+				});
+			}
 		},
 
 		//Focus------------------------------------------------------
@@ -49258,7 +51328,9 @@ define([
 				rowHeader = g.rowHeader,
 				headerCellNode = rowHeader.headerCellNode,
 				focus = function(evt){
-					g.focus.stopEvent(evt);
+					if(g.header.hidden){
+						return false;
+					}
 					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
 					headerCellNode.focus();
 					return true;
@@ -49279,7 +51351,7 @@ define([
 		},
 		_onKeyDown: function(evt){
 			// CTRL - A
-			if(evt.keyCode == 65 && evt.ctrlKey && !evt.shiftKey){
+			if(evt.keyCode == 65 && this.grid._isCtrlKey(evt) && !evt.shiftKey){
 				if(!this._allSelected[this._getPageId()]){
 					this._onSelectAll();
 				}
@@ -49307,6 +51379,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: indirectSelect.
 		//		Provide a check box (or radio button) column to select rows.
 		// description:
 		//		This module depends on "rowHeader" and "selectRow" modules.
@@ -49331,7 +51404,7 @@ define([
 
 		position: 0,
 
-		width: '20px',
+		width: '23px',
 
 		all: true,
 
@@ -49339,9 +51412,8 @@ define([
 			var t = this,
 				g = t.grid,
 				sr = g.select.row,
-				columns = g._columns,
 				w = t.arg('width'),
-				col = {
+				col = t._col = {
 					id: indirectSelectColumnId,
 					decorator: lang.hitch(this, '_createSelector'),
 					headerStyle: 'text-align: center;',
@@ -49355,10 +51427,13 @@ define([
 					declaredWidth: w,
 					width: w
 				};
+			sr.holdingCtrl = true;
 			t.batchConnect(
+				[g, 'setColumns', '_onSetColumns'],
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
+				[g.body, 'onRender', '_onSelectionChange'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
@@ -49372,11 +51447,7 @@ define([
 				}],
 				[g, 'onCellMouseOver', '_onMouseOver'],
 				[g, 'onCellMouseOut', '_onMouseOut']);
-			columns.splice(t.arg('position'), 0, col);
-			g._columnsById[col.id] = col;
-			array.forEach(columns, function(c, i){
-				c.index = i;
-			});
+			t._onSetColumns();
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				col.name = t._createSelectAllBox();
@@ -49393,6 +51464,23 @@ define([
 				});
 			}
 			g.header._build();
+		},
+
+		_onSetColumns: function(){
+			var g = this.grid,
+				columns = g._columns,
+				col = this._col;
+			columns.splice(this.arg('position'), 0, col);
+			g._columnsById[col.id] = col;
+			array.forEach(columns, function(c, i){
+				c.index = i;
+			});
+		},
+
+		_updateSelectAll: function(){
+			var newHeader = this._createSelectAllBox();
+			this.grid._columnsById[indirectSelectColumnId].name = newHeader;
+			this.grid.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
 		},
 
 		_createSelectAllBox: function(){
@@ -49436,12 +51524,17 @@ define([
 		},
 
 		_onClear: function(reservedRowId){
-			var cls = this._getDijitClass() + 'Checked',
+			var dijitCls = this._getDijitClass(),
+				cls = dijitCls + 'Checked',
+				partialCls = dijitCls + 'Partial',
 				g = this.grid;
-			query('.' + cls, this.grid.bodyNode).removeClass(cls);
+			query('.' + cls, g.bodyNode).removeClass(cls);
+			query('.' + partialCls, g.bodyNode).removeClass(partialCls);
 			if(g.select.row.isSelected(reservedRowId)){
 				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRow .gridxIndirectSelectionCheckBox', g.bodyNode).addClass(cls);
 			}
+			query('.' + cls, g.headerNode).removeClass(cls).attr('aria-checked', 'false');
+			this._allSelected = {};
 		},
 
 		_onHighlightChange: function(target, toHighlight){
@@ -49461,7 +51554,7 @@ define([
 				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
 				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
-			}			
+			}
 		},
 
 		_onMouseOver: function(e){
@@ -49470,10 +51563,6 @@ define([
 				if(!sr.triggerOnCell){
 					this._triggerOnCell = false;
 					sr.triggerOnCell = true;
-				}
-				if(!sr.arg('holdingCtrl')){
-					this._holdingCtrl = false;
-					sr.holdingCtrl = true;
 				}
 			}else{
 				this._onMouseOut();
@@ -49486,10 +51575,6 @@ define([
 				sr.triggerOnCell = false;
 				delete this._triggerOnCell;
 			}
-			if(this.hasOwnProperty('_holdingCtrl')){
-				sr.holdingCtrl = false;
-				delete this._holdingCtrl;
-			}
 		},
 
 		_onSelectAll: function(){
@@ -49501,7 +51586,7 @@ define([
 			]([0, g.view.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 			var t = this, d,
 				g = t.grid,
 				allSelected,
@@ -49509,42 +51594,40 @@ define([
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
-			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
-				return !model.treePath(id).pop();
-			});
-			var unselectableRows = g.select.row._getUnselectableRows();
-			var unselectableRoots = array.filter(unselectableRows, function(id){
-				return !model.parentId(id) && !g.select.row.isSelected(id);
-			});			
-			if(count === model.size()){
-				allSelected = count && count - unselectableRoots.length == selectedRoot.length;
-			}else{
-				d = new Deferred();
-				model.when({
-					start: start,
-					count: count
-				}, function(){
-					var indexes = array.filter(array.map(selectedRoot, function(id){
-						return model.idToIndex(id);
-					}), function(index){
-						return index >= start && index < start + count;
+			if(g.select.row.selectByIndex && t.arg('all')){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
+					return !model.treePath(id).pop();
+				});
+				var unselectableRows = g.select.row._getUnselectableRows();
+				var unselectableRoots = array.filter(unselectableRows, function(id){
+					return !model.parentId(id) && !g.select.row.isSelected(id);
+				});
+				if(count === model.size()){
+					allSelected = count && count - unselectableRoots.length == selectedRoot.length;
+				}else{
+					d = new Deferred();
+					model.when({
+						start: start,
+						count: count
+					}, function(){
+						var indexes = array.filter(array.map(selectedRoot, function(id){
+							return model.idToIndex(id);
+						}), function(index){
+							return index >= start && index < start + count;
+						});
+						unselectableRoots = array.filter(unselectableRoots, function(id){
+							var index = model.idToIndex(id);
+							return index >= start && index < start + count;
+						});
+						allSelected = count - unselectableRoots.length == indexes.length;
+						d.callback();
 					});
-					unselectableRoots = array.filter(unselectableRoots, function(id){
-						var index = model.idToIndex(id);
-						return index >= start && index < start + count;
-					});
-					allSelected = count - unselectableRoots.length == indexes.length;
-					d.callback();
+				}
+				Deferred.when(d, function(){
+					t._allSelected[t._getPageId()] = allSelected;
+					t._updateSelectAll();
 				});
 			}
-			Deferred.when(d, function(){
-				if(t.arg('all')){
-					t._allSelected[t._getPageId()] = allSelected;
-					var newHeader = t._createSelectAllBox();
-					g._columnsById[indirectSelectColumnId].name = newHeader;
-					g.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
-				}
-			});
 		}
 	});
 });
@@ -49564,6 +51647,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: persist.
 		//		Provide a mechanism to persist various grid features when the grid is destroyed,
 		//		so that when a new grid with the same id (or the same persist key) is created,
 		//		all these features will be restored.
@@ -49777,8 +51861,7 @@ define([
 		_restoreColumnState: function(){
 			var t = this,
 				grid = t.grid,
-				col, cols = [], colHash = {},
-				notPersistOrder,
+				colHash = {},
 				columns = t.registerAndLoad('column', t._columnStateSaver, t);
 			if(lang.isArray(columns)){
 				array.forEach(columns, function(c){
@@ -49787,30 +51870,23 @@ define([
 				//persist column width
 				array.forEach(grid._columns, function(col){
 					var c = colHash[col.id];
-					if(!c){
-						//If there exists some column that is not in the persisted column array,
-						//don't restore column order
-						notPersistOrder = true;
-					}else if(c.id == col.id){
+					if(c && c.id == col.id){
 						col.declaredWidth = col.width = c.width;
 					}
 				});
-				if(notPersistOrder){
-					cols = grid._columns;
-				}else{
-					//persist column order
-					array.forEach(grid._columns, function(col){
-						var c = colHash[col.id];
-						cols[c.index] = col;
-					});
-					//remove possible holes if the current columns are less.
-					for(var i = cols.length - 1; i >= 0; --i){
-						if(!cols[i]){
-							cols.splice(i, 1);
-						}
+				grid._columns.sort(function(ca, cb){
+					var c1 = colHash[ca.id];
+					var c2 = colHash[cb.id];
+					if(c1 && c2){
+						return c1.index - c2.index;
+					}else if(!c1 && c2){
+						return 1;
+					}else if(c1 && !c2){
+						return -1;
 					}
-				}
-				grid.setColumns(cols);
+					return ca.index - cb.index;
+				});
+				grid.setColumns(grid._columns);
 			}
 		},
 		
@@ -49841,7 +51917,11 @@ define([
 
 /*=====
 	var Menu = declare(_Module, {
-		// context: __MenuContext
+		// summary:
+		//		module name: menu.
+		//		Manage context menu for grid.
+
+		// context: [readonly] __MenuContext
 		//		An object representing the current context when user triggers a context menu.
 		//		This property is updated everytime a menu of grid is popped up.
 		//		Users can refer to this in their menu action handlers by grid.menu.context.
@@ -50010,8 +52090,14 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/fx",
 	"dojo/fx",
-	"dojo/query"
-], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, Deferred, _Module, declare, baseFx, fx, query){
+	"dojo/keys",
+	'gridx/support/query',
+	'dijit/a11y',
+	'dijit/registry',
+	'dojo/_base/event',
+	'dojo/_base/sniff'
+], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, 
+			Deferred, _Module, declare, baseFx, fx, keys, query, a11y, registry, event, has){
 	kernel.experimental('gridx/modules/Dod');
 
 /*=====
@@ -50074,18 +52160,26 @@ define([
 		duration: 750,
 		defaultShow: false,
 		showExpando: true,
+		
+		preload: function(){
+			this.initFocus();
+		},
+		
 		load: function(args, deferStartup){
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
 			this.connect(this.grid.body, 'onUnrender', '_onBodyUnrender');
+			this.connect(this.grid, 'onCellKeyDown', '_onCellKeyDown');
+			this.connect(this.grid.body, '_onRowMouseOver', '_onRowMouseOver');
 			if(this.grid.columnResizer){
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
 			this.loaded.callback();
 			
 		},
+		
 		rowMixin: {
 			showDetail: function(){
 				this.grid.dod.show(this);
@@ -50105,10 +52199,14 @@ define([
 		},
 		
 		show: function(row){
-			var _row = this._row(row);
-			if(_row.dodShown || _row.inAnim || !row.node()){return;}
+			var _row = this._row(row), 
+				g = this.grid;
+			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
+			
+			if(!row.node()){ return; }
+
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '-';}
 			
@@ -50116,7 +52214,7 @@ define([
 			if(!_row.dodLoadingNode){
 				_row.dodLoadingNode = domConstruct.create('div', {
 					className: 'gridxDodLoadNode', 
-					innerHTML: 'Loading...'
+					innerHTML: this.grid.nls.loadingInfo
 				});
 			}
 			if(!_row.dodNode){
@@ -50124,23 +52222,35 @@ define([
 			}
 			domConstruct.place(_row.dodLoadingNode, node, 'last');
 			domConstruct.place(_row.dodNode, node, 'last');
+			// domConstruct.place(_row.dodNode, _row.dodLoadingNode, 'last');
+
+			
 			domStyle.set(_row.dodLoadingNode, 'width', w + 'px');
 			domStyle.set(_row.dodNode, 'width', w + 'px');
+			domStyle.set(_row.dodNode, 'visibility', 'hidden');
+			domStyle.set(_row.dodNode, 'overflow', 'hidden');
+			domStyle.set(_row.dodNode, 'height', '0px');
+
 			
 			domClass.add(node, 'gridxDodShown');
-			domStyle.set(_row.dodNode, 'display', 'none');
+			//domStyle.set(_row.dodNode, 'display', 'none');
 			
 			if(_row.dodLoaded){
 				this._detailLoadComplete(row);
 				return;
 			}else{
 				domStyle.set(_row.dodLoadingNode, 'display', 'block');
+				if(g.autoHeight){
+					g.vLayout.reLayout();
+				}
+				_row.inLoading = true;
 			}
 			
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') + 'px');
 			}
 			
 			var df = new Deferred(), _this = this;
@@ -50158,12 +52268,19 @@ define([
 		
 		hide: function(row){
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(!_row.dodShown || _row.inAnim || _row.inLoading){return;}
+			
+			if(!row.node()){
+				_row.dodShown = false;
+				return;
+			}
+			
 			domClass.remove(row.node(), 'gridxDodShown');
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
 			var expando = this._getExpando(row);
@@ -50187,16 +52304,22 @@ define([
 							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 						}
 					}).play();
+					baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+						properties: {
+							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
+						}
+					}).play();					
 				}
 			}else{
 				_row.dodShown = false;
 				_row.inAnim = false;
-				_row.dodNode.style.display = 'none';
-				g.body.onRender();
 				if(this.grid.rowHeader){
 					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 					rowHeaderNode.firstChild.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
+					rowHeaderNode.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
 				}
+				_row.dodNode.style.display = 'none';
+				g.body.onRender();
 				
 			}
 			
@@ -50224,6 +52347,24 @@ define([
 		onShow: function(row){},
 		onHide: function(row){},
 		
+		initFocus: function(){
+			var t = this,
+				focus = t.grid.focus;
+			focus.registerArea({
+				name: 'navigabledod',
+				priority: 1,
+				scope: t,
+				doFocus: t._doFocus,
+				doBlur: t._doBlur,
+				onFocus: t._onFocus,
+				onBlur: t._onBlur,
+				connects: [
+					t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
+					t.connect(t.grid, 'onRowKeyDown', '_onRowKeyDown')
+				]
+			});	
+		},
+		
 		//private
 		_rowMap: null,
 		_lastOpen: null, //only useful when autoClose is true.
@@ -50236,17 +52377,37 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			if(!domClass.contains(e.target, 'gridxDodExpando') && !domClass.contains(e.target, 'gridxDodExpandoText')){return;}
+			if(!domClass.contains(e.target, 'gridxDodExpando') 
+			&& !domClass.contains(e.target, 'gridxDodExpandoText') 
+			|| this.grid.domNode != query(e.target).closest('.gridx')[0]){return;}
 			var node = e.target;
 			while(node && !domClass.contains(node, 'gridxRow')){
 				node = node.parentNode;
 			}
+			
+			// event.stop(e);
 			var idx = node.getAttribute('rowindex');
-			this.toggle(this.grid.row(parseInt(idx)));
+			
+			
+			this.toggle(this.grid.row(parseInt(idx, 10)));
+		},
+		
+		_onRowMouseOver: function(e){
+			var target = e.target;
+			var dodNode = this._rowMap[e.rowId]? this._rowMap[e.rowId].dodNode : undefined;
+			
+			if(dodNode){
+				while(target && target !== dodNode){
+					target = target.parentNode;
+				}
+				if(target){
+					domClass.remove(dodNode.parentNode, 'gridxRowOver');
+					event.stop(e);
+				}
+			}
 		},
 		
 		_onAfterRow: function(row){
-
 			var _row = this._row(row);
 			if(this.arg('showExpando')){
 				var tbl = query('table', row.node())[0];
@@ -50285,7 +52446,7 @@ define([
 
 		_onAfterCell: function(cell){
 			//when the first cell's content is changed, update the expando
-			if(this.arg('showExpando') && cell.node().cellIndex == 0){
+			if(this.arg('showExpando') && cell.node().cellIndex === 0){
 				this._onAfterRow(cell.row);
 			}
 		},
@@ -50301,9 +52462,24 @@ define([
 			if(!this.isShown(row)){return;}
 			_row.dodLoaded = true;
 			
+			var gridNodes = query('.gridx', _row.dodNode);
+			if(gridNodes.length){		//flag gridInGrid to query
+				query.isGridInGrid[this.grid.id] = true;
+			}
+	
+			
 			if(_row.defaultShow){
-				domStyle.set(_row.dodNode, 'display', 'block');
+				// domStyle.set(_row.dodNode, 'display', 'block');
+				_row.dodNode.style.display = 'block';
+				_row.dodNode.style.visibility = 'visible';
+				_row.dodNode.style.height = 'auto';
 				g.body.onRender();
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+					rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+	
+				}
 			}else{
 				if(domStyle.get(_row.dodLoadingNode, 'display') == 'block'){
 					domGeometry.setMarginBox(_row.dodNode, {h: domGeometry.getMarginBox(_row.dodLoadingNode).h});
@@ -50328,41 +52504,218 @@ define([
 								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
 							}
 						}).play();
+						baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+							properties: {
+								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
+							}
+						}).play();						
 					}
 				}else{
 					_row.dodNode.style.display = 'block';
+					_row.dodNode.style.visibility = 'visible';
 					_row.dodNode.style.height = 'auto';
 					g.body.onRender();
 					if(this.grid.rowHeader){
 						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+						rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
 					}
 					
 				}
 			}
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
+			_row.inLoading = false;
+			
+			//***for nested grid in grid ****
+			
+			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
+			for(var i = 0; i < gridNodes.length; i++){
+				var gig = registry.byNode(gridNodes[i]);
+				gs.push(gig);
+				if(!gig._refreshForDod){
+					gig._refreshForDod = true;
+					// gig.resize();
+					// gig.vLayout.reLayout();
+					this.connect(gig.focus, 'tab', '_tab');
+					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
+					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
+					
+				}
+			}
+			g.vLayout.reLayout();
 		},
+		
 		_detailLoadError: function(row){
 			var _row = this._row(row);
 			_row.dodLoaded = false;
 			if(!this.isShown(row)){return;}
-			_row.dodLoadingNode.innerHTML = 'Error: failed to load detail.';
+			_row.dodLoadingNode.innerHTML = this.grid.nls.loadFailInfo;
 		},
+		
 		_showLoading: function(row){
 			var _row = this._row(row);
 			var node = _row.dodLoadingNode;
-			node.innerHTML = 'Loading...';
+			node.innerHTML = this.grid.nls.loadingInfo;
 		},
+		
 		_getExpando: function(row){
-			if(!this.showExpando)return null;
+			if(!this.showExpando){
+				return null;
+			}
 			var tbl = query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
-			return cell.firstChild;
+			return cell? cell.firstChild : null;
 		},
 		
+		_onCellKeyDown: function(e){
+			var t = this,
+				grid = t.grid,
+				focus = grid.focus,
+				row = grid.row(e.rowId, 1);
+			if(e.keyCode == keys.DOWN_ARROW && e.ctrlKey){
+				t.show(row);
+				e.stopPropagation();
+			}else if(e.keyCode == keys.UP_ARROW && e.ctrlKey){
+				t.hide(row);
+				e.stopPropagation();
+			}
+		
+			if(e.keyCode == keys.F4 && !t._navigating && focus.currentArea() == 'body'){
+				if(t._beginNavigate(e.rowId, e.columnId)){
+					focus.focusArea('navigabledod');
+					if(has('ie') < 9){
+						e.returnValue = false;
+						return false;
+					}
+					event.stop(e);
+				}
+			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+				t._navigating = false;
+				focus.focusArea('body');
+			}
+		},
 		
 		//Focus
+		_onRowKeyDown: function(e){
+			var t = this,
+				focus = t.grid.focus;
+
+			if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+				t._navigating = false;
+				focus.focusArea('body');
+			}
+		},
 		
+		_beginNavigate: function(rowId){
+			
+			var t = this,
+				row = t.grid.row(rowId, 1),
+				_row = t._row(rowId);
+			if(!_row.dodShown){
+				return false;
+			}
+			t._navigating = true;
+			// t._focusColId = colId;
+			t._focusRowId = rowId;
+			var navElems = t._navElems = a11y._getTabNavigable(row.node());
+			return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+			
+		},
+		_tab: function(step, evt){
+			this._step = step;
+		},
+		
+		_domNodeFocus: function(evt){
+			if(evt && this._step === -1){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+				
+				if(target == firstElem){
+					// this._doFocus(evt, -1);
+					lastElem.focus();
+				}
+				return false;
+			}			
+		},
+		
+		_lastNodeFocus: function(evt){
+			if(evt && this._step === 1){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+	
+				if(target == lastElem){
+					// this._onBlur();
+					setTimeout(function(){
+						firstElem.focus();
+					}, 1);
+					// event.stop(evt);
+					// this.focus.tab(evt, 1);
+				}
+				return false;
+			}
+		},
+		
+		_doFocus: function(evt, step){
+			if(this._navigating){
+				var elems = this._navElems,
+					func = function(){
+						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
+						if(toFocus){
+							toFocus.focus();
+						}
+					};
+				if(has('webkit')){
+					func();
+				}else{
+					setTimeout(func, 5);
+				}
+				return true;
+			}
+			return false;
+		},
+		
+		_onFocus: function(evt){
+			var node = evt.target, dn = this.grid.domNode;
+			while(node && node !== dn && !domClass.contains(node, 'gridxDodNode')){
+				node = node.parentNode;
+			}
+			if(node && node !== dn){
+				var dodNode = node,
+					rowNode = dodNode.parentNode;
+				// this.grid.hScroller.scrollToColumn(colId);
+				if(rowNode){
+					var rowId = rowNode.getAttribute('rowid');
+					return dodNode !== evt.target && this._beginNavigate(rowId);
+				}
+			}
+			return false;
+		},		
+		
+		_doBlur: function(evt, step){
+			if(evt){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+
+				if(target == (step > 0 ? lastElem : firstElem)){
+					event.stop(evt);
+				}
+				return false;
+			}else{
+				this._navigating = false;
+				return true;
+			}
+		},
+		
+		_onBlur: function(evt){
+			this._navigating = false;
+		},
+
 		endFunc: function(){}
 	});
 });
@@ -50519,21 +52872,23 @@ define([
 
 	coreFx.chain = function(/*dojo/_base/fx.Animation[]*/ animations){
 		// summary:
-		//		Chain a list of `dojo.Animation`s to run in sequence
+		//		Chain a list of `dojo/_base/fx.Animation`s to run in sequence
 		//
 		// description:
-		//		Return a `dojo.Animation` which will play all passed
-		//		`dojo.Animation` instances in sequence, firing its own
+		//		Return a `dojo/_base/fx.Animation` which will play all passed
+		//		`dojo/_base/fx.Animation` instances in sequence, firing its own
 		//		synthesized events simulating a single animation. (eg:
 		//		onEnd of this animation means the end of the chain,
 		//		not the individual animations within)
 		//
 		// example:
 		//	Once `node` is faded out, fade in `otherNode`
-		//	|	fx.chain([
-		//	|		dojo.fadeIn({ node:node }),
-		//	|		dojo.fadeOut({ node:otherNode })
-		//	|	]).play();
+		//	|	require(["dojo/fx"], function(fx){
+		//	|		fx.chain([
+		//	|			fx.fadeIn({ node:node }),
+		//	|			fx.fadeOut({ node:otherNode })
+		//	|		]).play();
+		//	|	});
 		//
 		return new _chain(animations); // dojo/_base/fx.Animation
 	};
@@ -50614,30 +52969,34 @@ define([
 
 	coreFx.combine = function(/*dojo/_base/fx.Animation[]*/ animations){
 		// summary:
-		//		Combine a list of `dojo.Animation`s to run in parallel
+		//		Combine a list of `dojo/_base/fx.Animation`s to run in parallel
 		//
 		// description:
-		//		Combine an array of `dojo.Animation`s to run in parallel,
-		//		providing a new `dojo.Animation` instance encompasing each
+		//		Combine an array of `dojo/_base/fx.Animation`s to run in parallel,
+		//		providing a new `dojo/_base/fx.Animation` instance encompasing each
 		//		animation, firing standard animation events.
 		//
 		// example:
 		//	Fade out `node` while fading in `otherNode` simultaneously
-		//	|	fx.combine([
-		//	|		dojo.fadeIn({ node:node }),
-		//	|		dojo.fadeOut({ node:otherNode })
-		//	|	]).play();
+		//	|	require(["dojo/fx"], function(fx){
+		//	|		fx.combine([
+		//	|			fx.fadeIn({ node:node }),
+		//	|			fx.fadeOut({ node:otherNode })
+		//	|		]).play();
+		//	|	});
 		//
 		// example:
 		//	When the longest animation ends, execute a function:
-		//	|	var anim = fx.combine([
-		//	|		dojo.fadeIn({ node: n, duration:700 }),
-		//	|		dojo.fadeOut({ node: otherNode, duration: 300 })
-		//	|	]);
-		//	|	aspect.after(anim, "onEnd", function(){
-		//	|		// overall animation is done.
-		//	|	}, true);
-		//	|	anim.play(); // play the animation
+		//	|	require(["dojo/fx"], function(fx){
+		//	|		var anim = fx.combine([
+		//	|			fx.fadeIn({ node: n, duration:700 }),
+		//	|			fx.fadeOut({ node: otherNode, duration: 300 })
+		//	|		]);
+		//	|		aspect.after(anim, "onEnd", function(){
+		//	|			// overall animation is done.
+		//	|		}, true);
+		//	|		anim.play(); // play the animation
+		//	|	});
 		//
 		return new _combine(animations); // dojo/_base/fx.Animation
 	};
@@ -50653,13 +53012,16 @@ define([
 		//		Node must have no margin/border/padding.
 		//
 		// args: Object
-		//		A hash-map of standard `dojo.Animation` constructor properties
+		//		A hash-map of standard `dojo/_base/fx.Animation` constructor properties
 		//		(such as easing: node: duration: and so on)
 		//
 		// example:
-		//	|	fx.wipeIn({
-		//	|		node:"someId"
-		//	|	}).play()
+		//	|	require(["dojo/fx"], function(fx){
+		//	|		fx.wipeIn({
+		//	|			node:"someId"
+		//	|		}).play()
+		//	|	});
+
 		var node = args.node = dom.byId(args.node), s = node.style, o;
 
 		var anim = baseFx.animateProperty(lang.mixin({
@@ -50707,11 +53069,13 @@ define([
 		//		from it's current height to 1px, and then hide it.
 		//
 		// args: Object
-		//		A hash-map of standard `dojo.Animation` constructor properties
+		//		A hash-map of standard `dojo/_base/fx.Animation` constructor properties
 		//		(such as easing: node: duration: and so on)
 		//
 		// example:
-		//	|	fx.wipeOut({ node:"someId" }).play()
+		//	|	require(["dojo/fx"], function(fx){
+		//	|		fx.wipeOut({ node:"someId" }).play()
+		//	|	});
 
 		var node = args.node = dom.byId(args.node), s = node.style, o;
 
@@ -50749,7 +53113,7 @@ define([
 		//		the position defined by (args.left, args.top).
 		//
 		// args: Object
-		//		A hash-map of standard `dojo.Animation` constructor properties
+		//		A hash-map of standard `dojo/_base/fx.Animation` constructor properties
 		//		(such as easing: node: duration: and so on). Special args members
 		//		are `top` and `left`, which indicate the new position to slide to.
 		//
@@ -50794,7 +53158,6 @@ define([
 },
 'gridx/modules/Tree':function(){
 define([
-	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/dom-class",
@@ -50807,8 +53170,7 @@ define([
 	"../core/_Module"
 //    "dojo/NodeList-dom",
 //    "dojo/NodeList-traverse"
-], function(kernel, declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
-	kernel.experimental('gridx/modules/Tree');
+], function(declare, array, domClass, domGeometry, lang, Deferred, DeferredList, query, keys, _Module){
 
 /*=====
 	Row.canExpand = function(){
@@ -50850,6 +53212,7 @@ define([
 
 	var Tree = declare(_Module, {
 		// summary:
+		//		module name: tree.
 		//		This module manages row expansion/collapsing in tree grid.
 		// description:
 		//		To use tree grid, the store must have 2 extra methods: hasChildren and getChildren.
@@ -51154,7 +53517,7 @@ define([
 		},
 
 		isExpanded: function(id){
-			return !!this.grid.view._openInfo[id];
+			return this.model.isId(id) && !!this.grid.view._openInfo[id];
 		},
 
 		isPaddingCell: function(rowId, colId){
@@ -51175,7 +53538,7 @@ define([
 		expand: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				t = this;
-			if(id && !t.isExpanded(id) && t.canExpand(id)){
+			if(!t.isExpanded(id) && t.canExpand(id)){
 				t._beginLoading(id);
 				t.grid.view.logicExpand(id).then(function(){
 					Deferred.when(t._updateBody(id, skipUpdateBody, true), function(){
@@ -51193,7 +53556,7 @@ define([
 		collapse: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				t = this;
-			if(id && t.isExpanded(id)){
+			if(t.isExpanded(id)){
 				t.grid.view.logicCollapse(id);
 				Deferred.when(t._updateBody(id, skipUpdateBody), function(){
 					d.callback();
@@ -51266,7 +53629,7 @@ define([
 					array.forEach(cols, function(col, i){
 						col.expandLevel = i + 1;
 					});
-				}else{
+				}else if(cols.length){
 					cols[0].expandLevel = 1;
 				}
 			}
@@ -51349,10 +53712,13 @@ define([
 			var rowNode = this.grid.body.getRowNode({rowId: id}),
 				isOpen = this.isExpanded(id);
 			if(rowNode){
+				var nls = this.grid.nls;
 				query('.gridxTreeExpandoCell', rowNode).
 					removeClass('gridxTreeExpandoLoading').
 					toggleClass('gridxTreeExpandoCellOpen', isOpen).
-					closest('.gridxCell').attr('aria-expanded', String(isOpen));
+					closest('.gridxCell').
+					attr('aria-expanded', String(isOpen)).
+					attr('aria-label', isOpen ? nls.treeExpanded : nls.treeCollapsed);
 				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
 					node.firstChild.innerHTML = isOpen ? '-' : '+';
 				});
@@ -51385,14 +53751,17 @@ define([
 				var rowNode = row.node(),
 					expanded = this.isExpanded();
 				rowNode.setAttribute('aria-expanded', expanded);
-				//This is only to make JAWS read.
-				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').attr('aria-expanded', String(expanded));
+				//This is only to make JAWS readk
+				var nls = this.grid.nls;
+				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').
+					attr('aria-expanded', String(expanded)).
+					attr('aria-label', expanded ? nls.treeExpanded : nls.treeCollapsed);
 			}
 		},
 
 		//Focus------------------------------------------------------------------
 		_initFocus: function(){
-			this.connect(this.grid, 'onCellKeyPress', '_onKey'); 
+			this.connect(this.grid, 'onCellKeyDown', '_onKey'); 
 		},
 
 		_onKey: function(e){
@@ -51422,7 +53791,7 @@ define([
 						});
 					});
 				}
-			}else if(e.ctrlKey && isExpando(e.cellNode)){
+			}else if(t.grid._isCtrlKey(e) && isExpando(e.cellNode)){
 				var ltr = t.grid.isLeftToRight();
 				if(e.keyCode == (ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW) && t.isExpanded(e.rowId)){
 					t.collapse(e.rowId);
@@ -51443,8 +53812,9 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/array",
 	"dojo/dom-class",
+	"dojo/aspect",
 	"dojo/query"
-], function(kernel, lang, _Module, declare, array, domClass, query){
+], function(kernel, lang, _Module, declare, array, domClass, aspect, query){
 	kernel.experimental('gridx/modules/RowLock');
 
 /*=====
@@ -51474,33 +53844,90 @@ define([
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
 			var _this = this, g = this.grid;
+			
 			deferStartup.then(function(){
-				if(_this.grid.vScroller)_this.connect(g.vScrollerNode, 'onscroll', function(){
-					_this._updatePosition();
-				});
+				
+				if(_this.grid.vScroller){
+					_this.connect(g.vScrollerNode, 'onscroll', function(){
+						_this._updateRowPosition();
+					});
+					
+					_this.connect(g.bodyNode, 'onscroll', function(){
+						_this._updateRowPosition();
+					});
+					
+					_this.connect(g.body, 'onAfterCell', function(cell){
+						if(cell.row.visualIndex() < _this.count){
+							_this._adjustBody();
+							_this._updatePosition();
+
+						}
+					});
+
+				}
+				
+				if(_this.grid.vScroller && _this.grid.rowHeader){
+					_this.connect(g.bodyNode, 'onscroll', function(){
+						_this._updateRowHeaderPosition();
+					});
+				}
+
+				if(g.columnResizer){
+					//make it compatible with column resizer
+					_this.connect(g.columnResizer, 'onResize', '_adjustBody');
+					_this.connect(g.columnResizer, 'onResize', '_updatePosition');
+				}
+
+
+				
 				_this.lock(_this.count);
 				_this.loaded.callback();
 			});
+			
+			aspect.before(g.body, 'refresh', function(){
+				_this.grid.bodyNode.style.paddingTop = '0px';
+			});
+
+			this.connect(g.body, 'refresh', function(){
+				//FIX ME
+				//the lock can't run before vscroll._doScroll()
+				setTimeout(function(){
+					_this.lock(_this.count);
+				}, 0);
+			});
 		},
+		
 		lock: function(count){
 			this.unlock();
 			this.count = count;
 			this._foreachLockedRows(function(node){
 				node.style.position = 'absolute';
 				domClass.add(node, 'gridxLockedRow');
+			}, function(rowHeaderNode){
+				rowHeaderNode.style.position = 'absolute';
 			});
+			
 			this._adjustBody();
 			this._updatePosition();
+
+			
 		},
+		
 		unlock: function(){
 			this._foreachLockedRows(function(node){
 				node.style.position = 'static';
 				domClass.remove(node, 'gridxLockedRow');
+			}, function(rowHeaderNode){
+				rowHeaderNode.style.position = 'static';
 			});
 			this.grid.bodyNode.style.paddingTop = '0px';
+			if(this.grid.rowHeader){
+				this.grid.rowHeader.bodyNode.style.paddingTop = '0px';
+			}
 			this.count = 0;
 			
 		},
+		
 		_adjustBody: function(){
 			// summary:
 			//	Called after content is changed or column width is resized, which
@@ -51508,10 +53935,25 @@ define([
 			var h = 0;
 			this._foreachLockedRows(function(node){
 				h += node.offsetHeight;
+			}, function(rowHeaderNode){
+				
 			});
 			this.grid.bodyNode.style.paddingTop = h + 'px';
+			if(this.grid.rowHeader){
+				this.grid.rowHeader.bodyNode.style.paddingTop = h + 'px';			
+			}
 		},
+		
 		_updatePosition: function(){
+			// summary:
+			//	Update position of locked rows so that they look like locked.
+			this._updateRowPosition();
+			if(this.grid.rowHeader){
+				this._updateRowHeaderPosition();
+			}
+		},
+		
+		_updateRowPosition: function(){
 			// summary:
 			//	Update position of locked rows so that they look like locked.
 			if(!this.count){return;}
@@ -51519,14 +53961,34 @@ define([
 			this._foreachLockedRows(function(node){
 				node.style.top = t + h + 'px';
 				h += node.offsetHeight;
+			}, null);
+		},
+		
+		_updateRowHeaderPosition: function(){
+			// summary:
+			//	Update position of locked rowHeaders so that they look like locked.
+			if(!this.count){return;}
+			var t = this.grid.bodyNode.scrollTop, h = 0, _this = this;
+			this._foreachLockedRows(null, function(rowHeaderNode){
+				rowHeaderNode.style.top = t + h + 'px';
+				h += rowHeaderNode.offsetHeight;
 			});
 		},
-		_foreachLockedRows: function(callback){
+				
+		_foreachLockedRows: function(callback, rowHeaderCallback){
+			// rowHeaderCallback = rowHeaderCallback? rowHeaderCallback : callback;
 			var nodes = this.grid.bodyNode.childNodes;
+			var rowHeaderNodes = this.grid.rowHeader? this.grid.rowHeader.bodyNode.childNodes : [];
 			for(var i = 0; i < this.count; i++){
-				callback(nodes[i]);
+				if(rowHeaderNodes[i] && rowHeaderCallback){
+					rowHeaderCallback(rowHeaderNodes[i]);
+				}
+				if(nodes[i] && callback){
+					callback(nodes[i]);
+				}
 			}
 		}
+		
 	});
 });
 
@@ -51543,15 +54005,18 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: toolBar.
 		//		Add toolbar on top of grid.
 		// description:
 		//		Add toolbar based on Bar module. This module is only for conveniency and backward compatibility.
 		//		Using Bar module directly is recommended.
 
 		// widget: [readonly] Object
+		//		
 		widget: null,
 
 		// domNode: [readonly] HTMLElement
+		//		
 		domNode: null
 	});
 =====*/
@@ -51589,51 +54054,6 @@ define([
 });
 
 },
-'dijit/Toolbar':function(){
-define([
-	"require",
-	"dojo/_base/declare", // declare
-	"dojo/has",
-	"dojo/keys", // keys.LEFT_ARROW keys.RIGHT_ARROW
-	"dojo/ready",
-	"./_Widget",
-	"./_KeyNavContainer",
-	"./_TemplatedMixin"
-], function(require, declare, has, keys, ready, _Widget, _KeyNavContainer, _TemplatedMixin){
-
-	// module:
-	//		dijit/Toolbar
-
-
-	// Back compat w/1.6, remove for 2.0
-	if(has("dijit-legacy-requires")){
-		ready(0, function(){
-			var requires = ["dijit/ToolbarSeparator"];
-			require(requires);	// use indirection so modules not rolled into a build
-		});
-	}
-
-	return declare("dijit.Toolbar", [_Widget, _TemplatedMixin, _KeyNavContainer], {
-		// summary:
-		//		A Toolbar widget, used to hold things like `dijit/Editor` buttons
-
-		templateString:
-			'<div class="dijit" role="toolbar" tabIndex="${tabIndex}" data-dojo-attach-point="containerNode">' +
-			'</div>',
-
-		baseClass: "dijitToolbar",
-
-		_onLeftArrow: function(){
-			this.focusPrev();
-		},
-
-		_onRightArrow: function(){
-			this.focusNext();
-		}
-	});
-});
-
-},
 'gridx/modules/SummaryBar':function(){
 define([
 	"dojo/_base/declare",
@@ -51645,6 +54065,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: summaryBar.
 		//		Add summary bar to the bottom of grid.
 		// description:
 		//		Add summary based on Bar module. This module is only for conveniency and backward compatibility.
@@ -51657,13 +54078,18 @@ define([
 
 		required: ['bar'],
 
+		//message: ''
+
 		preload: function(){
 			this.grid.bar.defs.push({
 				bar: 'bottom',
 				row: 0,
 				col: 0,
 				pluginClass: Summary,
-				className: 'gridxBarSummary'
+				className: 'gridxBarSummary',
+				message: this.arg('message'),
+				hookPoint: this,
+				hookName: 'summary'
 			});
 		}
 	});
@@ -51684,6 +54110,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: touchScroll.
 		//		Make desktop grid scrollable by touch in mobile devices.
 		// description:
 		//		No bouncing and sliding effect now.
@@ -51780,18 +54207,18 @@ define([
 define([
 	"dojo/_base/kernel",
 	"dojo/_base/Deferred",
-	"dojo/_base/sniff",
 	"dojo/_base/declare",
 	"dojo/query",
 	"dojo/dom-class",
 	"./VScroller",
 	"dojox/mobile/scrollable"
-], function(kernel, Deferred, has, declare, query, domClass, VScroller, Scrollable){
+], function(kernel, Deferred, declare, query, domClass, VScroller, Scrollable){
 	kernel.experimental('gridx/modules/TouchVScroller');
 
 /*=====
 	return declare(VScroller, {
 		// summary:
+		//		module name: vScroller.
 		//		A vertical scroller only for touch devices.
 		// description:
 		//		Using dojox/mobile/scrollable, and no lazy-rendering (all rows are rendered out).
@@ -51799,12 +54226,18 @@ define([
 =====*/
 
 	return declare(VScroller, {
+		constructor: function(){
+			if(this.grid.touch){
+				domClass.add(this.grid.domNode, 'gridxTouchVScroller');
+				this.domNode.style.width = '';
+			}
+		},
+
 		scrollToRow: function(rowVisualIndex, toTop){
-			if(has('ios') || has('android')){
+			if(this.grid.touch){
 				var d = new Deferred(),
 					rowNode = query('[visualindex="' + rowVisualIndex + '"]', this.grid.bodyNode)[0];
 				if(rowNode){
-					0 && console.log('scroll into view: ' + rowNode.getAttribute('rowid'));
 					this._scrollable.scrollIntoView(rowNode, toTop);
 				}
 				d.callback();
@@ -51813,27 +54246,53 @@ define([
 			return this.inherited(arguments);
 		},
 
+		scroll: function(top){
+			if(this.grid.touch){
+				this._scrollable.scrollTo({ y: top });
+			}else{
+				this.inherited(arguments);
+			}
+		},
+
+		position: function(){
+			if(this.grid.touch){
+				return this._scrollable.getPos().y;
+			}else{
+				return this.inherited(arguments);
+			}
+		},
+
 		_init: function(){
-			if(has('ios') || has('android')){
+			if(this.grid.touch){
 				var t = this,
 					g = t.grid,
 					view = g.view,
 					h = g.header.innerNode,
 					mainNode = g.mainNode,
 					bodyNode = g.bodyNode,
-					headerTable = h.firstChild,
 					scrollable = t._scrollable = new Scrollable();
-				domClass.add(g.domNode, 'gridxTouchVScroller');
-				h.style.height = headerTable.offsetHeight + 'px';
+				h.style.height = h.firstChild.offsetHeight + 'px';
 				scrollable.init({
 					domNode: mainNode,
 					containerNode: bodyNode,
 					scrollDir: g.hScrollerNode.style.display == 'none' ? 'v' : 'vh',
 					noResize: true
 				});
+				function getLayerParent(){
+					var layerParent = g.layer && g.layer._wrapper1.firstChild;
+					return layerParent && layerParent.firstChild;
+				}
 				t.aspect(scrollable, 'scrollTo', function(to){
 					if(typeof to.x == "number"){
-						headerTable.style.webkitTransform = scrollable.makeTranslateStr({x: to.x});
+						var translateStr = scrollable.makeTranslateStr({x: to.x});
+						h.firstChild.style.webkitTransform = translateStr;
+						h.firstChild.style.transform = translateStr;
+
+						var layerParent = getLayerParent();
+						if(layerParent){
+							layerParent.style.webkitTransform = translateStr;
+							layerParent.style.transform = translateStr;
+						}
 					}
 				});
 				t.aspect(scrollable, 'slideTo', function(to, duration, easing){
@@ -51841,19 +54300,34 @@ define([
 						x: scrollable.getPos().x
 					}, {
 						x: to.x
-					}, duration, easing, headerTable, 2);	//2 means it's a containerNode
+					}, duration, easing, h.firstChild, 2);	//2 means it's a containerNode
+
+					var layerParent = getLayerParent();
+					if(layerParent){
+						scrollable._runSlideAnimation({
+							x: scrollable.getPos().x
+						}, {
+							x: to.x
+						}, duration, easing, layerParent, 2);	//2 means it's a containerNode
+					}
 				});
 				t.aspect(scrollable, 'stopAnimation', function(){
-					domClass.remove(headerTable, 'mblScrollableScrollTo2');
+					domClass.remove(h.firstChild, 'mblScrollableScrollTo2');
+
+					var layerParent = getLayerParent();
+					if(layerParent){
+						domClass.remove(layerParent, 'mblScrollableScrollTo2');
+					}
 				});
 				t.aspect(g.hScroller, 'refresh', function(){
 					scrollable._h = bodyNode.scrollWidth > mainNode.clientWidth;
-					scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
+//                    scrollable._v = bodyNode.scrollHeight > mainNode.clientHeight;
 				});
 				t._onBodyChange = function(){
-					t._update();
+					g.hLayout.reLayout();
+					g.vLayout.reLayout();
 				};
-				t._onForcedScroll = function(){};
+//                t._onForcedScroll = function(){};
 				t.model.when({
 					start: view.rootStart,
 					count: view.rootCount
@@ -53619,6 +56093,7 @@ define([
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hiddenColumns.
 		//		Hide columns.
 		// description:
 		//		Hide columns and change the column array at the same time so that other grid features 
@@ -53683,6 +56158,9 @@ define([
 				g = t.grid,
 				ids = t.arg('init', []);
 			t._cols = g._columns.slice();
+			t.aspect(g, 'setColumns', function(){
+				t._cols = g._columns.slice();
+			});
 			if(g.move && g.move.column){
 				t.connect(g.move.column, 'onMoved', '_syncOrder');
 			}
@@ -53708,12 +56186,21 @@ define([
 				columns = g._columns,
 				columnLock = g.columnLock,
 				lockCount = 0,
+				hash = {},
 				cols = array.filter(array.map(arguments, function(id){
-					id = id && typeof id == "object" ? id.id: id;
+					id = id && typeof id == "object" ? id.id : id;
 					return columnsById[id];
 				}), function(col){
 					return col && !col.ignore && (col.hidable === undefined || col.hidable);
 				});
+			//remove duplicated arguments.
+			for(var i = 0, len = cols.length; i < len; ++i){
+				hash[cols[i].id] = cols[i];
+			}
+			cols = [];
+			for(var arg in hash){
+				cols.push(hash[arg]);
+			}
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();
@@ -53764,7 +56251,7 @@ define([
 				columnLock.unlock();
 			}
 			array.forEach(arguments, function(id){
-				id = id && typeof id == "object" ? id.id: id;
+				id = id && typeof id == "object" ? id.id : id;
 				var c,
 					index = -1,
 					i = 0,
@@ -53855,13 +56342,14 @@ define([
 		},
 
 		_refresh: function(changed){
+			var g = this.grid;
 			if(changed){
-				var g = this.grid;
 				g.header.refresh();
 				g.columnWidth._adaptWidth();
 				return g.body.refresh();
 			}else{
 				var d = new Deferred();
+				g.header.onRender();
 				d.callback();
 				return d;
 			}
@@ -53887,6 +56375,7 @@ define([
 /*=====
 	var GroupHeader = declare(Header, {
 		// summary:
+		//		module name: header.
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
 		//		This module is not compatible with ColumnLock and HiddenColumns.
@@ -54007,6 +56496,11 @@ define([
 					}
 				});
 			}
+		},
+
+		refresh: function(){
+			this.inherited(arguments);
+			this._curNode = 0;
 		},
 
 		_parse: function(){
@@ -54203,7 +56697,7 @@ define([
 						fid = g._columns[colIdx].id;
 					}
 				}
-				if(fid){
+				if(fid && g._columnsById[fid]){
 					t._blurNode();
 					if(g.hScroller){
 						g.hScroller.scrollToColumn(fid);
@@ -54282,7 +56776,7 @@ define([
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid, col,
 				node = t._curNode;
-			if(!evt.ctrlKey && !evt.altKey &&
+			if(!g._isCtrlKey(evt) && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);
@@ -54313,23 +56807,18 @@ define([
 'gridx/modules/PagedBody':function(){
 define([
 	"dojo/_base/declare",
-	"dojo/_base/lang",
 	"dojo/query",
-	"dojo/_base/array",
 	"dojo/dom-construct",
 	"dojo/dom-class",
-	"dojo/_base/Deferred",
-	"dojo/_base/sniff",
 	"dojo/keys",
-	"dijit/a11y",
 	"./Body",
-	"dojo/i18n!../nls/Body",
-	"dojo/touch"
-], function(declare, lang, query, array, domConstruct, domClass, Deferred, has, keys, a11y, Body, nls, touch){
+	"./_PagedBodyMixin"
+], function(declare, query, domConstruct, domClass, keys, Body, _PagedBodyMixin){
 
 /*=====
 	return declare(Body, {
 		// summary:
+		//		module name: body.
 		//		This module provides a "load more" button (and a "load previous" button if necessary) inside grid body.
 		// description:
 		//		Page size can be set to indicate how many rows to show in one page. Clicking "load more" button or 
@@ -54342,47 +56831,160 @@ define([
 		//		The max allowed page count. If this value > 0, when visible pages exceeds this value, some previous pages will be destroyed
 		//		and the "load previous" button will be shown. If this value <= 0, grid will never destroy and previous pages, 
 		//		and the "load previous" button will never be shown. Default to 0.
+		maxPageCount: 0
+	});
+=====*/
+
+	return declare([Body, _PagedBodyMixin], {
 		maxPageCount: 0,
+
+		createBottom: function(bottomNode){
+			var t = this,
+				moreBtn = t._moreBtn = domConstruct.create('button', {
+					innerHTML: t.arg('loadMoreLabel', t.grid.nls.loadMore)
+				}, bottomNode, 'last');
+			t.connect(moreBtn, 'onclick', function(){
+				t._load(1);
+			});
+			t.connect(moreBtn, 'onkeydown', function(evt){
+				if(evt.keyCode == keys.ENTER){
+					t._load(1);
+				}
+			});
+		},
+
+		createTop: function(topNode){
+			var t = this,
+				prevBtn = t._prevBtn = domConstruct.create('button', {
+					innerHTML: t.arg('loadPreviousLabel', t.grid.nls.loadPrevious)
+				}, topNode, 'last');
+			t.connect(prevBtn, 'onclick', function(){
+				t._load();
+			});
+			t.connect(prevBtn, 'onkeydown', function(evt){
+				if(evt.keyCode == keys.ENTER){
+					t._load();
+				}
+			});
+		},
+
+		_onLoadFinish: function(isPost, start, count, onFinish){
+			var t = this,
+				view = t.grid.view,
+				maxPageCount = t.arg('maxPageCount'),
+				maxRowCount = maxPageCount * t.arg('pageSize'),
+				btnNode = isPost ? t._bottomNode : t._topNode;
+			if(maxPageCount > 0 && view.rootCount > maxRowCount){
+				var newRootStart = isPost ? view.rootStart : view.rootStart + view.rootCount - maxRowCount;
+				view.updateRootRange(newRootStart, maxRowCount).then(function(){
+					if(btnNode.parentNode){
+						btnNode.parentNode.removeChild(btnNode);
+					}
+					t.unrenderRows(t.renderCount - view.visualCount, isPost ? 'post' : '');
+					t.renderStart = 0;
+					t.renderCount = view.visualCount;
+					query('.gridxRow', t.domNode).forEach(function(node, i){
+						node.setAttribute('visualindex', i);
+						domClass.toggle(node, 'gridxRowOdd', i % 2);
+					});
+					domConstruct.place(btnNode, t.domNode, isPost ? 'last' : 'first');
+					if(!isPost){
+						t.grid.vScroller.scrollToRow(view.visualCount - 1);
+					}
+					onFinish();
+				});
+			}else{
+				onFinish();
+			}
+		},
+
+		_busy: function(isPost, begin){
+			var t = this,
+				btn = isPost ? t._moreBtn : t._prevBtn,
+				cls = isPost ? "More" : "Previous";
+			btn.innerHTML = begin ?
+				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', t.grid.nls['load' + cls + 'Loading']) :
+				t.arg('load' + cls + 'Label', t.grid.nls['load' + cls]);
+			btn.disabled = !!begin;
+		}/*,
+
+		_checkSpace: function(){
+			return this.inherited(arguments) && this.renderCount < this.arg('maxPageCount') * this.arg('pageSize');
+		}*/
+	});
+});
+
+},
+'gridx/modules/_PagedBodyMixin':function(){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/query",
+	"dojo/_base/array",
+	"dojo/dom-construct",
+	"dojo/dom-geometry",
+	"dojo/dom-class",
+	"dojo/_base/Deferred",
+	"dojo/_base/sniff",
+	"dijit/a11y"
+], function(declare, lang, query, array, domConstruct, domGeo, domClass, Deferred, has, a11y){
+
+/*=====
+	return declare([], {
+		// summary:
+		// description:
 
 		// pageSize: Integer
 		//		The row count in one page. Default to the pageSize of grid cache. If using cache has no pageSize, default to 20.
 		//		Users can directly set grid parameter pageSize to set both the cache pageSize and the body pageSize.
 		//		If using bodyPageSize, it'll be different from the cache page size, but that's also okay.
 		pageSize: 20,
+
+		// quickRefresh: Boolean
+		//		When refresh, scroll to top first
+		quickRefresh: false
 	});
 =====*/
 
-	return declare(Body, {
-		maxPageCount: 0,
-
+	return declare([], {
 		preload: function(){
 			var t = this,
 				g = t.grid,
 				view = g.view;
 			view.paging = 1;
 			view.rootStart = 0;
-			view.rootCount = this.arg('pageSize', t.model._cache.pageSize || 20);
+			t._autoPageSize = t.arg('pageSize') == 'auto' || g.pageSize == 'auto';
+			t.pageSize = t.pageSize || t.model._cache.pageSize || 20;
+			view.rootCount = t.pageSize;
 			domClass.remove(t.domNode, 'gridxBodyRowHoverEffect');
 			t.connect(t.domNode, 'onscroll', function(e){
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
+			t.aspect(t.model, 'onSizeChange', '_onSizeChange');
 
-			t._moreNode = domConstruct.create('div', {
-				'class': 'gridxLoadMore'
-			});
-			t.arg('createMoreNode').call(t, t._moreNode);
-			t._prevNode = domConstruct.create('div', {
-				'class': 'gridxLoadMore'
-			});
-			t.arg('createPrevNode').call(t, t._prevNode);
-
-			t.connect(t._moreNode, 'onmouseover', function(){
-				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-			});
-			t.connect(t._prevNode, 'onmouseover', function(){
-				query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
-			});
+			if(t.arg('createBottom')){
+				t._bottomNode = domConstruct.create('div', {
+					'class': 'gridxBodyBottom'
+				});
+				t.createBottom(t._bottomNode);
+				t.connect(t._bottomNode, 'onmouseover', function(){
+					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+				});
+			}
+			if(t.arg('createTop')){
+				t._topNode = domConstruct.create('div', {
+					'class': 'gridxBodyTop'
+				});
+				t.createTop(t._topNode);
+				t.connect(t._topNode, 'onmouseover', function(){
+					query('> .gridxRowOver', t.domNode).removeClass('gridxRowOver');
+				});
+			}
 			t._initFocus();
+		},
+
+		_onSizeChange: function(size){
+			this.grid.view.updateRootRange(0, size < this.pageSize ? size : this.pageSize);
 		},
 
 		_initFocus: function(){
@@ -54410,62 +57012,42 @@ define([
 					}
 				};
 			t.inherited(arguments);
-			focus.registerArea({
-				name: 'prevBtn',
-				priority: 0.9999,
-				focusNode: t._prevNode,
-				scope: t,
-				doFocus: lang.partial(doFocus, t._prevNode),
-				doBlur: lang.partial(doBlur, t._prevNode)
-			});
-			focus.registerArea({
-				name: 'moreBtn',
-				priority: 1.0001,
-				focusNode: t._moreNode,
-				scope: t,
-				doFocus: lang.partial(doFocus, t._moreNode),
-				doBlur: lang.partial(doBlur, t._moreNode)
-			});
+			if(t._topNode){
+				focus.registerArea({
+					name: 'bodyTop',
+					priority: 0.9999,
+					focusNode: t._topNode,
+					scope: t,
+					doFocus: lang.partial(doFocus, t._topNode),
+					doBlur: lang.partial(doBlur, t._topNode)
+				});
+			}
+			if(t._bottomNode){
+				focus.registerArea({
+					name: 'bodyBottom',
+					priority: 1.0001,
+					focusNode: t._bottomNode,
+					scope: t,
+					doFocus: lang.partial(doFocus, t._bottomNode),
+					doBlur: lang.partial(doBlur, t._bottomNode)
+				});
+			}
 		},
 
-		createMoreNode: function(moreNode){
-			var t = this,
-				moreBtn = t._moreBtn = domConstruct.create('button', {
-					innerHTML: t.arg('loadMoreLabel', nls.loadMore)
-				}, moreNode, 'last');
-			t.connect(moreBtn, touch.press, function(){
-				t._load(1);
-			});
-			t.connect(moreBtn, 'onkeydown', function(evt){
-				if(evt.keyCode == keys.ENTER){
-					t._load(1);
-				}
-			});
-		},
-
-		createPrevNode: function(prevNode){
-			var t = this,
-				prevBtn = t._prevBtn = domConstruct.create('button', {
-					innerHTML: t.arg('loadPreviousLabel', nls.loadPrevious)
-				}, t._prevNode, 'last');
-			t.connect(prevBtn, touch.press, function(){
-				t._load();
-			});
-			t.connect(prevBtn, 'onkeydown', function(evt){
-				if(evt.keyCode == keys.ENTER){
-					t._load();
-				}
-			});
-		},
-
-		load: function(args){
+		load: function(args, startup){
 			var t = this,
 				view = t.grid.view;
-			t.aspect(t.model, 'onDelete', '_onDelete');
 			if(view._err){
 				t._loadFail(view._err);
 			}
-			t.loaded.callback();
+			startup.then(function(){
+				if(t._autoPageSize){
+					var rowCount = parseInt(t.grid.mainNode.offsetHeight / t.arg('defaultRowHeight', 24) * 1.5, 10);
+					t.pageSize = rowCount;
+					view.updateRootRange(0, rowCount);
+				}
+				t.loaded.callback();
+			});
 		},
 
 		refresh: function(start){
@@ -54482,12 +57064,14 @@ define([
 						var count = rc - start,
 							n = query('> [visualindex="' + start + '"]', t.domNode)[0],
 							uncachedRows = [],
-							renderedRows = [],
-							rows = t._buildRows(start, count, uncachedRows, renderedRows);
-						if(rows){
-							domConstruct.place(rows, n || t._moreNode, 'before');
+							renderedRows = [];
+						if(n){
+							var rows = t._buildRows(start, count, uncachedRows, renderedRows);
+							if(rows){
+								domConstruct.place(rows, n, 'before');
+							}
 						}
-						while(n && n !== t._moreNode){
+						while(n && (!t._bottomNode || n !== t._bottomNode)){
 							var tmp = n.nextSibling,
 								vidx = parseInt(n.getAttribute('visualindex'), 10),
 								id = n.getAttribute('rowid');
@@ -54532,7 +57116,7 @@ define([
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', nls.loadingInfo);
+				en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
 				en.style.zIndex = '';
 				var str = t._buildRows(start, count, uncachedRows, renderedRows);
 				t.renderStart = start;
@@ -54546,8 +57130,15 @@ define([
 					}
 				}
 				n.innerHTML = str;
-				if(g.view.rootStart + g.view.rootCount < g.model.size()){
-					n.appendChild(t._moreNode);
+				if(t._topNode && g.view.rootStart > 0){
+					if(str){
+						n.insertBefore(t._topNode, n.firstChild);
+					}else{
+						n.appendChild(t._topNode);
+					}
+				}
+				if(t._bottomNode && g.view.rootStart + g.view.rootCount < g.model.size()){
+					n.appendChild(t._bottomNode);
 				}
 				n.scrollLeft = g.hScrollerNode.scrollLeft;
 				if(!str){
@@ -54555,7 +57146,9 @@ define([
 				}else{
 					en.innerHTML = '';
 				}
-				t.onUnrender();
+				if(!t._skipUnrender){
+					t.onUnrender();
+				}
 				array.forEach(renderedRows, t.onAfterRow, t);
 				Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 					t.onRender(start, count);
@@ -54570,21 +57163,36 @@ define([
 					}
 				}
 				n.innerHTML = '';
-				en.innerHTML = t.arg('emptyInfo', nls.emptyInfo);
-				en.style.zIndex = 1;
-				t.onUnrender();
-				t.onEmpty();
-				t.model.free();
+				if(!t._skipUnrender){
+					t.onUnrender();
+				}
+				if(!t.model.size()){
+					en.innerHTML = t.arg('emptyInfo', g.nls.emptyInfo);
+					en.style.zIndex = 1;
+					t.onEmpty();
+					t.model.free();
+				}else{
+					n.appendChild(t._bottomNode);
+				}
 			}
 		},
 
 		onRender: function(/*start, count*/){
 			//FIX #8746
-			var bn = this.domNode;
-			if(has('ie') < 9 && bn.childNodes.length){
-				query('> gridxLastRow', bn).removeClass('gridxLastRow');
-				if(bn.lastChild !== this._moreNode){
-					domClass.add(bn.lastChild, 'gridxLastRow');
+			var t = this;
+			var bn = t.domNode;
+			query('.gridxBodyFirstRow', bn).removeClass('gridxBodyFirstRow');
+			if(t._topNode){
+				var firstRow = t._topNode.nextSibling;
+				if(firstRow && firstRow != t._bottomNode){
+					domClass.add(firstRow, 'gridxBodyFirstRow');
+				}
+			}
+			query('.gridxBodyLastRow', bn).removeClass('gridxBodyLastRow');
+			if(t._bottomNode){
+				var lastRow = t._bottomNode.previousSibling;
+				if(lastRow && lastRow != t._topNode){
+					domClass.add(lastRow, 'gridxBodyLastRow');
 				}
 			}
 		},
@@ -54595,20 +57203,19 @@ define([
 				m = t.model,
 				view = g.view,
 				pageSize = t.arg('pageSize'),
-				btnNode = isPost ? t._moreNode : t._prevNode,
+				btnNode = isPost ? t._bottomNode : t._topNode,
 				start = view.rootStart,
 				count = view.rootCount,
 				newRootStart = isPost ? start : start < pageSize ? 0 : start - pageSize,
 				newRootCount = isPost ? count + pageSize : start + count - newRootStart,
 				finish = function(renderStart, renderCount){
 					t._busy(isPost);
-					t._checkSize(!isPost, function(){
-						query('.gridxBodyFirstRow').removeClass('gridxBodyFirstRow');
-						var firstRow = t._prevNode.nextSibling;
-						if(firstRow && firstRow != t._moreNode){
-							domClass.add(firstRow, 'gridxBodyFirstRow');
-						}
+					t._onLoadFinish(!isPost, renderStart, renderCount, function(){
 						t.onRender(renderStart, renderCount);
+						if(g.indirectSelect){
+							//FIXME: this breaks encapsulation!
+							g.indirectSelect._onSelectionChange();
+						}
 					});
 				};
 			t._busy(isPost, 1);
@@ -54641,18 +57248,24 @@ define([
 							var renderedRows = [],
 								scrollHeight = g.bodyNode.scrollHeight;
 							str = t._buildRows(renderStart, renderCount, [], renderedRows);
-							domConstruct.place(str, btnNode, isPost ? 'before' : 'after');
+							if(btnNode){
+								domConstruct.place(str, btnNode, isPost ? 'before' : 'after');
+							}else{
+								domConstruct.place(str, t.domNode, isPost ? 'last' : 'first');
+							}
 							if(!isPost){
 								g.bodyNode.scrollTop += g.bodyNode.scrollHeight - scrollHeight;
 							}
-							if(isPost ? view.rootStart + view.rootCount >= totalCount : view.rootStart === 0){
+							if(isPost && btnNode && btnNode.parentNode ? view.rootStart + view.rootCount >= totalCount : view.rootStart === 0){
 								t.domNode.removeChild(btnNode);
 							}
 							array.forEach(renderedRows, t.onAfterRow, t);
 							finish(renderStart, renderCount);
 						});
 					}else{
-						t.domNode.removeChild(btnNode);
+						if(isPost && btnNode && btnNode.parentNode && view.rootStart + view.rootCount >= totalCount){
+							t.domNode.removeChild(btnNode);
+						}
 						if(!isPost){
 							query('.gridxBodyFirstRow').removeClass('gridxBodyFirstRow');
 						}
@@ -54660,61 +57273,109 @@ define([
 					}
 				});
 			});
-		},
+		}
+	});
+});
 
-		_checkSize: function(isPost, onFinish){
-			var t = this,
-				view = t.grid.view,
-				maxPageCount = t.arg('maxPageCount'),
-				maxRowCount = maxPageCount * t.arg('pageSize'),
-				btnNode = isPost ? t._moreNode : t._prevNode;
-			if(maxPageCount > 0 && view.rootCount > maxRowCount){
-				var newRootStart = isPost ? view.rootStart : view.rootStart + view.rootCount - maxRowCount;
-				view.updateRootRange(newRootStart, maxRowCount).then(function(){
-					if(btnNode.parentNode){
-						btnNode.parentNode.removeChild(btnNode);
-					}
-					t.unrenderRows(t.renderCount - view.visualCount, isPost ? 'post' : '');
-					t.renderStart = 0;
-					t.renderCount = view.visualCount;
-					query('.gridxRow', t.domNode).forEach(function(node, i){
-						node.setAttribute('visualindex', i);
-					});
-					domConstruct.place(btnNode, t.domNode, isPost ? 'last' : 'first');
-					if(!isPost){
-						t.grid.vScroller.scrollToRow(view.visualCount - 1);
-					}
-					onFinish();
-				});
-			}else{
-				onFinish();
-			}
-		},
+},
+'gridx/modules/AutoPagedBody':function(){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/dom-class",
+	"dojo/_base/Deferred",
+	"./Body",
+	"./_PagedBodyMixin"
+], function(declare, lang, domClass, Deferred, Body, _PagedBodyMixin){
 
-		_busy: function(isPost, begin){
-			var t = this,
-				btn = isPost ? t._moreBtn : t._prevBtn,
-				cls = isPost ? "More" : "Previous";
-			btn.innerHTML = begin ?
-				'<span class="gridxLoadingMore"></span>' + t.arg('load' + cls + 'LoadingLabel', nls['load' + cls + 'Loading']) :
-				t.arg('load' + cls + 'Label', nls['load' + cls]);
-			btn.disabled = !!begin;
-		},
+/*=====
+	return declare(Body, {
+		// summary:
+		//		module name: body.
+		//		
+		// description:
+		//		
+	});
+=====*/
 
-		_onDelete: function(id){
+	return declare([Body, _PagedBodyMixin], {
+		preload: function(){
+			this.inherited(arguments);
 			var t = this,
-				view = t.grid.view;
-			if(t.autoUpdate){
-				var node = t.getRowNode({rowId: id});
-				if(node){
-					var parentId = node.getAttribute('parentid'),
-						rowIndex = parseInt(node.getAttribute('rowindex'), 10);
-					if(parentId === '' && rowIndex >= view.rootStart && rowIndex < view.rootStart + view.rootCount){
-						view.updateRootRange(view.rootStart, view.rootCount - 1);
-					}
+				g = t.grid,
+				dn = t.domNode,
+				load = function(){
+					t._load(1);
+				};
+			t.connect(dn, 'onscroll', function(e){
+				var lastNode = dn.lastChild;
+				if(lastNode.offsetTop + lastNode.offsetHeight <= dn.scrollTop + dn.offsetHeight){
+					clearTimeout(t._loadHandler);
+					t._loadHandler = setTimeout(load, 10);
 				}
-			}
+			});
+			t.aspect(g, '_onResizeEnd', function(){
+				if(t._checkSpace()){
+					t._load(1);
+				}
+			});
+			g.vScroller.loaded.then(function(){
+				var scrollable = g.vScroller._scrollable;
+				if(scrollable){
+					t.aspect(scrollable, 'slideTo', function(to, duration){
+						if(to.y < g.mainNode.offsetHeight - g.bodyNode.offsetHeight + dn.lastChild.offsetHeight){
+							clearTimeout(t._loadHandler);
+							t._loadHandler = setTimeout(load, duration * 1000);
+						}
+					});
+				}
+			});
+		},
+
+		_checkSpace: function(){
+			var bn = this.domNode;
+			return bn.lastChild == this._bottomNode && bn.lastChild.offsetTop + bn.lastChild.offsetHeight < bn.scrollTop + bn.offsetHeight;
+		},
+
+		onRender: function(/*start, count*/){
+			var t = this;
 			t.inherited(arguments);
+			if(t._checkSpace()){
+				t._load(1);
+			}
+		},
+
+		createBottom: function(bottomNode){
+			bottomNode.innerHTML = '<span class="gridxLoadingMore"></span>' + this.arg('loadMoreLoadingLabel', this.grid.nls.loadMoreLoading);
+		},
+
+		refresh: function(){
+			var inherited = lang.hitch(this, this.inherited, arguments);
+			if(this.arg('quickRefresh')){
+				domClass.add(this.grid.loadingNode, 'gridxLoading');
+				var scrollable = this.grid.vScroller._scrollable;
+				if(scrollable){
+					var pos = scrollable.getPos();
+					scrollable.scrollTo({x: pos.x, y: 0});
+				}
+				var d = new Deferred();
+				this.grid.view.updateRootRange(0, this.pageSize).then(function(){
+					inherited().then(function(){
+						d.callback();
+					}, function(e){
+						d.errback(e);
+					});
+				});
+				return d;
+			}else{
+				return inherited();
+			}
+		},
+
+		_busy: function(){},
+
+		_onLoadFinish: function(isPost, start, count, callback){
+			callback();
 		}
 	});
 });
@@ -54735,6 +57396,7 @@ define([
 /*=====
 	var HeaderMenu = declare(_Module, {
 		// summary:
+		//		module name: headerMenu.
 		//		Add a dropdown menu button on header cell.
 		// description:
 		//		Add a dropdown menu button on the header of any column that has a "menu" defined in structure.
@@ -54786,6 +57448,928 @@ define([
 });
 
 },
+'gridx/modules/SlantedHeader':function(){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/query",
+	"dojo/string",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/keys",
+	"../core/_Module",
+	"./GroupHeader"
+], function(declare, array, lang, event, query, string, domClass, domConstruct, keys, _Module, Sort, nls){
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		module name: slantedheader.
+		//		Slant headers including group headers.
+
+	});
+=====*/
+	
+	return declare(_Module, {
+		name: 'slantedheader',
+
+		_actionAreaHolder: null,
+
+		required: ['header'],
+
+		load: function(args, deferStartup){
+			domClass.add(this.grid.domNode, 'gridxSlantedHeader');
+			var self = this;
+
+			window.setTimeout(function(){
+				//Need a timeout so that the header height is available.
+				//Skew the header node, and use translate to align columns
+				self._updateTransform();
+			},0);
+			this.connect(this.grid, 'resize', '_updateTransform')
+			this.loaded.callback();
+		}
+
+		,_updateTransform: function(){
+			var n = this.grid.header.domNode;	
+			var headerHeight = n.offsetHeight;
+			0 && console.log('header height: ', headerHeight);
+			var translateX = Math.round(headerHeight/2) - 1; //TODO: 1 is the top border width
+			n.style.transform = n.style.msTransform = n.style.mozTransform
+				= n.style.webkitTransform = 'translate(' + translateX
+				 + 'px, 0px) skew(-45deg,0deg)';
+		}
+	});
+});
+
+},
+'gridx/modules/ExpandableColumn':function(){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/keys",
+	"dojo/aspect",
+	"dojo/query",
+	"dojo/string",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"../core/_Module",
+	"./HiddenColumns"
+], function(declare, array, lang, event, keys, aspect, query, string, domClass, domConstruct, _Module, HiddenColumns, Sort, nls){
+
+	/*=====
+	return declare(HiddenColumns, {
+		// summary:
+		//		module name: expandableColumn.
+		//		Expandable column including group headers.
+
+		expand: function(colId){
+			// summary:
+			//		Expand a column by id.
+
+		},
+		collapse: function(colId){
+			// summary:
+			//		Collapse a column by id.
+		}
+	});
+=====*/
+
+	return declare(HiddenColumns, {
+		name: 'expandedColumn',
+		_parentCols: null,
+
+		required: ['header'],
+
+		preload: function(){
+			this.inherited(arguments);
+		},
+
+		load: function(args, startup){
+			var t = this,
+				g = t.grid;
+			t._cols = g._columns.slice();
+			t._parentCols = {};
+
+			var toHide = [];
+			array.forEach(t._cols, function(col){
+				if(col.expanded){
+					toHide.push(col.id);
+				}else if(col.parentColumn){
+					t._parentCols[col.parentColumn] = 1;
+					var parentCol = this._colById(col.parentColumn);
+
+					if(!parentCol.expanded){
+						toHide.push(col.id);
+						parentCol.expanded = false;	//Force expanded false for later use.
+					}else{
+					}
+				}
+			}, this);
+
+			this.expandoBar = domConstruct.create('div', {className: 'gridxColumnExpandoBar'});
+
+			this.connect(g.columnWidth, 'onUpdate', '_updateUI');
+			this.grid.vLayout.register(this, 'expandoBar', 'headerNode', 1);
+
+			this.connect(g, 'onHeaderCellMouseOver', function(evt){
+				domClass.add(this._expandoCellByColumnId(evt.columnId), 'gridxColumnExpandoHighlight');
+			}, this);
+
+			this.connect(g, 'onHeaderCellMouseOut', function(evt){
+				domClass.remove(this._expandoCellByColumnId(evt.columnId), 'gridxColumnExpandoHighlight');
+			}, this);
+
+			this.connect(this.expandoBar, 'onmouseover', function(evt){
+				var expandoCell = null;
+				if(/td/i.test(evt.target.tagName)){
+					expandoCell = evt.target;
+				}else if(domClass.contains(evt.target, 'gridxColumnExpando')){
+					expandoCell = evt.target.parentNode;
+				}
+				if(expandoCell){
+					var colId = expandoCell.getAttribute('data-column-id');
+					domClass.add(expandoCell, 'gridxColumnExpandoHighlight');
+					domClass.add(this._headerCellByColumnId(colId), 'gridxCellHighlight');
+				}
+			}, this);
+
+			this.connect(this.expandoBar, 'onmouseout', function(evt){
+				var expandoCell = null;
+				if(/td/i.test(evt.target.tagName)){
+					expandoCell = evt.target;
+				}else if(domClass.contains(evt.target, 'gridxColumnExpando')){
+					expandoCell = evt.target.parentNode;
+				}
+				if(expandoCell){
+					var colId = expandoCell.getAttribute('data-column-id');
+					domClass.remove(expandoCell, 'gridxColumnExpandoHighlight');
+					domClass.remove(this._headerCellByColumnId(colId), 'gridxCellHighlight');
+				}
+			}, this);
+
+			this.connect(this.expandBar, 'onclick', function(evt){
+				if(domClass.contains(evt.target, 'gridxColumnExpando')){
+					var colId = evt.target.parentNode.getAttribute('data-column-id');
+					this.expand(colId);
+				}
+			}, this);
+
+			this.connect(this.grid.header.innerNode, 'onkeyup', function(evt){
+				//Bind short cut key to expand/coallapse the column: shift + ctrl + e
+
+				if(evt.keyCode == 77 && evt.ctrlKey){
+					var node = evt.target;
+					if(domClass.contains(node, 'gridxGroupHeader')){
+						var colId = node.getAttribute('groupid').split('-').pop();
+						colId = this._colById(colId).parentColumn;
+						this.collapse(colId);
+						this._focusById(colId);
+
+					}else if(domClass.contains(node, 'gridxCell')){
+						var colId = node.getAttribute('colid');
+						if(this._parentCols[colId]){
+							//expandable
+							this.expand(colId);
+							this._focusById(colId);
+						}
+					}
+					event.stop(evt);
+				}
+			}, this);
+
+			this.connect(this.grid.header, 'refresh', function(){
+				if(g.header.hidden){
+					g.header.domNode.parentNode.style.overflow = 'hidden';
+					this.expandoBar.style.display = 'none';
+				}else{
+					g.header.domNode.parentNode.style.overflow = 'visible';
+					this.expandoBar.style.display = 'block';
+				}
+			});
+
+			this.connect(this.grid, 'onHScroll', function(left){
+				this.expandoBar.scrollLeft = left;
+			}, this);
+
+			if(toHide.length){
+				startup.then(function(){
+					t.add.apply(t, toHide);
+					t._refreshHeader();
+					t.loaded.callback();
+				});
+			}else{
+				t.loaded.callback();
+			}
+		},
+
+		expand: function(colId){
+			var children = array.filter(this._cols, function(col){
+				return col.parentColumn == colId;
+			});
+			
+			this.add(colId);
+			this.remove.apply(this, children);
+			this._colById(colId).expanded = true;
+			this._refreshHeader();
+
+		},
+
+		collapse: function(colId){
+			var children = array.filter(this._cols, function(col){
+				return col.parentColumn == colId;
+			});
+
+			this.remove(colId);
+			this.add.apply(this, children);
+			this._colById(colId).expanded = false;
+			this._refreshHeader();
+		},
+
+		_updateUI: function(){
+			// summary:
+			//	Called when the header is changed, need to sync expando bar.
+
+			//Build expando bar
+			var sb = ['<table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr>'];
+			array.forEach(this.grid._columns, function(col){
+				sb.push('<td data-column-id="', col.id,'" aria-readonly="true" tabindex="-1" class="gridxColumnExpandoCell">');
+				if(this._parentCols[col.id]){
+					//expandable
+					sb.push('<span class="gridxColumnExpando"></span>');
+				}
+				sb.push('</td>');
+			}, this);
+
+			sb.push('</tr></table>');
+			this.expandoBar.innerHTML = sb.join('');
+			if(!this.grid._columns.length){
+				//empty columns
+				return;
+			}
+			this.expandoBar.style.marginRight = this.grid.header.innerNode.style.marginRight;
+			this.expandoBar.style.marginLeft = this.grid.header.innerNode.style.marginLeft;
+			//Adjust width of the expando cells
+			var headerCells = query('table', this.grid.headerNode)[0].rows[0].cells
+				,expandoCells = this.expandoBar.firstChild.rows[0].cells;
+
+			array.forEach(expandoCells, function(cell, i){
+				var colId = cell.getAttribute('data-column-id')
+					,col = this.grid._columnsById[colId];
+				cell.style.width = col.width;
+				cell.style.minWidth = col.width;
+				cell.style.maxWidth = col.width;
+			}, this);
+		},
+
+		_createExpandNode: function(i, col){
+			0 && console.log('creating expand node for:', col.id);
+			var div = domConstruct.create('div', {innerHTML: '', className: 'gridxColumnExpandNode'});
+			if(this._parentCols[col.id]){
+				div.innerHTML = '<span class="gridxColumnExpandNodeIcon"></span>';
+				var self = this;
+				div.onclick = function(){
+					self.expand(col.id);
+				}
+			}else{
+				0 && console.log(col.id, ' is not expandable');
+				div.innerHTML = '';
+			}
+			return div;
+		},
+
+		_headerCellByColumnId: function(colId){
+			var cell = query('td[colid="' + colId + '"]', this.grid.headerNode)[0];
+			if(!cell){
+				cell = query('td[data-map-column-id="' + colId + '"]', this.grid.headerNode)[0];
+			}
+			return cell;
+		},
+
+		_expandoCellByColumnId: function(colId){
+			return query('td[data-column-id="' + colId + '"]', this.expandoBar)[0];
+		},
+
+		_refreshHeader: function(){
+			var headerGroups = [],
+				cols = this.grid._columns,
+				currentGroup = null,
+				c = 0;
+
+			for(var i = 0; i < cols.length; i++){
+				var col = cols[i];
+				if(col.parentColumn){
+					//if column has parent
+					if(c > 0){
+						headerGroups.push(c);
+						c = 0;
+					}
+					if(!currentGroup || currentGroup._colId != col.parentColumn){
+						if(currentGroup && currentGroup._colId != col.parentColumn){
+							headerGroups.push(currentGroup);
+						}
+
+						currentGroup = {
+							_colId: col.parentColumn,
+							name: this._colById(col.parentColumn).name,
+							children: 0
+						};
+					}
+					currentGroup.children++;
+				}else{
+					if(currentGroup){
+						headerGroups.push(currentGroup);
+					}
+					c++;
+					currentGroup = null;
+				}
+			}
+			0 && console.log('headerGroups: ', headerGroups);
+			delete this.grid.header.groups;
+			this.grid.headerGroups = headerGroups;
+			this.grid.header.refresh();
+
+			//add expand arrow the the group header
+			var self = this;
+			query('.gridxGroupHeader', this.grid.headerNode).forEach(function(td){
+				var colId = td.getAttribute('groupid').split('-').pop();
+				colId = self._colById(colId).parentColumn;
+				td.setAttribute('data-map-column-id', colId);
+
+				var div = domConstruct.create('div', {
+					innerHTML: '<span class="gridxColumnCollapseNodeIcon"></span>', 
+					className: 'gridxColumnCollapseNode'});
+
+				div.onclick = function(){
+					self.collapse(colId);
+				}
+				td.firstChild.insertBefore(div, td.firstChild.firstChild);
+			});
+		},
+
+		_colById: function(id){
+			return this.grid._columnsById[id] || array.filter(this._cols, function(col){
+				return col.id == id;
+			})[0];
+		},
+
+		_focusById: function(colId){
+			// summary:
+			//	Focus the column header cell by column id
+
+			var headerCell = this._headerCellByColumnId(colId);
+			if(headerCell){
+				this.grid.header._focusNode(headerCell);
+			}
+		}
+	});
+});
+
+},
+'gridx/modules/Layer':function(){
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/dom-class",
+	"dojo/dom-geometry",
+	"dojo/query",
+	"dojo/keys",
+	"../core/_Module"
+], function(kernel, declare, lang, domClass, domGeometry, query, keys, _Module){
+	kernel.experimental('gridx/modules/Layer');
+
+/*=====
+	var Layer = declare(_Module, {
+		// summary:
+		//		module name: Layer.
+		//		A drill-down version of tree grid.
+		// description:
+		//		Add a drill-down button to every row that has children.
+		//		Once clicked this button, child level rows slides in and current level rows slides out,
+		//		while the parent row slides up and gets locked.
+		//		Clicking anywhere in the locked parent row will reverse the above process so as to go back to the parent level.
+		//		Especially suitable for mobile tree grid.
+
+		// buttonColumnWidth: String
+		//		Width of the drill-down column. Same format as column width in column definition.
+		buttonColumnWidth: '20px',
+
+		// buttonColumnArgs: Object
+		//		The drill-down column can be customized by providing extra column definition parameters here.
+		buttonColumnArgs: null,
+
+		down: function(id){
+			// summary:
+			//		Drill down one level on the row with the given ID.
+			//		Only works if the given row exists in current layer.
+			// id: String
+			//		A parent row ID.
+		},
+
+		up: function(){
+			// summary:
+			//		Drill up one level, i.e.: go to the parent layer.
+		},
+
+		onFinish: function(args){
+			// summary:
+			//		Fired when a layer operation (down or up) is done.
+			// args: __LayerOperationArgs
+			//		Some args indicating whether it is drilling down or up, and on which row.
+		}
+	});
+
+	Layer.__LayerOperationArgs = declare([], {
+		// summary:
+		//		Some context info for layer operations.
+
+		// isDown: Boolean
+		//		If true, the operation is drilling down, otherwise, it is drilling up.
+		isDown: true,
+
+		// rowId: String
+		//		Only available when isDown is true. Indicating on which row it is drilling down.
+		rowId: ''
+	});
+
+	return Layer;
+=====*/
+
+	var transitionDuration = 700;
+
+	function moveNodes(bn, tmpBn){
+		while(bn.childNodes.length){
+			tmpBn.appendChild(bn.firstChild);
+		}
+	}
+
+	var nextLevelButtonColumnId = '__nextLevelButton__';
+
+	return declare(_Module, {
+		name: "layer",
+
+		buttonColumnWidth: '20px',
+
+		constructor: function(){
+			var t = this,
+				g = t.grid,
+				n = t._tmpBodyNode = document.createElement('div'),
+				cn = t._contextNode = document.createElement('div'),
+				wrapper1 = t._wrapper1 = document.createElement('div'),
+				wrapper2 = t._wrapper2 = document.createElement('div');
+			n.setAttribute('class', 'gridxBody');
+			cn.setAttribute('class', 'gridxLayerContext');
+			wrapper1.setAttribute('class', 'gridxLayerWrapper');
+			wrapper2.setAttribute('class', 'gridxLayerWrapper');
+			t._parentStack = [];
+			t.connect(cn, 'onmousedown', 'up');
+			function updateColumnWidth(node){
+				var columnId = node.getAttribute('colid');
+				var headerNode = g.header.getHeaderNode(columnId);
+				node.style.width = headerNode.style.width;
+				node.style.minWidth = headerNode.style.minWidth;
+				node.style.maxWidth = headerNode.style.maxWidth;
+			}
+			t.aspect(g.columnWidth, 'onUpdate', function(){
+				query('.gridxCell', wrapper1).forEach(updateColumnWidth);
+				query('.gridxCell', wrapper2).forEach(updateColumnWidth);
+				if(cn.firstChild){
+					cn.style.height = cn.firstChild.offsetHeight + 'px';
+				}
+			});
+
+			var w = t.arg('buttonColumnWidth');
+			var col = t._col = lang.mixin({
+				id: nextLevelButtonColumnId,
+				headerStyle: 'text-align:center;',
+				style: function(cell){
+					return 'text-align:center;' + (cell.model.hasChildren(cell.row.id) ? 'cursor:pointer;' : '');
+				},
+				rowSelectable: false,
+				sortable: false,
+				filterable: false,
+				editable: false,
+				padding: false,
+				ignore: true,
+				declaredWidth: w,
+				width: w,
+				decorator: function(data, rowId){
+					if(t.model.hasChildren(rowId)){
+						return '<div class="gridxLayerHasChildren"></div>';
+					}
+					return '';
+				}
+			}, t.arg('buttonColumnArgs') || {});
+			t._onSetColumns();
+			t.aspect(g, 'setColumns', '_onSetColumns');
+			t.aspect(g, 'setStore', function(){
+				t._parentStack = [];
+				wrapper1.innerHTML = wrapper2.innerHTML = '';
+				if(cn.firstChild){
+					cn.removeChild(cn.firstChild);
+					cn.style.height = 0;
+					g.vLayout.reLayout();
+				}
+			});
+
+			function onDrillDown(e){
+				if(e.columnId == nextLevelButtonColumnId && e.cellNode.childNodes.length){
+					g.focus.focusArea('header');
+					setTimeout(function(){
+						t.down(e.rowId);
+					}, 0);
+				}
+			}
+			if(g.touch){
+				t.aspect(g, 'onCellTouchStart', onDrillDown);
+			}
+			t.aspect(g, 'onCellMouseDown', onDrillDown);
+		},
+
+		preload: function(){
+			this.grid.vLayout.register(this, '_contextNode', 'headerNode', 10);
+		},
+
+		onReady: function(){},
+		onFinish: function(){},
+
+		down: function(id){
+			var t = this,
+				m = t.model;
+			if(!t._lock && m.hasChildren(id) && String(m.parentId(id)) === String(m.layerId())){
+				t._lock = 1;
+				var g = t.grid,
+					bn = g.bodyNode,
+					w = bn.offsetWidth,
+					tmpBn = t._tmpBodyNode,
+					wrapper1 = t._wrapper1,
+					wrapper2 = t._wrapper2,
+					parentRowNode = g.body.getRowNode({ rowId: id }),
+					pos = domGeometry.position(parentRowNode),
+					refPos = domGeometry.position(t._contextNode),
+					cloneParent = parentRowNode.cloneNode(true);
+
+				domClass.add(parentRowNode, 'gridxLayerLoading');
+
+				wrapper2.appendChild(cloneParent);
+				t._parentStack.push(cloneParent);
+				cloneParent._pos = g.vScroller.position();
+				t._bodyScrollTop = bn.scrollTop;
+				moveNodes(bn, tmpBn);
+
+				bn.style.left = w + 'px';
+				bn.style.zIndex = 1;
+				tmpBn.style.left = 0;
+				tmpBn.style.zIndex = 0;
+				wrapper2.style.top = (pos.y - refPos.y) + 'px';
+				wrapper2.style.zIndex = -1;
+				g.vScrollerNode.style.zIndex = 9999;
+
+				m.setLayer(id);
+				t._refresh(function(){
+					domClass.remove(parentRowNode, 'gridxLayerLoading');
+					wrapper2.style.zIndex = 9999;
+					g.vScroller.scroll(0);
+					domClass.add(wrapper1, 'gridxLayerHSlide');
+					domClass.add(wrapper2, 'gridxLayerVSlide');
+					bn.style.left = 0;
+					tmpBn.style.left = -w + 'px';
+					wrapper1.style.left = -w + 'px';
+					wrapper2.style.top = 0;
+				}, {
+					isDown: true,
+					rowId: id,
+					parentRowNode: cloneParent
+				});
+			}
+		},
+
+		up: function(){
+			var t = this,
+				m = t.model;
+			if(!t._lock && m.isId(m.layerId())){
+				t._lock = 1;
+				var g = t.grid,
+					bn = g.bodyNode,
+					tmpBn = t._tmpBodyNode,
+					w = bn.offsetWidth,
+					wrapper1 = t._wrapper1,
+					wrapper2 = t._wrapper2,
+					parentRowNode = t._parentStack[t._parentStack.length - 2],
+					currentParentRowNode = t._parentStack.pop();
+					parentId = currentParentRowNode.getAttribute('rowid');
+
+				if(parentRowNode){
+					wrapper2.appendChild(parentRowNode);
+				}
+				t._bodyScrollTop = bn.scrollTop;
+				moveNodes(bn, tmpBn);
+
+				bn.style.left = -w + 'px';
+				bn.style.zIndex = 0;
+				tmpBn.style.left = 0;
+				tmpBn.style.zIndex = 1;
+				wrapper1.style.top = 0;
+				wrapper1.style.zIndex = 2;
+				wrapper2.style.left = -w + 'px';
+				g.vScrollerNode.style.zIndex = 9999;
+
+				m.layerUp();
+				t._refresh(function(){
+					if(currentParentRowNode){
+						g.vScroller.scroll(currentParentRowNode._pos);
+						var pos = domGeometry.position(g.body.getRowNode({
+							rowId: parentId
+						}));
+						var refPos = domGeometry.position(t._contextNode);
+					}
+					domClass.add(wrapper1, 'gridxLayerVSlide');
+					domClass.add(wrapper2, 'gridxLayerHSlide');
+					bn.style.left = 0;
+					tmpBn.style.left = w + 'px';
+					if(currentParentRowNode){
+						wrapper1.style.top = (pos.y - refPos.y) + 'px';
+					}
+					wrapper2.style.left = 0;
+				}, {
+					parentRowNode: currentParentRowNode
+				});
+			}
+		},
+
+		//Private--------------------------------------------------------------------
+		_onSetColumns: function(){
+			var g = this.grid,
+				col = this._col;
+			col.index = g._columns.length;
+			g._columns.push(col);
+			g._columnsById[col.id] = col;
+		},
+
+		_onTransitionEnd: function(){
+			var t = this,
+				m = t.model,
+				g = t.grid,
+				mainNode = g.mainNode,
+				bn = g.bodyNode,
+				tmpBn = t._tmpBodyNode,
+				w = bn.offsetWidth,
+				contextNode = t._contextNode,
+				wrapper1 = t._wrapper1,
+				wrapper2 = t._wrapper2;
+			if(t._lock){
+				mainNode.removeChild(tmpBn);
+				mainNode.removeChild(wrapper1);
+				contextNode.appendChild(wrapper2);
+				contextNode.style.height = wrapper2.offsetHeight + 'px';
+				domClass.remove(tmpBn, 'gridxSlideRefresh');
+				domClass.remove(bn, 'gridxSlideRefresh');
+				domClass.remove(wrapper1, 'gridxLayerHSlide gridxLayerVSlide');
+				domClass.remove(wrapper2, 'gridxLayerHSlide gridxLayerVSlide');
+				if(wrapper1.childNodes.length){
+					wrapper1.removeChild(wrapper1.firstChild);
+				}
+
+				var tmp = t._wrapper1;
+				t._wrapper1 = t._wrapper2;
+				t._wrapper2 = tmp;
+
+				wrapper1.style.left = 0;
+				wrapper1.style.zIndex = '';
+				wrapper1.style.top = 0;
+				wrapper2.style.left = 0;
+				wrapper2.style.zIndex = '';
+				wrapper2.style.top = 0;
+				bn.style.paddingTop = 0;
+				bn.style.zIndex = '';
+				tmpBn.style.paddingTop = 0;
+				tmpBn.style.zIndex = '';
+				g.vScrollerNode.style.zIndex = '';
+
+				g.vLayout.reLayout();
+				for(var i = 0; i < tmpBn.childNodes.length; ++i){
+					var rowId = tmpBn.childNodes[i].getAttribute('rowid');
+					if(m.isId(rowId)){
+						g.body.onUnrender(rowId);
+					}
+				}
+				tmpBn.innerHTML = '';
+				g.body._skipUnrender = 0;
+				t._lock = 0;
+			}
+		},
+
+		_refresh: function(callback, args){
+			var t = this,
+				g = t.grid,
+				bn = g.bodyNode,
+				tmpBn = t._tmpBodyNode,
+				frag = document.createDocumentFragment();
+			frag.appendChild(tmpBn);
+			frag.appendChild(t._wrapper1);
+			frag.appendChild(t._wrapper2);
+			g.mainNode.appendChild(frag);
+			tmpBn.scrollTop = t._bodyScrollTop;
+			tmpBn.style.paddingTop = t._wrapper1.offsetHeight + 'px';
+			bn.style.paddingTop = t._wrapper2.offsetHeight + 'px';
+			t._contextNode.style.height = 0;
+			//temparary disable paging
+			t._paging = g.view.paging;
+			g.view.paging = 0;
+			g.vLayout.reLayout();
+			if(args.isDown){
+				query('.gridxLayerHasChildren', args.parentRowNode).
+					removeClass('gridxLayerHasChildren').
+					addClass('gridxLayerLevelUp');
+			}else if(args.parentRowNode){
+				query('.gridxLayerLevelUp', args.parentRowNode).
+					removeClass('gridxLayerLevelUp').
+					addClass('gridxLayerHasChildren');
+			}
+			t.onReady(args);
+			g.body._skipUnrender = 1;
+			if(args.isDown){
+				g.vScroller._lock = 1;
+			}
+			focusEnabled = g.focus.enabled;
+			g.focus.enabled = 0;
+			g.body.refresh().then(function(){
+				g.vScroller._lock = 0;
+				g.view.paging = t._paging;
+				setTimeout(function(){
+					domClass.add(bn, 'gridxSlideRefresh');
+					domClass.add(tmpBn, 'gridxSlideRefresh');
+					if(g.vScroller._scrollable){
+						g.vScroller._scrollable.scrollTo({x: 0});
+					}
+					callback();
+					setTimeout(function(){
+						t._onTransitionEnd();
+						g.vLayout.reLayout();
+						g.focus.enabled = focusEnabled;
+						g.body._focusCellRow = 0;
+						g.body._focusCellCol = 0;
+						g.focus.focusArea('body');
+						t.onFinish(args);
+					}, transitionDuration);
+				}, 10);
+			});
+		}
+	});
+});
+
+},
+'gridx/modules/StructureSwitch':function(){
+define([
+	'dojo/_base/kernel',
+	'dojo/_base/declare',
+	'dojo/_base/array',
+	'../core/_Module'
+], function(kernel, declare, array, _Module){
+	kernel.experimental('gridx/modules/StructureSwitch');
+
+/*=====
+	return declare(_Module, {
+		// summary:
+		//		module name: structureSwitch.
+		//		Switch column structure by means of hidden columns.
+		// description:
+		//		All possible columns are declared on creation of gridx, but only a few of them are shown at a time.
+		//		Column structure profiles are defined, each profile defines which columns to show.
+		//		Switch profiles through API of this module, which is done by means of the HiddenColumns module.
+		//		Especially suitable for orientation change on mobile device.
+
+		// default: String
+		//		The name of the default structure profile. Should exist in the config parameter.
+		//		If not, every column will be shown.
+		default: '',
+
+		// orientation: Boolean
+		//		If true, gridx automatically checks which profile to use on every "orientationchange" event.
+		orientation: true,
+
+		// config: Object
+		//		An association array to define column structure profiles.
+		//		Key is profile name. Value is an array of column IDs.
+		config: {},
+
+		// condition: Object
+		//		An association array to define trigger-conditions for every profile.
+		//		Key is profile name (should exists in the config parameter).
+		//		Value is a predicate function accepting grid as its parameter:
+		//		For example:
+		//		function(grid){
+		//			return Math.abs(window.orientation) == 90;
+		//		}
+		condition: {},
+
+		to: function(profileName){
+			// summary:
+			//		Switch to a column structure indicated by the profileName.
+			//		Returns true if switched to the target profile, false if not.
+			// profileName: String
+			//		The name of the target profile.
+			//		If set to empty string "", switch to show all columns.
+			//		If invalid, no-op.
+		},
+
+		check: function(){
+			// summary:
+			//		Checks every pre-defined condition predicate, if any of them returns true,
+			//		and the corresponding profile exists, switch to that profile.
+			//		Returns the name of the profile if found a match, null if not.
+		}
+	});
+=====*/
+
+	return declare(_Module, {
+		name: "structureSwitch",
+		required: ['hiddenColumns'],
+		'default': '',
+		orientation: true,
+
+		constructor: function(){
+			var t = this,
+				config = t.arg('config') || {},
+				condition = t.arg('condition') || {};
+			if(t.arg('orientation')){
+				if(config.portrait){
+					condition.portrait = function(){
+						return 'orientation' in window && window.orientation === 0;
+					};
+				}
+				if(config.landscape){
+					condition.portrait = function(){
+						return Math.abs(window.orientation) == 90;
+					};
+				}
+				t.connect(window, 'orientationchange', 'check');
+			}
+		},
+
+		preload: function(){
+			var t = this,
+				dft = t.config[t.arg('default')];
+			if(dft){
+				var toHide = array.filter(array.map(t.grid._columns, function(col){
+					return col.id;
+				}), function(id){
+					return array.indexOf(dft, id) < 0;
+				});
+				[].push.apply(t.grid.hiddenColumns.arg('init', []), toHide);
+			}
+		},
+
+		load: function(args, startup){
+			var t = this;
+			startup.then(function(){
+				t.check();
+				t.loaded.callback();
+			});
+		},
+
+		//Public----------------------------------------------------------------------------
+		to: function(name){
+			var g = this.grid,
+				structure = this.config[name];
+			if(!structure && name === ''){
+				structure = array.map(g.structure, function(col){
+					return col.id;
+				});
+			}
+			if(structure){
+				var hiddenColumns = g.hiddenColumns;
+				var toHide = array.filter(g._columns, function(col){
+					return array.indexOf(structure, col.id) < 0;
+				});
+				var toShow = array.filter(structure, function(col){
+					return !g._columnsById[col.id];
+				});
+				hiddenColumns.add.apply(hiddenColumns, toHide);
+				hiddenColumns.remove.apply(hiddenColumns, toShow);
+			}
+			return !!structure;
+		},
+
+		check: function(){
+			var t = this;
+			for(var name in t.condition){
+				if(t.condition[name](t.grid) && t.to(name)){
+					t.grid.resize();
+					return name;
+				}
+			}
+			return null;
+		}
+	});
+});
+
+},
 'url:dijit/form/templates/TextBox.html':"<div class=\"dijit dijitReset dijitInline dijitLeft\" id=\"widget_${id}\" role=\"presentation\"\r\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\r\n\t\t><input class=\"dijitReset dijitInputInner\" data-dojo-attach-point='textbox,focusNode' autocomplete=\"off\"\r\n\t\t\t${!nameAttrSetting} type='${type}'\r\n\t/></div\r\n></div>\r\n",
 'url:dijit/templates/Tooltip.html':"<div class=\"dijitTooltip dijitTooltipLeft\" id=\"dojoTooltip\"\r\n\t><div class=\"dijitTooltipConnector\" data-dojo-attach-point=\"connectorNode\"></div\r\n\t><div class=\"dijitTooltipContainer dijitTooltipContents\" data-dojo-attach-point=\"containerNode\" role='alert'></div\r\n></div>\r\n",
 'url:dijit/form/templates/ValidationTextBox.html':"<div class=\"dijit dijitReset dijitInline dijitLeft\"\r\n\tid=\"widget_${id}\" role=\"presentation\"\r\n\t><div class='dijitReset dijitValidationContainer'\r\n\t\t><input class=\"dijitReset dijitInputField dijitValidationIcon dijitValidationInner\" value=\"&#935; \" type=\"text\" tabIndex=\"-1\" readonly=\"readonly\" role=\"presentation\"\r\n\t/></div\r\n\t><div class=\"dijitReset dijitInputField dijitInputContainer\"\r\n\t\t><input class=\"dijitReset dijitInputInner\" data-dojo-attach-point='textbox,focusNode' autocomplete=\"off\"\r\n\t\t\t${!nameAttrSetting} type='${type}'\r\n\t/></div\r\n></div>\r\n",
@@ -54805,14 +58389,14 @@ define([
 'url:gridx/templates/LinkPager.html':"<div class=\"gridxLinkPager\" role=\"toolbar\" aria-label=\"${pagerWai}\"\r\n\t><span class='gridxPagerStepperBtn gridxPagerPrevPage'\r\n\t\ttabindex='${_tabIndex}'\r\n\t\ttitle='${prevPageTitle}'\r\n\t\taria-label='${prevPageTitle}'\r\n\t\tpageindex='prev',\r\n\t\tdata-dojo-attach-point='_prevPageBtn'\r\n\t\tdata-dojo-attach-event='onclick: _prevPage'\r\n\t\t><span class='gridxPagerA11yInner'>&nbsp;&lt;</span\r\n\t></span\r\n\t><span class='gridxPagerPages'\r\n\t\tdata-dojo-attach-point='_pageBtnContainer'\r\n\t\tdata-dojo-attach-event='onclick: _gotoPage, onmouseover: _onHover, onmouseout: _onHover'\r\n\t></span\r\n\t><span class='gridxPagerStepperBtn gridxPagerNextPage'\r\n\t\ttabindex='${_tabIndex}'\r\n\t\ttitle='${nextPageTitle}'\r\n\t\taria-label='${nextPageTitle}'\r\n\t\tpageindex='next',\r\n\t\tdata-dojo-attach-point='_nextPageBtn'\r\n\t\tdata-dojo-attach-event='onclick: _nextPage'\r\n\t\t><span class='gridxPagerA11yInner'>&nbsp;&gt;</span\r\n\t></span\r\n></div>\r\n",
 'url:gridx/templates/GotoPagePane.html':"<div class='gridxGotoPage'\r\n\t><table><tbody\r\n\t\t><tr><td id='${id}-pageInputLabel' class='gridxGotoPageMainMsg'>\r\n\t\t${gotoDialogMainMsg}\r\n\t\t</td></tr\r\n\t\t><tr><td class='gridxGotoPageInput'\r\n\t\t\t><input data-dojo-type='${numberTextBoxClass}'\r\n\t\t\t\tdata-dojo-props='\"aria-labelledby\": \"${id}-pageInputLabel\"'\r\n\t\t\t\tclass='gridxGotoPageInputBox'\r\n\t\t\t\tdata-dojo-attach-point='pageInputBox'\r\n\t\t\t\tdata-dojo-attach-event='onKeyUp: _updateStatus, onKeyDown: _onKeyDown'></input\r\n\t\t\t><span\r\n\t\t\t\tclass='gridxPageCountMsg'\r\n\t\t\t\tdata-dojo-attach-point='pageCountMsgNode'></span\r\n\t\t></td></tr\r\n\t\t><tr><td class='gridxGotoPageBtns'\r\n\t\t\t><button data-dojo-type='${buttonClass}' \r\n\t\t\t\tdata-dojo-attach-point='okBtn'\r\n\t\t\t\tdata-dojo-attach-event='onClick: _onOK'>\r\n\t\t\t\t${gotoDialogOKBtn}\r\n\t\t\t</button\r\n\t\t\t><button data-dojo-type='${buttonClass}'\r\n\t\t\t\tdata-dojo-attach-event='onClick: _onCancel'>\r\n\t\t\t\t${gotoDialogCancelBtn}\r\n\t\t\t</button\r\n\t\t></td></tr\r\n\t></tbody></table\r\n></div>\r\n",
 'url:dijit/templates/Dialog.html':"<div class=\"dijitDialog\" role=\"dialog\" aria-labelledby=\"${id}_title\">\r\n\t<div data-dojo-attach-point=\"titleBar\" class=\"dijitDialogTitleBar\">\r\n\t\t<span data-dojo-attach-point=\"titleNode\" class=\"dijitDialogTitle\" id=\"${id}_title\"\r\n\t\t\t\trole=\"heading\" level=\"1\"></span>\r\n\t\t<span data-dojo-attach-point=\"closeButtonNode\" class=\"dijitDialogCloseIcon\" data-dojo-attach-event=\"ondijitclick: onCancel\" title=\"${buttonCancel}\" role=\"button\" tabindex=\"0\">\r\n\t\t\t<span data-dojo-attach-point=\"closeText\" class=\"closeText\" title=\"${buttonCancel}\">x</span>\r\n\t\t</span>\r\n\t</div>\r\n\t<div data-dojo-attach-point=\"containerNode\" class=\"dijitDialogPaneContent\"></div>\r\n</div>\r\n",
-'url:gridx/templates/FilterBar.html':"<input type=\"button\" data-dojo-type=\"dijit.form.Button\" data-dojo-props=\"\r\n\ticonClass: 'gridxFilterBarBtnIcon',\r\n\tlabel: '...',\r\n\ttitle: '${defineFilter}'\" aria-label='${defineFilter}'\r\n/><div class=\"gridxFilterBarStatus\"\r\n\t><span>${noFilterApplied}</span\r\n\t><span class=\"gridxFilterBarCloseBtn\" tabindex=\"-1\" title=\"${closeFilterBarBtn}\"><span class=\"gridxFilterBarCloseBtnText\">x</span></span\r\n></div>\r\n",
+'url:gridx/templates/FilterBar.html':"<input type=\"button\" data-dojo-type=\"dijit.form.Button\" data-dojo-props=\"\r\n\ticonClass: 'gridxFilterBarBtnIcon',\r\n\tlabel: '...',\r\n\ttitle: &quot;${defineFilter}&quot;\" aria-label=\"${defineFilter}\"\r\n/><div class=\"gridxFilterBarStatus\"\r\n\t><span>${noFilterApplied}</span\r\n\t><span class=\"gridxFilterBarCloseBtn\" tabindex=\"-1\" title=\"${closeFilterBarBtn}\"><span class=\"gridxFilterBarCloseBtnText\">x</span></span\r\n></div>\r\n",
 'url:gridx/templates/FilterPane.html':"<ul class=\"gridxFilterPaneForm\">\r\n\t<li><label id=\"${id}_ColumnLabel\" for=\"${id}_ColumnSelect\">${i18n.columnSelectLabel}</label></li>\r\n\t<li name=\"sltColumn\">\r\n\t\t<div data-dojo-type=\"dijit.form.Select\" id=\"${id}_ColumnSelect\" aria-labelledby=\"${id}_ColumnLabel\" style=\"width:100%;\"></div>\r\n\t</li>\r\n\t<li><label id=\"${id}_ConditionLabel\" for=\"${id}_ConditionSelect\">${i18n.conditionSelectLabel}</label></li>\r\n\t<li name=\"sltCondition\">\r\n\t\t<div data-dojo-type=\"dijit.form.Select\" id=\"${id}_ConditionSelect\" style=\"width:100%;\" aria-labelledby=\"${id}_ConditionLabel\"></div>\r\n\t</li>\r\n\t<li><label id=\"${id}_ValueLabel\">${i18n.valueBoxLabel}</label></li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneTextWrapper\">\r\n\t\t<input type=\"text\" data-dojo-type=\"dijit.form.TextBox\" intermediateChanges=\"true\"\r\n\t\t style=\"width:100%;\" aria-labelledby=\"${id}_ValueLabel\"/>\r\n\t</li>\r\n\t\r\n<!--            dropDownClass=\"gridx.modules.filter.DistinctComboBoxMenu\"-->\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneComboWrapper\">\r\n\t\t<input type=\"text\" data-dojo-type=\"dijit.form.ComboBox\" \r\n\t\t\tintermediateChanges=\"true\" autoComplete=\"false\" queryExpr=\"*${i18n.startsWithExpr}\" \r\n\t\t\tstyle=\"width:100%;\"  aria-labelledby=\"${id}_ValueLabel\"/>\r\n\t</li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneNumberWrapper\">\r\n\t\t<input type=\"text\" data-dojo-type=\"dijit.form.NumberTextBox\"  aria-labelledby=\"${id}_ValueLabel\" intermediateChanges=\"true\" style=\"width:100%;\"/>\r\n\t</li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneDateWrapper\">\r\n\t\t<div data-dojo-type=\"dijit.form.DateTextBox\" aria-labelledby=\"${id}_ValueLabel\" intermediateChanges=\"true\" style=\"width: 100%\"></div>\r\n\t</li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneDateRangeWrapper\">\r\n\t\t<div data-dojo-type=\"dijit.form.DateTextBox\" style=\"width:44%; float: left;\" intermediateChanges=\"true\"\r\n\t\t\t aria-label=\"${i18n.beginDateRangeLabel}\"></div>\r\n\t\t<div style=\"width:10%; text-align: center; float: left;\">${i18n.rangeTo}</div>\r\n\t\t<div data-dojo-type=\"dijit.form.DateTextBox\" style=\"width:44%; float: right;\" intermediateChanges=\"true\"\r\n\t\t\t aria-label=\"${i18n.endDateRangeLabel}\"></div>\r\n\t</li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneTimeWrapper\">\r\n\t\t<div data-dojo-type=\"dijit.form.TimeTextBox\" aria-labelledby=\"${id}_ValueLabel\" style=\"width: 100%\" intermediateChanges=\"true\"></div>\r\n\t</li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneTimeRangeWrapper\">\r\n\t\t<div data-dojo-type=\"dijit.form.TimeTextBox\" style=\"width:44%; float: left;\" intermediateChanges=\"true\"\r\n\t\t\t aria-label=\"${i18n.beginTimeRangeLabel}\"></div>\r\n\t\t<div style=\"text-align: center; float: left; width: 10%;\">${i18n.rangeTo}</div>\r\n\t\t<div data-dojo-type=\"dijit.form.TimeTextBox\" style=\"width:44%; float: right;\" intermediateChanges=\"true\"\r\n\t\t\t aria-label=\"${i18n.endTimeRangeLabel}\"></div>\r\n\t</li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneRadioWrapper\">\r\n\t\t<span style=\"width:49%; float:left;\">\r\n\t\t\t<div data-dojo-type=\"dijit.form.RadioButton\" aria-label=\"${i18n.radioTrueLabel}\" checked=\"true\"></div><span>${i18n.trueLabel}</span>\r\n\t\t</span>\r\n\t\t<span style=\"width:49%; float: right;\">\r\n\t\t\t<div data-dojo-type=\"dijit.form.RadioButton\" aria-label=\"${i18n.radioFalseLabel}\"></div><span>${i18n.falseLabel}</span>\r\n\t\t</span>\r\n\t</li>\r\n\t\r\n\t<li class=\"gridxFilterPaneFieldWrapper gridxFilterPaneSelectWrapper\">\r\n\t\t<div data-dojo-type=\"dijit.form.Select\" aria-labelledby=\"${id}_ValueLabel\" style=\"width: 100%\"></div>\r\n\t</li>\r\n</ul>\r\n",
 'url:gridx/templates/FilterDialog.html':"<form action=\"./\" onsubmit=\"return false;\">\r\n<label id=\"${id}_MatchOptionLabel\" for=\"${id}_MatchOptionSelect\">${i18n.relationMsgFront} </label>\r\n<select data-dojo-type=\"dijit.form.Select\" id=\"${id}_MatchOptionSelect\" aria-labelledby=\"${id}_MatchOptionLabel\">\r\n\t<option value=\"all\">${i18n.relationAll}</option>\r\n\t<option value=\"any\">${i18n.relationAny}</option>\r\n</select>\r\n\r\n<div class=\"gridxFilterAccordionWrapper\">\r\n\t<div data-dojo-type=\"dijit.layout.AccordionContainer\"></div>\r\n</div>\r\n\r\n<div class=\"gridxFilterDialogButtons\">\r\n\t<input type=\"button\" class=\"gridxFilterDialogBtnAdd\" data-dojo-type=\"dijit.form.Button\" \r\n\t\t   showLabel=\"false\" iconClass=\"gridxFilterBtnAddRule\" label=\"${i18n.addRuleButton}\"/>\r\n\t<input type=\"submit\" data-dojo-type=\"dijit.form.Button\" label=\"${i18n.filterButton}\"/>\r\n\t<input type=\"button\" data-dojo-type=\"dijit.form.Button\" label=\"${i18n.clearButton}\"/>\r\n\t<input type=\"button\" data-dojo-type=\"dijit.form.Button\" label=\"${i18n.cancelButton}\"/>\r\n</div>\r\n</form>\r\n",
 'url:dijit/layout/templates/AccordionButton.html':"<div data-dojo-attach-event='ondijitclick:_onTitleClick' class='dijitAccordionTitle' role=\"presentation\">\r\n\t<div data-dojo-attach-point='titleNode,focusNode' data-dojo-attach-event='onkeydown:_onTitleKeyDown'\r\n\t\t\tclass='dijitAccordionTitleFocus' role=\"tab\" aria-expanded=\"false\"\r\n\t\t><span class='dijitInline dijitAccordionArrow' role=\"presentation\"></span\r\n\t\t><span class='arrowTextUp' role=\"presentation\">+</span\r\n\t\t><span class='arrowTextDown' role=\"presentation\">-</span\r\n\t\t><span role=\"presentation\" class=\"dijitInline dijitIcon\" data-dojo-attach-point=\"iconNode\"></span>\r\n\t\t<span role=\"presentation\" data-dojo-attach-point='titleTextNode, textDirNode' class='dijitAccordionText'></span>\r\n\t</div>\r\n</div>\r\n",
 'url:gridx/templates/FilterConfirmDialog.html':"<div class=\"gridxFilterConfirmDialogMessage\">${clearFilterMsg}</div\r\n><div class=\"gridxFilterConfirmDialogButtons\"\r\n\t><input type=\"button\" data-dojo-type=\"dijit.form.Button\" label=\"${clearButton}\"\r\n\t/><input type=\"button\" data-dojo-type=\"dijit.form.Button\" label=\"${cancelButton}\"\r\n/></div>\r\n",
 'url:dijit/templates/TooltipDialog.html':"<div role=\"alertdialog\" tabIndex=\"-1\">\r\n\t<div class=\"dijitTooltipContainer\" role=\"presentation\">\r\n\t\t<div class=\"dijitTooltipContents dijitTooltipFocusNode\" data-dojo-attach-point=\"containerNode\"></div>\r\n\t</div>\r\n\t<div class=\"dijitTooltipConnector\" role=\"presentation\" data-dojo-attach-point=\"connectorNode\"></div>\r\n</div>\r\n",
 'url:dijit/form/templates/ComboButton.html':"<table class=\"dijit dijitReset dijitInline dijitLeft\"\r\n\tcellspacing='0' cellpadding='0' role=\"presentation\"\r\n\t><tbody role=\"presentation\"><tr role=\"presentation\"\r\n\t\t><td class=\"dijitReset dijitStretch dijitButtonNode\" data-dojo-attach-point=\"buttonNode\" data-dojo-attach-event=\"ondijitclick:__onClick,onkeydown:_onButtonKeyDown\"\r\n\t\t><div id=\"${id}_button\" class=\"dijitReset dijitButtonContents\"\r\n\t\t\tdata-dojo-attach-point=\"titleNode\"\r\n\t\t\trole=\"button\" aria-labelledby=\"${id}_label\"\r\n\t\t\t><div class=\"dijitReset dijitInline dijitIcon\" data-dojo-attach-point=\"iconNode\" role=\"presentation\"></div\r\n\t\t\t><div class=\"dijitReset dijitInline dijitButtonText\" id=\"${id}_label\" data-dojo-attach-point=\"containerNode\" role=\"presentation\"></div\r\n\t\t></div\r\n\t\t></td\r\n\t\t><td id=\"${id}_arrow\" class='dijitReset dijitRight dijitButtonNode dijitArrowButton'\r\n\t\t\tdata-dojo-attach-point=\"_popupStateNode,focusNode,_buttonNode\"\r\n\t\t\tdata-dojo-attach-event=\"onkeydown:_onArrowKeyDown\"\r\n\t\t\ttitle=\"${optionsTitle}\"\r\n\t\t\trole=\"button\" aria-haspopup=\"true\"\r\n\t\t\t><div class=\"dijitReset dijitArrowButtonInner\" role=\"presentation\"></div\r\n\t\t\t><div class=\"dijitReset dijitArrowButtonChar\" role=\"presentation\">&#9660;</div\r\n\t\t></td\r\n\t\t><td style=\"display:none !important;\"\r\n\t\t\t><input ${!nameAttrSetting} type=\"${type}\" value=\"${value}\" data-dojo-attach-point=\"valueNode\" role=\"presentation\"\r\n\t\t\t\tdata-dojo-attach-event=\"onclick:_onClick\"\r\n\t\t/></td></tr></tbody\r\n></table>\r\n",
-'url:gridx/templates/QuickFilter.html':"<div class=\"gridxQuickFilter ${_hasFilterBar}\"\r\n\t><span class=\"gridxQuickFilterInputContainer\"\r\n\t\t><input type=\"text\" data-dojo-type=\"${textBoxClass}\"\r\n\t\t\tclass=\"gridxQuickFilterInput\"\r\n\t\t\tdata-dojo-attach-point=\"textBox\"\r\n\t\t\tdata-dojo-props=\"placeHolder: '${filterLabel}', 'aria-label': '${filterLabel}'\"\r\n\t\t/><span class=\"gridxQuickFilterClear\"\r\n\t\t\ttabindex='0'\r\n\t\t\tdata-dojo-attach-event=\"onclick: _clear\"\r\n\t\t\ttitle=\"${clearButtonTitle}\"\r\n\t\t\t><span class=\"gridxQuickFilterClearInner\">x</span\r\n\t\t></span\r\n\t></span\r\n\t><button data-dojo-type=\"${buttonClass}\"\r\n\t\tclass=\"gridxQuickFilterButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: '${filterLabel}',\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t></button\r\n\t><button data-dojo-type=\"${comboButtonClass}\"\r\n\t\tclass=\"gridxQuickFilterComboButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: '${filterLabel}',\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t><span data-dojo-type=\"${menuClass}\">\r\n\t\t\t<span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t\t>${filterLabel}</span\r\n\t\t\t><span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _showFilterBar\"\r\n\t\t\t>${buildFilterMenuLabel}</span\r\n\t\t></span\r\n\t></button\r\n></div>\r\n",
+'url:gridx/templates/QuickFilter.html':"<div class=\"gridxQuickFilter ${_hasFilterBar}\"\r\n\t><span class=\"gridxQuickFilterInputContainer\"\r\n\t\t><input type=\"text\" data-dojo-type=\"${textBoxClass}\"\r\n\t\t\tclass=\"gridxQuickFilterInput\"\r\n\t\t\tdata-dojo-attach-point=\"textBox\"\r\n\t\t\tdata-dojo-props=\"placeHolder: &quot;${filterLabel}&quot;, 'aria-label': &quot;${filterLabel}&quot;\"\r\n\t\t/><span class=\"gridxQuickFilterClear\"\r\n\t\t\ttabindex='0'\r\n\t\t\tdata-dojo-attach-event=\"ontouchend: _clear, onclick: _clear, onkeydown: _onKey\"\r\n\t\t\ttitle=\"${clearButtonTitle}\"\r\n\t\t\t><span class=\"gridxQuickFilterClearInner\">x</span\r\n\t\t></span\r\n\t></span\r\n\t><button data-dojo-type=\"${buttonClass}\"\r\n\t\tclass=\"gridxQuickFilterButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: &quot;${filterLabel}&quot;,\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t></button\r\n\t><button data-dojo-type=\"${comboButtonClass}\"\r\n\t\tclass=\"gridxQuickFilterComboButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: &quot;${filterLabel}&quot;,\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t><span data-dojo-type=\"${menuClass}\">\r\n\t\t\t<span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t\t>${filterLabel}</span\r\n\t\t\t><span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _showFilterBar\"\r\n\t\t\t>${buildFilterMenuLabel}</span\r\n\t\t></span\r\n\t></button\r\n></div>\r\n",
 '*now':function(r){r(['dojo/i18n!*preload*gridx/tests/nls/allInOne*["ar","ca","cs","da","de","el","en-gb","en-us","es-es","fi-fi","fr-fr","he-il","hu","it-it","ja-jp","ko-kr","nl-nl","nb","pl","pt-br","pt-pt","ru","sk","sl","sv","th","tr","zh-tw","zh-cn","ROOT"]']);}
 }});
 define("gridx/tests/allInOne", [], 1);

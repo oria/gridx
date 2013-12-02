@@ -192,14 +192,14 @@
     				</ul>
     			</li>
     			
-    			<li>Mobile GridX</li>
+    			<!-- <li>Mobile GridX</li>
     			<li>
     				<ul class="sub-nav">
     					{% for m in mobile %}
 					    <li><a href="#{{m.id}}">{{m.name}}</a></li>
 					    {% endfor %}
     				</ul>
-    			</li>
+    			</li> -->
     			
     		</ul>
     	</div>

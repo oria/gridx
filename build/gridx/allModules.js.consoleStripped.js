@@ -5,6 +5,7 @@ define("gridx/allModules", [
 	'gridx/modules/VirtualVScroller',
 	'gridx/modules/SingleSort',
 	'gridx/modules/NestedSort',
+	'gridx/modules/Sort',
 	'gridx/modules/ColumnLock',
 	'gridx/modules/select/Row',
 	'gridx/modules/select/Column',
@@ -41,10 +42,15 @@ define("gridx/allModules", [
 	'gridx/modules/HiddenColumns',
 	'gridx/modules/GroupHeader',
 	'gridx/modules/PagedBody',
-	'gridx/modules/HeaderMenu'
+	'gridx/modules/AutoPagedBody',
+	'gridx/modules/HeaderMenu',
+	'gridx/modules/SlantedHeader',
+	'gridx/modules/ExpandableColumn',
+	'gridx/modules/Layer',
+	'gridx/modules/StructureSwitch'
 ], function(
 	Focus, VScroller, ColumnResizer, VirtualVScroller,
-	SingleSort, NestedSort, ColumnLock,
+	SingleSort, NestedSort, Sort, ColumnLock,
 	SelectRow, SelectColumn, SelectCell,
 	ExtendedSelectRow, ExtendedSelectColumn, ExtendedSelectCell,
 	MoveRow, MoveColumn,
@@ -56,7 +62,9 @@ define("gridx/allModules", [
 	RowHeader, IndirectSelect, IndirectSelectColumn,
 	Persist, Menu, Dod, Tree, RowLock,
 	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, TouchVScroller,
-	HiddenColumns, GroupHeader, PagedBody, HeaderMenu){
+	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody,
+	HeaderMenu, SlantedHeader, ExpandableColumn,
+	Layer, StructureSwitch){
 return {
 	Focus: Focus,
 	VScroller: VScroller,
@@ -64,6 +72,7 @@ return {
 	VirtualVScroller: VirtualVScroller,
 	SingleSort: SingleSort,
 	NestedSort: NestedSort,
+	Sort: Sort,
 	ColumnLock: ColumnLock,
 	SelectRow: SelectRow,
 	SelectColumn: SelectColumn,
@@ -100,6 +109,11 @@ return {
 	HiddenColumns: HiddenColumns,
 	GroupHeader: GroupHeader,
 	PagedBody: PagedBody,
-	HeaderMenu: HeaderMenu
+	AutoPagedBody: AutoPagedBody,
+	HeaderMenu: HeaderMenu,
+	SlantedHeader: SlantedHeader,
+	ExpandableColumn: ExpandableColumn,
+	Layer: Layer,
+	StructureSwitch: StructureSwitch
 };
 });

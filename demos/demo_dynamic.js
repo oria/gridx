@@ -14,7 +14,7 @@ require([
 	'gridx/modules/CellWidget',
 	'gridx/modules/Edit',
 	'gridx/modules/filter/FilterBar',
-	'gridx/modules/filter/Filter',
+	'gridx/modules/Filter',
 	'dojo/domReady!'
 ], function(MemoryStore, Grid, Cache, dataSource){
 

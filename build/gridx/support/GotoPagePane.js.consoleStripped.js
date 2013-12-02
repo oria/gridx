@@ -8,9 +8,8 @@ define("gridx/support/GotoPagePane", [
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/_WidgetsInTemplateMixin",
-	"dojo/text!../templates/GotoPagePane.html",
-	"dojo/i18n!../nls/PaginationBar"
-], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate, nls){
+	"dojo/text!../templates/GotoPagePane.html"
+], function(declare, lang, event, keys, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, goToTemplate){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -28,7 +27,7 @@ define("gridx/support/GotoPagePane", [
 	
 		postMixInProperties: function(){
 			var t = this;
-			lang.mixin(t, nls);
+			lang.mixin(t, t.pagination.grid.nls);
 			t.numberTextBoxClass = t.pager.numberTextBoxClass.prototype.declaredClass;
 			t.buttonClass = t.pager.buttonClass.prototype.declaredClass;
 			t.connect(t.domNode, 'onkeydown', '_onKeyDown');

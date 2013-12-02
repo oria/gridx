@@ -32,7 +32,7 @@ define("gridx/support/exporter/toCSV", [
 	}
 
 	toCSV.writer = {
-		initialize: function(args){
+		initialize: function(context, args){
 			this._s = args.separator || ",";
 			this._n = args.newLine || "\r\n";
 			this._lines = [];

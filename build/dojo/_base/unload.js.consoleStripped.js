@@ -66,9 +66,13 @@ var unload = {
 		//		browsers from using a "fast back" cache to make page
 		//		loading via back button instantaneous.
 		// example:
-		//	|	dojo.addOnUnload(functionPointer)
-		//	|	dojo.addOnUnload(object, "functionName")
-		//	|	dojo.addOnUnload(object, function(){ /* ... */});
+		//	|	var afunc = function() {0 && console.log("global function");};
+		//	|	require(["dojo/_base/unload"], function(unload) {
+		//	|		var foo = {unload: function(){ 0 && console.log("unloading...");}, data: "mydata"};
+		//	|		unload.addOnUnload(afunc);
+		//	|		unload.addOnUnload(foo, "unload");
+		//	|		unload.addOnUnload(foo, function(){0 && console.log("", this.data);});
+		//	|	});
 
 		on(win, "beforeunload", lang.hitch(obj, functionName));
 	}

@@ -2,7 +2,7 @@
 
 #### **A fast rendering, well modularized and plugin architecture based Grid.**
 
-Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset(e.g.[larger than millions of rows]()).
+Besides supporting a rich set of popular features, GridX is optimized and extremely capable of supporting huge dataset.
 
 GridX is consisted of:
 
@@ -13,8 +13,9 @@ GridX is consisted of:
 GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://dojofoundation.org/about/cla) with the same [BSD/AFLv2 license] (http://dojotoolkit.org/license)
 
 ### Current Versions:
-* [1.2 (LTS)](https://github.com/oria/gridx/tree/1.2)
-* [1.1](https://github.com/oria/gridx/tree/1.1)
+* [1.3 (LTS)](https://github.com/oria/gridx/tree/1.3): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.3.0-Release-Notes)
+* [1.2 (LTS)](https://github.com/oria/gridx/tree/1.2): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.2.0-Release-Notes)
+* [1.1](https://github.com/oria/gridx/tree/1.1): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.1.0-Release-Notes)
 * [1.0 (LTS)](https://github.com/oria/gridx/tree/1.0)
 
 ## Installation
@@ -41,7 +42,7 @@ GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2
 * [Tutorial](https://github.com/oria/gridx/wiki) (in progress)
 * [API Doc](http://oria.github.com/gridx/apidoc/index.html) (in progress)
 * [Known limitations]() (in progress)
-* [Release download (v1.1)](https://github.com/oria/gridx/zipball/1.1)
+* [Release download (v1.3)](https://github.com/oria/gridx/zipball/1.3)
 * [Report bugs](https://github.com/oria/gridx/issues/new)
 
 

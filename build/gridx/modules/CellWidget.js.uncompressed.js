@@ -25,6 +25,7 @@ define("gridx/modules/CellWidget", [
 
 	var CellWidget = declare(_Module, {
 		// summary:
+		//		module name: cellWidget.
 		//		This module makes it possible to efficiently show widgets within a grid cell.
 		// description:
 		//		Since widget declarations need to be parsed by dojo.parser, it can NOT be directly
@@ -109,6 +110,8 @@ define("gridx/modules/CellWidget", [
 		//		Indicating whether this column should use this CellWidget module.
 		//		CellWidget module reuses widgets in cell, so if there is no widgets in cell, you don't need this module at all.
 		widgetsInCell: false,
+
+		allowEventBubble: false,
 
 		decorator: function(){
 			// summary:
@@ -203,13 +206,14 @@ define("gridx/modules/CellWidget", [
 			},
 
 			postCreate: function(){
-				var dn = this.domNode;
-				this.connect(dn, 'onmousedown', function(e){
-					if(e.target != dn){
+				var t = this,
+					dn = t.domNode;
+				t.connect(dn, 'onmousedown', function(e){
+					if(e.target != dn && !t.cell.column.allowEventBubble){
 						e.cancelBubble = true;
 					}
 				});
-				this._cellCnnts = [];
+				t._cellCnnts = [];
 			},
 
 			startup: function(){
@@ -263,7 +267,6 @@ define("gridx/modules/CellWidget", [
 							}
 						}
 					});
-					// console.log('lazy is: ', lazyData);
 					if(t.setCellValue){
 						t.setCellValue(gridData, storeData, t, isInit);
 					}
@@ -462,9 +465,6 @@ define("gridx/modules/CellWidget", [
 						setCellValue: col.setCellValue
 					});
 					this.onCellWidgetCreated(widget, cell.column);
-					if(col.onCellWidgetCreated){
-						col.onCellWidgetCreated(widget, cell.column);
-					}
 				}
 				col._cellWidgets[cell.row.id] = widget;
 			}
@@ -521,10 +521,11 @@ define("gridx/modules/CellWidget", [
 				if(cellDec){
 					if(!cellDec.widget && cellDec.decorator){
 						try{
-							cellDec.widget = new CellWidget({
+							var widget = cellDec.widget = new CellWidget({
 								content: cellDec.decorator(cell.data(), cell.row.id, cell.row.visualIndex(), cell),
 								setCellValue: cellDec.setCellValue
 							});
+							this.onCellWidgetCreated(widget, cell.column);
 						}catch(e){
 							console.error('Edit:', e);
 						}

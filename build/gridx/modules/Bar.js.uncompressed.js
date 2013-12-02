@@ -11,9 +11,8 @@ define("gridx/modules/Bar", [
 
 /*=====
 	var Bar = declare(_Module, {
-		// module:
-		//		gridx/modules/Bar
 		// summary:
+		//		module name: bar.
 		//		This is a general-purpose bar for gridx.
 		// description:
 		//		This module can be configured to hold various plugins, such as pager, pageSizer, gotoPageButton, summary, quickFilter, toobar, etc.
@@ -230,6 +229,9 @@ define("gridx/modules/Bar", [
 					}catch(e){
 						console.error(e);
 					}
+					if(def.hookPoint && def.hookName){
+						def.hookPoint[def.hookName] = plugin || td;
+					}
 					pluginRow.push(plugin || td);
 					tr.appendChild(td);
 				}
@@ -308,6 +310,7 @@ define("gridx/modules/Bar", [
 			this.grid.focus.stopEvent(evt);
 			var elems = a11y._getTabNavigable(node),
 				n = elems[step < 0 ? 'last' : 'first'];
+
 			if(n){
 				n.focus();
 			}
@@ -315,8 +318,17 @@ define("gridx/modules/Bar", [
 		},
 
 		_doBlur: function(node, evt, step){
+			function isChild(child, parent){
+				if(!child || !parent){ return false; }
+				var n = child;
+				while(n && n != parent){
+					n = n.parentNode;
+				}
+				return !!n;
+			}
 			var elems = a11y._getTabNavigable(node);
-			return evt ? evt.target == (step < 0 ? elems.first : elems.last) : true;
+			return evt ? (evt.target == (step < 0 ? elems.first : elems.last) 
+						|| isChild(evt.target, step < 0 ? elems.first : elems.last)) : true;
 		}
 	}));
 });

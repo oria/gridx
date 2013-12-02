@@ -14,6 +14,7 @@ define("gridx/modules/GroupHeader", [
 /*=====
 	var GroupHeader = declare(Header, {
 		// summary:
+		//		module name: header.
 		//		The header UI of grid. This implementation supports header groups (also called "column groups").
 		//		This module is not compatible with IE7 and below.
 		//		This module is not compatible with ColumnLock and HiddenColumns.
@@ -134,6 +135,11 @@ define("gridx/modules/GroupHeader", [
 					}
 				});
 			}
+		},
+
+		refresh: function(){
+			this.inherited(arguments);
+			this._curNode = 0;
 		},
 
 		_parse: function(){
@@ -330,7 +336,7 @@ define("gridx/modules/GroupHeader", [
 						fid = g._columns[colIdx].id;
 					}
 				}
-				if(fid){
+				if(fid && g._columnsById[fid]){
 					t._blurNode();
 					if(g.hScroller){
 						g.hScroller.scrollToColumn(fid);
@@ -409,7 +415,7 @@ define("gridx/modules/GroupHeader", [
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid, col,
 				node = t._curNode;
-			if(!evt.ctrlKey && !evt.altKey &&
+			if(!g._isCtrlKey(evt) && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);

@@ -22,6 +22,7 @@ define("gridx/modules/Header", [
 
 	return declare(_Module, {
 		// summary:
+		//		module name: header.
 		//		The header UI of grid
 		// description:
 		//		This module is in charge of the rendering of the grid header. But it should not manage column width,
@@ -100,6 +101,18 @@ define("gridx/modules/Header", [
 					}
 				});
 			}
+			t.aspect(g, 'onHeaderCellMouseOver', function(){
+				g.vLayout.reLayout();
+			});
+			t.aspect(g, 'onHeaderCellMouseOut', function(){
+				g.vLayout.reLayout();
+				//When mouse leave a very narrow nested sorting header, sometimes this reLayout happens before the header height change.
+				//So set a timeout to ensure this gets relayout.
+				//FIXME: need investigate why
+				setTimeout(function(){
+					g.vLayout.reLayout();
+				}, 0);
+			});
 			t._initFocus();
 		},
 
@@ -124,6 +137,7 @@ define("gridx/modules/Header", [
 		refresh: function(){
 			this._build();
 			this._onHScroll(this._scrollLeft);
+			this.grid.vLayout.reLayout();
 			this.onRender();
 		},
 
@@ -204,8 +218,15 @@ define("gridx/modules/Header", [
 					doFocus: t._doFocus,
 					doBlur: t._blurNode,
 					onBlur: t._blurNode,
-					connects: [
-						t.connect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
+					connects: g.touch ? [
+						t.aspect(g, 'onHeaderCellTouchStart', function(evt){
+							domClass.add(evt.headerCellNode, t._focusClass);
+						}),
+						t.aspect(g, 'onHeaderCellTouchEnd', function(evt){
+							domClass.remove(evt.headerCellNode, t._focusClass);
+						})
+					] : [
+						t.aspect(g, 'onHeaderCellKeyDown', '_onKeyDown'),
 						t.connect(g, 'onHeaderCellMouseDown', function(evt){
 							t._focusNode(t.getHeaderNode(evt.columnId));
 						})
@@ -215,11 +236,14 @@ define("gridx/modules/Header", [
 		},
 
 		_doFocus: function(evt, step){
-			var t = this, 
-				n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
-				r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
-			t.grid.focus.stopEvent(r && evt);
-			return r;
+			var t = this;
+			if(!t.hidden){
+				var n = t._focusHeaderId && t.getHeaderNode(t._focusHeaderId),
+					r = t._focusNode(n || query('.gridxCell', t.domNode)[0]);
+				t.grid.focus.stopEvent(r && evt);
+				return r;
+			}
+			return false;
 		},
 		
 		_focusNode: function(node){
@@ -266,7 +290,7 @@ define("gridx/modules/Header", [
 			var t = this, g = t.grid, col,
 				dir = g.isLeftToRight() ? 1 : -1,
 				delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir;
-			if(t._focusHeaderId && !evt.ctrlKey && !evt.altKey &&
+			if(t._focusHeaderId && !g._isCtrlKey(evt) && !evt.altKey &&
 				(evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW)){
 				//Prevent scrolling the whole page.
 				g.focus.stopEvent(evt);

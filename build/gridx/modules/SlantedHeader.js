@@ -1,0 +1,4 @@
+//>>built
+define("gridx/modules/SlantedHeader","dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/_base/event dojo/query dojo/string dojo/dom-class dojo/dom-construct dojo/keys ../core/_Module ./GroupHeader".split(" "),function(b,e,f,g,h,k,c,l,m,d,n,p){return b(d,{name:"slantedheader",_actionAreaHolder:null,required:["header"],load:function(a,q){c.add(this.grid.domNode,"gridxSlantedHeader");var b=this;window.setTimeout(function(){b._updateTransform()},0);this.connect(this.grid,"resize","_updateTransform");
+this.loaded.callback()},_updateTransform:function(){var a=this.grid.header.domNode,b=Math.round(a.offsetHeight/2)-1;a.style.transform=a.style.msTransform=a.style.mozTransform=a.style.webkitTransform="translate("+b+"px, 0px) skew(-45deg,0deg)"}})});
+//@ sourceMappingURL=SlantedHeader.js.map

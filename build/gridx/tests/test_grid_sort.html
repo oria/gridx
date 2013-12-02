@@ -18,6 +18,25 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Single Sort Test
 	</h1>
+	<h2>Sort</h2>
+	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		modelExtensions: [
+			"gridx/core/model/extensions/FormatSort"
+		],
+		baseSort: [{attribute: "Genre", descending: true}],
+		modules: [
+			"gridx/modules/Sort",
+			"gridx/modules/ColumnResizer",
+			"gridx/modules/extendedSelect/Row",
+			"gridx/modules/IndirectSelectColumn",
+			"gridx/modules/TouchVScroller",
+			"gridx/modules/RowHeader",
+			"gridx/modules/VirtualVScroller"
+		]
+	'></div>
 	<h2>Single Sort</h2>
 	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
@@ -42,7 +61,6 @@
 			"gridx/core/model/extensions/FormatSort"
 		],
 		sortInitialOrder: [{colId: "Genre", descending: true},{colId: "Artist", descending: true}],
-
 		modules: [
 			"gridx/modules/NestedSort",
 			"gridx/modules/ColumnResizer",

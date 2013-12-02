@@ -82,6 +82,7 @@ define("gridx/modules/Traverse", [
 
 	return declare(_Module, {
 		// summary:
+		//		module name: traverse.
 		//		Provides some useful functions to traverse among rows/columns/cells.
 	});
 =====*/

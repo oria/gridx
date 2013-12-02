@@ -1,0 +1,8 @@
+{
+"version":3,
+"file":"SlantedHeader.js",
+"lineCount":2,
+"mappings":"A,SAAAA,MAAA,+BAAsC,uKAAA,MAAA,KAAtC,CAYG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAyBC,CAAzB,CAA+BC,CAA/B,CAAsCC,CAAtC,CAA6CC,CAA7C,CAAqDC,CAArD,CAA+DC,CAA/D,CAA6EC,CAA7E,CAAmFC,CAAnF,CAA4FC,CAA5F,CAAkGC,CAAlG,QAWKX,EAAA,CAAQS,CAAR,uEAOAG,QAAAA,CAASC,CAATD,CAAeE,CAAfF,EACLN,CAAAS,IAAA,CAAaC,SAAAC,QAAb,sBADKL,KAEDM,MAEJC,OAAAC,WAAA,CAAkB,QAAA,GAGjBF,CAAAG,iBAAA,EAHiB,CAAlB,GAKAC,aAAA,CAAaN,SAAb,6BACAO;WAAAC,SAAA,EAVKZ,CAPA,kBAoBaS,QAAAA,OACdI,EAAIT,SAAAU,OAAAT,QADUI,CAIdM,EAAaC,IAAAC,MAAA,CAFEJ,CAAAK,aAEF,GAAbH,EACJF,EAAAM,MAAAC,UALkBX,CAKEI,CAAAM,MAAAE,YALFZ,CAKwBI,CAAAM,MAAAG,aALxBb,CAMfI,CAAAM,MAAAI,gBANed,cAM0BM,CAN1BN,8BApBb,EAXL,CAZH;",
+"sources":["SlantedHeader.js.uncompressed.js"],
+"names":["define","declare","array","lang","event","query","string","domClass","domConstruct","keys","_Module","Sort","nls","load","args","deferStartup","add","grid","domNode","self","window","setTimeout","_updateTransform","connect","loaded","callback","n","header","translateX","Math","round","offsetHeight","style","transform","msTransform","mozTransform","webkitTransform"]
+}

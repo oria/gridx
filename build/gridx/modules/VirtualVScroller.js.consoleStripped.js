@@ -5,7 +5,8 @@ define("gridx/modules/VirtualVScroller", [
 	"dojo/_base/sniff",
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"
@@ -14,6 +15,7 @@ define("gridx/modules/VirtualVScroller", [
 /*=====
 	return declare(VScroller, {
 		// summary:
+		//		module name: vScroller.
 		//		This module implements lazy-rendering when virtically scrolling grid.
 		// description:
 		//		This module takes a DOMNode-based way to implement lazy-rendering.
@@ -100,10 +102,7 @@ define("gridx/modules/VirtualVScroller", [
 							focus.focusArea('body', 1);	//1 as true
 						}
 						t.lazy = t._lazy;
-						//wait for the dom nodes to settle down.
-						setTimeout(function(){
-							defer.callback(success);
-						}, 5);
+						defer.callback(success);
 					}
 				};
 			if(node){
@@ -183,6 +182,7 @@ define("gridx/modules/VirtualVScroller", [
 	
 		_init: function(args){
 			var t = this;
+			t._avgRowHeight = t.grid.body.arg('defaultRowHeight') || 24;
 			t._rowHeight = {};
 			t._syncHeight();
 			t.connect(t.grid, '_onResizeEnd', function(){
@@ -197,7 +197,7 @@ define("gridx/modules/VirtualVScroller", [
 				a = dn.scrollTop,
 				deltaT = a - (t._lastScrollTop || 0),
 				neighborhood = 2;
-	
+			
 			if(forced || deltaT){
 				t._lastScrollTop = a;
 	
@@ -209,7 +209,7 @@ define("gridx/modules/VirtualVScroller", [
 					visualEnd = visualStart + view.visualCount,
 					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,
-					firstRowTop = firstRow && firstRow.offsetTop - deltaT,
+					firstRowTop = firstRow && firstRow.clientTop - deltaT,
 					lastRow = bn.lastChild,
 					lastRowBtm = lastRow && lastRow.offsetTop - deltaT + lastRow.offsetHeight,
 					bnTop = bn.scrollTop,
@@ -220,7 +220,8 @@ define("gridx/modules/VirtualVScroller", [
 					nearTop = a <= neighborhood,
 					nearBottom = Math.abs(a - scrollRange) <= neighborhood,
 					start, end, pos, d;
-				if(bnTop == bnBtm && !bnBtm){
+				//In IE7 offsetTop will be -1 when grid is hidden
+				if((bnTop == bnBtm && !bnBtm) || (lastRow && lastRow.offsetTop < 0)){
 					//The grid is not correctly shown, so we just ignore.
 					return;
 				}
@@ -236,6 +237,17 @@ define("gridx/modules/VirtualVScroller", [
 					d = Math.ceil((bnBtm - lastRowBtm) * ratio / h) + buffSize;
 					end = nearBottom && a ? visualEnd : Math.min(start + d, visualEnd);
 					pos = "bottom";
+					
+					if(deltaT === 0 && start == visualEnd){
+						//If the last row in the grid has very big height and then change 
+						//to normal or very small height, need to add rows to the front.
+						//this usually appear in DOD, especially GridInGrid mode
+						
+						end = body.renderStart;
+						d = Math.ceil((firstRowTop - bnTop) * ratio / h) + buffSize;
+						start = nearTop ? visualStart : Math.max(end - d, visualStart);
+						pos = "top";
+					}
 				}else if(!firstRow || firstRowTop > bnBtm || !lastRow || lastRowBtm < bnTop){
 					//Replace all
 					if(a <= scrollRange / 2){
@@ -291,13 +303,17 @@ define("gridx/modules/VirtualVScroller", [
 		
 		_doScroll: function(e, forced, noLazy){
 			var t = this;
-			if(!noLazy && t.arg('lazy')){
-				if(t._lazyScrollHandle){
-					clearTimeout(t._lazyScrollHandle);
+			//FIXME: this _lock flag is ugly. This flag is only to avoid accidentlly triggering onscroll event handling
+			// especially when using Layer.js to drill down.
+			if(!t._lock || forced){
+				if(!noLazy && t.arg('lazy') && !forced){
+					if(t._lazyScrollHandle){
+						clearTimeout(t._lazyScrollHandle);
+					}
+					t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
+				}else{
+					t._doVirtualScroll(forced);
 				}
-				t._lazyScrollHandle = setTimeout(lang.hitch(t, t._doVirtualScroll, forced), t.arg('lazyTimeout'));
-			}else{
-				t._doVirtualScroll(forced);
 			}
 		},
 	
@@ -315,7 +331,7 @@ define("gridx/modules/VirtualVScroller", [
 			t._doScroll(0, 1);
 			//If some scrollToRow requests are pending, resume them.
 			array.forEach(t._scrolls, function(d){
-				if(d.scrollContext){
+				if(d && d.scrollContext){
 					//delete scrollContext to avoid firing multiple times.
 					var scrollContext = d.scrollContext;
 					delete d.scrollContext;
@@ -348,12 +364,22 @@ define("gridx/modules/VirtualVScroller", [
 				h = maxHeight;
 			}
 			var dn = t.domNode,
+				bn = t.grid.bodyNode,
 				//remember the scroll bar position
-				r = dn.scrollTop / dn.scrollHeight;
+				oldScrollTop = dn.scrollTop,
+				isBottom = oldScrollTop >= dn.scrollHeight - dn.offsetHeight;
 			t.stubNode.style.height = h + 'px';
 			//Update last scrolltop, to avoid firing _doVirtualScroll with incorrect delta.
 			if(t._lastScrollTop){
-				t._lastScrollTop = dn.scrollTop = dn.scrollHeight * r;
+				//If we were at bottom, should keep us at bottom after height change.
+				dn.scrollTop = isBottom ? dn.scrollHeight : oldScrollTop;
+				t._lastScrollTop = dn.scrollTop;
+			}
+			//Force body scrollTop to sync with vscroller
+			if(dn.scrollTop >= dn.scrollHeight - dn.offsetHeight){
+				bn.scrollTop = bn.scrollHeight;
+			}else if(!dn.scrollTop){
+				bn.scrollTop = 0;
 			}
 		},
 	
@@ -381,7 +407,11 @@ define("gridx/modules/VirtualVScroller", [
 				ret = 0;
 	
 			array.forEach(bn.childNodes, function(n){
-				rh[n.getAttribute('rowid')] = n.offsetHeight;
+				var oh = n.offsetHeight;
+				rh[n.getAttribute('rowid')] = oh;
+				// Save the offsetHeight of this row so that we don't have to get offsetHeight again during
+				// Body::unrenderRows(), which is a very expensive operation
+				n.setAttribute("data-rowHeight", oh);
 				if(n.offsetTop > bottom){
 					++postCount;
 				}else if(n.offsetTop + n.offsetHeight < top){
@@ -402,7 +432,7 @@ define("gridx/modules/VirtualVScroller", [
 				h += rh[p];
 				++c;
 			}
-			if(c){
+			if(h && c){
 				t._avgRowHeight = h / c;
 				t._syncHeight();
 			}
@@ -415,16 +445,17 @@ define("gridx/modules/VirtualVScroller", [
 				view = t.grid.view,
 				focus = t.grid.focus,
 				sn = t.domNode,
+				ctrlKey = t.grid._isCtrlKey(evt),
 				st = 'scrollTop',
 				r,
 				fc = '_focusCellRow';
 			if(!focus || focus.currentArea() == 'body'){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					bd._focusCellCol = 0;
 					bd[fc] = 0;
 					sn[st] = 0;
 					bd._focusCell();
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					bd._focusCellCol = t.grid._columns.length - 1;
 					bd[fc] = view.visualCount - 1;
 					sn[st] = t.stubNode.clientHeight - bd.domNode.offsetHeight;

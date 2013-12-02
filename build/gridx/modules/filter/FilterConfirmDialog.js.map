@@ -2,7 +2,7 @@
 "version":3,
 "file":"FilterConfirmDialog.js",
 "lineCount":3,
-"mappings":"A,SAAAA,OAAA,SACA,8CADA,kXAEAC;MAAA,qLAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA0BC,CAA1B,CAAkCC,CAAlC,CAA4CC,CAA5C,QAOKJ,EAAA,CAAQE,CAAR,QACCE,CAAAC,uBADD,6DAIMC,QAAAA,GACXC,cAAA,CAAeC,SAAf,CACAC,SAAA,WAAoBR,CAAAS,WAAA,CAAkBP,CAAlB,CAA4BC,CAA5B,CAApB,CAFWE,KAGPK,EAAMC,KAAAC,YAAA,CAAkBC,YAAlB,CACVC,cAJWT,CAIKK,CAAA,GAChBK,eALWV,CAKMK,CAAA,GACjBM,aAAA,CAAaD,cAAb,kBACAC;YAAA,CAAaF,aAAb,uBACAE,aAAA,aAA2B,QAAA,GAC1BD,cAAAE,MAAA,EAD0B,CAA3B,CARWZ,CAJN,WAgBKa,QAAAA,GACVC,YAAA,EADUD,CAhBL,SAmBGC,QAAAA,IAnBH,EAPL,CANH;",
+"mappings":"A,SAAAA,OAAA,SACA,8CADA,kXAEAC;MAAA,qJAKG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA0BC,CAA1B,CAAkCC,CAAlC,QAOKH,EAAA,CAAQE,CAAR,wEAIME,QAAAA,GACXC,cAAA,CAAeC,SAAf,CACAC,SAAA,SAAkBC,SAAAC,IAAAC,uBAAlB,CACAH,SAAA,WAAoBN,CAAAU,WAAA,CAAkBR,CAAlB,CAA4BK,SAAAC,IAA5B,CAApB,CAHWL,KAIPQ,EAAMC,KAAAC,YAAA,CAAkBC,YAAlB,CACVC,cALWZ,CAKKQ,CAAA,GAChBK,eANWb,CAMMQ,CAAA,GACjBM,aAAA,CAAaD,cAAb;iBACAC,aAAA,CAAaF,aAAb,uBACAE,aAAA,aAA2B,QAAA,GAC1BD,cAAAE,MAAA,EAD0B,CAA3B,CATWf,CAJN,WAiBKgB,QAAAA,GACVC,YAAA,EADUD,CAjBL,SAoBGC,QAAAA,IApBH,EAPL,CALH;",
 "sources":["FilterConfirmDialog.js.uncompressed.js"],
-"names":["require","define","declare","string","Dialog","template","i18n","clearFilterDialogTitle","postCreate","inherited","arguments","set","substitute","arr","dijit","findWidgets","domNode","btnClear","btnCancel","connect","focus","onExecute","execute"]
+"names":["require","define","declare","string","Dialog","template","postCreate","inherited","arguments","set","grid","nls","clearFilterDialogTitle","substitute","arr","dijit","findWidgets","domNode","btnClear","btnCancel","connect","focus","onExecute","execute"]
 }

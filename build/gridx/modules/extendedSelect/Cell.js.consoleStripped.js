@@ -30,6 +30,7 @@ define("gridx/modules/extendedSelect/Cell", [
 
 	return declare(_RowCellBase, {
 		// summary:
+		//		module name: selectCell.
 		//		Provides advanced cell selections.
 		// description:
 		//		This module provides an advanced way for selecting cells by clicking, swiping, SPACE key, or CTRL/SHIFT CLICK to select multiple cell.
@@ -248,10 +249,11 @@ define("gridx/modules/extendedSelect/Cell", [
 			t.inherited(arguments);
 			t.batchConnect(
 				[g, 'onCellMouseDown', function(e){
-					if(mouse.isLeft(e) && (
+					if(mouse.isLeft(e) &&
+						(!g.select.row || !g.select.row.arg('triggerOnCell')) &&
 						!domClass.contains(e.target, 'gridxTreeExpandoIcon') &&
-						!domClass.contains(e.target, 'gridxTreeExpandoInner'))){
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						!domClass.contains(e.target, 'gridxTreeExpandoInner')){
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCtrlKey(e), e.shiftKey);
 						if(!e.shiftKey && !t.arg('canSwept')){
 							t._end();
 						}
@@ -263,7 +265,7 @@ define("gridx/modules/extendedSelect/Cell", [
 				[g, has('ff') < 4 ? 'onCellKeyUp' : 'onCellKeyDown', function(e){
 					if(e.keyCode === keys.SPACE && (!g.focus || g.focus.currentArea() == 'body')){
 						event.stop(e);
-						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCopyEvent(e), e.shiftKey);
+						t._start(createItem(e.rowId, e.visualIndex, e.columnId, e.columnIndex), g._isCtrlKey(e), e.shiftKey);
 						t._end();
 					}
 				}]
@@ -313,7 +315,7 @@ define("gridx/modules/extendedSelect/Cell", [
 					g = t.grid,
 					rid = t._getRowId(rowVisIndex),
 					cid = g._columns[colIndex].id;
-				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCopyEvent(e), 1);	//1 as true
+				t._start(createItem(rid, rowVisIndex, cid, colIndex), g._isCtrlKey(e), 1);	//1 as true
 				t._end();
 			}
 		},

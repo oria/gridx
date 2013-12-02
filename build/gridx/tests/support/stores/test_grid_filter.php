@@ -188,10 +188,14 @@ function endWith($a, $b){
 	return preg_match("/{$b}$/", $a);
 }
 
-function output($data){
+function output($data, $isFilter = false){
 	// header("Content-Range: /" . count($GLOBALS['data']));
 	// header("Content-Range:" . 'items 0-' . count($data) . '/' . count($GLOBALS['data']));
-	header("Content-Range: /" . count($data));
+	if($isFilter){
+		header("Content-Range: " . $GLOBALS['totalCount'] . "/" . count($data));
+	}else{
+		header("Content-Range: /" . count($data));
+	}
 	
 	$data = slice($data);
 	echo json_encode($data);
@@ -199,6 +203,7 @@ function output($data){
 
 function slice($data){
 	$range = $_SERVER['HTTP_RANGE'];
+	// var_dump($range);
 	$range = substr($range, 6);
 	$pairs = explode('-', $range);
 	$start = intval($pairs[0]);
@@ -206,13 +211,17 @@ function slice($data){
 	
 	$a = array();
 	for($i = $start; $i <= $end; $i++){
-		$a[] = $data[$i];
+		if(array_key_exists($i, $data)){
+			$a[] = $data[$i];
+		}	
 	}
 	return $a;
 }
 
 
 $data = json_decode($items);
+$totalCount = count($data);
+
 $currentItem = null;
 $field;
 // header("Content-Type: " . ($_SERVER["CONTENT_TYPE"] == 'application/json' ? 'application/json' : 'text/plain'));
@@ -246,7 +255,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 					}
 				}
 				// echo json_encode($array);
-				output($array);
+				output($array, 1);
 			
 		}else{		//search
 			preg_match('/^(\w*)=\*?(\w*)\*&sort\((\+|-)(\w*)\)$/', $query, $matches);

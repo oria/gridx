@@ -238,6 +238,8 @@
     			<li>
     				<ul class="sub-nav">
     					
+					    <li><a href="#nestedGrid">Nested Grid</a></li>
+					    
 					    <li><a href="#export_print">Export/Print</a></li>
 					    
 					    <li><a href="#groupHeader">Group Header</a></li>
@@ -257,14 +259,12 @@
     				</ul>
     			</li>
     			
-    			<li>Mobile GridX</li>
+    			<!-- <li>Mobile GridX</li>
     			<li>
     				<ul class="sub-nav">
     					
-					    <li><a href="#mobile">Mobile Grid</a></li>
-					    
     				</ul>
-    			</li>
+    			</li> -->
     			
     		</ul>
     	</div>
@@ -298,7 +298,7 @@
     		<a name="virtualScroller"/>
     		<img src="images/gallery/virtualScroller.jpg"/>
     		<h4>Virtual Scroller</h4>
-    		<div class="description">This module takes a DOMNode-based way to implement lazy-rendering.							It tries to remove all the DOMNodes that are out of the grid body viewport,							so that the DOMNodes in grid are always limited to a very small number.</div>
+    		<div class="description">This module takes a DOMNode-based way to implement lazy-rendering.                            It tries to remove all the DOMNodes that are out of the grid body viewport,                            so that the DOMNodes in grid are always limited to a very small number.</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#virtualScroller">API Reference</a>
     		<a class="button button-demo" href="demos/virtualScroller.html">See the Demo</a>
     		<div class="clear"></div>
@@ -338,7 +338,7 @@
     		<a name="editableCell"/>
     		<img src="images/gallery/editableCell.jpg"/>
     		<h4>Editable Cell</h4>
-    		<div class="description">This module relies on an implementation of the CellWidget module.							The editing mode means there will be an editable widget appearing in the grid cell.							This implementation also covers &quot;alwaysEditing&quot; mode for grid columns,							which means all the cells in this column are always in editing mode.</div>
+    		<div class="description">This module relies on an implementation of the CellWidget module.                            The editing mode means there will be an editable widget appearing in the grid cell.                            This implementation also covers &quot;alwaysEditing&quot; mode for grid columns,                            which means all the cells in this column are always in editing mode.</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#editableCell">API Reference</a>
     		<a class="button button-demo" href="demos/edit.html">See the Demo</a>
     		<div class="clear"></div>
@@ -348,7 +348,7 @@
     		<a name="pagination"/>
     		<img src="images/gallery/pagination.jpg"/>
     		<h4>Pagination</h4>
-    		<div class="description">This module does not include any UI buttons for pagination, so that various							kinds of pagination UI implementations can benifit from this module.</div>
+    		<div class="description">This module does not include any UI buttons for pagination, so that various                            kinds of pagination UI implementations can benifit from this module.</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#pagination">API Reference</a>
     		<a class="button button-demo" href="demos/pagination.html">See the Demo</a>
     		<div class="clear"></div>
@@ -358,7 +358,7 @@
     		<a name="simpleSelect"/>
     		<img src="images/gallery/simpleSelect.jpg"/>
     		<h4>Simple Select</h4>
-    		<div class="description">There are three modules for simple row/column/cell select.			    			These modules only allow to select a single row/column/cell in one time.			    			If need multi select, use extendedSelect instead.</div>
+    		<div class="description">There are three modules for simple row/column/cell select.                            These modules only allow to select a single row/column/cell in one time.                            If need multi select, use extendedSelect instead.</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#simpleSelect">API Reference</a>
     		<a class="button button-demo" href="demos/select.html">See the Demo</a>
     		<div class="clear"></div>
@@ -368,7 +368,7 @@
     		<a name="indirectSelect"/>
     		<img src="images/gallery/indirectSelect.jpg"/>
     		<h4>Indirect Select</h4>
-    		<div class="description">This module will check whether the SelectRow module provides the functionality 	        				 of &quot;select rows by index&quot; 							(which means the &quot;selectByIndex&quot; method exists). If so, a &quot;select all&quot; checkbox can be provided 							in the header node of the row header column.</div>
+    		<div class="description">This module will check whether the SelectRow module provides the functionality                              of &quot;select rows by index&quot;                             (which means the &quot;selectByIndex&quot; method exists). If so, a &quot;select all&quot; checkbox can be provided                             in the header node of the row header column.</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#indirectSelect">API Reference</a>
     		<a class="button button-demo" href="demos/indirectSelect.html">See the Demo</a>
     		<div class="clear"></div>
@@ -445,12 +445,22 @@
     	</div>
     	
     	<div class="gallery-item">
+    		<a name="nestedGrid"/>
+    		<img src="images/gallery/nestedGrid.jpg"/>
+    		<h4>Nested Grid</h4>
+    		<div class="description">This demo shows how to embed a nested grid in a Dod module.  By this feature and custom css you can simulate complicated rows as you like.</div>
+    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#nestedGrid">API Reference</a>
+    		<a class="button button-demo" href="demos/nestedGrid.html">See the Demo</a>
+    		<div class="clear"></div>
+    	</div>
+    	
+    	<div class="gallery-item">
     		<a name="export_print"/>
     		<img src="images/gallery/export_print.jpg"/>
     		<h4>Export/Print</h4>
     		<div class="description">This module provides the API to print grid contents or provide print preview</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#export_print">API Reference</a>
-    		<a class="button button-demo" href="demos/test_grid_exporter.html">See the Demo</a>
+    		<a class="button button-demo" href="demos/exporter.html">See the Demo</a>
     		<div class="clear"></div>
     	</div>
     	
@@ -521,16 +531,6 @@
     		<div class="description">This module is used for creation, destruction and management of the Tree Grid. There are two kind of Tree Grid: columnar or nested, it will be indicated by the argument `type`, and the layout of the TreeGrid will be defined by extended structure` argument.</div>
     		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#treeGrid">API Reference</a>
     		<a class="button button-demo" href="demos/tree.html">See the Demo</a>
-    		<div class="clear"></div>
-    	</div>
-    	
-    	<div class="gallery-item">
-    		<a name="mobile"/>
-    		<img src="images/gallery/mobile.jpg"/>
-    		<h4>Mobile Grid</h4>
-    		<div class="description">Mobile GridX is based on dojox.mobile and provides native-like UI.It&#39;s now only for experienmental using. Currently it provides several plugins such as pull-refresh/lazy-load/sort etc.</div>
-    		<a class="button" href="http://oria.github.com/gridx/doc/gridx.html#mobile">API Reference</a>
-    		<a class="button button-demo" href="demos/../mobile/demos/demo.html">See the Demo</a>
     		<div class="clear"></div>
     	</div>
     	

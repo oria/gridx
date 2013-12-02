@@ -1,11 +1,10 @@
 require([
 	'gridx/Grid',
-	'gridx/core/model/cache/Sync',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
 	'gridx/allModules'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, mods){
+], function(Grid, dataSource, storeFactory, TestPane, mods){
 
 	var columnSetIdx = 0;
 
@@ -25,7 +24,6 @@ require([
 			var layout = dataSource.layouts[columnSetIdx];
 			grid = new Grid({
 				id: 'grid',
-				cacheClass: Cache,
 				store: store,
 				structure: layout,
 				modules: [

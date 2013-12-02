@@ -36,6 +36,7 @@ define("gridx/modules/SingleSort", [
 
 	var SingleSort = declare(_Module, {
 		// summary:
+		//		module name: sort.
 		//		This module provides the single column sorting functionality for grid.
 
 		// initialOrder: Object|Array
@@ -129,7 +130,6 @@ define("gridx/modules/SingleSort", [
 
 		load: function(){
 			var t = this,
-				columnsById = t.grid._columnsById,
 				refresh = function(){
 					var columnsById = t.grid._columnsById;
 					for(var colId in columnsById){
@@ -200,9 +200,11 @@ define("gridx/modules/SingleSort", [
 			var t = this;
 			if(t._sortId !== null){
 				var headerCell = t.grid.header.getHeaderNode(t._sortId);
-				domClass.remove(headerCell, 'gridxCellSorted');
-				domClass.remove(headerCell, 'gridxCellSortedAsc');
-				domClass.remove(headerCell, 'gridxCellSortedDesc');
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+				}
 				t._sortId = t._sortDescend = null;
 				t.model.sort();
 				if(!skipUpdateBody){
@@ -245,13 +247,15 @@ define("gridx/modules/SingleSort", [
 				headerCell;
 			if(t._sortId && t._sortId != colId){
 				headerCell = g.header.getHeaderNode(t._sortId);
-				domClass.remove(headerCell, 'gridxCellSorted');
-				domClass.remove(headerCell, 'gridxCellSortedAsc');
-				domClass.remove(headerCell, 'gridxCellSortedDesc');
-				headerCell.setAttribute('aria-sort', 'none');
+				if(headerCell){
+					domClass.remove(headerCell, 'gridxCellSorted');
+					domClass.remove(headerCell, 'gridxCellSortedAsc');
+					domClass.remove(headerCell, 'gridxCellSortedDesc');
+					headerCell.setAttribute('aria-sort', 'none');
+				}
 			}
 			t._sortId = colId;
-			t._sortDescend = !!isDescending;
+			t._sortDescend = isDescending = !!isDescending;
 			headerCell = g.header.getHeaderNode(colId);
 			domClass.add(headerCell, 'gridxCellSorted');
 			domClass.toggle(headerCell, 'gridxCellSortedAsc', !isDescending);

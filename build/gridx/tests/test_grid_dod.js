@@ -1,4 +1,6 @@
 require([
+	'dojo/dom-construct',
+	'dojo/parser',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
@@ -22,7 +24,8 @@ require([
     'dojox/charting/plot2d/OHLC',
     'dojox/charting/plot2d/Pie',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
+], function(domConstruct, parser,
+	Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
 	function random(start, end){
 		//include start but not end. e.g. 1-10, 1 is possible but not 10.
 		return Math.floor(Math.random()*(end-start)) + start;
@@ -88,7 +91,7 @@ require([
 				'	<td><input /></td>',
 				'</tr>',
 				'<tr>',
-				'	<td><label for="birth">Birthdate (before 2006-12-31):</label><br><br><br><br></td>',
+				'	<td><label for="birth">Birthdate (before 2006-12-31):</label></td>',
 				'	<td><div><input data-dojo-type="dijit.form.DateTextBox" data-dojo-props=\'value:"2000-01-01",',
 				'		required:true, name:"birth", constraints:{min:"1900-01-01", max:"2006-12-31"} \'/> <br>',
 				'	</div></td>',
@@ -107,10 +110,10 @@ require([
 				'	</select></td>',
 				'</tr>',
 			'</table></div>'].join('');
-		dojo.parser.parse(node);
+		parser.parse(node);
 	}
 	function setChartContent(node){
-		var container = dojo.create('div', {}, node, 'last'), div = dojo.create('div', {}, container, 'last');
+		var container = domConstruct.create('div', {}, node, 'last'), div = domConstruct.create('div', {}, container, 'last');
 		container.style.margin = '10px';
 		container.style.backgroundColor = 'white';
 		var chart = new dojox.charting.Chart(div).

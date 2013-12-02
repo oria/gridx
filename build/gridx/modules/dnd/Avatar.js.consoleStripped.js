@@ -15,7 +15,7 @@ define("gridx/modules/dnd/Avatar", [
 =====*/
 
 	return declare(Avatar, {
-		construct: function(manager){
+		construct: function(){
 			var t = this;
 			t.isA11y = domClass.contains(win.body(), "dijit_a11y");
 			

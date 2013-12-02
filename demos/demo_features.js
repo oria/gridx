@@ -13,7 +13,7 @@ require([
 	'gridx/modules/CellWidget',
 	'gridx/modules/Edit',
 	'gridx/modules/filter/FilterBar',
-	'gridx/modules/filter/Filter',
+	'gridx/modules/Filter',
 	'dojo/domReady!'
 ], function(MemoryStore, Grid, Cache, dataSource){
 
@@ -60,7 +60,7 @@ require([
 
 
 
-	var grid = new Grid({
+	var grid = window.grid1 = new Grid({
 		style: 'width: 800px; height: 500px;',
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
@@ -77,7 +77,7 @@ require([
 			'gridx/modules/CellWidget',
 			'gridx/modules/Edit',
 			'gridx/modules/filter/FilterBar',
-			'gridx/modules/filter/Filter'
+			'gridx/modules/Filter'
 		]
 	});
 

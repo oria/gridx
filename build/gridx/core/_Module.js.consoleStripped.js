@@ -155,7 +155,7 @@ define("gridx/core/_Module", [
 			// description:
 			//		Similar to widget.connect, the scope of the listener will be default to this module.
 			//		But in this API, the scope argument is placed behind the listener function, so as to
-			//		avoid arguemnt checking logic.
+			//		avoid argument checking logic.
 			//		This method also allows conditional event firing using the flag argument.
 			// obj: Object
 			// e: String

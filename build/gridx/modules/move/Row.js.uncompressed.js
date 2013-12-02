@@ -13,6 +13,7 @@ define("gridx/modules/move/Row", [
 
 	return declare(_Module, {
 		// summary:
+		//		module name: moveRow.
 		//		This module provides some APIs to move rows within grid
 		// description:
 		//		This module requires the "Move" model extension.
@@ -118,14 +119,14 @@ define("gridx/modules/move/Row", [
 			var t = this,
 				g = t.grid,
 				selector = g.select && g.select.row;
-			if(e.ctrlKey && !e.shiftKey && !e.altKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
+			if(g._isCtrlKey(e) && !e.shiftKey && !e.altKey && (e.keyCode == keys.UP_ARROW || e.keyCode == keys.DOWN_ARROW)){
 				var target = e.rowIndex,
 					doMove = function(rowIdxes){
 						if(e.keyCode == keys.UP_ARROW){
 							while(array.indexOf(rowIdxes, target) >= 0){
 								target--;
 							}
-							if(target >= 0){
+							if(target >= g.view.rootStart){
 								t.move(rowIdxes, target);
 							}
 						}else{

@@ -7,6 +7,7 @@ define("gridx/modules/VLayout", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: vLayout.
 		//		This module manages the vertical layout of all the grid UI parts.
 		// description:
 		//		When user creates a grid with a given height, it means the height of the whole grid,

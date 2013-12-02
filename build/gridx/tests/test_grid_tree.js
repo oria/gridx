@@ -119,6 +119,7 @@ require([
 		modules.Pagination,
 		modules.PaginationBar,
 		modules.ColumnResizer,
+		// modules.SelectRow,
 		modules.ExtendedSelectRow,
 		modules.CellWidget,
 		modules.Edit,

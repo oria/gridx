@@ -4,9 +4,8 @@ define("gridx/modules/filter/FilterConfirmDialog", [
 	"dojo/_base/declare",
 	"dojo/string",
 	"dijit/Dialog",
-	"dojo/text!../../templates/FilterConfirmDialog.html",
-	"dojo/i18n!../../nls/FilterBar"
-], function(declare, string, Dialog, template, i18n){
+	"dojo/text!../../templates/FilterConfirmDialog.html"
+], function(declare, string, Dialog, template){
 
 /*=====
 	return declare([], {
@@ -14,12 +13,13 @@ define("gridx/modules/filter/FilterConfirmDialog", [
 =====*/
 
 	return declare(Dialog, {
-		title: i18n.clearFilterDialogTitle,
+		grid: null,
 		cssClass: 'gridxFilterConfirmDialog',
 		autofocus: false,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.set('content', string.substitute(template, i18n));
+			this.set('title', this.grid.nls.clearFilterDialogTitle);
+			this.set('content', string.substitute(template, this.grid.nls));
 			var arr = dijit.findWidgets(this.domNode);
 			this.btnClear = arr[0];
 			this.btnCancel = arr[1];

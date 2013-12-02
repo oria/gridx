@@ -4,11 +4,11 @@ define("gridx/core/model/cache/Async", [
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"./_Cache"
-], function(declare, array, lang, Deferred, DeferredList, _Cache){
+	"./Sync"
+], function(declare, array, lang, Deferred, DeferredList, Sync){
 
 /*=====
-	return declare(_Cache, {
+	return declare(Sync, {
 		// summary:
 		//		Implement lazy-loading for server side store.
 
@@ -34,13 +34,15 @@ define("gridx/core/model/cache/Async", [
 		var i, r, len, pid,
 			ranges = args.range,
 			isTree = self.store.getChildren;
-		args.pids = {
-			'': args.range
-		};
+		args.pids = {};
+		args.pids[self.layerId()] = args.range;
 		if(isTree){
 			for(i = ranges.length - 1; i >= 0; --i){
 				r = ranges[i];
 				pid = r.parentId;
+				if(!self.model.isId(pid)){
+					pid = self.layerId();
+				}
 				if(self.model.isId(pid)){
 					args.id.push(pid);
 					args.pids[pid] = args.pids[pid] || [];
@@ -351,7 +353,7 @@ define("gridx/core/model/cache/Async", [
 		func(ids);
 	}
 
-	return declare(_Cache, {
+	return declare(Sync, {
 		isAsync: true,
 
 		constructor: function(model, args){

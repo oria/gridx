@@ -4,9 +4,8 @@ define("gridx/support/DropDownSizer", [
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
-	"dojo/i18n!../nls/PaginationBar",
 	"dijit/form/Select"
-], function(declare, lang, _WidgetBase, _FocusMixin, _TemplatedMixin, nls, Select){
+], function(declare, lang, _WidgetBase, _FocusMixin, _TemplatedMixin, Select){
 
 /*=====
 	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
@@ -37,12 +36,15 @@ define("gridx/support/DropDownSizer", [
 		templateString: '<div class="gridxDropDownSizer"><label class="gridxPagerLabel">${pageSizeLabel}</label></div>',
 
 		constructor: function(args){
-			lang.mixin(this, nls);
+			lang.mixin(this, args.grid.nls);
 		},
 
 		postCreate: function(){
-			this.connect(this.grid.pagination, 'onChangePageSize', '_onChange');
-			this.refresh();
+			var t = this;
+			t.connect(t.grid.pagination, 'onChangePageSize', '_onChange');
+			t.grid.pagination.loaded.then(function(){
+				t.refresh();
+			});
 		},
 		startup: function(){
 			this.inherited(arguments);
@@ -70,7 +72,7 @@ define("gridx/support/DropDownSizer", [
 				var pageSize = sizes[i],
 					isAll = !(pageSize > 0);
 				options.push({
-					label: String(isAll ? nls.pageSizeAll : pageSize),
+					label: String(isAll ? t.pageSizeAll : pageSize),
 					value: String(isAll ? -1 : pageSize),
 					selected: currentSize == pageSize || (isAll && p.isAll())
 				});

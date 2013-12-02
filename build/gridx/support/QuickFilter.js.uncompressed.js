@@ -1,5 +1,5 @@
 require({cache:{
-'url:gridx/templates/QuickFilter.html':"<div class=\"gridxQuickFilter ${_hasFilterBar}\"\r\n\t><span class=\"gridxQuickFilterInputContainer\"\r\n\t\t><input type=\"text\" data-dojo-type=\"${textBoxClass}\"\r\n\t\t\tclass=\"gridxQuickFilterInput\"\r\n\t\t\tdata-dojo-attach-point=\"textBox\"\r\n\t\t\tdata-dojo-props=\"placeHolder: '${filterLabel}', 'aria-label': '${filterLabel}'\"\r\n\t\t/><span class=\"gridxQuickFilterClear\"\r\n\t\t\ttabindex='0'\r\n\t\t\tdata-dojo-attach-event=\"onclick: _clear\"\r\n\t\t\ttitle=\"${clearButtonTitle}\"\r\n\t\t\t><span class=\"gridxQuickFilterClearInner\">x</span\r\n\t\t></span\r\n\t></span\r\n\t><button data-dojo-type=\"${buttonClass}\"\r\n\t\tclass=\"gridxQuickFilterButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: '${filterLabel}',\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t></button\r\n\t><button data-dojo-type=\"${comboButtonClass}\"\r\n\t\tclass=\"gridxQuickFilterComboButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: '${filterLabel}',\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t><span data-dojo-type=\"${menuClass}\">\r\n\t\t\t<span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t\t>${filterLabel}</span\r\n\t\t\t><span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _showFilterBar\"\r\n\t\t\t>${buildFilterMenuLabel}</span\r\n\t\t></span\r\n\t></button\r\n></div>\r\n"}});
+'url:gridx/templates/QuickFilter.html':"<div class=\"gridxQuickFilter ${_hasFilterBar}\"\r\n\t><span class=\"gridxQuickFilterInputContainer\"\r\n\t\t><input type=\"text\" data-dojo-type=\"${textBoxClass}\"\r\n\t\t\tclass=\"gridxQuickFilterInput\"\r\n\t\t\tdata-dojo-attach-point=\"textBox\"\r\n\t\t\tdata-dojo-props=\"placeHolder: &quot;${filterLabel}&quot;, 'aria-label': &quot;${filterLabel}&quot;\"\r\n\t\t/><span class=\"gridxQuickFilterClear\"\r\n\t\t\ttabindex='0'\r\n\t\t\tdata-dojo-attach-event=\"ontouchend: _clear, onclick: _clear, onkeydown: _onKey\"\r\n\t\t\ttitle=\"${clearButtonTitle}\"\r\n\t\t\t><span class=\"gridxQuickFilterClearInner\">x</span\r\n\t\t></span\r\n\t></span\r\n\t><button data-dojo-type=\"${buttonClass}\"\r\n\t\tclass=\"gridxQuickFilterButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: &quot;${filterLabel}&quot;,\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t></button\r\n\t><button data-dojo-type=\"${comboButtonClass}\"\r\n\t\tclass=\"gridxQuickFilterComboButton\"\r\n\t\tdata-dojo-props=\"\r\n\t\t\tshowLabel: false,\r\n\t\t\ttitle: &quot;${filterLabel}&quot;,\r\n\t\t\ticonClass: 'gridxQuickFilterIcon'\"\r\n\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t><span data-dojo-type=\"${menuClass}\">\r\n\t\t\t<span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _filter\"\r\n\t\t\t>${filterLabel}</span\r\n\t\t\t><span data-dojo-type=\"${menuItemClass}\"\r\n\t\t\t\tdata-dojo-attach-event=\"onClick: _showFilterBar\"\r\n\t\t\t>${buildFilterMenuLabel}</span\r\n\t\t></span\r\n\t></button\r\n></div>\r\n"}});
 define("gridx/support/QuickFilter", [
 	'dojo/_base/declare',
 	'dojo/_base/lang',
@@ -15,12 +15,11 @@ define("gridx/support/QuickFilter", [
 	'dijit/Menu',
 	'dijit/MenuItem',
 	'../modules/Filter',
-	'dojo/i18n!../nls/QuickFilter',
 	'dojo/text!../templates/QuickFilter.html'
 ], function(declare, lang, array, domClass, keys,
 	_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, Button, ComboButton, Menu, MenuItem,
-	F, nls, template){
+	F, template){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -46,14 +45,17 @@ define("gridx/support/QuickFilter", [
 		templateString: template,
 
 		constructor: function(args){
-			lang.mixin(this, nls);
-			this._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			var t = this;
+			lang.mixin(t, args.grid.nls);
+			t._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			t.connect(args.grid.model, 'setStore', function(){
+				t.textBox.set('value', '');
+				domClass.remove(t.domNode, 'gridxQuickFilterActive');
+			});
 		},
 
 		postCreate: function(){
-			if(this.autoApply){
-				this.connect(this.textBox, 'onInput', '_onInput');
-			}
+			this.connect(this.textBox, 'onInput', '_onInput');
 		},
 
 		grid: null,
@@ -81,11 +83,19 @@ define("gridx/support/QuickFilter", [
 			setTimeout(function(){
 				domClass.toggle(dn, 'gridxQuickFilterActive', tb.get('value'));
 			}, 0);
-			if(key != keys.TAB){
+			if(t.autoApply && key != keys.TAB){
 				clearTimeout(t._handle);
 				t._handle = setTimeout(function(){
 					t._filter();
 				}, key == keys.ENTER ? 0 : t.delay);
+			}
+		},
+
+		_onKey: function(evt){
+			if(evt.keyCode == keys.ENTER){
+				this.grid.focus.stopEvent(evt);
+				this._clear();
+				this.textBox.focus();
 			}
 		},
 

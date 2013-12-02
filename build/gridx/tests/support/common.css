@@ -1,8 +1,9 @@
 @import "../../../dojo/resources/dojo.css";
 @import "../../../dijit/themes/claro/claro.css";
 @import "../../../dijit/themes/claro/document.css";
+/*@import "../../resources/_old/claro/Gridx.css";*/
+/*@import "../../resources/_old/claro/Gridx_rtl.css";*/
 @import "../../resources/claro/Gridx.css";
-@import "../../resources/claro/Gridx_rtl.css";
 
 body {
 	background:#fff url("../../../dijit/tests/images/testsBodyBg.gif") repeat-x top left;
@@ -33,4 +34,13 @@ body {
 
 #mainPane {
 	vertical-align: top;
+}
+
+.apiTester {
+}
+.apiTesterLog {
+	overflow: auto;
+	width: 300px;
+	height: 200px;
+	border: 1px solid blue;
 }

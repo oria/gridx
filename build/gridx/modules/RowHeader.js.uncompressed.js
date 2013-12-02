@@ -1,6 +1,7 @@
 define("gridx/modules/RowHeader", [
 	"dojo/_base/declare",
-	"dojo/query",
+	// "dojo/query",
+	'gridx/support/query',
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/aspect",
@@ -15,6 +16,7 @@ define("gridx/modules/RowHeader", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: rowHeader.
 		//		This modules provides a header before each row.
 		// description:
 		//		Row header can be used as a UI handler for row selection, especially when
@@ -49,10 +51,7 @@ define("gridx/modules/RowHeader", [
 			this.headerNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderHeader',
 				role: 'row',
-				innerHTML: ['<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: ', 
-					this.arg('width'), 
-					';"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
-				].join('')
+				innerHTML: '<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="width: 100%;"><tr><td class="gridxRowHeaderHeaderCell" role="rowheader" tabindex="-1"></td></tr></table>'
 			});
 			this.bodyNode = domConstruct.create('div', {
 				'class': 'gridxRowHeaderBody'
@@ -151,15 +150,14 @@ define("gridx/modules/RowHeader", [
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
-				nt = n.firstChild,
 				cp = t.arg('cellProvider');
 			n.setAttribute('rowid', row.id);
 			n.setAttribute('rowindex', row.index());
 			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');
 			if(cp){
-				nt.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
+				n.firstChild.firstChild.firstChild.firstChild.innerHTML = cp.call(t, row);
 			}
-			t._syncRowHeight(nt, bn);
+			t._syncRowHeight(n, bn);
 		},
 
 		_onAfterCell: function(cell){
@@ -168,7 +166,7 @@ define("gridx/modules/RowHeader", [
 				visualIndex = cell.row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0];
-			t._syncRowHeight(n.firstChild, bn);
+			t._syncRowHeight(n, bn);
 		},
 
 		_syncRowHeight: function(rowHeaderNode, bodyNode){
@@ -183,9 +181,11 @@ define("gridx/modules/RowHeader", [
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			rowHeaderNode.style.height = getHeight();
+			rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 			setTimeout(function(){
-				rowHeaderNode.style.height = getHeight();
+				if(rowHeaderNode && rowHeaderNode.firstChild){
+					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
+				}
 			}, 0);
 		},
 
@@ -243,7 +243,18 @@ define("gridx/modules/RowHeader", [
 		},
 
 		_onScroll: function(){
-			this.bodyNode.scrollTop = this.grid.bodyNode.scrollTop;
+			var t = this;
+			
+			t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			
+			//scrollTop to be set must not exceeds scrollTopMax
+			if(t.bodyNode.scrollHeight - t.bodyNode.clientHeigh >= t.grid.bodyNode.scrollTop){
+				t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+			}else{
+				setTimeout(function(){
+					t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
+				}, 0);
+			}
 		},
 
 		_onResize: function(){
@@ -251,10 +262,9 @@ define("gridx/modules/RowHeader", [
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
-					var bn = this.grid.dod? brn : brn.firstChild;
-					n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
-					
-					// n.firstChild.style.height = ie > 8? domStyle.getComputedStyle(brn.firstChild).height : brn.firstChild.offsetHeight + 'px';
+					var bn = this.grid.dod ? brn : brn.firstChild;
+					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
+					n.style.height = n.firstChild.style.height = h;
 			}
 			var t = this,
 				g = t.grid,
@@ -368,6 +378,7 @@ define("gridx/modules/RowHeader", [
 				if(domClass.contains(node, 'gridxRowHeaderRow')){
 					var r = t.grid.body._focusCellRow = parseInt(node.getAttribute('visualindex'), 10);
 					t._focusRow(r);
+					t._onScroll();
 					return true;
 				}
 				node = node.parentNode;
@@ -395,15 +406,17 @@ define("gridx/modules/RowHeader", [
 
 		_onKeyDown: function(evt){
 			var t = this, g = t.grid;
-			if(g.focus.currentArea() == 'rowHeader' && 
+			if(!t._busy && g.focus.currentArea() == 'rowHeader' && 
 					evt.keyCode == keys.UP_ARROW || evt.keyCode == keys.DOWN_ARROW){
 				g.focus.stopEvent(evt);
 				var step = evt.keyCode == keys.UP_ARROW ? -1 : 1,
 					body = g.body,
 					r = body._focusCellRow + step;
 				body._focusCellRow = r = r < 0 ? 0 : (r >= g.view.visualCount ? g.view.visualCount - 1 : r);
+				t._busy = 1;
 				g.vScroller.scrollToRow(r).then(function(){
 					t._focusRow(r);
+					t._busy = 0;
 					t.onMoveToRowHeaderCell(r, evt);
 				});
 			}

@@ -34,25 +34,25 @@ define([], function(){
 		};
 	};
 
-	var generateLevel = function(parentId, level, maxLevel, maxChildrenCount){
+	var generateLevel = function(parentId, level, maxLevel, maxChildrenCount, minChildrenCount){
 		var i, item, res = [];
-		var childrenCount = randomNumber(maxChildrenCount);
+		var childrenCount = minChildrenCount + randomNumber(maxChildrenCount - minChildrenCount);
 		for(i = 0; i < childrenCount; ++i){
 			item = generateItem(parentId, i);
 			res.push(item);
 			if(level < maxLevel){
-				item.children = generateLevel(item.id, level + 1, maxLevel, maxChildrenCount);
+				item.children = generateLevel(item.id, level + 1, maxLevel, maxChildrenCount, minChildrenCount);
 			}
 		}
 		return res;
 	};
 
 	return {
-		getData: function(maxLevel, maxChildrenCount){
+		getData: function(args){
 			return {
 				identifier: 'id', 
 				label: 'id', 
-				items: generateLevel('item', 1, maxLevel, maxChildrenCount)
+				items: generateLevel('item', 1, args.maxLevel || 1, args.maxChildrenCount || 10, args.minChildrenCount || 0)
 			};
 		},
 		

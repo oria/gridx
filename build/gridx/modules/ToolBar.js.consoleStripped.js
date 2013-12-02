@@ -9,15 +9,18 @@ define("gridx/modules/ToolBar", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: toolBar.
 		//		Add toolbar on top of grid.
 		// description:
 		//		Add toolbar based on Bar module. This module is only for conveniency and backward compatibility.
 		//		Using Bar module directly is recommended.
 
 		// widget: [readonly] Object
+		//		
 		widget: null,
 
 		// domNode: [readonly] HTMLElement
+		//		
 		domNode: null
 	});
 =====*/

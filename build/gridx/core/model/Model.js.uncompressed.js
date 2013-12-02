@@ -5,8 +5,9 @@ define("gridx/core/model/Model", [
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	"dojo/aspect"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect){
+	"dojo/aspect",
+	"./cache/Sync"
+], function(require, declare, array, lang, Deferred, DeferredList, aspect, Sync){
 
 /*=====
 	return declare([], {
@@ -49,7 +50,7 @@ define("gridx/core/model/Model", [
 
 		indexToId: function(index, parentId){
 			// summary:
-			//		Transform row index to row ID
+			//		Transform row index to row ID. If not exist, return undefined.
 			// index: Integer
 			//		The row index
 			// parentId: String?
@@ -61,7 +62,7 @@ define("gridx/core/model/Model", [
 
 		idToIndex: function(id){
 			// summary:
-			//		Transform row ID to row index
+			//		Transform row ID to row index. If not exist, return -1.
 			// id: String
 			//		The row ID
 			// returns:
@@ -280,7 +281,7 @@ define("gridx/core/model/Model", [
 	return declare([], {
 		constructor: function(args){
 			var t = this,
-				cacheClass = args.cacheClass;
+				cacheClass = args.cacheClass || Sync;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
 			t._exts = {};

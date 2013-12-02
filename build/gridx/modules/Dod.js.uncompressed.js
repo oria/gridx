@@ -10,8 +10,14 @@ define("gridx/modules/Dod", [
 	"dojo/_base/declare",
 	"dojo/_base/fx",
 	"dojo/fx",
-	"dojo/query"
-], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, Deferred, _Module, declare, baseFx, fx, query){
+	"dojo/keys",
+	'gridx/support/query',
+	'dijit/a11y',
+	'dijit/registry',
+	'dojo/_base/event',
+	'dojo/_base/sniff'
+], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, 
+			Deferred, _Module, declare, baseFx, fx, keys, query, a11y, registry, event, has){
 	kernel.experimental('gridx/modules/Dod');
 
 /*=====
@@ -74,18 +80,26 @@ define("gridx/modules/Dod", [
 		duration: 750,
 		defaultShow: false,
 		showExpando: true,
+		
+		preload: function(){
+			this.initFocus();
+		},
+		
 		load: function(args, deferStartup){
 			this._rowMap = {};
 			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
 			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
 			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
 			this.connect(this.grid.body, 'onUnrender', '_onBodyUnrender');
+			this.connect(this.grid, 'onCellKeyDown', '_onCellKeyDown');
+			this.connect(this.grid.body, '_onRowMouseOver', '_onRowMouseOver');
 			if(this.grid.columnResizer){
 				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
 			this.loaded.callback();
 			
 		},
+		
 		rowMixin: {
 			showDetail: function(){
 				this.grid.dod.show(this);
@@ -105,10 +119,14 @@ define("gridx/modules/Dod", [
 		},
 		
 		show: function(row){
-			var _row = this._row(row);
-			if(_row.dodShown || _row.inAnim || !row.node()){return;}
+			var _row = this._row(row), 
+				g = this.grid;
+			if(_row.dodShown || _row.inAnim){return;}
 			
 			_row.dodShown = true;
+			
+			if(!row.node()){ return; }
+
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '-';}
 			
@@ -116,7 +134,7 @@ define("gridx/modules/Dod", [
 			if(!_row.dodLoadingNode){
 				_row.dodLoadingNode = domConstruct.create('div', {
 					className: 'gridxDodLoadNode', 
-					innerHTML: 'Loading...'
+					innerHTML: this.grid.nls.loadingInfo
 				});
 			}
 			if(!_row.dodNode){
@@ -124,23 +142,35 @@ define("gridx/modules/Dod", [
 			}
 			domConstruct.place(_row.dodLoadingNode, node, 'last');
 			domConstruct.place(_row.dodNode, node, 'last');
+			// domConstruct.place(_row.dodNode, _row.dodLoadingNode, 'last');
+
+			
 			domStyle.set(_row.dodLoadingNode, 'width', w + 'px');
 			domStyle.set(_row.dodNode, 'width', w + 'px');
+			domStyle.set(_row.dodNode, 'visibility', 'hidden');
+			domStyle.set(_row.dodNode, 'overflow', 'hidden');
+			domStyle.set(_row.dodNode, 'height', '0px');
+
 			
 			domClass.add(node, 'gridxDodShown');
-			domStyle.set(_row.dodNode, 'display', 'none');
+			//domStyle.set(_row.dodNode, 'display', 'none');
 			
 			if(_row.dodLoaded){
 				this._detailLoadComplete(row);
 				return;
 			}else{
 				domStyle.set(_row.dodLoadingNode, 'display', 'block');
+				if(g.autoHeight){
+					g.vLayout.reLayout();
+				}
+				_row.inLoading = true;
 			}
 			
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') + 'px');
 			}
 			
 			var df = new Deferred(), _this = this;
@@ -158,12 +188,19 @@ define("gridx/modules/Dod", [
 		
 		hide: function(row){
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
+			if(!_row.dodShown || _row.inAnim || _row.inLoading){return;}
+			
+			if(!row.node()){
+				_row.dodShown = false;
+				return;
+			}
+			
 			domClass.remove(row.node(), 'gridxDodShown');
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
+				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
 			var expando = this._getExpando(row);
@@ -187,16 +224,22 @@ define("gridx/modules/Dod", [
 							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 						}
 					}).play();
+					baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+						properties: {
+							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
+						}
+					}).play();					
 				}
 			}else{
 				_row.dodShown = false;
 				_row.inAnim = false;
-				_row.dodNode.style.display = 'none';
-				g.body.onRender();
 				if(this.grid.rowHeader){
 					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 					rowHeaderNode.firstChild.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
+					rowHeaderNode.style.height = rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight + 'px';
 				}
+				_row.dodNode.style.display = 'none';
+				g.body.onRender();
 				
 			}
 			
@@ -224,6 +267,24 @@ define("gridx/modules/Dod", [
 		onShow: function(row){},
 		onHide: function(row){},
 		
+		initFocus: function(){
+			var t = this,
+				focus = t.grid.focus;
+			focus.registerArea({
+				name: 'navigabledod',
+				priority: 1,
+				scope: t,
+				doFocus: t._doFocus,
+				doBlur: t._doBlur,
+				onFocus: t._onFocus,
+				onBlur: t._onBlur,
+				connects: [
+					t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
+					t.connect(t.grid, 'onRowKeyDown', '_onRowKeyDown')
+				]
+			});	
+		},
+		
 		//private
 		_rowMap: null,
 		_lastOpen: null, //only useful when autoClose is true.
@@ -236,17 +297,37 @@ define("gridx/modules/Dod", [
 		},
 		
 		_onBodyClick: function(e){
-			if(!domClass.contains(e.target, 'gridxDodExpando') && !domClass.contains(e.target, 'gridxDodExpandoText')){return;}
+			if(!domClass.contains(e.target, 'gridxDodExpando') 
+			&& !domClass.contains(e.target, 'gridxDodExpandoText') 
+			|| this.grid.domNode != query(e.target).closest('.gridx')[0]){return;}
 			var node = e.target;
 			while(node && !domClass.contains(node, 'gridxRow')){
 				node = node.parentNode;
 			}
+			
+			// event.stop(e);
 			var idx = node.getAttribute('rowindex');
-			this.toggle(this.grid.row(parseInt(idx)));
+			
+			
+			this.toggle(this.grid.row(parseInt(idx, 10)));
+		},
+		
+		_onRowMouseOver: function(e){
+			var target = e.target;
+			var dodNode = this._rowMap[e.rowId]? this._rowMap[e.rowId].dodNode : undefined;
+			
+			if(dodNode){
+				while(target && target !== dodNode){
+					target = target.parentNode;
+				}
+				if(target){
+					domClass.remove(dodNode.parentNode, 'gridxRowOver');
+					event.stop(e);
+				}
+			}
 		},
 		
 		_onAfterRow: function(row){
-
 			var _row = this._row(row);
 			if(this.arg('showExpando')){
 				var tbl = query('table', row.node())[0];
@@ -285,7 +366,7 @@ define("gridx/modules/Dod", [
 
 		_onAfterCell: function(cell){
 			//when the first cell's content is changed, update the expando
-			if(this.arg('showExpando') && cell.node().cellIndex == 0){
+			if(this.arg('showExpando') && cell.node().cellIndex === 0){
 				this._onAfterRow(cell.row);
 			}
 		},
@@ -301,9 +382,24 @@ define("gridx/modules/Dod", [
 			if(!this.isShown(row)){return;}
 			_row.dodLoaded = true;
 			
+			var gridNodes = query('.gridx', _row.dodNode);
+			if(gridNodes.length){		//flag gridInGrid to query
+				query.isGridInGrid[this.grid.id] = true;
+			}
+	
+			
 			if(_row.defaultShow){
-				domStyle.set(_row.dodNode, 'display', 'block');
+				// domStyle.set(_row.dodNode, 'display', 'block');
+				_row.dodNode.style.display = 'block';
+				_row.dodNode.style.visibility = 'visible';
+				_row.dodNode.style.height = 'auto';
 				g.body.onRender();
+				if(this.grid.rowHeader){
+					var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
+					rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+					rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+	
+				}
 			}else{
 				if(domStyle.get(_row.dodLoadingNode, 'display') == 'block'){
 					domGeometry.setMarginBox(_row.dodNode, {h: domGeometry.getMarginBox(_row.dodLoadingNode).h});
@@ -328,41 +424,218 @@ define("gridx/modules/Dod", [
 								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
 							}
 						}).play();
+						baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+							properties: {
+								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
+							}
+						}).play();						
 					}
 				}else{
 					_row.dodNode.style.display = 'block';
+					_row.dodNode.style.visibility = 'visible';
 					_row.dodNode.style.height = 'auto';
 					g.body.onRender();
 					if(this.grid.rowHeader){
 						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+						rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
 					}
 					
 				}
 			}
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
+			_row.inLoading = false;
+			
+			//***for nested grid in grid ****
+			
+			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
+			for(var i = 0; i < gridNodes.length; i++){
+				var gig = registry.byNode(gridNodes[i]);
+				gs.push(gig);
+				if(!gig._refreshForDod){
+					gig._refreshForDod = true;
+					// gig.resize();
+					// gig.vLayout.reLayout();
+					this.connect(gig.focus, 'tab', '_tab');
+					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
+					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
+					
+				}
+			}
+			g.vLayout.reLayout();
 		},
+		
 		_detailLoadError: function(row){
 			var _row = this._row(row);
 			_row.dodLoaded = false;
 			if(!this.isShown(row)){return;}
-			_row.dodLoadingNode.innerHTML = 'Error: failed to load detail.';
+			_row.dodLoadingNode.innerHTML = this.grid.nls.loadFailInfo;
 		},
+		
 		_showLoading: function(row){
 			var _row = this._row(row);
 			var node = _row.dodLoadingNode;
-			node.innerHTML = 'Loading...';
+			node.innerHTML = this.grid.nls.loadingInfo;
 		},
+		
 		_getExpando: function(row){
-			if(!this.showExpando)return null;
+			if(!this.showExpando){
+				return null;
+			}
 			var tbl = query('table', row.node())[0];
 			var cell = tbl.rows[0].cells[0];
-			return cell.firstChild;
+			return cell? cell.firstChild : null;
 		},
 		
+		_onCellKeyDown: function(e){
+			var t = this,
+				grid = t.grid,
+				focus = grid.focus,
+				row = grid.row(e.rowId, 1);
+			if(e.keyCode == keys.DOWN_ARROW && e.ctrlKey){
+				t.show(row);
+				e.stopPropagation();
+			}else if(e.keyCode == keys.UP_ARROW && e.ctrlKey){
+				t.hide(row);
+				e.stopPropagation();
+			}
+		
+			if(e.keyCode == keys.F4 && !t._navigating && focus.currentArea() == 'body'){
+				if(t._beginNavigate(e.rowId, e.columnId)){
+					focus.focusArea('navigabledod');
+					if(has('ie') < 9){
+						e.returnValue = false;
+						return false;
+					}
+					event.stop(e);
+				}
+			}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+				t._navigating = false;
+				focus.focusArea('body');
+			}
+		},
 		
 		//Focus
+		_onRowKeyDown: function(e){
+			var t = this,
+				focus = t.grid.focus;
+
+			if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+				t._navigating = false;
+				focus.focusArea('body');
+			}
+		},
 		
+		_beginNavigate: function(rowId){
+			
+			var t = this,
+				row = t.grid.row(rowId, 1),
+				_row = t._row(rowId);
+			if(!_row.dodShown){
+				return false;
+			}
+			t._navigating = true;
+			// t._focusColId = colId;
+			t._focusRowId = rowId;
+			var navElems = t._navElems = a11y._getTabNavigable(row.node());
+			return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+			
+		},
+		_tab: function(step, evt){
+			this._step = step;
+		},
+		
+		_domNodeFocus: function(evt){
+			if(evt && this._step === -1){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+				
+				if(target == firstElem){
+					// this._doFocus(evt, -1);
+					lastElem.focus();
+				}
+				return false;
+			}			
+		},
+		
+		_lastNodeFocus: function(evt){
+			if(evt && this._step === 1){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+	
+				if(target == lastElem){
+					// this._onBlur();
+					setTimeout(function(){
+						firstElem.focus();
+					}, 1);
+					// event.stop(evt);
+					// this.focus.tab(evt, 1);
+				}
+				return false;
+			}
+		},
+		
+		_doFocus: function(evt, step){
+			if(this._navigating){
+				var elems = this._navElems,
+					func = function(){
+						var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
+						if(toFocus){
+							toFocus.focus();
+						}
+					};
+				if(has('webkit')){
+					func();
+				}else{
+					setTimeout(func, 5);
+				}
+				return true;
+			}
+			return false;
+		},
+		
+		_onFocus: function(evt){
+			var node = evt.target, dn = this.grid.domNode;
+			while(node && node !== dn && !domClass.contains(node, 'gridxDodNode')){
+				node = node.parentNode;
+			}
+			if(node && node !== dn){
+				var dodNode = node,
+					rowNode = dodNode.parentNode;
+				// this.grid.hScroller.scrollToColumn(colId);
+				if(rowNode){
+					var rowId = rowNode.getAttribute('rowid');
+					return dodNode !== evt.target && this._beginNavigate(rowId);
+				}
+			}
+			return false;
+		},		
+		
+		_doBlur: function(evt, step){
+			if(evt){
+				var navElems = this._navElems,
+					firstElem = navElems.lowest || navElems.first,
+					lastElem = navElems.highest || navElems.last ||firstElem,
+					target = has('ie') ? evt.srcElement : evt.target;
+
+				if(target == (step > 0 ? lastElem : firstElem)){
+					event.stop(evt);
+				}
+				return false;
+			}else{
+				this._navigating = false;
+				return true;
+			}
+		},
+		
+		_onBlur: function(evt){
+			this._navigating = false;
+		},
+
 		endFunc: function(){}
 	});
 });

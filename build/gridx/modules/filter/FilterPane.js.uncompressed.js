@@ -9,12 +9,12 @@ define("gridx/modules/filter/FilterPane", [
 	"dojo/string",
 	"dojo/query",
 	"dijit/registry",
+	"dijit/_BidiSupport",
 	"dojox/html/ellipsis",
 	"dojox/html/metrics",
 	"./DistinctComboBoxMenu",
 	"../Filter",
 	"dojo/text!../../templates/FilterPane.html",
-	"dojo/i18n!../../nls/FilterBar",
 	"dijit/layout/ContentPane",
 	"dijit/form/Select",
 	"dijit/form/TextBox",
@@ -23,7 +23,7 @@ define("gridx/modules/filter/FilterPane", [
 	"dijit/form/RadioButton",
 	"dijit/form/NumberTextBox",
 	"dijit/form/ComboBox"
-], function(declare, lang, array, dom, css, string, query, registry, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, i18n, ContentPane){
+], function(declare, lang, array, dom, css, string, query, registry, _BidiSupport, ellipsis, metrics, DistinctComboBoxMenu, Filter, template, ContentPane){
 
 /*=====
 	return declare([], {
@@ -40,10 +40,10 @@ define("gridx/modules/filter/FilterPane", [
 		sltColumn: null,
 		sltCondition: null,
 		grid: null,
-		title: i18n.defaultRuleTitle,
 		postCreate: function(){
 			this.inherited(arguments);
-			this.i18n = i18n;
+			this.i18n = this.grid.nls;
+			this.set('title', this.grid.nls.defaultRuleTitle);
 			this.set('content', string.substitute(template, this));
 			this._initFields();
 			this._initSltCol();
@@ -59,12 +59,14 @@ define("gridx/modules/filter/FilterPane", [
 			var value = this._getValue(), 
 				colId = this.sltColumn.get('value'),
 				condition = this.sltCondition.get('value');
-			
 			if(condition === 'isEmpty' || (value !== null && (condition !== 'range' || (value.start && value.end)))){
 				return {
 					colId: isAnyColumn(colId) ? '' : colId,
 					condition: condition,
-					value: condition === 'isEmpty' ? '' : value,
+					//fix defect #10741
+					//set('value', '') on DateTimeBox will set date to 1/1/1970
+					//so, set('value', null) when condition is empty on a DateTimeBoxs
+					value: condition === 'isEmpty'? ( this._getType() === 'Date'? null : '') : value,
 					type: this._getType()
 				};
 			}else{
@@ -82,7 +84,11 @@ define("gridx/modules/filter/FilterPane", [
 			window.setTimeout(function(){
 				_this.sltCondition.set('value', data.condition, null);
 				_this._onConditionChange();
-				_this._setValue(data.value);
+				window.setTimeout(function(){
+					//FIXME: Need another set timeout since something has became async for the new dijit.
+					_this._setValue(data.value);
+				},50);
+				// _this._setValue(data.value);
 			}, 10);
 		},
 		close: function(){
@@ -138,7 +144,7 @@ define("gridx/modules/filter/FilterPane", [
 			}, this);
 		},
 		_initSltCol: function(){
-			var colOpts = [{label: i18n.anyColumnOption, value: ANY_COLUMN_VALUE}],
+			var colOpts = [{label: this.i18n.anyColumnOption, value: ANY_COLUMN_VALUE}],
 				fb = this.grid.filterBar, 
 				sltCol = this.sltColumn;
 			array.forEach(this.grid.columns(), function(col){
@@ -158,7 +164,7 @@ define("gridx/modules/filter/FilterPane", [
 				className: 'gridxFilterPaneCloseButton',
 				innerHTML: '<img src="' + this._blankGif + '"/>',
 				tabIndex: 0,
-				title: i18n.removeRuleButton || ''
+				title: this.i18n.removeRuleButton || ''
 			}, btnWidget.domNode, 'last');
 			this.connect(closeButton, 'onclick', 'close');
 			css.add(btnWidget.titleTextNode, 'dojoxEllipsis');
@@ -181,6 +187,9 @@ define("gridx/modules/filter/FilterPane", [
 			this.onChange();
 		},
 		_onValueChange: function(){
+			if(this.grid.textDir && this.grid.textDir == 'auto'){
+				this.tbSingle.focusNode.dir = _BidiSupport.prototype._checkContextual(this._getValue());
+			}
 			this._updateTitle();
 			this.onChange();
 		},
@@ -214,7 +223,7 @@ define("gridx/modules/filter/FilterPane", [
 				var ruleNumber = array.indexOf(this._getContainer().getChildren(), this) + 1;
 				title = string.substitute(this.i18n.ruleTitleTemplate, {ruleNumber: ruleNumber});
 			}
-			txtNode.innerHTML = title;
+			txtNode.innerHTML = title.replace(/&/g, '&amp;');
 			txtNode.title = title.replace(/<\/?span[^>]*>/g, '').replace('&nbsp;', ' ');
 		},
 		_needComboBox: function(){
@@ -272,7 +281,7 @@ define("gridx/modules/filter/FilterPane", [
 				case 'Text':
 					return (combo ? this.comboText : this.tbSingle).get('value') || null;
 				case 'Number':
-					return isNaN(this.tbNumber.get('value')) ? null : this.tbNumber.get('value');
+					return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
 				case 'Select':
 					return this.sltSingle.get('value') || null;
 				case 'Date':
@@ -290,6 +299,7 @@ define("gridx/modules/filter/FilterPane", [
 			}
 		},
 		_setValue: function(value){
+
 			if(!this._isValidValue(value)){return;}
 			var type = this._getType(), combo = this._needComboBox();
 			switch(type){

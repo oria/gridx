@@ -14,6 +14,7 @@ define("gridx/modules/HeaderRegions", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: headerRegions.
 		//		This module makes it easy to add custom contents to column header.
 		//		Other modules such as NestedSort or HeaderMenu can be based upon this module.
 
@@ -52,14 +53,14 @@ declare(_Module, {
 		t.refresh();
 		t._initFocus();
 		t.aspect(t.grid.header, 'onRender', 'refresh');
-		t.aspect(t.grid, 'onHeaderKeyDown', '_onKey');
 		t.loaded.callback();
 	},
 
-	add: function(creater, priority, skipRefresh){
+	add: function(creater, priority, skipRefresh, skipFocus){
 		this._regions.push({
 			c: creater,
 			p: priority || 0,
+			f: !skipFocus,
 			n: {}
 		});
 		if(!skipRefresh){
@@ -82,27 +83,41 @@ declare(_Module, {
 				return b.p - a.p;
 			});
 			query('.gridxCell', g.header.domNode).forEach(function(node){
+				domClass.remove(node, 'gridxCellRegion');
 				var colId = node.getAttribute('colid'),
 					col = g.column(colId, 1),
-					nameNode = query('.gridxSortNode', node)[0];
-				regionNodes.push(nameNode);
-				nameNode.setAttribute('tabindex', -1);
-				t._regionCnnts.push(t.connect(nameNode, 'onblur', '_onRegionBlur'));
+					tmpArr = [];
 				array.forEach(regions, function(region){
 					var regionNode = region.n[colId];
 					if(!regionNode){
 						regionNode = region.n[colId] = region.c(col);
 						if(regionNode){
-							regionNode.setAttribute('tabindex', -1);
 							domClass.add(regionNode, 'gridxHeaderRegion');
-							t.connect(regionNode, 'onblur', '_onRegionBlur');
+							if(region.f){
+								domClass.add(regionNode, 'gridxHeaderRegionFocusable');
+								regionNode.setAttribute('tabindex', -1);
+								t.connect(regionNode, 'onblur', '_onRegionBlur');
+							}
 						}
 					}
 					if(regionNode){
 						domConstruct.place(regionNode, node, 'first');
-						regionNodes.push(regionNode);
+						if(region.f){
+							tmpArr.push(regionNode);
+						}
 					}
 				});
+				if(tmpArr.length){
+					var nameNode = query('.gridxSortNode', node)[0];
+					regionNodes.push(nameNode);
+					nameNode.setAttribute('tabindex', -1);
+					t._regionCnnts.push(t.connect(nameNode, 'onblur', '_onRegionBlur'));
+				}else{
+					regionNodes.push(node);
+					domClass.add(node, 'gridxCellRegion');
+					t._regionCnnts.push(t.connect(node, 'onblur', '_onRegionBlur'));
+				}
+				regionNodes.push.apply(regionNodes, tmpArr);
 			});
 			if(!regionNodes[t._curRegionIdx]){
 				t._curRegionIdx = 0;
@@ -126,7 +141,10 @@ declare(_Module, {
 			focusNode: g.header.domNode,
 			scope: t,
 			doFocus: t._doFocus,
-			onFocus: t._onFocus
+			onFocus: t._onFocus,
+			connects: [
+				t.aspect(g, 'onHeaderKeyDown', '_onKey')
+			]
 		});
 	},
 
@@ -146,10 +164,13 @@ declare(_Module, {
 	},
 
 	_focusRegion: function(region){
-		if(region){
-			var t = this,
-				g = t.grid,
-				header = g.header.domNode,
+		var t = this,
+			g = t.grid;
+		if(region && !t._lock){
+			//focus fires onFocus, which triggers _focusRegion recursively.
+			//Add a lock to avoid recursion.
+			t._lock = 1;
+			var header = g.header.domNode,
 				headerCell = query(region).closest('.gridxCell', header)[0];
 			t._curRegionIdx = array.indexOf(t._regionNodes, region);
 			try{
@@ -167,12 +188,13 @@ declare(_Module, {
 				if(g.hScroller){
 					g.hScroller.scrollToColumn(headerCell.getAttribute('colid'));
 				}
+				t._lock = 0;
 			}, 0);
 		}
 	},
 
 	_onKey: function(e){
-		if(!e.ctrlKey && !e.shiftKey && !e.altKey){
+		if(!this.grid._isCtrlKey(e) && !e.shiftKey && !e.altKey){
 			var ltr = this.grid.isLeftToRight(),
 				nextKey = ltr ? keys.RIGHT_ARROW : keys.LEFT_ARROW,
 				prevKey = ltr ? keys.LEFT_ARROW : keys.RIGHT_ARROW;

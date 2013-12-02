@@ -14,6 +14,7 @@ define("gridx/modules/IndirectSelect", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: indirectSelect.
 		//		This module shows a checkbox(or radiobutton) on the row header when row selection is used.
 		// description:
 		//		This module depends on "rowHeader" and "selectRow" modules.
@@ -46,21 +47,11 @@ define("gridx/modules/IndirectSelect", [
 				[sr,'onHighlightChange', '_onHighlightChange' ],
 				[sr,'clear', '_onClear' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
-				[g, 'onRowMouseOver', '_onMouseOver'],
-				[g, 'onRowMouseOut', '_onMouseOut'],
+				[g.body, 'onRender', '_onSelectionChange'],
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
-				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
-				focus && [focus, 'onFocusArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOver();
-					}
-				}],
-				focus && [focus, 'onBlurArea', function(name){
-					if(name == 'rowHeader'){
-						t._onMouseOut();
-					}
-				}]);
+				g.filter && [g.filter, 'onFilter', '_onSelectionChange']);
+			g.select.row.holdingCtrl = true;
 			if(sr.selectByIndex && t.arg('all')){
 				t._allSelected = {};
 				rowHeader.headerProvider = lang.hitch(t, t._createSelectAllBox);
@@ -111,13 +102,17 @@ define("gridx/modules/IndirectSelect", [
 				partial ? dijitClass + 'Partial' : '',
 				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
 				'"><span class="gridxIndirectSelectionCheckBoxInner">',
-				selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;',
+				//in high contrast mode, change to radio-liked character for single select mode
+				this._isSingle()? (selected? '&#x25C9;' : '&#x25CC;'):
+									(selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;'),
 				'</span></span>'
 			].join('');
 		},
 
 		_createSelectAllBox: function(){
-			return this._createCheckBox(this._allSelected[this._getPageId()]);
+			var allSelected = this._allSelected[this._getPageId()];
+			this.grid.rowHeader.headerCellNode.setAttribute('aria-label', allSelected ? this.grid.nls.indirectDeselectAll : this.grid.nls.indirectSelectAll);
+			return this._createCheckBox(allSelected);
 		},
 
 		_getPageId: function(){
@@ -125,12 +120,17 @@ define("gridx/modules/IndirectSelect", [
 		},
 
 		_onClear: function(reservedRowId){
-			var cls = this._getDijitClass() + 'Checked',
+			var dijitCls = this._getDijitClass(),
+				cls = dijitCls + 'Checked',
+				partialCls = dijitCls + 'Partial',
 				g = this.grid;
 			query('.' + cls, g.rowHeader.bodyNode).removeClass(cls);
+			query('.' + partialCls, g.rowHeader.bodyNode).removeClass(partialCls);
 			if(g.select.row.isSelected(reservedRowId)){
 				query('[rowid="' + g._escapeId(reservedRowId) + '"].gridxRowHeaderRow .gridxIndirectSelectionCheckBox', g.rowHeader.bodyNode).addClass(cls);
 			}
+			query('.' + cls, g.rowHeader.headerCellNode).removeClass(cls).attr('aria-checked', 'false');
+			this._allSelected = {};
 		},
 
 		_onHighlightChange: function(target, toHighlight){
@@ -149,22 +149,11 @@ define("gridx/modules/IndirectSelect", [
 				domClass.toggle(node, dijitClass + 'PartialDisabled', partial && isUnselectable);
 				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
-				node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
-			}
-		},
-		
-		_onMouseOver: function(){
-			var sr = this.grid.select.row;
-			if(!sr.holdingCtrl){
-				this._holdingCtrl = false;
-				sr.holdingCtrl = true;
-			}
-		},
-
-		_onMouseOut: function(){
-			if(this.hasOwnProperty('_holdingCtrl')){
-				this.grid.select.row.holdingCtrl = false;
-				delete this._holdingCtrl;
+				if(this._isSingle()){
+					node.firstChild.innerHTML = selected ? '&#x25C9' : '&#x25CC';
+				}else{
+					node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
+				}
 			}
 		},
 
@@ -186,7 +175,7 @@ define("gridx/modules/IndirectSelect", [
 			]([0, g.view.visualCount - 1]);
 		},
 
-		_onSelectionChange: function(selected){
+		_onSelectionChange: function(){
 			var t = this, d,
 				g = t.grid,
 				allSelected,
@@ -194,42 +183,46 @@ define("gridx/modules/IndirectSelect", [
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
-			var selectedRoot = array.filter(selected || g.select.row.getSelected(), function(id){
-				return !model.parentId(id);
-			});
-			var unselectableRows = g.select.row._getUnselectableRows();
-			var unselectableRoots = array.filter(unselectableRows, function(id){
-				return !model.parentId(id) && !g.select.row.isSelected(id);
-			});
-			if(count === model.size()){
-				allSelected = count && count - unselectableRoots.length == selectedRoot.length;
-			}else{
-				d = new Deferred();
-				model.when({
-					start: start,
-					count: count
-				}, function(){
-					var indexes = array.filter(array.map(selectedRoot, function(id){
-						return model.idToIndex(id);
-					}), function(index){
-						return index >= start && index < start + count;
-					});
-					unselectableRoots = array.filter(unselectableRoots, function(id){
-						var index = model.idToIndex(id);
-						return index >= start && index < start + count;
-					});
-					allSelected = count - unselectableRoots.length == indexes.length;
-					d.callback();
+			if(g.select.row.selectByIndex && t.arg('all')){
+				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
+					return !model.parentId(id);
 				});
-			}
-			Deferred.when(d, function(){
-				if(t.arg('all')){
+				var unselectableRows = g.select.row._getUnselectableRows();
+				var unselectableRoots = array.filter(unselectableRows, function(id){
+					return !model.parentId(id) && !g.select.row.isSelected(id);
+				});
+				if(count === model.size()){
+					allSelected = count && count - unselectableRoots.length == selectedRoot.length;
+				}else{
+					d = new Deferred();
+					model.when({
+						start: start,
+						count: count
+					}, function(){
+						var indexes = array.filter(array.map(selectedRoot, function(id){
+							return model.idToIndex(id);
+						}), function(index){
+							return index >= start && index < start + count;
+						});
+						unselectableRoots = array.filter(unselectableRoots, function(id){
+							var index = model.idToIndex(id);
+							return index >= start && index < start + count;
+						});
+						allSelected = count - unselectableRoots.length == indexes.length;
+						d.callback();
+					});
+				}
+				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
 					var node = t.grid.rowHeader.headerCellNode.firstChild;
-					domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
-					node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
-				}
-			});
+					if(node){
+						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
+						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+						t.grid.rowHeader.headerCellNode.setAttribute('aria-label',
+							allSelected ? g.nls.indirectDeselectAll : g.nls.indirectSelectAll);
+					}
+				});
+			}
 		},
 
 		//Focus------------------------------------------------------
@@ -238,7 +231,9 @@ define("gridx/modules/IndirectSelect", [
 				rowHeader = g.rowHeader,
 				headerCellNode = rowHeader.headerCellNode,
 				focus = function(evt){
-					g.focus.stopEvent(evt);
+					if(g.header.hidden){
+						return false;
+					}
 					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
 					headerCellNode.focus();
 					return true;
@@ -259,7 +254,7 @@ define("gridx/modules/IndirectSelect", [
 		},
 		_onKeyDown: function(evt){
 			// CTRL - A
-			if(evt.keyCode == 65 && evt.ctrlKey && !evt.shiftKey){
+			if(evt.keyCode == 65 && this.grid._isCtrlKey(evt) && !evt.shiftKey){
 				if(!this._allSelected[this._getPageId()]){
 					this._onSelectAll();
 				}

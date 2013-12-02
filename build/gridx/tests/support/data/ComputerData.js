@@ -92,8 +92,8 @@ define([
 	var progresses = [0.2, 0.5, 0.7, 0.3, 0.4, 0.9, 0.6, 0.8, 0.1];
 
 	return {
-		getData: function(size){
-			size = size === undefined ? 100 : size;
+		getData: function(args){
+			var size = args.size === undefined ? 100 : args.size;
 			var data = {
 				identifier: 'id', 
 				label: 'id', 

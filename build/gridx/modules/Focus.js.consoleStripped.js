@@ -13,8 +13,13 @@ define("gridx/modules/Focus", [
 /*=====
 	var Focus = declare(_Module, {
 		// summary
+		//		module name: focus.
 		//		This module controls the TAB sequence of all the UI modules.
 		//		But this module is (or at least can be) a non-UI module, because it does not handle the actual focus job.
+
+		// enabled: Boolean
+		//		Whether keyboar support is enabled for gridx. Default to true on desktop, false on touch device.
+		enabled: true,
 
 		registerArea: function(area){
 			// summary:
@@ -162,7 +167,7 @@ define("gridx/modules/Focus", [
 
 	return declare(_Module, {
 		name: 'focus',
-		
+
 		constructor: function(){
 			var t = this,
 				g = t.grid;
@@ -177,6 +182,7 @@ define("gridx/modules/Focus", [
 					t._onFocus(evt);
 				}
 			};
+			t.arg('enabled', !g.touch);
 			t.batchConnect(
 				[g.domNode, 'onkeydown', '_onTabDown'],
 				[g.domNode, 'onfocus', '_focus'],
@@ -204,6 +210,9 @@ define("gridx/modules/Focus", [
 		},
 	
 		//Public----------------------------------------------------------
+
+		//enabled: true,
+
 		registerArea: function(/* __FocusArea */ area){
 			if(area && area.name && typeof area.priority == 'number'){
 				var t = this,
@@ -241,7 +250,7 @@ define("gridx/modules/Focus", [
 
 		focusArea: function(/* String */ areaName, forced){
 			var t = this, area = t._areas[areaName];
-			if(area){
+			if(area && t.arg('enabled')){
 				var curArea = t._areas[t.currentArea()];
 				if(curArea && curArea.name === areaName){
 					if(forced){
@@ -261,6 +270,16 @@ define("gridx/modules/Focus", [
 				}
 			}
 			return false;
+		},
+
+		blur: function(){
+			var t = this,
+				curArea = t._areas[t.currentArea()];
+			if(curArea){
+				curArea.doBlur();
+			}
+			t._queueIdx = -1;
+			t._stackIdx = 0;
 		},
 
 		currentArea: function(){
@@ -360,7 +379,7 @@ define("gridx/modules/Focus", [
 		_stackIdx: 0,
 
 		_onTabDown: function(evt){
-			if(evt.keyCode === keys.TAB){
+			if(this.arg('enabled') && evt.keyCode === keys.TAB){
 				this.tab(evt.shiftKey ? -1 : 1, evt);
 			}
 		},
@@ -371,54 +390,60 @@ define("gridx/modules/Focus", [
 				dn = t.grid.domNode,
 				n = evt.target,
 				currentArea = t._areas[t.currentArea()];
-			while(n && n !== dn){
-				i = array.indexOf(t._focusNodes, n);
-				if(i >= 0){
-					stack = t._tabQueue[i].stack;
-					for(j = 0; j < stack.length; ++j){
-						area = t._areas[stack[j]];
-						if(area.onFocus(evt)){
-							if(currentArea && currentArea.name !== area.name){
-								currentArea.onBlur(evt);
-								t.onBlurArea(currentArea.name);
+			if(t.arg('enabled')){
+				while(n && n !== dn){
+					i = array.indexOf(t._focusNodes, n);
+					if(i >= 0){
+						stack = t._tabQueue[i].stack;
+						for(j = 0; j < stack.length; ++j){
+							area = t._areas[stack[j]];
+							if(area.onFocus(evt)){
+								if(currentArea && currentArea.name !== area.name){
+									currentArea.onBlur(evt);
+									t.onBlurArea(currentArea.name);
+								}
+								t.onFocusArea(area.name);
+								t._queueIdx = i;
+								t._stackIdx = j;
+								return;
 							}
-							t.onFocusArea(area.name);
-							t._queueIdx = i;
-							t._stackIdx = j;
-							return;
 						}
+						return;
 					}
-					return;
+					n = n.parentNode;
 				}
-				n = n.parentNode;
-			}
-			if(n == dn && currentArea){
-				t._doBlur(evt, currentArea);
+				if(n == dn && currentArea){
+					t._doBlur(evt, currentArea);
+				}
 			}
 		},
 
 		_focus: function(evt){
 			var t = this;
-			if(t._tabingOut){
-				t._tabingOut = 0;
-			}else if(evt.target == t.grid.domNode){
-				t._queueIdx = -1;
-				t.tab(1);
-			}else if(evt.target === t.grid.lastFocusNode){
-				t._queueIdx = t._tabQueue.length;
-				t.tab(-1);
+			if(t.arg('enabled')){
+				if(t._tabingOut){
+					t._tabingOut = 0;
+				}else if(evt.target == t.grid.domNode){
+					t._queueIdx = -1;
+					t.tab(1);
+				}else if(evt.target === t.grid.lastFocusNode){
+					t._queueIdx = t._tabQueue.length;
+					t.tab(-1);
+				}
 			}
 		},
 
 		_doBlur: function(evt, area){
 			var t = this;
-			if(!area && t.currentArea()){
-				area = t._areas[t.currentArea()];
-			}
-			if(area){
-				area.onBlur(evt);
-				t.onBlurArea(area.name);
-				t._updateCurrentArea();
+			if(t.arg('enabled')){
+				if(!area && t.currentArea()){
+					area = t._areas[t.currentArea()];
+				}
+				if(area){
+					area.onBlur(evt);
+					t.onBlurArea(area.name);
+					t._updateCurrentArea();
+				}
 			}
 		},
 

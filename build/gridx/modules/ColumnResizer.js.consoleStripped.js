@@ -9,9 +9,10 @@ define("gridx/modules/ColumnResizer", [
 	"dojo/dom-geometry",
 	"dojo/keys",
 	"dojo/query",
+	"dojo/_base/sniff",
 	"../core/_Module"
 //    "dojo/NodeList-traverse"
-], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, _Module){
+], function(declare, win, event, dom, domStyle, domClass, domConstruct, domGeometry, keys, query, has, _Module){
 
 /*=====
 	Column.setWidth = function(width){
@@ -21,6 +22,7 @@ define("gridx/modules/ColumnResizer", [
 
 	return declare(_Module, {
 		// summary:
+		//		module name: columnResizer.
 		//		Column Resizer machinery.
 		// description:
 		//		This module provides a way to resize column width. 
@@ -74,31 +76,45 @@ define("gridx/modules/ColumnResizer", [
 
 		setWidth: function(colId, width){
 			var t = this,
-				g = t.grid, i,
-				cols = g._columns,
-				col = g._columnsById[colId],
-				minWidth = t.arg('minWidth'),
-				oldWidth;
-			width = parseInt(width, 10);
-			if(width < minWidth){
-				width = minWidth;
-			}
-			col.width = width + 'px';
-			for(i = 0; i < cols.length; ++i){
-				cols[i].declaredWidth = cols[i].width;
-			}
-			query('[colid="' + g._escapeId(colId) + '"]', g.domNode).forEach(function(cell){
-				if(!oldWidth){
-					oldWidth = domStyle.get(cell, 'width');
+				g = t.grid,
+				col = g._columnsById[colId];
+			if(col){
+				var headerNode = g.header.getHeaderNode(colId),
+					headerNodeStyle = headerNode.style,
+					oldWidth = domStyle.get(headerNode, 'width'),
+					minWidth = t.arg('minWidth'),
+					padExtents = domGeometry.getPadExtents(headerNode),
+					pads = padExtents.l + padExtents.r,
+					cols = g._columns;
+
+				width = parseInt(width, 10);
+				if(width < minWidth){
+					width = minWidth;
 				}
-				var cs = cell.style;
-				cs.width = width + 'px';
-				cs.minWidth = width + 'px';
-				cs.maxWidth = width + 'px';
-			});
-			g.body.onRender();
-			g.vLayout.reLayout();
-			t.onResize(colId, width, oldWidth);
+				headerNodeStyle.width = width + 'px';
+				headerNodeStyle.minWidth = width + 'px';
+				headerNodeStyle.maxWidth = width + 'px';
+				width = headerNode.clientWidth - pads;
+				//set again in case actual effect is different from what we expect.
+				headerNodeStyle.width = width + 'px';
+				headerNodeStyle.minWidth = width + 'px';
+				headerNodeStyle.maxWidth = width + 'px';
+				//Use actual width as our new column width
+				col.width = width + 'px';
+				for(var i = 0, len = cols.length; i < len; ++i){
+					cols[i].declaredWidth = cols[i].width;
+				}
+				query('[colid="' + g._escapeId(colId) + '"]', g.bodyNode).forEach(function(cell){
+					var cs = cell.style;
+					cs.width = width + 'px';
+					cs.minWidth = width + 'px';
+					cs.maxWidth = width + 'px';
+				});
+				g.body.onRender();
+				g.hLayout.reLayout();
+				g.vLayout.reLayout();
+				t.onResize(colId, width, oldWidth);
+			}
 		},
 
 		//Event--------------------------------------------------------------
@@ -142,6 +158,12 @@ define("gridx/modules/ColumnResizer", [
 		_mouseout: function(e){
 			if(!this._resizing){
 				var pos = domGeometry.position(this.grid.header.domNode);
+				if(has('chrome')){
+					for(var i in pos){
+						pos[i] = Math.floor(pos[i]);
+					}
+				}
+				
 				if(e.clientY <= pos.y || e.clientY >= pos.y + pos.h ||
 					e.clientX <= pos.x || e.clientX >= pos.x + pos.w){
 					this._readyToResize = 0;
@@ -168,6 +190,10 @@ define("gridx/modules/ColumnResizer", [
 				t._updateResizer(e);
 				//Only mouse down, not moved yet
 				t._moving = 0;
+				//If column resizing should not cause any part of grid to be focused
+				setTimeout(function(){
+					g.focus.blur();
+				}, 0);
 			}else{
 				t._ismousedown = 1;
 			}
@@ -241,11 +267,11 @@ define("gridx/modules/ColumnResizer", [
 		},
 
 		_keydown: function(evt){
+			var t = this,
+				g = t.grid;
 			//support keyboard to resize a column
-			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && evt.ctrlKey && evt.shiftKey){
-				var t = this,
-					g = t.grid,
-					colId = evt.columnId,
+			if((evt.keyCode == keys.LEFT_ARROW || evt.keyCode == keys.RIGHT_ARROW) && g._isCtrlKey(evt) && evt.shiftKey){
+				var colId = evt.columnId,
 					cellNode = query('[colid="' + g._escapeId(colId) + '"].gridxCell', g.header.innerNode)[0],
 					step = t.arg('step');
 				step = evt.keyCode == keys.LEFT_ARROW ^ !!g.isLeftToRight() ? step : -step;

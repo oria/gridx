@@ -64,11 +64,13 @@ define("gridx/support/GotoPageButton", [
 				pane = t._gotoDialog.content;
 			pane.pageCountMsgNode.innerHTML = string.substitute(t.gotoDialogPageCount, [pageCount]);
 			pane.pageInputBox.constraints = {
-				fractional: false, 
+				fractional: false,
 				min: 1,
 				max: pageCount
 			};
+			pane.pageInputBox.set('value', pane.pagination.currentPage() + 1);
 			t._gotoDialog.show();
+			pane.pageInputBox.focusNode.select();
 		},
 
 		_onKey: function(evt){
@@ -79,6 +81,14 @@ define("gridx/support/GotoPageButton", [
 		},
 
 		_focusNextBtn: function(){
+		},
+		
+		destroy: function(){
+			var t = this;
+			if(t._gotoDialog){
+				t._gotoDialog.destroy();
+			}
+			t.inherited(arguments);
 		}
 	});
 });

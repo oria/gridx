@@ -13,6 +13,7 @@ define("gridx/modules/dnd/Row", [
 /*=====
 	return declare(_Base, {
 		// summary:
+		//		module name: dndRow.
 		//		This module provides an implementation of row drag & drop.
 		// description:
 		//		This module supports row reordering within grid, dragging out of grid, and dragging into grid.
@@ -140,13 +141,11 @@ define("gridx/modules/dnd/Row", [
 		},
 
 		_onBeginAutoScroll: function(){
-			var autoScroll = this.grid.autoScroll;
-			this._autoScrollH = autoScroll.horizontal;
-			autoScroll.horizontal = false;
+			this.grid.autoScroll.horizontal = false;
 		},
 
 		_onEndAutoScroll: function(){
-			this.grid.autoScroll.horizontal = this._autoScrollH;
+			this.grid.autoScroll.horizontal = true;
 		},
 
 		_getItemData: function(id){

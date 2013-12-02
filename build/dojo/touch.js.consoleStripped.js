@@ -8,7 +8,16 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 
 	var ios4 = has("ios") < 5;
 	
-	var msPointer = navigator.msPointerEnabled;
+	var msPointer = navigator.pointerEnabled || navigator.msPointerEnabled,
+		pointer = (function () {
+			var pointer = {};
+			for (var type in { down: 1, move: 1, up: 1, cancel: 1, over: 1, out: 1 }) {
+				pointer[type] = !navigator.pointerEnabled ?
+					"MSPointer" + type.charAt(0).toUpperCase() + type.slice(1) :
+					"pointer" + type;
+			}
+			return pointer;
+		})();
 
 	// Click generation variables
 	var clicksInited, clickTracker, clickTarget, clickX, clickY, clickDx, clickDy, clickTime;
@@ -51,7 +60,7 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 	function marked(/*DOMNode*/ node){
 		// Test if a node or its ancestor has been marked with the dojoClick property to indicate special processing,
 		do{
-			if(node.dojoClick){ return node.dojoClick; }
+			if(node.dojoClick !== undefined){ return node.dojoClick; }
 		}while(node = node.parentNode);
 	}
 	
@@ -60,7 +69,9 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		//		Setup touch listeners to generate synthetic clicks immediately (rather than waiting for the browser
 		//		to generate clicks after the double-tap delay) and consistently (regardless of whether event.preventDefault()
 		//		was called in an event listener. Synthetic clicks are generated only if a node or one of its ancestors has
-		//		its dojoClick property set to truthy.
+		//      its dojoClick property set to truthy. If a node receives synthetic clicks because one of its ancestors has its
+		//      dojoClick property set to truthy, you can disable synthetic clicks on this node by setting its own dojoClick property
+		//      to falsy.
 		
 		clickTracker  = !e.target.disabled && marked(e.target); // click threshold = true, number or x/y object
 		if(clickTracker){
@@ -141,8 +152,8 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		if(msPointer){
 			 // MSPointer (IE10+) already has support for over and out, so we just need to init click support
 			domReady(function(){
-				win.doc.addEventListener("MSPointerDown", function(evt){
-					doClicks(evt, "MSPointerMove", "MSPointerUp");
+				win.doc.addEventListener(pointer.down, function(evt){
+					doClicks(evt, pointer.move, pointer.up);
 				}, true);
 			});		
 		}else{
@@ -219,7 +230,11 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 
 						// Unlike a listener on "touchmove", on(node, "dojotouchmove", listener) fires when the finger
 						// drags over the specified node, regardless of which node the touch started on.
-						on.emit(newNode, "dojotouchmove", copyEventProps(evt));
+						if(!on.emit(newNode, "dojotouchmove", copyEventProps(evt))){
+							// emit returns false when synthetic event "dojotouchmove" is cancelled, so we prevent the
+							// default behavior of the underlying native event "touchmove".
+							evt.preventDefault();
+						}
 					}
 				});
 
@@ -240,14 +255,14 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 
 	//device neutral events - touch.press|move|release|cancel/over/out
 	var touch = {
-		press: dualEvent("mousedown", "touchstart", "MSPointerDown"),
-		move: dualEvent("mousemove", "dojotouchmove", "MSPointerMove"),
-		release: dualEvent("mouseup", "dojotouchend", "MSPointerUp"),
-		cancel: dualEvent(mouse.leave, "touchcancel", hasTouch?"MSPointerCancel":null),
-		over: dualEvent("mouseover", "dojotouchover", "MSPointerOver"),
-		out: dualEvent("mouseout", "dojotouchout", "MSPointerOut"),
-		enter: mouse._eventHandler(dualEvent("mouseover","dojotouchover", "MSPointerOver")),
-		leave: mouse._eventHandler(dualEvent("mouseout", "dojotouchout", "MSPointerOut"))
+		press: dualEvent("mousedown", "touchstart", pointer.down),
+		move: dualEvent("mousemove", "dojotouchmove", pointer.move),
+		release: dualEvent("mouseup", "dojotouchend", pointer.up),
+		cancel: dualEvent(mouse.leave, "touchcancel", hasTouch ? pointer.cancel : null),
+		over: dualEvent("mouseover", "dojotouchover", pointer.over),
+		out: dualEvent("mouseout", "dojotouchout", pointer.out),
+		enter: mouse._eventHandler(dualEvent("mouseover","dojotouchover", pointer.over)),
+		leave: mouse._eventHandler(dualEvent("mouseout", "dojotouchout", pointer.out))
 	};
 
 	/*=====
@@ -256,13 +271,13 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		//		This module provides unified touch event handlers by exporting
 		//		press, move, release and cancel which can also run well on desktop.
 		//		Based on http://dvcs.w3.org/hg/webevents/raw-file/tip/touchevents.html
-		//		Also, if the dojoClick property is set to true on a DOM node, dojo/touch generates
-		//		click events immediately for this node and its descendants, to avoid the
-		//		delay before native browser click events, and regardless of whether evt.preventDefault()
-		//		was called in a touch.press event listener.
+		//      Also, if the dojoClick property is set to truthy on a DOM node, dojo/touch generates
+		//      click events immediately for this node and its descendants (except for descendants that
+		//      have a dojoClick property set to falsy), to avoid the delay before native browser click events,
+		//      and regardless of whether evt.preventDefault() was called in a touch.press event listener.
 		//
 		// example:
-		//		Used with dojo.on
+		//		Used with dojo/on
 		//		|	define(["dojo/on", "dojo/touch"], function(on, touch){
 		//		|		on(node, touch.press, function(e){});
 		//		|		on(node, touch.move, function(e){});
@@ -283,7 +298,9 @@ function(dojo, aspect, dom, domClass, lang, on, has, mouse, domReady, win){
 		// example:
 		//		Have dojo/touch generate clicks without delay, with a move threshold of 50 pixels horizontally and 10 pixels vertically
 		//		|	node.dojoClick = {x:50, y:5};
-		
+		// example:
+		//    Disable clicks without delay generated by dojo/touch on a node that has an ancestor with property dojoClick set to truthy
+		//    |  node.dojoClick = false;		
 
 		press: function(node, listener){
 			// summary:

@@ -11,6 +11,7 @@ define("gridx/modules/HScroller", [
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: hScroller.
 		//		This module provides basic horizontal scrolling for grid
 
 		scrollToColumn: function(colId){
@@ -55,6 +56,15 @@ define("gridx/modules/HScroller", [
 				n.style.display = 'block';
 				t.aspect(g.columnWidth, 'onUpdate', 'refresh');
 				t.connect(n, 'onscroll', '_onScroll');
+				
+				//In dod, tab focus in the dodNode will sometimes
+				//scroll the bodyNode of gridx horizontally,
+				//so need to syn scrollLeft with hscroller
+				if(g.dod){
+					t.connect(g.bodyNode, 'onscroll', function(){
+						t.domNode.scrollLeft = g.bodyNode.scrollLeft;
+					});
+				}
 				if(has('ie')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
@@ -78,7 +88,7 @@ define("gridx/modules/HScroller", [
 		scrollToColumn: function(colId, rowDiv){
 			//when rowDiv has value, it's caused by move focus in Body.js
 			//It's used only for column lock module
-
+			
 			var hNode = this.grid.header.innerNode,
 				cells = query('.gridxCell', hNode),
 				left = 0,

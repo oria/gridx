@@ -9,6 +9,7 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
 	'gridx/modules/PagedBody',
+	'gridx/modules/AutoPagedBody',
 	'gridx/modules/TouchVScroller',
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory){
@@ -17,7 +18,7 @@ require([
 		isAsync: true,
 		path: './support/stores',
 		dataSource: dataSource,
-		size: 1000
+		size: 100
 //        maxLevel: 4,
 //        maxChildrenCount: 10
 	});

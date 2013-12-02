@@ -66,12 +66,12 @@ define("gridx/modules/extendedSelect/_Base", [
 				[doc, 'onmouseup', '_end'],
 				[doc, 'onkeydown', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(g.domNode, false);
+						dom.setSelectable(has('ie') > 9 ? doc.body : g.domNode, false);
 					}
 				}],
 				[doc, 'onkeyup', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(g.domNode, true);
+						dom.setSelectable(has('ie') > 9 ? doc.body : g.domNode, true);
 					}
 				}]
 			);
@@ -132,11 +132,14 @@ define("gridx/modules/extendedSelect/_Base", [
 		},
 
 		_start: function(item, extending, isRange){
-			var t = this;
+			var t = this,
+				g = t.grid,
+				m = g.model;
+				
 			if(!t._selecting && !t._marking && t.arg('enabled')){
 				dom.setSelectable(t.grid.domNode, false);
 				t._fixFF(1);
-				var isSelected = t._isSelected(item);
+				var isSelected = t._isSelected(item) === true;
 				isRange = isRange || t.arg('holdingShift');
 				if(isRange && t._lastStartItem){
 					t._isRange = 1;	//1 as true
@@ -146,10 +149,17 @@ define("gridx/modules/extendedSelect/_Base", [
 				}else{
 					t._startItem = item;
 					t._currentItem = null;
+					
 					if(extending || t.arg('holdingCtrl')){
 						t._toSelect = !isSelected;
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+							t._toSelect = 'mixed';
+						}
 					}else{
 						t._toSelect = 1;	//1 as true
+						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
+							t._toSelect = 'mixed';
+						}
 						t.clear(1);
 					}
 				}

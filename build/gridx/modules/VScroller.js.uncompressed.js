@@ -5,14 +5,17 @@ define("gridx/modules/VScroller", [
 	"dojo/_base/sniff",
 	"dojo/query",
 	"dojo/dom-geometry",
+	"dojo/dom-class",
+	"dojo/dom-style",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, has, query, domGeo, keys, metrics, _Module){
+], function(declare, Deferred, event, has, query, domGeo, domClass, domStyle, keys, metrics, _Module){
 
 /*=====
 	return declare(_Module, {
 		// summary:
+		//		module name: vScroller.
 		//		This module provides basic vertical scrolling logic for grid.
 		// description:
 		//		This module will make the grid body render all rows without paging.
@@ -55,7 +58,7 @@ define("gridx/modules/VScroller", [
 				if(has('ie') < 8){
 					dn.style.width = '0px';
 				}
-			}else{
+			}else if(!has('mac')){
 				var w = metrics.getScrollbar().w,
 					ltr = g.isLeftToRight();
 				dn.style.width = w + 'px';
@@ -63,6 +66,8 @@ define("gridx/modules/VScroller", [
 				if(has('ie') < 8){
 					t.stubNode.style.width = (w + 1) + 'px';
 				}
+			}else{
+				domClass.add(g.domNode, 'gridxMac');
 			}
 		},
 
@@ -84,6 +89,7 @@ define("gridx/modules/VScroller", [
 			t.aspect(g, '_onResizeEnd', '_onBodyChange');
 			t.aspect(bd, 'onForcedScroll', '_onForcedScroll');
 			t.aspect(bd, 'onRender', '_onBodyChange');
+			t.aspect(g.header, 'onRender', '_onBodyChange');
 			if(!g.autoHeight){
 				t.aspect(bd, 'onEmpty', function(){
 					var ds = dn.style;
@@ -124,7 +130,7 @@ define("gridx/modules/VScroller", [
 					dn[st] = no;
 					finish(true);
 					return d;
-				}else if(no < bs){
+				}else if(no <= bs){
 					dif = no - bs;
 				}else if(no + n.offsetHeight > bs + bn.clientHeight){
 					dif = no + n.offsetHeight - bs - bn.clientHeight;
@@ -136,6 +142,14 @@ define("gridx/modules/VScroller", [
 			}
 			finish(!!n);
 			return d;
+		},
+
+		scroll: function(top){
+			this.domNode.scrollTop = top;
+		},
+
+		position: function(){
+			return this.domNode.scrollTop;
 		},
 	
 		//Protected -------------------------------------------------
@@ -149,7 +163,12 @@ define("gridx/modules/VScroller", [
 			if(!g.autoHeight){
 				var bd = g.body,
 					bn = g.bodyNode,
-					toShow = bn.scrollHeight > bn.clientHeight,
+					toShow = (bn.scrollHeight > bn.clientHeight) ||
+						//This is to fix some rare issue that vscroller missing. #10267
+						//Logically this should not happen because virtual scroller has buffers.
+						//And this logic should not be put in non-virtual scroller either.
+						//FIXME: need more investigation.
+						(bn.scrollHeight == bn.clientHeight && bd.renderCount < g.view.visualCount),
 					ds = t.domNode.style;
 					scrollBarWidth = metrics.getScrollbar().w + (has('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(has('ie') < 8){
@@ -162,10 +181,13 @@ define("gridx/modules/VScroller", [
 				}else{
 					ds.width = '';
 				}
-				ds.display = toShow ? '' : 'none';
-				t._updatePos();
+				var display = toShow ? 'block' : 'none';
+				var changed = display != (domStyle.get(t.domNode, 'display') || 'block');
+				ds.display = display;
+				if(t._updatePos() || changed){
+					g.hLayout.reLayout();
+				}
 			}
-			g.hLayout.reLayout();
 		},
 
 		_updatePos: function(){
@@ -173,8 +195,11 @@ define("gridx/modules/VScroller", [
 				dn = this.domNode,
 				ds = dn.style,
 				ltr = g.isLeftToRight(),
-				mainBorder = domGeo.getBorderExtents(g.mainNode);
-			ds[ltr ? 'right' : 'left'] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+				mainBorder = domGeo.getBorderExtents(g.mainNode),
+				attr = ltr ? 'right' : 'left';
+				oldValue = ds[attr];
+			ds[attr] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
+			return oldValue != ds[attr];
 		},
 
 		_doScroll: function(){
@@ -225,13 +250,14 @@ define("gridx/modules/VScroller", [
 				bn = g.bodyNode,
 				focus = g.focus,
 				sn = t.domNode,
+				ctrlKey = g._isCtrlKey(evt),
 				rowNode;
 			if(bn.childNodes.length && (!focus || focus.currentArea() == 'body')){
-				if(evt.keyCode == keys.HOME && evt.ctrlKey){
+				if(evt.keyCode == keys.HOME && ctrlKey){
 					sn[st] = 0;
 					rowNode = bn.firstChild;
 					bd._focusCellCol = 0;
-				}else if(evt.keyCode == keys.END && evt.ctrlKey){
+				}else if(evt.keyCode == keys.END && ctrlKey){
 					sn[st] = sn.scrollHeight - sn.offsetHeight;
 					rowNode = bn.lastChild;
 					bd._focusCellCol = g._columns.length - 1;

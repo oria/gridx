@@ -27,6 +27,7 @@ define("gridx/modules/select/Column", [
 
 	return declare(_Base, {
 		// summary:
+		//		module name: selectColumn.
 		//		Provides simple column selection.
 		// description:
 		//		This module provides a simple way for selecting columns by clicking or SPACE key, 
@@ -157,12 +158,12 @@ define("gridx/modules/select/Column", [
 			t.batchConnect(
 				[g, 'onHeaderCellClick', function(e){
 					if(!domClass.contains(e.target, 'gridxArrowButtonNode')){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, g._isCtrlKey(e));
 					}
 				}],
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
 					if(e.keyCode == keys.SPACE || e.keyCode == keys.ENTER){
-						t._select(e.columnId, g._isCopyEvent(e));
+						t._select(e.columnId, g._isCtrlKey(e));
 						event.stop(e);
 					}
 				}]

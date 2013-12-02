@@ -8,6 +8,8 @@ define("gridx/modules/pagination/PaginationBarDD", [
 
 /*=====
 	return declare(_PaginationBarBase, {
+		// summary:
+		//		module name: paginationBar.
 	});
 =====*/
 
