@@ -30,7 +30,7 @@ define([
 	"dojo/NodeList-traverse"
 ], function(declare, lang, has, on, i18n, domClass, domGeometry, query, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
-	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport){
+	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport, nls){
 
 	var dummyFunc = function(){};
 
@@ -113,7 +113,8 @@ define([
 			if(!t.isLeftToRight()){
 				domClass.add(t.domNode, 'gridxRtl');
 			}
-			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang);
+			//in case gridx is not a root level package, it should still work
+			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang) || nls;
 			t._eventFlags = {};
 			t.modules = t.coreModules.concat(t.modules || []);
 			t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
