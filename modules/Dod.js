@@ -11,7 +11,7 @@ define([
 	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/keys",
-	'gridx/support/query',
+	'../support/query',
 	'dijit/a11y',
 	'dijit/registry',
 	'dojo/_base/event',

@@ -6,7 +6,7 @@ define([
 	"dojo/_base/event",
 	"dojo/_base/Deferred",
 	// "dojo/query",
-	'gridx/support/query',
+	'../support/query',
 	"dojo/keys",
 	"./VScroller",
 	"../core/_Module"

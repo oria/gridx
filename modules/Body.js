@@ -3,7 +3,7 @@ define([
 /*====="../core/Cell",=====*/
 	"dojo/_base/declare",
 	// "dojo/query",
-	'gridx/support/query',
+	'../support/query',
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/json",
@@ -857,7 +857,8 @@ define([
 					e.columnId = col.id;
 					e.columnIndex = col.index;
 				}
-				if(tag == 'div' && domClass.contains(n, 'gridxRow') && n.parentNode === g.bodyNode){
+				if(tag == 'table' && domClass.contains(n, 'gridxRowTable') && n.parentNode.parentNode === g.bodyNode){
+					n = n.parentNode;
 					e.rowId = n.getAttribute('rowid');
 					e.parentId = n.getAttribute('parentid');
 					e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);

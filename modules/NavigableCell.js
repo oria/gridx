@@ -111,6 +111,12 @@ define([
 						}
 						focusNextCell(rowIndex, colIndex);
 					});
+				}else{
+					//When TAB within cell, try no to blur and call doFocus again.
+					g.focus._noBlur = 1;
+					setTimeout(function(){
+						g.focus._noBlur = 0;
+					}, 0);
 				}
 				return false;
 			}else{
