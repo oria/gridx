@@ -30,6 +30,7 @@ define([
 		postCreate: function(){
 			var t = this,
 				m = t.grid.model;
+			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
 			t.connect(m, 'onSizeChange', 'refresh');
 			t.connect(m, 'onMarkChange', 'refresh');
 			if(t.grid.pagination){

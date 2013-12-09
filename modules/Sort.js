@@ -188,7 +188,9 @@ define([
 
 		_onClick: function(e){
 			event.stop(e);
-			this._sort(e.columnId, domClass.contains(e.target, 'gridxArrowButtonNode'), this.grid._isCtrlKey(e));
+			this._sort(e.columnId,
+				domClass.contains(e.target, 'gridxArrowButtonNode') || domClass.contains(e.target, 'gridxArrowButtonChar'),
+				this.grid._isCtrlKey(e));
 		},
 
 		_sort: function(id, isSortArrow, isNested){
