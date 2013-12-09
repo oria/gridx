@@ -31,6 +31,7 @@ define([
 			var t = this,
 				c = 'connect',
 				m = t.grid.model;
+			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
 			t[c](m, 'onSizeChange', 'refresh');
 			t[c](m, 'onMarkChange', 'refresh');
 			t._nls = i18n.getLocalization('gridx', 'SummaryBar', t.lang || t.grid.lang);
