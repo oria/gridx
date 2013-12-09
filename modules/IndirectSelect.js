@@ -220,6 +220,7 @@ define([
 					if(node){
 						domClass.toggle(node, t._getDijitClass() + 'Checked', allSelected);
 						node.setAttribute('aria-checked', allSelected ? 'true' : 'false');
+						node.firstChild.innerHTML = allSelected ? '&#10003;' : '&#9744;';
 						t.grid.rowHeader.headerCellNode.setAttribute('aria-label',
 							allSelected ? t._nls.indirectDeselectAll : t._nls.indirectSelectAll);
 					}
