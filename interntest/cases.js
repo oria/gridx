@@ -1,5 +1,6 @@
 module.exports = [
 	'../cases/other_wd.js',
+	'../cases/autoHideVScroller_wd.js',
 	'../cases/autoWidthAutoHeight_wd',
 	'../cases/cellWidget_wd',
 	'../cases/dnd_wd',
