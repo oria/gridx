@@ -241,6 +241,7 @@
 	height: 15px;
 	cursor: pointer;
 	display: none;
+	text-align: center;
 }
 
 .dj_ie7 .gridxQuickFilterClear {
@@ -249,6 +250,10 @@
 
 .gridxQuickFilterClearInner {
 	display: none;
+}
+
+.dijit_a11y .gridxQuickFilterClearInner {
+	display: inline;
 }
 
 .gridxQuickFilterActive .gridxQuickFilterClear {
