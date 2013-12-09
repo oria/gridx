@@ -87,7 +87,7 @@
     .grid_12 h1 {
       background: #eee;
       color: #45A29B;
-      font-family: "DOSIS", sans-serif;
+      font-family: "Arial", sans-serif;
       padding: 5px 10px;
       border-bottom: 1px solid #ccc;
     }
@@ -105,6 +105,9 @@
         -webkit-box-shadow: #999 3px 3px 3px;
         -moz-box-shadow: #999 3px 3px 3px;
         box-shadow: #999 3px 3px 3px;
+    }
+    .newDemo img {
+        width: 350px;
     }
     .demoLink h2 {
         padding: 15px;
@@ -139,8 +142,24 @@
     <a name="top"></a>
   <div class="container_12">
     {{header|safe}}
+
     <div class="grid_12 demosHead">
-        <h1>DEMOS</h1>
+        <h1>What's New in v1.3, Oct, 2013</h1>
+    </div>
+    <div class="grid_6 demoLink newDemo">
+        <a href="demos/slantedHeader.html">
+            <img src="images/demo_slanted_header.png"/>
+            <h2>Slanted Header</h2>
+        </a>
+    </div>
+    <div class="grid_6 demoLink newDemo">
+        <a href="demos/nestedGrid.html">
+            <img src="images/demo_nested_grid.png"/>
+            <h2>Nested Grid in Dod module</h2>
+        </a>
+    </div>
+    <div class="grid_12 demosHead">
+        <h1>Overall Demos</h1>
     </div>
     <div class="grid_4 demoLink">
         <a href="demos/demo_features.html">
@@ -162,7 +181,7 @@
     </div>
     <div class="clear"></div>
     <div class="grid_12">
-        <h1>GALLERY</h1>
+        <h1>Gallery</h1>
     </div>
     <div class="grid_3">
     	<div id="gallery-nav">

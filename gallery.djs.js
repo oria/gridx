@@ -116,6 +116,12 @@ define([
                 ]
                 ,advanced: [
                     {
+                        id: 'slantedHeader'
+                        ,name: 'Slanted Header'
+                        ,description: 'This demo shows how to use ExpandableColumn and SlantedHeader modules to construct a grid with slanted headers'
+                            + ', which is useful for displaying a grid with long column headers but small cells.'
+                        ,demo: 'slantedGrid.html'
+                    },{
                         id: 'nestedGrid'
                         ,name: 'Nested Grid'
                         ,description: 'This demo shows how to embed a nested grid in a Dod module. '
