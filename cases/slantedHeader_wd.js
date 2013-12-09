@@ -3,7 +3,7 @@ define([
 ], function(assert){
 	return {
 		"Slanted Header": {
-			"@expand of expandable column": function(){
+			"expand of expandable column": function(){
 				// this.colExpandoCellById = function(colId){
 					// var selector = '[data-column-id="' + colId + '"].gridxColumnExpandoCell .gridxColumnExpando';
 					// return this.end().
@@ -29,7 +29,7 @@ define([
 					}).
 					wait(200);
 			},
-			"@collapse of expandable column": function(){
+			"collapse of expandable column": function(){
 				var oldColsCount;
 				var collapseSelector = '[data-map-column-id="vulnerability"].gridxGroupHeader .gridxColumnCollapseNodeIcon';
 				
