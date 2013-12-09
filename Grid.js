@@ -26,6 +26,8 @@ define([
 	"./modules/Focus",
 	"dijit/_BidiSupport",
 	"dojo/i18n!./nls/gridx",
+	"dojo/uacss",
+	"dijit/hccss",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
 ], function(declare, lang, has, on, i18n, domClass, domGeometry, query, metrics,
