@@ -3,7 +3,7 @@ define([
 ], function(assert){
 return {
 	"IndirectSelect with extended selection": {
-		"should show correct charactor for select all checkbox in high contrast mode": function(){
+		"should show correct charactor for select all checkbox in high contrast mode[11798]": function(){
 			var uncheckedChar;
 			var checkedChar;
 			return this.execute('return dojo.query(".gridxIndirectSelectionCheckBoxInner")[0].innerHTML').
