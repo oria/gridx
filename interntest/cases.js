@@ -9,5 +9,7 @@ module.exports = [
 	'../cases/mobile_wd.js',
 	'../cases/rowHeader_wd.js',
 	'../cases/groupHeader_wd.js',
-	'../cases/slantedHeader_wd.js'
+	'../cases/slantedHeader_wd.js',
+	'../cases/tree_wd.js',
+	'../cases/lock_wd.js'
 ];
