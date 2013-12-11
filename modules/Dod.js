@@ -169,8 +169,9 @@ define([
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + this.grid._escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 				//TODO: 1 is the border for claro theme, will fix
-				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') + 'px');
-				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') + 'px');
+				var h = domStyle.get(row.node(), 'height');
+				domStyle.set(rowHeaderNode.firstChild, 'height', h + 'px');
+				domStyle.set(rowHeaderNode, 'height', h + 'px');
 			}
 			
 			var df = new Deferred(), _this = this;
@@ -199,8 +200,9 @@ define([
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
 				var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-				domStyle.set(rowHeaderNode.firstChild, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
-				domStyle.set(rowHeaderNode, 'height', domStyle.get(row.node(), 'height') - 1 + 'px');
+				var h = domStyle.get(row.node(), 'height');
+				domStyle.set(rowHeaderNode.firstChild, 'height', h + 'px');
+				domStyle.set(rowHeaderNode, 'height', h + 'px');
 				//TODO: 1 is the border for claro theme, will fix
 			}
 			var expando = this._getExpando(row);
@@ -419,16 +421,42 @@ define([
 					
 					if(this.grid.rowHeader){
 						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-						baseFx.animateProperty({ node: rowHeaderNode.firstChild, duration:this.arg('duration'),
+						baseFx.animateProperty({
+							node: rowHeaderNode.firstChild,
+							duration: this.arg('duration'),
+							onEnd: function(){
+								try{
+									var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', g.rowHeader.bodyNode)[0];
+									var h = row.node().firstChild.offsetHeight + _row.dodNode.offsetHeight;
+									rowHeaderNode.firstChild.style.height = h + 'px';
+								}catch(e){}
+							},
 							properties: {
-								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
+								height: {
+									start: rowHeaderNode.offsetHeight,
+									end: row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight,
+									units:"px"
+								}
 							}
 						}).play();
-						baseFx.animateProperty({ node: rowHeaderNode, duration:this.arg('duration'),
+						baseFx.animateProperty({
+							node: rowHeaderNode,
+							duration: this.arg('duration'),
+							onEnd: function(){
+								try{
+									var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', g.rowHeader.bodyNode)[0];
+									var h = row.node().firstChild.offsetHeight + _row.dodNode.offsetHeight;
+									rowHeaderNode.style.height = h + 'px';
+								}catch(e){}
+							},
 							properties: {
-								height: { start:rowHeaderNode.offsetHeight, end:row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight, units:"px" }
+								height: {
+									start: rowHeaderNode.offsetHeight,
+									end: row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight,
+									units:"px"
+								}
 							}
-						}).play();						
+						}).play();
 					}
 				}else{
 					_row.dodNode.style.display = 'block';
@@ -437,8 +465,9 @@ define([
 					g.body.onRender();
 					if(this.grid.rowHeader){
 						var rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
-						rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
-						rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
+						var h = row.node().firstChild.offsetHeight + _row.dodNode.offsetHeight;
+						rowHeaderNode.firstChild.style.height = h + 'px';
+						rowHeaderNode.style.height = h + 'px';
 					}
 					
 				}
