@@ -92,7 +92,7 @@ return {
 				});
 		}
 	},
-	"@dod nested grid": {
+	"dod nested grid": {
 		"should not select inner grid row when selecting outer grid row[11867]": function(){
 			return this.cellById(1, 'id').
 				moveTo().
@@ -109,7 +109,7 @@ return {
 					assert.equal(backgroundColor, 'transparent', 'inner grid row appears selected');
 				});
 		},
-		"@should not select outer grid row when selecting inner grid row": function(){
+		"should not select outer grid row when selecting inner grid row": function(){
 			return this.cellById(1, 'id').
 				moveTo().
 				end().
@@ -124,6 +124,25 @@ return {
 				execute("return grid.select.row.getSelected().length").
 				then(function(selectedCount){
 					assert.equal(selectedCount, 0, 'outer grid row appears selected');
+				});
+		}
+	},
+	"dod nested grid autoHeight headerHidden": {
+		"should remove hover effect from outer grid when hover inner grid rows[11868]": function(){
+			return this.cellById(1, 'id').
+				moveTo().
+				end().
+				elementByCss('[rowid="1"] [colid="id"] .gridxDodExpando').
+				click().
+				wait(5000).
+				cellById(2, 'id').
+				moveTo().
+				end().
+				elementByCss('[rowid="1"] [colid="inner-id"].gridxCell').
+				moveTo().
+				execute("return dojo.style(grid.cell('2', 'id').node(), 'backgroundColor')").
+				then(function(backgroundColor){
+					assert.equal(backgroundColor, 'transparent', 'outer grid row appears hoverred');
 				});
 		}
 	}

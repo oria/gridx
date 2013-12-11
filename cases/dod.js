@@ -200,6 +200,36 @@ define([
 			renderred.callback();
 		}, 1000);
 	}
+	function nestedGridProvider(grid, rowId, detailNode, renderred){
+		var g = new Grid({
+			cacheClass:globalCache,
+			store: storeFactory({
+				dataSource: dataSource,
+				size: 2
+			}),
+			structure: [
+				{id: 'inner-id', field: 'id', name: 'Identity', dataType: 'number'},
+				{id: 'inner-Artist', field: 'Artist', name: 'Artist', dataType: 'string'},
+				{id: 'inner-Album', field: 'Album', name: 'Album', dataType: 'string'},
+				{id: 'inner-Name', field: 'Name', name: 'Name', dataType: 'string'},
+				{id: 'inner-Year', field: 'Year', name: 'Year', dataType: 'number'},
+				{id: 'inner-Length', field: 'Length', name: 'Length', dataType: 'string'},
+				{id: 'inner-Track', field: 'Track', name: 'Track', dataType: 'number'}
+			],
+			modules: [
+			],
+			headerHidden: true,
+			autoHeight: true,
+			selectRowTriggerOnCell: true,
+			style: 'width: 100%;'
+		});
+		g.placeAt(detailNode);
+		g.startup();
+		setTimeout(function(){
+			renderred.callback();
+		}, 1000);
+		return renderred;
+	}
 	
 	function setFormContentDeclaritively(node, renderred){
 		node.innerHTML = [
@@ -399,6 +429,56 @@ define([
 					grid.dod.hide(grid.row(rowId, 1));
 				});
 			}
+		},
+		{
+			title: 'dod nested grid autoHeight headerHidden',
+			guide: [
+			],
+			cache: "gridx/core/model/cache/Async",
+			store: 'memory',
+			size: 100,
+			structure: [
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'order', field: 'order', name: 'Order'},
+				{id: 'Genre', field: 'Genre', name: 'Genre'},
+				{id: 'Artist', field: 'Artist', name: 'Artist'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Album', field: 'Album', name: 'Album'},
+				{id: 'Name', field: 'Name', name: 'Name'}
+			],
+			modules: [
+				// "gridx/modules/ColumnLock",
+				// "gridx/modules/CellWidget",
+				// "gridx/modules/Edit",
+				// "gridx/modules/ColumnResizer",
+//                "gridx/modules/RowHeader",
+//                "gridx/modules/select/Row",
+//                "gridx/modules/IndirectSelect",
+				// "gridx/modules/SingleSort",
+				// "gridx/modules/extendedSelect/Cell",
+				{
+					moduleClass: modules.Dod,
+					defaultShow: defaultShow,
+					useAnimation: useAnimation,
+					showExpando: true,
+					detailProvider: nestedGridProvider
+				},
+				"gridx/modules/VirtualVScroller"
+			],
+			props: {
+			},
+			onCreated: function(grid){
+				var input = util.addInput('text', 1);
+				util.addButton('show detail', function(){
+					var rowId = parseInt(input.value, 10);
+					grid.dod.show(grid.row(rowId, 1));
+				});
+				util.addButton('hide detail', function(){
+					var rowId = parseInt(input.value, 10);
+					grid.dod.hide(grid.row(rowId, 1));
+				});
+			}
+
 		}
 	];
 });
