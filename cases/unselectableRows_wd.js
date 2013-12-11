@@ -1,9 +1,9 @@
 define([
-	'intern/chai!assert',
+	'intern/chai!assert'
 ], function(assert){
 	return {
 		"unselectable row + extendedSelect/Row": {
-			"@select all checkbox should have correct status after toggle unselectable row selectable[11028]": function(){
+			"select all checkbox should have correct status after toggle unselectable row selectable[11028]": function(){
 				var selector = ".gridxHeader .gridxIndirectSelectionCheckBox ";
 				var checkboxSelector = ".gridxRowHeaderBody .gridxRowHeaderRow[rowid='2']";
 				

@@ -45,13 +45,12 @@ define([
 		}
 	}
 
-	function setTextContent(node){
+	/*function setTextContent(node){
 		// node.innerHTML = '<button data-dojo-type="dijit/form/Button" data-dojo-props="label: 123">cut</button>';
 		// dojo.parser.parse(node);
 
-		node.innerHTML = '<div style="color: #777; padding:5px">' 
-			+ getDummyText(20,140) + '</div>';
-	}
+		node.innerHTML = '<div style="color: #777; padding:5px">' + getDummyText(20,140) + '</div>';
+	}*/
 	
 	function setFormContent(node){
 		node.innerHTML = ['<div style="margin: 10px; background:white;padding: 10px;"><table style="width:400px">',
@@ -94,17 +93,17 @@ define([
 				dataSource: dataSource, 
 				size: 50
 	});
-	globalStructure = dataSource.layouts[1].slice(10);
+//    globalStructure = dataSource.layouts[1].slice(10);
 	globalStructure =[
-			{id: 'id', field: 'id', name: 'Identity', dataType: 'number', width: '100px'},
-			{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'enum', width: '100px',
+			{id: 'inner-id', field: 'id', name: 'Identity', dataType: 'number'},
+			{id: 'inner-Genre', field: 'Genre', name: 'Genre', dataType: 'enum',
 				enumOptions: ['a', 'b', 'c']},
-			{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'string', width: '100px'},
-			{id: 'Album', field: 'Album', name: 'Album', dataType: 'string',width: '100px'},
-			{id: 'Name', field: 'Name', name: 'Name', dataType: 'string',width: '100px'},
-			{id: 'Year', field: 'Year', name: 'Year', dataType: 'number',width: '100px'},
-			{id: 'Length', field: 'Length', name: 'Length', dataType: 'string',width: '100px'},
-			{id: 'Track', field: 'Track', name: 'Track', dataType: 'number',width: '100px'}
+			{id: 'inner-Artist', field: 'Artist', name: 'Artist', dataType: 'string'},
+			{id: 'inner-Album', field: 'Album', name: 'Album', dataType: 'string'},
+			{id: 'inner-Name', field: 'Name', name: 'Name', dataType: 'string'},
+			{id: 'inner-Year', field: 'Year', name: 'Year', dataType: 'number'},
+			{id: 'inner-Length', field: 'Length', name: 'Length', dataType: 'string'},
+			{id: 'inner-Track', field: 'Track', name: 'Track', dataType: 'number'}
 	];
 	
 	nestedDetailProvider = nestedAsyncDetailProvider = function(grid, rowId, detailNode, renderred){
@@ -143,8 +142,7 @@ define([
 		// node.innerHTML = '<button data-dojo-type="dijit/form/Button" data-dojo-props="label: 123">cut</button>';
 		// dojo.parser.parse(node);
 		
-		node.innerHTML = '<div style="color: #777; padding:5px">' 
-			+ getDummyText(20,140) + '</div>';
+		node.innerHTML = '<div style="color: #777; padding:5px">' + getDummyText(20,140) + '</div>';
 		
 		if(renderred){
 			renderred.callback();
@@ -154,46 +152,50 @@ define([
 		var rowNode = node.parentNode;
 		var rowId = rowNode.getAttribute('rowid');
 		
-		if(rowId % 2){		//odd
-			var num = 3;
-			var width = (100 / num - 1) + '%';
-			
-			for(var i = 0; i < num; i++){
-				var grid = new Grid({
-					cacheClass:globalCache,
-					store: globalStore,
-					structure: globalStructure,
-					modules: [	'gridx/modules/Pagination',
-								'gridx/modules/pagination/PaginationBar',
-								'gridx/modules/RowHeader',
-								'gridx/modules/Filter',
-								'gridx/modules/filter/FilterBar'
-					],
-					style: 'width: ' + width + '; float: left'
-				});
-				grid.placeAt(node);
-				grid.startup();
-			}
-			
-		}else{		//even
+//        if(rowId % 2){		//odd
+//            var num = 3;
+//            var width = (100 / num - 1) + '%';
+//            
+//            for(var i = 0; i < num; i++){
+//                var grid = new Grid({
+//                    cacheClass:globalCache,
+//                    store: globalStore,
+//                    structure: globalStructure,
+//                    modules: [	'gridx/modules/Pagination',
+//                                'gridx/modules/pagination/PaginationBar',
+//                                'gridx/modules/RowHeader',
+//                                'gridx/modules/Filter',
+//                                'gridx/modules/filter/FilterBar'
+//                    ],
+//                    style: 'width: ' + width + '; float: left'
+//                });
+//                grid.placeAt(node);
+//                grid.startup();
+//            }
+//            
+//        }else{		//even
 			var subSt = new Date().getTime();
 			var grid = new Grid({
 				cacheClass:globalCache,
 				store: globalStore,
 				structure: globalStructure,
-				modules: [	'gridx/modules/Pagination',
-							'gridx/modules/pagination/PaginationBar',
-							'gridx/modules/RowHeader',
-							'gridx/modules/Filter',
-							'gridx/modules/filter/FilterBar',
+				modules: [
+					'gridx/modules/Pagination',
+					'gridx/modules/pagination/PaginationBar',
+					'gridx/modules/RowHeader',
+					'gridx/modules/IndirectSelect',
+					'gridx/modules/select/Row',
+					'gridx/modules/Filter',
+					'gridx/modules/filter/FilterBar'
 				],
-				style: 'width: 85%; float: left'
+				selectRowTriggerOnCell: true,
+				style: 'height: 200px; width: 100%;'
 			});
 			grid.placeAt(node);
 			grid.startup();		
 			console.log('sub grid start time is:');
 			console.log(new Date().getTime() - subSt);
-		}
+//        }
 		setTimeout(function(){
 			renderred.callback();
 		}, 1000);
@@ -252,7 +254,7 @@ define([
 			'								\'gridx/modules/Pagination\',',
 			'								\'gridx/modules/pagination/PaginationBar\',',
 			'								\'gridx/modules/RowHeader\'',
-			']"></div>',
+			']"></div>'
 			// '</td></tr></table>'
 			].join('');
 			
@@ -283,10 +285,10 @@ define([
 						for(var i = 0; i < gridNodes.length; i++){
 							var w = dijit.byNode(gridNodes[i]);
 							ws.push(w);
-							console.log(w.body)
+							console.log(w.body);
 							w.body.refresh();
-							console.log(w.domNode)
-						};
+							console.log(w.domNode);
+						}
 						console.log(ws.domNode);
 						
 					// }, 0)
@@ -306,19 +308,13 @@ define([
 			store: 'memory',
 			size: 100,
 			structure: [
-				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
-				{id: 'order', field: 'order', name: 'Order', width: '80px'},
-				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px', alwaysEditing: true},
-				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px', editable: true},
-				{id: 'Year', field: 'Year', name: 'Year', width: '80px', editable: true},
-				{id: 'Album', field: 'Album', name: 'Album', width: '160px', editable: true},
-				{id: 'Name', field: 'Name', name: 'Name', width: '150px', alwaysEditing: true},
-				{id: 'Length', field: 'Length', name: 'Length', width: '80px', editable: true},
-				{id: 'Track', field: 'Track', name: 'Track', width: '80px', editable: true},
-				{id: 'Composer', field: 'Composer', name: 'Composer', width: '160px', editable: true},
-				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '160px'},
-				{id: 'Last Played', field: 'Last Played', name: 'Last Played', width: '120px'},
-				{id: 'Heard', field: 'Heard', name: 'Heard', width: '80px'}
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'order', field: 'order', name: 'Order'},
+				{id: 'Genre', field: 'Genre', name: 'Genre'},
+				{id: 'Artist', field: 'Artist', name: 'Artist'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Album', field: 'Album', name: 'Album'},
+				{id: 'Name', field: 'Name', name: 'Name'}
 			],
 			modules: [
 				// "gridx/modules/ColumnLock",
@@ -326,6 +322,8 @@ define([
 				// "gridx/modules/Edit",
 				// "gridx/modules/ColumnResizer",
 				"gridx/modules/RowHeader",
+				"gridx/modules/select/Row",
+				"gridx/modules/IndirectSelect",
 				// "gridx/modules/SingleSort",
 				// "gridx/modules/extendedSelect/Cell",
 				{
@@ -338,6 +336,7 @@ define([
 				"gridx/modules/VirtualVScroller"
 			],
 			props: {
+				selectRowTriggerOnCell: true,
 				columnLockCount: 1
 			},
 			onCreated: function(grid){
@@ -360,19 +359,13 @@ define([
 			store: 'memory',
 			size: 100,
 			structure: [
-				{id: 'id', field: 'id', name: 'Identity', width: '80px'},
-				{id: 'order', field: 'order', name: 'Order', width: '80px'},
-				{id: 'Genre', field: 'Genre', name: 'Genre', width: '100px', alwaysEditing: true},
-				{id: 'Artist', field: 'Artist', name: 'Artist', width: '120px', editable: true},
-				{id: 'Year', field: 'Year', name: 'Year', width: '80px', editable: true},
-				{id: 'Album', field: 'Album', name: 'Album', width: '160px', editable: true},
-				{id: 'Name', field: 'Name', name: 'Name', width: '150px', alwaysEditing: true},
-				{id: 'Length', field: 'Length', name: 'Length', width: '80px', editable: true},
-				{id: 'Track', field: 'Track', name: 'Track', width: '80px', editable: true},
-				{id: 'Composer', field: 'Composer', name: 'Composer', width: '160px', editable: true},
-				{id: 'Download Date', field: 'Download Date', name: 'Download Date', width: '160px'},
-				{id: 'Last Played', field: 'Last Played', name: 'Last Played', width: '120px'},
-				{id: 'Heard', field: 'Heard', name: 'Heard', width: '80px'}
+				{id: 'id', field: 'id', name: 'Identity'},
+				{id: 'order', field: 'order', name: 'Order'},
+				{id: 'Genre', field: 'Genre', name: 'Genre'},
+				{id: 'Artist', field: 'Artist', name: 'Artist'},
+				{id: 'Year', field: 'Year', name: 'Year'},
+				{id: 'Album', field: 'Album', name: 'Album'},
+				{id: 'Name', field: 'Name', name: 'Name'}
 			],
 			modules: [
 				// "gridx/modules/ColumnLock",
@@ -380,6 +373,8 @@ define([
 				// "gridx/modules/Edit",
 				// "gridx/modules/ColumnResizer",
 				"gridx/modules/RowHeader",
+				"gridx/modules/select/Row",
+				"gridx/modules/IndirectSelect",
 				// "gridx/modules/SingleSort",
 				// "gridx/modules/extendedSelect/Cell",
 				{
