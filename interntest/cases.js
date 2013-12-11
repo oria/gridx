@@ -6,6 +6,7 @@ module.exports = [
 	'../cases/cellWidget_wd',
 	'../cases/dnd_wd',
 	'../cases/dod_wd',
+	'../cases/persist_wd',
 	'../cases/filter_wd',
 	'../cases/mobile_wd.js',
 	'../cases/rowHeader_wd.js',

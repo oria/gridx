@@ -74,6 +74,8 @@ require(casefiles, function(){
 							if(!notestcase){
 								var dd = d.waitForElementByClassName('gridx', config.gridxCreationTimeout || 60 * 1000);
 								return caseFunc.call(d, d);
+							}else{
+								console.log("No test case: ", url);
 							}
 						});
 					return d;

@@ -101,9 +101,10 @@ return {
 				click().
 				wait(5000).
 				end().
-				elementByCss('[rowid="1"].gridxRowHeaderRow .gridxRowHeaderCell').
+				elementByCss('#grid > .gridxMain > .gridxRowHeaderBody [rowid="1"] .gridxRowHeaderCell').
 				click().
 				end().
+				wait(5000).
 				execute("return dojo.style(dojo.query(\"[rowid='0'] [colid='inner-id'].gridxCell\")[0], 'backgroundColor')").
 				then(function(backgroundColor){
 					assert.equal(backgroundColor, 'transparent', 'inner grid row appears selected');

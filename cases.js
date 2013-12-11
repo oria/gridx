@@ -1,22 +1,25 @@
 var testcases = [
-	'./cases/mobile',
-	'./cases/persist',
-	'./cases/filter',
-	'./cases/unselectableRows',
-	'./cases/special',
-	'./cases/lock',
 	'./cases/autoHideVScroller',
+	'./cases/autoWidthAutoHeight',
 	'./cases/bar',
+	'./cases/cellWidget',
 	'./cases/columnWidth',
+	'./cases/dnd',
+	'./cases/dod',
 	'./cases/edit',
 	'./cases/events',
+	'./cases/filter',
 	'./cases/groupHeader',
-	'./cases/slantedHeader',
 	'./cases/indirectSelect',
-	'./cases/rowHeader',
-	'./cases/tree',
+	'./cases/lock',
+	'./cases/mobile',
 	'./cases/other',
-	'./cases/dod'
+	'./cases/persist',
+	'./cases/rowHeader',
+	'./cases/slantedHeader',
+	'./cases/special',
+	'./cases/tree',
+	'./cases/unselectableRows'
 ];
 
 define(testcases, function(){
