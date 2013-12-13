@@ -4,6 +4,7 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/event",
 	"dojo/query",
+	// 'gridx/support/query',
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
