@@ -107,7 +107,7 @@ return {
 				wait(5000).
 				execute("return dojo.style(dojo.query(\"[rowid='0'] [colid='inner-id'].gridxCell\")[0], 'backgroundColor')").
 				then(function(backgroundColor){
-					assert.equal(backgroundColor, 'transparent', 'inner grid row appears selected');
+					assert((backgroundColor == 'rgba(0, 0, 0, 0)' || backgroundColor == 'transparent'), 'inner grid row appears selected');
 				});
 		},
 		"should not select outer grid row when selecting inner grid row": function(){
@@ -139,11 +139,14 @@ return {
 				cellById(2, 'id').
 				moveTo().
 				end().
-				elementByCss('[rowid="1"] [colid="inner-id"].gridxCell').
+				// elementByCss('[rowid="1"] [colid="inner-id"].gridxCell').	
+				//the former selector will fail in IE
+				elementByCss('[rowid="1"] > .gridxRowTable [colid="inner-id"].gridxCell').
 				moveTo().
+				wait(5000).
 				execute("return dojo.style(grid.cell('2', 'id').node(), 'backgroundColor')").
 				then(function(backgroundColor){
-					assert.equal(backgroundColor, 'transparent', 'outer grid row appears hoverred');
+					assert((backgroundColor == 'rgba(0, 0, 0, 0)' || backgroundColor == 'transparent'), 'outer grid row appears hoverred');
 				});
 		}
 	}
