@@ -480,6 +480,7 @@ define([
 			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){
 				var gig = registry.byNode(gridNodes[i]);
+				gig._outerGrid = g;
 				gs.push(gig);
 				if(!gig._refreshForDod){
 					gig._refreshForDod = true;
@@ -488,6 +489,11 @@ define([
 					this.connect(gig.focus, 'tab', '_tab');
 					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
 					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
+					this.connect(gig, 'onRowMouseOver', function(){
+						if(gig._outerGrid){
+							query('.gridxRowOver', gig._outerGrid.bodyNode).removeClass('gridxRowOver');
+						}
+					});
 					
 				}
 			}
