@@ -154,7 +154,7 @@ define([
 				enabled: true
 			};
 			var get = this.arg('get'),
-				content = get(this.arg('key'));
+				content = '_content' in this ? this._content : (this._content = get(this.arg('key')));
 			return content ? content[name] : null;
 		},
 
@@ -202,6 +202,7 @@ define([
 					}
 				}
 			}
+			delete t._content;
 			put(t.arg('key'), contents, t.arg('options'));
 		},
 	
