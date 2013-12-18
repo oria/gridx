@@ -31,7 +31,7 @@ define([
 						assert(checked >= 0, 'select all should not be checked');
 					});
 			},
-			"@select all checkbox should worke correctly after set store or update store[10949]": function(){
+			"select all checkbox should worke correctly after set store or update store[10949]": function(){
 				var selectAllSelector = ".gridxHeader .gridxIndirectSelectionCheckBox ";
 				var checkboxSelector = ".gridxRowHeaderBody .gridxRowHeaderRow[rowid='2']";
 				
