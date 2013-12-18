@@ -185,6 +185,10 @@ define([
 				if(i < len){
 					changed = 1;
 					t.grid._columnsById[id] = c;
+					// restored column should not appear before locked columns
+					if(index < lockCount){
+						c.index = index = lockCount;
+					}
 					columns.splice(index, 0, c);
 					for(i = index + 1; i < columns.length; ++i){
 						columns[i].index = i;
