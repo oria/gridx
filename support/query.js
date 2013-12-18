@@ -21,9 +21,10 @@ define([
 		
 		if(currentGrid){
 			var id = currentGrid.getAttribute('id');
+			var bn = currentGrid.childNodes[2].childNodes[1];
 			
 			if(!_query.isGridInGrid[id] || !query('.gridx', currentGrid).length
-				|| !currentGrid.childNodes[2].childNodes[1].contains(context)
+				|| (!bn.contains(context) && !context.contains(bn))
 			){
 				return nlist;
 			}
