@@ -56,6 +56,15 @@ define([
 		required: ['body'],
 		
 		count: 0,
+
+		preload: function(){
+			var t = this;
+			if(t.grid.persist){
+				t.count = t.grid.persist.registerAndLoad('columnLock', function(){
+					return t.count;
+				});
+			}
+		},
 		
 		load: function(args, deferStartup){
 			this.count = this.arg('count');
