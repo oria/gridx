@@ -756,7 +756,10 @@ define([
 					col.needCellWidget = function(cell){
 						return (!needCellWidget || needCellWidget.apply(col, arguments)) && cell.isEditable();
 					};
-					col._userDec = col.decorator;
+					// avoid infinite recursion
+					if(col.decorator != t._dummyDecorator){
+						col._userDec = col.decorator;
+					}
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
