@@ -148,6 +148,28 @@ return {
 				then(function(backgroundColor){
 					assert((backgroundColor == 'rgba(0, 0, 0, 0)' || backgroundColor == 'transparent'), 'outer grid row appears hoverred');
 				});
+		},
+		
+		"should not trigger onRowMouseOver event when mouse over inner grid": function(){
+			return this.
+				cellById(1, 'id').
+				moveTo().
+				end().
+				elementByCss('[rowid="1"] [colid="id"] .gridxDodExpando').
+				click().
+				wait(5000).
+				end().
+				cellById(1, 'id').
+				moveTo().
+				end().
+				execute("window._rowOverCount=0;dojo.connect(grid, 'onRowMouseOver', function(){window._rowOverCount++;});").
+				elementByCss('[rowid="1"] > .gridxRowTable [colid="inner-id"].gridxCell').
+				moveTo().
+				execute("return window._rowOverCount;").
+				then(function(count){
+					console.log(count)
+					assert.equal(count, 0, 'inner grid hover should not trigger OnRowMouseOver');
+				});
 		}
 	}
 };
