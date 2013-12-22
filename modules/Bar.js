@@ -41,15 +41,15 @@ define([
 		// top: __BarItem[]?
 		//		An array of bar content declarations. Located above grid header.
 		//		The top bar is a big html table, and every content occupies a cell in it.
-		//		If it is a single demension array, then the top bar will contain only one row.
-		//		If it is a 2 demension array, then every sub-array represents a row.
+		//		If it is a single dimensional array, then the top bar will contain only one row.
+		//		If it is a two dimensional array, then every sub-array represents a row.
 		top: null,
 
 		// bottom: __BarItem[]?
 		//		An array of bar content declarations. Located below grid horizontal scroller.
 		//		The bottom bar is a big html table, and every content occupies a cell in it.
-		//		If it is a single demension array, then the bottom bar will contain only one row.
-		//		If it is a 2 demension array, then every sub-array represents a row.
+		//		If it is a single dimensional array, then the bottom bar will contain only one row.
+		//		If it is a two dimensional array, then every sub-array represents a row.
 		bottom: null,
 
 		// plugins: [readonly]Object
