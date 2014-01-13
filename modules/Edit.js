@@ -523,6 +523,8 @@ define([
 			}
 		},
 
+
+		/* fix 11590*/
 		_getDecorator: function(colId){
 			var className = this._getColumnEditor(colId),
 				p, properties,
@@ -537,6 +539,13 @@ define([
 			}
 			constraints = json.toJson(constraints);
 			constraints = constraints.substring(1, constraints.length - 1);
+
+			if(props){
+				props += ',scrollOnFocus: false';
+			}else{
+				props = 'scrollOnFocus: false';
+			}
+
 			if(props && constraints){
 				props += ', ';
 			}
