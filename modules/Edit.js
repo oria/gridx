@@ -524,7 +524,7 @@ define([
 		},
 
 
-		/* fix 11590*/
+		/* fix 11235*/
 		_getDecorator: function(colId){
 			var className = this._getColumnEditor(colId),
 				p, properties,
