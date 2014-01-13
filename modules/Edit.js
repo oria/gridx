@@ -599,6 +599,14 @@ define([
 			}
 			constraints = json.toJson(constraints);
 			constraints = constraints.substring(1, constraints.length - 1);
+
+			/*fix 11235*/
+			if(props){
+				props += ',scrollOnFocus: false';
+			}else{
+				props = 'scrollOnFocus: false';
+			}
+
 			if(textDir){
 				props += [(props ? ', ' : ''),
 					'dir: "', (this.grid.isLeftToRight() ? 'ltr' : 'rtl'),
