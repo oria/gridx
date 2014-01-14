@@ -146,6 +146,7 @@ define([
 			this.grid.hScroller && this.grid.hScroller._doScroll();
 			this.grid.header.onRender();
 		},
+		
 		_lockColumns: function(rowNode){
 			// summary:
 			//	Lock columns for one row
@@ -192,7 +193,7 @@ define([
 				pl += cell.offsetWidth;
 			}
 			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl - lead + 'px';
-			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
+			// rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
