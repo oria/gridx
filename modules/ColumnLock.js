@@ -77,9 +77,7 @@ define([
 					_this.connect(g, '_onResizeEnd', '_updateHeader');
 					_this.connect(g, '_onResizeEnd', '_updateBody');
 					_this.connect(g.vScroller, '_onBodyChange', '_updateBody');
-					_this.connect(g, 'resize', function(){
-						this.grid.hScroller && this.grid.hScroller._doScroll();
-					});
+					_this.connect(g, 'resize', '_updateUI');
 					
 					if(g.header){
 						g.header.loaded.then(function(){
@@ -146,8 +144,8 @@ define([
 			}
 			this._updateBody();
 			this._updateScroller();
-			this.grid.hScroller && this.grid.hScroller._doScroll();
 			this.grid.header.onRender();
+			this.grid.hScroller && this.grid.hScroller._doScroll();
 		},
 		
 		_lockColumns: function(rowNode){
