@@ -27,6 +27,19 @@ define([
 						execute("return grid.rowLock.lock(1);").
 						assertSnapshot("after lock rows");
 			}
+		},
+
+		"column lock and row lock": {
+			"Grid should align after choose hide or show": function(){
+				return this.
+					hScrollGridx(3, 100).
+					assertSnapshot("before hide Grid").
+					execute("return window.hideGrid();").
+					wait(5000).
+					execute("return window.showGrid();").
+					wait(5000).
+					assertSnapshot("after show Grid");
+			}
 		}
 	};
 });
