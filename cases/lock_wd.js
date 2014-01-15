@@ -9,6 +9,15 @@ define([
 						execute("return window.toggleHeader();").
 						hScrollGridx(3, 100).
 						assertSnapshot("after toggleHeader");
+			},
+
+			"Edit alwaysEditing cell in locked column should not makes row mis-aligned[11235]": function(){
+				return this.
+						hScrollGridx(3, 50).
+						assertSnapshot('before click always edit cell').
+						elementByCssSelector('.gridxRow .gridxCell input.dijitReset').
+						click().
+						assertSnapshot('after click always edit cell');
 			}
 		},
 		"row lock": {
