@@ -75,6 +75,7 @@ define([
 
 					_this.connect(g, '_onResizeEnd', '_updateHeader');
 					_this.connect(g, '_onResizeEnd', '_updateBody');
+					_this.connect(g.vScroller, '_onBodyChange', '_updateBody');
 					_this.connect(g, 'resize', '_updateUI');
 					
 					if(g.header){
@@ -193,7 +194,7 @@ define([
 				pl += cell.offsetWidth;
 			}
 			rowNode.style[ltr ? 'paddingLeft' : 'paddingRight'] = pl - lead + 'px';
-			// rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
+			rowNode.style.width = this.grid.bodyNode.offsetWidth - pl + lead + 'px';
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
