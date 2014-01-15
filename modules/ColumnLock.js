@@ -144,8 +144,8 @@ define([
 			}
 			this._updateBody();
 			this._updateScroller();
-			this.grid.hScroller && this.grid.hScroller._doScroll();
 			this.grid.header.onRender();
+			this.grid.hScroller && this.grid.hScroller._doScroll();
 		},
 		
 		_lockColumns: function(rowNode){
