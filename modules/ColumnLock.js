@@ -77,7 +77,9 @@ define([
 					_this.connect(g, '_onResizeEnd', '_updateHeader');
 					_this.connect(g, '_onResizeEnd', '_updateBody');
 					_this.connect(g.vScroller, '_onBodyChange', '_updateBody');
-					_this.connect(g, 'resize', '_updateUI');
+					_this.connect(g, 'resize', function(){
+						this.grid.hScroller && this.grid.hScroller._doScroll();
+					});
 					
 					if(g.header){
 						g.header.loaded.then(function(){
