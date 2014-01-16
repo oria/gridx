@@ -316,7 +316,7 @@ define([
 		setColumns: function(columns){
 			var t = this;
 			t.structure = columns;
-			//make a shalow copy of columns here so one structure can be used in different grids.
+			//make a shallow copy of columns here so one structure can be used in different grids.
 			t._columns = array.map(columns, function(col){
 				return lang.mixin({}, col);
 			});
