@@ -546,15 +546,23 @@ define([
 		
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
-			var F = Filter;
-			var dc = this.grid._columnsById[colId].dateParser || this._stringToDate;
-			var tc = this.grid._columnsById[colId].timeParser || this._stringToTime;
-			var converter = {date: dc, time: tc};
+			var F = Filter, 
+				c = this.grid._columnsById[colId];
+			var dc = c.dateParser || this._stringToDate;
+			var tc = c.timeParser || this._stringToTime;
+			var converters = {
+				custom: c.dataTypeArgs && c.dataTypeArgs.converter && lang.isFunction(c.dataTypeArgs.converter)?
+						c.dataTypeArgs.converter : null,
+				data: dc,
+				time: tc
+			};
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
+			var converter = converters.custom? converters.custom : converters[type];
+
 			if(c === 'range'){
-				var startValue = F.value(data.value.start, type),
+				var startValue = F.value(data.value.start, type)
 					endValue = F.value(data.value.end, type), 
-					columnValue = F.column(colId, type, converter[type]);
+					columnValue = F.column(colId, type, converter);
 				exp = F.and(F.greaterEqual(columnValue, startValue), F.lessEqual(columnValue, endValue));
 			}else{
 				if(/^not/.test(c)){
@@ -562,7 +570,7 @@ define([
 					c = c.replace(/^not/g, '');
 					c = c.charAt(0).toLowerCase() + c.substring(1);
 				}
-				exp = F[c](F.column(colId, type, converter[type]), c == 'isEmpty' ? null : F.value(data.value, type));
+				exp = F[c](F.column(colId, type, converter), c == 'isEmpty' ? null : F.value(data.value, type));
 				if(isNot){exp = F.not(exp);}
 			}
 			return exp;
