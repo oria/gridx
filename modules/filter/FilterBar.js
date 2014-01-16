@@ -560,7 +560,7 @@ define([
 			var converter = converters.custom? converters.custom : converters[type];
 
 			if(c === 'range'){
-				var startValue = F.value(data.value.start, type)
+				var startValue = F.value(data.value.start, type),
 					endValue = F.value(data.value.end, type), 
 					columnValue = F.column(colId, type, converter);
 				exp = F.and(F.greaterEqual(columnValue, startValue), F.lessEqual(columnValue, endValue));
