@@ -85,14 +85,6 @@ define([
 				clearTimeout(t._handle);
 				t._handle = setTimeout(function(){
 					t._filter();
-
-				/*	fix me 11953
-					when use quickFilter together with gridx Bar, 
-					after filter, bar will _doFocus() and the textBox will lose focus
-					can be reproduced in test_grid_bar.html*/
-					setTimeout(function(){
-						tb.focus();
-					}, 0);
 				}, key == keys.ENTER ? 0 : t.delay);
 			}
 		},

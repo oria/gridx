@@ -306,7 +306,8 @@ define([
 			}
 		},
 
-		_doFocus: function(node, evt, step){
+		_doFocus: function(node, evt, step, forced){
+			if(forced){ return; }
 			this.grid.focus.stopEvent(evt);
 			var elems = a11y._getTabNavigable(node),
 				n = elems[step < 0 ? 'last' : 'first'];
