@@ -254,7 +254,7 @@ define([
 				var curArea = t._areas[t.currentArea()];
 				if(curArea && curArea.name === areaName){
 					if(forced){
-						curArea.doFocus();
+						curArea.doFocus(null, null, forced);
 					}
 					return true;
 				}else if(!curArea || curArea.doBlur()){

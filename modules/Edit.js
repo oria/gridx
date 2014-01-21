@@ -756,7 +756,10 @@ define([
 					col.needCellWidget = function(cell){
 						return (!needCellWidget || needCellWidget.apply(col, arguments)) && cell.isEditable();
 					};
-					col._userDec = col.decorator;
+					// avoid infinite recursion
+					if(col.decorator != t._dummyDecorator){
+						col._userDec = col.decorator;
+					}
 					col.userDecorator = t._getDecorator(col.id);
 					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
@@ -876,6 +879,15 @@ define([
 			}
 			constraints = json.toJson(constraints);
 			constraints = constraints.substring(1, constraints.length - 1);
+
+
+			/*		fix #11235		*/
+			if(props){
+				props += ',scrollOnFocus: false';
+			}else{
+				props = 'scrollOnFocus: false';
+			}
+
 			if(textDir){
 				props += [(props ? ', ' : ''),
 					'dir: "', (this.grid.isLeftToRight() ? 'ltr' : 'rtl'),
@@ -884,6 +896,7 @@ define([
 			}else if(props && constraints){
 				props += ', ';
 			}
+
 			var t = this;
 			return function(){
 				return [
