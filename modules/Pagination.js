@@ -197,7 +197,7 @@ define([
 			var t = this,
 				firstIndex = t.firstIndexInPage(page);
 			if(firstIndex >= 0){
-				var lastIndex = firstIndex + t.pageSize() - 1,
+				var lastIndex = firstIndex + parseInt(t.pageSize(), 10) - 1,
 					size = t.model.size();
 				return lastIndex < size ? lastIndex : size - 1;
 			}
