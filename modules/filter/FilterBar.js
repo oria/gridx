@@ -553,7 +553,7 @@ define([
 			var converters = {
 				custom: c.dataTypeArgs && c.dataTypeArgs.converter && lang.isFunction(c.dataTypeArgs.converter)?
 						c.dataTypeArgs.converter : null,
-				data: dc,
+				date: dc,
 				time: tc
 			};
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
@@ -575,16 +575,20 @@ define([
 			}
 			return exp;
 		},
-		_stringToDate: function(s, pattern){
-			pattern = pattern || /(\d{4})\/(\d\d?)\/(\d\d?)/;
+		_stringToDate: function(s){
+			if(s instanceof Date){return s;}
+
+			pattern = /(\d{4})\/(\d\d?)\/(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
 			d.setFullYear(parseInt(RegExp.$1));
 			d.setMonth(parseInt(RegExp.$2)-1);
 			return d;
 		},
-		_stringToTime: function(s, pattern){
-			pattern = pattern || /(\d\d?):(\d\d?):(\d\d?)/;
+		_stringToTime: function(s){
+			if(s instanceof Date){return s;}
+
+			pattern = /(\d\d?):(\d\d?):(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
 			d.setHours(parseInt(RegExp.$1));

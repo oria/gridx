@@ -385,11 +385,11 @@ define([
 			_row.dodLoaded = true;
 			
 			var gridNodes = query('.gridx', _row.dodNode);
-			if(gridNodes.length){		//flag gridInGrid to query
+			if(gridNodes.length){
+				//flag gridInGrid to query
 				query.isGridInGrid[this.grid.id] = true;
 			}
 	
-			
 			if(_row.defaultShow){
 				// domStyle.set(_row.dodNode, 'display', 'block');
 				_row.dodNode.style.display = 'block';
@@ -489,6 +489,9 @@ define([
 					this.connect(gig.focus, 'tab', '_tab');
 					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
 					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
+					this.connect(gig.vLayout, 'reLayout', function(){
+						gig._outerGrid && gig._outerGrid.vLayout.reLayout();
+					})
 					this.connect(gig, 'onRowMouseOver', function(){
 						if(gig._outerGrid){
 							query('.gridxRowOver', gig._outerGrid.bodyNode).removeClass('gridxRowOver');
