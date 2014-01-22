@@ -101,6 +101,18 @@ define([
 						_this.lock(_this.count);
 					}
 				}
+				if(g.rowLock){
+					_this.connect(g.rowLock, 'onLock', function(){
+						_this.grid.hScroller && _this.grid.hScroller._doScroll();
+					});
+					_this.connect(g.rowLock, 'onUnlock', function(rowCount){
+						var rowNodes = _this.grid.bodyNode.childNodes;
+
+						for(var i = 0; i < rowCount; i++){
+							_this._lockColumns(rowNodes[i]);
+						}
+					});
+				}
 				_this.loaded.callback();
 			});
 		},
