@@ -71,7 +71,7 @@ define([
 					_this.connect(g.columnResizer, 'onResize', '_updatePosition');
 				}
 
-
+ 
 				
 				_this.lock(_this.count);
 				_this.loaded.callback();
@@ -91,7 +91,7 @@ define([
 		},
 		
 		lock: function(count){
-			this.unlock();
+			this.unlock(true);
 			this.count = count;
 			this._foreachLockedRows(function(node){
 				node.style.position = 'absolute';
@@ -102,11 +102,12 @@ define([
 			
 			this._adjustBody();
 			this._updatePosition();
-
-			
+			this.onLock();
 		},
 		
-		unlock: function(){
+		unlock: function(forced){
+			var oc = this.count;
+
 			this._foreachLockedRows(function(node){
 				node.style.position = 'static';
 				domClass.remove(node, 'gridxLockedRow');
@@ -118,9 +119,14 @@ define([
 				this.grid.rowHeader.bodyNode.style.paddingTop = '0px';
 			}
 			this.count = 0;
+			if(!forced){this.onUnlock(oc);}
 			
 		},
 		
+		onLock: function(rowCount){},
+		
+		onUnlock: function(rowCount){},
+
 		_adjustBody: function(){
 			// summary:
 			//	Called after content is changed or column width is resized, which

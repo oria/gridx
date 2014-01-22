@@ -189,7 +189,7 @@ define([
 		_onClick: function(e){
 			event.stop(e);
 			this._sort(e.columnId,
-				domClass.contains(e.target, 'gridxArrowButtonNode') || domClass.contains(e.target, 'gridxArrowButtonChar'),
+				query(e.target).closest('.gridxArrowButtonNode', this.grid.header.domNode).length,
 				this.grid._isCtrlKey(e));
 		},
 
