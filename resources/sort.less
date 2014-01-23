@@ -12,12 +12,12 @@
 .gridxArrowButtonCharAsc,
 .gridxArrowButtonCharDesc {
 	display: none;
-
-	.dijit_a11y .gridxCellSoredAsc &,
-	.dijit_a11y .gridxCellSoredDesc & {
-		display: block;
-	}
 }
+.dijit_a11y .gridxCellSortedAsc .gridxArrowButtonCharAsc,
+.dijit_a11y .gridxCellSortedDesc .gridxArrowButtonCharDesc {
+	display: block;
+}
+
 .gridxArrowButtonNode {
 	display: none;
 	float: right;
