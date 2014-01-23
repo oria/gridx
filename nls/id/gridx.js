@@ -6,7 +6,7 @@ define({
 	loadMore: "Muatkan Lebih Banyak",
 	loadMoreLoading: "Memuatkan...",
 	loadPrevious: "Muatkan Sebelumnya",
-	loadPreviousLoading: "Memuatkan..."
+	loadPreviousLoading: "Memuatkan...",
 
 //FilterBar
 	"clearFilterDialogTitle": "Kosongkan Filter",
@@ -92,7 +92,7 @@ define({
 	"endTimeRangeLabel": "Akhir Nilai Rentang Waktu",
 	"beginDateRangeLabel": "Awal Nilai Rentang Tanggal",
 	"endDateRangeLabel": "Akhir Nilai Rentang Tanggal",
-	"startsWithExpr": "${0}*"
+	"startsWithExpr": "${0}*",
 
 //NestedSort
 	singleSort: "Pengurutan Tunggal",
@@ -102,7 +102,7 @@ define({
 	sortingState: "${0} - ${1}",
 	unsorted: "Jangan mengurutkan kolom ini",
 	waiSingleSortLabel: "${0} - diurutkan oleh ${1}. Pilih untuk mengurutkan berdasarkan ${2}",
-	waiNestedSortLabel:"${0} - diurutkan secara berkelompok oleh ${1}. Pilih untuk mengurutkan secara berkelompok berdasarkan ${2}"
+	waiNestedSortLabel:"${0} - diurutkan secara berkelompok oleh ${1}. Pilih untuk mengurutkan secara berkelompok berdasarkan ${2}",
 
 //PaginationBar
 	pagerWai: 'Penyeranta',
@@ -135,14 +135,13 @@ define({
 	gotoDialogCancelBtn: 'Batal',
 	// for drop down pagination bar
 	pageLabel: 'Halaman',
-	pageSizeLabel: 'Baris'
-
+	pageSizeLabel: 'Baris',
 
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Kosongkan Filter',
 	buildFilterMenuLabel: 'Buat Filter&hellip;',
-	apply: 'Terapkan Filter'
+	apply: 'Terapkan Filter',
 
 //Sort
 	helpMsg: '${0} - Cliquez pour effectuer le tri ou cliquez et maintenez la touche Ctrl enfoncée pour ajouter un élément au tri',
@@ -150,9 +149,8 @@ define({
 	priorityOrder: 'priorité de tri ${0}',
 
 //SummaryBar
-	summary: 'Total: ${0}',
-	summaryWithSelection: 'Total: ${0} Dipilih: ${1}'
-
+	summaryTotal: 'Total: ${0}',
+	summarySelected: 'Total: ${0} Dipilih: ${1}',
 	summaryRange: 'Range: ${0}-${1}',	//need translation
 
 //Other
