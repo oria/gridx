@@ -253,14 +253,16 @@ define([
 			array.forEach(filterData.conditions, function(data){
 				var type = 'string';
 				if(data.colId){
-					type = this.grid.column(data.colId).dataType();
-					exps.push(this._getFilterExpression(data.condition, data, type, data.colId));
+                    var filterColumn = this.grid.column(data.colId);
+					type = filterColumn.dataType();
+                    
+					exps.push(this._getFilterExpression(data.condition, data, type, data.colId,filterColumn.converter));
 				}else{
 					//any column
 					var arr = [];
 					array.forEach(this.grid.columns(), function(col){
 						if(!col.isFilterable()){return;}
-						arr.push(this._getFilterExpression(data.condition, data, type, col.id));
+						arr.push(this._getFilterExpression(data.condition, data, type, col.id,col.converter));
 					}, this);
 					exps.push(F.or.apply(F, arr));
 				}
@@ -533,12 +535,12 @@ define([
 			return cache[colId];
 		},
 		
-		_getFilterExpression: function(condition, data, type, colId){
+		_getFilterExpression: function(condition, data, type, colId,colConverter){
 			//get filter expression by condition,data, column and type
 			var F = Filter;
 			var dc = this.grid._columnsById[colId].dateParser || this._stringToDate;
 			var tc = this.grid._columnsById[colId].timeParser || this._stringToTime;
-			var converter = {date: dc, time: tc};
+			var typeConverter = {date: dc, time: tc};
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			if(c === 'range'){
 				var startValue = F.value(data.value.start, type),
@@ -551,7 +553,11 @@ define([
 					c = c.replace(/^not/g, '');
 					c = c.charAt(0).toLowerCase() + c.substring(1);
 				}
-				exp = F[c](F.column(colId, type, converter[type]), c == 'isEmpty' ? null : F.value(data.value, type));
+                var converter = typeConverter[type];
+                if(!converter) {
+                    converter = colConverter;
+                }
+				exp = F[c](F.column(colId, type, converter), c == 'isEmpty' ? null : F.value(data.value, type));
 				if(isNot){exp = F.not(exp);}
 			}
 			return exp;

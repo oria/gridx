@@ -305,9 +305,9 @@ define([
 	});
 
 	//Util
-	function valueConvert(d, type, converter){
+	function valueConvert(d, type, converter, rowData){
 		if(lang.isFunction(converter)){
-			d = converter(d);
+			d = converter(d,rowData);
 		}
 		switch(type){
 			case 'number':
@@ -361,7 +361,7 @@ define([
 		column: function(/* String|Number */colId, /* String? */type, /* Function? */converter, /* Boolean? */useRawData){
 			type = String(type || 'string').toLowerCase();
 			return wrap(function(row){
-				return valueConvert(row[useRawData ? 'rawData' : 'data'][colId], type, converter);
+				return valueConvert(row[useRawData ? 'rawData' : 'data'][colId], type, converter,row.item);
 			}, type, colId, {isCol: true});
 		},
 
