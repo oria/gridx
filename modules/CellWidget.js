@@ -371,21 +371,21 @@ define([
 
 		onCellWidgetCreated: function(widget, column){
 			if(column.onCellWidgetCreated){
-				column.onCellWidgetCreated(widget, column);
+				column.onCellWidgetCreated.apply(this, arguments);
 			}
 		},
 
 		initializeCellWidget: function(widget, cell){
 			var column = cell.column;
 			if(column.initializeCellWidget){
-				column.initializeCellWidget(widget, cell);
+				column.initializeCellWidget.apply(this, arguments);
 			}
 		},
 
 		uninitializeCellWidget: function(widget, cell){
 			var column = cell.column;
 			if(column.uninitializeCellWidget){
-				column.uninitializeCellWidget(widget, cell);
+				column.uninitializeCellWidget.apply(this, arguments);
 			}
 		},
 
