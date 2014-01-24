@@ -23,6 +23,7 @@ define([
 				containerNode: bn, 
 				noResize: true
 			});
+			this.inherited(arguments);
 		}
 	});
 });
