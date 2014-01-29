@@ -91,14 +91,6 @@ define([
 		return d ? locale.format(d, formatArgs) : rawData[field];
 	}
 
-	function getEditorValueSetter(toEditor){
-		return toEditor && function(gridData, storeData, cellWidget){
-			var editor = cellWidget.gridCellEditField,
-				cell = cellWidget.cell,
-				editorArgs = cell.column.editorArgs;
-			editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
-		};
-	}
 
 	_Module._markupAttrs.push('!editable', '!alwaysEditing', 'editor', '!editorArgs', 'applyWhen');
 
@@ -241,7 +233,7 @@ define([
 				if(row && col.editable){
 					g.cellWidget.setCellDecorator(rowId, colId, 
 						t._getDecorator(colId), 
-						getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
+						t._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col)));
 					t._record(rowId, colId);
 					g.body.refreshCell(row.visualIndex(), col.index).then(function(){
@@ -464,7 +456,7 @@ define([
 					col.editable = true;
 					col.navigable = true;
 					col.userDecorator = t._getDecorator(col.id);
-					col.setCellValue = getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
+					col.setCellValue = t._getEditorValueSetter((col.editorArgs && col.editorArgs.toEditor) ||
 							lang.partial(getTypeData, col));
 					col.decorator = function(){ return ''; };
 					//FIXME: this breaks encapsulation
@@ -558,6 +550,15 @@ define([
 					props, constraints,
 					"'></div>"
 				].join('');
+			};
+		},
+
+		_getEditorValueSetter: function(toEditor){
+			return toEditor && function(gridData, storeData, cellWidget){
+				var editor = cellWidget.gridCellEditField,
+					cell = cellWidget.cell,
+					editorArgs = cell.column.editorArgs;
+				editor.set(editorArgs && editorArgs.valueField || 'value', toEditor(storeData, gridData, cell, editor));
 			};
 		},
 
