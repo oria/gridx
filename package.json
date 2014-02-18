@@ -48,6 +48,9 @@
 		"dijit": "1.9.1",
 		"dojox": "1.9.1"
 	},
+	"directories": {
+		"lib": "."
+	},
 	"homepage": "http://oria.github.com/gridx",
 	"main": "./Grid",
 	"icon": "http://oria.github.com/gridx/images/logo.png",
