@@ -148,8 +148,11 @@ require([
 			],
 			structure: dataSource.layouts[1]
 		});
+		dojo.connect(grid.dod, 'onShow', function(row){console.log('row with id:#' + row.id + ' shows');})
+		dojo.connect(grid.dod, 'onHide', function(row){console.log('row with id:#' + row.id + ' hides');})
 		grid.placeAt('gridContainer');
 		grid.startup();
+
 		
 		window.dod = grid.dod;
 	}
