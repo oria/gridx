@@ -8,7 +8,7 @@ define([
 	"dojo/dom-construct",
 	"dojo/dom-geometry",
 	"dojo/keys",
-	"dojo/query",
+	"../support/query",
 	"dojo/_base/sniff",
 	"../core/_Module"
 //    "dojo/NodeList-traverse"

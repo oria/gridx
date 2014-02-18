@@ -246,6 +246,7 @@ define([
 			}
 			
 			_row.defaultShow = false;
+			this.onHide(row);
 		},
 		
 		toggle: function(row){
@@ -501,6 +502,7 @@ define([
 				}
 			}
 			g.vLayout.reLayout();
+			this.onShow(row);
 		},
 		
 		_detailLoadError: function(row){
