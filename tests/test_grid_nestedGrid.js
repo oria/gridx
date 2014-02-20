@@ -197,7 +197,7 @@ require([
 			cacheClass: Cache,
 			store: storeFactory({
 				dataSource: dataSource, 
-				size: 100
+				size: 10
 			}),
 			modules: [
 				VirtualVScroller,
@@ -212,7 +212,7 @@ require([
 			],
 			// structure: dataSource.layouts[1],
 			structure: mainStructure,
-			autoHeight: false
+			autoHeight: true
 		});
 		grid.placeAt('gridContainer');
 		grid.startup();
