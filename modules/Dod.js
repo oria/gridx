@@ -267,16 +267,7 @@ define([
 			return !!_row.dodShown;
 		},
 		
-		onShow: function(row){
-			var ngs = this.grid._nestedGridsById[row.id];
-			if(ngs){
-				for(var i = 0; i< ngs.length; i++){
-					ngs[i].resize();
-					console.log('in resize');
-				}
-			}
-
-		},
+		onShow: function(row){},
 		onHide: function(row){},
 		
 		initFocus: function(){
@@ -487,19 +478,13 @@ define([
 			
 			//***for nested grid in grid ****
 			
-			var ngs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
-			var ngsById = this.grid._nestedGridsById = this.grid._nestedGridsById? this.grid._nestedGridsById : {};
-
+			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){
 				var gig = registry.byNode(gridNodes[i]);
 				gig._outerGrid = g;
-				if(!gig._initializedForDod){
-					gig._initializedForDod = true;
-					
-					ngs.push(gig);
-					ngsById[row.id] = ngsById[row.id]? ngsById[row.id] : [];
-					ngsById[row.id].push(gig);
-
+				gs.push(gig);
+				if(!gig._refreshForDod){
+					gig._refreshForDod = true;
 					// gig.resize();
 					// gig.vLayout.reLayout();
 					this.connect(gig.focus, 'tab', '_tab');
