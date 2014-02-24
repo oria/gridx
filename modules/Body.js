@@ -591,6 +591,11 @@ define([
 						if(m.isId(id)){
 							m.free(id);
 							t.onUnrender(id);
+						}else{
+							//sometimes, unrendered row has id as null(happens in vv)
+							//this will make rowHeader unsync with rows
+							//explicitly tell rowHeader to treat this tricky scenerio
+							t.onUnrender(id, undefined, 'post');
 						}
 						domConstruct.destroy(bn.lastChild);
 					}
@@ -603,6 +608,8 @@ define([
 						if(m.isId(id)){
 							m.free(id);
 							t.onUnrender(id);
+						}else{
+							t.onUnrender(id , undefined, 'pre');
 						}
 						domConstruct.destroy(bn.firstChild);
 					}
@@ -629,7 +636,7 @@ define([
 			}
 		},
 
-		onUnrender: function(/* id */){},
+		onUnrender: function(/* id, refresh, preOrPost*/){},
 
 		onDelete: function(/*id, index*/){},
 
