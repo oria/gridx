@@ -648,17 +648,25 @@ define([
 				if(preOrPost == 'post'){
 					for(; i < count && bn.lastChild; ++i){
 						id = bn.lastChild.getAttribute('rowid');
-						t.model.free(id);
-						t.onUnrender(id);
+						if(t.model.isId(id)){
+							t.model.free(id);
+							t.onUnrender(id);
+						}else{
+							t.onUnrender(id, undefined, 'post')
+						}
 						domConstruct.destroy(bn.lastChild);
 					}
 				}else{
 					var tp = bn.scrollTop;
 					for(; i < count && bn.firstChild; ++i){
 						id = bn.firstChild.getAttribute('rowid');
-						t.model.free(id);
+						if(t.model.isId(id)){
+							t.model.free(id);
+							t.onUnrender(id);
+						}else{
+							t.onUnrender(id, undefined, 'pre');
+						}
 						tp -= bn.firstChild.offsetHeight;
-						t.onUnrender(id);
 						domConstruct.destroy(bn.firstChild);
 					}
 					t.renderStart += i;
@@ -685,7 +693,7 @@ define([
 			}
 		},
 
-		onUnrender: function(/* id */){},
+		onUnrender: function(/* id, refresh, preOrPost */){},
 
 		onDelete: function(/*id, index*/){},
 
