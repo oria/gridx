@@ -234,13 +234,21 @@ define([
 			}
 		},
 		
-		_onUnrender: function(id, refresh){
-			//If this is fired in partial refresh, don't destroy the row header, save if for later use.
-			if(refresh != 'refresh'){
-				var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
-				if(nodes && nodes.length){
-					//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
-					domConstruct.destroy(nodes[nodes.length - 1]);
+		_onUnrender: function(id, refresh, preOrPost){
+			if(!this.model.isId(id) && preOrPost){
+				if(preOrPost === 'post'){
+					this.bodyNode.lastChild && domConstruct.destroy(this.bodyNode.lastChild);
+				}else{
+					this.bodyNode.firstChild && domConstruct.destroy(this.bodyNode.firstChild);
+				}
+			}else{
+				//If this is fired in partial refresh, don't destroy the row header, save if for later use.
+				if(refresh != 'refresh'){
+					var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
+					if(nodes && nodes.length){
+						//remove the last node instead of the first, because when refreshing, there'll be 2 nodes with same id.
+						domConstruct.destroy(nodes[nodes.length - 1]);
+					}
 				}
 			}
 		},
