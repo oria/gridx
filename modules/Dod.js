@@ -6,6 +6,7 @@ define([
 	"dojo/dom-geometry",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
+	"dojo/_base/array",
 	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/fx",
@@ -17,7 +18,7 @@ define([
 	'dojo/_base/event',
 	'dojo/_base/sniff'
 ], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, 
-			Deferred, _Module, declare, baseFx, fx, keys, query, a11y, registry, event, has){
+			Deferred, array, _Module, declare, baseFx, fx, keys, query, a11y, registry, event, has){
 	kernel.experimental('gridx/modules/Dod');
 
 /*=====
@@ -72,7 +73,8 @@ define([
 		onHide: function(row){}
 	});
 =====*/
-
+	var dummyFunc = function(){};
+	
 	return declare(_Module, {
 		name: 'dod',
 		required: ['body'],
@@ -83,6 +85,18 @@ define([
 		
 		preload: function(){
 			this.initFocus();
+
+			var g = this.grid,
+				_events = g._eventNames,
+				len = _events.length,
+				eventName;
+
+			for(var i = 0; i < len; i++){
+				eventName = 'onDod' + _events[i];
+				g[eventName] = g[eventName] || dummyFunc;
+			}
+
+			this.connect(this.grid.body, '_onMouseEvent', '_dodEventDispatcher');
 		},
 		
 		load: function(args, deferStartup){
@@ -283,12 +297,12 @@ define([
 				onBlur: t._onBlur,
 				connects: [
 					t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
-					t.connect(t.grid, 'onRowKeyDown', '_onRowKeyDown')
+					t.connect(t.grid, 'onDodKeyDown', '_onRowKeyDown')
 				]
 			});	
 		},
 		
-		//private
+		//*****************************	private	*****************************
 		_rowMap: null,
 		_lastOpen: null, //only useful when autoClose is true.
 		_row: function(/*id|obj*/row){
@@ -674,6 +688,33 @@ define([
 		
 		_onBlur: function(evt){
 			this._navigating = false;
+		},
+
+		_dodEventDispatcher: function(eventName, e){
+			var target = e.target,
+				evtDod = 'onDod' + eventName,
+				g = this.grid;
+
+			var atrs = ['rowId', 'columnId', 'rowIndex', 'visualIndex', 'columnIndex', 'parentId', 'cellNode'];
+			array.forEach(atrs, function(atr){
+				if(atr in e){ 
+					e[atr] = undefined; 
+				}
+			});
+
+			while(target && !domClass.contains(target, 'gridxDodNode')){
+				target = target.parentNode;
+			}
+			if(target){
+				var n = target.parentNode;
+				e.rowId = n.getAttribute('rowid');
+				e.parentId = n.getAttribute('parentid');
+				e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);
+				e.visualIndex = parseInt(n.getAttribute('visualindex'), 10);
+
+				g[evtDod] && g[evtDod](e);
+				return;
+			}
 		},
 
 		endFunc: function(){}
