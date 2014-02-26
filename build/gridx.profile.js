@@ -10,19 +10,19 @@ var profile = {
 	packages: [
 		{
 			name: 'dojo',
-			location: '../../dojo'
+			location: '../../../dojo'
 		},
 		{
 			name: 'dijit',
-			location: '../../dijit'
+			location: '../../../dijit'
 		},
 		{
 			name: 'dojox',
-			location: '../../dojox'
+			location: '../../../dojox'
 		},
 		{
 			name: 'gridx',
-			location: '../../gridx',
+			location: '../../../gridx',
 			resourceTags: {
 				ignore: function(filename, mid){
 					return /gridx\/gallery\//.test(mid);
