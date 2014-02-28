@@ -65,6 +65,8 @@ define([
 					});
 					_this.connect(g.columnWidth, 'onUpdate', '_updateHeader');
 					_this.connect(g.header, 'onRender', '_updateHeader');
+					_this.connect(g.vScroller, '_onBodyChange', '_updateBody');
+
 					if(g.columnResizer){
 						//make it compatible with column resizer
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
