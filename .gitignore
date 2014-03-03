@@ -167,4 +167,6 @@ pip-log.txt
 #############
 
 .c9revisions
-/cn.txt
+/cn.txtresources/less_compile.bat
+
+/resources/less_compile.bat
