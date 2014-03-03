@@ -9,7 +9,8 @@ define([
 /*=====
 	return declare(_Extension, function(){
 		// summary:
-		//		Abstract base cache class, providing cache data structure and some common cache functions.
+		//		Base cache class, providing cache data structure and some common cache functions.
+		//		Also directly support client side stores.
 	});
 =====*/
 
@@ -33,10 +34,49 @@ define([
 	}
 
 	return declare(_Extension, {
+		// Assumption:
+		//		The parent id for root level rows is an empty string.
+		//
+		// Some internal data structures:
+		//
+		// _struct: the index structure of data
+		//		{
+		//			'': [undefined, 'id1', 'id2', ...], // root level
+		//			'id1': ['', 'child-id1', ...], // children of id1 
+		//			'id2': ['', ...],	// children of id2
+		//			'child-id1': ['id1', ...], // children of child-id1
+		//			...
+		//		}
+		//
+		// _cache: row data cache hashed by row id
+		//		{
+		//			'id1': {
+		//				data: {}, // formatted grid data, hashed by column id
+		//				rawData: {}, // raw store data, hashed by column id
+		//				item: {}	// original store item, defined by store, usually hashed by field name
+		//			},
+		//			'id2': {
+		//				data: {},
+		//				rawData: {},
+		//				item: {}
+		//			}
+		//		}
+		//
+		// _size: total size for every layer
+		//		{
+		//			'': 100		// root layer
+		//			'id1': 20		// id1 has 20 direct children
+		//		}
+		//
+		// _priority: array of row ids
+		//		provide an ordered list to decide which row to be removed from cache when cacheSize limit is reached.
+		//
+
 		constructor: function(model, args){
 			var t = this;
 			t.setStore(args.store);
 			t.columns = lang.mixin({}, args.columnsById || args._columnsById);
+			// provide the following APIs to Model
 			t._mixinAPI('byIndex', 'byId', 'indexToId', 'idToIndex', 'size', 'treePath', 'rootId', 'parentId',
 				'hasChildren', 'children', 'keep', 'free', 'layerId', 'setLayer', 'layerUp');
 		},
@@ -74,6 +114,7 @@ define([
 		},
 
 		when: function(args, callback){
+			// For client side store, this method is a no-op
 			var d = new Deferred();
 			try{
 				if(callback){

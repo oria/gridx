@@ -320,6 +320,7 @@ define([
 		//Public-------------------------------------------------------------------
 		when: function(args, callback, scope){
 			this._oldSize = this.size();
+			// execute pending operations and then fetch data
 			this._addCmd({
 				name: '_cmdRequest',
 				scope: this,
