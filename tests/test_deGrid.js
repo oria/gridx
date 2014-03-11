@@ -27,7 +27,7 @@ require([
 				store: store,
 				structure: layout,
 				modules: [
-					mods.VirtualVScroller
+					// mods.VirtualVScroller
 				]
 			});
 			grid.placeAt('gridContainer');

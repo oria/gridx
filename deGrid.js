@@ -151,10 +151,10 @@ define([
 			var t = this;
 			t.modules = t.coreModules.concat(t.modules || []);
 			this._init();
-			if(!this._started){
+			// if(!this._started){
 				// this.inherited(arguments);
 				this._deferStartup.callback();
-			}
+			// }
 		},
 	
 		destroy: function(){
