@@ -196,6 +196,7 @@ define([
 				if(isString(mc)){
 					try{
 						mc = m.moduleClass = require(mc);
+						console.log('require' + mc);
 					}catch(e){
 						console.error(e);
 					}
