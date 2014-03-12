@@ -428,13 +428,17 @@ define([
 		},
 
 		_uninit: function(){
-			var t = this, mods = t._modules, m;
+			var t = this, mods = t._modules, m, cnnts = t._cnnts, cnntsLen = cnnts.length;
 			for(m in mods){
 				mods[m].mod.destroy();
 			}
 			if(t.model){
 				t.model.destroy();
 			}
+			for(var i = 0; i < cnntsLen; i++){
+				cnnts[i].remove();
+			}
+			cnnts = [];
 		},
 
 		_create: function(){

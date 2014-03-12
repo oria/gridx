@@ -3,15 +3,23 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/on",
+	'dojo/aspect',
 	"dojo/i18n",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
 	"dojox/html/metrics",
+	/*delete*/
+	'delite/register',
+	'delite/widget',
+
+	/*dijit*/
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
-	"dojo/text!./templates/Grid.html",
+	// "dojo/text!./templates/Grid.html",
+	"delite/handlebars!./templates/Grid.html",
+
 	"./core/Core",
 	"./core/model/extensions/Query",
 	"./core/_Module",
@@ -29,21 +37,23 @@ define([
 	"dojo/uacss",
 	"dijit/hccss",
 	"dojo/NodeList-dom",
-	"dojo/NodeList-traverse"
-], function(declare, lang, has, on, i18n, domClass, domGeometry, query, metrics,
+	"dojo/NodeList-traverse",
+	"delite/themes/load!./resources/{{theme}}/Gridx.css"
+], function(declare, lang, has, on, aspect, i18n, domClass, domGeometry, query, metrics,
+	register, widget,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport, nls){
 
 	var dummyFunc = function(){};
 
-	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
+	return register('delite-grid', [HTMLElement, widget, Core], 
+		{
 		// summary:
 		//		Gridx is a highly extensible widget providing grid/table functionalities. 
 		// description:
 		//		Gridx is much smaller, faster, more reasonable designed, more powerful and more flexible 
 		//		compared to the old dojo DataGrid/EnhancedGrid.
 		
-		templateString: template,
 
 		//textDir bidi support begin
 		_setTextDirAttr: function(textDir){
@@ -96,6 +106,8 @@ define([
 			//Put default extensions here!
 			Query
 		],
+
+		buildRendering: template,
 	
 		postCreate: function(){
 			// summary:
@@ -103,7 +115,10 @@ define([
 			// tags:
 			//		protected extension
 			var t = this;
-			t.inherited(arguments);
+			t.domNode = t;
+
+
+			// t.inherited(arguments);
 			if(t.touch === undefined){
 				t.touch = has('ios') || has('android');
 			}
@@ -118,26 +133,34 @@ define([
 			//in case gridx is not a root level package, it should still work
 			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang) || nls;
 			t._eventFlags = {};
-			t.modules = t.coreModules.concat(t.modules || []);
-			t.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
-			t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
+			this.modelExtensions = t.coreExtensions.concat(t.modelExtensions || []);
+			// t.lastFocusNode.setAttribute('tabIndex', t.domNode.getAttribute('tabIndex'));
 			t._initEvents(t._compNames, t._eventNames);
-			t._init();
+		
 			//resize the grid when zoomed in/out.
 			t.connect(metrics, 'onFontResize', function(){
 				t.resize();
 			});
 		},
 	
+		connect: function(target, method, func, scope, receiveArguments){
+			var cnnt = aspect.after(target, method, lang.hitch(scope || this, func), receiveArguments);
+			this._cnnts.push(cnnt);
+			return cnnt;
+		},
+
 		startup: function(){
 			// summary:
 			//		Startup this grid widget
 			// tags:
 			//		public extension
-			if(!this._started){
-				this.inherited(arguments);
+			var t = this;
+			t.modules = t.coreModules.concat(t.modules || []);
+			this._init();
+			// if(!this._started){
+				// this.inherited(arguments);
 				this._deferStartup.callback();
-			}
+			// }
 		},
 	
 		destroy: function(){
@@ -146,7 +169,7 @@ define([
 			// tags:
 			//		public extension
 			this._uninit();
-			this.inherited(arguments);
+			// this.inherited(arguments);
 		},
 
 	/*=====
@@ -188,9 +211,15 @@ define([
 			t._onResizeEnd(changeSize, ds);
 		},
 
+		after: function(target, methodName, scope, advisingFunction, receiveArguments){
+
+		},
+		// before: functionfunction(target, methodName, advisingFunction, receiveArguments){
 		//Private-------------------------------------------------------------------------------
 		_onResizeBegin: function(){},
 		_onResizeEnd: function(){},
+
+		_cnnts: [],
 
 		_escapeId: function(id){
 			return String(id).replace(/\\/g, "\\\\");
