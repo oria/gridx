@@ -1,13 +1,20 @@
 require([
-	'gridx/Grid',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
-	'gridx/allModules'
-], function(Grid, dataSource, storeFactory, TestPane, mods){
+	'delite/register',
+	'gridx/allModules',
+], function(dataSource, storeFactory, TestPane, register, mods){
 
 	var columnSetIdx = 0;
 
+	window.store = storeFactory({
+		dataSource: dataSource,
+		size: 100
+	});
+
+	window.layout = dataSource.layouts[columnSetIdx];
+	
 	destroy = function(){
 		if(window.grid){
 			grid.destroy();
@@ -15,27 +22,21 @@ require([
 		}
 	};
 
-	create = function(){
+
+	require(['gridx/Grid'], function(Grid){
 		if(!window.grid){
-			var store = storeFactory({
-				dataSource: dataSource,
-				size: 100
-			});
-			var layout = dataSource.layouts[columnSetIdx];
 			grid = new Grid({
-				id: 'grid',
+				id: 'grid1',
 				store: store,
 				structure: layout,
 				modules: [
 					mods.VirtualVScroller
 				]
 			});
-			grid.placeAt('gridContainer');
+			grid.placeAt(dojo.query('.gridContainer')[0]);
 			grid.startup();
 		}
-	};
-
-	create();
+	})
 	
 	//Test Functions, must be global
 	setStore = function(){
@@ -73,19 +74,20 @@ require([
 	};
 
 	//Test buttons
-	var tp = new TestPane({});
-	tp.placeAt('ctrlPane');
+	// var tp = new TestPane({});
+	// tp.placeAt('ctrlPane');
 
-	tp.addTestSet('Tests', [
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setColumns">Change column structure</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setStore">Change store</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: newRow">Add an empty new row</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setRow">Set Year of the first row</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroy">Destroy</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: create">Create</div><br/>',
-		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: toggleHeader">Toggle Header</div><br/>'
-	].join(''));
+	// tp.addTestSet('Tests', [
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setColumns">Change column structure</div><br/>',
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setStore">Change store</div><br/>',
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: newRow">Add an empty new row</div><br/>',
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: setRow">Set Year of the first row</div><br/>',
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: deleteRow">Delete the first row</div><br/>',
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: destroy">Destroy</div><br/>',
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: create">Create</div><br/>',
+	// 	'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: toggleHeader">Toggle Header</div><br/>'
+	// ].join(''));
 
-	tp.startup();
+	// tp.startup();
+	// register.parse();
 });

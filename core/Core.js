@@ -307,6 +307,8 @@ define([
 	}
 
 	return declare([], {
+		store: null,
+
 		setStore: function(store){
 			if(this.store != store){
 				this.store = store;
@@ -314,6 +316,7 @@ define([
 			}
 		},
 
+		structure: null, 
 		setColumns: function(columns){
 			var t = this;
 			t.structure = columns;
