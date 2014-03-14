@@ -23,6 +23,8 @@ require([
 	};
 
 
+	//for this issue:
+	//https://github.com/ibm-js/delite/issues/127
 	require(['gridx/Grid'], function(Grid){
 		if(!window.grid){
 			grid = new Grid({
@@ -32,7 +34,7 @@ require([
 				modules: [
 					mods.VirtualVScroller
 				]
-			});
+			});	
 			grid.placeAt(dojo.query('.gridContainer')[0]);
 			grid.startup();
 		}
