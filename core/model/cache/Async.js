@@ -34,6 +34,7 @@ define([
 		var i, r, len, pid,
 			ranges = args.range,
 			isTree = self.store.getChildren;
+		// classify range requests into different parent ids.
 		args.pids = {};
 		args.pids[self.layerId()] = args.range;
 		if(isTree){
@@ -57,6 +58,8 @@ define([
 			array.forEach(ids, function(id){
 				var idx = self.idToIndex(id);
 				if(idx >= 0 && !self.treePath(id).pop()){
+					// the requested row is a root and have index,
+					// so fetch it by index, which is a quicker way.
 					ranges.push({
 						start: idx,
 						count: 1
@@ -67,6 +70,7 @@ define([
 			});
 			searchRootLevel(self, mis, function(ids){
 				if(ids.length && isTree){
+					// some row not found in root level, search in children
 					searchChildLevel(self, ids, function(ids){
 						if(ids.length){
 							console.warn('Requested row ids are not found: ', ids);
@@ -122,6 +126,7 @@ define([
 			reqs = self._requests;
 		for(i = reqs.length - 1; i >= 0; --i){
 			req = reqs[i];
+			// check if some part of this range request is already covered by previous pending requests.
 			ranges = minus(ranges, req.pids[parentId]);
 			if(ranges._overlap && array.indexOf(dl, req._def) < 0){
 				dl.push(req._def);
@@ -371,6 +376,8 @@ define([
 					t._requests.pop();
 					fail(e);
 				};
+			// fetch by row id first, because this can greatly 
+			// increase the hit-rate for fetchByIndex
 			fetchById(t, args, function(args){
 				fetchByIndex(t, args, function(args){
 					Deferred.when(args._req, function(){
@@ -446,6 +453,7 @@ define([
 		_init: function(){},
 
 		_checkSize: function(){
+			// only meaningful when casheSize is limited
 			var t = this, id,
 				cs = t.cacheSize,
 				p = t._priority;

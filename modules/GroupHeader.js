@@ -353,7 +353,7 @@ define([
 							domClass.add(node, t._focusClass);
 						}
 						node.focus();
-						if(has('ie') < 8){
+						if(t._isMSIE()){
 							t.innerNode.scrollLeft = t._scrollLeft;
 						}
 					}, 0);
@@ -362,6 +362,12 @@ define([
 			}
 			return false;
 		},
+		
+		//dojo has not well support IE version check for IE11 currently, should remove when it's ready
+		_isMSIE: function(){
+            var ua = navigator.userAgent.toLowerCase();
+            return ((/msie/.test(ua)||/trident/.test(ua)) && !/opera/.test(ua));
+        },
 
 		_blurNode: function(){
 			var t = this, n = query('.' + t._focusClass, t.innerNode)[0];

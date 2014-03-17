@@ -160,6 +160,24 @@ define([
 			//		The ID of the row that is unrendered.
 		},
 
+		onCheckCustomRow: function(row, output){
+			// summary:
+			//		Fired before creating every row, giving user a chance to customize the entire row.
+			// row: grid.core.Row
+			//		A row object representing this row
+			// output: Object
+			//		If the given row should be customized, set output[row.id] to truthy.
+		},
+
+		onBuildCustomRow: function(row, output){
+			// summary:
+			//		Fired if onCheckCustomRow decides to customize this row.
+			// row: grid.core.Row
+			//		A row object representing this row
+			// output: Object
+			//		Set output[row.id] = some html string to render the row.
+		},
+
 		onDelete: function(){
 			// summary:
 			//		Fired when a row in current view is deleted from the store.

@@ -2,12 +2,13 @@ define([
 	"dojo/_base/kernel",
 	"dojo/_base/declare",
 	"dojo/_base/lang",
+	"dojo/_base/sniff",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
 	"dojo/keys",
 	"../core/_Module"
-], function(kernel, declare, lang, domClass, domGeometry, query, keys, _Module){
+], function(kernel, declare, lang, has, domClass, domGeometry, query, keys, _Module){
 	kernel.experimental('gridx/modules/Layer');
 
 /*=====
@@ -91,6 +92,9 @@ define([
 				wrapper2 = t._wrapper2 = document.createElement('div');
 			n.setAttribute('class', 'gridxBody');
 			cn.setAttribute('class', 'gridxLayerContext');
+			cn.style.overflow = 'hidden';
+			
+			cn.setAttribute('id', 'testContextNode')
 			wrapper1.setAttribute('class', 'gridxLayerWrapper');
 			wrapper2.setAttribute('class', 'gridxLayerWrapper');
 			t._parentStack = [];
@@ -108,7 +112,24 @@ define([
 				if(cn.firstChild){
 					cn.style.height = cn.firstChild.offsetHeight + 'px';
 				}
+				var marginRight = parseInt(g.header.innerNode.style.marginRight),
+					marginLeft = parseInt(g.header.innerNode.style.marginLeft);
+				if ( marginRight ){
+					marginRight =( marginRight + 1 ) + 'px';
+				}
+				else{
+					marginRight =( marginRight + 0 ) + 'px';
+				}
+				if ( marginLeft ){
+					marginLeft = ( marginLeft + 1 ) + 'px'; 
+				}
+				else{
+					marginLeft = ( marginLeft + 0 ) + 'px';
+				}
+				cn.style.marginRight = marginRight;	
+				cn.style.marginLeft = marginLeft;
 			});
+			
 
 			var w = t.arg('buttonColumnWidth');
 			var col = t._col = lang.mixin({
@@ -160,6 +181,25 @@ define([
 
 		preload: function(){
 			this.grid.vLayout.register(this, '_contextNode', 'headerNode', 10);
+			
+			var t = this,
+			g = t.grid;
+			//Add this.domNode to be a part of the grid header
+			t.aspect(g, 'onHScroll', '_onHScroll');
+		},
+		
+		_onHScroll: function(left){
+			var t = this,
+				g = t.grid;
+
+			if ( t._contextNode ){
+				var innerNode = t._contextNode;
+				if((has('webkit') || has('ie') < 8) && !g.isLeftToRight()){debugger;
+					left = innerNode.scrollWidth - innerNode.offsetWidth - left;	
+				}
+				innerNode.scrollLeft = t._scrollLeft = left;
+			}
+			
 		},
 
 		onReady: function(){},
@@ -365,6 +405,7 @@ define([
 			}
 			focusEnabled = g.focus.enabled;
 			g.focus.enabled = 0;
+			
 			g.body.refresh().then(function(){
 				g.vScroller._lock = 0;
 				g.view.paging = t._paging;
@@ -375,6 +416,7 @@ define([
 						g.vScroller._scrollable.scrollTo({x: 0});
 					}
 					callback();
+					t._contextNode.style.postion = 'absolute';
 					setTimeout(function(){
 						t._onTransitionEnd();
 						g.vLayout.reLayout();
@@ -383,6 +425,7 @@ define([
 						g.body._focusCellCol = 0;
 						g.focus.focusArea('body');
 						t.onFinish(args);
+						t._contextNode.style.postion = 'relative';
 					}, transitionDuration);
 				}, 10);
 			});
