@@ -546,7 +546,7 @@ define([
 				t = this,
 				g = t.grid;
 			if(!t.isEditing(rowId, colId)){
-				var row = g.row(rowId, 1),	//1 as true
+				var row = g.row(rowId, 1),		//1 as true
 					col = g._columnsById[colId];
 				if(row && row.cell(colId, 1).isEditable()){
 					g.cellWidget.setCellDecorator(rowId, colId, 

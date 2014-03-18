@@ -435,6 +435,8 @@ define([
 						}
 						cellWidget.placeAt(cellNode);
 						cellWidget.startup();
+						cellNode.setAttribute('aria-labelledby', cellWidget.id);
+						cellNode.removeAttribute('aria-label');
 					}
 				}
 			});
@@ -449,6 +451,8 @@ define([
 				cellNode.innerHTML = "";
 				cellWidget.placeAt(cellNode);
 				cellWidget.startup();
+				cellNode.setAttribute('aria-labelledby', cellWidget.id);
+				cellNode.removeAttribute('aria-label');
 			}
 		},
 
