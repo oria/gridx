@@ -65,6 +65,9 @@ define([
 					_this.connect(g.header, 'onRender', '_updateHeader');
 					_this.connect(g.vScroller, '_onBodyChange', '_updateBody');
 
+					//potential cell upate will cause rowHeight changing
+					_this.connect(g.body, 'onAfterCell', '_updateBody');
+					
 					if(g.columnResizer){
 						//make it compatible with column resizer
 						_this.connect(g.columnResizer, 'onResize', '_updateHeader');
