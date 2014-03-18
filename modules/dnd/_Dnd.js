@@ -368,6 +368,10 @@ define([
 
 		_onDropInternal: function(nodes, copy){
 			this.profile._onDropInternal(nodes, copy);
+			//
+			// Fix IE anchor not hide when drop
+			//
+			this._endDnd();
 		},
 		
 		_onDropExternal: function(source, nodes, copy){
