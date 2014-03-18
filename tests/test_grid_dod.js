@@ -179,7 +179,7 @@ require([
 					]
 				});
 				t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown');
-				t.connect(t.grid.body, '_onRowMouseOver', '_onRowMouseOver');
+				// t.connect(t.grid.body, '_onRowMouseOver', '_onRowMouseOver');
 			},
 
 			_onCellKeyDown: function(e){
