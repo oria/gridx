@@ -180,8 +180,9 @@ define([
 		//private
 		_rowMap: null,
 		_lastOpen: null, //only useful when autoClose is true.
+		
 		_row: function(/*id|obj*/row){
-			var id = row.id || row;
+			var id = typeof row === 'object'? row.id : row;
 			return this._rowMap[id] || (this._rowMap[id] = {});
 		},
 		
