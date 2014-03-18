@@ -22,7 +22,7 @@ require([
     'dojox/charting/plot2d/OHLC',
     'dojox/charting/plot2d/Pie',
 	'dojo/domReady!'
-], function(Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
+], function(Grid, Cache, dataSource, storeFactory, TestPane, Focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
 	function random(start, end){
 		//include start but not end. e.g. 1-10, 1 is possible but not 10.
 		return Math.floor(Math.random()*(end-start)) + start;
@@ -122,6 +122,7 @@ require([
 			setTheme(JulieTheme).render()
 			;
 	}
+
 	window.createGrid = function(){
 		if(window.grid){window.grid.destroy();}
 		grid = new Grid({
@@ -139,7 +140,8 @@ require([
 					defaultShow: defaultShow,
 					showExpando: showExpando,
 					detailProvider: detailProvider
-				}
+				},
+				Focus
 			],
 			structure: dataSource.layouts[1]
 		});
@@ -150,8 +152,160 @@ require([
 	}
 	
 	createGrid();
-	
-	
+
+	require([	'dojo/_base/sniff', 
+				'dojo/_base/event', 
+				'dojo/_base/lang',
+				'dojo/dom-class',
+				'dojo/keys',
+				'dijit/a11y'
+	], function(has, event, lang, domClass, keys, a11y){
+		var focusMixin = {
+			//Focus
+			initFocus: function(){
+				var t = this,
+					focus = t.grid.focus;
+				focus.registerArea({
+					name: 'navigabledod',
+					priority: 1,
+					scope: t,
+					doFocus: t._doFocus,
+					doBlur: t._doBlur,
+					onFocus: t._onFocus,
+					onBlur: t._onBlur,
+					connects: [
+						t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
+						t.connect(t.grid, 'onRowKeyDown', '_onRowKeyDown')
+					]
+				});
+				t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown');
+				t.connect(t.grid.body, '_onRowMouseOver', '_onRowMouseOver');
+			},
+
+			_onCellKeyDown: function(e){
+				var t = this,
+					grid = t.grid,
+					focus = grid.focus,
+					row = grid.row(e.rowId, 1);
+				if(e.keyCode == keys.DOWN_ARROW && e.ctrlKey){
+					t.show(row);
+					e.stopPropagation();
+				}else if(e.keyCode == keys.UP_ARROW && e.ctrlKey){
+					t.hide(row);
+					e.stopPropagation();
+				}
+			
+				if(e.keyCode == keys.F4 && !t._navigating && focus.	currentArea() == 'body'){
+					if(t._beginNavigate(e.rowId, e.columnId)){
+						focus.focusArea('navigabledod');
+						if(has('ie') < 9){
+							e.returnValue = false;
+							return false;
+						}
+						event.stop(e);
+					}
+				}else if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+					t._navigating = false;
+					focus.focusArea('body');
+				}
+			},
+
+			_beginNavigate: function(rowId){
+				
+				var t = this,
+					row = t.grid.row(rowId, 1),
+					_row = t._row(rowId);
+				if(!_row.dodShown){
+					return false;
+				}
+				t._navigating = true;
+				// t._focusColId = colId;
+				t._focusRowId = rowId;
+				var navElems = t._navElems = a11y._getTabNavigable(row.node());
+				return (navElems.highest || navElems.last) && (navElems.lowest || navElems.first);
+				
+			},
+			
+			_onRowKeyDown: function(e){
+				var t = this,
+					focus = t.grid.focus;
+
+				if(e.keyCode == keys.ESCAPE && t._navigating && focus.currentArea() == 'navigabledod'){
+					t._navigating = false;
+					focus.focusArea('body');
+				}
+			},
+			
+			_doFocus: function(evt, step){
+				if(this._navigating){
+					var elems = this._navElems,
+						func = function(){
+							var toFocus = step < 0 ? (elems.highest || elems.last) : (elems.lowest || elems.first);
+							if(toFocus){
+								toFocus.focus();
+							}
+						};
+					if(has('webkit')){
+						func();
+					}else{
+						setTimeout(func, 5);
+					}
+					return true;
+				}
+				return false;
+			},
+			
+			_onFocus: function(evt){
+				var node = evt.target, dn = this.grid.domNode;
+				while(node && node !== dn && !domClass.contains(node, 'gridxDodNode')){
+					node = node.parentNode;
+				}
+				if(node && node !== dn){
+					var dodNode = node,
+						rowNode = dodNode.parentNode;
+					// this.grid.hScroller.scrollToColumn(colId);
+					if(rowNode){
+						var rowId = rowNode.getAttribute('rowid');
+						return dodNode !== evt.target && this._beginNavigate(rowId);
+					}
+				}
+				return false;
+			},		
+			
+			_doBlur: function(evt, step){
+				if(evt){
+					var navElems = this._navElems,
+						firstElem = navElems.lowest || navElems.first,
+						lastElem = navElems.highest || navElems.last ||firstElem,
+						target = has('ie') ? evt.srcElement : evt.target;
+
+					if(target == (step > 0 ? lastElem : firstElem)){
+						event.stop(evt);
+					}
+					return false;
+				}else{
+					this._navigating = false;
+					return true;
+				}
+			},
+			
+			_onBlur: function(evt){
+				this._navigating = false;
+			},
+
+		};
+
+		if(!grid){
+			setTimeout(function(){
+				lang.mixin(grid.dod, focusMixin);
+				grid.dod.iniFocus();
+			}, 10);
+		}else{
+			lang.mixin(grid.dod, focusMixin);
+			grid.dod.initFocus();
+		}
+	});
+
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
 	
