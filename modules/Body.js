@@ -814,7 +814,7 @@ define([
 						g.getTextDirStyle(colId, cellData),
 						(styleIsFunction ? col.style(cell) : col.style) || '"',
 						//when cell content is empty, need to add aria-label
-						(!cellContent || cellContent === '&nbsp;')? ' aria-label="empty"' : '',
+						(!cellContent.toString() || cellContent.toString() === '&nbsp;')? ' aria-label="empty cell"' : '',
 						'>', cellContent,
 					'</td>');
 				}
