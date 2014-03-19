@@ -812,10 +812,10 @@ define([
 						cellCls[colId] ? cellCls[colId].join('') : '',
 						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
 						g.getTextDirStyle(colId, cellData),
-						(styleIsFunction ? col.style(cell) : col.style) || '"',
+						(styleIsFunction ? col.style(cell) : col.style) || '',
 						//when cell content is empty, need to add aria-label
-						(!cellContent.toString() || cellContent.toString() === '&nbsp;')? ' aria-label="empty cell"' : '',
-						'>', cellContent,
+						(!cellContent.toString() || cellContent.toString() === '&nbsp;')? '" aria-label="empty cell' : '',
+						'">', cellContent,
 					'</td>');
 				}
 			}
