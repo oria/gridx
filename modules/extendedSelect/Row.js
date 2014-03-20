@@ -229,7 +229,10 @@ define([
 			var t = this,
 				g = t.grid,
 				unselectable = t.arg('unselectable', {});
-			t.model.treeMarkMode('', t.arg('treeMode'));
+
+			//#12078
+			//tri-state selection status is meaningless for grid without tree module
+			t.model.treeMarkMode('', t.arg('treeMode') && g.tree);
 			for(var id in unselectable){
 				t.model.setMarkable(id, !unselectable[id]);
 			}

@@ -160,6 +160,24 @@ define([
 			//		The ID of the row that is unrendered.
 		},
 
+		onCheckCustomRow: function(row, output){
+			// summary:
+			//		Fired before creating every row, giving user a chance to customize the entire row.
+			// row: grid.core.Row
+			//		A row object representing this row
+			// output: Object
+			//		If the given row should be customized, set output[row.id] to truthy.
+		},
+
+		onBuildCustomRow: function(row, output){
+			// summary:
+			//		Fired if onCheckCustomRow decides to customize this row.
+			// row: grid.core.Row
+			//		A row object representing this row
+			// output: Object
+			//		Set output[row.id] = some html string to render the row.
+		},
+
 		onDelete: function(){
 			// summary:
 			//		Fired when a row in current view is deleted from the store.
@@ -782,17 +800,22 @@ define([
 						styleIsFunction = col.style && lang.isFunction(col.style),
 						needCell = customClsIsFunction || styleIsFunction || (!isPadding && col.decorator),
 						cell = needCell && g.cell(row, cols && cols[i] || colId, 1);
+
+					var cellContent = t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData);
+
 					sb.push('<td aria-readonly="true" role="gridcell" tabindex="-1" aria-describedby="',
 						col._domId,'" colid="', colId, '" class="gridxCell ',
-						isPadding ? 'gridxPaddingCell ' : '',
 						isFocusedRow && t._focusCellCol === i ? 'gridxCellFocus ' : '',
+						isPadding ? 'gridxPaddingCell ' : '',
 						col._class || '', ' ',
 						(customClsIsFunction ? customCls(cell) : customCls) || '', ' ',
 						cellCls[colId] ? cellCls[colId].join('') : '',
 						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
 						g.getTextDirStyle(colId, cellData),
 						(styleIsFunction ? col.style(cell) : col.style) || '',
-						'">', t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
+						//when cell content is empty, need to add aria-label
+						(!cellContent.toString() || cellContent.toString() === '&nbsp;')? '" aria-label="empty cell' : '',
+						'">', cellContent,
 					'</td>');
 				}
 			}

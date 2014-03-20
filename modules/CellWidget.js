@@ -229,13 +229,11 @@ define([
 					cellWidget.uninitializeCellWidget(t, cell);
 				}
 				cellWidget.initializeCellWidget(t, cell);
-				if(col.getCellWidgetConnects){
-					var output = [];
-					cellWidget.collectCellWidgetConnects(t, output);
-					t._cellCnnts = array.map(output, function(cnnt){
-						return t.connect.apply(t, cnnt);
-					});
-				}
+				var output = [];
+				cellWidget.collectCellWidgetConnects(t, output);
+				t._cellCnnts = array.map(output, function(cnnt){
+					return t.connect.apply(t, cnnt);
+				});
 			},
 		
 			setValue: function(gridData, storeData, isInit){
@@ -437,6 +435,8 @@ define([
 						}
 						cellWidget.placeAt(cellNode);
 						cellWidget.startup();
+						cellNode.setAttribute('aria-labelledby', cellWidget.id);
+						cellNode.removeAttribute('aria-label');
 					}
 				}
 			});
@@ -451,6 +451,8 @@ define([
 				cellNode.innerHTML = "";
 				cellWidget.placeAt(cellNode);
 				cellWidget.startup();
+				cellNode.setAttribute('aria-labelledby', cellWidget.id);
+				cellNode.removeAttribute('aria-label');
 			}
 		},
 
