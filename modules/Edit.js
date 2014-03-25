@@ -593,7 +593,15 @@ define([
 						cw.restoreCellDecorator(rowId, colId);
 						g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 							d.callback();
-							t.onCancel(g.cell(rowId, colId, 1));
+							var c = g.cell(rowId, colId, 1),
+								node = c && c.node();
+							if(node){
+								node.removeAttribute('aria-labelledby');
+								if(!node.innerHTML || node.innerHTML === '&nbsp;'){
+									node.setAttribute('aria-label', 'empty cell');
+								}
+							}
+							t.onCancel(c);
 						});
 					}
 				}
@@ -628,6 +636,12 @@ define([
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
 									g.resize();
+
+									var node = cell.node();
+									node.removeAttribute('aria-labelledby');
+									if(!node.innerHTML || node.innerHTML === '&nbsp;'){
+										node.setAttribute('aria-label', 'empty cell');
+									}
 									t.onApply(cell, success, e, t.arg('lazy'));
 								});
 							}
