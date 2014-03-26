@@ -10,8 +10,10 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/fx",
 	"dojo/fx",
-	"dojo/query"
-], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, Deferred, _Module, declare, baseFx, fx, query){
+	"dojo/query",
+	"dojo/sniff"
+], function(kernel, domConstruct, domStyle, domClass, domGeometry, 
+			lang, Deferred, _Module, declare, baseFx, fx, query, has){
 	kernel.experimental('gridx/modules/Dod');
 
 /*=====
@@ -76,16 +78,33 @@ define([
 		defaultShow: false,
 		showExpando: true,
 		load: function(args, deferStartup){
-			this._rowMap = {};
-			this.connect(this.grid.body, 'onAfterCell', '_onAfterCell');
-			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
-			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
-			this.connect(this.grid.body, 'onUnrender', '_onBodyUnrender');
-			if(this.grid.columnResizer){
-				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
+			var t =this, g = t.grid;
+			t._rowMap = {};
+			t.connect(t.grid.body, 'onAfterCell', '_onAfterCell');
+			t.connect(t.grid.body, 'onAfterRow', '_onAfterRow');
+			t.connect(t.grid.bodyNode, 'onclick', '_onBodyClick');
+			t.connect(t.grid.body, 'onUnrender', '_onBodyUnrender');
+
+			//in IE, renderRow will use bodyNode.innerHTML = str,
+			//this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
+			//Here, manually set dodLoaded to false to force dod to re-render the dodNode 
+			has('ie') && t.aspect(t.grid.body, 'renderRows', function(s, c, p){
+				if(p === 'top' || p === 'bottom') return;
+				var i, rowInfo, _row;
+				for(var i = s; i < s + c; i++){
+					rowInfo = g.view.getRowInfo({visualIndex: i});
+					if(_row = t._rowMap[rowInfo.rowId]){
+						_row.dodLoaded = false;
+						_row.dodLoadingNode = null;
+						_row.dodNode = null;
+					}
+				}
+			}, t, 'before');
+
+			if(t.grid.columnResizer){
+				t.connect(t.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
-			this.loaded.callback();
-			
+			t.loaded.callback();
 		},
 		rowMixin: {
 			showDetail: function(){
