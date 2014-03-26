@@ -5,8 +5,9 @@ define([
 	"dojo/_base/html",
 	"dojo/_base/fx",
 	"dojo/fx",
-	"dojo/query"
-], function(dojo, _Module, declare, html, baseFx, fx, query){
+	"dojo/query",
+	"dojo/sniff"
+], function(dojo, _Module, declare, html, baseFx, fx, query, has){
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
@@ -26,13 +27,28 @@ define([
 		autoClose: false,
 		load: function(args, deferStartup){
 			dojo.experimental('gridx/modules/Dod');
-			this._rowMap = {};
-			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
-			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
-			if(this.grid.columnResizer){
-				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
+			var t = this, g = t.grid;
+			t._rowMap = {};
+			t.connect(g.body, 'onAfterRow', '_onAfterRow');
+			t.connect(g.bodyNode, 'onclick', '_onBodyClick');
+
+			has('ie') && t.aspect(g.body, 'renderRows', function(s, c, p){
+				if(p === 'top' || p === 'bottom') return;
+				var i, rowInfo, _row;
+				for(var i = s; i < s + c; i++){
+					rowInfo = g.body.getRowInfo({visualIndex: i});
+					if(_row = t._rowMap[rowInfo.rowId]){
+						_row.dodLoaded = false;
+						_row.dodLoadingNode = null;
+						_row.dodNode = null;
+					}
+				}
+			}, t, 'before');
+
+			if(g.columnResizer){
+				t.connect(g.columnResizer, 'onResize', '_onColumnResize');
 			}
-			this.loaded.callback();
+			t.loaded.callback();
 			
 		},
 		getAPIPath: function(){
@@ -215,7 +231,7 @@ define([
 			}
 			
 		},
-		
+	
 		_onColumnResize: function(){
 			dojo.query('.gridxDodNode', this.grid.bodyNode).forEach(function(node){
 				html.style(node, 'width', node.parentNode.firstChild.offsetWidth + 'px');
