@@ -5,8 +5,9 @@ define([
 	"dojo/_base/html",
 	"dojo/_base/fx",
 	"dojo/fx",
-	"dojo/query"
-], function(dojo, _Module, declare, html, baseFx, fx, query){
+	"dojo/query",
+	'dojo/sniff'
+], function(dojo, _Module, declare, html, baseFx, fx, query, has){
 	dojo.experimental('gridx/modules/Dod');
 
 /*=====
@@ -75,13 +76,31 @@ define([
 		showExpando: true,
 		autoClose: false,
 		load: function(args, deferStartup){
-			this._rowMap = {};
-			this.connect(this.grid.body, 'onAfterRow', '_onAfterRow');
-			this.connect(this.grid.bodyNode, 'onclick', '_onBodyClick');
-			if(this.grid.columnResizer){
-				this.connect(this.grid.columnResizer, 'onResize', '_onColumnResize');
+			var t =this, g = t.grid;
+			t._rowMap = {};
+			t.connect(t.grid.body, 'onAfterRow', '_onAfterRow');
+			t.connect(t.grid.bodyNode, 'onclick', '_onBodyClick');
+
+			//in IE, renderRow will use bodyNode.innerHTML = str,
+			//this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
+			//Here, manually set dodLoaded to false to force dod to re-render the dodNode 
+			has('ie') && t.aspect(t.grid.body, 'renderRows', function(s, c, p){
+				if(p === 'top' || p === 'bottom') return;
+				var i, rowInfo, _row;
+				for(var i = s; i < s + c; i++){
+					rowInfo = g.body.getRowInfo({visualIndex: i});
+					if(_row = t._rowMap[rowInfo.rowId]){
+						_row.dodLoaded = false;
+						_row.dodLoadingNode = null;
+						_row.dodNode = null;
+					}
+				}
+			}, t, 'before');
+
+			if(t.grid.columnResizer){
+				t.connect(t.grid.columnResizer, 'onResize', '_onColumnResize');
 			}
-			this.loaded.callback();
+			t.loaded.callback();
 			
 		},
 		getAPIPath: function(){
@@ -149,7 +168,7 @@ define([
 			var df = new dojo.Deferred(), _this = this;
 			this.detailProvider(this.grid, row.id, _row.dodNode, df);
 			df.then(
-				dojo.hitch(this, '_detailLoadComplete', row), 
+				dojo.hitch(this, '_detailLoadComplete', row),
 				dojo.hitch(this, '_detailLoadError', row)
 			);
 
