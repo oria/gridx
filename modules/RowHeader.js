@@ -274,13 +274,14 @@ define([
 					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
 					n.style.height = n.firstChild.style.height = h;
 			}
+
+			bn = this.bodyNode;
 			var t = this,
 				g = t.grid,
 				w = bn.offsetWidth || domStyle.get(bn, 'width'),
 				ltr = g.isLeftToRight(),
 				mainBorder = domGeo.getBorderExtents(g.mainNode);
 			
-			bn = t.bodyNode;
 			bn.style[ltr ? 'left' : 'right'] = -(w + (ltr ? mainBorder.l : mainBorder.r)) + 'px';
 		},
 
