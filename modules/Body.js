@@ -803,7 +803,9 @@ define([
 
 					var cellContent = t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
 						testNode = domConstruct.create('div', {innerHTML: cellContent}),
-						testNodeContent = (testNode.innerText || testNode.textContent).trim(),
+						testNodeContent = (testNode.innerText || testNode.textContent).trim? 
+										(testNode.innerText || testNode.textContent).trim() : 
+										(testNode.innerText || testNode.textContent).replace(/\s/g, ''),
 						isEmpty = testNodeContent === '&nbsp;' || !testNodeContent;
 
 					testNode = '';
