@@ -211,7 +211,7 @@ define([
 		_onDelete: function(id){
 			var nodes = this.model.isId(id) && query('[rowid="' + this.grid._escapeId(id) + '"].gridxRowHeaderRow', this.bodyNode);
 			if(nodes && nodes.length){
-				var node = nodes[nodes.length - 1],
+				var node = nodes[nodes.length - 1], sn, rid,
 					pid = node.getAttribute('parentid'),
 					pids = {},
 					toDeleteC = 1;
@@ -256,7 +256,7 @@ define([
 			t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
 			
 			//scrollTop to be set must not exceeds scrollTopMax
-			if(t.bodyNode.scrollHeight - t.bodyNode.clientHeigh >= t.grid.bodyNode.scrollTop){
+			if(t.bodyNode.scrollHeight - t.bodyNode.clientHeight >= t.grid.bodyNode.scrollTop){
 				t.bodyNode.scrollTop = t.grid.bodyNode.scrollTop;
 			}else{
 				setTimeout(function(){
@@ -266,20 +266,21 @@ define([
 		},
 
 		_onResize: function(){
-			var ie = has('ie');
+			var ie = has('ie'), bn;
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
-					var bn = this.grid.dod ? brn : brn.firstChild;
+					bn = this.grid.dod ? brn : brn.firstChild;
 					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
 					n.style.height = n.firstChild.style.height = h;
 			}
 			var t = this,
 				g = t.grid,
-				bn = t.bodyNode,
 				w = bn.offsetWidth || domStyle.get(bn, 'width'),
 				ltr = g.isLeftToRight(),
 				mainBorder = domGeo.getBorderExtents(g.mainNode);
+			
+			bn = t.bodyNode;
 			bn.style[ltr ? 'left' : 'right'] = -(w + (ltr ? mainBorder.l : mainBorder.r)) + 'px';
 		},
 
