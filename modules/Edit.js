@@ -337,7 +337,7 @@ define([
 				
 			if(t.arg('lazySave')){
 				var _removeCellBackground = function(cell){
-					var node = cell.node();
+					var node = cell.node(),
 						cellBgNode = query('.gridxCellBg', node);
 					if(cellBgNode.length){
 						domConstruct.destroy(cellBgNode);
@@ -366,6 +366,7 @@ define([
 							var computedStyle = domStyle.getComputedStyle(node),
 								cellPadding= parseInt(domGeo.getPadBorderExtents(node, computedStyle).l, 10),
 								leftToMove = node.clientWidth - cellPadding - 5,
+								wrapper, wrapperPosition, nodePosition,
 								
 								html = [
 									"<div class='gridxCellEditedBgWrapper'>",
@@ -374,7 +375,7 @@ define([
 												"class='gridxCellEditedBg'><span>◥</span>",
 										"</div>",
 									"</div>"
-							].join('');
+								].join('');
 							
 							wrapper= domConstruct.toDom(html);
 							cellBgNode = wrapper.firstChild;
@@ -708,7 +709,7 @@ define([
 		},
 
 		getLazyData: function(rowId, colId){
-			var t = this,
+			var t = this, r,
 				f = t.grid._columnsById[colId].field;
 			
 			if(t.arg('lazy')){

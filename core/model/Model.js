@@ -331,7 +331,7 @@ define([
 		},
 
 		scan: function(args, callback){
-			var d = new Deferred,
+			var d = new Deferred(),
 				start = args.start || 0,
 				pageSize = args.pageSize || this._cache.pageSize || 1,
 				count = args.count,
@@ -419,7 +419,7 @@ define([
 						}
 					};
 				if(arg === null || !args.length){
-					var d = new Deferred;
+					var d = new Deferred();
 					finish();
 					d.callback();
 					return d;
@@ -432,7 +432,7 @@ define([
 			//Execute commands one by one.
 			var t = this,
 				c = t._cache,
-				d = new Deferred,
+				d = new Deferred(),
 				cmds = t._cmdQueue,
 				finish = function(d, err){
 					t._busy = 0;

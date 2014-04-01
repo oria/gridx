@@ -113,17 +113,18 @@ define([
 
 			this.connect(this.grid.header.innerNode, 'onkeyup', function(evt){
 				//Bind short cut key to expand/coallapse the column: shift + ctrl + e
+				var colId;
 
 				if(evt.keyCode == 77 && evt.ctrlKey){
 					var node = evt.target;
 					if(domClass.contains(node, 'gridxGroupHeader')){
-						var colId = node.getAttribute('groupid').split('-').pop();
+						colId = node.getAttribute('groupid').split('-').pop();
 						colId = this._colById(colId).parentColumn;
 						this.collapse(colId);
 						this._focusById(colId);
 
 					}else if(domClass.contains(node, 'gridxCell')){
-						var colId = node.getAttribute('colid');
+						colId = node.getAttribute('colid');
 						if(this._parentCols[colId]){
 							//expandable
 							this.expand(colId);

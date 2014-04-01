@@ -328,7 +328,8 @@ define([
 						}
 						m.when(toFetch, function(){
 							var renderedRows = [],
-								scrollHeight = g.bodyNode.scrollHeight;
+								scrollHeight = g.bodyNode.scrollHeight,
+								str;
 							str = t._buildRows(renderStart, renderCount, [], renderedRows);
 							if(btnNode){
 								domConstruct.place(str, btnNode, isPost ? 'before' : 'after');
