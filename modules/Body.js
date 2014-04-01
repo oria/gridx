@@ -801,7 +801,14 @@ define([
 						needCell = customClsIsFunction || styleIsFunction || (!isPadding && col.decorator),
 						cell = needCell && g.cell(row, cols && cols[i] || colId, 1);
 
-					var cellContent = t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData);
+					var cellContent = t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
+						testNode = domConstruct.create('div', {innerHTML: cellContent}),
+						testNodeContent = (testNode.innerText || testNode.textContent).trim? 
+										(testNode.innerText || testNode.textContent).trim() : 
+										(testNode.innerText || testNode.textContent).replace(/\s/g, ''),
+						isEmpty = testNodeContent === '&nbsp;' || !testNodeContent;
+
+					testNode = '';
 
 					sb.push('<td aria-readonly="true" role="gridcell" tabindex="-1" aria-describedby="',
 						col._domId,'" colid="', colId, '" class="gridxCell ',
@@ -813,8 +820,8 @@ define([
 						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
 						g.getTextDirStyle(colId, cellData),
 						(styleIsFunction ? col.style(cell) : col.style) || '',
-						//when cell content is empty, need to add aria-label
-						(!cellContent.toString() || cellContent.toString() === '&nbsp;')? '" aria-label="empty cell' : '',
+						//when cell content is empty, need to add aria-labssel
+						isEmpty? '" aria-label="empty cell' : '',
 						'">', cellContent,
 					'</td>');
 				}
