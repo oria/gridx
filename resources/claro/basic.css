@@ -69,7 +69,8 @@
 	background: linear-gradient(top,  #edf2f7 0%,#d0dfea 100%); /* W3C */
 }
 
-.claro .gridxHeader .gridxHeaderRow .gridxCell:hover {
+.claro .gridxHeader .gridxHeaderRow .gridxCell:hover,
+.claro .gridxHeader .gridxHeaderRow .gridxGroupHeader:hover { 
 	background: #9bcaf7;
 	border-top-color: #9BCAF7;
 }
