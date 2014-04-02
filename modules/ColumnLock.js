@@ -121,7 +121,7 @@ define([
 		},
 		
 		lock: function(/*Integer*/count){
-			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
+			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize')){ return; }
 			if(count >= this.grid._columns.length){
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
 				return;
@@ -137,7 +137,7 @@ define([
 		},
 		
 		unlock: function(){
-			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize'))return;
+			if(this.grid.columnWidth && this.grid.columnWidth.arg('autoResize')){ return; }
 			domClass.remove(this.grid.domNode, 'gridxColumnLock');
 			
 			var rowNode = query('.gridxHeaderRowInner', this.grid.headerNode)[0];

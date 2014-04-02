@@ -194,8 +194,8 @@ define([
 
 			if ( t._contextNode ){
 				var innerNode = t._contextNode;
-				if((has('webkit') || has('ie') < 8) && !g.isLeftToRight()){debugger;
-					left = innerNode.scrollWidth - innerNode.offsetWidth - left;	
+				if((has('webkit') || has('ie') < 8) && !g.isLeftToRight()){
+					left = innerNode.scrollWidth - innerNode.offsetWidth - left;
 				}
 				innerNode.scrollLeft = t._scrollLeft = left;
 			}
@@ -268,7 +268,7 @@ define([
 					wrapper1 = t._wrapper1,
 					wrapper2 = t._wrapper2,
 					parentRowNode = t._parentStack[t._parentStack.length - 2],
-					currentParentRowNode = t._parentStack.pop();
+					currentParentRowNode = t._parentStack.pop(),
 					parentId = currentParentRowNode.getAttribute('rowid');
 
 				if(parentRowNode){
@@ -288,12 +288,14 @@ define([
 
 				m.layerUp();
 				t._refresh(function(){
+					var pos, refPos;
+
 					if(currentParentRowNode){
 						g.vScroller.scroll(currentParentRowNode._pos);
-						var pos = domGeometry.position(g.body.getRowNode({
+						pos = domGeometry.position(g.body.getRowNode({
 							rowId: parentId
 						}));
-						var refPos = domGeometry.position(t._contextNode);
+						refPos = domGeometry.position(t._contextNode);
 					}
 					domClass.add(wrapper1, 'gridxLayerVSlide');
 					domClass.add(wrapper2, 'gridxLayerHSlide');
@@ -372,7 +374,7 @@ define([
 		},
 
 		_refresh: function(callback, args){
-			var t = this,
+			var t = this, focusEnabled,
 				g = t.grid,
 				bn = g.bodyNode,
 				tmpBn = t._tmpBodyNode,

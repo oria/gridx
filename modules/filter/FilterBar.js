@@ -12,6 +12,7 @@ define([
 	"dojo/parser",
 	"dojo/query",
 	"dojo/keys",
+	'dojo/on',
 	"dijit/_BidiSupport",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
@@ -22,7 +23,7 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, keys, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, keys, on, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -459,17 +460,31 @@ define([
 		_buildFilterState: function(){
 			// summary:
 			//		Build the tooltip dialog to show all applied filters.
+			var clearButton, t = this;
+
 			if(!this.filterData || !this.filterData.conditions.length){
 				this.statusNode.innerHTML = this.arg('noFilterMessage', this.grid.nls.filterBarMsgNoFilterTemplate);
+				clearButton = dojo.query('[role]', this.statusNode)[0];
+				if(clearButton){
+					clearButton.signal.remove();
+				}
 				return;
 			}
 			this.statusNode.innerHTML = string.substitute(
 				this.arg('hasFilterMessage', this.arg('useShortMessage') ? this.grid.nls.summary : this.grid.nls.filterBarMsgHasFilterTemplate),
 				[this._currentSize, this._totalSize, this.arg('itemsName')? this.arg('itemsName') : this.grid.nls.defaultItemsName]) + 
-				'&nbsp; &nbsp; <span action="clear" tabindex="-1" title="' + this.grid.nls.filterBarClearButton + '">'
-					 + this.grid.nls.filterBarClearButton + '</span>';
+				'&nbsp; &nbsp; <a action="clear" tabindex="-1" role="button" title="' + this.grid.nls.filterBarClearButton + '">'
+					 + this.grid.nls.filterBarClearButton + '</a>';
+
+			clearButton = dojo.query('[role]', this.statusNode)[0];
+			clearButton.signal = on(clearButton, 'keypress', function(e){
+				if(e.keyCode === keys.ENTER){
+					t.clearFilter();
+				}
+			});
 			this._buildTooltip();
 		},
+
 		_buildTooltip: function(){
 			if(!this._tooltip){
 				this._tooltip = new FilterTooltip({grid: this.grid});
@@ -578,7 +593,7 @@ define([
 		_stringToDate: function(s){
 			if(s instanceof Date){return s;}
 
-			pattern = /(\d{4})\/(\d\d?)\/(\d\d?)/;
+			var pattern = /(\d{4})\/(\d\d?)\/(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
 			d.setFullYear(parseInt(RegExp.$1));
@@ -588,7 +603,7 @@ define([
 		_stringToTime: function(s){
 			if(s instanceof Date){return s;}
 
-			pattern = /(\d\d?):(\d\d?):(\d\d?)/;
+			var pattern = /(\d\d?):(\d\d?):(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
 			d.setHours(parseInt(RegExp.$1));
@@ -642,9 +657,10 @@ define([
 			if(evt){event.stop(evt);}
 			return true;
 		},
+		
 		_doFocusClearLink: function(evt){
 			this.btnFilter.focus();
-			var link = query('span[action="clear"]')[0];
+			var link = query('a[action="clear"]')[0];
 			if(link){
 				link.focus();
 				if(evt){event.stop(evt);}
@@ -661,6 +677,7 @@ define([
 		_doBlur: function(){
 			return true;
 		},
+
 		_onCloseKey: function(evt){
 			if(evt.keyCode === keys.ENTER){
 				this.hide();

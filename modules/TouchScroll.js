@@ -48,7 +48,7 @@ define([
 		_start: function(e){
 			var t = this,
 				g = t.grid,
-				vScrollerNode = g.vScrollerNode;
+				vScrollerNode = g.vScrollerNode,
 				hScrollerNode = g.hScrollerNode;
 			//Start touch scroll only on mobile devices where the scroll bar can not be shown
 			if((vScrollerNode.style.display != 'none' && vScrollerNode.offsetWidth == 1) ||

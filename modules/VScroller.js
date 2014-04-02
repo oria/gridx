@@ -169,7 +169,7 @@ define([
 						//And this logic should not be put in non-virtual scroller either.
 						//FIXME: need more investigation.
 						(bn.scrollHeight == bn.clientHeight && bd.renderCount < g.view.visualCount),
-					ds = t.domNode.style;
+					ds = t.domNode.style,
 					scrollBarWidth = metrics.getScrollbar().w + (has('webkit') ? 1 : 0);//Fix a chrome RTL defect
 				if(has('ie') < 8){
 					//In IE7 if the node is not wider than the scrollbar, 
@@ -196,7 +196,7 @@ define([
 				ds = dn.style,
 				ltr = g.isLeftToRight(),
 				mainBorder = domGeo.getBorderExtents(g.mainNode),
-				attr = ltr ? 'right' : 'left';
+				attr = ltr ? 'right' : 'left',
 				oldValue = ds[attr];
 			ds[attr] = -(dn.offsetWidth + (ltr ? mainBorder.r : mainBorder.l)) + 'px';
 			return oldValue != ds[attr];
