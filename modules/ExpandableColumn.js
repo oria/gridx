@@ -158,6 +158,40 @@ define([
 			}else{
 				t.loaded.callback();
 			}
+			
+			t.aspect(g, 'setColumns', '_onSetColumns');
+		},
+		
+		_onSetColumns: function(){
+			var t = this,
+				g = t.grid;
+			t._cols = g._columns.slice();
+			t._parentCols = {};
+			
+			var toHide = [];
+			array.forEach(t._cols, function(col){
+				if(col.expanded){
+					toHide.push(col.id);
+				}else if(col.parentColumn){
+					t._parentCols[col.parentColumn] = 1;
+					var parentCol = this._colById(col.parentColumn);
+
+					if(!parentCol.expanded){
+						toHide.push(col.id);
+						parentCol.expanded = false;	//Force expanded false for later use.
+					}else{
+					}
+				}
+			}, this);
+			
+			g.header._build();
+			g.body.refresh();
+			// g.header.onRender();
+			
+			if(toHide.length){
+				t.add.apply(t, toHide);
+				t._refreshHeader();
+			}
 		},
 
 		expand: function(colId){
@@ -213,9 +247,11 @@ define([
 			array.forEach(expandoCells, function(cell, i){
 				var colId = cell.getAttribute('data-column-id')
 					,col = this.grid._columnsById[colId];
-				cell.style.width = col.width;
-				cell.style.minWidth = col.width;
-				cell.style.maxWidth = col.width;
+				if(col){
+					cell.style.width = col.width;
+					cell.style.minWidth = col.width;
+					cell.style.maxWidth = col.width;
+				}
 			}, this);
 		},
 
