@@ -2,7 +2,8 @@
 	"undef": true,
 	"unused": false,
 	"strict": false,
-	
+	"eqeqeq": true,
+
 	"smarttabs": false,
 	"supernew": false
 }
