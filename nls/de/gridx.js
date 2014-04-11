@@ -1,19 +1,19 @@
 define({     
 //Body
-	loadingInfo: "Laden...",
-	emptyInfo: "Keine Elemente zum Anzeigen ",
-	loadFailInfo: "Daten konnten nicht geladen werden!",
-	loadMore: "Mehr laden",
-	loadMoreLoading: "Laden...",
+	loadingInfo: "Ladevorgang läuft...",
+	emptyInfo: "Es sind keine anzuzeigenden Elemente vorhanden.",
+	loadFailInfo: "Fehler beim Laden der Daten!",
+	loadMore: "Weitere laden",
+	loadMoreLoading: "Ladevorgang läuft...",
 	loadPrevious: "Vorherige laden",
-	loadPreviousLoading: "Laden...",
+	loadPreviousLoading: "Ladevorgang läuft...",
 
 //FilterBar
 	"clearFilterDialogTitle": "Filter löschen",
 	"filterDefDialogTitle": "Filter",
 	"defaultRuleTitle": "Regel",
 	"ruleTitleTemplate": "Regel ${ruleNumber}",
-	"noFilterApplied": "Kein Filter angewendet.",
+	"noFilterApplied": "Kein Filter angewendet",
 	"defineFilter": "Filter definieren",
 	"conditionEqual": "gleich",
 	"conditionNotEqual": "ist nicht gleich",
@@ -34,12 +34,12 @@ define({
 	"conditionRange": "Bereich",
 	"conditionIsEmpty": "ist leer",
 	"all": "alle",
-	"any": "jede",
+	"any": "beliebig",
 	"relationAll": "Alle Regeln",
-	"waiRelAll": "Muss mit allen folgenden Regeln übereinstimmen:",
+	"waiRelAll": "Übereinstimmung mit allen folgenden Regeln:",
 	"relationAny": "Beliebige Regel",
-	"waiRelAny": "Muss mit irgendeiner der folgenden Regeln übereinstimmen:",
-	"relationMsgFront": "Übereinstimmen",
+	"waiRelAny": "Übereinstimmung mit einer beliebigen der folgenden Regeln:",
+	"relationMsgFront": "Übereinstimmung",
 	"relationMsgTail": "",
 	"and": "und",
 	"or": "oder",
@@ -49,11 +49,11 @@ define({
 	"waiRemoveRuleButtonTemplate": "Regel ${0} entfernen",
 	"addRuleButton": "Filterregel hinzufügen",
 	"cancelButton": "Abbrechen",
-	"waiCancelButton": "Diesen Dialog abbrechen",
-	"clearButton": "Löschen",
-	"waiClearButton": "Den Filter löschen",
+	"waiCancelButton": "Dialog abbrechen",
+	"clearButton": "Abwählen",
+	"waiClearButton": "Filter abwählen",
 	"filterButton": "Filter",
-	"waiFilterButton": "Den Filter übergeben",
+	"waiFilterButton": "Filter übergeben",
 	"columnSelectLabel": "Spalte:",
 	"waiColumnSelectTemplate": "Spalte für Regel ${0}",
 	"conditionSelectLabel": "Bedingung:",
@@ -65,44 +65,44 @@ define({
 	"statusTipHeaderColumn": "Spalte",
 	"statusTipHeaderCondition": "Regeln",
 	"statusTipTitle": "Filterleiste",
-	"statusTipMsg": "Hier auf die Filterleiste klicken, um nach den Werten in ${0} zu filtern.",
-	"anycolumn": "Irgendeine Spalte",
+	"statusTipMsg": "Kicken Sie auf die Filterleiste, um nach Werten in ${0} zu filtern.",
+	"anycolumn": "Beliebige Spalte",
 	"statusTipTitleNoFilter": "Filterleiste",
 	"statusTipTitleHasFilter": "Filter",
-	"statusTipRelPre": "Übereinstimmen",
+	"statusTipRelPre": "Abgleich mit",
 	"statusTipRelPost": "Regeln.",
-	"statusTipHeaderAll": "Muss mit allen Regeln übereinstimmen.",
-	"statusTipHeaderAny": "Muss mit irgendeiner Regel übereinstimmen.",
-	"defaultItemsName": "Elemente",
+	"statusTipHeaderAll": "Alle Regel abgleichen.",
+	"statusTipHeaderAny": "Beliebige Regeln abgleichen.",
+	"defaultItemsName": "Einträge",
 	"filterBarMsgHasFilterTemplate": "${0} von ${1} ${2} angezeigt.",
 	"filterBarMsgNoFilterTemplate": "Kein Filter angewendet",
 	"filterBarDefButton": "Filter definieren",
 	"waiFilterBarDefButton": "Tabelle filtern",
 	"a11yFilterBarDefButton": "Filter...",
 	"filterBarClearButton": "Filter löschen",
-	"waiFilterBarClearButton": "Den Filter löschen",
+	"waiFilterBarClearButton": "Filter abwählen",
 	"closeFilterBarBtn": "Filterleiste schließen",
-	"clearFilterMsg": "Hiermit wird der Filter entfernt und alle verfügbaren Sätze werden angezeigt.",
-	"anyColumnOption": "Irgendeine Spalte",
-	"trueLabel": "True",
-	"falseLabel": "False",
-	"radioTrueLabel": "Wert True",
-	"radioFalseLabel": "Wert False",
-	"beginTimeRangeLabel": "Zeitbereichswert Start",
-	"endTimeRangeLabel": "Zeitbereichswert End",
-	"beginDateRangeLabel": "Datumsbereichswert Start",
-	"endDateRangeLabel": "Datumsbereichswert End",
+	"clearFilterMsg": "Diese Aktion entfernt den Filter und zeigt alle verfügbaren Datensätze an.",
+	"anyColumnOption": "Beliebige Spalte",
+	"trueLabel": "Wahr",
+	"falseLabel": "Falsch",
+	"radioTrueLabel": "Wert wahr",
+	"radioFalseLabel": "Wert falsch",
+	"beginTimeRangeLabel": "Anfangswert des Zeitbereichs",
+	"endTimeRangeLabel": "Endwert des Zeitbereichs",
+	"beginDateRangeLabel": "Anfangswert des Datumsbereichs",
+	"endDateRangeLabel": "Endwert des Datumsbereichs",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
-	singleSort: "Einzeln sortieren",
-	nestedSort: "Verschachtelt sortieren",
-	ascending: "Klicken, um aufsteigend zu sortieren",
-	descending: "Klicken, um absteigend zu sortieren",
+	singleSort: "Einfache Sortierung",
+	nestedSort: "Verschachtelte Sortierung",
+	ascending: "Für aufsteigende Sortierung hier klicken",
+	descending: "Für absteigende Sortierung hier klicken",
 	sortingState: "${0} - ${1}",
 	unsorted: "Diese Spalte nicht sortieren",
-	waiSingleSortLabel: "${0} - wird sortiert nach ${1}. Sortieren nach ${2}",
-	waiNestedSortLabel:"${0} - wird verschachtelt sortiert nach ${1}. Verschachtelt sortieren nach ${2}",
+	waiSingleSortLabel: "${0} ist sortiert nach ${1}. Wählen Sie die Sortierung nach ${2} aus.",
+	waiNestedSortLabel:"${0} ist verschachtelt nach ${1} sortiert. Wählen Sie die verschachtelte Sortierung nach ${2} aus.",
 
 //PaginationBar
 	pagerWai: 'Pager',
@@ -116,22 +116,22 @@ define({
 	lastPageTitle: 'Letzte Seite',
 
 	pageSize: '${0}',
-	pageSizeTitle: '${0} Elemente pro Seite',
+	pageSizeTitle: '${0} Einträge pro Seite',
 	pageSizeAll: 'Alle',
-	pageSizeAllTitle: 'Alle Elemente',
+	pageSizeAllTitle: 'Alle Einträge',
 
 	description: '${0} - ${1} von ${2} Elementen.',
 	descriptionEmpty: 'Raster ist leer.',
 
-	summary: 'Gesamt: ${0}',
-	summaryWithSelection: 'Summe: ${0} Ausgewählt: ${1}',
+	summary: 'Insgesamt: ${0}',
+	summaryWithSelection: 'Insgesamt: ${0} Ausgewählt: ${1}',
 
-	gotoBtnTitle: 'Zu einer bestimmten Seite wechseln',
+	gotoBtnTitle: 'Wechsel zu einer bestimmten Seite',
 
-	gotoDialogTitle: 'Gehe zu Seite',
-	gotoDialogMainMsg: 'Seitenzahl angeben:',
+	gotoDialogTitle: 'Wechseln zur Seite',
+	gotoDialogMainMsg: 'Seitennummer angeben:',
 	gotoDialogPageCount: '(${0} Seiten)',
-	gotoDialogOKBtn: 'Gehe zu',
+	gotoDialogOKBtn: 'Start',
 	gotoDialogCancelBtn: 'Abbrechen',
 	// for drop down pagination bar
 	pageLabel: 'Seite',
@@ -144,19 +144,19 @@ define({
 	apply: 'Filter anwenden',
 
 //Sort
-	helpMsg: '${0} - Klicken Sie zum Sortieren der Tabelle auf den Spaltennamen, oder klicken Sie bei gedrückter Steuertaste auf den Spaltennamen, um die Spalte der verschachtelten Sortierung hinzuzufügen.',
-	singleHelpMsg: '${0} Klicken Sie zum Sortieren der Tabelle auf den Spaltennamen.',
+	helpMsg: '${0} - Zum Sortieren klicken oder zum Hinzufügen zur Sortierung bei gedrückter Steuertaste klicken',
+	singleHelpMsg: '${0} - Zum Sortieren klicken',
 	priorityOrder: 'Sortierpriorität ${0}',
 
 //SummaryBar
-	summaryTotal: 'Gesamt: ${0}',
+	summaryTotal: 'Insgesamt: ${0}',
 	summarySelected: 'Ausgewählt: ${0}',
 	summaryRange: 'Bereich: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "LEERSCHRITT drücken, um alles auszuwählen.",	//need translation
-	indirectDeselectAll: "LEERSCHRITT drücken, um alles abzuwählen.",	//need translation
-	treeExpanded: "Strg + Linkspfeiltaste, um diese Zeile auszublenden.",	//need translation
-	treeCollapsed: "Strg + Rechtspfeiltaste, um diese Zeile einzublenden. "	//need translation
+	indirectSelectAll: "Zum Auswählen aller Einträge die Leertaste drücken",	//need translation
+	indirectDeselectAll: "Zum Abwählen aller Einträge die Leertaste drücken",	//need translation
+	treeExpanded: "Zum Ausblenden dieser Zeile Steuertaste + Linkspfeiltaste drücken",	//need translation
+	treeCollapsed: "Zum Einblenden dieser Zeile Steuertaste + Rechtspfeiltaste drücken"	//need translation
 });
 

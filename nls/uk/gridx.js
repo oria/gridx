@@ -37,7 +37,7 @@ define({
 	"any": "будь-яке",
 	"relationAll": "всі правила",
 	"waiRelAll": "Відповідає всім наступним правилам:",
-	"relationAny": "Будь-яке правило",
+	"relationAny": "будь-яке правило",
 	"waiRelAny": "Відповідає будь-якому з наступних правил:",
 	"relationMsgFront": "Відповідає",
 	"relationMsgTail": "",
@@ -54,7 +54,7 @@ define({
 	"waiClearButton": "Очистити фільтр",
 	"filterButton": "Фільтр",
 	"waiFilterButton": "Застосувати фільтр",
-	"columnSelectLabel": "Стовпець:",
+	"columnSelectLabel": "Стовпчик:",
 	"waiColumnSelectTemplate": "Стовпчик для правила ${0}",
 	"conditionSelectLabel": "Умова:",
 	"waiConditionSelectTemplate": "Умова правила ${0}",
@@ -144,19 +144,19 @@ define({
 	apply: 'Застосувати фільтр',
 
 //Sort
-	helpMsg: '${0} - Клацніть для сортування або клацніть, утримуючи клавішу Control, для додання до списку сортування',
-	singleHelpMsg: '${0} - Клацніть для сортування',
-	priorityOrder: 'Пріоритет сортування ${0}',
+	helpMsg: '${0} - Клацніть для сортування або клацніть, утримуючи клавішу CTRL, для додання до списку сортування',
+	singleHelpMsg: '${0} - Клацніть для сортування ',
+	priorityOrder: 'сортувати ${0} за пріоритетом ',
 
 //SummaryBar
 	summaryTotal: 'Всього: ${0}',
-	summarySelected: 'Виділено: ${0}',
+	summarySelected: 'Вибрано: ${0}',
 	summaryRange: 'Діапазон: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Натисніть SPACE, щоб вибрати всі.",	//need translation
-	indirectDeselectAll: "Натисніть SPACE, щоб скасувати вибір всіх.",	//need translation
-	treeExpanded: "Натисніть Control + стрілка вліво для згортання рядка.",	//need translation
-	treeCollapsed: "Натисніть Control + стрілка вправо для розгортання рядка."	//need translation
+	indirectSelectAll: "Натисніть клавішу Пробіл для вибору всіх елементів.",	//need translation
+	indirectDeselectAll: "Натисніть клавішу Пробіл для скасування вибору всіх елементів.",	//need translation
+	treeExpanded: "Натисніть клавішу Control + стрілка вліво для згортання цього рядка.",	//need translation
+	treeCollapsed: "Натисніть клавішу Control + стрілка вправо для розгортання цього рядка."	//need translation
 });
 

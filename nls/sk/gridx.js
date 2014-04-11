@@ -1,15 +1,15 @@
 define({     
 //Body
-	loadingInfo: "Načítava sa...",
+	loadingInfo: "Načítavanie...",
 	emptyInfo: "Žiadne položky na zobrazenie",
 	loadFailInfo: "Zlyhalo načítavanie údajov!",
 	loadMore: "Načítať viac",
-	loadMoreLoading: "Načítava sa...",
+	loadMoreLoading: "Načítavanie...",
 	loadPrevious: "Načítať predošlé",
-	loadPreviousLoading: "Načítava sa...",
+	loadPreviousLoading: "Načítavanie...",
 
 //FilterBar
-	"clearFilterDialogTitle": "Vymazať filter",
+	"clearFilterDialogTitle": "Zrušiť filter",
 	"filterDefDialogTitle": "Filter",
 	"defaultRuleTitle": "Pravidlo",
 	"ruleTitleTemplate": "Pravidlo ${ruleNumber}",
@@ -50,8 +50,8 @@ define({
 	"addRuleButton": "Pridať filtrovacie pravidlo",
 	"cancelButton": "Zrušiť",
 	"waiCancelButton": "Zrušiť toto dialógové okno",
-	"clearButton": "Vymazať",
-	"waiClearButton": "Vymazať filter",
+	"clearButton": "Zrušiť",
+	"waiClearButton": "Zrušiť filter",
 	"filterButton": "Filter",
 	"waiFilterButton": "Odoslať filter",
 	"columnSelectLabel": "Stĺpec:",
@@ -71,8 +71,8 @@ define({
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Vyhovieť",
 	"statusTipRelPost": "pravidlá.",
-	"statusTipHeaderAll": "Vyhovieť všetkým pravidlám.",
-	"statusTipHeaderAny": "Vyhovieť ľubovoľným pravidlám.",
+	"statusTipHeaderAll": "Zhoda pre všetky pravidlá.",
+	"statusTipHeaderAny": "Zhoda pre ktorékoľvek pravidlo.",
 	"defaultItemsName": "položky",
 	"filterBarMsgHasFilterTemplate": "Zobrazuje sa ${0} z ${1} ${2}.",
 	"filterBarMsgNoFilterTemplate": "Nepoužíva sa žiadny filter",
@@ -80,12 +80,12 @@ define({
 	"waiFilterBarDefButton": "Filtrovať tabuľku",
 	"a11yFilterBarDefButton": "Filtrovať...",
 	"filterBarClearButton": "Zrušiť filter",
-	"waiFilterBarClearButton": "Vymazať filter",
+	"waiFilterBarClearButton": "Zrušiť filter",
 	"closeFilterBarBtn": "Zatvoriť lištu filtra",
 	"clearFilterMsg": "Toto odstráni filter a zobrazí všetky dostupné záznamy",
 	"anyColumnOption": "Ľubovoľný stĺpec",
-	"trueLabel": "Áno",
-	"falseLabel": "Nie",
+	"trueLabel": "Pravda",
+	"falseLabel": "Nepravda",
 	"radioTrueLabel": "Hodnota pravda",
 	"radioFalseLabel": "Hodnota nepravda",
 	"beginTimeRangeLabel": "Začiatočná hodnota rozsahu časov",
@@ -130,28 +130,28 @@ define({
 
 	gotoDialogTitle: 'Prejsť na stranu',
 	gotoDialogMainMsg: 'Zadajte číslo strany:',
-	gotoDialogPageCount: '(${0} strán)',
+	gotoDialogPageCount: '(strany: ${0})',
 	gotoDialogOKBtn: 'Prejsť',
 	gotoDialogCancelBtn: 'Zrušiť',
 	// for drop down pagination bar
-	pageLabel: 'Stránka',
+	pageLabel: 'Strana',
 	pageSizeLabel: 'Riadky',
 
 //QuickFilter
 	filterLabel: 'Filter',
-	clearButtonTitle: 'Vymazať filter',
+	clearButtonTitle: 'Zrušiť filter',
 	buildFilterMenuLabel: 'Vytvoriť filter&hellip;',
 	apply: 'Použiť filter',
 
 //Sort
 	helpMsg: '${0} - kliknutie = zoradiť, Ctrl + kliknutie = pridať do zoradenia',
 	singleHelpMsg: '${0} - Kliknutím zoraďte',
-	priorityOrder: 'priorita zoradenia ${0}',
+	priorityOrder: 'zoradiť prioritu ${0}',
 
 //SummaryBar
 	summaryTotal: 'Celkovo: ${0}',
 	summarySelected: 'Vybraté: ${0}',
-	summaryRange: 'Rozsah: ${0}-${1}',	//need translation
+	summaryRange: 'Rozsah: ${0} - ${1}',	//need translation
 
 //Other
 	indirectSelectAll: "Ak chcete vybrať všetko, stlačte medzerník.",	//need translation

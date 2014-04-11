@@ -39,7 +39,7 @@ define({
 	"waiRelAll": "Matcher alle følgende regler:",
 	"relationAny": "vilkårlig regel",
 	"waiRelAny": "Matcher en eller flere af følgende regler:",
-	"relationMsgFront": "Matcher",
+	"relationMsgFront": "Lig med",
 	"relationMsgTail": "",
 	"and": "og",
 	"or": "eller",
@@ -55,11 +55,11 @@ define({
 	"filterButton": "Filtrér",
 	"waiFilterButton": "Send filteret",
 	"columnSelectLabel": "Kolonne:",
-	"waiColumnSelectTemplate": "Kolonne for regel ${0}",
+	"waiColumnSelectTemplate": "Kolonne for reglen ${0}",
 	"conditionSelectLabel": "Betingelse:",
-	"waiConditionSelectTemplate": "Betingelse for regel ${0}",
+	"waiConditionSelectTemplate": "Betingelse for reglen ${0}",
 	"valueBoxLabel": "Værdi:",
-	"waiValueBoxTemplate": "Angiv værdi for filtrering for regel ${0}",
+	"waiValueBoxTemplate": "Angiv værdi, der skal filtreres efter for reglen ${0}",
 	"rangeTo": "til",
 	"rangeTemplate": "fra ${0} til ${1}",
 	"statusTipHeaderColumn": "Kolonne",
@@ -68,8 +68,8 @@ define({
 	"statusTipMsg": "Klik på filterlinjen for at filtrere efter værdier i ${0}.",
 	"anycolumn": "vilkårlig kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
-	"statusTipTitleHasFilter": "Filtrér",
-	"statusTipRelPre": "Matcher",
+	"statusTipTitleHasFilter": "Filter",
+	"statusTipRelPre": "Match",
 	"statusTipRelPost": "regler.",
 	"statusTipHeaderAll": "Matcher alle regler.",
 	"statusTipHeaderAny": "Matcher en hvilken som helst regel.",
@@ -131,22 +131,22 @@ define({
 	gotoDialogTitle: 'Gå til side',
 	gotoDialogMainMsg: 'Angiv sidenummeret:',
 	gotoDialogPageCount: ' (${0} sider)',
-	gotoDialogOKBtn: 'Udfør',
+	gotoDialogOKBtn: 'Gå',
 	gotoDialogCancelBtn: 'Annullér',
 	// for drop down pagination bar
 	pageLabel: 'Side',
 	pageSizeLabel: 'Rækker',
 
 //QuickFilter
-	filterLabel: 'Filtrér',
+	filterLabel: 'Filter',
 	clearButtonTitle: 'Ryd filter',
 	buildFilterMenuLabel: 'Byg filter&hellip;',
 	apply: 'Anvend filter',
 
 //Sort
-	helpMsg: '${0} - Klik for at sortere, eller hold Ctrl-tasten nede og klik for at tilføje til sortering',
-	singleHelpMsg: '${0} - Klik for at sortere',
-	priorityOrder: 'sorteringsrækkefølge ${0}',
+	helpMsg: '${0} - klik for at sortere, eller hold Ctrl-tasten nede og klik for at tilføje til sortering',
+	singleHelpMsg: '${0} - klik for at sortere',
+	priorityOrder: 'sorteringsprioritet ${0}',
 
 //SummaryBar
 	summaryTotal: 'I alt: ${0}',
@@ -154,9 +154,9 @@ define({
 	summaryRange: 'Interval: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Tryk på mellemrumstasten for at markere alle.",	//need translation
-	indirectDeselectAll: "Tryk på mellemrumstasten for at ophæve markeringen af alle.",	//need translation
-	treeExpanded: "Ctrl + venstre piltast for at skjule denne række.",	//need translation
-	treeCollapsed: "Ctrl + højre piltast for at udvide denne række."	//need translation
+	indirectSelectAll: "Tryk på mellemrumstasten for at vælge alle.",	//need translation
+	indirectDeselectAll: "Tryk på mellemrumstasten for at fravælge alle.",	//need translation
+	treeExpanded: "Ctrl+venstre pil for at skjule rækken.",	//need translation
+	treeCollapsed: "Ctrl+højre pil for at udvide rækken."	//need translation
 });
 

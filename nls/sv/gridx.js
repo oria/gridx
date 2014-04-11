@@ -2,7 +2,7 @@ define({
 //Body
 	loadingInfo: "Läser in...",
 	emptyInfo: "Det finns inga objekt att visa",
-	loadFailInfo: "Det gick inte att läsa in data!",
+	loadFailInfo: "Det gick inte att läsa in data. ",
 	loadMore: "Läs in mer",
 	loadMoreLoading: "Läser in...",
 	loadPrevious: "Läs in föregående",
@@ -59,18 +59,18 @@ define({
 	"conditionSelectLabel": "Villkor:",
 	"waiConditionSelectTemplate": "Villkor för regel ${0}",
 	"valueBoxLabel": "Värde:",
-	"waiValueBoxTemplate": "Ange värde för filtrering efter regeln ${0}",
+	"waiValueBoxTemplate": "Ange värde för filtrering efter regel ${0}",
 	"rangeTo": "till",
 	"rangeTemplate": "från ${0} till ${1}",
 	"statusTipHeaderColumn": "Kolumn",
 	"statusTipHeaderCondition": "Regler",
 	"statusTipTitle": "Filterfält",
 	"statusTipMsg": "Klicka på filterfältet om du vill filtrera värden i ${0}.",
-	"anycolumn": "alla kolumner",
+	"anycolumn": "någon kolumn",
 	"statusTipTitleNoFilter": "Filterfält",
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Matcha",
-	"statusTipRelPost": "regel/regler.",
+	"statusTipRelPost": "regler.",
 	"statusTipHeaderAll": "Matcha alla regler.",
 	"statusTipHeaderAny": "Matcha någon regel.",
 	"defaultItemsName": "objekt",
@@ -97,15 +97,15 @@ define({
 //NestedSort
 	singleSort: "Enkel sortering",
 	nestedSort: "Nästlad sortering",
-	ascending: "Klicka för att sortera i stigande ordning",
-	descending: "Klicka för att sortera i fallande ordning",
+	ascending: "Sortera i stigande ordning",
+	descending: "Sortera i fallande ordning",
 	sortingState: "${0} - ${1}",
 	unsorted: "Sortera inte den här kolumnen",
 	waiSingleSortLabel: "${0} - sorteras efter ${1}. Välj för att sortera efter ${2}",
 	waiNestedSortLabel:"${0} - är nästlat sorterat efter ${1}. Välj för nästlad sortering efter ${2}",
 
 //PaginationBar
-	pagerWai: 'Bläddrare',
+	pagerWai: 'Sidfunktion',
 
 	pageIndex: '${0}',
 	pageIndexTitle: 'Sida ${0}',
@@ -124,11 +124,11 @@ define({
 	descriptionEmpty: 'Rutnätet är tomt.',
 
 	summary: 'Totalt: ${0}',
-	summaryWithSelection: 'Totalt: ${0} Valda: ${1}',
+	summaryWithSelection: 'Totalt: ${0}, valda: ${1}',
 
 	gotoBtnTitle: 'Gå till en viss sida',
 
-	gotoDialogTitle: 'Gå till sidan',
+	gotoDialogTitle: 'Gå till sida',
 	gotoDialogMainMsg: 'Ange sidnummer:',
 	gotoDialogPageCount: ' (${0} sidor)',
 	gotoDialogOKBtn: 'Gå',
@@ -141,10 +141,10 @@ define({
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Rensa filter',
 	buildFilterMenuLabel: 'Bygg filter&hellip;',
-	apply: 'Använd filter',
+	apply: 'Tillämpa filter',
 
 //Sort
-	helpMsg: '${0} - Klicka om du vill sortera eller Ctrl-klicka om du vill lägga till till sorteringen',
+	helpMsg: '${0} - Klicka om du vill sortera eller Ctrl-klicka om du vill lägga till i sorteringen',
 	singleHelpMsg: '${0} - Klicka om du vill sortera',
 	priorityOrder: 'sorteringsprioritet ${0}',
 
@@ -154,8 +154,8 @@ define({
 	summaryRange: 'Intervall: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Tryck på MELLANSLAG för att markera alla.",	//need translation
-	indirectDeselectAll: "Tryck på MELLANSLAG för att avmarkera alla.",	//need translation
+	indirectSelectAll: "Tryck på mellanslag för att markera alla.",	//need translation
+	indirectDeselectAll: "Tryck på mellanslag för att avmarkera alla.",	//need translation
 	treeExpanded: "Ctrl + vänster piltangent för att komprimera raden.",	//need translation
 	treeCollapsed: "Ctrl + höger piltangent för att expandera raden."	//need translation
 });

@@ -1,11 +1,11 @@
 define({     
 //Body
 	loadingInfo: "Φόρτωση...",
-	emptyInfo: "Δεν υπάρχουν στοιχεία προς εμφάνιση",
-	loadFailInfo: "Αποτυχία φόρτωσης των δεδομένων!",
-	loadMore: "Φόρτωση περισσότερων",
+	emptyInfo: "Δεν υπάρχουν στοιχεία για εμφάνιση.",
+	loadFailInfo: "Απέτυχε η φόρτωση δεδομένων!",
+	loadMore: "Φόρτωση περισσοτέρων",
 	loadMoreLoading: "Φόρτωση...",
-	loadPrevious: "Φόρτωση προηγούμενων",
+	loadPrevious: "Φόρτωση προηγούμενου",
 	loadPreviousLoading: "Φόρτωση...",
 
 //FilterBar
@@ -15,41 +15,41 @@ define({
 	"ruleTitleTemplate": "Κανόνας ${ruleNumber}",
 	"noFilterApplied": "Δεν έχει εφαρμοστεί φίλτρο.",
 	"defineFilter": "Ορισμός φίλτρου",
-	"conditionEqual": "ίσο με",
-	"conditionNotEqual": "δεν είναι ίσο με",
+	"conditionEqual": "ίσο",
+	"conditionNotEqual": "όχι ίσο",
 	"conditionLess": "είναι μικρότερο από",
-	"conditionLessEqual": "μικρότερο από ή ίσο με",
+	"conditionLessEqual": "μικρότερο ή ίσο",
 	"conditionGreater": "είναι μεγαλύτερο από",
-	"conditionGreaterEqual": "μεγαλύτερο από ή ίσο με",
+	"conditionGreaterEqual": "μεγαλύτερο ή ίσο",
 	"conditionContain": "περιέχει",
 	"conditionIs": "είναι",
-	"conditionStartWith": "αρχίζει με",
+	"conditionStartWith": "αρχίζει από",
 	"conditionEndWith": "τελειώνει σε",
 	"conditionNotContain": "δεν περιέχει",
 	"conditionIsNot": "δεν είναι",
-	"conditionNotStartWith": "δεν αρχίζει με",
+	"conditionNotStartWith": "δεν αρχίζει από",
 	"conditionNotEndWith": "δεν τελειώνει σε",
-	"conditionBefore": "πριν από",
-	"conditionAfter": "μετά από",
+	"conditionBefore": "πριν",
+	"conditionAfter": "μετά",
 	"conditionRange": "εύρος",
 	"conditionIsEmpty": "είναι κενό",
-	"all": "όλες",
-	"any": "οποιαδήποτε",
+	"all": "όλα",
+	"any": "οποιοδήποτε",
 	"relationAll": "όλοι οι κανόνες",
-	"waiRelAll": "Ικανοποίηση όλων των ακόλουθων κανόνων:",
+	"waiRelAll": "Αντιστοιχία με όλους τους παρακάτω κανόνες:",
 	"relationAny": "οποιοσδήποτε κανόνας",
-	"waiRelAny": "Ικανοποίηση οποιουδήποτε από τους ακόλουθους κανόνες:",
-	"relationMsgFront": "Εντοπισμός",
+	"waiRelAny": "Αντιστοιχία με οποιονδήποτε από τους παρακάτω κανόνες:",
+	"relationMsgFront": "Αντιστοιχία",
 	"relationMsgTail": "",
 	"and": "και",
 	"or": "ή",
 	"addRuleButton": "Προσθήκη κανόνα",
 	"waiAddRuleButton": "Προσθήκη νέου κανόνα",
 	"removeRuleButton": "Αφαίρεση κανόνα",
-	"waiRemoveRuleButtonTemplate": "Αφαίρεση του κανόνα ${0}",
-	"addRuleButton": "Προσθήκη κανόνα φιλτραρίσματος",
+	"waiRemoveRuleButtonTemplate": "Αφαίρεση κανόνα ${0}",
+	"addRuleButton": "Προσθήκη κανόνα φίλτρου",
 	"cancelButton": "Ακύρωση",
-	"waiCancelButton": "Ακύρωση του πλαισίου διαλόγου",
+	"waiCancelButton": "Ακύρωση αυτού του πλαισίου διαλόγου",
 	"clearButton": "Εκκαθάριση",
 	"waiClearButton": "Εκκαθάριση του φίλτρου",
 	"filterButton": "Φίλτρο",
@@ -59,22 +59,22 @@ define({
 	"conditionSelectLabel": "Συνθήκη:",
 	"waiConditionSelectTemplate": "Συνθήκη για τον κανόνα ${0}",
 	"valueBoxLabel": "Τιμή:",
-	"waiValueBoxTemplate": "Καταχωρήστε τιμή για φιλτράρισμα για τον κανόνα ${0}",
+	"waiValueBoxTemplate": "Καταχωρήστε τιμή φίλτρου για τον κανόνα ${0}",
 	"rangeTo": "έως",
 	"rangeTemplate": "από ${0} έως ${1}",
 	"statusTipHeaderColumn": "Στήλη",
 	"statusTipHeaderCondition": "Κανόνες",
 	"statusTipTitle": "Γραμμή φίλτρου",
-	"statusTipMsg": "Πατήστε στη γραμμή φίλτρου για να φιλτράρετε τις τιμές σε ${0}.",
+	"statusTipMsg": "Πατήστε στη γραμμή φίλτρου για φιλτράρισμα με βάση τις τιμές στο ${0}.",
 	"anycolumn": "οποιαδήποτε στήλη",
 	"statusTipTitleNoFilter": "Γραμμή φίλτρου",
 	"statusTipTitleHasFilter": "Φίλτρο",
-	"statusTipRelPre": "Εντοπισμός",
+	"statusTipRelPre": "Αντιστοιχία",
 	"statusTipRelPost": "κανόνες.",
-	"statusTipHeaderAll": "Ικανοποίηση όλων των κανόνων.",
-	"statusTipHeaderAny": "Ικανοποίηση οποιουδήποτε κανόνα.",
+	"statusTipHeaderAll": "Αντιστοιχία με όλους τους κανόνες.",
+	"statusTipHeaderAny": "Αντιστοιχία με οποιουσδήποτε κανόνες.",
 	"defaultItemsName": "στοιχεία",
-	"filterBarMsgHasFilterTemplate": "${0} από ${1} ${2} εμφανίζονται.",
+	"filterBarMsgHasFilterTemplate": "Εμφανίζονται ${0} από ${1} ${2}.",
 	"filterBarMsgNoFilterTemplate": "Δεν έχει εφαρμοστεί φίλτρο",
 	"filterBarDefButton": "Ορισμός φίλτρου",
 	"waiFilterBarDefButton": "Φιλτράρισμα του πίνακα",
@@ -82,30 +82,30 @@ define({
 	"filterBarClearButton": "Εκκαθάριση φίλτρου",
 	"waiFilterBarClearButton": "Εκκαθάριση του φίλτρου",
 	"closeFilterBarBtn": "Κλείσιμο γραμμής φίλτρου",
-	"clearFilterMsg": "Αφαιρεί το φίλτρο και εμφανίζει όλες τις διαθέσιμες εγγραφές.",
+	"clearFilterMsg": "Με την επιλογή αυτή θα αφαιρεθεί το φίλτρο και θα εμφανιστούν όλες οι διαθέσιμες εγγραφές.",
 	"anyColumnOption": "Οποιαδήποτε στήλη",
-	"trueLabel": "True",
-	"falseLabel": "False",
-	"radioTrueLabel": "Τιμή True",
-	"radioFalseLabel": "Τιμή False",
-	"beginTimeRangeLabel": "Αρχική τιμή εύρους ωρών",
-	"endTimeRangeLabel": "Τελική τιμή εύρους ωρών",
+	"trueLabel": "Αληθής",
+	"falseLabel": "Ψευδής",
+	"radioTrueLabel": "Τιμή αληθής",
+	"radioFalseLabel": "Τιμή ψευδής",
+	"beginTimeRangeLabel": "Άρχική τιμή χρονικού εύρους",
+	"endTimeRangeLabel": "Τελική τιμή χρονικού εύρους",
 	"beginDateRangeLabel": "Αρχική τιμή εύρους ημερομηνιών",
 	"endDateRangeLabel": "Τελική τιμή εύρους ημερομηνιών",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
 	singleSort: "Απλή ταξινόμηση",
-	nestedSort: "Σύνθετη ταξινόμηση",
-	ascending: "Πατήστε εδώ για αύξουσα ταξινόμηση",
-	descending: "Πατήστε εδώ για φθίνουσα ταξινόμηση",
+	nestedSort: "Ένθετη ταξινόμηση",
+	ascending: "Πατήστε εδώ για ταξινόμηση σε αύξουσα σειρά",
+	descending: "Πατήστε εδώ για ταξινόμηση σε φθίνουσα σειρά",
 	sortingState: "${0} - ${1}",
-	unsorted: "Να μην ταξινομηθεί αυτή η στήλη",
-	waiSingleSortLabel: "${0} - έχει ταξινομηθεί κατά ${1}. Επιλέξτε την ταξινόμηση κατά ${2}",
-	waiNestedSortLabel:"${0} - έχει εφαρμοστεί σύνθετη ταξινόμηση κατά ${1}. Επιλέξτε τη σύνθετη ταξινόμηση κατά ${2}",
+	unsorted: "Χωρίς ταξινόμηση αυτής της στήλης",
+	waiSingleSortLabel: "${0} - ταξινομήθηκε κατά ${1}. Επιλέξτε ταξινόμηση κατά ${2}",
+	waiNestedSortLabel:"${0} - ταξινομήθηκε με ένθετη ταξινόμηση κατά ${1}. Επιλέξτε ένθετη ταξινόμηση κατά ${2}",
 
 //PaginationBar
-	pagerWai: 'Σελιδοποίηση',
+	pagerWai: 'Συσκευή τηλεειδοποίησης',
 
 	pageIndex: '${0}',
 	pageIndexTitle: 'Σελίδα ${0}',
@@ -124,13 +124,13 @@ define({
 	descriptionEmpty: 'Το πλέγμα είναι κενό.',
 
 	summary: 'Σύνολο: ${0}',
-	summaryWithSelection: 'Σύνολο: ${0}, Επιλεγμένα: ${1}',
+	summaryWithSelection: 'Σύνολο: ${0} Επιλεγμένα: ${1}',
 
 	gotoBtnTitle: 'Μετάβαση σε συγκεκριμένη σελίδα',
 
 	gotoDialogTitle: 'Μετάβαση σε σελίδα',
 	gotoDialogMainMsg: 'Καθορίστε τον αριθμό σελίδας:',
-	gotoDialogPageCount: '(${0} σελίδες)',
+	gotoDialogPageCount: ' (${0} σελίδες)',
 	gotoDialogOKBtn: 'Μετάβαση',
 	gotoDialogCancelBtn: 'Ακύρωση',
 	// for drop down pagination bar
@@ -144,8 +144,8 @@ define({
 	apply: 'Εφαρμογή φίλτρου',
 
 //Sort
-	helpMsg: '${0} - Πατήστε για ταξινόμηση της στήλης ή κρατήστε πατημένο το πλήκτρο Control και πατήστε για να την προσθέσετε στις στήλες ταξινόμησης',
-	singleHelpMsg: '${0} - Πατήστε για ταξινόμηση',
+	helpMsg: '${0} - Πατήστε τη στήλη για ταξινόμηση ή πατήστε την κρατώντας το πλήκτρο Ctrl για να την προσθέσετε για ταξινόμηση',
+	singleHelpMsg: '${0} - Πατήστε τη στήλη για ταξινόμηση',
 	priorityOrder: 'προτεραιότητα ταξινόμησης ${0}',
 
 //SummaryBar
@@ -154,9 +154,9 @@ define({
 	summaryRange: 'Εύρος: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα επιλέξετε όλα. ",	//need translation
-	indirectDeselectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα αποεπιλέξετε όλα. ",	//need translation
-	treeExpanded: "Πατήστε Control + αριστερό βέλος για να συμπτύξετε αυτή τη γραμμή.",	//need translation
-	treeCollapsed: "Πατήστε Control + δεξί βέλος για να αναπτύξετε αυτή τη γραμμή."	//need translation
+	indirectSelectAll: "Πατήστε το πλήκτρο διαστήματος για να επιλεγούν όλα.",	//need translation
+	indirectDeselectAll: "Πατήστε το πλήκτρο διαστήματος για να αποεπιλεγούν όλα.",	//need translation
+	treeExpanded: "Πατήστε Ctrl + αριστερό βέλος για σύμπτυξη αυτής της γραμμής.",	//need translation
+	treeCollapsed: "Πατήστε Ctrl + δεξί βέλος για ανάπτυξη αυτής της γραμμής."	//need translation
 });
 
