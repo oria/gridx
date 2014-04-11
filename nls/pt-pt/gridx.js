@@ -1,7 +1,7 @@
 define({     
 //Body
 	loadingInfo: "A carregar...",
-	emptyInfo: "Não existem artigos a apresentar",
+	emptyInfo: "Sem artigos a apresentar",
 	loadFailInfo: "Falha ao carregar dados!",
 	loadMore: "Carregar Mais",
 	loadMoreLoading: "A carregar...",
@@ -17,10 +17,10 @@ define({
 	"defineFilter": "Definir filtro",
 	"conditionEqual": "igual",
 	"conditionNotEqual": "não é igual",
-	"conditionLess": "é inferior a",
-	"conditionLessEqual": "é inferior ou igual a",
-	"conditionGreater": "é superior a",
-	"conditionGreaterEqual": "é superior ou igual a",
+	"conditionLess": "é menor do que",
+	"conditionLessEqual": "menor ou igual",
+	"conditionGreater": "é maior do que",
+	"conditionGreaterEqual": "maior ou igual",
 	"conditionContain": "contém",
 	"conditionIs": "é",
 	"conditionStartWith": "começa com",
@@ -30,24 +30,24 @@ define({
 	"conditionNotStartWith": "não começa com",
 	"conditionNotEndWith": "não termina com",
 	"conditionBefore": "antes",
-	"conditionAfter": "depois",
+	"conditionAfter": "após",
 	"conditionRange": "intervalo",
 	"conditionIsEmpty": "está vazio",
-	"all": "todas",
+	"all": "tudo",
 	"any": "qualquer",
 	"relationAll": "todas as regras",
-	"waiRelAll": "Corresponder a todas as regras seguintes:",
+	"waiRelAll": "Corresponder a todas as seguintes regras:",
 	"relationAny": "qualquer regra",
-	"waiRelAny": "Corresponder a qualquer das regras seguintes:",
-	"relationMsgFront": "Corresponder",
+	"waiRelAny": "Corresponder a qualquer uma das seguintes regras:",
+	"relationMsgFront": "Correspondência",
 	"relationMsgTail": "",
-	"and": "e",
-	"or": "ou",
+	"and": "and",
+	"or": "or",
 	"addRuleButton": "Adicionar regra",
 	"waiAddRuleButton": "Adicionar uma nova regra",
-	"removeRuleButton": "Remover Regra",
+	"removeRuleButton": "Remover regra",
 	"waiRemoveRuleButtonTemplate": "Remover regra ${0}",
-	"addRuleButton": "Adicionar Regra de Filtro",
+	"addRuleButton": "Adicionar regra de filtro",
 	"cancelButton": "Cancelar",
 	"waiCancelButton": "Cancelar esta caixa de diálogo",
 	"clearButton": "Limpar",
@@ -59,17 +59,17 @@ define({
 	"conditionSelectLabel": "Condição:",
 	"waiConditionSelectTemplate": "Condição para a regra ${0}",
 	"valueBoxLabel": "Valor:",
-	"waiValueBoxTemplate": "Introduza o valor a filtrar para a regra ${0}",
-	"rangeTo": "para",
-	"rangeTemplate": "de ${0} para ${1}",
+	"waiValueBoxTemplate": "Introduzir valor para filtrar para a regra ${0}",
+	"rangeTo": "a",
+	"rangeTemplate": "de ${0} a ${1}",
 	"statusTipHeaderColumn": "Coluna",
 	"statusTipHeaderCondition": "Regras",
-	"statusTipTitle": "Barra de Filtros",
-	"statusTipMsg": "Faça clique na barra de filtros aqui para filtrar valores em ${0}.",
+	"statusTipTitle": "Barra do filtro",
+	"statusTipMsg": "Faça clique na barra de filtro para filtrar os valores em ${0}.",
 	"anycolumn": "qualquer coluna",
-	"statusTipTitleNoFilter": "Barra de Filtros",
+	"statusTipTitleNoFilter": "Barra do filtro",
 	"statusTipTitleHasFilter": "Filtro",
-	"statusTipRelPre": "Corresponder",
+	"statusTipRelPre": "Correspondência",
 	"statusTipRelPost": "regras.",
 	"statusTipHeaderAll": "Corresponder todas as regras.",
 	"statusTipHeaderAny": "Corresponder quaisquer regras.",
@@ -81,31 +81,31 @@ define({
 	"a11yFilterBarDefButton": "Filtrar...",
 	"filterBarClearButton": "Limpar filtro",
 	"waiFilterBarClearButton": "Limpar o filtro",
-	"closeFilterBarBtn": "Fechar barra de filtros",
-	"clearFilterMsg": "Esta acção irá remover o filtro e apresentar todos os registos disponíveis.",
-	"anyColumnOption": "Qualquer Coluna",
+	"closeFilterBarBtn": "Fechar barra de filtro",
+	"clearFilterMsg": "Este procedimento irá remover o filtro e apresentar todos os registos disponíveis.",
+	"anyColumnOption": "Qualquer coluna",
 	"trueLabel": "True",
 	"falseLabel": "False",
 	"radioTrueLabel": "Valor True",
 	"radioFalseLabel": "Valor False",
-	"beginTimeRangeLabel": "Início do Valor do Intervalo de Hora",
-	"endTimeRangeLabel": "Final do Valor do Intervalo de Hora",
-	"beginDateRangeLabel": "Início do Valor do Intervalo de Data",
-	"endDateRangeLabel": "Final do Valor do Intervalo de Data",
+	"beginTimeRangeLabel": "Início do valor de intervalo de tempo",
+	"endTimeRangeLabel": "Fim do valor de intervalo de tempo",
+	"beginDateRangeLabel": "Início do valor de intervalo de datas",
+	"endDateRangeLabel": "Fim do valor de intervalo de datas",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
-	singleSort: "Ordenação Singular",
-	nestedSort: "Ordenação Imbricada",
-	ascending: "Faça clique para ordenar de forma Ascendente",
-	descending: "Faça clique para ordenar de forma Descendente",
+	singleSort: "Ordenação única",
+	nestedSort: "Ordenação imbricada",
+	ascending: "Faça clique para ordenar Ascendente",
+	descending: "Faça clique para ordenar Descendente",
 	sortingState: "${0} - ${1}",
 	unsorted: "Não ordenar esta coluna",
-	waiSingleSortLabel: "${0} - está ordenada por ${1}. Seleccione para ordenar por ${2}",
-	waiNestedSortLabel:"${0} - está imbricada por ${1}. Seleccione para ordenar de forma imbricada por ${2}",
+	waiSingleSortLabel: "${0} - está ordenado por ${1}. Seleccionar ordenar por ${2}",
+	waiNestedSortLabel:"${0} - é ordenação imbricada por ${1}. Seleccionar ordenação imbricada por ${2}",
 
 //PaginationBar
-	pagerWai: 'Pager',
+	pagerWai: 'Paginador',
 
 	pageIndex: '${0}',
 	pageIndexTitle: 'Página ${0}',
@@ -121,16 +121,16 @@ define({
 	pageSizeAllTitle: 'Todos os artigos',
 
 	description: '${0} - ${1} de ${2} artigos.',
-	descriptionEmpty: 'A grelha está vazia.',
+	descriptionEmpty: 'Grelha está vazia.',
 
 	summary: 'Total: ${0}',
-	summaryWithSelection: 'Total: ${0} Seleccionado(s): ${1}',
+	summaryWithSelection: 'Total: ${0} Seleccionados: ${1}',
 
-	gotoBtnTitle: 'Ir para uma página específica',
+	gotoBtnTitle: 'Avançar para uma página específica',
 
-	gotoDialogTitle: 'Ir para Página',
-	gotoDialogMainMsg: 'Especificar o número da página:',
-	gotoDialogPageCount: '(${0} páginas)',
+	gotoDialogTitle: 'Avançar para a página',
+	gotoDialogMainMsg: 'Especificar o número de página:',
+	gotoDialogPageCount: ' (${0} páginas)',
 	gotoDialogOKBtn: 'Ir',
 	gotoDialogCancelBtn: 'Cancelar',
 	// for drop down pagination bar
@@ -140,23 +140,23 @@ define({
 //QuickFilter
 	filterLabel: 'Filtro',
 	clearButtonTitle: 'Limpar filtro',
-	buildFilterMenuLabel: 'Compilar Filtro&hellip;',
+	buildFilterMenuLabel: 'Construir filtro&hellip;',
 	apply: 'Aplicar filtro',
 
 //Sort
-	helpMsg: '${0} - Faça clique para ordenar ou carregue na tecla Control e faça clique para adicionar a ordenação',
+	helpMsg: '${0} - Faça clique para ordenar ou prima CTRL e faça clique para adicionar à ordenação',
 	singleHelpMsg: '${0} - Faça clique para ordenar',
 	priorityOrder: 'prioridade de ordenação ${0}',
 
 //SummaryBar
 	summaryTotal: 'Total: ${0}',
-	summarySelected: 'Seleccionado(s): ${0}',
-	summaryRange: 'Intervalo: ${0}-${1}',	//need translation
+	summarySelected: 'Seleccionado: ${0}',
+	summaryRange: 'Intervalo: ${0} a ${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Prima SPACE para seleccionar tudo.",	//need translation
-	indirectDeselectAll: "Prima SPACE para desmarcar tudo.",	//need translation
-	treeExpanded: "Control + seta para a esquerda para contrair esta fila.",	//need translation
-	treeCollapsed: "Control + seta para a direita para expandir esta fila."	//need translation
+	indirectSelectAll: "Prima a Barra de espaços para seleccionar tudo.",	//need translation
+	indirectDeselectAll: "Prima a Barra de espaços para desmarcar tudo.",	//need translation
+	treeExpanded: "Prima CTRL e a seta para a esquerda para contrair esta linha.",	//need translation
+	treeCollapsed: "Prima CTRL e a seta para a direita para expandir esta linha."	//need translation
 });
 

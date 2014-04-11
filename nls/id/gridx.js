@@ -1,12 +1,12 @@
 define({     
 //Body
-	loadingInfo: "Memuatkan...",
+	loadingInfo: "Memuat...",
 	emptyInfo: "Tidak ada item untuk ditampilkan",
 	loadFailInfo: "Tidak dapat memuat data!",
-	loadMore: "Muatkan Lebih Banyak",
-	loadMoreLoading: "Memuatkan...",
-	loadPrevious: "Muatkan Sebelumnya",
-	loadPreviousLoading: "Memuatkan...",
+	loadMore: "Muat Lebih Banyak",
+	loadMoreLoading: "Memuat...",
+	loadPrevious: "Muat Sebelumnya",
+	loadPreviousLoading: "Memuat...",
 
 //FilterBar
 	"clearFilterDialogTitle": "Kosongkan Filter",
@@ -14,7 +14,7 @@ define({
 	"defaultRuleTitle": "Penggaris",
 	"ruleTitleTemplate": "Penggaris ${ruleNumber}",
 	"noFilterApplied": "Tidak ada filter yang diterapkan.",
-	"defineFilter": "Menetapkan filter",
+	"defineFilter": "Tentukan filter",
 	"conditionEqual": "sama dengan",
 	"conditionNotEqual": "tidak sama dengan",
 	"conditionLess": "kurang dari",
@@ -27,8 +27,8 @@ define({
 	"conditionEndWith": "diakhiri dengan",
 	"conditionNotContain": "tidak memuat",
 	"conditionIsNot": "tidak",
-	"conditionNotStartWith": "dimulai dengan",
-	"conditionNotEndWith": "tidak dimulai dengan",
+	"conditionNotStartWith": "tidak dimulai dengan",
+	"conditionNotEndWith": "tidak diakhiri dengan",
 	"conditionBefore": "sebelum",
 	"conditionAfter": "setelah",
 	"conditionRange": "rentang",
@@ -36,10 +36,10 @@ define({
 	"all": "semua",
 	"any": "apa pun",
 	"relationAll": "semua penggaris",
-	"waiRelAll": "Sesuaikan semua penggaris:",
-	"relationAny": "penggaris apa pun",
+	"waiRelAll": "Sesuaikan semua penggaris berikut:",
+	"relationAny": "penggaris mana saja",
 	"waiRelAny": "Sesuaikan semua penggaris berikut:",
-	"relationMsgFront": "Sesuaikan",
+	"relationMsgFront": "Sesuai",
 	"relationMsgTail": "",
 	"and": "dan",
 	"or": "atau",
@@ -54,11 +54,11 @@ define({
 	"waiClearButton": "Kosongkan filter",
 	"filterButton": "Filter",
 	"waiFilterButton": "Kirimkan filter",
-	"columnSelectLabel": "Kolom",
+	"columnSelectLabel": "Kolom:",
 	"waiColumnSelectTemplate": "Kolom untuk penggaris ${0}",
-	"conditionSelectLabel": "Kondisi",
+	"conditionSelectLabel": "Kondisi:",
 	"waiConditionSelectTemplate": "Kondisi untuk penggaris ${0}",
-	"valueBoxLabel": "Nilai",
+	"valueBoxLabel": "Nilai:",
 	"waiValueBoxTemplate": "Masukkan nilai untuk menyaring penggaris ${0}",
 	"rangeTo": "hingga",
 	"rangeTemplate": "dari ${0} hingga ${1}",
@@ -67,7 +67,7 @@ define({
 	"statusTipTitle": "Bilah Filter",
 	"statusTipMsg": "Klik bilah filter di sini untuk menyaring nilai pada ${0}.",
 	"anycolumn": "kolom mana pun",
-	"statusTipTitleNoFilter": "Bilah Bar",
+	"statusTipTitleNoFilter": "Bilah Filter",
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Sesuai",
 	"statusTipRelPost": "penggaris.",
@@ -83,7 +83,7 @@ define({
 	"waiFilterBarClearButton": "Kosongkan filter",
 	"closeFilterBarBtn": "Tutup bilah filter",
 	"clearFilterMsg": "Menutup bilah filter akan menghapus semua filter dan memperlihatkan semua catatan yang tersedia.",
-	"anyColumnOption": "kolom mana pun",
+	"anyColumnOption": "Kolom mana pun",
 	"trueLabel": "Benar",
 	"falseLabel": "Salah",
 	"radioTrueLabel": "Nilai Benar",
@@ -98,7 +98,7 @@ define({
 	singleSort: "Pengurutan Tunggal",
 	nestedSort: "Pengurutan Berkelompok",
 	ascending: "Klik untuk mengurutkan Ke Atas",
-	descending: "Klik untuk mengurutkan Ke Bawah ",
+	descending: "Klik untuk mengurutkan Ke Bawah",
 	sortingState: "${0} - ${1}",
 	unsorted: "Jangan mengurutkan kolom ini",
 	waiSingleSortLabel: "${0} - diurutkan oleh ${1}. Pilih untuk mengurutkan berdasarkan ${2}",
@@ -144,19 +144,19 @@ define({
 	apply: 'Terapkan Filter',
 
 //Sort
-	helpMsg: '${0} - Cliquez pour effectuer le tri ou cliquez et maintenez la touche Ctrl enfoncée pour ajouter un élément au tri',
-	singleHelpMsg: '${0} - Cliquez pour effectuer le tri',
-	priorityOrder: 'priorité de tri ${0}',
+	helpMsg: '${0} - Klik untuk mengurutkan atau klik kanan untuk menambahkan ke urutan',
+	singleHelpMsg: '${0} - Klik untuk mengurutkan',
+	priorityOrder: 'urutkan prioritas ${0}',
 
 //SummaryBar
 	summaryTotal: 'Total: ${0}',
-	summarySelected: 'Total: ${0} Dipilih: ${1}',
-	summaryRange: 'Range: ${0}-${1}',	//need translation
+	summarySelected: 'Terpilih: ${0}',
+	summaryRange: 'Rentang: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Press SPACE to select all.",	//need translation
-	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
-	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
-	treeCollapsed: "Control + right arrow key to expand this row."	//need translation
+	indirectSelectAll: "Tekan SPASI untuk memilih semua.",	//need translation
+	indirectDeselectAll: "Tekan SPASI untuk batal memilih semua.",	//need translation
+	treeExpanded: "Tombol Control + panah kiri untuk menyiutkan baris ini.",	//need translation
+	treeCollapsed: "Tombol Control + panah kanan untuk memperluas baris ini."	//need translation
 });
 
