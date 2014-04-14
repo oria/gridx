@@ -13,6 +13,7 @@ define([
 	"dojo/query",
 	"dojo/keys",
 	'dojo/on',
+	'dojox/html/entities',
 	"dijit/_BidiSupport",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
@@ -23,7 +24,8 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, keys, on, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string,
+			parser, query, keys, on, entities, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -562,17 +564,24 @@ define([
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
 			var F = Filter, 
-				c = this.grid._columnsById[colId];
-			var dc = c.dateParser || this._stringToDate;
-			var tc = c.timeParser || this._stringToTime;
+				col = this.grid._columnsById[colId];
+			var dc = col.dateParser || this._stringToDate;
+			var tc = col.timeParser || this._stringToTime;
 			var converters = {
-				custom: c.dataTypeArgs && c.dataTypeArgs.converter && lang.isFunction(c.dataTypeArgs.converter)?
-						c.dataTypeArgs.converter : null,
+				custom: col.dataTypeArgs && col.dataTypeArgs.converter && lang.isFunction(col.dataTypeArgs.converter)?
+						col.dataTypeArgs.converter : null,
 				date: dc,
 				time: tc
 			};
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			var converter = converters.custom? converters.custom : converters[type];
+
+			console.log(col);
+			console.log(data)
+			if(col.encode === true && typeof data.value === 'string'){
+				data.value = entities.encode(data.value);
+				console.log('in entities encode');
+			}
 
 			if(c === 'range'){
 				var startValue = F.value(data.value.start, type),

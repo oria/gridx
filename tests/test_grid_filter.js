@@ -18,7 +18,7 @@ require([
 
 	layout = [
 		{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
-		{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'enum',
+		{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'enum', encode: true,
 			enumOptions: ['a', 'b', 'c']
 		},
 		{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'enum',
