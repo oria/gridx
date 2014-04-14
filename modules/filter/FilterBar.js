@@ -576,11 +576,8 @@ define([
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			var converter = converters.custom? converters.custom : converters[type];
 
-			console.log(col);
-			console.log(data)
 			if(col.encode === true && typeof data.value === 'string'){
 				data.value = entities.encode(data.value);
-				console.log('in entities encode');
 			}
 
 			if(c === 'range'){
