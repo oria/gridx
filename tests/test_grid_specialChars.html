@@ -6,7 +6,7 @@
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
 		.gridx {
-			width: 800px;
+			/*width: 800px;*/
 			height: 300px;
 		}
 	</style>
@@ -43,8 +43,10 @@
 			"gridx/modules/SingleSort",
 			"gridx/modules/extendedSelect/Row",
 			"gridx/modules/IndirectSelectColumn",
-			"gridx/modules/VirtualVScroller"
-		]
+			"gridx/modules/VirtualVScroller",
+			"gridx/modules/ColumnResizer"
+		],
+		autoWidth: true
 	'></div>
 	<h2>Filter with quickFilter</h2>
 	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
@@ -55,11 +57,12 @@
 		modules: [
 			"gridx/modules/Filter",
 			"gridx/modules/filter/QuickFilter",
-			"gridx/modules/SingleSort",
+			"gridx/modules/SingleSort", 
 			"gridx/modules/extendedSelect/Row",
 			"gridx/modules/IndirectSelectColumn",
 			"gridx/modules/VirtualVScroller"
-		]
+		],
+		autoWidth: true
 	'></div>
 </body>
 </html>
