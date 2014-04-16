@@ -9,6 +9,21 @@ define([
 	'dojo/_base/Color'
 ], function(lang, locale, NumberTextBox, DateTextBox, TimeTextBox, Editor, ProgressBar, Color){
 
+	var SPECIAL_CHARS = ['<a', 'a/>', '&', '!', '#', '*', '^', '%'];
+	var toSpecialchars = function(str){
+		var i, char,
+			len = str.length, 
+			spLen = SPECIAL_CHARS.length,
+			newStr = [];
+
+		for(i = 0; i < len; i++){
+			char = str.charCodeAt(i);
+			newStr.push(SPECIAL_CHARS[char % spLen]);
+		}
+
+		return newStr.join('');
+	}
+
 	var items = [
 //        {"Heard": '', "Progress": '', "Genre":"",	"Artist":"",	"Year": '',	"Album":"",	"Name":"",	"Length":"",	"Track": '',	"Composer":"",	"Download Date":"",	"Last Played":""},
 //        {"Heard": '', "Progress": '', "Genre":"",	"Artist":"",	"Year": '',	"Album":"",	"Name":"",	"Length":"",	"Track": '',	"Composer":"",	"Download Date":"",	"Last Played":""},
@@ -180,6 +195,7 @@ define([
 	return {
 		getData: function(args){
 			var size = args.size === undefined ? 100 : args.size;
+			var cs = args.containSpecialChars;
 			var data = {
 				identifier: 'id', 
 				label: 'id', 
@@ -187,6 +203,10 @@ define([
 			};
 			for(var i = 0; i < size; ++i){
 				var item = items[i % items.length];
+				if(cs === true){
+					item.Genre = toSpecialchars(item.Genre);
+					item.Artist = toSpecialchars(item.Artist);
+				}
 				data.items.push(lang.mixin({
 					id: i,
 					order: i + 1,
