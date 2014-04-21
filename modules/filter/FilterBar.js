@@ -13,6 +13,7 @@ define([
 	"dojo/query",
 	"dojo/keys",
 	'dojo/on',
+	'dojox/html/entities',
 	"dijit/_BidiSupport",
 	"../../core/_Module",
 	"dojo/text!../../templates/FilterBar.html",
@@ -23,7 +24,8 @@ define([
 	"dijit/TooltipDialog",
 	"dijit/popup",
 	"dijit/form/Button"
-], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string, parser, query, keys, on, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
+], function(kernel, declare, registry, lang, array, event, dom, domAttr, css, string,
+			parser, query, keys, on, entities, _BidiSupport, _Module, template, Filter, FilterDialog, FilterConfirmDialog, FilterTooltip){
 
 /*=====
 	var FilterBar = declare(_Module, {
@@ -406,7 +408,7 @@ define([
 		_getColumnConditions: function(colId){
 			// summary:
 			//		Get the available conditions for a specific column. 
-			// 		Excluded condtions is defined by col.disabledConditions
+			//		Excluded condtions is defined by col.disabledConditions
 			// tag:
 			//		private
 			// colId: String|Number
@@ -425,10 +427,12 @@ define([
 			}
 			
 			var ret = this.conditions[type], hash = {};
-			if(!ret){ret = this.conditions['string'];}
+			if(!ret){
+				ret = this.conditions.string;
+			}
 			array.forEach(disabled, function(name){hash[name] = true;});
 			ret = array.filter(ret, function(name){return !hash[name];});
-			return ret;
+			return ret; 
 		},
 		
 		_setFilterable: function(colId, filterable){
@@ -474,7 +478,7 @@ define([
 				this.arg('hasFilterMessage', this.arg('useShortMessage') ? this.grid.nls.summary : this.grid.nls.filterBarMsgHasFilterTemplate),
 				[this._currentSize, this._totalSize, this.arg('itemsName')? this.arg('itemsName') : this.grid.nls.defaultItemsName]) + 
 				'&nbsp; &nbsp; <a action="clear" tabindex="-1" role="button" title="' + this.grid.nls.filterBarClearButton + '">'
-					 + this.grid.nls.filterBarClearButton + '</a>';
+					+ this.grid.nls.filterBarClearButton + '</a>';
 
 			clearButton = dojo.query('[role]', this.statusNode)[0];
 			clearButton.signal = on(clearButton, 'keypress', function(e){
@@ -562,17 +566,22 @@ define([
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
 			var F = Filter, 
-				c = this.grid._columnsById[colId];
-			var dc = c.dateParser || this._stringToDate;
-			var tc = c.timeParser || this._stringToTime;
+				dv = data.value,
+				col = this.grid._columnsById[colId];
+			var dc = col.dateParser || this._stringToDate;
+			var tc = col.timeParser || this._stringToTime;
 			var converters = {
-				custom: c.dataTypeArgs && c.dataTypeArgs.converter && lang.isFunction(c.dataTypeArgs.converter)?
-						c.dataTypeArgs.converter : null,
+				custom: col.dataTypeArgs && col.dataTypeArgs.converter && lang.isFunction(col.dataTypeArgs.converter)?
+						col.dataTypeArgs.converter : null,
 				date: dc,
 				time: tc
 			};
 			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			var converter = converters.custom? converters.custom : converters[type];
+
+			if(col.encode === true && typeof data.value === 'string'){
+				dv = entities.encode(data.value);
+			}
 
 			if(c === 'range'){
 				var startValue = F.value(data.value.start, type),
@@ -585,7 +594,7 @@ define([
 					c = c.replace(/^not/g, '');
 					c = c.charAt(0).toLowerCase() + c.substring(1);
 				}
-				exp = F[c](F.column(colId, type, converter), c == 'isEmpty' ? null : F.value(data.value, type));
+				exp = F[c](F.column(colId, type, converter), c == 'isEmpty' ? null : F.value(dv, type));
 				if(isNot){exp = F.not(exp);}
 			}
 			return exp;

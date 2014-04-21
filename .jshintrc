@@ -4,6 +4,8 @@
 	"strict": false,
 	"eqeqeq": true,
 
+	"laxbreak": true,
+
 	"smarttabs": false,
 	"supernew": false
 }
