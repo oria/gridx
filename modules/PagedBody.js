@@ -2,11 +2,13 @@ define([
 	"dojo/_base/declare",
 	"dojo/query",
 	"dojo/dom-construct",
+	"dojo/dom-style",
 	"dojo/dom-class",
 	"dojo/keys",
+	"dojo/sniff",
 	"./Body",
 	"./_PagedBodyMixin"
-], function(declare, query, domConstruct, domClass, keys, Body, _PagedBodyMixin){
+], function(declare, query, domConstruct, domStyle, domClass, keys, has, Body, _PagedBodyMixin){
 
 /*=====
 	return declare(Body, {
@@ -30,6 +32,20 @@ define([
 
 	return declare([Body, _PagedBodyMixin], {
 		maxPageCount: 0,
+		
+		_onHScroll: function(left){
+			var t = this,
+				g = t.grid;
+				
+			t.inherited(arguments);
+			
+			if((has('webkit') || has('ie') < 8) && !g.isLeftToRight()){
+				left = g.header.innerNode.scrollWidth - g.header.innerNode.offsetWidth - left;
+			}
+			
+			domStyle.set(t._prevBtn, "marginLeft", left+"px");
+			domStyle.set(t._moreBtn, "marginLeft", left+"px");
+		},
 
 		createBottom: function(bottomNode){
 			var t = this,

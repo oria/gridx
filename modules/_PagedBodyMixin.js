@@ -43,6 +43,8 @@ define([
 				g.hScrollerNode.scrollLeft = t.domNode.scrollLeft;
 			});
 			t.aspect(t.model, 'onSizeChange', '_onSizeChange');
+			
+			t.aspect(g, 'onHScroll', '_onHScroll');
 
 			if(t.arg('createBottom')){
 				t._bottomNode = domConstruct.create('div', {
@@ -63,6 +65,10 @@ define([
 				});
 			}
 			t._initFocus();
+		},
+		
+		_onHScroll: function(left){
+			//TODO logic when scroll in horizontal
 		},
 
 		_onSizeChange: function(size){
