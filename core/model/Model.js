@@ -6,8 +6,9 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/aspect",
+	'dojo/store/Memory',
 	"./cache/Sync"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect, Sync){
+], function(require, declare, array, lang, Deferred, DeferredList, aspect, Memory, Sync){
 
 /*=====
 	return declare([], {
@@ -284,6 +285,17 @@ define([
 				cacheClass = args.cacheClass || Sync;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
+
+			if(!args.store){
+				t.store = args.store = t._parseData(args.data);
+				console.log(t.store);
+			}else{
+				t.store = args.store;
+			}
+
+			if(!args.structure){
+				args.setColumns(t._parseStructure(args.data));
+			}
 			t._exts = {};
 			t._cmdQueue = [];
 			t._model = t._cache = new cacheClass(t, args);
@@ -492,6 +504,54 @@ define([
 					this._exts[ext.name] = ext;
 				}
 			}
+		}, 
+
+		_parseData: function(data){
+			var store;
+
+			if(!data){
+				store = new Memory({
+					data:[
+						{id: 1, name: 'Dojo'},
+						{id: 2, name: 'jQuery'},
+						{id: 3, name: 'ExtJS'},
+						{id: 4, name: 'YUI'}
+					]
+				});
+				return store;
+			}
+			return new Memory({data: data});
+		},
+
+		_parseStructure: function(data){
+			if(!data || typeof data !== 'object'){ 
+				return [
+					{id: 1, name: 'id', field: 'id'},
+					{id: 2, name: 'name', field: 'name'}
+				]; 
+			}
+
+			var s = {},
+				len = data.length,
+				keys, i, j, kl, key, 
+				struct = [];
+
+			for(i = 0; i < len; i++){
+				keys = Object.keys(data[i]);
+				kl = keys.length;
+				for(j = 0; j < kl; j++){
+					s[keys[j]] = 1;
+				}
+			}
+
+			for(key in s){
+				struct.push({id: key, name: key, field: key})
+			}
+
+			return struct;
+
+			// return Object.keys(s);
+
 		}
 	});
 });
