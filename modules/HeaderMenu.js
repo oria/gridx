@@ -56,6 +56,11 @@ define([
 					if(menu.bindGrid){
 						menu.bindGrid(grid, col);
 					}
+					//handle menu close
+					t.aspect(menu, 'onClose', function(e){
+						grid.headerRegions._doFocus(e);
+					});
+					
 					return btn;
 				}
 			}, 0, 1);
