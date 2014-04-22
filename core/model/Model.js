@@ -282,20 +282,21 @@ define([
 	return declare([], {
 		constructor: function(args){
 			var t = this,
+				g = args,
 				cacheClass = args.cacheClass || Sync;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
 
-			if(!args.store){
-				t.store = args.store = t._parseData(args.data);
-				console.log(t.store);
+			if(!g.store){
+				t.store = g.store = t._parseData(g.data);
+				
+				if(!g.structure){
+					g.setColumns(t._parseStructure(g.data));
+				}
 			}else{
 				t.store = args.store;
 			}
 
-			if(!args.structure){
-				args.setColumns(t._parseStructure(args.data));
-			}
 			t._exts = {};
 			t._cmdQueue = [];
 			t._model = t._cache = new cacheClass(t, args);
@@ -530,7 +531,7 @@ define([
 					{id: 2, name: 'name', field: 'name'}
 				]; 
 			}
-
+			
 			var s = {},
 				len = data.length,
 				keys, i, j, kl, key, 
