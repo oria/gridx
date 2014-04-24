@@ -413,7 +413,7 @@ Async, Model, Row, Column, Cell, _Module){
 
 		//Private-------------------------------------------------------------------------------------
 		_init: function(){
-			var t = this,
+			var t = this, s,
 				d = t._deferStartup = new Deferred();
 			t.modules = t.modules || [];
 			t.modelExtensions = t.modelExtensions || [];
@@ -426,12 +426,8 @@ Async, Model, Row, Column, Cell, _Module){
 				t.modules = t.modules.concat(t.desktopModules);
 			}
 
-			var s = null;
 			if(!t.store){
 				s = t._parseData(t.data);
-					// if(!t.structure){
-
-					// }
 			}else{
 				s = t.store;
 			}
@@ -443,7 +439,6 @@ Async, Model, Row, Column, Cell, _Module){
 				checkForced(t);
 				removeDuplicate(t);
 				checkModelExtensions(t);
-					
 
 				//Create model before module creation, so that all modules can use the logic grid from very beginning.
 				t.model = new Model(t);
@@ -513,8 +508,7 @@ Async, Model, Row, Column, Cell, _Module){
 		],
 
 		_parseData: function(data){
-			var store,
-				t = this;
+			var t = this;
 
 			if(typeof data ==='object' && data.constructor === Array){
 				this.store = new Memory({data: data});
@@ -523,17 +517,12 @@ Async, Model, Row, Column, Cell, _Module){
 				return xhr(data, {
 					handleAs: "json"
 				}).then(function(data){
-					console.log(data);
 					t.store = new Memory({data: data});
 					if(!t.structure){
 						t.structure = t._parseStructure(data);
-						console.log('after parse structure');
-						console.log(t.structure);
 					}
 				});
-
-				// return new JsonRest({target: data});
-			}else if(!data){
+			}else if(!data){	//use default data
 				this.store = new Memory({
 					data: this._defaultData
 				});
@@ -570,13 +559,6 @@ Async, Model, Row, Column, Cell, _Module){
 			}
 
 			return struct;
-		},
-	
-		//used in fast mode
-		setData: function(data){
-			var data = this._parseData(data);
-			
-			this.setStore(data);
-		},		
+		}
 	});
 });

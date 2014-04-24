@@ -32,12 +32,20 @@
 		}catch(e){
 			console.log('fail to parse data!');
 			console.log(e);
-			return false;
+			return false; 
 		}
 
-		if(grid2){
-			grid2.setData(data);
-		}
+		require(['gridx/Grid', 'dojo/store/Memory'], function(grid, Memory){
+			console.log(data);
+			if(grid2){
+				grid2.destroy();
+				grid2 = new grid({
+					data: data
+				});
+				grid2.placeAt('gridContainer2');
+				grid2.startup();
+			}
+		});
 	}
 
 	// require(['dojo/store/JsonRest'], function(store){
@@ -62,7 +70,7 @@
 		The Grid Simple Creation test page
 	</h1>
 	<h2>Create grid without any properties</h2>
-	<div id='gridContainer'>
+	<div id='gridContainer1'>
 		<div jsid='grid1' data-dojo-type='gridx/Grid'></div>
 	</div>
 
@@ -78,7 +86,7 @@
 
 	<button onclick='updateData()'>update data</button>
 
-	<div id='gridContainer'>
+	<div id='gridContainer2'>
 		<div jsid='grid2' data-dojo-type='gridx/Grid' data-dojo-props="
 				data: [
 					{id: 1, name: 'apple', country: 'China'},
@@ -92,7 +100,7 @@
 	<h2>Create grid with self defined data property</h2>
 	<button onclick='updateData()'>update data</button>
 
-	<div id='gridContainer'>
+	<div id='gridContainer3'>
 		<div jsid='grid3' data-dojo-type='gridx/Grid' data-dojo-props="
 				data: 'support/data/musicData.json'
 		"></div>

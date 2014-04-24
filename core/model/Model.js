@@ -286,23 +286,11 @@ define([
 			var t = this,
 				g = args,
 				cacheClass = args.cacheClass || Sync;
-
-			t.cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
+			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
-
-			// if(!g.store){
-			// 	t.store = g.store = t._parseData(g.data);
-				
-			// 	if(!g.structure){
-			// 		g.setColumns(t._parseStructure(g.data));
-			// 	}
-			// }else{
-			// 	t.store = args.store;
-			// }
-
 			t._exts = {};
 			t._cmdQueue = [];
-			t._model = t._cache = new t.cacheClass(t, args);
+			t._model = t._cache = new cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
 			var m = t._model;
 			t._cnnts = [
