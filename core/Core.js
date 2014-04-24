@@ -5,12 +5,16 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
+	'dojo/request/xhr',
+	'dojo/store/Memory',
+	"./model/cache/Async",
 	"./model/Model",
 	"./Row",
 	"./Column",
 	"./Cell",
 	"./_Module"
-], function(require, declare, array, lang, Deferred, DeferredList, Model, Row, Column, Cell, _Module){	
+], function(require, declare, array, lang, Deferred, DeferredList, xhr, Memory,
+Async, Model, Row, Column, Cell, _Module){
 
 /*=====
 	return declare([], {
@@ -313,6 +317,16 @@ define([
 			}
 		},
 
+		setData: function(data, skipAutoParseColumn){
+			var c;
+
+			this.model.setData(data);
+			if(!skipAutoParseColumn){
+				c = this.model._parseStructure(data);
+				this.setColumns(c);
+			}
+		},
+
 		setColumns: function(columns){
 			var t = this;
 			t.structure = columns;
@@ -403,7 +417,6 @@ define([
 				d = t._deferStartup = new Deferred();
 			t.modules = t.modules || [];
 			t.modelExtensions = t.modelExtensions || [];
-			t.setColumns(t.structure);
 
 			if(t.touch){
 				if(t.touchModules){
@@ -412,18 +425,35 @@ define([
 			}else if(t.desktopModules){
 				t.modules = t.modules.concat(t.desktopModules);
 			}
-			normalizeModules(t);
-			checkForced(t);
-			removeDuplicate(t);
-			checkModelExtensions(t);
-			//Create model before module creation, so that all modules can use the logic grid from very beginning.
-			t.model = new Model(t);
-			t.when = hitch(t.model, t.model.when);
-			t._create();
-			t._preload();
-			t._load(d).then(function(){
-				t.onModulesLoaded();
-			});
+
+			var s = null;
+			if(!t.store){
+				s = t._parseData(t.data);
+					// if(!t.structure){
+
+					// }
+			}else{
+				s = t.store;
+			}
+
+			Deferred.when(s, function(){
+				t.setColumns(t.structure);
+				
+				normalizeModules(t);
+				checkForced(t);
+				removeDuplicate(t);
+				checkModelExtensions(t);
+					
+
+				//Create model before module creation, so that all modules can use the logic grid from very beginning.
+				t.model = new Model(t);
+				t.when = hitch(t.model, t.model.when);
+				t._create();
+				t._preload();
+				t._load(d).then(function(){
+					t.onModulesLoaded();
+				});
+			})
 		},
 
 		_uninit: function(){
@@ -472,6 +502,81 @@ define([
 				dl.push(initMod(this, deferredStartup, m));
 			}
 			return new DeferredList(dl, 0, 1);
-		}
+		},
+
+		//used when creating grid without store
+		_defaultData: [
+			{id: 1, name: 'Dojo'},
+			{id: 2, name: 'jQuery'},
+			{id: 3, name: 'ExtJS'},
+			{id: 4, name: 'YUI'}
+		],
+
+		_parseData: function(data){
+			var store,
+				t = this;
+
+			if(typeof data ==='object' && data.constructor === Array){
+				this.store = new Memory({data: data});
+			}else if(typeof data === 'string'){
+				this.cacheClass = Async;
+				return xhr(data, {
+					handleAs: "json"
+				}).then(function(data){
+					console.log(data);
+					t.store = new Memory({data: data});
+					if(!t.structure){
+						t.structure = t._parseStructure(data);
+						console.log('after parse structure');
+						console.log(t.structure);
+					}
+				});
+
+				// return new JsonRest({target: data});
+			}else if(!data){
+				this.store = new Memory({
+					data: this._defaultData
+				});
+			}
+			if(!t.structure){
+				this.structure = this._parseStructure(data);
+			}
+			return 1;
+		},
+
+		_parseStructure: function(data){
+			if(!data || typeof data !== 'object'){ 
+				return [
+					{id: 1, name: 'id', field: 'id'},
+					{id: 2, name: 'name', field: 'name'}
+				]; 
+			}
+			
+			var s = {},
+				len = data.length,
+				keys, i, j, kl, key, 
+				struct = [];
+
+			for(i = 0; i < len; i++){
+				keys = Object.keys(data[i]);
+				kl = keys.length;
+				for(j = 0; j < kl; j++){
+					s[keys[j]] = 1;
+				}
+			}
+
+			for(key in s){
+				struct.push({id: key, name: key, field: key})
+			}
+
+			return struct;
+		},
+	
+		//used in fast mode
+		setData: function(data){
+			var data = this._parseData(data);
+			
+			this.setStore(data);
+		},		
 	});
 });

@@ -7,6 +7,7 @@ define([
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/query",
+	"dojo/store/Memory",
 	"dojox/html/metrics",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
@@ -30,7 +31,7 @@ define([
 	"dijit/hccss",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
-], function(declare, lang, has, on, i18n, domClass, domGeometry, query, metrics,
+], function(declare, lang, has, on, i18n, domClass, domGeometry, query, Memory, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport, nls){
 
@@ -240,6 +241,7 @@ define([
 			//		On Mac Ctrl+click also opens a context menu. So call this to check ctrlKey instead of directly call evt.ctrlKey
 			//		if you need to implement some handler for Ctrl+click.
 			return has('mac') ? evt.metaKey : evt.ctrlKey;
-		}
+		},
+
 	});
 });

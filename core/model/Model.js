@@ -7,8 +7,10 @@ define([
 	"dojo/DeferredList",
 	"dojo/aspect",
 	'dojo/store/Memory',
-	"./cache/Sync"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect, Memory, Sync){
+	'dojo/store/JsonRest',
+	"./cache/Sync",
+	"./cache/Async"
+], function(require, declare, array, lang, Deferred, DeferredList, aspect, Memory, JsonRest, Sync, Async){
 
 /*=====
 	return declare([], {
@@ -284,22 +286,23 @@ define([
 			var t = this,
 				g = args,
 				cacheClass = args.cacheClass || Sync;
-			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
+
+			t.cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
 
-			if(!g.store){
-				t.store = g.store = t._parseData(g.data);
+			// if(!g.store){
+			// 	t.store = g.store = t._parseData(g.data);
 				
-				if(!g.structure){
-					g.setColumns(t._parseStructure(g.data));
-				}
-			}else{
-				t.store = args.store;
-			}
+			// 	if(!g.structure){
+			// 		g.setColumns(t._parseStructure(g.data));
+			// 	}
+			// }else{
+			// 	t.store = args.store;
+			// }
 
 			t._exts = {};
 			t._cmdQueue = [];
-			t._model = t._cache = new cacheClass(t, args);
+			t._model = t._cache = new t.cacheClass(t, args);
 			t._createExts(args.modelExtensions || [], args);
 			var m = t._model;
 			t._cnnts = [
@@ -329,7 +332,7 @@ define([
 			this.store = store;
 			this._cache.setStore(store);
 		},
-	
+
 		//Public-------------------------------------------------------------------
 		when: function(args, callback, scope){
 			this._oldSize = this.size();
@@ -505,54 +508,6 @@ define([
 					this._exts[ext.name] = ext;
 				}
 			}
-		}, 
-
-		_parseData: function(data){
-			var store;
-
-			if(!data){
-				store = new Memory({
-					data:[
-						{id: 1, name: 'Dojo'},
-						{id: 2, name: 'jQuery'},
-						{id: 3, name: 'ExtJS'},
-						{id: 4, name: 'YUI'}
-					]
-				});
-				return store;
-			}
-			return new Memory({data: data});
 		},
-
-		_parseStructure: function(data){
-			if(!data || typeof data !== 'object'){ 
-				return [
-					{id: 1, name: 'id', field: 'id'},
-					{id: 2, name: 'name', field: 'name'}
-				]; 
-			}
-			
-			var s = {},
-				len = data.length,
-				keys, i, j, kl, key, 
-				struct = [];
-
-			for(i = 0; i < len; i++){
-				keys = Object.keys(data[i]);
-				kl = keys.length;
-				for(j = 0; j < kl; j++){
-					s[keys[j]] = 1;
-				}
-			}
-
-			for(key in s){
-				struct.push({id: key, name: key, field: key})
-			}
-
-			return struct;
-
-			// return Object.keys(s);
-
-		}
 	});
 });
