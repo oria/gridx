@@ -5,6 +5,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
 	<link rel='stylesheet' href="support/common.css" />
 	<style type="text/css">
+		div.container{
+			width: 800px;
+			height: 300px;
+		}
 		#gridContainer {
 			width: 800px;
 			height: 300px;
@@ -70,7 +74,7 @@
 		The Grid Simple Creation test page
 	</h1>
 	<h2>Create grid without any properties</h2>
-	<div id='gridContainer1'>
+	<div id='gridContainer1' class='container'>
 		<div jsid='grid1' data-dojo-type='gridx/Grid'></div>
 	</div>
 
@@ -86,7 +90,7 @@
 
 	<button onclick='updateData()'>update data</button>
 
-	<div id='gridContainer2'>
+	<div id='gridContainer2' class='container'>
 		<div jsid='grid2' data-dojo-type='gridx/Grid' data-dojo-props="
 				data: [
 					{id: 1, name: 'apple', country: 'China'},
@@ -97,20 +101,20 @@
 		"></div>
 	</div>
 
-	<h2>Create grid with self defined data property</h2>
+	<h2>Create grid with <strong>URL</strong> data property</h2>
 	<button onclick='updateData()'>update data</button>
 
-	<div id='gridContainer3'>
+	<div id='gridContainer3' class='container'>
 		<div jsid='grid3' data-dojo-type='gridx/Grid' data-dojo-props="
 				data: 'support/data/musicData.json'
 		"></div>
 	</div>
-<!-- 
+
 	<h2>Create grid with empty data property</h2>
 	<div id='gridContainer'>
 		<div jsid='grid4' data-dojo-type='gridx/Grid' data-dojo-props="
 				data: []
 		"></div>
-	</div>	 -->
+	</div>
 </body>
 </html>
