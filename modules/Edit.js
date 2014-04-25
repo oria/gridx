@@ -337,7 +337,7 @@ define([
 				
 			if(t.arg('lazySave')){
 				var _removeCellBackground = function(cell){
-					var node = cell.node();
+					var node = cell.node(),
 						cellBgNode = query('.gridxCellBg', node);
 					if(cellBgNode.length){
 						domConstruct.destroy(cellBgNode);
@@ -366,6 +366,7 @@ define([
 							var computedStyle = domStyle.getComputedStyle(node),
 								cellPadding= parseInt(domGeo.getPadBorderExtents(node, computedStyle).l, 10),
 								leftToMove = node.clientWidth - cellPadding - 5,
+								wrapper, wrapperPosition, nodePosition,
 								
 								html = [
 									"<div class='gridxCellEditedBgWrapper'>",
@@ -374,7 +375,7 @@ define([
 												"class='gridxCellEditedBg'><span>◥</span>",
 										"</div>",
 									"</div>"
-							].join('');
+								].join('');
 							
 							wrapper= domConstruct.toDom(html);
 							cellBgNode = wrapper.firstChild;
@@ -546,7 +547,7 @@ define([
 				t = this,
 				g = t.grid;
 			if(!t.isEditing(rowId, colId)){
-				var row = g.row(rowId, 1),	//1 as true
+				var row = g.row(rowId, 1),		//1 as true
 					col = g._columnsById[colId];
 				if(row && row.cell(colId, 1).isEditable()){
 					g.cellWidget.setCellDecorator(rowId, colId, 
@@ -593,7 +594,15 @@ define([
 						cw.restoreCellDecorator(rowId, colId);
 						g.body.refreshCell(row.visualIndex(), col.index).then(function(){
 							d.callback();
-							t.onCancel(g.cell(rowId, colId, 1));
+							var c = g.cell(rowId, colId, 1),
+								node = c && c.node();
+							if(node){
+								node.removeAttribute('aria-labelledby');
+								if(!node.innerHTML || node.innerHTML === '&nbsp;'){
+									node.setAttribute('aria-label', 'empty cell');
+								}
+							}
+							t.onCancel(c);
 						});
 					}
 				}
@@ -628,6 +637,12 @@ define([
 								g.body.refreshCell(cell.row.visualIndex(), cell.column.index()).then(function(){
 									d.callback(success);
 									g.resize();
+
+									var node = cell.node();
+									node.removeAttribute('aria-labelledby');
+									if(!node.innerHTML || node.innerHTML === '&nbsp;'){
+										node.setAttribute('aria-label', 'empty cell');
+									}
 									t.onApply(cell, success, e, t.arg('lazy'));
 								});
 							}
@@ -694,7 +709,7 @@ define([
 		},
 
 		getLazyData: function(rowId, colId){
-			var t = this,
+			var t = this, r,
 				f = t.grid._columnsById[colId].field;
 			
 			if(t.arg('lazy')){

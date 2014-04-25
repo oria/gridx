@@ -127,7 +127,7 @@ define([
 		},
 
 		_createSelector: function(data, rowId){
-			var mark = this.model.getMark(rowId);
+			var mark = this.model.getMark(rowId),
 				isUnselectable = !this.grid.row(rowId, 1).isSelectable();
 			return this._createCheckBox(mark === true, mark == 'mixed', isUnselectable);
 		},
@@ -140,7 +140,7 @@ define([
 				selected ? dijitClass + 'Checked' : '',
 				partial ? dijitClass + 'Partial' : '',
 				isUnselectable && selected ? dijitClass + 'CheckedDisabled' : '',
-				isUnselectable && partial ? dijitClas  + 'PartialDisabled' : '',
+				isUnselectable && partial ? dijitClass  + 'PartialDisabled' : '',
 				isUnselectable && !selected && !partial ? dijitClass + 'Disabled' : '',
 				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
 				'"><span class="gridxIndirectSelectionCheckBoxInner">',
@@ -179,7 +179,7 @@ define([
 				var dijitClass = this._getDijitClass(),
 					partial = toHighlight == 'mixed',
 					selected = toHighlight && !partial,
-					rowId = row.getAttribute('rowid');
+					rowId = row.getAttribute('rowid'),
 					isUnselectable = !this.grid.row(rowId).isSelectable();
 					
 				domClass.toggle(node, dijitClass + 'Checked', selected);

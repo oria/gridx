@@ -12,7 +12,8 @@ require([
 
 	store = storeFactory({
 		dataSource: dataSource, 
-		size: 100
+		size: 100,
+		containSpecialChars: true
 	});
 	
 
@@ -21,7 +22,7 @@ require([
 		{id: 'Genre', field: 'Genre', name: 'Genre', dataType: 'enum', encode: true,
 			enumOptions: ['a', 'b', 'c']
 		},
-		{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'enum',
+		{id: 'Artist', field: 'Artist', name: 'Artist', dataType: 'enum', encode: true,
 			enumOptions: ['d', 'e', 'f']
 		},
 		{id: 'Album', field: 'Album', name: 'Album', dataType: 'string', autoComplete: false},

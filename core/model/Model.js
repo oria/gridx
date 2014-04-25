@@ -6,8 +6,11 @@ define([
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
 	"dojo/aspect",
-	"./cache/Sync"
-], function(require, declare, array, lang, Deferred, DeferredList, aspect, Sync){
+	'dojo/store/Memory',
+	'dojo/store/JsonRest',
+	"./cache/Sync",
+	"./cache/Async"
+], function(require, declare, array, lang, Deferred, DeferredList, aspect, Memory, JsonRest, Sync, Async){
 
 /*=====
 	return declare([], {
@@ -281,6 +284,7 @@ define([
 	return declare([], {
 		constructor: function(args){
 			var t = this,
+				g = args,
 				cacheClass = args.cacheClass || Sync;
 			cacheClass = typeof cacheClass == 'string' ? require(cacheClass) : cacheClass;
 			t.store = args.store;
@@ -316,7 +320,7 @@ define([
 			this.store = store;
 			this._cache.setStore(store);
 		},
-	
+
 		//Public-------------------------------------------------------------------
 		when: function(args, callback, scope){
 			this._oldSize = this.size();
@@ -331,7 +335,7 @@ define([
 		},
 
 		scan: function(args, callback){
-			var d = new Deferred,
+			var d = new Deferred(),
 				start = args.start || 0,
 				pageSize = args.pageSize || this._cache.pageSize || 1,
 				count = args.count,
@@ -419,7 +423,7 @@ define([
 						}
 					};
 				if(arg === null || !args.length){
-					var d = new Deferred;
+					var d = new Deferred();
 					finish();
 					d.callback();
 					return d;
@@ -432,7 +436,7 @@ define([
 			//Execute commands one by one.
 			var t = this,
 				c = t._cache,
-				d = new Deferred,
+				d = new Deferred(),
 				cmds = t._cmdQueue,
 				finish = function(d, err){
 					t._busy = 0;
@@ -492,6 +496,6 @@ define([
 					this._exts[ext.name] = ext;
 				}
 			}
-		}
+		},
 	});
 });

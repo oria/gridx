@@ -193,7 +193,7 @@ var isFunc = lang.isFunction,
 			var t = this;
 			t.grid = grid;
 			t.model = grid.model;
-			t.loaded = new Deferred;
+			t.loaded = new Deferred();
 			t._cnnts = [];
 			t._sbscs = [];
 			lang.mixin(t, args);

@@ -13,11 +13,12 @@ define([
 	'dijit/Menu',
 	'dijit/MenuItem',
 	'../modules/Filter',
-	'dojo/text!../templates/QuickFilter.html'
+	'dojo/text!../templates/QuickFilter.html',
+	'dojox/html/entities'
 ], function(declare, lang, array, domClass, keys,
 	_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 	TextBox, Button, ComboButton, Menu, MenuItem,
-	F, template){
+	F, template, entities){
 
 /*=====
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
@@ -125,7 +126,8 @@ define([
 				}
 			}else{
 				g.filter.setFilter(v === '' ? 0 : F.or.apply(0, array.map(cols, function(col){
-					return F.contain(F.column(col.id), F.value(v));
+					return col.encode === true? F.contain(F.column(col.id), F.value(entities.encode(v)))
+							: F.contain(F.column(col.id), F.value(v));
 				})));
 			}
 		},

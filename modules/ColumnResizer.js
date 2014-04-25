@@ -143,7 +143,8 @@ define([
 							t._cellPos = pos;
 							//Forbid anything else to happen when we are resizing a column!
 							flags.onHeaderMouseDown = t.name;
-							return t._readyToResize = 1;//Intentional assignment
+							t._readyToResize = 1;//Intentional assignment
+							return 1;
 						}
 					}
 				})){

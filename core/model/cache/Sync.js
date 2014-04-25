@@ -3,8 +3,9 @@ define([
 	'dojo/_base/array',
 	'dojo/_base/lang',
 	'dojo/_base/Deferred',
+	'dojox/html/entities',
 	'../_Extension'
-], function(declare, array, lang, Deferred, _Extension){
+], function(declare, array, lang, Deferred, entities, _Extension){
 
 /*=====
 	return declare(_Extension, function(){
@@ -282,8 +283,12 @@ define([
 		},
 
 		_formatCell: function(rawData, rowId, colId){
-			var col = this.columns[colId];
-			return col.formatter ? col.formatter(rawData, rowId) : rawData[col.field || colId];
+			var col = this.columns[colId],
+				t = this,
+				cellData; 
+
+			cellData = col.formatter ? col.formatter(rawData, rowId) : rawData[col.field || colId];
+			return (t.columns[colId] && t.columns[colId].encode === true)? entities.encode(cellData) : cellData;
 		},
 
 		_formatRow: function(rowData, rowId){
@@ -332,7 +337,6 @@ define([
 //                    options.count, ", end: ",
 //                    options.count && (options.start || 0) + options.count - 1, ", options:",
 //                    this.options);
-
 			var t = this,
 				s = t.store,
 				d = new Deferred(),

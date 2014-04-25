@@ -2,11 +2,13 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/store/Memory",
+	"dojo/query",
+	"dojo/dom-attr",
 	"dijit/_WidgetBase",
 	"dijit/_FocusMixin",
 	"dijit/_TemplatedMixin",
 	"dijit/form/FilteringSelect"
-], function(declare, lang, Store, _WidgetBase, _FocusMixin, _TemplatedMixin, FilteringSelect){
+], function(declare, lang, Store, query, domAttr, _WidgetBase, _FocusMixin, _TemplatedMixin, FilteringSelect){
 
 /*=====
 	return declare([_WidgetBase, _FocusMixin, _TemplatedMixin], {
@@ -94,6 +96,8 @@ define([
 				stepper = t._pageStepperSelect = new cls(props);
 				stepper.placeAt(t.domNode, "last");
 				stepper.startup();
+				
+				domAttr.set(query('.gridxPagerLabel', t.domNode)[0], 'for', stepper.id); 
 			}else{
 				stepper.set('store', store);
 				stepper.set('value', currentPage + 1);
