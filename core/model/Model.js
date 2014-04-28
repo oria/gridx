@@ -496,6 +496,6 @@ define([
 					this._exts[ext.name] = ext;
 				}
 			}
-		},
+		}
 	});
 });
