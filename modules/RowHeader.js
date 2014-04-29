@@ -262,7 +262,9 @@ define([
 		},
 
 		_onResize: function(){
-			var ie = sniff('ie');
+			var ie = sniff('ie')? sniff('ie') : sniff('trident')? 11 : false, 
+				bn;
+
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
