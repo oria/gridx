@@ -65,7 +65,9 @@ define([
 						t.domNode.scrollLeft = g.bodyNode.scrollLeft;
 					});
 				}
-				if(has('ie')){
+				//FIX ME: has('ie')is not working under IE 11
+				//use has('trident') here to judget IE 11
+				if(has('ie') || has('trident')){
 					//In IE8 the horizontal scroller bar will disappear when grid.domNode's css classes are changed.
 					//In IE6 this.domNode will become a bit taller than usual, still don't know why.
 					n.style.height = (metrics.getScrollbar().h + 2) + 'px';

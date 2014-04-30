@@ -426,7 +426,9 @@ define([
 					var cellNode = cell.contentNode();
 					if(cellNode){
 						var cellWidget = t._prepareCellWidget(cell);
-						if(has('ie')){
+						//FIX ME: has('ie')is not working under IE 11
+						//use has('trident') here to judget IE 11
+						if(has('ie') || has('trident')){
 							while(cellNode.childNodes.length){
 								cellNode.removeChild(cellNode.firstChild);
 							}

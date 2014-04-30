@@ -362,7 +362,9 @@ define([
 		},
 
 		getRowNode: function(args){
-			if(this.model.isId(args.rowId) && has('ie')){
+			//FIX ME: has('ie')is not working under IE 11
+			//use has('trident') here to judget IE 11
+			if(this.model.isId(args.rowId) && (has('ie') || has('trident'))){
 				return this._getRowNode(args.rowId);
 			}else{
 				var rowQuery = this._getRowNodeQuery(args);
@@ -380,7 +382,9 @@ define([
 					colId = cols[args.colIndex].id;
 				}
 				var c = " [colid='" + colId + "'].gridxCell";
-				if(t.model.isId(args.rowId) && has('ie')){
+				//FIX ME: has('ie')is not working under IE 11
+				//use has('trident') here to judget IE 11
+				if(t.model.isId(args.rowId) && (has('ie') || has('trident'))){
 					var rowNode = t._getRowNode(args.rowId);
 					return rowNode && query(c, rowNode)[0] || null;
 				}else{

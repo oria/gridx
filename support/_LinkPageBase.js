@@ -22,7 +22,7 @@ define([
 		constructor: function(args){
 			var t = this;
 			lang.mixin(t, args.grid.nls);
-			if(has('ie')){
+			if(has('ie') || has('trident')){
 				//IE does not support inline-block, so have to set tabIndex
 				var gridTabIndex = args.grid.domNode.getAttribute('tabindex');
 				t._tabIndex = gridTabIndex > 0 ? gridTabIndex : 0;

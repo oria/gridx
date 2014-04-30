@@ -190,7 +190,9 @@ define([
 			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h, 
 				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
 
-			if(has('ie') > 8){
+			//FIX ME: has('ie')is not working under IE 11
+			//use has('trident') here to judget IE 11
+			if(has('ie') > 8 || has('trident') > 4 ){
 				//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
 				//so that the locked cells will have different height with the unlocked ones.
 				//plus the height by 1 can force IE to ceil the decimal to integer like from 34.4px to 35px

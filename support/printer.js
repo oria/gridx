@@ -107,7 +107,7 @@ define([
 				s.right = s.bottom = 0;
 				s.border = 'none';
 				s.overflow = 'hidden';
-				if(!has('ie')){
+				if(!has('ie') && !has('trident')){
 					s.visibility = 'hidden';
 				}
 				win.body().appendChild(printFrame);

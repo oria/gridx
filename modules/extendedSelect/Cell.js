@@ -342,7 +342,7 @@ define([
 					t._highlightSingle(target, 1);	//1 as true
 					//In IE, when setSelectable(false), the onfocusin event will not fire on doc, so the focus border is gone.
 					//So refocus it here.
-					if(has('ie')){
+					if(has('ie') || has('trident')){
 						t._focus(target);
 					}
 				}else{
