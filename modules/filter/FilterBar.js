@@ -315,7 +315,7 @@ define([
 				this.confirmToExecute(lang.hitch(this, 'clearFilter', true), this);
 			}else{
 				this.filterData = null;
-				this.grid.filter.setFilter();
+				this.grid.filter.clearFilter();
 				this._buildFilterState();
 			}
 		},

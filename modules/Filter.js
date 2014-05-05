@@ -35,6 +35,16 @@ define([
 			//		If *checker* is not a function, or null, should not throw.
 		},
 
+		clearFilter: function(){
+			// summary:
+			//		Remove the current filters applied on the grid. When there is not filterBar applied on
+			//		the grid, user can call grid.filter.clearFilter() to logically clear the filters.
+			//		When filterBar is applied, user should use grid.filterBar.clearFilter() to clear filter,
+			//		otherwise the filter status will not sync between filter(logic) and filterBar(UI).
+			// return:
+			//		undefined
+		},
+
 		getFilter: function(){
 			// summary:
 			//		Return the current checker function.
@@ -273,6 +283,10 @@ define([
 				this._checker = checker;
 				this.refresh(skipUpdateBody);
 			}
+		},
+
+		clearFilter: function(){
+			this.setFilter();
 		},
 
 		getFilter: function(){
