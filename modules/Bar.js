@@ -3,11 +3,12 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/array",
+	"dojo/has",
 	"dijit/registry",
 	"dijit/a11y",
 	"dojo/dom-construct",
 	"../core/_Module"
-], function(require, declare, lang, array, registry, a11y, domConstruct, _Module){
+], function(require, declare, lang, array, has, registry, a11y, domConstruct, _Module){
 
 /*=====
 	var Bar = declare(_Module, {
@@ -200,8 +201,13 @@ define([
 				tbody = domConstruct.create('tbody'),
 				setAttr = function(n, def, domAttr, attr){
 					if(def[attr]){
-						n.setAttribute(domAttr || attr, def[attr]);
-						delete def[attr];
+						//fixes problems where IE 7 & 6 do not apply the css for the specified class.
+						//see http://stackoverflow.com/questions/5406301/ie7-how-to-set-the-class-attribute-for-a-dynamically-created-element-in-javas
+	        				if ((has("ie") < 8) && attr == 'className') {
+				            		n.className = def[attr];
+				        	} else {
+				            		n.setAttribute(domAttr || attr, def[attr]);
+				        	};
 					}
 				};
 			for(var i = 0, rowCount = defs.length; i < rowCount; ++i){
