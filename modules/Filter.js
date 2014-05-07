@@ -274,6 +274,8 @@ define([
 
 		serverMode: false,
 
+		caseSensitive: false,
+
 		setupQuery: function(obj){
 			return obj;
 		},
