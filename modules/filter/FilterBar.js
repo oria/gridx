@@ -315,7 +315,7 @@ define([
 				this.confirmToExecute(lang.hitch(this, 'clearFilter', true), this);
 			}else{
 				this.filterData = null;
-				this.grid.filter.setFilter();
+				this.grid.filter.clearFilter();
 				this._buildFilterState();
 			}
 		},
@@ -565,9 +565,12 @@ define([
 		
 		_getFilterExpression: function(condition, data, type, colId){
 			//get filter expression by condition,data, column and type
-			var F = Filter, 
+			var F = Filter,
+				f = this.grid.filter,
 				dv = data.value,
-				col = this.grid._columnsById[colId];
+				col = this.grid._columnsById[colId],
+				cs = f.arg('caseSensitive');
+
 			var dc = col.dateParser || this._stringToDate;
 			var tc = col.timeParser || this._stringToTime;
 			var converters = {
@@ -576,7 +579,8 @@ define([
 				date: dc,
 				time: tc
 			};
-			var c = data.condition, exp, isNot = false, type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
+			var c = data.condition, exp, isNot = false;
+			type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			var converter = converters.custom? converters.custom : converters[type];
 
 			if(col.encode === true && typeof data.value === 'string'){
@@ -594,7 +598,7 @@ define([
 					c = c.replace(/^not/g, '');
 					c = c.charAt(0).toLowerCase() + c.substring(1);
 				}
-				exp = F[c](F.column(colId, type, converter), c == 'isEmpty' ? null : F.value(dv, type));
+				exp = F[c](F.column(colId, type, converter), c == 'isEmpty' ? null : F.value(dv, type), cs);
 				if(isNot){exp = F.not(exp);}
 			}
 			return exp;

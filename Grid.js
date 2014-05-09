@@ -36,6 +36,25 @@ define([
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport, nls){
 
 	var dummyFunc = function(){};
+	var version = {
+		// summary:
+		//		Version number of the Dojo Toolkit
+		// description:
+		//		Hash about the version, including
+		//
+		//		- major: Integer: Major version. If total version is "1.2.0beta1", will be 1
+		//		- minor: Integer: Minor version. If total version is "1.2.0beta1", will be 2
+		//		- patch: Integer: Patch version. If total version is "1.2.0beta1", will be 0
+		//		- flag: String: Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
+		//		- revision: Number: The Git rev from which dojo was pulled
+		major: 1,
+		minor: 3,
+		patch: 0,
+		flag: "",
+		toString: function(){
+			return this.major + "." + this.minor + "." + this.patch + this.flag;	// String
+		}
+	};
 
 	return declare('gridx.Grid', [_WidgetBase, _TemplatedMixin, _FocusMixin, Core], {
 		// summary:
@@ -46,6 +65,7 @@ define([
 		
 		templateString: template,
 
+		version: version,
 		//textDir bidi support begin
 		_setTextDirAttr: function(textDir){
 			// summary:
@@ -218,7 +238,7 @@ define([
 				}
 			}
 		},
-	
+
 		_connectEvents: function(node, connector, scope){
 			for(var t = this,
 					m = t.model,
@@ -242,6 +262,5 @@ define([
 			//		if you need to implement some handler for Ctrl+click.
 			return has('mac') ? evt.metaKey : evt.ctrlKey;
 		}
-
 	});
 });

@@ -112,7 +112,7 @@ define([
 			//in IE, renderRow will use bodyNode.innerHTML = str,
 			//this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
 			//Here, manually set dodLoaded to false to force dod to re-render the dodNode 
-			has('ie') && t.aspect(t.grid.body, 'renderRows', function(s, c, p){
+			(has('ie') || has('trident')) && t.aspect(t.grid.body, 'renderRows', function(s, c, p){
 				if(p === 'top' || p === 'bottom'){ return; }
 				var i, rowInfo, _row;
 				for(i = s; i < s + c; i++){
@@ -144,7 +144,7 @@ define([
 				this.grid.dod.toggle(this);
 			},
 			refreshDetail: function(){
-				this.grid.dod.refreshDetail(this);
+				this.grid.dod.refresh(this);
 			},
 			isDetailShown: function(){
 				return this.grid.dod.isShown(this);
@@ -152,7 +152,7 @@ define([
 		},
 		
 		show: function(row){
-			var _row = this._row(row), 
+			var _row = this._row(row),
 				g = this.grid;
 			if(_row.dodShown || _row.inAnim){return;}
 			
@@ -267,7 +267,7 @@ define([
 						properties: {
 							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 						}
-					}).play();					
+					}).play();
 				}
 			}else{
 				_row.dodShown = false;
@@ -293,9 +293,12 @@ define([
 				this.show(row);
 			}
 		},
+
 		refresh: function(row){
 			var _row = this._row(row);
+			if(!_row || !_row.dodShown || _row.inAnim || _row.inLoading) return;
 			_row.dodLoaded = false;
+			_row.dodShown = false;
 			this.show(row);
 		},
 		
@@ -327,7 +330,9 @@ define([
 		
 		//*****************************	private	*****************************
 		_rowMap: null,
+
 		_lastOpen: null, //only useful when autoClose is true.
+
 		_row: function(/*id|obj*/row){
 			var id = row;
 			if(typeof row === 'object'){
@@ -627,7 +632,9 @@ define([
 				var navElems = this._navElems,
 					firstElem = navElems.lowest || navElems.first,
 					lastElem = navElems.highest || navElems.last ||firstElem,
-					target = has('ie') ? evt.srcElement : evt.target;
+					//FIX ME: has('ie')is not working under IE 11
+					//use has('trident') here to judget IE 11
+					target = (has('ie') || has('trident')) ? evt.srcElement : evt.target;
 				
 				if(target == firstElem){
 					// this._doFocus(evt, -1);
@@ -642,7 +649,7 @@ define([
 				var navElems = this._navElems,
 					firstElem = navElems.lowest || navElems.first,
 					lastElem = navElems.highest || navElems.last ||firstElem,
-					target = has('ie') ? evt.srcElement : evt.target;
+					target = (has('ie') || has('trident')) ? evt.srcElement : evt.target;
 	
 				if(target == lastElem){
 					// this._onBlur();
@@ -697,7 +704,7 @@ define([
 				var navElems = this._navElems,
 					firstElem = navElems.lowest || navElems.first,
 					lastElem = navElems.highest || navElems.last ||firstElem,
-					target = has('ie') ? evt.srcElement : evt.target;
+					target = ( has('ie') || has('trident') ) ? evt.srcElement : evt.target;
 
 				if(target == (step > 0 ? lastElem : firstElem)){
 					event.stop(evt);

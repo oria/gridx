@@ -7,5 +7,7 @@
 	"laxbreak": true,
 
 	"smarttabs": false,
-	"supernew": false
+	"supernew": false,
+
+	"predef": [ "define", "window", "document", "setTimeout", "clearTimeout", "console", "dojo", "dijit"]
 }

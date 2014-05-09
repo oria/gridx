@@ -176,7 +176,9 @@ define([
 			t._focusNodes = [];
 			t._onDocFocus = function(evt){
 				if(!t._noBlur){
-					if(has('ie')){
+					//FIX ME: has('ie')is not working under IE 11
+					//use has('trident') here to judget IE 11
+					if(has('ie') || has('trident')){
 						evt.target = evt.srcElement;
 					}
 					t._onFocus(evt);

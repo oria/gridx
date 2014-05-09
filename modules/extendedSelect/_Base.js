@@ -66,12 +66,12 @@ define([
 				[doc, 'onmouseup', '_end'],
 				[doc, 'onkeydown', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(has('ie') > 9 ? doc.body : g.domNode, false);
+						dom.setSelectable((has('ie') > 9  || has('trident') > 5)? doc.body : g.domNode, false);
 					}
 				}],
 				[doc, 'onkeyup', function(e){
 					if(e.keyCode == keys.SHIFT){
-						dom.setSelectable(has('ie') > 9 ? doc.body : g.domNode, true);
+						dom.setSelectable((has('ie') > 9  || has('trident') > 5) ? doc.body : g.domNode, true);
 					}
 				}]
 			);
