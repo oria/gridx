@@ -144,7 +144,7 @@ define([
 				this.grid.dod.toggle(this);
 			},
 			refreshDetail: function(){
-				this.grid.dod.refreshDetail(this);
+				this.grid.dod.refresh(this);
 			},
 			isDetailShown: function(){
 				return this.grid.dod.isShown(this);
@@ -152,7 +152,7 @@ define([
 		},
 		
 		show: function(row){
-			var _row = this._row(row), 
+			var _row = this._row(row),
 				g = this.grid;
 			if(_row.dodShown || _row.inAnim){return;}
 			
@@ -267,7 +267,7 @@ define([
 						properties: {
 							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 						}
-					}).play();					
+					}).play();
 				}
 			}else{
 				_row.dodShown = false;
@@ -293,9 +293,12 @@ define([
 				this.show(row);
 			}
 		},
+
 		refresh: function(row){
 			var _row = this._row(row);
+			if(!_row || !_row.dodShown || _row.inAnim || _row.inLoading) return;
 			_row.dodLoaded = false;
+			_row.dodShown = false;
 			this.show(row);
 		},
 		
@@ -327,7 +330,9 @@ define([
 		
 		//*****************************	private	*****************************
 		_rowMap: null,
+
 		_lastOpen: null, //only useful when autoClose is true.
+
 		_row: function(/*id|obj*/row){
 			var id = row;
 			if(typeof row === 'object'){
