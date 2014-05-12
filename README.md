@@ -30,7 +30,7 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://do
  * dojox
  * gridx
 
-GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2/) or higher.
+GridX works best with [Dojo 1.8.0](http://download.dojotoolkit.org/release-1.8.0/) or higher.
 
 
 ## Quick ways to know GridX
