@@ -182,7 +182,7 @@ define([
 			//		and execute the callback function for every batch of rows.
 			// args: Object
 			//		An object containing scan arguments
-			// callback: Function(rows,startIndex)
+			// callback: Function(rows, startIndex)
 			//		The callback function.
 			// returns:
 			//		If return true in this function, the scan process will end immediately.

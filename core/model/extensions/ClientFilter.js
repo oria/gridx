@@ -120,27 +120,44 @@ define([
 				oldSize = t.size();
 			t.clear();
 			if(lang.isFunction(checker)){
-				var ids = [];
+				var ids = [],
+					f = function(rows, s){
+						var i, id, row,
+							parentId,
+							children,
+							end = s + rows.length;
+
+						if(rows.length){
+							parentId = t.model.parentId(rows[0]);
+							console.log('parent id is');
+							console.log(parentId);
+						}
+
+						for(i = s; i < end; ++i){
+							id = t.indexToId(i, parentId);
+							row = t.byIndex(i, parentId);
+							if(row){
+								if(checker(row, id)){
+									ids.push(id);
+									t._indexes[id] = i;
+								}
+								children = t.model.children(id);
+								console.log('children length is ', children.length);
+								if(children.length){
+									f(children, 0);
+								}
+							}else{
+								break;
+							}
+						}
+					};
 				return t.model.scan({
 					start: 0,
 					pageSize: t.pageSize,
 					whenScope: t,
 					whenFunc: t.when
-				}, function(rows, s){
-					var i, id, row,
-						end = s + rows.length;
-					for(i = s; i < end; ++i){
-						id = t.indexToId(i);
-						row = t.byIndex(i);
-						if(row){
-							if(checker(row, id)){
-								ids.push(id);
-								t._indexes[id] = i;
-							}
-						}else{
-							break;
-						}
-					}
+				}, function(row, s){
+					f(row, s);
 				}).then(function(){
 					if(ids.length == t.size()){
 						//Filtered item size equals cache size, so filter is useless.
