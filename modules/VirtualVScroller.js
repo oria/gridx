@@ -202,9 +202,17 @@ define([
 				t._lastScrollTop = a;
 	
 				var buffSize = t.arg('buffSize'),
-					scrollRange = dn.scrollHeight - dn.offsetHeight,
-					body = t.grid.body,
-					view = t.grid.view,
+					scrollRange = dn.scrollHeight - dn.offsetHeight;
+					
+				//the scrollHeight in ie 7 is not correct see http://stackoverflow.com/questions/7917508/scrollheight-in-ie7-returns-incorrect-value-unless-specifically-referenced-befor
+		                if (has('ie') <= 7) {
+		                    if (dn.scrollHeight < dn.offsetHeight) {
+		                        scrollRange = 0; //because dn.scrollHeight == dn.offsetHeight;
+		                    };
+		                }
+		
+		                var body = t.grid.body,
+                			view = t.grid.view,
 					visualStart = 0,	//visualStart is always zero
 					visualEnd = visualStart + view.visualCount,
 					bn = t.grid.bodyNode,
