@@ -125,9 +125,7 @@ require([
 		modules.Edit,
 		modules.IndirectSelectColumn,
 		modules.SingleSort,
-		modules.VirtualVScroller,
-		modules.Filter,
-		modules.QuickFilter
+		modules.VirtualVScroller
 	];
 
 	parser.parse();
