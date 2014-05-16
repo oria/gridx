@@ -181,7 +181,7 @@ define([
 				columnLock = g.columnLock,
 				lockCount = 0,
 				changed,
-				args = arguments;
+				cols = [];
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();
@@ -197,6 +197,7 @@ define([
 					if(c.id === id && c.hidden){
 						delete c.hidden;
 						c.index = ++index;
+						cols.push(c);
 						break;
 					}else if(!c.hidden){
 						index = c.index;
@@ -216,7 +217,7 @@ define([
 				}
 			});
 			return t._refresh(changed).then(function(){
-				t.onShow(array.map(args, function(col){
+				t.onShow(array.map(cols, function(col){
 					return col.id;
 				}));
 				if(columnLock && lockCount > 0){

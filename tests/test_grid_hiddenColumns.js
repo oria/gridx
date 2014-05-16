@@ -40,6 +40,13 @@ require([
 			grid.hiddenColumns.remove(row);
 			// console.log('show: ' + (new Date - t));
 		});
+
+		dojo.connect(grid.hiddenColumns, 'onShow', function(colIds){
+			console.log(colIds);
+		});
+		dojo.connect(grid.hiddenColumns, 'onHide', function(colIds){
+			console.log(colIds);
+		});
 	});
 
 	showAll = function(){
