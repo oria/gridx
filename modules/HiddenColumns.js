@@ -35,7 +35,7 @@ define([
 			//	|	var col = grid.column("columnA");
 			//	|	grid.hiddenColumns.add(col);
 		},
-
+		
 		remove: function(colId){
 			// summary:
 			//		Show all the given columns in arguments.
@@ -56,6 +56,22 @@ define([
 			// summary:
 			//		Show all hidden columns.
 		},
+
+		onShow: function(colIds){
+			// summary:
+			// 		Fired when a specific column with colId is showing.
+			// colIds: Array
+			//		Column ids are used here because hiddenColumns.remove() 
+			// 		can accept a list of column ids to show.
+		},
+
+		onHide: function(colIds){
+			// summary:
+			// 		Fired when a specific column with colId is hidden.
+			// colIds: Array
+			//		Column ids are used here because hiddenColumns.add() 
+			// 		can accept a list of column ids to hide.
+		}
 
 		get: function(){
 			// summary:
@@ -104,7 +120,7 @@ define([
 				lockCount = 0,
 				hash = {},
 				cols = array.filter(array.map(arguments, function(id){
-					id = id && typeof id == "object" ? id.id : id;
+					id = id && typeof id === "object" ? id.id : id;
 					return columnsById[id];
 				}), function(col){
 					return col && !col.ignore && (col.hidable === undefined || col.hidable);
@@ -149,6 +165,9 @@ define([
 				g.body.onForcedScroll();
 			}
 			return t._refresh(0).then(function(){
+				t.onHide(array.map(cols, function(col){
+					return col.id;
+				}));
 				if(columnLock && lockCount > 0){
 					columnLock.lock(lockCount);
 				}
@@ -161,22 +180,24 @@ define([
 				columns = g._columns,
 				columnLock = g.columnLock,
 				lockCount = 0,
-				changed;
+				changed,
+				cols = [];
 			if(columnLock){
 				lockCount = columnLock.count;
 				columnLock.unlock();
 			}
 			array.forEach(arguments, function(id){
-				id = id && typeof id == "object" ? id.id : id;
+				id = id && typeof id === "object" ? id.id : id;
 				var c,
 					index = -1,
 					i = 0,
 					len = t._cols.length;
 				for(; i < len; ++i){
 					c = t._cols[i];
-					if(c.id == id && c.hidden){
+					if(c.id === id && c.hidden){
 						delete c.hidden;
 						c.index = ++index;
+						cols.push(c);
 						break;
 					}else if(!c.hidden){
 						index = c.index;
@@ -196,6 +217,9 @@ define([
 				}
 			});
 			return t._refresh(changed).then(function(){
+				t.onShow(array.map(cols, function(col){
+					return col.id;
+				}));
 				if(columnLock && lockCount > 0){
 					columnLock.lock(lockCount);
 				}
@@ -239,6 +263,10 @@ define([
 			}
 			return res;
 		},
+
+		onShow: function(colIds){},
+
+		onHide: function(colIds){},
 
 		_syncOrder: function(){
 			var t = this,

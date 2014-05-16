@@ -11,6 +11,13 @@
 			margin: 40px;
 		}
 
+		h2{
+			margin-left: 40px;
+		}
+		#titlePane{
+			margin: 0 40px;
+		}
+
 		#topPane, #bottomPane {
 			height: 300px;
 		}
@@ -25,6 +32,18 @@
 </head>
 <body class='claro'>
 	<h1 class='title'>Grid in Dijit Containers</h1>
+	<h2>Grid with autoHeight inside titlepane</h2>
+	<div id='titlePane' data-dojo-type='dijit.TitlePane' data-dojo-props='title: "Gridx TitlePane", open: false, region: "bottom"'>
+			<div id='titlePaneGrid' data-dojo-type='gridx/Grid' data-dojo-props="
+						cacheClass: 'gridx/core/model/cache/Sync',
+						store: store,
+						structure: structure,
+						modules: [],
+						autoHeight: true
+					">
+			</div>
+	</div>
+	
 	<div id="container" jsid="container" data-dojo-type="dijit.layout.BorderContainer">
 		<div id='centerPane' data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'center'"></div>
 		<div id='leftPane' data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'left', splitter: true">
@@ -36,6 +55,8 @@
 		</div>
 		<div id='bottomPane' data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region: 'bottom', splitter: true">
 		</div>
+
+		
 	</div>
 </body>
 </html>
