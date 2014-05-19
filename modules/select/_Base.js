@@ -39,9 +39,11 @@ define([
 			var t = this, g = t.grid;
 			t._lastSelectedIds = [];
 			t.subscribe('gridClearSelection_' + g.id, function(type){
-				if(type != t._type){
-					t.clear();
-				}
+				//FIX #211
+				//Three kinds of selections way should be compatible with each other?
+				// if(type != t._type){
+				// 	t.clear();
+				// }
 			});
 			t.connect(g.body, 'onRender', '_onRender');
 			if(t.arg('multiple')){

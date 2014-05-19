@@ -14,15 +14,15 @@ require([
 	'gridx/modules/IndirectSelect',
 	'dojox/charting/themes/Julie',
 	'dojox/charting/Chart',
-    'dojox/charting/axis2d/Default',
-    'dojox/charting/plot2d/ClusteredBars',
-    'dojox/charting/plot2d/ClusteredColumns',
-    'dojox/charting/plot2d/Default',
-    'dojox/charting/plot2d/StackedAreas',
-    'dojox/charting/plot2d/Bubble',
-    'dojox/charting/plot2d/Candlesticks',
-    'dojox/charting/plot2d/OHLC',
-    'dojox/charting/plot2d/Pie',
+	'dojox/charting/axis2d/Default',
+	'dojox/charting/plot2d/ClusteredBars',
+	'dojox/charting/plot2d/ClusteredColumns',
+	'dojox/charting/plot2d/Default',
+	'dojox/charting/plot2d/StackedAreas',
+	'dojox/charting/plot2d/Bubble',
+	'dojox/charting/plot2d/Candlesticks',
+	'dojox/charting/plot2d/OHLC',
+	'dojox/charting/plot2d/Pie',
 	'dojo/domReady!'
 ], function(domConstruct, parser,
 	Grid, Cache, dataSource, storeFactory, TestPane, focus, VirtualVScroller, Dod, SelectRow, RowHeader, IndirectSelect, JulieTheme){
@@ -48,6 +48,8 @@ require([
 	window.contentType = 'form';
 	window.detailProvider = window.asyncDetailProvider = function(grid, rowId, detailNode, renderred){
 		setContent(detailNode);
+		detailNode.innerHTML += '<br><p style="padding-left:20px;margin:0">Current Time is:</p>';
+		detailNode.innerHTML += '<br><p style="padding-left:20px;margin:0;color:blue">' + new Date().toString() +'</p>';
 		window.setTimeout(function(){
 			renderred.callback();
 		}, 2000);
@@ -166,13 +168,24 @@ require([
 	
 
 	window.showRow1Detail = function(){
-		dod.show(grid.row('1'));
+		dod.show(grid.row('1')).then(function(row){
+			console.log(row);
+		}, function(err){
+			console.log(err);
+		});
 	}
 	window.hideRow1Detail = function(){
-		dod.hide(grid.row('1'));
+		dod.hide(grid.row('1')).then(function(row){
+			console.log(row);
+		}, function(err){
+			console.log(err);
+		});
 	}
 	window.toggleRow2Detail = function(){
 		dod.toggle(grid.row('2'));
+	}
+	window.refreshRow2Detail = function(){
+		dod.refresh(grid.row('2'));
 	}
 	window.isRow3DetailShown = function(){
 		alert(dod.isShown(grid.row('1')));
@@ -206,10 +219,16 @@ require([
 	tp.addTestSet('Dod APIs', [
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick:' 
 			+ 'showRow1Detail">dod.show(grid.row(\'1\')</div><br/>',
+
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick:'
 			+ 'hideRow1Detail">dod.hide(grid.row(\'1\')</div><br/>',
+
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick:'
 			+ 'toggleRow2Detail">dod.toggle(grid.row(\'2\')</div><br/>',
+
+		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick:'
+			+ 'refreshRow2Detail">dod.refresh(grid.row(\'2\')</div><br/>',
+
 		'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick:'
 			+ 'isRow3DetailShown">dod.isShown(grid.row(\'1\')</div><br/>'
 	].join(''));

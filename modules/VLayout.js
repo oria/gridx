@@ -93,8 +93,6 @@ define([
 		},
 		
 		reLayout: function(){
-			if(this.grid.autoHeight && this.grid.domNode.clientHeight === 0){return;}
-
 			var t = this,
 				freeHeight = 0,
 				hookPoint, n;

@@ -110,7 +110,9 @@ define([
 				v = t.textBox.get('value'),
 				cols = array.filter(g.columns(), function(col){
 					return col.filterable !== false;
-				});
+				}),
+				cs = t.grid.filter.arg('caseSensitive');
+
 			clearTimeout(t._handle);
 			if(g.filterBar){
 				//TODO: is there a better way communicate with FilterBar?
@@ -126,8 +128,8 @@ define([
 				}
 			}else{
 				g.filter.setFilter(v === '' ? 0 : F.or.apply(0, array.map(cols, function(col){
-					return col.encode === true? F.contain(F.column(col.id), F.value(entities.encode(v)))
-							: F.contain(F.column(col.id), F.value(v));
+					return col.encode === true? F.contain(F.column(col.id), F.value(entities.encode(v)), cs)
+							: F.contain(F.column(col.id), F.value(v), cs);
 				})));
 			}
 		},

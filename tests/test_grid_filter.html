@@ -18,12 +18,13 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Filter Test
 	</h1>
-	<h2>FilterBar</h2>
+	<h2>FilterBar(case sensitive)</h2>
 	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout,
 		selectRowTriggerOnCell: true,
+		filterCaseSensitive: true,
 		filterBarMaxRuleCount: Infinity,
 		filterBarFilterData: {
 			type: "all",
@@ -46,12 +47,42 @@
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>
-	<h2>QuickFilter</h2>
+	<h2>FilterBar(case insensitive)</h2>
 	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout,
 		selectRowTriggerOnCell: true,
+		filterCaseSensitive: false,
+		filterBarMaxRuleCount: Infinity,
+		filterBarFilterData: {
+			type: "all",
+			conditions: [
+				{
+					colId: "",
+					condition: "contain",
+					type: "Text",
+					value: "Easy"
+				}
+			]
+		},
+		filterBarItemsName: "elements",
+		modules: [
+			"gridx/modules/Filter",
+			"gridx/modules/filter/FilterBar",
+			"gridx/modules/SingleSort",
+			"gridx/modules/extendedSelect/Row",
+			"gridx/modules/IndirectSelectColumn",
+			"gridx/modules/VirtualVScroller"
+		]
+	'></div>
+	<h2>QuickFilter(case sensitive)</h2>
+	<div id='grid3' jsid='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		selectRowTriggerOnCell: true,
+		filterCaseSensitive: true,
 		modules: [
 			"gridx/modules/Filter",
 			"gridx/modules/filter/QuickFilter",
@@ -61,8 +92,24 @@
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>
+	<h2>QuickFilter(case insensitive)</h2>
+	<div id='grid4' jsid='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		selectRowTriggerOnCell: true,
+		filterCaseSensitive: false,
+		modules: [
+			"gridx/modules/Filter",
+			"gridx/modules/filter/QuickFilter",
+			"gridx/modules/SingleSort",
+			"gridx/modules/extendedSelect/Row",
+			"gridx/modules/IndirectSelectColumn",
+			"gridx/modules/VirtualVScroller"
+		]
+	'></div>	
 	<h2>FilterBar and QuickFilter</h2>
-	<div id='grid3' jsid='grid3' data-dojo-type='gridx.Grid' data-dojo-props='
+	<div id='grid5' jsid='grid5' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout,

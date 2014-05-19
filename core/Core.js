@@ -5,7 +5,6 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/DeferredList",
-	'dojo/request/xhr',
 	'dojo/store/Memory',
 	"./model/cache/Async",
 	"./model/Model",
@@ -13,8 +12,8 @@ define([
 	"./Column",
 	"./Cell",
 	"./_Module"
-], function(require, declare, array, lang, Deferred, DeferredList, xhr, Memory,
-Async, Model, Row, Column, Cell, _Module){
+], function(require, declare, array, lang, Deferred, DeferredList, Memory,
+			Async, Model, Row, Column, Cell, _Module){
 
 /*=====
 	return declare([], {
@@ -311,7 +310,7 @@ Async, Model, Row, Column, Cell, _Module){
 
 	return declare([], {
 		setStore: function(store){
-			if(this.store != store){
+			if(this.store !== store){
 				this.store = store;
 				this.model.setStore(store);
 			}
@@ -347,7 +346,7 @@ Async, Model, Row, Column, Cell, _Module){
 
 		row: function(row, isId, parentId){
 			var t = this;
-			if(typeof row == "number" && !isId){
+			if(typeof row === "number" && !isId){
 				row = t.model.indexToId(row, parentId);
 			}
 			if(t.model.byId(row)){
@@ -361,7 +360,7 @@ Async, Model, Row, Column, Cell, _Module){
 
 		column: function(column, isId){
 			var t = this, c, a, obj = {};
-			if(typeof column == "number" && !isId){
+			if(typeof column === "number" && !isId){
 				c = t._columns[column];
 				column = c && c.id;
 			}
@@ -448,7 +447,7 @@ Async, Model, Row, Column, Cell, _Module){
 				t._load(d).then(function(){
 					t.onModulesLoaded();
 				});
-			})
+			});
 		},
 
 		_uninit: function(){
@@ -512,17 +511,7 @@ Async, Model, Row, Column, Cell, _Module){
 
 			if(typeof data ==='object' && data.constructor === Array){
 				this.store = new Memory({data: data});
-			}else if(typeof data === 'string'){
-				this.cacheClass = Async;
-				return xhr(data, {
-					handleAs: "json"
-				}).then(function(data){
-					t.store = new Memory({data: data});
-					if(!t.structure){
-						t.structure = t._parseStructure(data);
-					}
-				});
-			}else if(!data){	//use default data
+			}else{					//use default data
 				this.store = new Memory({
 					data: this._defaultData
 				});
@@ -534,16 +523,16 @@ Async, Model, Row, Column, Cell, _Module){
 		},
 
 		_parseStructure: function(data){
-			if(!data || typeof data !== 'object'){ 
+			if(!data || typeof data !== 'object'){
 				return [
 					{id: 1, name: 'id', field: 'id'},
 					{id: 2, name: 'name', field: 'name'}
-				]; 
+				];
 			}
 			
 			var s = {},
 				len = data.length,
-				keys, i, j, kl, key, 
+				keys, i, j, kl, key,
 				struct = [];
 
 			for(i = 0; i < len; i++){
@@ -555,7 +544,7 @@ Async, Model, Row, Column, Cell, _Module){
 			}
 
 			for(key in s){
-				struct.push({id: key, name: key, field: key})
+				struct.push({id: key, name: key, field: key});
 			}
 
 			return struct;

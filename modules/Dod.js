@@ -17,9 +17,9 @@ define([
 	'dijit/registry',
 	'dojo/_base/event',
 	'dojo/_base/sniff'
-], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang, 
+], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang,
 			Deferred, array, _Module, declare, baseFx, fx, keys, query, a11y, registry, event, has){
-	kernel.experimental('gridx/modules/Dod');
+	// kernel.experimental('gridx/modules/Dod');
 
 /*=====
 	return declare(_Module, {
@@ -144,7 +144,7 @@ define([
 				this.grid.dod.toggle(this);
 			},
 			refreshDetail: function(){
-				this.grid.dod.refreshDetail(this);
+				this.grid.dod.refresh(this);
 			},
 			isDetailShown: function(){
 				return this.grid.dod.isShown(this);
@@ -152,13 +152,21 @@ define([
 		},
 		
 		show: function(row){
-			var _row = this._row(row), 
+			var _row = this._row(row),
+				df = new Deferred(),
 				g = this.grid;
-			if(_row.dodShown || _row.inAnim){return;}
+
+			if(_row.dodShown || _row.inAnim){
+				df.errback('Row detail has already shown.');
+				return df;
+			}
 			
 			_row.dodShown = true;
 			
-			if(!row.node()){ return; }
+			if(!row.node()){
+				df.callback(row);
+				return df;
+			}
 
 			var expando = this._getExpando(row);
 			if(expando){expando.firstChild.innerHTML = '-';}
@@ -189,8 +197,8 @@ define([
 			//domStyle.set(_row.dodNode, 'display', 'none');
 			
 			if(_row.dodLoaded){
-				this._detailLoadComplete(row);
-				return;
+				this._detailLoadComplete(row, df);
+				return df;
 			}else{
 				domStyle.set(_row.dodLoadingNode, 'display', 'block');
 				if(g.autoHeight){
@@ -207,30 +215,34 @@ define([
 				domStyle.set(rowHeaderNode, 'height', h + 'px');
 			}
 			
-			var df = new Deferred(), _this = this;
+			var _df = new Deferred(),
+				_this = this;
 			if(this.arg('detailProvider')){
-				this.detailProvider(this.grid, row.id, _row.dodNode, df);
+				this.detailProvider(this.grid, row.id, _row.dodNode, _df);
 			}else{
-				df.callback();
+				_df.callback();
 			}
-			df.then(
-				lang.hitch(this, '_detailLoadComplete', row), 
-				lang.hitch(this, '_detailLoadError', row)
-			);
-
+			_df.then(lang.hitch(this, '_detailLoadComplete', row, df), lang.hitch(this, '_detailLoadError', row, df));
+			return df;
 		},
 		
 		hide: function(row){
 			var rowHeaderNode,
 				_row = this._row(row),
 				g = this.grid,
-				escapeId = g._escapeId;
+				escapeId = g._escapeId,
+				df = new Deferred(),
+				t = this;
 
-			if(!_row.dodShown || _row.inAnim || _row.inLoading){return;}
+			if(!_row.dodShown || _row.inAnim || _row.inLoading){
+				df.errback('Row Detail has already been hidden.');
+				return df;
+			}
 			
 			if(!row.node()){
 				_row.dodShown = false;
-				return;
+				df.callback(row);
+				return df;
 			}
 			
 			domClass.remove(row.node(), 'gridxDodShown');
@@ -253,6 +265,9 @@ define([
 					onEnd: function(){
 						_row.dodShown = false;
 						_row.inAnim = false;
+						_row.defaultShow = false;
+						t.onHide(row);
+						df.callback(row);
 						g.body.onRender();
 					}
 				}).play();
@@ -267,7 +282,7 @@ define([
 						properties: {
 							height: { start:rowHeaderNode.offsetHeight, end:rowHeaderNode.offsetHeight - _row.dodNode.scrollHeight, units:"px" }
 						}
-					}).play();					
+					}).play();
 				}
 			}else{
 				_row.dodShown = false;
@@ -279,11 +294,11 @@ define([
 				}
 				_row.dodNode.style.display = 'none';
 				g.body.onRender();
-				
+				_row.defaultShow = false;
+				this.onHide(row);
+				df.callback(row);
 			}
-			
-			_row.defaultShow = false;
-			this.onHide(row);
+			return df;
 		},
 		
 		toggle: function(row){
@@ -293,9 +308,12 @@ define([
 				this.show(row);
 			}
 		},
+
 		refresh: function(row){
 			var _row = this._row(row);
+			if(!_row || !_row.dodShown || _row.inAnim || _row.inLoading) return;
 			_row.dodLoaded = false;
+			_row.dodShown = false;
 			this.show(row);
 		},
 		
@@ -327,7 +345,9 @@ define([
 		
 		//*****************************	private	*****************************
 		_rowMap: null,
+
 		_lastOpen: null, //only useful when autoClose is true.
+
 		_row: function(/*id|obj*/row){
 			var id = row;
 			if(typeof row === 'object'){
@@ -337,9 +357,12 @@ define([
 		},
 		
 		_onBodyClick: function(e){
-			if(!domClass.contains(e.target, 'gridxDodExpando') 
-			&& !domClass.contains(e.target, 'gridxDodExpandoText') 
-			|| this.grid.domNode != query(e.target).closest('.gridx')[0]){return;}
+			if(!domClass.contains(e.target, 'gridxDodExpando') &&
+				!domClass.contains(e.target, 'gridxDodExpandoText') ||
+				this.grid.domNode != query(e.target).closest('.gridx')[0]
+			){
+				return;
+			}
 			var node = e.target;
 			while(node && !domClass.contains(node, 'gridxRow')){
 				node = node.parentNode;
@@ -347,8 +370,6 @@ define([
 			
 			// event.stop(e);
 			var idx = node.getAttribute('rowindex');
-			
-			
 			this.toggle(this.grid.row(parseInt(idx, 10)));
 		},
 		
@@ -417,17 +438,22 @@ define([
 			});
 		},
 		
-		_detailLoadComplete: function(row){
-			var _row = this._row(row), g = this.grid, escapeId = g._escapeId, rowHeaderNode;
-			if(!this.isShown(row)){return;}
+		_detailLoadComplete: function(row, df){
+			var _row = this._row(row),
+				g = this.grid, 
+				escapeId = g._escapeId, rowHeaderNode;
+
+			if(!this.isShown(row)){
+				df.errorback();
+				return;
+			}
 			_row.dodLoaded = true;
-			
+
 			var gridNodes = query('.gridx', _row.dodNode);
 			if(gridNodes.length){
 				//flag gridInGrid to query
 				query.isGridInGrid[this.grid.id] = true;
 			}
-	
 			if(_row.defaultShow){
 				// domStyle.set(_row.dodNode, 'display', 'block');
 				_row.dodNode.style.display = 'block';
@@ -438,7 +464,6 @@ define([
 					rowHeaderNode = query('[rowid="' + escapeId(row.id) + '"].gridxRowHeaderRow', this.grid.rowHeader.bodyNode)[0];
 					rowHeaderNode.firstChild.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
 					rowHeaderNode.style.height = row.node().firstChild.offsetHeight + _row.dodNode.scrollHeight + 'px';
-	
 				}
 			}else{
 				if(domStyle.get(_row.dodLoadingNode, 'display') == 'block'){
@@ -528,8 +553,10 @@ define([
 					this.connect(gig.lastFocusNode, 'onfocus', '_lastNodeFocus');
 					this.connect(gig.domNode, 'onfocus', '_domNodeFocus');
 					this.connect(gig.vLayout, 'reLayout', function(){
-						gig._outerGrid && gig._outerGrid.vLayout.reLayout();
-					})
+						if(gig._outerGrid){
+							gig._outerGrid.vLayout.reLayout();
+						}
+					});
 					this.connect(gig, 'onRowMouseOver', function(){
 						if(gig._outerGrid){
 							query('.gridxRowOver', gig._outerGrid.bodyNode).removeClass('gridxRowOver');
@@ -540,6 +567,7 @@ define([
 			}
 			g.vLayout.reLayout();
 			this.onShow(row);
+			df.callback(row);
 		},
 		
 		_detailLoadError: function(row){
@@ -737,8 +765,9 @@ define([
 				e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);
 				e.visualIndex = parseInt(n.getAttribute('visualindex'), 10);
 
-				g[evtDod] && g[evtDod](e);
-				return;
+				if(g[evtDod]){
+					g[evtDod](e);
+				}
 			}
 		},
 

@@ -30,7 +30,7 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://do
  * dojox
  * gridx
 
-GridX works best with [Dojo 1.7.2](http://download.dojotoolkit.org/release-1.7.2/) or higher.
+GridX works best with [Dojo 1.8.0](http://download.dojotoolkit.org/release-1.8.0/) or higher.
 
 
 ## Quick ways to know GridX
@@ -53,7 +53,10 @@ Please also check out [GridX Home Site](http://oria.github.com/gridx) for more d
 ## GridX Team
 * [Xiao Wen Zhu (Oliver) - IBM, CCLA](mailto:zhuxw1984@gmail.com)
 * [Pei Wang (Nate) - IBM, CCLA](mailto:supnate@gmail.com)
-* [Chen Qi (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
+* [Qi Chen (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
+* [Bing Jian Guo (Evans) - IBM, CCLA](mailto:)
+* [Qi Ruan (Rock) - IBM, CCLA](mailto:)
+* [Xiang Zhou (JayZ) - IBM, CCLA](mailto:)
 * [Wei Huang (Evan) -  Dojo Committer](mailto:evanhuangwei@gmail.com)
 
 Please contact us if you have got any questions. We really appreciate any suggestions or fix patches to improve GridX.

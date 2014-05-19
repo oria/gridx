@@ -31,14 +31,21 @@ require([
 
 	Deferred.when(parser.parse(), function(){
 		configGrid.connect(configGrid.select.row, 'onSelected', function(row){
-			var t = new Date;
+			// var t = new Date;
 			grid.hiddenColumns.add(row);
-			console.log('hide: ' + (new Date - t));
+			// console.log('hide: ' + (new Date - t));
 		});
 		configGrid.connect(configGrid.select.row, 'onDeselected', function(row){
-			var t = new Date;
+			// var t = new Date;
 			grid.hiddenColumns.remove(row);
-			console.log('show: ' + (new Date - t));
+			// console.log('show: ' + (new Date - t));
+		});
+
+		dojo.connect(grid.hiddenColumns, 'onShow', function(colIds){
+			console.log(colIds);
+		});
+		dojo.connect(grid.hiddenColumns, 'onHide', function(colIds){
+			console.log(colIds);
 		});
 	});
 
