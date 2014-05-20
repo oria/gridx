@@ -64,7 +64,8 @@ define([
 					h = g.header.innerNode,
 					mainNode = g.mainNode,
 					bodyNode = g.bodyNode,
-					scrollable = t._scrollable = new Scrollable();
+					scrollableArgs = g.vScroller.arg("scrollable") || {}
+					scrollable = t._scrollable = new Scrollable(scrollableArgs);
 				h.style.height = h.firstChild.offsetHeight + 'px';
 				scrollable.init({
 					domNode: mainNode,
