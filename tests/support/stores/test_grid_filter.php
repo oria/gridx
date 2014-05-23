@@ -219,6 +219,7 @@ function slice($data){
 }
 
 
+sleep(4);
 $data = json_decode($items);
 $totalCount = count($data);
 

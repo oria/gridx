@@ -28,7 +28,8 @@ require([
 				structure: layout,
 				modules: [
 					mods.VirtualVScroller
-				]
+				],
+				summary: 'this is the gridx'
 			});
 			grid.placeAt('gridContainer');
 			grid.startup();
