@@ -54,7 +54,7 @@ Please also check out [GridX Home Site](http://oria.github.com/gridx) for more d
 * [Xiao Wen Zhu (Oliver) - IBM, CCLA](mailto:zhuxw1984@gmail.com)
 * [Pei Wang (Nate) - IBM, CCLA](mailto:supnate@gmail.com)
 * [Qi Chen (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
-* [Bing Jian Guo (Evans) - IBM, CCLA](mailto:)
+* [Bing Jian Guo (Evans) - IBM, CCLA](mailto:bingjian.guo@gmail.com)
 * [Qi Ruan (Rock) - IBM, CCLA](mailto:)
 * [Xiang Zhou (JayZ) - IBM, CCLA](mailto:)
 * [Wei Huang (Evan) -  Dojo Committer](mailto:evanhuangwei@gmail.com)

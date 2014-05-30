@@ -136,6 +136,9 @@ define([
 			if(!t.isLeftToRight()){
 				domClass.add(t.domNode, 'gridxRtl');
 			}
+			if(t.summary){
+				t.domNode.setAttribute('summary', t.summary);
+			}
 			//in case gridx is not a root level package, it should still work
 			t.nls = i18n.getLocalization('gridx', 'gridx', t.lang) || nls;
 			t._eventFlags = {};
@@ -180,7 +183,10 @@ define([
 		//		If true, the grid's width is determined by the total width of the columns, so that there will
 		//		never be horizontal scroller bar.
 		autoWidth: false,
-
+		// summary: String
+		//
+		//
+		summary: '',
 		// touch: Boolean
 		//		Whether grid is run in touch environment
 		//		If undefined, automatically set to true on mobile devices (like ios or android)

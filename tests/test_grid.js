@@ -27,8 +27,10 @@ require([
 				store: store,
 				structure: layout,
 				modules: [
+					"gridx/modules/TouchScroll",
 					mods.VirtualVScroller
-				]
+				],
+				summary: 'this is the gridx'
 			});
 			grid.placeAt('gridContainer');
 			grid.startup();
