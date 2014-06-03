@@ -117,31 +117,49 @@ define([
 
 		_filter: function(checker){
 			var t = this,
-				oldSize = t.size();
+				oldSize = t.size(),
+				m = t.model;
 			t.clear();
 			if(lang.isFunction(checker)){
-				var ids = [];
-				return t.model.scan({
-					start: 0,
-					pageSize: t.pageSize,
-					whenScope: t,
-					whenFunc: t.when
-				}, function(rows, s){
-					var i, id, row,
+				var ids = [],
+					scanCallback = function(rows/* object|string array */, s, parentId){
+					if(!rows.length){
+						return false;
+					}
+					console.log(rows);
+					console.log(s);
+					var i, id, row, len, children,
 						end = s + rows.length;
+
+					parentId = parentId !== undefined? parentId: '';
 					for(i = s; i < end; ++i){
-						id = t.indexToId(i);
-						row = t.byIndex(i);
+						id = t.indexToId(i, parentId);
+						row = t.byIndex(i, parentId);
 						if(row){
 							if(checker(row, id)){
 								ids.push(id);
 								t._indexes[id] = i;
 							}
+							// if(m.hasChildren(id))
+							children = m.children(id);
+							if(children.length){
+								parentId = m.parentId(children[0]);
+								console.log('child length is', children.length);
+								console.log(children);
+								scanCallback(children, 0, parentId);
+							}
 						}else{
 							break;
 						}
 					}
-				}).then(function(){
+				};
+
+				return t.model.scan({
+					start: 0,
+					pageSize: t.pageSize,
+					whenScope: t,
+					whenFunc: t.when
+				}, scanCallback).then(function(){
 					if(ids.length == t.size()){
 						//Filtered item size equals cache size, so filter is useless.
 						t.clear();

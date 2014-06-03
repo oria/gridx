@@ -116,6 +116,9 @@ require([
 
 	mods = [
 		modules.Tree,
+		modules.Filter,
+		// modules.FilterBar,
+		modules.QuickFilter,
 		modules.Pagination,
 		modules.PaginationBar,
 		modules.ColumnResizer,
