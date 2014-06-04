@@ -142,7 +142,6 @@ define([
 			if(lang.isFunction(checker)){
 				var ids = [], temp,
 					scanCallback = function(rows/* object|string array */, s, parentId){
-						console.log(rows);
 						if(!rows.length){
 							return false;
 						}
@@ -188,7 +187,6 @@ define([
 				}, scanCallback).then(function(){
 					if(ids.length == t.size()){
 						//Filtered item size equals cache size, so filter is useless.
-						console.log('in clear callback~~~~~~~~~~~~~~~~~~~~~');
 						t.clear();
 					}else{
 						t._ids = ids;
@@ -314,7 +312,6 @@ define([
 		},
 
 		_onNew: function(id){
-			console.log('in on new');
 			var t = this;
 			if(t._ids){
 				t._ids.push(id);
