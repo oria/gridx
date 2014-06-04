@@ -70,7 +70,8 @@ define([
 			// t._init();
 			// c = t.byId(id);
 			if(ids){
-				return inner._call('hasChildren', arguments) && this._indexes[id] && this._struct[id] && this._struct[id].length > 0;
+				return false;
+				// return inner._call('hasChildren', arguments) && this._indexes[id] && this._struct[id] && this._struct[id].length > 0;
 			}else{
 				return inner._call('hasChildren', arguments);
 			}
@@ -151,14 +152,8 @@ define([
 						parentId = parentId !== undefined? parentId: '';
 						// console.log(parentId);
 						for(i = s; i < end; ++i){
-							console.log(111111)
 							id = t.indexToId(i, parentId);
 							row = t.byIndex(i, parentId);
-							console.log(i);
-							console.log(row);
-							console.log(id);
-							console.log(22222222222)
-
 							if(row){
 								if(checker(row, id)){
 								// if(true){
@@ -176,18 +171,12 @@ define([
 								// if(m.hasChildren(id))
 								children = m.children(id);
 								if(children.length){
-									pid = m.parentId(children[0]);
-									// console.log('parent id is');
-									// console.log(parentId);
-									console.log('~~~~~~~~~~~go in callback~~~~~~~~~~~~~~~~~');
+									var pid = m.parentId(children[0]);
 									scanCallback(children, 0, pid);
 								}
 							}else{
-								console.log('in break');
 								break;
 							}
-							console.log(i);
-							console.log('=================');
 						}
 					};
 
