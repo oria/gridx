@@ -496,6 +496,10 @@ define([
 					this._exts[ext.name] = ext;
 				}
 			}
+		}, 
+
+		_getExt: function(name){
+			return this._exts[name] || null;
 		}
 	});
 });

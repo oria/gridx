@@ -45,6 +45,8 @@ define([
 		clear: function(){
 			this._ids = 0;
 			this._indexes = {};
+			this._struct = {};
+			this._struct[''] = [];
 		},
 
 		filter: function(checker){
@@ -58,6 +60,21 @@ define([
 
 		hasFilter: function(){
 			return !!this._ids;
+		},
+
+		hasChildren: function(id){
+			var t = this,
+				ids = t._ids,
+				inner = t.inner;
+				// id = ids && ids[index];
+			// t._init();
+			// c = t.byId(id);
+			if(ids){
+				return inner._call('hasChildren', arguments) && this._indexes[id] && this._struct[id] && this._struct[id].length > 0;
+			}else{
+				return inner._call('hasChildren', arguments);
+			}
+			// return s.hasChildren && s.hasChildren(id, c && c.item) && s.getChildren;
 		},
 
 		byIndex: function(index, parentId){
@@ -119,40 +136,60 @@ define([
 			var t = this,
 				oldSize = t.size(),
 				m = t.model;
+
 			t.clear();
 			if(lang.isFunction(checker)){
-				var ids = [],
+				var ids = [], temp,
 					scanCallback = function(rows/* object|string array */, s, parentId){
-					if(!rows.length){
-						return false;
-					}
-					console.log(rows);
-					console.log(s);
-					var i, id, row, len, children,
-						end = s + rows.length;
-
-					parentId = parentId !== undefined? parentId: '';
-					for(i = s; i < end; ++i){
-						id = t.indexToId(i, parentId);
-						row = t.byIndex(i, parentId);
-						if(row){
-							if(checker(row, id)){
-								ids.push(id);
-								t._indexes[id] = i;
-							}
-							// if(m.hasChildren(id))
-							children = m.children(id);
-							if(children.length){
-								parentId = m.parentId(children[0]);
-								console.log('child length is', children.length);
-								console.log(children);
-								scanCallback(children, 0, parentId);
-							}
-						}else{
-							break;
+						console.log(rows);
+						if(!rows.length){
+							return false;
 						}
-					}
-				};
+						var i, id, row, len, children,
+							end = s + rows.length;
+
+						parentId = parentId !== undefined? parentId: '';
+						// console.log(parentId);
+						for(i = s; i < end; ++i){
+							console.log(111111)
+							id = t.indexToId(i, parentId);
+							row = t.byIndex(i, parentId);
+							console.log(i);
+							console.log(row);
+							console.log(id);
+							console.log(22222222222)
+
+							if(row){
+								if(checker(row, id)){
+								// if(true){
+									ids.push(id);
+									// temp = t._struct[id] = [];
+									// if(ids.indexOf(parentId) >= 0){
+									// 	temp.push(parentId);
+									// 	t._struct[parentId].push(id);
+									// }else{
+									// 	temp.push('');
+									// }
+
+									t._indexes[id] = i;
+								}
+								// if(m.hasChildren(id))
+								children = m.children(id);
+								if(children.length){
+									pid = m.parentId(children[0]);
+									// console.log('parent id is');
+									// console.log(parentId);
+									console.log('~~~~~~~~~~~go in callback~~~~~~~~~~~~~~~~~');
+									scanCallback(children, 0, pid);
+								}
+							}else{
+								console.log('in break');
+								break;
+							}
+							console.log(i);
+							console.log('=================');
+						}
+					};
 
 				return t.model.scan({
 					start: 0,
@@ -162,6 +199,7 @@ define([
 				}, scanCallback).then(function(){
 					if(ids.length == t.size()){
 						//Filtered item size equals cache size, so filter is useless.
+						console.log('in clear callback~~~~~~~~~~~~~~~~~~~~~');
 						t.clear();
 					}else{
 						t._ids = ids;
@@ -287,6 +325,7 @@ define([
 		},
 
 		_onNew: function(id){
+			console.log('in on new');
 			var t = this;
 			if(t._ids){
 				t._ids.push(id);
