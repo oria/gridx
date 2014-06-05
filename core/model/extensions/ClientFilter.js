@@ -145,7 +145,7 @@ define([
 						if(!rows.length){
 							return false;
 						}
-						var i, id, row, len, children, pid/*parent id*/
+						var i, id, row, len, children, pid,/*parent id*/
 							end = start + rows.length;
 
 						parentId = parentId !== undefined? parentId: '';
@@ -168,7 +168,7 @@ define([
 								}
 								children = m.children(id);
 								if(children.length){
-									var pid = m.parentId(children[0]);
+									pid = m.parentId(children[0]);
 									scanCallback(children, 0, pid);
 								}
 							}else{
