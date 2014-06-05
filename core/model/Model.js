@@ -343,35 +343,35 @@ define([
 				scope = args.whenScope || this,
 				whenFunc = args.whenFunc || scope.when;
 			var f = function(s){
-					d.progress(s / (count > 0 ? s + count : scope.size()));
-					whenFunc.call(scope, {
-						id: [],
-						range: [{
-							start: s,
-							count: pageSize
-						}]
-					}, function(){
-						var i, r, rows = [];
-						for(i = s; i < s + pageSize && i < end; ++i){
-							r = scope.byIndex(i);
-							if(r){
-								rows.push(r);
-							}else{
-								end = -1;
-								break;
-							}
-						}
-						if(callback(rows, s) || i == end){
-							end = -1;
-						}
-					}).then(function(){
-						if(end == -1){
-							d.callback();
+				d.progress(s / (count > 0 ? s + count : scope.size()));
+				whenFunc.call(scope, {
+					id: [],
+					range: [{
+						start: s,
+						count: pageSize
+					}]
+				}, function(){
+					var i, r, rows = [];
+					for(i = s; i < s + pageSize && i < end; ++i){
+						r = scope.byIndex(i);
+						if(r){
+							rows.push(r);
 						}else{
-							f(s + pageSize);
+							end = -1;
+							break;
 						}
-					});
-				};
+					}
+					if(callback(rows, s) || i == end){
+						end = -1;
+					}
+				}).then(function(){
+					if(end == -1){
+						d.callback();
+					}else{
+						f(s + pageSize);
+					}
+				});
+			};
 			f(start);
 			return d;
 		},
@@ -496,10 +496,6 @@ define([
 					this._exts[ext.name] = ext;
 				}
 			}
-		}, 
-
-		_getExt: function(name){
-			return this._exts[name] || null;
 		}
 	});
 });

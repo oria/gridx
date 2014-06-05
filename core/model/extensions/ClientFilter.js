@@ -66,16 +66,16 @@ define([
 			var t = this,
 				ids = t._ids,
 				inner = t.inner;
-				// id = ids && ids[index];
-			// t._init();
-			// c = t.byId(id);
+
 			if(ids){
+				//FIX me:
+				//In filter mode, we don't want the rows to have tree-relationship with each other,
+				//compulsively return false here to make tree expand/collapse button disappear in each row.
 				return false;
 				// return inner._call('hasChildren', arguments) && this._indexes[id] && this._struct[id] && this._struct[id].length > 0;
 			}else{
 				return inner._call('hasChildren', arguments);
 			}
-			// return s.hasChildren && s.hasChildren(id, c && c.item) && s.getChildren;
 		},
 
 		byIndex: function(index, parentId){
@@ -141,21 +141,20 @@ define([
 			t.clear();
 			if(lang.isFunction(checker)){
 				var ids = [], temp,
-					scanCallback = function(rows/* object|string array */, s, parentId){
+					scanCallback = function(rows/* object|string array */, start, parentId){
 						if(!rows.length){
 							return false;
 						}
-						var i, id, row, len, children,
-							end = s + rows.length;
+						var i, id, row, len, children, pid/*parent id*/
+							end = start + rows.length;
 
 						parentId = parentId !== undefined? parentId: '';
 						// console.log(parentId);
-						for(i = s; i < end; ++i){
+						for(i = start; i < end; ++i){
 							id = t.indexToId(i, parentId);
 							row = t.byIndex(i, parentId);
 							if(row){
 								if(checker(row, id)){
-								// if(true){
 									ids.push(id);
 									// temp = t._struct[id] = [];
 									// if(ids.indexOf(parentId) >= 0){
@@ -167,7 +166,6 @@ define([
 
 									t._indexes[id] = i;
 								}
-								// if(m.hasChildren(id))
 								children = m.children(id);
 								if(children.length){
 									var pid = m.parentId(children[0]);
