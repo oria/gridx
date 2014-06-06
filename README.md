@@ -12,7 +12,8 @@ GridX is consisted of:
 
 GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://dojofoundation.org/about/cla) with the same [BSD/AFLv2 license] (http://dojotoolkit.org/license)
 
-### Current Versions:
+
+### Archive Versions:
 * [1.3 (LTS)](https://github.com/oria/gridx/tree/1.3): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.3.0-Release-Notes)
 * [1.2 (LTS)](https://github.com/oria/gridx/tree/1.2): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.2.0-Release-Notes)
 * [1.1](https://github.com/oria/gridx/tree/1.1): [release notes](https://github.com/oria/gridx/wiki/Gridx-v1.1.0-Release-Notes)
@@ -20,17 +21,21 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://do
 
 ## Installation
 
-1.  [CPM installation](https://github.com/kriszyp/cpm) with the following command:
+1.	[CPM installation](https://github.com/kriszyp/cpm) with the following command:
 
-    ``cpm install gridx``
+	``cpm install gridx``
 
-2.  Manual installation by putting GridX at the same level as Dojo, e.g:
- * dojo 
- * dijit
- * dojox
- * gridx
+2.	[Bower](http://bower.io) install dependency:
 
-GridX works best with [Dojo 1.8.0](http://download.dojotoolkit.org/release-1.8.0/) or higher.
+	``bower install``
+
+3.	Manual installation by putting GridX at the same level as Dojo, e.g:
+	* dojo 
+	* dijit
+	* dojox
+	* gridx
+
+**GridX** works best with [Dojo 1.8.0](http://download.dojotoolkit.org/release-1.8.0/) or higher.
 
 
 ## Quick ways to know GridX
