@@ -220,8 +220,12 @@ define([
 		_onResizeEnd: function(){},
 
 		_escapeId: function(id){
-			return String(id).replace(/\\/g, "\\\\");
+			return String(id).replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
 		},
+
+                _escapeIdHtml: function(id){
+                        return String(id).replace(/\\/g, "\\\\").replace(/\"/g, "&quot;");
+                },
 
 		//event handling begin
 		_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],
