@@ -596,7 +596,7 @@ define([
 				}
 				n.innerHTML = '';
 				en.innerHTML = emptyInfo;
-				en.style.zIndex = '';
+				en.style.zIndex = 1;
 				t.onEmpty();
 				t.model.free();
 			}
