@@ -5,10 +5,11 @@ define([
 	"dojo/_base/sniff",
 	"dojo/_base/query",
 	"dojo/dom-geometry",
+	"dojo/dom-class",
 	"dojo/keys",
 	"dojox/html/metrics",
 	"../core/_Module"
-], function(declare, Deferred, event, sniff, query, domGeo, keys, metrics, _Module){
+], function(declare, Deferred, event, sniff, query, domGeo, domClass, keys, metrics, _Module){
 	
 	var st = 'scrollTop';
 
@@ -44,7 +45,7 @@ define([
 				if(sniff('ie') < 8){
 					dn.style.width = '0px';
 				}
-			}else{
+			}else if(!sniff('mac')){
 				var w = metrics.getScrollbar().w,
 					ltr = g.isLeftToRight();
 				dn.style.width = w + 'px';
@@ -52,6 +53,8 @@ define([
 				if(sniff('ie') < 8){
 					t.stubNode.style.width = (w + 1) + 'px';
 				}
+			}else{
+				domClass.add(g.domNode, 'gridxMac');
 			}
 		},
 
