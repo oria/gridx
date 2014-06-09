@@ -710,6 +710,7 @@ define([
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){
+                        var escapeIdHtml = this.grid._escapeIdHtml;
 			var t = this,
 				end = start + count,
 				s = [],
@@ -724,9 +725,9 @@ define([
 					'" role="row" visualindex="', i);
 				if(row){
 					t.model.keep(row.id);
-					s.push('" rowid="', row.id,
+					s.push('" rowid="', escapeIdHtml(row.id),
 						'" rowindex="', rowInfo.rowIndex,
-						'" parentid="', rowInfo.parentId,
+						'" parentid="', escapeIdHtml(rowInfo.parentId),
 						'">', t._buildCells(row, i, columns),
 					'</div>');
 					renderedRows.push(row);
