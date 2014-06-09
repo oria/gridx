@@ -276,32 +276,25 @@
 }
 
 
- {
 .gridxMac .gridxHScrollerInner::-webkit-scrollbar {
-		height: 11px !important;
-	}
-
-.gridxMac .gridxVScroller::-webkit-scrollbar {
-		width: 11px !important;
-	}
-
-.gridxMac .gridxHScrollerInner , .gridxVScroller {
-		&::-webkit-scrollbar {
-			-webkit-appearance:none !important;
-			background-color: #eee !important;
-		}
-
-		&::-webkit-scrollbar-thumb {
-			border-radius: 8px !important;
-			border: 2px solid white !important;
-			background-color: rgba(100,100,100,.5) !important;
-
-			&:hover,
-			&:active,
-			&:focus {
-				background-color: rgba(0,0,0,.5) !important;
-			}
-		}
-	}
+    height: 11px !important
 }
 
+.gridxMac .gridxVScroller::-webkit-scrollbar {
+    width: 11px !important
+}
+
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar, .gridxMac .gridxVScroller::-webkit-scrollbar {
+    -webkit-appearance: none !important;
+    background-color: #eee !important
+}
+
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb, .gridxMac .gridxVScroller::-webkit-scrollbar-thumb {
+    border-radius: 8px !important;
+    border: 2px solid white !important;
+    background-color: rgba(100, 100, 100, 0.5) !important
+}
+
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:hover, .gridxMac .gridxVScroller::-webkit-scrollbar-thumb:hover, .gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:active, .gridxMac .gridxVScroller::-webkit-scrollbar-thumb:active, .gridxMac .gridxHScrollerInner::-webkit-scrollbar-thumb:focus, .gridxMac .gridxVScroller::-webkit-scrollbar-thumb:focus {
+    background-color: rgba(0, 0, 0, 0.5) !important
+}
