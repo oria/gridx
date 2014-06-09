@@ -274,3 +274,34 @@
 [class~='dijitSliderV'].gridxCellEditor {
 	width: auto;
 }
+
+
+ {
+.gridxMac .gridxHScrollerInner::-webkit-scrollbar {
+		height: 11px !important;
+	}
+
+.gridxMac .gridxVScroller::-webkit-scrollbar {
+		width: 11px !important;
+	}
+
+.gridxMac .gridxHScrollerInner , .gridxVScroller {
+		&::-webkit-scrollbar {
+			-webkit-appearance:none !important;
+			background-color: #eee !important;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			border-radius: 8px !important;
+			border: 2px solid white !important;
+			background-color: rgba(100,100,100,.5) !important;
+
+			&:hover,
+			&:active,
+			&:focus {
+				background-color: rgba(0,0,0,.5) !important;
+			}
+		}
+	}
+}
+
