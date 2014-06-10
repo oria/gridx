@@ -223,9 +223,9 @@ define([
 			return String(id).replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
 		},
 
-                _escapeIdHtml: function(id){
-                        return String(id).replace(/\\/g, "\\\\").replace(/\"/g, "&quot;");
-                },
+		_encodeHTML: function(id){
+			return String(id).replace(/\"/g, "&quot;");
+		},
 
 		//event handling begin
 		_compNames: ['Cell', 'HeaderCell', 'Row', 'Header'],

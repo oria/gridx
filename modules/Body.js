@@ -710,14 +710,15 @@ define([
 		},
 
 		_buildRows: function(start, count, uncachedRows, renderedRows){
-                        var escapeIdHtml = this.grid._escapeIdHtml;
 			var t = this,
 				end = start + count,
 				s = [],
 				g = t.grid,
 				w = t.domNode.scrollWidth,
 				columns = g.columns(),
+				encode = this.grid._encodeHTML,
 				i = start;
+
 			for(; i < end; ++i){
 				var rowInfo = g.view.getRowInfo({visualIndex: i}),
 					row = g.row(rowInfo.rowId, 1);
@@ -725,9 +726,9 @@ define([
 					'" role="row" visualindex="', i);
 				if(row){
 					t.model.keep(row.id);
-					s.push('" rowid="', escapeIdHtml(row.id),
+					s.push('" rowid="', encode(row.id),
 						'" rowindex="', rowInfo.rowIndex,
-						'" parentid="', escapeIdHtml(rowInfo.parentId),
+						'" parentid="', encode(rowInfo.parentId),
 						'">', t._buildCells(row, i, columns),
 					'</div>');
 					renderedRows.push(row);
