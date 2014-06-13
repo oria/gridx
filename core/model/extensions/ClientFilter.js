@@ -45,6 +45,8 @@ define([
 		clear: function(){
 			this._ids = 0;
 			this._indexes = {};
+			this._struct = {};
+			this._struct[''] = [];
 		},
 
 		filter: function(checker){
@@ -58,6 +60,22 @@ define([
 
 		hasFilter: function(){
 			return !!this._ids;
+		},
+
+		hasChildren: function(id){
+			var t = this,
+				ids = t._ids,
+				inner = t.inner;
+
+			if(ids){
+				//FIX me:
+				//In filter mode, we don't want the rows to have tree-relationship with each other,
+				//compulsively return false here to make tree expand/collapse button disappear in each row.
+				return false;
+				// return inner._call('hasChildren', arguments) && this._indexes[id] && this._struct[id] && this._struct[id].length > 0;
+			}else{
+				return inner._call('hasChildren', arguments);
+			}
 		},
 
 		byIndex: function(index, parentId){
@@ -117,31 +135,54 @@ define([
 
 		_filter: function(checker){
 			var t = this,
-				oldSize = t.size();
+				oldSize = t.size(),
+				m = t.model;
+
 			t.clear();
 			if(lang.isFunction(checker)){
-				var ids = [];
+				var ids = [], temp,
+					scanCallback = function(rows/* object|string array */, start, parentId){
+						if(!rows.length){
+							return false;
+						}
+						var i, id, row, len, children, pid,/*parent id*/
+							end = start + rows.length;
+
+						parentId = parentId !== undefined? parentId: '';
+						// console.log(parentId);
+						for(i = start; i < end; ++i){
+							id = t.indexToId(i, parentId);
+							row = t.byIndex(i, parentId);
+							if(row){
+								if(checker(row, id)){
+									ids.push(id);
+									// temp = t._struct[id] = [];
+									// if(ids.indexOf(parentId) >= 0){
+									// 	temp.push(parentId);
+									// 	t._struct[parentId].push(id);
+									// }else{
+									// 	temp.push('');
+									// }
+
+									t._indexes[id] = i;
+								}
+								children = m.children(id);
+								if(children.length){
+									pid = m.parentId(children[0]);
+									scanCallback(children, 0, pid);
+								}
+							}else{
+								break;
+							}
+						}
+					};
+
 				return t.model.scan({
 					start: 0,
 					pageSize: t.pageSize,
 					whenScope: t,
 					whenFunc: t.when
-				}, function(rows, s){
-					var i, id, row,
-						end = s + rows.length;
-					for(i = s; i < end; ++i){
-						id = t.indexToId(i);
-						row = t.byIndex(i);
-						if(row){
-							if(checker(row, id)){
-								ids.push(id);
-								t._indexes[id] = i;
-							}
-						}else{
-							break;
-						}
-					}
-				}).then(function(){
+				}, scanCallback).then(function(){
 					if(ids.length == t.size()){
 						//Filtered item size equals cache size, so filter is useless.
 						t.clear();

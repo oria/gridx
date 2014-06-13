@@ -116,6 +116,22 @@ require([
 
 	mods = [
 		modules.Tree,
+		modules.Filter,
+		// modules.FilterBar,
+		modules.QuickFilter,
+		modules.Pagination,
+		modules.PaginationBar,
+		modules.ColumnResizer,
+		// modules.SelectRow,
+		modules.ExtendedSelectRow,
+		modules.CellWidget,
+		modules.Edit,
+		modules.IndirectSelectColumn,
+		modules.SingleSort,
+		modules.VirtualVScroller
+	];	
+	mods1 = [
+		modules.Tree,
 		modules.Pagination,
 		modules.PaginationBar,
 		modules.ColumnResizer,

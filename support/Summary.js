@@ -30,6 +30,7 @@ define([
 		postCreate: function(){
 			var t = this,
 				m = t.grid.model;
+
 			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
 			t.connect(m, 'onSizeChange', 'refresh');
 			t.connect(m, 'onMarkChange', 'refresh');
@@ -41,32 +42,39 @@ define([
 		},
 
 		refresh: function(){
-			var g = this.grid,
+			var t = this, g = this.grid,
 				sr = g.select && g.select.row,
-				pagination = g.pagination,
-				size = g.model.size(),
-				selected = sr ? sr.getSelected().length : 0,
-				tpl = this.message;
-			if(pagination){
-				var cp = pagination.currentPage(),
-					firstIdx = pagination.firstIndexInPage(cp) + 1,
-					lastIdx = pagination.lastIndexInPage(cp) + 1;
-			}
-			if(g.getSummaryMessage){
-				tpl = g.getSummaryMessage();
-			}
-			if(!tpl){
-				tpl = [];
+				pagination = g.pagination;
+			
+			var finish = function(){
+				var size = g.model.size(),
+					selected = sr ? sr.getSelected().length : 0,
+					tpl = t.message;
 				if(pagination){
-					tpl.push(string.substitute(g.nls.summaryRange, [firstIdx, lastIdx]));
+					var cp = pagination.currentPage(),
+						firstIdx = pagination.firstIndexInPage(cp) + 1,
+						lastIdx = pagination.lastIndexInPage(cp) + 1;
 				}
-				tpl.push(string.substitute(g.nls.summaryTotal, [size >= 0 ? size : 0]));
-				if(sr){
-					tpl.push(string.substitute(g.nls.summarySelected, [selected]));
+				if(g.getSummaryMessage){
+					tpl = g.getSummaryMessage();
 				}
-				tpl = tpl.join(' ');
-			}
-			this.domNode.innerHTML = string.substitute(tpl, [size >= 0 ? size : 0, selected, firstIdx, lastIdx]);
+				if(!tpl){
+					tpl = [];
+					if(pagination){
+						tpl.push(string.substitute(g.nls.summaryRange, [firstIdx, lastIdx]));
+					}
+					tpl.push(string.substitute(g.nls.summaryTotal, [size >= 0 ? size : 0]));
+					if(sr){
+						tpl.push(string.substitute(g.nls.summarySelected, [selected]));
+					}
+					tpl = tpl.join(' ');
+				}
+				var summary = string.substitute(tpl, [size >= 0 ? size : 0, selected, firstIdx, lastIdx]);
+
+				t.domNode.innerHTML = summary;
+			};
+			g.model.when({}).then(finish, finish);			
+			
 		}
 	});
 });

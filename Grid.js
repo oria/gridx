@@ -220,7 +220,11 @@ define([
 		_onResizeEnd: function(){},
 
 		_escapeId: function(id){
-			return String(id).replace(/\\/g, "\\\\");
+			return String(id).replace(/\\/g, "\\\\").replace(/\"/g, "\\\"");
+		},
+
+		_encodeHTML: function(id){
+			return String(id).replace(/\"/g, "&quot;");
 		},
 
 		//event handling begin

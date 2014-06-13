@@ -716,7 +716,9 @@ define([
 				g = t.grid,
 				w = t.domNode.scrollWidth,
 				columns = g.columns(),
+				encode = this.grid._encodeHTML,
 				i = start;
+
 			for(; i < end; ++i){
 				var rowInfo = g.view.getRowInfo({visualIndex: i}),
 					row = g.row(rowInfo.rowId, 1);
@@ -724,9 +726,9 @@ define([
 					'" role="row" visualindex="', i);
 				if(row){
 					t.model.keep(row.id);
-					s.push('" rowid="', row.id,
+					s.push('" rowid="', encode(row.id),
 						'" rowindex="', rowInfo.rowIndex,
-						'" parentid="', rowInfo.parentId,
+						'" parentid="', encode(rowInfo.parentId),
 						'">', t._buildCells(row, i, columns),
 					'</div>');
 					renderedRows.push(row);
