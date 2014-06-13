@@ -319,7 +319,7 @@ define([
 		},
 
 		_doBlur: function(node, evt, step){
-			var elems = window.a11y._getTabNavigable(node),
+			var elems = a11y._getTabNavigable(node),
 				first = elems.first,
 				last = elems.last, result;
 
