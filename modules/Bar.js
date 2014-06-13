@@ -319,6 +319,10 @@ define([
 		},
 
 		_doBlur: function(node, evt, step){
+			var elems = a11y._getTabNavigable(node),
+				first = elems.first,
+				last = elems.last, result;
+
 			function isChild(child, parent){
 				if(!child || !parent){ return false; }
 				var n = child;
@@ -327,9 +331,19 @@ define([
 				}
 				return !!n;
 			}
-			var elems = a11y._getTabNavigable(node);
-			return evt ? (evt.target == (step < 0 ? elems.first : elems.last) 
-						|| isChild(evt.target, step < 0 ? elems.first : elems.last)) : true;
+
+			if(!evt){
+				return true;
+			}
+			if(step > 0 && !last){
+				return true;
+			}
+			if(step < 0 && !first){
+				return true;
+			}
+
+			result = (evt.target == (step < 0 ? elems.first : elems.last)) || isChild(evt.target, step < 0 ? elems.first : elems.last);
+			return result;
 		}
 	}));
 });
