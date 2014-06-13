@@ -50,9 +50,13 @@ define([
 		},
 		
 		_onKeyDown: function(evt){
-			if(!this.okBtn.get('disabled') && keys.ENTER == evt.keyCode){
-				this._onOK();
-				event.stop(evt);
+			if(!this.okBtn.get('disabled') ){
+				if ( this.okBtn.get('focused') && keys.ENTER == evt.keyCode){
+					
+					this._onOK();
+					event.stop(evt);
+				}
+				
 			}
 		}
 	});
