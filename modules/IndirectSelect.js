@@ -237,6 +237,7 @@ define([
 					}
 					domClass.add(headerCellNode, 'gridxHeaderCellFocus');
 					headerCellNode.focus();
+					g.focus.stopEvent(evt);
 					return true;
 				},
 				blur = function(){
@@ -249,7 +250,7 @@ define([
 				focusNode: rowHeader.headerNode,
 				doFocus: focus,
 				doBlur: blur,
-				onFocus: focus,
+				// onFocus: focus,
 				onBlur: blur
 			});
 		},
