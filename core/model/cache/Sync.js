@@ -170,7 +170,7 @@ define([
 		indexToId: function(index, parentId){
 			this._init();
 			var items = this._struct[this.model.isId(parentId) ? parentId : this.layerId()];
-			return typeof index == 'number' && index >= 0 ? items && items[index + 1] : undefined;
+			return typeof index === 'number' && index >= 0 ? items && items[index + 1] : undefined;
 		},
 
 		idToIndex: function(id){
@@ -277,7 +277,7 @@ define([
 				array.forEach(s.getAttributes(item), function(attr){
 					obj[attr] = s.getValue(item, attr);
 				});
-				return obj;	
+				return obj;
 			}
 			return item;
 		},
@@ -288,7 +288,7 @@ define([
 				cellData; 
 
 			cellData = col.formatter ? col.formatter(rawData, rowId) : rawData[col.field || colId];
-			return (t.columns[colId] && t.columns[colId].encode === true)? entities.encode(cellData) : cellData;
+			return (t.columns[colId] && t.columns[colId].encode === true && typeof cellData === 'string')? entities.encode(cellData) : cellData;
 		},
 
 		_formatRow: function(rowData, rowId){
