@@ -144,7 +144,6 @@ define([
 				isUnselectable && !selected && !partial ? dijitClass + 'Disabled' : '',
 				'" aria-checked="', selected ? 'true' : partial ? 'mixed' : 'false',
 				'"><span class="gridxIndirectSelectionCheckBoxInner">',
-				// selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;',
 				this._isSingle()? (selected? '&#x25C9;' : '&#x25CC;'):
 									(selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;'),
 				'</span></span>'
@@ -190,7 +189,6 @@ define([
 				domClass.toggle(node, dijitClass + 'PartialDisabled', partial && isUnselectable);
 				domClass.toggle(node, dijitClass + 'Disabled', !selected && !partial && isUnselectable);
 				node.setAttribute('aria-checked', selected ? 'true' : partial ? 'mixed' : 'false');
-				// node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
 				if(this._isSingle()){
 					node.firstChild.innerHTML = selected ? '&#x25C9' : '&#x25CC';
 				}else{
