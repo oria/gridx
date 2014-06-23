@@ -875,7 +875,11 @@ define([
 				if(cw && cw.btns){
 					domClass.add(cw.btns, 'gridxEditFocus');
 				}
-				g.body.onRender();
+				//
+				// Defect 12439, when combine the AlwaysEditing and ColumnLock
+				//     The _updateBody contians many rows to call _lockColumn, which is very slow
+				//
+				g.body.onRender( { '_updateBody': false } );
 			}
 		},
 

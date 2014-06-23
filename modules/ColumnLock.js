@@ -235,10 +235,13 @@ define([
 			this._updateScroller();//used for column dnd to sync hscroller.
 		},
 		
-		_updateBody: function(){
+		_updateBody: function( aopFucMap ){
 			// summary:
 			//	Update the body for column lock
-			array.forEach(this.grid.bodyNode.childNodes, this._lockColumns, this);
+			if ( !aopFucMap || aopFucMap['_updateBody'] !== false ){
+				array.forEach(this.grid.bodyNode.childNodes, this._lockColumns, this);
+			}
+				
 		},
 		
 		_updateScroller: function(){
