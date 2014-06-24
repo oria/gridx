@@ -209,8 +209,13 @@ define([
 				var t = this,
 					dn = t.domNode;
 				t.connect(dn, 'onmousedown', function(e){
+					var n = query(e.target).closest('.dijit')[0],
+						widget = registry.byNode(n);
 					if(e.target != dn && !t.cell.column.allowEventBubble){
 						e.cancelBubble = true;
+					}
+					if(widget && dijit && dijit.form && dijit.form.ComboButton && (widget instanceof dijit.form.ComboButton)){
+						e.cancelBubble = false;
 					}
 				});
 				t._cellCnnts = [];

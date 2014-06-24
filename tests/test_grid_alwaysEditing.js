@@ -7,6 +7,7 @@ require([
 	'dojo/date/locale',
 	'dijit/form/TextBox',
 	'dijit/form/ComboBox',
+	'dijit/form/ComboButton',
 	'dijit/form/DateTextBox',
 	'dijit/form/TimeTextBox',
 	'dijit/form/NumberTextBox',
@@ -17,13 +18,14 @@ require([
 	'dijit/form/CheckBox',
 	'dijit/form/ToggleButton',
 	'dijit/Calendar',
+	'dijit/Menu',
 	'dijit/ColorPalette',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	"gridx/allModules",
 	'dojo/domReady!'
 ], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale,
-	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
+	TextBox, ComboBox, ComboButton, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
 		res = locale.format(d, {
@@ -87,11 +89,17 @@ require([
 
 	fsStore = createSelectStore('Album');
 	selectStore = createSelectStore('Length');
+	var dropDownCreate = function(){
+		return [
+			'<div data-dojo-attach-point="combo" data-dojo-type="dijit/form/ComboButton" data-dojo-props="label:\'Select\'">',
+			'<div data-dojo-attach-point="sMenu" data-dojo-type="dijit/Menu"></div></div>'
+		].join('');
+	};
 
 	layout = [
-		{ field: "id", name:"ID", width: '20px'},
-		{ field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
-		{ field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
+		{id: 'id', field: "id", name:"ID", width: '20px'},
+		{id: "Genre", field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
+		{id: 'Artist', field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
 			decorator: function(data){
 				return "<b>" + data + "</b>";
 			},
@@ -103,46 +111,48 @@ require([
 				props: 'store: mystore, searchAttr: "Artist"'
 			}
 		},
-		{ field: "Year", name:"NumberTextBox", width: '100px', alwaysEditing: true,
+		{id: 'Year', field: "Year", name:"NumberTextBox", width: '100px', alwaysEditing: true,
 			editor: "dijit.form.NumberTextBox"
 		},
-		{ field: "Album", name:"FilteringSelect", width: '100px', alwaysEditing: true,
+		{id: 'Album', field: "Album", name:"FilteringSelect", width: '100px', alwaysEditing: true,
 			editor: FilteringSelect,
 			editorArgs: {
 				props: 'store: fsStore, searchAttr: "id"'
 			}
 		},
-		{ field: "Length", name:"Select", width: '100px', alwaysEditing: true,
+		{id: 'Length', field: "Length", name:"Select", width: '100px', alwaysEditing: true,
 			//FIXME: this is still buggy, hard to set width properly
 			editor: Select,
 			editorArgs: {
 				props: 'store: selectStore, labelAttr: "id"'
 			}
 		},
-		{ field: "Progress", name:"HorizontalSlider", width: '100px', alwaysEditing: true,
+		{id: 'Progress', field: "Progress", name:"HorizontalSlider", width: '100px', alwaysEditing: true,
 			editor: "dijit.form.HorizontalSlider",
 			editorArgs: {
 				props: 'minimum: 0, maximum: 1'
 			}
 		},
-		{ field: "Track", name:"Number Spinner", width: '100px', alwaysEditing: true,
+		{id: 'Track', field: "Track", name:"Number Spinner",
+			// width: '100px',
+			alwaysEditing: true,
 			width: '50px',
 			editor: "dijit.form.NumberSpinner"
 		},
-		{ field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
+		{id: 'Heard', field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
 			editor: "dijit.form.CheckBox",
 			editorArgs: {
 				props: 'value: true'
 			}
 		},
-		{ field: "Heard", name:"ToggleButton", width: '100px', alwaysEditing: true,
+		{id: 'Heard', field: "Heard", name:"ToggleButton", width: '100px', alwaysEditing: true,
 			editor: "dijit.form.ToggleButton",
 			editorArgs: {
 				valueField: 'checked',
 				props: 'label: "Press me"'
 			}
 		},
-		{ field: "Download Date", name:"DateTextBox", width: '100px', alwaysEditing: true,
+		{id: 'Download Date', field: "Download Date", name:"DateTextBox", width: '100px', alwaysEditing: true,
 			dataType: 'date',
 			storePattern: 'yyyy/M/d',
 			gridPattern: 'yyyy--MM--dd',
@@ -151,7 +161,7 @@ require([
 				fromEditor: getDate
 			}
 		},
-		{ field: "Last Played", name:"TimeTextBox", width: '100px', alwaysEditing: true,
+		{id: 'Last Played', field: "Last Played", name:"TimeTextBox", width: '100px', alwaysEditing: true,
 			dataType: "time",
 			storePattern: 'HH:mm:ss',
 			formatter: 'hh:mm a',
