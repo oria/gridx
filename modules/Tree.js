@@ -73,7 +73,7 @@ define([
 		//		by setting the "expandLevel" parameter in column definition. If "nested" is false, the expandos will 
 		//		appear in the first column with truthy "expandLevel" parameter. If "nested" is true, the expando
 		//		of any 1st level row will be shown in the column with "expandLevel" equal to 1, and the expando of 
-		//		any 2nd level row will be shown in the column width "expandLevel" equal to 2, and so on.
+		//		any 2nd level row will be shown in the column with "expandLevel" equal to 2, and so on.
 		//		
 		//		The expansion/collapsing of a row can also be controlled by keyboard when the focus is on the cell 
 		//		with the expando. CTRL+RIGHT_ARROW to expand and CTRL+LEFT_ARROW to collapse. If in RTL mode, the ARROW
