@@ -104,7 +104,7 @@ define([
 				}
 			}, this);
 
-			this.connect(this.expandBar, 'onclick', function(evt){
+			this.connect(this.expandoBar, 'onclick', function(evt){
 				if(domClass.contains(evt.target, 'gridxColumnExpando')){
 					var colId = evt.target.parentNode.getAttribute('data-column-id');
 					this.expand(colId);
