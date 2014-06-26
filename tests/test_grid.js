@@ -3,9 +3,9 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
-	'gridx/allModules'
-], function(Grid, dataSource, storeFactory, TestPane, mods){
-
+	'gridx/allModules',
+	'chai/chai'
+], function(Grid, dataSource, storeFactory, TestPane, mods, chai){
 	var columnSetIdx = 0;
 
 	destroy = function(){

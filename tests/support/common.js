@@ -1,3 +1,16 @@
+var dojoConfig = {
+	parseOnLoad: true,
+	isDebug: true,
+	locale: 'en-us',
+	extraLocale: ['ja-jp'],
+	packages: [
+		{
+			name: 'chai',
+			location: '../gridx/node_modules/chai'
+		}
+	]
+};
+
 (function(){
 	var w = window,
 		d = document,
