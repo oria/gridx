@@ -209,7 +209,7 @@ define([
 				var t = this,
 					dn = t.domNode;
 				t.connect(dn, 'onmousedown', function(e){
-					if(e.target != dn && !t.cell.column.allowEventBubble){
+					if(e.target !== dn && !t.cell.column.allowEventBubble){
 						e.cancelBubble = true;
 					}
 				});

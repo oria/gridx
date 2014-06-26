@@ -5,6 +5,7 @@
 *.pydevproject
 .project
 .metadata
+*.txt
 bin/
 tmp/
 node_modules/
