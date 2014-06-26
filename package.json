@@ -48,9 +48,9 @@
 		"dijit": "1.9.1",
 		"dojox": "1.9.1"
 	},
-	devDependencies: {
-		"chai": "*",
-	}
+	"devDependencies": {
+		"chai": "*"
+	},
 	"directories": {
 		"lib": "."
 	},

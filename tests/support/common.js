@@ -7,9 +7,39 @@ var dojoConfig = {
 		{
 			name: 'chai',
 			location: '../gridx/node_modules/chai'
-		}
+		},
+		{
+			name: 'mocha',
+			location: '../gridx/node_modules/mocha'
+		},
+
 	]
 };
+
+function runCase(){
+	if(!window.caseName || !window.require){
+		return;
+	}
+	var casePath = 'gridx/tests/unit/' + window.caseName;
+	require([
+			'mocha/mocha',
+			'chai/chai',
+	], function(mocha, chai){
+		if(mocha === 'not-a-module'){
+			mocha = window.mocha;
+		}
+
+		mocha.setup('bdd');
+		require([casePath], function(){
+			mocha.run();
+			console.log(1);
+		});
+
+		// console.log(mocha);
+		// console.log(window.mocha);
+		// console.log(chai);
+	});
+}
 
 (function(){
 	var w = window,
@@ -26,11 +56,24 @@ var dojoConfig = {
 						b : '';
 	v = v == b ? '' : b;
 	p = d.createElement('a');
-	p.innerHTML = "<input type='button' style='position:fixed;top:0;right:0;width:5em;' value='" + (v || 'LTR') + "' />";
+	p.innerHTML = "<button type='button' style='position:fixed;top:0;right:0;width:5em;'>" + (v || 'LTR') + "</button>";
 	p.firstChild.onclick = function(){
 		l.href = (q ? h.substr(0, i) : h) + (v && '?dir=' + v);
 	};
+	var testButton = document.createElement('button');
+	testButton.id = 'run_test';
+	testButton.innerHTML = 'run test';
+	testButton.setAttribute('style', 'position:fixed;top:0;right:5em');
+	testButton.onclick = function(){
+		runCase();
+		console.log(123);
+	};
+
+	var mochaDiv = document.createElement('div');
+	mochaDiv.id = 'mocha';
 	w.onload = function(){
 		d.body.appendChild(p.firstChild);
+		d.body.appendChild(testButton);
+		d.body.appendChild(mochaDiv);
 	};
 })();

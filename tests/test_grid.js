@@ -4,9 +4,10 @@ require([
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
 	'gridx/allModules',
-	'chai/chai'
-], function(Grid, dataSource, storeFactory, TestPane, mods, chai){
+	'dojo/domReady'
+], function(Grid, dataSource, storeFactory, TestPane, mods, ready){
 	var columnSetIdx = 0;
+	window.caseName = 'core';
 
 	destroy = function(){
 		if(window.grid){
