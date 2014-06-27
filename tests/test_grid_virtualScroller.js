@@ -3,22 +3,31 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/XQueryReadStore',
+	'dojox/data/QueryReadStore',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
 	'dojo/domReady!'
-], function(parser, dataSource, memoryFactory, xstoreFactory){
+], function(parser, dataSource, memoryFactory, xstoreFactory, QueryReadStore){
 
 	clientStore = memoryFactory({
 		dataSource: dataSource, 
 		size: 2000
 	});
 
-	serverStore = new xstoreFactory({
+	serverStore = new QueryReadStore({
 		idAttribute: 'id',
-		url: 'http://dojotoolkit.cn/data/?totalSize=1000000'
+		url: 'support/stores/QueryReadStore.php'
 	});
 
+	serverLayout = [
+		{id: 'id', field: 'id', name: 'Identity'},
+		{id: 'name', field: 'name', name: 'name'},
+		{id: 'label', field: 'label', name: 'label'},
+		{id: 'abbreviation', field: 'abbreviation', name: 'abbreviation'},
+		{id: 'capital', field: 'capital', name: 'capital'}
+	];
+	
 	layout = [
 		{id: 'id', field: 'id', name: 'Identity'},
 		{id: 'Year', field: 'Year', name: 'Year'},

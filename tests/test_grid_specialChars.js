@@ -27,7 +27,7 @@ require([
 		},
 		{id: 'Album', field: 'Album', name: 'Album', dataType: 'string', autoComplete: false},
 		{id: 'Name', field: 'Name', name: 'Name', dataType: 'string'},
-		{id: 'Year', field: 'Year', name: 'Year', dataType: 'number'},
+		{id: 'Year', field: 'Year', name: 'Year', dataType: 'number', encode: true},
 		{id: 'Length', field: 'Length', name: 'Length', dataType: 'string'},
 		{id: 'Track', field: 'Track', name: 'Track', dataType: 'number'},
 		{id: 'Composer', field: 'Composer', name: 'Composer', dataType: 'string'},

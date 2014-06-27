@@ -7,18 +7,19 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
 	"dojo/_base/array",
-	"../core/_Module",
 	"dojo/_base/declare",
 	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/keys",
+	'dojo/_base/event',
+	'dojo/_base/sniff',
+	"../core/_Module",
 	'../support/query',
 	'dijit/a11y',
-	'dijit/registry',
-	'dojo/_base/event',
-	'dojo/_base/sniff'
+	'dijit/registry'
 ], function(kernel, domConstruct, domStyle, domClass, domGeometry, lang,
-			Deferred, array, _Module, declare, baseFx, fx, keys, query, a11y, registry, event, has){
+			Deferred, array, declare, baseFx, fx, keys, event, has,
+			_Module, query, a11y, registry){
 	// kernel.experimental('gridx/modules/Dod');
 
 /*=====
