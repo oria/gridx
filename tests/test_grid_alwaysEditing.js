@@ -139,13 +139,13 @@ require([
 			width: '50px',
 			editor: "dijit.form.NumberSpinner"
 		},
-		{id: 'Heard', field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
+		{id: 'Heard1', field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
 			editor: "dijit.form.CheckBox",
 			editorArgs: {
 				props: 'value: true'
 			}
 		},
-		{id: 'Heard', field: "Heard", name:"ToggleButton", width: '100px', alwaysEditing: true,
+		{id: 'Heard2', field: "Heard", name:"ToggleButton", width: '100px', alwaysEditing: true,
 			editor: "dijit.form.ToggleButton",
 			editorArgs: {
 				valueField: 'checked',
