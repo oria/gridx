@@ -1,6 +1,4 @@
 define([
-/*====="../core/Row",=====*/
-/*====="../core/Cell",=====*/
 	"dojo/_base/declare",
 	// "dojo/query",
 	'../support/query',
@@ -11,11 +9,13 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	"dojo/on",
 	"dojo/keys",
 	"../core/_Module"
 //    "dojo/NodeList-dom",
 //    "dojo/NodeList-traverse"
-], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module){
+], function(declare, query, array, lang, json, domConstruct, domClass, 
+			Deferred, has, on, keys, _Module){
 
 /*=====
 	Row.node = function(){
