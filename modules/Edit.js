@@ -806,9 +806,9 @@ define([
 		_getColumnEditor: function(colId){
 			var editor = this.grid._columnsById[colId].editor;
 			if(lang.isFunction(editor)){
-				return editor.prototype.declaredClass;
+				return editor.prototype.declaredClass.replace(/\//g, ".");
 			}else if(lang.isString(editor)){
-				return editor;
+				return editor.replace(/\//g, ".");
 			}else{
 				return 'dijit.form.TextBox';
 			}
