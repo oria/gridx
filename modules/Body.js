@@ -256,7 +256,7 @@ define([
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
-			g._connectEvents(dn, '_onMouseEvent', t);
+			g._connectEvents(dn, '_onEvent', t);
 			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
 			if(!g.touch){
@@ -862,17 +862,20 @@ define([
 		},
 
 		//Events-------------------------------------------------------------
-		_onMouseEvent: function(eventName, e){
+		_onEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onCell' + eventName,
-				evtRow = 'onRow' + eventName;
+				evtRow = 'onRow' + eventName, evtName;
+
 			if(g._isConnected(evtCell) || g._isConnected(evtRow)){
 				this._decorateEvent(e);
 				if(e.rowId){
 					if(e.columnId){
 						g[evtCell](e);
+						on.emit(e.target, 'cell' + eventName, e);
 					}
 					g[evtRow](e);
+					on.emit(e.target, 'row' + eventName, e);
 				}
 			}
 		},

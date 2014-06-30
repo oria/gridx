@@ -3,8 +3,9 @@ require([
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/TestPane',
-	'gridx/allModules'
-], function(Grid, dataSource, storeFactory, TestPane, mods){
+	'gridx/allModules',
+	'dojo/on'
+], function(Grid, dataSource, storeFactory, TestPane, mods, on){
 
 	var columnSetIdx = 0;
 
@@ -34,6 +35,29 @@ require([
 			});
 			grid.placeAt('gridContainer');
 			grid.startup();
+
+			on(grid.domNode, 'rowClick', function(e){
+				console.log('dojo/on row click event');
+				console.log('event row id is',e.rowId);
+			});
+			grid.on('rowClick', function(e){
+				console.log('grid/on row click event');
+				console.log('event row id is',e.rowId);
+			});
+			on(grid.domNode, 'cellClick', function(e){
+				console.log('dojo/on cell click event');
+				console.log('event column id is', e.columnId);
+			});
+			grid.on('cellClick', function(e){
+				console.log('grid/on cell click event');
+				console.log('event column id is', e.columnId);
+			});
+			// on(grid.domNode, 'rowMouseOver', function(e){
+			// 	console.log('dojo/on row mouseOver event');
+			// });
+			// grid.on('rowMouseOver', function(e){
+			// 	console.log('grid/on row mouseOver event');
+			// });
 		}
 	};
 

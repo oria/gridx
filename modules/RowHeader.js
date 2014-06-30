@@ -10,8 +10,9 @@ define([
 	"dojo/dom-style",
 	"dojo/dom-geometry",
 	"dojo/keys",
+	"dojo/on",
 	"../core/_Module"
-], function(declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, _Module){
+], function(declare, query, lang, has, aspect, domConstruct, domClass, domStyle, domGeo, keys, on, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -77,7 +78,7 @@ define([
 			g.header.domNode.appendChild(rhhn);
 			rhhn.style.width = w;
 			t.headerCellNode = query('td', rhhn)[0];
-			g._connectEvents(rhhn, '_onHeaderMouseEvent', t);
+			g._connectEvents(rhhn, '_onHeaderEvent', t);
 			//modify body
 			g.mainNode.appendChild(rhbn);
 			rhbn.style.width = w;
@@ -105,7 +106,7 @@ define([
 				aspect.before(body, 'renderRows', lang.hitch(t, t._onRenderRows), true),
 				aspect.before(body, '_onDelete', lang.hitch(t, t._onDelete), true));
 
-			g._connectEvents(rhbn, '_onBodyMouseEvent', t);
+			g._connectEvents(rhbn, '_onBodyEvent', t);
 			t._initFocus();
 		},
 
@@ -297,15 +298,16 @@ define([
 		},
 
 		//Events
-		_onHeaderMouseEvent: function(eventName, e){
+		_onHeaderEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onRowHeaderHeader' + eventName;
 			if(g._isConnected(evtCell)){
 				g[evtCell](e);
+				on.emit(e.target, 'rowHeader' + eventName, e);
 			}
 		},
 
-		_onBodyMouseEvent: function(eventName, e){
+		_onBodyEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onRowHeaderCell' + eventName,
 				evtRow = 'onRow' + eventName,
@@ -316,9 +318,11 @@ define([
 				if(e.rowIndex >= 0){
 					if(e.isRowHeader && cellConnected){
 						g[evtCell](e);
+						on.emit(e.target, 'rowHeader' + eventName, e);
 					}
 					if(rowConnected){
 						g[evtRow](e);
+						on.emit(e.target, 'row' + eventName, e);
 					}
 				}
 			}
