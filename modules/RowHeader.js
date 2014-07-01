@@ -301,30 +301,26 @@ define([
 		_onHeaderEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onRowHeaderHeader' + eventName;
-			if(g._isConnected(evtCell)){
-				g[evtCell](e);
-				on.emit(e.target, 'rowHeader' + eventName, e);
-			}
+
+			g[evtCell](e);
+			on.emit(e.target, 'rowHeader' + eventName, e);
 		},
 
 		_onBodyEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onRowHeaderCell' + eventName,
-				evtRow = 'onRow' + eventName,
-				cellConnected = g._isConnected(evtCell),
-				rowConnected = g._isConnected(evtRow);
-			if(cellConnected || rowConnected){
-				this._decorateBodyEvent(e);
-				if(e.rowIndex >= 0){
-					if(e.isRowHeader && cellConnected){
-						g[evtCell](e);
-						on.emit(e.target, 'rowHeader' + eventName, e);
-					}
-					if(rowConnected){
-						g[evtRow](e);
-						on.emit(e.target, 'row' + eventName, e);
-					}
+				evtRow = 'onRow' + eventName;
+				// cellConnected = g._isConnected(evtCell),
+				// rowConnected = g._isConnected(evtRow);
+
+			this._decorateBodyEvent(e);
+			if(e.rowIndex >= 0){
+				if(e.isRowHeader){
+					g[evtCell](e);
+					on.emit(e.target, 'rowHeader' + eventName, e);
 				}
+				g[evtRow](e);
+				on.emit(e.target, 'row' + eventName, e);
 			}
 		},
 

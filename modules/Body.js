@@ -867,16 +867,14 @@ define([
 				evtCell = 'onCell' + eventName,
 				evtRow = 'onRow' + eventName, evtName;
 
-			if(g._isConnected(evtCell) || g._isConnected(evtRow)){
-				this._decorateEvent(e);
-				if(e.rowId){
-					if(e.columnId){
-						g[evtCell](e);
-						on.emit(e.target, 'cell' + eventName, e);
-					}
-					g[evtRow](e);
-					on.emit(e.target, 'row' + eventName, e);
+			this._decorateEvent(e);
+			if(e.rowId){
+				if(e.columnId){
+					g[evtCell](e);
+					on.emit(e.target, 'cell' + eventName, e);
 				}
+				g[evtRow](e);
+				on.emit(e.target, 'row' + eventName, e);
 			}
 		},
 

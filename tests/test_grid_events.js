@@ -1,12 +1,13 @@
 require([
 	'dojo/parser',
+	'dojo/on',
 	'dojo/_base/Deferred',
 	'dojo/_base/array',
 	'dojo/store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	'dojo/domReady!'
-], function(parser, Deferred, array, Memory){
+], function(parser, on, Deferred, array, Memory){
 	var comps = ['Header', 'Row', 'HeaderCell', 'Cell'];
 	var events = [
 		'Click', 'DblClick',
@@ -37,8 +38,13 @@ require([
 	Deferred.when(parser.parse(), function(){
 		array.forEach(comps, function(comp){
 			array.forEach(events, function(evt){
-				var evtName = 'on' + comp + evt;
-				grid.connect(grid, evtName, function(e){
+				// var evtName = 'on' + comp + evt;
+				// grid.connect(grid, evtName, function(e){
+				// 	var cell = grid.cell(evt, comp);
+				// 	cell.setRawData(parseInt(cell.data(), 10) + 1);
+				// });
+				var evtName = comp.charAt(0).toLowerCase() + comp.substr(1) + evt;
+				on(grid.domNode, evtName, function(e){
 					var cell = grid.cell(evt, comp);
 					cell.setRawData(parseInt(cell.data(), 10) + 1);
 				});

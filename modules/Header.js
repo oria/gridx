@@ -184,15 +184,14 @@ define([
 			var g = this.grid,
 				evtCell = 'onHeaderCell' + eventName,
 				evtRow = 'onHeader' + eventName;
-			if(g._isConnected(evtCell) || g._isConnected(evtRow)){
 				this._decorateEvent(e);
-				if(e.columnIndex >= 0){
-					g[evtCell](e);
-					on.emit(e.target, 'headerCell' + eventName, e);
-				}
-				g[evtRow](e);
-				on.emit(e.target, 'header' + eventName, e);
+				
+			if(e.columnIndex >= 0){
+				g[evtCell](e);
+				on.emit(e.target, 'headerCell' + eventName, e);
 			}
+			g[evtRow](e);
+			on.emit(e.target, 'header' + eventName, e);
 		},
 
 		_decorateEvent: function(e){

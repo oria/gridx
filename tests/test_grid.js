@@ -37,27 +37,17 @@ require([
 			grid.startup();
 
 			on(grid.domNode, 'rowClick', function(e){
-				console.log('dojo/on row click event');
-				console.log('event row id is',e.rowId);
+				console.log('dojo/on mouseclick');
+				// console.log('event row id is',e.rowId);
 			});
-			grid.on('rowClick', function(e){
-				console.log('grid/on row click event');
-				console.log('event row id is',e.rowId);
+			on(grid.domNode, 'rowMouseDown', function(e){
+				console.log('dojo/on mousedown');
+				// console.log('event row id is',e.rowId);
 			});
-			on(grid.domNode, 'cellClick', function(e){
-				console.log('dojo/on cell click event');
-				console.log('event column id is', e.columnId);
+			on(grid.domNode, 'rowMouseUp', function(e){
+				console.log('dojo/on mouseup');
+				// console.log('event row id is',e.rowId);
 			});
-			grid.on('cellClick', function(e){
-				console.log('grid/on cell click event');
-				console.log('event column id is', e.columnId);
-			});
-			// on(grid.domNode, 'rowMouseOver', function(e){
-			// 	console.log('dojo/on row mouseOver event');
-			// });
-			// grid.on('rowMouseOver', function(e){
-			// 	console.log('grid/on row mouseOver event');
-			// });
 		}
 	};
 
