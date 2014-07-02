@@ -185,6 +185,7 @@ define([
 			if(this._dndReady && !this._dndBegun){
 				this._loadSelectStatus();
 				this._dndReady = 0;	//0 as false
+				t._source.notSelectText = 0;
 				domClass.remove(win.body(), 'gridxDnDReadyCursor');
 			}
 		},
