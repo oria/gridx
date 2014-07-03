@@ -159,10 +159,12 @@ define([
 
 		_update: function(){
 			var t = this,
-				g = t.grid;
+				g = t.grid,
+				dn = t.domNode,
+				bn = g.bodyNode;
+
 			if(!g.autoHeight){
 				var bd = g.body,
-					bn = g.bodyNode,
 					toShow = (bn.scrollHeight > bn.clientHeight) ||
 						//This is to fix some rare issue that vscroller missing. #10267
 						//Logically this should not happen because virtual scroller has buffers.
@@ -185,6 +187,11 @@ define([
 				var changed = display != (domStyle.get(t.domNode, 'display') || 'block');
 				ds.display = display;
 				if(t._updatePos() || changed){
+					g.hLayout.reLayout();
+				}
+			}else{
+				if(domStyle.get(dn, 'display') !== 'none'){
+					dn.style.display = 'none';
 					g.hLayout.reLayout();
 				}
 			}
