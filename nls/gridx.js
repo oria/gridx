@@ -35,6 +35,7 @@ define({root:
 	"conditionAfter": "after",
 	"conditionRange": "range",
 	"conditionIsEmpty": "is empty",
+	"conditionIsNotEmpty": "is not empty",
 	
 	"all": "all",
 	"any": "any",
