@@ -47,6 +47,13 @@ define([
 			var t = this;
 			lang.mixin(t, args.grid.nls);
 			t._hasFilterBar = args.grid.filterBar ? 'gridxQuickFilterHasFilterBar' : 'gridxQuickFilterNoFilterBar';
+			if(t._hasFilterBar){
+				t.connect(args.grid.filterBar, 'clearFilter', function(){
+					if(t.textBox){
+						t.textBox.set('value', '');
+					}
+				});
+			}
 			t.connect(args.grid.model, 'setStore', function(){
 				t.textBox.set('value', '');
 				domClass.remove(t.domNode, 'gridxQuickFilterActive');
