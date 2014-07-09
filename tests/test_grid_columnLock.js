@@ -27,7 +27,6 @@ require([
 			].join('');
 		},
 		setCellValue: function(gridData, storeData, cellWidget){
-			console.log(cellWidget.valueNode)
 			cellWidget.valueNode.innerHTML = gridData;
 			cellWidget.textNode.domNode.style.display = 'none';
 
