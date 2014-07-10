@@ -1,5 +1,6 @@
 <?php
-	
+
+$lag = 2;
 $items = <<<EOF
 [
 		{"Heard": true, "Progress": 0.5, "Genre":"Easy Listening",	"Artist":"Bette Midler",	"Year":2003,	"Album":"Bette Midler Sings the Rosemary Clooney Songbook",	"Name":"Hey There",	"Length":"03:31",	"Track":4,	"Composer":"Ross, Jerry 1926-1956 -w Adler, Richard 1921-",	"Download Date":"1923/4/9",	"Last Played":"04:32:49"},
@@ -107,7 +108,7 @@ EOF;
 
 function boolToStr($a){
 	if($a === TRUE){
-		$a = 'true';	
+		$a = 'true';
 	}
 	if($a === FALSE){
 		$a = 'fasle';
@@ -191,6 +192,7 @@ function endWith($a, $b){
 function output($data, $isFilter = false){
 	// header("Content-Range: /" . count($GLOBALS['data']));
 	// header("Content-Range:" . 'items 0-' . count($data) . '/' . count($GLOBALS['data']));
+	sleep($GLOBALS['lag']);
 	if($isFilter){
 		header("Content-Range: " . $GLOBALS['totalCount'] . "/" . count($data));
 	}else{
