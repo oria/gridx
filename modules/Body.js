@@ -402,7 +402,8 @@ define([
 			clearTimeout(t._sizeChangeHandler);
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
 			
-			domClass.add(loadingNode, 'gridxLoading');
+			// domClass.add(loadingNode, 'gridxLoading');
+			t._showLoadingMask();
 			t.grid.view.updateVisualCount().then(function(){
 				try{
 					var rs = t.renderStart,
@@ -448,23 +449,27 @@ define([
 						Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 							t.onRender(start, count);
 							t.onForcedScroll();
-							domClass.remove(loadingNode, 'gridxLoading');
+							// domClass.remove(loadingNode, 'gridxLoading');
+							t._hideLoadingMask();
 							d.callback();
 						});
 					}else{
 						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
-						domClass.remove(loadingNode, 'gridxLoading');
+						// domClass.remove(loadingNode, 'gridxLoading');
+						t._hideLoadingMask();
 						d.callback();
 					}
 				}catch(e){
 					t._loadFail(e);
-					domClass.remove(loadingNode, 'gridxLoading');
+					// domClass.remove(loadingNode, 'gridxLoading');
+					t._hideLoadingMask();
 					d.errback(e);
 				}
 			}, function(e){
 				t._loadFail(e);
-				domClass.remove(loadingNode, 'gridxLoading');
+				// domClass.remove(loadingNode, 'gridxLoading');
+				t._hideLoadingMask();
 				d.errback(e);
 			});
 			return d;
@@ -675,6 +680,28 @@ define([
 		collectCellWrapper: function(/* wrappers, rowId, colId */){},
 
 		//Private---------------------------------------------------------------------------
+		_showLoadingMask: function(){
+			var t = this,
+				g = t.grid,
+				ln = g.loadingNode,
+				en = g.emptyNode;
+
+			domClass.add(ln, 'gridxLoading');
+			en.innerHTML = g.nls.loadingInfo;
+			en.style.zIndex = 1;
+		},
+
+		_hideLoadingMask: function(){
+			var t = this,
+				g = t.grid,
+				ln = g.loadingNode,
+				en = g.emptyNode;
+
+			domClass.remove(ln, 'gridxLoading');
+			// en.innerHTML = g.nls.loadingInfo;
+			en.style.zIndex = '';
+		},
+
 		_getRowNodeQuery: function(args){
 			var r, m = this.model, escapeId = this.grid._escapeId;
 			if(m.isId(args.rowId)){
@@ -808,10 +835,9 @@ define([
 						cell = needCell && g.cell(row, cols && cols[i] || colId, 1);
 
 					var cellContent = t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
-						testNode = domConstruct.create('div', {innerHTML: cellContent}),
-						testNodeContent = (testNode.innerText !== undefined && testNode.innerText !== null) ? 
-											testNode.innerText : testNode.textContent;
-						testNodeContent = testNodeContent.trim ? testNodeContent.trim() : testNodeContent.replace(/\s/g, ''),
+						testNode = domConstruct.create('div', {innerHTML: cellContent}), isEmpty,
+						testNodeContent = (testNode.innerText !== undefined && testNode.innerText !== null) ? testNode.innerText : testNode.textContent;
+						testNodeContent = testNodeContent.trim ? testNodeContent.trim() : testNodeContent.replace(/\s/g, '');
 						isEmpty = testNodeContent === '&nbsp;' || !testNodeContent;
 
 					testNode = '';
