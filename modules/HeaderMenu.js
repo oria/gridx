@@ -50,7 +50,7 @@ define([
 					t.connect(btn, 'onkeydown', function(e){
 						if(e.keyCode == keys.ENTER){
 							event.stop(e);
-							menu._scheduleOpen(btn);
+							menu._scheduleOpen(btn, undefined, undefined, btn);
 						}
 					});
 					if(menu.bindGrid){
