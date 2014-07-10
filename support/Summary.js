@@ -49,18 +49,22 @@ define([
 			var finish = function(){
 				var size = g.model.size(),
 					selected = sr ? sr.getSelected().length : 0,
-					tpl = t.message;
+					tpl = t.message,
+					cp = 0,
+					firstIdx = 0,
+					lastIdx = 0;
+
 				if(pagination){
-					var cp = pagination.currentPage(),
-						firstIdx = pagination.firstIndexInPage(cp) + 1,
-						lastIdx = pagination.lastIndexInPage(cp) + 1;
+					cp = pagination.currentPage();
+					firstIdx = pagination.firstIndexInPage(cp) + 1;
+					lastIdx = pagination.lastIndexInPage(cp) + 1;
 				}
 				if(g.getSummaryMessage){
 					tpl = g.getSummaryMessage();
 				}
 				if(!tpl){
 					tpl = [];
-					if(pagination){
+					if(pagination && t.showRange === true){
 						tpl.push(string.substitute(g.nls.summaryRange, [firstIdx, lastIdx]));
 					}
 					tpl.push(string.substitute(g.nls.summaryTotal, [size >= 0 ? size : 0]));
@@ -73,7 +77,7 @@ define([
 
 				t.domNode.innerHTML = summary;
 			};
-			g.model.when({}).then(finish, finish);			
+			g.model.when({}).then(finish, finish);
 			
 		}
 	});
