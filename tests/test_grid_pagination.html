@@ -54,7 +54,19 @@
 		modules: [
 			"gridx/modules/Pagination",
 			"gridx/modules/pagination/PaginationBarDD"
-		]
+		],
+		paginationBarShowRange: true
+	'></div>
+	<h2>Drop-down style PaginationBar(not showing range)</h2>
+	<div id='grid4' jsid='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		modules: [
+			"gridx/modules/Pagination",
+			"gridx/modules/pagination/PaginationBarDD"
+		],
+		paginationBarShowRange: false
 	'></div>
 </body>
 </html>
