@@ -338,7 +338,7 @@ define([
 				onFocus: t._onFocus,
 				onBlur: t._onBlur,
 				connects: [
-					t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
+					// t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
 					t.connect(t.grid, 'onDodKeyDown', '_onRowKeyDown')
 				]
 			});	
@@ -598,12 +598,14 @@ define([
 				grid = t.grid,
 				focus = grid.focus,
 				row = grid.row(e.rowId, 1);
+
 			if(e.keyCode == keys.DOWN_ARROW && e.ctrlKey){
 				t.show(row);
-				e.stopPropagation();
+				event.stop(e);
 			}else if(e.keyCode == keys.UP_ARROW && e.ctrlKey){
 				t.hide(row);
-				e.stopPropagation();
+				event.stop(e);
+				// e.stopPropagation();
 			}
 		
 			if(e.keyCode == keys.F4 && !t._navigating && focus.currentArea() == 'body'){
