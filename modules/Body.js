@@ -143,11 +143,13 @@ define([
 			//		A cell object representing this cell
 		},
 
-		onRender: function(start, count){
+		onRender: function(start, count, flag){
 			// summary:
 			//		Fired everytime the grid body content is rendered or updated.
 			// start: Integer
 			//		The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.
+			// flag: Object
+			//		Some info can be carried by the flag attribute.
 			// count: Integer
 			//		The count of rows that is affected by this rendering. If omitted, all rows from start are affected.
 		},
@@ -654,7 +656,7 @@ define([
 
 		onAfterCell: function(){/* cell */},
 
-		onRender: function(/*start, count*/){
+		onRender: function(/*start, count, flag*/){
 			//FIX #8746
 			var bn = this.domNode;
 			if(has('ie') < 9 && bn.childNodes.length){

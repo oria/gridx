@@ -235,7 +235,7 @@ define([
 			this._updateScroller();//used for column dnd to sync hscroller.
 		},
 		
-		_updateBody: function( aopFucMap ){
+		_updateBody: function(start, count, aopFucMap){
 			// summary:
 			//	Update the body for column lock
 			if ( !aopFucMap || aopFucMap['_updateBody'] !== false ){
