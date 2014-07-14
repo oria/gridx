@@ -604,12 +604,11 @@ define([
 				row = grid.row(e.rowId, 1);
 
 			if(e.keyCode == keys.DOWN_ARROW && e.ctrlKey){
-				t.show(row);
+				t.show(row).then(function(){}, function(){});
 				event.stop(e);
 			}else if(e.keyCode == keys.UP_ARROW && e.ctrlKey){
-				t.hide(row);
-				event.stop(e);
-				// e.stopPropagation();
+				t.hide(row).then(function(){}, function(){});
+				event.stop(e); // e.stopPropagation();
 			}
 		
 			if(e.keyCode == keys.F4 && !t._navigating && focus.currentArea() == 'body'){
