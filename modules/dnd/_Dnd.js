@@ -171,7 +171,7 @@ define([
 					p = t._profiles[name];
 					if(p.arg('enabled') && p._checkDndReady(evt)){
 						t.profile = p;
-						t._saveSelectStatus(false);
+						// t._saveSelectStatus(false);
 						domClass.add(win.body(), 'gridxDnDReadyCursor');
 						t._source.notSelectText = 1;
 						t._dndReady = 1;
@@ -216,6 +216,8 @@ define([
 				t.grid.vScrollerNode.focus();
 				p._onBeginDnd(t._source);
 				dom.setSelectable(t.grid.domNode, false);
+				t._saveSelectStatus(false);
+
 			}
 		},
 
