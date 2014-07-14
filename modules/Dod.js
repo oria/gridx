@@ -303,6 +303,10 @@ define([
 		},
 		
 		toggle: function(row){
+			var _row = this._row(row);
+			if(!_row || _row.inAnim || _row.inLoading){
+				return;
+			}
 			if(this.isShown(row)){
 				this.hide(row);
 			}else{
@@ -445,7 +449,7 @@ define([
 				escapeId = g._escapeId, rowHeaderNode;
 
 			if(!this.isShown(row)){
-				df.errorback();
+				df.errback();
 				return;
 			}
 			_row.dodLoaded = true;
