@@ -362,11 +362,7 @@ define([
 						i = 0,
 						item;
 					for(; item = items[i]; ++i){
-						var identity = s.getIdentity(item);
-						if ( t._cache[identity] )
-							t._addRow( identity + start, start + i, t._itemToObject(item), item, parentId);
-						else
-							t._addRow( identity, start + i, t._itemToObject(item), item, parentId);
+						t._addRow(s.getIdentity(item), start + i, t._itemToObject(item), item, parentId);
 					}
 					d.callback();
 				}catch(e){
