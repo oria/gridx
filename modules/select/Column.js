@@ -157,6 +157,9 @@ define([
 				g = t.grid;
 			t.batchConnect(
 				[g, 'onHeaderCellClick', function(e){
+					if(e.columnId === '__indirectSelect__'){
+						return;
+					}
 					if(!domClass.contains(e.target, 'gridxArrowButtonNode')){
 						t._select(e.columnId, g._isCtrlKey(e));
 					}

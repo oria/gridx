@@ -168,8 +168,7 @@ require([
 	};
 	
 	createGrid();
-	
-	
+
 	var tp = new TestPane({});
 	tp.placeAt('ctrlPane');
 	

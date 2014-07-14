@@ -1,5 +1,5 @@
 <?php
-	
+$lag = 4;
 $items = <<<EOF
 [
 		{"Heard": true, "Progress": 0.5, "Genre":"Easy Listening",	"Artist":"Bette Midler",	"Year":2003,	"Album":"Bette Midler Sings the Rosemary Clooney Songbook",	"Name":"Hey There",	"Length":"03:31",	"Track":4,	"Composer":"Ross, Jerry 1926-1956 -w Adler, Richard 1921-",	"Download Date":"1923/4/9",	"Last Played":"04:32:49"},
@@ -191,6 +191,7 @@ function endWith($a, $b){
 function output($data, $isFilter = false){
 	// header("Content-Range: /" . count($GLOBALS['data']));
 	// header("Content-Range:" . 'items 0-' . count($data) . '/' . count($GLOBALS['data']));
+	// sleep($GLOBALS['lag']);
 	if($isFilter){
 		header("Content-Range: " . $GLOBALS['totalCount'] . "/" . count($data));
 	}else{
@@ -213,13 +214,13 @@ function slice($data){
 	for($i = $start; $i <= $end; $i++){
 		if(array_key_exists($i, $data)){
 			$a[] = $data[$i];
-		}	
+		}
 	}
 	return $a;
 }
 
 
-sleep(4);
+sleep($lag);
 $data = json_decode($items);
 $totalCount = count($data);
 
@@ -287,15 +288,15 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
 					if ($a->$GLOBALS['field'] == $b->$GLOBALS['field']) {
 						return 0;
 					}
-					return ($a->$GLOBALS['field'] < $b->$GLOBALS['field']) ? -1 : 1;	
+					return ($a->$GLOBALS['field'] < $b->$GLOBALS['field']) ? -1 : 1;
 				}
 				
 				function cmpDesc($a, $b){
 					if ($a->$GLOBALS['field'] == $b->$GLOBALS['field']) {
 						return 0;
 					}
-					return ($a->$GLOBALS['field'] > $b->$GLOBALS['field']) ? -1 : 1;	
-				}				
+					return ($a->$GLOBALS['field'] > $b->$GLOBALS['field']) ? -1 : 1;
+				}
 				if($sort == '+'){
 					usort($array, 'cmpAsc');
 				}else{

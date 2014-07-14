@@ -303,6 +303,10 @@ define([
 		},
 		
 		toggle: function(row){
+			var _row = this._row(row);
+			if(!_row || _row.inAnim || _row.inLoading){
+				return;
+			}
 			if(this.isShown(row)){
 				this.hide(row);
 			}else{
@@ -338,7 +342,7 @@ define([
 				onFocus: t._onFocus,
 				onBlur: t._onBlur,
 				connects: [
-					t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
+					// t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown'),
 					t.connect(t.grid, 'onDodKeyDown', '_onRowKeyDown')
 				]
 			});	
@@ -445,7 +449,7 @@ define([
 				escapeId = g._escapeId, rowHeaderNode;
 
 			if(!this.isShown(row)){
-				df.errorback();
+				df.errback();
 				return;
 			}
 			_row.dodLoaded = true;
@@ -598,12 +602,13 @@ define([
 				grid = t.grid,
 				focus = grid.focus,
 				row = grid.row(e.rowId, 1);
+
 			if(e.keyCode == keys.DOWN_ARROW && e.ctrlKey){
-				t.show(row);
-				e.stopPropagation();
+				t.show(row).then(function(){}, function(){});
+				event.stop(e);
 			}else if(e.keyCode == keys.UP_ARROW && e.ctrlKey){
-				t.hide(row);
-				e.stopPropagation();
+				t.hide(row).then(function(){}, function(){});
+				event.stop(e); // e.stopPropagation();
 			}
 		
 			if(e.keyCode == keys.F4 && !t._navigating && focus.currentArea() == 'body'){

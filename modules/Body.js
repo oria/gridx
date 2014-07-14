@@ -1,6 +1,4 @@
 define([
-/*====="../core/Row",=====*/
-/*====="../core/Cell",=====*/
 	"dojo/_base/declare",
 	// "dojo/query",
 	'../support/query',
@@ -11,11 +9,13 @@ define([
 	"dojo/dom-class",
 	"dojo/_base/Deferred",
 	"dojo/_base/sniff",
+	"dojo/on",
 	"dojo/keys",
 	"../core/_Module"
 //    "dojo/NodeList-dom",
 //    "dojo/NodeList-traverse"
-], function(/*=====Row, Cell, =====*/declare, query, array, lang, json, domConstruct, domClass, Deferred, has, keys, _Module){
+], function(declare, query, array, lang, json, domConstruct, domClass, 
+			Deferred, has, on, keys, _Module){
 
 /*=====
 	Row.node = function(){
@@ -143,11 +143,13 @@ define([
 			//		A cell object representing this cell
 		},
 
-		onRender: function(start, count){
+		onRender: function(start, count, flag){
 			// summary:
 			//		Fired everytime the grid body content is rendered or updated.
 			// start: Integer
 			//		The visual index of the start row that is affected by this rendering. If omitted, all rows are affected.
+			// flag: Object
+			//		Some info can be carried by the flag attribute.
 			// count: Integer
 			//		The count of rows that is affected by this rendering. If omitted, all rows from start are affected.
 		},
@@ -256,7 +258,7 @@ define([
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
 			g.emptyNode.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
-			g._connectEvents(dn, '_onMouseEvent', t);
+			g._connectEvents(dn, '_onEvent', t);
 			t.aspect(t.model, 'onDelete', '_onDelete');
 			t.aspect(t.model, 'onSet', '_onSet');
 			if(!g.touch){
@@ -402,7 +404,8 @@ define([
 			clearTimeout(t._sizeChangeHandler);
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
 			
-			domClass.add(loadingNode, 'gridxLoading');
+			// domClass.add(loadingNode, 'gridxLoading');
+			t._showLoadingMask();
 			t.grid.view.updateVisualCount().then(function(){
 				try{
 					var rs = t.renderStart,
@@ -448,23 +451,27 @@ define([
 						Deferred.when(t._buildUncachedRows(uncachedRows), function(){
 							t.onRender(start, count);
 							t.onForcedScroll();
-							domClass.remove(loadingNode, 'gridxLoading');
+							// domClass.remove(loadingNode, 'gridxLoading');
+							t._hideLoadingMask();
 							d.callback();
 						});
 					}else{
 						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
-						domClass.remove(loadingNode, 'gridxLoading');
+						// domClass.remove(loadingNode, 'gridxLoading');
+						t._hideLoadingMask();
 						d.callback();
 					}
 				}catch(e){
 					t._loadFail(e);
-					domClass.remove(loadingNode, 'gridxLoading');
+					// domClass.remove(loadingNode, 'gridxLoading');
+					t._hideLoadingMask();
 					d.errback(e);
 				}
 			}, function(e){
 				t._loadFail(e);
-				domClass.remove(loadingNode, 'gridxLoading');
+				// domClass.remove(loadingNode, 'gridxLoading');
+				t._hideLoadingMask();
 				d.errback(e);
 			});
 			return d;
@@ -649,7 +656,7 @@ define([
 
 		onAfterCell: function(){/* cell */},
 
-		onRender: function(/*start, count*/){
+		onRender: function(/*start, count, flag*/){
 			//FIX #8746
 			var bn = this.domNode;
 			if(has('ie') < 9 && bn.childNodes.length){
@@ -675,6 +682,28 @@ define([
 		collectCellWrapper: function(/* wrappers, rowId, colId */){},
 
 		//Private---------------------------------------------------------------------------
+		_showLoadingMask: function(){
+			var t = this,
+				g = t.grid,
+				ln = g.loadingNode,
+				en = g.emptyNode;
+
+			domClass.add(ln, 'gridxLoading');
+			en.innerHTML = g.nls.loadingInfo;
+			en.style.zIndex = 1;
+		},
+
+		_hideLoadingMask: function(){
+			var t = this,
+				g = t.grid,
+				ln = g.loadingNode,
+				en = g.emptyNode;
+
+			domClass.remove(ln, 'gridxLoading');
+			// en.innerHTML = g.nls.loadingInfo;
+			en.style.zIndex = '';
+		},
+
 		_getRowNodeQuery: function(args){
 			var r, m = this.model, escapeId = this.grid._escapeId;
 			if(m.isId(args.rowId)){
@@ -808,10 +837,9 @@ define([
 						cell = needCell && g.cell(row, cols && cols[i] || colId, 1);
 
 					var cellContent = t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
-						testNode = domConstruct.create('div', {innerHTML: cellContent}),
-						testNodeContent = (testNode.innerText !== undefined && testNode.innerText !== null) ? 
-											testNode.innerText : testNode.textContent;
-						testNodeContent = testNodeContent.trim ? testNodeContent.trim() : testNodeContent.replace(/\s/g, ''),
+						testNode = domConstruct.create('div', {innerHTML: cellContent}), isEmpty,
+						testNodeContent = (testNode.innerText !== undefined && testNode.innerText !== null) ? testNode.innerText : testNode.textContent;
+						testNodeContent = testNodeContent.trim ? testNodeContent.trim() : testNodeContent.replace(/\s/g, '');
 						isEmpty = testNodeContent === '&nbsp;' || !testNodeContent;
 
 					testNode = '';
@@ -862,18 +890,19 @@ define([
 		},
 
 		//Events-------------------------------------------------------------
-		_onMouseEvent: function(eventName, e){
+		_onEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onCell' + eventName,
-				evtRow = 'onRow' + eventName;
-			if(g._isConnected(evtCell) || g._isConnected(evtRow)){
-				this._decorateEvent(e);
-				if(e.rowId){
-					if(e.columnId){
-						g[evtCell](e);
-					}
-					g[evtRow](e);
+				evtRow = 'onRow' + eventName, evtName;
+
+			this._decorateEvent(e);
+			if(e.rowId){
+				if(e.columnId){
+					g[evtCell](e);
+					on.emit(e.target, 'cell' + eventName, e);
 				}
+				g[evtRow](e);
+				on.emit(e.target, 'row' + eventName, e);
 			}
 		},
 

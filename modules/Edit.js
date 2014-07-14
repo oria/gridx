@@ -806,9 +806,9 @@ define([
 		_getColumnEditor: function(colId){
 			var editor = this.grid._columnsById[colId].editor;
 			if(lang.isFunction(editor)){
-				return editor.prototype.declaredClass;
+				return editor.prototype.declaredClass.replace(/\//g, ".");
 			}else if(lang.isString(editor)){
-				return editor;
+				return editor.replace(/\//g, ".");
 			}else{
 				return 'dijit.form.TextBox';
 			}
@@ -876,10 +876,10 @@ define([
 					domClass.add(cw.btns, 'gridxEditFocus');
 				}
 				//
-				// Defect 12439, when combine the AlwaysEditing and ColumnLock
-				//     The _updateBody contians many rows to call _lockColumn, which is very slow
+				//	Defect 12439, when combine the AlwaysEditing and ColumnLock
+				//	The _updateBody contians many rows to call _lockColumn, which is very slow
 				//
-				g.body.onRender( { '_updateBody': false } );
+				g.body.onRender(undefined, undefined, {'_updateBody': false });
 			}
 		},
 

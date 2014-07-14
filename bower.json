@@ -1,6 +1,6 @@
 {
 	"name": "gridx",
-	"version": "1.3.2",
+	"version": "1.3.4",
 	"dependencies": {
 		"dojo": ">=1.9.1",
 		"dijit": ">=1.9.1",
@@ -11,8 +11,8 @@
 	"ignore": [
 		".jshintrc",
 		".gitattributes",
+		".gitignore",
 		".travis.yml",
-		"tests",
 		"CONTRIBUTING.md"
 	]
 }

@@ -53,6 +53,10 @@ define([
 
 		sizeSwitch: true,
 
+		showRange: false,
+
+		showTotal: true,
+
 		//message: '',
 
 		preload: function(){
@@ -95,7 +99,8 @@ define([
 				row: 0,
 				col: col,
 				'class': this._exist(bar, name) ? '' : 'dijitHidden',
-				pluginClass: plugin
+				pluginClass: plugin,
+				showRange: this.arg('showRange')
 			}, args));
 		},
 

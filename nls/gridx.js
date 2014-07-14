@@ -16,7 +16,7 @@ define({root:
 	"ruleTitleTemplate": "Rule ${ruleNumber}",
 	"noFilterApplied": "No filter applied.",
 	"defineFilter": "Define filter",
-	
+	"defineFilterAriaLabel": "Define filter: Opens a filter dialog for configuring complex filter rules. Each filter rule is made up of a combination of column, condition and value. When the dialog opens, the value field has keyboard focus.",
 	"conditionEqual": "equal",
 	"conditionNotEqual": "does not equal",
 	"conditionLess": "is less than",
@@ -35,6 +35,7 @@ define({root:
 	"conditionAfter": "after",
 	"conditionRange": "range",
 	"conditionIsEmpty": "is empty",
+	"conditionIsNotEmpty": "is not empty",
 	
 	"all": "all",
 	"any": "any",
@@ -61,10 +62,15 @@ define({root:
 	"waiFilterButton": "Submit the filter",
 	
 	"columnSelectLabel": "Column:",
+	"columnSelectAriaLabel": "Column: condition part ${0} of ${1}",
 	"waiColumnSelectTemplate": "Column for rule ${0}",
+
 	"conditionSelectLabel": "Condition:",
+	"conditionSelectAriaLabel": "Operator: condition part ${0} of ${1}",
 	"waiConditionSelectTemplate": "Condition for rule ${0}",
+
 	"valueBoxLabel": "Value:",
+	"valueBoxAriaLabel": "Value: condition part ${0} of ${1}",
 	"waiValueBoxTemplate": "Enter value to filter for rule ${0}",
 	
 	"rangeTo": "to",

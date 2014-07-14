@@ -28,7 +28,7 @@ require([
 	];
 
 	store = storeFactory({
-		dataSource: dataSource,
+		dataSource: dataSource, 
 		size: 100
 	});
 

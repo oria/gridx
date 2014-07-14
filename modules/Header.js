@@ -8,9 +8,10 @@ define([
 	"dojo/dom-geometry",
 	"dojo/query",
 	"dojo/_base/sniff",
+	"dojo/on",
 	"dojo/keys",
 	"../core/_Module"
-], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, has, keys, _Module){
+], function(/*=====Column, =====*/declare, lang, array, domConstruct, domClass, domGeometry, query, has, on, keys, _Module){
 
 /*=====
 	Column.headerNode = function(){
@@ -75,7 +76,7 @@ define([
 					'class': 'gridxHeaderRowInner',
 					role: 'row'
 				});
-			t.grid._connectEvents(dn, '_onMouseEvent', t);
+			t.grid._connectEvents(dn, '_onEvent', t);
 		},
 
 		preload: function(args){
@@ -179,17 +180,18 @@ define([
 			this.innerNode.scrollLeft = this._scrollLeft = left;
 		},
 
-		_onMouseEvent: function(eventName, e){
+		_onEvent: function(eventName, e){
 			var g = this.grid,
 				evtCell = 'onHeaderCell' + eventName,
 				evtRow = 'onHeader' + eventName;
-			if(g._isConnected(evtCell) || g._isConnected(evtRow)){
 				this._decorateEvent(e);
-				if(e.columnIndex >= 0){
-					g[evtCell](e);
-				}
-				g[evtRow](e);
+				
+			if(e.columnIndex >= 0){
+				g[evtCell](e);
+				on.emit(e.target, 'headerCell' + eventName, e);
 			}
+			g[evtRow](e);
+			on.emit(e.target, 'header' + eventName, e);
 		},
 
 		_decorateEvent: function(e){

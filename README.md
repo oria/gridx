@@ -25,9 +25,9 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://do
 
 	``cpm install gridx``
 
-2.	[Bower](http://bower.io) install dependency:
+2.	[Bower](http://bower.io) install:
 
-	``bower install``
+	``bower install gridx``
 
 3.	Manual installation by putting GridX at the same level as Dojo, e.g:
 	* dojo 
