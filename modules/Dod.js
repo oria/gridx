@@ -97,7 +97,7 @@ define([
 				g[eventName] = g[eventName] || dummyFunc;
 			}
 
-			this.connect(this.grid.body, '_onMouseEvent', '_dodEventDispatcher');
+			this.connect(this.grid.body, '_onEvent', '_dodEventDispatcher');
 		},
 		
 		load: function(args, deferStartup){
