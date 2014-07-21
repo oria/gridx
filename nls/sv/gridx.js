@@ -54,7 +54,7 @@ define({
 	"waiCancelButton": "Stäng fönstret",
 	"clearButton": "Rensa",
 	"waiClearButton": "Rensa filtret",
-	"filterButton": "Filter",
+	"filterButton": "Filtrera",
 	"waiFilterButton": "Filtrera",
 	"columnSelectLabel": "Kolumn:",
 	"columnSelectAriaLabel": "Kolumn: Villkorsdel ${0} av ${1}",

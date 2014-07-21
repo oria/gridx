@@ -54,7 +54,7 @@ define({
 	"waiCancelButton": "Bu iletişim kutusunu iptal et",
 	"clearButton": "Temizle",
 	"waiClearButton": "Süzgeci temizle",
-	"filterButton": "Süzgeç",
+	"filterButton": "Süzgeç uygula",
 	"waiFilterButton": "Süzgeci gönder",
 	"columnSelectLabel": "Sütun:",
 	"columnSelectAriaLabel": "Sütun: koşul parçası ${0} / ${1}",
@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Süzgeç',
 	clearButtonTitle: 'Süzgeci Temizle',
-	buildFilterMenuLabel: 'Oluşturma Süzgeci&hellip;',
+	buildFilterMenuLabel: 'Süzgeç Oluştur&hellip;',
 	apply: 'Süzgeci Uygula',
 
 //Sort
