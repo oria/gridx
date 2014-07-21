@@ -15,6 +15,7 @@ define({
 	"ruleTitleTemplate": "규칙 ${ruleNumber}",
 	"noFilterApplied": "필터가 적용되지 않음",
 	"defineFilter": "필터 정의",
+	"defineFilterAriaLabel": "필터 정의: 복합 필터 규칙을 구성하기 위해 필터 대화 상자를 엽니다. 각 필터 규칙은 열, 조건 및 값의 조합으로 구성됩니다. 대화 상자가 열리면 값 필드에 키보드 초점이 생깁니다. ",
 	"conditionEqual": "같음",
 	"conditionNotEqual": "!=",
 	"conditionLess": "<",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "후",
 	"conditionRange": "범위",
 	"conditionIsEmpty": "비어 있음",
+	"conditionIsNotEmpty": "비어 있지 않음",
 	"all": "모두",
 	"any": "임의",
 	"relationAll": "모든 규칙",
@@ -55,10 +57,15 @@ define({
 	"filterButton": "필터",
 	"waiFilterButton": "필터 제출",
 	"columnSelectLabel": "열:",
+	"columnSelectAriaLabel": "열: ${1} 중 ${0} 조건 파트",
 	"waiColumnSelectTemplate": "규칙 ${0}에 대한 열",
+
 	"conditionSelectLabel": "조건:",
+	"conditionSelectAriaLabel": "연산자: ${1} 중 ${0} 조건 파트",
 	"waiConditionSelectTemplate": "규칙 ${0}에 대한 조건",
+
 	"valueBoxLabel": "값:",
+	"valueBoxAriaLabel": "값: ${1} 중 ${0} 조건 파트",
 	"waiValueBoxTemplate": "규칙 ${0}에 대해 필터할 값 입력",
 	"rangeTo": "대상",
 	"rangeTemplate": "${0} - ${1}",
@@ -144,9 +151,9 @@ define({
 	apply: '필터 적용',
 
 //Sort
-	helpMsg: '${0} - Click to sort or control-click to add to sort',
-	singleHelpMsg: '${0} - Click to sort',
-	priorityOrder: 'sort priority ${0}',
+	helpMsg: '${0} - 정렬하려면 클릭하거나 정렬에 추가하려면 Ctrl키와 함께 클릭',
+	singleHelpMsg: '${0} - 정렬하려면 클릭',
+	priorityOrder: '정렬 우선순위 ${0}',
 
 //SummaryBar
 	summaryTotal: '총 항목: ${0}',

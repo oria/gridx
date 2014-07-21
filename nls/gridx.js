@@ -211,5 +211,6 @@ define({root:
 "tr": true,
 "uk": true,
 "zh": true,
-"zh-tw": true
+"zh-tw": true,
+"vi": true
 });
