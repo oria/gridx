@@ -12,6 +12,7 @@ node_modules/
 *.tmp
 *.bak
 *.swp
+*.zip
 *~.nib
 local.properties
 .classpath
