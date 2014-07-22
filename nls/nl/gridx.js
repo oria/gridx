@@ -151,7 +151,7 @@ define({
 	apply: 'Filter toepassen',
 
 //Sort
-	helpMsg: '${0} - Klik om te sorteren of houdt Ctrl ingedrukt en klik om toe te voegen aan sorteren',
+	helpMsg: '${0} - Klik om te sorteren of houd Ctrl ingedrukt en klik om toe te voegen aan sorteren',
 	singleHelpMsg: '${0} - Klik om te sorteren',
 	priorityOrder: 'sorteervolgorde ${0}',
 
@@ -163,7 +163,7 @@ define({
 //Other
 	indirectSelectAll: "Druk op spatiebalk om alles te selecteren.",	//need translation
 	indirectDeselectAll: "Druk op spatiebalk om alle selecties op te heffen.",	//need translation
-	treeExpanded: "Control + pijl naar links om deze rij samen te vouwen.",	//need translation
-	treeCollapsed: "Control + pijl naar rechts om deze rij uit te vouwen."	//need translation
+	treeExpanded: "Ctrl + pijl naar links om deze rij samen te vouwen.",	//need translation
+	treeCollapsed: "Ctrl + pijl naar rechts om deze rij uit te vouwen."	//need translation
 });
 

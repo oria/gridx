@@ -162,7 +162,7 @@ define({
 
 //Other
 	indirectSelectAll: "Tryk på mellemrumstasten for at markere alle.",	//need translation
-	indirectDeselectAll: "Tryk på mellemrumstasten for at ophæve markeringen af alle.",	//need translation
+	indirectDeselectAll: "Tryk på mellemrumstasten for at fjerne markeringen af alle.",	//need translation
 	treeExpanded: "Ctrl + venstre piltast for at skjule denne række.",	//need translation
 	treeCollapsed: "Ctrl + højre piltast for at udvide denne række."	//need translation
 });
