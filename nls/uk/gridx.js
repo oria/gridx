@@ -147,22 +147,22 @@ define({
 //QuickFilter
 	filterLabel: 'Фільтр',
 	clearButtonTitle: 'Очистити фільтр',
-	buildFilterMenuLabel: 'Скласти фільтр&hellip;',
+	buildFilterMenuLabel: 'Визначити фільтр&hellip;',
 	apply: 'Застосувати фільтр',
 
 //Sort
 	helpMsg: '${0} - Клацніть для сортування або клацніть, утримуючи клавішу Control, для додання до списку сортування',
 	singleHelpMsg: '${0} - Клацніть для сортування',
-	priorityOrder: 'Пріоритет сортування ${0}',
+	priorityOrder: 'Пріоритет сортування: ${0}',
 
 //SummaryBar
 	summaryTotal: 'Всього: ${0}',
-	summarySelected: 'Виділено: ${0}',
+	summarySelected: 'Вибрано: ${0}',
 	summaryRange: 'Діапазон: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Натисніть SPACE, щоб вибрати всі.",	//need translation
-	indirectDeselectAll: "Натисніть SPACE, щоб скасувати вибір всіх.",	//need translation
+	indirectSelectAll: "Натисніть клавішу Пробіл, щоб вибрати всі елементи. ",	//need translation
+	indirectDeselectAll: "Натисніть клавішу Пробіл, щоб скасувати вибір всіх елементів. ",	//need translation
 	treeExpanded: "Натисніть Control + стрілка вліво для згортання рядка.",	//need translation
 	treeCollapsed: "Натисніть Control + стрілка вправо для розгортання рядка."	//need translation
 });

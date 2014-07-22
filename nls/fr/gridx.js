@@ -15,9 +15,10 @@ define({
 	"ruleTitleTemplate": "Règle ${ruleNumber}",
 	"noFilterApplied": "Aucun filtre appliqué.",
 	"defineFilter": "Définir un filtre",
-	"conditionEqual": "être égale à",
-	"conditionNotEqual": "N'est pas égal",
-	"conditionLess": "est moindre que",
+	"defineFilterAriaLabel": "Définir un filtre : ouvre une boîte de dialogue de filtre pour la configuration des règles de filtre complexes. Chaque règle de filtre comprend une combinaison de colonne, condition et valeur. Lorsque la boîte de dialogue s'ouvre, la zone de valeur est active.",
+	"conditionEqual": "est égale à",
+	"conditionNotEqual": "n'est pas égale à",
+	"conditionLess": "est inférieure à",
 	"conditionLessEqual": "est inférieure ou égale à",
 	"conditionGreater": "est supérieure à",
 	"conditionGreaterEqual": "est supérieure ou égale à",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "après le",
 	"conditionRange": "plage",
 	"conditionIsEmpty": "est vide",
+	"conditionIsNotEmpty": "n'est pas vide",
 	"all": "tous",
 	"any": "n'importe quel",
 	"relationAll": "toutes les règles",
@@ -55,10 +57,15 @@ define({
 	"filterButton": "Filtre",
 	"waiFilterButton": "Soumettre le filtre",
 	"columnSelectLabel": "Colonne :",
+	"columnSelectAriaLabel": "Colonne : élément de condition ${0} sur ${1}",
 	"waiColumnSelectTemplate": "Colonne de la règle ${0}",
+
 	"conditionSelectLabel": "Condition:",
+	"conditionSelectAriaLabel": "Opérateur : élément de condition ${0} sur ${1}",
 	"waiConditionSelectTemplate": "Condition de la règle ${0}",
+
 	"valueBoxLabel": "Valeur :",
+	"valueBoxAriaLabel": "Valeur : élément de condition ${0} sur ${1}",
 	"waiValueBoxTemplate": "Entrez la valeur à filtrer pour la règle ${0}",
 	"rangeTo": "au",
 	"rangeTemplate": "de ${0} à ${1}",
@@ -150,12 +157,12 @@ define({
 
 //SummaryBar
 	summaryTotal: 'Total : ${0}',
-	summarySelected: 'Sélectionné : ${0}',
-	summaryRange: 'Intervalle : ${0}-${1}',	//need translation
+	summarySelected: 'Sélectionné(s) : ${0}',
+	summaryRange: 'Plage : ${0}-${1}',	//need translation
 
 //Other
 	indirectSelectAll: "Appuyez sur ESPACE pour tout sélectionner.",	//need translation
-	indirectDeselectAll: "Appuyez sur ESPACE pour tout déselectionner.",	//need translation
+	indirectDeselectAll: "Appuyez sur ESPACE pour tout désélectionner.",	//need translation
 	treeExpanded: "Contrôle + Flèche vers la gauche pour réduire cette ligne.",	//need translation
 	treeCollapsed: "Contrôle + Flèche vers la droite pour développer cette ligne."	//need translation
 });

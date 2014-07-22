@@ -161,8 +161,8 @@ define({
 	summaryRange: 'Intervalo: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Prima SPACE para seleccionar tudo.",	//need translation
-	indirectDeselectAll: "Prima SPACE para desmarcar tudo.",	//need translation
+	indirectSelectAll: "Prima Barra de Espaços para seleccionar tudo.",	//need translation
+	indirectDeselectAll: "Prima Barra de Espaços para desmarcar tudo.",	//need translation
 	treeExpanded: "Control + seta para a esquerda para contrair esta fila.",	//need translation
 	treeCollapsed: "Control + seta para a direita para expandir esta fila."	//need translation
 });
