@@ -1,7 +1,7 @@
 define({     
 //Body
 	loadingInfo: "Laden...",
-	emptyInfo: "Geen af te beeld items",
+	emptyInfo: "Geen af te beelden items",
 	loadFailInfo: "Gegevens kunnen niet geladen worden.",
 	loadMore: "Meer laden",
 	loadMoreLoading: "Laden...",
