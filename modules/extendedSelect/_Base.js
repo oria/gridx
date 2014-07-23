@@ -173,16 +173,20 @@ define([
 		},
 
 		_highlight: function(target){
-			var t = this;
-			if(t._selecting){
+			var t = this,
+				g = t.grid;
+			if(t._selecting && t._lastStartItem != target){
 				var type = t._type,
 					start = t._startItem,
 					current = t._currentItem,
 					highlight = function(from, to, toHL){
 						from = from[type];
 						to = to[type];
-						var dir = from < to ? 1 : -1;
+						var dir = from < to ? 1 : -1,
+							start = g.body.renderStart, 
+							end = start + g.body.renderCount;
 						for(; from != to; from += dir){
+							if (from < start || from > end) continue;
 							var item = {};
 							item[type] = from;
 							t._highlightSingle(item, toHL);

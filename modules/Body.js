@@ -330,6 +330,8 @@ define([
 
 		autoUpdate: true,
 
+		renderredIds: {},
+
 		compareOnSet: function(v1, v2){
 			return typeof v1 == 'object' && typeof v2 == 'object' ?
 				json.toJson(v1) == json.toJson(v2) :
@@ -403,6 +405,9 @@ define([
 			delete t._err;
 			clearTimeout(t._sizeChangeHandler);
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
+
+			// cache visual ids
+			t.renderredIds = {};
 			
 			// domClass.add(loadingNode, 'gridxLoading');
 			t._showLoadingMask();
@@ -753,6 +758,7 @@ define([
 					row = g.row(rowInfo.rowId, 1);
 				s.push('<div class="gridxRow ', i % 2 ? 'gridxRowOdd' : '',
 					'" role="row" visualindex="', i);
+				t.renderredIds[rowInfo.rowId] = 1;
 				if(row){
 					t.model.keep(row.id);
 					s.push('" rowid="', encode(row.id),
@@ -795,6 +801,7 @@ define([
 					n.setAttribute('rowindex', rowInfo.rowIndex);
 					n.setAttribute('parentid', rowInfo.parentId || '');
 					n.innerHTML = t._buildCells(row, rowInfo.visualIndex);
+					t.renderredIds[row.id] = 1;
 					t.onAfterRow(row);
 				}else{
 					console.error('Error in Body._buildRowContent: Row is not in cache: ' + rowInfo.rowIndex);
