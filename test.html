@@ -9,11 +9,16 @@
 		body {
 			padding: 20px;
 		}
+		input[type=button]{
+			margin: 3px 2px;
+			padding: 2px;
+		}
 		.screenshot {
 			width: 984px;
 			height: 728px;
 		}
 		#gridContainer {
+			margin: 5px 0;
 		}
 		.only {
 			position: absolute;
@@ -61,16 +66,16 @@
 		async: true,
 		packages: [
 			{name: 'gridx', location: '../gridx'},
-			{name: 'gridxtest', location: '../gridxtest'}
+			{name: 'gridxtest', location: '../gridx-test'}
 		]
 	"></script>
 	<script type="text/javascript" src='support/common.js'></script>
 	<script type="text/javascript" src='test.js'></script>
 </head>
 <body class='claro'>
-<div class='miscellany'>
-	<h2 tabindex='0' class='prevFocusHandler' style="position: absolute; top: 0;" onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler before grid #</h2>
-</div>
+	<div class='miscellany'>
+		<h2 tabindex='0' class='prevFocusHandler' style="position: absolute; top: 0;" onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler before grid #</h2>
+	</div>
 	<div id='gridContainer'></div>
 <div class='miscellany'>
 	<h2 tabindex='0' class='postFocusHandler' onfocus='this.style.color="red"' onblur='this.style.color=""'># Focus handler after grid #</h2>

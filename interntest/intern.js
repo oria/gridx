@@ -3,10 +3,10 @@
 // packages, suites, excludeInstrumentation, and (if you want functional tests) functionalSuites.
 define({
 	// The port on which the instrumenting proxy will listen
-	proxyPort: 9000,
+	proxyPort: 9001,
 
 	// A fully qualified URL to the Intern proxy
-	proxyUrl: 'http://localhost:9000/',
+	proxyUrl: 'http://localhost:9001/',
 
 	// Default desired capabilities for all environments. Individual capabilities can be overridden by any of the
 	// specified browser environments in the `environments` array below as well. See
@@ -30,7 +30,8 @@ define({
 //        { browserName: 'safari', version: '6', platform: 'Mac 10.8' }
 		{ browserName: 'firefox' }
 //        { browserName: 'internet explorer' },
-//        { browserName: 'chrome' }
+       // { browserName: 'chrome' }
+       
 	],
 
 	// Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service
