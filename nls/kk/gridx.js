@@ -15,6 +15,7 @@ define({
 	"ruleTitleTemplate": "Ереже ${ruleNumber}",
 	"noFilterApplied": "Қабылданған сүзгі жоқ.",
 	"defineFilter": "Сүзгіні анықтау",
+	"defineFilterAriaLabel": "Сүзгіні анықтау: Сүзгі диалогын күрделі сүзгі ережелерін теңшеу үшін ашады. Әр сүзгі ережесі бағанның, шарттың және мәннің тіркесімінен жасалады. Диалог ашылатын кезде, мәннің өрісінде пернетақта кезелуі болады.",
 	"conditionEqual": "тең",
 	"conditionNotEqual": "тең емес",
 	"conditionLess": "аздау",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "кейін",
 	"conditionRange": "ауқым",
 	"conditionIsEmpty": "бос",
+	"conditionIsNotEmpty": "бос",
 	"all": "барлығы",
 	"any": "кез келген",
 	"relationAll": "барлық ережелер",
@@ -55,10 +57,15 @@ define({
 	"filterButton": "Сүзгі",
 	"waiFilterButton": "Сүзгіні жіберу",
 	"columnSelectLabel": "Бағана:",
+	"columnSelectAriaLabel": "Баған: ${0} шарт бөлігі - ${1}",
 	"waiColumnSelectTemplate": "${0} ережесіне арналған бағана",
+
 	"conditionSelectLabel": "Шарт:",
+	"conditionSelectAriaLabel": "Амалдағыш: ${0} шарт бөлігі - ${1}",
 	"waiConditionSelectTemplate": "${0} ережесіне арналған шарт",
+
 	"valueBoxLabel": "Мән:",
+	"valueBoxAriaLabel": "Мән: ${0} шарт бөлігі - ${1}",
 	"waiValueBoxTemplate": "${0} ережесі үшін сүзуге арналған мәнді енгізу",
 	"rangeTo": "неге",
 	"rangeTemplate": "${0} және ${1} аралығында",
@@ -101,7 +108,7 @@ define({
 	descending: "Кемуі бойынша сұрыптау үшін басу",
 	sortingState: "${0} - ${1}",
 	unsorted: "Осы бағананы сұрыптамаңыз",
-	waiSingleSortLabel: "${1} арқылы ${0} элементі сұрыпталмаған. ${2} арқылы сұрыптауды таңдау ",
+	waiSingleSortLabel: "${1} арқылы ${0} элементі сұрыпталмаған. ${2} арқылы сұрыптауды таңдау",
 	waiNestedSortLabel:"${1} арқылы ${0} іштей сұрыпталған. ${2} арқылы ішкі сұрыптауды таңдау",
 
 //PaginationBar
@@ -121,7 +128,7 @@ define({
 	pageSizeAllTitle: 'Барлық элементтер',
 
 	description: '${1} элементінің ${2} элементі - ${0}.',
-	descriptionEmpty: 'Тор бос. ',
+	descriptionEmpty: 'Тор бос.',
 
 	summary: 'Жалпы: ${0}',
 	summaryWithSelection: 'Жалпы: ${0} Таңдалған: ${1}',

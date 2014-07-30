@@ -1,32 +1,32 @@
 <ul class="gridxFilterPaneForm">
 	<li><label id="${id}_ColumnLabel" for="${id}_ColumnSelect">${i18n.columnSelectLabel}</label></li>
 	<li name="sltColumn">
-		<div data-dojo-type="dijit.form.Select" id="${id}_ColumnSelect" aria-labelledby="${id}_ColumnLabel" style="width:100%;"></div>
+		<div data-dojo-type="dijit.form.Select" id="${id}_ColumnSelect" aria-label="${_columnAriaLabel}" style="width:100%;"></div>
 	</li>
 	<li><label id="${id}_ConditionLabel" for="${id}_ConditionSelect">${i18n.conditionSelectLabel}</label></li>
 	<li name="sltCondition">
-		<div data-dojo-type="dijit.form.Select" id="${id}_ConditionSelect" style="width:100%;" aria-labelledby="${id}_ConditionLabel"></div>
+		<div data-dojo-type="dijit.form.Select" id="${id}_ConditionSelect" style="width:100%;" aria-label="${_conditionAriaLabel}"></div>
 	</li>
 	<li><label id="${id}_ValueLabel">${i18n.valueBoxLabel}</label></li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTextWrapper">
 		<input type="text" data-dojo-type="dijit.form.TextBox" intermediateChanges="true"
-		 style="width:100%;" aria-labelledby="${id}_ValueLabel"/>
+		 style="width:100%;" aria-label="${_valueAriaLabel}"/>
 	</li>
 	
 <!--            dropDownClass="gridx.modules.filter.DistinctComboBoxMenu"-->
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneComboWrapper">
 		<input type="text" data-dojo-type="dijit.form.ComboBox" 
 			intermediateChanges="true" autoComplete="false" queryExpr="*${i18n.startsWithExpr}" 
-			style="width:100%;"  aria-labelledby="${id}_ValueLabel"/>
+			style="width:100%;" aria-label="${_valueAriaLabel}"/>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneNumberWrapper">
-		<input type="text" data-dojo-type="dijit.form.NumberTextBox"  aria-labelledby="${id}_ValueLabel" intermediateChanges="true" style="width:100%;"/>
+		<input type="text" data-dojo-type="dijit.form.NumberTextBox"  aria-label="${_conditionAriaLabel}" intermediateChanges="true" style="width:100%;"/>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDateWrapper">
-		<div data-dojo-type="dijit.form.DateTextBox" aria-labelledby="${id}_ValueLabel" intermediateChanges="true" style="width: 100%"></div>
+		<div data-dojo-type="dijit.form.DateTextBox" aria-label="${_valueAriaLabel}" intermediateChanges="true" style="width: 100%"></div>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDateRangeWrapper">
@@ -38,7 +38,7 @@
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeWrapper">
-		<div data-dojo-type="dijit.form.TimeTextBox" aria-labelledby="${id}_ValueLabel" style="width: 100%" intermediateChanges="true"></div>
+		<div data-dojo-type="dijit.form.TimeTextBox" aria-label="${_valueAriaLabel}" style="width: 100%" intermediateChanges="true"></div>
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneTimeRangeWrapper">
@@ -59,6 +59,6 @@
 	</li>
 	
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneSelectWrapper">
-		<div data-dojo-type="dijit.form.Select" aria-labelledby="${id}_ValueLabel" style="width: 100%"></div>
+		<div data-dojo-type="dijit.form.Select" aria-label="${_valueAriaLabel}" style="width: 100%"></div>
 	</li>
 </ul>

@@ -15,6 +15,7 @@ define({
 	"ruleTitleTemplate": "Правило ${ruleNumber}",
 	"noFilterApplied": "Фільтри не використовуються.",
 	"defineFilter": "Визначити фільтр",
+	"defineFilterAriaLabel": "Визначити фільтр: відкриває вікно фільтра для налаштування складних правил фільтрації. Кожне правило фільтра складається з стовпця, умови та значення. У вікні, що відкриється, буде активним поле значення.",
 	"conditionEqual": "дорівнює",
 	"conditionNotEqual": "не дорівнює",
 	"conditionLess": "менше за",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "після",
 	"conditionRange": "діапазон",
 	"conditionIsEmpty": "порожній",
+	"conditionIsNotEmpty": "не порожній",
 	"all": "всі",
 	"any": "будь-яке",
 	"relationAll": "всі правила",
@@ -55,10 +57,15 @@ define({
 	"filterButton": "Фільтр",
 	"waiFilterButton": "Застосувати фільтр",
 	"columnSelectLabel": "Стовпець:",
+	"columnSelectAriaLabel": "Стовпець: частина умови ${0} з ${1}",
 	"waiColumnSelectTemplate": "Стовпчик для правила ${0}",
+
 	"conditionSelectLabel": "Умова:",
+	"conditionSelectAriaLabel": "Оператор: частина умови ${0} з ${1}",
 	"waiConditionSelectTemplate": "Умова правила ${0}",
+
 	"valueBoxLabel": "Значення:",
+	"valueBoxAriaLabel": "Значення: частина умови ${0} з ${1}",
 	"waiValueBoxTemplate": "Введіть значення для фільтрації за правилом ${0}",
 	"rangeTo": "до",
 	"rangeTemplate": "з ${0} до ${1}",
@@ -88,10 +95,10 @@ define({
 	"falseLabel": "Неправда",
 	"radioTrueLabel": "Значення True",
 	"radioFalseLabel": "Значення False",
-	"beginTimeRangeLabel": "Початкове значення диапазону часу",
-	"endTimeRangeLabel": "Кінцеве значення диапазону часу",
-	"beginDateRangeLabel": "Початкове значення диапазону дат",
-	"endDateRangeLabel": "Кінцеве значення диапазону дат",
+	"beginTimeRangeLabel": "Початкове значення діапазону часу",
+	"endTimeRangeLabel": "Кінцеве значення діапазону часу",
+	"beginDateRangeLabel": "Початкове значення діапазону дат",
+	"endDateRangeLabel": "Кінцеве значення діапазону дат",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
@@ -140,22 +147,22 @@ define({
 //QuickFilter
 	filterLabel: 'Фільтр',
 	clearButtonTitle: 'Очистити фільтр',
-	buildFilterMenuLabel: 'Скласти фільтр&hellip;',
+	buildFilterMenuLabel: 'Визначити фільтр&hellip;',
 	apply: 'Застосувати фільтр',
 
 //Sort
 	helpMsg: '${0} - Клацніть для сортування або клацніть, утримуючи клавішу Control, для додання до списку сортування',
 	singleHelpMsg: '${0} - Клацніть для сортування',
-	priorityOrder: 'Пріоритет сортування ${0}',
+	priorityOrder: 'Пріоритет сортування: ${0}',
 
 //SummaryBar
 	summaryTotal: 'Всього: ${0}',
-	summarySelected: 'Виділено: ${0}',
+	summarySelected: 'Вибрано: ${0}',
 	summaryRange: 'Діапазон: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Натисніть SPACE, щоб вибрати всі.",	//need translation
-	indirectDeselectAll: "Натисніть SPACE, щоб скасувати вибір всіх.",	//need translation
+	indirectSelectAll: "Натисніть клавішу Пробіл, щоб вибрати всі елементи. ",	//need translation
+	indirectDeselectAll: "Натисніть клавішу Пробіл, щоб скасувати вибір всіх елементів. ",	//need translation
 	treeExpanded: "Натисніть Control + стрілка вліво для згортання рядка.",	//need translation
 	treeCollapsed: "Натисніть Control + стрілка вправо для розгортання рядка."	//need translation
 });

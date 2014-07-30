@@ -1,7 +1,7 @@
 define({     
 //Body
 	loadingInfo: "Laden...",
-	emptyInfo: "Geen af te beeld items",
+	emptyInfo: "Geen af te beelden items",
 	loadFailInfo: "Gegevens kunnen niet geladen worden.",
 	loadMore: "Meer laden",
 	loadMoreLoading: "Laden...",
@@ -15,6 +15,7 @@ define({
 	"ruleTitleTemplate": "Regel ${ruleNumber}",
 	"noFilterApplied": "Geen filter toegepast.",
 	"defineFilter": "Filter definiëren",
+	"defineFilterAriaLabel": "Filter definiëren: Hiermee opent u een venster waarin u complexe filterregels kunt configureren. Elke filterregel bestaat een combinatie van kolom, voorwaarde en waarde. Wanneer het venster wordt geopend, staat de cursor in het waardeveld. ",
 	"conditionEqual": "is gelijk aan",
 	"conditionNotEqual": "is niet gelijk aan",
 	"conditionLess": "is kleiner dan",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "na",
 	"conditionRange": "bereik",
 	"conditionIsEmpty": "is leeg",
+	"conditionIsNotEmpty": "is niet leeg",
 	"all": "alle",
 	"any": "een of meer",
 	"relationAll": "alle regels",
@@ -52,13 +54,18 @@ define({
 	"waiCancelButton": "Dit dialoogvenster annuleren",
 	"clearButton": "Leegmaken",
 	"waiClearButton": "Filter wissen",
-	"filterButton": "Filteren",
+	"filterButton": "Filter",
 	"waiFilterButton": "Filter verzenden",
 	"columnSelectLabel": "Kolom:",
+	"columnSelectAriaLabel": "Kolom: voorwaarde deel ${0} van ${1}",
 	"waiColumnSelectTemplate": "Kolom voor regel ${0}",
+
 	"conditionSelectLabel": "Voorwaarde:",
+	"conditionSelectAriaLabel": "Operator: voorwaarde deel ${0} van ${1}",
 	"waiConditionSelectTemplate": "Voorwaarde voor regel ${0}",
+
 	"valueBoxLabel": "Waarde:",
+	"valueBoxAriaLabel": "Waarde: voorwaarde deel ${0} van ${1}",
 	"waiValueBoxTemplate": "Geef een waarde op voor het filter voor regel ${0}",
 	"rangeTo": "tot",
 	"rangeTemplate": "van ${0} tot ${1}",
@@ -144,7 +151,7 @@ define({
 	apply: 'Filter toepassen',
 
 //Sort
-	helpMsg: '${0} - Klik om te sorteren of houdt Ctrl ingedrukt en klik om toe te voegen aan sorteren',
+	helpMsg: '${0} - Klik om te sorteren of houd Ctrl ingedrukt en klik om toe te voegen aan sorteren',
 	singleHelpMsg: '${0} - Klik om te sorteren',
 	priorityOrder: 'sorteervolgorde ${0}',
 
@@ -156,7 +163,7 @@ define({
 //Other
 	indirectSelectAll: "Druk op spatiebalk om alles te selecteren.",	//need translation
 	indirectDeselectAll: "Druk op spatiebalk om alle selecties op te heffen.",	//need translation
-	treeExpanded: "Control + pijl naar links om deze rij samen te vouwen.",	//need translation
-	treeCollapsed: "Control + pijl naar rechts om deze rij uit te vouwen."	//need translation
+	treeExpanded: "Ctrl + pijl naar links om deze rij samen te vouwen.",	//need translation
+	treeCollapsed: "Ctrl + pijl naar rechts om deze rij uit te vouwen."	//need translation
 });
 

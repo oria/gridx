@@ -41,8 +41,12 @@ define([
 		postCreate: function(){
 			this.inherited(arguments);
 			this.i18n = this.grid.nls;
+			this._columnAriaLabel = this.i18n.columnSelectAriaLabel.replace('${0}', 1).replace('${1}', 3);
+			this._conditionAriaLabel = this.i18n.conditionSelectAriaLabel.replace('${0}', 2).replace('${1}', 3);
+			this._valueAriaLabel = this.i18n.valueBoxAriaLabel.replace('${0}', 3).replace('${1}', 3);
 			this.set('title', this.grid.nls.defaultRuleTitle);
 			this.set('content', string.substitute(template, this));
+			// console.log('value aria label is', this._valueAriaLabel);
 			this._initFields();
 			this._initSltCol();
 			this.connect(this.sltColumn, 'onChange', '_onColumnChange');

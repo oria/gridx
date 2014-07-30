@@ -15,6 +15,7 @@ define({
 	"ruleTitleTemplate": "Regel ${ruleNumber}",
 	"noFilterApplied": "Inget filter tillämpat.",
 	"defineFilter": "Definiera filter",
+	"defineFilterAriaLabel": "Definiera filter: Öppnar ett filterfönster för konfigurering av komplexa filterregler. Varje filterregel består av en kombination av kolumn, villkor och värde. När fönstret öppnas är tangentfokus på värdefältet. ",
 	"conditionEqual": "lika med",
 	"conditionNotEqual": "inte lika med",
 	"conditionLess": "mindre än",
@@ -32,7 +33,8 @@ define({
 	"conditionBefore": "före",
 	"conditionAfter": "efter",
 	"conditionRange": "intervall",
-	"conditionIsEmpty": "är tom",
+	"conditionIsEmpty": "är tomt ",
+	"conditionIsNotEmpty": "är inte tomt",
 	"all": "alla",
 	"any": "någon",
 	"relationAll": "alla regler",
@@ -49,16 +51,21 @@ define({
 	"waiRemoveRuleButtonTemplate": "Ta bort regel ${0}",
 	"addRuleButton": "Lägg till filterregel",
 	"cancelButton": "Avbryt",
-	"waiCancelButton": "Stäng dialogrutan",
+	"waiCancelButton": "Stäng fönstret",
 	"clearButton": "Rensa",
 	"waiClearButton": "Rensa filtret",
 	"filterButton": "Filtrera",
 	"waiFilterButton": "Filtrera",
 	"columnSelectLabel": "Kolumn:",
+	"columnSelectAriaLabel": "Kolumn: Villkorsdel ${0} av ${1}",
 	"waiColumnSelectTemplate": "Kolumn för regel ${0}",
+
 	"conditionSelectLabel": "Villkor:",
+	"conditionSelectAriaLabel": "Operator: Villkorsdel ${0} av ${1}",
 	"waiConditionSelectTemplate": "Villkor för regel ${0}",
+
 	"valueBoxLabel": "Värde:",
+	"valueBoxAriaLabel": "Värde: Villkorsdel ${0} av ${1}",
 	"waiValueBoxTemplate": "Ange värde för filtrering efter regeln ${0}",
 	"rangeTo": "till",
 	"rangeTemplate": "från ${0} till ${1}",
@@ -70,7 +77,7 @@ define({
 	"statusTipTitleNoFilter": "Filterfält",
 	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Matcha",
-	"statusTipRelPost": "regel/regler.",
+	"statusTipRelPost": "regler. ",
 	"statusTipHeaderAll": "Matcha alla regler.",
 	"statusTipHeaderAny": "Matcha någon regel.",
 	"defaultItemsName": "objekt",
@@ -97,8 +104,8 @@ define({
 //NestedSort
 	singleSort: "Enkel sortering",
 	nestedSort: "Nästlad sortering",
-	ascending: "Klicka för att sortera i stigande ordning",
-	descending: "Klicka för att sortera i fallande ordning",
+	ascending: "Sortera i stigande ordning",
+	descending: "Sortera i fallande ordning",
 	sortingState: "${0} - ${1}",
 	unsorted: "Sortera inte den här kolumnen",
 	waiSingleSortLabel: "${0} - sorteras efter ${1}. Välj för att sortera efter ${2}",
@@ -144,7 +151,7 @@ define({
 	apply: 'Använd filter',
 
 //Sort
-	helpMsg: '${0} - Klicka om du vill sortera eller Ctrl-klicka om du vill lägga till till sorteringen',
+	helpMsg: '${0} - Klicka om du vill sortera eller Ctrl-klicka om du vill lägga till i sorteringen',
 	singleHelpMsg: '${0} - Klicka om du vill sortera',
 	priorityOrder: 'sorteringsprioritet ${0}',
 
@@ -154,8 +161,8 @@ define({
 	summaryRange: 'Intervall: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Tryck på MELLANSLAG för att markera alla.",	//need translation
-	indirectDeselectAll: "Tryck på MELLANSLAG för att avmarkera alla.",	//need translation
+	indirectSelectAll: "Tryck på mellanslag för att markera alla.",	//need translation
+	indirectDeselectAll: "Tryck på mellanslag för att avmarkera alla.",	//need translation
 	treeExpanded: "Ctrl + vänster piltangent för att komprimera raden.",	//need translation
 	treeCollapsed: "Ctrl + höger piltangent för att expandera raden."	//need translation
 });

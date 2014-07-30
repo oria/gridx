@@ -15,6 +15,7 @@ define({
 	"ruleTitleTemplate": "Κανόνας ${ruleNumber}",
 	"noFilterApplied": "Δεν έχει εφαρμοστεί φίλτρο.",
 	"defineFilter": "Ορισμός φίλτρου",
+	"defineFilterAriaLabel": "Ορισμός φίλτρου: ανοίγει ένα παράθυρο διαλόγου όπου μπορείτε να ορίσετε σύνθετους κανόνες φιλτραρίσματος. Κάθε κανόνας φιλτραρίσματος αποτελείται από μια στήλη, μια συνθήκη και μια τιμή. Όταν ανοίξει το παράθυρο διαλόγου, το πληκτρολόγιο μεταφέρει την εστίαση αυτόματα στο πεδίο Τιμή. ",
 	"conditionEqual": "ίσο με",
 	"conditionNotEqual": "δεν είναι ίσο με",
 	"conditionLess": "είναι μικρότερο από",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "μετά από",
 	"conditionRange": "εύρος",
 	"conditionIsEmpty": "είναι κενό",
+	"conditionIsNotEmpty": "δεν είναι κενό",
 	"all": "όλες",
 	"any": "οποιαδήποτε",
 	"relationAll": "όλοι οι κανόνες",
@@ -55,10 +57,15 @@ define({
 	"filterButton": "Φίλτρο",
 	"waiFilterButton": "Υποβολή του φίλτρου",
 	"columnSelectLabel": "Στήλη:",
+	"columnSelectAriaLabel": "Στήλη: τμήμα συνθήκης ${0} από ${1}",
 	"waiColumnSelectTemplate": "Στήλη για τον κανόνα ${0}",
+
 	"conditionSelectLabel": "Συνθήκη:",
+	"conditionSelectAriaLabel": "Τελεστής: τμήμα συνθήκης ${0} από ${1}",
 	"waiConditionSelectTemplate": "Συνθήκη για τον κανόνα ${0}",
+
 	"valueBoxLabel": "Τιμή:",
+	"valueBoxAriaLabel": "Τιμή: τμήμα συνθήκης ${0} από ${1}",
 	"waiValueBoxTemplate": "Καταχωρήστε τιμή για φιλτράρισμα για τον κανόνα ${0}",
 	"rangeTo": "έως",
 	"rangeTemplate": "από ${0} έως ${1}",
@@ -154,8 +161,8 @@ define({
 	summaryRange: 'Εύρος: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα επιλέξετε όλα. ",	//need translation
-	indirectDeselectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα αποεπιλέξετε όλα. ",	//need translation
+	indirectSelectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα επιλέξετε όλα.",	//need translation
+	indirectDeselectAll: "Πατήστε το ΠΛΗΚΤΡΟ ΔΙΑΣΤΗΜΑΤΟΣ για να τα αποεπιλέξετε όλα.",	//need translation
 	treeExpanded: "Πατήστε Control + αριστερό βέλος για να συμπτύξετε αυτή τη γραμμή.",	//need translation
 	treeCollapsed: "Πατήστε Control + δεξί βέλος για να αναπτύξετε αυτή τη γραμμή."	//need translation
 });

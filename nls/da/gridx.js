@@ -15,12 +15,13 @@ define({
 	"ruleTitleTemplate": "Regel ${ruleNumber}",
 	"noFilterApplied": "Intet filter anvendt.",
 	"defineFilter": "Definér filter",
-	"conditionEqual": "lig med",
+	"defineFilterAriaLabel": "Definér filter: Åbner en filterdialogboks, hvor du kan konfigurere komplekse filterregler. Hver filterregel består af en kombination af kolonne, betingelse og værdi. Når dialogboksen åbnes, er tastaturfokus placeret i værdifeltet.",
+	"conditionEqual": "er lig med",
 	"conditionNotEqual": "er forskellig fra",
 	"conditionLess": "er mindre end",
-	"conditionLessEqual": "mindre end eller lig med",
+	"conditionLessEqual": "er mindre end eller lig med",
 	"conditionGreater": "er større end",
-	"conditionGreaterEqual": "større end eller lig med",
+	"conditionGreaterEqual": "er større end eller lig med",
 	"conditionContain": "indeholder",
 	"conditionIs": "er",
 	"conditionStartWith": "begynder med",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "efter",
 	"conditionRange": "interval",
 	"conditionIsEmpty": "er tom",
+	"conditionIsNotEmpty": "er ikke tom",
 	"all": "alle",
 	"any": "vilkårlige",
 	"relationAll": "alle regler",
@@ -52,13 +54,18 @@ define({
 	"waiCancelButton": "Annullér denne dialogboks",
 	"clearButton": "Ryd",
 	"waiClearButton": "Ryd filteret",
-	"filterButton": "Filtrér",
+	"filterButton": "Filter",
 	"waiFilterButton": "Send filteret",
 	"columnSelectLabel": "Kolonne:",
+	"columnSelectAriaLabel": "Kolonne: betingelsesdel ${0} af ${1}",
 	"waiColumnSelectTemplate": "Kolonne for regel ${0}",
+
 	"conditionSelectLabel": "Betingelse:",
+	"conditionSelectAriaLabel": "Operator: betingelsesdel ${0} af ${1}",
 	"waiConditionSelectTemplate": "Betingelse for regel ${0}",
+
 	"valueBoxLabel": "Værdi:",
+	"valueBoxAriaLabel": "Værdi: betingelsesdel ${0} af ${1}",
 	"waiValueBoxTemplate": "Angiv værdi for filtrering for regel ${0}",
 	"rangeTo": "til",
 	"rangeTemplate": "fra ${0} til ${1}",
@@ -68,7 +75,7 @@ define({
 	"statusTipMsg": "Klik på filterlinjen for at filtrere efter værdier i ${0}.",
 	"anycolumn": "vilkårlig kolonne",
 	"statusTipTitleNoFilter": "Filterlinje",
-	"statusTipTitleHasFilter": "Filtrér",
+	"statusTipTitleHasFilter": "Filter",
 	"statusTipRelPre": "Matcher",
 	"statusTipRelPost": "regler.",
 	"statusTipHeaderAll": "Matcher alle regler.",
@@ -138,7 +145,7 @@ define({
 	pageSizeLabel: 'Rækker',
 
 //QuickFilter
-	filterLabel: 'Filtrér',
+	filterLabel: 'Filter',
 	clearButtonTitle: 'Ryd filter',
 	buildFilterMenuLabel: 'Byg filter&hellip;',
 	apply: 'Anvend filter',
@@ -155,7 +162,7 @@ define({
 
 //Other
 	indirectSelectAll: "Tryk på mellemrumstasten for at markere alle.",	//need translation
-	indirectDeselectAll: "Tryk på mellemrumstasten for at ophæve markeringen af alle.",	//need translation
+	indirectDeselectAll: "Tryk på mellemrumstasten for at fjerne markeringen af alle.",	//need translation
 	treeExpanded: "Ctrl + venstre piltast for at skjule denne række.",	//need translation
 	treeCollapsed: "Ctrl + højre piltast for at udvide denne række."	//need translation
 });

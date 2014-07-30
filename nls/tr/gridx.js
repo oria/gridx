@@ -15,6 +15,7 @@ define({
 	"ruleTitleTemplate": "Kural ${ruleNumber}",
 	"noFilterApplied": "Süzgeç uygulanmadı.",
 	"defineFilter": "Süzgeci tanımla",
+	"defineFilterAriaLabel": "Süzgeci tanımla: Karmaşık süzgeç kuralları yapılandırılması için bir süzgeç iletişim kutusu açar. Her bir süzgeç kuralı bir sütun, koşul ve değer birleşiminden oluşur. İletişim kutusu açıldığında klavye odağı, değer alanında yer alır. ",
 	"conditionEqual": "eşittir",
 	"conditionNotEqual": "eşit değildir",
 	"conditionLess": "küçüktür",
@@ -33,6 +34,7 @@ define({
 	"conditionAfter": "sonra",
 	"conditionRange": "aralık",
 	"conditionIsEmpty": "boştur",
+	"conditionIsNotEmpty": "boş değildir",
 	"all": "tümü",
 	"any": "herhangi biri",
 	"relationAll": "tüm kurallar",
@@ -51,14 +53,19 @@ define({
 	"cancelButton": "İptal",
 	"waiCancelButton": "Bu iletişim kutusunu iptal et",
 	"clearButton": "Temizle",
-	"waiClearButton": "Süzgeci temizler",
-	"filterButton": "Süzgeç",
+	"waiClearButton": "Süzgeci temizle",
+	"filterButton": "Süzgeç uygula",
 	"waiFilterButton": "Süzgeci gönder",
 	"columnSelectLabel": "Sütun:",
+	"columnSelectAriaLabel": "Sütun: koşul parçası ${0} / ${1}",
 	"waiColumnSelectTemplate": "${0} kuralı için sütun",
+
 	"conditionSelectLabel": "Koşul:",
+	"conditionSelectAriaLabel": "İşleç: koşul parçası ${0} / ${1}",
 	"waiConditionSelectTemplate": "${0} kuralı için koşul",
+
 	"valueBoxLabel": "Değer:",
+	"valueBoxAriaLabel": "Değer: koşul parçası ${0} / ${1}",
 	"waiValueBoxTemplate": "${0} kuralı için süzülecek değeri girin",
 	"rangeTo": "bitiş",
 	"rangeTemplate": "başlangıç: ${0} bitiş: ${1}",
@@ -74,7 +81,7 @@ define({
 	"statusTipHeaderAll": "Kuralların tümüyle eşleştir.",
 	"statusTipHeaderAny": "Kuralların herhangi biriyle eşleştir.",
 	"defaultItemsName": "öğe",
-	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} gösteriliyor. ",
+	"filterBarMsgHasFilterTemplate": "${0} / ${1} ${2} gösteriliyor.",
 	"filterBarMsgNoFilterTemplate": "Süzgeç uygulanmadı",
 	"filterBarDefButton": "Süzgeci tanımla",
 	"waiFilterBarDefButton": "Tabloyu süz",
@@ -82,7 +89,7 @@ define({
 	"filterBarClearButton": "Süzgeci kaldır",
 	"waiFilterBarClearButton": "Süzgeci kaldır",
 	"closeFilterBarBtn": "Süzgeç çubuğunu kapat",
-	"clearFilterMsg": "Bu süzgeci kaldıracak ve kullanılabilir tüm kayıtları görüntüleyecektir. ",
+	"clearFilterMsg": "Bu süzgeci kaldıracak ve kullanılabilir tüm kayıtları görüntüleyecektir.",
 	"anyColumnOption": "Herhangi Bir Sütun",
 	"trueLabel": "Doğru",
 	"falseLabel": "Yanlış",
@@ -101,7 +108,7 @@ define({
 	descending: "Azalan düzende sıralamak için tıklatın",
 	sortingState: "${0} - ${1}",
 	unsorted: "Bu sütunu sıralama",
-	waiSingleSortLabel: "${0} - ${1} öğesine göre sıralı. ${2} öğesine göre sıralamak için seçin. ",
+	waiSingleSortLabel: "${0} - ${1} öğesine göre sıralı. ${2} öğesine göre sıralamak için seçin.",
 	waiNestedSortLabel:"${0} - ${1} öğesine göre iç içe sıralı. ${2} öğesine göre iç içe sıralamak için seçin.",
 
 //PaginationBar
@@ -140,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Süzgeç',
 	clearButtonTitle: 'Süzgeci Temizle',
-	buildFilterMenuLabel: 'Oluşturma Süzgeci&hellip;',
+	buildFilterMenuLabel: 'Süzgeç Oluştur&hellip;',
 	apply: 'Süzgeci Uygula',
 
 //Sort
@@ -154,9 +161,9 @@ define({
 	summaryRange: 'Aralık: ${0}-${1}',	//need translation
 
 //Other
-	indirectSelectAll: "Tümünü seçmek için ARA ÇUBUĞU tuşuna basın. ",	//need translation
+	indirectSelectAll: "Tümünü seçmek için ARA ÇUBUĞU tuşuna basın.",	//need translation
 	indirectDeselectAll: "Tüm seçimi kaldırmak için ARA ÇUBUĞU tuşuna basın.",	//need translation
-	treeExpanded: "Bu satırı daraltmak için Control + sol ok tuşlarına basın. ",	//need translation
+	treeExpanded: "Bu satırı daraltmak için Control + sol ok tuşlarına basın.",	//need translation
 	treeCollapsed: "Bu satırı genişletmek için Control + sağ ok tuşlarına basın."	//need translation
 });
 
