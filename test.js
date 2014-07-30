@@ -311,6 +311,7 @@ require([
 		gotoCase();
 	};
 
+	//					display 					
 	window.showGrid = function(){
 		if(!window.grid){return;}
 		document.getElementById('gridContainer').style.display = '';
@@ -320,6 +321,20 @@ require([
 	window.hideGrid = function(){
 		if(!window.grid){return;}
 		document.getElementById('gridContainer').style.display = 'none';
+	};
+
+	window.showLoadingMask = function(){
+		if(!window.grid){return}
+		if(has('gridx1.3')){
+			grid.body._showLoadingMask();
+		}
+	};
+
+	window.hideLoadingMask = function(){
+		if(!window.grid){return}
+		if(has('gridx1.3')){
+			grid.body._hideLoadingMask();
+		}
 	};
 
 	var columns;
