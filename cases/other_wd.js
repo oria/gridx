@@ -16,7 +16,28 @@ return {
 			return this.execute('setStore(100);').
 				execute('restoreStore();').
 				assertSnapshot();
-		}/*,
+		},
+		"should show loading mask when call grid.body._showLoadingMask()": function(){
+			return this.execute('grid.body._showLoadingMask();').
+					then().
+					execute('return [grid.emptyNode.style.zIndex, grid.bodyNode.style.zIndex];').
+					then(function(zIndexes){
+						//emptyNode should overlap bodyNode
+						assert.isTrue(parseInt(zIndexes[0], 10) > parseInt(!zIndexes[1]? 0 : zIndexes[1], 10));
+					}).
+					wait(4000).
+
+					execute('grid.body._hideLoadingMask();').
+					then().
+					execute('return [grid.emptyNode.style.zIndex, grid.bodyNode.style.zIndex];').
+					then(function(zIndexes){
+						//emptyNode should not overlap bodyNode
+						console.log(zIndexes);
+						assert.isFalse(parseInt(zIndexes[0], 10) > parseInt(!zIndexes[1]? 0 : zIndexes[1], 10));
+					}).
+						wait(4000);
+		},
+		/*,
 		"should show effect when hover header": function(){
 			return this.headerCellById('Genre').
 				moveTo().
