@@ -845,7 +845,8 @@ define([
 
 					var cellContent = t._buildCellContent(col, rowId, cell, visualIndex, isPadding, cellData),
 						testNode = domConstruct.create('div', {innerHTML: cellContent}), isEmpty,
-						testNodeContent = (testNode.innerText !== undefined && testNode.innerText !== null) ? testNode.innerText : testNode.textContent;
+						testNodeInnerText = testNode.innerText,
+						testNodeContent = (testNodeInnerText !== undefined && testNodeInnerText !== null) ? testNodeInnerText : testNode.textContent;
 						testNodeContent = testNodeContent.trim ? testNodeContent.trim() : testNodeContent.replace(/\s/g, '');
 						isEmpty = testNodeContent === '&nbsp;' || !testNodeContent;
 
