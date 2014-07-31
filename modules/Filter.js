@@ -377,7 +377,9 @@ define([
 		column: function(/* String|Number */colId, /* String? */type, /* Function? */converter, /* Boolean? */useRawData){
 			type = String(type || 'string').toLowerCase();
 			return wrap(function(row){
-				return valueConvert(row[useRawData ? 'rawData' : 'data'][colId], type, converter);
+				var data = row[useRawData ? 'rawData' : '_data'];
+				data = row._data();
+				return valueConvert(data[colId], type, converter);
 			}, type, colId, {isCol: true});
 		},
 

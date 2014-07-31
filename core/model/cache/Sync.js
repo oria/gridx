@@ -164,6 +164,10 @@ define([
 
 		byId: function(id){
 			this._init();
+			var row = this._cache[id];
+			if (row && typeof row._data === 'function') {
+				row.data = row._data();
+			}
 			return this._cache[id];
 		},
 
@@ -253,6 +257,7 @@ define([
 				c = t._cache[id];
 				for(colId in columns){
 					col = columns[colId];
+					c.data = c._data();
 					c.data[colId] = t._formatCell(c.rawData, id, col.id);
 				}
 			}
@@ -323,7 +328,7 @@ define([
 				pr.push(id);
 			}
 			t._cache[id] = {
-				data: t._formatRow(rowData, id),
+				data: hitch(t, t._formatRow, rowData, id),
 				rawData: rowData,
 				item: item
 			};
@@ -425,7 +430,7 @@ define([
 				size = t._size[''];
 			t.clear();
 			t.onNew(id, 0, {
-				data: t._formatRow(row, id),
+				_data: hitch(t, t._formatRow, row, id),
 				rawData: row,
 				item: item
 			});
