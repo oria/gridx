@@ -328,7 +328,7 @@ define([
 				pr.push(id);
 			}
 			t._cache[id] = {
-				data: hitch(t, t._formatRow, rowData, id),
+				_data: hitch(t, t._formatRow, rowData, id),
 				rawData: rowData,
 				item: item
 			};
