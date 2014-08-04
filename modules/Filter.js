@@ -307,7 +307,7 @@ define([
 			}else{
 				m.filter(checker);
 			}
-			m.clearCache();
+			// m.clearCache();
 			Deferred.when(!skipUpdateBody && g.body.refresh(), function(){
 				d.callback();
 				t.onFilter();

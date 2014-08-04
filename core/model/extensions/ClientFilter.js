@@ -71,14 +71,16 @@ define([
 				//FIX me:
 				//In filter mode, we don't want the rows to have tree-relationship with each other,
 				//compulsively return false here to make tree expand/collapse button disappear in each row.
-				return false;
-				// return inner._call('hasChildren', arguments) && this._indexes[id] && this._struct[id] && this._struct[id].length > 0;
+				// return false;
+				// return true;
+				return inner._call('hasChildren', arguments) && this._indexes[id]!== undefined && this._struct[id] && this._struct[id].length > 0;
 			}else{
 				return inner._call('hasChildren', arguments);
 			}
 		},
 
 		byIndex: function(index, parentId){
+			console.log(index, parentId);
 			var t = this,
 				ids = t._ids,
 				inner = t.inner,

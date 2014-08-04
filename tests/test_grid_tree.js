@@ -128,8 +128,8 @@ require([
 		modules.Edit,
 		modules.IndirectSelectColumn,
 		modules.SingleSort,
-		modules.VirtualVScroller
-	];	
+		// modules.VirtualVScroller
+	];
 	mods1 = [
 		modules.Tree,
 		modules.Pagination,
