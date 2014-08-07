@@ -265,7 +265,11 @@ define([
 		},
 
 		_onClick: function(e){
-			this.sort(e.columnId, this._sortId != e.columnId ? 0 : !this._sortDescend);
+			// for Clicking on the divider for resizing a column without moving the mouse (no resize is done), causes a column sort
+			// which should not be allowed
+			if (this.grid._eventFlags.onHeaderCellMouseDown !== "columnResizer") {
+				this.sort(e.columnId, this._sortId != e.columnId ? 0 : !this._sortDescend);
+			}
 		},
 
 		_onKey: function(e){
