@@ -83,15 +83,12 @@ define([
 		},
 
 		byIndex: function(index, parentId){
-			// console.log(index, parentId);
 			var t = this,
 				ids = t._ids,
 				inner = t.inner,
 				id = ids && t._struct[parentId? parentId : ''][index + 1];
 
-			var result = !t.model.isId(parentId) && ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
-			// console.log(result);
-			return result;
+			return !t.model.isId(parentId) && ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
 		},
 
 		byId: function(id){
@@ -104,8 +101,6 @@ define([
 			}else{
 				return this.inner._call('indexToId', arguments);
 			}
-			// return !this.model.isId(parentId) && this._ids ? this._ids[index] :
-			 // this.inner._call('indexToId', arguments);
 		},
 
 		idToIndex: function(id){
@@ -117,16 +112,14 @@ define([
 				index = (this._struct[pid] || []).indexOf(id);
 
 			return index > 0 ? index - 1 : -1;
-
-			// if(this._ids && this.inner._call('parentId', arguments) === ''){
-			// 	var idx = indexOf(this._ids, id);
-			// 	return idx >= 0 ? idx : undefined;
-			// }
 		},
 
 		size: function(parentId){
+			var _struct;
+
 			if(this._ids){
-				return this._struct[this.model.isId(parentId)? parentId : ''].length - 1
+				_struct = this._struct[this.model.isId(parentId)? parentId : ''];
+				return _struct? _struct.length - 1 : -1;
 			}
 
 			return this.inner._call('size', arguments);
@@ -175,27 +168,17 @@ define([
 							end = start + rows.length;
 
 						parentId = parentId !== undefined? parentId: '';
-						// console.log(parentId);
 						for(i = start; i < end; ++i){
 							id = t.indexToId(i, parentId);
 							row = t.byIndex(i, parentId);
 							if(row){
-								if(checker(row, id)){		//match
+								if(checker(row, id)){
+									//match
 									ids.push(id);
 									t._add(id);
-									// temp = t._struct[id] = [];
-									// // if(ids.indexOf(parentId) >= 0){
-									// // 	temp.push(parentId);
-									// if(!t._struct.hasOwnProperty(parentId)){
-									// 	t._struct[parentId] = [m.parentId(parentId)];
-									// }
-									// t._struct[parentId].push(id);
-									// // }else{
-									// temp.push(parentId);
-									// }
-
 									t._indexes[id] = i;
-								}else{		//not match
+								}else{
+									//not match
 									t._valid = true;
 								}
 								children = m.children(id);
