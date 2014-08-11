@@ -85,7 +85,13 @@ define([
 		},
 
 		clearMark: function(type){
-			this._byId[this._initMark(type)] = {};
+			var tp = this._initMark(type);
+			var k = Object.keys(this._byId[tp]);
+			for (var i=0; i<k.length; i++){
+				if (this._byId[tp][k[i]] === 2) {
+					this._doMark(k[i], tp, 0);
+				};
+			}
 		},
 
 		getMarkedIds: function(type, includePartial){
