@@ -859,7 +859,7 @@ define([
 						isPadding ? 'gridxPaddingCell ' : '',
 						col._class || '', ' ',
 						(customClsIsFunction ? customCls(cell) : customCls) || '', ' ',
-						cellCls[colId] ? cellCls[colId].join('') : '',
+						cellCls[colId] ? cellCls[colId].join(' ') : '',
 						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
 						g.getTextDirStyle(colId, cellData),
 						(styleIsFunction ? col.style(cell) : col.style) || '',
