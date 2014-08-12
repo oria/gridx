@@ -47,9 +47,11 @@ define([
 		clear: function(){
 			this._ids = 0;
 			this._indexes = {};
+			
 			this._struct = {};
+			this._struct[''] = [undefined];
+			
 			this._valid = false;
-			// this._struct[''] = [];
 		},
 
 		filter: function(checker){
@@ -74,11 +76,23 @@ define([
 				//FIX me:
 				//In filter mode, we don't want the rows to have tree-relationship with each other,
 				//compulsively return false here to make tree expand/collapse button disappear in each row.
-				// return false;
-				// return true;
 				return inner._call('hasChildren', arguments) && this._struct[id] && this._struct[id].length > 1;
 			}else{
 				return inner._call('hasChildren', arguments);
+			}
+		},
+
+		children: function(id){
+			var t = this,
+				ids = t._ids,
+				inner = t.inner,
+				_struct;
+
+			if(ids){
+				_struct = this._struct[id];
+				return _struct instanceof Array ? _struct.slice(1) : [];
+			}else{
+				return inner._call('children', arguments);
 			}
 		},
 
@@ -209,6 +223,7 @@ define([
 			}else{
 				var d = new Deferred();
 				d.callback();
+				t.model._msg('clearFilter', ids);
 				return d;
 			}
 		},
