@@ -464,7 +464,7 @@ define([
 						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
 						// domClass.remove(loadingNode, 'gridxLoading');
-						t._hideLoadingMask();
+						// t._hideLoadingMask();
 						d.callback();
 					}
 				}catch(e){
@@ -543,8 +543,8 @@ define([
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
-				en.style.zIndex = '';
+				// en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
+				// en.style.zIndex = '';
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
@@ -597,6 +597,7 @@ define([
 					if(!t._err){
 						en.innerHTML = finalInfo;
 					}
+					t._hideLoadingMask();
 					t.onRender(start, count);
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
@@ -606,7 +607,10 @@ define([
 					//only when we do have something to unrender
 					t.onUnrender();
 				}
-				n.innerHTML = '';
+				// n.innerHTML = '';
+				while(n.firstChild){
+					n.removeChild(n.firstChild);
+				}
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
 				t.onEmpty();
