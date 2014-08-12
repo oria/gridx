@@ -464,7 +464,6 @@ define([
 						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
 						// domClass.remove(loadingNode, 'gridxLoading');
-						// t._hideLoadingMask();
 						d.callback();
 					}
 				}catch(e){
@@ -607,7 +606,6 @@ define([
 					//only when we do have something to unrender
 					t.onUnrender();
 				}
-				// n.innerHTML = '';
 				while(n.firstChild){
 					n.removeChild(n.firstChild);
 				}
