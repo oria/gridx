@@ -463,6 +463,7 @@ define([
 					}else{
 						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
+						// t._hideLoadingMask();
 						// domClass.remove(loadingNode, 'gridxLoading');
 						d.callback();
 					}
@@ -611,6 +612,7 @@ define([
 				}
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
+				t._hideLoadingMask();
 				t.onEmpty();
 				t.model.free();
 			}
