@@ -178,8 +178,11 @@ define([
 		forced: ['filter'],
 		preload: function(){
 			var t = this,
-				g = t.grid,
-				rules;
+				g = t.grid, rules;
+
+			if(this.arg('experimental')){
+				this.conditions.number = ['equal','greater','less','greaterEqual','lessEqual','notEqual', 'range', 'isEmpty'];
+			}
 			if(g.persist){
 				rules = g.persist.registerAndLoad('filterBar', function(){
 					return t.filterData;
@@ -205,11 +208,15 @@ define([
 		
 		ruleCountToConfirmClearFilter: 2,
 
+		//some newly added conditions(like numberRange) may not have complete nls,
+		//which means they should not be used in a production environment,
+		//mark experimental=true to open them.
+		experimental: false,
 		//useShortMessage: false,
 		
 		conditions: {
 			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
-			number: ['equal','greater','less','greaterEqual','lessEqual','notEqual','isEmpty'],
+			number: ['equal', 'greater', 'less', 'greaterEqual', 'lessEqual', 'notEqual', 'isEmpty'],
 			date: ['equal','before','after','range','isEmpty'],
 			time: ['equal','before','after','range','isEmpty'],
 			'enum': ['equal', 'notEqual', 'isEmpty'],

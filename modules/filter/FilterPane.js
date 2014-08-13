@@ -122,15 +122,22 @@ define([
 			this.sltCondition = registry.byNode(query('li>table', this.domNode)[1]);
 			var fields = this._fields = [
 				this.tbSingle = registry.byNode(query('.gridxFilterPaneTextWrapper > .dijitTextBox', this.domNode)[0]),
+				
 				this.tbNumber = registry.byNode(query('.gridxFilterPaneNumberWrapper > .dijitTextBox', this.domNode)[0]),
+				this.tbNumberStart = registry.byNode(query('.gridxFilterPaneNumberRangeWrapper > .dijitTextBox', this.domNode)[0]),
+				this.tbNumberEnd = registry.byNode(query('.gridxFilterPaneNumberRangeWrapper > .dijitTextBox', this.domNode)[1]),
+				
 				this.comboText = registry.byNode(query('.gridxFilterPaneComboWrapper > .dijitComboBox', this.domNode)[0]),
 				this.sltSingle = registry.byNode(query('.gridxFilterPaneSelectWrapper > .dijitSelect', this.domNode)[0]),
+				
 				this.dtbSingle = registry.byNode(query('.gridxFilterPaneDateWrapper > .dijitDateTextBox', this.domNode)[0]),
 				this.dtbStart = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[0]),
 				this.dtbEnd = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[1]),
+				
 				this.ttbSingle = registry.byNode(query('.gridxFilterPaneTimeWrapper > .dijitTimeTextBox', this.domNode)[0]),
 				this.ttbStart = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[0]),
 				this.ttbEnd = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[1]),
+				
 				this.rbTrue = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[0]),
 				this.rbFalse = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[1])
 			];
@@ -240,7 +247,7 @@ define([
 			var type = this._getType(), colId = this.sltColumn.get('value');
 			var combo = this._needComboBox();
 			
-			array.forEach(['Text','Combo', 'Date', 'Number', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
+			array.forEach(['Text','Combo', 'Date', 'Number', 'NumberRange', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
 				css.remove(this.domNode, 'gridxFilterPane' + k);
 			}, this);
 			
@@ -284,6 +291,12 @@ define([
 					return (combo ? this.comboText : this.tbSingle).get('value') || null;
 				case 'Number':
 					return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
+				case 'NumberRange':
+					return {
+								start: (isNaN(this.tbNumberStart.get('value')) || !this.tbNumberStart.isValid())? null : this.tbNumberStart.get('value'), 
+								end: (isNaN(this.tbNumberEnd.get('value')) || !this.tbNumberEnd.isValid())? null : this.tbNumberEnd.get('value')
+							}
+					// return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
 				case 'Select':
 					return this.sltSingle.get('value') || null;
 				case 'Date':
@@ -310,6 +323,10 @@ define([
 					break;
 				case 'Number':
 					this.tbNumber.set('value', value);
+					break;
+				case 'NumberRange':
+					this.tbNumberStart.set('value', value.start);
+					this.tbNumberEnd.set('value', value.end);
 					break;
 				case 'Select':
 					this.sltSingle.set('value', value);

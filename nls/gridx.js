@@ -110,6 +110,8 @@ define({root:
 	"endTimeRangeLabel": "Time Range Value End",
 	"beginDateRangeLabel": "Date Range Value Start",
 	"endDateRangeLabel": "Date Range Value End",
+	"beginNumberRangeLabel": "Number Value Start",
+	"endNumberRangeLabel": "Number Value End",
 	"startsWithExpr": "${0}*",
 
 //NestedSort
