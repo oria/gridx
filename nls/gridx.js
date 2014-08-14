@@ -36,6 +36,7 @@ define({root:
 	"conditionRange": "range",
 	"conditionIsEmpty": "is empty",
 	"conditionIsNotEmpty": "is not empty",
+	"conditionPast": "past",
 	
 	"all": "all",
 	"any": "any",
@@ -110,6 +111,7 @@ define({root:
 	"endTimeRangeLabel": "Time Range Value End",
 	"beginDateRangeLabel": "Date Range Value Start",
 	"endDateRangeLabel": "Date Range Value End",
+	"datePastLabel": "Past several days",
 	"beginNumberRangeLabel": "Number Value Start",
 	"endNumberRangeLabel": "Number Value End",
 	"startsWithExpr": "${0}*",

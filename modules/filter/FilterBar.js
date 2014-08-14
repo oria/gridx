@@ -211,13 +211,14 @@ define([
 		//some newly added conditions(like numberRange) may not have complete nls,
 		//which means they should not be used in a production environment,
 		//mark experimental=true to open them.
-		experimental: false,
+		experimental: true,
 		//useShortMessage: false,
 		
 		conditions: {
 			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
 			number: ['equal', 'greater', 'less', 'greaterEqual', 'lessEqual', 'notEqual', 'isEmpty'],
-			date: ['equal','before','after','range','isEmpty'],
+			date: ['equal','before','after','range','isEmpty', 'past'],
+			datetime: ['equal','before','after','range','isEmpty', 'past'],
 			time: ['equal','before','after','range','isEmpty'],
 			'enum': ['equal', 'notEqual', 'isEmpty'],
 			'boolean': ['equal','isEmpty']
@@ -525,15 +526,16 @@ define([
 			dlg.hide();
 		},
 		_getRuleString: function(condition, value, type){
-			var valueString, type;
+			var valueString, f, tpl, resolvedTextDir;
+
 			if(condition == 'isEmpty'){
 				valueString = '';
-			}else if(/^date|^time/i.test(type)){
-				var f = this._formatDate;
+			}else if(/^date|^time/i.test(type) && condition !== 'past'){
+				f = this._formatDate;
 				if(/^time/i.test(type)){f = this._formatTime;}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
+					tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
@@ -542,7 +544,7 @@ define([
 				valueString = value;
 			}
 			if(this.grid.textDir){
-				var resolvedTextDir = this.grid.textDir;
+				resolvedTextDir = this.grid.textDir;
 				if(resolvedTextDir == "auto"){
 					resolvedTextDir = _BidiSupport.prototype._checkContextual(valueString);
 				}
@@ -571,7 +573,7 @@ define([
 		},
 		
 		_getFilterExpression: function(condition, data, type, colId){
-			//get filter expression by condition,data, column and type
+			//get filter expression by condition, data, column and type
 			var F = Filter,
 				f = this.grid.filter,
 				dv = data.value,
@@ -584,6 +586,7 @@ define([
 				custom: col.dataTypeArgs && col.dataTypeArgs.converter && lang.isFunction(col.dataTypeArgs.converter)?
 						col.dataTypeArgs.converter : null,
 				date: dc,
+				datetime: dc,
 				time: tc
 			};
 			var c = data.condition, exp, isNot = false;
@@ -593,11 +596,21 @@ define([
 			if(col.encode === true && typeof data.value === 'string'){
 				dv = entities.encode(data.value);
 			}
+			// if(type == 'datetime'){
+			// 	var date = data.value.date,
+			// 		time = data.value.time.
+			// 		dv = new Date(date);
 
-			if(c === 'range'){
-				var startValue = F.value(data.value.start, type),
-					endValue = F.value(data.value.end, type), 
-					columnValue = F.column(colId, type, converter);
+			// 	if(date && time){
+			// 		dv.setMinutes(time.getMinutes());
+			// 		dv.setHours(time.getHours());
+			// 	}
+			// }
+			var startValue, endValue, columnValue;
+			if(c === 'range' || c === 'past'){
+				startValue = F.value(data.value.start, type);
+				endValue = F.value(data.value.end, type);
+				columnValue = F.column(colId, type, converter);
 				exp = F.and(F.greaterEqual(columnValue, startValue), F.lessEqual(columnValue, endValue));
 			}else{
 				if(/^not/.test(c)){
