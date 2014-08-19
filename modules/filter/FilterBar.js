@@ -540,6 +540,9 @@ define([
 				}else{
 					valueString = f(value);
 				}
+			}else if(condition === 'range'){
+				tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
+				valueString = string.substitute(tpl, [value.start, value.end]);
 			}else{
 				valueString = value;
 			}
