@@ -337,6 +337,13 @@ define([
 				d.setSeconds(0);
 				d.setMilliseconds(0);
 				return d.getTime();
+			case 'datetime':
+				d = new Date(d);
+				// d.setHours(0);
+				// d.setMinutes(0);
+				// d.setSeconds(0);
+				// d.setMilliseconds(0);
+				return d.getTime();
 			case 'time':
 				d = new Date(d);
 				d.setDate(1);
