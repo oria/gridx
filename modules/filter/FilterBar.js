@@ -181,6 +181,7 @@ define([
 				g = t.grid, rules;
 
 			if(this.arg('experimental')){
+				this.conditions = lang.mixin({}, this.conditions);
 				this.conditions.number = ['equal','greater','less','greaterEqual','lessEqual','notEqual', 'range', 'isEmpty'];
 			}
 			if(g.persist){
