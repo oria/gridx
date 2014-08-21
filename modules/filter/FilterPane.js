@@ -60,13 +60,19 @@ define([
 			//		Get the filter defined by this filter pane.
 			var value = this._getValue(), 
 				colId = this.sltColumn.get('value'),
-				condition = this.sltCondition.get('value');
-			if(condition === 'isEmpty' || (value !== null && (condition !== 'range' || (value.start && value.end)))){
+				condition = this.sltCondition.get('value'),
+				dataType = this._getDataType();
+			if(condition === 'isEmpty' ||
+				(value !== null && 
+					(condition !== 'range' || (value.start && value.end)) //s&&
+					// (dataType !== 'datetime' || (value.date && value.time))
+				)
+			){
 				return {
 					colId: isAnyColumn(colId) ? '' : colId,
 					condition: condition,
-					//fix defect #10741
-					//set('value', '') on DateTimeBox will set date to 1/1/1970
+					//fix defect #
+					//set('value', '') on DateTimeBox will set date to 1/1/197010741
 					//so, set('value', null) when condition is empty on a DateTimeBoxs
 					value: condition === 'isEmpty'? ( this._getType() === 'Date'? null : '') : value,
 					type: this._getType()
@@ -122,15 +128,33 @@ define([
 			this.sltCondition = registry.byNode(query('li>table', this.domNode)[1]);
 			var fields = this._fields = [
 				this.tbSingle = registry.byNode(query('.gridxFilterPaneTextWrapper > .dijitTextBox', this.domNode)[0]),
+				
 				this.tbNumber = registry.byNode(query('.gridxFilterPaneNumberWrapper > .dijitTextBox', this.domNode)[0]),
+				this.tbNumberStart = registry.byNode(query('.gridxFilterPaneNumberRangeWrapper > .dijitTextBox', this.domNode)[0]),
+				this.tbNumberEnd = registry.byNode(query('.gridxFilterPaneNumberRangeWrapper > .dijitTextBox', this.domNode)[1]),
+				
 				this.comboText = registry.byNode(query('.gridxFilterPaneComboWrapper > .dijitComboBox', this.domNode)[0]),
 				this.sltSingle = registry.byNode(query('.gridxFilterPaneSelectWrapper > .dijitSelect', this.domNode)[0]),
+				
 				this.dtbSingle = registry.byNode(query('.gridxFilterPaneDateWrapper > .dijitDateTextBox', this.domNode)[0]),
 				this.dtbStart = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[0]),
 				this.dtbEnd = registry.byNode(query('.gridxFilterPaneDateRangeWrapper > .dijitDateTextBox', this.domNode)[1]),
+				this.tbDatePast = registry.byNode(query('.gridxFilterPaneDatePastWrapper > .dijitTextBox', this.domNode)[0]),
+				this.sltDateInterval = registry.byNode(query('.gridxFilterPaneDatePastWrapper > .dijitSelect', this.domNode)[0]),
+
+				this.dtbDatetimeSingle = registry.byNode(query('.gridxFilterPaneDatetimeWrapper > .dijitDateTextBox', this.domNode)[0]),
+				this.dtbDatetimeStart = registry.byNode(query('.gridxFilterPaneDatetimeRangeWrapper > .dijitDateTextBox', this.domNode)[0]),
+				this.dtbDatetimeEnd = registry.byNode(query('.gridxFilterPaneDatetimeRangeWrapper > .dijitDateTextBox', this.domNode)[1]),
+				this.ttbDatetimeSingle = registry.byNode(query('.gridxFilterPaneDatetimeWrapper > .dijitTimeTextBox', this.domNode)[0]),
+				this.ttbDatetimeStart = registry.byNode(query('.gridxFilterPaneDatetimeRangeWrapper > .dijitTimeTextBox', this.domNode)[0]),
+				this.ttbDatetimeEnd = registry.byNode(query('.gridxFilterPaneDatetimeRangeWrapper > .dijitTimeTextBox', this.domNode)[1]),
+				this.tbDatetimePast = registry.byNode(query('.gridxFilterPaneDatetimePastWrapper > .dijitTextBox', this.domNode)[0]),
+				this.sltDatetimeInterval = registry.byNode(query('.gridxFilterPaneDatetimePastWrapper > .dijitSelect', this.domNode)[0]),
+
 				this.ttbSingle = registry.byNode(query('.gridxFilterPaneTimeWrapper > .dijitTimeTextBox', this.domNode)[0]),
 				this.ttbStart = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[0]),
 				this.ttbEnd = registry.byNode(query('.gridxFilterPaneTimeRangeWrapper > .dijitTimeTextBox', this.domNode)[1]),
+				
 				this.rbTrue = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[0]),
 				this.rbFalse = registry.byNode(query('.gridxFilterPaneRadioWrapper .dijitRadio', this.domNode)[1])
 			];
@@ -208,9 +232,10 @@ define([
 		_getType: function(){
 			// summary:
 			//		Get current filter type, determined by data type and condition.
-			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', 'enum': 'Select', 'boolean': 'Radio'};
+			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', datetime: 'Datetime', 'enum': 'Select', 'boolean': 'Radio'};
 			var type = mapping[this._getDataType()];
-			if('range' === this.sltCondition.get('value')){type += 'Range';} ;
+			if('range' === this.sltCondition.get('value')){type += 'Range';}
+			if('past' === this.sltCondition.get('value')){type += 'Past';}
 			return type;
 		},
 		_updateTitle: function(){
@@ -240,13 +265,19 @@ define([
 			var type = this._getType(), colId = this.sltColumn.get('value');
 			var combo = this._needComboBox();
 			
-			array.forEach(['Text','Combo', 'Date', 'Number', 'DateRange', 'Time', 'TimeRange', 'Select', 'Radio'], function(k){
+			array.forEach([
+				'Text','Combo',
+				'Number', 'NumberRange',
+				'Date', 'DateRange', 'DatePast',
+				'Datetime', 'DatetimeRange', 'DatetimePast',
+				'Time', 'TimeRange', 'Select', 'Radio'
+			], function(k){
 				css.remove(this.domNode, 'gridxFilterPane' + k);
 			}, this);
 			
 			css.add(this.domNode, 'gridxFilterPane' + (combo ? 'Combo' : type));
 			var disabled = this.sltCondition.get('value') === 'isEmpty';
-			array.forEach(this._fields, function(f){f.set('disabled', disabled)});
+			array.forEach(this._fields, function(f){f.set('disabled', disabled);});
 			
 			var col = this.grid._columnsById[colId];
 			if(combo){
@@ -278,18 +309,100 @@ define([
 		_getValue: function(){
 			// summary:
 			//		Get current filter value
-			var type = this._getType(), combo = this._needComboBox();
+			var type = this._getType(), combo = this._needComboBox(), val,
+				_getDatetime = function(date, time){
+					var datetime = new Date(date);
+
+					if(date && time){
+						datetime.setMinutes(time.getMinutes());
+						datetime.setHours(time.getHours());
+						return datetime;
+					}
+					return null;
+				};
+
 			switch(type){
 				case 'Text':
 					return (combo ? this.comboText : this.tbSingle).get('value') || null;
 				case 'Number':
 					return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
+				case 'NumberRange':
+					return {
+						start: (isNaN(this.tbNumberStart.get('value')) || !this.tbNumberStart.isValid())? null : this.tbNumberStart.get('value'), 
+						end: (isNaN(this.tbNumberEnd.get('value')) || !this.tbNumberEnd.isValid())? null : this.tbNumberEnd.get('value')
+					};
+					// return (isNaN(this.tbNumber.get('value')) || !this.tbNumber.isValid())? null : this.tbNumber.get('value');
 				case 'Select':
 					return this.sltSingle.get('value') || null;
 				case 'Date':
+					// console.log(this.dtbSingle.get('value'));
+					// console.log(typeof this.dtbSingle.get('value'));
 					return this.dtbSingle.get('value') || null;
 				case 'DateRange':
 					return {start: this.dtbStart.get('value'), end: this.dtbEnd.get('value')};
+				case 'DatePast':
+					val = this.tbDatePast.get('value');
+					if(isNaN(val) || !this.tbDatePast.isValid()){
+						return null;
+					}
+					var cur = new Date(),
+						past = new Date(),
+						interval = this.sltDateInterval.get('value');
+
+					switch(interval){
+						case 'day':
+							past.setDate(cur.getDate() - val);
+							break;
+						case 'month':
+							past.setMonth(cur.getMonth() - val);
+							break;
+						case 'year':
+							past.setFullYear(cur.getFullYear() - val);
+							break;
+					}
+
+					// console.log(past, cur);
+					return {start: past, end: cur, amount: val, interval: interval};
+				case 'Datetime':
+					// console.log(this.dtbSingle.get('value'));
+					// console.log(typeof this.dtbSingle.get('value'));
+					var date = this.dtbDatetimeSingle.get('value'),
+						time = this.ttbDatetimeSingle.get('value');
+
+					return _getDatetime(date, time);
+					// return {date: date, time: time};
+				case 'DatetimeRange':
+					var dateStart = this.dtbDatetimeStart.get('value'),
+						timeStart = this.ttbDatetimeStart.get('value'),
+						dateEnd = this.dtbDatetimeEnd.get('value'),
+						timeEnd = this.ttbDatetimeEnd.get('value');
+
+					return {start: _getDatetime(dateStart, timeStart), end: _getDatetime(dateEnd, timeEnd)};
+				case 'DatetimePast':
+					val = this.tbDatetimePast.get('value');
+					if(isNaN(val) || !this.tbDatetimePast.isValid()){
+						return null;
+					}
+					var cur = new Date(),
+						past = new Date(),
+						interval = this.sltDatetimeInterval.get('value');
+
+					switch(interval){
+						case 'day':
+							past.setDate(cur.getDate() - val);
+							break;
+						case 'month':
+							past.setMonth(cur.getMonth() - val);
+							break;
+						case 'year':
+							past.setFullYear(cur.getFullYear() - val);
+							break;
+					}
+
+					// console.log(past, cur);
+					return {start: past, end: cur, amount: val, interval: interval};
+					// temp = this.tbDatePast.get('value');
+					// return isNaN(temp) || !this.tbDatePast.isValid()? null : temp;
 				case 'Time':
 					return this.ttbSingle.get('value') || null;
 				case 'TimeRange':
@@ -300,16 +413,26 @@ define([
 					return null;
 			}
 		},
+
 		_setValue: function(value){
+			console.log('in set value');
+			console.log(value);
+			console.log(typeof value);
+			console.log(value instanceof Date);
 
 			if(!this._isValidValue(value)){return;}
-			var type = this._getType(), combo = this._needComboBox();
+			var type = this._getType(),
+				combo = this._needComboBox(), tempDate;
 			switch(type){
 				case 'Text':
 					(combo ? this.comboText : this.tbSingle).set('value', value);
 					break;
 				case 'Number':
 					this.tbNumber.set('value', value);
+					break;
+				case 'NumberRange':
+					this.tbNumberStart.set('value', value.start);
+					this.tbNumberEnd.set('value', value.end);
 					break;
 				case 'Select':
 					this.sltSingle.set('value', value);
@@ -320,6 +443,37 @@ define([
 				case 'DateRange':
 					this.dtbStart.set('value', value.start);
 					this.dtbEnd.set('value', value.end);
+					break;
+				case 'DatePast':
+					this.tbDatePast.set('value', value.amount);
+					this.sltDateInterval.set('value', value.interval);
+					break;
+				case 'Datetime':
+					tempDate = new Date(value);
+					tempDate.setFullYear(1970);
+					tempDate.setMonth(0);
+					tempDate.setDate(1);
+					this.dtbDatetimeSingle.set('value', value);
+					this.ttbDatetimeSingle.set('value', tempDate);
+					break;
+				case 'DatetimeRange':
+					tempDate = new Date(value.start);
+					tempDate.setFullYear(1970);
+					tempDate.setMonth(0);
+					tempDate.setDate(1);
+					this.dtbDatetimeStart.set('value', value.start);
+					this.ttbDatetimeStart.set('value', tempDate);
+
+					var endTempDate = new Date(value.end);
+					endTempDate.setFullYear(1970);
+					endTempDate.setMonth(0);
+					endTempDate.setDate(1);
+					this.dtbDatetimeEnd.set('value', value.end);
+					this.ttbDatetimeEnd.set('value', endTempDate);
+					break;
+				case 'DatetimePast':
+					this.tbDatetimePast.set('value', value.amount);
+					this.sltDatetimeInterval.set('value', value.interval);
 					break;
 				case 'Time':
 					this.ttbSingle.set('value', value);

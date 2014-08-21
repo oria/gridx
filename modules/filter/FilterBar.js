@@ -178,8 +178,11 @@ define([
 		forced: ['filter'],
 		preload: function(){
 			var t = this,
-				g = t.grid,
-				rules;
+				g = t.grid, rules;
+
+			if(this.arg('experimental')){
+				this.conditions.number = ['equal','greater','less','greaterEqual','lessEqual','notEqual', 'range', 'isEmpty'];
+			}
 			if(g.persist){
 				rules = g.persist.registerAndLoad('filterBar', function(){
 					return t.filterData;
@@ -205,12 +208,17 @@ define([
 		
 		ruleCountToConfirmClearFilter: 2,
 
+		//some newly added conditions(like numberRange) may not have complete nls,
+		//which means they should not be used in a production environment,
+		//mark experimental=true to open them.
+		experimental: false,
 		//useShortMessage: false,
 		
 		conditions: {
 			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
-			number: ['equal','greater','less','greaterEqual','lessEqual','notEqual','isEmpty'],
-			date: ['equal','before','after','range','isEmpty'],
+			number: ['equal', 'greater', 'less', 'greaterEqual', 'lessEqual', 'notEqual', 'isEmpty'],
+			date: ['equal','before','after','range','isEmpty', 'past'],
+			datetime: ['equal','before','after','range','isEmpty', 'past'],
 			time: ['equal','before','after','range','isEmpty'],
 			'enum': ['equal', 'notEqual', 'isEmpty'],
 			'boolean': ['equal','isEmpty']
@@ -518,24 +526,31 @@ define([
 			dlg.hide();
 		},
 		_getRuleString: function(condition, value, type){
-			var valueString, type;
+			var valueString, f, tpl, resolvedTextDir;
+
 			if(condition == 'isEmpty'){
 				valueString = '';
-			}else if(/^date|^time/i.test(type)){
-				var f = this._formatDate;
+			}else if(/^date|^time/i.test(type) && condition !== 'past'){
+				f = this._formatDate;
 				if(/^time/i.test(type)){f = this._formatTime;}
+				if(/^datetime/i.test(type)){
+					f = this._formatDatetime;
+				}
 				
 				if(condition === 'range'){
-					var tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
+					tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
 					valueString = string.substitute(tpl, [f(value.start), f(value.end)]);
 				}else{
 					valueString = f(value);
 				}
+			}else if(condition === 'range'){
+				tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
+				valueString = string.substitute(tpl, [value.start, value.end]);
 			}else{
 				valueString = value;
 			}
 			if(this.grid.textDir){
-				var resolvedTextDir = this.grid.textDir;
+				resolvedTextDir = this.grid.textDir;
 				if(resolvedTextDir == "auto"){
 					resolvedTextDir = _BidiSupport.prototype._checkContextual(valueString);
 				}
@@ -564,7 +579,7 @@ define([
 		},
 		
 		_getFilterExpression: function(condition, data, type, colId){
-			//get filter expression by condition,data, column and type
+			//get filter expression by condition, data, column and type
 			var F = Filter,
 				f = this.grid.filter,
 				dv = data.value,
@@ -573,10 +588,12 @@ define([
 
 			var dc = col.dateParser || this._stringToDate;
 			var tc = col.timeParser || this._stringToTime;
+			var dtc = col.datetimeParser || this._stringToDatetime;
 			var converters = {
 				custom: col.dataTypeArgs && col.dataTypeArgs.converter && lang.isFunction(col.dataTypeArgs.converter)?
 						col.dataTypeArgs.converter : null,
 				date: dc,
+				datetime: dtc,
 				time: tc
 			};
 			var c = data.condition, exp, isNot = false;
@@ -586,11 +603,21 @@ define([
 			if(col.encode === true && typeof data.value === 'string'){
 				dv = entities.encode(data.value);
 			}
+			// if(type == 'datetime'){
+			// 	var date = data.value.date,
+			// 		time = data.value.time.
+			// 		dv = new Date(date);
 
-			if(c === 'range'){
-				var startValue = F.value(data.value.start, type),
-					endValue = F.value(data.value.end, type), 
-					columnValue = F.column(colId, type, converter);
+			// 	if(date && time){
+			// 		dv.setMinutes(time.getMinutes());
+			// 		dv.setHours(time.getHours());
+			// 	}
+			// }
+			var startValue, endValue, columnValue;
+			if(c === 'range' || c === 'past'){
+				startValue = F.value(data.value.start, type);
+				endValue = F.value(data.value.end, type);
+				columnValue = F.column(colId, type, converter);
 				exp = F.and(F.greaterEqual(columnValue, startValue), F.lessEqual(columnValue, endValue));
 			}else{
 				if(/^not/.test(c)){
@@ -624,6 +651,11 @@ define([
 			d.setSeconds(parseInt(RegExp.$3));
 			return d;
 		},
+		_stringToDatetime: function(s){
+			if(s instanceof Date){return s;}
+
+			return new Date(s);
+		},
 		_formatDate: function(date){
 			//this may be customized by grid layout definition
 			var m = date.getMonth() + 1, d = date.getDate();
@@ -635,6 +667,15 @@ define([
 			if(h < 10){h = '0' + h;}
 			if(m < 10){m = '0' + m;}
 			return h + ':' + m + ':00';
+		},
+		_formatDatetime: function(datetime){
+			//this may be customized by grid layout definition
+			var m = datetime.getMonth() + 1, d = datetime.getDate();
+			//this may be customized by grid layout definition
+			var h = datetime.getHours(), min = datetime.getMinutes();
+			if(h < 10){h = '0' + h;}
+			if(min < 10){min = '0' + min;}
+			return m + '/' + d + '/' + datetime.getFullYear() + ' ' + h + ':' + min + ':00';
 		},
 		
 		_initFocus: function(){

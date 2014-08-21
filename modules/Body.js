@@ -330,6 +330,8 @@ define([
 
 		autoUpdate: true,
 
+		renderredIds: {},
+
 		compareOnSet: function(v1, v2){
 			return typeof v1 == 'object' && typeof v2 == 'object' ?
 				json.toJson(v1) == json.toJson(v2) :
@@ -403,6 +405,9 @@ define([
 			delete t._err;
 			clearTimeout(t._sizeChangeHandler);
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
+
+			// cache visual ids
+			t.renderredIds = {};
 			
 			// domClass.add(loadingNode, 'gridxLoading');
 			t._showLoadingMask();
@@ -458,8 +463,8 @@ define([
 					}else{
 						t.renderRows(rs, rc, 0, 1);
 						t.onForcedScroll();
+						// t._hideLoadingMask();
 						// domClass.remove(loadingNode, 'gridxLoading');
-						t._hideLoadingMask();
 						d.callback();
 					}
 				}catch(e){
@@ -538,8 +543,8 @@ define([
 				return;
 			}
 			if(count > 0){
-				en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
-				en.style.zIndex = '';
+				// en.innerHTML = t.arg('loadingInfo', g.nls.loadingInfo);
+				// en.style.zIndex = '';
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
@@ -592,6 +597,7 @@ define([
 					if(!t._err){
 						en.innerHTML = finalInfo;
 					}
+					t._hideLoadingMask();
 					t.onRender(start, count);
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
@@ -601,9 +607,12 @@ define([
 					//only when we do have something to unrender
 					t.onUnrender();
 				}
-				n.innerHTML = '';
+				while(n.firstChild){
+					n.removeChild(n.firstChild);
+				}
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
+				t._hideLoadingMask();
 				t.onEmpty();
 				t.model.free();
 			}
@@ -753,6 +762,7 @@ define([
 					row = g.row(rowInfo.rowId, 1);
 				s.push('<div class="gridxRow ', i % 2 ? 'gridxRowOdd' : '',
 					'" role="row" visualindex="', i);
+				t.renderredIds[rowInfo.rowId] = 1;
 				if(row){
 					t.model.keep(row.id);
 					s.push('" rowid="', encode(row.id),
@@ -795,6 +805,7 @@ define([
 					n.setAttribute('rowindex', rowInfo.rowIndex);
 					n.setAttribute('parentid', rowInfo.parentId || '');
 					n.innerHTML = t._buildCells(row, rowInfo.visualIndex);
+					t.renderredIds[row.id] = 1;
 					t.onAfterRow(row);
 				}else{
 					console.error('Error in Body._buildRowContent: Row is not in cache: ' + rowInfo.rowIndex);

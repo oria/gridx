@@ -153,7 +153,11 @@ define([
 		_updateButtons: function(){
 			var children = this._accordionContainer.getChildren();
 			//toggle filter button disable
-			if(array.some(children, function(c){return c.getData() === null;})){
+			if(
+				array.some(children, function(c){
+					return c.getData() === null;
+				})
+			){
 				this._btnFilter.set('disabled', true);
 			}else{
 				this._btnFilter.set('disabled', false);

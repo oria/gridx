@@ -163,7 +163,7 @@ declare(_Module, {
 		return n;
 	},
 
-	_focusRegion: function(region){
+	_focusRegion: function(region, isByArrowkey){
 		var t = this,
 			g = t.grid;
 		if(region && !t._lock){
@@ -216,7 +216,7 @@ declare(_Module, {
 			i += dir;
 		}
 		if(regionNodes[i]){
-			t._focusRegion(regionNodes[i]);
+			t._focusRegion(regionNodes[i], true);
 		}
 	}
 }));

@@ -172,7 +172,8 @@ define([
 
 		_syncRowHeight: function(rowHeaderNode, bodyNode){
 			//Check if the table is collasped.
-			var t = this;
+			var t = this, h;
+
 			if(t._isCollapse === undefined){
 				var refNode = query('.gridxCell', t.grid.header.innerNode)[0];
 				t._isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse';
@@ -182,11 +183,17 @@ define([
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 			setTimeout(function(){
-				if(rowHeaderNode && rowHeaderNode.firstChild){
-					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
+				h = getHeight();
+				if((h + '').indexOf('.') >= 0){
+					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
+
+				}else{
+					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height  = h;
 				}
+				// if(rowHeaderNode && rowHeaderNode.firstChild){
+				// 	rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
+				// }
 			}, 0);
 		},
 

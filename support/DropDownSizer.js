@@ -84,6 +84,7 @@ define([
 						'class': 'gridxPagerSizeSwitchWidget',
 						'aria-label': 'switch page size',
 						onChange: function(ps){
+							ps = parseInt(ps, 10);
 							p.setPageSize(ps < 0 ? 0 : ps);
 						}
 					}, t.sizerProps || {});

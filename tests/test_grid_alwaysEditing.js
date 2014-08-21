@@ -53,12 +53,12 @@ require([
 	});
 
 	//Monitor writing store
-	dojo.connect(store1, 'put', function(){
-		console.log('put store1:', arguments);
-	});
-	dojo.connect(store2, 'put', function(){
-		console.log('put store2:', arguments);
-	});
+	// dojo.connect(store1, 'put', function(){
+	// 	console.log('put store1:', arguments);
+	// });
+	// dojo.connect(store2, 'put', function(){
+	// 	console.log('put store2:', arguments);
+	// });
 
 	mystore = IFWSFactory({
 		dataSource: dataSource, 
@@ -139,8 +139,14 @@ require([
 			width: '50px',
 			editor: "dijit.form.NumberSpinner"
 		},
-		{id: 'Heard1', field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
-			editor: "dijit.form.CheckBox",
+		// {id: 'Heard1', field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
+		// 	editor: "dijit.form.CheckBox",
+		// 	editorArgs: {
+		// 		props: 'value: true'
+		// 	}
+		// },
+		{id: 'Heard1-1', field: "Heard", name:"Radio Button", width: '30px', alwaysEditing: true,
+			editor: "dijit.form.RadioButton",
 			editorArgs: {
 				props: 'value: true'
 			}

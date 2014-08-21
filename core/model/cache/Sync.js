@@ -468,7 +468,10 @@ define([
 					delete t._cache[j];
 					delete st[j];
 					delete sz[j];
-					t.onDelete(j);
+					// only fire onDelete if it is a child
+					if (i !== (ids.length - 1)) {
+						t.onDelete(j, undefined, t.treePath(j));
+					}
 				}
 				i = indexOf(t._priority, id);
 				if(i >= 0){
