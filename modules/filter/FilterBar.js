@@ -211,7 +211,7 @@ define([
 		//some newly added conditions(like numberRange) may not have complete nls,
 		//which means they should not be used in a production environment,
 		//mark experimental=true to open them.
-		experimental: true,
+		experimental: false,
 		//useShortMessage: false,
 		
 		conditions: {
@@ -533,6 +533,9 @@ define([
 			}else if(/^date|^time/i.test(type) && condition !== 'past'){
 				f = this._formatDate;
 				if(/^time/i.test(type)){f = this._formatTime;}
+				if(/^datetime/i.test(type)){
+					f = this._formatDatetime;
+				}
 				
 				if(condition === 'range'){
 					tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
@@ -658,6 +661,15 @@ define([
 			if(h < 10){h = '0' + h;}
 			if(m < 10){m = '0' + m;}
 			return h + ':' + m + ':00';
+		},
+		_formatDatetime: function(datetime){
+			//this may be customized by grid layout definition
+			var m = datetime.getMonth() + 1, d = datetime.getDate();
+			//this may be customized by grid layout definition
+			var h = datetime.getHours(), min = datetime.getMinutes();
+			if(h < 10){h = '0' + h;}
+			if(min < 10){min = '0' + min;}
+			return m + '/' + d + '/' + datetime.getFullYear() + ' ' + h + ':' + min + ':00';
 		},
 		
 		_initFocus: function(){
