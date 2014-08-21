@@ -211,7 +211,7 @@ define([
 		//some newly added conditions(like numberRange) may not have complete nls,
 		//which means they should not be used in a production environment,
 		//mark experimental=true to open them.
-		experimental: false,
+		experimental: true,
 		//useShortMessage: false,
 		
 		conditions: {
