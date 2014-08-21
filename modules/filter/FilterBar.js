@@ -588,11 +588,12 @@ define([
 
 			var dc = col.dateParser || this._stringToDate;
 			var tc = col.timeParser || this._stringToTime;
+			var dtc = col.datetimeParser || this._stringToDatetime;
 			var converters = {
 				custom: col.dataTypeArgs && col.dataTypeArgs.converter && lang.isFunction(col.dataTypeArgs.converter)?
 						col.dataTypeArgs.converter : null,
 				date: dc,
-				datetime: dc,
+				datetime: dtc,
 				time: tc
 			};
 			var c = data.condition, exp, isNot = false;
@@ -649,6 +650,11 @@ define([
 			d.setMinutes(parseInt(RegExp.$2));
 			d.setSeconds(parseInt(RegExp.$3));
 			return d;
+		},
+		_stringToDatetime: function(s){
+			if(s instanceof Date){return s;}
+
+			return new Date(s);
 		},
 		_formatDate: function(date){
 			//this may be customized by grid layout definition

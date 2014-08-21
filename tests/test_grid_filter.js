@@ -11,10 +11,9 @@ require([
 ], function(parser, dataSource, storeFactory, JsonRest){
 
 	store = storeFactory({
-		dataSource: dataSource, 
+		dataSource: dataSource,
 		size: 100
 	});
-	
 
 	layout = [
 		{id: 'id', field: 'id', name: 'Identity', dataType: 'number'},
@@ -31,7 +30,7 @@ require([
 		{id: 'Track', field: 'Track', name: 'Track', dataType: 'number'},
 		{id: 'Composer', field: 'Composer', name: 'Composer', dataType: 'string'},
 		{id: 'Download Date', field: 'Download Date', name: 'Download Date', dataType: 'date'},
-		{id: 'Date Time', field: 'Download Date', name: 'Date Time', dataType: 'datetime'},
+		{id: 'Date Time', field: 'datetime', name: 'Date Time', dataType: 'datetime'},
 		{id: 'Last Played', field: 'Last Played', name: 'Last Played', dataType: 'time'},
 		{id: 'Heard', field: 'Heard', name: 'Heard', dataType: 'boolean'}
 	];
