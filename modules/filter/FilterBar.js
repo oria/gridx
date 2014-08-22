@@ -634,11 +634,20 @@ define([
 		_stringToDate: function(s){
 			if(s instanceof Date){return s;}
 
+			if(typeof s === 'string'){
+				var d = new Date(s);
+
+				if(typeof d.getTime() === 'number'){
+					return d;
+				}
+			}
+
 			var pattern = /(\d{4})\/(\d\d?)\/(\d\d?)/;
 			pattern.test(s);
 			var d = new Date();
 			d.setFullYear(parseInt(RegExp.$1));
-			d.setMonth(parseInt(RegExp.$2)-1);
+			d.setMonth(parseInt(RegExp.$2) - 1);
+			d.setDate(parseInt(RegExp.$3));
 			return d;
 		},
 		_stringToTime: function(s){
