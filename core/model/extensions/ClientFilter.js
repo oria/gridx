@@ -38,6 +38,8 @@ define([
 			this.aspect(model, 'setStore', 'clear');
 		},
 
+		_valid: false,		//valid filter means there are truelly rows that are filterred out
+
 		//Public---------------------------------------------------------------------
 
 		//pageSize: 100,
@@ -45,8 +47,11 @@ define([
 		clear: function(){
 			this._ids = 0;
 			this._indexes = {};
+			
 			this._struct = {};
-			this._struct[''] = [];
+			this._struct[''] = [undefined];
+			
+			this._valid = false;
 		},
 
 		filter: function(checker){
@@ -71,10 +76,23 @@ define([
 				//FIX me:
 				//In filter mode, we don't want the rows to have tree-relationship with each other,
 				//compulsively return false here to make tree expand/collapse button disappear in each row.
-				return false;
-				// return inner._call('hasChildren', arguments) && this._indexes[id] && this._struct[id] && this._struct[id].length > 0;
+				return inner._call('hasChildren', arguments) && this._struct[id] && this._struct[id].length > 1;
 			}else{
 				return inner._call('hasChildren', arguments);
+			}
+		},
+
+		children: function(id){
+			var t = this,
+				ids = t._ids,
+				inner = t.inner,
+				_struct;
+
+			if(ids){
+				_struct = this._struct[id];
+				return _struct instanceof Array ? _struct.slice(1) : [];
+			}else{
+				return inner._call('children', arguments);
 			}
 		},
 
@@ -82,7 +100,8 @@ define([
 			var t = this,
 				ids = t._ids,
 				inner = t.inner,
-				id = ids && ids[index];
+				id = ids && t._struct[parentId? parentId : ''][index + 1];
+
 			return !t.model.isId(parentId) && ids ? t.model.isId(id) && inner._call('byId', [id]) : inner._call('byIndex', arguments);
 		},
 
@@ -91,19 +110,33 @@ define([
 		},
 
 		indexToId: function(index, parentId){
-			return !this.model.isId(parentId) && this._ids ? this._ids[index] : this.inner._call('indexToId', arguments);
+			if(this._ids){
+				return this._struct[this.model.isId(parentId)? parentId: ''][index + 1]
+			}else{
+				return this.inner._call('indexToId', arguments);
+			}
 		},
 
 		idToIndex: function(id){
-			if(this._ids && this.inner._call('parentId', arguments) === ''){
-				var idx = indexOf(this._ids, id);
-				return idx >= 0 ? idx : undefined;
+			if(!this._ids){
+				return this.inner._call('idToIndex', arguments);
 			}
-			return this.inner._call('idToIndex', arguments);
+
+			var pid = this._struct[id] && this._struct[id][0],
+				index = (this._struct[pid] || []).indexOf(id);
+
+			return index > 0 ? index - 1 : -1;
 		},
 
 		size: function(parentId){
-			return !this.model.isId(parentId) && this._ids ? this._ids.length : this.inner._call('size', arguments);
+			var _struct;
+
+			if(this._ids){
+				_struct = this._struct[this.model.isId(parentId)? parentId : ''];
+				return _struct? _struct.length - 1 : -1;
+			}
+
+			return this.inner._call('size', arguments);
 		},
 
 		when: function(args, callback){
@@ -149,22 +182,18 @@ define([
 							end = start + rows.length;
 
 						parentId = parentId !== undefined? parentId: '';
-						// console.log(parentId);
 						for(i = start; i < end; ++i){
 							id = t.indexToId(i, parentId);
 							row = t.byIndex(i, parentId);
 							if(row){
 								if(checker(row, id)){
+									//match
 									ids.push(id);
-									// temp = t._struct[id] = [];
-									// if(ids.indexOf(parentId) >= 0){
-									// 	temp.push(parentId);
-									// 	t._struct[parentId].push(id);
-									// }else{
-									// 	temp.push('');
-									// }
-
+									t._add(id);
 									t._indexes[id] = i;
+								}else{
+									//not match
+									t._valid = true;
 								}
 								children = m.children(id);
 								if(children.length){
@@ -183,7 +212,7 @@ define([
 					whenScope: t,
 					whenFunc: t.when
 				}, scanCallback).then(function(){
-					if(ids.length == t.size()){
+					if(ids.length == t.size() && !t._valid){
 						//Filtered item size equals cache size, so filter is useless.
 						t.clear();
 					}else{
@@ -194,7 +223,36 @@ define([
 			}else{
 				var d = new Deferred();
 				d.callback();
+				t.model._msg('clearFilter', ids);
 				return d;
+			}
+		},
+
+		_add: function(id){
+			if(id === undefined || id === null){return;}
+
+			var t = this,
+				m = t.model,
+				treepath = t.model.treePath(id),
+				treepathLen = treepath.length, temp, i,
+				parentId = t.model.parentId(id);
+
+			if(!t._struct[id]){
+				t._struct[id] = [parentId];
+			}
+			temp = t._struct[id];
+			if(parentId !== undefined && parentId !== null){
+				if(!t._struct.hasOwnProperty(parentId)){
+					t._struct[parentId] = [m.parentId(parentId)];
+				}
+				if(t._struct[parentId].indexOf(id) < 0){
+					t._struct[parentId].push(id);
+				}
+			}
+			// }else{
+			// temp.push(parentId);
+			for(i = treepathLen - 1; i >= 0; i--){
+				t._add(treepath[i]);
 			}
 		},
 

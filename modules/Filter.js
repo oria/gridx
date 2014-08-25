@@ -281,14 +281,23 @@ define([
 		},
 
 		setFilter: function(checker, skipUpdateBody){
+			var t = this;
+
 			if(checker != this._checker){
 				this._checker = checker;
-				this.refresh(skipUpdateBody);
+				this.refresh(skipUpdateBody).then(function(){
+					t.onFilter();
+				});
 			}
 		},
 
-		clearFilter: function(){
-			this.setFilter();
+		clearFilter: function(skipUpdateBody){
+			var t = this;
+
+			this._checker = null;
+			this.refresh(skipUpdateBody).then(function(){
+				t.onClearFilter();
+			})
 		},
 
 		getFilter: function(){
@@ -307,17 +316,19 @@ define([
 			}else{
 				m.filter(checker);
 			}
-			m.clearCache();
+			// m.clearCache();
 			Deferred.when(!skipUpdateBody && g.body.refresh(), function(){
 				d.callback();
-				t.onFilter();
+				// t.onFilter();
 			}, function(e){
 				d.errback(e);
 			});
 			return d;
 		},
 
-		onFilter: function(){}
+		onFilter: function(){},
+
+		onClearFilter: function(){}
 	});
 
 	//Util

@@ -157,6 +157,9 @@ define([
 					t._clear();
 				}
 			}, t, 'before');
+			t.aspect(m, '_msg', '_receiveMsg');
+			// t.aspect(m, 'filter', '_onFilter');
+
 			t._loadLevels(persistedOpenInfo).then(function(){
 				var size = t._openInfo[''].count = m.size();
 				t.rootCount = t.rootCount || size - t.rootStart;
@@ -500,6 +503,20 @@ define([
 			var t = this;
 			if(!t.paging && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
+			}
+		},
+
+		_receiveMsg: function(msg){
+			var info = this._openInfo,
+				m = this.model;
+
+			if(msg === 'filter'){
+				this.__openInfo = this._openInfo;
+				this.__parentOpenInfo = this._parentOpenInfo;
+				this._clear();
+			}else if(msg === 'clearFilter'){
+				this._openInfo = this.__openInfo;
+				this._parentOpenInfo = this.__parentOpenInfo;
 			}
 		},
 
