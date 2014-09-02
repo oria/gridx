@@ -158,8 +158,10 @@ define([
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
-				nt = n.firstChild,
+				nt = n && n.firstChild,
 				cp = t.arg('cellProvider');
+
+			if(!n || !bn || !nt) return;
 			n.setAttribute('rowid', row.id);
 			n.setAttribute('rowindex', row.index());
 			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');

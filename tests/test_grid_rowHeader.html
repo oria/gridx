@@ -28,6 +28,7 @@
 		modules: [
 			"gridx/modules/Focus",
 			"gridx/modules/RowHeader",
+			"gridx/modules/CellWidget",
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>
@@ -59,13 +60,13 @@
 		store: store1,
 		structure: layout3,
 		cacheClass: "gridx/core/model/cache/Sync",
-		autoHeight: true,
+		autoHeight: false,
 		modules: [
 			"gridx/modules/Focus",
 			"gridx/modules/RowHeader",
 			"gridx/modules/CellWidget",
-			"gridx/modules/pagination/Pagination",
-			"gridx/modules/pagination/PaginationBar"
+			"gridx/modules/VirtualVScroller",
+
 		]
 	'></div>
 	<h2>RowHeader with Editable Cells</h2>
