@@ -517,55 +517,27 @@ define([
 			}else if(msg === 'clearFilter'){
 				this._openInfo = this.__openInfo;
 				this._parentOpenInfo = this.__parentOpenInfo;
+				delete this.__openInfo;
+				delete this.__parentOpenInfo;
 			}
 		},
 
 		_onDelete: function(rowId, rowIndex, treePath){
-			if(treePath){
+			if (treePath) {
 				var t = this,
-					openInfo = t._openInfo,
-					parentOpenInfo = t._parentOpenInfo,
-					info = openInfo[rowId],
 					model = t.model,
-					parentId = treePath.pop(),
-					count = 1,
-					deleteItem = function(id, parentId){
-						var info = openInfo[id],
-							openedChildren = parentOpenInfo[id] || [];
-						array.forEach(openedChildren, function(child){
-							deleteItem(child);
-						});
-						delete parentOpenInfo[id];
-						if(info){
-							delete openInfo[id];
-							parentId = info.parentId;
-						}else if(!model.isId(parentId)){
-							//FIXME: don't know what to do here...
-							return;
-						}
-						var ppoi = parentOpenInfo[parentId],
-							i = array.indexOf(ppoi, id);
-						if(i >= 0){
-							ppoi.splice(i, 1);
-						}
-					};
-				if(info){
-					count += info.count;
-					info = openInfo[info.parentId];
-				}else if(model.isId(parentId)){
-					info = openInfo[parentId];
-				}
-				deleteItem(rowId, parentId);
-				while(info){
-					info.count -= count;
-					info = openInfo[info.parentId];
-				}
+					parentId = treePath[treePath.length - 1],
+					count = t._deleteInfo(rowId, rowIndex, treePath, t._openInfo, t._parentOpenInfo),
+					rootIndex = model.idToIndex(model.rootId(rowId));
+
+				// delete info from the filtering view
+				if (t.__openInfo) count = t._deleteInfo(rowId, rowIndex, treePath, t.__openInfo, t.__parentOpenInfo);
+
 				//sometimes number typed ID can be accidentally changed to string type.
 				if(String(parentId) == String(model.layerId()) && rowIndex >= t.rootStart && rowIndex < t.rootStart + t.rootCount){
 					t.rootCount--;
 				}
-				var rootIndex = model.idToIndex(model.rootId(rowId));
-				if(rootIndex >= t.rootStart && rootIndex < t.rootStart + t.rootCount){
+				if (rootIndex >= t.rootStart && rootIndex < t.rootStart + t.rootCount) {
 					t.visualCount -= count;
 				}
 			}else{
@@ -573,6 +545,47 @@ define([
 				this._clear();
 			}
 			this.grid.body.lazyRefresh();
+		},
+
+		_deleteInfo: function(rowId, rowIndex, treePath, openInfo, parentOpenInfo) {
+			var t = this,
+				info = openInfo[rowId],
+				model = t.model,
+				parentId = treePath[treePath.length - 1],
+				count = 1,
+				deleteItem = function(id, parentId){
+					var info = openInfo[id],
+						openedChildren = parentOpenInfo[id] || [];
+					array.forEach(openedChildren, function(child){
+						deleteItem(child);
+					});
+					delete parentOpenInfo[id];
+					if(info){
+						delete openInfo[id];
+						parentId = info.parentId;
+					}else if(!model.isId(parentId)){
+						//FIXME: don't know what to do here...
+						return;
+					}
+					var ppoi = parentOpenInfo[parentId],
+						i = array.indexOf(ppoi, id);
+					if(i >= 0){
+						ppoi.splice(i, 1);
+					}
+				};
+			if(info){
+				count += info.count;
+				info = openInfo[info.parentId];
+			}else if(model.isId(parentId)){
+				info = openInfo[parentId];
+			}
+			deleteItem(rowId, parentId);
+			while(info){
+				info.count -= count;
+				info = openInfo[info.parentId];
+			}
+
+			return count;
 		}
 	});
 });

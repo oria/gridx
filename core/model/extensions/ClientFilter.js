@@ -376,8 +376,23 @@ define([
 			t.onNew.apply(t, arguments);
 		},
 
-		_onDelete: function(id, index, row){
-			var t = this, indexes = t._indexes, ids = t._ids;
+		_onDelete: function(id, index, path){
+			var t = this, indexes = t._indexes, ids = t._ids, st = t._struct;
+			// remove id in the struct
+			if (path.length && ids) {
+				var parentId = path[path.length - 1],
+					sIndex = indexOf(st[parentId], id),
+					children = st[id];
+
+				st[parentId].splice(sIndex, 1);
+				delete st[id];
+				if(children){
+					for(var i = children.length - 1; i > 0; --i){
+						delete st[i];
+					}
+				}
+			}
+
 			if(ids){
 				var i = indexOf(ids, id),
 					idx = indexes[id];
@@ -396,7 +411,7 @@ define([
 					t._refilter = 1;
 				}
 			}
-			t.onDelete(id, index, row);
+			t.onDelete(id, index, path);
 		}
 	});
 });
