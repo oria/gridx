@@ -515,8 +515,8 @@ define([
 				this.__parentOpenInfo = this._parentOpenInfo;
 				this._clear();
 			}else if(msg === 'clearFilter'){
-				this._openInfo = this.__openInfo;
-				this._parentOpenInfo = this.__parentOpenInfo;
+				this._openInfo = this.__openInfo || this._openInfo;
+				this._parentOpenInfo = this.__parentOpenInfo || this._parentOpenInfo;
 			}
 		},
 
