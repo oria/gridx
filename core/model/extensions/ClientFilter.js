@@ -345,10 +345,13 @@ define([
 
 		syncOrder: function() {
 			var struct = this.model._cache._struct;
+			// handle special root id array
 			for (var id in this._struct) {
 				var idArray = this._struct[id];
 				if (idArray.length > 2) {
+					if (id === '') idArray.shift();
 					this._syncOrder(idArray, struct[id]);
+					if (id === '') idArray.unshift(undefined);
 				}
 			}
 		},
