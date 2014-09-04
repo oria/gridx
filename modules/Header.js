@@ -165,7 +165,7 @@ define([
 					g.getTextDirStyle(col.id, col.name),
 					(lang.isFunction(col.headerStyle) ? col.headerStyle(col) : col.headerStyle) || '',
 					'"><div class="gridxSortNode">',
-					col.name || '',
+					(lang.isFunction(col.headerFormatter) ? col.headerFormatter(col) : col.name) || '',
 					'</div></td>');
 			});
 			sb.push('</tr></table>');
