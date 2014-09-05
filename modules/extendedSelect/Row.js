@@ -354,7 +354,8 @@ define([
 		},
 
 		_onMark: function(id, toMark, oldState, type){
-			if(type == 'select' && this.grid.body.renderredIds[id]){
+			// if(type == 'select' && this.grid.body.renderredIds[id]){
+			if(type == 'select'){
 				var nodes = query('[rowid="' + this.grid._escapeId(id) + '"]', this.grid.mainNode);
 				if(nodes.length){
 					nodes.forEach(function(node){

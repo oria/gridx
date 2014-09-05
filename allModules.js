@@ -44,6 +44,7 @@ define([
 	'./modules/PagedBody',
 	'./modules/AutoPagedBody',
 	'./modules/HeaderMenu',
+	'./modules/HeaderRegions',
 	'./modules/SlantedHeader',
 	'./modules/ExpandableColumn',
 	'./modules/Layer',
@@ -63,7 +64,7 @@ define([
 	Persist, Menu, Dod, Tree, RowLock,
 	ToolBar, SummaryBar, Bar, NavigableCell, TouchScroll, TouchVScroller,
 	HiddenColumns, GroupHeader, PagedBody, AutoPagedBody,
-	HeaderMenu, SlantedHeader, ExpandableColumn,
+	HeaderMenu, HeaderRegions, SlantedHeader, ExpandableColumn,
 	Layer, StructureSwitch){
 return {
 	Focus: Focus,
@@ -111,6 +112,7 @@ return {
 	PagedBody: PagedBody,
 	AutoPagedBody: AutoPagedBody,
 	HeaderMenu: HeaderMenu,
+	HeaderRegions: HeaderRegions,
 	SlantedHeader: SlantedHeader,
 	ExpandableColumn: ExpandableColumn,
 	Layer: Layer,
