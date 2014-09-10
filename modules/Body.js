@@ -64,6 +64,10 @@ define([
 		//		Whether to show a visual effect when mouse hovering a row.
 		rowHoverEffect: true,
 
+		// renderredIds: Object
+		//		This object contains the current renderred rows Ids.
+		//		For grid not using virtualVSroller, this is equal to current row ids in the grid body.
+		renderredIds: {},
 		// stuffEmptyCell: Boolean
 		//		Whether to stuff a cell with &nbsp; if it is empty.
 		stuffEmptyCell: true,
@@ -587,13 +591,15 @@ define([
 						//only when we do have something to unrender
 						t.onUnrender();
 					}
-					while(n.firstChild){
-						id = n.firstChild.getAttribute('rowid');
-						n.removeChild(n.firstChild);
-						if(g.model.isId(id)){
-							t.renderredIds[id] = undefined;
-						}
-					}
+					// while(n.firstChild){
+					// 	id = n.firstChild.getAttribute('rowid');
+					// 	n.removeChild(n.firstChild);
+					// 	if(g.model.isId(id)){
+					// 		t.renderredIds[id] = undefined;
+					// 	}
+					// }
+					// reset renderredIds since all rows in body are destroyed
+					t.renderredIds = {};
 					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					n.innerHTML = str;
 					n.scrollTop = scrollTop;
@@ -622,10 +628,9 @@ define([
 				while(n.firstChild){
 					id = n.firstChild.getAttribute('rowid');
 					n.removeChild(n.firstChild);
-					if(g.model.isId(id)){
-						t.renderredIds[id] = undefined;
-					}
 				}
+				//reset renderredIds since all rows in body are destroyed.
+				t.renderredIds = {};
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
 				t._hideLoadingMask();
