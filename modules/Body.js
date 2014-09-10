@@ -254,6 +254,7 @@ define([
 				g = t.grid,
 				dn = t.domNode = g.bodyNode;
 			t._cellCls = {};
+			t.renderredIds = {};
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
@@ -407,7 +408,7 @@ define([
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
 
 			// cache visual ids
-			t.renderredIds = {};
+			// t.renderredIds = {};
 			
 			// domClass.add(loadingNode, 'gridxLoading');
 			t._showLoadingMask();
@@ -450,6 +451,7 @@ define([
 								t.onUnrender(id, 'refresh');
 							}
 							domConstruct.destroy(n);
+							t.renderredIds[id] = undefined;
 							n = tmp;
 						}
 						array.forEach(renderedRows, t.onAfterRow, t);
@@ -548,8 +550,8 @@ define([
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
-				str = t._buildRows(start, count, uncachedRows, renderedRows);
 				if(position == 'top'){
+					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					t.renderCount += t.renderStart - start;
 					t.renderStart = start;
 					domConstruct.place(str, n, 'first');
@@ -563,6 +565,7 @@ define([
 						}
 					}
 				}else if(position == 'bottom'){
+					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					t.renderCount = start + count - t.renderStart;
 					domConstruct.place(str, n, 'last');
 					//unrender out-of-range rows immediately, so that CellWidget can reuse the widgets.
@@ -584,6 +587,14 @@ define([
 						//only when we do have something to unrender
 						t.onUnrender();
 					}
+					while(n.firstChild){
+						id = n.firstChild.getAttribute('rowid');
+						n.removeChild(n.firstChild);
+						if(g.model.isId(id)){
+							t.renderredIds[id] = undefined;
+						}
+					}
+					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					n.innerHTML = str;
 					n.scrollTop = scrollTop;
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
@@ -601,6 +612,7 @@ define([
 					t.onRender(start, count);
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
+				var id  = 0;
 				n.scrollTop = 0;
 				//unrender before destroy nodes, so that other modules have a chance to detach nodes.
 				if(!t._skipUnrender){
@@ -608,7 +620,11 @@ define([
 					t.onUnrender();
 				}
 				while(n.firstChild){
+					id = n.firstChild.getAttribute('rowid');
 					n.removeChild(n.firstChild);
+					if(g.model.isId(id)){
+						t.renderredIds[id] = undefined;
+					}
 				}
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
@@ -636,6 +652,7 @@ define([
 							t.onUnrender(id, undefined, 'post');
 						}
 						domConstruct.destroy(bn.lastChild);
+						t.renderredIds[id] = undefined;
 					}
 				}else{
 					var tp = bn.scrollTop;
@@ -650,6 +667,7 @@ define([
 							t.onUnrender(id , undefined, 'pre');
 						}
 						domConstruct.destroy(bn.firstChild);
+						t.renderredIds[id] = undefined;
 					}
 					t.renderStart += i;
 					bn.scrollTop = tp > 0 ? tp : 0;

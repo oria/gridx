@@ -130,6 +130,7 @@ require([
 		modules.SingleSort,
 		modules.VirtualVScroller
 	];
+
 	mods1 = [
 		modules.Tree,
 		modules.Pagination,
