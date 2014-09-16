@@ -24,7 +24,7 @@ require([
 			enumOptions: ['d', 'e', 'f']
 		},
 		{id: 'Album', field: 'Album', name: 'Album', dataType: 'string', autoComplete: false},
-		{id: 'Name', field: 'Name', name: 'Name', dataType: 'string'},
+		{id: 'Name', field: 'Name', name: 'Name', dataType: 'string', autoComplete: false},
 		{id: 'Year', field: 'Year', name: 'Year', dataType: 'number'},
 		{id: 'Length', field: 'Length', name: 'Length', dataType: 'string'},
 		{id: 'Track', field: 'Track', name: 'Track', dataType: 'number'},
