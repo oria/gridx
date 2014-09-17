@@ -87,6 +87,7 @@ define([
 			t.batchConnect(
 				[body, 'onRender', '_onRendered'],
 				[body, 'onAfterRow', '_onAfterRow'],
+				[body, 'onRowHeightChange', '_onAfterRow'],
 				[body, 'onAfterCell', '_onAfterCell'],
 				[body, 'onUnrender', '_onUnrender'],
 				[body, 'onEmpty', function(){
@@ -147,6 +148,9 @@ define([
 		},
 
 		_onAfterRow: function(row){
+			if(typeof row === 'string'){
+				row = grid.row(row, 1);
+			}
 			var t = this,
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],

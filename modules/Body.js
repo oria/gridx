@@ -138,6 +138,15 @@ define([
 			// row: gridx.core.Row
 			//		A row object representing this row.
 		},
+		
+		onRowHeightChange: function(row){
+			// summary:
+			//		Fired when a row node's height is changed.
+			//		This is different from onAfterRow since the row node is already there but the style/height is changed.
+			//
+			// row: gridx.core.Row | rowId
+			//		A row object representing this row or rowId.
+		},
 
 		onAfterCell: function(cell){
 			// summary:
@@ -685,6 +694,8 @@ define([
 
 		//Events--------------------------------------------------------------------------------
 		onAfterRow: function(){/* row */},
+
+		onRowHeightChange: function(/*id*/){},
 
 		onAfterCell: function(){/* cell */},
 
