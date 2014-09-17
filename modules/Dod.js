@@ -153,6 +153,7 @@ define([
 		},
 		
 		show: function(row){
+			var row = typeof row === 'object' ? row : grid.row(row, 1/*isid*/);
 			var _row = this._row(row),
 				df = new Deferred(),
 				g = this.grid;
@@ -228,6 +229,7 @@ define([
 		},
 		
 		hide: function(row){
+			var row = typeof row === 'object' ? row : grid.row(row, 1/*isid*/);
 			var rowHeaderNode,
 				_row = this._row(row),
 				g = this.grid,
@@ -303,6 +305,7 @@ define([
 		},
 		
 		toggle: function(row){
+			var row = typeof row === 'object' ? row : grid.row(row, 1/*isid*/);
 			var _row = this._row(row);
 			if(!_row || _row.inAnim || _row.inLoading){
 				return;
@@ -323,6 +326,7 @@ define([
 		},
 		
 		isShown: function(row){
+			var row = typeof row === 'object' ? row : grid.row(row, 1/*isid*/);
 			var _row = this._row(row);
 			return !!_row.dodShown;
 		},
