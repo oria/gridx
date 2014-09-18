@@ -132,7 +132,7 @@ define([
 			for(i = 0; i < count; i++){
 				totalCount += 8 + parseInt(this.grid._columns[i].width, 10);
 			}
-			if(grid.bodyNode.clientWidth - totalCount < 10){
+			if(this.grid.bodyNode.clientWidth - totalCount < 10){
 				console.warn('Warning: locked total columns width exceed grid width, do nothing.');
 				return;
 			}

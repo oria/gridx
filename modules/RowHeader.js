@@ -149,7 +149,7 @@ define([
 
 		_onAfterRow: function(row){
 			if(typeof row === 'string'){
-				row = grid.row(row, 1);
+				row = this.grid.row(row, 1);
 			}
 			var t = this,
 				visualIndex = row.visualIndex(),
