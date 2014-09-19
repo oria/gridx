@@ -308,6 +308,11 @@ define([
 					}
 				}
 			});
+			if(t.arg('autoExpandOnFilter') === true && g.filter){
+				t.aspect(g.filter, 'onFilter', function(msg){
+					t.expandRecursive();
+				});
+			}
 			t._initExpandLevel();
 			t._initFocus();
 		},
@@ -344,6 +349,8 @@ define([
 		clearOnSetStore: true,
 
 		mergedParentRow: false,
+
+		autoExpandOnFilter: true,
 
 		onExpand: function(id){},
 

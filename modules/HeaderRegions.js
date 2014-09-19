@@ -68,7 +68,7 @@ declare(_Module, {
 		}
 	},
 
-	refresh: function(){
+	refresh: function(force){
 		var t = this,
 			g = t.grid,
 			regionNodes = t._regionNodes = [],
@@ -89,7 +89,10 @@ declare(_Module, {
 					tmpArr = [];
 				array.forEach(regions, function(region){
 					var regionNode = region.n[colId];
-					if(!regionNode){
+					if(!regionNode || force){
+						if(regionNode){
+							regionNode.parentNode.removeChild(regionNode);
+						}
 						regionNode = region.n[colId] = region.c(col);
 						if(regionNode){
 							domClass.add(regionNode, 'gridxHeaderRegion');

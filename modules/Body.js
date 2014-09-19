@@ -64,6 +64,10 @@ define([
 		//		Whether to show a visual effect when mouse hovering a row.
 		rowHoverEffect: true,
 
+		// renderredIds: Object
+		//		This object contains the current renderred rows Ids.
+		//		For grid not using virtualVSroller, this is equal to current row ids in the grid body.
+		renderredIds: {},
 		// stuffEmptyCell: Boolean
 		//		Whether to stuff a cell with &nbsp; if it is empty.
 		stuffEmptyCell: true,
@@ -133,6 +137,15 @@ define([
 			//		Fired when a row is created, data is filled in, and its node is inserted into the dom tree.
 			// row: gridx.core.Row
 			//		A row object representing this row.
+		},
+		
+		onRowHeightChange: function(row){
+			// summary:
+			//		Fired when a row node's height is changed.
+			//		This is different from onAfterRow since the row node is already there but the style/height is changed.
+			//
+			// row: gridx.core.Row | rowId
+			//		A row object representing this row or rowId.
 		},
 
 		onAfterCell: function(cell){
@@ -254,6 +267,7 @@ define([
 				g = t.grid,
 				dn = t.domNode = g.bodyNode;
 			t._cellCls = {};
+			t.renderredIds = {};
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
@@ -407,7 +421,7 @@ define([
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
 
 			// cache visual ids
-			t.renderredIds = {};
+			// t.renderredIds = {};
 			
 			// domClass.add(loadingNode, 'gridxLoading');
 			t._showLoadingMask();
@@ -450,6 +464,7 @@ define([
 								t.onUnrender(id, 'refresh');
 							}
 							domConstruct.destroy(n);
+							t.renderredIds[id] = undefined;
 							n = tmp;
 						}
 						array.forEach(renderedRows, t.onAfterRow, t);
@@ -548,8 +563,8 @@ define([
 				if(position != 'top' && position != 'bottom'){
 					t.model.free();
 				}
-				str = t._buildRows(start, count, uncachedRows, renderedRows);
 				if(position == 'top'){
+					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					t.renderCount += t.renderStart - start;
 					t.renderStart = start;
 					domConstruct.place(str, n, 'first');
@@ -563,6 +578,7 @@ define([
 						}
 					}
 				}else if(position == 'bottom'){
+					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					t.renderCount = start + count - t.renderStart;
 					domConstruct.place(str, n, 'last');
 					//unrender out-of-range rows immediately, so that CellWidget can reuse the widgets.
@@ -584,6 +600,16 @@ define([
 						//only when we do have something to unrender
 						t.onUnrender();
 					}
+					// while(n.firstChild){
+					// 	id = n.firstChild.getAttribute('rowid');
+					// 	n.removeChild(n.firstChild);
+					// 	if(g.model.isId(id)){
+					// 		t.renderredIds[id] = undefined;
+					// 	}
+					// }
+					// reset renderredIds since all rows in body are destroyed
+					t.renderredIds = {};
+					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					n.innerHTML = str;
 					n.scrollTop = scrollTop;
 					n.scrollLeft = g.hScrollerNode.scrollLeft;
@@ -601,6 +627,7 @@ define([
 					t.onRender(start, count);
 				});
 			}else if(!{top: 1, bottom: 1}[position]){
+				var id  = 0;
 				n.scrollTop = 0;
 				//unrender before destroy nodes, so that other modules have a chance to detach nodes.
 				if(!t._skipUnrender){
@@ -608,8 +635,11 @@ define([
 					t.onUnrender();
 				}
 				while(n.firstChild){
+					id = n.firstChild.getAttribute('rowid');
 					n.removeChild(n.firstChild);
 				}
+				//reset renderredIds since all rows in body are destroyed.
+				t.renderredIds = {};
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
 				t._hideLoadingMask();
@@ -636,6 +666,7 @@ define([
 							t.onUnrender(id, undefined, 'post');
 						}
 						domConstruct.destroy(bn.lastChild);
+						t.renderredIds[id] = undefined;
 					}
 				}else{
 					var tp = bn.scrollTop;
@@ -650,6 +681,7 @@ define([
 							t.onUnrender(id , undefined, 'pre');
 						}
 						domConstruct.destroy(bn.firstChild);
+						t.renderredIds[id] = undefined;
 					}
 					t.renderStart += i;
 					bn.scrollTop = tp > 0 ? tp : 0;
@@ -662,6 +694,8 @@ define([
 
 		//Events--------------------------------------------------------------------------------
 		onAfterRow: function(){/* row */},
+
+		onRowHeightChange: function(/*id*/){},
 
 		onAfterCell: function(){/* cell */},
 
@@ -861,7 +895,7 @@ define([
 						isPadding ? 'gridxPaddingCell ' : '',
 						col._class || '', ' ',
 						(customClsIsFunction ? customCls(cell) : customCls) || '', ' ',
-						cellCls[colId] ? cellCls[colId].join('') : '',
+						cellCls[colId] ? cellCls[colId].join(' ') : '',
 						' " style="width:', colWidth, ';min-width:', colWidth, ';max-width:', colWidth, ';',
 						g.getTextDirStyle(colId, cellData),
 						(styleIsFunction ? col.style(cell) : col.style) || '',

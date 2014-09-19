@@ -207,6 +207,8 @@ define([
 					item.Genre = toSpecialchars(item.Genre);
 					item.Artist = toSpecialchars(item.Artist);
 				}
+				// item['Download Date'] = '2014/8/23';
+				// item['Last Played'] = '13:11:00';
 				data.items.push(lang.mixin({
 					id: i,
 					order: i + 1,

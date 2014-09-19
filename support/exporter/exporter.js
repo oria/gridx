@@ -2,8 +2,9 @@ define([
 /*====="dojo/_base/declare", =====*/
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
+	"dojo/DeferredList",
 	"dojo/_base/array"
-], function(/*=====declare, =====*/lang, Deferred, array){
+], function(/*=====declare, =====*/lang, Deferred, DeferredList, array){
 
 /*=====
 	function exporter(grid, writer, args){
@@ -185,13 +186,15 @@ define([
 			if(!ps || count <= ps){
 				reqs.push({
 					start: start,
-					count: count
+					count: count,
+					parentId: ''
 				});
 			}else{
 				for(i = start; i < end; i += ps){
 					reqs.push({
 						start: i,
-						count: i + ps < end ? ps : end - i
+						count: i + ps < end ? ps : end - i,
+						parentId: ''
 					});
 				}
 			}
@@ -200,22 +203,22 @@ define([
 		return reqs;
 	}
 
-	function first(req, grid){
+	function first(req, grid, parentId){
 		return lang.isArray(req) ? {
 			p: 0,
-			row: grid.row(req[0])
+			row: grid.row(req[0], 0, parentId)
 		} : {
 			p: req.start,
-			row: grid.row(req.start)
+			row: grid.row(req.start, 0, parentId)
 		};
 	}
 
-	function next(req, grid, prevRow){
+	function next(req, grid, prevRow, parentId){
 		var p = prevRow.p + 1,
 			isArray = lang.isArray(req);
 		return p < (isArray ? req.length : req.start + req.count) ? {
 			p: p,
-			row: grid.row(isArray ? req[p] : p)
+			row: grid.row(isArray ? req[p] : p, 0, parentId)
 		} : null;
 	}
 
@@ -231,25 +234,58 @@ define([
 	}
 
 	function fetchRows(grid, defer, writer, context, args, d, reqs){
+		var dl = [];
 		var f = args.filter,
 			cols = context.columnIds,
-			req = reqs[reqs.p++],
+			req = reqs[reqs.p++], newReq,
 			fail = lang.hitch(d, d.errback),
+			parentId = req && req.parentId,
+
 			func = function(){
 				defer.progress(reqs.p / reqs.length);
 				grid.when(req, function(){
-					for(var r = first(req, grid); r && r.row; r = next(req, grid, r)){
-						context.row = r.row;
-						if((!f || f(r.row)) && check(writer, 'beforeRow', context, args)){
-							for(var i = 0; i < cols.length; ++i){
-								var col = grid.column(cols[i], 1),	//1 as true
-									cell = context.cell = grid.cell(r.row, col);
-								context.column = col;
-								context.data = format(args, cell);
-								check(writer, 'handleCell', context, args);
+					console.log(req);
+					var rowid,
+						fetchChildren = function(id){
+							//only support Sync cache currently
+							var m = grid.model,
+								size = m.size(id), i, childRowid;
+
+							console.log('id', id);
+							m.when({start: 0, parentId: id}).then(function(){
+								for(i = 0; i < size; i++){
+									childRowid = m.indexToId(i, id);
+									writerCallback({row:grid.row(i, 0, id)});
+									fetchChildren(childRowid);
+								}
+							});
+						},
+
+						writerCallback = function(r){
+							context.row = r.row;
+
+							if((!f || f(r.row)) && check(writer, 'beforeRow', context, args)){
+								for(var i = 0; i < cols.length; ++i){
+									var col = grid.column(cols[i], 1),	//1 as true
+										cell = context.cell = grid.cell(r.row, col);
+									// if(!cell) continue;
+									context.column = col;
+									context.data = format(args, cell);
+									check(writer, 'handleCell', context, args);
+								}
+								check(writer, 'afterRow', context, args);
 							}
-							check(writer, 'afterRow', context, args);
-						}
+						};
+
+					for(var r = first(req, grid, parentId); r && r.row; r = next(req, grid, r, parentId)){
+						// context.row = r.row;
+						rowid = r.row.id;
+
+						// console.log('!!!!!!!', rowid);
+						writerCallback(r);
+						fetchChildren(rowid);
+						// reqs.splice(reqs.p, 0, {start: 0, count: 1, parentId: rowid});
+						// fetchRows(grid, defer, writer, context, args, d, reqs);
 					}
 				}).then(function(){
 					fetchRows(grid, defer, writer, context, args, d, reqs);
@@ -287,6 +323,7 @@ define([
 	}
 
 	function exporter(grid, writer, /* __ExportArgs */ args){
+		// debugger;
 		var d = new Deferred(),
 			model = grid.model,
 			cols = getColumns(grid, args),
@@ -301,6 +338,7 @@ define([
 			},
 			success = function(){
 				check(writer, 'afterBody', context, args);
+				// console.log(writer.getResult());
 				d.callback(writer.getResult());
 			},
 			fail = lang.hitch(d, d.errback);

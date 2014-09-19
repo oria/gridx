@@ -157,6 +157,7 @@ define([
 			this.setLayer(pid);
 		},
 
+		// Technically, byIndex is based on byId API.
 		byIndex: function(index, parentId){
 			this._init();
 			return this._cache[this.indexToId(index, parentId)];

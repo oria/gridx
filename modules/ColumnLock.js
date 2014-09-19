@@ -126,6 +126,16 @@ define([
 				console.warn('Warning: lock count is larger than columns count, do nothing.');
 				return;
 			}
+			var i = 0,
+				totalCount = 0;
+
+			for(i = 0; i < count; i++){
+				totalCount += 8 + parseInt(this.grid._columns[i].width, 10);
+			}
+			if(this.grid.bodyNode.clientWidth - totalCount < 10){
+				console.warn('Warning: locked total columns width exceed grid width, do nothing.');
+				return;
+			}
 			this.unlock();
 			
 			if(count){
@@ -223,6 +233,11 @@ define([
 			
 			//This is useful for virtual scrolling.
 			rowNode.scrollLeft = this.grid.hScroller ? this.grid.hScroller.domNode.scrollLeft : 0;
+
+			if(domClass.contains(rowNode, 'gridxRow')){
+				var rowid = rowNode.getAttribute('rowid') + '';
+				this.grid.body.onRowHeightChange(rowid);
+			}
 		},
 		
 		_updateHeader: function(){

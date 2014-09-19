@@ -87,6 +87,7 @@ define([
 			t.batchConnect(
 				[body, 'onRender', '_onRendered'],
 				[body, 'onAfterRow', '_onAfterRow'],
+				[body, 'onRowHeightChange', '_onAfterRow'],
 				[body, 'onAfterCell', '_onAfterCell'],
 				[body, 'onUnrender', '_onUnrender'],
 				[body, 'onEmpty', function(){
@@ -147,11 +148,15 @@ define([
 		},
 
 		_onAfterRow: function(row){
+			if(typeof row === 'string'){
+				row = this.grid.row(row, 1);
+			}
 			var t = this,
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
 				cp = t.arg('cellProvider');
+			if(!n || !bn) return;
 			n.setAttribute('rowid', row.id);
 			n.setAttribute('rowindex', row.index());
 			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');
@@ -183,7 +188,7 @@ define([
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			setTimeout(function(){
+			// setTimeout(function(){
 				h = getHeight();
 				if((h + '').indexOf('.') >= 0){
 					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
@@ -194,7 +199,7 @@ define([
 				// if(rowHeaderNode && rowHeaderNode.firstChild){
 				// 	rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 				// }
-			}, 0);
+			// }, 0);
 		},
 
 		_onRendered: function(start, count){

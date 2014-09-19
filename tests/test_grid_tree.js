@@ -117,7 +117,7 @@ require([
 	mods = [
 		modules.Tree,
 		modules.Filter,
-		// modules.FilterBar,
+		modules.FilterBar,
 		modules.QuickFilter,
 		modules.Pagination,
 		modules.PaginationBar,
@@ -129,7 +129,8 @@ require([
 		modules.IndirectSelectColumn,
 		modules.SingleSort,
 		modules.VirtualVScroller
-	];	
+	];
+
 	mods1 = [
 		modules.Tree,
 		modules.Pagination,
