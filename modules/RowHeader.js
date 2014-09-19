@@ -156,6 +156,7 @@ define([
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
 				bn = t.grid.dod? query('[visualindex="' + visualIndex + '"].gridxRow', t.grid.bodyNode)[0] : query('[visualindex="' + visualIndex + '"].gridxRow .gridxRowTable', t.grid.bodyNode)[0],
 				cp = t.arg('cellProvider');
+			if(!n || !bn) return;
 			n.setAttribute('rowid', row.id);
 			n.setAttribute('rowindex', row.index());
 			n.setAttribute('parentid', t.model.treePath(row.id).pop() || '');
