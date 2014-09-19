@@ -187,7 +187,7 @@ define([
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			setTimeout(function(){
+			// setTimeout(function(){
 				h = getHeight();
 				if((h + '').indexOf('.') >= 0){
 					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
@@ -198,7 +198,7 @@ define([
 				// if(rowHeaderNode && rowHeaderNode.firstChild){
 				// 	rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 				// }
-			}, 0);
+			// }, 0);
 		},
 
 		_onRendered: function(start, count){
