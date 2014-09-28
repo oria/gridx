@@ -76,6 +76,10 @@ define({root:
 	
 	"rangeTo": "to",
 	"rangeTemplate": "from ${0} to ${1}",
+	"pastHoursConditionTemplate": "${0} hours",
+	"pastDaysConditionTemplate": "${0} days",
+	"pastMonthsConditionTemplate": "${0} months",
+	"pastYearsConditionTemplate": "${0} years",
 	
 	"statusTipHeaderColumn": "Column",
 	"statusTipHeaderCondition": "Rules",
