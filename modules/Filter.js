@@ -357,10 +357,13 @@ define([
 				return d.getTime();
 			case 'time':
 				d = new Date(d);
-				d.setDate(1);
-				d.setMonth(0);
-				d.setFullYear(2000);
-				return d.getTime();
+				if(!isNaN(d.getTime())){	//d is not invalid date
+					d.setDate(1);
+					d.setMonth(0);
+					d.setFullYear(2000);
+					return d.getTime();
+				}
+				return null;
 			default: //string
 				return (d === null || d === undefined) ? '' : String(d);
 		}
@@ -485,13 +488,22 @@ define([
 
 		greaterEqual: function(expr1, expr2){
 			return wrap(function(){
-				return expr1.apply(0, arguments) >= expr2.apply(0, arguments);
+				var v1 = expr1.apply(0, arguments);
+				var v2 = expr2.apply(0, arguments);
+				return v1 !== undefined && v1 !== null &&
+						v2 !== undefined && v2 !== null &&
+						v1 >= v2;
 			}, "greaterEqual", [expr1, expr2]);
 		},
 
 		lessEqual: function(expr1, expr2){
 			return wrap(function(){
-				return expr1.apply(0, arguments) <= expr2.apply(0, arguments);
+				var v1 = expr1.apply(0, arguments);
+				var v2 = expr2.apply(0, arguments);
+				console.log(v1, v2);
+				return v1 !== undefined && v1 !== null &&
+						v2 !== undefined && v2 !== null &&
+						v1 <= v2;
 			}, "lessEqual", [expr1, expr2]);
 		},
 

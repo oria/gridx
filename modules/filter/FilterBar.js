@@ -661,12 +661,14 @@ define([
 			if(s instanceof Date){return s;}
 
 			var pattern = /(\d\d?):(\d\d?):(\d\d?)/;
-			pattern.test(s);
-			var d = new Date();
-			d.setHours(parseInt(RegExp.$1));
-			d.setMinutes(parseInt(RegExp.$2));
-			d.setSeconds(parseInt(RegExp.$3));
-			return d;
+			if(pattern.test(s)){
+				var d = new Date();
+				d.setHours(parseInt(RegExp.$1));
+				d.setMinutes(parseInt(RegExp.$2));
+				d.setSeconds(parseInt(RegExp.$3));
+				return d;
+			}
+			return 'invalid time';
 		},
 		_stringToDatetime: function(s){
 			if(s instanceof Date){return s;}
