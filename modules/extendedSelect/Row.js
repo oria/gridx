@@ -137,6 +137,8 @@ define([
 	return declare(_RowCellBase, {
 		name: 'selectRow',
 
+		allowRight: false,		//allow mouse right click to trigger select
+
 		rowMixin: {
 			select: function(){
 				this.grid.select.row.selectById(this.id);
@@ -255,7 +257,7 @@ define([
 			t.batchConnect(
 				g.rowHeader && [g.rowHeader, 'onMoveToRowHeaderCell', '_onMoveToRowHeaderCell'],
 				[g, 'onRowMouseDown', function(e){
-					if(mouse.isLeft(e) && canSelect(e)){
+					if((mouse.isLeft(e) || t.arg('allowRight')) && canSelect(e)){
 						t._isOnCell = e.columnId;
 						if(t._isOnCell){
 							g.body._focusCellCol = e.columnIndex;

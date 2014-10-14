@@ -294,8 +294,11 @@ define([
 		if(col.storePattern && (col.dataType == 'date' || col.dataType == 'time')){
 			return locale.parse(storeData, col.storePattern);
 		}
-		//Some editor like textbox will ignore setting undefined value.
-		return gridData === undefined ? null : gridData;
+		if(col.editorArgs && col.editorArgs.useGridData === true){
+			//Some editor like textbox will ignore setting undefined value.
+			return gridData === undefined ? null : gridData;
+		}
+		return gridData === undefined ? null : storeData;
 	}
 	
 	function dateTimeFormatter(field, parseArgs, formatArgs, rawData){

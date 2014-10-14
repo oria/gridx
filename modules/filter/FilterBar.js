@@ -547,7 +547,14 @@ define([
 			}else if(condition === 'range'){
 				tpl = this.arg('rangeTemplate', this.grid.nls.rangeTemplate);
 				valueString = string.substitute(tpl, [value.start, value.end]);
-			}else{
+			}else if(condition === 'past' && value.interval && value.amount !== undefined){
+				var interval = value.interval;
+				tpl = this.grid.nls['past' + interval[0].toUpperCase() + interval.substring(1) + 'sConditionTemplate'];
+				if(tpl){
+					valueString = string.substitute(tpl, [value.amount]);
+				}
+			}
+			else{
 				valueString = value;
 			}
 			if(this.grid.textDir){

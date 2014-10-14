@@ -30,10 +30,11 @@ require([
 			SelectColumn,
 			SelectCell,
 			VirtualVScroller
-		]
+		],
+		selectRowTriggerOnCell: true
 	});
 	grid.placeAt('gridContainer');
-	grid.startup();	
+	grid.startup();
 	
 	//Test functions
 	rowSelectById = function(){
