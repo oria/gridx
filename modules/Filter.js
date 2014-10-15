@@ -500,7 +500,7 @@ define([
 			return wrap(function(){
 				var v1 = expr1.apply(0, arguments);
 				var v2 = expr2.apply(0, arguments);
-				console.log(v1, v2);
+
 				return v1 !== undefined && v1 !== null &&
 						v2 !== undefined && v2 !== null &&
 						v1 <= v2;

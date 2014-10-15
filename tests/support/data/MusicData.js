@@ -213,7 +213,7 @@ define([
 					id: i,
 					order: i + 1,
 					Color: new Color([Math.sin(i) * 100, Math.cos(i) * 100, i * i]).toHex(),
-					datetime: item['Download Date'] + ' ' + (item['Last Played']).substr(0, item['Last Played'].length - 2) + '00'
+					datetime: item['Download Date'] && item['Last Played'] ? item['Download Date'] + ' ' + (item['Last Played']).substr(0, item['Last Played'].length - 2) + '00' : ''
 				}, item));
 			}
 			return data;

@@ -415,11 +415,6 @@ define([
 		},
 
 		_setValue: function(value){
-			console.log('in set value');
-			console.log(value);
-			console.log(typeof value);
-			console.log(value instanceof Date);
-
 			if(!this._isValidValue(value)){return;}
 			var type = this._getType(),
 				combo = this._needComboBox(), tempDate;
