@@ -64,10 +64,10 @@ define([
 		//		Whether to show a visual effect when mouse hovering a row.
 		rowHoverEffect: true,
 
-		// renderredIds: Object
+		// renderedIds: Object
 		//		This object contains the current renderred rows Ids.
 		//		For grid not using virtualVSroller, this is equal to current row ids in the grid body.
-		renderredIds: {},
+		renderedIds: {},
 		// stuffEmptyCell: Boolean
 		//		Whether to stuff a cell with &nbsp; if it is empty.
 		stuffEmptyCell: true,
@@ -267,7 +267,7 @@ define([
 				g = t.grid,
 				dn = t.domNode = g.bodyNode;
 			t._cellCls = {};
-			t.renderredIds = {};
+			t.renderedIds = {};
 			if(t.arg('rowHoverEffect')){
 				domClass.add(dn, 'gridxBodyRowHoverEffect');
 			}
@@ -344,7 +344,7 @@ define([
 
 		autoUpdate: true,
 
-		renderredIds: {},
+		renderedIds: {},
 
 		compareOnSet: function(v1, v2){
 			return typeof v1 == 'object' && typeof v2 == 'object' ?
@@ -421,7 +421,7 @@ define([
 			domClass.toggle(t.domNode, 'gridxBodyRowHoverEffect', t.arg('rowHoverEffect'));
 
 			// cache visual ids
-			// t.renderredIds = {};
+			// t.renderedIds = {};
 			
 			// domClass.add(loadingNode, 'gridxLoading');
 			t._showLoadingMask();
@@ -464,7 +464,7 @@ define([
 								t.onUnrender(id, 'refresh');
 							}
 							domConstruct.destroy(n);
-							t.renderredIds[id] = undefined;
+							t.renderedIds[id] = undefined;
 							n = tmp;
 						}
 						array.forEach(renderedRows, t.onAfterRow, t);
@@ -604,11 +604,11 @@ define([
 					// 	id = n.firstChild.getAttribute('rowid');
 					// 	n.removeChild(n.firstChild);
 					// 	if(g.model.isId(id)){
-					// 		t.renderredIds[id] = undefined;
+					// 		t.renderedIds[id] = undefined;
 					// 	}
 					// }
-					// reset renderredIds since all rows in body are destroyed
-					t.renderredIds = {};
+					// reset renderedIds since all rows in body are destroyed
+					t.renderedIds = {};
 					str = t._buildRows(start, count, uncachedRows, renderedRows);
 					n.innerHTML = str;
 					n.scrollTop = scrollTop;
@@ -638,8 +638,8 @@ define([
 					id = n.firstChild.getAttribute('rowid');
 					n.removeChild(n.firstChild);
 				}
-				//reset renderredIds since all rows in body are destroyed.
-				t.renderredIds = {};
+				//reset renderedIds since all rows in body are destroyed.
+				t.renderedIds = {};
 				en.innerHTML = emptyInfo;
 				en.style.zIndex = 1;
 				t._hideLoadingMask();
@@ -666,7 +666,7 @@ define([
 							t.onUnrender(id, undefined, 'post');
 						}
 						domConstruct.destroy(bn.lastChild);
-						t.renderredIds[id] = undefined;
+						t.renderedIds[id] = undefined;
 					}
 				}else{
 					var tp = bn.scrollTop;
@@ -681,7 +681,7 @@ define([
 							t.onUnrender(id , undefined, 'pre');
 						}
 						domConstruct.destroy(bn.firstChild);
-						t.renderredIds[id] = undefined;
+						t.renderedIds[id] = undefined;
 					}
 					t.renderStart += i;
 					bn.scrollTop = tp > 0 ? tp : 0;
@@ -796,7 +796,7 @@ define([
 					row = g.row(rowInfo.rowId, 1);
 				s.push('<div class="gridxRow ', i % 2 ? 'gridxRowOdd' : '',
 					'" role="row" visualindex="', i);
-				t.renderredIds[rowInfo.rowId] = 1;
+				t.renderedIds[rowInfo.rowId] = 1;
 				if(row){
 					t.model.keep(row.id);
 					s.push('" rowid="', encode(row.id),
@@ -839,7 +839,7 @@ define([
 					n.setAttribute('rowindex', rowInfo.rowIndex);
 					n.setAttribute('parentid', rowInfo.parentId || '');
 					n.innerHTML = t._buildCells(row, rowInfo.visualIndex);
-					t.renderredIds[row.id] = 1;
+					t.renderedIds[row.id] = 1;
 					t.onAfterRow(row);
 				}else{
 					console.error('Error in Body._buildRowContent: Row is not in cache: ' + rowInfo.rowIndex);
