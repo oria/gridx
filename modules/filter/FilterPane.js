@@ -350,6 +350,9 @@ define([
 						interval = this.sltDateInterval.get('value');
 
 					switch(interval){
+						case 'hour':
+							past.setHours(cur.getHours() - val);
+							break;
 						case 'day':
 							past.setDate(cur.getDate() - val);
 							break;
@@ -388,6 +391,9 @@ define([
 						interval = this.sltDatetimeInterval.get('value');
 
 					switch(interval){
+						case 'hour':
+							past.setHours(cur.getHours() - val);
+							break;
 						case 'day':
 							past.setDate(cur.getDate() - val);
 							break;
