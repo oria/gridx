@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Szűrő',
 	clearButtonTitle: 'Szűrő törlése',
-	buildFilterMenuLabel: '&hellip; összeépítés-szűrő',
+	buildFilterMenuLabel: '... összeépítés-szűrő',
 	apply: 'Szűrő alkalmazása',
 
 //Sort

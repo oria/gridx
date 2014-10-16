@@ -173,7 +173,7 @@ define({root:
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Clear Filter',
-	buildFilterMenuLabel: 'Build Filter&hellip;',
+	buildFilterMenuLabel: 'Build Filter...',
 	apply: 'Apply Filter',
 
 //Sort

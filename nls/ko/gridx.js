@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: '필터',
 	clearButtonTitle: '필터 지우기',
-	buildFilterMenuLabel: '필터 빌드&hellip;',
+	buildFilterMenuLabel: '필터 빌드...',
 	apply: '필터 적용',
 
 //Sort

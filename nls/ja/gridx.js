@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'フィルター',
 	clearButtonTitle: 'フィルターのクリア',
-	buildFilterMenuLabel: 'フィルターの作成&hellip;',
+	buildFilterMenuLabel: 'フィルターの作成...',
 	apply: 'フィルターの適用',
 
 //Sort

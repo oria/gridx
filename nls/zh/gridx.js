@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: '过滤',
 	clearButtonTitle: '清除过滤器',
-	buildFilterMenuLabel: '构建过滤器&hellip;',
+	buildFilterMenuLabel: '构建过滤器...',
 	apply: '应用过滤器',
 
 //Sort

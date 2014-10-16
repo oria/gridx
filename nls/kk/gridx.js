@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Сүзгі',
 	clearButtonTitle: 'Сүзгіні тазалау',
-	buildFilterMenuLabel: 'Build Filter&hellip;',
+	buildFilterMenuLabel: 'Build Filter...',
 	apply: 'Сүзгіні қолдану',
 
 //Sort

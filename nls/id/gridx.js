@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Hapus Filter',
-	buildFilterMenuLabel: 'Buat Filter&hellip;',
+	buildFilterMenuLabel: 'Buat Filter...',
 	apply: 'Terapkan Filter',
 
 //Sort

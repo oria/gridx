@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Süzgeç',
 	clearButtonTitle: 'Süzgeci Temizle',
-	buildFilterMenuLabel: 'Süzgeç Oluştur&hellip;',
+	buildFilterMenuLabel: 'Süzgeç Oluştur...',
 	apply: 'Süzgeci Uygula',
 
 //Sort
