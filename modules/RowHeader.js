@@ -151,6 +151,10 @@ define([
 			if(typeof row === 'string'){
 				row = this.grid.row(row, 1);
 			}
+			if(!row){
+				console.warn('rowHeader._onAfterRow, row is null');
+				return;
+			}
 			var t = this,
 				visualIndex = row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
