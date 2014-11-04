@@ -167,7 +167,7 @@ define([
 		},
 
 		_onAfterCell: function(cell){
-			//This is to ensure the rowHeader get correct height for editable cells
+			//This is to ensuregit  the rowHeader get correct height for editable cells
 			var t = this,
 				visualIndex = cell.row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
@@ -188,7 +188,7 @@ define([
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			// setTimeout(function(){
+			setTimeout(function(){
 				h = getHeight();
 				if((h + '').indexOf('.') >= 0){
 					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
@@ -199,7 +199,7 @@ define([
 				// if(rowHeaderNode && rowHeaderNode.firstChild){
 				// 	rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
 				// }
-			// }, 0);
+			}, 0);
 		},
 
 		_onRendered: function(start, count){
