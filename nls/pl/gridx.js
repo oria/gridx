@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filtr',
 	clearButtonTitle: 'Wyczyść filtr',
-	buildFilterMenuLabel: 'Zbuduj filtr&hellip;',
+	buildFilterMenuLabel: 'Zbuduj filtr...',
 	apply: 'Zastosuj filtr',
 
 //Sort

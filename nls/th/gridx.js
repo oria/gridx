@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'ตัวกรอง',
 	clearButtonTitle: 'เคลียร์ตัวกรอง',
-	buildFilterMenuLabel: 'สร้างตัวกรอง&hellip;',
+	buildFilterMenuLabel: 'สร้างตัวกรอง...',
 	apply: 'ใช้ตัวกรอง',
 
 //Sort

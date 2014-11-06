@@ -10,6 +10,11 @@ define({root:
 	loadPreviousLoading: "Loading...",
 
 //FilterBar
+	"day": "days",
+	"month": "months",
+	"year": "years",
+	"hour": "hours",
+
 	"clearFilterDialogTitle": "Clear Filter",
 	"filterDefDialogTitle": "Filter",
 	"defaultRuleTitle": "Rule",
@@ -168,7 +173,7 @@ define({root:
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Clear Filter',
-	buildFilterMenuLabel: 'Build Filter&hellip;',
+	buildFilterMenuLabel: 'Build Filter...',
 	apply: 'Apply Filter',
 
 //Sort

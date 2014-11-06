@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Isprazni filter',
-	buildFilterMenuLabel: 'Kreiraj filter&hellip;',
+	buildFilterMenuLabel: 'Kreiraj filter...',
 	apply: 'Primijeni filter',
 
 //Sort

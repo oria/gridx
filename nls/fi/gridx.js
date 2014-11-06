@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Suodatin',
 	clearButtonTitle: 'Tyhjennä suodatin',
-	buildFilterMenuLabel: 'Muodosta suodatin&hellip;',
+	buildFilterMenuLabel: 'Muodosta suodatin...',
 	apply: 'Käytä suodatinta',
 
 //Sort

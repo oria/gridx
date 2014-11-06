@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'סינון',
 	clearButtonTitle: 'ניקוי מסנן',
-	buildFilterMenuLabel: 'בניית מסנן&hellip;‏',
+	buildFilterMenuLabel: 'בניית מסנן...‏',
 	apply: 'החלת מסנן',
 
 //Sort

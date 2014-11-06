@@ -1,7 +1,7 @@
 define({     
 //Body
 	loadingInfo: "Laden...",
-	emptyInfo: "Geen af te beelden items",
+	emptyInfo: "Er zijn geen items beschikbaar om weer te geven.",
 	loadFailInfo: "Gegevens kunnen niet geladen worden.",
 	loadMore: "Meer laden",
 	loadMoreLoading: "Laden...",
@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Filter verwijderen',
-	buildFilterMenuLabel: 'Filter bouwen&hellip;',
+	buildFilterMenuLabel: 'Filter bouwen...',
 	apply: 'Filter toepassen',
 
 //Sort

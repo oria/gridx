@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filtrer',
 	clearButtonTitle: 'Tøm filter',
-	buildFilterMenuLabel: 'Bygg filter&hellip;',
+	buildFilterMenuLabel: 'Bygg filter...',
 	apply: 'Bruk filter',
 
 //Sort

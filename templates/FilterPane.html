@@ -37,14 +37,15 @@
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDateWrapper">
 		<div data-dojo-type="dijit.form.DateTextBox" aria-label="${_valueAriaLabel}" intermediateChanges="true" style="width: 100%"></div>
 	</li>
-	<!-- date past x days/months/years -->
+	<!-- date past x hours/days/months/years -->
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDatePastWrapper">
 		<div data-dojo-type="dijit.form.NumberTextBox" aria-label="${_valueAriaLabel}" intermediateChanges="true" style="width: 44%; float: left"></div>
 		<div class='gridxSpace' style='width: 10%; float: left; height: 1px;'></div>
 		<div data-dojo-type="dijit.form.Select" aria-label="${_valueAriaLabel}" style="width: 44%; float: left">
-			<option value="day" selected="selected">Day</option>
-			<option value="month">Month</option>
-			<option value="year">Year</option>
+			<option value="hour">${i18n.hour}</option>
+			<option value="day" selected="selected">${i18n.day}</option>
+			<option value="month">${i18n.month}</option>
+			<option value="year">${i18n.year}</option>
 			<!-- <option value="FL">Florida</option> -->
 			<!-- <option value="CA">California</option> -->
 		</div>
@@ -65,14 +66,15 @@
 		<div style="width:10%; text-align: center; float: left;height:1px"></div>
 		<div data-dojo-type="dijit.form.TimeTextBox" aria-label="${_valueAriaLabel}" style="width:44%;float:left" intermediateChanges="true"></div>
 	</li>
-	<!-- datetime past x days/months/years -->
+	<!-- datetime past x hours/days/months/years -->
 	<li class="gridxFilterPaneFieldWrapper gridxFilterPaneDatetimePastWrapper">
 		<div data-dojo-type="dijit.form.NumberTextBox" aria-label="${_valueAriaLabel}" intermediateChanges="true" style="width: 44%; float: left"></div>
 		<div class='gridxSpace' style='width: 10%; float: left; height: 1px;'></div>
 		<div data-dojo-type="dijit.form.Select" aria-label="${_valueAriaLabel}" style="width: 44%; float: left">
-			<option value="day" selected="selected">Day</option>
-			<option value="month">Month</option>
-			<option value="year">Year</option>
+			<option value="hour">${i18n.hour}</option>
+			<option value="day" selected="selected">${i18n.day}</option>
+			<option value="month">${i18n.month}</option>
+			<option value="year">${i18n.year}</option>
 			<!-- <option value="FL">Florida</option> -->
 			<!-- <option value="CA">California</option> -->
 		</div>

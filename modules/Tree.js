@@ -440,6 +440,27 @@ define([
 			return d;
 		},
 
+		loadChildRecursive: function(id){
+			var d = new Deferred(),
+				t = this,
+				m = t.model;
+
+			var i, dl = [], size = m.size(id);
+			// console.log(context.size);
+			m.when({start: 0, count: 1, parentId: id}, function(){
+				size = m.size(id);
+				for(i = 0; i < size; ++i){
+					var childId = m.indexToId(i, id);
+					dl.push(t.loadChildRecursive(childId));
+				}
+			}).then(function(){
+				new DeferredList(dl).then(function(){
+					d.callback();
+				});
+			});
+			return d;
+		},
+
 		collapseRecursive: function(id, skipUpdateBody){
 			var d = new Deferred(),
 				success = lang.hitch(d, d.callback),

@@ -139,7 +139,7 @@ define([
 		//Minus index range list B from index range list A, 
 		//assuming A and B do not have overlapped ranges.
 		//This is a set operation
-		if(!rangesB.length || !rangesA.length){
+		if(!rangesB || !rangesB.length || !rangesA.length){
 			return rangesA;
 		}
 		var indexes = [], f = 0, r, res = [],

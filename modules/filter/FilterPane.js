@@ -350,6 +350,9 @@ define([
 						interval = this.sltDateInterval.get('value');
 
 					switch(interval){
+						case 'hour':
+							past.setHours(cur.getHours() - val);
+							break;
 						case 'day':
 							past.setDate(cur.getDate() - val);
 							break;
@@ -388,6 +391,9 @@ define([
 						interval = this.sltDatetimeInterval.get('value');
 
 					switch(interval){
+						case 'hour':
+							past.setHours(cur.getHours() - val);
+							break;
 						case 'day':
 							past.setDate(cur.getDate() - val);
 							break;
@@ -415,11 +421,6 @@ define([
 		},
 
 		_setValue: function(value){
-			console.log('in set value');
-			console.log(value);
-			console.log(typeof value);
-			console.log(value instanceof Date);
-
 			if(!this._isValidValue(value)){return;}
 			var type = this._getType(),
 				combo = this._needComboBox(), tempDate;

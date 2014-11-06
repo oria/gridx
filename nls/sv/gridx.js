@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Rensa filter',
-	buildFilterMenuLabel: 'Bygg filter&hellip;',
+	buildFilterMenuLabel: 'Bygg filter...',
 	apply: 'Använd filter',
 
 //Sort

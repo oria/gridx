@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Φίλτρο',
 	clearButtonTitle: 'Εκκαθάριση φίλτρου',
-	buildFilterMenuLabel: 'Δημιουργία φίλτρου&hellip;',
+	buildFilterMenuLabel: 'Δημιουργία φίλτρου...',
 	apply: 'Εφαρμογή φίλτρου',
 
 //Sort
