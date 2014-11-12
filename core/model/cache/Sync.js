@@ -165,7 +165,7 @@ define([
 		byId: function(id){
 			this._init();
 			var row = this._cache[id];
-			if (row && typeof row._data === 'function') {
+			if (row && !row.data && typeof row._data === 'function') {
 				row.data = row._data();
 			}
 			return this._cache[id];
