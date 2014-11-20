@@ -28,13 +28,13 @@
 		filterBarMaxRuleCount: Infinity,
 		filterBarExperimental: true,
 		filterBarFilterData: {
-			type: "all",
+			type: "or",
 			conditions: [
 				{
-					colId: "",
-					condition: "contain",
-					type: "Text",
-					value: "Easy"
+					colId: "Download Date",
+					condition: "before",
+					type: "Date",
+					value: "Thu Nov 20 2014"
 				}
 			]
 		},

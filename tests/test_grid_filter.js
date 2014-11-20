@@ -18,19 +18,14 @@ require([
 
 	var localDateFormatter = function(rawData) {
 		var date = rawData['Download Date'];
-
+		debugger;
 		if (rawData === undefined || rawData === null ||
-			date === undefined || date === null)
-		{
+			date === undefined || date === null){
 			return "";
 		} else {
 			var item = new Date(date);
 			var localed = locale.format(item, {datePattern: "yyyy/M/d", selector: "date"});
-			// return '';
-			// return date;
-			console.log(localed);
 			return localed;
-			return locale.format(item, {datePattern: "yyyy/M/d", selector: "date"});
 		}
 	};
 	// DATE_S_FORMAT_OPTIONS: {datePattern: "yyyy/M/d", selector: "date"},
@@ -49,7 +44,7 @@ require([
 		{id: 'Length', field: 'Length', name: 'Length', dataType: 'string'},
 		{id: 'Track', field: 'Track', name: 'Track', dataType: 'number'},
 		{id: 'Composer', field: 'Composer', name: 'Composer', dataType: 'string'},
-		{id: 'Download Date', field: 'Download Date', name: 'Download Date', dataType: 'date', formatter: localDateFormatter},
+		{id: 'Download Date', field: 'Download Date', name: 'Download Date', dataType: 'date'},
 		{id: 'Date Time', field: 'datetime', name: 'Date Time', dataType: 'datetime'},
 		{id: 'Last Played', field: 'Last Played', name: 'Last Played', dataType: 'time'},
 		{id: 'Heard', field: 'Heard', name: 'Heard', dataType: 'boolean'}

@@ -180,6 +180,10 @@ define([
 			var t = this,
 				g = t.grid, rules;
 
+			var F = Filter;
+			F.before = F.lessEqual;
+			F.after = F.greaterEqual;
+
 			if(this.arg('experimental')){
 				this.conditions = lang.mixin({}, this.conditions);
 				this.conditions.number = ['equal','greater','less','greaterEqual','lessEqual','notEqual', 'range', 'isEmpty'];
@@ -227,9 +231,6 @@ define([
 		
 		load: function(args, startup){
 			//Add before and after expression for filter.
-			var F = Filter;
-			F.before = F.lessEqual;
-			F.after = F.greaterEqual;
 			this._nls = this.grid.nls;
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, this._nls),
@@ -677,11 +678,13 @@ define([
 		},
 		_formatDate: function(date){
 			//this may be customized by grid layout definition
+			date = typeof date === 'object' ? date : new Date(date);
 			var m = date.getMonth() + 1, d = date.getDate();
 			return m + '/' + d + '/' + date.getFullYear();
 		},
 		_formatTime: function(time){
 			//this may be customized by grid layout definition
+			time = typeof time === 'object' ? time : new Date(time);
 			var h = time.getHours(), m = time.getMinutes();
 			if(h < 10){h = '0' + h;}
 			if(m < 10){m = '0' + m;}
