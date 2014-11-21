@@ -605,7 +605,10 @@ define([
 				datetime: dtc,
 				time: tc
 			};
-			var c = data.condition, exp, isNot = false;
+			var c = data.condition.toLowerCase(), 
+				exp,
+				isNot = false;
+
 			type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			var converter = converters.custom? converters.custom : converters[type];
 
@@ -691,7 +694,7 @@ define([
 			return h + ':' + m + ':00';
 		},
 		_formatDatetime: function(datetime){
-			//this may be customized by grid layout definition
+			datetime = typeof datetime === 'object' ? datetime : new Date(datetime);
 			var m = datetime.getMonth() + 1, d = datetime.getDate();
 			//this may be customized by grid layout definition
 			var h = datetime.getHours(), min = datetime.getMinutes();
