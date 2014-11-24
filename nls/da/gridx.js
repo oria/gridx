@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filter',
 	clearButtonTitle: 'Ryd filter',
-	buildFilterMenuLabel: 'Byg filter&hellip;',
+	buildFilterMenuLabel: 'Byg filter…',
 	apply: 'Anvend filter',
 
 //Sort
