@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Bộ lọc',
 	clearButtonTitle: 'Xóa bộ lọc',
-	buildFilterMenuLabel: 'Tạo bộ lọc&hellip;',
+	buildFilterMenuLabel: 'Tạo bộ lọc…',
 	apply: 'Áp dụng bộ lọc',
 
 //Sort

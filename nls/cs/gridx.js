@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Filtr',
 	clearButtonTitle: 'Vymazat filtr',
-	buildFilterMenuLabel: 'Sestavit filtr&hellip;',
+	buildFilterMenuLabel: 'Sestavit filtr…',
 	apply: 'Použít filtr',
 
 //Sort

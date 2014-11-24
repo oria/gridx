@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'Фільтр',
 	clearButtonTitle: 'Очистити фільтр',
-	buildFilterMenuLabel: 'Визначити фільтр&hellip;',
+	buildFilterMenuLabel: 'Визначити фільтр…',
 	apply: 'Застосувати фільтр',
 
 //Sort
