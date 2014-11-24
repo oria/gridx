@@ -277,16 +277,7 @@ define([
 							}
 						};
 
-					for(var r = first(req, grid, parentId); r && r.row; r = next(req, grid, r, parentId)){
-						// context.row = r.row;
-						rowid = r.row.id;
-
-						// console.log('!!!!!!!', rowid);
-						writerCallback(r);
-						fetchChildren(rowid);
-						// reqs.splice(reqs.p, 0, {start: 0, count: 1, parentId: rowid});
-						// fetchRows(grid, defer, writer, context, args, d, reqs);
-					}
+					fetchChildren(parentId);
 				}).then(function(){
 					fetchRows(grid, defer, writer, context, args, d, reqs);
 				}, fail);
