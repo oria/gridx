@@ -36,7 +36,7 @@
 		cacheClass: "gridx/core/model/cache/Async",
 		store: store,
 		structure: layout,
-		columnLockCount: 1,
+		columnLockCount: 2,
 		modules: [
 			"gridx/modules/ColumnLock",
 			"gridx/modules/CellWidget",
@@ -44,7 +44,9 @@
 			"gridx/modules/ColumnResizer",
 			"gridx/modules/RowHeader",
 			"gridx/modules/SingleSort",
-			"gridx/modules/extendedSelect/Cell",
+			"gridx/modules/move/Column",
+			"gridx/modules/select/Column",
+			"gridx/modules/dnd/Column",
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>
