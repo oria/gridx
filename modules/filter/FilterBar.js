@@ -530,12 +530,16 @@ define([
 		_getRuleString: function(condition, value, type){
 			var valueString, f, tpl, resolvedTextDir;
 
+			condition = condition && condition.toLowerCase();
+
 			if(condition == 'isEmpty'){
 				valueString = '';
 			}else if(/^date|^time/i.test(type) && condition !== 'past'){
 				f = this._formatDate;
-				if(/^time/i.test(type)){f = this._formatTime;}
-				if(/^datetime/i.test(type)){
+				if (/^time/i.test(type)) {
+					f = this._formatTime;
+				}
+				if (/^datetime/i.test(type)) {
 					f = this._formatDatetime;
 				}
 				
@@ -627,6 +631,9 @@ define([
 			// }
 			var startValue, endValue, columnValue;
 			if(c === 'range' || c === 'past'){
+				if(c === 'past' && (!data.value.start || !data.value.end)){
+					this._buildPastCondition(data);
+				}
 				startValue = F.value(data.value.start, type);
 				endValue = F.value(data.value.end, type);
 				columnValue = F.column(colId, type, converter);
@@ -701,6 +708,32 @@ define([
 			if(h < 10){h = '0' + h;}
 			if(min < 10){min = '0' + min;}
 			return m + '/' + d + '/' + datetime.getFullYear() + ' ' + h + ':' + min + ':00';
+		},
+
+		_buildPastCondition: function(data) {
+			var cur = new Date(),
+				past = new Date(),
+				interval = data.value.interval,
+				val = data.value.amount;
+
+			switch(interval){
+				case 'hour':
+					past.setHours(cur.getHours() - val);
+					break;
+				case 'day':
+					past.setDate(cur.getDate() - val);
+					break;
+				case 'month':
+					past.setMonth(cur.getMonth() - val);
+					break;
+				case 'year':
+					past.setFullYear(cur.getFullYear() - val);
+					break;
+			}
+
+			data.value.start = past;
+			data.value.end = cur;
+			// return {start: past, end: cur, amount: val, interval: interval};
 		},
 		
 		_initFocus: function(){

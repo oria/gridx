@@ -439,11 +439,12 @@ define([
 					this.sltSingle.set('value', value);
 					break;
 				case 'Date':
-					this.dtbSingle.set('value', value);
+					tempDate = new Date(value);
+					this.dtbSingle.set('value', tempDate);
 					break;
 				case 'DateRange':
-					this.dtbStart.set('value', value.start);
-					this.dtbEnd.set('value', value.end);
+					this.dtbStart.set('value', new Date(value.start));
+					this.dtbEnd.set('value', new Date(value.end));
 					break;
 				case 'DatePast':
 					this.tbDatePast.set('value', value.amount);
@@ -451,10 +452,10 @@ define([
 					break;
 				case 'Datetime':
 					tempDate = new Date(value);
+					this.dtbDatetimeSingle.set('value', tempDate);
 					tempDate.setFullYear(1970);
 					tempDate.setMonth(0);
 					tempDate.setDate(1);
-					this.dtbDatetimeSingle.set('value', value);
 					this.ttbDatetimeSingle.set('value', tempDate);
 					break;
 				case 'DatetimeRange':
