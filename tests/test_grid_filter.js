@@ -9,7 +9,7 @@ require([
 	'gridx/core/model/cache/Async',
 	'gridx/allModules',
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory, JsonRest, locale){
+], function(parser, dataSource, storeFactory, JsonRest, locale, Grid){
 
 	store = storeFactory({
 		dataSource: dataSource,
@@ -49,6 +49,35 @@ require([
 		{id: 'Last Played', field: 'Last Played', name: 'Last Played', dataType: 'time'},
 		{id: 'Heard', field: 'Heard', name: 'Heard', dataType: 'boolean'}
 	];
+
+	window.generateGrid = function() {
+		if (grid1) grid1.destroy();
+
+		var preCondition = dojo.byId('preFilterInput').value;
+		preCondition = preCondition && JSON.parse(preCondition);
+
+		grid1 = new Grid({
+			cacheClass: "gridx/core/model/cache/Sync",
+			store: store,
+			structure: layout,
+			selectRowTriggerOnCell: true,
+			filterCaseSensitive: true,
+			filterBarMaxRuleCount: 100,
+			filterBarExperimental: true,
+			filterBarFilterData: preCondition,
+			filterBarItemsName: "elements",
+			modules: [
+				"gridx/modules/Filter",
+				"gridx/modules/filter/FilterBar",
+				"gridx/modules/SingleSort",
+				"gridx/modules/extendedSelect/Row",
+				"gridx/modules/IndirectSelectColumn",
+				"gridx/modules/VirtualVScroller"
+			]
+		});
+		grid1.placeAt('gridContainer');
+		grid1.startup();
+	}
 	
 	parser.parse();
 });
