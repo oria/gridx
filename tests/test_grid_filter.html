@@ -22,49 +22,51 @@
 	<table style='width:100%'>
 		<tr>
 			<td style='width:950px' id='gridContainer'>
-			<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
-				cacheClass: "gridx/core/model/cache/Sync",
-				store: store,
-				structure: layout,
-				selectRowTriggerOnCell: true,
-				filterCaseSensitive: true,
-				filterBarMaxRuleCount: 1,
-				filterBarExperimental: true,
-				filterBarFilterData: {
-					type: "any",
-					conditions: [
-						{
-							colId: "Download Date",
-							condition: "before",
-							type: "Date",
-							value: "Thu Nov 20 2000"
-						},
-						{
-							colId: "Date Time",
-							condition: "after",
-							type: "Date",
-							value: "Thu Nov 20 1950"
-						},
-						{
-							colId: "Download Date",
-							condition: "past",
-							type: "Date",
-							value: {
-								interval: "day",
-								amount: 2000
+			<div id='grid1' jsid='grid1' 
+				data-dojo-type='gridx.Grid' 
+				data-dojo-props='
+					cacheClass: "gridx/core/model/cache/Sync",
+					store: store,
+					structure: layout,
+					selectRowTriggerOnCell: true,
+					filterCaseSensitive: true,
+					filterBarMaxRuleCount: 100,
+					filterBarExperimental: true,
+					filterBarFilterData: {
+						type: "any",
+						conditions: [
+							{
+								colId: "Download Date",
+								condition: "before",
+								type: "Date",
+								value: "Thu Nov 20 2000"
+							},
+							{
+								colId: "Date Time",
+								condition: "after",
+								type: "Date",
+								value: "Thu Nov 20 1950"
+							},
+							{
+								colId: "Download Date",
+								condition: "past",
+								type: "Date",
+								value: {
+									interval: "day",
+									amount: 2000
+								}
 							}
-						}
+						]
+					},
+					filterBarItemsName: "elements",
+					modules: [
+						"gridx/modules/Filter",
+						"gridx/modules/filter/FilterBar",
+						"gridx/modules/SingleSort",
+						"gridx/modules/extendedSelect/Row",
+						"gridx/modules/IndirectSelectColumn",
+						"gridx/modules/VirtualVScroller"
 					]
-				},
-				filterBarItemsName: "elements",
-				modules: [
-					"gridx/modules/Filter",
-					"gridx/modules/filter/FilterBar",
-					"gridx/modules/SingleSort",
-					"gridx/modules/extendedSelect/Row",
-					"gridx/modules/IndirectSelectColumn",
-					"gridx/modules/VirtualVScroller"
-				]
 			'></div>
 			</td>
 			<td>

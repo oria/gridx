@@ -402,6 +402,7 @@ define([
 			if(!this.filterData){
 				dlg.setData(this.filterData);
 			}
+			dlg._matchCase.set('checked', this.grid.filter.caseSensitive);
 			dlg.show();
 			if(this.filterData){
 				dlg.setData(this.filterData);
