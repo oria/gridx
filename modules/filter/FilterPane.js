@@ -423,8 +423,10 @@ define([
 		_setValue: function(value){
 			if(!this._isValidValue(value)){return;}
 			var type = this._getType(),
-				combo = this._needComboBox(), tempDate;
-			switch(type){
+				combo = this._needComboBox(),
+				tempDate;
+
+			switch (type) {
 				case 'Text':
 					(combo ? this.comboText : this.tbSingle).set('value', value);
 					break;
@@ -460,17 +462,17 @@ define([
 					break;
 				case 'DatetimeRange':
 					tempDate = new Date(value.start);
+					this.dtbDatetimeStart.set('value', tempDate);
 					tempDate.setFullYear(1970);
 					tempDate.setMonth(0);
 					tempDate.setDate(1);
-					this.dtbDatetimeStart.set('value', value.start);
 					this.ttbDatetimeStart.set('value', tempDate);
 
 					var endTempDate = new Date(value.end);
+					this.dtbDatetimeEnd.set('value', endTempDate);
 					endTempDate.setFullYear(1970);
 					endTempDate.setMonth(0);
 					endTempDate.setDate(1);
-					this.dtbDatetimeEnd.set('value', value.end);
 					this.ttbDatetimeEnd.set('value', endTempDate);
 					break;
 				case 'DatetimePast':
