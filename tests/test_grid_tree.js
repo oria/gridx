@@ -21,8 +21,20 @@ require([
 	store.hasChildren = function(id, item){
 		return item && store.getValues(item, 'children').length;
 	};
-	store.getChildren = function(item){
-		return store.getValues(item, 'children');
+	store.getChildren = function(item, req){
+		var children = store.getValues(item, 'children'),
+			attr,
+			t = this;		//store object
+
+		if (req.sort && req.sort[0]&& req.sort[0].attribute) {
+			attr = req.sort[0].attribute;
+
+			children.sort(function(a, b) {
+				return !req.sort[0].descending ? t.getValue(a, attr) > t.getValue(b, attr) : 
+												!(t.getValue(a, attr) > t.getValue(b, attr));
+			});
+		}
+		return children;
 	};
 
 	storeAsync = storeFactory({
