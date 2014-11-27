@@ -531,7 +531,7 @@ define([
 		_getRuleString: function(condition, value, type){
 			var valueString, f, tpl, resolvedTextDir;
 
-			condition = condition && condition.toLowerCase();
+			// condition = condition && condition.toLowerCase();
 
 			if(condition == 'isEmpty'){
 				valueString = '';
@@ -610,7 +610,7 @@ define([
 				datetime: dtc,
 				time: tc
 			};
-			var c = data.condition.toLowerCase(), 
+			var c = data.condition,
 				exp,
 				isNot = false;
 
