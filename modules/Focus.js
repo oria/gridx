@@ -125,7 +125,7 @@ define([
 		doFocus: function(evt, step){
 			// summary:
 			//		If provided, will be called when TABing to this area.
-			//		If not provided, default to successful foc us.
+			//		If not provided, default to successful focus.
 			//		Return TRUE if successfully focused. FALSE if not.
 		},
 
