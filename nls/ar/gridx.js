@@ -147,7 +147,7 @@ define({
 //QuickFilter
 	filterLabel: 'ترشيح البيانات',
 	clearButtonTitle: 'محو مرشح البيانات',
-	buildFilterMenuLabel: 'بناء مرشح بيانات &hellip;',
+	buildFilterMenuLabel: 'بناء مرشح بيانات …',
 	apply: 'تطبيق مرشح البيانات',
 
 //Sort
