@@ -188,12 +188,14 @@ define([
 			t.batchConnect(
 				[g.domNode, 'onkeydown', '_onTabDown'],
 				[g.domNode, 'onfocus', '_focus'],
+				// [g.bodyNode, 'onfocus', '_focusBody'],
 				[g.lastFocusNode, 'onfocus', '_focus'],
 				[g, 'onBlur', '_doBlur']);
 			if(has('ie') < 9){
 				win.doc.attachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.addEventListener('focus', t._onDocFocus, true);
+				g.bodyNode.addEventListener('focus', lang.hitch(t, t._focusBody), true);
 			}
 		},
 
@@ -432,6 +434,15 @@ define([
 					t._queueIdx = t._tabQueue.length;
 					t.tab(-1);
 				}
+			}
+		},
+
+		_focusBody: function(evt){
+			var t = this;
+			this.stopEvent(evt);
+
+			if(evt.target === this.grid.bodyNode){
+				this.focusArea('body', true);
 			}
 		},
 

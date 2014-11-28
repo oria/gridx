@@ -244,14 +244,12 @@ define([
 			func = function(){
 				defer.progress(reqs.p / reqs.length);
 				grid.when(req, function(){
-					console.log(req);
 					var rowid,
 						fetchChildren = function(id){
 							//only support Sync cache currently
 							var m = grid.model,
 								size = m.size(id), i, childRowid;
 
-							console.log('id', id);
 							m.when({start: 0, parentId: id}).then(function(){
 								for(i = 0; i < size; i++){
 									childRowid = m.indexToId(i, id);
@@ -277,16 +275,7 @@ define([
 							}
 						};
 
-					for(var r = first(req, grid, parentId); r && r.row; r = next(req, grid, r, parentId)){
-						// context.row = r.row;
-						rowid = r.row.id;
-
-						// console.log('!!!!!!!', rowid);
-						writerCallback(r);
-						fetchChildren(rowid);
-						// reqs.splice(reqs.p, 0, {start: 0, count: 1, parentId: rowid});
-						// fetchRows(grid, defer, writer, context, args, d, reqs);
-					}
+					fetchChildren(parentId);
 				}).then(function(){
 					fetchRows(grid, defer, writer, context, args, d, reqs);
 				}, fail);
@@ -338,7 +327,6 @@ define([
 			},
 			success = function(){
 				check(writer, 'afterBody', context, args);
-				// console.log(writer.getResult());
 				d.callback(writer.getResult());
 			},
 			fail = lang.hitch(d, d.errback);

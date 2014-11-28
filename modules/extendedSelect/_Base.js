@@ -124,6 +124,7 @@ define([
 					connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
 				}
 				t._lastSelectedIds = t.getSelected();
+
 				t._refSelectedIds = [];
 				return Deferred.when(t[func](args, toSelect), function(){
 					t._onSelectionChange();
@@ -135,7 +136,7 @@ define([
 			var t = this,
 				g = t.grid,
 				m = g.model;
-				
+			
 			if(!t._selecting && !t._marking && t.arg('enabled')){
 				dom.setSelectable(t.grid.domNode, false);
 				t._fixFF(1);
@@ -146,6 +147,7 @@ define([
 					t._toSelect = t._lastToSelect;
 					t._startItem = t._lastStartItem;
 					t._currentItem = t._lastEndItem;
+					t._lastSelectedIds = t.getSelected();
 				}else{
 					t._startItem = item;
 					t._currentItem = null;
@@ -156,17 +158,17 @@ define([
 							t._toSelect = 'mixed';
 						}
 					}else{
-						t._toSelect = 1;	//1 as true
+						t._toSelect = 1;	//1 as true 
 						if(t._type === 'row' && m.treeMarkMode() && !t._isSelected(item) && t._toSelect){
 							t._toSelect = 'mixed';
 						}
+						t._lastSelectedIds = t.getSelected();
 						t.clear(1);
 					}
 				}
 				connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
 				t._beginAutoScroll();
 				t.grid.autoScroll.enabled = true;
-				t._lastSelectedIds = t.getSelected();
 				t._selecting = 1;	//1 as true
 				t._highlight(item);
 			}

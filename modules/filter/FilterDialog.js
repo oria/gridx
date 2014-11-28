@@ -13,6 +13,7 @@ define([
 	"dojo/text!../../templates/FilterDialog.html",
 	"dijit/form/Select",
 	"dijit/form/Button",
+	"dijit/form/CheckBox",
 	"dijit/layout/AccordionContainer"
 ], function(declare, lang, array, css, string, query, keys, registry, Dialog, metrics, FilterPane, template){
 
@@ -135,9 +136,13 @@ define([
 			this._btnFilter = registry.byNode(btns[1]);
 			this._btnClear = registry.byNode(btns[2]);
 			this._btnCancel = registry.byNode(btns[3]);
+			this._matchCase = registry.byNode(query('.matchCaseCheckbox', this.domNode)[0]);
 			this.connect(this._btnAdd, 'onClick', 'addRule');
 			this.connect(this._btnClear, 'onClick', 'clear');
 			this.connect(this._btnCancel, 'onClick', 'cancel');
+			this.connect(this._matchCase, 'onClick', lang.hitch(this, function(){
+				this.grid.filter.caseSensitive = this._matchCase.get('checked');
+			}));
 			this.connect(this._accordionContainer, 'removeChild', '_updateButtons');
 			this.connect(this._accordionContainer, 'removeChild', '_updatePaneTitle');
 		},

@@ -55,10 +55,13 @@ GridX is available under [Dojo Toolkit](http://dojotoolkit.org/) [CLA](http://do
 Please also check out [GridX Home Site](http://oria.github.com/gridx) for more details on how GridX can help you.
 
 
+
+##Current Maintainer
+* [Qi Chen (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
+
 ## GridX Team
 * [Xiao Wen Zhu (Oliver) - IBM, CCLA](mailto:zhuxw1984@gmail.com)
 * [Pei Wang (Nate) - IBM, CCLA](mailto:supnate@gmail.com)
-* [Qi Chen (Leslie) - IBM, CCLA](mailto:yurychika@gmail.com)
 * [Bing Jian Guo (Evans) - IBM, CCLA](mailto:bingjian.guo@gmail.com)
 * [Qi Ruan (Rock) - IBM, CCLA](mailto:)
 * [Xiang Zhou (JayZ) - IBM, CCLA](mailto:)

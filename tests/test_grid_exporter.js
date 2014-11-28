@@ -111,8 +111,15 @@ require([
 			}, 500);
 		}
 	}
+	exportGrid = function() {
+		exportCSV(grid);
+	};
+	
+	exportTreeGrid = function() {
+		exportCSV(grid1);
+	};
 
-	exportCSV = function(){
+	exportCSV = function(grid){
 		var args = {
 			selectedOnly: registry.byId('selectedRows').get('checked'),
 			omitHeader: registry.byId('omitHeader').get('checked'),
@@ -162,8 +169,8 @@ require([
 			});
 		}
 		console.log(args);
-		// toCSV(grid, args).then(showResult, onError, onProgress);
-		toCSV(grid1, args).then(showResult, onError, onProgress);
+		toCSV(grid, args).then(showResult, onError, onProgress);
+		// toCSV(grid1, args).then(showResult, onError, onProgress);
 	};
 
 	//Test
@@ -263,10 +270,11 @@ require([
 			].join('');
 		}));
 		tests.push([
-			'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportCSV">Export to CSV</div>',
+			'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportGrid">Export to CSV</div>',
 			'<div id="exportProgress" data-dojo-type="dijit.ProgressBar" style="display: none;" data-dojo-props="',
 				'minimum: 0, maximum: 1',
-			'"></div>'
+			'"></div>',
+			'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportTreeGrid">Export tree grid to CSV</div>',
 		].join(''));
 
 		var tp = new TestPane({});

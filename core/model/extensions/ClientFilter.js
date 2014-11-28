@@ -338,7 +338,33 @@ define([
 				t._ids.sort(function(a, b){
 					return t._indexes[a] - t._indexes[b];
 				});
+				// sync client filter local struct order with cache struct order
+				t.syncOrder();
 			}]);
+		},
+
+		syncOrder: function() {
+			var struct = this.model._cache._struct;
+			// handle special root id array
+			for (var id in this._struct) {
+				var idArray = this._struct[id];
+				if (idArray.length > 2) {
+					if (id === '') idArray.shift();
+					this._syncOrder(idArray, struct[id]);
+					if (id === '') idArray.unshift(undefined);
+				}
+			}
+		},
+
+		_syncOrder: function(arrayA, arrayB) {
+			var index = {};
+			arrayA.forEach(function(a) {
+				index[a] = arrayB.indexOf(a);
+			});
+
+			arrayA.sort(function(a, b) {
+				return index[a] - index[b];
+			});
 		},
 
 		_onMoved: function(map){

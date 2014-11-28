@@ -180,6 +180,10 @@ define([
 			var t = this,
 				g = t.grid, rules;
 
+			var F = Filter;
+			F.before = F.lessEqual;
+			F.after = F.greaterEqual;
+
 			if(this.arg('experimental')){
 				this.conditions = lang.mixin({}, this.conditions);
 				this.conditions.number = ['equal','greater','less','greaterEqual','lessEqual','notEqual', 'range', 'isEmpty'];
@@ -227,9 +231,6 @@ define([
 		
 		load: function(args, startup){
 			//Add before and after expression for filter.
-			var F = Filter;
-			F.before = F.lessEqual;
-			F.after = F.greaterEqual;
 			this._nls = this.grid.nls;
 			this.domNode = dom.create('div', {
 				innerHTML: string.substitute(template, this._nls),
@@ -401,6 +402,7 @@ define([
 			if(!this.filterData){
 				dlg.setData(this.filterData);
 			}
+			dlg._matchCase.set('checked', this.grid.filter.caseSensitive);
 			dlg.show();
 			if(this.filterData){
 				dlg.setData(this.filterData);
@@ -529,12 +531,16 @@ define([
 		_getRuleString: function(condition, value, type){
 			var valueString, f, tpl, resolvedTextDir;
 
+			// condition = condition && condition.toLowerCase();
+
 			if(condition == 'isEmpty'){
 				valueString = '';
 			}else if(/^date|^time/i.test(type) && condition !== 'past'){
 				f = this._formatDate;
-				if(/^time/i.test(type)){f = this._formatTime;}
-				if(/^datetime/i.test(type)){
+				if (/^time/i.test(type)) {
+					f = this._formatTime;
+				}
+				if (/^datetime/i.test(type)) {
 					f = this._formatDatetime;
 				}
 				
@@ -604,7 +610,10 @@ define([
 				datetime: dtc,
 				time: tc
 			};
-			var c = data.condition, exp, isNot = false;
+			var c = data.condition,
+				exp,
+				isNot = false;
+
 			type = c == 'isEmpty' ? 'string' : type; //isEmpty always treat type as string
 			var converter = converters.custom? converters.custom : converters[type];
 
@@ -623,6 +632,9 @@ define([
 			// }
 			var startValue, endValue, columnValue;
 			if(c === 'range' || c === 'past'){
+				if(c === 'past' && (!data.value.start || !data.value.end)){
+					this._buildPastCondition(data);
+				}
 				startValue = F.value(data.value.start, type);
 				endValue = F.value(data.value.end, type);
 				columnValue = F.column(colId, type, converter);
@@ -677,24 +689,52 @@ define([
 		},
 		_formatDate: function(date){
 			//this may be customized by grid layout definition
+			date = typeof date === 'object' ? date : new Date(date);
 			var m = date.getMonth() + 1, d = date.getDate();
 			return m + '/' + d + '/' + date.getFullYear();
 		},
 		_formatTime: function(time){
 			//this may be customized by grid layout definition
+			time = typeof time === 'object' ? time : new Date(time);
 			var h = time.getHours(), m = time.getMinutes();
 			if(h < 10){h = '0' + h;}
 			if(m < 10){m = '0' + m;}
 			return h + ':' + m + ':00';
 		},
 		_formatDatetime: function(datetime){
-			//this may be customized by grid layout definition
+			datetime = typeof datetime === 'object' ? datetime : new Date(datetime);
 			var m = datetime.getMonth() + 1, d = datetime.getDate();
 			//this may be customized by grid layout definition
 			var h = datetime.getHours(), min = datetime.getMinutes();
 			if(h < 10){h = '0' + h;}
 			if(min < 10){min = '0' + min;}
 			return m + '/' + d + '/' + datetime.getFullYear() + ' ' + h + ':' + min + ':00';
+		},
+
+		_buildPastCondition: function(data) {
+			var cur = new Date(),
+				past = new Date(),
+				interval = data.value.interval,
+				val = data.value.amount;
+
+			switch(interval){
+				case 'hour':
+					past.setHours(cur.getHours() - val);
+					break;
+				case 'day':
+					past.setDate(cur.getDate() - val);
+					break;
+				case 'month':
+					past.setMonth(cur.getMonth() - val);
+					break;
+				case 'year':
+					past.setFullYear(cur.getFullYear() - val);
+					break;
+			}
+
+			data.value.start = past;
+			data.value.end = cur;
+			// return {start: past, end: cur, amount: val, interval: interval};
 		},
 		
 		_initFocus: function(){

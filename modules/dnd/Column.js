@@ -195,6 +195,9 @@ define([
 		_onDropInternal: function(nodes, copy){
 			var t = this;
 			if(t._target >= 0){
+				if (t.grid.columnLock && t._target < t.grid.columnLock.count) {
+					return false;
+				}
 				var indexes = array.map(t._selectedColIds, function(colId){
 					return t.grid._columnsById[colId].index;
 				});
