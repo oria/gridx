@@ -220,11 +220,11 @@ define([
 		//useShortMessage: false,
 		
 		conditions: {
-			string: ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
-			number: ['equal', 'greater', 'less', 'greaterEqual', 'lessEqual', 'notEqual', 'isEmpty'],
-			date: ['equal','before','after','range','isEmpty', 'past'],
-			datetime: ['equal','before','after','range','isEmpty', 'past'],
-			time: ['equal','before','after','range','isEmpty'],
+			'string': ['contain', 'equal', 'startWith', 'endWith', 'notEqual','notContain', 'notStartWith', 'notEndWith',	'isEmpty'],
+			'number': ['equal', 'greater', 'less', 'greaterEqual', 'lessEqual', 'notEqual', 'isEmpty'],
+			'date': ['equal','before','after','range','isEmpty', 'past'],
+			'datetime': ['equal','before','after','range','isEmpty', 'past'],
+			'time': ['equal','before','after','range','isEmpty', 'past'],
 			'enum': ['equal', 'notEqual', 'isEmpty'],
 			'boolean': ['equal','isEmpty']
 		},
@@ -719,7 +719,12 @@ define([
 
 			switch(interval){
 				case 'hour':
-					past.setHours(cur.getHours() - val);
+					if (cur.getHours() < val) {
+						past.setHours(0);
+						past.setMinutes(0);
+					} else {
+						past.setHours(cur.getHours() - val);
+					}
 					break;
 				case 'day':
 					past.setDate(cur.getDate() - val);

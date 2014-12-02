@@ -132,6 +132,8 @@ define([
 				this.tbNumber = registry.byNode(query('.gridxFilterPaneNumberWrapper > .dijitTextBox', this.domNode)[0]),
 				this.tbNumberStart = registry.byNode(query('.gridxFilterPaneNumberRangeWrapper > .dijitTextBox', this.domNode)[0]),
 				this.tbNumberEnd = registry.byNode(query('.gridxFilterPaneNumberRangeWrapper > .dijitTextBox', this.domNode)[1]),
+				this.tbTimePast = registry.byNode(query('.gridxFilterPaneTimePastWrapper > .dijitTextBox', this.domNode)[0]),
+				this.sltTimeInterval = registry.byNode(query('.gridxFilterPaneTimePastWrapper > .dijitSelect', this.domNode)[0]),
 				
 				this.comboText = registry.byNode(query('.gridxFilterPaneComboWrapper > .dijitComboBox', this.domNode)[0]),
 				this.sltSingle = registry.byNode(query('.gridxFilterPaneSelectWrapper > .dijitSelect', this.domNode)[0]),
@@ -234,8 +236,8 @@ define([
 			//		Get current filter type, determined by data type and condition.
 			var mapping = {'string': 'Text', number: 'Number', date: 'Date', time: 'Time', datetime: 'Datetime', 'enum': 'Select', 'boolean': 'Radio'};
 			var type = mapping[this._getDataType()];
-			if('range' === this.sltCondition.get('value')){type += 'Range';}
-			if('past' === this.sltCondition.get('value')){type += 'Past';}
+			if ('range' === this.sltCondition.get('value')) type += 'Range';
+			if ('past' === this.sltCondition.get('value')) type += 'Past';
 			return type;
 		},
 		_updateTitle: function(){
@@ -270,7 +272,8 @@ define([
 				'Number', 'NumberRange',
 				'Date', 'DateRange', 'DatePast',
 				'Datetime', 'DatetimeRange', 'DatetimePast',
-				'Time', 'TimeRange', 'Select', 'Radio'
+				'Time', 'TimeRange', 'TimePast',
+				'Select', 'Radio'
 			], function(k){
 				css.remove(this.domNode, 'gridxFilterPane' + k);
 			}, this);
@@ -413,6 +416,27 @@ define([
 					return this.ttbSingle.get('value') || null;
 				case 'TimeRange':
 					return {start: this.ttbStart.get('value'), end: this.ttbEnd.get('value')};
+				case 'TimePast':
+					val = this.tbTimePast.get('value');
+					if(isNaN(val) || !this.tbTimePast.isValid()){
+						return null;
+					}
+					var cur = new Date(),
+						past = new Date(),
+						interval = this.sltTimeInterval.get('value');
+
+					switch(interval){
+						case 'hour':
+							if (cur.getHours() < val) {
+								past.setHours(0);
+								past.setMinutes(0);
+							} else {
+								past.setHours(cur.getHours() - val);
+							}
+							break;
+					}
+
+					return {start: past, end: cur, amount: val, interval: interval};
 				case 'Radio':
 					return !!this.rbTrue.get('checked');
 				default:
@@ -485,6 +509,10 @@ define([
 				case 'TimeRange':
 					this.ttbStart.set('value', value.start);
 					this.ttbEnd.set('value', value.end);
+					break;
+				case 'TimePast':
+					this.tbTimePast.set('value', value.amount);
+					this.sltTimeInterval.set('value', value.interval);
 					break;
 				case 'Radio':
 					if(value){this.rbTrue.set('checked', true);}
