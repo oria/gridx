@@ -21,13 +21,15 @@ require([
 	store.hasChildren = function(id, item){
 		return item && store.getValues(item, 'children').length;
 	};
+	/* 
+	 * Dojo don't provide sort interface for tree store, so it's hard to do sorting for children. 
+	 * User should add their own sorting logic here to sort children manually.
+	 */
 	store.getChildren = function(item, req){
 		var children = store.getValues(item, 'children'),
 			attr,
 			t = this,		//store object
 			sorts = req.sort;
-
-		// console.log(req);
 
 		var sorting = function (a, b, index) {
 			if (!sorts[index]) return 0;
@@ -42,16 +44,12 @@ require([
 			return !sorts[index].descending ? va > vb : va <= vb;
 		}
 
-		// if (req.sort && req.sort[0]&& req.sort[0].attribute) {
-			// attr = req.sort[0].attribute;
 		if (sorts && sorts.length) {
 			children.sort(function(a, b) {
 				return sorting(a, b, 0);
-				// return !req.sort[0].descending ? t.getValue(a, attr) > t.getValue(b, attr) : 
-												// !(t.getValue(a, attr) > t.getValue(b, attr));
 			});
 		}
-		// }
+
 		return children;
 	};
 
