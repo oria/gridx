@@ -24,16 +24,34 @@ require([
 	store.getChildren = function(item, req){
 		var children = store.getValues(item, 'children'),
 			attr,
-			t = this;		//store object
+			t = this,		//store object
+			sorts = req.sort;
 
-		if (req.sort && req.sort[0]&& req.sort[0].attribute) {
-			attr = req.sort[0].attribute;
+		// console.log(req);
 
+		var sorting = function (a, b, index) {
+			if (!sorts[index]) return 0;
+
+			var attr = sorts[index].attribute;
+			var va = t.getValue(a, attr);
+			var vb = t.getValue(b, attr);
+
+			if (va == vb) {
+				return sorting(a, b, ++index);
+			}
+			return !sorts[index].descending ? va > vb : va <= vb;
+		}
+
+		// if (req.sort && req.sort[0]&& req.sort[0].attribute) {
+			// attr = req.sort[0].attribute;
+		if (sorts && sorts.length) {
 			children.sort(function(a, b) {
-				return !req.sort[0].descending ? t.getValue(a, attr) > t.getValue(b, attr) : 
-												!(t.getValue(a, attr) > t.getValue(b, attr));
+				return sorting(a, b, 0);
+				// return !req.sort[0].descending ? t.getValue(a, attr) > t.getValue(b, attr) : 
+												// !(t.getValue(a, attr) > t.getValue(b, attr));
 			});
 		}
+		// }
 		return children;
 	};
 
@@ -139,7 +157,8 @@ require([
 		modules.CellWidget,
 		modules.Edit,
 		modules.IndirectSelectColumn,
-		modules.SingleSort,
+		// modules.SingleSort,
+		modules.NestedSort,
 		modules.VirtualVScroller
 	];
 
