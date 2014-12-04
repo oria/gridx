@@ -3,12 +3,8 @@ define([
 	"dojo/_base/array",
 	"dojo/_base/lang",
 	"dojo/_base/Deferred",
-	/*====='../Model',=====*/
 	'../_Extension'
-], function(declare, array, lang, Deferred,
-	/*=====Model, =====*/
-	_Extension){
-
+], function(declare, array, lang, Deferred, _Extension) {
 /*=====
 	Model.filter = function(){};
 	Model.hasFilter = function(){};
@@ -117,12 +113,13 @@ define([
 			}
 		},
 
-		idToIndex: function(id){
+		idToIndex: function(id) {
 			if(!this._ids){
 				return this.inner._call('idToIndex', arguments);
 			}
 
 			var pid = this._struct[id] && this._struct[id][0],
+				//Use indexOf provided by Dojo, since IE8 doesn't have [].indexOf function.
 				index = indexOf(this._struct[pid] || [], id);
 
 			return index > 0 ? index - 1 : -1;
