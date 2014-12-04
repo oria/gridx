@@ -123,7 +123,7 @@ define([
 			}
 
 			var pid = this._struct[id] && this._struct[id][0],
-				index = (this._struct[pid] || []).indexOf(id);
+				index = indexOf(this._struct[pid] || [], id);
 
 			return index > 0 ? index - 1 : -1;
 		},
@@ -245,7 +245,7 @@ define([
 				if(!t._struct.hasOwnProperty(parentId)){
 					t._struct[parentId] = [m.parentId(parentId)];
 				}
-				if(t._struct[parentId].indexOf(id) < 0){
+				if(indexOf(t._struct[parentId], id) < 0){
 					t._struct[parentId].push(id);
 				}
 			}
@@ -359,7 +359,7 @@ define([
 		_syncOrder: function(arrayA, arrayB) {
 			var index = {};
 			arrayA.forEach(function(a) {
-				index[a] = arrayB.indexOf(a);
+				index[a] = indexOf(arrayB, a);
 			});
 
 			arrayA.sort(function(a, b) {
