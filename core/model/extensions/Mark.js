@@ -27,6 +27,8 @@ define([
 		name: 'mark',
 
 		priority: 5,
+
+		isZOS: false,
 		
 		constructor: function(model){
 			var t = this;
@@ -302,6 +304,11 @@ define([
 					delete byId[pid]; //all|partial -> none
 				}else if(markCount && fullCount < siblings.length && oldState != 1){
 					byId[pid] = 1; //all|none -> partial
+				}
+				if (t.isZOS) {
+					if (fullCount === siblings.length && siblings.length === 1) {
+						byId[pid] = 1;
+					}
 				}
 				if(!noEvent){
 					t._fireEvent(pid, type, byId[pid], oldState);

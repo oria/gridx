@@ -201,6 +201,15 @@ define([
 				var indexes = array.map(t._selectedColIds, function(colId){
 					return t.grid._columnsById[colId].index;
 				});
+
+				if (t.grid.columnLock) {
+					if (array.some(indexes, function(index) {
+						return index < t.grid.columnLock.count;
+					})) {
+						console.warn('can not move locked columns');
+						return false;
+					}
+				}
 				t.grid.move.column.move(indexes, t._target);
 			}
 		},
