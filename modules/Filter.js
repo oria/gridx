@@ -314,7 +314,11 @@ define([
 				var setupQuery = t.arg('setupFilterQuery') || t.arg('setupQuery');
 				m.query(setupQuery.call(t, checker && checker.expr));
 			}else{
-				m.filter(checker);
+				if (g.tree && g.tree.loadChildRecursive) {
+					g.tree.loadChildRecursive('').then(function() {
+						m.filter(checker);
+					});
+				}
 			}
 			// m.clearCache();
 			Deferred.when(!skipUpdateBody && g.body.refresh(), function(){

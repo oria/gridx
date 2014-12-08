@@ -37,7 +37,7 @@ define([
 		// classify range requests into different parent ids.
 		args.pids = {};
 		args.pids[self.layerId()] = args.range;
-		if(isTree){
+		if(isTree && ranges && ranges.length){
 			for(i = ranges.length - 1; i >= 0; --i){
 				r = ranges[i];
 				pid = r.parentId;
