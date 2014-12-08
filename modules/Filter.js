@@ -402,7 +402,8 @@ define([
 		column: function(/* String|Number */colId, /* String? */type, /* Function? */converter, /* Boolean? */useRawData){
 			type = String(type || 'string').toLowerCase();
 			return wrap(function(row){
-				return valueConvert(row[useRawData ? 'rawData' : 'data'][colId], type, converter);
+				if (typeof row.data === 'undefined') row.data = row._data();
+				return valueConvert( row[useRawData ? 'rawData' : 'data'][colId], type, converter);
 			}, type, colId, {isCol: true});
 		},
 
