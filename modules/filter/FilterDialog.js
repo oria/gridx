@@ -124,7 +124,10 @@ define([
 		},
 		
 		_initWidgets: function(){
-			var form = dojo.query('form', this.domNode)[0], _this = this;
+			var form = dojo.query('form', this.domNode)[0],
+				_this = this;
+			var preFilterData = this.grid.filterBar && this.grid.filterBar._preFilterData;
+
 			form.onsubmit = function(){
 				_this.done();
 				return false;
@@ -134,8 +137,14 @@ define([
 			var btns = query('.dijitButton', this.domNode);
 			this._btnAdd = registry.byNode(btns[0]);
 			this._btnFilter = registry.byNode(btns[1]);
-			this._btnClear = registry.byNode(btns[2]);
-			this._btnCancel = registry.byNode(btns[3]);
+			
+			this._btnRestore = registry.byNode(btns[2]);
+			if (!preFilterData) {
+				this._btnRestore.domNode.style.display = 'none';
+			}
+
+			this._btnClear = registry.byNode(btns[3]);
+			this._btnCancel = registry.byNode(btns[4]);
 			this._matchCase = registry.byNode(query('.matchCaseCheckbox', this.domNode)[0]);
 			this.connect(this._btnAdd, 'onClick', 'addRule');
 			this.connect(this._btnClear, 'onClick', 'clear');
@@ -145,6 +154,13 @@ define([
 			}));
 			this.connect(this._accordionContainer, 'removeChild', '_updateButtons');
 			this.connect(this._accordionContainer, 'removeChild', '_updatePaneTitle');
+			this.own(
+				this._btnRestore.on('click', function() {
+					if (preFilterData) {
+						_this.setData(preFilterData);
+					}
+				})
+			);
 		},
 		
 		_updatePaneTitle: function(){

@@ -66,6 +66,7 @@ define({root:
 	"clearButton": "Clear",
 	"waiClearButton": "Clear the filter",
 	"filterButton": "Filter",
+	"restoreFilterButton": "Restore",
 	"waiFilterButton": "Submit the filter",
 	
 	"columnSelectLabel": "Column:",
