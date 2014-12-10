@@ -318,6 +318,8 @@ define([
 					g.tree.loadChildRecursive('').then(function() {
 						m.filter(checker);
 					});
+				} else {
+					m.filter(checker);
 				}
 			}
 			// m.clearCache();
