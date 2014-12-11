@@ -176,7 +176,7 @@ define([
 	return declare(_Module, {
 		name: 'filterBar',
 		forced: ['filter'],
-		preload: function(){
+		preload: function() {
 			var t = this,
 				g = t.grid, rules;
 
@@ -184,21 +184,22 @@ define([
 			F.before = F.lessEqual;
 			F.after = F.greaterEqual;
 
-			if(this.arg('experimental')){
+			if (this.arg('experimental')) {
 				this.conditions = lang.mixin({}, this.conditions);
 				this.conditions.number = ['equal','greater','less','greaterEqual','lessEqual','notEqual', 'range', 'isEmpty'];
 			}
-			if(g.persist){
+			if (g.persist) {
 				rules = g.persist.registerAndLoad('filterBar', function(){
 					return t.filterData;
 				});
 			}
-			if(rules){
+			if (rules) {
 				t.filterData = rules;
-			}else{
+			} else {
 				rules = t.arg('filterData');
+				t._preFilterData = rules;
 			}
-			if(rules){
+			if (rules) {
 				g.filter.setFilter(t._createFilterExpr(rules), 1);
 			}
 		},

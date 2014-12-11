@@ -314,7 +314,13 @@ define([
 				var setupQuery = t.arg('setupFilterQuery') || t.arg('setupQuery');
 				m.query(setupQuery.call(t, checker && checker.expr));
 			}else{
-				m.filter(checker);
+				if (g.tree && g.tree.loadChildRecursive) {
+					g.tree.loadChildRecursive('').then(function() {
+						m.filter(checker);
+					});
+				} else {
+					m.filter(checker);
+				}
 			}
 			// m.clearCache();
 			Deferred.when(!skipUpdateBody && g.body.refresh(), function(){
@@ -398,7 +404,8 @@ define([
 		column: function(/* String|Number */colId, /* String? */type, /* Function? */converter, /* Boolean? */useRawData){
 			type = String(type || 'string').toLowerCase();
 			return wrap(function(row){
-				return valueConvert(row[useRawData ? 'rawData' : 'data'][colId], type, converter);
+				if (typeof row.data === 'undefined') row.data = row._data();
+				return valueConvert( row[useRawData ? 'rawData' : 'data'][colId], type, converter);
 			}, type, colId, {isCol: true});
 		},
 

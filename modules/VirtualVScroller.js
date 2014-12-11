@@ -209,7 +209,7 @@ define([
 					visualEnd = visualStart + view.visualCount,
 					bn = t.grid.bodyNode,
 					firstRow = bn.firstChild,
-					firstRowTop = firstRow && firstRow.clientTop - deltaT,
+					firstRowTop = firstRow && firstRow.offsetTop - deltaT,
 					lastRow = bn.lastChild,
 					lastRowBtm = lastRow && lastRow.offsetTop - deltaT + lastRow.offsetHeight,
 					bnTop = bn.scrollTop,

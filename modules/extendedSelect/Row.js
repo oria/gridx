@@ -139,6 +139,8 @@ define([
 
 		allowRight: false,		//allow mouse right click to trigger select
 
+		unselectable: {},
+
 		rowMixin: {
 			select: function(){
 				this.grid.select.row.selectById(this.id);
