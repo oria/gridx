@@ -54,6 +54,7 @@ define([
 					firstIdx = 0,
 					lastIdx = 0;
 
+				size = g.tree? g.model._sizeAll() : size;
 				if(pagination){
 					cp = pagination.currentPage();
 					firstIdx = pagination.firstIndexInPage(cp) + 1;
