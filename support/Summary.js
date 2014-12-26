@@ -54,6 +54,11 @@ define([
 					firstIdx = 0,
 					lastIdx = 0;
 
+				if (g.sizeHandler && typeof g.sizeHandler === 'function') {
+					size = g.sizeHandler(g);
+				}
+
+				size = g.tree? g.model._sizeAll() : size;
 				if(pagination){
 					cp = pagination.currentPage();
 					firstIdx = pagination.firstIndexInPage(cp) + 1;

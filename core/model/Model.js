@@ -377,15 +377,15 @@ define([
 		},
 
 		_sizeAll: function(parentId){
-			var size = this.size(parentId), i, childId,
-				count = 0;
+			var size = this.size(parentId),
+				count = 0,
+				i, childId;
 
 			size = size === -1 ? 0 : size;
 			count += size;
 			
-			for(i = 0; i < size; i++){
+			for(i = 0; i < size; i++) {
 				childId = this.indexToId(i, parentId);
-				console.log(childId);
 				count += this._sizeAll(childId);
 			}
 
