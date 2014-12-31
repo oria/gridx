@@ -183,7 +183,7 @@ define([
 			//Check if the table is collasped.
 			var t = this, h;
 
-			if(t._isCollapse === undefined){
+			if (t._isCollapse === undefined) {
 				var refNode = query('.gridxCell', t.grid.header.innerNode)[0];
 				t._isCollapse = refNode && domStyle.get(refNode, 'borderCollapse') == 'collapse';
 			}
@@ -192,12 +192,13 @@ define([
 			function getHeight(){
 				return has('ie') <= 8 || t._isCollapse ? bodyNode.offsetHeight + 'px' : domStyle.getComputedStyle(bodyNode).height;
 			}
-			setTimeout(function(){
+			setTimeout(function() {
 				h = getHeight();
-				if((h + '').indexOf('.') >= 0){
-					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
-
-				}else{
+				if ((h + '').indexOf('.') >= 0) {
+					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.firstChild.style.height = bodyNode.firstChild.clientHeight + 1 + 'px';
+					//For IE,setting fixed height on row will break DOD.
+					// bodyNode.style.height = '';
+				} else {
 					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height  = h;
 				}
 				// if(rowHeaderNode && rowHeaderNode.firstChild){
