@@ -338,11 +338,11 @@ define([
 	});
 
 	//Util
-	function valueConvert(d, type, converter){
-		if(lang.isFunction(converter)){
+	function valueConvert(d, type, converter, caseSensitive) {
+		if (lang.isFunction(converter)) {
 			d = converter(d);
 		}
-		switch(type){
+		switch (type) {
 			case 'number':
 				return parseFloat(d, 10);
 			case 'boolean':
@@ -371,7 +371,10 @@ define([
 				}
 				return null;
 			default: //string
-				return (d === null || d === undefined) ? '' : String(d);
+				d = d ? ((!caseSensitive) ? (d + '').toLowerCase() : d + '') : '';
+				return d;
+				// return d ? ((!caseSensitive) ? (d + '').toLowerCase() : d + '') : '';
+				// return (d === null || d === undefined) ? '' : String(d);
 		}
 	}
 
@@ -401,17 +404,17 @@ define([
 
 	return lang.mixin(module, {
 		//Data
-		column: function(/* String|Number */colId, /* String? */type, /* Function? */converter, /* Boolean? */useRawData){
+		column: function(/* String|Number */colId, /* String? */type, /* Function? */converter, /* Boolean? */useRawData, caseSensitive){
 			type = String(type || 'string').toLowerCase();
 			return wrap(function(row){
 				if (typeof row.data === 'undefined') row.data = row._data();
-				return valueConvert( row[useRawData ? 'rawData' : 'data'][colId], type, converter);
+				return valueConvert( row[useRawData ? 'rawData' : 'data'][colId], type, converter, caseSensitive);
 			}, type, colId, {isCol: true});
 		},
 
-		value: function(v, type, converter){
+		value: function(v, type, converter, caseSensitive){
 			type = String(type || typeof v).toLowerCase();
-			v = valueConvert(v, type, converter);
+			v = valueConvert(v, type, converter, caseSensitive);
 			return wrap(function(){
 				return v;
 			}, type, v);

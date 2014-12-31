@@ -646,7 +646,7 @@ define([
 					c = c.replace(/^not/g, '');
 					c = c.charAt(0).toLowerCase() + c.substring(1);
 				}
-				exp = F[c](F.column(colId, type, converter), c == 'isEmpty' ? null : F.value(dv, type), cs);
+				exp = F[c](F.column(colId, type, converter, false, cs), c == 'isEmpty' ? null : F.value(dv, type, null, cs), cs);
 				if(isNot){exp = F.not(exp);}
 			}
 			return exp;
