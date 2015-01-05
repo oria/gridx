@@ -189,11 +189,23 @@ require([
 	};
 
 	window.toggleRow2Detail = function(){
-		dod.toggle(grid.row('2'));
+		var df = dod.toggle(grid.row('2'));
+
+		df.then(function() {
+			console.log('in dod toggle callback');
+		}, function(err) {
+			console.warn(err);
+		});
 	};
 
 	window.refreshRow2Detail = function(){
-		dod.refresh(grid.row('2'));
+		var df = dod.refresh(grid.row('2'));
+		
+		df.then(function() {
+			console.log('in dod refresh callback');
+		}, function(err) {
+			console.warn(err);
+		});
 	};
 
 	window.isRow3DetailShown = function(){

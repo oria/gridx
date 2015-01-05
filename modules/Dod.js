@@ -304,25 +304,37 @@ define([
 			return df;
 		},
 		
-		toggle: function(row){
+		toggle: function(row) {
 			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
-			var _row = this._row(row);
-			if(!_row || _row.inAnim || _row.inLoading){
-				return;
+			var _row = this._row(row), 
+				df = new Deferred();
+
+			if (!_row || _row.inAnim || _row.inLoading) {
+				df.errback("can't toggle now!");
+				return df;
 			}
-			if(this.isShown(row)){
-				this.hide(row);
-			}else{
-				this.show(row);
+			if (this.isShown(row)) {
+				df = this.hide(row);
+			} else {
+				df = this.show(row);
 			}
+
+			return df;
 		},
 
 		refresh: function(row){
-			var _row = this._row(row);
-			if(!_row || !_row.dodShown || _row.inAnim || _row.inLoading) return;
+			var _row = this._row(row),
+				df = new Deferred();
+
+			if(!_row || !_row.dodShown || _row.inAnim || _row.inLoading) {
+				df.errback("can't refresh now!");
+				return df;
+			}
 			_row.dodLoaded = false;
 			_row.dodShown = false;
-			this.show(row);
+			df = this.show(row);
+
+			return df;
 		},
 		
 		isShown: function(row){
