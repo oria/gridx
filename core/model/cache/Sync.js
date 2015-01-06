@@ -409,16 +409,20 @@ define([
 		},
 
 		//--------------------------------------------------------------------------
-		_onSet: function(item){
+		_onSet: function(item, option) {
 			var t = this,
 				id = t.store.getIdentity(item),
 				index = t.idToIndex(id),
 				path = t.treePath(id),
 				old = t._cache[id];
-			if(path.length){
+
+			if (path.length) {
 				t._addRow(id, index, t._itemToObject(item), item, path.pop());
 			}
-			t.onSet(id, index, t._cache[id], old);
+			if (!option || option.overwrite !== false) { // In new store, add() is using put().
+														 // Here to stop t.onSet when calling store.add()
+				t.onSet(id, index, t._cache[id], old);
+			}
 		},
 
 		_onNew: function(item, parentInfo){
