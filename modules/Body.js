@@ -975,6 +975,12 @@ define([
 					e.columnId = col.id;
 					e.columnIndex = col.index;
 				}
+				if(tag == 'div' && domClass.contains(n, 'gridxRow') && n.parentNode === g.bodyNode){
+					e.rowId = n.getAttribute('rowid');
+					e.parentId = n.getAttribute('parentid');
+					e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);
+					e.visualIndex = parseInt(n.getAttribute('visualindex'), 10);
+				}
 				if(tag == 'table' && domClass.contains(n, 'gridxRowTable') && n.parentNode.parentNode === g.bodyNode){
 					n = n.parentNode;
 					e.rowId = n.getAttribute('rowid');
