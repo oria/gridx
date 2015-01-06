@@ -393,13 +393,13 @@ define([
 		},
 
 		//Events---------------------------------------------------------------------------------
-		onDelete: function(/*id, index*/){},
+		onDelete: function(/*id, index*/) {},
 
-		onNew: function(/*id, index, row*/){},
+		onNew: function(/*id, index, row*/) {},
 
-		onSet: function(/*id, index, row*/){},
+		onSet: function(/*id, index, row*/) {},
 
-		onSizeChange: function(/*size, oldSize*/){},
+		onSizeChange: function(/*size, oldSize*/) {},
 
 		//Package----------------------------------------------------------------------------
 		_msg: function(/* msg */){},

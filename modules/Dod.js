@@ -117,14 +117,18 @@ define([
 		},
 		
 		load: function(args, deferStartup){
-			var t =this, g = t.grid;
+			var t =this,
+				g = t.grid,
+				m = g.model;
+
 			t._rowMap = {};
-			t.connect(t.grid.body, 'onAfterCell', '_onAfterCell');
-			t.connect(t.grid.body, 'onAfterRow', '_onAfterRow');
-			t.connect(t.grid.bodyNode, 'onclick', '_onBodyClick');
-			t.connect(t.grid.body, 'onUnrender', '_onBodyUnrender');
-			t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown');
-			t.connect(t.grid.body, '_onRowMouseOver', '_onRowMouseOver');
+			t.connect(g.body, 'onAfterCell', '_onAfterCell');
+			t.connect(g.body, 'onAfterRow', '_onAfterRow');
+			t.connect(g.bodyNode, 'onclick', '_onBodyClick');
+			t.connect(g.body, 'onUnrender', '_onBodyUnrender');
+			t.connect(g, 'onCellKeyDown', '_onCellKeyDown');
+			t.connect(g.body, '_onRowMouseOver', '_onRowMouseOver');
+			t.connect(m, 'onSet', '_onModelSet');		//When update store, detail should udpate.
 
 			// In IE, renderRow will use bodyNode.innerHTML = str,
 			// this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
@@ -342,11 +346,12 @@ define([
 			var _row = this._row(row),
 				df = new Deferred();
 
-			if(!_row || !_row.dodShown || _row.inAnim || _row.inLoading) {
+			if (_row) _row.dodLoaded = false;
+			if (!_row || !_row.dodShown || _row.inAnim || _row.inLoading) {
 				df.errback("can't refresh now!");
 				return df;
 			}
-			_row.dodLoaded = false;
+			// _row.dodLoaded = false;
 			_row.dodShown = false;
 			df = this.show(row);
 
@@ -391,6 +396,10 @@ define([
 				id = row.id;
 			}
 			return this._rowMap[id] || (this._rowMap[id] = {});
+		},
+
+		_onModelSet: function(id, index, row) {
+			this.refresh(id);
 		},
 		
 		_onBodyClick: function(e){
@@ -575,7 +584,7 @@ define([
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			_row.inLoading = false;
 			
-			//***for nested grid in grid ****
+			//***For nested grid in grid ****
 			
 			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){
