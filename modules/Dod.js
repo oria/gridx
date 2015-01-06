@@ -62,9 +62,25 @@ define([
 		},
 
 		toggle: function(row){
+			// summary:
+			//		Hide the detail part of a row when it is showing.
+			//		Show the detail part of a row when it is hidden.
+			// rowId: string
+			//		The ID of a row.
+			//	return: dojo.Deferred.
+			//		A deferred object indicating when the toggle success or fail.
 		},
 
 		refresh: function(row){
+			// summary:
+			//		When the dod of a specific row is open, refresh the content of dod.
+			// rowId: String
+			//		The ID of a row
+			// return: dojo.Deferred
+			//		A deferred object indicating when the detail refresh success or fail.
+			//		When the dod of the row is open and the refresh successes, the defer will be resolved
+			//		When the dod of the row is not open or the dod is in process of open/hide,
+			//		the refresh will fail and the defer will be rejected.
 		},
 
 		isShown: function(row){
@@ -110,9 +126,9 @@ define([
 			t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown');
 			t.connect(t.grid.body, '_onRowMouseOver', '_onRowMouseOver');
 
-			//in IE, renderRow will use bodyNode.innerHTML = str,
-			//this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
-			//Here, manually set dodLoaded to false to force dod to re-render the dodNode 
+			// In IE, renderRow will use bodyNode.innerHTML = str,
+			// this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
+			// Here, manually set dodLoaded to false to force dod to re-render the dodNode 
 			(has('ie') || has('trident')) && t.aspect(t.grid.body, 'renderRows', function(s, c, p){
 				if(p === 'top' || p === 'bottom'){ return; }
 				var i, rowInfo, _row;
@@ -153,7 +169,7 @@ define([
 		},
 		
 		show: function(row){
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
 			var _row = this._row(row),
 				df = new Deferred(),
 				g = this.grid;
@@ -229,7 +245,7 @@ define([
 		},
 		
 		hide: function(row){
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
 			var rowHeaderNode,
 				_row = this._row(row),
 				g = this.grid,
@@ -237,7 +253,7 @@ define([
 				df = new Deferred(),
 				t = this;
 
-			if(!_row.dodShown || _row.inAnim || _row.inLoading){
+			if (!_row.dodShown || _row.inAnim || _row.inLoading) {
 				df.errback('Row Detail has already been hidden.');
 				return df;
 			}
@@ -305,7 +321,7 @@ define([
 		},
 		
 		toggle: function(row) {
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
 			var _row = this._row(row), 
 				df = new Deferred();
 
@@ -338,7 +354,7 @@ define([
 		},
 		
 		isShown: function(row){
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
 			var _row = this._row(row);
 			return !!_row.dodShown;
 		},
