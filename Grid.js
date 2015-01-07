@@ -66,6 +66,10 @@ define([
 		templateString: template,
 
 		version: version,
+
+		isIE: has('ie') || has('trident'),
+		
+
 		//textDir bidi support begin
 		_setTextDirAttr: function(textDir){
 			// summary:

@@ -131,21 +131,25 @@ define([
 			t.connect(m, 'onSet', '_onModelSet');		//When update store, detail should udpate.
 
 			// In IE, renderRow will use bodyNode.innerHTML = str,
-			// this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
+			// this will destroy all the node and _row.dodNode's innerHTML will also be destroyed.
 			// Here, manually set dodLoaded to false to force dod to re-render the dodNode 
-			(has('ie') || has('trident')) && t.aspect(t.grid.body, 'renderRows', function(s, c, p){
-				if(p === 'top' || p === 'bottom'){ return; }
-				var i, rowInfo, _row;
-				for(i = s; i < s + c; i++){
-					rowInfo = g.view.getRowInfo({visualIndex: i});
-					_row = t._rowMap[rowInfo.rowId];
-					if(_row){
-						_row.dodLoaded = false;
-						_row.dodLoadingNode = null;
-						_row.dodNode = null;
+			if (g.isIE) {
+				// (has('ie') || has('trident')) && 
+				t.aspect(t.grid.body, 'renderRows', function(s, c, p) {
+					if(p === 'top' || p === 'bottom') return;
+
+					var i, rowInfo, _row, temp,
+						rm = t._rowMap;
+
+					for (var k in rm) {
+						temp = rm[k];
+						temp.dodLoaded = false;
+						temp.dodLoadingNode = null;
+						temp.dodNode = null;
+						// temp.dodShown = false;
 					}
-				}
-			}, t, 'before');
+				}, t, 'before');
+			}
 
 			if(t.grid.columnResizer){
 				t.connect(t.grid.columnResizer, 'onResize', '_onColumnResize');
@@ -218,10 +222,10 @@ define([
 			domClass.add(node, 'gridxDodShown');
 			//domStyle.set(_row.dodNode, 'display', 'none');
 			
-			if(_row.dodLoaded){
+			if (_row.dodLoaded) {
 				this._detailLoadComplete(row, df);
 				return df;
-			}else{
+			} else {
 				domStyle.set(_row.dodLoadingNode, 'display', 'block');
 				if(g.autoHeight){
 					g.vLayout.reLayout();
@@ -434,9 +438,12 @@ define([
 			}
 		},
 		
-		_onAfterRow: function(row){
-			var _row = this._row(row);
-			if(this.arg('showExpando')){
+		_onAfterRow: function(row) {
+			var _row = this._row(row),
+				t = this,
+				g = t.grid;
+
+			if(this.arg('showExpando')) {
 				var tbl = query('table', row.node())[0];
 				var cell = tbl.rows[0].cells[0];
 				var span = domConstruct.create('span', {
@@ -449,7 +456,13 @@ define([
 			if(this.isShown(row) || (this.arg('defaultShow') && _row.dodShown === undefined)){
 				_row.dodShown = false;
 				_row.defaultShow = true;
-				this.show(row);
+				if (g.isIE) {
+					setTimeout(function() {
+						t.show(row);
+					}, 10);
+				} else {
+					t.show(row);
+				}
 			}
 			
 		},
