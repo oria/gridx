@@ -132,7 +132,7 @@ require([
 			setTheme(JulieTheme).render();
 	}
 
-	var store = new Memory({data: dataSource.getData({ size : 100})});
+	var store = new Memory({data: dataSource.getData({size : 100})});
 	window.createGrid = function(){
 		if(window.grid){window.grid.destroy();}
 		grid = new Grid({
