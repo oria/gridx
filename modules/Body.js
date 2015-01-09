@@ -1008,8 +1008,8 @@ define([
 					row = g.row(id, 1),
 					rowNode = row && row.node();
 				if(rowNode){
-					var curData = rowCache.data,
-						oldData = oldCache.data,
+					var curData = rowCache.data || rowCache._data(),
+						oldData = oldCache.data || oldCache._data(),
 						cols = g._columns,
 						renderWhole = t.arg('renderWholeRowOnSet'),
 						compareOnSet = t.arg('compareOnSet');
