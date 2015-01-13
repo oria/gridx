@@ -318,7 +318,7 @@ define([
 		},
 
 		_doMark: function(id, tp, toMark, skipParent, noEvent){
-			var i, ids, children, childId, treePath,
+			var i, ids, children, childId, treePath, childrenLen,
 				t = this,
 				m = t.model,
 				mm = m._model,
@@ -331,12 +331,24 @@ define([
 
 			if(t._tree[tp]){
 				children = mm._call('children', [id]);
-				if(toMark == 1 && array.every(children, function(childId){
-					return (last[childId] || 0) == (last[children[0]] || 0);
-				})){
-					toMark = 2;
+				childrenLen = children.length;
+
+				if (toMark === 1) {
+					if (childrenLen > 1) {
+						if(array.every(children, function(childId){
+								return (last[childId] || 0) == (last[children[0]] || 0);
+						})){
+							toMark = 2;
+						}
+						
+					} else if(childrenLen === 1) {
+						toMark = last[children[0]] === 1 ? 1 : 2;
+					} else {		//without children rows
+						toMark = 2;
+					}
 				}
 			}
+
 			byId[id] = last[id] = toMark;
 			if(!noEvent){
 				t._fireEvent(id, tp, toMark, oldState);
