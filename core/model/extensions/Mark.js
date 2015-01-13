@@ -220,6 +220,7 @@ define([
 		_fireEvent: function(id, type, toMark, oldState){
 			var t = this,
 				m = t.model;
+			// debugger;
 			if(toMark != oldState){
 				if(!toMark){
 					delete t._byId[type][id];
@@ -266,7 +267,8 @@ define([
 				last = t._last[tp],
 				lazy = t._lazy[tp],
 				oldState = byId[id] || 0,
-				newState;
+				newState, parent;
+
 			if(t._tree[tp]){
 				children = mm._call('children', [id]);
 				if(toMark == 1 && array.every(children, function(childId){
@@ -284,7 +286,15 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
+					newState = byId[childId] = toMark == 1 ? last[childId] || undefined : toMark;
+					
+					if (newState === undefined) {
+						parent = mm._call('treePath', [childId]);
+						newState = byId[parent.pop()];
+						newState = newState === 1 ? 0 : newState;
+						byId[childId] = newState;
+					}
+
 					if(!noEvent){
 						t._fireEvent(childId, tp, newState, oldState);
 					}
