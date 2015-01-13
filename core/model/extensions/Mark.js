@@ -316,37 +316,6 @@ define([
 			}
 		},
 
-		_updateChildren: function(id, tp, toMark, noEvent) {
-			var t = this,
-				byId = t._byId[tp],
-				last = t._last[tp],
-				lazy = t._lazy[tp],
-				m = t.model,
-				mm = m._model,
-				children = mm._call('children', [id]),
-				ids = children,
-				childId, oldState, newState;
-
-			while (ids.length) {
-				childId = ids.shift();
-				oldState = byId[childId] || 0;
-				newState = toMark === 1 ? last[childId] : toMark;
-				byId[childId] = newState;
-				// last[childId] = newState;
-				if (!noEvent) {
-					t._fireEvent(childId, tp, newState, oldState);
-				}
-				if (mm._call('hasChildren', [childId])) {
-					children = mm._call('children', [childId]);
-					if (children.length) {
-						ids = ids.concat(children);
-					} else {
-						lazy[childId] = toMark;
-					}
-				}
-			}
-		},
-
 		_doMark: function(id, tp, toMark, skipParent, noEvent){
 			var i, ids, children, childId, treePath,
 				t = this,
@@ -358,7 +327,6 @@ define([
 				// selectable = t._byId['selectable'],
 				oldState = byId[id] || 0,
 				newState;
-				
 			if(t._tree[tp]){
 				children = mm._call('children', [id]);
 				if(toMark == 1 && array.every(children, function(childId){
@@ -372,27 +340,22 @@ define([
 				t._fireEvent(id, tp, toMark, oldState);
 			}
 			if(t._tree[tp]){
-				ids = mm._call('children', [id]);
-
-				// ids = [children];
+				ids = [id];
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					newState = toMark == 1 ? last[childId] || 0 : toMark;
-					byId[childId] = newState;
-					this._updateChildren(childId, tp, newState, noEvent);
-					// last[childId] = newState;
+					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
 					if(!noEvent){
 						t._fireEvent(childId, tp, newState, oldState);
 					}
-					// if(mm._call('hasChildren', [childId])){
-					// 	children = mm._call('children', [childId]);
-					// 	if(children.length){
-					// 		ids = ids.concat(children);
-					// 	}else{
-					// 		lazy[childId] = toMark;
-					// 	}
-					// }
+					if(mm._call('hasChildren', [childId])){
+						children = mm._call('children', [childId]);
+						if(children.length){
+							ids = ids.concat(children);
+						}else{
+							lazy[childId] = toMark;
+						}
+					}
 				}
 				if(!skipParent){
 					treePath = mm._call('treePath', [id]);
