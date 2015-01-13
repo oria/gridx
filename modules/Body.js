@@ -462,9 +462,10 @@ define([
 								//Set a special flag so that RowHeader won't destroy its nodes.
 								//FIXME: this is ugly...
 								t.onUnrender(id, 'refresh');
+								t.renderedIds[id] = undefined;
 							}
 							domConstruct.destroy(n);
-							t.renderedIds[id] = undefined;
+							// t.renderedIds[id] = undefined;
 							n = tmp;
 						}
 						array.forEach(renderedRows, t.onAfterRow, t);
