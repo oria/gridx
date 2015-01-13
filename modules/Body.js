@@ -426,6 +426,7 @@ define([
 								//Set a special flag so that RowHeader won't destroy its nodes.
 								//FIXME: this is ugly...
 								t.onUnrender(id, 'refresh');
+								t.renderedIds[id] = undefined;
 							}
 							domConstruct.destroy(n);
 							n = tmp;
