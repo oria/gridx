@@ -181,13 +181,16 @@ define([
 				var type = t._type,
 					start = t._startItem,
 					current = t._currentItem,
-					highlight = function(from, to, toHL){
+					highlight = function(from, to, toHL, forceDeselect){
 						from = from[type];
 						to = to[type];
 						var dir = from < to ? 1 : -1,
 							start = g.body.renderStart, 
 							end = start + g.body.renderCount;
 						for(; from != to; from += dir){
+							if(forceDeselect){
+								t.deselectByIndex(from);
+							}
 							if (from < start || from > end) continue;
 							var item = {};
 							item[type] = from;
@@ -204,7 +207,7 @@ define([
 					}else{
 						if(t._inRange(start[type], target[type], current[type])){
 							//selection has jumped to different direction, all should be deselected.
-							highlight(current, start, 0);	//0 as false
+							highlight(current, start, 0, 1);	//0 as false, 1 as true
 							current = start;
 						}
 						highlight(target, current, 1);	//1 as true
