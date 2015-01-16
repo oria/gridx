@@ -62,9 +62,25 @@ define([
 		},
 
 		toggle: function(row){
+			// summary:
+			//		Hide the detail part of a row when it is showing.
+			//		Show the detail part of a row when it is hidden.
+			// rowId: string
+			//		The ID of a row.
+			//	return: dojo.Deferred.
+			//		A deferred object indicating when the toggle success or fail.
 		},
 
 		refresh: function(row){
+			// summary:
+			//		When the dod of a specific row is open, refresh the content of dod.
+			// rowId: String
+			//		The ID of a row
+			// return: dojo.Deferred
+			//		A deferred object indicating when the detail refresh success or fail.
+			//		When the dod of the row is open and the refresh successes, the defer will be resolved
+			//		When the dod of the row is not open or the dod is in process of open/hide,
+			//		the refresh will fail and the defer will be rejected.
 		},
 
 		isShown: function(row){
@@ -101,31 +117,39 @@ define([
 		},
 		
 		load: function(args, deferStartup){
-			var t =this, g = t.grid;
-			t._rowMap = {};
-			t.connect(t.grid.body, 'onAfterCell', '_onAfterCell');
-			t.connect(t.grid.body, 'onAfterRow', '_onAfterRow');
-			t.connect(t.grid.bodyNode, 'onclick', '_onBodyClick');
-			t.connect(t.grid.body, 'onUnrender', '_onBodyUnrender');
-			t.connect(t.grid, 'onCellKeyDown', '_onCellKeyDown');
-			t.connect(t.grid.body, '_onRowMouseOver', '_onRowMouseOver');
+			var t =this,
+				g = t.grid,
+				m = g.model;
 
-			//in IE, renderRow will use bodyNode.innerHTML = str,
-			//this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
-			//Here, manually set dodLoaded to false to force dod to re-render the dodNode 
-			(has('ie') || has('trident')) && t.aspect(t.grid.body, 'renderRows', function(s, c, p){
-				if(p === 'top' || p === 'bottom'){ return; }
-				var i, rowInfo, _row;
-				for(i = s; i < s + c; i++){
-					rowInfo = g.view.getRowInfo({visualIndex: i});
-					_row = t._rowMap[rowInfo.rowId];
-					if(_row){
-						_row.dodLoaded = false;
-						_row.dodLoadingNode = null;
-						_row.dodNode = null;
+			t._rowMap = {};
+			t.connect(g.body, 'onAfterCell', '_onAfterCell');
+			t.connect(g.body, 'onAfterRow', '_onAfterRow');
+			t.connect(g.bodyNode, 'onclick', '_onBodyClick');
+			t.connect(g.body, 'onUnrender', '_onBodyUnrender');
+			t.connect(g, 'onCellKeyDown', '_onCellKeyDown');
+			t.connect(g.body, '_onRowMouseOver', '_onRowMouseOver');
+			t.connect(m, 'onSet', '_onModelSet');		//When update store, detail should udpate.
+
+			// In IE, renderRow will use bodyNode.innerHTML = str,
+			// this will destroy all the node and _row.dodNode's innerHTML will also be destroyed.
+			// Here, manually set dodLoaded to false to force dod to re-render the dodNode 
+			if (g.isIE) {
+				// (has('ie') || has('trident')) && 
+				t.aspect(t.grid.body, 'renderRows', function(s, c, p) {
+					if(p === 'top' || p === 'bottom') return;
+
+					var i, rowInfo, _row, temp,
+						rm = t._rowMap;
+
+					for (var k in rm) {
+						temp = rm[k];
+						temp.dodLoaded = false;
+						temp.dodLoadingNode = null;
+						temp.dodNode = null;
+						// temp.dodShown = false;
 					}
-				}
-			}, t, 'before');
+				}, t, 'before');
+			}
 
 			if(t.grid.columnResizer){
 				t.connect(t.grid.columnResizer, 'onResize', '_onColumnResize');
@@ -153,7 +177,7 @@ define([
 		},
 		
 		show: function(row){
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
 			var _row = this._row(row),
 				df = new Deferred(),
 				g = this.grid;
@@ -198,10 +222,10 @@ define([
 			domClass.add(node, 'gridxDodShown');
 			//domStyle.set(_row.dodNode, 'display', 'none');
 			
-			if(_row.dodLoaded){
+			if (_row.dodLoaded) {
 				this._detailLoadComplete(row, df);
 				return df;
-			}else{
+			} else {
 				domStyle.set(_row.dodLoadingNode, 'display', 'block');
 				if(g.autoHeight){
 					g.vLayout.reLayout();
@@ -229,7 +253,7 @@ define([
 		},
 		
 		hide: function(row){
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
 			var rowHeaderNode,
 				_row = this._row(row),
 				g = this.grid,
@@ -237,7 +261,7 @@ define([
 				df = new Deferred(),
 				t = this;
 
-			if(!_row.dodShown || _row.inAnim || _row.inLoading){
+			if (!_row.dodShown || _row.inAnim || _row.inLoading) {
 				df.errback('Row Detail has already been hidden.');
 				return df;
 			}
@@ -304,29 +328,42 @@ define([
 			return df;
 		},
 		
-		toggle: function(row){
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
-			var _row = this._row(row);
-			if(!_row || _row.inAnim || _row.inLoading){
-				return;
+		toggle: function(row) {
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			var _row = this._row(row), 
+				df = new Deferred();
+
+			if (!_row || _row.inAnim || _row.inLoading) {
+				df.errback("can't toggle now!");
+				return df;
 			}
-			if(this.isShown(row)){
-				this.hide(row);
-			}else{
-				this.show(row);
+			if (this.isShown(row)) {
+				df = this.hide(row);
+			} else {
+				df = this.show(row);
 			}
+
+			return df;
 		},
 
 		refresh: function(row){
-			var _row = this._row(row);
-			if(!_row || !_row.dodShown || _row.inAnim || _row.inLoading) return;
-			_row.dodLoaded = false;
+			var _row = this._row(row),
+				df = new Deferred();
+
+			if (_row) _row.dodLoaded = false;
+			if (!_row || !_row.dodShown || _row.inAnim || _row.inLoading) {
+				df.errback("can't refresh now!");
+				return df;
+			}
+			// _row.dodLoaded = false;
 			_row.dodShown = false;
-			this.show(row);
+			df = this.show(row);
+
+			return df;
 		},
 		
 		isShown: function(row){
-			var row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
+			row = typeof row === 'object' ? row : this.grid.row(row, 1/*isid*/);
 			var _row = this._row(row);
 			return !!_row.dodShown;
 		},
@@ -364,6 +401,10 @@ define([
 			}
 			return this._rowMap[id] || (this._rowMap[id] = {});
 		},
+
+		_onModelSet: function(id, index, row) {
+			this.refresh(id);
+		},
 		
 		_onBodyClick: function(e){
 			if(!domClass.contains(e.target, 'gridxDodExpando') &&
@@ -397,9 +438,12 @@ define([
 			}
 		},
 		
-		_onAfterRow: function(row){
-			var _row = this._row(row);
-			if(this.arg('showExpando')){
+		_onAfterRow: function(row) {
+			var _row = this._row(row),
+				t = this,
+				g = t.grid;
+
+			if(this.arg('showExpando')) {
 				var tbl = query('table', row.node())[0];
 				var cell = tbl.rows[0].cells[0];
 				var span = domConstruct.create('span', {
@@ -412,7 +456,13 @@ define([
 			if(this.isShown(row) || (this.arg('defaultShow') && _row.dodShown === undefined)){
 				_row.dodShown = false;
 				_row.defaultShow = true;
-				this.show(row);
+				if (g.isIE) {
+					setTimeout(function() {
+						t.show(row);
+					}, 10);
+				} else {
+					t.show(row);
+				}
 			}
 			
 		},
@@ -547,7 +597,7 @@ define([
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
 			_row.inLoading = false;
 			
-			//***for nested grid in grid ****
+			//***For nested grid in grid ****
 			
 			var gs = this.grid._nestedGrids = this.grid._nestedGrids? this.grid._nestedGrids : [];
 			for(var i = 0; i < gridNodes.length; i++){

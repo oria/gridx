@@ -462,9 +462,10 @@ define([
 								//Set a special flag so that RowHeader won't destroy its nodes.
 								//FIXME: this is ugly...
 								t.onUnrender(id, 'refresh');
+								t.renderedIds[id] = undefined;
 							}
 							domConstruct.destroy(n);
-							t.renderedIds[id] = undefined;
+							// t.renderedIds[id] = undefined;
 							n = tmp;
 						}
 						array.forEach(renderedRows, t.onAfterRow, t);
@@ -975,6 +976,12 @@ define([
 					e.columnId = col.id;
 					e.columnIndex = col.index;
 				}
+				if(tag == 'div' && domClass.contains(n, 'gridxRow') && n.parentNode === g.bodyNode){
+					e.rowId = n.getAttribute('rowid');
+					e.parentId = n.getAttribute('parentid');
+					e.rowIndex = parseInt(n.getAttribute('rowindex'), 10);
+					e.visualIndex = parseInt(n.getAttribute('visualindex'), 10);
+				}
 				if(tag == 'table' && domClass.contains(n, 'gridxRowTable') && n.parentNode.parentNode === g.bodyNode){
 					n = n.parentNode;
 					e.rowId = n.getAttribute('rowid');
@@ -1002,8 +1009,8 @@ define([
 					row = g.row(id, 1),
 					rowNode = row && row.node();
 				if(rowNode){
-					var curData = rowCache.data,
-						oldData = oldCache.data,
+					var curData = rowCache.data || rowCache._data(),
+						oldData = oldCache.data || oldCache._data(),
 						cols = g._columns,
 						renderWhole = t.arg('renderWholeRowOnSet'),
 						compareOnSet = t.arg('compareOnSet');

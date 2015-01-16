@@ -43,7 +43,7 @@ grid.startup();
 
 connect.connect(grid.select.row, 'onSelectionChange', function(selected, lastSelected){
 	// dom.byId('rowSelectedCount').value = selected.length;
-	dom.byId('lastRowStatus').value = lastSelected.join("\n");
+	dom.byId('lastRowStatus').value = lastSelected && lastSelected.join("\n");
 });
 connect.connect(grid.select.row, 'onSelectionChange', function(selected){
 	dom.byId('rowSelectedCount').value = selected.length;

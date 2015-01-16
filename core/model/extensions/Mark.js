@@ -274,6 +274,7 @@ define([
 		_fireEvent: function(id, type, toMark, oldState){
 			var t = this,
 				m = t.model;
+			// debugger;
 			if(toMark != oldState){
 				if(!toMark){
 					delete t._byId[type][id];
@@ -317,7 +318,7 @@ define([
 		},
 
 		_doMark: function(id, tp, toMark, skipParent, noEvent){
-			var i, ids, children, childId, treePath,
+			var i, ids, children, childId, treePath, childrenLen,
 				t = this,
 				m = t.model,
 				mm = m._model,
@@ -326,15 +327,28 @@ define([
 				lazy = t._lazy[tp],
 				// selectable = t._byId['selectable'],
 				oldState = byId[id] || 0,
-				newState;
+				newState, parent;
+
 			if(t._tree[tp]){
 				children = mm._call('children', [id]);
-				if(toMark == 1 && array.every(children, function(childId){
-					return (last[childId] || 0) == (last[children[0]] || 0);
-				})){
-					toMark = 2;
+				childrenLen = children.length;
+
+				if (toMark === 1) {
+					if (childrenLen > 1) {
+						if(array.every(children, function(childId){
+								return (last[childId] || 0) == (last[children[0]] || 0);
+						})){
+							toMark = 2;
+						}
+						
+					} else if(childrenLen === 1) {
+						toMark = last[children[0]] === 1 ? 1 : 2;
+					} else {		//without children rows
+						toMark = 2;
+					}
 				}
 			}
+
 			byId[id] = last[id] = toMark;
 			if(!noEvent){
 				t._fireEvent(id, tp, toMark, oldState);
@@ -344,7 +358,15 @@ define([
 				while(ids.length){
 					childId = ids.shift();
 					oldState = byId[childId] || 0;
-					newState = byId[childId] = toMark == 1 ? last[childId] || 0 : toMark;
+					newState = byId[childId] = toMark == 1 ? last[childId] || undefined : toMark;
+					
+					if (newState === undefined) {
+						parent = mm._call('treePath', [childId]);
+						newState = byId[parent.pop()];
+						newState = newState === 1 ? 0 : newState;
+						byId[childId] = newState;
+					}
+
 					if(!noEvent){
 						t._fireEvent(childId, tp, newState, oldState);
 					}

@@ -49,7 +49,7 @@ define([
 		//		- revision: Number: The Git rev from which dojo was pulled
 		major: 1,
 		minor: 3,
-		patch: 6,
+		patch: 7,
 		flag: "",
 		toString: function(){
 			return this.major + "." + this.minor + "." + this.patch + this.flag;	// String
@@ -66,6 +66,10 @@ define([
 		templateString: template,
 
 		version: version,
+
+		isIE: has('ie') || has('trident'),
+		
+
 		//textDir bidi support begin
 		_setTextDirAttr: function(textDir){
 			// summary:
