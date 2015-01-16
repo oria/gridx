@@ -199,11 +199,11 @@ define([
 					//For IE,setting fixed height on row will break DOD.
 					// bodyNode.style.height = '';
 				} else {
-					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height  = h;
+					// rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height  = h;
+					if(rowHeaderNode && rowHeaderNode.firstChild){
+						rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = h;
+					}
 				}
-				// if(rowHeaderNode && rowHeaderNode.firstChild){
-				// 	rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = getHeight();
-				// }
 			}, 0);
 		},
 

@@ -155,8 +155,8 @@ require([
 		modules.CellWidget,
 		modules.Edit,
 		modules.IndirectSelectColumn,
-		// modules.SingleSort,
-		modules.NestedSort,
+		modules.SingleSort,
+		// modules.NestedSort,
 		modules.VirtualVScroller
 	];
 
