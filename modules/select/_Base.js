@@ -39,8 +39,8 @@ define([
 			var t = this, g = t.grid;
 			t._lastSelectedIds = [];
 			t.subscribe('gridClearSelection_' + g.id, function(type){
-				//FIX #211
-				//Three kinds of selections way should be compatible with each other?
+				// FIX #211
+				// Three kinds of selections way should be compatible with each other?
 				// if(type != t._type){
 				// 	t.clear();
 				// }
@@ -87,10 +87,11 @@ define([
 
 		_select: function(item, extending){
 			var t = this, toSelect = 1, g = t.grid;
-			if(t.arg('enabled') && t._isSelectable(item)){
-				if(t.arg('multiple') && (extending || t.arg('holdingCtrl'))){
+			if (t.arg('enabled') && t._isSelectable(item)) {
+				if (t.arg('multiple') && (extending || t.arg('holdingCtrl'))) {
 					toSelect = !t._isSelected(item);
-				}else{
+				} else {
+					toSelect = !t._isSelected(item);
 					t.clear(item);
 				}
 				connect.publish('gridClearSelection_' + t.grid.id, [t._type]);
