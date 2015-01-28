@@ -181,7 +181,7 @@ define([
 
 		_syncRowHeight: function(rowHeaderNode, bodyNode){
 			//Check if the table is collasped.
-			var t = this, h;
+			var t = this, h, isIE = has('ie');
 
 			if (t._isCollapse === undefined) {
 				var refNode = query('.gridxCell', t.grid.header.innerNode)[0];
@@ -195,7 +195,11 @@ define([
 			setTimeout(function() {
 				h = getHeight();
 				if ((h + '').indexOf('.') >= 0) {
-					rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.firstChild.style.height = bodyNode.firstChild.clientHeight + 1 + 'px';
+					if (isIE === 9) {
+						rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
+					} else {
+						rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.firstChild.style.height = bodyNode.firstChild.clientHeight + 1 + 'px';
+					}
 					//For IE,setting fixed height on row will break DOD.
 					// bodyNode.style.height = '';
 				} else {
