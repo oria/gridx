@@ -376,17 +376,17 @@ define([
 			return d;
 		},
 
-		_sizeAll: function(parentId){
-			var size = this.size(parentId),
+		_sizeAll: function(parentId, isWhole){
+			var size = this.size(parentId, isWhole),
 				count = 0,
 				i, childId;
 
 			size = size === -1 ? 0 : size;
 			count += size;
 			
-			for(i = 0; i < size; i++) {
-				childId = this.indexToId(i, parentId);
-				count += this._sizeAll(childId);
+			for (i = 0; i < size; i++) {
+				childId = this.indexToId(i, parentId, isWhole);
+				count += this._sizeAll(childId, isWhole);
 			}
 
 			return count;
