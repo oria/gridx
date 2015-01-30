@@ -458,7 +458,6 @@ define([
 			}else{
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
-				this.model.clearMark();
 
 				for(i = a; i <= b; ++i){
 					var rowInfo = view.getRowInfo({visualIndex: i});
