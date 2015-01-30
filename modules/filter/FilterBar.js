@@ -300,8 +300,10 @@ define([
 			this.filterData = filterData;
 			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
-				_this._currentSize = _this.model.size();
-				_this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
+				// _this._currentSize = _this.model.size();
+				_this._currentSize = _this.model._sizeAll();
+				// _this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
+				_this._totalSize = _this.model._sizeAll('', true);
 				_this._buildFilterState();
 			});
 		},

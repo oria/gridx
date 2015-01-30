@@ -105,8 +105,8 @@ define([
 			return (this.ids && this._indexes[id] === undefined) ? null : this.inner._call('byId', arguments);
 		},
 
-		indexToId: function(index, parentId){
-			if(this._ids){
+		indexToId: function(index, parentId, skip){
+			if(this._ids && !skip){
 				return this._struct[this.model.isId(parentId)? parentId: ''][index + 1]
 			}else{
 				return this.inner._call('indexToId', arguments);
@@ -125,10 +125,10 @@ define([
 			return index > 0 ? index - 1 : -1;
 		},
 
-		size: function(parentId){
+		size: function(parentId, skip){
 			var _struct;
 
-			if(this._ids){
+			if(this._ids && !skip){
 				_struct = this._struct[this.model.isId(parentId)? parentId : ''];
 				return _struct? _struct.length - 1 : -1;
 			}
