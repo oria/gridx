@@ -174,13 +174,15 @@ define([
 			var isHeader = domClass.contains(rowNode, 'gridxHeaderRowInner');
 			var ltr = this.grid.isLeftToRight();
 			var r = rowNode.firstChild.rows[0], i;
+
+			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h,
+				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
+
 			rowNode.firstChild.style.height = 'auto';	//Remove the height of the last locked state.
+			// debugger;
 			for(i = 0; i < this.count; i++){
 				domStyle.set(r.cells[i], 'height', 'auto');
 			}
-			
-			var h1 = domGeometry.getContentBox(r.cells[r.cells.length - 1]).h, 
-				h2 = domGeometry.getMarginBox(r.cells[r.cells.length - 1]).h;
 
 			if(has('ie') > 8){
 				//in IE 9 +, sometimes computed height will contain decimal pixels like 34.4 px, 
