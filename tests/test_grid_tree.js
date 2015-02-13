@@ -41,7 +41,7 @@ require([
 			if (va == vb) {
 				return sorting(a, b, ++index);
 			}
-			return !sorts[index].descending ? va > vb : va <= vb;
+			return !sorts[index].descending ? (va > vb ? 1 : -1) : (va <= vb ? 1 : -1);
 		}
 
 		if (sorts && sorts.length) {

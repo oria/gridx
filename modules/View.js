@@ -570,7 +570,7 @@ define([
 				}
 			}else{
 				//FIXME: what to do if some unknown row is deleted?
-				this._clear();
+				// this._clear();
 			}
 			this.grid.body.lazyRefresh();
 		}
