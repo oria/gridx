@@ -446,6 +446,10 @@ define([
 				}
 				t.model._onSizeChange();
 			}
+			if (parentItem && parentId) {
+				t._size[parentId] = t._size[parentId] + 1;
+				t.model._onParentSizeChange(parentId);
+			}
 		},
 
 		_onDelete: function(item){

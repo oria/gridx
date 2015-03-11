@@ -13,6 +13,16 @@ require([
 	'dojo/domReady!'
 ], function(parser, Deferred, dataSource, nestedDataSource, storeFactory, modules){
 
+	window.addRow = function() {
+		var newItem = {id: "itemId", type: "itemType"};
+		this.store.fetchItemByIdentity({identity: "item-1", onItem: function(parentItem) {
+			this.store.newItem({id: new Date().getTime()}, {
+				parent: parentItem,
+				attribute: "children"
+			});
+		}});
+	};
+
 	store = storeFactory({
 		dataSource: dataSource, 
 		maxLevel: 4,
@@ -150,7 +160,7 @@ require([
 		modules.Pagination,
 		modules.PaginationBar,
 		modules.ColumnResizer,
-		// modules.SelectRow,
+		modules.SelectRow,
 		modules.ExtendedSelectRow,
 		modules.CellWidget,
 		modules.Edit,

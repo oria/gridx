@@ -426,6 +426,8 @@ define([
 			}
 		},
 
+		_onParentSizeChange: function(parentId) {},
+
 		_cmdRequest: function(){
 			var t = this;
 			return new DeferredList(array.map(arguments, function(args){
