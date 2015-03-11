@@ -508,9 +508,14 @@ define([
 		},
 
 		_onParentSizeChange: function(parentId){
+			var t = this;
+
 			if (this._openInfo && this._openInfo[parentId]) {
-				this._openInfo[parentId].count++;
-				this.grid.body.lazyRefresh();
+				// this._openInfo[parentId].count++;
+				this.logicCollapse(parentId);
+				this.logicExpand(parentId).then(function() {
+					t.grid.body.lazyRefresh();
+				});
 			}
 		},
 

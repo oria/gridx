@@ -14,8 +14,14 @@ require([
 ], function(parser, Deferred, dataSource, nestedDataSource, storeFactory, modules){
 
 	window.addRow = function() {
-		var newItem = {id: "itemId", type: "itemType"};
-		this.store.fetchItemByIdentity({identity: "item-1", onItem: function(parentItem) {
+		var newItem = {id: "itemId", type: "itemType"},
+			parentId = dojo.byId('parentIdInput').value;
+
+		if (!parentId) return;
+
+		this.store.fetchItemByIdentity({identity: parentId, onItem: function(parentItem) {
+			if (!parentItem) return;
+			
 			this.store.newItem({id: new Date().getTime()}, {
 				parent: parentItem,
 				attribute: "children"
@@ -161,7 +167,7 @@ require([
 		modules.PaginationBar,
 		modules.ColumnResizer,
 		modules.SelectRow,
-		modules.ExtendedSelectRow,
+		// modules.ExtendedSelectRow,
 		modules.CellWidget,
 		modules.Edit,
 		modules.IndirectSelectColumn,
