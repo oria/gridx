@@ -508,14 +508,19 @@ define([
 		},
 
 		_onParentSizeChange: function(parentId){
-			var t = this;
+			var t = this,
+				rowInfo = t.getRowInfo({rowId: parentId});
 
-			if (this._openInfo && this._openInfo[parentId]) {
-				// this._openInfo[parentId].count++;
-				this.logicCollapse(parentId);
-				this.logicExpand(parentId).then(function() {
-					t.grid.body.lazyRefresh();
-				});
+			if (rowInfo.visualIndex  !== null && rowInfo.visualIndex !== undefined) {
+				t.grid.body.renderRows(rowInfo.visualIndex, 1);
+			
+				if (this._openInfo && this._openInfo[parentId]) {
+					// this._openInfo[parentId].count++;
+					this.logicCollapse(parentId);
+					this.logicExpand(parentId).then(function() {
+						t.grid.body.lazyRefresh();
+					});
+				}
 			}
 		},
 
