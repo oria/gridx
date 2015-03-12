@@ -29,6 +29,23 @@ require([
 		}});
 	};
 
+	window.deleteRow = function() {
+		var newItem = {id: "itemId", type: "itemType"},
+			deleteRowId = dojo.byId('deleteRowId').value;
+
+		if (!deleteRowId) return;
+
+		this.store.fetchItemByIdentity({identity: deleteRowId, onItem: function(item) {
+			if (!item) return;
+			
+			this.store.deleteItem(item);
+			// this.store.newItem({id: new Date().getTime()}, {
+			// 	parent: parentItem,
+			// 	attribute: "children"
+			// });
+		}});
+	};
+
 	store = storeFactory({
 		dataSource: dataSource, 
 		maxLevel: 4,
