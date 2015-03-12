@@ -507,11 +507,11 @@ define([
 			}
 		},
 
-		_onParentSizeChange: function(parentId){
+		_onParentSizeChange: function(parentId, isAdd){
 			var t = this,
 				rowInfo = t.getRowInfo({rowId: parentId});
 
-			if (rowInfo.visualIndex  !== null && rowInfo.visualIndex !== undefined) {
+			if (rowInfo.visualIndex  !== null && rowInfo.visualIndex !== undefined && isAdd) {
 				t.grid.body.renderRows(rowInfo.visualIndex, 1);
 			
 				if (this._openInfo && this._openInfo[parentId]) {

@@ -448,7 +448,7 @@ define([
 			}
 			if (parentItem && parentId) {
 				t._size[parentId] = t._size[parentId] + 1;
-				t.model._onParentSizeChange(parentId);
+				t.model._onParentSizeChange(parentId, 1/*isAdd*/);
 			}
 		},
 
@@ -500,7 +500,7 @@ define([
 					t.model._onSizeChange();
 				}
 				if (parentId) {
-					t.model._onParentSizeChange(parentId);
+					t.model._onParentSizeChange(parentId, 0/*isDelete*/);
 				}
 			}else{
 				//FIXME: Don't know what to do if the deleted row was not loaded.

@@ -426,7 +426,7 @@ define([
 			}
 		},
 
-		_onParentSizeChange: function(parentId) {},
+		_onParentSizeChange: function(parentId, isAdd) {},
 
 		_cmdRequest: function(){
 			var t = this;
