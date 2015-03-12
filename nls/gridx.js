@@ -45,9 +45,9 @@ define({root:
 	
 	"all": "all",
 	"any": "any",
-	"relationAll": "all rules",
+	"relationAll": "All rules",
 	"waiRelAll": "Match all of the following rules:",
-	"relationAny": "any rule",
+	"relationAny": "Any rule",
 	"matchCase": "match case",
 	"waiRelAny": "Match any of the following rules:",
 	"relationMsgFront": "Match",
