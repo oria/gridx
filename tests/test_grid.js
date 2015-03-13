@@ -29,6 +29,7 @@ require([
 				structure: layout,
 				modules: [
 					"gridx/modules/TouchScroll",
+					"gridx/modules/NavigableCell",
 					mods.VirtualVScroller
 				],
 				summary: 'this is the gridx'

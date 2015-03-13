@@ -150,6 +150,7 @@ define([
 				}) : {};
 			t._clear();
 			t.aspect(m, 'onSizeChange', '_onSizeChange');
+			t.aspect(m, '_onParentSizeChange', '_onParentSizeChange');
 			t.aspect(m, 'onDelete', '_onDelete');
 			t.aspect(m, 'setStore', function(){
 				//If server store changes without notifying grid, expanded rows should remain expanded.
@@ -503,6 +504,23 @@ define([
 			var t = this;
 			if(!t.paging && t.rootStart === 0 && (t.rootCount === oldSize || oldSize < 0)){
 				t.updateRootRange(0, size);
+			}
+		},
+
+		_onParentSizeChange: function(parentId, isAdd){
+			var t = this,
+				rowInfo = t.getRowInfo({rowId: parentId});
+
+			if (rowInfo.visualIndex  !== null && rowInfo.visualIndex !== undefined && isAdd) {
+				t.grid.body.renderRows(rowInfo.visualIndex, 1);
+			
+				if (this._openInfo && this._openInfo[parentId]) {
+					// this._openInfo[parentId].count++;
+					this.logicCollapse(parentId);
+					this.logicExpand(parentId).then(function() {
+						t.grid.body.lazyRefresh();
+					});
+				}
 			}
 		},
 

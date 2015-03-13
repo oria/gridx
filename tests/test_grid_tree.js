@@ -13,6 +13,39 @@ require([
 	'dojo/domReady!'
 ], function(parser, Deferred, dataSource, nestedDataSource, storeFactory, modules){
 
+	window.addRow = function() {
+		var newItem = {id: "itemId", type: "itemType"},
+			parentId = dojo.byId('parentIdInput').value;
+
+		if (!parentId) return;
+
+		this.store.fetchItemByIdentity({identity: parentId, onItem: function(parentItem) {
+			if (!parentItem) return;
+			
+			this.store.newItem({id: new Date().getTime()}, {
+				parent: parentItem,
+				attribute: "children"
+			});
+		}});
+	};
+
+	window.deleteRow = function() {
+		var newItem = {id: "itemId", type: "itemType"},
+			deleteRowId = dojo.byId('deleteRowId').value;
+
+		if (!deleteRowId) return;
+
+		this.store.fetchItemByIdentity({identity: deleteRowId, onItem: function(item) {
+			if (!item) return;
+			
+			this.store.deleteItem(item);
+			// this.store.newItem({id: new Date().getTime()}, {
+			// 	parent: parentItem,
+			// 	attribute: "children"
+			// });
+		}});
+	};
+
 	store = storeFactory({
 		dataSource: dataSource, 
 		maxLevel: 4,
@@ -150,8 +183,8 @@ require([
 		modules.Pagination,
 		modules.PaginationBar,
 		modules.ColumnResizer,
-		// modules.SelectRow,
-		modules.ExtendedSelectRow,
+		modules.SelectRow,
+		// modules.ExtendedSelectRow,
 		modules.CellWidget,
 		modules.Edit,
 		modules.IndirectSelectColumn,

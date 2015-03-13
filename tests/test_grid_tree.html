@@ -7,7 +7,7 @@
 	<style type="text/css">
 		.gridx {
 			width: 800px;
-			height: 700px;
+			height: 400px;
 		}
 	</style>
 	<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: true"></script>
@@ -19,6 +19,10 @@
 		Tree Grid
 	</h1>
 	<h2>All expandoes in one column, sync store</h2>
+	<br/>
+	<button onclick='addRow();'>add row</button> into <input type='text' id='parentIdInput'/>|
+	<button onclick='deleteRow();'>delete row</button> with id <input type='text' id='deleteRowId'/>
+	<br/>
 	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,

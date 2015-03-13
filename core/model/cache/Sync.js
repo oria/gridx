@@ -446,6 +446,10 @@ define([
 				}
 				t.model._onSizeChange();
 			}
+			if (parentItem && parentId) {
+				t._size[parentId] = t._size[parentId] + 1;
+				t.model._onParentSizeChange(parentId, 1/*isAdd*/);
+			}
 		},
 
 		_onDelete: function(item){
@@ -494,6 +498,9 @@ define([
 						t.totalSize = size - 1;
 					}
 					t.model._onSizeChange();
+				}
+				if (parentId) {
+					t.model._onParentSizeChange(parentId, 0/*isDelete*/);
 				}
 			}else{
 				//FIXME: Don't know what to do if the deleted row was not loaded.

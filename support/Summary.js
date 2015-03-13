@@ -33,6 +33,7 @@ define([
 
 			t.domNode.setAttribute('tabIndex', t.grid.domNode.getAttribute('tabIndex'));
 			t.connect(m, 'onSizeChange', 'refresh');
+			t.connect(m, '_onParentSizeChange', 'refresh');
 			t.connect(m, 'onMarkChange', 'refresh');
 			if(t.grid.pagination){
 				t.connect(t.grid.pagination, 'onSwitchPage', 'refresh');

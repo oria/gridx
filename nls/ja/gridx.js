@@ -9,6 +9,22 @@ define({
 	loadPreviousLoading: "ロード中...",
 
 //FilterBar
+
+//translation from ZOS
+	"beginNumberRangeLabel": "番号値の始まり",
+	"endNumberRangeLabel": "番号値の終わり",
+	"conditionPast": "過去",
+	"datePastLabel": "過去数日",
+	"pastHoursConditionTemplate": "${0} 時間",
+	"pastDaysConditionTemplate": "${0} 日",
+	"pastMonthsConditionTemplate": "${0} カ月",
+	"pastYearsConditionTemplate": "${0} 年",
+	"day": "日",
+	"month": "カ月",
+	"year": "年",
+	"hour": "時間",
+	"matchCase": "大/小文字の一致",
+
 	"clearFilterDialogTitle": "フィルターのクリア",
 	"filterDefDialogTitle": "フィルター",
 	"defaultRuleTitle": "規則",
