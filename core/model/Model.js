@@ -386,7 +386,7 @@ define([
 			
 			for (i = 0; i < size; i++) {
 				childId = this.indexToId(i, parentId, isWhole);
-				count += this._sizeAll(childId, isWhole);
+				if (this.isId(childId)) count += this._sizeAll(childId, isWhole);
 			}
 
 			return count;
