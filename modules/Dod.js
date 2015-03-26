@@ -6,8 +6,9 @@ define([
 	"dojo/_base/fx",
 	"dojo/fx",
 	"dojo/query",
-	"dojo/sniff"
-], function(dojo, _Module, declare, html, baseFx, fx, query, has){
+	"dojo/sniff",
+	"dojo/_base/Deferred"
+], function(dojo, _Module, declare, html, baseFx, fx, query, has, Deferred){
 	return declare(/*===== "gridx.modules.Dod", =====*/_Module, {
 		name: 'dod',
 		required: ['body'],
@@ -123,7 +124,7 @@ define([
 			
 			var df = new dojo.Deferred(), _this = this;
 			this.detailProvider(this.grid, row.id, _row.dodNode, df);
-			df.then(
+			return df.then(
 				dojo.hitch(this, '_detailLoadComplete', row), 
 				dojo.hitch(this, '_detailLoadError', row)
 			);
@@ -140,7 +141,12 @@ define([
 			// return: dojo.Deferred.
 			//		A deferred object indicating when the detail is completely hidden.
 			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim || !row.node()){return;}
+			var df = new Deferred();
+
+			if(!_row.dodShown || _row.inAnim || !row.node()){
+				df.errorback('');
+				return df;
+			}
 			html.removeClass(row.node(), 'gridxDodShown');
 			html.style(_row.dodLoadingNode, 'display', 'none');
 			if(this.grid.rowHeader){
@@ -158,6 +164,7 @@ define([
 					_row.dodShown = false;
 					_row.inAnim = false;
 					g.body.onRender();
+					df.callback();
 				}
 			}).play();
 			if(this.grid.rowHeader){
@@ -170,19 +177,20 @@ define([
 			}
 			
 			_row.defaultShow = false;
+			return df;
 		},
 		
 		toggle: function(row){
-			if(this.isShown(row)){
-				this.hide(row);
-			}else{
-				this.show(row);
+			if (this.isShown(row)) {
+				return this.hide(row);
+			} else {
+				return this.show(row);
 			}
 		},
 		refresh: function(row){
 			var _row = this._row(row);
 			_row.dodLoaded = false;
-			this.show(row);
+			return this.show(row);
 		},
 		
 		isShown: function(row){
