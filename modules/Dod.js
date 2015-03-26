@@ -125,6 +125,7 @@ define([
 		},
 		
 		show: function(row){
+			var row = typeof row === 'object' ? row : grid.row(row, 1/*isid*/);
 			var _row = this._row(row);
 			if(_row.dodShown || _row.inAnim){return;}
 			
@@ -183,6 +184,7 @@ define([
 		},
 		
 		hide: function(row){
+			var row = typeof row === 'object' ? row : grid.row(row, 1/*isid*/);
 			var _row = this._row(row),
 				g = this.grid,
 				escapeId = g._escapeId,
