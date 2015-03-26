@@ -178,15 +178,25 @@ define([
 				lang.hitch(this, '_detailLoadError', row)
 			);
 
+			return df;
+
 		},
 		
 		hide: function(row){
-			var _row = this._row(row), g = this.grid, escapeId = g._escapeId;
-			if(!_row.dodShown || _row.inAnim){return;}
+			var _row = this._row(row),
+				g = this.grid,
+				escapeId = g._escapeId,
+				df = new Deferred();
+
+			if(!_row.dodShown || _row.inAnim){
+				df.errback('');
+				return df;
+			}
 			
 			if(!row.node()){
 				_row.dodShown = false;
-				return;
+				df.errback(row);
+				return df;
 			}
 			domClass.remove(row.node(), 'gridxDodShown');
 			domStyle.set(_row.dodLoadingNode, 'display', 'none');
@@ -208,6 +218,7 @@ define([
 						_row.dodShown = false;
 						_row.inAnim = false;
 						g.body.onRender();
+						df.callback();
 					}
 				}).play();
 				this._syncRowheaderHeight(row, true/*isAnim*/, true/*isHide*/);
@@ -218,22 +229,25 @@ define([
 				g.body.onRender();
 				_row.dodNode.style.display = 'none';
 				this._syncRowheaderHeight(row);
+				df.callback();
 			}
 			
 			_row.defaultShow = false;
+			return df;
 		},
 		
 		toggle: function(row){
-			if(this.isShown(row)){
-				this.hide(row);
-			}else{
-				this.show(row);
+			if (this.isShown(row)) {
+				return this.hide(row);
+			} else {
+				return this.show(row);
 			}
 		},
+
 		refresh: function(row){
 			var _row = this._row(row);
 			_row.dodLoaded = false;
-			this.show(row);
+			return this.show(row);
 		},
 		
 		isShown: function(row){
