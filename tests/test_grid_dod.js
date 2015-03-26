@@ -1,7 +1,6 @@
 require([
 	'dojo/dom-construct',
 	'dojo/parser',
-	'dojo/Store/Memory',
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/MusicData',
@@ -128,20 +127,18 @@ require([
 			addSeries("Series A", [-2, 1.1, 1.2, 1.3, 1.4, 1.5, -1.6]).
 			addSeries("Series B", [1, 1.6, 1.3, 1.4, 1.1, 1.5, 1.1]).
 			addSeries("Series C", [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6]).
-			setTheme(JulieTheme).render();
+			setTheme(JulieTheme).render()
+			;
 	}
-
-	var store = new Memory({data: dataSource.getData({ size : 100 })});
 	window.createGrid = function(){
 		if(window.grid){window.grid.destroy();}
 		grid = new Grid({
 			id: 'grid',
 			cacheClass: Cache,
-			// store: storeFactory({
-			// 	dataSource: dataSource, 
-			// 	size: 100
-			// }),
-			store: store,
+			store: storeFactory({
+				dataSource: dataSource, 
+				size: 100
+			}),
 			modules: [
 				VirtualVScroller,
 				RowHeader,
@@ -157,6 +154,7 @@ require([
 		});
 		grid.placeAt('gridContainer');
 		grid.startup();
+		
 		window.dod = grid.dod;
 	}
 	

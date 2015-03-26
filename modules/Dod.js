@@ -78,16 +78,12 @@ define([
 		defaultShow: false,
 		showExpando: true,
 		load: function(args, deferStartup){
-			var t =this,
-				g = t.grid,
-				m = g.model;
-
+			var t =this, g = t.grid;
 			t._rowMap = {};
-			t.connect(g.body, 'onAfterCell', '_onAfterCell');
-			t.connect(g.body, 'onAfterRow', '_onAfterRow');
-			t.connect(g.bodyNode, 'onclick', '_onBodyClick');
-			t.connect(g.body, 'onUnrender', '_onBodyUnrender');
-			t.connect(m, 'onSet', '_onModelSet');		//When update store, detail should udpate.
+			t.connect(t.grid.body, 'onAfterCell', '_onAfterCell');
+			t.connect(t.grid.body, 'onAfterRow', '_onAfterRow');
+			t.connect(t.grid.bodyNode, 'onclick', '_onBodyClick');
+			t.connect(t.grid.body, 'onUnrender', '_onBodyUnrender');
 
 			//in IE, renderRow will use bodyNode.innerHTML = str,
 			//this will destroy all the node and _row.dodNode's innerHTML wil be destroyed,
@@ -273,10 +269,6 @@ define([
 				id = row.id;
 			}
 			return this._rowMap[id] || (this._rowMap[id] = {});
-		},
-
-		_onModelSet: function(id, index, row) {
-			this.refresh(id);
 		},
 		
 		_onBodyClick: function(e){
