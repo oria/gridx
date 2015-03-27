@@ -295,15 +295,18 @@ define([
 		},
 
 		applyFilter: function(filterData){
-			var _this = this;
-			var filter = this._createFilterExpr(filterData);
+			var _this = this,
+				g = this.grid,
+				filter = this._createFilterExpr(filterData);
+
 			this.filterData = filterData;
 			this.grid.filter.setFilter(filter);
 			this.model.when({}).then(function(){
 				// _this._currentSize = _this.model.size();
-				_this._currentSize = _this.model._sizeAll();
 				// _this._totalSize = _this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size();
-				_this._totalSize = _this.model._sizeAll('', true);
+				_this._currentSize = g.tree? _this.model._sizeAll() : _this.model.size();
+				_this._totalSize = g.tree? _this.model._sizeAll('', true) :
+										(_this.model._cache.totalSize >= 0 ? _this.model._cache.totalSize : _this.model._cache.size());
 				_this._buildFilterState();
 			});
 		},

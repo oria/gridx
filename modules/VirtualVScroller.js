@@ -430,7 +430,7 @@ define([
 			}
 	
 			var p, h = 0, c = 0;
-			for(p in rh){
+			for (p in rh) {
 				h += rh[p];
 				++c;
 			}

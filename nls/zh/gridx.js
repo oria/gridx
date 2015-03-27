@@ -81,7 +81,7 @@ define({
 	"statusTipHeaderAll": "与所有规则匹配。",
 	"statusTipHeaderAny": "与任何规则匹配。",
 	"defaultItemsName": "项",
-	"filterBarMsgHasFilterTemplate": "已显示的 ${1} ${2} 项中的第 ${0} 项。",
+	"filterBarMsgHasFilterTemplate": "已显示 ${1} ${2}中的 ${0} ${2}。",
 	"filterBarMsgNoFilterTemplate": "未应用过滤器",
 	"filterBarDefButton": "定义过滤器",
 	"waiFilterBarDefButton": "对表进行过滤",
