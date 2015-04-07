@@ -195,7 +195,7 @@ define([
 				win.doc.attachEvent('onfocusin', t._onDocFocus);
 			}else{
 				win.doc.addEventListener('focus', t._onDocFocus, true);
-				g.bodyNode.addEventListener('focus', lang.hitch(t, t._focusBody), true);
+				g.bodyNode.addEventListener('focus', lang.hitch(t, t._focusBody));
 			}
 		},
 
