@@ -75,6 +75,7 @@ define({
 	"columnSelectLabel": "列:",
 	"columnSelectAriaLabel": "列: 条件部分 ${0}/${1}",
 	"waiColumnSelectTemplate": "規則 ${0} の列",
+	"restoreFilterButton": '復元',
 
 	"conditionSelectLabel": "条件:",
 	"conditionSelectAriaLabel": "演算子: 条件部分 ${0}/${1}",
