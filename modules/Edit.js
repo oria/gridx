@@ -870,6 +870,7 @@ define([
 		},
 
 		_showButtons: function(rowId, colId){
+			if (!this.arg('buttons')) return;
 			var g = this.grid;
 			var alwaysEditing = g._columnsById[colId].alwaysEditing;
 			if(alwaysEditing){
@@ -887,6 +888,7 @@ define([
 		},
 
 		_hideButtons: function(){
+			if (!this.arg('buttons')) return;
 			query('.gridxEditFocus', this.grid.bodyNode).removeClass('gridxEditFocus');
 			this.grid.body.onRender();
 		},
