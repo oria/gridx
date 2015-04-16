@@ -200,7 +200,7 @@ define([
 			});
 			query(".gridxRowPartialSelected", this.grid.mainNode).forEach(function(node){
 				domClass.remove(node, 'gridxRowPartialSelected');
-			});
+			});	
 			this._clear();
 			this.model.clearMark();
 			if(!silent){
@@ -425,16 +425,36 @@ define([
 			}
 		},
 
+		_clearSelection: function() {
+			var selected = this.getSelected(),
+				t = this;
+
+			query(".gridxRowSelected", this.grid.mainNode).forEach(function(node){
+				domClass.remove(node, 'gridxRowSelected');
+				node.removeAttribute('aria-selected');
+			});
+			query(".gridxRowPartialSelected", this.grid.mainNode).forEach(function(node){
+				domClass.remove(node, 'gridxRowPartialSelected');
+			});
+			array.forEach(selected, function(rowId) {
+				t.model.markById(rowId, 0);
+			});
+		},
+
 		_addToSelected: function(start, end, toSelect){
 			var t = this,
 				view = t.grid.view,
 				m = t.model,
 				lastEndItem = t._lastEndItem,
-				a, b, i, d;
+				a, b, i, d,
+				selectedRows = [];
+
 			if(!t._isRange){
 				t._refSelectedIds = m.getMarkedIds();
 			}
+			// if (t._isRange) this.model.clearMark();
 			if(t._isRange && t._inRange(end.row, start.row, lastEndItem.row)){
+				console.log(end.row, start.row, lastEndItem.row);
 				a = Math.min(end.row, lastEndItem.row);
 				b = Math.max(end.row, lastEndItem.row);
 				start = view.getRowInfo({visualIndex: a}).rowIndex + 1;
@@ -459,7 +479,8 @@ define([
 				a = Math.min(start.row, end.row);
 				b = Math.max(start.row, end.row);
 
-				for(i = a; i <= b; ++i){
+				this._clearSelection();
+ 				for(i = a; i <= b; ++i){
 					var rowInfo = view.getRowInfo({visualIndex: i});
 					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
 				}
