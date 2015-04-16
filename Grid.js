@@ -49,7 +49,7 @@ define([
 		//		- revision: Number: The Git rev from which dojo was pulled
 		major: 1,
 		minor: 3,
-		patch: 9,
+		patch: 8,
 		flag: "",
 		toString: function(){
 			return this.major + "." + this.minor + "." + this.patch + this.flag;	// String
