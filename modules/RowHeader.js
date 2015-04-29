@@ -195,12 +195,11 @@ define([
 			setTimeout(function() {
 				h = getHeight();
 				if ((h + '').indexOf('.') >= 0) {
-					// #13641
-					// if (isIE === 9) {
-					// 	rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
-					// } else {
+					if (isIE === 9) {
+						rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.style.height = bodyNode.clientHeight + 1 + 'px';
+					} else {
 						rowHeaderNode.style.height = rowHeaderNode.firstChild.style.height = bodyNode.firstChild.style.height = bodyNode.firstChild.clientHeight + 1 + 'px';
-					// }
+					}
 					//For IE,setting fixed height on row will break DOD.
 					// bodyNode.style.height = '';
 				} else {
