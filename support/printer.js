@@ -87,8 +87,12 @@ define([
 			//In opera and chrome the iframe.contentWindow.print
 			//will also print the outside window. So we must create a
 			//stand-alone new window.
-			w = window.open("javascript:''", "",
-				"status=0,menubar=0,location=0,toolbar=0,width=1,height=1,resizable=0,scrollbars=0");
+
+			// Chromium 41 opens very small preview window if width and height are specified.
+			// Do not set options to get print preview opened in a new tab
+			var o = has('chrome') ? null
+				: "status=0,menubar=0,location=0,toolbar=0,width=1,height=1,resizable=0,scrollbars=0";
+			w = window.open("javascript:''", "", o);
 			fillDoc(w);
 			w.print();
 			//Opera will stop at this point, showing the popping-out window.
