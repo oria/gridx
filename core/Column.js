@@ -173,7 +173,8 @@ define([
 		},
 
 		field: function(){
-			return this.def().field || null;
+			var value = this.def().field;
+			return value == null ? null : value;
 		},
 
 		getWidth: function(){
