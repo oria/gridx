@@ -78,6 +78,11 @@ define([
 			doc.open();
 			doc.write(str);
 			doc.close();
+			var def = new Deferred();
+			w.onload = function() {
+				def.resolve(w);
+			};
+			return def;
 		};
 		if(!window.print){
 			console.warn('Print function is not available');
@@ -93,13 +98,14 @@ define([
 			var o = has('chrome') ? null
 				: "status=0,menubar=0,location=0,toolbar=0,width=1,height=1,resizable=0,scrollbars=0";
 			w = window.open("javascript:''", "", o);
-			fillDoc(w);
-			w.print();
-			//Opera will stop at this point, showing the popping-out window.
-			//If the user closes the window, the following codes will not execute.
-			//If the user returns focus to the main window, the print function
-			// is executed, but still a no-op.
-			w.close();
+			fillDoc(w).then(function(w) {
+				w.print();
+				//Opera will stop at this point, showing the popping-out window.
+				//If the user closes the window, the following codes will not execute.
+				//If the user returns focus to the main window, the print function
+				// is executed, but still a no-op.
+				w.close();
+			});
 		}else{
 			if(!printFrame){
 				//create an iframe to store the grid data.
@@ -117,10 +123,11 @@ define([
 				win.body().appendChild(printFrame);
 			}
 			w = printFrame.contentWindow;
-			fillDoc(w);
-			//IE requires the frame to be focused for print to work, and it's harmless for FF.
-			w.focus();
-			w.print();
+			fillDoc(w).then(function(w) {
+				//IE requires the frame to be focused for print to work, and it's harmless for FF.
+				w.focus();
+				w.print();
+			});
 		}
 	}
 
