@@ -674,7 +674,13 @@ define([
 								t.model.set(rowId, obj);
 								finish(true);
 							}else{
-								Deferred.when(cell.setRawData(v), function(){
+								Deferred.when(cell.setRawData(v), function() {
+									if (g.focus && g.focus.currentArea() === 'navigablecell' && cell) {
+										cell.node().focus && cell.node().focus()
+										if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
+											g.focus.focusArea('navigablecell');
+										}
+									}
 									finish(true);
 								}, function(e){
 									finish(false, e);
