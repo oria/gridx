@@ -10,6 +10,7 @@ define({root:
 "de": true,
 "el": true,
 "es": true,
+"eu": true,
 "fi": true,
 "fr": true,
 "he": true,
