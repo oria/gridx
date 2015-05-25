@@ -69,6 +69,7 @@ define([
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
 				[g.body, 'onRender', '_onSelectionChange'],
+				[g.body, 'onAfterRow', '_onAfterRow'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){
 					var evt = {
@@ -171,6 +172,16 @@ define([
 			}
 			query('.' + cls, g.headerNode).removeClass(cls).attr('aria-checked', 'false');
 			this._allSelected = {};
+		},
+
+		_onAfterRow: function(row) {
+			// console.log(row.id);
+			var cell = row.cell('__indirectSelect__', 1),
+				node = cell && cell.node();
+
+			if (!node) return false;
+			node.setAttribute('aria-label', this.grid.nls.indirectSelectInstruction);
+			// console.log(row.cell('__indirectSelect__', 1).node());
 		},
 
 		_onHighlightChange: function(target, toHighlight){
