@@ -5,6 +5,7 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'dojo/data/ItemFileWriteStore',
 	'dojo/date/locale',
+	'dojo/store/Memory',
 	'dijit/form/TextBox',
 	'dijit/form/ComboBox',
 	'dijit/form/ComboButton',
@@ -24,7 +25,7 @@ require([
 	'gridx/core/model/cache/Sync',
 	"gridx/allModules",
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale,
+], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale, Memory,
 	TextBox, ComboBox, ComboButton, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
@@ -87,8 +88,26 @@ require([
 		});
 	}
 
+	function createMemoryStore(field) {
+		var data = dataSource.getData(100).items;
+		//Make the items unique
+		var res = {};
+		for(var i = 0; i < data.length; ++i){
+			res[data[i][field]] = 1;
+		}
+		data = [];
+		for(var d in res){
+			data.push({
+				id: d
+			});
+		}
+		return new Memory({
+			data: data
+		});
+	}
+
 	fsStore = createSelectStore('Album');
-	selectStore = createSelectStore('Length');
+	selectStore = createMemoryStore('Length');
 	var dropDownCreate = function(){
 		return [
 			'<div data-dojo-attach-point="combo" data-dojo-type="dijit/form/ComboButton" data-dojo-props="label:\'Select\'">',
