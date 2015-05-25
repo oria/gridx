@@ -175,13 +175,11 @@ define([
 		},
 
 		_onAfterRow: function(row) {
-			// console.log(row.id);
 			var cell = row.cell('__indirectSelect__', 1),
 				node = cell && cell.node();
 
 			if (!node) return false;
 			node.setAttribute('aria-label', this.grid.nls.indirectSelectInstruction);
-			// console.log(row.cell('__indirectSelect__', 1).node());
 		},
 
 		_onHighlightChange: function(target, toHighlight){
