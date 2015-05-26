@@ -676,9 +676,18 @@ define([
 							}else{
 								Deferred.when(cell.setRawData(v), function() {
 									if (g.focus && g.focus.currentArea() === 'navigablecell' && cell) {
-										cell.node().focus && cell.node().focus()
-										if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
-											g.focus.focusArea('navigablecell');
+										cell.node().focus && cell.node().focus();
+
+										if (g.isIE) {
+											setTimeout(function() {
+												if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
+													g.focus.focusArea('navigablecell');
+												}
+											}, 0);
+										} else {
+											if(g.navigableCell._beginNavigate(cell.row.id, cell.column.id)){
+												g.focus.focusArea('navigablecell');
+											}
 										}
 									}
 									finish(true);
