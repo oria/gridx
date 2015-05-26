@@ -286,6 +286,7 @@ define([
 				build();
 			}
 			sb.push('</table>');
+			t._curNode = 0;
 			t.innerNode.innerHTML = sb.join('');
 			domClass.toggle(t.domNode, 'gridxHeaderRowHidden', t.arg('hidden'));
 			domClass.add(g.domNode, 'gridxGH');
