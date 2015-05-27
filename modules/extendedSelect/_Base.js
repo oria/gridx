@@ -187,15 +187,20 @@ define([
 						var dir = from < to ? 1 : -1,
 							start = g.body.renderStart, 
 							end = start + g.body.renderCount;
+							currentIndex = from;
 						for(; from != to; from += dir){
-							if(forceDeselect){
-								t.deselectByIndex(from);
-							}
 							if (from < start || from > end) continue;
 							var item = {};
 							item[type] = from;
 							t._highlightSingle(item, toHL);
 						}
+						if(forceDeselect){
+		    					if(dir==1){
+		    						t.deselectByIndex([currentIndex, from - dir]);
+		    					} else {
+	    							t.deselectByIndex([from - dir, currentIndex]);
+				    			}
+	    					}
 					};
 				if(current === null){
 					//First time select.
