@@ -587,7 +587,7 @@ define([
 					toggleClass('gridxTreeExpandoCellOpen', isOpen).
 					closest('.gridxCell').
 					attr('aria-expanded', String(isOpen)).
-					attr('aria-label', isOpen ? nls.treeExpanded : nls.treeCollapsed);
+					attr('title', isOpen ? nls.treeExpanded : nls.treeCollapsed);
 				query('.gridxTreeExpandoIcon', rowNode).forEach(function(node){
 					node.firstChild.innerHTML = isOpen ? '-' : '+';
 				});
@@ -624,7 +624,7 @@ define([
 				var nls = this.grid.nls;
 				query('.gridxTreeExpandoCell', rowNode).closest('.gridxCell').
 					attr('aria-expanded', String(expanded)).
-					attr('aria-label', expanded ? nls.treeExpanded : nls.treeCollapsed);
+					attr('title', expanded ? nls.treeExpanded : nls.treeCollapsed);
 			}
 		},
 

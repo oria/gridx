@@ -42,6 +42,7 @@ define([
 				focus = g.focus,
 				sr = g.select.row,
 				rowHeader = g.rowHeader;
+			rowHeader.rowHeaderCellAriaLabel = this.grid.nls.indirectSelectInstruction;
 			rowHeader.cellProvider = lang.hitch(t, t._createSelector);
 			t.batchConnect(
 				[sr,'onHighlightChange', '_onHighlightChange' ],

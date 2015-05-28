@@ -127,6 +127,8 @@ define([
 		//Public--------------------------------------------------------------------------
 		width: '20px',
 
+		rowHeaderCellAriaLabel: '',
+
 		onMoveToRowHeaderCell: function(){},
 
 		//Private-------------------------------------------------------
@@ -309,11 +311,13 @@ define([
 			bn.style[ltr ? 'left' : 'right'] = -(w + (ltr ? mainBorder.l : mainBorder.r)) + 'px';
 		},
 
-		_buildRows: function(start, count){
+		_buildRows: function (start, count) {
 			var sb = [];
-			for(var i = 0; i < count; ++i){
+
+			for (var i = 0; i < count; ++i) {
 				sb.push('<div class="gridxRowHeaderRow" role="row" visualindex="', start + i,
-					'"><table role="presentation" border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" role="rowheader" tabindex="-1"></td></tr></table></div>');
+					'"><table role="presentation" border="0" cellspacing="0" cellpadding="0" style="height: 24px;"><tr><td class="gridxRowHeaderCell" role="rowheader" tabindex="-1" aria-label="', 
+					this.rowHeaderCellAriaLabel, '"></td></tr></table></div>');
 			}
 			return sb.join('');
 		},

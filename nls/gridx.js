@@ -189,6 +189,7 @@ define({root:
 	summaryRange: 'Range: ${0}-${1}',	//need translation
 
 //Other
+	indirectSelectInstruction: "Press SPACE to select or deselect this row.",
 	indirectSelectAll: "Press SPACE to select all.",	//need translation
 	indirectDeselectAll: "Press SPACE to deselect all.",	//need translation
 	treeExpanded: "Control + left arrow key to collapse this row.",	//need translation
