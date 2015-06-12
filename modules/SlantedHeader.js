@@ -37,12 +37,12 @@ define([
 				//Skew the header node, and use translate to align columns
 				self._updateTransform();
 			},0);
-			this.connect(this.grid, 'resize', '_updateTransform')
+			this.connect(this.grid, 'resize', '_updateTransform');
 			this.loaded.callback();
-		}
+		},
 
-		,_updateTransform: function(){
-			var n = this.grid.header.domNode;	
+		_updateTransform: function(){
+			var n = this.grid.header.domNode;
 			var headerHeight = n.offsetHeight;
 			console.log('header height: ', headerHeight);
 			var translateX = Math.round(headerHeight/2) - 1; //TODO: 1 is the top border width

@@ -107,7 +107,7 @@ define([
 
 		indexToId: function(index, parentId, skip){
 			if(this._ids && !skip){
-				return this._struct[this.model.isId(parentId)? parentId: ''][index + 1]
+				return this._struct[this.model.isId(parentId)? parentId: ''][index + 1];
 			}else{
 				return this.inner._call('indexToId', arguments);
 			}

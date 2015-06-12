@@ -241,12 +241,12 @@ define([
 			this.expandoBar.style.marginRight = this.grid.header.innerNode.style.marginRight;
 			this.expandoBar.style.marginLeft = this.grid.header.innerNode.style.marginLeft;
 			//Adjust width of the expando cells
-			var headerCells = query('table', this.grid.headerNode)[0].rows[0].cells
-				,expandoCells = this.expandoBar.firstChild.rows[0].cells;
+			var headerCells = query('table', this.grid.headerNode)[0].rows[0].cells,
+				expandoCells = this.expandoBar.firstChild.rows[0].cells;
 
 			array.forEach(expandoCells, function(cell, i){
-				var colId = cell.getAttribute('data-column-id')
-					,col = this.grid._columnsById[colId];
+				var colId = cell.getAttribute('data-column-id'),
+					col = this.grid._columnsById[colId];
 				if(col){
 					cell.style.width = col.width;
 					cell.style.minWidth = col.width;
@@ -263,7 +263,7 @@ define([
 				var self = this;
 				div.onclick = function(){
 					self.expand(col.id);
-				}
+				};
 			}else{
 				console.log(col.id, ' is not expandable');
 				div.innerHTML = '';
@@ -335,7 +335,7 @@ define([
 
 				div.onclick = function(){
 					self.collapse(colId);
-				}
+				};
 				td.firstChild.insertBefore(div, td.firstChild.firstChild);
 			});
 		},
