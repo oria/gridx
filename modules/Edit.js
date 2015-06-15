@@ -472,6 +472,8 @@ define([
 					output.push.apply(output, cnnts);
 				}
 			});
+			t.connect(g.body, 'onBeforeUnrender', '_onBeforeBodyUnrender');
+
 			t.aspect(g.body, 'onAfterRow', function(row){
 				query('.gridxCell', row.node()).forEach(function(node){
 					// var colid = node.getAttribute('colid');
@@ -714,6 +716,15 @@ define([
 			return !!this.getEditor(rowId, colId);
 		},
 
+		isRowEditing: function(rowId) {
+			var colId;
+
+			for (colId in this.grid._columnsById) {
+				if (this.isEditing(rowId, colId)) return colId;
+			}
+			return false;
+		},
+
 		setEditor: function(colId, editor, args){
 			var col = this.grid._columnsById[colId],
 				editorArgs = col.editorArgs = col.editorArgs || {};
@@ -807,6 +818,24 @@ define([
 					col._backupWidgets = [];
 				}
 			});
+		},
+
+		// In alwaysEditing mode, when focus is still in input,
+		// then scroll the grid, the edited cell value will get lost.
+		_onBeforeBodyUnrender: function(id) {
+			var rowId, colId, _ec;
+
+			if (!this._editingCells) return false;
+
+			for (rowId in this._editingCells) {
+				_ec = this._editingCells;
+				for (colId in _ec[rowId]) {
+					if (_ec[rowId] && _ec[rowId][colId]) {
+						console.log('gee apply', rowId, colId);
+						this.apply(rowId, colId);
+					}
+				}
+			}
 		},
 
 		_dummyDecorator: function(data, rowId, visualIndex, cell){

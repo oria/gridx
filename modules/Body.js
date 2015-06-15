@@ -461,6 +461,7 @@ define([
 								//Unrender this row only when it is not being rendered now.
 								//Set a special flag so that RowHeader won't destroy its nodes.
 								//FIXME: this is ugly...
+								t.onBeforeUnrender(id);
 								t.onUnrender(id, 'refresh');
 								t.renderedIds[id] = undefined;
 							}
@@ -599,6 +600,7 @@ define([
 					//unrender before destroy nodes, so that other modules have a chance to detach nodes.
 					if(!t._skipUnrender){
 						//only when we do have something to unrender
+						t.onBeforeUnrender();
 						t.onUnrender();
 					}
 					// while(n.firstChild){
@@ -633,6 +635,7 @@ define([
 				//unrender before destroy nodes, so that other modules have a chance to detach nodes.
 				if(!t._skipUnrender){
 					//only when we do have something to unrender
+					t.onBeforeUnrender();
 					t.onUnrender();
 				}
 				while(n.firstChild){
@@ -659,11 +662,13 @@ define([
 						id = bn.lastChild.getAttribute('rowid');
 						if(m.isId(id)){
 							m.free(id);
+							t.onBeforeUnrender(id);
 							t.onUnrender(id);
 						}else{
 							//sometimes, unrendered row has id as null(happens in vv)
 							//this will make rowHeader unsync with rows
 							//explicitly tell rowHeader to treat this tricky scenerio
+							t.onBeforeUnrender(id);
 							t.onUnrender(id, undefined, 'post');
 						}
 						domConstruct.destroy(bn.lastChild);
@@ -677,8 +682,10 @@ define([
 						tp -= rh ? parseInt(rh, 10) : bn.firstChild.offsetHeight;
 						if(m.isId(id)){
 							m.free(id);
+							t.onBeforeUnrender(id);
 							t.onUnrender(id);
 						}else{
+							t.onBeforeUnrender(id);
 							t.onUnrender(id , undefined, 'pre');
 						}
 						domConstruct.destroy(bn.firstChild);
@@ -708,6 +715,8 @@ define([
 				domClass.add(bn.lastChild, 'gridxLastRow');
 			}
 		},
+
+		onBeforeUnrender: function(/* id, refresh, preOrPost*/){},
 
 		onUnrender: function(/* id, refresh, preOrPost*/){},
 
