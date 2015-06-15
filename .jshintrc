@@ -2,7 +2,7 @@
 	"undef": true,
 	"unused": false,
 	"strict": false,
-	"eqeqeq": true,
+	"eqeqeq": false,
 
 	"laxbreak": true,
 
