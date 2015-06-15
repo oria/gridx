@@ -385,7 +385,9 @@ define([
 
 		expand: function(id, skipUpdateBody){
 			var d = new Deferred(),
-				t = this;
+				t = this,
+				vi = t.grid.view.getRowInfo({rowId: id}).visualIndex;
+
 			if(!t.isExpanded(id) && t.canExpand(id)){
 				t._beginLoading(id);
 				t.grid.view.logicExpand(id).then(function(){
@@ -393,6 +395,8 @@ define([
 						t._endLoading(id);
 						d.callback();
 						t.onExpand(id);
+
+						if (vi !== undefined) t.grid.vScroller.scrollToRow(vi);
 					});
 				});
 			}else{
