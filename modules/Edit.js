@@ -831,7 +831,6 @@ define([
 				_ec = this._editingCells;
 				for (colId in _ec[rowId]) {
 					if (_ec[rowId] && _ec[rowId][colId]) {
-						console.log('gee apply', rowId, colId);
 						this.apply(rowId, colId);
 					}
 				}
