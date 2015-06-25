@@ -94,7 +94,7 @@ define([
 			cn.setAttribute('class', 'gridxLayerContext');
 			cn.style.overflow = 'hidden';
 			
-			cn.setAttribute('id', 'testContextNode')
+			cn.setAttribute('id', 'testContextNode');
 			wrapper1.setAttribute('class', 'gridxLayerWrapper');
 			wrapper2.setAttribute('class', 'gridxLayerWrapper');
 			t._parentStack = [];

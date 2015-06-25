@@ -297,7 +297,7 @@ define([
 			this._checker = null;
 			this.refresh(skipUpdateBody).then(function(){
 				t.onClearFilter();
-			})
+			});
 		},
 
 		getFilter: function(){

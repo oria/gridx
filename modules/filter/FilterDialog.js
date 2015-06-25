@@ -131,7 +131,7 @@ define([
 			form.onsubmit = function(){
 				_this.done();
 				return false;
-			}
+			};
 			this._accordionContainer = registry.byNode(query('.dijitAccordionContainer', this.domNode)[0]);
 			this._sltMatch = registry.byNode(query('.dijitSelect', this.domNode)[0]);
 			var btns = query('.dijitButton', this.domNode);

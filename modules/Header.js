@@ -288,7 +288,7 @@ define([
 			return true;
 		},
 
-		_onKeyDown: function(evt){
+		_onKeyDown: function(evt) {
 			var t = this, g = t.grid, col,
 				dir = g.isLeftToRight() ? 1 : -1,
 				delta = evt.keyCode == keys.LEFT_ARROW ? -dir : dir;

@@ -117,7 +117,7 @@ require([
 
 	layout = [
 		{id: 'id', field: "id", name:"ID", width: '20px'},
-		{id: "Genre", field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
+		{id: "Genre", field: "Genre", name:"TextBox", width: '100px', editable: true, alwaysEditing: true},
 		{id: 'Artist', field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
 			decorator: function(data){
 				return "<b>" + data + "</b>";
