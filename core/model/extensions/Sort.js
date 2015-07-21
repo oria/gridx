@@ -59,7 +59,7 @@ define([
 					}
 				}
 				if(bs){
-					sortSpec = sortSpec.concat(bs);
+					sortSpec = bs.concat(sortSpec);
 				}
 			}else{
 				sortSpec = bs;
