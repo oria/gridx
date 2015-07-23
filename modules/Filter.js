@@ -282,7 +282,9 @@ define([
 
 		setFilter: function(checker, skipUpdateBody){
 			var t = this;
-
+			if(t.arg("serverMode") && !t._checker){
+				t.grid.view.backupOpenInfo();
+			}
 			if(checker != this._checker){
 				this._checker = checker;
 				this.refresh(skipUpdateBody).then(function(){
@@ -293,7 +295,9 @@ define([
 
 		clearFilter: function(skipUpdateBody){
 			var t = this;
-
+			if(t.arg("serverMode")){
+				t.grid.view.restoreOpenInfo();
+			}
 			this._checker = null;
 			this.refresh(skipUpdateBody).then(function(){
 				t.onClearFilter();

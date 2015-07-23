@@ -591,6 +591,33 @@ define([
 				// this._clear();
 			}
 			this.grid.body.lazyRefresh();
+		},
+
+		backupOpenInfo: function(){
+			var t = this,
+				g = t.grid;
+			if(t._openInfo && t._openInfo[""]){
+				t.__openInfo = lang.clone(t._openInfo);
+				for (var x in t._openInfo){
+					if(x != ""){
+						delete t._openInfo[x];
+					} 
+				}
+				var openned = [];
+				t._openInfo[""].openned = openned;
+				t._parentOpenInfo[""] = openned;
+			}			
+		},
+
+		restoreOpenInfo: function(){
+			var t = this,
+				g = t.grid;
+		
+			if(t.__openInfo){
+				t._openInfo = t.__openInfo;
+				t._parentOpenInfo[""] = t._openInfo[""].openned;
+				delete t.__openInfo;
+			}
 		}
 	});
 });
