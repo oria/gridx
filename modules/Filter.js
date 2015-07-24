@@ -282,12 +282,16 @@ define([
 
 		setFilter: function(checker, skipUpdateBody){
 			var t = this;
-			if(t.arg("serverMode") && !t._checker){
-				t.grid.view.backupOpenInfo();
+			if(t.arg("serverMode")){
+				if(!t._checker){
+					t.grid.view.backupOpenInfo();	
+				}
+				t.grid.vScroller._lastScrollTop = 0;
 			}
-			if(checker != this._checker){
-				this._checker = checker;
-				this.refresh(skipUpdateBody).then(function(){
+
+			if(checker != t._checker){
+				t._checker = checker;
+				t.refresh(skipUpdateBody).then(function(){
 					t.onFilter();
 				});
 			}
@@ -297,9 +301,10 @@ define([
 			var t = this;
 			if(t.arg("serverMode")){
 				t.grid.view.restoreOpenInfo();
-			}
-			this._checker = null;
-			this.refresh(skipUpdateBody).then(function(){
+				t.grid.vScroller._lastScrollTop = 0;
+			}			
+			t._checker = null;
+			t.refresh(skipUpdateBody).then(function(){
 				t.onClearFilter();
 			});
 		},
