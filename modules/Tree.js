@@ -308,11 +308,16 @@ define([
 					}
 				}
 			});
-			if(t.arg('autoExpandOnFilter') === true && g.filter){
-				t.aspect(g.filter, 'onFilter', function(msg){
-					t.expandRecursive();
-				});
+
+			//disable expand recursive onfilter when on server side mode
+			if(!t.grid.arg || !t.grid.filter.arg("serverMode")){
+				if(t.arg('autoExpandOnFilter') === true && g.filter){
+					t.aspect(g.filter, 'onFilter', function(msg){
+						t.expandRecursive();
+					});
+				}
 			}
+			
 			t._initExpandLevel();
 			t._initFocus();
 		},

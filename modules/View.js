@@ -438,16 +438,18 @@ define([
 			var m = this.model,
 				d = new Deferred(),
 				id, levels = [];
-			for(id in openInfo){
-				if(m.isId(id)){
-					var i, path = openInfo[id].path;
-					for(i = 0; i < path.length; ++i){
-						levels[i] = levels[i] || [];
-						levels[i].push({
-							parentId: path[i],
-							start: 0,
-							count: 1
-						});
+			if(this.grid.arg && !this.grid.arg("serverMode")){
+				for(id in openInfo){
+					if(m.isId(id)){
+						var i, path = openInfo[id].path;
+						for(i = 0; i < path.length; ++i){
+							levels[i] = levels[i] || [];
+							levels[i].push({
+								parentId: path[i],
+								start: 0,
+								count: 1
+							});
+						}
 					}
 				}
 			}
@@ -591,6 +593,39 @@ define([
 				// this._clear();
 			}
 			this.grid.body.lazyRefresh();
+		},
+
+		backupOpenInfo: function(){
+			var t = this,
+				g = t.grid;
+			if(t._openInfo && t._openInfo[""]){
+				t.__openInfo = lang.clone(t._openInfo);
+				for (var x in t._openInfo){
+					if(x != ""){
+						delete t._openInfo[x];
+					} 
+				}
+				var openned = [];
+				t._openInfo[""].openned = openned;
+				for (var x in t._parentOpenInfo){
+					delete t._parentOpenInfo[x]
+				}
+				t._parentOpenInfo[""] = openned;
+			}			
+		},
+
+		restoreOpenInfo: function(){
+			var t = this,
+				g = t.grid;
+		
+			if(t.__openInfo){
+				t._openInfo = t.__openInfo;
+				for (var x in t._openInfo){
+					t._parentOpenInfo[x] = t._openInfo[x].openned;
+					 
+				}
+				delete t.__openInfo;
+			}
 		}
 	});
 });
