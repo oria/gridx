@@ -63,8 +63,12 @@ define([
 			}
 			for(i = 0; i < len; ++i){
 				c = autoCols[i];
-				c.width = (i ? w : ww) + 'px';
-			}
+				c.width = (i ? w : ww);
+				var clientWidth = dojo.byId(c._domId).clientWidth - padBorder;
+				if(c.width > clientWidth)
+					clientWidth = c.width;
+				c.width = clientWidth + "px";
+			}			
 		}
 	}
 
