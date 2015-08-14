@@ -6,11 +6,12 @@ define([
 	'../support/query',
 	"dojo/_base/sniff",
 	"dojo/dom-geometry",
+	"dojo/dom", // dom.byId
 	"dojo/dom-class",
 	"dojo/dom-style",
 	"dojo/keys",
 	"../core/_Module"
-], function(declare, array, Deferred, query, has, domGeometry, domClass, domStyle, keys, _Module){
+], function(declare, array, Deferred, query, has, domGeometry, dojoDom, domClass, domStyle, keys, _Module){
 
 /*=====
 	return declare(_Module, {
@@ -64,7 +65,7 @@ define([
 			for(i = 0; i < len; ++i){
 				c = autoCols[i];
 				c.width = (i ? w : ww);
-				var clientWidth = dojo.byId(c._domId).clientWidth - padBorder;
+				var clientWidth = dojoDom.byId(c._domId).clientWidth - padBorder;
 				if(c.width > clientWidth)
 					clientWidth = c.width;
 				c.width = clientWidth + "px";
