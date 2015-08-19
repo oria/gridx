@@ -113,13 +113,16 @@ define([
 			});
 		},
 
-		_updateSelectAll: function(){
-			var newHeader = this._createSelectAllBox();
+		_updateSelectAll: function(checked){
+			var newHeader = this._createSelectAllBox(checked);
 			this.grid._columnsById[indirectSelectColumnId].name = newHeader;
 			this.grid.header.getHeaderNode(indirectSelectColumnId).innerHTML = newHeader;
 		},
 
-		_createSelectAllBox: function(){
+		_createSelectAllBox: function(checked){
+			if(checked != undefined){
+				return this._createCheckBox(checked);
+			}
 			return this._createCheckBox(this._allSelected[this._getPageId()]);
 		},
 
@@ -204,6 +207,16 @@ define([
 					node.firstChild.innerHTML = selected ? '&#10003;' : partial ? '&#9646;' : '&#9744;';
 				}
 			}
+			var m = this.grid.model;
+			if(m.allSelected){
+				if(toHighlight){
+					if(m.allSelectedExp && !m.allSelectedExp.length)
+						this._updateSelectAll(true);
+				} else {
+					this._updateSelectAll(false);
+				}
+			}
+				
 		},
 
 		_onMouseOver: function(e){
@@ -228,8 +241,32 @@ define([
 
 		_onSelectAll: function(){
 			var t = this,
-				g = t.grid;
-			g.select.row[t._allSelected[t._getPageId()] ? 
+				g = t.grid,
+				allSelected = t._allSelected[t._getPageId()],
+				cache = g.model._cache,
+				isAsync = cache.isAsync;				
+			
+			if(isAsync){
+				var i, viewStart = g.body.renderStart,
+					viewCount = g.body.renderCount,
+					viewEnd = viewStart + viewCount,
+					allSelected = g.model.allSelected && g.model.allSelectedExp && !g.model.allSelectedExp.length;
+
+				if(!allSelected) {
+					g.model.allSelected = true;
+					g.model.allSelectedExp = [];
+				} else
+					delete g.model.allSelected;
+
+				for(i = viewStart; i < viewEnd; ++i){
+					g.select.row._doHighlight({row: i}, !allSelected);
+				}
+
+				this._updateSelectAll(!allSelected);
+
+				return;				
+			}
+			g.select.row[allSelected ? 
 				'deselectByIndex' :
 				'selectByIndex'
 			]([0, g.view.visualCount - 1]);
@@ -243,6 +280,11 @@ define([
 				model = t.model,
 				start = view.rootStart,
 				count = view.rootCount;
+			if(typeof(arguments[0]) == "number" && typeof(arguments[1]) == "number"){
+				start = arguments[0];
+				count = arguments[1];
+			}
+
 			if(g.select.row.selectByIndex && t.arg('all')){
 				var selectedRoot = array.filter(g.select.row.getSelected(), function(id){
 					return !model.treePath(id).pop();
@@ -274,7 +316,7 @@ define([
 				}
 				Deferred.when(d, function(){
 					t._allSelected[t._getPageId()] = allSelected;
-					t._updateSelectAll();
+					//t._updateSelectAll();
 				});
 			}
 		}

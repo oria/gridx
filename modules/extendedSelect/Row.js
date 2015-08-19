@@ -358,6 +358,17 @@ define([
 		},
 
 		_onMark: function(id, toMark, oldState, type){
+			if(this.model.allSelected){
+				var exp = this.model.allSelectedExp;
+				if(exp && exp.length){
+					for(var i=0; i<exp.length; i++){
+						if(exp[i] == id){
+							toMark = false;
+						}
+					}
+				}
+				toMark = true;
+			}
 			if(type == 'select' && this.grid.body.renderedIds[id]){
 			// if(type == 'select'){
 				var nodes = query('[rowid="' + this.grid._escapeId(id) + '"]', this.grid.mainNode);
@@ -391,6 +402,18 @@ define([
 		_isSelected: function(target){
 			var t = this,
 				id = t._getRowId(target.row);
+
+			if(t.model.allSelected){
+				var exp = t.model.allSelectedExp;
+				if(exp && exp.length){
+					for(var i=0; i<exp.length; i++){
+						if(exp[i] == id){
+							return false;
+						}
+					}
+				}
+				return true;
+			}				
 			return t._isRange ? array.indexOf(t._refSelectedIds, id) >= 0 : t.model.getMark(id);
 		},
 
@@ -473,6 +496,26 @@ define([
 				toHighlight = this.model.getMark(rowId);
 			}else{
 				toHighlight = toHighlight ? this._toSelect : this._isSelected(target);
+			}
+			if(this.model.allSelected){
+				var exp = this.model.allSelectedExp;
+				if(toHighlight){
+					if(exp && exp.length){
+						var index = -1;
+						for(var i=0; i<exp.length; i++){
+							if(exp[i] == rowId){
+								index = i;
+							}
+						}
+						if(index != -1)
+							exp.splice(index,1);
+					}
+				} else {
+					exp.push(rowId);
+				}
+				this._selecting = 0;
+				this._endAutoScroll();
+				this.grid.autoScroll.enabled = false;
 			}
 			this._doHighlight(target, toHighlight);
 		},
