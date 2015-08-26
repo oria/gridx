@@ -1230,6 +1230,12 @@ define([
 		_onFocus: function(evt){
 			var bn = this.domNode,
 				nl = query(evt.target).closest('.gridxCell', bn);
+
+			//refocus body if target is bodynode itself
+			if(evt.target == this.domNode){
+				return true;
+			}
+
 			if(nl[0] && this._isDescendantCellNode(nl[0])){
 				var colIndex = this.grid._columnsById[nl[0].getAttribute('colid')].index,
 					visualIndex = parseInt(nl.closest('.gridxRow', bn)[0].getAttribute('visualindex'), 10);
