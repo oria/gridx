@@ -100,6 +100,7 @@ define({ root:
 //end v1.x content
 "ar": true,
 "bg": true,
+"bs": true,
 "ca": true,
 "cs": true,
 "da": true,
@@ -117,6 +118,7 @@ define({ root:
 "ja": true,
 "kk": true,
 "ko": true,
+"mk": true,
 "nb": true,
 "nl": true,
 "pl": true,
@@ -126,6 +128,7 @@ define({ root:
 "ru": true,
 "sk": true,
 "sl": true,
+"sr": true,
 "sv": true,
 "th": true,
 "tr": true,
