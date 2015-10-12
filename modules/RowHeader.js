@@ -173,7 +173,7 @@ define([
 		},
 
 		_onAfterCell: function(cell){
-			//This is to ensuregit  the rowHeader get correct height for editable cells
+			//Ensure that the rowHeader gets the correct height for editable cells.
 			var t = this,
 				visualIndex = cell.row.visualIndex(),
 				n = query('[visualindex="' + visualIndex + '"].gridxRowHeaderRow', t.bodyNode)[0],
