@@ -290,14 +290,14 @@ define([
 		},
 
 		_onResize: function(){
-			var ie = has('ie')? has('ie') : has('trident')? 11 : false, 
+			var ie = has('ie')? has('ie') : has('trident')? 11 : undefined,
 				bn;
 
 			for(var brn = this.grid.bodyNode.firstChild, n = this.bodyNode.firstChild;
 				brn && n;
 				brn = brn.nextSibling, n = n.nextSibling){
 					bn = this.grid.dod ? brn : brn.firstChild;
-					var h = ie > 8 ? domStyle.getComputedStyle(bn).height : bn.offsetHeight + 'px';
+					var h = ie <= 8 ? bn.offsetHeight + 'px' : domStyle.getComputedStyle(bn).height;
 					n.style.height = n.firstChild.style.height = h;
 			}
 
