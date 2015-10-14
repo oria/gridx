@@ -3,6 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dojo/_base/sniff",
 	"dojo/on",
+	"dojo/string",
 	"dojo/i18n",
 	"dojo/dom-class",
 	"dojo/dom-geometry",
@@ -31,7 +32,7 @@ define([
 	"dijit/hccss",
 	"dojo/NodeList-dom",
 	"dojo/NodeList-traverse"
-], function(declare, lang, has, on, i18n, domClass, domGeometry, query, Memory, metrics,
+], function(declare, lang, has, on, string, i18n, domClass, domGeometry, query, Memory, metrics,
 	_WidgetBase, _FocusMixin, _TemplatedMixin, template,
 	Core, Query, _Module, Header, View, Body, VLayout, HLayout, VScroller, HScroller, ColumnWidth, Focus, _BidiSupport, nls){
 
@@ -228,7 +229,7 @@ define([
 		},
 
 		_encodeHTML: function(id){
-			return String(id).replace(/\"/g, "&quot;");
+			return string.escape(id);
 		},
 
 		//event handling begin
