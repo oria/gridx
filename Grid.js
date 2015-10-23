@@ -229,7 +229,7 @@ define([
 		},
 
 		_encodeHTML: function(id){
-			return string.escape(id);
+			return string.escape(String(id));
 		},
 
 		//event handling begin
