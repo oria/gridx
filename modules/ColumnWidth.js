@@ -65,10 +65,13 @@ define([
 			for(i = 0; i < len; ++i){
 				c = autoCols[i];
 				c.width = (i ? w : ww);
-				var clientWidth = dojoDom.byId(c._domId).clientWidth - padBorder;
-				if(c.width > clientWidth)
-					clientWidth = c.width;
-				c.width = clientWidth + "px";
+				var titleNode = dojoDom.byId(c._domId);
+				if(titleNode){
+					var clientWidth = titleNode.clientWidth - padBorder;
+					if(c.width < clientWidth)
+						c.width = clientWidth;
+				}
+				c.width += "px";
 			}			
 		}
 	}
