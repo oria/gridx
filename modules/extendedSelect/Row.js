@@ -430,40 +430,66 @@ define([
 				view = t.grid.view,
 				m = t.model,
 				lastEndItem = t._lastEndItem,
-				a, b, i, d;
-			if(!t._isRange){
-				t._refSelectedIds = m.getMarkedIds();
-			}
-			if(t._isRange && t._inRange(end.row, start.row, lastEndItem.row)){
-				a = Math.min(end.row, lastEndItem.row);
-				b = Math.max(end.row, lastEndItem.row);
-				start = view.getRowInfo({visualIndex: a}).rowIndex + 1;
-				end = view.getRowInfo({visualIndex: b}).rowIndex;
-				d = new Deferred();
-				m.when({
-					start: start, 
-					count: end - start + 1
-				}, function(){
-					for(i = start; i <= end; ++i){
-						var id = m.indexToId(i),
-							selected = array.indexOf(t._refSelectedIds, id) >= 0;
-						m.markById(id, selected); 
-					}
-				}).then(function(){
-					m.when(null, function(){
-						d.callback();
-					});
-				});
-				return d;
-			}else{
-				a = Math.min(start.row, end.row);
-				b = Math.max(start.row, end.row);
+				i, d;
 
-				for(i = a; i <= b; ++i){
-					var rowInfo = view.getRowInfo({visualIndex: i});
-					m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
+			if(!t._isRange){
+				//todo: can be removed later
+				t._refSelectedIds = m.getMarkedIds();
+				for(i = Math.min(start.row, end.row); i <= Math.max(start.row, end.row); ++i){
+					m.markById(m.indexToId(i), toSelect); 
 				}
 				return m.when();
+			}else{
+				// end.row between start.row and lastEndItem.row
+				if(t._inRange(end.row, start.row, lastEndItem.row)){
+					if(lastEndItem.row > end.row){
+						// list from low to high: start.row, end.row, lastEndItem.row
+						rowStart = end.row+1;
+						rowEnd = lastEndItem.row;
+					}else{
+						// list from low to high: lastEndItem.row, end.row, start.row
+						rowStart = lastEndItem.row;
+						rowEnd = end.row-1;
+					}					
+					d = new Deferred();
+					m.when({
+						rowStart: rowStart, 
+						rowEnd: rowEnd
+					}, function(){
+						for(i = rowStart; i <= rowEnd; ++i){
+							m.markById(m.indexToId(i), false); 
+						}
+					}).then(function(){
+						m.when(null, function(){
+							d.callback();
+						});
+					});
+				}else{
+					ummark_start = Math.min(start.row, lastEndItem.row);
+					ummark_end = Math.max(start.row, lastEndItem.row);
+					mark_start = Math.min(start.row, end.row);
+					mark_end = Math.max(start.row, end.row);
+
+					d = new Deferred();
+					m.when({
+						ummark_start : ummark_start, 
+						ummark_end : ummark_end,
+						mark_start : mark_start,
+						mark_end : mark_end
+					}, function(){
+						for(i = ummark_start; i <= ummark_end; ++i){
+							m.markById(m.indexToId(i), false); 
+						}
+						for(i = mark_start; i <= mark_end; ++i){
+							m.markById(m.indexToId(i), toSelect); 
+						}
+					}).then(function(){
+						m.when(null, function(){
+							d.callback();
+						});
+					});
+				}
+				return d;
 			}
 		},
 

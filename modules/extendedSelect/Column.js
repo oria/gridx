@@ -265,23 +265,37 @@ define([
 			}
 		},
 
+		// ummark not selected columns, mark selected columns
 		_addToSelected: function(start, end, toSelect){
-			var t = this, g = t.grid, a, i;
+			var t = this, g = t.grid, lastEndItem = t._lastEndItem, i;
+			var columnStart, columnEnd;
+
 			if(!t._isRange){
+				//todo: can be removed later
 				t._refSelectedIds = t.getSelected();
-			}
-			if(t._isRange && t._inRange(end.column, start.column, t._lastEndItem.column)){
-				start = Math.min(end.column, t._lastEndItem.column);
-				end = Math.max(end.column, t._lastEndItem.column);
-				for(i = start; i <= end; ++i){
-					g._columns[i]._selected = array.indexOf(t._refSelectedIds, g._columns[i].id) >= 0;
-				}
-			}else{
-				a = Math.min(start.column, end.column);
-				end = Math.max(start.column, end.column);
-				start = a;
-				for(i = start; i <= end; ++i){
+				for(i = Math.min(start.column, end.column); i <= Math.max(start.column, end.column); ++i){
 					g._columns[i]._selected = toSelect;
+				}				
+			}else{
+				// end.column between start.column and lastEndItem.column
+				if(t._inRange(end.column, start.column, lastEndItem.column)){
+					if(lastEndItem.column > end.column){
+						columnStart = end.column+1;
+						columnEnd = lastEndItem.column;
+					}else{
+						columnStart = lastEndItem.column;
+						columnEnd = end.column-1;
+					}				
+					for(i = columnStart; i <= columnEnd; ++i){
+						g._columns[i]._selected = false;
+					}
+				}else{
+					for(i = Math.min(start.column, lastEndItem.column); i <= Math.max(start.column, lastEndItem.column); ++i){
+						g._columns[i]._selected = false;
+					}
+					for(i = Math.min(start.column, end.column); i <= Math.max(start.column, end.column); ++i){
+						g._columns[i]._selected = toSelect;
+					}
 				}
 			}
 		}
