@@ -48,7 +48,9 @@ define([
 				[sr,'onHighlightChange', '_onHighlightChange' ],
 				[sr,'clear', '_onClear' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
-				[g.body, 'onRender', '_onSelectionChange'],
+				// defect 13758
+				// todo: refine the function of selecting all
+				//[g.body, 'onRender', '_onSelectionChange'],
 				[g, 'onRowKeyDown', '_onKeyDown'],
 				[g, 'onHeaderKeyDown', '_onKeyDown'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange']);
