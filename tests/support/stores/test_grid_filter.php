@@ -110,7 +110,7 @@ function boolToStr($a){
 		$a = 'true';	
 	}
 	if($a === FALSE){
-		$a = 'fasle';
+		$a = 'false';
 	}
 	return $a;
 }
