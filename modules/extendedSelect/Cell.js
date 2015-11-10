@@ -500,11 +500,23 @@ define([
 					var i, j, k, pack;
 					for(i = 0; i < packs.length; ++i){
 						pack = packs[i];
-						for(j = pack.columnStart; j <= pack.columnEnd; ++j){
-							var cid = t.grid._columns[j].id,
+
+						if(pack.action == "unmark"){
+							for(j = pack.columnStart; j <= pack.columnEnd; ++j){
+								var cid = t.grid._columns[j].id,
+									type = t._getMarkType(cid);
+								for(k = pack.rowStart; k <= pack.rowEnd; ++k){
+									model.markById(model.indexToId(k), false, type);
+								}
+							}
+						}else{
+							for(j = pack.columnStart; j <= pack.columnEnd; ++j){
+								var cid = t.grid._columns[j].id,
 								type = t._getMarkType(cid);
-							for(k = pack.rowStart; k <= pack.rowEnd; ++k){
-								model.markById(model.indexToId(k), pack.action == "mark" && toSelect, type);
+								for(k = pack.rowStart; k <= pack.rowEnd; ++k){
+									rowInfo = view.getRowInfo({visualIndex: k});
+									model.markByIndex(rowInfo.rowIndex, toSelect, type, rowInfo.parentId);
+								}
 							}
 						}	
 					}

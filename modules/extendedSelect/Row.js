@@ -436,7 +436,8 @@ define([
 				//todo: can be removed later
 				t._refSelectedIds = m.getMarkedIds();
 				for(i = Math.min(start.row, end.row); i <= Math.max(start.row, end.row); ++i){
-					m.markById(m.indexToId(i), toSelect); 
+ 					 var rowInfo = view.getRowInfo({visualIndex: i});
+					 m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
 				}
 				return m.when();
 			}else{
@@ -481,7 +482,8 @@ define([
 							m.markById(m.indexToId(i), false); 
 						}
 						for(i = mark_start; i <= mark_end; ++i){
-							m.markById(m.indexToId(i), toSelect); 
+							 var rowInfo = view.getRowInfo({visualIndex: i});
+							 m.markByIndex(rowInfo.rowIndex, toSelect, '', rowInfo.parentId);
 						}
 					}).then(function(){
 						m.when(null, function(){
