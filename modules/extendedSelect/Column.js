@@ -206,7 +206,7 @@ define([
 					t._highlight({column: e.columnIndex});
 				}],
 				[g, has('ff') < 4 ? 'onHeaderCellKeyUp' : 'onHeaderCellKeyDown', function(e){
-					if((e.keyCode == keys.SPACE || e.keyCode == keys.ENTER) && !domClass.contains(e.target, 'gridxArrowButtonNode')){
+					if(e.keyCode == keys.SPACE && !domClass.contains(e.target, 'gridxArrowButtonNode')){
 						event.stop(e);
 						t._start({column: e.columnIndex}, g._isCtrlKey(e), e.shiftKey);
 						t._end();
