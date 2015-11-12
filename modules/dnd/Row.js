@@ -6,9 +6,10 @@ define([
 	"dojo/dom-class",
 	"dojo/dom-geometry",
 	"dojo/_base/sniff",
+	"dojo/dnd/Manager",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, array, Deferred, lang, domClass, domGeometry, has, _Base, _Module){
+], function(declare, array, Deferred, lang, domClass, domGeometry, has, DndManager, _Base, _Module){
 
 /*=====
 	return declare(_Base, {
@@ -244,16 +245,57 @@ define([
 			return ret;
 		},
 
-		_onDropInternal: function(nodes, copy){
-			var t = this, g = t.grid;
+
+		_onMouseMove: function(){
+			var t = this, flag = true;
 			if(t._target >= 0){
+
+				if(t.grid.rowLock && t._target < t.grid.rowLock.count){
+					flag = false;
+				}
 				t.model.when({id: t._selectedRowIds}, function(){
 					var indexes = array.map(t._selectedRowIds, function(rowId){
 						return t.model.idToIndex(rowId);
 					});
+					if (t.grid.rowLock) {
+						if (array.some(indexes, function(index) {
+							return index < t.grid.rowLock.count;
+						})) {						
+							console.warn('can not move locked rows');
+							flag = false;
+						}
+					}
+				});
+			}
+			var manager=DndManager.manager();
+			manager.canDropFlag = flag;
+			manager.avatar.update();
+		},
+
+
+		_onDropInternal: function(nodes, copy){
+			var t = this, g = t.grid;
+			if(t._target >= 0){
+
+				if(t.grid.rowLock && t._target < t.grid.rowLock.count){
+					return false;
+				}
+				t.model.when({id: t._selectedRowIds}, function(){
+					var indexes = array.map(t._selectedRowIds, function(rowId){
+						return t.model.idToIndex(rowId);
+					});
+					if (t.grid.rowLock) {
+						if (array.some(indexes, function(index) {
+							return index < t.grid.rowLock.count;
+						})) {						
+							console.warn('can not move locked rows');
+							return false;
+						}
+					}
 					g.move.row.move(indexes, g.view.getRowInfo({
 						visualIndex: t._target
 					}).rowIndex);
+
 				});
 			}
 		},

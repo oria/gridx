@@ -329,11 +329,11 @@ define([
 						onFocus: this._onFocus,
 //                        doBlur: hitch(this, this._doBlur),
 //                        onBlur: hitch(this, this._onBlur),
-						connects: [this.connect(g, 'onHeaderCellKeyPress', '_onKeyPress')]
+						connects: [this.connect(g, 'onHeaderCellKeyDown', '_onKeyDown')]
 					});
 				}else{
 					this.connect(g, 'onHeaderCellKeyDown', function(evt){
-						if(evt.keyCode == keys.ENTER || evt.keyCode == keys.SPACE){
+						if(evt.keyCode == keys.ENTER){
 							this._sort(evt.columnId, false, g._isCtrlKey(evt));
 						}
 					});
@@ -360,15 +360,14 @@ define([
 //            return true;
 //        },
 
-		_onKeyPress: function(e){
+		_onKeyDown: function(e){
 			switch(e.keyCode){
 				case keys.RIGHT_ARROW:
 				case keys.LEFT_ARROW:
 					this._moveFocus(e);
 					break;
 				case keys.ENTER:
-				case keys.SPACE:
-					this._sort(this._focusHeaderId, this._focusSortArrow, this.grid._isCtrlKey(e));
+					this._sort(this._focusHeaderId, true, this.grid._isCtrlKey(e));
 			}
 		},
 
@@ -380,12 +379,10 @@ define([
 				event.stop(evt);	//Prevent scrolling the whole page.
 				col = g.column(this._focusHeaderId, 1);
 				var sortable = col.isSortable();
-				if(!sortable || focusSortArrow ^ (delta < 0)){
-					col = g.column(col.index() + delta);
-				}
+				col = g.column(col.index() + delta);
 				if(col){
 					this._focusHeaderId = col.id;
-					this._focusSortArrow = col.isSortable() && (sortable || delta < 0) && !focusSortArrow;
+					this._focusSortArrow = col.isSortable() && !focusSortArrow;
 					this._focus(col.id, evt);
 				}
 			}

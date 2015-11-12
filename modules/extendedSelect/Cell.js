@@ -420,50 +420,79 @@ define([
 				view = t.grid.view,
 				d = new Deferred(),
 				lastEndItem = t._lastEndItem,
-				a, b, colDir, i, j, rowInfo,
+				rowInfo,
 				packs = [],
+
+				rowStart, 
+				rowEnd, 
+				columnStart, 
+				columnEnd,
+
 				finish = function(){
 					model.when().then(function(){
 						d.callback();
 					});
 				};
+
 			if(!t._isRange){
-				t._refSelectedIds = t._getSelectedIds();
+		 		t._refSelectedIds = t._getSelectedIds();
+		 		// mark selected cells
+		 		packs.push({
+					rowStart: Math.min(start.r, end.r),
+					rowEnd: Math.max(start.r, end.r),
+					columnStart: Math.min(start.c, end.c),
+					columnEnd: Math.max(start.c, end.c),
+					action: "mark" 
+				});
 			}
-			if(t._isRange){
-				if(t._inRange(end.r, start.r, lastEndItem.r)){
-					a = Math.min(end.r, lastEndItem.r);
-					b = Math.max(end.r, lastEndItem.r);
-					rowInfo = view.getRowInfo({visualIndex: a + 1});
+			else{
+				// end cell inside rectangle set by start cell and lastEndItem cell
+				if(t._inRange(end.c, start.c, lastEndItem.c) && t._inRange(end.r, start.r, lastEndItem.r)){
+					// first step: unmark selected cells in rows below or above end.r
+					if(lastEndItem.r > end.r){
+						rowStart = view.getRowInfo({visualIndex: end.r}).rowIndex+1;
+						rowEnd = view.getRowInfo({visualIndex: lastEndItem.r}).rowIndex;
+					}else{
+						rowStart = view.getRowInfo({visualIndex: lastEndItem.r}).rowIndex;
+						rowEnd = view.getRowInfo({visualIndex: end.r}).rowIndex-1;
+					}
 					packs.push({
-						start: rowInfo.rowIndex,
-						count: b - a,
-						columnStart: start.c,
-						columnEnd: lastEndItem.c
+						rowStart: rowStart,
+						rowEnd: rowEnd,
+						columnStart: Math.min(start.c, end.c),
+						columnEnd: Math.max(start.c, end.c),
+						action: "unmark" 
 					});
-				}
-				if(t._inRange(end.c, start.c, lastEndItem.c)){
-					colDir = end.c < lastEndItem.c ? 1 : -1;
-					a = Math.min(start.r, end.r);
-					b = Math.max(start.r, end.r);
-					rowInfo = view.getRowInfo({visualIndex: a});
+					// second step: unmark selected cells in columns between end.c and lastEndItem.c
+					if(lastEndItem.c > end.c){
+						columnStart = end.c+1;
+						columnEnd = lastEndItem.c;
+					}else{
+						columnStart = lastEndItem.c;
+						columnEnd = end.c-1;
+					}
 					packs.push({
-						start: rowInfo.rowIndex,
-						count: b - a + 1,
-						columnStart: end.c + colDir,
-						columnEnd: lastEndItem.c
+						rowStart: Math.min(start.r, lastEndItem.r),
+						rowEnd: Math.max(start.r, lastEndItem.r),
+						columnStart: columnStart,
+						columnEnd: columnEnd,
+						action: "unmark" 
 					});
-				}
-			}
-			colDir = start.c < end.c ? 1 : -1;
-			for(i = start.c; i != end.c + colDir; i += colDir){
-				var cid = t.grid._columns[i].id,
-					type = t._getMarkType(cid);
-				a = Math.min(start.r, end.r);
-				b = Math.max(start.r, end.r);
-				for(j = a; j <= b; ++j){
-					rowInfo = view.getRowInfo({visualIndex: j});
-					model.markByIndex(rowInfo.rowIndex, toSelect, type, rowInfo.parentId);
+				}else{
+					packs.push({
+						rowStart: Math.min(start.r, lastEndItem.r),
+						rowEnd: Math.max(start.r, lastEndItem.r),
+						columnStart: Math.min(start.c, lastEndItem.c),
+						columnEnd: Math.max(start.c, lastEndItem.c),
+						action: "unmark" 
+					});
+					packs.push({
+						rowStart: Math.min(start.r, end.r),
+						rowEnd: Math.max(start.r, end.r),
+						columnStart: Math.min(start.c, end.c),
+						columnEnd: Math.max(start.c, end.c),
+						action: "mark" 
+					});
 				}
 			}
 			if(packs.length){
@@ -471,17 +500,25 @@ define([
 					var i, j, k, pack;
 					for(i = 0; i < packs.length; ++i){
 						pack = packs[i];
-						var colDir = pack.columnStart < pack.columnEnd ? 1 : -1;
-						for(j = pack.columnStart; j != pack.columnEnd + colDir; j += colDir){
-							var cid = t.grid._columns[j].id,
-								type = t._getMarkType(cid),
-								rids = t._refSelectedIds[cid];
-							for(k = pack.start; k < pack.start + pack.count; ++k){
-								var rid = model.indexToId(k),
-									selected = rids && rids[rid];
-								model.markById(rid, selected, type);
+
+						if(pack.action == "unmark"){
+							for(j = pack.columnStart; j <= pack.columnEnd; ++j){
+								var cid = t.grid._columns[j].id,
+									type = t._getMarkType(cid);
+								for(k = pack.rowStart; k <= pack.rowEnd; ++k){
+									model.markById(model.indexToId(k), false, type);
+								}
 							}
-						}
+						}else{
+							for(j = pack.columnStart; j <= pack.columnEnd; ++j){
+								var cid = t.grid._columns[j].id,
+								type = t._getMarkType(cid);
+								for(k = pack.rowStart; k <= pack.rowEnd; ++k){
+									rowInfo = view.getRowInfo({visualIndex: k});
+									model.markByIndex(rowInfo.rowIndex, toSelect, type, rowInfo.parentId);
+								}
+							}
+						}	
 					}
 				}).then(finish);
 			}else{

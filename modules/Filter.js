@@ -380,8 +380,9 @@ define([
 				}
 				return null;
 			default: //string
-				d = d ? ((!caseSensitive) ? (d + '').toLowerCase() : d + '') : '';
-				return d;
+				return (!caseSensitive) ? (d + '').toLowerCase() : d + '';
+				//d = d ? ((!caseSensitive) ? (d + '').toLowerCase() : d + '') : '';
+				//return d;
 				// return d ? ((!caseSensitive) ? (d + '').toLowerCase() : d + '') : '';
 				// return (d === null || d === undefined) ? '' : String(d);
 		}

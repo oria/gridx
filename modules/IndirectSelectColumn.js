@@ -68,7 +68,9 @@ define([
 				[sr, 'onHighlightChange', '_onHighlightChange' ],
 				[sr, 'onSelectionChange', '_onSelectionChange'],
 				[sr, 'clear', '_onClear'],
-				[g.body, 'onRender', '_onSelectionChange'],
+				// defect 13758
+				// todo: refine the function of selecting all
+				//[g.body, 'onRender', '_onSelectionChange'],
 				[g.body, 'onAfterRow', '_onAfterRow'],
 				g.filter && [g.filter, 'onFilter', '_onSelectionChange'],
 				[g.body, 'onMoveToCell', function(r, c, e){

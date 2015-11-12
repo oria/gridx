@@ -134,6 +134,8 @@ define([
 			var t = this;
 			if(t._alreadyIn && (t._dnding || t._extDnding)){
 				t._markTargetAnchor(evt);
+				if(this.profile._onMouseMove)
+					this.profile._onMouseMove();
 			}
 		},
 

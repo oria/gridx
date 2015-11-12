@@ -4,9 +4,10 @@ define([
 	"dojo/dom-geometry",
 	"dojo/dom-class",
 	"dojo/query",
+	"dojo/dnd/Manager",
 	"./_Base",
 	"../../core/_Module"
-], function(declare, array, domGeometry, domClass, query, _Base, _Module){
+], function(declare, array, domGeometry, domClass, query, DndManager, _Base, _Module){
 
 /*=====
 	return declare(_Base, {
@@ -190,6 +191,34 @@ define([
 				return func(node);
 			}
 			return ret;
+		},
+
+		_onMouseMove: function(){
+			var t = this;
+			var flag = true;
+
+			if(t._target >= 0){
+
+				if (t.grid.columnLock && t._target < t.grid.columnLock.count) {
+					flag = false;
+				}
+
+				var indexes = array.map(t._selectedColIds, function(colId){
+					return t.grid._columnsById[colId].index;
+				});
+
+				if (t.grid.columnLock) {
+					if (array.some(indexes, function(index) {
+						return index < t.grid.columnLock.count;
+					})) {						
+						console.warn('can not move locked columns');
+						flag = false;
+					}
+				}
+			}
+			var manager=DndManager.manager();
+			manager.canDropFlag = flag;
+			manager.avatar.update();
 		},
 		
 		_onDropInternal: function(nodes, copy){
