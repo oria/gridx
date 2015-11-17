@@ -49,12 +49,7 @@ define([
 			t._selector = g.select.column;
 			t.connect(g.header, 'onRender', '_initHeader');
 		},
-
-		load: function(){
-			this._initHeader();
-			this.loaded.callback();
-		},
-	
+		
 		//Public---------------------------------------------------------------------------------------
 		accept: [],
 

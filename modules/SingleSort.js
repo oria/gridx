@@ -103,7 +103,17 @@ define([
 
 		preload: function(){
 			var t = this,
-				g = t.grid, sort;
+				g = t.grid, sort,
+				refresh = function(){
+					var columnsById = t.grid._columnsById;
+					for(var colId in columnsById){
+						t._initHeader(colId);
+					}
+					if(t._sortId && columnsById[t._sortId]){
+						t._updateHeader(t._sortId, t._sortDescend);
+					}
+				};
+			t.connect(t.grid.header, 'onRender', refresh);
 			t.connect(g, 'onHeaderCellClick', '_onClick');
 			t.connect(g, 'onHeaderCellKeyDown', '_onKey');
 			//persistence support
@@ -126,23 +136,6 @@ define([
 				//sort here so the body can render correctly.
 				t.model.sort([sort]);
 			}
-		},
-
-		load: function(){
-			var t = this,
-				refresh = function(){
-					var columnsById = t.grid._columnsById;
-					for(var colId in columnsById){
-						t._initHeader(colId);
-					}
-					if(t._sortId && columnsById[t._sortId]){
-						t._updateHeader(t._sortId, t._sortDescend);
-					}
-				};
-			t.connect(t.grid.header, 'onRender', refresh);
-			//If presorted, update header UI
-			refresh();
-			t.loaded.callback();
 		},
 
 		columnMixin: {

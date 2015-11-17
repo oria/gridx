@@ -48,11 +48,14 @@ declare(_Module, {
 		this._regions = [];
 	},
 
+	preload: function(){
+		var t = this;
+		t.aspect(t.grid.header, 'onRender', 'refresh');
+	},
+
 	load: function(){
 		var t = this;
-		t.refresh();
 		t._initFocus();
-		t.aspect(t.grid.header, 'onRender', 'refresh');
 		t.loaded.callback();
 	},
 
