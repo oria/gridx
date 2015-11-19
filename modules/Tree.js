@@ -450,18 +450,15 @@ define([
 				t = this,
 				m = t.model;
 
-			var i, dl = [], size = m.size(id);
-			// console.log(context.size);
+			var i, size = m.size(id);
 			m.when({start: 0, count: 1, parentId: id}, function(){
 				size = m.size(id);
 				for(i = 0; i < size; ++i){
 					var childId = m.indexToId(i, id);
-					dl.push(t.loadChildRecursive(childId));
+					t.loadChildRecursive(childId);
 				}
 			}).then(function(){
-				new DeferredList(dl).then(function(){
-					d.callback();
-				});
+				d.callback();
 			});
 			return d;
 		},
