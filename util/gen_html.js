@@ -2,7 +2,7 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs'); 
 var siteDir = path.join(path.dirname(module.filename), '../');
-var sitePath = '/gridx_site/gridx/';
+var sitePath = '/gridx/';
  // GET.   
 var options = {  
 	host: '127.0.0.1',   

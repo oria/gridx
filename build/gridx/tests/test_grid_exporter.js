@@ -5,7 +5,9 @@ require([
 	'gridx/Grid',
 	'gridx/core/model/cache/Async',
 	'gridx/tests/support/data/ComputerData',
+	'gridx/tests/support/data/TreeColumnarTestData',
 	'gridx/tests/support/stores/Memory',
+	'gridx/tests/support/stores/ItemFileWriteStore',
 	'gridx/support/exporter/toCSV',
 	'gridx/allModules',
 	'gridx/tests/support/TestPane',
@@ -17,7 +19,8 @@ require([
 	'dijit/ProgressBar',
 	'dijit/Dialog',
 	'dojo/domReady!'
-], function(parser, Deferred, array, Grid, Cache, dataSource, storeFactory, toCSV, mods, TestPane, registry){
+], function(parser, Deferred, array, Grid, Cache, dataSource, treeDataSource,
+			storeFactory, treeStoreFactory, toCSV, mods, TestPane, registry){
 
 	store = storeFactory({
 		path: './support/stores',
@@ -33,6 +36,58 @@ require([
 		mods.FilterBar,
 		mods.Pagination,
 		mods.PaginationBar,
+		mods.VirtualVScroller
+	];
+
+	//tree
+	treeStore = treeStoreFactory({
+		dataSource: treeDataSource,
+		maxLevel: 4,
+		maxChildrenCount: 10
+	});
+	treeStore.hasChildren = function(id, item){
+		return item && treeStore.getValues(item, 'children').length;
+	};
+	treeStore.getChildren = function(item){
+		return treeStore.getValues(item, 'children');
+	};
+	var progressDecorator = function(){
+		return [
+			"<div data-dojo-type='dijit.ProgressBar' data-dojo-props='maximum: 10000' ",
+			"class='gridxHasGridCellValue' style='width: 100%;'></div>"
+		].join('');
+	};
+	layout1 = [
+		//Anything except natual number (1, 2, 3...) means all levels are expanded in this column.
+		{id: 'number', name: 'number', field: 'number',
+			expandLevel: 'all',
+			width: '200px',
+			widgetsInCell: true,
+			decorator: progressDecorator,
+			editable: true,
+			editor: 'dijit/form/NumberTextBox'
+		},
+		{id: 'id', name: 'id', field: 'id'},
+		{id: 'string', name: 'string', field: 'string'},
+		{id: 'date', name: 'date', field: 'date'},
+		{id: 'time', name: 'time', field: 'time'},
+		{id: 'bool', name: 'bool', field: 'bool'}
+	];
+
+	treeModules = [
+		mods.Tree,
+		// mods.Filter,
+		// mods.FilterBar,
+		// mods.QuickFilter,
+		mods.Pagination,
+		mods.PaginationBar,
+		mods.ColumnResizer,
+		// mods.SelectRow,
+		mods.ExtendedSelectRow,
+		mods.CellWidget,
+		mods.Edit,
+		mods.IndirectSelectColumn,
+		mods.SingleSort,
 		mods.VirtualVScroller
 	];
 
@@ -56,8 +111,15 @@ require([
 			}, 500);
 		}
 	}
+	exportGrid = function() {
+		exportCSV(grid);
+	};
+	
+	exportTreeGrid = function() {
+		exportCSV(grid1);
+	};
 
-	exportCSV = function(){
+	exportCSV = function(grid){
 		var args = {
 			selectedOnly: registry.byId('selectedRows').get('checked'),
 			omitHeader: registry.byId('omitHeader').get('checked'),
@@ -108,6 +170,7 @@ require([
 		}
 		console.log(args);
 		toCSV(grid, args).then(showResult, onError, onProgress);
+		// toCSV(grid1, args).then(showResult, onError, onProgress);
 	};
 
 	//Test
@@ -207,10 +270,11 @@ require([
 			].join('');
 		}));
 		tests.push([
-			'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportCSV">Export to CSV</div>',
+			'</div><div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportGrid">Export to CSV</div>',
 			'<div id="exportProgress" data-dojo-type="dijit.ProgressBar" style="display: none;" data-dojo-props="',
 				'minimum: 0, maximum: 1',
-			'"></div>'
+			'"></div>',
+			'<div data-dojo-type="dijit.form.Button" data-dojo-props="onClick: exportTreeGrid">Export tree grid to CSV</div>',
 		].join(''));
 
 		var tp = new TestPane({});

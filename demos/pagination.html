@@ -38,10 +38,16 @@
 		]
 	'></div>
 	<h2>Link-button style PaginationBar</h2>
+	<h3>using self defined size handler to calculate row count</h3>
 	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
 		structure: layout,
+		//self defined size handler
+		sizeHandler: function() {
+			console.log("in size handler");
+			return 123;
+		},
 		paginationBarMessage: "${2} to ${3} of ${0} items ${1} items selected",
 		modules: [
 			"gridx/modules/Pagination",
@@ -56,7 +62,19 @@
 		modules: [
 			"gridx/modules/Pagination",
 			"gridx/modules/pagination/PaginationBarDD"
-		]
+		],
+		paginationBarShowRange: true
+	'></div>
+	<h2>Drop-down style PaginationBar(not showing range)</h2>
+	<div id='grid4' jsid='grid4' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		modules: [
+			"gridx/modules/Pagination",
+			"gridx/modules/pagination/PaginationBarDD"
+		],
+		paginationBarShowRange: false
 	'></div>
 </body>
 </html>

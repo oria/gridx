@@ -8,6 +8,7 @@ require([
 	'gridx/tests/support/TestPane',
 	'gridx/modules/Focus',
 	'gridx/modules/VirtualVScroller',
+	'gridx/modules/ColumnResizer',
 	'gridx/modules/Dod',
 	'gridx/modules/select/Row',
 	'gridx/modules/RowHeader',
@@ -28,7 +29,7 @@ require([
 	'gridx/allModules'
 ], function(domConstruct, parser,
 			Grid, Cache, dataSource, storeFactory,
-			TestPane, focus, VirtualVScroller, Dod, 
+			TestPane, focus, VirtualVScroller, ColumnResizer, Dod, 
 			SelectRow, RowHeader, IndirectSelect, JulieTheme){
 	
 	var mainStructure = [
@@ -206,7 +207,8 @@ require([
 					useAnimation: useAnimation,
 					showExpando: showExpando,
 					detailProvider: detailProvider
-				}
+				},
+				ColumnResizer
 			],
 			// structure: dataSource.layouts[1],
 			structure: mainStructure,
@@ -217,4 +219,5 @@ require([
 	};
 	
 	createGrid();
+
 });

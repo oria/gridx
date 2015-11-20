@@ -20,10 +20,23 @@
 	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
 		Grid Header Regions Test
 	</h1>
-	<div id='grid' jsid='grid' data-dojo-type='gridx.Grid' data-dojo-props='
+	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Sync",
 		store: store,
-		structure: layout,
+		structure: layout1,
+		modules: [
+			"gridx/modules/NestedSort"
+		]
+	'></div>
+	<br>
+	<br>
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Grid Header Formatter Test(define headerFormatter callback to customize header)
+	</h1>
+	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout2,
 		modules: [
 			"gridx/modules/NestedSort"
 		]

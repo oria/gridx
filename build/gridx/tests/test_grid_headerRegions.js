@@ -30,7 +30,7 @@ require([
 //        {id: 'Heard', field: 'Heard', name: 'Heard:12'}
 //    ];
 
-	layout = [
+	layout1 = [
 		{id: 'id', field: 'id', name: 'id:1'},
 		{id: 'Genre', field: 'Genre', name: 'Genre:2'},
 		{id: 'Artist', field: 'Artist', name: 'Artist:3'},
@@ -42,8 +42,22 @@ require([
 		{id: 'Composer', field: 'Composer', name: 'Composer:9'}
 	];
 
+	layout2 = [
+		{id: 'id', field: 'id', name: 'id:1'},
+		{id: 'Genre', field: 'Genre', name: 'Genre:2', headerFormatter: function(col){
+			return col.name + '<br>' + '<a href="#">filter</a>';
+		}},
+		{id: 'Artist', field: 'Artist', name: 'Artist:3'},
+		{id: 'Album', field: 'Album', name: 'Album:4'},
+		{id: 'Name', field: 'Name', name: 'Name:5'},
+		{id: 'Year', field: 'Year', name: 'Year:6'},
+		{id: 'Length', field: 'Length', name: 'Length:7'},
+		{id: 'Track', field: 'Track', name: 'Track:8'},
+		{id: 'Composer', field: 'Composer', name: 'Composer:9'}
+	];
+
 	Deferred.when(parser.parse(), function(){
-		var hr = grid.headerRegions;
+		var hr = grid1.headerRegions;
 		hr.add(function(col){
 			return domConstruct.create('div', {
 				style: 'height: 13px; width: 10px; background-color: red;'

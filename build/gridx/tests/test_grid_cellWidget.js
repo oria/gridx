@@ -22,8 +22,8 @@ require([
 	});
 
 	layout1 = [
-		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Progress", name:"Progress", dataType:'number',
+		{id: "id", field: "id", name:"Index", width: '50px'},
+		{id: 'Progress', field: "Progress", name:"Progress", dataType:'number',
 			widgetsInCell: true, 
 			decorator: function(){
 				return [
@@ -32,7 +32,7 @@ require([
 				].join('');
 			}
 		},
-		{ field: "Artist", name:"Button", 
+		{id: 'Artist', field: "Artist", name:"Button", 
 			widgetsInCell: true,
 			navigable: true,
 			allowEventBubble: true,
@@ -51,7 +51,39 @@ require([
 				this.btn.set('label', data);
 			}
 		},
-		{ field: "Album", name:"Read-only CheckBox", 
+		{id: 'Artist2', field: "Artist", name:"ComboButton", 
+			navigable: true,
+			expandLevel: 'all',
+			width: '200px',
+			widgetsInCell: true,
+			allowEventBubble: true,
+			setCellValue: function(gridData, storeData, cellWidget){
+				var menuItem = new dijit.MenuItem({
+					label : "Cut",
+					value : "Cut",
+					onClick : function (value) {
+						cellWidget.combo.set('label', "Cut");
+					}
+				});
+
+				cellWidget.sMenu.addChild(menuItem);
+				menuItem = new dijit.MenuItem({
+					label : "Paste",
+					value : "Paste",
+					onClick : function (value) {
+						cellWidget.combo.set('label', "Paste");
+					}
+				});
+				cellWidget.sMenu.addChild(menuItem);
+			},
+			decorator: function(){
+				return [
+					'<div data-dojo-attach-point="combo" data-dojo-type="dijit/form/ComboButton" data-dojo-props="label:\'Select\'">',
+					'<div data-dojo-attach-point="sMenu" data-dojo-type="dijit/Menu"></div></div>'
+				].join('');
+			}
+		},
+		{id: 'Album', field: "Album", name:"Read-only CheckBox", 
 			widgetsInCell: true,
 			decorator: function(){
 				return [
@@ -68,7 +100,7 @@ require([
 				this.cb.set('value', data.length % 2);
 			}
 		},
-		{ field: "Genre", name:"ComboButton", 
+		{id: 'Genre', field: "Genre", name:"ComboButton", 
 			widgetsInCell: true,
 			navigable: true,
 			decorator: function(){
@@ -97,7 +129,7 @@ require([
 				this.btn.set('label', data);
 			}
 		},
-		{ field: "Name", name:"DropDown Button",
+		{id: 'Name', field: "Name", name:"DropDown Button",
 			widgetsInCell: true, 
 			navigable: true,
 			decorator: function(){
@@ -118,8 +150,8 @@ require([
 	];
 
 	layout2 = [
-		{ field: "id", name:"Index", width: '50px'},
-		{ field: "Name", name:"Buttons",
+		{id: 'id', field: "id", name:"Index", width: '50px'},
+		{id: 'Name', field: "Name", name:"Buttons",
 			widgetsInCell: true,
 			navigable: true,
 			decorator: function(){

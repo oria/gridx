@@ -14,6 +14,8 @@ require([
 	'dijit/form/TimeTextBox',
 	'dijit/form/NumberTextBox',
 	'dijit/form/FilteringSelect',
+	'dijit/form/SimpleTextarea',
+	'dijit/form/Textarea',
 	'dijit/form/Select',
 	'dijit/form/HorizontalSlider',
 	'dijit/form/NumberSpinner',
@@ -93,7 +95,8 @@ require([
 				}
 			}
 		},
-		{ field: "Genre", name:"TextBox", width: '100px', editable: true},
+		{ field: "Genre", name:"TextBox", width: '100px', editable: true, editor: 'dijit/form/TextBox'},
+		{ field: "Genre", name:"Textarea(with editorIgnoresEnter:true)", width: '150px', editable: true, editor: 'dijit/form/Textarea', editorIgnoresEnter: true},
 		{ field: "Artist", name:"ComboBox", width: '100px', editable: true,
 			editor: "dijit/form/ComboBox",
 			editorArgs: {

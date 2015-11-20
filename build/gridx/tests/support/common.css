@@ -11,6 +11,12 @@ body {
 	margin: 5em;
 }
 
+h3 {
+	color: blue;
+	margin: 0;
+	padding: 0;
+}
+
 .title {
 	font-size: large;
 	font-weight: bolder;

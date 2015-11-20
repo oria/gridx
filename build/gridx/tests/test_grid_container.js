@@ -11,16 +11,20 @@ require([
 	'dijit/layout/TabContainer',
 	'dijit/layout/AccordionContainer',
 	'dijit/layout/ContentPane',
+	'dijit/TitlePane',
 	'dojo/domReady!'
 ], function(parser, array, Deferred, Grid, Cache, dataSource, storeFactory, mods){
+	window.store = storeFactory({
+		dataSource: dataSource,
+		size: 10
+	});
+	window.structure = dataSource.layouts[0];
+
 	var createGrid = function(){
 		return new Grid({
+			store: window.store,
+			structure: window.structure,
 			cacheClass: Cache,
-			store: storeFactory({
-				dataSource: dataSource,
-				size: 10
-			}),
-			structure: dataSource.layouts[0],
 			//query: {Genre: 'E*'},
 			modules: [
 				mods.VirtualVScroller,

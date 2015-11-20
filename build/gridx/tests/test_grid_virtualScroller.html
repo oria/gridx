@@ -28,12 +28,13 @@
 			"gridx/modules/VirtualVScroller"
 		]
 	'></div>
-	<h2>Huge Server Store (1000000 rows, lazy scroll)</h2>
-	<p>Please note - All data are loaded from a <a href="http://dojotoolkit.cn/data/?totalSize=1000000&count=200">third party server</a>, so loading speed will be highly dependent on the network and stability of the service.</p>
+	<h2>Huge Server Store (100000 rows, lazy scroll)</h2>
+	<p>Please note - All data are loaded from a <a href="support/stores/QueryReadStore.php?start=0&count=100">third party server</a>, so loading speed will be highly dependent on the network and stability of the service.</p>
 	<div id='grid2' jsid='grid2' data-dojo-type='gridx.Grid' data-dojo-props='
 		cacheClass: "gridx/core/model/cache/Async",
 		store: serverStore,
-		structure: layout,
+		structure: serverLayout,
+		pageSize: 30,
 		vScrollerLazy: true,
 		modules: [
 			"gridx/modules/ColumnResizer",

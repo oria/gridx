@@ -1,5 +1,6 @@
 require([
 	'dojo/parser',
+	'dojo/on',
 	'gridx/tests/support/data/MusicData',
 	'gridx/tests/support/stores/Memory',
 	'gridx/tests/support/data/TestData',
@@ -20,8 +21,7 @@ require([
 	'dijit/TooltipDialog',
 	'dijit/ColorPalette',
 	'dojo/domReady!'
-], function(parser, dataSource1, storeFactory1, dataSource2, storeFactory2){
-
+], function(parser, on, dataSource1, storeFactory1, dataSource2, storeFactory2){
 	store1 = storeFactory1({
 		dataSource: dataSource1,
 		size: 100
@@ -181,5 +181,9 @@ require([
 		}
 	];
 	
-	parser.parse();
+	parser.parse().then(function(){
+		on(grid1.domNode, 'rowHeaderClick', function(e){
+			console.log('row header with id:', e.rowId, 'clicked');
+		})
+	});
 });

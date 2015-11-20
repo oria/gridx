@@ -5,8 +5,10 @@ require([
 	'gridx/tests/support/stores/ItemFileWriteStore',
 	'dojo/data/ItemFileWriteStore',
 	'dojo/date/locale',
+	'dojo/store/Memory',
 	'dijit/form/TextBox',
 	'dijit/form/ComboBox',
+	'dijit/form/ComboButton',
 	'dijit/form/DateTextBox',
 	'dijit/form/TimeTextBox',
 	'dijit/form/NumberTextBox',
@@ -17,13 +19,14 @@ require([
 	'dijit/form/CheckBox',
 	'dijit/form/ToggleButton',
 	'dijit/Calendar',
+	'dijit/Menu',
 	'dijit/ColorPalette',
 	'gridx/Grid',
 	'gridx/core/model/cache/Sync',
 	"gridx/allModules",
 	'dojo/domReady!'
-], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale,
-	TextBox, ComboBox, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
+], function(parser, dataSource, storeFactory, IFWSFactory, IFWStore, locale, Memory,
+	TextBox, ComboBox, ComboButton, DateTextBox, TimeTextBox, NumberTextBox, FilteringSelect, Select){
 
 	var getDate = function(d){
 		res = locale.format(d, {
@@ -51,12 +54,12 @@ require([
 	});
 
 	//Monitor writing store
-	dojo.connect(store1, 'put', function(){
-		console.log('put store1:', arguments);
-	});
-	dojo.connect(store2, 'put', function(){
-		console.log('put store2:', arguments);
-	});
+	// dojo.connect(store1, 'put', function(){
+	// 	console.log('put store1:', arguments);
+	// });
+	// dojo.connect(store2, 'put', function(){
+	// 	console.log('put store2:', arguments);
+	// });
 
 	mystore = IFWSFactory({
 		dataSource: dataSource, 
@@ -85,13 +88,37 @@ require([
 		});
 	}
 
+	function createMemoryStore(field) {
+		var data = dataSource.getData(100).items;
+		//Make the items unique
+		var res = {};
+		for(var i = 0; i < data.length; ++i){
+			res[data[i][field]] = 1;
+		}
+		data = [];
+		for(var d in res){
+			data.push({
+				id: d
+			});
+		}
+		return new Memory({
+			data: data
+		});
+	}
+
 	fsStore = createSelectStore('Album');
-	selectStore = createSelectStore('Length');
+	selectStore = createMemoryStore('Length');
+	var dropDownCreate = function(){
+		return [
+			'<div data-dojo-attach-point="combo" data-dojo-type="dijit/form/ComboButton" data-dojo-props="label:\'Select\'">',
+			'<div data-dojo-attach-point="sMenu" data-dojo-type="dijit/Menu"></div></div>'
+		].join('');
+	};
 
 	layout = [
-		{ field: "id", name:"ID", width: '20px'},
-		{ field: "Genre", name:"TextBox", width: '100px', alwaysEditing: true},
-		{ field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
+		{id: 'id', field: "id", name:"ID", width: '20px'},
+		{id: "Genre", field: "Genre", name:"TextBox", width: '100px', editable: true, alwaysEditing: true},
+		{id: 'Artist', field: "Artist", name:"ComboBox", width: '100px', alwaysEditing: true,
 			decorator: function(data){
 				return "<b>" + data + "</b>";
 			},
@@ -103,46 +130,54 @@ require([
 				props: 'store: mystore, searchAttr: "Artist"'
 			}
 		},
-		{ field: "Year", name:"NumberTextBox", width: '100px', alwaysEditing: true,
+		{id: 'Year', field: "Year", name:"NumberTextBox", width: '100px', alwaysEditing: true,
 			editor: "dijit.form.NumberTextBox"
 		},
-		{ field: "Album", name:"FilteringSelect", width: '100px', alwaysEditing: true,
+		{id: 'Album', field: "Album", name:"FilteringSelect", width: '100px', alwaysEditing: true,
 			editor: FilteringSelect,
 			editorArgs: {
 				props: 'store: fsStore, searchAttr: "id"'
 			}
 		},
-		{ field: "Length", name:"Select", width: '100px', alwaysEditing: true,
+		{id: 'Length', field: "Length", name:"Select", width: '100px', alwaysEditing: true,
 			//FIXME: this is still buggy, hard to set width properly
 			editor: Select,
 			editorArgs: {
 				props: 'store: selectStore, labelAttr: "id"'
 			}
 		},
-		{ field: "Progress", name:"HorizontalSlider", width: '100px', alwaysEditing: true,
+		{id: 'Progress', field: "Progress", name:"HorizontalSlider", width: '100px', alwaysEditing: true,
 			editor: "dijit.form.HorizontalSlider",
 			editorArgs: {
 				props: 'minimum: 0, maximum: 1'
 			}
 		},
-		{ field: "Track", name:"Number Spinner", width: '100px', alwaysEditing: true,
+		{id: 'Track', field: "Track", name:"Number Spinner",
+			// width: '100px',
+			alwaysEditing: true,
 			width: '50px',
 			editor: "dijit.form.NumberSpinner"
 		},
-		{ field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
-			editor: "dijit.form.CheckBox",
+		// {id: 'Heard1', field: "Heard", name:"Check Box", width: '30px', alwaysEditing: true,
+		// 	editor: "dijit.form.CheckBox",
+		// 	editorArgs: {
+		// 		props: 'value: true'
+		// 	}
+		// },
+		{id: 'Heard1-1', field: "Heard", name:"Radio Button", width: '30px', alwaysEditing: true,
+			editor: "dijit.form.RadioButton",
 			editorArgs: {
 				props: 'value: true'
 			}
 		},
-		{ field: "Heard", name:"ToggleButton", width: '100px', alwaysEditing: true,
+		{id: 'Heard2', field: "Heard", name:"ToggleButton", width: '100px', alwaysEditing: true,
 			editor: "dijit.form.ToggleButton",
 			editorArgs: {
 				valueField: 'checked',
 				props: 'label: "Press me"'
 			}
 		},
-		{ field: "Download Date", name:"DateTextBox", width: '100px', alwaysEditing: true,
+		{id: 'Download Date', field: "Download Date", name:"DateTextBox", width: '100px', alwaysEditing: true,
 			dataType: 'date',
 			storePattern: 'yyyy/M/d',
 			gridPattern: 'yyyy--MM--dd',
@@ -151,7 +186,7 @@ require([
 				fromEditor: getDate
 			}
 		},
-		{ field: "Last Played", name:"TimeTextBox", width: '100px', alwaysEditing: true,
+		{id: 'Last Played', field: "Last Played", name:"TimeTextBox", width: '100px', alwaysEditing: true,
 			dataType: "time",
 			storePattern: 'HH:mm:ss',
 			formatter: 'hh:mm a',

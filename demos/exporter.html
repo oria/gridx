@@ -57,6 +57,19 @@
 		<td id='ctrlPane' class='pane'></td>
 	</tr></table>
 
+	<h1 class='title' tabindex='0' onfocus='this.style.color="blue"' onblur='this.style.color=""'>
+		Tree Grid
+	</h1>
+	<h2>All expandoes in one column, sync store</h2>
+	<div id='grid1' jsid='grid1' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: treeStore,
+		structure: layout1,
+		paginationBarSizes: [1, 2, 0],
+		selectRowTriggerOnCell: true,
+		modules: treeModules,
+		treeAutoExpandOnFilter: true
+	'></div>
 	<div id="resultDialog" data-dojo-type="dijit.Dialog" data-dojo-props='title:"Export Results"'>
 		<textarea id="resultArea" style="width: 540px; height: 300px;" data-dojo-type="dijit.form.SimpleTextarea"
 			data-dojo-props="readOnly: true"></textarea>

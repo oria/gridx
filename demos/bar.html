@@ -101,5 +101,21 @@
 			"gridx/modules/SummaryBar"
 		]
 	'></div>
+	<h2>Empty Toolbar</h2>
+	<div id='grid5' jsid='grid5' data-dojo-type='gridx.Grid' data-dojo-props='
+		cacheClass: "gridx/core/model/cache/Sync",
+		store: store,
+		structure: layout,
+		selectRowTriggerOnCell: true,
+		modules: [
+			"gridx/modules/extendedSelect/Row",
+			"gridx/modules/IndirectSelect",
+			"gridx/modules/ToolBar",
+			"gridx/modules/ColumnResizer",
+			"gridx/modules/RowHeader",
+			"gridx/modules/Focus",
+			"gridx/modules/Sort"
+		]
+	'></div>
 </body>
 </html>
