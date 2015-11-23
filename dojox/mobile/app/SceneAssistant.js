@@ -1,3 +1,0 @@
-//>>built
-define("dojox/mobile/app/SceneAssistant",["dijit","dojo","dojox"],function(b,a){a.provide("dojox.mobile.app.SceneAssistant");a.experimental("dojox.mobile.app.SceneAssistant");a.declare("dojox.mobile.app.SceneAssistant",null,{constructor:function(){},setup:function(){},activate:function(){},deactivate:function(){},destroy:function(){var c=a.query("> [widgetId]",this.containerNode).map(b.byNode);a.forEach(c,function(a){a.destroyRecursive()});this.disconnect()},connect:function(c,b,d){if(!this._connects)this._connects=
-[];this._connects.push(a.connect(c,b,d))},disconnect:function(){a.forEach(this._connects,a.disconnect);this._connects=[]}})});

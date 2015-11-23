@@ -1,3 +1,0 @@
-//>>built
-define("dojox/dtl/Context",["dojo/_base/lang","./_base"],function(g,d){d.Context=g.extend(function(a){this._this={};d._Context.call(this,a)},d._Context.prototype,{getKeys:function(){var a=[],c;for(c in this)this.hasOwnProperty(c)&&"_this"!=c&&a.push(c);return a},extend:function(a){return g.delegate(this,a)},filter:function(a){var c=new d.Context,f=[],e,b;if(a instanceof d.Context)f=a.getKeys();else if("object"==typeof a)for(b in a)f.push(b);else for(e=0;b=arguments[e];e++)"string"==typeof b&&f.push(b);
-for(e=0;b=f[e];e++)c[b]=this[b];return c},setThis:function(a){this._this=a},getThis:function(){return this._this},hasKey:function(a){return this._getter&&"undefined"!=typeof this._getter(a)?!0:"undefined"!=typeof this[a]?!0:!1}});return d.Context});

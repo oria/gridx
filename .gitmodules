@@ -18,3 +18,19 @@
 	path = src/util
 	url = https://github.com/dojo/util.git
 	branch = 1.10
+[submodule "dojo"]
+	path = dojo
+	url = https://github.com/dojo/dojo.git
+	branch = 1.10
+[submodule "dijit"]
+	path = dijit
+	url = https://github.com/dojo/dijit.git
+	branch = 1.10
+[submodule "dojox"]
+	path = dojox
+	url = https://github.com/dojo/dojox.git
+	branch = 1.10
+[submodule "gridx"]
+	path = gridx
+	url = https://github.com/oria/gridx.git
+	branch = 1.3

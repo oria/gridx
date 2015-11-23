@@ -1,3 +1,0 @@
-//>>built
-define("dojox/form/Manager","dijit/_Widget,dijit/_TemplatedMixin,./manager/_Mixin,./manager/_NodeMixin,./manager/_FormMixin,./manager/_ValueMixin,./manager/_EnableMixin,./manager/_DisplayMixin,./manager/_ClassMixin,dojo/_base/declare".split(","),function(c,b,d,e,f,g,h,i,j,k){return k("dojox.form.Manager",[c,d,e,f,g,h,i,j],{buildRendering:function(){var a=this.domNode=this.srcNodeRef;if(!this.containerNode)this.containerNode=a;this.inherited(arguments);this._attachPoints=[];this._attachEvents=[];b.prototype._attachTemplateNodes.call(this,
-a,function(a,b){return a.getAttribute(b)})},destroyRendering:function(a){if(!this.__ctm)this.__ctm=!0,b.prototype.destroyRendering.apply(this,arguments),delete this.__ctm,this.inherited(arguments)}})});

@@ -1,3 +1,0 @@
-//>>built
-define("dojox/lang/functional/numrec",["dijit","dojo","dojox","dojo/require!dojox/lang/functional/lambda,dojox/lang/functional/util"],function(j,b,e){b.provide("dojox.lang.functional.numrec");b.require("dojox.lang.functional.lambda");b.require("dojox.lang.functional.util");(function(){var c=e.lang.functional,b=c.inlineLambda,i=["_r","_i"];c.numrec=function(e,f){var d,a,g={};a=function(a){g[a]=1};"string"==typeof f?a=b(f,i,a):(d=c.lambda(f),a="_a.call(this, _r, _i)");var h=c.keys(g);a=new Function(["_x"],
-"var _t=arguments.callee,_r=_t.t,_i".concat(h.length?","+h.join(","):"",d?",_a=_t.a":"",";for(_i=1;_i<=_x;++_i){_r=",a,"}return _r"));a.t=e;if(d)a.a=d;return a}})()});

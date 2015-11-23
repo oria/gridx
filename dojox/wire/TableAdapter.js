@@ -1,3 +1,0 @@
-//>>built
-define("dojox/wire/TableAdapter",["dijit","dojo","dojox","dojo/require!dojox/wire/CompositeWire"],function(f,c,e){c.provide("dojox.wire.TableAdapter");c.require("dojox.wire.CompositeWire");c.declare("dojox.wire.TableAdapter",e.wire.CompositeWire,{_wireClass:"dojox.wire.TableAdapter",constructor:function(){this._initializeChildren(this.columns)},_getValue:function(a){if(!a||!this.columns)return a;c.isArray(a)||(a=[a]);var d=[],b;for(b in a){var e=this._getRow(a[b]);d.push(e)}return d},_setValue:function(){throw Error("Unsupported API: "+
-this._wireClass+"._setValue");},_getRow:function(a){var d=c.isArray(this.columns)?[]:{},b;for(b in this.columns)d[b]=this.columns[b].getValue(a);return d}})});

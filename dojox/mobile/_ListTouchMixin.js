@@ -1,2 +1,0 @@
-//>>built
-define("dojox/mobile/_ListTouchMixin",["dojo/_base/declare","dijit/form/_ListBase"],function(a,c){return a("dojox.mobile._ListTouchMixin",c,{postCreate:function(){this.inherited(arguments);this._listConnect("click","_onClick")},_onClick:function(a,b){this._setSelectedAttr(b);this.onClick(b)}})});

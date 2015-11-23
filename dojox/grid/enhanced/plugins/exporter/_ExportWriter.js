@@ -1,3 +1,0 @@
-//>>built
-define("dojox/grid/enhanced/plugins/exporter/_ExportWriter",["dojo/_base/declare"],function(e){return e("dojox.grid.enhanced.plugins.exporter._ExportWriter",null,{constructor:function(){},_getExportDataForCell:function(c,d,b,a){a=(b.get||a.get).call(b,c,d);return this.formatter?this.formatter(a,b,c,d):a},beforeHeader:function(){return!0},afterHeader:function(){},beforeContent:function(){return!0},afterContent:function(){},beforeContentRow:function(){return!0},afterContentRow:function(){},beforeView:function(){return!0},
-afterView:function(){},beforeSubrow:function(){return!0},afterSubrow:function(){},handleCell:function(){},toString:function(){return""}})});

@@ -1,2 +1,0 @@
-//>>built
-define("dojo/cldr/nls/pl/number",{decimal:",",group:"\u00a0",list:";",percentSign:"%",plusSign:"+",minusSign:"-",exponential:"E",perMille:"\u2030",infinity:"\u221e",nan:"NaN",decimalFormat:"#,##0.###","decimalFormat-short":"000\u00a0bln",scientificFormat:"#E0",percentFormat:"#,##0%",currencyFormat:"#,##0.00\u00a0\u00a4"});

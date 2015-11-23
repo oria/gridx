@@ -1,3 +1,0 @@
-//>>built
-define("dojox/wire/demos/WidgetRepeater",["dijit","dojo","dojox","dojo/require!dojo/parser,dijit/_Widget,dijit/_Templated,dijit/_Container"],function(b,a){a.provide("dojox.wire.demos.WidgetRepeater");a.require("dojo.parser");a.require("dijit._Widget");a.require("dijit._Templated");a.require("dijit._Container");a.declare("dojox.wire.demos.WidgetRepeater",[b._Widget,b._Templated,b._Container],{templateString:"<div class='WidgetRepeater' dojoAttachPoint='repeaterNode'></div>",widget:null,repeater:null,
-createNew:function(b){try{if(a.isString(this.widget))this.widget=a.getObject(this.widget);this.addChild(new this.widget(b));this.repeaterNode.appendChild(document.createElement("br"))}catch(c){}}})});

@@ -1,3 +1,0 @@
-//>>built
-define("dojox/dtl/render/dom",["dojo/_base/lang","dojo/dom","../Context","../dom","../_base"],function(d,f,g,h,e){d.getObject("dojox.dtl.render.dom",!0);e.render.dom.Render=function(a,b){this._tpl=b;this.domNode=f.byId(a)};d.extend(e.render.dom.Render,{setAttachPoint:function(a){this.domNode=a},render:function(a,b,c){if(!this.domNode)throw Error("You cannot use the Render object without specifying where you want to render it");this._tpl=b=b||this._tpl;c=c||b.getBuffer();a=a||new g;a=b.render(a,c).getParent();
-if(!a)throw Error("Rendered template does not have a root node");if(this.domNode!==a)this.domNode.parentNode&&this.domNode.parentNode.replaceChild(a,this.domNode),this.domNode=a}});return dojox.dtl.render.dom});

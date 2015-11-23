@@ -1,3 +1,0 @@
-//>>built
-define("dojox/mobile/TransitionEvent",["dojo/_base/declare","dojo/_base/Deferred","dojo/_base/lang","dojo/on","./transition"],function(f,c,d,e,g){return f("dojox.mobile.TransitionEvent",null,{constructor:function(a,b,h){this.transitionOptions=b;this.target=a;this.triggerEvent=h||null},dispatch:function(){var a=e.emit(this.target,"startTransition",{bubbles:!0,cancelable:!0,detail:this.transitionOptions,triggerEvent:this.triggerEvent});a&&c.when(g,d.hitch(this,function(b){c.when(b.call(this,a),d.hitch(this,
-function(a){this.endTransition(a)}))}))},endTransition:function(a){e.emit(this.target,"endTransition",{detail:a.transitionOptions})}})});

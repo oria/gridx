@@ -1,3 +1,0 @@
-//>>built
-define("dijit/form/NumberSpinner",["dojo/_base/declare","dojo/_base/event","dojo/keys","./_Spinner","./NumberTextBox"],function(h,i,c,j,k){return h("dijit.form.NumberSpinner",[j,k.Mixin],{adjust:function(a,d){var b=this.constraints,c=isNaN(a),f=!isNaN(b.max),g=!isNaN(b.min);c&&0!=d&&(a=0<d?g?b.min:f?b.max:0:f?this.constraints.max:g?b.min:0);var e=a+d;if(c||isNaN(e))return a;if(f&&e>b.max)e=b.max;if(g&&e<b.min)e=b.min;return e},_onKeyPress:function(a){if((a.charOrCode==c.HOME||a.charOrCode==c.END)&&
-!a.ctrlKey&&!a.altKey&&!a.metaKey&&"undefined"!=typeof this.get("value")){var d=this.constraints[a.charOrCode==c.HOME?"min":"max"];"number"==typeof d&&this._setValueAttr(d,!1);i.stop(a)}}})});

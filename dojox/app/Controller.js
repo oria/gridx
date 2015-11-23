@@ -1,3 +1,0 @@
-//>>built
-define("dojox/app/Controller",["dojo/_base/lang","dojo/_base/declare","dojo/on"],function(e,f,g){return f("dojox.app.Controller",null,{constructor:function(c,b){this.events=this.events||b;this._boundEvents=[];this.app=c;if(this.events)for(var a in this.events)"_"!==a.charAt(0)&&this.bind(this.app.domNode,a,e.hitch(this,this.events[a]))},bind:function(c,b,a){a||console.warn("bind event '"+b+"' without callback function.");a=g(c,b,a);this._boundEvents.push({event:b,evented:c,signal:a})},unbind:function(c,
-b){for(var a=this._boundEvents.length,d=0;d<a;d++)if(this._boundEvents[d].event==b&&this._boundEvents[d].evented==c){this._boundEvents[d].signal.remove();this._boundEvents.splice(d,1);return}console.warn("event '"+b+"' not bind on ",c)}})});

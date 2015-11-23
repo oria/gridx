@@ -1,2 +1,0 @@
-//>>built
-define("dijit/form/VerticalRuleLabels",["dojo/_base/declare","./HorizontalRuleLabels"],function(a,b){return a("dijit.form.VerticalRuleLabels",b,{templateString:'<div class="dijitRuleContainer dijitRuleContainerV dijitRuleLabelsContainer dijitRuleLabelsContainerV"></div>',_positionPrefix:'<div class="dijitRuleLabelContainer dijitRuleLabelContainerV" style="top:',_labelPrefix:'"><span class="dijitRuleLabel dijitRuleLabelV">',_calcPosition:function(a){return 100-a},_isHorizontal:!1})});

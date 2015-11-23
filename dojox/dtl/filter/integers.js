@@ -1,2 +1,0 @@
-//>>built
-define("dojox/dtl/filter/integers",["dojo/_base/lang","../_base"],function(c,d){c.getObject("dojox.dtl.filter.integers",!0);c.mixin(d.filter.integers,{add:function(a,b){a=parseInt(a,10);b=parseInt(b,10);return isNaN(b)?a:a+b},get_digit:function(a,b){a=parseInt(a,10);b=parseInt(b,10)-1;0<=b&&(a+="",a=b<a.length?parseInt(a.charAt(b),10):0);return isNaN(a)?0:a}});return dojox.dtl.filter.integers});

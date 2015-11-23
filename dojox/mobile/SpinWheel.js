@@ -1,2 +1,0 @@
-//>>built
-define("dojox/mobile/SpinWheel",["dojo/_base/declare","dojo/dom-construct","./_PickerBase","./SpinWheelSlot"],function(a,b,c){return a("dojox.mobile.SpinWheel",c,{baseClass:"mblSpinWheel",buildRendering:function(){this.inherited(arguments);b.create("div",{className:"mblSpinWheelBar"},this.domNode)},startup:function(){if(!this._started)this.centerPos=Math.round(this.domNode.offsetHeight/2),this.inherited(arguments)},addChild:function(a,b){this.inherited(arguments);this._started&&a.setInitialValue()}})});
