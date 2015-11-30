@@ -1,3 +1,3 @@
-//>>built
-define("dojox/grid/_CheckBoxSelector",["../main","./_Selector"],function(a){return a.grid._CheckBoxSelector});
-//@ sourceMappingURL=_CheckBoxSelector.js.map
+define(["../main", "./_Selector"], function(dojox){
+	return dojox.grid._CheckBoxSelector;
+});

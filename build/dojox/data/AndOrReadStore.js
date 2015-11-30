@@ -1,7 +1,260 @@
-//>>built
-define("dojox/data/AndOrReadStore","dojo/_base/declare dojo/_base/lang dojo/data/ItemFileReadStore dojo/data/util/filter dojo/_base/array dojo/_base/json".split(" "),function(v,d,x,y,z,t){return v("dojox.data.AndOrReadStore",[x],{_containsValue:function(n,s,t,h){return z.some(this.getValues(n,s),function(c){if(d.isString(h))return eval(h);if(null!==c&&!d.isObject(c)&&h){if(c.toString().match(h))return!0}else return t===c?!0:!1})},filter:function(n,s,v){var h=[];if(n.query){var c=t.fromJson(t.toJson(n.query));
-if("object"==typeof c){var a=0,g;for(g in c)a++;if(1<a&&c.complexQuery){var a=c.complexQuery,p=!1;for(g in c)if("complexQuery"!==g){p||(a="( "+a+" )",p=!0);var k=n.query[g];d.isString(k)&&(k="'"+k+"'");a+=" AND "+g+":"+k;delete c[g]}c.complexQuery=a}}g=n.queryOptions?n.queryOptions.ignoreCase:!1;"string"!=typeof c&&(c=t.toJson(c),c=c.replace(/\\\\/g,"\\"));var c=c.replace(/\\"/g,'"'),a=d.trim(c.replace(/{|}/g,"")),b;if(a.match(/"? *complexQuery *"?:/)){for(var a=d.trim(a.replace(/"?\s*complexQuery\s*"?:/,
-"")),p=["'",'"'],l,q=!1,c=0;c<p.length;c++)if(k=a.indexOf(p[c]),b=a.indexOf(p[c],1),l=a.indexOf(":",1),0===k&&-1!=b&&l<b){q=!0;break}q&&(a=a.replace(/^\"|^\'|\"$|\'$/g,""))}p=a;k=/^>=|^<=|^<|^>|^,|^NOT |^AND |^OR |^\(|^\)|^!|^&&|^\|\|/i;b=l="";var e=-1,q=!1,w="",f="";b="";for(c=0;c<s.length;++c){var m=!0,u=s[c];if(null===u)m=!1;else{a=p;for(l="";0<a.length&&!q;){for(b=a.match(k);b&&!q;)a=d.trim(a.replace(b[0],"")),b=d.trim(b[0]).toUpperCase(),b="NOT"==b?"!":"AND"==b||","==b?"\x26\x26":"OR"==b?"||":
-b,b=" "+b+" ",l+=b,b=a.match(k);if(0<a.length)if(m=(b=a.match(/:|>=|<=|>|</g))&&b.shift(),e=a.indexOf(m),-1==e){q=!0;break}else{w=d.trim(a.substring(0,e).replace(/\"|\'/g,""));a=d.trim(a.substring(e+m.length));if(b=a.match(/^\'|^\"/)){b=b[0];e=a.indexOf(b);b=a.indexOf(b,e+1);if(-1==b){q=!0;break}f=a.substring(e+m.length,b);a=b==a.length-1?"":d.trim(a.substring(b+1))}else if(b=a.match(/\s|\)|,/)){for(var f=Array(b.length),r=0;r<b.length;r++)f[r]=a.indexOf(b[r]);e=f[0];if(1<f.length)for(r=1;r<f.length;r++)e=
-Math.min(e,f[r]);f=d.trim(a.substring(0,e));a=d.trim(a.substring(e))}else f=d.trim(a),a="";b=":"!=m?this.getValue(u,w)+m+f:y.patternToRegExp(f,g);l+=this._containsValue(u,w,f,b)}}m=eval(l)}m&&h.push(u)}q&&(h=[])}else for(c=0;c<s.length;++c)g=s[c],null!==g&&h.push(g);v(h,n)}})});
-//@ sourceMappingURL=AndOrReadStore.js.map
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/data/ItemFileReadStore", "dojo/data/util/filter", "dojo/_base/array", "dojo/_base/json"],
+  function(declare, lang, ItemFileReadStore, filterUtil, array, json) {
+  
+// module:
+//		dojox/data/AndOrReadStore
+// summary:
+//		TODOC
+
+return declare("dojox.data.AndOrReadStore", [ItemFileReadStore], {
+	// summary:
+	//		AndOrReadStore uses ItemFileReadStore as a base, modifying only the query (_fetchItems) section.
+	//		Supports queries of the form: query:"id:1* OR dept:'Sales Department' || (id:2* && NOT dept:S*)"
+	//		Includes legacy/widget support via:
+	// |		query:{complexQuery:"id:1* OR dept:'Sales Department' || (id:2* && NOT dept:S*)"}
+	//		The ItemFileReadStore implements the dojo/data/api/Read API and reads
+	//		data from JSON files that have contents in this format --
+	// |	{ items: [
+	// |		{ name:'Kermit', color:'green', age:12, friends:['Gonzo', {_reference:{name:'Fozzie Bear'}}]},
+	// |		{ name:'Fozzie Bear', wears:['hat', 'tie']},
+	// |		{ name:'Miss Piggy', pets:'Foo-Foo'}
+	// |	]}
+	//		Note that it can also contain an 'identifier' property that specified which attribute on the items
+	//		in the array of items that acts as the unique identifier for that item.
+
+	_containsValue: function(/*dojo/data/api/Item*/ item, /*attribute-name-string */ attribute, /*anything*/ value,
+			/*String|RegExp?*/ regexp){
+		// summary:
+		//		Internal function for looking at the values contained by the item.
+		// description:
+		//		Internal function for looking at the values contained by the item.  This
+		//		function allows for denoting if the comparison should be case sensitive for
+		//		strings or not (for handling filtering cases where string case should not matter)
+		// item:
+		//		The data item to examine for attribute values.
+		// attribute:
+		//		The attribute to inspect.
+		// value:
+		//		The value to match.
+		// regexp:
+		//		Optional string or regular expression generated off value if value was of string type to handle wildcarding.
+		//		If present and attribute values are string, then it can be used for comparison instead of 'value'
+		//		If RegExp is a string, it is treated as an comparison statement and eval for number comparisons
+		return array.some(this.getValues(item, attribute), function(possibleValue){
+			// if string... eval for math operator comparisons
+			if(lang.isString(regexp)){
+				return eval(regexp);
+			}else if(possibleValue !== null && !lang.isObject(possibleValue) && regexp){
+				if(possibleValue.toString().match(regexp)){
+					return true; // Boolean
+				}
+			} else if(value === possibleValue){
+				return true; // Boolean
+			} else {
+				return false;
+			}
+		});
+	},
+
+	filter: function(requestArgs, arrayOfItems, findCallback){
+		var items = [];
+		if(requestArgs.query){
+			//Complete copy, we may have to mess with it.
+			//Safer than clone, which does a shallow copy, I believe.
+			var query = json.fromJson(json.toJson(requestArgs.query));
+			//Okay, object form query, we have to check to see if someone mixed query methods (such as using FilteringSelect
+			//with a complexQuery).  In that case, the params need to be anded to the complex query statement.
+			//See defect #7980
+			if(typeof query == "object" ){
+				var count = 0;
+				var p;
+				for(p in query){
+					count++;
+				}
+				if(count > 1 && query.complexQuery){
+					var cq = query.complexQuery;
+					var wrapped = false;
+					for(p in query){
+						if(p !== "complexQuery"){
+							//We should wrap this in () as it should and with the entire complex query
+							//Not just part of it.
+							if(!wrapped){
+								cq = "( " + cq + " )";
+								wrapped = true;
+							}
+							//Make sure strings are quoted when going into complexQuery merge.
+							var v = requestArgs.query[p];
+							if(lang.isString(v)){
+								v = "'" + v + "'";
+							}
+							cq += " AND " + p + ":" + v;
+							delete query[p];
+
+						}
+					}
+					query.complexQuery = cq;
+				}
+			}
+
+			var ignoreCase = requestArgs.queryOptions ? requestArgs.queryOptions.ignoreCase : false;
+			//for complex queries only:  pattern = query[:|=]"NOT id:23* AND (type:'test*' OR dept:'bob') && !filed:true"
+			//logical operators are case insensitive:  , NOT AND OR ( ) ! && ||  // "," included for quoted/string legacy queries.
+			if(typeof query != "string"){
+				query = json.toJson(query);
+				query = query.replace(/\\\\/g,"\\"); //counter toJson expansion of backslashes, e.g., foo\\*bar test.
+			}
+			query = query.replace(/\\"/g,"\"");   //ditto, for embedded \" in lieu of " availability.
+			var complexQuery = lang.trim(query.replace(/{|}/g,"")); //we can handle these, too.
+			var pos2, i;
+			if(complexQuery.match(/"? *complexQuery *"?:/)){ //case where widget required a json object, so use complexQuery:'the real query'
+				complexQuery = lang.trim(complexQuery.replace(/"?\s*complexQuery\s*"?:/,""));
+				var quotes = ["'",'"'];
+				var pos1,colon;
+				var flag = false;
+				for(i = 0; i<quotes.length; i++){
+					pos1 = complexQuery.indexOf(quotes[i]);
+					pos2 = complexQuery.indexOf(quotes[i],1);
+					colon = complexQuery.indexOf(":",1);
+					if(pos1 === 0 && pos2 != -1 && colon < pos2){
+						flag = true;
+						break;
+					} //first two sets of quotes don't occur before the first colon.
+				}
+				if(flag){	//dojo.toJson, and maybe user, adds surrounding quotes, which we need to remove.
+					complexQuery = complexQuery.replace(/^\"|^\'|\"$|\'$/g,"");
+				}
+			} //end query="{complexQuery:'id:1* || dept:Sales'}" parsing (for when widget required json object query).
+			var complexQuerySave = complexQuery;
+			//valid logical operators.
+			var begRegExp = /^>=|^<=|^<|^>|^,|^NOT |^AND |^OR |^\(|^\)|^!|^&&|^\|\|/i; //trailing space on some tokens on purpose.
+			var sQuery = ""; //will be eval'ed for each i-th candidateItem, based on query components.
+			var op = "";
+			var val = "";
+			var pos = -1;
+			var err = false;
+			var key = "";
+			var value = "";
+			var tok = "";
+			pos2 = -1;
+			for(i = 0; i < arrayOfItems.length; ++i){
+				var match = true;
+				var candidateItem = arrayOfItems[i];
+				if(candidateItem === null){
+					match = false;
+				}else{
+					//process entire string for this i-th candidateItem.
+					complexQuery = complexQuerySave; //restore query for next candidateItem.
+					sQuery = "";
+					//work left to right, finding either key:value pair or logical operator at the beginning of the complexQuery string.
+					//when found, concatenate to sQuery and remove from complexQuery and loop back.
+					while(complexQuery.length > 0 && !err){
+						op = complexQuery.match(begRegExp);
+
+						//get/process/append one or two leading logical operators.
+						while(op && !err){ //look for leading logical operators.
+							complexQuery = lang.trim(complexQuery.replace(op[0],""));
+							op = lang.trim(op[0]).toUpperCase();
+							//convert some logical operators to their javascript equivalents for later eval.
+							op = op == "NOT" ? "!" : op == "AND" || op == "," ? "&&" : op == "OR" ? "||" : op;
+							op = " " + op + " ";
+							sQuery += op;
+							op = complexQuery.match(begRegExp);
+						}//end op && !err
+
+						//now get/process/append one key:value pair.
+						if(complexQuery.length > 0){
+							var opsRegex = /:|>=|<=|>|</g,
+								matches = complexQuery.match(opsRegex),
+								match = matches && matches.shift(),
+								regex;
+
+							pos = complexQuery.indexOf(match);
+							if(pos == -1){
+								err = true;
+								break;
+							}else{
+								key = lang.trim(complexQuery.substring(0,pos).replace(/\"|\'/g,""));
+								complexQuery = lang.trim(complexQuery.substring(pos + match.length));
+								tok = complexQuery.match(/^\'|^\"/);	//quoted?
+								if(tok){
+									tok = tok[0];
+									pos = complexQuery.indexOf(tok);
+									pos2 = complexQuery.indexOf(tok,pos + 1);
+									if(pos2 == -1){
+										err = true;
+										break;
+									}
+									value = complexQuery.substring(pos + match.length,pos2);
+									if(pos2 == complexQuery.length - 1){ //quote is last character
+										complexQuery = "";
+									}else{
+										complexQuery = lang.trim(complexQuery.substring(pos2 + 1));
+									}
+									if (match != ':') {
+										regex = this.getValue(candidateItem, key) + match + value;
+									} else {
+										regex = filterUtil.patternToRegExp(value, ignoreCase);
+									}
+									sQuery += this._containsValue(candidateItem, key, value, regex);
+								}
+								else{ //not quoted, so a space, comma, or closing parens (or the end) will be the break.
+									tok = complexQuery.match(/\s|\)|,/);
+									if(tok){
+										var pos3 = new Array(tok.length);
+										for(var j = 0;j<tok.length;j++){
+											pos3[j] = complexQuery.indexOf(tok[j]);
+										}
+										pos = pos3[0];
+										if(pos3.length > 1){
+											for(var j=1;j<pos3.length;j++){
+												pos = Math.min(pos,pos3[j]);
+											}
+										}
+										value = lang.trim(complexQuery.substring(0,pos));
+										complexQuery = lang.trim(complexQuery.substring(pos));
+									}else{ //not a space, so must be at the end of the complexQuery.
+										value = lang.trim(complexQuery);
+										complexQuery = "";
+									} //end  inner if(tok) else
+									if (match != ':') {
+										regex = this.getValue(candidateItem, key) + match + value;
+									} else {
+										regex = filterUtil.patternToRegExp(value, ignoreCase);
+										console.log("regex value: ", value, " regex pattern: ", regex);
+									}
+									sQuery += this._containsValue(candidateItem, key, value, regex);
+								} //end outer if(tok) else
+							} //end found ":"
+						} //end if(complexQuery.length > 0)
+					} //end while complexQuery.length > 0 && !err, so finished the i-th item.
+					match = eval(sQuery);
+				} //end else is non-null candidateItem.
+				if(match){
+					items.push(candidateItem);
+				}
+			} //end for/next of all items.
+			if(err){
+				//soft fail.
+				items = [];
+				console.log("The store's _fetchItems failed, probably due to a syntax error in query.");
+			}
+		}else{
+			// No query...
+			// We want a copy to pass back in case the parent wishes to sort the array.
+			// We shouldn't allow resort of the internal list, so that multiple callers
+			// can get lists and sort without affecting each other.  We also need to
+			// filter out any null values that have been left as a result of deleteItem()
+			// calls in ItemFileWriteStore.
+			for(var i = 0; i < arrayOfItems.length; ++i){
+				var item = arrayOfItems[i];
+				if(item !== null){
+					items.push(item);
+				}
+			}
+		} //end if there is a query.
+		findCallback(items, requestArgs);
+	} //end filter function
+
+});
+
+});

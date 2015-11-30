@@ -1,39 +1,1180 @@
-//>>built
-require({cache:{"url:dojox/atom/widget/templates/FeedEntryEditor.html":'\x3cdiv class\x3d"feedEntryViewer"\x3e\r\n    \x3ctable border\x3d"0" width\x3d"100%" class\x3d"feedEntryViewerMenuTable" dojoAttachPoint\x3d"feedEntryViewerMenu" style\x3d"display: none;"\x3e\r\n        \x3ctr width\x3d"100%"  dojoAttachPoint\x3d"entryCheckBoxDisplayOptions"\x3e\r\n        \t\x3ctd align\x3d"left" dojoAttachPoint\x3d"entryNewButton"\x3e\r\n                \x3cspan class\x3d"feedEntryViewerMenu" dojoAttachPoint\x3d"doNew" dojoAttachEvent\x3d"onclick:_toggleNew"\x3e\x3c/span\x3e\r\n        \t\x3c/td\x3e\r\n            \x3ctd align\x3d"left" dojoAttachPoint\x3d"entryEditButton" style\x3d"display: none;"\x3e\r\n                \x3cspan class\x3d"feedEntryViewerMenu" dojoAttachPoint\x3d"edit" dojoAttachEvent\x3d"onclick:_toggleEdit"\x3e\x3c/span\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd align\x3d"left" dojoAttachPoint\x3d"entrySaveCancelButtons" style\x3d"display: none;"\x3e\r\n                \x3cspan class\x3d"feedEntryViewerMenu" dojoAttachPoint\x3d"save" dojoAttachEvent\x3d"onclick:saveEdits"\x3e\x3c/span\x3e\r\n                \x3cspan class\x3d"feedEntryViewerMenu" dojoAttachPoint\x3d"cancel" dojoAttachEvent\x3d"onclick:cancelEdits"\x3e\x3c/span\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd align\x3d"right"\x3e\r\n                \x3cspan class\x3d"feedEntryViewerMenu" dojoAttachPoint\x3d"displayOptions" dojoAttachEvent\x3d"onclick:_toggleOptions"\x3e\x3c/span\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n        \x3ctr class\x3d"feedEntryViewerDisplayCheckbox" dojoAttachPoint\x3d"entryCheckBoxRow" width\x3d"100%" style\x3d"display: none;"\x3e\r\n            \x3ctd dojoAttachPoint\x3d"feedEntryCelltitle"\x3e\r\n                \x3cinput type\x3d"checkbox" name\x3d"title" value\x3d"Title" dojoAttachPoint\x3d"feedEntryCheckBoxTitle" dojoAttachEvent\x3d"onclick:_toggleCheckbox"/\x3e\r\n\t\t\t\t\x3clabel for\x3d"title" dojoAttachPoint\x3d"feedEntryCheckBoxLabelTitle"\x3e\x3c/label\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd dojoAttachPoint\x3d"feedEntryCellauthors"\x3e\r\n                \x3cinput type\x3d"checkbox" name\x3d"authors" value\x3d"Authors" dojoAttachPoint\x3d"feedEntryCheckBoxAuthors" dojoAttachEvent\x3d"onclick:_toggleCheckbox"/\x3e\r\n\t\t\t\t\x3clabel for\x3d"title" dojoAttachPoint\x3d"feedEntryCheckBoxLabelAuthors"\x3e\x3c/label\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd dojoAttachPoint\x3d"feedEntryCellcontributors"\x3e\r\n                \x3cinput type\x3d"checkbox" name\x3d"contributors" value\x3d"Contributors" dojoAttachPoint\x3d"feedEntryCheckBoxContributors" dojoAttachEvent\x3d"onclick:_toggleCheckbox"/\x3e\r\n\t\t\t\t\x3clabel for\x3d"title" dojoAttachPoint\x3d"feedEntryCheckBoxLabelContributors"\x3e\x3c/label\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd dojoAttachPoint\x3d"feedEntryCellid"\x3e\r\n                \x3cinput type\x3d"checkbox" name\x3d"id" value\x3d"Id" dojoAttachPoint\x3d"feedEntryCheckBoxId" dojoAttachEvent\x3d"onclick:_toggleCheckbox"/\x3e\r\n\t\t\t\t\x3clabel for\x3d"title" dojoAttachPoint\x3d"feedEntryCheckBoxLabelId"\x3e\x3c/label\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd rowspan\x3d"2" align\x3d"right"\x3e\r\n                \x3cspan class\x3d"feedEntryViewerMenu" dojoAttachPoint\x3d"close" dojoAttachEvent\x3d"onclick:_toggleOptions"\x3e\x3c/span\x3e\r\n            \x3c/td\x3e\r\n\t\t\x3c/tr\x3e\r\n\t\t\x3ctr class\x3d"feedEntryViewerDisplayCheckbox" dojoAttachPoint\x3d"entryCheckBoxRow2" width\x3d"100%" style\x3d"display: none;"\x3e\r\n            \x3ctd dojoAttachPoint\x3d"feedEntryCellupdated"\x3e\r\n                \x3cinput type\x3d"checkbox" name\x3d"updated" value\x3d"Updated" dojoAttachPoint\x3d"feedEntryCheckBoxUpdated" dojoAttachEvent\x3d"onclick:_toggleCheckbox"/\x3e\r\n\t\t\t\t\x3clabel for\x3d"title" dojoAttachPoint\x3d"feedEntryCheckBoxLabelUpdated"\x3e\x3c/label\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd dojoAttachPoint\x3d"feedEntryCellsummary"\x3e\r\n                \x3cinput type\x3d"checkbox" name\x3d"summary" value\x3d"Summary" dojoAttachPoint\x3d"feedEntryCheckBoxSummary" dojoAttachEvent\x3d"onclick:_toggleCheckbox"/\x3e\r\n\t\t\t\t\x3clabel for\x3d"title" dojoAttachPoint\x3d"feedEntryCheckBoxLabelSummary"\x3e\x3c/label\x3e\r\n            \x3c/td\x3e\r\n            \x3ctd dojoAttachPoint\x3d"feedEntryCellcontent"\x3e\r\n                \x3cinput type\x3d"checkbox" name\x3d"content" value\x3d"Content" dojoAttachPoint\x3d"feedEntryCheckBoxContent" dojoAttachEvent\x3d"onclick:_toggleCheckbox"/\x3e\r\n\t\t\t\t\x3clabel for\x3d"title" dojoAttachPoint\x3d"feedEntryCheckBoxLabelContent"\x3e\x3c/label\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n    \x3c/table\x3e\r\n    \r\n    \x3ctable class\x3d"feedEntryViewerContainer" border\x3d"0" width\x3d"100%"\x3e\r\n        \x3ctr class\x3d"feedEntryViewerTitle" dojoAttachPoint\x3d"entryTitleRow" style\x3d"display: none;"\x3e\r\n            \x3ctd\x3e\r\n                \x3ctable width\x3d"100%" cellpadding\x3d"0" cellspacing\x3d"0" border\x3d"0"\x3e\r\n                    \x3ctr class\x3d"graphic-tab-lgray"\x3e\r\n\t\t\t\t\t\t\x3ctd class\x3d"lp2"\x3e\r\n\t\t\t\t\t\t\t\x3cspan class\x3d"lp" dojoAttachPoint\x3d"entryTitleHeader"\x3e\x3c/span\x3e\r\n\t\t\t\t\t\t\x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd\x3e\r\n                        \t\x3cselect dojoAttachPoint\x3d"entryTitleSelect" dojoAttachEvent\x3d"onchange:_switchEditor" style\x3d"display: none"\x3e\r\n                        \t\t\x3coption value\x3d"text"\x3eText\x3c/option\x3e\r\n\t\t\t\t\t\t\t\t\x3coption value\x3d"html"\x3eHTML\x3c/option\x3e\r\n\t\t\t\t\t\t\t\t\x3coption value\x3d"xhtml"\x3eXHTML\x3c/option\x3e\r\n                        \t\x3c/select\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd colspan\x3d"2" dojoAttachPoint\x3d"entryTitleNode"\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                \x3c/table\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n\r\n        \x3ctr class\x3d"feedEntryViewerAuthor" dojoAttachPoint\x3d"entryAuthorRow" style\x3d"display: none;"\x3e\r\n            \x3ctd\x3e\r\n                \x3ctable width\x3d"100%" cellpadding\x3d"0" cellspacing\x3d"0" border\x3d"0"\x3e\r\n                    \x3ctr class\x3d"graphic-tab-lgray"\x3e\r\n\t\t\t\t\t\t\x3ctd class\x3d"lp2"\x3e\r\n\t\t\t\t\t\t\t\x3cspan class\x3d"lp" dojoAttachPoint\x3d"entryAuthorHeader"\x3e\x3c/span\x3e\r\n\t\t\t\t\t\t\x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd dojoAttachPoint\x3d"entryAuthorNode"\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                \x3c/table\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n\r\n        \x3ctr class\x3d"feedEntryViewerContributor" dojoAttachPoint\x3d"entryContributorRow" style\x3d"display: none;"\x3e\r\n            \x3ctd\x3e\r\n                \x3ctable width\x3d"100%" cellpadding\x3d"0" cellspacing\x3d"0" border\x3d"0"\x3e\r\n                    \x3ctr class\x3d"graphic-tab-lgray"\x3e\r\n\t\t\t\t\t\t\x3ctd class\x3d"lp2"\x3e\r\n\t\t\t\t\t\t\t\x3cspan class\x3d"lp" dojoAttachPoint\x3d"entryContributorHeader"\x3e\x3c/span\x3e\r\n\t\t\t\t\t\t\x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd dojoAttachPoint\x3d"entryContributorNode" class\x3d"feedEntryViewerContributorNames"\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                \x3c/table\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n        \r\n        \x3ctr class\x3d"feedEntryViewerId" dojoAttachPoint\x3d"entryIdRow" style\x3d"display: none;"\x3e\r\n            \x3ctd\x3e\r\n                \x3ctable width\x3d"100%" cellpadding\x3d"0" cellspacing\x3d"0" border\x3d"0"\x3e\r\n                    \x3ctr class\x3d"graphic-tab-lgray"\x3e\r\n\t\t\t\t\t\t\x3ctd class\x3d"lp2"\x3e\r\n\t\t\t\t\t\t\t\x3cspan class\x3d"lp" dojoAttachPoint\x3d"entryIdHeader"\x3e\x3c/span\x3e\r\n\t\t\t\t\t\t\x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd dojoAttachPoint\x3d"entryIdNode" class\x3d"feedEntryViewerIdText"\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                \x3c/table\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n    \r\n        \x3ctr class\x3d"feedEntryViewerUpdated" dojoAttachPoint\x3d"entryUpdatedRow" style\x3d"display: none;"\x3e\r\n            \x3ctd\x3e\r\n                \x3ctable width\x3d"100%" cellpadding\x3d"0" cellspacing\x3d"0" border\x3d"0"\x3e\r\n                    \x3ctr class\x3d"graphic-tab-lgray"\x3e\r\n\t\t\t\t\t\t\x3ctd class\x3d"lp2"\x3e\r\n\t\t\t\t\t\t\t\x3cspan class\x3d"lp" dojoAttachPoint\x3d"entryUpdatedHeader"\x3e\x3c/span\x3e\r\n\t\t\t\t\t\t\x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd dojoAttachPoint\x3d"entryUpdatedNode" class\x3d"feedEntryViewerUpdatedText"\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                \x3c/table\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n    \r\n        \x3ctr class\x3d"feedEntryViewerSummary" dojoAttachPoint\x3d"entrySummaryRow" style\x3d"display: none;"\x3e\r\n            \x3ctd\x3e\r\n                \x3ctable width\x3d"100%" cellpadding\x3d"0" cellspacing\x3d"0" border\x3d"0"\x3e\r\n                    \x3ctr class\x3d"graphic-tab-lgray"\x3e\r\n\t\t\t\t\t\t\x3ctd class\x3d"lp2" colspan\x3d"2"\x3e\r\n\t\t\t\t\t\t\t\x3cspan class\x3d"lp" dojoAttachPoint\x3d"entrySummaryHeader"\x3e\x3c/span\x3e\r\n\t\t\t\t\t\t\x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd\x3e\r\n                        \t\x3cselect dojoAttachPoint\x3d"entrySummarySelect" dojoAttachEvent\x3d"onchange:_switchEditor" style\x3d"display: none"\x3e\r\n                        \t\t\x3coption value\x3d"text"\x3eText\x3c/option\x3e\r\n\t\t\t\t\t\t\t\t\x3coption value\x3d"html"\x3eHTML\x3c/option\x3e\r\n\t\t\t\t\t\t\t\t\x3coption value\x3d"xhtml"\x3eXHTML\x3c/option\x3e\r\n                        \t\x3c/select\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd dojoAttachPoint\x3d"entrySummaryNode"\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                \x3c/table\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n    \r\n        \x3ctr class\x3d"feedEntryViewerContent" dojoAttachPoint\x3d"entryContentRow" style\x3d"display: none;"\x3e\r\n            \x3ctd\x3e\r\n                \x3ctable width\x3d"100%" cellpadding\x3d"0" cellspacing\x3d"0" border\x3d"0"\x3e\r\n                    \x3ctr class\x3d"graphic-tab-lgray"\x3e\r\n\t\t\t\t\t\t\x3ctd class\x3d"lp2"\x3e\r\n\t\t\t\t\t\t\t\x3cspan class\x3d"lp" dojoAttachPoint\x3d"entryContentHeader"\x3e\x3c/span\x3e\r\n\t\t\t\t\t\t\x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd\x3e\r\n                        \t\x3cselect dojoAttachPoint\x3d"entryContentSelect" dojoAttachEvent\x3d"onchange:_switchEditor" style\x3d"display: none"\x3e\r\n                        \t\t\x3coption value\x3d"text"\x3eText\x3c/option\x3e\r\n\t\t\t\t\t\t\t\t\x3coption value\x3d"html"\x3eHTML\x3c/option\x3e\r\n\t\t\t\t\t\t\t\t\x3coption value\x3d"xhtml"\x3eXHTML\x3c/option\x3e\r\n                        \t\x3c/select\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                    \x3ctr\x3e\r\n                        \x3ctd dojoAttachPoint\x3d"entryContentNode"\x3e\r\n                        \x3c/td\x3e\r\n                    \x3c/tr\x3e\r\n                \x3c/table\x3e\r\n            \x3c/td\x3e\r\n        \x3c/tr\x3e\r\n    \x3c/table\x3e\r\n\x3c/div\x3e\r\n',
-"url:dojox/atom/widget/templates/PeopleEditor.html":'\x3cdiv class\x3d"peopleEditor"\x3e\r\n\t\x3ctable style\x3d"width: 100%"\x3e\r\n\t\t\x3ctbody dojoAttachPoint\x3d"peopleEditorEditors"\x3e\x3c/tbody\x3e\r\n\t\x3c/table\x3e\r\n\t\x3cspan class\x3d"peopleEditorButton" dojoAttachPoint\x3d"peopleEditorButton" dojoAttachEvent\x3d"onclick:_add"\x3e\x3c/span\x3e\r\n\x3c/div\x3e'}});
-define("dojox/atom/widget/FeedEntryEditor","dojo/_base/kernel dojo/_base/lang dojo/_base/connect dojo/_base/declare dojo/_base/fx dojo/_base/sniff dojo/dom dojo/dom-style dojo/dom-construct dijit/_Widget dijit/_Templated dijit/_Container dijit/Editor dijit/form/TextBox dijit/form/SimpleTextarea ./FeedEntryViewer ../io/model dojo/text!./templates/FeedEntryEditor.html dojo/text!./templates/PeopleEditor.html dojo/i18n!./nls/FeedEntryViewer dojo/i18n!./nls/FeedEntryEditor dojo/i18n!./nls/PeopleEditor".split(" "),function(q,
-t,z,u,A,v,w,g,x,B,C,D,p,r,y,l,n,E,F,m,G,s){q.experimental("dojox.atom.widget.FeedEntryEditor");var k=u("dojox.atom.widget.FeedEntryEditor",l,{_contentEditor:null,_oldContent:null,_setObject:null,enableEdit:!1,_contentEditorCreator:null,_editors:{},entryNewButton:null,_editable:!1,templateString:E,postCreate:function(){""!==this.entrySelectionTopic&&(this._subscriptions=[q.subscribe(this.entrySelectionTopic,this,"_handleEvent")]);var a=m;this.displayOptions.innerHTML=a.displayOptions;this.feedEntryCheckBoxLabelTitle.innerHTML=
-a.title;this.feedEntryCheckBoxLabelAuthors.innerHTML=a.authors;this.feedEntryCheckBoxLabelContributors.innerHTML=a.contributors;this.feedEntryCheckBoxLabelId.innerHTML=a.id;this.close.innerHTML=a.close;this.feedEntryCheckBoxLabelUpdated.innerHTML=a.updated;this.feedEntryCheckBoxLabelSummary.innerHTML=a.summary;this.feedEntryCheckBoxLabelContent.innerHTML=a.content;a=G;this.doNew.innerHTML=a.doNew;this.edit.innerHTML=a.edit;this.save.innerHTML=a.save;this.cancel.innerHTML=a.cancel},setEntry:function(a,
-b,c){c=this._entry!==a?this._editMode=!1:!0;k.superclass.setEntry.call(this,a,b);this._editable=this._isEditable(a);!c&&!this._editable&&(g.set(this.entryEditButton,"display","none"),g.set(this.entrySaveCancelButtons,"display","none"));this._editable&&this.enableEdit&&!c&&(g.set(this.entryEditButton,"display",""),this.enableMenuFade&&this.entrySaveCancelButton&&A.fadeOut({node:this.entrySaveCancelButton,duration:250}).play())},_toggleEdit:function(){this._editable&&this.enableEdit&&(g.set(this.entryEditButton,
-"display","none"),g.set(this.entrySaveCancelButtons,"display",""),this._editMode=!0,this.setEntry(this._entry,this._feed,!0))},_handleEvent:function(a){a.source!=this&&("delete"==a.action&&a.entry&&a.entry==this._entry)&&g.set(this.entryEditButton,"display","none");k.superclass._handleEvent.call(this,a)},_isEditable:function(a){var b=!1;if(a&&null!==a&&a.links&&null!==a.links)for(var c in a.links)if(a.links[c].rel&&"edit"==a.links[c].rel){b=!0;break}return b},setTitle:function(a,b,c){b?c.title&&(c.title.value&&
-null!==c.title.value)&&(this._toLoad||(this._toLoad=[]),this.entryTitleSelect.value=c.title.type,a=this._createEditor(a,c.title,!0,"html"===c.title.type||"xhtml"===c.title.type),a.name="title",this._toLoad.push(a),this.setFieldValidity("titleedit",!0),this.setFieldValidity("title",!0)):(k.superclass.setTitle.call(this,a,b,c),c.title&&(c.title.value&&null!==c.title.value)&&this.setFieldValidity("title",!0))},setAuthors:function(a,b,c){b?c.authors&&0<c.authors.length&&(this._editors.authors=this._createPeopleEditor(this.entryAuthorNode,
-{data:c.authors,name:"Author"}),this.setFieldValidity("authors",!0)):(k.superclass.setAuthors.call(this,a,b,c),c.authors&&0<c.authors.length&&this.setFieldValidity("authors",!0))},setContributors:function(a,b,c){b?c.contributors&&0<c.contributors.length&&(this._editors.contributors=this._createPeopleEditor(this.entryContributorNode,{data:c.contributors,name:"Contributor"}),this.setFieldValidity("contributors",!0)):(k.superclass.setContributors.call(this,a,b,c),c.contributors&&0<c.contributors.length&&
-this.setFieldValidity("contributors",!0))},setId:function(a,b,c){b?c.id&&null!==c.id&&(this._editors.id=this._createEditor(a,c.id),this.setFieldValidity("id",!0)):(k.superclass.setId.call(this,a,b,c),c.id&&null!==c.id&&this.setFieldValidity("id",!0))},setUpdated:function(a,b,c){b?c.updated&&null!==c.updated&&(this._editors.updated=this._createEditor(a,c.updated),this.setFieldValidity("updated",!0)):(k.superclass.setUpdated.call(this,a,b,c),c.updated&&null!==c.updated&&this.setFieldValidity("updated",
-!0))},setSummary:function(a,b,c){b?c.summary&&(c.summary.value&&null!==c.summary.value)&&(this._toLoad||(this._toLoad=[]),this.entrySummarySelect.value=c.summary.type,a=this._createEditor(a,c.summary,!0,"html"===c.summary.type||"xhtml"===c.summary.type),a.name="summary",this._toLoad.push(a),this.setFieldValidity("summaryedit",!0),this.setFieldValidity("summary",!0)):(k.superclass.setSummary.call(this,a,b,c),c.summary&&(c.summary.value&&null!==c.summary.value)&&this.setFieldValidity("summary",!0))},
-setContent:function(a,b,c){b?c.content&&(c.content.value&&null!==c.content.value)&&(this._toLoad||(this._toLoad=[]),this.entryContentSelect.value=c.content.type,a=this._createEditor(a,c.content,!0,"html"===c.content.type||"xhtml"===c.content.type),a.name="content",this._toLoad.push(a),this.setFieldValidity("contentedit",!0),this.setFieldValidity("content",!0)):(k.superclass.setContent.call(this,a,b,c),c.content&&(c.content.value&&null!==c.content.value)&&this.setFieldValidity("content",!0))},_createEditor:function(a,
-b,c,d){if(!b){if(d)return{anchorNode:a,entryValue:"",editor:null,generateEditor:function(){var a=document.createElement("div");a.innerHTML=this.entryValue;this.anchorNode.appendChild(a);return this.editor=a=new p({},a)}};c?(c=document.createElement("textarea"),a.appendChild(c),g.set(c,"width","90%"),a=new y({},c)):(c=document.createElement("input"),a.appendChild(c),g.set(c,"width","95%"),a=new r({},c));a.attr("value","");return a}b=void 0!==b.value?b.value:b.attr?b.attr("value"):b;if(d)return-1!=
-b.indexOf("\x3c")&&(b=b.replace(/</g,"\x26lt;")),{anchorNode:a,entryValue:b,editor:null,generateEditor:function(){var a=document.createElement("div");a.innerHTML=this.entryValue;this.anchorNode.appendChild(a);return this.editor=a=new p({},a)}};c?(c=document.createElement("textarea"),a.appendChild(c),g.set(c,"width","90%"),a=new y({},c)):(c=document.createElement("input"),a.appendChild(c),g.set(c,"width","95%"),a=new r({},c));a.attr("value",b);return a},_switchEditor:function(a){var b=null,c=null,
-d=null,c=v("ie")?a.srcElement:a.target;c===this.entryTitleSelect?(d=this.entryTitleNode,b="title"):c===this.entrySummarySelect?(d=this.entrySummaryNode,b="summary"):(d=this.entryContentNode,b="content");a=this._editors[b];if("text"===c.value){if(a.isInstanceOf(p)){c=a.attr("value",!1);a.close(!1,!0);for(a.destroy();d.firstChild;)x.destroy(d.firstChild);d=this._createEditor(d,{value:c},!0,!1);this._editors[b]=d}}else if(!a.isInstanceOf(p)){c=a.attr("value");for(a.destroy();d.firstChild;)x.destroy(d.firstChild);
-d=this._createEditor(d,{value:c},!0,!0);d=t.hitch(d,d.generateEditor)();this._editors[b]=d}},_createPeopleEditor:function(a,b){var c=document.createElement("div");a.appendChild(c);return new H(b,c)},saveEdits:function(){g.set(this.entrySaveCancelButtons,"display","none");g.set(this.entryEditButton,"display","");g.set(this.entryNewButton,"display","");var a=!1,b,c,d,e;if(this._new){this._new=!1;d=new n.Entry;a=this._editors.title.attr("value");"xhtml"===this.entryTitleSelect.value&&(a=this._enforceXhtml(a),
-a='\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e'+a+"\x3c/div\x3e");d.setTitle(a,this.entryTitleSelect.value);d.id=this._editors.id.attr("value");e=this._editors.authors.getValues();for(b in e)(e[b].name||e[b].email||e[b].uri)&&d.addAuthor(e[b].name,e[b].email,e[b].uri);e=this._editors.contributors.getValues();for(b in e)(e[b].name||e[b].email||e[b].uri)&&d.addContributor(e[b].name,e[b].email,e[b].uri);a=this._editors.summary.attr("value");"xhtml"===this.entrySummarySelect.value&&(a=this._enforceXhtml(a),
-a='\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e'+a+"\x3c/div\x3e");d.summary=new n.Content("summary",a,null,this.entrySummarySelect.value);a=this._editors.content.attr("value");"xhtml"===this.entryContentSelect.value&&(a=this._enforceXhtml(a),a='\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e'+a+"\x3c/div\x3e");d.content=new n.Content("content",a,null,this.entryContentSelect.value);g.set(this.entryNewButton,"display","");q.publish(this.entrySelectionTopic,[{action:"post",source:this,entry:d}])}else{d=
-this.getEntry();if(this._editors.title&&(this._editors.title.attr("value")!=d.title.value||this.entryTitleSelect.value!=d.title.type))a=this._editors.title.attr("value"),"xhtml"===this.entryTitleSelect.value&&(a=this._enforceXhtml(a),0!==a.indexOf('\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e')&&(a='\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e'+a+"\x3c/div\x3e")),d.title=new n.Content("title",a,null,this.entryTitleSelect.value),a=!0;this._editors.id.attr("value")!=d.id&&(d.id=this._editors.id.attr("value"),
-a=!0);if(this._editors.summary&&(this._editors.summary.attr("value")!=d.summary.value||this.entrySummarySelect.value!=d.summary.type))a=this._editors.summary.attr("value"),"xhtml"===this.entrySummarySelect.value&&(a=this._enforceXhtml(a),0!==a.indexOf('\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e')&&(a='\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e'+a+"\x3c/div\x3e")),d.summary=new n.Content("summary",a,null,this.entrySummarySelect.value),a=!0;if(this._editors.content&&(this._editors.content.attr("value")!=
-d.content.value||this.entryContentSelect.value!=d.content.type))a=this._editors.content.attr("value"),"xhtml"===this.entryContentSelect.value&&(a=this._enforceXhtml(a),0!==a.indexOf('\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e')&&(a='\x3cdiv xmlns\x3d"http://www.w3.org/1999/xhtml"\x3e'+a+"\x3c/div\x3e")),d.content=new n.Content("content",a,null,this.entryContentSelect.value),a=!0;if(this._editors.authors)if(a)for(b in d.authors=[],e=this._editors.authors.getValues(),e)(e[b].name||e[b].email||
-e[b].uri)&&d.addAuthor(e[b].name,e[b].email,e[b].uri);else{var f=d.authors;e=this._editors.authors.getValues();c=!1;for(b in e){var h;a:{for(b in f)if(f[b].name===e[b].name&&f[b].email===e[b].email&&f[b].uri===e[b].uri){h=!0;break a}h=!1}if(!h){c=!0;break}}if(c){d.authors=[];for(b in e)(e[b].name||e[b].email||e[b].uri)&&d.addAuthor(e[b].name,e[b].email,e[b].uri);a=!0}}if(this._editors.contributors)if(a)for(b in d.contributors=[],e=this._editors.contributors.getValues(),e)(e[b].name||e[b].email||e[b].uri)&&
-d.addAuthor(e[b].name,e[b].email,e[b].uri);else{f=d.contributors;e=this._editors.contributors.getValues();c=!1;for(b in e){a:{for(b in f)if(f[b].name===e[b].name&&f[b].email===e[b].email&&f[b].uri===e[b].uri){h=!0;break a}h=!1}if(h){c=!0;break}}if(c){d.contributors=[];for(b in e)(e[b].name||e[b].email||e[b].uri)&&d.addContributor(e[b].name,e[b].email,e[b].uri);a=!0}}a&&q.publish(this.entrySelectionTopic,[{action:"update",source:this,entry:d,callback:this._handleSave}])}this._editMode=!1;this.setEntry(d,
-this._feed,!0)},_handleSave:function(a,b){this._editMode=!1;this.clear();this.setEntry(a,this.getFeed(),!0)},cancelEdits:function(){this._new=!1;g.set(this.entrySaveCancelButtons,"display","none");this._editable&&g.set(this.entryEditButton,"display","");g.set(this.entryNewButton,"display","");this._editMode=!1;this.clearEditors();this.setEntry(this.getEntry(),this.getFeed(),!0)},clear:function(){this._editable=!1;this.clearEditors();k.superclass.clear.apply(this);this._contentEditor&&(this._contentEditor=
-this._setObject=this._oldContent=this._contentEditorCreator=null,this._editors={})},clearEditors:function(){for(var a in this._editors)this._editors[a].isInstanceOf(p)&&this._editors[a].close(!1,!0),this._editors[a].destroy();this._editors={}},_enforceXhtml:function(a){var b=null;a&&(b=a.replace(/<br>/g,"\x3cbr/\x3e"),b=this._closeTag(b,"hr"),b=this._closeTag(b,"img"));return b},_closeTag:function(a,b){var c="\x3c"+b,d=a.indexOf(c);if(-1!==d)for(;-1!==d;){for(var e="",f=!1,g=0;g<a.length;g++){var k=
-a.charAt(g);if(!(g<=d||f)&&"\x3e"===k)e+="/",f=!0;e+=k}a=e;d=a.indexOf(c,d+1)}return a},_toggleNew:function(){g.set(this.entryNewButton,"display","none");g.set(this.entryEditButton,"display","none");g.set(this.entrySaveCancelButtons,"display","");this.entrySummarySelect.value="text";this.entryContentSelect.value="text";this.entryTitleSelect.value="text";this.clearNodes();this._new=!0;var a=new l.EntryHeader({title:m.title});this.entryTitleHeader.appendChild(a.domNode);this._editors.title=this._createEditor(this.entryTitleNode,
-null);this.setFieldValidity("title",!0);a=new l.EntryHeader({title:m.authors});this.entryAuthorHeader.appendChild(a.domNode);this._editors.authors=this._createPeopleEditor(this.entryAuthorNode,{name:"Author"});this.setFieldValidity("authors",!0);a=new l.EntryHeader({title:m.contributors});this.entryContributorHeader.appendChild(a.domNode);this._editors.contributors=this._createPeopleEditor(this.entryContributorNode,{name:"Contributor"});this.setFieldValidity("contributors",!0);a=new l.EntryHeader({title:m.id});
-this.entryIdHeader.appendChild(a.domNode);this._editors.id=this._createEditor(this.entryIdNode,null);this.setFieldValidity("id",!0);a=new l.EntryHeader({title:m.updated});this.entryUpdatedHeader.appendChild(a.domNode);this._editors.updated=this._createEditor(this.entryUpdatedNode,null);this.setFieldValidity("updated",!0);a=new l.EntryHeader({title:m.summary});this.entrySummaryHeader.appendChild(a.domNode);this._editors.summary=this._createEditor(this.entrySummaryNode,null,!0);this.setFieldValidity("summaryedit",
-!0);this.setFieldValidity("summary",!0);a=new l.EntryHeader({title:m.content});this.entryContentHeader.appendChild(a.domNode);this._editors.content=this._createEditor(this.entryContentNode,null,!0);this.setFieldValidity("contentedit",!0);this.setFieldValidity("content",!0);this._displaySections()},_displaySections:function(){g.set(this.entrySummarySelect,"display","none");g.set(this.entryContentSelect,"display","none");g.set(this.entryTitleSelect,"display","none");this.isFieldValid("contentedit")&&
-g.set(this.entryContentSelect,"display","");this.isFieldValid("summaryedit")&&g.set(this.entrySummarySelect,"display","");this.isFieldValid("titleedit")&&g.set(this.entryTitleSelect,"display","");k.superclass._displaySections.apply(this);if(this._toLoad){for(var a in this._toLoad){var b;b=this._toLoad[a].generateEditor?t.hitch(this._toLoad[a],this._toLoad[a].generateEditor)():this._toLoad[a];this._editors[this._toLoad[a].name]=b;this._toLoad[a]=null}this._toLoad=null}}}),H=u("dojox.atom.widget.PeopleEditor",
-[B,C,D],{templateString:F,_rows:[],_editors:[],_index:0,_numRows:0,postCreate:function(){this.name?"Author"==this.name?this.peopleEditorButton.appendChild(document.createTextNode("["+s.addAuthor+"]")):"Contributor"==this.name&&this.peopleEditorButton.appendChild(document.createTextNode("["+s.addContributor+"]")):this.peopleEditorButton.appendChild(document.createTextNode("["+s.add+"]"));this._editors=[];if(!this.data||0===this.data.length)this._createEditors(null,null,null,0,this.name),this._index=
-1;else for(var a in this.data)this._createEditors(this.data[a].name,this.data[a].email,this.data[a].uri,a),this._index++,this._numRows++},destroy:function(){for(var a in this._editors)for(var b in this._editors[a])this._editors[a][b].destroy();this._editors=[]},_createEditors:function(a,b,c,d,e){var f=document.createElement("tr");this.peopleEditorEditors.appendChild(f);f.id="removeRow"+d;var h=document.createElement("td");h.setAttribute("align","right");f.appendChild(h);h.colSpan=2;0<this._numRows&&
-(f=document.createElement("hr"),h.appendChild(f),f.id="hr"+d);f=document.createElement("span");h.appendChild(f);f.className="peopleEditorButton";g.set(f,"font-size","x-small");z.connect(f,"onclick",this,"_removeEditor");f.id="remove"+d;h=document.createTextNode("[X]");f.appendChild(h);f=document.createElement("tr");this.peopleEditorEditors.appendChild(f);f.id="editorsRow"+d;var k=document.createElement("td");f.appendChild(k);g.set(k,"width","20%");h=document.createElement("td");f.appendChild(h);f=
-document.createElement("table");k.appendChild(f);g.set(f,"width","100%");k=document.createElement("tbody");f.appendChild(k);f=document.createElement("table");h.appendChild(f);g.set(f,"width","100%");h=document.createElement("tbody");f.appendChild(h);this._editors[d]=[];this._editors[d].push(this._createEditor(a,e+"name"+d,"Name:",k,h));this._editors[d].push(this._createEditor(b,e+"email"+d,"Email:",k,h));this._editors[d].push(this._createEditor(c,e+"uri"+d,"URI:",k,h))},_createEditor:function(a,b,
-c,d,e){var f=document.createElement("tr");d.appendChild(f);var h=document.createElement("label");h.setAttribute("for",b);h.appendChild(document.createTextNode(c));d=document.createElement("td");d.appendChild(h);f.appendChild(d);f=document.createElement("tr");e.appendChild(f);e=document.createElement("td");f.appendChild(e);c=document.createElement("input");c.setAttribute("id",b);e.appendChild(c);g.set(c,"width","95%");b=new r({},c);b.attr("value",a);return b},_removeEditor:function(a){var b=null,b=
-v("ie")?a.srcElement:a.target;a=b.id;a=a.substring(6);for(var c in this._editors[a])this._editors[a][c].destroy();c=w.byId("editorsRow"+a);b=c.parentNode;b.removeChild(c);c=w.byId("removeRow"+a);b=c.parentNode;b.removeChild(c);this._numRows--;1===this._numRows&&"hr"===b.firstChild.firstChild.firstChild.tagName.toLowerCase()&&(c=b.firstChild.firstChild,c.removeChild(c.firstChild));this._editors[a]=null},_add:function(){this._createEditors(null,null,null,this._index);this._index++;this._numRows++},
-getValues:function(){var a=[],b;for(b in this._editors)this._editors[b]&&a.push({name:this._editors[b][0].attr("value"),email:this._editors[b][1].attr("value"),uri:this._editors[b][2].attr("value")});return a}});return k});
-//@ sourceMappingURL=FeedEntryEditor.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/_base/fx",
+	"dojo/_base/sniff",
+	"dojo/dom",
+	"dojo/dom-style",
+	"dojo/dom-construct",
+	"dijit/_Widget",
+	"dijit/_Templated",
+	"dijit/_Container",
+	"dijit/Editor",
+	"dijit/form/TextBox",
+	"dijit/form/SimpleTextarea",
+	"./FeedEntryViewer",
+	"../io/model",
+	"dojo/text!./templates/FeedEntryEditor.html",
+	"dojo/text!./templates/PeopleEditor.html",
+	"dojo/i18n!./nls/FeedEntryViewer",
+	"dojo/i18n!./nls/FeedEntryEditor",
+	"dojo/i18n!./nls/PeopleEditor"
+], function (dojo, lang, connect, declare, fx, has, domUtil, domStyle, domConstruct,
+			 _Widget, _Templated, _Container, Editor, TextBox, SimpleTextarea,
+			 FeedEntryViewer, model, template, peopleEditorTemplate, i18nViewer, i18nEditor, i18nPeople) {
+dojo.experimental("dojox.atom.widget.FeedEntryEditor");
+
+
+var FeedEntryEditor = declare("dojox.atom.widget.FeedEntryEditor", FeedEntryViewer,{
+	// summary:
+	//		An ATOM feed entry editor that allows viewing of the individual attributes of an entry.
+
+	_contentEditor: null,
+	_oldContent: null,
+	_setObject: null,
+	enableEdit: false,
+	_contentEditorCreator: null,
+	_editors: {},
+	entryNewButton: null,
+	_editable: false,		//Flag denoting if the current entry is editable or not.
+
+	//Templates for the HTML rendering.  Need to figure these out better, admittedly.
+	templateString: template,
+
+	postCreate: function(){
+		if(this.entrySelectionTopic !== ""){
+			this._subscriptions = [dojo.subscribe(this.entrySelectionTopic, this, "_handleEvent")];
+		}
+		var _nlsResources = i18nViewer;
+		this.displayOptions.innerHTML = _nlsResources.displayOptions;
+		this.feedEntryCheckBoxLabelTitle.innerHTML = _nlsResources.title;
+		this.feedEntryCheckBoxLabelAuthors.innerHTML = _nlsResources.authors;
+		this.feedEntryCheckBoxLabelContributors.innerHTML = _nlsResources.contributors;
+		this.feedEntryCheckBoxLabelId.innerHTML = _nlsResources.id;
+		this.close.innerHTML = _nlsResources.close;
+		this.feedEntryCheckBoxLabelUpdated.innerHTML = _nlsResources.updated;
+		this.feedEntryCheckBoxLabelSummary.innerHTML = _nlsResources.summary;
+		this.feedEntryCheckBoxLabelContent.innerHTML = _nlsResources.content;
+
+		_nlsResources = i18nEditor;
+		this.doNew.innerHTML = _nlsResources.doNew;
+		this.edit.innerHTML = _nlsResources.edit;
+		this.save.innerHTML = _nlsResources.save;
+		this.cancel.innerHTML = _nlsResources.cancel;
+	},
+	
+	setEntry: function(/*object*/entry, /*object*/feed, /*boolean*/leaveMenuState){
+		// summary:
+		//		Function to set the current entry that is being edited.
+		// entry:
+		//		Instance of dojox.atom.io.model.Entry to display for reading/editing.
+		if(this._entry !== entry){
+			//If we swap entries, we don't want to keep the menu states and modes.
+			this._editMode=false;
+			leaveMenuState=false;
+		}else{
+			leaveMenuState = true;
+		}
+		FeedEntryEditor.superclass.setEntry.call(this, entry, feed);
+		this._editable = this._isEditable(entry);
+		if(!leaveMenuState && !this._editable){
+			domStyle.set(this.entryEditButton, 'display', 'none');
+			domStyle.set(this.entrySaveCancelButtons, 'display', 'none');
+		}
+		if(this._editable && this.enableEdit){
+			if(!leaveMenuState){
+				domStyle.set(this.entryEditButton, 'display', '');
+				//TODO double check this &&...
+				if(this.enableMenuFade && this.entrySaveCancelButton){
+					fx.fadeOut({node: this.entrySaveCancelButton,duration: 250}).play();
+				}
+			}
+		}
+	},
+
+	_toggleEdit: function(){
+		// summary:
+		//		Internal function for toggling/enabling the display of edit mode
+		// returns:
+		//		Nothing.
+		if(this._editable && this.enableEdit){
+			domStyle.set(this.entryEditButton, 'display', 'none');
+			domStyle.set(this.entrySaveCancelButtons, 'display', '');
+			this._editMode = true;
+
+			//Rebuild the view using the same entry and feed.
+			this.setEntry(this._entry, this._feed, true);
+		}
+	},
+
+	_handleEvent: function(/*object*/entrySelectionEvent){
+		// summary:
+		//		Internal function for listening to a topic that will handle entry notification.
+		// entrySelectionEvent:
+		//		The topic message containing the entry that was selected for view.
+		// returns:
+		//		Nothing.
+		if(entrySelectionEvent.source != this && entrySelectionEvent.action == "delete" &&
+			entrySelectionEvent.entry && entrySelectionEvent.entry == this._entry){
+				domStyle.set(this.entryEditButton, 'display', 'none');
+		}
+		FeedEntryEditor.superclass._handleEvent.call(this, entrySelectionEvent);
+	},
+
+	_isEditable: function(/*object*/entry){
+		// summary:
+		//		Internal function for determining of a particular entry is editable.
+		// description:
+		//		Internal function for determining of a particular entry is editable.
+		//		This is used for determining if the delete action should be displayed or not.
+		// entry:
+		//		The dojox.atom.io.model.Entry object to examine
+		// returns:
+		//		Boolean denoting if the entry seems editable or not..
+		var retVal = false;
+		if(entry && entry !== null && entry.links && entry.links !== null){
+			for(var x in entry.links){
+				if(entry.links[x].rel && entry.links[x].rel == "edit"){
+					retVal = true;
+					break;
+				}
+			}
+		}
+		return retVal;
+	},
+	
+	// The following set<Attribute> functions override the corresponding functions in FeedEntryViewer.  These handle
+	// the editMode flag by inserting appropriate editor widgets inside of just splashing the content in the page.
+	setTitle: function(/*DOM node*/titleAnchorNode, /*boolean*/editMode, /*object*/entry){
+		// summary:
+		//		Function to set the contents of the title node in the template to some value from the entry.
+		// description:
+		//		Function to set the contents of the title node in the template to some value from the entry.
+		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
+		// titleAnchorNode:
+		//		The DOM node to attach the title data to.
+		// editMode:
+		//		Boolean to indicate if the display should be in edit mode or not.
+		// entry:
+		//		The Feed Entry to work with.
+
+		if(!editMode){
+			FeedEntryEditor.superclass.setTitle.call(this, titleAnchorNode, editMode, entry);
+			if(entry.title && entry.title.value && entry.title.value !== null){
+				this.setFieldValidity("title", true);
+			}
+		}else{
+			if(entry.title && entry.title.value && entry.title.value !== null){
+				if(!this._toLoad){
+					this._toLoad = [];
+				}
+				this.entryTitleSelect.value = entry.title.type;
+				
+				var editor = this._createEditor(titleAnchorNode, entry.title, true, entry.title.type === "html" || entry.title.type === "xhtml");
+				editor.name = "title";
+				this._toLoad.push(editor);
+				this.setFieldValidity("titleedit",true);
+				this.setFieldValidity("title",true);
+			}
+		}
+	},
+
+	setAuthors: function(/*DOM node*/authorsAnchorNode, /*boolean*/editMode, /*object*/entry){
+		// summary:
+		//		Function to set the contents of the author node in the template to some value from the entry.
+		// description:
+		//		Function to set the contents of the author node in the template to some value from the entry.
+		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
+		// authorsAnchorNode:
+		//		The DOM node to attach the author data to.
+		// editMode:
+		//		Boolean to indicate if the display should be in edit mode or not.
+		// entry:
+		//		The Feed Entry to work with.
+		if(!editMode){
+			FeedEntryEditor.superclass.setAuthors.call(this, authorsAnchorNode, editMode, entry);
+			if(entry.authors && entry.authors.length > 0){
+				this.setFieldValidity("authors", true);
+			}
+		}else{
+			if(entry.authors && entry.authors.length > 0){
+				this._editors.authors = this._createPeopleEditor(this.entryAuthorNode, {data: entry.authors, name: "Author"});
+				this.setFieldValidity("authors", true);
+			}
+		}
+	},
+
+
+	setContributors: function(/*DOM node*/contributorsAnchorNode, /*boolean*/editMode, /*object*/entry){
+		// summary:
+		//		Function to set the contents of the contributor node in the template to some value from the entry.
+		// description:
+		//		Function to set the contents of the contributor node in the template to some value from the entry.
+		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
+		// contributorsAnchorNode:
+		//		The DOM node to attach the contributor data to.
+		// editMode:
+		//		Boolean to indicate if the display should be in edit mode or not.
+		// entry:
+		//		The Feed Entry to work with.
+		if(!editMode){
+			FeedEntryEditor.superclass.setContributors.call(this, contributorsAnchorNode, editMode, entry);
+			if(entry.contributors && entry.contributors.length > 0){
+				this.setFieldValidity("contributors", true);
+			}
+		}else{
+			if(entry.contributors && entry.contributors.length > 0){
+				this._editors.contributors = this._createPeopleEditor(this.entryContributorNode, {data: entry.contributors, name: "Contributor"});
+				this.setFieldValidity("contributors", true);
+			}
+		}
+	},
+
+
+	setId: function(/*DOM node*/idAnchorNode, /*boolean*/editMode, /*object*/entry){
+		// summary:
+		//		Function to set the contents of the ID  node in the template to some value from the entry.
+		// description:
+		//		Function to set the contents of the ID node in the template to some value from the entry.
+		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
+		// idAnchorNode:
+		//		The DOM node to attach the ID data to.
+		// editMode:
+		//		Boolean to indicate if the display should be in edit mode or not.
+		// entry:
+		//		The Feed Entry to work with.
+		if(!editMode){
+			FeedEntryEditor.superclass.setId.call(this, idAnchorNode, editMode, entry);
+			if(entry.id && entry.id !== null){
+				this.setFieldValidity("id", true);
+			}
+		}else{
+			if(entry.id && entry.id !== null){
+				this._editors.id = this._createEditor(idAnchorNode, entry.id);
+				this.setFieldValidity("id",true);
+			}
+		}
+	},
+
+	setUpdated: function(/*DOM node*/updatedAnchorNode, /*boolean*/editMode, /*object*/entry){
+		// summary:
+		//		Function to set the contents of the updated  node in the template to some value from the entry.
+		// description:
+		//		Function to set the contents of the updated node in the template to some value from the entry.
+		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
+		// updatedAnchorNode:
+		//		The DOM node to attach the updated data to.
+		// editMode:
+		//		Boolean to indicate if the display should be in edit mode or not.
+		// entry:
+		//		The Feed Entry to work with.
+		if(!editMode){
+			FeedEntryEditor.superclass.setUpdated.call(this, updatedAnchorNode, editMode, entry);
+			if(entry.updated && entry.updated !== null){
+				this.setFieldValidity("updated", true);
+			}
+		}else{
+			if(entry.updated && entry.updated !== null){
+				this._editors.updated = this._createEditor(updatedAnchorNode, entry.updated);
+				this.setFieldValidity("updated",true);
+			}
+		}
+	},
+
+
+	setSummary: function(/*DOM node*/summaryAnchorNode, /*boolean*/editMode, /*object*/entry){
+		// summary:
+		//		Function to set the contents of the summary  node in the template to some value from the entry.
+		// description:
+		//		Function to set the contents of the summary node in the template to some value from the entry.
+		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
+		// summaryAnchorNode:
+		//		The DOM node to attach the summary data to.
+		// editMode:
+		//		Boolean to indicate if the display should be in edit mode or not.
+		// entry:
+		//		The Feed Entry to work with.
+		if(!editMode){
+			FeedEntryEditor.superclass.setSummary.call(this, summaryAnchorNode, editMode, entry);
+			if(entry.summary && entry.summary.value && entry.summary.value !== null){
+				this.setFieldValidity("summary", true);
+			}
+		}else{
+			if(entry.summary && entry.summary.value && entry.summary.value !== null){
+				if(!this._toLoad){
+					this._toLoad = [];
+				}
+				this.entrySummarySelect.value = entry.summary.type;
+				
+				var editor = this._createEditor(summaryAnchorNode, entry.summary, true, entry.summary.type === "html" || entry.summary.type === "xhtml");
+				editor.name = "summary";
+				this._toLoad.push(editor);
+				this.setFieldValidity("summaryedit",true);
+				this.setFieldValidity("summary",true);
+			}
+		}
+	},
+
+	setContent: function(/*DOM node*/contentAnchorNode, /*boolean*/editMode, /*object*/entry){
+		// summary:
+		//		Function to set the contents of the content node in the template to some value from the entry.
+		// description:
+		//		Function to set the contents of the content node in the template to some value from the entry.
+		//		This exists specifically so users can over-ride how the title data is filled out from an entry.
+		// summaryAnchorNode:
+		//		The DOM node to attach the content data to.
+		// editMode:
+		//		Boolean to indicate if the display should be in edit mode or not.
+		// entry:
+		//		The Feed Entry to work with.
+		if(!editMode){
+			FeedEntryEditor.superclass.setContent.call(this, contentAnchorNode, editMode, entry);
+			if(entry.content && entry.content.value && entry.content.value !== null){
+				this.setFieldValidity("content",true);
+			}
+		}else{
+			if(entry.content && entry.content.value && entry.content.value !== null){
+				if(!this._toLoad){
+					this._toLoad = [];
+				}
+				this.entryContentSelect.value = entry.content.type;
+				var editor = this._createEditor(contentAnchorNode, entry.content, true, entry.content.type === "html" || entry.content.type === "xhtml");
+				editor.name = "content";
+				this._toLoad.push(editor);
+				this.setFieldValidity("contentedit",true);
+				this.setFieldValidity("content",true);
+			}
+		}
+	},
+	
+	_createEditor: function(/*DOM node*/anchorNode, /*DOM node*/node, /*boolean*/multiline, /*object*/rte){
+		// summary:
+		//		Function to create an appropriate text editor widget based on the given parameters.
+		// anchorNode:
+		//		The DOM node to attach the editor widget to.
+		// node:
+		//		An object containing the value to be put into the editor.  This ranges from an anonymous object
+		//		with a value parameter to a dojox.atom.io.model.Content object.
+		// multiline:
+		//		A boolean indicating whether the content should be multiline (such as a textarea) instead of a
+		//		single line (such as a textbox).
+		// rte:
+		//		A boolean indicating whether the content should be a rich text editor widget.
+		// returns:
+		//		Either a widget (for textarea or textbox widgets) or an anonymous object to be used to create a
+		//		rich text area widget.
+		var viewNode;
+		var box;
+		if(!node){
+			if(rte){
+				// Returns an anonymous object which would then be loaded later, after the containing element
+				// exists on the page.
+				return {anchorNode: anchorNode,
+						entryValue: "",
+						editor: null,
+						generateEditor: function(){
+							// The only way I found I could get the editor to behave consistently was to
+							// create the content on a span, and allow the content editor to replace it.
+							// This gets around the dynamic/delayed way in which content editors get created.
+							var node = document.createElement("div");
+							node.innerHTML = this.entryValue;
+							this.anchorNode.appendChild(node);
+							var _editor = new Editor({}, node);
+							this.editor = _editor;
+							return _editor;
+						}
+				};
+			}
+			if(multiline){
+				// If multiline, create a textarea
+				viewNode = document.createElement("textarea");
+				anchorNode.appendChild(viewNode);
+				domStyle.set(viewNode, 'width', '90%');
+				box = new SimpleTextarea({},viewNode);
+			}else{
+				// If single line, create a textbox.
+				viewNode = document.createElement("input");
+				anchorNode.appendChild(viewNode);
+				domStyle.set(viewNode, 'width', '95%');
+				box = new TextBox({},viewNode);
+			}
+			box.attr('value', '');
+			return box;
+		}
+
+		// Check through the node parameter to get the value to be used.
+		var value;
+		if(node.value !== undefined){
+			value = node.value;
+		}else if(node.attr){
+			value = node.attr('value');
+		}else{
+			value = node;
+		}
+		if(rte){
+			// Returns an anonymous object which would then be loaded later, after the containing element
+			// exists on the page.
+			if(value.indexOf("<") != -1){
+				value = value.replace(/</g, "&lt;");
+			}
+			return {anchorNode: anchorNode,
+					entryValue: value,
+					editor: null,
+					generateEditor: function(){
+						// The only way I found I could get the editor to behave consistently was to
+						// create the content on a span, and allow the content editor to replace it.
+						// This gets around the dynamic/delayed way in which content editors get created.
+						var node = document.createElement("div");
+						node.innerHTML = this.entryValue;
+						this.anchorNode.appendChild(node);
+						var _editor = new Editor({}, node);
+						this.editor = _editor;
+						return _editor;
+					}
+			};
+		}
+		if(multiline){
+			// If multiline, create a textarea
+			viewNode = document.createElement("textarea");
+			anchorNode.appendChild(viewNode);
+			domStyle.set(viewNode, 'width', '90%');
+			box = new SimpleTextarea({},viewNode);
+		}else{
+			// If single line, create a textbox.
+			viewNode = document.createElement("input");
+			anchorNode.appendChild(viewNode);
+			domStyle.set(viewNode, 'width', '95%');
+			box = new TextBox({},viewNode);
+		}
+		box.attr('value', value);
+		return box;
+	},
+	
+	_switchEditor: function(/*object*/event){
+		// summary:
+		//		Function to switch between editor types.
+		// description:
+		//		Function to switch between a rich text editor and a textarea widget.  Used for title, summary,
+		//		And content when switching between text and html/xhtml content.
+		// event:
+		//		The event generated by the change in the select box on the page.
+		var type = null;
+		var target = null;
+		var parent = null;
+		
+		// Determine the source/target of this event (to determine which editor we're switching)
+		if(has("ie")){
+			target = event.srcElement;
+		}else{
+			target = event.target;
+		}
+			
+		// Determine which editor (title, summary, or content)
+		if(target === this.entryTitleSelect){
+			parent = this.entryTitleNode;
+			type = "title";
+		} else if(target === this.entrySummarySelect){
+			parent = this.entrySummaryNode;
+			type = "summary";
+		}else{
+			parent = this.entryContentNode;
+			type = "content";
+		}
+
+		// Grab the existing editor.
+		var editor = this._editors[type];
+		var newEditor;
+		var value;
+		
+		if(target.value === "text"){
+			if(editor.isInstanceOf(Editor)){
+				// If we're changing the type to text and our existing editor is a rich text editor, we need to destroy
+				// it and switch to a multiline editor.
+				value = editor.attr('value', false);
+				editor.close(false,true);
+				editor.destroy();
+				while(parent.firstChild){
+					domConstruct.destroy(parent.firstChild);
+				}
+				newEditor = this._createEditor(parent, {value: value}, true, false);
+				this._editors[type] = newEditor;
+			}
+		}else{
+			if(!editor.isInstanceOf(Editor)){
+				// Otherwise, we're switching to a html or xhtml type, but we currently have a textarea widget.  We need
+				// to destroy the existing RTE and create a multiline textarea widget.
+				value = editor.attr('value');
+				editor.destroy();
+				while(parent.firstChild){
+					domConstruct.destroy(parent.firstChild);
+				}
+				newEditor = this._createEditor(parent, {value: value}, true, true);
+				newEditor = lang.hitch(newEditor, newEditor.generateEditor)();
+				this._editors[type] = newEditor;
+			}
+		}
+	},
+	
+	_createPeopleEditor: function(/*DOM node*/anchorNode, /*DOM node*/node){
+		// summary:
+		//		Creates a People Editor widget, sets its value, and returns it.
+		// anchorNode:
+		//		The node to attach the editor to.
+		// node:
+		//		An object containing the value to be put into the editor. Typically, this is an
+		//		dojox.atom.io.model.Person object.
+		// returns:
+		//		A new People Editor object.
+		var viewNode = document.createElement("div");
+		anchorNode.appendChild(viewNode);
+		return new PeopleEditor(node,viewNode);
+	},
+
+	saveEdits: function(){
+		// summary:
+		//		Saves edits submitted when the 'save' button is pressed.
+		// description:
+		//		Saves edits submitted when the 'save' button is pressed.  Distinguishes between new and existing
+		//		entries and saves appropriately.  Fetches the values of the editors, and, if existing, compares them to
+		//		the existing values and submits the updates, otherwise creates a new entry and posts it as a new entry.
+		// returns:
+		//		Nothing.
+		domStyle.set(this.entrySaveCancelButtons, 'display', 'none');
+		domStyle.set(this.entryEditButton, 'display', '');
+		domStyle.set(this.entryNewButton, 'display', '');
+		var modifiedEntry = false;
+		var value;
+		var i;
+		var changed;
+		var entry;
+		var authors;
+		var contributors;
+		if(!this._new){
+			entry = this.getEntry();
+			if(this._editors.title && (this._editors.title.attr('value') != entry.title.value || this.entryTitleSelect.value != entry.title.type)){
+				value = this._editors.title.attr('value');
+				if(this.entryTitleSelect.value === "xhtml"){
+					value = this._enforceXhtml(value);
+					if(value.indexOf('<div xmlns="http://www.w3.org/1999/xhtml">') !== 0){
+						value = '<div xmlns="http://www.w3.org/1999/xhtml">' + value + '</div>';
+					}
+				}
+				entry.title = new model.Content("title", value, null, this.entryTitleSelect.value);
+				modifiedEntry = true;
+			}
+			
+			if(this._editors.id.attr('value') != entry.id){
+				entry.id = this._editors.id.attr('value');
+				modifiedEntry = true;
+			}
+			
+			if(this._editors.summary && (this._editors.summary.attr('value') != entry.summary.value || this.entrySummarySelect.value != entry.summary.type)){
+				value = this._editors.summary.attr('value');
+				if(this.entrySummarySelect.value === "xhtml"){
+					value = this._enforceXhtml(value);
+					if(value.indexOf('<div xmlns="http://www.w3.org/1999/xhtml">') !== 0){
+						value = '<div xmlns="http://www.w3.org/1999/xhtml">' + value + '</div>';
+					}
+				}
+				entry.summary = new model.Content("summary", value, null, this.entrySummarySelect.value);
+				modifiedEntry = true;
+			}
+			
+			if(this._editors.content && (this._editors.content.attr('value') != entry.content.value || this.entryContentSelect.value != entry.content.type)){
+				value = this._editors.content.attr('value');
+				if(this.entryContentSelect.value === "xhtml"){
+					value = this._enforceXhtml(value);
+					if(value.indexOf('<div xmlns="http://www.w3.org/1999/xhtml">') !== 0){
+						value = '<div xmlns="http://www.w3.org/1999/xhtml">' + value + '</div>';
+					}
+				}
+				entry.content = new model.Content("content", value, null, this.entryContentSelect.value);
+				modifiedEntry = true;
+			}
+			
+			if(this._editors.authors){
+				if(modifiedEntry){
+					entry.authors = [];
+					authors = this._editors.authors.getValues();
+					for(i in authors){
+						if(authors[i].name || authors[i].email || authors[i].uri){
+							entry.addAuthor(authors[i].name, authors[i].email, authors[i].uri);
+						}
+					}
+				}else{
+					var currentAuthors = entry.authors;
+					var searchAuthors = function(name, email, uri){
+						for(i in currentAuthors){
+							if(currentAuthors[i].name === name && currentAuthors[i].email === email && currentAuthors[i].uri === uri){
+								return true;
+							}
+						}
+						return false;
+					};
+					authors = this._editors.authors.getValues();
+					changed = false;
+					for(i in authors){
+						if(!searchAuthors(authors[i].name, authors[i].email, authors[i].uri)){
+							changed = true;
+							break;
+						}
+					}
+					if(changed){
+						entry.authors = [];
+						for(i in authors){
+							if(authors[i].name || authors[i].email || authors[i].uri){
+								entry.addAuthor(authors[i].name, authors[i].email, authors[i].uri);
+							}
+						}
+						modifiedEntry = true;
+					}
+				}
+			}
+			
+			if(this._editors.contributors){
+    			if(modifiedEntry){
+					entry.contributors = [];
+					contributors = this._editors.contributors.getValues();
+					for(i in contributors){
+						if(contributors[i].name || contributors[i].email || contributors[i].uri){
+							entry.addAuthor(contributors[i].name, contributors[i].email, contributors[i].uri);
+						}
+					}
+				}else{
+					var currentContributors = entry.contributors;
+					var searchContributors = function(name, email, uri){
+						for(i in currentContributors){
+							if(currentContributors[i].name === name && currentContributors[i].email === email && currentContributors[i].uri === uri){
+								return true;
+							}
+						}
+						return false;
+					};
+					contributors = this._editors.contributors.getValues();
+					changed = false;
+					for(i in contributors){
+						if(searchContributors(contributors[i].name, contributors[i].email, contributors[i].uri)){
+							changed = true;
+							break;
+						}
+					}
+					if(changed){
+						entry.contributors = [];
+						for(i in contributors){
+							if(contributors[i].name || contributors[i].email || contributors[i].uri){
+								entry.addContributor(contributors[i].name, contributors[i].email, contributors[i].uri);
+							}
+						}
+						modifiedEntry = true;
+					}
+				}
+			}
+
+			if(modifiedEntry){
+				dojo.publish(this.entrySelectionTopic, [{action: "update", source: this, entry: entry, callback: this._handleSave }]);
+				//TODO: REMOVE BELOW
+				//var atomIO = new dojox.atom.io.Connection();
+				//atomIO.updateEntry(entry, dojo.hitch(this,this._handleSave));
+				//WARNING: Use above when testing with SimpleProxy (or any other servlet which
+				//			doesn't actually create a new entry and return it properly)
+				//atomIO.updateEntry(entry, dojo.hitch(this,this._handleSave), true);
+			}
+		}else{
+			this._new = false;
+			entry = new model.Entry();
+			
+			value = this._editors.title.attr('value');
+			if(this.entryTitleSelect.value === "xhtml"){
+				value = this._enforceXhtml(value);
+				value = '<div xmlns="http://www.w3.org/1999/xhtml">' + value + '</div>';
+			}
+			entry.setTitle(value, this.entryTitleSelect.value);
+			entry.id = this._editors.id.attr('value');
+			
+			authors = this._editors.authors.getValues();
+			for(i in authors){
+				if(authors[i].name || authors[i].email || authors[i].uri){
+					entry.addAuthor(authors[i].name, authors[i].email, authors[i].uri);
+				}
+			}
+					
+			contributors = this._editors.contributors.getValues();
+			for(i in contributors){
+				if(contributors[i].name || contributors[i].email || contributors[i].uri){
+					entry.addContributor(contributors[i].name, contributors[i].email, contributors[i].uri);
+				}
+			}
+
+			
+			value = this._editors.summary.attr('value');
+			if(this.entrySummarySelect.value === "xhtml"){
+				value = this._enforceXhtml(value);
+				value = '<div xmlns="http://www.w3.org/1999/xhtml">' + value + '</div>';
+			}
+			entry.summary = new model.Content("summary", value, null, this.entrySummarySelect.value);
+
+			value = this._editors.content.attr('value');
+			if(this.entryContentSelect.value === "xhtml"){
+				value = this._enforceXhtml(value);
+				value = '<div xmlns="http://www.w3.org/1999/xhtml">' + value + '</div>';
+			}
+			entry.content = new model.Content("content", value, null, this.entryContentSelect.value);
+
+			domStyle.set(this.entryNewButton, 'display', '');
+			dojo.publish(this.entrySelectionTopic, [{action: "post", source: this, entry: entry }]);
+		}
+		this._editMode = false;
+		
+		//Rebuild the view using the same entry and feed.
+		this.setEntry(entry, this._feed, true);
+	},
+	
+	_handleSave: function(/*object*/entry, /*string*/ location){
+		// summary:
+		//		Function for handling the save of an entry, cleaning up the display after the edit is completed.
+		// entry: dojox.atom.io.model.Entry object
+		//		The entry that was saved.
+		// Location: String
+		//		A URL to be used, not used here, but part of the call back from the AtomIO
+		// returns: Nothing
+
+		//Close the editor and revert out.
+		this._editMode = false;
+		
+		//Rebuild the view using the same entry and feed.
+		this.clear();
+		this.setEntry(entry, this.getFeed(), true);
+	},
+
+	cancelEdits: function(){
+		// summary:
+		//		Cancels edits and reverts the editor to its previous state (display mode)
+		// returns:
+		//		Nothing.
+		this._new = false;
+		domStyle.set(this.entrySaveCancelButtons, 'display', 'none');
+		if(this._editable){
+			domStyle.set(this.entryEditButton, 'display', '');
+		}
+		domStyle.set(this.entryNewButton, 'display', '');
+		this._editMode = false;
+		
+		//Rebuild the view using the same entry and feed.
+		this.clearEditors();
+		this.setEntry(this.getEntry(), this.getFeed(), true);
+	},
+
+	clear: function(){
+		// summary:
+		//		Clears the editor, destroys all editors, leaving the editor completely clear
+		this._editable=false;
+		this.clearEditors();
+		FeedEntryEditor.superclass.clear.apply(this);
+		if(this._contentEditor){
+			// Note that the superclass clear destroys the widget since it's in the child widget list,
+			// so this is just ref clearing.
+			this._contentEditor = this._setObject = this._oldContent = this._contentEditorCreator = null;
+			this._editors = {};
+		}
+	},
+	
+	clearEditors: function(){
+		for(var key in this._editors){
+			if(this._editors[key].isInstanceOf(Editor)){
+				this._editors[key].close(false, true);
+			}
+			this._editors[key].destroy();
+		}
+		this._editors = {};
+	},
+
+	_enforceXhtml: function(/*string*/html){
+		// summary:
+		//		Function for cleaning up/enforcing the XHTML standard in HTML returned from the editor2 widget.
+		// html:
+		//		HTML string to be enforced as xhtml.
+		// returns:
+		//		string of cleaned up HTML.
+		var xhtml = null;
+		if(html){
+			//Handle <BR>
+			var brRegExp = /<br>/g;
+			xhtml = html.replace(brRegExp, "<br/>");
+
+			//Handle <HR>
+			xhtml = this._closeTag(xhtml, "hr");
+
+			//Handle <img>
+			xhtml = this._closeTag(xhtml, "img");
+		}
+		return xhtml;
+	},
+
+	_closeTag: function(/*string*/xhtml, /*string*/tag){
+		// summary:
+		//		Function for closing tags in a text of HTML/XHTML
+		// xhtml: String
+		//		XHTML string which needs the closing tag.
+		// tag:
+		//		The tag to close.
+		// returns:
+		//		string of cleaned up HTML.
+
+		// NOTE:  Probably should redo this function in a more efficient way.  This could get expensive.
+		var tagStart = "<" + tag;
+		var tagIndex = xhtml.indexOf(tagStart);
+		if(tagIndex !== -1){
+			while (tagIndex !== -1){
+				var tempString = "";
+				var foundTagEnd = false;
+				for (var i = 0; i < xhtml.length; i++){
+					var c = xhtml.charAt(i);
+					if(i <= tagIndex ||foundTagEnd){
+						tempString += c;
+					}
+					else
+					{
+						if(c === '>'){
+							tempString += "/";
+							foundTagEnd = true;
+						}
+						tempString +=c;
+					}
+				}
+				xhtml = tempString;
+				tagIndex = xhtml.indexOf(tagStart, tagIndex + 1);
+			}
+		}
+		return xhtml;
+	},
+	
+	_toggleNew: function(){
+		// summary:
+		//		Function to put the editor into a state to create a new entry.
+
+		// Hide the edit/new buttons and show the save/cancel buttons.
+		domStyle.set(this.entryNewButton, 'display', 'none');
+		domStyle.set(this.entryEditButton, 'display', 'none');
+		domStyle.set(this.entrySaveCancelButtons, 'display', '');
+		
+		// Reset the type select boxes to text.
+		this.entrySummarySelect.value = "text";
+		this.entryContentSelect.value = "text";
+		this.entryTitleSelect.value = "text";
+		
+		// Clear all nodes.
+		this.clearNodes();
+		this._new = true;
+		
+		var _nlsResources = i18nViewer;
+		// Create all headers and editors.
+		var titleHeader = new FeedEntryViewer.EntryHeader({title: _nlsResources.title});
+		this.entryTitleHeader.appendChild(titleHeader.domNode);
+		
+		this._editors.title = this._createEditor(this.entryTitleNode, null);
+		this.setFieldValidity("title",true);
+		
+		var authorHeader = new FeedEntryViewer.EntryHeader({title: _nlsResources.authors});
+		this.entryAuthorHeader.appendChild(authorHeader.domNode);
+
+		this._editors.authors = this._createPeopleEditor(this.entryAuthorNode, {name: "Author"});
+		this.setFieldValidity("authors", true);
+		
+		var contributorHeader = new FeedEntryViewer.EntryHeader({title: _nlsResources.contributors});
+		this.entryContributorHeader.appendChild(contributorHeader.domNode);
+
+		this._editors.contributors = this._createPeopleEditor(this.entryContributorNode, {name: "Contributor"});
+		this.setFieldValidity("contributors", true);
+		
+		var idHeader = new FeedEntryViewer.EntryHeader({title: _nlsResources.id});
+		this.entryIdHeader.appendChild(idHeader.domNode);
+		
+		this._editors.id = this._createEditor(this.entryIdNode, null);
+		this.setFieldValidity("id",true);
+
+		var updatedHeader = new FeedEntryViewer.EntryHeader({title: _nlsResources.updated});
+		this.entryUpdatedHeader.appendChild(updatedHeader.domNode);
+		
+		this._editors.updated = this._createEditor(this.entryUpdatedNode, null);
+		this.setFieldValidity("updated",true);
+
+		var summaryHeader = new FeedEntryViewer.EntryHeader({title: _nlsResources.summary});
+		this.entrySummaryHeader.appendChild(summaryHeader.domNode);
+		
+		this._editors.summary = this._createEditor(this.entrySummaryNode, null, true);
+		this.setFieldValidity("summaryedit",true);
+		this.setFieldValidity("summary",true);
+
+		var contentHeader = new FeedEntryViewer.EntryHeader({title: _nlsResources.content});
+		this.entryContentHeader.appendChild(contentHeader.domNode);
+		
+		this._editors.content = this._createEditor(this.entryContentNode, null, true);
+		this.setFieldValidity("contentedit",true);
+		this.setFieldValidity("content",true);
+
+		// Show the sections.
+		this._displaySections();
+	},
+	
+	_displaySections: function(){
+		// summary:
+		//		Function to display the appropriate sections based on validity.
+
+		// Hide select boxes.
+		domStyle.set(this.entrySummarySelect, 'display', 'none');
+		domStyle.set(this.entryContentSelect, 'display', 'none');
+		domStyle.set(this.entryTitleSelect, 'display', 'none');
+
+		// Show select boxes if the flags are set.
+		if(this.isFieldValid("contentedit")){
+			domStyle.set(this.entryContentSelect, 'display', '');
+		}
+		if(this.isFieldValid("summaryedit")){
+			domStyle.set(this.entrySummarySelect, 'display', '');
+		}
+		if(this.isFieldValid("titleedit")){
+			domStyle.set(this.entryTitleSelect, 'display', '');
+		}
+		// Call super's _displaySections.
+		FeedEntryEditor.superclass._displaySections.apply(this);
+		
+		// If we have editors to load after the nodes are created on the page, execute those now.
+		if(this._toLoad){
+			for(var i in this._toLoad){
+				var editor;
+				if(this._toLoad[i].generateEditor){
+					editor = lang.hitch(this._toLoad[i], this._toLoad[i].generateEditor)();
+				}else{
+					editor = this._toLoad[i];
+				}
+				this._editors[this._toLoad[i].name] = editor;
+				this._toLoad[i] = null;
+			}
+			this._toLoad = null;
+		}
+	}
+});
+
+var PeopleEditor = declare("dojox.atom.widget.PeopleEditor", [_Widget, _Templated, _Container],{
+		// summary:
+		//		An editor for dojox.atom.io.model.Person objects.
+		// description:
+		//		An editor for dojox.atom.io.model.Person objects.  Displays multiple rows for the respective arrays
+		//		of people.  Can add/remove rows on the fly.
+		templateString: peopleEditorTemplate,
+
+		_rows: [],
+		_editors: [],
+		_index: 0,
+		_numRows: 0,
+		
+		postCreate: function(){
+			// Initializer function for the PeopleEditor widget.
+			var _nlsResources = i18nPeople;
+			if(this.name){
+				if(this.name == "Author"){
+					this.peopleEditorButton.appendChild(document.createTextNode("["+_nlsResources.addAuthor+"]"));
+				}else if(this.name == "Contributor"){
+					this.peopleEditorButton.appendChild(document.createTextNode("["+_nlsResources.addContributor+"]"));
+				}
+			}else{
+				this.peopleEditorButton.appendChild(document.createTextNode("["+_nlsResources.add+"]"));
+			}
+			this._editors = [];
+
+			if(!this.data || this.data.length===0){
+				this._createEditors(null, null, null, 0, this.name);
+				this._index = 1;
+			}else{
+				for(var i in this.data){
+					this._createEditors(this.data[i].name, this.data[i].email, this.data[i].uri, i);
+					this._index++;
+					this._numRows++;
+				}
+			}
+		},
+		
+		destroy: function(){
+			for(var key in this._editors){
+				for(var key2 in this._editors[key]){
+					this._editors[key][key2].destroy();
+				}
+			}
+			this._editors = [];
+		},
+		
+		_createEditors: function(/*string*/name, /*string*/email, /*string*/uri, /*int*/index, /*string*/widgetName){
+			// summary:
+			//		creates editor boxes (textbox widgets) for the individual values of a Person.
+			// name:
+			//		The name of this Person.
+			// email:
+			//		The email of this Person.
+			// uri:
+			//		The Person's URI.
+			// index:
+			//		The row index to use for this Person.
+			var row = document.createElement("tr");
+			this.peopleEditorEditors.appendChild(row);
+			row.id = "removeRow"+index;
+			
+			var node = document.createElement("td");
+			node.setAttribute('align', 'right');
+			row.appendChild(node);
+			node.colSpan = 2;
+			
+			if(this._numRows>0){
+				var hr = document.createElement("hr");
+				node.appendChild(hr);
+				hr.id = "hr"+index;
+			}
+			
+			row = document.createElement("span");
+			node.appendChild(row);
+			row.className = "peopleEditorButton";
+			domStyle.set(row, 'font-size', 'x-small');
+			connect.connect(row, "onclick", this, "_removeEditor");
+			row.id = "remove"+index;
+			
+			node = document.createTextNode("[X]");
+			row.appendChild(node);
+			
+			row = document.createElement("tr");
+			this.peopleEditorEditors.appendChild(row);
+			row.id = "editorsRow"+index;
+			
+			var labelNode = document.createElement("td");
+			row.appendChild(labelNode);
+			domStyle.set(labelNode, 'width', '20%');
+			
+			node = document.createElement("td");
+			row.appendChild(node);
+			
+			row = document.createElement("table");
+			labelNode.appendChild(row);
+			domStyle.set(row, 'width', '100%');
+			
+			labelNode = document.createElement("tbody");
+			row.appendChild(labelNode);
+			
+			row = document.createElement("table");
+			node.appendChild(row);
+			domStyle.set(row, 'width', '100%');
+			
+			node = document.createElement("tbody");
+			row.appendChild(node);
+
+			this._editors[index] = [];
+			this._editors[index].push(this._createEditor(name, widgetName+'name'+index, 'Name:', labelNode, node));
+			this._editors[index].push(this._createEditor(email, widgetName+'email'+index, 'Email:', labelNode, node));
+			this._editors[index].push(this._createEditor(uri, widgetName+'uri'+index, 'URI:', labelNode, node));
+		},
+		
+		_createEditor: function(/*string*/value, /*string*/id, /*string*/name, /*DOM node*/labelNode, /*DOM node*/node){
+			// summary:
+			//		Creates an individual editor widget (textbox) for a value.
+			// value:
+			//		The initial value of the textbox
+			// id:
+			//		The id the textbox should have.
+			// name:
+			//		The text to put in the label element for this textbox.
+			// labelNode:
+			//		The node to attach the label to.
+			// node:
+			//		The node to attach the editor rows to.
+			// returns:
+			//		Editor widget.
+			var row = document.createElement("tr");
+			labelNode.appendChild(row);
+			
+			var label = document.createElement("label");
+			label.setAttribute('for', id);
+			label.appendChild(document.createTextNode(name));
+			labelNode = document.createElement("td");
+			labelNode.appendChild(label);
+			row.appendChild(labelNode);
+			
+			row = document.createElement("tr");
+			node.appendChild(row);
+				
+			node = document.createElement("td");
+			row.appendChild(node);
+			
+			var viewNode = document.createElement("input");
+			viewNode.setAttribute('id', id);
+			node.appendChild(viewNode);
+			domStyle.set(viewNode, 'width', '95%');
+			
+			var box = new TextBox({},viewNode);
+			box.attr('value', value);
+			return box;
+		},
+		
+		_removeEditor: function(/*object*/event){
+			// summary:
+			//		Removes a Person from our list of editors.
+			// description:
+			//		Removes a Person from our list of editors by removing the block of editors that
+			//		make up that Person.
+			// event:
+			//		The event generated when the remove button is pressed on the page.
+			var target = null;
+		
+			if(has("ie")){
+				target = event.srcElement;
+			}else{
+				target = event.target;
+			}
+				
+			var id = target.id;
+			id = id.substring(6);
+			for(var key in this._editors[id]){
+				this._editors[id][key].destroy();
+			}
+			
+			var node = domUtil.byId("editorsRow"+id);
+			var parent = node.parentNode;
+			parent.removeChild(node);
+			
+			node = domUtil.byId("removeRow"+id);
+			parent = node.parentNode;
+			parent.removeChild(node);
+
+			this._numRows--;
+			if(this._numRows === 1 && parent.firstChild.firstChild.firstChild.tagName.toLowerCase() === "hr"){
+				node = parent.firstChild.firstChild;
+				node.removeChild(node.firstChild);
+			}
+			this._editors[id] = null;
+		},
+		
+		_add: function(){
+			// summary:
+			//		Adds a new block of blank editors to represent a Person.
+			this._createEditors(null, null, null, this._index);
+			this._index++;
+			this._numRows++;
+		},
+		
+		getValues: function(){
+			// summary:
+			//		Gets the values of this editor in an array.
+			// description:
+			//		Gets the values of this editor in an array, with each Person as an object within the array.
+			// returns:
+			//		An array of anonymous objects representing dojox.atom.io.model.Persons.
+			var values = [];
+			for(var i in this._editors){
+				if(this._editors[i]){
+					values.push({name: this._editors[i][0].attr('value'), email: this._editors[i][1].attr('value'), uri: this._editors[i][2].attr('value')});
+				}
+			}
+			return values;
+		}
+});
+
+return FeedEntryEditor;
+});

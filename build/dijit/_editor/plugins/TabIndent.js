@@ -1,4 +1,60 @@
-//>>built
-define("dijit/_editor/plugins/TabIndent",["dojo/_base/declare","dojo/_base/kernel","../_Plugin","../../form/ToggleButton"],function(c,d,a,e){d.experimental("dijit._editor.plugins.TabIndent");var b=c("dijit._editor.plugins.TabIndent",a,{useDefaultCommand:!1,buttonClass:e,command:"tabIndent",_initButton:function(){this.inherited(arguments);var f=this.editor;this.own(this.button.on("change",function(a){f.set("isTabIndent",a)}));this.updateState()},updateState:function(){var a=this.get("disabled");this.button.set("disabled",
-a);a||this.button.set("checked",this.editor.isTabIndent,!1)}});a.registry.tabIndent=function(){return new b({command:"tabIndent"})};return b});
-//@ sourceMappingURL=TabIndent.js.map
+define([
+	"dojo/_base/declare", // declare
+	"dojo/_base/kernel", // kernel.experimental
+	"../_Plugin",
+	"../../form/ToggleButton"
+], function(declare, kernel, _Plugin, ToggleButton){
+
+	// module:
+	//		dijit/_editor/plugins/TabIndent
+
+	kernel.experimental("dijit._editor.plugins.TabIndent");
+
+
+	var TabIndent = declare("dijit._editor.plugins.TabIndent", _Plugin, {
+		// summary:
+		//		This plugin is used to allow the use of the tab and shift-tab keys
+		//		to indent/outdent list items.  This overrides the default behavior
+		//		of moving focus from/to the toolbar
+
+		// Override _Plugin.useDefaultCommand... processing is handled by this plugin, not by dijit/Editor.
+		useDefaultCommand: false,
+
+		// Override _Plugin.buttonClass to use a ToggleButton for this plugin rather than a vanilla Button
+		buttonClass: ToggleButton,
+
+		command: "tabIndent",
+
+		_initButton: function(){
+			// Override _Plugin._initButton() to setup listener on button click
+			this.inherited(arguments);
+
+			var e = this.editor;
+			this.own(this.button.on("change", function(val){
+				e.set("isTabIndent", val);
+			}));
+
+			// Set initial checked state of button based on Editor.isTabIndent
+			this.updateState();
+		},
+
+		updateState: function(){
+			// Overrides _Plugin.updateState().
+			// Ctrl-m in the editor will switch tabIndent mode on/off, so we need to react to that.
+			var disabled = this.get("disabled");
+			this.button.set("disabled", disabled);
+			if(disabled){
+				return;
+			}
+			this.button.set('checked', this.editor.isTabIndent, false);
+		}
+	});
+
+	// Register this plugin.
+	_Plugin.registry["tabIndent"] = function(){
+		return new TabIndent({command: "tabIndent"});
+	};
+
+
+	return TabIndent;
+});

@@ -98,7 +98,7 @@ calculateAngle = function(x, y, handAngle){
 	try {
 		return normalizeAngle(Math.atan2(y - center.y, x - center.x) - handAngle);
 	} catch(e) {
-		// supress
+		// suppress
 	}
 	return 0;
 };

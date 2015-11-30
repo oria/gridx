@@ -1,5 +1,100 @@
-//>>built
-require({cache:{"url:dijit/form/templates/DropDownButton.html":'\x3cspan class\x3d"dijit dijitReset dijitInline"\r\n\t\x3e\x3cspan class\x3d\'dijitReset dijitInline dijitButtonNode\'\r\n\t\tdata-dojo-attach-event\x3d"ondijitclick:__onClick" data-dojo-attach-point\x3d"_buttonNode"\r\n\t\t\x3e\x3cspan class\x3d"dijitReset dijitStretch dijitButtonContents"\r\n\t\t\tdata-dojo-attach-point\x3d"focusNode,titleNode,_arrowWrapperNode,_popupStateNode"\r\n\t\t\trole\x3d"button" aria-haspopup\x3d"true" aria-labelledby\x3d"${id}_label"\r\n\t\t\t\x3e\x3cspan class\x3d"dijitReset dijitInline dijitIcon"\r\n\t\t\t\tdata-dojo-attach-point\x3d"iconNode"\r\n\t\t\t\x3e\x3c/span\r\n\t\t\t\x3e\x3cspan class\x3d"dijitReset dijitInline dijitButtonText"\r\n\t\t\t\tdata-dojo-attach-point\x3d"containerNode"\r\n\t\t\t\tid\x3d"${id}_label"\r\n\t\t\t\x3e\x3c/span\r\n\t\t\t\x3e\x3cspan class\x3d"dijitReset dijitInline dijitArrowButtonInner"\x3e\x3c/span\r\n\t\t\t\x3e\x3cspan class\x3d"dijitReset dijitInline dijitArrowButtonChar"\x3e\x26#9660;\x3c/span\r\n\t\t\x3e\x3c/span\r\n\t\x3e\x3c/span\r\n\t\x3e\x3cinput ${!nameAttrSetting} type\x3d"${type}" value\x3d"${value}" class\x3d"dijitOffScreen" tabIndex\x3d"-1"\r\n\t\tdata-dojo-attach-event\x3d"onclick:_onClick"\r\n\t\tdata-dojo-attach-point\x3d"valueNode" role\x3d"presentation"\r\n/\x3e\x3c/span\x3e\r\n'}});
-define("dijit/form/DropDownButton","dojo/_base/declare dojo/_base/lang dojo/query ../registry ../popup ./Button ../_Container ../_HasDropDown dojo/text!./templates/DropDownButton.html".split(" "),function(c,d,b,e,f,g,h,k,l){return c("dijit.form.DropDownButton",[g,h,k],{baseClass:"dijitDropDownButton",templateString:l,_fillContent:function(){if(this.srcNodeRef){var a=b("*",this.srcNodeRef);this.inherited(arguments,[a[0]]);this.dropDownContainer=this.srcNodeRef}},startup:function(){if(!this._started){if(!this.dropDown&&
-this.dropDownContainer){var a=b("[widgetId]",this.dropDownContainer)[0];a&&(this.dropDown=e.byNode(a));delete this.dropDownContainer}this.dropDown&&f.hide(this.dropDown);this.inherited(arguments)}},isLoaded:function(){var a=this.dropDown;return!!a&&(!a.href||a.isLoaded)},loadDropDown:function(a){var b=this.dropDown,c=b.on("load",d.hitch(this,function(){c.remove();a()}));b.refresh()},isFocusable:function(){return this.inherited(arguments)&&!this._mouseDown}})});
-//@ sourceMappingURL=DropDownButton.js.map
+define([
+	"dojo/_base/declare", // declare
+	"dojo/_base/lang", // hitch
+	"dojo/query", // query
+	"../registry", // registry.byNode
+	"../popup", // dijit.popup2.hide
+	"./Button",
+	"../_Container",
+	"../_HasDropDown",
+	"dojo/text!./templates/DropDownButton.html",
+	"../a11yclick"	// template uses ondijitclick
+], function(declare, lang, query, registry, popup, Button, _Container, _HasDropDown, template){
+
+	// module:
+	//		dijit/form/DropDownButton
+
+	return declare("dijit.form.DropDownButton", [Button, _Container, _HasDropDown], {
+		// summary:
+		//		A button with a drop down
+		//
+		// example:
+		// |	<button data-dojo-type="dijit/form/DropDownButton">
+		// |		Hello world
+		// |		<div data-dojo-type="dijit/Menu">...</div>
+		// |	</button>
+		//
+		// example:
+		// |	var button1 = new DropDownButton({ label: "hi", dropDown: new dijit.Menu(...) });
+		// |	win.body().appendChild(button1);
+		//
+
+		baseClass: "dijitDropDownButton",
+
+		templateString: template,
+
+		_fillContent: function(){
+			// Overrides Button._fillContent().
+			//
+			// My inner HTML contains both the button contents and a drop down widget, like
+			// <DropDownButton>  <span>push me</span>  <Menu> ... </Menu> </DropDownButton>
+			// The first node is assumed to be the button content. The widget is the popup.
+
+			if(this.srcNodeRef){ // programatically created buttons might not define srcNodeRef
+				//FIXME: figure out how to filter out the widget and use all remaining nodes as button
+				//	content, not just nodes[0]
+				var nodes = query("*", this.srcNodeRef);
+				this.inherited(arguments, [nodes[0]]);
+
+				// save pointer to srcNode so we can grab the drop down widget after it's instantiated
+				this.dropDownContainer = this.srcNodeRef;
+			}
+		},
+
+		startup: function(){
+			if(this._started){
+				return;
+			}
+
+			// the child widget from srcNodeRef is the dropdown widget.  Insert it in the page DOM,
+			// make it invisible, and store a reference to pass to the popup code.
+			if(!this.dropDown && this.dropDownContainer){
+				var dropDownNode = query("[widgetId]", this.dropDownContainer)[0];
+				if(dropDownNode){
+					this.dropDown = registry.byNode(dropDownNode);
+				}
+				delete this.dropDownContainer;
+			}
+			if(this.dropDown){
+				popup.hide(this.dropDown);
+			}
+
+			this.inherited(arguments);
+		},
+
+		isLoaded: function(){
+			// Returns whether or not we are loaded - if our dropdown has an href,
+			// then we want to check that.
+			var dropDown = this.dropDown;
+			return (!!dropDown && (!dropDown.href || dropDown.isLoaded));
+		},
+
+		loadDropDown: function(/*Function*/ callback){
+			// Default implementation assumes that drop down already exists,
+			// but hasn't loaded it's data (ex: ContentPane w/href).
+			// App must override if the drop down is lazy-created.
+			var dropDown = this.dropDown;
+			var handler = dropDown.on("load", lang.hitch(this, function(){
+				handler.remove();
+				callback();
+			}));
+			dropDown.refresh();		// tell it to load
+		},
+
+		isFocusable: function(){
+			// Overridden so that focus is handled by the _HasDropDown mixin, not by
+			// the _FormWidget mixin.
+			return this.inherited(arguments) && !this._mouseDown;
+		}
+	});
+});

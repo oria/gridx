@@ -1,10 +1,242 @@
-//>>built
-define("dojox/dtl/contrib/dijit","dojo/_base/lang dojo/_base/connect dojo/_base/array dojo/query ../_base ../dom dojo/parser dojo/_base/sniff".split(" "),function(g,m,r,n,h,t,p,s){function k(c){var b=c.cloneNode(!0);s("ie")&&n("script",b).forEach("item.text \x3d this[index].text;",n("script",c));return b}var d=g.getObject("contrib.dijit",!0,h);d.AttachNode=g.extend(function(c,b){this._keys=c;this._object=b},{render:function(c,b){if(!this._rendered){this._rendered=!0;for(var a=0,e;e=this._keys[a];a++)c.getThis()[e]=
-this._object||b.getParent()}return b},unrender:function(c,b){if(this._rendered){this._rendered=!1;for(var a=0,e;e=this._keys[a];a++)c.getThis()[e]===(this._object||b.getParent())&&delete c.getThis()[e]}return b},clone:function(c){return new this.constructor(this._keys,this._object)}});d.EventNode=g.extend(function(c,b){this._command=c;for(var a,e=c.split(/\s*,\s*/),d=g.trim,h=[],q=[];a=e.pop();)if(a){var l=null;-1!=a.indexOf(":")?(l=a.split(":"),a=d(l[0]),l=d(l.slice(1).join(":"))):a=d(a);l||(l=a);
-h.push(a);q.push(l)}this._types=h;this._fns=q;this._object=b;this._rendered=[]},{_clear:!1,render:function(c,b){for(var a=0,d;d=this._types[a];a++){!this._clear&&!this._object&&(b.getParent()[d]=null);var f=this._fns[a],k;-1!=f.indexOf(" ")&&(this._rendered[a]&&(m.disconnect(this._rendered[a]),this._rendered[a]=!1),k=r.map(f.split(" ").slice(1),function(a){return(new h._Filter(a)).resolve(c)}),f=f.split(" ",2)[0]);this._rendered[a]||(this._object?(g.isArray(k),this._rendered[a]=m.connect(this._object,
-d,c.getThis(),f)):this._rendered[a]=b.addEvent(c,d,f,k))}this._clear=!0;return b},unrender:function(c,b){for(;this._rendered.length;)m.disconnect(this._rendered.pop());return b},clone:function(){return new this.constructor(this._command,this._object)}});d.DojoTypeNode=g.extend(function(c,b){this._node=c;this._parsed=b;var a=c.getAttribute("dojoAttachEvent")||c.getAttribute("data-dojo-attach-event");a&&(this._events=new d.EventNode(g.trim(a)));if(a=c.getAttribute("dojoAttachPoint")||c.getAttribute("data-dojo-attach-point"))this._attach=
-new d.AttachNode(g.trim(a).split(/\s*,\s*/));b?(c=k(c),a=d.widgetsInTemplate,d.widgetsInTemplate=!1,this._template=new h.DomTemplate(c),d.widgetsInTemplate=a):this._dijit=p.instantiate([k(c)])[0]},{render:function(c,b){if(this._parsed){var a=new h.DomBuffer;this._template.render(c,a);var a=k(a.getRootNode()),d=document.createElement("div");d.appendChild(a);var f=d.innerHTML;d.removeChild(a);f!=this._rendered&&(this._rendered=f,this._dijit&&this._dijit.destroyRecursive(),this._dijit=p.instantiate([a])[0])}a=
-this._dijit.domNode;this._events&&(this._events._object=this._dijit,this._events.render(c,b));this._attach&&(this._attach._object=this._dijit,this._attach.render(c,b));return b.concat(a)},unrender:function(c,b){return b.remove(this._dijit.domNode)},clone:function(){return new this.constructor(this._node,this._parsed)}});g.mixin(d,{widgetsInTemplate:!0,dojoAttachPoint:function(c,b){return new d.AttachNode(b.contents.slice(-1!==b.contents.indexOf("data-")?23:16).split(/\s*,\s*/))},dojoAttachEvent:function(c,
-b){return new d.EventNode(b.contents.slice(-1!==b.contents.indexOf("data-")?23:16))},dojoType:function(c,b){var a=!1;" parsed"==b.contents.slice(-7)&&(a=!0);var e=-1!==b.contents.indexOf("data-")?b.contents.slice(15):b.contents.slice(9),e=a?e.slice(0,-7):e.toString();if(d.widgetsInTemplate){var f=c.swallowNode();f.setAttribute("data-dojo-type",e);return new d.DojoTypeNode(f,a)}return new h.AttributeNode("data-dojo-type",e)},on:function(c,b){var a=b.contents.split();return new d.EventNode(a[0]+":"+
-a.slice(1).join(" "))}});d["data-dojo-type"]=d.dojoType;d["data-dojo-attach-point"]=d.dojoAttachPoint;d["data-dojo-attach-event"]=d.dojoAttachEvent;h.register.tags("dojox.dtl.contrib",{dijit:["attr:dojoType","attr:data-dojo-type","attr:dojoAttachPoint","attr:data-dojo-attach-point",["attr:attach","dojoAttachPoint"],["attr:attach","data-dojo-attach-point"],"attr:dojoAttachEvent","attr:data-dojo-attach-event",[/(attr:)?on(click|key(up))/i,"on"]]});return d});
-//@ sourceMappingURL=dijit.js.map
+define([
+	"dojo/_base/lang",
+	"dojo/_base/connect",
+	"dojo/_base/array",
+	"dojo/query",
+	"../_base",
+	"../dom",
+	"dojo/parser",
+	"dojo/_base/sniff"
+], function(lang,connect,array,query,dd,dxdom,parser,has){
+
+	var ddcd = lang.getObject("contrib.dijit", true, dd);
+/*=====
+	ddcd = {
+		// TODO: summary
+	};
+=====*/
+
+	ddcd.AttachNode = lang.extend(function(keys, object){
+		this._keys = keys;
+		this._object = object;
+	},
+	{
+		render: function(context, buffer){
+			if(!this._rendered){
+				this._rendered = true;
+				for(var i = 0, key; key = this._keys[i]; i++){
+					context.getThis()[key] = this._object || buffer.getParent();
+				}
+			}
+			return buffer;
+		},
+		unrender: function(context, buffer){
+			if(this._rendered){
+				this._rendered = false;
+				for(var i = 0, key; key = this._keys[i]; i++){
+					if(context.getThis()[key] === (this._object || buffer.getParent())){
+						delete context.getThis()[key];
+					}
+				}
+			}
+			return buffer;
+		},
+		clone: function(buffer){
+			return new this.constructor(this._keys, this._object);
+		}
+	});
+
+	ddcd.EventNode = lang.extend(function(command, obj){
+		this._command = command;
+
+		var type, events = command.split(/\s*,\s*/);
+		var trim = lang.trim;
+		var types = [];
+		var fns = [];
+		while(type = events.pop()){
+			if(type){
+				var fn = null;
+				if(type.indexOf(":") != -1){
+					// oh, if only JS had tuple assignment
+					var funcNameArr = type.split(":");
+					type = trim(funcNameArr[0]);
+					fn = trim(funcNameArr.slice(1).join(":"));
+				}else{
+					type = trim(type);
+				}
+				if(!fn){
+					fn = type;
+				}
+				types.push(type);
+				fns.push(fn);
+			}
+		}
+
+		this._types = types;
+		this._fns = fns;
+		this._object = obj;
+		this._rendered = [];
+	},
+	{
+		// _clear: Boolean
+		//		Make sure we kill the actual tags (onclick problems, etc)
+		_clear: false,
+		render: function(context, buffer){
+			for(var i = 0, type; type = this._types[i]; i++){
+				if(!this._clear && !this._object){
+					buffer.getParent()[type] = null;
+				}
+				var fn = this._fns[i];
+				var args;
+				if(fn.indexOf(" ") != -1){
+					if(this._rendered[i]){
+						connect.disconnect(this._rendered[i]);
+						this._rendered[i] = false;
+					}
+					args = array.map(fn.split(" ").slice(1), function(item){
+						return new dd._Filter(item).resolve(context);
+					});
+					fn = fn.split(" ", 2)[0];
+				}
+				if(!this._rendered[i]){
+					if(!this._object){
+						this._rendered[i] = buffer.addEvent(context, type, fn, args);
+					}else{
+						var resolved = fn; 
+						if(lang.isArray(args)){ 
+							resolved = function(e){ 
+								this[fn].apply(this, [e].concat(args)); 
+							} 
+						} 
+						this._rendered[i] = connect.connect(this._object, type, context.getThis(), fn);
+					}
+				}
+			}
+			this._clear = true;
+
+			return buffer;
+		},
+		unrender: function(context, buffer){
+			while(this._rendered.length){
+				connect.disconnect(this._rendered.pop());
+			}
+			return buffer;
+		},
+		clone: function(){
+			return new this.constructor(this._command, this._object);
+		}
+	});
+
+	function cloneNode(n1){
+		var n2 = n1.cloneNode(true);
+		if(has("ie")){
+			query("script", n2).forEach("item.text = this[index].text;", query("script", n1));
+		}
+		return n2;
+	}
+
+	ddcd.DojoTypeNode = lang.extend(function(node, parsed){
+		this._node = node;
+		this._parsed = parsed;
+
+		var events = node.getAttribute("dojoAttachEvent") || node.getAttribute("data-dojo-attach-event");
+		if(events){
+			this._events = new ddcd.EventNode(lang.trim(events));
+		}
+		var attach = node.getAttribute("dojoAttachPoint") || node.getAttribute("data-dojo-attach-point");
+		if(attach){
+			this._attach = new ddcd.AttachNode(lang.trim(attach).split(/\s*,\s*/));
+		}
+
+		if(!parsed){
+			this._dijit = parser.instantiate([cloneNode(node)])[0];
+		}else{
+			node = cloneNode(node);
+			var old = ddcd.widgetsInTemplate;
+			ddcd.widgetsInTemplate = false;
+			this._template = new dd.DomTemplate(node);
+			ddcd.widgetsInTemplate = old;
+		}
+	},
+	{
+		render: function(context, buffer){
+			if(this._parsed){
+				var _buffer = new dd.DomBuffer();
+				this._template.render(context, _buffer);
+				var root = cloneNode(_buffer.getRootNode());
+				var div = document.createElement("div");
+				div.appendChild(root);
+				var rendered = div.innerHTML;
+				div.removeChild(root);
+				if(rendered != this._rendered){
+					this._rendered = rendered;
+					if(this._dijit){
+						this._dijit.destroyRecursive();
+					}
+					this._dijit = parser.instantiate([root])[0];
+				}
+			}
+
+			var node = this._dijit.domNode;
+
+			if(this._events){
+				this._events._object = this._dijit;
+				this._events.render(context, buffer);
+			}
+			if(this._attach){
+				this._attach._object = this._dijit;
+				this._attach.render(context, buffer);
+			}
+
+			return buffer.concat(node);
+		},
+		unrender: function(context, buffer){
+			return buffer.remove(this._dijit.domNode);
+		},
+		clone: function(){
+			return new this.constructor(this._node, this._parsed);
+		}
+	});
+
+	lang.mixin(ddcd, {
+		widgetsInTemplate: true,
+		dojoAttachPoint: function(parser, token){
+			return new ddcd.AttachNode(token.contents.slice(token.contents.indexOf("data-") !== -1 ? 23 : 16).split(/\s*,\s*/));
+		},
+		dojoAttachEvent: function(parser, token){
+			return new ddcd.EventNode(token.contents.slice(token.contents.indexOf("data-") !== -1 ? 23 : 16));
+		},
+		dojoType: function(parser, token){
+			var parsed = false;
+			if(token.contents.slice(-7) == " parsed"){
+				parsed = true;
+			}
+			var contents = token.contents.indexOf("data-") !== -1 ? token.contents.slice(15)  : token.contents.slice(9);
+			var dojoType = parsed ? contents.slice(0, -7) : contents.toString();
+
+			if(ddcd.widgetsInTemplate){
+				var node = parser.swallowNode();
+				node.setAttribute("data-dojo-type", dojoType);
+				return new ddcd.DojoTypeNode(node, parsed);
+			}
+
+			return new dd.AttributeNode("data-dojo-type", dojoType);
+		},
+		on: function(parser, token){
+			// summary:
+			//		Associates an event type to a function (on the current widget) by name
+			var parts = token.contents.split();
+			return new ddcd.EventNode(parts[0] + ":" + parts.slice(1).join(" "));
+		}
+	});
+	ddcd["data-dojo-type"] = ddcd.dojoType;
+	ddcd["data-dojo-attach-point"] = ddcd.dojoAttachPoint;
+	ddcd["data-dojo-attach-event"] = ddcd.dojoAttachEvent;
+	
+
+	dd.register.tags("dojox.dtl.contrib", {
+		"dijit": ["attr:dojoType", "attr:data-dojo-type", "attr:dojoAttachPoint", "attr:data-dojo-attach-point", ["attr:attach", "dojoAttachPoint"], ["attr:attach", "data-dojo-attach-point"], "attr:dojoAttachEvent", "attr:data-dojo-attach-event", [/(attr:)?on(click|key(up))/i, "on"]]
+	});
+
+	return ddcd;
+});

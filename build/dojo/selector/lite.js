@@ -1,9 +1,283 @@
-//>>built
-define("dojo/selector/lite",["../has","../_base/kernel"],function(k,p){var g=document.createElement("div"),l=g.matchesSelector||g.webkitMatchesSelector||g.mozMatchesSelector||g.msMatchesSelector||g.oMatchesSelector,q=g.querySelectorAll,s=/([^\s,](?:"(?:\\.|[^"])+"|'(?:\\.|[^'])+'|[^,])*)/g;k.add("dom-matches-selector",!!l);k.add("dom-qsa",!!q);var n=function(f,a){if(t&&-1<f.indexOf(","))return t(f,a);var c=a?a.ownerDocument||a:p.doc||document,b=(q?/^([\w]*)#([\w\-]+$)|^(\.)([\w\-\*]+$)|^(\w+$)/:/^([\w]*)#([\w\-]+)(?:\s+(.*))?$|(?:^|(>|.+\s+))([\w\-\*]+)(\S*$)/).exec(f);
-a=a||c;if(b){if(b[2]){var d=p.byId?p.byId(b[2],c):c.getElementById(b[2]);if(!d||b[1]&&b[1]!=d.tagName.toLowerCase())return[];if(a!=c)for(c=d;c!=a;)if(c=c.parentNode,!c)return[];return b[3]?n(b[3],d):[d]}if(b[3]&&a.getElementsByClassName)return a.getElementsByClassName(b[4]);if(b[5])if(d=a.getElementsByTagName(b[5]),b[4]||b[6])f=(b[4]||"")+b[6];else return d}if(q)return 1===a.nodeType&&"object"!==a.nodeName.toLowerCase()?u(a,f,a.querySelectorAll):a.querySelectorAll(f);d||(d=a.getElementsByTagName("*"));
-for(var b=[],c=0,m=d.length;c<m;c++){var h=d[c];1==h.nodeType&&v(h,f,a)&&b.push(h)}return b},u=function(f,a,c){var b=f,d=f.getAttribute("id"),m=d||"__dojo__",h=f.parentNode,g=/^\s*[+~]/.test(a);if(g&&!h)return[];d?m=m.replace(/'/g,"\\$\x26"):f.setAttribute("id",m);g&&h&&(f=f.parentNode);a=a.match(s);for(h=0;h<a.length;h++)a[h]="[id\x3d'"+m+"'] "+a[h];a=a.join(",");try{return c.call(f,a)}finally{d||b.removeAttribute("id")}};if(!k("dom-matches-selector"))var v=function(){function f(r,e,a){var b=e.charAt(0);
-if('"'==b||"'"==b)e=e.slice(1,-1);e=e.replace(/\\/g,"");var c=h[a||""];return function(a){return(a=a.getAttribute(r))&&c(a,e)}}function a(a){return function(e,b){for(;(e=e.parentNode)!=b;)if(a(e,b))return!0}}function c(a){return function(e,b){e=e.parentNode;return a?e!=b&&a(e,b):e==b}}function b(a,e){return a?function(b,c){return e(b)&&a(b,c)}:e}var d="div"==g.tagName?"toLowerCase":"toUpperCase",m={"":function(a){a=a[d]();return function(b){return b.tagName==a}},".":function(a){var b=" "+a+" ";return function(c){return-1<
-c.className.indexOf(a)&&-1<(" "+c.className+" ").indexOf(b)}},"#":function(a){return function(b){return b.id==a}}},h={"^\x3d":function(a,b){return 0==a.indexOf(b)},"*\x3d":function(a,b){return-1<a.indexOf(b)},"$\x3d":function(a,b){return a.substring(a.length-b.length,a.length)==b},"~\x3d":function(a,b){return-1<(" "+a+" ").indexOf(" "+b+" ")},"|\x3d":function(a,b){return 0==(a+"-").indexOf(b+"-")},"\x3d":function(a,b){return a==b},"":function(a,b){return!0}},k={};return function(d,e,h){var g=k[e];
-if(!g){if(e.replace(/(?:\s*([> ])\s*)|(#|\.)?((?:\\.|[\w-])+)|\[\s*([\w-]+)\s*(.?=)?\s*("(?:\\.|[^"])+"|'(?:\\.|[^'])+'|(?:\\.|[^\]])*)\s*\]/g,function(d,e,h,k,l,n,r){k?g=b(g,m[h||""](k.replace(/\\/g,""))):e?g=(" "==e?a:c)(g):l&&(g=b(g,f(l,r,n)));return""}))throw Error("Syntax error in query");if(!g)return!0;k[e]=g}return g(d,h)}}();if(!k("dom-qsa"))var t=function(f,a){for(var c=f.match(s),b=[],d=0;d<c.length;d++){f=new String(c[d].replace(/\s*$/,""));f.indexOf=escape;for(var g=n(f,a),h=0,k=g.length;h<
-k;h++){var l=g[h];b[l.sourceIndex]=l}}c=[];for(d in b)c.push(b[d]);return c};n.match=l?function(f,a,c){return c&&9!=c.nodeType?u(c,a,function(a){return l.call(f,a)}):l.call(f,a)}:v;return n});
-//@ sourceMappingURL=lite.js.map
+define(["../has", "../_base/kernel"], function(has, dojo){
+"use strict";
+
+var testDiv = document.createElement("div");
+var matchesSelector = testDiv.matches || testDiv.webkitMatchesSelector || testDiv.mozMatchesSelector || testDiv.msMatchesSelector || testDiv.oMatchesSelector;
+var querySelectorAll = testDiv.querySelectorAll;
+var unionSplit = /([^\s,](?:"(?:\\.|[^"])+"|'(?:\\.|[^'])+'|[^,])*)/g;
+has.add("dom-matches-selector", !!matchesSelector);
+has.add("dom-qsa", !!querySelectorAll); 
+
+// this is a simple query engine. It has handles basic selectors, and for simple
+// common selectors is extremely fast
+var liteEngine = function(selector, root){
+	// summary:
+	//		A small lightweight query selector engine that implements CSS2.1 selectors
+	//		minus pseudo-classes and the sibling combinator, plus CSS3 attribute selectors
+
+	if(combine && selector.indexOf(',') > -1){
+		return combine(selector, root);
+	}
+	// use the root's ownerDocument if provided, otherwise try to use dojo.doc. Note 
+	// that we don't use dojo/_base/window's doc to reduce dependencies, and 
+	// fallback to plain document if dojo.doc hasn't been defined (by dojo/_base/window).
+	// presumably we will have a better way to do this in 2.0 
+	var doc = root ? root.ownerDocument || root : dojo.doc || document, 
+		match = (querySelectorAll ? 
+			/^([\w]*)#([\w\-]+$)|^(\.)([\w\-\*]+$)|^(\w+$)/ : // this one only matches on simple queries where we can beat qSA with specific methods
+			/^([\w]*)#([\w\-]+)(?:\s+(.*))?$|(?:^|(>|.+\s+))([\w\-\*]+)(\S*$)/) // this one matches parts of the query that we can use to speed up manual filtering
+			.exec(selector);
+	root = root || doc;
+	if(match){
+		// fast path regardless of whether or not querySelectorAll exists
+		if(match[2]){
+			// an #id
+			// use dojo.byId if available as it fixes the id retrieval in IE, note that we can't use the dojo namespace in 2.0, but if there is a conditional module use, we will use that
+			var found = dojo.byId ? dojo.byId(match[2], doc) : doc.getElementById(match[2]);
+			if(!found || (match[1] && match[1] != found.tagName.toLowerCase())){
+				// if there is a tag qualifer and it doesn't match, no matches
+				return [];
+			}
+			if(root != doc){
+				// there is a root element, make sure we are a child of it
+				var parent = found;
+				while(parent != root){
+					parent = parent.parentNode;
+					if(!parent){
+						return [];
+					}
+				}
+			}
+			return match[3] ?
+					liteEngine(match[3], found) 
+					: [found];
+		}
+		if(match[3] && root.getElementsByClassName){
+			// a .class
+			return root.getElementsByClassName(match[4]);
+		}
+		var found;
+		if(match[5]){
+			// a tag
+			found = root.getElementsByTagName(match[5]);
+			if(match[4] || match[6]){
+				selector = (match[4] || "") + match[6];
+			}else{
+				// that was the entirety of the query, return results
+				return found;
+			}
+		}
+	}
+	if(querySelectorAll){
+		// qSA works strangely on Element-rooted queries
+		// We can work around this by specifying an extra ID on the root
+		// and working up from there (Thanks to Andrew Dupont for the technique)
+		// IE 8 doesn't work on object elements
+		if (root.nodeType === 1 && root.nodeName.toLowerCase() !== "object"){				
+			return useRoot(root, selector, root.querySelectorAll);
+		}else{
+			// we can use the native qSA
+			return root.querySelectorAll(selector);
+		}
+	}else if(!found){
+		// search all children and then filter
+		found = root.getElementsByTagName("*");
+	}
+	// now we filter the nodes that were found using the matchesSelector
+	var results = [];
+	for(var i = 0, l = found.length; i < l; i++){
+		var node = found[i];
+		if(node.nodeType == 1 && jsMatchesSelector(node, selector, root)){
+			// keep the nodes that match the selector
+			results.push(node);
+		}
+	}
+	return results;
+};
+var useRoot = function(context, query, method){
+	// this function creates a temporary id so we can do rooted qSA queries, this is taken from sizzle
+	var oldContext = context,
+		old = context.getAttribute("id"),
+		nid = old || "__dojo__",
+		hasParent = context.parentNode,
+		relativeHierarchySelector = /^\s*[+~]/.test(query);
+
+	if(relativeHierarchySelector && !hasParent){
+		return [];
+	}
+	if(!old){
+		context.setAttribute("id", nid);
+	}else{
+		nid = nid.replace(/'/g, "\\$&");
+	}
+	if(relativeHierarchySelector && hasParent){
+		context = context.parentNode;
+	}
+	var selectors = query.match(unionSplit);
+	for(var i = 0; i < selectors.length; i++){
+		selectors[i] = "[id='" + nid + "'] " + selectors[i];
+	}
+	query = selectors.join(",");
+
+	try{
+		return method.call(context, query);
+	}finally{
+		if(!old){
+			oldContext.removeAttribute("id");
+		}
+	}
+};
+
+if(!has("dom-matches-selector")){
+	var jsMatchesSelector = (function(){
+		// a JS implementation of CSS selector matching, first we start with the various handlers
+		var caseFix = testDiv.tagName == "div" ? "toLowerCase" : "toUpperCase";
+		var selectorTypes = {
+			"": function(tagName){
+				tagName = tagName[caseFix]();
+				return function(node){
+					return node.tagName == tagName;
+				};
+			},
+			".": function(className){
+				var classNameSpaced = ' ' + className + ' ';
+				return function(node){
+					return node.className.indexOf(className) > -1 && (' ' + node.className + ' ').indexOf(classNameSpaced) > -1;
+				};
+			},
+			"#": function(id){
+				return function(node){
+					return node.id == id;
+				};
+			}
+		};
+		var attrComparators = {
+			"^=": function(attrValue, value){
+				return attrValue.indexOf(value) == 0;
+			},
+			"*=": function(attrValue, value){
+				return attrValue.indexOf(value) > -1;
+			},
+			"$=": function(attrValue, value){
+				return attrValue.substring(attrValue.length - value.length, attrValue.length) == value;
+			},
+			"~=": function(attrValue, value){
+				return (' ' + attrValue + ' ').indexOf(' ' + value + ' ') > -1;
+			},
+			"|=": function(attrValue, value){
+				return (attrValue + '-').indexOf(value + '-') == 0;
+			},
+			"=": function(attrValue, value){
+				return attrValue == value;
+			},
+			"": function(attrValue, value){
+				return true;
+			}
+		};
+		function attr(name, value, type){
+			var firstChar = value.charAt(0);
+			if(firstChar == '"' || firstChar == "'"){
+				// it is quoted, remove the quotes
+				value = value.slice(1, -1);
+			}
+			value = value.replace(/\\/g,'');
+			var comparator = attrComparators[type || ""];
+			return function(node){
+				var attrValue = node.getAttribute(name);
+				return attrValue && comparator(attrValue, value);
+			};
+		}
+		function ancestor(matcher){
+			return function(node, root){
+				while((node = node.parentNode) != root){
+					if(matcher(node, root)){
+						return true;
+					}
+				}
+			};
+		}
+		function parent(matcher){
+			return function(node, root){
+				node = node.parentNode;
+				return matcher ? 
+					node != root && matcher(node, root)
+					: node == root;
+			};
+		}
+		var cache = {};
+		function and(matcher, next){
+			return matcher ?
+				function(node, root){
+					return next(node) && matcher(node, root);
+				}
+				: next;
+		}
+		return function(node, selector, root){
+			// this returns true or false based on if the node matches the selector (optionally within the given root)
+			var matcher = cache[selector]; // check to see if we have created a matcher function for the given selector
+			if(!matcher){
+				// create a matcher function for the given selector
+				// parse the selectors
+				if(selector.replace(/(?:\s*([> ])\s*)|(#|\.)?((?:\\.|[\w-])+)|\[\s*([\w-]+)\s*(.?=)?\s*("(?:\\.|[^"])+"|'(?:\\.|[^'])+'|(?:\\.|[^\]])*)\s*\]/g, function(t, combinator, type, value, attrName, attrType, attrValue){
+					if(value){
+						matcher = and(matcher, selectorTypes[type || ""](value.replace(/\\/g, '')));
+					}
+					else if(combinator){
+						matcher = (combinator == " " ? ancestor : parent)(matcher);
+					}
+					else if(attrName){
+						matcher = and(matcher, attr(attrName, attrValue, attrType));
+					}
+					return "";
+				})){
+					throw new Error("Syntax error in query");
+				}
+				if(!matcher){
+					return true;
+				}
+				cache[selector] = matcher;
+			}
+			// now run the matcher function on the node
+			return matcher(node, root);
+		};
+	})();
+}
+if(!has("dom-qsa")){
+	var combine = function(selector, root){
+		// combined queries
+		var selectors = selector.match(unionSplit);
+		var indexed = [];
+		// add all results and keep unique ones, this only runs in IE, so we take advantage 
+		// of known IE features, particularly sourceIndex which is unique and allows us to 
+		// order the results 
+		for(var i = 0; i < selectors.length; i++){
+			selector = new String(selectors[i].replace(/\s*$/,''));
+			selector.indexOf = escape; // keep it from recursively entering combine
+			var results = liteEngine(selector, root);
+			for(var j = 0, l = results.length; j < l; j++){
+				var node = results[j];
+				indexed[node.sourceIndex] = node;
+			}
+		}
+		// now convert from a sparse array to a dense array
+		var totalResults = [];
+		for(i in indexed){
+			totalResults.push(indexed[i]);
+		}
+		return totalResults;
+	};
+}
+
+liteEngine.match = matchesSelector ? function(node, selector, root){
+	if(root && root.nodeType != 9){
+		// doesn't support three args, use rooted id trick
+		return useRoot(root, selector, function(query){
+			return matchesSelector.call(node, query);
+		});
+	}
+	// we have a native matchesSelector, use that
+	return matchesSelector.call(node, selector);
+} : jsMatchesSelector; // otherwise use the JS matches impl
+
+return liteEngine;
+});

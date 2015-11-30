@@ -1,8 +1,188 @@
-//>>built
-define("dojox/html/metrics","dojo/_base/kernel dojo/_base/lang dojo/_base/sniff dojo/ready dojo/_base/unload dojo/_base/window dojo/dom-geometry".split(" "),function(m,n,h,s,t,e,u){var a=n.getObject("dojox.html.metrics",!0),p=n.getObject("dojox");a.getFontMeasurements=function(){var b={"1em":0,"1ex":0,"100%":0,"12pt":0,"16px":0,"xx-small":0,"x-small":0,small:0,medium:0,large:0,"x-large":0,"xx-large":0};h("ie")&&(e.doc.documentElement.style.fontSize="100%");var d=e.doc.createElement("div"),a=d.style;
-a.position="absolute";a.left="-100px";a.top="0";a.width="30px";a.height="1000em";a.borderWidth="0";a.margin="0";a.padding="0";a.outline="0";a.lineHeight="1";a.overflow="hidden";e.body().appendChild(d);for(var f in b)a.fontSize=f,b[f]=16*Math.round(12*d.offsetHeight/16)/12/1E3;e.body().removeChild(d);return b};var g=null;a.getCachedFontMeasurements=function(b){if(b||!g)g=a.getFontMeasurements();return g};var k=null,v={};a.getTextBox=function(b,a,h){var f,c;if(k)f=k;else{f=k=e.doc.createElement("div");
-var g=e.doc.createElement("div");g.appendChild(f);c=g.style;c.overflow="scroll";c.position="absolute";c.left="0px";c.top="-10000px";c.width="1px";c.height="1px";c.visibility="hidden";c.borderWidth="0";c.margin="0";c.padding="0";c.outline="0";e.body().appendChild(g)}f.className="";c=f.style;c.borderWidth="0";c.margin="0";c.padding="0";c.outline="0";if(1<arguments.length&&a)for(var l in a)l in v||(c[l]=a[l]);2<arguments.length&&h&&(f.className=h);f.innerHTML=b;c=u.position(f);c.w=f.parentNode.scrollWidth;
-return c};var q=16,r=16;a.getScrollbar=function(){return{w:q,h:r}};a._fontResizeNode=null;a.initOnFontResize=function(b){var d=a._fontResizeNode=e.doc.createElement("iframe");b=d.style;b.position="absolute";b.width="5em";b.height="10em";b.top="-10000px";b.display="none";h("ie")?d.onreadystatechange=function(){"complete"==d.contentWindow.document.readyState&&(d.onresize=d.contentWindow.parent[p._scopeName].html.metrics._fontresize)}:d.onload=function(){d.contentWindow.onresize=d.contentWindow.parent[p._scopeName].html.metrics._fontresize};
-d.setAttribute("src","javascript:'\x3chtml\x3e\x3chead\x3e\x3cscript\x3eif(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}\x3c/script\x3e\x3c/head\x3e\x3cbody\x3e\x3c/body\x3e\x3c/html\x3e'");e.body().appendChild(d);a.initOnFontResize=function(){}};a.onFontResize=function(){};a._fontresize=function(){a.onFontResize()};t.addOnUnload(function(){var b=a._fontResizeNode;b&&(h("ie")&&b.onresize?b.onresize=null:b.contentWindow&&b.contentWindow.onresize&&(b.contentWindow.onresize=null),a._fontResizeNode=
-null)});s(function(){try{var b=e.doc.createElement("div");b.style.cssText="top:0;left:0;width:100px;height:100px;overflow:scroll;position:absolute;visibility:hidden;";e.body().appendChild(b);q=b.offsetWidth-b.clientWidth;r=b.offsetHeight-b.clientHeight;e.body().removeChild(b);delete b}catch(d){}"fontSizeWatch"in m.config&&m.config.fontSizeWatch&&a.initOnFontResize()});return a});
-//@ sourceMappingURL=metrics.js.map
+define(["dojo/_base/kernel","dojo/_base/lang", "dojo/_base/sniff", "dojo/ready", "dojo/_base/unload",
+		"dojo/_base/window", "dojo/dom-geometry"],
+  function(kernel,lang,has,ready,UnloadUtil,Window,DOMGeom){
+	var dhm = lang.getObject("dojox.html.metrics",true);
+	var dojox = lang.getObject("dojox");
+
+	//	derived from Morris John's emResized measurer
+	dhm.getFontMeasurements = function(){
+		// summary:
+		//		Returns an object that has pixel equivilents of standard font size values.
+		var heights = {
+			'1em':0, '1ex':0, '100%':0, '12pt':0, '16px':0, 'xx-small':0, 'x-small':0,
+			'small':0, 'medium':0, 'large':0, 'x-large':0, 'xx-large':0
+		};
+	
+		var oldStyle;	
+		if(has("ie")){
+			//	We do a font-size fix if and only if one isn't applied already.
+			// NOTE: If someone set the fontSize on the HTML Element, this will kill it.
+			oldStyle = Window.doc.documentElement.style.fontSize || "";
+			if(!oldStyle){
+				Window.doc.documentElement.style.fontSize="100%";
+			}
+		}		
+	
+		//	set up the measuring node.
+		var div=Window.doc.createElement("div");
+		var ds = div.style;
+		ds.position="absolute";
+		ds.left="-100px";
+		ds.top="0";
+		ds.width="30px";
+		ds.height="1000em";
+		ds.borderWidth="0";
+		ds.margin="0";
+		ds.padding="0";
+		ds.outline="0";
+		ds.lineHeight="1";
+		ds.overflow="hidden";
+		Window.body().appendChild(div);
+	
+		//	do the measurements.
+		for(var p in heights){
+			ds.fontSize = p;
+			heights[p] = Math.round(div.offsetHeight * 12/16) * 16/12 / 1000;
+		}
+
+		if(has("ie")){
+			// Restore the font to its old style.
+			Window.doc.documentElement.style.fontSize = oldStyle;
+		}
+		
+		Window.body().removeChild(div);
+		div = null;
+		return heights; 	//	object
+	};
+
+	var fontMeasurements = null;
+	
+	dhm.getCachedFontMeasurements = function(recalculate){
+		if(recalculate || !fontMeasurements){
+			fontMeasurements = dhm.getFontMeasurements();
+		}
+		return fontMeasurements;
+	};
+
+	var measuringNode = null, empty = {};
+	dhm.getTextBox = function(/* String */ text, /* Object */ style, /* String? */ className){
+		var m, s;
+		if(!measuringNode){
+			m = measuringNode = Window.doc.createElement("div");
+			// Container that we can set constraints on so that it doesn't
+			// trigger a scrollbar.
+			var c = Window.doc.createElement("div");
+			c.appendChild(m);
+			s = c.style;
+			s.overflow='scroll';
+			s.position = "absolute";
+			s.left = "0px";
+			s.top = "-10000px";
+			s.width = "1px";
+			s.height = "1px";
+			s.visibility = "hidden";
+			s.borderWidth = "0";
+			s.margin = "0";
+			s.padding = "0";
+			s.outline = "0";
+			Window.body().appendChild(c);
+		}else{
+			m = measuringNode;
+		}
+		// reset styles
+		m.className = "";
+		s = m.style;
+		s.borderWidth = "0";
+		s.margin = "0";
+		s.padding = "0";
+		s.outline = "0";
+		// set new style
+		if(arguments.length > 1 && style){
+			for(var i in style){
+				if(i in empty){ continue; }
+				s[i] = style[i];
+			}
+		}
+		// set classes
+		if(arguments.length > 2 && className){
+			m.className = className;
+		}
+		// take a measure
+		m.innerHTML = text;
+		var box = DOMGeom.position(m);
+		// position doesn't report right (reports 1, since parent is 1)
+		// So we have to look at the scrollWidth to get the real width
+		// Height is right.
+		box.w = m.parentNode.scrollWidth;
+		return box;
+	};
+
+	//	determine the scrollbar sizes on load.
+	var scroll={ w:16, h:16 };
+	dhm.getScrollbar=function(){ return { w:scroll.w, h:scroll.h }; };
+
+	dhm._fontResizeNode = null;
+
+	dhm.initOnFontResize = function(interval){
+		var f = dhm._fontResizeNode = Window.doc.createElement("iframe");
+		var fs = f.style;
+		fs.position = "absolute";
+		fs.width = "5em";
+		fs.height = "10em";
+		fs.top = "-10000px";
+		fs.display = "none";
+		if(has("ie")){
+			f.onreadystatechange = function(){
+				if(f.contentWindow.document.readyState == "complete"){
+					f.onresize = f.contentWindow.parent[dojox._scopeName].html.metrics._fontresize;
+				}
+			};
+		}else{
+			f.onload = function(){
+				f.contentWindow.onresize = f.contentWindow.parent[dojox._scopeName].html.metrics._fontresize;
+			};
+		}
+		//The script tag is to work around a known firebug race condition.  See comments in bug #9046
+		f.setAttribute("src", "javascript:'<html><head><script>if(\"loadFirebugConsole\" in window){window.loadFirebugConsole();}</script></head><body></body></html>'");
+		Window.body().appendChild(f);
+		dhm.initOnFontResize = function(){};
+	};
+
+	dhm.onFontResize = function(){};
+	dhm._fontresize = function(){
+		dhm.onFontResize();
+	};
+
+	UnloadUtil.addOnUnload(function(){
+		// destroy our font resize iframe if we have one
+		var f = dhm._fontResizeNode;
+		if(f){
+			if(has("ie") && f.onresize){
+				f.onresize = null;
+			}else if(f.contentWindow && f.contentWindow.onresize){
+				f.contentWindow.onresize = null;
+			}
+			dhm._fontResizeNode = null;
+		}
+	});
+
+	ready(function(){
+		// getScrollbar metrics node
+		try{
+			var n=Window.doc.createElement("div");
+			n.style.cssText = "top:0;left:0;width:100px;height:100px;overflow:scroll;position:absolute;visibility:hidden;";
+			Window.body().appendChild(n);
+			scroll.w = n.offsetWidth - n.clientWidth;
+			scroll.h = n.offsetHeight - n.clientHeight;
+			Window.body().removeChild(n);
+			//console.log("Scroll bar dimensions: ", scroll);
+			delete n;
+		}catch(e){}
+
+		// text size poll setup
+		if("fontSizeWatch" in kernel.config && !!kernel.config.fontSizeWatch){
+			dhm.initOnFontResize();
+		}
+	});
+	return dhm;
+});

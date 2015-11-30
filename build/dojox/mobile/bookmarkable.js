@@ -1,6 +1,154 @@
-//>>built
-define("dojox/mobile/bookmarkable","dojo/_base/array dojo/_base/connect dojo/_base/lang dojo/_base/window dojo/hash dijit/registry ./TransitionEvent ./View ./viewRegistry".split(" "),function(e,m,n,p,q,k,r,s,f){var c={settingHash:!1,transitionInfo:[],getTransitionInfo:function(a,b){return this.transitionInfo[a.replace(/^#/,"")+":"+b.replace(/^#/,"")]},addTransitionInfo:function(a,b,c){this.transitionInfo[a.replace(/^#/,"")+":"+b.replace(/^#/,"")]=c},findTransitionViews:function(a){if(!a)return[];
-a=k.byId(a.replace(/^#/,""));if(!a)return[];for(var b=a.getParent();b;b=b.getParent())b.isVisible&&!b.isVisible()&&(a=b);return[a.getShowingView(),a]},onHashChange:function(a){this.settingHash?this.settingHash=!1:(a=this.handleFragIds(a),a.hashchange=!0,(new r(p.body(),a)).dispatch())},handleFragIds:function(a){var b,c;if(a){a=a.replace(/^#/,"").split(/,/);for(var d=0;d<a.length;d++){var g=k.byId(a[d]);if(!g.isVisible()){for(var l=!0,h=f.getParentView(g);h;h=f.getParentView(h))if(-1===e.indexOf(a,
-h.id)){l=!1;break}l?(b=this.findTransitionViews(a[d]),2===b.length&&(c=a[d])):e.forEach(g.getSiblingViews(),function(a){a.domNode.style.display=a===g?"":"none"})}}}else c=f.initialView.id,b=this.findTransitionViews(c);a=this.getTransitionInfo(b[0].id,b[1].id);d=1;a||(a=this.getTransitionInfo(b[1].id,b[0].id),d=-1);return{moveTo:"#"+c,transitionDir:a?a.transitionDir*d:1,transition:a?a.transition:"none"}},setFragIds:function(a){a=e.filter(f.getViews(),function(a){return a.isVisible()});this.settingHash=
-!0;q(e.map(a,function(a){return a.id}).join(","))}};m.subscribe("/dojo/hashchange",null,function(){c.onHashChange.apply(c,arguments)});n.extend(s,{getTransitionInfo:function(){c.getTransitionInfo.apply(c,arguments)},addTransitionInfo:function(){c.addTransitionInfo.apply(c,arguments)},handleFragIds:function(){c.handleFragIds.apply(c,arguments)},setFragIds:function(){c.setFragIds.apply(c,arguments)}});return c});
-//@ sourceMappingURL=bookmarkable.js.map
+define([
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/_base/lang",
+	"dojo/_base/window",
+	"dojo/hash",
+	"dijit/registry",
+	"./TransitionEvent",
+	"./View",
+	"./viewRegistry"
+], function(array, connect, lang, win, hash, registry, TransitionEvent, View, viewRegistry){
+
+	// module:
+	//		dojox/mobile/bookmarkable
+
+	var b = {
+		// summary:
+		//		Utilities to make the view transitions bookmarkable.
+
+		// settingHash: [private] Boolean
+		//		Whether the browser URL needs to be updated to include the hash.
+		settingHash: false,
+		
+		// transitionInfo: Array
+		//		An array containing information about the transition.
+		transitionInfo: [],
+
+		getTransitionInfo: function(/*String*/ fromViewId, /*String*/ toViewId){
+			// summary:
+			//		Returns an array containing the transition information.
+			return this.transitionInfo[fromViewId.replace(/^#/, "") + ":" + toViewId.replace(/^#/, "")]; // Array
+		},
+
+		addTransitionInfo: function(/*String*/ fromViewId, /*String*/ toViewId, /*Object*/args){
+			// summary:
+			//		Adds transition information.
+			this.transitionInfo[fromViewId.replace(/^#/, "") + ":" + toViewId.replace(/^#/, "")] = args;
+		},
+
+		findTransitionViews: function(/*String*/moveTo){
+			// summary:
+			//		Searches for a starting view and a destination view.
+			if(!moveTo){ return []; }
+			var view = registry.byId(moveTo.replace(/^#/, ""));
+			if(!view){ return []; }
+			for(var v = view.getParent(); v; v = v.getParent()){ // search for the topmost invisible parent node
+				if(v.isVisible && !v.isVisible()){
+					view = v;
+				}
+			}
+			// fromView, toView
+			return [view.getShowingView(), view]; // Array 
+		},
+
+		onHashChange: function(value){
+			// summary:
+			//		Called on "/dojo/hashchange" events.
+			if(this.settingHash){
+				this.settingHash = false;
+				return;
+			}
+			var params = this.handleFragIds(value);
+			params.hashchange = true;
+			new TransitionEvent(win.body(), params).dispatch();
+		},
+
+		handleFragIds: function(/*String*/fragIds){
+			// summary:
+			//		Analyzes the given hash (fragment id).
+			// description:
+			//		Given a comma-separated list of view IDs, this method
+			//		searches for a transition destination, and makes all the
+			//		views in the hash visible.
+
+			var arr, moveTo;
+			if(!fragIds){
+				moveTo = viewRegistry.initialView.id;
+				arr = this.findTransitionViews(moveTo);
+			}else{
+				var ids = fragIds.replace(/^#/, "").split(/,/);
+				for(var i = 0; i < ids.length; i++){
+					// Search for a transition destination view.
+
+					var view = registry.byId(ids[i]);
+
+					// Skip a visible view. Visible view can't be a destination candidate.
+					if(view.isVisible()){ continue; }
+
+					// Check if all the ancestors are in the fragIds.
+					// If not, obviously the view was NOT visible before the previous transition.
+					// That means the previous transition can't happen from that view,
+					// which means the view can't be a destination.
+					var success = true;
+					for(var v = viewRegistry.getParentView(view); v; v = viewRegistry.getParentView(v)){
+						if(array.indexOf(ids, v.id) === -1){
+							success = false;
+							break;
+						}
+					}
+					if(!success){
+						// Simply make the view visible without transition.
+						array.forEach(view.getSiblingViews(), function(v){
+							v.domNode.style.display = (v === view) ? "" : "none";
+						});
+						continue;
+					}
+
+					arr = this.findTransitionViews(ids[i]);
+					if(arr.length === 2){
+						moveTo = ids[i];
+						// The destination found. But continue the loop to make
+						// the other views in the fragIds visible.
+					}
+				}
+			}
+
+			var args = this.getTransitionInfo(arr[0].id, arr[1].id);
+			var dir = 1;
+			if(!args){
+				args = this.getTransitionInfo(arr[1].id, arr[0].id);
+				dir = -1;
+			}
+
+			return {
+				moveTo: "#" + moveTo,
+				transitionDir: args ? args.transitionDir * dir : 1,
+				transition: args ? args.transition : "none"
+			};
+		},
+
+		setFragIds: function(/*Widget*/toView){
+			// summary:
+			//		Updates the hash (fragment id) in the browser URL.
+			// description:
+			//		The hash value consists of one or more visible view ids
+			//		separated with commas.
+
+			var arr = array.filter(viewRegistry.getViews(), function(v){ return v.isVisible(); });
+			this.settingHash = true;
+			hash(array.map(arr, function(v){ return v.id; }).join(","));
+		}
+	};
+
+	connect.subscribe("/dojo/hashchange", null, function(){ b.onHashChange.apply(b, arguments); });
+
+	lang.extend(View, {
+		getTransitionInfo: function(){ b.getTransitionInfo.apply(b, arguments); },
+		addTransitionInfo: function(){ b.addTransitionInfo.apply(b, arguments); },
+		handleFragIds: function(){ b.handleFragIds.apply(b, arguments); },
+		setFragIds: function(){ b.setFragIds.apply(b, arguments); }
+	});
+
+	return b;
+});

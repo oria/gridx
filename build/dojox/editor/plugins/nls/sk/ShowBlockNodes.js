@@ -1,3 +1,5 @@
-//>>built
-define("dojox/editor/plugins/nls/sk/ShowBlockNodes",{showBlockNodes:"Zobrazi\u0165 elementy blokov HTML"});
-//@ sourceMappingURL=ShowBlockNodes.js.map
+define(
+({
+	"showBlockNodes": "Zobraziť elementy blokov HTML"
+})
+);

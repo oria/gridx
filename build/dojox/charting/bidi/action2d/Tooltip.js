@@ -1,4 +1,51 @@
-//>>built
-define("dojox/charting/bidi/action2d/Tooltip",["dojo/_base/declare","dojo/dom-style"],function(e,f){return e(null,{_recheckPosition:function(a,b,c){if(this.chart.isRightToLeft()){var d=this.chart.offsets.l-this.chart.offsets.r;"marker"==a.element?(b.x=this.chart.dim.width-a.cx+d,c[0]="before-centered",c[1]="after-centered"):"circle"==a.element?b.x=this.chart.dim.width-a.cx-a.cr+d:"bar"==a.element||"column"==a.element?(b.x=this.chart.dim.width-b.width-b.x+d,"bar"==a.element&&(c[0]="before-centered",
-c[1]="after-centered")):"candlestick"==a.element&&(b.x=this.chart.dim.width+d-a.x)}},_format:function(a){var b="rtl"==f.get(this.chart.node,"direction"),c="rtl"==this.chart.getTextDir(a);return c&&!b?"\x3cspan dir \x3d 'rtl'\x3e"+a+"\x3c/span\x3e":!c&&b?"\x3cspan dir \x3d 'ltr'\x3e"+a+"\x3c/span\x3e":a}})});
-//@ sourceMappingURL=Tooltip.js.map
+define(["dojo/_base/declare", "dojo/dom-style"],
+	function(declare, domStyle){
+	// module:
+	//		dojox/charting/bidi/action2d/Tooltip		
+	return declare(null, {
+		_recheckPosition: function(obj,rect,position){
+			if(!this.chart.isRightToLeft()){
+				return;
+			}
+			var shift = this.chart.offsets.l - this.chart.offsets.r;
+			if(obj.element == "marker"){
+				rect.x = this.chart.dim.width - obj.cx + shift;
+				position[0] = "before-centered";
+				position[1] = "after-centered";
+			}
+			else if(obj.element == "circle"){
+				rect.x = this.chart.dim.width - obj.cx - obj.cr + shift;
+			}
+			else if(obj.element == "bar" || obj.element == "column"){
+				rect.x = this.chart.dim.width - rect.width - rect.x + shift;
+				if(obj.element == "bar"){
+					position[0] = "before-centered";
+					position[1] = "after-centered";
+				}
+			}
+			else if(obj.element == "candlestick"){
+				rect.x = this.chart.dim.width + shift - obj.x;
+			}
+			else if(obj.element == "slice"){
+				if((position[0] == "before-centered") || (position[0] == "after-centered")) {
+					position.reverse();
+				}
+				rect.x = obj.cx + (obj.cx - rect.x);
+			}
+		},
+		
+		_format: function(tooltip){
+			var isChartDirectionRtl = (domStyle.get(this.chart.node, "direction") == "rtl");
+			var isBaseTextDirRtl = (this.chart.getTextDir(tooltip) == "rtl");
+			if(isBaseTextDirRtl && !isChartDirectionRtl){
+				return "<span dir = 'rtl'>" + tooltip +"</span>";
+			}
+			else if(!isBaseTextDirRtl && isChartDirectionRtl){
+				return "<span dir = 'ltr'>" + tooltip +"</span>";
+			}else{
+				return tooltip;
+			}
+		}
+	});
+});
+

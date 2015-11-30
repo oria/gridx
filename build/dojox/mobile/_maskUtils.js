@@ -1,7 +1,125 @@
-//>>built
-define("dojox/mobile/_maskUtils",["dojo/_base/window","dojo/dom-style","./sniff"],function(q,t,r){var s={};return{createRoundMask:function(n,c,d,b,l,g,e,a,f,k){b=c+g+b;var m=d+e+l;if(r("webkit"))l=("DojoMobileMask"+c+d+g+e+a+f).replace(/\./g,"_"),s[l]||(s[l]=1,b=q.doc.getCSSCanvasContext("2d",l,b,m),b.beginPath(),a==f?2==a&&5==g?(b.fillStyle="rgba(0,0,0,0.5)",b.fillRect(1,0,3,2),b.fillRect(0,1,5,1),b.fillRect(0,e-2,5,1),b.fillRect(1,e-1,3,2),b.fillStyle="rgb(0,0,0)",b.fillRect(0,2,5,e-4)):2==a&&5==
-e?(b.fillStyle="rgba(0,0,0,0.5)",b.fillRect(0,1,2,3),b.fillRect(1,0,1,5),b.fillRect(g-2,0,1,5),b.fillRect(g-1,1,2,3),b.fillStyle="rgb(0,0,0)",b.fillRect(2,0,g-4,5)):(b.fillStyle="#000000",b.moveTo(c+a,d),b.arcTo(c,d,c,d+a,a),b.lineTo(c,d+e-a),b.arcTo(c,d+e,c+a,d+e,a),b.lineTo(c+g-a,d+e),b.arcTo(c+g,d+e,c+g,d+a,a),b.lineTo(c+g,d+a),b.arcTo(c+g,d,c+g-a,d,a)):(e=Math.PI,b.scale(1,f/a),b.moveTo(c+a,d),b.arc(c+a,d+a,a,1.5*e,0.5*e,!0),b.lineTo(c+g-a,d+2*a),b.arc(c+g-a,d+a,a,0.5*e,1.5*e,!0)),b.closePath(),
-b.fill()),n.style.webkitMaskImage="-webkit-canvas("+l+")";else if(r("svg")){n._svgMask&&n.removeChild(n._svgMask);for(var p=null,h=n.parentNode;h&&(!(p=t.getComputedStyle(h).backgroundColor)||"transparent"==p||p.match(/rgba\(.*,\s*0\s*\)/));h=h.parentNode);h=q.doc.createElementNS("http://www.w3.org/2000/svg","svg");h.setAttribute("width",b);h.setAttribute("height",m);h.style.position="absolute";h.style.pointerEvents="none";h.style.opacity="1";h.style.zIndex="2147483647";m=q.doc.createElementNS("http://www.w3.org/2000/svg",
-"path");k=k||0;a+=k;f+=k;c=" M"+(c+a-k)+","+(d-k)+" a"+a+","+f+" 0 0,0 "+-a+","+f+" v"+-f+" h"+a+" Z M"+(c-k)+","+(d+e-f+k)+" a"+a+","+f+" 0 0,0 "+a+","+f+" h"+-a+" v"+-f+" z M"+(c+g-a+k)+","+(d+e+k)+" a"+a+","+f+" 0 0,0 "+a+","+-f+" v"+f+" h"+-a+" z M"+(c+g+k)+","+(d+f-k)+" a"+a+","+f+" 0 0,0 "+-a+","+-f+" h"+a+" v"+f+" z";0<d&&(c+=" M0,0 h"+b+" v"+d+" h"+-b+" z");0<l&&(c+=" M0,"+(d+e)+" h"+b+" v"+l+" h"+-b+" z");m.setAttribute("d",c);m.setAttribute("fill",p);m.setAttribute("stroke",p);m.style.opacity=
-"1";h.appendChild(m);n._svgMask=h;n.appendChild(h)}}}});
-//@ sourceMappingURL=_maskUtils.js.map
+define([
+	"dojo/_base/window",
+	"dojo/dom-style",
+	"./sniff"
+], function(win, domStyle, has){
+
+	has.add("mask-image-css", function(global, doc, elt){
+		return typeof doc.getCSSCanvasContext === "function" && typeof elt.style.webkitMaskImage !== "undefined";
+	});
+
+	// Indicates whether image mask is available (either via css mask image or svg)
+	has.add("mask-image", function(){
+		return has("mask-image-css") || has("svg");
+	});
+
+	var cache = {};
+
+	return {
+		// summary:
+		//		Utility methods to clip rounded corners of various elements (Switch, ScrollablePane, scrollbars in scrollable widgets).
+		//		Uses -webkit-mask-image on webkit, or SVG on other browsers.
+		
+		createRoundMask: function(/*DomNode*/node, x, y, r, b, w, h, rx, ry, e){
+			// summary:
+			//		Creates and sets a mask for the specified node.
+			
+			var tw = x + w + r;
+			var th = y + h + b;
+			
+			if(has("mask-image-css")){			// use -webkit-mask-image
+				var id = ("DojoMobileMask" + x + y + w + h + rx + ry).replace(/\./g, "_");
+				if (!cache[id]) {
+					cache[id] = 1;
+					var ctx = win.doc.getCSSCanvasContext("2d", id, tw, th);
+					ctx.beginPath();
+					if (rx == ry) {
+						// round arc
+						if(rx == 2 && w == 5){
+							// optimized case for vertical scrollbar
+							ctx.fillStyle = "rgba(0,0,0,0.5)";
+							ctx.fillRect(1, 0, 3, 2);
+							ctx.fillRect(0, 1, 5, 1);
+							ctx.fillRect(0, h - 2, 5, 1);
+							ctx.fillRect(1, h - 1, 3, 2);
+							ctx.fillStyle = "rgb(0,0,0)";
+							ctx.fillRect(0, 2, 5, h - 4);
+						}else if(rx == 2 && h == 5){
+							// optimized case for horizontal scrollbar
+							ctx.fillStyle = "rgba(0,0,0,0.5)";
+							ctx.fillRect(0, 1, 2, 3);
+							ctx.fillRect(1, 0, 1, 5);
+							ctx.fillRect(w - 2, 0, 1, 5);
+							ctx.fillRect(w - 1, 1, 2, 3);
+							ctx.fillStyle = "rgb(0,0,0)";
+							ctx.fillRect(2, 0, w - 4, 5);
+						}else{
+							// general case
+							ctx.fillStyle = "#000000";
+							ctx.moveTo(x+rx, y);
+							ctx.arcTo(x, y, x, y+rx, rx);
+							ctx.lineTo(x, y+h - rx);
+							ctx.arcTo(x, y+h, x+rx, y+h, rx);
+							ctx.lineTo(x+w - rx, y+h);
+							ctx.arcTo(x+w, y+h, x+w, y+rx, rx);
+							ctx.lineTo(x+w, y+rx);
+							ctx.arcTo(x+w, y, x+w - rx, y, rx);
+						}
+					} else {
+						// elliptical arc
+						var pi = Math.PI;
+						ctx.scale(1, ry / rx);
+						ctx.moveTo(x+rx, y);
+						ctx.arc(x+rx, y+rx, rx, 1.5 * pi, 0.5 * pi, true);
+						ctx.lineTo(x+w - rx, y+2 * rx);
+						ctx.arc(x+w - rx, y+rx, rx, 0.5 * pi, 1.5 * pi, true);
+					}
+					ctx.closePath();
+					ctx.fill();
+				}
+				node.style.webkitMaskImage = "-webkit-canvas(" + id + ")";
+			}else if(has("svg")){		// add an SVG image to clip the corners.
+				if(node._svgMask){
+					node.removeChild(node._svgMask);
+				}
+				var bg = null;
+				for(var p = node.parentNode; p; p = p.parentNode){
+					bg = domStyle.getComputedStyle(p).backgroundColor;
+					if(bg && bg != "transparent" && !bg.match(/rgba\(.*,\s*0\s*\)/)){
+						break;
+					}
+				}
+				var svgNS = "http://www.w3.org/2000/svg";
+				var svg = win.doc.createElementNS(svgNS, "svg");
+				svg.setAttribute("width", tw);
+				svg.setAttribute("height", th);
+				svg.style.position = "absolute";
+				svg.style.pointerEvents = "none";
+				svg.style.opacity = "1";
+				svg.style.zIndex = "2147483647"; // max int
+				var path = win.doc.createElementNS(svgNS, "path");
+				e = e || 0;
+				rx += e;
+				ry += e;
+				// TODO: optimized cases for scrollbars as in webkit case?
+				var d = " M" + (x + rx - e) + "," + (y - e) + " a" + rx + "," + ry + " 0 0,0 " + (-rx) + "," + ry + " v" + (-ry) + " h" + rx + " Z" +
+						" M" + (x - e) + "," + (y + h - ry + e) + " a" + rx + "," + ry + " 0 0,0 " + rx + "," + ry + " h" + (-rx) + " v" + (-ry) + " z" +
+						" M" + (x + w - rx + e) + "," + (y + h + e) + " a" + rx + "," + ry + " 0 0,0 " + rx + "," + (-ry) + " v" + ry + " h" + (-rx) + " z" +
+						" M" + (x + w + e) + "," + (y + ry - e) + " a" + rx + "," + ry + " 0 0,0 " + (-rx) + "," + (-ry) + " h" + rx + " v" + ry + " z";
+				if(y > 0){
+					d += " M0,0 h" + tw + " v" + y + " h" + (-tw) + " z";
+				}
+				if(b > 0){
+					d += " M0," + (y + h) + " h" + tw + " v" + b + " h" + (-tw) + " z";
+				}
+				path.setAttribute("d", d);
+				path.setAttribute("fill", bg);
+				path.setAttribute("stroke", bg);
+				path.style.opacity = "1";
+				svg.appendChild(path); 
+				node._svgMask = svg;
+				node.appendChild(svg);
+			}
+		}
+	};
+});

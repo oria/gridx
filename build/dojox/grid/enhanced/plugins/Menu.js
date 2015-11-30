@@ -1,7 +1,135 @@
-//>>built
-define("dojox/grid/enhanced/plugins/Menu","dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/_base/html dojo/_base/event dojo/keys ../_Plugin ../../EnhancedGrid".split(" "),function(e,h,f,g,k,l,m,n){e=e("dojox.grid.enhanced.plugins.Menu",m,{name:"menus",types:["headerMenu","rowMenu","cellMenu","selectedRegionMenu"],constructor:function(){var a=this.grid;a.showMenu=f.hitch(a,this.showMenu);a._setRowMenuAttr=f.hitch(this,"_setRowMenuAttr");a._setCellMenuAttr=f.hitch(this,"_setCellMenuAttr");
-a._setSelectedRegionMenuAttr=f.hitch(this,"_setSelectedRegionMenuAttr")},onStartUp:function(){var a,b=this.option;for(a in b)0<=h.indexOf(this.types,a)&&b[a]&&this._initMenu(a,b[a])},_initMenu:function(a,b){var c=this.grid;if(!c[a]){var d=this._getMenuWidget(b);d&&(c.set(a,d),"headerMenu"!=a?d._scheduleOpen=function(){}:c.setupHeaderMenu())}},_getMenuWidget:function(a){return a instanceof dijit.Menu?a:dijit.byId(a)},_setRowMenuAttr:function(a){this._setMenuAttr(a,"rowMenu")},_setCellMenuAttr:function(a){this._setMenuAttr(a,
-"cellMenu")},_setSelectedRegionMenuAttr:function(a){this._setMenuAttr(a,"selectedRegionMenu")},_setMenuAttr:function(a,b){var c=this.grid,d=c.domNode;!a||!(a instanceof dijit.Menu)?console.warn(b," of Grid ",c.id," is not existed!"):(c[b]&&c[b].unBindDomNode(d),c[b]=a,c[b].bindDomNode(d))},showMenu:function(a){if((a.cellNode&&g.hasClass(a.cellNode,"dojoxGridRowSelected")||a.rowNode&&(g.hasClass(a.rowNode,"dojoxGridRowSelected")||g.hasClass(a.rowNode,"dojoxGridRowbarSelected")))&&this.selectedRegionMenu)this.onSelectedRegionContextMenu(a);
-else{var b={target:a.target,coords:a.keyCode!==l.F10&&"pageX"in a?{x:a.pageX,y:a.pageY}:null};this.rowMenu&&(!this.cellMenu||this.selection.isSelected(a.rowIndex)||a.rowNode&&g.hasClass(a.rowNode,"dojoxGridRowbar"))?this.rowMenu._openMyself(b):this.cellMenu&&this.cellMenu._openMyself(b);k.stop(a)}},destroy:function(){var a=this.grid;a.headerMenu&&a.headerMenu.unBindDomNode(a.viewsHeaderNode);a.rowMenu&&a.rowMenu.unBindDomNode(a.domNode);a.cellMenu&&a.cellMenu.unBindDomNode(a.domNode);a.selectedRegionMenu&&
-a.selectedRegionMenu.destroy();this.inherited(arguments)}});n.registerPlugin(e);return e});
-//@ sourceMappingURL=Menu.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/html",
+	"dojo/_base/event",
+	"dojo/keys",
+	"../_Plugin",
+	"../../EnhancedGrid"
+], function(declare, array, lang, html, evt, keys, _Plugin, EnhancedGrid){
+
+var Menu = declare("dojox.grid.enhanced.plugins.Menu", _Plugin, {
+	// summary:
+	//		 Provides context menu support, including header menu, row menu, cell menu and selected region menu
+	// example:
+	// |	<div dojoType="dojox.grid.EnhancedGrid"
+	// |		plugins="{menus:{headerMenu:"headerMenuId", rowMenu:"rowMenuId", cellMenu:"cellMenuId",
+	// |						   selectedRegionMenu:"selectedRegionMenuId"}}" ...>
+	// |	</div>
+	
+	// name: String
+	//		Plugin name
+	name: "menus",
+
+	// types: [const] String[]
+	//		menu types
+	types: ['headerMenu', 'rowMenu', 'cellMenu', 'selectedRegionMenu'],
+	
+	constructor: function(){
+		var g = this.grid;
+		g.showMenu = lang.hitch(g, this.showMenu);
+		g._setRowMenuAttr = lang.hitch(this, '_setRowMenuAttr');
+		g._setCellMenuAttr = lang.hitch(this, '_setCellMenuAttr');
+		g._setSelectedRegionMenuAttr = lang.hitch(this, '_setSelectedRegionMenuAttr');
+	},
+	onStartUp: function(){
+		var type, option = this.option;
+		for(type in option){
+			if(array.indexOf(this.types, type) >= 0 && option[type]){
+				this._initMenu(type, option[type]);
+			}
+		}
+	},
+	_initMenu: function(/*String*/ menuType, /*String|dijit/Menu*/ menu){
+		var g = this.grid;
+		if(!g[menuType]){//in case already created in _Grid.postCreate()
+			var m = this._getMenuWidget(menu);
+			if(!m){return;}
+			g.set(menuType, m);
+			if(menuType != "headerMenu"){
+				m._scheduleOpen = function(){return;};
+			}else{
+				g.setupHeaderMenu();
+			}
+		}
+	},
+	_getMenuWidget: function(/*String|Widget(dijit.Menu)*/menu){
+		// summary:
+		//		Fetch the required menu widget(should already been created)
+		return (menu instanceof dijit.Menu) ? menu : dijit.byId(menu);
+	},
+	_setRowMenuAttr: function(/*Widget(dijit.Menu)*/menu){
+		// summary:
+		//		Set row menu widget
+		this._setMenuAttr(menu, 'rowMenu');
+	},
+	_setCellMenuAttr: function(/*Widget(dijit.Menu)*/menu){
+		// summary:
+		//		Set cell menu widget
+		this._setMenuAttr(menu, 'cellMenu');
+	},
+	_setSelectedRegionMenuAttr: function(/*Widget(dijit.Menu)*/menu){
+		// summary:
+		//		Set row menu widget
+		this._setMenuAttr(menu, 'selectedRegionMenu');
+	},
+	_setMenuAttr: function(/*Widget(dijit.Menu)*/menu, /*String*/menuType){
+		// summary:
+		//		Bind menus to Grid.
+		var g = this.grid, n = g.domNode;
+		if(!menu || !(menu instanceof dijit.Menu)){
+			console.warn(menuType, " of Grid ", g.id, " is not existed!");
+			return;
+		}
+		if(g[menuType]){
+			g[menuType].unBindDomNode(n);
+		}
+		g[menuType] = menu;
+		g[menuType].bindDomNode(n);
+	},
+	showMenu: function(/*Event*/e){
+		// summary:
+		//		Show appropriate context menu
+		//		Fired from dojox.grid.enhanced._Events.onRowContextMenu, 'this' scope - Grid
+
+		// TODO: test Shift-F10
+
+		var inSelectedRegion = (e.cellNode && html.hasClass(e.cellNode, 'dojoxGridRowSelected') ||
+			e.rowNode && (html.hasClass(e.rowNode, 'dojoxGridRowSelected') || html.hasClass(e.rowNode, 'dojoxGridRowbarSelected')));
+		
+		if(inSelectedRegion && this.selectedRegionMenu){
+			this.onSelectedRegionContextMenu(e);
+			return;
+		}
+		
+		var info = {target: e.target, coords: e.keyCode !== keys.F10 && "pageX" in e ? {x: e.pageX, y: e.pageY } : null};
+		if(this.rowMenu && (!this.cellMenu || this.selection.isSelected(e.rowIndex) || e.rowNode && html.hasClass(e.rowNode, 'dojoxGridRowbar'))){
+			this.rowMenu._openMyself(info);
+			evt.stop(e);
+			return;
+		}
+
+		if(this.cellMenu){
+			this.cellMenu._openMyself(info);
+		}
+		evt.stop(e);
+	},
+	destroy: function(){
+		// summary:
+		//		Destroy all resources.
+		//		_Grid.destroy() will unbind headerMenu
+		var g = this.grid;
+		if(g.headerMenu){g.headerMenu.unBindDomNode(g.viewsHeaderNode);}
+		if(g.rowMenu){g.rowMenu.unBindDomNode(g.domNode);}
+		if(g.cellMenu){g.cellMenu.unBindDomNode(g.domNode);}
+		if(g.selectedRegionMenu){g.selectedRegionMenu.destroy();}
+		this.inherited(arguments);
+	}
+});
+
+EnhancedGrid.registerPlugin(Menu/*name:'menus'*/);
+
+return Menu;
+
+});

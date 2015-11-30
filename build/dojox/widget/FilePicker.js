@@ -1,9 +1,229 @@
-//>>built
-define("dojox/widget/FilePicker",["dojo","dijit","dojox","dojo/i18n!dojox/widget/nls/FilePicker","dojo/require!dojox/widget/RollingList,dojo/i18n"],function(d,f,e){d.provide("dojox.widget.FilePicker");d.require("dojox.widget.RollingList");d.require("dojo.i18n");d.requireLocalization("dojox.widget","FilePicker");d.declare("dojox.widget._FileInfoPane",[e.widget._RollingListPane],{templateString:"",templateString:d.cache("dojox.widget","FilePicker/_FileInfoPane.html",'\x3cdiv class\x3d"dojoxFileInfoPane"\x3e\r\n\t\x3ctable\x3e\r\n\t\t\x3ctbody\x3e\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd class\x3d"dojoxFileInfoLabel dojoxFileInfoNameLabel"\x3e${_messages.name}\x3c/td\x3e\r\n\t\t\t\t\x3ctd class\x3d"dojoxFileInfoName" dojoAttachPoint\x3d"nameNode"\x3e\x3c/td\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd class\x3d"dojoxFileInfoLabel dojoxFileInfoPathLabel"\x3e${_messages.path}\x3c/td\x3e\r\n\t\t\t\t\x3ctd class\x3d"dojoxFileInfoPath" dojoAttachPoint\x3d"pathNode"\x3e\x3c/td\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd class\x3d"dojoxFileInfoLabel dojoxFileInfoSizeLabel"\x3e${_messages.size}\x3c/td\x3e\r\n\t\t\t\t\x3ctd class\x3d"dojoxFileInfoSize" dojoAttachPoint\x3d"sizeNode"\x3e\x3c/td\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\x3c/tbody\x3e\r\n\t\x3c/table\x3e\r\n\t\x3cdiv dojoAttachPoint\x3d"containerNode" style\x3d"display:none;"\x3e\x3c/div\x3e\r\n\x3c/div\x3e'),
-postMixInProperties:function(){this._messages=d.i18n.getLocalization("dojox.widget","FilePicker",this.lang);this.inherited(arguments)},onItems:function(){var a=this.store,b=this.items[0];b?(this.nameNode.innerHTML=a.getLabel(b),this.pathNode.innerHTML=a.getIdentity(b),this.sizeNode.innerHTML=a.getValue(b,"size"),this.parentWidget.scrollIntoView(this),this.inherited(arguments)):this._onError("Load",Error("No item defined"))}});d.declare("dojox.widget.FilePicker",e.widget.RollingList,{className:"dojoxFilePicker",
-pathSeparator:"",topDir:"",parentAttr:"parentDir",pathAttr:"path",preloadItems:50,selectDirectories:!0,selectFiles:!0,_itemsMatch:function(a,b){if(!a&&!b)return!0;if(a&&b){if(a==b)return!0;if(this._isIdentity){var c=[this.store.getIdentity(a),this.store.getIdentity(b)];d.forEach(c,function(a,b){a.lastIndexOf(this.pathSeparator)==a.length-1&&(c[b]=a.substring(0,a.length-1))},this);return c[0]==c[1]}}return!1},startup:function(){if(!this._started){this.inherited(arguments);var a,b=this.getChildren()[0],
-c=d.hitch(this,function(){a&&this.disconnect(a);delete a;var c=b.items[0];if(c){var d=this.store,e=d.getValue(c,this.parentAttr),c=d.getValue(c,this.pathAttr);this.pathSeparator=this.pathSeparator||d.pathSeparator;this.pathSeparator||(this.pathSeparator=c.substring(e.length,e.length+1));this.topDir||(this.topDir=e,this.topDir.lastIndexOf(this.pathSeparator)!=this.topDir.length-1&&(this.topDir+=this.pathSeparator))}});if(!this.pathSeparator||!this.topDir)b.items?c():a=this.connect(b,"onItems",c)}},
-getChildItems:function(a){var b=this.inherited(arguments);!b&&this.store.getValue(a,"directory")&&(b=[]);return b},getMenuItemForItem:function(a,b,c){b={iconClass:"dojoxDirectoryItemIcon"};this.store.getValue(a,"directory")||(b.iconClass="dojoxFileItemIcon",a=this.store.getLabel(a),c=a.lastIndexOf("."),0<=c&&(b.iconClass+=" dojoxFileItemIcon_"+a.substring(c+1)),this.selectFiles||(b.disabled=!0));return new f.MenuItem(b)},getPaneForItem:function(a,b,c){b=null;!a||this.store.isItem(a)&&this.store.getValue(a,
-"directory")?b=new e.widget._RollingListGroupPane({}):this.store.isItem(a)&&!this.store.getValue(a,"directory")&&(b=new e.widget._FileInfoPane({}));return b},_setPathValueAttr:function(a,b,c){a?(a.lastIndexOf(this.pathSeparator)==a.length-1&&(a=a.substring(0,a.length-1)),this.store.fetchItemByIdentity({identity:a,onItem:function(a){b&&(this._lastExecutedValue=a);this.set("value",a);c&&c()},scope:this})):this.set("value",null)},_getPathValueAttr:function(a){a||(a=this.value);return a&&this.store.isItem(a)?
-this.store.getValue(a,this.pathAttr):""},_setValue:function(a){delete this._setInProgress;var b=this.store;if(a&&b.isItem(a)){if((b=this.store.getValue(a,"directory"))&&!this.selectDirectories||!b&&!this.selectFiles)return}else a=null;this._itemsMatch(this.value,a)||(this.value=a,this._onChange(a))}})});
-//@ sourceMappingURL=FilePicker.js.map
+dojo.provide("dojox.widget.FilePicker");
+
+dojo.require("dojox.widget.RollingList");
+
+dojo.require("dojo.i18n");
+dojo.requireLocalization("dojox.widget", "FilePicker");
+
+dojo.declare("dojox.widget._FileInfoPane",
+	[dojox.widget._RollingListPane], {
+	// summary:
+	//		a pane to display the information for the currently-selected
+	//		file
+	
+	// templateString: string
+	//		delete our template string
+	templateString: "",
+	
+	// templateString: String
+	//		The template to be used to construct the widget.
+	templateString: dojo.cache("dojox.widget", "FilePicker/_FileInfoPane.html"),
+	
+	postMixInProperties: function(){
+		this._messages = dojo.i18n.getLocalization("dojox.widget", "FilePicker", this.lang);
+		this.inherited(arguments);
+	},
+
+	onItems: function(){
+		// summary:
+		//		called after a fetch or load - at this point, this.items should be
+		//		set and loaded.
+		var store = this.store, item = this.items[0];
+		if(!item){
+			this._onError("Load", new Error("No item defined"));
+		}else{
+			this.nameNode.innerHTML = store.getLabel(item);
+			this.pathNode.innerHTML = store.getIdentity(item);
+			this.sizeNode.innerHTML = store.getValue(item, "size");
+			this.parentWidget.scrollIntoView(this);
+			this.inherited(arguments);
+		}
+	}
+});
+
+dojo.declare("dojox.widget.FilePicker", dojox.widget.RollingList, {
+	// summary:
+	//		a specialized version of RollingList that handles file information
+	//		in a store
+	
+	className: "dojoxFilePicker",
+	
+	// pathSeparator: String
+	//		Our file separator - it will be guessed if not set
+	pathSeparator: "",
+	
+	// topDir: String
+	//		The top directory string - it will be guessed if not set
+	topDir: "",
+		
+	// parentAttr: String
+	//		the attribute to read for finding our parent directory
+	parentAttr: "parentDir",
+	
+	// pathAttr: String
+	//		the attribute to read for getting the full path of our file
+	pathAttr: "path",
+	
+	// preloadItems: Boolean|Int
+	//		Set this to a sane number - since we expect to mostly be using the
+	//		dojox.data.FileStore - which doesn't like loading lots of items
+	//		all at once.
+	preloadItems: 50,
+
+	// selectDirectories: Boolean
+	//		whether or not we allow selection of directories - that is, whether or
+	//		our value can be set to a directory.
+	selectDirectories: true,
+
+	// selectFiles: Boolean
+	//		whether or not we allow selection of files - that is, we will disable
+	//		the file entries.
+	selectFiles: true,
+
+	_itemsMatch: function(/*item*/ item1, /*item*/ item2){
+		// Summary:
+		//		Returns whether or not the two items match - checks ID if
+		//		they aren't the exact same object - ignoring trailing slashes
+		if(!item1 && !item2){
+			return true;
+		}else if(!item1 || !item2){
+			return false;
+		}else if(item1 == item2){
+			return true;
+		}else if (this._isIdentity){
+			var iArr = [ this.store.getIdentity(item1), this.store.getIdentity(item2) ];
+			dojo.forEach(iArr, function(i, idx){
+				if(i.lastIndexOf(this.pathSeparator) == (i.length - 1)){
+					iArr[idx] = i.substring(0, i.length - 1);
+				}else{
+				}
+			}, this);
+			return (iArr[0] == iArr[1]);
+		}
+		return false;
+	},
+	
+	startup: function(){
+		if(this._started){ return; }
+		this.inherited(arguments);
+		// Figure out our file separator if we don't have it yet
+		var conn, child = this.getChildren()[0];
+		var setSeparator = dojo.hitch(this, function(){
+			if(conn){
+				this.disconnect(conn);
+			}
+			delete conn;
+			var item = child.items[0];
+			if(item){
+				var store = this.store;
+				var parent = store.getValue(item, this.parentAttr);
+				var path = store.getValue(item, this.pathAttr);
+				this.pathSeparator = this.pathSeparator || store.pathSeparator;
+				if(!this.pathSeparator){
+					this.pathSeparator = path.substring(parent.length, parent.length + 1);
+				}
+				if(!this.topDir){
+					this.topDir = parent;
+					if(this.topDir.lastIndexOf(this.pathSeparator) != (this.topDir.length - 1)){
+						this.topDir += this.pathSeparator;
+					}
+				}
+			}
+		});
+		if(!this.pathSeparator || !this.topDir){
+			if(!child.items){
+				conn = this.connect(child, "onItems", setSeparator);
+			}else{
+				setSeparator();
+			}
+		}
+	},
+	
+	getChildItems: function(item){
+		var ret = this.inherited(arguments);
+		if(!ret && this.store.getValue(item, "directory")){
+			// It's an empty directory - so pass through an empty array
+			ret = [];
+		}
+		return ret;
+	},
+	
+	getMenuItemForItem: function(/*item*/ item, /* dijit/_Contained */ parentPane, /* item[]? */ children){
+		var menuOptions = {iconClass: "dojoxDirectoryItemIcon"};
+		if(!this.store.getValue(item, "directory")){
+			menuOptions.iconClass = "dojoxFileItemIcon";
+			var l = this.store.getLabel(item), idx = l.lastIndexOf(".");
+			if(idx >= 0){
+				menuOptions.iconClass += " dojoxFileItemIcon_" + l.substring(idx + 1);
+			}
+			if(!this.selectFiles){
+				menuOptions.disabled = true;
+			}
+		}
+		var ret = new dijit.MenuItem(menuOptions);
+		return ret;
+	},
+	
+	getPaneForItem: function(/*item*/ item, /* dijit/_Contained */ parentPane, /* item[]? */ children){
+		var ret = null;
+		if(!item || (this.store.isItem(item) && this.store.getValue(item, "directory"))){
+			ret = new dojox.widget._RollingListGroupPane({});
+		}else if(this.store.isItem(item) && !this.store.getValue(item, "directory")){
+			ret = new dojox.widget._FileInfoPane({});
+		}
+		return ret;
+	},
+	
+	_setPathValueAttr: function(/*String*/ path, /*Boolean?*/ resetLastExec, /*function?*/ onSet){
+		// summary:
+		//		sets the value of this widget based off the given path
+		if(!path){
+			this.set("value", null);
+			return;
+		}
+		if(path.lastIndexOf(this.pathSeparator) == (path.length - 1)){
+			path = path.substring(0, path.length - 1);
+		}
+		this.store.fetchItemByIdentity({identity: path,
+										onItem: function(v){
+											if(resetLastExec){
+												this._lastExecutedValue = v;
+											}
+											this.set("value", v);
+											if(onSet){ onSet(); }
+										},
+										scope: this});
+	},
+	
+	_getPathValueAttr: function(/*item?*/val){
+		// summary:
+		//		returns the path value of the given value (or current value
+		//		if not passed a value)
+		if(!val){
+			val = this.value;
+		}
+		if(val && this.store.isItem(val)){
+			return this.store.getValue(val, this.pathAttr);
+		}else{
+			return "";
+		}
+	},
+	
+	_setValue: function(/* item */ value){
+		// summary:
+		//		internally sets the value and fires onchange
+		delete this._setInProgress;
+		var store = this.store;
+		if(value && store.isItem(value)){
+			var isDirectory = this.store.getValue(value, "directory");
+			if((isDirectory && !this.selectDirectories) ||
+				(!isDirectory && !this.selectFiles)){ return; }
+		}else{
+			value = null;
+		}
+		if(!this._itemsMatch(this.value, value)){
+			this.value = value;
+			this._onChange(value);
+		}
+	}
+});

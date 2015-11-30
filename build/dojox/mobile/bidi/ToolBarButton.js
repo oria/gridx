@@ -1,4 +1,35 @@
-//>>built
-define("dojox/mobile/bidi/ToolBarButton",["dojo/_base/declare","dojo/_base/lang","dojo/dom-class"],function(a,e,b){return a(null,{buildRendering:function(){this.inherited(arguments);if(!this.isLeftToRight()&&this.arrow){var c="left"===this.arrow?"mblToolBarButtonHasLeftArrow":"mblToolBarButtonHasRightArrow",a="left"===this.arrow?"mblToolBarButtonRightArrow":"mblToolBarButtonLeftArrow",d="left"===this.arrow?"mblToolBarButtonHasRightArrow":"mblToolBarButtonHasLeftArrow";b.remove(this.arrowNode,"left"===
-this.arrow?"mblToolBarButtonLeftArrow":"mblToolBarButtonRightArrow");b.add(this.arrowNode,a);b.remove(this.domNode,c);b.add(this.domNode,d)}},_setLabelAttr:function(a){this.inherited(arguments);this.isLeftToRight()||b.toggle(this.tableNode,"mblToolBarButtonTextRtl",a||this.arrow)}})});
-//@ sourceMappingURL=ToolBarButton.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/dom-class"
+], function(declare, lang, domClass){
+
+	// module:
+	//		dojox/mobile/ToolBarButton
+
+	return declare(null, {
+		buildRendering: function(){
+			this.inherited(arguments);
+			//dojox.mobile mirroring support
+			if(!this.isLeftToRight() && this.arrow){
+				var cRemove1 = (this.arrow === "left" ? "mblToolBarButtonLeftArrow" : "mblToolBarButtonRightArrow");
+				var cRemove2 = (this.arrow === "left" ? "mblToolBarButtonHasLeftArrow" : "mblToolBarButtonHasRightArrow");
+				var cAdd1 = (this.arrow === "left" ? "mblToolBarButtonRightArrow" : "mblToolBarButtonLeftArrow");
+				var cAdd2 = (this.arrow === "left" ? "mblToolBarButtonHasRightArrow" : "mblToolBarButtonHasLeftArrow");
+				domClass.remove(this.arrowNode, cRemove1);
+				domClass.add(this.arrowNode, cAdd1);
+				domClass.remove(this.domNode, cRemove2);
+				domClass.add(this.domNode, cAdd2);
+			}
+		},
+		_setLabelAttr: function(/*String*/text){
+			// summary:
+			//		Sets the button label text.
+			this.inherited(arguments);
+			// dojox.mobile mirroring support
+			if(!this.isLeftToRight()){
+				domClass.toggle(this.tableNode, "mblToolBarButtonTextRtl", text || this.arrow);
+			}
+		}
+	});
+});

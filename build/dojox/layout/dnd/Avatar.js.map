@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"Avatar.js",
-"lineCount":2,
-"mappings":"A,SACAA,MAAA,mGAA2G,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC3GF,CAAAG,QAAA,2BAEAH,EAAAI,QAAA,mBACAJ,EAAAI,QAAA,mBAEAJ,EAAAK,QAAA,2BAAwCL,CAAAM,IAAAC,OAAxC,cAGcC,QAAAA,CAASC,CAATD,CAAkBE,CAAlBF,EACZE,YADYF,CACGE,CADHF,MAHd,WAOYG,QAAAA,OAKNC,EAASH,YAAAG,OALHD,CAMTE,EAAOD,CAAAE,QAAPD,CAECD,CAAAG,mBAAA,CAA0BH,CAAAI,QAAA,CAAeP,YAAAQ,MAAA,GAAAC,GAAf,CAAAC,KAA1B,UAAAN,KAFDA,CAICJ,YAAAQ,MAAA,GAAAG,UAAA,IAGFpB,EAAAqB,SAAA,CAAcR,CAAd,iBAEAA;CAAAK,GAfUP,CAeAX,CAAAM,IAAAgB,YAAA,EACVT,EAAAU,MAAAC,SAhBUb,WAiBVE,EAAAU,MAAAE,OAjBUd,KAkBVE,EAAAU,MAAAG,OAlBUf,MAmBVE,EAAAU,MAAAI,MAnBUhB,CAmBSX,CAAA4B,UAAA,CAAehB,CAAAC,KAAf,CAAAgB,EAnBTlB,KAsBVX,EAAAuB,MAAA,CAAWV,CAAX,WAA4BH,YAA5B,CACAG,UAvBUF,CAuBEE,CAvBFF,CAPZ,QAiCSmB,QAAAA,GAGP9B,CAAA+B,YAAA,CAAiBlB,SAAjB,wBAAoDJ,YAAAuB,YAApD,CAHOF,CAjCT,eAuCgBG,QAAAA,IAvChB,EAN2G,CAA3G;",
-"sources":["Avatar.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","declare","dnd","Avatar","constructor","manager","opacity","construct","source","node","creator","_normalizedCreator","getItem","nodes","id","data","cloneNode","addClass","getUniqueId","style","position","zIndex","margin","width","marginBox","w","update","toggleClass","canDropFlag","_generateText"]
-}

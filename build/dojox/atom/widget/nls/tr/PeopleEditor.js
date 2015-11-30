@@ -1,3 +1,7 @@
-//>>built
-define("dojox/atom/widget/nls/tr/PeopleEditor",{add:"Ekle",addAuthor:"Yazar Ekle",addContributor:"Katk\u0131da Bulunan Ekle"});
-//@ sourceMappingURL=PeopleEditor.js.map
+define(
+({
+	add: "Ekle",
+	addAuthor: "Yazar Ekle",
+	addContributor: "Katkıda Bulunan Ekle"
+})
+);

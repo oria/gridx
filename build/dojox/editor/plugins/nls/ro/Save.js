@@ -1,3 +1,5 @@
-//>>built
-define("dojox/editor/plugins/nls/ro/Save",{save:"Salvare"});
-//@ sourceMappingURL=Save.js.map
+define(
+({
+	"save": "Salvare"
+})
+);

@@ -1,5 +1,98 @@
-//>>built
-define("dojox/treemap/Keyboard","dojo/_base/array dojo/_base/lang dojo/_base/event dojo/_base/declare dojo/on dojo/keys dojo/dom-attr ./_utils dijit/_FocusMixin".split(" "),function(k,l,m,q,p,a,r,s,t){return q("dojox.treemap.Keyboard",t,{tabIndex:"0",_setTabIndexAttr:"domNode",constructor:function(){},postCreate:function(){this.inherited(arguments);this.own(p(this.domNode,"keydown",l.hitch(this,this._onKeyDown)));this.own(p(this.domNode,"mousedown",l.hitch(this,this._onMouseDown)))},createRenderer:function(a,
-d,h){var g=this.inherited(arguments);r.set(g,"tabindex","-1");return g},_onMouseDown:function(a){this.domNode.focus()},_onKeyDown:function(c){var d=this.get("selectedItem");if(d){var h=this.itemToRenderer[this.getIdentity(d)],g=h.parentItem,f,b,n;if(c.keyCode!=a.UP_ARROW&&c.keyCode!=a.NUMPAD_MINUS&&c.keyCode!=a.NUMPAD_PLUS)if(f=c.keyCode==a.DOWN_ARROW?d.children:g.children)b=s.initElements(f,l.hitch(this,this._computeAreaForItem)).elements,n=b[k.indexOf(f,d)],b.sort(function(a,b){return b.size-a.size});
-else return;var e;switch(c.keyCode){case a.LEFT_ARROW:e=f[b[Math.max(0,k.indexOf(b,n)-1)].index];break;case a.RIGHT_ARROW:e=f[b[Math.min(b.length-1,k.indexOf(b,n)+1)].index];break;case a.DOWN_ARROW:e=f[b[0].index];break;case a.UP_ARROW:e=g;break;case a.NUMPAD_PLUS:!this._isLeaf(d)&&this.drillDown&&(this.drillDown(h),m.stop(c));break;case a.NUMPAD_MINUS:!this._isLeaf(d)&&this.drillUp&&(this.drillUp(h),m.stop(c))}e&&!this._isRoot(e)&&(this.set("selectedItem",e),m.stop(c))}}})});
-//@ sourceMappingURL=Keyboard.js.map
+define(["dojo/_base/array", "dojo/_base/lang", "dojo/_base/event", "dojo/_base/declare", "dojo/on", "dojo/keys", "dojo/dom-attr",
+	"./_utils", "dijit/_FocusMixin"],
+	function(arr, lang, event, declare, on, keys, domAttr, utils, _FocusMixin){
+
+	return declare("dojox.treemap.Keyboard", _FocusMixin, {
+		// summary:
+		//		Specializes TreeMap to support keyboard navigation and accessibility.
+		
+		// tabIndex: String
+		//		Order fields are traversed when user hits the tab key
+		tabIndex: "0",
+		_setTabIndexAttr: "domNode",
+			
+		constructor: function(){
+		},
+		
+		postCreate: function(){
+			this.inherited(arguments);
+			this.own(on(this.domNode, "keydown", lang.hitch(this, this._onKeyDown)));
+			this.own(on(this.domNode, "mousedown", lang.hitch(this, this._onMouseDown)));
+		},
+
+		createRenderer: function(item, level, kind){
+			var renderer = this.inherited(arguments);
+			// on Firefox we need a tabindex on sub divs to let the keyboard event be dispatched
+			// put -1 so that it is not tablable
+			domAttr.set(renderer, "tabindex", "-1");
+			return renderer;
+		},
+		
+		_onMouseDown: function(e){
+			this.domNode.focus();
+		},
+	
+		_onKeyDown: function(e){
+			var selected = this.get("selectedItem");
+			if(!selected){
+				// nothing selected selected we can't navigate
+				return;
+			}
+			var renderer = this.itemToRenderer[this.getIdentity(selected)];
+			var parent = renderer.parentItem;
+			var children, childrenI, selectedI;
+			// we also need items to be sorted out
+			if(e.keyCode != keys.UP_ARROW && e.keyCode != keys.NUMPAD_MINUS &&
+				e.keyCode != keys.NUMPAD_PLUS){
+				children = (e.keyCode == keys.DOWN_ARROW)?selected.children:parent.children;
+				if(children){
+					childrenI = utils.initElements(children, lang.hitch(this,
+						this._computeAreaForItem)).elements;
+					selectedI = childrenI[arr.indexOf(children, selected)];
+					childrenI.sort(function(a, b){
+						return b.size - a.size;
+					});
+				}else{
+					return;
+				}
+			}
+			var newSelected;
+			switch(e.keyCode){
+				case keys.LEFT_ARROW:
+				newSelected = children[childrenI[Math.max(0, arr.indexOf(childrenI, selectedI)-1)].index];				
+				break;
+				case keys.RIGHT_ARROW:
+				newSelected = children[childrenI[Math.min(childrenI.length-1, arr.indexOf(childrenI, selectedI)+1)].index];								
+				break;
+				case keys.DOWN_ARROW:
+				newSelected = children[childrenI[0].index];
+				break;
+				case keys.UP_ARROW:
+				newSelected = parent;
+				break;
+				// TODO
+				//case "+":
+				case keys.NUMPAD_PLUS:
+				if(!this._isLeaf(selected) && this.drillDown){
+					this.drillDown(renderer);
+					event.stop(e);
+				}
+				break;
+				// TODO
+				//case "-":
+				case keys.NUMPAD_MINUS:
+				if(!this._isLeaf(selected) && this.drillUp){
+					this.drillUp(renderer);
+					event.stop(e);
+				}
+				break;
+			}
+			if(newSelected){
+				if(!this._isRoot(newSelected)){
+					this.set("selectedItem", newSelected);
+					event.stop(e);
+				}
+			}
+		}
+	});
+});

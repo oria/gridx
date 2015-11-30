@@ -1,4 +1,98 @@
-//>>built
-define("dojox/drawing/stencil/Ellipse",["dojo/_base/lang","../util/oo","./_Base","../manager/_registry"],function(e,c,f,g){c=c.declare(f,function(a){},{type:"dojox.drawing.stencil.Ellipse",anchorType:"group",baseRender:!0,dataToPoints:function(a){a=a||this.data;var b=a.cx-a.rx,d=a.cy-a.ry,c=2*a.rx;a=2*a.ry;return this.points=[{x:b,y:d},{x:b+c,y:d},{x:b+c,y:d+a},{x:b,y:d+a}]},pointsToData:function(a){a=a||this.points;var b=a[0];a=a[2];return this.data={cx:b.x+(a.x-b.x)/2,cy:b.y+(a.y-b.y)/2,rx:0.5*
-(a.x-b.x),ry:0.5*(a.y-b.y)}},_create:function(a,b,c){this.remove(this[a]);this[a]=this.container.createEllipse(b).setStroke(c).setFill(c.fill);this._setNodeAtts(this[a])},render:function(){this.onBeforeRender(this);this.renderHit&&this._create("hit",this.data,this.style.currentHit);this._create("shape",this.data,this.style.current)}});e.setObject("dojox.drawing.stencil.Ellipse",c);g.register({name:"dojox.drawing.stencil.Ellipse"},"stencil");return c});
-//@ sourceMappingURL=Ellipse.js.map
+define(["dojo/_base/lang", "../util/oo", "./_Base", "../manager/_registry"], 
+function(lang, oo, Base, registry){
+
+/*=====
+var __StencilData = {
+	// summary:
+	//		the data used to create the dojox.gfx Shape
+	// cx: Number
+	//		Center point x
+	// cy: Number
+	//		Center point y
+	// rx: Number
+	//		Horizontal radius
+	// ry: Number
+	//		Vertical radius
+};
+=====*/
+
+var Ellipse = oo.declare(
+	Base,
+	function(options){
+		// summary:
+		//		constructor
+	},
+	{
+		// summary:
+		//		Creates a dojox.gfx Ellipse based on data or points provided.
+
+		type:"dojox.drawing.stencil.Ellipse",
+		anchorType: "group",
+		baseRender:true,
+		dataToPoints: function(/*Object*/o){
+			// summary:
+			//		Converts data to points.
+			o = o || this.data;
+			var x = o.cx - o.rx,
+				y = o.cy - o.ry,
+				w = o.rx*2,
+				h = o.ry*2
+			this.points = [
+				{x:x, y:y}, 	// TL
+				{x:x+w, y:y},	// TR
+				{x:x+w, y:y+h},	// BR
+				{x:x, y:y+h}	// BL
+			];
+			return this.points; //Array
+		},
+		
+		pointsToData: function(/*Array*/p){
+			// summary:
+			//		Converts points to data
+			p = p || this.points;
+			var s = p[0];
+			var e = p[2];
+			this.data = {
+				cx: s.x + (e.x - s.x)/2,
+				cy: s.y + (e.y - s.y)/2,
+				rx: (e.x - s.x)*.5,
+				ry: (e.y - s.y)*.5
+			};
+			return this.data; //Object
+		
+		},
+		
+		_create: function(/*String*/shp, /*__StencilData*/d, /*Object*/sty){
+			// summary:
+			//		Creates a dojox.gfx.shape based on passed arguments.
+			//		Can be called many times by implementation to create
+			//		multiple shapes in one stencil.
+
+			this.remove(this[shp]);
+			this[shp] = this.container.createEllipse(d)
+				.setStroke(sty)
+				.setFill(sty.fill);
+			this._setNodeAtts(this[shp]);
+		},
+		
+		render: function(){
+			// summary:
+			//		Renders the 'hit' object (the shape used for an expanded
+			//		hit area and for highlighting) and the'shape' (the actual
+			//		display object).
+
+			this.onBeforeRender(this);
+			this.renderHit && this._create("hit", this.data, this.style.currentHit);
+			this._create("shape", this.data, this.style.current);
+		}
+		
+	}
+);
+
+lang.setObject("dojox.drawing.stencil.Ellipse", Ellipse);
+registry.register({
+	name:"dojox.drawing.stencil.Ellipse"
+}, "stencil");
+
+return Ellipse;
+});

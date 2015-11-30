@@ -1,5 +1,99 @@
-//>>built
-define("dojox/dtl/_DomTemplated","dojo/dom-construct . ./contrib/dijit ./render/dom dojo/cache dijit/_TemplatedMixin".split(" "),function(e,c,d,f,g,h){c._DomTemplated=function(){};c._DomTemplated.prototype={_dijitTemplateCompat:!1,buildRendering:function(){this.domNode=this.srcNodeRef||dojo.create("div");if(!this._render){var a=d.widgetsInTemplate;d.widgetsInTemplate=this.widgetsInTemplate;this.template=this.template&&!0!==this.template?this.template:this._getCachedTemplate(this.templatePath,this.templateString);
-this._render=new f.Render(this.domNode,this.template);d.widgetsInTemplate=a}a=this._getContext();this._created||delete a._getter;this.render(a);this.domNode=this.template.getRootNode();this.srcNodeRef&&this.srcNodeRef.parentNode&&(e.destroy(this.srcNodeRef),delete this.srcNodeRef)},setTemplate:function(a,b){dojox.dtl.text._isTemplate(a)?this.template=this._getCachedTemplate(null,a):this.template=this._getCachedTemplate(a);this.render(b)},render:function(a,b){b&&(this.template=b);this._render.render(this._getContext(a),
-this.template)},_getContext:function(a){a instanceof dojox.dtl.Context||(a=!1);a=a||new dojox.dtl.Context(this);a.setThis(this);return a},_getCachedTemplate:function(a,b){this._templates||(this._templates={});b||(b=g(a,{sanitize:!0}));var c=b,d=this._templates;return d[c]?d[c]:d[c]=new dojox.dtl.DomTemplate(h.getCachedTemplate(b,!0))}};return c._DomTemplated});
-//@ sourceMappingURL=_DomTemplated.js.map
+define([
+	"dojo/dom-construct",
+	".",
+	"./contrib/dijit",
+	"./render/dom",
+	"dojo/cache",
+	"dijit/_TemplatedMixin"
+	], function(domConstruct,dtl,ddcd,ddrd,cache,TemplatedMixin){
+
+	dtl._DomTemplated = function(){
+		// summary:
+		//		The base class for DOM-based templating.
+	};
+	dtl._DomTemplated.prototype = {
+		_dijitTemplateCompat: false,
+		buildRendering: function(){
+			// summary:
+			//		Constructs the DOM representation.
+			
+			//render needs a domNode to work with
+			this.domNode = this.srcNodeRef || dojo.create('div');
+
+			if(!this._render){
+				var old = ddcd.widgetsInTemplate;
+				ddcd.widgetsInTemplate = this.widgetsInTemplate;
+				this.template = this.template && this.template !== true ? this.template : this._getCachedTemplate(this.templatePath, this.templateString);
+				this._render = new ddrd.Render(this.domNode, this.template);
+				ddcd.widgetsInTemplate = old;
+			}
+
+			var context = this._getContext();
+			if(!this._created){
+				delete context._getter;
+			}
+			this.render(context);
+
+			this.domNode = this.template.getRootNode();
+			if(this.srcNodeRef && this.srcNodeRef.parentNode){
+				domConstruct.destroy(this.srcNodeRef);
+				delete this.srcNodeRef;
+			}
+		},
+		setTemplate: function(/*String|dojo/url*/ template, /*dojox/dtl/Context?*/ context){
+			// summary:
+			//		Quickly switch between templated by location
+			// template:
+			//		The new template.
+			// context:
+			//		The runtime context.
+			if(dojox.dtl.text._isTemplate(template)){
+				this.template = this._getCachedTemplate(null, template);
+			}else{
+				this.template = this._getCachedTemplate(template);
+			}
+			this.render(context);
+		},
+		render: function(/*dojox/dtl/Context?*/ context, /*dojox/dtl/DomTemplate?*/ tpl){
+			// summary:
+			//		Renders this template.
+			// context:
+			//		The runtime context.
+			// tpl:
+			//		The template to render. Optional.
+			if(tpl){
+				this.template = tpl;
+			}
+			this._render.render(this._getContext(context), this.template);
+		},
+		_getContext: function(context){
+			if(!(context instanceof dojox.dtl.Context)){
+				context = false;
+			}
+			context = context || new dojox.dtl.Context(this);
+			context.setThis(this);
+			return context;
+		},
+		_getCachedTemplate: function(templatePath, templateString){
+			if(!this._templates){
+				this._templates = {};
+			}
+			if(!templateString){
+				templateString = cache(templatePath, {sanitize: true});
+			}
+			var key = templateString;
+			var tmplts = this._templates;
+			if(tmplts[key]){
+				return tmplts[key];
+			}
+			return (tmplts[key] = new dojox.dtl.DomTemplate(
+				TemplatedMixin.getCachedTemplate(
+					templateString,
+					true
+				)
+			));
+		}
+	};
+	return dtl._DomTemplated;
+});
+

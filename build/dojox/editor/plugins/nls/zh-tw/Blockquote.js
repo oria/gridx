@@ -1,3 +1,5 @@
-//>>built
-define("dojox/editor/plugins/nls/zh-tw/Blockquote",{blockquote:"\u5340\u584a\u5f15\u6587"});
-//@ sourceMappingURL=Blockquote.js.map
+define(
+({
+	"blockquote": "區塊引文"
+})
+);

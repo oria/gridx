@@ -1,4 +1,21 @@
-//>>built
-define("dojox/storage/_common",["dojo","dijit","dojox","dojo/require!dojox/storage/Provider,dojox/storage/manager,dojox/storage/LocalStorageProvider,dojox/storage/GearsStorageProvider,dojox/storage/WhatWGStorageProvider,dojox/storage/FlashStorageProvider,dojox/storage/BehaviorStorageProvider,dojox/storage/CookieStorageProvider"],function(a,c,b){a.provide("dojox.storage._common");a.require("dojox.storage.Provider");a.require("dojox.storage.manager");a.require("dojox.storage.LocalStorageProvider");
-a.require("dojox.storage.GearsStorageProvider");a.require("dojox.storage.WhatWGStorageProvider");a.require("dojox.storage.FlashStorageProvider");a.require("dojox.storage.BehaviorStorageProvider");a.require("dojox.storage.CookieStorageProvider");b.storage.manager.initialize()});
-//@ sourceMappingURL=_common.js.map
+dojo.provide("dojox.storage._common");
+dojo.require("dojox.storage.Provider");
+dojo.require("dojox.storage.manager");
+
+/*
+  Note: if you are doing Dojo Offline builds you _must_
+  have offlineProfile=true when you run the build script:
+  ./build.sh action=release profile=offline offlineProfile=true
+*/
+dojo.require("dojox.storage.LocalStorageProvider");
+dojo.require("dojox.storage.GearsStorageProvider");
+//>>excludeStart("offlineProfileExclude", kwArgs.dojoxStorageBuildOption == "offline");
+dojo.require("dojox.storage.WhatWGStorageProvider");
+dojo.require("dojox.storage.FlashStorageProvider");
+//>>excludeEnd("offlineProfileExclude");
+dojo.require("dojox.storage.BehaviorStorageProvider");
+dojo.require("dojox.storage.CookieStorageProvider");
+
+// now that we are loaded and registered tell the storage manager to
+// initialize itself
+dojox.storage.manager.initialize();

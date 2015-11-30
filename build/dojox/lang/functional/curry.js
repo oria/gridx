@@ -1,5 +1,98 @@
-//>>built
-define("dojox/lang/functional/curry",["dojo","dijit","dojox","dojo/require!dojox/lang/functional/lambda"],function(f,n,m){f.provide("dojox.lang.functional.curry");f.require("dojox.lang.functional.lambda");(function(){var g=m.lang.functional,k=Array.prototype,l=function(a){return function(){var b=a.args.concat(k.slice.call(arguments,0));return arguments.length+a.args.length<a.arity?l({func:a.func,arity:a.arity,args:b}):a.func.apply(this,b)}};f.mixin(g,{curry:function(a,b){a=g.lambda(a);b="number"==
-typeof b?b:a.length;return l({func:a,arity:b,args:[]})},arg:{},partial:function(a){var b=arguments,c=b.length,d=Array(c-1),e=[],h=1,f;for(a=g.lambda(a);h<c;++h)f=b[h],d[h-1]=f,f===g.arg&&e.push(h-1);return function(){for(var b=k.slice.call(d,0),c=0,f=e.length;c<f;++c)b[e[c]]=arguments[c];return a.apply(this,b)}},mixer:function(a,b){a=g.lambda(a);return function(){for(var c=Array(b.length),d=0,e=b.length;d<e;++d)c[d]=arguments[b[d]];return a.apply(this,c)}},flip:function(a){a=g.lambda(a);return function(){for(var b=
-arguments,c=b.length-1,d=Array(c+1),e=0;e<=c;++e)d[c-e]=b[e];return a.apply(this,d)}}})})()});
-//@ sourceMappingURL=curry.js.map
+dojo.provide("dojox.lang.functional.curry");
+
+dojo.require("dojox.lang.functional.lambda");
+
+// This module adds high-level functions and related constructs:
+//	- currying and partial functions
+//	- argument pre-processing: mixer and flip
+
+// Acknowledgements:
+//	- partial() is based on work by Oliver Steele
+//		(http://osteele.com/sources/javascript/functional/functional.js)
+//		which was published under MIT License
+
+// Defined methods:
+//	- take any valid lambda argument as the functional argument
+
+(function(){
+	var df = dojox.lang.functional, ap = Array.prototype;
+
+	var currying = function(/*Object*/ info){
+		return function(){	// Function
+			var args = info.args.concat(ap.slice.call(arguments, 0));
+			if(arguments.length + info.args.length < info.arity){
+				return currying({func: info.func, arity: info.arity, args: args});
+			}
+			return info.func.apply(this, args);
+		};
+	};
+
+	dojo.mixin(df, {
+		// currying and partial functions
+		curry: function(/*Function|String|Array*/ f, /*Number?*/ arity){
+			// summary:
+			//		curries a function until the arity is satisfied, at
+			//		which point it returns the calculated value.
+			f = df.lambda(f);
+			arity = typeof arity == "number" ? arity : f.length;
+			return currying({func: f, arity: arity, args: []});	// Function
+		},
+		arg: {},	// marker for missing arguments
+		partial: function(/*Function|String|Array*/ f){
+			// summary:
+			//		creates a function where some arguments are bound, and
+			//		some arguments (marked as dojox.lang.functional.arg) are will be
+			//		accepted by the final function in the order they are encountered.
+			// description:
+			//		This method is used to produce partially bound
+			//		functions. If you want to change the order of arguments, use
+			//		dojox.lang.functional.mixer() or dojox.lang.functional.flip().
+			var a = arguments, l = a.length, args = new Array(l - 1), p = [], i = 1, t;
+			f = df.lambda(f);
+			for(; i < l; ++i){
+				t = a[i];
+				args[i - 1] = t;
+				if(t === df.arg){
+					p.push(i - 1);
+				}
+			}
+			return function(){	// Function
+				var t = ap.slice.call(args, 0), // clone the array
+					i = 0, l = p.length;
+				for(; i < l; ++i){
+					t[p[i]] = arguments[i];
+				}
+				return f.apply(this, t);
+			};
+		},
+		// argument pre-processing
+		mixer: function(/*Function|String|Array*/ f, /*Array*/ mix){
+			// summary:
+			//		changes the order of arguments using an array of
+			//		numbers mix --- i-th argument comes from mix[i]-th place
+			//		of supplied arguments.
+			f = df.lambda(f);
+			return function(){	// Function
+				var t = new Array(mix.length), i = 0, l = mix.length;
+				for(; i < l; ++i){
+					t[i] = arguments[mix[i]];
+				}
+				return f.apply(this, t);
+			};
+		},
+		flip: function(/*Function|String|Array*/ f){
+			// summary:
+			//		changes the order of arguments by reversing their
+			//		order.
+			f = df.lambda(f);
+			return function(){	// Function
+				// reverse arguments
+				var a = arguments, l = a.length - 1, t = new Array(l + 1), i = 0;
+				for(; i <= l; ++i){
+					t[l - i] = a[i];
+				}
+				return f.apply(this, t);
+			};
+		}
+	});
+})();

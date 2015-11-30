@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"PicasaViewList.js",
-"lineCount":2,
-"mappings":"A,SACAA,MAAA,sJAA8J,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC9JF,CAAAG,QAAA,2CACAH,EAAAI,QAAA,oBACAJ,EAAAI,QAAA,iBACAJ,EAAAI,QAAA,uCAEAJ,EAAAK,QAAA,4CAAyDJ,CAAAK,QAAzD,CAAwEL,CAAAM,WAAxE,kBAGiBP,CAAAQ,MAAA,wHAHjB;yBAQaC,QAAAA,GACXC,iBADWD,IARb,WAYYE,QAAAA,QACJC,SAAAC,WADIF,EAETC,SAAAE,YAAA,CAAsBF,SAAAC,WAAtB,CAFSF,SAIFI,GAJEJ,CAIKI,CAJLJ,CAISD,iBAAAM,OAJTL,CAImCI,CAJnCJ,GAKTD,iBAAA,CAAkBK,CAAlB,CAAAE,QAAA,EAEDP,kBAPUC,IAZZ,SAsBUO,QAAAA,CAASC,CAATD,EACJE,CADIF,CACO,IAAIhB,CAAAmB,KAAAC,MAAAC,QAAAC,WAAJ,CAAwCL,CAAxC,CACfT,kBAAAe,KAAA,CAAuBL,CAAvB,CACAR,UAAAc,YAAA,CAAsBN,CAAAO,QAAtB,CAHQT,CAtBV,EAN8J,CAA9J;",
-"sources":["PicasaViewList.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","declare","_Widget","_Templated","cache","postCreate","fViewWidgets","clearList","list","firstChild","removeChild","i","length","destroy","addView","viewData","newView","data","demos","widgets","PicasaView","push","appendChild","domNode"]
-}

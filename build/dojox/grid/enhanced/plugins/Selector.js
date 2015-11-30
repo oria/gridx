@@ -1,45 +1,1479 @@
-//>>built
-define("dojox/grid/enhanced/plugins/Selector","dojo/_base/kernel dojo/_base/lang dojo/_base/declare dojo/_base/array dojo/_base/event dojo/keys dojo/query dojo/_base/html dojo/_base/window dijit/focus ../../_RowSelector ../_Plugin ../../EnhancedGrid ../../cells/_base ./AutoScroll".split(" "),function(t,h,y,e,z,u,w,l,A,x,r,B,C){var q={col:"row",row:"col"},p=function(a,b,c,d,f){return"cell"!==a?(b=b[a],c=c[a],d=d[a],"number"!==typeof b||"number"!==typeof c||"number"!==typeof d?!1:f?b>=c&&b<d||b>d&&
-b<=c:b>=c&&b<=d||b>=d&&b<=c):p("col",b,c,d,f)&&p("row",b,c,d,f)},v=function(a,b,c){try{if(b&&c)switch(a){case "col":case "row":return b[a]==c[a]&&"number"==typeof b[a]&&!(q[a]in b)&&!(q[a]in c);case "cell":return b.col==c.col&&b.row==c.row&&"number"==typeof b.col&&"number"==typeof b.row}}catch(d){}return!1},s=function(a){try{a&&a.preventDefault&&z.stop(a)}catch(b){}},g=function(a,b,c){switch(a){case "col":return{col:"undefined"==typeof c?b:c,except:[]};case "row":return{row:b,except:[]};case "cell":return{row:b,
-col:c}}return null};t=y("dojox.grid.enhanced.plugins.Selector",B,{name:"selector",constructor:function(a,b){this.grid=a;this._config={row:2,col:2,cell:2};this.noClear=b&&b.noClear;this.setupConfig(b);"single"===a.selectionMode&&(this._config.row=1);this._enabled=!0;this._selecting={};this._selected={col:[],row:[],cell:[]};this._startPoint={};this._currentPoint={};this._lastAnchorPoint={};this._lastEndPoint={};this._lastSelectedAnchorPoint={};this._lastSelectedEndPoint={};this._keyboardSelect={};this._lastType=
-null;this._selectedRowModified={};this._hacks();this._initEvents();this._initAreas();this._mixinGrid()},destroy:function(){this.inherited(arguments)},setupConfig:function(a){if(a&&h.isObject(a)){var b=["row","col","cell"],c;for(c in a)0<=e.indexOf(b,c)&&(this._config[c]=!a[c]||"disabled"==a[c]?0:"single"==a[c]?1:2);this.grid.selection.setMode(["none","single","extended"][this._config.row])}},isSelected:function(a,b,c){return this._isSelected(a,g(a,b,c))},toggleSelect:function(a,b,c){this._startSelect(a,
-g(a,b,c),2===this._config[a],!1,!1,!this.isSelected(a,b,c));this._endSelect(a)},select:function(a,b,c){this.isSelected(a,b,c)||this.toggleSelect(a,b,c)},deselect:function(a,b,c){this.isSelected(a,b,c)&&this.toggleSelect(a,b,c)},selectRange:function(a,b,c,d){this.grid._selectingRange=!0;b="cell"==a?g(a,b.row,b.col):g(a,b);c="cell"==a?g(a,c.row,c.col):g(a,c);this._startSelect(a,b,!1,!1,!1,d);this._highlight(a,c,void 0===d?!0:d);this._endSelect(a);this.grid._selectingRange=!1},clear:function(a){this._clearSelection(a||
-"all")},isSelecting:function(a){return"undefined"==typeof a?this._selecting.col||this._selecting.row||this._selecting.cell:this._selecting[a]},selectEnabled:function(a){"undefined"!=typeof a&&!this.isSelecting()&&(this._enabled=!!a);return this._enabled},getSelected:function(a,b){switch(a){case "cell":return e.map(this._selected[a],function(a){return a});case "col":case "row":return e.map(b?this._selected[a]:e.filter(this._selected[a],function(a){return 0===a.except.length}),function(c){return b?
-c:c[a]})}return[]},getSelectedCount:function(a,b){switch(a){case "cell":return this._selected[a].length;case "col":case "row":return(b?this._selected[a]:e.filter(this._selected[a],function(a){return 0===a.except.length})).length}return 0},getSelectedType:function(){var a=this._selected;return" cell row row|cell col col|cell col|row col|row|cell".split(" ")[!!a.cell.length|!!a.row.length<<1|!!a.col.length<<2]},getLastSelectedRange:function(a){return this._lastAnchorPoint[a]?{start:this._lastAnchorPoint[a],
-end:this._lastEndPoint[a]}:null},_hacks:function(){var a=this.grid,b=function(b){if(b.cellNode)a.onMouseUp(b);a.onMouseUpRow(b)},c=h.hitch(a,"onMouseUp"),d=h.hitch(a,"onMouseDown"),f=function(a){a.cellNode.style.border="solid 1px"};e.forEach(a.views.views,function(a){a.content.domouseup=b;a.header.domouseup=c;"dojox.grid._RowSelector"==a.declaredClass&&(a.domousedown=d,a.domouseup=c,a.dofocus=f)});a.selection.clickSelect=function(){};this._oldDeselectAll=a.selection.deselectAll;var k=this;a.selection.selectRange=
-function(b,c){k.selectRange("row",b,c,!0);a.selection.preserver&&a.selection.preserver._updateMapping(!0,!0,!1,b,c);a.selection.onChanged()};a.selection.deselectRange=function(b,c){k.selectRange("row",b,c,!1);a.selection.preserver&&a.selection.preserver._updateMapping(!0,!1,!1,b,c);a.selection.onChanged()};a.selection.deselectAll=function(){a._selectingRange=!0;k._oldDeselectAll.apply(a.selection,arguments);k._clearSelection("all");a._selectingRange=!1;a.selection.preserver&&a.selection.preserver._updateMapping(!0,
-!1,!0);a.selection.onChanged()};var m=a.views.views[0];m instanceof r&&(m.doStyleRowNode=function(b,c){l.removeClass(c,"dojoxGridRow");l.addClass(c,"dojoxGridRowbar");l.addClass(c,"dojoxGridNonNormalizedCell");l.toggleClass(c,"dojoxGridRowbarOver",a.rows.isOver(b));l.toggleClass(c,"dojoxGridRowbarSelected",!!a.selection.isSelected(b))});this.connect(a,"updateRow",function(b){e.forEach(a.layout.cells,function(a){this.isSelected("cell",b,a.index)&&this._highlightNode(a.getNode(b),!0)},this)})},_mixinGrid:function(){var a=
-this.grid;a.setupSelectorConfig=h.hitch(this,this.setupConfig);a.onStartSelect=function(){};a.onEndSelect=function(){};a.onStartDeselect=function(){};a.onEndDeselect=function(){};a.onSelectCleared=function(){}},_initEvents:function(){var a=this.grid,b=this,c=h.partial,d=function(a,c){"row"===a&&(b._isUsingRowSelector=!0);if(b.selectEnabled()&&b._config[a]&&2!=c.button){if(b._keyboardSelect.col||b._keyboardSelect.row||b._keyboardSelect.cell)b._endSelect("all"),b._keyboardSelect.col=b._keyboardSelect.row=
-b._keyboardSelect.cell=0;b._usingKeyboard&&(b._usingKeyboard=!1);var d=g(a,c.rowIndex,c.cell&&c.cell.index);b._startSelect(a,d,c.ctrlKey,c.shiftKey)}},f=h.hitch(this,"_endSelect");this.connect(a,"onHeaderCellMouseDown",c(d,"col"));this.connect(a,"onHeaderCellMouseUp",c(f,"col"));this.connect(a,"onRowSelectorMouseDown",c(d,"row"));this.connect(a,"onRowSelectorMouseUp",c(f,"row"));this.connect(a,"onCellMouseDown",function(c){if(!c.cell||!c.cell.isRowSelector)a.singleClickEdit&&(b._singleClickEdit=!0,
-a.singleClickEdit=!1),d(0==b._config.cell?"row":"cell",c)});this.connect(a,"onCellMouseUp",function(c){b._singleClickEdit&&(delete b._singleClickEdit,a.singleClickEdit=!0);f("all",c)});this.connect(a,"onCellMouseOver",function(a){"row"!=b._curType&&(b._selecting[b._curType]&&2==b._config[b._curType])&&(b._highlight("col",g("col",a.cell.index),b._toSelect),b._keyboardSelect.cell||b._highlight("cell",g("cell",a.rowIndex,a.cell.index),b._toSelect))});this.connect(a,"onHeaderCellMouseOver",function(a){b._selecting.col&&
-2==b._config.col&&b._highlight("col",g("col",a.cell.index),b._toSelect)});this.connect(a,"onRowMouseOver",function(a){b._selecting.row&&2==b._config.row&&b._highlight("row",g("row",a.rowIndex),b._toSelect)});this.connect(a,"onSelectedById","_onSelectedById");this.connect(a,"_onFetchComplete",function(){a._notRefreshSelection||this._refreshSelected(!0)});this.connect(a.scroller,"buildPage",function(){a._notRefreshSelection||this._refreshSelected(!0)});this.connect(A.doc,"onmouseup",c(f,"all"));this.connect(a,
-"onEndAutoScroll",function(a,c,d,f){d=b._selecting.cell;c=c?1:-1;if(a&&(d||b._selecting.row))a=d?"cell":"row",d=b._currentPoint[a],b._highlight(a,g(a,d.row+c,d.col),b._toSelect);else if(!a&&(d||b._selecting.col))a=d?"cell":"col",d=b._currentPoint[a],b._highlight(a,g(a,d.row,f),b._toSelect)});this.subscribe("dojox/grid/rearrange/move/"+a.id,"_onInternalRearrange");this.subscribe("dojox/grid/rearrange/copy/"+a.id,"_onInternalRearrange");this.subscribe("dojox/grid/rearrange/change/"+a.id,"_onExternalChange");
-this.subscribe("dojox/grid/rearrange/insert/"+a.id,"_onExternalChange");this.subscribe("dojox/grid/rearrange/remove/"+a.id,"clear");this.connect(a,"onSelected",function(a){this._selectedRowModified&&this._isUsingRowSelector?delete this._selectedRowModified:this.grid._selectingRange||this.select("row",a)});this.connect(a,"onDeselected",function(a){this._selectedRowModified&&this._isUsingRowSelector?delete this._selectedRowModified:this.grid._selectingRange||this.deselect("row",a)})},_onSelectedById:function(a,
-b,c){if(!this.grid._noInternalMapping){var d=[this._lastAnchorPoint.row,this._lastEndPoint.row,this._lastSelectedAnchorPoint.row,this._lastSelectedEndPoint.row],d=d.concat(this._selected.row),f=!1;e.forEach(d,function(c){c&&(c.id===a?(f=!0,c.row=b):c.row===b&&c.id&&(c.row=-1))});!f&&c&&e.some(this._selected.row,function(c){return c&&!c.id&&!c.except.length?(c.id=a,c.row=b,!0):!1});f=!1;d=[this._lastAnchorPoint.cell,this._lastEndPoint.cell,this._lastSelectedAnchorPoint.cell,this._lastSelectedEndPoint.cell];
-d=d.concat(this._selected.cell);e.forEach(d,function(c){c&&(c.id===a?(f=!0,c.row=b):c.row===b&&c.id&&(c.row=-1))})}},onSetStore:function(){this._clearSelection("all")},_onInternalRearrange:function(a,b){try{this._refresh("col",!1);e.forEach(this._selected.row,function(a){e.forEach(this.grid.layout.cells,function(b){this._highlightNode(b.getNode(a.row),!1)},this)},this);w(".dojoxGridRowSelectorSelected").forEach(function(a){l.removeClass(a,"dojoxGridRowSelectorSelected");l.removeClass(a,"dojoxGridRowSelectorSelectedUp");
-l.removeClass(a,"dojoxGridRowSelectorSelectedDown")});var c=[this._lastAnchorPoint[a],this._lastEndPoint[a],this._lastSelectedAnchorPoint[a],this._lastSelectedEndPoint[a]];if("cell"===a){this.selectRange("cell",b.to.min,b.to.max);var d=this.grid.layout.cells;e.forEach(c,function(a){if(!a.converted)for(var c=b.from.min.row,f=b.to.min.row;c<=b.from.max.row;++c,++f)for(var n=b.from.min.col,e=b.to.min.col;n<=b.from.max.col;++n,++e){for(;d[n].hidden;)++n;for(;d[e].hidden;)++e;if(a.row==c&&a.col==n){a.row=
-f;a.col=e;a.converted=!0;return}}})}else c=this._selected.cell.concat(this._selected[a]).concat(c).concat([this._lastAnchorPoint.cell,this._lastEndPoint.cell,this._lastSelectedAnchorPoint.cell,this._lastSelectedEndPoint.cell]),e.forEach(c,function(c){if(c&&!c.converted){var d=c[a];d in b&&(c[a]=b[d]);c.converted=!0}}),e.forEach(this._selected[q[a]],function(a){for(var c=0,d=a.except.length;c<d;++c){var f=a.except[c];f in b&&(a.except[c]=b[f])}});e.forEach(c,function(a){a&&delete a.converted});this._refreshSelected(!0);
-this._focusPoint(a,this._lastEndPoint)}catch(f){console.warn("Selector._onInternalRearrange() error",f)}},_onExternalChange:function(a,b){this.selectRange(a,"cell"==a?b.min:b[0],"cell"==a?b.max:b[b.length-1])},_refresh:function(a,b){this._keyboardSelect[a]||e.forEach(this._selected[a],function(c){this._highlightSingle(a,b,c,void 0,!0)},this)},_refreshSelected:function(){this._refresh("col",!0);this._refresh("row",!0);this._refresh("cell",!0)},_initAreas:function(){var a=this.grid,b=a.focus,c=this,
-d=function(d,f,n,e,k){var g=c._keyboardSelect;if(k.shiftKey&&g[d]){if(1===g[d]){if("cell"===d){var h=c._lastEndPoint[d];if(b.cell!=a.layout.cells[h.col+e]||b.rowIndex!=h.row+n){g[d]=0;return}}c._startSelect(d,c._lastAnchorPoint[d],!0,!1,!0);c._highlight(d,c._lastEndPoint[d],c._toSelect);g[d]=2}f=f(d,n,e,k);c._isValid(d,f,a)&&c._highlight(d,f,c._toSelect);s(k)}},f=function(b,d,f,e){if(e&&c.selectEnabled()&&0!=c._config[b])switch(f.keyCode){case u.SPACE:c._startSelect(b,d(),f.ctrlKey,f.shiftKey);c._endSelect(b);
-break;case u.SHIFT:2==c._config[b]&&c._isValid(b,c._lastAnchorPoint[b],a)&&(c._endSelect(b),c._keyboardSelect[b]=1,c._usingKeyboard=!0)}},e=function(a,b,d){d&&(b.keyCode==u.SHIFT&&c._keyboardSelect[a])&&(c._endSelect(a),c._keyboardSelect[a]=0)};a.views.views[0]instanceof r&&(this._lastFocusedRowBarIdx=0,b.addArea({name:"rowHeader",onFocus:function(d,f){var e=a.views.views[0];if(e instanceof r){var k=e.getCellNode(c._lastFocusedRowBarIdx,0);k&&l.toggleClass(k,b.focusClass,!1);d&&"rowIndex"in d&&(0<=
-d.rowIndex?c._lastFocusedRowBarIdx=d.rowIndex:c._lastFocusedRowBarIdx||(c._lastFocusedRowBarIdx=0));if(k=e.getCellNode(c._lastFocusedRowBarIdx,0))x.focus(k),l.toggleClass(k,b.focusClass,!0);b.rowIndex=c._lastFocusedRowBarIdx;s(d);return!0}return!1},onBlur:function(d,f){var e=a.views.views[0];e instanceof r&&((e=e.getCellNode(c._lastFocusedRowBarIdx,0))&&l.toggleClass(e,b.focusClass,!1),s(d));return!0},onMove:function(d,f,e){f=a.views.views[0];if(d&&f instanceof r&&(d=c._lastFocusedRowBarIdx+d,0<=
-d&&d<a.rowCount)){s(e);e=f.getCellNode(c._lastFocusedRowBarIdx,0);l.toggleClass(e,b.focusClass,!1);e=a.scroller;var k=e.getLastPageRow(e.page),g=Math.min(a.rowCount-1,d);d>k&&a.setScrollTop(a.scrollTop+e.findScrollTop(g)-e.findScrollTop(c._lastFocusedRowBarIdx));e=f.getCellNode(d,0);x.focus(e);l.toggleClass(e,b.focusClass,!0);c._lastFocusedRowBarIdx=d;b.cell=e;b.cell.view=f;b.cell.getNode=function(a){return b.cell};b.rowIndex=c._lastFocusedRowBarIdx;b.scrollIntoView();b.cell=null}}}),b.placeArea("rowHeader",
-"before","content"));b.addArea({name:"cellselect",onMove:h.partial(d,"cell",function(a,b,d,f){a=c._currentPoint[a];return g("cell",a.row+b,a.col+d)}),onKeyDown:h.partial(f,"cell",function(){return g("cell",b.rowIndex,b.cell.index)}),onKeyUp:h.partial(e,"cell")});b.placeArea("cellselect","below","content");b.addArea({name:"colselect",onMove:h.partial(d,"col",function(a,b,d,f){return g("col",c._currentPoint[a].col+d)}),onKeyDown:h.partial(f,"col",function(){return g("col",b.getHeaderIndex())}),onKeyUp:h.partial(e,
-"col")});b.placeArea("colselect","below","header");b.addArea({name:"rowselect",onMove:h.partial(d,"row",function(a,c,d,f){return g("row",b.rowIndex)}),onKeyDown:h.partial(f,"row",function(){return g("row",b.rowIndex)}),onKeyUp:h.partial(e,"row")});b.placeArea("rowselect","below","rowHeader")},_clearSelection:function(a,b){"all"==a?(this._clearSelection("cell",b),this._clearSelection("col",b),this._clearSelection("row",b)):(this._isUsingRowSelector=!0,e.forEach(this._selected[a],function(c){v(a,b,
-c)||this._highlightSingle(a,!1,c)},this),this._blurPoint(a,this._currentPoint),this._selecting[a]=!1,this._startPoint[a]=this._currentPoint[a]=null,this._selected[a]=[],"row"==a&&!this.grid._selectingRange&&(this._oldDeselectAll.call(this.grid.selection),this.grid.selection._selectedById={}),this.grid.onEndDeselect(a,null,null,this._selected),this.grid.onSelectCleared(a))},_startSelect:function(a,b,c,d,f,e){if(this._isValid(a,b)){var m=this._isSelected(a,this._lastEndPoint[a]),g=this._isSelected(a,
-b);this._toSelect=this.noClear&&!c?void 0===e?!0:e:f?g:!g;if(!c||!g&&1==this._config[a])this._clearSelection("col",b),this._clearSelection("cell",b),(!this.noClear||"row"===a&&1==this._config[a])&&this._clearSelection("row",b),this._toSelect=void 0===e?!0:e;this._selecting[a]=!0;this._currentPoint[a]=null;d&&this._lastType==a&&m==this._toSelect&&2==this._config[a]?("row"===a&&(this._isUsingRowSelector=!0),this._startPoint[a]=this._lastAnchorPoint[a],this._highlight(a,this._startPoint[a]),this._isUsingRowSelector=
-!1):this._startPoint[a]=b;this._curType=a;this._fireEvent("start",a);this._isUsingRowSelector=this._isStartFocus=!0;this._highlight(a,b,this._toSelect);this._isStartFocus=!1}},_endSelect:function(a){"row"===a&&delete this._isUsingRowSelector;"all"==a?(this._endSelect("col"),this._endSelect("row"),this._endSelect("cell")):this._selecting[a]&&(this._addToSelected(a),this._lastAnchorPoint[a]=this._startPoint[a],this._lastEndPoint[a]=this._currentPoint[a],this._toSelect&&(this._lastSelectedAnchorPoint[a]=
-this._lastAnchorPoint[a],this._lastSelectedEndPoint[a]=this._lastEndPoint[a]),this._startPoint[a]=this._currentPoint[a]=null,this._selecting[a]=!1,this._lastType=a,this._fireEvent("end",a))},_fireEvent:function(a,b){switch(a){case "start":this.grid[this._toSelect?"onStartSelect":"onStartDeselect"](b,this._startPoint[b],this._selected);break;case "end":this.grid[this._toSelect?"onEndSelect":"onEndDeselect"](b,this._lastAnchorPoint[b],this._lastEndPoint[b],this._selected)}},_calcToHighlight:function(a,
-b,c,d){if(void 0!==d){var f;if(this._usingKeyboard&&!c&&this._isInLastRange(this._lastType,b)){f=this._isSelected(a,b);if(d&&f)return!1;if(!d&&!f&&this._isInLastRange(this._lastType,b,!0))return!0}return c?d:f||this._isSelected(a,b)}return c},_highlightNode:function(a,b){a&&(l.toggleClass(a,"dojoxGridRowSelected",b),l.toggleClass(a,"dojoxGridCellSelected",b))},_highlightHeader:function(a,b){var c=this.grid.layout.cells[a].getHeaderNode();l.toggleClass(c,"dojoxGridHeaderSelected",b)},_highlightRowSelector:function(a,
-b){var c=this.grid.views.views[0];c instanceof r&&(c=c.getRowNode(a))&&l.toggleClass(c,"dojoxGridRowSelectorSelected",b)},_highlightSingle:function(a,b,c,d,f){var k=this,m,g=k.grid,h=g.layout.cells;switch(a){case "cell":m=this._calcToHighlight(a,c,b,d);a=h[c.col];!a.hidden&&!a.notselectable&&this._highlightNode(c.node||a.getNode(c.row),m);break;case "col":m=this._calcToHighlight(a,c,b,d);this._highlightHeader(c.col,m);w("td[idx\x3d'"+c.col+"']",g.domNode).forEach(function(a){var b=h[c.col].view.content.findRowTarget(a);
-b&&k._highlightSingle("cell",m,{row:b[dojox.grid.util.rowIndexTag],col:c.col,node:a})});break;case "row":m=this._calcToHighlight(a,c,b,d),this._highlightRowSelector(c.row,m),this._config.cell&&e.forEach(h,function(a){k._highlightSingle("cell",m,{row:c.row,col:a.index,node:a.getNode(c.row)})}),this._selectedRowModified=!0,f||g.selection.setSelected(c.row,m)}},_highlight:function(a,b,c){if(this._selecting[a]&&null!==b){var d=this._startPoint[a],f=this._currentPoint[a],e=this,g=function(b,d,f){e._forEach(a,
-b,d,function(b){e._highlightSingle(a,f,b,c)},!0)};switch(a){case "col":case "row":null!==f?p(a,b,d,f,!0)?g(f,b,!1):(p(a,d,b,f,!0)&&(g(f,d,!1),f=d),g(b,f,!0)):this._highlightSingle(a,!0,b,c);break;case "cell":null!==f&&(p("row",b,d,f,!0)||p("col",b,d,f,!0)||p("row",d,b,f,!0)||p("col",d,b,f,!0))&&g(d,f,!1),g(d,b,!0)}this._currentPoint[a]=b;this._focusPoint(a,this._currentPoint)}},_focusPoint:function(a,b){if(!this._isStartFocus){var c=b[a],d=this.grid.focus;"col"==a?(d._colHeadFocusIdx=c.col,d.focusArea("header")):
-"row"==a?d.focusArea("rowHeader",{rowIndex:c.row}):"cell"==a&&d.setFocusIndex(c.row,c.col)}},_blurPoint:function(a,b){var c=this.grid.focus;"cell"==a&&c._blurContent()},_addToSelected:function(a){var b=this._toSelect,c=this,d=[],f=[],k=this._startPoint[a],g=this._currentPoint[a];this._usingKeyboard&&this._forEach(a,this._lastAnchorPoint[a],this._lastEndPoint[a],function(c){p(a,c,k,g)||(b?f:d).push(c)});this._forEach(a,k,g,function(e){var k=c._isSelected(a,e);b&&!k?d.push(e):b||f.push(e)});this._add(a,
-d);this._remove(a,f);e.forEach(this._selected.row,function(a){0<a.except.length&&(this._selectedRowModified=!0,this.grid.selection.setSelected(a.row,!1))},this)},_forEach:function(a,b,c,d,f){if(this._isValid(a,b,!0)&&this._isValid(a,c,!0))switch(a){case "col":case "row":b=b[a];c=c[a];var e=c>b?1:-1;for(f||(c+=e);b!=c;b+=e)d(g(a,b));break;case "cell":f=c.col>b.col?1:-1;for(var e=c.row>b.row?1:-1,h=b.row,l=c.row+e;h!=l;h+=e)for(var n=b.col,p=c.col+f;n!=p;n+=f)d(g(a,h,n))}},_makeupForExceptions:function(a,
-b){var c=[];e.forEach(this._selected[a],function(d){e.forEach(b,function(b){if(d[a]==b[a]){var g=e.indexOf(d.except,b[q[a]]);0<=g&&d.except.splice(g,1);c.push(b)}})});return c},_makeupForCells:function(a,b){var c=[];e.forEach(this._selected.cell,function(d){e.some(b,function(b){return d[a]==b[a]?(c.push(d),!0):!1})});this._remove("cell",c);e.forEach(this._selected[q[a]],function(c){e.forEach(b,function(b){b=e.indexOf(c.except,b[a]);0<=b&&c.except.splice(b,1)})})},_addException:function(a,b){e.forEach(this._selected[a],
-function(c){e.forEach(b,function(b){c.except.push(b[q[a]])})})},_addCellException:function(a,b){e.forEach(this._selected[a],function(c){e.forEach(b,function(b){c[a]==b[a]&&c.except.push(b[q[a]])})})},_add:function(a,b){var c=this.grid.layout.cells;if("cell"==a){var d=this._makeupForExceptions("col",b),f=this._makeupForExceptions("row",b);b=e.filter(b,function(a){return 0>e.indexOf(d,a)&&0>e.indexOf(f,a)&&!c[a.col].hidden&&!c[a.col].notselectable})}else"col"==a&&(b=e.filter(b,function(a){return!c[a.col].hidden&&
-!c[a.col].notselectable})),this._makeupForCells(a,b),this._selected[a]=e.filter(this._selected[a],function(c){return e.every(b,function(b){return c[a]!==b[a]})});"col"!=a&&this.grid._hasIdentity&&e.forEach(b,function(a){var b=this.grid._by_idx[a.row];b&&(a.id=b.idty)},this);this._selected[a]=this._selected[a].concat(b)},_remove:function(a,b){var c=h.partial(v,a);this._selected[a]=e.filter(this._selected[a],function(a){return!e.some(b,function(b){return c(a,b)})});"cell"==a?(this._addCellException("col",
-b),this._addCellException("row",b)):this._config.cell&&this._addException(q[a],b)},_isCellNotInExcept:function(a,b){var c=b[a],d=b[q[a]];return e.some(this._selected[a],function(b){return b[a]==c&&0>e.indexOf(b.except,d)})},_isSelected:function(a,b){if(!b)return!1;var c=e.some(this._selected[a],function(c){var e=v(a,b,c);return e&&"cell"!==a?0===c.except.length:e});!c&&"cell"===a&&(c=this._isCellNotInExcept("col",b)||this._isCellNotInExcept("row",b),"cell"===a&&(c=c&&!this.grid.layout.cells[b.col].notselectable));
-return c},_isInLastRange:function(a,b,c){var d=this[c?"_lastSelectedAnchorPoint":"_lastAnchorPoint"][a];c=this[c?"_lastSelectedEndPoint":"_lastEndPoint"][a];return!b||!d||!c?!1:p(a,b,d,c)},_isValid:function(a,b,c){if(!b)return!1;try{var d=this.grid,e=b[a];switch(a){case "col":return 0<=e&&e<d.layout.cells.length&&h.isArray(b.except)&&(c||!d.layout.cells[e].notselectable);case "row":return 0<=e&&e<d.rowCount&&h.isArray(b.except);case "cell":return 0<=b.col&&b.col<d.layout.cells.length&&0<=b.row&&b.row<
-d.rowCount&&(c||!d.layout.cells[b.col].notselectable)}}catch(g){}return!1}});C.registerPlugin(t,{dependency:["autoScroll"]});return t});
-//@ sourceMappingURL=Selector.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/event",
+	"dojo/keys",
+	"dojo/query",
+	"dojo/_base/html",
+	"dojo/_base/window",
+	"dijit/focus",
+	"../../_RowSelector",
+	"../_Plugin",
+	"../../EnhancedGrid",
+	"../../cells/_base",
+	"./AutoScroll"
+], function(dojo, lang, declare, array, event, keys, query, html, win, dijitFocus, _RowSelector, _Plugin, EnhancedGrid){
+
+/*=====
+declare("__SelectItem", null,{
+	// summary:
+	//		An abstract representation of an item.
+});
+declare("__SelectCellItem", __SelectItem,{
+	// summary:
+	//		An abstract representation of a cell.
+	
+	// row: Integer
+	//		Row index of this cell
+	row: 0,
+	
+	// col: Integer
+	//		Column index of this cell
+	col: 0
+});
+declare("__SelectRowItem", __SelectItem,{
+	// summary:
+	//		An abstract representation of a row.
+	
+	// row: Integer
+	//		Row index of this row
+	row: 0,
+	
+	// except: Integer[]
+	//		An array of column indexes of all the unselected cells in this row.
+	except: []
+});
+declare("__SelectColItem", __SelectItem,{
+	// summary:
+	//		An abstract representation of a column.
+	
+	// col: Integer
+	//		Column index of this column
+	col: 0,
+	
+	// except: Integer[]
+	//		An array of row indexes of all the unselected cells in this column.
+	except: []
+});
+=====*/
+
+var DISABLED = 0, SINGLE = 1, MULTI = 2,
+	_theOther = { col: "row", row: "col" },
+	_inRange = function(type, value, start, end, halfClose){
+		if(type !== "cell"){
+			value = value[type];
+			start = start[type];
+			end = end[type];
+			if(typeof value !== "number" || typeof start !== "number" || typeof end !== "number"){
+				return false;
+			}
+			return halfClose ? ((value >= start && value < end) || (value > end && value <= start))
+							: ((value >= start && value <= end) || (value >= end && value <= start));
+		}else{
+			return _inRange("col", value, start, end, halfClose) && _inRange("row", value, start, end, halfClose);
+		}
+	},
+	_isEqual = function(type, v1, v2){
+		try{
+			if(v1 && v2){
+				switch(type){
+					case "col": case "row":
+						return v1[type] == v2[type] && typeof v1[type] == "number" &&
+								!(_theOther[type] in v1) && !(_theOther[type] in v2);
+					case "cell":
+						return v1.col == v2.col && v1.row == v2.row && typeof v1.col == "number" && typeof v1.row == "number";
+				}
+			}
+		}catch(e){}
+		return false;
+	},
+	_stopEvent = function(evt){
+		try{
+			if(evt && evt.preventDefault){
+				event.stop(evt);
+			}
+		}catch(e){}
+	},
+	_createItem = function(type, rowIndex, colIndex){
+		switch(type){
+			case "col":
+				return {
+					"col": typeof colIndex == "undefined" ? rowIndex : colIndex,
+					"except": []
+				};
+			case "row":
+				return {
+					"row": rowIndex,
+					"except": []
+				};
+			case "cell":
+				return {
+					"row": rowIndex,
+					"col": colIndex
+				};
+		}
+		return null;
+	};
+var Selector = declare("dojox.grid.enhanced.plugins.Selector", _Plugin, {
+	// summary:
+	//		Provides standard extended selection for grid.
+	//		Supports mouse/keyboard selection, multi-selection, and de-selection.
+	//
+	//		Acceptable plugin parameters:
+	//		The whole plugin parameter object is a config object passed to the setupConfig function.
+	//
+	//		Acceptable cell parameters defined in layout:
+	//
+	//		1. notselectable: Boolean: Whether this column is (and all the cells in it are) selectable.
+	
+	// name: String
+	//		plugin name
+	name: "selector",
+
+	// noClear: Boolean
+	//		Not to clear rows selected by IndirectSelection.
+/*
+	//	_config: null,
+	//	_enabled: true,
+	//	_selecting: {
+	//		row: false,
+	//		col: false,
+	//		cell: false
+	//	},
+	//	_selected: {
+	//		row: [],
+	//		col: [],
+	//		cell: []
+	//	},
+	//	_startPoint: {},
+	//	_currentPoint: {},
+	//	_lastAnchorPoint: {},
+	//	_lastEndPoint: {},
+	//	_lastSelectedAnchorPoint: {},
+	//	_lastSelectedEndPoint: {},
+	//	_keyboardSelect: {
+	//		row: 0,
+	//		col: 0,
+	//		cell: 0
+	//	},
+	//	_curType: null,
+	//	_lastType: null,
+	//	_usingKeyboard: false,
+	//	_toSelect: true,
+*/
+
+	constructor: function(grid, args){
+		this.grid = grid;
+		this._config = {
+			row: MULTI,
+			col: MULTI,
+			cell: MULTI
+		};
+		this.noClear = args && args.noClear;
+		this.setupConfig(args);
+		if(grid.selectionMode === "single"){
+			this._config.row = SINGLE;
+		}
+		this._enabled = true;
+		this._selecting = {};
+		this._selected = {
+			"col": [],
+			"row": [],
+			"cell": []
+		};
+		this._startPoint = {};
+		this._currentPoint = {};
+		this._lastAnchorPoint = {};
+		this._lastEndPoint = {};
+		this._lastSelectedAnchorPoint = {};
+		this._lastSelectedEndPoint = {};
+		this._keyboardSelect = {};
+		this._lastType = null;
+		this._selectedRowModified = {};
+		this._hacks();
+		this._initEvents();
+		this._initAreas();
+		this._mixinGrid();
+	},
+	destroy: function(){
+		this.inherited(arguments);
+	},
+	//------------public--------------------
+	setupConfig: function(config){
+		// summary:
+		//		Set selection mode for row/col/cell.
+		// config: Object
+		//		An object with the following structure (all properties are optional):
+		// |	{
+		// |		//Default is "multi", all other values are same as "multi".
+		// |		row: false|"disabled"|"single",
+		// |		col: false|"disabled"|"single",
+		// |		cell: false|"disabled"|"single"
+		// |	}
+		if(!config || !lang.isObject(config)){
+			return;
+		}
+		var types = ["row", "col", "cell"];
+		for(var type in config){
+			if(array.indexOf(types, type) >= 0){
+				if(!config[type] || config[type] == "disabled"){
+					this._config[type] = DISABLED;
+				}else if(config[type] == "single"){
+					this._config[type] = SINGLE;
+				}else{
+					this._config[type] = MULTI;
+				}
+			}
+		}
+		
+		//Have to set mode to default grid selection.
+		var mode = ["none","single","extended"][this._config.row];
+		this.grid.selection.setMode(mode);
+	},
+	isSelected: function(type, rowIndex, colIndex){
+		// summary:
+		//		Check whether a location (a cell, a column or a row) is selected.
+		// tags:
+		//		public
+		// type: String
+		//		"row" or "col" or "cell"
+		// rowIndex: Integer
+		//		If type is "row" or "cell", this is the row index.
+		//		If type if "col", this is the column index.
+		// colIndex: Integer?
+		//		Only valid when type is "cell"
+		// returns: Boolean
+		//		true if selected, false if not. If cell is covered by a selected column, it's selected.
+		return this._isSelected(type, _createItem(type, rowIndex, colIndex));
+	},
+	toggleSelect: function(type, rowIndex, colIndex){
+		this._startSelect(type, _createItem(type, rowIndex, colIndex), this._config[type] === MULTI, false, false, !this.isSelected(type, rowIndex, colIndex));
+		this._endSelect(type);
+	},
+	select: function(type, rowIndex, colIndex){
+		// summary:
+		//		Select a location (a cell, a column or a row).
+		// tags:
+		//		public
+		// type: String
+		//		"row" or "col" or "cell"
+		// rowIndex: Integer
+		//		If type is "row" or "cell", this is the row index.
+		//		If type if "col", this is the column index.
+		// colIndex: Integer?
+		//		Only valid when type is "cell"
+		if(!this.isSelected(type, rowIndex, colIndex)){
+			this.toggleSelect(type, rowIndex, colIndex);
+		}
+	},
+	deselect: function(type, rowIndex, colIndex){
+		if(this.isSelected(type, rowIndex, colIndex)){
+			this.toggleSelect(type, rowIndex, colIndex);
+		}
+	},
+	selectRange: function(type, start, end, toSelect){
+		// summary:
+		//		Select a continuous range (a block of cells, a set of continuous columns or rows)
+		// tags:
+		//		public
+		// type: String
+		//		"row" or "col" or "cell"
+		// start: Integer|Object
+		//		If type is "row" or "col", this is the index of the starting row or column.
+		//		If type if "cell", this is the left-top cell of the range.
+		// end: Integer|Object
+		//		If type is "row" or "col", this is the index of the ending row or column.
+		//		If type if "cell", this is the right-bottom cell of the range.
+		this.grid._selectingRange = true;
+		var startPoint = type == "cell" ? _createItem(type, start.row, start.col) : _createItem(type, start),
+			endPoint = type == "cell" ? _createItem(type, end.row, end.col) : _createItem(type, end);
+		this._startSelect(type, startPoint, false, false, false, toSelect);
+		this._highlight(type, endPoint, toSelect === undefined ? true : toSelect);
+		this._endSelect(type);
+		this.grid._selectingRange = false;
+	},
+	clear: function(type){
+		// summary:
+		//		Clear all selections.
+		// tags:
+		//		public
+		// type: String?
+		//		"row" or "col" or "cell". If omitted, clear all.
+		this._clearSelection(type || "all");
+	},
+	isSelecting: function(type){
+		// summary:
+		//		Check whether the user is currently selecting something.
+		// tags:
+		//		public
+		// type: String
+		//		"row" or "col" or "cell"
+		// returns: Boolean
+		//		true if is selection, false otherwise.
+		if(typeof type == "undefined"){
+			return this._selecting.col || this._selecting.row || this._selecting.cell;
+		}
+		return this._selecting[type];
+	},
+	selectEnabled: function(toEnable){
+		// summary:
+		//		Turn on/off this selection functionality if *toEnable* is provided.
+		//		Check whether this selection functionality is enabled if nothing is passed in.
+		// tags:
+		//		public
+		// toEnable: Boolean?
+		//		To enable or not.
+		// returns: Boolean|undefined
+		//		Enabled or not.
+		if(typeof toEnable != "undefined" && !this.isSelecting()){
+			this._enabled = !!toEnable;
+		}
+		return this._enabled;
+	},
+	getSelected: function(type, includeExceptions){
+		// summary:
+		//		Get an array of selected locations.
+		// tags:
+		//		public
+		// type: String
+		//		"row" or "col" or "cell"
+		// includeExceptions: Boolean
+		//		Only meaningful for rows/columns. If true, all selected rows/cols, even they are partly selected, are all returned.
+		// returns: __SelectItem[]
+		switch(type){
+			case "cell":
+				return array.map(this._selected[type], function(item){ return item; });
+			case "col": case "row":
+				return array.map(includeExceptions ? this._selected[type]
+				: array.filter(this._selected[type], function(item){
+					return item.except.length === 0;
+				}), function(item){
+					return includeExceptions ? item : item[type];
+				});
+		}
+		return [];
+	},
+	getSelectedCount: function(type, includeExceptions){
+		// summary:
+		//		Get the number of selected items.
+		// tags:
+		//		public
+		// type: String
+		//		"row" or "col" or "cell"
+		// includeExceptions: Boolean
+		//		Only meaningful for rows/columns. If true, all selected rows/cols, even they are partly selected, are all returned.
+		// returns: Integer
+		//		The number of selected items.
+		switch(type){
+			case "cell":
+				return this._selected[type].length;
+			case "col": case "row":
+				return (includeExceptions ? this._selected[type]
+				: array.filter(this._selected[type], function(item){
+					return item.except.length === 0;
+				})).length;
+		}
+		return 0;
+	},
+	getSelectedType: function(){
+		// summary:
+		//		Get the type of selected items.
+		// tags:
+		//		public
+		// returns: String
+		//		"row" or "col" or "cell", or any mix of these (separator is | ).
+		var s = this._selected;
+		return ["",		"cell",		"row",		"row|cell",
+				"col",	"col|cell",	"col|row",	"col|row|cell"
+			][(!!s.cell.length) | (!!s.row.length << 1) | (!!s.col.length << 2)];
+	},
+	getLastSelectedRange: function(type){
+		// summary:
+		//		Get last selected range of the given type.
+		// tags:
+		//		public
+		// returns: Object
+		//		{start: __SelectItem, end: __SelectItem}
+		//		return null if nothing is selected.
+		return this._lastAnchorPoint[type] ? {
+			"start": this._lastAnchorPoint[type],
+			"end": this._lastEndPoint[type]
+		} : null;
+	},
+	
+	//--------------------------private----------------------------
+	_hacks: function(){
+		// summary:
+		//		Complete the event system of grid, hack some grid functions to prevent default behavior.
+		var g = this.grid;
+		var doContentMouseUp = function(e){
+			if(e.cellNode){
+				g.onMouseUp(e);
+			}
+			g.onMouseUpRow(e);
+		};
+		var mouseUp = lang.hitch(g, "onMouseUp");
+		var mouseDown = lang.hitch(g, "onMouseDown");
+		var doRowSelectorFocus = function(e){
+			e.cellNode.style.border = "solid 1px";
+		};
+		array.forEach(g.views.views, function(view){
+			view.content.domouseup = doContentMouseUp;
+			view.header.domouseup = mouseUp;
+			if(view.declaredClass == "dojox.grid._RowSelector"){
+				view.domousedown = mouseDown;
+				view.domouseup = mouseUp;
+				view.dofocus = doRowSelectorFocus;
+			}
+		});
+		//Disable default selection.
+		g.selection.clickSelect = function(){};
+		
+		this._oldDeselectAll = g.selection.deselectAll;
+		var _this = this;
+		g.selection.selectRange = function(from, to){
+			_this.selectRange("row", from, to, true);
+			if(g.selection.preserver){
+				g.selection.preserver._updateMapping(true, true, false, from, to);
+			}
+			g.selection.onChanged();
+		};
+		g.selection.deselectRange = function(from, to){
+			_this.selectRange("row", from, to, false);
+			if(g.selection.preserver){
+				g.selection.preserver._updateMapping(true, false, false, from, to);
+			}
+			g.selection.onChanged();
+		};
+		g.selection.deselectAll = function(){
+			g._selectingRange = true;
+			_this._oldDeselectAll.apply(g.selection, arguments);
+			_this._clearSelection("all");
+			g._selectingRange = false;
+			if(g.selection.preserver){
+				g.selection.preserver._updateMapping(true, false, true);
+			}
+			g.selection.onChanged();
+		};
+		
+		var rowSelector = g.views.views[0];
+		//The default function re-write the whole className, so can not insert any other classes.
+		if(rowSelector instanceof _RowSelector){
+			rowSelector.doStyleRowNode = function(inRowIndex, inRowNode){
+				html.removeClass(inRowNode, "dojoxGridRow");
+				html.addClass(inRowNode, "dojoxGridRowbar");
+				html.addClass(inRowNode, "dojoxGridNonNormalizedCell");
+				html.toggleClass(inRowNode, "dojoxGridRowbarOver", g.rows.isOver(inRowIndex));
+				html.toggleClass(inRowNode, "dojoxGridRowbarSelected", !!g.selection.isSelected(inRowIndex));
+			};
+		}
+		this.connect(g, "updateRow", function(rowIndex){
+			array.forEach(g.layout.cells, function(cell){
+				if(this.isSelected("cell", rowIndex, cell.index)){
+					this._highlightNode(cell.getNode(rowIndex), true);
+				}
+			}, this);
+		});
+	},
+	_mixinGrid: function(){
+		// summary:
+		//		Expose events to grid.
+		var g = this.grid;
+		g.setupSelectorConfig = lang.hitch(this, this.setupConfig);
+		g.onStartSelect = function(){};
+		g.onEndSelect = function(){};
+		g.onStartDeselect = function(){};
+		g.onEndDeselect = function(){};
+		g.onSelectCleared = function(){};
+	},
+	_initEvents: function(){
+		// summary:
+		//		Connect events, create event handlers.
+		var g = this.grid,
+			_this = this,
+			dp = lang.partial,
+			starter = function(type, e){
+				if(type === "row"){
+					_this._isUsingRowSelector = true;
+				}
+				//only left mouse button can select.
+				if(_this.selectEnabled() && _this._config[type] && e.button != 2){
+					if(_this._keyboardSelect.col || _this._keyboardSelect.row || _this._keyboardSelect.cell){
+						_this._endSelect("all");
+						_this._keyboardSelect.col = _this._keyboardSelect.row = _this._keyboardSelect.cell = 0;
+					}
+					if(_this._usingKeyboard){
+						_this._usingKeyboard = false;
+					}
+					var target = _createItem(type, e.rowIndex, e.cell && e.cell.index);
+					_this._startSelect(type, target, e.ctrlKey, e.shiftKey);
+				}
+			},
+			ender = lang.hitch(this, "_endSelect");
+		this.connect(g, "onHeaderCellMouseDown", dp(starter, "col"));
+		this.connect(g, "onHeaderCellMouseUp", dp(ender, "col"));
+		
+		this.connect(g, "onRowSelectorMouseDown", dp(starter, "row"));
+		this.connect(g, "onRowSelectorMouseUp", dp(ender, "row"));
+		
+		this.connect(g, "onCellMouseDown", function(e){
+			if(e.cell && e.cell.isRowSelector){ return; }
+			if(g.singleClickEdit){
+				_this._singleClickEdit = true;
+				g.singleClickEdit = false;
+			}
+			starter(_this._config["cell"] == DISABLED ? "row" : "cell", e);
+		});
+		this.connect(g, "onCellMouseUp", function(e){
+			if(_this._singleClickEdit){
+				delete _this._singleClickEdit;
+				g.singleClickEdit = true;
+			}
+			ender("all", e);
+		});
+		
+		this.connect(g, "onCellMouseOver", function(e){
+			if(_this._curType != "row" && _this._selecting[_this._curType] && _this._config[_this._curType] == MULTI){
+				_this._highlight("col", _createItem("col", e.cell.index), _this._toSelect);
+				if(!_this._keyboardSelect.cell){
+					_this._highlight("cell", _createItem("cell", e.rowIndex, e.cell.index), _this._toSelect);
+				}
+			}
+		});
+		this.connect(g, "onHeaderCellMouseOver", function(e){
+			if(_this._selecting.col && _this._config.col == MULTI){
+				_this._highlight("col", _createItem("col", e.cell.index), _this._toSelect);
+			}
+		});
+		this.connect(g, "onRowMouseOver", function(e){
+			if(_this._selecting.row && _this._config.row == MULTI){
+				_this._highlight("row", _createItem("row", e.rowIndex), _this._toSelect);
+			}
+		});
+		
+		//When row order has changed in a unpredictable way (sorted or filtered), map the new rowindex.
+		this.connect(g, "onSelectedById", "_onSelectedById");
+		
+		//When the grid refreshes, all those selected should still appear selected.
+		this.connect(g, "_onFetchComplete", function(){
+			//console.debug("refresh after buildPage:", g._notRefreshSelection);
+			if(!g._notRefreshSelection){
+				this._refreshSelected(true);
+			}
+		});
+
+		//Small scroll might not refresh the grid.
+		this.connect(g.scroller, "buildPage", function(){
+			//console.debug("refresh after buildPage:", g._notRefreshSelection);
+			if(!g._notRefreshSelection){
+				this._refreshSelected(true);
+			}
+		});
+		
+		//Whenever the mouse is up, end selecting.
+		this.connect(win.doc, "onmouseup", dp(ender, "all"));
+		
+		//If autoscroll is enabled, connect to it.
+		this.connect(g, "onEndAutoScroll", function(isVertical, isForward, view, target){
+			var selectCell = _this._selecting.cell,
+				type, current, dir = isForward ? 1 : -1;
+			if(isVertical && (selectCell || _this._selecting.row)){
+				type = selectCell ? "cell" : "row";
+				current = _this._currentPoint[type];
+				_this._highlight(type, _createItem(type, current.row + dir, current.col), _this._toSelect);
+			}else if(!isVertical && (selectCell || _this._selecting.col)){
+				type = selectCell ? "cell" : "col";
+				current = _this._currentPoint[type];
+				_this._highlight(type, _createItem(type, current.row, target), _this._toSelect);
+			}
+		});
+		//If the grid is changed, selection should be consistent.
+		this.subscribe("dojox/grid/rearrange/move/" + g.id, "_onInternalRearrange");
+		this.subscribe("dojox/grid/rearrange/copy/" + g.id, "_onInternalRearrange");
+		this.subscribe("dojox/grid/rearrange/change/" + g.id, "_onExternalChange");
+		this.subscribe("dojox/grid/rearrange/insert/" + g.id, "_onExternalChange");
+		this.subscribe("dojox/grid/rearrange/remove/" + g.id, "clear");
+		
+		//have to also select when the grid's default select is used.
+		this.connect(g, "onSelected", function(rowIndex){
+			if(this._selectedRowModified && this._isUsingRowSelector){
+				delete this._selectedRowModified;
+			}else if(!this.grid._selectingRange){
+				this.select("row", rowIndex);
+			}
+		});
+		this.connect(g, "onDeselected", function(rowIndex){
+			if(this._selectedRowModified && this._isUsingRowSelector){
+				delete this._selectedRowModified;
+			}else if(!this.grid._selectingRange){
+				this.deselect("row", rowIndex);
+			}
+		});
+	},
+	_onSelectedById: function(id, newIndex, isSelected){
+		if(this.grid._noInternalMapping){
+			return;
+		}
+		var pointSet = [this._lastAnchorPoint.row, this._lastEndPoint.row,
+			this._lastSelectedAnchorPoint.row, this._lastSelectedEndPoint.row];
+		pointSet = pointSet.concat(this._selected.row);
+		var found = false;
+		array.forEach(pointSet, function(item){
+			if(item){
+				if(item.id === id){
+					found = true;
+					item.row = newIndex;
+				}else if(item.row === newIndex && item.id){
+					item.row = -1;
+				}
+			}
+		});
+		if(!found && isSelected){
+			array.some(this._selected.row, function(item){
+				if(item && !item.id && !item.except.length){
+					item.id = id;
+					item.row = newIndex;
+					return true;
+				}
+				return false;
+			});
+		}
+		found = false;
+		pointSet = [this._lastAnchorPoint.cell, this._lastEndPoint.cell,
+			this._lastSelectedAnchorPoint.cell, this._lastSelectedEndPoint.cell];
+		pointSet = pointSet.concat(this._selected.cell);
+		array.forEach(pointSet, function(item){
+			if(item){
+				if(item.id === id){
+					found = true;
+					item.row = newIndex;
+				}else if(item.row === newIndex && item.id){
+					item.row = -1;
+				}
+			}
+		});
+	},
+	onSetStore: function(){
+		this._clearSelection("all");
+	},
+	_onInternalRearrange: function(type, mapping){
+		try{
+		//The column can not refresh it self!
+		this._refresh("col", false);
+		
+		array.forEach(this._selected.row, function(item){
+			array.forEach(this.grid.layout.cells, function(cell){
+				this._highlightNode(cell.getNode(item.row), false);
+			}, this);
+		}, this);
+		//The rowbar must be cleaned manually
+		query(".dojoxGridRowSelectorSelected").forEach(function(node){
+			html.removeClass(node, "dojoxGridRowSelectorSelected");
+			html.removeClass(node, "dojoxGridRowSelectorSelectedUp");
+			html.removeClass(node, "dojoxGridRowSelectorSelectedDown");
+		});
+		
+		var cleanUp = function(item){
+			if(item){
+				delete item.converted;
+			}
+		},
+		pointSet = [this._lastAnchorPoint[type], this._lastEndPoint[type],
+			this._lastSelectedAnchorPoint[type], this._lastSelectedEndPoint[type]];
+		
+		if(type === "cell"){
+			this.selectRange("cell", mapping.to.min, mapping.to.max);
+			var cells = this.grid.layout.cells;
+			array.forEach(pointSet, function(item){
+				if(item.converted){ return; }
+				for(var r = mapping.from.min.row, tr = mapping.to.min.row; r <= mapping.from.max.row; ++r, ++tr){
+					for(var c = mapping.from.min.col, tc = mapping.to.min.col; c <= mapping.from.max.col; ++c, ++tc){
+						while(cells[c].hidden){ ++c; }
+						while(cells[tc].hidden){ ++tc; }
+						if(item.row == r && item.col == c){
+							//console.log('mapping found: (', item.row, ",",item.col,") to (", tr, ",", tc,")");
+							item.row = tr;
+							item.col = tc;
+							item.converted = true;
+							return;
+						}
+					}
+				}
+			});
+		}else{
+			pointSet = this._selected.cell.concat(this._selected[type]).concat(pointSet).concat(
+				[this._lastAnchorPoint.cell, this._lastEndPoint.cell,
+				this._lastSelectedAnchorPoint.cell, this._lastSelectedEndPoint.cell]);
+			array.forEach(pointSet, function(item){
+				if(item && !item.converted){
+					var from = item[type];
+					if(from in mapping){
+						item[type] = mapping[from];
+					}
+					item.converted = true;
+				}
+			});
+			array.forEach(this._selected[_theOther[type]], function(item){
+				for(var i = 0, len = item.except.length; i < len; ++i){
+					var from = item.except[i];
+					if(from in mapping){
+						item.except[i] = mapping[from];
+					}
+				}
+			});
+		}
+		
+		array.forEach(pointSet, cleanUp);
+		
+		this._refreshSelected(true);
+		this._focusPoint(type, this._lastEndPoint);
+		}catch(e){
+			console.warn("Selector._onInternalRearrange() error",e);
+		}
+	},
+	_onExternalChange: function(type, target){
+		var start = type == "cell" ? target.min : target[0],
+			end = type == "cell" ? target.max : target[target.length - 1];
+		this.selectRange(type, start, end);
+	},
+	_refresh: function(type, toHighlight){
+		if(!this._keyboardSelect[type]){
+			array.forEach(this._selected[type], function(item){
+				this._highlightSingle(type, toHighlight, item, undefined, true);
+			}, this);
+		}
+	},
+	_refreshSelected: function(){
+		this._refresh("col", true);
+		this._refresh("row", true);
+		this._refresh("cell", true);
+	},
+	_initAreas: function(){
+		var g = this.grid, f = g.focus, _this = this,
+			keyboardSelectReady = 1, duringKeyboardSelect = 2,
+			onmove = function(type, createNewEnd, rowStep, colStep, evt){
+				//Keyboard swipe selection is SHIFT + Direction Keys.
+				var ks = _this._keyboardSelect;
+				//Tricky, rely on valid status not being 0.
+				if(evt.shiftKey && ks[type]){
+					if(ks[type] === keyboardSelectReady){
+						if(type === "cell"){
+							var item = _this._lastEndPoint[type];
+							if(f.cell != g.layout.cells[item.col + colStep] || f.rowIndex != item.row + rowStep){
+								ks[type] = 0;
+								return;
+							}
+						}
+						//If selecting is not started, start it
+						_this._startSelect(type, _this._lastAnchorPoint[type], true, false, true);
+						_this._highlight(type, _this._lastEndPoint[type], _this._toSelect);
+						ks[type] = duringKeyboardSelect;
+					}
+					//Highlight to the new end point.
+					var newEnd = createNewEnd(type, rowStep, colStep, evt);
+					if(_this._isValid(type, newEnd, g)){
+						_this._highlight(type, newEnd, _this._toSelect);
+					}
+					_stopEvent(evt);
+				}
+			},
+			onkeydown = function(type, getTarget, evt, isBubble){
+				if(isBubble && _this.selectEnabled() && _this._config[type] != DISABLED){
+					switch(evt.keyCode){
+						case keys.SPACE:
+							//Keyboard single point selection is SPACE.
+							_this._startSelect(type, getTarget(), evt.ctrlKey, evt.shiftKey);
+							_this._endSelect(type);
+							break;
+						case keys.SHIFT:
+							//Keyboard swipe selection starts with SHIFT.
+							if(_this._config[type] == MULTI && _this._isValid(type, _this._lastAnchorPoint[type], g)){
+								//End last selection if any.
+								_this._endSelect(type);
+								_this._keyboardSelect[type] = keyboardSelectReady;
+								_this._usingKeyboard = true;
+							}
+					}
+				}
+			},
+			onkeyup = function(type, evt, isBubble){
+				if(isBubble && evt.keyCode == keys.SHIFT && _this._keyboardSelect[type]){
+					_this._endSelect(type);
+					_this._keyboardSelect[type] = 0;
+				}
+			};
+		//TODO: this area "rowHeader" should be put outside, same level as header/content.
+		if(g.views.views[0] instanceof _RowSelector){
+			this._lastFocusedRowBarIdx = 0;
+			f.addArea({
+				name:"rowHeader",
+				onFocus: function(evt, step){
+					var view = g.views.views[0];
+					if(view instanceof _RowSelector){
+						var rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
+						if(rowBarNode){
+							html.toggleClass(rowBarNode, f.focusClass, false);
+						}
+						//evt might not be real event, it may be a mock object instead.
+						if(evt && "rowIndex" in evt){
+							if(evt.rowIndex >= 0){
+								_this._lastFocusedRowBarIdx = evt.rowIndex;
+							}else if(!_this._lastFocusedRowBarIdx){
+								_this._lastFocusedRowBarIdx = 0;
+							}
+						}
+						rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
+						if(rowBarNode){
+							dijitFocus.focus(rowBarNode);
+							html.toggleClass(rowBarNode, f.focusClass, true);
+						}
+						f.rowIndex = _this._lastFocusedRowBarIdx;
+						_stopEvent(evt);
+						return true;
+					}
+					return false;
+				},
+				onBlur: function(evt, step){
+					var view = g.views.views[0];
+					if(view instanceof _RowSelector){
+						var rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
+						if(rowBarNode){
+							html.toggleClass(rowBarNode, f.focusClass, false);
+						}
+						_stopEvent(evt);
+					}
+					return true;
+				},
+				onMove: function(rowStep, colStep, evt){
+					var view = g.views.views[0];
+					if(rowStep && view instanceof _RowSelector){
+						var next = _this._lastFocusedRowBarIdx + rowStep;
+						if(next >= 0 && next < g.rowCount){
+							//TODO: these logic require a better Scroller.
+							_stopEvent(evt);
+							var rowBarNode = view.getCellNode(_this._lastFocusedRowBarIdx, 0);
+							html.toggleClass(rowBarNode, f.focusClass, false);
+							//If the row is not fetched, fetch it.
+							var sc = g.scroller;
+							var lastPageRow = sc.getLastPageRow(sc.page);
+							var rc = g.rowCount - 1, row = Math.min(rc, next);
+							if(next > lastPageRow){
+								g.setScrollTop(g.scrollTop + sc.findScrollTop(row) - sc.findScrollTop(_this._lastFocusedRowBarIdx));
+							}
+							//Now we have fetched the row.
+							rowBarNode = view.getCellNode(next, 0);
+							dijitFocus.focus(rowBarNode);
+							html.toggleClass(rowBarNode, f.focusClass, true);
+							_this._lastFocusedRowBarIdx = next;
+							//If the row is out of view, scroll to it.
+							f.cell = rowBarNode;
+							f.cell.view = view;
+							f.cell.getNode = function(index){
+								return f.cell;
+							};
+							f.rowIndex = _this._lastFocusedRowBarIdx;
+							f.scrollIntoView();
+							f.cell = null;
+						}
+					}
+				}
+			});
+			f.placeArea("rowHeader","before","content");
+		}
+		//Support keyboard selection.
+		f.addArea({
+			name:"cellselect",
+			onMove: lang.partial(onmove, "cell", function(type, rowStep, colStep, evt){
+				var current = _this._currentPoint[type];
+				return _createItem("cell", current.row + rowStep, current.col + colStep);
+			}),
+			onKeyDown: lang.partial(onkeydown, "cell", function(){
+				return _createItem("cell", f.rowIndex, f.cell.index);
+			}),
+			onKeyUp: lang.partial(onkeyup, "cell")
+		});
+		f.placeArea("cellselect","below","content");
+		f.addArea({
+			name:"colselect",
+			onMove: lang.partial(onmove, "col", function(type, rowStep, colStep, evt){
+				var current = _this._currentPoint[type];
+				return _createItem("col", current.col + colStep);
+			}),
+			onKeyDown: lang.partial(onkeydown, "col", function(){
+				return _createItem("col", f.getHeaderIndex());
+			}),
+			onKeyUp: lang.partial(onkeyup, "col")
+		});
+		f.placeArea("colselect","below","header");
+		f.addArea({
+			name:"rowselect",
+			onMove: lang.partial(onmove, "row", function(type, rowStep, colStep, evt){
+				return _createItem("row", f.rowIndex);
+			}),
+			onKeyDown: lang.partial(onkeydown, "row", function(){
+				return _createItem("row", f.rowIndex);
+			}),
+			onKeyUp: lang.partial(onkeyup, "row")
+		});
+		f.placeArea("rowselect","below","rowHeader");
+	},
+	_clearSelection: function(type, reservedItem){
+		// summary:
+		//		Clear selection for given type and fire events, but retain the highlight for *reservedItem*,
+		//		thus avoid "flashing".
+		// tags:
+		//		private
+		// type: String
+		//		"row", "col", or "cell
+		// reservedItem: __SelectItem
+		//		The item to retain highlight.
+		if(type == "all"){
+			this._clearSelection("cell", reservedItem);
+			this._clearSelection("col", reservedItem);
+			this._clearSelection("row", reservedItem);
+			return;
+		}
+		this._isUsingRowSelector = true;
+		array.forEach(this._selected[type], function(item){
+			if(!_isEqual(type, reservedItem, item)){
+				this._highlightSingle(type, false, item);
+			}
+		}, this);
+		this._blurPoint(type, this._currentPoint);
+		this._selecting[type] = false;
+		this._startPoint[type] = this._currentPoint[type] = null;
+		this._selected[type] = [];
+		
+		//Have to also deselect default grid selection.
+		if(type == "row" && !this.grid._selectingRange){
+			this._oldDeselectAll.call(this.grid.selection);
+			this.grid.selection._selectedById = {};
+		}
+		
+		//Fire events.
+		this.grid.onEndDeselect(type, null, null, this._selected);
+		this.grid.onSelectCleared(type);
+	},
+	_startSelect: function(type, start, extending, isRange, mandatarySelect, toSelect){
+		// summary:
+		//		Start selection, setup start point and current point, fire events.
+		// tags:
+		//		private
+		// type: String
+		//		"row", "col", or "cell"
+		// extending: Boolean
+		//		Whether this is a multi selection
+		// isRange: Boolean
+		//		Whether this is a range selection (i.e. select from the last end point to this point)
+		// start: __SelectItem
+		//		The start point
+		// mandatarySelect: Boolean
+		//		If true, toSelect will be same as the original selection status.
+		if(!this._isValid(type, start)){
+			return;
+		}
+		var lastIsSelected = this._isSelected(type, this._lastEndPoint[type]),
+			isSelected = this._isSelected(type, start);
+		
+		if(this.noClear && !extending){
+			this._toSelect = toSelect === undefined ? true : toSelect;
+		}else{
+			//If we are modifying the selection using keyboard, retain the old status.
+			this._toSelect = mandatarySelect ? isSelected : !isSelected;
+		}
+		
+		//If CTRL is not pressed or it's SINGLE mode, this is a brand new selection.
+		if(!extending || (!isSelected && this._config[type] == SINGLE)){
+			this._clearSelection("col", start);
+			this._clearSelection("cell", start);
+			if(!this.noClear || (type === 'row' && this._config[type] == SINGLE)){
+				this._clearSelection('row', start);
+			}
+			this._toSelect = toSelect === undefined ? true : toSelect;
+		}
+		
+		this._selecting[type] = true;
+		this._currentPoint[type] = null;
+		
+		//We're holding SHIFT while clicking, it's a Click-Range selection.
+		if(isRange && this._lastType == type && lastIsSelected == this._toSelect && this._config[type] == MULTI){
+			if(type === "row"){
+				this._isUsingRowSelector = true;
+			}
+			this._startPoint[type] = this._lastAnchorPoint[type];
+			this._highlight(type, this._startPoint[type]);
+			this._isUsingRowSelector = false;
+		}else{
+			this._startPoint[type] = start;
+		}
+		//Now start selection
+		this._curType = type;
+		this._fireEvent("start", type);
+		this._isStartFocus = true;
+		this._isUsingRowSelector = true;
+		this._highlight(type, start, this._toSelect);
+		this._isStartFocus = false;
+	},
+	_endSelect: function(type){
+		// summary:
+		//		End selection. Keep records, fire events and cleanup status.
+		// tags:
+		//		private
+		// type: String
+		//		"row", "col", or "cell"
+		if(type === "row"){
+			delete this._isUsingRowSelector;
+		}
+		if(type == "all"){
+			this._endSelect("col");
+			this._endSelect("row");
+			this._endSelect("cell");
+		}else if(this._selecting[type]){
+			this._addToSelected(type);
+			this._lastAnchorPoint[type] = this._startPoint[type];
+			this._lastEndPoint[type] = this._currentPoint[type];
+			if(this._toSelect){
+				this._lastSelectedAnchorPoint[type] = this._lastAnchorPoint[type];
+				this._lastSelectedEndPoint[type] = this._lastEndPoint[type];
+			}
+			this._startPoint[type] = this._currentPoint[type] = null;
+			this._selecting[type] = false;
+			this._lastType = type;
+			this._fireEvent("end", type);
+		}
+	},
+	_fireEvent: function(evtName, type){
+		switch(evtName){
+			case "start":
+				this.grid[this._toSelect ? "onStartSelect" : "onStartDeselect"](type, this._startPoint[type], this._selected);
+				break;
+			case "end":
+				this.grid[this._toSelect ? "onEndSelect" : "onEndDeselect"](type, this._lastAnchorPoint[type], this._lastEndPoint[type], this._selected);
+				break;
+		}
+	},
+	_calcToHighlight: function(type, target, toHighlight, toSelect){
+		// summary:
+		//		Calculate what status should *target* have.
+		//		If *toSelect* is not provided, this is a no op.
+		
+		// This function is time-critical!!
+		if(toSelect !== undefined){
+			var sltd;
+			if(this._usingKeyboard && !toHighlight){
+				var last = this._isInLastRange(this._lastType, target);
+				if(last){
+					sltd = this._isSelected(type, target);
+					//This 2 cases makes the keyboard swipe selection valid!
+					if(toSelect && sltd){
+						return false;
+					}
+					if(!toSelect && !sltd && this._isInLastRange(this._lastType, target, true)){
+						return true;
+					}
+				}
+			}
+			return toHighlight ? toSelect : (sltd || this._isSelected(type, target));
+		}
+		return toHighlight;
+	},
+	_highlightNode: function(node, toHighlight){
+		// summary:
+		//		Do the actual highlight work.
+		if(node){
+			var selectCSSClass = "dojoxGridRowSelected";
+			var selectCellClass = "dojoxGridCellSelected";
+			html.toggleClass(node, selectCSSClass, toHighlight);
+			html.toggleClass(node, selectCellClass, toHighlight);
+		}
+	},
+	_highlightHeader: function(colIdx, toHighlight){
+		var cells = this.grid.layout.cells;
+		var node = cells[colIdx].getHeaderNode();
+		var selectedClass = "dojoxGridHeaderSelected";
+		html.toggleClass(node, selectedClass, toHighlight);
+	},
+	_highlightRowSelector: function(rowIdx, toHighlight){
+		//var t1 = (new Date()).getTime();
+		var rowSelector = this.grid.views.views[0];
+		if(rowSelector instanceof _RowSelector){
+			var node = rowSelector.getRowNode(rowIdx);
+			if(node){
+				var selectedClass = "dojoxGridRowSelectorSelected";
+				html.toggleClass(node, selectedClass, toHighlight);
+			}
+		}
+		//console.log((new Date()).getTime() - t1);
+	},
+	_highlightSingle: function(type, toHighlight, target, toSelect, isRefresh){
+		// summary:
+		//		Highlight a single item.
+		
+		// This function is time critical!!
+		var _this = this, toHL, g = _this.grid, cells = g.layout.cells;
+		switch(type){
+			case "cell":
+				toHL = this._calcToHighlight(type, target, toHighlight, toSelect);
+				var c = cells[target.col];
+				if(!c.hidden && !c.notselectable){
+					this._highlightNode(target.node || c.getNode(target.row), toHL);
+				}
+				break;
+			case "col":
+				toHL = this._calcToHighlight(type, target, toHighlight, toSelect);
+				this._highlightHeader(target.col, toHL);
+				query("td[idx='" + target.col + "']", g.domNode).forEach(function(cellNode){
+					var rowNode = cells[target.col].view.content.findRowTarget(cellNode);
+					if(rowNode){
+						var rowIndex = rowNode[dojox.grid.util.rowIndexTag];
+						_this._highlightSingle("cell", toHL, {
+							"row": rowIndex,
+							"col": target.col,
+							"node": cellNode
+						});
+					}
+				});
+				break;
+			case "row":
+				toHL = this._calcToHighlight(type, target, toHighlight, toSelect);
+				this._highlightRowSelector(target.row, toHL);
+				if(this._config.cell){
+					array.forEach(cells, function(cell){
+						_this._highlightSingle("cell", toHL, {
+							"row": target.row,
+							"col": cell.index,
+							"node": cell.getNode(target.row)
+						});
+					});
+				}
+				//To avoid dead lock
+				this._selectedRowModified = true;
+				if(!isRefresh){
+					g.selection.setSelected(target.row, toHL);
+				}
+		}
+	},
+	_highlight: function(type, target, toSelect){
+		// summary:
+		//		Highlight from start point to target.
+		// toSelect: Boolean
+		//		Whether we are selecting or deselecting.
+		
+		// This function is time critical!!
+		if(this._selecting[type] && target !== null){
+			var start = this._startPoint[type],
+				current = this._currentPoint[type],
+				_this = this,
+				highlight = function(from, to, toHL){
+					_this._forEach(type, from, to, function(item){
+						_this._highlightSingle(type, toHL, item, toSelect);
+					}, true);
+				};
+			switch(type){
+				case "col": case "row":
+					if(current !== null){
+						if(_inRange(type, target, start, current, true)){
+							//target is between start and current, some selected should be deselected.
+							highlight(current, target, false);
+						}else{
+							if(_inRange(type, start, target, current, true)){
+								//selection has jumped to different direction, all should be deselected.
+								highlight(current, start, false);
+								current = start;
+							}
+							highlight(target, current, true);
+						}
+					}else{
+						//First time select.
+						this._highlightSingle(type, true, target, toSelect);
+					}
+					break;
+				case "cell":
+					if(current !== null){
+						if(_inRange("row", target, start, current, true) ||
+							_inRange("col", target, start, current, true) ||
+							_inRange("row", start, target, current, true) ||
+							_inRange("col", start, target, current, true)){
+							highlight(start, current, false);
+						}
+					}
+					highlight(start, target, true);
+			}
+			this._currentPoint[type] = target;
+			this._focusPoint(type, this._currentPoint);
+		}
+	},
+	_focusPoint: function(type, point){
+		// summary:
+		//		Focus the current point, so when you move mouse, the focus indicator follows you.
+		if(!this._isStartFocus){
+			var current = point[type],
+				f = this.grid.focus;
+			if(type == "col"){
+				f._colHeadFocusIdx = current.col;
+				f.focusArea("header");
+			}else if(type == "row"){
+				f.focusArea("rowHeader", {
+					"rowIndex": current.row
+				});
+			}else if(type == "cell"){
+				f.setFocusIndex(current.row, current.col);
+			}
+		}
+	},
+	_blurPoint: function(type, point){
+		// summary:
+		//		Blur the current point.
+		var f = this.grid.focus;
+		if(type == "cell"){
+			f._blurContent();
+		}
+	},
+	_addToSelected: function(type){
+		// summary:
+		//		Record the selected items.
+		var toSelect = this._toSelect, _this = this,
+			toAdd = [], toRemove = [],
+			start = this._startPoint[type],
+			end = this._currentPoint[type];
+		if(this._usingKeyboard){
+			//If using keyboard, selection will be ended after every move. But we have to remember the original selection status,
+			//so as to return to correct status when we shrink the selection region.
+			this._forEach(type, this._lastAnchorPoint[type], this._lastEndPoint[type], function(item){
+				//If the original selected item is not in current range, change its status.
+				if(!_inRange(type, item, start, end)){
+					(toSelect ? toRemove : toAdd).push(item);
+				}
+			});
+		}
+		this._forEach(type, start, end, function(item){
+			var isSelected = _this._isSelected(type, item);
+			if(toSelect && !isSelected){
+				//Add new selected items
+				toAdd.push(item);
+			}else if(!toSelect){
+				//Remove deselected items.
+				toRemove.push(item);
+			}
+		});
+		this._add(type, toAdd);
+		this._remove(type, toRemove);
+		
+		// have to keep record in original grid selection
+		array.forEach(this._selected.row, function(item){
+			if(item.except.length > 0){
+				//to avoid dead lock
+				this._selectedRowModified = true;
+				this.grid.selection.setSelected(item.row, false);
+			}
+		}, this);
+	},
+	_forEach: function(type, start, end, func, halfClose){
+		// summary:
+		//		Go through items from *start* point to *end* point.
+		
+		// This function is time critical!!
+		if(!this._isValid(type, start, true) || !this._isValid(type, end, true)){
+			return;
+		}
+		switch(type){
+			case "col": case "row":
+				start = start[type];
+				end = end[type];
+				var dir = end > start ? 1 : -1;
+				if(!halfClose){
+					end += dir;
+				}
+				for(; start != end; start += dir){
+					func(_createItem(type, start));
+				}
+				break;
+			case "cell":
+				var colDir = end.col > start.col ? 1 : -1,
+					rowDir = end.row > start.row ? 1 : -1;
+				for(var i = start.row, p = end.row + rowDir; i != p; i += rowDir){
+					for(var j = start.col, q = end.col + colDir; j != q; j += colDir){
+						func(_createItem(type, i, j));
+					}
+				}
+		}
+	},
+	_makeupForExceptions: function(type, newCellItems){
+		// summary:
+		//		When new cells is selected, maybe they will fill in the "holes" in selected rows and columns.
+		var makedUps = [];
+		array.forEach(this._selected[type], function(v1){
+			array.forEach(newCellItems, function(v2){
+				if(v1[type] == v2[type]){
+					var pos = array.indexOf(v1.except, v2[_theOther[type]]);
+					if(pos >= 0){
+						v1.except.splice(pos, 1);
+					}
+					makedUps.push(v2);
+				}
+			});
+		});
+		return makedUps;
+	},
+	_makeupForCells: function(type, newItems){
+		// summary:
+		//		When some rows/cols are selected, maybe they can cover some of the selected cells,
+		//		and fill some of the "holes" in the selected cols/rows.
+		var toRemove = [];
+		array.forEach(this._selected.cell, function(v1){
+			array.some(newItems, function(v2){
+				if(v1[type] == v2[type]){
+					toRemove.push(v1);
+					return true;
+				}
+				return false;
+			});
+		});
+		this._remove("cell", toRemove);
+		array.forEach(this._selected[_theOther[type]], function(v1){
+			array.forEach(newItems, function(v2){
+				var pos = array.indexOf(v1.except, v2[type]);
+				if(pos >= 0){
+					v1.except.splice(pos, 1);
+				}
+			});
+		});
+	},
+	_addException: function(type, items){
+		// summary:
+		//		If some rows/cols are deselected, maybe they have created "holes" in selected cols/rows.
+		array.forEach(this._selected[type], function(v1){
+			array.forEach(items, function(v2){
+				v1.except.push(v2[_theOther[type]]);
+			});
+		});
+	},
+	_addCellException: function(type, items){
+		// summary:
+		//		If some cells are deselected, maybe they have created "holes" in selected rows/cols.
+		array.forEach(this._selected[type], function(v1){
+			array.forEach(items, function(v2){
+				if(v1[type] == v2[type]){
+					v1.except.push(v2[_theOther[type]]);
+				}
+			});
+		});
+	},
+	_add: function(type, items){
+		// summary:
+		//		Add to the selection record.
+		var cells = this.grid.layout.cells;
+		if(type == "cell"){
+			var colMakedup = this._makeupForExceptions("col", items);
+			var rowMakedup = this._makeupForExceptions("row", items);
+			//Step over hidden columns.
+			items = array.filter(items, function(item){
+				return array.indexOf(colMakedup, item) < 0 && array.indexOf(rowMakedup, item) < 0 &&
+					!cells[item.col].hidden && !cells[item.col].notselectable;
+			});
+		}else{
+			if(type == "col"){
+				//Step over hidden columns.
+				items = array.filter(items, function(item){
+					return !cells[item.col].hidden && !cells[item.col].notselectable;
+				});
+			}
+			this._makeupForCells(type, items);
+			this._selected[type] = array.filter(this._selected[type], function(v){
+				return array.every(items, function(item){
+					return v[type] !== item[type];
+				});
+			});
+		}
+		if(type != "col" && this.grid._hasIdentity){
+			array.forEach(items, function(item){
+				var record = this.grid._by_idx[item.row];
+				if(record){
+					item.id = record.idty;
+				}
+			}, this);
+		}
+		this._selected[type] = this._selected[type].concat(items);
+	},
+	_remove: function(type, items){
+		// summary:
+		//		Remove from the selection record.
+		var comp = lang.partial(_isEqual, type);
+		this._selected[type] = array.filter(this._selected[type], function(v1){
+			return !array.some(items, function(v2){
+				return comp(v1, v2);
+			});
+		});
+		if(type == "cell"){
+			this._addCellException("col", items);
+			this._addCellException("row", items);
+		}else if(this._config.cell){
+			this._addException(_theOther[type], items);
+		}
+	},
+	_isCellNotInExcept: function(type, item){
+		// summary:
+		//		Return true only when a cell is covered by selected row/col, and its not a "hole".
+		var attr = item[type], corres = item[_theOther[type]];
+		return array.some(this._selected[type], function(v){
+			return v[type] == attr && array.indexOf(v.except, corres) < 0;
+		});
+	},
+	_isSelected: function(type, item){
+		// summary:
+		//		Return true when the item is selected. (or logically selected, i.e, covered by a row/col).
+		if(!item){ return false; }
+		var res = array.some(this._selected[type], function(v){
+			var ret = _isEqual(type, item, v);
+			if(ret && type !== "cell"){
+				return v.except.length === 0;
+			}
+			return ret;
+		});
+		if(!res && type === "cell"){
+			res = (this._isCellNotInExcept("col", item) || this._isCellNotInExcept("row", item));
+			if(type === "cell"){
+				res = res && !this.grid.layout.cells[item.col].notselectable;
+			}
+		}
+		return res;
+	},
+	_isInLastRange: function(type, item, isSelected){
+		// summary:
+		//		Return true only when the item is in the last seletion/deseletion range.
+		var start = this[isSelected ? "_lastSelectedAnchorPoint" : "_lastAnchorPoint"][type],
+			end = this[isSelected ? "_lastSelectedEndPoint" : "_lastEndPoint"][type];
+		if(!item || !start || !end){ return false; }
+		return _inRange(type, item, start, end);
+	},
+	_isValid: function(type, item, allowNotSelectable){
+		// summary:
+		//		Check whether the item is a valid __SelectItem for the given type.
+		if(!item){ return false; }
+		try{
+			var g = this.grid, index = item[type];
+			switch(type){
+				case "col":
+					return index >= 0 && index < g.layout.cells.length && lang.isArray(item.except) &&
+							(allowNotSelectable || !g.layout.cells[index].notselectable);
+				case "row":
+					return index >= 0 && index < g.rowCount && lang.isArray(item.except);
+				case "cell":
+					return item.col >= 0 && item.col < g.layout.cells.length &&
+							item.row >= 0 && item.row < g.rowCount &&
+							(allowNotSelectable || !g.layout.cells[item.col].notselectable);
+			}
+		}catch(e){}
+		return false;
+	}
+});
+
+EnhancedGrid.registerPlugin(Selector/*name:'selector'*/, {
+	"dependency": ["autoScroll"]
+});
+
+return Selector;
+
+});

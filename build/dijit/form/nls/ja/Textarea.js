@@ -1,3 +1,9 @@
-//>>built
-define("dijit/form/nls/ja/Textarea",{iframeEditTitle:"\u7de8\u96c6\u57df",iframeFocusTitle:"\u7de8\u96c6\u57df\u30d5\u30ec\u30fc\u30e0"});
-//@ sourceMappingURL=Textarea.js.map
+define(
+// used by both the editor and textarea widgets to provide information to screen reader users
+({
+	iframeEditTitle: '編集域',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
+	iframeFocusTitle: '編集域フレーム'  // secondary title for editable IFRAME when focus is on outer container
+									 //  to let user know that focus has moved out of editing area and to the
+									 //  parent element of the editing area
+})
+);

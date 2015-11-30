@@ -1,7 +1,267 @@
-//>>built
-define("dojox/drawing/manager/keys",["dojo","../util/common"],function(b,l){var d=!1,e=!0,k={arrowIncrement:1,arrowShiftIncrement:10,shift:!1,ctrl:!1,alt:!1,cmmd:!1,meta:!1,onDelete:function(a){},onEsc:function(a){},onEnter:function(a){},onArrow:function(a){},onKeyDown:function(a){},onKeyUp:function(a){},listeners:[],register:function(a){var b=l.uid("listener");this.listeners.push({handle:b,scope:a.scope||window,callback:a.callback,keyCode:a.keyCode})},_getLetter:function(a){return!a.meta&&65<=a.keyCode&&
-90>=a.keyCode?"abcdefghijklmnopqrstuvwxyz".charAt(a.keyCode-65):null},_mixin:function(a){a.meta=this.meta;a.shift=this.shift;a.alt=this.alt;a.cmmd=this.cmmd;a.ctrl=this.ctrl;a.letter=this._getLetter(a);return a},editMode:function(a){d=a},enable:function(a){e=a},scanForFields:function(){this._fieldCons&&b.forEach(this._fieldCons,b.disconnect,b);this._fieldCons=[];b.query("input").forEach(function(a){var c=b.connect(a,"focus",this,function(a){this.enable(!1)});a=b.connect(a,"blur",this,function(a){this.enable(!0)});
-this._fieldCons.push(c);this._fieldCons.push(a)},this)},init:function(){setTimeout(b.hitch(this,"scanForFields"),500);b.connect(document,"blur",this,function(a){this.meta=this.shift=this.ctrl=this.cmmd=this.alt=!1});b.connect(document,"keydown",this,function(a){e&&(16==a.keyCode&&(this.shift=!0),17==a.keyCode&&(this.ctrl=!0),18==a.keyCode&&(this.alt=!0),224==a.keyCode&&(this.cmmd=!0),this.meta=this.shift||this.ctrl||this.cmmd||this.alt,d||(this.onKeyDown(this._mixin(a)),(8==a.keyCode||46==a.keyCode)&&
-b.stopEvent(a)))});b.connect(document,"keyup",this,function(a){if(e){var c=!1;16==a.keyCode&&(this.shift=!1);17==a.keyCode&&(this.ctrl=!1);18==a.keyCode&&(this.alt=!1);224==a.keyCode&&(this.cmmd=!1);this.meta=this.shift||this.ctrl||this.cmmd||this.alt;!d&&this.onKeyUp(this._mixin(a));13==a.keyCode&&(console.warn("KEY ENTER"),this.onEnter(a),c=!0);27==a.keyCode&&(this.onEsc(a),c=!0);if(8==a.keyCode||46==a.keyCode)this.onDelete(a),c=!0;c&&!d&&b.stopEvent(a)}});b.connect(document,"keypress",this,function(a){if(e){var c=
-this.shift?this.arrowIncrement*this.arrowShiftIncrement:this.arrowIncrement,f=a.alt||this.cmmd,g=0,h=0;32==a.keyCode&&!d&&b.stopEvent(a);37==a.keyCode&&!f&&(g=-c);38==a.keyCode&&!f&&(h=-c);39==a.keyCode&&!f&&(g=c);40==a.keyCode&&!f&&(h=c);if(g||h)a.x=g,a.y=h,a.shift=this.shift,d||(this.onArrow(a),b.stopEvent(a))}})}};b.addOnLoad(k,"init");return k});
-//@ sourceMappingURL=keys.js.map
+define(["dojo", "../util/common"], 
+function(dojo, utilCommon){
+	
+	// Ref: isEdit allows events to happen in Drawing, like TextBlocks
+	var isEdit = false;
+	
+	// Ref: enabled = false allows inputs outside of drawing to function
+	var enabled = true;
+	
+	var alphabet = "abcdefghijklmnopqrstuvwxyz";
+	
+	//dojox.drawing.manager.keys = 
+	var keys = {
+		// summary:
+		//		A singleton, master object that detects
+		//		keyboard keys and events
+		//		Connect to it like:
+		//	|	dojo.connect(this.keys, "onEnter", ....);
+
+		// arrowIncrement: Number
+		//		The amount, in pixels, a selected Stencil will
+		//		move on an arrow key event
+		arrowIncrement:1,
+
+		// arrowShiftIncrement: Number
+		//		The amount, in pixels, a selected Stencil will
+		//		move on an arrow key + SHIFT event
+		arrowShiftIncrement:10,
+
+		// shift: [readonly] Boolean
+		//		Indicates whether the Shift key is currently pressed
+		shift:false,
+
+		// ctrl: [readonly] Boolean
+		//		Indicates whether the Control key is currently pressed
+		ctrl:false,
+
+		// alt: [readonly] Boolean
+		//		Indicates whether the Alt or Option key is currently pressed
+		alt:false,
+
+		// cmmd: [readonly] Boolean
+		//		Indicates whether the Apple Command key is currently pressed
+		cmmd:false, // apple key
+
+		// meta: [readonly] Boolean
+		//		Indicates whether any 'meta' key is currently pressed:
+		//		shift || ctrl || cmd || alt
+		meta:false, // any meta key
+		
+		onDelete: function(/* Event */evt){
+			// summary:
+			//		Event fires when Delete key is released
+		},
+		onEsc: function(/* Event */evt){
+			// summary:
+			//		Event fires when ESC key is released
+		},
+		onEnter: function(/* Event */evt){
+			// summary:
+			//		Event fires when Enter key is released
+		},
+		onArrow: function(/* Event */evt){
+			// summary:
+			//		Event fires when an Arrow key is released
+			//		You will have to further check if evt.keyCode
+			//		is 37,38,39, or 40
+		},
+		onKeyDown: function(/* Event */evt){
+			// summary:
+			//		Event fires when any key is pressed
+		},
+		onKeyUp: function(/* Event */evt){
+			// summary:
+			//		Event fires when any key is released
+		},
+		
+		listeners:[],
+		register: function(options){
+			// summary:
+			//		Register an object and callback to be notified
+			//		of events.
+			//		NOTE: Not really used in code, but should work.
+			//		See manager.mouse for similar usage
+
+			var _handle = utilCommon.uid("listener");
+			this.listeners.push({
+				handle:_handle,
+				scope: options.scope || window,
+				callback:options.callback,
+				keyCode:options.keyCode
+			});
+		},
+		
+		_getLetter: function(evt){
+			if(!evt.meta && evt.keyCode>=65 && evt.keyCode<=90){
+				return alphabet.charAt(evt.keyCode-65);
+			}
+			return null;
+		},
+		
+		_mixin: function(evt){
+			// summary:
+			//		Internal. Mixes in key events.
+			evt.meta = this.meta;
+			evt.shift = this.shift;
+			evt.alt = this.alt;
+			evt.cmmd = this.cmmd;
+			evt.ctrl = this.ctrl;
+			evt.letter = this._getLetter(evt);
+			return evt;
+		},
+		
+		editMode: function(_isedit){
+			// summary:
+			//		Relinquishes control of events to another portion
+			//		of Drawing; namely the TextBlock.
+			isEdit = _isedit;
+		},
+		
+		enable: function(_enabled){
+			// summary:
+			//		Enables or disables key events, to relinquish
+			//		control to something outside of Drawing; input
+			//		fields for example.
+			//		You may need to call this directly if you are
+			//		using textareas or contenteditables.
+			//		NOTE: See scanForFields
+			enabled = _enabled;
+		},
+		
+		scanForFields: function(){
+			// summary:
+			//		Scans the document for inputs
+			//		and calls this automatically. However you may need
+			//		to call this if you create inputs after the fact.
+
+			if(this._fieldCons){
+				dojo.forEach(this._fieldCons, dojo.disconnect, dojo);
+			}
+			this._fieldCons = [];
+			dojo.query("input").forEach(function(n){
+				var a = dojo.connect(n, "focus", this, function(evt){
+					this.enable(false);
+				});
+				var b = dojo.connect(n, "blur", this, function(evt){
+					this.enable(true);
+				});
+				this._fieldCons.push(a);
+				this._fieldCons.push(b);
+			}, this);
+		
+		},
+		
+		init: function(){
+			// summary:
+			//		Initialize the keys object
+
+			// a little extra time is needed in some browsers
+			setTimeout(dojo.hitch(this, "scanForFields"), 500);
+			
+			dojo.connect(document, "blur", this, function(evt){
+				// when command tabbing to another application, the key "sticks"
+				// this clears any key used for such activity
+				this.meta = this.shift = this.ctrl = this.cmmd = this.alt = false;
+			});
+			
+			dojo.connect(document, "keydown", this, function(evt){
+				if(!enabled){ return; }
+				if(evt.keyCode==16){
+					this.shift = true;
+				}
+				if(evt.keyCode==17){
+					this.ctrl = true;
+				}
+				if(evt.keyCode==18){
+					this.alt = true;
+				}
+				if(evt.keyCode==224){
+					this.cmmd = true;
+				}
+				
+				this.meta = this.shift || this.ctrl || this.cmmd || this.alt;
+				
+				if(!isEdit){
+					this.onKeyDown(this._mixin(evt));
+					if(evt.keyCode==8 || evt.keyCode==46){
+						dojo.stopEvent(evt);
+					}
+				}
+			});
+			dojo.connect(document, "keyup", this, function(evt){
+				if(!enabled){ return; }
+				//console.log("KEY UP:", evt.keyCode);
+				var _stop = false;
+				if(evt.keyCode==16){
+					this.shift = false;
+				}
+				if(evt.keyCode==17){
+					this.ctrl = false;
+				}
+				if(evt.keyCode==18){
+					this.alt = false;
+				}
+				if(evt.keyCode==224){
+					this.cmmd = false;
+				}
+				
+				this.meta = this.shift || this.ctrl || this.cmmd || this.alt;
+				
+				!isEdit && this.onKeyUp(this._mixin(evt));
+				
+				if(evt.keyCode==13){
+					console.warn("KEY ENTER");
+					this.onEnter(evt);
+					_stop = true;
+				}
+				if(evt.keyCode==27){
+					this.onEsc(evt);
+					_stop = true;
+				}
+				if(evt.keyCode==8 || evt.keyCode==46){
+					this.onDelete(evt);
+					_stop = true;
+				}
+				
+				if(_stop && !isEdit){
+					dojo.stopEvent(evt);
+				}
+			});
+			
+			dojo.connect(document, "keypress", this, function(evt){
+				if(!enabled){ return; }
+				var inc = this.shift ? this.arrowIncrement*this.arrowShiftIncrement : this.arrowIncrement,
+					altOrOption = evt.alt || this.cmmd;
+				
+				var x =0, y =0;
+				if(evt.keyCode==32 && !isEdit){ //space
+					dojo.stopEvent(evt);
+				}
+				if(evt.keyCode==37 && !altOrOption){ //left
+					x = -inc;
+				}
+				if(evt.keyCode==38 && !altOrOption){ //up
+					y = -inc;
+				}
+				if(evt.keyCode==39 && !altOrOption){ //right
+					x = inc;
+				}
+				if(evt.keyCode==40 && !altOrOption){ //down
+					y = inc;
+				}
+				if(x || y){
+					evt.x = x;
+					evt.y = y;
+					evt.shift = this.shift;
+					if(!isEdit){
+						this.onArrow(evt);
+						dojo.stopEvent(evt);
+					}
+				}
+			});
+		}
+	};
+	dojo.addOnLoad(keys, "init");
+	return keys;
+});

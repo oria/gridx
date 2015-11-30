@@ -1,10 +1,262 @@
-//>>built
-define("dojox/charting/scaler/linear",["dojo/_base/lang","./common"],function(q,r){function n(b,d){b=b.toLowerCase();for(var a=d.length-1;0<=a;--a)if(b===d[a])return!0;return!1}var u=q.getObject("dojox.charting.scaler.linear",!0),p=r.getNumericLabel,m=function(b,d,a,c,e,g,f){a=q.delegate(a);c||("major"==a.fixUpper&&(a.fixUpper="minor"),"major"==a.fixLower&&(a.fixLower="minor"));e||("minor"==a.fixUpper&&(a.fixUpper="micro"),"minor"==a.fixLower&&(a.fixLower="micro"));g||("micro"==a.fixUpper&&(a.fixUpper=
-"none"),"micro"==a.fixLower&&(a.fixLower="none"));var k=n(a.fixLower,["major"])?Math.floor(a.min/c)*c:n(a.fixLower,["minor"])?Math.floor(a.min/e)*e:n(a.fixLower,["micro"])?Math.floor(a.min/g)*g:a.min,l=n(a.fixUpper,["major"])?Math.ceil(a.max/c)*c:n(a.fixUpper,["minor"])?Math.ceil(a.max/e)*e:n(a.fixUpper,["micro"])?Math.ceil(a.max/g)*g:a.max;a.useMin&&(b=k);a.useMax&&(d=l);var h=!c||a.useMin&&n(a.fixLower,["major"])?b:Math.ceil(b/c)*c,m=!e||a.useMin&&n(a.fixLower,["major","minor"])?b:Math.ceil(b/e)*
-e,s=!g||a.useMin&&n(a.fixLower,["major","minor","micro"])?b:Math.ceil(b/g)*g,p=!c?0:(a.useMax&&n(a.fixUpper,["major"])?Math.round((d-h)/c):Math.floor((d-h)/c))+1,r=!e?0:(a.useMax&&n(a.fixUpper,["major","minor"])?Math.round((d-m)/e):Math.floor((d-m)/e))+1;a=!g?0:(a.useMax&&n(a.fixUpper,["major","minor","micro"])?Math.round((d-s)/g):Math.floor((d-s)/g))+1;var v=e?Math.round(c/e):0,w=g?Math.round(e/g):0,x=c?Math.floor(Math.log(c)/Math.LN10):0,y=e?Math.floor(Math.log(e)/Math.LN10):0,t=f/(d-b);isFinite(t)||
-(t=1);return{bounds:{lower:k,upper:l,from:b,to:d,scale:t,span:f},major:{tick:c,start:h,count:p,prec:x},minor:{tick:e,start:m,count:r,prec:y},micro:{tick:g,start:s,count:a,prec:0},minorPerMajor:v,microPerMinor:w,scaler:u}};return q.mixin(u,{buildScaler:function(b,d,a,c,e,g){var f={fixUpper:"none",fixLower:"none",natural:!1};c&&("fixUpper"in c&&(f.fixUpper=String(c.fixUpper)),"fixLower"in c&&(f.fixLower=String(c.fixLower)),"natural"in c&&(f.natural=Boolean(c.natural)));g=!g||3>g?3:g;"min"in c&&(b=c.min);
-"max"in c&&(d=c.max);c.includeZero&&(0<b&&(b=0),0>d&&(d=0));f.min=b;f.useMin=!0;f.max=d;f.useMax=!0;"from"in c&&(b=c.from,f.useMin=!1);"to"in c&&(d=c.to,f.useMax=!1);if(d<=b)return m(b,d,f,0,0,0,a);e||(e=d-b);e=Math.floor(Math.log(e)/Math.LN10);e=c&&"majorTickStep"in c?c.majorTickStep:Math.pow(10,e);var k=0,l=0,h;if(c&&"minorTickStep"in c)k=c.minorTickStep;else{do{k=e/10;if(!f.natural||0.9<k)if(h=m(b,d,f,e,k,0,a),h.bounds.scale*h.minor.tick>g)break;k=e/5;if(!f.natural||0.9<k)if(h=m(b,d,f,e,k,0,a),
-h.bounds.scale*h.minor.tick>g)break;k=e/2;if(!f.natural||0.9<k)if(h=m(b,d,f,e,k,0,a),h.bounds.scale*h.minor.tick>g)break;return m(b,d,f,e,0,0,a)}while(0)}if(c&&"microTickStep"in c)l=c.microTickStep,h=m(b,d,f,e,k,l,a);else{do{l=k/10;if(!f.natural||0.9<l)if(h=m(b,d,f,e,k,l,a),3<h.bounds.scale*h.micro.tick)break;l=k/5;if(!f.natural||0.9<l)if(h=m(b,d,f,e,k,l,a),3<h.bounds.scale*h.micro.tick)break;l=k/2;if(!f.natural||0.9<l)if(h=m(b,d,f,e,k,l,a),3<h.bounds.scale*h.micro.tick)break;l=0}while(0)}return l?
-h:m(b,d,f,e,k,0,a)},buildTicks:function(b,d){var a,c,e,g=b.major.start,f=b.minor.start,k=b.micro.start;if(d.microTicks&&b.micro.tick)a=b.micro.tick,c=k;else if(d.minorTicks&&b.minor.tick)a=b.minor.tick,c=f;else if(b.major.tick)a=b.major.tick,c=g;else return null;var l=1/b.bounds.scale;if(b.bounds.to<=b.bounds.from||isNaN(l)||!isFinite(l)||0>=a||isNaN(a)||!isFinite(a))return null;for(var h=[],m=[],n=[];c<=b.bounds.to+l;)Math.abs(g-c)<a/2?(e={value:g},d.majorLabels&&(e.label=p(g,b.major.prec,d)),h.push(e),
-g+=b.major.tick,f+=b.minor.tick):Math.abs(f-c)<a/2?(d.minorTicks&&(e={value:f},d.minorLabels&&b.minMinorStep<=b.minor.tick*b.bounds.scale&&(e.label=p(f,b.minor.prec,d)),m.push(e)),f+=b.minor.tick):d.microTicks&&n.push({value:k}),k+=b.micro.tick,c+=a;return{major:h,minor:m,micro:n}},getTransformerFromModel:function(b){var d=b.bounds.from,a=b.bounds.scale;return function(b){return(b-d)*a}},getTransformerFromPlot:function(b){var d=b.bounds.from,a=b.bounds.scale;return function(b){return b/a+d}}})});
-//@ sourceMappingURL=linear.js.map
+define(["dojo/_base/lang", "./common"], 
+	function(lang, common){
+	var linear = lang.getObject("dojox.charting.scaler.linear", true);
+	
+	var deltaLimit = 3,	// pixels
+		getLabel = common.getNumericLabel;
+
+		function findString(/*String*/ val, /*Array*/ text){
+			val = val.toLowerCase();
+			for(var i = text.length - 1; i >= 0; --i){
+				if(val === text[i]){
+					return true;
+				}
+			}
+			return false;
+		}
+	
+	var calcTicks = function(min, max, kwArgs, majorTick, minorTick, microTick, span){
+		kwArgs = lang.delegate(kwArgs);
+		if(!majorTick){
+			if(kwArgs.fixUpper == "major"){ kwArgs.fixUpper = "minor"; }
+			if(kwArgs.fixLower == "major"){ kwArgs.fixLower = "minor"; }
+		}
+		if(!minorTick){
+			if(kwArgs.fixUpper == "minor"){ kwArgs.fixUpper = "micro"; }
+			if(kwArgs.fixLower == "minor"){ kwArgs.fixLower = "micro"; }
+		}
+		if(!microTick){
+			if(kwArgs.fixUpper == "micro"){ kwArgs.fixUpper = "none"; }
+			if(kwArgs.fixLower == "micro"){ kwArgs.fixLower = "none"; }
+		}
+		var lowerBound = findString(kwArgs.fixLower, ["major"]) ?
+				Math.floor(kwArgs.min / majorTick) * majorTick :
+					findString(kwArgs.fixLower, ["minor"]) ?
+						Math.floor(kwArgs.min / minorTick) * minorTick :
+							findString(kwArgs.fixLower, ["micro"]) ?
+								Math.floor(kwArgs.min / microTick) * microTick : kwArgs.min,
+			upperBound = findString(kwArgs.fixUpper, ["major"]) ?
+				Math.ceil(kwArgs.max / majorTick) * majorTick :
+					findString(kwArgs.fixUpper, ["minor"]) ?
+						Math.ceil(kwArgs.max / minorTick) * minorTick :
+							findString(kwArgs.fixUpper, ["micro"]) ?
+								Math.ceil(kwArgs.max / microTick) * microTick : kwArgs.max;
+								
+		if(kwArgs.useMin){ min = lowerBound; }
+		if(kwArgs.useMax){ max = upperBound; }
+		
+		var majorStart = (!majorTick || kwArgs.useMin && findString(kwArgs.fixLower, ["major"])) ?
+				min : Math.ceil(min / majorTick) * majorTick,
+			minorStart = (!minorTick || kwArgs.useMin && findString(kwArgs.fixLower, ["major", "minor"])) ?
+				min : Math.ceil(min / minorTick) * minorTick,
+			microStart = (! microTick || kwArgs.useMin && findString(kwArgs.fixLower, ["major", "minor", "micro"])) ?
+				min : Math.ceil(min / microTick) * microTick,
+			majorCount = !majorTick ? 0 : (kwArgs.useMax && findString(kwArgs.fixUpper, ["major"]) ?
+				Math.round((max - majorStart) / majorTick) :
+				Math.floor((max - majorStart) / majorTick)) + 1,
+			minorCount = !minorTick ? 0 : (kwArgs.useMax && findString(kwArgs.fixUpper, ["major", "minor"]) ?
+				Math.round((max - minorStart) / minorTick) :
+				Math.floor((max - minorStart) / minorTick)) + 1,
+			microCount = !microTick ? 0 : (kwArgs.useMax && findString(kwArgs.fixUpper, ["major", "minor", "micro"]) ?
+				Math.round((max - microStart) / microTick) :
+				Math.floor((max - microStart) / microTick)) + 1,
+			minorPerMajor  = minorTick ? Math.round(majorTick / minorTick) : 0,
+			microPerMinor  = microTick ? Math.round(minorTick / microTick) : 0,
+			majorPrecision = majorTick ? Math.floor(Math.log(majorTick) / Math.LN10) : 0,
+			minorPrecision = minorTick ? Math.floor(Math.log(minorTick) / Math.LN10) : 0,
+			scale = span / (max - min);
+		if(!isFinite(scale)){ scale = 1; }
+		
+		return {
+			bounds: {
+				lower:	lowerBound,
+				upper:	upperBound,
+				from:	min,
+				to:		max,
+				scale:	scale,
+				span:	span
+			},
+			major: {
+				tick:	majorTick,
+				start:	majorStart,
+				count:	majorCount,
+				prec:	majorPrecision
+			},
+			minor: {
+				tick:	minorTick,
+				start:	minorStart,
+				count:	minorCount,
+				prec:	minorPrecision
+			},
+			micro: {
+				tick:	microTick,
+				start:	microStart,
+				count:	microCount,
+				prec:	0
+			},
+			minorPerMajor:	minorPerMajor,
+			microPerMinor:	microPerMinor,
+			scaler:			linear
+		};
+	};
+	
+	return lang.mixin(linear, {
+		buildScaler: function(/*Number*/ min, /*Number*/ max, /*Number*/ span, /*Object*/ kwArgs, /*Number?*/ delta, /*Number?*/ minorDelta){
+			var h = {fixUpper: "none", fixLower: "none", natural: false};
+			if(kwArgs){
+				if("fixUpper" in kwArgs){ h.fixUpper = String(kwArgs.fixUpper); }
+				if("fixLower" in kwArgs){ h.fixLower = String(kwArgs.fixLower); }
+				if("natural"  in kwArgs){ h.natural  = Boolean(kwArgs.natural); }
+			}
+			minorDelta = !minorDelta || minorDelta < deltaLimit ? deltaLimit : minorDelta;
+			
+			// update bounds
+			if("min" in kwArgs){ min = kwArgs.min; }
+			if("max" in kwArgs){ max = kwArgs.max; }
+			if(kwArgs.includeZero){
+				if(min > 0){ min = 0; }
+				if(max < 0){ max = 0; }
+			}
+			h.min = min;
+			h.useMin = true;
+			h.max = max;
+			h.useMax = true;
+			
+			if("from" in kwArgs){
+				min = kwArgs.from;
+				h.useMin = false;
+			}
+			if("to" in kwArgs){
+				max = kwArgs.to;
+				h.useMax = false;
+			}
+			
+			// check for erroneous condition
+			if(max <= min){
+				return calcTicks(min, max, h, 0, 0, 0, span);	// Object
+			}
+			if(!delta){
+				delta = max - min;
+			}
+			var mag = Math.floor(Math.log(delta) / Math.LN10),
+				major = kwArgs && ("majorTickStep" in kwArgs) ? kwArgs.majorTickStep : Math.pow(10, mag),
+				minor = 0, micro = 0, ticks;
+				
+			// calculate minor ticks
+			if(kwArgs && ("minorTickStep" in kwArgs)){
+				minor = kwArgs.minorTickStep;
+			}else{
+				do{
+					minor = major / 10;
+					if(!h.natural || minor > 0.9){
+						ticks = calcTicks(min, max, h, major, minor, 0, span);
+						if(ticks.bounds.scale * ticks.minor.tick > minorDelta){ break; }
+					}
+					minor = major / 5;
+					if(!h.natural || minor > 0.9){
+						ticks = calcTicks(min, max, h, major, minor, 0, span);
+						if(ticks.bounds.scale * ticks.minor.tick > minorDelta){ break; }
+					}
+					minor = major / 2;
+					if(!h.natural || minor > 0.9){
+						ticks = calcTicks(min, max, h, major, minor, 0, span);
+						if(ticks.bounds.scale * ticks.minor.tick > minorDelta){ break; }
+					}
+					return calcTicks(min, max, h, major, 0, 0, span);	// Object
+				}while(false);
+			}
+	
+			// calculate micro ticks
+			if(kwArgs && ("microTickStep" in kwArgs)){
+				micro = kwArgs.microTickStep;
+				ticks = calcTicks(min, max, h, major, minor, micro, span);
+			}else{
+				do{
+					micro = minor / 10;
+					if(!h.natural || micro > 0.9){
+						ticks = calcTicks(min, max, h, major, minor, micro, span);
+						if(ticks.bounds.scale * ticks.micro.tick > deltaLimit){ break; }
+					}
+					micro = minor / 5;
+					if(!h.natural || micro > 0.9){
+						ticks = calcTicks(min, max, h, major, minor, micro, span);
+						if(ticks.bounds.scale * ticks.micro.tick > deltaLimit){ break; }
+					}
+					micro = minor / 2;
+					if(!h.natural || micro > 0.9){
+						ticks = calcTicks(min, max, h, major, minor, micro, span);
+						if(ticks.bounds.scale * ticks.micro.tick > deltaLimit){ break; }
+					}
+					micro = 0;
+				}while(false);
+			}
+	
+			return micro ? ticks : calcTicks(min, max, h, major, minor, 0, span);	// Object
+		},
+		buildTicks: function(/*Object*/ scaler, /*Object*/ kwArgs){
+			var step, next, tick,
+				nextMajor = scaler.major.start,
+				nextMinor = scaler.minor.start,
+				nextMicro = scaler.micro.start;
+			if(kwArgs.microTicks && scaler.micro.tick){
+				step = scaler.micro.tick, next = nextMicro;
+			}else if(kwArgs.minorTicks && scaler.minor.tick){
+				step = scaler.minor.tick, next = nextMinor;
+			}else if(scaler.major.tick){
+				step = scaler.major.tick, next = nextMajor;
+			}else{
+				// no ticks
+				return null;
+			}
+			// make sure that we have finite bounds
+			var revScale = 1 / scaler.bounds.scale;
+			if(scaler.bounds.to <= scaler.bounds.from || isNaN(revScale) || !isFinite(revScale) ||
+					step <= 0 || isNaN(step) || !isFinite(step)){
+				// no ticks
+				return null;
+			}
+			// loop over all ticks
+			var majorTicks = [], minorTicks = [], microTicks = [];
+			while(next <= scaler.bounds.to + revScale){
+				if(Math.abs(nextMajor - next) < step / 2){
+					// major tick
+					tick = {value: nextMajor};
+					if(kwArgs.majorLabels){
+						tick.label = getLabel(nextMajor, scaler.major.prec, kwArgs);
+					}
+					majorTicks.push(tick);
+					nextMajor += scaler.major.tick;
+					nextMinor += scaler.minor.tick;
+					nextMicro += scaler.micro.tick;
+				}else if(Math.abs(nextMinor - next) < step / 2){
+					// minor tick
+					if(kwArgs.minorTicks){
+						tick = {value: nextMinor};
+						if(kwArgs.minorLabels && (scaler.minMinorStep <= scaler.minor.tick * scaler.bounds.scale)){
+							tick.label = getLabel(nextMinor, scaler.minor.prec, kwArgs);
+						}
+						minorTicks.push(tick);
+					}
+					nextMinor += scaler.minor.tick;
+					nextMicro += scaler.micro.tick;
+				}else{
+					// micro tick
+					if(kwArgs.microTicks){
+						microTicks.push({value: nextMicro});
+					}
+					nextMicro += scaler.micro.tick;
+				}
+				next += step;
+			}
+			return {major: majorTicks, minor: minorTicks, micro: microTicks};	// Object
+		},
+		getTransformerFromModel: function(/*Object*/ scaler){
+			var offset = scaler.bounds.from, scale = scaler.bounds.scale;
+			return function(x){ return (x - offset) * scale; };	// Function
+		},
+		getTransformerFromPlot: function(/*Object*/ scaler){
+			var offset = scaler.bounds.from, scale = scaler.bounds.scale;
+			return function(x){ return x / scale + offset; };	// Function
+		}
+	});
+});

@@ -1,3 +1,38 @@
-//>>built
-define("dojox/dtl/ext-dojo/NodeList",["dojo/_base/lang","dojo/query","../_base"],function(b,a,c){b.getObject("dojox.dtl.ext-dojo.NodeList",!0);a=a.NodeList;b.extend(a,{dtl:function(a,b){var d=this,e=function(a,b){var e=a.render(new c._Context(b));d.forEach(function(a){a.innerHTML=e})};c.text._resolveTemplateArg(a).addCallback(function(d){a=new c.Template(d);c.text._resolveContextArg(b).addCallback(function(b){e(a,b)})});return this}});return a});
-//@ sourceMappingURL=NodeList.js.map
+define([
+	"dojo/_base/lang",
+	"dojo/query",
+	"../_base"
+], function(lang, query, dd){
+	var nl = lang.getObject("dojox.dtl.ext-dojo.NodeList", true);
+
+	var NodeList = query.NodeList;
+
+	lang.extend(NodeList, {
+		dtl: function(template, context){
+			// summary:
+			//		Renders the specified template in each of the NodeList entries.
+			// template: dojox/dtl/__StringArgs|String
+			//		The template string or location
+			// context: dojox/dtl/__ObjectArgs|Object
+			//		The context object or location
+			var d = dd, self = this;
+			
+			var render = function(template, context){
+				var content = template.render(new d._Context(context));
+				self.forEach(function(node){
+					node.innerHTML = content;
+				});
+			};
+
+			d.text._resolveTemplateArg(template).addCallback(function(templateString){
+				template = new d.Template(templateString);
+				d.text._resolveContextArg(context).addCallback(function(context){
+					render(template, context);
+				});
+			});
+
+			return this;
+		}
+	});
+	return NodeList;
+});

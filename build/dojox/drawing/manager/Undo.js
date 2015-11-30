@@ -1,4 +1,60 @@
-//>>built
-define("dojox/drawing/manager/Undo",["dojo","../util/oo"],function(b,c){return c.declare(function(a){this.keys=a.keys;this.undostack=[];this.redostack=[];b.connect(this.keys,"onKeyDown",this,"onKeyDown")},{onKeyDown:function(a){if(a.cmmd||a.ctrl)90==a.keyCode&&!a.shift?this.undo():(90==a.keyCode&&a.shift||89==a.keyCode)&&this.redo()},add:function(a){a.args=b.mixin({},a.args);this.undostack.push(a)},apply:function(a,c,d){b.hitch(a,c)(d)},undo:function(){var a=this.undostack.pop();a&&(a.before(),this.redostack.push(a))},
-redo:function(){var a=this.redostack.pop();a&&(a.after?a.after():a.before(),this.undostack.push(a))}})});
-//@ sourceMappingURL=Undo.js.map
+define(["dojo", "../util/oo"],//, "../defaults"], 
+function(dojo, oo){
+
+//dojox.drawing.manager.Undo = 
+return oo.declare(
+	function(options){
+		this.keys = options.keys;
+		this.undostack = [];
+		this.redostack = [];
+		dojo.connect(this.keys, "onKeyDown", this, "onKeyDown");
+	},
+	{
+		// summary:
+		//		Handles the Undo in drawing.
+		//		NOTE: Only partially implemented!!! There is very
+		//		little actual undo functionality!
+
+		onKeyDown: function(evt){
+			if(!evt.cmmd && !evt.ctrl){ return; }
+			
+			if(evt.keyCode==90 && !evt.shift){
+				this.undo();
+			}else if((evt.keyCode == 90 && evt.shift) || evt.keyCode==89){
+				this.redo();
+			}
+			
+		},
+		add: function(stack){
+			//console.log("undo add", stack)
+			stack.args = dojo.mixin({}, stack.args);
+			this.undostack.push(stack);
+		},
+		apply: function(scope, method, args){
+			dojo.hitch(scope, method)(args);
+		},
+		undo: function(){
+			
+			var o = this.undostack.pop();
+			console.log("undo!", o);
+			if(!o){ return; }
+			
+			o.before();
+			
+			this.redostack.push(o);
+		},
+		redo: function(){
+			console.log("redo!");
+			var o = this.redostack.pop();
+			if(!o){ return; }
+			if(o.after){
+				o.after();
+			}else{
+				o.before(); ///??????
+			}
+			
+			this.undostack.push(o);
+		}
+	}
+);
+});

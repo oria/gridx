@@ -1,32 +1,844 @@
-//>>built
-require({cache:{"url:dojox/grid/resources/Expando.html":'\x3cdiv class\x3d"dojoxGridExpando"\r\n\t\x3e\x3cdiv class\x3d"dojoxGridExpandoNode" dojoAttachEvent\x3d"onclick:onToggle"\r\n\t\t\x3e\x3cdiv class\x3d"dojoxGridExpandoNodeInner" dojoAttachPoint\x3d"expandoInner"\x3e\x3c/div\r\n\t\x3e\x3c/div\r\n\x3e\x3c/div\x3e\r\n'}});
-define("dojox/grid/LazyTreeGrid","dojo/_base/kernel dojo/_base/declare dojo/_base/lang dojo/_base/event dojo/_base/array dojo/query dojo/parser dojo/dom-construct dojo/dom-class dojo/dom-style dojo/dom-geometry dojo/dom dojo/keys dojo/text!./resources/Expando.html dijit/_Widget dijit/_TemplatedMixin ./TreeGrid ./_Builder ./_View ./_Layout ./cells/tree ./_RowManager ./_FocusManager ./_EditManager ./DataSelection ./util".split(" "),function(C,k,h,D,u,y,E,z,p,F,s,G,H,t,I,J,A,K,x,L,M,N,O,P,Q,R){var S=
-k("dojox.grid._LazyExpando",[I,J],{grid:null,view:null,rowIdx:-1,cellIdx:-1,level:0,itemId:"",templateString:t,onToggle:function(a){if(this.grid._treeCache.items[this.rowIdx]){this.grid.focus.setFocusIndex(this.rowIdx,this.cellIdx);this.setOpen(!this.grid._treeCache.items[this.rowIdx].opened);try{D.stop(a)}catch(b){}}},setOpen:function(a){var b=this.grid,c=b._by_idx[this.rowIdx].item;c&&(b.treeModel.mayHaveChildren(c)&&!b._loading&&b._treeCache.items[this.rowIdx].opened!==a)&&(b._treeCache.items[this.rowIdx].opened=
-a,b.expandoFetch(this.rowIdx,a),this._updateOpenState(c))},_updateOpenState:function(a){var b=this.grid;a&&b.treeModel.mayHaveChildren(a)?(a=b._treeCache.items[this.rowIdx].opened,this.expandoInner.innerHTML=a?"-":"+",p.toggle(this.domNode,"dojoxGridExpandoOpened",a),this.domNode.parentNode.setAttribute("aria-expanded",a)):p.remove(this.domNode,"dojoxGridExpandoOpened")},setRowNode:function(a,b,c){if(0>this.cellIdx||!this.itemId)return!1;this.view=c;this.grid=c.grid;this.rowIdx=a;a=this.grid.isLeftToRight()?
-"marginLeft":"marginRight";F.set(this.domNode.parentNode,a,1.125*this.level+"em");this._updateOpenState(this.grid._by_idx[this.rowIdx].item);return!0}});t=k("dojox.grid._TreeGridContentBuilder",K._ContentBuilder,{generateHtml:function(a,b){var c=this.getTableArray(),d=this.grid,g=this.view.structure.cells,e=d.getItem(b),f=0,B="",m=d._treeCache.items[b]?d._treeCache.items[b].treePath:null;R.fire(this.view,"onBeforeRow",[b,g]);e&&h.isArray(m)&&(f=m.length,B=d.treeModel.mayHaveChildren(e)?"":"dojoxGridNoChildren");
-for(var l=0,d=0,k,n,p=0,t=[];k=g[d];d++)if(!k.hidden&&!k.header){c.push('\x3ctr class\x3d"'+B+'"\x3e');(m=this._getColSpans(f))&&u.forEach(m,function(a){for(l=0;n=k[l];l++)l>=a.start&&l<=a.end&&(p+=this._getCellWidth(k,l));t.push(p);p=0},this);for(var q,v,w,r=0,l=0;n=k[l];l++)q=n.markup,v=n.customClasses=[],w=n.customStyles=[],m&&m[r]&&l>=m[r].start&&l<=m[r].end?l==(m[r].primary||m[r].start)?(q[5]=n.formatAtLevel(e,f,b),q[1]=v.join(" "),v=s.getMarginBox(n.getHeaderNode()).w-s.getContentBox(n.getHeaderNode()).w,
-w=n.customStyles=["width:"+(t[r]-v)+"px"],q[3]=w.join(";"),c.push.apply(c,q)):l==m[r].end&&r++:(q[5]=n.formatAtLevel(e,f,b),q[1]=v.join(" "),q[3]=w.join(";"),c.push.apply(c,q));c.push("\x3c/tr\x3e")}c.push("\x3c/table\x3e");return c.join("")},_getColSpans:function(a){var b=this.grid.colSpans;return b&&b[a]?b[a]:null},_getCellWidth:function(a,b){var c=a[b],d=c.getHeaderNode();if(c.hidden)return 0;if(b==a.length-1||u.every(a.slice(b+1),function(a){return a.hidden}))return c=s.position(a[b].view.headerContentNode.firstChild),
-c.x+c.w-s.position(d).x;do c=a[++b];while(c.hidden);return s.position(c.getHeaderNode()).x-s.position(d).x}});k("dojox.grid._TreeGridView",x,{_contentBuilderClass:t,postCreate:function(){this.inherited(arguments);this._expandos={};this.connect(this.grid,"_onCleanupExpandoCache","_cleanupExpandoCache")},destroy:function(){this._cleanupExpandoCache();this.inherited(arguments)},_cleanupExpandoCache:function(a){if(a&&this._expandos[a])this._expandos[a].destroy(),delete this._expandos[a];else{for(var b in this._expandos)this._expandos[b].destroy();
-this._expandos={}}},onAfterRow:function(a,b,c){y("span.dojoxGridExpando",c).forEach(function(b){if(b&&b.parentNode){var g,e,f=this.grid._by_idx;f&&(f[a]&&f[a].idty)&&(g=f[a].idty,e=this._expandos[g]);e?(z.place(e.domNode,b,"replace"),e.itemId=b.getAttribute("itemId"),e.cellIdx=parseInt(b.getAttribute("cellIdx"),10),isNaN(e.cellIdx)&&(e.cellIdx=-1)):(e=E.parse(b.parentNode)[0],g&&(this._expandos[g]=e));e.setRowNode(a,c,this)||e.domNode.parentNode.removeChild(e.domNode);z.destroy(b)}},this);this.inherited(arguments)},
-updateRow:function(a){var b=this.grid,c;b.keepSelection&&(c=b.getItem(a))&&b.selection.preserver._reSelectById(c,a);this.inherited(arguments)}});var T=h.mixin(h.clone(M),{formatAtLevel:function(a,b,c){if(!a)return this.formatIndexes(c,a,b);var d="";this.isCollapsable&&this.grid.store.isItem(a)&&(d="\x3cspan "+C._scopeName+'Type\x3d"dojox.grid._LazyExpando" level\x3d"'+b+'" class\x3d"dojoxGridExpando" itemId\x3d"'+this.grid.store.getIdentity(a)+'" cellIdx\x3d"'+this.index+'"\x3e\x3c/span\x3e');a=this.formatIndexes(c,
-a,b);return""!==d?"\x3cdiv\x3e"+d+a+"\x3c/div\x3e":a},formatIndexes:function(a,b,c){var d=this.grid.edit.info;b=this.get?this.get(a,b):this.value||this.defaultValue;if(this.editable&&(this.alwaysEditing||d.rowIndex===a&&d.cell===this))return this.formatEditing(b,a);d=this.textDir||this.grid.textDir;a=this._defaultFormat(b,[b,a,c,this]);d&&this._enforceTextDirWithUcc&&(a=this._enforceTextDirWithUcc(d,a));return a}});x=k("dojox.grid._LazyTreeLayout",L,{setStructure:function(a){var b=a;this.grid&&!u.every(b,
-function(a){return!!a.cells})&&(b=arguments[0]=[{cells:[b]}]);1===b.length&&1===b[0].cells.length&&(b[0].type="dojox.grid._TreeGridView",this._isCollapsable=!0,b[0].cells[0][this.grid.expandoCell].isCollapsable=!0);this.inherited(arguments)},addCellDef:function(a,b,c){var d=this.inherited(arguments);return h.mixin(d,T)}});var U=k("dojox.grid._LazyTreeGridCache",null,{constructor:function(){this.items=[]},getSiblingIndex:function(a,b){for(var c=a-1,d=0,g;0<=c;c--)if(g=this.items[c]?this.items[c].treePath:
-[],g.join("/")===b.join("/"))d++;else if(g.length<b.length)break;return d},removeChildren:function(a){for(var b=a+1,c,d=this.items[a]?this.items[a].treePath:[];b<this.items.length&&!(c=this.items[b]?this.items[b].treePath:[],c.join("/")===d.join("/")||c.length<=d.length);b++);b-=a+1;this.items.splice(a+1,b);return b}});k=k("dojox.grid.LazyTreeGrid",A,{_layoutClass:x,_size:0,treeModel:null,defaultState:null,colSpans:null,postCreate:function(){this._setState();this.inherited(arguments);this._treeCache||
-(this._treeCache=new U);if(!this.treeModel||!(this.treeModel instanceof dijit.tree.ForestStoreModel))throw Error("dojox.grid.LazyTreeGrid: must be used with a treeModel which is an instance of dijit.tree.ForestStoreModel");p.add(this.domNode,"dojoxGridTreeModel");G.setSelectable(this.domNode,this.selectable)},createManagers:function(){this.rows=new N(this);this.focus=new O(this);this.edit=new P(this)},createSelection:function(){this.selection=new Q(this)},setModel:function(a){a&&(this._setModel(a),
-this._cleanup(),this._refresh(!0))},setStore:function(a,b,c){a&&(this._setQuery(b,c),this.treeModel.query=b,this.treeModel.store=a,this.treeModel.root.children=[],this.setModel(this.treeModel))},onSetState:function(){},_setState:function(){this.defaultState&&(this._treeCache=this.defaultState.cache,this.sortInfo=this.defaultState.sortInfo||0,this.query=this.defaultState.query||this.query,this._lastScrollTop=this.defaultState.scrollTop,this.keepSelection?this.selection.preserver._selectedById=this.defaultState.selection:
-this.selection.selected=this.defaultState.selection||[],this.onSetState())},getState:function(){var a=this.keepSelection?this.selection.preserver._selectedById:this.selection.selected;return{cache:h.clone(this._treeCache),query:h.clone(this.query),sortInfo:h.clone(this.sortInfo),scrollTop:h.clone(this.scrollTop),selection:h.clone(a)}},_setQuery:function(a,b){this.inherited(arguments);this.treeModel.query=a},filter:function(a,b){this._cleanup();this.inherited(arguments)},destroy:function(){this._cleanup();
-this.inherited(arguments)},expand:function(a){this._fold(a,!0)},collapse:function(a){this._fold(a,!1)},refresh:function(a){a||this._cleanup();this._refresh(!0)},_cleanup:function(){this._treeCache.items=[];this._onCleanupExpandoCache()},setSortIndex:function(a,b){this.canSort(a+1)&&this._cleanup();this.inherited(arguments)},_refresh:function(a){this._clearData();this.updateRowCount(this._size);this._fetch(0,!0)},render:function(){this.inherited(arguments);this.setScrollTop(this.scrollTop)},_onNew:function(a,
-b){var c=b&&this.store.isItem(b.item)&&u.some(this.treeModel.childrenAttrs,function(a){return a===b.attribute}),d=this._treeCache.items,g=this._by_idx;if(c){for(var c=this.store.getIdentity(b.item),e=-1,f=0;f<g.length;f++)if(c===g[f].idty){e=f;break}if(0<=e)if(d[e]&&d[e].opened){f=d[e].treePath;for(e+=1;e<d.length&&!(d[e].treePath.length<=f.length);e++);d=f.slice();d.push(c);this._treeCache.items.splice(e,0,{opened:!1,treePath:d});d=this.store.getIdentity(a);this._by_idty[d]={idty:d,item:a};g.splice(e,
-0,this._by_idty[d]);this._size+=1;this.updateRowCount(this._size);this._updateRenderedRows(e)}else this.updateRow(e)}else d.push({opened:!1,treePath:[]}),this._size+=1,this.inherited(arguments)},_onDelete:function(a){var b=0,c=-1;for(a=this.store.getIdentity(a);b<this._by_idx.length;b++)if(a===this._by_idx[b].idty){c=b;break}if(0<=c){for(var d=this._treeCache.items,g=d[c]?d[c].treePath:[],e=1,b=c+1;b<this._size&&!(d[b].treePath.length<=g.length);b++,e++);d.splice(c,e);this._onCleanupExpandoCache(a);
-this._by_idx.splice(c,e);this._size-=e;this.updateRowCount(this._size);this._updateRenderedRows(c)}},_onCleanupExpandoCache:function(a){},_fetch:function(a,b){this._loading||(this._loading=!0);a=a||0;var c=0<this._size-a?Math.min(this.rowsPerPage,this._size-a):this.rowsPerPage,d=0,g=[];for(this._reqQueueLen=0;d<c;d++)if(this._by_idx[a+d])g.push(this._by_idx[a+d].item);else break;if(g.length===c)this._reqQueueLen=1,this._onFetchBegin(this._size,{startRowIdx:a,count:c}),this._onFetchComplete(g,{startRowIdx:a,
-count:c});else{for(var e,f=1,h=this._treeCache.items,k=h[a]?h[a].treePath:[],d=1;d<c;d++)g=h[a+f-1]?h[a+f-1].treePath.length:0,e=h[a+f]?h[a+f].treePath.length:0,g!==e?(this._reqQueueLen++,this._fetchItems({startRowIdx:a,count:f,treePath:k}),a+=f,f=1,k=h[a]?h[a].treePath:0):f++;this._reqQueueLen++;this._fetchItems({startRowIdx:a,count:f,treePath:k})}},_fetchItems:function(a){if(!this._pending_requests[a.startRowIdx]){this.showMessage(this.loadingMessage);this._pending_requests[a.startRowIdx]=!0;var b=
-h.hitch(this,"_onFetchError"),c=this._treeCache.getSiblingIndex(a.startRowIdx,a.treePath);if(0===a.treePath.length)this.store.fetch({start:c,startRowIdx:a.startRowIdx,treePath:a.treePath,count:a.count,query:this.query,sort:this.getSortProps(),queryOptions:this.queryOptions,onBegin:h.hitch(this,"_onFetchBegin"),onComplete:h.hitch(this,"_onFetchComplete"),onError:h.hitch(this,"_onFetchError")});else{var d=a.treePath[a.treePath.length-1],g={start:c,startRowIdx:a.startRowIdx,treePath:a.treePath,count:a.count,
-parentId:d,sort:this.getSortProps()},e=this,f=function(){var a=h.hitch(e,"_onFetchComplete");1==arguments.length?a.apply(e,[arguments[0],g]):a.apply(e,arguments)};this._by_idty[d]?(a=this._by_idty[d].item,this.treeModel.getChildren(a,f,b,g)):this.store.fetchItemByIdentity({identity:d,onItem:function(a){e.treeModel.getChildren(a,f,b,g)},onError:b})}}},_onFetchBegin:function(a,b){0===this._treeCache.items.length&&(this._size=parseInt(a,10));a=this._size;this.inherited(arguments)},_onFetchComplete:function(a,
-b){var c=b.startRowIdx,d=b.count,g=a.length<=d?0:b.start,e=b.treePath||[];if(h.isArray(a)&&0<a.length){for(var f=0,d=Math.min(d,a.length);f<d;f++)this._treeCache.items[c+f]||(this._treeCache.items[c+f]={opened:!1,treePath:e}),this._by_idx[c+f]||this._addItem(a[g+f],c+f,!0);this.updateRows(c,d)}0==this._size?this.showMessage(this.noDataMessage):this.showMessage();this._pending_requests[c]=!1;this._reqQueueLen--;this._loading&&0===this._reqQueueLen&&(this._loading=!1,this._lastScrollTop&&this.setScrollTop(this._lastScrollTop))},
-expandoFetch:function(a,b){if(!this._loading&&this._by_idx[a]){this._loading=!0;this._toggleLoadingClass(a,!0);this.expandoRowIndex=a;var c=this._by_idx[a].item;if(b){var d={start:0,count:this.rowsPerPage,parentId:this.store.getIdentity(this._by_idx[a].item),sort:this.getSortProps()};this.treeModel.getChildren(c,h.hitch(this,"_onExpandoComplete"),h.hitch(this,"_onFetchError"),d)}else c=this._treeCache.removeChildren(a),this._by_idx.splice(a+1,c),this._bop=this._eop=-1,this._size-=c,this.updateRowCount(this._size),
-this._updateRenderedRows(a+1),this._toggleLoadingClass(a,!1),this._loading&&(this._loading=!1),this.focus._delayedCellFocus()}},_onExpandoComplete:function(a,b,c){c=isNaN(c)?a.length:parseInt(c,10);var d=this._treeCache.items[this.expandoRowIndex].treePath.slice(0);d.push(this.store.getIdentity(this._by_idx[this.expandoRowIndex].item));for(b=1;b<=c;b++)this._treeCache.items.splice(this.expandoRowIndex+b,0,{treePath:d,opened:!1});this._size+=c;this.updateRowCount(this._size);for(b=0;b<c;b++)a[b]?(d=
-this.store.getIdentity(a[b]),this._by_idty[d]={idty:d,item:a[b]},this._by_idx.splice(this.expandoRowIndex+1+b,0,this._by_idty[d])):this._by_idx.splice(this.expandoRowIndex+1+b,0,null);this._updateRenderedRows(this.expandoRowIndex+1);this._toggleLoadingClass(this.expandoRowIndex,!1);this.stateChangeNode=null;this._loading&&(this._loading=!1);!0===this.autoHeight&&this._resize();this.focus._delayedCellFocus()},styleRowNode:function(a,b){b&&this.rows.styleRowNode(a,b)},onStyleRow:function(a){this.layout._isCollapsable?
-(a.customClasses+=(a.odd?" dojoxGridRowOdd":"")+(a.selected?" dojoxGridRowSelected":"")+(a.over?" dojoxGridRowOver":""),this.focus.styleRow(a),this.edit.styleRow(a)):this.inherited(arguments)},onKeyDown:function(a){if(!a.altKey&&!a.metaKey){var b=dijit.findWidgets(a.target)[0];if(a.keyCode===H.ENTER&&b instanceof S)b.onToggle();this.inherited(arguments)}},_toggleLoadingClass:function(a,b){var c=this.views.views;if(c=c[c.length-1].getRowNode(a))(c=y(".dojoxGridExpando",c)[0])&&p.toggle(c,"dojoxGridExpandoLoading",
-b)},_updateRenderedRows:function(a){u.forEach(this.scroller.stack,function(b){b*this.rowsPerPage>=a?this.updateRows(b*this.rowsPerPage,this.rowsPerPage):(b+1)*this.rowsPerPage>=a&&this.updateRows(a,(b+1)*this.rowsPerPage-a+1)},this)},_fold:function(a,b){var c=-1,d=0,g=this._by_idx,e=this._by_idty[a];if(e&&e.item&&this.treeModel.mayHaveChildren(e.item)){for(;d<g.length;d++)if(g[d]&&g[d].idty===a){c=d;break}if(0<=c&&(c=this.views.views[this.views.views.length-1].getRowNode(c)))(c=dijit.findWidgets(c)[0])&&
-c.setOpen(b)}}});k.markupFactory=function(a,b,c,d){return A.markupFactory(a,b,c,d)};return k});
-//@ sourceMappingURL=LazyTreeGrid.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/_base/array",
+	"dojo/query",
+	"dojo/parser",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-geometry",
+	"dojo/dom",
+	"dojo/keys",	
+	"dojo/text!./resources/Expando.html",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"./TreeGrid",
+	"./_Builder",
+	"./_View",
+	"./_Layout",
+	"./cells/tree",
+	"./_RowManager",
+	"./_FocusManager",
+	"./_EditManager",
+	"./DataSelection",
+	"./util"
+], function(dojo, declare, lang, event, array, query, parser, domConstruct,
+	domClass, domStyle, domGeometry, dom, keys, template, _widget, _templatedMixin,
+	TreeGrid, _Builder, _View, _Layout, TreeCell, _RowManager, _FocusManager, _EditManager, DataSelection, util){
+		
+var _LazyExpando = declare("dojox.grid._LazyExpando", [_widget, _templatedMixin], {
+	grid: null,
+	view: null,
+	rowIdx: -1,
+	cellIdx: -1,
+	level: 0,
+	itemId: "",
+	templateString: template,
+	onToggle: function(evt){
+		// summary:
+		//		The onclick handler of expando, expand/collapse a tree node if has children.
+		if(this.grid._treeCache.items[this.rowIdx]){
+			this.grid.focus.setFocusIndex(this.rowIdx, this.cellIdx);
+			this.setOpen(!this.grid._treeCache.items[this.rowIdx].opened);
+			try{
+				event.stop(evt);
+			}catch(e){}
+		}
+	},
+	setOpen: function(open){
+		// summary:
+		//		expand/collapse the row where the expando is in.
+		var g = this.grid,
+			item = g._by_idx[this.rowIdx].item;
+		if(item && g.treeModel.mayHaveChildren(item) && !g._loading && g._treeCache.items[this.rowIdx].opened !== open){
+			g._treeCache.items[this.rowIdx].opened = open;
+			g.expandoFetch(this.rowIdx, open);
+			this._updateOpenState(item);
+		}
+	},
+	_updateOpenState: function(item){
+		var g = this.grid, state;
+		if(item && g.treeModel.mayHaveChildren(item)){
+			state = g._treeCache.items[this.rowIdx].opened;
+			this.expandoInner.innerHTML = state ? "-" : "+";
+			domClass.toggle(this.domNode, "dojoxGridExpandoOpened", state);
+			this.domNode.parentNode.setAttribute("aria-expanded", state);
+		}else{
+			domClass.remove(this.domNode, "dojoxGridExpandoOpened");
+		}
+	},
+	setRowNode: function(rowIdx, rowNode, view){
+		if(this.cellIdx < 0 || !this.itemId){
+			return false;
+		}
+		this.view = view;
+		this.grid = view.grid;
+		this.rowIdx = rowIdx;
+		var marginPos = this.grid.isLeftToRight() ? "marginLeft" : "marginRight";
+		domStyle.set(this.domNode.parentNode, marginPos, (this.level * 1.125) + "em");
+		this._updateOpenState(this.grid._by_idx[this.rowIdx].item);
+		return true;
+	}
+});
+
+var _TreeGridContentBuilder = declare("dojox.grid._TreeGridContentBuilder", _Builder._ContentBuilder, {
+	generateHtml: function(inDataIndex, rowIndex){
+		var html = this.getTableArray(),
+			grid = this.grid,
+			v = this.view,
+			cells = v.structure.cells,
+			item = grid.getItem(rowIndex),
+			level = 0,
+			toggleClass = "",
+			treePath = grid._treeCache.items[rowIndex] ? grid._treeCache.items[rowIndex].treePath : null;
+		util.fire(this.view, "onBeforeRow", [rowIndex, cells]);
+		if(item && lang.isArray(treePath)){
+			level = treePath.length;
+			toggleClass = grid.treeModel.mayHaveChildren(item) ? "" : "dojoxGridNoChildren";
+		}
+		var i = 0, j = 0, row, cell,
+			mergedCells, totalWidth = 0, totalWidthes = [];
+		for(; row = cells[j]; j++){
+			if(row.hidden || row.header){
+				continue;
+			}
+			html.push('<tr class="' + toggleClass + '">');
+			// cell merge
+			mergedCells = this._getColSpans(level);
+			if(mergedCells){
+				array.forEach(mergedCells, function(c){
+					for(i = 0; cell = row[i]; i++){
+						if(i >= c.start && i <= c.end){
+							totalWidth += this._getCellWidth(row, i);
+						}
+					}
+					totalWidthes.push(totalWidth);
+					totalWidth = 0;
+				}, this);
+			}
+			var m, cc, cs, pbm, k = 0;
+			for(i = 0; cell = row[i]; i++){
+				m = cell.markup;
+				cc = cell.customClasses = [];
+				cs = cell.customStyles = [];
+				if(mergedCells && mergedCells[k] && (i >= mergedCells[k].start && i <= mergedCells[k].end)){
+					var primaryIdx = mergedCells[k].primary || mergedCells[k].start;
+					if(i == primaryIdx){
+						m[5] = cell.formatAtLevel(item, level, rowIndex);
+						m[1] = cc.join(' ');
+						pbm = domGeometry.getMarginBox(cell.getHeaderNode()).w - domGeometry.getContentBox(cell.getHeaderNode()).w;
+						cs = cell.customStyles = ['width:' + (totalWidthes[k] - pbm) + "px"];
+						m[3] = cs.join(';');
+						html.push.apply(html, m);
+					}else if(i == mergedCells[k].end){
+						k++;
+						continue;
+					}else{
+						continue;
+					}
+				}else{
+					m[5] = cell.formatAtLevel(item, level, rowIndex);
+					m[1] = cc.join(' ');
+					m[3] = cs.join(';');
+					html.push.apply(html, m);
+				}
+			}
+			html.push('</tr>');
+		}
+		html.push('</table>');
+		return html.join(''); // String
+	},
+	_getColSpans: function(level){
+		var colSpans = this.grid.colSpans;
+		return colSpans && colSpans[level] ? colSpans[level] : null;
+	},
+	_getCellWidth: function(cells, colIndex){
+		var curCell = cells[colIndex], node = curCell.getHeaderNode();
+		if(curCell.hidden){
+			return 0;
+		}
+		if(colIndex == cells.length - 1 || array.every(cells.slice(colIndex + 1), function(cell){
+			return cell.hidden;
+		})){
+			var headerNodePos = domGeometry.position(cells[colIndex].view.headerContentNode.firstChild);
+			return headerNodePos.x + headerNodePos.w - domGeometry.position(node).x;
+		}else{
+			var nextCell;
+			do{
+				nextCell = cells[++colIndex];
+			}while(nextCell.hidden);
+			return domGeometry.position(nextCell.getHeaderNode()).x - domGeometry.position(node).x;
+		}
+	}
+});
+
+declare("dojox.grid._TreeGridView", _View, {
+	_contentBuilderClass: _TreeGridContentBuilder,
+	postCreate: function(){
+		this.inherited(arguments);
+		this._expandos = {};
+		this.connect(this.grid, '_onCleanupExpandoCache', '_cleanupExpandoCache');
+	},
+	destroy: function(){
+		this._cleanupExpandoCache();
+		this.inherited(arguments);
+	},
+	_cleanupExpandoCache: function(identity){
+		if(identity && this._expandos[identity]){
+			this._expandos[identity].destroy();
+			delete this._expandos[identity];
+		}else{
+			var i;
+			for(i in this._expandos){
+				this._expandos[i].destroy();
+			}
+			this._expandos = {};
+		}
+	},
+	onAfterRow: function(rowIndex, cells, rowNode){
+		query("span.dojoxGridExpando", rowNode).forEach(function(n){
+			if(n && n.parentNode){
+				var idty, expando, _byIdx = this.grid._by_idx;
+				if(_byIdx && _byIdx[rowIndex] && _byIdx[rowIndex].idty){
+					idty = _byIdx[rowIndex].idty;
+					expando = this._expandos[idty];
+				}
+				if(expando){
+					domConstruct.place(expando.domNode, n, "replace");
+					expando.itemId = n.getAttribute("itemId");
+					expando.cellIdx = parseInt(n.getAttribute("cellIdx"), 10);
+					if(isNaN(expando.cellIdx)){
+						expando.cellIdx = -1;
+					}
+				}else{
+					expando = parser.parse(n.parentNode)[0];
+					if(idty){
+						this._expandos[idty] = expando;
+					}
+				}
+				if(!expando.setRowNode(rowIndex, rowNode, this)){
+					expando.domNode.parentNode.removeChild(expando.domNode);
+				}
+				domConstruct.destroy(n);
+			}
+		}, this);
+		this.inherited(arguments);
+	},
+	updateRow: function(rowIndex){
+		var grid = this.grid, item;
+		if(grid.keepSelection){
+			item = grid.getItem(rowIndex);
+			if(item){
+				grid.selection.preserver._reSelectById(item, rowIndex);
+			}
+		}
+		this.inherited(arguments);
+	}
+});
+
+var LazyTreeCell = lang.mixin(lang.clone(TreeCell), {
+	formatAtLevel: function(item, level, rowIndex){
+		if(!item){
+			return this.formatIndexes(rowIndex, item, level);
+		}
+		var result = "", ret = "", content;
+		if(this.isCollapsable && this.grid.store.isItem(item)){
+			ret = '<span ' + dojo._scopeName + 'Type="dojox.grid._LazyExpando" level="' + level + '" class="dojoxGridExpando"' +
+					' itemId="' + this.grid.store.getIdentity(item) + '" cellIdx="' + this.index + '"></span>';
+		}
+		content = this.formatIndexes(rowIndex, item, level);
+		result = ret !== "" ? '<div>' + ret + content + '</div>' : content;
+		return result;
+	},
+	formatIndexes: function(rowIndex, item, level){
+		var info = this.grid.edit.info,
+			d = this.get ? this.get(rowIndex, item) : (this.value || this.defaultValue);
+		if(this.editable && (this.alwaysEditing || (info.rowIndex === rowIndex && info.cell === this))){
+			return this.formatEditing(d, rowIndex);
+		}else{
+			var dir = this.textDir || this.grid.textDir;
+			var ret = this._defaultFormat(d, [d, rowIndex, level, this]);
+			if(dir && this._enforceTextDirWithUcc){
+			    ret = this._enforceTextDirWithUcc(dir, ret);
+			}
+			return ret;
+		}
+	}
+});
+
+var _LazyTreeLayout = declare("dojox.grid._LazyTreeLayout", _Layout, {
+	// summary:
+	//		Override the dojox.grid._TreeLayout to modify the _TreeGridView and cell formatter
+	setStructure: function(structure){
+		var g = this.grid, s = structure;
+		if(g && !array.every(s, function(i){
+			return !!i.cells;
+		})){
+			s = arguments[0] = [{cells:[s]}];//intentionally change arguments[0]
+		}
+		if(s.length === 1 && s[0].cells.length === 1){
+			s[0].type = "dojox.grid._TreeGridView";
+			this._isCollapsable = true;
+			s[0].cells[0][this.grid.expandoCell].isCollapsable = true;
+		}
+		this.inherited(arguments);
+	},
+	addCellDef: function(rowIndex, cellIndex, def){
+		var obj = this.inherited(arguments);
+		return lang.mixin(obj, LazyTreeCell);
+	}
+});
+
+var _LazyTreeGridCache = declare("dojox.grid._LazyTreeGridCache", null, {
+	// summary:
+	//		An internal object used to cache the tree path and open state of each item.
+	//		The form of the cache items would be an object array: 
+	//		[{opened: true/false, treePath: [level0 parent id, level1 parent id, ...]}]
+	// example:
+	//		| [{opened: true, treePath: []},
+	//		|  {opened: false, treePath: ["root0"]},
+	//		|  {opened: false, treePath: ["root0"]},
+	//		|  {opened: false, treePath: []},
+	//		|  ...]
+	constructor: function(){
+		this.items = [];
+	},
+	getSiblingIndex: function(rowIndex, treePath){
+		var i = rowIndex - 1, indexCount = 0, tp;
+		for(; i >=0; i--){
+			tp = this.items[i] ? this.items[i].treePath : [];
+			if(tp.join('/') === treePath.join('/')){
+				indexCount++;
+			}else if(tp.length < treePath.length){
+				break;
+			}
+		}
+		return indexCount;
+	},
+	removeChildren: function(rowIndex){
+		// find next sibling index
+		var i = rowIndex + 1, count, tp,
+			treePath = this.items[rowIndex] ? this.items[rowIndex].treePath : [];
+		for(; i < this.items.length; i++){
+			tp = this.items[i] ? this.items[i].treePath : [];
+			if(tp.join('/') === treePath.join('/') || tp.length <= treePath.length){
+				break;
+			}
+		}
+		count = i - (rowIndex + 1);
+		this.items.splice(rowIndex + 1, count);
+		return count;
+	}
+});
+
+var LazyTreeGrid = declare("dojox.grid.LazyTreeGrid", TreeGrid, {
+	// summary:
+	//		An enhanced TreeGrid widget which supports lazy-loading for nested children items
+	//
+	// description:
+	//		LazyTreeGrid inherits from dojo.grid.TreeGrid and applies virtual scrolling mechanism
+	//		to nested children rows so that it's possible to deal with complex tree structure data set
+	//		with nested and huge children rows. It's also compatible with dijit.tree.ForestStoreModel
+	//
+	//		Most methods and properties pertaining to dojox.grid.DataGrid
+	//		and dojox.grid.TreeGrid also apply here
+	//
+	//		LazyTreeGrid does not support summary row/items aggregate due to the lazy-loading rationale.
+
+	_layoutClass: _LazyTreeLayout,
+	_size: 0,
+
+	// treeModel: dijit/tree/.ForestStoreModel|dojox/grid/LazyTreeGridStoreModel
+	//		A tree store model object.
+	treeModel: null,
+
+	// defaultState: Object
+	//		Used to restore the state of LazyTreeGrid.
+	//		This object should ONLY be obtained from `LazyTreeGrid.getState()`.
+	defaultState: null,
+
+	// colSpans: Object
+	//		A json object that defines column span of each level rows.  Attributes:
+	//
+	//		- 0/1/..: which level need to colspan
+	//		- start: start column index of colspan
+	//		- end: end column index of colspan
+	//		- primary: index of column which content will be displayed (default is value of start).
+	//
+	//		example:
+	//		|	colSpans = {
+	//		|	0:	[
+	//		|			{start: 0, end: 1, primary: 0},
+	//		|			{start: 2, end: 4, primary: 3}
+	//		|		],
+	//		|	1:	[
+	//		|			{start: 0, end: 3, primary: 1}
+	//		|		]
+	//		|	};
+	colSpans: null,
+	
+	postCreate: function(){
+		this._setState();
+		this.inherited(arguments);
+		if(!this._treeCache){
+			this._treeCache = new _LazyTreeGridCache();
+		}
+		if(!this.treeModel || !(this.treeModel instanceof dijit.tree.ForestStoreModel)){
+			throw new Error("dojox.grid.LazyTreeGrid: must be used with a treeModel which is an instance of dijit.tree.ForestStoreModel");
+		}
+		domClass.add(this.domNode, "dojoxGridTreeModel");
+		dom.setSelectable(this.domNode, this.selectable);
+	},
+	createManagers: function(){
+		this.rows = new _RowManager(this);
+		this.focus = new _FocusManager(this);
+		this.edit = new _EditManager(this);
+	},
+	createSelection: function(){
+		this.selection = new DataSelection(this);
+	},
+	setModel: function(treeModel){
+		if(!treeModel){
+			return;
+		}
+		this._setModel(treeModel);
+		this._cleanup();
+		this._refresh(true);
+	},
+	setStore: function(store, query, queryOptions){
+		if(!store){
+			return;
+		}
+		this._setQuery(query, queryOptions);
+		this.treeModel.query = query;
+		this.treeModel.store = store;
+		this.treeModel.root.children = [];
+		this.setModel(this.treeModel);
+	},
+	onSetState: function(){
+		// summary:
+		//		Event fired when a default state being set.
+	},
+	_setState: function(){
+		if(this.defaultState){
+			this._treeCache = this.defaultState.cache;
+			this.sortInfo = this.defaultState.sortInfo || 0;
+			this.query = this.defaultState.query || this.query;
+			this._lastScrollTop = this.defaultState.scrollTop;
+			if(this.keepSelection){
+				this.selection.preserver._selectedById = this.defaultState.selection;
+			}else{
+				this.selection.selected = this.defaultState.selection || [];
+			}
+			this.onSetState();
+		}
+	},
+	getState: function(){
+		// summary:
+		//		Get the current state of LazyTreeGrid including expanding, sorting, selection and scroll top state.
+		var _this = this, 
+			selection = this.keepSelection ? this.selection.preserver._selectedById : this.selection.selected;
+		return {
+			cache: lang.clone(_this._treeCache),
+			query: lang.clone(_this.query),
+			sortInfo: lang.clone(_this.sortInfo),
+			scrollTop: lang.clone(_this.scrollTop),
+			selection: lang.clone(selection)
+		};
+	},
+	_setQuery: function(query, queryOptions){
+		this.inherited(arguments);
+		this.treeModel.query = query;
+	},
+	filter: function(query, reRender){
+		this._cleanup();
+		this.inherited(arguments);
+    },
+	destroy: function(){
+		this._cleanup();
+		this.inherited(arguments);
+	},
+	expand: function(itemId){
+		// summary:
+		//		Expand the row with the given itemId.
+		// itemId: String?
+		this._fold(itemId, true);
+	},
+	collapse: function(itemId){
+		// summary:
+		//		Collapse the row with the given itemId.
+		// itemId: String?
+		this._fold(itemId, false);
+	},
+	refresh: function(keepState){
+		// summary:
+		//		Refresh, and persist the expand/collapse state when keepState equals true
+		// keepState: Boolean
+		if(!keepState){
+			this._cleanup();
+		}
+		this._refresh(true);
+	},
+	_cleanup: function(){
+		this._treeCache.items = [];
+		this._onCleanupExpandoCache();
+	},
+	setSortIndex: function(inIndex, inAsc){
+		// Need to clean up the cache before sorting
+		if(this.canSort(inIndex + 1)){
+			this._cleanup();
+		}
+		this.inherited(arguments);
+	},
+	_refresh: function(isRender){
+		this._clearData();
+		this.updateRowCount(this._size);
+		this._fetch(0, true);
+	},
+	render: function(){
+		this.inherited(arguments);
+		this.setScrollTop(this.scrollTop);
+	},
+	_onNew: function(item, parentInfo){
+		var addingChild = parentInfo && this.store.isItem(parentInfo.item) && array.some(this.treeModel.childrenAttrs, function(c){
+			return c === parentInfo.attribute;
+		});
+		var items = this._treeCache.items, byIdx = this._by_idx;
+		if(!addingChild){
+			items.push({opened: false, treePath: []});
+			this._size += 1;
+			this.inherited(arguments);
+		}else{
+			var parentItem = parentInfo.item, 
+				parentIdty = this.store.getIdentity(parentItem),
+				rowIndex = -1, i = 0;
+			for(; i < byIdx.length; i++){
+				if(parentIdty === byIdx[i].idty){
+					rowIndex = i;
+					break;
+				}
+			}
+			if(rowIndex >= 0){
+				if(items[rowIndex] && items[rowIndex].opened){
+					var parentTreePath = items[rowIndex].treePath, pos = rowIndex + 1;
+					for(; pos < items.length; pos++){
+						if(items[pos].treePath.length <= parentTreePath.length){
+							break;
+						}
+					}
+					var treePath = parentTreePath.slice();
+					treePath.push(parentIdty);
+					this._treeCache.items.splice(pos, 0, {opened: false, treePath: treePath});
+					// update grid._by_idx
+					var idty = this.store.getIdentity(item);
+					this._by_idty[idty] = { idty: idty, item: item };
+					byIdx.splice(pos, 0, this._by_idty[idty]);
+					// update grid
+					this._size += 1;
+					this.updateRowCount(this._size);
+					this._updateRenderedRows(pos);
+				}else{
+					this.updateRow(rowIndex);
+				}
+			}
+		}
+	},
+	_onDelete: function(item){
+		var i = 0, rowIndex = -1, idty = this.store.getIdentity(item);
+		for(; i < this._by_idx.length; i++){
+			if(idty === this._by_idx[i].idty){
+				rowIndex = i;
+				break;
+			}
+		}
+		if(rowIndex >= 0){
+			var items = this._treeCache.items, treePath = items[rowIndex] ? items[rowIndex].treePath : [], tp, count = 1;
+			i = rowIndex + 1;
+			for(; i < this._size; i++, count++){
+				tp = items[i] ? items[i].treePath : [];
+				if(items[i].treePath.length <= treePath.length){
+					break;
+				}
+			}
+			items.splice(rowIndex, count);
+			this._onCleanupExpandoCache(idty);
+			this._by_idx.splice(rowIndex, count);
+			this._size -= count;
+			this.updateRowCount(this._size);
+			this._updateRenderedRows(rowIndex);
+		}
+	},
+	_onCleanupExpandoCache: function(identity){},
+	_fetch: function(start, isRender){
+		if(!this._loading){
+			this._loading = true;
+		}
+		start = start || 0;
+		var count = this._size - start > 0 ? Math.min(this.rowsPerPage, this._size - start) : this.rowsPerPage;
+		var i = 0;
+		var fetchedItems = [];
+		this._reqQueueLen = 0;
+		for(; i < count; i++){
+			if(this._by_idx[start + i]){
+				fetchedItems.push(this._by_idx[start + i].item);
+			}else{
+				break;
+			}
+		}
+		if(fetchedItems.length === count){
+			this._reqQueueLen = 1;
+			this._onFetchBegin(this._size, {startRowIdx: start, count: count});
+			this._onFetchComplete(fetchedItems, {startRowIdx: start, count: count});
+		}else{
+			var level, nextLevel, len = 1, items = this._treeCache.items, 
+				treePath = items[start] ? items[start].treePath : [];
+			for(i = 1; i < count; i++){
+				level = items[start + len - 1] ? items[start + len - 1].treePath.length : 0;
+				nextLevel = items[start + len] ? items[start + len].treePath.length : 0;
+				if(level !== nextLevel){
+					this._reqQueueLen++;
+					this._fetchItems({startRowIdx: start, count: len, treePath: treePath});
+					start = start + len;
+					len = 1;
+					treePath = items[start] ? items[start].treePath : 0;
+				}else{
+					len++;
+				}
+			}
+			this._reqQueueLen++;
+			this._fetchItems({startRowIdx: start, count: len, treePath: treePath});
+		}
+	},
+	_fetchItems: function(req){
+		if(this._pending_requests[req.startRowIdx]){
+			return;
+		}
+		this.showMessage(this.loadingMessage);
+		this._pending_requests[req.startRowIdx] = true;
+		var	onError = lang.hitch(this, '_onFetchError'),
+			start = this._treeCache.getSiblingIndex(req.startRowIdx, req.treePath);
+		if(req.treePath.length === 0){
+			this.store.fetch({
+				start: start,
+				startRowIdx: req.startRowIdx,
+				treePath: req.treePath,
+				count: req.count,
+				query: this.query,
+				sort: this.getSortProps(),
+				queryOptions: this.queryOptions,
+				onBegin: lang.hitch(this, '_onFetchBegin'),
+				onComplete: lang.hitch(this, '_onFetchComplete'),
+				onError: lang.hitch(this, '_onFetchError')
+			});
+		}else{
+			var parentId = req.treePath[req.treePath.length - 1], parentItem;
+			var queryObj = {
+				start: start,
+				startRowIdx: req.startRowIdx,
+				treePath: req.treePath,
+				count: req.count,
+				parentId: parentId,
+				sort: this.getSortProps()
+			};
+			var _this = this;
+			var onComplete = function(){
+				var f = lang.hitch(_this, '_onFetchComplete');
+				if(arguments.length == 1){
+					f.apply(_this, [arguments[0], queryObj]);
+				}else{
+					f.apply(_this, arguments);
+				}
+			};
+			if(this._by_idty[parentId]){
+				parentItem = this._by_idty[parentId].item;
+				this.treeModel.getChildren(parentItem, onComplete, onError, queryObj);
+			}else{
+				this.store.fetchItemByIdentity({
+					identity: parentId,
+					onItem: function(item){
+						_this.treeModel.getChildren(item, onComplete, onError, queryObj);
+					},
+					onError: onError
+				});
+			}
+		}
+	},
+	_onFetchBegin: function(size, request){
+		if(this._treeCache.items.length === 0){
+			this._size = parseInt(size, 10);
+		}
+		size = this._size;
+		// this._size = size = this._treeCache.items.length;
+		this.inherited(arguments);
+	},
+	_onFetchComplete: function(items, request){
+		var startRowIdx = request.startRowIdx,
+			count = request.count,
+			start = items.length <= count ? 0: request.start,
+			treePath = request.treePath || [];
+		if(lang.isArray(items) && items.length > 0){
+			var i = 0, len = Math.min(count, items.length);
+			for(; i < len; i++){
+				if(!this._treeCache.items[startRowIdx + i]){
+					this._treeCache.items[startRowIdx + i] = {opened: false, treePath: treePath};
+				}
+				if(!this._by_idx[startRowIdx + i]){
+					this._addItem(items[start + i], startRowIdx + i, true);
+				}
+				// this._treeCache.items.splice(startRowIdx + i, 0, {opened: false, treePath: treePath});
+			}
+			this.updateRows(startRowIdx, len);
+		}
+		if(this._size == 0){
+			this.showMessage(this.noDataMessage);
+		}else{
+			this.showMessage();
+		}
+		this._pending_requests[startRowIdx] = false;
+		this._reqQueueLen--;
+		if(this._loading && this._reqQueueLen === 0){
+			this._loading = false;
+			if(this._lastScrollTop){
+				this.setScrollTop(this._lastScrollTop);
+			}
+		}
+	},
+	expandoFetch: function(rowIndex, open){
+		// summary:
+		//		Function for fetch children of a given row
+		if(this._loading || !this._by_idx[rowIndex]){return;}
+		this._loading = true;
+		this._toggleLoadingClass(rowIndex, true);
+		this.expandoRowIndex = rowIndex;
+		var item = this._by_idx[rowIndex].item;
+		// this._pages = [];
+		if(open){
+			var queryObj = {
+				start: 0,
+				count: this.rowsPerPage,
+				parentId: this.store.getIdentity(this._by_idx[rowIndex].item),
+				sort: this.getSortProps()
+			};
+			this.treeModel.getChildren(item, lang.hitch(this, "_onExpandoComplete"), lang.hitch(this, "_onFetchError"), queryObj);
+		}else{
+			// get the whole children number when clear the children from cache
+			var num = this._treeCache.removeChildren(rowIndex);
+			// remove the items from grid._by_idx
+			this._by_idx.splice(rowIndex + 1, num);
+			this._bop = this._eop = -1;
+			//update grid
+			this._size -= num;
+			this.updateRowCount(this._size);
+			this._updateRenderedRows(rowIndex + 1);
+			this._toggleLoadingClass(rowIndex, false);
+			if(this._loading){
+				this._loading = false;
+			}
+			this.focus._delayedCellFocus();
+		}
+	},
+	_onExpandoComplete: function(childItems, request, size){
+		size = isNaN(size) ? childItems.length : parseInt(size, 10);
+		var treePath = this._treeCache.items[this.expandoRowIndex].treePath.slice(0);
+		treePath.push(this.store.getIdentity(this._by_idx[this.expandoRowIndex].item));
+		var i = 1, idty;
+		for(; i <= size; i++){
+			this._treeCache.items.splice(this.expandoRowIndex + i, 0, {treePath: treePath, opened: false});
+		}
+		this._size += size;
+		this.updateRowCount(this._size);
+		for(i = 0; i < size; i++){
+			if(childItems[i]){
+				idty = this.store.getIdentity(childItems[i]);
+				this._by_idty[idty] = { idty: idty, item: childItems[i] };
+				this._by_idx.splice(this.expandoRowIndex + 1 + i, 0, this._by_idty[idty]);
+			}else{
+				this._by_idx.splice(this.expandoRowIndex + 1 + i, 0, null);
+			}
+		}
+		this._updateRenderedRows(this.expandoRowIndex + 1);
+		this._toggleLoadingClass(this.expandoRowIndex, false);
+		this.stateChangeNode = null;
+		if(this._loading){
+			this._loading = false;
+		}
+		if(this.autoHeight === true){
+			this._resize();
+		}
+		this.focus._delayedCellFocus();
+	},
+	styleRowNode: function(rowIndex, rowNode){
+		if(rowNode){
+			this.rows.styleRowNode(rowIndex, rowNode);
+		}
+	},
+	onStyleRow: function(row){
+		if(!this.layout._isCollapsable){
+			this.inherited(arguments);
+			return;
+		}
+		row.customClasses += (row.odd ? " dojoxGridRowOdd" : "") + (row.selected ? " dojoxGridRowSelected" : "") + (row.over ? " dojoxGridRowOver" : "");
+		this.focus.styleRow(row);
+		this.edit.styleRow(row);
+	},
+	onKeyDown: function(e){
+		if(e.altKey || e.metaKey){
+			return;
+		}
+		var expando = dijit.findWidgets(e.target)[0];
+		if(e.keyCode === keys.ENTER && expando instanceof _LazyExpando){
+			expando.onToggle();
+		}
+		this.inherited(arguments);
+	},
+	_toggleLoadingClass: function(rowIndex, flag){
+		var views = this.views.views, node,
+			rowNode = views[views.length - 1].getRowNode(rowIndex);
+		if(rowNode){
+			node = query('.dojoxGridExpando', rowNode)[0];
+			if(node){
+				domClass.toggle(node, "dojoxGridExpandoLoading", flag);
+			}
+		}
+	},
+	_updateRenderedRows: function(start){
+		array.forEach(this.scroller.stack, function(p){
+			if(p * this.rowsPerPage >= start){
+				this.updateRows(p * this.rowsPerPage, this.rowsPerPage);
+			}else if((p + 1) * this.rowsPerPage >=  start){
+				this.updateRows(start, (p + 1) * this.rowsPerPage - start + 1);
+			}
+		}, this);
+	},
+	_fold: function(itemId, open){
+		var rowIndex = -1, i = 0, byIdx = this._by_idx, idty = this._by_idty[itemId];
+		if(idty && idty.item && this.treeModel.mayHaveChildren(idty.item)){
+			for(; i < byIdx.length; i++){
+				if(byIdx[i] && byIdx[i].idty === itemId){
+					rowIndex = i;
+					break;
+				}
+			}
+			if(rowIndex >= 0){
+				var rowNode = this.views.views[this.views.views.length - 1].getRowNode(rowIndex);
+				if(rowNode){
+					var expando = dijit.findWidgets(rowNode)[0];
+					if(expando){
+						expando.setOpen(open);
+					}
+				}
+			}
+		}
+	}
+});
+
+LazyTreeGrid.markupFactory = function(props, node, ctor, cellFunc){
+	return TreeGrid.markupFactory(props, node, ctor, cellFunc);
+};
+
+return LazyTreeGrid;
+
+});

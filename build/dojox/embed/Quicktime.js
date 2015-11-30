@@ -1,9 +1,258 @@
-//>>built
-define("dojox/embed/Quicktime","dojo/_base/kernel dojo/_base/lang dojo/_base/sniff dojo/_base/window dojo/dom dojo/dom-construct dojo/domReady!".split(" "),function(h,m,f,n,p,k){function q(a){a=h.mixin(m.clone(u),a||{});if(!("path"in a)&&!a.testing)return console.error("dojox.embed.Quicktime(ctor):: no path reference to a QuickTime movie was provided."),null;a.testing&&(a.path="");"id"in a||(a.id=v+w++);return a}var g,r={major:0,minor:0,rev:0},e,u={width:320,height:240,redirect:null},v="dojox-embed-quicktime-",
-w=0;h.getObject("dojox.embed",!0);f("ie")?(e=function(){try{var a=new ActiveXObject("QuickTimeCheckObject.QuickTimeCheck.1");if(void 0!==a){var b=a.QuickTimeVersion.toString(16);r={major:b.substring(0,1)-0||0,minor:b.substring(1,2)-0||0,rev:b.substring(2,3)-0||0};return a.IsQuickTimeAvailable(0)}}catch(c){}return!1}(),g=function(a){if(!e)return{id:null,markup:'This content requires the \x3ca href\x3d"http://www.apple.com/quicktime/download/" title\x3d"Download and install QuickTime."\x3eQuickTime plugin\x3c/a\x3e.'};
-a=q(a);if(!a)return null;var b='\x3cobject classid\x3d"clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase\x3d"http://www.apple.com/qtactivex/qtplugin.cab#version\x3d6,0,2,0" id\x3d"'+a.id+'" width\x3d"'+a.width+'" height\x3d"'+a.height+'"\x3e\x3cparam name\x3d"src" value\x3d"'+a.path+'"/\x3e',c;for(c in a.params||{})b+='\x3cparam name\x3d"'+c+'" value\x3d"'+a.params[c]+'"/\x3e';return{id:a.id,markup:b+"\x3c/object\x3e"}}):(e=function(){for(var a=0,b=navigator.plugins,c=b.length;a<c;a++)if(-1<b[a].name.indexOf("QuickTime"))return!0;
-return!1}(),g=function(a){if(!e)return{id:null,markup:'This content requires the \x3ca href\x3d"http://www.apple.com/quicktime/download/" title\x3d"Download and install QuickTime."\x3eQuickTime plugin\x3c/a\x3e.'};a=q(a);if(!a)return null;var b='\x3cembed type\x3d"video/quicktime" src\x3d"'+a.path+'" id\x3d"'+a.id+'" name\x3d"'+a.id+'" pluginspage\x3d"www.apple.com/quicktime/download" enablejavascript\x3d"true" width\x3d"'+a.width+'" height\x3d"'+a.height+'"',c;for(c in a.params||{})b+=" "+c+'\x3d"'+
-a.params[c]+'"';return{id:a.id,markup:b+"\x3e\x3c/embed\x3e"}});var d=function(a,b){return d.place(a,b)};h.mixin(d,{minSupported:6,available:e,supported:e,version:r,initialized:!1,onInitialize:function(){d.initialized=!0},place:function(a,b){var c=g(a);if(!(b=p.byId(b)))b=k.create("div",{id:c.id+"-container"},n.body());return c&&(b.innerHTML=c.markup,c.id)?f("ie")?dom.byId(c.id):document[c.id]:null}});if(f("ie"))f("ie")&&e&&setTimeout(function(){d.onInitialize()},10);else{var s=g({testing:!0,width:4,
-height:4}),l=10,t=function(){setTimeout(function(){var a=document[s.id],b=p.byId("-qt-version-test");if(a)try{var c=a.GetQuickTimeVersion().split(".");d.version={major:parseInt(c[0]||0),minor:parseInt(c[1]||0),rev:parseInt(c[2]||0)};if(d.supported=c[0])d.onInitialize();l=0}catch(e){l--&&t()}!l&&b&&k.destroy(b)},20)};k.create("div",{innerHTML:s.markup,id:"-qt-version-test",style:{top:"-1000px",left:0,width:"1px",height:"1px",overflow:"hidden",position:"absolute"}},n.body());t()}m.setObject("dojox.embed.Quicktime",
-d);return d});
-//@ sourceMappingURL=Quicktime.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/_base/window",
+	"dojo/dom",
+	"dojo/dom-construct",
+	"dojo/domReady!" // fixes doc.readyState in Fx<=3.5
+], function (dojo, lang, has, windowUtil, domUtil, domConstruct) {
+	// module:
+	//		dojox/embed/Quicktime
+	// summary:
+	//		Base functionality to insert a QuickTime movie
+	//		into a document on the fly.
+
+	var qtMarkup,
+		qtVersion = { major: 0, minor: 0, rev: 0 },
+		installed,
+		__def__ = {
+			width: 320,
+			height: 240,
+			redirect: null
+		},
+		keyBase = "dojox-embed-quicktime-",
+		keyCount = 0,
+		getQTMarkup = 'This content requires the <a href="http://www.apple.com/quicktime/download/" title="Download and install QuickTime.">QuickTime plugin</a>.',
+		embed = dojo.getObject("dojox.embed", true);
+
+	//	*** private methods *********************************************************
+	function prep(kwArgs){
+		kwArgs = dojo.mixin(lang.clone(__def__), kwArgs || {});
+		if(!("path" in kwArgs) && !kwArgs.testing){
+			console.error("dojox.embed.Quicktime(ctor):: no path reference to a QuickTime movie was provided.");
+			return null;
+		}
+		if(kwArgs.testing){
+			kwArgs.path = "";
+		}
+		if(!("id" in kwArgs)){
+			kwArgs.id = keyBase + keyCount++;
+		}
+		return kwArgs;
+	}
+
+	if(has("ie")){
+		installed = (function(){
+			try{
+				var o = new ActiveXObject("QuickTimeCheckObject.QuickTimeCheck.1");
+				if(o!==undefined){
+					//	pull the qt version too
+					var v = o.QuickTimeVersion.toString(16);
+					function p(i){ return (v.substring(i, i+1)-0) || 0; }
+					qtVersion = {
+						major: p(0),
+						minor: p(1),
+						rev: p(2)
+					};
+					return o.IsQuickTimeAvailable(0);
+				}
+			} catch(e){ }
+			return false;
+		})();
+
+		qtMarkup = function(kwArgs){
+			if(!installed){ return { id: null, markup: getQTMarkup }; }
+			
+			kwArgs = prep(kwArgs);
+			if(!kwArgs){ return null; }
+			var s = '<object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" '
+				+ 'codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0" '
+				+ 'id="' + kwArgs.id + '" '
+				+ 'width="' + kwArgs.width + '" '
+				+ 'height="' + kwArgs.height + '">'
+				+ '<param name="src" value="' + kwArgs.path + '"/>';
+			for(var p in kwArgs.params||{}){
+				s += '<param name="' + p + '" value="' + kwArgs.params[p] + '"/>';
+			}
+			s += '</object>';
+			return { id: kwArgs.id, markup: s };
+		}
+	} else {
+		installed = (function(){
+			for(var i=0, p=navigator.plugins, l=p.length; i<l; i++){
+				if(p[i].name.indexOf("QuickTime")>-1){
+					return true;
+				}
+			}
+			return false;
+		})();
+
+		qtMarkup = function(kwArgs){
+			if(!installed){ return { id: null, markup: getQTMarkup }; }
+
+			kwArgs = prep(kwArgs);
+			if(!kwArgs){ return null; }
+			var s = '<embed type="video/quicktime" src="' + kwArgs.path + '" '
+				+ 'id="' + kwArgs.id + '" '
+				+ 'name="' + kwArgs.id + '" '
+				+ 'pluginspage="www.apple.com/quicktime/download" '
+				+ 'enablejavascript="true" '
+				+ 'width="' + kwArgs.width + '" '
+				+ 'height="' + kwArgs.height + '"';
+			for(var p in kwArgs.params||{}){
+				s += ' ' + p + '="' + kwArgs.params[p] + '"';
+			}
+			s += '></embed>';
+			return { id: kwArgs.id, markup: s };
+		}
+	}
+
+	/*=====
+	var __QTArgs = {
+		// path: String
+		//		The URL of the movie to embed.
+		// id: String?
+		//		A unique key that will be used as the id of the created markup.  If you don't
+		//		provide this, a unique key will be generated.
+		// width: Number?
+		//		The width of the embedded movie; the default value is 320px.
+		// height: Number?
+		//		The height of the embedded movie; the default value is 240px
+		// params: Object?
+		//		A set of key/value pairs that you want to define in the resultant markup.
+		// redirect: String?
+		//		A url to redirect the browser to if the current QuickTime version is not supported.
+	};
+	=====*/
+
+	var Quicktime=function(/* __QTArgs */kwArgs, /* DOMNode */node){
+		// summary:
+		//		Returns a reference to the HTMLObject/HTMLEmbed that is created to
+		//		place the movie in the document.  You can use this either with or
+		//		without the new operator.  Note that with any other DOM manipulation,
+		//		you must wait until the document is finished loading before trying
+		//		to use this.
+		//
+		// example:
+		//		Embed a QuickTime movie in a document using the new operator, and get a reference to it.
+		//	|	var movie = new dojox.embed.Quicktime({
+		//	|		path: "path/to/my/movie.mov",
+		//	|		width: 400,
+		//	|		height: 300
+		//	|	}, myWrapperNode);
+		//
+		// example:
+		//		Embed a movie in a document without using the new operator.
+		//	|	var movie = dojox.embed.Quicktime({
+		//	|		path: "path/to/my/movie.mov",
+		//	|		width: 400,
+		//	|		height: 300
+		//	|	}, myWrapperNode);
+
+		return Quicktime.place(kwArgs, node);	//	HTMLObject
+	};
+
+	dojo.mixin(Quicktime, {
+		// summary:
+		//		A singleton object used internally to get information
+		//		about the QuickTime player available in a browser, and
+		//		as the factory for generating and placing markup in a
+		//		document.
+		//
+		// minSupported: Number
+		//		The minimum supported version of the QuickTime Player, defaults to
+		//		6.
+		// available: Boolean
+		//		Whether or not QuickTime is available.
+		// supported: Boolean
+		//		Whether or not the QuickTime Player installed is supported by
+		//		dojox.embed.
+		// version: Object
+		//		The version of the installed QuickTime Player; takes the form of
+		//		{ major, minor, rev }.  To get the major version, you'd do this:
+		//		var v=dojox.embed.Quicktime.version.major;
+		// initialized: Boolean
+		//		Whether or not the QuickTime engine is available for use.
+		// onInitialize: Function
+		//		A stub you can connect to if you are looking to fire code when the
+		//		engine becomes available.  A note: do NOT use this stub to embed
+		//		a movie in your document; this WILL be fired before DOMContentLoaded
+		//		is fired, and you will get an error.  You should use dojo.addOnLoad
+		//		to place your movie instead.
+
+		minSupported: 6,
+		available: installed,
+		supported: installed,
+		version: qtVersion,
+		initialized: false,
+		onInitialize: function(){
+			Quicktime.initialized = true;
+		},	//	stub function to let you know when this is ready
+
+		place: function(kwArgs, node){
+			var o = qtMarkup(kwArgs);
+
+			if(!(node = domUtil.byId(node))){
+				node=domConstruct.create("div", { id:o.id+"-container" }, windowUtil.body());
+			}
+			
+			if(o){
+				node.innerHTML = o.markup;
+				if(o.id){
+					return has("ie") ? dom.byId(o.id) : document[o.id];	//	QuickTimeObject
+				}
+			}
+			return null;	//	QuickTimeObject
+		}
+	});
+
+	//	go get the info
+	if(!has("ie")){
+		var id = "-qt-version-test",
+			o = qtMarkup({ testing:true , width:4, height:4 }),
+			c = 10, // counter to prevent infinite looping
+			top = "-1000px",
+			widthHeight = "1px";
+
+		function getVer(){
+			setTimeout(function(){
+				var qt = document[o.id],
+					n = domUtil.byId(id);
+
+				if(qt){
+					try{
+						var v = qt.GetQuickTimeVersion().split(".");
+						Quicktime.version = { major: parseInt(v[0]||0), minor: parseInt(v[1]||0), rev: parseInt(v[2]||0) };
+						if((Quicktime.supported = v[0])){
+							Quicktime.onInitialize();
+						}
+						c = 0;
+					} catch(e){
+						if(c--){
+							getVer();
+						}
+					}
+				}
+
+				if(!c && n){ domConstruct.destroy(n); }
+			}, 20);
+		}
+
+		domConstruct.create("div", {
+			innerHTML: o.markup,
+			id: id,
+			style: { top:top, left:0, width:widthHeight, height:widthHeight, overflow:"hidden", position:"absolute" }
+		}, windowUtil.body());
+		getVer();
+	}else if(has("ie") && installed){
+		// we already know if IE has QuickTime installed, but we need this to seem like a callback.
+		setTimeout(function(){
+			Quicktime.onInitialize();
+		}, 10);
+	}
+
+	lang.setObject("dojox.embed.Quicktime", Quicktime);
+
+	return Quicktime;
+});

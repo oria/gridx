@@ -1,3 +1,41 @@
-//>>built
-define("dojox/lang/async/event",["dojo","dijit","dojox"],function(b,k,h){b.provide("dojox.lang.async.event");(function(){var g=h.lang.async.event;g.from=function(e,f){return function(){var a,c=function(){a&&(b.disconnect(a),a=null)},d=new b.Deferred(c);a=b.connect(e,f,function(a){c();d.callback(a)});return d}};g.failOn=function(e,f){return function(){var a,c=function(){a&&(b.disconnect(a),a=null)},d=new b.Deferred(c);a=b.connect(e,f,function(a){c();d.errback(Error(a))});return d}}})()});
-//@ sourceMappingURL=event.js.map
+dojo.provide("dojox.lang.async.event");
+
+// Source of Deferred for events
+
+(function(){
+	var d = dojo, event = dojox.lang.async.event;
+
+	event.from = function(src, name){
+		return function(){
+			var h, cancel = function(){
+					if(h){
+						d.disconnect(h);
+						h = null;
+					}
+				},
+				x = new d.Deferred(cancel);
+			h = d.connect(src, name, function(evt){
+				cancel();
+				x.callback(evt);
+			});
+			return x;
+		};
+	};
+
+	event.failOn = function(src, name){
+		return function(){
+			var h, cancel = function(){
+					if(h){
+						d.disconnect(h);
+						h = null;
+					}
+				},
+				x = new d.Deferred(cancel);
+			h = d.connect(src, name, function(evt){
+				cancel();
+				x.errback(new Error(evt));
+			});
+			return x;
+		};
+	};
+})();

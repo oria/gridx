@@ -1,7 +1,57 @@
-//>>built
-define("dojo/cldr/nls/el/roc",{"dateFormatItem-yM":"M/y G","field-dayperiod":"\u03c0.\u03bc./\u03bc.\u03bc.","field-minute":"\u039b\u03b5\u03c0\u03c4\u03cc","dateFormatItem-MMMEd":"E, d MMM","field-day-relative+-1":"\u03a7\u03c4\u03b5\u03c2","dateFormatItem-yQQQ":"y G QQQ","field-day-relative+-2":"\u03a0\u03c1\u03bf\u03c7\u03c4\u03ad\u03c2","field-weekday":"\u0397\u03bc\u03ad\u03c1\u03b1 \u03b5\u03b2\u03b4\u03bf\u03bc\u03ac\u03b4\u03b1\u03c2","dateFormatItem-MMM":"LLL","field-era":"\u03a0\u03b5\u03c1\u03af\u03bf\u03b4\u03bf\u03c2",
-"dateFormatItem-Gy":"y G","field-hour":"\u038f\u03c1\u03b1","dateFormatItem-y":"y G","dateFormatItem-Ed":"E d","dateFormatItem-yMMM":"LLL, y G","field-day-relative+0":"\u03a3\u03ae\u03bc\u03b5\u03c1\u03b1","field-day-relative+1":"\u0391\u03cd\u03c1\u03b9\u03bf",eraAbbr:["\u03a0\u03c1\u03b9\u03bd R.O.C.","R.O.C."],"field-day-relative+2":"\u039c\u03b5\u03b8\u03b1\u03cd\u03c1\u03b9\u03bf","dateFormat-long":"d MMMM, y G","field-zone":"\u0396\u03ce\u03bd\u03b7","field-week-relative+-1":"\u03a0\u03c1\u03bf\u03b7\u03b3\u03bf\u03cd\u03bc\u03b5\u03bd\u03b7 \u03b5\u03b2\u03b4\u03bf\u03bc\u03ac\u03b4\u03b1",
-"dateFormat-medium":"d MMM, y G","field-year-relative+0":"\u03a6\u03ad\u03c4\u03bf\u03c2","field-year-relative+1":"\u0395\u03c0\u03cc\u03bc\u03b5\u03bd\u03bf \u03ad\u03c4\u03bf\u03c2","dateFormatItem-yMd":"d/M/y G","field-year-relative+-1":"\u03a0\u03c1\u03bf\u03b7\u03b3\u03bf\u03cd\u03bc\u03b5\u03bd\u03bf \u03ad\u03c4\u03bf\u03c2","field-year":"\u0388\u03c4\u03bf\u03c2","field-week":"\u0395\u03b2\u03b4\u03bf\u03bc\u03ac\u03b4\u03b1","dateFormatItem-MMMd":"d MMM","field-week-relative+0":"\u0391\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7\u03bd \u03b5\u03b2\u03b4\u03bf\u03bc\u03ac\u03b4\u03b1",
-"field-week-relative+1":"\u0395\u03c0\u03cc\u03bc\u03b5\u03bd\u03b7 \u03b5\u03b2\u03b4\u03bf\u03bc\u03ac\u03b4\u03b1","dateFormatItem-yQQQQ":"QQQQ y G","field-month-relative+0":"\u03a4\u03c1\u03ad\u03c7\u03c9\u03bd \u03bc\u03ae\u03bd\u03b1\u03c2","field-month":"\u039c\u03ae\u03bd\u03b1\u03c2","field-month-relative+1":"\u0395\u03c0\u03cc\u03bc\u03b5\u03bd\u03bf\u03c2 \u03bc\u03ae\u03bd\u03b1\u03c2","dateFormatItem-yMMMd":"d MMM, y G","field-second":"\u0394\u03b5\u03c5\u03c4\u03b5\u03c1\u03cc\u03bb\u03b5\u03c0\u03c4\u03bf",
-"field-day":"\u0397\u03bc\u03ad\u03c1\u03b1","dateFormatItem-MEd":"E, d/M","dateFormat-short":"d/M/y G","dateFormatItem-yMMMEd":"E, d MMM, y G","dateFormat-full":"EEEE, d MMMM, y G","dateFormatItem-Md":"d/M","dateFormatItem-yMEd":"E, d/M/y G","field-month-relative+-1":"\u03a0\u03c1\u03bf\u03b7\u03b3\u03bf\u03cd\u03bc\u03b5\u03bd\u03bf\u03c2 \u03bc\u03ae\u03bd\u03b1\u03c2"});
-//@ sourceMappingURL=roc.js.map
+define(
+//begin v1.x content
+{
+	"field-sat-relative+0": "αυτό το Σάββατο",
+	"field-sat-relative+1": "επόμενο Σάββατο",
+	"field-dayperiod": "π.μ./μ.μ.",
+	"field-sun-relative+-1": "προηγούμενη Κυριακή",
+	"field-mon-relative+-1": "προηγούμενη Δευτέρα",
+	"field-minute": "Λεπτό",
+	"field-day-relative+-1": "χθες",
+	"field-weekday": "Ημέρα εβδομάδας",
+	"field-day-relative+-2": "προχθές",
+	"field-era": "Περίοδος",
+	"field-hour": "Ώρα",
+	"field-sun-relative+0": "αυτήν την Κυριακή",
+	"field-sun-relative+1": "επόμενη Κυριακή",
+	"field-wed-relative+-1": "προηγούμενη Τετάρτη",
+	"field-day-relative+0": "σήμερα",
+	"field-day-relative+1": "αύριο",
+	"eraAbbr": [
+		"Πριν R.O.C.",
+		"R.O.C."
+	],
+	"field-day-relative+2": "μεθαύριο",
+	"field-tue-relative+0": "αυτήν την Τρίτη",
+	"field-zone": "Ζώνη",
+	"field-tue-relative+1": "επόμενη Τρίτη",
+	"field-week-relative+-1": "προηγούμενη εβδομάδα",
+	"field-year-relative+0": "φέτος",
+	"field-year-relative+1": "επόμενο έτος",
+	"field-sat-relative+-1": "προηγούμενο Σάββατο",
+	"field-year-relative+-1": "προηγούμενο έτος",
+	"field-year": "Έτος",
+	"field-fri-relative+0": "αυτήν την Παρασκευή",
+	"field-fri-relative+1": "επόμενη Παρασκευή",
+	"field-week": "Εβδομάδα",
+	"field-week-relative+0": "αυτήν την εβδομάδα",
+	"field-week-relative+1": "επόμενη εβδομάδα",
+	"field-month-relative+0": "τρέχων μήνας",
+	"field-month": "Μήνας",
+	"field-month-relative+1": "επόμενος μήνας",
+	"field-fri-relative+-1": "προηγούμενη Παρασκευή",
+	"field-second": "Δευτερόλεπτο",
+	"field-tue-relative+-1": "προηγούμενη Τρίτη",
+	"field-day": "Ημέρα",
+	"field-mon-relative+0": "αυτήν τη Δευτέρα",
+	"field-mon-relative+1": "επόμενη Δευτέρα",
+	"field-thu-relative+0": "αυτήν την Πέμπτη",
+	"field-second-relative+0": "τώρα",
+	"field-thu-relative+1": "επόμενη Πέμπτη",
+	"field-wed-relative+0": "αυτήν την Τετάρτη",
+	"field-wed-relative+1": "επόμενη Τετάρτη",
+	"field-month-relative+-1": "προηγούμενος μήνας",
+	"field-thu-relative+-1": "επόμενη Πέμπτη"
+}
+//end v1.x content
+);

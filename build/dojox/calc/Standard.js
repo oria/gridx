@@ -1,16 +1,357 @@
-//>>built
-require({cache:{"url:dojox/calc/templates/Standard.html":'\x3cdiv class\x3d"dijitReset dijitInline dojoxCalc"\r\n\x3e\x3ctable class\x3d"dijitReset dijitInline dojoxCalcLayout" data-dojo-attach-point\x3d"calcTable" rules\x3d"none" cellspacing\x3d0 cellpadding\x3d0 border\x3d0\x3e\r\n\t\x3ctr\r\n\t\t\x3e\x3ctd colspan\x3d"4" class\x3d"dojoxCalcInputContainer"\r\n\t\t\t\x3e\x3cinput data-dojo-type\x3d"dijit.form.TextBox" data-dojo-attach-event\x3d"onBlur:onBlur,onKeyPress:onKeyPress" data-dojo-attach-point\x3d\'textboxWidget\'\r\n\t\t/\x3e\x3c/td\r\n\t\x3e\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"seven" label\x3d"7" value\x3d\'7\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"eight" label\x3d"8" value\x3d\'8\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"nine" label\x3d"9" value\x3d\'9\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"divide" label\x3d"/" value\x3d\'/\' data-dojo-attach-event\x3d\'onClick:insertOperator\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"four" label\x3d"4" value\x3d\'4\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"five" label\x3d"5" value\x3d\'5\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"six" label\x3d"6" value\x3d\'6\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"multiply" label\x3d"*" value\x3d\'*\' data-dojo-attach-event\x3d\'onClick:insertOperator\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"one" label\x3d"1" value\x3d\'1\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"two" label\x3d"2" value\x3d\'2\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"three" label\x3d"3" value\x3d\'3\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"add" label\x3d"+" value\x3d\'+\' data-dojo-attach-event\x3d\'onClick:insertOperator\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"decimal" label\x3d"." value\x3d\'.\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"zero" label\x3d"0" value\x3d\'0\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"equals" label\x3d"x\x3dy" value\x3d\'\x3d\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcMinusButtonContainer"\x3e\r\n\t\t\t\x3cspan data-dojo-type\x3d"dijit.form.ComboButton" data-dojo-attach-point\x3d"subtract" label\x3d\'-\' value\x3d\'-\' data-dojo-attach-event\x3d\'onClick:insertOperator\'\x3e\r\n\r\n\t\t\t\t\x3cdiv data-dojo-type\x3d"dijit.Menu" style\x3d"display:none;"\x3e\r\n\t\t\t\t\t\x3cdiv data-dojo-type\x3d"dijit.MenuItem" data-dojo-attach-event\x3d"onClick:insertMinus"\x3e\r\n\t\t\t\t\t\t(-)\r\n\t\t\t\t\t\x3c/div\x3e\r\n\t\t\t\t\x3c/div\x3e\r\n\t\t\t\x3c/span\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"clear" label\x3d"Clear" data-dojo-attach-event\x3d\'onClick:clearText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"sqrt" label\x3d"\x26#x221A;" value\x3d"\x26#x221A;" data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"power" label\x3d"^" value\x3d"^" data-dojo-attach-event\x3d\'onClick:insertOperator\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"comma" label\x3d"," value\x3d\',\' data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"AnsButton" label\x3d"Ans" value\x3d"Ans" data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"LeftParenButton" label\x3d"(" value\x3d"(" data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"RightParenButton" label\x3d")" value\x3d")" data-dojo-attach-event\x3d\'onClick:insertText\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcButtonContainer"\x3e\r\n\t\t\t\x3cbutton data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"enter" label\x3d"Enter" data-dojo-attach-event\x3d\'onClick:parseTextbox\' /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\x3c/table\x3e\r\n\x3cspan data-dojo-attach-point\x3d"executor" data-dojo-type\x3d"dojox.calc._Executor" data-dojo-attach-event\x3d"onLoad:executorLoaded"\x3e\x3c/span\x3e\r\n\x3c/div\x3e\r\n'}});
-define("dojox/calc/Standard","dojo/_base/declare dojo/_base/lang dojo/_base/sniff dojo/_base/window dojo/_base/event dojo/dom-style dojo/ready dojo/keys dijit/registry dijit/typematic dijit/_WidgetBase dijit/_WidgetsInTemplateMixin dijit/_TemplatedMixin dijit/form/_TextBoxMixin dojox/math/_base dijit/TooltipDialog dojo/text!./templates/Standard.html dojox/calc/_Executor dijit/Menu dijit/MenuItem dijit/form/ComboButton dijit/form/Button dijit/form/TextBox".split(" "),function(r,f,g,m,n,h,s,d,p,q,t,
-u,v,k,x,y,w,l){return r("dojox.calc.Standard",[t,v,u],{templateString:w,readStore:null,writeStore:null,functions:[],executorLoaded:function(){s(f.hitch(this,function(){this.loadStore(this.readStore,!0);this.loadStore(this.writeStore)}))},saveFunction:function(a,b,c){this.functions[a]=this.executor.normalizedFunction(a,b,c);this.functions[a].args=b;this.functions[a].body=c},loadStore:function(a,b){a&&a.query({}).forEach(f.hitch(this,function(a){f.hitch(this,b?this.executor.normalizedFunction:this.saveFunction)(a.name,
-a.args,a.body)}))},parseTextbox:function(){var a=this.textboxWidget.textbox.value;""==a&&0<this.commandList.length&&(this.setTextboxValue(this.textboxWidget,this.commandList[this.commandList.length-1]),a=this.textboxWidget.textbox.value);if(""!=a){var b=this.executor.eval(a);if("number"==typeof b&&isNaN(b))(0==this.commandList.length||this.commandList[this.commandList.length-1]!=a)&&this.commandList.push(a),this.print(a,!1),this.print("Not a Number",!0);else if(("object"==typeof b&&"length"in b||
-"object"!=typeof b)&&"function"!=typeof b&&null!=b)this.executor.eval("Ans\x3d"+b),(0==this.commandList.length||this.commandList[this.commandList.length-1]!=a)&&this.commandList.push(a),this.print(a,!1),this.print(b,!0);this.commandIndex=this.commandList.length-1;this.hasDisplay&&(this.displayBox.scrollTop=this.displayBox.scrollHeight);k.selectInputText(this.textboxWidget.textbox)}else this.textboxWidget.focus()},cycleCommands:function(a,b,c){-1==a||0==this.commandList.length||(a=c.charOrCode,a==
-d.UP_ARROW?this.cycleCommandUp():a==d.DOWN_ARROW&&this.cycleCommandDown())},cycleCommandUp:function(){0>this.commandIndex-1?this.commandIndex=0:this.commandIndex--;this.setTextboxValue(this.textboxWidget,this.commandList[this.commandIndex])},cycleCommandDown:function(){this.commandIndex+1>=this.commandList.length?(this.commandIndex=this.commandList.length,this.setTextboxValue(this.textboxWidget,"")):(this.commandIndex++,this.setTextboxValue(this.textboxWidget,this.commandList[this.commandIndex]))},
-onBlur:function(){if(g("ie")){var a=m.doc.selection.createRange().duplicate(),b=a.text||"",c=this.textboxWidget.textbox.createTextRange();a.move("character",0);c.move("character",0);try{c.setEndPoint("EndToEnd",a),this.textboxWidget.textbox.selectionEnd=(this.textboxWidget.textbox.selectionStart=String(c.text).replace(/\r/g,"").length)+b.length}catch(e){}}},onKeyPress:function(a){if(a.charOrCode==d.ENTER)this.parseTextbox(),n.stop(a);else if("!"==a.charOrCode||"^"==a.charOrCode||"*"==a.charOrCode||
-"/"==a.charOrCode||"-"==a.charOrCode||"+"==a.charOrCode){if(g("ie")){a=m.doc.selection.createRange().duplicate();var b=a.text||"",c=this.textboxWidget.textbox.createTextRange();a.move("character",0);c.move("character",0);try{c.setEndPoint("EndToEnd",a),this.textboxWidget.textbox.selectionEnd=(this.textboxWidget.textbox.selectionStart=String(c.text).replace(/\r/g,"").length)+b.length}catch(e){}}""==this.textboxWidget.get("value")?this.setTextboxValue(this.textboxWidget,"Ans"):this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox,
-n.charOrCode)&&(this.setTextboxValue(this.textboxWidget,"Ans"),k.selectInputText(this.textboxWidget.textbox,this.textboxWidget.textbox.value.length,this.textboxWidget.textbox.value.length))}},insertMinus:function(){this.insertText("-")},print:function(a,b){var c="\x3cspan style\x3d'display:block;",c=(b?c+"text-align:right;'\x3e":c+"text-align:left;'\x3e")+(a+"\x3cbr\x3e\x3c/span\x3e");this.hasDisplay?this.displayBox.innerHTML+=c:this.setTextboxValue(this.textboxWidget,a)},setTextboxValue:function(a,
-b){a.set("value",b)},putInAnsIfTextboxIsHighlighted:function(a){if("number"==typeof a.selectionStart){if(0==a.selectionStart&&a.selectionEnd==a.value.length)return!0}else if(document.selection){var b=document.selection.createRange();if(a.value==b.text)return!0}return!1},clearText:function(){this.hasDisplay&&""==this.textboxWidget.get("value")?this.displayBox.innerHTML="":this.setTextboxValue(this.textboxWidget,"");this.textboxWidget.focus()},insertOperator:function(a){"object"==typeof a&&(a=a=p.getEnclosingWidget(a.target).value);
-if(""==this.textboxWidget.get("value")||this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox))a="Ans"+a;this.insertText(a)},insertText:function(a){setTimeout(f.hitch(this,function(){var b=this.textboxWidget.textbox;""==b.value&&(b.selectionStart=0,b.selectionEnd=0);"object"==typeof a&&(a=a=p.getEnclosingWidget(a.target).value);var c=b.value.replace(/\r/g,"");if("number"==typeof b.selectionStart){var e=b.selectionStart,d=0;g("opera")&&(d=(b.value.substring(0,e).match(/\r/g)||[]).length);
-b.value=c.substring(0,b.selectionStart-d)+a+c.substring(b.selectionEnd-d);b.focus();e+=a.length;k.selectInputText(this.textboxWidget.textbox,e,e)}else document.selection&&(this.handle&&(clearTimeout(this.handle),this.handle=null),b.focus(),this.handle=setTimeout(function(){var b=document.selection.createRange();b.text=a;b.select();this.handle=null},0))}),0)},hasDisplay:!1,postCreate:function(){this.handle=null;this.commandList=[];this.commandIndex=0;this.displayBox&&(this.hasDisplay=!0);this.toFracButton&&
-!l.toFrac&&h.set(this.toFracButton.domNode,{visibility:"hidden"});this.functionMakerButton&&!l.FuncGen&&h.set(this.functionMakerButton.domNode,{visibility:"hidden"});this.grapherMakerButton&&!l.Grapher&&h.set(this.grapherMakerButton.domNode,{visibility:"hidden"});this._connects.push(q.addKeyListener(this.textboxWidget.textbox,{charOrCode:d.UP_ARROW,shiftKey:!1,metaKey:!1,ctrlKey:!1},this,this.cycleCommands,200,200));this._connects.push(q.addKeyListener(this.textboxWidget.textbox,{charOrCode:d.DOWN_ARROW,
-shiftKey:!1,metaKey:!1,ctrlKey:!1},this,this.cycleCommands,200,200));this.startup()}})});
-//@ sourceMappingURL=Standard.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/_base/window",
+	"dojo/_base/event",
+	"dojo/dom-style",
+	"dojo/ready",
+	"dojo/keys",
+	"dijit/registry",
+	"dijit/typematic",
+	"dijit/_WidgetBase",
+	"dijit/_WidgetsInTemplateMixin",
+	"dijit/_TemplatedMixin",
+	"dijit/form/_TextBoxMixin",
+	"dojox/math/_base",
+	"dijit/TooltipDialog",
+	"dojo/text!./templates/Standard.html",
+	"dojox/calc/_Executor", // template
+	"dijit/Menu", // template
+	"dijit/MenuItem", // template
+	"dijit/form/ComboButton", // template
+	"dijit/form/Button", // template
+	"dijit/form/TextBox" // template
+], function(declare, lang, has, win, event, domStyle, ready, keys, registry, typematic, WidgetBase, WidgetsInTemplateMixin, TemplatedMixin, _TextBoxMixin, math, TooltipDialog, template, calc){
+
+	return declare(
+		"dojox.calc.Standard",
+		[WidgetBase, TemplatedMixin, WidgetsInTemplateMixin],
+	{
+		// summary:
+		//		The dialog layout for a standard 4 function/algebraic calculator
+
+		templateString: template,
+
+		readStore:null,
+		writeStore:null,
+		functions: [],
+
+		executorLoaded: function(){
+			// summary:
+			//		load in the stores after executor is loaded (the stores need executor to be loaded because it parses them)
+			ready(lang.hitch(this, function(){
+				this.loadStore(this.readStore, true);
+				this.loadStore(this.writeStore);
+			}));
+		},
+
+		saveFunction: function(name, args, body){
+			// summary:
+			//		make the function with executor
+			this.functions[name] = this.executor.normalizedFunction(name, args, body);
+			this.functions[name].args = args;
+			this.functions[name].body = body;
+		},
+
+		loadStore: function(store, isReadOnly){
+			// summary:
+			//		load an entire store, and make it publicly editable/viewable based on isReadOnly
+			if(!store){
+				return;
+			}
+			store.query({}).forEach(lang.hitch(this, function(item){
+				lang.hitch(this, isReadOnly ? this.executor.normalizedFunction : this.saveFunction)(item.name, item.args, item.body);
+			}));
+		},
+
+		parseTextbox: function(){
+			// summary:
+			//		parse the contents of the textboxWidget and display the answer somewhere (depending on the layout)
+			var text = this.textboxWidget.textbox.value;
+			if(text == "" && this.commandList.length > 0){
+				this.setTextboxValue(this.textboxWidget, this.commandList[this.commandList.length-1]);
+				text = this.textboxWidget.textbox.value;
+			}
+			if(text!=""){
+				var ans = this.executor.eval(text);
+
+				if((typeof ans == "number" && isNaN(ans))){
+					if(this.commandList.length == 0 || this.commandList[this.commandList.length - 1] != text){
+						this.commandList.push(text);
+					}
+					this.print(text, false);
+					this.print("Not a Number", true);
+				}else if(((typeof ans == "object" && "length" in ans) || typeof ans != "object") && typeof ans != "function" && ans != null){
+					this.executor.eval("Ans="+ans);
+					// add it to the command list as well
+					if(this.commandList.length == 0 || this.commandList[this.commandList.length - 1] != text){
+						this.commandList.push(text);
+					}
+					this.print(text, false);
+					this.print(ans, true);
+				}
+				this.commandIndex = this.commandList.length-1;
+				//this.displayBox.textbox.scrollTop=this.displayBox.textbox.scrollHeight;
+				if(this.hasDisplay){
+					this.displayBox.scrollTop=this.displayBox.scrollHeight;
+				}
+				//this.clearText();
+				//this.textboxWidget.focus();
+				_TextBoxMixin.selectInputText(this.textboxWidget.textbox);
+
+			}else{
+				this.textboxWidget.focus();
+			}
+		},
+		cycleCommands: function(count, node, event){
+			// summary:
+			//		Cycle through the commands that the user has entered.
+			//		It does not wrap around.
+			if(count == -1 || this.commandList.length==0){
+				return;
+			}
+			var keyNum = event.charOrCode;
+			//up arrow
+			if(keyNum == keys.UP_ARROW){
+				this.cycleCommandUp();
+			}else if(keyNum == keys.DOWN_ARROW){
+				this.cycleCommandDown();
+			}
+		},
+		cycleCommandUp: function(){
+			// summary:
+			//		cycle up through the list of commands the user has entered already
+			if(this.commandIndex-1<0){
+				this.commandIndex=0;
+			}else{
+				this.commandIndex--;
+			}
+			this.setTextboxValue(this.textboxWidget, this.commandList[this.commandIndex]);
+		},
+		cycleCommandDown: function(){
+			// summary:
+			//		cycle down through the list of commands the user has entered already
+			if(this.commandIndex+1>=this.commandList.length){
+				this.commandIndex=this.commandList.length;
+				this.setTextboxValue(this.textboxWidget, "");
+			}else{
+				this.commandIndex++;
+				this.setTextboxValue(this.textboxWidget, this.commandList[this.commandIndex]);
+			}
+
+		},
+		onBlur: function(){
+			// summary:
+			//		IE is lacking in function when it comes to the text boxes, so here, make it work like other browsers do by forcing a node.selectionStart and End onto it
+			if(has('ie')){
+				var tr = win.doc.selection.createRange().duplicate();
+				var selectedText = tr.text || '';
+				var ntr = this.textboxWidget.textbox.createTextRange();
+				tr.move("character",0);
+				ntr.move("character",0);
+				try{
+					ntr.setEndPoint("EndToEnd", tr);
+					this.textboxWidget.textbox.selectionEnd = (this.textboxWidget.textbox.selectionStart = String(ntr.text).replace(/\r/g,"").length) + selectedText.length;
+
+				}catch(e){}
+			}
+		},
+		onKeyPress: function(e){
+			// summary:
+			//		handle key input for Enter and operators
+			if(e.charOrCode == keys.ENTER){
+				this.parseTextbox();
+				// stop form submissions
+				event.stop(e);
+			}else if(e.charOrCode == '!' || e.charOrCode == '^' || e.charOrCode == '*' || e.charOrCode == '/' || e.charOrCode == '-' || e.charOrCode == '+'){
+				if(has('ie')){
+					var tr = win.doc.selection.createRange().duplicate();
+					var selectedText = tr.text || '';
+					var ntr = this.textboxWidget.textbox.createTextRange();
+					tr.move("character",0);
+					ntr.move("character",0);
+					try{
+						ntr.setEndPoint("EndToEnd", tr);
+						this.textboxWidget.textbox.selectionEnd = (this.textboxWidget.textbox.selectionStart = String(ntr.text).replace(/\r/g,"").length) + selectedText.length;
+
+					}catch(e){}
+				}
+
+				if(this.textboxWidget.get("value")==""){
+					this.setTextboxValue(this.textboxWidget, "Ans");
+				}else if(this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox, event.charOrCode)){
+					this.setTextboxValue(this.textboxWidget, "Ans");//this.insertText("Ans");
+					// move the cursor to the end of "Ans"
+					_TextBoxMixin.selectInputText(this.textboxWidget.textbox, this.textboxWidget.textbox.value.length, this.textboxWidget.textbox.value.length);
+				}
+			}
+		},
+		insertMinus: function(){
+			// summary:
+			//		insert a minus sign when they press (-) in the combo button
+			this.insertText('-');
+		},
+		print: function(text, isRight){
+			// summary:
+			//		print the answer (typically) to the display or the input box
+			var t = "<span style='display:block;";
+			if(isRight){
+				t += "text-align:right;'>";
+			}else{
+				t += "text-align:left;'>";
+			}
+			t += text+"<br></span>";
+			if(this.hasDisplay){
+				this.displayBox.innerHTML += t;
+			}else{// if there is not a display box, put the answer in the input box
+				this.setTextboxValue(this.textboxWidget, text);
+			}
+			//this.setTextboxValue(this.displayBox, this.displayBox.get('value')+'\n'+text);
+		},
+		setTextboxValue: function(widget, val){
+			// summary:
+			//		set a widget's value
+			widget.set('value', val);
+		},
+		putInAnsIfTextboxIsHighlighted: function(node){
+			// summary:
+			//		try seeing if the textbox is highlighted completely so you know if Ans should be put in for an operator like +
+
+			//console.log("Entered "+node.selectionStart + " "+ node.selectionEnd);
+			if(typeof node.selectionStart == "number"){ // not-IE
+				if(node.selectionStart==0 && node.selectionEnd == node.value.length){
+					//node.value = "Ans";
+					//dijit.selectInputText(node, node.value.length, node.value.length);
+					return true;
+				}
+			}else if(document.selection){ // IE
+				//console.log("Entered 2");
+				var range = document.selection.createRange();
+				//console.log("Range: "+range.text +" Node: "+node.value);
+				if(node.value == range.text){
+					//this.insertText("Ans");
+					return true;
+				}
+			}
+			return false;
+		},
+		clearText: function(){
+			// summary:
+			//		this clears the input box if it has content, but if it does not it clears the display
+			if(this.hasDisplay && this.textboxWidget.get('value')==""){
+				this.displayBox.innerHTML = "";//this.setTextboxValue(this.displayBox, "");
+			}else{
+				this.setTextboxValue(this.textboxWidget, "");
+			}
+			this.textboxWidget.focus();
+		},
+		/*insertMinusSign: function(){
+			//
+			var v = this.subtract.get('label');
+			if(v != '(-)' && this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox)){
+				this.insertText("Ans-");
+				return;
+			}
+			this.insertText('-');
+		},*/
+		insertOperator: function(newText){
+			// summary:
+			//		insert an operator with a button
+			if(typeof newText == "object"){
+				newText = newText = registry.getEnclosingWidget(newText["target"]).value;
+			}
+			if(this.textboxWidget.get("value") == "" || this.putInAnsIfTextboxIsHighlighted(this.textboxWidget.textbox)){
+				newText = "Ans"+newText;
+			}
+			this.insertText(newText);
+		},
+		insertText: function(newText){//(node, newText){
+			// summary:
+			//		insert text to the textboxWidget node
+			setTimeout(lang.hitch(this, function(){
+
+			var node = this.textboxWidget.textbox;
+			if(node.value==""){
+				node.selectionStart = 0;
+				node.selectionEnd = 0;
+			}
+			if(typeof newText == "object"){
+				newText = newText = registry.getEnclosingWidget(newText["target"]).value;
+			}
+
+			var value = node.value.replace(/\r/g,'');
+			if(typeof node.selectionStart == "number"){ // not-IE
+			        var pos = node.selectionStart;
+			        var cr = 0;
+		        	if(has('opera')){
+		                	cr = (node.value.substring(0,pos).match(/\r/g) || []).length;
+			        }
+			        node.value = value.substring(0, node.selectionStart-cr) + newText + value.substring(node.selectionEnd-cr);
+				node.focus();
+				pos += newText.length;
+			        //node.setSelectionRange(pos, pos);
+				_TextBoxMixin.selectInputText(this.textboxWidget.textbox, pos, pos);
+			}else if(document.selection){ // IE
+				if(this.handle){
+					clearTimeout(this.handle);
+					this.handle = null;
+				}
+				node.focus();
+				this.handle = setTimeout(function(){
+			        	var range = document.selection.createRange();
+				        range.text = newText;
+				        // show cursor
+		        		range.select();
+					this.handle = null;
+				}, 0);
+
+			}
+			}), 0);
+		},
+		hasDisplay: false,
+		postCreate: function(){
+			// summary:
+			//		run startup, see if there is an upper display box, etc
+			this.handle = null;
+			this.commandList = [];
+			this.commandIndex = 0;
+
+			if(this.displayBox){
+				this.hasDisplay = true;
+			}
+			if(this.toFracButton && !calc.toFrac){
+				domStyle.set(this.toFracButton.domNode, { visibility: "hidden" });
+			}
+			if(this.functionMakerButton && !calc.FuncGen){
+				domStyle.set(this.functionMakerButton.domNode, { visibility: "hidden" });
+			}
+			if(this.grapherMakerButton && !calc.Grapher){
+				domStyle.set(this.grapherMakerButton.domNode, { visibility: "hidden" });
+			}
+			this._connects.push(typematic.addKeyListener(this.textboxWidget.textbox,
+					{
+						charOrCode:keys.UP_ARROW,
+						shiftKey:false,
+						metaKey:false,
+						ctrlKey:false // ALT is optional since its unspecified
+					},
+					this, this.cycleCommands, 200, 200));
+			this._connects.push(typematic.addKeyListener(this.textboxWidget.textbox,
+					{
+						charOrCode:keys.DOWN_ARROW,
+						shiftKey:false,
+						metaKey:false,
+						ctrlKey:false // ALT is optional since its unspecified
+					},
+					this, this.cycleCommands, 200, 200));
+
+
+			//onClick="this.insertText(document.getElementById('textbox'), '\u221A')"
+			//this.sqrt.set("onClick", lang.hitch(this, "insertText", this.textboxWidget, '\u221A'));
+			//this.pi.set("onClick", lang.hitch(this, "insertText", this.textboxWidget, '\u03C0'));
+			this.startup()
+		}
+	});
+
+});

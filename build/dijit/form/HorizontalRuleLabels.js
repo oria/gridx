@@ -1,6 +1,122 @@
-//>>built
-define("dijit/form/HorizontalRuleLabels","dojo/_base/declare dojo/has dojo/number dojo/query dojo/_base/lang ./HorizontalRule".split(" "),function(b,f,g,e,h,k){b=b("dijit.form.HorizontalRuleLabels",k,{templateString:'\x3cdiv class\x3d"dijitRuleContainer dijitRuleContainerH dijitRuleLabelsContainer dijitRuleLabelsContainerH"\x3e\x3c/div\x3e',labelStyle:"",labels:[],numericMargin:0,minimum:0,maximum:1,constraints:{pattern:"#%"},_positionPrefix:'\x3cdiv class\x3d"dijitRuleLabelContainer dijitRuleLabelContainerH" style\x3d"left:',
-_labelPrefix:'"\x3e\x3cdiv class\x3d"dijitRuleLabel dijitRuleLabelH"\x3e',_suffix:"\x3c/div\x3e\x3c/div\x3e",_calcPosition:function(a){return a},_genHTML:function(a,c){var b=this.labels[c];return this._positionPrefix+this._calcPosition(a)+this._positionSuffix+this.labelStyle+this._genDirectionHTML(b)+this._labelPrefix+b+this._suffix},_genDirectionHTML:function(a){return""},getLabels:function(){var a=this.labels;!a.length&&this.srcNodeRef&&(a=e("\x3e li",this.srcNodeRef).map(function(a){return String(a.innerHTML)}));
-if(!a.length&&1<this.count)for(var c=this.minimum,b=(this.maximum-c)/(this.count-1),d=0;d<this.count;d++)a.push(d<this.numericMargin||d>=this.count-this.numericMargin?"":g.format(c,this.constraints)),c+=b;return a},postMixInProperties:function(){this.inherited(arguments);this.labels=this.getLabels();this.count=this.labels.length}});f("dojo-bidi")&&b.extend({_setTextDirAttr:function(a){this.textDir!=a&&(this._set("textDir",a),e(".dijitRuleLabelContainer",this.domNode).forEach(h.hitch(this,function(a){a.style.direction=
-this.getTextDir(a.innerText||a.textContent||"")})))},_genDirectionHTML:function(a){return this.textDir?"direction:"+this.getTextDir(a)+";":""}});return b});
-//@ sourceMappingURL=HorizontalRuleLabels.js.map
+define([
+	"dojo/_base/declare", // declare
+	"dojo/has",
+	"dojo/number", // number.format
+	"dojo/query", // query
+	"dojo/_base/lang", // lang
+	"./HorizontalRule"
+], function(declare, has, number, query, lang, HorizontalRule){
+
+	// module:
+	//		dijit/form/HorizontalRuleLabels
+
+	var HorizontalRuleLabels = declare("dijit.form.HorizontalRuleLabels", HorizontalRule, {
+		// summary:
+		//		Labels for `dijit/form/HorizontalSlider`
+
+		templateString: '<div class="dijitRuleContainer dijitRuleContainerH dijitRuleLabelsContainer dijitRuleLabelsContainerH"></div>',
+
+		// labelStyle: String
+		//		CSS style to apply to individual text labels
+		labelStyle: "",
+
+		// labels: String[]?
+		//		Array of text labels to render - evenly spaced from left-to-right or bottom-to-top.
+		//		Alternately, minimum and maximum can be specified, to get numeric labels.
+		labels: [],
+
+		// numericMargin: Integer
+		//		Number of generated numeric labels that should be rendered as '' on the ends when labels[] are not specified
+		numericMargin: 0,
+
+		// numericMinimum: Integer
+		//		Leftmost label value for generated numeric labels when labels[] are not specified
+		minimum: 0,
+
+		// numericMaximum: Integer
+		//		Rightmost label value for generated numeric labels when labels[] are not specified
+		maximum: 1,
+
+		// constraints: Object
+		//		pattern, places, lang, et al (see dojo.number) for generated numeric labels when labels[] are not specified
+		constraints: {pattern: "#%"},
+
+		_positionPrefix: '<div class="dijitRuleLabelContainer dijitRuleLabelContainerH" style="left:',
+		_labelPrefix: '"><div class="dijitRuleLabel dijitRuleLabelH">',
+		_suffix: '</div></div>',
+
+		_calcPosition: function(pos){
+			// summary:
+			//		Returns the value to be used in HTML for the label as part of the left: attribute
+			// tags:
+			//		protected extension
+			return pos;
+		},
+
+		_genHTML: function(pos, ndx){
+			var label = this.labels[ndx];
+			return this._positionPrefix + this._calcPosition(pos) + this._positionSuffix + this.labelStyle +
+				this._genDirectionHTML(label) +
+				this._labelPrefix + label + this._suffix;
+		},
+
+		_genDirectionHTML: function(label){
+			// extension point for bidi code
+			return "";
+		},
+
+		getLabels: function(){
+			// summary:
+			//		Overridable function to return array of labels to use for this slider.
+			//		Can specify a getLabels() method instead of a labels[] array, or min/max attributes.
+			// tags:
+			//		protected extension
+
+			// if the labels array was not specified directly, then see if <li> children were
+			var labels = this.labels;
+			if(!labels.length && this.srcNodeRef){
+				// for markup creation, labels are specified as child elements
+				labels = query("> li", this.srcNodeRef).map(function(node){
+					return String(node.innerHTML);
+				});
+			}
+			// if the labels were not specified directly and not as <li> children, then calculate numeric labels
+			if(!labels.length && this.count > 1){
+				var start = this.minimum;
+				var inc = (this.maximum - start) / (this.count - 1);
+				for(var i = 0; i < this.count; i++){
+					labels.push((i < this.numericMargin || i >= (this.count - this.numericMargin)) ? '' : number.format(start, this.constraints));
+					start += inc;
+				}
+			}
+			return labels;
+		},
+
+		postMixInProperties: function(){
+			this.inherited(arguments);
+			this.labels = this.getLabels();
+			this.count = this.labels.length;
+		}
+	});
+
+	if(has("dojo-bidi")){
+		HorizontalRuleLabels.extend({
+			_setTextDirAttr: function(textDir){
+				if(this.textDir != textDir){
+					this._set("textDir", textDir);
+					query(".dijitRuleLabelContainer", this.domNode).forEach(
+						lang.hitch(this, function(labelNode){
+							labelNode.style.direction = this.getTextDir(labelNode.innerText || labelNode.textContent || "");
+						})
+					);
+				}
+			},
+
+			_genDirectionHTML: function(label){
+				return (this.textDir ? ("direction:" + this.getTextDir(label) + ";") : "")
+			}
+		});
+	}
+
+	return HorizontalRuleLabels;
+});

@@ -1,7 +1,201 @@
-//>>built
-define("dijit/_editor/plugins/AlwaysShowToolbar","dojo/_base/declare dojo/dom-class dojo/dom-construct dojo/dom-geometry dojo/_base/lang dojo/on dojo/sniff dojo/_base/window ../_Plugin".split(" "),function(l,h,k,d,e,m,g,p,n){return l("dijit._editor.plugins.AlwaysShowToolbar",n,{_handleScroll:!0,setEditor:function(b){b.iframe&&(this.editor=b,b.onLoadDeferred.then(e.hitch(this,this.enable)))},enable:function(b){this._updateHeight();this.own(m(window,"scroll",e.hitch(this,"globalOnScrollHandler")),this.editor.on("NormalizedDisplayChanged",
-e.hitch(this,"_updateHeight")));return b},_updateHeight:function(){var b=this.editor;if(b.isLoaded&&!b.height){var a=d.getMarginSize(b.editNode).h;g("opera")&&(a=b.editNode.scrollHeight);a||(a=d.getMarginSize(b.document.body).h);this._fixEnabled&&(a+=d.getMarginSize(this.editor.header).h);if(0!=a){if(7>=g("ie")&&this.editor.minHeight){var f=parseInt(this.editor.minHeight);a<f&&(a=f)}a!=this._lastHeight&&(this._lastHeight=a,d.setMarginBox(b.iframe,{h:this._lastHeight}))}}},_lastHeight:0,globalOnScrollHandler:function(){var b=
-7>g("ie");if(this._handleScroll){var a=this.editor.header;this._scrollSetUp||(this._scrollSetUp=!0,this._scrollThreshold=d.position(a,!0).y);var f=d.docScroll(this.editor.ownerDocument).y,c=a.style;if(f>this._scrollThreshold&&f<this._scrollThreshold+this._lastHeight){if(!this._fixEnabled){var e=d.getMarginSize(a);this.editor.iframe.style.marginTop=e.h+"px";b?(c.left=d.position(a).x,this._IEOriginalPos=a.previousSibling?["after",a.previousSibling]:a.nextSibling?["before",a.nextSibling]:["last",a.parentNode],
-this.editor.ownerDocumentBody.appendChild(a),h.add(a,"dijitIEFixedToolbar")):(c.position="fixed",c.top="0px");d.setMarginBox(a,{w:e.w});c.zIndex=2E3;this._fixEnabled=!0}b=this.height?parseInt(this.editor.height):this.editor._lastHeight;c.display=f>this._scrollThreshold+b?"none":""}else this._fixEnabled&&(this.editor.iframe.style.marginTop="",c.position="",c.top="",c.zIndex="",c.display="",b&&(c.left="",h.remove(a,"dijitIEFixedToolbar"),this._IEOriginalPos?(k.place(a,this._IEOriginalPos[1],this._IEOriginalPos[0]),
-this._IEOriginalPos=null):k.place(a,this.editor.iframe,"before")),c.width="",this._fixEnabled=!1)}},destroy:function(){this._IEOriginalPos=null;this._handleScroll=!1;this.inherited(arguments);7>g("ie")&&h.remove(this.editor.header,"dijitIEFixedToolbar")}})});
-//@ sourceMappingURL=AlwaysShowToolbar.js.map
+define([
+	"dojo/_base/declare", // declare
+	"dojo/dom-class", // domClass.add domClass.remove
+	"dojo/dom-construct", // domConstruct.place
+	"dojo/dom-geometry",
+	"dojo/_base/lang", // lang.hitch
+	"dojo/on",
+	"dojo/sniff", // has("ie") has("opera")
+	"dojo/_base/window", // win.body
+	"../_Plugin"
+], function(declare, domClass, domConstruct, domGeometry, lang, on, has, win, _Plugin){
+
+	// module:
+	//		dijit/_editor/plugins/AlwaysShowToolbar
+
+	return declare("dijit._editor.plugins.AlwaysShowToolbar", _Plugin, {
+		// summary:
+		//		This plugin is required for Editors in auto-expand mode.
+		//		It handles the auto-expansion as the user adds/deletes text,
+		//		and keeps the editor's toolbar visible even when the top of the editor
+		//		has scrolled off the top of the viewport (usually when editing a long
+		//		document).
+		// description:
+		//		Specify this in extraPlugins (or plugins) parameter and also set
+		//		height to "".
+		// example:
+		//	|	<script type="dojo/require">
+		//	|		AlwaysShowToolbar: "dijit/_editor/plugins/AlwaysShowToolbar"
+		//	|	</script>
+		//	|	<div data-dojo-type="dijit/Editor" height=""
+		//	|			data-dojo-props="extraPlugins: [AlwaysShowToolbar]">
+
+		// _handleScroll: Boolean
+		//		Enables/disables the handler for scroll events
+		_handleScroll: true,
+
+		setEditor: function(e){
+			// Overrides _Plugin.setEditor().
+			if(!e.iframe){
+				console.log('Port AlwaysShowToolbar plugin to work with Editor without iframe');
+				return;
+			}
+
+			this.editor = e;
+
+			e.onLoadDeferred.then(lang.hitch(this, this.enable));
+		},
+
+		enable: function(d){
+			// summary:
+			//		Enable plugin.  Called when Editor has finished initializing.
+			// tags:
+			//		private
+
+			this._updateHeight();
+			this.own(
+				on(window, 'scroll', lang.hitch(this, "globalOnScrollHandler")),
+				this.editor.on('NormalizedDisplayChanged', lang.hitch(this, "_updateHeight"))
+			);
+			return d;
+		},
+
+		_updateHeight: function(){
+			// summary:
+			//		Updates the height of the editor area to fit the contents.
+			var e = this.editor;
+			if(!e.isLoaded){
+				return;
+			}
+			if(e.height){
+				return;
+			}
+
+			var height = domGeometry.getMarginSize(e.editNode).h;
+			if(has("opera")){
+				height = e.editNode.scrollHeight;
+			}
+			// console.debug('height',height);
+			// alert(this.editNode);
+
+			//height maybe zero in some cases even though the content is not empty,
+			//we try the height of body instead
+			if(!height){
+				height = domGeometry.getMarginSize(e.document.body).h;
+			}
+
+			if(this._fixEnabled){
+				// #16204: add toolbar height when it is fixed aka "stuck to the top of the screen" to prevent content from cutting off during autosizing.
+				// Seems like _updateHeight should be taking the intitial margin height from a more appropriate node that includes the marginTop set in globalOnScrollHandler.
+				height += domGeometry.getMarginSize(this.editor.header).h;
+			}
+
+			if(height == 0){
+				console.debug("Can not figure out the height of the editing area!");
+				return; //prevent setting height to 0
+			}
+			if(has("ie") <= 7 && this.editor.minHeight){
+				var min = parseInt(this.editor.minHeight);
+				if(height < min){
+					height = min;
+				}
+			}
+			if(height != this._lastHeight){
+				this._lastHeight = height;
+				// this.editorObject.style.height = this._lastHeight + "px";
+				domGeometry.setMarginBox(e.iframe, { h: this._lastHeight });
+			}
+		},
+
+		// _lastHeight: Integer
+		//		Height in px of the editor at the last time we did sizing
+		_lastHeight: 0,
+
+		globalOnScrollHandler: function(){
+			// summary:
+			//		Handler for scroll events that bubbled up to `<html>`
+			// tags:
+			//		private
+
+			var isIE6 = has("ie") < 7;
+			if(!this._handleScroll){
+				return;
+			}
+			var tdn = this.editor.header;
+			if(!this._scrollSetUp){
+				this._scrollSetUp = true;
+				this._scrollThreshold = domGeometry.position(tdn, true).y;
+			}
+
+			var scrollPos = domGeometry.docScroll(this.editor.ownerDocument).y;
+			var s = tdn.style;
+
+			if(scrollPos > this._scrollThreshold && scrollPos < this._scrollThreshold + this._lastHeight){
+				// console.debug(scrollPos);
+				if(!this._fixEnabled){
+					var tdnbox = domGeometry.getMarginSize(tdn);
+					this.editor.iframe.style.marginTop = tdnbox.h + "px";
+
+					if(isIE6){
+						s.left = domGeometry.position(tdn).x;
+						if(tdn.previousSibling){
+							this._IEOriginalPos = ['after', tdn.previousSibling];
+						}else if(tdn.nextSibling){
+							this._IEOriginalPos = ['before', tdn.nextSibling];
+						}else{
+							this._IEOriginalPos = ['last', tdn.parentNode];
+						}
+						this.editor.ownerDocumentBody.appendChild(tdn);
+						domClass.add(tdn, 'dijitIEFixedToolbar');
+					}else{
+						s.position = "fixed";
+						s.top = "0px";
+					}
+
+					domGeometry.setMarginBox(tdn, { w: tdnbox.w });
+					s.zIndex = 2000;
+					this._fixEnabled = true;
+				}
+				// if we're showing the floating toolbar, make sure that if
+				// we've scrolled past the bottom of the editor that we hide
+				// the toolbar for this instance of the editor.
+
+				// TODO: when we get multiple editor toolbar support working
+				// correctly, ensure that we check this against the scroll
+				// position of the bottom-most editor instance.
+				var eHeight = (this.height) ? parseInt(this.editor.height) : this.editor._lastHeight;
+				s.display = (scrollPos > this._scrollThreshold + eHeight) ? "none" : "";
+			}else if(this._fixEnabled){
+				this.editor.iframe.style.marginTop = '';
+				s.position = "";
+				s.top = "";
+				s.zIndex = "";
+				s.display = "";
+				if(isIE6){
+					s.left = "";
+					domClass.remove(tdn, 'dijitIEFixedToolbar');
+					if(this._IEOriginalPos){
+						domConstruct.place(tdn, this._IEOriginalPos[1], this._IEOriginalPos[0]);
+						this._IEOriginalPos = null;
+					}else{
+						domConstruct.place(tdn, this.editor.iframe, 'before');
+					}
+				}
+				s.width = "";
+				this._fixEnabled = false;
+			}
+		},
+
+		destroy: function(){
+			// Overrides _Plugin.destroy().   TODO: call this.inherited() rather than repeating code.
+			this._IEOriginalPos = null;
+			this._handleScroll = false;
+			this.inherited(arguments);
+
+			if(has("ie") < 7){
+				domClass.remove(this.editor.header, 'dijitIEFixedToolbar');
+			}
+		}
+	});
+
+});

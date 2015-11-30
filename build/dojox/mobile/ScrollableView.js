@@ -1,7 +1,170 @@
-//>>built
-define("dojox/mobile/ScrollableView","dojo/_base/array dojo/_base/declare dojo/dom-class dojo/dom-construct dijit/registry ./View ./_ScrollableMixin".split(" "),function(f,g,h,k,d,l,m){return g("dojox.mobile.ScrollableView",[l,m],{scrollableParams:null,keepScrollPos:!1,constructor:function(){this.scrollableParams={noResize:!0}},buildRendering:function(){this.inherited(arguments);h.add(this.domNode,"mblScrollableView");this.domNode.style.overflow="hidden";this.domNode.style.top="0px";this.containerNode=
-k.create("div",{className:"mblScrollableViewContainer"},this.domNode);this.containerNode.style.position="absolute";this.containerNode.style.top="0px";"v"===this.scrollDir&&(this.containerNode.style.width="100%")},startup:function(){this._started||(this.fixedFooter&&!this.isLocalFooter&&(this._fixedAppFooter=this.fixedFooter,this.fixedFooter=""),this.reparent(),this.inherited(arguments))},resize:function(){this.inherited(arguments);f.forEach(this.getChildren(),function(a){a.resize&&a.resize()});this._dim=
-this.getDim();this._conn&&this.resetScrollBar()},isTopLevel:function(a){a=this.getParent&&this.getParent();return!a||!a.resize},addFixedBar:function(a){a=a.domNode;var b=this.checkFixedBar(a,!0);b&&(this.domNode.appendChild(a),"top"===b?(this.fixedHeaderHeight=a.offsetHeight,this.isLocalHeader=!0):"bottom"===b&&(this.fixedFooterHeight=a.offsetHeight,this.isLocalFooter=!0,a.style.bottom="0px"),this.resize())},reparent:function(){var a,b,e,c;b=a=0;for(e=this.domNode.childNodes.length;a<e;a++)c=this.domNode.childNodes[b],
-c===this.containerNode||this.checkFixedBar(c,!0)?b++:this.containerNode.appendChild(this.domNode.removeChild(c))},onAfterTransitionIn:function(a,b,e,c,d){this.flashScrollBar()},getChildren:function(){var a=this.inherited(arguments),b;this.fixedHeader&&this.fixedHeader.parentNode===this.domNode&&(b=d.byNode(this.fixedHeader))&&a.push(b);this.fixedFooter&&this.fixedFooter.parentNode===this.domNode&&(b=d.byNode(this.fixedFooter))&&a.push(b);return a},_addTransitionPaddingTop:function(a){this.domNode.style.paddingTop=
-a+"px";this.containerNode.style.paddingTop=a+"px"},_removeTransitionPaddingTop:function(){this.domNode.style.paddingTop="";this.containerNode.style.paddingTop=""}})});
-//@ sourceMappingURL=ScrollableView.js.map
+define([
+	"dojo/_base/array",
+	"dojo/_base/declare",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dijit/registry",	// registry.byNode
+	"./View",
+	"./_ScrollableMixin"
+], function(array, declare, domClass, domConstruct, registry, View, ScrollableMixin){
+
+	// module:
+	//		dojox/mobile/ScrollableView
+
+	return declare("dojox.mobile.ScrollableView", [View, ScrollableMixin], {
+		// summary:
+		//		A container that has a touch scrolling capability.
+		// description:
+		//		ScrollableView is a subclass of View (dojox/mobile/View).
+		//		Unlike the base View class, ScrollableView's domNode always stays
+		//		at the top of the screen and its height is "100%" of the screen.
+		//		Inside this fixed domNode, the containerNode scrolls. The browser's
+		//		default scrolling behavior is disabled, and the scrolling mechanism is
+		//		reimplemented in JavaScript. Thus the user does not need to use the
+		//		two-finger operation to scroll the inner DIV (containerNode).
+		//		The main purpose of this widget is to realize fixed-positioned header
+		//		and/or footer bars.
+
+		// scrollableParams: Object
+		//		Parameters for dojox/mobile/scrollable.init().
+		scrollableParams: null,
+
+		// keepScrollPos: Boolean
+		//		Overrides dojox/mobile/View/keepScrollPos.
+		keepScrollPos: false,
+
+		constructor: function(){
+			// summary:
+			//		Creates a new instance of the class.
+			this.scrollableParams = {noResize: true};
+		},
+
+		buildRendering: function(){
+			this.inherited(arguments);
+			domClass.add(this.domNode, "mblScrollableView");
+			this.domNode.style.overflow = "hidden";
+			this.domNode.style.top = "0px";
+			this.containerNode = domConstruct.create("div",
+				{className:"mblScrollableViewContainer"}, this.domNode);
+			this.containerNode.style.position = "absolute";
+			this.containerNode.style.top = "0px"; // view bar is relative
+			if(this.scrollDir === "v"){
+				this.containerNode.style.width = "100%";
+			}
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+			// user can initialize the app footers using a value for fixedFooter (we keep this value for non regression of existing apps)
+			if(this.fixedFooter && !this.isLocalFooter){
+				this._fixedAppFooter = this.fixedFooter;
+				this.fixedFooter = "";
+			}
+			this.reparent();
+			this.inherited(arguments);
+		},
+
+		resize: function(){
+			// summary:
+			//		Calls resize() of each child widget.
+			this.inherited(arguments); // scrollable#resize() will be called
+			array.forEach(this.getChildren(), function(child){
+				if(child.resize){ child.resize(); }
+			});
+			this._dim = this.getDim(); // update dimension cache
+			if(this._conn){
+				// if a resize happens during a scroll, update the scrollbar
+				this.resetScrollBar();
+			}
+		},
+
+		isTopLevel: function(/*Event*/e){
+			// summary:
+			//		Returns true if this is a top-level widget.
+			//		Overrides dojox/mobile/scrollable.isTopLevel.
+			var parent = this.getParent && this.getParent();
+			return (!parent || !parent.resize); // top level widget
+		},
+
+		addFixedBar: function(/*Widget*/widget){
+			// summary:
+			//		Adds a view local fixed bar to this widget.
+			// description:
+			//		This method can be used to programmatically add a view local
+			//		fixed bar to ScrollableView. The bar is appended to this
+			//		widget's domNode. The addChild API cannot be used for this
+			//		purpose, because it adds the given widget to containerNode.
+			var c = widget.domNode;
+			var fixed = this.checkFixedBar(c, true);
+			if(!fixed){ return; }
+			// Fixed bar has to be added to domNode, not containerNode.
+			this.domNode.appendChild(c);
+			if(fixed === "top"){
+				this.fixedHeaderHeight = c.offsetHeight;
+				this.isLocalHeader = true;
+			}else if(fixed === "bottom"){
+				this.fixedFooterHeight = c.offsetHeight;
+				this.isLocalFooter = true;
+				c.style.bottom = "0px";
+			}
+			this.resize();
+		},
+
+		reparent: function(){
+			// summary:
+			//		Moves all the children, except header and footer, to
+			//		containerNode.
+			var i, idx, len, c;
+			for(i = 0, idx = 0, len = this.domNode.childNodes.length; i < len; i++){
+				c = this.domNode.childNodes[idx];
+				// search for view-specific header or footer
+				if(c === this.containerNode || this.checkFixedBar(c, true)){
+					idx++;
+					continue;
+				}
+				this.containerNode.appendChild(this.domNode.removeChild(c));
+			}
+		},
+
+		onAfterTransitionIn: function(moveTo, dir, transition, context, method){
+			// summary:
+			//		Overrides View.onAfterTransitionIn to flash the scroll bar
+			//		after performing a view transition.
+			this.flashScrollBar();
+		},
+
+		getChildren: function(){
+			// summary:
+			//		Overrides _WidgetBase.getChildren to add local fixed bars,
+			//		which are not under containerNode, to the children array.
+			var children = this.inherited(arguments);
+			var fixedWidget;
+			if(this.fixedHeader && this.fixedHeader.parentNode === this.domNode){
+				fixedWidget = registry.byNode(this.fixedHeader);
+				if(fixedWidget){
+					children.push(fixedWidget);
+				}
+			}
+			if(this.fixedFooter && this.fixedFooter.parentNode === this.domNode){
+				fixedWidget = registry.byNode(this.fixedFooter);
+				if(fixedWidget){
+					children.push(fixedWidget);
+				}
+			}
+			return children;
+		},
+
+		_addTransitionPaddingTop: function(/*String|Integer*/ value){
+			// add padding top to the view in order to get alignment during the transition
+			this.domNode.style.paddingTop = value + "px";
+			this.containerNode.style.paddingTop = value + "px";
+		},
+
+		_removeTransitionPaddingTop: function(){
+			// remove padding top from the view after the transition
+			this.domNode.style.paddingTop = "";
+			this.containerNode.style.paddingTop = "";
+		}
+
+	});
+});

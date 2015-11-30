@@ -1,4 +1,65 @@
-//>>built
-define("dojox/highlight/languages/xml",["../_base"],function(a){var b={className:"comment",begin:"\x3c!--",end:"--\x3e"},c={className:"attribute",begin:" [a-zA-Z-]+\\s*\x3d\\s*",end:"^",contains:["value"]},d={className:"value",begin:'"',end:'"'};a.languages.xml={defaultMode:{contains:["pi","comment","cdata","tag"]},case_insensitive:!0,modes:[{className:"pi",begin:"\x3c\\?",end:"\\?\x3e",relevance:10},b,{className:"cdata",begin:"\x3c\\!\\[CDATA\\[",end:"\\]\\]\x3e"},{className:"tag",begin:"\x3c/?",
-end:"\x3e",contains:["title","tag_internal"],relevance:1.5},{className:"title",begin:"[A-Za-z:_][A-Za-z0-9\\._:-]+",end:"^",relevance:0},{className:"tag_internal",begin:"^",endsWithParent:!0,contains:["attribute"],relevance:0,illegal:"[\\+\\.]"},c,d],XML_COMMENT:b,XML_ATTR:c,XML_VALUE:d};return a.languages.xml});
-//@ sourceMappingURL=xml.js.map
+define(["../_base"], function(dh){
+
+	var XML_COMMENT = {
+		className: 'comment',
+		begin: '<!--', end: '-->'
+	};
+	
+	var XML_ATTR = {
+		className: 'attribute',
+		begin: ' [a-zA-Z-]+\\s*=\\s*', end: '^',
+		contains: ['value']
+	};
+	
+	var XML_VALUE = {
+		className: 'value',
+		begin: '"', end: '"'
+	};
+	
+	var dhc = dh.constants;
+	dh.languages.xml = {
+		defaultMode: {
+			contains: ['pi', 'comment', 'cdata', 'tag']
+		},
+		case_insensitive: true,
+		modes: [
+			{
+				className: 'pi',
+				begin: '<\\?', end: '\\?>',
+				relevance: 10
+			},
+			XML_COMMENT,
+			{
+				className: 'cdata',
+				begin: '<\\!\\[CDATA\\[', end: '\\]\\]>'
+			},
+			{
+				className: 'tag',
+				begin: '</?', end: '>',
+				contains: ['title', 'tag_internal'],
+				relevance: 1.5
+			},
+			{
+				className: 'title',
+				begin: '[A-Za-z:_][A-Za-z0-9\\._:-]+', end: '^',
+				relevance: 0
+			},
+			{
+				className: 'tag_internal',
+				begin: '^', endsWithParent: true,
+				contains: ['attribute'],
+				relevance: 0,
+				illegal: '[\\+\\.]'
+			},
+			XML_ATTR,
+			XML_VALUE
+		],
+		// exporting constants
+		XML_COMMENT: XML_COMMENT,
+		XML_ATTR: XML_ATTR,
+		XML_VALUE: XML_VALUE
+	};
+
+	return dh.languages.xml;
+
+});

@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"PicasaView.js",
-"lineCount":3,
-"mappings":"A,SACAA,MAAA,8GAAsH,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EACtHF,CAAAG,QAAA,uCACAH,EAAAI,QAAA,oBACAJ,EAAAI,QAAA,iBAEAJ,EAAAK,QAAA,wCAAqDJ,CAAAK,QAArD,CAAoEL,CAAAM,WAApE,kBAGiBP,CAAAQ,MAAA,+9BAHjB;wHAgBaC,QAAAA,GACXC,cAAAC,YAAA,CAA2BC,QAAAC,eAAA,CAAwBC,UAAxB,CAA3B,CACAC,gBAAAJ,YAAA,CAA4BC,QAAAC,eAAA,CAAwBG,WAAxB,CAA5B,CACAC,qBAAAN,YAAA,CAAiCC,QAAAC,eAAA,CAAwBK,gBAAxB,CAAjC,CAHWT,KAIPU,EAAOP,QAAAQ,cAAA,KACXD,EAAAE,aAAA,QAA0BC,aAA1B,CACAH,EAAAE,aAAA,mBANWZ,KAODc,EAAWX,QAAAQ,cAAA,OACrBG,EAAAF,aAAA,OAA6BG,YAA7B,CACAL;CAAAR,YAAA,CAAiBY,CAAjB,CACAE,eAAAd,YAAA,CAA2BQ,CAA3B,CAVWV,CAhBb,EALsH,CAAtH;",
-"sources":["PicasaView.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","declare","_Widget","_Templated","cache","postCreate","titleNode","appendChild","document","createTextNode","title","authorNode","author","descriptionNode","description","href","createElement","setAttribute","imageUrl","imageTag","iconUrl","imageNode"]
-}

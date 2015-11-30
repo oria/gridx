@@ -1,16 +1,578 @@
-//>>built
-define("dijit/_editor/plugins/ViewSource","dojo/_base/array dojo/aspect dojo/_base/declare dojo/dom-attr dojo/dom-construct dojo/dom-geometry dojo/dom-style dojo/i18n dojo/keys dojo/_base/lang dojo/on dojo/sniff dojo/window ../../focus ../_Plugin ../../form/ToggleButton ../.. ../../registry dojo/i18n!../nls/commands".split(" "),function(p,w,x,q,k,h,f,y,r,e,s,l,t,u,d,z,A,B){var m=x("dijit._editor.plugins.ViewSource",d,{stripScripts:!0,stripComments:!0,stripIFrames:!0,readOnly:!1,_fsPlugin:null,toggle:function(){l("webkit")&&
-(this._vsFocused=!0);this.button.set("checked",!this.button.get("checked"))},_initButton:function(){var a=y.getLocalization("dijit._editor","commands"),b=this.editor;this.button=new z({label:a.viewSource,ownerDocument:b.ownerDocument,dir:b.dir,lang:b.lang,showLabel:!1,iconClass:this.iconClassPrefix+" "+this.iconClassPrefix+"ViewSource",tabIndex:"-1",onChange:e.hitch(this,"_showSource")});7==l("ie")&&(this._ieFixNode=k.create("div",{style:{opacity:"0",zIndex:"-1000",position:"absolute",top:"-1000px"}},
-b.ownerDocumentBody));this.button.set("readOnly",!1)},setEditor:function(a){this.editor=a;this._initButton();this.editor.addKeyHandler(r.F12,!0,!0,e.hitch(this,function(a){this.button.focus();this.toggle();a.stopPropagation();a.preventDefault();setTimeout(e.hitch(this,function(){this.editor.focused&&this.editor.focus()}),100)}))},_showSource:function(a){var b=this.editor,v=b._plugins,c;this._sourceShown=a;var g=this;try{this.sourceArea||this._createSourceView();if(a)b._sourceQueryCommandEnabled=b.queryCommandEnabled,
-b.queryCommandEnabled=function(a){return"viewsource"===a.toLowerCase()},this.editor.onDisplayChanged(),c=b.get("value"),c=this._filter(c),b.set("value",c),p.forEach(v,function(a){a&&(!(a instanceof m)&&a.isInstanceOf(d))&&a.set("disabled",!0)}),this._fsPlugin&&(this._fsPlugin._getAltViewNode=function(){return g.sourceArea}),this.sourceArea.value=c,this.sourceArea.style.height=b.iframe.style.height,this.sourceArea.style.width=b.iframe.style.width,f.set(b.iframe,"display","none"),f.set(this.sourceArea,
-{display:"block"}),this._resizeHandle=s(window,"resize",e.hitch(this,function(){var a=t.getBox(b.ownerDocument);if(!("_prevW"in this&&"_prevH"in this)||!(a.w===this._prevW&&a.h===this._prevH))this._prevW=a.w,this._prevH=a.h,this._resizer&&(clearTimeout(this._resizer),delete this._resizer),this._resizer=setTimeout(e.hitch(this,function(){delete this._resizer;this._resize()}),10)})),setTimeout(e.hitch(this,this._resize),100),this.editor.onNormalizedDisplayChanged(),this.editor.__oldGetValue=this.editor.getValue,
-this.editor.getValue=e.hitch(this,function(){var a=this.sourceArea.value;return a=this._filter(a)}),this._setListener=w.after(this.editor,"setValue",e.hitch(this,function(a){a=this._filter(a||"");this.sourceArea.value=a}),!0);else{if(!b._sourceQueryCommandEnabled)return;this._setListener.remove();delete this._setListener;this._resizeHandle.remove();delete this._resizeHandle;this.editor.__oldGetValue&&(this.editor.getValue=this.editor.__oldGetValue,delete this.editor.__oldGetValue);b.queryCommandEnabled=
-b._sourceQueryCommandEnabled;this._readOnly||(c=this.sourceArea.value,c=this._filter(c),b.beginEditing(),b.set("value",c),b.endEditing());p.forEach(v,function(a){a&&a.isInstanceOf(d)&&a.set("disabled",!1)});f.set(this.sourceArea,"display","none");f.set(b.iframe,"display","block");delete b._sourceQueryCommandEnabled;this.editor.onDisplayChanged()}setTimeout(e.hitch(this,function(){var a=b.domNode.parentNode;a&&(a=B.getEnclosingWidget(a))&&a.resize&&a.resize();b.resize()}),300)}catch(n){}},updateState:function(){this.button.set("disabled",
-this.get("disabled"))},_resize:function(){var a=this.editor,b=a.getHeaderHeight(),e=a.getFooterHeight(),c=h.position(a.domNode),g=h.getPadBorderExtents(a.iframe.parentNode),n=h.getMarginExtents(a.iframe.parentNode),f=h.getPadBorderExtents(a.domNode),d=c.w-f.w,c=c.h-(b+f.h+e);this._fsPlugin&&this._fsPlugin.isFullscreen&&(c=t.getBox(a.ownerDocument),d=c.w-f.w,c=c.h-(b+f.h+e));l("ie")&&(c-=2);this._ieFixNode&&(b=-this._ieFixNode.offsetTop/1E3,d=Math.floor((d+0.9)/b),c=Math.floor((c+0.9)/b));h.setMarginBox(this.sourceArea,
-{w:d-(g.w+n.w),h:c-(g.h+n.h)});h.setMarginBox(a.iframe.parentNode,{h:c})},_createSourceView:function(){var a=this.editor,b=a._plugins;this.sourceArea=k.create("textarea");this.readOnly&&(q.set(this.sourceArea,"readOnly",!0),this._readOnly=!0);f.set(this.sourceArea,{padding:"0px",margin:"0px",borderWidth:"0px",borderStyle:"none"});q.set(this.sourceArea,"aria-label",this.editor.id);k.place(this.sourceArea,a.iframe,"before");l("ie")&&a.iframe.parentNode.lastChild!==a.iframe&&f.set(a.iframe.parentNode.lastChild,
-{width:"0px",height:"0px",padding:"0px",margin:"0px",borderWidth:"0px",borderStyle:"none"});a._viewsource_oldFocus=a.focus;var d=this;a.focus=function(){if(d._sourceShown)d.setSourceAreaCaret();else try{this._vsFocused?(delete this._vsFocused,u.focus(a.editNode)):a._viewsource_oldFocus()}catch(b){}};var c,g;for(c=0;c<b.length;c++)if((g=b[c])&&("dijit._editor.plugins.FullScreen"===g.declaredClass||g.declaredClass===A._scopeName+"._editor.plugins.FullScreen")){this._fsPlugin=g;break}this._fsPlugin&&
-(this._fsPlugin._viewsource_getAltViewNode=this._fsPlugin._getAltViewNode,this._fsPlugin._getAltViewNode=function(){return d._sourceShown?d.sourceArea:this._viewsource_getAltViewNode()});this.own(s(this.sourceArea,"keydown",e.hitch(this,function(b){this._sourceShown&&(b.keyCode==r.F12&&b.ctrlKey&&b.shiftKey)&&(this.button.focus(),this.button.set("checked",!1),setTimeout(e.hitch(this,function(){a.focus()}),100),b.stopPropagation(),b.preventDefault())})))},_stripScripts:function(a){a&&(a=a.replace(/<\s*script[^>]*>((.|\s)*?)<\\?\/\s*script\s*>/ig,
-""),a=a.replace(/<\s*script\b([^<>]|\s)*>?/ig,""),a=a.replace(/<[^>]*=(\s|)*[("|')]javascript:[^$1][(\s|.)]*[$1][^>]*>/ig,""));return a},_stripComments:function(a){a&&(a=a.replace(/\x3c!--(.|\s){1,}?--\x3e/g,""));return a},_stripIFrames:function(a){a&&(a=a.replace(/<\s*iframe[^>]*>((.|\s)*?)<\\?\/\s*iframe\s*>/ig,""));return a},_filter:function(a){a&&(this.stripScripts&&(a=this._stripScripts(a)),this.stripComments&&(a=this._stripComments(a)),this.stripIFrames&&(a=this._stripIFrames(a)));return a},
-setSourceAreaCaret:function(){var a=this.sourceArea;u.focus(a);this._sourceShown&&!this.readOnly&&(a.setSelectionRange?a.setSelectionRange(0,0):this.sourceArea.createTextRange&&(a=a.createTextRange(),a.collapse(!0),a.moveStart("character",-99999),a.moveStart("character",0),a.moveEnd("character",0),a.select()))},destroy:function(){this._ieFixNode&&k.destroy(this._ieFixNode);this._resizer&&(clearTimeout(this._resizer),delete this._resizer);this._resizeHandle&&(this._resizeHandle.remove(),delete this._resizeHandle);
-this._setListener&&(this._setListener.remove(),delete this._setListener);this.inherited(arguments)}});d.registry.viewSource=d.registry.viewsource=function(a){return new m({readOnly:"readOnly"in a?a.readOnly:!1,stripComments:"stripComments"in a?a.stripComments:!0,stripScripts:"stripScripts"in a?a.stripScripts:!0,stripIFrames:"stripIFrames"in a?a.stripIFrames:!0})};return m});
-//@ sourceMappingURL=ViewSource.js.map
+define([
+	"dojo/_base/array", // array.forEach
+	"dojo/aspect", // Aspect commands for advice
+	"dojo/_base/declare", // declare
+	"dojo/dom-attr", // domAttr.set
+	"dojo/dom-construct", // domConstruct.create domConstruct.place
+	"dojo/dom-geometry", // domGeometry.setMarginBox domGeometry.position
+	"dojo/dom-style", // domStyle.set
+	"dojo/i18n", // i18n.getLocalization
+	"dojo/keys", // keys.F12
+	"dojo/_base/lang", // lang.hitch
+	"dojo/on", // on()
+	"dojo/sniff", // has("ie")
+	"dojo/window", // winUtils.getBox
+	"../../focus", // focus.focus()
+	"../_Plugin",
+	"../../form/ToggleButton",
+	"../..", // dijit._scopeName
+	"../../registry", // registry.getEnclosingWidget()
+	"dojo/i18n!../nls/commands"
+], function(array, aspect, declare, domAttr, domConstruct, domGeometry, domStyle, i18n, keys, lang, on, has, winUtils,
+			focus, _Plugin, ToggleButton, dijit, registry){
+
+	// module:
+	//		dijit/_editor/plugins/ViewSource
+
+	var ViewSource = declare("dijit._editor.plugins.ViewSource", _Plugin, {
+		// summary:
+		//		This plugin provides a simple view source capability.  When view
+		//		source mode is enabled, it disables all other buttons/plugins on the RTE.
+		//		It also binds to the hotkey: CTRL-SHIFT-F11 for toggling ViewSource mode.
+
+		// stripScripts: [public] Boolean
+		//		Boolean flag used to indicate if script tags should be stripped from the document.
+		//		Defaults to true.
+		stripScripts: true,
+
+		// stripComments: [public] Boolean
+		//		Boolean flag used to indicate if comment tags should be stripped from the document.
+		//		Defaults to true.
+		stripComments: true,
+
+		// stripComments: [public] Boolean
+		//		Boolean flag used to indicate if iframe tags should be stripped from the document.
+		//		Defaults to true.
+		stripIFrames: true,
+
+		// readOnly: [const] Boolean
+		//		Boolean flag used to indicate if the source view should be readonly or not.
+		//		Cannot be changed after initialization of the plugin.
+		//		Defaults to false.
+		readOnly: false,
+
+		// _fsPlugin: [private] Object
+		//		Reference to a registered fullscreen plugin so that viewSource knows
+		//		how to scale.
+		_fsPlugin: null,
+
+		toggle: function(){
+			// summary:
+			//		Function to allow programmatic toggling of the view.
+
+			// For Webkit, we have to focus a very particular way.
+			// when swapping views, otherwise focus doesn't shift right
+			// but can't focus this way all the time, only for VS changes.
+			// If we did it all the time, buttons like bold, italic, etc
+			// break.
+			if(has("webkit")){
+				this._vsFocused = true;
+			}
+			this.button.set("checked", !this.button.get("checked"));
+
+		},
+
+		_initButton: function(){
+			// summary:
+			//		Over-ride for creation of the resize button.
+			var strings = i18n.getLocalization("dijit._editor", "commands"),
+				editor = this.editor;
+			this.button = new ToggleButton({
+				label: strings["viewSource"],
+				ownerDocument: editor.ownerDocument,
+				dir: editor.dir,
+				lang: editor.lang,
+				showLabel: false,
+				iconClass: this.iconClassPrefix + " " + this.iconClassPrefix + "ViewSource",
+				tabIndex: "-1",
+				onChange: lang.hitch(this, "_showSource")
+			});
+
+			// IE 7 has a horrible bug with zoom, so we have to create this node
+			// to cross-check later.  Sigh.
+			if(has("ie") == 7){
+				this._ieFixNode = domConstruct.create("div", {
+					style: {
+						opacity: "0",
+						zIndex: "-1000",
+						position: "absolute",
+						top: "-1000px"
+					}
+				}, editor.ownerDocumentBody);
+			}
+			// Make sure readonly mode doesn't make the wrong cursor appear over the button.
+			this.button.set("readOnly", false);
+		},
+
+
+		setEditor: function(/*dijit/Editor*/ editor){
+			// summary:
+			//		Tell the plugin which Editor it is associated with.
+			// editor: Object
+			//		The editor object to attach the print capability to.
+			this.editor = editor;
+			this._initButton();
+
+			this.editor.addKeyHandler(keys.F12, true, true, lang.hitch(this, function(e){
+				// Move the focus before switching
+				// It'll focus back.  Hiding a focused
+				// node causes issues.
+				this.button.focus();
+				this.toggle();
+				e.stopPropagation();
+				e.preventDefault();
+
+				// Call the focus shift outside of the handler.
+				setTimeout(lang.hitch(this, function(){
+					// Focus the textarea... unless focus has moved outside of the editor completely during the timeout.
+					// Since we override focus, so we just need to call it.
+					if(this.editor.focused){
+						this.editor.focus();
+					}
+				}), 100);
+			}));
+		},
+
+		_showSource: function(source){
+			// summary:
+			//		Function to toggle between the source and RTE views.
+			// source: boolean
+			//		Boolean value indicating if it should be in source mode or not.
+			// tags:
+			//		private
+			var ed = this.editor;
+			var edPlugins = ed._plugins;
+			var html;
+			this._sourceShown = source;
+			var self = this;
+			try{
+				if(!this.sourceArea){
+					this._createSourceView();
+				}
+				if(source){
+					// Update the QueryCommandEnabled function to disable everything but
+					// the source view mode.  Have to over-ride a function, then kick all
+					// plugins to check their state.
+					ed._sourceQueryCommandEnabled = ed.queryCommandEnabled;
+					ed.queryCommandEnabled = function(cmd){
+						return cmd.toLowerCase() === "viewsource";
+					};
+					this.editor.onDisplayChanged();
+					html = ed.get("value");
+					html = this._filter(html);
+					ed.set("value", html);
+					array.forEach(edPlugins, function(p){
+						// Turn off any plugins not controlled by queryCommandenabled.
+						if(p && !(p instanceof ViewSource) && p.isInstanceOf(_Plugin)){
+							p.set("disabled", true)
+						}
+					});
+
+					// We actually do need to trap this plugin and adjust how we
+					// display the textarea.
+					if(this._fsPlugin){
+						this._fsPlugin._getAltViewNode = function(){
+							return self.sourceArea;
+						};
+					}
+
+					this.sourceArea.value = html;
+
+					// Since neither iframe nor textarea have margin, border, or padding,
+					// just set sizes equal
+					this.sourceArea.style.height = ed.iframe.style.height;
+					this.sourceArea.style.width = ed.iframe.style.width;
+					domStyle.set(ed.iframe, "display", "none");
+					domStyle.set(this.sourceArea, {
+						display: "block"
+					});
+
+					var resizer = function(){
+						// function to handle resize events.
+						// Will check current VP and only resize if
+						// different.
+						var vp = winUtils.getBox(ed.ownerDocument);
+
+						if("_prevW" in this && "_prevH" in this){
+							// No actual size change, ignore.
+							if(vp.w === this._prevW && vp.h === this._prevH){
+								return;
+							}else{
+								this._prevW = vp.w;
+								this._prevH = vp.h;
+							}
+						}else{
+							this._prevW = vp.w;
+							this._prevH = vp.h;
+						}
+						if(this._resizer){
+							clearTimeout(this._resizer);
+							delete this._resizer;
+						}
+						// Timeout it to help avoid spamming resize on IE.
+						// Works for all browsers.
+						this._resizer = setTimeout(lang.hitch(this, function(){
+							delete this._resizer;
+							this._resize();
+						}), 10);
+					};
+					this._resizeHandle = on(window, "resize", lang.hitch(this, resizer));
+
+					//Call this on a delay once to deal with IE glitchiness on initial size.
+					setTimeout(lang.hitch(this, this._resize), 100);
+
+					//Trigger a check for command enablement/disablement.
+					this.editor.onNormalizedDisplayChanged();
+
+					this.editor.__oldGetValue = this.editor.getValue;
+					this.editor.getValue = lang.hitch(this, function(){
+						var txt = this.sourceArea.value;
+						txt = this._filter(txt);
+						return txt;
+					});
+
+					this._setListener = aspect.after(this.editor, "setValue", lang.hitch(this, function(htmlTxt){
+						htmlTxt = htmlTxt || "";
+						htmlTxt = this._filter(htmlTxt);
+						this.sourceArea.value = htmlTxt;
+					}), true);
+				}else{
+					// First check that we were in source view before doing anything.
+					// corner case for being called with a value of false and we hadn't
+					// actually been in source display mode.
+					if(!ed._sourceQueryCommandEnabled){
+						return;
+					}
+
+					// Remove the set listener.
+					this._setListener.remove();
+					delete this._setListener;
+
+					this._resizeHandle.remove();
+					delete this._resizeHandle;
+
+					if(this.editor.__oldGetValue){
+						this.editor.getValue = this.editor.__oldGetValue;
+						delete this.editor.__oldGetValue;
+					}
+
+					// Restore all the plugin buttons state.
+					ed.queryCommandEnabled = ed._sourceQueryCommandEnabled;
+					if(!this._readOnly){
+						html = this.sourceArea.value;
+						html = this._filter(html);
+						ed.beginEditing();
+						ed.set("value", html);
+						ed.endEditing();
+					}
+
+					array.forEach(edPlugins, function(p){
+						// Turn back on any plugins we turned off.
+						if(p && p.isInstanceOf(_Plugin)){
+							p.set("disabled", false);
+						}
+					});
+
+					domStyle.set(this.sourceArea, "display", "none");
+					domStyle.set(ed.iframe, "display", "block");
+					delete ed._sourceQueryCommandEnabled;
+
+					//Trigger a check for command enablement/disablement.
+					this.editor.onDisplayChanged();
+				}
+				// Call a delayed resize to wait for some things to display in header/footer.
+				setTimeout(lang.hitch(this, function(){
+					// Make resize calls.
+					var parent = ed.domNode.parentNode;
+					if(parent){
+						var container = registry.getEnclosingWidget(parent);
+						if(container && container.resize){
+							container.resize();
+						}
+					}
+					ed.resize();
+				}), 300);
+			}catch(e){
+				console.log(e);
+			}
+		},
+
+		updateState: function(){
+			// summary:
+			//		Over-ride for button state control for disabled to work.
+			this.button.set("disabled", this.get("disabled"));
+		},
+
+		_resize: function(){
+			// summary:
+			//		Internal function to resize the source view
+			// tags:
+			//		private
+			var ed = this.editor;
+			var tbH = ed.getHeaderHeight();
+			var fH = ed.getFooterHeight();
+			var eb = domGeometry.position(ed.domNode);
+
+			// Styles are now applied to the internal source container, so we have
+			// to subtract them off.
+			var containerPadding = domGeometry.getPadBorderExtents(ed.iframe.parentNode);
+			var containerMargin = domGeometry.getMarginExtents(ed.iframe.parentNode);
+
+			var extents = domGeometry.getPadBorderExtents(ed.domNode);
+			var edb = {
+				w: eb.w - extents.w,
+				h: eb.h - (tbH + extents.h + fH)
+			};
+
+			// Fullscreen gets odd, so we need to check for the FS plugin and
+			// adapt.
+			if(this._fsPlugin && this._fsPlugin.isFullscreen){
+				//Okay, probably in FS, adjust.
+				var vp = winUtils.getBox(ed.ownerDocument);
+				edb.w = (vp.w - extents.w);
+				edb.h = (vp.h - (tbH + extents.h + fH));
+			}
+
+			if(has("ie")){
+				// IE is always off by 2px, so we have to adjust here
+				// Note that IE ZOOM is broken here.  I can't get
+				//it to scale right.
+				edb.h -= 2;
+			}
+
+			// IE has a horrible zoom bug.  So, we have to try and account for
+			// it and fix up the scaling.
+			if(this._ieFixNode){
+				var _ie7zoom = -this._ieFixNode.offsetTop / 1000;
+				edb.w = Math.floor((edb.w + 0.9) / _ie7zoom);
+				edb.h = Math.floor((edb.h + 0.9) / _ie7zoom);
+			}
+
+			domGeometry.setMarginBox(this.sourceArea, {
+				w: edb.w - (containerPadding.w + containerMargin.w),
+				h: edb.h - (containerPadding.h + containerMargin.h)
+			});
+
+			// Scale the parent container too in this case.
+			domGeometry.setMarginBox(ed.iframe.parentNode, {
+				h: edb.h
+			});
+		},
+
+		_createSourceView: function(){
+			// summary:
+			//		Internal function for creating the source view area.
+			// tags:
+			//		private
+			var ed = this.editor;
+			var edPlugins = ed._plugins;
+			this.sourceArea = domConstruct.create("textarea");
+			if(this.readOnly){
+				domAttr.set(this.sourceArea, "readOnly", true);
+				this._readOnly = true;
+			}
+			domStyle.set(this.sourceArea, {
+				padding: "0px",
+				margin: "0px",
+				borderWidth: "0px",
+				borderStyle: "none"
+			});
+			domAttr.set(this.sourceArea, "aria-label", this.editor.id);
+
+			domConstruct.place(this.sourceArea, ed.iframe, "before");
+
+			if(has("ie") && ed.iframe.parentNode.lastChild !== ed.iframe){
+				// There's some weirdo div in IE used for focus control
+				// But is messed up scaling the textarea if we don't config
+				// it some so it doesn't have a varying height.
+				domStyle.set(ed.iframe.parentNode.lastChild, {
+					width: "0px",
+					height: "0px",
+					padding: "0px",
+					margin: "0px",
+					borderWidth: "0px",
+					borderStyle: "none"
+				});
+			}
+
+			// We also need to take over editor focus a bit here, so that focus calls to
+			// focus the editor will focus to the right node when VS is active.
+			ed._viewsource_oldFocus = ed.focus;
+			var self = this;
+			ed.focus = function(){
+				if(self._sourceShown){
+					self.setSourceAreaCaret();
+				}else{
+					try{
+						if(this._vsFocused){
+							delete this._vsFocused;
+							// Must focus edit node in this case (webkit only) or
+							// focus doesn't shift right, but in normal
+							// cases we focus with the regular function.
+							focus.focus(ed.editNode);
+						}else{
+							ed._viewsource_oldFocus();
+						}
+					}catch(e){
+						console.log(e);
+					}
+				}
+			};
+
+			var i, p;
+			for(i = 0; i < edPlugins.length; i++){
+				// We actually do need to trap this plugin and adjust how we
+				// display the textarea.
+				p = edPlugins[i];
+				if(p && (p.declaredClass === "dijit._editor.plugins.FullScreen" ||
+					p.declaredClass === (dijit._scopeName +
+						"._editor.plugins.FullScreen"))){
+					this._fsPlugin = p;
+					break;
+				}
+			}
+			if(this._fsPlugin){
+				// Found, we need to over-ride the alt-view node function
+				// on FullScreen with our own, chain up to parent call when appropriate.
+				this._fsPlugin._viewsource_getAltViewNode = this._fsPlugin._getAltViewNode;
+				this._fsPlugin._getAltViewNode = function(){
+					return self._sourceShown ? self.sourceArea : this._viewsource_getAltViewNode();
+				};
+			}
+
+			// Listen to the source area for key events as well, as we need to be able to hotkey toggle
+			// it from there too.
+			this.own(on(this.sourceArea, "keydown", lang.hitch(this, function(e){
+				if(this._sourceShown && e.keyCode == keys.F12 && e.ctrlKey && e.shiftKey){
+					this.button.focus();
+					this.button.set("checked", false);
+					setTimeout(lang.hitch(this, function(){
+						ed.focus();
+					}), 100);
+					e.stopPropagation();
+					e.preventDefault();
+				}
+			})));
+		},
+
+		_stripScripts: function(html){
+			// summary:
+			//		Strips out script tags from the HTML used in editor.
+			// html: String
+			//		The HTML to filter
+			// tags:
+			//		private
+			if(html){
+				// Look for closed and unclosed (malformed) script attacks.
+				html = html.replace(/<\s*script[^>]*>((.|\s)*?)<\\?\/\s*script\s*>/ig, "");
+				html = html.replace(/<\s*script\b([^<>]|\s)*>?/ig, "");
+				html = html.replace(/<[^>]*=(\s|)*[("|')]javascript:[^$1][(\s|.)]*[$1][^>]*>/ig, "");
+			}
+			return html;
+		},
+
+		_stripComments: function(html){
+			// summary:
+			//		Strips out comments from the HTML used in editor.
+			// html: String
+			//		The HTML to filter
+			// tags:
+			//		private
+			if(html){
+				html = html.replace(/<!--(.|\s){1,}?-->/g, "");
+			}
+			return html;
+		},
+
+		_stripIFrames: function(html){
+			// summary:
+			//		Strips out iframe tags from the content, to avoid iframe script
+			//		style injection attacks.
+			// html: String
+			//		The HTML to filter
+			// tags:
+			//		private
+			if(html){
+				html = html.replace(/<\s*iframe[^>]*>((.|\s)*?)<\\?\/\s*iframe\s*>/ig, "");
+			}
+			return html;
+		},
+
+		_filter: function(html){
+			// summary:
+			//		Internal function to perform some filtering on the HTML.
+			// html: String
+			//		The HTML to filter
+			// tags:
+			//		private
+			if(html){
+				if(this.stripScripts){
+					html = this._stripScripts(html);
+				}
+				if(this.stripComments){
+					html = this._stripComments(html);
+				}
+				if(this.stripIFrames){
+					html = this._stripIFrames(html);
+				}
+			}
+			return html;
+		},
+
+		setSourceAreaCaret: function(){
+			// summary:
+			//		Internal function to set the caret in the sourceArea
+			//		to 0x0
+			var elem = this.sourceArea;
+			focus.focus(elem);
+			if(this._sourceShown && !this.readOnly){
+				if(elem.setSelectionRange){
+					elem.setSelectionRange(0, 0);
+				}else if(this.sourceArea.createTextRange){
+					// IE
+					var range = elem.createTextRange();
+					range.collapse(true);
+					range.moveStart("character", -99999); // move to 0
+					range.moveStart("character", 0); // delta from 0 is the correct position
+					range.moveEnd("character", 0);
+					range.select();
+				}
+			}
+		},
+
+		destroy: function(){
+			// summary:
+			//		Over-ride to remove the node used to correct for IE's
+			//		zoom bug.
+			if(this._ieFixNode){
+				domConstruct.destroy(this._ieFixNode);
+			}
+			if(this._resizer){
+				clearTimeout(this._resizer);
+				delete this._resizer;
+			}
+			if(this._resizeHandle){
+				this._resizeHandle.remove();
+				delete this._resizeHandle;
+			}
+			if(this._setListener){
+				this._setListener.remove();
+				delete this._setListener;
+			}
+			this.inherited(arguments);
+		}
+	});
+
+	// Register this plugin.
+	// For back-compat accept "viewsource" (all lowercase) too, remove in 2.0
+	_Plugin.registry["viewSource"] = _Plugin.registry["viewsource"] = function(args){
+		return new ViewSource({
+			readOnly: ("readOnly" in args) ? args.readOnly : false,
+			stripComments: ("stripComments" in args) ? args.stripComments : true,
+			stripScripts: ("stripScripts" in args) ? args.stripScripts : true,
+			stripIFrames: ("stripIFrames" in args) ? args.stripIFrames : true
+		});
+	};
+
+	return ViewSource;
+});

@@ -1,3 +1,32 @@
-//>>built
-define("dojo/request/default",["exports","require","../has"],function(a,d,c){var b=c("config-requestProvider");b||(b="./xhr");a.getPlatformDefaultId=function(){return"./xhr"};a.load=function(a,c,e,f){d(["platform"==a?"./xhr":b],function(a){e(a)})}});
-//@ sourceMappingURL=default.js.map
+define([
+	'exports',
+	'require',
+	'../has'
+], function(exports, require, has){
+	var defId = has('config-requestProvider'),
+		platformId;
+
+	if(has('host-browser') || has('host-webworker')){
+		platformId = './xhr';
+	}else if(has('host-node')){
+		platformId = './node';
+	/* TODO:
+	}else if(has('host-rhino')){
+		platformId = './rhino';
+   */
+	}
+
+	if(!defId){
+		defId = platformId;
+	}
+
+	exports.getPlatformDefaultId = function(){
+		return platformId;
+	};
+
+	exports.load = function(id, parentRequire, loaded, config){
+		require([id == 'platform' ? platformId : defId], function(provider){
+			loaded(provider);
+		});
+	};
+});

@@ -1,3 +1,15 @@
-//>>built
-define("dojox/mobile",[".","dojo/_base/lang","dojox/mobile/_base"],function(a,b,c){b.getObject("mobile",!0,a);return a.mobile});
-//@ sourceMappingURL=mobile.js.map
+define([
+	".",
+	"dojo/_base/lang",
+	"dojox/mobile/_base"
+], function(dojox, lang, base){
+	lang.getObject("mobile", true, dojox);
+	/*=====
+	return {
+		// summary:
+		//		Deprecated.  Should require dojox/mobile classes directly rather than trying to access them through
+		//		this module.
+	};
+	=====*/
+	return dojox.mobile;
+});

@@ -1,5 +1,109 @@
-//>>built
-define("dojo/request/watch","./util ../errors/RequestTimeoutError ../errors/CancelError ../_base/array ../_base/window ../has!host-browser?dom-addeventlistener?:../on:".split(" "),function(q,l,m,n,e,h){function k(){for(var p=+new Date,d=0,b;d<c.length&&(b=c[d]);d++){var f=b.response,e=f.options;if(b.isCanceled&&b.isCanceled()||b.isValid&&!b.isValid(f))c.splice(d--,1),a._onAction&&a._onAction();else if(b.isReady&&b.isReady(f))c.splice(d--,1),b.handleResponse(f),a._onAction&&a._onAction();else if(b.startTime&&
-b.startTime+(e.timeout||0)<p)c.splice(d--,1),b.cancel(new l("Timeout exceeded",f)),a._onAction&&a._onAction()}a._onInFlight&&a._onInFlight(b);c.length||(clearInterval(g),g=null)}function a(a){a.response.options.timeout&&(a.startTime=+new Date);a.isFulfilled()||(c.push(a),g||(g=setInterval(k,50)),a.response.options.sync&&k())}var g=null,c=[];a.cancelAll=function(){try{n.forEach(c,function(a){try{a.cancel(new m("All requests canceled."))}catch(b){}})}catch(a){}};e&&(h&&e.doc.attachEvent)&&h(e.global,
-"unload",function(){a.cancelAll()});return a});
-//@ sourceMappingURL=watch.js.map
+define([
+	'./util',
+	'../errors/RequestTimeoutError',
+	'../errors/CancelError',
+	'../_base/array',
+	'../has!host-browser?../_base/window:',
+	'../has!host-browser?dom-addeventlistener?:../on:'
+], function(util, RequestTimeoutError, CancelError, array, win, on){
+	// avoid setting a timer per request. It degrades performance on IE
+	// something fierece if we don't use unified loops.
+	var _inFlightIntvl = null,
+		_inFlight = [];
+
+	function watchInFlight(){
+		// summary:
+		//		internal method that checks each inflight XMLHttpRequest to see
+		//		if it has completed or if the timeout situation applies.
+
+		var now = +(new Date);
+
+		// we need manual loop because we often modify _inFlight (and therefore 'i') while iterating
+		for(var i = 0, dfd; i < _inFlight.length && (dfd = _inFlight[i]); i++){
+			var response = dfd.response,
+				options = response.options;
+			if((dfd.isCanceled && dfd.isCanceled()) || (dfd.isValid && !dfd.isValid(response))){
+				_inFlight.splice(i--, 1);
+				watch._onAction && watch._onAction();
+			}else if(dfd.isReady && dfd.isReady(response)){
+				_inFlight.splice(i--, 1);
+				dfd.handleResponse(response);
+				watch._onAction && watch._onAction();
+			}else if(dfd.startTime){
+				// did we timeout?
+				if(dfd.startTime + (options.timeout || 0) < now){
+					_inFlight.splice(i--, 1);
+					// Cancel the request so the io module can do appropriate cleanup.
+					dfd.cancel(new RequestTimeoutError('Timeout exceeded', response));
+					watch._onAction && watch._onAction();
+				}
+			}
+		}
+
+		watch._onInFlight && watch._onInFlight(dfd);
+
+		if(!_inFlight.length){
+			clearInterval(_inFlightIntvl);
+			_inFlightIntvl = null;
+		}
+	}
+
+	function watch(dfd){
+		// summary:
+		//		Watches the io request represented by dfd to see if it completes.
+		// dfd: Deferred
+		//		The Deferred object to watch.
+		// response: Object
+		//		The object used as the value of the request promise.
+		// validCheck: Function
+		//		Function used to check if the IO request is still valid. Gets the dfd
+		//		object as its only argument.
+		// ioCheck: Function
+		//		Function used to check if basic IO call worked. Gets the dfd
+		//		object as its only argument.
+		// resHandle: Function
+		//		Function used to process response. Gets the dfd
+		//		object as its only argument.
+		if(dfd.response.options.timeout){
+			dfd.startTime = +(new Date);
+		}
+
+		if(dfd.isFulfilled()){
+			// bail out if the deferred is already fulfilled
+			return;
+		}
+
+		_inFlight.push(dfd);
+		if(!_inFlightIntvl){
+			_inFlightIntvl = setInterval(watchInFlight, 50);
+		}
+
+		// handle sync requests separately from async:
+		// http://bugs.dojotoolkit.org/ticket/8467
+		if(dfd.response.options.sync){
+			watchInFlight();
+		}
+	}
+
+	watch.cancelAll = function cancelAll(){
+		// summary:
+		//		Cancels all pending IO requests, regardless of IO type
+		try{
+			array.forEach(_inFlight, function(dfd){
+				try{
+					dfd.cancel(new CancelError('All requests canceled.'));
+				}catch(e){}
+			});
+		}catch(e){}
+	};
+
+	if(win && on && win.doc.attachEvent){
+		// Automatically call cancel all io calls on unload in IE
+		// http://bugs.dojotoolkit.org/ticket/2357
+		on(win.global, 'unload', function(){
+			watch.cancelAll();
+		});
+	}
+
+	return watch;
+});

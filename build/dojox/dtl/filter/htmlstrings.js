@@ -1,4 +1,60 @@
-//>>built
-define("dojox/dtl/filter/htmlstrings",["dojo/_base/lang","../_base"],function(f,g){var b=f.getObject("filter.htmlstrings",!0,g);f.mixin(b,{_linebreaksrn:/(\r\n|\n\r)/g,_linebreaksn:/\n{2,}/g,_linebreakss:/(^\s+|\s+$)/g,_linebreaksbr:/\n/g,_removetagsfind:/[a-z0-9]+/g,_striptags:/<[^>]*?>/g,linebreaks:function(a){var d=[];a=a.replace(b._linebreaksrn,"\n");a=a.split(b._linebreaksn);for(var c=0;c<a.length;c++){var e=a[c].replace(b._linebreakss,"").replace(b._linebreaksbr,"\x3cbr /\x3e");d.push("\x3cp\x3e"+
-e+"\x3c/p\x3e")}return d.join("\n\n")},linebreaksbr:function(a){return a.replace(b._linebreaksrn,"\n").replace(b._linebreaksbr,"\x3cbr /\x3e")},removetags:function(a,d){for(var c=[],e;e=b._removetagsfind.exec(d);)c.push(e[0]);c="("+c.join("|")+")";return a.replace(RegExp("\x3c/?s*"+c+"s*[^\x3e]*\x3e","gi"),"")},striptags:function(a){return a.replace(dojox.dtl.filter.htmlstrings._striptags,"")}});return b});
-//@ sourceMappingURL=htmlstrings.js.map
+define([
+	"dojo/_base/lang",
+	"../_base"
+], function(lang,dd){
+
+	var htmlstrings = lang.getObject("filter.htmlstrings", true, dd);
+/*=====
+	htmlstrings = {
+		// TODO: summary
+	};
+=====*/
+
+	lang.mixin(htmlstrings, {
+		_linebreaksrn: /(\r\n|\n\r)/g,
+		_linebreaksn: /\n{2,}/g,
+		_linebreakss: /(^\s+|\s+$)/g,
+		_linebreaksbr: /\n/g,
+		_removetagsfind: /[a-z0-9]+/g,
+		_striptags: /<[^>]*?>/g,
+		linebreaks: function(value){
+			// summary:
+			//		Converts newlines into `<p>` and `<br />`s
+			var output = [];
+			var dh = htmlstrings;
+			value = value.replace(dh._linebreaksrn, "\n");
+			var parts = value.split(dh._linebreaksn);
+			for(var i = 0; i < parts.length; i++){
+				var part = parts[i].replace(dh._linebreakss, "").replace(dh._linebreaksbr, "<br />");
+				output.push("<p>" + part + "</p>");
+			}
+
+			return output.join("\n\n");
+		},
+		linebreaksbr: function(value){
+			// summary:
+			//		Converts newlines into `<br />`s
+			var dh = htmlstrings;
+			return value.replace(dh._linebreaksrn, "\n").replace(dh._linebreaksbr, "<br />");
+		},
+		removetags: function(value, arg){
+			// summary:
+			//		Removes a space separated list of [X]HTML tags from the output"
+			var dh = htmlstrings;
+			var tags = [];
+			var group;
+			while(group = dh._removetagsfind.exec(arg)){
+				tags.push(group[0]);
+			}
+			tags = "(" + tags.join("|") + ")";
+			return value.replace(new RegExp("</?\s*" + tags + "\s*[^>]*>", "gi"), "");
+		},
+		striptags: function(value){
+			// summary:
+			//		Strips all [X]HTML tags
+			return value.replace(dojox.dtl.filter.htmlstrings._striptags, "");
+		}
+	});
+
+	return htmlstrings;
+});

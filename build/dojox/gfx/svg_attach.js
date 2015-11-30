@@ -1,9 +1,249 @@
-//>>built
-define("dojox/gfx/svg_attach","dojo/_base/kernel dojo/_base/lang dojo/_base/array dojo/_base/Color ./_base ./svg ./matrix".split(" "),function(n,h,k,l,f,e,p){function q(a){var c=a.rawNode.getAttribute("fill");if("none"==c)a.fillStyle=null;else{var b=null,d=e.getRef(c);if(d)switch(d.tagName.toLowerCase()){case "lineargradient":b=m(f.defaultLinearGradient,d);k.forEach(["x1","y1","x2","y2"],function(a){b[a]=d.getAttribute(a)});break;case "radialgradient":b=m(f.defaultRadialGradient,d);k.forEach(["cx",
-"cy","r"],function(a){b[a]=d.getAttribute(a)});b.cx=d.getAttribute("cx");b.cy=d.getAttribute("cy");b.r=d.getAttribute("r");break;case "pattern":b=h.clone(f.defaultPattern),k.forEach(["x","y","width","height"],function(a){b[a]=d.getAttribute(a)}),b.src=d.firstChild.getAttributeNS(e.xmlns.xlink,"href")}else b=new l(c),c=a.rawNode.getAttribute("fill-opacity"),null!=c&&(b.a=c);a.fillStyle=b}}function m(a,c){var b=h.clone(a);b.colors=[];for(var d=0;d<c.childNodes.length;++d)b.colors.push({offset:c.childNodes[d].getAttribute("offset"),
-color:new l(c.childNodes[d].getAttribute("stop-color"))});return b}function g(a,c){var b=a.shape=h.clone(c),d=a.rawNode,e;for(e in b)b[e]=d.getAttribute(e)}n.experimental("dojox.gfx.svg_attach");e.attachNode=function(a){if(!a)return null;var c=null;switch(a.tagName.toLowerCase()){case e.Rect.nodeType:a=c=new e.Rect(a);g(a,f.defaultRect);a.shape.r=Math.min(a.rawNode.getAttribute("rx"),a.rawNode.getAttribute("ry"));break;case e.Ellipse.nodeType:c=new e.Ellipse(a);g(c,f.defaultEllipse);break;case e.Polyline.nodeType:c=
-new e.Polyline(a);g(c,f.defaultPolyline);break;case e.Path.nodeType:c=new e.Path(a);g(c,f.defaultPath);break;case e.Circle.nodeType:c=new e.Circle(a);g(c,f.defaultCircle);break;case e.Line.nodeType:c=new e.Line(a);g(c,f.defaultLine);break;case e.Image.nodeType:c=new e.Image(a);g(c,f.defaultImage);break;case e.Text.nodeType:if((c=a.getElementsByTagName("textPath"))&&c.length){c=new e.TextPath(a);g(c,f.defaultPath);var b=c;a=b.shape=h.clone(f.defaultTextPath);b=b.rawNode}else b=c=new e.Text(a),a=b.shape=
-h.clone(f.defaultText),b=b.rawNode,a.x=b.getAttribute("x"),a.y=b.getAttribute("y");a.align=b.getAttribute("text-anchor");a.decoration=b.getAttribute("text-decoration");a.rotated=0!=parseFloat(b.getAttribute("rotate"));a.kerning="auto"==b.getAttribute("kerning");a.text=b.firstChild.nodeValue;b=c;a=b.fontStyle=h.clone(f.defaultFont);b=b.rawNode;a.style=b.getAttribute("font-style");a.variant=b.getAttribute("font-variant");a.weight=b.getAttribute("font-weight");a.size=b.getAttribute("font-size");a.family=
-b.getAttribute("font-family");break;default:return null}if(!(c instanceof e.Image)){q(c);var d=c;a=d.rawNode;b=a.getAttribute("stroke");if(null==b||"none"==b)d.strokeStyle=null;else if(d=d.strokeStyle=h.clone(f.defaultStroke),b=new l(b))d.color=b,d.color.a=a.getAttribute("stroke-opacity"),d.width=a.getAttribute("stroke-width"),d.cap=a.getAttribute("stroke-linecap"),d.join=a.getAttribute("stroke-linejoin"),"miter"==d.join&&(d.join=a.getAttribute("stroke-miterlimit")),d.style=a.getAttribute("dojoGfxStrokeStyle")}a=
-c;b=a.rawNode.getAttribute("transform");b.match(/^matrix\(.+\)$/)?(b=b.slice(7,-1).split(","),a.matrix=p.normalize({xx:parseFloat(b[0]),xy:parseFloat(b[2]),yx:parseFloat(b[1]),yy:parseFloat(b[3]),dx:parseFloat(b[4]),dy:parseFloat(b[5])})):a.matrix=null;return c};e.attachSurface=function(a){var c=new e.Surface;c.rawNode=a;a=a.getElementsByTagName("defs");if(0==a.length)return null;c.defNode=a[0];return c};return e});
-//@ sourceMappingURL=svg_attach.js.map
+define(["dojo/_base/kernel", "dojo/_base/lang", "dojo/_base/array","dojo/_base/Color", "./_base","./svg","./matrix"], 
+  function(kernel, lang, arr, Color, g, svg, Matrix){
+
+	kernel.experimental("dojox.gfx.svg_attach");
+	
+	svg.attachNode = function(node){
+		// summary:
+		//		creates a shape from a Node
+		// node: Node
+		//		an SVG node
+		if(!node){
+			return null;
+		}
+		var s = null;
+		switch(node.tagName.toLowerCase()){
+			case svg.Rect.nodeType:
+				s = new svg.Rect(node);
+				attachRect(s);
+				break;
+			case svg.Ellipse.nodeType:
+				s = new svg.Ellipse(node);
+				attachShape(s, g.defaultEllipse);
+				break;
+			case svg.Polyline.nodeType:
+				s = new svg.Polyline(node);
+				attachShape(s, g.defaultPolyline);
+				break;
+			case svg.Path.nodeType:
+				s = new svg.Path(node);
+				attachShape(s, g.defaultPath);
+				break;
+			case svg.Circle.nodeType:
+				s = new svg.Circle(node);
+				attachShape(s, g.defaultCircle);
+				break;
+			case svg.Line.nodeType:
+				s = new svg.Line(node);
+				attachShape(s, g.defaultLine);
+				break;
+			case svg.Image.nodeType:
+				s = new svg.Image(node);
+				attachShape(s, g.defaultImage);
+				break;
+			case svg.Text.nodeType:
+				var t = node.getElementsByTagName("textPath");
+				if(t && t.length){
+					s = new svg.TextPath(node);
+					attachShape(s, g.defaultPath);
+					attachTextPath(s);
+				}else{
+					s = new svg.Text(node);
+					attachText(s);
+				}
+				attachFont(s);
+				break;
+			default:
+				//console.debug("FATAL ERROR! tagName = " + node.tagName);
+				return null;
+		}
+		if(!(s instanceof svg.Image)){
+			attachFill(s);
+			attachStroke(s);
+		}
+		attachTransform(s);
+		return s;	// dojox/gfx/shape.Shape
+	};
+
+	svg.attachSurface = function(node){
+		// summary:
+		//		creates a surface from a Node
+		// node: Node
+		//		an SVG node
+		var s = new svg.Surface();
+		s.rawNode = node;
+		var def_elems = node.getElementsByTagName("defs");
+		if(def_elems.length == 0){
+			return null;	// dojox/gfx.Surface
+		}
+		s.defNode = def_elems[0];
+		return s;	// dojox/gfx.Surface
+	};
+
+	function attachFill(object){
+		// summary:
+		//		deduces a fill style from a node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		var fill = object.rawNode.getAttribute("fill");
+		if(fill == "none"){
+			object.fillStyle = null;
+			return;
+		}
+		var fillStyle = null, gradient = svg.getRef(fill);
+		if(gradient){
+			switch(gradient.tagName.toLowerCase()){
+				case "lineargradient":
+					fillStyle = _getGradient(g.defaultLinearGradient, gradient);
+					arr.forEach(["x1", "y1", "x2", "y2"], function(x){
+						fillStyle[x] = gradient.getAttribute(x);
+					});
+					break;
+				case "radialgradient":
+					fillStyle = _getGradient(g.defaultRadialGradient, gradient);
+					arr.forEach(["cx", "cy", "r"], function(x){
+						fillStyle[x] = gradient.getAttribute(x);
+					});
+					fillStyle.cx = gradient.getAttribute("cx");
+					fillStyle.cy = gradient.getAttribute("cy");
+					fillStyle.r  = gradient.getAttribute("r");
+					break;
+				case "pattern":
+					fillStyle = lang.clone(g.defaultPattern);
+					arr.forEach(["x", "y", "width", "height"], function(x){
+						fillStyle[x] = gradient.getAttribute(x);
+					});
+					fillStyle.src = gradient.firstChild.getAttributeNS(svg.xmlns.xlink, "href");
+					break;
+			}
+		}else{
+			fillStyle = new Color(fill);
+			var opacity = object.rawNode.getAttribute("fill-opacity");
+			if(opacity != null){ fillStyle.a = opacity; }
+		}
+		object.fillStyle = fillStyle;
+	}
+
+	function _getGradient(defaultGradient, gradient){
+		var fillStyle = lang.clone(defaultGradient);
+		fillStyle.colors = [];
+		for(var i = 0; i < gradient.childNodes.length; ++i){
+			fillStyle.colors.push({
+				offset: gradient.childNodes[i].getAttribute("offset"),
+				color:  new Color(gradient.childNodes[i].getAttribute("stop-color"))
+			});
+		}
+		return fillStyle;
+	}
+
+	function attachStroke(object){
+		// summary:
+		//		deduces a stroke style from a node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		var rawNode = object.rawNode, stroke = rawNode.getAttribute("stroke");
+		if(stroke == null || stroke == "none"){
+			object.strokeStyle = null;
+			return;
+		}
+		var strokeStyle = object.strokeStyle = lang.clone(g.defaultStroke);
+		var color = new Color(stroke);
+		if(color){
+			strokeStyle.color = color;
+			strokeStyle.color.a = rawNode.getAttribute("stroke-opacity");
+			strokeStyle.width = rawNode.getAttribute("stroke-width");
+			strokeStyle.cap = rawNode.getAttribute("stroke-linecap");
+			strokeStyle.join = rawNode.getAttribute("stroke-linejoin");
+			if(strokeStyle.join == "miter"){
+				strokeStyle.join = rawNode.getAttribute("stroke-miterlimit");
+			}
+			strokeStyle.style = rawNode.getAttribute("dojoGfxStrokeStyle");
+		}
+	}
+
+	function attachTransform(object){
+		// summary:
+		//		deduces a transformation matrix from a node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		var matrix = object.rawNode.getAttribute("transform");
+		if(matrix.match(/^matrix\(.+\)$/)){
+			var t = matrix.slice(7, -1).split(",");
+			object.matrix = Matrix.normalize({
+				xx: parseFloat(t[0]), xy: parseFloat(t[2]),
+				yx: parseFloat(t[1]), yy: parseFloat(t[3]),
+				dx: parseFloat(t[4]), dy: parseFloat(t[5])
+			});
+		}else{
+			object.matrix = null;
+		}
+	}
+
+	function attachFont(object){
+		// summary:
+		//		deduces a font style from a Node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		var fontStyle = object.fontStyle = lang.clone(g.defaultFont),
+			r = object.rawNode;
+		fontStyle.style = r.getAttribute("font-style");
+		fontStyle.variant = r.getAttribute("font-variant");
+		fontStyle.weight = r.getAttribute("font-weight");
+		fontStyle.size = r.getAttribute("font-size");
+		fontStyle.family = r.getAttribute("font-family");
+	}
+
+	function attachShape(object, def){
+		// summary:
+		//		builds a shape from a node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		// def: Object
+		//		a default shape template
+		var shape = object.shape = lang.clone(def), r = object.rawNode;
+		for(var i in shape) {
+			shape[i] = r.getAttribute(i);
+		}
+	}
+
+	function attachRect(object){
+		// summary:
+		//		builds a rectangle shape from a node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		attachShape(object, g.defaultRect);
+		object.shape.r = Math.min(object.rawNode.getAttribute("rx"), object.rawNode.getAttribute("ry"));
+	}
+
+	function attachText(object){
+		// summary:
+		//		builds a text shape from a node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		var shape = object.shape = lang.clone(g.defaultText),
+			r = object.rawNode;
+		shape.x = r.getAttribute("x");
+		shape.y = r.getAttribute("y");
+		shape.align = r.getAttribute("text-anchor");
+		shape.decoration = r.getAttribute("text-decoration");
+		shape.rotated = parseFloat(r.getAttribute("rotate")) != 0;
+		shape.kerning = r.getAttribute("kerning") == "auto";
+		shape.text = r.firstChild.nodeValue;
+	}
+
+	function attachTextPath(object){
+		// summary:
+		//		builds a textpath shape from a node.
+		// object: dojox/gfx/shape.Shape
+		//		an SVG shape
+		var shape = object.shape = lang.clone(g.defaultTextPath),
+			r = object.rawNode;
+		shape.align = r.getAttribute("text-anchor");
+		shape.decoration = r.getAttribute("text-decoration");
+		shape.rotated = parseFloat(r.getAttribute("rotate")) != 0;
+		shape.kerning = r.getAttribute("kerning") == "auto";
+		shape.text = r.firstChild.nodeValue;
+	}
+
+	return svg; // return augmented svg api
+});

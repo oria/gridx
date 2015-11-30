@@ -1,4 +1,74 @@
-//>>built
-define("dojo/request/notify",["../Evented","../_base/lang","./util"],function(d,g,h){function e(a,b){return f.on(a,b)}var b=0,k=[].slice,f=g.mixin(new d,{onsend:function(a){b||this.emit("start");b++},_onload:function(a){this.emit("done",a)},_onerror:function(a){this.emit("done",a)},_ondone:function(a){0>=--b&&(b=0,this.emit("stop"))},emit:function(a,b){var c=d.prototype.emit.apply(this,arguments);this["_on"+a]&&this["_on"+a].apply(this,k.call(arguments,1));return c}});e.emit=function(a,b,c){return f.emit(a,
-b,c)};return h.notify=e});
-//@ sourceMappingURL=notify.js.map
+define(['../Evented', '../_base/lang', './util'], function(Evented, lang, util){
+	// module:
+	//		dojo/request/notify
+	// summary:
+	//		Global notification API for dojo/request. Notifications will
+	//		only be emitted if this module is required.
+	//
+	//		| require('dojo/request', 'dojo/request/notify',
+	//		|     function(request, notify){
+	//		|         notify('load', function(response){
+	//		|             if(response.url === 'someUrl.html'){
+	//		|                 console.log('Loaded!');
+	//		|             }
+	//		|         });
+	//		|         request.get('someUrl.html');
+	//		|     }
+	//		| );
+
+	var pubCount = 0,
+		slice = [].slice;
+
+	var hub = lang.mixin(new Evented, {
+		onsend: function(data){
+			if(!pubCount){
+				this.emit('start');
+			}
+			pubCount++;
+		},
+		_onload: function(data){
+			this.emit('done', data);
+		},
+		_onerror: function(data){
+			this.emit('done', data);
+		},
+		_ondone: function(data){
+			if(--pubCount <= 0){
+				pubCount = 0;
+				this.emit('stop');
+			}
+		},
+		emit: function(type, event){
+			var result = Evented.prototype.emit.apply(this, arguments);
+
+			// After all event handlers have run, run _on* handler
+			if(this['_on' + type]){
+				this['_on' + type].apply(this, slice.call(arguments, 1));
+			}
+			return result;
+		}
+	});
+
+	function notify(type, listener){
+		// summary:
+		//		Register a listener to be notified when an event
+		//		in dojo/request happens.
+		// type: String?
+		//		The event to listen for. Events emitted: "start", "send",
+		//		"load", "error", "done", "stop".
+		// listener: Function?
+		//		A callback to be run when an event happens.
+		// returns:
+		//		A signal object that can be used to cancel the listener.
+		//		If remove() is called on this signal object, it will
+		//		stop the listener from being executed.
+		return hub.on(type, listener);
+	}
+	notify.emit = function(type, event, cancel){
+		return hub.emit(type, event, cancel);
+	};
+
+	// Attach notify to dojo/request/util to avoid
+	// try{ require('./notify'); }catch(e){}
+	return util.notify = notify;
+});

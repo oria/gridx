@@ -1,6 +1,113 @@
-//>>built
-define("dojox/grid/LazyTreeGridStoreModel",["dojo/_base/declare","dojo/_base/array","dojo/_base/lang","dijit/tree/ForestStoreModel"],function(g,f,d,h){return g("dojox.grid.LazyTreeGridStoreModel",h,{serverStore:!1,constructor:function(b){this.serverStore=!!b.serverStore},mayHaveChildren:function(b){var a=null;return f.some(this.childrenAttrs,function(c){a=this.store.getValue(b,c);return d.isString(a)?0<parseInt(a,10)||"true"===a.toLowerCase()?!0:!1:"number"==typeof a?0<a:"boolean"==typeof a?a:this.store.isItem(a)?
-(a=this.store.getValues(b,c),d.isArray(a)?0<a.length:!1):!1},this)},getChildren:function(b,a,c,e){if(e){var f=e.start||0,k=e.count,g=e.parentId,l=e.sort;if(b===this.root)this.root.size=0,this.store.fetch({start:f,count:k,sort:l,query:this.query,onBegin:d.hitch(this,function(a){this.root.size=a}),onComplete:d.hitch(this,function(b){a(b,e,this.root.size)}),onError:c});else{var m=this.store;if(m.isItemLoaded(b))this.serverStore&&!this._isChildrenLoaded(b)?(this.childrenSize=0,this.store.fetch({start:f,
-count:k,sort:l,query:d.mixin({parentId:g},this.query||{}),onBegin:d.hitch(this,function(a){this.childrenSize=a}),onComplete:d.hitch(this,function(b){a(b,e,this.childrenSize)}),onError:c})):this.inherited(arguments);else{var h=d.hitch(this,arguments.callee);m.loadItem({item:b,onItem:function(b){h(b,a,c,e)},onError:c})}}}else this.inherited(arguments)},_isChildrenLoaded:function(b){var a=null;return f.every(this.childrenAttrs,function(c){a=this.store.getValues(b,c);return f.every(a,function(a){return this.store.isItemLoaded(a)},
-this)},this)},onNewItem:function(b,a){},onDeleteItem:function(b){}})});
-//@ sourceMappingURL=LazyTreeGridStoreModel.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dijit/tree/ForestStoreModel"], function(declare, array, lang, ForestStoreModel){
+
+return declare("dojox.grid.LazyTreeGridStoreModel", ForestStoreModel, {
+
+	// There are different approaches to get children for client-side
+	// DataStore (e.g. dojo.data.ItemFileReadStore) or server-side DataStore
+	// (e.g. dojox.data.QueryReadStore), so we need to be sure what kind of
+	// DataStore is being used
+	serverStore: false, // server side store
+	
+	constructor: function(/* Object */ args){
+		this.serverStore = !!args.serverStore;
+	},
+
+	mayHaveChildren: function(/*dojo.data.Item*/ item){
+		var children = null;
+		return array.some(this.childrenAttrs, function(attr){
+				children = this.store.getValue(item, attr);
+				if(lang.isString(children)){
+					return parseInt(children, 10) > 0 || children.toLowerCase() === "true" ? true : false;
+				}else if(typeof children == "number"){
+					return children > 0;
+				}else if(typeof children == "boolean"){
+					return children;
+				}else if(this.store.isItem(children)){
+					children = this.store.getValues(item, attr);
+					return lang.isArray(children) ? children.length > 0 : false;
+				}else{
+					return false;
+				}
+		}, this);
+	},
+	
+	getChildren: function(/*dojo.data.Item*/parentItem, /*function(items, size)*/onComplete, /*function*/ onError, /*object*/queryObj){
+		if(queryObj){
+			var start = queryObj.start || 0,
+				count = queryObj.count,
+				parentId = queryObj.parentId,
+				sort = queryObj.sort;
+			if(parentItem === this.root){
+				this.root.size = 0;
+				this.store.fetch({
+					start: start,
+					count: count,
+					sort: sort,
+					query: this.query,
+					onBegin: lang.hitch(this, function(size){
+						this.root.size = size;
+					}),
+					onComplete: lang.hitch(this, function(items){
+						onComplete(items, queryObj, this.root.size);
+					}),
+					onError: onError
+				});
+			}else{
+				var store = this.store;
+				if(!store.isItemLoaded(parentItem)){
+					var getChildren = lang.hitch(this, arguments.callee);
+					store.loadItem({
+						item: parentItem,
+						onItem: function(parentItem){
+							getChildren(parentItem, onComplete, onError, queryObj);
+						},
+						onError: onError
+					});
+					return;
+				}
+				if(this.serverStore && !this._isChildrenLoaded(parentItem)){
+					this.childrenSize = 0;
+					this.store.fetch({
+						start: start,
+						count: count,
+						sort: sort,
+						query: lang.mixin({parentId: parentId}, this.query || {}),
+						onBegin: lang.hitch(this, function(size){
+							this.childrenSize = size;
+						}),
+						onComplete: lang.hitch(this, function(items){
+							onComplete(items, queryObj, this.childrenSize);
+						}),
+						onError: onError
+					});
+				}else{
+					this.inherited(arguments);
+				}
+			}
+		}else{
+			this.inherited(arguments);
+		}
+	},
+	
+	_isChildrenLoaded: function(parentItem){
+		// summary:
+		//		Check if all children of the given item have been loaded
+		var children = null;
+		return array.every(this.childrenAttrs, function(attr){
+			children = this.store.getValues(parentItem, attr);
+			return array.every(children, function(c){
+				return this.store.isItemLoaded(c);
+			}, this);
+		}, this);
+	},
+	
+	//overwritten
+	onNewItem: function(item, parentInfo){ },
+	
+	onDeleteItem: function(item){ }
+});
+});

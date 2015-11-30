@@ -1,3 +1,5 @@
-//>>built
-define("dojox/editor/plugins/nls/fr/Blockquote",{blockquote:"Bloc de citation"});
-//@ sourceMappingURL=Blockquote.js.map
+define(
+({
+	"blockquote": "Bloc de citation"
+})
+);

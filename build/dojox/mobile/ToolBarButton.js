@@ -1,9 +1,178 @@
-//>>built
-define("dojox/mobile/ToolBarButton","dojo/_base/declare dojo/_base/lang dojo/_base/window dojo/dom-class dojo/dom-construct dojo/dom-style dojo/dom-attr ./sniff ./_ItemBase dojo/has!dojo-bidi?dojox/mobile/bidi/ToolBarButton".split(" "),function(h,k,g,b,f,p,l,c,m,n){g=h(c("dojo-bidi")?"dojox.mobile.NonBidiToolBarButton":"dojox.mobile.ToolBarButton",m,{selected:!1,arrow:"",light:!0,defaultColor:"mblColorDefault",selColor:"mblColorDefaultSel",baseClass:"mblToolBarButton",_selStartMethod:"touch",_selEndMethod:"touch",
-buildRendering:function(){!this.label&&this.srcNodeRef&&(this.label=this.srcNodeRef.innerHTML);this.label=k.trim(this.label);this.domNode=this.srcNodeRef&&"SPAN"===this.srcNodeRef.tagName?this.srcNodeRef:f.create("span");l.set(this.domNode,"role","button");this.inherited(arguments);if(this.light&&!this.arrow&&(!this.icon||!this.label))this.labelNode=this.tableNode=this.bodyNode=this.iconParentNode=this.domNode,b.add(this.domNode,this.defaultColor+" mblToolBarButtonBody"+(this.icon?" mblToolBarButtonLightIcon":
-" mblToolBarButtonLightText"));else{this.domNode.innerHTML="";if("left"===this.arrow||"right"===this.arrow)this.arrowNode=f.create("span",{className:"mblToolBarButtonArrow mblToolBarButton"+("left"===this.arrow?"Left":"Right")+"Arrow "+(10>c("ie")?"":this.defaultColor+" "+this.defaultColor+"45")},this.domNode),b.add(this.domNode,"mblToolBarButtonHas"+("left"===this.arrow?"Left":"Right")+"Arrow");this.bodyNode=f.create("span",{className:"mblToolBarButtonBody"},this.domNode);this.tableNode=f.create("table",
-{cellPadding:"0",cellSpacing:"0",border:"0"},this.bodyNode);!this.label&&this.arrow&&(this.tableNode.className="mblToolBarButtonText");var a=this.tableNode.insertRow(-1);this.iconParentNode=a.insertCell(-1);this.labelNode=a.insertCell(-1);this.iconParentNode.className="mblToolBarButtonIcon";this.labelNode.className="mblToolBarButtonLabel";this.icon&&("none"!==this.icon&&this.label)&&(b.add(this.domNode,"mblToolBarButtonHasIcon"),b.add(this.bodyNode,"mblToolBarButtonLabeledIcon"));b.add(this.bodyNode,
-this.defaultColor)}},startup:function(){this._started||(this.connect(this.domNode,"onkeydown","_onClick"),this.inherited(arguments),this._isOnLine||(this._isOnLine=!0,this.set("icon",void 0!==this._pendingIcon?this._pendingIcon:this.icon),delete this._pendingIcon))},_onClick:function(a){(!a||!("keydown"===a.type&&13!==a.keyCode))&&!1!==this.onClick(a)&&this.defaultClickAction(a)},onClick:function(){},_setLabelAttr:function(a){this.inherited(arguments);b.toggle(this.tableNode,"mblToolBarButtonText",
-a||this.arrow)},_setSelectedAttr:function(a){this.inherited(arguments);if(a){if(b.replace(this.bodyNode,this.selColor,this.defaultColor),!(10>c("ie"))&&this.arrowNode){var d=this.selColor,e=this.defaultColor;b.replace(this.arrowNode,d+" "+d+"45",e+" "+e+"45")}}else b.replace(this.bodyNode,this.defaultColor,this.selColor),!(10>c("ie"))&&this.arrowNode&&(d=this.defaultColor,e=this.selColor,b.replace(this.arrowNode,d+" "+d+"45",e+" "+e+"45"));b.toggle(this.domNode,"mblToolBarButtonSelected",a);b.toggle(this.bodyNode,
-"mblToolBarButtonBodySelected",a)}});return c("dojo-bidi")?h("dojox.mobile.ToolBarButton",[g,n]):g});
-//@ sourceMappingURL=ToolBarButton.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/window",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-attr",
+	"./sniff",
+	"./_ItemBase",
+	"dojo/has!dojo-bidi?dojox/mobile/bidi/ToolBarButton"
+], function(declare, lang, win, domClass, domConstruct, domStyle, domAttr, has, ItemBase, BidiToolBarButton){
+
+	// module:
+	//		dojox/mobile/ToolBarButton
+
+	var ToolBarButton = declare(has("dojo-bidi") ? "dojox.mobile.NonBidiToolBarButton" : "dojox.mobile.ToolBarButton", ItemBase, {
+		// summary:
+		//		A button widget which is placed in the Heading widget.
+		// description:
+		//		ToolBarButton is a button which is typically placed in the
+		//		Heading widget. It is a subclass of dojox/mobile/_ItemBase just
+		//		like ListItem or IconItem. So, unlike Button, it has basically
+		//		the same capability as ListItem or IconItem, such as icon
+		//		support, transition, etc.
+
+		// selected: Boolean
+		//		If true, the button is in the selected state.
+		selected: false,
+
+		// arrow: [const] String
+		//		Specifies "right" or "left" to be an arrow button.
+		//		Note that changing the value of the property after the widget 
+		//		creation has no effect.
+		arrow: "",
+
+		// light: [const] Boolean
+		//		If true, this widget produces only a single `<span>` node when it
+		//		has only an icon or only a label, and has no arrow. In that
+		//		case, you cannot have both icon and label, or arrow even if you
+		//		try to set them.
+		//		Note that changing the value of the property after the widget 
+		//		creation has no effect.
+		light: true,
+
+		// defaultColor: String
+		//		CSS class for the default color.
+		//		Note: If this button has an arrow (typically back buttons on iOS),
+		//		the class selector used for it is the value of defaultColor + "45".
+		//		For example, by default the arrow selector is "mblColorDefault45".
+		defaultColor: "mblColorDefault",
+
+		// selColor: String
+		//		CSS class for the selected color.
+		//		Note: If this button has an arrow (typically back buttons on iOS),
+		//		the class selector used for it is the value of selColor + "45".
+		//		For example, by default the selected arrow selector is "mblColorDefaultSel45".
+		selColor: "mblColorDefaultSel",
+
+		/* internal properties */
+		baseClass: "mblToolBarButton",
+
+		_selStartMethod: "touch",
+		_selEndMethod: "touch",
+
+		buildRendering: function(){
+			if(!this.label && this.srcNodeRef){
+				this.label = this.srcNodeRef.innerHTML;
+			}
+			this.label = lang.trim(this.label);
+			this.domNode = (this.srcNodeRef && this.srcNodeRef.tagName === "SPAN") ?
+				this.srcNodeRef : domConstruct.create("span");
+			domAttr.set(this.domNode, "role", "button");
+			this.inherited(arguments);
+
+			if(this.light && !this.arrow && (!this.icon || !this.label)){
+				this.labelNode = this.tableNode = this.bodyNode = this.iconParentNode = this.domNode;
+				domClass.add(this.domNode, this.defaultColor + " mblToolBarButtonBody" +
+							 (this.icon ? " mblToolBarButtonLightIcon" : " mblToolBarButtonLightText"));
+				return;
+			}
+
+			this.domNode.innerHTML = "";
+			if(this.arrow === "left" || this.arrow === "right"){
+				this.arrowNode = domConstruct.create("span", {
+					className: "mblToolBarButtonArrow mblToolBarButton" +
+					(this.arrow === "left" ? "Left" : "Right") + "Arrow " +
+					(has("ie") < 10 ? "" : (this.defaultColor + " " + this.defaultColor + "45"))
+				}, this.domNode);
+				domClass.add(this.domNode, "mblToolBarButtonHas" +
+					(this.arrow === "left" ? "Left" : "Right") + "Arrow");
+			}
+			this.bodyNode = domConstruct.create("span", {className:"mblToolBarButtonBody"}, this.domNode);
+			this.tableNode = domConstruct.create("table", {cellPadding:"0",cellSpacing:"0",border:"0",role:"presentation"}, this.bodyNode);
+			if(!this.label && this.arrow){
+				// The class mblToolBarButtonText is needed for arrow shape too.
+				// If the button has a label, the class is set by _setLabelAttr. If no label, do it here.
+				this.tableNode.className = "mblToolBarButtonText";
+			}
+
+			var row = this.tableNode.insertRow(-1);
+			this.iconParentNode = row.insertCell(-1);
+			this.labelNode = row.insertCell(-1);
+			this.iconParentNode.className = "mblToolBarButtonIcon";
+			this.labelNode.className = "mblToolBarButtonLabel";
+
+			if(this.icon && this.icon !== "none" && this.label){
+				domClass.add(this.domNode, "mblToolBarButtonHasIcon");
+				domClass.add(this.bodyNode, "mblToolBarButtonLabeledIcon");
+			}
+
+			domClass.add(this.bodyNode, this.defaultColor);
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+
+			this.connect(this.domNode, "onkeydown", "_onClick"); // for desktop browsers
+
+			this.inherited(arguments);
+			if(!this._isOnLine){
+				this._isOnLine = true;
+				// retry applying the attribute for which the custom setter delays the actual 
+				// work until _isOnLine is true. 
+				this.set("icon", this._pendingIcon !== undefined ? this._pendingIcon : this.icon);
+				// Not needed anymore (this code executes only once per life cycle):
+				delete this._pendingIcon; 
+			}
+		},
+
+		_onClick: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(e && e.type === "keydown" && e.keyCode !== 13){ return; }
+			if(this.onClick(e) === false){ return; } // user's click action
+			this.defaultClickAction(e);
+		},
+
+		onClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User defined function to handle clicks
+			// tags:
+			//		callback
+		},
+
+		_setLabelAttr: function(/*String*/text){
+			// summary:
+			//		Sets the button label text.
+			this.inherited(arguments);
+			domClass.toggle(this.tableNode, "mblToolBarButtonText", text || this.arrow); // also needed if only arrow
+		},
+
+		_setSelectedAttr: function(/*Boolean*/selected){
+			// summary:
+			//		Makes this widget in the selected or unselected state.
+			var replace = function(node, a, b){
+				domClass.replace(node, a + " " + a + "45", b + " " + b + "45");
+			};
+			this.inherited(arguments);
+			if(selected){
+				domClass.replace(this.bodyNode, this.selColor, this.defaultColor);
+				if(!(has("ie") < 10) && this.arrowNode){
+					replace(this.arrowNode, this.selColor, this.defaultColor);
+				}
+			}else{
+				domClass.replace(this.bodyNode, this.defaultColor, this.selColor);
+				if(!(has("ie") < 10) && this.arrowNode){
+					replace(this.arrowNode, this.defaultColor, this.selColor);
+				}
+			}
+			domClass.toggle(this.domNode, "mblToolBarButtonSelected", selected);
+			domClass.toggle(this.bodyNode, "mblToolBarButtonBodySelected", selected);
+		}
+	});
+	return has("dojo-bidi") ? declare("dojox.mobile.ToolBarButton", [ToolBarButton, BidiToolBarButton]) : ToolBarButton;
+});

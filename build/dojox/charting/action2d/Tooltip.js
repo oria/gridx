@@ -1,8 +1,178 @@
-//>>built
-define("dojox/charting/action2d/Tooltip","dijit/Tooltip dojo/_base/lang dojo/_base/declare dojo/_base/window dojo/_base/connect dojo/dom-style ./PlotAction dojox/gfx/matrix dojo/has dojo/has!dojo-bidi?../bidi/action2d/Tooltip dojox/lang/functional dojox/lang/functional/scan dojox/lang/functional/fold".split(" "),function(l,p,m,q,r,h,s,t,k,u,e){var n=function(a,b){var c=a.run&&a.run.data&&a.run.data[a.index];return c&&"number"!=typeof c&&(c.tooltip||c.text)?c.tooltip||c.text:b.tooltipFunc?b.tooltipFunc(a):
-a.y},g=Math.PI/4,v=Math.PI/2;h=m(k("dojo-bidi")?"dojox.charting.action2d.NonBidiTooltip":"dojox.charting.action2d.Tooltip",s,{defaultParams:{text:n,mouseOver:!0},optionalParams:{},constructor:function(a,b,c){this.text=c&&c.text?c.text:n;this.mouseOver=c&&void 0!=c.mouseOver?c.mouseOver:!0;this.connect()},process:function(a){if("onplotreset"===a.type||"onmouseout"===a.type)l.hide(this.aroundRect),this.aroundRect=null,"onplotreset"===a.type&&delete this.angles;else if(a.shape&&!(this.mouseOver&&"onmouseover"!==
-a.type||!this.mouseOver&&"onclick"!==a.type)){var b={type:"rect"},c=["after-centered","before-centered"];switch(a.element){case "marker":b.x=a.cx;b.y=a.cy;b.w=b.h=1;break;case "circle":b.x=a.cx-a.cr;b.y=a.cy-a.cr;b.w=b.h=2*a.cr;break;case "spider_circle":b.x=a.cx;b.y=a.cy;b.w=b.h=1;break;case "spider_plot":return;case "column":c=["above-centered","below-centered"];case "bar":b=p.clone(a.shape.getShape());b.w=b.width;b.h=b.height;break;case "candlestick":b.x=a.x;b.y=a.y;b.w=a.width;b.h=a.height;break;
-default:this.angles||(this.angles="number"==typeof a.run.data[0]?e.map(e.scanl(a.run.data,"+",0),"* 2 * Math.PI / this",e.foldl(a.run.data,"+",0)):e.map(e.scanl(a.run.data,"a + b.y",0),"* 2 * Math.PI / this",e.foldl(a.run.data,"a + b.y",0)));var f=t._degToRad(a.plot.opt.startAngle),d=(this.angles[a.index]+this.angles[a.index+1])/2+f;b.x=a.cx+a.cr*Math.cos(d);b.y=a.cy+a.cr*Math.sin(d);b.w=b.h=1;if(f&&(0>d||d>2*Math.PI))d=Math.abs(2*Math.PI-Math.abs(d));d<g||(d<v+g?c=["below-centered","above-centered"]:
-d<Math.PI+g?c=["before-centered","after-centered"]:d<2*Math.PI-g&&(c=["above-centered","below-centered"]))}k("dojo-bidi")&&this._recheckPosition(a,b,c);f=this.chart.getCoords();b.x+=f.x;b.y+=f.y;b.x=Math.round(b.x);b.y=Math.round(b.y);b.w=Math.ceil(b.w);b.h=Math.ceil(b.h);this.aroundRect=b;(a=this.text(a,this.plot))&&l.show(this._format(a),this.aroundRect,c);this.mouseOver||(this._handle=r.connect(q.doc,"onclick",this,"onClick"))}},onClick:function(){this.process({type:"onmouseout"})},_recheckPosition:function(a,
-b,c){},_format:function(a){return a}});return k("dojo-bidi")?m("dojox.charting.action2d.Tooltip",[h,u]):h});
-//@ sourceMappingURL=Tooltip.js.map
+define(["dijit/Tooltip", "dojo/_base/lang", "dojo/_base/declare", "dojo/_base/window", "dojo/_base/connect", "dojo/dom-style",
+	"./PlotAction", "dojox/gfx/matrix", "dojo/has", "dojo/has!dojo-bidi?../bidi/action2d/Tooltip", 
+	"dojox/lang/functional", "dojox/lang/functional/scan", "dojox/lang/functional/fold"],
+	function(DijitTooltip, lang, declare, win, hub, domStyle, PlotAction, m, has, BidiTooltip, df){
+	
+	/*=====
+	var __TooltipCtorArgs = {
+			// summary:
+			//		Additional arguments for tooltip actions.
+			// duration: Number?
+			//		The amount of time in milliseconds for an animation to last.  Default is 400.
+			// easing: dojo/fx/easing/*?
+			//		An easing object (see dojo.fx.easing) for use in an animation.  The
+			//		default is dojo.fx.easing.backOut.
+			// text: Function?
+			//		The function that produces the text to be shown within a tooltip.  By default this will be
+			//		set by the plot in question, by returning the value of the element.
+			// mouseOver: Boolean?
+            //		Whether the tooltip is enabled on mouse over or on mouse click / touch down. Default is true.
+	};
+	=====*/
+
+	var DEFAULT_TEXT = function(o, plot){
+		var t = o.run && o.run.data && o.run.data[o.index];
+		if(t && typeof t != "number" && (t.tooltip || t.text)){
+			return t.tooltip || t.text;
+		}
+		if(plot.tooltipFunc){
+			return plot.tooltipFunc(o);
+		}else{
+			return o.y;
+		}
+	};
+
+	var pi4 = Math.PI / 4, pi2 = Math.PI / 2;
+	
+	var Tooltip = declare(has("dojo-bidi")? "dojox.charting.action2d.NonBidiTooltip" : "dojox.charting.action2d.Tooltip", PlotAction, {
+		// summary:
+		//		Create an action on a plot where a tooltip is shown when hovering over an element.
+
+		// the data description block for the widget parser
+		defaultParams: {
+			text: DEFAULT_TEXT,	// the function to produce a tooltip from the object
+            mouseOver: true
+		},
+		optionalParams: {},	// no optional parameters
+
+		constructor: function(chart, plot, kwArgs){
+			// summary:
+			//		Create the tooltip action and connect it to the plot.
+			// chart: dojox/charting/Chart
+			//		The chart this action belongs to.
+			// plot: String?
+			//		The plot this action is attached to.  If not passed, "default" is assumed.
+			// kwArgs: __TooltipCtorArgs?
+			//		Optional keyword arguments object for setting parameters.
+			this.text = kwArgs && kwArgs.text ? kwArgs.text : DEFAULT_TEXT;
+			this.mouseOver = kwArgs && kwArgs.mouseOver != undefined ? kwArgs.mouseOver : true;
+			this.connect();
+		},
+		
+		process: function(o){
+			// summary:
+			//		Process the action on the given object.
+			// o: dojox/gfx/shape.Shape
+			//		The object on which to process the highlighting action.
+			if(o.type === "onplotreset" || o.type === "onmouseout"){
+                DijitTooltip.hide(this.aroundRect);
+				this.aroundRect = null;
+				if(o.type === "onplotreset"){
+					delete this.angles;
+				}
+				return;
+			}
+			
+			if(!o.shape || (this.mouseOver && o.type !== "onmouseover") || (!this.mouseOver && o.type !== "onclick")){ return; }
+			
+			// calculate relative coordinates and the position
+			var aroundRect = {type: "rect"}, position = ["after-centered", "before-centered"];
+			switch(o.element){
+				case "marker":
+					aroundRect.x = o.cx;
+					aroundRect.y = o.cy;
+					aroundRect.w = aroundRect.h = 1;
+					break;
+				case "circle":
+					aroundRect.x = o.cx - o.cr;
+					aroundRect.y = o.cy - o.cr;
+					aroundRect.w = aroundRect.h = 2 * o.cr;
+					break;
+				case "spider_circle":
+					aroundRect.x = o.cx;
+					aroundRect.y = o.cy ;
+					aroundRect.w = aroundRect.h = 1;
+					break;
+				case "spider_plot":
+					return;
+				case "column":
+					position = ["above-centered", "below-centered"];
+					// intentional fall down
+				case "bar":
+					aroundRect = lang.clone(o.shape.getShape());
+					aroundRect.w = aroundRect.width;
+					aroundRect.h = aroundRect.height;
+					break;
+				case "candlestick":
+					aroundRect.x = o.x;
+					aroundRect.y = o.y;
+					aroundRect.w = o.width;
+					aroundRect.h = o.height;
+					break;
+				default:
+				//case "slice":
+					if(!this.angles){
+						// calculate the running total of slice angles
+						var filteredRun = typeof o.run.data[0] == "number" ?
+								df.map(o.run.data, "x ? Math.max(x, 0) : 0") : df.map(o.run.data, "x ? Math.max(x.y, 0) : 0");
+						this.angles = df.map(df.scanl(filteredRun, "+", 0),
+							"* 2 * Math.PI / this", df.foldl(filteredRun, "+", 0));
+					}
+					var startAngle = m._degToRad(o.plot.opt.startAngle),
+						angle = (this.angles[o.index] + this.angles[o.index + 1]) / 2 + startAngle;
+					aroundRect.x = o.cx + o.cr * Math.cos(angle);
+					aroundRect.y = o.cy + o.cr * Math.sin(angle);
+					aroundRect.w = aroundRect.h = 1;
+                    // depending on startAngle we might go out of the 0-2*PI range, normalize that
+                    if(startAngle && (angle < 0 || angle > 2 * Math.PI)){
+						angle = Math.abs(2 * Math.PI  - Math.abs(angle));
+					}
+					// calculate the position
+					if(angle < pi4){
+						// do nothing: the position is right
+					}else if(angle < pi2 + pi4){
+						position = ["below-centered", "above-centered"];
+					}else if(angle < Math.PI + pi4){
+						position = ["before-centered", "after-centered"];
+					}else if(angle < 2 * Math.PI - pi4){
+						position = ["above-centered", "below-centered"];
+					}
+					/*
+					else{
+						// do nothing: the position is right
+					}
+					*/
+					break;
+			}
+			if(has("dojo-bidi")){
+				this._recheckPosition(o,aroundRect,position);
+			}
+			// adjust relative coordinates to absolute, and remove fractions
+			var lt = this.chart.getCoords();
+			aroundRect.x += lt.x;
+			aroundRect.y += lt.y;
+			aroundRect.x = Math.round(aroundRect.x);
+			aroundRect.y = Math.round(aroundRect.y);
+			aroundRect.w = Math.ceil(aroundRect.w);
+			aroundRect.h = Math.ceil(aroundRect.h);
+			this.aroundRect = aroundRect;
+
+			var tooltipText = this.text(o, this.plot);
+			if(tooltipText){
+				DijitTooltip.show(this._format(tooltipText), this.aroundRect, position);
+			}
+			if(!this.mouseOver){
+				this._handle = hub.connect(win.doc, "onclick", this, "onClick");
+			}
+		},
+		onClick: function(){
+			this.process({ type: "onmouseout"});
+		},
+		_recheckPosition: function(obj,rect,position){			
+		},
+		_format: function(tooltipText){
+			return tooltipText;
+		}
+	});
+	return has("dojo-bidi")? declare("dojox.charting.action2d.Tooltip", [Tooltip, BidiTooltip]) : Tooltip;
+});

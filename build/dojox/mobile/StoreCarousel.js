@@ -1,3 +1,17 @@
-//>>built
-define("dojox/mobile/StoreCarousel",["dojo/_base/declare","./Carousel","./_StoreMixin"],function(a,b,c){return a("dojox.mobile.StoreCarousel",[b,c],{})});
-//@ sourceMappingURL=StoreCarousel.js.map
+define([
+	"dojo/_base/declare",
+	"./Carousel",
+	"./_StoreMixin"
+], function(declare, Carousel, StoreMixin){
+
+	// module:
+	//		dojox/mobile/StoreCarousel
+
+	return declare("dojox.mobile.StoreCarousel", [Carousel, StoreMixin], {
+		// summary:
+		//		A dojo/store enabled Carousel.
+		// description:
+		//		StoreCarousel is a subclass of dojox/mobile/Carousel which
+		//		can generate contents according to the given dojo/store store.
+	});
+});

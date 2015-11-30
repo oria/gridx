@@ -1,3 +1,10 @@
-//>>built
-define("dijit/_base/typematic",["../typematic"],function(){});
-//@ sourceMappingURL=typematic.js.map
+define(["../typematic"], function(){
+
+	/*=====
+	return {
+		// summary:
+		//		Deprecated, for back-compat, just loads top level module
+	};
+	=====*/
+
+});

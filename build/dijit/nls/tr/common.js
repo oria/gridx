@@ -1,3 +1,8 @@
-//>>built
-define("dijit/nls/tr/common",{buttonOk:"Tamam",buttonCancel:"\u0130ptal",buttonSave:"Kaydet",itemClose:"Kapat"});
-//@ sourceMappingURL=common.js.map
+define(
+({
+	buttonOk: "Tamam",
+	buttonCancel: "İptal",
+	buttonSave: "Kaydet",
+	itemClose: "Kapat"
+})
+);

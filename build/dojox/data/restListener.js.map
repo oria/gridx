@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"restListener.js",
-"lineCount":2,
-"mappings":"A,SACAA,MAAA,oDAA4D,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC5DF,CAAAG,QAAA,2BAEAD,EAAAE,KAAAC,aAH4D,CAGlCC,QAAAA,CAASC,CAATD,MAQrBE,EAAUD,CAAAC,QARWF,CASrBG,EAAKP,CAAAQ,IAAAC,SATgBL,CAUrBM,EAAUH,CAAAI,gBAAA,CAAmBL,CAAnB,CAAAI,QAVWN,CAWrBQ,EAASZ,CAAAa,KAAAC,IAAAC,YAAA,CAA2BV,CAAAO,OAA3B,mBACEP,CAAAW,MADF,EAC4BV,CAD5B,OAEFN,CAAAQ,IAAAS,KAAAC,OAFE,UAGCR,CAAAS,YAAAC,QAAA,cAHD,aAIIb,CAAAc,eAAA,CAAkBX,CAAlB,CAJJ,SAKAH,CAAAe,QALA,QAMDf,CAAAgB,QANC,uBAXYnB,CAoBrBoB,EAASxB,CAAAQ,IAAAS,KAAAC,OAATM,EAAkCxB,CAAAQ,IAAAS,KAAAC,OAAA,CAAsBZ,CAAtB,CAClCmB,EArBqBrB,MAqBJC,CAAAW,MAAAU,YAAA,EACjBC,EAtBqBvB;AAsBbM,CAtBaN,EAsBFM,CAAAkB,OAtBExB,IAuBtBoB,CAvBsBpB,EAwBrBoB,CAAA,CAAOC,CAAP,CAxBqBrB,CAyBvBoB,CAAA,CAAOC,CAAP,CAAA,CAAgBb,CAAhB,CAzBuBR,SA8BtBuB,CA9BsBvB,QA+BjBqB,CA/BiBrB,gBAiCtBuB,CAAAE,MAAA,CAAYjB,CAAZ,CAjCsBR,uBAoCtBuB,CAAAG,SAAA,CAAeN,CAAf,CApCsBpB,EAHkC,CAA5D;",
-"sources":["restListener.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","data","restListener","dojox.data.restListener","message","channel","jr","rpc","JsonRest","service","getServiceAndId","result","json","ref","resolveJson","event","Rest","_index","servicePath","replace","getIdAttribute","schemas","_loader","target","onEvent","toLowerCase","store","_store","onNew","onDelete"]
-}

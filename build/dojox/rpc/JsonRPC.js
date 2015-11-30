@@ -1,4 +1,56 @@
-//>>built
-define("dojox/rpc/JsonRPC",["dojo","dojox","dojox/rpc/Service","dojo/errors/RequestError"],function(c,d,h,f){function e(b){return{serialize:function(a,g,d,e){a={id:this._requestId++,method:g.name,params:d};b&&(a.jsonrpc=b);return{data:c.toJson(a),handleAs:"json",contentType:"application/json",transport:"POST"}},deserialize:function(a){if("Error"==a.name||a instanceof f)a=c.fromJson(a.responseText);if(a.error){var b=Error(a.error.message||a.error);b._rpcErrorObject=a.error;return b}return a.result}}}
-d.rpc.envelopeRegistry.register("JSON-RPC-1.0",function(b){return"JSON-RPC-1.0"==b},c.mixin({namedParams:!1},e()));d.rpc.envelopeRegistry.register("JSON-RPC-2.0",function(b){return"JSON-RPC-2.0"==b},c.mixin({namedParams:!0},e("2.0")))});
-//@ sourceMappingURL=JsonRPC.js.map
+define("dojox/rpc/JsonRPC", ["dojo", "dojox", "dojox/rpc/Service", "dojo/errors/RequestError"], function(dojo, dojox, Service, RequestError) {
+
+	function jsonRpcEnvelope(version){
+		return {
+			serialize: function(smd, method, data, options){
+				//not converted to json it self. This  will be done, if
+				//appropriate, at the transport level
+	
+				var d = {
+					id: this._requestId++,
+					method: method.name,
+					params: data
+				};
+				if(version){
+					d.jsonrpc = version;
+				}
+				return {
+					data: dojo.toJson(d),
+					handleAs:'json',
+					contentType: 'application/json',
+					transport:"POST"
+				};
+			},
+	
+			deserialize: function(obj){
+				if ('Error' == obj.name // old xhr
+					|| obj instanceof RequestError // new xhr
+				){
+					obj = dojo.fromJson(obj.responseText);
+				}
+				if(obj.error) {
+					var e = new Error(obj.error.message || obj.error);
+					e._rpcErrorObject = obj.error;
+					return e;
+				}
+				return obj.result;
+			}
+		};
+	}
+	dojox.rpc.envelopeRegistry.register(
+		"JSON-RPC-1.0",
+		function(str){
+			return str == "JSON-RPC-1.0";
+		},
+		dojo.mixin({namedParams:false}, jsonRpcEnvelope()) // 1.0 will only work with ordered params
+	);
+
+	dojox.rpc.envelopeRegistry.register(
+		"JSON-RPC-2.0",
+		function(str){
+			return str == "JSON-RPC-2.0";
+		},
+		dojo.mixin({namedParams:true }, jsonRpcEnvelope("2.0")) // 2.0 supports named params
+	);
+
+});

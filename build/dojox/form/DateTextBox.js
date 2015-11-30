@@ -1,3 +1,28 @@
-//>>built
-define("dojox/form/DateTextBox",["dojo/_base/kernel","dojo/dom-style","dojox/widget/Calendar","dijit/form/_DateTimeTextBox","dojo/_base/declare"],function(a,b,c,d,e){a.experimental("dojox/form/DateTextBox");return e("dojox.form.DateTextBox",d,{baseClass:"dijitTextBox dijitComboBox dojoxDateTextBox",popupClass:c,_selector:"date",openDropDown:function(){this.inherited(arguments);b.set(this.dropDown.domNode.parentNode,"position","absolute")}})});
-//@ sourceMappingURL=DateTextBox.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/dom-style",
+	"dojox/widget/Calendar",
+	"dijit/form/_DateTimeTextBox",
+	"dojo/_base/declare"
+	], function(kernel, domStyle, Calendar, _DateTimeTextBox, declare){
+	kernel.experimental("dojox/form/DateTextBox");
+	return declare( "dojox.form.DateTextBox", _DateTimeTextBox,
+		{
+			// summary:
+			//		A validating, serializable, range-bound date text box with a popup calendar
+
+			baseClass: "dijitTextBox dijitComboBox dojoxDateTextBox",
+
+			// popupClass: String
+			//		The popup widget to use. In this case, a calendar with Day, Month and Year views.
+			popupClass: Calendar,
+
+			_selector: "date",
+
+			openDropDown: function(){
+				this.inherited(arguments);
+				domStyle.set(this.dropDown.domNode.parentNode, "position", "absolute");
+			}
+		}
+	);
+});

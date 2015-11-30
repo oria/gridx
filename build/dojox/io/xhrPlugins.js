@@ -1,7 +1,170 @@
-//>>built
-define("dojox/io/xhrPlugins",["dojo/_base/kernel","dojo/_base/xhr","dojo/AdapterRegistry"],function(b,m,n){function f(){return k=dojox.io.xhrPlugins.plainXhr=k||b._defaultXhr||m}b.getObject("io.xhrPlugins",!0,dojox);var d,k;dojox.io.xhrPlugins.register=function(){var e=f();d||(d=new n,b[b._defaultXhr?"_defaultXhr":"xhr"]=function(b,c,a){return d.match.apply(d,arguments)},d.register("xhr",function(b,c){if(!c.url.match(/^\w*:\/\//))return!0;var a=window.location.href.match(/^.*?\/\/.*?\//)[0];return c.url.substring(0,
-a.length)==a},e));return d.register.apply(d,arguments)};dojox.io.xhrPlugins.addProxy=function(e){var h=f();dojox.io.xhrPlugins.register("proxy",function(b,a){return!0},function(c,a,p){a.url=e+encodeURIComponent(a.url);return h.call(b,c,a,p)})};var g;dojox.io.xhrPlugins.addCrossSiteXhr=function(e,h){var c=f();if(void 0===g&&window.XMLHttpRequest)try{(new XMLHttpRequest).open("GET","http://testing-cross-domain-capability.com",!0),g=!0,b.config.noRequestedWithHeaders=!0}catch(a){g=!1}dojox.io.xhrPlugins.register("cs-xhr",
-function(a,b){return(g||window.XDomainRequest&&!0!==b.sync&&("GET"==a||"POST"==a||h))&&b.url.substring(0,e.length)==e},g?c:function(){var a=b._xhrObj;b._xhrObj=function(){function a(c,e){return function(){b.readyState=e;b.status=c}}var b=new XDomainRequest;b.readyState=1;b.setRequestHeader=function(){};b.getResponseHeader=function(a){return"Content-Type"==a?b.contentType:null};b.onload=a(200,4);b.onprogress=a(200,3);b.onerror=a(404,4);return b};var c=(h?h(f()):f()).apply(b,arguments);b._xhrObj=a;
-return c})};dojox.io.xhrPlugins.fullHttpAdapter=function(e,h){return function(c,a,d){var f={},g={};"GET"!=c&&(g["http-method"]=c,a.putData&&h&&(f["http-content"]=a.putData,delete a.putData,d=!1),a.postData&&h&&(f["http-content"]=a.postData,delete a.postData,d=!1),c="POST");for(var l in a.headers){var k=l.match(/^X-/)?l.substring(2).replace(/-/g,"_").toLowerCase():"http-"+l;g[k]=a.headers[l]}a.query=b.objectToQuery(g);b._ioAddQueryToUrl(a);a.content=b.mixin(a.content||{},f);return e.call(b,c,a,d)}};
-return dojox.io.xhrPlugins});
-//@ sourceMappingURL=xhrPlugins.js.map
+define(["dojo/_base/kernel", "dojo/_base/xhr", "dojo/AdapterRegistry"], function(dojo, xhr, AdapterRegistry){
+	dojo.getObject("io.xhrPlugins", true, dojox);
+
+	var registry;
+	var plainXhr;
+	function getPlainXhr(){
+		return plainXhr = dojox.io.xhrPlugins.plainXhr = plainXhr || dojo._defaultXhr || xhr;
+	}
+	dojox.io.xhrPlugins.register = function(){
+		// summary:
+		//		overrides the default xhr handler to implement a registry of
+		//		xhr handlers
+		var plainXhr = getPlainXhr();
+		if(!registry){
+			registry = new AdapterRegistry();
+			// replaces the default xhr() method. Can we just use connect() instead?
+			dojo[dojo._defaultXhr ? "_defaultXhr" : "xhr"] = function(/*String*/ method, /*dojo.__XhrArgs*/ args, /*Boolean?*/ hasBody){
+				return registry.match.apply(registry,arguments);
+			};
+			registry.register(
+				"xhr",
+				function(method,args){
+					if(!args.url.match(/^\w*:\/\//)){
+						// if it is not an absolute url (or relative to the
+						// protocol) we can use this plain XHR
+						return true;
+					}
+					var root = window.location.href.match(/^.*?\/\/.*?\//)[0];
+					return args.url.substring(0, root.length) == root; // or check to see if we have the same path
+				},
+				plainXhr
+			);
+		}
+		return registry.register.apply(registry, arguments);
+	};
+	dojox.io.xhrPlugins.addProxy = function(proxyUrl){
+		// summary:
+		//		adds a server side proxy xhr handler for cross-site URLs
+		// proxyUrl:
+		//		This is URL to send the requests to.
+		// example:
+		//		Define a proxy:
+		//	|	dojox.io.xhrPlugins.addProxy("/proxy?url=");
+		//		And then when you call:
+		//	|	dojo.xhr("GET",{url:"http://othersite.com/file"});
+		//		It would result in the request (to your origin server):
+		//	|	GET /proxy?url=http%3A%2F%2Fothersite.com%2Ffile HTTP/1.1
+		var plainXhr = getPlainXhr();
+		dojox.io.xhrPlugins.register(
+			"proxy",
+			function(method,args){
+				// this will match on URL
+
+				// really can be used for anything, but plain XHR will take
+				// precedent by order of loading
+				return true;
+			},
+			function(method,args,hasBody){
+				args.url = proxyUrl + encodeURIComponent(args.url);
+				return plainXhr.call(dojo, method, args, hasBody);
+			});
+	};
+	var csXhrSupport;
+	dojox.io.xhrPlugins.addCrossSiteXhr = function(url, httpAdapter){
+		// summary:
+		//		Adds W3C Cross site XHR or XDomainRequest handling for the given URL prefix
+		//
+		// url:
+		//		Requests that start with this URL will be considered for using
+		//		cross-site XHR.
+		//
+		// httpAdapter: This allows for adapting HTTP requests that could not otherwise be
+		//		sent with XDR, so you can use a convention for headers and PUT/DELETE methods.
+		//
+		// description:
+		//		This can be used for servers that support W3C cross-site XHR. In order for
+		//		a server to allow a client to make cross-site XHR requests,
+		//		it should respond with the header like:
+		//	|	Access-Control: allow <*>
+		//		see: http://www.w3.org/TR/access-control/
+		var plainXhr = getPlainXhr();
+		if(csXhrSupport === undefined && window.XMLHttpRequest){
+			// just run this once to see if we have cross-site support
+			try{
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET","http://testing-cross-domain-capability.com",true);
+				csXhrSupport = true;
+				dojo.config.noRequestedWithHeaders = true;
+			}catch(e){
+				csXhrSupport = false;
+			}
+		}
+		dojox.io.xhrPlugins.register(
+			"cs-xhr",
+			function(method,args){
+				return (csXhrSupport ||
+						(window.XDomainRequest && args.sync !== true &&
+							(method == "GET" || method == "POST" || httpAdapter))) &&
+					(args.url.substring(0,url.length) == url);
+			},
+			csXhrSupport ? plainXhr : function(){
+				var normalXhrObj = dojo._xhrObj;
+				// we will just substitute this in temporarily so we can use XDomainRequest instead of XMLHttpRequest
+				dojo._xhrObj = function(){
+					
+					var xdr = new XDomainRequest();
+					xdr.readyState = 1;
+					xdr.setRequestHeader = function(){}; // just absorb them, we can't set headers :/
+					xdr.getResponseHeader = function(header){ // this is the only header we can access
+						return header == "Content-Type" ? xdr.contentType : null;
+					}
+					// adapt the xdr handlers to xhr
+					function handler(status, readyState){
+						return function(){
+							xdr.readyState = readyState;
+							xdr.status = status;
+						}
+					}
+					xdr.onload = handler(200, 4);
+					xdr.onprogress = handler(200, 3);
+					xdr.onerror = handler(404, 4); // an error, who knows what the real status is
+					return xdr;
+				};
+				var dfd = (httpAdapter ? httpAdapter(getPlainXhr()) : getPlainXhr()).apply(dojo,arguments);
+				dojo._xhrObj = normalXhrObj;
+				return dfd;
+			}
+		);
+	};
+	dojox.io.xhrPlugins.fullHttpAdapter = function(plainXhr,noRawBody){
+		// summary:
+		//		Provides a HTTP adaption.
+		// description:
+		//		The following convention is used:
+		//		method name -> ?http-method=PUT
+		//		Header -> http-Header-Name=header-value
+		//		X-Header -> header_name=header-value
+		// example:
+		//		dojox.io.xhrPlugins.addXdr("http://somesite.com", dojox.io.xhrPlugins.fullHttpAdapter);
+		return function(method,args,hasBody){
+			var content = {};
+			var parameters = {};
+			if(method != "GET"){
+				parameters["http-method"] = method;
+				if(args.putData && noRawBody){
+					content["http-content"] = args.putData;
+					delete args.putData;
+					hasBody = false;
+				}
+				if(args.postData && noRawBody){
+					content["http-content"] = args.postData;
+					delete args.postData;
+					hasBody = false;
+				}
+				method = "POST";
+			
+			}
+			for(var i in args.headers){
+				var parameterName = i.match(/^X-/) ? i.substring(2).replace(/-/g,'_').toLowerCase() : ("http-" + i);
+				parameters[parameterName] = args.headers[i];
+			}
+			args.query = dojo.objectToQuery(parameters);
+			dojo._ioAddQueryToUrl(args);
+			args.content = dojo.mixin(args.content || {},content);
+			return plainXhr.call(dojo,method,args,hasBody);
+		};
+	};
+
+	return dojox.io.xhrPlugins;
+});

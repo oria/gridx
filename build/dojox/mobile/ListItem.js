@@ -1,19 +1,583 @@
-//>>built
-define("dojox/mobile/ListItem","dojo/_base/array dojo/_base/declare dojo/_base/lang dojo/dom-class dojo/dom-construct dojo/dom-style dojo/dom-attr dijit/registry dijit/_WidgetBase ./iconUtils ./_ItemBase ./ProgressIndicator dojo/has dojo/has!dojo-bidi?dojox/mobile/bidi/ListItem".split(" "),function(h,k,n,d,f,p,g,l,q,r,e,s,m,t){e=k(m("dojo-bidi")?"dojox.mobile.NonBidiListItem":"dojox.mobile.ListItem",e,{rightText:"",rightIcon:"",rightIcon2:"",deleteIcon:"",anchorLabel:!1,noArrow:!1,checked:!1,arrowClass:"",
-checkClass:"",uncheckClass:"",variableHeight:!1,rightIconTitle:"",rightIcon2Title:"",header:!1,tag:"li",busy:!1,progStyle:"",paramsToInherit:"variableHeight,transition,deleteIcon,icon,rightIcon,rightIcon2,uncheckIcon,arrowClass,checkClass,uncheckClass,deleteIconTitle,deleteIconRole",baseClass:"mblListItem",_selStartMethod:"touch",_selEndMethod:"timer",_delayedSelection:!0,_selClass:"mblListItemSelected",buildRendering:function(){this._templated=!!this.templateString;this._templated||(this.domNode=
-this.containerNode=this.srcNodeRef||f.create(this.tag));this.inherited(arguments);this.selected&&d.add(this.domNode,this._selClass);this.header&&d.replace(this.domNode,"mblEdgeToEdgeCategory",this.baseClass);if(!this._templated){this.labelNode=f.create("div",{className:"mblListItemLabel"});var a=this.srcNodeRef;a&&(1===a.childNodes.length&&3===a.firstChild.nodeType)&&this.labelNode.appendChild(a.firstChild);this.domNode.appendChild(this.labelNode)}this._layoutChildren=[]},startup:function(){if(!this._started){var a=
-this.getParent(),b=this.getTransOpts();if((!this._templated||this.labelNode)&&this.anchorLabel)this.labelNode.style.display="inline",this.labelNode.style.cursor="pointer",this.connect(this.labelNode,"onclick","_onClick"),this.onTouchStart=function(a){return a.target!==this.labelNode};b.moveTo||b.href||b.url||this.clickable||a&&a.select?this.connect(this.domNode,"onkeydown","_onClick"):this._handleClick=!1;this.inherited(arguments);d.contains(this.domNode,"mblVariableHeight")&&(this.variableHeight=
-!0);this.variableHeight&&(d.add(this.domNode,"mblVariableHeight"),this.defer("layoutVariableHeight"));this._isOnLine||(this._isOnLine=!0,this.set({icon:void 0!==this._pending_icon?this._pending_icon:this.icon,deleteIcon:void 0!==this._pending_deleteIcon?this._pending_deleteIcon:this.deleteIcon,rightIcon:void 0!==this._pending_rightIcon?this._pending_rightIcon:this.rightIcon,rightIcon2:void 0!==this._pending_rightIcon2?this._pending_rightIcon2:this.rightIcon2,uncheckIcon:void 0!==this._pending_uncheckIcon?
-this._pending_uncheckIcon:this.uncheckIcon}),delete this._pending_icon,delete this._pending_deleteIcon,delete this._pending_rightIcon,delete this._pending_rightIcon2,delete this._pending_uncheckIcon);a&&a.select&&(this.set("checked",void 0!==this._pendingChecked?this._pendingChecked:this.checked),g.set(this.domNode,"role","option"),(this._pendingChecked||this.checked)&&g.set(this.domNode,"aria-selected","true"),delete this._pendingChecked);this.setArrow();this.layoutChildren()}},_updateHandles:function(){var a=
-this.getParent(),b=this.getTransOpts();b.moveTo||b.href||b.url||this.clickable||a&&a.select?(this._keydownHandle||(this._keydownHandle=this.connect(this.domNode,"onkeydown","_onClick")),this._handleClick=!0):(this._keydownHandle&&(this.disconnect(this._keydownHandle),this._keydownHandle=null),this._handleClick=!1);this.inherited(arguments)},layoutChildren:function(){var a;h.forEach(this.domNode.childNodes,function(b){if(1===b.nodeType){var c=b.getAttribute("layout")||b.getAttribute("data-mobile-layout")||
-(l.byNode(b)||{}).layout;c&&(d.add(b,"mblListItemLayout"+c.charAt(0).toUpperCase()+c.substring(1)),this._layoutChildren.push(b),"center"===c&&(a=b))}},this);a&&this.domNode.insertBefore(a,this.domNode.firstChild)},resize:function(){this.variableHeight&&this.layoutVariableHeight();if(!this._templated||this.labelNode)this.labelNode.style.display=this.labelNode.firstChild?"block":"inline"},_onTouchStart:function(a){!a.target.getAttribute("preventTouch")&&(!a.target.getAttribute("data-mobile-prevent-touch")&&
-!(l.getEnclosingWidget(a.target)||{}).preventTouch)&&this.inherited(arguments)},_onClick:function(a){if(!(this.getParent().isEditing||a&&"keydown"===a.type&&13!==a.keyCode)&&!1!==this.onClick(a)){var b=this.labelNode;if((this._templated||b)&&this.anchorLabel&&a.currentTarget===b)d.add(b,"mblListItemLabelSelected"),this.defer(function(){d.remove(b,"mblListItemLabelSelected")},this._duration),this.onAnchorLabelClicked(a);else{var c=this.getParent();c.select&&("single"===c.select?this.checked||this.set("checked",
-!0):"multiple"===c.select&&this.set("checked",!this.checked));this.defaultClickAction(a)}}},onClick:function(){},onAnchorLabelClicked:function(a){},layoutVariableHeight:function(){var a=this.domNode.offsetHeight;a!==this.domNodeHeight&&(this.domNodeHeight=a,h.forEach(this._layoutChildren.concat([this.rightTextNode,this.rightIcon2Node,this.rightIconNode,this.uncheckIconNode,this.iconNode,this.deleteIconNode,this.knobIconNode]),function(a){if(a){var c=this.domNode,d=function(){var d=Math.round((c.offsetHeight-
-a.offsetHeight)/2)-p.get(c,"paddingTop");a.style.marginTop=d+"px"};0===a.offsetHeight&&"IMG"===a.tagName?a.onload=d:d()}},this))},setArrow:function(){if(!this.checked){var a="",b=this.getParent(),c=this.getTransOpts();if(c.moveTo||c.href||c.url||this.clickable)if(!this.noArrow&&(!b||!b.selectOne))a=this.arrowClass||"mblDomButtonArrow",g.set(this.domNode,"role","button");a&&this._setRightIconAttr(a)}},_findRef:function(a){var b,c="deleteIcon icon rightIcon uncheckIcon rightIcon2 rightText".split(" ");
-for(a=h.indexOf(c,a)+1;a<c.length;a++)if(b=this[c[a]+"Node"])return b;for(a=c.length-1;0<=a;a--)if(b=this[c[a]+"Node"])return b.nextSibling;return this.domNode.firstChild},_setIcon:function(a,b){if(this._isOnLine){this._set(b,a);this[b+"Node"]=r.setIcon(a,this[b+"Pos"],this[b+"Node"],this[b+"Title"]||this.alt,this.domNode,this._findRef(b),"before");if(this[b+"Node"]){var c=b.charAt(0).toUpperCase()+b.substring(1);d.add(this[b+"Node"],"mblListItem"+c)}(c=this[b+"Role"])&&this[b+"Node"].setAttribute("role",
-c)}else this["_pending_"+b]=a},_setDeleteIconAttr:function(a){this._setIcon(a,"deleteIcon")},_setIconAttr:function(a){this._setIcon(a,"icon")},_setRightTextAttr:function(a){!this._templated&&!this.rightTextNode&&(this.rightTextNode=f.create("div",{className:"mblListItemRightText"},this.labelNode,"before"));this.rightText=a;this.rightTextNode.innerHTML=this._cv?this._cv(a):a},_setRightIconAttr:function(a){this._setIcon(a,"rightIcon")},_setUncheckIconAttr:function(a){this._setIcon(a,"uncheckIcon")},
-_setRightIcon2Attr:function(a){this._setIcon(a,"rightIcon2")},_setCheckedAttr:function(a){if(this._isOnLine){var b=this.getParent();b&&("single"===b.select&&a)&&h.forEach(b.getChildren(),function(a){a!==this&&a.checked&&a.set("checked",!1)&&g.set(a.domNode,"aria-selected","false")},this);this._setRightIconAttr(this.checkClass||"mblDomButtonCheck");this._setUncheckIconAttr(this.uncheckClass);d.toggle(this.domNode,"mblListItemChecked",a);d.toggle(this.domNode,"mblListItemUnchecked",!a);d.toggle(this.domNode,
-"mblListItemHasUncheck",!!this.uncheckIconNode);this.rightIconNode.style.position=this.uncheckIconNode&&!a?"absolute":"";if(b&&this.checked!==a)b.onCheckStateChanged(this,a);this._set("checked",a);g.set(this.domNode,"aria-selected",a?"true":"false")}else this._pendingChecked=a},_setBusyAttr:function(a){var b=this._prog;a?(this._progNode||(this._progNode=f.create("div",{className:"mblListItemIcon"}),b=this._prog=new s({size:25,center:!1,removeOnStop:!1}),d.add(b.domNode,this.progStyle),this._progNode.appendChild(b.domNode)),
-this.iconNode?this.domNode.replaceChild(this._progNode,this.iconNode):f.place(this._progNode,this._findRef("icon"),"before"),b.start()):this._progNode&&(this.iconNode?this.domNode.replaceChild(this.iconNode,this._progNode):this.domNode.removeChild(this._progNode),b.stop());this._set("busy",a)},_setSelectedAttr:function(a){this.inherited(arguments);d.toggle(this.domNode,this._selClass,a)},_setClickableAttr:function(a){this._set("clickable",a);this._updateHandles()},_setMoveToAttr:function(a){this._set("moveTo",
-a);this._updateHandles()},_setHrefAttr:function(a){this._set("href",a);this._updateHandles()},_setUrlAttr:function(a){this._set("url",a);this._updateHandles()}});e.ChildWidgetProperties={layout:"",preventTouch:!1};n.extend(q,e.ChildWidgetProperties);return m("dojo-bidi")?k("dojox.mobile.ListItem",[e,t]):e});
-//@ sourceMappingURL=ListItem.js.map
+define([
+	"dojo/_base/array",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-attr",
+	"dijit/registry",
+	"dijit/_WidgetBase",
+	"./iconUtils",
+	"./_ItemBase",
+	"./ProgressIndicator",
+	"dojo/has",
+	"dojo/has!dojo-bidi?dojox/mobile/bidi/ListItem"
+], function(array, declare, lang, domClass, domConstruct, domStyle, domAttr, registry, WidgetBase, iconUtils, ItemBase, ProgressIndicator, has,  BidiListItem){
+
+	// module:
+	//		dojox/mobile/ListItem
+
+	var ListItem = declare(has("dojo-bidi") ? "dojox.mobile.NonBidiListItem" : "dojox.mobile.ListItem", ItemBase, {
+		// summary:
+		//		An item of either RoundRectList or EdgeToEdgeList.
+		// description:
+		//		ListItem represents an item of either RoundRectList or
+		//		EdgeToEdgeList. There are three ways to move to a different view:
+		//		moveTo, href, and url. You can choose only one of them.
+		//
+		//		A child DOM node (or widget) can have the layout attribute,
+		//		whose value is "left", "right", or "center". Such nodes will be
+		//		aligned as specified.
+		// example:
+		// |	<li data-dojo-type="dojox.mobile.ListItem">
+		// |		<div layout="left">Left Node</div>
+		// |		<div layout="right">Right Node</div>
+		// |		<div layout="center">Center Node</div>
+		// |	</li>
+		//
+		//		Similarly, a child widget can have the preventTouch
+		//		attribute, whose value is a boolean (or data-mobile-prevent-touch
+		//		for children which are not widgets), such that touching such
+		//		child doesn't trigger the item action.
+		//
+		//		Note that even if you specify variableHeight="true" for the list
+		//		and place a tall object inside the layout node as in the example
+		//		below, the layout node does not expand as you may expect,
+		//		because layout node is aligned using float:left, float:right, or
+		//		position:absolute.
+		// example:
+		// |	<li data-dojo-type="dojox.mobile.ListItem" variableHeight="true">
+		// |		<div layout="left"><img src="large-picture.jpg"></div>
+		// |	</li>
+
+		// rightText: String
+		//		A right-aligned text to display on the item.
+		rightText: "",
+
+		// rightIcon: String
+		//		An icon to display at the right hand side of the item. The value
+		//		can be either a path for an image file or a class name of a DOM
+		//		button.
+		rightIcon: "",
+
+		// rightIcon2: String
+		//		An icon to display at the left of the rightIcon. The value can
+		//		be either a path for an image file or a class name of a DOM
+		//		button.
+		rightIcon2: "",
+
+		// deleteIcon: String
+		//		A delete icon to display at the left of the item. The value can
+		//		be either a path for an image file or a class name of a DOM
+		//		button.
+		deleteIcon: "",
+
+		// anchorLabel: Boolean
+		//		If true, the label text becomes a clickable anchor text. When
+		//		the user clicks on the text, the onAnchorLabelClicked handler is
+		//		called. You can override or connect to the handler and implement
+		//		any action. The handler has no default action.
+		anchorLabel: false,
+
+		// noArrow: Boolean
+		//		If true, the right hand side arrow is not displayed.
+		noArrow: false,
+
+		// checked: Boolean
+		//		If true, a check mark is displayed at the right of the item.
+		checked: false,
+
+		// arrowClass: String
+		//		An icon to display as an arrow. The value can be either a path
+		//		for an image file or a class name of a DOM button.
+		arrowClass: "",
+
+		// checkClass: String
+		//		An icon to display as a check mark. The value can be either a
+		//		path for an image file or a class name of a DOM button.
+		checkClass: "",
+
+		// uncheckClass: String
+		//		An icon to display as an uncheck mark. The value can be either a
+		//		path for an image file or a class name of a DOM button.
+		uncheckClass: "",
+
+		// variableHeight: Boolean
+		//		If true, the height of the item varies according to its content.
+		variableHeight: false,
+
+		// rightIconTitle: String
+		//		An alt text for the right icon.
+		rightIconTitle: "",
+
+		// rightIcon2Title: String
+		//		An alt text for the right icon2.
+		rightIcon2Title: "",
+
+		// header: Boolean
+		//		If true, this item is rendered as a category header.
+		header: false,
+
+		// tag: String
+		//		A name of html tag to create as domNode.
+		tag: "li",
+
+		// busy: Boolean
+		//		If true, a progress indicator spins.
+		busy: false,
+
+		// progStyle: String
+		//		A css class name to add to the progress indicator.
+		progStyle: "",
+
+		// layoutOnResize: Boolean
+		//		If true, a call to resize() will force computation of variable height items layout. You should not need this as in most
+		//		cases ListItem height doesn't change on container resize. Depending on number and complexity
+		//		of items in a view, setting to true may have a high impact on performance.
+		layoutOnResize: false,
+
+		/* internal properties */	
+		// The following properties are overrides of those in _ItemBase.
+		paramsToInherit: "variableHeight,transition,deleteIcon,icon,rightIcon,rightIcon2,uncheckIcon,arrowClass,checkClass,uncheckClass,deleteIconTitle,deleteIconRole",
+		baseClass: "mblListItem",
+
+		_selStartMethod: "touch",
+		_selEndMethod: "timer",
+		_delayedSelection: true,
+
+		_selClass: "mblListItemSelected",
+
+		buildRendering: function(){
+			this._templated = !!this.templateString; // true if this widget is templated
+			if(!this._templated){
+				// Create root node if it wasn't created by _TemplatedMixin
+				this.domNode = this.containerNode = this.srcNodeRef || domConstruct.create(this.tag);
+			}
+			this.inherited(arguments);
+
+			if(this.selected){
+				domClass.add(this.domNode, this._selClass);
+			}
+			if(this.header){
+				domClass.replace(this.domNode, "mblEdgeToEdgeCategory", this.baseClass);
+			}
+
+			if(!this._templated){
+				this.labelNode =
+					domConstruct.create("div", {className:"mblListItemLabel"});
+				var ref = this.srcNodeRef;
+				if(ref && ref.childNodes.length === 1 && ref.firstChild.nodeType === 3){
+					// if ref has only one text node, regard it as a label
+					this.labelNode.appendChild(ref.firstChild);
+				}
+				this.domNode.appendChild(this.labelNode);
+			}
+			this._layoutChildren = [];
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+			var parent = this.getParent();
+			var opts = this.getTransOpts();
+			// When using a template, labelNode may be created via an attach point.
+			// The attach points are not yet set when ListItem.buildRendering() 
+			// executes, hence the need to use them in startup().
+			if((!this._templated || this.labelNode) && this.anchorLabel){
+				this.labelNode.style.display = "inline"; // to narrow the text region
+				this.labelNode.style.cursor = "pointer";
+				this.connect(this.labelNode, "onclick", "_onClick");
+				this.onTouchStart = function(e){
+					return (e.target !== this.labelNode);
+				};
+			}
+
+			this.inherited(arguments);
+			
+			if(domClass.contains(this.domNode, "mblVariableHeight")){
+				this.variableHeight = true;
+			}
+			if(this.variableHeight){
+				domClass.add(this.domNode, "mblVariableHeight");
+				this.defer("layoutVariableHeight");
+			}
+
+			if(!this._isOnLine){
+				this._isOnLine = true;
+				this.set({ 
+					// retry applying the attributes for which the custom setter delays the actual 
+					// work until _isOnLine is true
+					icon: this._pending_icon !== undefined ? this._pending_icon : this.icon,
+					deleteIcon: this._pending_deleteIcon !== undefined ? this._pending_deleteIcon : this.deleteIcon,
+					rightIcon: this._pending_rightIcon !== undefined ? this._pending_rightIcon : this.rightIcon,
+					rightIcon2: this._pending_rightIcon2 !== undefined ? this._pending_rightIcon2 : this.rightIcon2,
+					uncheckIcon: this._pending_uncheckIcon !== undefined ? this._pending_uncheckIcon : this.uncheckIcon 
+				});
+				// Not needed anymore (this code executes only once per life cycle):
+				delete this._pending_icon;
+				delete this._pending_deleteIcon;
+				delete this._pending_rightIcon;
+				delete this._pending_rightIcon2;
+				delete this._pending_uncheckIcon;
+			}
+			if(parent && parent.select){
+				// retry applying the attributes for which the custom setter delays the actual 
+				// work until _isOnLine is true. 
+				this.set("checked", this._pendingChecked !== undefined ? this._pendingChecked : this.checked);
+				domAttr.set(this.domNode, "role", "option");
+				if(this._pendingChecked || this.checked){
+					domAttr.set(this.domNode, "aria-selected", "true");
+				}
+				// Not needed anymore (this code executes only once per life cycle):
+				delete this._pendingChecked; 
+			}
+			this.setArrow();
+			this.layoutChildren();
+		},
+
+		_updateHandles: function(){
+			// tags:
+			//		private
+			var parent = this.getParent();
+			var opts = this.getTransOpts();
+			if(opts.moveTo || opts.href || opts.url || this.clickable || (parent && parent.select)){
+				if(!this._keydownHandle){
+					this._keydownHandle = this.connect(this.domNode, "onkeydown", "_onClick"); // for desktop browsers
+				}
+				this._handleClick = true;
+			}else{
+				if(this._keydownHandle){
+					this.disconnect(this._keydownHandle);
+					this._keydownHandle = null;
+				}
+				this._handleClick = false;
+			}
+			this.inherited(arguments);
+		},
+
+		layoutChildren: function(){
+			var centerNode;
+			array.forEach(this.domNode.childNodes, function(n){
+				if(n.nodeType !== 1){ return; }
+				var layout = n.getAttribute("layout") || // TODO: Remove the non-HTML5-compliant attribute in 2.0
+					n.getAttribute("data-mobile-layout") || 
+					(registry.byNode(n) || {}).layout;
+				if(layout){ 
+					domClass.add(n, "mblListItemLayout" +
+						layout.charAt(0).toUpperCase() + layout.substring(1));
+					this._layoutChildren.push(n);
+					if(layout === "center"){ centerNode = n; }
+				}
+			}, this);
+			if(centerNode){
+				this.domNode.insertBefore(centerNode, this.domNode.firstChild);
+			}
+		},
+
+		resize: function(){
+			if(this.layoutOnResize && this.variableHeight){
+				this.layoutVariableHeight();
+			}
+			// labelNode may not exist only when using a template (if not created by an attach point)
+			if(!this._templated || this.labelNode){
+				// If labelNode is empty, shrink it so as not to prevent user clicks.
+				this.labelNode.style.display = this.labelNode.firstChild ? "block" : "inline";
+			}
+		},
+
+		_onTouchStart: function(e){
+			// tags:
+			//		private
+			if(e.target.getAttribute("preventTouch") || // TODO: Remove the non-HTML5-compliant attribute in 2.0
+				e.target.getAttribute("data-mobile-prevent-touch") ||
+				(registry.getEnclosingWidget(e.target) || {}).preventTouch){
+				return;
+			}
+			this.inherited(arguments);
+		},
+
+		_onClick: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(this.getParent().isEditing || e && e.type === "keydown" && e.keyCode !== 13){ return; }
+			if(this.onClick(e) === false){ return; } // user's click action
+			var n = this.labelNode;
+			// labelNode may not exist only when using a template 
+			if((this._templated || n) && this.anchorLabel && e.currentTarget === n){
+				domClass.add(n, "mblListItemLabelSelected");
+				this.defer(function(){
+					domClass.remove(n, "mblListItemLabelSelected");
+				}, this._duration);
+				this.onAnchorLabelClicked(e);
+				return;
+			}
+			var parent = this.getParent();
+			if(parent.select){
+				if(parent.select === "single"){
+					if(!this.checked){
+						this.set("checked", true);
+					}
+				}else if(parent.select === "multiple"){
+					this.set("checked", !this.checked);
+				}
+			}
+			this.defaultClickAction(e);
+		},
+
+		onClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User-defined function to handle clicks.
+			// tags:
+			//		callback
+		},
+
+		onAnchorLabelClicked: function(e){
+			// summary:
+			//		Stub function to connect to from your application.
+		},
+
+		layoutVariableHeight: function(){
+			// summary:
+			//		Lays out the current item with variable height.
+			var h = this.domNode.offsetHeight;
+			if(h === this.domNodeHeight){ return; }
+			this.domNodeHeight = h;
+			array.forEach(this._layoutChildren.concat([
+				this.rightTextNode,
+				this.rightIcon2Node,
+				this.rightIconNode,
+				this.uncheckIconNode,
+				this.iconNode,
+				this.deleteIconNode,
+				this.knobIconNode
+			]), function(n){
+				if(n){
+					var domNode = this.domNode;
+					var f = function(){
+						var t = Math.round((domNode.offsetHeight - n.offsetHeight) / 2) -
+							domStyle.get(domNode, "paddingTop");
+						n.style.marginTop = t + "px";
+					};
+					if(n.offsetHeight === 0 && n.tagName === "IMG"){
+						n.onload = f;
+					}else{
+						f();
+					}
+				}
+			}, this);
+		},
+
+		setArrow: function(){
+			// summary:
+			//		Sets the arrow icon if necessary.
+			if(this.checked){ return; }
+			var c = "";
+			var parent = this.getParent();
+			var opts = this.getTransOpts();
+			if(opts.moveTo || opts.href || opts.url || this.clickable){
+				if(!this.noArrow && !(parent && parent.selectOne)){
+					c = this.arrowClass || "mblDomButtonArrow";
+					domAttr.set(this.domNode, "role", "button");
+				}
+			}
+			if(c){
+				this._setRightIconAttr(c);
+			}
+		},
+
+		_findRef: function(/*String*/type){
+			// summary:
+			//		Find an appropriate position to insert a new child node.
+			// tags:
+			//		private
+			var i, node, list = ["deleteIcon", "icon", "rightIcon", "uncheckIcon", "rightIcon2", "rightText"];
+			for(i = array.indexOf(list, type) + 1; i < list.length; i++){
+				node = this[list[i] + "Node"];
+				if(node){ return node; }
+			}
+			for(i = list.length - 1; i >= 0; i--){
+				node = this[list[i] + "Node"];
+				if(node){ return node.nextSibling; }
+			}
+			return this.domNode.firstChild;
+		},
+		
+		_setIcon: function(/*String*/icon, /*String*/type){
+			// tags:
+			//		private
+			if(!this._isOnLine){
+				// record the value to be able to reapply it (see the code in the startup method)
+				this["_pending_" + type] = icon;
+				return; 
+			} // icon may be invalid because inheritParams is not called yet
+			this._set(type, icon);
+			this[type + "Node"] = iconUtils.setIcon(icon, this[type + "Pos"],
+				this[type + "Node"], this[type + "Title"] || this.alt, this.domNode, this._findRef(type), "before");
+			if(this[type + "Node"]){
+				var cap = type.charAt(0).toUpperCase() + type.substring(1);
+				domClass.add(this[type + "Node"], "mblListItem" + cap);
+			}
+			var role = this[type + "Role"];
+			if(role){
+				this[type + "Node"].setAttribute("role", role);
+			}
+		},
+
+		_setDeleteIconAttr: function(/*String*/icon){
+			// tags:
+			//		private
+			this._setIcon(icon, "deleteIcon");
+		},
+
+		_setIconAttr: function(icon){
+			// tags:
+			//		private
+			this._setIcon(icon, "icon");
+		},
+
+		_setRightTextAttr: function(/*String*/text){
+			// tags:
+			//		private
+			if(!this._templated && !this.rightTextNode){
+				// When using a template, let the template create the element.
+				this.rightTextNode = domConstruct.create("div", {className:"mblListItemRightText"}, this.labelNode, "before");
+			}
+			this.rightText = text;
+			this.rightTextNode.innerHTML = this._cv ? this._cv(text) : text;
+		},
+
+		_setRightIconAttr: function(/*String*/icon){
+			// tags:
+			//		private
+			this._setIcon(icon, "rightIcon");
+		},
+
+		_setUncheckIconAttr: function(/*String*/icon){
+			// tags:
+			//		private
+			this._setIcon(icon, "uncheckIcon");
+		},
+
+		_setRightIcon2Attr: function(/*String*/icon){
+			// tags:
+			//		private
+			this._setIcon(icon, "rightIcon2");
+		},
+
+		_setCheckedAttr: function(/*Boolean*/checked){
+			// tags:
+			//		private
+			if(!this._isOnLine){
+				// record the value to be able to reapply it (see the code in the startup method)
+				this._pendingChecked = checked; 
+				return; 
+			} // icon may be invalid because inheritParams is not called yet
+			var parent = this.getParent();
+			if(parent && parent.select === "single" && checked){
+				array.forEach(parent.getChildren(), function(child){
+					child !== this && child.checked && child.set("checked", false) && domAttr.set(child.domNode, "aria-selected", "false");
+				}, this);
+			}
+			this._setRightIconAttr(this.checkClass || "mblDomButtonCheck");
+			this._setUncheckIconAttr(this.uncheckClass);
+
+			domClass.toggle(this.domNode, "mblListItemChecked", checked);
+			domClass.toggle(this.domNode, "mblListItemUnchecked", !checked);
+			domClass.toggle(this.domNode, "mblListItemHasUncheck", !!this.uncheckIconNode);
+			this.rightIconNode.style.position = (this.uncheckIconNode && !checked) ? "absolute" : "";
+
+			if(parent && this.checked !== checked){
+				parent.onCheckStateChanged(this, checked);
+			}
+			this._set("checked", checked);
+			domAttr.set(this.domNode, "aria-selected", checked ? "true" : "false");
+		},
+
+		_setBusyAttr: function(/*Boolean*/busy){
+			// tags:
+			//		private
+			var prog = this._prog;
+			if(busy){
+				if(!this._progNode){
+					this._progNode = domConstruct.create("div", {className:"mblListItemIcon"});
+					prog = this._prog = new ProgressIndicator({size:25, center:false, removeOnStop:false});
+					domClass.add(prog.domNode, this.progStyle);
+					this._progNode.appendChild(prog.domNode);
+				}
+				if(this.iconNode){
+					this.domNode.replaceChild(this._progNode, this.iconNode);
+				}else{
+					domConstruct.place(this._progNode, this._findRef("icon"), "before");
+				}
+				prog.start();
+			}else if(this._progNode){
+				if(this.iconNode){
+					this.domNode.replaceChild(this.iconNode, this._progNode);
+				}else{
+					this.domNode.removeChild(this._progNode);
+				}
+				prog.stop();
+			}
+			this._set("busy", busy);
+		},
+
+		_setSelectedAttr: function(/*Boolean*/selected){
+			// summary:
+			//		Makes this widget in the selected or unselected state.
+			// tags:
+			//		private
+			this.inherited(arguments);
+			domClass.toggle(this.domNode, this._selClass, selected);
+		},
+		
+		_setClickableAttr: function(/*Boolean*/clickable){
+			// tags:
+			//		private
+			this._set("clickable", clickable);
+			this._updateHandles();
+		},
+		
+		_setMoveToAttr: function(/*String*/moveTo){
+			// tags:
+			//		private
+			this._set("moveTo", moveTo);
+			this._updateHandles();
+		},
+		
+		_setHrefAttr: function(/*String*/href){
+			// tags:
+			//		private
+			this._set("href", href);
+			this._updateHandles();
+		},
+		
+		_setUrlAttr: function(/*String*/url){
+			// tags:
+			//		private
+			this._set("url", url);
+			this._updateHandles();
+		}
+	});
+	
+	ListItem.ChildWidgetProperties = {
+		// summary:
+		//		These properties can be specified for the children of a dojox/mobile/ListItem.
+
+		// layout: String
+		//		Specifies the position of the ListItem child ("left", "center" or "right").
+		layout: "",
+
+		// preventTouch: Boolean
+		//		Disables touch events on the ListItem child.
+		preventTouch: false
+	};
+	
+	// Since any widget can be specified as a ListItem child, mix ChildWidgetProperties
+	// into the base widget class.  (This is a hack, but it's effective.)
+	// This is for the benefit of the parser.   Remove for 2.0.  Also, hide from doc viewer.
+	lang.extend(WidgetBase, /*===== {} || =====*/ ListItem.ChildWidgetProperties);
+
+	return has("dojo-bidi") ? declare("dojox.mobile.ListItem", [ListItem, BidiListItem]) : ListItem;	
+});

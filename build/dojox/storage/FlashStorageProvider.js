@@ -1,11 +1,344 @@
-//>>built
-define("dojox/storage/FlashStorageProvider",["dojo","dijit","dojox","dojo/require!dojox/flash,dojox/storage/manager,dojox/storage/Provider"],function(e,h,c){e.provide("dojox.storage.FlashStorageProvider");e.require("dojox.flash");e.require("dojox.storage.manager");e.require("dojox.storage.Provider");e.declare("dojox.storage.FlashStorageProvider",c.storage.Provider,{initialized:!1,_available:null,_statusHandler:null,_flashReady:!1,_pageReady:!1,initialize:function(){if(!0!=e.config.disableFlashStorage){c.flash.addLoadedListener(e.hitch(this,
-function(){(this._flashReady=!0)&&this._pageReady&&this._loaded()}));var a=e.moduleUrl("dojox","storage/Storage.swf").toString();c.flash.setSwf(a,!1);e.connect(e,"loaded",this,function(){this._pageReady=!0;this._flashReady&&this._pageReady&&this._loaded()})}},setFlushDelay:function(a){if(null===a||"undefined"===typeof a||isNaN(a))throw Error("Invalid argunment: "+a);c.flash.comm.setFlushDelay(String(a))},getFlushDelay:function(){return Number(c.flash.comm.getFlushDelay())},flush:function(a){if(null==
-a||"undefined"==typeof a)a=c.storage.DEFAULT_NAMESPACE;c.flash.comm.flush(a)},isAvailable:function(){return this._available=!e.config.disableFlashStorage},put:function(a,b,d,f){if(!this.isValidKey(a))throw Error("Invalid key given: "+a);f||(f=c.storage.DEFAULT_NAMESPACE);if(!this.isValidKey(f))throw Error("Invalid namespace given: "+f);this._statusHandler=d;b=e.isString(b)?"string:"+b:e.toJson(b);c.flash.comm.put(a,b,f)},putMultiple:function(a,b,d,f){if(!this.isValidKeyArray(a)||!b instanceof Array||
-a.length!=b.length)throw Error("Invalid arguments: keys \x3d ["+a+"], values \x3d ["+b+"]");f||(f=c.storage.DEFAULT_NAMESPACE);if(!this.isValidKey(f))throw Error("Invalid namespace given: "+f);this._statusHandler=d;a=a.join(",");d=[];for(var g=0;g<b.length;g++)e.isString(b[g])?b[g]="string:"+b[g]:b[g]=e.toJson(b[g]),d[g]=b[g].length;b=b.join("");d=d.join(",");c.flash.comm.putMultiple(a,b,d,f)},get:function(a,b){if(!this.isValidKey(a))throw Error("Invalid key given: "+a);b||(b=c.storage.DEFAULT_NAMESPACE);
-if(!this.isValidKey(b))throw Error("Invalid namespace given: "+b);var d=c.flash.comm.get(a,b);return""==d?null:this._destringify(d)},getMultiple:function(a,b){if(!this.isValidKeyArray(a))throw new ("Invalid key array given: "+a);b||(b=c.storage.DEFAULT_NAMESPACE);if(!this.isValidKey(b))throw Error("Invalid namespace given: "+b);for(var d=a.join(","),d=c.flash.comm.getMultiple(d,b),d=eval("("+d+")"),f=0;f<d.length;f++)d[f]=""==d[f]?null:this._destringify(d[f]);return d},_destringify:function(a){return a=
-e.isString(a)&&/^string:/.test(a)?a.substring(7):e.fromJson(a)},getKeys:function(a){a||(a=c.storage.DEFAULT_NAMESPACE);if(!this.isValidKey(a))throw Error("Invalid namespace given: "+a);a=c.flash.comm.getKeys(a);if(null==a||"null"==a)a="";a=a.split(",");a.sort();return a},getNamespaces:function(){var a=c.flash.comm.getNamespaces();if(null==a||"null"==a)a=c.storage.DEFAULT_NAMESPACE;a=a.split(",");a.sort();return a},clear:function(a){a||(a=c.storage.DEFAULT_NAMESPACE);if(!this.isValidKey(a))throw Error("Invalid namespace given: "+
-a);c.flash.comm.clear(a)},remove:function(a,b){b||(b=c.storage.DEFAULT_NAMESPACE);if(!this.isValidKey(b))throw Error("Invalid namespace given: "+b);c.flash.comm.remove(a,b)},removeMultiple:function(a,b){this.isValidKeyArray(a)||e.raise("Invalid key array given: "+a);b||(b=c.storage.DEFAULT_NAMESPACE);if(!this.isValidKey(b))throw Error("Invalid namespace given: "+b);var d=a.join(",");c.flash.comm.removeMultiple(d,b)},isPermanent:function(){return!0},getMaximumSize:function(){return c.storage.SIZE_NO_LIMIT},
-hasSettingsUI:function(){return!0},showSettingsUI:function(){c.flash.comm.showSettings();c.flash.obj.setVisible(!0);c.flash.obj.center()},hideSettingsUI:function(){c.flash.obj.setVisible(!1);e.isFunction(c.storage.onHideSettingsUI)&&c.storage.onHideSettingsUI.call(null)},getResourceList:function(){return[]},_loaded:function(){this._allNamespaces=this.getNamespaces();this.initialized=!0;c.storage.manager.loaded()},_onStatus:function(a,b,d){var f=c.storage,e=c.flash.obj;a==f.PENDING?(e.center(),e.setVisible(!0)):
-e.setVisible(!1);f._statusHandler&&f._statusHandler.call(null,a,b,null,d)}});c.storage.manager.register("dojox.storage.FlashStorageProvider",new c.storage.FlashStorageProvider)});
-//@ sourceMappingURL=FlashStorageProvider.js.map
+dojo.provide("dojox.storage.FlashStorageProvider");
+
+dojo.require("dojox.flash");
+dojo.require("dojox.storage.manager");
+dojo.require("dojox.storage.Provider");
+
+
+dojo.declare("dojox.storage.FlashStorageProvider", dojox.storage.Provider, {
+		// summary:
+		//		Storage provider that uses features in Flash to achieve permanent
+		//		storage
+		// description:
+		//		Authors of this storage provider-
+		//		Brad Neuberg, bkn3@columbia.edu
+
+		initialized: false,
+		
+		_available: null,
+		_statusHandler: null,
+		_flashReady: false,
+		_pageReady: false,
+		
+		initialize: function(){
+		  //console.debug("FlashStorageProvider.initialize");
+			if(dojo.config["disableFlashStorage"] == true){
+				return;
+			}
+			
+			// initialize our Flash
+			dojox.flash.addLoadedListener(dojo.hitch(this, function(){
+			  //console.debug("flashReady");
+			  // indicate our Flash subsystem is now loaded
+			  this._flashReady = true;
+			  if(this._flashReady && this._pageReady){
+				  this._loaded();
+				}
+			}));
+			var swfLoc = dojo.moduleUrl("dojox", "storage/Storage.swf").toString();
+			dojox.flash.setSwf(swfLoc, false);
+			
+			// wait till page is finished loading
+			dojo.connect(dojo, "loaded", this, function(){
+			  //console.debug("pageReady");
+			  this._pageReady = true;
+			  if(this._flashReady && this._pageReady){
+			    this._loaded();
+			  }
+			});
+		},
+		
+		//	Set a new value for the flush delay timer.
+		//	Possible values:
+		//	  0 : Perform the flush synchronously after each "put" request
+		//	> 0 : Wait until 'newDelay' ms have passed without any "put" request to flush
+		//	 -1 : Do not  automatically flush
+		setFlushDelay: function(newDelay){
+			if(newDelay === null || typeof newDelay === "undefined" || isNaN(newDelay)){
+				throw new Error("Invalid argunment: " + newDelay);
+			}
+			
+			dojox.flash.comm.setFlushDelay(String(newDelay));
+		},
+		
+		getFlushDelay: function(){
+			return Number(dojox.flash.comm.getFlushDelay());
+		},
+		
+		flush: function(namespace){
+			//FIXME: is this test necessary?  Just use !namespace
+			if(namespace == null || typeof namespace == "undefined"){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			dojox.flash.comm.flush(namespace);
+		},
+
+		isAvailable: function(){
+			return (this._available = !dojo.config["disableFlashStorage"]);
+		},
+
+		put: function(key, value, resultsHandler, namespace){
+			if(!this.isValidKey(key)){
+				throw new Error("Invalid key given: " + key);
+			}
+			
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+				
+			this._statusHandler = resultsHandler;
+			
+			// serialize the value;
+			// handle strings differently so they have better performance
+			if(dojo.isString(value)){
+				value = "string:" + value;
+			}else{
+				value = dojo.toJson(value);
+			}
+			
+			dojox.flash.comm.put(key, value, namespace);
+		},
+
+		putMultiple: function(keys, values, resultsHandler, namespace){
+			if(!this.isValidKeyArray(keys) || ! values instanceof Array
+			    || keys.length != values.length){
+				throw new Error("Invalid arguments: keys = [" + keys + "], values = [" + values + "]");
+			}
+			
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+
+			this._statusHandler = resultsHandler;
+			
+			//	Convert the arguments on strings we can pass along to Flash
+			var metaKey = keys.join(",");
+			var lengths = [];
+			for(var i=0;i<values.length;i++){
+				if(dojo.isString(values[i])){
+					values[i] = "string:" + values[i];
+				}else{
+					values[i] = dojo.toJson(values[i]);
+				}
+				lengths[i] = values[i].length;
+			}
+			var metaValue = values.join("");
+			var metaLengths = lengths.join(",");
+			
+			dojox.flash.comm.putMultiple(metaKey, metaValue, metaLengths, namespace);
+		},
+
+		get: function(key, namespace){
+			if(!this.isValidKey(key)){
+				throw new Error("Invalid key given: " + key);
+			}
+			
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+			
+			var results = dojox.flash.comm.get(key, namespace);
+
+			if(results == ""){
+				return null;
+			}
+		
+			return this._destringify(results);
+		},
+
+		getMultiple: function(/*array*/ keys, /*string?*/ namespace){ /*Object*/
+			if(!this.isValidKeyArray(keys)){
+				throw new ("Invalid key array given: " + keys);
+			}
+			
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+			
+			var metaKey = keys.join(",");
+			var metaResults = dojox.flash.comm.getMultiple(metaKey, namespace);
+			var results = eval("(" + metaResults + ")");
+			
+			//	destringify each entry back into a real JS object
+			//FIXME: use dojo.map
+			for(var i = 0; i < results.length; i++){
+				results[i] = (results[i] == "") ? null : this._destringify(results[i]);
+			}
+			
+			return results;
+		},
+
+		_destringify: function(results){
+			// destringify the content back into a
+			// real JavaScript object;
+			// handle strings differently so they have better performance
+			if(dojo.isString(results) && (/^string:/.test(results))){
+				results = results.substring("string:".length);
+			}else{
+				results = dojo.fromJson(results);
+			}
+		
+			return results;
+		},
+		
+		getKeys: function(namespace){
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+			
+			var results = dojox.flash.comm.getKeys(namespace);
+			
+			// Flash incorrectly returns an empty string as "null"
+			if(results == null || results == "null"){
+			  results = "";
+			}
+			
+			results = results.split(",");
+			results.sort();
+			
+			return results;
+		},
+		
+		getNamespaces: function(){
+			var results = dojox.flash.comm.getNamespaces();
+			
+			// Flash incorrectly returns an empty string as "null"
+			if(results == null || results == "null"){
+			  results = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			results = results.split(",");
+			results.sort();
+			
+			return results;
+		},
+
+		clear: function(namespace){
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+			
+			dojox.flash.comm.clear(namespace);
+		},
+		
+		remove: function(key, namespace){
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+			
+			dojox.flash.comm.remove(key, namespace);
+		},
+		
+		removeMultiple: function(/*array*/ keys, /*string?*/ namespace){ /*Object*/
+			if(!this.isValidKeyArray(keys)){
+				dojo.raise("Invalid key array given: " + keys);
+			}
+			if(!namespace){
+				namespace = dojox.storage.DEFAULT_NAMESPACE;
+			}
+			
+			if(!this.isValidKey(namespace)){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+			
+			var metaKey = keys.join(",");
+			dojox.flash.comm.removeMultiple(metaKey, namespace);
+		},
+
+		isPermanent: function(){
+			return true;
+		},
+
+		getMaximumSize: function(){
+			return dojox.storage.SIZE_NO_LIMIT;
+		},
+
+		hasSettingsUI: function(){
+			return true;
+		},
+
+		showSettingsUI: function(){
+			dojox.flash.comm.showSettings();
+			dojox.flash.obj.setVisible(true);
+			dojox.flash.obj.center();
+		},
+
+		hideSettingsUI: function(){
+			// hide the dialog
+			dojox.flash.obj.setVisible(false);
+			
+			// call anyone who wants to know the dialog is
+			// now hidden
+			if(dojo.isFunction(dojox.storage.onHideSettingsUI)){
+				dojox.storage.onHideSettingsUI.call(null);
+			}
+		},
+		
+		getResourceList: function(){ /* Array[] */
+			// Dojo Offline no longer uses the FlashStorageProvider for offline
+			// storage; Gears is now required
+			return [];
+		},
+		
+		/** Called when Flash and the page are finished loading. */
+		_loaded: function(){
+			// get available namespaces
+			this._allNamespaces = this.getNamespaces();
+			
+			this.initialized = true;
+
+			// indicate that this storage provider is now loaded
+			dojox.storage.manager.loaded();
+		},
+		
+		//	Called if the storage system needs to tell us about the status
+		//	of a put() request.
+		_onStatus: function(statusResult, key, namespace){
+		  //console.debug("onStatus, statusResult="+statusResult+", key="+key);
+			var ds = dojox.storage;
+			var dfo = dojox.flash.obj;
+			
+			if(statusResult == ds.PENDING){
+				dfo.center();
+				dfo.setVisible(true);
+			}else{
+				dfo.setVisible(false);
+			}
+			
+			if(ds._statusHandler){
+				ds._statusHandler.call(null, statusResult, key, null, namespace);
+			}
+		}
+	}
+);
+
+dojox.storage.manager.register("dojox.storage.FlashStorageProvider",
+								new dojox.storage.FlashStorageProvider());

@@ -1,3 +1,29 @@
-//>>built
-define("dojox/drawing/manager/_registry",[],function(){var c={tool:{},stencil:{},drawing:{},plugin:{},button:{}};return{register:function(a,b){"drawing"==b?c.drawing[a.id]=a:"tool"==b?c.tool[a.name]=a:"stencil"==b?c.stencil[a.name]=a:"plugin"==b?c.plugin[a.name]=a:"button"==b&&(c.button[a.toolType]=a)},getRegistered:function(a,b){return b?c[a][b]:c[a]}}});
-//@ sourceMappingURL=_registry.js.map
+define([], function(){
+	var _registered = {
+		tool:{},
+		stencil:{},
+		drawing:{},
+		plugin:{},
+		button:{}
+	};
+	
+	return {
+		register: function(item, type){
+			if(type=="drawing"){
+				_registered.drawing[item.id] = item;
+			}else if(type=="tool"){
+				_registered.tool[item.name] = item;
+			}else if(type=="stencil"){
+				_registered.stencil[item.name] = item;
+			}else if(type=="plugin"){
+				_registered.plugin[item.name] = item;
+			}else if(type=="button"){
+				_registered.button[item.toolType] = item;
+			}
+		},
+		
+		getRegistered: function(type, id){
+			return id ? _registered[type][id] : _registered[type];
+		}
+	};
+});

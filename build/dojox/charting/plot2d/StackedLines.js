@@ -1,3 +1,12 @@
-//>>built
-define("dojox/charting/plot2d/StackedLines",["dojo/_base/declare","./Stacked"],function(a,b){return a("dojox.charting.plot2d.StackedLines",b,{constructor:function(){this.opt.lines=!0}})});
-//@ sourceMappingURL=StackedLines.js.map
+define(["dojo/_base/declare", "./Stacked"], function(declare, Stacked){
+
+	return declare("dojox.charting.plot2d.StackedLines", Stacked, {
+		// summary:
+		//		A convenience object to create a stacked line chart.
+		constructor: function(){
+			// summary:
+			//		Force our Stacked base to be lines only.
+			this.opt.lines = true;
+		}
+	});
+});

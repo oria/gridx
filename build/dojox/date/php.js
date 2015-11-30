@@ -1,10 +1,353 @@
-//>>built
-define("dojox/date/php",["dojo/_base/kernel","dojo/_base/lang","dojo/date","dojox/string/tokenize"],function(e,h,f,g){var d=e.getObject("date.php",!0,dojox);d.format=function(a,b){return(new d.DateFormat(b)).format(a)};d.DateFormat=function(a){if(!this.regex){var b=[],c;for(c in this.constructor.prototype)e.isString(c)&&(1==c.length&&e.isFunction(this[c]))&&b.push(c);this.constructor.prototype.regex=RegExp("(?:(\\\\.)|(["+b.join("")+"]))","g")}var d=[];this.tokens=g(a,this.regex,function(a,b,c){if(b)return d.push([c,
-b]),b;if(a)return a.charAt(1)});this.replacements=d};e.extend(d.DateFormat,{weekdays:"Sunday Monday Tuesday Wednesday Thursday Friday Saturday".split(" "),weekdays_3:"Sun Mon Tue Wed Thu Fri Sat".split(" "),months:"January February March April May June July August September October November December".split(" "),months_3:"Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" "),monthdays:[31,28,31,30,31,30,31,31,30,31,30,31],format:function(a){this.date=a;a=0;for(var b;b=this.replacements[a];a++)this.tokens[b[0]]=
-this[b[1]]();return this.tokens.join("")},d:function(){var a=this.j();return 1==a.length?"0"+a:a},D:function(){return this.weekdays_3[this.date.getDay()]},j:function(){return this.date.getDate()+""},l:function(){return this.weekdays[this.date.getDay()]},N:function(){var a=this.w();return!a?7:a},S:function(){switch(this.date.getDate()){case 11:case 12:case 13:return"th";case 1:case 21:case 31:return"st";case 2:case 22:return"nd";case 3:case 23:return"rd";default:return"th"}},w:function(){return this.date.getDay()+
-""},z:function(){var a=this.date.getTime()-(new Date(this.date.getFullYear(),0,1)).getTime();return Math.floor(a/864E5)+""},W:function(){var a,b=(new Date(this.date.getFullYear(),0,1)).getDay()+1;a=this.date.getDay()+1;var c=parseInt(this.z());c<=8-b&&4<b?(a=new Date(this.date.getFullYear()-1,this.date.getMonth(),this.date.getDate()),a=5==b||6==b&&f.isLeapYear(a)?53:52):(Boolean(this.L())?366:365)-c<4-a?a=1:(a=Math.ceil((c+(7-a)+(b-1))/7),4<b&&--a);return a},F:function(){return this.months[this.date.getMonth()]},
-m:function(){var a=this.n();return 1==a.length?"0"+a:a},M:function(){return this.months_3[this.date.getMonth()]},n:function(){return this.date.getMonth()+1+""},t:function(){return Boolean(this.L())&&1==this.date.getMonth()?29:this.monthdays[this.getMonth()]},L:function(){return f.isLeapYear(this.date)?"1":"0"},o:function(){},Y:function(){return this.date.getFullYear()+""},y:function(){return this.Y().slice(-2)},a:function(){return 12<=this.date.getHours()?"pm":"am"},b:function(){return this.a().toUpperCase()},
-B:function(){for(var a=this.date.getTimezoneOffset()+60,a=3600*this.date.getHours()+60*this.date.getMinutes()+this.getSeconds()+60*a,a=Math.abs(Math.floor(a/86.4)%1E3)+"";2>a.length;)a="0"+a;return a},g:function(){return(this.date.getHours()%12||12)+""},G:function(){return this.date.getHours()+""},h:function(){var a=this.g();return 1==a.length?"0"+a:a},H:function(){var a=this.G();return 1==a.length?"0"+a:a},i:function(){var a=this.date.getMinutes()+"";return 1==a.length?"0"+a:a},s:function(){var a=
-this.date.getSeconds()+"";return 1==a.length?"0"+a:a},e:function(){return f.getTimezoneName(this.date)},I:function(){},O:function(){var a=Math.abs(this.date.getTimezoneOffset()),b=Math.floor(a/60)+"",a=a%60+"";1==b.length&&(b="0"+b);1==a.length&&(b="0"+a);return(0>this.date.getTimezoneOffset()?"+":"-")+b+a},P:function(){var a=this.O();return a.substring(0,2)+":"+a.substring(2,4)},T:function(){return this.e().substring(0,3)},Z:function(){return-60*this.date.getTimezoneOffset()},c:function(){return this.Y()+
-"-"+this.m()+"-"+this.d()+"T"+this.h()+":"+this.i()+":"+this.s()+this.P()},r:function(){return this.D()+", "+this.d()+" "+this.M()+" "+this.Y()+" "+this.H()+":"+this.i()+":"+this.s()+" "+this.O()},U:function(){return Math.floor(this.date.getTime()/1E3)}});return d});
-//@ sourceMappingURL=php.js.map
+define(["dojo/_base/kernel", "dojo/_base/lang","dojo/date","dojox/string/tokenize"], function(dojo,dlang,ddate,dxst){
+
+var php = dojo.getObject("date.php", true, dojox);
+/*=====
+var php = {
+	// TODO: summary
+};
+=====*/
+
+php.format = function(/*Date*/ date, /*String*/ format){
+	// summary:
+	//		Get a formatted string for a given date object
+	var df = new php.DateFormat(format);
+	return df.format(date);
+};
+
+php.DateFormat = function(/*String*/ format){
+	// summary:
+	//		Format the internal date object
+	if(!this.regex){
+		var keys = [];
+		for(var key in this.constructor.prototype){
+			if(dojo.isString(key) && key.length == 1 && dojo.isFunction(this[key])){
+				keys.push(key);
+			}
+		}
+		this.constructor.prototype.regex = new RegExp("(?:(\\\\.)|([" + keys.join("") + "]))", "g");
+	}
+
+	var replacements = [];
+
+	this.tokens = dxst(format, this.regex, function(escape, token, i){
+		if(token){
+			replacements.push([i, token]);
+			return token;
+		}
+		if(escape){
+			return escape.charAt(1);
+		}
+	});
+
+	this.replacements = replacements;
+};
+
+dojo.extend(php.DateFormat, {
+	weekdays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+	weekdays_3: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+	months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+	months_3: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	monthdays: [31,28,31,30,31,30,31,31,30,31,30,31],
+
+	format: function(/*Date*/ date){
+		this.date = date;
+		for(var i = 0, replacement; replacement = this.replacements[i]; i++){
+			this.tokens[replacement[0]] = this[replacement[1]]();
+		}
+		return this.tokens.join("");
+	},
+
+	// Day
+
+	d: function(){
+		// summary:
+		//		Day of the month, 2 digits with leading zeros
+		var j = this.j();
+		return (j.length == 1) ? "0" + j : j;
+	},
+
+	D: function(){
+		// summary:
+		//		A textual representation of a day, three letters
+		return this.weekdays_3[this.date.getDay()];
+	},
+
+	j: function(){
+		// summary:
+		//		Day of the month without leading zeros
+		return this.date.getDate() + "";
+	},
+
+	l: function(){
+		// summary:
+		//		A full textual representation of the day of the week
+		return this.weekdays[this.date.getDay()];
+	},
+
+	N: function(){
+		// summary:
+		//		ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)
+		var w = this.w();
+		return (!w) ? 7 : w;
+	},
+
+	S: function(){
+		// summary:
+		//		English ordinal suffix for the day of the month, 2 characters
+		switch(this.date.getDate()){
+			case 11: case 12: case 13: return "th";
+			case 1: case 21: case 31: return "st";
+			case 2: case 22: return "nd";
+			case 3: case 23: return "rd";
+			default: return "th";
+		}
+	},
+
+	w: function(){
+		// summary:
+		//		Numeric representation of the day of the week
+		return this.date.getDay() + "";
+	},
+
+	z: function(){
+		// summary:
+		//		The day of the year (starting from 0)
+		var millis = this.date.getTime() - new Date(this.date.getFullYear(), 0, 1).getTime();
+		return Math.floor(millis/86400000) + "";
+	},
+
+	// Week
+
+	W: function(){
+		// summary:
+		//		ISO-8601 week number of year, weeks starting on Monday (added in PHP 4.1.0)
+		var week;
+		var jan1_w = new Date(this.date.getFullYear(), 0, 1).getDay() + 1;
+		var w = this.date.getDay() + 1;
+		var z = parseInt(this.z());
+
+		if(z <= (8 - jan1_w) && jan1_w > 4){
+			var last_year = new Date(this.date.getFullYear() - 1, this.date.getMonth(), this.date.getDate());
+			if(jan1_w == 5 || (jan1_w == 6 && ddate.isLeapYear(last_year))){
+				week = 53;
+			}else{
+				week = 52;
+			}
+		}else{
+			var i;
+			if(Boolean(this.L())){
+				i = 366;
+			}else{
+				i = 365;
+			}
+			if((i - z) < (4 - w)){
+				week = 1;
+			}else{
+				var j = z + (7 - w) + (jan1_w - 1);
+				week = Math.ceil(j / 7);
+				if(jan1_w > 4){
+					--week;
+				}
+			}
+		}
+
+		return week;
+	},
+
+	// Month
+
+	F: function(){
+		// summary:
+		//		A full textual representation of a month, such as January or March
+		return this.months[this.date.getMonth()];
+	},
+
+	m: function(){
+		// summary:
+		//		Numeric representation of a month, with leading zeros
+		var n = this.n();
+		return (n.length == 1) ? "0" + n : n;
+	},
+
+	M: function(){
+		// summary:
+		//		A short textual representation of a month, three letters
+		return this.months_3[this.date.getMonth()];
+	},
+
+	n: function(){
+		// summary:
+		//		Numeric representation of a month, without leading zeros
+		return this.date.getMonth() + 1 + "";
+	},
+
+	t: function(){
+		// summary:
+		//		Number of days in the given month
+		return (Boolean(this.L()) && this.date.getMonth() == 1) ? 29 : this.monthdays[this.getMonth()];
+	},
+
+	// Year
+
+	L: function(){
+		// summary:
+		//		Whether it's a leap year
+		return (ddate.isLeapYear(this.date)) ? "1" : "0";
+	},
+
+	o: function(){
+		// summary:
+		//		ISO-8601 year number. This has the same value as Y, except that if
+		//		the ISO week number (W) belongs to the previous or next year, that year is used instead. (added in PHP 5.1.0)
+
+		// TODO: Figure out what this means
+	},
+
+	Y: function(){
+		// summary:
+		//		A full numeric representation of a year, 4 digits
+		return this.date.getFullYear() + "";
+	},
+
+	y: function(){
+		// summary:
+		//		A two digit representation of a year
+		return this.Y().slice(-2);
+	},
+
+	// Time
+
+	a: function(){
+		// summary:
+		//		Lowercase Ante meridian and Post meridian
+		return this.date.getHours() >= 12 ? "pm" : "am";
+	},
+
+	b: function(){
+		// summary:
+		//		Uppercase Ante meridian and Post meridian
+		return this.a().toUpperCase();
+	},
+
+	B: function(){
+		// summary:
+		//		Swatch Internet time
+		//		A day is 1,000 beats. All time is measured from GMT + 1
+		var off = this.date.getTimezoneOffset() + 60;
+		var secs = (this.date.getHours() * 3600) + (this.date.getMinutes() * 60) + this.getSeconds() + (off * 60);
+		var beat = Math.abs(Math.floor(secs / 86.4) % 1000) + "";
+		while(beat.length <  2) beat = "0" + beat;
+		return beat;
+	},
+
+	g: function(){
+		// summary:
+		//		12-hour format of an hour without leading zeros
+		return (this.date.getHours() % 12 || 12) + "";
+	},
+
+	G: function(){
+		// summary:
+		//		24-hour format of an hour without leading zeros
+		return this.date.getHours() + "";
+	},
+
+	h: function(){
+		// summary:
+		//		12-hour format of an hour with leading zeros
+		var g = this.g();
+		return (g.length == 1) ? "0" + g : g;
+	},
+
+	H: function(){
+		// summary:
+		//		24-hour format of an hour with leading zeros
+		var G = this.G();
+		return (G.length == 1) ? "0" + G : G;
+	},
+
+	i: function(){
+		// summary:
+		//		Minutes with leading zeros
+		var mins = this.date.getMinutes() + "";
+		return (mins.length == 1) ? "0" + mins : mins;
+	},
+
+	s: function(){
+		// summary:
+		//		Seconds, with leading zeros
+		var secs = this.date.getSeconds() + "";
+		return (secs.length == 1) ? "0" + secs : secs;
+	},
+
+	// Timezone
+
+	e: function(){
+		// summary:
+		//		Timezone identifier (added in PHP 5.1.0)
+		return ddate.getTimezoneName(this.date);
+	},
+
+	I: function(){
+		// summary:
+		//		Whether or not the date is in daylight saving time
+
+		// TODO: Can dojo.date do this?
+	},
+
+	O: function(){
+		// summary:
+		//		Difference to Greenwich time (GMT) in hours
+		var off = Math.abs(this.date.getTimezoneOffset());
+		var hours = Math.floor(off / 60) + "";
+		var mins = (off % 60) + "";
+		if(hours.length == 1) hours = "0" + hours;
+		if(mins.length == 1) hours = "0" + mins;
+		return ((this.date.getTimezoneOffset() < 0) ? "+" : "-") + hours + mins;
+	},
+
+	P: function(){
+		// summary:
+		//		Difference to Greenwich time (GMT) with colon between hours and minutes (added in PHP 5.1.3)
+		var O = this.O();
+		return O.substring(0, 2) + ":" + O.substring(2, 4);
+	},
+
+	T: function(){
+		// summary:
+		//		Timezone abbreviation
+
+		// Guess...
+		return this.e().substring(0, 3);
+	},
+
+	Z: function(){
+		// summary:
+		//		Timezone offset in seconds. The offset for timezones west of UTC is always negative,
+		//		and for those east of UTC is always positive.
+		return this.date.getTimezoneOffset() * -60;
+	},
+
+	// Full Date/Time
+
+	c: function(){
+		// summary:
+		//		ISO 8601 date (added in PHP 5)
+		return this.Y() + "-" + this.m() + "-" + this.d() + "T" + this.h() + ":" + this.i() + ":" + this.s() + this.P();
+	},
+
+	r: function(){
+		// summary:
+		//		RFC 2822 formatted date
+		return this.D() + ", " + this.d() + " " + this.M() + " " + this.Y() + " " + this.H() + ":" + this.i() + ":" + this.s() + " " + this.O();
+	},
+
+	U: function(){
+		// summary:
+		//		Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)
+		return Math.floor(this.date.getTime() / 1000);
+	}
+
+});
+return php;
+});

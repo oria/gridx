@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"StackContainer-touch.js",
-"lineCount":3,
-"mappings":"A,SACAA,MAAA,0HAAkI,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAClIF,CAAAG,QAAA,sDACAH,EAAAI,aAAA,sDACAJ,EAAAK,QAAA,+BAMAL,EAAAM,QAAA,CAAaL,CAAAM,OAAAC,eAAAC,UAAb,cAAkE,QAAA,GACjEC,SADiE,4BACpDC,cADoD,QAEjEX,EAAAY,QAAA;AAEC,QAAA,CAASC,CAAT,EACCP,YAAA,CAAaQ,YAAb,CAA2BD,CAA3B,CAA8B,QAAA,CAASE,CAAT,SACtBA,CAAAC,KADsB,mBAG3BD,CAAAE,eAAA,EACGC,mBAJwB,GAKtBC,CALsB,CAKdJ,CAAAK,QAAA,GAAA,QAAsBV,SAAtB,CALc,CAKqBQ,kBALrB,KAMvBG,IAAAC,IAAA,CAASH,CAAT,CANuB,QAOtBT,SAPsB,GAOHS,CAPG,aAQlBD,kBARkB,GAStBC,CATsB,EAUvBI,wBAAAC,YAVuB,EAUiBC,YAAA,EAVjB,EAYvBF,wBAAAG,aAZuB,EAYkBC,SAAA,EAZlB,iCAkBxBZ,CAAAK,QAAAQ,OAlBwB,EAmB1BV,kBAnB0B,CAmBLH,CAAAK,QAAA,GAAA,QAAsBV,SAAtB,CAnBK,iDAyBpBQ,kBAzBoB,EAA9B,CADD,CAFD;KAFiE,CAAlE,CATkI,CAAlI;",
-"sources":["StackContainer-touch.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","experimental","require","connect","layout","StackContainer","prototype","axis","baseClass","forEach","p","domNode","e","type","preventDefault","touchPosition","delta","touches","Math","abs","selectedChildWidget","isLastChild","forward","isFirstChild","back","length"]
-}

@@ -1,3 +1,12 @@
-//>>built
-define("dojox/charting/plot2d/Lines",["dojo/_base/declare","./Default"],function(a,b){return a("dojox.charting.plot2d.Lines",b,{constructor:function(){this.opt.lines=!0}})});
-//@ sourceMappingURL=Lines.js.map
+define(["dojo/_base/declare", "./Default"], function(declare, Default){
+
+	return declare("dojox.charting.plot2d.Lines", Default, {
+		// summary:
+		//		A convenience constructor to create a typical line chart.
+		constructor: function(){
+			// summary:
+			//		Preset our default plot to be line-based.
+			this.opt.lines = true;
+		}
+	});
+});

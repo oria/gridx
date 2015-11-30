@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"ToggleDir.js",
-"lineCount":2,
-"mappings":"A,SAAAA,MAAA,mCAA0C,gHAAA,MAAA,KAA1C,CAQG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA4BC,CAA5B,CAAoCC,CAApC,CAA0CC,CAA1C,CAA8CC,CAA9C,CAAuDC,CAAvD,EAKFJ,CAAAK,aAAA,mCALE,KAOEC,EAAYR,CAAA,mCAA2CK,CAA3C,uDAYFC,CAZE,aAcFG,QAAAA,GAEZC,cAAA,CAAeC,SAAf,CACAC,YAAAC,eAAAC,KAAA,CAAgCX,CAAAY,MAAA,MAAiB,QAAA,OAC5CC,EAAUJ,WAAAK,aAAAC,cAAAC,SAAAC,gBADkC;AAKhDJ,EAAUA,CAAAK,qBAAA,QAAA,GALsC,CAM5CC,SAAQrB,CAAAsB,iBAAA,CAA0BP,CAA1B,CAAAQ,UACZC,YAAAC,IAAA,YAA4BJ,CAA5B,CACAK,SAAA,CAASF,WAAArB,GAAA,UAAyBD,CAAAY,MAAA,gBAAzB,CAAT,CARgD,CAAjB,CAAhC,CAHYN,CAdE,aA6BFmB,QAAAA,GAGZH,WAAAC,IAAA,YAA4BG,QAAA,YAA5B,CAHYD,CA7BE,SAmCNE,QAAAA,CAASC,CAATD,MAGJE,OACDD,EAJKD,GAKPE,CALOF,OAOJd,EAPIc,CAOMlB,WAAAK,aAAAC,cAAAC,SAAAC,gBACdJ,EARQc,CAQEd,CAAAK,qBAAA,QAAA,GACVL,EAAAgB,IATQF,CASmBE,CATnBF,CAnCM,EAiDhBzB,EAAA4B,SAAA,UAxDE,CAwD8B,QAAA,SACxB,KAAIzB,CAAJ,uBADwB,CAxD9B,OA4DKA,EA5DL,CARH;",
-"sources":["ToggleDir.js.uncompressed.js"],
-"names":["define","declare","domStyle","kernel","lang","on","_Plugin","ToggleButton","experimental","ToggleDir","_initButton","inherited","arguments","editor","onLoadDeferred","then","hitch","editDoc","editorObject","contentWindow","document","documentElement","getElementsByTagName","isLtr","getComputedStyle","direction","button","set","own","updateState","get","_setRtl","rtl","dir","registry"]
-}

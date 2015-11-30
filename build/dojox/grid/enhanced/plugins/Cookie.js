@@ -1,12 +1,361 @@
-//>>built
-define("dojox/grid/enhanced/plugins/Cookie","dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/_base/sniff dojo/_base/html dojo/_base/json dojo/_base/window dojo/_base/unload dojo/cookie ../_Plugin ../../_RowSelector ../../EnhancedGrid ../../cells/_base".split(" "),function(h,e,c,m,r,k,s,t,l,u,v,n){var p=c.getObject("dojox.grid.cells"),q=function(a){var b=[];c.isArray(a)||(a=[a]);e.forEach(a,function(a){c.isArray(a)&&(a={cells:a});a=a.rows||a.cells;c.isArray(a)&&(c.isArray(a[0])||(a=[a]),e.forEach(a,
-function(a){c.isArray(a)&&e.forEach(a,function(a){b.push(a)})}))});return b},w=function(a,b){if(c.isArray(a)){var d=b._setStructureAttr;b._setStructureAttr=function(g){if(!b._colWidthLoaded){b._colWidthLoaded=!0;for(var f=q(g),c=f.length-1;0<=c;--c)"number"==typeof a[c]?f[c].width=a[c]+"px":"hidden"==a[c]&&(f[c].hidden=!0)}d.call(b,g);b._setStructureAttr=d}}},x=function(a){return e.map(e.filter(a.layout.cells,function(a){return!(a.isRowSelector||a instanceof p.RowIndex)}),function(a){return a.hidden?
-"hidden":r[m("webkit")?"marginBox":"contentBox"](a.getHeaderNode()).w})},y=function(a,b){if(a&&e.every(a,function(a){return c.isArray(a)&&e.every(a,function(a){return c.isArray(a)&&0<a.length})})){var d=b._setStructureAttr,g=function(a){return null!==a&&c.isObject(a)&&("cells"in a||"rows"in a||"type"in a&&!("name"in a||"field"in a||"get"in a))};b._setStructureAttr=function(f){if(!b._colOrderLoaded){b._colOrderLoaded=!0;b._setStructureAttr=d;f=c.clone(f);c.isArray(f)&&!e.some(f,g)?f=[{cells:f}]:g(f)&&
-(f=[f]);var h=q(f);e.forEach(c.isArray(f)?f:[f],function(b,d){var g=b;c.isArray(b)?b.splice(0,b.length):(delete b.rows,g=b.cells=[]);e.forEach(a[d],function(a){e.forEach(a,function(a){var b,d;for(b=0;b<h.length&&!(d=h[b],k.toJson({name:d.name,field:d.field})==k.toJson(a));++b);b<h.length&&g.push(d)})})})}d.call(b,f)}}},z=function(a){return e.map(e.filter(a.views.views,function(a){return!(a instanceof v)}),function(a){return e.map(a.structure.cells,function(a){return e.map(e.filter(a,function(a){return!(a.isRowSelector||
-a instanceof p.RowIndex)}),function(a){return{name:a.name,field:a.field}})})})},A=function(a,b){try{a&&c.isObject(a)&&b.setSortIndex(a.idx,a.asc)}catch(d){}},B=function(a){return{idx:a.getSortIndex(),asc:a.getSortAsc()}};m("ie")||t.addOnWindowUnload(function(){e.forEach(dijit.findWidgets(s.body()),function(a){a instanceof n&&!a._destroyed&&a.destroyRecursive()})});h=h("dojox.grid.enhanced.plugins.Cookie",u,{name:"cookie",_cookieEnabled:!0,constructor:function(a,b){this.grid=a;b=b&&c.isObject(b)?b:
-{};this.cookieProps=b.cookieProps;this._cookieHandlers=[];this._mixinGrid();this.addCookieHandler({name:"columnWidth",onLoad:w,onSave:x});this.addCookieHandler({name:"columnOrder",onLoad:y,onSave:z});this.addCookieHandler({name:"sortOrder",onLoad:A,onSave:B});e.forEach(this._cookieHandlers,function(a){!1===b[a.name]&&(a.enable=!1)},this)},destroy:function(){this._saveCookie();this._cookieHandlers=null;this.inherited(arguments)},_mixinGrid:function(){var a=this.grid;a.addCookieHandler=c.hitch(this,
-"addCookieHandler");a.removeCookie=c.hitch(this,"removeCookie");a.setCookieEnabled=c.hitch(this,"setCookieEnabled");a.getCookieEnabled=c.hitch(this,"getCookieEnabled")},_saveCookie:function(){if(this.getCookieEnabled()){for(var a={},b=this._cookieHandlers,d=this.cookieProps,g=window.location+"/"+this.grid.id,d=b.length-1;0<=d;--d)b[d].enabled&&(a[b[d].name]=b[d].onSave(this.grid));d=c.isObject(this.cookieProps)?this.cookieProps:{};l(g,k.toJson(a),d)}else this.removeCookie()},onPreInit:function(){var a=
-this.grid,b=this._cookieHandlers,d=l(window.location+"/"+a.id);if(d)for(var d=k.fromJson(d),c=0;c<b.length;++c)if(b[c].name in d&&b[c].enabled)b[c].onLoad(d[b[c].name],a);this._cookie=d||{};this._cookieStartedup=!0},addCookieHandler:function(a){if(a.name){var b=function(){};a.onLoad=a.onLoad||b;a.onSave=a.onSave||b;"enabled"in a||(a.enabled=!0);for(b=this._cookieHandlers.length-1;0<=b;--b)this._cookieHandlers[b].name==a.name&&this._cookieHandlers.splice(b,1);this._cookieHandlers.push(a);if(this._cookieStartedup&&
-a.name in this._cookie)a.onLoad(this._cookie[a.name],this.grid)}},removeCookie:function(){l(window.location+"/"+this.grid.id,null,{expires:-1})},setCookieEnabled:function(a,b){if("string"==typeof a)for(var d=this._cookieHandlers,c=d.length-1;0<=c;--c)d[c].name===a&&(d[c].enabled=!!b);else(this._cookieEnabled=!!a)||this.removeCookie()},getCookieEnabled:function(a){if(c.isString(a)){for(var b=this._cookieHandlers,d=b.length-1;0<=d;--d)if(b[d].name==a)return b[d].enabled;return!1}return this._cookieEnabled}});
-n.registerPlugin(h,{preInit:!0});return h});
-//@ sourceMappingURL=Cookie.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/_base/html",
+	"dojo/_base/json",
+	"dojo/_base/window",
+	"dojo/_base/unload",
+	"dojo/cookie",
+	"../_Plugin",
+	"../../_RowSelector",
+	"../../EnhancedGrid",
+	"../../cells/_base"
+], function(declare, array, lang, has, html, json, win, unload, cookie, _Plugin, _RowSelector, EnhancedGrid){
+
+	var gridCells = lang.getObject("dojox.grid.cells");
+
+	// Generate a cookie key for the given grid.
+	var _cookieKeyBuilder = function(grid){
+		return window.location + "/" + grid.id;
+	};
+	
+	//Utilities:
+	var _getCellsFromStructure = function(structure){
+		var cells = [];
+		if(!lang.isArray(structure)){
+			structure = [structure];
+		}
+		array.forEach(structure,function(viewDef){
+			if(lang.isArray(viewDef)){
+				viewDef = {"cells" : viewDef};
+			}
+			var rows = viewDef.rows || viewDef.cells;
+			if(lang.isArray(rows)){
+				if(!lang.isArray(rows[0])){
+					rows = [rows];
+				}
+				array.forEach(rows, function(row){
+					if(lang.isArray(row)){
+						array.forEach(row, function(cell){
+							cells.push(cell);
+						});
+					}
+				});
+			}
+		});
+		return cells;
+	};
+	
+	// Persist column width
+	var _loadColWidth = function(colWidths, grid){
+		if(lang.isArray(colWidths)){
+			var oldFunc = grid._setStructureAttr;
+			grid._setStructureAttr = function(structure){
+				if(!grid._colWidthLoaded){
+					grid._colWidthLoaded = true;
+					var cells = _getCellsFromStructure(structure);
+					for(var i = cells.length - 1; i >= 0; --i){
+						if(typeof colWidths[i] == "number"){
+							cells[i].width = colWidths[i] + "px";
+						}else if(colWidths[i] == 'hidden'){
+							cells[i].hidden = true;
+						}
+					}
+				}
+				oldFunc.call(grid, structure);
+				grid._setStructureAttr = oldFunc;
+			};
+		}
+	};
+	
+
+	var _saveColWidth = function(grid){
+		return array.map(array.filter(grid.layout.cells, function(cell){
+			return !(cell.isRowSelector || cell instanceof gridCells.RowIndex);
+		}), function(cell){
+			return cell.hidden ? 'hidden' : html[has('webkit') ? "marginBox" : "contentBox"](cell.getHeaderNode()).w;
+		});
+	};
+	
+	// Persist column order
+	var _loadColumnOrder = function(colOrder, grid){
+		if(colOrder && array.every(colOrder, function(viewInfo){
+			return lang.isArray(viewInfo) && array.every(viewInfo, function(subrowInfo){
+				return lang.isArray(subrowInfo) && subrowInfo.length > 0;
+			});
+		})){
+			var oldFunc = grid._setStructureAttr;
+			var isCell = function(def){
+				return ("name" in def || "field" in def || "get" in def);
+			};
+			var isView = function(def){
+				return (def !== null && lang.isObject(def) &&
+						("cells" in def || "rows" in def || ("type" in def && !isCell(def))));
+			};
+			grid._setStructureAttr = function(structure){
+				if(!grid._colOrderLoaded){
+					grid._colOrderLoaded = true;
+					grid._setStructureAttr = oldFunc;
+					structure = lang.clone(structure);
+					if(lang.isArray(structure) && !array.some(structure, isView)){
+						structure = [{ cells: structure }];
+					}else if(isView(structure)){
+						structure = [structure];
+					}
+					var cells = _getCellsFromStructure(structure);
+					array.forEach(lang.isArray(structure) ? structure : [structure], function(viewDef, viewIdx){
+						var cellArray = viewDef;
+						if(lang.isArray(viewDef)){
+							viewDef.splice(0, viewDef.length);
+						}else{
+							delete viewDef.rows;
+							cellArray = viewDef.cells = [];
+						}
+						array.forEach(colOrder[viewIdx], function(subrow){
+							array.forEach(subrow, function(cellInfo){
+								var i, cell;
+								for(i = 0; i < cells.length; ++i){
+									cell = cells[i];
+									if(json.toJson({'name':cell.name,'field':cell.field}) == json.toJson(cellInfo)){
+										break;
+									}
+								}
+								if(i < cells.length){
+									cellArray.push(cell);
+								}
+							});
+						});
+					});
+				}
+				oldFunc.call(grid, structure);
+			};
+		}
+	};
+	
+	var _saveColumnOrder = function(grid){
+		var colOrder = array.map(array.filter(grid.views.views, function(view){
+			return !(view instanceof _RowSelector);
+		}), function(view){
+			return array.map(view.structure.cells, function(subrow){
+				return array.map(array.filter(subrow, function(cell){
+					return !(cell.isRowSelector || cell instanceof gridCells.RowIndex);
+				}), function(cell){
+					return {
+						"name": cell.name,
+						"field": cell.field
+					};
+				});
+			});
+		});
+		return colOrder;
+	};
+	
+	// Persist sorting order
+	var _loadSortOrder = function(sortOrder, grid){
+		try{
+			if(sortOrder && lang.isObject(sortOrder)){
+				grid.setSortIndex(sortOrder.idx, sortOrder.asc);
+			}
+		}catch(e){
+			//setSortIndex will finally call _fetch, some exceptions will be throw
+			//'cause the grid hasn't be fully loaded now. Just ignore them.
+		}
+	};
+	
+	var _saveSortOrder = function(grid){
+		return {
+			idx: grid.getSortIndex(),
+			asc: grid.getSortAsc()
+		};
+	};
+	
+	if(!has('ie')){
+		// Now in non-IE, widgets are no longer destroyed on page unload,
+		// so we have to destroy it manually to trigger saving cookie.
+		unload.addOnWindowUnload(function(){
+			array.forEach(dijit.findWidgets(win.body()), function(widget){
+				if(widget instanceof EnhancedGrid && !widget._destroyed){
+					widget.destroyRecursive();
+				}
+			});
+		});
+	}
+	
+	var Cookie = declare("dojox.grid.enhanced.plugins.Cookie", _Plugin, {
+		// summary:
+		//		This plugin provides a way to persist some grid features in cookie.
+		//		Default persistable features are:
+		//		column width:	"columnWidth" (handler name)
+		//		column order:	"columnOrder"
+		//		sorting order:	"sortOrder"
+		//
+		//		Grid users can define new persistable features
+		//		by calling the following before grid is initialized (that is, during "preInit");
+		//		|	grid.addCookieHandler({
+		//		|		name: "a name for the new persistable feature",
+		//		|		onLoad: function(savedObject, grid){
+		//		|			//load the cookie.
+		//		|		},
+		//		|		onSave: function(grid){
+		//		|			//save the cookie.
+		//		|		}
+		//		|	});
+		
+		// name: String
+		//		Plugin name
+		name: "cookie",
+		
+		_cookieEnabled: true,
+		
+		constructor: function(grid, args){
+			this.grid = grid;
+			args = (args && lang.isObject(args)) ? args : {};
+			this.cookieProps = args.cookieProps;
+			this._cookieHandlers = [];
+			this._mixinGrid();
+			
+			//Column width & simple sorting & column reorder are base grid features, so they must be supported.
+			this.addCookieHandler({
+				name: "columnWidth",
+				onLoad: _loadColWidth,
+				onSave: _saveColWidth
+			});
+			this.addCookieHandler({
+				name: "columnOrder",
+				onLoad: _loadColumnOrder,
+				onSave: _saveColumnOrder
+			});
+			this.addCookieHandler({
+				name: "sortOrder",
+				onLoad: _loadSortOrder,
+				onSave: _saveSortOrder
+			});
+			
+			array.forEach(this._cookieHandlers, function(handler){
+				if(args[handler.name] === false){
+					handler.enable = false;
+				}
+			}, this);
+		},
+		destroy:function(){
+			this._saveCookie();
+			this._cookieHandlers = null;
+			this.inherited(arguments);
+		},
+		_mixinGrid: function(){
+			var g = this.grid;
+			g.addCookieHandler = lang.hitch(this, "addCookieHandler");
+			g.removeCookie = lang.hitch(this, "removeCookie");
+			g.setCookieEnabled = lang.hitch(this, "setCookieEnabled");
+			g.getCookieEnabled = lang.hitch(this, "getCookieEnabled");
+		},
+		_saveCookie: function(){
+			if(this.getCookieEnabled()){
+				var ck = {},
+					chs = this._cookieHandlers,
+					cookieProps = this.cookieProps,
+					cookieKey = _cookieKeyBuilder(this.grid);
+				for(var i = chs.length-1; i >= 0; --i){
+					if(chs[i].enabled){
+						//Do the real saving work here.
+						ck[chs[i].name] = chs[i].onSave(this.grid);
+					}
+				}
+				cookieProps = lang.isObject(this.cookieProps) ? this.cookieProps : {};
+				cookie(cookieKey, json.toJson(ck), cookieProps);
+			}else{
+				this.removeCookie();
+			}
+		},
+		onPreInit: function(){
+			var grid = this.grid,
+				chs = this._cookieHandlers,
+				cookieKey = _cookieKeyBuilder(grid),
+				ck = cookie(cookieKey);
+			if(ck){
+				ck = json.fromJson(ck);
+				for(var i = 0; i < chs.length; ++i){
+					if(chs[i].name in ck && chs[i].enabled){
+						//Do the real loading work here.
+						chs[i].onLoad(ck[chs[i].name], grid);
+					}
+				}
+			}
+			this._cookie = ck || {};
+			this._cookieStartedup = true;
+		},
+		addCookieHandler: function(args){
+			// summary:
+			//		If a grid plugin wants cookie service, call this.
+			//		This must be called during preInit.
+			// args: Object
+			//		An object with the following structure:
+			//	|	{
+			//	|		name: "some-string",
+			//	|		onLoad: /* void */ function(/* object */partOfCookie, /* EDG */grid){...},
+			//	|		onSave: /* object */ function(/* EDG */grid){...}
+			//	|	}
+			if(args.name){
+				var dummy = function(){};
+				args.onLoad = args.onLoad || dummy;
+				args.onSave = args.onSave || dummy;
+				if(!("enabled" in args)){
+					args.enabled = true;
+				}
+				for(var i = this._cookieHandlers.length - 1; i >= 0; --i){
+					if(this._cookieHandlers[i].name == args.name){
+						this._cookieHandlers.splice(i, 1);
+					}
+				}
+				this._cookieHandlers.push(args);
+				if(this._cookieStartedup && args.name in this._cookie){
+					args.onLoad(this._cookie[args.name], this.grid);
+				}
+			}
+		},
+		removeCookie: function(){
+			// summary:
+			//		Remove cookie for this grid.
+			var key = _cookieKeyBuilder(this.grid);
+			cookie(key, null, {expires: -1});
+		},
+		setCookieEnabled: function(cookieName, enabled){
+			// summary:
+			//		A setter to enable|disable cookie support for a particular Grid feature.
+			// cookieName: String?
+			//		Name of a cookie handler if provided, otherwise for all cookies.
+			// enabled: Boolean
+			if(typeof cookieName == 'string'){
+				var chs = this._cookieHandlers;
+				for(var i = chs.length - 1; i >= 0; --i){
+					if(chs[i].name === cookieName){
+						chs[i].enabled = !!enabled;
+					}
+				}
+			}else{
+				this._cookieEnabled = !!cookieName;
+				if(!this._cookieEnabled){ this.removeCookie(); }
+			}
+		},
+		getCookieEnabled: function(cookieName){
+			// summary:
+			//		A getter to check cookie support of a particular Grid feature.
+			// cookieName: String?
+			//		Name of a cookie handler if provided, otherwise for all cookies.
+			if(lang.isString(cookieName)){
+				var chs = this._cookieHandlers;
+				for(var i = chs.length - 1; i >= 0; --i){
+					if(chs[i].name == cookieName){ return chs[i].enabled; }
+				}
+				return false;
+			}
+			return this._cookieEnabled;
+		}
+	});
+
+	EnhancedGrid.registerPlugin(Cookie, {"preInit": true});
+
+	return Cookie;
+});

@@ -1,15 +1,508 @@
-//>>built
-define("dojox/grid/enhanced/plugins/Rearrange","dojo/_base/kernel dojo/_base/lang dojo/_base/declare dojo/_base/array dojo/_base/connect ../../EnhancedGrid ../_Plugin ./_RowMapLayer".split(" "),function(s,u,v,m,p,x,y,z){s=v("dojox.grid.enhanced.plugins.Rearrange",y,{name:"rearrange",constructor:function(a,b){this.grid=a;this.setArgs(b);var e=new z(a);dojox.grid.enhanced.plugins.wrap(a,"_storeLayerFetch",e)},setArgs:function(a){this.args=u.mixin(this.args||{},a||{});this.args.setIdentifierForNewItem=
-this.args.setIdentifierForNewItem||function(b){return b}},destroy:function(){this.inherited(arguments);this.grid.unwrap("rowmap")},onSetStore:function(a){this.grid.layer("rowmap").clearMapping()},_hasIdentity:function(a){var b=this.grid,e=b.store,g=b.layout.cells;return e.getFeatures()["dojo.data.api.Identity"]&&m.some(a,function(a){return e.getIdentityAttributes(b._by_idx[a.r].item)==g[a.c].field})?!0:!1},moveColumns:function(a,b){var e=this.grid,g=e.layout,f=g.cells,h,c,d=0,l=!0;h={};var k={};a.sort(function(a,
-b){return a-b});for(c=0;c<a.length;++c)h[a[c]]=c,a[c]<b&&++d;var n=0,q=0,m=Math.max(a[a.length-1],b);m==f.length&&--m;var t=Math.min(a[0],b);for(c=t;c<=m;++c){var r=h[c];0<=r?k[c]=b-d+r:c<b?(k[c]=t+n,++n):c>=b&&(k[c]=b+a.length-d+q,++q)}d=0;b==f.length&&(--b,l=!1);e._notRefreshSelection=!0;for(c=0;c<a.length;++c)h=a[c],h<b&&(h-=d),++d,h!=b&&(g.moveColumn(f[h].view.idx,f[b].view.idx,h,b,l),f=g.cells),b<=h&&++b;delete e._notRefreshSelection;p.publish("dojox/grid/rearrange/move/"+e.id,["col",k,a])},
-moveRows:function(a,b){var e=this.grid,g={},f=[],h=[],c=a.length,d,l,k;for(d=0;d<c;++d){h=a[d];if(h>=b)break;f.push(h)}h=a.slice(d);d=f;if(c=d.length){l={};m.forEach(d,function(a){l[a]=!0});g[d[0]]=b-c;f=0;d=d[f]+1;for(k=d-1;d<b;++d)l[d]?(++f,g[d]=b-c+f):(g[d]=k,++k)}d=h;if(c=d.length){l={};m.forEach(d,function(a){l[a]=!0});g[d[c-1]]=b+c-1;f=c-1;d=d[f]-1;for(k=d+1;d>=b;--d)l[d]?(--f,g[d]=b+f):(g[d]=k,--k)}var n=u.clone(g);e.layer("rowmap").setMapping(g);e.forEachLayer(function(a){return"rowmap"!=
-a.name()?(a.invalidate(),!0):!1},!1);e.selection.selected=[];e._noInternalMapping=!0;e._refresh();setTimeout(function(){p.publish("dojox/grid/rearrange/move/"+e.id,["row",n,a]);e._noInternalMapping=!1},0)},moveCells:function(a,b){var e=this.grid,g=e.store;if(g.getFeatures()["dojo.data.api.Write"]&&!(a.min.row==b.min.row&&a.min.col==b.min.col)){var f=e.layout.cells,h,c,d,l,k=[],n=[];h=a.min.row;for(d=b.min.row;h<=a.max.row;++h,++d){c=a.min.col;for(l=b.min.col;c<=a.max.col;++c,++l){for(;f[c]&&f[c].hidden;)++c;
-for(;f[l]&&f[l].hidden;)++l;k.push({r:h,c:c});n.push({r:d,c:l,v:f[c].get(h,e._by_idx[h].item)})}}this._hasIdentity(k.concat(n))?console.warn("Can not write to identity!"):(m.forEach(k,function(a){g.setValue(e._by_idx[a.r].item,f[a.c].field,"")}),m.forEach(n,function(a){g.setValue(e._by_idx[a.r].item,f[a.c].field,a.v)}),g.save({onComplete:function(){p.publish("dojox/grid/rearrange/move/"+e.id,["cell",{from:a,to:b}])}}))}},copyCells:function(a,b){var e=this.grid,g=e.store;if(g.getFeatures()["dojo.data.api.Write"]&&
-!(a.min.row==b.min.row&&a.min.col==b.min.col)){var f=e.layout.cells,h,c,d,l,k=[];h=a.min.row;for(d=b.min.row;h<=a.max.row;++h,++d){c=a.min.col;for(l=b.min.col;c<=a.max.col;++c,++l){for(;f[c]&&f[c].hidden;)++c;for(;f[l]&&f[l].hidden;)++l;k.push({r:d,c:l,v:f[c].get(h,e._by_idx[h].item)})}}this._hasIdentity(k)?console.warn("Can not write to identity!"):(m.forEach(k,function(a){g.setValue(e._by_idx[a.r].item,f[a.c].field,a.v)}),g.save({onComplete:function(){setTimeout(function(){p.publish("dojox/grid/rearrange/copy/"+
-e.id,["cell",{from:a,to:b}])},0)}}))}},changeCells:function(a,b,e){var g=this.grid,f=g.store;if(f.getFeatures()["dojo.data.api.Write"]){var h=g.layout.cells,c=a.layout.cells,d,l,k,n,q=[];d=b.min.row;for(k=e.min.row;d<=b.max.row;++d,++k){l=b.min.col;for(n=e.min.col;l<=b.max.col;++l,++n){for(;c[l]&&c[l].hidden;)++l;for(;h[n]&&h[n].hidden;)++n;q.push({r:k,c:n,v:c[l].get(d,a._by_idx[d].item)})}}this._hasIdentity(q)?console.warn("Can not write to identity!"):(m.forEach(q,function(a){f.setValue(g._by_idx[a.r].item,
-h[a.c].field,a.v)}),f.save({onComplete:function(){p.publish("dojox/grid/rearrange/change/"+g.id,["cell",e])}}))}},clearCells:function(a){var b=this.grid,e=b.store;if(e.getFeatures()["dojo.data.api.Write"]){var g=b.layout.cells,f,h,c=[];for(f=a.min.row;f<=a.max.row;++f)for(h=a.min.col;h<=a.max.col;++h){for(;g[h]&&g[h].hidden;)++h;c.push({r:f,c:h})}this._hasIdentity(c)?console.warn("Can not write to identity!"):(m.forEach(c,function(a){e.setValue(b._by_idx[a.r].item,g[a.c].field,"")}),e.save({onComplete:function(){p.publish("dojox/grid/rearrange/change/"+
-b.id,["cell",a])}}))}},insertRows:function(a,b,e){try{var g=this.grid,f=g.store,h=g.rowCount,c={},d=0,l=[],k,n=0>e,q=this,s=b.length;if(n)e=0;else for(k=e;k<g.rowCount;++k)c[k]=k+s;if(f.getFeatures()["dojo.data.api.Write"]){if(a){var t=a.store,r,w;if(n)w=m.filter(m.map(g.layout.cells,function(a){return a.field}),function(a){return a});else{for(k=0;!r;++k)r=g._by_idx[k];w=f.getAttributes(r.item)}var v=[];m.forEach(b,function(b,g){var k={},n=a._by_idx[b];if(n){m.forEach(w,function(a){k[a]=t.getValue(n.item,
-a)});k=q.args.setIdentifierForNewItem(k,f,h+d)||k;try{f.newItem(k),l.push(e+g),c[h+d]=e+g,++d}catch(p){}}else v.push(b)})}else if(b.length&&u.isObject(b[0]))m.forEach(b,function(a,b){var g=q.args.setIdentifierForNewItem(a,f,h+d)||a;try{f.newItem(g),l.push(e+b),c[h+d]=e+b,++d}catch(k){}});else return;g.layer("rowmap").setMapping(c);f.save({onComplete:function(){g._refresh();setTimeout(function(){p.publish("dojox/grid/rearrange/insert/"+g.id,["row",l])},0)}})}}catch(x){}},removeRows:function(a){var b=
-this.grid,e=b.store;try{m.forEach(m.map(a,function(a){return b._by_idx[a]}),function(a){a&&e.deleteItem(a.item)}),e.save({onComplete:function(){p.publish("dojox/grid/rearrange/remove/"+b.id,["row",a])}})}catch(g){}},_getPageInfo:function(){var a=this.grid.scroller,b=a.page,e=a.page,g=a.firstVisibleRow,f=a.lastVisibleRow,h=a.rowsPerPage,c,d,l,k=[];m.forEach(a.pageNodes[0],function(a,m){a&&(l=!1,c=m*h,d=(m+1)*h-1,g>=c&&g<=d&&(b=m,l=!0),f>=c&&f<=d&&(e=m,l=!0),!l&&(c>f||d<g)&&k.push(m))});return{topPage:b,
-bottomPage:e,invalidPages:k}}});x.registerPlugin(s);return s});
-//@ sourceMappingURL=Rearrange.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"../../EnhancedGrid",
+	"../_Plugin",
+	"./_RowMapLayer"
+], function(dojo, lang, declare, array, connect, EnhancedGrid, _Plugin, _RowMapLayer){
+
+var Rearrange = declare("dojox.grid.enhanced.plugins.Rearrange", _Plugin, {
+	// summary:
+	//		Provides a set of method to re-arrange the structure of grid.
+	
+	// name: String
+	//		plugin name
+	name: "rearrange",
+	
+	constructor: function(grid, args){
+		this.grid = grid;
+		this.setArgs(args);
+		var rowMapLayer = new _RowMapLayer(grid);
+		dojox.grid.enhanced.plugins.wrap(grid, "_storeLayerFetch", rowMapLayer);
+	},
+	setArgs: function(args){
+		this.args = lang.mixin(this.args || {}, args || {});
+		this.args.setIdentifierForNewItem = this.args.setIdentifierForNewItem || function(v){return v;};
+	},
+	destroy: function(){
+		this.inherited(arguments);
+		this.grid.unwrap("rowmap");
+	},
+	onSetStore: function(store){
+		this.grid.layer("rowmap").clearMapping();
+	},
+	_hasIdentity: function(points){
+		var g = this.grid, s = g.store, cells = g.layout.cells;
+		if(s.getFeatures()["dojo.data.api.Identity"]){
+			if(array.some(points, function(point){
+				return s.getIdentityAttributes(g._by_idx[point.r].item) == cells[point.c].field;
+			})){
+				return true;
+			}
+		}
+		return false;
+	},
+	moveColumns: function(colsToMove, targetPos){
+		// summary:
+		//		Move a set of columns to a given position.
+		// tags:
+		//		public
+		// colsToMove: Integer[]
+		//		Array of column indexes.
+		// targetPos: Integer
+		//		The target position
+		var g = this.grid,
+			layout = g.layout,
+			cells = layout.cells,
+			colIndex, i, delta = 0,
+			before = true, tmp = {}, mapping = {};
+		colsToMove.sort(function(a, b){
+			return a - b;
+		});
+		for(i = 0; i < colsToMove.length; ++i){
+			tmp[colsToMove[i]] = i;
+			if(colsToMove[i] < targetPos){
+				++delta;
+			}
+		}
+		var leftCount = 0, rightCount = 0;
+		var maxCol = Math.max(colsToMove[colsToMove.length - 1], targetPos);
+		if(maxCol == cells.length){
+			--maxCol;
+		}
+		var minCol = Math.min(colsToMove[0], targetPos);
+		for(i = minCol; i <= maxCol; ++i){
+			var j = tmp[i];
+			if(j >= 0){
+				mapping[i] = targetPos - delta + j;
+			}else if(i < targetPos){
+				mapping[i] = minCol + leftCount;
+				++leftCount;
+			}else if(i >= targetPos){
+				mapping[i] = targetPos + colsToMove.length - delta + rightCount;
+				++rightCount;
+			}
+		}
+		//console.log("mapping:", mapping, ", colsToMove:", colsToMove,", target:", targetPos);
+		delta = 0;
+		if(targetPos == cells.length){
+			--targetPos;
+			before = false;
+		}
+		g._notRefreshSelection = true;
+		for(i = 0; i < colsToMove.length; ++i){
+			colIndex = colsToMove[i];
+			if(colIndex < targetPos){
+				colIndex -= delta;
+			}
+			++delta;
+			if(colIndex != targetPos){
+				layout.moveColumn(cells[colIndex].view.idx, cells[targetPos].view.idx, colIndex, targetPos, before);
+				cells = layout.cells;
+			}
+			if(targetPos <= colIndex){
+				++targetPos;
+			}
+		}
+		delete g._notRefreshSelection;
+		connect.publish("dojox/grid/rearrange/move/" + g.id, ["col", mapping, colsToMove]);
+	},
+	moveRows: function(rowsToMove, targetPos){
+		// summary:
+		//		Move a set of rows to a given position
+		// tags:
+		//		public
+		// rowsToMove: Integer[]
+		//		Array of row indexes.
+		// targetPos: Integer
+		//		The target position
+		var g = this.grid,
+			mapping = {},
+			preRowsToMove = [],
+			postRowsToMove = [],
+			len = rowsToMove.length,
+			i, r, k, arr, rowMap, lastPos;
+			
+		for(i = 0; i < len; ++i){
+			r = rowsToMove[i];
+			if(r >= targetPos){
+				break;
+			}
+			preRowsToMove.push(r);
+		}
+		postRowsToMove = rowsToMove.slice(i);
+		
+		arr = preRowsToMove;
+		len = arr.length;
+		if(len){
+			rowMap = {};
+			array.forEach(arr, function(r){
+				rowMap[r] = true;
+			});
+			mapping[arr[0]] = targetPos - len;
+			for(k = 0, i = arr[k] + 1, lastPos = i - 1; i < targetPos; ++i){
+				if(!rowMap[i]){
+					mapping[i] = lastPos;
+					++lastPos;
+				}else{
+					++k;
+					mapping[i] = targetPos - len + k;
+				}
+			}
+		}
+		arr = postRowsToMove;
+		len = arr.length;
+		if(len){
+			rowMap = {};
+			array.forEach(arr, function(r){
+				rowMap[r] = true;
+			});
+			mapping[arr[len - 1]] = targetPos + len - 1;
+			for(k = len - 1, i = arr[k] - 1, lastPos = i + 1; i >= targetPos; --i){
+				if(!rowMap[i]){
+					mapping[i] = lastPos;
+					--lastPos;
+				}else{
+					--k;
+					mapping[i] = targetPos + k;
+				}
+			}
+		}
+		var tmpMapping = lang.clone(mapping);
+		g.layer("rowmap").setMapping(mapping);
+		g.forEachLayer(function(layer){
+			if(layer.name() != "rowmap"){
+				layer.invalidate();
+				return true;
+			}else{
+				return false;
+			}
+		}, false);
+		g.selection.selected = [];
+		g._noInternalMapping = true;
+		g._refresh();
+		setTimeout(function(){
+			connect.publish("dojox/grid/rearrange/move/" + g.id, ["row", tmpMapping, rowsToMove]);
+			g._noInternalMapping = false;
+		}, 0);
+	},
+	moveCells: function(cellsToMove, target){
+		var g = this.grid,
+			s = g.store;
+		if(s.getFeatures()["dojo.data.api.Write"]){
+			if(cellsToMove.min.row == target.min.row && cellsToMove.min.col == target.min.col){
+				//Same position, no need to move
+				return;
+			}
+			var cells = g.layout.cells,
+				cnt = cellsToMove.max.row - cellsToMove.min.row + 1,
+				r, c, tr, tc,
+				sources = [], targets = [];
+			for(r = cellsToMove.min.row, tr = target.min.row; r <= cellsToMove.max.row; ++r, ++tr){
+				for(c = cellsToMove.min.col, tc = target.min.col; c <= cellsToMove.max.col; ++c, ++tc){
+					while(cells[c] && cells[c].hidden){
+						++c;
+					}
+					while(cells[tc] && cells[tc].hidden){
+						++tc;
+					}
+					sources.push({
+						"r": r,
+						"c": c
+					});
+					targets.push({
+						"r": tr,
+						"c": tc,
+						"v": cells[c].get(r, g._by_idx[r].item)
+					});
+				}
+			}
+			if(this._hasIdentity(sources.concat(targets))){
+				console.warn("Can not write to identity!");
+				return;
+			}
+			array.forEach(sources, function(point){
+				s.setValue(g._by_idx[point.r].item, cells[point.c].field, "");
+			});
+			array.forEach(targets, function(point){
+				s.setValue(g._by_idx[point.r].item, cells[point.c].field, point.v);
+			});
+			s.save({
+				onComplete: function(){
+					connect.publish("dojox/grid/rearrange/move/" + g.id, ["cell", {
+						"from": cellsToMove,
+						"to": target
+					}]);
+				}
+			});
+		}
+	},
+	copyCells: function(cellsToMove, target){
+		var g = this.grid,
+			s = g.store;
+		if(s.getFeatures()["dojo.data.api.Write"]){
+			if(cellsToMove.min.row == target.min.row && cellsToMove.min.col == target.min.col){
+				return;
+			}
+			var cells = g.layout.cells,
+				cnt = cellsToMove.max.row - cellsToMove.min.row + 1,
+				r, c, tr, tc,
+				targets = [];
+			for(r = cellsToMove.min.row, tr = target.min.row; r <= cellsToMove.max.row; ++r, ++tr){
+				for(c = cellsToMove.min.col, tc = target.min.col; c <= cellsToMove.max.col; ++c, ++tc){
+					while(cells[c] && cells[c].hidden){
+						++c;
+					}
+					while(cells[tc] && cells[tc].hidden){
+						++tc;
+					}
+					targets.push({
+						"r": tr,
+						"c": tc,
+						"v": cells[c].get(r, g._by_idx[r].item)
+					});
+				}
+			}
+			if(this._hasIdentity(targets)){
+				console.warn("Can not write to identity!");
+				return;
+			}
+			array.forEach(targets, function(point){
+				s.setValue(g._by_idx[point.r].item, cells[point.c].field, point.v);
+			});
+			s.save({
+				onComplete: function(){
+					setTimeout(function(){
+						connect.publish("dojox/grid/rearrange/copy/" + g.id, ["cell", {
+							"from": cellsToMove,
+							"to": target
+						}]);
+					}, 0);
+				}
+			});
+		}
+	},
+	changeCells: function(sourceGrid, cellsToMove, target){
+		var g = this.grid,
+			s = g.store;
+		if(s.getFeatures()["dojo.data.api.Write"]){
+			var srcg = sourceGrid,
+				cells = g.layout.cells,
+				srccells = srcg.layout.cells,
+				cnt = cellsToMove.max.row - cellsToMove.min.row + 1,
+				r, c, tr, tc, targets = [];
+			for(r = cellsToMove.min.row, tr = target.min.row; r <= cellsToMove.max.row; ++r, ++tr){
+				for(c = cellsToMove.min.col, tc = target.min.col; c <= cellsToMove.max.col; ++c, ++tc){
+					while(srccells[c] && srccells[c].hidden){
+						++c;
+					}
+					while(cells[tc] && cells[tc].hidden){
+						++tc;
+					}
+					targets.push({
+						"r": tr,
+						"c": tc,
+						"v": srccells[c].get(r, srcg._by_idx[r].item)
+					});
+				}
+			}
+			if(this._hasIdentity(targets)){
+				console.warn("Can not write to identity!");
+				return;
+			}
+			array.forEach(targets, function(point){
+				s.setValue(g._by_idx[point.r].item, cells[point.c].field, point.v);
+			});
+			s.save({
+				onComplete: function(){
+					connect.publish("dojox/grid/rearrange/change/" + g.id, ["cell", target]);
+				}
+			});
+		}
+	},
+	clearCells: function(cellsToClear){
+		var g = this.grid,
+			s = g.store;
+		if(s.getFeatures()["dojo.data.api.Write"]){
+			var cells = g.layout.cells,
+				cnt = cellsToClear.max.row - cellsToClear.min.row + 1,
+				r, c, targets = [];
+			for(r = cellsToClear.min.row; r <= cellsToClear.max.row; ++r){
+				for(c = cellsToClear.min.col; c <= cellsToClear.max.col; ++c){
+					while(cells[c] && cells[c].hidden){
+						++c;
+					}
+					targets.push({
+						"r": r,
+						"c": c
+					});
+				}
+			}
+			if(this._hasIdentity(targets)){
+				console.warn("Can not write to identity!");
+				return;
+			}
+			array.forEach(targets, function(point){
+				s.setValue(g._by_idx[point.r].item, cells[point.c].field, "");
+			});
+			s.save({
+				onComplete: function(){
+					connect.publish("dojox/grid/rearrange/change/" + g.id, ["cell", cellsToClear]);
+				}
+			});
+		}
+	},
+	insertRows: function(sourceGrid, rowsToMove, targetPos){
+		try{
+			var g = this.grid,
+				s = g.store,
+				rowCnt = g.rowCount,
+				mapping = {},
+				obj = {idx: 0},
+				newRows = [],
+				i,
+				emptyTarget = targetPos < 0,
+				_this = this,
+				len = rowsToMove.length;
+			if(emptyTarget){
+				targetPos = 0;
+			}else{
+				for(i = targetPos; i < g.rowCount; ++i){
+					mapping[i] = i + len;
+				}
+			}
+			if(s.getFeatures()['dojo.data.api.Write']){
+				if(sourceGrid){
+					var srcg = sourceGrid,
+						srcs = srcg.store,
+						thisItem, attrs;
+					if(!emptyTarget){
+						for(i = 0; !thisItem; ++i){
+							thisItem = g._by_idx[i];
+						}
+						attrs = s.getAttributes(thisItem.item);
+					}else{
+						//If the target grid is empty, there is no way to retrieve attributes.
+						//So try to get attrs from grid.layout.cells[], but this might not be right
+						//since some fields may be missed(e.g ID fields), please use "setIdentifierForNewItem()" 
+						//to add those missed fields
+						attrs = array.filter(array.map(g.layout.cells, function(cell){
+							return cell.field;
+						}), function(field){
+							return field; //non empty
+						});
+					}
+					var rowsToFetch = [];
+					array.forEach(rowsToMove, function(rowIndex, i){
+						var item = {};
+						var srcItem = srcg._by_idx[rowIndex];
+						if(srcItem){
+							array.forEach(attrs, function(attr){
+								item[attr] = srcs.getValue(srcItem.item, attr);
+							});
+							item = _this.args.setIdentifierForNewItem(item, s, rowCnt + obj.idx) || item;
+							try{
+								s.newItem(item);
+								newRows.push(targetPos + i);
+								mapping[rowCnt + obj.idx] = targetPos + i;
+								++obj.idx;
+							}catch(e){
+								console.log("insertRows newItem:",e,item);
+							}
+						}else{
+							rowsToFetch.push(rowIndex);
+						}
+					});
+				}else if(rowsToMove.length && lang.isObject(rowsToMove[0])){
+					array.forEach(rowsToMove, function(rowData, i){
+						var item = _this.args.setIdentifierForNewItem(rowData, s, rowCnt + obj.idx) || rowData;
+						try{
+							s.newItem(item);
+							newRows.push(targetPos + i);
+							mapping[rowCnt + obj.idx] = targetPos + i;
+							++obj.idx;
+						}catch(e){
+							console.log("insertRows newItem:",e,item);
+						}
+					});
+				}else{
+					return;
+				}
+				g.layer("rowmap").setMapping(mapping);
+				s.save({
+					onComplete: function(){
+						g._refresh();
+						setTimeout(function(){
+							connect.publish("dojox/grid/rearrange/insert/" + g.id, ["row", newRows]);
+						}, 0);
+					}
+				});
+			}
+		}catch(e){
+			console.log("insertRows:",e);
+		}
+	},
+	removeRows: function(rowsToRemove){
+		var g = this.grid;
+		var s = g.store;
+		try{
+			array.forEach(array.map(rowsToRemove, function(rowIndex){
+				return g._by_idx[rowIndex];
+			}), function(row){
+				if(row){
+					s.deleteItem(row.item);
+				}
+			});
+			s.save({
+				onComplete: function(){
+					connect.publish("dojox/grid/rearrange/remove/" + g.id, ["row", rowsToRemove]);
+				}
+			});
+		}catch(e){
+			console.log("removeRows:",e);
+		}
+	},
+	_getPageInfo: function(){
+		// summary:
+		//		Find pages that contain visible rows
+		// returns: Object
+		//		{topPage: xx, bottomPage: xx, invalidPages: [xx,xx,...]}
+		var scroller = this.grid.scroller,
+			topPage = scroller.page,
+			bottomPage = scroller.page,
+			firstVisibleRow = scroller.firstVisibleRow,
+			lastVisibleRow = scroller.lastVisibleRow,
+			rowsPerPage = scroller.rowsPerPage,
+			renderedPages = scroller.pageNodes[0],
+			topRow, bottomRow, matched,
+			invalidPages = [];
+		
+		array.forEach(renderedPages, function(page, pageIndex){
+			if(!page){ return; }
+			matched = false;
+			topRow = pageIndex * rowsPerPage;
+			bottomRow = (pageIndex + 1) * rowsPerPage - 1;
+			if(firstVisibleRow >= topRow && firstVisibleRow <= bottomRow){
+				topPage = pageIndex;
+				matched = true;
+			}
+			if(lastVisibleRow >= topRow && lastVisibleRow <= bottomRow){
+				bottomPage = pageIndex;
+				matched = true;
+			}
+			if(!matched && (topRow > lastVisibleRow || bottomRow < firstVisibleRow)){
+				invalidPages.push(pageIndex);
+			}
+		});
+		return {topPage: topPage, bottomPage: bottomPage, invalidPages: invalidPages};
+	}
+});
+
+EnhancedGrid.registerPlugin(Rearrange/*name:'rearrange'*/);
+
+return Rearrange;
+
+});

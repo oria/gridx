@@ -1,14 +1,472 @@
-//>>built
-define("dojox/charting/plot2d/Default","dojo/_base/lang dojo/_base/declare dojo/_base/array dojo/has ./CartesianBase ./_PlotEvents ./common dojox/lang/functional dojox/lang/functional/reversed dojox/lang/utils dojox/gfx/fx".split(" "),function(r,D,n,K,L,M,w,N,O,x,P){var Q=O.lambda("item.purgeGroup()");return D("dojox.charting.plot2d.Default",[L,M],{defaultParams:{lines:!0,areas:!1,markers:!1,tension:"",animate:!1,enableCache:!1,interpolate:!1},optionalParams:{stroke:{},outline:{},shadow:{},fill:{},
-filter:{},styleFunc:null,font:"",fontColor:"",marker:"",markerStroke:{},markerOutline:{},markerShadow:{},markerFill:{},markerFont:"",markerFontColor:""},constructor:function(g,a){this.opt=r.clone(r.mixin(this.opt,this.defaultParams));x.updateWithObject(this.opt,a);x.updateWithPattern(this.opt,a,this.optionalParams);this.animate=this.opt.animate},createPath:function(g,a,c){var f;this.opt.enableCache&&0<g._pathFreePool.length?(f=g._pathFreePool.pop(),f.setShape(c),a.add(f)):f=a.createPath(c);this.opt.enableCache&&
-g._pathUsePool.push(f);return f},buildSegments:function(g,a){for(var c=this.series[g],f=a?Math.max(0,Math.floor(this._hScaler.bounds.from-1)):0,n=a?Math.min(c.data.length,Math.ceil(this._hScaler.bounds.to)):c.data.length,h=null,r=[];f<n;f++)if(null!=c.data[f]&&(a||null!=c.data[f].y))h||(h=[],r.push({index:f,rseg:h})),h.push(a&&c.data[f].hasOwnProperty("y")?c.data[f].y:c.data[f]);else if(!this.opt.interpolate||a)h=null;return r},render:function(g,a){if(this.zoom&&!this.isDataDirty())return this.performZoom(g,
-a);this.resetEvents();this.dirty=this.isDirty();var c;this.dirty&&(n.forEach(this.series,Q),this._eventSeries={},this.cleanGroup(),this.getGroup().setTransform(null),c=this.getGroup(),N.forEachRev(this.series,function(e){e.cleanGroup(c)}));for(var f=this.chart.theme,s,h,x=this.events(),y=this.series.length-1;0<=y;--y){var b=this.series[y];if(!this.dirty&&!b.dirty)f.skip(),this._reconnectEvents(b.name);else if(b.cleanGroup(),this.opt.enableCache&&(b._pathFreePool=(b._pathFreePool?b._pathFreePool:[]).concat(b._pathUsePool?
-b._pathUsePool:[]),b._pathUsePool=[]),b.data.length){var k=f.next(this.opt.areas?"area":"line",[this.opt,b],!0),d,E=this._hScaler.scaler.getTransformerFromModel(this._hScaler),F=this._vScaler.scaler.getTransformerFromModel(this._vScaler),D=this._eventSeries[b.name]=Array(b.data.length);c=b.group;for(var z=n.some(b.data,function(e){return"number"==typeof e||e&&!e.hasOwnProperty("x")}),A=this.buildSegments(y,z),u=0;u<A.length;u++){var m=A[u];d=z?n.map(m.rseg,function(e,b){return{x:E(b+m.index+1)+a.l,
-y:g.height-a.b-F(e),data:e}},this):n.map(m.rseg,function(e){return{x:E(e.x)+a.l,y:g.height-a.b-F(e.y),data:e}},this);if(z&&this.opt.interpolate)for(;u<A.length;)u++,(m=A[u])&&(d=d.concat(n.map(m.rseg,function(e,b){return{x:E(b+m.index+1)+a.l,y:g.height-a.b-F(e),data:e}},this)));var p=this.opt.tension?w.curve(d,this.opt.tension):"";if(this.opt.areas&&1<d.length){var v=this._plotFill(k.series.fill,g,a),q=r.clone(d);this.opt.tension?b.dyn.fill=c.createPath(p+" "+("L"+q[q.length-1].x+","+(g.height-a.b)+
-" L"+q[0].x+","+(g.height-a.b)+" L"+q[0].x+","+q[0].y)).setFill(v).getFill():(q.push({x:d[d.length-1].x,y:g.height-a.b}),q.push({x:d[0].x,y:g.height-a.b}),q.push(d[0]),b.dyn.fill=c.createPolyline(q).setFill(v).getFill())}if(this.opt.lines||this.opt.markers)s=k.series.stroke,k.series.outline&&(h=b.dyn.outline=w.makeStroke(k.series.outline),h.width=2*h.width+s.width);this.opt.markers&&(b.dyn.marker=k.symbol);var B=null,G=null,H=null;if(s&&k.series.shadow&&1<d.length){var t=k.series.shadow,v=n.map(d,
-function(b){return{x:b.x+t.dx,y:b.y+t.dy}});this.opt.lines&&(b.dyn.shadow=this.opt.tension?c.createPath(w.curve(v,this.opt.tension)).setStroke(t).getStroke():c.createPolyline(v).setStroke(t).getStroke());this.opt.markers&&k.marker.shadow&&(t=k.marker.shadow,H=n.map(v,function(e){return this.createPath(b,c,"M"+e.x+" "+e.y+" "+k.symbol).setStroke(t).setFill(t.color)},this))}if(this.opt.lines&&1<d.length){var C;h&&(b.dyn.outline=this.opt.tension?c.createPath(p).setStroke(h).getStroke():c.createPolyline(d).setStroke(h).getStroke());
-b.dyn.stroke=this.opt.tension?(C=c.createPath(p)).setStroke(s).getStroke():(C=c.createPolyline(d)).setStroke(s).getStroke();C.setFilter&&k.series.filter&&C.setFilter(k.series.filter)}p=null;if(this.opt.markers){var l=k,B=Array(d.length),G=Array(d.length);h=null;l.marker.outline&&(h=w.makeStroke(l.marker.outline),h.width=2*h.width+(l.marker.stroke?l.marker.stroke.width:0));n.forEach(d,function(e,a){if(this.opt.styleFunc||"number"!=typeof e.data){var d="number"!=typeof e.data?[e.data]:[];this.opt.styleFunc&&
-d.push(this.opt.styleFunc(e.data));l=f.addMixin(k,"marker",d,!0)}else l=f.post(k,"marker");d="M"+e.x+" "+e.y+" "+l.symbol;h&&(G[a]=this.createPath(b,c,d).setStroke(h));B[a]=this.createPath(b,c,d).setStroke(l.marker.stroke).setFill(l.marker.fill)},this);b.dyn.markerFill=l.marker.fill;b.dyn.markerStroke=l.marker.stroke;!p&&this.opt.labels&&(p=B[0].getBoundingBox());x?n.forEach(B,function(e,a){var c={element:"marker",index:a+m.index,run:b,shape:e,outline:G[a]||null,shadow:H&&H[a]||null,cx:d[a].x,cy:d[a].y};
-z?(c.x=a+m.index+1,c.y=b.data[a+m.index]):(c.x=m.rseg[a].x,c.y=b.data[a+m.index].y);this._connectEvents(c);D[a+m.index]=c},this):delete this._eventSeries[b.name]}if(this.opt.labels){var I=p?p.width:2,J=p?p.height:2;n.forEach(d,function(a,b){if(this.opt.styleFunc||"number"!=typeof a.data){var d="number"!=typeof a.data?[a.data]:[];this.opt.styleFunc&&d.push(this.opt.styleFunc(a.data));l=f.addMixin(k,"marker",d,!0)}else l=f.post(k,"marker");this.createLabel(c,m.rseg[b],{x:a.x-I/2,y:a.y-J/2,width:I,height:J},
-l)},this)}}b.dirty=!1}else b.dirty=!1,f.skip()}K("dojo-bidi")&&this._checkOrientation(this.group,g,a);this.animate&&(s=this.getGroup(),P.animateTransform(r.delegate({shape:s,duration:1200,transform:[{name:"translate",start:[0,g.height-a.b],end:[0,0]},{name:"scale",start:[1,0],end:[1,1]},{name:"original"}]},this.animate)).play());this.dirty=!1;return this}})});
-//@ sourceMappingURL=Default.js.map
+define(["dojo/_base/lang", "dojo/_base/declare", "dojo/_base/array", "dojo/has", 
+		"./CartesianBase", "./_PlotEvents", "./common", "dojox/lang/functional", "dojox/lang/functional/reversed", "dojox/lang/utils", "dojox/gfx/fx"],
+	function(lang, declare, arr, has, CartesianBase, _PlotEvents, dc, df, dfr, du, fx){
+
+	/*=====
+	declare("dojox.charting.plot2d.__DefaultCtorArgs", dojox.charting.plot2d.__CartesianCtorArgs, {
+		// summary:
+		//		The arguments used for any/most plots.
+	
+		// lines: Boolean?
+		//		Whether or not to draw lines on this plot.  Defaults to true.
+		lines:   true,
+	
+		// areas: Boolean?
+		//		Whether or not to draw areas on this plot. Defaults to false.
+		areas:   false,
+	
+		// markers: Boolean?
+		//		Whether or not to draw markers at data points on this plot. Default is false.
+		markers: false,
+	
+		// tension: Number|String?
+		//		Whether or not to apply 'tensioning' to the lines on this chart.
+		//		Options include a number, "X", "x", or "S"; if a number is used, the
+		//		simpler bezier curve calculations are used to draw the lines.  If X, x or S
+		//		is used, the more accurate smoothing algorithm is used.
+		tension: "",
+	
+		// animate: Boolean?|Number?
+		//		Whether or not to animate the chart to place. When a Number it specifies the duration of the animation.
+		//		Default is false.
+		animate: false,
+	
+		// stroke: dojox.gfx.Stroke?
+		//		An optional stroke to use for any series on the plot.
+		stroke:		{},
+	
+		// outline: dojox.gfx.Stroke?
+		//		An optional stroke used to outline any series on the plot.
+		outline:	{},
+	
+		// shadow: dojox.gfx.Stroke?
+		//		An optional stroke to use to draw any shadows for a series on a plot.
+		shadow:		{},
+	
+		// fill: dojox.gfx.Fill?
+		//		Any fill to be used for elements on the plot (such as areas).
+		fill:		{},
+
+		// filter: dojox.gfx.Filter?
+		//		An SVG filter to be used for elements on the plot. gfx SVG renderer must be used and dojox/gfx/svgext must
+		//		be required for this to work.
+		filter:		{},
+
+		// styleFunc: Function?
+		//		A function that returns a styling object for the a given data item.
+		styleFunc:	null,
+	
+		// font: String?
+		//		A font definition to be used for labels and other text-based elements on the plot.
+		font:		"",
+	
+		// fontColor: String|dojo.Color?
+		//		The color to be used for any text-based elements on the plot.
+		fontColor:	"",
+	
+		// markerStroke: dojo.gfx.Stroke?
+		//		An optional stroke to use for any markers on the plot.
+		markerStroke:		{},
+	
+		// markerOutline: dojo.gfx.Stroke?
+		//		An optional outline to use for any markers on the plot.
+		markerOutline:		{},
+	
+		// markerShadow: dojo.gfx.Stroke?
+		//		An optional shadow to use for any markers on the plot.
+		markerShadow:		{},
+	
+		// markerFill: dojo.gfx.Fill?
+		//		An optional fill to use for any markers on the plot.
+		markerFill:			{},
+	
+		// markerFont: String?
+		//		An optional font definition to use for any markers on the plot.
+		markerFont:			"",
+	
+		// markerFontColor: String|dojo.Color?
+		//		An optional color to use for any marker text on the plot.
+		markerFontColor:	"",
+		
+		// enableCache: Boolean?
+		//		Whether the markers are cached from one rendering to another. This improves the rendering performance of
+		//		successive rendering but penalize the first rendering.  Default false.
+		enableCache: false,
+
+		// interpolate: Boolean?
+		//		Whether when there is a null data point in the data the plot interpolates it or if the lines is split at that
+		//		point.	Default false.
+		interpolate: false
+	});
+=====*/
+
+	var purgeGroup = dfr.lambda("item.purgeGroup()");
+
+	var DEFAULT_ANIMATION_LENGTH = 1200;	// in ms
+
+	return declare("dojox.charting.plot2d.Default", [CartesianBase, _PlotEvents], {
+		
+		// defaultParams:
+		//		The default parameters of this plot.
+		defaultParams: {
+			lines:   true,	// draw lines
+			areas:   false,	// draw areas
+			markers: false,	// draw markers
+			tension: "",	// draw curved lines (tension is "X", "x", or "S")
+			animate: false, // animate chart to place
+			enableCache: false,
+			interpolate: false
+		},
+		
+		// optionalParams:
+		//		The optional parameters of this plot.
+		optionalParams: {
+			// theme component
+			stroke:		{},
+			outline:	{},
+			shadow:		{},
+			fill:		{},
+			filter:     {},
+			styleFunc: null,
+			font:		"",
+			fontColor:	"",
+			marker:             "",
+			markerStroke:		{},
+			markerOutline:		{},
+			markerShadow:		{},
+			markerFill:			{},
+			markerFont:			"",
+			markerFontColor:	""
+		},
+
+		constructor: function(chart, kwArgs){
+			// summary:
+			//		Return a new plot.
+			// chart: dojox/charting/Chart
+			//		The chart this plot belongs to.
+			// kwArgs: dojox.charting.plot2d.__DefaultCtorArgs?
+			//		An optional arguments object to help define this plot.
+			this.opt = lang.clone(lang.mixin(this.opt, this.defaultParams));
+			du.updateWithObject(this.opt, kwArgs);
+			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
+			// animation properties
+			this.animate = this.opt.animate;
+		},
+
+		createPath: function(run, creator, params){
+			var path;
+			if(this.opt.enableCache && run._pathFreePool.length > 0){
+				path = run._pathFreePool.pop();
+				path.setShape(params);
+				// was cleared, add it back
+				creator.add(path);
+			}else{
+				path = creator.createPath(params);
+			}
+			if(this.opt.enableCache){
+				run._pathUsePool.push(path);
+			}
+			return path;
+		},
+
+		buildSegments: function(i, indexed){
+			var run = this.series[i],
+				min = indexed?Math.max(0, Math.floor(this._hScaler.bounds.from - 1)):0,
+				max = indexed?Math.min(run.data.length, Math.ceil(this._hScaler.bounds.to)):run.data.length,
+				rseg = null, segments = [];
+
+			// split the run data into dense segments (each containing no nulls)
+			// except if interpolates is false in which case ignore null between valid data
+			for(var j = min; j < max; j++){
+				if(run.data[j] != null && (indexed || run.data[j].y != null)){
+					if(!rseg){
+						rseg = [];
+						segments.push({index: j, rseg: rseg});
+					}
+					rseg.push((indexed && run.data[j].hasOwnProperty("y"))?run.data[j].y:run.data[j]);
+				}else{
+					if(!this.opt.interpolate || indexed){
+						// we break the line only if not interpolating or if we have indexed data
+						rseg = null;
+					}
+				}
+			}
+			return segments;
+		},
+
+		render: function(dim, offsets){
+			// summary:
+			//		Render/draw everything on this plot.
+			// dim: Object
+			//		An object of the form { width, height }
+			// offsets: Object
+			//		An object of the form { l, r, t, b }
+			// returns: dojox/charting/plot2d/Default
+			//		A reference to this plot for functional chaining.
+
+			// make sure all the series is not modified
+			if(this.zoom && !this.isDataDirty()){
+				return this.performZoom(dim, offsets);
+			}
+
+			this.resetEvents();
+			this.dirty = this.isDirty();
+			var s;
+			if(this.dirty){
+				arr.forEach(this.series, purgeGroup);
+				this._eventSeries = {};
+				this.cleanGroup();
+				this.getGroup().setTransform(null);
+				s = this.getGroup();
+				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
+			}
+			var t = this.chart.theme, stroke, outline, events = this.events();
+
+			for(var i = this.series.length - 1; i >= 0; --i){
+				var run = this.series[i];
+				if(!this.dirty && !run.dirty){
+					t.skip();
+					this._reconnectEvents(run.name);
+					continue;
+				}
+				run.cleanGroup();
+				if(this.opt.enableCache){
+					run._pathFreePool = (run._pathFreePool?run._pathFreePool:[]).concat(run._pathUsePool?run._pathUsePool:[]);
+					run._pathUsePool = [];
+				}
+				if(!run.data.length){
+					run.dirty = false;
+					t.skip();
+					continue;
+				}
+
+				var theme = t.next(this.opt.areas ? "area" : "line", [this.opt, run], true),
+					lpoly,
+					ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
+					vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler),
+					eventSeries = this._eventSeries[run.name] = new Array(run.data.length);
+
+				s = run.group;
+				if(run.hidden){
+					if(this.opt.lines){
+						run.dyn.stroke = theme.series.stroke;
+					}
+					if(this.opt.markers){
+						run.dyn.markerFill = theme.marker.fill;
+						run.dyn.markerStroke = theme.marker.stroke;
+						run.dyn.marker = theme.symbol;
+					}
+					if(this.opt.areas){ 
+						run.dyn.fill = theme.series.fill;
+					}
+					continue;
+				}
+				// optim works only for index based case
+				var indexed = arr.some(run.data, function(item){
+					return typeof item == "number" || (item && !item.hasOwnProperty("x"));
+				});
+
+				var rsegments = this.buildSegments(i, indexed);
+				for(var seg = 0; seg < rsegments.length; seg++){
+					var rsegment = rsegments[seg];
+					if(indexed){
+						lpoly = arr.map(rsegment.rseg, function(v, i){
+							return {
+								x: ht(i + rsegment.index + 1) + offsets.l,
+								y: dim.height - offsets.b - vt(v),
+								data: v
+							};
+						}, this);
+					}else{
+						lpoly = arr.map(rsegment.rseg, function(v){
+							return {
+								x: ht(v.x) + offsets.l,
+								y: dim.height - offsets.b - vt(v.y),
+								data: v
+							};
+						}, this);
+					}
+
+					// if we are indexed & we interpolate we need to put all the segments as a single one now
+					if(indexed && this.opt.interpolate){
+						while(seg < rsegments.length) {
+							seg++;
+							rsegment = rsegments[seg];
+							if(rsegment){
+								lpoly = lpoly.concat(arr.map(rsegment.rseg, function(v, i){
+									return {
+										x: ht(i + rsegment.index + 1) + offsets.l,
+										y: dim.height - offsets.b - vt(v),
+										data: v
+									};
+								}, this));
+							}
+						}
+					} 
+
+					var lpath = this.opt.tension ? dc.curve(lpoly, this.opt.tension) : "";
+
+					if(this.opt.areas && lpoly.length > 1){
+						var fill = this._plotFill(theme.series.fill, dim, offsets), apoly = lang.clone(lpoly);
+						if(this.opt.tension){
+							var apath = "L" + apoly[apoly.length-1].x + "," + (dim.height - offsets.b) +
+								" L" + apoly[0].x + "," + (dim.height - offsets.b) +
+								" L" + apoly[0].x + "," + apoly[0].y;
+							run.dyn.fill = s.createPath(lpath + " " + apath).setFill(fill).getFill();
+						} else {
+							apoly.push({x: lpoly[lpoly.length - 1].x, y: dim.height - offsets.b});
+							apoly.push({x: lpoly[0].x, y: dim.height - offsets.b});
+							apoly.push(lpoly[0]);
+							run.dyn.fill = s.createPolyline(apoly).setFill(fill).getFill();
+						}
+					}
+					if(this.opt.lines || this.opt.markers){
+						// need a stroke
+						stroke = theme.series.stroke;
+						if(theme.series.outline){
+							outline = run.dyn.outline = dc.makeStroke(theme.series.outline);
+							outline.width = 2 * outline.width + stroke.width;
+						}
+					}
+					if(this.opt.markers){
+						run.dyn.marker = theme.symbol;
+					}
+					var frontMarkers = null, outlineMarkers = null, shadowMarkers = null;
+					if(stroke && theme.series.shadow && lpoly.length > 1){
+						var shadow = theme.series.shadow,
+							spoly = arr.map(lpoly, function(c){
+								return {x: c.x + shadow.dx, y: c.y + shadow.dy};
+							});
+						if(this.opt.lines){
+							if(this.opt.tension){
+								run.dyn.shadow = s.createPath(dc.curve(spoly, this.opt.tension)).setStroke(shadow).getStroke();
+							} else {
+								run.dyn.shadow = s.createPolyline(spoly).setStroke(shadow).getStroke();
+							}
+						}
+						if(this.opt.markers && theme.marker.shadow){
+							shadow = theme.marker.shadow;
+							shadowMarkers = arr.map(spoly, function(c){
+								return this.createPath(run, s, "M" + c.x + " " + c.y + " " + theme.symbol).
+									setStroke(shadow).setFill(shadow.color);
+							}, this);
+						}
+					}
+					if(this.opt.lines && lpoly.length > 1){
+						var shape;
+						if(outline){
+							if(this.opt.tension){
+								run.dyn.outline = s.createPath(lpath).setStroke(outline).getStroke();
+							} else {
+								run.dyn.outline = s.createPolyline(lpoly).setStroke(outline).getStroke();
+							}
+						}
+						if(this.opt.tension){
+							run.dyn.stroke = (shape = s.createPath(lpath)).setStroke(stroke).getStroke();
+						} else {
+							run.dyn.stroke = (shape = s.createPolyline(lpoly)).setStroke(stroke).getStroke();
+						}
+						if(shape.setFilter && theme.series.filter){
+							shape.setFilter(theme.series.filter);
+						}
+					}
+					var markerBox = null;
+					if(this.opt.markers){
+						var markerTheme = theme; 
+						frontMarkers = new Array(lpoly.length);
+						outlineMarkers = new Array(lpoly.length);
+						outline = null;
+						if(markerTheme.marker.outline){
+							outline = dc.makeStroke(markerTheme.marker.outline);
+							outline.width = 2 * outline.width + (markerTheme.marker.stroke ? markerTheme.marker.stroke.width : 0);
+						}
+						arr.forEach(lpoly, function(c, i){
+							if(this.opt.styleFunc || typeof c.data != "number"){
+								var tMixin = typeof c.data != "number" ? [c.data] : [];
+								if(this.opt.styleFunc){
+									tMixin.push(this.opt.styleFunc(c.data));
+								}
+								markerTheme = t.addMixin(theme, "marker", tMixin, true);
+							}else{
+								markerTheme = t.post(theme, "marker");
+							}
+							var path = "M" + c.x + " " + c.y + " " + markerTheme.symbol;
+							if(outline){
+								outlineMarkers[i] = this.createPath(run, s, path).setStroke(outline);
+							}
+							frontMarkers[i] = this.createPath(run, s, path).setStroke(markerTheme.marker.stroke).setFill(markerTheme.marker.fill);
+						}, this);
+						run.dyn.markerFill = markerTheme.marker.fill;
+						run.dyn.markerStroke = markerTheme.marker.stroke;
+						if(!markerBox && this.opt.labels){
+							markerBox = frontMarkers[0].getBoundingBox();
+						}
+						if(events){
+							arr.forEach(frontMarkers, function(s, i){
+								var o = {
+									element: "marker",
+									index:   i + rsegment.index,
+									run:     run,
+									shape:   s,
+									outline: outlineMarkers[i] || null,
+									shadow:  shadowMarkers && shadowMarkers[i] || null,
+									cx:      lpoly[i].x,
+									cy:      lpoly[i].y
+								};
+								if(indexed){
+									o.x = i + rsegment.index + 1;
+									o.y = run.data[i + rsegment.index];
+								}else{
+									o.x = rsegment.rseg[i].x;
+									o.y = run.data[i + rsegment.index].y;
+								}
+								this._connectEvents(o);
+								eventSeries[i + rsegment.index] = o;
+							}, this);
+						}else{
+							delete this._eventSeries[run.name];
+						}
+					}
+					if(this.opt.labels){
+						var labelBoxW = markerBox?markerBox.width:2;
+						var labelBoxH = markerBox?markerBox.height:2;
+						arr.forEach(lpoly, function(c, i){
+							if(this.opt.styleFunc || typeof c.data != "number"){
+								var tMixin = typeof c.data != "number" ? [c.data] : [];
+								if(this.opt.styleFunc){
+									tMixin.push(this.opt.styleFunc(c.data));
+								}
+								markerTheme = t.addMixin(theme, "marker", tMixin, true);
+							}else{
+								markerTheme = t.post(theme, "marker");
+							}
+							this.createLabel(s, rsegment.rseg[i], { x: c.x - labelBoxW / 2, y: c.y - labelBoxH / 2,
+								width: labelBoxW , height: labelBoxH }, markerTheme);
+						}, this);
+					}
+				}
+				run.dirty = false;
+			}
+			// chart mirroring starts
+			if(has("dojo-bidi")){
+				this._checkOrientation(this.group, dim, offsets);
+			}
+			// chart mirroring ends
+			if(this.animate){
+				// grow from the bottom
+				var plotGroup = this.getGroup();
+				fx.animateTransform(lang.delegate({
+					shape: plotGroup,
+					duration: DEFAULT_ANIMATION_LENGTH,
+					transform:[
+						{name:"translate", start: [0, dim.height - offsets.b], end: [0, 0]},
+						{name:"scale", start: [1, 0], end:[1, 1]},
+						{name:"original"}
+					]
+				}, this.animate)).play();
+			}
+			this.dirty = false;
+			return this;	//	dojox/charting/plot2d/Default
+		}
+	});
+});

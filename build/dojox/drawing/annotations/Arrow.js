@@ -1,4 +1,73 @@
-//>>built
-define("dojox/drawing/annotations/Arrow",["../util/oo","../stencil/Path"],function(g,h){return g.declare(h,function(d){this.stencil.connectMult([[this.stencil,"select",this,"select"],[this.stencil,"deselect",this,"deselect"],[this.stencil,"render",this,"render"],[this.stencil,"onDelete",this,"destroy"]]);this.connect("onBeforeRender",this,function(){var a=this.stencil.points[this.idx1],b=this.stencil.points[this.idx2];this.stencil.getRadius()>=this.minimumSize?this.points=this.arrowHead(b.x,b.y,a.x,
-a.y,this.style):this.points=[]})},{idx1:0,idx2:1,subShape:!0,minimumSize:30,arrowHead:function(d,a,b,e,c){a={start:{x:d,y:a},x:b,y:e};d=this.util.angle(a);var f=this.util.length(a);a=c.arrows.length;c=c.arrows.width/2;f<a&&(a=f/2);f=this.util.pointOnCircle(b,e,-a,d-c);c=this.util.pointOnCircle(b,e,-a,d+c);return[{x:b,y:e},f,c]}})});
-//@ sourceMappingURL=Arrow.js.map
+define(["../util/oo", "../stencil/Path"], 
+function(oo, Path){
+
+//dojox.drawing.annotations.Arrow =
+return oo.declare(
+
+	Path,
+	function(/* dojox.__stencilArgs */options){
+		this.stencil.connectMult([
+			[this.stencil, "select", this, "select"],
+			[this.stencil, "deselect", this, "deselect"],
+			[this.stencil, "render", this, "render"],
+			[this.stencil, "onDelete", this, "destroy"]
+		]);
+		
+		this.connect("onBeforeRender", this, function(){
+			var o = this.stencil.points[this.idx1];
+			var c = this.stencil.points[this.idx2];
+			if(this.stencil.getRadius() >= this.minimumSize){
+				this.points = this.arrowHead(c.x, c.y, o.x, o.y, this.style);
+			}else{
+				this.points = [];
+			}
+		});
+		
+	},
+	{
+		// summary:
+		//		An annotation called internally to put an arrowhead
+		//		on ether end of a Line. Initiated in Arrow (and Vector)
+		//		with the optional params: arrowStart and arrowEnd. Both
+		//		default true for Axes.
+
+		idx1:0,
+		idx2:1,
+		
+		subShape:true,
+		minimumSize:30,
+		//annotation:true, NOT!
+		
+		arrowHead: function(x1, y1, x2, y2, style){
+			// summary:
+			//		Creates data used to draw arrow head.
+
+			var obj = {
+				start:{
+					x:x1,
+					y:y1
+				},
+				x:x2,
+				y:y2
+			}
+			var angle = this.util.angle(obj);
+			
+			var lineLength = this.util.length(obj);
+			var al = style.arrows.length;
+			var aw = style.arrows.width/2;
+			if(lineLength<al){
+				al = lineLength/2;
+			}
+			var p1 = this.util.pointOnCircle(x2, y2, -al, angle-aw);
+			var p2 = this.util.pointOnCircle(x2, y2, -al, angle+aw);
+			
+			return [
+				{x:x2, y:y2},
+				p1,
+				p2
+			];
+		}
+		
+	}
+);
+});

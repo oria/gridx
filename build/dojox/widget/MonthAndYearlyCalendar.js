@@ -1,3 +1,10 @@
-//>>built
-define("dojox/widget/MonthAndYearlyCalendar",["dojo/_base/declare","./_CalendarBase","./_CalendarMonthYear"],function(a,b,c){return a("dojox.widget.MonthAndYearlyCalendar",[b,c],{})});
-//@ sourceMappingURL=MonthAndYearlyCalendar.js.map
+define([
+	"dojo/_base/declare",
+	"./_CalendarBase",
+	"./_CalendarMonthYear"
+], function(declare, _CalendarBase, _CalendarMonthYear){
+	return declare("dojox.widget.MonthAndYearlyCalendar", [_CalendarBase, _CalendarMonthYear], {
+		// summary:
+		//		A calendar with only a daily view.
+	});
+});

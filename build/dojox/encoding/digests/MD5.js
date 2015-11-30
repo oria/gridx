@@ -1,9 +1,172 @@
-//>>built
-define("dojox/encoding/digests/MD5",["./_base"],function(h){function r(e,g){return e<<g|e>>>32-g}function k(e,g,c,a,d,b){return h.addWords(r(h.addWords(h.addWords(g,e),h.addWords(a,b)),d),c)}function l(e,g,c,a,d,b,f){return k(g&c|~g&a,e,g,d,b,f)}function m(e,g,c,a,d,b,f){return k(g&a|c&~a,e,g,d,b,f)}function n(e,g,c,a,d,b,f){return k(c^(g|~a),e,g,d,b,f)}function p(e,g){e[g>>5]|=128<<g%32;e[(g+64>>>9<<4)+14]=g;for(var c=1732584193,a=-271733879,d=-1732584194,b=271733878,f=0;f<e.length;f+=16)var p=c,
-q=a,r=d,s=b,c=l(c,a,d,b,e[f+0],7,-680876936),b=l(b,c,a,d,e[f+1],12,-389564586),d=l(d,b,c,a,e[f+2],17,606105819),a=l(a,d,b,c,e[f+3],22,-1044525330),c=l(c,a,d,b,e[f+4],7,-176418897),b=l(b,c,a,d,e[f+5],12,1200080426),d=l(d,b,c,a,e[f+6],17,-1473231341),a=l(a,d,b,c,e[f+7],22,-45705983),c=l(c,a,d,b,e[f+8],7,1770035416),b=l(b,c,a,d,e[f+9],12,-1958414417),d=l(d,b,c,a,e[f+10],17,-42063),a=l(a,d,b,c,e[f+11],22,-1990404162),c=l(c,a,d,b,e[f+12],7,1804603682),b=l(b,c,a,d,e[f+13],12,-40341101),d=l(d,b,c,a,e[f+
-14],17,-1502002290),a=l(a,d,b,c,e[f+15],22,1236535329),c=m(c,a,d,b,e[f+1],5,-165796510),b=m(b,c,a,d,e[f+6],9,-1069501632),d=m(d,b,c,a,e[f+11],14,643717713),a=m(a,d,b,c,e[f+0],20,-373897302),c=m(c,a,d,b,e[f+5],5,-701558691),b=m(b,c,a,d,e[f+10],9,38016083),d=m(d,b,c,a,e[f+15],14,-660478335),a=m(a,d,b,c,e[f+4],20,-405537848),c=m(c,a,d,b,e[f+9],5,568446438),b=m(b,c,a,d,e[f+14],9,-1019803690),d=m(d,b,c,a,e[f+3],14,-187363961),a=m(a,d,b,c,e[f+8],20,1163531501),c=m(c,a,d,b,e[f+13],5,-1444681467),b=m(b,c,
-a,d,e[f+2],9,-51403784),d=m(d,b,c,a,e[f+7],14,1735328473),a=m(a,d,b,c,e[f+12],20,-1926607734),c=k(a^d^b,c,a,e[f+5],4,-378558),b=k(c^a^d,b,c,e[f+8],11,-2022574463),d=k(b^c^a,d,b,e[f+11],16,1839030562),a=k(d^b^c,a,d,e[f+14],23,-35309556),c=k(a^d^b,c,a,e[f+1],4,-1530992060),b=k(c^a^d,b,c,e[f+4],11,1272893353),d=k(b^c^a,d,b,e[f+7],16,-155497632),a=k(d^b^c,a,d,e[f+10],23,-1094730640),c=k(a^d^b,c,a,e[f+13],4,681279174),b=k(c^a^d,b,c,e[f+0],11,-358537222),d=k(b^c^a,d,b,e[f+3],16,-722521979),a=k(d^b^c,a,
-d,e[f+6],23,76029189),c=k(a^d^b,c,a,e[f+9],4,-640364487),b=k(c^a^d,b,c,e[f+12],11,-421815835),d=k(b^c^a,d,b,e[f+15],16,530742520),a=k(d^b^c,a,d,e[f+2],23,-995338651),c=n(c,a,d,b,e[f+0],6,-198630844),b=n(b,c,a,d,e[f+7],10,1126891415),d=n(d,b,c,a,e[f+14],15,-1416354905),a=n(a,d,b,c,e[f+5],21,-57434055),c=n(c,a,d,b,e[f+12],6,1700485571),b=n(b,c,a,d,e[f+3],10,-1894986606),d=n(d,b,c,a,e[f+10],15,-1051523),a=n(a,d,b,c,e[f+1],21,-2054922799),c=n(c,a,d,b,e[f+8],6,1873313359),b=n(b,c,a,d,e[f+15],10,-30611744),
-d=n(d,b,c,a,e[f+6],15,-1560198380),a=n(a,d,b,c,e[f+13],21,1309151649),c=n(c,a,d,b,e[f+4],6,-145523070),b=n(b,c,a,d,e[f+11],10,-1120210379),d=n(d,b,c,a,e[f+2],15,718787259),a=n(a,d,b,c,e[f+9],21,-343485551),c=h.addWords(c,p),a=h.addWords(a,q),d=h.addWords(d,r),b=h.addWords(b,s);return[c,a,d,b]}var q=function(e,g){var c=g||h.outputTypes.Base64,a=p(h.stringToWord(e),8*e.length);switch(c){case h.outputTypes.Raw:return a;case h.outputTypes.Hex:return h.wordToHex(a);case h.outputTypes.String:return h.wordToString(a);
-default:return h.wordToBase64(a)}};q._hmac=function(e,g,c){c=c||h.outputTypes.Base64;var a=h.stringToWord(g);16<a.length&&(a=p(a,8*g.length));var d=[];g=[];for(var b=0;16>b;b++)d[b]=a[b]^909522486,g[b]=a[b]^1549556828;e=p(d.concat(h.stringToWord(e)),512+8*e.length);e=p(g.concat(e),640);switch(c){case h.outputTypes.Raw:return e;case h.outputTypes.Hex:return h.wordToHex(e);case h.outputTypes.String:return h.wordToString(e);default:return h.wordToBase64(e)}};return q});
-//@ sourceMappingURL=MD5.js.map
+define(["./_base"], function(base) {
+
+/*	A port of Paul Johnstone's MD5 implementation
+ *	http://pajhome.org.uk/crypt/md5/index.html
+ *
+ *	Copyright (C) Paul Johnston 1999 - 2002.
+ *	Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+ * 	Distributed under the BSD License
+ *
+ *	Dojo port by Tom Trenka
+ */
+
+	var chrsz=8;
+
+	//	MD5 rounds functions
+	function R(n,c){ return (n<<c)|(n>>>(32-c)); }
+	function C(q,a,b,x,s,t){ return base.addWords(R(base.addWords(base.addWords(a, q), base.addWords(x, t)), s), b); }
+	function FF(a,b,c,d,x,s,t){ return C((b&c)|((~b)&d),a,b,x,s,t); }
+	function GG(a,b,c,d,x,s,t){ return C((b&d)|(c&(~d)),a,b,x,s,t); }
+	function HH(a,b,c,d,x,s,t){ return C(b^c^d,a,b,x,s,t); }
+	function II(a,b,c,d,x,s,t){ return C(c^(b|(~d)),a,b,x,s,t); }
+
+	//	the core MD5 rounds method
+	function core(x,len){
+		x[len>>5]|=0x80<<((len)%32);
+		x[(((len+64)>>>9)<<4)+14]=len;
+		var a= 1732584193;
+		var b=-271733879;
+		var c=-1732584194;
+		var d= 271733878;
+		for(var i=0; i<x.length; i+=16){
+			var olda=a;
+			var oldb=b;
+			var oldc=c;
+			var oldd=d;
+
+			a=FF(a,b,c,d,x[i+ 0],7 ,-680876936);
+			d=FF(d,a,b,c,x[i+ 1],12,-389564586);
+			c=FF(c,d,a,b,x[i+ 2],17, 606105819);
+			b=FF(b,c,d,a,x[i+ 3],22,-1044525330);
+			a=FF(a,b,c,d,x[i+ 4],7 ,-176418897);
+			d=FF(d,a,b,c,x[i+ 5],12, 1200080426);
+			c=FF(c,d,a,b,x[i+ 6],17,-1473231341);
+			b=FF(b,c,d,a,x[i+ 7],22,-45705983);
+			a=FF(a,b,c,d,x[i+ 8],7 , 1770035416);
+			d=FF(d,a,b,c,x[i+ 9],12,-1958414417);
+			c=FF(c,d,a,b,x[i+10],17,-42063);
+			b=FF(b,c,d,a,x[i+11],22,-1990404162);
+			a=FF(a,b,c,d,x[i+12],7 , 1804603682);
+			d=FF(d,a,b,c,x[i+13],12,-40341101);
+			c=FF(c,d,a,b,x[i+14],17,-1502002290);
+			b=FF(b,c,d,a,x[i+15],22, 1236535329);
+
+			a=GG(a,b,c,d,x[i+ 1],5 ,-165796510);
+			d=GG(d,a,b,c,x[i+ 6],9 ,-1069501632);
+			c=GG(c,d,a,b,x[i+11],14, 643717713);
+			b=GG(b,c,d,a,x[i+ 0],20,-373897302);
+			a=GG(a,b,c,d,x[i+ 5],5 ,-701558691);
+			d=GG(d,a,b,c,x[i+10],9 , 38016083);
+			c=GG(c,d,a,b,x[i+15],14,-660478335);
+			b=GG(b,c,d,a,x[i+ 4],20,-405537848);
+			a=GG(a,b,c,d,x[i+ 9],5 , 568446438);
+			d=GG(d,a,b,c,x[i+14],9 ,-1019803690);
+			c=GG(c,d,a,b,x[i+ 3],14,-187363961);
+			b=GG(b,c,d,a,x[i+ 8],20, 1163531501);
+			a=GG(a,b,c,d,x[i+13],5 ,-1444681467);
+			d=GG(d,a,b,c,x[i+ 2],9 ,-51403784);
+			c=GG(c,d,a,b,x[i+ 7],14, 1735328473);
+			b=GG(b,c,d,a,x[i+12],20,-1926607734);
+
+			a=HH(a,b,c,d,x[i+ 5],4 ,-378558);
+			d=HH(d,a,b,c,x[i+ 8],11,-2022574463);
+			c=HH(c,d,a,b,x[i+11],16, 1839030562);
+			b=HH(b,c,d,a,x[i+14],23,-35309556);
+			a=HH(a,b,c,d,x[i+ 1],4 ,-1530992060);
+			d=HH(d,a,b,c,x[i+ 4],11, 1272893353);
+			c=HH(c,d,a,b,x[i+ 7],16,-155497632);
+			b=HH(b,c,d,a,x[i+10],23,-1094730640);
+			a=HH(a,b,c,d,x[i+13],4 , 681279174);
+			d=HH(d,a,b,c,x[i+ 0],11,-358537222);
+			c=HH(c,d,a,b,x[i+ 3],16,-722521979);
+			b=HH(b,c,d,a,x[i+ 6],23, 76029189);
+			a=HH(a,b,c,d,x[i+ 9],4 ,-640364487);
+			d=HH(d,a,b,c,x[i+12],11,-421815835);
+			c=HH(c,d,a,b,x[i+15],16, 530742520);
+			b=HH(b,c,d,a,x[i+ 2],23,-995338651);
+
+			a=II(a,b,c,d,x[i+ 0],6 ,-198630844);
+			d=II(d,a,b,c,x[i+ 7],10, 1126891415);
+			c=II(c,d,a,b,x[i+14],15,-1416354905);
+			b=II(b,c,d,a,x[i+ 5],21,-57434055);
+			a=II(a,b,c,d,x[i+12],6 , 1700485571);
+			d=II(d,a,b,c,x[i+ 3],10,-1894986606);
+			c=II(c,d,a,b,x[i+10],15,-1051523);
+			b=II(b,c,d,a,x[i+ 1],21,-2054922799);
+			a=II(a,b,c,d,x[i+ 8],6 , 1873313359);
+			d=II(d,a,b,c,x[i+15],10,-30611744);
+			c=II(c,d,a,b,x[i+ 6],15,-1560198380);
+			b=II(b,c,d,a,x[i+13],21, 1309151649);
+			a=II(a,b,c,d,x[i+ 4],6 ,-145523070);
+			d=II(d,a,b,c,x[i+11],10,-1120210379);
+			c=II(c,d,a,b,x[i+ 2],15, 718787259);
+			b=II(b,c,d,a,x[i+ 9],21,-343485551);
+
+			a=base.addWords(a, olda);
+			b=base.addWords(b, oldb);
+			c=base.addWords(c, oldc);
+			d=base.addWords(d, oldd);
+		}
+		return [a,b,c,d];
+	}
+
+	function hmac(data, key){
+		var wa=base.stringToWord(key);
+		if(wa.length>16){
+			wa=core(wa, key.length*chrsz);
+		}
+		var l=[], r=[];
+		for(var i=0; i<16; i++){
+			l[i]=wa[i]^0x36363636;
+			r[i]=wa[i]^0x5c5c5c5c;
+		}
+		var h=core(l.concat(base.stringToWord(data)), 512+data.length*chrsz);
+		return core(r.concat(h), 640);
+	}
+
+	//	public function
+	base.MD5=function(/* string */data, /* dojox.encoding.digests.outputTypes? */outputType){
+		// summary:
+		//		computes the digest of data, and returns the result according to type outputType
+		var out=outputType || base.outputTypes.Base64;
+		var wa=core(base.stringToWord(data), data.length*chrsz);
+		switch(out){
+			case base.outputTypes.Raw:{
+				return wa;	//	word[]
+			}
+			case base.outputTypes.Hex:{
+				return base.wordToHex(wa);	//	string
+			}
+			case base.outputTypes.String:{
+				return base.wordToString(wa);	//	string
+			}
+			default:{
+				return base.wordToBase64(wa);	//	string
+			}
+		}
+	};
+
+	//	make this private, for later use with a generic HMAC calculator.
+	base.MD5._hmac=function(/* string */data, /* string */key, /* dojox.encoding.digests.outputTypes? */outputType){
+		// summary:
+		//		computes the digest of data, and returns the result according to type outputType
+		var out=outputType || base.outputTypes.Base64;
+		var wa=hmac(data, key);
+		switch(out){
+			case base.outputTypes.Raw:{
+				return wa;	//	word[]
+			}
+			case base.outputTypes.Hex:{
+				return base.wordToHex(wa);	//	string
+			}
+			case base.outputTypes.String:{
+				return base.wordToString(wa);	//	string
+			}
+			default:{
+				return base.wordToBase64(wa);	//	string
+			}
+		}
+	};
+
+	return base.MD5;
+});

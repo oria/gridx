@@ -1,4 +1,85 @@
-//>>built
-define("dojo/uacss",["./dom-geometry","./_base/lang","./domReady","./sniff","./_base/window"],function(g,h,m,a,d){var e=d.doc.documentElement;d=a("ie");var b=a("opera"),k=Math.floor,l=a("ff"),n=g.boxModel.replace(/-/,""),b={dj_quirks:a("quirks"),dj_opera:b,dj_khtml:a("khtml"),dj_webkit:a("webkit"),dj_safari:a("safari"),dj_chrome:a("chrome"),dj_gecko:a("mozilla"),dj_ios:a("ios"),dj_android:a("android")};d&&(b.dj_ie=!0,b["dj_ie"+k(d)]=!0,b.dj_iequirks=a("quirks"));l&&(b["dj_ff"+k(l)]=!0);b["dj_"+n]=
-!0;var c="",f;for(f in b)b[f]&&(c+=f+" ");e.className=h.trim(e.className+" "+c);m(function(){if(!g.isBodyLtr()){var a="dj_rtl dijitRtl "+c.replace(/ /g,"-rtl ");e.className=h.trim(e.className+" "+a+"dj_rtl dijitRtl "+c.replace(/ /g,"-rtl "))}});return a});
-//@ sourceMappingURL=uacss.js.map
+define(["./dom-geometry", "./_base/lang", "./domReady", "./sniff", "./_base/window"],
+	function(geometry, lang, domReady, has, baseWindow){
+
+	// module:
+	//		dojo/uacss
+
+	/*=====
+	return {
+		// summary:
+		//		Applies pre-set CSS classes to the top-level HTML node, based on:
+		//
+		//		- browser (ex: dj_ie)
+		//		- browser version (ex: dj_ie6)
+		//		- box model (ex: dj_contentBox)
+		//		- text direction (ex: dijitRtl)
+		//
+		//		In addition, browser, browser version, and box model are
+		//		combined with an RTL flag when browser text is RTL. ex: dj_ie-rtl.
+		//
+		//		Returns the has() method.
+	};
+	=====*/
+
+	var
+		html = baseWindow.doc.documentElement,
+		ie = has("ie"),
+		trident = has("trident"),
+		opera = has("opera"),
+		maj = Math.floor,
+		ff = has("ff"),
+		boxModel = geometry.boxModel.replace(/-/,''),
+
+		classes = {
+			"dj_quirks": has("quirks"),
+
+			// NOTE: Opera not supported by dijit
+			"dj_opera": opera,
+
+			"dj_khtml": has("khtml"),
+
+			"dj_webkit": has("webkit"),
+			"dj_safari": has("safari"),
+			"dj_chrome": has("chrome"),
+			"dj_edge": has("edge"),
+
+			"dj_gecko": has("mozilla"),
+
+			"dj_ios": has("ios"),
+			"dj_android": has("android")
+		}; // no dojo unsupported browsers
+
+	if(ie){
+		classes["dj_ie"] = true;
+		classes["dj_ie" + maj(ie)] = true;
+		classes["dj_iequirks"] = has("quirks");
+	}
+	if(trident){
+		classes["dj_trident"] = true;
+		classes["dj_trident" + maj(trident)] = true;
+	}
+	if(ff){
+		classes["dj_ff" + maj(ff)] = true;
+	}
+
+	classes["dj_" + boxModel] = true;
+
+	// apply browser, browser version, and box model class names
+	var classStr = "";
+	for(var clz in classes){
+		if(classes[clz]){
+			classStr += clz + " ";
+		}
+	}
+	html.className = lang.trim(html.className + " " + classStr);
+
+	// If RTL mode, then add dj_rtl flag plus repeat existing classes with -rtl extension.
+	// We can't run the code below until the <body> tag has loaded (so we can check for dir=rtl).
+	domReady(function(){
+		if(!geometry.isBodyLtr()){
+			var rtlClassStr = "dj_rtl dijitRtl " + classStr.replace(/ /g, "-rtl ");
+			html.className = lang.trim(html.className + " " + rtlClassStr + "dj_rtl dijitRtl " + classStr.replace(/ /g, "-rtl "));
+		}
+	});
+	return has;
+});

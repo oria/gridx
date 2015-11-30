@@ -1,3 +1,30 @@
-//>>built
-define("dojox/geo/openlayers/Collection",["dojo/_base/declare","./Geometry"],function(a,b){return a("dojox.geo.openlayers.Collection",b,{coordinates:null,setGeometries:function(a){this.coordinates=a},getGeometries:function(){return this.coordinates}})});
-//@ sourceMappingURL=Collection.js.map
+define([
+	"dojo/_base/declare",
+	"./Geometry"
+], function(declare, Geometry){
+
+	return declare("dojox.geo.openlayers.Collection", Geometry, {
+		// summary:
+		//		A collection of geometries. 
+
+		// coordinates: Array
+		//		An array of geometries.
+		coordinates:null,
+
+		setGeometries: function(g){
+			// summary:
+			//		Sets the geometries
+			// g: Array
+			//		The array of geometries.
+			this.coordinates = g;
+		},
+
+		getGeometries: function(){
+			// summary:
+			//		Returns the geometries.
+			// returns:
+			//		The array of geometries defining this collection.
+			return this.coordinates; // Array
+		}
+	});
+});

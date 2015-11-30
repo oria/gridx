@@ -1,19 +1,577 @@
-//>>built
-require({cache:{"url:dojox/widget/ColorPicker/ColorPicker.html":'\x3ctable class\x3d"dojoxColorPicker" dojoAttachEvent\x3d"onkeypress: _handleKey" cellpadding\x3d"0" cellspacing\x3d"0" role\x3d"presentation"\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd valign\x3d"top" class\x3d"dojoxColorPickerRightPad"\x3e\r\n\t\t\t\x3cdiv class\x3d"dojoxColorPickerBox"\x3e\r\n\t\t\t\t\x3c!-- Forcing ABS in style attr due to dojo DND issue with not picking it up form the class. --\x3e\r\n\t\t\t\t\x3cimg title\x3d"${saturationPickerTitle}" alt\x3d"${saturationPickerTitle}" class\x3d"dojoxColorPickerPoint" src\x3d"${_pickerPointer}" tabIndex\x3d"0" dojoAttachPoint\x3d"cursorNode" style\x3d"position: absolute; top: 0px; left: 0px;"\x3e\r\n\t\t\t\t\x3cimg role\x3d"presentation" alt\x3d"" dojoAttachPoint\x3d"colorUnderlay" dojoAttachEvent\x3d"onclick: _setPoint, onmousedown: _stopDrag" class\x3d"dojoxColorPickerUnderlay" src\x3d"${_underlay}" ondragstart\x3d"return false"\x3e\r\n\t\t\t\x3c/div\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd valign\x3d"top" class\x3d"dojoxColorPickerRightPad"\x3e\r\n\t\t\t\x3cdiv class\x3d"dojoxHuePicker"\x3e\r\n\t\t\t\t\x3c!-- Forcing ABS in style attr due to dojo DND issue with not picking it up form the class. --\x3e\r\n\t\t\t\t\x3cimg dojoAttachPoint\x3d"hueCursorNode" tabIndex\x3d"0" class\x3d"dojoxHuePickerPoint" title\x3d"${huePickerTitle}" alt\x3d"${huePickerTitle}" src\x3d"${_huePickerPointer}" style\x3d"position: absolute; top: 0px; left: 0px;"\x3e\r\n\t\t\t\t\x3cdiv class\x3d"dojoxHuePickerUnderlay" dojoAttachPoint\x3d"hueNode"\x3e\r\n\t\t\t\t    \x3cimg role\x3d"presentation" alt\x3d"" dojoAttachEvent\x3d"onclick: _setHuePoint, onmousedown: _stopDrag" src\x3d"${_hueUnderlay}"\x3e\r\n\t\t\t\t\x3c/div\x3e\r\n\t\t\t\x3c/div\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd valign\x3d"top"\x3e\r\n\t\t\t\x3ctable cellpadding\x3d"0" cellspacing\x3d"0" role\x3d"presentation"\x3e\r\n\t\t\t\t\x3ctr\x3e\r\n\t\t\t\t\t\x3ctd valign\x3d"top" class\x3d"dojoxColorPickerPreviewContainer"\x3e\r\n\t\t\t\t\t\t\x3ctable cellpadding\x3d"0" cellspacing\x3d"0" role\x3d"presentation"\x3e\r\n\t\t\t\t\t\t\t\x3ctr\x3e\r\n\t\t\t\t\t\t\t\t\x3ctd valign\x3d"top" class\x3d"dojoxColorPickerRightPad"\x3e\r\n\t\t\t\t\t\t\t\t\t\x3cdiv dojoAttachPoint\x3d"previewNode" class\x3d"dojoxColorPickerPreview"\x3e\x3c/div\x3e\r\n\t\t\t\t\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\t\t\t\t\x3ctd valign\x3d"top"\x3e\r\n\t\t\t\t\t\t\t\t\t\x3cdiv dojoAttachPoint\x3d"safePreviewNode" class\x3d"dojoxColorPickerWebSafePreview"\x3e\x3c/div\x3e\r\n\t\t\t\t\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\t\t\t\x3c/tr\x3e\r\n\t\t\t\t\t\t\x3c/table\x3e\r\n\t\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3c/tr\x3e\r\n\t\t\t\t\x3ctr\x3e\r\n\t\t\t\t\t\x3ctd valign\x3d"bottom"\x3e\r\n\t\t\t\t\t\t\x3ctable class\x3d"dojoxColorPickerOptional" cellpadding\x3d"0" cellspacing\x3d"0" role\x3d"presentation"\x3e\r\n\t\t\t\t\t\t\t\x3ctr\x3e\r\n\t\t\t\t\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\t\t\t\t\x3cdiv class\x3d"dijitInline dojoxColorPickerRgb" dojoAttachPoint\x3d"rgbNode"\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctable cellpadding\x3d"1" cellspacing\x3d"1" role\x3d"presentation"\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctr\x3e\x3ctd\x3e\x3clabel for\x3d"${_uId}_r"\x3e${redLabel}\x3c/label\x3e\x3c/td\x3e\x3ctd\x3e\x3cinput id\x3d"${_uId}_r" dojoAttachPoint\x3d"Rval" size\x3d"1" dojoAttachEvent\x3d"onchange: _colorInputChange"\x3e\x3c/td\x3e\x3c/tr\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctr\x3e\x3ctd\x3e\x3clabel for\x3d"${_uId}_g"\x3e${greenLabel}\x3c/label\x3e\x3c/td\x3e\x3ctd\x3e\x3cinput id\x3d"${_uId}_g" dojoAttachPoint\x3d"Gval" size\x3d"1" dojoAttachEvent\x3d"onchange: _colorInputChange"\x3e\x3c/td\x3e\x3c/tr\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctr\x3e\x3ctd\x3e\x3clabel for\x3d"${_uId}_b"\x3e${blueLabel}\x3c/label\x3e\x3c/td\x3e\x3ctd\x3e\x3cinput id\x3d"${_uId}_b" dojoAttachPoint\x3d"Bval" size\x3d"1" dojoAttachEvent\x3d"onchange: _colorInputChange"\x3e\x3c/td\x3e\x3c/tr\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3c/table\x3e\r\n\t\t\t\t\t\t\t\t\t\x3c/div\x3e\r\n\t\t\t\t\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\t\t\t\t\x3cdiv class\x3d"dijitInline dojoxColorPickerHsv" dojoAttachPoint\x3d"hsvNode"\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctable cellpadding\x3d"1" cellspacing\x3d"1" role\x3d"presentation"\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctr\x3e\x3ctd\x3e\x3clabel for\x3d"${_uId}_h"\x3e${hueLabel}\x3c/label\x3e\x3c/td\x3e\x3ctd\x3e\x3cinput id\x3d"${_uId}_h" dojoAttachPoint\x3d"Hval"size\x3d"1" dojoAttachEvent\x3d"onchange: _colorInputChange"\x3e ${degLabel}\x3c/td\x3e\x3c/tr\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctr\x3e\x3ctd\x3e\x3clabel for\x3d"${_uId}_s"\x3e${saturationLabel}\x3c/label\x3e\x3c/td\x3e\x3ctd\x3e\x3cinput id\x3d"${_uId}_s" dojoAttachPoint\x3d"Sval" size\x3d"1" dojoAttachEvent\x3d"onchange: _colorInputChange"\x3e ${percentSign}\x3c/td\x3e\x3c/tr\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3ctr\x3e\x3ctd\x3e\x3clabel for\x3d"${_uId}_v"\x3e${valueLabel}\x3c/label\x3e\x3c/td\x3e\x3ctd\x3e\x3cinput id\x3d"${_uId}_v" dojoAttachPoint\x3d"Vval" size\x3d"1" dojoAttachEvent\x3d"onchange: _colorInputChange"\x3e ${percentSign}\x3c/td\x3e\x3c/tr\x3e\r\n\t\t\t\t\t\t\t\t\t\t\x3c/table\x3e\r\n\t\t\t\t\t\t\t\t\t\x3c/div\x3e\r\n\t\t\t\t\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\t\t\t\x3c/tr\x3e\r\n\t\t\t\t\t\t\t\x3ctr\x3e\r\n\t\t\t\t\t\t\t\t\x3ctd colspan\x3d"2"\x3e\r\n\t\t\t\t\t\t\t\t\t\x3cdiv class\x3d"dojoxColorPickerHex" dojoAttachPoint\x3d"hexNode" aria-live\x3d"polite"\x3e\t\r\n\t\t\t\t\t\t\t\t\t\t\x3clabel for\x3d"${_uId}_hex"\x3e\x26nbsp;${hexLabel}\x26nbsp;\x3c/label\x3e\x3cinput id\x3d"${_uId}_hex" dojoAttachPoint\x3d"hexCode, focusNode, valueNode" size\x3d"6" class\x3d"dojoxColorPickerHexCode" dojoAttachEvent\x3d"onchange: _colorInputChange"\x3e\r\n\t\t\t\t\t\t\t\t\t\x3c/div\x3e\r\n\t\t\t\t\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\t\t\t\x3c/tr\x3e\r\n\t\t\t\t\t\t\x3c/table\x3e\r\n\t\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3c/tr\x3e\r\n\t\t\t\x3c/table\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\x3c/table\x3e\r\n\r\n'}});
-define("dojox/widget/ColorPicker","dojo/_base/kernel dojo/_base/declare dojo/_base/lang dojo/_base/array dojo/_base/html dojo/_base/connect dojo/_base/sniff dojo/_base/window dojo/_base/event dojo/dom dojo/dom-class dojo/keys dojo/fx dojo/dnd/move dijit/registry dijit/_base/focus dijit/form/_FormWidget dijit/typematic dojox/color dojo/i18n dojo/i18n!./nls/ColorPicker dojo/i18n!dojo/cldr/nls/number dojo/text!./ColorPicker/ColorPicker.html".split(" "),function(e,t,b,u,f,p,v,w,x,q,y,g,n,r,z,m,A,h,k,
-s,C,D,B){e.experimental("dojox.widget.ColorPicker");return t("dojox.widget.ColorPicker",A,{showRgb:!0,showHsv:!0,showHex:!0,webSafe:!0,animatePoint:!0,slideDuration:250,liveUpdate:!1,PICKER_HUE_H:150,PICKER_SAT_VAL_H:150,PICKER_SAT_VAL_W:150,PICKER_HUE_SELECTOR_H:8,PICKER_SAT_SELECTOR_H:10,PICKER_SAT_SELECTOR_W:10,value:"#ffffff",_underlay:e.moduleUrl("dojox.widget","ColorPicker/images/underlay.png"),_hueUnderlay:e.moduleUrl("dojox.widget","ColorPicker/images/hue.png"),_pickerPointer:e.moduleUrl("dojox.widget",
-"ColorPicker/images/pickerPointer.png"),_huePickerPointer:e.moduleUrl("dojox.widget","ColorPicker/images/hueHandle.png"),_huePickerPointerAlly:e.moduleUrl("dojox.widget","ColorPicker/images/hueHandleA11y.png"),templateString:B,postMixInProperties:function(){y.contains(w.body(),"dijit_a11y")&&(this._huePickerPointer=this._huePickerPointerAlly);this._uId=z.getUniqueId(this.id);b.mixin(this,s.getLocalization("dojox.widget","ColorPicker"));b.mixin(this,s.getLocalization("dojo.cldr","number"));this.inherited(arguments)},
-postCreate:function(){this.inherited(arguments);7>v("ie")&&(this.colorUnderlay.style.filter="progid:DXImageTransform.Microsoft.AlphaImageLoader(src\x3d'"+this._underlay+"', sizingMethod\x3d'scale')",this.colorUnderlay.src=this._blankGif.toString());this.showRgb||(this.rgbNode.style.visibility="hidden");this.showHsv||(this.hsvNode.style.visibility="hidden");this.showHex||(this.hexNode.style.visibility="hidden");this.webSafe||(this.safePreviewNode.style.visibility="hidden")},startup:function(){this._started||
-(this._started=!0,this.set("value",this.value),this._mover=new r.boxConstrainedMoveable(this.cursorNode,{box:{t:-(this.PICKER_SAT_SELECTOR_H/2),l:-(this.PICKER_SAT_SELECTOR_W/2),w:this.PICKER_SAT_VAL_W,h:this.PICKER_SAT_VAL_H}}),this._hueMover=new r.boxConstrainedMoveable(this.hueCursorNode,{box:{t:-(this.PICKER_HUE_SELECTOR_H/2),l:0,w:0,h:this.PICKER_HUE_H}}),this._subs=[],this._subs.push(p.subscribe("/dnd/move/stop",b.hitch(this,"_clearTimer"))),this._subs.push(p.subscribe("/dnd/move/start",b.hitch(this,
-"_setTimer"))),this._keyListeners=[],this._connects.push(h.addKeyListener(this.hueCursorNode,{charOrCode:g.UP_ARROW,shiftKey:!1,metaKey:!1,ctrlKey:!1,altKey:!1},this,b.hitch(this,this._updateHueCursorNode),25,25)),this._connects.push(h.addKeyListener(this.hueCursorNode,{charOrCode:g.DOWN_ARROW,shiftKey:!1,metaKey:!1,ctrlKey:!1,altKey:!1},this,b.hitch(this,this._updateHueCursorNode),25,25)),this._connects.push(h.addKeyListener(this.cursorNode,{charOrCode:g.UP_ARROW,shiftKey:!1,metaKey:!1,ctrlKey:!1,
-altKey:!1},this,b.hitch(this,this._updateCursorNode),25,25)),this._connects.push(h.addKeyListener(this.cursorNode,{charOrCode:g.DOWN_ARROW,shiftKey:!1,metaKey:!1,ctrlKey:!1,altKey:!1},this,b.hitch(this,this._updateCursorNode),25,25)),this._connects.push(h.addKeyListener(this.cursorNode,{charOrCode:g.LEFT_ARROW,shiftKey:!1,metaKey:!1,ctrlKey:!1,altKey:!1},this,b.hitch(this,this._updateCursorNode),25,25)),this._connects.push(h.addKeyListener(this.cursorNode,{charOrCode:g.RIGHT_ARROW,shiftKey:!1,metaKey:!1,
-ctrlKey:!1,altKey:!1},this,b.hitch(this,this._updateCursorNode),25,25)))},_setValueAttr:function(a){this._started&&this.setColor(a,!0)},setColor:function(a,c){a=k.fromString(a);this._updatePickerLocations(a);this._updateColorInputs(a);this._updateValue(a,c)},_setTimer:function(a){a.node==this.cursorNode&&(m.focus(a.node),q.setSelectable(this.domNode,!1),this._timer=setInterval(b.hitch(this,"_updateColor"),45))},_clearTimer:function(a){this._timer&&(clearInterval(this._timer),this._timer=null,this.onChange(this.value),
-q.setSelectable(this.domNode,!0))},_setHue:function(a){f.style(this.colorUnderlay,"backgroundColor",k.fromHsv(a,100,100).toHex())},_updateHueCursorNode:function(a,c,d){if(-1!==a){a=f.style(this.hueCursorNode,"top");c=this.PICKER_HUE_SELECTOR_H/2;a+=c;var l=!1;d.charOrCode==g.UP_ARROW?0<a&&(a-=1,l=!0):d.charOrCode==g.DOWN_ARROW&&a<this.PICKER_HUE_H&&(a+=1,l=!0);l&&f.style(this.hueCursorNode,"top",a-c+"px")}else this._updateColor(!0)},_updateCursorNode:function(a,c,d){c=this.PICKER_SAT_SELECTOR_H/2;
-var l=this.PICKER_SAT_SELECTOR_W/2;if(-1!==a){a=f.style(this.cursorNode,"top");var b=f.style(this.cursorNode,"left");a+=c;var b=b+l,e=!1;d.charOrCode==g.UP_ARROW?0<a&&(a-=1,e=!0):d.charOrCode==g.DOWN_ARROW?a<this.PICKER_SAT_VAL_H&&(a+=1,e=!0):d.charOrCode==g.LEFT_ARROW?0<b&&(b-=1,e=!0):d.charOrCode==g.RIGHT_ARROW&&b<this.PICKER_SAT_VAL_W&&(b+=1,e=!0);e&&(b-=l,f.style(this.cursorNode,"top",a-c+"px"),f.style(this.cursorNode,"left",b+"px"))}else this._updateColor(!0)},_updateColor:function(a){var c=
-this.PICKER_HUE_SELECTOR_H/2,d=this.PICKER_SAT_SELECTOR_H/2,b=this.PICKER_SAT_SELECTOR_W/2,c=f.style(this.hueCursorNode,"top")+c,d=f.style(this.cursorNode,"top")+d,b=f.style(this.cursorNode,"left")+b,c=Math.round(360-360*(c/this.PICKER_HUE_H)),b=k.fromHsv(c,100*(b/this.PICKER_SAT_VAL_W),100-100*(d/this.PICKER_SAT_VAL_H));this._updateColorInputs(b);this._updateValue(b,a);c!=this._hue&&this._setHue(c)},_colorInputChange:function(a){var c,b=!1;switch(a.target){case this.hexCode:c=k.fromString(a.target.value);
-b=!0;break;case this.Rval:case this.Gval:case this.Bval:c=k.fromArray([this.Rval.value,this.Gval.value,this.Bval.value]);b=!0;break;case this.Hval:case this.Sval:case this.Vval:c=k.fromHsv(this.Hval.value,this.Sval.value,this.Vval.value),b=!0}b&&(this._updatePickerLocations(c),this._updateColorInputs(c),this._updateValue(c,!0))},_updateValue:function(a,c){var b=a.toHex();this.value=this.valueNode.value=b;if(c&&(!this._timer||this.liveUpdate))this.onChange(b)},_updatePickerLocations:function(a){var b=
-this.PICKER_HUE_SELECTOR_H/2,d=this.PICKER_SAT_SELECTOR_H/2,e=this.PICKER_SAT_SELECTOR_W/2;a=a.toHsv();b=Math.round(this.PICKER_HUE_H-a.h/360*this.PICKER_HUE_H)-b;e=Math.round(a.s/100*this.PICKER_SAT_VAL_W)-e;d=Math.round(this.PICKER_SAT_VAL_H-a.v/100*this.PICKER_SAT_VAL_H)-d;this.animatePoint?(n.slideTo({node:this.hueCursorNode,duration:this.slideDuration,top:b,left:0}).play(),n.slideTo({node:this.cursorNode,duration:this.slideDuration,top:d,left:e}).play()):(f.style(this.hueCursorNode,"top",b+"px"),
-f.style(this.cursorNode,{left:e+"px",top:d+"px"}));a.h!=this._hue&&this._setHue(a.h)},_updateColorInputs:function(a){var b=a.toHex();this.showRgb&&(this.Rval.value=a.r,this.Gval.value=a.g,this.Bval.value=a.b);this.showHsv&&(a=a.toHsv(),this.Hval.value=Math.round(a.h),this.Sval.value=Math.round(a.s),this.Vval.value=Math.round(a.v));this.showHex&&(this.hexCode.value=b);this.previewNode.style.backgroundColor=b;this.webSafe&&(this.safePreviewNode.style.backgroundColor=b)},_setHuePoint:function(a){a=a.layerY-
-this.PICKER_HUE_SELECTOR_H/2;this.animatePoint?n.slideTo({node:this.hueCursorNode,duration:this.slideDuration,top:a,left:0,onEnd:b.hitch(this,function(){this._updateColor(!1);m.focus(this.hueCursorNode)})}).play():(f.style(this.hueCursorNode,"top",a+"px"),this._updateColor(!1))},_setPoint:function(a){var c=a.layerY-this.PICKER_SAT_SELECTOR_H/2,d=a.layerX-this.PICKER_SAT_SELECTOR_W/2;a&&m.focus(a.target);this.animatePoint?n.slideTo({node:this.cursorNode,duration:this.slideDuration,top:c,left:d,onEnd:b.hitch(this,
-function(){this._updateColor(!0);m.focus(this.cursorNode)})}).play():(f.style(this.cursorNode,{left:d+"px",top:c+"px"}),this._updateColor(!1))},_handleKey:function(a){},focus:function(){this.focused||m.focus(this.focusNode)},_stopDrag:function(a){x.stop(a)},destroy:function(){this.inherited(arguments);u.forEach(this._subs,function(a){p.unsubscribe(a)});delete this._subs}})});
-//@ sourceMappingURL=ColorPicker.js.map
+define([
+	"dojo/_base/kernel","dojo/_base/declare","dojo/_base/lang","dojo/_base/array",
+	"dojo/_base/html","dojo/_base/connect","dojo/_base/sniff","dojo/_base/window",
+	"dojo/_base/event","dojo/dom","dojo/dom-class","dojo/keys","dojo/fx","dojo/dnd/move",
+	"dijit/registry","dijit/_base/focus","dijit/form/_FormWidget","dijit/typematic",
+	"dojox/color","dojo/i18n","dojo/i18n!./nls/ColorPicker","dojo/i18n!dojo/cldr/nls/number",
+	"dojo/text!./ColorPicker/ColorPicker.html"
+], function(kernel,declare,lang,ArrayUtil,html,Hub,has,win,Event,DOM,DOMClass,Keys,fx,move,
+		registry,FocusManager,FormWidget,Typematic,color,i18n,bundle1,bundle2,template){
+
+	kernel.experimental("dojox.widget.ColorPicker");
+	
+	var webSafeFromHex = function(hex){
+		// stub, this is planned later:
+		return hex;
+	};
+
+	// TODO: shouldn't this extend _FormValueWidget?
+	return declare("dojox.widget.ColorPicker", FormWidget, {
+		// summary:
+		//		a HSV color picker - similar to Photoshop picker
+		// description:
+		//		Provides an interactive HSV ColorPicker similar to
+		//		PhotoShop's color selction tool. This is an enhanced
+		//		version of the default dijit.ColorPalette, though provides
+		//		no accessibility.
+		// example:
+		// |	var picker = new dojox.widget.ColorPicker({
+		// |		// a couple of example toggles:
+		// |		animatePoint:false,
+		// |		showHsv: false,
+		// |		webSafe: false,
+		// |		showRgb: false
+		// |	});
+		// example:
+		// |	<!-- markup: -->
+		// |	<div dojoType="dojox.widget.ColorPicker"></div>
+
+		// showRgb: Boolean
+		//		show/update RGB input nodes
+		showRgb: true,
+	
+		// showHsv: Boolean
+		//		show/update HSV input nodes
+		showHsv: true,
+	
+		// showHex: Boolean
+		//		show/update Hex value field
+		showHex: true,
+
+		// webSafe: Boolean
+		//		deprecated? or just use a toggle to show/hide that node, too?
+		webSafe: true,
+
+		// animatePoint: Boolean
+		//		toggle to use slideTo (true) or just place the cursor (false) on click
+		animatePoint: true,
+
+		// slideDuration: Integer
+		//		time in ms picker node will slide to next location (non-dragging) when animatePoint=true
+		slideDuration: 250,
+
+		// liveUpdate: Boolean
+		//		Set to true to fire onChange in an indeterminate way
+		liveUpdate: false,
+
+		// PICKER_HUE_H: int
+		//		Height of the hue picker, used to calculate positions
+		PICKER_HUE_H: 150,
+		
+		// PICKER_SAT_VAL_H: int
+		//		Height of the 2d picker, used to calculate positions
+		PICKER_SAT_VAL_H: 150,
+		
+		// PICKER_SAT_VAL_W: int
+		//		Width of the 2d picker, used to calculate positions
+		PICKER_SAT_VAL_W: 150,
+
+		// PICKER_HUE_SELECTOR_H: int
+		//		Height of the hue selector DOM node, used to calc offsets so that selection
+		//		is center of the image node.
+		PICKER_HUE_SELECTOR_H: 8,
+		
+		// PICKER_SAT_SELECTOR_H: int
+		//		Height of the saturation selector DOM node, used to calc offsets so that selection
+		//		is center of the image node.
+		PICKER_SAT_SELECTOR_H: 10,
+
+		// PICKER_SAT_SELECTOR_W: int
+		//		Width of the saturation selector DOM node, used to calc offsets so that selection
+		//		is center of the image node.
+		PICKER_SAT_SELECTOR_W: 10,
+
+		// value: String
+		//		Default color for this component. Only hex values are accepted as incoming/returned
+		//		values. Adjust this value with `.attr`, eg: dijit.byId("myPicker").attr("value", "#ededed");
+		//		to cause the points to adjust and the values to reflect the current color.
+		value: "#ffffff",
+		
+		_underlay: require.toUrl("dojox/widget/ColorPicker/images/underlay.png"),
+
+		_hueUnderlay: require.toUrl("dojox/widget/ColorPicker/images/hue.png"),
+
+		_pickerPointer: require.toUrl("dojox/widget/ColorPicker/images/pickerPointer.png"),
+
+		_huePickerPointer: require.toUrl("dojox/widget/ColorPicker/images/hueHandle.png"),
+
+		_huePickerPointerAlly: require.toUrl("dojox/widget/ColorPicker/images/hueHandleA11y.png"),
+
+		templateString: template,
+
+		postMixInProperties: function(){
+			if(DOMClass.contains(win.body(), "dijit_a11y")){
+				// Use the pointer that will show up in high contrast.
+				this._huePickerPointer = this._huePickerPointerAlly;
+			}
+			this._uId = registry.getUniqueId(this.id);
+			lang.mixin(this, i18n.getLocalization("dojox.widget", "ColorPicker"));
+			lang.mixin(this, i18n.getLocalization("dojo.cldr", "number"));
+			this.inherited(arguments);
+		},
+
+		postCreate: function(){
+			// summary:
+			//		As quickly as we can, set up ie6 alpha-filter support for our
+			//		underlay.  we don't do image handles (done in css), just the 'core'
+			//		of this widget: the underlay.
+			this.inherited(arguments);
+			if(has("ie") < 7){
+				this.colorUnderlay.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+this._underlay+"', sizingMethod='scale')";
+				this.colorUnderlay.src = this._blankGif.toString();
+			}
+			// hide toggle-able nodes:
+			if(!this.showRgb){ this.rgbNode.style.visibility = "hidden"; }
+			if(!this.showHsv){ this.hsvNode.style.visibility = "hidden"; }
+			if(!this.showHex){ this.hexNode.style.visibility = "hidden"; }
+			if(!this.webSafe){ this.safePreviewNode.style.visibility = "hidden"; }
+		},
+		
+		startup: function(){
+			if(this._started){
+				return;
+			}
+			this._started = true;
+			this.set("value", this.value);
+			this._mover = new move.boxConstrainedMoveable(this.cursorNode, {
+				box: {
+					t: -(this.PICKER_SAT_SELECTOR_H/2),
+					l: -(this.PICKER_SAT_SELECTOR_W/2),
+					w:this.PICKER_SAT_VAL_W,
+					h:this.PICKER_SAT_VAL_H
+				}
+			});
+			
+			this._hueMover = new move.boxConstrainedMoveable(this.hueCursorNode, {
+				box: {
+					t: -(this.PICKER_HUE_SELECTOR_H/2),
+					l:0,
+					w:0,
+					h:this.PICKER_HUE_H
+				}
+			});
+			
+			this._subs = [];
+			// no dnd/move/move published ... use a timer:
+			this._subs.push(Hub.subscribe("/dnd/move/stop", lang.hitch(this, "_clearTimer")));
+			this._subs.push(Hub.subscribe("/dnd/move/start", lang.hitch(this, "_setTimer")));
+
+			// Bind to up, down, left and right  arrows on the hue and saturation nodes.
+			this._keyListeners = [];
+			this._connects.push(Typematic.addKeyListener(this.hueCursorNode,{
+				charOrCode: Keys.UP_ARROW,
+				shiftKey: false,
+				metaKey: false,
+				ctrlKey: false,
+				altKey: false
+			}, this, lang.hitch(this, this._updateHueCursorNode), 25, 25));
+			this._connects.push(Typematic.addKeyListener(this.hueCursorNode,{
+				charOrCode: Keys.DOWN_ARROW,
+				shiftKey: false,
+				metaKey: false,
+				ctrlKey: false,
+				altKey: false
+			}, this, lang.hitch(this, this._updateHueCursorNode), 25, 25));
+			this._connects.push(Typematic.addKeyListener(this.cursorNode,{
+				charOrCode: Keys.UP_ARROW,
+				shiftKey: false,
+				metaKey: false,
+				ctrlKey: false,
+				altKey: false
+			}, this, lang.hitch(this, this._updateCursorNode), 25, 25));
+			this._connects.push(Typematic.addKeyListener(this.cursorNode,{
+				charOrCode: Keys.DOWN_ARROW,
+				shiftKey: false,
+				metaKey: false,
+				ctrlKey: false,
+				altKey: false
+			}, this, lang.hitch(this, this._updateCursorNode), 25, 25));
+			this._connects.push(Typematic.addKeyListener(this.cursorNode,{
+				charOrCode: Keys.LEFT_ARROW,
+				shiftKey: false,
+				metaKey: false,
+				ctrlKey: false,
+				altKey: false
+			}, this, lang.hitch(this, this._updateCursorNode), 25, 25));
+			this._connects.push(Typematic.addKeyListener(this.cursorNode,{
+				charOrCode: Keys.RIGHT_ARROW,
+				shiftKey: false,
+				metaKey: false,
+				ctrlKey: false,
+				altKey: false
+			}, this, lang.hitch(this, this._updateCursorNode), 25, 25));
+		},
+		
+		_setValueAttr: function(value, fireOnChange){
+			if(!this._started){ return; }
+			this.setColor(value, fireOnChange);
+		},
+		
+		setColor: function(/* String */col, force){
+			// summary:
+			//		Set a color on a picker. Usually used to set
+			//		initial color as an alternative to passing defaultColor option
+			//		to the constructor.
+			col = color.fromString(col);
+			this._updatePickerLocations(col);
+			this._updateColorInputs(col);
+			this._updateValue(col, force);
+		},
+		
+		_setTimer: function(/* dojo/dnd/Mover */mover){
+			if(mover.node != this.cursorNode && mover.node != this.hueCursorNode){ return; }
+			// FIXME: should I assume this? focus on mouse down so on mouse up
+			FocusManager.focus(mover.node);
+			DOM.setSelectable(this.domNode,false);
+			this._timer = setInterval(lang.hitch(this, "_updateColor"), 45);
+		},
+		
+		_clearTimer: function(/* dojo/dnd/Mover */mover){
+			if(!this._timer){ return; }
+			clearInterval(this._timer);
+			this._timer = null;
+			this.onChange(this.value);
+			DOM.setSelectable(this.domNode,true);
+		},
+		
+		_setHue: function(/* Float */h){
+			// summary:
+			//		Sets a natural color background for the
+			//		underlay image against closest hue value (full saturation)
+			// h:
+			//		0..360
+			html.style(this.colorUnderlay, "backgroundColor", color.fromHsv(h,100,100).toHex());
+			
+		},
+
+		_updateHueCursorNode: function(count, node, e){
+			// summary:
+			//		Function used by the typematic code to handle cursor position and update
+			//		via keyboard.
+			// count: Number
+			//		-1 means stop, anything else is just how many times it was called.
+			// node: DomNode
+			//		The node generating the event.
+			// e: Event
+			//		The event.
+			if(count !== -1){
+				var y = html.style(this.hueCursorNode, "top");
+				var selCenter = this.PICKER_HUE_SELECTOR_H/2;
+
+				// Account for our offset
+				y += selCenter;
+				var update = false;
+				if(e.charOrCode == Keys.UP_ARROW){
+					if(y > 0){
+						y -= 1;
+						update = true;
+					}
+				}else if(e.charOrCode == Keys.DOWN_ARROW){
+					if(y < this.PICKER_HUE_H){
+						y += 1;
+						update = true;
+					}
+				}
+				y -= selCenter;
+				if(update){
+					html.style(this.hueCursorNode, "top", y + "px");
+				}
+			}else{
+				this._updateColor(true);
+			}
+		},
+		
+		_updateCursorNode: function(count, node, e){
+			// summary:
+			//		Function used by the typematic code to handle cursor position and update
+			//		via keyboard.
+			// count:
+			//		-1 means stop, anything else is just how many times it was called.
+			// node:
+			//		The node generating the event.
+			// e:
+			//		The event.
+			var selCenterH = this.PICKER_SAT_SELECTOR_H/2;
+			var selCenterW = this.PICKER_SAT_SELECTOR_W/2;
+
+			if(count !== -1){
+				var y = html.style(this.cursorNode, "top");
+				var x = html.style(this.cursorNode, "left");
+				
+				// Account for our offsets to center
+				y += selCenterH;
+				x += selCenterW;
+
+				var update = false;
+				if(e.charOrCode == Keys.UP_ARROW){
+					if(y > 0){
+						y -= 1;
+						update = true;
+					}
+				}else if(e.charOrCode == Keys.DOWN_ARROW){
+					if(y < this.PICKER_SAT_VAL_H){
+						y += 1;
+						update = true;
+					}
+				}else if(e.charOrCode == Keys.LEFT_ARROW){
+					if(x > 0){
+						x -= 1;
+						update = true;
+					}
+				}else if(e.charOrCode == Keys.RIGHT_ARROW){
+					if(x < this.PICKER_SAT_VAL_W){
+						x += 1;
+						update = true;
+					}
+				}
+				if(update){
+					// Account for our offsets to center
+					y -= selCenterH;
+					x -= selCenterW;
+					html.style(this.cursorNode, "top", y + "px");
+					html.style(this.cursorNode, "left", x + "px");
+				}
+			}else{
+				this._updateColor(true);
+			}
+		},
+
+		_updateColor: function(fireChange){
+			// summary:
+			//		update the previewNode color, and input values [optional]
+			
+			var hueSelCenter = this.PICKER_HUE_SELECTOR_H/2,
+				satSelCenterH = this.PICKER_SAT_SELECTOR_H/2,
+				satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
+
+			var _huetop = html.style(this.hueCursorNode,"top") + hueSelCenter,
+				_pickertop = html.style(this.cursorNode,"top") + satSelCenterH,
+				_pickerleft = html.style(this.cursorNode,"left") + satSelCenterW,
+				h = Math.round(360 - (_huetop / this.PICKER_HUE_H * 360)),
+				col = color.fromHsv(h, _pickerleft / this.PICKER_SAT_VAL_W * 100, 100 - (_pickertop / this.PICKER_SAT_VAL_H * 100))
+			;
+			
+			this._updateColorInputs(col);
+			this._updateValue(col, fireChange);
+			
+			// update hue, not all the pickers
+			if(h!=this._hue){
+				this._setHue(h);
+			}
+		},
+		
+		_colorInputChange: function(e){
+			// summary:
+			//		updates picker position and inputs
+			//		according to rgb, hex or hsv input changes
+			var col, hasit = false;
+			switch(e.target){
+				//transform to hsv to pixels
+
+				case this.hexCode:
+					col = color.fromString(e.target.value);
+					hasit = true;
+					
+					break;
+				case this.Rval:
+				case this.Gval:
+				case this.Bval:
+					col = color.fromArray([this.Rval.value, this.Gval.value, this.Bval.value]);
+					hasit = true;
+					break;
+				case this.Hval:
+				case this.Sval:
+				case this.Vval:
+					col = color.fromHsv(this.Hval.value, this.Sval.value, this.Vval.value);
+					hasit = true;
+					break;
+			}
+			
+			if(hasit){
+				this._updatePickerLocations(col);
+				this._updateColorInputs(col);
+				this._updateValue(col, true);
+			}
+			
+		},
+		
+		_updateValue: function(/* dojox/color/Color */col, /* Boolean */fireChange){
+			// summary:
+			//		updates the value of the widget
+			//		can cancel reverse onChange by specifying second param
+			var hex = col.toHex();
+			
+			this.value = this.valueNode.value = hex;
+			
+			// anytime we muck with the color, fire onChange?
+			if(fireChange && (!this._timer || this.liveUpdate)){
+				this.onChange(hex);
+			}
+		},
+		
+		_updatePickerLocations: function(/* dojox/color/Color */col){
+			// summary:
+			//		update handles on the pickers acording to color values
+			
+			var hueSelCenter = this.PICKER_HUE_SELECTOR_H/2,
+				satSelCenterH = this.PICKER_SAT_SELECTOR_H/2,
+				satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
+
+			var hsv = col.toHsv(),
+				ypos = Math.round(this.PICKER_HUE_H - hsv.h / 360 * this.PICKER_HUE_H) - hueSelCenter,
+				newLeft = Math.round(hsv.s / 100 * this.PICKER_SAT_VAL_W) - satSelCenterW,
+				newTop = Math.round(this.PICKER_SAT_VAL_H - hsv.v / 100 * this.PICKER_SAT_VAL_H) - satSelCenterH
+			;
+			
+			if(this.animatePoint){
+				fx.slideTo({
+					node: this.hueCursorNode,
+					duration: this.slideDuration,
+					top: ypos,
+					left: 0
+				}).play();
+				
+				fx.slideTo({
+					node: this.cursorNode,
+					duration: this.slideDuration,
+					top: newTop,
+					left: newLeft
+				}).play();
+				
+			}
+			else {
+				html.style(this.hueCursorNode, "top", ypos + "px");
+				html.style(this.cursorNode, {
+					left: newLeft + "px",
+					top: newTop + "px"
+				});
+			}
+			
+			// limit hue calculations to only when it changes
+			if(hsv.h != this._hue){
+				this._setHue(hsv.h);
+			}
+			
+		},
+		
+		_updateColorInputs: function(/* dojox/color/Color */ col){
+			// summary:
+			//		updates color inputs that were changed through other inputs
+			//		or by clicking on the picker
+			
+			var hex = col.toHex();
+			
+			if(this.showRgb){
+				this.Rval.value = col.r;
+				this.Gval.value = col.g;
+				this.Bval.value = col.b;
+			}
+			
+			if(this.showHsv){
+				var hsv = col.toHsv();
+				this.Hval.value = Math.round((hsv.h)); // convert to 0..360
+				this.Sval.value = Math.round(hsv.s);
+				this.Vval.value = Math.round(hsv.v);
+			}
+			
+			if(this.showHex){
+				this.hexCode.value = hex;
+			}
+			
+			this.previewNode.style.backgroundColor = hex;
+			
+			if(this.webSafe){
+				this.safePreviewNode.style.backgroundColor = webSafeFromHex(hex);
+			}
+		},
+		
+		_setHuePoint: function(/* Event */evt){
+			// summary:
+			//		set the hue picker handle on relative y coordinates
+			var selCenter = this.PICKER_HUE_SELECTOR_H/2;
+			var ypos = evt.layerY - selCenter;
+			if(this.animatePoint){
+				fx.slideTo({
+					node: this.hueCursorNode,
+					duration:this.slideDuration,
+					top: ypos,
+					left: 0,
+					onEnd: lang.hitch(this, function(){ this._updateColor(false); FocusManager.focus(this.hueCursorNode); })
+				}).play();
+			}else{
+				html.style(this.hueCursorNode, "top", ypos + "px");
+				this._updateColor(false);
+			}
+		},
+		
+		_setPoint: function(/* Event */evt){
+			// summary:
+			//		set our picker point based on relative x/y coordinates
+
+			//	evt.preventDefault();
+			var satSelCenterH = this.PICKER_SAT_SELECTOR_H/2;
+			var satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
+			var newTop = evt.layerY - satSelCenterH;
+			var newLeft = evt.layerX - satSelCenterW;
+			
+			if(evt){ FocusManager.focus(evt.target); }
+
+			if(this.animatePoint){
+				fx.slideTo({
+					node: this.cursorNode,
+					duration: this.slideDuration,
+					top: newTop,
+					left: newLeft,
+					onEnd: lang.hitch(this, function(){ this._updateColor(true); FocusManager.focus(this.cursorNode); })
+				}).play();
+			}else{
+				html.style(this.cursorNode, {
+					left: newLeft + "px",
+					top: newTop + "px"
+				});
+				this._updateColor(false);
+			}
+		},
+		
+		_handleKey: function(/* Event */e){
+			// TODO: not implemented YET
+			// var keys = d.keys;
+		},
+
+		focus: function(){
+			// summary:
+			//		Put focus on this widget, only if focus isn't set on it already.
+			if(!this.focused){
+				FocusManager.focus(this.focusNode);
+			}
+		},
+
+		_stopDrag: function(e){
+			// summary:
+			//		Function to halt the mouse down default
+			//		to disable dragging of images out of the color
+			//		picker.
+			Event.stop(e);
+		},
+
+		destroy: function(){
+			// summary:
+			//		Over-ride to clean up subscriptions, etc.
+			this.inherited(arguments);
+			ArrayUtil.forEach(this._subs, function(sub){
+				Hub.unsubscribe(sub);
+			});
+			delete this._subs;
+		}
+	});
+});

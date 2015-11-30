@@ -1,8 +1,215 @@
-//>>built
-define("dojox/grid/TreeSelection","../main dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/dom-attr dojo/query ./DataSelection".split(" "),function(g,m,n,p,h,k,l){return m("dojox.grid.TreeSelection",l,{setMode:function(a){this.selected={};this.sorted_sel=[];this.sorted_ltos={};this.sorted_stol={};l.prototype.setMode.call(this,a)},addToSelection:function(a){if("none"!=this.mode){var b=null,b="number"==typeof a||"string"==typeof a?a:this.grid.getItemIndex(a);this.selected[b]?this.selectedIndex=
-b:!1!==this.onCanSelect(b)&&(this.selectedIndex=b,a=k("tr[dojoxTreeGridPath\x3d'"+b+"']",this.grid.domNode),a.length&&h.set(a[0],"aria-selected","true"),this._beginUpdate(),this.selected[b]=!0,this._insertSortedSelection(b),this.onSelected(b),this._endUpdate())}},deselect:function(a){if("none"!=this.mode){var b=null,b="number"==typeof a||"string"==typeof a?a:this.grid.getItemIndex(a);this.selectedIndex==b&&(this.selectedIndex=-1);this.selected[b]&&!1!==this.onCanDeselect(b)&&(a=k("tr[dojoxTreeGridPath\x3d'"+
-b+"']",this.grid.domNode),a.length&&h.set(a[0],"aria-selected","false"),this._beginUpdate(),delete this.selected[b],this._removeSortedSelection(b),this.onDeselected(b),this._endUpdate())}},getSelected:function(){var a=[],b;for(b in this.selected)this.selected[b]&&a.push(this.grid.getItem(b));return a},getSelectedCount:function(){var a=0,b;for(b in this.selected)this.selected[b]&&a++;return a},_bsearch:function(a){for(var b=this.sorted_sel,d=b.length-1,e=0,c;e<=d;){var f=this._comparePaths(b[c=e+d>>
-1],a);if(0>f)e=c+1;else if(0<f)d=c-1;else return c}return 0>f?c-f:c},_comparePaths:function(a,b){for(var d=0,e=a.length<b.length?a.length:b.length;d<e;d++){if(a[d]<b[d])return-1;if(a[d]>b[d])return 1}return a.length<b.length?-1:a.length>b.length?1:0},_insertSortedSelection:function(a){a=String(a);var b=this.sorted_sel,d=this.sorted_ltos,e=this.sorted_stol,c=a.split("/"),c=n.map(c,function(a){return parseInt(a,10)});d[c]=a;e[a]=c;0===b.length?b.push(c):1==b.length?1==this._comparePaths(b[0],c)?b.unshift(c):
-b.push(c):(a=this._bsearch(c),this.sorted_sel.splice(a,0,c))},_removeSortedSelection:function(a){a=String(a);var b=this.sorted_sel,d=this.sorted_ltos,e=this.sorted_stol;if(0!==b.length){var c=e[a];if(c){var f=this._bsearch(c);-1<f&&(delete d[c],delete e[a],b.splice(f,1))}}},getFirstSelected:function(){if(!this.sorted_sel.length||"none"==this.mode)return-1;var a=this.sorted_sel[0];if(!a)return-1;a=this.sorted_ltos[a];return!a?-1:a},getNextSelected:function(a){if(!this.sorted_sel.length||"none"==this.mode)return-1;
-a=String(a);a=this.sorted_stol[a];if(!a)return-1;a=this._bsearch(a);a=this.sorted_sel[a+1];return!a?-1:this.sorted_ltos[a]},_range:function(a,b,d){!p.isString(a)&&0>a&&(a=b);var e=this.grid;a=new g.grid.TreePath(String(a),e);b=new g.grid.TreePath(String(b),e);0<a.compare(b)&&(e=a,a=b,b=e);b=b._str;for(d(a._str);(a=a.next())&&a._str!=b;)d(a._str);d(b)}})});
-//@ sourceMappingURL=TreeSelection.js.map
+define([
+	"../main",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/dom-attr",
+	"dojo/query",
+	"./DataSelection"
+], function(dojox, declare, array, lang, domAttr, query, DataSelection){
+
+return declare("dojox.grid.TreeSelection", DataSelection, {
+	setMode: function(mode){
+		this.selected = {};
+		this.sorted_sel = [];
+		this.sorted_ltos = {};
+		this.sorted_stol = {};
+		DataSelection.prototype.setMode.call(this, mode);
+	},
+	addToSelection: function(inItemOrIndex){
+		if(this.mode == 'none'){ return; }
+		var idx = null;
+		if(typeof inItemOrIndex == "number" || typeof inItemOrIndex == "string"){
+			idx = inItemOrIndex;
+		}else{
+			idx = this.grid.getItemIndex(inItemOrIndex);
+		}
+		if(this.selected[idx]){
+			this.selectedIndex = idx;
+		}else{
+			if(this.onCanSelect(idx) !== false){
+				this.selectedIndex = idx;
+				var rowNodes = query("tr[dojoxTreeGridPath='" + idx + "']", this.grid.domNode);
+				if(rowNodes.length){
+					domAttr.set(rowNodes[0], "aria-selected", "true");
+				}
+				this._beginUpdate();
+				this.selected[idx] = true;
+				this._insertSortedSelection(idx);
+				//this.grid.onSelected(idx);
+				this.onSelected(idx);
+				//this.onSetSelected(idx, true);
+				this._endUpdate();
+			}
+		}
+	},
+	deselect: function(inItemOrIndex){
+		if(this.mode == 'none'){ return; }
+		var idx = null;
+		if(typeof inItemOrIndex == "number" || typeof inItemOrIndex == "string"){
+			idx = inItemOrIndex;
+		}else{
+			idx = this.grid.getItemIndex(inItemOrIndex);
+		}
+		if(this.selectedIndex == idx){
+			this.selectedIndex = -1;
+		}
+		if(this.selected[idx]){
+			if(this.onCanDeselect(idx) === false){
+				return;
+			}
+			var rowNodes = query("tr[dojoxTreeGridPath='" + idx + "']", this.grid.domNode);
+			if(rowNodes.length){
+				domAttr.set(rowNodes[0], "aria-selected", "false");
+			}
+			this._beginUpdate();
+			delete this.selected[idx];
+			this._removeSortedSelection(idx);
+			//this.grid.onDeselected(idx);
+			this.onDeselected(idx);
+			//this.onSetSelected(idx, false);
+			this._endUpdate();
+		}
+	},
+	getSelected: function(){
+		var result = [];
+		for(var i in this.selected){
+			if(this.selected[i]){
+				result.push(this.grid.getItem(i));
+			}
+		}
+		return result;
+	},
+	getSelectedCount: function(){
+		var c = 0;
+		for(var i in this.selected){
+			if(this.selected[i]){
+				c++;
+			}
+		}
+		return c;
+	},
+	_bsearch: function(v){
+		var o = this.sorted_sel;
+		var h = o.length - 1, l = 0, m;
+		while(l<=h){
+			var cmp = this._comparePaths(o[m = (l + h) >> 1], v);
+			if(cmp < 0){ l = m + 1; continue; }
+			if(cmp > 0){ h = m - 1; continue; }
+			return m;
+		}
+		return cmp < 0 ? m - cmp : m;
+	},
+	_comparePaths: function(a, b){
+		for(var i=0, l=(a.length < b.length ? a.length : b.length); i<l; i++){
+			if(a[i]<b[i]){ return -1; }
+			if(a[i]>b[i]){ return 1; }
+		}
+		if(a.length<b.length){ return -1; }
+		if(a.length>b.length){ return 1; }
+		return 0;
+	},
+	_insertSortedSelection: function(index){
+		index = String(index);
+		var s = this.sorted_sel;
+		var sl = this.sorted_ltos;
+		var ss = this.sorted_stol;
+
+		var lpath = index.split('/');
+		lpath = array.map(lpath, function(item){ return parseInt(item, 10); });
+		sl[lpath] = index;
+		ss[index] = lpath;
+
+		if(s.length === 0){
+			s.push(lpath);
+			return;
+		}
+		if(s.length==1){
+			var cmp = this._comparePaths(s[0], lpath);
+			if(cmp==1){ s.unshift(lpath); }
+			else{ s.push(lpath); }
+			return;
+		}
+
+		var idx = this._bsearch(lpath);
+		this.sorted_sel.splice(idx, 0, lpath);
+	},
+	_removeSortedSelection: function(index){
+		index = String(index);
+		var s = this.sorted_sel;
+		var sl = this.sorted_ltos;
+		var ss = this.sorted_stol;
+
+		if(s.length === 0){
+			return;
+		}
+
+		var lpath = ss[index];
+		if(!lpath){ return; }
+
+		var idx = this._bsearch(lpath);
+		if(idx > -1){
+			delete sl[lpath];
+			delete ss[index];
+			s.splice(idx, 1);
+		}
+	},
+	getFirstSelected: function(){
+		if(!this.sorted_sel.length||this.mode == 'none'){ return -1; }
+		var fpath = this.sorted_sel[0];
+		if(!fpath){
+			return -1;
+		}
+		fpath = this.sorted_ltos[fpath];
+		if(!fpath){
+			return -1;
+		}
+		return fpath;
+	},
+	getNextSelected: function(inPrev){
+		if(!this.sorted_sel.length||this.mode == 'none'){ return -1; }
+		inPrev = String(inPrev);
+		var prevPath = this.sorted_stol[inPrev];
+		if(!prevPath){ return -1; }
+
+		var idx = this._bsearch(prevPath);
+		var lpath = this.sorted_sel[idx+1];
+		if(!lpath){
+			return -1;
+		}
+		return this.sorted_ltos[lpath];
+	},
+	_range: function(inFrom, inTo, func){
+		if(!lang.isString(inFrom) && inFrom < 0){
+			inFrom = inTo;
+		}
+		var cells = this.grid.layout.cells,
+			store = this.grid.store,
+			grid = this.grid;
+		inFrom = new dojox.grid.TreePath(String(inFrom), grid);
+		inTo = new dojox.grid.TreePath(String(inTo), grid);
+
+		if(inFrom.compare(inTo) > 0){
+			var tmp = inFrom;
+			inFrom = inTo;
+			inTo = tmp;
+		}
+
+		var inFromStr = inFrom._str, inToStr = inTo._str;
+
+		// select/deselect the first
+		func(inFromStr);
+
+		var p = inFrom;
+		while((p = p.next())){
+			if(p._str == inToStr){
+				break;
+			}
+			func(p._str);
+		}
+
+		// select/deselect the last
+		func(inToStr);
+	}
+});
+});

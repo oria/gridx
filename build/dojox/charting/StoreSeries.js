@@ -1,5 +1,101 @@
-//>>built
-define("dojox/charting/StoreSeries",["dojo/_base/array","dojo/_base/declare","dojo/_base/Deferred"],function(d,e,f){return e("dojox.charting.StoreSeries",null,{constructor:function(c,a,b){this.store=c;this.kwArgs=a;this.value=b?"function"==typeof b?b:"object"==typeof b?function(g){var a={},c;for(c in b)a[c]=g[b[c]];return a}:function(a){return a[b]}:function(a){return a.value};this.data=[];this._initialRendering=!1;this.fetch()},destroy:function(){this.observeHandle&&this.observeHandle.remove()},
-setSeriesObject:function(c){this.series=c},fetch:function(){function c(){a.data=d.map(a.objects,function(b){return a.value(b,a.store)});a._pushDataChanges()}var a=this;this.observeHandle&&this.observeHandle.remove();var b=this.store.query(this.kwArgs.query,this.kwArgs);f.when(b,function(b){a.objects=b;c()});b.observe&&(this.observeHandle=b.observe(c,!0))},_pushDataChanges:function(){this.series&&(this.series.chart.updateSeries(this.series.name,this,this._initialRendering),this._initialRendering=!1,
-this.series.chart.delayedRender())}})});
-//@ sourceMappingURL=StoreSeries.js.map
+define(["dojo/_base/array", "dojo/_base/declare", "dojo/_base/Deferred"], 
+  function(arr, declare, Deferred){
+	
+	return declare("dojox.charting.StoreSeries", null, {
+		constructor: function(store, kwArgs, value){
+			// summary:
+			//		Series adapter for dojo object stores (dojo.store).
+			// store: Object
+			//		A dojo object store.
+			// kwArgs: Object
+			//		A store-specific keyword parameters used for querying objects.
+			//		See dojo.store docs
+			// value: Function|Object|String
+			//		Function, which takes an object handle, and
+			//		produces an output possibly inspecting the store's item. Or
+			//		a dictionary object, which tells what names to extract from
+			//		an object and how to map them to an output. Or a string, which
+			//		is a numeric field name to use for plotting. If undefined, null
+			//		or empty string (the default), "value" field is extracted.
+			this.store = store;
+			this.kwArgs = kwArgs;
+	
+			if(value){
+				if(typeof value == "function"){
+					this.value = value;
+				}else if(typeof value == "object"){
+					this.value = function(object){
+						var o = {};
+						for(var key in value){
+							o[key] = object[value[key]];
+						}
+						return o;
+					};
+				}else{
+					this.value = function(object){
+						return object[value];
+					};
+				}
+			}else{
+				this.value = function(object){
+					return object.value;
+				};
+			}
+	
+			this.data = [];
+
+			this._initialRendering = true;
+			this.fetch();
+		},
+	
+		destroy: function(){
+			// summary:
+			//		Clean up before GC.
+			if(this.observeHandle){
+				this.observeHandle.remove();
+			}
+		},
+	
+		setSeriesObject: function(series){
+			// summary:
+			//		Sets a dojox.charting.Series object we will be working with.
+			// series: dojox/charting/Series
+			//		Our interface to the chart.
+			this.series = series;
+		},
+	
+		// store fetch loop
+	
+		fetch: function(){
+			// summary:
+			//		Fetches data from the store and updates a chart.
+			var self = this;
+			if(this.observeHandle){
+				this.observeHandle.remove();
+			}
+			var results = this.store.query(this.kwArgs.query, this.kwArgs);
+			Deferred.when(results, function(objects){
+				self.objects = objects;
+				update();
+			});
+			if(results.observe){
+				this.observeHandle = results.observe(update, true);
+			}
+			function update(){
+				self.data = arr.map(self.objects, function(object){
+					return self.value(object, self.store);
+				});
+				self._pushDataChanges();
+			}
+		},
+	
+		_pushDataChanges: function(){
+			if(this.series){
+				this.series.chart.updateSeries(this.series.name, this, this._initialRendering);
+				this._initialRendering = false;
+				this.series.chart.delayedRender();
+			}
+		}
+	
+	});
+});

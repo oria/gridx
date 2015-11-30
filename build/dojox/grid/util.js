@@ -1,4 +1,80 @@
-//>>built
-define("dojox/grid/util",["../main","dojo/_base/lang","dojo/dom"],function(f,h,k){var a=h.getObject("grid.util",!0,f);a.na="...";a.rowIndexTag="gridRowIndex";a.gridViewTag="gridView";a.fire=function(b,e,c){var a=b&&e&&b[e];return a&&(c?a.apply(b,c):b[e]())};a.setStyleHeightPx=function(b,e){if(0<=e){var a=b.style,d=e+"px";b&&a.height!=d&&(a.height=d)}};a.mouseEvents="mouseover mouseout mousedown mouseup click dblclick contextmenu".split(" ");a.keyEvents=["keyup","keydown","keypress"];a.funnelEvents=
-function(b,e,c,d){d=d?d:a.mouseEvents.concat(a.keyEvents);for(var g=0,f=d.length;g<f;g++)e.connect(b,"on"+d[g],c)};a.removeNode=function(b){(b=k.byId(b))&&b.parentNode&&b.parentNode.removeChild(b);return b};a.arrayCompare=function(b,a){for(var c=0,d=b.length;c<d;c++)if(b[c]!=a[c])return!1;return b.length==a.length};a.arrayInsert=function(b,a,c){b.length<=a?b[a]=c:b.splice(a,0,c)};a.arrayRemove=function(b,a){b.splice(a,1)};a.arraySwap=function(a,e,c){var d=a[e];a[e]=a[c];a[c]=d};return a});
-//@ sourceMappingURL=util.js.map
+define([
+	"../main",
+	"dojo/_base/lang",
+	"dojo/dom"
+], function(dojox, lang, dom){
+
+	var dgu = lang.getObject("grid.util", true, dojox);
+
+/*=====
+dgu = {
+	// summary:
+	//		grid utility library
+};
+=====*/
+
+	dgu.na = '...';
+	dgu.rowIndexTag = "gridRowIndex";
+	dgu.gridViewTag = "gridView";
+
+
+	dgu.fire = function(ob, ev, args){
+		var fn = ob && ev && ob[ev];
+		return fn && (args ? fn.apply(ob, args) : ob[ev]());
+	};
+	
+	dgu.setStyleHeightPx = function(inElement, inHeight){
+		if(inHeight >= 0){
+			var s = inElement.style;
+			var v = inHeight + 'px';
+			if(inElement && s['height'] != v){
+				s['height'] = v;
+			}
+		}
+	};
+	
+	dgu.mouseEvents = [ 'mouseover', 'mouseout', /*'mousemove',*/ 'mousedown', 'mouseup', 'click', 'dblclick', 'contextmenu' ];
+
+	dgu.keyEvents = [ 'keyup', 'keydown', 'keypress' ];
+
+	dgu.funnelEvents = function(inNode, inObject, inMethod, inEvents){
+		var evts = (inEvents ? inEvents : dgu.mouseEvents.concat(dgu.keyEvents));
+		for (var i=0, l=evts.length; i<l; i++){
+			inObject.connect(inNode, 'on' + evts[i], inMethod);
+		}
+	};
+
+	dgu.removeNode = function(inNode){
+		inNode = dom.byId(inNode);
+		inNode && inNode.parentNode && inNode.parentNode.removeChild(inNode);
+		return inNode;
+	};
+	
+	dgu.arrayCompare = function(inA, inB){
+		for(var i=0,l=inA.length; i<l; i++){
+			if(inA[i] != inB[i]){return false;}
+		}
+		return (inA.length == inB.length);
+	};
+	
+	dgu.arrayInsert = function(inArray, inIndex, inValue){
+		if(inArray.length <= inIndex){
+			inArray[inIndex] = inValue;
+		}else{
+			inArray.splice(inIndex, 0, inValue);
+		}
+	};
+	
+	dgu.arrayRemove = function(inArray, inIndex){
+		inArray.splice(inIndex, 1);
+	};
+	
+	dgu.arraySwap = function(inArray, inI, inJ){
+		var cache = inArray[inI];
+		inArray[inI] = inArray[inJ];
+		inArray[inJ] = cache;
+	};
+
+	return dgu;
+
+});

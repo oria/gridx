@@ -1,4 +1,26 @@
-//>>built
-require({cache:{"url:dijit/templates/MenuBarItem.html":'\x3cdiv class\x3d"dijitReset dijitInline dijitMenuItem dijitMenuItemLabel" data-dojo-attach-point\x3d"focusNode"\r\n\t \trole\x3d"menuitem" tabIndex\x3d"-1"\x3e\r\n\t\x3cspan data-dojo-attach-point\x3d"containerNode,textDirNode"\x3e\x3c/span\x3e\r\n\x3c/div\x3e\r\n'}});
-define("dijit/MenuBarItem",["dojo/_base/declare","./MenuItem","dojo/text!./templates/MenuBarItem.html"],function(a,c,b){b=a("dijit._MenuBarItemMixin",null,{templateString:b,_setIconClassAttr:null});a=a("dijit.MenuBarItem",[c,b],{});a._MenuBarItemMixin=b;return a});
-//@ sourceMappingURL=MenuBarItem.js.map
+define([
+	"dojo/_base/declare", // declare
+	"./MenuItem",
+	"dojo/text!./templates/MenuBarItem.html"
+], function(declare, MenuItem, template){
+
+	// module:
+	//		dijit/MenuBarItem
+
+	var _MenuBarItemMixin = declare("dijit._MenuBarItemMixin", null, {
+		templateString: template,
+
+		// Map widget attributes to DOMNode attributes.
+		_setIconClassAttr: null	// cancel MenuItem setter because we don't have a place for an icon
+	});
+
+	var MenuBarItem = declare("dijit.MenuBarItem", [MenuItem, _MenuBarItemMixin], {
+		// summary:
+		//		Item in a MenuBar that's clickable, and doesn't spawn a submenu when pressed (or hovered)
+
+	});
+	MenuBarItem._MenuBarItemMixin = _MenuBarItemMixin;	// dojox.mobile is accessing this
+
+
+	return MenuBarItem;
+});

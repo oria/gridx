@@ -1,21 +1,655 @@
-//>>built
-require({cache:{"url:dojox/calc/templates/Grapher.html":'\x3cdiv\x3e\r\n\x3cdiv data-dojo-attach-point\x3d"chartsParent" class\x3d"dojoxCalcChartHolder"\x3e\x3c/div\x3e\r\n\x3cdiv data-dojo-attach-point\x3d"outerDiv"\x3e\r\n\x3cdiv data-dojo-type\x3d"dijit.form.DropDownButton" data-dojo-attach-point\x3d"windowOptions" class\x3d"dojoxCalcDropDownForWindowOptions" title\x3d"Window Options"\x3e\r\n\t\x3cdiv\x3eWindow Options\x3c/div\x3e\r\n\t\x3cdiv data-dojo-type\x3d"dijit.TooltipDialog" data-dojo-attach-point\x3d"windowOptionsInside" class\x3d"dojoxCalcTooltipDialogForWindowOptions" title\x3d""\x3e\r\n\t\t\x3ctable class\x3d"dojoxCalcGraphOptionTable"\x3e\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\tWidth:\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.TextBox" data-dojo-attach-point\x3d"graphWidth" class\x3d"dojoxCalcGraphWidth" value\x3d"500" /\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\tHeight:\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.TextBox" data-dojo-attach-point\x3d"graphHeight" class\x3d"dojoxCalcGraphHeight" value\x3d"500" /\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\tX \x3e\x3d\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.TextBox" data-dojo-attach-point\x3d"graphMinX" class\x3d"dojoxCalcGraphMinX" value\x3d"-10" /\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\tX \x3c\x3d\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.TextBox" data-dojo-attach-point\x3d"graphMaxX" class\x3d"dojoxCalcGraphMaxX" value\x3d"10" /\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\tY \x3e\x3d\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.TextBox" data-dojo-attach-point\x3d"graphMinY" class\x3d"dojoxCalcGraphMinY" value\x3d"-10" /\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\tY \x3c\x3d\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.TextBox" data-dojo-attach-point\x3d"graphMaxY" class\x3d"dojoxCalcGraphMaxY" value\x3d"10" /\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\x3c/table\x3e\r\n\t\x3c/div\x3e\r\n\x3c/div\x3e\r\n\r\n\x3cBR\x3e\r\n\r\n\x3cdiv class\x3d"dojoxCalcGrapherFuncOuterDiv"\x3e\r\n\t\x3ctable class\x3d"dojoxCalcGrapherFuncTable" data-dojo-attach-point\x3d"graphTable"\x3e\r\n\t\x3c/table\x3e\r\n\x3c/div\x3e\r\n\r\n\x3cdiv data-dojo-type\x3d"dijit.form.DropDownButton" data-dojo-attach-point\x3d\'addFuncButton\' class\x3d"dojoxCalcDropDownAddingFunction"\x3e\r\n\t\x3cdiv\x3eAdd Function\x3c/div\x3e\r\n\t\x3cdiv data-dojo-type\x3d"dijit.TooltipDialog" data-dojo-attach-point\x3d"addFuncInside" class\x3d"dojoxCalcTooltipDialogAddingFunction" title\x3d""\x3e\r\n\t\t\x3ctable class\x3d"dojoxCalcGrapherModeTable"\x3e\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\tMode:\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cselect data-dojo-type\x3d"dijit.form.Select" data-dojo-attach-point\x3d"funcMode" class\x3d"dojoxCalcFunctionModeSelector"\x3e\r\n\t\t\t\t\t\t\x3coption value\x3d"y\x3d" selected\x3d"selected"\x3ey\x3d\x3c/option\x3e\r\n\t\t\t\t\t\t\x3coption value\x3d"x\x3d"\x3ex\x3d\x3c/option\x3e\r\n\t\t\t\t\t\x3c/select\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\r\n\t\t\t\x3ctr\x3e\r\n\t\t\t\t\x3ctd\x3e\r\n\t\t\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.Button" data-dojo-attach-point\x3d"createFunc" class\x3d"dojoxCalcAddFunctionButton" label\x3d"Create" /\x3e\r\n\t\t\t\t\x3c/td\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\x3c/table\x3e\r\n\t\x3c/div\x3e\r\n\x3c/div\x3e\r\n\x3cBR\x3e\r\n\x3cBR\x3e\r\n\x3ctable class\x3d"dijitInline dojoxCalcGrapherLayout"\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcGrapherButtonContainer"\x3e\r\n\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.Button" class\x3d"dojoxCalcGrapherButton" data-dojo-attach-point\x3d\'selectAllButton\' label\x3d"Select All" /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcGrapherButtonContainer"\x3e\r\n\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.Button" class\x3d"dojoxCalcGrapherButton" data-dojo-attach-point\x3d\'deselectAllButton\' label\x3d"Deselect All" /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcGrapherButtonContainer"\x3e\r\n\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.Button" class\x3d"dojoxCalcGrapherButton" data-dojo-attach-point\x3d\'drawButton\'label\x3d"Draw Selected" /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcGrapherButtonContainer"\x3e\r\n\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.Button" class\x3d"dojoxCalcGrapherButton" data-dojo-attach-point\x3d\'eraseButton\' label\x3d"Erase Selected" /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\t\x3ctr\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcGrapherButtonContainer"\x3e\r\n\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.Button" class\x3d"dojoxCalcGrapherButton" data-dojo-attach-point\x3d\'deleteButton\' label\x3d"Delete Selected" /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\t\x3ctd class\x3d"dojoxCalcGrapherButtonContainer"\x3e\r\n\t\t\t\x3cinput data-dojo-type\x3d"dijit.form.Button" class\x3d"dojoxCalcGrapherButton" data-dojo-attach-point\x3d\'closeButton\' label\x3d"Close" /\x3e\r\n\t\t\x3c/td\x3e\r\n\t\x3c/tr\x3e\r\n\x3c/table\x3e\r\n\x3c/div\x3e\r\n\x3c/div\x3e\r\n'}});
-define("dojox/calc/Grapher","dojo/_base/declare dojo/_base/lang dojo/_base/window dojo/dom-construct dojo/dom-class dojo/dom-style dijit/_WidgetBase dijit/_WidgetsInTemplateMixin dijit/_TemplatedMixin dojox/math/_base dijit/registry dijit/form/DropDownButton dijit/TooltipDialog dijit/form/TextBox dijit/form/CheckBox dijit/ColorPalette dojox/charting/Chart dojox/charting/axis2d/Default dojox/charting/plot2d/Default dojox/charting/plot2d/Lines dojox/charting/themes/Tufte dojo/colors dojo/text!./templates/Grapher.html dojox/calc/_Executor dijit/form/Button dijit/form/Select".split(" "),
-function(q,k,x,m,p,r,y,z,A,K,B,C,D,E,F,G,L,M,N,O,P,Q,H,s){var u=1E-15/9,I=Math.log(2),J={graphNumber:0,fOfX:!0,color:{stroke:"black"}};q=q("dojox.calc.Grapher",[y,A,z],{templateString:H,addXYAxes:function(a){return a.addAxis("x",{max:parseInt(this.graphMaxX.get("value")),min:parseInt(this.graphMinX.get("value")),majorLabels:!0,minorLabels:!0,minorTicks:!1,microTicks:!1,htmlLabels:!0,labelFunc:function(a){return a},maxLabelSize:30,fixUpper:"major",fixLower:"major",majorTick:{length:3}}).addAxis("y",
-{max:parseInt(this.graphMaxY.get("value")),min:parseInt(this.graphMinY.get("value")),labelFunc:function(a){return a},maxLabelSize:50,vertical:!0,microTicks:!1,minorTicks:!0,majorTick:{stroke:"black",length:3}})},selectAll:function(){for(var a=0;a<this.rowCount;a++)this.array[a][this.checkboxIndex].set("checked",!0)},deselectAll:function(){for(var a=0;a<this.rowCount;a++)this.array[a][this.checkboxIndex].set("checked",!1)},drawOne:function(a){},onDraw:function(){},erase:function(a){for(var d=0,c="Series "+
-this.array[a][this.funcNumberIndex]+"_"+d;c in this.array[a][this.chartIndex].runs;)this.array[a][this.chartIndex].removeSeries(c),d++,c="Series "+this.array[a][this.funcNumberIndex]+"_"+d;this.array[a][this.chartIndex].render();this.setStatus(a,"Hidden")},onErase:function(){for(var a=0;a<this.rowCount;a++)this.array[a][this.checkboxIndex].get("checked")&&this.erase(a)},onDelete:function(){for(var a=0;a<this.rowCount;a++)if(this.array[a][this.checkboxIndex].get("checked")){this.erase(a);for(var d=
-0;d<this.functionRef;d++)this.array[a][d]&&this.array[a][d].destroy&&this.array[a][d].destroy();this.graphTable.deleteRow(a);this.array.splice(a,1);this.rowCount--;a--}},checkboxIndex:0,functionMode:1,expressionIndex:2,colorIndex:3,dropDownIndex:4,tooltipIndex:5,colorBoxFieldsetIndex:6,statusIndex:7,chartIndex:8,funcNumberIndex:9,evaluatedExpression:10,functionRef:11,createFunction:function(){var a=this.graphTable.insertRow(-1);this.array[a.rowIndex]=[];var d=a.insertCell(-1),c=m.create("div");d.appendChild(c);
-var f=new F({},c);this.array[a.rowIndex][this.checkboxIndex]=f;p.add(c,"dojoxCalcCheckBox");d=a.insertCell(-1);f=this.funcMode.get("value");c=x.doc.createTextNode(f);d.appendChild(c);this.array[a.rowIndex][this.functionMode]=f;d=a.insertCell(-1);c=m.create("div");d.appendChild(c);f=new E({},c);this.array[a.rowIndex][this.expressionIndex]=f;p.add(c,"dojoxCalcExpressionBox");c=m.create("div");f=new G({changedColor:this.changedColor},c);p.add(c,"dojoxCalcColorPalette");this.array[a.rowIndex][this.colorIndex]=
-f;var c=m.create("div"),g=new D({content:f},c);this.array[a.rowIndex][this.tooltipIndex]=g;p.add(c,"dojoxCalcContainerOfColor");d=a.insertCell(-1);c=m.create("div");d.appendChild(c);var b=m.create("fieldset");r.set(b,{backgroundColor:"black",width:"1em",height:"1em",display:"inline"});this.array[a.rowIndex][this.colorBoxFieldsetIndex]=b;d=new C({label:"Color ",dropDown:g},c);d.containerNode.appendChild(b);this.array[a.rowIndex][this.dropDownIndex]=d;p.add(c,"dojoxCalcDropDownForColor");d=a.insertCell(-1);
-c=m.create("fieldset");c.innerHTML="Hidden";this.array[a.rowIndex][this.statusIndex]=c;p.add(c,"dojoxCalcStatusBox");d.appendChild(c);c=m.create("div");r.set(c,{position:"absolute",left:"0px",top:"0px"});this.chartsParent.appendChild(c);this.array[a.rowIndex][this.chartNodeIndex]=c;p.add(c,"dojoxCalcChart");c=(new dojox.charting.Chart(c)).setTheme(dojox.charting.themes.Tufte).addPlot("default",{type:"Lines",shadow:{dx:1,dy:1,width:2,color:[0,0,0,0.3]}});this.addXYAxes(c);this.array[a.rowIndex][this.chartIndex]=
-c;f.set("chart",c);f.set("colorBox",b);f.set("onChange",k.hitch(f,"changedColor"));this.array[a.rowIndex][this.funcNumberIndex]=this.funcNumber++;this.rowCount++},setStatus:function(a,d){this.array[a][this.statusIndex].innerHTML=d},changedColor:function(){for(var a=this.get("chart"),d=this.get("colorBox"),c=0;c<a.series.length;c++)a.series[c].stroke&&a.series[c].stroke.color&&(a.series[c].stroke.color=this.get("value"),a.dirty=!0);a.render();r.set(d,{backgroundColor:this.get("value")})},makeDirty:function(){this.dirty=
-!0},checkDirty1:function(){setTimeout(k.hitch(this,"checkDirty"),0)},checkDirty:function(){if(this.dirty){for(var a=0;a<this.rowCount;a++)this.array[a][this.chartIndex].removeAxis("x"),this.array[a][this.chartIndex].removeAxis("y"),this.addXYAxes(this.array[a][this.chartIndex]);this.onDraw()}this.dirty=!1},postCreate:function(){this.inherited(arguments);this.createFunc.set("onClick",k.hitch(this,"createFunction"));this.selectAllButton.set("onClick",k.hitch(this,"selectAll"));this.deselectAllButton.set("onClick",
-k.hitch(this,"deselectAll"));this.drawButton.set("onClick",k.hitch(this,"onDraw"));this.eraseButton.set("onClick",k.hitch(this,"onErase"));this.deleteButton.set("onClick",k.hitch(this,"onDelete"));this.dirty=!1;this.graphWidth.set("onChange",k.hitch(this,"makeDirty"));this.graphHeight.set("onChange",k.hitch(this,"makeDirty"));this.graphMaxX.set("onChange",k.hitch(this,"makeDirty"));this.graphMinX.set("onChange",k.hitch(this,"makeDirty"));this.graphMaxY.set("onChange",k.hitch(this,"makeDirty"));this.graphMinY.set("onChange",
-k.hitch(this,"makeDirty"));this.windowOptionsInside.set("onClose",k.hitch(this,"checkDirty1"));this.rowCount=this.funcNumber=0;this.array=[]},startup:function(){this.inherited(arguments);var a=B.getEnclosingWidget(this.domNode.parentNode);a&&"function"==typeof a.close?this.closeButton.set("onClick",k.hitch(a,"close")):r.set(this.closeButton.domNode,{display:"none"});this.createFunction();this.array[0][this.checkboxIndex].set("checked",!0);this.onDraw();this.erase(0);this.array[0][this.expressionIndex].value=
-""}});return k.mixin(s,{draw:function(a,d,c){c=k.mixin({},J,c);a.fullGeometry();d=!0==c.fOfX?s.generatePoints(d,"x","y",a.axes.x.scaler.bounds.span,a.axes.x.scaler.bounds.lower,a.axes.x.scaler.bounds.upper,a.axes.y.scaler.bounds.lower,a.axes.y.scaler.bounds.upper):s.generatePoints(d,"y","x",a.axes.y.scaler.bounds.span,a.axes.y.scaler.bounds.lower,a.axes.y.scaler.bounds.upper,a.axes.x.scaler.bounds.lower,a.axes.x.scaler.bounds.upper);var f=0;if(0<d.length)for(;f<d.length;f++)0<d[f].length&&a.addSeries("Series "+
-c.graphNumber+"_"+f,d[f],c.color);for(var g="Series "+c.graphNumber+"_"+f;g in a.runs;)a.removeSeries(g),f++,g="Series "+c.graphNumber+"_"+f;a.render();return d},generatePoints:function(a,d,c,f,g,b,k,m){function p(a,b,e,h){for(;b<=e;){var f={};f[d]=(b[d]+e[d])/2;f[c]=a(f[d]);if(h==f[c]||f[d]==e[d]||f[d]==b[d])return f;var g=!0;h<f[c]&&(g=!1);f[c]<e[c]?g?b=f:e=f:f[c]<b[c]&&(g?e=f:b=f)}return NaN}function r(a,b,e){for(var f=[[],[]],h;b[d]<=e[d];){var g=(b[d]+e[d])/2;h={};h[d]=g;h[c]=a(g);var g=h[d],
-k=void 0,k=-1<g&&1>g?0>g?g>=-u?-g:g/Math.ceil(g/u):u:Math.abs(g)*u,g=g+k,k={};k[d]=g;k[c]=a(g);if(Math.abs(k[c])>=Math.abs(h[c]))f[0].push(h),b=k;else{f[1].unshift(h);if(e[d]==h[d])break;e=h}}return f}function q(a,b){var c=!1,d=!1;a<b&&(c=!0);0<b&&(d=!0);return{inc:c,pos:d}}function t(a,b){return(b[c]-a[c])/(b[d]-a[d])}f=1<<Math.ceil(Math.log(f)/I);var n=(b-g)/f;b=[];var h=0,e,l;b[h]=[];for(var v=g,s=0;s<=f;v+=n,s++){g={};g[d]=v;g[c]=a({_name:d,_value:v,_graphing:!0});if(null==g[d]||null==g[c])return{};
-if(!isNaN(g[c])&&!isNaN(g[d]))if(b[h].push(g),3==b[h].length)e=q(t(b[h][b[h].length-3],b[h][b[h].length-2]),t(b[h][b[h].length-2],b[h][b[h].length-1]));else if(!(4>b[h].length)&&(l=q(t(b[h][b[h].length-3],b[h][b[h].length-2]),t(b[h][b[h].length-2],b[h][b[h].length-1])),e.inc!=l.inc||e.pos!=l.pos)){var w=r(a,b[h][b[h].length-3],b[h][b[h].length-1]);g=b[h].pop();b[h].pop();for(e=0;e<w[0].length;e++)b[h].push(w[0][e]);for(e=1;e<w.length;e++)b[++h]=w.pop();b[h].push(g);e=l}}for(;1<b.length;){for(e=0;e<
-b[1].length;e++)b[0][b[0].length-1][d]!=b[1][e][d]&&b[0].push(b[1][e]);b.splice(1,1)}b=b[0];f=0;n=[[]];for(e=0;e<b.length;e++)if(isNaN(b[e][c])||isNaN(b[e][d])){for(;isNaN(b[e][c])||isNaN(b[e][d]);)b.splice(e,1);n[++f]=[];e--}else if(b[e][c]>m||b[e][c]<k){0<e&&(b[e-1].y!=k&&b[e-1].y!=m)&&(l=t(b[e-1],b[e]),1E200<l?l=1E200:-1E200>l&&(l=-1E200),h=b[e][c]>m?m:k,g=b[e][c]-l*b[e][d],l=(h-g)/l,g={},g[d]=l,g[c]=a(l),g[c]!=h&&(g=p(a,b[e-1],b[e],h)),n[f].push(g),n[++f]=[]);for(;e<b.length&&(b[e][c]>m||b[e][c]<
-k);)e++;if(e>=b.length){0==n[f].length&&n.splice(f,1);break}0<e&&(b[e].y!=k&&b[e].y!=m)&&(l=t(b[e-1],b[e]),1E200<l?l=1E200:-1E200>l&&(l=-1E200),h=b[e-1][c]>m?m:k,g=b[e][c]-l*b[e][d],l=(h-g)/l,g={},g[d]=l,g[c]=a(l),g[c]!=h&&(g=p(a,b[e-1],b[e],h)),n[f].push(g),n[f].push(b[e]))}else n[f].push(b[e]);return n},Grapher:q})});
-//@ sourceMappingURL=Grapher.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/window",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dijit/_WidgetBase",
+	"dijit/_WidgetsInTemplateMixin",
+	"dijit/_TemplatedMixin",
+	"dojox/math/_base",
+	"dijit/registry",
+	"dijit/form/DropDownButton",
+	"dijit/TooltipDialog",
+	"dijit/form/TextBox",
+	"dijit/form/CheckBox",
+	"dijit/ColorPalette",
+	"dojox/charting/Chart",
+	"dojox/charting/axis2d/Default",
+	"dojox/charting/plot2d/Default",
+	"dojox/charting/plot2d/Lines",
+	"dojox/charting/themes/Tufte",
+	"dojo/colors",
+	"dojo/text!./templates/Grapher.html",
+	"dojox/calc/_Executor",
+	"dijit/form/Button", // template
+	"dijit/form/Select" // template
+], function(declare, lang, win, domConstruct, domClass, domStyle, WidgetBase, WidgetsInTemplateMixin, TemplatedMixin, math, registry, DropDownButton, TooltipDialog, TextBox, CheckBox, ColorPalette, Chart, axis2d, plot2d, Lines, Tufte, colors, template, calc){
+
+	var
+		epsilon = 1e-15 / 9,
+		bigNumber = 1e200,
+		log2 = Math.log(2),
+		defaultParams = {graphNumber:0, fOfX:true, color:{stroke:"black"}};
+
+	var Grapher = declare(
+		"dojox.calc.Grapher",
+		[WidgetBase, TemplatedMixin, WidgetsInTemplateMixin],
+	{
+		// summary:
+		//		The dialog layout for making graphs
+
+		templateString: template,
+
+		addXYAxes: function(chart){
+			// summary:
+			//		add or re-add the default x/y axes to the Chart provided
+			// chart: dojox.charting.Chart
+
+			return chart.addAxis("x", {
+				max: parseInt(this.graphMaxX.get("value")),
+				min: parseInt(this.graphMinX.get("value")),
+				majorLabels: true,
+				minorLabels: true,
+				//includeZero: true,
+				minorTicks: false,
+				microTicks: false,
+				//majorTickStep: 1,
+				htmlLabels: true,
+				labelFunc: function(value){
+					return value;
+				},
+				maxLabelSize: 30,
+				fixUpper: "major", fixLower: "major",
+				majorTick: { length: 3 }
+			}).
+			addAxis("y", {
+				max: parseInt(this.graphMaxY.get("value")),
+				min: parseInt(this.graphMinY.get("value")),
+				labelFunc: function(value){
+					return value;
+				},
+				maxLabelSize: 50,
+				vertical: true,
+				// htmlLabels: false,
+				microTicks: false,
+				minorTicks: true,
+				majorTick: { stroke: "black", length: 3 }
+			});
+		},
+		selectAll: function(){
+			// summary:
+			//		select all checkboxes inside the function table
+			for(var i = 0; i < this.rowCount; i++){
+				this.array[i][this.checkboxIndex].set("checked", true);
+			}
+		},
+		deselectAll: function(){
+			// summary:
+			//		deselect all checkboxes inside the function table
+			for(var i = 0; i < this.rowCount; i++){
+				this.array[i][this.checkboxIndex].set("checked", false);
+			}
+		},
+		drawOne: function(i){
+			// i is a the index to this.array
+			// override me
+		},
+		onDraw: function(){
+			console.log("Draw was pressed");
+			// override me
+		},
+		erase: function(i){
+			// summary:
+			//		erase the chart inside this.array with the index i
+			// i: Integer
+			//		index to this.array that represents the current row number in the table
+			var nameNum = 0;
+			var name = "Series "+this.array[i][this.funcNumberIndex]+"_"+nameNum;
+			while(name in this.array[i][this.chartIndex].runs){
+				this.array[i][this.chartIndex].removeSeries(name);
+				nameNum++;
+				name = "Series "+this.array[i][this.funcNumberIndex]+"_"+nameNum;
+			}
+			this.array[i][this.chartIndex].render();
+			this.setStatus(i, "Hidden");
+		},
+		onErase: function(){
+			// summary:
+			//		the erase button's onClick method
+			//		it see's if the checkbox is checked and then erases it if it is.
+			for(var i = 0; i < this.rowCount; i++){
+				if(this.array[i][this.checkboxIndex].get("checked")){
+					this.erase(i);
+				}
+			}
+		},
+		onDelete: function(){
+			// summary:
+			//		The delete button's onClick method.
+			//		Delete all of the selected rows.
+			for(var i = 0; i < this.rowCount; i++){
+				if(this.array[i][this.checkboxIndex].get("checked")){
+					this.erase(i);
+					for(var k = 0; k < this.functionRef; k++){
+						if(this.array[i][k] && this.array[i][k]["destroy"]){
+							this.array[i][k].destroy();
+						}
+					}
+					this.graphTable.deleteRow(i);
+					this.array.splice(i, 1);
+					this.rowCount--;
+					i--;
+				}
+			}
+		},
+		// attributes to name the indices of this.array
+		checkboxIndex:		0,
+		functionMode:		1,
+		expressionIndex:	2,
+		colorIndex:		3,
+		dropDownIndex:		4,
+		tooltipIndex:		5,
+		colorBoxFieldsetIndex:	6,
+		statusIndex:		7,
+		chartIndex:		8,
+		funcNumberIndex:	9,
+		evaluatedExpression:	10,
+		functionRef:		11,
+
+		createFunction: function(){
+			// summary:
+			//		create a new row in the table with all of the dojo objects.
+
+			var tr = this.graphTable.insertRow(-1);
+			this.array[tr.rowIndex] = [];
+			var td = tr.insertCell(-1);
+			var d = domConstruct.create('div');
+			td.appendChild(d);
+			var checkBox = new CheckBox({}, d);
+			this.array[tr.rowIndex][this.checkboxIndex] = checkBox;
+			domClass.add(d, "dojoxCalcCheckBox");
+
+			td = tr.insertCell(-1);
+			var funcMode = this.funcMode.get("value");
+			d = win.doc.createTextNode(funcMode);
+			td.appendChild(d);
+			this.array[tr.rowIndex][this.functionMode] = funcMode;
+			//domClass.add(d, "dojoxCalcFunctionMode");// cannot use text nodes
+
+			td = tr.insertCell(-1);
+			d = domConstruct.create('div');
+			td.appendChild(d);
+			var expression = new TextBox({}, d);
+			this.array[tr.rowIndex][this.expressionIndex] = expression;
+			domClass.add(d, "dojoxCalcExpressionBox");
+
+			var b = domConstruct.create('div');
+			var color = new ColorPalette({changedColor:this.changedColor}, b);
+			domClass.add(b, "dojoxCalcColorPalette");
+
+			this.array[tr.rowIndex][this.colorIndex] = color;
+
+			var c = domConstruct.create('div');
+			var dialog = new TooltipDialog({content:color}, c);
+			this.array[tr.rowIndex][this.tooltipIndex] = dialog;
+			domClass.add(c, "dojoxCalcContainerOfColor");
+
+			td = tr.insertCell(-1);
+			d = domConstruct.create('div');
+			td.appendChild(d);
+
+			var colorBoxFieldset = domConstruct.create('fieldset');
+			domStyle.set(colorBoxFieldset, { backgroundColor: "black", width: "1em", height: "1em", display: "inline" });
+			this.array[tr.rowIndex][this.colorBoxFieldsetIndex] = colorBoxFieldset;
+
+			var drop = new DropDownButton({label:"Color ", dropDown:dialog}, d);
+			drop.containerNode.appendChild(colorBoxFieldset);
+			this.array[tr.rowIndex][this.dropDownIndex] = drop;
+			domClass.add(d, "dojoxCalcDropDownForColor");
+
+			/*td = tr.insertCell(-1);
+			d = domConstruct.create('div');
+			td.appendChild(d);
+			var status = new TextBox({style:"width:50px", value:"Hidden", readOnly:true}, d);//hidden, drawn, or error
+			this.array[tr.rowIndex][this.statusIndex] = status;
+			domClass.add(d, "dojoxCalcStatusBox");*/
+
+			td = tr.insertCell(-1);
+			d = domConstruct.create('fieldset');
+			d.innerHTML = "Hidden";
+			this.array[tr.rowIndex][this.statusIndex] = d;
+			domClass.add(d, "dojoxCalcStatusBox");
+			td.appendChild(d);
+
+			d = domConstruct.create('div');
+			domStyle.set(d, { position: "absolute", left: "0px", top: "0px" })
+			this.chartsParent.appendChild(d);
+			this.array[tr.rowIndex][this.chartNodeIndex] = d;
+			domClass.add(d, "dojoxCalcChart");
+			var chart = new dojox.charting.Chart(d).setTheme(dojox.charting.themes.Tufte).
+				addPlot("default", { type: "Lines", shadow:  {dx: 1, dy: 1, width: 2, color: [0, 0, 0, 0.3]} });
+			this.addXYAxes(chart);
+			this.array[tr.rowIndex][this.chartIndex] = chart;
+			color.set("chart", chart);
+			color.set("colorBox", colorBoxFieldset);
+			color.set("onChange", lang.hitch(color, 'changedColor'));
+
+			this.array[tr.rowIndex][this.funcNumberIndex] = this.funcNumber++;
+			this.rowCount++;
+		},
+		setStatus: function(i, status){
+			// summary:
+			//		set the status of the row i to be status
+			// i: Integer
+			//		index of this.array as well as a row index
+			// status: String
+			//		either Error, Hidden, or Drawn
+			this.array[i][this.statusIndex].innerHTML = status; //this.array[i][this.statusIndex].set("value", status);
+		},
+		changedColor: function(){
+			// summary:
+			//		Make the color of the chart the new color.
+			//		The context is changed to the colorPalette, and a reference to chart was added to it a an attribute.
+			var chart = this.get("chart");
+			var colorBoxFieldset = this.get("colorBox");
+			for(var i = 0; i < chart.series.length; i++){
+				if(chart.series[i]["stroke"]){
+					if(chart.series[i].stroke["color"]){
+						chart.series[i]["stroke"].color = this.get("value");
+						chart.dirty = true;
+					}
+				}
+			}
+			chart.render();
+			domStyle.set(colorBoxFieldset, { backgroundColor: this.get("value") });
+		},
+		makeDirty: function(){
+			// summary:
+			//		if something in the window options is changed, this is called
+			this.dirty = true;
+		},
+		checkDirty1: function(){
+			// summary:
+			//		to stay in sync with onChange, checkDirty is called with a timeout
+			setTimeout(lang.hitch(this, 'checkDirty'), 0);
+		},
+		checkDirty: function(){
+			// summary:
+			//		adjust all charts in this.array according to any changes in window options
+			if(this.dirty){
+				// change the axes of all charts if it is dirty
+				for(var i = 0; i < this.rowCount; i++){
+					this.array[i][this.chartIndex].removeAxis("x");
+					this.array[i][this.chartIndex].removeAxis("y");
+					this.addXYAxes(this.array[i][this.chartIndex]);
+				}
+				this.onDraw();
+			}
+			this.dirty = false;
+		},
+		postCreate: function(){
+			// summary:
+			//		add Event handlers, some additional attributes, etc
+			this.inherited(arguments);// this is super class postCreate
+			this.createFunc.set("onClick", lang.hitch(this, 'createFunction'));
+
+			this.selectAllButton.set("onClick", lang.hitch(this, 'selectAll'));
+			this.deselectAllButton.set("onClick", lang.hitch(this, 'deselectAll'));
+
+			this.drawButton.set("onClick", lang.hitch(this, 'onDraw'));
+			this.eraseButton.set("onClick", lang.hitch(this, 'onErase'));
+			this.deleteButton.set("onClick", lang.hitch(this, 'onDelete'));
+
+			this.dirty = false;
+			this.graphWidth.set("onChange", lang.hitch(this, 'makeDirty'));
+			this.graphHeight.set("onChange", lang.hitch(this, 'makeDirty'));
+			this.graphMaxX.set("onChange", lang.hitch(this, 'makeDirty'));
+			this.graphMinX.set("onChange", lang.hitch(this, 'makeDirty'));
+			this.graphMaxY.set("onChange", lang.hitch(this, 'makeDirty'));
+			this.graphMinY.set("onChange", lang.hitch(this, 'makeDirty'));
+			this.windowOptionsInside.set("onClose", lang.hitch(this, 'checkDirty1'));
+
+			this.funcNumber = 0;
+			this.rowCount = 0;
+			this.array = [];
+
+		},
+		startup: function(){
+			// summary:
+			//		make sure the parent has a close button if it needs to be able to close
+			this.inherited(arguments);// this is super class startup
+			// close is only valid if the parent is a widget with a close function
+			var parent = registry.getEnclosingWidget(this.domNode.parentNode);
+			if(parent && typeof parent.close == "function"){
+				this.closeButton.set("onClick", lang.hitch(parent, 'close'));
+			}else{
+				domStyle.set(this.closeButton.domNode, { display: "none" }); // hide the button
+			}
+			// add one row at the start
+			this.createFunction();
+
+			// make the graph bounds appear initially
+			this.array[0][this.checkboxIndex].set("checked", true);
+			this.onDraw();
+			this.erase(0);
+			this.array[0][this.expressionIndex].value = "";
+		}
+	});
+
+	return lang.mixin(calc, {
+		draw: function(/*Chart*/ chart, /*Function*/ functionToGraph, params){
+			// summary:
+			//		graph a chart with the given function.
+			// chart: dojox.charting.Chart
+			// functionToGraph: Function
+			//		Function with one numeric parameter (x or y typically)
+			// params: Object
+			//		can contain the number of the graph in the chart it is (an integer), a boolean saying if the functionToGraph is a function of x (otherwise y)
+			//		and the color, which is an object with a stroke with a color's name eg: color:{stroke:"black"}
+
+			params = lang.mixin({}, defaultParams, params);
+			chart.fullGeometry();
+			var x;
+			var y;
+			var points;
+			if(params.fOfX==true){
+				x = 'x';
+				y = 'y';
+				points = calc.generatePoints(functionToGraph, x, y, chart.axes.x.scaler.bounds.span, chart.axes.x.scaler.bounds.lower, chart.axes.x.scaler.bounds.upper, chart.axes.y.scaler.bounds.lower, chart.axes.y.scaler.bounds.upper);
+			}else{
+				x = 'y';
+				y = 'x';
+				points = calc.generatePoints(functionToGraph, x, y, chart.axes.y.scaler.bounds.span, chart.axes.y.scaler.bounds.lower, chart.axes.y.scaler.bounds.upper, chart.axes.x.scaler.bounds.lower, chart.axes.x.scaler.bounds.upper);
+			}
+
+			var i = 0;
+
+			if(points.length > 0){
+				for(; i < points.length; i++){
+					if(points[i].length>0){
+						chart.addSeries("Series "+params.graphNumber+"_"+i, points[i], params.color);
+					}
+				}
+			}
+			// you only need to remove the excess i's
+			var name = "Series "+params.graphNumber+"_"+i;
+			while(name in chart.runs){
+				chart.removeSeries(name);
+				i++;
+				name = "Series "+params.graphNumber+"_"+i;
+			}
+			chart.render();
+			return points;
+		},
+
+		generatePoints: function(/*Function*/ funcToGraph, /*String*/ x, /*String*/ y, /*Number*/ width, /*Number*/ minX, /*Number*/ maxX, /*Number*/ minY, /*Number*/ maxY){
+			// summary:
+			//		create the points with information about the graph.
+			// funcToGraph: Function
+			//		A function with one numeric parameter (x or y typically)
+			// x: String
+			//		x and y are Strings which always have the values of "x" or "y".  If y="x" and x="y" then it is creating points for the function as though it was a function of y
+			// y: String
+			//		x and y are Strings which always have the values of "x" or "y".  If y="x" and x="y" then it is creating points for the function as though it was a function of y
+			// minX:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// maxX:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// minY:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// maxY:
+			//		minX, maxX, minY, and maxY are all bounds of the chart.  If x="y" then maxY should be the maximum bound of x rather than y
+			// width:
+			//		pixel width of the chart
+			// output:
+			//		an array of arrays of points
+			var pow2 = (1 << Math.ceil(Math.log(width) / log2));
+			var
+				dx = (maxX - minX) / pow2, // divide by 2^n instead of width to avoid loss of precision
+				points = [], // [{x:value, y:value2},...]
+				series = 0,
+				slopeTrend,
+				slopeTrendTemp;
+
+			points[series] = [];
+
+			var i = minX, k, p;
+			for(var counter = 0; counter <= pow2; i += dx, counter++){
+				p = {};
+				p[x] = i;
+				p[y] = funcToGraph({_name:x, _value:i, _graphing:true});//funcToGraph(i);
+				if(p[x] == null || p[y] == null){
+					return {};// someone pushed cancel in the val code
+				}
+				if(isNaN(p[y]) || isNaN(p[x])){
+					continue;
+				}
+				points[series].push(p);
+
+				if(points[series].length == 3){
+					slopeTrend = getSlopePairTrend(slope(points[series][points[series].length - 3], points[series][points[series].length-2]), slope(points[series][points[series].length-2], points[series][points[series].length-1]));
+					continue;
+				}
+				if(points[series].length < 4){
+					continue;
+				}
+
+				slopeTrendTemp = getSlopePairTrend(slope(points[series][points[series].length - 3], points[series][points[series].length-2]), slope(points[series][points[series].length-2], points[series][points[series].length-1]));
+				if(slopeTrend.inc != slopeTrendTemp.inc || slopeTrend.pos != slopeTrendTemp.pos){
+					// var a = asymptoteSearch(funcToGraph, points[series][points[series].length - 2], points[series][points[series].length-1]);
+					var a = asymptoteSearch(funcToGraph, points[series][points[series].length - 3], points[series][points[series].length-1]);
+					p = points[series].pop();
+					// this pop was added after changing the var a line above
+					points[series].pop();
+					for(var j = 0; j < a[0].length; j++){
+						points[series].push(a[0][j]);
+					}
+					for(k = 1; k < a.length; k++){
+						points[++series] = a.pop();
+					}
+					points[series].push(p);
+					slopeTrend = slopeTrendTemp;
+				}
+			}
+			while(points.length > 1){
+				for(k = 0; k < points[1].length; k++){
+					if(points[0][points[0].length - 1][x] == points[1][k][x]){
+						continue;
+					}
+					points[0].push(points[1][k]);
+				}
+				points.splice(1, 1);
+			}
+			points = points[0];
+
+			// make new series when it goes off the graph
+			var s = 0;
+			var points2 = [ [] ];
+			for(k = 0; k < points.length; k++){
+				var x1, y1, b, slope1;
+				if(isNaN(points[k][y]) || isNaN(points[k][x])){
+					while(isNaN(points[k][y]) || isNaN(points[k][x])){
+						points.splice(k, 1);
+					}
+					points2[++s] = [];
+					k--;
+				}else if(points[k][y] > maxY || points[k][y] < minY){
+					// make the last point's y equal maxY and find a matching x
+					if(k > 0 && points[k - 1].y!=minY && points[k - 1].y!=maxY){
+						slope1 = slope(points[k - 1], points[k]);
+						if(slope1 > bigNumber){
+							slope1 = bigNumber;
+						}else if(slope1 < -bigNumber){
+							slope1 = -bigNumber;
+						}
+						if(points[k][y] > maxY){
+							y1 = maxY;
+						}else{
+							y1 = minY;
+						}
+						b = points[k][y] - slope1 * points[k][x];
+						x1 = (y1 - b) / slope1;
+
+						p = {};
+						p[x] = x1;
+						p[y] = funcToGraph(x1);//y1;//
+
+						if(p[y]!=y1){
+							p = findMinOrMaxY(funcToGraph, points[k - 1], points[k], y1);
+						}
+
+						points2[s].push(p);
+						// setup the next series
+						points2[++s] = []
+					}
+					var startK = k;
+					while(k < points.length && (points[k][y] > maxY || points[k][y] < minY)){
+						k++;
+					}
+					if(k >= points.length){
+						if(points2[s].length == 0){
+							points2.splice(s, 1);
+						}
+						break;
+					}
+					// connect the end graph
+					if(k > 0 && points[k].y != minY && points[k].y != maxY){
+						slope1 = slope(points[k - 1], points[k]);
+						if(slope1 > bigNumber){
+							slope1 = bigNumber;
+						}else if(slope1 < -bigNumber){
+							slope1 = -bigNumber;
+						}
+						if(points[k - 1][y] > maxY){
+							y1 = maxY;
+						}else{
+							y1 = minY;
+						}
+						b = points[k][y] - slope1 * points[k][x];
+						x1 = (y1 - b) / slope1;
+
+						p = {};
+						p[x] = x1;
+						p[y] = funcToGraph(x1);//y1;//
+						if(p[y]!=y1){
+							p = findMinOrMaxY(funcToGraph, points[k - 1], points[k], y1);
+						}
+						points2[s].push(p);
+						points2[s].push(points[k]);
+					}
+				}else{
+					points2[s].push(points[k]);
+				}
+			}
+			return points2;
+
+			function findMinOrMaxY(funcToGraph, left, right, minMaxY){
+
+				while(left<=right){
+					var midX = (left[x]+right[x])/2;
+					var mid = {};
+					mid[x] = midX;
+					mid[y] = funcToGraph(mid[x]);
+
+					if(minMaxY==mid[y]||mid[x]==right[x]||mid[x]==left[x]){
+						return mid;
+					}
+
+					var moveTowardsLarger = true;
+					if(minMaxY<mid[y]){
+						moveTowardsLarger = false;
+					}
+
+					if(mid[y]<right[y]){
+						if(moveTowardsLarger){
+							left = mid;
+						}else{
+							right = mid;
+						}
+					}else if(mid[y]<left[y]){
+						if(!moveTowardsLarger){
+							left = mid;
+						}else{
+							right = mid;
+						}
+					}
+				}
+				return NaN;
+			}
+
+			function asymptoteSearch(funcToGraph, pointStart, pointStop){
+				var
+					pointTemp = [ [], [] ],
+					left = pointStart,
+					right = pointStop,
+					midpoint;
+
+
+				while(left[x] <= right[x]){
+					var midX = (left[x] + right[x]) / 2;
+
+					midpoint = {};
+					midpoint[x] = midX;
+					midpoint[y] = funcToGraph(midX);
+
+					var rx = nextNumber(midpoint[x]);
+					var rightPoint = {};
+					rightPoint[x] = rx;
+					rightPoint[y] = funcToGraph(rx);
+
+					if(Math.abs(rightPoint[y]) >= Math.abs(midpoint[y])){
+						pointTemp[0].push(midpoint);
+						left = rightPoint;
+					}else{
+						pointTemp[1].unshift(midpoint);
+						if(right[x] == midpoint[x]){
+							break;
+						}
+						right = midpoint;
+					}
+						
+				}
+				return pointTemp;
+			}
+
+			function getSlopePairTrend(slope1, slope2){
+				var
+					isInc = false,
+					isPos = false;
+
+				if(slope1 < slope2){
+					isInc = true;
+				}
+				if(slope2 > 0){
+					isPos = true;
+				}
+				return { inc: isInc, pos: isPos };
+			}
+
+			function nextNumber(v){
+				var delta;
+				if(v > -1 && v < 1){
+					if(v < 0){ // special handling as we approach 0
+						if(v >= -epsilon){
+							delta = -v; // always stop at 0
+						}else{
+							delta = v / Math.ceil(v / epsilon); // divide distance to 0 into equal tiny chunks
+						}
+					}else{
+						delta = epsilon;
+					}
+				}else{
+					delta = Math.abs(v) * epsilon;
+				}
+				return v + delta;
+			}
+
+			function slope(p1, p2){
+				return (p2[y] - p1[y]) / (p2[x] - p1[x]);
+			}
+		},
+		Grapher: Grapher
+	});
+});

@@ -55,6 +55,11 @@ html.mobile,
 .mblImageIcon {
   vertical-align: top;
 }
+.unselectable {
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
 /* iOS 6 specific */
 .dj_ios6 .mblColorBlue {
   background-image: -webkit-gradient(linear, left top, left bottom, from(#89abec), to(#2057c1));
@@ -66,14 +71,12 @@ html.mobile,
 }
 .dj_ios6.dj_phone {
   /* mblColorBlue also defined here to correctly show up in openers */
-
 }
 .dj_ios6.dj_phone body {
   background-color: #d7dce5;
 }
 .dj_ios6.dj_phone body.mblIOS6Stripes {
   /* Vertical stripes on webkit */
-
   background-image: -webkit-gradient(linear, left top, right top, from(transparent), to(#d4d9e3), color-stop(0.7, transparent), color-stop(0.7, #d4d9e3));
   background-size: 8px 8px;
 }

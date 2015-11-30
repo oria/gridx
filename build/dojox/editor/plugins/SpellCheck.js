@@ -1,32 +1,1417 @@
-//>>built
-define("dojox/editor/plugins/SpellCheck","dojo dijit dojo/io/script dijit/popup dijit/_Widget dijit/_Templated dijit/_editor/_Plugin dijit/form/TextBox dijit/form/DropDownButton dijit/TooltipDialog dijit/form/MultiSelect dijit/Menu dojo/i18n!dojox/editor/plugins/nls/SpellCheck".split(" "),function(d,m,B,x,y,z,A){d.experimental("dojox.editor.plugins.SpellCheck");var s=d.declare("dojox.editor.plugins._spellCheckControl",[y,z],{widgetsInTemplate:!0,templateString:"\x3ctable role\x3d'presentation' class\x3d'dijitEditorSpellCheckTable'\x3e\x3ctr\x3e\x3ctd colspan\x3d'3' class\x3d'alignBottom'\x3e\x3clabel for\x3d'${textId}' id\x3d'${textId}_label'\x3e${unfound}\x3c/label\x3e\x3cdiv class\x3d'dijitEditorSpellCheckBusyIcon' id\x3d'${id}_progressIcon'\x3e\x3c/div\x3e\x3c/td\x3e\x3c/tr\x3e\x3ctr\x3e\x3ctd class\x3d'dijitEditorSpellCheckBox'\x3e\x3cinput dojoType\x3d'dijit.form.TextBox' required\x3d'false' intermediateChanges\x3d'true' class\x3d'dijitEditorSpellCheckBox' dojoAttachPoint\x3d'unfoundTextBox' id\x3d'${textId}'/\x3e\x3c/td\x3e\x3ctd\x3e\x3cbutton dojoType\x3d'dijit.form.Button' class\x3d'blockButton' dojoAttachPoint\x3d'skipButton'\x3e${skip}\x3c/button\x3e\x3c/td\x3e\x3ctd\x3e\x3cbutton dojoType\x3d'dijit.form.Button' class\x3d'blockButton' dojoAttachPoint\x3d'skipAllButton'\x3e${skipAll}\x3c/button\x3e\x3c/td\x3e\x3c/tr\x3e\x3ctr\x3e\x3ctd class\x3d'alignBottom'\x3e\x3clabel for\x3d'${selectId}'\x3e${suggestions}\x3c/td\x3e\x3c/label\x3e\x3ctd colspan\x3d'2'\x3e\x3cbutton dojoType\x3d'dijit.form.Button' class\x3d'blockButton' dojoAttachPoint\x3d'toDicButton'\x3e${toDic}\x3c/button\x3e\x3c/td\x3e\x3c/tr\x3e\x3ctr\x3e\x3ctd\x3e\x3cselect dojoType\x3d'dijit.form.MultiSelect' id\x3d'${selectId}' class\x3d'dijitEditorSpellCheckBox listHeight' dojoAttachPoint\x3d'suggestionSelect'\x3e\x3c/select\x3e\x3c/td\x3e\x3ctd colspan\x3d'2'\x3e\x3cbutton dojoType\x3d'dijit.form.Button' class\x3d'blockButton' dojoAttachPoint\x3d'replaceButton'\x3e${replace}\x3c/button\x3e\x3cdiv class\x3d'topMargin'\x3e\x3cbutton dojoType\x3d'dijit.form.Button' class\x3d'blockButton' dojoAttachPoint\x3d'replaceAllButton'\x3e${replaceAll}\x3c/button\x3e\x3cdiv\x3e\x3c/td\x3e\x3c/tr\x3e\x3ctr\x3e\x3ctd\x3e\x3cdiv class\x3d'topMargin'\x3e\x3cbutton dojoType\x3d'dijit.form.Button' dojoAttachPoint\x3d'cancelButton'\x3e${cancel}\x3c/button\x3e\x3c/div\x3e\x3c/td\x3e\x3ctd\x3e\x3c/td\x3e\x3ctd\x3e\x3c/td\x3e\x3c/tr\x3e\x3c/table\x3e",
-constructor:function(){this.isOpen=this.isChanged=this.ignoreChange=!1;this.closable=!0},postMixInProperties:function(){this.id=m.getUniqueId(this.declaredClass.replace(/\./g,"_"));this.textId=this.id+"_textBox";this.selectId=this.id+"_select"},postCreate:function(){var a=this.suggestionSelect;d.removeAttr(a.domNode,"multiple");a.addItems=function(a){var c=this,h=null;a&&0<a.length&&d.forEach(a,function(a,b){h=d.create("option",{innerHTML:a,value:a},c.domNode);0==b&&(h.selected=!0)})};a.removeItems=
-function(){d.empty(this.domNode)};a.deselectAll=function(){this.containerNode.selectedIndex=-1};this.connect(this,"onKeyPress","_cancel");this.connect(this.unfoundTextBox,"onKeyPress","_enter");this.connect(this.unfoundTextBox,"onChange","_unfoundTextBoxChange");this.connect(this.suggestionSelect,"onKeyPress","_enter");this.connect(this.skipButton,"onClick","onSkip");this.connect(this.skipAllButton,"onClick","onSkipAll");this.connect(this.toDicButton,"onClick","onAddToDic");this.connect(this.replaceButton,
-"onClick","onReplace");this.connect(this.replaceAllButton,"onClick","onReplaceAll");this.connect(this.cancelButton,"onClick","onCancel")},onSkip:function(){},onSkipAll:function(){},onAddToDic:function(){},onReplace:function(){},onReplaceAll:function(){},onCancel:function(){},onEnter:function(){},focus:function(){this.unfoundTextBox.focus()},_cancel:function(a){a.keyCode==d.keys.ESCAPE&&(this.onCancel(),d.stopEvent(a))},_enter:function(a){a.keyCode==d.keys.ENTER&&(this.onEnter(),d.stopEvent(a))},_unfoundTextBoxChange:function(){var a=
-this.textId+"_label";this.ignoreChange?d.byId(a).innerHTML=this.unfound:(d.byId(a).innerHTML=this.replaceWith,this.isChanged=!0,this.suggestionSelect.deselectAll())},_setUnfoundWordAttr:function(a){this.unfoundTextBox.set("value",a||"")},_getUnfoundWordAttr:function(){return this.unfoundTextBox.get("value")},_setSuggestionListAttr:function(a){var b=this.suggestionSelect;a=a||[];b.removeItems();b.addItems(a)},_getSelectedWordAttr:function(){var a=this.suggestionSelect.getSelected();return a&&0<a.length?
-a[0].value:this.unfoundTextBox.get("value")},_setDisabledAttr:function(a){this.skipButton.set("disabled",a);this.skipAllButton.set("disabled",a);this.toDicButton.set("disabled",a);this.replaceButton.set("disabled",a);this.replaceAllButton.set("disabled",a)},_setInProgressAttr:function(a){d.toggleClass(this.id+"_progressIcon","hidden",!a)}}),w=d.declare("dojox.editor.plugins._SpellCheckScriptMultiPart",null,{ACTION_QUERY:"query",ACTION_UPDATE:"update",callbackHandle:"callback",maxBufferLength:100,
-delimiter:" ",label:"response",_timeout:3E4,SEC:1E3,constructor:function(){this.serviceEndPoint="";this._queue=[];this.isWorking=!1;this.exArgs=null;this._counter=0},send:function(a,b){var c=this,h=this.delimiter,e=this.maxBufferLength,f=this.label,m=this.serviceEndPoint,t=this.callbackHandle,r=this.exArgs,u=this._timeout,q=0,g=0;this._result||(this._result=[]);b=b||this.ACTION_QUERY;var k=function(){var n=[],l=0;if(a&&0<a.length){c.isWorking=!0;var k=a.length;do{q=g+1;if((g+=e)>k)g=k;else for(;h&&
-a.charAt(g)!=h&&g<=k;)g++;n.push({l:q,r:g});l++}while(g<k);d.forEach(n,function(e,h){var g={url:m,action:b,timeout:u,callbackParamName:t,handle:function(a,b){if(++c._counter<=this.size&&!(a instanceof Error)&&a[f]&&d.isArray(a[f])){var e=this.offset;d.forEach(a[f],function(a){a.offset+=e});c._result[this.number]=a[f]}c._counter==this.size&&(c._finalizeCollection(this.action),c.isWorking=!1,0<c._queue.length&&c._queue.shift()())}};g.content=r?d.mixin(r,{action:b,content:a.substring(e.l-1,e.r)}):{action:b,
-content:a.substring(e.l-1,e.r)};g.size=l;g.number=h;g.offset=e.l-1;d.io.script.get(g)})}};c.isWorking?c._queue.push(k):k()},_finalizeCollection:function(a){for(var b=this._result,c=b.length,h=0;h<c;h++)var e=b.shift(),b=b.concat(e);if(a==this.ACTION_QUERY)this.onLoad(b);this._counter=0;this._result=[]},onLoad:function(a){},setWaitingTime:function(a){this._timeout=a*this.SEC}}),p=d.declare("dojox.editor.plugins.SpellCheck",[A],{url:"",bufferLength:100,interactive:!1,timeout:30,button:null,_editor:null,
-exArgs:null,_cursorSpan:'\x3cspan class\x3d"cursorPlaceHolder"\x3e\x3c/span\x3e',_cursorSelector:"cursorPlaceHolder",_incorrectWordsSpan:"\x3cspan class\x3d'incorrectWordPlaceHolder'\x3e${text}\x3c/span\x3e",_ignoredIncorrectStyle:{cursor:"inherit",borderBottom:"none",backgroundColor:"transparent"},_normalIncorrectStyle:{cursor:"pointer",borderBottom:"1px dotted red",backgroundColor:"yellow"},_highlightedIncorrectStyle:{borderBottom:"1px dotted red",backgroundColor:"#b3b3ff"},_selector:"incorrectWordPlaceHolder",
-_maxItemNumber:3,constructor:function(){this._spanList=[];this._cache={};this._enabled=!0;this._iterator=0},setEditor:function(a){this._editor=a;this._initButton();this._setNetwork();this._connectUp()},_initButton:function(){var a=this,b=this._strings=d.i18n.getLocalization("dojox.editor.plugins","SpellCheck"),c=this._dialog=new m.TooltipDialog;c.set("content",this._dialogContent=new s({unfound:b.unfound,skip:b.skip,skipAll:b.skipAll,toDic:b.toDic,suggestions:b.suggestions,replaceWith:b.replaceWith,
-replace:b.replace,replaceAll:b.replaceAll,cancel:b.cancel}));this.button=new m.form.DropDownButton({label:b.widgetLabel,showLabel:!1,iconClass:"dijitEditorSpellCheckIcon",dropDown:c,id:m.getUniqueId(this.declaredClass.replace(/\./g,"_"))+"_dialogPane",closeDropDown:function(b){if(a._dialogContent.closable){a._dialogContent.isOpen=!1;if(d.isIE){var c=a._iterator,f=a._spanList;c<f.length&&0<=c&&d.style(f[c],a._normalIncorrectStyle)}this._opened&&(x.close(this.dropDown),b&&this.focus(),this._opened=
-!1,this.state="")}}});a._dialogContent.isOpen=!1;c.domNode.setAttribute("aria-label",this._strings.widgetLabel)},_setNetwork:function(){var a=this.exArgs;if(!this._service){var b=this._service=new w;b.serviceEndPoint=this.url;b.maxBufferLength=this.bufferLength;b.setWaitingTime(this.timeout);a&&(delete a.name,delete a.url,delete a.interactive,delete a.timeout,b.exArgs=a)}},_connectUp:function(){var a=this._editor,b=this._dialogContent;this.connect(this.button,"set","_disabled");this.connect(this._service,
-"onLoad","_loadData");this.connect(this._dialog,"onOpen","_openDialog");this.connect(a,"onKeyPress","_keyPress");this.connect(a,"onLoad","_submitContent");this.connect(b,"onSkip","_skip");this.connect(b,"onSkipAll","_skipAll");this.connect(b,"onAddToDic","_add");this.connect(b,"onReplace","_replace");this.connect(b,"onReplaceAll","_replaceAll");this.connect(b,"onCancel","_cancel");this.connect(b,"onEnter","_enter");a.contentPostFilters.push(this._spellCheckFilter);d.publish(m._scopeName+".Editor.plugin.SpellCheck.getParser",
-[this]);this.parser||console.error("Can not get the word parser!")},_disabled:function(a,b){"disabled"==a&&(b?(this._iterator=0,this._spanList=[]):this.interactive&&(!b&&this._service)&&this._submitContent(!0),this._enabled=!b)},_keyPress:function(a){if(this.interactive){var b=a.charCode;!a.altKey&&b==d.keys.SPACE?this._submitContent():(a.ctrlKey&&(118==b||86==b)||!a.ctrlKey&&a.charCode)&&this._submitContent(!0)}},_loadData:function(a){var b=this._cache,c=this._editor.get("value"),h=this._dialogContent;
-this._iterator=0;d.forEach(a,function(a){b[a.text]=a.suggestion;b[a.text].correct=!1});this._enabled&&(h.closable=!1,this._markIncorrectWords(c,b),h.closable=!0,this._dialogContent.isOpen&&(this._iterator=-1,this._skip()))},_openDialog:function(){var a=this._dialogContent;a.ignoreChange=!0;a.set("unfoundWord","");a.set("suggestionList",null);a.set("disabled",!0);a.set("inProgress",!0);a.isOpen=!0;a.closable=!1;this._submitContent();a.closable=!0},_skip:function(a,b){var c=this._dialogContent,h=this._spanList||
-[],e=h.length,f=this._iterator;c.closable=!1;c.isChanged=!1;c.ignoreChange=!0;for(!b&&(0<=f&&f<e)&&this._skipWord(f);++f<e&&!0==h[f].edited;);f<e?(this._iterator=f,this._populateDialog(f),this._selectWord(f)):(this._iterator=-1,c.set("unfoundWord",this._strings.msg),c.set("suggestionList",null),c.set("disabled",!0),c.set("inProgress",!1));setTimeout(function(){d.isWebKit&&c.skipButton.focus();c.focus();c.ignoreChange=!1;c.closable=!0},0)},_skipAll:function(){this._dialogContent.closable=!1;this._skipWordAll(this._iterator);
-this._skip()},_add:function(){var a=this._dialogContent;a.closable=!1;a.isOpen=!0;this._addWord(this._iterator,a.get("unfoundWord"));this._skip()},_replace:function(){var a=this._dialogContent,b=this._iterator,c=a.get("selectedWord");a.closable=!1;this._replaceWord(b,c);this._skip(null,!0)},_replaceAll:function(){var a=this._dialogContent,b=this._spanList,c=b.length,d=b[this._iterator].innerHTML.toLowerCase(),e=a.get("selectedWord");a.closable=!1;for(a=0;a<c;a++)b[a].innerHTML.toLowerCase()==d&&this._replaceWord(a,
-e);this._skip(null,!0)},_cancel:function(){this._dialogContent.closable=!0;this._editor.focus()},_enter:function(){this._dialogContent.isChanged?this._replace():this._skip()},_query:function(a){var b=this._service,c=this._cache;a=this.parser.parseIntoWords(this._html2Text(a))||[];var h=[];d.forEach(a,function(a){a=a.toLowerCase();c[a]||(c[a]=[],c[a].correct=!0,h.push(a))});0<h.length?b.send(h.join(" ")):b.isWorking||this._loadData([])},_html2Text:function(a){for(var b=[],c=!1,d=a?a.length:0,e=0;e<
-d;e++)"\x3c"==a.charAt(e)&&(c=!0),!0==c?b.push(" "):b.push(a.charAt(e)),"\x3e"==a.charAt(e)&&(c=!1);return b.join("")},_getBookmark:function(a){var b=this._editor,c=this._cursorSpan;b.execCommand("inserthtml",c);for(var b=b.get("value"),c=b.indexOf(c),d=-1;++d<c&&a.charAt(d)==b.charAt(d););return d},_moveToBookmark:function(){var a=this._editor,b=d.query("."+this._cursorSelector,a.document);if(b=b&&b[0])a._sCall("selectElement",[b]),a._sCall("collapse",[!0]),(a=b.parentNode)&&a.removeChild(b)},_submitContent:function(a){if(a){var b=
-this;this._delayHandler&&(clearTimeout(this._delayHandler),this._delayHandler=null);setTimeout(function(){b._query(b._editor.get("value"))},3E3)}else this._query(this._editor.get("value"))},_populateDialog:function(a){var b=this._spanList,c=this._cache,d=this._dialogContent;d.set("disabled",!1);a<b.length&&0<b.length&&(a=b[a].innerHTML,d.set("unfoundWord",a),d.set("suggestionList",c[a.toLowerCase()]),d.set("inProgress",!1))},_markIncorrectWords:function(a,b){for(var c=this,h=this.parser,e=this._editor,
-f=this._incorrectWordsSpan,p=this._normalIncorrectStyle,t=this._selector,r=h.parseIntoWords(this._html2Text(a).toLowerCase()),h=h.getIndices(),u=this._cursorSpan,q=this._getBookmark(a),g=!1,k=a.split(""),n=null,n=r.length-1;0<=n;n--){var l=r[n];if(b[l]&&!b[l].correct){var l=h[n],s=r[n].length,v=l+s;v<=q&&!g&&(k.splice(q,0,u),g=!0);k.splice(l,s,d.string.substitute(f,{text:a.substring(l,v)}));l<q&&(q<v&&!g)&&(g=k[l].split(""),g.splice(39+q-l,0,u),k[l]=g.join(""),g=!0)}}g||(k.splice(q,0,u),g=!0);e.set("value",
-k.join(""));e._cursorToStart=!1;this._moveToBookmark();n=this._spanList=d.query("."+this._selector,e.document);n.forEach(function(a,b){a.id=t+b});this.interactive||delete p.cursor;n.style(p);this.interactive&&(c._contextMenu&&(c._contextMenu.uninitialize(),c._contextMenu=null),c._contextMenu=new m.Menu({targetNodeIds:[e.iframe],bindDomNode:function(a){a=d.byId(a);var h,f;"iframe"==a.tagName.toLowerCase()?(f=a,this._iframeContentWindow(f),h=d.body(e.document)):h=a==d.body()?d.doc.documentElement:a;
-var g={node:a,iframe:f};d.attr(a,"_dijitMenu"+this.id,this._bindings.push(g));var k=d.hitch(this,function(a){return[d.connect(a,this.leftClickToOpen?"onclick":"oncontextmenu",this,function(a){var h=a.target,g=c._strings;if(d.hasClass(h,t)&&!h.edited){d.stopEvent(a);var k=c._maxItemNumber,l=h.id.substring(t.length),n=b[h.innerHTML.toLowerCase()],q=n.length;this.destroyDescendants();if(0==q)this.addChild(new m.MenuItem({label:g.iMsg,disabled:!0}));else for(var p=0;p<k&&p<q;p++)this.addChild(new m.MenuItem({label:n[p],
-onClick:function(){var a=n[p];return function(){c._replaceWord(l,a);e.focus()}}()}));this.addChild(new m.MenuSeparator);this.addChild(new m.MenuItem({label:g.iSkip,onClick:function(){c._skipWord(l);e.focus()}}));this.addChild(new m.MenuItem({label:g.iSkipAll,onClick:function(){c._skipWordAll(l);e.focus()}}));this.addChild(new m.MenuSeparator);this.addChild(new m.MenuItem({label:g.toDic,onClick:function(){c._addWord(l);e.focus()}}));this._scheduleOpen(h,f,{x:a.pageX,y:a.pageY})}}),d.connect(a,"onkeydown",
-this,function(a){a.shiftKey&&a.keyCode==d.keys.F10&&(d.stopEvent(a),this._scheduleOpen(a.target,f))})]});g.connects=h?k(h):[];f&&(g.onloadHandler=d.hitch(this,function(){this._iframeContentWindow(f);var a=d.body(e.document);g.connects=k(a)}),f.addEventListener?f.addEventListener("load",g.onloadHandler,!1):f.attachEvent("onload",g.onloadHandler))}}))},_selectWord:function(a){var b=this._editor,c=this._spanList;a<c.length&&0<c.length&&(b._sCall("selectElement",[c[a]]),b._sCall("collapse",[!0]),this._findText(c[a].innerHTML,
-!1,!1),d.isIE&&d.style(c[a],this._highlightedIncorrectStyle))},_replaceWord:function(a,b){var c=this._spanList;c[a].innerHTML=b;d.style(c[a],this._ignoredIncorrectStyle);c[a].edited=!0},_skipWord:function(a){var b=this._spanList;d.style(b[a],this._ignoredIncorrectStyle);this._cache[b[a].innerHTML.toLowerCase()].correct=!0;b[a].edited=!0},_skipWordAll:function(a,b){var c=this._spanList,d=c.length;b=b||c[a].innerHTML.toLowerCase();for(var e=0;e<d;e++)!c[e].edited&&c[e].innerHTML.toLowerCase()==b&&this._skipWord(e)},
-_addWord:function(a,b){var c=this._service;c.send(b||this._spanList[a].innerHTML.toLowerCase(),c.ACTION_UPDATE);this._skipWordAll(a,b)},_findText:function(a,b,c){var d=this._editor,e=d.window,f=!1;a&&(e.find?f=e.find(a,b,c,!1,!1,!1,!1):(e=d.document,e.selection&&(this._editor.focus(),d=e.body.createTextRange(),(f=e.selection?e.selection.createRange():null)&&(c?d.setEndPoint("EndToStart",f):d.setEndPoint("StartToEnd",f)),b=b?4:0,c&&(b|=1),(f=d.findText(a,d.text.length,b))&&d.select())));return f},
-_spellCheckFilter:function(a){return a.replace(/<span class=["']incorrectWordPlaceHolder["'].*?>(.*?)<\/span>/g,"$1")}});p._SpellCheckControl=s;p._SpellCheckScriptMultiPart=w;d.subscribe(m._scopeName+".Editor.getPlugin",null,function(a){!a.plugin&&"spellcheck"===a.args.name.toLowerCase()&&(a.plugin=new p({url:"url"in a.args?a.args.url:"",interactive:"interactive"in a.args?a.args.interactive:!1,bufferLength:"bufferLength"in a.args?a.args.bufferLength:100,timeout:"timeout"in a.args?a.args.timeout:30,
-exArgs:a.args}))});return p});
-//@ sourceMappingURL=SpellCheck.js.map
+define([
+	"dojo",
+	"dijit",
+	"dojo/io/script",
+	"dijit/popup",
+	"dijit/_Widget",
+	"dijit/_Templated",
+	"dijit/_editor/_Plugin",
+	"dijit/form/TextBox",
+	"dijit/form/DropDownButton",
+	"dijit/TooltipDialog",
+	"dijit/form/MultiSelect",
+	"dijit/Menu",
+	"dojo/i18n!dojox/editor/plugins/nls/SpellCheck"
+], function(dojo, dijit, script, popup, _Widget, _Templated, _Plugin){
+
+dojo.experimental("dojox.editor.plugins.SpellCheck");
+
+var SpellCheckControl = dojo.declare("dojox.editor.plugins._spellCheckControl", [_Widget, _Templated], {
+	// summary:
+	//		The widget that is used for the UI of the batch spelling check
+
+	widgetsInTemplate: true,
+
+	templateString:
+		"<table role='presentation' class='dijitEditorSpellCheckTable'>" +
+			"<tr><td colspan='3' class='alignBottom'><label for='${textId}' id='${textId}_label'>${unfound}</label>" +
+				"<div class='dijitEditorSpellCheckBusyIcon' id='${id}_progressIcon'></div></td></tr>" +
+			"<tr>" +
+				"<td class='dijitEditorSpellCheckBox'><input dojoType='dijit.form.TextBox' required='false' intermediateChanges='true' " +
+					"class='dijitEditorSpellCheckBox' dojoAttachPoint='unfoundTextBox' id='${textId}'/></td>" +
+				"<td><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='skipButton'>${skip}</button></td>" +
+				"<td><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='skipAllButton'>${skipAll}</button></td>" +
+			"</tr>" +
+			"<tr>" +
+				"<td class='alignBottom'><label for='${selectId}'>${suggestions}</td></label>" +
+				"<td colspan='2'><button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='toDicButton'>${toDic}</button></td>" +
+			"</tr>" +
+			"<tr>" +
+				"<td>" +
+					"<select dojoType='dijit.form.MultiSelect' id='${selectId}' " +
+						"class='dijitEditorSpellCheckBox listHeight' dojoAttachPoint='suggestionSelect'></select>" +
+				"</td>" +
+				"<td colspan='2'>" +
+					"<button dojoType='dijit.form.Button' class='blockButton' dojoAttachPoint='replaceButton'>${replace}</button>" +
+					"<div class='topMargin'><button dojoType='dijit.form.Button' class='blockButton' " +
+						"dojoAttachPoint='replaceAllButton'>${replaceAll}</button><div>" +
+				"</td>" +
+			"</tr>" +
+			"<tr>" +
+				"<td><div class='topMargin'><button dojoType='dijit.form.Button' dojoAttachPoint='cancelButton'>${cancel}</button></div></td>" +
+				"<td></td>" +
+				"<td></td>" +
+			"</tr>" +
+		"</table>",
+
+	/*************************************************************************/
+	/**                      Framework Methods                              **/
+	/*************************************************************************/
+	constructor: function(){
+		// Indicate if the textbox ignores the text change event of the textbox
+		this.ignoreChange = false;
+		// Indicate if the text of the textbox is changed or not
+		this.isChanged = false;
+		// Indicate if the dialog is open or not
+		this.isOpen = false;
+		// Indicate if the dialog can be closed
+		this.closable = true;
+	},
+
+	postMixInProperties: function(){
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+		this.textId = this.id + "_textBox";
+		this.selectId = this.id + "_select";
+	},
+
+	postCreate: function(){
+		var select = this.suggestionSelect;
+
+		// Customize multi-select to single select
+		dojo.removeAttr(select.domNode, "multiple");
+		select.addItems = function(/*Array*/ items){
+			// summary:
+			//		Add items to the select widget
+			// items:
+			//		An array of items be added to the select
+			// tags:
+			//		public
+			var _this = this;
+			var o = null;
+			if(items && items.length > 0){
+				dojo.forEach(items, function(item, i){
+					o = dojo.create("option", {innerHTML: item, value: item}, _this.domNode);
+					if(i == 0){
+						o.selected = true;
+					}
+				});
+			}
+		};
+		select.removeItems = function(){
+			// summary:
+			//		Remove all the items within the select widget
+			// tags:
+			//		public
+			dojo.empty(this.domNode);
+		};
+
+		select.deselectAll = function(){
+			// summary:
+			//		De-select all the selected items
+			// tags:
+			//		public
+			this.containerNode.selectedIndex = -1;
+		};
+
+		// Connect up all the controls with their event handler
+		this.connect(this, "onKeyPress", "_cancel");
+		this.connect(this.unfoundTextBox, "onKeyPress", "_enter");
+		this.connect(this.unfoundTextBox, "onChange", "_unfoundTextBoxChange");
+		this.connect(this.suggestionSelect, "onKeyPress", "_enter");
+		this.connect(this.skipButton, "onClick", "onSkip");
+		this.connect(this.skipAllButton, "onClick", "onSkipAll");
+		this.connect(this.toDicButton, "onClick", "onAddToDic");
+		this.connect(this.replaceButton, "onClick", "onReplace");
+		this.connect(this.replaceAllButton, "onClick", "onReplaceAll");
+		this.connect(this.cancelButton, "onClick", "onCancel");
+	},
+
+	/*************************************************************************/
+	/**                      Public Methods                                 **/
+	/*************************************************************************/
+
+	onSkip: function(){
+		// Stub for the click event of the skip button.
+	},
+
+	onSkipAll: function(){
+		// Stub for the click event of the skipAll button.
+	},
+
+	onAddToDic: function(){
+		// Stub for the click event of the toDic button.
+	},
+
+	onReplace: function(){
+		// Stub for the click event of the replace button.
+	},
+
+	onReplaceAll: function(){
+		// Stub for the click event of the replaceAll button.
+	},
+
+	onCancel: function(){
+		// Stub for the click event of the cancel button.
+	},
+
+	onEnter: function(){
+		// Stub for the enter event of the unFound textbox.
+	},
+
+	focus: function(){
+		// summary:
+		//		Set the focus of the control
+		// tags:
+		//		public
+		this.unfoundTextBox.focus();
+	},
+
+	/*************************************************************************/
+	/**                      Private Methods                                **/
+	/*************************************************************************/
+
+	_cancel: function(/*Event*/ evt){
+		// summary:
+		//		Handle the cancel event
+		// evt:
+		//		The event object
+		// tags:
+		//		private
+		if(evt.keyCode == dojo.keys.ESCAPE){
+			this.onCancel();
+			dojo.stopEvent(evt);
+		}
+	},
+
+	_enter: function(/*Event*/ evt){
+		// summary:
+		//		Handle the enter event
+		// evt:
+		//		The event object
+		// tags:
+		//		private
+		if(evt.keyCode == dojo.keys.ENTER){
+			this.onEnter();
+			dojo.stopEvent(evt);
+		}
+	},
+
+	_unfoundTextBoxChange: function(){
+		// summary:
+		//		Indicate that the Not Found textbox is changed or not
+		// tags:
+		//		private
+		var id = this.textId + "_label";
+		if(!this.ignoreChange){
+			dojo.byId(id).innerHTML = this["replaceWith"];
+			this.isChanged = true;
+			this.suggestionSelect.deselectAll();
+		}else{
+			dojo.byId(id).innerHTML = this["unfound"];
+		}
+	},
+
+	_setUnfoundWordAttr: function(/*String*/ value){
+		// summary:
+		//		Set the value of the Not Found textbox
+		// value:
+		//		The value of the Not Found textbox
+		// tags:
+		//		private
+		value = value || "";
+		this.unfoundTextBox.set("value", value);
+	},
+
+	_getUnfoundWordAttr: function(){
+		// summary:
+		//		Get the value of the Not Found textbox
+		// tags:
+		//		private
+		return this.unfoundTextBox.get("value");
+	},
+
+	_setSuggestionListAttr: function(/*Array*/ values){
+		// summary:
+		//		Set the items of the suggestion list
+		// values:
+		//		The list of the suggestion items
+		// tags:
+		//		private
+		var select = this.suggestionSelect;
+		values = values || [];
+		select.removeItems();
+		select.addItems(values);
+	},
+
+	_getSelectedWordAttr: function(){
+		// summary:
+		//		Get the suggested word.
+		//		If the select box is selected, the value is the selected item's value,
+		//		else the value the the textbox's value
+		// tags:
+		//		private
+		var selected = this.suggestionSelect.getSelected();
+		if(selected && selected.length > 0){
+			return selected[0].value;
+		}else{
+			return this.unfoundTextBox.get("value");
+		}
+	},
+
+	_setDisabledAttr: function(/*Boolean*/ disabled){
+		// summary:
+		//		Enable/disable the control
+		// tags:
+		//		private
+		this.skipButton.set("disabled", disabled);
+		this.skipAllButton.set("disabled", disabled);
+		this.toDicButton.set("disabled", disabled);
+		this.replaceButton.set("disabled", disabled);
+		this.replaceAllButton.set("disabled", disabled);
+	},
+
+	_setInProgressAttr: function(/*Boolean*/ show){
+		// summary:
+		//		Set the visibility of the progress icon
+		// tags:
+		//		private
+		var id = this.id + "_progressIcon";
+		dojo.toggleClass(id, "hidden", !show);
+	}
+});
+
+var SpellCheckScriptMultiPart = dojo.declare("dojox.editor.plugins._SpellCheckScriptMultiPart", null, {
+	// summary:
+	//		It is a base network service component. It transfers text to a remote service port
+	//		with cross domain ability enabled. It can split text into specified pieces and send
+	//		them out one by one so that it can handle the case when the service has a limitation of
+	//		the capability.
+	//		The encoding is UTF-8.
+
+	// ACTION [public const] String
+	//		Actions for the server-side piece to take
+	ACTION_QUERY: "query",
+	ACTION_UPDATE: "update",
+
+	// callbackHandle [public] String
+	//		The callback name of JSONP
+	callbackHandle: "callback",
+
+	// maxBufferLength [public] Number
+	//		The max number of characters that send to the service at one time.
+	maxBufferLength: 100,
+
+	// delimiter [public] String
+	//		A token that is used to identify the end of a word (a complete unit). It prevents the service from
+	//		cutting a single word into two parts. For example:
+	// |		"Dojo toolkit is a ajax framework. It helps the developers buid their web applications."
+	//		Without the delimiter, the sentence might be split into the follow pieces which is absolutely
+	//		not the result we want.
+	// |		"Dojo toolkit is a ajax fram", "ework It helps the developers bu", "id their web applications"
+	//		Having " " as the delimiter, we get the following correct pieces.
+	// |		"Dojo toolkit is a ajax framework", " It helps the developers buid", " their web applications"
+	delimiter: " ",
+
+	// label [public] String
+	//		The leading label of the JSON response. The service will return the result like this:
+	// |	{response: [
+	// |		{
+	// |			text: "teest",
+	// |			suggestion: ["test","treat"]
+	// |		}
+	// |	]}
+	label: "response",
+
+	// _timeout: [private] Number
+	//		Set JSONP timeout period
+	_timeout: 30000,
+	SEC: 1000,
+
+	constructor: function(){
+		// The URL of the target service
+		this.serviceEndPoint = "";
+		// The queue that holds all the xhr request
+		this._queue = [];
+		// Indicate if the component is still working. For example, waiting for collecting all
+		// the responses from the service
+		this.isWorking = false;
+		// The extra command passed to the service
+		this.exArgs = null;
+		// The counter that indicate if all the responses are collected to
+		// assemble the final result.
+		this._counter = 0;
+	},
+
+	send: function(/*String*/ content, /*String?*/ action){
+		// summary:
+		//		Send the content to the service port with the specified action
+		// content:
+		//		The text to be sent
+		// action:
+		//		The action the service should take. Current support actions are
+		//		ACTION_QUERY and ACTION_UPDATE
+		// tags:
+		//		public
+		var _this = this,
+			dt = this.delimiter,
+			mbl = this.maxBufferLength,
+			label = this.label,
+			serviceEndPoint = this.serviceEndPoint,
+			callbackParamName = this.callbackHandle,
+			comms = this.exArgs,
+			timeout = this._timeout,
+			l = 0, r = 0;
+
+		// Temporary list that holds the result returns from the service, which will be
+		// assembled into a completed one.
+		if(!this._result) {
+			this._result = [];
+		}
+
+		action = action || this.ACTION_QUERY;
+
+		var batchSend = function(){
+			var plan = [];
+			var plannedSize = 0;
+			if(content && content.length > 0){
+				_this.isWorking = true;
+				var len = content.length;
+				do{
+					l = r + 1;
+					if((r += mbl) > len){
+						r = len;
+					}else{
+						// If there is no delimiter (emplty string), leave the right boundary where it is.
+						// Else extend the right boundary to the first occurrence of the delimiter if
+						// it doesn't meet the end of the content.
+						while(dt && content.charAt(r) != dt && r <= len){
+							r++;
+						}
+					}
+					// Record the information of the text slices
+					plan.push({l: l, r: r});
+					plannedSize++;
+				}while(r < len);
+
+				dojo.forEach(plan, function(item, index){
+					var jsonpArgs = {
+						url: serviceEndPoint,
+						action: action,
+						timeout: timeout,
+						callbackParamName: callbackParamName,
+						handle: function(response, ioArgs){
+							if(++_this._counter <= this.size && !(response instanceof Error) &&
+								response[label] && dojo.isArray(response[label])){
+								// Collect the results
+								var offset = this.offset;
+								dojo.forEach(response[label], function(item){
+									item.offset += offset;
+								});
+								// Put the packages in order
+								_this._result[this.number]= response[label];
+							}
+							if(_this._counter == this.size){
+								_this._finalizeCollection(this.action);
+								_this.isWorking = false;
+								if(_this._queue.length > 0){
+									// Call the next request waiting in queue
+									(_this._queue.shift())();
+								}
+							}
+						}
+					};
+					jsonpArgs.content = comms ? dojo.mixin(comms, {action: action, content: content.substring(item.l - 1, item.r)}):
+													{action: action, content: content.substring(item.l - 1, item.r)};
+					jsonpArgs.size = plannedSize;
+					jsonpArgs.number = index; // The index of the current package
+					jsonpArgs.offset = item.l - 1;
+					dojo.io.script.get(jsonpArgs);
+				});
+			}
+		};
+
+		if(!_this.isWorking){
+			batchSend();
+		}else{
+			_this._queue.push(batchSend);
+		}
+	},
+
+	_finalizeCollection: function(action){
+		// summary:
+		//		Assemble the responses into one result.
+		// action:
+		//		The action token
+		// tags:
+		//		private
+		var result = this._result,
+			len = result.length;
+		// Turn the result into a one-dimensional array
+		for(var i = 0; i < len; i++){
+			var temp = result.shift();
+			result = result.concat(temp);
+		}
+		if(action == this.ACTION_QUERY){
+			this.onLoad(result);
+		}
+		this._counter = 0;
+		this._result = [];
+	},
+
+	onLoad: function(/*String*/ data){
+		// Stub method for a successful call
+	},
+
+	setWaitingTime: function(/*Number*/ seconds){
+		this._timeout = seconds * this.SEC;
+	}
+});
+
+var SpellCheck = dojo.declare("dojox.editor.plugins.SpellCheck", [_Plugin], {
+	// summary:
+	//		This plugin provides a spelling check capability for the editor.
+
+	// url: [public] String
+	//		The url of the spelling check service
+	url: "",
+
+	// bufferLength: [public] Number
+	//		The max length of each XHR request. It is used to divide the large
+	//		text into pieces so that the server-side piece can hold.
+	bufferLength: 100,
+
+	// interactive: [public] Boolean
+	//		Indicate if the interactive spelling check is enabled
+	interactive: false,
+
+	// timeout: [public] Number
+	//		The minutes to waiting for the response. The default value is 30 seconds.
+	timeout: 30,
+
+	// button: [protected] dijit/form/DropDownButton
+	//		The button displayed on the editor's toolbar
+	button: null,
+
+	// _editor: [private] dijit/Editor
+	//		The reference to the editor the plug-in belongs to.
+	_editor: null,
+
+	// exArgs: [private] Object
+	//		The object that holds all the parametes passed into the constructor
+	exArgs: null,
+
+	// _cursorSpan: [private] String
+	//		The span that holds the current position of the cursor
+	_cursorSpan:
+		"<span class=\"cursorPlaceHolder\"></span>",
+
+	// _cursorSelector: [private] String
+	//		The CSS selector of the cursor span
+	_cursorSelector:
+		"cursorPlaceHolder",
+
+	// _incorrectWordsSpan: [private] String
+	//		The wrapper that marks the incorrect words
+	_incorrectWordsSpan:
+		"<span class='incorrectWordPlaceHolder'>${text}</span>",
+
+	// _ignoredIncorrectStyle: [private] Object
+	//		The style of the ignored incorrect words
+	_ignoredIncorrectStyle:
+		{"cursor": "inherit", "borderBottom": "none", "backgroundColor": "transparent"},
+
+	// _normalIncorrectStyle: [private] Object
+	//		The style of the marked incorrect words.
+	_normalIncorrectStyle:
+		{"cursor": "pointer", "borderBottom": "1px dotted red", "backgroundColor": "yellow"},
+
+	// _highlightedIncorrectStyle: [private] Object
+	//		The style of the highlighted incorrect words
+	_highlightedIncorrectStyle:
+		{"borderBottom": "1px dotted red", "backgroundColor": "#b3b3ff"},
+
+	// _selector: [private] String
+	//		An empty CSS class that identifies the incorrect words
+	_selector: "incorrectWordPlaceHolder",
+
+	// _maxItemNumber: [private] Number
+	//		The max number of the suggestion list items
+	_maxItemNumber: 3,
+
+	/*************************************************************************/
+	/**                      Framework Methods                              **/
+	/*************************************************************************/
+
+	constructor: function(){
+		// A list that holds all the spans that contains the incorrect words
+		// It is used to select/replace the specified word.
+		this._spanList = [];
+		// The cache that stores all the words. It looks like the following
+		// {
+		//	 "word": [],
+		//	 "wrd": ["word", "world"]
+		// }
+		this._cache = {};
+		// Indicate if this plugin is enabled or not
+		this._enabled = true;
+		// The index of the _spanList
+		this._iterator = 0;
+	},
+
+	setEditor: function(/*dijit.Editor*/ editor){
+		this._editor = editor;
+		this._initButton();
+		this._setNetwork();
+		this._connectUp();
+	},
+
+	/*************************************************************************/
+	/**                      Private Methods                                **/
+	/*************************************************************************/
+
+	_initButton: function(){
+		// summary:
+		//		Initialize the button displayed on the editor's toolbar
+		// tags:
+		//		private
+		var _this = this,
+			strings = (this._strings = dojo.i18n.getLocalization("dojox.editor.plugins", "SpellCheck")),
+			dialogPane = (this._dialog = new dijit.TooltipDialog());
+
+		dialogPane.set("content", (this._dialogContent = new SpellCheckControl({
+			unfound: strings["unfound"],
+			skip: strings["skip"],
+			skipAll: strings["skipAll"],
+			toDic: strings["toDic"],
+			suggestions: strings["suggestions"],
+			replaceWith: strings["replaceWith"],
+			replace: strings["replace"],
+			replaceAll: strings["replaceAll"],
+			cancel: strings["cancel"]
+		})));
+
+		this.button = new dijit.form.DropDownButton({
+			label: strings["widgetLabel"],
+			showLabel: false,
+			iconClass: "dijitEditorSpellCheckIcon",
+			dropDown: dialogPane,
+			id: dijit.getUniqueId(this.declaredClass.replace(/\./g,"_")) + "_dialogPane",
+			closeDropDown: function(focus){
+				// Determine if the dialog can be closed
+				if(_this._dialogContent.closable){
+					_this._dialogContent.isOpen = false;
+					if(dojo.isIE){
+						var pos = _this._iterator,
+							list = _this._spanList;
+						if(pos < list.length && pos >=0 ){
+							dojo.style(list[pos], _this._normalIncorrectStyle);
+						}
+					}
+					if(this._opened){
+						popup.close(this.dropDown);
+						if(focus){ this.focus(); }
+						this._opened = false;
+						this.state = "";
+					}
+				}
+			}
+		});
+		_this._dialogContent.isOpen = false;
+
+		dialogPane.domNode.setAttribute("aria-label", this._strings["widgetLabel"]);
+	},
+
+	_setNetwork: function(){
+		// summary:
+		//		Set up the underlying network service
+		// tags:
+		//		private
+		var comms = this.exArgs;
+
+		if(!this._service){
+			var service = (this._service = new SpellCheckScriptMultiPart());
+			service.serviceEndPoint = this.url;
+			service.maxBufferLength = this.bufferLength;
+			service.setWaitingTime(this.timeout);
+			// Pass the other arguments directly to the service
+			if(comms){
+				delete comms.name;
+				delete comms.url;
+				delete comms.interactive;
+				delete comms.timeout;
+				service.exArgs = comms;
+			}
+		}
+	},
+
+	_connectUp: function(){
+		// summary:
+		//		Connect up all the events with their event handlers
+		// tags:
+		//		private
+		var editor = this._editor,
+			cont = this._dialogContent;
+
+		this.connect(this.button, "set", "_disabled");
+		this.connect(this._service, "onLoad", "_loadData");
+		this.connect(this._dialog, "onOpen", "_openDialog");
+		this.connect(editor, "onKeyPress", "_keyPress");
+		this.connect(editor, "onLoad", "_submitContent");
+		this.connect(cont, "onSkip", "_skip");
+		this.connect(cont, "onSkipAll", "_skipAll");
+		this.connect(cont, "onAddToDic", "_add");
+		this.connect(cont, "onReplace", "_replace");
+		this.connect(cont, "onReplaceAll", "_replaceAll");
+		this.connect(cont, "onCancel", "_cancel");
+		this.connect(cont, "onEnter", "_enter");
+
+		editor.contentPostFilters.push(this._spellCheckFilter); // Register the filter
+		dojo.publish(dijit._scopeName + ".Editor.plugin.SpellCheck.getParser", [this]); // Get the language parser
+		if(!this.parser){
+			console.error("Can not get the word parser!");
+		}
+	},
+
+	/*************************************************************************/
+	/**                      Event Handlers                                 **/
+	/*************************************************************************/
+
+	_disabled: function(name, disabled){
+		// summary:
+		//		When the plugin is disabled (the button is disabled), reset all to their initial status.
+		//		If the interactive mode is on, check the content once it is enabled.
+		// name:
+		//		Command name
+		// disabled:
+		//		Command argument
+		// tags:
+		//		private
+		if(name == "disabled"){
+			if(disabled){
+				this._iterator = 0;
+				this._spanList = [];
+			}else if(this.interactive && !disabled && this._service){
+				this._submitContent(true);
+			}
+			this._enabled = !disabled;
+		}
+	},
+
+	_keyPress: function(evt){
+		// summary:
+		//		The handler of the onKeyPress event of the editor
+		// tags:
+		//		private
+		if(this.interactive){
+			var v = 118, V = 86,
+				cc = evt.charCode;
+			if(!evt.altKey && cc == dojo.keys.SPACE){
+				this._submitContent();
+			}else if((evt.ctrlKey && (cc == v || cc == V)) || (!evt.ctrlKey && evt.charCode)){
+				this._submitContent(true);
+			}
+		}
+	},
+
+	_loadData: function(/*Array*/ data){
+		// summary:
+		//		Apply the query result to the content
+		// data:
+		//		The result of the query
+		// tags:
+		//		private
+		var cache = this._cache,
+			html = this._editor.get("value"),
+			cont = this._dialogContent;
+
+		this._iterator = 0;
+
+		// Update the local cache
+		dojo.forEach(data, function(d){
+			cache[d.text] = d.suggestion;
+			cache[d.text].correct = false;
+		});
+
+		if(this._enabled){
+			// Mark incorrect words
+			cont.closable = false;
+			this._markIncorrectWords(html, cache);
+			cont.closable = true;
+
+			if(this._dialogContent.isOpen){
+				this._iterator = -1;
+				this._skip();
+			}
+		}
+	},
+
+	_openDialog: function(){
+		// summary:
+		//		The handler of the onOpen event
+		var cont = this._dialogContent;
+
+		// Clear dialog content and disable it first
+		cont.ignoreChange = true;
+		cont.set("unfoundWord", "");
+		cont.set("suggestionList", null);
+		cont.set("disabled", true);
+		cont.set("inProgress", true);
+
+		cont.isOpen = true; // Indicate that the dialog is open
+		cont.closable = false;
+
+		this._submitContent();
+
+		cont.closable = true;
+	},
+
+	_skip: function(/*Event?*/ evt, /*Boolean?*/ noUpdate){
+		// summary:
+		//		Ignore this word and move to the next unignored one.
+		// evt:
+		//		The event object
+		// noUpdate:
+		//		Indicate whether to update the status of the span list or not
+		// tags:
+		//		private
+		var cont = this._dialogContent,
+			list = this._spanList || [],
+			len = list.length,
+			iter = this._iterator;
+
+		cont.closable = false;
+		cont.isChanged = false;
+		cont.ignoreChange = true;
+
+		// Skip the current word
+		if(!noUpdate && iter >= 0 && iter < len){
+			this._skipWord(iter);
+		}
+
+		// Move to the next
+		while(++iter < len && list[iter].edited == true){ /* do nothing */}
+		if(iter < len){
+			this._iterator = iter;
+			this._populateDialog(iter);
+			this._selectWord(iter);
+		}else{
+			// Reaches the end of the list
+			this._iterator = -1;
+			cont.set("unfoundWord", this._strings["msg"]);
+			cont.set("suggestionList", null);
+			cont.set("disabled", true);
+			cont.set("inProgress", false);
+		}
+
+		setTimeout(function(){
+			// When moving the focus out of the iframe in WebKit browsers, we
+			// need to focus something else first. So the textbox
+			// can be focused correctly.
+			if(dojo.isWebKit) { cont.skipButton.focus(); }
+			cont.focus();
+			cont.ignoreChange = false;
+			cont.closable = true;
+		}, 0);
+	},
+
+	_skipAll: function(){
+		// summary:
+		//		Ignore all the same words
+		// tags:
+		//		private
+		this._dialogContent.closable = false;
+		this._skipWordAll(this._iterator);
+		this._skip();
+	},
+
+	_add: function(){
+		// summary:
+		//		Add the unrecognized word into the dictionary
+		// tags:
+		//		private
+		var cont = this._dialogContent;
+
+		cont.closable = false;
+		cont.isOpen = true;
+		this._addWord(this._iterator, cont.get("unfoundWord"));
+		this._skip();
+	},
+
+	_replace: function(){
+		// summary:
+		//		Replace the incorrect word with the selected one,
+		//		or the one the user types in the textbox
+		// tags:
+		//		private
+		var cont = this._dialogContent,
+			iter = this._iterator,
+			targetWord = cont.get("selectedWord");
+
+		cont.closable = false;
+		this._replaceWord(iter, targetWord);
+		this._skip(null, true);
+	},
+
+	_replaceAll: function(){
+		// summary:
+		//		Replace all the words with the same text
+		// tags:
+		//		private
+		var cont = this._dialogContent,
+			list = this._spanList,
+			len = list.length,
+			word = list[this._iterator].innerHTML.toLowerCase(),
+			targetWord = cont.get("selectedWord");
+
+		cont.closable = false;
+		for(var iter = 0; iter < len; iter++){
+			// If this word is not ignored and is the same as the source word,
+			// replace it.
+			if(list[iter].innerHTML.toLowerCase() == word){
+				this._replaceWord(iter, targetWord);
+			}
+		}
+
+		this._skip(null, true);
+	},
+
+	_cancel: function(){
+		// summary:
+		//		Cancel this check action
+		// tags:
+		//		private
+		this._dialogContent.closable = true;
+		this._editor.focus();
+	},
+
+	_enter: function(){
+		// summary:
+		//		Handle the ENTER event
+		// tags:
+		//		private
+		if(this._dialogContent.isChanged){
+			this._replace();
+		}else{
+			this._skip();
+		}
+	},
+
+	/*************************************************************************/
+	/**                              Utils                                  **/
+	/*************************************************************************/
+
+	_query: function(/*String*/ html){
+		// summary:
+		//		Send the query text to the service. The query text is a string of words
+		//		separated by space.
+		// html:
+		//		The html value of the editor
+		// tags:
+		//		private
+		var service = this._service,
+			cache = this._cache,
+			words = this.parser.parseIntoWords(this._html2Text(html)) || [];
+		var content = [];
+		dojo.forEach(words, function(word){
+			word = word.toLowerCase();
+			if(!cache[word]){
+				// New word that need to be send to the server side for check
+				cache[word] = [];
+				cache[word].correct = true;
+				content.push(word);
+			}
+		});
+		if(content.length > 0){
+			service.send(content.join(" "));
+		}else if(!service.isWorking){
+			this._loadData([]);
+		}
+	},
+
+	_html2Text: function(html){
+		// summary:
+		//		Substitute the tag with white charactors so that the server
+		//		can easily process the text. For example:
+		// |	"<a src="sample.html">Hello, world!</a>" ==>
+		// |	"                     Hello, world!    "
+		// html:
+		//		The html code
+		// tags:
+		//		private
+		var text = [],
+			isTag = false,
+			len = html ? html.length : 0;
+
+		for(var i = 0; i < len; i++){
+			if(html.charAt(i) == "<"){ isTag = true; }
+			if(isTag == true){
+				text.push(" ");
+			}else{
+				text.push(html.charAt(i));
+			}
+			if(html.charAt(i) == ">"){ isTag = false; }
+
+		}
+		return text.join("");
+	},
+
+	_getBookmark: function(/*String*/ eValue){
+		// summary:
+		//		Get the cursor position. It is the index of the characters
+		//		where the cursor is.
+		// eValue:
+		//		The html value of the editor
+		// tags:
+		//		private
+		var ed = this._editor,
+			cp = this._cursorSpan;
+		ed.execCommand("inserthtml", cp);
+		var nv = ed.get("value"),
+			index = nv.indexOf(cp),
+			i = -1;
+		while(++i < index && eValue.charAt(i) == nv.charAt(i)){ /* do nothing */}
+		return i;
+	},
+
+	_moveToBookmark: function(){
+		// summary:
+		//		Move to the position when the cursor was.
+		// tags:
+		//		private
+		var ed = this._editor,
+			cps = dojo.query("." + this._cursorSelector, ed.document),
+			cursorSpan = cps && cps[0];
+		// Find the cursor place holder
+		if(cursorSpan){
+			ed._sCall("selectElement", [cursorSpan]);
+			ed._sCall("collapse", [true]);
+			var parent = cursorSpan.parentNode;
+			if(parent){ parent.removeChild(cursorSpan); }
+		}
+	},
+
+	_submitContent: function(/*Boolean?*/ delay){
+		// summary:
+		//		Functions to submit the content of the editor
+		// delay:
+		//		Indicate if the action is taken immediately or not
+		// tags:
+		//		private
+		if(delay){
+			var _this = this,
+				interval = 3000;
+			if(this._delayHandler){
+				clearTimeout(this._delayHandler);
+				this._delayHandler = null;
+			}
+			setTimeout(function(){ _this._query(_this._editor.get("value")); }, interval);
+		}else{
+			this._query(this._editor.get("value"));
+		}
+	},
+
+	_populateDialog: function(index){
+		// summary:
+		//		Populate the content of the dailog
+		// index:
+		//		The idex of the span list
+		// tags:
+		//		private
+		var list = this._spanList,
+			cache = this._cache,
+			cont = this._dialogContent;
+
+		cont.set("disabled", false);
+		if(index < list.length && list.length > 0){
+			var word = list[index].innerHTML;
+			cont.set("unfoundWord", word);
+			cont.set("suggestionList", cache[word.toLowerCase()]);
+			cont.set("inProgress", false);
+		}
+	},
+
+	_markIncorrectWords: function(/*String*/ html, /*Object*/ cache){
+		// summary:
+		//		Mark the incorrect words and set up menus if available
+		// html:
+		//		The html value of the editor
+		// cache:
+		//		The local word cache
+		// tags:
+		//		private
+		var _this = this,
+			parser = this.parser,
+			editor = this._editor,
+			spanString = this._incorrectWordsSpan,
+			nstyle = this._normalIncorrectStyle,
+			selector = this._selector,
+			words = parser.parseIntoWords(this._html2Text(html).toLowerCase()),
+			indices = parser.getIndices(),
+			bookmark = this._cursorSpan,
+			bmpos = this._getBookmark(html),
+			spanOffset = "<span class='incorrectWordPlaceHolder'>".length,
+			bmMarked = false,
+			cArray = html.split(""),
+			spanList = null;
+
+		// Mark the incorrect words and cursor position
+		for(var i = words.length - 1; i >= 0; i--){
+			var word = words[i];
+			if(cache[word] && !cache[word].correct){
+				var offset = indices[i],
+					len = words[i].length,
+					end = offset + len;
+				if(end <= bmpos && !bmMarked){
+					cArray.splice(bmpos, 0, bookmark);
+					bmMarked = true;
+				}
+				cArray.splice(offset, len, dojo.string.substitute(spanString, {text: html.substring(offset, end)}));
+				if(offset < bmpos && bmpos < end && !bmMarked){
+					var tmp = cArray[offset].split("");
+					tmp.splice(spanOffset + bmpos - offset, 0, bookmark);
+					cArray[offset] = tmp.join("");
+					bmMarked = true;
+				}
+			}
+		}
+		if(!bmMarked){
+			cArray.splice(bmpos, 0, bookmark);
+			bmMarked = true;
+		}
+
+		editor.set("value", cArray.join(""));
+		editor._cursorToStart = false; // HACK! But really necessary here.
+
+		this._moveToBookmark();
+
+		// Get the incorrect words <span>
+		spanList = this._spanList = dojo.query("." + this._selector, editor.document);
+		spanList.forEach(function(span, i){ span.id = selector + i; });
+
+		// Set them to the incorrect word style
+		if(!this.interactive){ delete nstyle.cursor; }
+		spanList.style(nstyle);
+
+		if(this.interactive){
+			// Build the context menu
+			if(_this._contextMenu){
+				_this._contextMenu.uninitialize();
+				_this._contextMenu = null;
+			}
+			_this._contextMenu = new dijit.Menu({
+				targetNodeIds: [editor.iframe],
+
+				bindDomNode: function(/*String|DomNode*/ node){
+					// summary:
+					//		Attach menu to given node
+					node = dojo.byId(node);
+
+					var cn;	// Connect node
+
+					// Support context menus on iframes.   Rather than binding to the iframe itself we need
+					// to bind to the <body> node inside the iframe.
+					var iframe, win;
+					if(node.tagName.toLowerCase() == "iframe"){
+						iframe = node;
+						win = this._iframeContentWindow(iframe);
+						cn = dojo.body(editor.document)
+					}else{
+
+						// To capture these events at the top level, attach to <html>, not <body>.
+						// Otherwise right-click context menu just doesn't work.
+						cn = (node == dojo.body() ? dojo.doc.documentElement : node);
+					}
+
+
+					// "binding" is the object to track our connection to the node (ie, the parameter to bindDomNode())
+					var binding = {
+						node: node,
+						iframe: iframe
+					};
+
+					// Save info about binding in _bindings[], and make node itself record index(+1) into
+					// _bindings[] array.   Prefix w/_dijitMenu to avoid setting an attribute that may
+					// start with a number, which fails on FF/safari.
+					dojo.attr(node, "_dijitMenu" + this.id, this._bindings.push(binding));
+
+					// Setup the connections to monitor click etc., unless we are connecting to an iframe which hasn't finished
+					// loading yet, in which case we need to wait for the onload event first, and then connect
+					// On linux Shift-F10 produces the oncontextmenu event, but on Windows it doesn't, so
+					// we need to monitor keyboard events in addition to the oncontextmenu event.
+					var doConnects = dojo.hitch(this, function(cn){
+						return [
+							// TODO: when leftClickToOpen is true then shouldn't space/enter key trigger the menu,
+							// rather than shift-F10?
+							dojo.connect(cn, this.leftClickToOpen ? "onclick" : "oncontextmenu", this, function(evt){
+								var target = evt.target,
+									strings = _this._strings;
+								// Schedule context menu to be opened unless it's already been scheduled from onkeydown handler
+								if(dojo.hasClass(target, selector) && !target.edited){ // Click on the incorrect word
+									dojo.stopEvent(evt);
+
+									// Build the on-demand menu items
+									var maxNumber = _this._maxItemNumber,
+										id = target.id,
+										index = id.substring(selector.length),
+										suggestions = cache[target.innerHTML.toLowerCase()],
+										slen = suggestions.length;
+
+									// Add the suggested words menu items
+									this.destroyDescendants();
+									if(slen == 0){
+										this.addChild(new dijit.MenuItem({
+											label: strings["iMsg"],
+											disabled: true
+										}));
+									}else{
+										for(var i = 0 ; i < maxNumber && i < slen; i++){
+											this.addChild(new dijit.MenuItem({
+												label: suggestions[i],
+												onClick: (function(){
+													var idx = index, txt = suggestions[i];
+													return function(){
+														_this._replaceWord(idx, txt);
+														editor.focus();
+													};
+												})()
+											}));
+										}
+									}
+
+									//Add the other action menu items
+									this.addChild(new dijit.MenuSeparator());
+									this.addChild(new dijit.MenuItem({
+										label: strings["iSkip"],
+										onClick: function(){
+											_this._skipWord(index);
+											editor.focus();
+										}
+									}));
+									this.addChild(new dijit.MenuItem({
+										label: strings["iSkipAll"],
+										onClick: function(){
+											_this._skipWordAll(index);
+											editor.focus();
+										}
+									}));
+									this.addChild(new dijit.MenuSeparator());
+									this.addChild(new dijit.MenuItem({
+										label: strings["toDic"],
+										onClick: function(){
+											_this._addWord(index);
+											editor.focus();
+										}
+									}));
+
+									this._scheduleOpen(target, iframe, {x: evt.pageX, y: evt.pageY});
+								}
+							}),
+							dojo.connect(cn, "onkeydown", this, function(evt){
+								if(evt.shiftKey && evt.keyCode == dojo.keys.F10){
+									dojo.stopEvent(evt);
+									this._scheduleOpen(evt.target, iframe);	// no coords - open near target node
+								}
+							})
+						];
+					});
+					binding.connects = cn ? doConnects(cn) : [];
+
+					if(iframe){
+						// Setup handler to [re]bind to the iframe when the contents are initially loaded,
+						// and every time the contents change.
+						// Need to do this b/c we are actually binding to the iframe's <body> node.
+						// Note: can't use dojo.connect(), see #9609.
+
+						binding.onloadHandler = dojo.hitch(this, function(){
+							// want to remove old connections, but IE throws exceptions when trying to
+							// access the <body> node because it's already gone, or at least in a state of limbo
+
+							var win = this._iframeContentWindow(iframe),
+								cn = dojo.body(editor.document);
+							binding.connects = doConnects(cn);
+						});
+						if(iframe.addEventListener){
+							iframe.addEventListener("load", binding.onloadHandler, false);
+						}else{
+							iframe.attachEvent("onload", binding.onloadHandler);
+						}
+					}
+				}
+			});
+		}
+	},
+
+	_selectWord: function(index){
+		// summary:
+		//		Select the incorrect word. Move to it and highlight it
+		// index:
+		//		The index of the span list
+		// tags:
+		//		private
+		var ed = this._editor,
+			list = this._spanList;
+
+		if(index < list.length && list.length > 0){
+			ed._sCall("selectElement", [list[index]]);
+			ed._sCall("collapse", [true]);
+			this._findText(list[index].innerHTML, false, false);
+			if(dojo.isIE){
+				// Because the selection in the iframe will be lost when the outer window get the
+				// focus, we need to mimic the highlight ourselves.
+				dojo.style(list[index], this._highlightedIncorrectStyle);
+			}
+		}
+	},
+
+	_replaceWord: function(index, text){
+		// summary:
+		//		Replace the word at the given index with the text
+		// index:
+		//		The index of the span list
+		// text:
+		//		The text to be replaced with
+		// tags:
+		//		private
+		var list = this._spanList;
+
+		list[index].innerHTML = text;
+		dojo.style(list[index], this._ignoredIncorrectStyle);
+		list[index].edited = true;
+	},
+
+	_skipWord: function(index){
+		// summary:
+		//		Skip the word at the index
+		// index:
+		//		The index of the span list
+		// tags:
+		//		private
+		var list = this._spanList;
+
+		dojo.style(list[index], this._ignoredIncorrectStyle);
+		this._cache[list[index].innerHTML.toLowerCase()].correct = true;
+		list[index].edited = true;
+	},
+
+	_skipWordAll: function(index, /*String?*/word){
+		// summary:
+		//		Skip the all the word that have the same text as the word at the index
+		//		or the given word
+		// index:
+		//		The index of the span list
+		// word:
+		//		If this argument is given, skip all the words that have the same text
+		//		as the word
+		// tags:
+		//		private
+		var list = this._spanList,
+			len = list.length;
+		word = word || list[index].innerHTML.toLowerCase();
+
+		for(var i = 0; i < len; i++){
+			if(!list[i].edited && list[i].innerHTML.toLowerCase() == word){
+				this._skipWord(i);
+			}
+		}
+	},
+
+	_addWord: function(index, /*String?*/word){
+		// summary:
+		//		Add the word at the index to the dictionary
+		// index:
+		//		The index of the span list
+		// word:
+		//		If this argument is given, add the word to the dictionary and
+		//		skip all the words like it
+		// tags:
+		//		private
+		var service = this._service;
+		service.send(word || this._spanList[index].innerHTML.toLowerCase(), service.ACTION_UPDATE);
+		this._skipWordAll(index, word);
+	},
+
+	_findText: function(/*String*/ txt, /*Boolean*/ caseSensitive, /*Boolean*/ backwards){
+		// summary:
+		//		This function invokes a find with specific options
+		// txt: String
+		//		The text to locate in the document.
+		// caseSensitive: Boolean
+		//		Whether or ot to search case-sensitively.
+		// backwards: Boolean
+		//		Whether or not to search backwards in the document.
+		// tags:
+		//		private.
+		// returns:
+		//		Boolean indicating if the content was found or not.
+		var ed = this._editor,
+			win = ed.window,
+			found = false;
+		if(txt){
+			if(win.find){
+				found = win.find(txt, caseSensitive, backwards, false, false, false, false);
+			}else{
+				var doc = ed.document;
+				if(doc.selection){
+					/* IE */
+					// Focus to restore position/selection,
+					// then shift to search from current position.
+					this._editor.focus();
+					var txtRg = doc.body.createTextRange();
+					var curPos = doc.selection?doc.selection.createRange():null;
+					if(curPos){
+						if(backwards){
+							txtRg.setEndPoint("EndToStart", curPos);
+						}else{
+							txtRg.setEndPoint("StartToEnd", curPos);
+						}
+					}
+					var flags = caseSensitive?4:0;
+					if(backwards){
+						flags = flags | 1;
+					}
+					//flags = flags |
+					found = txtRg.findText(txt,txtRg.text.length,flags);
+					if(found){
+						txtRg.select();
+					}
+				}
+			}
+		}
+		return found;
+	},
+
+	_spellCheckFilter: function(/*String*/ value){
+		// summary:
+		//		Filter out the incorrect word style so that the value of the edtior
+		//		won't include the spans that wrap around the incorrect words
+		// value:
+		//		The html value of the editor
+		// tags:
+		//		private
+		var regText = /<span class=["']incorrectWordPlaceHolder["'].*?>(.*?)<\/span>/g;
+		return value.replace(regText, "$1");
+	}
+});
+
+// For monkey patching
+SpellCheck._SpellCheckControl = SpellCheckControl;
+SpellCheck._SpellCheckScriptMultiPart = SpellCheckScriptMultiPart;
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	var name = o.args.name.toLowerCase();
+	if(name ===  "spellcheck"){
+		o.plugin = new SpellCheck({
+			url: ("url" in o.args) ? o.args.url : "",
+			interactive: ("interactive" in o.args) ? o.args.interactive : false,
+			bufferLength: ("bufferLength" in o.args) ? o.args.bufferLength: 100,
+			timeout: ("timeout" in o.args) ? o.args.timeout : 30,
+			exArgs: o.args
+		});
+	}
+});
+
+return SpellCheck;
+
+});

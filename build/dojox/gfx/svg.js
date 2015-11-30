@@ -1,31 +1,1023 @@
-//>>built
-define("dojox/gfx/svg","dojo/_base/lang dojo/_base/sniff dojo/_base/window dojo/dom dojo/_base/declare dojo/_base/array dojo/dom-geometry dojo/dom-attr dojo/_base/Color ./_base ./shape ./path".split(" "),function(l,n,p,q,k,u,x,t,y,h,g,s){function m(a,b){return p.doc.createElementNS?p.doc.createElementNS(a,b):p.doc.createElement(b)}function v(a){return c.useSvgWeb?p.doc.createTextNode(a,!0):p.doc.createTextNode(a)}var c=h.svg={};c.useSvgWeb="undefined"!=typeof window.svgweb;var z=navigator.userAgent,
-A=n("ios"),w=n("android"),B=n("chrome")||w&&4<=w?"auto":"optimizeLegibility";c.xmlns={xlink:"http://www.w3.org/1999/xlink",svg:"http://www.w3.org/2000/svg"};c.getRef=function(a){return!a||"none"==a?null:a.match(/^url\(#.+\)$/)?q.byId(a.slice(5,-1)):a.match(/^#dojoUnique\d+$/)?q.byId(a.slice(1)):null};c.dasharray={solid:"none",shortdash:[4,1],shortdot:[1,1],shortdashdot:[4,1,1,1],shortdashdotdot:[4,1,1,1,1,1],dot:[1,3],dash:[4,3],longdash:[8,3],dashdot:[4,3,1,3],longdashdot:[8,3,1,3],longdashdotdot:[8,
-3,1,3,1,3]};var C=0;c.Shape=k("dojox.gfx.svg.Shape",g.Shape,{destroy:function(){if(this.fillStyle&&"type"in this.fillStyle){var a=this.rawNode.getAttribute("fill");(a=c.getRef(a))&&a.parentNode.removeChild(a)}if(this.clip&&(a=this.rawNode.getAttribute("clip-path")))(a=q.byId(a.match(/gfx_clip[\d]+/)[0]))&&a.parentNode.removeChild(a);g.Shape.prototype.destroy.apply(this,arguments)},setFill:function(a){if(!a)return this.fillStyle=null,this.rawNode.setAttribute("fill","none"),this.rawNode.setAttribute("fill-opacity",
-0),this;var b,d=function(a){this.setAttribute(a,b[a].toFixed(8))};if("object"==typeof a&&"type"in a){switch(a.type){case "linear":b=h.makeParameters(h.defaultLinearGradient,a);a=this._setFillObject(b,"linearGradient");u.forEach(["x1","y1","x2","y2"],d,a);break;case "radial":b=h.makeParameters(h.defaultRadialGradient,a);a=this._setFillObject(b,"radialGradient");u.forEach(["cx","cy","r"],d,a);break;case "pattern":b=h.makeParameters(h.defaultPattern,a),a=this._setFillObject(b,"pattern"),u.forEach(["x",
-"y","width","height"],d,a)}this.fillStyle=b;return this}this.fillStyle=b=h.normalizeColor(a);this.rawNode.setAttribute("fill",b.toCss());this.rawNode.setAttribute("fill-opacity",b.a);this.rawNode.setAttribute("fill-rule","evenodd");return this},setStroke:function(a){var b=this.rawNode;if(!a)return this.strokeStyle=null,b.setAttribute("stroke","none"),b.setAttribute("stroke-opacity",0),this;if("string"==typeof a||l.isArray(a)||a instanceof y)a={color:a};a=this.strokeStyle=h.makeParameters(h.defaultStroke,
-a);a.color=h.normalizeColor(a.color);if(a){b.setAttribute("stroke",a.color.toCss());b.setAttribute("stroke-opacity",a.color.a);b.setAttribute("stroke-width",a.width);b.setAttribute("stroke-linecap",a.cap);"number"==typeof a.join?(b.setAttribute("stroke-linejoin","miter"),b.setAttribute("stroke-miterlimit",a.join)):b.setAttribute("stroke-linejoin",a.join);var d=a.style.toLowerCase();d in c.dasharray&&(d=c.dasharray[d]);if(d instanceof Array){var d=l._toArray(d),e;for(e=0;e<d.length;++e)d[e]*=a.width;
-if("butt"!=a.cap){for(e=0;e<d.length;e+=2)d[e]-=a.width,1>d[e]&&(d[e]=1);for(e=1;e<d.length;e+=2)d[e]+=a.width}d=d.join(",")}b.setAttribute("stroke-dasharray",d);b.setAttribute("dojoGfxStrokeStyle",a.style)}return this},_getParentSurface:function(){for(var a=this.parent;a&&!(a instanceof h.Surface);a=a.parent);return a},_setFillObject:function(a,b){var d=c.xmlns.svg;this.fillStyle=a;var e=this._getParentSurface().defNode,f=this.rawNode.getAttribute("fill");if(f=c.getRef(f))if(f.tagName.toLowerCase()!=
-b.toLowerCase()){var g=f.id;f.parentNode.removeChild(f);f=m(d,b);f.setAttribute("id",g);e.appendChild(f)}else for(;f.childNodes.length;)f.removeChild(f.lastChild);else f=m(d,b),f.setAttribute("id",h._base._getUniqueId()),e.appendChild(f);if("pattern"==b)f.setAttribute("patternUnits","userSpaceOnUse"),d=m(d,"image"),d.setAttribute("x",0),d.setAttribute("y",0),d.setAttribute("width",a.width.toFixed(8)),d.setAttribute("height",a.height.toFixed(8)),d.setAttributeNS?d.setAttributeNS(c.xmlns.xlink,"xlink:href",
-a.src):d.setAttribute("xlink:href",a.src),f.appendChild(d);else{f.setAttribute("gradientUnits","userSpaceOnUse");for(e=0;e<a.colors.length;++e){var g=a.colors[e],k=m(d,"stop"),l=g.color=h.normalizeColor(g.color);k.setAttribute("offset",g.offset.toFixed(8));k.setAttribute("stop-color",l.toCss());k.setAttribute("stop-opacity",l.a);f.appendChild(k)}}this.rawNode.setAttribute("fill","url(#"+f.getAttribute("id")+")");this.rawNode.removeAttribute("fill-opacity");this.rawNode.setAttribute("fill-rule","evenodd");
-return f},_applyTransform:function(){if(this.matrix){var a=this.matrix;this.rawNode.setAttribute("transform","matrix("+a.xx.toFixed(8)+","+a.yx.toFixed(8)+","+a.xy.toFixed(8)+","+a.yy.toFixed(8)+","+a.dx.toFixed(8)+","+a.dy.toFixed(8)+")")}else this.rawNode.removeAttribute("transform");return this},setRawNode:function(a){a=this.rawNode=a;"image"!=this.shape.type&&a.setAttribute("fill","none");a.setAttribute("fill-opacity",0);a.setAttribute("stroke","none");a.setAttribute("stroke-opacity",0);a.setAttribute("stroke-width",
-1);a.setAttribute("stroke-linecap","butt");a.setAttribute("stroke-linejoin","miter");a.setAttribute("stroke-miterlimit",4);a.__gfxObject__=this},setShape:function(a){this.shape=h.makeParameters(this.shape,a);for(var b in this.shape)"type"!=b&&this.rawNode.setAttribute(b,this.shape[b]);this.bbox=null;return this},_moveToFront:function(){this.rawNode.parentNode.appendChild(this.rawNode);return this},_moveToBack:function(){this.rawNode.parentNode.insertBefore(this.rawNode,this.rawNode.parentNode.firstChild);
-return this},setClip:function(a){this.inherited(arguments);var b=a?"width"in a?"rect":"cx"in a?"ellipse":"points"in a?"polyline":"d"in a?"path":null:null;if(a&&!b)return this;"polyline"===b&&(a=l.clone(a),a.points=a.points.join(","));var d,e=t.get(this.rawNode,"clip-path");e&&(d=q.byId(e.match(/gfx_clip[\d]+/)[0]))&&d.removeChild(d.childNodes[0]);a?(d?(b=m(c.xmlns.svg,b),d.appendChild(b)):(e="gfx_clip"+ ++C,this.rawNode.setAttribute("clip-path","url(#"+e+")"),d=m(c.xmlns.svg,"clipPath"),b=m(c.xmlns.svg,
-b),d.appendChild(b),this.rawNode.parentNode.appendChild(d),t.set(d,"id",e)),t.set(b,a)):(this.rawNode.removeAttribute("clip-path"),d&&d.parentNode.removeChild(d));return this},_removeClipNode:function(){var a,b=t.get(this.rawNode,"clip-path");b&&(a=q.byId(b.match(/gfx_clip[\d]+/)[0]))&&a.parentNode.removeChild(a);return a}});c.Group=k("dojox.gfx.svg.Group",c.Shape,{constructor:function(){g.Container._init.call(this)},setRawNode:function(a){this.rawNode=a;this.rawNode.__gfxObject__=this},destroy:function(){this.clear(!0);
-c.Shape.prototype.destroy.apply(this,arguments)}});c.Group.nodeType="g";c.Rect=k("dojox.gfx.svg.Rect",[c.Shape,g.Rect],{setShape:function(a){this.shape=h.makeParameters(this.shape,a);this.bbox=null;for(var b in this.shape)"type"!=b&&"r"!=b&&this.rawNode.setAttribute(b,this.shape[b]);null!=this.shape.r&&(this.rawNode.setAttribute("ry",this.shape.r),this.rawNode.setAttribute("rx",this.shape.r));return this}});c.Rect.nodeType="rect";c.Ellipse=k("dojox.gfx.svg.Ellipse",[c.Shape,g.Ellipse],{});c.Ellipse.nodeType=
-"ellipse";c.Circle=k("dojox.gfx.svg.Circle",[c.Shape,g.Circle],{});c.Circle.nodeType="circle";c.Line=k("dojox.gfx.svg.Line",[c.Shape,g.Line],{});c.Line.nodeType="line";c.Polyline=k("dojox.gfx.svg.Polyline",[c.Shape,g.Polyline],{setShape:function(a,b){a&&a instanceof Array?(this.shape=h.makeParameters(this.shape,{points:a}),b&&this.shape.points.length&&this.shape.points.push(this.shape.points[0])):this.shape=h.makeParameters(this.shape,a);this.bbox=null;this._normalizePoints();for(var d=[],c=this.shape.points,
-f=0;f<c.length;++f)d.push(c[f].x.toFixed(8),c[f].y.toFixed(8));this.rawNode.setAttribute("points",d.join(" "));return this}});c.Polyline.nodeType="polyline";c.Image=k("dojox.gfx.svg.Image",[c.Shape,g.Image],{setShape:function(a){this.shape=h.makeParameters(this.shape,a);this.bbox=null;a=this.rawNode;for(var b in this.shape)"type"!=b&&"src"!=b&&a.setAttribute(b,this.shape[b]);a.setAttribute("preserveAspectRatio","none");a.setAttributeNS?a.setAttributeNS(c.xmlns.xlink,"xlink:href",this.shape.src):a.setAttribute("xlink:href",
-this.shape.src);a.__gfxObject__=this;return this}});c.Image.nodeType="image";c.Text=k("dojox.gfx.svg.Text",[c.Shape,g.Text],{setShape:function(a){this.shape=h.makeParameters(this.shape,a);this.bbox=null;a=this.rawNode;var b=this.shape;a.setAttribute("x",b.x);a.setAttribute("y",b.y);a.setAttribute("text-anchor",b.align);a.setAttribute("text-decoration",b.decoration);a.setAttribute("rotate",b.rotated?90:0);a.setAttribute("kerning",b.kerning?"auto":0);a.setAttribute("text-rendering",B);a.firstChild?
-a.firstChild.nodeValue=b.text:a.appendChild(v(b.text));return this},getTextWidth:function(){var a=this.rawNode,b=a.parentNode,a=a.cloneNode(!0);a.style.visibility="hidden";var d=0,c=a.firstChild.nodeValue;b.appendChild(a);if(""!=c)for(;!d;)d=a.getBBox?parseInt(a.getBBox().width):68;b.removeChild(a);return d},getBoundingBox:function(){var a=null;if(this.getShape().text)try{a=this.rawNode.getBBox()}catch(b){a={x:0,y:0,width:0,height:0}}return a}});c.Text.nodeType="text";c.Path=k("dojox.gfx.svg.Path",
-[c.Shape,s.Path],{_updateWithSegment:function(a){this.inherited(arguments);"string"==typeof this.shape.path&&this.rawNode.setAttribute("d",this.shape.path)},setShape:function(a){this.inherited(arguments);this.shape.path?this.rawNode.setAttribute("d",this.shape.path):this.rawNode.removeAttribute("d");return this}});c.Path.nodeType="path";c.TextPath=k("dojox.gfx.svg.TextPath",[c.Shape,s.TextPath],{_updateWithSegment:function(a){this.inherited(arguments);this._setTextPath()},setShape:function(a){this.inherited(arguments);
-this._setTextPath();return this},_setTextPath:function(){if("string"==typeof this.shape.path){var a=this.rawNode;if(!a.firstChild){var b=m(c.xmlns.svg,"textPath"),d=v("");b.appendChild(d);a.appendChild(b)}b=(b=a.firstChild.getAttributeNS(c.xmlns.xlink,"href"))&&c.getRef(b);if(!b&&(d=this._getParentSurface())){var d=d.defNode,b=m(c.xmlns.svg,"path"),e=h._base._getUniqueId();b.setAttribute("id",e);d.appendChild(b);a.firstChild.setAttributeNS?a.firstChild.setAttributeNS(c.xmlns.xlink,"xlink:href","#"+
-e):a.firstChild.setAttribute("xlink:href","#"+e)}b&&b.setAttribute("d",this.shape.path)}},_setText:function(){var a=this.rawNode;if(!a.firstChild){var b=m(c.xmlns.svg,"textPath"),d=v("");b.appendChild(d);a.appendChild(b)}a=a.firstChild;b=this.text;a.setAttribute("alignment-baseline","middle");switch(b.align){case "middle":a.setAttribute("text-anchor","middle");a.setAttribute("startOffset","50%");break;case "end":a.setAttribute("text-anchor","end");a.setAttribute("startOffset","100%");break;default:a.setAttribute("text-anchor",
-"start"),a.setAttribute("startOffset","0%")}a.setAttribute("baseline-shift","0.5ex");a.setAttribute("text-decoration",b.decoration);a.setAttribute("rotate",b.rotated?90:0);a.setAttribute("kerning",b.kerning?"auto":0);a.firstChild.data=b.text}});c.TextPath.nodeType="text";var D=534<function(){var a=/WebKit\/(\d*)/.exec(z);return a?a[1]:0}();c.Surface=k("dojox.gfx.svg.Surface",g.Surface,{constructor:function(){g.Container._init.call(this)},destroy:function(){g.Container.clear.call(this,!0);this.defNode=
-null;this.inherited(arguments)},setDimensions:function(a,b){if(!this.rawNode)return this;this.rawNode.setAttribute("width",a);this.rawNode.setAttribute("height",b);D&&(this.rawNode.style.width=a,this.rawNode.style.height=b);return this},getDimensions:function(){return this.rawNode?{width:h.normalizedLength(this.rawNode.getAttribute("width")),height:h.normalizedLength(this.rawNode.getAttribute("height"))}:null}});c.createSurface=function(a,b,d){var e=new c.Surface;e.rawNode=m(c.xmlns.svg,"svg");e.rawNode.setAttribute("overflow",
-"hidden");b&&e.rawNode.setAttribute("width",b);d&&e.rawNode.setAttribute("height",d);b=m(c.xmlns.svg,"defs");e.rawNode.appendChild(b);e.defNode=b;e._parent=q.byId(a);e._parent.appendChild(e.rawNode);h._base._fixMsTouchAction(e);return e};n={_setFont:function(){var a=this.fontStyle;this.rawNode.setAttribute("font-style",a.style);this.rawNode.setAttribute("font-variant",a.variant);this.rawNode.setAttribute("font-weight",a.weight);this.rawNode.setAttribute("font-size",a.size);this.rawNode.setAttribute("font-family",
-a.family)}};var r=g.Container;k={openBatch:function(){if(!this._batch){var a;a=c.useSvgWeb?p.doc.createDocumentFragment(!0):p.doc.createDocumentFragment();this.fragment=a}++this._batch;return this},closeBatch:function(){this._batch=0<this._batch?--this._batch:0;this.fragment&&!this._batch&&(this.rawNode.appendChild(this.fragment),delete this.fragment);return this},add:function(a){this!=a.getParent()&&(this.fragment?this.fragment.appendChild(a.rawNode):this.rawNode.appendChild(a.rawNode),r.add.apply(this,
-arguments),a.setClip(a.clip));return this},remove:function(a,b){this==a.getParent()&&(this.rawNode==a.rawNode.parentNode&&this.rawNode.removeChild(a.rawNode),this.fragment&&this.fragment==a.rawNode.parentNode&&this.fragment.removeChild(a.rawNode),a._removeClipNode(),r.remove.apply(this,arguments));return this},clear:function(){for(var a=this.rawNode;a.lastChild;)a.removeChild(a.lastChild);var b=this.defNode;if(b){for(;b.lastChild;)b.removeChild(b.lastChild);a.appendChild(b)}return r.clear.apply(this,
-arguments)},getBoundingBox:r.getBoundingBox,_moveChildToFront:r._moveChildToFront,_moveChildToBack:r._moveChildToBack};s={createObject:function(a,b){if(!this.rawNode)return null;var d=new a,e=m(c.xmlns.svg,a.nodeType);d.setRawNode(e);d.setShape(b);this.add(d);return d}};l.extend(c.Text,n);l.extend(c.TextPath,n);l.extend(c.Group,k);l.extend(c.Group,g.Creator);l.extend(c.Group,s);l.extend(c.Surface,k);l.extend(c.Surface,g.Creator);l.extend(c.Surface,s);c.fixTarget=function(a,b){a.gfxTarget||(a.gfxTarget=
-A&&a.target.wholeText?a.target.parentElement.__gfxObject__:a.target.__gfxObject__);return!0};c.useSvgWeb&&(c.createSurface=function(a,b,d){var e=new c.Surface;if(!b||!d){var f=x.position(a);b=b||f.w;d=d||f.h}a=q.byId(a);var f=a.id?a.id+"_svgweb":h._base._getUniqueId(),g=m(c.xmlns.svg,"svg");g.id=f;g.setAttribute("width",b);g.setAttribute("height",d);svgweb.appendChild(g,a);g.addEventListener("SVGLoad",function(){e.rawNode=this;e.isLoaded=!0;var a=m(c.xmlns.svg,"defs");e.rawNode.appendChild(a);e.defNode=
-a;if(e.onLoad)e.onLoad(e)},!1);e.isLoaded=!1;return e},c.Surface.extend({destroy:function(){var a=this.rawNode;svgweb.removeChild(a,a.parentNode)}}),n={connect:function(a,b,c){"on"===a.substring(0,2)&&(a=a.substring(2));c=2==arguments.length?b:l.hitch(b,c);this.getEventSource().addEventListener(a,c,!1);return[this,a,c]},disconnect:function(a){this.getEventSource().removeEventListener(a[1],a[2],!1);delete a[0]}},l.extend(c.Shape,n),l.extend(c.Surface,n));return c});
-//@ sourceMappingURL=svg.js.map
+define(["dojo/_base/lang", "dojo/_base/sniff", "dojo/_base/window", "dojo/dom", "dojo/_base/declare", "dojo/_base/array",
+  "dojo/dom-geometry", "dojo/dom-attr", "dojo/_base/Color", "./_base", "./shape", "./path"],
+function(lang, has, win, dom, declare, arr, domGeom, domAttr, Color, g, gs, pathLib){
+
+	var svg = g.svg = {
+		// summary:
+		//		This the graphics rendering bridge for browsers compliant with W3C SVG1.0.
+		//		This is the preferred renderer to use for interactive and accessible graphics.
+	};
+	svg.useSvgWeb = (typeof window.svgweb != "undefined");
+
+	// Need to detect iOS in order to workaround bug when
+	// touching nodes with text
+	var uagent = navigator.userAgent,
+		safMobile = has("ios"),
+		android = has("android"),
+		textRenderingFix = has("chrome") || (android && android>=4) ? "auto" : "optimizeLegibility";// #16099, #16461
+
+	function _createElementNS(ns, nodeType){
+		// summary:
+		//		Internal helper to deal with creating elements that
+		//		are namespaced.  Mainly to get SVG markup output
+		//		working on IE.
+		if(win.doc.createElementNS){
+			return win.doc.createElementNS(ns,nodeType);
+		}else{
+			return win.doc.createElement(nodeType);
+		}
+	}
+	
+	function _setAttributeNS(node, ns, attr, value){
+		if(node.setAttributeNS){
+			return node.setAttributeNS(ns, attr, value);
+		}else{
+			return node.setAttribute(attr, value);
+		}
+	}
+
+	function _createTextNode(text){
+		if(svg.useSvgWeb){
+			return win.doc.createTextNode(text, true);
+		}else{
+			return win.doc.createTextNode(text);
+		}
+	}
+
+	function _createFragment(){
+		if(svg.useSvgWeb){
+			return win.doc.createDocumentFragment(true);
+		}else{
+			return win.doc.createDocumentFragment();
+		}
+	}
+
+	svg.xmlns = {
+		xlink: "http://www.w3.org/1999/xlink",
+		svg:   "http://www.w3.org/2000/svg"
+	};
+
+	svg.getRef = function(name){
+		// summary:
+		//		looks up a node by its external name
+		// name: String
+		//		an SVG external reference
+		// returns:
+		//      returns a DOM Node specified by the name argument or null
+		if(!name || name == "none") return null;
+		if(name.match(/^url\(#.+\)$/)){
+			return dom.byId(name.slice(5, -1));	// Node
+		}
+		// alternative representation of a reference
+		if(name.match(/^#dojoUnique\d+$/)){
+			// we assume here that a reference was generated by dojox/gfx
+			return dom.byId(name.slice(1));	// Node
+		}
+		return null;	// Node
+	};
+
+	svg.dasharray = {
+		solid:				"none",
+		shortdash:			[4, 1],
+		shortdot:			[1, 1],
+		shortdashdot:		[4, 1, 1, 1],
+		shortdashdotdot:	[4, 1, 1, 1, 1, 1],
+		dot:				[1, 3],
+		dash:				[4, 3],
+		longdash:			[8, 3],
+		dashdot:			[4, 3, 1, 3],
+		longdashdot:		[8, 3, 1, 3],
+		longdashdotdot:		[8, 3, 1, 3, 1, 3]
+	};
+
+	var clipCount = 0;
+
+	svg.Shape = declare("dojox.gfx.svg.Shape", gs.Shape, {
+		// summary:
+		//		SVG-specific implementation of dojox/gfx/shape.Shape methods
+
+		destroy: function(){
+			if(this.fillStyle && "type" in this.fillStyle){
+				var fill = this.rawNode.getAttribute("fill"),
+					ref  = svg.getRef(fill);
+				if(ref){
+					ref.parentNode.removeChild(ref);
+				}
+			}
+			if(this.clip){
+				var clipPathProp = this.rawNode.getAttribute("clip-path");
+				if(clipPathProp){
+					var clipNode = dom.byId(clipPathProp.match(/gfx_clip[\d]+/)[0]);
+					if(clipNode){ clipNode.parentNode.removeChild(clipNode); }
+				}
+			}
+			gs.Shape.prototype.destroy.apply(this, arguments);
+		},
+
+		setFill: function(fill){
+			// summary:
+			//		sets a fill object (SVG)
+			// fill: Object
+			//		a fill object
+			//		(see dojox/gfx.defaultLinearGradient,
+			//		dojox/gfx.defaultRadialGradient,
+			//		dojox/gfx.defaultPattern,
+			//		or dojo/_base/Color)
+
+			if(!fill){
+				// don't fill
+				this.fillStyle = null;
+				this.rawNode.setAttribute("fill", "none");
+				this.rawNode.setAttribute("fill-opacity", 0);
+				return this;
+			}
+			var f;
+			// FIXME: slightly magical. We're using the outer scope's "f", but setting it later
+			var setter = function(x){
+					// we assume that we're executing in the scope of the node to mutate
+					this.setAttribute(x, f[x].toFixed(8));
+				};
+			if(typeof(fill) == "object" && "type" in fill){
+				// gradient
+				switch(fill.type){
+					case "linear":
+						f = g.makeParameters(g.defaultLinearGradient, fill);
+						var gradient = this._setFillObject(f, "linearGradient");
+						arr.forEach(["x1", "y1", "x2", "y2"], setter, gradient);
+						break;
+					case "radial":
+						f = g.makeParameters(g.defaultRadialGradient, fill);
+						var grad = this._setFillObject(f, "radialGradient");
+						arr.forEach(["cx", "cy", "r"], setter, grad);
+						break;
+					case "pattern":
+						f = g.makeParameters(g.defaultPattern, fill);
+						var pattern = this._setFillObject(f, "pattern");
+						arr.forEach(["x", "y", "width", "height"], setter, pattern);
+						break;
+				}
+				this.fillStyle = f;
+				return this;
+			}
+			// color object
+			f = g.normalizeColor(fill);
+			this.fillStyle = f;
+			this.rawNode.setAttribute("fill", f.toCss());
+			this.rawNode.setAttribute("fill-opacity", f.a);
+			this.rawNode.setAttribute("fill-rule", "evenodd");
+			return this;	// self
+		},
+
+		setStroke: function(stroke){
+			// summary:
+			//		sets a stroke object (SVG)
+			// stroke: Object
+			//		a stroke object (see dojox/gfx.defaultStroke)
+
+			var rn = this.rawNode;
+			if(!stroke){
+				// don't stroke
+				this.strokeStyle = null;
+				rn.setAttribute("stroke", "none");
+				rn.setAttribute("stroke-opacity", 0);
+				return this;
+			}
+			// normalize the stroke
+			if(typeof stroke == "string" || lang.isArray(stroke) || stroke instanceof Color){
+				stroke = { color: stroke };
+			}
+			var s = this.strokeStyle = g.makeParameters(g.defaultStroke, stroke);
+			s.color = g.normalizeColor(s.color);
+			// generate attributes
+			if(s){
+				rn.setAttribute("stroke", s.color.toCss());
+				rn.setAttribute("stroke-opacity", s.color.a);
+				rn.setAttribute("stroke-width",   s.width);
+				rn.setAttribute("stroke-linecap", s.cap);
+				if(typeof s.join == "number"){
+					rn.setAttribute("stroke-linejoin",   "miter");
+					rn.setAttribute("stroke-miterlimit", s.join);
+				}else{
+					rn.setAttribute("stroke-linejoin",   s.join);
+				}
+				var da = s.style.toLowerCase();
+				if(da in svg.dasharray){
+					da = svg.dasharray[da];
+				}
+				if(da instanceof Array){
+					da = lang._toArray(da);
+					var i;
+					for(i = 0; i < da.length; ++i){
+						da[i] *= s.width;
+					}
+					if(s.cap != "butt"){
+						for(i = 0; i < da.length; i += 2){
+							da[i] -= s.width;
+							if(da[i] < 1){ da[i] = 1; }
+						}
+						for(i = 1; i < da.length; i += 2){
+							da[i] += s.width;
+						}
+					}
+					da = da.join(",");
+				}
+				rn.setAttribute("stroke-dasharray", da);
+				rn.setAttribute("dojoGfxStrokeStyle", s.style);
+			}
+			return this;	// self
+		},
+
+		_getParentSurface: function(){
+			var surface = this.parent;
+			for(; surface && !(surface instanceof g.Surface); surface = surface.parent);
+			return surface;
+		},
+
+		_setFillObject: function(f, nodeType){
+			var svgns = svg.xmlns.svg;
+			this.fillStyle = f;
+			var surface = this._getParentSurface(),
+				defs = surface.defNode,
+				fill = this.rawNode.getAttribute("fill"),
+				ref  = svg.getRef(fill);
+			if(ref){
+				fill = ref;
+				if(fill.tagName.toLowerCase() != nodeType.toLowerCase()){
+					var id = fill.id;
+					fill.parentNode.removeChild(fill);
+					fill = _createElementNS(svgns, nodeType);
+					fill.setAttribute("id", id);
+					defs.appendChild(fill);
+				}else{
+					while(fill.childNodes.length){
+						fill.removeChild(fill.lastChild);
+					}
+				}
+			}else{
+				fill = _createElementNS(svgns, nodeType);
+				fill.setAttribute("id", g._base._getUniqueId());
+				defs.appendChild(fill);
+			}
+			if(nodeType == "pattern"){
+				fill.setAttribute("patternUnits", "userSpaceOnUse");
+				var img = _createElementNS(svgns, "image");
+				img.setAttribute("x", 0);
+				img.setAttribute("y", 0);
+				img.setAttribute("width",  f.width .toFixed(8));
+				img.setAttribute("height", f.height.toFixed(8));
+				_setAttributeNS(img, svg.xmlns.xlink, "xlink:href", f.src);
+				fill.appendChild(img);
+			}else{
+				fill.setAttribute("gradientUnits", "userSpaceOnUse");
+				for(var i = 0; i < f.colors.length; ++i){
+					var c = f.colors[i], t = _createElementNS(svgns, "stop"),
+						cc = c.color = g.normalizeColor(c.color);
+					t.setAttribute("offset",       c.offset.toFixed(8));
+					t.setAttribute("stop-color",   cc.toCss());
+					t.setAttribute("stop-opacity", cc.a);
+					fill.appendChild(t);
+				}
+			}
+			this.rawNode.setAttribute("fill", "url(#" + fill.getAttribute("id") +")");
+			this.rawNode.removeAttribute("fill-opacity");
+			this.rawNode.setAttribute("fill-rule", "evenodd");
+			return fill;
+		},
+
+		_applyTransform: function() {
+			var matrix = this.matrix;
+			if(matrix){
+				var tm = this.matrix;
+				this.rawNode.setAttribute("transform", "matrix(" +
+					tm.xx.toFixed(8) + "," + tm.yx.toFixed(8) + "," +
+					tm.xy.toFixed(8) + "," + tm.yy.toFixed(8) + "," +
+					tm.dx.toFixed(8) + "," + tm.dy.toFixed(8) + ")");
+			}else{
+				this.rawNode.removeAttribute("transform");
+			}
+			return this;
+		},
+
+		setRawNode: function(rawNode){
+			// summary:
+			//		assigns and clears the underlying node that will represent this
+			//		shape. Once set, transforms, gradients, etc, can be applied.
+			//		(no fill & stroke by default)
+			var r = this.rawNode = rawNode;
+			if(this.shape.type!="image"){
+				r.setAttribute("fill", "none");
+			}
+			r.setAttribute("fill-opacity", 0);
+			r.setAttribute("stroke", "none");
+			r.setAttribute("stroke-opacity", 0);
+			r.setAttribute("stroke-width", 1);
+			r.setAttribute("stroke-linecap", "butt");
+			r.setAttribute("stroke-linejoin", "miter");
+			r.setAttribute("stroke-miterlimit", 4);
+			// Bind GFX object with SVG node for ease of retrieval - that is to
+			// save code/performance to keep this association elsewhere
+			r.__gfxObject__ = this;
+		},
+
+		setShape: function(newShape){
+			// summary:
+			//		sets a shape object (SVG)
+			// newShape: Object
+			//		a shape object
+			//		(see dojox/gfx.defaultPath,
+			//		dojox/gfx.defaultPolyline,
+			//		dojox/gfx.defaultRect,
+			//		dojox/gfx.defaultEllipse,
+			//		dojox/gfx.defaultCircle,
+			//		dojox/gfx.defaultLine,
+			//		or dojox/gfx.defaultImage)
+			this.shape = g.makeParameters(this.shape, newShape);
+			for(var i in this.shape){
+				if(i != "type"){
+					this.rawNode.setAttribute(i, this.shape[i]);
+				}
+			}
+			this.bbox = null;
+			return this;	// self
+		},
+
+		// move family
+
+		_moveToFront: function(){
+			// summary:
+			//		moves a shape to front of its parent's list of shapes (SVG)
+			this.rawNode.parentNode.appendChild(this.rawNode);
+			return this;	// self
+		},
+		_moveToBack: function(){
+			// summary:
+			//		moves a shape to back of its parent's list of shapes (SVG)
+			this.rawNode.parentNode.insertBefore(this.rawNode, this.rawNode.parentNode.firstChild);
+			return this;	// self
+		},
+		setClip: function(clip){
+			// summary:
+			//		sets the clipping area of this shape.
+			// description:
+			//		This method overrides the dojox/gfx/shape.Shape.setClip() method.
+			// clip: Object
+			//		an object that defines the clipping geometry, or null to remove clip.
+			this.inherited(arguments);
+			var clipType = clip ? "width" in clip ? "rect" : 
+							"cx" in clip ? "ellipse" : 
+							"points" in clip ? "polyline" : "d" in clip ? "path" : null : null;
+			if(clip && !clipType){
+				return this;
+			}
+			if(clipType === "polyline"){
+				clip = lang.clone(clip);
+				clip.points = clip.points.join(",");
+			}
+			var clipNode, clipShape,
+				clipPathProp = domAttr.get(this.rawNode, "clip-path");
+			if(clipPathProp){
+				clipNode = dom.byId(clipPathProp.match(/gfx_clip[\d]+/)[0]);
+				if(clipNode){ // may be null if not in the DOM anymore
+					clipNode.removeChild(clipNode.childNodes[0]);
+				}
+			}
+			if(clip){
+				if(clipNode){
+					clipShape = _createElementNS(svg.xmlns.svg, clipType);
+					clipNode.appendChild(clipShape);
+				}else{
+					var idIndex = ++clipCount;
+					var clipId = "gfx_clip" + idIndex;
+					var clipUrl = "url(#" + clipId + ")";
+					this.rawNode.setAttribute("clip-path", clipUrl);
+					clipNode = _createElementNS(svg.xmlns.svg, "clipPath");
+					clipShape = _createElementNS(svg.xmlns.svg, clipType);
+					clipNode.appendChild(clipShape);
+					this.rawNode.parentNode.insertBefore(clipNode, this.rawNode);
+					domAttr.set(clipNode, "id", clipId);
+				}
+				domAttr.set(clipShape, clip);
+			}else{
+				//remove clip-path
+				this.rawNode.removeAttribute("clip-path");
+				if(clipNode){
+					clipNode.parentNode.removeChild(clipNode);
+				}
+			}
+			return this;
+		},
+		_removeClipNode: function(){
+			var clipNode, clipPathProp = domAttr.get(this.rawNode, "clip-path");
+			if(clipPathProp){
+				clipNode = dom.byId(clipPathProp.match(/gfx_clip[\d]+/)[0]);
+				if(clipNode){
+					clipNode.parentNode.removeChild(clipNode);
+				}
+			}
+			return clipNode;
+		}
+	});
+
+
+	svg.Group = declare("dojox.gfx.svg.Group", svg.Shape, {
+		// summary:
+		//		a group shape (SVG), which can be used
+		//		to logically group shapes (e.g, to propagate matricies)
+		constructor: function(){
+			gs.Container._init.call(this);
+		},
+		setRawNode: function(rawNode){
+			// summary:
+			//		sets a raw SVG node to be used by this shape
+			// rawNode: Node
+			//		an SVG node
+			this.rawNode = rawNode;
+			// Bind GFX object with SVG node for ease of retrieval - that is to
+			// save code/performance to keep this association elsewhere
+			this.rawNode.__gfxObject__ = this;
+		},
+		destroy: function(){
+			// summary:
+			//		Releases all internal resources owned by this shape. Once this method has been called,
+			//		the instance is considered disposed and should not be used anymore.
+			this.clear(true);
+			// avoid this.inherited
+			svg.Shape.prototype.destroy.apply(this, arguments);
+		}
+	});
+	svg.Group.nodeType = "g";
+
+	svg.Rect = declare("dojox.gfx.svg.Rect", [svg.Shape, gs.Rect], {
+		// summary:
+		//		a rectangle shape (SVG)
+		setShape: function(newShape){
+			// summary:
+			//		sets a rectangle shape object (SVG)
+			// newShape: Object
+			//		a rectangle shape object
+			this.shape = g.makeParameters(this.shape, newShape);
+			this.bbox = null;
+			for(var i in this.shape){
+				if(i != "type" && i != "r"){
+					this.rawNode.setAttribute(i, this.shape[i]);
+				}
+			}
+			if(this.shape.r != null){
+				this.rawNode.setAttribute("ry", this.shape.r);
+				this.rawNode.setAttribute("rx", this.shape.r);
+			}
+			return this;	// self
+		}
+	});
+	svg.Rect.nodeType = "rect";
+
+	svg.Ellipse = declare("dojox.gfx.svg.Ellipse", [svg.Shape, gs.Ellipse], {});
+	svg.Ellipse.nodeType = "ellipse";
+
+	svg.Circle = declare("dojox.gfx.svg.Circle", [svg.Shape, gs.Circle], {});
+	svg.Circle.nodeType = "circle";
+
+	svg.Line = declare("dojox.gfx.svg.Line", [svg.Shape, gs.Line], {});
+	svg.Line.nodeType = "line";
+
+	svg.Polyline = declare("dojox.gfx.svg.Polyline", [svg.Shape, gs.Polyline], {
+		// summary:
+		//		a polyline/polygon shape (SVG)
+		setShape: function(points, closed){
+			// summary:
+			//		sets a polyline/polygon shape object (SVG)
+			// points: Object|Array
+			//		a polyline/polygon shape object, or an array of points
+			if(points && points instanceof Array){
+				this.shape = g.makeParameters(this.shape, { points: points });
+				if(closed && this.shape.points.length){
+					this.shape.points.push(this.shape.points[0]);
+				}
+			}else{
+				this.shape = g.makeParameters(this.shape, points);
+			}
+			this.bbox = null;
+			this._normalizePoints();
+			var attr = [], p = this.shape.points;
+			for(var i = 0; i < p.length; ++i){
+				attr.push(p[i].x.toFixed(8), p[i].y.toFixed(8));
+			}
+			this.rawNode.setAttribute("points", attr.join(" "));
+			return this;	// self
+		}
+	});
+	svg.Polyline.nodeType = "polyline";
+
+	svg.Image = declare("dojox.gfx.svg.Image", [svg.Shape, gs.Image], {
+		// summary:
+		//		an image (SVG)
+		setShape: function(newShape){
+			// summary:
+			//		sets an image shape object (SVG)
+			// newShape: Object
+			//		an image shape object
+			this.shape = g.makeParameters(this.shape, newShape);
+			this.bbox = null;
+			var rawNode = this.rawNode;
+			for(var i in this.shape){
+				if(i != "type" && i != "src"){
+					rawNode.setAttribute(i, this.shape[i]);
+				}
+			}
+			rawNode.setAttribute("preserveAspectRatio", "none");
+			_setAttributeNS(rawNode, svg.xmlns.xlink, "xlink:href", this.shape.src);
+			// Bind GFX object with SVG node for ease of retrieval - that is to
+			// save code/performance to keep this association elsewhere
+			rawNode.__gfxObject__ = this;
+			return this;	// self
+		}
+	});
+	svg.Image.nodeType = "image";
+
+	svg.Text = declare("dojox.gfx.svg.Text", [svg.Shape, gs.Text], {
+		// summary:
+		//		an anchored text (SVG)
+		setShape: function(newShape){
+			// summary:
+			//		sets a text shape object (SVG)
+			// newShape: Object
+			//		a text shape object
+			this.shape = g.makeParameters(this.shape, newShape);
+			this.bbox = null;
+			var r = this.rawNode, s = this.shape;
+			r.setAttribute("x", s.x);
+			r.setAttribute("y", s.y);
+			r.setAttribute("text-anchor", s.align);
+			r.setAttribute("text-decoration", s.decoration);
+			r.setAttribute("rotate", s.rotated ? 90 : 0);
+			r.setAttribute("kerning", s.kerning ? "auto" : 0);
+			r.setAttribute("text-rendering", textRenderingFix);
+
+			// update the text content
+			if(r.firstChild){
+				r.firstChild.nodeValue = s.text;
+			}else{
+				r.appendChild(_createTextNode(s.text));
+			}
+			return this;	// self
+		},
+		getTextWidth: function(){
+			// summary:
+			//		get the text width in pixels
+			var rawNode = this.rawNode,
+				oldParent = rawNode.parentNode,
+				_measurementNode = rawNode.cloneNode(true);
+			_measurementNode.style.visibility = "hidden";
+
+			// solution to the "orphan issue" in FF
+			var _width = 0, _text = _measurementNode.firstChild.nodeValue;
+			oldParent.appendChild(_measurementNode);
+
+			// solution to the "orphan issue" in Opera
+			// (nodeValue == "" hangs firefox)
+			if(_text!=""){
+				while(!_width){
+//Yang: work around svgweb bug 417 -- http://code.google.com/p/svgweb/issues/detail?id=417
+if (_measurementNode.getBBox)
+					_width = parseInt(_measurementNode.getBBox().width);
+else
+	_width = 68;
+				}
+			}
+			oldParent.removeChild(_measurementNode);
+			return _width;
+		},
+		getBoundingBox: function(){
+			var s = this.getShape(), bbox = null;
+			if(s.text){
+				// try/catch the FF native getBBox error.
+				try {
+					bbox = this.rawNode.getBBox();
+				} catch (e) {
+					// under FF when the node is orphan (all other browsers return a 0ed bbox.
+					bbox = {x:0, y:0, width:0, height:0};
+				}
+			}
+			return bbox;
+		}
+	});
+	svg.Text.nodeType = "text";
+
+	svg.Path = declare("dojox.gfx.svg.Path", [svg.Shape, pathLib.Path], {
+		// summary:
+		//		a path shape (SVG)
+		_updateWithSegment: function(segment){
+			// summary:
+			//		updates the bounding box of path with new segment
+			// segment: Object
+			//		a segment
+			this.inherited(arguments);
+			if(typeof(this.shape.path) == "string"){
+				this.rawNode.setAttribute("d", this.shape.path);
+			}
+		},
+		setShape: function(newShape){
+			// summary:
+			//		forms a path using a shape (SVG)
+			// newShape: Object
+			//		an SVG path string or a path object (see dojox/gfx.defaultPath)
+			this.inherited(arguments);
+			if(this.shape.path){
+				this.rawNode.setAttribute("d", this.shape.path);
+			}else{
+				this.rawNode.removeAttribute("d");
+			}
+			return this;	// self
+		}
+	});
+	svg.Path.nodeType = "path";
+
+	svg.TextPath = declare("dojox.gfx.svg.TextPath", [svg.Shape, pathLib.TextPath], {
+		// summary:
+		//		a textpath shape (SVG)
+		_updateWithSegment: function(segment){
+			// summary:
+			//		updates the bounding box of path with new segment
+			// segment: Object
+			//		a segment
+			this.inherited(arguments);
+			this._setTextPath();
+		},
+		setShape: function(newShape){
+			// summary:
+			//		forms a path using a shape (SVG)
+			// newShape: Object
+			//		an SVG path string or a path object (see dojox/gfx.defaultPath)
+			this.inherited(arguments);
+			this._setTextPath();
+			return this;	// self
+		},
+		_setTextPath: function(){
+			if(typeof this.shape.path != "string"){ return; }
+			var r = this.rawNode;
+			if(!r.firstChild){
+				var tp = _createElementNS(svg.xmlns.svg, "textPath"),
+					tx = _createTextNode("");
+				tp.appendChild(tx);
+				r.appendChild(tp);
+			}
+			var ref  = r.firstChild.getAttributeNS(svg.xmlns.xlink, "href"),
+				path = ref && svg.getRef(ref);
+			if(!path){
+				var surface = this._getParentSurface();
+				if(surface){
+					var defs = surface.defNode;
+					path = _createElementNS(svg.xmlns.svg, "path");
+					var id = g._base._getUniqueId();
+					path.setAttribute("id", id);
+					defs.appendChild(path);
+					_setAttributeNS(r.firstChild, svg.xmlns.xlink, "xlink:href", "#" + id);
+				}
+			}
+			if(path){
+				path.setAttribute("d", this.shape.path);
+			}
+		},
+		_setText: function(){
+			var r = this.rawNode;
+			if(!r.firstChild){
+				var tp = _createElementNS(svg.xmlns.svg, "textPath"),
+					tx = _createTextNode("");
+				tp.appendChild(tx);
+				r.appendChild(tp);
+			}
+			r = r.firstChild;
+			var t = this.text;
+			r.setAttribute("alignment-baseline", "middle");
+			switch(t.align){
+				case "middle":
+					r.setAttribute("text-anchor", "middle");
+					r.setAttribute("startOffset", "50%");
+					break;
+				case "end":
+					r.setAttribute("text-anchor", "end");
+					r.setAttribute("startOffset", "100%");
+					break;
+				default:
+					r.setAttribute("text-anchor", "start");
+					r.setAttribute("startOffset", "0%");
+					break;
+			}
+			//r.parentNode.setAttribute("alignment-baseline", "central");
+			//r.setAttribute("dominant-baseline", "central");
+			r.setAttribute("baseline-shift", "0.5ex");
+			r.setAttribute("text-decoration", t.decoration);
+			r.setAttribute("rotate", t.rotated ? 90 : 0);
+			r.setAttribute("kerning", t.kerning ? "auto" : 0);
+			r.firstChild.data = t.text;
+		}
+	});
+	svg.TextPath.nodeType = "text";
+
+	// Fix for setDimension bug:
+	// http://bugs.dojotoolkit.org/ticket/16100
+	// (https://code.google.com/p/chromium/issues/detail?id=162628)
+	var hasSvgSetAttributeBug = (function(){ var matches = /WebKit\/(\d*)/.exec(uagent); return matches ? matches[1] : 0})() > 534;
+
+	svg.Surface = declare("dojox.gfx.svg.Surface", gs.Surface, {
+		// summary:
+		//		a surface object to be used for drawings (SVG)
+		constructor: function(){
+			gs.Container._init.call(this);
+		},
+		destroy: function(){
+			// no need to call svg.Container.clear to remove the children raw
+			// nodes since the surface raw node will be removed. So, only dispose at gfx level	
+			gs.Container.clear.call(this, true); 
+			this.defNode = null;	// release the external reference
+			this.inherited(arguments);
+		},
+		setDimensions: function(width, height){
+			// summary:
+			//		sets the width and height of the rawNode
+			// width: String
+			//		width of surface, e.g., "100px"
+			// height: String
+			//		height of surface, e.g., "100px"
+			if(!this.rawNode){ return this; }
+			this.rawNode.setAttribute("width",  width);
+			this.rawNode.setAttribute("height", height);
+			if(hasSvgSetAttributeBug){
+				this.rawNode.style.width =  width;
+				this.rawNode.style.height =  height;
+			}
+			return this;	// self
+		},
+		getDimensions: function(){
+			// summary:
+			//		returns an object with properties "width" and "height"
+			var t = this.rawNode ? {
+				width:  g.normalizedLength(this.rawNode.getAttribute("width")),
+				height: g.normalizedLength(this.rawNode.getAttribute("height"))} : null;
+			return t;	// Object
+		}
+	});
+
+	svg.createSurface = function(parentNode, width, height){
+		// summary:
+		//		creates a surface (SVG)
+		// parentNode: Node
+		//		a parent node
+		// width: String|Number
+		//		width of surface, e.g., "100px" or 100
+		// height: String|Number
+		//		height of surface, e.g., "100px" or 100
+		// returns: dojox/gfx/shape.Surface
+		//     newly created surface
+
+		var s = new svg.Surface();
+		s.rawNode = _createElementNS(svg.xmlns.svg, "svg");
+		s.rawNode.setAttribute("overflow", "hidden");
+		if(width){
+			s.rawNode.setAttribute("width",  width);
+		}
+		if(height){
+			s.rawNode.setAttribute("height", height);
+		}
+
+		var defNode = _createElementNS(svg.xmlns.svg, "defs");
+		s.rawNode.appendChild(defNode);
+		s.defNode = defNode;
+
+		s._parent = dom.byId(parentNode);
+		s._parent.appendChild(s.rawNode);
+
+		g._base._fixMsTouchAction(s);
+
+		return s;	// dojox/gfx.Surface
+	};
+
+	// Extenders
+
+	var Font = {
+		_setFont: function(){
+			// summary:
+			//		sets a font object (SVG)
+			var f = this.fontStyle;
+			// next line doesn't work in Firefox 2 or Opera 9
+			//this.rawNode.setAttribute("font", dojox.gfx.makeFontString(this.fontStyle));
+			this.rawNode.setAttribute("font-style", f.style);
+			this.rawNode.setAttribute("font-variant", f.variant);
+			this.rawNode.setAttribute("font-weight", f.weight);
+			this.rawNode.setAttribute("font-size", f.size);
+			this.rawNode.setAttribute("font-family", f.family);
+		}
+	};
+
+	var C = gs.Container;
+	var Container = svg.Container = {
+		openBatch: function() {
+			// summary:
+			//		starts a new batch, subsequent new child shapes will be held in
+			//		the batch instead of appending to the container directly
+			if(!this._batch){
+				this.fragment = _createFragment();
+			}
+			++this._batch;
+			return this;
+		},
+		closeBatch: function() {
+			// summary:
+			//		submits the current batch, append all pending child shapes to DOM
+			this._batch = this._batch > 0 ? --this._batch : 0;
+			if (this.fragment && !this._batch) {
+				this.rawNode.appendChild(this.fragment);
+				delete this.fragment;
+			}
+			return this;
+		},
+		add: function(shape){
+			// summary:
+			//		adds a shape to a group/surface
+			// shape: dojox/gfx/shape.Shape
+			//		an VML shape object
+			if(this != shape.getParent()){
+				if (this.fragment) {
+					this.fragment.appendChild(shape.rawNode);
+				} else {
+					this.rawNode.appendChild(shape.rawNode);
+				}
+				C.add.apply(this, arguments);
+				// update clipnode with new parent
+				shape.setClip(shape.clip);
+			}
+			return this;	// self
+		},
+		remove: function(shape, silently){
+			// summary:
+			//		remove a shape from a group/surface
+			// shape: dojox/gfx/shape.Shape
+			//		an VML shape object
+			// silently: Boolean?
+			//		if true, regenerate a picture
+			if(this == shape.getParent()){
+				if(this.rawNode == shape.rawNode.parentNode){
+					this.rawNode.removeChild(shape.rawNode);
+				}
+				if(this.fragment && this.fragment == shape.rawNode.parentNode){
+					this.fragment.removeChild(shape.rawNode);
+				}
+				// remove clip node from parent 
+				shape._removeClipNode();
+				C.remove.apply(this, arguments);
+			}
+			return this;	// self
+		},
+		clear: function(){
+			// summary:
+			//		removes all shapes from a group/surface
+			var r = this.rawNode;
+			while(r.lastChild){
+				r.removeChild(r.lastChild);
+			}
+			var defNode = this.defNode;
+			if(defNode){
+				while(defNode.lastChild){
+					defNode.removeChild(defNode.lastChild);
+				}
+				r.appendChild(defNode);
+			}
+			return C.clear.apply(this, arguments);
+		},
+		getBoundingBox: C.getBoundingBox,
+		_moveChildToFront: C._moveChildToFront,
+		_moveChildToBack:  C._moveChildToBack
+	};
+
+	var Creator = svg.Creator = {
+		// summary:
+		//		SVG shape creators
+		createObject: function(shapeType, rawShape){
+			// summary:
+			//		creates an instance of the passed shapeType class
+			// shapeType: Function
+			//		a class constructor to create an instance of
+			// rawShape: Object
+			//		properties to be passed in to the classes "setShape" method
+			if(!this.rawNode){ return null; }
+			var shape = new shapeType(),
+				node = _createElementNS(svg.xmlns.svg, shapeType.nodeType);
+
+			shape.setRawNode(node);
+			shape.setShape(rawShape);
+			// rawNode.appendChild() will be done inside this.add(shape) below
+			this.add(shape);
+			return shape;	// dojox/gfx/shape.Shape
+		}
+	};
+
+	lang.extend(svg.Text, Font);
+	lang.extend(svg.TextPath, Font);
+
+	lang.extend(svg.Group, Container);
+	lang.extend(svg.Group, gs.Creator);
+	lang.extend(svg.Group, Creator);
+
+	lang.extend(svg.Surface, Container);
+	lang.extend(svg.Surface, gs.Creator);
+	lang.extend(svg.Surface, Creator);
+
+	// Mouse/Touch event
+	svg.fixTarget = function(event, gfxElement) {
+		// summary:
+		//		Adds the gfxElement to event.gfxTarget if none exists. This new
+		//		property will carry the GFX element associated with this event.
+		// event: Object
+		//		The current input event (MouseEvent or TouchEvent)
+		// gfxElement: Object
+		//		The GFX target element
+		if (!event.gfxTarget) {
+			if (safMobile && event.target.wholeText) {
+				// Workaround iOS bug when touching text nodes
+				event.gfxTarget = event.target.parentElement.__gfxObject__;
+			} else {
+				event.gfxTarget = event.target.__gfxObject__;
+			}
+		}
+		return true;
+	};
+
+	// some specific override for svgweb + flash
+	if(svg.useSvgWeb){
+		// override createSurface()
+		svg.createSurface = function(parentNode, width, height){
+			var s = new svg.Surface();
+
+			// ensure width / height
+			if(!width || !height){
+				var pos = domGeom.position(parentNode);
+				width  = width  || pos.w;
+				height = height || pos.h;
+			}
+
+			// ensure id
+			parentNode = dom.byId(parentNode);
+			var id = parentNode.id ? parentNode.id+'_svgweb' : g._base._getUniqueId();
+
+			// create dynamic svg root
+			var mockSvg = _createElementNS(svg.xmlns.svg, 'svg');
+			mockSvg.id = id;
+			mockSvg.setAttribute('width', width);
+			mockSvg.setAttribute('height', height);
+			svgweb.appendChild(mockSvg, parentNode);
+
+			// notice: any call to the raw node before flash init will fail.
+			mockSvg.addEventListener('SVGLoad', function(){
+				// become loaded
+				s.rawNode = this;
+				s.isLoaded = true;
+
+				// init defs
+				var defNode = _createElementNS(svg.xmlns.svg, "defs");
+				s.rawNode.appendChild(defNode);
+				s.defNode = defNode;
+
+				// notify application
+				if (s.onLoad)
+					s.onLoad(s);
+			}, false);
+
+			// flash not loaded yet
+			s.isLoaded = false;
+			return s;
+		};
+
+		// override Surface.destroy()
+		svg.Surface.extend({
+			destroy: function(){
+				var mockSvg = this.rawNode;
+				svgweb.removeChild(mockSvg, mockSvg.parentNode);
+			}
+		});
+
+		// override connect() & disconnect() for Shape & Surface event processing
+		var _eventsProcessing = {
+			connect: function(name, object, method){
+				// connect events using the mock addEventListener() provided by svgweb
+				if (name.substring(0, 2)==='on') { name = name.substring(2); }
+				if (arguments.length == 2) {
+					method = object;
+				} else {
+					method = lang.hitch(object, method);
+				}
+				this.getEventSource().addEventListener(name, method, false);
+				return [this, name, method];
+			},
+			disconnect: function(token){
+				// disconnect events using the mock removeEventListener() provided by svgweb
+				this.getEventSource().removeEventListener(token[1], token[2], false);
+				delete token[0];
+			}
+		};
+
+		lang.extend(svg.Shape, _eventsProcessing);
+		lang.extend(svg.Surface, _eventsProcessing);
+	}
+
+	return svg;
+});

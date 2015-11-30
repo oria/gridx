@@ -1,5 +1,63 @@
-//>>built
-define("dojox/charting/plot3d/Bars",["dojo/_base/kernel","dojo/_base/declare","dojo/_base/Color","dojo/has","./Base"],function(n,f,g,p,q){return f("dojox.charting.plot3d.Bars",q,{constructor:function(a,d,b){this.depth="auto";this.gap=0;this.data=[];this.material={type:"plastic",finish:"dull",color:"lime"};b&&("depth"in b&&(this.depth=b.depth),"gap"in b&&(this.gap=b.gap),"material"in b&&(a=b.material,"string"==typeof a||a instanceof g?this.material.color=a:this.material=a))},getDepth:function(){if("auto"==
-this.depth){var a=this.width;this.data&&this.data.length&&(a/=this.data.length);return a-2*this.gap}return this.depth},generate:function(a,d){if(!this.data)return this;for(var b=this.width/this.data.length,e=0,f="auto"==this.depth?b-2*this.gap:this.depth,h=this.height,c=this.data,g=Math.max,k=void 0,c="string"==typeof c?c.split(""):c,k=k||n.global,l=c[0],m=1;m<c.length;l=g.call(k,l,c[m++]));h/=l;d||(d=a.view);for(c=0;c<this.data.length;++c,e+=b)d.createCube({bottom:{x:e+this.gap,y:0,z:0},top:{x:e+
-b-this.gap,y:this.data[c]*h,z:f}}).setFill(this.material);p("dojo-bidi")&&this._checkOrientation(a)}})});
-//@ sourceMappingURL=Bars.js.map
+define(["dojo/_base/kernel", "dojo/_base/declare", "dojo/_base/Color", "dojo/has", "./Base"],
+	function(kernel, declare, Color, has, Base) {
+
+	// reduce function borrowed from dojox.fun
+	var reduce = function(/*Array*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
+		// summary:
+		//		repeatedly applies a binary function to an array from left
+		//		to right; returns the final value.
+		a = typeof a == "string" ? a.split("") : a; o = o || kernel.global;
+		var z = a[0];
+		for(var i = 1; i < a.length; z = f.call(o, z, a[i++]));
+		return z;	// Object
+	};
+
+	return declare("dojox.charting.plot3d.Bars", Base, {
+		constructor: function(width, height, kwArgs){
+			this.depth = "auto";
+			this.gap   = 0;
+			this.data  = [];
+			this.material = {type: "plastic", finish: "dull", color: "lime"};
+			if(kwArgs){
+				if("depth" in kwArgs){ this.depth = kwArgs.depth; }
+				if("gap"   in kwArgs){ this.gap   = kwArgs.gap; }
+				if("material" in kwArgs){
+					var m = kwArgs.material;
+					if(typeof m == "string" || m instanceof Color){
+						this.material.color = m;
+					}else{
+						this.material = m;
+					}
+				}
+			}
+		},
+		getDepth: function(){
+			if(this.depth == "auto"){
+				var w = this.width;
+				if(this.data && this.data.length){
+					w = w / this.data.length;
+				}
+				return w - 2 * this.gap;
+			}
+			return this.depth;
+		},
+		generate: function(chart, creator){
+			if(!this.data){ return this; }
+			var step = this.width / this.data.length, org = 0,
+				depth = this.depth == "auto" ? step - 2 * this.gap : this.depth,
+				scale = this.height / reduce(this.data, Math.max);
+			if(!creator){ creator = chart.view; }
+			for(var i = 0; i < this.data.length; ++i, org += step){
+				creator
+					.createCube({
+						bottom: {x: org + this.gap, y: 0, z: 0},
+						top:    {x: org + step - this.gap, y: this.data[i] * scale, z: depth}
+					})
+					.setFill(this.material);
+			}
+			if(has("dojo-bidi")){
+				this._checkOrientation(chart);
+			}
+		}
+	});
+});

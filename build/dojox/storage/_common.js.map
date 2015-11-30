@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"_common.js",
-"lineCount":2,
-"mappings":"A,SACAA,MAAA,qUAA6U,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC7UF,CAAAG,QAAA,yBACAH,EAAAI,QAAA,0BACAJ,EAAAI,QAAA,yBAOAJ,EAAAI,QAAA,sCACAJ;CAAAI,QAAA,sCACAJ,EAAAI,QAAA,uCACAJ,EAAAI,QAAA,sCACAJ,EAAAI,QAAA,yCACAJ,EAAAI,QAAA,uCAIAF,EAAAG,QAAAC,QAAAC,WAAA,EAnB6U,CAA7U;",
-"sources":["_common.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","storage","manager","initialize"]
-}

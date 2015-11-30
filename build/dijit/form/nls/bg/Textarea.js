@@ -1,3 +1,9 @@
-//>>built
-define("dijit/form/nls/bg/Textarea",{iframeEditTitle:"\u0437\u043e\u043d\u0430 \u0437\u0430 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0430\u043d\u0435",iframeFocusTitle:"\u0440\u0430\u043c\u043a\u0430 \u043d\u0430 \u0437\u043e\u043d\u0430\u0442\u0430 \u0437\u0430 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u0430\u043d\u0435"});
-//@ sourceMappingURL=Textarea.js.map
+define(
+// used by both the editor and textarea widgets to provide information to screen reader users
+({
+	iframeEditTitle: 'зона за редактиране',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
+	iframeFocusTitle: 'рамка на зоната за редактиране'  // secondary title for editable IFRAME when focus is on outer container
+	//  to let user know that focus has moved out of editing area and to the
+	//  parent element of the editing area
+})
+);

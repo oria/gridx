@@ -1,4 +1,36 @@
-//>>built
-define("dojox/charting/scaler/primitive",["dojo/_base/lang"],function(d){var e=d.getObject("dojox.charting.scaler.primitive",!0);return d.mixin(e,{buildScaler:function(a,b,c,f){a==b&&(a-=0.5,b+=0.5);return{bounds:{lower:a,upper:b,from:a,to:b,scale:c/(b-a),span:c},scaler:e}},buildTicks:function(a,b){return{major:[],minor:[],micro:[]}},getTransformerFromModel:function(a){var b=a.bounds.from,c=a.bounds.scale;return function(a){return(a-b)*c}},getTransformerFromPlot:function(a){var b=a.bounds.from,c=
-a.bounds.scale;return function(a){return a/c+b}}})});
-//@ sourceMappingURL=primitive.js.map
+define(["dojo/_base/lang"], 
+  function(lang){
+	var primitive = lang.getObject("dojox.charting.scaler.primitive", true);
+	return lang.mixin(primitive, {
+		buildScaler: function(/*Number*/ min, /*Number*/ max, /*Number*/ span, /*Object*/ kwArgs){
+			if(min == max){
+				// artificially extend bounds
+				min -= 0.5;
+				max += 0.5;
+				// now the line will be centered
+			}
+			return {
+				bounds: {
+					lower: min,
+					upper: max,
+					from:  min,
+					to:    max,
+					scale: span / (max - min),
+					span:  span
+				},
+				scaler: primitive
+			};
+		},
+		buildTicks: function(/*Object*/ scaler, /*Object*/ kwArgs){
+			return {major: [], minor: [], micro: []};	// Object
+		},
+		getTransformerFromModel: function(/*Object*/ scaler){
+			var offset = scaler.bounds.from, scale = scaler.bounds.scale;
+			return function(x){ return (x - offset) * scale; };	// Function
+		},
+		getTransformerFromPlot: function(/*Object*/ scaler){
+			var offset = scaler.bounds.from, scale = scaler.bounds.scale;
+			return function(x){ return x / scale + offset; };	// Function
+		}
+	});
+});

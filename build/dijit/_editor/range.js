@@ -1,16 +1,559 @@
-//>>built
-define("dijit/_editor/range",["dojo/_base/array","dojo/_base/declare","dojo/_base/lang"],function(p,r,q){var h={getIndex:function(a,b){for(var c=[],d=[],e=a,f,g;a!=b;){var h=0;for(f=a.parentNode;g=f.childNodes[h++];)if(g===a){--h;break}c.unshift(h);d.unshift(h-f.childNodes.length);a=f}if(0<c.length&&3==e.nodeType){for(g=e.previousSibling;g&&3==g.nodeType;)c[c.length-1]--,g=g.previousSibling;for(g=e.nextSibling;g&&3==g.nodeType;)d[d.length-1]++,g=g.nextSibling}return{o:c,r:d}},getNode:function(a,b){if(!q.isArray(a)||
-0==a.length)return b;var c=b;p.every(a,function(a){if(0<=a&&a<c.childNodes.length)c=c.childNodes[a];else return c=null,!1;return!0});return c},getCommonAncestor:function(a,b,c){c=c||a.ownerDocument.body;var d=function(a){for(var b=[];a;)if(b.unshift(a),a!==c)a=a.parentNode;else break;return b};a=d(a);b=d(b);for(var d=Math.min(a.length,b.length),e=a[0],f=1;f<d;f++)if(a[f]===b[f])e=a[f];else break;return e},getAncestor:function(a,b,c){for(c=c||a.ownerDocument.body;a&&a!==c;){var d=a.nodeName.toUpperCase();
-if(b.test(d))return a;a=a.parentNode}return null},BlockTagNames:/^(?:P|DIV|H1|H2|H3|H4|H5|H6|ADDRESS|PRE|OL|UL|LI|DT|DE)$/,getBlockAncestor:function(a,b,c){c=c||a.ownerDocument.body;b=b||h.BlockTagNames;for(var d=null,e;a&&a!==c;){var f=a.nodeName.toUpperCase();!d&&b.test(f)&&(d=a);!e&&/^(?:BODY|TD|TH|CAPTION)$/.test(f)&&(e=a);a=a.parentNode}return{blockNode:d,blockContainer:e||a.ownerDocument.body}},atBeginningOfContainer:function(a,b,c){var d=!1,e=0==c;!e&&3==b.nodeType&&/^[\s\xA0]+$/.test(b.nodeValue.substr(0,
-c))&&(e=!0);if(e)for(d=!0;b&&b!==a;){if(b.previousSibling){d=!1;break}b=b.parentNode}return d},atEndOfContainer:function(a,b,c){var d=!1,e=c==(b.length||b.childNodes.length);!e&&3==b.nodeType&&/^[\s\xA0]+$/.test(b.nodeValue.substr(c))&&(e=!0);if(e)for(d=!0;b&&b!==a;){if(b.nextSibling){d=!1;break}b=b.parentNode}return d},adjacentNoneTextNode:function(a,b){for(var c=a,d=0-a.length||0,e=b?"nextSibling":"previousSibling";c&&3==c.nodeType;)d+=c.length,c=c[e];return[c,d]},create:function(a){a=a||window;
-return a.getSelection?a.document.createRange():new l},getSelection:function(a,b){if(a.getSelection)return a.getSelection();var c=new k.selection(a);b||c._getCurrentSelection();return c}};if(!window.getSelection)var k=h.ie={cachedSelection:{},selection:function(a){this._ranges=[];this.addRange=function(a,c){this._ranges.push(a);c||a._select();this.rangeCount=this._ranges.length};this.removeAllRanges=function(){this._ranges=[];this.rangeCount=0};this.getRangeAt=function(a){return this._ranges[a]};this._getCurrentSelection=
-function(){this.removeAllRanges();var b;b=a.document.selection.createRange();b="CONTROL"==a.document.selection.type.toUpperCase()?new l(k.decomposeControlRange(b)):new l(k.decomposeTextRange(b));b?(this.addRange(b,!0),this.isCollapsed=b.collapsed):this.isCollapsed=!0}},decomposeControlRange:function(a){var b=a.item(0),c=a.item(a.length-1);a=b.parentNode;var d=c.parentNode,b=h.getIndex(b,a).o[0],c=h.getIndex(c,d).o[0]+1;return[a,b,d,c]},getEndPoint:function(a,b){var c=a.duplicate();c.collapse(!b);
-var d="EndTo"+(b?"End":"Start"),e=c.parentElement(),f,g,k;0<e.childNodes.length?p.every(e.childNodes,function(b,l){var m;if(3!=b.nodeType)if(c.moveToElementText(b),0<c.compareEndPoints(d,a))if(k&&3==k.nodeType)f=k,m=!0;else return f=e,g=l,!1;else{if(l==e.childNodes.length-1)return f=e,g=e.childNodes.length,!1}else l==e.childNodes.length-1&&(f=b,m=!0);if(m&&f){f=(m=h.adjacentNoneTextNode(f)[0])?m.nextSibling:e.firstChild;var n=h.adjacentNoneTextNode(f);m=n[0];n=n[1];m?(c.moveToElementText(m),c.collapse(!1)):
-c.moveToElementText(e);c.setEndPoint(d,a);g=c.text.length-n;return!1}k=b;return!0}):(f=e,g=0);if(!b&&1==f.nodeType&&g==f.childNodes.length){var l=f.nextSibling;l&&3==l.nodeType&&(f=l,g=0)}return[f,g]},setEndPoint:function(a,b,c){a=a.duplicate();var d;if(3!=b.nodeType)if(0<c){if(d=b.childNodes[c-1])if(3==d.nodeType)b=d,c=d.length;else if(d.nextSibling&&3==d.nextSibling.nodeType)b=d.nextSibling,c=0;else{a.moveToElementText(d.nextSibling?d:b);var e=d.parentNode;d=e.insertBefore(d.ownerDocument.createTextNode(" "),
-d.nextSibling);a.collapse(!1);e.removeChild(d)}}else a.moveToElementText(b),a.collapse(!0);3==b.nodeType&&(d=h.adjacentNoneTextNode(b),e=d[0],d=d[1],e?(a.moveToElementText(e),a.collapse(!1),"inherit"!=e.contentEditable&&d++):(a.moveToElementText(b.parentNode),a.collapse(!0),a.move("character",1),a.move("character",-1)),c+=d,0<c&&a.move("character",c)!=c&&console.error("Error when moving!"));return a},decomposeTextRange:function(a){var b=k.getEndPoint(a),c=b[0],d=b[1],e=b[0],b=b[1];a.htmlText.length&&
-(a.htmlText==a.text?b=d+a.text.length:(b=k.getEndPoint(a,!0),e=b[0],b=b[1]));return[c,d,e,b]},setRange:function(a,b,c,d,e,f){b=k.setEndPoint(a,b,c);a.setEndPoint("StartToStart",b);if(!f)var g=k.setEndPoint(a,d,e);a.setEndPoint("EndToEnd",g||b);return a}},l=h.W3CRange=r(null,{constructor:function(){0<arguments.length?(this.setStart(arguments[0][0],arguments[0][1]),this.setEnd(arguments[0][2],arguments[0][3])):(this.startContainer=this.commonAncestorContainer=null,this.startOffset=0,this.endContainer=
-null,this.endOffset=0,this.collapsed=!0)},_updateInternal:function(){this.commonAncestorContainer=this.startContainer!==this.endContainer?h.getCommonAncestor(this.startContainer,this.endContainer):this.startContainer;this.collapsed=this.startContainer===this.endContainer&&this.startOffset==this.endOffset},setStart:function(a,b){b=parseInt(b);this.startContainer===a&&this.startOffset==b||(delete this._cachedBookmark,this.startContainer=a,this.startOffset=b,this.endContainer?this._updateInternal():
-this.setEnd(a,b))},setEnd:function(a,b){b=parseInt(b);this.endContainer===a&&this.endOffset==b||(delete this._cachedBookmark,this.endContainer=a,this.endOffset=b,this.startContainer?this._updateInternal():this.setStart(a,b))},setStartAfter:function(a,b){this._setPoint("setStart",a,b,1)},setStartBefore:function(a,b){this._setPoint("setStart",a,b,0)},setEndAfter:function(a,b){this._setPoint("setEnd",a,b,1)},setEndBefore:function(a,b){this._setPoint("setEnd",a,b,0)},_setPoint:function(a,b,c,d){c=h.getIndex(b,
-b.parentNode).o;this[a](b.parentNode,c.pop()+d)},_getIERange:function(){var a=(this._body||this.endContainer.ownerDocument.body).createTextRange();k.setRange(a,this.startContainer,this.startOffset,this.endContainer,this.endOffset,this.collapsed);return a},getBookmark:function(){this._getIERange();return this._cachedBookmark},_select:function(){this._getIERange().select()},deleteContents:function(){var a=this.startContainer,b=this._getIERange();3===a.nodeType&&!this.startOffset&&this.setStartBefore(a);
-b.pasteHTML("");this.endContainer=this.startContainer;this.endOffset=this.startOffset;this.collapsed=!0},cloneRange:function(){var a=new l([this.startContainer,this.startOffset,this.endContainer,this.endOffset]);a._body=this._body;return a},detach:function(){this.startContainer=this.commonAncestorContainer=this._body=null;this.startOffset=0;this.endContainer=null;this.endOffset=0;this.collapsed=!0}});q.setObject("dijit.range",h);return h});
-//@ sourceMappingURL=range.js.map
+define([
+	"dojo/_base/array", // array.every
+	"dojo/_base/declare", // declare
+	"dojo/_base/lang" // lang.isArray
+], function(array, declare, lang){
+
+	// module:
+	//		dijit/_editor/range
+
+	var rangeapi = {
+		// summary:
+		//		W3C range API
+
+		getIndex: function(/*DomNode*/ node, /*DomNode*/ parent){
+			var ret = [], retR = [];
+			var onode = node;
+
+			var pnode, n;
+			while(node != parent){
+				var i = 0;
+				pnode = node.parentNode;
+				while((n = pnode.childNodes[i++])){
+					if(n === node){
+						--i;
+						break;
+					}
+				}
+				//if(i>=pnode.childNodes.length){
+				//console.debug("Error finding index of a node in dijit/range.getIndex()");
+				//}
+				ret.unshift(i);
+				retR.unshift(i - pnode.childNodes.length);
+				node = pnode;
+			}
+
+			//normalized() can not be called so often to prevent
+			//invalidating selection/range, so we have to detect
+			//here that any text nodes in a row
+			if(ret.length > 0 && onode.nodeType == 3){
+				n = onode.previousSibling;
+				while(n && n.nodeType == 3){
+					ret[ret.length - 1]--;
+					n = n.previousSibling;
+				}
+				n = onode.nextSibling;
+				while(n && n.nodeType == 3){
+					retR[retR.length - 1]++;
+					n = n.nextSibling;
+				}
+			}
+
+			return {o: ret, r:retR};
+		},
+
+		getNode: function(/*Array*/ index, /*DomNode*/ parent){
+			if(!lang.isArray(index) || index.length == 0){
+				return parent;
+			}
+			var node = parent;
+			//	if(!node)debugger
+			array.every(index, function(i){
+				if(i >= 0 && i < node.childNodes.length){
+					node = node.childNodes[i];
+				}else{
+					node = null;
+					//console.debug('Error: can not find node with index',index,'under parent node',parent );
+					return false; //terminate array.every
+				}
+				return true; //carry on the every loop
+			});
+
+			return node;
+		},
+
+		getCommonAncestor: function(n1, n2, root){
+			root = root || n1.ownerDocument.body;
+			var getAncestors = function(n){
+				var as = [];
+				while(n){
+					as.unshift(n);
+					if(n !== root){
+						n = n.parentNode;
+					}else{
+						break;
+					}
+				}
+				return as;
+			};
+			var n1as = getAncestors(n1);
+			var n2as = getAncestors(n2);
+
+			var m = Math.min(n1as.length, n2as.length);
+			var com = n1as[0]; //at least, one element should be in the array: the root (BODY by default)
+			for(var i = 1; i < m; i++){
+				if(n1as[i] === n2as[i]){
+					com = n1as[i]
+				}else{
+					break;
+				}
+			}
+			return com;
+		},
+
+		getAncestor: function(/*DomNode*/ node, /*RegEx?*/ regex, /*DomNode?*/ root){
+			root = root || node.ownerDocument.body;
+			while(node && node !== root){
+				var name = node.nodeName.toUpperCase();
+				if(regex.test(name)){
+					return node;
+				}
+
+				node = node.parentNode;
+			}
+			return null;
+		},
+
+		BlockTagNames: /^(?:P|DIV|H1|H2|H3|H4|H5|H6|ADDRESS|PRE|OL|UL|LI|DT|DE)$/,
+
+		getBlockAncestor: function(/*DomNode*/ node, /*RegEx?*/ regex, /*DomNode?*/ root){
+			root = root || node.ownerDocument.body;
+			regex = regex || rangeapi.BlockTagNames;
+			var block = null, blockContainer;
+			while(node && node !== root){
+				var name = node.nodeName.toUpperCase();
+				if(!block && regex.test(name)){
+					block = node;
+				}
+				if(!blockContainer && (/^(?:BODY|TD|TH|CAPTION)$/).test(name)){
+					blockContainer = node;
+				}
+
+				node = node.parentNode;
+			}
+			return {blockNode:block, blockContainer:blockContainer || node.ownerDocument.body};
+		},
+
+		atBeginningOfContainer: function(/*DomNode*/ container, /*DomNode*/ node, /*Int*/ offset){
+			var atBeginning = false;
+			var offsetAtBeginning = (offset == 0);
+			if(!offsetAtBeginning && node.nodeType == 3){ //if this is a text node, check whether the left part is all space
+				if(/^[\s\xA0]+$/.test(node.nodeValue.substr(0, offset))){
+					offsetAtBeginning = true;
+				}
+			}
+			if(offsetAtBeginning){
+				var cnode = node;
+				atBeginning = true;
+				while(cnode && cnode !== container){
+					if(cnode.previousSibling){
+						atBeginning = false;
+						break;
+					}
+					cnode = cnode.parentNode;
+				}
+			}
+			return atBeginning;
+		},
+
+		atEndOfContainer: function(/*DomNode*/ container, /*DomNode*/ node, /*Int*/ offset){
+			var atEnd = false;
+			var offsetAtEnd = (offset == (node.length || node.childNodes.length));
+			if(!offsetAtEnd && node.nodeType == 3){ //if this is a text node, check whether the right part is all space
+				if(/^[\s\xA0]+$/.test(node.nodeValue.substr(offset))){
+					offsetAtEnd = true;
+				}
+			}
+			if(offsetAtEnd){
+				var cnode = node;
+				atEnd = true;
+				while(cnode && cnode !== container){
+					if(cnode.nextSibling){
+						atEnd = false;
+						break;
+					}
+					cnode = cnode.parentNode;
+				}
+			}
+			return atEnd;
+		},
+
+		adjacentNoneTextNode: function(startnode, next){
+			var node = startnode;
+			var len = (0 - startnode.length) || 0;
+			var prop = next ? 'nextSibling' : 'previousSibling';
+			while(node){
+				if(node.nodeType != 3){
+					break;
+				}
+				len += node.length;
+				node = node[prop];
+			}
+			return [node,len];
+		},
+
+		create: function(/*Window?*/ win){	// TODO: for 2.0, replace optional window param w/mandatory window or document param
+			win = win || window;
+			if(win.getSelection){
+				return win.document.createRange();
+			}else{//IE
+				return new W3CRange();
+			}
+		},
+
+		getSelection: function(/*Window*/ window, /*Boolean?*/ ignoreUpdate){
+			if(window.getSelection){
+				return window.getSelection();
+			}else{//IE
+				var s = new ie.selection(window);
+				if(!ignoreUpdate){
+					s._getCurrentSelection();
+				}
+				return s;
+			}
+		}
+	};
+
+	// TODO: convert to has() test?   But remember IE9 issues with quirks vs. standards in main frame vs. iframe.
+	if(!window.getSelection){
+		var ie = rangeapi.ie = {
+			cachedSelection: {},
+			selection: function(window){
+				this._ranges = [];
+				this.addRange = function(r, /*boolean*/ internal){
+					this._ranges.push(r);
+					if(!internal){
+						r._select();
+					}
+					this.rangeCount = this._ranges.length;
+				};
+				this.removeAllRanges = function(){
+					//don't detach, the range may be used later
+					//				for(var i=0;i<this._ranges.length;i++){
+					//					this._ranges[i].detach();
+					//				}
+					this._ranges = [];
+					this.rangeCount = 0;
+				};
+				var _initCurrentRange = function(){
+					var r = window.document.selection.createRange();
+					var type = window.document.selection.type.toUpperCase();
+					if(type == "CONTROL"){
+						//TODO: multiple range selection(?)
+						return new W3CRange(ie.decomposeControlRange(r));
+					}else{
+						return new W3CRange(ie.decomposeTextRange(r));
+					}
+				};
+				this.getRangeAt = function(i){
+					return this._ranges[i];
+				};
+				this._getCurrentSelection = function(){
+					this.removeAllRanges();
+					var r = _initCurrentRange();
+					if(r){
+						this.addRange(r, true);
+						this.isCollapsed = r.collapsed;
+					}else{
+						this.isCollapsed = true;
+					}
+				};
+			},
+			decomposeControlRange: function(range){
+				var firstnode = range.item(0), lastnode = range.item(range.length - 1);
+				var startContainer = firstnode.parentNode, endContainer = lastnode.parentNode;
+				var startOffset = rangeapi.getIndex(firstnode, startContainer).o[0];
+				var endOffset = rangeapi.getIndex(lastnode, endContainer).o[0] + 1;
+				return [startContainer, startOffset,endContainer, endOffset];
+			},
+			getEndPoint: function(range, end){
+				var atmrange = range.duplicate();
+				atmrange.collapse(!end);
+				var cmpstr = 'EndTo' + (end ? 'End' : 'Start');
+				var parentNode = atmrange.parentElement();
+
+				var startnode, startOffset, lastNode;
+				if(parentNode.childNodes.length > 0){
+					array.every(parentNode.childNodes, function(node, i){
+						var calOffset;
+						if(node.nodeType != 3){
+							atmrange.moveToElementText(node);
+
+							if(atmrange.compareEndPoints(cmpstr, range) > 0){
+								//startnode = node.previousSibling;
+								if(lastNode && lastNode.nodeType == 3){
+									//where shall we put the start? in the text node or after?
+									startnode = lastNode;
+									calOffset = true;
+								}else{
+									startnode = parentNode;
+									startOffset = i;
+									return false;
+								}
+							}else{
+								if(i == parentNode.childNodes.length - 1){
+									startnode = parentNode;
+									startOffset = parentNode.childNodes.length;
+									return false;
+								}
+							}
+						}else{
+							if(i == parentNode.childNodes.length - 1){//at the end of this node
+								startnode = node;
+								calOffset = true;
+							}
+						}
+						//			try{
+						if(calOffset && startnode){
+							var prevnode = rangeapi.adjacentNoneTextNode(startnode)[0];
+							if(prevnode){
+								startnode = prevnode.nextSibling;
+							}else{
+								startnode = parentNode.firstChild; //firstChild must be a text node
+							}
+							var prevnodeobj = rangeapi.adjacentNoneTextNode(startnode);
+							prevnode = prevnodeobj[0];
+							var lenoffset = prevnodeobj[1];
+							if(prevnode){
+								atmrange.moveToElementText(prevnode);
+								atmrange.collapse(false);
+							}else{
+								atmrange.moveToElementText(parentNode);
+							}
+							atmrange.setEndPoint(cmpstr, range);
+							startOffset = atmrange.text.length - lenoffset;
+
+							return false;
+						}
+						//			}catch(e){ debugger }
+						lastNode = node;
+						return true;
+					});
+				}else{
+					startnode = parentNode;
+					startOffset = 0;
+				}
+
+				//if at the end of startnode and we are dealing with start container, then
+				//move the startnode to nextSibling if it is a text node
+				//TODO: do this for end container?
+				if(!end && startnode.nodeType == 1 && startOffset == startnode.childNodes.length){
+					var nextnode = startnode.nextSibling;
+					if(nextnode && nextnode.nodeType == 3){
+						startnode = nextnode;
+						startOffset = 0;
+					}
+				}
+				return [startnode, startOffset];
+			},
+			setEndPoint: function(range, container, offset){
+				//text node
+				var atmrange = range.duplicate(), node, len;
+				if(container.nodeType != 3){ //normal node
+					if(offset > 0){
+						node = container.childNodes[offset - 1];
+						if(node){
+							if(node.nodeType == 3){
+								container = node;
+								offset = node.length;
+								//pass through
+							}else{
+								if(node.nextSibling && node.nextSibling.nodeType == 3){
+									container = node.nextSibling;
+									offset = 0;
+									//pass through
+								}else{
+									atmrange.moveToElementText(node.nextSibling ? node : container);
+									var parent = node.parentNode;
+									var tempNode = parent.insertBefore(node.ownerDocument.createTextNode(' '), node.nextSibling);
+									atmrange.collapse(false);
+									parent.removeChild(tempNode);
+								}
+							}
+						}
+					}else{
+						atmrange.moveToElementText(container);
+						atmrange.collapse(true);
+					}
+				}
+				if(container.nodeType == 3){
+					var prevnodeobj = rangeapi.adjacentNoneTextNode(container);
+					var prevnode = prevnodeobj[0];
+					len = prevnodeobj[1];
+					if(prevnode){
+						atmrange.moveToElementText(prevnode);
+						atmrange.collapse(false);
+						//if contentEditable is not inherit, the above collapse won't make the end point
+						//in the correctly position: it always has a -1 offset, so compensate it
+						if(prevnode.contentEditable != 'inherit'){
+							len++;
+						}
+					}else{
+						atmrange.moveToElementText(container.parentNode);
+						atmrange.collapse(true);
+
+						// Correct internal cursor position
+						// http://bugs.dojotoolkit.org/ticket/15578
+						atmrange.move('character', 1);
+						atmrange.move('character', -1);
+					}
+
+					offset += len;
+					if(offset > 0){
+						if(atmrange.move('character', offset) != offset){
+							console.error('Error when moving!');
+						}
+					}
+				}
+
+				return atmrange;
+			},
+			decomposeTextRange: function(range){
+				var tmpary = ie.getEndPoint(range);
+				var startContainer = tmpary[0], startOffset = tmpary[1];
+				var endContainer = tmpary[0], endOffset = tmpary[1];
+
+				if(range.htmlText.length){
+					if(range.htmlText == range.text){ //in the same text node
+						endOffset = startOffset + range.text.length;
+					}else{
+						tmpary = ie.getEndPoint(range, true);
+						endContainer = tmpary[0],endOffset = tmpary[1];
+						//					if(startContainer.tagName == "BODY"){
+						//						startContainer = startContainer.firstChild;
+						//					}
+					}
+				}
+				return [startContainer, startOffset, endContainer, endOffset];
+			},
+			setRange: function(range, startContainer, startOffset, endContainer, endOffset, collapsed){
+				var start = ie.setEndPoint(range, startContainer, startOffset);
+
+				range.setEndPoint('StartToStart', start);
+				if(!collapsed){
+					var end = ie.setEndPoint(range, endContainer, endOffset);
+				}
+				range.setEndPoint('EndToEnd', end || start);
+
+				return range;
+			}
+		};
+
+		var W3CRange = rangeapi.W3CRange = declare(null, {
+			constructor: function(){
+				if(arguments.length>0){
+					this.setStart(arguments[0][0],arguments[0][1]);
+					this.setEnd(arguments[0][2],arguments[0][3]);
+				}else{
+					this.commonAncestorContainer = null;
+					this.startContainer = null;
+					this.startOffset = 0;
+					this.endContainer = null;
+					this.endOffset = 0;
+					this.collapsed = true;
+				}
+			},
+			_updateInternal: function(){
+				if(this.startContainer !== this.endContainer){
+					this.commonAncestorContainer = rangeapi.getCommonAncestor(this.startContainer, this.endContainer);
+				}else{
+					this.commonAncestorContainer = this.startContainer;
+				}
+				this.collapsed = (this.startContainer === this.endContainer) && (this.startOffset == this.endOffset);
+			},
+			setStart: function(node, offset){
+				offset=parseInt(offset);
+				if(this.startContainer === node && this.startOffset == offset){
+					return;
+				}
+				delete this._cachedBookmark;
+
+				this.startContainer = node;
+				this.startOffset = offset;
+				if(!this.endContainer){
+					this.setEnd(node, offset);
+				}else{
+					this._updateInternal();
+				}
+			},
+			setEnd: function(node, offset){
+				offset=parseInt(offset);
+				if(this.endContainer === node && this.endOffset == offset){
+					return;
+				}
+				delete this._cachedBookmark;
+
+				this.endContainer = node;
+				this.endOffset = offset;
+				if(!this.startContainer){
+					this.setStart(node, offset);
+				}else{
+					this._updateInternal();
+				}
+			},
+			setStartAfter: function(node, offset){
+				this._setPoint('setStart', node, offset, 1);
+			},
+			setStartBefore: function(node, offset){
+				this._setPoint('setStart', node, offset, 0);
+			},
+			setEndAfter: function(node, offset){
+				this._setPoint('setEnd', node, offset, 1);
+			},
+			setEndBefore: function(node, offset){
+				this._setPoint('setEnd', node, offset, 0);
+			},
+			_setPoint: function(what, node, offset, ext){
+				var index = rangeapi.getIndex(node, node.parentNode).o;
+				this[what](node.parentNode, index.pop()+ext);
+			},
+			_getIERange: function(){
+				var r = (this._body || this.endContainer.ownerDocument.body).createTextRange();
+				ie.setRange(r, this.startContainer, this.startOffset, this.endContainer, this.endOffset, this.collapsed);
+				return r;
+			},
+			getBookmark: function(){
+				this._getIERange();
+				return this._cachedBookmark;
+			},
+			_select: function(){
+				var r = this._getIERange();
+				r.select();
+			},
+			deleteContents: function(){
+				var s = this.startContainer, r = this._getIERange();
+				if(s.nodeType === 3 && !this.startOffset){
+					//if the range starts at the beginning of a
+					//text node, move it to before the textnode
+					//to make sure the range is still valid
+					//after deleteContents() finishes
+					this.setStartBefore(s);
+				}
+				r.pasteHTML('');
+				this.endContainer = this.startContainer;
+				this.endOffset = this.startOffset;
+				this.collapsed = true;
+			},
+			cloneRange: function(){
+				var r = new W3CRange([this.startContainer,this.startOffset,
+					this.endContainer,this.endOffset]);
+				r._body = this._body;
+				return r;
+			},
+			detach: function(){
+				this._body = null;
+				this.commonAncestorContainer = null;
+				this.startContainer = null;
+				this.startOffset = 0;
+				this.endContainer = null;
+				this.endOffset = 0;
+				this.collapsed = true;
+			}
+		});
+	} //if(!window.getSelection)
+
+	// remove for 2.0
+	lang.setObject("dijit.range", rangeapi);
+
+	return rangeapi;
+});

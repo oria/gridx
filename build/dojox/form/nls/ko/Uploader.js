@@ -1,3 +1,5 @@
-//>>built
-define("dojox/form/nls/ko/Uploader",{label:"\ud30c\uc77c \uc120\ud0dd..."});
-//@ sourceMappingURL=Uploader.js.map
+define(
+({
+	label: "파일 선택..."
+})
+);

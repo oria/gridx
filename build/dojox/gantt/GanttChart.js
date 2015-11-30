@@ -1,57 +1,1318 @@
-//>>built
-define("dojox/gantt/GanttChart","./GanttProjectItem ./GanttResourceItem ./GanttProjectControl ./GanttTaskControl ./GanttTaskItem ./TabMenu dijit/Tooltip dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/date/locale dojo/request dojo/request/util dojo/on dojo/dom dojo/dom-class dojo/dom-construct dojo/dom-style dojo/dom-attr dojo/dom-geometry dojo/keys dojo/has dojo/_base/window dojo/json dojo/domReady!".split(" "),function(w,C,v,x,y,D,K,E,k,l,q,z,F,n,G,r,h,f,p,A,s,H,I,B){return E("dojox.gantt.GanttChart",
-[],{constructor:function(b,a){this.resourceChartHeight=void 0!==b.resourceChartHeight?b.resourceChartHeight:!1;this.withResource=void 0!==b.withResource?b.withResource:!0;this.correctError=void 0!==b.autoCorrectError?b.autoCorrectError:!1;this.isShowConMenu=this.isContentEditable=!b.readOnly;this.withTaskId=void 0!==b.withTaskId?b.withTaskId:!b.readOnly;this.animation=void 0!==b.animation?b.animation:!0;this.saveProgramPath=b.saveProgramPath||"saveGanttData.php";this.dataFilePath=b.dataFilePath||
-"gantt_default.json";this.contentHeight=b.height||400;this.contentWidth=b.width||600;this.content=G.byId(a);this.scrollBarWidth=18;this.panelTimeHeight=102;this.maxWidthTaskNames=this.maxWidthPanelNames=150;this.minWorkLength=8;this.heightTaskItem=12;this.heightTaskItemExtra=11;this.pixelsPerDay=24;this.hsPerDay=8;this.pixelsPerWorkHour=this.pixelsPerDay/this.hsPerDay;this.pixelsPerHour=this.pixelsPerDay/24;this.totalDays=this.countDays=0;this.startDate=null;this.contentDataHeight=this.initialPos=
-0;this.panelTimeExpandDelta=20;this.tabMenu=this.contentData=this.panelTime=this.panelNames=this.divTimeInfo=null;this.project=[];this.arrProjects=[];this.xmlLoader=null;this.isResizing=this.isMoving=!1;this.animationNodes=[];this.scale=1;this.tempDayInPixels=0;this.resource=null;this.months=q.getNames("months","wide");this._events=[]},getProject:function(b){return k.filter(this.arrProjects,function(a){return a.project.id==b},this)[0]},checkPosPreviousTask:function(b,a){var c=this.getWidthOnDuration(b.duration),
-d=this.getPosOnDate(b.startTime),e=this.getPosOnDate(a.startTime);return c+d<=e},correctPosPreviousTask:function(b,a,c){var d=new Date(b.startTime);d.setHours(d.getHours()+24*(b.duration/this.hsPerDay));0<d.getHours()&&(d.setHours(0),d.setDate(d.getDate()+1));c?c.setStartTime(d,!0):a.startTime=d;a.parentTask&&!this.checkPosParentTask(a.parentTask,a)&&(b=new Date(a.parentTask.startTime),b.setHours(b.getHours()+24*(a.parentTask.duration/this.hsPerDay)),a.duration=parseInt(parseInt((b-a.startTime)/36E5)*
-this.hsPerDay/24))},correctPosParentTask:function(b,a){a.previousTask?this.correctPosPreviousTask(a.previousTask,a):(b.startTime>a.startTime&&(a.startTime=new Date(b.startTime)),this.checkPosParentTask(b,a)||(a.duration=b.duration))},checkPosParentTaskInTree:function(b){for(var a=!1,c=0;c<b.cldTasks.length;c++){var d=b.cldTasks[c];if(!this.checkPosParentTask(b,d))if(this.correctError)this.correctPosParentTask(b,d);else return!0;if(b.startTime>d.startTime)if(this.correctError)this.correctPosParentTask(b,
-d);else return!0;0<d.cldTasks.length&&(a=this.checkPosParentTaskInTree(d))}return a},setPreviousTask:function(b){for(var a=!1,c=0;c<b.parentTasks.length;c++){a=b.parentTasks[c];if(a.previousTaskId){a.previousTask=b.getTaskById(a.previousTaskId);if(!a.previousTask&&!this.correctError)return!0;a.previousTask.cldPreTasks.push(a)}if(a.previousTask&&!this.checkPosPreviousTask(a.previousTask,a))if(this.correctError)this.correctPosPreviousTask(a.previousTask,a);else return!0;a=this.setPreviousTaskInTree(a)}return a},
-setPreviousTaskInTree:function(b){for(var a=!1,c=0;c<b.cldTasks.length;c++){var d=b.cldTasks[c];if(d.previousTaskId){d.previousTask=b.project.getTaskById(d.previousTaskId);if(!d.previousTask&&!this.correctError)return!0;if(!this.checkPosPreviousTask(d.previousTask,d))if(this.correctError)this.correctPosPreviousTask(d.previousTask,d);else return!0;d.previousTask.cldPreTasks.push(d)}0<d.cldTasks.length&&(a=this.setPreviousTaskInTree(d))}return a},checkPosParentTask:function(b,a){var c=this.getWidthOnDuration(b.duration),
-d=this.getPosOnDate(b.startTime),e=this.getPosOnDate(a.startTime),g=this.getWidthOnDuration(a.duration);return c+d>=e+g},addProject:function(b){this.project.push(b)},deleteProject:function(b){var a=this.getProject(b);if(a){if(0<a.arrTasks.length)for(;0<a.arrTasks.length;)a.deleteChildTask(a.arrTasks[0]);var c=this.heightTaskItemExtra+this.heightTaskItem;a.nextProject&&a.shiftNextProject(a,-c);this.project=k.filter(this.project,function(b){return b.id!=a.project.id},this);a.previousProject&&a.nextProject&&
-(c=a.previousProject,c.nextProject=a.nextProject);a.previousProject&&!a.nextProject&&(c=a.previousProject,c.nextProject=null);!a.previousProject&&a.nextProject&&(a.nextProject.previousProject=null);for(c=0;c<this.arrProjects.length;c++)this.arrProjects[c].project.id==b&&this.arrProjects.splice(c,1);a.projectItem[0].parentNode.removeChild(a.projectItem[0]);a.descrProject.parentNode.removeChild(a.descrProject);a.projectNameItem.parentNode.removeChild(a.projectNameItem);this.contentDataHeight-=this.heightTaskItemExtra+
-this.heightTaskItem;0==this.project.length&&(b=new Date(this.startDate),b=new Date(b.setDate(b.getDate()+1)),b=new w({id:1,name:"New Project",startDate:b}),this.project.push(b),a=new v(this,b),a.create(),this.arrProjects.push(a),this.contentDataHeight+=this.heightTaskItemExtra+this.heightTaskItem);this.checkPosition()}},insertProject:function(b,a,c){if(this.startDate>=c||this.getProject(b))return!1;this.checkHeighPanelTasks();b=new w({id:b,name:a,startDate:c});this.project.push(b);b=new v(this,b);
-for(a=0;a<this.arrProjects.length;a++){var d=this.arrProjects[a-1],e=this.arrProjects[a+1];if(c<this.arrProjects[a].project.startDate)return this.arrProjects.splice(a,0,b),0<a&&(b.previousProject=d,d.nextProject=b),a+1<=this.arrProjects.length&&(b.nextProject=e,e.previousProject=b,b.shiftNextProject(b,this.heightTaskItem+this.heightTaskItemExtra)),b.create(),b.hideDescrProject(),this.checkPosition(),b}0<this.arrProjects.length&&(this.arrProjects[this.arrProjects.length-1].nextProject=b,b.previousProject=
-this.arrProjects[this.arrProjects.length-1]);this.arrProjects.push(b);b.create();b.hideDescrProject();this.checkPosition();return b},openTree:function(b){var a=this.getLastCloseParent(b);this.openNode(a);b.taskItem.id!=a.taskItem.id&&this.openTree(b)},openNode:function(b){b.isExpanded||(r.remove(b.cTaskNameItem[2],"ganttImageTreeExpand"),r.add(b.cTaskNameItem[2],"ganttImageTreeCollapse"),b.isExpanded=!0,b.shiftCurrentTasks(b,b.hideTasksHeight),b.showChildTasks(b,b.isExpanded),b.hideTasksHeight=0)},
-getLastCloseParent:function(b){return b.parentTask?!b.parentTask.isExpanded||"none"==b.parentTask.cTaskNameItem[2].style.display?this.getLastCloseParent(b.parentTask):b:b},getProjectItemById:function(b){return k.filter(this.project,function(a){return a.id==b},this)[0]},clearAll:function(){this.contentDataHeight=0;this.startDate=null;this.clearData();this.clearItems();this.clearEvents()},clearEvents:function(){k.forEach(this._events,function(b){b.remove()});this._events=[]},clearData:function(){this.project=
-[];this.arrProjects=[]},clearItems:function(){this.contentData.removeChild(this.contentData.firstChild);this.contentData.appendChild(this.createPanelTasks());this.panelNames.removeChild(this.panelNames.firstChild);this.panelNames.appendChild(this.createPanelNamesTasks());this.panelTime.removeChild(this.panelTime.firstChild)},buildUIContent:function(){this.project.sort(this.sortProjStartDate);this.startDate=this.getStartDate();this.panelTime.appendChild(this.createPanelTime());for(var b=0;b<this.project.length;b++){for(var a=
-this.project[b],c=0;c<a.parentTasks.length;c++){var d=a.parentTasks[c];if(d.startTime)this.setStartTimeChild(d);else return;if(this.setPreviousTask(a))return}for(c=0;c<a.parentTasks.length;c++)if(d=a.parentTasks[c],d.startTime<a.startDate||this.checkPosParentTaskInTree(d))return;this.sortTasksByStartTime(a)}for(b=0;b<this.project.length;b++)a=this.project[b],a=new v(this,a),0<this.arrProjects.length&&(c=this.arrProjects[this.arrProjects.length-1],a.previousProject=c,c.nextProject=a),a.create(),this.checkHeighPanelTasks(),
-this.arrProjects.push(a),this.createTasks(a);this.resource&&this.resource.reConstruct();this.postLoadData();this.postBindEvents()},loadJSONData:function(b){var a=this;a.dataFilePath=b||a.dataFilePath;z.get(a.dataFilePath,{sync:!0}).then(function(b){a.loadJSONString(b.text);a.buildUIContent()},function(){})},loadJSONString:function(b){b&&(this.clearAll(),b=B.parse(b).items,k.forEach(b,function(a){var b=a.startdate.split("-"),d=new w({id:a.id,name:a.name,startDate:new Date(b[0],parseInt(b[1])-1,b[2])});
-k.forEach(a.tasks,function(a){var b=a.id,c=a.name,f=a.starttime.split("-"),h=a.duration,k=a.percentage,J=a.previousTaskId,l=a.taskOwner,b=new y({id:b,name:c,startTime:new Date(f[0],parseInt(f[1])-1,f[2]),duration:h,percentage:k,previousTaskId:J,taskOwner:l});a=a.children;0!=a.length&&this.buildChildTasksData(b,a);d.addTask(b)},this);this.addProject(d)},this))},buildChildTasksData:function(b,a){a&&k.forEach(a,function(a){var d=a.id,e=a.name,g=a.starttime.split("-"),m=a.duration,f=a.percentage,h=a.previousTaskId,
-k=a.taskOwner,d=new y({id:d,name:e,startTime:new Date(g[0],parseInt(g[1])-1,g[2]),duration:m,percentage:f,previousTaskId:h,taskOwner:k});d.parentTask=b;b.addChildTask(d);a=a.children;0!=a.length&&this.buildChildTasksData(d,a)},this)},getJSONData:function(){var b={identifier:"id",items:[]};k.forEach(this.project,function(a){var c={id:a.id,name:a.name,startdate:a.startDate.getFullYear()+"-"+(a.startDate.getMonth()+1)+"-"+a.startDate.getDate(),tasks:[]};b.items.push(c);k.forEach(a.parentTasks,function(a){a=
-{id:a.id,name:a.name,starttime:a.startTime.getFullYear()+"-"+(a.startTime.getMonth()+1)+"-"+a.startTime.getDate(),duration:a.duration,percentage:a.percentage,previousTaskId:a.previousTaskId||"",taskOwner:a.taskOwner||"",children:this.getChildTasksData(a.cldTasks)};c.tasks.push(a)},this)},this);return b},getChildTasksData:function(b){var a=[];b&&0<b.length&&k.forEach(b,function(b){b={id:b.id,name:b.name,starttime:b.startTime.getFullYear()+"-"+(b.startTime.getMonth()+1)+"-"+b.startTime.getDate(),duration:b.duration,
-percentage:b.percentage,previousTaskId:b.previousTaskId||"",taskOwner:b.taskOwner||"",children:this.getChildTasksData(b.cldTasks)};a.push(b)},this);return a},saveJSONData:function(b){this.dataFilePath=b&&0<l.trim(b).length?b:this.dataFilePath;try{z.post(this.saveProgramPath,{query:{filename:this.dataFilePath,data:B.stringify(this.getJSONData())}}).response.then(function(a){F.checkStatus(a.options.status)})}catch(a){}},sortTaskStartTime:function(b,a){return b.startTime<a.startTime?-1:b.startTime>a.startTime?
-1:0},sortProjStartDate:function(b,a){return b.startDate<a.startDate?-1:b.startDate>a.startDate?1:0},setStartTimeChild:function(b){k.forEach(b.cldTasks,function(a){a.startTime||(a.startTime=b.startTime);0!=a.cldTasks.length&&this.setStartTimeChild(a)},this)},createPanelTasks:function(){var b=h.create("div",{className:"ganttTaskPanel"});f.set(b,{height:this.contentHeight-this.panelTimeHeight-this.scrollBarWidth+"px"});return b},refreshParams:function(b){this.pixelsPerDay=b;this.pixelsPerWorkHour=this.pixelsPerDay/
-this.hsPerDay;this.pixelsPerHour=this.pixelsPerDay/24},createPanelNamesTasksHeader:function(){var b=h.create("div",{className:"ganttPanelHeader"}),a=h.create("table",{cellPadding:"0px",border:"0px",cellSpacing:"0px",bgColor:"#FFFFFF",className:"ganttToolbar"},b),c=a.insertRow(a.rows.length),d=a.insertRow(a.rows.length),e=a.insertRow(a.rows.length);a.insertRow(a.rows.length);var a=h.create("td",{align:"center",vAlign:"middle",className:"ganttToolbarZoomIn"},c),g=l.hitch(this,function(){5<2*this.scale||
-(this.scale*=2,this.switchTeleMicroView(this.pixelsPerDay*this.scale))});this.zoomInClickEvent&&this.zoomInClickEvent.remove();this.zoomInClickEvent=n(a,"click",l.hitch(this,g));this.zoomInKeyEvent&&this.zoomInKeyEvent.remove();this.zoomInKeyEvent=n(a,"keydown",l.hitch(this,function(a){a.keyCode==s.ENTER&&g()}));p.set(a,"tabIndex",0);var c=h.create("td",{align:"center",vAlign:"middle",className:"ganttToolbarZoomOut"},c),f=l.hitch(this,function(){0.2>0.5*this.scale||(this.scale*=0.5,this.switchTeleMicroView(this.pixelsPerDay*
-this.scale))});this.zoomOutClickEvent&&this.zoomOutClickEvent.remove();this.zoomOutClickEvent=n(c,"click",l.hitch(this,f));this.zoomOutKeyEvent&&this.zoomOutKeyEvent.remove();this.zoomOutKeyEvent=n(c,"keydown",l.hitch(this,function(a){a.keyCode==s.ENTER&&f()}));p.set(c,"tabIndex",0);var t=h.create("td",{align:"center",vAlign:"middle",className:"ganttToolbarMicro"},d);this.microClickEvent&&this.microClickEvent.remove();this.microClickEvent=n(t,"click",l.hitch(this,this.refresh,this.animation?15:1,
-0,2));this.microKeyEvent&&this.microKeyEvent.remove();this.microKeyEvent=n(t,"keydown",l.hitch(this,function(a){a.keyCode==s.ENTER&&(t.blur(),this.refresh(this.animation?15:1,0,2))}));p.set(t,"tabIndex",0);var u=h.create("td",{align:"center",vAlign:"middle",className:"ganttToolbarTele"},d);this.teleClickEvent&&this.teleClickEvent.remove();this.teleClickEvent=n(u,"click",l.hitch(this,this.refresh,this.animation?15:1,0,0.5));this.teleKeyEvent&&this.teleKeyEvent.remove();this.teleKeyEvent=n(u,"keydown",
-l.hitch(this,function(a){a.keyCode==s.ENTER&&(u.blur(),this.refresh(this.animation?15:1,0,0.5))}));p.set(u,"tabIndex",0);d=h.create("td",{align:"center",vAlign:"middle",className:"ganttToolbarSave"},e);this.saveClickEvent&&this.saveClickEvent.remove();this.saveClickEvent=n(d,"click",l.hitch(this,this.saveJSONData,""));this.saveKeyEvent&&this.saveKeyEvent.remove();this.saveKeyEvent=n(d,"keydown",l.hitch(this,function(a){a.keyCode==s.ENTER&&this.saveJSONData("")}));p.set(d,"tabIndex",0);e=h.create("td",
-{align:"center",vAlign:"middle",className:"ganttToolbarLoad"},e);this.loadClickEvent&&this.loadClickEvent.remove();this.loadClickEvent=n(e,"click",l.hitch(this,this.loadJSONData,""));this.loadKeyEvent&&this.loadKeyEvent.remove();this.loadKeyEvent=n(e,"keydown",l.hitch(this,function(a){a.keyCode==s.ENTER&&this.loadJSONData("")}));p.set(e,"tabIndex",0);var q="Enlarge timeline;Shrink timeline;Zoom in time zone(microscope view);Zoom out time zone(telescope view);Save gantt data to json file;Load gantt data from json file".split(";");
-k.forEach([a,c,t,u,d,e],function(a,b){var c=q[b],d=function(){r.add(a,"ganttToolbarActionHover");dijit.showTooltip(c,a,["above","below"])};a.onmouseover=d;a.onfocus=d;d=function(){r.remove(a,"ganttToolbarActionHover");a&&dijit.hideTooltip(a)};a.onmouseout=d;a.onblur=d},this);return b},createPanelNamesTasks:function(){var b=h.create("div",{innerHTML:"\x26nbsp;",className:"ganttPanelNames"});f.set(b,{height:this.contentHeight-this.panelTimeHeight-this.scrollBarWidth+"px",width:this.maxWidthPanelNames+
-"px"});return b},createPanelTime:function(){var b=h.create("div",{className:"ganttPanelTime"}),a=h.create("table",{cellPadding:"0px",border:"0px",cellSpacing:"0px",bgColor:"#FFFFFF",className:"ganttTblTime"},b);this.totalDays=this.countDays;var c=a.insertRow(a.rows.length),d,e,g=0;e=d=(new Date(this.startDate)).getFullYear();for(var m=0;m<this.countDays;m++,g++)e=new Date(this.startDate),e.setDate(e.getDate()+m),e=e.getFullYear(),e!=d&&(this.addYearInPanelTime(c,g,d),g=0,d=e);this.addYearInPanelTime(c,
-g,e);f.set(c,"display","none");d=a.insertRow(a.rows.length);var k,c=0;e=1970;k=g=(new Date(this.startDate)).getMonth();for(m=0;m<this.countDays;m++,c++)e=new Date(this.startDate),e.setDate(e.getDate()+m),k=e.getMonth(),e=e.getFullYear(),k!=g&&(this.addMonthInPanelTime(d,c,g,e),c=0,g=k);this.addMonthInPanelTime(d,c,k,e);d=a.insertRow(a.rows.length);c=0;e=g=q._getWeekOfYear(new Date(this.startDate));for(m=0;m<this.countDays;m++,c++)e=new Date(this.startDate),e.setDate(e.getDate()+m),e=q._getWeekOfYear(e),
-e!=g&&(this.addWeekInPanelTime(d,c,g),c=0,g=e);this.addWeekInPanelTime(d,c,e);e=a.insertRow(a.rows.length);for(m=0;m<this.countDays;m++)this.addDayInPanelTime(e);a=a.insertRow(a.rows.length);for(m=0;m<this.countDays;m++)this.addHourInPanelTime(a);f.set(a,"display","none");return b},adjustPanelTime:function(){var b=k.map(this.arrProjects,function(a){return parseInt(a.projectItem[0].style.left)+parseInt(a.projectItem[0].firstChild.style.width)+a.descrProject.offsetWidth+this.panelTimeExpandDelta},this).sort(function(a,
-b){return b-a})[0];if(this.maxTaskEndPos!=b){for(var a=this.panelTime.firstChild.firstChild.rows,c=0;4>=c;c++)this.removeCell(a[c]);var d=Math.round((b+this.panelTimeExpandDelta)/this.pixelsPerDay);this.totalDays=d;var e,g,f=0;g=e=(new Date(this.startDate)).getFullYear();for(c=0;c<d;c++,f++)g=new Date(this.startDate),g.setDate(g.getDate()+c),g=g.getFullYear(),g!=e&&(this.addYearInPanelTime(a[0],f,e),f=0,e=g);this.addYearInPanelTime(a[0],f,g);var h;e=0;g=1970;h=f=(new Date(this.startDate)).getMonth();
-for(c=0;c<d;c++,e++)g=new Date(this.startDate),g.setDate(g.getDate()+c),h=g.getMonth(),g=g.getFullYear(),h!=f&&(this.addMonthInPanelTime(a[1],e,f,g),e=0,f=h);this.addMonthInPanelTime(a[1],e,h,g);e=0;g=f=q._getWeekOfYear(new Date(this.startDate));for(c=0;c<d;c++,e++)g=new Date(this.startDate),g.setDate(g.getDate()+c),g=q._getWeekOfYear(g),g!=f&&(this.addWeekInPanelTime(a[2],e,f),e=0,f=g);this.addWeekInPanelTime(a[2],e,g);for(c=0;c<d;c++)this.addDayInPanelTime(a[3]);for(c=0;c<d;c++)this.addHourInPanelTime(a[4]);
-this.panelTime.firstChild.firstChild.style.width=this.pixelsPerDay*a[3].cells.length+"px";this.contentData.firstChild.style.width=this.pixelsPerDay*a[3].cells.length+"px";this.maxTaskEndPos=b}},addYearInPanelTime:function(b,a,c){c="Year   "+c;b=h.create("td",{colSpan:a,align:"center",vAlign:"middle",className:"ganttYearNumber",innerHTML:20<this.pixelsPerDay*a?c:"",innerHTMLData:c},b);f.set(b,"width",this.pixelsPerDay*a+"px")},addMonthInPanelTime:function(b,a,c,d){c=this.months[c]+(d?" of "+d:"");
-b=h.create("td",{colSpan:a,align:"center",vAlign:"middle",className:"ganttMonthNumber",innerHTML:30<this.pixelsPerDay*a?c:"",innerHTMLData:c},b);f.set(b,"width",this.pixelsPerDay*a+"px")},addWeekInPanelTime:function(b,a,c){c="Week   "+c;b=h.create("td",{colSpan:a,align:"center",vAlign:"middle",className:"ganttWeekNumber",innerHTML:20<this.pixelsPerDay*a?c:"",innerHTMLData:c},b);f.set(b,"width",this.pixelsPerDay*a+"px")},addDayInPanelTime:function(b){var a=new Date(this.startDate);a.setDate(a.getDate()+
-parseInt(b.cells.length));var c=h.create("td",{align:"center",vAlign:"middle",className:"ganttDayNumber",innerHTML:20<this.pixelsPerDay?a.getDate():"",innerHTMLData:String(a.getDate()),data:b.cells.length},b);f.set(c,"width",this.pixelsPerDay+"px");5<=a.getDay()&&r.add(c,"ganttDayNumberWeekend");this._events.push(n(c,"mouseover",l.hitch(this,function(a){a=a.target||a.srcElement;var b=new Date(this.startDate.getTime());b.setDate(b.getDate()+parseInt(p.get(a,"data")));dijit.showTooltip(b.getFullYear()+
-"."+(b.getMonth()+1)+"."+b.getDate(),c,["above","below"])})));this._events.push(n(c,"mouseout",l.hitch(this,function(a){(a=a.target||a.srcElement)&&dijit.hideTooltip(a)})))},addHourInPanelTime:function(b){b=h.create("td",{align:"center",vAlign:"middle",className:"ganttHourNumber",data:b.cells.length},b);f.set(b,"width",this.pixelsPerDay+"px");b=h.create("table",{cellPadding:"0",cellSpacing:"0"},b);b=b.insertRow(b.rows.length);for(var a=0;a<this.hsPerDay;a++){var c=h.create("td",{className:"ganttHourClass"},
-b);f.set(c,"width",this.pixelsPerDay/this.hsPerDay+"px");p.set(c,"innerHTMLData",String(9+a));5<this.pixelsPerDay/this.hsPerDay&&p.set(c,"innerHTML",String(9+a));r.add(c,3>=a?"ganttHourNumberAM":"ganttHourNumberPM")}},incHeightPanelTasks:function(b){var a=this.contentData.firstChild;a.style.height=parseInt(a.style.height)+b+"px"},incHeightPanelNames:function(b){var a=this.panelNames.firstChild;a.style.height=parseInt(a.style.height)+b+"px"},checkPosition:function(){k.forEach(this.arrProjects,function(b){k.forEach(b.arrTasks,
-function(a){a.checkPosition()},this)},this)},checkHeighPanelTasks:function(){this.contentDataHeight+=this.heightTaskItemExtra+this.heightTaskItem;parseInt(this.contentData.firstChild.style.height)<=this.contentDataHeight&&(this.incHeightPanelTasks(this.heightTaskItem+this.heightTaskItemExtra),this.incHeightPanelNames(this.heightTaskItem+this.heightTaskItemExtra))},sortTasksByStartTime:function(b){b.parentTasks.sort(this.sortTaskStartTime);for(var a=0;a<b.parentTasks.length;a++)b.parentTasks[a]=this.sortChildTasks(b.parentTasks[a])},
-sortChildTasks:function(b){b.cldTasks.sort(this.sortTaskStartTime);for(var a=0;a<b.cldTasks.length;a++)0<b.cldTasks[a].cldTasks.length&&this.sortChildTasks(b.cldTasks[a]);return b},refresh:function(b,a,c){if(!(0>=this.arrProjects.length)&&!(0>=this.arrProjects[0].arrTasks.length))if(!b||a>b)this.refreshController(),this.resource&&this.resource.refresh(),this.tempDayInPixels=0,this.panelNameHeadersCover&&f.set(this.panelNameHeadersCover,"display","none");else{0==this.tempDayInPixels&&(this.tempDayInPixels=
-this.pixelsPerDay);this.panelNameHeadersCover&&f.set(this.panelNameHeadersCover,"display","");var d=this.tempDayInPixels+this.tempDayInPixels*(c-1)*Math.pow(a/b,2);this.refreshParams(d);k.forEach(this.arrProjects,function(a){k.forEach(a.arrTasks,function(a){a.refresh()},this);a.refresh()},this);setTimeout(l.hitch(this,function(){this.refresh(b,++a,c)}),15)}},switchTeleMicroView:function(b){for(var a=this.panelTime.firstChild.firstChild,c=0;5>c;c++)40<b?f.set(a.rows[c],"display",0==c||1==c?"none":
-""):20>b?f.set(a.rows[c],"display",2==c||4==c?"none":""):f.set(a.rows[c],"display",0==c||4==c?"none":"")},refreshController:function(){this.contentData.firstChild.style.width=Math.max(1200,this.pixelsPerDay*this.totalDays)+"px";this.panelTime.firstChild.style.width=this.pixelsPerDay*this.totalDays+"px";this.panelTime.firstChild.firstChild.style.width=this.pixelsPerDay*this.totalDays+"px";this.switchTeleMicroView(this.pixelsPerDay);k.forEach(this.panelTime.firstChild.firstChild.rows,function(b){k.forEach(b.childNodes,
-function(a){var b=parseInt(p.get(a,"colSpan")||1),d=l.trim(p.get(a,"innerHTMLData")||"");0<d.length?p.set(a,"innerHTML",20>this.pixelsPerDay*b?"":d):k.forEach(a.firstChild.rows[0].childNodes,function(a){var b=l.trim(p.get(a,"innerHTMLData")||"");p.set(a,"innerHTML",10<this.pixelsPerDay/this.hsPerDay?b:"")},this);1==b&&(f.set(a,"width",this.pixelsPerDay*b+"px"),0>=d.length&&k.forEach(a.firstChild.rows[0].childNodes,function(a){f.set(a,"width",this.pixelsPerDay*b/this.hsPerDay+"px")},this))},this)},
-this)},init:function(){this.startDate=this.getStartDate();f.set(this.content,{width:this.contentWidth+"px",height:this.contentHeight+"px"});this.tableControl=h.create("table",{cellPadding:"0",cellSpacing:"0",className:"ganttTabelControl"});var b=this.tableControl.insertRow(this.tableControl.rows.length);this.content.appendChild(this.tableControl);this.countDays=this.getCountDays();this.panelTime=h.create("div",{className:"ganttPanelTimeContainer"});f.set(this.panelTime,"height",this.panelTimeHeight+
-"px");this.panelTime.appendChild(this.createPanelTime());this.contentData=h.create("div",{className:"ganttContentDataContainer"});f.set(this.contentData,"height",this.contentHeight-this.panelTimeHeight+"px");this.contentData.appendChild(this.createPanelTasks());var a=h.create("td",{vAlign:"top"});this.panelNameHeaders=h.create("div",{className:"ganttPanelNameHeaders"},a);f.set(this.panelNameHeaders,{height:this.panelTimeHeight+"px",width:this.maxWidthPanelNames+"px"});this.panelNameHeaders.appendChild(this.createPanelNamesTasksHeader());
-this.panelNames=h.create("div",{className:"ganttPanelNamesContainer"},a);this.panelNames.appendChild(this.createPanelNamesTasks());b.appendChild(a);var a=h.create("td",{vAlign:"top"}),c=h.create("div",{className:"ganttDivCell"});c.appendChild(this.panelTime);c.appendChild(this.contentData);a.appendChild(c);b.appendChild(a);f.set(this.panelNames,"height",this.contentHeight-this.panelTimeHeight-this.scrollBarWidth+"px");f.set(this.panelNames,"width",this.maxWidthPanelNames+"px");f.set(this.contentData,
-"width",this.contentWidth-this.maxWidthPanelNames+"px");f.set(this.contentData.firstChild,"width",this.pixelsPerDay*this.countDays+"px");f.set(this.panelTime,"width",this.contentWidth-this.maxWidthPanelNames-this.scrollBarWidth+"px");f.set(this.panelTime.firstChild,"width",this.pixelsPerDay*this.countDays+"px");this.isShowConMenu&&(this.tabMenu=new D(this));var d=this;this.contentData.onscroll=function(){d.panelTime.scrollLeft=this.scrollLeft;d.panelNames&&(d.panelNames.scrollTop=this.scrollTop,d.isShowConMenu&&
-d.tabMenu.hide());d.resource&&(d.resource.contentData.scrollLeft=this.scrollLeft)};this.project.sort(this.sortProjStartDate);for(b=0;b<this.project.length;b++){a=this.project[b];for(c=0;c<a.parentTasks.length;c++){var e=a.parentTasks[c];e.startTime||(e.startTime=a.startDate);this.setStartTimeChild(e);if(this.setPreviousTask(a))return}for(c=0;c<a.parentTasks.length;c++){e=a.parentTasks[c];if(e.startTime<a.startDate)if(this.correctError)e.startTime=a.startDate;else return;if(this.checkPosParentTaskInTree(e))return}this.sortTasksByStartTime(a)}for(b=
-0;b<this.project.length;b++)a=this.project[b],a=new v(this,a),0<this.arrProjects.length&&(c=this.arrProjects[this.arrProjects.length-1],a.previousProject=c,c.nextProject=a),a.create(),this.checkHeighPanelTasks(),this.arrProjects.push(a),this.createTasks(a);this.withResource&&(this.resource=new C(this),this.resource.create());this.postLoadData();this.postBindEvents();return this},postLoadData:function(){k.forEach(this.arrProjects,function(a){k.forEach(a.arrTasks,function(a){a.postLoadData()},this);
-a.postLoadData()},this);var b=A.getMarginBox(this.panelNameHeaders);this.panelNameHeadersCover||(this.panelNameHeadersCover=h.create("div",{className:"ganttHeaderCover"},this.panelNameHeaders.parentNode),f.set(this.panelNameHeadersCover,{left:b.l+"px",top:b.t+"px",height:b.h+"px",width:b.w+"px",display:"none"}))},postBindEvents:function(){var b=A.position(this.tableControl,!0);H("dom-addeventlistener")&&this._events.push(n(this.tableControl,"mousemove",l.hitch(this,function(a){var c=a.srcElement||
-a.target;if(c==this.panelNames.firstChild||c==this.contentData.firstChild)c=this.heightTaskItem+this.heightTaskItemExtra,a=parseInt(a.layerY/c)*c+this.panelTimeHeight-this.contentData.scrollTop,a!=this.oldHLTop&&a<b.h-50&&(this.highLightDiv?f.set(this.highLightDiv,"top",b.y+a+"px"):(this.highLightDiv=h.create("div",{className:"ganttRowHighlight"},I.body()),f.set(this.highLightDiv,{top:b.y+a+"px",left:b.x+"px",width:b.w-20+"px",height:c+"px"}))),this.oldHLTop=a})))},getStartDate:function(){k.forEach(this.project,
-function(b){this.startDate?b.startDate<this.startDate&&(this.startDate=new Date(b.startDate)):this.startDate=new Date(b.startDate)},this);this.initialPos=24*this.pixelsPerHour;return this.startDate?new Date(this.startDate.setHours(this.startDate.getHours()-24)):new Date},getCountDays:function(){return parseInt((this.contentWidth-this.maxWidthPanelNames)/(24*this.pixelsPerHour))},createTasks:function(b){k.forEach(b.project.parentTasks,function(a,c){0<c&&(b.project.parentTasks[c-1].nextParentTask=a,
-a.previousParentTask=b.project.parentTasks[c-1]);var d=new x(a,b,this);b.arrTasks.push(d);d.create();this.checkHeighPanelTasks();0<a.cldTasks.length&&this.createChildItemControls(a.cldTasks,b)},this)},createChildItemControls:function(b,a){b&&k.forEach(b,function(c,d){0<d&&(c.previousChildTask=b[d-1],b[d-1].nextChildTask=c);(new x(c,a,this)).create();this.checkHeighPanelTasks();0<c.cldTasks.length&&this.createChildItemControls(c.cldTasks,a)},this)},getPosOnDate:function(b){return(b-this.startDate)/
-36E5*this.pixelsPerHour},getWidthOnDuration:function(b){return Math.round(this.pixelsPerWorkHour*b)},getLastChildTask:function(b){return 0<b.childTask.length?this.getLastChildTask(b.childTask[b.childTask.length-1]):b},removeCell:function(b){for(;b.cells[0];)b.deleteCell(b.cells[0])}})});
-//@ sourceMappingURL=GanttChart.js.map
+// FIXME: documentation
+define([
+    "./GanttProjectItem",
+    "./GanttResourceItem",
+    "./GanttProjectControl",
+    "./GanttTaskControl",
+    "./GanttTaskItem",
+    "./TabMenu",
+    "dijit/Tooltip",
+    "dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+    "dojo/date/locale",
+	"dojo/request",
+	"dojo/request/util",
+	"dojo/on",
+	"dojo/dom",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-attr",
+	"dojo/dom-geometry",
+	"dojo/keys",
+	"dojo/has",
+	"dojo/_base/window",
+	"dojo/json",
+	"dojo/domReady!"
+], function(GanttProjectItem, GanttResourceItem, GanttProjectControl, 
+		GanttTaskControl, GanttTaskItem, TabMenu,
+		Tooltip, 
+		declare, arrayUtil, lang, locale, request, util, on,
+		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys, has, win, JSON){
+	return declare("dojox.gantt.GanttChart", [], {
+		constructor: function(configuration, node){
+			this.resourceChartHeight = configuration.resourceChartHeight !== undefined ? configuration.resourceChartHeight : false;
+			this.withResource = configuration.withResource !== undefined ? configuration.withResource : true;
+			this.correctError = configuration.autoCorrectError !== undefined ? configuration.autoCorrectError : false;
+			this.isShowConMenu = this.isContentEditable = !configuration.readOnly;
+			this.withTaskId = configuration.withTaskId !== undefined ? configuration.withTaskId : !configuration.readOnly;
+			this.animation = configuration.animation !== undefined ? configuration.animation : true;
+			this.saveProgramPath = configuration.saveProgramPath  || "saveGanttData.php";
+			this.dataFilePath = configuration.dataFilePath  || "gantt_default.json";
+			this.contentHeight = configuration.height || 400;
+			this.contentWidth = configuration.width || 600;
+			this.content = dom.byId(node);
+			this.scrollBarWidth = 18;
+			this.panelTimeHeight = 102;
+			this.maxWidthPanelNames = 150;
+			this.maxWidthTaskNames = 150;
+			this.minWorkLength = 8;
+			this.heightTaskItem = 12;
+			this.heightTaskItemExtra = 11;
+			this.pixelsPerDay = 24;//px
+			this.hsPerDay = 8;
+			this.pixelsPerWorkHour = this.pixelsPerDay / this.hsPerDay;//px
+			this.pixelsPerHour = this.pixelsPerDay / 24;//px
+			this.countDays = 0;
+			this.totalDays = 0;
+			this.startDate = null;
+			this.initialPos = 0;
+			
+			this.contentDataHeight = 0;
+			this.panelTimeExpandDelta = 20;
+			
+			this.divTimeInfo = null;
+			this.panelNames = null;
+			this.panelTime = null;
+			this.contentData = null;
+			this.tabMenu = null;
+			
+			this.project = [];
+			this.arrProjects = [];
+			
+			this.xmlLoader = null;
+			this.isMoving = false;
+			this.isResizing = false;
+			this.animationNodes = [];
+			this.scale = 1;
+			this.tempDayInPixels = 0;
+			this.resource = null;
+			this.months = locale.getNames("months", "wide");
+			this._events = [];
+		},
+		getProject: function(id){
+			return arrayUtil.filter(this.arrProjects, function(proj){
+				return proj.project.id == id;
+			}, this)[0];
+		},
+		checkPosPreviousTask: function(predTask, task){
+			var widthPred = this.getWidthOnDuration(predTask.duration);
+			var posPred = this.getPosOnDate(predTask.startTime);
+			var posChild = this.getPosOnDate(task.startTime);
+			return (widthPred + posPred) <= posChild;
+
+		},
+		correctPosPreviousTask: function(predTask, ctask, ctaskObj){
+			var newDate = new Date(predTask.startTime);
+			newDate.setHours(newDate.getHours() + (predTask.duration / this.hsPerDay * 24));
+			if(newDate.getHours() > 0){
+				newDate.setHours(0);
+				newDate.setDate(newDate.getDate() + 1);
+			}
+			ctaskObj ? (ctaskObj.setStartTime(newDate, true)) : (ctask.startTime = newDate);
+			if(ctask.parentTask){
+				if(!this.checkPosParentTask(ctask.parentTask, ctask)){
+					var newDate2 = new Date(ctask.parentTask.startTime);
+					newDate2.setHours(newDate2.getHours() + (ctask.parentTask.duration / this.hsPerDay * 24));
+					ctask.duration = parseInt((parseInt((newDate2 - ctask.startTime) / (1000 * 60 * 60))) * this.hsPerDay / 24);
+				}
+			}
+		},
+		correctPosParentTask: function(parentTask, ctask){
+			if(!ctask.previousTask){
+				if(parentTask.startTime > ctask.startTime){
+					ctask.startTime = new Date(parentTask.startTime);
+				}
+				if(!this.checkPosParentTask(parentTask, ctask)){
+					ctask.duration = parentTask.duration;
+				}
+			}else{
+				this.correctPosPreviousTask(ctask.previousTask, ctask);
+			}
+		},
+		checkPosParentTaskInTree: function(parentTask){
+			var exception = false;
+			for(var i = 0; i < parentTask.cldTasks.length; i++){
+				var pcTask = parentTask.cldTasks[i];
+				if(!this.checkPosParentTask(parentTask, pcTask)){
+					if(!this.correctError){
+						return true;
+					}else{
+						this.correctPosParentTask(parentTask, pcTask);
+					}
+				}
+				if(parentTask.startTime > pcTask.startTime){
+					if(!this.correctError){
+						return true;
+					}else{
+						this.correctPosParentTask(parentTask, pcTask);
+					}
+				}
+				if(pcTask.cldTasks.length > 0){
+					exception = this.checkPosParentTaskInTree(pcTask);
+				}
+			}
+			return exception;
+		},
+		setPreviousTask: function(project){
+			var exception = false;
+			for(var i = 0; i < project.parentTasks.length; i++){
+				var ppTask = project.parentTasks[i];
+				if(ppTask.previousTaskId){
+					ppTask.previousTask = project.getTaskById(ppTask.previousTaskId);
+					if(!ppTask.previousTask){
+						if(!this.correctError){
+							return true;
+						}
+					}
+					ppTask.previousTask.cldPreTasks.push(ppTask);
+				}
+				if(ppTask.previousTask){
+					if(!this.checkPosPreviousTask(ppTask.previousTask, ppTask)){
+						if(!this.correctError){
+							return true;
+						}else{
+							this.correctPosPreviousTask(ppTask.previousTask, ppTask);
+						}
+					}
+				}
+				exception = this.setPreviousTaskInTree(ppTask);
+			}
+			return exception;
+		},
+		setPreviousTaskInTree: function(parentTask){
+			var exception = false;
+			for(var i = 0; i < parentTask.cldTasks.length; i++){
+				var pcTask = parentTask.cldTasks[i];
+				if(pcTask.previousTaskId){
+					pcTask.previousTask = parentTask.project.getTaskById(pcTask.previousTaskId);
+					if(!pcTask.previousTask){
+						if(!this.correctError){
+							return true;
+						}
+					}
+					if(!this.checkPosPreviousTask(pcTask.previousTask, pcTask)){
+						if(!this.correctError){
+							return true;
+						}else{
+							this.correctPosPreviousTask(pcTask.previousTask, pcTask);
+						}
+					}
+					pcTask.previousTask.cldPreTasks.push(pcTask);
+				}
+				
+				if(pcTask.cldTasks.length > 0){
+					exception = this.setPreviousTaskInTree(pcTask);
+				}
+			}
+			return exception;
+		},
+		checkPosParentTask: function(parentTask, task){
+			var widthParent = this.getWidthOnDuration(parentTask.duration);
+			var posParent = this.getPosOnDate(parentTask.startTime);
+			var posChild = this.getPosOnDate(task.startTime);
+			var widthChild = this.getWidthOnDuration(task.duration);
+			return (widthParent + posParent) >= (posChild + widthChild);
+		},
+		addProject: function(projectItem){
+			this.project.push(projectItem);
+		},
+		deleteProject: function(id){
+			var project = this.getProject(id);
+			if(project){
+				if(project.arrTasks.length > 0){
+					while(project.arrTasks.length > 0){
+						project.deleteChildTask(project.arrTasks[0]);
+					}
+				}
+				var rowHeight = this.heightTaskItemExtra + this.heightTaskItem;
+				project.nextProject && project.shiftNextProject(project, -rowHeight); //rowHeight: 23
+				this.project = arrayUtil.filter(this.project, function(proj){
+					return proj.id != project.project.id;
+				}, this);
+				if((project.previousProject) && (project.nextProject)){
+					var previousProject = project.previousProject;
+					previousProject.nextProject = project.nextProject;
+				}
+				if((project.previousProject) && !(project.nextProject)){
+					var previousProject = project.previousProject;
+					previousProject.nextProject = null;
+				}
+				if(!(project.previousProject) && (project.nextProject)){
+					var nextProject = project.nextProject;
+					nextProject.previousProject = null;
+				}
+				for(var i = 0; i < this.arrProjects.length; i++){
+					if(this.arrProjects[i].project.id == id){
+						this.arrProjects.splice(i, 1);
+					}
+				}
+				project.projectItem[0].parentNode.removeChild(project.projectItem[0]);
+				project.descrProject.parentNode.removeChild(project.descrProject);
+				project.projectNameItem.parentNode.removeChild(project.projectNameItem);
+				this.contentDataHeight -= this.heightTaskItemExtra + this.heightTaskItem;
+				if(this.project.length == 0){
+					var d = new Date(this.startDate);
+					var t = new Date(d.setDate(d.getDate() + 1));
+					var pi = new GanttProjectItem({
+						id: 1,
+						name: "New Project",
+						startDate: t
+					});
+					this.project.push(pi);
+					var project = new GanttProjectControl(this, pi);
+					project.create();
+					this.arrProjects.push(project);
+					this.contentDataHeight += this.heightTaskItemExtra + this.heightTaskItem;
+				}
+				this.checkPosition();
+			}
+		},
+		insertProject: function(id, name, startDate){
+			if(this.startDate >= startDate){
+				return false;
+			}
+			if(this.getProject(id)){
+				return false;
+			}
+			this.checkHeighPanelTasks();
+			var project = new GanttProjectItem({
+				id: id,
+				name: name,
+				startDate: startDate
+			});
+			this.project.push(project);
+			var _project = new GanttProjectControl(this, project);
+			for(var i = 0; i < this.arrProjects.length; i++){
+				var curProject = this.arrProjects[i],
+					preProject = this.arrProjects[i-1],
+					nextProject = this.arrProjects[i+1];
+				if(startDate < curProject.project.startDate){
+					this.arrProjects.splice(i, 0, _project);
+					if(i > 0){
+						_project.previousProject = preProject;
+						preProject.nextProject = _project;
+					}
+					if(i + 1 <= this.arrProjects.length){
+						_project.nextProject = nextProject;
+						nextProject.previousProject = _project;
+						var rowHeight = this.heightTaskItem + this.heightTaskItemExtra;
+						_project.shiftNextProject(_project, rowHeight);
+					}
+					_project.create();
+					_project.hideDescrProject();
+					this.checkPosition();
+					return _project;
+				}
+			}
+			if(this.arrProjects.length > 0){
+				this.arrProjects[this.arrProjects.length - 1].nextProject = _project;
+				_project.previousProject = this.arrProjects[this.arrProjects.length - 1];
+			}
+			this.arrProjects.push(_project);
+			_project.create();
+			_project.hideDescrProject();
+			this.checkPosition();
+			return _project;
+		},
+		openTree: function(parentTask){
+			var lastParentTask = this.getLastCloseParent(parentTask);
+			this.openNode(lastParentTask);
+			parentTask.taskItem.id != lastParentTask.taskItem.id && this.openTree(parentTask);
+		},
+		openNode: function(parentTask){
+			if(!parentTask.isExpanded){
+				domClass.remove(parentTask.cTaskNameItem[2], "ganttImageTreeExpand");
+				domClass.add(parentTask.cTaskNameItem[2], "ganttImageTreeCollapse");
+				parentTask.isExpanded = true;
+				parentTask.shiftCurrentTasks(parentTask, parentTask.hideTasksHeight);
+				parentTask.showChildTasks(parentTask, parentTask.isExpanded);
+				parentTask.hideTasksHeight = 0;
+			}
+		},
+		getLastCloseParent: function(task){
+			if(task.parentTask){
+				if((!task.parentTask.isExpanded) ||
+				(task.parentTask.cTaskNameItem[2].style.display == "none")){
+					return this.getLastCloseParent(task.parentTask);
+				}else{
+					return task;
+				}
+			}else{
+				return task;
+			}
+		},
+		getProjectItemById: function(id){
+			return arrayUtil.filter(this.project, function(proj){
+				return proj.id == id;
+			}, this)[0];
+		},
+		clearAll: function(){
+			this.contentDataHeight = 0;
+			this.startDate = null;
+			this.clearData();
+			this.clearItems();
+			this.clearEvents();
+		},
+		clearEvents: function(){
+			arrayUtil.forEach(this._events, function(e){
+				e.remove();
+			});
+			this._events = [];
+		},
+		clearData: function(){
+			this.project = [];
+			this.arrProjects = [];
+		},
+		clearItems: function(){
+			this.contentData.removeChild(this.contentData.firstChild);
+			this.contentData.appendChild(this.createPanelTasks());
+			this.panelNames.removeChild(this.panelNames.firstChild);
+			this.panelNames.appendChild(this.createPanelNamesTasks());
+			this.panelTime.removeChild(this.panelTime.firstChild);
+		},
+		buildUIContent: function(){
+			this.project.sort(this.sortProjStartDate);
+			this.startDate = this.getStartDate();
+			this.panelTime.appendChild(this.createPanelTime());
+			for(var i = 0; i < this.project.length; i++){
+				var proj = this.project[i];
+				for(var k = 0; k < proj.parentTasks.length; k++){
+					var ppTask = proj.parentTasks[k];
+					if(ppTask.startTime){
+						this.setStartTimeChild(ppTask);
+					}else{
+						return;
+					}
+					if(this.setPreviousTask(proj)){
+						return;
+					}
+				}
+				for(var k = 0; k < proj.parentTasks.length; k++){
+					var ppTask = proj.parentTasks[k];
+					if(ppTask.startTime < proj.startDate){
+						return;
+					}
+					if(this.checkPosParentTaskInTree(ppTask)) return;
+				}
+				this.sortTasksByStartTime(proj);
+			}
+			
+			for(var i = 0; i < this.project.length; i++){
+				var proj = this.project[i];
+				var project = new GanttProjectControl(this, proj);
+				if(this.arrProjects.length > 0){
+					var previousProject = this.arrProjects[this.arrProjects.length - 1];
+					project.previousProject = previousProject;
+					previousProject.nextProject = project;
+				}
+				project.create();
+				this.checkHeighPanelTasks();
+				this.arrProjects.push(project);
+				this.createTasks(project);
+			}
+			this.resource && this.resource.reConstruct();
+			this.postLoadData();
+			this.postBindEvents();
+		},
+		loadJSONData: function(filename){
+			var _this = this;
+			_this.dataFilePath = filename || _this.dataFilePath;
+			request.get(_this.dataFilePath, {
+				sync: true
+			}).then(function(response){
+				_this.loadJSONString(response.text);
+				_this.buildUIContent();
+				console.log("Successfully! Loaded data from: " + _this.dataFilePath);
+			}, function(){
+				console.log("Failed! Load error: " + _this.dataFilePath);
+			});
+		},
+		loadJSONString: function(content){
+			//load data
+			if(!content){ return; }
+			this.clearAll();
+			var jsonObj = JSON.parse(content);
+			
+			var items = jsonObj.items;
+			arrayUtil.forEach(items, function(pItem){
+				var startDate = pItem.startdate.split("-");
+				var project = new GanttProjectItem({
+					id: pItem.id,
+					name: pItem.name,
+					startDate: new Date(startDate[0], (parseInt(startDate[1]) - 1), startDate[2])
+				});
+				var tItems = pItem.tasks;
+				arrayUtil.forEach(tItems, function(tItem){
+					var id = tItem.id,
+						name = tItem.name,
+						starttime = tItem.starttime.split("-"),
+						duration = tItem.duration,
+						percentage = tItem.percentage,
+						previousTaskId = tItem.previousTaskId,
+						taskOwner = tItem.taskOwner;
+					
+					var task = new GanttTaskItem({
+						id: id,
+						name: name,
+						startTime: new Date(starttime[0], (parseInt(starttime[1]) - 1), starttime[2]),
+						duration: duration,
+						percentage: percentage,
+						previousTaskId: previousTaskId,
+						taskOwner: taskOwner
+					});
+					var ctItems = tItem.children;
+					if(ctItems.length != 0){
+						this.buildChildTasksData(task, ctItems);
+					}
+					project.addTask(task);
+				}, this);
+				this.addProject(project);
+			 }, this);
+		},
+		buildChildTasksData: function(parentTask, childTaskItems){
+			childTaskItems && arrayUtil.forEach(childTaskItems, function(ctItem){
+				var id = ctItem.id,
+					name = ctItem.name,
+					starttime = ctItem.starttime.split("-"),
+					duration = ctItem.duration,
+					percentage = ctItem.percentage,
+					previousTaskId = ctItem.previousTaskId,
+					taskOwner = ctItem.taskOwner;
+				
+				var task = new GanttTaskItem({
+					id: id,
+					name: name,
+					startTime: new Date(starttime[0], (parseInt(starttime[1]) - 1), starttime[2]),
+					duration: duration,
+					percentage: percentage,
+					previousTaskId: previousTaskId,
+					taskOwner: taskOwner
+				});
+				task.parentTask = parentTask;
+				parentTask.addChildTask(task);
+				
+				var ctItems = ctItem.children;
+				if(ctItems.length != 0){
+					this.buildChildTasksData(task, ctItems);
+				}
+			}, this);
+		},
+		getJSONData: function(){
+			var jsonObj = {identifier: 'id', items: []};
+			arrayUtil.forEach(this.project, function(proj){
+				var project = {
+					id: proj.id,
+					name: proj.name,
+					startdate: proj.startDate.getFullYear() + '-' + (proj.startDate.getMonth() + 1) + '-' + proj.startDate.getDate(),
+					tasks: []
+				};
+				jsonObj.items.push(project);
+				arrayUtil.forEach(proj.parentTasks, function(pTask){
+					var task = {
+						id: pTask.id,
+						name: pTask.name,
+						starttime: pTask.startTime.getFullYear() + '-' + (pTask.startTime.getMonth() + 1) + '-' + pTask.startTime.getDate(),
+						duration: pTask.duration,
+						percentage: pTask.percentage,
+						previousTaskId: (pTask.previousTaskId || ''),
+						taskOwner: (pTask.taskOwner || ''),
+						children: this.getChildTasksData(pTask.cldTasks)
+					};
+					project.tasks.push(task);
+				}, this);
+			}, this);
+			return jsonObj;
+		},
+		getChildTasksData: function(childTasks){
+			var cTaskObj = [];
+			childTasks && childTasks.length > 0 && arrayUtil.forEach(childTasks, function(childTask){
+				var ctask = {
+					id: childTask.id,
+					name: childTask.name,
+					starttime: childTask.startTime.getFullYear() + '-' + (childTask.startTime.getMonth() + 1) + '-' + childTask.startTime.getDate(),
+					duration: childTask.duration,
+					percentage: childTask.percentage,
+					previousTaskId: (childTask.previousTaskId || ''),
+					taskOwner: (childTask.taskOwner || ''),
+					children: this.getChildTasksData(childTask.cldTasks)
+				};
+				cTaskObj.push(ctask);
+			}, this);
+			return cTaskObj;
+		},
+		saveJSONData: function(fileName){
+			var _this = this;
+			_this.dataFilePath = (fileName && lang.trim(fileName).length > 0) ? fileName : this.dataFilePath;
+			try {
+				request.post(_this.saveProgramPath, {
+					query: {filename: _this.dataFilePath, data: JSON.stringify(_this.getJSONData())}
+				}).response.then(function(response){
+					if((util.checkStatus(response.options.status))||
+						(response.options.status == 405)
+					){
+						console.log("Successfully! Saved data to " + _this.dataFilePath);
+					}else{
+						console.log("Failed! Saved error");
+					}
+				});
+			} catch(e){
+				console.log("exception: " + e.message);
+			}
+		},
+		sortTaskStartTime: function(a, b){
+			return a.startTime < b.startTime ? -1 : (a.startTime > b.startTime ? 1 : 0);
+		},
+		sortProjStartDate: function(a, b){
+			return a.startDate < b.startDate ? -1 : (a.startDate > b.startDate ? 1 : 0);
+		},
+		setStartTimeChild: function(parentTask){
+			arrayUtil.forEach(parentTask.cldTasks, function(pcTask){
+				if(!pcTask.startTime){
+					pcTask.startTime = parentTask.startTime;
+				}
+				if(pcTask.cldTasks.length != 0){
+					this.setStartTimeChild(pcTask);
+				}
+			}, this);
+		},
+		createPanelTasks: function(){
+			var panelTask = domConstruct.create("div", {
+				className: "ganttTaskPanel"
+			});
+			domStyle.set(panelTask, {
+				height: (this.contentHeight - this.panelTimeHeight - this.scrollBarWidth) + "px"
+			});
+			return panelTask;
+		},
+		refreshParams: function(pixelsPerDay){
+			this.pixelsPerDay = pixelsPerDay;
+			this.pixelsPerWorkHour = this.pixelsPerDay / this.hsPerDay;
+			this.pixelsPerHour = this.pixelsPerDay / 24;
+		},
+		createPanelNamesTasksHeader: function(){
+			var panelHeader = domConstruct.create("div", {className: "ganttPanelHeader"});
+			var tblHeader = domConstruct.create("table", {
+				cellPadding: "0px",
+				border: "0px",
+				cellSpacing: "0px",
+				bgColor: "#FFFFFF",
+				className: "ganttToolbar"
+			}, panelHeader);
+			var firstRow = tblHeader.insertRow(tblHeader.rows.length);
+			var secondRow = tblHeader.insertRow(tblHeader.rows.length);
+			var thirdRow = tblHeader.insertRow(tblHeader.rows.length);
+			var forthRow = tblHeader.insertRow(tblHeader.rows.length);
+			var zoomIn = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttToolbarZoomIn"
+			}, firstRow);
+			var zoomInFn = lang.hitch(this, function(){
+				if(this.scale * 2 > 5){return;}
+				this.scale = this.scale * 2;
+				this.switchTeleMicroView(this.pixelsPerDay * this.scale);
+			});
+			if(this.zoomInClickEvent){
+				this.zoomInClickEvent.remove();
+			}
+			this.zoomInClickEvent = on(zoomIn, "click", lang.hitch(this, zoomInFn));
+			//a11y support
+			if(this.zoomInKeyEvent){
+				this.zoomInKeyEvent.remove();
+			}
+			this.zoomInKeyEvent = on(zoomIn, "keydown", lang.hitch(this, function(e){
+				if(e.keyCode != keys.ENTER){return;}
+				zoomInFn();
+			}));
+
+			domAttr.set(zoomIn, "tabIndex", 0);
+			var zoomOut = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttToolbarZoomOut"
+			}, firstRow);
+			var zoomOutFn = lang.hitch(this, function(){
+				if(this.scale * 0.5 < 0.2){return;}
+				this.scale = this.scale * 0.5;
+				this.switchTeleMicroView(this.pixelsPerDay * this.scale);
+			});
+			if(this.zoomOutClickEvent){
+				this.zoomOutClickEvent.remove();
+			}
+			this.zoomOutClickEvent = on(zoomOut, "click", lang.hitch(this, zoomOutFn));
+
+			//a11y support
+			if(this.zoomOutKeyEvent){
+				this.zoomOutKeyEvent.remove();
+			}
+			this.zoomOutKeyEvent = on(zoomOut, "keydown", lang.hitch(this, function(e){
+				if(e.keyCode != keys.ENTER){return;}
+				zoomOutFn();
+			}));
+
+			domAttr.set(zoomOut, "tabIndex", 0);
+			var micro = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttToolbarMicro"
+			}, secondRow);
+			if(this.microClickEvent){
+				this.microClickEvent.remove();
+			}
+			this.microClickEvent = on(micro, "click", lang.hitch(this, this.refresh, this.animation?15:1, 0, 2));
+
+			//a11y support
+			if(this.microKeyEvent){
+				this.microKeyEvent.remove();
+			}
+			this.microKeyEvent = on(micro, "keydown", lang.hitch(this, function(e){
+				if(e.keyCode != keys.ENTER){return;}
+				micro.blur();
+				this.refresh(this.animation?15:1, 0, 2);
+			}));
+
+			domAttr.set(micro, "tabIndex", 0);
+			var tele = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttToolbarTele"
+			}, secondRow);
+			if(this.teleClickEvent){
+				this.teleClickEvent.remove();
+			}
+			this.teleClickEvent = on(tele, "click", lang.hitch(this, this.refresh, this.animation?15:1, 0, 0.5));
+			//a11y support
+			if(this.teleKeyEvent){
+				this.teleKeyEvent.remove();
+			}
+			this.teleKeyEvent = on(tele, "keydown", lang.hitch(this, function(e){
+				if(e.keyCode != keys.ENTER){return;}
+				tele.blur();
+				this.refresh(this.animation?15:1, 0, 0.5);
+			}));
+			domAttr.set(tele, "tabIndex", 0);
+			var save = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttToolbarSave"
+			}, thirdRow);
+			if(this.saveClickEvent){
+				this.saveClickEvent.remove();
+			}
+			this.saveClickEvent = on(save, "click", lang.hitch(this, this.saveJSONData, ""));
+			//a11y support
+			if(this.saveKeyEvent){
+				this.saveKeyEvent.remove();
+			}
+			this.saveKeyEvent = on(save, "keydown", lang.hitch(this, function(e){
+				if(e.keyCode != keys.ENTER){return;}
+				this.saveJSONData("");
+			}));
+			domAttr.set(save, "tabIndex", 0);
+			var load = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttToolbarLoad"
+			}, thirdRow);
+			if(this.loadClickEvent){
+				this.loadClickEvent.remove();
+			}
+			this.loadClickEvent = on(load, "click", lang.hitch(this, this.loadJSONData, ""));
+			//a11y support
+			if(this.loadKeyEvent){
+				this.loadKeyEvent.remove();
+			}
+			this.loadKeyEvent = on(load, "keydown", lang.hitch(this, function(e){
+				if(e.keyCode != keys.ENTER){return;}
+				this.loadJSONData("");
+			}));
+
+			domAttr.set(load, "tabIndex", 0);
+			//action popup description
+			var actions = [zoomIn, zoomOut, micro, tele, save, load],
+				titles = ["Enlarge timeline", "Shrink timeline", "Zoom in time zone(microscope view)", "Zoom out time zone(telescope view)",
+							"Save gantt data to json file", "Load gantt data from json file"];
+			arrayUtil.forEach(actions, function(action, i){
+				var title = titles[i];
+				var tooltipShow = function(){
+					domClass.add(action, "ganttToolbarActionHover");
+					// FIXME: including dijit/Tooltip moves showTooltip and hideTooltip into the dijit namespace
+					dijit.showTooltip(title, action, ["above", "below"]);
+				};
+				action.onmouseover = tooltipShow;
+				//a11y support
+				action.onfocus = tooltipShow;
+				var tooltipHide = function(){
+					domClass.remove(action, "ganttToolbarActionHover");
+					action && dijit.hideTooltip(action);
+				};
+				action.onmouseout = tooltipHide;
+				action.onblur = tooltipHide;
+			}, this);
+			return panelHeader;
+		},
+		createPanelNamesTasks: function(){
+			var panelNameTask = domConstruct.create("div", {
+				innerHTML: "&nbsp;",
+				className: "ganttPanelNames"
+			});
+			domStyle.set(panelNameTask, {
+				height: (this.contentHeight - this.panelTimeHeight - this.scrollBarWidth) + "px",
+				width: this.maxWidthPanelNames + "px"
+			});
+			return panelNameTask;
+		},
+		createPanelTime: function(){
+			var panelTime = domConstruct.create("div", {className: "ganttPanelTime"});
+			var tblTime = domConstruct.create("table", {
+				cellPadding: "0px",
+				border: "0px",
+				cellSpacing: "0px",
+				bgColor: "#FFFFFF",
+				className: "ganttTblTime"
+			}, panelTime);
+			this.totalDays = this.countDays;
+			//year
+			var newYearRow = tblTime.insertRow(tblTime.rows.length), oldYear, newYear, ycount = 0;
+			newYear = oldYear = new Date(this.startDate).getFullYear();
+			for(var i = 0; i < this.countDays; i++, ycount++){
+				var date = new Date(this.startDate);
+				date.setDate(date.getDate() + i);
+				newYear = date.getFullYear();
+				if(newYear != oldYear){
+					this.addYearInPanelTime(newYearRow, ycount, oldYear);
+					ycount = 0;
+					oldYear = newYear;
+				}
+			}
+			this.addYearInPanelTime(newYearRow, ycount, newYear);
+			domStyle.set(newYearRow, "display", "none");
+			//month
+			var newMonthRow = tblTime.insertRow(tblTime.rows.length), oldMonth, newMonth, mcount = 0, lastYear = 1970;
+			newMonth = oldMonth = new Date(this.startDate).getMonth();
+			for(var i = 0; i < this.countDays; i++, mcount++){
+				var date = new Date(this.startDate);
+				date.setDate(date.getDate() + i);
+				newMonth = date.getMonth();
+				lastYear = date.getFullYear();
+				if(newMonth != oldMonth){
+					this.addMonthInPanelTime(newMonthRow, mcount, oldMonth, oldMonth !== 11 ? lastYear : lastYear - 1);
+					mcount = 0;
+					oldMonth = newMonth;
+				}
+			}
+			this.addMonthInPanelTime(newMonthRow, mcount, newMonth, lastYear);
+			//week
+			var newWeekRow = tblTime.insertRow(tblTime.rows.length), oldWeek, newWeek, mcount = 0;
+			newWeek = oldWeek = locale._getWeekOfYear(new Date(this.startDate));
+			for(var i = 0; i < this.countDays; i++, mcount++){
+				var date = new Date(this.startDate);
+				date.setDate(date.getDate() + i);
+				newWeek = locale._getWeekOfYear(date);
+				if(newWeek != oldWeek){
+					this.addWeekInPanelTime(newWeekRow, mcount, oldWeek);
+					mcount = 0;
+					oldWeek = newWeek;
+				}
+			}
+			this.addWeekInPanelTime(newWeekRow, mcount, newWeek);
+			//day
+			var newDayRow = tblTime.insertRow(tblTime.rows.length);
+			for(var i = 0; i < this.countDays; i++){
+				this.addDayInPanelTime(newDayRow);
+			}
+			//hour
+			var newHourRow = tblTime.insertRow(tblTime.rows.length);
+			for(var i = 0; i < this.countDays; i++){
+				this.addHourInPanelTime(newHourRow);
+			}
+			domStyle.set(newHourRow, "display", "none");
+			return panelTime;
+		},
+		adjustPanelTime: function(){
+			var maxEndPos = arrayUtil.map(this.arrProjects, function(project){
+				return (parseInt(project.projectItem[0].style.left) + parseInt(project.projectItem[0].firstChild.style.width)
+					+ project.descrProject.offsetWidth + this.panelTimeExpandDelta);
+			}, this).sort(function(a,b){return b-a})[0];
+			if(this.maxTaskEndPos != maxEndPos){
+				//reset panel time
+				var prows = this.panelTime.firstChild.firstChild.rows;
+				for(var i = 0; i <= 4; i++){//prows.length
+					this.removeCell(prows[i]);
+				}
+				var countDays = Math.round((maxEndPos+this.panelTimeExpandDelta) / this.pixelsPerDay);
+				this.totalDays = countDays;
+				//year
+				var oldYear, newYear, ycount = 0;
+				newYear = oldYear = new Date(this.startDate).getFullYear();
+				for(var i = 0; i < countDays; i++, ycount++){
+					var date = new Date(this.startDate);
+					date.setDate(date.getDate() + i);
+					newYear = date.getFullYear();
+					if(newYear != oldYear){
+						this.addYearInPanelTime(prows[0], ycount, oldYear);
+						ycount = 0;
+						oldYear = newYear;
+					}
+				}
+				this.addYearInPanelTime(prows[0], ycount, newYear);
+				//month
+				var oldMonth, newMonth, mcount = 0, lastYear = 1970;
+				newMonth = oldMonth = new Date(this.startDate).getMonth();
+				for(var i = 0; i < countDays; i++, mcount++){
+					var date = new Date(this.startDate);
+					date.setDate(date.getDate() + i);
+					newMonth = date.getMonth();
+					lastYear = date.getFullYear();
+					if(newMonth != oldMonth){
+						this.addMonthInPanelTime(prows[1], mcount, oldMonth, oldMonth !== 11 ? lastYear : lastYear - 1);
+						mcount = 0;
+						oldMonth = newMonth;
+					}
+				}
+				this.addMonthInPanelTime(prows[1], mcount, newMonth, lastYear);
+				//week
+				var oldWeek, newWeek, mcount = 0;
+				newWeek = oldWeek = locale._getWeekOfYear(new Date(this.startDate));
+				for(var i = 0; i < countDays; i++, mcount++){
+					var date = new Date(this.startDate);
+					date.setDate(date.getDate() + i);
+					newWeek = locale._getWeekOfYear(date);
+					if(newWeek != oldWeek){
+						this.addWeekInPanelTime(prows[2], mcount, oldWeek);
+						mcount = 0;
+						oldWeek = newWeek;
+					}
+				}
+				this.addWeekInPanelTime(prows[2], mcount, newWeek);
+				//day
+				for(var i = 0; i < countDays; i++){
+					this.addDayInPanelTime(prows[3]);
+				}
+				//hour
+				for(var i = 0; i < countDays; i++){
+					this.addHourInPanelTime(prows[4]);
+				}
+				this.panelTime.firstChild.firstChild.style.width = this.pixelsPerDay * (prows[3].cells.length) + "px";
+				this.contentData.firstChild.style.width = this.pixelsPerDay * (prows[3].cells.length) + "px";
+				this.maxTaskEndPos = maxEndPos;
+			}
+		},
+		addYearInPanelTime: function(row, count, year){
+			var data = "Year   " + year;
+			var newCell = domConstruct.create("td", {
+				colSpan: count,
+				align: "center",
+				vAlign: "middle",
+				className: "ganttYearNumber",
+				innerHTML: this.pixelsPerDay * count > 20 ? data : "",
+				innerHTMLData: data
+			}, row);
+			domStyle.set(newCell, "width", (this.pixelsPerDay * count) + "px");
+		},
+		addMonthInPanelTime: function(row, count, month, year){
+			var data = this.months[month] + (year ? " of " + year : "");
+			var newCell = domConstruct.create("td", {
+				colSpan: count,
+				align: "center",
+				vAlign: "middle",
+				className: "ganttMonthNumber",
+				innerHTML: this.pixelsPerDay * count > 30 ? data : "",
+				innerHTMLData: data
+			}, row);
+			domStyle.set(newCell, "width", (this.pixelsPerDay * count) + "px");
+		},
+		addWeekInPanelTime: function(row, count, week){
+			var data = "Week   " + week;
+			var newCell = domConstruct.create("td", {
+				colSpan: count,
+				align: "center",
+				vAlign: "middle",
+				className: "ganttWeekNumber",
+				innerHTML: this.pixelsPerDay * count > 20 ? data : "",
+				innerHTMLData: data
+			}, row);
+			domStyle.set(newCell, "width", (this.pixelsPerDay * count) + "px");
+		},
+		addDayInPanelTime: function(row){
+			var date = new Date(this.startDate);
+			date.setDate(date.getDate() + parseInt(row.cells.length));
+			var newCell = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttDayNumber",
+				innerHTML: this.pixelsPerDay > 20 ? date.getDate() : "",
+				innerHTMLData: String(date.getDate()),
+				data: row.cells.length
+			}, row);
+			domStyle.set(newCell, "width", this.pixelsPerDay + "px");
+			(date.getDay() >= 5) && domClass.add(newCell, "ganttDayNumberWeekend");
+			this._events.push(
+				on(newCell, "mouseover", lang.hitch(this, function(event){
+					var dayTime = event.target || event.srcElement;
+					var date = new Date(this.startDate.getTime());
+					date.setDate(date.getDate() + parseInt(domAttr.get(dayTime, "data")));
+					dijit.showTooltip(date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDate(), newCell, ["above", "below"]);
+				}))
+			);
+			this._events.push(
+				on(newCell, "mouseout", lang.hitch(this, function(event){
+					var dayTime = event.target || event.srcElement;
+					dayTime && dijit.hideTooltip(dayTime);
+				}))
+			);
+		},
+		addHourInPanelTime: function(row){
+			var newCell = domConstruct.create("td", {
+				align: "center",
+				vAlign: "middle",
+				className: "ganttHourNumber",
+				data: row.cells.length
+			}, row);
+			domStyle.set(newCell, "width", this.pixelsPerDay + "px");
+			
+			var hourTable = domConstruct.create("table", {
+				cellPadding: "0",
+				cellSpacing: "0"
+			}, newCell);
+			var newRow = hourTable.insertRow(hourTable.rows.length);
+			for(var i = 0; i < this.hsPerDay; i++){
+				var hourTD = domConstruct.create("td", {
+					className: "ganttHourClass"
+				}, newRow);
+				domStyle.set(hourTD, "width", (this.pixelsPerDay / this.hsPerDay) + "px");
+				domAttr.set(hourTD, "innerHTMLData", String(9 + i));
+				if(this.pixelsPerDay / this.hsPerDay > 5){
+					domAttr.set(hourTD, "innerHTML", String(9 + i));
+				}
+				domClass.add(hourTD, i <= 3?"ganttHourNumberAM":"ganttHourNumberPM");
+			}
+		},
+		incHeightPanelTasks: function(height){
+			var containerTasks = this.contentData.firstChild;
+			containerTasks.style.height = parseInt(containerTasks.style.height) + height + "px";
+		},
+		incHeightPanelNames: function(height){
+			var containerNames = this.panelNames.firstChild;
+			containerNames.style.height = parseInt(containerNames.style.height) + height + "px";
+		},
+		checkPosition: function(){
+			arrayUtil.forEach(this.arrProjects, function(project){
+				arrayUtil.forEach(project.arrTasks, function(task){
+					task.checkPosition();
+				}, this);
+			}, this);
+		},
+		checkHeighPanelTasks: function(){
+			this.contentDataHeight += this.heightTaskItemExtra + this.heightTaskItem;
+			if((parseInt(this.contentData.firstChild.style.height) <= this.contentDataHeight)){
+				this.incHeightPanelTasks(this.heightTaskItem + this.heightTaskItemExtra);
+				this.incHeightPanelNames(this.heightTaskItem + this.heightTaskItemExtra);
+			}
+		},
+		sortTasksByStartTime: function(project){
+			project.parentTasks.sort(this.sortTaskStartTime);
+			for(var i = 0; i < project.parentTasks.length; i++){
+				project.parentTasks[i] = this.sortChildTasks(project.parentTasks[i]);
+			}
+		},
+		sortChildTasks: function(parenttask){
+			parenttask.cldTasks.sort(this.sortTaskStartTime);
+			for(var i = 0; i < parenttask.cldTasks.length; i++){
+				if(parenttask.cldTasks[i].cldTasks.length > 0) this.sortChildTasks(parenttask.cldTasks[i]);
+			}
+			return parenttask;
+		},
+		refresh: function(count, current, multi){
+			//return if no task items
+			if(this.arrProjects.length <= 0){return;}
+			if(this.arrProjects[0].arrTasks.length <= 0){return;}
+			//Show panel of names
+			if(!count || current > count){
+				this.refreshController();
+				if(this.resource){
+					this.resource.refresh();
+				}
+				this.tempDayInPixels = 0;
+				this.panelNameHeadersCover && domStyle.set(this.panelNameHeadersCover, "display", "none");
+				return;
+			}
+			if(this.tempDayInPixels == 0){
+				this.tempDayInPixels = this.pixelsPerDay;
+			}
+			this.panelNameHeadersCover && domStyle.set(this.panelNameHeadersCover, "display", "");
+			var dip = this.tempDayInPixels + this.tempDayInPixels * (multi - 1) * Math.pow((current / count), 2);
+			this.refreshParams(dip);
+			arrayUtil.forEach(this.arrProjects, function(project){
+				arrayUtil.forEach(project.arrTasks, function(task){
+					task.refresh();
+				}, this);
+				project.refresh();
+			}, this);
+			setTimeout(lang.hitch(this, function(){
+				this.refresh(count, ++current, multi);
+			}), 15);
+		},
+		switchTeleMicroView: function(dip){
+			var plChild = this.panelTime.firstChild.firstChild;
+			for(var i = 0; i < 5; i++){//0:Y 1:M 2:W 3:D 4:H
+				if(dip > 40){
+					domStyle.set(plChild.rows[i], "display", (i==0||i==1)?"none":"");
+				}else if(dip < 20){
+					domStyle.set(plChild.rows[i], "display", (i==2||i==4)?"none":"");
+				}else{
+					domStyle.set(plChild.rows[i], "display", (i==0||i==4)?"none":"");
+				}
+			}
+		},
+		refreshController: function(){
+			this.contentData.firstChild.style.width = Math.max(1200, this.pixelsPerDay * this.totalDays) + "px";
+			this.panelTime.firstChild.style.width = this.pixelsPerDay * this.totalDays + "px";
+			this.panelTime.firstChild.firstChild.style.width = this.pixelsPerDay * this.totalDays + "px";
+			this.switchTeleMicroView(this.pixelsPerDay);
+			arrayUtil.forEach(this.panelTime.firstChild.firstChild.rows, function(row){
+				arrayUtil.forEach(row.childNodes, function(td){
+					var cs = parseInt(domAttr.get(td, "colSpan") || 1);
+					var idata = lang.trim(domAttr.get(td, "innerHTMLData")||"");
+					if(idata.length > 0){
+						domAttr.set(td, "innerHTML", this.pixelsPerDay * cs < 20 ? "" : idata);
+					}else{
+						arrayUtil.forEach(td.firstChild.rows[0].childNodes, function(td){
+							var sdata = lang.trim(domAttr.get(td, "innerHTMLData")||"");
+							domAttr.set(td, "innerHTML", this.pixelsPerDay / this.hsPerDay > 10 ? sdata : "");
+						}, this);
+					}
+					if(cs == 1){
+						domStyle.set(td, "width", (this.pixelsPerDay*cs) + "px");
+						if(idata.length <= 0){
+							arrayUtil.forEach(td.firstChild.rows[0].childNodes, function(td){
+								domStyle.set(td, "width", (this.pixelsPerDay*cs / this.hsPerDay) + "px");
+							}, this);
+						}
+					}
+				}, this);
+			}, this);
+		},
+		init: function(){
+			this.startDate = this.getStartDate();
+			domStyle.set(this.content, {
+				width: this.contentWidth + "px",
+				height: this.contentHeight + "px"
+			});
+			//create Table
+			this.tableControl = domConstruct.create("table", {
+				cellPadding: "0",
+				cellSpacing: "0",
+				className: "ganttTabelControl"
+			});
+			var newRowTblControl = this.tableControl.insertRow(this.tableControl.rows.length);
+			//Add to content Table
+			this.content.appendChild(this.tableControl);
+			this.countDays = this.getCountDays();
+			//Creation panel of time
+			this.panelTime = domConstruct.create("div", {className: "ganttPanelTimeContainer"});
+			domStyle.set(this.panelTime, "height", this.panelTimeHeight + "px");
+			this.panelTime.appendChild(this.createPanelTime());
+			//Creation panel contentData
+			this.contentData = domConstruct.create("div", {className: "ganttContentDataContainer"});
+			domStyle.set(this.contentData, "height", (this.contentHeight - this.panelTimeHeight) + "px");
+			this.contentData.appendChild(this.createPanelTasks());
+			//Creation panel of names
+			var newCellTblControl = domConstruct.create("td", {
+				vAlign: "top"
+			});
+			//Creation panel of task header
+			this.panelNameHeaders = domConstruct.create("div", {className: "ganttPanelNameHeaders"}, newCellTblControl);
+			domStyle.set(this.panelNameHeaders, {
+				height: this.panelTimeHeight + "px",
+				width: this.maxWidthPanelNames + "px"
+			});
+			this.panelNameHeaders.appendChild(this.createPanelNamesTasksHeader());
+			this.panelNames = domConstruct.create("div", {className: "ganttPanelNamesContainer"}, newCellTblControl);
+			this.panelNames.appendChild(this.createPanelNamesTasks());
+			newRowTblControl.appendChild(newCellTblControl);
+			//add to control contentData and dataTime
+			newCellTblControl = domConstruct.create("td", {
+				vAlign: "top"
+			});
+			var divCell = domConstruct.create("div", {className: "ganttDivCell"});
+			divCell.appendChild(this.panelTime);
+			divCell.appendChild(this.contentData);
+			newCellTblControl.appendChild(divCell);
+			newRowTblControl.appendChild(newCellTblControl);
+			//Show panel of names
+			domStyle.set(this.panelNames, "height", (this.contentHeight - this.panelTimeHeight - this.scrollBarWidth) + "px");
+			domStyle.set(this.panelNames, "width", this.maxWidthPanelNames + "px");
+			domStyle.set(this.contentData, "width", (this.contentWidth - this.maxWidthPanelNames) + "px");
+			domStyle.set(this.contentData.firstChild, "width", this.pixelsPerDay * this.countDays + "px");
+			domStyle.set(this.panelTime, "width", (this.contentWidth - this.maxWidthPanelNames - this.scrollBarWidth) + "px");
+			domStyle.set(this.panelTime.firstChild, "width", this.pixelsPerDay * this.countDays + "px");
+			if(this.isShowConMenu){
+				this.tabMenu = new TabMenu(this);
+			}
+			var _this = this;
+			this.contentData.onscroll = function(){
+				_this.panelTime.scrollLeft = this.scrollLeft;
+				if(_this.panelNames){
+					_this.panelNames.scrollTop = this.scrollTop;
+					if(_this.isShowConMenu){
+						_this.tabMenu.hide();
+					}
+				}
+				if(_this.resource){
+					_this.resource.contentData.scrollLeft = this.scrollLeft;
+				}
+			};
+			this.project.sort(this.sortProjStartDate);
+			for(var i = 0; i < this.project.length; i++){
+				var proj = this.project[i];
+				for(var k = 0; k < proj.parentTasks.length; k++){
+					var ppTask = proj.parentTasks[k];
+					if(!ppTask.startTime){
+						ppTask.startTime = proj.startDate;
+					}
+					this.setStartTimeChild(ppTask);
+					if(this.setPreviousTask(proj)){
+						return;
+					}
+				}
+				for(var k = 0; k < proj.parentTasks.length; k++){
+					var ppTask = proj.parentTasks[k];
+					if(ppTask.startTime < proj.startDate){
+						if(!this.correctError){
+							return;
+						}else{
+							ppTask.startTime = proj.startDate;
+						}
+					}
+					if(this.checkPosParentTaskInTree(ppTask)){
+						return;
+					}
+				}
+				this.sortTasksByStartTime(proj);
+			}
+			for(var i = 0; i < this.project.length; i++){
+				//creation project
+				var proj = this.project[i];
+				var project = new GanttProjectControl(this, proj);
+				if(this.arrProjects.length > 0){
+					var previousProject = this.arrProjects[this.arrProjects.length - 1];
+					project.previousProject = previousProject;
+					previousProject.nextProject = project;
+				}
+				project.create();
+				this.checkHeighPanelTasks();
+				this.arrProjects.push(project);
+				this.createTasks(project);
+			}
+			if(this.withResource){
+				this.resource = new GanttResourceItem(this);
+				this.resource.create();
+			}
+			this.postLoadData();
+			this.postBindEvents();
+			return this;
+		},
+		postLoadData: function(){
+			arrayUtil.forEach(this.arrProjects, function(project){
+				arrayUtil.forEach(project.arrTasks, function(task){
+					task.postLoadData();
+				}, this);
+				project.postLoadData();
+			}, this);
+			//toolbar cover div
+			var cpos = domGeometry.getMarginBox(this.panelNameHeaders);
+			if(!this.panelNameHeadersCover){
+				this.panelNameHeadersCover = domConstruct.create("div", {className: "ganttHeaderCover"}, this.panelNameHeaders.parentNode);
+				domStyle.set(this.panelNameHeadersCover, {
+					left: cpos.l+"px",
+					top: cpos.t+"px",
+					height: cpos.h+"px",
+					width: cpos.w+"px",
+					display: "none"
+				});
+			}
+		},
+		postBindEvents: function(){
+			//highlight row
+			var pos = domGeometry.position(this.tableControl, true);
+			has("dom-addeventlistener") && this._events.push(
+				on(this.tableControl, "mousemove", lang.hitch(this, function(event){
+					var elem = event.srcElement || event.target;
+					if(elem == this.panelNames.firstChild || elem == this.contentData.firstChild){
+						//23: this.heightTaskItem + this.heightTaskItemExtra
+						var rowHeight = this.heightTaskItem + this.heightTaskItemExtra;
+						var hlTop = parseInt(event.layerY / rowHeight) * rowHeight + this.panelTimeHeight - this.contentData.scrollTop;
+						if(hlTop != this.oldHLTop && hlTop < (pos.h - 50)){
+							if(this.highLightDiv){
+								domStyle.set(this.highLightDiv, "top", (pos.y + hlTop) + "px");
+							}else{
+								this.highLightDiv = domConstruct.create("div", {
+									className: "ganttRowHighlight"
+								}, win.body());
+								domStyle.set(this.highLightDiv, {
+									top: (pos.y + hlTop) + "px",
+									left: pos.x + "px",
+									width: (pos.w - 20) + "px",
+									height: rowHeight + "px"
+								});
+							}
+						}
+						this.oldHLTop = hlTop;
+					}
+				}))
+			);
+		},
+		getStartDate: function(){
+			arrayUtil.forEach(this.project, function(proj){
+				if(this.startDate){
+					if(proj.startDate < this.startDate){
+						this.startDate = new Date(proj.startDate);
+					}
+				}else{
+					this.startDate = new Date(proj.startDate);
+				}
+			}, this);
+			this.initialPos = 24 * this.pixelsPerHour;
+			return this.startDate ? new Date(this.startDate.setHours(this.startDate.getHours() - 24)) : new Date();
+		},
+		getCountDays: function(){
+			return parseInt((this.contentWidth - this.maxWidthPanelNames) / (this.pixelsPerHour * 24));
+		},
+		createTasks: function(project){
+			arrayUtil.forEach(project.project.parentTasks, function(pppTask, i){
+				if(i > 0){
+					project.project.parentTasks[i - 1].nextParentTask = pppTask;
+					pppTask.previousParentTask = project.project.parentTasks[i - 1];
+				}
+				var task = new GanttTaskControl(pppTask, project, this);
+				project.arrTasks.push(task);
+				task.create();
+				this.checkHeighPanelTasks();
+				if(pppTask.cldTasks.length > 0){
+					this.createChildItemControls(pppTask.cldTasks, project);
+				}
+			}, this);
+		},
+		createChildItemControls: function(arrChildTasks, project){
+			arrChildTasks && arrayUtil.forEach(arrChildTasks, function(cTask, i){
+				if(i > 0){
+					cTask.previousChildTask = arrChildTasks[i - 1];
+					arrChildTasks[i - 1].nextChildTask = cTask;
+				}
+				var task = new GanttTaskControl(cTask, project, this);
+				task.create();
+				this.checkHeighPanelTasks();
+				if(cTask.cldTasks.length > 0){
+					this.createChildItemControls(cTask.cldTasks, project);
+				}
+			}, this);
+		},
+		getPosOnDate: function(startTime){
+			return (startTime - this.startDate) / (60 * 60 * 1000) * this.pixelsPerHour;
+		},
+		getWidthOnDuration: function(duration){
+			return Math.round(this.pixelsPerWorkHour * duration);
+		},
+		getLastChildTask: function(task){
+			return task.childTask.length > 0 ? this.getLastChildTask(task.childTask[task.childTask.length - 1]) : task;
+		},
+		removeCell: function(row){
+			while(row.cells[0]){
+				row.deleteCell(row.cells[0]);
+			}
+		}
+	});
+});

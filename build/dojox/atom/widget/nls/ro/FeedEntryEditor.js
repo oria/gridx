@@ -1,3 +1,8 @@
-//>>built
-define("dojox/atom/widget/nls/ro/FeedEntryEditor",{doNew:"[nou]",edit:"[editare]",save:"[salvare]",cancel:"[anulare]"});
-//@ sourceMappingURL=FeedEntryEditor.js.map
+define(
+({
+	doNew: "[nou]",
+	edit: "[editare]",
+	save: "[salvare]",
+	cancel: "[anulare]"
+})
+);

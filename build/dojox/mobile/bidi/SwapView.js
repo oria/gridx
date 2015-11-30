@@ -1,3 +1,38 @@
-//>>built
-define("dojox/mobile/bidi/SwapView",["dojo/_base/declare"],function(b){return b(null,{_callParentFunction:!1,nextView:function(a){if(this.isLeftToRight()||this._callParentFunction)return this._callParentFunction=!1,this.inherited(arguments);this._callParentFunction=!0;return this.previousView(a)},previousView:function(a){if(this.isLeftToRight()||this._callParentFunction)return this._callParentFunction=!1,this.inherited(arguments);this._callParentFunction=!0;return this.nextView(a)}})});
-//@ sourceMappingURL=SwapView.js.map
+define([
+	"dojo/_base/declare"
+], function(declare){
+
+	// module:
+	//		dojox/mobile/bidi/SwapView
+
+	return declare(null, {
+		
+		// callParentFunction: Boolean
+		//		Boolean value indicate whether to call the parent version of the function or the child one.
+		//		Used to support mirroring.
+		_callParentFunction: false,
+		
+		nextView: function(/*DomNode*/node){
+			//dojox.mobile mirroring support
+			if(this.isLeftToRight() || this._callParentFunction){
+				this._callParentFunction = false;
+				return this.inherited(arguments);
+			}else{
+				this._callParentFunction = true;
+				return this.previousView(node);
+			}
+		},
+		previousView: function(/*DomNode*/node){
+			//dojox.mobile mirroring support
+			if(this.isLeftToRight() || this._callParentFunction){
+				this._callParentFunction = false;
+				return this.inherited(arguments);
+			}else{
+				this._callParentFunction = true;
+				return this.nextView(node);
+			}
+		}
+		
+		
+	});
+});

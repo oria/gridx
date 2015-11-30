@@ -1,6 +1,125 @@
-//>>built
-define("dojox/treemap/DrillDownUp","dojo/_base/lang dojo/_base/event dojo/_base/declare dojo/on dojo/dom-geometry dojo/dom-construct dojo/dom-style dojo/_base/fx dojo/has!touch?dojox/gesture/tap".split(" "),function(d,k,n,h,e,l,f,m,g){return n("dojox.treemap.DrillDownUp",null,{postCreate:function(){this.inherited(arguments);this.own(h(this.domNode,"dblclick",d.hitch(this,this._onDoubleClick)));g&&this.own(h(this.domNode,g.doubletap,d.hitch(this,this._onDoubleClick)))},_onDoubleClick:function(b){var a=
-this._getRendererFromTarget(b.target);if(a.item){var c=a.item;if(this._isLeaf(c)&&(c=a.parentItem,a=this.itemToRenderer[this.getIdentity(c)],null==a))return;this.rootItem==c?this.drillUp(a):this.drillDown(a);k.stop(b)}},drillUp:function(b){var a=b.item;this.domNode.removeChild(b);var c=this._getRenderer(a).parentItem;this.set("rootItem",c);this.validateRendering();l.place(b,this.domNode);f.set(b,"zIndex",40);a=e.position(this._getRenderer(a),!0);c=e.getMarginBox(this.domNode);m.animateProperty({node:b,
-duration:500,properties:{left:{end:a.x-c.l},top:{end:a.y-c.t},height:{end:a.h},width:{end:a.w}},onAnimate:d.hitch(this,function(a){a=e.getContentBox(b);this._layoutGroupContent(b,a.w,a.h,b.level+1,!1,!0)}),onEnd:d.hitch(this,function(){this.domNode.removeChild(b)})}).play()},drillDown:function(b){var a=e.getMarginBox(this.domNode),c=b.item,h=b.parentNode,g=e.position(b,!0);h.removeChild(b);l.place(b,this.domNode);f.set(b,{left:g.x-a.l+"px",top:g.y-a.t+"px"});var k=f.get(b,"zIndex");f.set(b,"zIndex",
-40);m.animateProperty({node:b,duration:500,properties:{left:{end:a.l},top:{end:a.t},height:{end:a.h},width:{end:a.w}},onAnimate:d.hitch(this,function(a){a=e.getContentBox(b);this._layoutGroupContent(b,a.w,a.h,b.level+1,!1)}),onEnd:d.hitch(this,function(){f.set(b,"zIndex",k);this.set("rootItem",c)})}).play()}})});
-//@ sourceMappingURL=DrillDownUp.js.map
+define(["dojo/_base/lang", "dojo/_base/event", "dojo/_base/declare", "dojo/on", "dojo/dom-geometry", "dojo/dom-construct",
+	"dojo/dom-style", "dojo/_base/fx", "dojo/has!touch?dojox/gesture/tap"],
+	function(lang, event, declare, on, domGeom, domConstruct, domStyle, fx, tap){
+
+	return declare("dojox.treemap.DrillDownUp", null, {
+		// summary:
+		//		Specializes TreeMap to support drill down and up operations.
+
+		postCreate: function(){
+			this.inherited(arguments);
+			this.own(on(this.domNode, "dblclick", lang.hitch(this, this._onDoubleClick)));
+			if(tap){
+				this.own(on(this.domNode, tap.doubletap, lang.hitch(this, this._onDoubleClick)));
+			}
+		},
+
+		_onDoubleClick: function(e){
+			var renderer = this._getRendererFromTarget(e.target);
+			if(renderer.item){
+				var item = renderer.item;
+				if(this._isLeaf(item)){
+					// walk up
+					item = renderer.parentItem;
+					renderer = this.itemToRenderer[this.getIdentity(item)];
+					// our leaf parent is the root, we can't do much...
+					if(renderer == null){
+						return;
+					}
+				}
+				// Drill up
+				if(this.rootItem == item){
+					this.drillUp(renderer);
+				}else{
+					this.drillDown(renderer);
+				}
+				event.stop(e);
+			}
+		},
+
+		drillUp: function(renderer){
+			// summary:
+			//		Drill up from the given renderer.
+			// renderer: DomNode
+			//		The item renderer.
+			var item = renderer.item;
+
+			// Remove the current rootItem renderer
+			// rebuild the tree map
+			// and animate the old renderer before deleting it.
+
+			this.domNode.removeChild(renderer);
+			var parent = this._getRenderer(item).parentItem;
+			this.set("rootItem", parent);
+			this.validateRendering(); // Must call this to create the treemap now
+
+			// re-add the old renderer to show the animation
+			domConstruct.place(renderer, this.domNode);
+
+			domStyle.set(renderer, "zIndex", 40);
+
+			var finalBox = domGeom.position(this._getRenderer(item), true);
+			var corner = domGeom.getMarginBox(this.domNode);
+
+			fx.animateProperty({
+				node: renderer, duration: 500, properties: {
+					left: {
+						end: finalBox.x - corner.l
+					}, top: {
+						end: finalBox.y - corner.t
+					}, height: {
+						end: finalBox.h
+					}, width: {
+						end: finalBox.w
+					}
+				}, onAnimate: lang.hitch(this, function(values){
+					var box = domGeom.getContentBox(renderer);
+					this._layoutGroupContent(renderer, box.w, box.h, renderer.level + 1, false, true);
+				}), onEnd: lang.hitch(this, function(){
+					this.domNode.removeChild(renderer);
+				})
+			}).play();
+		},
+
+		drillDown: function(renderer){
+			// summary:
+			//		Drill up from the given renderer.
+			// renderer: DomNode
+			//		The item renderer.
+			var box = domGeom.getMarginBox(this.domNode);
+			var item = renderer.item;
+
+			// Set the new root item into the rootPanel to make it appear on top
+			// of the other nodes, and keep the same global location
+			var parentNode = renderer.parentNode;
+			var spanInfo = domGeom.position(renderer, true);
+			parentNode.removeChild(renderer);
+			domConstruct.place(renderer, this.domNode);
+			domStyle.set(renderer, {
+				left: (spanInfo.x - box.l)+ "px", top: (spanInfo.y - box.t)+ "px"
+			});
+			var zIndex = domStyle.get(renderer, "zIndex");
+			domStyle.set(renderer, "zIndex", 40);
+
+			fx.animateProperty({
+				node: renderer, duration: 500, properties: {
+					left: {
+						end: box.l
+					}, top: {
+						end: box.t
+					}, height: {
+						end: box.h
+					}, width: {
+						end: box.w
+					}
+				}, onAnimate: lang.hitch(this, function(values){
+					var box2 = domGeom.getContentBox(renderer);
+					this._layoutGroupContent(renderer, box2.w, box2.h, renderer.level + 1, false);
+				}), onEnd: lang.hitch(this, function(){
+					domStyle.set(renderer, "zIndex", zIndex);
+					this.set("rootItem", item);
+				})
+			}).play();
+		}
+	});
+});

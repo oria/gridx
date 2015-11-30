@@ -1,5 +1,106 @@
-//>>built
-define("dojox/data/css",["dojo/_base/lang","dojo/_base/array"],function(h,e){var f=h.getObject("dojox.data.css",!0);f.rules={};f.rules.forEach=function(c,d,b){b&&e.forEach(b,function(a){e.forEach(a[a.cssRules?"cssRules":"rules"],function(g){if(!g.type||3!==g.type){var b="";a&&a.href&&(b=a.href);c.call(d?d:this,g,a,b)}})})};f.findStyleSheets=function(c){var d=[];e.forEach(c,function(b){(b=f.findStyleSheet(b))&&e.forEach(b,function(a){-1===e.indexOf(d,a)&&d.push(a)})});return d};f.findStyleSheet=function(c){var d=
-[];"."===c.charAt(0)&&(c=c.substring(1));var b=function(a){return a.href&&a.href.match(c)?(d.push(a),!0):a.imports?e.some(a.imports,function(a){return b(a)}):e.some(a[a.cssRules?"cssRules":"rules"],function(a){return a.type&&3===a.type&&b(a.styleSheet)?!0:!1})};e.some(document.styleSheets,b);return d};f.determineContext=function(c){var d=[];c=c&&0<c.length?f.findStyleSheets(c):document.styleSheets;var b=function(a){d.push(a);a.imports&&e.forEach(a.imports,function(a){b(a)});e.forEach(a[a.cssRules?
-"cssRules":"rules"],function(a){a.type&&3===a.type&&b(a.styleSheet)})};e.forEach(c,b);return d};return f});
-//@ sourceMappingURL=css.js.map
+define(["dojo/_base/lang", "dojo/_base/array"], 
+  function(lang, array) {
+
+var css = lang.getObject("dojox.data.css",true) 
+
+css.rules = {};
+
+css.rules.forEach = function(fn,ctx,context){
+	if(context){
+		var _processSS = function(styleSheet){
+			//iterate across rules in the stylesheet
+			array.forEach(styleSheet[styleSheet.cssRules?"cssRules":"rules"], function(rule){
+				if(!rule.type || rule.type !== 3){// apply fn to current rule with approp ctx. rule is arg (all browsers)
+					var href = "";
+					if(styleSheet && styleSheet.href){
+						href = styleSheet.href;
+					}
+					fn.call(ctx?ctx:this,rule, styleSheet, href);
+				}
+			});
+			//process any child stylesheets
+		};
+		array.forEach(context,_processSS);
+	}
+};
+
+css.findStyleSheets = function(sheets){
+	// Takes an array of stylesheet paths and finds the currently loaded StyleSheet objects matching
+	// those names
+	var sheetObjects = [];
+	var _processSS = function(styleSheet){
+		var s = css.findStyleSheet(styleSheet);
+		if(s){
+			array.forEach(s, function(sheet){
+				if(array.indexOf(sheetObjects, sheet) === -1){
+					sheetObjects.push(sheet);
+				}
+			});
+		}
+	};
+	array.forEach(sheets, _processSS);
+	return sheetObjects;
+};
+
+css.findStyleSheet = function(sheet){
+	// Takes a stylesheet path and finds the currently loaded StyleSheet objects matching
+	// those names (and it's parent(s), if it is imported from another)
+	var sheetObjects = [];
+	if(sheet.charAt(0) === '.'){
+		sheet = sheet.substring(1);
+	}
+	var _processSS = function(styleSheet){
+		if(styleSheet.href && styleSheet.href.match(sheet)){
+			sheetObjects.push(styleSheet);
+			return true;
+		}
+		if(styleSheet.imports){
+			return array.some(styleSheet.imports, function(importedSS){ //IE stylesheet has imports[] containing @import'ed rules
+				//console.debug("Processing IE @import rule",importedSS);
+				return _processSS(importedSS);
+			});
+		}
+		//iterate across rules in the stylesheet
+		return array.some(styleSheet[styleSheet.cssRules?"cssRules":"rules"], function(rule){
+			if(rule.type && rule.type === 3 && _processSS(rule.styleSheet)){// CSSImportRule (firefox)
+				//sheetObjects.push(styleSheet);
+				return true;
+			}
+			return false;
+		});
+	};
+	array.some(document.styleSheets, _processSS);
+	return sheetObjects;
+};
+
+css.determineContext = function(initialStylesheets){
+	// Takes an array of stylesheet paths and returns an array of all stylesheets that fall in the
+	// given context.  If no paths are given, all stylesheets are returned.
+	var ret = [];
+	if(initialStylesheets && initialStylesheets.length > 0){
+		initialStylesheets = css.findStyleSheets(initialStylesheets);
+	}else{
+		initialStylesheets = document.styleSheets;
+	}
+	var _processSS = function(styleSheet){
+		ret.push(styleSheet);
+		if(styleSheet.imports){
+			array.forEach(styleSheet.imports, function(importedSS){ //IE stylesheet has imports[] containing @import'ed rules
+				//console.debug("Processing IE @import rule",importedSS);
+				_processSS(importedSS);
+			});
+		}
+		//iterate across rules in the stylesheet
+		array.forEach(styleSheet[styleSheet.cssRules?"cssRules":"rules"], function(rule){
+			if(rule.type && rule.type === 3){// CSSImportRule (firefox)
+				_processSS(rule.styleSheet);
+			}
+		});
+	};
+	array.forEach(initialStylesheets,_processSS);
+	return ret;
+};
+
+return css;
+
+});

@@ -1,9 +1,203 @@
-//>>built
-define("dojox/dtl/tag/loop",["dojo/_base/lang","dojo/_base/array","dojo/_base/json","../_base","dojox/string/tokenize"],function(f,k,l,h,m){var e=f.getObject("tag.loop",!0,h);e.CycleNode=f.extend(function(b,c,a,d){this.cyclevars=b;this.name=c;this.contents=a;this.shared=d||{counter:-1,map:{}}},{render:function(b,c){b.forloop&&!b.forloop.counter0&&(this.shared.counter=-1);++this.shared.counter;var a=this.cyclevars[this.shared.counter%this.cyclevars.length],d=this.shared.map;d[a]||(d[a]=new h._Filter(a));
-a=d[a].resolve(b,c);this.name&&(b[this.name]=a);this.contents.set(a);return this.contents.render(b,c)},unrender:function(b,c){return this.contents.unrender(b,c)},clone:function(b){return new this.constructor(this.cyclevars,this.name,this.contents.clone(b),this.shared)}});e.IfChangedNode=f.extend(function(b,c,a){this.nodes=b;this._vars=c;this.shared=a||{last:null,counter:0};this.vars=k.map(c,function(a){return new dojox.dtl._Filter(a)})},{render:function(b,c){b.forloop&&(b.forloop.counter<=this.shared.counter&&
-(this.shared.last=null),this.shared.counter=b.forloop.counter);var a;a=this.vars.length?l.toJson(k.map(this.vars,function(a){return a.resolve(b)})):this.nodes.dummyRender(b,c);if(a!=this.shared.last){var d=null===this.shared.last;this.shared.last=a;b=b.push();b.ifchanged={firstloop:d};c=this.nodes.render(b,c);b=b.pop()}else c=this.nodes.unrender(b,c);return c},unrender:function(b,c){return this.nodes.unrender(b,c)},clone:function(b){return new this.constructor(this.nodes.clone(b),this._vars,this.shared)}});
-e.RegroupNode=f.extend(function(b,c,a){this._expression=b;this.expression=new h._Filter(b);this.key=c;this.alias=a},{_push:function(b,c,a){a.length&&b.push({grouper:c,list:a})},render:function(b,c){b[this.alias]=[];var a=this.expression.resolve(b);if(a){for(var d=null,g=[],e=0;e<a.length;e++){var f=a[e][this.key];d!==f?(this._push(b[this.alias],d,g),d=f,g=[a[e]]):g.push(a[e])}this._push(b[this.alias],d,g)}return c},unrender:function(b,c){return c},clone:function(b,c){return this}});f.mixin(e,{cycle:function(b,
-c){var a=c.split_contents();if(2>a.length)throw Error("'cycle' tag requires at least two arguments");if(-1!=a[1].indexOf(","))for(var d=a[1].split(","),a=[a[0]],g=0;g<d.length;g++)a.push('"'+d[g]+'"');if(2==a.length){d=a[a.length-1];if(!b._namedCycleNodes)throw Error("No named cycles in template: '"+d+"' is not defined");if(!b._namedCycleNodes[d])throw Error("Named cycle '"+d+"' does not exist");return b._namedCycleNodes[d]}4<a.length&&"as"==a[a.length-2]?(d=a[a.length-1],a=new e.CycleNode(a.slice(1,
-a.length-2),d,b.create_text_node()),b._namedCycleNodes||(b._namedCycleNodes={}),b._namedCycleNodes[d]=a):a=new e.CycleNode(a.slice(1),null,b.create_text_node());return a},ifchanged:function(b,c){var a=c.contents.split(),d=b.parse(["endifchanged"]);b.delete_first_token();return new e.IfChangedNode(d,a.slice(1))},regroup:function(b,c){var a=m(c.contents,/(\s+)/g,function(a){return a});if(11>a.length||"as"!=a[a.length-3]||"by"!=a[a.length-7])throw Error("Expected the format: regroup list by key as newList");
-var d=a.slice(2,-8).join("");return new e.RegroupNode(d,a[a.length-5],a[a.length-1])}});return e});
-//@ sourceMappingURL=loop.js.map
+define([
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/json",
+	"../_base",
+	"dojox/string/tokenize"
+], function(lang,array,json,dd,Tokenize){
+
+	var ddtl = lang.getObject("tag.loop", true, dd);
+	/*=====
+	 ddtl = {
+	 	// TODO: summary
+	 };
+	 =====*/
+
+	ddtl.CycleNode = lang.extend(function(cyclevars, name, text, shared){
+		this.cyclevars = cyclevars;
+		this.name = name;
+		this.contents = text;
+		this.shared = shared || {counter: -1, map: {}};
+	},
+	{
+		render: function(context, buffer){
+			if(context.forloop && !context.forloop.counter0){
+				this.shared.counter = -1;
+			}
+
+			++this.shared.counter;
+			var value = this.cyclevars[this.shared.counter % this.cyclevars.length];
+
+			var map = this.shared.map;
+			if(!map[value]){
+				map[value] = new dd._Filter(value);
+			}
+			value = map[value].resolve(context, buffer);
+
+			if(this.name){
+				context[this.name] = value;
+			}
+			this.contents.set(value);
+			return this.contents.render(context, buffer);
+		},
+		unrender: function(context, buffer){
+			return this.contents.unrender(context, buffer);
+		},
+		clone: function(buffer){
+			return new this.constructor(this.cyclevars, this.name, this.contents.clone(buffer), this.shared);
+		}
+	});
+
+	ddtl.IfChangedNode = lang.extend(function(nodes, vars, shared){
+		this.nodes = nodes;
+		this._vars = vars;
+		this.shared = shared || {last: null, counter: 0};
+		this.vars = array.map(vars, function(item){
+			return new dojox.dtl._Filter(item);
+		});
+	}, {
+		render: function(context, buffer){
+			if(context.forloop){
+				if(context.forloop.counter <= this.shared.counter){
+					this.shared.last = null;
+				}
+				this.shared.counter = context.forloop.counter;
+			}
+
+			var change;
+			if(this.vars.length){
+				change = json.toJson(array.map(this.vars, function(item){
+					return item.resolve(context);
+				}));
+			}else{
+				change = this.nodes.dummyRender(context, buffer);
+			}
+
+			if(change != this.shared.last){
+				var firstloop = (this.shared.last === null);
+				this.shared.last = change;
+				context = context.push();
+				context.ifchanged = {firstloop: firstloop};
+				buffer = this.nodes.render(context, buffer);
+				context = context.pop();
+			}else{
+				buffer = this.nodes.unrender(context, buffer);
+			}
+			return buffer;
+		},
+		unrender: function(context, buffer){
+			return this.nodes.unrender(context, buffer);
+		},
+		clone: function(buffer){
+			return new this.constructor(this.nodes.clone(buffer), this._vars, this.shared);
+		}
+	});
+
+	ddtl.RegroupNode = lang.extend(function(expression, key, alias){
+		this._expression = expression;
+		this.expression = new dd._Filter(expression);
+		this.key = key;
+		this.alias = alias;
+	},
+	{
+		_push: function(container, grouper, stack){
+			if(stack.length){
+				container.push({ grouper: grouper, list: stack });
+			}
+		},
+		render: function(context, buffer){
+			context[this.alias] = [];
+			var list = this.expression.resolve(context);
+			if(list){
+				var last = null;
+				var stack = [];
+				for(var i = 0; i < list.length; i++){
+					var id = list[i][this.key];
+					if(last !== id){
+						this._push(context[this.alias], last, stack);
+						last = id;
+						stack = [list[i]];
+					}else{
+						stack.push(list[i]);
+					}
+				}
+				this._push(context[this.alias], last, stack);
+			}
+			return buffer;
+		},
+		unrender: function(context, buffer){
+			return buffer;
+		},
+		clone: function(context, buffer){
+			return this;
+		}
+	});
+
+	lang.mixin(ddtl, {
+		cycle: function(parser, token){
+			// summary:
+			//		Cycle among the given strings each time this tag is encountered
+			var args = token.split_contents();
+
+			if(args.length < 2){
+				throw new Error("'cycle' tag requires at least two arguments");
+			}
+
+			if(args[1].indexOf(",") != -1){
+				var vars = args[1].split(",");
+				args = [args[0]];
+				for(var i = 0; i < vars.length; i++){
+					args.push('"' + vars[i] + '"');
+				}
+			}
+
+			if(args.length == 2){
+				var name = args[args.length - 1];
+
+				if(!parser._namedCycleNodes){
+					throw new Error("No named cycles in template: '" + name + "' is not defined");
+				}
+				if(!parser._namedCycleNodes[name]){
+					throw new Error("Named cycle '" + name + "' does not exist");
+				}
+
+				return parser._namedCycleNodes[name];
+			}
+
+			if(args.length > 4 && args[args.length - 2] == "as"){
+				var name = args[args.length - 1];
+
+				var node = new ddtl.CycleNode(args.slice(1, args.length - 2), name, parser.create_text_node());
+
+				if(!parser._namedCycleNodes){
+					parser._namedCycleNodes = {};
+				}
+				parser._namedCycleNodes[name] = node;
+			}else{
+				node = new ddtl.CycleNode(args.slice(1), null, parser.create_text_node());
+			}
+
+			return node;
+		},
+		ifchanged: function(parser, token){
+			var parts = token.contents.split();
+			var nodes = parser.parse(["endifchanged"]);
+			parser.delete_first_token();
+			return new ddtl.IfChangedNode(nodes, parts.slice(1));
+		},
+		regroup: function(parser, token){
+			var tokens = Tokenize(token.contents, /(\s+)/g, function(spaces){
+				return spaces;
+			});
+			if(tokens.length < 11 || tokens[tokens.length - 3] != "as" || tokens[tokens.length - 7] != "by"){
+				throw new Error("Expected the format: regroup list by key as newList");
+			}
+			var expression = tokens.slice(2, -8).join("");
+			var key = tokens[tokens.length - 5];
+			var alias = tokens[tokens.length - 1];
+			return new ddtl.RegroupNode(expression, key, alias);
+		}
+	});
+
+	return ddtl;
+});

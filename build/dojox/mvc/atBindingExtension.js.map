@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"atBindingExtension.js",
-"lineCount":2,
-"mappings":"A,SAAAA,MAAA,gCAAuC,iGAAA,MAAA,KAAvC,CAOG,QAAA,CAASC,CAAT,CAAiBC,CAAjB,CAAwBC,CAAxB,CAA8BC,CAA9B,CAA2CC,CAA3C,QACK,SAAA,CAAkCC,CAAlC,EAMNJ,CAAAK,QAAA,CAAcC,SAAd,CAAyB,QAAA,CAASF,CAAT,EACrBA,CAAAG,aADqB,CAEvBC,OAAAC,KAAA,yGAFuB,EAOxBR,CAAAS,OAAA,CAAYN,CAAZ,CAAeD,CAAAQ,MAAf,CAPwB,CAUxBZ,CAAAa,OAAA,CAAcR,CAAd,cAA+B,QAAA,CAAqBS,CAArB,CAAgDC,CAAhD,EAC9BC,kBAAA,CAAmBF,CAAnB,CAA2BC,CAA3B,CAD8B,CAA/B,CAVwB,CAexBf,CAAAa,OAAA,CAAcR,CAAd,WAA4B,QAAA,GAC3BY,yBAAA,EAD2B,CAA5B,CAfwB,CAoBxBjB,CAAAa,OAAA,CAAcR,CAAd;UAA4B,QAAA,GAC3Ba,wBAAA,EAD2B,CAA5B,CApBwB,CAyBxBlB,CAAAmB,OAAA,CAAcd,CAAd,OAAwB,QAAA,CAASe,CAAT,QAChB,SAAA,CAAoBC,CAApB,CAAuCC,CAAvC,QACHD,EADG,EACKjB,CAAAmB,UAAAf,aADL,CAEEgB,aAAA,CAAcF,CAAd,CAFF,iBAGIG,CAAAH,CAAAG,iBAHJ,CAIEC,sBAAA,CAAuBL,CAAvB,CAA6BC,CAA7B,CAJF,CAMCF,CAAAO,MAAA,MAA6BzB,CAAA0B,SAAA,CAAcrB,SAAd,CAA7B,CAND,CADgB,CAAxB,CAzBwB,EAAzB,CANM,OA2CCA,UA3CD,CADL,CAPH;",
-"sources":["atBindingExtension.js.uncompressed.js"],
-"names":["define","aspect","array","lang","_WidgetBase","_atBindingMixin","w","forEach","arguments","dataBindAttr","console","warn","_mixin","mixin","before","params","srcNodeRef","_dbpostscript","_startAtWatchHandles","_stopAtWatchHandles","around","oldWidgetBaseSet","name","value","prototype","_setBind","atsignature","_setAtWatchHandle","apply","_toArray"]
-}

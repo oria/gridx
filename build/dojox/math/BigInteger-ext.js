@@ -1,21 +1,656 @@
-//>>built
-define("dojox/math/BigInteger-ext",["dojo","dojox","dojox/math/BigInteger"],function(v,w){function A(a,b){return a&b}function u(a,b){return a|b}function x(a,b){return a^b}function y(a,b){return a&~b}function r(){}function z(a){return a}function s(a){this.r2=k();this.q3=k();l.ONE._dlShiftTo(2*a.t,this.r2);this.mu=this.r2.divide(a);this.m=a}v.experimental("dojox.math.BigInteger-ext");var l=w.math.BigInteger,k=l._nbi,t=l._nbv,B=l._nbits,C=l._Montgomery;r.prototype.convert=z;r.prototype.revert=z;r.prototype.mulTo=
-function(a,b,c){a._multiplyTo(b,c)};r.prototype.sqrTo=function(a,b){a._squareTo(b)};s.prototype.convert=function(a){if(0>a.s||a.t>2*this.m.t)return a.mod(this.m);if(0>a.compareTo(this.m))return a;var b=k();a._copyTo(b);this.reduce(b);return b};s.prototype.revert=function(a){return a};s.prototype.reduce=function(a){a._drShiftTo(this.m.t-1,this.r2);a.t>this.m.t+1&&(a.t=this.m.t+1,a._clamp());this.mu._multiplyUpperTo(this.r2,this.m.t+1,this.q3);for(this.m._multiplyLowerTo(this.q3,this.m.t+1,this.r2);0>
-a.compareTo(this.r2);)a._dAddOffset(1,this.m.t+1);for(a._subTo(this.r2,a);0<=a.compareTo(this.m);)a._subTo(this.m,a)};s.prototype.mulTo=function(a,b,c){a._multiplyTo(b,c);this.reduce(c)};s.prototype.sqrTo=function(a,b){a._squareTo(b);this.reduce(b)};var m=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,
-349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509],D=67108864/m[m.length-1];v.extend(l,{_chunkSize:function(a){return Math.floor(Math.LN2*this._DB/Math.log(a))},_toRadix:function(a){null==a&&(a=10);if(0==this.signum()||2>a||36<a)return"0";var b=this._chunkSize(a),b=Math.pow(a,b),c=t(b),d=k(),e=k(),g="";for(this._divRemTo(c,d,e);0<d.signum();)g=(b+e.intValue()).toString(a).substr(1)+g,d._divRemTo(c,d,e);return e.intValue().toString(a)+g},
-_fromRadix:function(a,b){this._fromInt(0);null==b&&(b=10);for(var c=this._chunkSize(b),d=Math.pow(b,c),e=!1,g=0,h=0,f=0;f<a.length;++f){var k=intAt(a,f);0>k?"-"==a.charAt(f)&&0==this.signum()&&(e=!0):(h=b*h+k,++g>=c&&(this._dMultiply(d),this._dAddOffset(h,0),h=g=0))}0<g&&(this._dMultiply(Math.pow(b,g)),this._dAddOffset(h,0));e&&l.ZERO._subTo(this,this)},_fromNumber:function(a,b,c){if("number"==typeof b)if(2>a)this._fromInt(1);else{this._fromNumber(a,c);this.testBit(a-1)||this._bitwiseTo(l.ONE.shiftLeft(a-
-1),u,this);for(this._isEven()&&this._dAddOffset(1,0);!this.isProbablePrime(b);)this._dAddOffset(2,0),this.bitLength()>a&&this._subTo(l.ONE.shiftLeft(a-1),this)}else{c=[];var d=a&7;c.length=(a>>3)+1;b.nextBytes(c);c[0]=0<d?c[0]&(1<<d)-1:0;this._fromString(c,256)}},_bitwiseTo:function(a,b,c){var d,e,g=Math.min(a.t,this.t);for(d=0;d<g;++d)c[d]=b(this[d],a[d]);if(a.t<this.t){e=a.s&this._DM;for(d=g;d<this.t;++d)c[d]=b(this[d],e);c.t=this.t}else{e=this.s&this._DM;for(d=g;d<a.t;++d)c[d]=b(e,a[d]);c.t=a.t}c.s=
-b(this.s,a.s);c._clamp()},_changeBit:function(a,b){var c=l.ONE.shiftLeft(a);this._bitwiseTo(c,b,c);return c},_addTo:function(a,b){for(var c=0,d=0,e=Math.min(a.t,this.t);c<e;)d+=this[c]+a[c],b[c++]=d&this._DM,d>>=this._DB;if(a.t<this.t){for(d+=a.s;c<this.t;)d+=this[c],b[c++]=d&this._DM,d>>=this._DB;d+=this.s}else{for(d+=this.s;c<a.t;)d+=a[c],b[c++]=d&this._DM,d>>=this._DB;d+=a.s}b.s=0>d?-1:0;0<d?b[c++]=d:-1>d&&(b[c++]=this._DV+d);b.t=c;b._clamp()},_dMultiply:function(a){this[this.t]=this.am(0,a-1,
-this,0,0,this.t);++this.t;this._clamp()},_dAddOffset:function(a,b){for(;this.t<=b;)this[this.t++]=0;for(this[b]+=a;this[b]>=this._DV;)this[b]-=this._DV,++b>=this.t&&(this[this.t++]=0),++this[b]},_multiplyLowerTo:function(a,b,c){var d=Math.min(this.t+a.t,b);c.s=0;for(c.t=d;0<d;)c[--d]=0;var e;for(e=c.t-this.t;d<e;++d)c[d+this.t]=this.am(0,a[d],c,d,0,this.t);for(e=Math.min(a.t,b);d<e;++d)this.am(0,a[d],c,d,0,b-d);c._clamp()},_multiplyUpperTo:function(a,b,c){--b;var d=c.t=this.t+a.t-b;for(c.s=0;0<=--d;)c[d]=
-0;for(d=Math.max(b-this.t,0);d<a.t;++d)c[this.t+d-b]=this.am(b-d,a[d],c,0,0,this.t+d-b);c._clamp();c._drShiftTo(1,c)},_modInt:function(a){if(0>=a)return 0;var b=this._DV%a,c=0>this.s?a-1:0;if(0<this.t)if(0==b)c=this[0]%a;else for(var d=this.t-1;0<=d;--d)c=(b*c+this[d])%a;return c},_millerRabin:function(a){var b=this.subtract(l.ONE),c=b.getLowestSetBit();if(0>=c)return!1;var d=b.shiftRight(c);a=a+1>>1;a>m.length&&(a=m.length);for(var e=k(),g=0;g<a;++g){e._fromInt(m[g]);var h=e.modPow(d,this);if(0!=
-h.compareTo(l.ONE)&&0!=h.compareTo(b)){for(var f=1;f++<c&&0!=h.compareTo(b);)if(h=h.modPowInt(2,this),0==h.compareTo(l.ONE))return!1;if(0!=h.compareTo(b))return!1}}return!0},clone:function(){var a=k();this._copyTo(a);return a},intValue:function(){if(0>this.s){if(1==this.t)return this[0]-this._DV;if(0==this.t)return-1}else{if(1==this.t)return this[0];if(0==this.t)return 0}return(this[1]&(1<<32-this._DB)-1)<<this._DB|this[0]},byteValue:function(){return 0==this.t?this.s:this[0]<<24>>24},shortValue:function(){return 0==
-this.t?this.s:this[0]<<16>>16},signum:function(){return 0>this.s?-1:0>=this.t||1==this.t&&0>=this[0]?0:1},toByteArray:function(){var a=this.t,b=[];b[0]=this.s;var c=this._DB-a*this._DB%8,d,e=0;if(0<a--){if(c<this._DB&&(d=this[a]>>c)!=(this.s&this._DM)>>c)b[e++]=d|this.s<<this._DB-c;for(;0<=a;)if(8>c?(d=(this[a]&(1<<c)-1)<<8-c,d|=this[--a]>>(c+=this._DB-8)):(d=this[a]>>(c-=8)&255,0>=c&&(c+=this._DB,--a)),0!=(d&128)&&(d|=-256),0==e&&(this.s&128)!=(d&128)&&++e,0<e||d!=this.s)b[e++]=d}return b},equals:function(a){return 0==
-this.compareTo(a)},min:function(a){return 0>this.compareTo(a)?this:a},max:function(a){return 0<this.compareTo(a)?this:a},and:function(a){var b=k();this._bitwiseTo(a,A,b);return b},or:function(a){var b=k();this._bitwiseTo(a,u,b);return b},xor:function(a){var b=k();this._bitwiseTo(a,x,b);return b},andNot:function(a){var b=k();this._bitwiseTo(a,y,b);return b},not:function(){for(var a=k(),b=0;b<this.t;++b)a[b]=this._DM&~this[b];a.t=this.t;a.s=~this.s;return a},shiftLeft:function(a){var b=k();0>a?this._rShiftTo(-a,
-b):this._lShiftTo(a,b);return b},shiftRight:function(a){var b=k();0>a?this._lShiftTo(-a,b):this._rShiftTo(a,b);return b},getLowestSetBit:function(){for(var a=0;a<this.t;++a)if(0!=this[a]){var b=a*this._DB;a=this[a];if(0==a)a=-1;else{var c=0;0==(a&65535)&&(a>>=16,c+=16);0==(a&255)&&(a>>=8,c+=8);0==(a&15)&&(a>>=4,c+=4);0==(a&3)&&(a>>=2,c+=2);0==(a&1)&&++c;a=c}return b+a}return 0>this.s?this.t*this._DB:-1},bitCount:function(){for(var a=0,b=this.s&this._DM,c=0;c<this.t;++c){for(var d=this[c]^b,e=0;0!=
-d;)d&=d-1,++e;a+=e}return a},testBit:function(a){var b=Math.floor(a/this._DB);return b>=this.t?0!=this.s:0!=(this[b]&1<<a%this._DB)},setBit:function(a){return this._changeBit(a,u)},clearBit:function(a){return this._changeBit(a,y)},flipBit:function(a){return this._changeBit(a,x)},add:function(a){var b=k();this._addTo(a,b);return b},subtract:function(a){var b=k();this._subTo(a,b);return b},multiply:function(a){var b=k();this._multiplyTo(a,b);return b},divide:function(a){var b=k();this._divRemTo(a,b,
-null);return b},remainder:function(a){var b=k();this._divRemTo(a,null,b);return b},divideAndRemainder:function(a){var b=k(),c=k();this._divRemTo(a,b,c);return[b,c]},modPow:function(a,b){var c=a.bitLength(),d,e=t(1),g;if(0>=c)return e;d=18>c?1:48>c?3:144>c?4:768>c?5:6;g=8>c?new Classic(b):b._isEven()?new s(b):new C(b);var h=[],f=3,l=d-1,m=(1<<d)-1;h[1]=g.convert(this);if(1<d){c=k();for(g.sqrTo(h[1],c);f<=m;)h[f]=k(),g.mulTo(c,h[f-2],h[f]),f+=2}for(var n=a.t-1,p,r=!0,q=k(),c=B(a[n])-1;0<=n;){c>=l?p=
-a[n]>>c-l&m:(p=(a[n]&(1<<c+1)-1)<<l-c,0<n&&(p|=a[n-1]>>this._DB+c-l));for(f=d;0==(p&1);)p>>=1,--f;if(0>(c-=f))c+=this._DB,--n;if(r)h[p]._copyTo(e),r=!1;else{for(;1<f;)g.sqrTo(e,q),g.sqrTo(q,e),f-=2;0<f?g.sqrTo(e,q):(f=e,e=q,q=f);g.mulTo(q,h[p],e)}for(;0<=n&&0==(a[n]&1<<c);)g.sqrTo(e,q),f=e,e=q,q=f,0>--c&&(c=this._DB-1,--n)}return g.revert(e)},modInverse:function(a){var b=a._isEven();if(this._isEven()&&b||0==a.signum())return l.ZERO;for(var c=a.clone(),d=this.clone(),e=t(1),g=t(0),h=t(0),f=t(1);0!=
-c.signum();){for(;c._isEven();){c._rShiftTo(1,c);if(b){if(!e._isEven()||!g._isEven())e._addTo(this,e),g._subTo(a,g);e._rShiftTo(1,e)}else g._isEven()||g._subTo(a,g);g._rShiftTo(1,g)}for(;d._isEven();){d._rShiftTo(1,d);if(b){if(!h._isEven()||!f._isEven())h._addTo(this,h),f._subTo(a,f);h._rShiftTo(1,h)}else f._isEven()||f._subTo(a,f);f._rShiftTo(1,f)}0<=c.compareTo(d)?(c._subTo(d,c),b&&e._subTo(h,e),g._subTo(f,g)):(d._subTo(c,d),b&&h._subTo(e,h),f._subTo(g,f))}if(0!=d.compareTo(l.ONE))return l.ZERO;
-if(0<=f.compareTo(a))return f.subtract(a);if(0>f.signum())f._addTo(a,f);else return f;return 0>f.signum()?f.add(a):f},pow:function(a){return this._exp(a,new r)},gcd:function(a){var b=0>this.s?this.negate():this.clone();a=0>a.s?a.negate():a.clone();if(0>b.compareTo(a)){var c=b,b=a;a=c}var c=b.getLowestSetBit(),d=a.getLowestSetBit();if(0>d)return b;c<d&&(d=c);0<d&&(b._rShiftTo(d,b),a._rShiftTo(d,a));for(;0<b.signum();)0<(c=b.getLowestSetBit())&&b._rShiftTo(c,b),0<(c=a.getLowestSetBit())&&a._rShiftTo(c,
-a),0<=b.compareTo(a)?(b._subTo(a,b),b._rShiftTo(1,b)):(a._subTo(b,a),a._rShiftTo(1,a));0<d&&a._lShiftTo(d,a);return a},isProbablePrime:function(a){var b,c=this.abs();if(1==c.t&&c[0]<=m[m.length-1]){for(b=0;b<m.length;++b)if(c[0]==m[b])return!0;return!1}if(c._isEven())return!1;for(b=1;b<m.length;){for(var d=m[b],e=b+1;e<m.length&&d<D;)d*=m[e++];for(d=c._modInt(d);b<e;)if(0==d%m[b++])return!1}return c._millerRabin(a)}});return w.math.BigInteger});
-//@ sourceMappingURL=BigInteger-ext.js.map
+// AMD-ID "dojox/math/BigInteger-ext"
+define(["dojo", "dojox", "dojox/math/BigInteger"], function(dojo, dojox) {
+	dojo.experimental("dojox.math.BigInteger-ext");
+
+// Contributed under CLA by Tom Wu
+
+// Extended JavaScript BN functions, required for RSA private ops.
+	var BigInteger = dojox.math.BigInteger,
+		nbi = BigInteger._nbi, nbv = BigInteger._nbv,
+		nbits = BigInteger._nbits,
+		Montgomery = BigInteger._Montgomery;
+
+	// (public)
+	function bnClone() { var r = nbi(); this._copyTo(r); return r; }
+
+	// (public) return value as integer
+	function bnIntValue() {
+	  if(this.s < 0) {
+		if(this.t == 1) return this[0]-this._DV;
+		else if(this.t == 0) return -1;
+	  }
+	  else if(this.t == 1) return this[0];
+	  else if(this.t == 0) return 0;
+	  // assumes 16 < DB < 32
+	  return ((this[1]&((1<<(32-this._DB))-1))<<this._DB)|this[0];
+	}
+
+	// (public) return value as byte
+	function bnByteValue() { return (this.t==0)?this.s:(this[0]<<24)>>24; }
+
+	// (public) return value as short (assumes DB>=16)
+	function bnShortValue() { return (this.t==0)?this.s:(this[0]<<16)>>16; }
+
+	// (protected) return x s.t. r^x < DV
+	function bnpChunkSize(r) { return Math.floor(Math.LN2*this._DB/Math.log(r)); }
+
+	// (public) 0 if this == 0, 1 if this > 0
+	function bnSigNum() {
+	  if(this.s < 0) return -1;
+	  else if(this.t <= 0 || (this.t == 1 && this[0] <= 0)) return 0;
+	  else return 1;
+	}
+
+	// (protected) convert to radix string
+	function bnpToRadix(b) {
+	  if(b == null) b = 10;
+	  if(this.signum() == 0 || b < 2 || b > 36) return "0";
+	  var cs = this._chunkSize(b);
+	  var a = Math.pow(b,cs);
+	  var d = nbv(a), y = nbi(), z = nbi(), r = "";
+	  this._divRemTo(d,y,z);
+	  while(y.signum() > 0) {
+		r = (a+z.intValue()).toString(b).substr(1) + r;
+		y._divRemTo(d,y,z);
+	  }
+	  return z.intValue().toString(b) + r;
+	}
+
+	// (protected) convert from radix string
+	function bnpFromRadix(s,b) {
+	  this._fromInt(0);
+	  if(b == null) b = 10;
+	  var cs = this._chunkSize(b);
+	  var d = Math.pow(b,cs), mi = false, j = 0, w = 0;
+	  for(var i = 0; i < s.length; ++i) {
+		var x = intAt(s,i);
+		if(x < 0) {
+		  if(s.charAt(i) == "-" && this.signum() == 0) mi = true;
+		  continue;
+		}
+		w = b*w+x;
+		if(++j >= cs) {
+		  this._dMultiply(d);
+		  this._dAddOffset(w,0);
+		  j = 0;
+		  w = 0;
+		}
+	  }
+	  if(j > 0) {
+		this._dMultiply(Math.pow(b,j));
+		this._dAddOffset(w,0);
+	  }
+	  if(mi) BigInteger.ZERO._subTo(this,this);
+	}
+
+	// (protected) alternate constructor
+	function bnpFromNumber(a,b,c) {
+	  if("number" == typeof b) {
+		// new BigInteger(int,int,RNG)
+		if(a < 2) this._fromInt(1);
+		else {
+		  this._fromNumber(a,c);
+		  if(!this.testBit(a-1))	// force MSB set
+			this._bitwiseTo(BigInteger.ONE.shiftLeft(a-1),op_or,this);
+		  if(this._isEven()) this._dAddOffset(1,0); // force odd
+		  while(!this.isProbablePrime(b)) {
+			this._dAddOffset(2,0);
+			if(this.bitLength() > a) this._subTo(BigInteger.ONE.shiftLeft(a-1),this);
+		  }
+		}
+	  }
+	  else {
+		// new BigInteger(int,RNG)
+		var x = [], t = a&7;
+		x.length = (a>>3)+1;
+		b.nextBytes(x);
+		if(t > 0) x[0] &= ((1<<t)-1); else x[0] = 0;
+		this._fromString(x,256);
+	  }
+	}
+
+	// (public) convert to bigendian byte array
+	function bnToByteArray() {
+	  var i = this.t, r = [];
+	  r[0] = this.s;
+	  var p = this._DB-(i*this._DB)%8, d, k = 0;
+	  if(i-- > 0) {
+		if(p < this._DB && (d = this[i]>>p) != (this.s&this._DM)>>p)
+		  r[k++] = d|(this.s<<(this._DB-p));
+		while(i >= 0) {
+		  if(p < 8) {
+			d = (this[i]&((1<<p)-1))<<(8-p);
+			d |= this[--i]>>(p+=this._DB-8);
+		  }
+		  else {
+			d = (this[i]>>(p-=8))&0xff;
+			if(p <= 0) { p += this._DB; --i; }
+		  }
+		  if((d&0x80) != 0) d |= -256;
+		  if(k == 0 && (this.s&0x80) != (d&0x80)) ++k;
+		  if(k > 0 || d != this.s) r[k++] = d;
+		}
+	  }
+	  return r;
+	}
+
+	function bnEquals(a) { return(this.compareTo(a)==0); }
+	function bnMin(a) { return(this.compareTo(a)<0)?this:a; }
+	function bnMax(a) { return(this.compareTo(a)>0)?this:a; }
+
+	// (protected) r = this op a (bitwise)
+	function bnpBitwiseTo(a,op,r) {
+	  var i, f, m = Math.min(a.t,this.t);
+	  for(i = 0; i < m; ++i) r[i] = op(this[i],a[i]);
+	  if(a.t < this.t) {
+		f = a.s&this._DM;
+		for(i = m; i < this.t; ++i) r[i] = op(this[i],f);
+		r.t = this.t;
+	  }
+	  else {
+		f = this.s&this._DM;
+		for(i = m; i < a.t; ++i) r[i] = op(f,a[i]);
+		r.t = a.t;
+	  }
+	  r.s = op(this.s,a.s);
+	  r._clamp();
+	}
+
+	// (public) this & a
+	function op_and(x,y) { return x&y; }
+	function bnAnd(a) { var r = nbi(); this._bitwiseTo(a,op_and,r); return r; }
+
+	// (public) this | a
+	function op_or(x,y) { return x|y; }
+	function bnOr(a) { var r = nbi(); this._bitwiseTo(a,op_or,r); return r; }
+
+	// (public) this ^ a
+	function op_xor(x,y) { return x^y; }
+	function bnXor(a) { var r = nbi(); this._bitwiseTo(a,op_xor,r); return r; }
+
+	// (public) this & ~a
+	function op_andnot(x,y) { return x&~y; }
+	function bnAndNot(a) { var r = nbi(); this._bitwiseTo(a,op_andnot,r); return r; }
+
+	// (public) ~this
+	function bnNot() {
+	  var r = nbi();
+	  for(var i = 0; i < this.t; ++i) r[i] = this._DM&~this[i];
+	  r.t = this.t;
+	  r.s = ~this.s;
+	  return r;
+	}
+
+	// (public) this << n
+	function bnShiftLeft(n) {
+	  var r = nbi();
+	  if(n < 0) this._rShiftTo(-n,r); else this._lShiftTo(n,r);
+	  return r;
+	}
+
+	// (public) this >> n
+	function bnShiftRight(n) {
+	  var r = nbi();
+	  if(n < 0) this._lShiftTo(-n,r); else this._rShiftTo(n,r);
+	  return r;
+	}
+
+	// return index of lowest 1-bit in x, x < 2^31
+	function lbit(x) {
+	  if(x == 0) return -1;
+	  var r = 0;
+	  if((x&0xffff) == 0) { x >>= 16; r += 16; }
+	  if((x&0xff) == 0) { x >>= 8; r += 8; }
+	  if((x&0xf) == 0) { x >>= 4; r += 4; }
+	  if((x&3) == 0) { x >>= 2; r += 2; }
+	  if((x&1) == 0) ++r;
+	  return r;
+	}
+
+	// (public) returns index of lowest 1-bit (or -1 if none)
+	function bnGetLowestSetBit() {
+	  for(var i = 0; i < this.t; ++i)
+		if(this[i] != 0) return i*this._DB+lbit(this[i]);
+	  if(this.s < 0) return this.t*this._DB;
+	  return -1;
+	}
+
+	// return number of 1 bits in x
+	function cbit(x) {
+	  var r = 0;
+	  while(x != 0) { x &= x-1; ++r; }
+	  return r;
+	}
+
+	// (public) return number of set bits
+	function bnBitCount() {
+	  var r = 0, x = this.s&this._DM;
+	  for(var i = 0; i < this.t; ++i) r += cbit(this[i]^x);
+	  return r;
+	}
+
+	// (public) true iff nth bit is set
+	function bnTestBit(n) {
+	  var j = Math.floor(n/this._DB);
+	  if(j >= this.t) return(this.s!=0);
+	  return((this[j]&(1<<(n%this._DB)))!=0);
+	}
+
+	// (protected) this op (1<<n)
+	function bnpChangeBit(n,op) {
+	  var r = BigInteger.ONE.shiftLeft(n);
+	  this._bitwiseTo(r,op,r);
+	  return r;
+	}
+
+	// (public) this | (1<<n)
+	function bnSetBit(n) { return this._changeBit(n,op_or); }
+
+	// (public) this & ~(1<<n)
+	function bnClearBit(n) { return this._changeBit(n,op_andnot); }
+
+	// (public) this ^ (1<<n)
+	function bnFlipBit(n) { return this._changeBit(n,op_xor); }
+
+	// (protected) r = this + a
+	function bnpAddTo(a,r) {
+	  var i = 0, c = 0, m = Math.min(a.t,this.t);
+	  while(i < m) {
+		c += this[i]+a[i];
+		r[i++] = c&this._DM;
+		c >>= this._DB;
+	  }
+	  if(a.t < this.t) {
+		c += a.s;
+		while(i < this.t) {
+		  c += this[i];
+		  r[i++] = c&this._DM;
+		  c >>= this._DB;
+		}
+		c += this.s;
+	  }
+	  else {
+		c += this.s;
+		while(i < a.t) {
+		  c += a[i];
+		  r[i++] = c&this._DM;
+		  c >>= this._DB;
+		}
+		c += a.s;
+	  }
+	  r.s = (c<0)?-1:0;
+	  if(c > 0) r[i++] = c;
+	  else if(c < -1) r[i++] = this._DV+c;
+	  r.t = i;
+	  r._clamp();
+	}
+
+	// (public) this + a
+	function bnAdd(a) { var r = nbi(); this._addTo(a,r); return r; }
+
+	// (public) this - a
+	function bnSubtract(a) { var r = nbi(); this._subTo(a,r); return r; }
+
+	// (public) this * a
+	function bnMultiply(a) { var r = nbi(); this._multiplyTo(a,r); return r; }
+
+	// (public) this / a
+	function bnDivide(a) { var r = nbi(); this._divRemTo(a,r,null); return r; }
+
+	// (public) this % a
+	function bnRemainder(a) { var r = nbi(); this._divRemTo(a,null,r); return r; }
+
+	// (public) [this/a,this%a]
+	function bnDivideAndRemainder(a) {
+	  var q = nbi(), r = nbi();
+	  this._divRemTo(a,q,r);
+	  return [q, r];
+	}
+
+	// (protected) this *= n, this >= 0, 1 < n < DV
+	function bnpDMultiply(n) {
+	  this[this.t] = this.am(0,n-1,this,0,0,this.t);
+	  ++this.t;
+	  this._clamp();
+	}
+
+	// (protected) this += n << w words, this >= 0
+	function bnpDAddOffset(n,w) {
+	  while(this.t <= w) this[this.t++] = 0;
+	  this[w] += n;
+	  while(this[w] >= this._DV) {
+		this[w] -= this._DV;
+		if(++w >= this.t) this[this.t++] = 0;
+		++this[w];
+	  }
+	}
+
+	// A "null" reducer
+	function NullExp() {}
+	function nNop(x) { return x; }
+	function nMulTo(x,y,r) { x._multiplyTo(y,r); }
+	function nSqrTo(x,r) { x._squareTo(r); }
+
+	NullExp.prototype.convert = nNop;
+	NullExp.prototype.revert = nNop;
+	NullExp.prototype.mulTo = nMulTo;
+	NullExp.prototype.sqrTo = nSqrTo;
+
+	// (public) this^e
+	function bnPow(e) { return this._exp(e,new NullExp()); }
+
+	// (protected) r = lower n words of "this * a", a.t <= n
+	// "this" should be the larger one if appropriate.
+	function bnpMultiplyLowerTo(a,n,r) {
+	  var i = Math.min(this.t+a.t,n);
+	  r.s = 0; // assumes a,this >= 0
+	  r.t = i;
+	  while(i > 0) r[--i] = 0;
+	  var j;
+	  for(j = r.t-this.t; i < j; ++i) r[i+this.t] = this.am(0,a[i],r,i,0,this.t);
+	  for(j = Math.min(a.t,n); i < j; ++i) this.am(0,a[i],r,i,0,n-i);
+	  r._clamp();
+	}
+
+	// (protected) r = "this * a" without lower n words, n > 0
+	// "this" should be the larger one if appropriate.
+	function bnpMultiplyUpperTo(a,n,r) {
+	  --n;
+	  var i = r.t = this.t+a.t-n;
+	  r.s = 0; // assumes a,this >= 0
+	  while(--i >= 0) r[i] = 0;
+	  for(i = Math.max(n-this.t,0); i < a.t; ++i)
+		r[this.t+i-n] = this.am(n-i,a[i],r,0,0,this.t+i-n);
+	  r._clamp();
+	  r._drShiftTo(1,r);
+	}
+
+	// Barrett modular reduction
+	function Barrett(m) {
+	  // setup Barrett
+	  this.r2 = nbi();
+	  this.q3 = nbi();
+	  BigInteger.ONE._dlShiftTo(2*m.t,this.r2);
+	  this.mu = this.r2.divide(m);
+	  this.m = m;
+	}
+
+	function barrettConvert(x) {
+	  if(x.s < 0 || x.t > 2*this.m.t) return x.mod(this.m);
+	  else if(x.compareTo(this.m) < 0) return x;
+	  else { var r = nbi(); x._copyTo(r); this.reduce(r); return r; }
+	}
+
+	function barrettRevert(x) { return x; }
+
+	// x = x mod m (HAC 14.42)
+	function barrettReduce(x) {
+	  x._drShiftTo(this.m.t-1,this.r2);
+	  if(x.t > this.m.t+1) { x.t = this.m.t+1; x._clamp(); }
+	  this.mu._multiplyUpperTo(this.r2,this.m.t+1,this.q3);
+	  this.m._multiplyLowerTo(this.q3,this.m.t+1,this.r2);
+	  while(x.compareTo(this.r2) < 0) x._dAddOffset(1,this.m.t+1);
+	  x._subTo(this.r2,x);
+	  while(x.compareTo(this.m) >= 0) x._subTo(this.m,x);
+	}
+
+	// r = x^2 mod m; x != r
+	function barrettSqrTo(x,r) { x._squareTo(r); this.reduce(r); }
+
+	// r = x*y mod m; x,y != r
+	function barrettMulTo(x,y,r) { x._multiplyTo(y,r); this.reduce(r); }
+
+	Barrett.prototype.convert = barrettConvert;
+	Barrett.prototype.revert = barrettRevert;
+	Barrett.prototype.reduce = barrettReduce;
+	Barrett.prototype.mulTo = barrettMulTo;
+	Barrett.prototype.sqrTo = barrettSqrTo;
+
+	// (public) this^e % m (HAC 14.85)
+	function bnModPow(e,m) {
+	  var i = e.bitLength(), k, r = nbv(1), z;
+	  if(i <= 0) return r;
+	  else if(i < 18) k = 1;
+	  else if(i < 48) k = 3;
+	  else if(i < 144) k = 4;
+	  else if(i < 768) k = 5;
+	  else k = 6;
+	  if(i < 8)
+		z = new Classic(m);
+	  else if(m._isEven())
+		z = new Barrett(m);
+	  else
+		z = new Montgomery(m);
+
+	  // precomputation
+	  var g = [], n = 3, k1 = k-1, km = (1<<k)-1;
+	  g[1] = z.convert(this);
+	  if(k > 1) {
+		var g2 = nbi();
+		z.sqrTo(g[1],g2);
+		while(n <= km) {
+		  g[n] = nbi();
+		  z.mulTo(g2,g[n-2],g[n]);
+		  n += 2;
+		}
+	  }
+
+	  var j = e.t-1, w, is1 = true, r2 = nbi(), t;
+	  i = nbits(e[j])-1;
+	  while(j >= 0) {
+		if(i >= k1) w = (e[j]>>(i-k1))&km;
+		else {
+		  w = (e[j]&((1<<(i+1))-1))<<(k1-i);
+		  if(j > 0) w |= e[j-1]>>(this._DB+i-k1);
+		}
+
+		n = k;
+		while((w&1) == 0) { w >>= 1; --n; }
+		if((i -= n) < 0) { i += this._DB; --j; }
+		if(is1) {	// ret == 1, don't bother squaring or multiplying it
+		  g[w]._copyTo(r);
+		  is1 = false;
+		}
+		else {
+		  while(n > 1) { z.sqrTo(r,r2); z.sqrTo(r2,r); n -= 2; }
+		  if(n > 0) z.sqrTo(r,r2); else { t = r; r = r2; r2 = t; }
+		  z.mulTo(r2,g[w],r);
+		}
+
+		while(j >= 0 && (e[j]&(1<<i)) == 0) {
+		  z.sqrTo(r,r2); t = r; r = r2; r2 = t;
+		  if(--i < 0) { i = this._DB-1; --j; }
+		}
+	  }
+	  return z.revert(r);
+	}
+
+	// (public) gcd(this,a) (HAC 14.54)
+	function bnGCD(a) {
+	  var x = (this.s<0)?this.negate():this.clone();
+	  var y = (a.s<0)?a.negate():a.clone();
+	  if(x.compareTo(y) < 0) { var t = x; x = y; y = t; }
+	  var i = x.getLowestSetBit(), g = y.getLowestSetBit();
+	  if(g < 0) return x;
+	  if(i < g) g = i;
+	  if(g > 0) {
+		x._rShiftTo(g,x);
+		y._rShiftTo(g,y);
+	  }
+	  while(x.signum() > 0) {
+		if((i = x.getLowestSetBit()) > 0) x._rShiftTo(i,x);
+		if((i = y.getLowestSetBit()) > 0) y._rShiftTo(i,y);
+		if(x.compareTo(y) >= 0) {
+		  x._subTo(y,x);
+		  x._rShiftTo(1,x);
+		}
+		else {
+		  y._subTo(x,y);
+		  y._rShiftTo(1,y);
+		}
+	  }
+	  if(g > 0) y._lShiftTo(g,y);
+	  return y;
+	}
+
+	// (protected) this % n, n < 2^26
+	function bnpModInt(n) {
+	  if(n <= 0) return 0;
+	  var d = this._DV%n, r = (this.s<0)?n-1:0;
+	  if(this.t > 0)
+		if(d == 0) r = this[0]%n;
+		else for(var i = this.t-1; i >= 0; --i) r = (d*r+this[i])%n;
+	  return r;
+	}
+
+	// (public) 1/this % m (HAC 14.61)
+	function bnModInverse(m) {
+	  var ac = m._isEven();
+	  if((this._isEven() && ac) || m.signum() == 0) return BigInteger.ZERO;
+	  var u = m.clone(), v = this.clone();
+	  var a = nbv(1), b = nbv(0), c = nbv(0), d = nbv(1);
+	  while(u.signum() != 0) {
+		while(u._isEven()) {
+		  u._rShiftTo(1,u);
+		  if(ac) {
+			if(!a._isEven() || !b._isEven()) { a._addTo(this,a); b._subTo(m,b); }
+			a._rShiftTo(1,a);
+		  }
+		  else if(!b._isEven()) b._subTo(m,b);
+		  b._rShiftTo(1,b);
+		}
+		while(v._isEven()) {
+		  v._rShiftTo(1,v);
+		  if(ac) {
+			if(!c._isEven() || !d._isEven()) { c._addTo(this,c); d._subTo(m,d); }
+			c._rShiftTo(1,c);
+		  }
+		  else if(!d._isEven()) d._subTo(m,d);
+		  d._rShiftTo(1,d);
+		}
+		if(u.compareTo(v) >= 0) {
+		  u._subTo(v,u);
+		  if(ac) a._subTo(c,a);
+		  b._subTo(d,b);
+		}
+		else {
+		  v._subTo(u,v);
+		  if(ac) c._subTo(a,c);
+		  d._subTo(b,d);
+		}
+	  }
+	  if(v.compareTo(BigInteger.ONE) != 0) return BigInteger.ZERO;
+	  if(d.compareTo(m) >= 0) return d.subtract(m);
+	  if(d.signum() < 0) d._addTo(m,d); else return d;
+	  if(d.signum() < 0) return d.add(m); else return d;
+	}
+
+	var lowprimes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101,103,107,109,113,127,131,137,139,149,151,157,163,167,173,179,181,191,193,197,199,211,223,227,229,233,239,241,251,257,263,269,271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461,463,467,479,487,491,499,503,509];
+	var lplim = (1<<26)/lowprimes[lowprimes.length-1];
+
+	// (public) test primality with certainty >= 1-.5^t
+	function bnIsProbablePrime(t) {
+	  var i, x = this.abs();
+	  if(x.t == 1 && x[0] <= lowprimes[lowprimes.length-1]) {
+		for(i = 0; i < lowprimes.length; ++i)
+		  if(x[0] == lowprimes[i]) return true;
+		return false;
+	  }
+	  if(x._isEven()) return false;
+	  i = 1;
+	  while(i < lowprimes.length) {
+		var m = lowprimes[i], j = i+1;
+		while(j < lowprimes.length && m < lplim) m *= lowprimes[j++];
+		m = x._modInt(m);
+		while(i < j) if(m%lowprimes[i++] == 0) return false;
+	  }
+	  return x._millerRabin(t);
+	}
+
+	// (protected) true if probably prime (HAC 4.24, Miller-Rabin)
+	function bnpMillerRabin(t) {
+	  var n1 = this.subtract(BigInteger.ONE);
+	  var k = n1.getLowestSetBit();
+	  if(k <= 0) return false;
+	  var r = n1.shiftRight(k);
+	  t = (t+1)>>1;
+	  if(t > lowprimes.length) t = lowprimes.length;
+	  var a = nbi();
+	  for(var i = 0; i < t; ++i) {
+		a._fromInt(lowprimes[i]);
+		var y = a.modPow(r,this);
+		if(y.compareTo(BigInteger.ONE) != 0 && y.compareTo(n1) != 0) {
+		  var j = 1;
+		  while(j++ < k && y.compareTo(n1) != 0) {
+			y = y.modPowInt(2,this);
+			if(y.compareTo(BigInteger.ONE) == 0) return false;
+		  }
+		  if(y.compareTo(n1) != 0) return false;
+		}
+	  }
+	  return true;
+	}
+
+	dojo.extend(BigInteger, {
+		// protected
+		_chunkSize:			bnpChunkSize,
+		_toRadix:			bnpToRadix,
+		_fromRadix:			bnpFromRadix,
+		_fromNumber:		bnpFromNumber,
+		_bitwiseTo:			bnpBitwiseTo,
+		_changeBit:			bnpChangeBit,
+		_addTo:				bnpAddTo,
+		_dMultiply:			bnpDMultiply,
+		_dAddOffset:		bnpDAddOffset,
+		_multiplyLowerTo:	bnpMultiplyLowerTo,
+		_multiplyUpperTo:	bnpMultiplyUpperTo,
+		_modInt:			bnpModInt,
+		_millerRabin:		bnpMillerRabin,
+
+		// public
+		clone:				bnClone,
+		intValue:			bnIntValue,
+		byteValue:			bnByteValue,
+		shortValue:			bnShortValue,
+		signum:				bnSigNum,
+		toByteArray:		bnToByteArray,
+		equals:				bnEquals,
+		min:				bnMin,
+		max:				bnMax,
+		and:				bnAnd,
+		or:					bnOr,
+		xor:				bnXor,
+		andNot:				bnAndNot,
+		not:				bnNot,
+		shiftLeft:			bnShiftLeft,
+		shiftRight:			bnShiftRight,
+		getLowestSetBit:	bnGetLowestSetBit,
+		bitCount:			bnBitCount,
+		testBit:			bnTestBit,
+		setBit:				bnSetBit,
+		clearBit:			bnClearBit,
+		flipBit:			bnFlipBit,
+		add:				bnAdd,
+		subtract:			bnSubtract,
+		multiply:			bnMultiply,
+		divide:				bnDivide,
+		remainder:			bnRemainder,
+		divideAndRemainder:	bnDivideAndRemainder,
+		modPow:				bnModPow,
+		modInverse:			bnModInverse,
+		pow:				bnPow,
+		gcd:				bnGCD,
+		isProbablePrime:	bnIsProbablePrime
+	});
+
+	// BigInteger interfaces not implemented in jsbn:
+
+	// BigInteger(int signum, byte[] magnitude)
+	// double doubleValue()
+	// float floatValue()
+	// int hashCode()
+	// long longValue()
+	// static BigInteger valueOf(long val)
+
+	return dojox.math.BigInteger;
+});

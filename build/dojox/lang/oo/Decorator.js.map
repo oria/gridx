@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"Decorator.js",
-"lineCount":1,
-"mappings":"A,SACAA,MAAA,oDAA4D,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC5DF,CAAAG,QAAA,2BAEC,UAAA,OACIC,EAAKF,CAAAG,KAAAD,GADT,CAGAE,EAAIF,CAAAG,UAAJD,CAAmBE,QAAAA,CAASC,CAATD,CAAgBE,CAAhBF,EAalBC,UAbkBD,CAaJC,CACdC,eAdkBF,iBAcME,EAdNF,CAejB,QAAA,SAAmBE,EAAAC,KAAAC,MAAA,CAAqBF,CAArB,CAAgCG,SAAhC,CAAnB,CAfiBL,CAekDE,CAflDF,CAkBnBJ,EAAAU,cArBA,CAqBmBC,QAAAA,CAASL,CAATK,QAQX,SAAA,CAASN,CAAT,QACC,KAAIH,CAAJ,CAAMG,CAAN,CAAaC,CAAb,CADD,CARWK,CArBnB,EAAA,EAH2D,CAA5D;",
-"sources":["Decorator.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","oo","lang","D","Decorator","oo.Decorator","value","decorator","exec","apply","arguments","makeDecorator","oo.makeDecorator"]
-}

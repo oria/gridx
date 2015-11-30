@@ -1,4 +1,42 @@
-//>>built
-define("dojox/treemap/GroupLabel",["dojo/_base/declare","dojo/dom-construct","dojo/dom-style"],function(h,f,d){return h("dojox.treemap.GroupLabel",null,{createRenderer:function(a,e,b){var c=this.inherited(arguments);if("content"==b||"leaf"==b){var g=f.create("div");d.set(g,{zIndex:30,position:"relative",height:"100%",textAlign:"center",top:"50%",marginTop:"-.5em"});f.place(g,c)}return c},styleRenderer:function(a,e,b,c){switch(c){case "leaf":d.set(a,"background",this.getColorForItem(e).toHex());case "content":a.firstChild.innerHTML=
-0==b?this.getLabelForItem(e):null;break;case "header":d.set(a,"display","none")}}})});
-//@ sourceMappingURL=GroupLabel.js.map
+define(["dojo/_base/declare", "dojo/dom-construct", "dojo/dom-style"],
+	function(declare, domConstruct, domStyle) {
+
+	return declare("dojox.treemap.GroupLabel", null, {
+		// summary:
+		//		Specializes TreeMap to remove leaf labels and display group labels centered on group
+		//		content instead of display them in headers.
+
+		createRenderer: function(item, level, kind){
+			var renderer = this.inherited(arguments);
+			if(kind == "content" || kind == "leaf"){
+				var p = domConstruct.create("div");
+				domStyle.set(p, {
+					"zIndex": 30,
+					"position": "relative",
+					"height": "100%",
+					"textAlign": "center",
+					"top": "50%",
+					"marginTop": "-.5em"
+				});
+				domConstruct.place(p, renderer);
+			}
+			return renderer;
+		},
+
+		styleRenderer: function(renderer, item, level, kind){
+			switch(kind){
+				case "leaf":
+					domStyle.set(renderer, "background", this.getColorForItem(item).toHex());
+				case "content":
+					if(level == 0){
+						renderer.firstChild.innerHTML = this.getLabelForItem(item);
+					}else{
+						renderer.firstChild.innerHTML = null;
+					}
+					break;
+				case "header":
+					domStyle.set(renderer, "display", "none");
+			}
+		}
+	});
+});

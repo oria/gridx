@@ -1,16 +1,383 @@
-//>>built
-require({cache:{"url:dijit/form/templates/HorizontalSlider.html":'\x3ctable class\x3d"dijit dijitReset dijitSlider dijitSliderH" cellspacing\x3d"0" cellpadding\x3d"0" border\x3d"0" rules\x3d"none" data-dojo-attach-event\x3d"onkeydown:_onKeyDown, onkeyup:_onKeyUp"\r\n\trole\x3d"presentation"\r\n\t\x3e\x3ctr class\x3d"dijitReset"\r\n\t\t\x3e\x3ctd class\x3d"dijitReset" colspan\x3d"2"\x3e\x3c/td\r\n\t\t\x3e\x3ctd data-dojo-attach-point\x3d"topDecoration" class\x3d"dijitReset dijitSliderDecoration dijitSliderDecorationT dijitSliderDecorationH"\x3e\x3c/td\r\n\t\t\x3e\x3ctd class\x3d"dijitReset" colspan\x3d"2"\x3e\x3c/td\r\n\t\x3e\x3c/tr\r\n\t\x3e\x3ctr class\x3d"dijitReset"\r\n\t\t\x3e\x3ctd class\x3d"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerH"\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitSliderDecrementIconH" style\x3d"display:none" data-dojo-attach-point\x3d"decrementButton"\x3e\x3cspan class\x3d"dijitSliderButtonInner"\x3e-\x3c/span\x3e\x3c/div\r\n\t\t\x3e\x3c/td\r\n\t\t\x3e\x3ctd class\x3d"dijitReset"\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitSliderBar dijitSliderBumper dijitSliderBumperH dijitSliderLeftBumper" data-dojo-attach-event\x3d"press:_onClkDecBumper"\x3e\x3c/div\r\n\t\t\x3e\x3c/td\r\n\t\t\x3e\x3ctd class\x3d"dijitReset"\r\n\t\t\t\x3e\x3cinput data-dojo-attach-point\x3d"valueNode" type\x3d"hidden" ${!nameAttrSetting}\r\n\t\t\t/\x3e\x3cdiv class\x3d"dijitReset dijitSliderBarContainerH" role\x3d"presentation" data-dojo-attach-point\x3d"sliderBarContainer"\r\n\t\t\t\t\x3e\x3cdiv role\x3d"presentation" data-dojo-attach-point\x3d"progressBar" class\x3d"dijitSliderBar dijitSliderBarH dijitSliderProgressBar dijitSliderProgressBarH" data-dojo-attach-event\x3d"press:_onBarClick"\r\n\t\t\t\t\t\x3e\x3cdiv class\x3d"dijitSliderMoveable dijitSliderMoveableH"\r\n\t\t\t\t\t\t\x3e\x3cdiv data-dojo-attach-point\x3d"sliderHandle,focusNode" class\x3d"dijitSliderImageHandle dijitSliderImageHandleH" data-dojo-attach-event\x3d"press:_onHandleClick" role\x3d"slider"\x3e\x3c/div\r\n\t\t\t\t\t\x3e\x3c/div\r\n\t\t\t\t\x3e\x3c/div\r\n\t\t\t\t\x3e\x3cdiv role\x3d"presentation" data-dojo-attach-point\x3d"remainingBar" class\x3d"dijitSliderBar dijitSliderBarH dijitSliderRemainingBar dijitSliderRemainingBarH" data-dojo-attach-event\x3d"press:_onBarClick"\x3e\x3c/div\r\n\t\t\t\x3e\x3c/div\r\n\t\t\x3e\x3c/td\r\n\t\t\x3e\x3ctd class\x3d"dijitReset"\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitSliderBar dijitSliderBumper dijitSliderBumperH dijitSliderRightBumper" data-dojo-attach-event\x3d"press:_onClkIncBumper"\x3e\x3c/div\r\n\t\t\x3e\x3c/td\r\n\t\t\x3e\x3ctd class\x3d"dijitReset dijitSliderButtonContainer dijitSliderButtonContainerH"\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitSliderIncrementIconH" style\x3d"display:none" data-dojo-attach-point\x3d"incrementButton"\x3e\x3cspan class\x3d"dijitSliderButtonInner"\x3e+\x3c/span\x3e\x3c/div\r\n\t\t\x3e\x3c/td\r\n\t\x3e\x3c/tr\r\n\t\x3e\x3ctr class\x3d"dijitReset"\r\n\t\t\x3e\x3ctd class\x3d"dijitReset" colspan\x3d"2"\x3e\x3c/td\r\n\t\t\x3e\x3ctd data-dojo-attach-point\x3d"containerNode,bottomDecoration" class\x3d"dijitReset dijitSliderDecoration dijitSliderDecorationB dijitSliderDecorationH"\x3e\x3c/td\r\n\t\t\x3e\x3ctd class\x3d"dijitReset" colspan\x3d"2"\x3e\x3c/td\r\n\t\x3e\x3c/tr\r\n\x3e\x3c/table\x3e\r\n'}});
-define("dijit/form/HorizontalSlider","dojo/_base/array dojo/_base/declare dojo/dnd/move dojo/_base/fx dojo/dom-geometry dojo/dom-style dojo/keys dojo/_base/lang dojo/sniff dojo/dnd/Moveable dojo/dnd/Mover dojo/query dojo/mouse dojo/on ../_base/manager ../focus ../typematic ./Button ./_FormValueWidget ../_Container dojo/text!./templates/HorizontalSlider.html".split(" "),function(r,f,g,s,h,t,e,l,u,v,m,w,x,y,z,n,p,D,A,B,C){var q=f("dijit.form._SliderMover",m,{onMouseMove:function(a){var b=this.widget,
-c=b._abspos;c||(c=b._abspos=h.position(b.sliderBarContainer,!0),b._setPixelValue_=l.hitch(b,"_setPixelValue"),b._isReversed_=b._isReversed());a=a[b._mousePixelCoord]-c[b._startingPixelCoord];b._setPixelValue_(b._isReversed_?c[b._pixelCount]-a:a,c[b._pixelCount],!1)},destroy:function(a){m.prototype.destroy.apply(this,arguments);var b=this.widget;b._abspos=null;b._setValueAttr(b.value,!0)}});g=f("dijit.form.HorizontalSlider",[A,B],{templateString:C,value:0,showButtons:!0,minimum:0,maximum:100,discreteValues:Infinity,
-pageIncrement:2,clickSelect:!0,slideDuration:z.defaultDuration,_setIdAttr:"",_setNameAttr:"valueNode",baseClass:"dijitSlider",cssStateNodes:{incrementButton:"dijitSliderIncrementButton",decrementButton:"dijitSliderDecrementButton",focusNode:"dijitSliderThumb"},_mousePixelCoord:"pageX",_pixelCount:"w",_startingPixelCoord:"x",_handleOffsetCoord:"left",_progressPixelSize:"width",_onKeyUp:function(a){!this.disabled&&(!this.readOnly&&!a.altKey&&!a.ctrlKey&&!a.metaKey)&&this._setValueAttr(this.value,!0)},
-_onKeyDown:function(a){if(!this.disabled&&!this.readOnly&&!a.altKey&&!a.ctrlKey&&!a.metaKey){switch(a.keyCode){case e.HOME:this._setValueAttr(this.minimum,!1);break;case e.END:this._setValueAttr(this.maximum,!1);break;case this._descending||this.isLeftToRight()?e.RIGHT_ARROW:e.LEFT_ARROW:case !1===this._descending?e.DOWN_ARROW:e.UP_ARROW:case !1===this._descending?e.PAGE_DOWN:e.PAGE_UP:this.increment(a);break;case this._descending||this.isLeftToRight()?e.LEFT_ARROW:e.RIGHT_ARROW:case !1===this._descending?
-e.UP_ARROW:e.DOWN_ARROW:case !1===this._descending?e.PAGE_UP:e.PAGE_DOWN:this.decrement(a);break;default:return}a.stopPropagation();a.preventDefault()}},_onHandleClick:function(a){!this.disabled&&!this.readOnly&&(u("ie")||n.focus(this.sliderHandle),a.stopPropagation(),a.preventDefault())},_isReversed:function(){return!this.isLeftToRight()},_onBarClick:function(a){if(!this.disabled&&!this.readOnly&&this.clickSelect){n.focus(this.sliderHandle);a.stopPropagation();a.preventDefault();var b=h.position(this.sliderBarContainer,
-!0),c=a[this._mousePixelCoord]-b[this._startingPixelCoord];this._setPixelValue(this._isReversed()?b[this._pixelCount]-c:c,b[this._pixelCount],!0);this._movable.onMouseDown(a)}},_setPixelValue:function(a,b,c){if(!this.disabled&&!this.readOnly){var d=this.discreteValues;if(1>=d||Infinity==d)d=b;d--;a=Math.round(a/(b/d));this._setValueAttr(Math.max(Math.min((this.maximum-this.minimum)*a/d+this.minimum,this.maximum),this.minimum),c)}},_setValueAttr:function(a,b){this._set("value",a);this.valueNode.value=
-a;this.focusNode.setAttribute("aria-valuenow",a);this.inherited(arguments);var c=(a-this.minimum)/(this.maximum-this.minimum),d=!1===this._descending?this.remainingBar:this.progressBar,e=!1===this._descending?this.progressBar:this.remainingBar;this._inProgressAnim&&"stopped"!=this._inProgressAnim.status&&this._inProgressAnim.stop(!0);if(b&&0<this.slideDuration&&d.style[this._progressPixelSize]){var f=this,g={},h=parseFloat(d.style[this._progressPixelSize]),k=this.slideDuration*(c-h/100);0!=k&&(0>
-k&&(k=0-k),g[this._progressPixelSize]={start:h,end:100*c,units:"%"},this._inProgressAnim=s.animateProperty({node:d,duration:k,onAnimate:function(a){e.style[f._progressPixelSize]=100-parseFloat(a[f._progressPixelSize])+"%"},onEnd:function(){delete f._inProgressAnim},properties:g}),this._inProgressAnim.play())}else d.style[this._progressPixelSize]=100*c+"%",e.style[this._progressPixelSize]=100*(1-c)+"%"},_bumpValue:function(a,b){if(!this.disabled&&!this.readOnly){var c=t.getComputedStyle(this.sliderBarContainer),
-d=h.getContentBox(this.sliderBarContainer,c),c=this.discreteValues;if(1>=c||Infinity==c)c=d[this._pixelCount];c--;d=(this.value-this.minimum)*c/(this.maximum-this.minimum)+a;0>d&&(d=0);d>c&&(d=c);d=d*(this.maximum-this.minimum)/c+this.minimum;this._setValueAttr(d,b)}},_onClkBumper:function(a){!this.disabled&&(!this.readOnly&&this.clickSelect)&&this._setValueAttr(a,!0)},_onClkIncBumper:function(){this._onClkBumper(!1===this._descending?this.minimum:this.maximum)},_onClkDecBumper:function(){this._onClkBumper(!1===
-this._descending?this.maximum:this.minimum)},decrement:function(a){this._bumpValue(a.keyCode==e.PAGE_DOWN?-this.pageIncrement:-1)},increment:function(a){this._bumpValue(a.keyCode==e.PAGE_UP?this.pageIncrement:1)},_mouseWheeled:function(a){a.stopPropagation();a.preventDefault();this._bumpValue(0>a.wheelDelta?-1:1,!0)},startup:function(){this._started||(r.forEach(this.getChildren(),function(a){this[a.container]!=this.containerNode&&this[a.container].appendChild(a.domNode)},this),this.inherited(arguments))},
-_typematicCallback:function(a,b,c){if(-1==a)this._setValueAttr(this.value,!0);else this[b==(this._descending?this.incrementButton:this.decrementButton)?"decrement":"increment"](c)},buildRendering:function(){this.inherited(arguments);this.showButtons&&(this.incrementButton.style.display="",this.decrementButton.style.display="");var a=w('label[for\x3d"'+this.id+'"]');a.length&&(a[0].id||(a[0].id=this.id+"_label"),this.focusNode.setAttribute("aria-labelledby",a[0].id));this.focusNode.setAttribute("aria-valuemin",
-this.minimum);this.focusNode.setAttribute("aria-valuemax",this.maximum)},postCreate:function(){this.inherited(arguments);this.showButtons&&this.own(p.addMouseListener(this.decrementButton,this,"_typematicCallback",25,500),p.addMouseListener(this.incrementButton,this,"_typematicCallback",25,500));this.own(y(this.domNode,x.wheel,l.hitch(this,"_mouseWheeled")));var a=f(q,{widget:this});this._movable=new v(this.sliderHandle,{mover:a});this._layoutHackIE7()},destroy:function(){this._movable.destroy();
-this._inProgressAnim&&"stopped"!=this._inProgressAnim.status&&this._inProgressAnim.stop(!0);this.inherited(arguments)}});g._Mover=q;return g});
-//@ sourceMappingURL=HorizontalSlider.js.map
+define([
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/dnd/move",
+	"dojo/_base/fx", // fx.animateProperty
+	"dojo/dom-geometry", // domGeometry.position
+	"dojo/dom-style", // domStyle.getComputedStyle
+	"dojo/keys", // keys.DOWN_ARROW keys.END keys.HOME keys.LEFT_ARROW keys.PAGE_DOWN keys.PAGE_UP keys.RIGHT_ARROW keys.UP_ARROW
+	"dojo/_base/lang", // lang.hitch
+	"dojo/sniff", // has("ie") has("mozilla")
+	"dojo/dnd/Moveable", // Moveable
+	"dojo/dnd/Mover", // Mover Mover.prototype.destroy.apply
+	"dojo/query", // query
+	"dojo/mouse", // mouse.wheel
+	"dojo/on",
+	"../_base/manager", // defaultDuration
+	"../focus", // focus.focus()
+	"../typematic",
+	"./Button",
+	"./_FormValueWidget",
+	"../_Container",
+	"dojo/text!./templates/HorizontalSlider.html"
+], function(array, declare, move, fx, domGeometry, domStyle, keys, lang, has, Moveable, Mover, query, mouse, on,
+			manager, focus, typematic, Button, _FormValueWidget, _Container, template){
+
+	// module:
+	//		dijit/form/HorizontalSlider
+
+	var _SliderMover = declare("dijit.form._SliderMover", Mover, {
+		onMouseMove: function(e){
+			var widget = this.widget;
+			var abspos = widget._abspos;
+			if(!abspos){
+				abspos = widget._abspos = domGeometry.position(widget.sliderBarContainer, true);
+				widget._setPixelValue_ = lang.hitch(widget, "_setPixelValue");
+				widget._isReversed_ = widget._isReversed();
+			}
+			var pixelValue = e[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
+			widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount] - pixelValue) : pixelValue, abspos[widget._pixelCount], false);
+		},
+
+		destroy: function(e){
+			Mover.prototype.destroy.apply(this, arguments);
+			var widget = this.widget;
+			widget._abspos = null;
+			widget._setValueAttr(widget.value, true);
+		}
+	});
+
+	var HorizontalSlider = declare("dijit.form.HorizontalSlider", [_FormValueWidget, _Container], {
+		// summary:
+		//		A form widget that allows one to select a value with a horizontally draggable handle
+
+		templateString: template,
+
+		// Overrides FormValueWidget.value to indicate numeric value
+		value: 0,
+
+		// showButtons: [const] Boolean
+		//		Show increment/decrement buttons at the ends of the slider?
+		showButtons: true,
+
+		// minimum: [const] Integer
+		//		The minimum value the slider can be set to.
+		minimum: 0,
+
+		// maximum: [const] Integer
+		//		The maximum value the slider can be set to.
+		maximum: 100,
+
+		// discreteValues: Integer
+		//		If specified, indicates that the slider handle has only 'discreteValues' possible positions,
+		//		and that after dragging the handle, it will snap to the nearest possible position.
+		//		Thus, the slider has only 'discreteValues' possible values.
+		//
+		//		For example, if minimum=10, maxiumum=30, and discreteValues=3, then the slider handle has
+		//		three possible positions, representing values 10, 20, or 30.
+		//
+		//		If discreteValues is not specified or if it's value is higher than the number of pixels
+		//		in the slider bar, then the slider handle can be moved freely, and the slider's value will be
+		//		computed/reported based on pixel position (in this case it will likely be fractional,
+		//		such as 123.456789).
+		discreteValues: Infinity,
+
+		// pageIncrement: Integer
+		//		If discreteValues is also specified, this indicates the amount of clicks (ie, snap positions)
+		//		that the slider handle is moved via pageup/pagedown keys.
+		//		If discreteValues is not specified, it indicates the number of pixels.
+		pageIncrement: 2,
+
+		// clickSelect: Boolean
+		//		If clicking the slider bar changes the value or not
+		clickSelect: true,
+
+		// slideDuration: Number
+		//		The time in ms to take to animate the slider handle from 0% to 100%,
+		//		when clicking the slider bar to make the handle move.
+		slideDuration: manager.defaultDuration,
+
+		// Map widget attributes to DOMNode attributes.
+		_setIdAttr: "", // Override _FormWidget which sends id to focusNode
+		_setNameAttr: "valueNode", // Override default behavior to send to focusNode
+
+		baseClass: "dijitSlider",
+
+		// Apply CSS classes to up/down arrows and handle per mouse state
+		cssStateNodes: {
+			incrementButton: "dijitSliderIncrementButton",
+			decrementButton: "dijitSliderDecrementButton",
+			focusNode: "dijitSliderThumb"
+		},
+
+		_mousePixelCoord: "pageX",
+		_pixelCount: "w",
+		_startingPixelCoord: "x",
+		_handleOffsetCoord: "left",
+		_progressPixelSize: "width",
+
+		_onKeyUp: function(/*Event*/ e){
+			if(this.disabled || this.readOnly || e.altKey || e.ctrlKey || e.metaKey){
+				return;
+			}
+			this._setValueAttr(this.value, true);
+		},
+
+		_onKeyDown: function(/*Event*/ e){
+			if(this.disabled || this.readOnly || e.altKey || e.ctrlKey || e.metaKey){
+				return;
+			}
+			switch(e.keyCode){
+				case keys.HOME:
+					this._setValueAttr(this.minimum, false);
+					break;
+				case keys.END:
+					this._setValueAttr(this.maximum, false);
+					break;
+				// this._descending === false: if ascending vertical (min on top)
+				// (this._descending || this.isLeftToRight()): if left-to-right horizontal or descending vertical
+				case ((this._descending || this.isLeftToRight()) ? keys.RIGHT_ARROW : keys.LEFT_ARROW):
+				case (this._descending === false ? keys.DOWN_ARROW : keys.UP_ARROW):
+				case (this._descending === false ? keys.PAGE_DOWN : keys.PAGE_UP):
+					this.increment(e);
+					break;
+				case ((this._descending || this.isLeftToRight()) ? keys.LEFT_ARROW : keys.RIGHT_ARROW):
+				case (this._descending === false ? keys.UP_ARROW : keys.DOWN_ARROW):
+				case (this._descending === false ? keys.PAGE_UP : keys.PAGE_DOWN):
+					this.decrement(e);
+					break;
+				default:
+					return;
+			}
+			e.stopPropagation();
+			e.preventDefault();
+		},
+
+		_onHandleClick: function(e){
+			if(this.disabled || this.readOnly){
+				return;
+			}
+			if(!has("ie")){
+				// make sure you get focus when dragging the handle
+				// (but don't do on IE because it causes a flicker on mouse up (due to blur then focus)
+				focus.focus(this.sliderHandle);
+			}
+			e.stopPropagation();
+			e.preventDefault();
+		},
+
+		_isReversed: function(){
+			// summary:
+			//		Returns true if direction is from right to left
+			// tags:
+			//		protected extension
+			return !this.isLeftToRight();
+		},
+
+		_onBarClick: function(e){
+			if(this.disabled || this.readOnly || !this.clickSelect){
+				return;
+			}
+			focus.focus(this.sliderHandle);
+			e.stopPropagation();
+			e.preventDefault();
+			var abspos = domGeometry.position(this.sliderBarContainer, true);
+			var pixelValue = e[this._mousePixelCoord] - abspos[this._startingPixelCoord];
+			this._setPixelValue(this._isReversed() ? (abspos[this._pixelCount] - pixelValue) : pixelValue, abspos[this._pixelCount], true);
+			this._movable.onMouseDown(e);
+		},
+
+		_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean?*/ priorityChange){
+			if(this.disabled || this.readOnly){
+				return;
+			}
+			var count = this.discreteValues;
+			if(count <= 1 || count == Infinity){
+				count = maxPixels;
+			}
+			count--;
+			var pixelsPerValue = maxPixels / count;
+			var wholeIncrements = Math.round(pixelValue / pixelsPerValue);
+			this._setValueAttr(Math.max(Math.min((this.maximum - this.minimum) * wholeIncrements / count + this.minimum, this.maximum), this.minimum), priorityChange);
+		},
+
+		_setValueAttr: function(/*Number*/ value, /*Boolean?*/ priorityChange){
+			// summary:
+			//		Hook so set('value', value) works.
+			this._set("value", value);
+			this.valueNode.value = value;
+			this.focusNode.setAttribute("aria-valuenow", value);
+			this.inherited(arguments);
+			var percent = this.maximum > this.minimum ? ((value - this.minimum) / (this.maximum - this.minimum)) : 0;
+			var progressBar = (this._descending === false) ? this.remainingBar : this.progressBar;
+			var remainingBar = (this._descending === false) ? this.progressBar : this.remainingBar;
+			if(this._inProgressAnim && this._inProgressAnim.status != "stopped"){
+				this._inProgressAnim.stop(true);
+			}
+			if(priorityChange && this.slideDuration > 0 && progressBar.style[this._progressPixelSize]){
+				// animate the slider
+				var _this = this;
+				var props = {};
+				var start = parseFloat(progressBar.style[this._progressPixelSize]);
+				var duration = this.slideDuration * (percent - start / 100);
+				if(duration == 0){
+					return;
+				}
+				if(duration < 0){
+					duration = 0 - duration;
+				}
+				props[this._progressPixelSize] = { start: start, end: percent * 100, units: "%" };
+				this._inProgressAnim = fx.animateProperty({ node: progressBar, duration: duration,
+					onAnimate: function(v){
+						remainingBar.style[_this._progressPixelSize] = (100 - parseFloat(v[_this._progressPixelSize])) + "%";
+					},
+					onEnd: function(){
+						delete _this._inProgressAnim;
+					},
+					properties: props
+				});
+				this._inProgressAnim.play();
+			}else{
+				progressBar.style[this._progressPixelSize] = (percent * 100) + "%";
+				remainingBar.style[this._progressPixelSize] = ((1 - percent) * 100) + "%";
+			}
+		},
+
+		_bumpValue: function(signedChange, /*Boolean?*/ priorityChange){
+			if(this.disabled || this.readOnly || (this.maximum <= this.minimum)){
+				return;
+			}
+			var s = domStyle.getComputedStyle(this.sliderBarContainer);
+			var c = domGeometry.getContentBox(this.sliderBarContainer, s);
+			var count = this.discreteValues;
+			if(count <= 1 || count == Infinity){
+				count = c[this._pixelCount];
+			}
+			count--;
+			var value = (this.value - this.minimum) * count / (this.maximum - this.minimum) + signedChange;
+			if(value < 0){
+				value = 0;
+			}
+			if(value > count){
+				value = count;
+			}
+			value = value * (this.maximum - this.minimum) / count + this.minimum;
+			this._setValueAttr(value, priorityChange);
+		},
+
+		_onClkBumper: function(val){
+			if(this.disabled || this.readOnly || !this.clickSelect){
+				return;
+			}
+			this._setValueAttr(val, true);
+		},
+
+		_onClkIncBumper: function(){
+			this._onClkBumper(this._descending === false ? this.minimum : this.maximum);
+		},
+
+		_onClkDecBumper: function(){
+			this._onClkBumper(this._descending === false ? this.maximum : this.minimum);
+		},
+
+		decrement: function(/*Event*/ e){
+			// summary:
+			//		Decrement slider
+			// tags:
+			//		private
+			this._bumpValue(e.keyCode == keys.PAGE_DOWN ? -this.pageIncrement : -1);
+		},
+
+		increment: function(/*Event*/ e){
+			// summary:
+			//		Increment slider
+			// tags:
+			//		private
+			this._bumpValue(e.keyCode == keys.PAGE_UP ? this.pageIncrement : 1);
+		},
+
+		_mouseWheeled: function(/*Event*/ evt){
+			// summary:
+			//		Event handler for mousewheel where supported
+			evt.stopPropagation();
+			evt.preventDefault();
+			this._bumpValue(evt.wheelDelta < 0 ? -1 : 1, true); // negative scroll acts like a decrement
+		},
+
+		startup: function(){
+			if(this._started){
+				return;
+			}
+
+			array.forEach(this.getChildren(), function(child){
+				if(this[child.container] != this.containerNode){
+					this[child.container].appendChild(child.domNode);
+				}
+			}, this);
+
+			this.inherited(arguments);
+		},
+
+		_typematicCallback: function(/*Number*/ count, /*Object*/ button, /*Event*/ e){
+			if(count == -1){
+				this._setValueAttr(this.value, true);
+			}else{
+				this[(button == (this._descending ? this.incrementButton : this.decrementButton)) ? "decrement" : "increment"](e);
+			}
+		},
+
+		buildRendering: function(){
+			this.inherited(arguments);
+			if(this.showButtons){
+				this.incrementButton.style.display = "";
+				this.decrementButton.style.display = "";
+			}
+
+			// find any associated label element and add to slider focusnode.
+			var label = query('label[for="' + this.id + '"]');
+			if(label.length){
+				if(!label[0].id){
+					label[0].id = this.id + "_label";
+				}
+				this.focusNode.setAttribute("aria-labelledby", label[0].id);
+			}
+
+			this.focusNode.setAttribute("aria-valuemin", this.minimum);
+			this.focusNode.setAttribute("aria-valuemax", this.maximum);
+		},
+
+		postCreate: function(){
+			this.inherited(arguments);
+
+			if(this.showButtons){
+				this.own(
+					typematic.addMouseListener(this.decrementButton, this, "_typematicCallback", 25, 500),
+					typematic.addMouseListener(this.incrementButton, this, "_typematicCallback", 25, 500)
+				);
+			}
+			this.own(
+				on(this.domNode, mouse.wheel, lang.hitch(this, "_mouseWheeled"))
+			);
+
+			// define a custom constructor for a SliderMover that points back to me
+			var mover = declare(_SliderMover, {
+				widget: this
+			});
+			this._movable = new Moveable(this.sliderHandle, {mover: mover});
+
+			this._layoutHackIE7();
+		},
+
+		destroy: function(){
+			this._movable.destroy();
+			if(this._inProgressAnim && this._inProgressAnim.status != "stopped"){
+				this._inProgressAnim.stop(true);
+			}
+			this.inherited(arguments);
+		}
+	});
+
+	HorizontalSlider._Mover = _SliderMover;	// for monkey patching
+
+	return HorizontalSlider;
+});

@@ -1,3 +1,9 @@
-//>>built
-define("dijit/form/nls/el/Textarea",{iframeEditTitle:"\u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae \u03b5\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1\u03c2",iframeFocusTitle:"\u03c0\u03bb\u03b1\u03af\u03c3\u03b9\u03bf \u03c0\u03b5\u03c1\u03b9\u03bf\u03c7\u03ae\u03c2 \u03b5\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1\u03c2"});
-//@ sourceMappingURL=Textarea.js.map
+define(
+// used by both the editor and textarea widgets to provide information to screen reader users
+({
+	iframeEditTitle: 'περιοχή επεξεργασίας',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
+	iframeFocusTitle: 'πλαίσιο περιοχής επεξεργασίας'  // secondary title for editable IFRAME when focus is on outer container
+									 //  to let user know that focus has moved out of editing area and to the
+									 //  parent element of the editing area
+})
+);

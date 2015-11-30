@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"AnalogArcIndicator.js",
-"lineCount":1,
-"mappings":"A,SACAA,MAAA,iHAAyH,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EACzHF,CAAAG,QAAA,yCACAH,EAAAI,QAAA,mCAEAF,EAAAG,OAAAC,MAAAC,mBAJyH,CAIjFL,CAAAM,OAAAD,mBAJiF,CAAzH;",
-"sources":["AnalogArcIndicator.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","widget","gauge","AnalogArcIndicator","gauges"]
-}

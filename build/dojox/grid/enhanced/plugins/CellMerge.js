@@ -1,9 +1,276 @@
-//>>built
-define("dojox/grid/enhanced/plugins/CellMerge","dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/_base/html ../_Plugin ../../EnhancedGrid".split(" "),function(f,l,e,k,q,r){f=f("dojox.grid.enhanced.plugins.CellMerge",q,{name:"cellMerge",constructor:function(a,b){this.grid=a;this._records=[];this._merged={};b&&e.isObject(b)&&this._setupConfig(b.mergedCells);this._initEvents();this._mixinGrid()},mergeCells:function(a,b,d,h){(a=this._createRecord({row:a,start:b,end:d,major:h}))&&this._updateRows(a);
-return a},unmergeCells:function(a){var b;if(a&&0<=(b=l.indexOf(this._records,a)))this._records.splice(b,1),this._updateRows(a)},getMergedCells:function(){var a=[],b;for(b in this._merged)a=a.concat(this._merged[b]);return a},getMergedCellsByRow:function(a){return this._merged[a]||[]},_setupConfig:function(a){l.forEach(a,this._createRecord,this)},_initEvents:function(){l.forEach(this.grid.views.views,function(a){this.connect(a,"onAfterRow",e.hitch(this,"_onAfterRow",a.index))},this)},_mixinGrid:function(){var a=
-this.grid;a.mergeCells=e.hitch(this,"mergeCells");a.unmergeCells=e.hitch(this,"unmergeCells");a.getMergedCells=e.hitch(this,"getMergedCells");a.getMergedCellsByRow=e.hitch(this,"getMergedCellsByRow")},_getWidth:function(a){a=this.grid.layout.cells[a].getHeaderNode();return k.position(a).w},_onAfterRow:function(a,b,d){try{if(!(0>b)){var h=[],n,c,e=this._records.length,f=this.grid.layout.cells;for(n=0;n<e;++n){var g=this._records[n],s=this.grid._by_idx[b];if(g.view==a&&g.row(b,s&&s.item,this.grid.store)){var m=
-{record:g,hiddenCells:[],totalWidth:0,majorNode:f[g.major].getNode(b),majorHeaderNode:f[g.major].getHeaderNode()};for(c=g.start;c<=g.end;++c){var q=this._getWidth(c,b);m.totalWidth+=q;c!=g.major&&m.hiddenCells.push(f[c].getNode(b))}if(1!=d.length||0<m.totalWidth){for(c=h.length-1;0<=c;--c){var p=h[c].record;(p.start>=g.start&&p.start<=g.end||p.end>=g.start&&p.end<=g.end)&&h.splice(c,1)}h.push(m)}}}this._merged[b]=[];l.forEach(h,function(a){l.forEach(a.hiddenCells,function(a){k.style(a,"display","none")});
-var d=k.marginBox(a.majorHeaderNode).w-k.contentBox(a.majorHeaderNode).w,c=a.totalWidth;k.isWebKit||(c-=d);k.style(a.majorNode,"width",c+"px");a.majorNode.setAttribute("colspan",a.hiddenCells.length+1);this._merged[b].push({row:b,start:a.record.start,end:a.record.end,major:a.record.major,handle:a.record})},this)}}catch(r){console.warn("CellMerge._onAfterRow() error: ",b,r)}},_createRecord:function(a){if(this._isValid(a)){a={row:a.row,start:a.start,end:a.end,major:a.major};a.view=this.grid.layout.cells[a.start].view.index;
-a.major="number"==typeof a.major&&!isNaN(a.major)?a.major:a.start;if("number"==typeof a.row){var b=a.row;a.row=function(a){return a===b}}else if("string"==typeof a.row){var d=a.row;a.row=function(a,b,c){try{if(c&&b&&c.getFeatures()["dojo.data.api.Identity"])return c.getIdentity(b)==d}catch(e){console.error(e)}return!1}}if(e.isFunction(a.row))return this._records.push(a),a}return null},_isValid:function(a){var b=this.grid.layout.cells,d=b.length;return e.isObject(a)&&"row"in a&&"start"in a&&"end"in
-a&&0<=a.start&&a.start<d&&a.end>a.start&&a.end<d&&b[a.start].view.index==b[a.end].view.index&&b[a.start].subrow==b[a.end].subrow&&!("number"==typeof a.major&&(a.major<a.start||a.major>a.end))},_updateRows:function(a){for(var b=null,d=0,e=this.grid.rowCount;d<e;++d){var f=this.grid._by_idx[d];f&&a.row(d,f&&f.item,this.grid.store)&&(this.grid.views.updateRow(d),null===b&&(b=d))}0<=b&&this.grid.scroller.rowHeightChanged(b)}});r.registerPlugin(f);return f});
-//@ sourceMappingURL=CellMerge.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/html",
+	"../_Plugin",
+	"../../EnhancedGrid"
+], function(declare, array, lang, html, _Plugin, EnhancedGrid){
+
+var CellMerge = declare("dojox.grid.enhanced.plugins.CellMerge", _Plugin, {
+	// summary:
+	//		This plugin provides functions to merge(un-merge) adjacent cells within one row.
+	//		Acceptable plugin parameters:
+	//
+	//		- mergedCells: Array: An array of objects with structure:
+	//
+	// |		{
+	// |			row: function(Integer)|Integer
+	// |				If it's a function, it's a predicate to decide which rows are to be merged.
+	// |				It takes an integer (the row index), and should return true or false;
+	// |			start: Integer
+	// |				The column index of the left most cell that shall be merged.
+	// |			end: Integer
+	// |				The column index of the right most cell that shall be merged.
+	// |			major: Integer
+	// |				The column index of the cell whose content should be used as the content of the merged cell.
+	// |				It must be larger than or equal to the startColumnIndex, and less than or equal to the endColumnIndex.
+	// |				If it is omitted, the content of the leading edge (left-most for ltr, right most for rtl) cell will be used.
+	// |		}
+	
+	// name: String
+	//		Plugin name
+	name: "cellMerge",
+	
+	constructor: function(grid, args){
+		this.grid = grid;
+		this._records = [];
+		this._merged = {};
+		if(args && lang.isObject(args)){
+			this._setupConfig(args.mergedCells);
+		}
+		this._initEvents();
+		this._mixinGrid();
+	},
+	//----------------Public----------------------------
+	mergeCells: function(rowTester, startColumnIndex, endColumnIndex, majorColumnIndex){
+		// summary:
+		//		Merge cells from *startColumnIndex* to *endColumnIndex* at rows that make *rowTester* return true,
+		//		using the content of the cell at *majorColumnIndex*
+		// tags:
+		//		public
+		// rowTester: function(Integer)|Integer
+		//		If it's a function, it's a predicate to decide which rows are to be merged.
+		//		It takes an integer (the row index), and should return true or false;
+		// startColumnIndex: Integer
+		//		The column index of the left most cell that shall be merged.
+		// endColumnIndex: Integer
+		//		The column index of the right most cell that shall be merged.
+		// majorColumnIndex: Integer?
+		//		The column index of the cell whose content should be used as the content of the merged cell.
+		//		It must be larger than or equal to the startColumnIndex, and less than or equal to the endColumnIndex.
+		//		If it is omitted, the content of the leading edge (left-most for ltr, right most for rtl) cell will be used.
+		// returns: Object|null
+		//		A handler for the merged cells created by a call of this function.
+		//		This handler can be used later to unmerge cells using the function unmergeCells
+		//		If the merge is not valid, returns null;
+		var item = this._createRecord({
+			"row": rowTester,
+			"start": startColumnIndex,
+			"end": endColumnIndex,
+			"major": majorColumnIndex
+		});
+		if(item){
+			this._updateRows(item);
+		}
+		return item; // Object|null
+	},
+	unmergeCells: function(mergeHandler){
+		// summary:
+		//		Unmerge the cells that are merged by the *mergeHandler*, which represents a call to the function mergeCells.
+		// tags:
+		//		public
+		// mergeHandler: object
+		//		A handler for the merged cells created by a call of function mergeCells.
+		var idx;
+		if(mergeHandler && (idx = array.indexOf(this._records, mergeHandler)) >= 0){
+			this._records.splice(idx, 1);
+			this._updateRows(mergeHandler);
+		}
+	},
+	getMergedCells: function(){
+		// summary:
+		//		Get all records of currently merged cells.
+		// tags:
+		//		public
+		// returns: Array
+		//		An array of records for merged-cells.
+		//		The record has the following structure:
+		// |	{
+		// |		"row": 1, //the row index
+		// |		"start": 2, //the start column index
+		// |		"end": 4, //the end column index
+		// |		"major": 3, //the major column index
+		// |		"handle": someHandle, //The handler that covers this merge cell record.
+		// |	}
+		var res = [];
+		for(var i in this._merged){
+			res = res.concat(this._merged[i]);
+		}
+		return res;
+	},
+	getMergedCellsByRow: function(rowIndex){
+		// summary:
+		//		Get the records of currently merged cells at the given row.
+		// tags:
+		//		public
+		// returns: Array
+		//		An array of records for merged-cells. See docs of getMergedCells.
+		return this._merged[rowIndex] || [];
+	},
+	
+	//----------------Private--------------------------
+	_setupConfig: function(config){
+		array.forEach(config, this._createRecord, this);
+	},
+	_initEvents: function(){
+		array.forEach(this.grid.views.views, function(view){
+			this.connect(view, "onAfterRow", lang.hitch(this, "_onAfterRow", view.index));
+		}, this);
+	},
+	_mixinGrid: function(){
+		var g = this.grid;
+		g.mergeCells = lang.hitch(this, "mergeCells");
+		g.unmergeCells = lang.hitch(this, "unmergeCells");
+		g.getMergedCells = lang.hitch(this, "getMergedCells");
+		g.getMergedCellsByRow = lang.hitch(this, "getMergedCellsByRow");
+	},
+	_getWidth: function(colIndex){
+		var node = this.grid.layout.cells[colIndex].getHeaderNode();
+		return html.position(node).w;
+	},
+	_onAfterRow: function(viewIdx, rowIndex, subrows){
+		try{
+			if(rowIndex < 0){
+				return;
+			}
+			var result = [], i, j, len = this._records.length,
+				cells = this.grid.layout.cells;
+			//Apply merge-cell requests one by one.
+			for(i = 0; i < len; ++i){
+				var item = this._records[i];
+				var storeItem = this.grid._by_idx[rowIndex];
+				if(item.view == viewIdx && item.row(rowIndex, storeItem && storeItem.item, this.grid.store)){
+					var res = {
+						record: item,
+						hiddenCells: [],
+						totalWidth: 0,
+						majorNode: cells[item.major].getNode(rowIndex),
+						majorHeaderNode: cells[item.major].getHeaderNode()
+					};
+					//Calculated the width of merged cell.
+					for(j = item.start; j <= item.end; ++j){
+						var w = this._getWidth(j, rowIndex);
+						res.totalWidth += w;
+						if(j != item.major){
+							res.hiddenCells.push(cells[j].getNode(rowIndex));
+						}
+					}
+					//If width is valid, remember it. There may be multiple merges within one row.
+					if(subrows.length != 1 || res.totalWidth > 0){
+						//Remove conflicted merges.
+						for(j = result.length - 1; j >= 0; --j){
+							var r = result[j].record;
+							if((r.start >= item.start && r.start <= item.end) ||
+								(r.end >= item.start && r.end <= item.end)){
+								result.splice(j, 1);
+							}
+						}
+						result.push(res);
+					}
+				}
+			}
+			this._merged[rowIndex] = [];
+			array.forEach(result, function(res){
+				array.forEach(res.hiddenCells, function(node){
+					html.style(node, "display", "none");
+				});
+				var pbm = html.marginBox(res.majorHeaderNode).w - html.contentBox(res.majorHeaderNode).w;
+				var tw = res.totalWidth;
+				
+				//Tricky for WebKit.
+				if(!html.isWebKit){
+					tw -= pbm;
+				}
+				
+				html.style(res.majorNode, "width", tw + "px");
+				//In case we're dealing with multiple subrows.
+				res.majorNode.setAttribute("colspan", res.hiddenCells.length + 1);
+	
+				this._merged[rowIndex].push({
+					"row": rowIndex,
+					"start": res.record.start,
+					"end": res.record.end,
+					"major": res.record.major,
+					"handle": res.record
+				});
+			}, this);
+		}catch(e){
+			console.warn("CellMerge._onAfterRow() error: ", rowIndex, e);
+		}
+	},
+	_createRecord: function(item){
+		if(this._isValid(item)){
+			item = {
+				"row": item.row,
+				"start": item.start,
+				"end": item.end,
+				"major": item.major
+			};
+			var cells = this.grid.layout.cells;
+			item.view = cells[item.start].view.index;
+			item.major = typeof item.major == "number" && !isNaN(item.major) ? item.major : item.start;
+			if(typeof item.row == "number"){
+				var r = item.row;
+				item.row = function(rowIndex){
+					return rowIndex === r;
+				};
+			}else if(typeof item.row == "string"){
+				var id = item.row;
+				item.row = function(rowIndex, storeItem, store){
+					try{
+						if(store && storeItem && store.getFeatures()['dojo.data.api.Identity']){
+							return store.getIdentity(storeItem) == id;
+						}
+					}catch(e){
+						console.error(e);
+					}
+					return false;
+				};
+			}
+			if(lang.isFunction(item.row)){
+				this._records.push(item);
+				return item;
+			}
+		}
+		return null;
+	},
+	_isValid: function(item){
+		var cells = this.grid.layout.cells,
+			colCount = cells.length;
+		return (lang.isObject(item) && ("row" in item) && ("start" in item) && ("end" in item) &&
+			item.start >= 0 && item.start < colCount &&
+			item.end > item.start && item.end < colCount &&
+			cells[item.start].view.index == cells[item.end].view.index &&
+			cells[item.start].subrow == cells[item.end].subrow &&
+			!(typeof item.major == "number" && (item.major < item.start || item.major > item.end)));
+	},
+	_updateRows: function(item){
+		var min = null;
+		for(var i = 0, count = this.grid.rowCount; i < count; ++i){
+			var storeItem = this.grid._by_idx[i];
+			if(storeItem && item.row(i, storeItem && storeItem.item, this.grid.store)){
+				this.grid.views.updateRow(i);
+				if(min === null){ min = i; }
+			}
+		}
+		if(min >= 0){
+			this.grid.scroller.rowHeightChanged(min);
+		}
+	}
+});
+
+EnhancedGrid.registerPlugin(CellMerge);
+
+return CellMerge;
+});

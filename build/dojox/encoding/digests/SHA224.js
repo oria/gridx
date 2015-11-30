@@ -1,4 +1,9 @@
-//>>built
-define("dojox/encoding/digests/SHA224",["./_sha-32"],function(a){var h=[3238371032,914150663,812702999,4144912697,4290775857,1750603025,1694076839,3204075428],g=function(c,d){var f=d||a.outputTypes.Base64;c=a.stringToUtf8(c);var b=a.digest(a.toWord(c),8*c.length,h,224);switch(f){case a.outputTypes.Raw:return b;case a.outputTypes.Hex:return a.toHex(b);case a.outputTypes.String:return a._toString(b);default:return a.toBase64(b)}};g._hmac=function(c,d,f){f=f||a.outputTypes.Base64;c=a.stringToUtf8(c);
-d=a.stringToUtf8(d);var b=a.toWord(d);16<b.length&&(b=a.digest(b,8*d.length,h,224));var g=Array(16);d=Array(16);for(var e=0;16>e;e++)g[e]=b[e]^909522486,d[e]=b[e]^1549556828;c=a.digest(g.concat(a.toWord(c)),512+8*c.length,h,224);a.digest(d.concat(c),672,h,224);switch(f){case a.outputTypes.Raw:return b;case a.outputTypes.Hex:return a.toHex(b);case a.outputTypes.String:return a._toString(b);default:return a.toBase64(b)}};return g});
-//@ sourceMappingURL=SHA224.js.map
+define(["./_sha-32", "./_sha2"], function(sha32, sha2){
+	//	The 224-bit implementation of SHA-2
+	var hash = [
+		0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
+		0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
+	];
+
+	return sha2(sha32, 224, 512, hash);
+});

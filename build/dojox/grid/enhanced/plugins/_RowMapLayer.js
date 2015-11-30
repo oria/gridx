@@ -1,8 +1,207 @@
-//>>built
-define("dojox/grid/enhanced/plugins/_RowMapLayer",["dojo/_base/array","dojo/_base/declare","dojo/_base/kernel","dojo/_base/lang","./_StoreLayer"],function(p,q,r,l,s){var t=function(b){b.sort(function(a,b){return a-b});for(var c=[[b[0]]],a=1,d=0;a<b.length;++a)b[a]==b[a-1]+1?c[d].push(b[a]):c[++d]=[b[a]];return c},n=function(b,c){return c?l.hitch(b||r.global,c):function(){}};return q("dojox.grid.enhanced.plugins._RowMapLayer",s._StoreLayer,{tags:["reorder"],constructor:function(b){this._map={};this._revMap=
-{};this.grid=b;this._oldOnDelete=b._onDelete;var c=this;b._onDelete=function(a){c._onDelete(a);c._oldOnDelete.call(b,a)};this._oldSort=b.sort;b.sort=function(){c.clearMapping();c._oldSort.apply(b,arguments)}},uninitialize:function(){this.grid._onDelete=this._oldOnDelete;this.grid.sort=this._oldSort},setMapping:function(b){this._store.forEachLayer(function(a){if("rowmap"===a.name())return!1;if(a.onRowMappingChange)a.onRowMappingChange(b);return!0},!1);var c,a,d,f={};for(c in b)c=parseInt(c,10),a=b[c],
-"number"==typeof a&&(c in this._revMap?(d=this._revMap[c],delete this._revMap[c]):d=c,d==a?(delete this._map[d],f[a]="eq"):(this._map[d]=a,f[a]=d));for(a in f)"eq"===f[a]?delete this._revMap[parseInt(a,10)]:this._revMap[parseInt(a,10)]=f[a]},clearMapping:function(){this._map={};this._revMap={}},_onDelete:function(b){var c=this.grid._getItemIndex(b,!0);if(c in this._revMap){b=[];var a,d=this._revMap[c];delete this._map[d];delete this._revMap[c];for(a in this._revMap)a=parseInt(a,10),this._revMap[a]>
-d&&--this._revMap[a];for(a in this._revMap)a=parseInt(a,10),a>c&&b.push(a);b.sort(function(a,b){return b-a});for(c=b.length-1;0<=c;--c)a=b[c],this._revMap[a-1]=this._revMap[a],delete this._revMap[a];this._map={};for(a in this._revMap)this._map[this._revMap[a]]=a}},_fetch:function(b){var c=0,a,d=b.start||0;for(a in this._revMap)a=parseInt(a,10),a>=d&&++c;if(0<c){var f=[],e,g={},h=0<b.count?b.count:-1;if(0<h)for(e=0;e<h;++e)a=d+e,a=a in this._revMap?this._revMap[a]:a,g[a]=e,f.push(a);else for(e=0;!(a=
-d+e,a in this._revMap&&(--c,a=this._revMap[a]),g[a]=e,f.push(a),0>=c);++e);this._subFetch(b,this._getRowArrays(f),0,[],g,b.onComplete,d,h);return b}return l.hitch(this._store,this._originFetch)(b)},_getRowArrays:function(b){return t(b)},_subFetch:function(b,c,a,d,f,e,g,h){var k=c[a],m=this,l=b.start=k[0];b.count=k[k.length-1]-k[0]+1;b.onComplete=function(k){p.forEach(k,function(a,b){var c=l+b;c in f&&(d[f[c]]=a)});++a==c.length?0<h?(b.start=g,b.count=h,b.onComplete=e,n(b.scope,e)(d,b)):(b.start+=
-k.length,delete b.count,b.onComplete=function(a){d=d.concat(a);b.start=g;b.onComplete=e;n(b.scope,e)(d,b)},m.originFetch(b)):m._subFetch(b,c,a,d,f,e,g,h)};m.originFetch(b)}})});
-//@ sourceMappingURL=_RowMapLayer.js.map
+define([
+	"dojo/_base/array",
+	"dojo/_base/declare",
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"./_StoreLayer"
+], function(array, declare, kernel, lang, layers){
+
+var _devideToArrays = function(a){
+	a.sort(function(v1, v2){
+		return v1 - v2;
+	});
+	var arr = [[a[0]]];
+	for(var i = 1, j = 0; i < a.length; ++i){
+		if(a[i] == a[i-1] + 1){
+			arr[j].push(a[i]);
+		}else{
+			arr[++j] = [a[i]];
+		}
+	}
+	return arr;
+},
+hitchIfCan = function(scope, func){
+	return func ? lang.hitch(scope || kernel.global, func) : function(){};
+};
+
+return declare("dojox.grid.enhanced.plugins._RowMapLayer", layers._StoreLayer, {
+	tags: ["reorder"],
+	constructor: function(grid){
+		this._map = {};
+		this._revMap = {};
+		this.grid = grid;
+		this._oldOnDelete = grid._onDelete;
+		var _this = this;
+		grid._onDelete = function(item){
+			_this._onDelete(item);
+			_this._oldOnDelete.call(grid, item);
+		};
+		this._oldSort = grid.sort;
+		grid.sort = function(){
+			_this.clearMapping();
+			_this._oldSort.apply(grid, arguments);
+		};
+	},
+	uninitialize: function(){
+		this.grid._onDelete = this._oldOnDelete;
+		this.grid.sort = this._oldSort;
+	},
+	setMapping: function(mapping){
+		// summary:
+		//		Remember the row mapping.
+		// mapping: Object
+		//		keys are original rowIndexes, values are new rowIndexes.
+		this._store.forEachLayer(function(layer){
+			if(layer.name() === "rowmap"){
+				return false;
+			}else if(layer.onRowMappingChange){
+				layer.onRowMappingChange(mapping);
+			}
+			return true;
+		}, false);
+		var from, to, origin, revmap = {};
+		for(from in mapping){
+			from = parseInt(from, 10);
+			to = mapping[from];
+			if(typeof to == "number"){
+				if(from in this._revMap){
+					origin = this._revMap[from];
+					delete this._revMap[from];
+				}else{
+					origin = from;
+				}
+				if(origin == to){
+					delete this._map[origin];
+					revmap[to] = "eq";
+				}else{
+					this._map[origin] = to;
+					revmap[to] = origin;
+				}
+			}
+		}
+		for(to in revmap){
+			if(revmap[to] === "eq"){
+				delete this._revMap[parseInt(to, 10)];
+			}else{
+				this._revMap[parseInt(to, 10)] = revmap[to];
+			}
+		}
+	},
+	clearMapping: function(){
+		this._map = {};
+		this._revMap = {};
+	},
+	_onDelete: function(item){
+		var idx = this.grid._getItemIndex(item, true);
+		if(idx in this._revMap){
+			var rowIdxArr = [], r, i, origin = this._revMap[idx];
+			delete this._map[origin];
+			delete this._revMap[idx];
+			for(r in this._revMap){
+				r = parseInt(r, 10);
+				if(this._revMap[r] > origin){
+					--this._revMap[r];
+				}
+			}
+			for(r in this._revMap){
+				r = parseInt(r, 10);
+				if(r > idx){
+					rowIdxArr.push(r);
+				}
+			}
+			rowIdxArr.sort(function(a, b){
+				return b - a;
+			});
+			for(i = rowIdxArr.length - 1; i >= 0; --i){
+				r = rowIdxArr[i];
+				this._revMap[r - 1] = this._revMap[r];
+				delete this._revMap[r];
+			}
+			this._map = {};
+			for(r in this._revMap){
+				this._map[this._revMap[r]] = r;
+			}
+		}
+	},
+	_fetch: function(userRequest){
+		var mapCount = 0, r;
+		var start = userRequest.start || 0;
+		for(r in this._revMap){
+			r = parseInt(r, 10);
+			if(r >= start){
+				++mapCount;
+			}
+		}
+		if(mapCount > 0){
+			//Row mapping is in use.
+			var rows = [], i, map = {},
+				count = userRequest.count > 0 ? userRequest.count : -1;
+			if(count > 0){
+				for(i = 0; i < count; ++i){
+					r = start + i;
+					r = r in this._revMap ? this._revMap[r] : r;
+					map[r] = i;
+					rows.push(r);
+				}
+			}else{
+				//We don't have a count, must create our own.
+				for(i = 0;; ++i){
+					r = start + i;
+					if(r in this._revMap){
+						--mapCount;
+						r = this._revMap[r];
+					}
+					map[r] = i;
+					rows.push(r);
+					if(mapCount <= 0){
+						break;
+					}
+				}
+			}
+			this._subFetch(userRequest, this._getRowArrays(rows), 0, [], map, userRequest.onComplete, start, count);
+			return userRequest;
+		}else{
+			//No row mapping at all.
+			return lang.hitch(this._store, this._originFetch)(userRequest);
+		}
+	},
+	_getRowArrays: function(rows){
+		return _devideToArrays(rows);
+	},
+	_subFetch: function(userRequest, rowArrays, index, result, map, oldOnComplete, start, count){
+		var arr = rowArrays[index], _this = this;
+		var urstart = userRequest.start = arr[0];
+		userRequest.count = arr[arr.length - 1] - arr[0] + 1;
+		userRequest.onComplete = function(items){
+			array.forEach(items, function(item, i){
+				var r = urstart + i;
+				if(r in map){
+					result[map[r]] = item;
+				}
+			});
+			if(++index == rowArrays.length){
+				//mapped rows are all fetched.
+				if(count > 0){
+					userRequest.start = start;
+					userRequest.count = count;
+					userRequest.onComplete = oldOnComplete;
+					hitchIfCan(userRequest.scope, oldOnComplete)(result, userRequest);
+				}else{
+					userRequest.start = userRequest.start + items.length;
+					delete userRequest.count;
+					userRequest.onComplete = function(items){
+						result = result.concat(items);
+						userRequest.start = start;
+						userRequest.onComplete = oldOnComplete;
+						hitchIfCan(userRequest.scope, oldOnComplete)(result, userRequest);
+					};
+					_this.originFetch(userRequest);
+				}
+			}else{
+				_this._subFetch(userRequest, rowArrays, index, result, map, oldOnComplete, start, count);
+			}
+		};
+		_this.originFetch(userRequest);
+	}
+});
+});

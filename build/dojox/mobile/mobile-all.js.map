@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"mobile-all.js",
-"lineCount":2,
-"mappings":"A,SAAAA,MAAA,2BAAkC,wlCAAA,MAAA,KAAlC;AAyEG,QAAA,CAASC,CAAT,EAIFC,OAAAC,KAAA,kJAJE,OAaKF,EAbL,CAzEH;",
-"sources":["mobile-all.js.uncompressed.js"],
-"names":["define","common","console","warn"]
-}

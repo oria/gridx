@@ -1,5 +1,117 @@
-//>>built
-define("dojox/drawing/tools/Line",["dojo/_base/lang","../util/oo","../manager/_registry","../stencil/Line"],function(g,c,h,k){c=c.declare(k,function(){},{draws:!0,showAngle:!0,onTransformEnd:function(a){this._toggleSelected();if(this.getRadius()<this.minimumSize)a=this.points,this.setPoints([{x:a[0].x,y:a[0].y},{x:a[0].x,y:a[0].y}]);else{a=this.data;var b=this.util.snapAngle({start:{x:a.x1,y:a.y1},x:a.x2,y:a.y2},this.angleSnap/180);this.setPoints([{x:a.x1,y:a.y1},{x:b.x,y:b.y}]);this._isBeingModified=
-!1;this.onModify(this)}},onDrag:function(a){if(!this.created){var b=a.start.x,c=a.start.y,e=a.x,d=a.y;this.keys.shift&&(d=this.util.snapAngle(a,0.25),e=d.x,d=d.y);if(this.keys.alt){a=e>b?(e-b)/2:(b-e)/-2;var f=d>c?(d-c)/2:(c-d)/-2,b=b-a,e=e-a,c=c-f,d=d-f}this.setPoints([{x:b,y:c},{x:e,y:d}]);this.render()}},onUp:function(a){if(!this.created&&this._downOnCanvas){this._downOnCanvas=!1;if(this.shape){if(this.getRadius()<this.minimumSize){this.remove(this.shape,this.hit);return}}else{var b=a.start;this.setPoints([{x:b.x,
-y:b.y+4*this.minimumSize},{x:b.x,y:b.y}]);this.render()}a=this.util.snapAngle(a,this.angleSnap/180);b=this.points;this.setPoints([{x:b[0].x,y:b[0].y},{x:a.x,y:a.y}]);this.renderedOnce=!0;this.onRender(this)}}});g.setObject("dojox.drawing.tools.Line",c);c.setup={name:"dojox.drawing.tools.Line",tooltip:"Line Tool",iconClass:"iconLine"};h.register(c.setup,"tool");return c});
-//@ sourceMappingURL=Line.js.map
+define(["dojo/_base/lang", "../util/oo", "../manager/_registry", "../stencil/Line"],
+function(lang, oo, registry, StencilLine){
+
+//dojox.drawing.tools.Line 
+var Line = oo.declare(
+	StencilLine,
+	function(){
+		// summary:
+		//		constructor
+	},
+	{
+		// summary:
+		//		Class for a drawable Line
+
+		draws:true,
+		showAngle:true,
+		onTransformEnd: function(/*manager.Anchor*/anchor){
+			this._toggleSelected();
+			if(this.getRadius()<this.minimumSize){
+				var p = this.points;
+				this.setPoints([
+					{x:p[0].x, y:p[0].y},
+					{x:p[0].x, y:p[0].y}
+				]);
+			}else{
+				var d = this.data;
+				var obj = {start:{x:d.x1,y:d.y1},x:d.x2,y:d.y2};
+				var pt = this.util.snapAngle(obj, this.angleSnap/180);
+				this.setPoints([
+					{x:d.x1, y:d.y1},
+					{x:pt.x, y:pt.y}
+				]);
+				
+				this._isBeingModified = false;
+				this.onModify(this);
+			}
+		},
+		
+		onDrag: function(/*EventObject*/obj){
+			if(this.created){ return; }
+			var x1 = obj.start.x,
+				y1 = obj.start.y,
+				x2 = obj.x,
+				y2 = obj.y;
+			
+			if(this.keys.shift){
+				var pt = this.util.snapAngle(obj, 45/180);
+				x2 = pt.x;
+				y2 = pt.y;
+			}
+			
+			if(this.keys.alt){
+				// FIXME:
+				//	should double the length of the line
+				// FIXME:
+				//	if alt dragging past ZERO it seems to work
+				//	but select/deselect shows bugs
+				var dx = x2>x1 ? ((x2-x1)/2) : ((x1-x2)/-2);
+				var dy = y2>y1 ? ((y2-y1)/2) : ((y1-y2)/-2);
+				x1 -= dx;
+				x2 -= dx;
+				y1 -= dy;
+				y2 -= dy;
+			}
+			
+			this.setPoints([
+				{x:x1, y:y1},
+				{x:x2, y:y2}
+			]);
+			this.render();
+		},
+		
+		onUp: function(/*EventObject*/obj){
+			if(this.created || !this._downOnCanvas){ return; }
+			this._downOnCanvas = false;
+			//Default shape on single click
+			if(!this.shape){
+				var s = obj.start, e = this.minimumSize*4;
+				this.setPoints([
+					{x:s.x, y:s.y+e},
+					{x:s.x, y:s.y}
+				]);
+				this.render();
+				
+			}else{
+				// if too small, need to reset
+				
+				if(this.getRadius()<this.minimumSize){
+					this.remove(this.shape, this.hit);
+					return;
+				}
+			}
+			
+			var pt = this.util.snapAngle(obj, this.angleSnap/180);
+			var p = this.points;
+			this.setPoints([
+				{x:p[0].x, y:p[0].y},
+				{x:pt.x, y:pt.y}
+			]);
+			
+			this.renderedOnce = true;
+			this.onRender(this);
+		}
+	}
+);
+
+lang.setObject("dojox.drawing.tools.Line", Line);
+Line.setup = {
+	name:"dojox.drawing.tools.Line",
+	tooltip:"Line Tool",
+	iconClass:"iconLine"
+};
+
+registry.register(Line.setup, "tool");
+
+return Line;
+});

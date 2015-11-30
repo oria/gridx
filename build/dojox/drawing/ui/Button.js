@@ -1,10 +1,234 @@
-//>>built
-define("dojox/drawing/ui/Button","dojo ../util/oo ../stencil/Rect ../stencil/Ellipse ../stencil/Text ../manager/_registry".split(" "),function(e,f,g,h,k,l){f=f.declare(function(a){a.subShape=!0;e.mixin(this,a);this.width=a.data.width||2*a.data.rx;this.height=a.data.height||2*a.data.ry;this.y=a.data.y||a.data.cy-a.data.ry;this.id=this.id||this.util.uid(this.type);this.util.attr(this.container,"id",this.id);this.callback&&(this.hitched=e.hitch(this.scope||window,this.callback,this));a.drawingType="ui";
-this.shape=a.data.width&&a.data.height?new g(a):new h(a);var d=function(a,b,d){e.forEach(["norm","over","down","selected"],function(e){a[e].fill[b]=d})};d(this.style.button,"y2",this.height+this.y);d(this.style.button,"y1",this.y);if(a.icon&&!a.icon.text){var d=this.drawing.getConstructor(a.icon.type),b=this.makeOptions(a.icon);b.data=e.mixin(b.data,this.style.button.icon.norm);if(b.data&&0===b.data.borderWidth)b.data.fill=this.style.button.icon.norm.fill=b.data.color;else if("line"==a.icon.type||
-"path"==a.icon.type&&!a.icon.closePath)this.style.button.icon.selected.color=this.style.button.icon.selected.fill;this.icon=new d(b)}else if(a.text||a.icon&&a.icon.text)b=this.makeOptions(a.text||a.icon.text),b.data.color=this.style.button.icon.norm.color,this.style.button.icon.selected.color=this.style.button.icon.selected.fill,this.icon=new k(b),this.icon.attr({height:this.icon._lineHeight,y:(this.height-this.icon._lineHeight)/2+this.y});(a=this.drawing.getConstructor(this.toolType))&&this.drawing.addUI("tooltip",
-{data:{text:a.setup.tooltip},button:this});this.onOut()},{callback:null,scope:null,hitched:null,toolType:"",onClick:function(a){},makeOptions:function(a,d){d=d||1;a=e.clone(a);var b={util:this.util,mouse:this.mouse,container:this.container,subShape:!0};if("string"==typeof a)b.data={x:this.data.x-5,y:this.data.y+2,width:this.data.width,height:this.data.height,text:a,makeFit:!0};else if(a.points){e.forEach(a.points,function(a){a.x=0.01*(a.x*this.data.width)*d+this.data.x;a.y=0.01*(a.y*this.data.height)*
-d+this.data.y},this);b.data={};for(var c in a)"points"!=c&&(b.data[c]=a[c]);b.points=a.points}else{for(c in a)/x|width/.test(c)?a[c]=0.01*(a[c]*this.data.width)*d:/y|height/.test(c)&&(a[c]=0.01*(a[c]*this.data.height)*d),/x/.test(c)&&!/r/.test(c)?a[c]+=this.data.x:/y/.test(c)&&!/r/.test(c)&&(a[c]+=this.data.y);delete a.type;b.data=a}b.drawingType="ui";return b},enabled:!0,selected:!1,type:"drawing.library.UI.Button",select:function(){this.selected=!0;this.icon&&this.icon.attr(this.style.button.icon.selected);
-this._change(this.style.button.selected);this.shape.shadow&&this.shape.shadow.hide()},deselect:function(){this.selected=!1;this.icon&&this.icon.attr(this.style.button.icon.norm);this.shape.shadow&&this.shape.shadow.show();this._change(this.style.button.norm)},disable:function(){this.enabled&&(this.enabled=!1,this._change(this.style.button.disabled),this.icon.attr({color:this.style.button.norm.color}))},enable:function(){this.enabled||(this.enabled=!0,this._change(this.style.button.norm),this.icon.attr({color:this.style.button.icon.norm.color}))},
-_change:function(a){this.shape.attr(a);this.shape.shadow&&this.shape.shadow.container.moveToBack();this.icon&&this.icon.shape.moveToFront()},onOver:function(){!this.selected&&this.enabled&&this._change(this.style.button.over)},onOut:function(){this.selected||this._change(this.style.button.norm)},onDown:function(){!this.selected&&this.enabled&&this._change(this.style.button.selected)},onUp:function(){this.enabled&&(this._change(this.style.button.over),this.hitched&&this.hitched(),this.onClick(this))},
-attr:function(a){this.icon&&this.icon.attr(a)}});e.setObject("dojox.drawing.ui.Button",f);l.register({name:"dojox.drawing.ui.Button"},"stencil");return f});
-//@ sourceMappingURL=Button.js.map
+define(["dojo", "../util/oo", "../stencil/Rect", "../stencil/Ellipse",
+"../stencil/Text", "../manager/_registry"],
+  function(dojo, oo, Rect, Ellipse, Text, registry){
+
+//dojox.drawing.ui.Button = 
+var Button = oo.declare(
+	function(options){
+		options.subShape = true;
+		dojo.mixin(this, options);
+		//console.log("  button:", this);
+		this.width = options.data.width || options.data.rx*2;
+		this.height = options.data.height || options.data.ry*2;
+		this.y = options.data.y || options.data.cy - options.data.ry;
+
+		this.id = this.id || this.util.uid(this.type);
+		this.util.attr(this.container, "id", this.id);
+		if(this.callback){
+			this.hitched = dojo.hitch(this.scope || window, this.callback, this);
+		}
+		
+		// Rectangle itself must be "ui" for radio buttons to work.
+		// This is a work-around for messy code associated with drawingType;
+		// see http://www.andestutor.org/bugzilla/show_bug.cgi?id=1745
+		options.drawingType="ui";
+		// Choose between rectangle and ellipse based on options
+		if(options.data.width && options.data.height){
+			this.shape = new Rect(options);
+		}else{
+			this.shape = new Ellipse(options);
+		}
+		
+		var setGrad = function(s, p, v){
+			dojo.forEach(["norm", "over", "down", "selected"], function(nm){
+				s[nm].fill[p] = v;
+			});
+		};
+		// for button backs, not for icons
+		setGrad(this.style.button, "y2", this.height + this.y);
+		setGrad(this.style.button, "y1", this.y);
+		
+		if(options.icon && !options.icon.text){
+			var constr = this.drawing.getConstructor(options.icon.type);
+			var o = this.makeOptions(options.icon);
+			o.data = dojo.mixin(o.data, this.style.button.icon.norm);
+			
+			if(o.data && o.data.borderWidth===0){
+				o.data.fill = this.style.button.icon.norm.fill = o.data.color;
+			}else if(options.icon.type=="line" || (options.icon.type=="path" && !options.icon.closePath)){
+				this.style.button.icon.selected.color = this.style.button.icon.selected.fill;
+			}else{
+				//o.data.fill = this.style.button.icon.norm.fill = o.data.color;
+			}
+			this.icon = new constr(o);
+			//console.log("  button:", this.toolType, this.style.button.icon)
+		}else if(options.text || (options.icon && options.icon.text)){
+			//console.warn("button text:", options.text || options.icon.text)
+			o = this.makeOptions(options.text || options.icon.text);
+			o.data.color = this.style.button.icon.norm.color; //= o.data.fill;
+			this.style.button.icon.selected.color = this.style.button.icon.selected.fill;
+			this.icon = new Text(o);
+			this.icon.attr({
+				height:	this.icon._lineHeight,
+				y:((this.height-this.icon._lineHeight)/2)+this.y
+			});
+		}
+		
+		var c = this.drawing.getConstructor(this.toolType);
+		if(c){
+			this.drawing.addUI("tooltip", {data:{text:c.setup.tooltip}, button:this});
+		}
+		
+		this.onOut();
+		
+	},{
+		// summary:
+		//		Creates a clickable button in "UI" mode of the drawing.
+		// description:
+		//		Creates a 4-state button: normal, hover, active, selected.
+		//		Optionally may include button text or an icon.
+
+		callback:null,
+		scope:null,
+		hitched:null,
+		toolType:"",
+		
+		onClick: function(/*Object*/button){
+			// summary:
+			//		Stub to connect. Event is 'this'
+			//		Alternatively can pass in a scope and a callback
+			//		on creation.
+		},
+		
+		makeOptions: function(/*Object*/d, /*Float*/s){
+			
+			s = s || 1;
+			d = dojo.clone(d);
+			var o = {
+				util: this.util,
+				mouse: this.mouse,
+				container: this.container,
+				subShape:true
+			};
+			
+			if(typeof(d)=="string"){
+				
+				o.data = {
+					x:this.data.x - 5,
+					y: this.data.y + 2,
+					width:this.data.width,
+					height:this.data.height,
+					text:d,
+					makeFit:true
+				};
+			
+			}else if(d.points){
+				//console.warn("points")
+				dojo.forEach(d.points, function(pt){
+					pt.x = pt.x * this.data.width * .01 * s + this.data.x;
+					pt.y = pt.y * this.data.height * .01 * s + this.data.y;
+				}, this);
+				o.data = {};
+				for(var n in d){
+					if(n!="points"){
+						o.data[n] = d[n];
+					}
+				}
+				o.points = d.points;
+				
+			}else{
+				//console.warn("data")
+				for(n in d){
+					if(/x|width/.test(n)){
+						d[n] = d[n] * this.data.width * .01 * s;
+					}else if(/y|height/.test(n)){
+						d[n] = d[n] * this.data.height * .01 * s;
+					}
+					if(/x/.test(n) && !/r/.test(n)){
+						d[n] += this.data.x;
+					}else if(/y/.test(n) && !/r/.test(n)){
+						d[n] += this.data.y;
+					}
+				}
+				delete d.type;
+				o.data = d;
+				
+			}
+			o.drawingType = "ui";
+			return o;
+		
+			// do style
+			if(d.borderWidth!==undefined){
+				//console.log(" -------- bw data:", o.data)
+				o.data.borderWidth = d.borderWidth;
+			}
+			
+			return o;
+		},
+		
+		enabled:true,
+		selected:false,
+		type:"drawing.library.UI.Button",
+		
+		// note:
+		//	need to move the Stencil's shape to front, not
+		// its container. Therefore we can't use the Stencil's
+		// moveTo.. methods.
+		select: function(){
+			this.selected = true;
+			if(this.icon){this.icon.attr(this.style.button.icon.selected);}
+			this._change(this.style.button.selected);
+			this.shape.shadow && this.shape.shadow.hide();
+		},
+		deselect: function(){
+			this.selected = false;
+			if(this.icon){this.icon.attr(this.style.button.icon.norm);}
+			this.shape.shadow && this.shape.shadow.show();
+			this._change(this.style.button.norm);
+			
+		},
+		disable: function(){
+			if(!this.enabled){ return; }
+			this.enabled = false;
+			this._change(this.style.button.disabled);
+			this.icon.attr({color:this.style.button.norm.color});
+		},
+		enable: function(){
+			if(this.enabled){ return; }
+			this.enabled = true;
+			this._change(this.style.button.norm);
+			this.icon.attr({color:this.style.button.icon.norm.color});
+		},
+		
+		_change: function(/*Object*/sty){
+			this.shape.attr(sty);
+			this.shape.shadow && this.shape.shadow.container.moveToBack();
+			if(this.icon){this.icon.shape.moveToFront();};
+		},
+		onOver: function(){
+			//console.log("BUTTON OVER")
+			if(this.selected || !this.enabled){ return; }
+			this._change(this.style.button.over);
+		},
+		onOut: function(){
+			if(this.selected){ return; }
+			this._change(this.style.button.norm);
+		},
+		onDown: function(){
+			if(this.selected || !this.enabled){ return; }
+			this._change(this.style.button.selected);
+		},
+		onUp: function(){
+			//console.log("BUTTON UP")
+			if(!this.enabled){ return; }
+			this._change(this.style.button.over);
+			if(this.hitched){
+				this.hitched();
+			}
+			this.onClick(this);
+		},
+		attr: function(options){
+			if(this.icon){this.icon.attr(options);}
+		}
+	}
+	
+);
+
+dojo.setObject("dojox.drawing.ui.Button", Button);
+
+registry.register({
+	name:"dojox.drawing.ui.Button"
+}, "stencil");
+
+return Button;
+});

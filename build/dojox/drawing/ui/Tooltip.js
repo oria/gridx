@@ -1,5 +1,112 @@
-//>>built
-define("dojox/drawing/ui/Tooltip",["dojo","../util/oo","../plugins/_Plugin","../manager/_registry"],function(g,b,k,l){var h=null,m=b.declare(k,function(a){this.createDom()},{show:function(a,e){this.domNode.innerHTML=e;var c=a.data.x+a.data.width+this.mouse.origin.x+30,d=a.data.y+a.data.height+this.mouse.origin.y+30;g.style(this.domNode,{display:"inline",left:c+"px",top:d+"px"});var b=g.marginBox(this.domNode);this.createShape(c-this.mouse.origin.x,d-this.mouse.origin.y,b.w,b.h)},createShape:function(a,
-e,c,d){this.balloon&&this.balloon.destroy();c=a+c;d=e+d;var b=[],f=function(){for(var a=0;a<arguments.length;a++)b.push(arguments[a])};f({x:a,y:e+5},{t:"Q",x:a,y:e},{x:a+5,y:e});f({t:"L",x:c-5,y:e});f({t:"Q",x:c,y:e},{x:c,y:e+5});f({t:"L",x:c,y:d-5});f({t:"Q",x:c,y:d},{x:c-5,y:d});f({t:"L",x:a+5,y:d});f({t:"Q",x:a,y:d},{x:a,y:d-5});f({t:"L",x:a,y:e+5});this.balloon=this.drawing.addUI("path",{points:b})},createDom:function(){this.domNode=g.create("span",{"class":"drawingTooltip"},document.body);g.style(this.domNode,
-{display:"none",position:"absolute"})}});b=b.declare(k,function(a){h||(h=new m(a));!a.stencil&&this.button&&(this.connect(this.button,"onOver",this,"onOver"),this.connect(this.button,"onOut",this,"onOut"))},{width:300,height:200,onOver:function(){h.show(this.button,this.data.text)},onOut:function(){}});g.setObject("dojox.drawing.ui.Tooltip",b);l.register({name:"dojox.drawing.ui.Tooltip"},"stencil");return b});
-//@ sourceMappingURL=Tooltip.js.map
+define(["dojo", "../util/oo", "../plugins/_Plugin", "../manager/_registry"], 
+function(dojo, oo, Plugin, registry){
+	
+	var master = null;
+	var MasterC = oo.declare(
+		Plugin,
+		function(options){
+			this.createDom();
+		},
+		{
+			// summary:
+			//		Used for UI tooltips. Buttons in the toolbar.
+			//		This file is not complete.
+
+			show: function(button, text){
+				this.domNode.innerHTML = text;
+				
+				var dx = 30;
+				var px = button.data.x + button.data.width;
+				var py = button.data.y + button.data.height;
+				var x =  px + this.mouse.origin.x + dx;
+				var y = py + this.mouse.origin.y + dx;
+				
+				dojo.style(this.domNode, {
+					display: "inline",
+					left:x +"px",
+					top:y+"px"
+				});
+				
+				var box = dojo.marginBox(this.domNode);
+				
+				this.createShape(x-this.mouse.origin.x, y-this.mouse.origin.y, box.w, box.h);
+			},
+			
+			
+			createShape: function(x,y,w,h){
+				this.balloon && this.balloon.destroy();
+				var r = 5, x2 = x+w, y2 = y+h, points = [];
+				var add = function(){
+					for(var i=0;i<arguments.length;i++){
+						points.push(arguments[i]);
+					}
+				};
+				
+				add({x:x,y:y+5},
+					{t:"Q", x:x,y:y},
+					{x:x+r,y:y});
+				
+				add({t:"L", x:x2-r,y:y});
+				
+				add({t:"Q", x:x2,y:y},
+					{x:x2,y:y+r});
+					
+				add({t:"L", x:x2,y:y2-r});
+					
+				add({t:"Q", x:x2,y:y2},
+					{x:x2-r,y:y2});
+				
+				add({t:"L", x:x+r,y:y2});
+				
+				add({t:"Q", x:x,y:y2},
+					{x:x,y:y2-r});
+					
+				add({t:"L", x:x,y:y+r});
+				
+				this.balloon = this.drawing.addUI("path", {points:points});
+			},
+			
+			createDom: function(){
+				this.domNode = dojo.create('span', {"class":"drawingTooltip"}, document.body);
+				dojo.style(this.domNode, {
+					display: "none",
+					position:"absolute"
+				});
+			}
+		}
+	);
+	
+	var Tooltip =  oo.declare(
+		
+		Plugin,
+		function(options){
+			if(!master){
+				master = new MasterC(options);
+			}
+			if(options.stencil){
+				//todo
+			}else if(this.button){
+				this.connect(this.button, "onOver", this, "onOver");
+				this.connect(this.button, "onOut", this, "onOut");
+			}
+			
+		},
+		{
+			width:300,
+			height:200,
+			onOver: function(){
+				//console.log("   tooltip over", this.data.text)
+				master.show(this.button, this.data.text);
+			},
+			
+			onOut: function(){
+				//console.log("   tooltip out")
+			}
+		}
+	);
+	dojo.setObject('dojox.drawing.ui.Tooltip', Tooltip);
+	registry.register({
+		name:"dojox.drawing.ui.Tooltip"
+	}, "stencil");
+	return Tooltip;
+});

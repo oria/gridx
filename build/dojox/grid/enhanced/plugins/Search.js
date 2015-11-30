@@ -1,5 +1,122 @@
-//>>built
-define("dojox/grid/enhanced/plugins/Search","dojo/_base/kernel dojo/_base/lang dojo/_base/declare dojo/_base/array dojo/data/util/filter ../../EnhancedGrid ../_Plugin".split(" "),function(h,a,m,k,l,n,p){h=m("dojox.grid.enhanced.plugins.Search",p,{name:"search",constructor:function(b,c){this.grid=b;c=c&&a.isObject(c)?c:{};this._cacheSize=c.cacheSize||-1;b.searchRow=a.hitch(this,"searchRow")},searchRow:function(b,c){if(a.isFunction(c)){a.isString(b)&&(b=l.patternToRegExp(b));var g=!1;if(b instanceof
-RegExp)g=!0;else if(a.isObject(b)){var e=!0,f;for(f in b)a.isString(b[f])&&(b[f]=l.patternToRegExp(b[f])),e=!1;if(e)return}else return;this._search(b,0,c,g)}},_search:function(b,c,g,e){var f=this,d=this._cacheSize,a={start:c,query:this.grid.query,sort:this.grid.getSortProps(),queryOptions:this.grid.queryOptions,onBegin:function(b){f._storeSize=b},onComplete:function(a){k.some(a,function(a,d){return f._checkRow(a,b,e)?(g(c+d,a),!0):!1})||(0<d&&c+d<f._storeSize?f._search(b,c+d,g,e):g(-1,null))}};0<
-d&&(a.count=d);this.grid._storeLayerFetch(a)},_checkRow:function(b,c,a){var e=this.grid,f=e.store,d,e=k.filter(e.layout.cells,function(a){return!a.hidden});if(a)return k.some(e,function(a){try{if(a.field)return 0<=String(f.getValue(b,a.field)).search(c)}catch(d){}return!1});for(d in c)if(c[d]instanceof RegExp){for(a=e.length-1;0<=a;--a)if(e[a].field==d)try{if(0>String(f.getValue(b,d)).search(c[d]))return!1;break}catch(h){return!1}if(0>a)return!1}return!0}});n.registerPlugin(h);return h});
-//@ sourceMappingURL=Search.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/data/util/filter",
+	"../../EnhancedGrid",
+	"../_Plugin"
+], function(dojo, lang, declare, array, dFilter, EnhancedGrid, _Plugin){
+
+var Search = declare("dojox.grid.enhanced.plugins.Search", _Plugin, {
+	// summary:
+	//		Search the grid using wildcard string or Regular Expression.
+	
+	// name: String
+	//		plugin name
+	name: "search",
+	
+	constructor: function(grid, args){
+		this.grid = grid;
+		args = (args && lang.isObject(args)) ? args : {};
+		this._cacheSize = args.cacheSize || -1;
+		grid.searchRow = lang.hitch(this, "searchRow");
+	},
+	searchRow: function(/* Object|RegExp|String */searchArgs, /* function(Integer, item) */onSearched){
+		if(!lang.isFunction(onSearched)){ return; }
+		if(lang.isString(searchArgs)){
+			searchArgs = dFilter.patternToRegExp(searchArgs);
+		}
+		var isGlobal = false;
+		if(searchArgs instanceof RegExp){
+			isGlobal = true;
+		}else if(lang.isObject(searchArgs)){
+			var isEmpty = true;
+			for(var field in searchArgs){
+				if(lang.isString(searchArgs[field])){
+					searchArgs[field] = dFilter.patternToRegExp(searchArgs[field]);
+				}
+				isEmpty = false;
+			}
+			if(isEmpty){ return; }
+		}else{
+			return;
+		}
+		this._search(searchArgs, 0, onSearched, isGlobal);
+	},
+	_search: function(/* Object|RegExp */searchArgs, /* Integer */start, /* function(Integer, item) */onSearched, /* Boolean */isGlobal){
+		var _this = this,
+			cnt = this._cacheSize,
+			args = {
+				start: start,
+				query: this.grid.query,
+				sort: this.grid.getSortProps(),
+				queryOptions: this.grid.queryOptions,
+				onBegin: function(size){
+					_this._storeSize = size;
+				},
+				onComplete: function(items){
+					if(!array.some(items, function(item, i){
+						if(_this._checkRow(item, searchArgs, isGlobal)){
+							onSearched(start + i, item);
+							return true;
+						}
+						return false;
+					})){
+						if(cnt > 0 && start + cnt < _this._storeSize){
+							_this._search(searchArgs, start + cnt, onSearched, isGlobal);
+						}else{
+							onSearched(-1, null);
+						}
+					}
+				}
+			};
+		if(cnt > 0){
+			args.count = cnt;
+		}
+		this.grid._storeLayerFetch(args);
+	},
+	_checkRow: function(/* store item */item, /* Object|RegExp */searchArgs, /* Boolean */isGlobal){
+		var g = this.grid, s = g.store, i, field,
+			cells = array.filter(g.layout.cells, function(cell){
+				return !cell.hidden;
+			});
+		if(isGlobal){
+			return array.some(cells, function(cell){
+				try{
+					if(cell.field){
+						return String(s.getValue(item, cell.field)).search(searchArgs) >= 0;
+					}
+				}catch(e){
+					console.log("Search._checkRow() error: ", e);
+				}
+				return false;
+			});
+		}else{
+			for(field in searchArgs){
+				if(searchArgs[field] instanceof RegExp){
+					for(i = cells.length - 1; i >= 0; --i){
+						if(cells[i].field == field){
+							try{
+								if(String(s.getValue(item, field)).search(searchArgs[field]) < 0){
+									return false;
+								}
+								break;
+							}catch(e){
+								return false;
+							}
+						}
+					}
+					if(i < 0){ return false; }
+				}
+			}
+			return true;
+		}
+	}
+});
+
+EnhancedGrid.registerPlugin(Search/*name:'search'*/);
+
+return Search;
+
+});

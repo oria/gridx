@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"Templated.js",
-"lineCount":1,
-"mappings":"A,SAAAA,MAAA,uBAA8B,+GAAA,MAAA,KAA9B,CAOG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAAwBC,CAAxB,CAAqCC,CAArC,CAAsDC,CAAtD,QACKJ,EAAA,wBAAgCE,CAAhC,CAA6CC,CAA7C,CAA8DC,CAA9D,yBAQGC,QAAAA,OAGJC,EAAWL,CAAAM,WAAA,CAAgBD,aAAhB,CAAXA,EAA6CA,aAAAE,KAAA,MAA7CF,EAAyEA,aAHrED,CAIAI,CAJAJ,KAIAI,CAJAJ,GAIKC,EAJLD,MAKHK,EAAI,KAAKD,CAAL,CALDJ,CAKUM,EAAQL,CAAA,CAASG,CAAT,CALlBJ,IAMJK,CANIL,SAOEO,CAPFP,GAOUM,EAPVN,CAQLK,CAAAG,IAAA,CAAMD,CAAN,CAAYD,CAAA,CAAMC,CAAN,CAAZ,CARKP,KAWNS,QAAAC,KAAA,0DAAwEN,CAAxE,CAXMJ,CAcRW,cAAA,CAAeC,SAAf,CAdQZ,CARH,EADL,CAPH;",
-"sources":["Templated.js.uncompressed.js"],
-"names":["define","declare","lang","_WidgetBase","_TemplatedMixin","_WidgetsInTemplateMixin","startup","bindings","isFunction","call","s","w","props","prop","set","console","warn","inherited","arguments"]
-}

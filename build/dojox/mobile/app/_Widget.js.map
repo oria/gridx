@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"_Widget.js",
-"lineCount":1,
-"mappings":"A,SACAA,MAAA,sFAA8F,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC9FF,CAAAG,QAAA,4BACAH,EAAAI,aAAA,4BAEAJ,EAAAK,QAAA,qBAEAL,EAAAM,QAAA,4BAAyCL,CAAAM,YAAzC,YAIYC,QAAAA,YAINR,CAAAS,OAAAC,QAJMF,GAKNR,CAAAS,OAAAE,QALMH,EAJZ,SAaUI,QAAAA,CAASC,CAATD,CAAiBE,CAAjBF,CAAwBG,CAAxBH,qBACLE,CAAAE,YAAA,EADKJ,gBAEJE,CAAAE,YAAA,EAFIJ,GAIJZ,CAAAS,OAAA,KAJIG,CAMCA,YAAA,CAAaC,CAAb,CAAqBI,IAAAC,MAAAC,IAArB,CAAqCJ,CAArC,CANDH,CASDQ,cAAA,CAAeC,SAAf,CATCT,CAbV,EAN8F,CAA9F;",
-"sources":["_Widget.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","experimental","require","declare","_WidgetBase","getScroll","global","scrollX","scrollY","connect","target","event","fn","toLowerCase","Mojo","Event","tap","inherited","arguments"]
-}

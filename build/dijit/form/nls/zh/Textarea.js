@@ -1,3 +1,9 @@
-//>>built
-define("dijit/form/nls/zh/Textarea",{iframeEditTitle:"\u7f16\u8f91\u533a\u57df",iframeFocusTitle:"\u7f16\u8f91\u533a\u57df\u6846"});
-//@ sourceMappingURL=Textarea.js.map
+define(
+// used by both the editor and textarea widgets to provide information to screen reader users
+({
+	iframeEditTitle: '编辑区域',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
+	iframeFocusTitle: '编辑区域框'  // secondary title for editable IFRAME when focus is on outer container
+									 //  to let user know that focus has moved out of editing area and to the
+									 //  parent element of the editing area
+})
+);

@@ -1,4 +1,30 @@
-//>>built
-define("dojox/mvc/_InlineTemplateMixin",["dojo/_base/declare","dojo/_base/lang","dojo/has"],function(c,f,d){d.add("dom-qsa",!!document.createElement("div").querySelectorAll);return c("dojox.mvc._InlineTemplateMixin",null,{buildRendering:function(){var a=this.srcNodeRef;if(a){for(var a=d("dom-qsa")?a.querySelectorAll("script[type\x3d'dojox/mvc/InlineTemplate']"):a.getElementsByTagName("script"),e=[],b=0,c=a.length;b<c;++b)(d("dom-qsa")||"dojox/mvc/InlineTemplate"==a[b].getAttribute("type"))&&e.push(a[b].innerHTML);
-if(a=f.trim(e.join("")))this.templateString=a}this.inherited(arguments)}})});
-//@ sourceMappingURL=_InlineTemplateMixin.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/has"
+], function(declare, lang, has){
+	has.add("dom-qsa", !!document.createElement("div").querySelectorAll);
+
+	return declare("dojox.mvc._InlineTemplateMixin", null, {
+		// summary:
+		//		A mixin for template widget, which will look for `<script type="dojox/mvc/InlineTemplate">`
+		//		and treat the HTML in there as the template string.
+
+		buildRendering: function(){
+			var root = this.srcNodeRef;
+			if(root){
+				var nodes = has("dom-qsa") ? root.querySelectorAll("script[type='dojox/mvc/InlineTemplate']") : root.getElementsByTagName("script"),
+				 templates = [];
+				for(var i = 0, l = nodes.length; i < l; ++i){
+					if(!has("dom-qsa") && nodes[i].getAttribute("type") != "dojox/mvc/InlineTemplate"){ continue; }
+					templates.push(nodes[i].innerHTML);
+				}
+				var templateString = lang.trim(templates.join(""));
+				if(templateString){
+					this.templateString = templateString;
+				}
+			}
+			this.inherited(arguments);
+		}
+	});
+});

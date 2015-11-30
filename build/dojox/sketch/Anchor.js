@@ -1,5 +1,69 @@
-//>>built
-define("dojox/sketch/Anchor",["dojo/_base/kernel","dojo/_base/lang","../gfx"],function(e){e.getObject("sketch",!0,dojox);dojox.sketch.Anchor=function(a,b,g){var e=this,f=null;this.type=function(){return"Anchor"};this.annotation=a;this.id=b;this._key="anchor-"+dojox.sketch.Anchor.count++;this.shape=null;this.isControl=null!=g?g:!0;this.beginEdit=function(){this.annotation.beginEdit(dojox.sketch.CommandTypes.Modify)};this.endEdit=function(){this.annotation.endEdit()};this.zoom=function(c){if(this.shape){var d=
-Math.floor(4/c);c="vml"==dojox.gfx.renderer?1:1/c;this.shape.setShape({x:a[b].x-d,y:a[b].y-d,width:2*d,height:2*d}).setStroke({color:"black",width:c})}};this.setBinding=function(c){a[b]={x:a[b].x+c.dx,y:a[b].y+c.dy};a.draw();a.drawBBox()};this.setUndo=function(){a.setUndo()};this.enable=function(){a.shape&&(a.figure._add(this),f={x:a[b].x-4,y:a[b].y-4,width:8,height:8},this.shape=a.shape.createRect(f).setFill([255,255,255,0.35]),this.shape.getEventSource().setAttribute("id",e._key),this.shape.getEventSource().setAttribute("shape-rendering",
-"crispEdges"),this.zoom(a.figure.zoomFactor))};this.disable=function(){a.figure._remove(this);a.shape&&a.shape.remove(this.shape);f=this.shape=null}};dojox.sketch.Anchor.count=0;return dojox.sketch.Anchor});
-//@ sourceMappingURL=Anchor.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"../gfx"
+], function(dojo){
+	dojo.getObject("sketch", true, dojox);
+
+	dojox.sketch.Anchor=function(an, id, isControl){
+		var self=this;
+		var size=4;	//	.5 * size of anchor.
+		var rect=null;
+
+		this.type=function(){ return "Anchor"; };
+		this.annotation=an;
+
+		this.id=id;
+		this._key="anchor-" + dojox.sketch.Anchor.count++;
+		this.shape=null;
+		this.isControl=(isControl!=null)?isControl:true;
+
+		this.beginEdit=function(){
+			this.annotation.beginEdit(dojox.sketch.CommandTypes.Modify);
+		};
+		this.endEdit=function(){
+			this.annotation.endEdit();
+		};
+		this.zoom=function(pct){
+			if(this.shape){
+				var rs=Math.floor(size/pct);
+				var width=dojox.gfx.renderer=='vml'?1:1/pct
+				this.shape.setShape({ x:an[id].x-rs, y:an[id].y-rs, width:rs*2, height:rs*2 }).setStroke({ color:"black", width:width }); //For IE, maybe we need Math.ceil(1/pct)||1
+			}
+		}
+		/*this.doChange=function(pt){
+			if(this.isControl){
+				this.shape.applyTransform(pt);
+			} else{
+				an.transform.dx+=pt.dx;
+				an.transform.dy+=pt.dy;
+			}
+		};*/
+		this.setBinding=function(pt){
+			an[id]={ x: an[id].x+pt.dx, y:an[id].y+pt.dy };
+			an.draw();
+			an.drawBBox();
+		};
+		this.setUndo=function(){ an.setUndo(); };
+
+		this.enable=function(){
+			if(!an.shape){ return; }
+			an.figure._add(this);
+			rect={ x:an[id].x-size, y:an[id].y-size, width:size*2, height:size*2 };
+			this.shape=an.shape.createRect(rect)
+				//.setStroke({ color:"black", width:1 })
+				.setFill([255,255,255,0.35]);
+			this.shape.getEventSource().setAttribute("id", self._key);
+			this.shape.getEventSource().setAttribute("shape-rendering", "crispEdges");
+			this.zoom(an.figure.zoomFactor);
+		};
+		this.disable=function(){
+			an.figure._remove(this);
+			if(an.shape){ an.shape.remove(this.shape); }
+			this.shape=null;
+			rect=null;
+		};
+	};
+	dojox.sketch.Anchor.count=0;
+	return dojox.sketch.Anchor;
+});

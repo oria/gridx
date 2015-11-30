@@ -1,3 +1,31 @@
-//>>built
-define("dojox/charting/plot2d/StackedColumns",["dojo/_base/declare","./Columns","./commonStacked"],function(b,f,c){return b("dojox.charting.plot2d.StackedColumns",f,{getSeriesStats:function(){var a=c.collectStats(this.series);a.hmin-=0.5;a.hmax+=0.5;return a},getValue:function(a,d,e,b){b?a=c.getIndexValue(this.series,e,d):(d=a.x-1,a=c.getValue(this.series,e,a.x),a=[a[0]?a[0].y:null,a[1]?a[1]:null]);return{x:d,y:a[0],py:a[1]}}})});
-//@ sourceMappingURL=StackedColumns.js.map
+define(["dojo/_base/declare", "./Columns", "./commonStacked"], 
+	function( declare, Columns, commonStacked){
+
+	return declare("dojox.charting.plot2d.StackedColumns", Columns, {
+		// summary:
+		//		The plot object representing a stacked column chart (vertical bars).
+		getSeriesStats: function(){
+			// summary:
+			//		Calculate the min/max on all attached series in both directions.
+			// returns: Object
+			//		{hmin, hmax, vmin, vmax} min/max in both directions.
+			var stats = commonStacked.collectStats(this.series);
+			stats.hmin -= 0.5;
+			stats.hmax += 0.5;
+			return stats; // Object
+		},
+		getValue: function(value, index, seriesIndex, indexed){
+			var x, y;
+			if(indexed){
+				x = index;
+				y = commonStacked.getIndexValue(this.series, seriesIndex, x);
+			}else{
+				x = value.x - 1;
+				y = commonStacked.getValue(this.series, seriesIndex, value.x);
+				y = [  y[0]?y[0].y:null, y[1]?y[1]:null ];
+			}
+			// in py we return the previous stack value as we need it to position labels on columns
+			return { x: x, y: y[0], py: y[1] };
+		}
+	});
+});

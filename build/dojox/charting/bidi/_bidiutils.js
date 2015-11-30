@@ -1,3 +1,27 @@
-//>>built
-define("dojox/charting/bidi/_bidiutils",{reverseMatrix:function(a,d,b,c){var h=b.l-b.r;b=c?-1:1;var e=0,f=0,g=1;d=c?d.width+h:0;c=0;a.matrix&&(b*=Math.abs(a.matrix.xx),g=a.matrix.yy,e=a.matrix.xy,f=a.matrix.yx,c=a.matrix.xy);a.setTransform({xx:b,xy:e,yx:f,yy:g,dx:d,dy:c})}});
-//@ sourceMappingURL=_bidiutils.js.map
+  define ({
+		reverseMatrix: function(plot, dim, offsets, rtl){
+			//summary:
+			//	reverse the underlying matrix of the plots to perform the mirroring behavior.
+			//plot:
+			//  the plot which has the matrix to be reversed.
+			//dim:
+			//  the dimension (width,height) of the chart.
+			//offsets:
+			//  the offsets of the chart
+			var shift = offsets.l - offsets.r;
+			var xx = rtl? -1 : 1;
+			var xy = 0;
+			var yx = 0;
+			var yy = 1;
+			var dx = rtl? dim.width + shift : 0;
+			var dy = 0;
+			if(plot.matrix){
+				xx = xx * Math.abs(plot.matrix.xx);
+				yy = plot.matrix.yy;
+				xy = plot.matrix.xy;
+				yx = plot.matrix.yx;
+				dy = plot.matrix.xy;
+			}
+			plot.setTransform({xx: xx, xy: xy, yx: yx, yy: yy, dx: dx, dy: dy});
+ 	}
+ });

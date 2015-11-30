@@ -1,12 +1,389 @@
-//>>built
-define("dojox/mobile/app/ImageThumbView",["dojo","dijit","dojox","dojo/require!dijit/_WidgetBase,dojo/string"],function(c,k,l){c.provide("dojox.mobile.app.ImageThumbView");c.experimental("dojox.mobile.app.ImageThumbView");c.require("dijit._WidgetBase");c.require("dojo.string");c.declare("dojox.mobile.app.ImageThumbView",k._WidgetBase,{items:[],urlParam:"url",labelParam:null,itemTemplate:'\x3cdiv class\x3d"mblThumbInner"\x3e\x3cdiv class\x3d"mblThumbOverlay"\x3e\x3c/div\x3e\x3cdiv class\x3d"mblThumbMask"\x3e\x3cdiv class\x3d"mblThumbSrc" style\x3d"background-image:url(${url})"\x3e\x3c/div\x3e\x3c/div\x3e\x3c/div\x3e',
-minPadding:4,maxPerRow:3,maxRows:-1,baseClass:"mblImageThumbView",thumbSize:"medium",animationEnabled:!0,selectedIndex:-1,cache:null,cacheMustMatch:!1,clickEvent:"onclick",cacheBust:!1,disableHide:!1,constructor:function(a,b){},postCreate:function(){this.inherited(arguments);var a=this;this.addThumb=c.hitch(this,this.addThumb);this.handleImgLoad=c.hitch(this,this.handleImgLoad);this.hideCached=c.hitch(this,this.hideCached);this._onLoadImages={};this.cache=[];this.visibleImages=[];this._cacheCounter=
-0;this.connect(this.domNode,this.clickEvent,function(b){if((b=a._getItemNodeFromEvent(b))&&!b._cached)a.onSelect(b._item,b._index,a.items),c.query(".selected",this.domNode).removeClass("selected"),c.addClass(b,"selected")});c.addClass(this.domNode,this.thumbSize);this.resize();this.render()},onSelect:function(a,b,c){},_setAnimationEnabledAttr:function(a){this.animationEnabled=a;c[a?"addClass":"removeClass"](this.domNode,"animated")},_setItemsAttr:function(a){this.items=a||[];a={};var b;for(b=0;b<
-this.items.length;b++)a[this.items[b][this.urlParam]]=1;var e=[],d;for(d in this._onLoadImages)!a[d]&&this._onLoadImages[d]._conn&&(c.disconnect(this._onLoadImages[d]._conn),this._onLoadImages[d].src=null,e.push(d));for(b=0;b<e.length;b++)delete this._onLoadImages[d];this.render()},_getItemNode:function(a){for(;a&&!c.hasClass(a,"mblThumb")&&a!=this.domNode;)a=a.parentNode;return a==this.domNode?null:a},_getItemNodeFromEvent:function(a){a.touches&&0<a.touches.length&&(a=a.touches[0]);return this._getItemNode(a.target)},
-resize:function(){this._thumbSize=null;this._size=c.contentBox(this.domNode);this.disableHide=!0;this.render();this.disableHide=!1},hideCached:function(){for(var a=0;a<this.cache.length;a++)this.cache[a]&&c.style(this.cache[a],"display","none")},render:function(){for(var a,b,e;this.visibleImages&&0<this.visibleImages.length;)a=this.visibleImages.pop(),this.cache.push(a),this.disableHide||c.addClass(a,"hidden"),a._cached=!0;this.cache&&0<this.cache.length&&setTimeout(this.hideCached,1E3);if(this.items&&
-0!=this.items.length){for(a=0;a<this.items.length&&!(e=this.items[a],b=c.isString(e)?e:e[this.urlParam],this.addThumb(e,b,a),0<this.maxRows&&(a+1)/this.maxPerRow>=this.maxRows);a++);if(this._thumbSize){b=0;e=-1;var d=this._thumbSize.w+2*this.padding,g=this._thumbSize.h+2*this.padding,f=this.thumbNodes=c.query(".mblThumb",this.domNode),h=0,f=this.visibleImages;for(a=0;a<f.length;a++)if(!f[a]._cached){0==h%this.maxPerRow&&e++;b=h%this.maxPerRow;this.place(f[a],b*d+this.padding,e*g+this.padding);f[a]._loading||
-c.removeClass(f[a],"hidden");if(h==this.selectedIndex)c[h==this.selectedIndex?"addClass":"removeClass"](f[a],"selected");h++}this._numRows=a=Math.ceil(h/this.maxPerRow);this.setContainerHeight(a*(this._thumbSize.h+2*this.padding))}}},setContainerHeight:function(a){c.style(this.domNode,"height",a+"px")},addThumb:function(a,b,e){var d,g=!1;if(0<this.cache.length){for(var f=0;f<this.cache.length;f++)if(this.cache[f]._url==b){d=this.cache.splice(f,1)[0];break}!d&&!this.cacheMustMatch?(d=this.cache.pop(),
-c.removeClass(d,"selected")):g=!0}d||(d=c.create("div",{"class":"mblThumb hidden",innerHTML:c.string.substitute(this.itemTemplate,{url:b},null,this)},this.domNode));this.labelParam&&((f=c.query(".mblThumbLabel",d)[0])||(f=c.create("div",{"class":"mblThumbLabel"},d)),f.innerHTML=a[this.labelParam]||"");c.style(d,"display","");this.disableHide||c.addClass(d,"hidden");if(!g&&(g=c.create("img",{}),g._thumbDiv=d,g._conn=c.connect(g,"onload",this.handleImgLoad),g._url=b,d._loading=!0,this._onLoadImages[b]=
-g))g.src=b;this.visibleImages.push(d);d._index=e;d._item=a;d._url=b;d._cached=!1;this._thumbSize||(this._thumbSize=c.marginBox(d),0==this._thumbSize.h&&(this._thumbSize.h=100,this._thumbSize.w=100),this.labelParam&&(this._thumbSize.h+=8),this.calcPadding())},handleImgLoad:function(a){a=a.target;c.disconnect(a._conn);c.removeClass(a._thumbDiv,"hidden");a._thumbDiv._loading=!1;a._conn=null;var b=a._url;this.cacheBust&&(b+=(-1<b.indexOf("?")?"\x26":"?")+"cacheBust\x3d"+(new Date).getTime()+"_"+this._cacheCounter++);
-c.query(".mblThumbSrc",a._thumbDiv).style("backgroundImage","url("+b+")");delete this._onLoadImages[a._url]},calcPadding:function(){var a=this._size.w,b=this._thumbSize.w;this.maxPerRow=Math.floor(a/(b+this.minPadding));this.padding=Math.floor((a-b*this.maxPerRow)/(2*this.maxPerRow))},place:function(a,b,e){c.style(a,{"-webkit-transform":"translate("+b+"px,"+e+"px)"})},destroy:function(){var a,b=0,c;for(c in this._onLoadImages)if(a=this._onLoadImages[c])a.src=null,b++;this.inherited(arguments)}})});
-//@ sourceMappingURL=ImageThumbView.js.map
+dojo.provide("dojox.mobile.app.ImageThumbView");
+dojo.experimental("dojox.mobile.app.ImageThumbView");
+
+dojo.require("dijit._WidgetBase");
+dojo.require("dojo.string");
+
+dojo.declare("dojox.mobile.app.ImageThumbView", dijit._WidgetBase, {
+	// summary:
+	//		An image thumbnail gallery
+
+	// items: Array
+	//		The data items from which the image urls are retrieved.
+	//		If an item is a string, it is expected to be a URL. Otherwise
+	//		by default it is expected to have a 'url' member.  This can
+	//		be configured using the 'urlParam' attribute on this widget.
+	items: [],
+
+	// urlParam: String
+	//		The parameter name used to retrieve an image url from a JSON object
+	urlParam: "url",
+
+	labelParam: null,
+
+	itemTemplate: '<div class="mblThumbInner">' +
+				'<div class="mblThumbOverlay"></div>' +
+				'<div class="mblThumbMask">' +
+					'<div class="mblThumbSrc" style="background-image:url(${url})"></div>' +
+				'</div>' +
+			'</div>',
+
+	minPadding: 4,
+
+	maxPerRow: 3,
+
+	maxRows: -1,
+
+	baseClass: "mblImageThumbView",
+
+	thumbSize: "medium",
+
+	animationEnabled: true,
+
+	selectedIndex: -1,
+
+	cache: null,
+
+	cacheMustMatch: false,
+
+	clickEvent: "onclick",
+
+	cacheBust: false,
+
+	disableHide: false,
+
+	constructor: function(params, node){
+	},
+
+	postCreate: function(){
+
+		this.inherited(arguments);
+		var _this = this;
+
+		var hoverCls = "mblThumbHover";
+
+		this.addThumb = dojo.hitch(this, this.addThumb);
+		this.handleImgLoad = dojo.hitch(this, this.handleImgLoad);
+		this.hideCached = dojo.hitch(this, this.hideCached);
+
+		this._onLoadImages = {};
+
+		this.cache = [];
+		this.visibleImages = [];
+
+		this._cacheCounter = 0;
+
+		this.connect(this.domNode, this.clickEvent, function(event){
+			var itemNode = _this._getItemNodeFromEvent(event);
+
+			if(itemNode && !itemNode._cached){
+				_this.onSelect(itemNode._item, itemNode._index, _this.items);
+				dojo.query(".selected", this.domNode).removeClass("selected");
+				dojo.addClass(itemNode, "selected");
+			}
+		});
+
+		dojo.addClass(this.domNode, this.thumbSize);
+
+		this.resize();
+		this.render();
+	},
+
+	onSelect: function(item, index, items){
+		// summary:
+		//		Dummy function that is triggered when an image is selected.
+	},
+
+	_setAnimationEnabledAttr: function(value){
+		this.animationEnabled = value;
+		dojo[value ? "addClass" : "removeClass"](this.domNode, "animated");
+	},
+
+	_setItemsAttr: function(items){
+		this.items = items || [];
+
+		var urls = {};
+		var i;
+		for(i = 0; i < this.items.length; i++){
+			urls[this.items[i][this.urlParam]] = 1;
+		}
+
+		var clearedUrls = [];
+		for(var url in this._onLoadImages){
+			if(!urls[url] && this._onLoadImages[url]._conn){
+				dojo.disconnect(this._onLoadImages[url]._conn);
+				this._onLoadImages[url].src = null;
+				clearedUrls.push(url);
+			}
+		}
+
+		for(i = 0; i < clearedUrls.length; i++){
+			delete this._onLoadImages[url];
+		}
+
+		this.render();
+	},
+
+	_getItemNode: function(node){
+		while(node && !dojo.hasClass(node, "mblThumb") && node != this.domNode){
+			node = node.parentNode;
+		}
+
+		return (node == this.domNode) ? null : node;
+	},
+
+	_getItemNodeFromEvent: function(event){
+		if(event.touches && event.touches.length > 0){
+			event = event.touches[0];
+		}
+		return this._getItemNode(event.target);
+	},
+
+	resize: function(){
+		this._thumbSize = null;
+
+		this._size = dojo.contentBox(this.domNode);
+
+		this.disableHide = true;
+		this.render();
+		this.disableHide = false;
+	},
+
+	hideCached: function(){
+		// summary:
+		//		Hides all cached nodes, so that they're no invisible and overlaying
+		//		other screen elements.
+		for(var i = 0; i < this.cache.length; i++){
+			if (this.cache[i]) {
+				dojo.style(this.cache[i], "display", "none");
+			}
+		}
+	},
+
+	render: function(){
+		var i;
+		var url;
+		var item;
+
+		var thumb;
+		while(this.visibleImages && this.visibleImages.length > 0){
+			thumb = this.visibleImages.pop();
+			this.cache.push(thumb);
+
+			if (!this.disableHide) {
+				dojo.addClass(thumb, "hidden");
+			}
+			thumb._cached = true;
+		}
+
+		if(this.cache && this.cache.length > 0){
+			setTimeout(this.hideCached, 1000);
+		}
+
+		if(!this.items || this.items.length == 0){
+			return;
+		}
+
+		for(i = 0; i < this.items.length; i++){
+			item = this.items[i];
+			url = (dojo.isString(item) ? item : item[this.urlParam]);
+
+			this.addThumb(item, url, i);
+
+			if(this.maxRows > 0 && (i + 1) / this.maxPerRow >= this.maxRows){
+				break;
+			}
+		}
+
+		if(!this._thumbSize){
+			return;
+		}
+
+		var column = 0;
+		var row = -1;
+
+		var totalThumbWidth = this._thumbSize.w + (this.padding * 2);
+		var totalThumbHeight = this._thumbSize.h + (this.padding * 2);
+
+		var nodes = this.thumbNodes =
+			dojo.query(".mblThumb", this.domNode);
+
+		var pos = 0;
+		nodes = this.visibleImages;
+		for(i = 0; i < nodes.length; i++){
+			if(nodes[i]._cached){
+				continue;
+			}
+
+			if(pos % this.maxPerRow == 0){
+				row ++;
+			}
+			column = pos % this.maxPerRow;
+
+			this.place(
+				nodes[i],
+				(column * totalThumbWidth) + this.padding,	// x position
+				(row * totalThumbHeight) + this.padding		// y position
+			);
+
+			if(!nodes[i]._loading){
+				dojo.removeClass(nodes[i], "hidden");
+			}
+
+			if(pos == this.selectedIndex){
+				dojo[pos == this.selectedIndex ? "addClass" : "removeClass"]
+					(nodes[i], "selected");
+			}
+			pos++;
+		}
+
+		var numRows = Math.ceil(pos / this.maxPerRow);
+
+		this._numRows = numRows;
+
+		this.setContainerHeight((numRows * (this._thumbSize.h + this.padding * 2)));
+	},
+
+	setContainerHeight: function(amount){
+		dojo.style(this.domNode, "height", amount + "px");
+	},
+
+	addThumb: function(item, url, index){
+
+		var thumbDiv;
+		var cacheHit = false;
+		if(this.cache.length > 0){
+			// Reuse a previously created node if possible
+			var found = false;
+			// Search for an image with the same url first
+			for(var i = 0; i < this.cache.length; i++){
+				if(this.cache[i]._url == url){
+					thumbDiv = this.cache.splice(i, 1)[0];
+					found = true;
+					break
+				}
+			}
+
+			// if no image with the same url is found, just take the last one
+			if(!thumbDiv && !this.cacheMustMatch){
+            	thumbDiv = this.cache.pop();
+				dojo.removeClass(thumbDiv, "selected");
+			} else {
+				cacheHit = true;
+			}
+		}
+
+		if(!thumbDiv){
+
+			// Create a new thumb
+			thumbDiv = dojo.create("div", {
+				"class": "mblThumb hidden",
+				innerHTML: dojo.string.substitute(this.itemTemplate, {
+					url: url
+				}, null, this)
+			}, this.domNode);
+		}
+
+		if(this.labelParam) {
+			var labelNode = dojo.query(".mblThumbLabel", thumbDiv)[0];
+			if(!labelNode) {
+				labelNode = dojo.create("div", {
+					"class": "mblThumbLabel"
+				}, thumbDiv);
+			}
+			labelNode.innerHTML = item[this.labelParam] || "";
+		}
+
+	    dojo.style(thumbDiv, "display", "");
+		if (!this.disableHide) {
+			dojo.addClass(thumbDiv, "hidden");
+		}
+
+		if (!cacheHit) {
+			var loader = dojo.create("img", {});
+			loader._thumbDiv = thumbDiv;
+			loader._conn = dojo.connect(loader, "onload", this.handleImgLoad);
+			loader._url = url;
+			thumbDiv._loading = true;
+
+			this._onLoadImages[url] = loader;
+			if (loader) {
+				loader.src = url;
+			}
+		}
+		this.visibleImages.push(thumbDiv);
+
+		thumbDiv._index = index;
+		thumbDiv._item = item;
+		thumbDiv._url = url;
+		thumbDiv._cached = false;
+
+		if(!this._thumbSize){
+			this._thumbSize = dojo.marginBox(thumbDiv);
+
+			if(this._thumbSize.h == 0){
+				this._thumbSize.h = 100;
+				this._thumbSize.w = 100;
+			}
+
+			if(this.labelParam){
+				this._thumbSize.h += 8;
+			}
+
+			this.calcPadding();
+		}
+	},
+
+	handleImgLoad: function(event){
+		var img = event.target;
+		dojo.disconnect(img._conn);
+		dojo.removeClass(img._thumbDiv, "hidden");
+		img._thumbDiv._loading = false;
+		img._conn = null;
+
+		var url = img._url;
+		if(this.cacheBust){
+			url += (url.indexOf("?") > -1 ? "&" : "?")
+				+ "cacheBust=" + (new Date()).getTime() + "_" + (this._cacheCounter++);
+		}
+
+		dojo.query(".mblThumbSrc", img._thumbDiv)
+				.style("backgroundImage", "url(" + url + ")");
+
+		delete this._onLoadImages[img._url];
+	},
+
+	calcPadding: function(){
+		var width = this._size.w;
+
+		var thumbWidth = this._thumbSize.w;
+
+		var imgBounds = thumbWidth + this.minPadding;
+
+		this.maxPerRow = Math.floor(width / imgBounds);
+
+		this.padding = Math.floor((width - (thumbWidth * this.maxPerRow)) / (this.maxPerRow * 2));
+	},
+
+	place: function(node, x, y){
+		dojo.style(node, {
+			"-webkit-transform" :"translate(" + x + "px," + y + "px)"
+		});
+	},
+
+	destroy: function(){
+		// Stop the loading of any more images
+
+		var img;
+		var counter = 0;
+		for (var url in this._onLoadImages){
+			img = this._onLoadImages[url];
+			if (img) {
+				img.src = null;
+				counter++;
+			}
+		}
+
+		this.inherited(arguments);
+	}
+});

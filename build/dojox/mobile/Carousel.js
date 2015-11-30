@@ -1,16 +1,478 @@
-//>>built
-define("dojox/mobile/Carousel","dojo/_base/array dojo/_base/connect dojo/_base/declare dojo/_base/event dojo/_base/lang dojo/sniff dojo/dom-class dojo/dom-construct dojo/dom-style dijit/registry dijit/_Contained dijit/_Container dijit/_WidgetBase ./lazyLoadUtils ./CarouselItem ./PageIndicator ./SwapView require dojo/has!dojo-bidi?dojox/mobile/bidi/Carousel".split(" "),function(h,t,r,u,v,p,q,c,n,s,k,w,x,y,C,z,l,A,B){k=r(p("dojo-bidi")?"dojox.mobile.NonBidiCarousel":"dojox.mobile.Carousel",[x,w,k],
-{numVisible:2,itemWidth:0,title:"",pageIndicator:!0,navButton:!1,height:"",selectable:!0,baseClass:"mblCarousel",buildRendering:function(){this.containerNode=c.create("div",{className:"mblCarouselPages"});this.inherited(arguments);var a;if(this.srcNodeRef){a=0;for(len=this.srcNodeRef.childNodes.length;a<len;a++)this.containerNode.appendChild(this.srcNodeRef.firstChild)}this.headerNode=c.create("div",{className:"mblCarouselHeaderBar"},this.domNode);this.navButton&&(this.btnContainerNode=c.create("div",
-{className:"mblCarouselBtnContainer"},this.headerNode),n.set(this.btnContainerNode,"float","right"),this.prevBtnNode=c.create("button",{className:"mblCarouselBtn",title:"Previous",innerHTML:"\x26lt;"},this.btnContainerNode),this.nextBtnNode=c.create("button",{className:"mblCarouselBtn",title:"Next",innerHTML:"\x26gt;"},this.btnContainerNode),this._prevHandle=this.connect(this.prevBtnNode,"onclick","onPrevBtnClick"),this._nextHandle=this.connect(this.nextBtnNode,"onclick","onNextBtnClick"));this.pageIndicator&&
-(this.title||(this.title="\x26nbsp;"),this.piw=new z,this.headerNode.appendChild(this.piw.domNode));this.titleNode=c.create("div",{className:"mblCarouselTitle"},this.headerNode);this.domNode.appendChild(this.containerNode);this.subscribe("/dojox/mobile/viewChanged","handleViewChanged");this.connect(this.domNode,"onclick","_onClick");this.connect(this.domNode,"onkeydown","_onClick");this._dragstartHandle=this.connect(this.domNode,"ondragstart",u.stop);this.selectedItemIndex=-1;this.items=[]},startup:function(){if(!this._started){var a;
-"inherit"===this.height?this.domNode.offsetParent&&(a=this.domNode.offsetParent.offsetHeight+"px"):this.height&&(a=this.height);a&&(this.domNode.style.height=a);if(this.store){if(!this.setStore)throw Error("Use StoreCarousel or DataCarousel instead of Carousel.");a=this.store;this.store=null;this.setStore(a,this.query,this.queryOptions)}else this.resizeItems();this.inherited(arguments);this.currentView=h.filter(this.getChildren(),function(a){return a.isVisible()})[0]}},resizeItems:function(){var a=
-0,b,d=this.domNode.offsetHeight-(this.headerNode?this.headerNode.offsetHeight:0),m=p("ie")?5/this.numVisible-1:5/this.numVisible,f,e;h.forEach(this.getChildren(),function(g){if(g instanceof l){g.lazy||(g._instantiated=!0);g=g.containerNode.childNodes;b=0;for(len=g.length;b<len;b++)f=g[b],1===f.nodeType&&(e=this.items[a]||{},n.set(f,{width:e.width||90/this.numVisible+"%",height:e.height||d+"px",margin:"0 "+(e.margin||m+"%")}),q.add(f,"mblCarouselSlot"),a++)}},this);this.piw&&(this.piw.refId=this.containerNode.firstChild,
-this.piw.reset())},resize:function(){if(this.itemWidth){var a=Math.floor(this.domNode.offsetWidth/this.itemWidth);a!==this.numVisible&&(this.selectedItemIndex=this.getIndexByItemWidget(this.selectedItem),this.numVisible=a,0<this.items.length&&(this.onComplete(this.items),this.select(this.selectedItemIndex)))}},fillPages:function(){h.forEach(this.getChildren(),function(a,b){var d="",m;for(m=0;m<this.numVisible;m++){var f,e="",g;f=b*this.numVisible+m;var c={};f<this.items.length?(c=this.items[f],(f=
-this.store.getValue(c,"type"))?(e=this.store.getValue(c,"props"),g=this.store.getValue(c,"mixins")):(f="dojox.mobile.CarouselItem",h.forEach(["alt","src","headerText","footerText"],function(a){var b=this.store.getValue(c,a);void 0!==b&&(e&&(e+=","),e+=a+':"'+b+'"')},this))):(f="dojox.mobile.CarouselItem",e='src:"'+A.toUrl("dojo/resources/blank.gif")+'", className:"mblCarouselItemBlank"');d+='\x3cdiv data-dojo-type\x3d"'+f+'"';e&&(d+=" data-dojo-props\x3d'"+e+"'");g&&(d+=" data-dojo-mixins\x3d'"+g+
-"'");d+="\x3e\x3c/div\x3e"}a.containerNode.innerHTML=d},this)},onComplete:function(a){h.forEach(this.getChildren(),function(a){a instanceof l&&a.destroyRecursive()});this.selectedItem=null;this.items=a;var b=Math.ceil(a.length/this.numVisible),d=this.domNode.offsetHeight-this.headerNode.offsetHeight;pg=Math.floor((-1===this.selectedItemIndex?0:this.selectedItemIndex)/this.numVisible);for(a=0;a<b;a++){var c=new l({height:d+"px",lazy:!0});this.addChild(c);a===pg?(c.show(),this.currentView=c):c.hide()}this.fillPages();
-this.resizeItems();d=this.getChildren();b=pg+1>b-1?b-1:pg+1;for(a=0>pg-1?0:pg-1;a<=b;a++)this.instantiateView(d[a])},onError:function(){},onUpdate:function(){},onDelete:function(){},onSet:function(a,b,c,h){},onNew:function(a,b){},onStoreClose:function(a){},getParentView:function(a){for(a=s.getEnclosingWidget(a);a;a=a.getParent())if(a.getParent()instanceof l)return a;return null},getIndexByItemWidget:function(a){if(!a)return-1;var b=a.getParent();return h.indexOf(this.getChildren(),b)*this.numVisible+
-h.indexOf(b.getChildren(),a)},getItemWidgetByIndex:function(a){return-1===a?null:this.getChildren()[Math.floor(a/this.numVisible)].getChildren()[a%this.numVisible]},onPrevBtnClick:function(){this.currentView&&this.currentView.goTo(-1)},onNextBtnClick:function(){this.currentView&&this.currentView.goTo(1)},_onClick:function(a){if(!1!==this.onClick(a)){if(a&&"keydown"===a.type)if(39===a.keyCode)this.onNextBtnClick();else if(37===a.keyCode)this.onPrevBtnClick();else if(13!==a.keyCode)return;for(a=s.getEnclosingWidget(a.target);;a=
-a.getParent()){if(!a)return;if(a.getParent()instanceof l)break}this.select(a);var b=this.getIndexByItemWidget(a);t.publish("/dojox/mobile/carouselSelect",[this,a,this.items[b],b])}},select:function(a){"number"===typeof a&&(a=this.getItemWidgetByIndex(a));this.selectable&&(this.selectedItem&&(this.selectedItem.set("selected",!1),q.remove(this.selectedItem.domNode,"mblCarouselSlotSelected")),a&&(a.set("selected",!0),q.add(a.domNode,"mblCarouselSlotSelected")),this.selectedItem=a)},onClick:function(){},
-instantiateView:function(a){if(a&&!a._instantiated){var b="none"===n.get(a.domNode,"display");b&&n.set(a.domNode,{visibility:"hidden",display:""});y.instantiateLazyWidgets(a.containerNode,null,function(c){b&&n.set(a.domNode,{visibility:"visible",display:"none"})});a._instantiated=!0}},handleViewChanged:function(a){a.getParent()===this&&(this.currentView.nextView(this.currentView.domNode)===a?this.instantiateView(a.nextView(a.domNode)):this.instantiateView(a.previousView(a.domNode)),this.currentView=
-a)},_setTitleAttr:function(a){this.titleNode.innerHTML=this._cv?this._cv(a):a;this._set("title",a)}});k.ChildSwapViewProperties={lazy:!1};v.extend(l,k.ChildSwapViewProperties);return p("dojo-bidi")?r("dojox.mobile.Carousel",[k,B]):k});
-//@ sourceMappingURL=Carousel.js.map
+define([
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/_base/event",
+	"dojo/_base/lang",
+	"dojo/sniff",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dijit/registry",
+	"dijit/_Contained",
+	"dijit/_Container",
+	"dijit/_WidgetBase",
+	"./lazyLoadUtils",
+	"./CarouselItem",
+	"./PageIndicator",
+	"./SwapView",
+	"require",
+	"dojo/has!dojo-bidi?dojox/mobile/bidi/Carousel",
+	"dojo/i18n!dojox/mobile/nls/messages"
+], function(array, connect, declare, event, lang, has, domClass, domConstruct, domStyle, registry, Contained, Container, WidgetBase, lazyLoadUtils, CarouselItem, PageIndicator, SwapView, require, BidiCarousel, messages){
+
+	// module:
+	//		dojox/mobile/Carousel
+
+	var Carousel = declare(has("dojo-bidi") ? "dojox.mobile.NonBidiCarousel" : "dojox.mobile.Carousel", [WidgetBase, Container, Contained], {
+		// summary:
+		//		A carousel widget that manages a list of images.
+		// description:
+		//		The carousel widget manages a list of images that can be
+		//		displayed horizontally, and allows the user to scroll through
+		//		the list and select a single item.
+		//
+		//		This widget itself has no data store support, but there are two
+		//		subclasses, dojox/mobile/DataCarousel and dojox/mobile/StoreCarousel,
+		//		available for generating the contents from a data store.
+		//		To feed data into a Carousel through a dojo/data, use DataCarousel.
+		//		To feed data into a Carousel through a dojo/store, use StoreCarousel.
+		//
+		//		The Carousel widget loads and instantiates its item contents in
+		//		a lazy manner. For example, if the number of visible items
+		//		(see the property numVisible) is 2, the widget creates 4 items, 2 for the
+		//		initial pane and 2 for the next page, at startup time. If you
+		//		swipe the page to open the second page, the widget creates 2 more
+		//		items for the third page. If the item to create is a dojo widget,
+		//		its module is dynamically loaded automatically before instantiation.
+
+		// numVisible: Number
+		//		The number of visible items.
+		numVisible: 2,
+
+		// itemWidth: Number
+		//		The number of visible items (=numVisible) is determined by
+		//		(carousel_width / itemWidth).
+		//		If itemWidth is specified, numVisible is automatically calculated.
+		//		If resize() is called, numVisible is recalculated and the layout
+		//		is changed accordingly.
+		itemWidth: 0,
+
+		// title: String
+		//		A title of the carousel to be displayed on the title bar.
+		title: "",
+
+		// pageIndicator: [const] Boolean
+		//		If true, a page indicator, a series of small dots that indicate
+		//		the current page, is displayed on the title bar.
+		//		Note that changing the value of the property after the widget
+		//		creation has no effect.
+		pageIndicator: true,
+
+		// navButton: [const] Boolean
+		//		If true, navigation buttons are displayed on the title bar.
+		//		Note that changing the value of the property after the widget
+		//		creation has no effect.
+		navButton: false,
+
+		// height: [const] String
+		//		Explicitly specified height of the widget (ex. "300px"). If
+		//		"inherit" is specified, the height is inherited from its offset
+		//		parent.
+		//		Note that changing the value of the property after the widget
+		//		creation has no effect.
+		height: "",
+
+		// selectable: Boolean
+		//		If true, an item can be selected by clicking it.
+		selectable: true,
+
+		/* internal properties */	
+		
+		// baseClass: String
+		//		The name of the CSS class of this widget.
+		baseClass: "mblCarousel",
+
+		buildRendering: function(){
+			this.containerNode = domConstruct.create("div", {className: "mblCarouselPages", id: this.id + "_pages"});
+			this.inherited(arguments);
+			var i, len;
+			if(this.srcNodeRef){
+				// reparent
+				for(i = 0, len = this.srcNodeRef.childNodes.length; i < len; i++){
+					this.containerNode.appendChild(this.srcNodeRef.firstChild);
+				}
+			}
+
+			this.headerNode = domConstruct.create("div", {className: "mblCarouselHeaderBar"}, this.domNode);
+
+			if(this.navButton){
+				this.btnContainerNode = domConstruct.create("div", {
+					className: "mblCarouselBtnContainer"
+				}, this.headerNode);
+				domStyle.set(this.btnContainerNode, "float", "right"); // workaround for webkit rendering problem
+				this.prevBtnNode = domConstruct.create("button", {
+					className: "mblCarouselBtn",
+					title: messages["CarouselPrevious"],
+					innerHTML: "&lt;",
+					"aria-controls": this.containerNode.id
+				}, this.btnContainerNode);
+				this.nextBtnNode = domConstruct.create("button", {
+					className: "mblCarouselBtn",
+					title: messages["CarouselNext"],
+					innerHTML: "&gt;",
+					"aria-controls": this.containerNode.id
+				}, this.btnContainerNode);
+				this._prevHandle = this.connect(this.prevBtnNode, "onclick", "onPrevBtnClick");
+				this._nextHandle = this.connect(this.nextBtnNode, "onclick", "onNextBtnClick");
+			}
+
+			if(this.pageIndicator){
+				if(!this.title){
+					this.title = "&nbsp;";
+				}
+				this.piw = new PageIndicator();
+				this.headerNode.appendChild(this.piw.domNode);
+			}
+
+			this.titleNode = domConstruct.create("div", {
+				className: "mblCarouselTitle"
+			}, this.headerNode);
+
+			this.domNode.appendChild(this.containerNode);
+			this.subscribe("/dojox/mobile/viewChanged", "handleViewChanged");
+			this.connect(this.domNode, "onclick", "_onClick");
+			this.connect(this.domNode, "onkeydown", "_onClick");
+			this._dragstartHandle = this.connect(this.domNode, "ondragstart", event.stop);
+			this.selectedItemIndex = -1;
+			this.items = [];
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+
+			var h;
+			if(this.height === "inherit"){
+				if(this.domNode.offsetParent){
+					h = this.domNode.offsetParent.offsetHeight + "px";
+				}
+			}else if(this.height){
+				h = this.height;
+			}
+			if(h){
+				this.domNode.style.height = h;
+			}
+
+			if(this.store){
+				if(!this.setStore){
+					throw new Error("Use StoreCarousel or DataCarousel instead of Carousel.");
+				}
+				var store = this.store;
+				this.store = null;
+				this.setStore(store, this.query, this.queryOptions);
+			}else{
+				this.resizeItems();
+			}
+			this.inherited(arguments);
+
+			this.currentView = array.filter(this.getChildren(), function(view){
+				return view.isVisible();
+			})[0];
+		},
+
+		resizeItems: function(){
+			// summary:
+			//		Resizes the child items of the carousel.
+			var idx = 0, i, len;
+			var h = this.domNode.offsetHeight - (this.headerNode ? this.headerNode.offsetHeight : 0);
+			var m = (has("ie") < 10) ? 5 / this.numVisible - 1 : 5 / this.numVisible;
+			var node, item;
+			array.forEach(this.getChildren(), function(view){
+				if(!(view instanceof SwapView)){ return; }
+				if(!(view.lazy)){
+					view._instantiated = true;
+				}
+				var ch = view.containerNode.childNodes;
+				for(i = 0, len = ch.length; i < len; i++){
+					node = ch[i];
+					if(node.nodeType !== 1){ continue; }
+					item = this.items[idx] || {};
+					domStyle.set(node, {
+						width: item.width || (90 / this.numVisible + "%"),
+						height: item.height || h + "px",
+						margin: "0 " + (item.margin || m + "%")
+					});
+					domClass.add(node, "mblCarouselSlot");
+					idx++;
+				}
+			}, this);
+
+			if(this.piw){
+				this.piw.refId = this.containerNode.firstChild;
+				this.piw.reset();
+			}
+		},
+
+		resize: function(){
+			if(!this.itemWidth){ return; }
+			var num = Math.floor(this.domNode.offsetWidth / this.itemWidth);
+			if(num === this.numVisible){ return; }
+			this.selectedItemIndex = this.getIndexByItemWidget(this.selectedItem);
+			this.numVisible = num;
+			if(this.items.length > 0){
+				this.onComplete(this.items);
+				this.select(this.selectedItemIndex);
+			}
+		},
+
+		fillPages: function(){
+			array.forEach(this.getChildren(), function(child, i){
+				var s = "";
+				var j;
+				for(j = 0; j < this.numVisible; j++){
+					var type, props = "", mixins;
+					var idx = i * this.numVisible + j;
+					var item = {};
+					if(idx < this.items.length){
+						item = this.items[idx];
+						type = this.store.getValue(item, "type");
+						if(type){
+							props = this.store.getValue(item, "props");
+							mixins = this.store.getValue(item, "mixins");
+						}else{
+							type = "dojox.mobile.CarouselItem";
+							array.forEach(["alt", "src", "headerText", "footerText"], function(p){
+								var v = this.store.getValue(item, p);
+								if(v !== undefined){
+									if(props){ props += ','; }
+									props += p + ':"' + v + '"';
+								}
+							}, this);
+						}
+					}else{
+						type = "dojox.mobile.CarouselItem";
+						props = 'src:"' + require.toUrl("dojo/resources/blank.gif") + '"' +
+							', className:"mblCarouselItemBlank"';
+					}
+
+					s += '<div data-dojo-type="' + type + '"';
+					if(props){
+						s += ' data-dojo-props=\'' + props + '\'';
+					}
+					if(mixins){
+						s += ' data-dojo-mixins=\'' + mixins + '\'';
+					}
+					s += '></div>';
+				}
+				child.containerNode.innerHTML = s;
+			}, this);
+		},
+
+		onComplete: function(/*Array*/items){
+			// summary:
+			//		A handler that is called after the fetch completes.
+			array.forEach(this.getChildren(), function(child){
+				if(child instanceof SwapView){
+					child.destroyRecursive();
+				}
+			});
+			this.selectedItem = null;
+			this.items = items;
+			var nPages = Math.ceil(items.length / this.numVisible),
+				i, h = this.domNode.offsetHeight - this.headerNode.offsetHeight,
+				idx = this.selectedItemIndex === -1 ? 0 : this.selectedItemIndex,
+				pg = Math.floor(idx / this.numVisible); // current page
+			for(i = 0; i < nPages; i++){
+				var w = new SwapView({height: h + "px", lazy:true});
+				this.addChild(w);
+				if(i === pg){
+					w.show();
+					this.currentView = w;
+				}else{
+					w.hide();
+				}
+			}
+			this.fillPages();
+			this.resizeItems();
+			var children = this.getChildren();
+			var from = pg - 1 < 0 ? 0 : pg - 1;
+			var to = pg + 1 > nPages - 1 ? nPages - 1 : pg + 1;
+			for(i = from; i <= to; i++){
+				this.instantiateView(children[i]);
+			}
+		},
+
+		onError: function(/*String*/ /*===== errText =====*/){
+			// summary:
+			//		An error handler.
+		},
+
+		onUpdate: function(/*Object*/ /*===== item, =====*/ /*Number*/ /*===== insertedInto =====*/){
+			// summary:
+			//		Adds a new item or updates an existing item.
+		},
+
+		onDelete: function(/*Object*/ /*===== item, =====*/ /*Number*/ /*===== removedFrom =====*/){
+			// summary:
+			//		Deletes an existing item.
+		},
+
+		onSet: function(item, attribute, oldValue, newValue){
+		},
+
+		onNew: function(newItem, parentInfo){
+		},
+
+		onStoreClose: function(request){
+			// summary:
+			//		Called when the store is closed.
+		},
+
+		getParentView: function(/*DomNode*/node){
+			// summary:
+			//		Returns the parent view of the given DOM node.
+			var w;
+			for(w = registry.getEnclosingWidget(node); w; w = w.getParent()){
+				if(w.getParent() instanceof SwapView){ return w; }
+			}
+			return null;
+		},
+
+		getIndexByItemWidget: function(/*Widget*/w){
+			// summary:
+			//		Returns the index of a given item widget.
+			if(!w){ return -1; }
+			var view = w.getParent();
+			return array.indexOf(this.getChildren(), view) * this.numVisible +
+				array.indexOf(view.getChildren(), w);
+		},
+
+		getItemWidgetByIndex: function(/*Number*/index){
+			// summary:
+			//		Returns the index of an item widget at a given index.
+			if(index === -1){ return null; }
+			var view = this.getChildren()[Math.floor(index / this.numVisible)];
+			return view.getChildren()[index % this.numVisible];
+		},
+
+		onPrevBtnClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		Called when the "previous" button is clicked.
+			if(this.currentView){
+				this.currentView.goTo(-1);
+			}
+		},
+
+		onNextBtnClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		Called when the "next" button is clicked.
+			if(this.currentView){
+				this.currentView.goTo(1);
+			}
+		},
+
+		_onClick: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(this.onClick(e) === false){ return; } // user's click action
+			if(e && e.type === "keydown"){ // keyboard navigation for accessibility
+				if(e.keyCode === 39){ // right arrow
+					this.onNextBtnClick();
+				}else if(e.keyCode === 37){ // left arrow
+					this.onPrevBtnClick();
+				}else if(e.keyCode !== 13){ // !Enter
+					return;
+				}
+			}
+
+			var w;
+			for(w = registry.getEnclosingWidget(e.target); ; w = w.getParent()){
+				if(!w){ return; }
+				if(w.getParent() instanceof SwapView){ break; }
+			}
+			this.select(w);
+			var idx = this.getIndexByItemWidget(w);
+			connect.publish("/dojox/mobile/carouselSelect", [this, w, this.items[idx], idx]);
+		},
+
+		select: function(/*Widget|Number*/itemWidget){
+			// summary:
+			//		Selects the given widget.
+			if(typeof(itemWidget) === "number"){
+				itemWidget = this.getItemWidgetByIndex(itemWidget);
+			}
+			if(this.selectable){
+				if(this.selectedItem){
+					this.selectedItem.set("selected", false);
+					domClass.remove(this.selectedItem.domNode, "mblCarouselSlotSelected");
+				}
+				if(itemWidget){
+					itemWidget.set("selected", true);
+					domClass.add(itemWidget.domNode, "mblCarouselSlotSelected");
+				}
+				this.selectedItem = itemWidget;
+			}
+		},
+
+		onClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User-defined function to handle clicks.
+			// tags:
+			//		callback
+		},
+
+		instantiateView: function(view){
+			// summary:
+			//		Instantiates the given view.
+			if(view && !view._instantiated){
+				var isHidden = (domStyle.get(view.domNode, "display") === "none");
+				if(isHidden){
+					domStyle.set(view.domNode, {visibility:"hidden", display:""});
+				}
+				lazyLoadUtils.instantiateLazyWidgets(view.containerNode, null, function(root){
+					if(isHidden){
+						domStyle.set(view.domNode, {visibility:"visible", display:"none"});
+					}
+				});
+				view._instantiated = true;
+			}
+		},
+
+		handleViewChanged: function(view){
+			// summary:
+			//		Listens to "/dojox/mobile/viewChanged" events.
+			if(view.getParent() !== this){ return; }
+			if(this.currentView.nextView(this.currentView.domNode) === view){
+				this.instantiateView(view.nextView(view.domNode));
+			}else{
+				this.instantiateView(view.previousView(view.domNode));
+			}
+			this.currentView = view;
+		},
+
+		_setTitleAttr: function(/*String*/title){
+			// tags:
+			//		private
+			this.titleNode.innerHTML = this._cv ? this._cv(title) : title;
+			this._set("title", title);
+		}
+	});
+	
+	Carousel.ChildSwapViewProperties = {
+		// summary:
+		//		This property can be specified for the SwapView children of a dojox/mobile/Carousel.
+
+		// lazy: Boolean
+		//		Specifies that the Carousel child must be lazily loaded.
+		lazy: false
+	};
+
+	// Since any widget can be specified as an Accordion child, mix ChildWidgetProperties
+	// into the base widget class.  (This is a hack, but it's effective.)
+	// This is for the benefit of the parser. Remove for 2.0.  Also, hide from doc viewer.
+	lang.extend(SwapView, /*===== {} || =====*/ Carousel.ChildSwapViewProperties);
+	
+	return has("dojo-bidi") ? declare("dojox.mobile.Carousel", [Carousel, BidiCarousel]) : Carousel;
+});

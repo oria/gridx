@@ -1,5 +1,56 @@
-//>>built
-define("dojox/treemap/ScaledLabel",["dojo/_base/declare","dojo/dom-geometry","dojo/dom-construct","dojo/dom-style"],function(l,b,k,d){return l("dojox.treemap.ScaledLabel",null,{onRendererUpdated:function(a){if("leaf"==a.kind){a=a.renderer;var e=d.get(a,"fontSize");d.set(a.firstChild,"fontSize",e);for(var e=parseInt(e),c=0.75*b.getContentBox(a).w/b.getMarginBox(a.firstChild).w,f=b.getContentBox(a).h/b.getMarginBox(a.firstChild).h,g=b.getContentBox(a).w-b.getMarginBox(a.firstChild).w,h=b.getContentBox(a).h-
-b.getMarginBox(a.firstChild).h,c=Math.floor(e*Math.min(c,f));0<h&&0<g;)d.set(a.firstChild,"fontSize",c+"px"),g=b.getContentBox(a).w-b.getMarginBox(a.firstChild).w,h=b.getContentBox(a).h-b.getMarginBox(a.firstChild).h,e=c,c+=1;(0>h||0>g)&&d.set(a.firstChild,"fontSize",e+"px")}},createRenderer:function(a,b,c){var f=this.inherited(arguments);if("leaf"==c){var g=k.create("div");d.set(g,{position:"absolute",width:"auto"});k.place(g,f)}return f},styleRenderer:function(a,b,c,f){"leaf"!=f?this.inherited(arguments):
-(d.set(a,"background",this.getColorForItem(b).toHex()),a.firstChild.innerHTML=this.getLabelForItem(b))}})});
-//@ sourceMappingURL=ScaledLabel.js.map
+define(["dojo/_base/declare", "dojo/dom-geometry", "dojo/dom-construct", "dojo/dom-style"],
+	function(declare, domGeom, domConstruct, domStyle) {
+
+	return declare("dojox.treemap.ScaledLabel", null, {
+		// summary:
+		//		Specializes TreeMap to display scaled leaf labels instead of constant size labels.
+
+		onRendererUpdated: function(evt){
+			if(evt.kind == "leaf"){
+				var renderer = evt.renderer;
+				// start back with default size
+				var oldSize = domStyle.get(renderer, "fontSize");
+				domStyle.set(renderer.firstChild, "fontSize", oldSize);
+				oldSize = parseInt(oldSize);
+				var hRatio = 0.75 * domGeom.getContentBox(renderer).w / domGeom.getMarginBox(renderer.firstChild).w;
+				var vRatio = domGeom.getContentBox(renderer).h  / domGeom.getMarginBox(renderer.firstChild).h;
+				var hDiff = domGeom.getContentBox(renderer).w - domGeom.getMarginBox(renderer.firstChild).w;
+				var vDiff = domGeom.getContentBox(renderer).h - domGeom.getMarginBox(renderer.firstChild).h;
+				var newSize = Math.floor(oldSize * Math.min(hRatio, vRatio));
+				while(vDiff > 0 && hDiff > 0){
+					domStyle.set(renderer.firstChild, "fontSize", newSize + "px");
+					hDiff = domGeom.getContentBox(renderer).w - domGeom.getMarginBox(renderer.firstChild).w;
+					vDiff = domGeom.getContentBox(renderer).h - domGeom.getMarginBox(renderer.firstChild).h;
+					oldSize = newSize;
+					newSize += 1;
+				}
+				if(vDiff < 0 || hDiff < 0){
+					// back track
+					domStyle.set(renderer.firstChild, "fontSize", oldSize + "px");
+				}
+			}
+		},
+
+		createRenderer: function(item, level, kind){
+			var renderer = this.inherited(arguments);
+			if(kind == "leaf"){
+				var p = domConstruct.create("div");
+				domStyle.set(p, {
+					"position": "absolute",
+					"width": "auto"
+				});
+				domConstruct.place(p, renderer);
+			}
+			return renderer;
+		},
+		
+		styleRenderer: function(renderer, item, level, kind){
+			if (kind != "leaf"){
+				this.inherited(arguments);
+			}else{
+				domStyle.set(renderer, "background", this.getColorForItem(item).toHex());
+				renderer.firstChild.innerHTML = this.getLabelForItem(item);
+			}
+		}
+	});
+});

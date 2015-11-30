@@ -1,8 +1,194 @@
-//>>built
-define("dojox/math/curves",["dojo","dojox"],function(n,g){n.getObject("math.curves",!0,g);n.mixin(g.math.curves,{Line:function(a,b){this.start=a;this.end=b;this.dimensions=a.length;for(var c=0;c<a.length;c++)a[c]=Number(a[c]);for(c=0;c<b.length;c++)b[c]=Number(b[c]);this.getValue=function(c){for(var d=Array(this.dimensions),e=0;e<this.dimensions;e++)d[e]=(this.end[e]-this.start[e])*c+this.start[e];return d};return this},Bezier:function(a){this.getValue=function(b){if(1<=b)return this.p[this.p.length-
-1];if(0>=b)return this.p[0];for(var c=Array(this.p[0].length),a=0;d<this.p[0].length;a++)c[a]=0;for(var d=0;d<this.p[0].length;d++){for(var e=a=0,f=0;f<this.p.length;f++)a+=this.p[f][d]*this.p[this.p.length-1][0]*g.math.bernstein(b,this.p.length,f);for(f=0;f<this.p.length;f++)e+=this.p[this.p.length-1][0]*g.math.bernstein(b,this.p.length,f);c[d]=a/e}return c};this.p=a;return this},CatmullRom:function(a,b){this.getValue=function(c){var a=c*(this.p.length-1);c=Math.floor(a);var a=a-c,d=c-1;0>d&&(d=
-0);var e=c+1;e>=this.p.length&&(e=this.p.length-1);var f=c+2;f>=this.p.length&&(f=this.p.length-1);for(var b=a*a,l=a*a*a,g=Array(this.p[0].length),h=0;h<this.p[0].length;h++)g[h]=(-this.c*this.p[d][h]+(2-this.c)*this.p[c][h]+(this.c-2)*this.p[e][h]+this.c*this.p[f][h])*l+(2*this.c*this.p[d][h]+(this.c-3)*this.p[c][h]+(3-2*this.c)*this.p[e][h]+-this.c*this.p[f][h])*b+(-this.c*this.p[d][h]+this.c*this.p[e][h])*a+this.p[c][h];return g};this.c=b?b:0.7;this.p=a;return this},Arc:function(a,b,c){b=g.math.midpoint(a,
-b);a=function(e,a){for(var c=Array(e.length),b=0;b<e.length;b++)c[b]=e[b]+a[b];return c}(function(e){for(var a=Array(e.length),b=0;b<e.length;b++)a[b]=-e[b];return a}(b),a);var k=Math.sqrt(Math.pow(a[0],2)+Math.pow(a[1],2)),d=g.math.radiansToDegrees(Math.atan(a[1]/a[0])),d=0>a[0]?d-90:d+90;g.math.curves.CenteredArc.call(this,b,k,d,d+(c?-180:180))},CenteredArc:function(a,b,c,k){this.center=a;this.radius=b;this.start=c||0;this.end=k;this.getValue=function(a){var e=Array(2);a=g.math.degreesToRadians(this.start+
-(this.end-this.start)*a);e[0]=this.center[0]+this.radius*Math.sin(a);e[1]=this.center[1]-this.radius*Math.cos(a);return e};return this},Circle:function(a,b){g.math.curves.CenteredArc.call(this,a,b,0,360);return this},Path:function(){function a(){for(var a=0,b=0;b<c.length;b++){var g=a+c[b]/d;k[b]=[a,g,g-a];a=g}}var b=[],c=[],k=[],d=0;this.add=function(e,f){0>f&&console.error("dojox.math.curves.Path.add: weight cannot be less than 0");b.push(e);c.push(f);d+=f;a()};this.remove=function(e){for(var f=
-0;f<b.length;f++)if(b[f]==e){b.splice(f,1);d-=c.splice(f,1)[0];break}a()};this.removeAll=function(){b=[];c=[];d=0};this.getValue=function(a){for(var c=!1,d=0,l=0;l<k.length;l++){var m=k[l];if(a>=m[0]&&a<m[1]){d=b[l].getValue((a-m[0])/m[2]);c=!0;break}}c||(d=b[b.length-1].getValue(1));for(a=0;a<l;a++)d=g.math.points.translate(d,b[a].getValue(1));return d};return this}});return g.math.curves});
-//@ sourceMappingURL=curves.js.map
+// AMD-ID "dojox/math/curves"
+define(["dojo", "dojox"], function(dojo, dojox) {
+dojo.getObject("math.curves", true, dojox);
+
+dojo.mixin(dojox.math.curves, {
+	Line:function (start, end) {
+		this.start = start;
+		this.end = end;
+		this.dimensions = start.length;
+		for (var i = 0; i < start.length; i++) {
+			start[i] = Number(start[i]);
+		}
+		for (var i = 0; i < end.length; i++) {
+			end[i] = Number(end[i]);
+		}
+		this.getValue = function (n) {
+			var retVal = new Array(this.dimensions);
+			for (var i = 0; i < this.dimensions; i++) {
+				retVal[i] = ((this.end[i] - this.start[i]) * n) + this.start[i];
+			}
+			return retVal;
+		};
+		return this;
+	},
+	Bezier:function(pnts) {
+		this.getValue = function (step) {
+			if (step >= 1) {
+				return this.p[this.p.length - 1];
+			}
+			if (step <= 0) {
+				return this.p[0];
+			}
+			var retVal = new Array(this.p[0].length);
+			for (var k = 0; j < this.p[0].length; k++) {
+				retVal[k] = 0;
+			}
+			for (var j = 0; j < this.p[0].length; j++) {
+				var C = 0;
+				var D = 0;
+				for (var i = 0; i < this.p.length; i++) {
+					C += this.p[i][j] * this.p[this.p.length - 1][0] * dojox.math.bernstein(step, this.p.length, i);
+				}
+				for (var l = 0; l < this.p.length; l++) {
+					D += this.p[this.p.length - 1][0] * dojox.math.bernstein(step, this.p.length, l);
+				}
+				retVal[j] = C / D;
+			}
+			return retVal;
+		};
+		this.p = pnts;
+		return this;
+	},
+	CatmullRom:function (pnts, c) {
+		this.getValue = function (step) {
+			var percent = step * (this.p.length - 1);
+			var node = Math.floor(percent);
+			var progress = percent - node;
+			var i0 = node - 1;
+			if (i0 < 0) {
+				i0 = 0;
+			}
+			var i = node;
+			var i1 = node + 1;
+			if (i1 >= this.p.length) {
+				i1 = this.p.length - 1;
+			}
+			var i2 = node + 2;
+			if (i2 >= this.p.length) {
+				i2 = this.p.length - 1;
+			}
+			var u = progress;
+			var u2 = progress * progress;
+			var u3 = progress * progress * progress;
+			var retVal = new Array(this.p[0].length);
+			for (var k = 0; k < this.p[0].length; k++) {
+				var x1 = (-this.c * this.p[i0][k]) + ((2 - this.c) * this.p[i][k]) + ((this.c - 2) * this.p[i1][k]) + (this.c * this.p[i2][k]);
+				var x2 = (2 * this.c * this.p[i0][k]) + ((this.c - 3) * this.p[i][k]) + ((3 - 2 * this.c) * this.p[i1][k]) + (-this.c * this.p[i2][k]);
+				var x3 = (-this.c * this.p[i0][k]) + (this.c * this.p[i1][k]);
+				var x4 = this.p[i][k];
+				retVal[k] = x1 * u3 + x2 * u2 + x3 * u + x4;
+			}
+			return retVal;
+		};
+		if (!c) {
+			this.c = 0.7;
+		} else {
+			this.c = c;
+		}
+		this.p = pnts;
+		return this;
+	},
+	Arc:function (start, end, ccw){
+		function translate(a,b){
+			var c=new Array(a.length);
+			for(var i=0; i<a.length; i++){ c[i]=a[i]+b[i]; }
+			return c;
+		}
+		function invert(a){
+			var b = new Array(a.length);
+			for(var i=0; i<a.length; i++){ b[i]=-a[i]; }
+			return b;
+		}
+		var center = dojox.math.midpoint(start, end);
+		var sides = translate(invert(center), start);
+		var rad = Math.sqrt(Math.pow(sides[0], 2) + Math.pow(sides[1], 2));
+		var theta = dojox.math.radiansToDegrees(Math.atan(sides[1] / sides[0]));
+		if (sides[0] < 0){
+			theta -= 90;
+		} else {
+			theta += 90;
+		}
+		dojox.math.curves.CenteredArc.call(this, center, rad, theta, theta + (ccw ? -180 : 180));
+	},
+	CenteredArc:function (center, radius, start, end) {
+		this.center = center;
+		this.radius = radius;
+		this.start = start || 0;
+		this.end = end;
+		this.getValue = function (n) {
+			var retVal = new Array(2);
+			var theta = dojox.math.degreesToRadians(this.start + ((this.end - this.start) * n));
+			retVal[0] = this.center[0] + this.radius * Math.sin(theta);
+			retVal[1] = this.center[1] - this.radius * Math.cos(theta);
+			return retVal;
+		};
+		return this;
+	},
+	Circle:function(center, radius){
+		dojox.math.curves.CenteredArc.call(this, center, radius, 0, 360);
+		return this;
+	},
+	Path:function () {
+		var curves = [];
+		var weights = [];
+		var ranges = [];
+		var totalWeight = 0;
+		this.add = function (curve, weight) {
+			if (weight < 0) {
+				console.error("dojox.math.curves.Path.add: weight cannot be less than 0");
+			}
+			curves.push(curve);
+			weights.push(weight);
+			totalWeight += weight;
+			computeRanges();
+		};
+		this.remove = function (curve) {
+			for (var i = 0; i < curves.length; i++) {
+				if (curves[i] == curve) {
+					curves.splice(i, 1);
+					totalWeight -= weights.splice(i, 1)[0];
+					break;
+				}
+			}
+			computeRanges();
+		};
+		this.removeAll = function () {
+			curves = [];
+			weights = [];
+			totalWeight = 0;
+		};
+		this.getValue = function (n) {
+			var found = false, value = 0;
+			for (var i = 0; i < ranges.length; i++) {
+				var r = ranges[i];
+				if (n >= r[0] && n < r[1]) {
+					var subN = (n - r[0]) / r[2];
+					value = curves[i].getValue(subN);
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				value = curves[curves.length - 1].getValue(1);
+			}
+			for (var j = 0; j < i; j++) {
+				value = dojox.math.points.translate(value, curves[j].getValue(1));
+			}
+			return value;
+		};
+		function computeRanges() {
+			var start = 0;
+			for (var i = 0; i < weights.length; i++) {
+				var end = start + weights[i] / totalWeight;
+				var len = end - start;
+				ranges[i] = [start, end, len];
+				start = end;
+			}
+		}
+		return this;
+	}
+});
+
+return dojox.math.curves;
+});

@@ -1,4 +1,47 @@
-//>>built
-define("dojox/editor/plugins/ToolbarLineBreak","dojo dijit dojox dijit/_Widget dijit/_TemplatedMixin dijit/_editor/_Plugin dojo/_base/declare".split(" "),function(a,d,k,e,f,g,h){var c=h("dojox.editor.plugins.ToolbarLineBreak",[e,f],{templateString:"\x3cspan class\x3d'dijit dijitReset'\x3e\x3cbr\x3e\x3c/span\x3e",postCreate:function(){a.setSelectable(this.domNode,!1)},isFocusable:function(){return!1}});a.subscribe(d._scopeName+".Editor.getPlugin",null,function(b){if(!b.plugin){var a=b.args.name.toLowerCase();
-if("||"===a||"toolbarlinebreak"===a)b.plugin=new g({button:new c,setEditor:function(a){this.editor=a}})}});return c});
-//@ sourceMappingURL=ToolbarLineBreak.js.map
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/_editor/_Plugin",
+	"dojo/_base/declare"
+], function(dojo, dijit, dojox, _Widget, _TemplatedMixin, _Plugin, declare) {
+
+var ToolbarLineBreak = declare("dojox.editor.plugins.ToolbarLineBreak",
+	[ _Widget, _TemplatedMixin ],
+	{
+	// summary:
+	//		A 'line break' between two `dijit.Toolbar` items so that very
+	//		long toolbars can be organized a bit.
+	templateString: "<span class='dijit dijitReset'><br></span>",
+	postCreate: function(){
+		dojo.setSelectable(this.domNode, false);
+	},
+	isFocusable: function(){
+		// summary:
+		//		This widget isn't focusable, so pass along that fact.
+		// tags:
+		//		protected
+		return false;
+	}
+});
+
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	var name = o.args.name.toLowerCase();
+	if(name ===  "||" || name === "toolbarlinebreak"){
+		o.plugin = new _Plugin({
+			button: new ToolbarLineBreak(),
+			setEditor: function(editor){
+				this.editor = editor;
+			}
+		});
+	}
+});
+
+return ToolbarLineBreak;
+
+});

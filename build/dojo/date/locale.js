@@ -1,16 +1,699 @@
-//>>built
-define("dojo/date/locale","../_base/lang ../_base/array ../date ../cldr/supplemental ../i18n ../regexp ../string ../i18n!../cldr/nls/gregorian module".split(" "),function(l,m,r,u,s,x,t,A,v){function y(a,f,e,c){return c.replace(/([a-z])\1*/ig,function(k){var b,h,d=k.charAt(0);k=k.length;var n=["abbr","wide","narrow"];switch(d){case "G":b=f[4>k?"eraAbbr":"eraNames"][0>a.getFullYear()?0:1];break;case "y":b=a.getFullYear();switch(k){case 1:break;case 2:if(!e.fullYear){b=String(b);b=b.substr(b.length-
-2);break}default:h=!0}break;case "Q":case "q":b=Math.ceil((a.getMonth()+1)/3);h=!0;break;case "M":case "L":b=a.getMonth();3>k?(b+=1,h=!0):(d=["months","L"==d?"standAlone":"format",n[k-3]].join("-"),b=f[d][b]);break;case "w":b=g._getWeekOfYear(a,0);h=!0;break;case "d":b=a.getDate();h=!0;break;case "D":b=g._getDayOfYear(a);h=!0;break;case "e":case "c":if(b=a.getDay(),2>k){b=(b-u.getFirstDayOfWeek(e.locale)+8)%7;break}case "E":b=a.getDay();3>k?(b+=1,h=!0):(d=["days","c"==d?"standAlone":"format",n[k-
-3]].join("-"),b=f[d][b]);break;case "a":d=12>a.getHours()?"am":"pm";b=e[d]||f["dayPeriods-format-wide-"+d];break;case "h":case "H":case "K":case "k":h=a.getHours();switch(d){case "h":b=h%12||12;break;case "H":b=h;break;case "K":b=h%12;break;case "k":b=h||24}h=!0;break;case "m":b=a.getMinutes();h=!0;break;case "s":b=a.getSeconds();h=!0;break;case "S":b=Math.round(a.getMilliseconds()*Math.pow(10,k-3));h=!0;break;case "v":case "z":if(b=g._getZone(a,!0,e))break;k=4;case "Z":d=g._getZone(a,!1,e);d=[0>=
-d?"+":"-",t.pad(Math.floor(Math.abs(d)/60),2),t.pad(Math.abs(d)%60,2)];4==k&&(d.splice(0,0,"GMT"),d.splice(3,0,":"));b=d.join("");break;default:throw Error("dojo.date.locale.format: invalid pattern char: "+c);}h&&(b=t.pad(b,k));return b})}function q(a,f,e,c){var k=function(b){return b};f=f||k;e=e||k;c=c||k;var b=a.match(/(''|[^'])+/g),h="'"==a.charAt(0);m.forEach(b,function(d,a){d?(b[a]=(h?e:f)(d.replace(/''/g,"'")),h=!h):b[a]=""});return c(b.join(""))}function z(a,f,e,c){c=x.escapeString(c);e.strict||
-(c=c.replace(" a"," ?a"));return c.replace(/([a-z])\1*/ig,function(c){var b;b=c.charAt(0);var h=c.length,d="",g="";e.strict?(1<h&&(d="0{"+(h-1)+"}"),2<h&&(g="0{"+(h-2)+"}")):(d="0?",g="0{0,2}");switch(b){case "y":b="\\d{2,4}";break;case "M":case "L":b=2<h?"\\S+?":"1[0-2]|"+d+"[1-9]";break;case "D":b="[12][0-9][0-9]|3[0-5][0-9]|36[0-6]|"+d+"[1-9][0-9]|"+g+"[1-9]";break;case "d":b="3[01]|[12]\\d|"+d+"[1-9]";break;case "w":b="[1-4][0-9]|5[0-3]|"+d+"[1-9]";break;case "E":case "e":case "c":b=".+?";break;
-case "h":b="1[0-2]|"+d+"[1-9]";break;case "k":b="1[01]|"+d+"\\d";break;case "H":b="1\\d|2[0-3]|"+d+"\\d";break;case "K":b="1\\d|2[0-4]|"+d+"[1-9]";break;case "m":case "s":b="[0-5]\\d";break;case "S":b="\\d{"+h+"}";break;case "a":h=e.am||f["dayPeriods-format-wide-am"];d=e.pm||f["dayPeriods-format-wide-pm"];b=h+"|"+d;e.strict||(h!=h.toLowerCase()&&(b+="|"+h.toLowerCase()),d!=d.toLowerCase()&&(b+="|"+d.toLowerCase()),-1!=b.indexOf(".")&&(b+="|"+b.replace(/\./g,"")));b=b.replace(/\./g,"\\.");break;default:b=
-".*"}a&&a.push(c);return"("+b+")"}).replace(/[\xa0 ]/g,"[\\s\\xa0]")}var g={};l.setObject(v.id.replace(/\//g,"."),g);g._getZone=function(a,f,e){return f?r.getTimezoneName(a):a.getTimezoneOffset()};g.format=function(a,f){f=f||{};var e=s.normalizeLocale(f.locale),c=f.formatLength||"short",e=g._getGregorianBundle(e),k=[],b=l.hitch(this,y,a,e,f);if("year"==f.selector)return q(e["dateFormatItem-yyyy"]||"yyyy",b);var h;"date"!=f.selector&&(h=f.timePattern||e["timeFormat-"+c])&&k.push(q(h,b));"time"!=f.selector&&
-(h=f.datePattern||e["dateFormat-"+c])&&k.push(q(h,b));return 1==k.length?k[0]:e["dateTimeFormat-"+c].replace(/\'/g,"").replace(/\{(\d+)\}/g,function(b,a){return k[a]})};g.regexp=function(a){return g._parseInfo(a).regexp};g._parseInfo=function(a){a=a||{};var f=s.normalizeLocale(a.locale),f=g._getGregorianBundle(f),e=a.formatLength||"short",c=a.datePattern||f["dateFormat-"+e],k=a.timePattern||f["timeFormat-"+e],e="date"==a.selector?c:"time"==a.selector?k:f["dateTimeFormat-"+e].replace(/\{(\d+)\}/g,
-function(b,a){return[k,c][a]}),b=[];return{regexp:q(e,l.hitch(this,z,b,f,a)),tokens:b,bundle:f}};g.parse=function(a,f){var e=/[\u200E\u200F\u202A\u202E]/g,c=g._parseInfo(f),k=c.tokens,b=c.bundle,e=RegExp("^"+c.regexp.replace(e,"")+"$",c.strict?"":"i").exec(a&&a.replace(e,""));if(!e)return null;var h=["abbr","wide","narrow"],d=[1970,0,1,0,0,0,0],n="",e=m.every(e,function(a,e){if(!e)return!0;var c=k[e-1],g=c.length,c=c.charAt(0);switch(c){case "y":if(2!=g&&f.strict)d[0]=a;else if(100>a)a=Number(a),
-c=""+(new Date).getFullYear(),g=100*c.substring(0,2),c=Math.min(Number(c.substring(2,4))+20,99),d[0]=a<c?g+a:g-100+a;else{if(f.strict)return!1;d[0]=a}break;case "M":case "L":if(2<g){if(g=b["months-"+("L"==c?"standAlone":"format")+"-"+h[g-3]].concat(),f.strict||(a=a.replace(".","").toLowerCase(),g=m.map(g,function(a){return a.replace(".","").toLowerCase()})),a=m.indexOf(g,a),-1==a)return!1}else a--;d[1]=a;break;case "E":case "e":case "c":g=b["days-"+("c"==c?"standAlone":"format")+"-"+h[g-3]].concat();
-f.strict||(a=a.toLowerCase(),g=m.map(g,function(a){return a.toLowerCase()}));a=m.indexOf(g,a);if(-1==a)return!1;break;case "D":d[1]=0;case "d":d[2]=a;break;case "a":g=f.am||b["dayPeriods-format-wide-am"];c=f.pm||b["dayPeriods-format-wide-pm"];if(!f.strict){var l=/\./g;a=a.replace(l,"").toLowerCase();g=g.replace(l,"").toLowerCase();c=c.replace(l,"").toLowerCase()}if(f.strict&&a!=g&&a!=c)return!1;n=a==c?"p":a==g?"a":"";break;case "K":24==a&&(a=0);case "h":case "H":case "k":if(23<a)return!1;d[3]=a;break;
-case "m":d[4]=a;break;case "s":d[5]=a;break;case "S":d[6]=a}return!0}),c=+d[3];"p"===n&&12>c?d[3]=c+12:"a"===n&&12==c&&(d[3]=0);c=new Date(d[0],d[1],d[2],d[3],d[4],d[5],d[6]);f.strict&&c.setFullYear(d[0]);var p=k.join(""),l=-1!=p.indexOf("d"),p=-1!=p.indexOf("M");if(!e||p&&c.getMonth()>d[1]||l&&c.getDate()>d[2])return null;if(p&&c.getMonth()<d[1]||l&&c.getDate()<d[2])c=r.add(c,"hour",1);return c};var w=[];g.addCustomFormats=function(a,f){w.push({pkg:a,name:f})};g._getGregorianBundle=function(a){var f=
-{};m.forEach(w,function(e){e=s.getLocalization(e.pkg,e.name,a);f=l.mixin(f,e)},this);return f};g.addCustomFormats(v.id.replace(/\/date\/locale$/,".cldr"),"gregorian");g.getNames=function(a,f,e,c){var k;c=g._getGregorianBundle(c);a=[a,e,f];"standAlone"==e&&(e=a.join("-"),k=c[e],1==k[0]&&(k=void 0));a[1]="format";return(k||c[a.join("-")]).concat()};g.isWeekend=function(a,f){var e=u.getWeekend(f),c=(a||new Date).getDay();e.end<e.start&&(e.end+=7,c<e.start&&(c+=7));return c>=e.start&&c<=e.end};g._getDayOfYear=
-function(a){return r.difference(new Date(a.getFullYear(),0,1,a.getHours()),a)+1};g._getWeekOfYear=function(a,f){1==arguments.length&&(f=0);var e=(new Date(a.getFullYear(),0,1)).getDay(),c=Math.floor((g._getDayOfYear(a)+(e-f+7)%7-1)/7);e==f&&c++;return c};return g});
-//@ sourceMappingURL=locale.js.map
+define([
+	"../_base/lang",
+	"../_base/array",
+	"../date",
+	/*===== "../_base/declare", =====*/
+	"../cldr/supplemental",
+	"../i18n",
+	"../regexp",
+	"../string",
+	"../i18n!../cldr/nls/gregorian",
+	"module"
+], function(lang, array, date, /*===== declare, =====*/ supplemental, i18n, regexp, string, gregorian, module){
+
+// module:
+//		dojo/date/locale
+
+var exports = {
+	// summary:
+	//		This modules defines dojo/date/locale, localization methods for Date.
+};
+lang.setObject(module.id.replace(/\//g, "."), exports);
+
+// Localization methods for Date.   Honor local customs using locale-dependent dojo.cldr data.
+
+// Load the bundles containing localization information for
+// names and formats
+
+//NOTE: Everything in this module assumes Gregorian calendars.
+// Other calendars will be implemented in separate modules.
+
+	// Format a pattern without literals
+	function formatPattern(dateObject, bundle, options, pattern){
+		return pattern.replace(/([a-z])\1*/ig, function(match){
+			var s, pad,
+				c = match.charAt(0),
+				l = match.length,
+				widthList = ["abbr", "wide", "narrow"];
+			switch(c){
+				case 'G':
+					s = bundle[(l < 4) ? "eraAbbr" : "eraNames"][dateObject.getFullYear() < 0 ? 0 : 1];
+					break;
+				case 'y':
+					s = dateObject.getFullYear();
+					switch(l){
+						case 1:
+							break;
+						case 2:
+							if(!options.fullYear){
+								s = String(s); s = s.substr(s.length - 2);
+								break;
+							}
+							// fallthrough
+						default:
+							pad = true;
+					}
+					break;
+				case 'Q':
+				case 'q':
+					s = Math.ceil((dateObject.getMonth()+1)/3);
+//					switch(l){
+//						case 1: case 2:
+							pad = true;
+//							break;
+//						case 3: case 4: // unimplemented
+//					}
+					break;
+				case 'M':
+				case 'L':
+					var m = dateObject.getMonth();
+					if(l<3){
+						s = m+1; pad = true;
+					}else{
+						var propM = [
+							"months",
+							c == 'L' ? "standAlone" : "format",
+							widthList[l-3]
+						].join("-");
+						s = bundle[propM][m];
+					}
+					break;
+				case 'w':
+					var firstDay = 0;
+					s = exports._getWeekOfYear(dateObject, firstDay); pad = true;
+					break;
+				case 'd':
+					s = dateObject.getDate(); pad = true;
+					break;
+				case 'D':
+					s = exports._getDayOfYear(dateObject); pad = true;
+					break;
+				case 'e':
+				case 'c':
+					var d = dateObject.getDay();
+					if(l<2){
+						s = (d - supplemental.getFirstDayOfWeek(options.locale) + 8) % 7
+						break;
+					}
+					// fallthrough
+				case 'E':
+					d = dateObject.getDay();
+					if(l<3){
+						s = d+1; pad = true;
+					}else{
+						var propD = [
+							"days",
+							c == 'c' ? "standAlone" : "format",
+							widthList[l-3]
+						].join("-");
+						s = bundle[propD][d];
+					}
+					break;
+				case 'a':
+					var timePeriod = dateObject.getHours() < 12 ? 'am' : 'pm';
+					s = options[timePeriod] || bundle['dayPeriods-format-wide-' + timePeriod];
+					break;
+				case 'h':
+				case 'H':
+				case 'K':
+				case 'k':
+					var h = dateObject.getHours();
+					// strange choices in the date format make it impossible to write this succinctly
+					switch (c){
+						case 'h': // 1-12
+							s = (h % 12) || 12;
+							break;
+						case 'H': // 0-23
+							s = h;
+							break;
+						case 'K': // 0-11
+							s = (h % 12);
+							break;
+						case 'k': // 1-24
+							s = h || 24;
+							break;
+					}
+					pad = true;
+					break;
+				case 'm':
+					s = dateObject.getMinutes(); pad = true;
+					break;
+				case 's':
+					s = dateObject.getSeconds(); pad = true;
+					break;
+				case 'S':
+					s = Math.round(dateObject.getMilliseconds() * Math.pow(10, l-3)); pad = true;
+					break;
+				case 'v': // FIXME: don't know what this is. seems to be same as z?
+				case 'z':
+					// We only have one timezone to offer; the one from the browser
+					s = exports._getZone(dateObject, true, options);
+					if(s){break;}
+					l=4;
+					// fallthrough... use GMT if tz not available
+				case 'Z':
+					var offset = exports._getZone(dateObject, false, options);
+					var tz = [
+						(offset<=0 ? "+" : "-"),
+						string.pad(Math.floor(Math.abs(offset)/60), 2),
+						string.pad(Math.abs(offset)% 60, 2)
+					];
+					if(l==4){
+						tz.splice(0, 0, "GMT");
+						tz.splice(3, 0, ":");
+					}
+					s = tz.join("");
+					break;
+//				case 'Y': case 'u': case 'W': case 'F': case 'g': case 'A':
+//					console.log(match+" modifier unimplemented");
+				default:
+					throw new Error("dojo.date.locale.format: invalid pattern char: "+pattern);
+			}
+			if(pad){ s = string.pad(s, l); }
+			return s;
+		});
+	}
+
+/*=====
+var __FormatOptions = exports.__FormatOptions = declare(null, {
+	// selector: String
+	//		choice of 'time','date' (default: date and time)
+	// formatLength: String
+	//		choice of long, short, medium or full (plus any custom additions).  Defaults to 'short'
+	// datePattern:String
+	//		override pattern with this string
+	// timePattern:String
+	//		override pattern with this string
+	// am: String
+	//		override strings for am in times
+	// pm: String
+	//		override strings for pm in times
+	// locale: String
+	//		override the locale used to determine formatting rules
+	// fullYear: Boolean
+	//		(format only) use 4 digit years whenever 2 digit years are called for
+	// strict: Boolean
+	//		(parse only) strict parsing, off by default
+});
+=====*/
+
+exports._getZone = function(/*Date*/ dateObject, /*boolean*/ getName, /*__FormatOptions?*/ options){
+	// summary:
+	//		Returns the zone (or offset) for the given date and options.  This
+	//		is broken out into a separate function so that it can be overridden
+	//		by timezone-aware code.
+	//
+	// dateObject:
+	//		the date and/or time being formatted.
+	//
+	// getName:
+	//		Whether to return the timezone string (if true), or the offset (if false)
+	//
+	// options:
+	//		The options being used for formatting
+	if(getName){
+		return date.getTimezoneName(dateObject);
+	}else{
+		return dateObject.getTimezoneOffset();
+	}
+};
+
+
+exports.format = function(/*Date*/ dateObject, /*__FormatOptions?*/ options){
+	// summary:
+	//		Format a Date object as a String, using locale-specific settings.
+	//
+	// description:
+	//		Create a string from a Date object using a known localized pattern.
+	//		By default, this method formats both date and time from dateObject.
+	//		Formatting patterns are chosen appropriate to the locale.  Different
+	//		formatting lengths may be chosen, with "full" used by default.
+	//		Custom patterns may be used or registered with translations using
+	//		the dojo/date/locale.addCustomFormats() method.
+	//		Formatting patterns are implemented using [the syntax described at
+	//		unicode.org](http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns)
+	//
+	// dateObject:
+	//		the date and/or time to be formatted.  If a time only is formatted,
+	//		the values in the year, month, and day fields are irrelevant.  The
+	//		opposite is true when formatting only dates.
+
+	options = options || {};
+
+	var locale = i18n.normalizeLocale(options.locale),
+		formatLength = options.formatLength || 'short',
+		bundle = exports._getGregorianBundle(locale),
+		str = [],
+		sauce = lang.hitch(this, formatPattern, dateObject, bundle, options);
+	if(options.selector == "year"){
+		return _processPattern(bundle["dateFormatItem-yyyy"] || "yyyy", sauce);
+	}
+	var pattern;
+	if(options.selector != "date"){
+		pattern = options.timePattern || bundle["timeFormat-"+formatLength];
+		if(pattern){str.push(_processPattern(pattern, sauce));}
+	}
+	if(options.selector != "time"){
+		pattern = options.datePattern || bundle["dateFormat-"+formatLength];
+		if(pattern){str.push(_processPattern(pattern, sauce));}
+	}
+
+	return str.length == 1 ? str[0] : bundle["dateTimeFormat-"+formatLength].replace(/\'/g,'').replace(/\{(\d+)\}/g,
+		function(match, key){ return str[key]; }); // String
+};
+
+exports.regexp = function(/*__FormatOptions?*/ options){
+	// summary:
+	//		Builds the regular needed to parse a localized date
+
+	return exports._parseInfo(options).regexp; // String
+};
+
+exports._parseInfo = function(/*__FormatOptions?*/ options){
+	options = options || {};
+	var locale = i18n.normalizeLocale(options.locale),
+		bundle = exports._getGregorianBundle(locale),
+		formatLength = options.formatLength || 'short',
+		datePattern = options.datePattern || bundle["dateFormat-" + formatLength],
+		timePattern = options.timePattern || bundle["timeFormat-" + formatLength],
+		pattern;
+	if(options.selector == 'date'){
+		pattern = datePattern;
+	}else if(options.selector == 'time'){
+		pattern = timePattern;
+	}else{
+		pattern = bundle["dateTimeFormat-"+formatLength].replace(/\{(\d+)\}/g,
+			function(match, key){ return [timePattern, datePattern][key]; });
+	}
+
+	var tokens = [],
+		re = _processPattern(pattern, lang.hitch(this, _buildDateTimeRE, tokens, bundle, options));
+	return {regexp: re, tokens: tokens, bundle: bundle};
+};
+
+exports.parse = function(/*String*/ value, /*__FormatOptions?*/ options){
+	// summary:
+	//		Convert a properly formatted string to a primitive Date object,
+	//		using locale-specific settings.
+	//
+	// description:
+	//		Create a Date object from a string using a known localized pattern.
+	//		By default, this method parses looking for both date and time in the string.
+	//		Formatting patterns are chosen appropriate to the locale.  Different
+	//		formatting lengths may be chosen, with "full" used by default.
+	//		Custom patterns may be used or registered with translations using
+	//		the dojo/date/locale.addCustomFormats() method.
+	//
+	//		Formatting patterns are implemented using [the syntax described at
+	//		unicode.org](http://www.unicode.org/reports/tr35/tr35-4.html#Date_Format_Patterns)
+	//		When two digit years are used, a century is chosen according to a sliding
+	//		window of 80 years before and 20 years after present year, for both `yy` and `yyyy` patterns.
+	//		year < 100CE requires strict mode.
+	//
+	// value:
+	//		A string representation of a date
+
+	// remove non-printing bidi control chars from input and pattern
+	var controlChars = /[\u200E\u200F\u202A\u202E]/g,
+		info = exports._parseInfo(options),
+		tokens = info.tokens, bundle = info.bundle,
+		re = new RegExp("^" + info.regexp.replace(controlChars, "") + "$",
+			info.strict ? "" : "i"),
+		match = re.exec(value && value.replace(controlChars, ""));
+
+	if(!match){ return null; } // null
+
+	var widthList = ['abbr', 'wide', 'narrow'],
+		result = [1970,0,1,0,0,0,0], // will get converted to a Date at the end
+		amPm = "",
+		valid = array.every(match, function(v, i){
+		if(!i){return true;}
+		var token = tokens[i-1],
+			l = token.length,
+			c = token.charAt(0);
+		switch(c){
+			case 'y':
+				if(l != 2 && options.strict){
+					//interpret year literally, so '5' would be 5 A.D.
+					result[0] = v;
+				}else{
+					if(v<100){
+						v = Number(v);
+						//choose century to apply, according to a sliding window
+						//of 80 years before and 20 years after present year
+						var year = '' + new Date().getFullYear(),
+							century = year.substring(0, 2) * 100,
+							cutoff = Math.min(Number(year.substring(2, 4)) + 20, 99);
+						result[0] = (v < cutoff) ? century + v : century - 100 + v;
+					}else{
+						//we expected 2 digits and got more...
+						if(options.strict){
+							return false;
+						}
+						//interpret literally, so '150' would be 150 A.D.
+						//also tolerate '1950', if 'yyyy' input passed to 'yy' format
+						result[0] = v;
+					}
+				}
+				break;
+			case 'M':
+			case 'L':
+				if(l>2){
+					var months = bundle['months-' +
+							    (c == 'L' ? 'standAlone' : 'format') +
+							    '-' + widthList[l-3]].concat();
+					if(!options.strict){
+						//Tolerate abbreviating period in month part
+						//Case-insensitive comparison
+						v = v.replace(".","").toLowerCase();
+						months = array.map(months, function(s){ return s.replace(".","").toLowerCase(); } );
+					}
+					v = array.indexOf(months, v);
+					if(v == -1){
+//						console.log("dojo/date/locale.parse: Could not parse month name: '" + v + "'.");
+						return false;
+					}
+				}else{
+					v--;
+				}
+				result[1] = v;
+				break;
+			case 'E':
+			case 'e':
+			case 'c':
+				var days = bundle['days-' +
+						  (c == 'c' ? 'standAlone' : 'format') +
+						  '-' + widthList[l-3]].concat();
+				if(!options.strict){
+					//Case-insensitive comparison
+					v = v.toLowerCase();
+					days = array.map(days, function(d){return d.toLowerCase();});
+				}
+				v = array.indexOf(days, v);
+				if(v == -1){
+//					console.log("dojo/date/locale.parse: Could not parse weekday name: '" + v + "'.");
+					return false;
+				}
+
+				//TODO: not sure what to actually do with this input,
+				//in terms of setting something on the Date obj...?
+				//without more context, can't affect the actual date
+				//TODO: just validate?
+				break;
+			case 'D':
+				result[1] = 0;
+				// fallthrough...
+			case 'd':
+				result[2] = v;
+				break;
+			case 'a': //am/pm
+				var am = options.am || bundle['dayPeriods-format-wide-am'],
+					pm = options.pm || bundle['dayPeriods-format-wide-pm'];
+				if(!options.strict){
+					var period = /\./g;
+					v = v.replace(period,'').toLowerCase();
+					am = am.replace(period,'').toLowerCase();
+					pm = pm.replace(period,'').toLowerCase();
+				}
+				if(options.strict && v != am && v != pm){
+//					console.log("dojo/date/locale.parse: Could not parse am/pm part.");
+					return false;
+				}
+
+				// we might not have seen the hours field yet, so store the state and apply hour change later
+				amPm = (v == pm) ? 'p' : (v == am) ? 'a' : '';
+				break;
+			case 'K': //hour (1-24)
+				if(v == 24){ v = 0; }
+				// fallthrough...
+			case 'h': //hour (1-12)
+			case 'H': //hour (0-23)
+			case 'k': //hour (0-11)
+				//TODO: strict bounds checking, padding
+				if(v > 23){
+//					console.log("dojo/date/locale.parse: Illegal hours value");
+					return false;
+				}
+
+				//in the 12-hour case, adjusting for am/pm requires the 'a' part
+				//which could come before or after the hour, so we will adjust later
+				result[3] = v;
+				break;
+			case 'm': //minutes
+				result[4] = v;
+				break;
+			case 's': //seconds
+				result[5] = v;
+				break;
+			case 'S': //milliseconds
+				result[6] = v;
+//				break;
+//			case 'w':
+//TODO				var firstDay = 0;
+//			default:
+//TODO: throw?
+//				console.log("dojo/date/locale.parse: unsupported pattern char=" + token.charAt(0));
+		}
+		return true;
+	});
+
+	var hours = +result[3];
+	if(amPm === 'p' && hours < 12){
+		result[3] = hours + 12; //e.g., 3pm -> 15
+	}else if(amPm === 'a' && hours == 12){
+		result[3] = 0; //12am -> 0
+	}
+
+	//TODO: implement a getWeekday() method in order to test
+	//validity of input strings containing 'EEE' or 'EEEE'...
+
+	var dateObject = new Date(result[0], result[1], result[2], result[3], result[4], result[5], result[6]); // Date
+	if(options.strict){
+		dateObject.setFullYear(result[0]);
+	}
+
+	// Check for overflow.  The Date() constructor normalizes things like April 32nd...
+	//TODO: why isn't this done for times as well?
+	var allTokens = tokens.join(""),
+		dateToken = allTokens.indexOf('d') != -1,
+		monthToken = allTokens.indexOf('M') != -1;
+
+	if(!valid ||
+		(monthToken && dateObject.getMonth() > result[1]) ||
+		(dateToken && dateObject.getDate() > result[2])){
+		return null;
+	}
+
+	// Check for underflow, due to DST shifts.  See #9366
+	// This assumes a 1 hour dst shift correction at midnight
+	// We could compare the timezone offset after the shift and add the difference instead.
+	if((monthToken && dateObject.getMonth() < result[1]) ||
+		(dateToken && dateObject.getDate() < result[2])){
+		dateObject = date.add(dateObject, "hour", 1);
+	}
+
+	return dateObject; // Date
+};
+
+function _processPattern(pattern, applyPattern, applyLiteral, applyAll){
+	//summary: Process a pattern with literals in it
+
+	// Break up on single quotes, treat every other one as a literal, except '' which becomes '
+	var identity = function(x){return x;};
+	applyPattern = applyPattern || identity;
+	applyLiteral = applyLiteral || identity;
+	applyAll = applyAll || identity;
+
+	//split on single quotes (which escape literals in date format strings)
+	//but preserve escaped single quotes (e.g., o''clock)
+	var chunks = pattern.match(/(''|[^'])+/g),
+		literal = pattern.charAt(0) == "'";
+
+	array.forEach(chunks, function(chunk, i){
+		if(!chunk){
+			chunks[i]='';
+		}else{
+			chunks[i]=(literal ? applyLiteral : applyPattern)(chunk.replace(/''/g, "'"));
+			literal = !literal;
+		}
+	});
+	return applyAll(chunks.join(''));
+}
+
+function _buildDateTimeRE(tokens, bundle, options, pattern){
+	pattern = regexp.escapeString(pattern);
+	if(!options.strict){ pattern = pattern.replace(" a", " ?a"); } // kludge to tolerate no space before am/pm
+	return pattern.replace(/([a-z])\1*/ig, function(match){
+		// Build a simple regexp.  Avoid captures, which would ruin the tokens list
+		var s,
+			c = match.charAt(0),
+			l = match.length,
+			p2 = '', p3 = '';
+		if(options.strict){
+			if(l > 1){ p2 = '0' + '{'+(l-1)+'}'; }
+			if(l > 2){ p3 = '0' + '{'+(l-2)+'}'; }
+		}else{
+			p2 = '0?'; p3 = '0{0,2}';
+		}
+		switch(c){
+			case 'y':
+				s = '\\d{2,4}';
+				break;
+			case 'M':
+			case 'L':
+				s = (l>2) ? '\\S+?' : '1[0-2]|'+p2+'[1-9]';
+				break;
+			case 'D':
+				s = '[12][0-9][0-9]|3[0-5][0-9]|36[0-6]|'+p2+'[1-9][0-9]|'+p3+'[1-9]';
+				break;
+			case 'd':
+				s = '3[01]|[12]\\d|'+p2+'[1-9]';
+				break;
+			case 'w':
+				s = '[1-4][0-9]|5[0-3]|'+p2+'[1-9]';
+				break;
+			case 'E':
+			case 'e':
+			case 'c':
+				s = '.+?'; // match anything including spaces until the first pattern delimiter is found such as a comma or space
+				break;
+			case 'h': //hour (1-12)
+				s = '1[0-2]|'+p2+'[1-9]';
+				break;
+			case 'k': //hour (0-11)
+				s = '1[01]|'+p2+'\\d';
+				break;
+			case 'H': //hour (0-23)
+				s = '1\\d|2[0-3]|'+p2+'\\d';
+				break;
+			case 'K': //hour (1-24)
+				s = '1\\d|2[0-4]|'+p2+'[1-9]';
+				break;
+			case 'm':
+			case 's':
+				s = '[0-5]\\d';
+				break;
+			case 'S':
+				s = '\\d{'+l+'}';
+				break;
+			case 'a':
+				var am = options.am || bundle['dayPeriods-format-wide-am'],
+					pm = options.pm || bundle['dayPeriods-format-wide-pm'];
+					s = am + '|' + pm;
+				if(!options.strict){
+					if(am != am.toLowerCase()){ s += '|' + am.toLowerCase(); }
+					if(pm != pm.toLowerCase()){ s += '|' + pm.toLowerCase(); }
+					if(s.indexOf('.') != -1){ s += '|' + s.replace(/\./g, ""); }
+				}
+				s = s.replace(/\./g, "\\.");
+				break;
+			default:
+			// case 'v':
+			// case 'z':
+			// case 'Z':
+				s = ".*";
+//				console.log("parse of date format, pattern=" + pattern);
+		}
+
+		if(tokens){ tokens.push(match); }
+
+		return "(" + s + ")"; // add capture
+	}).replace(/[\xa0 ]/g, "[\\s\\xa0]"); // normalize whitespace.  Need explicit handling of \xa0 for IE.
+}
+
+var _customFormats = [];
+var _cachedGregorianBundles = {};
+exports.addCustomFormats = function(/*String*/ packageName, /*String*/ bundleName){
+	// summary:
+	//		Add a reference to a bundle containing localized custom formats to be
+	//		used by date/time formatting and parsing routines.
+	//
+	// description:
+	//		The user may add custom localized formats where the bundle has properties following the
+	//		same naming convention used by dojo.cldr: `dateFormat-xxxx` / `timeFormat-xxxx`
+	//		The pattern string should match the format used by the CLDR.
+	//		See dojo/date/locale.format() for details.
+	//		The resources must be loaded by dojo.requireLocalization() prior to use
+
+	_customFormats.push({pkg:packageName,name:bundleName});
+	_cachedGregorianBundles = {};
+};
+
+exports._getGregorianBundle = function(/*String*/ locale){
+	if(_cachedGregorianBundles[locale]){
+		return _cachedGregorianBundles[locale];
+	}
+	var gregorian = {};
+	array.forEach(_customFormats, function(desc){
+		var bundle = i18n.getLocalization(desc.pkg, desc.name, locale);
+		gregorian = lang.mixin(gregorian, bundle);
+	}, this);
+	return _cachedGregorianBundles[locale] = gregorian; /*Object*/
+};
+
+exports.addCustomFormats(module.id.replace(/\/date\/locale$/, ".cldr"),"gregorian");
+
+exports.getNames = function(/*String*/ item, /*String*/ type, /*String?*/ context, /*String?*/ locale){
+	// summary:
+	//		Used to get localized strings from dojo.cldr for day or month names.
+	//
+	// item:
+	//	'months' || 'days'
+	// type:
+	//	'wide' || 'abbr' || 'narrow' (e.g. "Monday", "Mon", or "M" respectively, in English)
+	// context:
+	//	'standAlone' || 'format' (default)
+	// locale:
+	//	override locale used to find the names
+
+	var label,
+		lookup = exports._getGregorianBundle(locale),
+		props = [item, context, type];
+	if(context == 'standAlone'){
+		var key = props.join('-');
+		label = lookup[key];
+		// Fall back to 'format' flavor of name
+		if(label[0] == 1){ label = undefined; } // kludge, in the absence of real aliasing support in dojo.cldr
+	}
+	props[1] = 'format';
+
+	// return by copy so changes won't be made accidentally to the in-memory model
+	return (label || lookup[props.join('-')]).concat(); /*Array*/
+};
+
+exports.isWeekend = function(/*Date?*/ dateObject, /*String?*/ locale){
+	// summary:
+	//	Determines if the date falls on a weekend, according to local custom.
+
+	var weekend = supplemental.getWeekend(locale),
+		day = (dateObject || new Date()).getDay();
+	if(weekend.end < weekend.start){
+		weekend.end += 7;
+		if(day < weekend.start){ day += 7; }
+	}
+	return day >= weekend.start && day <= weekend.end; // Boolean
+};
+
+// These are used only by format and strftime.  Do they need to be public?  Which module should they go in?
+
+exports._getDayOfYear = function(/*Date*/ dateObject){
+	// summary:
+	//		gets the day of the year as represented by dateObject
+	return date.difference(new Date(dateObject.getFullYear(), 0, 1, dateObject.getHours()), dateObject) + 1; // Number
+};
+
+exports._getWeekOfYear = function(/*Date*/ dateObject, /*Number*/ firstDayOfWeek){
+	if(arguments.length == 1){ firstDayOfWeek = 0; } // Sunday
+
+	var firstDayOfYear = new Date(dateObject.getFullYear(), 0, 1).getDay(),
+		adj = (firstDayOfYear - firstDayOfWeek + 7) % 7,
+		week = Math.floor((exports._getDayOfYear(dateObject) + adj - 1) / 7);
+
+	// if year starts on the specified day, start counting weeks at 1
+	if(firstDayOfYear == firstDayOfWeek){ week++; }
+
+	return week; // Number
+};
+
+return exports;
+});

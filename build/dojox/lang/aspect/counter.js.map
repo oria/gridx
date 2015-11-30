@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"counter.js",
-"lineCount":1,
-"mappings":"A,SACAA,MAAA,sDAA8D,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC9DF,CAAAG,QAAA,6BAEC,UAAA,OACIC,EAAMF,CAAAG,KAAAC,OADV,CAGIC,EAAUA,QAAAA,GACbC,UAAA,EADaD,CAGdP,EAAAS,OAAA,CAAYF,CAAZ,SACSG,QAAAA,KACLC,UADKD,CADT,eAIgBE,QAAAA,KACZC,WADYD,CAJhB,OAOQJ,QAAAA,GACNG,UADMH,CACOK,WADPL,GAPR,EAYAJ,EAAAU,QAlBA,CAkBcC,QAAAA,SAIN,KAAIR,CAJEQ,CAlBd,EAAA,EAH6D,CAA9D;",
-"sources":["counter.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","aop","lang","aspect","Counter","reset","extend","before","calls","afterThrowing","errors","counter","aop.counter"]
-}

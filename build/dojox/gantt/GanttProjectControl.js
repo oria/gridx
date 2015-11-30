@@ -1,40 +1,886 @@
-//>>built
-define("dojox/gantt/GanttProjectControl","./GanttTaskItem ./GanttTaskControl dijit/focus dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/date/locale dojo/request dojo/on dojo/dom dojo/dom-class dojo/dom-construct dojo/dom-style dojo/dom-attr dojo/dom-geometry dojo/keys dojo/domReady!".split(" "),function(t,u,v,w,s,n,y,z,q,A,p,d,l,x,B,r){return w("dojox.gantt.GanttProjectControl",[],{constructor:function(a,c){this.project=c;this.ganttChart=a;this.projectNameItem=this.projectItem=this.descrProject=
-null;this.posX=this.posY=0;this.previousProject=this.nextProject=null;this.arrTasks=[];this.duration=this.percentage=0},checkWidthProjectNameItem:function(){if(this.projectNameItem.offsetWidth+this.projectNameItem.offsetLeft>this.ganttChart.maxWidthTaskNames){var a=Math.round((this.projectNameItem.offsetWidth+this.projectNameItem.offsetLeft-this.ganttChart.maxWidthTaskNames)/(this.projectNameItem.offsetWidth/this.projectNameItem.firstChild.length)),a=this.project.name.substring(0,this.projectNameItem.firstChild.length-
-a-3);this.projectNameItem.innerHTML=a+"..."}},refreshProjectItem:function(a){this.percentage=this.getPercentCompleted();l.set(a,{left:this.posX+"px",width:this.duration*this.ganttChart.pixelsPerWorkHour+"px"});var c=a.firstChild,b=this.duration*this.ganttChart.pixelsPerWorkHour;c.width=(0==b?1:b)+"px";c.style.width=(0==b?1:b)+"px";c=c.rows[0];-1!=this.percentage?(0!=this.percentage&&(b=c.firstChild,b.width=this.percentage+"%",b=b.firstChild,l.set(b,{width:(!this.duration?1:this.percentage*this.duration*
-this.ganttChart.pixelsPerWorkHour/100)+"px",height:this.ganttChart.heightTaskItem+"px"})),100!=this.percentage&&(b=c.lastChild,b.width=100-this.percentage+"%",b=b.firstChild,l.set(b,{width:(!this.duration?1:(100-this.percentage)*this.duration*this.ganttChart.pixelsPerWorkHour/100)+"px",height:this.ganttChart.heightTaskItem+"px"}))):(b=c.firstChild,b.width="1px",b=b.firstChild,l.set(b,{width:"1px",height:this.ganttChart.heightTaskItem+"px"}));c=a.lastChild.firstChild;l.set(c,{height:this.ganttChart.heightTaskItem+
-"px",width:(!this.duration?1:this.duration*this.ganttChart.pixelsPerWorkHour)+"px"});c.rows[0].firstChild.height=this.ganttChart.heightTaskItem+"px";0==this.project.parentTasks.length&&(a.style.display="none");return a},refreshDescrProject:function(a){l.set(a,{left:this.posX+this.duration*this.ganttChart.pixelsPerWorkHour+10+"px"});0==this.project.parentTasks.length&&(this.descrProject.style.visibility="hidden");return a},postLoadData:function(){},refresh:function(){this.posX=(this.project.startDate-
-this.ganttChart.startDate)/36E5*this.ganttChart.pixelsPerHour;this.refreshProjectItem(this.projectItem[0]);this.refreshDescrProject(this.projectItem[0].nextSibling);return this},create:function(){var a=this.ganttChart.contentData.firstChild;this.posX=(this.project.startDate-this.ganttChart.startDate)/36E5*this.ganttChart.pixelsPerHour;if(this.previousProject)if(0<this.previousProject.arrTasks.length){var c=this.ganttChart.getLastChildTask(this.previousProject.arrTasks[this.previousProject.arrTasks.length-
-1]);this.posY=parseInt(c.cTaskItem[0].style.top)+this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra}else this.posY=parseInt(this.previousProject.projectItem[0].style.top)+this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;else this.posY=6;c=this.ganttChart.panelNames.firstChild;this.projectNameItem=this.createProjectNameItem();c.appendChild(this.projectNameItem);this.checkWidthProjectNameItem();this.projectItem=[this.createProjectItem(),[]];a.appendChild(this.projectItem[0]);
-a.appendChild(this.createDescrProject());this.adjustPanelTime()},getTaskById:function(a){for(var c=0;c<this.arrTasks.length;c++){var b=this.searchTaskInTree(this.arrTasks[c],a);if(b)return b}return null},searchTaskInTree:function(a,c){if(a.taskItem.id==c)return a;for(var b=0;b<a.childTask.length;b++){var e=a.childTask[b];if(e.taskItem.id==c||0<e.childTask.length&&(e=this.searchTaskInTree(e,c)))return e}return null},shiftProjectItem:function(){for(var a=null,c=null,b=parseInt(this.projectItem[0].style.left),
-e=0;e<this.arrTasks.length;e++){var m=this.arrTasks[e],f=parseInt(m.cTaskItem[0].style.left),m=parseInt(m.cTaskItem[0].style.left)+parseInt(m.cTaskItem[0].firstChild.firstChild.width);a||(a=f);c||(c=m);a>f&&(a=f);c<m&&(c=m)}a!=b&&(this.project.startDate=new Date(this.ganttChart.startDate),this.project.startDate.setHours(this.project.startDate.getHours()+a/this.ganttChart.pixelsPerHour));this.projectItem[0].style.left=a+"px";this.resizeProjectItem(c-a);this.duration=Math.round(parseInt(this.projectItem[0].firstChild.width)/
-this.ganttChart.pixelsPerWorkHour);this.shiftDescrProject();this.adjustPanelTime()},adjustPanelTime:function(){var a=this.projectItem[0],a=parseInt(a.style.left)+parseInt(a.firstChild.style.width)+this.ganttChart.panelTimeExpandDelta,a=a+this.descrProject.offsetWidth;this.ganttChart.adjustPanelTime(a)},resizeProjectItem:function(a){var c=this.percentage,b=this.projectItem[0];if(0<c&&100>c){b.firstChild.style.width=a+"px";b.firstChild.width=a+"px";b.style.width=a+"px";var e=b.firstChild.rows[0];e.cells[0].firstChild.style.width=
-Math.round(a*c/100)+"px";e.cells[0].firstChild.style.height=this.ganttChart.heightTaskItem+"px";e.cells[1].firstChild.style.width=Math.round(a*(100-c)/100)+"px";e.cells[1].firstChild.style.height=this.ganttChart.heightTaskItem+"px";b.lastChild.firstChild.width=a+"px"}else if(0==c||100==c)b.firstChild.style.width=a+"px",b.firstChild.width=a+"px",b.style.width=a+"px",e=b.firstChild.rows[0],e.cells[0].firstChild.style.width=a+"px",e.cells[0].firstChild.style.height=this.ganttChart.heightTaskItem+"px",
-b.lastChild.firstChild.width=a+"px"},shiftDescrProject:function(){var a=parseInt(this.projectItem[0].style.left)+this.duration*this.ganttChart.pixelsPerWorkHour+10;this.descrProject.style.left=a+"px";this.descrProject.innerHTML=this.getDescStr()},showDescrProject:function(){var a=parseInt(this.projectItem[0].style.left)+this.duration*this.ganttChart.pixelsPerWorkHour+10;this.descrProject.style.left=a+"px";this.descrProject.style.visibility="visible";this.descrProject.innerHTML=this.getDescStr()},
-hideDescrProject:function(){this.descrProject.style.visibility="hidden"},getDescStr:function(){return this.duration/this.ganttChart.hsPerDay+" days,  "+this.duration+" hours"},createDescrProject:function(){var a=this.posX+this.duration*this.ganttChart.pixelsPerWorkHour+10,c=d.create("div",{innerHTML:this.getDescStr(),className:"ganttDescProject"});l.set(c,{left:a+"px",top:this.posY+"px"});this.descrProject=c;0==this.project.parentTasks.length&&(this.descrProject.style.visibility="hidden");return c},
-createProjectItem:function(){this.percentage=this.getPercentCompleted();this.duration=this.getDuration();var a=d.create("div",{id:this.project.id,className:"ganttProjectItem"});l.set(a,{left:this.posX+"px",top:this.posY+"px",width:this.duration*this.ganttChart.pixelsPerWorkHour+"px"});var c=d.create("table",{cellPadding:"0",cellSpacing:"0",className:"ganttTblProjectItem"},a),b=this.duration*this.ganttChart.pixelsPerWorkHour;c.width=(0==b?1:b)+"px";c.style.width=(0==b?1:b)+"px";c=c.insertRow(c.rows.length);
--1!=this.percentage?(0!=this.percentage&&(b=d.create("td",{width:this.percentage+"%"},c),b.style.lineHeight="1px",b=d.create("div",{className:"ganttImageProgressFilled"},b),l.set(b,{width:this.percentage*this.duration*this.ganttChart.pixelsPerWorkHour/100+"px",height:this.ganttChart.heightTaskItem+"px"})),100!=this.percentage&&(b=d.create("td",{width:100-this.percentage+"%"},c),b.style.lineHeight="1px",b=d.create("div",{className:"ganttImageProgressBg"},b),l.set(b,{width:(100-this.percentage)*this.duration*
-this.ganttChart.pixelsPerWorkHour/100+"px",height:this.ganttChart.heightTaskItem+"px"}))):(b=d.create("td",{width:"1px"},c),b.style.lineHeight="1px",b=d.create("div",{className:"ganttImageProgressBg"},b),l.set(b,{width:"1px",height:this.ganttChart.heightTaskItem+"px"}));c=d.create("div",{className:"ganttDivTaskInfo"});b=d.create("table",{cellPadding:"0",cellSpacing:"0",height:this.ganttChart.heightTaskItem+"px",width:(0==this.duration*this.ganttChart.pixelsPerWorkHour?1:this.duration*this.ganttChart.pixelsPerWorkHour)+
-"px"},c).insertRow(0);d.create("td",{align:"center",vAlign:"top",height:this.ganttChart.heightTaskItem+"px",className:"ganttMoveInfo"},b);a.appendChild(c);0==this.project.parentTasks.length&&(a.style.display="none");return a},createProjectNameItem:function(){var a=d.create("div",{className:"ganttProjectNameItem",innerHTML:this.project.name,title:this.project.name});l.set(a,{left:"5px",top:this.posY+"px"});x.set(a,"tabIndex",0);this.ganttChart.isShowConMenu&&(this.ganttChart._events.push(q(a,"mouseover",
-n.hitch(this,function(c){p.add(a,"ganttProjectNameItemHover");clearTimeout(this.ganttChart.menuTimer);this.ganttChart.tabMenu.clear();this.ganttChart.tabMenu.show(c.target,this)}))),this.ganttChart._events.push(q(a,"keydown",n.hitch(this,function(a){a.keyCode==r.ENTER&&(this.ganttChart.tabMenu.clear(),this.ganttChart.tabMenu.show(a.target,this));this.ganttChart.tabMenu.isShow&&(a.keyCode==r.LEFT_ARROW||a.keyCode==r.RIGHT_ARROW)&&v(this.ganttChart.tabMenu.menuPanel.firstChild.rows[0].cells[0]);this.ganttChart.tabMenu.isShow&&
-a.keyCode==r.ESCAPE&&this.ganttChart.tabMenu.hide()}))),this.ganttChart._events.push(q(a,"mouseout",n.hitch(this,function(){p.remove(a,"ganttProjectNameItemHover");clearTimeout(this.ganttChart.menuTimer);this.ganttChart.menuTimer=setTimeout(n.hitch(this,function(){this.ganttChart.tabMenu.hide()}),200)}))),this.ganttChart._events.push(q(this.ganttChart.tabMenu.menuPanel,"mouseover",n.hitch(this,function(){clearTimeout(this.ganttChart.menuTimer)}))),this.ganttChart._events.push(q(this.ganttChart.tabMenu.menuPanel,
-"keydown",n.hitch(this,function(){this.ganttChart.tabMenu.isShow&&event.keyCode==r.ESCAPE&&this.ganttChart.tabMenu.hide()}))),this.ganttChart._events.push(q(this.ganttChart.tabMenu.menuPanel,"mouseout",n.hitch(this,function(){clearTimeout(this.ganttChart.menuTimer);this.ganttChart.menuTimer=setTimeout(n.hitch(this,function(){this.ganttChart.tabMenu.hide()}),200)}))));return a},getPercentCompleted:function(){var a=0;s.forEach(this.project.parentTasks,function(c){a+=parseInt(c.percentage)},this);return 0!=
-this.project.parentTasks.length?Math.round(a/this.project.parentTasks.length):-1},getDuration:function(){var a=0,c=0;return 0<this.project.parentTasks.length?(s.forEach(this.project.parentTasks,function(b){c=24*b.duration/this.ganttChart.hsPerDay+(b.startTime-this.ganttChart.startDate)/36E5;c>a&&(a=c)},this),(a-this.posX)/24*this.ganttChart.hsPerDay):0},deleteTask:function(a){if(a=this.getTaskById(a))this.deleteChildTask(a),this.ganttChart.checkPosition()},setName:function(a){a&&(this.project.name=
-a,this.projectNameItem.innerHTML=a,this.projectNameItem.title=a,this.checkWidthProjectNameItem(),this.descrProject.innerHTML=this.getDescStr(),this.adjustPanelTime())},setPercentCompleted:function(a){a=parseInt(a);if(isNaN(a)||100<a||0>a)return!1;var c=this.projectItem[0].firstChild.rows[0],b=c.cells[0],e=c.cells[1];0<a&&100>a&&0<this.percentage&&100>this.percentage?(b.width=parseInt(a)+"%",b.firstChild.style.width=a*this.duration*this.ganttChart.pixelsPerWorkHour/100+"px",e.width=100-parseInt(a)+
-"%",e.firstChild.style.width=(100-a)*this.duration*this.ganttChart.pixelsPerWorkHour/100+"px"):(0==a||100==a)&&0<this.percentage&&100>this.percentage?0==a?(b.parentNode.removeChild(b),e.width="100%",e.firstChild.style.width=this.duration*this.ganttChart.pixelsPerWorkHour+"px"):100==a&&(e.parentNode.removeChild(e),b.width="100%",b.firstChild.style.width=this.duration*this.ganttChart.pixelsPerWorkHour+"px"):(0==a||100==a)&&(0==this.percentage||100==this.percentage)?0==a&&100==this.percentage?(p.remove(b.firstChild,
-"ganttImageProgressFilled"),p.add(b.firstChild,"ganttImageProgressBg")):100==a&&0==this.percentage&&(p.remove(b.firstChild,"ganttImageProgressBg"),p.add(b.firstChild,"ganttImageProgressFilled")):(0<a||100>a)&&(0==this.percentage||100==this.percentage)?(b.parentNode.removeChild(b),b=d.create("td",{width:a+"%"},c),b.style.lineHeight="1px",b=d.create("div",{className:"ganttImageProgressFilled"},b),l.set(b,{width:a*this.duration*this.ganttChart.pixelsPerWorkHour/100+"px",height:this.ganttChart.heightTaskItem+
-"px"}),b=d.create("td",{width:100-a+"%"},c),b.style.lineHeight="1px",b=d.create("div",{className:"ganttImageProgressBg"},b),l.set(b,{width:(100-a)*this.duration*this.ganttChart.pixelsPerWorkHour/100+"px",height:this.ganttChart.heightTaskItem+"px"})):-1==this.percentage&&(100==a?(p.remove(b.firstChild,"ganttImageProgressBg"),p.add(b.firstChild,"ganttImageProgressFilled")):100>a&&0<a&&(b.parentNode.removeChild(b),b=d.create("td",{width:a+"%"},c),b.style.lineHeight="1px",b=d.create("div",{className:"ganttImageProgressFilled"},
-b),l.set(b,{width:a*this.duration*this.ganttChart.pixelsPerWorkHour/100+"px",height:this.ganttChart.heightTaskItem+"px"}),b=d.create("td",{width:100-a+"%"},c),b.style.lineHeight="1px",b=d.create("div",{className:"ganttImageProgressBg"},b),l.set(b,{width:(100-a)*this.duration*this.ganttChart.pixelsPerWorkHour/100+"px",height:this.ganttChart.heightTaskItem+"px"})));this.percentage=a;this.descrProject.innerHTML=this.getDescStr();return!0},deleteChildTask:function(a){if(a){var c=a.cTaskItem[0],b=a.cTaskNameItem[0],
-e=a.cTaskItem[1],m=a.cTaskNameItem[1],f=a.cTaskNameItem[2];"none"==c.style.display&&this.ganttChart.openTree(a.parentTask);if(0<a.childPredTask.length)for(var g=0;g<a.childPredTask.length;g++){for(var d=a.childPredTask[g],h=0;h<d.cTaskItem[1].length;h++)d.cTaskItem[1][h].parentNode.removeChild(d.cTaskItem[1][h]);d.cTaskItem[1]=[];d.predTask=null}if(0<a.childTask.length)for(;0<a.childTask.length;)this.deleteChildTask(a.childTask[0]);g=this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;
-"none"!=c.style.display&&a.shiftCurrentTasks(a,-g);this.project.deleteTask(a.taskItem.id);c&&c.parentNode.removeChild(c);a.descrTask.parentNode.removeChild(a.descrTask);if(0<e.length)for(g=0;g<e.length;g++)e[g].parentNode.removeChild(e[g]);b&&b.parentNode.removeChild(b);if(a.cTaskNameItem[1])for(g=0;g<m.length;g++)m[g].parentNode.removeChild(m[g]);f&&f.parentNode&&f.parentNode.removeChild(f);a.taskIdentifier&&(a.taskIdentifier.parentNode.removeChild(a.taskIdentifier),a.taskIdentifier=null);if(a.parentTask){a.previousChildTask&&
-(a.previousChildTask.nextChildTask=a.nextChildTask?a.nextChildTask:null);b=a.parentTask;for(g=0;g<b.childTask.length;g++)if(b.childTask[g].taskItem.id==a.taskItem.id){b.childTask[g]=null;b.childTask.splice(g,1);break}0==b.childTask.length&&b.cTaskNameItem[2]&&(b.cTaskNameItem[2].parentNode.removeChild(b.cTaskNameItem[2]),b.cTaskNameItem[2]=null)}else{a.previousParentTask&&(a.previousParentTask.nextParentTask=a.nextParentTask?a.nextParentTask:null);b=a.project;for(g=0;g<b.arrTasks.length;g++)b.arrTasks[g].taskItem.id==
-a.taskItem.id&&b.arrTasks.splice(g,1)}if(a.predTask){b=a.predTask;for(g=0;g<b.childPredTask.length;g++)b.childPredTask[g].taskItem.id==a.taskItem.id&&(b.childPredTask[g]=null,b.childPredTask.splice(g,1))}0!=a.project.arrTasks.length?a.project.shiftProjectItem():(a.project.projectItem[0].style.display="none",this.hideDescrProject());this.ganttChart.contentDataHeight-=this.ganttChart.heightTaskItemExtra+this.ganttChart.heightTaskItem}},insertTask:function(a,c,b,e,d,f,g,l){var h=null,k=null;if(this.project.getTaskById(a))return!1;
-if(!e||e<this.ganttChart.minWorkLength)e=this.ganttChart.minWorkLength;if(!c||""==c)c=a;if(!d||""==d)d=0;else if(d=parseInt(d),0>d||100<d)return!1;if(l&&""!=l){k=this.project.getTaskById(l);if(!k)return!1;b=b||k.startTime;if(b<k.startTime)return!1;h=new t({id:a,name:c,startTime:b,duration:e,percentage:d,previousTaskId:f,taskOwner:g});if(!this.ganttChart.checkPosParentTask(k,h))return!1;h.parentTask=k;a=this.getTaskById(k.id);c=!1;"none"==a.cTaskItem[0].style.display?c=!0:a.cTaskNameItem[2]&&(a.isExpanded||
-(c=!0));c&&(0==a.childTask.length?this.ganttChart.openTree(a.parentTask):this.ganttChart.openTree(a));if(""!=f){if((f=this.project.getTaskById(f))&&f.parentTask){if(f.parentTask.id!=h.parentTask.id)return!1}else return!1;this.ganttChart.checkPosPreviousTask(f,h)||this.ganttChart.correctPosPreviousTask(f,h);h.previousTask=f}0<k.cldTasks.length&&(k.cldTasks[k.cldTasks.length-1].nextChildTask=h,h.previousChildTask=k.cldTasks[k.cldTasks.length-1]);k.cldTasks.push(h);1==k.cldTasks.length&&(a.cTaskNameItem[2]=
-a.createTreeImg());k=new u(h,this,this.ganttChart);k.create();h.nextChildTask&&(k.nextChildTask=k.project.getTaskById(h.nextChildTask.id));k.adjustPanelTime();h=this.ganttChart.heightTaskItem+this.ganttChart.heightTaskItemExtra;k.shiftCurrentTasks(k,h)}else{b=b||this.project.startDate;h=new t({id:a,name:c,startTime:b,duration:e,percentage:d,previousTaskId:f,taskOwner:g});if(h.startTime<=this.ganttChart.startDate)return!1;if(""!=f){f=this.project.getTaskById(f);if(!f)return!1;this.ganttChart.checkPosPreviousTask(f,
-h)||this.ganttChart.correctPosPreviousTask(f,h);if(f.parentTask)return!1;h.previousTask=f}0<this.project.parentTasks.length&&(this.project.parentTasks[this.project.parentTasks.length-1].nextParentTask=h,h.previousParentTask=this.project.parentTasks[this.project.parentTasks.length-1]);this.project.parentTasks.push(h);k=new u(h,this,this.ganttChart);k.create();h.nextParentTask&&(k.nextParentTask=k.project.getTaskById(h.nextParentTask.id));k.adjustPanelTime();this.arrTasks.push(k);h=this.ganttChart.heightTaskItem+
-this.ganttChart.heightTaskItemExtra;k.shiftCurrentTasks(k,h);this.projectItem[0].style.display="inline";this.setPercentCompleted(this.getPercentCompleted());this.shiftProjectItem();this.showDescrProject()}this.ganttChart.checkHeighPanelTasks();this.ganttChart.checkPosition();return k},shiftNextProject:function(a,c){a.nextProject&&(a.nextProject.shiftProject(c),this.shiftNextProject(a.nextProject,c))},shiftProject:function(a){this.posY+=a;this.projectItem[0].style.top=parseInt(this.projectItem[0].style.top)+
-a+"px";this.descrProject.style.top=parseInt(this.descrProject.style.top)+a+"px";this.projectNameItem.style.top=parseInt(this.projectNameItem.style.top)+a+"px";0<this.arrTasks.length&&this.shiftNextParentTask(this.arrTasks[0],a)},shiftTask:function(a,c){a.posY+=c;var b=a.cTaskNameItem[0],e=a.cTaskNameItem[1],d=a.cTaskNameItem[2],f=a.cTaskItem[1];b.style.top=parseInt(b.style.top)+c+"px";d&&(d.style.top=parseInt(d.style.top)+c+"px");a.parentTask&&(e[0].style.top=parseInt(e[0].style.top)+c+"px",e[1].style.top=
-parseInt(e[1].style.top)+c+"px");a.cTaskItem[0].style.top=parseInt(a.cTaskItem[0].style.top)+c+"px";a.descrTask.style.top=parseInt(a.descrTask.style.top)+c+"px";f[0]&&(f[0].style.top=parseInt(f[0].style.top)+c+"px",f[1].style.top=parseInt(f[1].style.top)+c+"px",f[2].style.top=parseInt(f[2].style.top)+c+"px")},shiftNextParentTask:function(a,c){this.shiftTask(a,c);this.shiftChildTasks(a,c);a.nextParentTask&&this.shiftNextParentTask(a.nextParentTask,c)},shiftChildTasks:function(a,c){s.forEach(a.childTask,
-function(a){this.shiftTask(a,c);0<a.childTask.length&&this.shiftChildTasks(a,c)},this)}})});
-//@ sourceMappingURL=GanttProjectControl.js.map
+define([
+	"./GanttTaskItem",
+	"./GanttTaskControl",
+	"dijit/focus",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/date/locale",
+	"dojo/request",
+	"dojo/on",
+	"dojo/dom",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-attr",
+	"dojo/dom-geometry",
+	"dojo/keys",
+	"dojo/domReady!"
+], function(GanttTaskItem, GanttTaskControl, focus,
+		declare, arrayUtil, lang, locale, request, on,
+		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys){
+	return declare("dojox.gantt.GanttProjectControl", [], {
+		constructor: function(ganttChart, projectItem){
+			this.project = projectItem;
+			this.ganttChart = ganttChart;
+			this.descrProject = null;
+			this.projectItem = null;
+			this.projectNameItem = null;
+			this.posY = 0;
+			this.posX = 0;
+			this.nextProject = null;
+			this.previousProject = null;
+			this.arrTasks = [];
+			this.percentage = 0;
+			this.duration = 0;
+		},
+		checkWidthProjectNameItem: function(){
+			if(this.projectNameItem.offsetWidth + this.projectNameItem.offsetLeft > this.ganttChart.maxWidthTaskNames){
+				var width = this.projectNameItem.offsetWidth + this.projectNameItem.offsetLeft - this.ganttChart.maxWidthTaskNames;
+				var countChar = Math.round(width / (this.projectNameItem.offsetWidth / this.projectNameItem.firstChild.length));
+				var pName = this.project.name.substring(0, this.projectNameItem.firstChild.length - countChar - 3);
+				pName += "...";
+				this.projectNameItem.innerHTML = pName;
+			}
+		},
+		refreshProjectItem: function(projectItem){
+			this.percentage = this.getPercentCompleted();
+			domStyle.set(projectItem, {
+				"left": this.posX + "px",
+				"width": this.duration * this.ganttChart.pixelsPerWorkHour + "px"
+			});
+			var tblProjectItem = projectItem.firstChild;
+			var width = this.duration * this.ganttChart.pixelsPerWorkHour;
+			tblProjectItem.width = ((width == 0) ? 1 : width) + "px";
+			tblProjectItem.style.width = ((width == 0) ? 1 : width) + "px";
+			var rowprojectItem = tblProjectItem.rows[0];
+			if(this.percentage != -1){
+				if(this.percentage != 0){
+					var cellprojectItem = rowprojectItem.firstChild;
+					cellprojectItem.width = this.percentage + "%";
+					var imageProgress = cellprojectItem.firstChild;
+					domStyle.set(imageProgress, {
+						width: (!this.duration ? 1 : (this.percentage * this.duration * this.ganttChart.pixelsPerWorkHour / 100)) + "px",
+						height: this.ganttChart.heightTaskItem + "px"
+					})
+				}
+				if(this.percentage != 100){
+					var cellprojectItem = rowprojectItem.lastChild;
+					cellprojectItem.width = (100 - this.percentage) + "%";
+					var imageProgress = cellprojectItem.firstChild;
+					domStyle.set(imageProgress, {
+						width: (!this.duration ? 1 : ((100 - this.percentage) * this.duration * this.ganttChart.pixelsPerWorkHour / 100)) + "px",
+						height: this.ganttChart.heightTaskItem + "px"
+					})
+				}
+			}else{
+				var cellprojectItem = rowprojectItem.firstChild;
+				cellprojectItem.width = "1px";
+				var imageProgress = cellprojectItem.firstChild;
+				domStyle.set(imageProgress, {
+					width: "1px",
+					height: this.ganttChart.heightTaskItem + "px"
+				})
+			}
+			var divTaskInfo = projectItem.lastChild;
+			var tblTaskInfo = divTaskInfo.firstChild;
+			domStyle.set(tblTaskInfo, {
+				height: this.ganttChart.heightTaskItem + "px",
+				width: (!this.duration ? 1 : (this.duration * this.ganttChart.pixelsPerWorkHour)) + "px"
+			});
+			var rowTaskInfo = tblTaskInfo.rows[0];
+			var cellTaskInfo = rowTaskInfo.firstChild;
+			cellTaskInfo.height = this.ganttChart.heightTaskItem + "px";
+			if(this.project.parentTasks.length == 0){
+				projectItem.style.display = "none";
+			}
+			return projectItem;
+		},
+		refreshDescrProject: function(divDesc){
+			var posX = (this.posX + this.duration * this.ganttChart.pixelsPerWorkHour + 10);
+			domStyle.set(divDesc, {
+				"left": posX + "px"
+			});
+			if(this.project.parentTasks.length == 0){
+				this.descrProject.style.visibility = 'hidden';
+			}
+			return divDesc;
+		},
+		postLoadData: function(){
+			//TODO e.g. project relative info...
+		},
+		refresh: function(){
+			this.posX = (this.project.startDate - this.ganttChart.startDate) / (60 * 60 * 1000) * this.ganttChart.pixelsPerHour;
+			this.refreshProjectItem(this.projectItem[0]);
+			this.refreshDescrProject(this.projectItem[0].nextSibling);
+			return this;
+		},
+		create: function(){
+			var containerTasks = this.ganttChart.contentData.firstChild;
+			this.posX = (this.project.startDate - this.ganttChart.startDate) / (60 * 60 * 1000) * this.ganttChart.pixelsPerHour;
+			if(this.previousProject){
+				if(this.previousProject.arrTasks.length > 0){
+					var lastChildTask = this.ganttChart.getLastChildTask(this.previousProject.arrTasks[this.previousProject.arrTasks.length - 1]);
+					this.posY = parseInt(lastChildTask.cTaskItem[0].style.top) + this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
+				}else{
+					this.posY = parseInt(this.previousProject.projectItem[0].style.top) + this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
+				}
+			}else{
+				this.posY = 6;
+			}
+			var containerNames = this.ganttChart.panelNames.firstChild;
+			this.projectNameItem = this.createProjectNameItem();
+			containerNames.appendChild(this.projectNameItem);
+			this.checkWidthProjectNameItem();
+			this.projectItem = [this.createProjectItem(), []];
+			containerTasks.appendChild(this.projectItem[0]);
+			containerTasks.appendChild(this.createDescrProject());
+			this.adjustPanelTime();
+		},
+		getTaskById: function(id){
+			for(var i = 0; i < this.arrTasks.length; i++){
+				var aTask = this.arrTasks[i];
+				var task = this.searchTaskInTree(aTask, id);
+				if(task){
+					return task;
+				}
+			}
+			return null;
+		},
+		searchTaskInTree: function(task, id){
+			if(task.taskItem.id == id){
+				return task;
+			}else{
+				for(var i = 0; i < task.childTask.length; i++){
+					var cTask = task.childTask[i];
+					if(cTask.taskItem.id == id){
+						return cTask;
+					}else{
+						if(cTask.childTask.length > 0){
+							var cTask = this.searchTaskInTree(cTask, id);
+							if(cTask){
+								return cTask;
+							}
+						}
+					}
+				}
+			}
+			return null;
+		},
+		shiftProjectItem: function(){
+			var posItemL = null;
+			var posItemR = null;
+			var posProjectItemL = parseInt(this.projectItem[0].style.left);
+			for(var i = 0; i < this.arrTasks.length; i++){
+				var aTask = this.arrTasks[i];
+				var tmpPosItemL = parseInt(aTask.cTaskItem[0].style.left);
+				var tmpPosItemR = parseInt(aTask.cTaskItem[0].style.left) + parseInt(aTask.cTaskItem[0].firstChild.firstChild.width);
+				if(!posItemL){
+					posItemL = tmpPosItemL;
+				}
+				if(!posItemR){
+					posItemR = tmpPosItemR;
+				}
+				if(posItemL > tmpPosItemL){
+					posItemL = tmpPosItemL;
+				}
+				if(posItemR < tmpPosItemR){
+					posItemR = tmpPosItemR;
+				}
+			}
+			if(posItemL != posProjectItemL){
+				this.project.startDate = new Date(this.ganttChart.startDate);
+				this.project.startDate.setHours(this.project.startDate.getHours() + (posItemL / this.ganttChart.pixelsPerHour));
+			}
+			this.projectItem[0].style.left = posItemL + "px";
+			this.resizeProjectItem(posItemR - posItemL);
+			this.duration = Math.round(parseInt(this.projectItem[0].firstChild.width) / (this.ganttChart.pixelsPerWorkHour));
+			this.shiftDescrProject();
+			this.adjustPanelTime();
+		},
+		adjustPanelTime: function(){
+			var projectItem = this.projectItem[0];
+			var width = parseInt(projectItem.style.left) + parseInt(projectItem.firstChild.style.width) + this.ganttChart.panelTimeExpandDelta;
+			width += this.descrProject.offsetWidth;
+			this.ganttChart.adjustPanelTime(width);
+		},
+		resizeProjectItem: function(width){
+			var percentage = this.percentage,
+				pItem = this.projectItem[0];
+			if(percentage > 0 && percentage < 100){
+				pItem.firstChild.style.width = width + "px";
+				pItem.firstChild.width = width + "px";
+				pItem.style.width = width + "px";
+				var firstRow = pItem.firstChild.rows[0];
+				firstRow.cells[0].firstChild.style.width = Math.round(width * percentage / 100) + "px";
+				firstRow.cells[0].firstChild.style.height = this.ganttChart.heightTaskItem + "px";
+				firstRow.cells[1].firstChild.style.width = Math.round(width * (100 - percentage) / 100) + "px";
+				firstRow.cells[1].firstChild.style.height = this.ganttChart.heightTaskItem + "px";
+				pItem.lastChild.firstChild.width = width + "px";
+			}else if(percentage == 0 || percentage == 100){
+				pItem.firstChild.style.width = width + "px";
+				pItem.firstChild.width = width + "px";
+				pItem.style.width = width + "px";
+				var firstRow = pItem.firstChild.rows[0];
+				firstRow.cells[0].firstChild.style.width = width + "px";
+				firstRow.cells[0].firstChild.style.height = this.ganttChart.heightTaskItem + "px";
+				pItem.lastChild.firstChild.width = width + "px";
+			}
+		},
+		shiftDescrProject: function(){
+			var posX = (parseInt(this.projectItem[0].style.left) + this.duration * this.ganttChart.pixelsPerWorkHour + 10);
+			this.descrProject.style.left = posX + "px";
+			this.descrProject.innerHTML = this.getDescStr();
+		},
+		showDescrProject: function(){
+			var posX = (parseInt(this.projectItem[0].style.left) + this.duration * this.ganttChart.pixelsPerWorkHour + 10);
+			this.descrProject.style.left = posX + "px";
+			this.descrProject.style.visibility = 'visible';
+			this.descrProject.innerHTML = this.getDescStr();
+		},
+		hideDescrProject: function(){
+			this.descrProject.style.visibility = 'hidden';
+		},
+		getDescStr: function(){
+			return this.duration/this.ganttChart.hsPerDay + " days,  " + this.duration + " hours";
+		},
+		createDescrProject: function(){
+			var posX = (this.posX + this.duration * this.ganttChart.pixelsPerWorkHour + 10);
+			var divDesc = domConstruct.create("div", {
+				innerHTML: this.getDescStr(),
+				className: "ganttDescProject"
+			});
+			domStyle.set(divDesc, {
+				left: posX + "px",
+				top: this.posY + "px"
+			});
+			this.descrProject = divDesc;
+			if(this.project.parentTasks.length == 0){
+				this.descrProject.style.visibility = 'hidden';
+			}
+			return divDesc;
+		},
+		createProjectItem: function(){
+			this.percentage = this.getPercentCompleted();
+			this.duration = this.getDuration();
+			var projectItem = domConstruct.create("div", {
+				id: this.project.id,
+				className: "ganttProjectItem"
+			});
+			domStyle.set(projectItem, {
+				left: this.posX + "px",
+				top: this.posY + "px",
+				width: this.duration * this.ganttChart.pixelsPerWorkHour + "px"
+			});
+			var tblProjectItem = domConstruct.create("table", {
+				cellPadding: "0",
+				cellSpacing: "0",
+				className: "ganttTblProjectItem"
+			}, projectItem);
+			var width = this.duration * this.ganttChart.pixelsPerWorkHour;
+			tblProjectItem.width = ((width == 0) ? 1 : width) + "px";
+			tblProjectItem.style.width = ((width == 0) ? 1 : width) + "px";
+		
+			var rowprojectItem = tblProjectItem.insertRow(tblProjectItem.rows.length);
+			if(this.percentage != -1){
+				if(this.percentage != 0){
+					var cellprojectItem = domConstruct.create("td", {
+						width: this.percentage + "%"
+					}, rowprojectItem);
+					cellprojectItem.style.lineHeight = "1px";
+					var imageProgress = domConstruct.create("div", {
+						className: "ganttImageProgressFilled"
+					}, cellprojectItem);
+					domStyle.set(imageProgress, {
+						width: (this.percentage * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
+						height: this.ganttChart.heightTaskItem + "px"
+					});
+				}
+				if(this.percentage != 100){
+					var cellprojectItem = domConstruct.create("td", {
+						width: (100 - this.percentage) + "%"
+					}, rowprojectItem);
+					cellprojectItem.style.lineHeight = "1px";
+					var imageProgress = domConstruct.create("div", {
+						className: "ganttImageProgressBg"
+					}, cellprojectItem);
+					domStyle.set(imageProgress, {
+						width: ((100 - this.percentage) * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
+						height: this.ganttChart.heightTaskItem + "px"
+					});
+				}
+			}else{
+				var cellprojectItem = domConstruct.create("td", {
+					width: "1px"
+				}, rowprojectItem);
+				cellprojectItem.style.lineHeight = "1px";
+				var imageProgress = domConstruct.create("div", {
+					className: "ganttImageProgressBg"
+				}, cellprojectItem);
+				domStyle.set(imageProgress, {
+					width: "1px",
+					height: this.ganttChart.heightTaskItem + "px"
+				});
+			}
+			var divTaskInfo = domConstruct.create("div", {className: "ganttDivTaskInfo"});
+			var tblTaskInfo = domConstruct.create("table", {
+				cellPadding: "0",
+				cellSpacing: "0",
+				height: this.ganttChart.heightTaskItem + "px",
+				width: ((this.duration * this.ganttChart.pixelsPerWorkHour == 0) ? 1 : this.duration * this.ganttChart.pixelsPerWorkHour) + "px"
+			}, divTaskInfo);
+			var rowTaskInfo = tblTaskInfo.insertRow(0);
+			domConstruct.create("td", {
+				align: "center",
+				vAlign: "top",
+				height: this.ganttChart.heightTaskItem + "px",
+				className: "ganttMoveInfo"
+			}, rowTaskInfo);
+			projectItem.appendChild(divTaskInfo);
+			if(this.project.parentTasks.length == 0){
+				projectItem.style.display = "none";
+			}
+			return projectItem;
+		},
+		createProjectNameItem: function(){
+			var divName = domConstruct.create("div", {
+				className: "ganttProjectNameItem",
+				innerHTML: this.project.name,
+				title: this.project.name
+			});
+			domStyle.set(divName, {
+				left: "5px",
+				top: this.posY + "px"
+			});
+			domAttr.set(divName, "tabIndex", 0);
+			if(this.ganttChart.isShowConMenu){
+				this.ganttChart._events.push(
+					on(divName, "mouseover", lang.hitch(this, function(event){
+						domClass.add(divName, "ganttProjectNameItemHover");
+						clearTimeout(this.ganttChart.menuTimer);
+						this.ganttChart.tabMenu.clear();
+						this.ganttChart.tabMenu.show(event.target, this);
+					}))
+				);
+				this.ganttChart._events.push(
+					on(divName, "keydown", lang.hitch(this, function(event){
+						if(event.keyCode == keys.ENTER){
+							this.ganttChart.tabMenu.clear();
+							this.ganttChart.tabMenu.show(event.target, this);
+						}
+						if(this.ganttChart.tabMenu.isShow && (event.keyCode == keys.LEFT_ARROW || event.keyCode == keys.RIGHT_ARROW)){
+							focus(this.ganttChart.tabMenu.menuPanel.firstChild.rows[0].cells[0]);
+						}
+						if(this.ganttChart.tabMenu.isShow && event.keyCode == keys.ESCAPE){
+							this.ganttChart.tabMenu.hide();
+						}
+					}))
+				);
+				this.ganttChart._events.push(
+					on(divName, "mouseout", lang.hitch(this, function(){
+						domClass.remove(divName, "ganttProjectNameItemHover");
+						clearTimeout(this.ganttChart.menuTimer);
+						this.ganttChart.menuTimer = setTimeout(lang.hitch(this, function(){
+							this.ganttChart.tabMenu.hide();
+						}), 200);
+					}))
+				);
+				this.ganttChart._events.push(
+					on(this.ganttChart.tabMenu.menuPanel, "mouseover", lang.hitch(this, function(){
+						clearTimeout(this.ganttChart.menuTimer);
+					}))
+				);
+				this.ganttChart._events.push(
+					on(this.ganttChart.tabMenu.menuPanel, "keydown", lang.hitch(this, function(){
+						if(this.ganttChart.tabMenu.isShow && event.keyCode == keys.ESCAPE){
+							this.ganttChart.tabMenu.hide();
+						}
+					}))
+				);
+				this.ganttChart._events.push(
+					on(this.ganttChart.tabMenu.menuPanel, "mouseout", lang.hitch(this, function(){
+						clearTimeout(this.ganttChart.menuTimer);
+						this.ganttChart.menuTimer = setTimeout(lang.hitch(this, function(){
+							this.ganttChart.tabMenu.hide();
+						}), 200);
+					}))
+				);
+			}
+			return divName;
+		},
+		getPercentCompleted: function(){
+			var sum = 0;
+			arrayUtil.forEach(this.project.parentTasks, function(ppTask){
+				sum += parseInt(ppTask.percentage);
+			}, this);
+			if(this.project.parentTasks.length != 0){
+				return Math.round(sum / this.project.parentTasks.length);
+			}else{
+				return -1;
+			}
+		},
+		getDuration: function(){
+			var duration = 0, tmpDuration = 0;
+			if(this.project.parentTasks.length > 0){
+				arrayUtil.forEach(this.project.parentTasks, function(ppTask){
+					tmpDuration = ppTask.duration * 24 / this.ganttChart.hsPerDay + (ppTask.startTime - this.ganttChart.startDate) / (60 * 60 * 1000);
+					if(tmpDuration > duration){
+						duration = tmpDuration;
+					}
+				}, this);
+				return ((duration - this.posX) / 24) * this.ganttChart.hsPerDay;
+			}else{
+				return 0;
+			}
+		},
+		deleteTask: function(id){
+			var task = this.getTaskById(id);
+			if(task){
+				this.deleteChildTask(task);
+				this.ganttChart.checkPosition();
+			}
+		},
+		setName: function(name){
+			if(name){
+				this.project.name = name;
+				this.projectNameItem.innerHTML = name;
+				this.projectNameItem.title = name;
+				this.checkWidthProjectNameItem();
+			
+				this.descrProject.innerHTML = this.getDescStr();
+				this.adjustPanelTime();
+			}
+		},
+		setPercentCompleted: function(percentage){
+			percentage = parseInt(percentage);
+			if(isNaN(percentage) || percentage > 100 || percentage < 0){
+				return false;
+			}
+			var prow = this.projectItem[0].firstChild.rows[0],
+				rc0 = prow.cells[0], rc1 = prow.cells[1];
+			if((percentage > 0) && (percentage < 100) && (this.percentage > 0) && (this.percentage < 100)){
+				rc0.width = parseInt(percentage) + "%";
+				rc0.firstChild.style.width = (percentage * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px";
+				rc1.width = (100 - parseInt(percentage)) + "%";
+				rc1.firstChild.style.width = ((100 - percentage) * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px";
+			}else if(((percentage == 0) || (percentage == 100)) && (this.percentage > 0) && (this.percentage < 100)){
+				if(percentage == 0){
+					rc0.parentNode.removeChild(rc0);
+					rc1.width = 100 + "%";
+					rc1.firstChild.style.width = this.duration * this.ganttChart.pixelsPerWorkHour + "px";
+				}else if(percentage == 100){
+					rc1.parentNode.removeChild(rc1);
+					rc0.width = 100 + "%";
+					rc0.firstChild.style.width = this.duration * this.ganttChart.pixelsPerWorkHour + "px";
+				}
+			}else if(((percentage == 0) || (percentage == 100)) && ((this.percentage == 0) || (this.percentage == 100))){
+				if((percentage == 0) && (this.percentage == 100)){
+					domClass.remove(rc0.firstChild, "ganttImageProgressFilled");
+					domClass.add(rc0.firstChild, "ganttImageProgressBg");
+				}else if((percentage == 100) && (this.percentage == 0)){
+					domClass.remove(rc0.firstChild, "ganttImageProgressBg");
+					domClass.add(rc0.firstChild, "ganttImageProgressFilled");
+				}
+			}else if(((percentage > 0) || (percentage < 100)) && ((this.percentage == 0) || (this.percentage == 100))){
+				rc0.parentNode.removeChild(rc0);
+				var cellprojectItem = domConstruct.create("td", {
+					width: percentage + "%"
+				}, prow);
+				cellprojectItem.style.lineHeight = "1px";
+				var imageProgress = domConstruct.create("div", {
+					className: "ganttImageProgressFilled"
+				}, cellprojectItem);
+				domStyle.set(imageProgress, {
+					width: (percentage * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
+					height: this.ganttChart.heightTaskItem + "px"
+				});
+				cellprojectItem = domConstruct.create("td", {
+					width: (100 - percentage) + "%"
+				}, prow);
+				cellprojectItem.style.lineHeight = "1px";
+				imageProgress = domConstruct.create("div", {
+					className: "ganttImageProgressBg"
+				}, cellprojectItem);
+				domStyle.set(imageProgress, {
+					width: ((100 - percentage) * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
+					height: this.ganttChart.heightTaskItem + "px"
+				});
+			}else if(this.percentage == -1){
+				if(percentage == 100){
+					domClass.remove(rc0.firstChild, "ganttImageProgressBg");
+					domClass.add(rc0.firstChild, "ganttImageProgressFilled");
+				}else if(percentage < 100 && percentage > 0){
+					rc0.parentNode.removeChild(rc0);
+					var cellprojectItem = domConstruct.create("td", {
+						width: percentage + "%"
+					}, prow);
+					cellprojectItem.style.lineHeight = "1px";
+					imageProgress = domConstruct.create("div", {
+						className: "ganttImageProgressFilled"
+					}, cellprojectItem);
+					domStyle.set(imageProgress, {
+						width: (percentage * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
+						height: this.ganttChart.heightTaskItem + "px"
+					});
+					cellprojectItem = domConstruct.create("td", {
+						width: (100 - percentage) + "%"
+					}, prow);
+					cellprojectItem.style.lineHeight = "1px";
+					imageProgress = domConstruct.create("div", {
+						className: "ganttImageProgressBg"
+					}, cellprojectItem);
+					domStyle.set(imageProgress, {
+						width: ((100 - percentage) * this.duration * this.ganttChart.pixelsPerWorkHour) / 100 + "px",
+						height: this.ganttChart.heightTaskItem + "px"
+					});
+				}
+			}
+			this.percentage = percentage;
+			this.descrProject.innerHTML = this.getDescStr();
+			return true;
+		},
+		deleteChildTask: function(task){
+			if(task){
+				var tItem0 = task.cTaskItem[0], tNameItem0 = task.cTaskNameItem[0],
+					tItem1 = task.cTaskItem[1], tNameItem1 = task.cTaskNameItem[1],
+					tNameItem2 = task.cTaskNameItem[2];
+				if(tItem0.style.display == "none"){
+					this.ganttChart.openTree(task.parentTask);
+				}
+				//delete of connecting lines
+				if(task.childPredTask.length > 0){
+					for(var i = 0; i < task.childPredTask.length; i++){
+						var cpTask = task.childPredTask[i];
+						for(var t = 0; t < cpTask.cTaskItem[1].length; t++){
+							cpTask.cTaskItem[1][t].parentNode.removeChild(cpTask.cTaskItem[1][t]);
+						}
+						cpTask.cTaskItem[1] = [];
+						cpTask.predTask = null;
+					}
+				}
+				//delete child task
+				if(task.childTask.length > 0){
+					while(task.childTask.length > 0){
+						this.deleteChildTask(task.childTask[0]);
+					}
+				}
+				//shift tasks
+				var rowHeight = this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
+				if(tItem0.style.display != "none"){
+					task.shiftCurrentTasks(task, -rowHeight);
+				}
+				//delete object task
+				this.project.deleteTask(task.taskItem.id);
+				//delete div and connecting lines from contentData
+				if(tItem0){
+					tItem0.parentNode.removeChild(tItem0);
+				}
+				task.descrTask.parentNode.removeChild(task.descrTask);
+				if(tItem1.length > 0){
+					for(var j = 0; j < tItem1.length; j++){
+						tItem1[j].parentNode.removeChild(tItem1[j]);
+					}
+				}
+				//delete div and connecting lines from panelName
+				if(tNameItem0){
+					tNameItem0.parentNode.removeChild(tNameItem0);
+				}
+				if(task.cTaskNameItem[1]){
+					for(var j = 0; j < tNameItem1.length; j++){
+						tNameItem1[j].parentNode.removeChild(tNameItem1[j]);
+					}
+				}
+				if(tNameItem2 && tNameItem2.parentNode){
+					tNameItem2.parentNode.removeChild(tNameItem2);
+				}
+				if(task.taskIdentifier){
+					task.taskIdentifier.parentNode.removeChild(task.taskIdentifier);
+					task.taskIdentifier = null;
+				}
+				//delete object task
+				if(task.parentTask){
+					if(task.previousChildTask){
+						if(task.nextChildTask){
+							task.previousChildTask.nextChildTask = task.nextChildTask;
+						}else{
+							task.previousChildTask.nextChildTask = null;
+						}
+					}
+					var parentTask = task.parentTask;
+					for(var i = 0; i < parentTask.childTask.length; i++){
+						if(parentTask.childTask[i].taskItem.id == task.taskItem.id){
+							parentTask.childTask[i] = null;
+							parentTask.childTask.splice(i, 1);
+							break;
+						}
+					}
+					if(parentTask.childTask.length == 0){
+						if(parentTask.cTaskNameItem[2]){
+							parentTask.cTaskNameItem[2].parentNode.removeChild(parentTask.cTaskNameItem[2]);
+							parentTask.cTaskNameItem[2] = null;
+						}
+					}
+				}else{
+					if(task.previousParentTask){
+						if(task.nextParentTask){
+							task.previousParentTask.nextParentTask = task.nextParentTask;
+						}else{
+							task.previousParentTask.nextParentTask = null;
+						}
+					}
+					var project = task.project;
+					for(var i = 0; i < project.arrTasks.length; i++){
+						if(project.arrTasks[i].taskItem.id == task.taskItem.id){
+							project.arrTasks.splice(i, 1);
+						}
+					}
+				}
+				if(task.predTask){
+					var predTask = task.predTask;
+					for(var i = 0; i < predTask.childPredTask.length; i++){
+						if(predTask.childPredTask[i].taskItem.id == task.taskItem.id){
+							predTask.childPredTask[i] = null;
+							predTask.childPredTask.splice(i, 1);
+						}
+					}
+				}
+				if(task.project.arrTasks.length != 0){
+					task.project.shiftProjectItem();
+				}else{
+					task.project.projectItem[0].style.display = "none";
+					this.hideDescrProject();
+				}
+				this.ganttChart.contentDataHeight -= this.ganttChart.heightTaskItemExtra + this.ganttChart.heightTaskItem;
+			}
+		},
+	
+		insertTask: function(id, name, startTime, duration, percentage, previousTaskId, taskOwner, parentTaskId){
+			var task = null;
+			var _task = null;
+			if(this.project.getTaskById(id)){
+				return false;
+			}
+			if((!duration) || (duration < this.ganttChart.minWorkLength)){
+				duration = this.ganttChart.minWorkLength;
+			}
+			if((!name) || (name == "")){
+				name = id;
+			}
+			if((!percentage) || (percentage == "")){
+				percentage = 0;
+			
+			}else{
+				percentage = parseInt(percentage);
+				if(percentage < 0 || percentage > 100){
+					return false;
+				}
+			}
+			var sortRequired = false;
+			if((parentTaskId) && (parentTaskId != "")){
+				var parentTask = this.project.getTaskById(parentTaskId);
+				if(!parentTask){
+					return false;
+				}
+				startTime = startTime || parentTask.startTime;
+				if(startTime < parentTask.startTime){
+					return false;
+				}
+				task = new GanttTaskItem({
+					id: id,
+					name: name,
+					startTime: startTime,
+					duration: duration,
+					percentage: percentage,
+					previousTaskId: previousTaskId,
+					taskOwner: taskOwner
+				});
+				if(!this.ganttChart.checkPosParentTask(parentTask, task)){
+					return false;
+				}
+				task.parentTask = parentTask;
+				var _parentTask = this.getTaskById(parentTask.id);
+				var isHide = false;
+				if(_parentTask.cTaskItem[0].style.display == "none"){
+					isHide = true;
+				}else if(_parentTask.cTaskNameItem[2]){
+					if(!_parentTask.isExpanded){
+						isHide = true;
+					}
+				}
+				if(isHide){
+					if(_parentTask.childTask.length == 0){
+						this.ganttChart.openTree(_parentTask.parentTask);
+					}else{
+						this.ganttChart.openTree(_parentTask);
+					}
+				}
+				if(previousTaskId != ""){
+					var predTask = this.project.getTaskById(previousTaskId);
+					if(!predTask){
+						return false;
+					}
+					if(predTask.parentTask){
+						if(predTask.parentTask.id != task.parentTask.id){
+							return false;
+						}
+					}else{
+						return false;
+					}
+					if(!this.ganttChart.checkPosPreviousTask(predTask, task)){
+						this.ganttChart.correctPosPreviousTask(predTask, task);
+					}
+					task.previousTask = predTask;
+				}
+				var isAdd = false;
+				if(sortRequired) for(var i = 0; i < parentTask.cldTasks.length; i++){
+					if(task.startTime < parentTask.cldTasks[i].startTime){
+						parentTask.cldTasks.splice(i, 0, task);
+						if(i > 0){
+							parentTask.cldTasks[i - 1].nextChildTask = parentTask.cldTasks[i];
+							parentTask.cldTasks[i].previousChildTask = parentTask.cldTasks[i - 1];
+						}
+						if(parentTask.cldTasks[i + 1]){
+							parentTask.cldTasks[i + 1].previousChildTask = parentTask.cldTasks[i];
+							parentTask.cldTasks[i].nextChildTask = parentTask.cldTasks[i + 1];
+						}
+						isAdd = true;
+						break;
+					}
+				}
+				if(!isAdd){
+					if(parentTask.cldTasks.length > 0){
+						parentTask.cldTasks[parentTask.cldTasks.length - 1].nextChildTask = task;
+						task.previousChildTask = parentTask.cldTasks[parentTask.cldTasks.length - 1];
+					}
+					parentTask.cldTasks.push(task);
+				}
+				if(parentTask.cldTasks.length == 1){
+					_parentTask.cTaskNameItem[2] = _parentTask.createTreeImg();
+				}
+				_task = new GanttTaskControl(task, this, this.ganttChart);
+				_task.create();
+				if(task.nextChildTask) _task.nextChildTask = _task.project.getTaskById(task.nextChildTask.id);
+				_task.adjustPanelTime();
+				var rowHeight = this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
+				_task.shiftCurrentTasks(_task, rowHeight);//23
+			}else{
+				startTime = startTime || this.project.startDate;
+				task = new GanttTaskItem({
+					id: id,
+					name: name,
+					startTime: startTime,
+					duration: duration,
+					percentage: percentage,
+					previousTaskId: previousTaskId,
+					taskOwner: taskOwner
+				});
+				if(task.startTime <= this.ganttChart.startDate){
+					return false;
+				}
+				if(previousTaskId != ""){
+					var predTask = this.project.getTaskById(previousTaskId);
+					if(!predTask){
+						return false;
+					}
+					if(!this.ganttChart.checkPosPreviousTask(predTask, task)){
+						this.ganttChart.correctPosPreviousTask(predTask, task);
+					}
+					if(predTask.parentTask){
+						return false;
+					}
+					task.previousTask = predTask;
+				}
+				var isAdd = false;
+				if(sortRequired){
+					for(var i = 0; i < this.project.parentTasks.length; i++){
+						var ppTask = this.project.parentTasks[i];
+						if(startTime < ppTask.startTime){
+							this.project.parentTasks.splice(i, 0, task);
+							if(i > 0){
+								this.project.parentTasks[i - 1].nextParentTask = task;
+								task.previousParentTask = this.project.parentTasks[i - 1];
+							}
+							if(this.project.parentTasks[i + 1]){
+								this.project.parentTasks[i + 1].previousParentTask = task;
+								task.nextParentTask = this.project.parentTasks[i + 1];
+							}
+							isAdd = true;
+							break;
+						}
+					}
+				}
+				if(!isAdd){
+					if(this.project.parentTasks.length > 0){
+						this.project.parentTasks[this.project.parentTasks.length - 1].nextParentTask = task;
+						task.previousParentTask = this.project.parentTasks[this.project.parentTasks.length - 1];
+					}
+					this.project.parentTasks.push(task);
+				}
+				_task = new GanttTaskControl(task, this, this.ganttChart);
+				_task.create();
+				if(task.nextParentTask) _task.nextParentTask = _task.project.getTaskById(task.nextParentTask.id);
+				_task.adjustPanelTime();
+				this.arrTasks.push(_task);
+				var rowHeight = this.ganttChart.heightTaskItem + this.ganttChart.heightTaskItemExtra;
+				_task.shiftCurrentTasks(_task, rowHeight);
+				this.projectItem[0].style.display = "inline";
+				this.setPercentCompleted(this.getPercentCompleted());
+				this.shiftProjectItem();
+				this.showDescrProject();
+			}
+			this.ganttChart.checkHeighPanelTasks();
+			this.ganttChart.checkPosition();
+			return _task;
+		},
+		shiftNextProject: function(project, height){
+			if(project.nextProject){
+				project.nextProject.shiftProject(height);
+				this.shiftNextProject(project.nextProject, height);
+			}
+		},
+		shiftProject: function(height){
+			this.posY = this.posY + height;
+			this.projectItem[0].style.top = parseInt(this.projectItem[0].style.top) + height + "px";
+			this.descrProject.style.top = parseInt(this.descrProject.style.top) + height + "px";
+			this.projectNameItem.style.top = parseInt(this.projectNameItem.style.top) + height + "px";
+			if(this.arrTasks.length > 0){
+				this.shiftNextParentTask(this.arrTasks[0], height);
+			}
+		},
+		shiftTask: function(task, height){
+			task.posY = task.posY + height;
+			var tNameItem0 = task.cTaskNameItem[0], tNameItem1 = task.cTaskNameItem[1], tNameItem2 = task.cTaskNameItem[2],
+				tItem1 = task.cTaskItem[1];
+			tNameItem0.style.top = parseInt(tNameItem0.style.top) + height + "px";
+			if(tNameItem2){
+				tNameItem2.style.top = parseInt(tNameItem2.style.top) + height + "px";
+			}
+			if(task.parentTask){
+				tNameItem1[0].style.top = parseInt(tNameItem1[0].style.top) + height + "px";
+				tNameItem1[1].style.top = parseInt(tNameItem1[1].style.top) + height + "px";
+			}
+			task.cTaskItem[0].style.top = parseInt(task.cTaskItem[0].style.top) + height + "px";
+			task.descrTask.style.top = parseInt(task.descrTask.style.top) + height + "px";
+			if(tItem1[0]){
+				tItem1[0].style.top = parseInt(tItem1[0].style.top) + height + "px";
+				tItem1[1].style.top = parseInt(tItem1[1].style.top) + height + "px";
+				tItem1[2].style.top = parseInt(tItem1[2].style.top) + height + "px";
+			}
+		},
+		shiftNextParentTask: function(task, height){
+			this.shiftTask(task, height);
+			this.shiftChildTasks(task, height);
+			if(task.nextParentTask){
+				this.shiftNextParentTask(task.nextParentTask, height);
+			}
+		},
+		shiftChildTasks: function(task, height){
+			arrayUtil.forEach(task.childTask, function(cTask){
+				this.shiftTask(cTask, height);
+				if(cTask.childTask.length > 0){
+					this.shiftChildTasks(cTask, height);
+				}
+			}, this);
+		}
+	});
+});

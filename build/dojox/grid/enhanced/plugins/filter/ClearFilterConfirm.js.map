@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"ClearFilterConfirm.js",
-"lineCount":3,
-"mappings":"A,SAAAA,OAAA,SACA,+DADA,wlBAEAC;MAAA,gNAMG,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA2BC,CAA3B,CAA4CC,CAA5C,CAAqEC,CAArE,QAEIJ,EAAA,0DACLC,CADK,CACIC,CADJ,CACqBC,CADrB,kBAIUC,CAJV,sDAUeC,QAAAA,OAChBC,EAAMC,WAAAD,IACVE,oBAFoBH,CAEEC,CAAA,YACtBG,qBAHoBJ,CAGGC,CAAA,aACvBI,qBAJoBL;AAIGC,CAAA,eAJHD,CAVf,YAiBMM,QAAAA,GACXC,cAAA,CAAeC,SAAf,CACAC,eAAAC,QAAAC,aAAA,cAAkDT,WAAAD,IAAA,gBAAlD,CACAW,cAAAF,QAAAC,aAAA,cAAiDT,WAAAD,IAAA,eAAjD,CAHWK,CAjBN,cAuBQO,QAAAA,GACbX,WADaW,MAvBR,WA2BKC,QAAAA,GACVZ,WAAAa,kBAAAC,KAAA,EADUF,CA3BL,UA+BIG,QAAAA,GACTf,WAAAa,kBAAAC,KAAA,EACAd,YAAAgB,gBAAAC,YAAA,CAAwCjB,WAAAgB,gBAAAE,qBAAxC,CAFSH,CA/BJ,EAFJ,CANH;",
-"sources":["ClearFilterConfirm.js.uncompressed.js"],
-"names":["require","define","declare","_Widget","_TemplatedMixin","_WidgetsInTemplateMixin","template","postMixInProperties","nls","plugin","_clearBtnLabel","_cancelBtnLabel","_clearFilterMsg","postCreate","inherited","arguments","cancelBtn","domNode","setAttribute","clearBtn","uninitialize","_onCancel","clearFilterDialog","hide","_onClear","filterDefDialog","clearFilter","_clearWithoutRefresh"]
-}

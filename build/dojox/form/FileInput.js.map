@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"FileInput.js",
-"lineCount":4,
-"mappings":"A,SAAAA,OAAA,SACA,yCADA,moBAEAC;MAAA,wBAA+B,8JAAA,MAAA,KAA/B,CAUA,QAAA,CAASC,CAAT,CAAkBC,CAAlB,CAA0BC,CAA1B,CAA8BC,CAA9B,CAAuCC,CAAvC,CAAiDC,CAAjD,CAA2DC,CAA3D,CAAuEC,CAAvE,EACAN,CAAAO,aAAA,wBADA,OAGOR,EAAA,wBAAgCM,CAAhC,0EAsBUD,CAtBV,SAwBGI,QAAAA,GAGRC,cAHQD,CAGSE,YAAA,CAAaC,cAAb,0BACjBC,kBAJQJ,CAIYE,YAAA,CAAaC,cAAb;wBAJZH,CAxBH,YAiCMK,QAAAA,IAjCN,aAmCOC,QAAAA,GAGZC,cAAAC,MAHYF,CAGWH,cAAAK,MACpBD,eAAAC,MAJSF,GAKXG,eAAAC,MAAAC,WALWL,WAMXb,CAAAmB,OAAA,OAAkBH,eAAlB,eAAAI,KAAA,EANWP,EAnCP,UA6CIQ,QAAAA,CAAoBC,CAApBD,CAAuCE,CAAvCF,EAGTG,cAAAC,UAHSJ,CAGkBC,CAHlBD,CA7CJ,OAmDCK,QAAAA,CAAmBC,CAAnBD,EAINE,eAAA,CAAgBpB,cAAhB,CACAoB,gBAAA,CAAgBjB,iBAAhB,CACGD,eANGgB,EAOLG,YAAAC,YAAA,CAAyBpB,cAAzB,CAEDV,EAAA+B,QAAA,OAAmBf,eAAnB,eAAAI,KAAA,EAGAV,eAZMgB,CAYWM,QAAAC,cAAA,SAIjBvB;cAAAwB,aAAA,eACAxB,eAAAwB,aAAA,MAAkCC,OAAlC,CACAzB,eAAAwB,aAAA,QAAoCE,SAApC,CACAlC,EAAAmC,IAAA,CAAa3B,cAAb,sBACAmB,aAAAS,YAAA,CAAyB5B,cAAzB,CAEAC,kBAtBMe,CAsBcjB,YAAA,CAAaC,cAAb,yBACpBF,eAvBMkB,CAuBWjB,YAAA,CAAaC,cAAb,0BACjBI,eAAAC,MAxBMW,IAnDD,EAHP,CAVA;",
-"sources":["FileInput.js.uncompressed.js"],
-"names":["require","define","declare","kernel","fx","domAttr","domClass","template","FormWidget","Templated","experimental","startup","_listener","connect","fileInput","_keyListener","postCreate","_matchValue","inputNode","value","cancelNode","style","visibility","fadeIn","play","setLabel","label","cssClass","titleNode","innerHTML","reset","e","disconnect","domNode","removeChild","fadeOut","document","createElement","setAttribute","id","name","add","appendChild"]
-}

@@ -1,5 +1,99 @@
-//>>built
-define("dojox/gantt/GanttProjectItem",["./GanttTaskItem","dojo/_base/declare","./GanttProjectControl","dojo/domReady!"],function(e,f){return f("dojox.gantt.GanttProjectItem",[e],{constructor:function(d){this.id=d.id;this.name=d.name||this.id;this.startDate=d.startDate||new Date;this.parentTasks=[]},getTaskById:function(d){for(var a=0;a<this.parentTasks.length;a++){var b=this.getTaskByIdInTree(this.parentTasks[a],d);if(b)return b}return null},getTaskByIdInTree:function(d,a){if(d.id==a)return d;for(var b=
-0;b<d.cldTasks.length;b++){var c=d.cldTasks[b];if(c.id==a||0<c.cldTasks.length&&0<c.cldTasks.length&&(c=this.getTaskByIdInTree(c,a)))return c}return null},addTask:function(d){this.parentTasks.push(d);d.setProject(this)},deleteTask:function(d){var a=this.getTaskById(d);if(a)if(a.parentTask)for(var b=a.parentTask,a=0;a<b.cldTasks.length;a++){var c=b.cldTasks[a];if(c.id==d){c.nextChildTask?c.previousChildTask?(c.previousChildTask.nextChildTask=c.nextChildTask,c.nextChildTask.previousChildTask=c.previousChildTask):
-c.nextChildTask.previousChildTask=null:c.previousChildTask&&(c.previousChildTask.nextChildTask=null);b.cldTasks.splice(a,1);break}}else for(a=0;a<this.parentTasks.length;a++)if(b=this.parentTasks[a],b.id==d){b.nextParentTask?b.previousParentTask?(b.previousParentTask.nextParentTask=b.nextParentTask,b.nextParentTask.previousParentTask=b.previousParentTask):b.nextParentTask.previousParentTask=null:b.previousParentTask&&(b.previousParentTask.nextParentTask=null);this.parentTasks.splice(a,1);break}}})});
-//@ sourceMappingURL=GanttProjectItem.js.map
+define([
+	"./GanttTaskItem",
+	"dojo/_base/declare",
+	"./GanttProjectControl",
+	"dojo/domReady!"
+], function(GanttTaskItem, declare){
+	return declare("dojox.gantt.GanttProjectItem", [GanttTaskItem], {
+		constructor: function(configuration){
+			//id is required
+			this.id = configuration.id;
+			this.name = configuration.name || this.id;
+			this.startDate = configuration.startDate || new Date();
+			this.parentTasks = [];
+		},
+		getTaskById: function(id){
+			for(var i = 0; i < this.parentTasks.length; i++){
+				var pTask = this.parentTasks[i];
+				var task = this.getTaskByIdInTree(pTask, id);
+				if(task){
+					return task;
+				}
+			}
+			return null;
+		},
+		getTaskByIdInTree: function(parentTask, id){
+			if(parentTask.id == id){
+				return parentTask;
+			}else{
+				for(var i = 0; i < parentTask.cldTasks.length; i++){
+					var pcTask = parentTask.cldTasks[i];
+					if(pcTask.id == id){
+						return pcTask;
+					}
+					if(pcTask.cldTasks.length > 0){
+						if(pcTask.cldTasks.length > 0){
+							var cTask = this.getTaskByIdInTree(pcTask, id);
+							if(cTask){
+								return cTask;
+							}
+						}
+					}
+				}
+			}
+			return null;
+		},
+		addTask: function(task){
+			this.parentTasks.push(task);
+			task.setProject(this);
+		},
+		deleteTask: function(id){
+			var task = this.getTaskById(id);
+			if(!task){return;}
+			if(!task.parentTask){
+				for(var i = 0; i < this.parentTasks.length; i++){
+					var pTask = this.parentTasks[i];
+					if(pTask.id == id){
+						if(pTask.nextParentTask){
+							if(pTask.previousParentTask){
+								pTask.previousParentTask.nextParentTask = pTask.nextParentTask;
+								pTask.nextParentTask.previousParentTask = pTask.previousParentTask;
+							}else{
+								pTask.nextParentTask.previousParentTask = null;
+							}
+						}else{
+							if(pTask.previousParentTask){
+								pTask.previousParentTask.nextParentTask = null;
+							}
+						}
+						pTask = null;
+						this.parentTasks.splice(i, 1);
+						break;
+					}
+				}
+			}else{
+				var parentTask = task.parentTask;
+				for(var i = 0; i < parentTask.cldTasks.length; i++){
+					var pcTask = parentTask.cldTasks[i];
+					if(pcTask.id == id){
+						if(pcTask.nextChildTask){
+							if(pcTask.previousChildTask){
+								pcTask.previousChildTask.nextChildTask = pcTask.nextChildTask;
+								pcTask.nextChildTask.previousChildTask = pcTask.previousChildTask;
+							}else{
+								pcTask.nextChildTask.previousChildTask = null;
+							}
+						}else{
+							if(pcTask.previousChildTask){
+								pcTask.previousChildTask.nextChildTask = null;
+							}
+						}
+						pcTask = null;
+						parentTask.cldTasks.splice(i, 1);
+						break;
+					}
+				}
+			}
+		}
+	});
+});

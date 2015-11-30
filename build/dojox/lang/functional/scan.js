@@ -1,5 +1,107 @@
-//>>built
-define("dojox/lang/functional/scan",["dojo/_base/kernel","dojo/_base/lang","./lambda"],function(k,l,h){var m={};l.mixin(h,{scanl:function(a,g,d,c){"string"==typeof a&&(a=a.split(""));c=c||k.global;g=h.lambda(g);var e,f,b;if(l.isArray(a)){e=Array((f=a.length)+1);e[0]=d;for(b=0;b<f;d=g.call(c,d,a[b],b,a),e[++b]=d);}else if("function"==typeof a.hasNext&&"function"==typeof a.next){e=[d];for(b=0;a.hasNext();e.push(d=g.call(c,d,a.next(),b++,a)));}else for(b in e=[d],a)b in m||e.push(d=g.call(c,d,a[b],b,
-a));return e},scanl1:function(a,g,d){"string"==typeof a&&(a=a.split(""));d=d||k.global;g=h.lambda(g);var c,e,f;e=!0;if(l.isArray(a)){c=Array(e=a.length);c[0]=f=a[0];for(var b=1;b<e;c[b]=f=g.call(d,f,a[b],b,a),++b);}else if("function"==typeof a.hasNext&&"function"==typeof a.next){if(a.hasNext()){c=[f=a.next()];for(b=1;a.hasNext();c.push(f=g.call(d,f,a.next(),b++,a)));}}else for(b in a)b in m||(e?(c=[f=a[b]],e=!1):c.push(f=g.call(d,f,a[b],b,a)));return c},scanr:function(a,g,d,c){"string"==typeof a&&
-(a=a.split(""));c=c||k.global;g=h.lambda(g);var e=a.length,f=Array(e+1),b=e;for(f[e]=d;0<b;--b,d=g.call(c,d,a[b],b,a),f[b]=d);return f},scanr1:function(a,g,d){"string"==typeof a&&(a=a.split(""));d=d||k.global;g=h.lambda(g);var c=a.length,e=Array(c),f=a[c-1],c=c-1;for(e[c]=f;0<c;--c,f=g.call(d,f,a[c],c,a),e[c]=f);return e}})});
-//@ sourceMappingURL=scan.js.map
+define(["dojo/_base/kernel", "dojo/_base/lang", "./lambda"], function(kernel, lang, df){
+
+// This module adds high-level functions and related constructs:
+//	- "scan" family of functions
+
+// Notes:
+//	- missing high-level functions are provided with the compatible API:
+//		scanl, scanl1, scanr, scanr1
+
+// Defined methods:
+//	- take any valid lambda argument as the functional argument
+//	- operate on dense arrays
+//	- take a string as the array argument
+//	- take an iterator objects as the array argument (only scanl, and scanl1)
+
+	var empty = {};
+
+	lang.mixin(df, {
+		// classic reduce-class functions
+		scanl: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
+			// summary:
+			//		repeatedly applies a binary function to an array from left
+			//		to right using a seed value as a starting point; returns an array
+			//		of values produced by foldl() at that point.
+			if(typeof a == "string"){ a = a.split(""); }
+			o = o || kernel.global; f = df.lambda(f);
+			var t, n, i;
+			if(lang.isArray(a)){
+				// array
+				t = new Array((n = a.length) + 1);
+				t[0] = z;
+				for(i = 0; i < n; z = f.call(o, z, a[i], i, a), t[++i] = z);
+			}else if(typeof a.hasNext == "function" && typeof a.next == "function"){
+				// iterator
+				t = [z];
+				for(i = 0; a.hasNext(); t.push(z = f.call(o, z, a.next(), i++, a)));
+			}else{
+				// object/dictionary
+				t = [z];
+				for(i in a){
+					if(!(i in empty)){
+						t.push(z = f.call(o, z, a[i], i, a));
+					}
+				}
+			}
+			return t;	// Array
+		},
+		scanl1: function(/*Array|String|Object*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
+			// summary:
+			//		repeatedly applies a binary function to an array from left
+			//		to right; returns an array of values produced by foldl1() at that
+			//		point.
+			if(typeof a == "string"){ a = a.split(""); }
+			o = o || kernel.global; f = df.lambda(f);
+			var t, n, z, first = true;
+			if(lang.isArray(a)){
+				// array
+				t = new Array(n = a.length);
+				t[0] = z = a[0];
+				for(var i = 1; i < n; t[i] = z = f.call(o, z, a[i], i, a), ++i);
+			}else if(typeof a.hasNext == "function" && typeof a.next == "function"){
+				// iterator
+				if(a.hasNext()){
+					t = [z = a.next()];
+					for(i = 1; a.hasNext(); t.push(z = f.call(o, z, a.next(), i++, a)));
+				}
+			}else{
+				// object/dictionary
+				for(i in a){
+					if(!(i in empty)){
+						if(first){
+							t = [z = a[i]];
+							first = false;
+						}else{
+							t.push(z = f.call(o, z, a[i], i, a));
+						}
+					}
+				}
+			}
+			return t;	// Array
+		},
+		scanr: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object*/ z, /*Object?*/ o){
+			// summary:
+			//		repeatedly applies a binary function to an array from right
+			//		to left using a seed value as a starting point; returns an array
+			//		of values produced by foldr() at that point.
+			if(typeof a == "string"){ a = a.split(""); }
+			o = o || kernel.global; f = df.lambda(f);
+			var n = a.length, t = new Array(n + 1), i = n;
+			t[n] = z;
+			for(; i > 0; --i, z = f.call(o, z, a[i], i, a), t[i] = z);
+			return t;	// Array
+		},
+		scanr1: function(/*Array|String*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
+			// summary:
+			//		repeatedly applies a binary function to an array from right
+			//		to left; returns an array of values produced by foldr1() at that
+			//		point.
+			if(typeof a == "string"){ a = a.split(""); }
+			o = o || kernel.global; f = df.lambda(f);
+			var n = a.length, t = new Array(n), z = a[n - 1], i = n - 1;
+			t[i] = z;
+			for(; i > 0; --i, z = f.call(o, z, a[i], i, a), t[i] = z);
+			return t;	// Array
+		}
+	});
+});

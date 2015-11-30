@@ -17,7 +17,6 @@ var profile = (function(){
 			"secure",
 			"data/(demos|ItemExplorer|StoreExplorer|restListener)",
 			"drawing/plugins/drawing/Silverlight",
-			"editor/plugins/(ResizeTableColumn|SpellCheck)",
 			"embed/(IE)",
 			"flash/_base",
 			"help",
@@ -29,7 +28,6 @@ var profile = (function(){
 			"mobile/app/",
 			"rails",
 			"robot",
-			"socket/Reconnect",
 			"sql/",
 			"storage/",
 			"widget/(AnalogGauge|BarGauge|DataPresentation|DocTester|DynamicTooltip|FeedPortlet|FilePicker|gauge|Iterator|Loader|RollingList|SortList)",
@@ -58,7 +56,7 @@ var profile = (function(){
 			},
 
 			miniExclude: function(filename, mid){
-				return 0;
+				return /\/demos\//.test(mid);
 			}
 		}
 	};

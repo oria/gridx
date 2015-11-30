@@ -1,5 +1,93 @@
-//>>built
-define("dojox/geo/charting/widget/Legend","dojo/_base/kernel dojo/_base/lang dojo/_base/array dojo/_base/declare dojo/_base/html dojo/dom dojo/dom-construct dojo/dom-class dojo/_base/window dijit/_Widget".split(" "),function(p,q,k,l,r,m,b,g,a,n){return l("dojox.geo.charting.widget.Legend",n,{horizontal:!0,legendBody:null,swatchSize:18,map:null,postCreate:function(){this.map&&(this.series=this.map.series,this.domNode.parentNode||m.byId(this.map.container).appendChild(this.domNode),this.refresh())},
-buildRendering:function(){this.domNode=b.create("table",{role:"group","class":"dojoxLegendNode"});this.legendBody=b.create("tbody",null,this.domNode);this.inherited(arguments)},refresh:function(){for(;this.legendBody.lastChild;)b.destroy(this.legendBody.lastChild);this.horizontal&&(g.add(this.domNode,"dojoxLegendHorizontal"),this._tr=a.doc.createElement("tr"),this.legendBody.appendChild(this._tr));var c=this.series;0!=c.length&&k.forEach(c,function(a){this._addLabel(a.color,a.name)},this)},_addLabel:function(c,
-b){var d=a.doc.createElement("td"),e=a.doc.createElement("td"),f=a.doc.createElement("div");g.add(d,"dojoxLegendIcon");g.add(e,"dojoxLegendText");f.style.width=this.swatchSize+"px";f.style.height=this.swatchSize+"px";d.appendChild(f);if(this.horizontal)this._tr.appendChild(d),this._tr.appendChild(e);else{var h=a.doc.createElement("tr");this.legendBody.appendChild(h);h.appendChild(d);h.appendChild(e)}f.style.background=c;e.innerHTML=String(b)}})});
-//@ sourceMappingURL=Legend.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/declare",
+	"dojo/_base/html",
+	"dojo/dom",
+	"dojo/dom-construct",
+	"dojo/dom-class",
+	"dojo/_base/window",
+	"dijit/_Widget"
+], function(dojo, lang, arr, declare, html,dom,domConstruct,domClass, win, Widget){
+
+	return declare("dojox.geo.charting.widget.Legend",Widget, {
+		// summary:
+		//		A legend widget displaying association between colors and Feature value ranges.
+		//
+		// description:
+		//		This widget basically is a table comprising (icon,string) pairs, describing the color scheme
+		//		used for the map and its associated text descriptions.
+		//
+
+		// example:
+		// |	var legend = new dojox.geo.charting.widget.Legend({
+		// |		map: map
+		// |	});
+		horizontal:true,
+		legendBody:null,
+		swatchSize:18,
+		map:null,
+		postCreate: function(){
+			if(!this.map){return;}
+			this.series = this.map.series;
+			if(!this.domNode.parentNode){
+				// compatibility with older version : add to map domNode if not already attached to a parentNode.
+				dom.byId(this.map.container).appendChild(this.domNode);
+			}
+			this.refresh();
+		},
+		buildRendering: function(){
+			this.domNode = domConstruct.create("table",
+						{role: "group", "class": "dojoxLegendNode"});
+			this.legendBody = domConstruct.create("tbody", null, this.domNode);
+			this.inherited(arguments);
+		},
+
+		refresh: function(){
+			// summary:
+			//		Refreshes this legend contents when Map series has changed.
+
+			// cleanup
+			while(this.legendBody.lastChild){
+				domConstruct.destroy(this.legendBody.lastChild);
+			}
+
+			if(this.horizontal){
+				domClass.add(this.domNode,"dojoxLegendHorizontal");
+				this._tr = win.doc.createElement("tr");
+				this.legendBody.appendChild(this._tr);
+			}
+
+			var s = this.series;
+			if(s.length == 0){return;}
+
+			arr.forEach(s,function(x){
+				this._addLabel(x.color, x.name);
+			},this);
+		},
+		_addLabel:function(color,label){
+			var icon = win.doc.createElement("td");
+			var text = win.doc.createElement("td");
+			var div = win.doc.createElement("div");
+			domClass.add(icon, "dojoxLegendIcon");
+			domClass.add(text, "dojoxLegendText");
+			div.style.width  = this.swatchSize + "px";
+			div.style.height = this.swatchSize + "px";
+			icon.appendChild(div);
+
+			if(this.horizontal){
+				this._tr.appendChild(icon);
+				this._tr.appendChild(text);
+			}else{
+				var tr = win.doc.createElement("tr");
+				this.legendBody.appendChild(tr);
+				tr.appendChild(icon);
+				tr.appendChild(text);
+			}
+
+			div.style.background = color;
+			text.innerHTML = String(label);
+		}
+	});
+});

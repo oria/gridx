@@ -1,6 +1,149 @@
-//>>built
-define("dojox/encoding/digests/SHA1",["./_base"],function(h){function m(b,c){b[c>>5]|=128<<24-c%32;b[(c+64>>9<<4)+15]=c;for(var a=Array(80),d=1732584193,g=-271733879,e=-1732584194,l=271733878,k=-1009589776,m=0;m<b.length;m+=16){for(var n=d,p=g,q=e,r=l,s=k,f=0;80>f;f++){a[f]=16>f?b[m+f]:(a[f-3]^a[f-8]^a[f-14]^a[f-16])<<1|(a[f-3]^a[f-8]^a[f-14]^a[f-16])>>>31;var t=h.addWords(h.addWords(d<<5|d>>>27,20>f?g&e|~g&l:40>f?g^e^l:60>f?g&e|g&l|e&l:g^e^l),h.addWords(h.addWords(k,a[f]),20>f?1518500249:40>f?1859775393:
-60>f?-1894007588:-899497514)),k=l,l=e,e=g<<30|g>>>2,g=d,d=t}d=h.addWords(d,n);g=h.addWords(g,p);e=h.addWords(e,q);l=h.addWords(l,r);k=h.addWords(k,s)}return[d,g,e,l,k]}function n(b){for(var c=[],a=0,d=b.length*k;a<d;a+=k)c[a>>5]|=(b.charCodeAt(a/k)&p)<<32-k-a%32;return c}function q(b){for(var c=[],a=0,d=4*b.length;a<d;a++)c.push("0123456789abcdef".charAt(b[a>>2]>>8*(3-a%4)+4&15),"0123456789abcdef".charAt(b[a>>2]>>8*(3-a%4)&15));return c.join("")}function r(b){for(var c=[],a=0,d=32*b.length;a<d;a+=
-k)c.push(String.fromCharCode(b[a>>5]>>>32-k-a%32&p));return c.join("")}function s(b){for(var c=[],a=0,d=4*b.length;a<d;a+=3)for(var g=(b[a>>2]>>8*(3-a%4)&255)<<16|(b[a+1>>2]>>8*(3-(a+1)%4)&255)<<8|b[a+2>>2]>>8*(3-(a+2)%4)&255,e=0;4>e;e++)8*a+6*e>32*b.length?c.push("\x3d"):c.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(g>>6*(3-e)&63));return c.join("")}var k=8,p=(1<<k)-1,t=function(b,c){var a=c||h.outputTypes.Base64,d=m(n(b),b.length*k);switch(a){case h.outputTypes.Raw:return d;
-case h.outputTypes.Hex:return q(d);case h.outputTypes.String:return r(d);default:return s(d)}};t._hmac=function(b,c,a){a=a||h.outputTypes.Base64;var d=n(c);16<d.length&&(d=m(d,c.length*k));var g=Array(16);c=Array(16);for(var e=0;16>e;e++)g[e]=d[e]^909522486,c[e]=d[e]^1549556828;b=m(g.concat(n(b)),512+b.length*k);b=m(c.concat(b),672);switch(a){case h.outputTypes.Raw:return b;case h.outputTypes.Hex:return q(b);case h.outputTypes.String:return r(b);default:return s(b)}};return t});
-//@ sourceMappingURL=SHA1.js.map
+define(["./_base"], function(base){
+/*
+ * A port of Paul Johnstone's SHA1 implementation
+ *
+ * Version 2.1a Copyright Paul Johnston 2000 - 2002.
+ * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+ * Distributed under the BSD License
+ * See http://pajhome.org.uk/crypt/md5 for details.
+ *
+ * Dojo port by Tom Trenka
+ */
+
+	var chrsz=8,	//	change to 16 for unicode.
+		mask=(1<<chrsz)-1;
+
+	function R(n,c){ return (n<<c)|(n>>>(32-c)); }
+	function FT(t,b,c,d){
+		if(t<20){ return (b&c)|((~b)&d); }
+		if(t<40){ return b^c^d; }
+		if(t<60){ return (b&c)|(b&d)|(c&d); }
+		return b^c^d;
+	}
+	function KT(t){ return (t<20)?1518500249:(t<40)?1859775393:(t<60)?-1894007588:-899497514; }
+
+	function core(x,len){
+		x[len>>5]|=0x80<<(24-len%32);
+		x[((len+64>>9)<<4)+15]=len;
+
+		var w=new Array(80), a=1732584193, b=-271733879, c=-1732584194, d=271733878, e=-1009589776;
+		for(var i=0; i<x.length; i+=16){
+			var olda=a, oldb=b, oldc=c, oldd=d, olde=e;
+			for(var j=0;j<80;j++){
+				if(j<16){ w[j]=x[i+j]; }
+				else { w[j]=R(w[j-3]^w[j-8]^w[j-14]^w[j-16],1); }
+				var t = base.addWords(base.addWords(R(a,5),FT(j,b,c,d)),base.addWords(base.addWords(e,w[j]),KT(j)));
+				e=d; d=c; c=R(b,30); b=a; a=t;
+			}
+			a=base.addWords(a,olda);
+			b=base.addWords(b,oldb);
+			c=base.addWords(c,oldc);
+			d=base.addWords(d,oldd);
+			e=base.addWords(e,olde);
+		}
+		return [a, b, c, d, e];
+	}
+
+	function hmac(data, key){
+		var wa=toWord(key);
+		if(wa.length>16){ wa=core(wa, key.length*chrsz); }
+
+		var ipad=new Array(16), opad=new Array(16);
+		for(var i=0;i<16;i++){
+			ipad[i]=wa[i]^0x36363636;
+			opad[i]=wa[i]^0x5c5c5c5c;
+		}
+
+		var hash=core(ipad.concat(toWord(data)),512+data.length*chrsz);
+		return core(opad.concat(hash), 512+160);
+	}
+
+	function toWord(s){
+		var wa=[];
+		for(var i=0, l=s.length*chrsz; i<l; i+=chrsz){
+			wa[i>>5]|=(s.charCodeAt(i/chrsz)&mask)<<(32-chrsz-i%32);
+		}
+		return wa;	//	word[]
+	}
+
+	function toHex(wa){
+		//	slightly different than the common one.
+		var h="0123456789abcdef", s=[];
+		for(var i=0, l=wa.length*4; i<l; i++){
+			s.push(h.charAt((wa[i>>2]>>((3-i%4)*8+4))&0xF), h.charAt((wa[i>>2]>>((3-i%4)*8))&0xF));
+		}
+		return s.join("");	//	string
+	}
+
+	function _toString(wa){
+		var s=[];
+		for(var i=0, l=wa.length*32; i<l; i+=chrsz){
+			s.push(String.fromCharCode((wa[i>>5]>>>(32-chrsz-i%32))&mask));
+		}
+		return s.join("");	//	string
+	}
+
+	function toBase64(/* word[] */wa){
+		// summary:
+		//		convert an array of words to base64 encoding, should be more efficient
+		//		than using dojox.encoding.base64
+		var p="=", tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", s=[];
+		for(var i=0, l=wa.length*4; i<l; i+=3){
+			var t=(((wa[i>>2]>>8*(3-i%4))&0xFF)<<16)|(((wa[i+1>>2]>>8*(3-(i+1)%4))&0xFF)<<8)|((wa[i+2>>2]>>8*(3-(i+2)%4))&0xFF);
+			for(var j=0; j<4; j++){
+				if(i*8+j*6>wa.length*32){
+					s.push(p);
+				} else {
+					s.push(tab.charAt((t>>6*(3-j))&0x3F));
+				}
+			}
+		}
+		return s.join("");	//	string
+	};
+
+	//	public function
+	base.SHA1=function(/* String */data, /* dojox.encoding.digests.outputTypes? */outputType){
+		// summary:
+		//		Computes the SHA1 digest of the data, and returns the result according to output type.
+		var out=outputType||base.outputTypes.Base64;
+		var wa=core(toWord(data), data.length*chrsz);
+		switch(out){
+			case base.outputTypes.Raw:{
+				return wa;	//	word[]
+			}
+			case base.outputTypes.Hex:{
+				return toHex(wa);	//	string
+			}
+			case base.outputTypes.String:{
+				return _toString(wa);	//	string
+			}
+			default:{
+				return toBase64(wa);	//	string
+			}
+		}
+	};
+
+	//	make this private, for later use with a generic HMAC calculator.
+	base.SHA1._hmac=function(/* string */data, /* string */key, /* dojox.encoding.digests.outputTypes? */outputType){
+		// summary:
+		//		computes the digest of data, and returns the result according to type outputType
+		var out=outputType || base.outputTypes.Base64;
+		var wa=hmac(data, key);
+		switch(out){
+			case base.outputTypes.Raw:{
+				return wa;	//	word[]
+			}
+			case base.outputTypes.Hex:{
+				return toHex(wa);	//	string
+			}
+			case base.outputTypes.String:{
+				return _toString(wa);	//	string
+			}
+			default:{
+				return toBase64(wa);	//	string
+			}
+		}
+	};
+
+	return base.SHA1;
+});

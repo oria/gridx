@@ -1,5 +1,119 @@
-//>>built
-define("dojox/mobile/PageIndicator","dojo/_base/connect dojo/_base/declare dojo/dom dojo/dom-class dojo/dom-construct dijit/registry dijit/_Contained dijit/_WidgetBase".split(" "),function(h,k,l,f,g,m,n,p){return k("dojox.mobile.PageIndicator",[p,n],{refId:"",baseClass:"mblPageIndicator",buildRendering:function(){this.inherited(arguments);this._tblNode=g.create("table",{className:"mblPageIndicatorContainer"},this.domNode);this._tblNode.insertRow(-1);this.connect(this.domNode,"onclick","_onClick");
-this.subscribe("/dojox/mobile/viewChanged",function(a){this.reset()})},startup:function(){var a=this;a.defer(function(){a.reset()})},reset:function(){var a=this._tblNode.rows[0],b,c,d=[],e=(this.refId&&l.byId(this.refId)||this.domNode).parentNode.childNodes;for(b=0;b<e.length;b++)c=e[b],this.isView(c)&&d.push(c);if(a.cells.length!==d.length){g.empty(a);for(b=0;b<d.length;b++)c=g.create("div",{className:"mblPageIndicatorDot"}),a.insertCell(-1).appendChild(c)}if(0!==d.length){e=m.byNode(d[0]).getShowingView();
-for(b=0;b<a.cells.length;b++)c=a.cells[b].firstChild,d[b]===e.domNode?f.add(c,"mblPageIndicatorDotSelected"):f.remove(c,"mblPageIndicatorDotSelected")}},isView:function(a){return a&&1===a.nodeType&&f.contains(a,"mblView")},_onClick:function(a){!1!==this.onClick(a)&&a.target===this.domNode&&(a.layerX<this._tblNode.offsetLeft?h.publish("/dojox/mobile/prevPage",[this]):a.layerX>this._tblNode.offsetLeft+this._tblNode.offsetWidth&&h.publish("/dojox/mobile/nextPage",[this]))},onClick:function(){}})});
-//@ sourceMappingURL=PageIndicator.js.map
+define([
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/dom",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dijit/registry",
+	"dijit/_Contained",
+	"dijit/_WidgetBase",
+	"dojo/i18n!dojox/mobile/nls/messages"
+], function(connect, declare, dom, domClass, domConstruct, registry, Contained, WidgetBase, messages){
+
+	// module:
+	//		dojox/mobile/PageIndicator
+
+	return declare("dojox.mobile.PageIndicator", [WidgetBase, Contained],{
+		// summary:
+		//		A current page indicator.
+		// description:
+		//		PageIndicator displays a series of gray and white dots to
+		//		indicate which page is currently being viewed. It can typically
+		//		be used with dojox/mobile/SwapView. It is also internally used
+		//		in dojox/mobile/Carousel.
+
+		// refId: String
+		//		An ID of a DOM node to be searched. Siblings of the reference
+		//		node will be searched for views. If not specified, this.domNode
+		//		will be the reference node.
+		refId: "",
+
+		// baseClass: String
+		//		The name of the CSS class of this widget.
+		baseClass: "mblPageIndicator",
+
+		buildRendering: function(){
+			this.inherited(arguments);
+			this.domNode.setAttribute("role", "img");
+			this._tblNode = domConstruct.create("table", {className:"mblPageIndicatorContainer"}, this.domNode);
+			this._tblNode.insertRow(-1);
+			this.connect(this.domNode, "onclick", "_onClick");
+			this.subscribe("/dojox/mobile/viewChanged", function(view){
+				this.reset();
+			});
+		},
+
+		startup: function(){
+			var _this = this;
+			_this.defer(function(){ // to wait until views' visibility is determined
+				_this.reset();
+			});
+		},
+
+		reset: function(){
+			// summary:
+			//		Updates the indicator.
+			var r = this._tblNode.rows[0];
+			var i, c, a = [], dot, value = 0;
+			var refNode = (this.refId && dom.byId(this.refId)) || this.domNode;
+			var children = refNode.parentNode.childNodes;
+			for(i = 0; i < children.length; i++){
+				c = children[i];
+				if(this.isView(c)){
+					a.push(c);
+				}
+			}
+			if(r.cells.length !== a.length){
+				domConstruct.empty(r);
+				for(i = 0; i < a.length; i++){
+					c = a[i];
+					dot = domConstruct.create("div", {className:"mblPageIndicatorDot"});
+					r.insertCell(-1).appendChild(dot);
+				}
+			}
+			if(a.length === 0){ return; }
+			var currentView = registry.byNode(a[0]).getShowingView();
+			for(i = 0; i < r.cells.length; i++){
+				dot = r.cells[i].firstChild;
+				if(a[i] === currentView.domNode){
+					value = i + 1;
+					domClass.add(dot, "mblPageIndicatorDotSelected");
+				}else{
+					domClass.remove(dot, "mblPageIndicatorDotSelected");
+				}
+			}
+			if (r.cells.length)  {
+				this.domNode.setAttribute("alt", messages["PageIndicatorLabel"].replace("$0", value).replace("$1", r.cells.length));
+			} else {
+				this.domNode.removeAttribute("alt");
+			}
+		},
+
+		isView: function(node){
+			// summary:
+			//		Returns true if the given node is a view.
+			return (node && node.nodeType === 1 && domClass.contains(node, "mblView")); // Boolean
+		},
+
+		_onClick: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(this.onClick(e) === false){ return; } // user's click action
+			if(e.target !== this.domNode){ return; }
+			if(e.layerX < this._tblNode.offsetLeft){
+				connect.publish("/dojox/mobile/prevPage", [this]);
+			}else if(e.layerX > this._tblNode.offsetLeft + this._tblNode.offsetWidth){
+				connect.publish("/dojox/mobile/nextPage", [this]);
+			}
+		},
+
+		onClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User-defined function to handle clicks.
+			// tags:
+			//		callback
+		}
+	});
+});

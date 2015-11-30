@@ -1,15 +1,448 @@
-//>>built
-require({cache:{"url:dijit/form/templates/Select.html":'\x3ctable class\x3d"dijit dijitReset dijitInline dijitLeft"\r\n\tdata-dojo-attach-point\x3d"_buttonNode,tableNode,focusNode,_popupStateNode" cellspacing\x3d\'0\' cellpadding\x3d\'0\'\r\n\trole\x3d"listbox" aria-haspopup\x3d"true"\r\n\t\x3e\x3ctbody role\x3d"presentation"\x3e\x3ctr role\x3d"presentation"\r\n\t\t\x3e\x3ctd class\x3d"dijitReset dijitStretch dijitButtonContents" role\x3d"presentation"\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitReset dijitInputField dijitButtonText"  data-dojo-attach-point\x3d"containerNode,textDirNode" role\x3d"presentation"\x3e\x3c/div\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitReset dijitValidationContainer"\r\n\t\t\t\t\x3e\x3cinput class\x3d"dijitReset dijitInputField dijitValidationIcon dijitValidationInner" value\x3d"\x26#935; " type\x3d"text" tabIndex\x3d"-1" readonly\x3d"readonly" role\x3d"presentation"\r\n\t\t\t/\x3e\x3c/div\r\n\t\t\t\x3e\x3cinput type\x3d"hidden" ${!nameAttrSetting} data-dojo-attach-point\x3d"valueNode" value\x3d"${value}" aria-hidden\x3d"true"\r\n\t\t/\x3e\x3c/td\r\n\t\t\x3e\x3ctd class\x3d"dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer"\r\n\t\t\tdata-dojo-attach-point\x3d"titleNode" role\x3d"presentation"\r\n\t\t\t\x3e\x3cinput class\x3d"dijitReset dijitInputField dijitArrowButtonInner" value\x3d"\x26#9660; " type\x3d"text" tabIndex\x3d"-1" readonly\x3d"readonly" role\x3d"presentation"\r\n\t\t\t\t${_buttonInputDisabled}\r\n\t\t/\x3e\x3c/td\r\n\t\x3e\x3c/tr\x3e\x3c/tbody\r\n\x3e\x3c/table\x3e\r\n'}});
-define("dijit/form/Select","dojo/_base/array dojo/_base/declare dojo/dom-attr dojo/dom-class dojo/dom-geometry dojo/i18n dojo/_base/lang dojo/on dojo/sniff ./_FormSelectWidget ../_HasDropDown ../DropDownMenu ../MenuItem ../MenuSeparator ../Tooltip ../_KeyNavMixin ../registry dojo/text!./templates/Select.html dojo/i18n!./nls/validate".split(" "),function(k,g,r,l,c,s,h,m,d,t,u,v,n,w,e,x,y,z){function p(a){return function(b){this._isLoaded?this.inherited(a,arguments):this.loadDropDown(h.hitch(this,a,
-b))}}var q=g("dijit.form._SelectMenu",v,{autoFocus:!0,buildRendering:function(){this.inherited(arguments);this.domNode.setAttribute("role","listbox")},postCreate:function(){this.inherited(arguments);this.own(m(this.domNode,"selectstart",function(a){a.preventDefault();a.stopPropagation()}))},focus:function(){var a=!1,b=this.parentWidget.value;h.isArray(b)&&(b=b[b.length-1]);b&&k.forEach(this.parentWidget._getChildren(),function(f){f.option&&b===f.option.value&&(a=!0,this.focusChild(f,!1))},this);a||
-this.inherited(arguments)}});c=g("dijit.form.Select"+(d("dojo-bidi")?"_NoBidi":""),[t,u,x],{baseClass:"dijitSelect dijitValidationTextBox",templateString:z,_buttonInputDisabled:d("ie")?"disabled":"",required:!1,state:"",message:"",tooltipPosition:[],emptyLabel:"\x26#160;",_isLoaded:!1,_childrenLoaded:!1,_fillContent:function(){this.inherited(arguments);if(this.options.length&&!this.value&&this.srcNodeRef){var a=this.srcNodeRef.selectedIndex||0;this._set("value",this.options[0<=a?a:0].value)}this.dropDown=
-new q({id:this.id+"_menu",parentWidget:this});l.add(this.dropDown.domNode,this.baseClass.replace(/\s+|$/g,"Menu "))},_getMenuItemForOption:function(a){if(!a.value&&!a.label)return new w({ownerDocument:this.ownerDocument});var b=h.hitch(this,"_setValueAttr",a);a=new n({option:a,label:a.label||this.emptyLabel,onClick:b,ownerDocument:this.ownerDocument,dir:this.dir,textDir:this.textDir,disabled:a.disabled||!1});a.focusNode.setAttribute("role","option");return a},_addOptionItem:function(a){this.dropDown&&
-this.dropDown.addChild(this._getMenuItemForOption(a))},_getChildren:function(){return!this.dropDown?[]:this.dropDown.getChildren()},focus:function(){if(!this.disabled&&this.focusNode.focus)try{this.focusNode.focus()}catch(a){}},focusChild:function(a){a&&this.set("value",a.option)},_getFirst:function(){var a=this._getChildren();return a.length?a[0]:null},_getLast:function(){var a=this._getChildren();return a.length?a[a.length-1]:null},childSelector:function(a){return(a=y.byNode(a))&&a.getParent()==
-this.dropDown},onKeyboardSearch:function(a,b,f,c){a&&this.focusChild(a)},_loadChildren:function(a){if(!0===a)if(this.dropDown&&(delete this.dropDown.focusedChild,this.focusedChild=null),this.options.length)this.inherited(arguments);else{k.forEach(this._getChildren(),function(a){a.destroyRecursive()});var b=new n({ownerDocument:this.ownerDocument,label:this.emptyLabel});this.dropDown.addChild(b)}else this._updateSelection();this._isLoaded=!1;this._childrenLoaded=!0;this._loadingStore||this._setValueAttr(this.value,
-!1)},_refreshState:function(){this._started&&this.validate(this.focused)},startup:function(){this.inherited(arguments);this._refreshState()},_setValueAttr:function(a){this.inherited(arguments);r.set(this.valueNode,"value",this.get("value"));this._refreshState()},_setNameAttr:"valueNode",_setDisabledAttr:function(a){this.inherited(arguments);this._refreshState()},_setRequiredAttr:function(a){this._set("required",a);this.focusNode.setAttribute("aria-required",a);this._refreshState()},_setOptionsAttr:function(a){this._isLoaded=
-!1;this._set("options",a)},_setDisplay:function(a){a=a||this.emptyLabel;this.containerNode.innerHTML='\x3cspan role\x3d"option" class\x3d"dijitReset dijitInline '+this.baseClass.replace(/\s+|$/g,"Label ")+'"\x3e'+a+"\x3c/span\x3e"},validate:function(a){a=this.disabled||this.isValid(a);this._set("state",a?"":this._hasBeenBlurred?"Error":"Incomplete");this.focusNode.setAttribute("aria-invalid",a?"false":"true");var b=a?"":this._missingMsg;b&&this.focused&&this._hasBeenBlurred?e.show(b,this.domNode,
-this.tooltipPosition,!this.isLeftToRight()):e.hide(this.domNode);this._set("message",b);return a},isValid:function(){return!this.required||0===this.value||!/^\s*$/.test(this.value||"")},reset:function(){this.inherited(arguments);e.hide(this.domNode);this._refreshState()},postMixInProperties:function(){this.inherited(arguments);this._missingMsg=s.getLocalization("dijit.form","validate",this.lang).missingMessage},postCreate:function(){this.inherited(arguments);this.own(m(this.domNode,"selectstart",
-function(a){a.preventDefault();a.stopPropagation()}));this.domNode.setAttribute("aria-expanded","false");9>d("ie")&&this.defer(function(){try{var a=domStyle.getComputedStyle(this.domNode);if(a){var b=a.fontFamily;if(b){var c=this.domNode.getElementsByTagName("INPUT");if(c)for(a=0;a<c.length;a++)c[a].style.fontFamily=b}}}catch(d){}})},_setStyleAttr:function(a){this.inherited(arguments);l.toggle(this.domNode,this.baseClass.replace(/\s+|$/g,"FixedWidth "),!!this.domNode.style.width)},isLoaded:function(){return this._isLoaded},
-loadDropDown:function(a){this._loadChildren(!0);this._isLoaded=!0;a()},destroy:function(a){this.dropDown&&!this.dropDown._destroyed&&(this.dropDown.destroyRecursive(a),delete this.dropDown);this.inherited(arguments)},_onFocus:function(){this.validate(!0);this.inherited(arguments)},_onBlur:function(){e.hide(this.domNode);this.inherited(arguments);this.validate(!1)}});d("dojo-bidi")&&(c=g("dijit.form.Select",c,{_setDisplay:function(a){this.inherited(arguments);this.applyTextDir(this.containerNode)}}));
-c._Menu=q;c.prototype._onContainerKeydown=p("_onContainerKeydown");c.prototype._onContainerKeypress=p("_onContainerKeypress");return c});
-//@ sourceMappingURL=Select.js.map
+define([
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/dom-attr", // domAttr.set
+	"dojo/dom-class", // domClass.add domClass.remove domClass.toggle
+	"dojo/dom-geometry", // domGeometry.setMarginBox
+	"dojo/i18n", // i18n.getLocalization
+	"dojo/keys",
+	"dojo/_base/lang", // lang.hitch
+	"dojo/on",
+	"dojo/sniff", // has("ie")
+	"./_FormSelectWidget",
+	"../_HasDropDown",
+	"../DropDownMenu",
+	"../MenuItem",
+	"../MenuSeparator",
+	"../Tooltip",
+	"../_KeyNavMixin",
+	"../registry", // registry.byNode
+	"dojo/text!./templates/Select.html",
+	"dojo/i18n!./nls/validate"
+], function(array, declare, domAttr, domClass, domGeometry, i18n, keys, lang, on, has,
+			_FormSelectWidget, _HasDropDown, DropDownMenu, MenuItem, MenuSeparator, Tooltip, _KeyNavMixin, registry, template){
+
+	// module:
+	//		dijit/form/Select
+
+	var _SelectMenu = declare("dijit.form._SelectMenu", DropDownMenu, {
+		// summary:
+		//		An internally-used menu for dropdown that allows us a vertical scrollbar
+
+		// Override Menu.autoFocus setting so that opening a Select highlights the current value.
+		autoFocus: true,
+
+		buildRendering: function(){
+			this.inherited(arguments);
+
+			this.domNode.setAttribute("role", "listbox");
+		},
+
+		postCreate: function(){
+			this.inherited(arguments);
+
+			// stop mousemove from selecting text on IE to be consistent with other browsers
+			this.own(on(this.domNode, "selectstart", function(evt){
+				evt.preventDefault();
+				evt.stopPropagation();
+			}));
+		},
+
+		focus: function(){
+			// summary:
+			//		Overridden so that the previously selected value will be focused instead of only the first item
+			var found = false,
+				val = this.parentWidget.value;
+			if(lang.isArray(val)){
+				val = val[val.length - 1];
+			}
+			if(val){ // if focus selected
+				array.forEach(this.parentWidget._getChildren(), function(child){
+					if(child.option && (val === child.option.value)){ // find menu item widget with this value
+						found = true;
+						this.focusChild(child, false); // focus previous selection
+					}
+				}, this);
+			}
+			if(!found){
+				this.inherited(arguments); // focus first item by default
+			}
+		}
+	});
+
+	var Select = declare("dijit.form.Select" + (has("dojo-bidi") ? "_NoBidi" : ""), [_FormSelectWidget, _HasDropDown, _KeyNavMixin], {
+		// summary:
+		//		This is a "styleable" select box - it is basically a DropDownButton which
+		//		can take a `<select>` as its input.
+
+		baseClass: "dijitSelect dijitValidationTextBox",
+
+		templateString: template,
+
+		_buttonInputDisabled: has("ie") ? "disabled" : "", // allows IE to disallow focus, but Firefox cannot be disabled for mousedown events
+
+		// required: Boolean
+		//		Can be true or false, default is false.
+		required: false,
+
+		// state: [readonly] String
+		//		"Incomplete" if this select is required but unset (i.e. blank value), "" otherwise
+		state: "",
+
+		// message: String
+		//		Currently displayed error/prompt message
+		message: "",
+
+		// tooltipPosition: String[]
+		//		See description of `dijit/Tooltip.defaultPosition` for details on this parameter.
+		tooltipPosition: [],
+
+		// emptyLabel: string
+		//		What to display in an "empty" dropdown
+		emptyLabel: "&#160;", // &nbsp;
+
+		// _isLoaded: Boolean
+		//		Whether or not we have been loaded
+		_isLoaded: false,
+
+		// _childrenLoaded: Boolean
+		//		Whether or not our children have been loaded
+		_childrenLoaded: false,
+
+		// labelType: String
+		//		Specifies how to interpret the labelAttr in the data store items.
+		//		Can be "html" or "text".
+		labelType: "html",
+
+		_fillContent: function(){
+			// summary:
+			//		Set the value to be the first, or the selected index
+			this.inherited(arguments);
+			// set value from selected option
+			if(this.options.length && !this.value && this.srcNodeRef){
+				var si = this.srcNodeRef.selectedIndex || 0; // || 0 needed for when srcNodeRef is not a SELECT
+				this._set("value", this.options[si >= 0 ? si : 0].value);
+			}
+			// Create the dropDown widget
+			this.dropDown = new _SelectMenu({ id: this.id + "_menu", parentWidget: this });
+			domClass.add(this.dropDown.domNode, this.baseClass.replace(/\s+|$/g, "Menu "));
+		},
+
+		_getMenuItemForOption: function(/*_FormSelectWidget.__SelectOption*/ option){
+			// summary:
+			//		For the given option, return the menu item that should be
+			//		used to display it.  This can be overridden as needed
+			if(!option.value && !option.label){
+				// We are a separator (no label set for it)
+				return new MenuSeparator({ownerDocument: this.ownerDocument});
+			}else{
+				// Just a regular menu option
+				var click = lang.hitch(this, "_setValueAttr", option);
+				var item = new MenuItem({
+					option: option,
+					label: (this.labelType === 'text' ? (option.label || '').toString()
+						.replace(/&/g, '&amp;').replace(/</g, '&lt;') :
+						option.label) || this.emptyLabel,
+					onClick: click,
+					ownerDocument: this.ownerDocument,
+					dir: this.dir,
+					textDir: this.textDir,
+					disabled: option.disabled || false
+				});
+				item.focusNode.setAttribute("role", "option");
+				return item;
+			}
+		},
+
+		_addOptionItem: function(/*_FormSelectWidget.__SelectOption*/ option){
+			// summary:
+			//		For the given option, add an option to our dropdown.
+			//		If the option doesn't have a value, then a separator is added
+			//		in that place.
+			if(this.dropDown){
+				this.dropDown.addChild(this._getMenuItemForOption(option));
+			}
+		},
+
+		_getChildren: function(){
+			if(!this.dropDown){
+				return [];
+			}
+			return this.dropDown.getChildren();
+		},
+
+		focus: function(){
+			// Override _KeyNavMixin::focus(), which calls focusFirstChild().
+			// We just want the standard form widget behavior.
+			if(!this.disabled && this.focusNode.focus){
+				try{
+					this.focusNode.focus();
+				}catch(e){
+					/*squelch errors from hidden nodes*/
+				}
+			}
+		},
+
+		focusChild: function(/*dijit/_WidgetBase*/ widget){
+			// summary:
+			//		Sets the value to the given option, used during search by letter.
+			// widget:
+			//		Reference to option's widget
+			// tags:
+			//		protected
+			if(widget){
+				this.set('value', widget.option);
+			}
+		},
+
+		_getFirst: function(){
+			// summary:
+			//		Returns the first child widget.
+			// tags:
+			//		abstract extension
+			var children = this._getChildren();
+			return children.length ? children[0] : null;
+		},
+
+		_getLast: function(){
+			// summary:
+			//		Returns the last child widget.
+			// tags:
+			//		abstract extension
+			var children = this._getChildren();
+			return children.length ? children[children.length-1] : null;
+		},
+
+		childSelector: function(/*DOMNode*/ node){
+			// Implement _KeyNavMixin.childSelector, to identify focusable child nodes.
+			// If we allowed a dojo/query dependency from this module this could more simply be a string "> *"
+			// instead of this function.
+
+			var node = registry.byNode(node);
+			return node && node.getParent() == this.dropDown;
+		},
+
+		onKeyboardSearch: function(/*dijit/_WidgetBase*/ item, /*Event*/ evt, /*String*/ searchString, /*Number*/ numMatches){
+			// summary:
+			//		When a key is pressed that matches a child item,
+			//		this method is called so that a widget can take appropriate action is necessary.
+			// tags:
+			//		protected
+			if(item){
+				this.focusChild(item);
+			}
+		},
+
+		_loadChildren: function(/*Boolean*/ loadMenuItems){
+			// summary:
+			//		Resets the menu and the length attribute of the button - and
+			//		ensures that the label is appropriately set.
+			// loadMenuItems: Boolean
+			//		actually loads the child menu items - we only do this when we are
+			//		populating for showing the dropdown.
+
+			if(loadMenuItems === true){
+				// this.inherited destroys this.dropDown's child widgets (MenuItems).
+				// Avoid this.dropDown (Menu widget) having a pointer to a destroyed widget (which will cause
+				// issues later in _setSelected). (see #10296)
+				if(this.dropDown){
+					delete this.dropDown.focusedChild;
+					this.focusedChild = null;
+				}
+				if(this.options.length){
+					this.inherited(arguments);
+				}else{
+					// Drop down menu is blank but add one blank entry just so something appears on the screen
+					// to let users know that they are no choices (mimicing native select behavior)
+					array.forEach(this._getChildren(), function(child){
+						child.destroyRecursive();
+					});
+					var item = new MenuItem({
+						ownerDocument: this.ownerDocument,
+						label: this.emptyLabel
+					});
+					this.dropDown.addChild(item);
+				}
+			}else{
+				this._updateSelection();
+			}
+
+			this._isLoaded = false;
+			this._childrenLoaded = true;
+
+			if(!this._loadingStore){
+				// Don't call this if we are loading - since we will handle it later
+				this._setValueAttr(this.value, false);
+			}
+		},
+
+		_refreshState: function(){
+			if(this._started){
+				this.validate(this.focused);
+			}
+		},
+
+		startup: function(){
+			this.inherited(arguments);
+			this._refreshState(); // after all _set* methods have run
+		},
+
+		_setValueAttr: function(value){
+			this.inherited(arguments);
+			domAttr.set(this.valueNode, "value", this.get("value"));
+			this._refreshState();	// to update this.state
+		},
+
+		_setNameAttr: "valueNode",
+
+		_setDisabledAttr: function(/*Boolean*/ value){
+			this.inherited(arguments);
+			this._refreshState();	// to update this.state
+		},
+
+		_setRequiredAttr: function(/*Boolean*/ value){
+			this._set("required", value);
+			this.focusNode.setAttribute("aria-required", value);
+			this._refreshState();	// to update this.state
+		},
+
+		_setOptionsAttr: function(/*Array*/ options){
+			this._isLoaded = false;
+			this._set('options', options);
+		},
+
+		_setDisplay: function(/*String*/ newDisplay){
+			// summary:
+			//		sets the display for the given value (or values)
+
+			var lbl = (this.labelType === 'text' ? (newDisplay || '')
+					.replace(/&/g, '&amp;').replace(/</g, '&lt;') :
+					newDisplay) || this.emptyLabel;
+			this.containerNode.innerHTML = '<span role="option" aria-selected="true" class="dijitReset dijitInline ' + this.baseClass.replace(/\s+|$/g, "Label ") + '">' + lbl + '</span>';
+		},
+
+		validate: function(/*Boolean*/ isFocused){
+			// summary:
+			//		Called by oninit, onblur, and onkeypress, and whenever required/disabled state changes
+			// description:
+			//		Show missing or invalid messages if appropriate, and highlight textbox field.
+			//		Used when a select is initially set to no value and the user is required to
+			//		set the value.
+
+			var isValid = this.disabled || this.isValid(isFocused);
+			this._set("state", isValid ? "" : (this._hasBeenBlurred ? "Error" : "Incomplete"));
+			this.focusNode.setAttribute("aria-invalid", isValid ? "false" : "true");
+			var message = isValid ? "" : this._missingMsg;
+			if(message && this.focused && this._hasBeenBlurred){
+				Tooltip.show(message, this.domNode, this.tooltipPosition, !this.isLeftToRight());
+			}else{
+				Tooltip.hide(this.domNode);
+			}
+			this._set("message", message);
+			return isValid;
+		},
+
+		isValid: function(/*Boolean*/ /*===== isFocused =====*/){
+			// summary:
+			//		Whether or not this is a valid value.  The only way a Select
+			//		can be invalid is when it's required but nothing is selected.
+			return (!this.required || this.value === 0 || !(/^\s*$/.test(this.value || ""))); // handle value is null or undefined
+		},
+
+		reset: function(){
+			// summary:
+			//		Overridden so that the state will be cleared.
+			this.inherited(arguments);
+			Tooltip.hide(this.domNode);
+			this._refreshState();	// to update this.state
+		},
+
+		postMixInProperties: function(){
+			// summary:
+			//		set the missing message
+			this.inherited(arguments);
+			this._missingMsg = i18n.getLocalization("dijit.form", "validate", this.lang).missingMessage;
+		},
+
+		postCreate: function(){
+			this.inherited(arguments);
+
+			// stop mousemove from selecting text on IE to be consistent with other browsers
+			this.own(on(this.domNode, "selectstart", function(evt){
+				evt.preventDefault();
+				evt.stopPropagation();
+			}));
+
+			this.domNode.setAttribute("aria-expanded", "false");
+
+			// Prevent _KeyNavMixin from calling stopPropagation() on left and right arrow keys, thus breaking
+			// navigation when Select inside Toolbar.
+			var keyNavCodes = this._keyNavCodes;
+			delete keyNavCodes[keys.LEFT_ARROW];
+			delete keyNavCodes[keys.RIGHT_ARROW];
+		},
+
+		_setStyleAttr: function(/*String||Object*/ value){
+			this.inherited(arguments);
+			domClass.toggle(this.domNode, this.baseClass.replace(/\s+|$/g, "FixedWidth "), !!this.domNode.style.width);
+		},
+
+		isLoaded: function(){
+			return this._isLoaded;
+		},
+
+		loadDropDown: function(/*Function*/ loadCallback){
+			// summary:
+			//		populates the menu
+			this._loadChildren(true);
+			this._isLoaded = true;
+			loadCallback();
+		},
+
+		destroy: function(preserveDom){
+			if(this.dropDown && !this.dropDown._destroyed){
+				this.dropDown.destroyRecursive(preserveDom);
+				delete this.dropDown;
+			}
+			Tooltip.hide(this.domNode);	// in case Select (or enclosing Dialog) destroyed while tooltip shown
+			this.inherited(arguments);
+		},
+
+		_onFocus: function(){
+			this.validate(true);	// show tooltip if second focus of required tooltip, but no selection
+			// Note: not calling superclass _onFocus() to avoid _KeyNavMixin::_onFocus() setting tabIndex --> -1
+		},
+
+		_onBlur: function(){
+			Tooltip.hide(this.domNode);
+			this.inherited(arguments);
+			this.validate(false);
+		}
+	});
+
+	if(has("dojo-bidi")){
+		Select = declare("dijit.form.Select", Select, {
+			_setDisplay: function(/*String*/ newDisplay){
+				this.inherited(arguments);
+				this.applyTextDir(this.containerNode);
+			}
+		});
+	}
+
+	Select._Menu = _SelectMenu;	// for monkey patching
+
+	// generic event helper to ensure the dropdown items are loaded before the real event handler is called
+	function _onEventAfterLoad(method){
+		return function(evt){
+			if(!this._isLoaded){
+				this.loadDropDown(lang.hitch(this, method, evt));
+			}else{
+				this.inherited(method, arguments);
+			}
+		};
+	}
+	Select.prototype._onContainerKeydown = _onEventAfterLoad("_onContainerKeydown");
+	Select.prototype._onContainerKeypress = _onEventAfterLoad("_onContainerKeypress");
+
+	return Select;
+});

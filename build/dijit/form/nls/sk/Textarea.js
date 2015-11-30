@@ -1,3 +1,9 @@
-//>>built
-define("dijit/form/nls/sk/Textarea",{iframeEditTitle:"upravi\u0165 oblas\u0165",iframeFocusTitle:"upravi\u0165 r\u00e1mec oblasti"});
-//@ sourceMappingURL=Textarea.js.map
+define(
+// used by both the editor and textarea widgets to provide information to screen reader users
+({
+	iframeEditTitle: 'upraviť oblasť',  // primary title for editable IFRAME, for screen readers when focus is in the editing area
+	iframeFocusTitle: 'upraviť rámec oblasti'  // secondary title for editable IFRAME when focus is on outer container
+									 //  to let user know that focus has moved out of editing area and to the
+									 //  parent element of the editing area
+})
+);

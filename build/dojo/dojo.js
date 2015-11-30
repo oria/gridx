@@ -1,215 +1,2026 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+(function(
+	userConfig,
+	defaultConfig
+){
+	// summary:
+	//		This is the "source loader" and is the entry point for Dojo during development. You may also load Dojo with
+	//		any AMD-compliant loader via the package main module dojo/main.
+	// description:
+	//		This is the "source loader" for Dojo. It provides an AMD-compliant loader that can be configured
+	//		to operate in either synchronous or asynchronous modes. After the loader is defined, dojo is loaded
+	//		IAW the package main module dojo/main. In the event you wish to use a foreign loader, you may load dojo as a package
+	//		via the package main module dojo/main and this loader is not required; see dojo/package.json for details.
+	//
+	//		In order to keep compatibility with the v1.x line, this loader includes additional machinery that enables
+	//		the dojo.provide, dojo.require et al API. This machinery is loaded by default, but may be dynamically removed
+	//		via the has.js API and statically removed via the build system.
+	//
+	//		This loader includes sniffing machinery to determine the environment; the following environments are supported:
+	//
+	//		- browser
+	//		- node.js
+	//		- rhino
+	//
+	//		This is the so-called "source loader". As such, it includes many optional features that may be discarded by
+	//		building a customized version with the build system.
 
-/*
-	This is an optimized version of Dojo, built for deployment and not for
-	development. To get sources and documentation, please visit:
+	// Design and Implementation Notes
+	//
+	// This is a dojo-specific adaption of bdLoad, donated to the dojo foundation by Altoviso LLC.
+	//
+	// This function defines an AMD-compliant (http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition)
+	// loader that can be configured to operate in either synchronous or asynchronous modes.
+	//
+	// Since this machinery implements a loader, it does not have the luxury of using a load system and/or
+	// leveraging a utility library. This results in an unpleasantly long file; here is a road map of the contents:
+	//
+	//	 1. Small library for use implementing the loader.
+	//	 2. Define the has.js API; this is used throughout the loader to bracket features.
+	//	 3. Define the node.js and rhino sniffs and sniff.
+	//	 4. Define the loader's data.
+	//	 5. Define the configuration machinery.
+	//	 6. Define the script element sniffing machinery and sniff for configuration data.
+	//	 7. Configure the loader IAW the provided user, default, and sniffing data.
+	//	 8. Define the global require function.
+	//	 9. Define the module resolution machinery.
+	//	10. Define the module and plugin module definition machinery
+	//	11. Define the script injection machinery.
+	//	12. Define the window load detection.
+	//	13. Define the logging API.
+	//	14. Define the tracing API.
+	//	16. Define the AMD define function.
+	//	17. Define the dojo v1.x provide/require machinery--so called "legacy" modes.
+	//	18. Publish global variables.
+	//
+	// Language and Acronyms and Idioms
+	//
+	// moduleId: a CJS module identifier, (used for public APIs)
+	// mid: moduleId (used internally)
+	// packageId: a package identifier (used for public APIs)
+	// pid: packageId (used internally); the implied system or default package has pid===""
+	// pack: package is used internally to reference a package object (since javascript has reserved words including "package")
+	// prid: plugin resource identifier
+	// The integer constant 1 is used in place of true and 0 in place of false.
 
-		http://dojotoolkit.org
-*/
+	// define a minimal library to help build the loader
+	var	noop = function(){
+		},
 
-//>>built
-(function(a,n){var f,p,m=function(){},h=function(b){for(var a in b)return 0;return 1},q={}.toString,k=function(b){return"[object Function]"==q.call(b)},e=function(b){return"[object String]"==q.call(b)},b=function(b){return"[object Array]"==q.call(b)},l=function(b,a){if(b)for(var c=0;c<b.length;)a(b[c++])},c=function(b,a){for(var c in a)b[c]=a[c];return b},d=function(b,a){return c(Error(b),{src:"dojoLoader",info:a})},g=1,u=function(){return"_"+g++},r=function(b,a,c){return Ma(b,a,c,0,r)},v=this,w=
-v.document,s=w&&w.createElement("DiV"),t=r.has=function(b){return k(A[b])?A[b]=A[b](v,w,s):A[b]},A=t.cache=n.hasCache;t.add=function(b,a,c,d){(void 0===A[b]||d)&&(A[b]=a);return c&&t(b)};for(var x in a.has)t.add(x,a.has[x],0,1);var y=0,I=[],R=0,N=m,J=m,K;r.isXdUrl=m;r.initSyncLoader=function(b,a,c){R||(R=b,N=a,J=c);return{sync:"sync",requested:1,arrived:2,nonmodule:3,executing:4,executed:5,syncExecStack:I,modules:B,execQ:L,getModule:S,injectModule:ma,setArrived:Z,signal:F,finishExec:ba,execModule:ca,
-dojoRequirePlugin:R,getLegacyMode:function(){return y},guardCheckComplete:da}};var P=location.protocol,ea=location.host;r.isXdUrl=function(b){return/^\./.test(b)?!1:/^\/\//.test(b)?!0:(b=b.match(/^([^\/\:]+\:)\/+([^\/]+)/))&&(b[1]!=P||ea&&b[2]!=ea)};t.add("dojo-force-activex-xhr",!w.addEventListener&&"file:"==window.location.protocol);t.add("native-xhr","undefined"!=typeof XMLHttpRequest);if(t("native-xhr")&&!t("dojo-force-activex-xhr"))K=function(){return new XMLHttpRequest};else{var z=["Msxml2.XMLHTTP",
-"Microsoft.XMLHTTP","Msxml2.XMLHTTP.4.0"],E;for(f=0;3>f;)try{if(E=z[f++],new ActiveXObject(E))break}catch(Q){}K=function(){return new ActiveXObject(E)}}r.getXhr=K;t.add("dojo-gettext-api",1);r.getText=function(b,a,c){var l=K();l.open("GET",na(b),!1);l.send(null);if(200==l.status||!location.host&&!l.status)c&&c(l.responseText,a);else throw d("xhrFailed",l.status);return l.responseText};var G=new Function("return eval(arguments[0]);");r.eval=function(b,a){return G(b+"\r\n////@ sourceURL\x3d"+a)};var H=
-{},F=r.signal=function(a,c){var d=H[a];l(d&&d.slice(0),function(a){a.apply(null,b(c)?c:[c])})},Aa=r.on=function(b,a){var c=H[b]||(H[b]=[]);c.push(a);return{remove:function(){for(var b=0;b<c.length;b++)if(c[b]===a){c.splice(b,1);break}}}},W=[],fa={},O=[],C={},X=r.map={},D=[],B={},Ba="",U={},oa={},pa={},$=0,qa=function(b){var a,c,d,l;for(a in oa)c=oa[a],(d=a.match(/^url\:(.+)/))?U["url:"+Na(d[1],b)]=c:"*now"==a?l=c:"*noref"!=a&&(d=ga(a,b,!0),U[d.mid]=U["url:"+d.url]=c);l&&l(Ca(b));oa={}},Oa=function(b){return b.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g,
-function(b){return"\\"+b})},Da=function(b,a){a.splice(0,a.length);for(var c in b)a.push([c,b[c],RegExp("^"+Oa(c)+"(/|$)"),c.length]);a.sort(function(b,a){return a[3]-b[3]});return a},ab=function(b,a){l(b,function(b){a.push([e(b[0])?RegExp("^"+Oa(b[0])+"$"):b[0],b[1]])})},Pa=function(b){var a=b.name;a||(a=b,b={name:a});b=c({main:"main"},b);b.location=b.location?b.location:a;b.packageMap&&(X[a]=b.packageMap);b.main.indexOf("./")||(b.main=b.main.substring(2));C[a]=b},Qa=[],ha=function(b,a,d){for(var g in b){"waitSeconds"==
-g&&(r.waitms=1E3*(b[g]||0));"cacheBust"==g&&(Ba=b[g]?e(b[g])?b[g]:(new Date).getTime()+"":"");if("baseUrl"==g||"combo"==g)r[g]=b[g];if("async"==g){var k=b[g];r.legacyMode=y=e(k)&&/sync|legacyAsync/.test(k)?k:!k?"sync":!1;r.async=!y}b[g]!==A&&(r.rawConfig[g]=b[g],"has"!=g&&t.add("config-"+g,b[g],0,a))}r.baseUrl||(r.baseUrl="./");/\/$/.test(r.baseUrl)||(r.baseUrl+="/");for(g in b.has)t.add(g,b.has[g],0,a);l(b.packages,Pa);for(p in b.packagePaths)l(b.packagePaths[p],function(b){var a=p+"/"+b;e(b)&&(b=
-{name:b});b.location=a;Pa(b)});Da(c(X,b.map),D);l(D,function(b){b[1]=Da(b[1],[]);"*"==b[0]&&(D.star=b)});Da(c(fa,b.paths),O);ab(b.aliases,W);if(a)Qa.push({config:b.config});else for(g in b.config)a=S(g,d),a.config=c(a.config||{},b.config[g]);b.cache&&(qa(),oa=b.cache,b.cache["*noref"]&&qa());F("config",[b,r.rawConfig])};t("dojo-cdn");var ra=w.getElementsByTagName("script");f=0;for(var T,Y,sa,ia;f<ra.length;){T=ra[f++];if((sa=T.getAttribute("src"))&&(ia=sa.match(/(((.*)\/)|^)dojo\.js(\W|$)/i)))Y=ia[3]||
-"",n.baseUrl=n.baseUrl||Y,$=T;if(sa=T.getAttribute("data-dojo-config")||T.getAttribute("djConfig"))pa=r.eval("({ "+sa+" })","data-dojo-config"),$=T}r.rawConfig={};ha(n,1);t("dojo-cdn")&&((C.dojo.location=Y)&&(Y+="/"),C.dijit.location=Y+"../dijit/",C.dojox.location=Y+"../dojox/");ha(a,1);ha(pa,1);var ja=function(b){da(function(){l(b.deps,ma)})},Ma=function(a,l,g,k,s){var h;if(e(a)){if((h=S(a,k,!0))&&h.executed)return h.result;throw d("undefinedModule",a);}b(a)||(ha(a,0,k),a=l,l=g);if(b(a))if(a.length){g=
-"require*"+u();for(var f,q=[],t=0;t<a.length;)f=a[t++],q.push(S(f,k));h=c(ta("",g,0,""),{injected:2,deps:q,def:l||m,require:k?k.require:r,gc:1});B[h.mid]=h;ja(h);var v=ka&&"sync"!=y;da(function(){ca(h,v)});h.executed||L.push(h);aa()}else l&&l();return s},Ca=function(b){if(!b)return r;var a=b.require;a||(a=function(c,d,l){return Ma(c,d,l,b,a)},b.require=c(a,r),a.module=b,a.toUrl=function(a){return Na(a,b)},a.toAbsMid=function(a){return Ea(a,b)},a.syncLoadNls=function(a){a=ga(a,b);var c=B[a.mid];if(!c||
-!c.executed)if(V=U[a.mid]||U["url:"+a.url])ua(V),c=B[a.mid];return c&&c.executed&&c.result});return a},L=[],va=[],M={},bb=function(b){b.injected=1;M[b.mid]=1;b.url&&(M[b.url]=b.pack||1);Ra()},Z=function(b){b.injected=2;delete M[b.mid];b.url&&delete M[b.url];h(M)&&(wa(),"xd"==y&&(y="sync"))},cb=r.idle=function(){return!va.length&&h(M)&&!L.length&&!ka},Fa=function(b,a){if(a)for(var c=0;c<a.length;c++)if(a[c][2].test(b))return a[c];return 0},Sa=function(b){var a=[],c,d;for(b=b.replace(/\\/g,"/").split("/");b.length;)c=
-b.shift(),".."==c&&a.length&&".."!=d?(a.pop(),d=a[a.length-1]):"."!=c&&a.push(d=c);return a.join("/")},ta=function(b,a,c,d){var l=r.isXdUrl(d);return{pid:b,mid:a,pack:c,url:d,executed:0,def:0,isXd:l,isAmd:!!(l||C[b]&&C[b].isAmd)}},Ta=function(b,a,c,g,e,h,s,r,f){var m,q,u,v;v=/^\./.test(b);if(/(^\/)|(\:)|(\.js$)/.test(b)||v&&!a)return ta(0,b,0,b);b=Sa(v?a.mid+"/../"+b:b);if(/^\./.test(b))throw d("irrationalPath",b);a&&(u=Fa(a.mid,h));(u=(u=u||h.star)&&Fa(b,u[1]))&&(b=u[1]+b.substring(u[3]));a=(ia=
-b.match(/^([^\/]+)(\/(.+))?$/))?ia[1]:"";(m=c[a])?b=a+"/"+(q=ia[3]||m.main):a="";var y=0;l(r,function(a){var c=b.match(a[0]);c&&0<c.length&&(y=k(a[1])?b.replace(a[0],a[1]):a[1])});if(y)return Ta(y,0,c,g,e,h,s,r,f);if(c=g[b])return f?ta(c.pid,c.mid,c.pack,c.url):g[b];g=(u=Fa(b,s))?u[1]+b.substring(u[3]):a?m.location+"/"+q:t("config-tlmSiblingOfDojo")?"../"+b:b;/(^\/)|(\:)/.test(g)||(g=e+g);return ta(a,b,m,Sa(g+".js"))},ga=function(b,a,c){return Ta(b,a,C,B,r.baseUrl,c?[]:D,c?[]:O,c?[]:W)},Ua=function(b,
-a,c){return b.normalize?b.normalize(a,function(b){return Ea(b,c)}):Ea(a,c)},Va=0,S=function(b,a,c){var d,l;(d=b.match(/^(.+?)\!(.*)$/))?(l=S(d[1],a,c),"sync"==y&&!l.executed&&(ma(l),2===l.injected&&!l.executed&&da(function(){ca(l)}),l.executed?xa(l):L.unshift(l)),5===l.executed&&!l.load&&xa(l),l.load?(d=Ua(l,d[2],a),b=l.mid+"!"+(l.dynamic?++Va+"!":"")+d):(d=d[2],b=l.mid+"!"+ ++Va+"!waitingForPlugin"),b={plugin:l,mid:b,req:Ca(a),prid:d}):b=ga(b,a);return B[b.mid]||!c&&(B[b.mid]=b)},Ea=r.toAbsMid=function(b,
-a){return ga(b,a).mid},Na=r.toUrl=function(b,a){var c=ga(b+"/x",a),d=c.url;return na(0===c.pid?b:d.substring(0,d.length-5))},Wa={injected:2,executed:5,def:3,result:3},Ga=function(b){return B[b]=c({mid:b},Wa)},db=Ga("require"),eb=Ga("exports"),fb=Ga("module"),ya={},Ha=0,xa=function(b){var a=b.result;b.dynamic=a.dynamic;b.normalize=a.normalize;b.load=a.load;return b},gb=function(b){var a={};l(b.loadQ,function(d){var l=Ua(b,d.prid,d.req.module),g=b.dynamic?d.mid.replace(/waitingForPlugin$/,l):b.mid+
-"!"+l,l=c(c({},d),{mid:g,prid:l,injected:0});B[g]||Xa(B[g]=l);a[d.mid]=B[g];Z(d);delete B[d.mid]});b.loadQ=0;var d=function(b){for(var c=b.deps||[],d=0;d<c.length;d++)(b=a[c[d].mid])&&(c[d]=b)},g;for(g in B)d(B[g]);l(L,d)},ba=function(b){r.trace("loader-finish-exec",[b.mid]);b.executed=5;b.defOrder=Ha++;l(b.provides,function(b){b()});b.loadQ&&(xa(b),gb(b));for(f=0;f<L.length;)L[f]===b?L.splice(f,1):f++;/^require\*/.test(b.mid)&&delete B[b.mid]},hb=[],ca=function(b,a){if(4===b.executed)return r.trace("loader-circular-dependency",
-[hb.concat(b.mid).join("-\x3e")]),!b.def||a?ya:b.cjs&&b.cjs.exports;if(!b.executed){if(!b.def)return ya;var c=b.mid,l=b.deps||[],g,e=[],h=0;for(b.executed=4;g=l[h++];){g=g===db?Ca(b):g===eb?b.cjs.exports:g===fb?b.cjs:ca(g,a);if(g===ya)return b.executed=0,r.trace("loader-exec-module",["abort",c]),ya;e.push(g)}r.trace("loader-run-factory",[b.mid]);var c=b.def,s;I.unshift(b);if(t("config-dojo-loader-catches"))try{s=k(c)?c.apply(null,e):c}catch(f){F("error",b.result=d("factoryThrew",[b,f]))}else s=k(c)?
-c.apply(null,e):c;b.result=void 0===s&&b.cjs?b.cjs.exports:s;I.shift(b);ba(b)}return b.result},ka=0,da=function(b){try{ka++,b()}finally{ka--}cb()&&F("idle",[])},aa=function(){ka||da(function(){N();for(var b,a,c=0;c<L.length;)b=Ha,a=L[c],ca(a),b!=Ha?(N(),c=0):c++})};void 0===t("dojo-loader-eval-hint-url")&&t.add("dojo-loader-eval-hint-url",1);var na=function(b){b+="";return b+(Ba?(/\?/.test(b)?"\x26":"?")+Ba:"")},Xa=function(b){var a=b.plugin;5===a.executed&&!a.load&&xa(a);var c=function(a){b.result=
-a;Z(b);ba(b);aa()};a.load?a.load(b.prid,b.req,c):a.loadQ?a.loadQ.push(b):(a.loadQ=[b],L.unshift(a),ma(a))},V=0,la=0,Ia=0,ua=function(b,a){t("config-stripStrict")&&(b=b.replace(/"use strict"/g,""));Ia=1;if(t("config-dojo-loader-catches"))try{b===V?V.call(null):r.eval(b,t("dojo-loader-eval-hint-url")?a.url:a.mid)}catch(c){F("error",d("evalModuleThrew",a))}else b===V?V.call(null):r.eval(b,t("dojo-loader-eval-hint-url")?a.url:a.mid);Ia=0},ma=function(b){var a=b.mid,g=b.url;if(!b.executed&&!b.injected&&
-!(M[a]||b.url&&(b.pack&&M[b.url]===b.pack||1==M[b.url])))if(bb(b),b.plugin)Xa(b);else{var e=function(){Ya(b);if(2!==b.injected){if(t("dojo-enforceDefine")){F("error",d("noDefine",b));return}Z(b);c(b,Wa);r.trace("loader-define-nonmodule",[b.url])}y?!I.length&&aa():aa()};if(V=U[a]||U["url:"+b.url])r.trace("loader-inject",["cache",b.mid,g]),ua(V,b),e();else{if(y)if(b.isXd)"sync"==y&&(y="xd");else if(!(b.isAmd&&"sync"!=y)){var k=function(c){if("sync"==y){I.unshift(b);ua(c,b);I.shift();Ya(b);b.cjs||(Z(b),
-ba(b));if(b.finish){c=a+"*finish";var d=b.finish;delete b.finish;Ja(c,["dojo",("dojo/require!"+d.join(",")).replace(/\./g,"/")],function(b){l(d,function(a){b.require(a)})});L.unshift(S(c))}e()}else(c=J(b,c))?(ua(c,b),e()):(la=b,r.injectUrl(na(g),e,b),la=0)};r.trace("loader-inject",["xhr",b.mid,g,"sync"!=y]);if(t("config-dojo-loader-catches"))try{r.getText(g,"sync"!=y,k)}catch(h){F("error",d("xhrInjectFailed",[b,h]))}else r.getText(g,"sync"!=y,k);return}r.trace("loader-inject",["script",b.mid,g]);
-la=b;r.injectUrl(na(g),e,b);la=0}}},Ka=function(b,a,l){r.trace("loader-define-module",[b.mid,a]);var g=b.mid;if(2===b.injected)return F("error",d("multipleDefine",b)),b;c(b,{deps:a,def:l,cjs:{id:b.mid,uri:b.url,exports:b.result={},setExports:function(a){b.cjs.exports=a},config:function(){return b.config}}});for(var e=0;a[e];e++)a[e]=S(a[e],b);y&&!M[g]&&(ja(b),L.push(b),aa());Z(b);!k(l)&&!a.length&&(b.result=l,ba(b));return b},Ya=function(b,a){for(var c=[],d,g;va.length;)g=va.shift(),a&&(g[0]=a.shift()),
-d=g[0]&&S(g[0])||b,c.push([d,g[1],g[2]]);qa(b);l(c,function(b){ja(Ka.apply(null,b))})},za=0,wa=m,Ra=m,wa=function(){za&&clearTimeout(za);za=0},Ra=function(){wa();r.waitms&&(za=window.setTimeout(function(){wa();F("error",d("timeout",M))},r.waitms))};t.add("ie-event-behavior",w.attachEvent&&"undefined"===typeof Windows&&("undefined"===typeof opera||"[object Opera]"!=opera.toString()));var La=function(b,a,c,d){if(t("ie-event-behavior"))return b.attachEvent(c,d),function(){b.detachEvent(c,d)};b.addEventListener(a,
-d,!1);return function(){b.removeEventListener(a,d,!1)}},ib=La(window,"load","onload",function(){r.pageLoaded=1;"complete"!=w.readyState&&(w.readyState="complete");ib()}),ra=w.getElementsByTagName("script");for(f=0;!$;)if(!/^dojo/.test((T=ra[f++])&&T.type))$=T;r.injectUrl=function(b,a,c){c=c.node=w.createElement("script");var l=La(c,"load","onreadystatechange",function(b){b=b||window.event;var c=b.target||b.srcElement;if("load"===b.type||/complete|loaded/.test(c.readyState))l(),g(),a&&a()}),g=La(c,
-"error","onerror",function(a){l();g();F("error",d("scriptError",[b,a]))});c.type="text/javascript";c.charset="utf-8";c.src=b;$.parentNode.insertBefore(c,$);return c};r.log=function(){try{for(var b=0;b<arguments.length;b++);}catch(a){}};r.trace=m;var Ja=function(b,a,c){var l=arguments.length,g=["require","exports","module"],h=[0,b,a];1==l?h=[0,k(b)?g:[],b]:2==l&&e(b)?h=[b,k(a)?g:[],a]:3==l&&(h=[b,a,c]);r.trace("loader-define",h.slice(0,2));if((l=h[0]&&S(h[0]))&&!M[l.mid])ja(Ka(l,h[1],h[2]));else if(!t("ie-event-behavior")||
-Ia)va.push(h);else{l=l||la;if(!l)for(b in M)if((g=B[b])&&g.node&&"interactive"===g.node.readyState){l=g;break}l?(qa(l),ja(Ka(l,h[1],h[2]))):F("error",d("ieDefineFailed",h[0]));aa()}};Ja.amd={vendor:"dojotoolkit.org"};c(c(r,n.loaderPatch),a.loaderPatch);Aa("error",function(b){try{if(console.error(b),b instanceof Error)for(var a in b);}catch(c){}});c(r,{uid:u,cache:U,packs:C});if(v.define)F("error",d("defineAlreadyDefined",0));else{v.define=Ja;v.require=r;l(Qa,function(b){ha(b)});var Za=pa.deps||a.deps||
-n.deps,$a=pa.callback||a.callback||n.callback;r.boot=Za||$a?[Za||[],$a]:0}})(this.dojoConfig||this.djConfig||this.require||{},{async:0,hasCache:{"config-selectorEngine":"acme","config-tlmSiblingOfDojo":1,"dojo-built":1,"dojo-loader":1,dom:1,"host-browser":1},packages:[{location:".",name:"dojo"},{location:"../dijit",name:"dijit"},{location:"../dojox",name:"dojox"},{location:"../gridx",main:"Grid",name:"gridx"}]});
-require({cache:{"dojo/main":function(){define("./_base/kernel ./has require ./sniff ./_base/lang ./_base/array ./_base/config ./ready ./_base/declare ./_base/connect ./_base/Deferred ./_base/json ./_base/Color ./has!dojo-firebug?./_firebug/firebug ./_base/browser ./_base/loader".split(" "),function(a,n,f,p,m,h,q,k){q.isDebug&&f(["./_firebug/firebug"]);var e=q.require;e&&(e=h.map(m.isArray(e)?e:[e],function(b){return b.replace(/\./g,"/")}),a.isAsync?f(e):k(1,function(){f(e)}));return a})},"dojo/_base/kernel":function(){define(["../has",
-"./config","require","module"],function(a,n,f,p){var m,h={},q={},k={config:n,global:this,dijit:h,dojox:q},h={dojo:["dojo",k],dijit:["dijit",h],dojox:["dojox",q]};p=f.map&&f.map[p.id.match(/[^\/]+/)[0]];for(m in p)h[m]?h[m][0]=p[m]:h[m]=[p[m],{}];for(m in h)p=h[m],p[1]._scopeName=p[0],n.noGlobals||(this[p[0]]=p[1]);k.scopeMap=h;k.baseUrl=k.config.baseUrl=f.baseUrl;k.isAsync=f.async;k.locale=n.locale;p="$Rev$".match(/[0-9a-f]{7,}/);k.version={major:1,minor:9,patch:2,flag:"-pre",revision:p?p[0]:NaN,
-toString:function(){var b=k.version;return b.major+"."+b.minor+"."+b.patch+b.flag+" ("+b.revision+")"}};Function("d","d.eval \x3d function(){return d.global.eval ? d.global.eval(arguments[0]) : eval(arguments[0]);}")(k);k.exit=function(){};"undefined"!=typeof console||(console={});var h="assert count debug dir dirxml error group groupEnd info profile profileEnd time timeEnd trace warn log".split(" "),e;for(p=0;e=h[p++];)console[e]||function(){var b=e+"";console[b]="log"in console?function(){var a=
-Array.apply({},arguments);a.unshift(b+":");console.log(a.join(" "))}:function(){};console[b]._fake=!0}();a.add("dojo-debug-messages",!!n.isDebug);k.deprecated=k.experimental=function(){};a("dojo-debug-messages")&&(k.deprecated=function(b,a,c){b="DEPRECATED: "+b;a&&(b+=" "+a);c&&(b+=" -- will be removed in version: "+c);console.warn(b)},k.experimental=function(b,a){var c="EXPERIMENTAL: "+b+" -- APIs subject to change without notice.";a&&(c+=" "+a);console.warn(c)});if(n.modulePaths){k.deprecated("dojo.modulePaths",
-"use paths configuration");a={};for(m in n.modulePaths)a[m.replace(/\./g,"/")]=n.modulePaths[m];f({paths:a})}k.moduleUrl=function(b,a){k.deprecated("dojo.moduleUrl()","use require.toUrl","2.0");var c=null;b&&(c=f.toUrl(b.replace(/\./g,"/")+(a?"/"+a:"")+"/*.*").replace(/\/\*\.\*/,"")+(a?"":"/"));return c};k._hasResource={};return k})},"dojo/has":function(){define(["require","module"],function(a,n){var f=a.has||function(){};f.add("dom-addeventlistener",!!document.addEventListener);f.add("touch","ontouchstart"in
-document||0<window.navigator.msMaxTouchPoints);f.add("device-width",screen.availWidth||innerWidth);var p=document.createElement("form");f.add("dom-attributes-explicit",0==p.attributes.length);f.add("dom-attributes-specified-flag",0<p.attributes.length&&40>p.attributes.length);f.clearElement=function(a){a.innerHTML="";return a};f.normalize=function(a,h){var q=a.match(/[\?:]|[^:\?]*/g),k=0,e=function(b){var a=q[k++];if(":"==a)return 0;if("?"==q[k++]){if(!b&&f(a))return e();e(!0);return e(b)}return a||
-0};return(a=e())&&h(a)};f.load=function(a,h,f){a?h([a],f):f()};return f})},"dojo/_base/config":function(){define(["../has","require"],function(a,n){var f={},p=n.rawConfig,m;for(m in p)f[m]=p[m];!f.locale&&"undefined"!=typeof navigator&&(f.locale=(navigator.language||navigator.userLanguage).toLowerCase());return f})},"dojo/sniff":function(){define(["./has"],function(a){var n=navigator,f=n.userAgent,n=n.appVersion,p=parseFloat(n);a.add("air",0<=f.indexOf("AdobeAIR"));a.add("msapp",parseFloat(f.split("MSAppHost/")[1])||
-void 0);a.add("khtml",0<=n.indexOf("Konqueror")?p:void 0);a.add("webkit",parseFloat(f.split("WebKit/")[1])||void 0);a.add("chrome",parseFloat(f.split("Chrome/")[1])||void 0);a.add("safari",0<=n.indexOf("Safari")&&!a("chrome")?parseFloat(n.split("Version/")[1]):void 0);a.add("mac",0<=n.indexOf("Macintosh"));a.add("quirks","BackCompat"==document.compatMode);if(f.match(/(iPhone|iPod|iPad)/)){var m=RegExp.$1.replace(/P/,"p"),h=f.match(/OS ([\d_]+)/)?RegExp.$1:"1",h=parseFloat(h.replace(/_/,".").replace(/_/g,
-""));a.add(m,h);a.add("ios",h)}a.add("android",parseFloat(f.split("Android ")[1])||void 0);a.add("bb",(0<=f.indexOf("BlackBerry")||0<=f.indexOf("BB10"))&&parseFloat(f.split("Version/")[1])||void 0);a.add("trident",parseFloat(n.split("Trident/")[1])||void 0);a.add("svg","undefined"!==typeof SVGAngle);a("webkit")||(0<=f.indexOf("Opera")&&a.add("opera",9.8<=p?parseFloat(f.split("Version/")[1])||p:p),0<=f.indexOf("Gecko")&&(!a("khtml")&&!a("webkit")&&!a("trident"))&&a.add("mozilla",p),a("mozilla")&&a.add("ff",
-parseFloat(f.split("Firefox/")[1]||f.split("Minefield/")[1])||void 0),document.all&&!a("opera")&&(f=parseFloat(n.split("MSIE ")[1])||void 0,(n=document.documentMode)&&(5!=n&&Math.floor(f)!=n)&&(f=n),a.add("ie",f)),a.add("wii","undefined"!=typeof opera&&opera.wiiremote));return a})},"dojo/_base/lang":function(){define(["./kernel","../has","../sniff"],function(a,n){n.add("bug-for-in-skips-shadowed",function(){for(var b in{toString:1})return 0;return 1});var f=n("bug-for-in-skips-shadowed")?"hasOwnProperty valueOf isPrototypeOf propertyIsEnumerable toLocaleString toString constructor".split(" "):
-[],p=f.length,m=function(b,l,c){var d,g=0,e=a.global;if(!c)if(b.length){d=b[g++];try{c=a.scopeMap[d]&&a.scopeMap[d][1]}catch(h){}c=c||(d in e?e[d]:l?e[d]={}:void 0)}else return e;for(;c&&(d=b[g++]);)c=d in c?c[d]:l?c[d]={}:void 0;return c},h=Object.prototype.toString,q=function(b,a,c){return(c||[]).concat(Array.prototype.slice.call(b,a||0))},k=/\{([^\}]+)\}/g,e={_extraNames:f,_mixin:function(b,a,c){var d,g,e,h={};for(d in a)if(g=a[d],!(d in b)||b[d]!==g&&(!(d in h)||h[d]!==g))b[d]=c?c(g):g;if(n("bug-for-in-skips-shadowed")&&
-a)for(e=0;e<p;++e)if(d=f[e],g=a[d],!(d in b)||b[d]!==g&&(!(d in h)||h[d]!==g))b[d]=c?c(g):g;return b},mixin:function(b,a){b||(b={});for(var c=1,d=arguments.length;c<d;c++)e._mixin(b,arguments[c]);return b},setObject:function(b,a,c){var d=b.split(".");b=d.pop();return(c=m(d,!0,c))&&b?c[b]=a:void 0},getObject:function(b,a,c){return m(b.split("."),a,c)},exists:function(b,a){return void 0!==e.getObject(b,!1,a)},isString:function(b){return"string"==typeof b||b instanceof String},isArray:function(b){return b&&
-(b instanceof Array||"array"==typeof b)},isFunction:function(b){return"[object Function]"===h.call(b)},isObject:function(b){return void 0!==b&&(null===b||"object"==typeof b||e.isArray(b)||e.isFunction(b))},isArrayLike:function(b){return b&&void 0!==b&&!e.isString(b)&&!e.isFunction(b)&&!(b.tagName&&"form"==b.tagName.toLowerCase())&&(e.isArray(b)||isFinite(b.length))},isAlien:function(b){return b&&!e.isFunction(b)&&/\{\s*\[native code\]\s*\}/.test(String(b))},extend:function(b,a){for(var c=1,d=arguments.length;c<
-d;c++)e._mixin(b.prototype,arguments[c]);return b},_hitchArgs:function(b,l){var c=e._toArray(arguments,2),d=e.isString(l);return function(){var g=e._toArray(arguments),h=d?(b||a.global)[l]:l;return h&&h.apply(b||this,c.concat(g))}},hitch:function(b,l){if(2<arguments.length)return e._hitchArgs.apply(a,arguments);l||(l=b,b=null);if(e.isString(l)){b=b||a.global;if(!b[l])throw['lang.hitch: scope["',l,'"] is null (scope\x3d"',b,'")'].join("");return function(){return b[l].apply(b,arguments||[])}}return!b?
-l:function(){return l.apply(b,arguments||[])}},delegate:function(){function b(){}return function(a,c){b.prototype=a;var d=new b;b.prototype=null;c&&e._mixin(d,c);return d}}(),_toArray:n("ie")?function(){function b(b,a,d){d=d||[];for(a=a||0;a<b.length;a++)d.push(b[a]);return d}return function(a){return(a.item?b:q).apply(this,arguments)}}():q,partial:function(b){return e.hitch.apply(a,[null].concat(e._toArray(arguments)))},clone:function(b){if(!b||"object"!=typeof b||e.isFunction(b))return b;if(b.nodeType&&
-"cloneNode"in b)return b.cloneNode(!0);if(b instanceof Date)return new Date(b.getTime());if(b instanceof RegExp)return RegExp(b);var a,c,d;if(e.isArray(b)){a=[];c=0;for(d=b.length;c<d;++c)c in b&&a.push(e.clone(b[c]))}else a=b.constructor?new b.constructor:{};return e._mixin(a,b,e.clone)},trim:String.prototype.trim?function(b){return b.trim()}:function(b){return b.replace(/^\s\s*/,"").replace(/\s\s*$/,"")},replace:function(b,a,c){return b.replace(c||k,e.isFunction(a)?a:function(b,c){return e.getObject(c,
-!1,a)})}};e.mixin(a,e);return e})},"dojo/_base/array":function(){define(["./kernel","../has","./lang"],function(a,n,f){function p(b){return q[b]=new Function("item","index","array",b)}function m(b){var a=!b;return function(c,d,g){var e=0,h=c&&c.length||0,k;h&&"string"==typeof c&&(c=c.split(""));"string"==typeof d&&(d=q[d]||p(d));if(g)for(;e<h;++e){if(k=!d.call(g,c[e],e,c),b^k)return!k}else for(;e<h;++e)if(k=!d(c[e],e,c),b^k)return!k;return a}}function h(b){var a=1,c=0,d=0;b||(a=c=d=-1);return function(g,
-h,r,f){if(f&&0<a)return e.lastIndexOf(g,h,r);f=g&&g.length||0;var m=b?f+d:c;r===k?r=b?c:f+d:0>r?(r=f+r,0>r&&(r=c)):r=r>=f?f+d:r;for(f&&"string"==typeof g&&(g=g.split(""));r!=m;r+=a)if(g[r]==h)return r;return-1}}var q={},k,e={every:m(!1),some:m(!0),indexOf:h(!0),lastIndexOf:h(!1),forEach:function(b,a,c){var d=0,g=b&&b.length||0;g&&"string"==typeof b&&(b=b.split(""));"string"==typeof a&&(a=q[a]||p(a));if(c)for(;d<g;++d)a.call(c,b[d],d,b);else for(;d<g;++d)a(b[d],d,b)},map:function(b,a,c,d){var g=0,
-e=b&&b.length||0;d=new (d||Array)(e);e&&"string"==typeof b&&(b=b.split(""));"string"==typeof a&&(a=q[a]||p(a));if(c)for(;g<e;++g)d[g]=a.call(c,b[g],g,b);else for(;g<e;++g)d[g]=a(b[g],g,b);return d},filter:function(b,a,c){var d=0,g=b&&b.length||0,e=[],h;g&&"string"==typeof b&&(b=b.split(""));"string"==typeof a&&(a=q[a]||p(a));if(c)for(;d<g;++d)h=b[d],a.call(c,h,d,b)&&e.push(h);else for(;d<g;++d)h=b[d],a(h,d,b)&&e.push(h);return e},clearCache:function(){q={}}};f.mixin(a,e);return e})},"dojo/ready":function(){define(["./_base/kernel",
-"./has","require","./domReady","./_base/lang"],function(a,n,f,p,m){var h=0,q=[],k=0;n=function(){h=1;a._postLoad=a.config.afterOnLoad=!0;e()};var e=function(){if(!k){for(k=1;h&&(!p||0==p._Q.length)&&(f.idle?f.idle():1)&&q.length;){var b=q.shift();try{b()}catch(a){if(a.info=a.message,f.signal)f.signal("error",a);else throw a;}}k=0}};f.on&&f.on("idle",e);p&&(p._onQEmpty=e);var b=a.ready=a.addOnLoad=function(b,d,g){var l=m._toArray(arguments);"number"!=typeof b?(g=d,d=b,b=1E3):l.shift();g=g?m.hitch.apply(a,
-l):function(){d()};g.priority=b;for(l=0;l<q.length&&b>=q[l].priority;l++);q.splice(l,0,g);e()},l=a.config.addOnLoad;if(l)b[m.isArray(l)?"apply":"call"](a,l);a.config.parseOnLoad&&!a.isAsync&&b(99,function(){a.parser||(a.deprecated("Add explicit require(['dojo/parser']);","","2.0"),f(["dojo/parser"]))});p?p(n):n();return b})},"dojo/domReady":function(){define(["./has"],function(a){function n(b){e.push(b);k&&f()}function f(){if(!b){for(b=!0;e.length;)try{e.shift()(m)}catch(a){}b=!1;n._onQEmpty()}}var p=
-this,m=document,h={loaded:1,complete:1},q="string"!=typeof m.readyState,k=!!h[m.readyState],e=[],b;n.load=function(b,a,c){n(c)};n._Q=e;n._onQEmpty=function(){};q&&(m.readyState="loading");if(!k){var l=[],c=function(b){b=b||p.event;k||"readystatechange"==b.type&&!h[m.readyState]||(q&&(m.readyState="complete"),k=1,f())},d=function(b,a){b.addEventListener(a,c,!1);e.push(function(){b.removeEventListener(a,c,!1)})};if(!a("dom-addeventlistener")){var d=function(b,a){a="on"+a;b.attachEvent(a,c);e.push(function(){b.detachEvent(a,
-c)})},g=m.createElement("div");try{g.doScroll&&null===p.frameElement&&l.push(function(){try{return g.doScroll("left"),1}catch(b){}})}catch(u){}}d(m,"DOMContentLoaded");d(p,"load");"onreadystatechange"in m?d(m,"readystatechange"):q||l.push(function(){return h[m.readyState]});if(l.length){var r=function(){if(!k){for(var b=l.length;b--;)if(l[b]()){c("poller");return}setTimeout(r,30)}};r()}}return n})},"dojo/_base/declare":function(){define(["./kernel","../has","./lang"],function(a,n,f){function p(b,
-a){throw Error("declare"+(a?" "+a:"")+": "+b);}function m(b,a,c){var d,g,l,e,h,k,s,f=this._inherited=this._inherited||{};"string"==typeof b&&(d=b,b=a,a=c);c=0;e=b.callee;(d=d||e.nom)||p("can't deduce a name to call inherited()",this.declaredClass);h=this.constructor._meta;l=h.bases;s=f.p;if(d!=I){if(f.c!==e&&(s=0,k=l[0],h=k._meta,h.hidden[d]!==e)){(g=h.chains)&&"string"==typeof g[d]&&p("calling chained method with inherited: "+d,this.declaredClass);do if(h=k._meta,g=k.prototype,h&&(g[d]===e&&g.hasOwnProperty(d)||
-h.hidden[d]===e))break;while(k=l[++s]);s=k?s:-1}if(k=l[++s])if(g=k.prototype,k._meta&&g.hasOwnProperty(d))c=g[d];else{e=t[d];do if(g=k.prototype,(c=g[d])&&(k._meta?g.hasOwnProperty(d):c!==e))break;while(k=l[++s])}c=k&&c||t[d]}else{if(f.c!==e&&(s=0,(h=l[0]._meta)&&h.ctor!==e)){g=h.chains;for((!g||"manual"!==g.constructor)&&p("calling chained constructor with inherited",this.declaredClass);(k=l[++s])&&!((h=k._meta)&&h.ctor===e););s=k?s:-1}for(;(k=l[++s])&&!(c=(h=k._meta)?h.ctor:k););c=k&&c}f.c=c;f.p=
-s;if(c)return!0===a?c:c.apply(this,a||b)}function h(b,a){return"string"==typeof b?this.__inherited(b,a,!0):this.__inherited(b,!0)}function q(b,a,c){var d=this.getInherited(b,a);if(d)return d.apply(this,c||a||b)}function k(b){for(var a=this.constructor._meta.bases,c=0,d=a.length;c<d;++c)if(a[c]===b)return!0;return this instanceof b}function e(b,a){for(var c in a)c!=I&&a.hasOwnProperty(c)&&(b[c]=a[c]);if(n("bug-for-in-skips-shadowed"))for(var d=f._extraNames,g=d.length;g;)c=d[--g],c!=I&&a.hasOwnProperty(c)&&
-(b[c]=a[c])}function b(b){w.safeMixin(this.prototype,b);return this}function l(b,a){return w([this].concat(b),a||{})}function c(b,a){return function(){var c=arguments,d=c,g=c[0],l,e;e=b.length;var h;if(!(this instanceof c.callee))return v(c);if(a&&(g&&g.preamble||this.preamble)){h=Array(b.length);h[0]=c;for(l=0;;){if(g=c[0])(g=g.preamble)&&(c=g.apply(this,c)||c);g=b[l].prototype;(g=g.hasOwnProperty("preamble")&&g.preamble)&&(c=g.apply(this,c)||c);if(++l==e)break;h[l]=c}}for(l=e-1;0<=l;--l)g=b[l],
-(g=(e=g._meta)?e.ctor:g)&&g.apply(this,h?h[l]:c);(g=this.postscript)&&g.apply(this,d)}}function d(b,a){return function(){var c=arguments,d=c,g=c[0];if(!(this instanceof c.callee))return v(c);a&&(g&&(g=g.preamble)&&(d=g.apply(this,d)||d),(g=this.preamble)&&g.apply(this,d));b&&b.apply(this,c);(g=this.postscript)&&g.apply(this,c)}}function g(b){return function(){var a=arguments,c=0,d,g;if(!(this instanceof a.callee))return v(a);for(;d=b[c];++c)if(d=(g=d._meta)?g.ctor:d){d.apply(this,a);break}(d=this.postscript)&&
-d.apply(this,a)}}function u(b,a,c){return function(){var d,g,l=0,e=1;c&&(l=a.length-1,e=-1);for(;d=a[l];l+=e)g=d._meta,(d=(g?g.hidden:d.prototype)[b])&&d.apply(this,arguments)}}function r(b){x.prototype=b.prototype;b=new x;x.prototype=null;return b}function v(b){var a=b.callee,c=r(a);a.apply(c,b);return c}function w(a,q,v){"string"!=typeof a&&(v=q,q=a,a="");v=v||{};var n,x,z,E,Q,G,H,F=1,Aa=q;if("[object Array]"==A.call(q)){F=a;z=[];E=[{cls:0,refs:[]}];G={};for(var W=1,fa=q.length,O=0,C,X,D,B;O<fa;++O){(C=
-q[O])?"[object Function]"!=A.call(C)&&p("mixin #"+O+" is not a callable constructor.",F):p("mixin #"+O+" is unknown. Did you use dojo.require to pull it in?",F);X=C._meta?C._meta.bases:[C];D=0;for(C=X.length-1;0<=C;--C)B=X[C].prototype,B.hasOwnProperty("declaredClass")||(B.declaredClass="uniqName_"+y++),B=B.declaredClass,G.hasOwnProperty(B)||(G[B]={count:0,refs:[],cls:X[C]},++W),B=G[B],D&&D!==B&&(B.refs.push(D),++D.count),D=B;++D.count;E[0].refs.push(D)}for(;E.length;){D=E.pop();z.push(D.cls);for(--W;x=
-D.refs,1==x.length;){D=x[0];if(!D||--D.count){D=0;break}z.push(D.cls);--W}if(D){O=0;for(fa=x.length;O<fa;++O)D=x[O],--D.count||E.push(D)}}W&&p("can't build consistent linearization",F);C=q[0];z[0]=C?C._meta&&C===z[z.length-C._meta.bases.length]?C._meta.bases.length:1:0;G=z;z=G[0];F=G.length-z;q=G[F]}else G=[0],q?"[object Function]"==A.call(q)?(z=q._meta,G=G.concat(z?z.bases:q)):p("base class is not a callable constructor.",a):null!==q&&p("unknown base class. Did you use dojo.require to pull it in?",
-a);if(q)for(x=F-1;;--x){n=r(q);if(!x)break;z=G[x];(z._meta?e:s)(n,z.prototype);E=new Function;E.superclass=q;E.prototype=n;q=n.constructor=E}else n={};w.safeMixin(n,v);z=v.constructor;z!==t.constructor&&(z.nom=I,n.constructor=z);for(x=F-1;x;--x)(z=G[x]._meta)&&z.chains&&(H=s(H||{},z.chains));n["-chains-"]&&(H=s(H||{},n["-chains-"]));z=!H||!H.hasOwnProperty(I);G[0]=E=H&&"manual"===H.constructor?g(G):1==G.length?d(v.constructor,z):c(G,z);E._meta={bases:G,hidden:v,chains:H,parents:Aa,ctor:v.constructor};
-E.superclass=q&&q.prototype;E.extend=b;E.createSubclass=l;E.prototype=n;n.constructor=E;n.getInherited=h;n.isInstanceOf=k;n.inherited=R;n.__inherited=m;a&&(n.declaredClass=a,f.setObject(a,E));if(H)for(Q in H)n[Q]&&("string"==typeof H[Q]&&Q!=I)&&(z=n[Q]=u(Q,G,"after"===H[Q]),z.nom=Q);return E}var s=f.mixin,t=Object.prototype,A=t.toString,x=new Function,y=0,I="constructor",R=a.config.isDebug?q:m;a.safeMixin=w.safeMixin=function(b,a){var c,d;for(c in a)if(d=a[c],(d!==t[c]||!(c in t))&&c!=I)"[object Function]"==
-A.call(d)&&(d.nom=c),b[c]=d;if(n("bug-for-in-skips-shadowed"))for(var g=f._extraNames,l=g.length;l;)if(c=g[--l],d=a[c],(d!==t[c]||!(c in t))&&c!=I)"[object Function]"==A.call(d)&&(d.nom=c),b[c]=d;return b};return a.declare=w})},"dojo/_base/connect":function(){define("./kernel ../on ../topic ../aspect ./event ../mouse ./sniff ./lang ../keys".split(" "),function(a,n,f,p,m,h,q,k){function e(b,c,d,l,e){l=k.hitch(d,l);if(!b||!b.addEventListener&&!b.attachEvent)return p.after(b||a.global,c,l,!0);"string"==
-typeof c&&"on"==c.substring(0,2)&&(c=c.substring(2));b||(b=a.global);if(!e)switch(c){case "keypress":c=g;break;case "mouseenter":c=h.enter;break;case "mouseleave":c=h.leave}return n(b,c,l,e)}function b(b){b.keyChar=b.charCode?String.fromCharCode(b.charCode):"";b.charOrCode=b.keyChar||b.keyCode}q.add("events-keypress-typed",function(){var b={charCode:0};try{b=document.createEvent("KeyboardEvent"),(b.initKeyboardEvent||b.initKeyEvent).call(b,"keypress",!0,!0,null,!1,!1,!1,!1,9,3)}catch(a){}return 0==
-b.charCode&&!q("opera")});var l={106:42,111:47,186:59,187:43,188:44,189:45,190:46,191:47,192:96,219:91,220:92,221:93,222:39,229:113},c=q("mac")?"metaKey":"ctrlKey",d=function(a,c){var d=k.mixin({},a,c);b(d);d.preventDefault=function(){a.preventDefault()};d.stopPropagation=function(){a.stopPropagation()};return d},g;g=q("events-keypress-typed")?function(b,a){var c=n(b,"keydown",function(b){var c=b.keyCode,g=13!=c&&32!=c&&(27!=c||!q("ie"))&&(48>c||90<c)&&(96>c||111<c)&&(186>c||192<c)&&(219>c||222<c)&&
-229!=c;if(g||b.ctrlKey){g=g?0:c;if(b.ctrlKey){if(3==c||13==c)return a.call(b.currentTarget,b);g=95<g&&106>g?g-48:!b.shiftKey&&65<=g&&90>=g?g+32:l[g]||g}c=d(b,{type:"keypress",faux:!0,charCode:g});a.call(b.currentTarget,c);if(q("ie"))try{b.keyCode=c.keyCode}catch(e){}}}),g=n(b,"keypress",function(b){var c=b.charCode;b=d(b,{charCode:32<=c?c:0,faux:!0});return a.call(this,b)});return{remove:function(){c.remove();g.remove()}}}:q("opera")?function(b,a){return n(b,"keypress",function(b){var c=b.which;3==
-c&&(c=99);c=32>c&&!b.shiftKey?0:c;b.ctrlKey&&(!b.shiftKey&&65<=c&&90>=c)&&(c+=32);return a.call(this,d(b,{charCode:c}))})}:function(a,c){return n(a,"keypress",function(a){b(a);return c.call(this,a)})};var u={_keypress:g,connect:function(b,a,c,d,g){var l=arguments,h=[],k=0;h.push("string"==typeof l[0]?null:l[k++],l[k++]);var f=l[k+1];h.push("string"==typeof f||"function"==typeof f?l[k++]:null,l[k++]);for(f=l.length;k<f;k++)h.push(l[k]);return e.apply(this,h)},disconnect:function(b){b&&b.remove()},
-subscribe:function(b,a,c){return f.subscribe(b,k.hitch(a,c))},publish:function(b,a){return f.publish.apply(f,[b].concat(a))},connectPublisher:function(b,a,c){var d=function(){u.publish(b,arguments)};return c?u.connect(a,c,d):u.connect(a,d)},isCopyKey:function(b){return b[c]}};u.unsubscribe=u.disconnect;k.mixin(a,u);return u})},"dojo/on":function(){define(["./has!dom-addeventlistener?:./aspect","./_base/kernel","./sniff"],function(a,n,f){function p(b,a,d,l,h){if(l=a.match(/(.*):(.*)/))return a=l[2],
-l=l[1],k.selector(l,a).call(h,b,d);f("touch")&&(e.test(a)&&(d=y(d)),!f("event-orientationchange")&&"orientationchange"==a&&(a="resize",b=window,d=y(d)));g&&(d=g(d));if(b.addEventListener){var s=a in c,q=s?c[a]:a;b.addEventListener(q,d,s);return{remove:function(){b.removeEventListener(q,d,s)}}}if(w&&b.attachEvent)return w(b,"on"+a,d);throw Error("Target must be an event emitter");}function m(){this.cancelable=!1;this.defaultPrevented=!0}function h(){this.bubbles=!1}var q=window.ScriptEngineMajorVersion;
-f.add("jscript",q&&q()+ScriptEngineMinorVersion()/10);f.add("event-orientationchange",f("touch")&&!f("android"));f.add("event-stopimmediatepropagation",window.Event&&!!window.Event.prototype&&!!window.Event.prototype.stopImmediatePropagation);f.add("event-focusin",function(b,a,c){return"onfocusin"in c||c.addEventListener&&function(){function b(){c=!0}var c=!1;try{var d=a.createElement("input"),g=d.style;g.position="absolute";g.top=d.style.left="0";d.addEventListener("focusin",b,!1);a.body.appendChild(d);
-d.focus();a.body.removeChild(d);d.removeEventListener("focusin",b,!1)}catch(l){}return c}()});var k=function(b,a,c,d){return"function"==typeof b.on&&"function"!=typeof a&&!b.nodeType?b.on(a,c):k.parse(b,a,c,p,d,this)};k.pausable=function(b,a,c,d){var g;b=k(b,a,function(){if(!g)return c.apply(this,arguments)},d);b.pause=function(){g=!0};b.resume=function(){g=!1};return b};k.once=function(b,a,c,d){var g=k(b,a,function(){g.remove();return c.apply(this,arguments)});return g};k.parse=function(b,a,c,d,
-g,l){if(a.call)return a.call(l,b,c);if(-1<a.indexOf(",")){a=a.split(/\s*,\s*/);for(var e=[],h=0,k;k=a[h++];)e.push(d(b,k,c,g,l));e.remove=function(){for(var b=0;b<e.length;b++)e[b].remove()};return e}return d(b,a,c,g,l)};var e=/^touch/;k.selector=function(b,a,c){return function(d,g){function l(a){for(e=e&&e.matches?e:n.query;!e.matches(a,b,d);)if(a==d||!1===c||!(a=a.parentNode)||1!=a.nodeType)return;return a}var e="function"==typeof b?{matches:b}:this,h=a.bubble;return h?k(d,h(l),g):k(d,a,function(b){var a=
-l(b.target);return a&&g.call(a,b)})}};var b=[].slice,l=k.emit=function(a,c,d){var g=b.call(arguments,2),l="on"+c;if("parentNode"in a){var e=g[0]={},k;for(k in d)e[k]=d[k];e.preventDefault=m;e.stopPropagation=h;e.target=a;e.type=c;d=e}do a[l]&&a[l].apply(a,g);while(d&&d.bubbles&&(a=a.parentNode));return d&&d.cancelable&&d},c=f("event-focusin")?{}:{focusin:"focus",focusout:"blur"};if(!f("event-stopimmediatepropagation"))var d=function(){this.modified=this.immediatelyStopped=!0},g=function(b){return function(a){if(!a.immediatelyStopped)return a.stopImmediatePropagation=
-d,b.apply(this,arguments)}};if(f("dom-addeventlistener"))k.emit=function(b,a,c){if(b.dispatchEvent&&document.createEvent){var d=b.ownerDocument.createEvent("HTMLEvents");d.initEvent(a,!!c.bubbles,!!c.cancelable);for(var g in c)g in d||(d[g]=c[g]);return b.dispatchEvent(d)&&d}return l.apply(k,arguments)};else{k._fixEvent=function(b,a){b||(b=(a&&(a.ownerDocument||a.document||a).parentWindow||window).event);if(!b)return b;try{u&&(b.type==u.type&&b.srcElement==u.target)&&(b=u)}catch(c){}if(!b.target)switch(b.target=
-b.srcElement,b.currentTarget=a||b.srcElement,"mouseover"==b.type&&(b.relatedTarget=b.fromElement),"mouseout"==b.type&&(b.relatedTarget=b.toElement),b.stopPropagation||(b.stopPropagation=s,b.preventDefault=t),b.type){case "keypress":var d="charCode"in b?b.charCode:b.keyCode;10==d?(d=0,b.keyCode=13):13==d||27==d?d=0:3==d&&(d=99);b.charCode=d;d=b;d.keyChar=d.charCode?String.fromCharCode(d.charCode):"";d.charOrCode=d.keyChar||d.keyCode}return b};var u,r=function(b){this.handle=b};r.prototype.remove=function(){delete _dojoIEListeners_[this.handle]};
-var v=function(b){return function(a){a=k._fixEvent(a,this);var c=b.call(this,a);a.modified&&(u||setTimeout(function(){u=null}),u=a);return c}},w=function(b,c,d){d=v(d);if(((b.ownerDocument?b.ownerDocument.parentWindow:b.parentWindow||b.window||window)!=top||5.8>f("jscript"))&&!f("config-_allow_leaks")){"undefined"==typeof _dojoIEListeners_&&(_dojoIEListeners_=[]);var g=b[c];if(!g||!g.listeners){var l=g,g=Function("event","var callee \x3d arguments.callee; for(var i \x3d 0; i\x3ccallee.listeners.length; i++){var listener \x3d _dojoIEListeners_[callee.listeners[i]]; if(listener){listener.call(this,event);}}");
-g.listeners=[];b[c]=g;g.global=this;l&&g.listeners.push(_dojoIEListeners_.push(l)-1)}g.listeners.push(b=g.global._dojoIEListeners_.push(d)-1);return new r(b)}return a.after(b,c,d,!0)},s=function(){this.cancelBubble=!0},t=k._preventDefault=function(){this.bubbledKeyCode=this.keyCode;if(this.ctrlKey)try{this.keyCode=0}catch(b){}this.defaultPrevented=!0;this.returnValue=!1;this.modified=!0}}if(f("touch"))var A=function(){},x=window.orientation,y=function(b){return function(a){var c=a.corrected;if(!c){var d=
-a.type;try{delete a.type}catch(g){}if(a.type){if(f("mozilla")){var c={},l;for(l in a)c[l]=a[l]}else A.prototype=a,c=new A;c.preventDefault=function(){a.preventDefault()};c.stopPropagation=function(){a.stopPropagation()}}else c=a,c.type=d;a.corrected=c;if("resize"==d){if(x==window.orientation)return null;x=window.orientation;c.type="orientationchange";return b.call(this,c)}"rotation"in c||(c.rotation=0,c.scale=1);var d=c.changedTouches[0],e;for(e in d)delete c[e],c[e]=d[e]}return b.call(this,c)}};
-return k})},"dojo/topic":function(){define(["./Evented"],function(a){var n=new a;return{publish:function(a,p){return n.emit.apply(n,arguments)},subscribe:function(a,p){return n.on.apply(n,arguments)}}})},"dojo/Evented":function(){define(["./aspect","./on"],function(a,n){function f(){}var p=a.after;f.prototype={on:function(a,h){return n.parse(this,a,h,function(a,k){return p(a,"on"+k,h,!0)})},emit:function(a,h){var f=[this];f.push.apply(f,arguments);return n.emit.apply(n,f)}};return f})},"dojo/aspect":function(){define([],
-function(){function a(a,e,b,l){var c=a[e],d="around"==e,g;if(d){var h=b(function(){return c.advice(this,arguments)});g={remove:function(){h&&(h=a=b=null)},advice:function(b,a){return h?h.apply(b,a):c.advice(b,a)}}}else g={remove:function(){if(g.advice){var c=g.previous,d=g.next;!d&&!c?delete a[e]:(c?c.next=d:a[e]=d,d&&(d.previous=c));a=b=g.advice=null}},id:p++,advice:b,receiveArguments:l};if(c&&!d)if("after"==e){for(;c.next&&(c=c.next););c.next=g;g.previous=c}else"before"==e&&(a[e]=g,g.next=c,c.previous=
-g);else a[e]=g;return g}function n(h){return function(e,b,l,c){var d=e[b],g;if(!d||d.target!=e)e[b]=g=function(){for(var b=p,a=arguments,c=g.before;c;)a=c.advice.apply(this,a)||a,c=c.next;if(g.around)var d=g.around.advice(this,a);for(c=g.after;c&&c.id<b;){if(c.receiveArguments)var l=c.advice.apply(this,a),d=l===f?d:l;else d=c.advice.call(this,d,a);c=c.next}return d},d&&(g.around={advice:function(b,a){return d.apply(b,a)}}),g.target=e;e=a(g||d,h,l,c);l=null;return e}}var f,p=0,m=n("after"),h=n("before"),
-q=n("around");return{before:h,around:q,after:m}})},"dojo/_base/event":function(){define(["./kernel","../on","../has","../dom-geometry"],function(a,n,f,p){if(n._fixEvent){var m=n._fixEvent;n._fixEvent=function(a,h){(a=m(a,h))&&p.normalizeEvent(a);return a}}var h={fix:function(a,h){return n._fixEvent?n._fixEvent(a,h):a},stop:function(a){f("dom-addeventlistener")||a&&a.preventDefault?(a.preventDefault(),a.stopPropagation()):(a=a||window.event,a.cancelBubble=!0,n._preventDefault.call(a))}};a.fixEvent=
-h.fix;a.stopEvent=h.stop;return h})},"dojo/dom-geometry":function(){define(["./sniff","./_base/window","./dom","./dom-style"],function(a,n,f,p){function m(b,a,c,d,g,e){e=e||"px";b=b.style;isNaN(a)||(b.left=a+e);isNaN(c)||(b.top=c+e);0<=d&&(b.width=d+e);0<=g&&(b.height=g+e)}function h(b){return"button"==b.tagName.toLowerCase()||"input"==b.tagName.toLowerCase()&&"button"==(b.getAttribute("type")||"").toLowerCase()}function q(b){return"border-box"==k.boxModel||"table"==b.tagName.toLowerCase()||h(b)}
-var k={boxModel:"content-box"};a("ie")&&(k.boxModel="BackCompat"==document.compatMode?"border-box":"content-box");k.getPadExtents=function(b,a){b=f.byId(b);var c=a||p.getComputedStyle(b),d=p.toPixelValue,g=d(b,c.paddingLeft),e=d(b,c.paddingTop),h=d(b,c.paddingRight),c=d(b,c.paddingBottom);return{l:g,t:e,r:h,b:c,w:g+h,h:e+c}};k.getBorderExtents=function(b,a){b=f.byId(b);var c=p.toPixelValue,d=a||p.getComputedStyle(b),g="none"!=d.borderLeftStyle?c(b,d.borderLeftWidth):0,e="none"!=d.borderTopStyle?c(b,
-d.borderTopWidth):0,h="none"!=d.borderRightStyle?c(b,d.borderRightWidth):0,c="none"!=d.borderBottomStyle?c(b,d.borderBottomWidth):0;return{l:g,t:e,r:h,b:c,w:g+h,h:e+c}};k.getPadBorderExtents=function(b,a){b=f.byId(b);var c=a||p.getComputedStyle(b),d=k.getPadExtents(b,c),c=k.getBorderExtents(b,c);return{l:d.l+c.l,t:d.t+c.t,r:d.r+c.r,b:d.b+c.b,w:d.w+c.w,h:d.h+c.h}};k.getMarginExtents=function(b,a){b=f.byId(b);var c=a||p.getComputedStyle(b),d=p.toPixelValue,g=d(b,c.marginLeft),e=d(b,c.marginTop),h=d(b,
-c.marginRight),c=d(b,c.marginBottom);return{l:g,t:e,r:h,b:c,w:g+h,h:e+c}};k.getMarginBox=function(b,e){b=f.byId(b);var c=e||p.getComputedStyle(b),d=k.getMarginExtents(b,c),g=b.offsetLeft-d.l,h=b.offsetTop-d.t,m=b.parentNode,q=p.toPixelValue;if(a("mozilla")){var n=parseFloat(c.left),c=parseFloat(c.top);!isNaN(n)&&!isNaN(c)?(g=n,h=c):m&&m.style&&(m=p.getComputedStyle(m),"visible"!=m.overflow&&(g+="none"!=m.borderLeftStyle?q(b,m.borderLeftWidth):0,h+="none"!=m.borderTopStyle?q(b,m.borderTopWidth):0))}else if((a("opera")||
-8==a("ie")&&!a("quirks"))&&m)m=p.getComputedStyle(m),g-="none"!=m.borderLeftStyle?q(b,m.borderLeftWidth):0,h-="none"!=m.borderTopStyle?q(b,m.borderTopWidth):0;return{l:g,t:h,w:b.offsetWidth+d.w,h:b.offsetHeight+d.h}};k.getContentBox=function(b,e){b=f.byId(b);var c=e||p.getComputedStyle(b),d=b.clientWidth,g=k.getPadExtents(b,c),h=k.getBorderExtents(b,c);d?(c=b.clientHeight,h.w=h.h=0):(d=b.offsetWidth,c=b.offsetHeight);a("opera")&&(g.l+=h.l,g.t+=h.t);return{l:g.l,t:g.t,w:d-g.w-h.w,h:c-g.h-h.h}};k.setContentSize=
-function(b,a,c){b=f.byId(b);var d=a.w;a=a.h;q(b)&&(c=k.getPadBorderExtents(b,c),0<=d&&(d+=c.w),0<=a&&(a+=c.h));m(b,NaN,NaN,d,a)};var e={l:0,t:0,w:0,h:0};k.setMarginBox=function(b,l,c){b=f.byId(b);var d=c||p.getComputedStyle(b);c=l.w;var g=l.h,n=q(b)?e:k.getPadBorderExtents(b,d),d=k.getMarginExtents(b,d);if(a("webkit")&&h(b)){var r=b.style;0<=c&&!r.width&&(r.width="4px");0<=g&&!r.height&&(r.height="4px")}0<=c&&(c=Math.max(c-n.w-d.w,0));0<=g&&(g=Math.max(g-n.h-d.h,0));m(b,l.l,l.t,c,g)};k.isBodyLtr=
-function(b){b=b||n.doc;return"ltr"==(n.body(b).dir||b.documentElement.dir||"ltr").toLowerCase()};k.docScroll=function(b){b=b||n.doc;var e=n.doc.parentWindow||n.doc.defaultView;return"pageXOffset"in e?{x:e.pageXOffset,y:e.pageYOffset}:(e=a("quirks")?n.body(b):b.documentElement)&&{x:k.fixIeBiDiScrollLeft(e.scrollLeft||0,b),y:e.scrollTop||0}};a("ie")&&(k.getIeDocumentElementOffset=function(b){b=b||n.doc;b=b.documentElement;if(8>a("ie")){var e=b.getBoundingClientRect(),c=e.left,e=e.top;7>a("ie")&&(c+=
-b.clientLeft,e+=b.clientTop);return{x:0>c?0:c,y:0>e?0:e}}return{x:0,y:0}});k.fixIeBiDiScrollLeft=function(b,e){e=e||n.doc;var c=a("ie");if(c&&!k.isBodyLtr(e)){var d=a("quirks"),g=d?n.body(e):e.documentElement,h=n.global;6==c&&(!d&&h.frameElement&&g.scrollHeight>g.clientHeight)&&(b+=g.clientLeft);return 8>c||d?b+g.clientWidth-g.scrollWidth:-b}return b};k.position=function(b,e){b=f.byId(b);var c=n.body(b.ownerDocument),d=b.getBoundingClientRect(),d={x:d.left,y:d.top,w:d.right-d.left,h:d.bottom-d.top};
-if(9>a("ie")){var g=k.getIeDocumentElementOffset(b.ownerDocument);d.x-=g.x+(a("quirks")?c.clientLeft+c.offsetLeft:0);d.y-=g.y+(a("quirks")?c.clientTop+c.offsetTop:0)}e&&(c=k.docScroll(b.ownerDocument),d.x+=c.x,d.y+=c.y);return d};k.getMarginSize=function(b,a){b=f.byId(b);var c=k.getMarginExtents(b,a||p.getComputedStyle(b)),d=b.getBoundingClientRect();return{w:d.right-d.left+c.w,h:d.bottom-d.top+c.h}};k.normalizeEvent=function(b){"layerX"in b||(b.layerX=b.offsetX,b.layerY=b.offsetY);if(!a("dom-addeventlistener")){var e=
-b.target,e=e&&e.ownerDocument||document,c=a("quirks")?e.body:e.documentElement,d=k.getIeDocumentElementOffset(e);b.pageX=b.clientX+k.fixIeBiDiScrollLeft(c.scrollLeft||0,e)-d.x;b.pageY=b.clientY+(c.scrollTop||0)-d.y}};return k})},"dojo/_base/window":function(){define(["./kernel","./lang","../sniff"],function(a,n,f){var p={global:a.global,doc:this.document||null,body:function(f){f=f||a.doc;return f.body||f.getElementsByTagName("body")[0]},setContext:function(f,h){a.global=p.global=f;a.doc=p.doc=h},
-withGlobal:function(f,h,q,k){var e=a.global;try{return a.global=p.global=f,p.withDoc.call(null,f.document,h,q,k)}finally{a.global=p.global=e}},withDoc:function(m,h,q,k){var e=p.doc,b=f("quirks"),l=f("ie"),c,d,g;try{a.doc=p.doc=m;a.isQuirks=f.add("quirks","BackCompat"==a.doc.compatMode,!0,!0);if(f("ie")&&(g=m.parentWindow)&&g.navigator)c=parseFloat(g.navigator.appVersion.split("MSIE ")[1])||void 0,(d=m.documentMode)&&(5!=d&&Math.floor(c)!=d)&&(c=d),a.isIE=f.add("ie",c,!0,!0);q&&"string"==typeof h&&
-(h=q[h]);return h.apply(q,k||[])}finally{a.doc=p.doc=e,a.isQuirks=f.add("quirks",b,!0,!0),a.isIE=f.add("ie",l,!0,!0)}}};n.mixin(a,p);return p})},"dojo/dom":function(){define(["./sniff","./_base/window"],function(a,n){if(7>=a("ie"))try{document.execCommand("BackgroundImageCache",!1,!0)}catch(f){}var p={};a("ie")?p.byId=function(a,f){if("string"!=typeof a)return a;var k=f||n.doc,e=a&&k.getElementById(a);if(e&&(e.attributes.id.value==a||e.id==a))return e;k=k.all[a];if(!k||k.nodeName)k=[k];for(var b=
-0;e=k[b++];)if(e.attributes&&e.attributes.id&&e.attributes.id.value==a||e.id==a)return e}:p.byId=function(a,f){return("string"==typeof a?(f||n.doc).getElementById(a):a)||null};p.isDescendant=function(a,f){try{a=p.byId(a);for(f=p.byId(f);a;){if(a==f)return!0;a=a.parentNode}}catch(k){}return!1};a.add("css-user-select",function(a,f,k){if(!k)return!1;a=k.style;f=["Khtml","O","ms","Moz","Webkit"];k=f.length;var e="userSelect";do if("undefined"!==typeof a[e])return e;while(k--&&(e=f[k]+"UserSelect"));return!1});
-var m=a("css-user-select");p.setSelectable=m?function(a,f){p.byId(a).style[m]=f?"":"none"}:function(a,f){a=p.byId(a);var k=a.getElementsByTagName("*"),e=k.length;if(f)for(a.removeAttribute("unselectable");e--;)k[e].removeAttribute("unselectable");else for(a.setAttribute("unselectable","on");e--;)k[e].setAttribute("unselectable","on")};return p})},"dojo/dom-style":function(){define(["./sniff","./dom"],function(a,n){function f(c,g,e){g=g.toLowerCase();if(a("ie")){if("auto"==e){if("height"==g)return c.offsetHeight;
-if("width"==g)return c.offsetWidth}if("fontweight"==g)switch(e){case 700:return"bold";default:return"normal"}}g in b||(b[g]=l.test(g));return b[g]?h(c,e):e}var p,m={};p=a("webkit")?function(b){var a;if(1==b.nodeType){var c=b.ownerDocument.defaultView;a=c.getComputedStyle(b,null);!a&&b.style&&(b.style.display="",a=c.getComputedStyle(b,null))}return a||{}}:a("ie")&&(9>a("ie")||a("quirks"))?function(b){return 1==b.nodeType&&b.currentStyle?b.currentStyle:{}}:function(b){return 1==b.nodeType?b.ownerDocument.defaultView.getComputedStyle(b,
-null):{}};m.getComputedStyle=p;var h;h=a("ie")?function(b,a){if(!a)return 0;if("medium"==a)return 4;if(a.slice&&"px"==a.slice(-2))return parseFloat(a);var c=b.style,e=b.runtimeStyle,h=c.left,l=e.left;e.left=b.currentStyle.left;try{c.left=a,a=c.pixelLeft}catch(k){a=0}c.left=h;e.left=l;return a}:function(b,a){return parseFloat(a)||0};m.toPixelValue=h;var q=function(b,a){try{return b.filters.item("DXImageTransform.Microsoft.Alpha")}catch(c){return a?{}:null}},k=9>a("ie")||10>a("ie")&&a("quirks")?function(b){try{return q(b).Opacity/
-100}catch(a){return 1}}:function(b){return p(b).opacity},e=9>a("ie")||10>a("ie")&&a("quirks")?function(b,a){""===a&&(a=1);var c=100*a;1===a?(b.style.zoom="",q(b)&&(b.style.filter=b.style.filter.replace(/\s*progid:DXImageTransform.Microsoft.Alpha\([^\)]+?\)/i,""))):(b.style.zoom=1,q(b)?q(b,1).Opacity=c:b.style.filter+=" progid:DXImageTransform.Microsoft.Alpha(Opacity\x3d"+c+")",q(b,1).Enabled=!0);if("tr"==b.tagName.toLowerCase())for(c=b.firstChild;c;c=c.nextSibling)"td"==c.tagName.toLowerCase()&&e(c,
-a);return a}:function(b,a){return b.style.opacity=a},b={left:!0,top:!0},l=/margin|padding|width|height|max|min|offset/,c={cssFloat:1,styleFloat:1,"float":1};m.get=function(b,a){var e=n.byId(b),h=arguments.length;if(2==h&&"opacity"==a)return k(e);a=c[a]?"cssFloat"in e.style?"cssFloat":"styleFloat":a;var l=m.getComputedStyle(e);return 1==h?l:f(e,a,l[a]||e.style[a])};m.set=function(b,a,h){var l=n.byId(b),k=arguments.length,f="opacity"==a;a=c[a]?"cssFloat"in l.style?"cssFloat":"styleFloat":a;if(3==k)return f?
-e(l,h):l.style[a]=h;for(var s in a)m.set(b,s,a[s]);return m.getComputedStyle(l)};return m})},"dojo/mouse":function(){define(["./_base/kernel","./on","./has","./dom","./_base/window"],function(a,n,f,p,m){function h(a,k){var e=function(b,e){return n(b,a,function(a){if(k)return k(a,e);if(!p.isDescendant(a.relatedTarget,b))return e.call(this,a)})};e.bubble=function(b){return h(a,function(a,c){var d=b(a.target),e=a.relatedTarget;if(d&&d!=(e&&1==e.nodeType&&b(e)))return c.call(d,a)})};return e}f.add("dom-quirks",
-m.doc&&"BackCompat"==m.doc.compatMode);f.add("events-mouseenter",m.doc&&"onmouseenter"in m.doc.createElement("div"));f.add("events-mousewheel",m.doc&&"onmousewheel"in m.doc);m=f("dom-quirks")&&f("ie")||!f("dom-addeventlistener")?{LEFT:1,MIDDLE:4,RIGHT:2,isButton:function(a,h){return a.button&h},isLeft:function(a){return a.button&1},isMiddle:function(a){return a.button&4},isRight:function(a){return a.button&2}}:{LEFT:0,MIDDLE:1,RIGHT:2,isButton:function(a,h){return a.button==h},isLeft:function(a){return 0==
-a.button},isMiddle:function(a){return 1==a.button},isRight:function(a){return 2==a.button}};a.mouseButtons=m;a=f("events-mousewheel")?"mousewheel":function(a,h){return n(a,"DOMMouseScroll",function(a){a.wheelDelta=-a.detail;h.call(this,a)})};return{_eventHandler:h,enter:h("mouseover"),leave:h("mouseout"),wheel:a,isLeft:m.isLeft,isMiddle:m.isMiddle,isRight:m.isRight}})},"dojo/_base/sniff":function(){define(["./kernel","./lang","../sniff"],function(a,n,f){a._name="browser";n.mixin(a,{isBrowser:!0,isFF:f("ff"),
-isIE:f("ie"),isKhtml:f("khtml"),isWebKit:f("webkit"),isMozilla:f("mozilla"),isMoz:f("mozilla"),isOpera:f("opera"),isSafari:f("safari"),isChrome:f("chrome"),isMac:f("mac"),isIos:f("ios"),isAndroid:f("android"),isWii:f("wii"),isQuirks:f("quirks"),isAir:f("air")});return f})},"dojo/keys":function(){define(["./_base/kernel","./sniff"],function(a,n){return a.keys={BACKSPACE:8,TAB:9,CLEAR:12,ENTER:13,SHIFT:16,CTRL:17,ALT:18,META:n("webkit")?91:224,PAUSE:19,CAPS_LOCK:20,ESCAPE:27,SPACE:32,PAGE_UP:33,PAGE_DOWN:34,
-END:35,HOME:36,LEFT_ARROW:37,UP_ARROW:38,RIGHT_ARROW:39,DOWN_ARROW:40,INSERT:45,DELETE:46,HELP:47,LEFT_WINDOW:91,RIGHT_WINDOW:92,SELECT:93,NUMPAD_0:96,NUMPAD_1:97,NUMPAD_2:98,NUMPAD_3:99,NUMPAD_4:100,NUMPAD_5:101,NUMPAD_6:102,NUMPAD_7:103,NUMPAD_8:104,NUMPAD_9:105,NUMPAD_MULTIPLY:106,NUMPAD_PLUS:107,NUMPAD_ENTER:108,NUMPAD_MINUS:109,NUMPAD_PERIOD:110,NUMPAD_DIVIDE:111,F1:112,F2:113,F3:114,F4:115,F5:116,F6:117,F7:118,F8:119,F9:120,F10:121,F11:122,F12:123,F13:124,F14:125,F15:126,NUM_LOCK:144,SCROLL_LOCK:145,
-UP_DPAD:175,DOWN_DPAD:176,LEFT_DPAD:177,RIGHT_DPAD:178,copyKey:n("mac")&&!n("air")?n("safari")?91:224:17}})},"dojo/_base/Deferred":function(){define("./kernel ../Deferred ../promise/Promise ../errors/CancelError ../has ./lang ../when".split(" "),function(a,n,f,p,m,h,q){var k=function(){},e=Object.freeze||function(){},b=a.Deferred=function(a){function c(b){if(q)throw Error("This deferred has already been resolved");g=b;q=!0;d()}function d(){for(var b;!b&&t;){var a=t;t=t.next;if(b=a.progress==k)q=!1;
-var c=w?a.error:a.resolved;m("config-useDeferredInstrumentation")&&w&&n.instrumentRejected&&n.instrumentRejected(g,!!c);if(c)try{var d=c(g);d&&"function"===typeof d.then?d.then(h.hitch(a.deferred,"resolve"),h.hitch(a.deferred,"reject"),h.hitch(a.deferred,"progress")):(c=b&&void 0===d,b&&!c&&(w=d instanceof Error),a.deferred[c&&w?"reject":"resolve"](c?g:d))}catch(e){a.deferred.reject(e)}else w?a.deferred.reject(g):a.deferred.resolve(g)}}var g,q,r,v,w,s,t,A=this.promise=new f;this.isResolved=A.isResolved=
-function(){return 0==v};this.isRejected=A.isRejected=function(){return 1==v};this.isFulfilled=A.isFulfilled=function(){return 0<=v};this.isCanceled=A.isCanceled=function(){return r};this.resolve=this.callback=function(b){this.fired=v=0;this.results=[b,null];c(b)};this.reject=this.errback=function(b){w=!0;this.fired=v=1;m("config-useDeferredInstrumentation")&&n.instrumentRejected&&n.instrumentRejected(b,!!t);c(b);this.results=[null,b]};this.progress=function(b){for(var a=t;a;){var c=a.progress;c&&
-c(b);a=a.next}};this.addCallbacks=function(b,a){this.then(b,a,k);return this};A.then=this.then=function(a,c,e){var g=e==k?this:new b(A.cancel);a={resolved:a,error:c,progress:e,deferred:g};t?s=s.next=a:t=s=a;q&&d();return g.promise};var x=this;A.cancel=this.cancel=function(){if(!q){var b=a&&a(x);q||(b instanceof Error||(b=new p(b)),b.log=!1,x.reject(b))}r=!0};e(A)};h.extend(b,{addCallback:function(b){return this.addCallbacks(h.hitch.apply(a,arguments))},addErrback:function(b){return this.addCallbacks(null,
-h.hitch.apply(a,arguments))},addBoth:function(b){var c=h.hitch.apply(a,arguments);return this.addCallbacks(c,c)},fired:-1});b.when=a.when=q;return b})},"dojo/Deferred":function(){define(["./has","./_base/lang","./errors/CancelError","./promise/Promise","./promise/instrumentation"],function(a,n,f,p,m){var h=Object.freeze||function(){},q=function(b,a,e,h,f){2===a&&(l.instrumentRejected&&0===b.length)&&l.instrumentRejected(e,!1,h,f);for(f=0;f<b.length;f++)k(b[f],a,e,h)},k=function(a,d,g,h){var k=a[d],
-f=a.deferred;if(k)try{var m=k(g);if(0===d)"undefined"!==typeof m&&b(f,d,m);else{if(m&&"function"===typeof m.then){a.cancel=m.cancel;m.then(e(f,1),e(f,2),e(f,0));return}b(f,1,m)}}catch(s){b(f,2,s)}else b(f,d,g);2===d&&l.instrumentRejected&&l.instrumentRejected(g,!!k,h,f.promise)},e=function(a,d){return function(e){b(a,d,e)}},b=function(b,a,e){if(!b.isCanceled())switch(a){case 0:b.progress(e);break;case 1:b.resolve(e);break;case 2:b.reject(e)}},l=function(b){var a=this.promise=new p,e=this,m,n,v,w=
-!1,s=[];Error.captureStackTrace&&(Error.captureStackTrace(e,l),Error.captureStackTrace(a,l));this.isResolved=a.isResolved=function(){return 1===m};this.isRejected=a.isRejected=function(){return 2===m};this.isFulfilled=a.isFulfilled=function(){return!!m};this.isCanceled=a.isCanceled=function(){return w};this.progress=function(b,c){if(m){if(!0===c)throw Error("This deferred has already been fulfilled.");return a}q(s,0,b,null,e);return a};this.resolve=function(b,c){if(m){if(!0===c)throw Error("This deferred has already been fulfilled.");
-return a}q(s,m=1,n=b,null,e);s=null;return a};var t=this.reject=function(b,c){if(m){if(!0===c)throw Error("This deferred has already been fulfilled.");return a}Error.captureStackTrace&&Error.captureStackTrace(v={},t);q(s,m=2,n=b,v,e);s=null;return a};this.then=a.then=function(b,c,e){var g=[e,b,c];g.cancel=a.cancel;g.deferred=new l(function(b){return g.cancel&&g.cancel(b)});m&&!s?k(g,m,n,v):s.push(g);return g.deferred.promise};this.cancel=a.cancel=function(a,d){if(m){if(!0===d)throw Error("This deferred has already been fulfilled.");
-}else{if(b){var e=b(a);a="undefined"===typeof e?a:e}w=!0;if(m){if(2===m&&n===a)return a}else return"undefined"===typeof a&&(a=new f),t(a),a}};h(a)};l.prototype.toString=function(){return"[object Deferred]"};m&&m(l);return l})},"dojo/errors/CancelError":function(){define(["./create"],function(a){return a("CancelError",null,null,{dojoType:"cancel"})})},"dojo/errors/create":function(){define(["../_base/lang"],function(a){return function(n,f,p,m){p=p||Error;var h=function(a){if(p===Error){Error.captureStackTrace&&
-Error.captureStackTrace(this,h);var k=Error.call(this,a),e;for(e in k)k.hasOwnProperty(e)&&(this[e]=k[e]);this.message=a;this.stack=k.stack}else p.apply(this,arguments);f&&f.apply(this,arguments)};h.prototype=a.delegate(p.prototype,m);h.prototype.name=n;return h.prototype.constructor=h}})},"dojo/promise/Promise":function(){define(["../_base/lang"],function(a){function n(){throw new TypeError("abstract");}return a.extend(function(){},{then:function(a,p,m){n()},cancel:function(a,p){n()},isResolved:function(){n()},
-isRejected:function(){n()},isFulfilled:function(){n()},isCanceled:function(){n()},always:function(a){return this.then(a,a)},otherwise:function(a){return this.then(null,a)},trace:function(){return this},traceRejected:function(){return this},toString:function(){return"[object Promise]"}})})},"dojo/promise/instrumentation":function(){define(["./tracer","../has","../_base/lang","../_base/array"],function(a,n,f,p){function m(b,a,e){var h="";b&&b.stack&&(h+=b.stack);a&&a.stack&&(h+="\n    ----------------------------------------\n    rejected"+
-a.stack.split("\n").slice(1).join("\n").replace(/^\s+/," "));e&&e.stack&&(h+="\n    ----------------------------------------\n"+e.stack);console.error(b,h)}function h(b,a,e,h){a||m(b,e,h)}function q(a,d,g,h){d?p.some(e,function(b,d){if(b.error===a)return e.splice(d,1),!0}):p.some(e,function(b){return b.error===a})||e.push({error:a,rejection:g,deferred:h,timestamp:(new Date).getTime()});b||(b=setTimeout(k,l))}function k(){var a=(new Date).getTime(),d=a-l;e=p.filter(e,function(b){return b.timestamp<
-d?(m(b.error,b.rejection,b.deferred),!1):!0});b=e.length?setTimeout(k,e[0].timestamp+l-a):!1}var e=[],b=!1,l=1E3;return function(b){var d=n("config-useDeferredInstrumentation");if(d){a.on("resolved",f.hitch(console,"log","resolved"));a.on("rejected",f.hitch(console,"log","rejected"));a.on("progress",f.hitch(console,"log","progress"));var e=[];"string"===typeof d&&(e=d.split(","),d=e.shift());if("report-rejections"===d)b.instrumentRejected=h;else if("report-unhandled-rejections"===d||!0===d||1===d)b.instrumentRejected=
-q,l=parseInt(e[0],10)||l;else throw Error("Unsupported instrumentation usage \x3c"+d+"\x3e");}}})},"dojo/promise/tracer":function(){define(["../_base/lang","./Promise","../Evented"],function(a,n,f){function p(a){setTimeout(function(){h.apply(m,a)},0)}var m=new f,h=m.emit;m.emit=null;n.prototype.trace=function(){var h=a._toArray(arguments);this.then(function(a){p(["resolved",a].concat(h))},function(a){p(["rejected",a].concat(h))},function(a){p(["progress",a].concat(h))});return this};n.prototype.traceRejected=
-function(){var h=a._toArray(arguments);this.otherwise(function(a){p(["rejected",a].concat(h))});return this};return m})},"dojo/when":function(){define(["./Deferred","./promise/Promise"],function(a,n){return function(f,p,m,h){var q=f&&"function"===typeof f.then,k=q&&f instanceof n;if(q)k||(q=new a(f.cancel),f.then(q.resolve,q.reject,q.progress),f=q.promise);else return 1<arguments.length?p?p(f):f:(new a).resolve(f);return p||m||h?f.then(p,m,h):f}})},"dojo/_base/json":function(){define(["./kernel",
-"../json"],function(a,n){a.fromJson=function(a){return eval("("+a+")")};a._escapeString=n.stringify;a.toJsonIndentStr="\t";a.toJson=function(f,p){return n.stringify(f,function(a,h){if(h){var f=h.__json__||h.json;if("function"==typeof f)return f.call(h)}return h},p&&a.toJsonIndentStr)};return a})},"dojo/json":function(){define(["./has"],function(a){var n="undefined"!=typeof JSON;a.add("json-parse",n);a.add("json-stringify",n&&'{"a":1}'==JSON.stringify({a:0},function(a,f){return f||1}));if(a("json-stringify"))return JSON;
-var f=function(a){return('"'+a.replace(/(["\\])/g,"\\$1")+'"').replace(/[\f]/g,"\\f").replace(/[\b]/g,"\\b").replace(/[\n]/g,"\\n").replace(/[\t]/g,"\\t").replace(/[\r]/g,"\\r")};return{parse:a("json-parse")?JSON.parse:function(a,f){if(f&&!/^([\s\[\{]*(?:"(?:\\.|[^"])*"|-?\d[\d\.]*(?:[Ee][+-]?\d+)?|null|true|false|)[\s\]\}]*(?:,|:|$))+$/.test(a))throw new SyntaxError("Invalid characters in JSON");return eval("("+a+")")},stringify:function(a,m,h){function n(a,b,l){m&&(a=m(l,a));var c;c=typeof a;if("number"==
-c)return isFinite(a)?a+"":"null";if("boolean"==c)return a+"";if(null===a)return"null";if("string"==typeof a)return f(a);if("function"==c||"undefined"==c)return k;if("function"==typeof a.toJSON)return n(a.toJSON(l),b,l);if(a instanceof Date)return'"{FullYear}-{Month+}-{Date}T{Hours}:{Minutes}:{Seconds}Z"'.replace(/\{(\w+)(\+)?\}/g,function(b,c,d){b=a["getUTC"+c]()+(d?1:0);return 10>b?"0"+b:b});if(a.valueOf()!==a)return n(a.valueOf(),b,l);var d=h?b+h:"",g=h?" ":"",p=h?"\n":"";if(a instanceof Array){var g=
-a.length,r=[];for(l=0;l<g;l++)c=n(a[l],d,l),"string"!=typeof c&&(c="null"),r.push(p+d+c);return"["+r.join(",")+p+b+"]"}r=[];for(l in a){var v;if(a.hasOwnProperty(l)){if("number"==typeof l)v='"'+l+'"';else if("string"==typeof l)v=f(l);else continue;c=n(a[l],d,l);"string"==typeof c&&r.push(p+d+v+":"+g+c)}}return"{"+r.join(",")+p+b+"}"}var k;"string"==typeof m&&(h=m,m=null);return n(a,"","")}}})},"dojo/_base/Color":function(){define(["./kernel","./lang","./array","./config"],function(a,n,f,p){var m=
-a.Color=function(a){a&&this.setColor(a)};m.named={black:[0,0,0],silver:[192,192,192],gray:[128,128,128],white:[255,255,255],maroon:[128,0,0],red:[255,0,0],purple:[128,0,128],fuchsia:[255,0,255],green:[0,128,0],lime:[0,255,0],olive:[128,128,0],yellow:[255,255,0],navy:[0,0,128],blue:[0,0,255],teal:[0,128,128],aqua:[0,255,255],transparent:p.transparentColor||[0,0,0,0]};n.extend(m,{r:255,g:255,b:255,a:1,_set:function(a,f,k,e){this.r=a;this.g=f;this.b=k;this.a=e},setColor:function(a){n.isString(a)?m.fromString(a,
-this):n.isArray(a)?m.fromArray(a,this):(this._set(a.r,a.g,a.b,a.a),a instanceof m||this.sanitize());return this},sanitize:function(){return this},toRgb:function(){return[this.r,this.g,this.b]},toRgba:function(){return[this.r,this.g,this.b,this.a]},toHex:function(){return"#"+f.map(["r","g","b"],function(a){a=this[a].toString(16);return 2>a.length?"0"+a:a},this).join("")},toCss:function(a){var f=this.r+", "+this.g+", "+this.b;return(a?"rgba("+f+", "+this.a:"rgb("+f)+")"},toString:function(){return this.toCss(!0)}});
-m.blendColors=a.blendColors=function(a,n,k,e){var b=e||new m;f.forEach(["r","g","b","a"],function(e){b[e]=a[e]+(n[e]-a[e])*k;"a"!=e&&(b[e]=Math.round(b[e]))});return b.sanitize()};m.fromRgb=a.colorFromRgb=function(a,f){var k=a.toLowerCase().match(/^rgba?\(([\s\.,0-9]+)\)/);return k&&m.fromArray(k[1].split(/\s*,\s*/),f)};m.fromHex=a.colorFromHex=function(a,n){var k=n||new m,e=4==a.length?4:8,b=(1<<e)-1;a=Number("0x"+a.substr(1));if(isNaN(a))return null;f.forEach(["b","g","r"],function(l){var c=a&b;
-a>>=e;k[l]=4==e?17*c:c});k.a=1;return k};m.fromArray=a.colorFromArray=function(a,f){var k=f||new m;k._set(Number(a[0]),Number(a[1]),Number(a[2]),Number(a[3]));isNaN(k.a)&&(k.a=1);return k.sanitize()};m.fromString=a.colorFromString=function(a,f){var k=m.named[a];return k&&m.fromArray(k,f)||m.fromRgb(a,f)||m.fromHex(a,f)};return m})},"dojo/_base/browser":function(){require.has&&require.has.add("config-selectorEngine","acme");define("../ready ./kernel ./connect ./unload ./window ./event ./html ./NodeList ../query ./xhr ./fx".split(" "),
-function(a){return a})},"dojo/_base/unload":function(){define(["./kernel","./lang","../on"],function(a,n,f){var p=window,m={addOnWindowUnload:function(h,m){a.windowUnloaded||f(p,"unload",a.windowUnloaded=function(){});f(p,"unload",n.hitch(h,m))},addOnUnload:function(a,m){f(p,"beforeunload",n.hitch(a,m))}};a.addOnWindowUnload=m.addOnWindowUnload;a.addOnUnload=m.addOnUnload;return m})},"dojo/_base/html":function(){define("./kernel ../dom ../dom-style ../dom-attr ../dom-prop ../dom-class ../dom-construct ../dom-geometry".split(" "),
-function(a,n,f,p,m,h,q,k){a.byId=n.byId;a.isDescendant=n.isDescendant;a.setSelectable=n.setSelectable;a.getAttr=p.get;a.setAttr=p.set;a.hasAttr=p.has;a.removeAttr=p.remove;a.getNodeProp=p.getNodeProp;a.attr=function(a,b,h){return 2==arguments.length?p["string"==typeof b?"get":"set"](a,b):p.set(a,b,h)};a.hasClass=h.contains;a.addClass=h.add;a.removeClass=h.remove;a.toggleClass=h.toggle;a.replaceClass=h.replace;a._toDom=a.toDom=q.toDom;a.place=q.place;a.create=q.create;a.empty=function(a){q.empty(a)};
-a._destroyElement=a.destroy=function(a){q.destroy(a)};a._getPadExtents=a.getPadExtents=k.getPadExtents;a._getBorderExtents=a.getBorderExtents=k.getBorderExtents;a._getPadBorderExtents=a.getPadBorderExtents=k.getPadBorderExtents;a._getMarginExtents=a.getMarginExtents=k.getMarginExtents;a._getMarginSize=a.getMarginSize=k.getMarginSize;a._getMarginBox=a.getMarginBox=k.getMarginBox;a.setMarginBox=k.setMarginBox;a._getContentBox=a.getContentBox=k.getContentBox;a.setContentSize=k.setContentSize;a._isBodyLtr=
-a.isBodyLtr=k.isBodyLtr;a._docScroll=a.docScroll=k.docScroll;a._getIeDocumentElementOffset=a.getIeDocumentElementOffset=k.getIeDocumentElementOffset;a._fixIeBiDiScrollLeft=a.fixIeBiDiScrollLeft=k.fixIeBiDiScrollLeft;a.position=k.position;a.marginBox=function(a,b){return b?k.setMarginBox(a,b):k.getMarginBox(a)};a.contentBox=function(a,b){return b?k.setContentSize(a,b):k.getContentBox(a)};a.coords=function(e,b){a.deprecated("dojo.coords()","Use dojo.position() or dojo.marginBox().");e=n.byId(e);var h=
-f.getComputedStyle(e),h=k.getMarginBox(e,h),c=k.position(e,b);h.x=c.x;h.y=c.y;return h};a.getProp=m.get;a.setProp=m.set;a.prop=function(a,b,h){return 2==arguments.length?m["string"==typeof b?"get":"set"](a,b):m.set(a,b,h)};a.getStyle=f.get;a.setStyle=f.set;a.getComputedStyle=f.getComputedStyle;a.__toPixelValue=a.toPixelValue=f.toPixelValue;a.style=function(a,b,h){switch(arguments.length){case 1:return f.get(a);case 2:return f["string"==typeof b?"get":"set"](a,b)}return f.set(a,b,h)};return a})},"dojo/dom-attr":function(){define("exports ./sniff ./_base/lang ./dom ./dom-style ./dom-prop".split(" "),
-function(a,n,f,p,m,h){function q(b,a){var c=b.getAttributeNode&&b.getAttributeNode(a);return c&&c.specified}var k={innerHTML:1,className:1,htmlFor:n("ie"),value:1},e={classname:"class",htmlfor:"for",tabindex:"tabIndex",readonly:"readOnly"};a.has=function(b,a){var c=a.toLowerCase();return k[h.names[c]||a]||q(p.byId(b),e[c]||a)};a.get=function(b,a){b=p.byId(b);var c=a.toLowerCase(),d=h.names[c]||a,g=b[d];if(k[d]&&"undefined"!=typeof g||"href"!=d&&("boolean"==typeof g||f.isFunction(g)))return g;c=e[c]||
-a;return q(b,c)?b.getAttribute(c):null};a.set=function(b,l,c){b=p.byId(b);if(2==arguments.length){for(var d in l)a.set(b,d,l[d]);return b}d=l.toLowerCase();var g=h.names[d]||l,n=k[g];if("style"==g&&"string"!=typeof c)return m.set(b,c),b;if(n||"boolean"==typeof c||f.isFunction(c))return h.set(b,l,c);b.setAttribute(e[d]||l,c);return b};a.remove=function(a,h){p.byId(a).removeAttribute(e[h.toLowerCase()]||h)};a.getNodeProp=function(a,f){a=p.byId(a);var c=f.toLowerCase(),d=h.names[c]||f;if(d in a&&"href"!=
-d)return a[d];c=e[c]||f;return q(a,c)?a.getAttribute(c):null}})},"dojo/dom-prop":function(){define("exports ./_base/kernel ./sniff ./_base/lang ./dom ./dom-style ./dom-construct ./_base/connect".split(" "),function(a,n,f,p,m,h,q,k){var e={},b=0,l=n._scopeName+"attrid";a.names={"class":"className","for":"htmlFor",tabindex:"tabIndex",readonly:"readOnly",colspan:"colSpan",frameborder:"frameBorder",rowspan:"rowSpan",valuetype:"valueType"};a.get=function(b,d){b=m.byId(b);var e=d.toLowerCase();return b[a.names[e]||
-d]};a.set=function(c,d,g){c=m.byId(c);if(2==arguments.length&&"string"!=typeof d){for(var n in d)a.set(c,n,d[n]);return c}n=d.toLowerCase();n=a.names[n]||d;if("style"==n&&"string"!=typeof g)return h.set(c,g),c;if("innerHTML"==n)return f("ie")&&c.tagName.toLowerCase()in{col:1,colgroup:1,table:1,tbody:1,tfoot:1,thead:1,tr:1,title:1}?(q.empty(c),c.appendChild(q.toDom(g,c.ownerDocument))):c[n]=g,c;if(p.isFunction(g)){var r=c[l];r||(r=b++,c[l]=r);e[r]||(e[r]={});var v=e[r][n];if(v)k.disconnect(v);else try{delete c[n]}catch(w){}g?
-e[r][n]=k.connect(c,n,g):c[n]=null;return c}c[n]=g;return c}})},"dojo/dom-construct":function(){define("exports ./_base/kernel ./sniff ./_base/window ./dom ./dom-attr".split(" "),function(a,n,f,p,m,h){function q(a,b){var c=b.parentNode;c&&c.insertBefore(a,b)}function k(a){if(a.canHaveChildren)try{a.innerHTML="";return}catch(b){}for(var c;c=a.lastChild;)e(c,a)}function e(a,b){a.firstChild&&k(a);b&&(f("ie")&&b.canHaveChildren&&"removeNode"in a?a.removeNode(!1):b.removeChild(a))}var b={option:["select"],
-tbody:["table"],thead:["table"],tfoot:["table"],tr:["table","tbody"],td:["table","tbody","tr"],th:["table","thead","tr"],legend:["fieldset"],caption:["table"],colgroup:["table"],col:["table","colgroup"],li:["ul"]},l=/<\s*([\w\:]+)/,c={},d=0,g="__"+n._scopeName+"ToDomId",u;for(u in b)b.hasOwnProperty(u)&&(n=b[u],n.pre="option"==u?'\x3cselect multiple\x3d"multiple"\x3e':"\x3c"+n.join("\x3e\x3c")+"\x3e",n.post="\x3c/"+n.reverse().join("\x3e\x3c/")+"\x3e");var r;8>=f("ie")&&(r=function(a){a.__dojo_html5_tested=
-"yes";var b=v("div",{innerHTML:"\x3cnav\x3ea\x3c/nav\x3e",style:{visibility:"hidden"}},a.body);1!==b.childNodes.length&&"abbr article aside audio canvas details figcaption figure footer header hgroup mark meter nav output progress section summary time video".replace(/\b\w+\b/g,function(b){a.createElement(b)});w(b)});a.toDom=function(a,e){e=e||p.doc;var h=e[g];h||(e[g]=h=++d+"",c[h]=e.createElement("div"));8>=f("ie")&&!e.__dojo_html5_tested&&e.body&&r(e);a+="";var k=a.match(l),m=k?k[1].toLowerCase():
-"",h=c[h];if(k&&b[m]){k=b[m];h.innerHTML=k.pre+a+k.post;for(k=k.length;k;--k)h=h.firstChild}else h.innerHTML=a;if(1==h.childNodes.length)return h.removeChild(h.firstChild);for(m=e.createDocumentFragment();k=h.firstChild;)m.appendChild(k);return m};a.place=function(b,c,d){c=m.byId(c);"string"==typeof b&&(b=/^\s*</.test(b)?a.toDom(b,c.ownerDocument):m.byId(b));if("number"==typeof d){var e=c.childNodes;!e.length||e.length<=d?c.appendChild(b):q(b,e[0>d?0:d])}else switch(d){case "before":q(b,c);break;
-case "after":d=b;(e=c.parentNode)&&(e.lastChild==c?e.appendChild(d):e.insertBefore(d,c.nextSibling));break;case "replace":c.parentNode.replaceChild(b,c);break;case "only":a.empty(c);c.appendChild(b);break;case "first":if(c.firstChild){q(b,c.firstChild);break}default:c.appendChild(b)}return b};var v=a.create=function(b,c,d,e){var g=p.doc;d&&(d=m.byId(d),g=d.ownerDocument);"string"==typeof b&&(b=g.createElement(b));c&&h.set(b,c);d&&a.place(b,d,e);return b};a.empty=function(a){k(m.byId(a))};var w=a.destroy=
-function(a){(a=m.byId(a))&&e(a,a.parentNode)}})},"dojo/dom-class":function(){define(["./_base/lang","./_base/array","./dom"],function(a,n,f){function p(a){if("string"==typeof a||a instanceof String){if(a&&!h.test(a))return q[0]=a,q;a=a.split(h);a.length&&!a[0]&&a.shift();a.length&&!a[a.length-1]&&a.pop();return a}return!a?[]:n.filter(a,function(a){return a})}var m,h=/\s+/,q=[""],k={};return m={contains:function(a,b){return 0<=(" "+f.byId(a).className+" ").indexOf(" "+b+" ")},add:function(a,b){a=f.byId(a);
-b=p(b);var h=a.className,c,h=h?" "+h+" ":" ";c=h.length;for(var d=0,g=b.length,k;d<g;++d)(k=b[d])&&0>h.indexOf(" "+k+" ")&&(h+=k+" ");c<h.length&&(a.className=h.substr(1,h.length-2))},remove:function(e,b){e=f.byId(e);var h;if(void 0!==b){b=p(b);h=" "+e.className+" ";for(var c=0,d=b.length;c<d;++c)h=h.replace(" "+b[c]+" "," ");h=a.trim(h)}else h="";e.className!=h&&(e.className=h)},replace:function(a,b,h){a=f.byId(a);k.className=a.className;m.remove(k,h);m.add(k,b);a.className!==k.className&&(a.className=
-k.className)},toggle:function(a,b,h){a=f.byId(a);if(void 0===h){b=p(b);for(var c=0,d=b.length,g;c<d;++c)g=b[c],m[m.contains(a,g)?"remove":"add"](a,g)}else m[h?"add":"remove"](a,b);return h}}})},"dojo/_base/NodeList":function(){define(["./kernel","../query","./array","./html","../NodeList-dom"],function(a,n,f){n=n.NodeList;var p=n.prototype;p.connect=n._adaptAsForEach(function(){return a.connect.apply(this,arguments)});p.coords=n._adaptAsMap(a.coords);n.events="blur focus change click error keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup submit".split(" ");
-f.forEach(n.events,function(a){var h="on"+a;p[h]=function(a,f){return this.connect(h,a,f)}});return a.NodeList=n})},"dojo/query":function(){define("./_base/kernel ./has ./dom ./on ./_base/array ./_base/lang ./selector/_loader ./selector/_loader!default".split(" "),function(a,n,f,p,m,h,q,k){function e(a,b){var c=function(c,d){if("string"==typeof d&&(d=f.byId(d),!d))return new b([]);var e="string"==typeof c?a(c,d):c?c.end&&c.on?c:[c]:[];return e.end&&e.on?e:new b(e)};c.matches=a.match||function(a,b,
-d){return 0<c.filter([a],b,d).length};c.filter=a.filter||function(a,b,d){return c(b,d).filter(function(b){return-1<m.indexOf(a,b)})};if("function"!=typeof a){var d=a.search;a=function(a,b){return d(b||document,a)}}return c}n.add("array-extensible",function(){return 1==h.delegate([],{length:1}).length&&!n("bug-for-in-skips-shadowed")});var b=Array.prototype,l=b.slice,c=b.concat,d=m.forEach,g=function(b,c,d){c=[0].concat(l.call(c,0));d=d||a.global;return function(a){c[0]=a;return b.apply(d,c)}},u=function(a){var b=
-this instanceof r&&n("array-extensible");"number"==typeof a&&(a=Array(a));var c=a&&"length"in a?a:arguments;if(b||!c.sort){for(var d=b?this:[],e=d.length=c.length,g=0;g<e;g++)d[g]=c[g];if(b)return d;c=d}h._mixin(c,v);c._NodeListCtor=function(a){return r(a)};return c},r=u,v=r.prototype=n("array-extensible")?[]:{};r._wrap=v._wrap=function(a,b,c){a=new (c||this._NodeListCtor||r)(a);return b?a._stash(b):a};r._adaptAsMap=function(a,b){return function(){return this.map(g(a,arguments,b))}};r._adaptAsForEach=
-function(a,b){return function(){this.forEach(g(a,arguments,b));return this}};r._adaptAsFilter=function(a,b){return function(){return this.filter(g(a,arguments,b))}};r._adaptWithCondition=function(b,c,d){return function(){var e=arguments,h=g(b,e,d);if(c.call(d||a.global,e))return this.map(h);this.forEach(h);return this}};d(["slice","splice"],function(a){var c=b[a];v[a]=function(){return this._wrap(c.apply(this,arguments),"slice"==a?this:null)}});d(["indexOf","lastIndexOf","every","some"],function(b){var c=
-m[b];v[b]=function(){return c.apply(a,[this].concat(l.call(arguments,0)))}});h.extend(u,{constructor:r,_NodeListCtor:r,toString:function(){return this.join(",")},_stash:function(a){this._parent=a;return this},on:function(a,b){var c=this.map(function(c){return p(c,a,b)});c.remove=function(){for(var a=0;a<c.length;a++)c[a].remove()};return c},end:function(){return this._parent?this._parent:new this._NodeListCtor(0)},concat:function(a){var b=l.call(this,0),d=m.map(arguments,function(a){return l.call(a,
-0)});return this._wrap(c.apply(b,d),this)},map:function(a,b){return this._wrap(m.map(this,a,b),this)},forEach:function(a,b){d(this,a,b);return this},filter:function(a){var b=arguments,c=this,d=0;if("string"==typeof a){c=w._filterResult(this,b[0]);if(1==b.length)return c._stash(this);d=1}return this._wrap(m.filter(c,b[d],b[d+1]),this)},instantiate:function(a,b){var c=h.isFunction(a)?a:h.getObject(a);b=b||{};return this.forEach(function(a){new c(b,a)})},at:function(){var a=new this._NodeListCtor(0);
-d(arguments,function(b){0>b&&(b=this.length+b);this[b]&&a.push(this[b])},this);return a._stash(this)}});var w=e(k,u);a.query=e(k,function(a){return u(a)});w.load=function(a,b,c){q.load(a,b,function(a){c(e(a,u))})};a._filterQueryResult=w._filterResult=function(a,b,c){return new u(w.filter(a,b,c))};a.NodeList=w.NodeList=u;return w})},"dojo/selector/_loader":function(){define(["../has","require"],function(a,n){var f=document.createElement("div");a.add("dom-qsa2.1",!!f.querySelectorAll);a.add("dom-qsa3",
-function(){try{return f.innerHTML="\x3cp class\x3d'TEST'\x3e\x3c/p\x3e",1==f.querySelectorAll(".TEST:empty").length}catch(a){}});var p;return{load:function(f,h,q,k){k=n;f="default"==f?a("config-selectorEngine")||"css3":f;f="css2"==f||"lite"==f?"./lite":"css2.1"==f?a("dom-qsa2.1")?"./lite":"./acme":"css3"==f?a("dom-qsa3")?"./lite":"./acme":"acme"==f?"./acme":(k=h)&&f;if("?"==f.charAt(f.length-1)){f=f.substring(0,f.length-1);var e=!0}if(e&&(a("dom-compliant-qsa")||p))return q(p);k([f],function(a){"./lite"!=
-f&&(p=a);q(a)})}}})},"dojo/NodeList-dom":function(){define("./_base/kernel ./query ./_base/array ./_base/lang ./dom-class ./dom-construct ./dom-geometry ./dom-attr ./dom-style".split(" "),function(a,n,f,p,m,h,q,k,e){function b(a){return function(b,c,d){return 2==arguments.length?a["string"==typeof c?"get":"set"](b,c):a.set(b,c,d)}}var l=function(a){return 1==a.length&&"string"==typeof a[0]},c=function(a){var b=a.parentNode;b&&b.removeChild(a)},d=n.NodeList,g=d._adaptWithCondition,u=d._adaptAsForEach,
-r=d._adaptAsMap;p.extend(d,{_normalize:function(b,c){var d=!0===b.parse;if("string"==typeof b.template){var e=b.templateFunc||a.string&&a.string.substitute;b=e?e(b.template,b):b}e=typeof b;"string"==e||"number"==e?(b=h.toDom(b,c&&c.ownerDocument),b=11==b.nodeType?p._toArray(b.childNodes):[b]):p.isArrayLike(b)?p.isArray(b)||(b=p._toArray(b)):b=[b];d&&(b._runParse=!0);return b},_cloneNode:function(a){return a.cloneNode(!0)},_place:function(b,c,d,e){if(!(1!=c.nodeType&&"only"==d))for(var g,f=b.length,
-k=f-1;0<=k;k--){var l=e?this._cloneNode(b[k]):b[k];if(b._runParse&&a.parser&&a.parser.parse){g||(g=c.ownerDocument.createElement("div"));g.appendChild(l);a.parser.parse(g);for(l=g.firstChild;g.firstChild;)g.removeChild(g.firstChild)}k==f-1?h.place(l,c,d):c.parentNode.insertBefore(l,c);c=l}},position:r(q.position),attr:g(b(k),l),style:g(b(e),l),addClass:u(m.add),removeClass:u(m.remove),toggleClass:u(m.toggle),replaceClass:u(m.replace),empty:u(h.empty),removeAttr:u(k.remove),marginBox:r(q.getMarginBox),
-place:function(a,b){var c=n(a)[0];return this.forEach(function(a){h.place(a,c,b)})},orphan:function(a){return(a?n._filterResult(this,a):this).forEach(c)},adopt:function(a,b){return n(a).place(this[0],b)._stash(this)},query:function(a){if(!a)return this;var b=new d;this.map(function(c){n(a,c).forEach(function(a){void 0!==a&&b.push(a)})});return b._stash(this)},filter:function(a){var b=arguments,c=this,d=0;if("string"==typeof a){c=n._filterResult(this,b[0]);if(1==b.length)return c._stash(this);d=1}return this._wrap(f.filter(c,
-b[d],b[d+1]),this)},addContent:function(a,b){a=this._normalize(a,this[0]);for(var c=0,d;d=this[c];c++)a.length?this._place(a,d,b,0<c):h.empty(d);return this}});return d})},"dojo/_base/xhr":function(){define("./kernel ./sniff require ../io-query ../dom ../dom-form ./Deferred ./config ./json ./lang ./array ../on ../aspect ../request/watch ../request/xhr ../request/util".split(" "),function(a,n,f,p,m,h,q,k,e,b,l,c,d,g,u,r){a._xhrObj=u._create;var v=a.config;a.objectToQuery=p.objectToQuery;a.queryToObject=
-p.queryToObject;a.fieldToObject=h.fieldToObject;a.formToObject=h.toObject;a.formToQuery=h.toQuery;a.formToJson=h.toJson;a._blockAsync=!1;var w=a._contentHandlers=a.contentHandlers={text:function(a){return a.responseText},json:function(a){return e.fromJson(a.responseText||null)},"json-comment-filtered":function(a){k.useCommentedJson||console.warn("Consider using the standard mimetype:application/json. json-commenting can introduce security issues. To decrease the chances of hijacking, use the standard the 'json' handler and prefix your json with: {}\x26\x26\nUse djConfig.useCommentedJson\x3dtrue to turn off this message.");
-a=a.responseText;var b=a.indexOf("/*"),c=a.lastIndexOf("*/");if(-1==b||-1==c)throw Error("JSON was not comment filtered");return e.fromJson(a.substring(b+2,c))},javascript:function(b){return a.eval(b.responseText)},xml:function(a){var b=a.responseXML;b&&(n("dom-qsa2.1")&&!b.querySelectorAll&&n("dom-parser"))&&(b=(new DOMParser).parseFromString(a.responseText,"application/xml"));if(n("ie")&&(!b||!b.documentElement)){var c=function(a){return"MSXML"+a+".DOMDocument"},c=["Microsoft.XMLDOM",c(6),c(4),
-c(3),c(2)];l.some(c,function(c){try{var d=new ActiveXObject(c);d.async=!1;d.loadXML(a.responseText);b=d}catch(e){return!1}return!0})}return b},"json-comment-optional":function(a){return a.responseText&&/^[^{\[]*\/\*/.test(a.responseText)?w["json-comment-filtered"](a):w.json(a)}};a._ioSetArgs=function(c,d,e,g){var f={args:c,url:c.url},k=null;if(c.form){var k=m.byId(c.form),l=k.getAttributeNode("action");f.url=f.url||(l?l.value:null);k=h.toObject(k)}l=[{}];k&&l.push(k);c.content&&l.push(c.content);
-c.preventCache&&l.push({"dojo.preventCache":(new Date).valueOf()});f.query=p.objectToQuery(b.mixin.apply(null,l));f.handleAs=c.handleAs||"text";var n=new q(function(a){a.canceled=!0;d&&d(a);var b=a.ioArgs.error;b||(b=Error("request cancelled"),b.dojoType="cancel",a.ioArgs.error=b);return b});n.addCallback(e);var r=c.load;r&&b.isFunction(r)&&n.addCallback(function(a){return r.call(c,a,f)});var s=c.error;s&&b.isFunction(s)&&n.addErrback(function(a){return s.call(c,a,f)});var t=c.handle;t&&b.isFunction(t)&&
-n.addBoth(function(a){return t.call(c,a,f)});n.addErrback(function(a){return g(a,n)});v.ioPublish&&(a.publish&&!1!==f.args.ioPublish)&&(n.addCallbacks(function(b){a.publish("/dojo/io/load",[n,b]);return b},function(b){a.publish("/dojo/io/error",[n,b]);return b}),n.addBoth(function(b){a.publish("/dojo/io/done",[n,b]);return b}));n.ioArgs=f;return n};var s=function(a){a=w[a.ioArgs.handleAs](a.ioArgs.xhr);return void 0===a?null:a},t=function(a,b){b.ioArgs.args.failOk||console.error(a);return a},A=function(b){0>=
-x&&(x=0,v.ioPublish&&(a.publish&&(!b||b&&!1!==b.ioArgs.args.ioPublish))&&a.publish("/dojo/io/stop"))},x=0;d.after(g,"_onAction",function(){x-=1});d.after(g,"_onInFlight",A);a._ioCancelAll=g.cancelAll;a._ioNotifyStart=function(b){v.ioPublish&&(a.publish&&!1!==b.ioArgs.args.ioPublish)&&(x||a.publish("/dojo/io/start"),x+=1,a.publish("/dojo/io/send",[b]))};a._ioWatch=function(a,c,d,e){a.ioArgs.options=a.ioArgs.args;b.mixin(a,{response:a.ioArgs,isValid:function(b){return c(a)},isReady:function(b){return d(a)},
-handleResponse:function(b){return e(a)}});g(a);A(a)};a._ioAddQueryToUrl=function(a){a.query.length&&(a.url+=(-1==a.url.indexOf("?")?"?":"\x26")+a.query,a.query=null)};a.xhr=function(b,c,d){var e,g=a._ioSetArgs(c,function(a){e&&e.cancel()},s,t),h=g.ioArgs;"postData"in c?h.query=c.postData:"putData"in c?h.query=c.putData:"rawBody"in c?h.query=c.rawBody:(2<arguments.length&&!d||-1==="POST|PUT".indexOf(b.toUpperCase()))&&a._ioAddQueryToUrl(h);var f={method:b,handleAs:"text",timeout:c.timeout,withCredentials:c.withCredentials,
-ioArgs:h};"undefined"!==typeof c.headers&&(f.headers=c.headers);"undefined"!==typeof c.contentType&&(f.headers||(f.headers={}),f.headers["Content-Type"]=c.contentType);"undefined"!==typeof h.query&&(f.data=h.query);"undefined"!==typeof c.sync&&(f.sync=c.sync);a._ioNotifyStart(g);try{e=u(h.url,f,!0)}catch(k){return g.cancel(),g}g.ioArgs.xhr=e.response.xhr;e.then(function(){g.resolve(g)}).otherwise(function(a){h.error=a;a.response&&(a.status=a.response.status,a.responseText=a.response.text,a.xhr=a.response.xhr);
-g.reject(a)});return g};a.xhrGet=function(b){return a.xhr("GET",b)};a.rawXhrPost=a.xhrPost=function(b){return a.xhr("POST",b,!0)};a.rawXhrPut=a.xhrPut=function(b){return a.xhr("PUT",b,!0)};a.xhrDelete=function(b){return a.xhr("DELETE",b)};a._isDocumentOk=function(a){return r.checkStatus(a.status)};a._getText=function(b){var c;a.xhrGet({url:b,sync:!0,load:function(a){c=a}});return c};b.mixin(a.xhr,{_xhrObj:a._xhrObj,fieldToObject:h.fieldToObject,formToObject:h.toObject,objectToQuery:p.objectToQuery,
-formToQuery:h.toQuery,formToJson:h.toJson,queryToObject:p.queryToObject,contentHandlers:w,_ioSetArgs:a._ioSetArgs,_ioCancelAll:a._ioCancelAll,_ioNotifyStart:a._ioNotifyStart,_ioWatch:a._ioWatch,_ioAddQueryToUrl:a._ioAddQueryToUrl,_isDocumentOk:a._isDocumentOk,_getText:a._getText,get:a.xhrGet,post:a.xhrPost,put:a.xhrPut,del:a.xhrDelete});return a.xhr})},"dojo/io-query":function(){define(["./_base/lang"],function(a){var n={};return{objectToQuery:function(f){var p=encodeURIComponent,m=[],h;for(h in f){var q=
-f[h];if(q!=n[h]){var k=p(h)+"\x3d";if(a.isArray(q))for(var e=0,b=q.length;e<b;++e)m.push(k+p(q[e]));else m.push(k+p(q))}}return m.join("\x26")},queryToObject:function(f){var n=decodeURIComponent;f=f.split("\x26");for(var m={},h,q,k=0,e=f.length;k<e;++k)if(q=f[k],q.length){var b=q.indexOf("\x3d");0>b?(h=n(q),q=""):(h=n(q.slice(0,b)),q=n(q.slice(b+1)));"string"==typeof m[h]&&(m[h]=[m[h]]);a.isArray(m[h])?m[h].push(q):m[h]=q}return m}}})},"dojo/dom-form":function(){define(["./_base/lang","./dom","./io-query",
-"./json"],function(a,n,f,p){var m={fieldToObject:function(a){var f=null;if(a=n.byId(a)){var k=a.name,e=(a.type||"").toLowerCase();if(k&&e&&!a.disabled)if("radio"==e||"checkbox"==e)a.checked&&(f=a.value);else if(a.multiple){f=[];for(a=[a.firstChild];a.length;)for(k=a.pop();k;k=k.nextSibling)if(1==k.nodeType&&"option"==k.tagName.toLowerCase())k.selected&&f.push(k.value);else{k.nextSibling&&a.push(k.nextSibling);k.firstChild&&a.push(k.firstChild);break}}else f=a.value}return f},toObject:function(h){var f=
-{};h=n.byId(h).elements;for(var k=0,e=h.length;k<e;++k){var b=h[k],l=b.name,c=(b.type||"").toLowerCase();if(l&&c&&0>"file|submit|image|reset|button".indexOf(c)&&!b.disabled){var d=f,g=l,b=m.fieldToObject(b);if(null!==b){var p=d[g];"string"==typeof p?d[g]=[p,b]:a.isArray(p)?p.push(b):d[g]=b}"image"==c&&(f[l+".x"]=f[l+".y"]=f[l].x=f[l].y=0)}}return f},toQuery:function(a){return f.objectToQuery(m.toObject(a))},toJson:function(a,f){return p.stringify(m.toObject(a),null,f?4:0)}};return m})},"dojo/request/watch":function(){define("./util ../errors/RequestTimeoutError ../errors/CancelError ../_base/array ../_base/window ../has!host-browser?dom-addeventlistener?:../on:".split(" "),
-function(a,n,f,p,m,h){function q(){for(var a=+new Date,c=0,d;c<b.length&&(d=b[c]);c++){var g=d.response,f=g.options;if(d.isCanceled&&d.isCanceled()||d.isValid&&!d.isValid(g))b.splice(c--,1),k._onAction&&k._onAction();else if(d.isReady&&d.isReady(g))b.splice(c--,1),d.handleResponse(g),k._onAction&&k._onAction();else if(d.startTime&&d.startTime+(f.timeout||0)<a)b.splice(c--,1),d.cancel(new n("Timeout exceeded",g)),k._onAction&&k._onAction()}k._onInFlight&&k._onInFlight(d);b.length||(clearInterval(e),
-e=null)}function k(a){a.response.options.timeout&&(a.startTime=+new Date);a.isFulfilled()||(b.push(a),e||(e=setInterval(q,50)),a.response.options.sync&&q())}var e=null,b=[];k.cancelAll=function(){try{p.forEach(b,function(a){try{a.cancel(new f("All requests canceled."))}catch(b){}})}catch(a){}};m&&(h&&m.doc.attachEvent)&&h(m.global,"unload",function(){k.cancelAll()});return k})},"dojo/request/util":function(){define("exports ../errors/RequestError ../errors/CancelError ../Deferred ../io-query ../_base/array ../_base/lang ../promise/Promise".split(" "),
-function(a,n,f,p,m,h,q,k){function e(a){return l(a)}function b(a){return a.data||a.text}a.deepCopy=function(b,d){for(var e in d){var f=b[e],h=d[e];f!==h&&(f&&"object"===typeof f&&h&&"object"===typeof h?a.deepCopy(f,h):b[e]=h)}return b};a.deepCreate=function(b,d){d=d||{};var e=q.delegate(b),f,h;for(f in b)(h=b[f])&&"object"===typeof h&&(e[f]=a.deepCreate(h,d[f]));return a.deepCopy(e,d)};var l=Object.freeze||function(a){return a};a.deferred=function(c,d,g,h,m,v){var w=new p(function(a){d&&d(w,c);return!a||
-!(a instanceof n)&&!(a instanceof f)?new f("Request canceled",c):a});w.response=c;w.isValid=g;w.isReady=h;w.handleResponse=m;g=w.then(e).otherwise(function(a){a.response=c;throw a;});a.notify&&g.then(q.hitch(a.notify,"emit","load"),q.hitch(a.notify,"emit","error"));h=g.then(b);m=new k;for(var s in h)h.hasOwnProperty(s)&&(m[s]=h[s]);m.response=g;l(m);v&&w.then(function(a){v.call(w,a)},function(a){v.call(w,c,a)});w.promise=m;w.then=m.then;return w};a.addCommonMethods=function(a,b){h.forEach(b||["GET",
-"POST","PUT","DELETE"],function(b){a[("DELETE"===b?"DEL":b).toLowerCase()]=function(d,e){e=q.delegate(e||{});e.method=b;return a(d,e)}})};a.parseArgs=function(a,b,e){var h=b.data,f=b.query;h&&!e&&"object"===typeof h&&(b.data=m.objectToQuery(h));f?("object"===typeof f&&(f=m.objectToQuery(f)),b.preventCache&&(f+=(f?"\x26":"")+"request.preventCache\x3d"+ +new Date)):b.preventCache&&(f="request.preventCache\x3d"+ +new Date);a&&f&&(a+=(~a.indexOf("?")?"\x26":"?")+f);return{url:a,options:b,getHeader:function(a){return null}}};
-a.checkStatus=function(a){a=a||0;return 200<=a&&300>a||304===a||1223===a||!a}})},"dojo/errors/RequestError":function(){define(["./create"],function(a){return a("RequestError",function(a,f){this.response=f})})},"dojo/errors/RequestTimeoutError":function(){define(["./create","./RequestError"],function(a,n){return a("RequestTimeoutError",null,n,{dojoType:"timeout"})})},"dojo/request/xhr":function(){define(["../errors/RequestError","./watch","./handlers","./util","../has"],function(a,n,f,p,m){function h(b,
-c){var d=b.xhr;b.status=b.xhr.status;b.text=d.responseText;"xml"===b.options.handleAs&&(b.data=d.responseXML);if(!c)try{f(b)}catch(e){c=e}c?this.reject(c):p.checkStatus(d.status)?this.resolve(b):(c=new a("Unable to load "+b.url+" status: "+d.status,b),this.reject(c))}function q(a){return this.xhr.getResponseHeader(a)}function k(f,r,s){var t=p.parseArgs(f,p.deepCreate(g,r),m("native-formdata")&&r&&r.data&&r.data instanceof FormData);f=t.url;r=t.options;var u,x=p.deferred(t,c,e,b,h,function(){u&&u()}),
-y=t.xhr=k._create();if(!y)return x.cancel(new a("XHR was not created")),s?x:x.promise;t.getHeader=q;l&&(u=l(y,x,t));var I=r.data,R=!r.sync,N=r.method;try{y.open(N,f,R,r.user||d,r.password||d);r.withCredentials&&(y.withCredentials=r.withCredentials);var J=r.headers;f="application/x-www-form-urlencoded";if(J)for(var K in J)"content-type"===K.toLowerCase()?f=J[K]:J[K]&&y.setRequestHeader(K,J[K]);f&&!1!==f&&y.setRequestHeader("Content-Type",f);(!J||!("X-Requested-With"in J))&&y.setRequestHeader("X-Requested-With",
-"XMLHttpRequest");p.notify&&p.notify.emit("send",t,x.promise.cancel);y.send(I)}catch(P){x.reject(P)}n(x);y=null;return s?x:x.promise}m.add("native-xhr",function(){return"undefined"!==typeof XMLHttpRequest});m.add("dojo-force-activex-xhr",function(){return m("activex")&&!document.addEventListener&&"file:"===window.location.protocol});m.add("native-xhr2",function(){if(m("native-xhr")){var a=new XMLHttpRequest;return"undefined"!==typeof a.addEventListener&&("undefined"===typeof opera||"undefined"!==
-typeof a.upload)}});m.add("native-formdata",function(){return"function"===typeof FormData});var e,b,l,c;m("native-xhr2")?(e=function(a){return!this.isFulfilled()},c=function(a,b){b.xhr.abort()},l=function(b,c,d){function e(a){c.handleResponse(d)}function f(b){b=new a("Unable to load "+d.url+" status: "+b.target.status,d);c.handleResponse(d,b)}function g(a){a.lengthComputable&&(d.loaded=a.loaded,d.total=a.total,c.progress(d))}b.addEventListener("load",e,!1);b.addEventListener("error",f,!1);b.addEventListener("progress",
-g,!1);return function(){b.removeEventListener("load",e,!1);b.removeEventListener("error",f,!1);b.removeEventListener("progress",g,!1);b=null}}):(e=function(a){return a.xhr.readyState},b=function(a){return 4===a.xhr.readyState},c=function(a,b){var c=b.xhr,d=typeof c.abort;("function"===d||"object"===d||"unknown"===d)&&c.abort()});var d,g={data:null,query:null,sync:!1,method:"GET"};k._create=function(){throw Error("XMLHTTP not available");};if(m("native-xhr")&&!m("dojo-force-activex-xhr"))k._create=
-function(){return new XMLHttpRequest};else if(m("activex"))try{new ActiveXObject("Msxml2.XMLHTTP"),k._create=function(){return new ActiveXObject("Msxml2.XMLHTTP")}}catch(u){try{new ActiveXObject("Microsoft.XMLHTTP"),k._create=function(){return new ActiveXObject("Microsoft.XMLHTTP")}}catch(r){}}p.addCommonMethods(k);return k})},"dojo/request/handlers":function(){define(["../json","../_base/kernel","../_base/array","../has","../selector/_loader"],function(a,n,f,p){function m(a){var b=k[a.options.handleAs];
-a.data=b?b(a):a.data||a.text;return a}p.add("activex","undefined"!==typeof ActiveXObject);p.add("dom-parser",function(a){return"DOMParser"in a});var h;if(p("activex")){var q=["Msxml2.DOMDocument.6.0","Msxml2.DOMDocument.4.0","MSXML2.DOMDocument.3.0","MSXML.DOMDocument"];h=function(a){var b=a.data;b&&(p("dom-qsa2.1")&&!b.querySelectorAll&&p("dom-parser"))&&(b=(new DOMParser).parseFromString(a.text,"application/xml"));if(!b||!b.documentElement){var h=a.text;f.some(q,function(a){try{var d=new ActiveXObject(a);
-d.async=!1;d.loadXML(h);b=d}catch(e){return!1}return!0})}return b}}var k={javascript:function(a){return n.eval(a.text||"")},json:function(e){return a.parse(e.text||null)},xml:h};m.register=function(a,b){k[a]=b};return m})},"dojo/_base/fx":function(){define("./kernel ./config ./lang ../Evented ./Color ../aspect ../sniff ../dom ../dom-style".split(" "),function(a,n,f,p,m,h,q,k,e){var b=f.mixin,l={},c=l._Line=function(a,b){this.start=a;this.end=b};c.prototype.getValue=function(a){return(this.end-this.start)*
-a+this.start};var d=l.Animation=function(a){b(this,a);f.isArray(this.curve)&&(this.curve=new c(this.curve[0],this.curve[1]))};d.prototype=new p;f.extend(d,{duration:350,repeat:0,rate:20,_percent:0,_startRepeatCount:0,_getStep:function(){var a=this._percent,b=this.easing;return b?b(a):a},_fire:function(a,b){var c=b||[];if(this[a])if(n.debugAtAllCosts)this[a].apply(this,c);else try{this[a].apply(this,c)}catch(d){console.error("exception in animation handler for:",a),console.error(d)}return this},play:function(a,
-b){this._delayTimer&&this._clearTimer();if(b)this._stopTimer(),this._active=this._paused=!1,this._percent=0;else if(this._active&&!this._paused)return this;this._fire("beforeBegin",[this.node]);var c=a||this.delay,d=f.hitch(this,"_play",b);if(0<c)return this._delayTimer=setTimeout(d,c),this;d();return this},_play:function(a){this._delayTimer&&this._clearTimer();this._startTime=(new Date).valueOf();this._paused&&(this._startTime-=this.duration*this._percent);this._active=!0;this._paused=!1;a=this.curve.getValue(this._getStep());
-this._percent||(this._startRepeatCount||(this._startRepeatCount=this.repeat),this._fire("onBegin",[a]));this._fire("onPlay",[a]);this._cycle();return this},pause:function(){this._delayTimer&&this._clearTimer();this._stopTimer();if(!this._active)return this;this._paused=!0;this._fire("onPause",[this.curve.getValue(this._getStep())]);return this},gotoPercent:function(a,b){this._stopTimer();this._active=this._paused=!0;this._percent=a;b&&this.play();return this},stop:function(a){this._delayTimer&&this._clearTimer();
-if(!this._timer)return this;this._stopTimer();a&&(this._percent=1);this._fire("onStop",[this.curve.getValue(this._getStep())]);this._active=this._paused=!1;return this},status:function(){return this._active?this._paused?"paused":"playing":"stopped"},_cycle:function(){if(this._active){var a=(new Date).valueOf(),a=0===this.duration?1:(a-this._startTime)/this.duration;1<=a&&(a=1);this._percent=a;this.easing&&(a=this.easing(a));this._fire("onAnimate",[this.curve.getValue(a)]);1>this._percent?this._startTimer():
-(this._active=!1,0<this.repeat?(this.repeat--,this.play(null,!0)):-1==this.repeat?this.play(null,!0):this._startRepeatCount&&(this.repeat=this._startRepeatCount,this._startRepeatCount=0),this._percent=0,this._fire("onEnd",[this.node]),!this.repeat&&this._stopTimer())}return this},_clearTimer:function(){clearTimeout(this._delayTimer);delete this._delayTimer}});var g=0,u=null,r={run:function(){}};f.extend(d,{_startTimer:function(){this._timer||(this._timer=h.after(r,"run",f.hitch(this,"_cycle"),!0),
-g++);u||(u=setInterval(f.hitch(r,"run"),this.rate))},_stopTimer:function(){this._timer&&(this._timer.remove(),this._timer=null,g--);0>=g&&(clearInterval(u),u=null,g=0)}});var v=q("ie")?function(a){var b=a.style;!b.width.length&&"auto"==e.get(a,"width")&&(b.width="auto")}:function(){};l._fade=function(a){a.node=k.byId(a.node);var c=b({properties:{}},a);a=c.properties.opacity={};a.start=!("start"in c)?function(){return+e.get(c.node,"opacity")||0}:c.start;a.end=c.end;a=l.animateProperty(c);h.after(a,
-"beforeBegin",f.partial(v,c.node),!0);return a};l.fadeIn=function(a){return l._fade(b({end:1},a))};l.fadeOut=function(a){return l._fade(b({end:0},a))};l._defaultEasing=function(a){return 0.5+Math.sin((a+1.5)*Math.PI)/2};var w=function(a){this._properties=a;for(var b in a){var c=a[b];c.start instanceof m&&(c.tempColor=new m)}};w.prototype.getValue=function(a){var b={},c;for(c in this._properties){var d=this._properties[c],e=d.start;e instanceof m?b[c]=m.blendColors(e,d.end,a,d.tempColor).toCss():f.isArray(e)||
-(b[c]=(d.end-e)*a+e+("opacity"!=c?d.units||"px":0))}return b};l.animateProperty=function(c){var g=c.node=k.byId(c.node);c.easing||(c.easing=a._defaultEasing);c=new d(c);h.after(c,"beforeBegin",f.hitch(c,function(){var a={},c;for(c in this.properties){if("width"==c||"height"==c)this.node.display="block";var d=this.properties[c];f.isFunction(d)&&(d=d(g));d=a[c]=b({},f.isObject(d)?d:{end:d});f.isFunction(d.start)&&(d.start=d.start(g));f.isFunction(d.end)&&(d.end=d.end(g));var h=0<=c.toLowerCase().indexOf("color"),
-k=function(a,b){var c={height:a.offsetHeight,width:a.offsetWidth}[b];if(void 0!==c)return c;c=e.get(a,b);return"opacity"==b?+c:h?c:parseFloat(c)};"end"in d?"start"in d||(d.start=k(g,c)):d.end=k(g,c);h?(d.start=new m(d.start),d.end=new m(d.end)):d.start="opacity"==c?+d.start:parseFloat(d.start)}this.curve=new w(a)}),!0);h.after(c,"onAnimate",f.hitch(e,"set",c.node),!0);return c};l.anim=function(a,b,c,e,f,g){return l.animateProperty({node:a,duration:c||d.prototype.duration,properties:b,easing:e,onEnd:f}).play(g||
-0)};b(a,l);a._Animation=d;return l})},"dojo/_base/loader":function(){define("./kernel ../has require module ../json ./lang ./array".split(" "),function(a,n,f,p,m,h,q){var k=function(a){return a.replace(/\./g,"/")},e=/\/\/>>built/,b=[],l=[],c=function(a,c,e){b.push(e);q.forEach(a.split(","),function(a){a=P(a,c.module);l.push(a);ea(a)});d()},d=function(){var a,c;for(c in J)if(a=J[c],void 0===a.noReqPluginCheck&&(a.noReqPluginCheck=/loadInit\!/.test(c)||/require\!/.test(c)?1:0),!a.executed&&!a.noReqPluginCheck&&
-a.injected==A)return;F(function(){var a=b;b=[];q.forEach(a,function(a){a(1)})})},g=function(b,c,d){var e=/\(|\)/g,f=1;for(e.lastIndex=c;(c=e.exec(b))&&!(f=")"==c[0]?f-1:f+1,0==f););if(0!=f)throw"unmatched paren around character "+e.lastIndex+" in: "+b;return[a.trim(b.substring(d,e.lastIndex))+";\n",e.lastIndex]},u=/(\/\*([\s\S]*?)\*\/|\/\/(.*)$)/mg,r=/(^|\s)dojo\.(loadInit|require|provide|requireLocalization|requireIf|requireAfterIf|platformRequire)\s*\(/mg,v=/(^|\s)(require|define)\s*\(/m,w=function(a,
-b){var c,d,e,f=[],h=[];c=[];for(b=b||a.replace(u,function(a){r.lastIndex=v.lastIndex=0;return r.test(a)||v.test(a)?"":a});c=r.exec(b);)d=r.lastIndex,e=d-c[0].length,d=g(b,d,e),"loadInit"==c[2]?f.push(d[0]):h.push(d[0]),r.lastIndex=d[1];c=f.concat(h);return c.length||!v.test(b)?[a.replace(/(^|\s)dojo\.loadInit\s*\(/g,"\n0 \x26\x26 dojo.loadInit("),c.join(""),c]:0},s=f.initSyncLoader(c,d,function(a,b){var c,d,f=[],g=[];if(e.test(b)||!(c=w(b)))return 0;d=a.mid+"-*loadInit";for(var h in P("dojo",a).result.scopeMap)f.push(h),
-g.push('"'+h+'"');return"// xdomain rewrite of "+a.mid+"\ndefine('"+d+"',{\n\tnames:"+m.stringify(f)+",\n\tdef:function("+f.join(",")+"){"+c[1]+"}});\n\ndefine("+m.stringify(f.concat(["dojo/loadInit!"+d]))+", function("+f.join(",")+"){\n"+c[0]+"});"}),t=s.sync,A=s.requested,x=s.arrived,y=s.nonmodule,I=s.executing,R=s.executed,N=s.syncExecStack,J=s.modules,K=s.execQ,P=s.getModule,ea=s.injectModule,z=s.setArrived,E=s.signal,Q=s.finishExec,G=s.execModule,H=s.getLegacyMode,F=s.guardCheckComplete,c=s.dojoRequirePlugin;
-a.provide=function(a){var b=N[0],c=h.mixin(P(k(a),f.module),{executed:I,result:h.getObject(a,!0)});z(c);b&&(b.provides||(b.provides=[])).push(function(){c.result=h.getObject(a);delete c.provides;c.executed!==R&&Q(c)});return c.result};n.add("config-publishRequireResult",1,0,0);a.require=function(a,b){var c=function(a,b){var c=P(k(a),f.module);if(N.length&&N[0].finish)N[0].finish.push(a);else{if(c.executed)return c.result;b&&(c.result=y);var d=H();ea(c);d=H();c.executed!==R&&c.injected===x&&s.guardCheckComplete(function(){G(c)});
-if(c.executed)return c.result;d==t?c.cjs?K.unshift(c):N.length&&(N[0].finish=[a]):K.push(c)}}(a,b);n("config-publishRequireResult")&&(!h.exists(a)&&void 0!==c)&&h.setObject(a,c);return c};a.loadInit=function(a){a()};a.registerModulePath=function(a,b){var c={};c[a.replace(/\./g,"/")]=b;f({paths:c})};a.platformRequire=function(b){b=(b.common||[]).concat(b[a._name]||b["default"]||[]);for(var c;b.length;)h.isArray(c=b.shift())?a.require.apply(a,c):a.require(c)};a.requireIf=a.requireAfterIf=function(b,
-c,d){b&&a.require(c,d)};a.requireLocalization=function(a,b,c){f(["../i18n"],function(d){d.getLocalization(a,b,c)})};return{extractLegacyApiApplications:w,require:c,loadInit:function(b,d,e){d([b],function(b){d(b.names,function(){for(var f="",g=[],h=0;h<arguments.length;h++)f+="var "+b.names[h]+"\x3d arguments["+h+"]; ",g.push(arguments[h]);eval(f);var l=d.module,m=[],n,f={provide:function(a){a=k(a);a=P(a,l);a!==l&&z(a)},require:function(a,b){a=k(a);b&&(P(a,l).result=y);m.push(a)},requireLocalization:function(b,
-c,d){n||(n=["dojo/i18n"]);d=(d||a.locale).toLowerCase();b=k(b)+"/nls/"+(/root/i.test(d)?"":d+"/")+k(c);P(b,l).isXd&&n.push("dojo/i18n!"+b)},loadInit:function(a){a()}},h={},q;try{for(q in f)h[q]=a[q],a[q]=f[q];b.def.apply(null,g)}catch(r){E("error",[{src:p.id,id:"failedDojoLoadInit"},r])}finally{for(q in f)a[q]=h[q]}n&&(m=m.concat(n));m.length?c(m.join(","),d,e):e()})})}}})}}});(function(){var a=this.require;a({cache:{}});!a.async&&a(["dojo"]);a.boot&&a.apply(null,a.boot)})();
-//@ sourceMappingURL=dojo.js.map
+		isEmpty = function(it){
+			for(var p in it){
+				return 0;
+			}
+			return 1;
+		},
+
+		toString = {}.toString,
+
+		isFunction = function(it){
+			return toString.call(it) == "[object Function]";
+		},
+
+		isString = function(it){
+			return toString.call(it) == "[object String]";
+		},
+
+		isArray = function(it){
+			return toString.call(it) == "[object Array]";
+		},
+
+		forEach = function(vector, callback){
+			if(vector){
+				for(var i = 0; i < vector.length;){
+					callback(vector[i++]);
+				}
+			}
+		},
+
+		mix = function(dest, src){
+			for(var p in src){
+				dest[p] = src[p];
+			}
+			return dest;
+		},
+
+		makeError = function(error, info){
+			return mix(new Error(error), {src:"dojoLoader", info:info});
+		},
+
+		uidSeed = 1,
+
+		uid = function(){
+			// Returns a unique identifier (within the lifetime of the document) of the form /_d+/.
+			return "_" + uidSeed++;
+		},
+
+		// FIXME: how to doc window.require() api
+
+		// this will be the global require function; define it immediately so we can start hanging things off of it
+		req = function(
+			config,		  //(object, optional) hash of configuration properties
+			dependencies, //(array of commonjs.moduleId, optional) list of modules to be loaded before applying callback
+			callback	  //(function, optional) lambda expression to apply to module values implied by dependencies
+		){
+			return contextRequire(config, dependencies, callback, 0, req);
+		},
+
+		// the loader uses the has.js API to control feature inclusion/exclusion; define then use throughout
+		global = this,
+
+		doc = global.document,
+
+		element = doc && doc.createElement("DiV"),
+
+		has = req.has = function(name){
+			return isFunction(hasCache[name]) ? (hasCache[name] = hasCache[name](global, doc, element)) : hasCache[name];
+		},
+
+		hasCache = has.cache = defaultConfig.hasCache;
+
+	has.add = function(name, test, now, force){
+		(hasCache[name]===undefined || force) && (hasCache[name] = test);
+		return now && has(name);
+	};
+
+	has.add("host-node", userConfig.has && "host-node" in userConfig.has ?
+		userConfig.has["host-node"] :
+		(typeof process == "object" && process.versions && process.versions.node && process.versions.v8));
+	if(has("host-node")){
+		// fixup the default config for node.js environment
+		require("./_base/configNode.js").config(defaultConfig);
+		// remember node's require (with respect to baseUrl==dojo's root)
+		defaultConfig.loaderPatch.nodeRequire = require;
+	}
+
+	has.add("host-rhino", userConfig.has && "host-rhino" in userConfig.has ?
+		userConfig.has["host-rhino"] :
+		(typeof load == "function" && (typeof Packages == "function" || typeof Packages == "object")));
+	if(has("host-rhino")){
+		// owing to rhino's lame feature that hides the source of the script, give the user a way to specify the baseUrl...
+		for(var baseUrl = userConfig.baseUrl || ".", arg, rhinoArgs = this.arguments, i = 0; i < rhinoArgs.length;){
+			arg = (rhinoArgs[i++] + "").split("=");
+			if(arg[0] == "baseUrl"){
+				baseUrl = arg[1];
+				break;
+			}
+		}
+		load(baseUrl + "/_base/configRhino.js");
+		rhinoDojoConfig(defaultConfig, baseUrl, rhinoArgs);
+	}
+
+	has.add("host-webworker", ((typeof WorkerGlobalScope !== 'undefined') && (self instanceof WorkerGlobalScope)));
+	if(has("host-webworker")){
+		mix(defaultConfig.hasCache, {
+			"host-browser": 0,
+			"dom": 0,
+			"dojo-dom-ready-api": 0,
+			"dojo-sniff": 0,
+			"dojo-inject-api": 1,
+			"host-webworker": 1
+		});
+
+		defaultConfig.loaderPatch = {
+			injectUrl: function(url, callback){
+				// TODO:
+				//		This is not async, nor can it be in Webworkers.  It could be made better by passing
+				//		the entire require array into importScripts at.  This way the scripts are loaded in
+				//		async mode; even if the callbacks are ran in sync.  It is not a major issue as webworkers
+				//		tend to be long running where initial startup is not a major factor.
+
+				try{
+					importScripts(url);
+					callback();
+				}catch(e){
+					console.info("failed to load resource (" + url + ")");
+					console.error(e);
+				}
+			}
+		};
+	}
+
+	// userConfig has tests override defaultConfig has tests; do this after the environment detection because
+	// the environment detection usually sets some has feature values in the hasCache.
+	for(var p in userConfig.has){
+		has.add(p, userConfig.has[p], 0, 1);
+	}
+
+	//
+	// define the loader data
+	//
+
+	// the loader will use these like symbols if the loader has the traceApi; otherwise
+	// define magic numbers so that modules can be provided as part of defaultConfig
+	var	requested = 1,
+		arrived = 2,
+		nonmodule = 3,
+		executing = 4,
+		executed = 5;
+
+	if(has("dojo-trace-api")){
+		// these make debugging nice; but using strings for symbols is a gross rookie error; don't do it for production code
+		requested = "requested";
+		arrived = "arrived";
+		nonmodule = "not-a-module";
+		executing = "executing";
+		executed = "executed";
+	}
+
+	var legacyMode = 0,
+		sync = "sync",
+		xd = "xd",
+		syncExecStack = [],
+		dojoRequirePlugin = 0,
+		checkDojoRequirePlugin = noop,
+		transformToAmd = noop,
+		getXhr;
+	if(has("dojo-sync-loader")){
+		req.isXdUrl = noop;
+
+		req.initSyncLoader = function(dojoRequirePlugin_, checkDojoRequirePlugin_, transformToAmd_){
+			// the first dojo/_base/loader loaded gets to define these variables; they are designed to work
+			// in the presence of zero to many mapped dojo/_base/loaders
+			if(!dojoRequirePlugin){
+				dojoRequirePlugin = dojoRequirePlugin_;
+				checkDojoRequirePlugin = checkDojoRequirePlugin_;
+				transformToAmd = transformToAmd_;
+			}
+
+			return {
+				sync:sync,
+				requested:requested,
+				arrived:arrived,
+				nonmodule:nonmodule,
+				executing:executing,
+				executed:executed,
+				syncExecStack:syncExecStack,
+				modules:modules,
+				execQ:execQ,
+				getModule:getModule,
+				injectModule:injectModule,
+				setArrived:setArrived,
+				signal:signal,
+				finishExec:finishExec,
+				execModule:execModule,
+				dojoRequirePlugin:dojoRequirePlugin,
+				getLegacyMode:function(){return legacyMode;},
+				guardCheckComplete:guardCheckComplete
+			};
+		};
+
+		if(has("dom") || has("host-webworker")){
+			// in legacy sync mode, the loader needs a minimal XHR library
+
+			var locationProtocol = location.protocol,
+				locationHost = location.host;
+			req.isXdUrl = function(url){
+				if(/^\./.test(url)){
+					// begins with a dot is always relative to page URL; therefore not xdomain
+					return false;
+				}
+				if(/^\/\//.test(url)){
+					// for v1.6- backcompat, url starting with // indicates xdomain
+					return true;
+				}
+				// get protocol and host
+				// \/+ takes care of the typical file protocol that looks like file:///drive/path/to/file
+				// locationHost is falsy if file protocol => if locationProtocol matches and is "file:", || will return false
+				var match = url.match(/^([^\/\:]+\:)\/+([^\/]+)/);
+				return match && (match[1] != locationProtocol || (locationHost && match[2] != locationHost));
+			};
+
+
+			// note: to get the file:// protocol to work in FF, you must set security.fileuri.strict_origin_policy to false in about:config
+			has.add("dojo-xhr-factory", 1);
+			has.add("dojo-force-activex-xhr", has("host-browser") && !doc.addEventListener && window.location.protocol == "file:");
+			has.add("native-xhr", typeof XMLHttpRequest != "undefined");
+			if(has("native-xhr") && !has("dojo-force-activex-xhr")){
+				getXhr = function(){
+					return new XMLHttpRequest();
+				};
+			}else{
+				// if in the browser an old IE; find an xhr
+				for(var XMLHTTP_PROGIDS = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'], progid, i = 0; i < 3;){
+					try{
+						progid = XMLHTTP_PROGIDS[i++];
+						if(new ActiveXObject(progid)){
+							// this progid works; therefore, use it from now on
+							break;
+						}
+					}catch(e){
+						// squelch; we're just trying to find a good ActiveX progid
+						// if they all fail, then progid ends up as the last attempt and that will signal the error
+						// the first time the client actually tries to exec an xhr
+					}
+				}
+				getXhr = function(){
+					return new ActiveXObject(progid);
+				};
+			}
+			req.getXhr = getXhr;
+
+			has.add("dojo-gettext-api", 1);
+			req.getText = function(url, async, onLoad){
+				var xhr = getXhr();
+				xhr.open('GET', fixupUrl(url), false);
+				xhr.send(null);
+				if(xhr.status == 200 || (!location.host && !xhr.status)){
+					if(onLoad){
+						onLoad(xhr.responseText, async);
+					}
+				}else{
+					throw makeError("xhrFailed", xhr.status);
+				}
+				return xhr.responseText;
+			};
+		}
+	}else{
+		req.async = 1;
+	}
+
+	//
+	// loader eval
+	//
+	var eval_ =
+		// use the function constructor so our eval is scoped close to (but not in) in the global space with minimal pollution
+		new Function('return eval(arguments[0]);');
+
+	req.eval =
+		function(text, hint){
+			return eval_(text + "\r\n//# sourceURL=" + hint);
+		};
+
+	//
+	// loader micro events API
+	//
+	var listenerQueues = {},
+		error = "error",
+		signal = req.signal = function(type, args){
+			var queue = listenerQueues[type];
+			// notice we run a copy of the queue; this allows listeners to add/remove
+			// other listeners without affecting this particular signal
+			forEach(queue && queue.slice(0), function(listener){
+				listener.apply(null, isArray(args) ? args : [args]);
+			});
+		},
+		on = req.on = function(type, listener){
+			// notice a queue is not created until a client actually connects
+			var queue = listenerQueues[type] || (listenerQueues[type] = []);
+			queue.push(listener);
+			return {
+				remove:function(){
+					for(var i = 0; i<queue.length; i++){
+						if(queue[i]===listener){
+							queue.splice(i, 1);
+							return;
+						}
+					}
+				}
+			};
+		};
+
+	// configuration machinery; with an optimized/built defaultConfig, all configuration machinery can be discarded
+	// lexical variables hold key loader data structures to help with minification; these may be completely,
+	// one-time initialized by defaultConfig for optimized/built versions
+	var
+		aliases
+			// a vector of pairs of [regexs or string, replacement] => (alias, actual)
+			= [],
+
+		paths
+			// CommonJS paths
+			= {},
+
+		pathsMapProg
+			// list of (from-path, to-path, regex, length) derived from paths;
+			// a "program" to apply paths; see computeMapProg
+			= [],
+
+		packs
+			// a map from packageId to package configuration object; see fixupPackageInfo
+			= {},
+
+		map = req.map
+			// AMD map config variable; dojo/_base/kernel needs req.map to figure out the scope map
+			= {},
+
+		mapProgs
+			// vector of quads as described by computeMapProg; map-key is AMD map key, map-value is AMD map value
+			= [],
+
+		modules
+			// A hash:(mid) --> (module-object) the module namespace
+			//
+			// pid: the package identifier to which the module belongs (e.g., "dojo"); "" indicates the system or default package
+			// mid: the fully-resolved (i.e., mappings have been applied) module identifier without the package identifier (e.g., "dojo/io/script")
+			// url: the URL from which the module was retrieved
+			// pack: the package object of the package to which the module belongs
+			// executed: 0 => not executed; executing => in the process of traversing deps and running factory; executed => factory has been executed
+			// deps: the dependency vector for this module (vector of modules objects)
+			// def: the factory for this module
+			// result: the result of the running the factory for this module
+			// injected: (0 | requested | arrived) the status of the module; nonmodule means the resource did not call define
+			// load: plugin load function; applicable only for plugins
+			//
+			// Modules go through several phases in creation:
+			//
+			// 1. Requested: some other module's definition or a require application contained the requested module in
+			//	  its dependency vector or executing code explicitly demands a module via req.require.
+			//
+			// 2. Injected: a script element has been appended to the insert-point element demanding the resource implied by the URL
+			//
+			// 3. Loaded: the resource injected in [2] has been evaluated.
+			//
+			// 4. Defined: the resource contained a define statement that advised the loader about the module. Notice that some
+			//	  resources may just contain a bundle of code and never formally define a module via define
+			//
+			// 5. Evaluated: the module was defined via define and the loader has evaluated the factory and computed a result.
+			= {},
+
+		cacheBust
+			// query string to append to module URLs to bust browser cache
+			= "",
+
+		cache
+			// hash:(mid | url)-->(function | string)
+			//
+			// A cache of resources. The resources arrive via a config.cache object, which is a hash from either mid --> function or
+			// url --> string. The url key is distinguished from the mid key by always containing the prefix "url:". url keys as provided
+			// by config.cache always have a string value that represents the contents of the resource at the given url. mid keys as provided
+			// by configl.cache always have a function value that causes the same code to execute as if the module was script injected.
+			//
+			// Both kinds of key-value pairs are entered into cache via the function consumePendingCache, which may relocate keys as given
+			// by any mappings *iff* the config.cache was received as part of a module resource request.
+			//
+			// Further, for mid keys, the implied url is computed and the value is entered into that key as well. This allows mapped modules
+			// to retrieve cached items that may have arrived consequent to another namespace.
+			//
+			 = {},
+
+		urlKeyPrefix
+			// the prefix to prepend to a URL key in the cache.
+			= "url:",
+
+		pendingCacheInsert
+			// hash:(mid)-->(function)
+			//
+			// Gives a set of cache modules pending entry into cache. When cached modules are published to the loader, they are
+			// entered into pendingCacheInsert; modules are then pressed into cache upon (1) AMD define or (2) upon receiving another
+			// independent set of cached modules. (1) is the usual case, and this case allows normalizing mids given in the pending
+			// cache for the local configuration, possibly relocating modules.
+			 = {},
+
+		dojoSniffConfig
+			// map of configuration variables
+			// give the data-dojo-config as sniffed from the document (if any)
+			= {},
+
+		insertPointSibling
+			// the nodes used to locate where scripts are injected into the document
+			= 0;
+
+	if(has("dojo-config-api")){
+		var consumePendingCacheInsert = function(referenceModule){
+				var p, item, match, now, m;
+				for(p in pendingCacheInsert){
+					item = pendingCacheInsert[p];
+					match = p.match(/^url\:(.+)/);
+					if(match){
+						cache[urlKeyPrefix + toUrl(match[1], referenceModule)] =  item;
+					}else if(p=="*now"){
+						now = item;
+					}else if(p!="*noref"){
+						m = getModuleInfo(p, referenceModule, true);
+						cache[m.mid] = cache[urlKeyPrefix + m.url] = item;
+					}
+				}
+				if(now){
+					now(createRequire(referenceModule));
+				}
+				pendingCacheInsert = {};
+			},
+
+			escapeString = function(s){
+				return s.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, function(c){ return "\\" + c; });
+			},
+
+			computeMapProg = function(map, dest){
+				// This routine takes a map as represented by a JavaScript object and initializes dest, a vector of
+				// quads of (map-key, map-value, refex-for-map-key, length-of-map-key), sorted decreasing by length-
+				// of-map-key. The regex looks for the map-key followed by either "/" or end-of-string at the beginning
+				// of a the search source. Notice the map-value is irrelevant to the algorithm
+				dest.splice(0, dest.length);
+				for(var p in map){
+					dest.push([
+						p,
+						map[p],
+						new RegExp("^" + escapeString(p) + "(\/|$)"),
+						p.length]);
+				}
+				dest.sort(function(lhs, rhs){ return rhs[3] - lhs[3]; });
+				return dest;
+			},
+
+			computeAliases = function(config, dest){
+				forEach(config, function(pair){
+					// take a fixed-up copy...
+					dest.push([isString(pair[0]) ? new RegExp("^" + escapeString(pair[0]) + "$") : pair[0], pair[1]]);
+				});
+			},
+
+
+			fixupPackageInfo = function(packageInfo){
+				// calculate the precise (name, location, main, mappings) for a package
+				var name = packageInfo.name;
+				if(!name){
+					// packageInfo must be a string that gives the name
+					name = packageInfo;
+					packageInfo = {name:name};
+				}
+				packageInfo = mix({main:"main"}, packageInfo);
+				packageInfo.location = packageInfo.location ? packageInfo.location : name;
+
+				// packageMap is deprecated in favor of AMD map
+				if(packageInfo.packageMap){
+					map[name] = packageInfo.packageMap;
+				}
+
+				if(!packageInfo.main.indexOf("./")){
+					packageInfo.main = packageInfo.main.substring(2);
+				}
+
+				// now that we've got a fully-resolved package object, push it into the configuration
+				packs[name] = packageInfo;
+			},
+
+			delayedModuleConfig
+				// module config cannot be consumed until the loader is completely initialized; therefore, all
+				// module config detected during booting is memorized and applied at the end of loader initialization
+				// TODO: this is a bit of a kludge; all config should be moved to end of loader initialization, but
+				// we'll delay this chore and do it with a final loader 1.x cleanup after the 2.x loader prototyping is complete
+				= [],
+
+
+			config = function(config, booting, referenceModule){
+				for(var p in config){
+					if(p=="waitSeconds"){
+						req.waitms = (config[p] || 0) * 1000;
+					}
+					if(p=="cacheBust"){
+						cacheBust = config[p] ? (isString(config[p]) ? config[p] : (new Date()).getTime() + "") : "";
+					}
+					if(p=="baseUrl" || p=="combo"){
+						req[p] = config[p];
+					}
+					if(has("dojo-sync-loader") && p=="async"){
+						// falsy or "sync" => legacy sync loader
+						// "xd" => sync but loading xdomain tree and therefore loading asynchronously (not configurable, set automatically by the loader)
+						// "legacyAsync" => permanently in "xd" by choice
+						// "debugAtAllCosts" => trying to load everything via script injection (not implemented)
+						// otherwise, must be truthy => AMD
+						// legacyMode: sync | legacyAsync | xd | false
+						var mode = config[p];
+						req.legacyMode = legacyMode = (isString(mode) && /sync|legacyAsync/.test(mode) ? mode : (!mode ? sync : false));
+						req.async = !legacyMode;
+					}
+					if(config[p]!==hasCache){
+						// accumulate raw config info for client apps which can use this to pass their own config
+						req.rawConfig[p] = config[p];
+						p!="has" && has.add("config-"+p, config[p], 0, booting);
+					}
+				}
+
+				// make sure baseUrl exists
+				if(!req.baseUrl){
+					req.baseUrl = "./";
+				}
+				// make sure baseUrl ends with a slash
+				if(!/\/$/.test(req.baseUrl)){
+					req.baseUrl += "/";
+				}
+
+				// now do the special work for has, packages, packagePaths, paths, aliases, and cache
+
+				for(p in config.has){
+					has.add(p, config.has[p], 0, booting);
+				}
+
+				// for each package found in any packages config item, augment the packs map owned by the loader
+				forEach(config.packages, fixupPackageInfo);
+
+				// for each packagePath found in any packagePaths config item, augment the packageConfig
+				// packagePaths is deprecated; remove in 2.0
+				for(var baseUrl in config.packagePaths){
+					forEach(config.packagePaths[baseUrl], function(packageInfo){
+						var location = baseUrl + "/" + packageInfo;
+						if(isString(packageInfo)){
+							packageInfo = {name:packageInfo};
+						}
+						packageInfo.location = location;
+						fixupPackageInfo(packageInfo);
+					});
+				}
+
+				// notice that computeMapProg treats the dest as a reference; therefore, if/when that variable
+				// is published (see dojo-publish-privates), the published variable will always hold a valid value.
+
+				// this must come after all package processing since package processing may mutate map
+				computeMapProg(mix(map, config.map), mapProgs);
+				forEach(mapProgs, function(item){
+					item[1] = computeMapProg(item[1], []);
+					if(item[0]=="*"){
+						mapProgs.star = item;
+					}
+				});
+
+				// push in any paths and recompute the internal pathmap
+				computeMapProg(mix(paths, config.paths), pathsMapProg);
+
+				// aliases
+				computeAliases(config.aliases, aliases);
+
+				if(booting){
+					delayedModuleConfig.push({config:config.config});
+				}else{
+					for(p in config.config){
+						var module = getModule(p, referenceModule);
+						module.config = mix(module.config || {}, config.config[p]);
+					}
+				}
+
+				// push in any new cache values
+				if(config.cache){
+					consumePendingCacheInsert();
+					pendingCacheInsert = config.cache;
+					if(config.cache["*noref"]){
+						consumePendingCacheInsert();
+					}
+				}
+
+				signal("config", [config, req.rawConfig]);
+			};
+
+		//
+		// execute the various sniffs; userConfig can override and value
+		//
+
+		if(has("dojo-cdn") || has("dojo-sniff")){
+			// the sniff regex looks for a src attribute ending in dojo.js, optionally preceded with a path.
+			// match[3] returns the path to dojo.js (if any) without the trailing slash. This is used for the
+			// dojo location on CDN deployments and baseUrl when either/both of these are not provided
+			// explicitly in the config data; this is the 1.6- behavior.
+
+			var scripts = doc.getElementsByTagName("script"),
+				i = 0,
+				script, dojoDir, src, match;
+			while(i < scripts.length){
+				script = scripts[i++];
+				if((src = script.getAttribute("src")) && (match = src.match(/(((.*)\/)|^)dojo\.js(\W|$)/i))){
+					// sniff dojoDir and baseUrl
+					dojoDir = match[3] || "";
+					defaultConfig.baseUrl = defaultConfig.baseUrl || dojoDir;
+
+					// remember an insertPointSibling
+					insertPointSibling = script;
+				}
+
+				// sniff configuration on attribute in script element
+				if((src = (script.getAttribute("data-dojo-config") || script.getAttribute("djConfig")))){
+					dojoSniffConfig = req.eval("({ " + src + " })", "data-dojo-config");
+
+					// remember an insertPointSibling
+					insertPointSibling = script;
+				}
+
+				// sniff requirejs attribute
+				if(has("dojo-requirejs-api")){
+					if((src = script.getAttribute("data-main"))){
+						dojoSniffConfig.deps = dojoSniffConfig.deps || [src];
+					}
+				}
+			}
+		}
+
+		if(has("dojo-test-sniff")){
+			// pass down doh.testConfig from parent as if it were a data-dojo-config
+			try{
+				if(window.parent != window && window.parent.require){
+					var doh = window.parent.require("doh");
+					doh && mix(dojoSniffConfig, doh.testConfig);
+				}
+			}catch(e){}
+		}
+
+		// configure the loader; let the user override defaults
+		req.rawConfig = {};
+		config(defaultConfig, 1);
+
+		// do this before setting userConfig/sniffConfig to allow userConfig/sniff overrides
+		if(has("dojo-cdn")){
+			packs.dojo.location = dojoDir;
+			if(dojoDir){
+				dojoDir += "/";
+			}
+			packs.dijit.location = dojoDir + "../dijit/";
+			packs.dojox.location = dojoDir + "../dojox/";
+		}
+
+		config(userConfig, 1);
+		config(dojoSniffConfig, 1);
+
+	}else{
+		// no config API, assume defaultConfig has everything the loader needs...for the entire lifetime of the application
+		paths = defaultConfig.paths;
+		pathsMapProg = defaultConfig.pathsMapProg;
+		packs = defaultConfig.packs;
+		aliases = defaultConfig.aliases;
+		mapProgs = defaultConfig.mapProgs;
+		modules = defaultConfig.modules;
+		cache = defaultConfig.cache;
+		cacheBust = defaultConfig.cacheBust;
+
+		// remember the default config for other processes (e.g., dojo/config)
+		req.rawConfig = defaultConfig;
+	}
+
+
+	if(has("dojo-combo-api")){
+		req.combo = req.combo || {add:noop};
+		var	comboPending = 0,
+			combosPending = [],
+			comboPendingTimer = null;
+	}
+
+
+	// build the loader machinery iaw configuration, including has feature tests
+	var	injectDependencies = function(module){
+			// checkComplete!=0 holds the idle signal; we're not idle if we're injecting dependencies
+			guardCheckComplete(function(){
+				forEach(module.deps, injectModule);
+				if(has("dojo-combo-api") && comboPending && !comboPendingTimer){
+					comboPendingTimer = setTimeout(function() {
+						comboPending = 0;
+						comboPendingTimer = null;
+						req.combo.done(function(mids, url) {
+							var onLoadCallback= function(){
+								// defQ is a vector of module definitions 1-to-1, onto mids
+								runDefQ(0, mids);
+								checkComplete();
+							};
+							combosPending.push(mids);
+							injectingModule = mids;
+							req.injectUrl(url, onLoadCallback, mids);
+							injectingModule = 0;
+						}, req);
+					}, 0);
+				}
+			});
+		},
+
+		contextRequire = function(a1, a2, a3, referenceModule, contextRequire){
+			var module, syntheticMid;
+			if(isString(a1)){
+				// signature is (moduleId)
+				module = getModule(a1, referenceModule, true);
+				if(module && module.executed){
+					return module.result;
+				}
+				throw makeError("undefinedModule", a1);
+			}
+			if(!isArray(a1)){
+				// a1 is a configuration
+				config(a1, 0, referenceModule);
+
+				// juggle args; (a2, a3) may be (dependencies, callback)
+				a1 = a2;
+				a2 = a3;
+			}
+			if(isArray(a1)){
+				// signature is (requestList [,callback])
+				if(!a1.length){
+					a2 && a2();
+				}else{
+					syntheticMid = "require*" + uid();
+
+					// resolve the request list with respect to the reference module
+					for(var mid, deps = [], i = 0; i < a1.length;){
+						mid = a1[i++];
+						deps.push(getModule(mid, referenceModule));
+					}
+
+					// construct a synthetic module to control execution of the requestList, and, optionally, callback
+					module = mix(makeModuleInfo("", syntheticMid, 0, ""), {
+						injected: arrived,
+						deps: deps,
+						def: a2 || noop,
+						require: referenceModule ? referenceModule.require : req,
+						gc: 1 //garbage collect
+					});
+					modules[module.mid] = module;
+
+					// checkComplete!=0 holds the idle signal; we're not idle if we're injecting dependencies
+					injectDependencies(module);
+
+					// try to immediately execute
+					// if already traversing a factory tree, then strict causes circular dependency to abort the execution; maybe
+					// it's possible to execute this require later after the current traversal completes and avoid the circular dependency.
+					// ...but *always* insist on immediate in synch mode
+					var strict = checkCompleteGuard && legacyMode!=sync;
+					guardCheckComplete(function(){
+						execModule(module, strict);
+					});
+					if(!module.executed){
+						// some deps weren't on board or circular dependency detected and strict; therefore, push into the execQ
+						execQ.push(module);
+					}
+					checkComplete();
+				}
+			}
+			return contextRequire;
+		},
+
+		createRequire = function(module){
+			if(!module){
+				return req;
+			}
+			var result = module.require;
+			if(!result){
+				result = function(a1, a2, a3){
+					return contextRequire(a1, a2, a3, module, result);
+				};
+				module.require = mix(result, req);
+				result.module = module;
+				result.toUrl = function(name){
+					return toUrl(name, module);
+				};
+				result.toAbsMid = function(mid){
+					return toAbsMid(mid, module);
+				};
+				if(has("dojo-undef-api")){
+					result.undef = function(mid){
+						req.undef(mid, module);
+					};
+				}
+				if(has("dojo-sync-loader")){
+					result.syncLoadNls = function(mid){
+						var nlsModuleInfo = getModuleInfo(mid, module),
+							nlsModule = modules[nlsModuleInfo.mid];
+						if(!nlsModule || !nlsModule.executed){
+							cached = cache[nlsModuleInfo.mid] || cache[urlKeyPrefix + nlsModuleInfo.url];
+							if(cached){
+								evalModuleText(cached);
+								nlsModule = modules[nlsModuleInfo.mid];
+							}
+						}
+						return nlsModule && nlsModule.executed && nlsModule.result;
+					};
+				}
+
+			}
+			return result;
+		},
+
+		execQ =
+			// The list of modules that need to be evaluated.
+			[],
+
+		defQ =
+			// The queue of define arguments sent to loader.
+			[],
+
+		waiting =
+			// The set of modules upon which the loader is waiting for definition to arrive
+			{},
+
+		setRequested = function(module){
+			module.injected = requested;
+			waiting[module.mid] = 1;
+			if(module.url){
+				waiting[module.url] = module.pack || 1;
+			}
+			startTimer();
+		},
+
+		setArrived = function(module){
+			module.injected = arrived;
+			delete waiting[module.mid];
+			if(module.url){
+				delete waiting[module.url];
+			}
+			if(isEmpty(waiting)){
+				clearTimer();
+				has("dojo-sync-loader") && legacyMode==xd && (legacyMode = sync);
+			}
+		},
+
+		execComplete = req.idle =
+			// says the loader has completed (or not) its work
+			function(){
+				return !defQ.length && isEmpty(waiting) && !execQ.length && !checkCompleteGuard;
+			},
+
+		runMapProg = function(targetMid, map){
+			// search for targetMid in map; return the map item if found; falsy otherwise
+			if(map){
+			for(var i = 0; i < map.length; i++){
+				if(map[i][2].test(targetMid)){
+					return map[i];
+				}
+			}
+			}
+			return 0;
+		},
+
+		compactPath = function(path){
+			var result = [],
+				segment, lastSegment;
+			path = path.replace(/\\/g, '/').split('/');
+			while(path.length){
+				segment = path.shift();
+				if(segment==".." && result.length && lastSegment!=".."){
+					result.pop();
+					lastSegment = result[result.length - 1];
+				}else if(segment!="."){
+					result.push(lastSegment= segment);
+				} // else ignore "."
+			}
+			return result.join("/");
+		},
+
+		makeModuleInfo = function(pid, mid, pack, url){
+			if(has("dojo-sync-loader")){
+				var xd= req.isXdUrl(url);
+				return {pid:pid, mid:mid, pack:pack, url:url, executed:0, def:0, isXd:xd, isAmd:!!(xd || (packs[pid] && packs[pid].isAmd))};
+			}else{
+				return {pid:pid, mid:mid, pack:pack, url:url, executed:0, def:0};
+			}
+		},
+
+		getModuleInfo_ = function(mid, referenceModule, packs, modules, baseUrl, mapProgs, pathsMapProg, aliases, alwaysCreate){
+			// arguments are passed instead of using lexical variables so that this function my be used independent of the loader (e.g., the builder)
+			// alwaysCreate is useful in this case so that getModuleInfo never returns references to real modules owned by the loader
+			var pid, pack, midInPackage, mapItem, url, result, isRelative, requestedMid;
+			requestedMid = mid;
+			isRelative = /^\./.test(mid);
+			if(/(^\/)|(\:)|(\.js$)/.test(mid) || (isRelative && !referenceModule)){
+				// absolute path or protocol of .js filetype, or relative path but no reference module and therefore relative to page
+				// whatever it is, it's not a module but just a URL of some sort
+				// note: pid===0 indicates the routine is returning an unmodified mid
+
+				return makeModuleInfo(0, mid, 0, mid);
+			}else{
+				// relative module ids are relative to the referenceModule; get rid of any dots
+				mid = compactPath(isRelative ? (referenceModule.mid + "/../" + mid) : mid);
+				if(/^\./.test(mid)){
+					throw makeError("irrationalPath", mid);
+				}
+				// at this point, mid is an absolute mid
+
+				// map the mid
+				if(referenceModule){
+					mapItem = runMapProg(referenceModule.mid, mapProgs);
+				}
+				mapItem = mapItem || mapProgs.star;
+				mapItem = mapItem && runMapProg(mid, mapItem[1]);
+
+				if(mapItem){
+					mid = mapItem[1] + mid.substring(mapItem[3]);
+					}
+
+				match = mid.match(/^([^\/]+)(\/(.+))?$/);
+				pid = match ? match[1] : "";
+				if((pack = packs[pid])){
+					mid = pid + "/" + (midInPackage = (match[3] || pack.main));
+				}else{
+					pid = "";
+				}
+
+				// search aliases
+				var candidateLength = 0,
+					candidate = 0;
+				forEach(aliases, function(pair){
+					var match = mid.match(pair[0]);
+					if(match && match.length>candidateLength){
+						candidate = isFunction(pair[1]) ? mid.replace(pair[0], pair[1]) : pair[1];
+					}
+				});
+				if(candidate){
+					return getModuleInfo_(candidate, 0, packs, modules, baseUrl, mapProgs, pathsMapProg, aliases, alwaysCreate);
+				}
+
+				result = modules[mid];
+				if(result){
+					return alwaysCreate ? makeModuleInfo(result.pid, result.mid, result.pack, result.url) : modules[mid];
+				}
+			}
+			// get here iff the sought-after module does not yet exist; therefore, we need to compute the URL given the
+			// fully resolved (i.e., all relative indicators and package mapping resolved) module id
+
+			// note: pid!==0 indicates the routine is returning a url that has .js appended unmodified mid
+			mapItem = runMapProg(mid, pathsMapProg);
+			if(mapItem){
+				url = mapItem[1] + mid.substring(mapItem[3]);
+			}else if(pid){
+				url = pack.location + "/" + midInPackage;
+			}else if(has("config-tlmSiblingOfDojo")){
+				url = "../" + mid;
+			}else{
+				url = mid;
+			}
+			// if result is not absolute, add baseUrl
+			if(!(/(^\/)|(\:)/.test(url))){
+				url = baseUrl + url;
+			}
+			url += ".js";
+			return makeModuleInfo(pid, mid, pack, compactPath(url));
+		},
+
+		getModuleInfo = function(mid, referenceModule, fromPendingCache){
+			return getModuleInfo_(mid, referenceModule, packs, modules, req.baseUrl, fromPendingCache ? [] : mapProgs, fromPendingCache ? [] : pathsMapProg, fromPendingCache ? [] : aliases);
+		},
+
+		resolvePluginResourceId = function(plugin, prid, referenceModule){
+			return plugin.normalize ? plugin.normalize(prid, function(mid){return toAbsMid(mid, referenceModule);}) : toAbsMid(prid, referenceModule);
+		},
+
+		dynamicPluginUidGenerator = 0,
+
+		getModule = function(mid, referenceModule, immediate){
+			// compute and optionally construct (if necessary) the module implied by the mid with respect to referenceModule
+			var match, plugin, prid, result;
+			match = mid.match(/^(.+?)\!(.*)$/);
+			if(match){
+				// name was <plugin-module>!<plugin-resource-id>
+				plugin = getModule(match[1], referenceModule, immediate);
+
+				if(has("dojo-sync-loader") && legacyMode == sync && !plugin.executed){
+					injectModule(plugin);
+					if(plugin.injected===arrived && !plugin.executed){
+						guardCheckComplete(function(){
+							execModule(plugin);
+						});
+					}
+					if(plugin.executed){
+						promoteModuleToPlugin(plugin);
+					}else{
+						// we are in xdomain mode for some reason
+						execQ.unshift(plugin);
+					}
+				}
+
+
+
+				if(plugin.executed === executed && !plugin.load){
+					// executed the module not knowing it was a plugin
+					promoteModuleToPlugin(plugin);
+				}
+
+				// if the plugin has not been loaded, then can't resolve the prid and  must assume this plugin is dynamic until we find out otherwise
+				if(plugin.load){
+					prid = resolvePluginResourceId(plugin, match[2], referenceModule);
+					mid = (plugin.mid + "!" + (plugin.dynamic ? ++dynamicPluginUidGenerator + "!" : "") + prid);
+				}else{
+					prid = match[2];
+					mid = plugin.mid + "!" + (++dynamicPluginUidGenerator) + "!waitingForPlugin";
+				}
+				result = {plugin:plugin, mid:mid, req:createRequire(referenceModule), prid:prid};
+			}else{
+				result = getModuleInfo(mid, referenceModule);
+			}
+			return modules[result.mid] || (!immediate && (modules[result.mid] = result));
+		},
+
+		toAbsMid = req.toAbsMid = function(mid, referenceModule){
+			return getModuleInfo(mid, referenceModule).mid;
+		},
+
+		toUrl = req.toUrl = function(name, referenceModule){
+			var moduleInfo = getModuleInfo(name+"/x", referenceModule),
+				url= moduleInfo.url;
+			return fixupUrl(moduleInfo.pid===0 ?
+				// if pid===0, then name had a protocol or absolute path; either way, toUrl is the identify function in such cases
+				name :
+				// "/x.js" since getModuleInfo automatically appends ".js" and we appended "/x" to make name look like a module id
+				url.substring(0, url.length-5)
+			);
+		},
+
+		nonModuleProps = {
+			injected: arrived,
+			executed: executed,
+			def: nonmodule,
+			result: nonmodule
+		},
+
+		makeCjs = function(mid){
+			return modules[mid] = mix({mid:mid}, nonModuleProps);
+		},
+
+		cjsRequireModule = makeCjs("require"),
+		cjsExportsModule = makeCjs("exports"),
+		cjsModuleModule = makeCjs("module"),
+
+		runFactory = function(module, args){
+			req.trace("loader-run-factory", [module.mid]);
+			var factory = module.def,
+				result;
+			has("dojo-sync-loader") && syncExecStack.unshift(module);
+			if(has("config-dojo-loader-catches")){
+				try{
+					result= isFunction(factory) ? factory.apply(null, args) : factory;
+				}catch(e){
+					signal(error, module.result = makeError("factoryThrew", [module, e]));
+				}
+			}else{
+				result= isFunction(factory) ? factory.apply(null, args) : factory;
+			}
+			module.result = result===undefined && module.cjs ? module.cjs.exports : result;
+			has("dojo-sync-loader") && syncExecStack.shift(module);
+		},
+
+		abortExec = {},
+
+		defOrder = 0,
+
+		promoteModuleToPlugin = function(pluginModule){
+			var plugin = pluginModule.result;
+			pluginModule.dynamic = plugin.dynamic;
+			pluginModule.normalize = plugin.normalize;
+			pluginModule.load = plugin.load;
+			return pluginModule;
+		},
+
+		resolvePluginLoadQ = function(plugin){
+			// plugins is a newly executed module that has a loadQ waiting to run
+
+			// step 1: traverse the loadQ and fixup the mid and prid; remember the map from original mid to new mid
+			// recall the original mid was created before the plugin was on board and therefore it was impossible to
+			// compute the final mid; accordingly, prid may or may not change, but the mid will definitely change
+			var map = {};
+			forEach(plugin.loadQ, function(pseudoPluginResource){
+				// manufacture and insert the real module in modules
+				var prid = resolvePluginResourceId(plugin, pseudoPluginResource.prid, pseudoPluginResource.req.module),
+					mid = plugin.dynamic ? pseudoPluginResource.mid.replace(/waitingForPlugin$/, prid) : (plugin.mid + "!" + prid),
+					pluginResource = mix(mix({}, pseudoPluginResource), {mid:mid, prid:prid, injected:0});
+				if(!modules[mid]){
+					// create a new (the real) plugin resource and inject it normally now that the plugin is on board
+					injectPlugin(modules[mid] = pluginResource);
+				} // else this was a duplicate request for the same (plugin, rid) for a nondynamic plugin
+
+				// pluginResource is really just a placeholder with the wrong mid (because we couldn't calculate it until the plugin was on board)
+				// mark is as arrived and delete it from modules; the real module was requested above
+				map[pseudoPluginResource.mid] = modules[mid];
+				setArrived(pseudoPluginResource);
+				delete modules[pseudoPluginResource.mid];
+			});
+			plugin.loadQ = 0;
+
+			// step2: replace all references to any placeholder modules with real modules
+			var substituteModules = function(module){
+				for(var replacement, deps = module.deps || [], i = 0; i<deps.length; i++){
+					replacement = map[deps[i].mid];
+					if(replacement){
+						deps[i] = replacement;
+					}
+				}
+			};
+			for(var p in modules){
+				substituteModules(modules[p]);
+			}
+			forEach(execQ, substituteModules);
+		},
+
+		finishExec = function(module){
+			req.trace("loader-finish-exec", [module.mid]);
+			module.executed = executed;
+			module.defOrder = defOrder++;
+			has("dojo-sync-loader") && forEach(module.provides, function(cb){ cb(); });
+			if(module.loadQ){
+				// the module was a plugin
+				promoteModuleToPlugin(module);
+				resolvePluginLoadQ(module);
+			}
+			// remove all occurrences of this module from the execQ
+			for(i = 0; i < execQ.length;){
+				if(execQ[i] === module){
+					execQ.splice(i, 1);
+				}else{
+					i++;
+				}
+			}
+			// delete references to synthetic modules
+			if (/^require\*/.test(module.mid)) {
+				delete modules[module.mid];
+			}
+		},
+
+		circleTrace = [],
+
+		execModule = function(module, strict){
+			// run the dependency vector, then run the factory for module
+			if(module.executed === executing){
+				req.trace("loader-circular-dependency", [circleTrace.concat(module.mid).join("->")]);
+				return (!module.def || strict) ? abortExec :  (module.cjs && module.cjs.exports);
+			}
+			// at this point the module is either not executed or fully executed
+
+
+			if(!module.executed){
+				if(!module.def){
+					return abortExec;
+				}
+				var mid = module.mid,
+					deps = module.deps || [],
+					arg, argResult,
+					args = [],
+					i = 0;
+
+				if(has("dojo-trace-api")){
+					circleTrace.push(mid);
+					req.trace("loader-exec-module", ["exec", circleTrace.length, mid]);
+				}
+
+				// for circular dependencies, assume the first module encountered was executed OK
+				// modules that circularly depend on a module that has not run its factory will get
+				// the pre-made cjs.exports===module.result. They can take a reference to this object and/or
+				// add properties to it. When the module finally runs its factory, the factory can
+				// read/write/replace this object. Notice that so long as the object isn't replaced, any
+				// reference taken earlier while walking the deps list is still valid.
+				module.executed = executing;
+				while((arg = deps[i++])){
+					argResult = ((arg === cjsRequireModule) ? createRequire(module) :
+									((arg === cjsExportsModule) ? module.cjs.exports :
+										((arg === cjsModuleModule) ? module.cjs :
+											execModule(arg, strict))));
+					if(argResult === abortExec){
+						module.executed = 0;
+						req.trace("loader-exec-module", ["abort", mid]);
+						has("dojo-trace-api") && circleTrace.pop();
+						return abortExec;
+					}
+					args.push(argResult);
+				}
+				runFactory(module, args);
+				finishExec(module);
+				has("dojo-trace-api") && circleTrace.pop();
+			}
+			// at this point the module is guaranteed fully executed
+
+			return module.result;
+		},
+
+
+		checkCompleteGuard = 0,
+
+		guardCheckComplete = function(proc){
+			try{
+				checkCompleteGuard++;
+				proc();
+			}finally{
+				checkCompleteGuard--;
+			}
+			if(execComplete()){
+				signal("idle", []);
+			}
+		},
+
+		checkComplete = function(){
+			// keep going through the execQ as long as at least one factory is executed
+			// plugins, recursion, cached modules all make for many execution path possibilities
+			if(checkCompleteGuard){
+				return;
+			}
+			guardCheckComplete(function(){
+				checkDojoRequirePlugin();
+				for(var currentDefOrder, module, i = 0; i < execQ.length;){
+					currentDefOrder = defOrder;
+					module = execQ[i];
+					execModule(module);
+					if(currentDefOrder!=defOrder){
+						// defOrder was bumped one or more times indicating something was executed (note, this indicates
+						// the execQ was modified, maybe a lot (for example a later module causes an earlier module to execute)
+						checkDojoRequirePlugin();
+						i = 0;
+					}else{
+						// nothing happened; check the next module in the exec queue
+						i++;
+					}
+				}
+			});
+		};
+
+
+	if(has("dojo-undef-api")){
+		req.undef = function(moduleId, referenceModule){
+			// In order to reload a module, it must be undefined (this routine) and then re-requested.
+			// This is useful for testing frameworks (at least).
+			var module = getModule(moduleId, referenceModule);
+			setArrived(module);
+			mix(module, {def:0, executed:0, injected:0, node:0});
+		};
+	}
+
+	if(has("dojo-inject-api")){
+		if(has("dojo-loader-eval-hint-url")===undefined){
+			has.add("dojo-loader-eval-hint-url", 1);
+		}
+
+		var fixupUrl= typeof userConfig.fixupUrl == "function" ? userConfig.fixupUrl : function(url){
+				url += ""; // make sure url is a Javascript string (some paths may be a Java string)
+				return url + (cacheBust ? ((/\?/.test(url) ? "&" : "?") + cacheBust) : "");
+			},
+
+			injectPlugin = function(
+				module
+			){
+				// injects the plugin module given by module; may have to inject the plugin itself
+				var plugin = module.plugin;
+
+				if(plugin.executed === executed && !plugin.load){
+					// executed the module not knowing it was a plugin
+					promoteModuleToPlugin(plugin);
+				}
+
+				var onLoad = function(def){
+						module.result = def;
+						setArrived(module);
+						finishExec(module);
+						checkComplete();
+					};
+
+				if(plugin.load){
+					plugin.load(module.prid, module.req, onLoad);
+				}else if(plugin.loadQ){
+					plugin.loadQ.push(module);
+				}else{
+					// the unshift instead of push is important: we don't want plugins to execute as
+					// dependencies of some other module because this may cause circles when the plugin
+					// loadQ is run; also, generally, we want plugins to run early since they may load
+					// several other modules and therefore can potentially unblock many modules
+					plugin.loadQ = [module];
+					execQ.unshift(plugin);
+					injectModule(plugin);
+				}
+			},
+
+			// for IE, injecting a module may result in a recursive execution if the module is in the cache
+
+			cached = 0,
+
+			injectingModule = 0,
+
+			injectingCachedModule = 0,
+
+			evalModuleText = function(text, module){
+				// see def() for the injectingCachedModule bracket; it simply causes a short, safe circuit
+				if(has("config-stripStrict")){
+					text = text.replace(/(["'])use strict\1/g, '');
+				}
+				injectingCachedModule = 1;
+				if(has("config-dojo-loader-catches")){
+					try{
+						if(text===cached){
+							cached.call(null);
+						}else{
+							req.eval(text, has("dojo-loader-eval-hint-url") ? module.url : module.mid);
+						}
+					}catch(e){
+						signal(error, makeError("evalModuleThrew", module));
+					}
+				}else{
+					if(text===cached){
+						cached.call(null);
+					}else{
+						req.eval(text, has("dojo-loader-eval-hint-url") ? module.url : module.mid);
+					}
+				}
+				injectingCachedModule = 0;
+			},
+
+			injectModule = function(module){
+				// Inject the module. In the browser environment, this means appending a script element into
+				// the document; in other environments, it means loading a file.
+				//
+				// If in synchronous mode, then get the module synchronously if it's not xdomainLoading.
+
+				var mid = module.mid,
+					url = module.url;
+				if(module.executed || module.injected || waiting[mid] || (module.url && ((module.pack && waiting[module.url]===module.pack) || waiting[module.url]==1))){
+					return;
+				}
+				setRequested(module);
+
+				if(has("dojo-combo-api")){
+					var viaCombo = 0;
+					if(module.plugin && module.plugin.isCombo){
+						// a combo plugin; therefore, must be handled by combo service
+						// the prid should have already been converted to a URL (if required by the plugin) during
+						// the normalize process; in any event, there is no way for the loader to know how to
+						// to the conversion; therefore the third argument is zero
+						req.combo.add(module.plugin.mid, module.prid, 0, req);
+						viaCombo = 1;
+					}else if(!module.plugin){
+						viaCombo = req.combo.add(0, module.mid, module.url, req);
+					}
+					if(viaCombo){
+						comboPending= 1;
+						return;
+					}
+				}
+
+				if(module.plugin){
+					injectPlugin(module);
+					return;
+				} // else a normal module (not a plugin)
+
+
+				var onLoadCallback = function(){
+					runDefQ(module);
+					if(module.injected !== arrived){
+						// the script that contained the module arrived and has been executed yet
+						// nothing was added to the defQ (so it wasn't an AMD module) and the module
+						// wasn't marked as arrived by dojo.provide (so it wasn't a v1.6- module);
+						// therefore, it must not have been a module; adjust state accordingly
+						if(has("dojo-enforceDefine")){
+							signal(error, makeError("noDefine", module));
+							return;
+						}
+						setArrived(module);
+						mix(module, nonModuleProps);
+						req.trace("loader-define-nonmodule", [module.url]);
+					}
+
+					if(has("dojo-sync-loader") && legacyMode){
+						// must call checkComplete even in for sync loader because we may be in xdomainLoading mode;
+						// but, if xd loading, then don't call checkComplete until out of the current sync traversal
+						// in order to preserve order of execution of the dojo.required modules
+						!syncExecStack.length && checkComplete();
+					}else{
+						checkComplete();
+					}
+				};
+				cached = cache[mid] || cache[urlKeyPrefix + module.url];
+				if(cached){
+					req.trace("loader-inject", ["cache", module.mid, url]);
+					evalModuleText(cached, module);
+					onLoadCallback();
+					return;
+				}
+				if(has("dojo-sync-loader") && legacyMode){
+					if(module.isXd){
+						// switch to async mode temporarily; if current legacyMode!=sync, then is must be one of {legacyAsync, xd, false}
+						legacyMode==sync && (legacyMode = xd);
+						// fall through and load via script injection
+					}else if(module.isAmd && legacyMode!=sync){
+						// fall through and load via script injection
+					}else{
+						// mode may be sync, xd/legacyAsync, or async; module may be AMD or legacy; but module is always located on the same domain
+						var xhrCallback = function(text){
+							if(legacyMode==sync){
+								// the top of syncExecStack gives the current synchronously executing module; the loader needs
+								// to know this if it has to switch to async loading in the middle of evaluating a legacy module
+								// this happens when a modules dojo.require's a module that must be loaded async because it's xdomain
+								// (using unshift/shift because there is no back() methods for Javascript arrays)
+								syncExecStack.unshift(module);
+								evalModuleText(text, module);
+								syncExecStack.shift();
+
+								// maybe the module was an AMD module
+								runDefQ(module);
+
+								// legacy modules never get to defineModule() => cjs and injected never set; also evaluation implies executing
+								if(!module.cjs){
+									setArrived(module);
+									finishExec(module);
+								}
+
+								if(module.finish){
+									// while synchronously evaluating this module, dojo.require was applied referencing a module
+									// that had to be loaded async; therefore, the loader stopped answering all dojo.require
+									// requests so they could be answered completely in the correct sequence; module.finish gives
+									// the list of dojo.requires that must be re-applied once all target modules are available;
+									// make a synthetic module to execute the dojo.require's in the correct order
+
+									// compute a guaranteed-unique mid for the synthetic finish module; remember the finish vector; remove it from the reference module
+									// TODO: can we just leave the module.finish...what's it hurting?
+									var finishMid = mid + "*finish",
+										finish = module.finish;
+									delete module.finish;
+
+									def(finishMid, ["dojo", ("dojo/require!" + finish.join(",")).replace(/\./g, "/")], function(dojo){
+										forEach(finish, function(mid){ dojo.require(mid); });
+									});
+									// unshift, not push, which causes the current traversal to be reattempted from the top
+									execQ.unshift(getModule(finishMid));
+								}
+								onLoadCallback();
+							}else{
+								text = transformToAmd(module, text);
+								if(text){
+									evalModuleText(text, module);
+									onLoadCallback();
+								}else{
+									// if transformToAmd returned falsy, then the module was already AMD and it can be script-injected
+									// do so to improve debugability(even though it means another download...which probably won't happen with a good browser cache)
+									injectingModule = module;
+									req.injectUrl(fixupUrl(url), onLoadCallback, module);
+									injectingModule = 0;
+								}
+							}
+						};
+
+						req.trace("loader-inject", ["xhr", module.mid, url, legacyMode!=sync]);
+						if(has("config-dojo-loader-catches")){
+							try{
+								req.getText(url, legacyMode!=sync, xhrCallback);
+							}catch(e){
+								signal(error, makeError("xhrInjectFailed", [module, e]));
+							}
+						}else{
+							req.getText(url, legacyMode!=sync, xhrCallback);
+						}
+						return;
+					}
+				} // else async mode or fell through in xdomain loading mode; either way, load by script injection
+				req.trace("loader-inject", ["script", module.mid, url]);
+				injectingModule = module;
+				req.injectUrl(fixupUrl(url), onLoadCallback, module);
+				injectingModule = 0;
+			},
+
+			defineModule = function(module, deps, def){
+				req.trace("loader-define-module", [module.mid, deps]);
+
+				if(has("dojo-combo-api") && module.plugin && module.plugin.isCombo){
+					// the module is a plugin resource loaded by the combo service
+					// note: check for module.plugin should be enough since normal plugin resources should
+					// not follow this path; module.plugin.isCombo is future-proofing belt and suspenders
+					module.result = isFunction(def) ? def() : def;
+					setArrived(module);
+					finishExec(module);
+					return module;
+				}
+
+				var mid = module.mid;
+				if(module.injected === arrived){
+					signal(error, makeError("multipleDefine", module));
+					return module;
+				}
+				mix(module, {
+					deps: deps,
+					def: def,
+					cjs: {
+						id: module.mid,
+						uri: module.url,
+						exports: (module.result = {}),
+						setExports: function(exports){
+							module.cjs.exports = exports;
+						},
+						config:function(){
+							return module.config;
+						}
+					}
+				});
+
+				// resolve deps with respect to this module
+				for(var i = 0; deps[i]; i++){
+					deps[i] = getModule(deps[i], module);
+				}
+
+				if(has("dojo-sync-loader") && legacyMode && !waiting[mid]){
+					// the module showed up without being asked for; it was probably in a <script> element
+					injectDependencies(module);
+					execQ.push(module);
+					checkComplete();
+				}
+				setArrived(module);
+
+				if(!isFunction(def) && !deps.length){
+					module.result = def;
+					finishExec(module);
+				}
+
+				return module;
+			},
+
+			runDefQ = function(referenceModule, mids){
+				// defQ is an array of [id, dependencies, factory]
+				// mids (if any) is a vector of mids given by a combo service
+				var definedModules = [],
+					module, args;
+				while(defQ.length){
+					args = defQ.shift();
+					mids && (args[0]= mids.shift());
+					// explicit define indicates possible multiple modules in a single file; delay injecting dependencies until defQ fully
+					// processed since modules earlier in the queue depend on already-arrived modules that are later in the queue
+					// TODO: what if no args[0] and no referenceModule
+					module = (args[0] && getModule(args[0])) || referenceModule;
+					definedModules.push([module, args[1], args[2]]);
+				}
+				consumePendingCacheInsert(referenceModule);
+				forEach(definedModules, function(args){
+					injectDependencies(defineModule.apply(null, args));
+				});
+			};
+	}
+
+	var timerId = 0,
+		clearTimer = noop,
+		startTimer = noop;
+	if(has("dojo-timeout-api")){
+		// Timer machinery that monitors how long the loader is waiting and signals an error when the timer runs out.
+		clearTimer = function(){
+			timerId && clearTimeout(timerId);
+			timerId = 0;
+		};
+
+		startTimer = function(){
+			clearTimer();
+			if(req.waitms){
+				timerId = global.setTimeout(function(){
+					clearTimer();
+					signal(error, makeError("timeout", waiting));
+				}, req.waitms);
+			}
+		};
+	}
+
+	if (has("dom")) {
+		// Test for IE's different way of signaling when scripts finish loading.  Note that according to
+		// http://bugs.dojotoolkit.org/ticket/15096#comment:14, IE9 also needs to follow the
+		// IE specific code path even though it has an addEventListener() method.
+		// Unknown if special path needed on IE10+, which also has a document.attachEvent() method.
+		// Should evaluate to false for Opera and Windows 8 apps, even though they document.attachEvent()
+		//  is defined in both those environments.
+		has.add("ie-event-behavior", doc.attachEvent && typeof Windows === "undefined" &&
+			(typeof opera === "undefined" || opera.toString() != "[object Opera]"));
+	}
+
+	if(has("dom") && (has("dojo-inject-api") || has("dojo-dom-ready-api"))){
+		var domOn = function(node, eventName, ieEventName, handler){
+				// Add an event listener to a DOM node using the API appropriate for the current browser;
+				// return a function that will disconnect the listener.
+				if(!has("ie-event-behavior")){
+					node.addEventListener(eventName, handler, false);
+					return function(){
+						node.removeEventListener(eventName, handler, false);
+					};
+				}else{
+					node.attachEvent(ieEventName, handler);
+					return function(){
+						node.detachEvent(ieEventName, handler);
+					};
+				}
+			},
+			windowOnLoadListener = domOn(window, "load", "onload", function(){
+				req.pageLoaded = 1;
+				doc.readyState!="complete" && (doc.readyState = "complete");
+				windowOnLoadListener();
+			});
+
+		if(has("dojo-inject-api")){
+			// if the loader is on the page, there must be at least one script element
+			// getting its parent and then doing insertBefore solves the "Operation Aborted"
+			// error in IE from appending to a node that isn't properly closed; see
+			// dojo/tests/_base/loader/requirejs/simple-badbase.html for an example
+			// don't use scripts with type dojo/... since these may be removed; see #15809
+			// prefer to use the insertPoint computed during the config sniff in case a script is removed; see #16958
+			var scripts = doc.getElementsByTagName("script"),
+				i = 0,
+				script;
+			while(!insertPointSibling){
+				if(!/^dojo/.test((script = scripts[i++]) && script.type)){
+					insertPointSibling= script;
+				}
+			}
+
+			req.injectUrl = function(url, callback, owner){
+				// insert a script element to the insert-point element with src=url;
+				// apply callback upon detecting the script has loaded.
+
+				var node = owner.node = doc.createElement("script"),
+					onLoad = function(e){
+						e = e || window.event;
+						var node = e.target || e.srcElement;
+						if(e.type === "load" || /complete|loaded/.test(node.readyState)){
+							loadDisconnector();
+							errorDisconnector();
+							callback && callback();
+						}
+					},
+					loadDisconnector = domOn(node, "load", "onreadystatechange", onLoad),
+					errorDisconnector = domOn(node, "error", "onerror", function(e){
+						loadDisconnector();
+						errorDisconnector();
+						signal(error, makeError("scriptError", [url, e]));
+					});
+
+				node.type = "text/javascript";
+				node.charset = "utf-8";
+				node.src = url;
+				insertPointSibling.parentNode.insertBefore(node, insertPointSibling);
+				return node;
+			};
+		}
+	}
+
+	if(has("dojo-log-api")){
+		req.log = function(){
+			try{
+				for(var i = 0; i < arguments.length; i++){
+					console.log(arguments[i]);
+				}
+			}catch(e){}
+		};
+	}else{
+		req.log = noop;
+	}
+
+	if(has("dojo-trace-api")){
+		var trace = req.trace = function(
+			group,	// the trace group to which this application belongs
+			args	// the contents of the trace
+		){
+			///
+			// Tracing interface by group.
+			//
+			// Sends the contents of args to the console iff (req.trace.on && req.trace[group])
+
+			if(trace.on && trace.group[group]){
+				signal("trace", [group, args]);
+				for(var arg, dump = [], text= "trace:" + group + (args.length ? (":" + args[0]) : ""), i= 1; i<args.length;){
+					arg = args[i++];
+					if(isString(arg)){
+						text += ", " + arg;
+					}else{
+						dump.push(arg);
+					}
+				}
+				req.log(text);
+				dump.length && dump.push(".");
+				req.log.apply(req, dump);
+			}
+		};
+		mix(trace, {
+			on:1,
+			group:{},
+			set:function(group, value){
+				if(isString(group)){
+					trace.group[group]= value;
+				}else{
+					mix(trace.group, group);
+				}
+			}
+		});
+		trace.set(mix(mix(mix({}, defaultConfig.trace), userConfig.trace), dojoSniffConfig.trace));
+		on("config", function(config){
+			config.trace && trace.set(config.trace);
+		});
+	}else{
+		req.trace = noop;
+	}
+
+	var def = function(
+		mid,		  //(commonjs.moduleId, optional)
+		dependencies, //(array of commonjs.moduleId, optional) list of modules to be loaded before running factory
+		factory		  //(any)
+	){
+		///
+		// Advises the loader of a module factory. //Implements http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition.
+		///
+		//note
+		// CommonJS factory scan courtesy of http://requirejs.org
+
+		var arity = arguments.length,
+			defaultDeps = ["require", "exports", "module"],
+			// the predominate signature...
+			args = [0, mid, dependencies];
+		if(arity==1){
+			args = [0, (isFunction(mid) ? defaultDeps : []), mid];
+		}else if(arity==2 && isString(mid)){
+			args = [mid, (isFunction(dependencies) ? defaultDeps : []), dependencies];
+		}else if(arity==3){
+			args = [mid, dependencies, factory];
+		}
+
+		if(has("dojo-amd-factory-scan") && args[1]===defaultDeps){
+			args[2].toString()
+				.replace(/(\/\*([\s\S]*?)\*\/|\/\/(.*)$)/mg, "")
+				.replace(/require\(["']([\w\!\-_\.\/]+)["']\)/g, function(match, dep){
+				args[1].push(dep);
+			});
+		}
+
+		req.trace("loader-define", args.slice(0, 2));
+		var targetModule = args[0] && getModule(args[0]),
+			module;
+		if(targetModule && !waiting[targetModule.mid]){
+			// given a mid that hasn't been requested; therefore, defined through means other than injecting
+			// consequent to a require() or define() application; examples include defining modules on-the-fly
+			// due to some code path or including a module in a script element. In any case,
+			// there is no callback waiting to finish processing and nothing to trigger the defQ and the
+			// dependencies are never requested; therefore, do it here.
+			injectDependencies(defineModule(targetModule, args[1], args[2]));
+		}else if(!has("ie-event-behavior") || !has("host-browser") || injectingCachedModule){
+			// not IE path: anonymous module and therefore must have been injected; therefore, onLoad will fire immediately
+			// after script finishes being evaluated and the defQ can be run from that callback to detect the module id
+			defQ.push(args);
+		}else{
+			// IE path: possibly anonymous module and therefore injected; therefore, cannot depend on 1-to-1,
+			// in-order exec of onLoad with script eval (since it's IE) and must manually detect here
+			targetModule = targetModule || injectingModule;
+			if(!targetModule){
+				for(mid in waiting){
+					module = modules[mid];
+					if(module && module.node && module.node.readyState === 'interactive'){
+						targetModule = module;
+						break;
+					}
+				}
+				if(has("dojo-combo-api") && !targetModule){
+					for(var i = 0; i<combosPending.length; i++){
+						targetModule = combosPending[i];
+						if(targetModule.node && targetModule.node.readyState === 'interactive'){
+							break;
+						}
+						targetModule= 0;
+					}
+				}
+			}
+			if(has("dojo-combo-api") && isArray(targetModule)){
+				injectDependencies(defineModule(getModule(targetModule.shift()), args[1], args[2]));
+				if(!targetModule.length){
+					combosPending.splice(i, 1);
+				}
+			}else if(targetModule){
+				consumePendingCacheInsert(targetModule);
+				injectDependencies(defineModule(targetModule, args[1], args[2]));
+			}else{
+				signal(error, makeError("ieDefineFailed", args[0]));
+			}
+			checkComplete();
+		}
+	};
+	def.amd = {
+		vendor:"dojotoolkit.org"
+	};
+
+	if(has("dojo-requirejs-api")){
+		req.def = def;
+	}
+
+	// allow config to override default implementation of named functions; this is useful for
+	// non-browser environments, e.g., overriding injectUrl, getText, log, etc. in node.js, Rhino, etc.
+	// also useful for testing and monkey patching loader
+	mix(mix(req, defaultConfig.loaderPatch), userConfig.loaderPatch);
+
+	// now that req is fully initialized and won't change, we can hook it up to the error signal
+	on(error, function(arg){
+		try{
+			console.error(arg);
+			if(arg instanceof Error){
+				for(var p in arg){
+					console.log(p + ":", arg[p]);
+				}
+				console.log(".");
+			}
+		}catch(e){}
+	});
+
+	// always publish these
+	mix(req, {
+		uid:uid,
+		cache:cache,
+		packs:packs
+	});
+
+
+	if(has("dojo-publish-privates")){
+		mix(req, {
+			// these may be interesting to look at when debugging
+			paths:paths,
+			aliases:aliases,
+			modules:modules,
+			legacyMode:legacyMode,
+			execQ:execQ,
+			defQ:defQ,
+			waiting:waiting,
+
+			// these are used for testing
+			// TODO: move testing infrastructure to a different has feature
+			packs:packs,
+			mapProgs:mapProgs,
+			pathsMapProg:pathsMapProg,
+			listenerQueues:listenerQueues,
+
+			// these are used by the builder (at least)
+			computeMapProg:computeMapProg,
+			computeAliases:computeAliases,
+			runMapProg:runMapProg,
+			compactPath:compactPath,
+			getModuleInfo:getModuleInfo_
+		});
+	}
+
+	// the loader can be defined exactly once; look for global define which is the symbol AMD loaders are
+	// *required* to define (as opposed to require, which is optional)
+	if(global.define){
+		if(has("dojo-log-api")){
+			signal(error, makeError("defineAlreadyDefined", 0));
+		}
+		return;
+	}else{
+		global.define = def;
+		global.require = req;
+		if(has("host-node")){
+			require = req;
+		}
+	}
+
+	if(has("dojo-combo-api") && req.combo && req.combo.plugins){
+		var plugins = req.combo.plugins,
+			pluginName;
+		for(pluginName in plugins){
+			mix(mix(getModule(pluginName), plugins[pluginName]), {isCombo:1, executed:"executed", load:1});
+		}
+	}
+
+	if(has("dojo-config-api")){
+		forEach(delayedModuleConfig, function(c){ config(c); });
+		var bootDeps = dojoSniffConfig.deps ||	userConfig.deps || defaultConfig.deps,
+			bootCallback = dojoSniffConfig.callback || userConfig.callback || defaultConfig.callback;
+		req.boot = (bootDeps || bootCallback) ? [bootDeps || [], bootCallback] : 0;
+	}
+	if(!has("dojo-built")){
+		!req.async && req(["dojo"]);
+		req.boot && req.apply(null, req.boot);
+	}
+})
+//>>excludeStart("replaceLoaderConfig", kwArgs.replaceLoaderConfig);
+(
+	// userConfig
+	(function(){
+		// make sure we're looking at global dojoConfig etc.
+		return this.dojoConfig || this.djConfig || this.require || {};
+	})(),
+
+	// defaultConfig
+	{
+		// the default configuration for a browser; this will be modified by other environments
+		hasCache:{
+			"host-browser":1,
+			"dom":1,
+			"dojo-amd-factory-scan":1,
+			"dojo-loader":1,
+			"dojo-has-api":1,
+			"dojo-inject-api":1,
+			"dojo-timeout-api":1,
+			"dojo-trace-api":1,
+			"dojo-log-api":1,
+			"dojo-dom-ready-api":1,
+			"dojo-publish-privates":1,
+			"dojo-config-api":1,
+			"dojo-sniff":1,
+			"dojo-sync-loader":1,
+			"dojo-test-sniff":1,
+			"config-deferredInstrumentation":1,
+			"config-tlmSiblingOfDojo":1
+		},
+		packages:[{
+			// note: like v1.6-, this bootstrap computes baseUrl to be the dojo directory
+			name:'dojo',
+			location:'.'
+		},{
+			name:'tests',
+			location:'./tests'
+		},{
+			name:'dijit',
+			location:'../dijit'
+		},{
+			name:'build',
+			location:'../util/build'
+		},{
+			name:'doh',
+			location:'../util/doh'
+		},{
+			name:'dojox',
+			location:'../dojox'
+		},{
+			name:'demos',
+			location:'../demos'
+		}],
+		trace:{
+			// these are listed so it's simple to turn them on/off while debugging loading
+			"loader-inject":0,
+			"loader-define":0,
+			"loader-exec-module":0,
+			"loader-run-factory":0,
+			"loader-finish-exec":0,
+			"loader-define-module":0,
+			"loader-circular-dependency":0,
+			"loader-define-nonmodule":0
+		},
+		async:0,
+		waitSeconds:15
+	}
+);
+//>>excludeEnd("replaceLoaderConfig")

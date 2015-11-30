@@ -1,4 +1,32 @@
-//>>built
-define("dojox/analytics/plugins/window",["dojo/_base/lang","../_base","dojo/ready","dojo/_base/config","dojo/aspect"],function(c,d,e,f,g){return d.plugins.window=new function(){this.addData=c.hitch(d,"addData","window");this.windowConnects=f.windowConnects||["open","onerror"];for(var a=0;a<this.windowConnects.length;a++)g.after(window,this.windowConnects[a],c.hitch(this,"addData",this.windowConnects[a]),!0);e(c.hitch(this,function(){var a={},b;for(b in window)if("object"==typeof window[b]||"function"==
-typeof window[b])switch(b){case "location":case "console":a[b]=window[b]}else a[b]=window[b];this.addData(a)}))}});
-//@ sourceMappingURL=window.js.map
+define(["dojo/_base/lang","../_base", "dojo/ready", "dojo/_base/config", "dojo/aspect"
+], function(lang, dxa, ready, config, aspect){
+
+	// window startup data
+	return (dxa.plugins.window = new (function(){
+		this.addData = lang.hitch(dxa, "addData", "window");
+		this.windowConnects = config["windowConnects"] || ["open", "onerror"];
+
+		for(var i = 0; i < this.windowConnects.length;i++){
+			aspect.after(window, this.windowConnects[i], lang.hitch(this, "addData", this.windowConnects[i]),true);
+		}
+
+		ready(lang.hitch(this, function(){
+			var data = {};
+			for(var i in window){
+				if(typeof window[i] == "object" || typeof window[i] == "function"){
+					switch(i){
+						case "location":
+						case "console":
+							data[i] = window[i];
+							break;
+						default:
+							break;
+					}
+				}else{
+					data[i] = window[i];
+				}
+			}
+			this.addData(data);
+		}));
+	})());
+});

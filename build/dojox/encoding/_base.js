@@ -1,3 +1,3 @@
-//>>built
-define("dojox/encoding/_base",["dojo/_base/lang"],function(a){return a.getObject("dojox.encoding._base",!0)});
-//@ sourceMappingURL=_base.js.map
+define(['dojo/_base/lang'], function(lang){
+	return lang.getObject("dojox.encoding._base", true);
+});

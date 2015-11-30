@@ -1,5 +1,116 @@
-//>>built
-define("dojo/promise/instrumentation",["./tracer","../has","../_base/lang","../_base/array"],function(g,p,h,k){function m(c,a,b){var d="";c&&c.stack&&(d+=c.stack);a&&a.stack&&(d+="\n    ----------------------------------------\n    rejected"+a.stack.split("\n").slice(1).join("\n").replace(/^\s+/," "));b&&b.stack&&(d+="\n    ----------------------------------------\n"+b.stack);console.error(c,d)}function q(c,a,b,d){a||m(c,b,d)}function r(c,a,b,d){a?k.some(e,function(a,b){if(a.error===c)return e.splice(b,
-1),!0}):k.some(e,function(a){return a.error===c})||e.push({error:c,rejection:b,deferred:d,timestamp:(new Date).getTime()});l||(l=setTimeout(n,f))}function n(){var c=(new Date).getTime(),a=c-f;e=k.filter(e,function(b){return b.timestamp<a?(m(b.error,b.rejection,b.deferred),!1):!0});l=e.length?setTimeout(n,e[0].timestamp+f-c):!1}var e=[],l=!1,f=1E3;return function(c){var a=p("config-useDeferredInstrumentation");if(a){g.on("resolved",h.hitch(console,"log","resolved"));g.on("rejected",h.hitch(console,
-"log","rejected"));g.on("progress",h.hitch(console,"log","progress"));var b=[];"string"===typeof a&&(b=a.split(","),a=b.shift());if("report-rejections"===a)c.instrumentRejected=q;else if("report-unhandled-rejections"===a||!0===a||1===a)c.instrumentRejected=r,f=parseInt(b[0],10)||f;else throw Error("Unsupported instrumentation usage \x3c"+a+"\x3e");}}});
-//@ sourceMappingURL=instrumentation.js.map
+define([
+	"./tracer",
+	"../has",
+	"../_base/lang",
+	"../_base/array"
+], function(tracer, has, lang, arrayUtil){
+	has.add("config-useDeferredInstrumentation", "report-unhandled-rejections");
+
+	function logError(error, rejection, deferred){
+		var stack = "";
+		if(error && error.stack){
+			stack += error.stack;
+		}
+		if(rejection && rejection.stack){
+			stack += "\n    ----------------------------------------\n    rejected" + rejection.stack.split("\n").slice(1).join("\n").replace(/^\s+/, " ");
+		}
+		if(deferred && deferred.stack){
+			stack += "\n    ----------------------------------------\n" + deferred.stack;
+		}
+		console.error(error, stack);
+	}
+
+	function reportRejections(error, handled, rejection, deferred){
+		if(!handled){
+			logError(error, rejection, deferred);
+		}
+	}
+
+	var errors = [];
+	var activeTimeout = false;
+	var unhandledWait = 1000;
+	function trackUnhandledRejections(error, handled, rejection, deferred){
+		// try to find the existing tracking object
+		if(!arrayUtil.some(errors, function(obj){
+			if(obj.error === error){
+				// found the tracking object for this error
+				if(handled){
+					// if handled, update the state
+					obj.handled = true;
+				}
+				return true;
+			}
+		})){
+			// no tracking object has been setup, create one
+			errors.push({
+				error: error,
+				rejection: rejection,
+				handled: handled,
+				deferred: deferred,
+				timestamp: new Date().getTime()
+			});
+		}
+
+		if(!activeTimeout){
+			activeTimeout = setTimeout(logRejected, unhandledWait);
+		}
+	}
+
+	function logRejected(){
+		var now = new Date().getTime();
+		var reportBefore = now - unhandledWait;
+		errors = arrayUtil.filter(errors, function(obj){
+			// only report the error if we have waited long enough and
+			// it hasn't been handled
+			if(obj.timestamp < reportBefore){
+				if(!obj.handled){
+					logError(obj.error, obj.rejection, obj.deferred);
+				}
+				return false;
+			}
+			return true;
+		});
+
+		if(errors.length){
+			activeTimeout = setTimeout(logRejected, errors[0].timestamp + unhandledWait - now);
+		}else{
+			activeTimeout = false;
+		}
+	}
+
+	return function(Deferred){
+		// summary:
+		//		Initialize instrumentation for the Deferred class.
+		// description:
+		//		Initialize instrumentation for the Deferred class.
+		//		Done automatically by `dojo/Deferred` if the
+		//		`deferredInstrumentation` and `useDeferredInstrumentation`
+		//		config options are set.
+		//
+		//		Sets up `dojo/promise/tracer` to log to the console.
+		//
+		//		Sets up instrumentation of rejected deferreds so unhandled
+		//		errors are logged to the console.
+
+		var usage = has("config-useDeferredInstrumentation");
+		if(usage){
+			tracer.on("resolved", lang.hitch(console, "log", "resolved"));
+			tracer.on("rejected", lang.hitch(console, "log", "rejected"));
+			tracer.on("progress", lang.hitch(console, "log", "progress"));
+
+			var args = [];
+			if(typeof usage === "string"){
+				args = usage.split(",");
+				usage = args.shift();
+			}
+			if(usage === "report-rejections"){
+				Deferred.instrumentRejected = reportRejections;
+			}else if(usage === "report-unhandled-rejections" || usage === true || usage === 1){
+				Deferred.instrumentRejected = trackUnhandledRejections;
+				unhandledWait = parseInt(args[0], 10) || unhandledWait;
+			}else{
+				throw new Error("Unsupported instrumentation usage <" + usage + ">");
+			}
+		}
+	};
+});

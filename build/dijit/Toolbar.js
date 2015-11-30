@@ -1,3 +1,42 @@
-//>>built
-define("dijit/Toolbar","require dojo/_base/declare dojo/has dojo/keys dojo/ready ./_Widget ./_KeyNavContainer ./_TemplatedMixin".split(" "),function(a,b,c,h,d,e,f,g){c("dijit-legacy-requires")&&d(0,function(){a(["dijit/ToolbarSeparator"])});return b("dijit.Toolbar",[e,g,f],{templateString:'\x3cdiv class\x3d"dijit" role\x3d"toolbar" tabIndex\x3d"${tabIndex}" data-dojo-attach-point\x3d"containerNode"\x3e\x3c/div\x3e',baseClass:"dijitToolbar",_onLeftArrow:function(){this.focusPrev()},_onRightArrow:function(){this.focusNext()}})});
-//@ sourceMappingURL=Toolbar.js.map
+define([
+	"require",
+	"dojo/_base/declare", // declare
+	"dojo/has",
+	"dojo/keys", // keys.LEFT_ARROW keys.RIGHT_ARROW
+	"dojo/ready",
+	"./_Widget",
+	"./_KeyNavContainer",
+	"./_TemplatedMixin"
+], function(require, declare, has, keys, ready, _Widget, _KeyNavContainer, _TemplatedMixin){
+
+	// module:
+	//		dijit/Toolbar
+
+
+	// Back compat w/1.6, remove for 2.0
+	if(has("dijit-legacy-requires")){
+		ready(0, function(){
+			var requires = ["dijit/ToolbarSeparator"];
+			require(requires);	// use indirection so modules not rolled into a build
+		});
+	}
+
+	return declare("dijit.Toolbar", [_Widget, _TemplatedMixin, _KeyNavContainer], {
+		// summary:
+		//		A Toolbar widget, used to hold things like `dijit/Editor` buttons
+
+		templateString:
+			'<div class="dijit" role="toolbar" tabIndex="${tabIndex}" data-dojo-attach-point="containerNode">' +
+			'</div>',
+
+		baseClass: "dijitToolbar",
+
+		_onLeftArrow: function(){
+			this.focusPrev();
+		},
+
+		_onRightArrow: function(){
+			this.focusNext();
+		}
+	});
+});

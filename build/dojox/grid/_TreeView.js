@@ -1,21 +1,464 @@
-//>>built
-require({cache:{"url:dojox/grid/resources/Expando.html":'\x3cdiv class\x3d"dojoxGridExpando"\r\n\t\x3e\x3cdiv class\x3d"dojoxGridExpandoNode" dojoAttachEvent\x3d"onclick:onToggle"\r\n\t\t\x3e\x3cdiv class\x3d"dojoxGridExpandoNodeInner" dojoAttachPoint\x3d"expandoInner"\x3e\x3c/div\r\n\t\x3e\x3c/div\r\n\x3e\x3c/div\x3e\r\n'}});
-define("dojox/grid/_TreeView","dijit/registry ../main dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/_base/event dojo/dom-attr dojo/dom-class dojo/dom-style dojo/dom-construct dojo/query dojo/parser dojo/text!./resources/Expando.html dijit/_Widget dijit/_TemplatedMixin ./_View ./_Builder ./util".split(" "),function(s,C,l,w,x,E,h,f,D,F,g,G,q,H,I,J,K,L){l("dojox.grid._Expando",[H,I],{open:!1,toggleClass:"",itemId:"",cellIdx:-1,view:null,rowNode:null,rowIdx:-1,expandoCell:null,level:0,templateString:q,
-_toggleRows:function(a,c){if(a&&this.rowNode)if(g("table.dojoxGridRowTableNeedsRowUpdate").length)this._initialized&&this.view.grid.updateRow(this.rowIdx);else{var b=this;if(this.view.grid.treeModel){var e=this._tableRow?h.get(this._tableRow,"dojoxTreeGridPath"):"";e&&g('tr[dojoxTreeGridPath^\x3d"'+e+'/"]',this.rowNode).forEach(function(b){var d=g(".dojoxGridExpando",b)[0];d&&d.parentNode&&d.parentNode.parentNode&&!f.contains(d.parentNode.parentNode,"dojoxGridNoChildren")&&(d=s.byNode(d))&&d._toggleRows(a,
-d.open&&c);b.style.display=c?"":"none"})}else g("tr."+a,this.rowNode).forEach(function(a){if(f.contains(a,"dojoxGridExpandoRow")){var d=g(".dojoxGridExpando",a)[0];if(d){var e=s.byNode(d),r=e?e.toggleClass:d.getAttribute("toggleClass"),d=e?e.open:b.expandoCell.getOpenState(d.getAttribute("itemId"));b._toggleRows(r,d&&c)}}a.style.display=c?"":"none"})}},setOpen:function(a){a&&f.contains(this.domNode,"dojoxGridExpandoLoading")&&(a=!1);var c=this.view.grid,b=c.store,e=c.treeModel,t=this;if(c._by_idx[this.rowIdx])if(e&&
-!this._loadedChildren)if(a){var d=c.getItem(h.get(this._tableRow,"dojoxTreeGridPath"));d?(this.expandoInner.innerHTML="o",f.add(this.domNode,"dojoxGridExpandoLoading"),e.getChildren(d,function(b){t._loadedChildren=!0;t._setOpen(a)})):this._setOpen(a)}else this._setOpen(a);else!e&&b?a?(e=c._by_idx[this.rowIdx])&&!b.isItemLoaded(e.item)?(this.expandoInner.innerHTML="o",f.add(this.domNode,"dojoxGridExpandoLoading"),b.loadItem({item:e.item,onItem:x.hitch(this,function(e){var d=b.getIdentity(e);c._by_idty[d]=
-c._by_idx[this.rowIdx]={idty:d,item:e};this._setOpen(a)})})):this._setOpen(a):this._setOpen(a):this._setOpen(a)},_setOpen:function(a){if(a&&this._tableRow&&f.contains(this._tableRow,"dojoxGridNoChildren"))this._setOpen(!1);else{this.expandoInner.innerHTML=a?"-":"+";f.remove(this.domNode,"dojoxGridExpandoLoading");f.toggle(this.domNode,"dojoxGridExpandoOpened",a);if(this._tableRow){f.toggle(this._tableRow,"dojoxGridRowCollapsed",!a);var c=h.get(this._tableRow,"dojoxTreeGridBaseClasses"),b="",b=a?x.trim((" "+
-c+" ").replace(" dojoxGridRowCollapsed "," ")):0>(" "+c+" ").indexOf(" dojoxGridRowCollapsed ")?c+(c?" ":"")+"dojoxGridRowCollapsed":c;h.set(this._tableRow,"dojoxTreeGridBaseClasses",b)}c=this.open!==a;this.open=a;this.expandoCell&&this.itemId&&(this.expandoCell.openStates[this.itemId]=a);var b=this.view,e=b.grid;this.toggleClass&&c&&(!this._tableRow||!this._tableRow.style.display)&&this._toggleRows(this.toggleClass,a);b&&(this._initialized&&0<=this.rowIdx)&&(e.rowHeightChanged(this.rowIdx),e.postresize(),
-b.hasVScrollbar(!0));this._initialized=!0}},onToggle:function(a){this.setOpen(!this.open);E.stop(a)},setRowNode:function(a,c,b){if(0>this.cellIdx||!this.itemId)return!1;this._initialized=!1;this.view=b;this.rowNode=c;this.rowIdx=a;this.expandoCell=b.structure.cells[0][this.cellIdx];if((a=this.domNode)&&a.parentNode&&a.parentNode.parentNode)this._tableRow=a.parentNode.parentNode;this.open=this.expandoCell.getOpenState(this.itemId);b.grid.treeModel&&(D.set(this.domNode,"marginLeft",18*this.level+"px"),
-this.domNode.parentNode&&D.set(this.domNode.parentNode,"backgroundPosition",18*this.level+3+"px"));this.setOpen(this.open);return!0}});q=l("dojox.grid._TreeContentBuilder",K._ContentBuilder,{generateHtml:function(a,c){var b=this.getTableArray(),e=this.view,t=e.structure.cells[0],d=this.grid.getItem(c),m=this.grid,r=this.grid.store;L.fire(this.view,"onBeforeRow",[c,[t]]);var B=function(a,c,d,f,g,h){if(h){var y=b.length;f=f||[];var l=f.join("|"),z=f[f.length-1],k=z+(d?" dojoxGridSummaryRow":"");m.treeModel&&
-(c&&!m.treeModel.mayHaveChildren(c))&&(k+=" dojoxGridNoChildren");b.push('\x3ctr style\x3d"" class\x3d"'+k+'" dojoxTreeGridPath\x3d"'+g.join("/")+'" dojoxTreeGridBaseClasses\x3d"'+k+'"\x3e');for(var q=a+1,k=null,u=0,n;n=t[u];u++){var A=n.markup,s=n.customClasses=[],x=n.customStyles=[];A[5]=n.formatAtLevel(g,c,a,d,z,s);A[1]=s.join(" ");A[3]=x.join(";");b.push.apply(b,A);!k&&(n.level===q&&n.parentCell)&&(k=n.parentCell)}b.push("\x3c/tr\x3e");c&&(r&&r.isItem(c))&&(u=r.getIdentity(c),"undefined"==typeof m._by_idty_paths[u]&&
-(m._by_idty_paths[u]=g.join("/")));var v,p=g.concat([]);m.treeModel&&c?m.treeModel.mayHaveChildren(c)&&(d=e.structure.cells[0][m.expandoCell||0],v=d.getOpenState(c)&&h,d=new C.grid.TreePath(g.join("/"),m),d=d.children(!0)||[],w.forEach(d,function(a,b){var d=l.split("|");d.push(d[d.length-1]+"-"+b);p.push(b);B(q,a,!1,d,p,v);p.pop()})):c&&k&&!d?(d=e.structure.cells[0][k.level],v=d.getOpenState(c)&&h,r.hasAttribute(c,k.field)?(h=l.split("|"),h.pop(),d=new C.grid.TreePath(g.join("/"),m),d=d.children(!0)||
-[],d.length?(b[y]='\x3ctr class\x3d"'+h.join(" ")+' dojoxGridExpandoRow" dojoxTreeGridPath\x3d"'+g.join("/")+'"\x3e',w.forEach(d,function(a,b){var d=l.split("|");d.push(d[d.length-1]+"-"+b);p.push(b);B(q,a,!1,d,p,v);p.pop()}),p.push(d.length),B(a,c,!0,f,p,v)):b[y]='\x3ctr class\x3d"'+z+' dojoxGridNoChildren" dojoxTreeGridPath\x3d"'+g.join("/")+'"\x3e'):r.isItemLoaded(c)?b[y]='\x3ctr class\x3d"'+z+' dojoxGridNoChildren" dojoxTreeGridPath\x3d"'+g.join("/")+'"\x3e':b[0]=b[0].replace("dojoxGridRowTable",
-"dojoxGridRowTable dojoxGridRowTableNeedsRowUpdate")):c&&(!d&&1<f.length)&&(b[y]='\x3ctr class\x3d"'+f[f.length-2]+'" dojoxTreeGridPath\x3d"'+g.join("/")+'"\x3e')}else-1==b[0].indexOf("dojoxGridRowTableNeedsRowUpdate")&&(b[0]=b[0].replace("dojoxGridRowTable","dojoxGridRowTable dojoxGridRowTableNeedsRowUpdate"))};B(0,d,!1,["dojoxGridRowToggle-"+c],[c],!0);b.push("\x3c/table\x3e");return b.join("")},findTarget:function(a,c){for(var b=a;b&&b!=this.domNode&&!(b.tagName&&"tr"==b.tagName.toLowerCase());)b=
-b.parentNode;return b!=this.domNode?b:null},getCellNode:function(a,c){var b=g("td[idx\x3d'"+c+"']",a)[0];if(b&&b.parentNode&&!f.contains(b.parentNode,"dojoxGridSummaryRow"))return b},decorateEvent:function(a){a.rowNode=this.findRowTarget(a.target);if(!a.rowNode)return!1;a.rowIndex=h.get(a.rowNode,"dojoxTreeGridPath");this.baseDecorateEvent(a);a.cell=this.grid.getCell(a.cellIndex);return!0}});return l("dojox.grid._TreeView",J,{_contentBuilderClass:q,_onDndDrop:function(a,c,b){this.grid&&this.grid.aggregator&&
-this.grid.aggregator.clearSubtotalCache();this.inherited(arguments)},postCreate:function(){this.inherited(arguments);this.connect(this.grid,"_cleanupExpandoCache","_cleanupExpandoCache")},_cleanupExpandoCache:function(a,c,b){if(-1!=a)if(w.forEach(this.grid.layout.cells,function(a){"undefined"!=typeof a.openStates&&c in a.openStates&&delete a.openStates[c]}),"string"==typeof a&&-1<a.indexOf("/")){var e=new C.grid.TreePath(a,this.grid);for(a=e.parent();a;)e=a,a=e.parent();if(e=e.item())if(e=this.grid.store.getIdentity(e),
-"undefined"!=typeof this._expandos[e]){for(var f in this._expandos[e])(a=this._expandos[e][f])&&a.destroy(),delete this._expandos[e][f];delete this._expandos[e]}}else{for(f in this._expandos)if("undefined"!=typeof this._expandos[f])for(e in this._expandos[f])(a=this._expandos[f][e])&&a.destroy();this._expandos={}}},postMixInProperties:function(){this.inherited(arguments);this._expandos={}},onBeforeRow:function(a,c){var b=this.grid;b._by_idx&&(b._by_idx[a]&&b._by_idx[a].idty)&&(b=b._by_idx[a].idty,
-this._expandos[b]=this._expandos[b]||{});this.inherited(arguments)},onAfterRow:function(a,c,b){w.forEach(g("span.dojoxGridExpando",b),function(d){if(d&&d.parentNode){var c=d.getAttribute("toggleClass"),e,f,g=this.grid;g._by_idx&&(g._by_idx[a]&&g._by_idx[a].idty)&&(e=g._by_idx[a].idty,f=this._expandos[e][c]);f?(F.place(f.domNode,d,"replace"),f.itemId=d.getAttribute("itemId"),f.cellIdx=parseInt(d.getAttribute("cellIdx"),10),isNaN(f.cellIdx)&&(f.cellIdx=-1)):e&&(f=G.parse(d.parentNode)[0],this._expandos[e][c]=
-f);f&&!f.setRowNode(a,b,this)&&f.domNode.parentNode.removeChild(f.domNode)}},this);var e=!1,l=this;g("tr[dojoxTreeGridPath]",b).forEach(function(a){f.toggle(a,"dojoxGridSubRowAlt",e);h.set(a,"dojoxTreeGridBaseClasses",a.className);e=!e;l.grid.rows.styleRowNode(h.get(a,"dojoxTreeGridPath"),a)});this.inherited(arguments)},updateRowStyles:function(a){var c=g("tr[dojoxTreeGridPath\x3d'"+a+"']",this.domNode);c.length&&this.styleRowNode(a,c[0])},getCellNode:function(a,c){var b=g("tr[dojoxTreeGridPath\x3d'"+
-a+"']",this.domNode)[0];if(b)return this.content.getCellNode(b,c)},destroy:function(){this._cleanupExpandoCache();this.inherited(arguments)}})});
-//@ sourceMappingURL=_TreeView.js.map
+define([
+	"dijit/registry",
+	"../main",
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/dom-attr",
+	"dojo/dom-class",
+	"dojo/dom-style",
+	"dojo/dom-construct",
+	"dojo/query",
+	"dojo/parser",
+	"dojo/text!./resources/Expando.html",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"./_View",
+	"./_Builder",
+	"./util"
+], function(dijit, dojox, declare, array, lang, event, domAttr, domClass, 
+	domStyle, domCtr, query, parser, template, _Widget, _TemplatedMixin, _View, _Builder, util){
+
+declare("dojox.grid._Expando", [ _Widget, _TemplatedMixin ], {
+	open: false,
+	toggleClass: "",
+	itemId: "",
+	cellIdx: -1,
+	view: null,
+	rowNode: null,
+	rowIdx: -1,
+	expandoCell: null,
+	level: 0,
+	templateString: template,
+	_toggleRows: function(toggleClass, open){
+		if(!toggleClass || !this.rowNode){ return; }
+		if(query("table.dojoxGridRowTableNeedsRowUpdate").length){
+			if(this._initialized){
+				this.view.grid.updateRow(this.rowIdx);
+			}
+			return;
+		}
+		var self = this;
+		var g = this.view.grid;
+		if(g.treeModel){
+			var p = this._tableRow ? domAttr.get(this._tableRow, "dojoxTreeGridPath") : "";
+			if(p){
+				query("tr[dojoxTreeGridPath^=\"" + p + "/\"]", this.rowNode).forEach(function(n){
+					var en = query(".dojoxGridExpando", n)[0];
+					if(en && en.parentNode && en.parentNode.parentNode &&
+								!domClass.contains(en.parentNode.parentNode, "dojoxGridNoChildren")){
+						var ew = dijit.byNode(en);
+						if(ew){
+							ew._toggleRows(toggleClass, ew.open&&open);
+						}
+					}
+					n.style.display = open ? "" : "none";
+				});
+			}
+		}else{
+			query("tr." + toggleClass, this.rowNode).forEach(function(n){
+				if(domClass.contains(n, "dojoxGridExpandoRow")){
+					var en = query(".dojoxGridExpando", n)[0];
+					if(en){
+						var ew = dijit.byNode(en);
+						var toggleClass = ew ? ew.toggleClass : en.getAttribute("toggleClass");
+						var wOpen = ew ? ew.open : self.expandoCell.getOpenState(en.getAttribute("itemId"));
+						self._toggleRows(toggleClass, wOpen&&open);
+					}
+				}
+				n.style.display = open ? "" : "none";
+			});
+		}
+	},
+	setOpen: function(open){
+		if(open && domClass.contains(this.domNode, "dojoxGridExpandoLoading")){
+			open = false;
+		}
+		var view = this.view;
+		var grid = view.grid;
+		var store = grid.store;
+		var treeModel = grid.treeModel;
+		var d = this;
+		var idx = this.rowIdx;
+		var me = grid._by_idx[idx];
+		if(!me){ return; }
+		if(treeModel && !this._loadedChildren){
+			if(open){
+				// Do this to make sure our children are fully-loaded
+				var itm = grid.getItem(domAttr.get(this._tableRow, "dojoxTreeGridPath"));
+				if(itm){
+					this.expandoInner.innerHTML = "o";
+					domClass.add(this.domNode, "dojoxGridExpandoLoading");
+					treeModel.getChildren(itm, function(items){
+						d._loadedChildren = true;
+						d._setOpen(open);
+					});
+				}else{
+					this._setOpen(open);
+				}
+			}else{
+				this._setOpen(open);
+			}
+		}else if(!treeModel && store){
+			if(open){
+				var data = grid._by_idx[this.rowIdx];
+				if(data&&!store.isItemLoaded(data.item)){
+					this.expandoInner.innerHTML = "o";
+					domClass.add(this.domNode, "dojoxGridExpandoLoading");
+					store.loadItem({
+						item: data.item,
+						onItem: lang.hitch(this, function(i){
+							var idty = store.getIdentity(i);
+							grid._by_idty[idty] = grid._by_idx[this.rowIdx] = { idty: idty, item: i };
+							this._setOpen(open);
+						})
+					});
+				}else{
+					this._setOpen(open);
+				}
+			}else{
+				this._setOpen(open);
+			}
+		}else{
+			this._setOpen(open);
+		}
+	},
+	_setOpen: function(open){
+		if(open && this._tableRow && domClass.contains(this._tableRow, "dojoxGridNoChildren")){
+			this._setOpen(false);
+			return;
+		}
+		this.expandoInner.innerHTML = open ? "-" : "+";
+		domClass.remove(this.domNode, "dojoxGridExpandoLoading");
+		domClass.toggle(this.domNode, "dojoxGridExpandoOpened", open);
+		if(this._tableRow){
+			domClass.toggle(this._tableRow, "dojoxGridRowCollapsed", !open);
+			var base = domAttr.get(this._tableRow, "dojoxTreeGridBaseClasses");
+			var new_base = "";
+			if(open){
+				new_base = lang.trim((" " + base + " ").replace(" dojoxGridRowCollapsed ", " "));
+			}else{
+				if((" " + base + " ").indexOf(' dojoxGridRowCollapsed ') < 0){
+					new_base = base + (base ? ' ' : '' ) + 'dojoxGridRowCollapsed';
+				}else{
+					new_base = base;
+				}
+			}
+			domAttr.set(this._tableRow, 'dojoxTreeGridBaseClasses', new_base);
+		}
+		var changed = (this.open !== open);
+		this.open = open;
+		if(this.expandoCell && this.itemId){
+			this.expandoCell.openStates[this.itemId] = open;
+		}
+		var v = this.view;
+		var g = v.grid;
+		if(this.toggleClass && changed){
+			if(!this._tableRow || !this._tableRow.style.display){
+				this._toggleRows(this.toggleClass, open);
+			}
+		}
+		if(v && this._initialized && this.rowIdx >= 0){
+			g.rowHeightChanged(this.rowIdx);
+			g.postresize();
+			v.hasVScrollbar(true);
+		}
+		this._initialized = true;
+	},
+	onToggle: function(e){
+		this.setOpen(!this.open);
+		event.stop(e);
+	},
+	setRowNode: function(rowIdx, rowNode, view){
+		if(this.cellIdx < 0 || !this.itemId){ return false; }
+		this._initialized = false;
+		this.view = view;
+		this.rowNode = rowNode;
+		this.rowIdx = rowIdx;
+		this.expandoCell = view.structure.cells[0][this.cellIdx];
+		var d = this.domNode;
+		if(d && d.parentNode && d.parentNode.parentNode){
+			this._tableRow = d.parentNode.parentNode;
+		}
+		this.open = this.expandoCell.getOpenState(this.itemId);
+		if(view.grid.treeModel){
+			// TODO: Rather than hard-code the 18px and 3px, we should probably
+			// calculate them based off css or something...  However, all the
+			// themes that we support use these values.
+			domStyle.set(this.domNode , "marginLeft" , (this.level * 18) + "px");
+			if(this.domNode.parentNode){
+				domStyle.set(this.domNode.parentNode, "backgroundPosition", ((this.level * 18) + (3)) + "px");
+			}
+		}
+		this.setOpen(this.open);
+		return true;
+	}
+});
+
+var _TreeContentBuilder = declare("dojox.grid._TreeContentBuilder", _Builder._ContentBuilder, {
+	generateHtml: function(inDataIndex, inRowIndex){
+		var
+			html = this.getTableArray(),
+			v = this.view,
+			row = v.structure.cells[0],
+			item = this.grid.getItem(inRowIndex),
+			grid = this.grid,
+			store = this.grid.store;
+
+		util.fire(this.view, "onBeforeRow", [inRowIndex, [row]]);
+		
+		var createRow = function(level, rowItem, summaryRow, toggleClasses, rowStack, shown){
+			if(!shown){
+				if(html[0].indexOf('dojoxGridRowTableNeedsRowUpdate') == -1){
+					html[0] = html[0].replace("dojoxGridRowTable", "dojoxGridRowTable dojoxGridRowTableNeedsRowUpdate");
+				}
+				return;
+			}
+			var rowNodeIdx = html.length;
+			toggleClasses = toggleClasses || [];
+			var tcJoin = toggleClasses.join('|');
+			var tcString = toggleClasses[toggleClasses.length - 1];
+			var clString = tcString + (summaryRow ? " dojoxGridSummaryRow" : "");
+			var sString = "";
+			if(grid.treeModel && rowItem && !grid.treeModel.mayHaveChildren(rowItem)){
+				clString += " dojoxGridNoChildren";
+			}
+			html.push('<tr style="' + sString + '" class="' + clString + '" dojoxTreeGridPath="' + rowStack.join('/') +  '" dojoxTreeGridBaseClasses="' + clString + '">');
+			var nextLevel = level + 1;
+			var parentCell = null;
+			for(var i=0, cell; (cell=row[i]); i++){
+				var m = cell.markup, cc = cell.customClasses = [], cs = cell.customStyles = [];
+				// content (format can fill in cc and cs as side-effects)
+				m[5] = cell.formatAtLevel(rowStack, rowItem, level, summaryRow, tcString, cc);
+				// classes
+				m[1] = cc.join(' ');
+				// styles
+				m[3] = cs.join(';');
+				// in-place concat
+				html.push.apply(html, m);
+				if(!parentCell && cell.level === nextLevel && cell.parentCell){
+					parentCell = cell.parentCell;
+				}
+			}
+			html.push('</tr>');
+			if(rowItem && store && store.isItem(rowItem)){
+				var idty = store.getIdentity(rowItem);
+				if(typeof grid._by_idty_paths[idty] == "undefined"){
+					grid._by_idty_paths[idty] = rowStack.join('/');
+				}
+			}
+			var expandoCell;
+			var parentOpen;
+			var path;
+			var values;
+			var iStack = rowStack.concat([]);
+			if(grid.treeModel && rowItem){
+				if(grid.treeModel.mayHaveChildren(rowItem)){
+					expandoCell = v.structure.cells[0][grid.expandoCell||0];
+					parentOpen = expandoCell.getOpenState(rowItem) && shown;
+					path = new dojox.grid.TreePath(rowStack.join('/'), grid);
+					values = path.children(true)||[];
+					array.forEach(values, function(cItm, idx){
+						var nToggle = tcJoin.split('|');
+						nToggle.push(nToggle[nToggle.length - 1] + "-" + idx);
+						iStack.push(idx);
+						createRow(nextLevel, cItm, false, nToggle, iStack, parentOpen);
+						iStack.pop();
+					});
+				}
+			}else if(rowItem && parentCell && !summaryRow){
+				expandoCell = v.structure.cells[0][parentCell.level];
+				parentOpen = expandoCell.getOpenState(rowItem) && shown;
+				if(store.hasAttribute(rowItem, parentCell.field)){
+					var tToggle = tcJoin.split('|');
+					tToggle.pop();
+					path = new dojox.grid.TreePath(rowStack.join('/'), grid);
+					values = path.children(true)||[];
+					if(values.length){
+						html[rowNodeIdx] = '<tr class="' + tToggle.join(' ') +' dojoxGridExpandoRow" dojoxTreeGridPath="' + rowStack.join('/') + '">';
+						array.forEach(values, function(cItm, idx){
+							var nToggle = tcJoin.split('|');
+							nToggle.push(nToggle[nToggle.length - 1] + "-" + idx);
+							iStack.push(idx);
+							createRow(nextLevel, cItm, false, nToggle, iStack, parentOpen);
+							iStack.pop();
+						});
+						iStack.push(values.length);
+						createRow(level, rowItem, true, toggleClasses, iStack, parentOpen);
+					}else{
+						html[rowNodeIdx] = '<tr class="' + tcString + ' dojoxGridNoChildren" dojoxTreeGridPath="' + rowStack.join('/') + '">';
+					}
+				}else{
+					if(!store.isItemLoaded(rowItem)){
+						html[0] = html[0].replace("dojoxGridRowTable", "dojoxGridRowTable dojoxGridRowTableNeedsRowUpdate");
+					}else{
+						html[rowNodeIdx] = '<tr class="' + tcString + ' dojoxGridNoChildren" dojoxTreeGridPath="' + rowStack.join('/') + '">';
+					}
+				}
+			}else if(rowItem && !summaryRow && toggleClasses.length > 1){
+				html[rowNodeIdx] = '<tr class="' + toggleClasses[toggleClasses.length - 2] + '" dojoxTreeGridPath="' + rowStack.join('/') + '">';
+			}
+		};
+		createRow(0, item, false, ["dojoxGridRowToggle-" + inRowIndex], [inRowIndex], true);
+		html.push('</table>');
+		return html.join(''); // String
+	},
+	findTarget: function(inSource, inTag){
+		var n = inSource;
+		while(n && (n!=this.domNode)){
+			if(n.tagName && n.tagName.toLowerCase() == 'tr'){
+				break;
+			}
+			n = n.parentNode;
+		}
+		return (n != this.domNode) ? n : null;
+	},
+	getCellNode: function(inRowNode, inCellIndex){
+		var node = query("td[idx='" + inCellIndex + "']", inRowNode)[0];
+		if(node&&node.parentNode&&!domClass.contains(node.parentNode, "dojoxGridSummaryRow")){
+			return node;
+		}
+	},
+	decorateEvent: function(e){
+		e.rowNode = this.findRowTarget(e.target);
+		if(!e.rowNode){return false;}
+		e.rowIndex = domAttr.get(e.rowNode, 'dojoxTreeGridPath');
+		this.baseDecorateEvent(e);
+		e.cell = this.grid.getCell(e.cellIndex);
+		return true; // Boolean
+	}
+});
+
+return declare("dojox.grid._TreeView", _View, {
+	_contentBuilderClass: _TreeContentBuilder,
+	_onDndDrop: function(source, nodes, copy){
+		if(this.grid && this.grid.aggregator){
+			this.grid.aggregator.clearSubtotalCache();
+		}
+		this.inherited(arguments);
+	},
+	postCreate: function(){
+		this.inherited(arguments);
+		this.connect(this.grid, '_cleanupExpandoCache', '_cleanupExpandoCache');
+	},
+	_cleanupExpandoCache: function(index, identity, item){
+		if(index == -1){
+			return;
+		}
+		array.forEach(this.grid.layout.cells, function(cell){
+			if(typeof cell['openStates'] != 'undefined'){
+				if(identity in cell.openStates){
+					delete cell.openStates[identity];
+				}
+			}
+		});
+		if(typeof index == "string" && index.indexOf('/') > -1){
+			var path = new dojox.grid.TreePath(index, this.grid);
+			var ppath = path.parent();
+			while(ppath){
+				path = ppath;
+				ppath = path.parent();
+			}
+			var pitem = path.item();
+			if(!pitem){
+				return;
+			}
+			var idty = this.grid.store.getIdentity(pitem);
+			if(typeof this._expandos[idty] != 'undefined'){
+				for(var i in this._expandos[idty]){
+					var exp = this._expandos[idty][i];
+					if(exp){
+						exp.destroy();
+					}
+					delete this._expandos[idty][i];
+				}
+				delete this._expandos[idty];
+			}
+		}else{
+			for(var i in this._expandos){
+				if(typeof this._expandos[i] != 'undefined'){
+					for(var j in this._expandos[i]){
+						var exp = this._expandos[i][j];
+						if(exp){
+							exp.destroy();
+						}
+					}
+				}
+			}
+			this._expandos = {};
+		}
+	},
+	postMixInProperties: function(){
+		this.inherited(arguments);
+		this._expandos = {};
+	},
+	onBeforeRow: function(inRowIndex, cells){
+		// Save off our expando if we have one so we don't have to create it
+		// again
+		var g = this.grid;
+		if(g._by_idx && g._by_idx[inRowIndex] && g._by_idx[inRowIndex].idty){
+			var idty = g._by_idx[inRowIndex].idty;
+			this._expandos[idty] = this._expandos[idty] || {};
+		}
+		this.inherited(arguments);
+	},
+	onAfterRow: function(inRowIndex, cells, inRowNode){
+		array.forEach(query("span.dojoxGridExpando", inRowNode), function(n){
+			if(n && n.parentNode){
+				// Either create our expando or put the existing expando back
+				// into place
+				var tc = n.getAttribute("toggleClass");
+				var idty;
+				var expando;
+				var g = this.grid;
+				if(g._by_idx && g._by_idx[inRowIndex] && g._by_idx[inRowIndex].idty){
+					idty = g._by_idx[inRowIndex].idty;
+					expando = this._expandos[idty][tc];
+				}
+				if(expando){
+					domCtr.place(expando.domNode, n, "replace");
+					expando.itemId = n.getAttribute("itemId");
+					expando.cellIdx = parseInt(n.getAttribute("cellIdx"), 10);
+					if(isNaN(expando.cellIdx)){
+						expando.cellIdx = -1;
+					}
+				}else{
+					if(idty){
+						expando = parser.parse(n.parentNode)[0];
+						this._expandos[idty][tc] = expando;
+					}
+				}
+				if(expando && !expando.setRowNode(inRowIndex, inRowNode, this)){
+					expando.domNode.parentNode.removeChild(expando.domNode);
+				}
+			}
+		}, this);
+		var alt = false;
+		var self = this;
+		query("tr[dojoxTreeGridPath]", inRowNode).forEach(function(n){
+			domClass.toggle(n, "dojoxGridSubRowAlt", alt);
+			domAttr.set(n, "dojoxTreeGridBaseClasses", n.className);
+			alt = !alt;
+			self.grid.rows.styleRowNode(domAttr.get(n, 'dojoxTreeGridPath'), n);
+		});
+		this.inherited(arguments);
+	},
+	updateRowStyles: function(inRowIndex){
+		var rowNodes = query("tr[dojoxTreeGridPath='" + inRowIndex + "']", this.domNode);
+		if(rowNodes.length){
+			this.styleRowNode(inRowIndex, rowNodes[0]);
+		}
+	},
+	getCellNode: function(inRowIndex, inCellIndex){
+		var row = query("tr[dojoxTreeGridPath='" + inRowIndex + "']", this.domNode)[0];
+		if(row){
+			return this.content.getCellNode(row, inCellIndex);
+		}
+	},
+	destroy: function(){
+		this._cleanupExpandoCache();
+		this.inherited(arguments);
+	}
+});
+});

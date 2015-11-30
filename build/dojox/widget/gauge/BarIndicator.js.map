@@ -1,8 +1,0 @@
-{
-"version":3,
-"file":"BarIndicator.js",
-"lineCount":1,
-"mappings":"A,SACAA,MAAA,qGAA6G,QAAA,CAASC,CAAT,CAAcC,CAAd,CAAoBC,CAApB,EAC7GF,CAAAG,QAAA,mCACAH,EAAAI,QAAA,6BAEAF,EAAAG,OAAAC,MAAAC,aAJ6G,CAI3EL,CAAAM,OAAAD,aAJ2E,CAA7G;",
-"sources":["BarIndicator.js.uncompressed.js"],
-"names":["define","dojo","dijit","dojox","provide","require","widget","gauge","BarIndicator","gauges"]
-}

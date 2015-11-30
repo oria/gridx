@@ -1,10 +1,293 @@
-//>>built
-require({cache:{"url:dijit/form/templates/DropDownBox.html":'\x3cdiv class\x3d"dijit dijitReset dijitInline dijitLeft"\r\n\tid\x3d"widget_${id}"\r\n\trole\x3d"combobox"\r\n\taria-haspopup\x3d"true"\r\n\tdata-dojo-attach-point\x3d"_popupStateNode"\r\n\t\x3e\x3cdiv class\x3d\'dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer\'\r\n\t\tdata-dojo-attach-point\x3d"_buttonNode" role\x3d"presentation"\r\n\t\t\x3e\x3cinput class\x3d"dijitReset dijitInputField dijitArrowButtonInner" value\x3d"\x26#9660; " type\x3d"text" tabIndex\x3d"-1" readonly\x3d"readonly" role\x3d"button presentation" aria-hidden\x3d"true"\r\n\t\t\t${_buttonInputDisabled}\r\n\t/\x3e\x3c/div\r\n\t\x3e\x3cdiv class\x3d\'dijitReset dijitValidationContainer\'\r\n\t\t\x3e\x3cinput class\x3d"dijitReset dijitInputField dijitValidationIcon dijitValidationInner" value\x3d"\x26#935; " type\x3d"text" tabIndex\x3d"-1" readonly\x3d"readonly" role\x3d"presentation"\r\n\t/\x3e\x3c/div\r\n\t\x3e\x3cdiv class\x3d"dijitReset dijitInputField dijitInputContainer"\r\n\t\t\x3e\x3cinput class\x3d\'dijitReset dijitInputInner\' ${!nameAttrSetting} type\x3d"text" autocomplete\x3d"off"\r\n\t\t\tdata-dojo-attach-point\x3d"textbox,focusNode" role\x3d"textbox"\r\n\t/\x3e\x3c/div\r\n\x3e\x3c/div\x3e\r\n'}});
-define("dijit/form/_DateTimeTextBox","dojo/date dojo/date/locale dojo/date/stamp dojo/_base/declare dojo/_base/lang ./RangeBoundTextBox ../_HasDropDown dojo/text!./templates/DropDownBox.html".split(" "),function(g,h,f,k,e,l,m,n){new Date("X");return k("dijit.form._DateTimeTextBox",[l,m],{templateString:n,hasDownArrow:!0,cssStateNodes:{_buttonNode:"dijitDownArrowButton"},pattern:h.regexp,datePackage:"",postMixInProperties:function(){this.inherited(arguments);this._set("type","text")},compare:function(a,
-b){var c=this._isInvalidDate(a),d=this._isInvalidDate(b);return c?d?0:-1:d?1:g.compare(a,b,this._selector)},autoWidth:!0,format:function(a,b){return!a?"":this.dateLocaleModule.format(a,b)},parse:function(a,b){return this.dateLocaleModule.parse(a,b)||(this._isEmpty(a)?null:void 0)},serialize:function(a,b){a.toGregorian&&(a=a.toGregorian());return f.toISOString(a,b)},dropDownDefaultValue:new Date,value:new Date(""),_blankValue:null,popupClass:"",_selector:"",constructor:function(a){this.dateModule=
-a.datePackage?e.getObject(a.datePackage,!1):g;this.dateClassObj=this.dateModule.Date||Date;this.dateLocaleModule=a.datePackage?e.getObject(a.datePackage+".locale",!1):h;this._set("pattern",this.dateLocaleModule.regexp);this._invalidDate=this.constructor.prototype.value.toString()},buildRendering:function(){this.inherited(arguments);this.hasDownArrow||(this._buttonNode.style.display="none");this.hasDownArrow||(this._buttonNode=this.domNode,this.baseClass+=" dijitComboBoxOpenOnClick")},_setConstraintsAttr:function(a){a.selector=
-this._selector;a.fullYear=!0;var b=f.fromISOString;"string"==typeof a.min&&(a.min=b(a.min));"string"==typeof a.max&&(a.max=b(a.max));this.inherited(arguments)},_isInvalidDate:function(a){return!a||isNaN(a)||"object"!=typeof a||a.toString()==this._invalidDate},_setValueAttr:function(a,b,c){void 0!==a&&("string"==typeof a&&(a=f.fromISOString(a)),this._isInvalidDate(a)&&(a=null),a instanceof Date&&!(this.dateClassObj instanceof Date)&&(a=new this.dateClassObj(a)));this.inherited(arguments);this.value instanceof
-Date&&(this.filterString="");this.dropDown&&this.dropDown.set("value",a,!1)},_set:function(a,b){var c=this._get("value");"value"==a&&c instanceof Date&&0==this.compare(b,c)||this.inherited(arguments)},_setDropDownDefaultValueAttr:function(a){this._isInvalidDate(a)&&(a=new this.dateClassObj);this._set("dropDownDefaultValue",a)},openDropDown:function(a){this.dropDown&&this.dropDown.destroy();var b=e.isString(this.popupClass)?e.getObject(this.popupClass,!1):this.popupClass,c=this,d=this.get("value");
-this.dropDown=new b({onChange:function(a){c.set("value",a,!0)},id:this.id+"_popup",dir:c.dir,lang:c.lang,value:d,textDir:c.textDir,currentFocus:!this._isInvalidDate(d)?d:this.dropDownDefaultValue,constraints:c.constraints,filterString:c.filterString,datePackage:c.params.datePackage,isDisabledDate:function(a){return!c.rangeCheck(a,c.constraints)}});this.inherited(arguments)},_getDisplayedValueAttr:function(){return this.textbox.value},_setDisplayedValueAttr:function(a,b){this._setValueAttr(this.parse(a,
-this.constraints),b,a)}})});
-//@ sourceMappingURL=_DateTimeTextBox.js.map
+define([
+	"dojo/date", // date date.compare
+	"dojo/date/locale", // locale.regexp
+	"dojo/date/stamp", // stamp.fromISOString stamp.toISOString
+	"dojo/_base/declare", // declare
+	"dojo/_base/lang", // lang.getObject
+	"./RangeBoundTextBox",
+	"../_HasDropDown",
+	"dojo/text!./templates/DropDownBox.html"
+], function(date, locale, stamp, declare, lang, RangeBoundTextBox, _HasDropDown, template){
+
+	// module:
+	//		dijit/form/_DateTimeTextBox
+
+	new Date("X"); // workaround for #11279, new Date("") == NaN
+
+	var _DateTimeTextBox = declare("dijit.form._DateTimeTextBox", [RangeBoundTextBox, _HasDropDown], {
+		// summary:
+		//		Base class for validating, serializable, range-bound date or time text box.
+
+		templateString: template,
+
+		// hasDownArrow: [const] Boolean
+		//		Set this textbox to display a down arrow button, to open the drop down list.
+		hasDownArrow: true,
+
+		// Set classes like dijitDownArrowButtonHover depending on mouse action over button node
+		cssStateNodes: {
+			"_buttonNode": "dijitDownArrowButton"
+		},
+
+		/*=====
+		// constraints: _DateTimeTextBox.__Constraints
+		//		Despite the name, this parameter specifies both constraints on the input
+		//		(including starting/ending dates/times allowed) as well as
+		//		formatting options like whether the date is displayed in long (ex: December 25, 2005)
+		//		or short (ex: 12/25/2005) format.  See `dijit/form/_DateTimeTextBox.__Constraints` for details.
+		constraints: {},
+		======*/
+
+		// The constraints without the min/max properties. Used by the compare() method
+		_unboundedConstraints: {},
+
+		// Override ValidationTextBox.pattern.... we use a reg-ex generating function rather
+		// than a straight regexp to deal with locale  (plus formatting options too?)
+		pattern: locale.regexp,
+
+		// datePackage: String
+		//		JavaScript namespace to find calendar routines.	 If unspecified, uses Gregorian calendar routines
+		//		at dojo/date and dojo/date/locale.
+		datePackage: "",
+		//		TODO: for 2.0, replace datePackage with dateModule and dateLocalModule attributes specifying MIDs,
+		//		or alternately just get rid of this completely and tell user to use module ID remapping
+		//		via require
+
+		postMixInProperties: function(){
+			this.inherited(arguments);
+			this._set("type", "text"); // in case type="date"|"time" was specified which messes up parse/format
+		},
+
+		// Override _FormWidget.compare() to work for dates/times
+		compare: function(/*Date*/ val1, /*Date*/ val2){
+			var isInvalid1 = this._isInvalidDate(val1);
+			var isInvalid2 = this._isInvalidDate(val2);
+			if (isInvalid1 || isInvalid2){
+				return (isInvalid1 && isInvalid2) ? 0 : (!isInvalid1 ? 1 : -1);
+			}
+			// Format and parse the values before comparing them to make sure that only the parts of the
+			// date that will make the "round trip" get compared.
+			var fval1 = this.format(val1, this._unboundedConstraints),
+				fval2 = this.format(val2, this._unboundedConstraints),
+				pval1 = this.parse(fval1, this._unboundedConstraints),
+				pval2 = this.parse(fval2, this._unboundedConstraints);
+
+			return fval1 == fval2 ? 0 : date.compare(pval1, pval2, this._selector);
+		},
+
+		// flag to _HasDropDown to make drop down Calendar width == <input> width
+		autoWidth: true,
+
+		format: function(/*Date*/ value, /*locale.__FormatOptions*/ constraints){
+			// summary:
+			//		Formats the value as a Date, according to specified locale (second argument)
+			// tags:
+			//		protected
+			if(!value){ return ''; }
+			return this.dateLocaleModule.format(value, constraints);
+		},
+
+		"parse": function(/*String*/ value, /*locale.__FormatOptions*/ constraints){
+			// summary:
+			//		Parses as string as a Date, according to constraints
+			// tags:
+			//		protected
+
+			return this.dateLocaleModule.parse(value, constraints) || (this._isEmpty(value) ? null : undefined);	 // Date
+		},
+
+		// Overrides ValidationTextBox.serialize() to serialize a date in canonical ISO format.
+		serialize: function(/*anything*/ val, /*Object?*/ options){
+			if(val.toGregorian){
+				val = val.toGregorian();
+			}
+			return stamp.toISOString(val, options);
+		},
+
+		// dropDownDefaultValue: Date
+		//		The default value to focus in the popupClass widget when the textbox value is empty.
+		dropDownDefaultValue : new Date(),
+
+		// value: Date
+		//		The value of this widget as a JavaScript Date object.  Use get("value") / set("value", val) to manipulate.
+		//		When passed to the parser in markup, must be specified according to `dojo/date/stamp.fromISOString()`
+		value: new Date(""),	// value.toString()="NaN"
+
+		_blankValue: null,	// used by filter() when the textbox is blank
+
+		// popupClass: [protected extension] String
+		//		Name of the popup widget class used to select a date/time.
+		//		Subclasses should specify this.
+		popupClass: "", // default is no popup = text only
+
+
+		// _selector: [protected extension] String
+		//		Specifies constraints.selector passed to dojo.date functions, should be either
+		//		"date" or "time".
+		//		Subclass must specify this.
+		_selector: "",
+
+		constructor: function(params /*===== , srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Hash of initialization parameters for widget, including scalar values (like title, duration etc.)
+			//		and functions, typically callbacks like onClick.
+			//		The hash can contain any of the widget's properties, excluding read-only properties.
+			// srcNodeRef: DOMNode|String?
+			//		If a srcNodeRef (DOM node) is specified, replace srcNodeRef with my generated DOM tree
+
+			params = params || {};
+			this.dateModule = params.datePackage ? lang.getObject(params.datePackage, false) : date;
+			this.dateClassObj = this.dateModule.Date || Date;
+			if(!(this.dateClassObj instanceof Date)){
+				this.value = new this.dateClassObj(this.value);
+			}
+			this.dateLocaleModule = params.datePackage ? lang.getObject(params.datePackage+".locale", false) : locale;
+			this._set('pattern', this.dateLocaleModule.regexp);
+			this._invalidDate = this.constructor.prototype.value.toString();
+		},
+
+		buildRendering: function(){
+			this.inherited(arguments);
+
+			if(!this.hasDownArrow){
+				this._buttonNode.style.display = "none";
+			}
+
+			// If hasDownArrow is false, we basically just want to treat the whole widget as the
+			// button.
+			if(!this.hasDownArrow){
+				this._buttonNode = this.domNode;
+				this.baseClass += " dijitComboBoxOpenOnClick";
+			}
+		},
+
+		_setConstraintsAttr: function(/*Object*/ constraints){
+			constraints.selector = this._selector;
+			constraints.fullYear = true; // see #5465 - always format with 4-digit years
+			var fromISO = stamp.fromISOString;
+			if(typeof constraints.min == "string"){
+				constraints.min = fromISO(constraints.min);
+				if(!(this.dateClassObj instanceof Date)){
+					constraints.min = new this.dateClassObj(constraints.min);
+				}
+			}
+			if(typeof constraints.max == "string"){
+				constraints.max = fromISO(constraints.max);
+				if(!(this.dateClassObj instanceof Date)){
+					constraints.max = new this.dateClassObj(constraints.max);
+				}
+			}
+			this.inherited(arguments);
+			this._unboundedConstraints = lang.mixin({}, this.constraints, {min: null, max: null});
+		},
+
+		_isInvalidDate: function(/*Date*/ value){
+			// summary:
+			//		Runs various tests on the value, checking for invalid conditions
+			// tags:
+			//		private
+			return !value || isNaN(value) || typeof value != "object" || value.toString() == this._invalidDate;
+		},
+
+		_setValueAttr: function(/*Date|String*/ value, /*Boolean?*/ priorityChange, /*String?*/ formattedValue){
+			// summary:
+			//		Sets the date on this textbox. Note: value can be a JavaScript Date literal or a string to be parsed.
+			if(value !== undefined){
+				if(typeof value == "string"){
+					value = stamp.fromISOString(value);
+				}
+				if(this._isInvalidDate(value)){
+					value = null;
+				}
+				if(value instanceof Date && !(this.dateClassObj instanceof Date)){
+					value = new this.dateClassObj(value);
+				}
+			}
+			this.inherited(arguments, [value, priorityChange, formattedValue]);
+			if(this.value instanceof Date){
+				this.filterString = "";
+			}
+			if(this.dropDown){
+				this.dropDown.set('value', value, false);
+			}
+		},
+
+		_set: function(attr, value){
+			// Avoid spurious watch() notifications when value is changed to new Date object w/the same value
+			if(attr == "value"){
+				if(value instanceof Date && !(this.dateClassObj instanceof Date)){
+					value = new this.dateClassObj(value);
+				}
+				var oldValue = this._get("value");
+				if(oldValue instanceof this.dateClassObj && this.compare(value, oldValue) == 0){
+					return;
+				}
+			}
+			this.inherited(arguments);
+		},
+
+		_setDropDownDefaultValueAttr: function(/*Date*/ val){
+			if(this._isInvalidDate(val)){
+				// convert null setting into today's date, since there needs to be *some* default at all times.
+				 val = new this.dateClassObj();
+			}
+			this._set("dropDownDefaultValue", val);
+		},
+
+		openDropDown: function(/*Function*/ callback){
+			// rebuild drop down every time, so that constraints get copied (#6002)
+			if(this.dropDown){
+				this.dropDown.destroy();
+			}
+			var PopupProto = lang.isString(this.popupClass) ? lang.getObject(this.popupClass, false) : this.popupClass,
+				textBox = this,
+				value = this.get("value");
+			this.dropDown = new PopupProto({
+				onChange: function(value){
+					// this will cause InlineEditBox and other handlers to do stuff so make sure it's last
+					textBox.set('value', value, true);
+				},
+				id: this.id + "_popup",
+				dir: textBox.dir,
+				lang: textBox.lang,
+				value: value,
+				textDir: textBox.textDir,
+				currentFocus: !this._isInvalidDate(value) ? value : this.dropDownDefaultValue,
+				constraints: textBox.constraints,
+				filterString: textBox.filterString, // for TimeTextBox, to filter times shown
+				datePackage: textBox.datePackage,
+				isDisabledDate: function(/*Date*/ date){
+					// summary:
+					//		disables dates outside of the min/max of the _DateTimeTextBox
+					return !textBox.rangeCheck(date, textBox.constraints);
+				}
+			});
+
+			this.inherited(arguments);
+		},
+
+		_getDisplayedValueAttr: function(){
+			return this.textbox.value;
+		},
+
+		_setDisplayedValueAttr: function(/*String*/ value, /*Boolean?*/ priorityChange){
+			this._setValueAttr(this.parse(value, this.constraints), priorityChange, value);
+		}
+	});
+
+
+	/*=====
+	 _DateTimeTextBox.__Constraints = declare([RangeBoundTextBox.__Constraints, locale.__FormatOptions], {
+		 // summary:
+		 //		Specifies both the rules on valid/invalid values (first/last date/time allowed),
+		 //		and also formatting options for how the date/time is displayed.
+		 // example:
+		 //		To restrict to dates within 2004, displayed in a long format like "December 25, 2005":
+		 //	|		{min:'2004-01-01',max:'2004-12-31', formatLength:'long'}
+	 });
+	 =====*/
+
+	return _DateTimeTextBox;
+});

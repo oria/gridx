@@ -1,7 +1,147 @@
-//>>built
-require({cache:{"url:dijit/form/templates/DropDownBox.html":'\x3cdiv class\x3d"dijit dijitReset dijitInline dijitLeft"\r\n\tid\x3d"widget_${id}"\r\n\trole\x3d"combobox"\r\n\taria-haspopup\x3d"true"\r\n\tdata-dojo-attach-point\x3d"_popupStateNode"\r\n\t\x3e\x3cdiv class\x3d\'dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton dijitArrowButtonContainer\'\r\n\t\tdata-dojo-attach-point\x3d"_buttonNode" role\x3d"presentation"\r\n\t\t\x3e\x3cinput class\x3d"dijitReset dijitInputField dijitArrowButtonInner" value\x3d"\x26#9660; " type\x3d"text" tabIndex\x3d"-1" readonly\x3d"readonly" role\x3d"button presentation" aria-hidden\x3d"true"\r\n\t\t\t${_buttonInputDisabled}\r\n\t/\x3e\x3c/div\r\n\t\x3e\x3cdiv class\x3d\'dijitReset dijitValidationContainer\'\r\n\t\t\x3e\x3cinput class\x3d"dijitReset dijitInputField dijitValidationIcon dijitValidationInner" value\x3d"\x26#935; " type\x3d"text" tabIndex\x3d"-1" readonly\x3d"readonly" role\x3d"presentation"\r\n\t/\x3e\x3c/div\r\n\t\x3e\x3cdiv class\x3d"dijitReset dijitInputField dijitInputContainer"\r\n\t\t\x3e\x3cinput class\x3d\'dijitReset dijitInputInner\' ${!nameAttrSetting} type\x3d"text" autocomplete\x3d"off"\r\n\t\t\tdata-dojo-attach-point\x3d"textbox,focusNode" role\x3d"textbox"\r\n\t/\x3e\x3c/div\r\n\x3e\x3c/div\x3e\r\n'}});
-define("dijit/form/ComboBoxMixin","dojo/_base/declare dojo/Deferred dojo/_base/kernel dojo/_base/lang dojo/store/util/QueryResults ./_AutoCompleterMixin ./_ComboBoxMenu ../_HasDropDown dojo/text!./templates/DropDownBox.html".split(" "),function(g,c,d,f,h,k,l,m,n){return g("dijit.form.ComboBoxMixin",[m,k],{dropDownClass:l,hasDownArrow:!0,templateString:n,baseClass:"dijitTextBox dijitComboBox",cssStateNodes:{_buttonNode:"dijitDownArrowButton"},_setHasDownArrowAttr:function(a){this._set("hasDownArrow",
-a);this._buttonNode.style.display=a?"":"none"},_showResultList:function(){this.displayMessage("");this.inherited(arguments)},_setStoreAttr:function(a){a.get||f.mixin(a,{_oldAPI:!0,get:function(a){var e=new c;this.fetchItemByIdentity({identity:a,onItem:function(b){e.resolve(b)},onError:function(b){e.reject(b)}});return e.promise},query:function(a,e){var b=new c(function(){d.abort&&d.abort()});b.total=new c;var d=this.fetch(f.mixin({query:a,onBegin:function(a){b.total.resolve(a)},onComplete:function(a){b.resolve(a)},
-onError:function(a){b.reject(a)}},e));return h(b)}});this._set("store",a)},postMixInProperties:function(){var a=this.params.store||this.store;a&&this._setStoreAttr(a);this.inherited(arguments);if(!this.params.store&&!this.store._oldAPI){var c=this.declaredClass;f.mixin(this.store,{getValue:function(a,b){d.deprecated(c+".store.getValue(item, attr) is deprecated for builtin store.  Use item.attr directly","","2.0");return a[b]},getLabel:function(a){d.deprecated(c+".store.getLabel(item) is deprecated for builtin store.  Use item.label directly",
-"","2.0");return a.name},fetch:function(a){d.deprecated(c+".store.fetch() is deprecated for builtin store.","Use store.query()","2.0");require(["dojo/data/ObjectStore"],f.hitch(this,function(b){(new b({objectStore:this})).fetch(a)}))}})}}})});
-//@ sourceMappingURL=ComboBoxMixin.js.map
+define([
+	"dojo/_base/declare", // declare
+	"dojo/Deferred",
+	"dojo/_base/kernel", // kernel.deprecated
+	"dojo/_base/lang", // lang.mixin
+	"dojo/store/util/QueryResults",
+	"./_AutoCompleterMixin",
+	"./_ComboBoxMenu",
+	"../_HasDropDown",
+	"dojo/text!./templates/DropDownBox.html"
+], function(declare, Deferred, kernel, lang, QueryResults, _AutoCompleterMixin, _ComboBoxMenu, _HasDropDown, template){
+
+
+	// module:
+	//		dijit/form/ComboBoxMixin
+
+	return declare("dijit.form.ComboBoxMixin", [_HasDropDown, _AutoCompleterMixin], {
+		// summary:
+		//		Provides main functionality of ComboBox widget
+
+		// dropDownClass: [protected extension] Function String
+		//		Dropdown widget class used to select a date/time.
+		//		Subclasses should specify this.
+		dropDownClass: _ComboBoxMenu,
+
+		// hasDownArrow: Boolean
+		//		Set this textbox to have a down arrow button, to display the drop down list.
+		//		Defaults to true.
+		hasDownArrow: true,
+
+		templateString: template,
+
+		baseClass: "dijitTextBox dijitComboBox",
+
+		/*=====
+		// store: [const] dojo/store/api/Store|dojo/data/api/Read
+		//		Reference to data provider object used by this ComboBox.
+		//
+		//		Should be dojo/store/api/Store, but dojo/data/api/Read supported
+		//		for backwards compatibility.
+		store: null,
+		=====*/
+
+		// Set classes like dijitDownArrowButtonHover depending on
+		// mouse action over button node
+		cssStateNodes: {
+			"_buttonNode": "dijitDownArrowButton"
+		},
+
+		_setHasDownArrowAttr: function(/*Boolean*/ val){
+			this._set("hasDownArrow", val);
+			this._buttonNode.style.display = val ? "" : "none";
+		},
+
+		_showResultList: function(){
+			// hide the tooltip
+			this.displayMessage("");
+			this.inherited(arguments);
+		},
+
+		_setStoreAttr: function(store){
+			// For backwards-compatibility, accept dojo.data store in addition to dojo/store/api/Store.  Remove in 2.0.
+			if(!store.get){
+				lang.mixin(store, {
+					_oldAPI: true,
+					get: function(id){
+						// summary:
+						//		Retrieves an object by it's identity. This will trigger a fetchItemByIdentity.
+						//		Like dojo/store/DataStore.get() except returns native item.
+						var deferred = new Deferred();
+						this.fetchItemByIdentity({
+							identity: id,
+							onItem: function(object){
+								deferred.resolve(object);
+							},
+							onError: function(error){
+								deferred.reject(error);
+							}
+						});
+						return deferred.promise;
+					},
+					query: function(query, options){
+						// summary:
+						//		Queries the store for objects.   Like dojo/store/DataStore.query()
+						//		except returned Deferred contains array of native items.
+						var deferred = new Deferred(function(){ fetchHandle.abort && fetchHandle.abort(); });
+						deferred.total = new Deferred();
+						var fetchHandle = this.fetch(lang.mixin({
+							query: query,
+							onBegin: function(count){
+								deferred.total.resolve(count);
+							},
+							onComplete: function(results){
+								deferred.resolve(results);
+							},
+							onError: function(error){
+								deferred.reject(error);
+							}
+						}, options));
+						return QueryResults(deferred);
+					}
+				});
+			}
+			this._set("store", store);
+		},
+
+		postMixInProperties: function(){
+			// Since _setValueAttr() depends on this.store, _setStoreAttr() needs to execute first.
+			// Unfortunately, without special code, it ends up executing second.
+			var store = this.params.store || this.store;
+			if(store){
+				this._setStoreAttr(store);
+			}
+
+			this.inherited(arguments);
+
+			// User may try to access this.store.getValue() etc.  in a custom labelFunc() function.
+			// It's not available with the new data store for handling inline <option> tags, so add it.
+			if(!this.params.store && this.store && !this.store._oldAPI){
+				var clazz = this.declaredClass;
+				lang.mixin(this.store, {
+					getValue: function(item, attr){
+						kernel.deprecated(clazz + ".store.getValue(item, attr) is deprecated for builtin store.  Use item.attr directly", "", "2.0");
+						return item[attr];
+					},
+					getLabel: function(item){
+						kernel.deprecated(clazz + ".store.getLabel(item) is deprecated for builtin store.  Use item.label directly", "", "2.0");
+						return item.name;
+					},
+					fetch: function(args){
+						kernel.deprecated(clazz + ".store.fetch() is deprecated for builtin store.", "Use store.query()", "2.0");
+						var shim = ["dojo/data/ObjectStore"];	// indirection so it doesn't get rolled into a build
+						require(shim, lang.hitch(this, function(ObjectStore){
+							new ObjectStore({objectStore: this}).fetch(args);
+						}));
+					}
+				});
+			}
+		},
+
+		buildRendering: function(){
+			this.inherited(arguments);
+
+			this.focusNode.setAttribute("aria-autocomplete", this.autoComplete ? "both" : "list");
+		}
+	});
+});

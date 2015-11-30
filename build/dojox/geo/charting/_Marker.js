@@ -1,5 +1,68 @@
-//>>built
-define("dojox/geo/charting/_Marker",["dojo/_base/lang","dojo/_base/array","dojo/_base/declare","dojo/_base/sniff","./_base"],function(g,h,k,c){return k("dojox.geo.charting._Marker",null,{_needTooltipRefresh:null,_map:null,constructor:function(a,b){this._map=b;this.features=b.mapObj.features;this.markerData=a;_needTooltipRefresh=!1},show:function(a,b){this.currentFeature=this.features[a];this._map.showTooltips&&this.currentFeature&&(this.markerText=this.currentFeature.markerText||this.markerData[a]||
-a,dojox.geo.charting.showTooltip(this.markerText,this.currentFeature.shape,["before"]));this._needTooltipRefresh=!1},hide:function(){this._map.showTooltips&&this.currentFeature&&dojox.geo.charting.hideTooltip(this.currentFeature.shape);this._needTooltipRefresh=!1},_getGroupBoundingBox:function(a){a=a.children;var b=a[0].getBoundingBox();this._arround=g.clone(b);h.forEach(a,function(a){a=a.getBoundingBox();this._arround.x=Math.min(this._arround.x,a.x);this._arround.y=Math.min(this._arround.y,a.y)},
-this)},_toWindowCoords:function(a,b,d){var e=(a.x-this.topLeft[0])*this.scale,f=(a.y-this.topLeft[1])*this.scale;3.5==c("ff")?(a.x=b.x,a.y=b.y):c("chrome")?(a.x=d.x+e,a.y=d.y+f):(a.x=b.x+e,a.y=b.y+f);a.width=this.currentFeature._bbox[2]*this.scale;a.height=this.currentFeature._bbox[3]*this.scale;a.x+=a.width/6;a.y+=a.height/4}})});
-//@ sourceMappingURL=_Marker.js.map
+define([
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dojo/_base/declare",
+	"dojo/_base/sniff",
+	"./_base"
+], function(lang, arr, declare, has){
+	return declare("dojox.geo.charting._Marker", null, {
+		
+		_needTooltipRefresh: null,
+		_map: null,
+		
+		constructor: function(markerData, map){
+			this._map = map;
+			var mapObj = map.mapObj;
+			this.features = mapObj.features;
+			this.markerData = markerData;
+			_needTooltipRefresh = false;
+		},
+	
+		show: function(featureId, evt){
+			this.currentFeature = this.features[featureId];
+			if(this._map.showTooltips && this.currentFeature){
+				this.markerText = this.currentFeature.markerText || this.markerData[featureId] || featureId;
+				dojox.geo.charting.showTooltip(this.markerText, this.currentFeature.shape, ["before"]);
+			}
+			this._needTooltipRefresh = false;
+		},
+	
+		hide: function(){
+			if(this._map.showTooltips && this.currentFeature){
+				dojox.geo.charting.hideTooltip(this.currentFeature.shape);
+			}
+			this._needTooltipRefresh = false;
+		},
+	
+		_getGroupBoundingBox: function(group){
+			var shapes = group.children;
+			var feature = shapes[0];
+			var bbox = feature.getBoundingBox();
+			this._arround = lang.clone(bbox);
+			arr.forEach(shapes, function(item){
+				var _bbox = item.getBoundingBox();
+				this._arround.x = Math.min(this._arround.x, _bbox.x);
+				this._arround.y = Math.min(this._arround.y, _bbox.y);
+			},this);
+		},
+	
+		_toWindowCoords: function(arround, coords, containerSize){
+			var toLeft = (arround.x - this.topLeft[0]) * this.scale;
+			var toTop = (arround.y - this.topLeft[1]) * this.scale
+			if(has("ff") == 3.5){
+				arround.x = coords.x;
+				arround.y = coords.y;
+			}else if(has("chrome")){
+				arround.x = containerSize.x + toLeft;
+				arround.y = containerSize.y + toTop;
+			}else{
+				arround.x = coords.x + toLeft;
+				arround.y = coords.y + toTop;
+			}
+			arround.width = (this.currentFeature._bbox[2]) * this.scale;
+			arround.height = (this.currentFeature._bbox[3]) * this.scale;
+			arround.x += arround.width / 6;
+			arround.y += arround.height / 4;
+		}
+	});
+});

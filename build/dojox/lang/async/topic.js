@@ -1,3 +1,41 @@
-//>>built
-define("dojox/lang/async/topic",["dojo","dijit","dojox"],function(b,h,g){b.provide("dojox.lang.async.topic");(function(){var f=g.lang.async.topic;f.from=function(e){return function(){var a,c=function(){a&&(b.unsubscribe(a),a=null)},d=new b.Deferred(c);a=b.subscribe(e,function(){c();d.callback(arguments)});return d}};f.failOn=function(e){return function(){var a,c=function(){a&&(b.unsubscribe(a),a=null)},d=new b.Deferred(c);a=b.subscribe(e,function(a){c();d.errback(Error(arguments))});return d}}})()});
-//@ sourceMappingURL=topic.js.map
+dojo.provide("dojox.lang.async.topic");
+
+// Source of Deferred for topics
+
+(function(){
+	var d = dojo, topic = dojox.lang.async.topic;
+
+	topic.from = function(topic){
+		return function(){
+			var h, cancel = function(){
+					if(h){
+						d.unsubscribe(h);
+						h = null;
+					}
+				},
+				x = new d.Deferred(cancel);
+			h = d.subscribe(topic, function(){
+				cancel();
+				x.callback(arguments);
+			});
+			return x;
+		};
+	};
+
+	topic.failOn = function(topic){
+		return function(){
+			var h, cancel = function(){
+					if(h){
+						d.unsubscribe(h);
+						h = null;
+					}
+				},
+				x = new d.Deferred(cancel);
+			h = d.subscribe(topic, function(evt){
+				cancel();
+				x.errback(new Error(arguments));
+			});
+			return x;
+		};
+	};
+})();

@@ -1,3 +1,23 @@
-//>>built
-define("dojo/cldr/nls/hu/currency",{HKD_displayName:"Hongkongi doll\u00e1r",CHF_displayName:"Sv\u00e1jci frank",JPY_symbol:"\u00a5",CAD_displayName:"Kanadai doll\u00e1r",HKD_symbol:"HKD",CNY_displayName:"K\u00ednai j\u00fcan renminbi",USD_symbol:"$",AUD_displayName:"Ausztr\u00e1l doll\u00e1r",JPY_displayName:"Jap\u00e1n jen",CAD_symbol:"CAD",USD_displayName:"USA doll\u00e1r",EUR_symbol:"EUR",CNY_symbol:"CNY",GBP_displayName:"Brit font sterling",GBP_symbol:"GBP",AUD_symbol:"AUD",EUR_displayName:"Euro"});
-//@ sourceMappingURL=currency.js.map
+define(
+//begin v1.x content
+{
+	"HKD_displayName": "hongkongi dollár",
+	"CHF_displayName": "svájci frank",
+	"JPY_symbol": "¥",
+	"CAD_displayName": "kanadai dollár",
+	"HKD_symbol": "HKD",
+	"CNY_displayName": "Kínai jüan renminbi",
+	"USD_symbol": "$",
+	"AUD_displayName": "ausztrál dollár",
+	"JPY_displayName": "japán jen",
+	"CAD_symbol": "CAD",
+	"USD_displayName": "USA-dollár",
+	"EUR_symbol": "EUR",
+	"CNY_symbol": "CNY",
+	"GBP_displayName": "brit font sterling",
+	"GBP_symbol": "GBP",
+	"AUD_symbol": "AUD",
+	"EUR_displayName": "euró"
+}
+//end v1.x content
+);

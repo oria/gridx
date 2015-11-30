@@ -1,19 +1,388 @@
-//>>built
-require({cache:{"url:dojox/grid/enhanced/templates/FilterBar.html":'\x3ctable class\x3d"dojoxGridFBar" border\x3d"0" cellspacing\x3d"0" role\x3d"presentation" dojoAttachEvent\x3d"onclick:_onClickFilterBar, onmouseenter:_onMouseEnter, onmouseleave:_onMouseLeave, onmousemove:_onMouseMove"\r\n\t\x3e\x3ctr\x3e\x3ctd class\x3d"dojoxGridFBarBtnTD"\r\n\t\t\x3e\x3cspan dojoType\x3d"dijit.form.Button" class\x3d"dojoxGridFBarBtn" dojoAttachPoint\x3d"defineFilterButton" label\x3d"..." iconClass\x3d"dojoxGridFBarDefFilterBtnIcon" showLabel\x3d"true" dojoAttachEvent\x3d"onClick:_showFilterDefDialog, onMouseEnter:_onEnterButton, onMouseLeave:_onLeaveButton, onMouseMove:_onMoveButton"\x3e\x3c/span\r\n\t\x3e\x3c/td\x3e\x3ctd class\x3d"dojoxGridFBarInfoTD"\r\n\t\t\x3e\x3cspan class\x3d"dojoxGridFBarInner"\r\n\t\t\t\x3e\x3cspan class\x3d"dojoxGridFBarStatus" dojoAttachPoint\x3d"statusBarNode"\x3e${_noFilterMsg}\x3c/span\r\n\t\t\t\x3e\x3cspan dojoType\x3d"dijit.form.Button" class\x3d"dojoxGridFBarClearFilterBtn" dojoAttachPoint\x3d"clearFilterButton" \r\n\t\t\t\tlabel\x3d"${_filterBarClearBtnLabel}" iconClass\x3d"dojoxGridFBarClearFilterBtnIcon" showLabel\x3d"true" \r\n\t\t\t\tdojoAttachEvent\x3d"onClick:_clearFilterDefDialog, onMouseEnter:_onEnterButton, onMouseLeave:_onLeaveButton, onMouseMove:_onMoveButton"\x3e\x3c/span\r\n\t\t\t\x3e\x3cspan dojotype\x3d"dijit.form.Button" class\x3d"dojoxGridFBarCloseBtn" dojoAttachPoint\x3d"closeFilterBarButton" \r\n\t\t\t\tlabel\x3d"${_closeFilterBarBtnLabel}" iconClass\x3d"dojoxGridFBarCloseBtnIcon" showLabel\x3d"false" \r\n\t\t\t\tdojoAttachEvent\x3d"onClick:_closeFilterBar, onMouseEnter:_onEnterButton, onMouseLeave:_onLeaveButton, onMouseMove:_onMoveButton"\x3e\x3c/span\r\n\t\t\x3e\x3c/span\r\n\t\x3e\x3c/td\x3e\x3c/tr\r\n\x3e\x3c/table\x3e\r\n'}});
-define("dojox/grid/enhanced/plugins/filter/FilterBar","dojo/_base/declare dojo/_base/array dojo/_base/connect dojo/_base/lang dojo/_base/sniff dojo/_base/event dojo/_base/html dojo/_base/window dojo/query dijit/_Widget dijit/_TemplatedMixin dijit/_WidgetsInTemplateMixin dojo/fx dojo/_base/fx dojo/string dijit/focus dojo/text!../../templates/FilterBar.html".split(" "),function(r,s,n,h,t,u,e,v,w,x,y,z,p,l,m,k,A){var d=function(a){try{a&&a.preventDefault&&u.stop(a)}catch(b){}};return r("dojox.grid.enhanced.plugins.filter.FilterBar",
-[x,y,z],{templateString:A,widgetsInTemplate:!0,_timeout_statusTooltip:300,_handle_statusTooltip:null,_curColIdx:-1,plugin:null,postMixInProperties:function(){var a=this.plugin,b=a.nls;this._filterBarDefBtnLabel=b.filterBarDefButton;this._filterBarClearBtnLabel=b.filterBarClearButton;this._closeFilterBarBtnLabel=b.closeFilterBarBtn;this._noFilterMsg=m.substitute(b.filterBarMsgNoFilterTemplate,["",a.args.itemsName||b.defaultItemsName]);b=this.plugin.args.statusTipTimeout;"number"==typeof b&&(this._timeout_statusTooltip=
-b);a=a.grid;a.showFilterBar=h.hitch(this,"showFilterBar");a.toggleFilterBar=h.hitch(this,"toggleFilterBar");a.isFilterBarShown=h.hitch(this,"isFilterBarShown")},postCreate:function(){this.inherited(arguments);this.plugin.args.closeFilterbarButton||e.style(this.closeFilterBarButton.domNode,"display","none");var a=this,b=this.plugin.grid,c=this.oldGetHeaderHeight=h.hitch(b,b._getHeaderHeight);this.placeAt(b.viewsHeaderNode,"after");this.connect(this.plugin.filterDefDialog,"showDialog","_onShowFilterDefDialog");
-this.connect(this.plugin.filterDefDialog,"closeDialog","_onCloseFilterDefDialog");this.connect(b.layer("filter"),"onFiltered",this._onFiltered);this.defineFilterButton.domNode.title=this.plugin.nls.filterBarDefButton;e.hasClass(v.body(),"dijit_a11y")&&this.defineFilterButton.set("label",this.plugin.nls.a11yFilterBarDefButton);this.connect(this.defineFilterButton.domNode,"click",d);this.connect(this.clearFilterButton.domNode,"click",d);this.connect(this.closeFilterBarButton.domNode,"click",d);this.toggleClearFilterBtn(!0);
-this._initAriaInfo();b._getHeaderHeight=function(){return c()+e.marginBox(a.domNode).h};b.focus.addArea({name:"filterbar",onFocus:h.hitch(this,this._onFocusFilterBar,!1),onBlur:h.hitch(this,this._onBlurFilterBar)});b.focus.placeArea("filterbar","after","header")},uninitialize:function(){var a=this.plugin.grid;a._getHeaderHeight=this.oldGetHeaderHeight;a.focus.removeArea("filterbar");this.plugin=null},isFilterBarShown:function(){return"none"!=e.style(this.domNode,"display")},showFilterBar:function(a,
-b,c){var f=this.plugin.grid;if(b){if(Boolean(a)!=this.isFilterBarShown()){c=c||{};var g=[];g.push(p[a?"wipeIn":"wipeOut"](h.mixin({node:this.domNode,duration:500},c)));var q=f.views.views[0].domNode.offsetHeight,d={duration:500,properties:{height:{end:h.hitch(this,function(){var b=this.domNode.scrollHeight;t("ff")&&(b-=2);return a?q-b:q+b})}}};s.forEach(f.views.views,function(a){g.push(l.animateProperty(h.mixin({node:a.domNode},d,c)),l.animateProperty(h.mixin({node:a.scrollboxNode},d,c)))});g.push(l.animateProperty(h.mixin({node:f.viewsNode},
-d,c)));p.combine(g).play()}}else e.style(this.domNode,"display",a?"":"none"),f.update()},toggleFilterBar:function(a,b){this.showFilterBar(!this.isFilterBarShown(),a,b)},getColumnIdx:function(a){for(var b=w("[role\x3d'columnheader']",this.plugin.grid.viewsHeaderNode),c=-1,f=b.length-1;0<=f;--f){var g=e.position(b[f]);if(a>=g.x&&a<g.x+g.w){c=f;break}}return 0<=c&&!1!==this.plugin.grid.layout.cells[c].filterable?c:-1},toggleClearFilterBtn:function(a){e.style(this.clearFilterButton.domNode,"display",
-a?"none":"")},_closeFilterBar:function(a){d(a);if(this.plugin.filterDefDialog.getCriteria()){var b=n.connect(this.plugin.filterDefDialog,"clearFilter",this,function(){this.showFilterBar(!1,!0);n.disconnect(b)});this._clearFilterDefDialog(a)}else this.showFilterBar(!1,!0)},_showFilterDefDialog:function(a){d(a);this.plugin.filterDefDialog.showDialog(this._curColIdx);this.plugin.grid.focus.focusArea("filterbar")},_clearFilterDefDialog:function(a){d(a);this.plugin.filterDefDialog.onClearFilter();this.plugin.grid.focus.focusArea("filterbar")},
-_onEnterButton:function(a){this._onBlurFilterBar();d(a)},_onMoveButton:function(a){this._onBlurFilterBar()},_onLeaveButton:function(a){this._leavingBtn=!0},_onShowFilterDefDialog:function(a){"number"==typeof a&&(this._curColIdx=a);this._defPaneIsShown=!0},_onCloseFilterDefDialog:function(){this._defPaneIsShown=!1;this._curColIdx=-1;k.focus(this.defineFilterButton.domNode)},_onClickFilterBar:function(a){d(a);this._clearStatusTipTimeout();this.plugin.grid.focus.focusArea("filterbar");this.plugin.filterDefDialog.showDialog(this.getColumnIdx(a.clientX))},
-_onMouseEnter:function(a){this._onFocusFilterBar(!0,null);this._updateTipPosition(a);this._setStatusTipTimeout()},_onMouseMove:function(a){this._leavingBtn&&(this._onFocusFilterBar(!0,null),this._leavingBtn=!1);this._isFocused&&(this._setStatusTipTimeout(),this._highlightHeader(this.getColumnIdx(a.clientX)),this._handle_statusTooltip&&this._updateTipPosition(a))},_onMouseLeave:function(a){this._onBlurFilterBar()},_updateTipPosition:function(a){this._tippos={x:a.pageX,y:a.pageY}},_onFocusFilterBar:function(a,
-b,c){if(!this.isFilterBarShown())return!1;this._isFocused=!0;e.addClass(this.domNode,"dojoxGridFBarHover");if(!a){a="none"!==e.style(this.clearFilterButton.domNode,"display");var f="none"!==e.style(this.closeFilterBarButton.domNode,"display");"undefined"==typeof this._focusPos&&(0<c?this._focusPos=0:(this._focusPos=f?1:0,a&&++this._focusPos));0===this._focusPos?k.focus(this.defineFilterButton.focusNode):1===this._focusPos&&a?k.focus(this.clearFilterButton.focusNode):k.focus(this.closeFilterBarButton.focusNode)}d(b);
-return!0},_onBlurFilterBar:function(a,b){this._isFocused&&(this._isFocused=!1,e.removeClass(this.domNode,"dojoxGridFBarHover"),this._clearStatusTipTimeout(),this._clearHeaderHighlight());var c=!0;if(b){var f=3;"none"===e.style(this.closeFilterBarButton.domNode,"display")&&--f;"none"===e.style(this.clearFilterButton.domNode,"display")&&--f;if(1==f)delete this._focusPos;else{for(var g=this._focusPos,d=g+b;0>d;d+=f);d%=f;0<b&&d<g||0>b&&d>g?delete this._focusPos:(this._focusPos=d,c=!1)}}return c},_onFiltered:function(a,
-b){var c=this.plugin,d=c.args.itemsName||c.nls.defaultItemsName,g="";c.grid.layer("filter").filterDef()?(g=m.substitute(c.nls.filterBarMsgHasFilterTemplate,[a,b,d]),e.addClass(this.domNode,"dojoxGridFBarFiltered")):(g=m.substitute(c.nls.filterBarMsgNoFilterTemplate,[b,d]),e.removeClass(this.domNode,"dojoxGridFBarFiltered"));this.statusBarNode.innerHTML=g;this._focusPos=0},_initAriaInfo:function(){this.defineFilterButton.domNode.setAttribute("aria-label",this.plugin.nls.waiFilterBarDefButton);this.clearFilterButton.domNode.setAttribute("aria-label",
-this.plugin.nls.waiFilterBarClearButton)},_isInColumn:function(a,b,c){b=e.position(b);return a>=b.x&&a<b.x+b.w},_setStatusTipTimeout:function(){this._clearStatusTipTimeout();this._defPaneIsShown||(this._handle_statusTooltip=setTimeout(h.hitch(this,this._showStatusTooltip),this._timeout_statusTooltip))},_clearStatusTipTimeout:function(){clearTimeout(this._handle_statusTooltip);this._handle_statusTooltip=null},_showStatusTooltip:function(){this._handle_statusTooltip=null;this.plugin&&this.plugin.filterStatusTip.showDialog(this._tippos.x,
-this._tippos.y,this.getColumnIdx(this._tippos.x))},_highlightHeader:function(a){if(a!=this._previousHeaderIdx){var b=this.plugin.grid,c=b.getCell(this._previousHeaderIdx);c&&e.removeClass(c.getHeaderNode(),"dojoxGridCellOver");(c=b.getCell(a))&&e.addClass(c.getHeaderNode(),"dojoxGridCellOver");this._previousHeaderIdx=a}},_clearHeaderHighlight:function(){if("undefined"!=typeof this._previousHeaderIdx){var a=this.plugin.grid,b=a.getCell(this._previousHeaderIdx);if(b)a.onHeaderCellMouseOut({cellNode:b.getHeaderNode()});
-delete this._previousHeaderIdx}}})});
-//@ sourceMappingURL=FilterBar.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/connect",
+	"dojo/_base/lang",
+	"dojo/_base/sniff",
+	"dojo/_base/event",
+	"dojo/_base/html",
+	"dojo/_base/window",
+	"dojo/query",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/_WidgetsInTemplateMixin",
+	"dojo/fx",
+	"dojo/_base/fx",
+	"dojo/string",
+	"dijit/focus",
+	"dojo/text!../../templates/FilterBar.html"
+], function(declare, array, connect, lang, has, event, html, win, query, _Widget,
+	_TemplatedMixin, _WidgetsInTemplateMixin, fx, baseFx, string, dijitFocus, template){
+
+var _focusClass = "dojoxGridFBarHover",
+	_filteredClass = "dojoxGridFBarFiltered",
+	_stopEvent = function(evt){
+		try{
+			if(evt && evt.preventDefault){
+				event.stop(evt);
+			}
+		}catch(e){}
+	};
+	
+return declare("dojox.grid.enhanced.plugins.filter.FilterBar", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin],{
+	// summary:
+	//		The filter bar UI.
+	templateString: template,
+
+	widgetsInTemplate: true,
+	
+	_timeout_statusTooltip: 300,
+
+	_handle_statusTooltip: null,
+
+	_curColIdx: -1,
+	
+	plugin: null,
+
+	postMixInProperties: function(){
+		var plugin = this.plugin;
+		var nls = plugin.nls;
+		this._filterBarDefBtnLabel = nls["filterBarDefButton"];
+		this._filterBarClearBtnLabel = nls["filterBarClearButton"];
+		this._closeFilterBarBtnLabel = nls["closeFilterBarBtn"];
+		var itemsName = plugin.args.itemsName || nls["defaultItemsName"];
+		this._noFilterMsg = string.substitute(nls["filterBarMsgNoFilterTemplate"], ["", itemsName]);
+		
+		var t = this.plugin.args.statusTipTimeout;
+		if(typeof t == 'number'){
+			this._timeout_statusTooltip = t;
+		}
+		
+		var g = plugin.grid;
+		g.showFilterBar = lang.hitch(this, "showFilterBar");
+		g.toggleFilterBar = lang.hitch(this, "toggleFilterBar");
+		g.isFilterBarShown = lang.hitch(this, "isFilterBarShown");
+	},
+	postCreate: function(){
+		this.inherited(arguments);
+		if(!this.plugin.args.closeFilterbarButton){
+			html.style(this.closeFilterBarButton.domNode, "display", "none");
+		}
+		var _this = this,
+			g = this.plugin.grid,
+			old_func = this.oldGetHeaderHeight = lang.hitch(g,g._getHeaderHeight);
+		
+		this.placeAt(g.viewsHeaderNode, "after");
+		this.connect(this.plugin.filterDefDialog, "showDialog", "_onShowFilterDefDialog");
+		this.connect(this.plugin.filterDefDialog, "closeDialog", "_onCloseFilterDefDialog");
+		this.connect(g.layer("filter"), "onFiltered", this._onFiltered);
+		
+		this.defineFilterButton.domNode.title = this.plugin.nls["filterBarDefButton"];
+		if(html.hasClass(win.body(), "dijit_a11y")){
+			this.defineFilterButton.set("label", this.plugin.nls["a11yFilterBarDefButton"]);
+		}
+		this.connect(this.defineFilterButton.domNode, "click", _stopEvent);
+		this.connect(this.clearFilterButton.domNode, "click", _stopEvent);
+		this.connect(this.closeFilterBarButton.domNode, "click", _stopEvent);
+		
+		this.toggleClearFilterBtn(true);
+		this._initAriaInfo();
+		
+		//Hack the header height to include filter bar height;
+		g._getHeaderHeight = function(){
+			return old_func() + html.marginBox(_this.domNode).h;
+		};
+		//Define an area to make focusManager handle all the navigation stuff
+		g.focus.addArea({
+			name: "filterbar",
+			onFocus: lang.hitch(this, this._onFocusFilterBar, false),
+			onBlur: lang.hitch(this, this._onBlurFilterBar)
+		});
+		g.focus.placeArea("filterbar","after","header");
+	},
+	uninitialize: function(){
+		var g = this.plugin.grid;
+		g._getHeaderHeight = this.oldGetHeaderHeight;
+		g.focus.removeArea("filterbar");
+		this.plugin = null;
+	},
+	isFilterBarShown: function(){
+		return html.style(this.domNode, "display") != "none";
+	},
+	showFilterBar: function(toShow, useAnim, animArgs){
+		var g = this.plugin.grid;
+		if(useAnim){
+			if(Boolean(toShow) == this.isFilterBarShown()){ return; }
+			animArgs = animArgs || {};
+			var anims = [], defaultDuration = 500;
+			anims.push(fx[toShow ? "wipeIn" : "wipeOut"](lang.mixin({
+				"node": this.domNode,
+				"duration": defaultDuration
+			}, animArgs)));
+			var curHeight = g.views.views[0].domNode.offsetHeight;
+			var prop = {
+				"duration": defaultDuration,
+				"properties": {
+					"height": {
+						"end": lang.hitch(this, function(){
+							var barHeight = this.domNode.scrollHeight;
+							if(has('ff')){
+								barHeight -= 2;
+							}
+							return toShow ? (curHeight - barHeight) : (curHeight + barHeight);
+						})
+					}
+				}
+			};
+			array.forEach(g.views.views, function(view){
+				anims.push(baseFx.animateProperty(lang.mixin({
+					"node": view.domNode
+				}, prop, animArgs)), baseFx.animateProperty(lang.mixin({
+					"node": view.scrollboxNode
+				}, prop, animArgs)));
+			});
+			anims.push(baseFx.animateProperty(lang.mixin({
+				"node": g.viewsNode
+			}, prop, animArgs)));
+			fx.combine(anims).play();
+		}else{
+			html.style(this.domNode, "display", toShow ? "" : "none");
+			g.update();
+		}
+	},
+	toggleFilterBar: function(useAnim, animArgs){
+		this.showFilterBar(!this.isFilterBarShown(), useAnim, animArgs);
+	},
+	getColumnIdx: function(/* int */coordX){
+		var headers = query("[role='columnheader']", this.plugin.grid.viewsHeaderNode);
+		var idx = -1;
+		for(var i = headers.length - 1; i >= 0; --i){
+			var coord = html.position(headers[i]);
+			if(coordX >= coord.x && coordX < coord.x + coord.w){
+				idx = i;
+				break;
+			}
+		}
+		if(idx >= 0 && this.plugin.grid.layout.cells[idx].filterable !== false){
+			return idx; //Integer
+		}else{
+			return -1; //Integer
+		}
+	},
+	toggleClearFilterBtn: function(toHide){
+		html.style(this.clearFilterButton.domNode, "display", toHide ? "none" : "");
+	},
+	_closeFilterBar: function(e){
+		_stopEvent(e);
+		var rulesCnt = this.plugin.filterDefDialog.getCriteria();
+		if(rulesCnt){
+			var handle = connect.connect(this.plugin.filterDefDialog, "clearFilter", this, function(){
+				this.showFilterBar(false, true);
+				connect.disconnect(handle);
+			});
+			this._clearFilterDefDialog(e);
+		}else{
+			this.showFilterBar(false, true);
+		}
+	},
+
+	_showFilterDefDialog: function(e){
+		_stopEvent(e);
+		this.plugin.filterDefDialog.showDialog(this._curColIdx);
+		this.plugin.grid.focus.focusArea("filterbar");
+	},
+	_clearFilterDefDialog: function(e){
+		_stopEvent(e);
+		this.plugin.filterDefDialog.onClearFilter();
+		this.plugin.grid.focus.focusArea("filterbar");
+	},
+	_onEnterButton: function(e){
+		//If mouse is hovering the btn, which means the user is about to click,
+		//we should not show status tip on the btn!
+		this._onBlurFilterBar();
+		_stopEvent(e);
+	},
+	_onMoveButton: function(e){
+		this._onBlurFilterBar();
+	},
+	_onLeaveButton: function(e){
+		this._leavingBtn = true;
+	},
+	_onShowFilterDefDialog: function(/* Integer */colIdx){
+		if(typeof colIdx == "number"){
+			this._curColIdx = colIdx;
+		}
+		this._defPaneIsShown = true;
+	},
+	_onCloseFilterDefDialog: function(){
+		this._defPaneIsShown = false;
+		//Do not remember what column are we on, so clicking the btn will show 'any column'
+		this._curColIdx = -1;
+		dijitFocus.focus(this.defineFilterButton.domNode);
+	},
+	_onClickFilterBar: function(/* event */e){
+		_stopEvent(e);
+		this._clearStatusTipTimeout();
+		this.plugin.grid.focus.focusArea("filterbar");
+		this.plugin.filterDefDialog.showDialog(this.getColumnIdx(e.clientX));
+	},
+	_onMouseEnter: function(/* event */e){
+		this._onFocusFilterBar(true, null);
+		this._updateTipPosition(e);
+		this._setStatusTipTimeout();
+	},
+	_onMouseMove: function(/* event */e){
+		if(this._leavingBtn){
+			this._onFocusFilterBar(true, null);
+			this._leavingBtn = false;
+		}
+		if(this._isFocused){
+			this._setStatusTipTimeout();
+			this._highlightHeader(this.getColumnIdx(e.clientX));
+			if(this._handle_statusTooltip){
+				this._updateTipPosition(e);
+			}
+		}
+	},
+	_onMouseLeave: function(e){
+		this._onBlurFilterBar();
+	},
+	_updateTipPosition: function(evt){
+		this._tippos = {
+			x: evt.pageX,
+			y: evt.pageY
+		};
+	},
+	_onFocusFilterBar: function(highlightOnly, evt, step){
+		if(!this.isFilterBarShown()){
+			return false;
+		}
+		this._isFocused = true;
+		html.addClass(this.domNode,_focusClass);
+		if(!highlightOnly){
+			var hasFilter = html.style(this.clearFilterButton.domNode, "display") !== "none";
+			var hasCloseButton = html.style(this.closeFilterBarButton.domNode, "display") !== "none";
+			if(typeof this._focusPos == "undefined"){
+				if(step > 0){
+					this._focusPos = 0;
+				}else{
+					if(hasCloseButton){
+						this._focusPos = 1;
+					}else{
+						this._focusPos = 0;
+					}
+					if(hasFilter){
+						++this._focusPos;
+					}
+				}
+			}
+			if(this._focusPos === 0){
+				dijitFocus.focus(this.defineFilterButton.focusNode);
+			}else if(this._focusPos === 1 && hasFilter){
+				dijitFocus.focus(this.clearFilterButton.focusNode);
+			}else{
+				dijitFocus.focus(this.closeFilterBarButton.focusNode);
+			}
+		}
+		_stopEvent(evt);
+		return true;
+	},
+	_onBlurFilterBar: function(evt, step){
+		if(this._isFocused){
+			this._isFocused = false;
+			html.removeClass(this.domNode,_focusClass);
+			this._clearStatusTipTimeout();
+			this._clearHeaderHighlight();
+		}
+		var toBlur = true;
+		if(step){
+			var buttonCount = 3;
+			if(html.style(this.closeFilterBarButton.domNode, "display") === "none"){
+				--buttonCount;
+			}
+			if(html.style(this.clearFilterButton.domNode, "display") === "none"){
+				--buttonCount;
+			}
+			if(buttonCount == 1){
+				delete this._focusPos;
+			}else{
+				var current = this._focusPos;
+				for(var next = current + step; next < 0; next += buttonCount){}
+				next %= buttonCount;
+				if((step > 0 && next < current) || (step < 0 && next > current)){
+					delete this._focusPos;
+				}else{
+					this._focusPos = next;
+					toBlur = false;
+				}
+			}
+		}
+		return toBlur;
+	},
+	_onFiltered: function(/* int */filteredSize,/* int */originSize){
+		var p = this.plugin,
+			itemsName = p.args.itemsName || p.nls["defaultItemsName"],
+			msg = "", g = p.grid,
+			filterLayer = g.layer("filter");
+		if(filterLayer.filterDef()){
+			msg = string.substitute(p.nls["filterBarMsgHasFilterTemplate"], [filteredSize, originSize, itemsName]);
+			html.addClass(this.domNode, _filteredClass);
+		}else{
+			msg = string.substitute(p.nls["filterBarMsgNoFilterTemplate"], [originSize, itemsName]);
+			html.removeClass(this.domNode, _filteredClass);
+		}
+		this.statusBarNode.innerHTML = msg;
+		this._focusPos = 0;
+	},
+	_initAriaInfo: function(){
+		this.defineFilterButton.domNode.setAttribute("aria-label", this.plugin.nls["waiFilterBarDefButton"]);
+		this.clearFilterButton.domNode.setAttribute("aria-label", this.plugin.nls["waiFilterBarClearButton"]);
+	},
+	_isInColumn: function(/* int */mousePos_x, /* domNode */headerNode, /* int */colIndex){
+		var coord = html.position(headerNode);
+		return mousePos_x >= coord.x && mousePos_x < coord.x + coord.w;
+	},
+	_setStatusTipTimeout: function(){
+		this._clearStatusTipTimeout();
+		if(!this._defPaneIsShown){
+			this._handle_statusTooltip = setTimeout(lang.hitch(this,this._showStatusTooltip),this._timeout_statusTooltip);
+		}
+	},
+	_clearStatusTipTimeout: function(){
+		clearTimeout(this._handle_statusTooltip);
+		this._handle_statusTooltip = null;
+	},
+	_showStatusTooltip: function(){
+		this._handle_statusTooltip = null;
+		if(this.plugin){
+			this.plugin.filterStatusTip.showDialog(this._tippos.x, this._tippos.y, this.getColumnIdx(this._tippos.x));
+		}
+	},
+	_highlightHeader: function(/* int */colIdx){
+		if(colIdx != this._previousHeaderIdx){
+			var g = this.plugin.grid,
+			cell = g.getCell(this._previousHeaderIdx);
+			if(cell){
+				html.removeClass(cell.getHeaderNode(), "dojoxGridCellOver");
+			}
+			cell = g.getCell(colIdx);
+			if(cell){
+				html.addClass(cell.getHeaderNode(), "dojoxGridCellOver");
+			}
+			this._previousHeaderIdx = colIdx;
+		}
+	},
+	_clearHeaderHighlight: function(){
+		if(typeof this._previousHeaderIdx != "undefined"){
+			var g = this.plugin.grid,
+			cell = g.getCell(this._previousHeaderIdx);
+			if(cell){
+				g.onHeaderCellMouseOut({
+					cellNode: cell.getHeaderNode()
+				});
+			}
+			delete this._previousHeaderIdx;
+		}
+	}
+});
+});

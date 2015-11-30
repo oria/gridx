@@ -1,3 +1,41 @@
-//>>built
-define("dojox/lang/async/timeout",["dojo","dijit","dojox"],function(e,h,g){e.provide("dojox.lang.async.timeout");(function(){var f=g.lang.async.timeout;f.from=function(b){return function(){var a,c=function(){a&&(clearTimeout(a),a=null)},d=new e.Deferred(c);a=setTimeout(function(){c();d.callback(b)},b);return d}};f.failOn=function(b){return function(){var a,c=function(){a&&(clearTimeout(a),a=null)},d=new e.Deferred(c);a=setTimeout(function(){c();d.errback(b)},b);return d}}})()});
-//@ sourceMappingURL=timeout.js.map
+dojo.provide("dojox.lang.async.timeout");
+
+// Source of Deferred for timeouts
+
+(function(){
+	var d = dojo, timeout = dojox.lang.async.timeout;
+
+	timeout.from = function(ms){
+		return function(){
+			var h, cancel = function(){
+					if(h){
+						clearTimeout(h);
+						h = null;
+					}
+				},
+				x = new d.Deferred(cancel);
+			h = setTimeout(function(){
+				cancel();
+				x.callback(ms);
+			}, ms);
+			return x;
+		};
+	};
+
+	timeout.failOn = function(ms){
+		return function(){
+			var h, cancel = function(){
+					if(h){
+						clearTimeout(h);
+						h = null;
+					}
+				},
+				x = new d.Deferred(cancel);
+			h = setTimeout(function(){
+				cancel();
+				x.errback(ms);
+			}, ms);
+			return x;
+		};
+	};
+})();

@@ -1,5 +1,90 @@
-//>>built
-define("dojo/sniff",["./has"],function(a){var c=navigator,b=c.userAgent,c=c.appVersion,d=parseFloat(c);a.add("air",0<=b.indexOf("AdobeAIR"));a.add("msapp",parseFloat(b.split("MSAppHost/")[1])||void 0);a.add("khtml",0<=c.indexOf("Konqueror")?d:void 0);a.add("webkit",parseFloat(b.split("WebKit/")[1])||void 0);a.add("chrome",parseFloat(b.split("Chrome/")[1])||void 0);a.add("safari",0<=c.indexOf("Safari")&&!a("chrome")?parseFloat(c.split("Version/")[1]):void 0);a.add("mac",0<=c.indexOf("Macintosh"));
-a.add("quirks","BackCompat"==document.compatMode);if(b.match(/(iPhone|iPod|iPad)/)){var f=RegExp.$1.replace(/P/,"p"),e=b.match(/OS ([\d_]+)/)?RegExp.$1:"1",e=parseFloat(e.replace(/_/,".").replace(/_/g,""));a.add(f,e);a.add("ios",e)}a.add("android",parseFloat(b.split("Android ")[1])||void 0);a.add("bb",(0<=b.indexOf("BlackBerry")||0<=b.indexOf("BB10"))&&parseFloat(b.split("Version/")[1])||void 0);a.add("trident",parseFloat(c.split("Trident/")[1])||void 0);a.add("svg","undefined"!==typeof SVGAngle);
-a("webkit")||(0<=b.indexOf("Opera")&&a.add("opera",9.8<=d?parseFloat(b.split("Version/")[1])||d:d),0<=b.indexOf("Gecko")&&(!a("khtml")&&!a("webkit")&&!a("trident"))&&a.add("mozilla",d),a("mozilla")&&a.add("ff",parseFloat(b.split("Firefox/")[1]||b.split("Minefield/")[1])||void 0),document.all&&!a("opera")&&(b=parseFloat(c.split("MSIE ")[1])||void 0,(c=document.documentMode)&&(5!=c&&Math.floor(b)!=c)&&(b=c),a.add("ie",b)),a.add("wii","undefined"!=typeof opera&&opera.wiiremote));return a});
-//@ sourceMappingURL=sniff.js.map
+define(["./has"], function(has){
+	// module:
+	//		dojo/sniff
+
+	/*=====
+	return function(){
+		// summary:
+		//		This module sets has() flags based on the current browser.
+		//		It returns the has() function.
+	};
+	=====*/
+
+	if(has("host-browser")){
+		var n = navigator,
+			dua = n.userAgent,
+			dav = n.appVersion,
+			tv = parseFloat(dav);
+		has.add("air", dua.indexOf("AdobeAIR") >= 0);
+		has.add("wp", parseFloat(dua.split("Windows Phone")[1]) || undefined);
+		has.add("msapp", parseFloat(dua.split("MSAppHost/")[1]) || undefined);
+		has.add("khtml", dav.indexOf("Konqueror") >= 0 ? tv : undefined);
+		has.add("edge", parseFloat(dua.split("Edge/")[1]) || undefined);
+		has.add("webkit", !has("wp") // NOTE: necessary since Windows Phone 8.1 Update 1, see #18540
+			&& !has("edge") && parseFloat(dua.split("WebKit/")[1]) || undefined);
+		has.add("chrome", !has("edge")
+				&& parseFloat(dua.split("Chrome/")[1]) || undefined);
+		has.add("android", !has("wp") // NOTE: necessary since Windows Phone 8.1 Update 1, see #18528
+				&& parseFloat(dua.split("Android ")[1]) || undefined);
+		has.add("safari", dav.indexOf("Safari") >= 0 
+				&& !has("wp") // NOTE: necessary since Windows Phone 8.1 Update 1, see #18540
+				&& !has("chrome") && !has("android") && !has("edge") ?
+			parseFloat(dav.split("Version/")[1]) : undefined);
+		has.add("mac", dav.indexOf("Macintosh") >= 0);
+		has.add("quirks", document.compatMode == "BackCompat");
+		if(!has("wp") // NOTE: necessary since Windows Phone 8.1 Update 1, see #18528
+				&& dua.match(/(iPhone|iPod|iPad)/)){
+			var p = RegExp.$1.replace(/P/, "p");
+			var v = dua.match(/OS ([\d_]+)/) ? RegExp.$1 : "1";
+			var os = parseFloat(v.replace(/_/, ".").replace(/_/g, ""));
+			has.add(p, os);		// "iphone", "ipad" or "ipod"
+			has.add("ios", os);
+		}
+		has.add("bb", (dua.indexOf("BlackBerry") >= 0 || dua.indexOf("BB10") >= 0) && parseFloat(dua.split("Version/")[1]) || undefined);
+		has.add("trident", parseFloat(dav.split("Trident/")[1]) || undefined);
+
+		has.add("svg", typeof SVGAngle !== "undefined");
+
+		if(!has("webkit")){
+			// Opera
+			if(dua.indexOf("Opera") >= 0){
+				// see http://dev.opera.com/articles/view/opera-ua-string-changes and http://www.useragentstring.com/pages/Opera/
+				// 9.8 has both styles; <9.8, 9.9 only old style
+				has.add("opera", tv >= 9.8 ? parseFloat(dua.split("Version/")[1]) || tv : tv);
+			}
+
+			// Mozilla and firefox
+			if(dua.indexOf("Gecko") >= 0 && !has("wp") // NOTE: necessary since Windows Phone 8.1 Update 1
+					&& !has("khtml") && !has("trident") && !has("edge")){
+				has.add("mozilla", tv);
+			}
+			if(has("mozilla")){
+				//We really need to get away from this. Consider a sane isGecko approach for the future.
+				has.add("ff", parseFloat(dua.split("Firefox/")[1] || dua.split("Minefield/")[1]) || undefined);
+			}
+
+			// IE
+			if(document.all && !has("opera")){
+				var isIE = parseFloat(dav.split("MSIE ")[1]) || undefined;
+
+				//In cases where the page has an HTTP header or META tag with
+				//X-UA-Compatible, then it is in emulation mode.
+				//Make sure isIE reflects the desired version.
+				//document.documentMode of 5 means quirks mode.
+				//Only switch the value if documentMode's major version
+				//is different from isIE's major version.
+				var mode = document.documentMode;
+				if(mode && mode != 5 && Math.floor(isIE) != mode){
+					isIE = mode;
+				}
+
+				has.add("ie", isIE);
+			}
+
+			// Wii
+			has.add("wii", typeof opera != "undefined" && opera.wiiremote);
+		}
+	}
+
+	return has;
+});

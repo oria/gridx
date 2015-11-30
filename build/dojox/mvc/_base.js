@@ -1,4 +1,67 @@
-//>>built
-define("dojox/mvc/_base","dojo/_base/kernel dojo/_base/lang ./getStateful ./StatefulModel ./Bind ./_DataBindingMixin ./_patches".split(" "),function(a,f,d,e){a.experimental("dojox.mvc");a=f.getObject("dojox.mvc",!0);a.newStatefulModel=function(b){if(b.data)return d(b.data,e.getStatefulOptions);if(b.store&&f.isFunction(b.store.query)){var c,a=b.store.query(b.query);if(a.then)return a.then(function(a){c=d(a,e.getStatefulOptions);c.store=b.store;return c});c=d(a,e.getStatefulOptions);c.store=b.store;
-return c}};return a});
-//@ sourceMappingURL=_base.js.map
+define([
+	"dojo/_base/kernel",
+	"dojo/_base/lang",
+	"./getStateful",
+	"./StatefulModel",
+	"./Bind",
+	"./_DataBindingMixin",
+	"./_patches"
+], function(kernel, lang, getStateful, StatefulModel){
+	// module:
+	//		dojox/mvc/_base
+	// summary:
+	//		Pulls in essential MVC dependencies such as basic support for
+	//		data binds, a data model and data binding mixin for dijits.
+	kernel.experimental("dojox.mvc");
+
+	var mvc = lang.getObject("dojox.mvc", true);
+	/*=====
+		mvc = dojox.mvc;
+	=====*/
+
+	// Factory method for dojox.mvc.StatefulModel instances
+	mvc.newStatefulModel = function(/*Object*/args){
+		// summary:
+		//		Factory method that instantiates a new data model that view
+		//		components may bind to.
+		// args:
+		//		The mixin properties.
+		// description:
+		//		Factory method that returns a client-side data model, which is a
+		//		tree of dojo/Stateful objects matching the initial data structure
+		//		passed as input:
+		//
+		//		- The mixin property "data" is used to provide a plain JavaScript
+		//		  object directly representing the data structure.
+		//		- The mixin property "store", along with an optional mixin property
+		//		  "query", is used to provide a data store to query to obtain the
+		//		  initial data.
+		//
+		//		This function returns an immediate dojox.mvc.StatefulModel instance or
+		//		a Promise for such an instance as follows:
+		//
+		//		- if args.data: returns immediately
+		//		- if args.store: if store returns immediately, this function returns immediately;
+		//			if store returns a Promise, this function returns a model Promise
+
+		if(args.data){
+			return getStateful(args.data, StatefulModel.getStatefulOptions);
+		}else if(args.store && lang.isFunction(args.store.query)){
+			var model;
+			var result = args.store.query(args.query);
+			if(result.then){
+				return (result.then(function(data){
+					model = getStateful(data, StatefulModel.getStatefulOptions);
+					model.store = args.store;
+					return model;
+				}));
+			}else{
+				model = getStateful(result, StatefulModel.getStatefulOptions);
+				model.store = args.store;
+				return model;
+			}
+		}
+	};
+
+	return mvc;
+});

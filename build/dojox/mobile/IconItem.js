@@ -1,13 +1,412 @@
-//>>built
-define("dojox/mobile/IconItem","dojo/_base/declare dojo/_base/event dojo/_base/lang dojo/sniff dojo/_base/window dojo/dom-class dojo/dom-construct dojo/dom-geometry dojo/dom-style ./_ItemBase ./Badge ./TransitionEvent ./iconUtils ./lazyLoadUtils ./viewRegistry ./_css3 dojo/has!dojo-bidi?dojox/mobile/bidi/IconItem".split(" "),function(l,m,n,g,p,e,d,h,k,f,q,r,s,t,u,v,w){f=l(g("dojo-bidi")?"dojox.mobile.NonBidiIconItem":"dojox.mobile.IconItem",f,{lazy:!1,requires:"",timeout:10,content:"",badge:"",badgeClass:"mblDomButtonRedBadge",
-deletable:!0,deleteIcon:"",tag:"li",paramsToInherit:"transition,icon,deleteIcon,badgeClass,deleteIconTitle,deleteIconRole",baseClass:"mblIconItem",_selStartMethod:"touch",_selEndMethod:"none",destroy:function(){this.badgeObj&&delete this.badgeObj;this.inherited(arguments)},buildRendering:function(){this.domNode=this.srcNodeRef||d.create(this.tag);if(this.srcNodeRef){this._tmpNode=d.create("div");for(var a=0,b=this.srcNodeRef.childNodes.length;a<b;a++)this._tmpNode.appendChild(this.srcNodeRef.firstChild)}this.iconDivNode=
-d.create("div",{className:"mblIconArea"},this.domNode);this.iconParentNode=d.create("div",{className:"mblIconAreaInner"},this.iconDivNode);this.labelNode=d.create("span",{className:"mblIconAreaTitle"},this.iconDivNode);this.inherited(arguments)},startup:function(){if(!this._started){var a=this.getParent();require([a.iconItemPaneClass],n.hitch(this,function(b){b=this.paneWidget=new b(a.iconItemPaneProps);this.containerNode=b.containerNode;if(this._tmpNode){for(var c=0,d=this._tmpNode.childNodes.length;c<
-d;c++)b.containerNode.appendChild(this._tmpNode.firstChild);this._tmpNode=null}a.paneContainerWidget.addChild(b,this.getIndexInParent());b.set("label",this.label);this._clickCloseHandle=this.connect(b.closeIconNode,"onclick","_closeIconClicked");this._keydownCloseHandle=this.connect(b.closeIconNode,"onkeydown","_closeIconClicked")}));this.inherited(arguments);this._isOnLine||(this._isOnLine=!0,this.set("icon",void 0!==this._pendingIcon?this._pendingIcon:this.icon),delete this._pendingIcon);!this.icon&&
-a.defaultIcon&&this.set("icon",a.defaultIcon);this._dragstartHandle=this.connect(this.domNode,"ondragstart",m.stop);this.connect(this.domNode,"onkeydown","_onClick")}},highlight:function(a){e.add(this.iconDivNode,"mblVibrate");a=void 0!==a?a:this.timeout;if(0<a){var b=this;b.defer(function(){b.unhighlight()},1E3*a)}},unhighlight:function(){e.remove(this.iconDivNode,"mblVibrate")},isOpen:function(a){return this.paneWidget.isOpen()},_onClick:function(a){this.getParent().isEditing||a&&"keydown"===a.type&&
-13!==a.keyCode||!1!==this.onClick(a)&&this.defaultClickAction(a)},onClick:function(){},_onNewWindowOpened:function(a){this.set("selected",!1)},_prepareForTransition:function(a,b){if(b)return this.defer(function(a){this.set("selected",!1)},1500),!0;"below"===this.getParent().transition&&this.isOpen()?this.close():this.open(a);return!1},_closeIconClicked:function(a){a?"keydown"===a.type&&13!==a.keyCode||!1!==this.closeIconClicked(a)&&this.defer(function(a){this._closeIconClicked()}):this.close()},closeIconClicked:function(){},
-open:function(a){var b=this.getParent();"below"===this.transition?(b.single&&b.closeAll(),this._open_1()):(b._opening=this,b.single&&(this.paneWidget.closeHeaderNode.style.display="none",this.isOpen()||b.closeAll(),b.appView._heading.set("label",this.label)),this.moveTo=b.id+"_mblApplView",(new r(this.domNode,this.getTransOpts(),a)).dispatch())},_open_1:function(){this.paneWidget.show();this.unhighlight();this.lazy&&(t.instantiateLazyWidgets(this.containerNode,this.requires),this.lazy=!1);this.scrollIntoView(this.paneWidget.domNode);
-this.onOpen()},scrollIntoView:function(a){var b=u.getEnclosingScrollable(a);if(b){var c=b.getDim();c.c.h>=c.d.h&&b.scrollIntoView(a,!0)}else p.global.scrollBy(0,h.position(a,!1).y)},close:function(a){if(this.isOpen()){this.set("selected",!1);if(g("css3-animations")&&!a)if(a=this.paneWidget.domNode,"below"==this.getParent().transition){e.add(a,"mblCloseContent mblShrink");var b=h.position(a,!0),c=h.position(this.domNode,!0);k.set(a,v.add({},{transformOrigin:c.x+c.w/2-b.x+"px "+(c.y+c.h/2-b.y)+"px"}))}else e.add(a,
-"mblCloseContent mblShrink0");else this.paneWidget.hide();this.onClose()}},onOpen:function(){},onClose:function(){},_setLabelAttr:function(a){this.label=a;var b=this._cv?this._cv(a):a;this.labelNode.innerHTML=b;this.paneWidget&&this.paneWidget.set("label",a)},_getBadgeAttr:function(){return this.badgeObj?this.badgeObj.getValue():null},_setBadgeAttr:function(a){this.badgeObj||(this.badgeObj=new q({fontSize:14,className:this.badgeClass}),k.set(this.badgeObj.domNode,{position:"absolute",top:"-2px",right:"2px"}));
-this.badgeObj.setValue(a);a?this.iconDivNode.appendChild(this.badgeObj.domNode):this.iconDivNode.removeChild(this.badgeObj.domNode)},_setDeleteIconAttr:function(a){if(this.getParent()&&(this._set("deleteIcon",a),a=this.deletable?a:"",this.deleteIconNode=s.setIcon(a,this.deleteIconPos,this.deleteIconNode,this.deleteIconTitle||this.alt,this.iconDivNode)))e.add(this.deleteIconNode,"mblIconItemDeleteIcon"),this.deleteIconRole&&this.deleteIconNode.setAttribute("role",this.deleteIconRole)},_setContentAttr:function(a){var b;
-this.paneWidget?b=this.paneWidget.containerNode:(this._tmpNode||(this._tmpNode=d.create("div")),b=this._tmpNode);"object"===typeof a?(d.empty(b),b.appendChild(a)):b.innerHTML=a},_setSelectedAttr:function(a){this.inherited(arguments);k.set(this.iconNode,"opacity",a?this.getParent().pressedIconOpacity:1)}});return g("dojo-bidi")?l("dojox.mobile.IconItem",[f,w]):f});
-//@ sourceMappingURL=IconItem.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/event",
+	"dojo/_base/lang",
+	"dojo/sniff",
+	"dojo/_base/window",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-geometry",
+	"dojo/dom-style",
+	"./_ItemBase",
+	"./Badge",
+	"./TransitionEvent",
+	"./iconUtils",
+	"./lazyLoadUtils",
+	"./viewRegistry",
+	"./_css3",
+	"dojo/has!dojo-bidi?dojox/mobile/bidi/IconItem"
+], function(declare, event, lang, has, win, domClass, domConstruct, domGeometry, domStyle, ItemBase, Badge, TransitionEvent, iconUtils, lazyLoadUtils, viewRegistry, css3, BidiIconItem){
+
+	// module:
+	//		dojox/mobile/IconItem
+
+	var IconItem = declare(has("dojo-bidi") ? "dojox.mobile.NonBidiIconItem" : "dojox.mobile.IconItem", ItemBase, {
+		// summary:
+		//		An icon item widget.
+		// description:
+		//		IconItem represents an item that has an application component
+		//		and its icon image. You can tap the icon to open the
+		//		corresponding application component. You can also use the icon
+		//		to move to a different view by specifying either of the moveTo,
+		//		href or url parameters.
+
+		// lazy: String
+		//		If true, the content of the widget, which includes dojo markup,
+		//		is instantiated lazily. That is, only when the widget is opened
+		//		by the user, the required modules are loaded and the content
+		//		widgets are instantiated.
+		//		This option works both in the sync and async loader mode.
+		lazy: false,
+
+		// requires: String
+		//		Comma-separated required module names to be lazily loaded. This
+		//		property is effective only when lazy=true. All the modules
+		//		specified with data-dojo-type and their depending modules are
+		//		automatically loaded by the IconItem when it is opened.
+		//		However, if you need other extra modules to be loaded, use this parameter.
+		//		This option works both in the sync and async loader mode.
+		requires: "",
+
+		// timeout: String
+		//		Duration of highlight in seconds.
+		timeout: 10,
+
+		// content: String
+		//		An HTML fragment to embed as icon content.
+		content: "",
+
+		// badge: String
+		//		A text to show in a badge (ex. "55").
+		badge: "",
+
+		// badgeClass: String
+		//		A class name of a DOM button for a badge.
+		badgeClass: "mblDomButtonRedBadge",
+
+		// deletable: Boolean
+		//		If true, you can delete this IconItem by clicking on the delete
+		//		icon during edit mode.
+		//		If false, the delete icon is not displayed during edit mode so
+		//		that it cannot be deleted.
+		deletable: true,
+
+		// deleteIcon: String
+		//		A delete icon to display at the top-left corner of the item
+		//		during edit mode. The value can be either a path for an image
+		//		file or a class name of a DOM button.
+		deleteIcon: "",
+
+		// tag: String
+		//		A name of the HTML tag to create as domNode.
+		tag: "li",
+
+		/* internal properties */	
+		// Note these are overrides for similar properties defined in _ItemBase.
+		paramsToInherit: "transition,icon,deleteIcon,badgeClass,deleteIconTitle,deleteIconRole",
+		baseClass: "mblIconItem",
+		_selStartMethod: "touch",
+		_selEndMethod: "none",
+
+		destroy: function(){
+			if(this.badgeObj){
+				delete this.badgeObj;
+			}
+			this.inherited(arguments);
+		},
+
+		buildRendering: function(){
+			this.domNode = this.srcNodeRef || domConstruct.create(this.tag);
+
+			if(this.srcNodeRef){
+				// reparent
+				this._tmpNode = domConstruct.create("div");
+				for(var i = 0, len = this.srcNodeRef.childNodes.length; i < len; i++){
+					this._tmpNode.appendChild(this.srcNodeRef.firstChild);
+				}
+			}
+
+			this.iconDivNode = domConstruct.create("div", {className:"mblIconArea"}, this.domNode);
+			this.iconParentNode = domConstruct.create("div", {className:"mblIconAreaInner"}, this.iconDivNode);
+			this.labelNode = domConstruct.create("span", {className:"mblIconAreaTitle"}, this.iconDivNode);
+
+			this.inherited(arguments);
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+
+			var p = this.getParent();
+			require([p.iconItemPaneClass], lang.hitch(this, function(module){
+				var w = this.paneWidget = new module(p.iconItemPaneProps);
+				this.containerNode = w.containerNode;
+				if(this._tmpNode){
+					// reparent
+					for(var i = 0, len = this._tmpNode.childNodes.length; i < len; i++){
+						w.containerNode.appendChild(this._tmpNode.firstChild);
+					}
+					this._tmpNode = null;
+				}
+				p.paneContainerWidget.addChild(w, this.getIndexInParent());
+				w.set("label", this.label);
+				this._clickCloseHandle = this.connect(w.closeIconNode, "onclick", "_closeIconClicked");
+				this._keydownCloseHandle = this.connect(w.closeIconNode, "onkeydown", "_closeIconClicked"); // for desktop browsers
+			}));
+
+			this.inherited(arguments);
+			if(!this._isOnLine){
+				this._isOnLine = true;
+				// retry applying the attribute for which the custom setter delays the actual 
+				// work until _isOnLine is true. 
+				this.set("icon", this._pendingIcon !== undefined ? this._pendingIcon : this.icon);
+				// Not needed anymore (this code executes only once per life cycle):
+				delete this._pendingIcon; 
+			}
+			if(!this.icon && p.defaultIcon){
+				this.set("icon", p.defaultIcon);
+			}
+
+			this._dragstartHandle = this.connect(this.domNode, "ondragstart", event.stop);
+			this.connect(this.domNode, "onkeydown", "_onClick"); // for desktop browsers
+		},
+
+		highlight: function(/*Number?*/timeout){
+			// summary:
+			//		Shakes the icon 10 seconds.
+			domClass.add(this.iconDivNode, "mblVibrate");
+			timeout = (timeout !== undefined) ? timeout : this.timeout;
+			if(timeout > 0){
+				var _this = this;
+				_this.defer(function(){
+					_this.unhighlight();
+				}, timeout*1000);
+			}
+		},
+
+		unhighlight: function(){
+			// summary:
+			//		Stops shaking the icon.
+			if(!has("ie") && has("trident") === 7){
+				// Workaround on IE11: if just removing the style, the icon continues to shake
+				domStyle.set(this.iconDivNode, "animation-name", "");
+			}
+			domClass.remove(this.iconDivNode, "mblVibrate");
+		},
+
+		isOpen: function(e){
+			// summary:
+			//		Returns true if the icon is open.
+			return this.paneWidget.isOpen();
+		},
+
+		_onClick: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(this.getParent().isEditing || e && e.type === "keydown" && e.keyCode !== 13){ return; }
+			if(this.onClick(e) === false){ return; } // user's click action
+			this.defaultClickAction(e);
+		},
+
+		onClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User-defined function to handle clicks.
+			// tags:
+			//		callback
+		},
+
+		_onNewWindowOpened: function(e){
+			// Override from _ItemBase
+			this.set("selected", false);
+		},
+
+		_prepareForTransition: function(e, transOpts){
+			// Override from _ItemBase
+			if(transOpts){
+				this.defer(function(d){
+					this.set("selected", false);
+				}, 1500);
+				return true;
+			}else{
+				if(this.getParent().transition === "below" && this.isOpen()){
+					this.close();
+				}else{
+					this.open(e);
+				}
+				return false;
+			}
+		},
+
+		_closeIconClicked: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(e){
+				if(e.type === "keydown" && e.keyCode !== 13){ return; }
+				if(this.closeIconClicked(e) === false){ return; } // user's click action
+				this.defer(function(d){ this._closeIconClicked(); });
+				return;
+			}
+			this.close();
+		},
+
+		closeIconClicked: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User-defined function to handle clicks for the close icon.
+			// tags:
+			//		callback
+		},
+
+		open: function(e){
+			// summary:
+			//		Opens the icon content, or makes a transition.
+			var parent = this.getParent(); // IconContainer
+			if(this.transition === "below"){
+				if(parent.single){
+					parent.closeAll();
+				}
+				this._open_1();
+			}else{
+				parent._opening = this;
+				if(parent.single){
+					this.paneWidget.closeHeaderNode.style.display = "none";
+					if(!this.isOpen()){
+						parent.closeAll();
+					}
+					parent.appView._heading.set("label", this.label);
+				}
+				this.moveTo = parent.id + "_mblApplView";
+				new TransitionEvent(this.domNode, this.getTransOpts(), e).dispatch();
+			}
+		},
+
+		_open_1: function(){
+			// summary:
+			//		Opens the icon content for the 'below' transition.
+			// tags:
+			//		private
+			this.paneWidget.show();
+			this.unhighlight();
+			if(this.lazy){
+				lazyLoadUtils.instantiateLazyWidgets(this.containerNode, this.requires);
+				this.lazy = false;
+			}
+			this.scrollIntoView(this.paneWidget.domNode);
+			this.onOpen();
+		},
+
+		scrollIntoView: function(/*DomNode*/node){
+			// summary:
+			//		Scrolls until the given node is in the view.
+			var s = viewRegistry.getEnclosingScrollable(node);
+			if(s){ // this node is placed inside scrollable
+				var dim = s.getDim();
+				if(dim.c.h >= dim.d.h){ // #16306: only if the content is larger than the display area 
+					s.scrollIntoView(node, true);
+				}
+			}else{
+				win.global.scrollBy(0, domGeometry.position(node, false).y);
+			}
+		},
+
+		close: function(/*Boolean?*/noAnimation){
+			// summary:
+			//		Closes the icon content.
+			if(!this.isOpen()){ return; }
+			this.set("selected", false);
+			if(has("css3-animations") && !noAnimation){
+				var contentNode = this.paneWidget.domNode;
+				if(this.getParent().transition == "below"){
+					domClass.add(contentNode, "mblCloseContent mblShrink");
+					var nodePos = domGeometry.position(contentNode, true);
+					var targetPos = domGeometry.position(this.domNode, true);
+					var origin = (targetPos.x + targetPos.w/2 - nodePos.x) + "px " + (targetPos.y + targetPos.h/2 - nodePos.y) + "px";
+					domStyle.set(contentNode, css3.add({}, { transformOrigin:origin }));
+				}else{
+					domClass.add(contentNode, "mblCloseContent mblShrink0");
+				}
+			}else{
+				this.paneWidget.hide();
+			}
+			this.onClose();
+		},
+
+		onOpen: function(){
+			// summary:
+			//		Stub method to allow the application to connect.
+		},
+
+		onClose: function(){
+			// summary:
+			//		Stub method to allow the application to connect.
+		},
+
+		_setLabelAttr: function(/*String*/text){
+			// tags:
+			//		private
+			this.label = text;
+			var s = this._cv ? this._cv(text) : text;
+			this.labelNode.innerHTML = s;
+			if(this.paneWidget){
+				this.paneWidget.set("label", text);
+			}
+		},
+
+		_getBadgeAttr: function(){
+			// tags:
+			//		private
+			return this.badgeObj ? this.badgeObj.getValue() : null;
+		},
+
+		_setBadgeAttr: function(/*String*/value){
+			// tags:
+			//		private
+			if(!this.badgeObj){
+				this.badgeObj = new Badge({fontSize:14, className:this.badgeClass});
+				domStyle.set(this.badgeObj.domNode, {
+					position: "absolute",
+					top: "-2px",
+					right: "2px"
+				});
+			}
+			this.badgeObj.setValue(value);
+			if(value){
+				this.iconDivNode.appendChild(this.badgeObj.domNode);
+			}else{
+				this.iconDivNode.removeChild(this.badgeObj.domNode);
+			}
+		},
+
+		_setDeleteIconAttr: function(icon){
+			// tags:
+			//		private
+			if(!this.getParent()){ return; } // icon may be invalid because inheritParams is not called yet
+
+			this._set("deleteIcon", icon);
+			icon = this.deletable ? icon : "";
+			this.deleteIconNode = iconUtils.setIcon(icon, this.deleteIconPos, this.deleteIconNode, 
+					this.deleteIconTitle || this.alt, this.iconDivNode);
+			if(this.deleteIconNode){
+				domClass.add(this.deleteIconNode, "mblIconItemDeleteIcon");
+				if(this.deleteIconRole){
+					this.deleteIconNode.setAttribute("role", this.deleteIconRole);
+				}
+			}
+		},
+
+		_setContentAttr: function(/*String|DomNode*/data){
+			// tags:
+			//		private
+			var root;
+			if(!this.paneWidget){
+				if(!this._tmpNode){
+					this._tmpNode = domConstruct.create("div");
+				}
+				root = this._tmpNode;
+			}else{
+				root = this.paneWidget.containerNode;
+			}
+
+			if(typeof data === "object"){
+				domConstruct.empty(root);
+				root.appendChild(data);
+			}else{
+				root.innerHTML = data;
+			}
+		},
+
+		_setSelectedAttr: function(/*Boolean*/selected){
+			// summary:
+			//		Makes this widget in the selected or unselected state.
+			// tags:
+			//		private
+			this.inherited(arguments);
+			this.iconNode && domStyle.set(this.iconNode, "opacity",
+						 selected ? this.getParent().pressedIconOpacity : 1);
+		}
+	});
+
+	return has("dojo-bidi") ? declare("dojox.mobile.IconItem", [IconItem, BidiIconItem]) : IconItem;
+});

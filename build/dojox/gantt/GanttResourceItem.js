@@ -1,23 +1,468 @@
-//>>built
-define("dojox/gantt/GanttResourceItem","dojo/_base/declare dojo/_base/array dojo/_base/lang dojo/date/locale dojo/request dojo/on dojo/dom dojo/dom-class dojo/dom-construct dojo/dom-style dojo/dom-attr dojo/dom-geometry dojo/keys dojo/domReady!".split(" "),function(p,g,q,u,v,r,w,m,f,d,s,x,t){return p("dojox.gantt.GanttResourceItem",[],{constructor:function(a){this.ganttChart=a;this.ownerItem=[];this.ownerNameItem=[];this.ownerTaskNodeMapping={};this.ownerTaskNodeMapping_time={};this.resourceInfo=
-{};this.ownerTimeConsume={}},clearAll:function(){this.clearData();this.clearItems()},clearData:function(){this.ownerItem=[];this.ownerNameItem=[];this.ownerTaskNodeMapping={};this.ownerTaskNodeMapping_time={};this.resourceInfo={};this.ownerTimeConsume={}},clearItems:function(){this.content.firstChild&&f.destroy(this.content.firstChild)},buildResource:function(){var a={};g.forEach(this.ganttChart.arrProjects,function(b){g.forEach(b.arrTasks,function(b){b.buildResourceInfo(a)},this)},this);return a},
-buildOwnerTimeConsume:function(){var a={},b;for(b in this.resourceInfo){for(var c=this.resourceInfo[b],e={},d=0;d<c.length;d++){var k=c[d],h=k.taskItem.startTime.getTime(),k=864E5*k.taskItem.duration/this.ganttChart.hsPerDay;e.min=e.min?Math.min(e.min,h):h;e.max=e.max?Math.max(e.max,h+k):h+k}e.dur=(e.max-e.min)*this.ganttChart.hsPerDay/864E5;e.min=new Date(e.min);e.max=new Date(e.max);a[b]=e}return a},refresh:function(){this.ownerTimeConsume=this.buildOwnerTimeConsume();this.contentData.firstChild.style.width=
-Math.max(1200,this.ganttChart.pixelsPerDay*this.ganttChart.totalDays)+"px";for(var a in this.resourceInfo)this.refreshOwnerEntry(a)},reConstruct:function(){this.clearAll();this.resourceInfo=this.buildResource();this.ownerTimeConsume=this.buildOwnerTimeConsume();this.tableControl=f.create("table",{cellPadding:"0",cellSpacing:"0",className:"ganttResourceTableControl"});var a=this.tableControl.insertRow(this.tableControl.rows.length);this.contentHeight=this.content.offsetHeight;this.contentWidth=this.content.offsetWidth;
-this.content.appendChild(this.tableControl);this.contentData=f.create("div",{className:"ganttResourceContentDataContainer"});this.contentData.appendChild(this.createPanelOwners());d.set(this.contentData,"height",this.contentHeight-this.ganttChart.panelTimeHeight+"px");var b=f.create("td",{vAlign:"top"});this.panelNames=f.create("div",{className:"ganttResourcePanelNames"});this.panelNames.appendChild(this.createPanelNamesOwners());b.appendChild(this.panelNames);a.appendChild(b);var b=f.create("td",
-{vAlign:"top"}),c=f.create("div",{className:"ganttResourceDivCell"});c.appendChild(this.contentData);b.appendChild(c);a.appendChild(b);d.set(this.panelNames,{height:this.contentHeight-this.ganttChart.panelTimeHeight-this.ganttChart.scrollBarWidth+"px",width:this.ganttChart.maxWidthPanelNames+"px"});this.contentData.style.width=this.contentWidth-this.ganttChart.maxWidthPanelNames+"px";this.contentData.firstChild.style.width=this.ganttChart.pixelsPerDay*this.ganttChart.panelTime.firstChild.firstChild.rows[3].cells.length+
-"px";var e=this;this.contentData.onscroll=function(){e.panelNames&&(e.panelNames.scrollTop=this.scrollTop)};this.contentData.scrollLeft=this.ganttChart.contentData.scrollLeft;for(var n in this.resourceInfo)this.createOwnerEntry(n);this.postAdjustment()},create:function(){var a=f.create("div",{innerHTML:"Resource Chart:",className:"ganttResourceHeader"},this.ganttChart.content,"after");d.set(a,"width",this.ganttChart.contentWidth+"px");a=f.create("div",{className:"ganttResourceContent"},a,"after");
-d.set(a,{width:this.ganttChart.contentWidth+"px",height:(this.ganttChart.resourceChartHeight||0.8*this.ganttChart.contentHeight)+"px"});this.content=a||this.content;this.reConstruct()},postAdjustment:function(){this.contentData.firstChild.style.height=23*this.ownerItem.length+"px";this.panelNames.firstChild.style.height=23*this.ownerItem.length+"px"},refreshOwnerEntry:function(a){this.refreshOwnerItem(a);g.forEach(this.resourceInfo[a],function(b,c){this.refreshDetailedTaskEntry(a,this.ownerTaskNodeMapping[a].tasks[c][0],
-b)},this)},createOwnerEntry:function(a){var b=this.contentData.firstChild,c=this.ownerItem[this.ownerItem.length-1];this.ownerTaskNodeMapping[a]={};this.ownerTaskNodeMapping[a][a]=[];var c=(c?parseInt(c.style.top):-17)+this.ganttChart.heightTaskItem+11,e=this.createOwnerItem(a,c);b.appendChild(e);this.ownerItem.push(e);this.ownerTaskNodeMapping[a][a].push(e);this.panelNames&&(b=this.createOwnerNameItem(a,c),this.panelNames.firstChild.appendChild(b),this.ownerNameItem.push(b),this.ownerTaskNodeMapping[a][a].push(b));
-var d=this.ownerNameItem[this.ownerNameItem.length-1];this.panelNames&&(this.checkWidthTaskNameItem(d),b=this.createTreeImg(d),this.panelNames.firstChild.appendChild(b),this.ownerTaskNodeMapping[a][a].push(b));this.ownerTaskNodeMapping[a].taskCount=this.resourceInfo[a].length;this.ownerTaskNodeMapping[a].isOpen=!1;this.ownerTaskNodeMapping[a].tasks=[];g.forEach(this.resourceInfo[a],function(b){this.ownerTaskNodeMapping[a].tasks.push(this.createDetailedTaskEntry(a,d,b))},this);return this},createOwnerNameItem:function(a,
-b){var c=f.create("div",{id:a,title:a,innerHTML:a,className:"ganttOwnerNameItem"});d.set(c,"top",b+"px");return c},refreshOwnerItem:function(a){var b=this.ownerTaskNodeMapping[a][a][0],c=this.ownerTimeConsume[a].dur,e=this.ganttChart.getPosOnDate(this.ownerTimeConsume[a].min);b.style.left=e+"px";b.style.width=c*this.ganttChart.pixelsPerWorkHour+"px";g.forEach(this.resourceInfo[a],function(a,c){var h=this.ganttChart.getPosOnDate(a.taskItem.startTime);d.set(b.childNodes[c],{left:h-e+"px",width:a.taskItem.duration*
-this.ganttChart.pixelsPerWorkHour+"px"})},this)},createOwnerItem:function(a,b){var c=this.ownerTimeConsume[a].dur,e=this.ganttChart.getPosOnDate(this.ownerTimeConsume[a].min),n=f.create("div",{id:a,owner:!0,className:"ganttOwnerBar"});d.set(n,{left:e+"px",top:b+"px",width:c*this.ganttChart.pixelsPerWorkHour+"px",height:this.ganttChart.heightTaskItem+"px"});g.forEach(this.resourceInfo[a],function(b){var c=f.create("div",{id:a,className:"ganttOwnerTaskBar"},n),g=this.ganttChart.getPosOnDate(b.taskItem.startTime);
-d.set(c,{left:g-e+"px",width:b.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px",height:this.ganttChart.heightTaskItem+"px"})},this);return n},refreshDetailedTaskEntry:function(a,b,c){this.refreshTaskItem(b,c)},createDetailedTaskEntry:function(a,b,c){a=[];var e=this.contentData.firstChild,f=parseInt(b.style.top),k=this.createTaskItem(c,f);k.style.display="none";e.appendChild(k);this.ownerItem.push(k);a.push(k);this.panelNames&&(c=this.createTaskNameItem(c.taskItem.name,f),this.panelNames.firstChild.appendChild(c),
-c.style.display="none",this.ownerNameItem.push(c),a.push(c));this.panelNames&&(this.ownerNameItem[this.ownerNameItem.length-1].style.left=d.get(b,"left")+15+"px",b=this.createConnectingLinesPN(b,this.ownerNameItem[this.ownerNameItem.length-1]),g.forEach(b,function(a){a.style.display="none"},this),a.push({v:b[0],h:b[1]}),this.checkWidthTaskNameItem(this.ownerNameItem[this.ownerNameItem.length-1]));return a},createTaskNameItem:function(a,b){var c=f.create("div",{id:a,className:"ganttTaskNameItem",title:a,
-innerHTML:a});d.set(c,"top",b+"px");return c},refreshTaskItem:function(a,b){var c=this.ganttChart.getPosOnDate(b.taskItem.startTime);d.set(a,{left:c+"px",width:b.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px"})},createTaskItem:function(a,b){var c=this.ganttChart.getPosOnDate(a.taskItem.startTime),e=f.create("div",{id:a.taskItem.name,className:"ganttTaskBar"});d.set(e,{left:c+"px",top:b+"px",width:a.taskItem.duration*this.ganttChart.pixelsPerWorkHour+"px",height:this.ganttChart.heightTaskItem+
-"px"});return e},createConnectingLinesPN:function(a,b){var c=[],e=f.create("div",{innerHTML:"\x26nbsp;",className:"ganttResourceLineVerticalLeft"},this.panelNames.firstChild);e.cNode=b;e.pNode=a;var d=f.create("div",{noShade:!0,color:"#000",className:"ganttResourceLineHorizontalLeft"},this.panelNames.firstChild);d.cNode=b;d.pNode=a;this.panelNames.firstChild.appendChild(d);c.push(e);c.push(d);return c},createTreeImg:function(a){var b=f.create("div",{id:a.id,className:"ganttImageTreeExpand"});s.set(b,
-"tabIndex",0);var c=this.ownerTaskNodeMapping[a.id];g.forEach(["click","keydown"],function(e){this.ganttChart._events.push(r(b,e,q.hitch(this,function(f){var k=!1,h,l;if(!("keydown"==e&&f.keyCode!=t.ENTER))if(c.isOpen)for(h in m.remove(b,"ganttImageTreeCollapse"),m.add(b,"ganttImageTreeExpand"),c.isOpen=!1,this.ownerTaskNodeMapping)l=this.ownerTaskNodeMapping[h],k?(g.forEach(l[h],function(a){d.set(a,"top",d.get(a,"top")-23*c.taskCount+"px")}),g.forEach(l.tasks,function(a){g.forEach(a,function(a){g.forEach(!a.v&&
-!a.h?[a]:[a.v,a.h],function(a){d.set(a,"top",d.get(a,"top")-23*c.taskCount+"px")})})})):h==a.id&&(k=!0,g.forEach(l.tasks,function(a){g.forEach(a,function(a){this.styleOwnerItem(a,l[h][0],"none",0)},this)},this));else for(h in m.remove(b,"ganttImageTreeExpand"),m.add(b,"ganttImageTreeCollapse"),c.isOpen=!0,this.ownerTaskNodeMapping)l=this.ownerTaskNodeMapping[h],k?(g.forEach(l[h],function(a){d.set(a,"top",d.get(a,"top")+23*c.taskCount+"px")}),g.forEach(l.tasks,function(a){g.forEach(a,function(a){g.forEach(!a.v&&
-!a.h?[a]:[a.v,a.h],function(a){d.set(a,"top",d.get(a,"top")+23*c.taskCount+"px")})})})):h==a.id&&(k=!0,g.forEach(l.tasks,function(a,b){g.forEach(a,function(a){this.styleOwnerItem(a,l[h][0],"inline",23*(b+1))},this)},this))})))},this);m.add(b,"ganttResourceTreeImage");d.set(b,{left:d.get(a,"left")-12+"px",top:d.get(a,"top")+3+"px"});return b},styleOwnerItem:function(a,b,c,e){a.v||a.h?(d.set(a.v,{height:Math.max(1,a.v.cNode.offsetTop-a.v.pNode.offsetTop)+"px",top:a.v.pNode.offsetTop+5+"px",left:a.v.pNode.offsetLeft-
-9+"px",display:c}),d.set(a.h,{width:Math.max(1,a.h.cNode.offsetLeft-a.h.pNode.offsetLeft+4)+"px",top:a.h.cNode.offsetTop+5+"px",left:a.h.pNode.offsetLeft-9+"px",display:c})):d.set(a,{display:c,top:parseInt(b.style.top)+e+"px"})},checkWidthTaskNameItem:function(a){if(a&&a.offsetWidth+a.offsetLeft>this.ganttChart.maxWidthPanelNames){var b=Math.round((a.offsetWidth+a.offsetLeft-this.ganttChart.maxWidthPanelNames)/(a.offsetWidth/a.firstChild.length)),b=a.id.substring(0,a.firstChild.length-b-3);a.innerHTML=
-b+"..."}},createPanelOwners:function(){var a=f.create("div",{className:"ganttOwnerPanel"});d.set(a,{height:this.contentHeight-this.ganttChart.panelTimeHeight-this.ganttChart.scrollBarWidth+"px"});return a},createPanelNamesOwners:function(){var a=f.create("div",{innerHTML:"\x26nbsp;",className:"ganttResourcePanelNamesOwners"});d.set(a,{height:this.contentHeight-this.ganttChart.panelTimeHeight-this.ganttChart.scrollBarWidth+"px",width:this.ganttChart.maxWidthPanelNames+"px"});return a}})});
-//@ sourceMappingURL=GanttResourceItem.js.map
+define([
+    "dojo/_base/declare",
+	"dojo/_base/array",
+	"dojo/_base/lang",
+    "dojo/date/locale",
+	"dojo/request",
+	"dojo/on",
+	"dojo/dom",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-attr",
+	"dojo/dom-geometry",
+	"dojo/keys",
+	"dojo/domReady!"
+], function(declare, arrayUtil, lang, locale, request, on,
+		dom, domClass, domConstruct, domStyle, domAttr, domGeometry, keys){
+	return declare("dojox.gantt.GanttResourceItem", [], {
+		constructor: function(ganttchart){
+			this.ganttChart = ganttchart;
+			this.ownerItem = [];
+			this.ownerNameItem = [];
+			this.ownerTaskNodeMapping = {};
+			this.ownerTaskNodeMapping_time = {};
+			this.resourceInfo = {};
+			this.ownerTimeConsume = {};
+		},
+		clearAll: function(){
+			this.clearData();
+			this.clearItems();
+		},
+		clearData: function(){
+			this.ownerItem = [];
+			this.ownerNameItem = [];
+			this.ownerTaskNodeMapping = {};
+			this.ownerTaskNodeMapping_time = {};
+			this.resourceInfo = {};
+			this.ownerTimeConsume = {};
+		},
+		clearItems: function(){
+			if(this.content.firstChild){
+			    domConstruct.destroy(this.content.firstChild);
+			}
+		},
+		buildResource: function(){
+			var resourceInfo = {};
+			arrayUtil.forEach(this.ganttChart.arrProjects, function(project){
+				arrayUtil.forEach(project.arrTasks, function(task){
+					task.buildResourceInfo(resourceInfo);
+				}, this);
+			}, this);
+			return resourceInfo;
+		},
+		buildOwnerTimeConsume: function(){
+			var ownerTimeConsume = {};
+			for(var owner in this.resourceInfo){
+				var tasks = this.resourceInfo[owner];
+				//combine time zone  (startTime - this.startDate) / (60 * 60 * 1000) * this.pixelsPerHour;
+				var timeZoom = {};
+				for(var i = 0; i < tasks.length; i++){
+					var task = tasks[i];
+					var startTime = task.taskItem.startTime.getTime(), dur = task.taskItem.duration * 24 * 60 * 60 * 1000 / this.ganttChart.hsPerDay;
+					timeZoom.min = timeZoom.min ? Math.min(timeZoom.min, startTime) : startTime;
+					timeZoom.max = timeZoom.max ? Math.max(timeZoom.max, (startTime + dur)) : (startTime + dur);
+				}
+				timeZoom.dur = (timeZoom.max - timeZoom.min) * this.ganttChart.hsPerDay / (24 * 60 * 60 * 1000);
+				timeZoom.min = new Date(timeZoom.min);
+				timeZoom.max = new Date(timeZoom.max);
+				ownerTimeConsume[owner] = timeZoom;
+			}
+			return ownerTimeConsume;
+		},
+		refresh: function(){
+			this.ownerTimeConsume = this.buildOwnerTimeConsume();
+			//resize outer div
+			this.contentData.firstChild.style.width = Math.max(1200, this.ganttChart.pixelsPerDay * this.ganttChart.totalDays) + "px";
+			for(var owner in this.resourceInfo){
+				this.refreshOwnerEntry(owner);
+			}
+		},
+		reConstruct: function(){
+			this.clearAll();
+			this.resourceInfo = this.buildResource();
+			this.ownerTimeConsume = this.buildOwnerTimeConsume();
+			this.tableControl = domConstruct.create("table", {
+				cellPadding: "0",
+				cellSpacing: "0",
+				className: "ganttResourceTableControl"
+			});
+			var newRowTblControl = this.tableControl.insertRow(this.tableControl.rows.length);
+			//Add to content Table
+			this.contentHeight = this.content.offsetHeight;
+			this.contentWidth = this.content.offsetWidth;
+			this.content.appendChild(this.tableControl);
+			//Creation panel contentData
+			this.contentData = domConstruct.create("div", {className: "ganttResourceContentDataContainer"});
+			this.contentData.appendChild(this.createPanelOwners());
+			domStyle.set(this.contentData, "height", (this.contentHeight - this.ganttChart.panelTimeHeight) + "px");
+			//Creation panel of names
+			var newCellTblControl = domConstruct.create("td", {
+				vAlign: "top"
+			});
+			this.panelNames = domConstruct.create("div", {className: "ganttResourcePanelNames"});
+			this.panelNames.appendChild(this.createPanelNamesOwners());
+			newCellTblControl.appendChild(this.panelNames);
+			newRowTblControl.appendChild(newCellTblControl);
+			//add to control contentData and contentDataTime
+			newCellTblControl = domConstruct.create("td", {
+				vAlign: "top"
+			});
+			var divCell = domConstruct.create("div", {className: "ganttResourceDivCell"});
+			divCell.appendChild(this.contentData);
+			newCellTblControl.appendChild(divCell);
+			newRowTblControl.appendChild(newCellTblControl);
+			//Show panel of names
+			domStyle.set(this.panelNames, {
+				height: (this.contentHeight - this.ganttChart.panelTimeHeight - this.ganttChart.scrollBarWidth) + "px",
+				width: this.ganttChart.maxWidthPanelNames + "px"
+			});
+			this.contentData.style.width = (this.contentWidth - this.ganttChart.maxWidthPanelNames) + "px";
+			this.contentData.firstChild.style.width = this.ganttChart.pixelsPerDay * (this.ganttChart.panelTime.firstChild.firstChild.rows[3].cells.length) + "px";
+			var _this = this;
+			this.contentData.onscroll = function(){
+				if(_this.panelNames){
+					_this.panelNames.scrollTop = this.scrollTop;
+				}
+			};
+			this.contentData.scrollLeft = this.ganttChart.contentData.scrollLeft;
+			for(var owner in this.resourceInfo){
+				this.createOwnerEntry(owner);
+			}
+			this.postAdjustment();
+		},
+		create: function(){
+			var resourceHeader = domConstruct.create("div", {
+				innerHTML: "Resource Chart:",
+				className: "ganttResourceHeader"
+			}, this.ganttChart.content, "after");
+			domStyle.set(resourceHeader, "width", this.ganttChart.contentWidth + "px");
+			var content = domConstruct.create("div", {className: "ganttResourceContent"}, resourceHeader, "after");
+			domStyle.set(content, {
+				width: this.ganttChart.contentWidth + "px",
+				height: (this.ganttChart.resourceChartHeight || (this.ganttChart.contentHeight * 0.8)) + "px"
+			});
+			this.content = content || this.content;
+			//create Table
+			this.reConstruct();
+		},
+		postAdjustment: function(){
+			//contentData height
+			this.contentData.firstChild.style.height = (this.ownerItem.length * 23) + "px";
+			this.panelNames.firstChild.style.height = (this.ownerItem.length * 23) + "px";
+		},
+	
+		refreshOwnerEntry: function(owner){
+			this.refreshOwnerItem(owner);
+			arrayUtil.forEach(this.resourceInfo[owner], function(task, i){
+				var item = this.ownerTaskNodeMapping[owner].tasks[i][0];
+				this.refreshDetailedTaskEntry(owner, item, task);
+			}, this);
+		},
+		createOwnerEntry: function(owner){
+			var containerOwner = this.contentData.firstChild;
+			var previousOwner = this.ownerItem[this.ownerItem.length - 1];
+			this.ownerTaskNodeMapping[owner] = {};
+			this.ownerTaskNodeMapping[owner][owner] = [];
+			//creation arrTasks
+			var posY = (previousOwner ? parseInt(previousOwner.style.top) : (6 - 23)) + this.ganttChart.heightTaskItem + 11;
+			//creation task item
+			var oItem = this.createOwnerItem(owner, posY);
+			containerOwner.appendChild(oItem);
+			this.ownerItem.push(oItem);
+			this.ownerTaskNodeMapping[owner][owner].push(oItem);
+			if(this.panelNames){
+				var oNameItem = this.createOwnerNameItem(owner, posY);
+				this.panelNames.firstChild.appendChild(oNameItem);
+				this.ownerNameItem.push(oNameItem);
+				this.ownerTaskNodeMapping[owner][owner].push(oNameItem);
+			}
+			var currentOwnerNameNode = this.ownerNameItem[this.ownerNameItem.length - 1];
+			//adjust nodes
+			if(this.panelNames){
+				this.checkWidthTaskNameItem(currentOwnerNameNode);
+				var treeImg = this.createTreeImg(currentOwnerNameNode);
+				this.panelNames.firstChild.appendChild(treeImg);
+				this.ownerTaskNodeMapping[owner][owner].push(treeImg);
+			}
+			this.ownerTaskNodeMapping[owner]["taskCount"] = this.resourceInfo[owner].length;
+			this.ownerTaskNodeMapping[owner]["isOpen"] = false;
+			this.ownerTaskNodeMapping[owner]["tasks"] = [];
+			arrayUtil.forEach(this.resourceInfo[owner], function(task){
+				this.ownerTaskNodeMapping[owner]["tasks"].push(this.createDetailedTaskEntry(owner, currentOwnerNameNode, task));
+			}, this);
+			return this;
+		},
+		createOwnerNameItem: function(owner, posY){
+			var ownerName = domConstruct.create("div", {
+				id: owner,
+				title: owner,
+				innerHTML: owner,
+				className: "ganttOwnerNameItem"
+			});
+			domStyle.set(ownerName, "top", posY + "px");
+			return ownerName;
+		},
+		refreshOwnerItem: function(owner){
+			var item = this.ownerTaskNodeMapping[owner][owner][0],
+				start = this.ownerTimeConsume[owner].min, dur = this.ownerTimeConsume[owner].dur,
+				posX = this.ganttChart.getPosOnDate(start); // should be task start date
+			item.style.left = posX + "px";
+			item.style.width = dur * this.ganttChart.pixelsPerWorkHour + "px";
+			arrayUtil.forEach(this.resourceInfo[owner], function(task, i){
+				var tposX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
+				domStyle.set(item.childNodes[i], {
+					left: (tposX - posX) + "px",
+					width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px"
+				});
+			}, this);
+		},
+		createOwnerItem: function(owner, posY){
+			var start = this.ownerTimeConsume[owner].min, dur = this.ownerTimeConsume[owner].dur;
+			var posX = this.ganttChart.getPosOnDate(start); // should be task start date
+			var ownerControl = domConstruct.create("div", {
+				id: owner,
+				owner: true,
+				className: "ganttOwnerBar"
+			});
+			domStyle.set(ownerControl, {
+				left: posX + "px",
+				top: posY + "px",
+				width: dur * this.ganttChart.pixelsPerWorkHour + "px",
+				height: this.ganttChart.heightTaskItem + "px"
+			});
+			arrayUtil.forEach(this.resourceInfo[owner], function(task){
+				var ownerTaskItem = domConstruct.create("div", {
+					id: owner,
+					className: "ganttOwnerTaskBar"
+				}, ownerControl);
+				var tposX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
+				domStyle.set(ownerTaskItem, {
+					left: (tposX - posX) + "px",
+					width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px", // should be task duration
+					height: this.ganttChart.heightTaskItem + "px"
+				});
+			}, this);
+			return ownerControl;
+		},
+		refreshDetailedTaskEntry: function(owner, item, task){
+			this.refreshTaskItem(item, task);
+		},
+		createDetailedTaskEntry: function(owner, parentNode, task){
+			var taskItems = [];
+			var containerTasks = this.contentData.firstChild;
+			var posY = parseInt(parentNode.style.top);
+		
+			//creation task item
+			var taskItem = this.createTaskItem(task, posY);
+			taskItem.style.display = "none";
+			containerTasks.appendChild(taskItem);
+			this.ownerItem.push(taskItem);
+			taskItems.push(taskItem);
+			if(this.panelNames){
+				var taskNameItem = this.createTaskNameItem(task.taskItem.name, posY);
+				this.panelNames.firstChild.appendChild(taskNameItem);
+				taskNameItem.style.display = "none";
+				this.ownerNameItem.push(taskNameItem);
+				taskItems.push(taskNameItem);
+			}
+			if(this.panelNames){
+				this.ownerNameItem[this.ownerNameItem.length - 1].style.left = domStyle.get(parentNode, "left") + 15 + "px";
+				var arrConnectingLinesNames = this.createConnectingLinesPN(parentNode, this.ownerNameItem[this.ownerNameItem.length - 1]);
+				arrayUtil.forEach(arrConnectingLinesNames, function(lineName){
+					lineName.style.display = "none";
+				}, this);
+				taskItems.push({
+					"v": arrConnectingLinesNames[0],
+					"h": arrConnectingLinesNames[1]
+				});
+				this.checkWidthTaskNameItem(this.ownerNameItem[this.ownerNameItem.length - 1]);
+			}
+			return taskItems;
+		},
+		createTaskNameItem: function(owner, posY){
+			var taskNameItem = domConstruct.create("div", {
+				id: owner,
+				className: "ganttTaskNameItem",
+				title: owner,
+				innerHTML: owner
+			});
+			domStyle.set(taskNameItem, "top", posY + "px");
+			return taskNameItem;
+		},
+		refreshTaskItem: function(item, task){
+			var posX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
+			domStyle.set(item, {
+				left: posX + "px",
+				width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px"
+			});
+		},
+		createTaskItem: function(task, posY){
+			var posX = this.ganttChart.getPosOnDate(task.taskItem.startTime); // should be task start date
+			var itemControl = domConstruct.create("div", {
+				id: task.taskItem.name,
+				className: "ganttTaskBar"
+			});
+			domStyle.set(itemControl, {
+				left: posX + "px",
+				top: posY + "px",
+				width: task.taskItem.duration * this.ganttChart.pixelsPerWorkHour + "px",
+				height: this.ganttChart.heightTaskItem + "px"
+			});
+			return itemControl;
+		},
+		createConnectingLinesPN: function(parentNode, currentNode){
+			var arrConnectingLinesNames = [];
+			var lineVerticalLeft = domConstruct.create("div", {
+				innerHTML: "&nbsp;",
+				className: "ganttResourceLineVerticalLeft"
+			}, this.panelNames.firstChild);
+			lineVerticalLeft.cNode = currentNode;
+			lineVerticalLeft.pNode = parentNode;
+			var LineHorizontalLeft = domConstruct.create("div", {
+				noShade: true,
+				color: "#000",
+				className: "ganttResourceLineHorizontalLeft"
+			}, this.panelNames.firstChild);
+			LineHorizontalLeft.cNode = currentNode;
+			LineHorizontalLeft.pNode = parentNode;
+			this.panelNames.firstChild.appendChild(LineHorizontalLeft);
+			arrConnectingLinesNames.push(lineVerticalLeft);
+			arrConnectingLinesNames.push(LineHorizontalLeft);
+			return arrConnectingLinesNames;
+		},
+		createTreeImg: function(ownerNameItem){
+			var treeImg = domConstruct.create("div", {
+				id: ownerNameItem.id,
+				className: "ganttImageTreeExpand"
+			});
+			domAttr.set(treeImg, "tabIndex", 0);
+			var currentItem = this.ownerTaskNodeMapping[ownerNameItem.id];
+			arrayUtil.forEach(["click", "keydown"], function(e){
+				this.ganttChart._events.push(
+					on(treeImg, e, lang.hitch(this, function(evt){
+						var reachTarget = false, owner, ownerItem;
+						if(e == "keydown" && evt.keyCode != keys.ENTER){ return; }
+						//TODO: perhaps the following conditional can be collapsed?  Duplicate code.
+						if(currentItem.isOpen){
+							domClass.remove(treeImg, "ganttImageTreeCollapse");
+							domClass.add(treeImg, "ganttImageTreeExpand");
+							currentItem.isOpen = false;
+							//collapse
+							for(owner in this.ownerTaskNodeMapping){
+								ownerItem = this.ownerTaskNodeMapping[owner];
+								if(reachTarget){
+									arrayUtil.forEach(ownerItem[owner], function(tItem){
+										domStyle.set(tItem, "top", domStyle.get(tItem, "top") - currentItem.taskCount * 23 + "px");
+									});
+									arrayUtil.forEach(ownerItem.tasks, function(tItems){
+										arrayUtil.forEach(tItems, function(tItem){
+											var item = !tItem.v && !tItem.h ? [tItem] : [tItem.v, tItem.h];
+											arrayUtil.forEach(item, function(t){
+												domStyle.set(t, "top", domStyle.get(t, "top") - currentItem.taskCount * 23 + "px");
+											});
+										});
+									});
+								}else{
+									if(owner == ownerNameItem.id){
+										reachTarget = true;
+										arrayUtil.forEach(ownerItem.tasks, function(tItems){
+											arrayUtil.forEach(tItems, function(tItem){
+												this.styleOwnerItem(tItem, ownerItem[owner][0], "none", 0);
+											}, this);
+										}, this);
+									}
+								}
+							}
+						}else{
+							domClass.remove(treeImg, "ganttImageTreeExpand");
+							domClass.add(treeImg, "ganttImageTreeCollapse");
+							currentItem.isOpen = true;
+							//expand
+							for(owner in this.ownerTaskNodeMapping){
+								ownerItem = this.ownerTaskNodeMapping[owner];
+								if(reachTarget){
+									arrayUtil.forEach(ownerItem[owner], function(tItem){
+										domStyle.set(tItem, "top", domStyle.get(tItem, "top") + currentItem.taskCount * 23 + "px");
+									});
+									arrayUtil.forEach(ownerItem.tasks, function(tItems){
+										arrayUtil.forEach(tItems, function(tItem){
+											var item = !tItem.v && !tItem.h ? [tItem] : [tItem.v, tItem.h];
+											arrayUtil.forEach(item, function(t){
+												domStyle.set(t, "top", domStyle.get(t, "top") + currentItem.taskCount * 23 + "px");
+											});
+										});
+									});
+								}else{
+									if(owner == ownerNameItem.id){
+										reachTarget = true;
+										arrayUtil.forEach(ownerItem.tasks, function(tItems, i){
+											arrayUtil.forEach(tItems, function(tItem){
+												this.styleOwnerItem(tItem, ownerItem[owner][0], "inline", (i + 1) * 23);
+											}, this);
+										}, this);
+									}
+								}
+							}
+						}
+					}))
+				);
+			}, this);
+			domClass.add(treeImg, "ganttResourceTreeImage");
+			domStyle.set(treeImg, {
+				left: (domStyle.get(ownerNameItem, "left") - 12) + "px",
+				top: (domStyle.get(ownerNameItem, "top") + 3) + "px"
+			});
+			return treeImg;
+		},
+		styleOwnerItem: function(tItem, owner, displayType, topOffset){
+			if(tItem.v || tItem.h){
+				domStyle.set(tItem.v, {
+					height: Math.max(1, (tItem.v.cNode.offsetTop - tItem.v.pNode.offsetTop)) + "px",
+					top: (tItem.v.pNode.offsetTop + 5) + "px",
+					left: (tItem.v.pNode.offsetLeft - 9) + "px",
+					display: displayType
+				});
+				domStyle.set(tItem.h, {
+					width: Math.max(1, (tItem.h.cNode.offsetLeft - tItem.h.pNode.offsetLeft + 4)) + "px",
+					top: (tItem.h.cNode.offsetTop + 5) + "px",
+					left: (tItem.h.pNode.offsetLeft - 9) + "px",
+					display: displayType
+				});
+			}else{
+				domStyle.set(tItem, {
+					display: displayType,
+					top: parseInt(owner.style.top) + topOffset + "px"
+				});
+			}
+		},
+		checkWidthTaskNameItem: function(taskNameItem){
+			if(taskNameItem && taskNameItem.offsetWidth + taskNameItem.offsetLeft > this.ganttChart.maxWidthPanelNames){
+				var width = taskNameItem.offsetWidth + taskNameItem.offsetLeft - this.ganttChart.maxWidthPanelNames,
+					countChar = Math.round(width / (taskNameItem.offsetWidth / taskNameItem.firstChild.length)),
+					tName = taskNameItem.id.substring(0, taskNameItem.firstChild.length - countChar - 3);
+				taskNameItem.innerHTML = tName + "...";
+			}
+		},
+		createPanelOwners: function(){
+			var panelOwner = domConstruct.create("div", {
+				className: "ganttOwnerPanel"
+			});
+			domStyle.set(panelOwner, {
+				height: (this.contentHeight - this.ganttChart.panelTimeHeight - this.ganttChart.scrollBarWidth) + "px"
+			});
+			return panelOwner;
+		},
+		createPanelNamesOwners: function(){
+			var panelNameOwner = domConstruct.create("div", {
+				innerHTML: "&nbsp;",
+				className: "ganttResourcePanelNamesOwners"
+			});
+			domStyle.set(panelNameOwner, {
+				height: (this.contentHeight - this.ganttChart.panelTimeHeight - this.ganttChart.scrollBarWidth) + "px",
+				width: this.ganttChart.maxWidthPanelNames + "px"
+			});
+			return panelNameOwner;
+		}
+	});
+});

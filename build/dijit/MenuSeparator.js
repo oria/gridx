@@ -1,4 +1,33 @@
-//>>built
-require({cache:{"url:dijit/templates/MenuSeparator.html":'\x3ctr class\x3d"dijitMenuSeparator" role\x3d"separator"\x3e\r\n\t\x3ctd class\x3d"dijitMenuSeparatorIconCell"\x3e\r\n\t\t\x3cdiv class\x3d"dijitMenuSeparatorTop"\x3e\x3c/div\x3e\r\n\t\t\x3cdiv class\x3d"dijitMenuSeparatorBottom"\x3e\x3c/div\x3e\r\n\t\x3c/td\x3e\r\n\t\x3ctd colspan\x3d"3" class\x3d"dijitMenuSeparatorLabelCell"\x3e\r\n\t\t\x3cdiv class\x3d"dijitMenuSeparatorTop dijitMenuSeparatorLabel"\x3e\x3c/div\x3e\r\n\t\t\x3cdiv class\x3d"dijitMenuSeparatorBottom"\x3e\x3c/div\x3e\r\n\t\x3c/td\x3e\r\n\x3c/tr\x3e\r\n'}});
-define("dijit/MenuSeparator","dojo/_base/declare dojo/dom ./_WidgetBase ./_TemplatedMixin ./_Contained dojo/text!./templates/MenuSeparator.html".split(" "),function(a,b,c,d,e,f){return a("dijit.MenuSeparator",[c,d,e],{templateString:f,buildRendering:function(){this.inherited(arguments);b.setSelectable(this.domNode,!1)},isFocusable:function(){return!1}})});
-//@ sourceMappingURL=MenuSeparator.js.map
+define([
+	"dojo/_base/declare", // declare
+	"dojo/dom", // dom.setSelectable
+	"./_WidgetBase",
+	"./_TemplatedMixin",
+	"./_Contained",
+	"dojo/text!./templates/MenuSeparator.html"
+], function(declare, dom, _WidgetBase, _TemplatedMixin, _Contained, template){
+
+	// module:
+	//		dijit/MenuSeparator
+
+	return declare("dijit.MenuSeparator", [_WidgetBase, _TemplatedMixin, _Contained], {
+		// summary:
+		//		A line between two menu items
+
+		templateString: template,
+
+		buildRendering: function(){
+			this.inherited(arguments);
+			dom.setSelectable(this.domNode, false);
+		},
+
+		isFocusable: function(){
+			// summary:
+			//		Override to always return false
+			// tags:
+			//		protected
+
+			return false; // Boolean
+		}
+	});
+});

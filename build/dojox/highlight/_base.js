@@ -1,15 +1,461 @@
-//>>built
-define("dojox/highlight/_base",["dojo/_base/lang","dojo/_base/array","dojo/dom","dojo/dom-class"],function(l,f,s,t){function h(a){return a.replace(/&/gm,"\x26amp;").replace(/</gm,"\x26lt;").replace(/>/gm,"\x26gt;")}function u(a){return f.every(a.childNodes,function(a){return 3==a.nodeType||"br"==String(a.nodeName).toLowerCase()})}function m(a){var b=[];f.forEach(a.childNodes,function(a){if(3==a.nodeType)b.push(a.nodeValue);else if("br"==String(a.nodeName).toLowerCase())b.push("\n");else throw"Complex markup";
-});return b.join("")}function n(a){if(!a.keywordGroups)for(var b in a.keywords){a.keywordGroups=a.keywords[b]instanceof Object?a.keywords:{keyword:a.keywords};break}}function p(a,b,c){if("code"==String(a.tagName).toLowerCase()&&"pre"==String(a.parentNode.tagName).toLowerCase()){var d=document.createElement("div"),e=a.parentNode.parentNode;d.innerHTML='\x3cpre\x3e\x3ccode class\x3d"'+b+'"\x3e'+c+"\x3c/code\x3e\x3c/pre\x3e";e.replaceChild(d.firstChild,a.parentNode)}else a.className=b,a.innerHTML=c}
-function q(a,b){var c=new k(a,b);return{result:c.result,langName:a,partialResult:c.partialResult}}function r(a){var b="",c="",d;for(d in g.languages)if(g.languages[d].defaultMode){var e=new k(d,a),f=e.keywordCount+e.relevance;if(!b||0<f)b=e.result,c=e.langName}return{result:b,langName:c}}function v(a){var b=r(m(a));b.result&&p(a,b.langName,b.result)}var g=l.getObject("dojox.highlight",!0);g.languages=g.languages||{};g.constants={IDENT_RE:"[a-zA-Z][a-zA-Z0-9_]*",UNDERSCORE_IDENT_RE:"[a-zA-Z_][a-zA-Z0-9_]*",
-NUMBER_RE:"\\b\\d+(\\.\\d+)?",C_NUMBER_RE:"\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)",APOS_STRING_MODE:{className:"string",begin:"'",end:"'",illegal:"\\n",contains:["escape"],relevance:0},QUOTE_STRING_MODE:{className:"string",begin:'"',end:'"',illegal:"\\n",contains:["escape"],relevance:0},BACKSLASH_ESCAPE:{className:"escape",begin:"\\\\.",end:"^",relevance:0},C_LINE_COMMENT_MODE:{className:"comment",begin:"//",end:"$",relevance:0},C_BLOCK_COMMENT_MODE:{className:"comment",begin:"/\\*",end:"\\*/"},HASH_COMMENT_MODE:{className:"comment",
-begin:"#",end:"$"},C_NUMBER_MODE:{className:"number",begin:"\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)",end:"^",relevance:0}};var k=function(a,b){this.langName=a;this.lang=g.languages[a];this.modes=[this.lang.defaultMode];this.keywordCount=this.relevance=0;this.result=[];if(!this.lang.defaultMode.illegalRe){this.buildRes();var c=this.lang;c.defaultMode&&c.modes&&(n(c.defaultMode),f.forEach(c.modes,n))}try{this.highlight(b),this.result=this.result.join("")}catch(d){if("Illegal"==d)this.keywordCount=this.relevance=
-0,this.partialResult=this.result.join(""),this.result=h(b);else throw d;}};l.extend(k,{buildRes:function(){f.forEach(this.lang.modes,function(a){a.begin&&(a.beginRe=this.langRe("^"+a.begin));a.end&&(a.endRe=this.langRe("^"+a.end));a.illegal&&(a.illegalRe=this.langRe("^(?:"+a.illegal+")"))},this);this.lang.defaultMode.illegalRe=this.langRe("^(?:"+this.lang.defaultMode.illegal+")")},subMode:function(a){var b=this.modes[this.modes.length-1].contains;if(b)for(var c=this.lang.modes,d=0;d<b.length;++d)for(var e=
-b[d],f=0;f<c.length;++f){var g=c[f];if(g.className==e&&g.beginRe.test(a))return g}return null},endOfMode:function(a){for(var b=this.modes.length-1;0<=b;--b){var c=this.modes[b];if(c.end&&c.endRe.test(a))return this.modes.length-b;if(!c.endsWithParent)break}return 0},isIllegal:function(a){var b=this.modes[this.modes.length-1].illegalRe;return b&&b.test(a)},langRe:function(a,b){return RegExp(a,"m"+(this.lang.case_insensitive?"i":"")+(b?"g":""))},buildTerminators:function(){var a=this.modes[this.modes.length-
-1],b={};a.contains&&f.forEach(this.lang.modes,function(c){0<=f.indexOf(a.contains,c.className)&&(b[c.begin]=1)});for(var c=this.modes.length-1;0<=c;--c){var d=this.modes[c];d.end&&(b[d.end]=1);if(!d.endsWithParent)break}a.illegal&&(b[a.illegal]=1);d=[];for(c in b)d.push(c);a.terminatorsRe=this.langRe("("+d.join("|")+")")},eatModeChunk:function(a,b){var c=this.modes[this.modes.length-1];c.terminatorsRe||this.buildTerminators();a=a.substr(b);c=c.terminatorsRe.exec(a);return!c?{buffer:a,lexeme:"",end:!0}:
-{buffer:c.index?a.substr(0,c.index):"",lexeme:c[0],end:!1}},keywordMatch:function(a,b){var c=b[0];this.lang.case_insensitive&&(c=c.toLowerCase());for(var d in a.keywordGroups)if(c in a.keywordGroups[d])return d;return""},buildLexemes:function(a){var b={};f.forEach(a.lexems,function(a){b[a]=1});var c=[],d;for(d in b)c.push(d);a.lexemsRe=this.langRe("("+c.join("|")+")",!0)},processKeywords:function(a){var b=this.modes[this.modes.length-1];if(!b.keywords||!b.lexems)return h(a);b.lexemsRe||this.buildLexemes(b);
-b.lexemsRe.lastIndex=0;for(var c=[],d=0,e=b.lexemsRe.exec(a);e;)c.push(h(a.substr(d,e.index-d))),(d=this.keywordMatch(b,e))?(++this.keywordCount,c.push('\x3cspan class\x3d"'+d+'"\x3e'+h(e[0])+"\x3c/span\x3e")):c.push(h(e[0])),d=b.lexemsRe.lastIndex,e=b.lexemsRe.exec(a);c.push(h(a.substr(d,a.length-d)));return c.join("")},processModeInfo:function(a,b,c){var d=this.modes[this.modes.length-1];if(c)this.result.push(this.processKeywords(d.buffer+a));else{if(this.isIllegal(b))throw"Illegal";if(c=this.subMode(b))d.buffer+=
-a,this.result.push(this.processKeywords(d.buffer)),c.excludeBegin?(this.result.push(b+'\x3cspan class\x3d"'+c.className+'"\x3e'),c.buffer=""):(this.result.push('\x3cspan class\x3d"'+c.className+'"\x3e'),c.buffer=b),this.modes.push(c),this.relevance+="number"==typeof c.relevance?c.relevance:1;else if(c=this.endOfMode(b)){d.buffer+=a;for(d.excludeEnd?this.result.push(this.processKeywords(d.buffer)+"\x3c/span\x3e"+b):this.result.push(this.processKeywords(d.buffer+b)+"\x3c/span\x3e");1<c;)this.result.push("\x3c/span\x3e"),
---c,this.modes.pop();this.modes.pop();this.modes[this.modes.length-1].buffer=""}}},highlight:function(a){var b=0;this.lang.defaultMode.buffer="";do{var c=this.eatModeChunk(a,b);this.processModeInfo(c.buffer,c.lexeme,c.end);b+=c.buffer.length+c.lexeme.length}while(!c.end);if(1<this.modes.length)throw"Illegal";}});dojox.highlight.processString=function(a,b){return b?q(b,a):r(a)};dojox.highlight.init=function(a){a=s.byId(a);if(!t.contains(a,"no-highlight")&&u(a)){var b=a.className.split(/\s+/);f.some(b,
-function(c){if("_"!=c.charAt(0)&&g.languages[c]){var b=a;c=q(c,m(b));p(b,b.className,c.result);return!0}return!1})||v(a)}};g.Code=function(a,b){g.init(b)};return g});
-//@ sourceMappingURL=_base.js.map
+define([
+	"dojo/_base/lang", 
+	"dojo/_base/array", 
+	"dojo/dom", 
+	"dojo/dom-class"
+], function(lang, array, dom, domClass){
+
+
+	var dh = lang.getObject("dojox.highlight", true),
+		C_NUMBER_RE = '\\b(0x[A-Za-z0-9]+|\\d+(\\.\\d+)?)'
+	;
+	/*=====
+	 dh = {
+		 // summary:
+		 //		Syntax highlighting with language auto-detection package
+		 // description:
+		 //		Syntax highlighting with language auto-detection package.
+		 //		Released under CLA by the Dojo Toolkit, original BSD release
+		 //		available from: http://softwaremaniacs.org/soft/highlight/
+	 };
+	 =====*/
+
+	dh.languages = dh.languages || {};
+	// constants
+
+	dh.constants = {
+		IDENT_RE: '[a-zA-Z][a-zA-Z0-9_]*',
+		UNDERSCORE_IDENT_RE: '[a-zA-Z_][a-zA-Z0-9_]*',
+		NUMBER_RE: '\\b\\d+(\\.\\d+)?',
+		C_NUMBER_RE: C_NUMBER_RE,
+		// Common modes
+		APOS_STRING_MODE: {
+			className: 'string',
+			begin: '\'', end: '\'',
+			illegal: '\\n',
+			contains: ['escape'],
+			relevance: 0
+		},
+		QUOTE_STRING_MODE: {
+			className: 'string',
+			begin: '"',
+			end: '"',
+			illegal: '\\n',
+			contains: ['escape'],
+			relevance: 0
+		},
+		BACKSLASH_ESCAPE: {
+			className: 'escape',
+			begin: '\\\\.', end: '^',
+			relevance: 0
+		},
+		C_LINE_COMMENT_MODE: {
+			className: 'comment',
+			begin: '//', end: '$',
+			relevance: 0
+		},
+		C_BLOCK_COMMENT_MODE: {
+			className: 'comment',
+			begin: '/\\*', end: '\\*/'
+		},
+		HASH_COMMENT_MODE: {
+			className: 'comment',
+			begin: '#', end: '$'
+		},
+		C_NUMBER_MODE: {
+			className: 'number',
+			begin: C_NUMBER_RE, end: '^',
+			relevance: 0
+		}
+	};
+
+	// utilities
+	
+	function esc(value){
+		return value.replace(/&/gm, '&amp;').replace(/</gm, '&lt;').replace(/>/gm, '&gt;');
+	}
+	
+	function verifyText(block){
+		return array.every(block.childNodes, function(node){
+			return node.nodeType == 3 || String(node.nodeName).toLowerCase() == 'br';
+		});
+	}
+
+	function blockText(block){
+		var result = [];
+		array.forEach(block.childNodes, function(node){
+			if(node.nodeType == 3){
+				result.push(node.nodeValue);
+			}else if(String(node.nodeName).toLowerCase() == 'br'){
+				result.push("\n");
+			}else{
+				throw 'Complex markup';
+			}
+		});
+		return result.join("");
+	}
+
+	function buildKeywordGroups(mode){
+		if(!mode.keywordGroups){
+			for(var key in mode.keywords){
+				var kw = mode.keywords[key];
+    			if(kw instanceof Object){  // dojo.isObject?
+					mode.keywordGroups = mode.keywords;
+				}else{
+					mode.keywordGroups = {keyword: mode.keywords};
+				}
+				break;
+			}
+		}
+	}
+	
+	function buildKeywords(language){
+		if(language.defaultMode && language.modes){
+			buildKeywordGroups(language.defaultMode);
+			array.forEach(language.modes, buildKeywordGroups);
+		}
+	}
+	
+	// main object
+
+	var Highlighter = function(langName, textBlock){
+		// initialize the state
+		this.langName = langName;
+		this.lang = dh.languages[langName];
+		this.modes = [this.lang.defaultMode];
+		this.relevance = 0;
+		this.keywordCount = 0;
+		this.result = [];
+		
+		// build resources lazily
+		if(!this.lang.defaultMode.illegalRe){
+			this.buildRes();
+			buildKeywords(this.lang);
+		}
+		
+		// run the algorithm
+		try{
+			this.highlight(textBlock);
+			this.result = this.result.join("");
+		}catch(e){
+			if(e == 'Illegal'){
+				this.relevance = 0;
+				this.keywordCount = 0;
+				this.partialResult = this.result.join("");
+				this.result = esc(textBlock);
+			}else{
+				throw e;
+			}
+		}
+	};
+
+	lang.extend(Highlighter, {
+		buildRes: function(){
+			array.forEach(this.lang.modes, function(mode){
+				if(mode.begin){
+					mode.beginRe = this.langRe('^' + mode.begin);
+				}
+				if(mode.end){
+					mode.endRe = this.langRe('^' + mode.end);
+				}
+				if(mode.illegal){
+					mode.illegalRe = this.langRe('^(?:' + mode.illegal + ')');
+				}
+			}, this);
+			this.lang.defaultMode.illegalRe = this.langRe('^(?:' + this.lang.defaultMode.illegal + ')');
+		},
+		
+		subMode: function(lexeme){
+			var classes = this.modes[this.modes.length - 1].contains;
+			if(classes){
+				var modes = this.lang.modes;
+				for(var i = 0; i < classes.length; ++i){
+					var className = classes[i];
+					for(var j = 0; j < modes.length; ++j){
+						var mode = modes[j];
+						if(mode.className == className && mode.beginRe.test(lexeme)){ return mode; }
+					}
+				}
+			}
+			return null;
+		},
+
+		endOfMode: function(lexeme){
+			for(var i = this.modes.length - 1; i >= 0; --i){
+				var mode = this.modes[i];
+				if(mode.end && mode.endRe.test(lexeme)){ return this.modes.length - i; }
+				if(!mode.endsWithParent){ break; }
+			}
+			return 0;
+		},
+
+		isIllegal: function(lexeme){
+			var illegalRe = this.modes[this.modes.length - 1].illegalRe;
+			return illegalRe && illegalRe.test(lexeme);
+		},
+
+
+		langRe: function(value, global){
+			var mode =  'm' + (this.lang.case_insensitive ? 'i' : '') + (global ? 'g' : '');
+			return new RegExp(value, mode);
+		},
+	
+		buildTerminators: function(){
+			var mode = this.modes[this.modes.length - 1],
+				terminators = {};
+			if(mode.contains){
+				array.forEach(this.lang.modes, function(lmode){
+					if(array.indexOf(mode.contains, lmode.className) >= 0){
+						terminators[lmode.begin] = 1;
+					}
+				});
+			}
+			for(var i = this.modes.length - 1; i >= 0; --i){
+				var m = this.modes[i];
+				if(m.end){ terminators[m.end] = 1; }
+				if(!m.endsWithParent){ break; }
+			}
+			if(mode.illegal){ terminators[mode.illegal] = 1; }
+			var t = [];
+			for(i in terminators){ t.push(i); }
+			mode.terminatorsRe = this.langRe("(" + t.join("|") + ")");
+		},
+
+		eatModeChunk: function(value, index){
+			var mode = this.modes[this.modes.length - 1];
+			
+			// create terminators lazily
+			if(!mode.terminatorsRe){
+				this.buildTerminators();
+			}
+	
+			value = value.substr(index);
+			var match = mode.terminatorsRe.exec(value);
+			if(!match){
+				return {
+					buffer: value,
+					lexeme: "",
+					end:    true
+				};
+			}
+			return {
+				buffer: match.index ? value.substr(0, match.index) : "",
+				lexeme: match[0],
+				end:    false
+			};
+		},
+	
+		keywordMatch: function(mode, match){
+			var matchStr = match[0];
+			if(this.lang.case_insensitive){ matchStr = matchStr.toLowerCase(); }
+			for(var className in mode.keywordGroups){
+				if(matchStr in mode.keywordGroups[className]){ return className; }
+			}
+			return "";
+		},
+		
+		buildLexemes: function(mode){
+			var lexemes = {};
+			array.forEach(mode.lexems, function(lexeme){
+				lexemes[lexeme] = 1;
+			});
+			var t = [];
+			for(var i in lexemes){ t.push(i); }
+			mode.lexemsRe = this.langRe("(" + t.join("|") + ")", true);
+		},
+	
+		processKeywords: function(buffer){
+			var mode = this.modes[this.modes.length - 1];
+			if(!mode.keywords || !mode.lexems){
+				return esc(buffer);
+			}
+			
+			// create lexemes lazily
+			if(!mode.lexemsRe){
+				this.buildLexemes(mode);
+			}
+			
+			mode.lexemsRe.lastIndex = 0;
+			var result = [], lastIndex = 0,
+				match = mode.lexemsRe.exec(buffer);
+			while(match){
+				result.push(esc(buffer.substr(lastIndex, match.index - lastIndex)));
+				var keywordM = this.keywordMatch(mode, match);
+				if(keywordM){
+					++this.keywordCount;
+					result.push('<span class="'+ keywordM +'">' + esc(match[0]) + '</span>');
+				}else{
+					result.push(esc(match[0]));
+				}
+				lastIndex = mode.lexemsRe.lastIndex;
+				match = mode.lexemsRe.exec(buffer);
+			}
+			result.push(esc(buffer.substr(lastIndex, buffer.length - lastIndex)));
+			return result.join("");
+		},
+	
+		processModeInfo: function(buffer, lexeme, end) {
+			var mode = this.modes[this.modes.length - 1];
+			if(end){
+				this.result.push(this.processKeywords(mode.buffer + buffer));
+				return;
+			}
+			if(this.isIllegal(lexeme)){ throw 'Illegal'; }
+			var newMode = this.subMode(lexeme);
+			if(newMode){
+				mode.buffer += buffer;
+				this.result.push(this.processKeywords(mode.buffer));
+				if(newMode.excludeBegin){
+					this.result.push(lexeme + '<span class="' + newMode.className + '">');
+					newMode.buffer = '';
+				}else{
+					this.result.push('<span class="' + newMode.className + '">');
+					newMode.buffer = lexeme;
+				}
+				this.modes.push(newMode);
+				this.relevance += typeof newMode.relevance == "number" ? newMode.relevance : 1;
+				return;
+			}
+			var endLevel = this.endOfMode(lexeme);
+			if(endLevel){
+				mode.buffer += buffer;
+				if(mode.excludeEnd){
+					this.result.push(this.processKeywords(mode.buffer) + '</span>' + lexeme);
+				}else{
+					this.result.push(this.processKeywords(mode.buffer + lexeme) + '</span>');
+				}
+				while(endLevel > 1){
+					this.result.push('</span>');
+					--endLevel;
+					this.modes.pop();
+				}
+				this.modes.pop();
+				this.modes[this.modes.length - 1].buffer = '';
+				return;
+			}
+		},
+	
+		highlight: function(value){
+			var index = 0;
+			this.lang.defaultMode.buffer = '';
+			do{
+				var modeInfo = this.eatModeChunk(value, index);
+				this.processModeInfo(modeInfo.buffer, modeInfo.lexeme, modeInfo.end);
+				index += modeInfo.buffer.length + modeInfo.lexeme.length;
+			}while(!modeInfo.end);
+			if(this.modes.length > 1){
+				throw 'Illegal';
+			}
+		}
+	});
+	
+	// more utilities
+	
+	function replaceText(node, className, text){
+		if(String(node.tagName).toLowerCase() == "code" && String(node.parentNode.tagName).toLowerCase() == "pre"){
+			// See these 4 lines? This is IE's notion of "node.innerHTML = text". Love this browser :-/
+			var container = document.createElement('div'),
+				environment = node.parentNode.parentNode;
+			container.innerHTML = '<pre><code class="' + className + '">' + text + '</code></pre>';
+			environment.replaceChild(container.firstChild, node.parentNode);
+		}else{
+			node.className = className;
+			node.innerHTML = text;
+		}
+	}
+	function highlightStringLanguage(language, str){
+		var highlight = new Highlighter(language, str);
+		return {result:highlight.result, langName:language, partialResult:highlight.partialResult};
+	}
+
+	function highlightLanguage(block, language){
+		var result = highlightStringLanguage(language, blockText(block));
+		replaceText(block, block.className, result.result);
+	}
+
+	function highlightStringAuto(str){
+		var result = "", langName = "", bestRelevance = 2,
+			textBlock = str;
+		for(var key in dh.languages){
+			if(!dh.languages[key].defaultMode){ continue; }	// skip internal members
+			var highlight = new Highlighter(key, textBlock),
+				relevance = highlight.keywordCount + highlight.relevance, relevanceMax = 0;
+			if(!result || relevance > relevanceMax){
+				relevanceMax = relevance;
+				result = highlight.result;
+				langName = highlight.langName;
+			}
+		}
+		return {result:result, langName:langName};
+	}
+	
+	function highlightAuto(block){
+		var result = highlightStringAuto(blockText(block));
+		if(result.result){
+			replaceText(block, result.langName, result.result);
+		}
+	}
+	
+	// the public API
+
+	dojox.highlight.processString = function(/* String */ str, /* String? */lang){
+		// summary:
+		//		highlight a string of text
+		// returns: Object
+		//		Object containing:
+		//
+		//		- result - string of html with spans to apply formatting
+		//		- partialResult - if the formatting failed: string of html
+		//		  up to the point of the failure, otherwise: undefined
+		//		- langName - the language used to do the formatting
+		return lang ? highlightStringLanguage(lang, str) : highlightStringAuto(str);
+	};
+
+	dojox.highlight.init = function(/* String|DomNode */ node){
+		// summary:
+		//		Highlight a passed node
+		// description:
+		//		Syntax highlight a passed DomNode or String ID of a DomNode
+		// example:
+		//	|	dojox.highlight.init("someId");
+		//
+		node = dom.byId(node);
+		if(domClass.contains(node, "no-highlight")){ return; }
+		if(!verifyText(node)){ return; }
+	
+		var classes = node.className.split(/\s+/),
+			flag = array.some(classes, function(className){
+				if(className.charAt(0) != "_" && dh.languages[className]){
+					highlightLanguage(node, className);
+					return true;	// stop iterations
+				}
+				return false;	// continue iterations
+			});
+		if(!flag){
+			highlightAuto(node);
+		}
+	};
+
+	dh.Code = function(props, node){
+		// summary:
+		//		A class object to allow for dojoType usage with the highlight engine. This is
+		//		NOT a Widget in the conventional sense, and does not have any member functions for
+		//		the instance. This is provided as a convenience. You likely should be calling
+		//		`dojox.highlight.init` directly.
+		// props: Object?
+		//		Unused. Pass 'null' or {}. Positional usage to allow `dojo.parser` to instantiate
+		//		this class as other Widgets would be.
+		// node: String|DomNode
+		//		A String ID or DomNode reference to use as the root node of this instance.
+		// example:
+		//	|	<pre><code dojoType="dojox.highlight.Code">for(var i in obj){ ... }</code></pre>
+		//
+		// example:
+		//	|	var inst = new dojox.highlight.Code({}, "someId");
+		//
+		dh.init(node);
+	};
+
+	return dh;
+
+});

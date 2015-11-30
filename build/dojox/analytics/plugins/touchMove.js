@@ -1,6 +1,109 @@
-//>>built
-define("dojox/analytics/plugins/touchMove","dojo/_base/lang ../_base dojo/_base/config dojo/_base/window dojo/on dojo/touch".split(" "),function(g,h,e,k,l,m){return h.plugins.touchMove=new function(){this.watchTouch=void 0!==e.watchTouch&&!e.watchTouch?!1:!0;this.showTouchesDetails=void 0!==e.showTouchesDetails&&!e.showTouchesDetails?!1:!0;this.touchSampleDelay=e.touchSampleDelay||1E3;this.targetProps=e.targetProps||"id className localName href spellcheck lang textContent value".split(" ");this.textContentMaxChars=
-e.textContentMaxChars||50;this.addData=g.hitch(h,"addData","touch.move");this.sampleTouchMove=function(b){this._rateLimited||(this.addData("sample",this.trimTouchEvent(b)),this._rateLimited=!0,setTimeout(g.hitch(this,function(){this._rateLimited&&(this.trimTouchEvent(this._lastTouchEvent),delete this._lastTouchEvent,delete this._rateLimited)}),this.touchSampleDelay));return this._lastTouchEvent=b};l(k.doc,m.move,g.hitch(this,"sampleTouchMove"));this.handleTarget=function(b,d,f){var a=this.targetProps;
-b[f]={};for(var c=0;c<a.length;c++)if(("object"==typeof d||"function"==typeof d)&&a[c]in d)"text"==a[c]||"textContent"==a[c]?d.localName&&("HTML"!=d.localName&&"BODY"!=d.localName)&&(b[f][a[c]]=d[a[c]].substr(0,this.textContentMaxChars)):b[f][a[c]]=d[a[c]]};this.trimTouchEvent=function(b){var d={},f,a;for(a in b)switch(a){case "target":this.handleTarget(d,b[a],a);break;case "touches":0!==b[a].length&&(d["touches.length"]=b[a].length);if(this.showTouchesDetails)for(var c=0;c<b[a].length;c++)for(var e in b[a][c])switch(e){case "target":this.handleTarget(d,
-b[a][c].target,"touches["+c+"][target]");break;case "clientX":case "clientY":case "screenX":case "screenY":b[a][c]&&(f=b[a][c][e],d["touches["+c+"]["+e+"]"]=f+"")}break;case "clientX":case "clientY":case "screenX":case "screenY":b[a]&&(f=b[a],d[a]=f+"")}return d}}});
-//@ sourceMappingURL=touchMove.js.map
+define(["dojo/_base/lang", "../_base", "dojo/_base/config", "dojo/_base/window", "dojo/on", "dojo/touch"
+], function(lang, dxa, config, window, on, touch){
+
+
+	return (dxa.plugins.touchMove = new (function(){
+		if(config["watchTouch"] !== undefined && !config["watchTouch"]){
+			this.watchTouch = false;			
+		}else{
+			this.watchTouch = true;
+		}
+		if(config["showTouchesDetails"] !== undefined && !config["showTouchesDetails"]){
+			this.showTouchesDetails = false;			
+		}else{
+			this.showTouchesDetails = true;
+		}
+		this.touchSampleDelay = config["touchSampleDelay"] || 1000;
+		this.targetProps = config["targetProps"] || ["id","className","localName","href", "spellcheck", "lang", "textContent", "value" ];
+		this.textContentMaxChars = config["textContentMaxChars"] || 50;
+		this.addData = lang.hitch(dxa, "addData", "touch.move");
+		
+		this.sampleTouchMove = function(e){
+			if(!this._rateLimited){
+				this.addData("sample",this.trimTouchEvent(e));
+				this._rateLimited = true;
+				setTimeout(lang.hitch(this, function(){
+					if(this._rateLimited){
+						this.trimTouchEvent(this._lastTouchEvent);
+						delete this._lastTouchEvent;
+						delete this._rateLimited;
+					}
+				}), this.touchSampleDelay);
+			}
+			this._lastTouchEvent = e;
+			return e;
+		};
+
+		on(window.doc, touch.move, lang.hitch(this, "sampleTouchMove"));
+
+		this.handleTarget = function(t, target, i){
+			var props = this.targetProps;
+			t[i] = {};
+			for(var j = 0;j < props.length;j++){
+				if((typeof target == "object" || typeof target == "function") && props[j] in target){
+								 
+					if(props[j] == "text" || props[j] == "textContent"){
+						if(target["localName"] && (target["localName"] != "HTML") && (target["localName"] != "BODY")){
+							t[i][props[j]] = target[props[j]].substr(0,this.textContentMaxChars);
+						}
+					}else{
+						t[i][props[j]] = target[props[j]];
+					}
+				}
+			}
+		};
+		
+		this.trimTouchEvent = function(e){
+			var t = {};
+			var val;
+			for(var i in e){
+				switch(i){
+					case "target":
+						this.handleTarget(t, e[i], i)
+						break;
+						case "touches":
+							if(e[i].length !== 0){
+								t["touches.length"] = e[i].length;
+							}
+							if(this.showTouchesDetails){
+								for(var j = 0;j < e[i].length;j++){
+									for(var s in e[i][j]){
+										switch(s){
+											case "target":
+												this.handleTarget(t, e[i][j].target, "touches["+j+"][target]");
+											break;	
+											case "clientX":
+											case "clientY":
+											case "screenX":
+											case "screenY":
+												if(e[i][j]){
+													val = e[i][j][s];
+													t["touches["+j+"]["+s+"]"] = val + '';
+												}
+											break;
+											default:
+												//console.log("Skipping: ", i);
+											break;
+										}
+									}
+								}
+							}
+						break;
+					case "clientX":
+					case "clientY":
+					case "screenX":
+					case "screenY":
+						if(e[i]){
+							val = e[i];
+							t[i] = val + '';
+						}
+						break;
+					default:
+						//console.log("Skipping: ", i);
+						break;
+				}
+			}
+			return t;
+		};
+	})());
+});

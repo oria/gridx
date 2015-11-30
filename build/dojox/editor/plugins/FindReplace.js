@@ -1,25 +1,882 @@
-//>>built
-define("dojox/editor/plugins/FindReplace","dojo dijit dojox dijit/_base/manager dijit/_base/popup dijit/_Widget dijit/_TemplatedMixin dijit/_KeyNavContainer dijit/_WidgetsInTemplateMixin dijit/TooltipDialog dijit/Toolbar dijit/form/CheckBox dijit/form/_TextBoxMixin dijit/form/TextBox dijit/_editor/_Plugin dijit/form/Button dijit/form/DropDownButton dijit/form/ToggleButton ./ToolbarLineBreak dojo/_base/connect dojo/_base/declare dojo/i18n dojo/string dojo/i18n!dojox/editor/plugins/nls/FindReplace".split(" "),
-function(b,d,u,x,y,k,l,z,m,A,v,B,C,D,w){b.experimental("dojox.editor.plugins.FindReplace");var q=b.declare("dojox.editor.plugins._FindReplaceCloseBox",[k,l,m],{btnId:"",widget:null,widgetsInTemplate:!0,templateString:"\x3cspan style\x3d'float: right' class\x3d'dijitInline' tabindex\x3d'-1'\x3e\x3cbutton class\x3d'dijit dijitReset dijitInline' id\x3d'${btnId}' dojoAttachPoint\x3d'button' dojoType\x3d'dijit.form.Button' tabindex\x3d'-1' iconClass\x3d'dijitEditorIconsFindReplaceClose' showLabel\x3d'false'\x3eX\x3c/button\x3e\x3c/span\x3e",
-postMixInProperties:function(){this.id=d.getUniqueId(this.declaredClass.replace(/\./g,"_"));this.btnId=this.id+"_close";this.inherited(arguments)},startup:function(){this.connect(this.button,"onClick","onClick")},onClick:function(){}}),n=b.declare("dojox.editor.plugins._FindReplaceTextBox",[k,l,m],{textId:"",label:"",toolTip:"",widget:null,widgetsInTemplate:!0,templateString:"\x3cspan style\x3d'white-space: nowrap' class\x3d'dijit dijitReset dijitInline dijitEditorFindReplaceTextBox' title\x3d'${tooltip}' tabindex\x3d'-1'\x3e\x3clabel class\x3d'dijitLeft dijitInline' for\x3d'${textId}' tabindex\x3d'-1'\x3e${label}\x3c/label\x3e\x3cinput dojoType\x3d'dijit.form.TextBox' intermediateChanges\x3d'true' class\x3d'focusTextBox' tabIndex\x3d'0' id\x3d'${textId}' dojoAttachPoint\x3d'textBox, focusNode' value\x3d'' dojoAttachEvent\x3d'onKeyPress: _onKeyPress'/\x3e\x3c/span\x3e",
-postMixInProperties:function(){this.id=d.getUniqueId(this.declaredClass.replace(/\./g,"_"));this.textId=this.id+"_text";this.inherited(arguments)},postCreate:function(){this.textBox.set("value","");this.disabled=this.textBox.get("disabled");this.connect(this.textBox,"onChange","onChange");b.attr(this.textBox.textbox,"formnovalidate","true")},_setValueAttr:function(a){this.value=a;this.textBox.set("value",a)},focus:function(){this.textBox.focus()},_setDisabledAttr:function(a){this.disabled=a;this.textBox.set("disabled",
-a)},onChange:function(a){this.value=a},_onKeyPress:function(a){var c=0,g=0;a.target&&(!a.ctrlKey&&!a.altKey&&!a.shiftKey)&&(a.keyCode==b.keys.LEFT_ARROW?(c=a.target.selectionStart,g=a.target.selectionEnd,c<g&&(d.selectInputText(a.target,c,c),b.stopEvent(a))):a.keyCode==b.keys.RIGHT_ARROW&&(c=a.target.selectionStart,g=a.target.selectionEnd,c<g&&(d.selectInputText(a.target,g,g),b.stopEvent(a))))}}),p=b.declare("dojox.editor.plugins._FindReplaceCheckBox",[k,l,m],{checkId:"",label:"",tooltip:"",widget:null,
-widgetsInTemplate:!0,templateString:"\x3cspan style\x3d'white-space: nowrap' tabindex\x3d'-1' class\x3d'dijit dijitReset dijitInline dijitEditorFindReplaceCheckBox' title\x3d'${tooltip}' \x3e\x3cinput dojoType\x3d'dijit.form.CheckBox' tabIndex\x3d'0' id\x3d'${checkId}' dojoAttachPoint\x3d'checkBox, focusNode' value\x3d''/\x3e\x3clabel tabindex\x3d'-1' class\x3d'dijitLeft dijitInline' for\x3d'${checkId}'\x3e${label}\x3c/label\x3e\x3c/span\x3e",postMixInProperties:function(){this.id=d.getUniqueId(this.declaredClass.replace(/\./g,
-"_"));this.checkId=this.id+"_check";this.inherited(arguments)},postCreate:function(){this.checkBox.set("checked",!1);this.disabled=this.checkBox.get("disabled");this.checkBox.isFocusable=function(){return!1}},_setValueAttr:function(a){this.checkBox.set("value",a)},_getValueAttr:function(){return this.checkBox.get("value")},focus:function(){this.checkBox.focus()},_setDisabledAttr:function(a){this.disabled=a;this.checkBox.set("disabled",a)}}),r=b.declare("dojox.editor.plugins._FindReplaceToolbar",v,
-{postCreate:function(){this.connectKeyNavHandlers([],[]);this.connect(this.containerNode,"onclick","_onToolbarEvent");this.connect(this.containerNode,"onkeydown","_onToolbarEvent");b.addClass(this.domNode,"dijitToolbar")},addChild:function(a,c){d._KeyNavContainer.superclass.addChild.apply(this,arguments)},_onToolbarEvent:function(a){a.stopPropagation()}}),e=b.declare("dojox.editor.plugins.FindReplace",[w],{buttonClass:d.form.ToggleButton,iconClassPrefix:"dijitEditorIconsFindReplace",editor:null,button:null,
-_frToolbar:null,_closeBox:null,_findField:null,_replaceField:null,_findButton:null,_replaceButton:null,_replaceAllButton:null,_caseSensitive:null,_backwards:null,_promDialog:null,_promDialogTimeout:null,_strings:null,_initButton:function(){this._strings=b.i18n.getLocalization("dojox.editor.plugins","FindReplace");this.button=new d.form.ToggleButton({label:this._strings.findReplace,showLabel:!1,iconClass:this.iconClassPrefix+" dijitEditorIconFindString",tabIndex:"-1",onChange:b.hitch(this,"_toggleFindReplace")});
-b.isOpera&&this.button.set("disabled",!0);this.connect(this.button,"set",b.hitch(this,function(a,c){"disabled"===a&&this._toggleFindReplace(!c&&this._displayed,!0,!0)}))},setEditor:function(a){this.editor=a;this._initButton()},toggle:function(){this.button.set("checked",!this.button.get("checked"))},_toggleFindReplace:function(a,c,g){var f=b.marginBox(this.editor.domNode);a&&!b.isOpera?(b.style(this._frToolbar.domNode,"display","block"),this._populateFindField(),c||(this._displayed=!0)):(b.style(this._frToolbar.domNode,
-"display","none"),c||(this._displayed=!1),g||this.editor.focus());this.editor.resize({h:f.h})},_populateFindField:function(){var a=this.editor._sCall("getSelectedText",[null]);this._findField&&this._findField.textBox&&(a&&this._findField.textBox.set("value",a),this._findField.textBox.focus(),d.selectInputText(this._findField.textBox.focusNode))},setToolbar:function(a){this.inherited(arguments);if(!b.isOpera){var c=this._frToolbar=new r;b.style(c.domNode,"display","none");b.place(c.domNode,a.domNode,
-"after");c.startup();this._closeBox=new q;c.addChild(this._closeBox);this._findField=new n({label:this._strings.findLabel,tooltip:this._strings.findTooltip});c.addChild(this._findField);this._replaceField=new n({label:this._strings.replaceLabel,tooltip:this._strings.replaceTooltip});c.addChild(this._replaceField);c.addChild(new u.editor.plugins.ToolbarLineBreak);this._findButton=new d.form.Button({label:this._strings.findButton,showLabel:!0,iconClass:this.iconClassPrefix+" dijitEditorIconFind"});
-this._findButton.titleNode.title=this._strings.findButtonTooltip;c.addChild(this._findButton);this._replaceButton=new d.form.Button({label:this._strings.replaceButton,showLabel:!0,iconClass:this.iconClassPrefix+" dijitEditorIconReplace"});this._replaceButton.titleNode.title=this._strings.replaceButtonTooltip;c.addChild(this._replaceButton);this._replaceAllButton=new d.form.Button({label:this._strings.replaceAllButton,showLabel:!0,iconClass:this.iconClassPrefix+" dijitEditorIconReplaceAll"});this._replaceAllButton.titleNode.title=
-this._strings.replaceAllButtonTooltip;c.addChild(this._replaceAllButton);this._caseSensitive=new p({label:this._strings.matchCase,tooltip:this._strings.matchCaseTooltip});c.addChild(this._caseSensitive);this._backwards=new p({label:this._strings.backwards,tooltip:this._strings.backwardsTooltip});c.addChild(this._backwards);this._findButton.set("disabled",!0);this._replaceButton.set("disabled",!0);this._replaceAllButton.set("disabled",!0);this.connect(this._findField,"onChange","_checkButtons");this.connect(this._findField,
-"onKeyDown","_onFindKeyDown");this.connect(this._replaceField,"onKeyDown","_onReplaceKeyDown");this.connect(this._findButton,"onClick","_find");this.connect(this._replaceButton,"onClick","_replace");this.connect(this._replaceAllButton,"onClick","_replaceAll");this.connect(this._closeBox,"onClick","toggle");this._promDialog=new d.TooltipDialog;this._promDialog.startup();this._promDialog.set("content","")}},_checkButtons:function(){this._findField.get("value")?(this._findButton.set("disabled",!1),this._replaceButton.set("disabled",
-!1),this._replaceAllButton.set("disabled",!1)):(this._findButton.set("disabled",!0),this._replaceButton.set("disabled",!0),this._replaceAllButton.set("disabled",!0))},_onFindKeyDown:function(a){a.keyCode==b.keys.ENTER&&(this._find(),b.stopEvent(a))},_onReplaceKeyDown:function(a){a.keyCode==b.keys.ENTER&&(this._replace()||this._replace(),b.stopEvent(a))},_find:function(a){var c=this._findField.get("value")||"";if(c){var g=this._caseSensitive.get("value"),f=this._backwards.get("value"),c=this._findText(c,
-g,f);!c&&a&&(this._promDialog.set("content",b.string.substitute(this._strings.eofDialogText,{"0":this._strings.eofDialogTextFind})),d.popup.open({popup:this._promDialog,around:this._findButton.domNode}),this._promDialogTimeout=setTimeout(b.hitch(this,function(){clearTimeout(this._promDialogTimeout);this._promDialogTimeout=null;d.popup.close(this._promDialog)}),3E3),setTimeout(b.hitch(this,function(){this.editor.focus()}),0));return c}return!1},_replace:function(a){var c=!1,g=this.editor;g.focus();
-var f=this._findField.get("value")||"",s=this._replaceField.get("value")||"";if(f){var t=this._caseSensitive.get("value"),e=this._backwards.get("value"),h=g._sCall("getSelectedText",[null]);b.isMoz&&(f=b.trim(f),h=b.trim(h));f=this._filterRegexp(f,!t);h&&f.test(h)&&(g.execCommand("inserthtml",s),c=!0,e&&(this._findText(s,t,e),g._sCall("collapse",[!0])));!this._find(!1)&&a&&(this._promDialog.set("content",b.string.substitute(this._strings.eofDialogText,{"0":this._strings.eofDialogTextReplace})),d.popup.open({popup:this._promDialog,
-around:this._replaceButton.domNode}),this._promDialogTimeout=setTimeout(b.hitch(this,function(){clearTimeout(this._promDialogTimeout);this._promDialogTimeout=null;d.popup.close(this._promDialog)}),3E3),setTimeout(b.hitch(this,function(){this.editor.focus()}),0));return c}return null},_replaceAll:function(a){var c=0;this._backwards.get("value")?this.editor.placeCursorAtEnd():this.editor.placeCursorAtStart();this._replace(!1)&&c++;var g=b.hitch(this,function(){this._replace(!1)?(c++,setTimeout(g,10)):
-a&&(this._promDialog.set("content",b.string.substitute(this._strings.replaceDialogText,{"0":""+c})),d.popup.open({popup:this._promDialog,around:this._replaceAllButton.domNode}),this._promDialogTimeout=setTimeout(b.hitch(this,function(){clearTimeout(this._promDialogTimeout);this._promDialogTimeout=null;d.popup.close(this._promDialog)}),3E3),setTimeout(b.hitch(this,function(){this._findField.focus();this._findField.textBox.focusNode.select()}),0))});g()},_findText:function(a,c,b){var f=this.editor,
-d=f.window,e=!1;a&&(d.find?e=d.find(a,c,b,!1,!1,!1,!1):(d=f.document,d.selection&&(this.editor.focus(),f=d.body.createTextRange(),(e=d.selection?d.selection.createRange():null)&&(b?f.setEndPoint("EndToStart",e):f.setEndPoint("StartToEnd",e)),c=c?4:0,b&&(c|=1),(e=f.findText(a,f.text.length,c))&&f.select())));return e},_filterRegexp:function(a,c){for(var b="",d=null,e=0;e<a.length;e++)switch(d=a.charAt(e),d){case "\\":b+=d;e++;b+=a.charAt(e);break;case "$":case "^":case "/":case "+":case ".":case "|":case "(":case ")":case "{":case "}":case "[":case "]":b+=
-"\\";default:b+=d}b="^"+b+"$";return c?RegExp(b,"mi"):RegExp(b,"m")},updateState:function(){this.button.set("disabled",this.get("disabled"))},destroy:function(){this.inherited(arguments);this._promDialogTimeout&&(clearTimeout(this._promDialogTimeout),this._promDialogTimeout=null,d.popup.close(this._promDialog));this._frToolbar&&(this._frToolbar.destroyRecursive(),this._frToolbar=null);this._promDialog&&(this._promDialog.destroyRecursive(),this._promDialog=null)}});e._FindReplaceCloseBox=q;e._FindReplaceTextBox=
-n;e._FindReplaceCheckBox=p;e._FindReplaceToolbar=r;b.subscribe(d._scopeName+".Editor.getPlugin",null,function(a){!a.plugin&&"findreplace"===a.args.name.toLowerCase()&&(a.plugin=new e({}))});return e});
-//@ sourceMappingURL=FindReplace.js.map
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_base/manager",	// getUniqueId
+	"dijit/_base/popup",
+	"dijit/_Widget",
+	"dijit/_TemplatedMixin",
+	"dijit/_KeyNavContainer",
+	"dijit/_WidgetsInTemplateMixin",
+	"dijit/TooltipDialog",
+	"dijit/Toolbar",
+	"dijit/form/CheckBox",
+	"dijit/form/_TextBoxMixin",	// selectInputText
+	"dijit/form/TextBox",
+	"dijit/_editor/_Plugin",
+	"dijit/form/Button",
+	"dijit/form/DropDownButton",
+	"dijit/form/ToggleButton",
+	"./ToolbarLineBreak",
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/i18n",
+	"dojo/string",
+	"dojo/i18n!dojox/editor/plugins/nls/FindReplace"
+], function(dojo, dijit, dojox, manager, popup,
+			_Widget, _TemplatedMixin, _KeyNavContainer, _WidgetsInTemplateMixin, TooltipDialog,
+			Toolbar, CheckBox, _TextBoxMixin, TextBox, _Plugin) {
+
+dojo.experimental("dojox.editor.plugins.FindReplace");
+
+var FindReplaceCloseBox = dojo.declare("dojox.editor.plugins._FindReplaceCloseBox",
+	[_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
+	// summary:
+	//		Base class for widgets that contains a button labeled X
+	//		to close the tool bar.
+	
+	btnId: "",
+	widget: null,
+	widgetsInTemplate: true,
+	
+	templateString:
+		"<span style='float: right' class='dijitInline' tabindex='-1'>" +
+			"<button class='dijit dijitReset dijitInline' " +
+				"id='${btnId}' dojoAttachPoint='button' dojoType='dijit.form.Button' tabindex='-1' iconClass='dijitEditorIconsFindReplaceClose' showLabel='false'>X</button>" +
+		"</span>",
+	
+	postMixInProperties: function(){
+		// Set some substitution variables used in the template
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+		this.btnId = this.id + "_close";
+		this.inherited(arguments);
+	},
+	startup: function(){
+		this.connect(this.button, "onClick", "onClick");
+	},
+	onClick: function(){
+	}
+});
+
+
+var FindReplaceTextBox = dojo.declare("dojox.editor.plugins._FindReplaceTextBox",
+	[_Widget, _TemplatedMixin, _WidgetsInTemplateMixin],{
+	// summary:
+	//		Base class for widgets that contains a label (like "Font:")
+	//		and a TextBox to pick a value.
+	//		Used as Toolbar entry.
+
+	// textId: [public] String
+	//		The id of the enhanced textbox
+	textId: "",
+	
+	// label: [public] String
+	//		The label of the enhanced textbox
+	label: "",
+	
+	// tooltip: [public] String
+	//		The tooltip of the enhanced textbox when the mouse is hovering on it
+	toolTip: "",
+	widget: null,
+	widgetsInTemplate: true,
+
+	templateString:
+		"<span style='white-space: nowrap' class='dijit dijitReset dijitInline dijitEditorFindReplaceTextBox' " +
+			"title='${tooltip}' tabindex='-1'>" +
+			"<label class='dijitLeft dijitInline' for='${textId}' tabindex='-1'>${label}</label>" +
+			"<input dojoType='dijit.form.TextBox' intermediateChanges='true' class='focusTextBox' " +
+					"tabIndex='0' id='${textId}' dojoAttachPoint='textBox, focusNode' value='' dojoAttachEvent='onKeyPress: _onKeyPress'/>" +
+		"</span>",
+
+	postMixInProperties: function(){
+		// Set some substitution variables used in the template
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+		this.textId = this.id + "_text";
+		
+		this.inherited(arguments);
+	},
+
+	postCreate: function(){
+		this.textBox.set("value", "");
+		this.disabled =  this.textBox.get("disabled");
+		this.connect(this.textBox, "onChange", "onChange");
+		dojo.attr(this.textBox.textbox, "formnovalidate", "true");
+	},
+
+	_setValueAttr: function(/*String*/ value){
+		//If the value is not a permitted value, just set empty string to prevent showing the warning icon
+		this.value = value;
+		this.textBox.set("value", value);
+	},
+
+	focus: function(){
+		this.textBox.focus();
+	},
+
+	_setDisabledAttr: function(/*Boolean*/ value){
+		// summary:
+		//		Over-ride for the textbox's 'disabled' attribute so that it can be
+		//		disabled programmatically.
+		// value:
+		//		The boolean value to indicate if the textbox should be disabled or not
+		// tags:
+		//		private
+		this.disabled = value;
+		this.textBox.set("disabled", value);
+	},
+
+	onChange: function(/*String*/ val){
+		// summary:
+		//		Stub function for change events on the box.
+		// tags:
+		//		public
+		this.value= val;
+	},
+	
+	_onKeyPress: function(/*Event*/ evt){
+		// summary:
+		//		Handle the arrow key events
+		// evt:
+		//		Event object passed to this handler
+		// tags:
+		//		private
+		var start = 0;
+		var end = 0;
+		
+		// If CTRL, ALT or SHIFT is not held on
+		if(evt.target && !evt.ctrlKey && !evt.altKey && !evt.shiftKey){
+			if(evt.keyCode == dojo.keys.LEFT_ARROW){
+				start = evt.target.selectionStart;
+				end = evt.target.selectionEnd;
+				if(start < end){
+					dijit.selectInputText(evt.target, start, start);
+					dojo.stopEvent(evt);
+				}
+			}else if(evt.keyCode == dojo.keys.RIGHT_ARROW){
+				start = evt.target.selectionStart;
+				end = evt.target.selectionEnd;
+				if(start < end){
+					dijit.selectInputText(evt.target, end, end);
+					dojo.stopEvent(evt);
+				}
+			}
+		}
+	}
+});
+
+
+var FindReplaceCheckBox = dojo.declare("dojox.editor.plugins._FindReplaceCheckBox",
+	[_Widget, _TemplatedMixin, _WidgetsInTemplateMixin],{
+	// summary:
+	//		Base class for widgets that contains a label (like "Match case: ")
+	//		and a checkbox to indicate if it is checked or not.
+	//		Used as Toolbar entry.
+
+	// checkId: [public] String
+	//		The id of the enhanced checkbox
+	checkId: "",
+	
+	// label: [public] String
+	//		The label of the enhanced checkbox
+	label: "",
+	
+	// tooltip: [public] String
+	//		The tooltip of the enhanced checkbox when the mouse is hovering it
+	tooltip: "",
+	
+	widget: null,
+	widgetsInTemplate: true,
+
+	templateString:
+		"<span style='white-space: nowrap' tabindex='-1' " +
+			"class='dijit dijitReset dijitInline dijitEditorFindReplaceCheckBox' title='${tooltip}' >" +
+			"<input dojoType='dijit.form.CheckBox' " +
+					"tabIndex='0' id='${checkId}' dojoAttachPoint='checkBox, focusNode' value=''/>" +
+			"<label tabindex='-1' class='dijitLeft dijitInline' for='${checkId}'>${label}</label>" +
+		"</span>",
+
+	postMixInProperties: function(){
+		// Set some substitution variables used in the template
+		this.id = dijit.getUniqueId(this.declaredClass.replace(/\./g,"_"));
+		this.checkId = this.id + "_check";
+		this.inherited(arguments);
+	},
+
+	postCreate: function(){
+		this.checkBox.set("checked", false);
+		this.disabled =  this.checkBox.get("disabled");
+		this.checkBox.isFocusable = function(){ return false; };
+	},
+
+	_setValueAttr: function(/*Boolean*/ value){
+		// summary:
+		//		Passthrough for checkbox.
+		// tags:
+		//		private
+		this.checkBox.set('value', value);
+	},
+
+	_getValueAttr: function(){
+		// summary:
+		//		Passthrough for checkbox.
+		// tags:
+		//		private
+		return this.checkBox.get('value');
+	},
+
+	focus: function(){
+		// summary:
+		//		Handle the focus event when this widget gets focused
+		// tags:
+		//		private
+		this.checkBox.focus();
+	},
+
+	_setDisabledAttr: function(/*Boolean*/ value){
+		// summary:
+		//		Over-ride for the button's 'disabled' attribute so that it can be
+		//		disabled programmatically.
+		// value:
+		//		The flag that indicates if the checkbox is disabled or not.
+		// tags:
+		//		private
+		this.disabled = value;
+		this.checkBox.set("disabled", value);
+	}
+});
+
+
+var FindReplaceToolbar = dojo.declare("dojox.editor.plugins._FindReplaceToolbar", Toolbar, {
+	// summary:
+	//		A toolbar that derived from dijit.Toolbar, which
+	//		eliminates some unnecessary event response such as LEFT_ARROW pressing
+	//		and click bubbling.
+
+	postCreate: function(){
+		this.connectKeyNavHandlers([], []); // Prevent arrow key navigation
+		this.connect(this.containerNode, "onclick", "_onToolbarEvent");
+		this.connect(this.containerNode, "onkeydown", "_onToolbarEvent");
+		dojo.addClass(this.domNode, "dijitToolbar");
+	},
+	
+	addChild: function(/*dijit._Widget*/ widget, /*int?*/ insertIndex){
+		// summary:
+		//		Add a child to our _Container and prevent the default
+		//		arrow key navigation function. This function may bring in
+		//		side effect
+		dijit._KeyNavContainer.superclass.addChild.apply(this, arguments);
+	},
+	
+	_onToolbarEvent: function(/*Event*/ evt){
+		// Editor may have special treatment to some events, so stop the bubbling.
+		// evt:
+		//		The Event object
+		// tages:
+		//		private
+		evt.stopPropagation();
+	}
+});
+
+var FindReplace = dojo.declare("dojox.editor.plugins.FindReplace",[_Plugin],{
+	// summary:
+	//		This plugin provides a Find/Replace capability for the editor.
+	//		Note that this plugin is NOT supported on Opera currently, as opera
+	//		does not implement a window.find or equiv function.
+
+	// buttonClass: [protected]
+	//		Define the class of button the editor uses.
+	buttonClass: dijit.form.ToggleButton,
+
+	// iconClassPrefix: [const] String
+	//		The CSS class name for the button node is formed from `iconClassPrefix` and `command`
+	iconClassPrefix: "dijitEditorIconsFindReplace",
+
+	// editor: [protected]
+	//		The editor this plugin belongs to
+	editor: null,
+	
+	// button: [protected]
+	//		The toggle button
+	button: null,
+	
+	// _frToolbar: [private]
+	//		The toolbar that contain all the entries and buttons
+	_frToolbar: null,
+	
+	// _closeBox: [private]
+	//		The close button of the F/R toolbar
+	_closeBox: null,
+	
+	// _findField: [private]
+	//		The Find field of the F/R toolbar
+	_findField: null,
+	
+	// _replaceField: [private]
+	//		The Replace field of the F/R toolbar
+	_replaceField: null,
+	
+	// _findButton: [private]
+	//		The Find button of the F/R toolbar
+	_findButton: null,
+	
+	// _replaceButton: [private]
+	//		The Replace button of the F/R toolbar
+	_replaceButton: null,
+	
+	// _replaceAllButton: [private]
+	//		The ReplaceAll button of the F/R toolbar
+	_replaceAllButton: null,
+	
+	// _caseSensitive: [private]
+	//		The case sensitive checkbox
+	_caseSensitive: null,
+	
+	// _backwards: [private]
+	//		The backwards checkbox
+	_backwards: null,
+	
+	// _promDialog: [private]
+	//		The prompt message box that shows the user some messages
+	//		such as the end of a search, the end of a replacement, etc.
+	_promDialog: null,
+	_promDialogTimeout: null,
+
+	// _strings: [private]
+	//		The array that contains globalized strings
+	_strings: null,
+
+	_bookmark: null,
+
+	_initButton: function(){
+		// summary:
+		//		Over-ride for creation of the resize button.
+		this._strings = dojo.i18n.getLocalization("dojox.editor.plugins", "FindReplace");
+		this.button = new dijit.form.ToggleButton({
+			label: this._strings["findReplace"],
+			showLabel: false,
+			iconClass: this.iconClassPrefix + " dijitEditorIconFindString",
+			tabIndex: "-1",
+			onChange: dojo.hitch(this, "_toggleFindReplace")
+		});
+		if(dojo.isOpera){
+			// Not currently supported on Opera!
+			this.button.set("disabled", true);
+		}
+		//Link up so that if the toggle is disabled, then the view of Find/Replace is closed.
+		this.connect(this.button, "set", dojo.hitch(this, function(attr, val){
+			if(attr === "disabled"){
+				this._toggleFindReplace((!val && this._displayed), true, true);
+			}
+		}));
+	},
+
+	setEditor: function(editor){
+		// summary:
+		//		This is a callback handler that set a reference to the editor this plugin
+		//		hosts in
+		this.editor = editor;
+		this._initButton();
+	},
+
+	toggle: function(){
+		// summary:
+		//		Function to allow programmatic toggling of the find toolbar.
+		// tags:
+		//		public
+		this.button.set("checked", !this.button.get("checked"));
+	},
+
+	_toggleFindReplace: function(/*Boolean*/ show, /*Boolean?*/ ignoreState, /*Boolean?*/ buttonDisabled){
+		// summary:
+		//		Function to toggle whether or not find/replace is displayed.
+		// show:
+		//		Indicate if the toolbar is shown or not
+		// ignoreState:
+		//		Indicate if the status should be ignored or not
+		// blurEditor:
+		//		Indicate if the focus should be removed from the editor or not
+		// tags:
+		//		private
+		var size = dojo.marginBox(this.editor.domNode);
+		if(show && !dojo.isOpera){
+			dojo.style(this._frToolbar.domNode, "display", "block");
+			// Auto populate the Find field
+			this._populateFindField();
+			if(!ignoreState){
+				this._displayed = true;
+			}
+		}else{
+			dojo.style(this._frToolbar.domNode, "display", "none");
+			if(!ignoreState){
+				this._displayed = false;
+			}
+			
+			// If the toggle button is disabled, it is most likely that
+			// another plugin such as ViewSource disables it.
+			// So we do not need to focus the text area of the editor to
+			// prevent the editor from an invalid status.
+			// Please refer to dijit._editor.plugins.ViewSource for more details.
+			if(!buttonDisabled){
+				this.editor.focus();
+			}
+		}
+
+		// Resize the editor.
+		this.editor.resize({h: size.h});
+	},
+
+	_populateFindField: function(){
+		// summary:
+		//		Populate the Find field with selected text when dialog initially displayed.
+		//		Auto-select text in Find field after it is populated.
+		//		If nothing selected, restore previous entry from the same session.
+		// tags:
+		//		private
+		var ed = this.editor;
+		var win = ed.window;
+		var selectedTxt = ed._sCall("getSelectedText", [null]);
+		if(this._findField && this._findField.textBox){
+			if(selectedTxt){
+				this._findField.textBox.set("value", selectedTxt);
+			}
+			this._findField.textBox.focus();
+			dijit.selectInputText(this._findField.textBox.focusNode);
+		}
+	},
+
+	setToolbar: function(/*dijit.Toolbar*/ toolbar){
+		// summary:
+		//		Over-ride so that find/replace toolbar is appended after the current toolbar.
+		// toolbar:
+		//		The current toolbar of the editor
+		// tags:
+		//		public
+		this.inherited(arguments);
+		if(!dojo.isOpera){
+			var _tb = (this._frToolbar = new FindReplaceToolbar());
+			dojo.style(_tb.domNode, "display", "none");
+			dojo.place(_tb.domNode, toolbar.domNode, "after");
+			_tb.startup();
+
+			// IE6 will put the close box in a new line when its style is "float: right".
+			// So place the close box ahead of the other fields, which makes it align with
+			// the other components.
+			this._closeBox = new FindReplaceCloseBox();
+			_tb.addChild(this._closeBox);
+			
+			// Define the search/replace fields.
+			this._findField = new FindReplaceTextBox(
+				{label: this._strings["findLabel"], tooltip: this._strings["findTooltip"]});
+			_tb.addChild(this._findField);
+			
+			this._replaceField = new FindReplaceTextBox(
+				{label: this._strings["replaceLabel"], tooltip: this._strings["replaceTooltip"]});
+			_tb.addChild(this._replaceField);
+
+			// Define the Find/Replace/ReplaceAll buttons.
+			_tb.addChild(new dojox.editor.plugins.ToolbarLineBreak());
+			
+			this._findButton = new dijit.form.Button({label: this._strings["findButton"], showLabel: true,
+				iconClass: this.iconClassPrefix + " dijitEditorIconFind"});
+			this._findButton.titleNode.title = this._strings["findButtonTooltip"];
+			_tb.addChild(this._findButton);
+			
+			this._replaceButton = new dijit.form.Button({label: this._strings["replaceButton"], showLabel: true,
+				iconClass: this.iconClassPrefix + " dijitEditorIconReplace"});
+			this._replaceButton.titleNode.title = this._strings["replaceButtonTooltip"];
+			_tb.addChild(this._replaceButton);
+			
+			this._replaceAllButton = new dijit.form.Button({label: this._strings["replaceAllButton"], showLabel: true,
+				iconClass: this.iconClassPrefix + " dijitEditorIconReplaceAll"});
+			this._replaceAllButton.titleNode.title = this._strings["replaceAllButtonTooltip"];
+			_tb.addChild(this._replaceAllButton);
+			
+			// Define the option checkboxes.
+			this._caseSensitive = new FindReplaceCheckBox(
+				{label: this._strings["matchCase"], tooltip: this._strings["matchCaseTooltip"]});
+			_tb.addChild(this._caseSensitive);
+			
+			this._backwards = new FindReplaceCheckBox(
+				{label: this._strings["backwards"], tooltip: this._strings["backwardsTooltip"]});
+			_tb.addChild(this._backwards);
+
+			// Set initial states, buttons should be disabled unless content is
+			// present in the fields.
+			this._findButton.set("disabled", true);
+			this._replaceButton.set("disabled", true);
+			this._replaceAllButton.set("disabled", true);
+
+			// Connect the event to the status of the items
+			this.connect(this._findField, "onChange", "_checkButtons");
+			this.connect(this._findField, "onKeyDown", "_onFindKeyDown");
+			this.connect(this._replaceField, "onKeyDown", "_onReplaceKeyDown");
+
+			// Connect up the actual search events.
+			this.connect(this._findButton, "onClick", "_find");
+			this.connect(this._replaceButton, "onClick", "_replace");
+			this.connect(this._replaceAllButton, "onClick", "_replaceAll");
+			
+			// Connect up the close event
+			this.connect(this._closeBox, "onClick", "toggle");
+			
+			// Prompt for the message
+			this._promDialog = new dijit.TooltipDialog();
+			this._promDialog.startup();
+			this._promDialog.set("content", "");
+		}
+	},
+
+	_checkButtons: function(){
+		// summary:
+		//		Ensure that all the buttons are in a correct status
+		//		when certain events are fired.
+		var fText = this._findField.get("value");
+
+		if(fText){
+			// Only enable if find text is not empty or just blank/spaces.
+			this._findButton.set("disabled", false);
+			this._replaceButton.set("disabled", false);
+			this._replaceAllButton.set("disabled", false);
+		}else{
+			this._findButton.set("disabled", true);
+			this._replaceButton.set("disabled", true);
+			this._replaceAllButton.set("disabled", true);
+		}
+	},
+	
+	_onFindKeyDown: function(evt){
+		if(evt.keyCode == dojo.keys.ENTER){
+			// Perform the default search action
+			this._find();
+			dojo.stopEvent(evt);
+		}
+	},
+	
+	_onReplaceKeyDown: function(evt){
+		if(evt.keyCode == dojo.keys.ENTER){
+			// Perform the default replace action
+			if(!this._replace()) this._replace();
+			dojo.stopEvent(evt);
+		}
+	},
+
+	_find: function(/*Boolean?*/ showMessage){
+		// summary:
+		//		This function invokes a find on the editor document with the noted options for
+		//		find.
+		// showMessage:
+		//		Indicated whether the tooltip is shown or not when the search reaches the end
+		// tags:
+		//		private.
+		// returns:
+		//		Boolean indicating if the content was found or not.
+		var txt = this._findField.get("value") || "";
+		if(txt){
+			var caseSensitive = this._caseSensitive.get("value");
+			var backwards = this._backwards.get("value");
+			var isFound = this._findText(txt, caseSensitive, backwards);
+			if(!isFound && showMessage){
+				this._promDialog.set("content", dojo.string.substitute(
+					this._strings["eofDialogText"], {"0": this._strings["eofDialogTextFind"]}));
+				dijit.popup.open({popup: this._promDialog, around: this._findButton.domNode});
+				this._promDialogTimeout = setTimeout(dojo.hitch(this, function(){
+					clearTimeout(this._promDialogTimeout);
+					this._promDialogTimeout = null;
+					dijit.popup.close(this._promDialog);
+				}), 3000);
+				setTimeout(dojo.hitch(this, function(){
+					this.editor.focus();
+				}), 0);
+			}
+			return isFound;
+		}
+		
+		return false;
+	},
+
+	_replace: function(/*Boolean?*/ showMessage){
+		// summary:
+		//		This function invokes a replace on the editor document with the noted options for replace
+		// showMessage:
+		//		Indicate if the prompt message is shown or not when the replacement
+		//		reaches the end
+		// tags:
+		//		private
+		// returns:
+		//		Boolean indicating if the content was replaced or not.
+		var isReplaced = false;
+		var ed = this.editor;
+		ed.focus();
+		var txt = this._findField.get("value") || "";
+		var repTxt = this._replaceField.get("value") || "";
+		 
+		if(txt){
+			var caseSensitive = this._caseSensitive.get("value");
+			// Check if it is forced to be forwards or backwards
+			var backwards = this._backwards.get("value");
+			
+			//Replace the current selected text if it matches the pattern
+			var selected = ed._sCall("getSelectedText", [null]);
+			// Handle checking/replacing current selection.  For some reason on Moz
+			// leading whitespace is trimmed, so we have to trim it down on this check
+			// or we don't always replace.  Moz bug!
+			if(dojo.isMoz){
+				txt = dojo.trim(txt);
+				selected = dojo.trim(selected);
+			}
+			
+			var regExp = this._filterRegexp(txt, !caseSensitive);
+			if(selected && regExp.test(selected)){
+				ed.execCommand("inserthtml", repTxt);
+				isReplaced = true;
+			
+				if(backwards){
+					// Move to the beginning of the replaced text
+					// to avoid the infinite recursive replace
+					this._findText(repTxt, caseSensitive, backwards);
+					ed._sCall("collapse", [true]);
+				}
+			}
+			
+			if(!this._find(false) && showMessage){	// Find the next
+				this._promDialog.set("content", dojo.string.substitute(
+					this._strings["eofDialogText"], {"0": this._strings["eofDialogTextReplace"]}));
+				dijit.popup.open({popup: this._promDialog, around: this._replaceButton.domNode});
+				this._promDialogTimeout = setTimeout(dojo.hitch(this, function(){
+					clearTimeout(this._promDialogTimeout);
+					this._promDialogTimeout = null;
+					dijit.popup.close(this._promDialog);
+				}), 3000);
+				setTimeout(dojo.hitch(this, function(){
+					this.editor.focus();
+				}), 0);
+			}
+			return isReplaced;
+		 }
+		 return null;
+	},
+	
+	_replaceAll: function(/*Boolean?*/ showMessage){
+		// summary:
+		//		This function replaces all the matched content on the editor document
+		//		with the noted options for replace
+		// showMessage:
+		//		Indicate if the prompt message is shown or not when the action is done.
+		// tags:
+		//		private
+		var replaced = 0;
+		var backwards = this._backwards.get("value");
+		
+		if(backwards){
+			this.editor.placeCursorAtEnd();
+		}else{
+			this.editor.placeCursorAtStart();
+		}
+		
+		// The _replace will return false if the current selection deos not match
+		// the searched text. So try the first attempt so that the selection
+		// is always the searched text if there is one that matches
+		if(this._replace(false)) { replaced++; }
+		// Do the replace via timeouts to avoid locking the browser up for a lot of replaces.
+		var loopBody = dojo.hitch(this, function(){
+			if(this._replace(false)){
+				replaced++;
+				setTimeout(loopBody, 10);
+			}else{
+				if(showMessage){
+					this._promDialog.set("content", dojo.string.substitute(
+						this._strings["replaceDialogText"], {"0": "" + replaced}));
+					dijit.popup.open({
+						popup: this._promDialog,
+						around: this._replaceAllButton.domNode
+					});
+					this._promDialogTimeout = setTimeout(dojo.hitch(this, function(){
+						clearTimeout(this._promDialogTimeout);
+						this._promDialogTimeout = null;
+						dijit.popup.close(this._promDialog);
+					}), 3000);
+					setTimeout(dojo.hitch(this, function(){
+						this._findField.focus();
+						this._findField.textBox.focusNode.select();
+					}), 0);
+				}
+			}
+		});
+		loopBody();
+	},
+
+	_findText: function(/*String*/ txt, /*Boolean*/ caseSensitive, /*Boolean*/ backwards){
+		// summary:
+		//		This function invokes a find with specific options
+		// txt: String
+		//		The text to locate in the document.
+		// caseSensitive: Boolean
+		//		Whether or ot to search case-sensitively.
+		// backwards: Boolean
+		//		Whether or not to search backwards in the document.
+		// tags:
+		//		private.
+		// returns:
+		//		Boolean indicating if the content was found or not.
+		var ed = this.editor;
+		var win = ed.window;
+		var found = false;
+		if(txt){
+			if(win.find){
+				found = win.find(txt, caseSensitive, backwards, false, false, false, false);
+			}else{
+				var doc = ed.document;
+				if(doc.selection || win.getSelection){
+					/* IE */
+					// Focus to restore position/selection,
+					// then shift to search from current position.
+					this.editor.focus();
+					var txtRg = doc.body.createTextRange();
+					var txtRg2 = txtRg.duplicate();
+					var sel1 = win.getSelection();
+					var sRange = sel1.getRangeAt(0);
+					var curPos = doc.selection?doc.selection.createRange():null;
+					if(curPos){
+						if(backwards){
+							txtRg.setEndPoint("EndToStart", curPos);
+						}else{
+							txtRg.setEndPoint("StartToEnd", curPos);
+						}
+					}else if(this._bookmark){
+						var currentText = win.getSelection().toString();
+						txtRg.moveToBookmark(this._bookmark);
+						//if selection is different to previous bookmark, need to search from that position
+						if ( txtRg.text != currentText ) {
+							txtRg = txtRg2.duplicate();
+							this._bookmark = null;
+						}else if(backwards){
+							txtRg2.setEndPoint("EndToStart", txtRg);
+							txtRg = txtRg2.duplicate();
+						}else{
+							txtRg2.setEndPoint("StartToEnd", txtRg);
+							txtRg = txtRg2.duplicate();
+						}
+					}
+					var flags = caseSensitive?4:0;
+					if(backwards){
+						flags = flags | 1;
+					}
+					//flags = flags |
+					found = txtRg.findText(txt,txtRg.text.length,flags);
+					if(found){
+						txtRg.select();
+						this._bookmark = txtRg.getBookmark();
+					}
+				}
+			}
+		}
+		return found;
+	},
+
+	_filterRegexp: function(/*String*/ pattern, /*Boolean*/ ignoreCase){
+		// summary:
+		//		Helper function to convert a simple pattern to a regular expression for matching.
+		// description:
+		//		Returns a regular expression object that conforms to the defined conversion rules.
+		//		For example:
+		//
+		//		- ca*   -> /^ca.*$/
+		//		- *ca*  -> /^.*ca.*$/
+		//		- *c\*a*  -> /^.*c\*a.*$/
+		//		- *c\*a?*  -> /^.*c\*a..*$/
+		//
+		//		and so on.
+		// pattern: string
+		//		A simple matching pattern to convert that follows basic rules:
+		//
+		//		- * Means match anything, so ca* means match anything starting with ca
+		//		- ? Means match single character.  So, b?b will match to bob and bab, and so on.
+		//		- \ is an escape character.  So for example, \* means do not treat * as a match, but literal character *.
+		//		  To use a \ as a character in the string, it must be escaped.  So in the pattern it should be
+		//		  represented by \\ to be treated as an ordinary \ character instead of an escape.
+		// ignoreCase:
+		//		An optional flag to indicate if the pattern matching should be treated as case-sensitive or not when comparing
+		//		By default, it is assumed case sensitive.
+		// tags:
+		//		private
+
+		var rxp = "";
+		var c = null;
+		for(var i = 0; i < pattern.length; i++){
+			c = pattern.charAt(i);
+			switch(c){
+				case '\\':
+					rxp += c;
+					i++;
+					rxp += pattern.charAt(i);
+					break;
+				case '$':
+				case '^':
+				case '/':
+				case '+':
+				case '.':
+				case '|':
+				case '(':
+				case ')':
+				case '{':
+				case '}':
+				case '[':
+				case ']':
+					rxp += "\\"; //fallthrough
+				default:
+					rxp += c;
+			}
+		}
+		rxp = "^" + rxp + "$";
+		if(ignoreCase){
+			return new RegExp(rxp,"mi"); //RegExp
+		}else{
+			return new RegExp(rxp,"m"); //RegExp
+		}
+		
+	},
+	
+	updateState: function(){
+		// summary:
+		//		Over-ride for button state control for disabled to work.
+		this.button.set("disabled", this.get("disabled"));
+	},
+
+	destroy: function(){
+		// summary:
+		//		Cleanup of our custom toolbar.
+		this.inherited(arguments);
+		if(this._promDialogTimeout){
+			clearTimeout(this._promDialogTimeout);
+			this._promDialogTimeout = null;
+			dijit.popup.close(this._promDialog);
+		}
+		if(this._frToolbar){
+			this._frToolbar.destroyRecursive();
+			this._frToolbar = null;
+		}
+		if(this._promDialog){
+			this._promDialog.destroyRecursive();
+			this._promDialog = null;
+		}
+	}
+});
+
+// For monkey patching
+FindReplace._FindReplaceCloseBox = FindReplaceCloseBox;
+FindReplace._FindReplaceTextBox = FindReplaceTextBox;
+FindReplace._FindReplaceCheckBox = FindReplaceCheckBox;
+FindReplace._FindReplaceToolbar = FindReplaceToolbar;
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	var name = o.args.name.toLowerCase();
+	if(name ===  "findreplace"){
+		o.plugin = new FindReplace({});
+	}
+});
+
+return FindReplace;
+
+});

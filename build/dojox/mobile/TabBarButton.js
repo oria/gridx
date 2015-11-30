@@ -1,12 +1,310 @@
-//>>built
-define("dojox/mobile/TabBarButton","dojo/_base/connect dojo/_base/declare dojo/_base/event dojo/_base/lang dojo/dom dojo/dom-class dojo/dom-construct dojo/dom-style dojo/dom-attr ./View ./iconUtils ./_ItemBase ./Badge ./sniff dojo/has!dojo-bidi?dojox/mobile/bidi/TabBarButton".split(" "),function(l,h,m,n,f,g,d,p,c,q,r,e,s,k,t){e=h(k("dojo-bidi")?"dojox.mobile.NonBidiTabBarButton":"dojox.mobile.TabBarButton",e,{icon1:"",icon2:"",iconPos1:"",iconPos2:"",selected:!1,transition:"none",tag:"li",badge:"",
-baseClass:"mblTabBarButton",closeIcon:"mblDomButtonWhiteCross",_selStartMethod:"touch",_selEndMethod:"touch",_moveTo:"",destroy:function(){this.badgeObj&&delete this.badgeObj;this.inherited(arguments)},inheritParams:function(){this.icon&&!this.icon1&&(this.icon1=this.icon);var a=this.getParent();a&&(this.transition||(this.transition=a.transition),this.icon1&&(a.iconBase&&"/"===a.iconBase.charAt(a.iconBase.length-1))&&(this.icon1=a.iconBase+this.icon1),this.icon1||(this.icon1=a.iconBase),this.iconPos1||
-(this.iconPos1=a.iconPos),this.icon2&&(a.iconBase&&"/"===a.iconBase.charAt(a.iconBase.length-1))&&(this.icon2=a.iconBase+this.icon2),this.icon2||(this.icon2=a.iconBase||this.icon1),this.iconPos2||(this.iconPos2=a.iconPos||this.iconPos1),a.closable&&(this.icon1||(this.icon1=this.closeIcon),this.icon2||(this.icon2=this.closeIcon),g.add(this.domNode,"mblTabBarButtonClosable")))},buildRendering:function(){this.domNode=this.srcNodeRef||d.create(this.tag);this.srcNodeRef&&(this.label||(this.label=n.trim(this.srcNodeRef.innerHTML)),
-this.srcNodeRef.innerHTML="");this.labelNode=this.box=d.create("div",{className:"mblTabBarButtonLabel"},this.domNode);c.set(this.domNode,"role","tab");c.set(this.domNode,"aria-selected","false");if(this._moveTo=this._getMoveToId()){var a=f.byId(this._moveTo);a&&(c.set(this.domNode,"aria-controls",this._moveTo),c.set(a,"role","tabpanel"),c.set(a,"aria-labelledby",this.id))}this.inherited(arguments)},startup:function(){if(!this._started){this._dragstartHandle=this.connect(this.domNode,"ondragstart",
-m.stop);this.connect(this.domNode,"onkeydown","_onClick");var a=this.getParent();a&&a.closable&&(this._clickCloseHandler=this.connect(this.iconDivNode,"onclick","_onCloseButtonClick"),this._keydownCloseHandler=this.connect(this.iconDivNode,"onkeydown","_onCloseButtonClick"),this.iconDivNode.tabIndex="0");this.inherited(arguments);this._isOnLine||(this._isOnLine=!0,this.set({icon:void 0!==this._pendingIcon?this._pendingIcon:this.icon,icon1:this.icon1,icon2:this.icon2}),delete this._pendingIcon);f.setSelectable(this.domNode,
-!1)}},onClose:function(a){l.publish("/dojox/mobile/tabClose",[this]);return this.getParent().onCloseButtonClick(this)},_onCloseButtonClick:function(a){(!a||!("keydown"===a.type&&13!==a.keyCode))&&!1!==this.onCloseButtonClick(a)&&this.onClose()&&this.destroy()},onCloseButtonClick:function(){},_onClick:function(a){(!a||!("keydown"===a.type&&13!==a.keyCode))&&!1!==this.onClick(a)&&this.defaultClickAction(a)},onClick:function(){},_setIcon:function(a,b){this.getParent()&&(this._set("icon"+b,a),this.iconDivNode||
-(this.iconDivNode=d.create("div",{className:"mblTabBarButtonIconArea"},this.domNode,"first")),this["iconParentNode"+b]||(this["iconParentNode"+b]=d.create("div",{className:"mblTabBarButtonIconParent mblTabBarButtonIconParent"+b},this.iconDivNode)),this["iconNode"+b]=r.setIcon(a,this["iconPos"+b],this["iconNode"+b],this.alt,this["iconParentNode"+b]),this["icon"+b]=a,g.toggle(this.domNode,"mblTabBarButtonHasIcon",a&&"none"!==a))},_getMoveToId:function(){if(this.moveTo){if("#"===this.moveTo)return"";
-var a="";(a="object"===typeof this.moveTo&&this.moveTo.moveTo?this.moveTo.moveTo:this.moveTo)&&(a=q.prototype.convertToId(a));return a}},_setIcon1Attr:function(a){this._setIcon(a,1)},_setIcon2Attr:function(a){this._setIcon(a,2)},_getBadgeAttr:function(){return this.badgeObj&&this.badgeObj.domNode.parentNode&&1==this.badgeObj.domNode.parentNode.nodeType?this.badgeObj.getValue():null},_setBadgeAttr:function(a){this.badgeObj||(this.badgeObj=new s({fontSize:11}),p.set(this.badgeObj.domNode,{position:"absolute",
-top:"0px",right:"0px"}));this.badgeObj.setValue(a);a?this.domNode.appendChild(this.badgeObj.domNode):this.domNode===this.badgeObj.domNode.parentNode&&this.domNode.removeChild(this.badgeObj.domNode)},_setSelectedAttr:function(a){this.inherited(arguments);g.toggle(this.domNode,"mblTabBarButtonSelected",a);c.set(this.domNode,"aria-selected",a?"true":"false");if(this._moveTo){var b=f.byId(this._moveTo);b&&c.set(b,"aria-hidden",a?"false":"true")}}});return k("dojo-bidi")?h("dojox.mobile.TabBarButton",
-[e,t]):e});
-//@ sourceMappingURL=TabBarButton.js.map
+define([
+	"dojo/_base/connect",
+	"dojo/_base/declare",
+	"dojo/_base/event",
+	"dojo/_base/lang",
+	"dojo/dom",
+	"dojo/dom-class",
+	"dojo/dom-construct",
+	"dojo/dom-style",
+	"dojo/dom-attr",
+	"./common",
+	"./View",
+	"./iconUtils",
+	"./_ItemBase",
+	"./Badge",
+	"./sniff",
+	"dojo/has!dojo-bidi?dojox/mobile/bidi/TabBarButton"
+], function(connect, declare, event, lang, dom, domClass, domConstruct, domStyle, domAttr, common, View, iconUtils, ItemBase, Badge, has, BidiTabBarButton){
+
+	// module:
+	//		dojox/mobile/TabBarButton
+
+	var TabBarButton = declare(has("dojo-bidi") ? "dojox.mobile.NonBidiTabBarButton" : "dojox.mobile.TabBarButton", ItemBase,{
+		// summary:
+		//		A button widget that is placed in the TabBar widget.
+		// description:
+		//		TabBarButton is a button that is placed in the TabBar widget. It
+		//		is a subclass of dojox/mobile/_ItemBase just like ListItem or
+		//		IconItem. So, unlike Button, it has similar capability as
+		//		ListItem or IconItem, such as icon support, transition, etc.
+
+		// icon1: String
+		//		A path for the unselected (typically dark) icon. If icon is not
+		//		specified, the iconBase parameter of the parent widget is used.
+		icon1: "",
+
+		// icon2: String
+		//		A path for the selected (typically highlight) icon. If icon is
+		//		not specified, the iconBase parameter of the parent widget or
+		//		icon1 is used.
+		icon2: "",
+
+		// iconPos1: String
+		//		The position of an aggregated unselected (typically dark)
+		//		icon. IconPos1 is a comma-separated list of values like
+		//		top,left,width,height (ex. "0,0,29,29"). If iconPos1 is not
+		//		specified, the iconPos parameter of the parent widget is used.
+		iconPos1: "",
+
+		// iconPos2: String
+		//		The position of an aggregated selected (typically highlight)
+		//		icon. IconPos2 is a comma-separated list of values like
+		//		top,left,width,height (ex. "0,0,29,29"). If iconPos2 is not
+		//		specified, the iconPos parameter of the parent widget or
+		//		iconPos1 is used.
+		iconPos2: "",
+
+		// selected: Boolean
+		//		If true, the button is in the selected state.
+		selected: false,
+
+		// transition: String
+		//		A type of animated transition effect.
+		transition: "none",
+
+		// tag: String
+		//		A name of html tag to create as domNode.
+		tag: "li",
+
+		// badge: String
+		//		A string to show on a badge. (ex. "12")
+		badge: "",
+		
+		// badgeClass: [const] String
+		//		A CSS class name of a badge DOM node.
+		badgeClass: "mblDomButtonRedBadge",
+
+		/* internal properties */	
+		baseClass: "mblTabBarButton",
+		// closeIcon: [private] String
+		//		CSS class for the close icon.
+		closeIcon: "mblDomButtonWhiteCross",
+
+		_selStartMethod: "touch",
+		_selEndMethod: "touch",
+		
+		// _moveTo: String
+		//		id of destination view
+		_moveTo: "",
+
+		destroy: function(){
+			if(this.badgeObj){
+				delete this.badgeObj;
+			}
+			this.inherited(arguments);
+		},
+
+		inheritParams: function(){
+			// summary:
+			//		Overrides dojox/mobile/_ItemBase.inheritParams().
+			if(this.icon && !this.icon1){ this.icon1 = this.icon; }
+			var parent = this.getParent();
+			if(parent){
+				if(!this.transition){ this.transition = parent.transition; }
+				if(this.icon1 && parent.iconBase &&
+					parent.iconBase.charAt(parent.iconBase.length - 1) === '/'){
+					this.icon1 = parent.iconBase + this.icon1;
+				}
+				if(!this.icon1){ this.icon1 = parent.iconBase; }
+				if(!this.iconPos1){ this.iconPos1 = parent.iconPos; }
+				if(this.icon2 && parent.iconBase &&
+					parent.iconBase.charAt(parent.iconBase.length - 1) === '/'){
+					this.icon2 = parent.iconBase + this.icon2;
+				}
+				if(!this.icon2){ this.icon2 = parent.iconBase || this.icon1; }
+				if(!this.iconPos2){ this.iconPos2 = parent.iconPos || this.iconPos1; }
+
+				if(parent.closable){
+					if(!this.icon1){
+						this.icon1 = this.closeIcon;
+					}
+					if(!this.icon2){
+						this.icon2 = this.closeIcon;
+					}
+					domClass.add(this.domNode, "mblTabBarButtonClosable");
+				}
+			}
+		},
+
+		buildRendering: function(){
+			this.domNode = this.srcNodeRef || domConstruct.create(this.tag);
+			if(this.srcNodeRef){
+				if(!this.label){
+					this.label = lang.trim(this.srcNodeRef.innerHTML);
+				}
+				this.srcNodeRef.innerHTML = "";
+			}
+
+			this.labelNode = this.box = domConstruct.create("div", {className:"mblTabBarButtonLabel"}, this.domNode);
+			
+			domAttr.set(this.domNode, "role", "tab");
+			domAttr.set(this.domNode, "aria-selected", "false");
+			this._moveTo = this._getMoveToId();
+			if(this._moveTo){
+				var tabPanelNode = dom.byId(this._moveTo);
+				if(tabPanelNode){
+					domAttr.set(this.domNode, "aria-controls", this._moveTo);
+					domAttr.set(tabPanelNode, "role", "tabpanel");
+					domAttr.set(tabPanelNode, "aria-labelledby", this.id);
+				}
+			}
+			
+			this.inherited(arguments);
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+
+			this._dragstartHandle = this.connect(this.domNode, "ondragstart", event.stop);
+			this.connect(this.domNode, "onkeydown", "_onClick"); // for desktop browsers
+			var parent = this.getParent();
+			if(parent && parent.closable){
+				this._clickCloseHandler = this.connect(this.iconDivNode, "onclick", "_onCloseButtonClick");
+				this._keydownCloseHandler = this.connect(this.iconDivNode, "onkeydown", "_onCloseButtonClick"); // for desktop browsers
+				this.iconDivNode.tabIndex = "0";
+			}
+
+			this.inherited(arguments);
+			if(!this._isOnLine){
+				this._isOnLine = true;
+				// retry applying the attribute for which the custom setter delays the actual 
+				// work until _isOnLine is true. 
+				this.set({
+					icon: this._pendingIcon !== undefined ? this._pendingIcon : this.icon,
+					icon1:this.icon1,
+					icon2:this.icon2});
+				// Not needed anymore (this code executes only once per life cycle):
+				delete this._pendingIcon; 
+			}
+			common.setSelectable(this.domNode, false);
+		},
+
+		onClose: function(e){
+			// summary:
+			//		Called when the parent is a dojox/mobile/TabBar whose closable property is true, and the user clicked the close button.
+			connect.publish("/dojox/mobile/tabClose", [this]);
+			return this.getParent().onCloseButtonClick(this);
+		},
+
+		_onCloseButtonClick: function(e){
+			if(e && e.type === "keydown" && e.keyCode !== 13){ return; }
+			if(this.onCloseButtonClick(e) === false){ return; } // user's click action
+			if(this.onClose()){
+				this.destroy();
+			}
+		},
+
+		onCloseButtonClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User defined function to handle clicks
+			//		when the parent is a dojox/mobile/TabBar whose closable property is true.
+			// tags:
+			//		callback
+		},
+
+		_onClick: function(e){
+			// summary:
+			//		Internal handler for click events.
+			// tags:
+			//		private
+			if(e && e.type === "keydown" && e.keyCode !== 13){ return; }
+			if(this.onClick(e) === false){ return; } // user's click action
+			this.defaultClickAction(e);
+		},
+
+		onClick: function(/*Event*/ /*===== e =====*/){
+			// summary:
+			//		User defined function to handle clicks
+			// tags:
+			//		callback
+		},
+
+		_setIcon: function(icon, n){
+			if(!this.getParent()){ return; } // icon may be invalid because inheritParams is not called yet
+			this._set("icon" + n, icon);
+			if(!this.iconDivNode){
+				this.iconDivNode = domConstruct.create("div", {className:"mblTabBarButtonIconArea"}, this.domNode, "first");
+				// mblTabBarButtonDiv -> mblTabBarButtonIconArea
+			}
+			if(!this["iconParentNode" + n]){
+				this["iconParentNode" + n] = domConstruct.create("div", {className:"mblTabBarButtonIconParent mblTabBarButtonIconParent" + n}, this.iconDivNode);
+				// mblTabBarButtonIcon -> mblTabBarButtonIconParent
+			}
+			this["iconNode" + n] = iconUtils.setIcon(icon, this["iconPos" + n],
+				this["iconNode" + n], this.alt, this["iconParentNode" + n]);
+			this["icon" + n] = icon;
+			domClass.toggle(this.domNode, "mblTabBarButtonHasIcon", icon && icon !== "none");
+		},
+		
+		_getMoveToId: function(){
+			// summary:
+			//		Return the id of the destination view.
+			//		If there is no id, return an empty string.
+			if(this.moveTo){
+				if(this.moveTo === "#"){ return ""; }
+				var toId = "";
+				if(typeof(this.moveTo) === "object" && this.moveTo.moveTo){
+					toId = this.moveTo.moveTo;
+				}else{
+					toId = this.moveTo;
+				}
+				if(toId){
+					toId = View.prototype.convertToId(toId);
+				}
+				return toId;
+			}
+		},
+
+		_setIcon1Attr: function(icon){
+			this._setIcon(icon, 1);
+		},
+
+		_setIcon2Attr: function(icon){
+			this._setIcon(icon, 2);
+		},
+
+		_getBadgeAttr: function(){
+			return this.badgeObj && this.badgeObj.domNode.parentNode &&
+				this.badgeObj.domNode.parentNode.nodeType == 1 ? this.badgeObj.getValue() : null;
+		},
+
+		_setBadgeAttr: function(/*String*/value){
+			if(!this.badgeObj){
+				this.badgeObj = new Badge({
+					fontSize: 11,
+					className: this.badgeClass
+				});
+				domStyle.set(this.badgeObj.domNode, {
+					position: "absolute",
+					top: "0px",
+					right: "0px"
+				});
+			}
+			this.badgeObj.setValue(value);
+			if(value){
+				this.domNode.appendChild(this.badgeObj.domNode);
+			}else{
+				if(this.domNode === this.badgeObj.domNode.parentNode){
+					this.domNode.removeChild(this.badgeObj.domNode);
+				}
+			}
+		},
+
+		_setSelectedAttr: function(/*Boolean*/selected){
+			// summary:
+			//		Makes this widget in the selected or unselected state.
+			this.inherited(arguments);
+			domClass.toggle(this.domNode, "mblTabBarButtonSelected", selected);
+			domAttr.set(this.domNode, "aria-selected", selected ? "true" : "false");
+			if(this._moveTo){
+				var tabPanelNode = dom.byId(this._moveTo);
+				if(tabPanelNode){
+					domAttr.set(tabPanelNode, "aria-hidden", selected ? "false" : "true");
+				}
+			}
+		}
+	});
+
+	return has("dojo-bidi")?declare("dojox.mobile.TabBarButton", [TabBarButton, BidiTabBarButton]):TabBarButton;
+});

@@ -1,11 +1,284 @@
-//>>built
-define("dojox/dtl/tag/logic",["dojo/_base/lang","../_base"],function(m,l){var g=m.getObject("tag.logic",!0,l);g.IfNode=m.extend(function(a,b,d,c){this.bools=a;this.trues=b;this.falses=d;this.type=c},{render:function(a,b){var d,c,e;if("or"==this.type){for(d=0;c=this.bools[d];d++)if(e=c[0],c=c[1],(c=c.resolve(a))&&!e||e&&!c)return this.falses&&(b=this.falses.unrender(a,b)),this.trues?this.trues.render(a,b,this):b;this.trues&&(b=this.trues.unrender(a,b));return this.falses?this.falses.render(a,b,this):
-b}for(d=0;c=this.bools[d];d++)if(e=c[0],c=c[1],c=c.resolve(a),c==e)return this.trues&&(b=this.trues.unrender(a,b)),this.falses?this.falses.render(a,b,this):b;this.falses&&(b=this.falses.unrender(a,b));return this.trues?this.trues.render(a,b,this):b},unrender:function(a,b){b=this.trues?this.trues.unrender(a,b):b;return b=this.falses?this.falses.unrender(a,b):b},clone:function(a){var b=this.trues?this.trues.clone(a):null;a=this.falses?this.falses.clone(a):null;return new this.constructor(this.bools,
-b,a,this.type)}});g.IfEqualNode=m.extend(function(a,b,d,c,e){this.var1=new l._Filter(a);this.var2=new l._Filter(b);this.trues=d;this.falses=c;this.negate=e},{render:function(a,b){var d=this.var1.resolve(a),c=this.var2.resolve(a),d="undefined"!=typeof d?d:"",c="undefined"!=typeof d?c:"";if(this.negate&&d!=c||!this.negate&&d==c)return this.falses&&(b=this.falses.unrender(a,b,this)),this.trues?this.trues.render(a,b,this):b;this.trues&&(b=this.trues.unrender(a,b,this));return this.falses?this.falses.render(a,
-b,this):b},unrender:function(a,b){return g.IfNode.prototype.unrender.call(this,a,b)},clone:function(a){var b=this.trues?this.trues.clone(a):null;a=this.falses?this.falses.clone(a):null;return new this.constructor(this.var1.getExpression(),this.var2.getExpression(),b,a,this.negate)}});g.ForNode=m.extend(function(a,b,d,c){this.assign=a;this.loop=new l._Filter(b);this.reversed=d;this.nodelist=c;this.pool=[]},{render:function(a,b){var d,c,e,h=!1,f=this.assign;for(e=0;e<f.length;e++)if("undefined"!=typeof a[f[e]]){h=
-!0;a=a.push();break}!h&&a.forloop&&(h=!0,a=a.push());e=this.loop.resolve(a)||[];var k=[];if(m.isObject(e)&&!m.isArrayLike(e))for(d in e)k.push(e[d]);else k=e;for(d=k.length;d<this.pool.length;d++)this.pool[d].unrender(a,b,this);this.reversed&&(k=k.slice(0).reverse());var g=a.forloop={parentloop:a.get("forloop",{})};for(d=c=0;d<k.length;d++){var l=k[d];g.counter0=c;g.counter=c+1;g.revcounter0=k.length-c-1;g.revcounter=k.length-c;g.first=!c;g.last=c==k.length-1;if(1<f.length&&m.isArrayLike(l)){h||(h=
-!0,a=a.push());var n={};for(e=0;e<l.length&&e<f.length;e++)n[f[e]]=l[e];m.mixin(a,n)}else a[f[0]]=l;c+1>this.pool.length&&this.pool.push(this.nodelist.clone(b));b=this.pool[c++].render(a,b,this)}delete a.forloop;if(h)a.pop();else for(e=0;e<f.length;e++)delete a[f[e]];return b},unrender:function(a,b){for(var d=0,c;c=this.pool[d];d++)b=c.unrender(a,b);return b},clone:function(a){return new this.constructor(this.assign,this.loop.getExpression(),this.reversed,this.nodelist.clone(a))}});m.mixin(g,{if_:function(a,
-b){var d,c,e,h=[],f=b.contents.split();f.shift();b=f.join(" ");f=b.split(" and ");if(1==f.length)e="or",f=b.split(" or ");else{e="and";for(d=0;d<f.length;d++)if(-1!=f[d].indexOf(" or "))throw Error("'if' tags can't mix 'and' and 'or'");}for(d=0;c=f[d];d++){var k=!1;0==c.indexOf("not ")&&(c=c.slice(4),k=!0);h.push([k,new l._Filter(c)])}d=a.parse(["else","endif"]);c=!1;b=a.next_token();"else"==b.contents&&(c=a.parse(["endif"]),a.next_token());return new g.IfNode(h,d,c,e)},_ifequal:function(a,b,d){var c=
-b.split_contents();if(3!=c.length)throw Error(c[0]+" takes two arguments");var e="end"+c[0],h=a.parse(["else",e]),f=!1;b=a.next_token();"else"==b.contents&&(f=a.parse([e]),a.next_token());return new g.IfEqualNode(c[1],c[2],h,f,d)},ifequal:function(a,b){return g._ifequal(a,b)},ifnotequal:function(a,b){return g._ifequal(a,b,!0)},for_:function(a,b){var d=b.contents.split();if(4>d.length)throw Error("'for' statements should have at least four words: "+b.contents);var c="reversed"==d[d.length-1],e=c?-3:
--2;if("in"!=d[d.length+e])throw Error("'for' tag received an invalid argument: "+b.contents);for(var h=d.slice(1,e).join(" ").split(/ *, */),f=0;f<h.length;f++)if(!h[f]||-1!=h[f].indexOf(" "))throw Error("'for' tag received an invalid argument: "+b.contents);f=a.parse(["endfor"]);a.next_token();return new g.ForNode(h,d[d.length+e+1],c,f)}});return g});
-//@ sourceMappingURL=logic.js.map
+define([
+	"dojo/_base/lang",
+	"../_base"
+], function(lang, dd){
+
+	var ddtl = lang.getObject("tag.logic", true, dd);
+	/*=====
+	 ddtl = {
+	 	// TODO: summary
+	 };
+	 =====*/
+
+	var ddt = dd.text;
+
+	ddtl.IfNode = lang.extend(function(bools, trues, falses, type){
+		this.bools = bools;
+		this.trues = trues;
+		this.falses = falses;
+		this.type = type;
+	},
+	{
+		render: function(context, buffer){
+			var i, bool, ifnot, filter, value;
+			if(this.type == "or"){
+				for(i = 0; bool = this.bools[i]; i++){
+					ifnot = bool[0];
+					filter = bool[1];
+					value = filter.resolve(context);
+					if((value && !ifnot) || (ifnot && !value)){
+						if(this.falses){
+							buffer = this.falses.unrender(context, buffer);
+						}
+						return (this.trues) ? this.trues.render(context, buffer, this) : buffer;
+					}
+				}
+				if(this.trues){
+					buffer = this.trues.unrender(context, buffer);
+				}
+				return (this.falses) ? this.falses.render(context, buffer, this) : buffer;
+			}else{
+				for(i = 0; bool = this.bools[i]; i++){
+					ifnot = bool[0];
+					filter = bool[1];
+					value = filter.resolve(context);
+					// If we ever encounter a false value
+					if(value == ifnot){
+						if(this.trues){
+							buffer = this.trues.unrender(context, buffer);
+						}
+						return (this.falses) ? this.falses.render(context, buffer, this) : buffer;
+					}
+				}
+				if(this.falses){
+					buffer = this.falses.unrender(context, buffer);
+				}
+				return (this.trues) ? this.trues.render(context, buffer, this) : buffer;
+			}
+			return buffer;
+		},
+		unrender: function(context, buffer){
+			buffer = (this.trues) ? this.trues.unrender(context, buffer) : buffer;
+			buffer = (this.falses) ? this.falses.unrender(context, buffer) : buffer;
+			return buffer;
+		},
+		clone: function(buffer){
+			var trues = (this.trues) ? this.trues.clone(buffer) : null;
+			var falses = (this.falses) ? this.falses.clone(buffer) : null;
+			return new this.constructor(this.bools, trues, falses, this.type);
+		}
+	});
+
+	ddtl.IfEqualNode = lang.extend(function(var1, var2, trues, falses, negate){
+		this.var1 = new dd._Filter(var1);
+		this.var2 = new dd._Filter(var2);
+		this.trues = trues;
+		this.falses = falses;
+		this.negate = negate;
+	},
+	{
+		render: function(context, buffer){
+			var var1 = this.var1.resolve(context);
+			var var2 = this.var2.resolve(context);
+			var1 = (typeof var1 != "undefined") ? var1 : "";
+			var2 = (typeof var1 != "undefined") ? var2 : "";
+			if((this.negate && var1 != var2) || (!this.negate && var1 == var2)){
+				if(this.falses){
+					buffer = this.falses.unrender(context, buffer, this);
+				}
+				return (this.trues) ? this.trues.render(context, buffer, this) : buffer;
+			}
+			if(this.trues){
+				buffer = this.trues.unrender(context, buffer, this);
+			}
+			return (this.falses) ? this.falses.render(context, buffer, this) : buffer;
+		},
+		unrender: function(context, buffer){
+			return ddtl.IfNode.prototype.unrender.call(this, context, buffer);
+		},
+		clone: function(buffer){
+			var trues = this.trues ? this.trues.clone(buffer) : null;
+			var falses = this.falses ? this.falses.clone(buffer) : null;
+			return new this.constructor(this.var1.getExpression(), this.var2.getExpression(), trues, falses, this.negate);
+		}
+	});
+
+	ddtl.ForNode = lang.extend(function(assign, loop, reversed, nodelist){
+		this.assign = assign;
+		this.loop = new dd._Filter(loop);
+		this.reversed = reversed;
+		this.nodelist = nodelist;
+		this.pool = [];
+	},
+	{
+		render: function(context, buffer){
+			var i, j, k;
+			var dirty = false;
+			var assign = this.assign;
+
+			for(k = 0; k < assign.length; k++){
+				if(typeof context[assign[k]] != "undefined"){
+					dirty = true;
+					context = context.push();
+					break;
+				}
+			}
+			if(!dirty && context.forloop){
+				dirty = true;
+				context = context.push();
+			}
+
+			var items = this.loop.resolve(context) || [];
+
+			var isObject = lang.isObject(items) && !lang.isArrayLike(items);
+			var arred = [];
+			if(isObject){
+				for(var key in items){
+					arred.push(items[key]);
+				}
+			}else{
+				arred = items;
+			}
+
+			for(i = arred.length; i < this.pool.length; i++){
+				this.pool[i].unrender(context, buffer, this);
+			}
+			if(this.reversed){
+				arred = arred.slice(0).reverse();
+			}
+
+			var forloop = context.forloop = {
+				parentloop: context.get("forloop", {})
+			};
+			var j = 0;
+			for(i = 0; i < arred.length; i++){
+				var item = arred[i];
+
+				forloop.counter0 = j;
+				forloop.counter = j + 1;
+				forloop.revcounter0 = arred.length - j - 1;
+				forloop.revcounter = arred.length - j;
+				forloop.first = !j;
+				forloop.last = (j == arred.length - 1);
+
+				if(assign.length > 1 && lang.isArrayLike(item)){
+					if(!dirty){
+						dirty = true;
+						context = context.push();
+					}
+					var zipped = {};
+					for(k = 0; k < item.length && k < assign.length; k++){
+						zipped[assign[k]] = item[k];
+					}
+					lang.mixin(context, zipped);
+				}else{
+					context[assign[0]] = item;
+				}
+
+				if(j + 1 > this.pool.length){
+					this.pool.push(this.nodelist.clone(buffer));
+				}
+				buffer = this.pool[j++].render(context, buffer, this);
+			}
+
+			delete context.forloop;
+			if(dirty){
+				context = context.pop();
+			}else{
+				for(k = 0; k < assign.length; k++){
+					delete context[assign[k]];
+				}
+			}
+			return buffer;
+		},
+		unrender: function(context, buffer){
+			for(var i = 0, pool; pool = this.pool[i]; i++){
+				buffer = pool.unrender(context, buffer);
+			}
+			return buffer;
+		},
+		clone: function(buffer){
+			return new this.constructor(this.assign, this.loop.getExpression(), this.reversed, this.nodelist.clone(buffer));
+		}
+	});
+
+	lang.mixin(ddtl, {
+		if_: function(parser, token){
+			var i, part, type, bools = [], parts = token.contents.split();
+			parts.shift();
+			token = parts.join(" ");
+			parts = token.split(" and ");
+			if(parts.length == 1){
+				type = "or";
+				parts = token.split(" or ");
+			}else{
+				type = "and";
+				for(i = 0; i < parts.length; i++){
+					if(parts[i].indexOf(" or ") != -1){
+						// Note, since we split by and, this is the only place we need to error check
+						throw new Error("'if' tags can't mix 'and' and 'or'");
+					}
+				}
+			}
+			for(i = 0; part = parts[i]; i++){
+				var not = false;
+				if(part.indexOf("not ") == 0){
+					part = part.slice(4);
+					not = true;
+				}
+				bools.push([not, new dd._Filter(part)]);
+			}
+			var trues = parser.parse(["else", "endif"]);
+			var falses = false;
+			var token = parser.next_token();
+			if(token.contents == "else"){
+				falses = parser.parse(["endif"]);
+				parser.next_token();
+			}
+			return new ddtl.IfNode(bools, trues, falses, type);
+		},
+		_ifequal: function(parser, token, negate){
+			var parts = token.split_contents();
+			if(parts.length != 3){
+				throw new Error(parts[0] + " takes two arguments");
+			}
+			var end = 'end' + parts[0];
+			var trues = parser.parse(["else", end]);
+			var falses = false;
+			var token = parser.next_token();
+			if(token.contents == "else"){
+				falses = parser.parse([end]);
+				parser.next_token();
+			}
+			return new ddtl.IfEqualNode(parts[1], parts[2], trues, falses, negate);
+		},
+		ifequal: function(parser, token){
+			return ddtl._ifequal(parser, token);
+		},
+		ifnotequal: function(parser, token){
+			return ddtl._ifequal(parser, token, true);
+		},
+		for_: function(parser, token){
+			var parts = token.contents.split();
+			if(parts.length < 4){
+				throw new Error("'for' statements should have at least four words: " + token.contents);
+			}
+			var reversed = parts[parts.length - 1] == "reversed";
+			var index = (reversed) ? -3 : -2;
+			if(parts[parts.length + index] != "in"){
+				throw new Error("'for' tag received an invalid argument: " + token.contents);
+			}
+			var loopvars = parts.slice(1, index).join(" ").split(/ *, */);
+			for(var i = 0; i < loopvars.length; i++){
+				if(!loopvars[i] || loopvars[i].indexOf(" ") != -1){
+					throw new Error("'for' tag received an invalid argument: " + token.contents);
+				}
+			}
+			var nodelist = parser.parse(["endfor"]);
+			parser.next_token();
+			return new ddtl.ForNode(loopvars, parts[parts.length + index + 1], reversed, nodelist);
+		}
+	});
+
+	return ddtl;
+});

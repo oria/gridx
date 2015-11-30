@@ -1,14 +1,409 @@
-//>>built
-define("dojox/string/sprintf",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/sniff","./tokenize"],function(n,h,l,m){var f=h.getObject("string",!0,dojox);f.sprintf=function(a,c){for(var d=[],e=1;e<arguments.length;e++)d.push(arguments[e]);e=new f.sprintf.Formatter(a);return e.format.apply(e,d)};f.sprintf.Formatter=function(a){this._mapped=!1;this._format=a;this._tokens=m(a,this._re,this._parseDelim,this)};h.extend(f.sprintf.Formatter,{_re:/\%(?:\(([\w_]+)\)|([1-9]\d*)\$)?([0 +\-\#]*)(\*|\d+)?(\.)?(\*|\d+)?[hlL]?([\%scdeEfFgGiouxX])/g,
-_parseDelim:function(a,c,d,e,b,g,f){a&&(this._mapped=!0);return{mapping:a,intmapping:c,flags:d,_minWidth:e,period:b,_precision:g,specifier:f}},_specifiers:{b:{base:2,isInt:!0},o:{base:8,isInt:!0},x:{base:16,isInt:!0},X:{extend:["x"],toUpper:!0},d:{base:10,isInt:!0},i:{extend:["d"]},u:{extend:["d"],isUnsigned:!0},c:{setArg:function(a){if(!isNaN(a.arg)){var c=parseInt(a.arg);if(0>c||127<c)throw Error("invalid character code passed to %c in sprintf");a.arg=isNaN(c)?""+c:String.fromCharCode(c)}}},s:{setMaxWidth:function(a){a.maxWidth=
-"."==a.period?a.precision:-1}},e:{isDouble:!0,doubleNotation:"e"},E:{extend:["e"],toUpper:!0},f:{isDouble:!0,doubleNotation:"f"},F:{extend:["f"]},g:{isDouble:!0,doubleNotation:"g"},G:{extend:["g"],toUpper:!0}},format:function(a){if(this._mapped&&"object"!=typeof a)throw Error("format requires a mapping");for(var c="",d=0,e=0,b;e<this._tokens.length;e++)if(b=this._tokens[e],"string"==typeof b)c+=b;else{if(this._mapped){if("undefined"==typeof a[b.mapping])throw Error("missing key "+b.mapping);b.arg=
-a[b.mapping]}else{b.intmapping&&(d=parseInt(b.intmapping)-1);if(d>=arguments.length)throw Error("got "+arguments.length+" printf arguments, insufficient for '"+this._format+"'");b.arg=arguments[d++]}if(!b.compiled){b.compiled=!0;b.sign="";b.zeroPad=!1;b.rightJustify=!1;b.alternative=!1;for(var g={},f=b.flags.length;f--;){var k=b.flags.charAt(f);g[k]=!0;switch(k){case " ":b.sign=" ";break;case "+":b.sign="+";break;case "0":b.zeroPad=g["-"]?!1:!0;break;case "-":b.rightJustify=!0;b.zeroPad=!1;break;
-case "#":b.alternative=!0;break;default:throw Error("bad formatting flag '"+b.flags.charAt(f)+"'");}}b.minWidth=b._minWidth?parseInt(b._minWidth):0;b.maxWidth=-1;b.toUpper=!1;b.isUnsigned=!1;b.isInt=!1;b.isDouble=!1;b.precision=1;"."==b.period&&(b.precision=b._precision?parseInt(b._precision):0);g=this._specifiers[b.specifier];if("undefined"==typeof g)throw Error("unexpected specifier '"+b.specifier+"'");g.extend&&(h.mixin(g,this._specifiers[g.extend]),delete g.extend);h.mixin(b,g)}"function"==typeof b.setArg&&
-b.setArg(b);"function"==typeof b.setMaxWidth&&b.setMaxWidth(b);if("*"==b._minWidth){if(this._mapped)throw Error("* width not supported in mapped formats");b.minWidth=parseInt(arguments[d++]);if(isNaN(b.minWidth))throw Error("the argument for * width at position "+d+" is not a number in "+this._format);0>b.minWidth&&(b.rightJustify=!0,b.minWidth=-b.minWidth)}if("*"==b._precision&&"."==b.period){if(this._mapped)throw Error("* precision not supported in mapped formats");b.precision=parseInt(arguments[d++]);
-if(isNaN(b.precision))throw Error("the argument for * precision at position "+d+" is not a number in "+this._format);0>b.precision&&(b.precision=1,b.period="")}b.isInt?("."==b.period&&(b.zeroPad=!1),this.formatInt(b)):b.isDouble&&("."!=b.period&&(b.precision=6),this.formatDouble(b));this.fitField(b);c+=""+b.arg}return c},_zeros10:"0000000000",_spaces10:"          ",formatInt:function(a){var c=parseInt(a.arg);if(!isFinite(c)){if("number"!=typeof a.arg)throw Error("format argument '"+a.arg+"' not an integer; parseInt returned "+
-c);c=0}if(0>c&&(a.isUnsigned||10!=a.base))c=4294967295+c+1;0>c?(a.arg=(-c).toString(a.base),this.zeroPad(a),a.arg="-"+a.arg):(a.arg=c.toString(a.base),!c&&!a.precision?a.arg="":this.zeroPad(a),a.sign&&(a.arg=a.sign+a.arg));16==a.base&&(a.alternative&&(a.arg="0x"+a.arg),a.arg=a.toUpper?a.arg.toUpperCase():a.arg.toLowerCase());8==a.base&&(a.alternative&&"0"!=a.arg.charAt(0))&&(a.arg="0"+a.arg)},formatDouble:function(a){var c=parseFloat(a.arg);if(!isFinite(c)){if("number"!=typeof a.arg)throw Error("format argument '"+
-a.arg+"' not a float; parseFloat returned "+c);c=0}switch(a.doubleNotation){case "e":a.arg=c.toExponential(a.precision);break;case "f":a.arg=c.toFixed(a.precision);break;case "g":1E-4>Math.abs(c)?a.arg=c.toExponential(0<a.precision?a.precision-1:a.precision):a.arg=c.toPrecision(a.precision);a.alternative||(a.arg=a.arg.replace(/(\..*[^0])0*/,"$1"),a.arg=a.arg.replace(/\.0*e/,"e").replace(/\.0$/,""));break;default:throw Error("unexpected double notation '"+a.doubleNotation+"'");}a.arg=a.arg.replace(/e\+(\d)$/,
-"e+0$1").replace(/e\-(\d)$/,"e-0$1");l("opera")&&(a.arg=a.arg.replace(/^\./,"0."));a.alternative&&(a.arg=a.arg.replace(/^(\d+)$/,"$1."),a.arg=a.arg.replace(/^(\d+)e/,"$1.e"));0<=c&&a.sign&&(a.arg=a.sign+a.arg);a.arg=a.toUpper?a.arg.toUpperCase():a.arg.toLowerCase()},zeroPad:function(a,c){c=2==arguments.length?c:a.precision;"string"!=typeof a.arg&&(a.arg=""+a.arg);for(var d=c-10;a.arg.length<d;)a.arg=a.rightJustify?a.arg+this._zeros10:this._zeros10+a.arg;d=c-a.arg.length;a.arg=a.rightJustify?a.arg+
-this._zeros10.substring(0,d):this._zeros10.substring(0,d)+a.arg},fitField:function(a){if(0<=a.maxWidth&&a.arg.length>a.maxWidth)return a.arg.substring(0,a.maxWidth);a.zeroPad?this.zeroPad(a,a.minWidth):this.spacePad(a)},spacePad:function(a,c){c=2==arguments.length?c:a.minWidth;"string"!=typeof a.arg&&(a.arg=""+a.arg);for(var d=c-10;a.arg.length<d;)a.arg=a.rightJustify?a.arg+this._spaces10:this._spaces10+a.arg;d=c-a.arg.length;a.arg=a.rightJustify?a.arg+this._spaces10.substring(0,d):this._spaces10.substring(0,
-d)+a.arg}});return f.sprintf});
-//@ sourceMappingURL=sprintf.js.map
+define([
+	"dojo/_base/kernel",	// dojo.getObject, dojo.mixin
+	"dojo/_base/lang",	// dojo.extend
+	"dojo/_base/sniff",	// dojo.isOpera
+	 "./tokenize"
+], function(dojo, lang, has, tokenize){
+	var strLib = lang.getObject("string", true, dojox);
+
+	strLib.sprintf = function(/*String*/ format, /*mixed...*/ filler){
+		for(var args = [], i = 1; i < arguments.length; i++){
+			args.push(arguments[i]);
+		}
+		var formatter = new strLib.sprintf.Formatter(format);
+		return formatter.format.apply(formatter, args);
+	};
+
+	strLib.sprintf.Formatter = function(/*String*/ format){
+		var tokens = [];
+		this._mapped = false;
+		this._format = format;
+		this._tokens = tokenize(format, this._re, this._parseDelim, this);
+	};
+
+	lang.extend(strLib.sprintf.Formatter, {
+		_re: /\%(?:\(([\w_]+)\)|([1-9]\d*)\$)?([0 +\-\#]*)(\*|\d+)?(\.)?(\*|\d+)?[hlL]?([\%scdeEfFgGiouxX])/g,
+		_parseDelim: function(mapping, intmapping, flags, minWidth, period, precision, specifier){
+			if(mapping){
+				this._mapped = true;
+			}
+			return {
+				mapping: mapping,
+				intmapping: intmapping,
+				flags: flags,
+				_minWidth: minWidth, // May be dependent on parameters
+				period: period,
+				_precision: precision, // May be dependent on parameters
+				specifier: specifier
+			};
+		},
+		_specifiers: {
+			b: {
+				base: 2,
+				isInt: true
+			},
+			o: {
+				base: 8,
+				isInt: true
+			},
+			x: {
+				base: 16,
+				isInt: true
+			},
+			X: {
+				extend: ["x"],
+				toUpper: true
+			},
+			d: {
+				base: 10,
+				isInt: true
+			},
+			i: {
+				extend: ["d"]
+			},
+			u: {
+				extend: ["d"],
+				isUnsigned: true
+			},
+			c: {
+				setArg: function(token){
+					if(!isNaN(token.arg)){
+						var num = parseInt(token.arg);
+						if(num < 0 || num > 127){
+							throw new Error("invalid character code passed to %c in sprintf");
+						}
+						token.arg = isNaN(num) ? "" + num : String.fromCharCode(num);
+					}
+				}
+			},
+			s: {
+				setMaxWidth: function(token){
+					token.maxWidth = (token.period == ".") ? token.precision : -1;
+				}
+			},
+			e: {
+				isDouble: true,
+				doubleNotation: "e"
+			},
+			E: {
+				extend: ["e"],
+				toUpper: true
+			},
+			f: {
+				isDouble: true,
+				doubleNotation: "f"
+			},
+			F: {
+				extend: ["f"]
+			},
+			g: {
+				isDouble: true,
+				doubleNotation: "g"
+			},
+			G: {
+				extend: ["g"],
+				toUpper: true
+			}
+		},
+		format: function(/*mixed...*/ filler){
+			if(this._mapped && typeof filler != "object"){
+				throw new Error("format requires a mapping");
+			}
+
+			var str = "";
+			var position = 0;
+			for(var i = 0, token; i < this._tokens.length; i++){
+				token = this._tokens[i];
+				if(typeof token == "string"){
+					str += token;
+				}else{
+					if(this._mapped){
+						if(typeof filler[token.mapping] == "undefined"){
+							throw new Error("missing key " + token.mapping);
+						}
+						token.arg = filler[token.mapping];
+					}else{
+						if(token.intmapping){
+							var position = parseInt(token.intmapping) - 1;
+						}
+						if(position >= arguments.length){
+							throw new Error("got " + arguments.length + " printf arguments, insufficient for '" + this._format + "'");
+						}
+						token.arg = arguments[position++];
+					}
+
+					if(!token.compiled){
+						token.compiled = true;
+						token.sign = "";
+						token.zeroPad = false;
+						token.rightJustify = false;
+						token.alternative = false;
+
+						var flags = {};
+						for(var fi = token.flags.length; fi--;){
+							var flag = token.flags.charAt(fi);
+							flags[flag] = true;
+							switch(flag){
+								case " ":
+									token.sign = " ";
+									break;
+								case "+":
+									token.sign = "+";
+									break;
+								case "0":
+									token.zeroPad = (flags["-"]) ? false : true;
+									break;
+								case "-":
+									token.rightJustify = true;
+									token.zeroPad = false;
+									break;
+								case "\#":
+									token.alternative = true;
+									break;
+								default:
+									throw Error("bad formatting flag '" + token.flags.charAt(fi) + "'");
+							}
+						}
+
+						token.minWidth = (token._minWidth) ? parseInt(token._minWidth) : 0;
+						token.maxWidth = -1;
+						token.toUpper = false;
+						token.isUnsigned = false;
+						token.isInt = false;
+						token.isDouble = false;
+						token.precision = 1;
+						if(token.period == '.'){
+							if(token._precision){
+								token.precision = parseInt(token._precision);
+							}else{
+								token.precision = 0;
+							}
+						}
+
+						var mixins = this._specifiers[token.specifier];
+						if(typeof mixins == "undefined"){
+							throw new Error("unexpected specifier '" + token.specifier + "'");
+						}
+						if(mixins.extend){
+							lang.mixin(mixins, this._specifiers[mixins.extend]);
+							delete mixins.extend;
+						}
+						lang.mixin(token, mixins);
+					}
+
+					if(typeof token.setArg == "function"){
+						token.setArg(token);
+					}
+
+					if(typeof token.setMaxWidth == "function"){
+						token.setMaxWidth(token);
+					}
+
+					if(token._minWidth == "*"){
+						if(this._mapped){
+							throw new Error("* width not supported in mapped formats");
+						}
+						token.minWidth = parseInt(arguments[position++]);
+						if(isNaN(token.minWidth)){
+							throw new Error("the argument for * width at position " + position + " is not a number in " + this._format);
+						}
+						// negative width means rightJustify
+						if (token.minWidth < 0) {
+							token.rightJustify = true;
+							token.minWidth = -token.minWidth;
+						}
+					}
+
+					if(token._precision == "*" && token.period == "."){
+						if(this._mapped){
+							throw new Error("* precision not supported in mapped formats");
+						}
+						token.precision = parseInt(arguments[position++]);
+						if(isNaN(token.precision)){
+							throw Error("the argument for * precision at position " + position + " is not a number in " + this._format);
+						}
+						// negative precision means unspecified
+						if (token.precision < 0) {
+							token.precision = 1;
+							token.period = '';
+						}
+					}
+
+					if(token.isInt){
+						// a specified precision means no zero padding
+						if(token.period == '.'){
+							token.zeroPad = false;
+						}
+						this.formatInt(token);
+					}else if(token.isDouble){
+						if(token.period != '.'){
+							token.precision = 6;
+						}
+						this.formatDouble(token);
+					}
+					this.fitField(token);
+
+					str += "" + token.arg;
+				}
+			}
+
+			return str;
+		},
+		_zeros10: '0000000000',
+		_spaces10: '          ',
+		formatInt: function(token) {
+			var i = parseInt(token.arg);
+			if(!isFinite(i)){ // isNaN(f) || f == Number.POSITIVE_INFINITY || f == Number.NEGATIVE_INFINITY)
+				// allow this only if arg is number
+				if(typeof token.arg != "number"){
+					throw new Error("format argument '" + token.arg + "' not an integer; parseInt returned " + i);
+				}
+				//return '' + i;
+				i = 0;
+			}
+
+			// if not base 10, make negatives be positive
+			// otherwise, (-10).toString(16) is '-a' instead of 'fffffff6'
+			if(i < 0 && (token.isUnsigned || token.base != 10)){
+				i = 0xffffffff + i + 1;
+			}
+
+			if(i < 0){
+				token.arg = (- i).toString(token.base);
+				this.zeroPad(token);
+				token.arg = "-" + token.arg;
+			}else{
+				token.arg = i.toString(token.base);
+				// need to make sure that argument 0 with precision==0 is formatted as ''
+				if(!i && !token.precision){
+					token.arg = "";
+				}else{
+					this.zeroPad(token);
+				}
+				if(token.sign){
+					token.arg = token.sign + token.arg;
+				}
+			}
+			if(token.base == 16){
+				if(token.alternative){
+					token.arg = '0x' + token.arg;
+				}
+				token.arg = token.toUpper ? token.arg.toUpperCase() : token.arg.toLowerCase();
+			}
+			if(token.base == 8){
+				if(token.alternative && token.arg.charAt(0) != '0'){
+					token.arg = '0' + token.arg;
+				}
+			}
+		},
+		formatDouble: function(token) {
+			var f = parseFloat(token.arg);
+			if(!isFinite(f)){ // isNaN(f) || f == Number.POSITIVE_INFINITY || f == Number.NEGATIVE_INFINITY)
+				// allow this only if arg is number
+				if(typeof token.arg != "number"){
+					throw new Error("format argument '" + token.arg + "' not a float; parseFloat returned " + f);
+				}
+				// C99 says that for 'f':
+				//	 infinity -> '[-]inf' or '[-]infinity' ('[-]INF' or '[-]INFINITY' for 'F')
+				//	 NaN -> a string  starting with 'nan' ('NAN' for 'F')
+				// this is not commonly implemented though.
+				//return '' + f;
+				f = 0;
+			}
+
+			switch(token.doubleNotation) {
+				case 'e': {
+					token.arg = f.toExponential(token.precision);
+					break;
+				}
+				case 'f': {
+					token.arg = f.toFixed(token.precision);
+					break;
+				}
+				case 'g': {
+					// C says use 'e' notation if exponent is < -4 or is >= prec
+					// ECMAScript for toPrecision says use exponential notation if exponent is >= prec,
+					// though step 17 of toPrecision indicates a test for < -6 to force exponential.
+					if(Math.abs(f) < 0.0001){
+						//print("forcing exponential notation for f=" + f);
+						token.arg = f.toExponential(token.precision > 0 ? token.precision - 1 : token.precision);
+					}else{
+						token.arg = f.toPrecision(token.precision);
+					}
+
+					// In C, unlike 'f', 'gG' removes trailing 0s from fractional part, unless alternative format flag ("#").
+					// But ECMAScript formats toPrecision as 0.00100000. So remove trailing 0s.
+					if(!token.alternative){
+						//print("replacing trailing 0 in '" + s + "'");
+						token.arg = token.arg.replace(/(\..*[^0])0*/, "$1");
+						// if fractional part is entirely 0, remove it and decimal point
+						token.arg = token.arg.replace(/\.0*e/, 'e').replace(/\.0$/,'');
+					}
+					break;
+				}
+				default: throw new Error("unexpected double notation '" + token.doubleNotation + "'");
+			}
+
+			// C says that exponent must have at least two digits.
+			// But ECMAScript does not; toExponential results in things like "1.000000e-8" and "1.000000e+8".
+			// Note that s.replace(/e([\+\-])(\d)/, "e$10$2") won't work because of the "$10" instead of "$1".
+			// And replace(re, func) isn't supported on IE50 or Safari1.
+			token.arg = token.arg.replace(/e\+(\d)$/, "e+0$1").replace(/e\-(\d)$/, "e-0$1");
+
+			// Ensure a '0' before the period.
+			// Opera implements (0.001).toString() as '0.001', but (0.001).toFixed(1) is '.001'
+			if(has("opera")){
+				token.arg = token.arg.replace(/^\./, '0.');
+			}
+
+			// if alt, ensure a decimal point
+			if(token.alternative){
+				token.arg = token.arg.replace(/^(\d+)$/,"$1.");
+				token.arg = token.arg.replace(/^(\d+)e/,"$1.e");
+			}
+
+			if(f >= 0 && token.sign){
+				token.arg = token.sign + token.arg;
+			}
+
+			token.arg = token.toUpper ? token.arg.toUpperCase() : token.arg.toLowerCase();
+		},
+		zeroPad: function(token, /*Int*/ length) {
+			length = (arguments.length == 2) ? length : token.precision;
+			if(typeof token.arg != "string"){
+				token.arg = "" + token.arg;
+			}
+
+			var tenless = length - 10;
+			while(token.arg.length < tenless){
+				token.arg = (token.rightJustify) ? token.arg + this._zeros10 : this._zeros10 + token.arg;
+			}
+			var pad = length - token.arg.length;
+			token.arg = (token.rightJustify) ? token.arg + this._zeros10.substring(0, pad) : this._zeros10.substring(0, pad) + token.arg;
+		},
+		fitField: function(token) {
+			if(token.maxWidth >= 0 && token.arg.length > token.maxWidth){
+				return token.arg.substring(0, token.maxWidth);
+			}
+			if(token.zeroPad){
+				this.zeroPad(token, token.minWidth);
+				return;
+			}
+			this.spacePad(token);
+		},
+		spacePad: function(token, /*Int*/ length) {
+			length = (arguments.length == 2) ? length : token.minWidth;
+			if(typeof token.arg != 'string'){
+				token.arg = '' + token.arg;
+			}
+
+			var tenless = length - 10;
+			while(token.arg.length < tenless){
+				token.arg = (token.rightJustify) ? token.arg + this._spaces10 : this._spaces10 + token.arg;
+			}
+			var pad = length - token.arg.length;
+			token.arg = (token.rightJustify) ? token.arg + this._spaces10.substring(0, pad) : this._spaces10.substring(0, pad) + token.arg;
+		}
+	});
+	return strLib.sprintf;
+});

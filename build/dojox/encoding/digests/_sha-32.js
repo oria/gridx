@@ -1,7 +1,138 @@
-//>>built
-define("dojox/encoding/digests/_sha-32",["./_base"],function(n){function h(c,b){return c>>>b|c<<32-b}var l=function(c){var b=function(){};b.prototype=c;return new b}(n);l.toWord=function(c){for(var b=Array(c.length>>2),a=0;a<b.length;a++)b[a]=0;for(a=0;a<8*c.length;a+=8)b[a>>5]|=(c.charCodeAt(a/8)&255)<<24-a%32;return b};l.toHex=function(c){for(var b=[],a=0,d=4*c.length;a<d;a++)b.push("0123456789abcdef".charAt(c[a>>2]>>8*(3-a%4)+4&15),"0123456789abcdef".charAt(c[a>>2]>>8*(3-a%4)&15));return b.join("")};
-l.toBase64=function(c){for(var b=[],a=0,d=4*c.length;a<d;a+=3)for(var f=(c[a>>2]>>8*(3-a%4)&255)<<16|(c[a+1>>2]>>8*(3-(a+1)%4)&255)<<8|c[a+2>>2]>>8*(3-(a+2)%4)&255,g=0;4>g;g++)8*a+6*g>32*c.length?b.push("\x3d"):b.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(f>>6*(3-g)&63));return b.join("")};l._toString=function(c){for(var b="",a=0;a<32*c.length;a+=8)b+=String.fromCharCode(c[a>>5]>>>24-a%32&255);return b};var d=n.addWords,v=[1116352408,1899447441,3049323471,3921009573,
-961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,
-883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298];l.digest=function(c,b,a,l){a=a.slice(0);var f=Array(64),g,m,s,k,p,q,t,r,e,u,n;c[b>>5]|=128<<24-b%32;c[(b+64>>9<<4)+15]=b;for(r=0;r<c.length;r+=16){b=a[0];g=a[1];m=a[2];s=a[3];k=a[4];p=a[5];q=a[6];t=a[7];for(e=0;64>e;e++)f[e]=16>e?c[e+r]:d(d(d(h(f[e-2],17)^h(f[e-2],19)^f[e-2]>>>10,f[e-7]),h(f[e-15],7)^h(f[e-15],18)^f[e-15]>>>3),f[e-16]),u=d(d(d(d(t,h(k,6)^h(k,
-11)^h(k,25)),k&p^~k&q),v[e]),f[e]),n=d(h(b,2)^h(b,13)^h(b,22),b&g^b&m^g&m),t=q,q=p,p=k,k=d(s,u),s=m,m=g,g=b,b=d(u,n);a[0]=d(b,a[0]);a[1]=d(g,a[1]);a[2]=d(m,a[2]);a[3]=d(s,a[3]);a[4]=d(k,a[4]);a[5]=d(p,a[5]);a[6]=d(q,a[6]);a[7]=d(t,a[7])}224==l&&a.pop();return a};return l});
-//@ sourceMappingURL=_sha-32.js.map
+define(["./_base"], function(base){
+	//	basic functions for 32-bit word based SHA-2 processing.
+
+	//	create a new object that uses a delegated base.
+	var o = (function(b){
+		var tmp = function(){};
+		tmp.prototype = b;
+		var ret = new tmp();
+		return ret;
+	})(base);
+
+	//	expose the output type conversion functions
+	o.toWord = function(s){
+		var wa = Array(s.length >> 2);
+		for(var i=0; i<wa.length; i++) wa[i] = 0;
+		for(var i=0; i<s.length*8; i+=8)
+			wa[i>>5] |= (s.charCodeAt(i/8)&0xFF)<<(24-i%32);
+		return wa;
+	};
+
+	o.toHex = function(wa){
+		var h="0123456789abcdef", s=[];
+		for(var i=0, l=wa.length*4; i<l; i++){
+			s.push(h.charAt((wa[i>>2]>>((3-i%4)*8+4))&0xF), h.charAt((wa[i>>2]>>((3-i%4)*8))&0xF));
+		}
+		return s.join("");	//	string
+	};
+
+	o.toBase64 = function(wa){
+		var p="=", tab="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", s=[];
+		for(var i=0, l=wa.length*4; i<l; i+=3){
+			var t=(((wa[i>>2]>>8*(3-i%4))&0xFF)<<16)|(((wa[i+1>>2]>>8*(3-(i+1)%4))&0xFF)<<8)|((wa[i+2>>2]>>8*(3-(i+2)%4))&0xFF);
+			for(var j=0; j<4; j++){
+				if(i*8+j*6>wa.length*32){
+					s.push(p);
+				} else {
+					s.push(tab.charAt((t>>6*(3-j))&0x3F));
+				}
+			}
+		}
+		return s.join("");	//	string
+	};
+
+	o._toString = function(wa){
+		var s = "";
+		for(var i=0; i<wa.length*32; i+=8)
+			s += String.fromCharCode((wa[i>>5]>>>(24-i%32))&0xFF);
+		return s;
+	};
+
+	//	the encoding functions
+	function S (X, n) {return ( X >>> n ) | (X << (32 - n));}
+	function R (X, n) {return ( X >>> n );}
+	function Ch(x, y, z) {return ((x & y) ^ ((~x) & z));}
+	function Maj(x, y, z) {return ((x & y) ^ (x & z) ^ (y & z));}
+	function Sigma0256(x) {return (S(x, 2) ^ S(x, 13) ^ S(x, 22));}
+	function Sigma1256(x) {return (S(x, 6) ^ S(x, 11) ^ S(x, 25));}
+	function Gamma0256(x) {return (S(x, 7) ^ S(x, 18) ^ R(x, 3));}
+	function Gamma1256(x) {return (S(x, 17) ^ S(x, 19) ^ R(x, 10));}
+	function Sigma0512(x) {return (S(x, 28) ^ S(x, 34) ^ S(x, 39));}
+	function Sigma1512(x) {return (S(x, 14) ^ S(x, 18) ^ S(x, 41));}
+	function Gamma0512(x) {return (S(x, 1)  ^ S(x, 8) ^ R(x, 7));}
+	function Gamma1512(x) {return (S(x, 19) ^ S(x, 61) ^ R(x, 6));}
+
+	//	math alias
+	var add = base.addWords;
+
+	//	constant K array
+	var K = [
+		0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+		0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+		0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+		0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+		0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+		0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+		0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+		0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+	];
+
+	//	the exposed function, used internally by SHA-224 and SHA-256
+	o.digest = function(msg, length, hash, depth){
+		//	clone the hash
+		hash = hash.slice(0);
+
+		var w = new Array(64);
+		var a, b, c, d, e, f, g, h;
+		var i, j, T1, T2;
+
+		//	append padding
+		msg[length >> 5] |= 0x80 << (24 - length % 32);
+		msg[((length + 64 >> 9) << 4) + 15] = length;
+
+		//	do the digest
+		for(i = 0; i < msg.length; i += 16){
+			a = hash[0];
+			b = hash[1];
+			c = hash[2];
+			d = hash[3];
+			e = hash[4];
+			f = hash[5];
+			g = hash[6];
+			h = hash[7];
+
+			for(j = 0; j < 64; j++) {
+				if (j < 16){
+					w[j] = msg[j + i];
+				} else { 
+					w[j] = add(add(add(Gamma1256(w[j - 2]), w[j - 7]), Gamma0256(w[j - 15])), w[j - 16]);
+				}
+
+				T1 = add(add(add(add(h, Sigma1256(e)), Ch(e, f, g)), K[j]), w[j]);
+				T2 = add(Sigma0256(a), Maj(a, b, c));
+				h = g;
+				g = f;
+				f = e;
+				e = add(d, T1);
+				d = c;
+				c = b;
+				b = a;
+				a = add(T1, T2);
+			}
+
+			hash[0] = add(a, hash[0]);
+			hash[1] = add(b, hash[1]);
+			hash[2] = add(c, hash[2]);
+			hash[3] = add(d, hash[3]);
+			hash[4] = add(e, hash[4]);
+			hash[5] = add(f, hash[5]);
+			hash[6] = add(g, hash[6]);
+			hash[7] = add(h, hash[7]);
+		}
+		if(depth == 224){
+			hash.pop();	//	take off the last word
+		}
+		return hash;
+	}
+	return o;
+});

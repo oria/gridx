@@ -1,8 +1,187 @@
-//>>built
-require({cache:{"url:dojox/form/resources/UploaderFileList.html":'\x3cdiv class\x3d"dojoxUploaderFileList"\x3e\r\n\t\x3cdiv data-dojo-attach-point\x3d"progressNode" class\x3d"dojoxUploaderFileListProgress"\x3e\r\n\t\t\x3cdiv data-dojo-attach-point\x3d"percentBarNode" class\x3d"dojoxUploaderFileListProgressBar"\x3e\x3c/div\x3e\r\n\t\t\x3cdiv data-dojo-attach-point\x3d"percentTextNode" class\x3d"dojoxUploaderFileListPercentText"\x3e0%\x3c/div\x3e\r\n\t\x3c/div\x3e\r\n\t\x3ctable class\x3d"dojoxUploaderFileListTable"\x3e\r\n\t\t\x3cthead\x3e\r\n\t\t\t\x3ctr class\x3d"dojoxUploaderFileListHeader"\x3e\r\n\t\t\t\t\x3cth class\x3d"dojoxUploaderIndex"\x3e${headerIndex}\x3c/th\x3e\r\n\t\t\t\t\x3cth class\x3d"dojoxUploaderIcon"\x3e${headerType}\x3c/th\x3e\r\n\t\t\t\t\x3cth class\x3d"dojoxUploaderFileName"\x3e${headerFilename}\x3c/th\x3e\r\n\t\t\t\t\x3cth class\x3d"dojoxUploaderFileSize" data-dojo-attach-point\x3d"sizeHeader"\x3e${headerFilesize}\x3c/th\x3e\r\n\t\t\t\x3c/tr\x3e\r\n\t\t\x3c/thead\x3e\r\n\t\t\x3ctbody class\x3d"dojoxUploaderFileListContent" data-dojo-attach-point\x3d"listNode"\x3e\x3c/tbody\x3e\r\n\t\x3c/table\x3e\r\n\x3cdiv\x3e'}});
-define("dojox/form/uploader/FileList","dojo/_base/fx dojo/dom-style dojo/dom-class dojo/_base/declare dojo/_base/lang dojo/_base/array dijit/_base/manager dojox/form/uploader/_Base dojo/text!../resources/UploaderFileList.html".split(" "),function(k,d,f,l,h,m,n,p,q){return l("dojox.form.uploader.FileList",p,{uploaderId:"",uploader:null,headerIndex:"#",headerType:"Type",headerFilename:"File Name",headerFilesize:"Size",_upCheckCnt:0,rowAmt:0,templateString:q,postCreate:function(){this.setUploader();
-this.hideProgress()},reset:function(){for(var a=0;a<this.rowAmt;a++)this.listNode.deleteRow(0);this.rowAmt=0},setUploader:function(){if(!this.uploaderId&&!this.uploader)console.warn("uploaderId not passed to UploaderFileList");else if(this.uploaderId&&!this.uploader)this.uploader=n.byId(this.uploaderId);else if(4<this._upCheckCnt){console.warn("uploader not found for ID ",this.uploaderId);return}if(this.uploader){if(this.connect(this.uploader,"onChange","_onUploaderChange"),this.connect(this.uploader,
-"reset","reset"),this.connect(this.uploader,"onBegin",function(){this.showProgress(!0)}),this.connect(this.uploader,"onProgress","_progress"),this.connect(this.uploader,"onComplete",function(){setTimeout(h.hitch(this,function(){this.hideProgress(!0)}),1250)}),!(this._fileSizeAvail={html5:1,flash:1}[this.uploader.uploadType]))this.sizeHeader.style.display="none"}else this._upCheckCnt++,setTimeout(h.hitch(this,"setUploader"),250)},hideProgress:function(a){this._hideShowProgress(a?{ani:!0,endDisp:"none",
-beg:15,end:0}:{endDisp:"none",ani:!1})},showProgress:function(a){this._hideShowProgress(a?{ani:!0,endDisp:"block",beg:0,end:15}:{endDisp:"block",ani:!1})},_progress:function(a){this.percentTextNode.innerHTML=a.percent;d.set(this.percentBarNode,"width",a.percent)},_hideShowProgress:function(a){var e=this.progressNode,c=function(){d.set(e,"display",a.endDisp)};a.ani?(d.set(e,"display","block"),k.animateProperty({node:e,properties:{height:{start:a.beg,end:a.end,units:"px"}},onEnd:c}).play()):c()},_onUploaderChange:function(a){this.reset();
-m.forEach(a,function(a,c){this._addRow(c+1,this.getFileType(a.name),a.name,a.size)},this)},_addRow:function(a,e,c,d){var b,g=this.listNode.insertRow(-1);b=g.insertCell(-1);f.add(b,"dojoxUploaderIndex");b.innerHTML=a;b=g.insertCell(-1);f.add(b,"dojoxUploaderIcon");b.innerHTML=e;b=g.insertCell(-1);f.add(b,"dojoxUploaderFileName");b.innerHTML=c;this._fileSizeAvail&&(b=g.insertCell(-1),f.add(b,"dojoxUploaderSize"),b.innerHTML=this.convertBytes(d).value);this.rowAmt++}})});
-//@ sourceMappingURL=FileList.js.map
+define([
+	"dojo/_base/fx",
+	"dojo/dom-style",
+	"dojo/dom-class",
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/_base/array",
+	"dijit/_base/manager",
+	"dojox/form/uploader/_Base",
+	"dojo/text!../resources/UploaderFileList.html"
+],function(fx, domStyle, domClass, declare, lang, arrayUtil, manager, Base, template){
+
+return declare("dojox.form.uploader.FileList", Base, {
+	// summary:
+	//		A simple widget that provides a list of the files currently selected by
+	//		dojox/form/Uploader
+	// description:
+	//		There is a required CSS file: resources/UploaderFileList.css.
+	//		This is a very simple widget, and not beautifully styled. It is here mainly for test
+	//		cases, but could very easily be used, extended, modified, or copied.
+
+	// uploaderId: String
+	//		The id of the dojox.form.Uploader to connect to.
+	uploaderId:"",
+
+	// uploader: dojox.form.Uploader
+	//		The dojox.form.Uploader to connect to. Use either this property of unploaderId. This
+	//		property is populated if uploaderId is used.
+	uploader:null,
+
+	// headerIndex: String
+	//		The label for the index column.
+	headerIndex:"#",
+
+	// headerType: String
+	//		The label for the file type column.
+	headerType:"Type",
+
+	// headerFilename: String
+	//		The label for the file name column.
+	headerFilename:"File Name",
+
+	// headerFilesize: String
+	//		The label for the file size column.
+	headerFilesize:"Size",
+
+	_upCheckCnt:0,
+	rowAmt:0,
+
+	templateString:template,
+
+	postCreate: function(){
+		this.setUploader();
+		this.hideProgress();
+	},
+
+	reset: function(){
+		// summary:
+		//		Clears all rows of items. Happens automatically if Uploader is reset, but you
+		//		could call this directly.
+
+		for(var i=0;i<this.rowAmt;i++){
+			this.listNode.deleteRow(0);
+		}
+		this.rowAmt = 0;
+	},
+
+	setUploader: function(){
+		// summary:
+		//		Connects to the Uploader based on the uploader or the uploaderId properties.
+
+		if(!this.uploaderId && !this.uploader){
+			console.warn("uploaderId not passed to UploaderFileList");
+		}else if(this.uploaderId && !this.uploader){
+			this.uploader = manager.byId(this.uploaderId);
+		}else if(this._upCheckCnt>4){
+			console.warn("uploader not found for ID ", this.uploaderId);
+			return;
+		}
+		if(this.uploader){
+			this.connect(this.uploader, "onChange", "_onUploaderChange");
+			this.connect(this.uploader, "reset", "reset");
+			this.connect(this.uploader, "onBegin", function(){
+				this.showProgress(true);
+			});
+			this.connect(this.uploader, "onProgress", "_progress");
+			this.connect(this.uploader, "onComplete", function(){
+				setTimeout(lang.hitch(this, function(){
+					this.hideProgress(true);
+				}), 1250);
+			});
+			if(!(this._fileSizeAvail = {'html5':1,'flash':1}[this.uploader.uploadType])){
+				//if uploadType is neither html5 nor flash, file size is not available
+				//hide the size header
+				this.sizeHeader.style.display="none";
+			}
+		}else{
+			this._upCheckCnt++;
+			setTimeout(lang.hitch(this, "setUploader"), 250);
+		}
+	},
+
+	hideProgress: function(/*Boolean*/ animate){
+		var o = animate ? {
+			ani:true,
+			endDisp:"none",
+			beg:15,
+			end:0
+		} : {
+			endDisp:"none",
+			ani:false
+		};
+		this._hideShowProgress(o);
+	},
+
+	showProgress: function(/*Boolean*/ animate){
+		var o = animate ? {
+			ani:true,
+			endDisp:"block",
+			beg:0,
+			end:15
+		} : {
+			endDisp:"block",
+			ani:false
+		};
+		this._hideShowProgress(o);
+	},
+
+	_progress: function(/*Object*/ customEvent){
+		this.percentTextNode.innerHTML = customEvent.percent;
+		domStyle.set(this.percentBarNode, "width", customEvent.percent);
+	},
+
+	_hideShowProgress: function(o){
+		var node = this.progressNode;
+		var onEnd = function(){
+			domStyle.set(node, "display", o.endDisp);
+		};
+		if(o.ani){
+			domStyle.set(node, "display", "block");
+			fx.animateProperty({
+				node: node,
+				properties:{
+					height:{
+						start:o.beg,
+						end:o.end,
+						units:"px"
+					}
+				},
+				onEnd:onEnd
+			}).play();
+		}else{
+			onEnd();
+		}
+	},
+
+	_onUploaderChange: function(fileArray){
+		this.reset();
+		arrayUtil.forEach(fileArray, function(f, i){
+			this._addRow(i+1, this.getFileType(f.name), f.name, f.size);
+		}, this)
+	},
+
+	_addRow: function(index, type, name, size){
+
+		var c, r = this.listNode.insertRow(-1);
+		c = r.insertCell(-1);
+		domClass.add(c, "dojoxUploaderIndex");
+		c.innerHTML = index;
+
+		c = r.insertCell(-1);
+		domClass.add(c, "dojoxUploaderIcon");
+		c.innerHTML = type;
+
+		c = r.insertCell(-1);
+		domClass.add(c, "dojoxUploaderFileName");
+		c.innerHTML = name;
+		if(this._fileSizeAvail){
+			c = r.insertCell(-1);
+			domClass.add(c, "dojoxUploaderSize");
+			c.innerHTML = this.convertBytes(size).value;
+		}
+
+		this.rowAmt++;
+	}
+});
+});

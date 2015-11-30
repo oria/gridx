@@ -1,5 +1,84 @@
-//>>built
-define("dojox/grid/enhanced/plugins/filter/_DataExprs",["dojo/_base/declare","dojo/_base/lang","dojo/date/locale","./_ConditionExpr"],function(b,d,f,c){var g=b("dojox.grid.enhanced.plugins.filter.BooleanExpr",c._DataExpr,{_name:"bool",_convertData:function(a){return!!a}}),h=b("dojox.grid.enhanced.plugins.filter.StringExpr",c._DataExpr,{_name:"string",_convertData:function(a){return String(a)}}),k=b("dojox.grid.enhanced.plugins.filter.NumberExpr",c._DataExpr,{_name:"number",_convertDataToExpr:function(a){return parseFloat(a)}}),
-e=b("dojox.grid.enhanced.plugins.filter.DateExpr",c._DataExpr,{_name:"date",_convertData:function(a){if(a instanceof Date)return a;if("number"==typeof a)return new Date(a);var b=f.parse(String(a),d.mixin({selector:this._name},this._convertArgs));if(!b)throw Error("Datetime parse failed: "+a);return b},toObject:function(){if(this._value instanceof Date){var a=this._value;this._value=this._value.valueOf();var b=this.inherited(arguments);this._value=a;return b}return this.inherited(arguments)}});b=b("dojox.grid.enhanced.plugins.filter.TimeExpr",
-e,{_name:"time"});return d.mixin({BooleanExpr:g,StringExpr:h,NumberExpr:k,DateExpr:e,TimeExpr:b},c)});
-//@ sourceMappingURL=_DataExprs.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/date/locale",
+	"./_ConditionExpr"
+], function(declare, lang, dateLocale, exprs){
+
+	var BooleanExpr = declare("dojox.grid.enhanced.plugins.filter.BooleanExpr", exprs._DataExpr, {
+		// summary:
+		//		A condition expression wrapper for boolean values
+		_name: "bool",
+		_convertData: function(/* anything */dataValue){
+			// summary:
+			//		override from _DataExpr
+			return !!dataValue;	//Boolean
+		}
+	});
+	var StringExpr = declare("dojox.grid.enhanced.plugins.filter.StringExpr", exprs._DataExpr, {
+		// summary:
+		//		A condition expression wrapper for string values
+		_name: "string",
+		_convertData: function(/* anything */dataValue){
+			// summary:
+			//		override from _DataExpr
+			return String(dataValue);	//String
+		}
+	});
+	var NumberExpr = declare("dojox.grid.enhanced.plugins.filter.NumberExpr", exprs._DataExpr, {
+		// summary:
+		//		A condition expression wrapper for number values
+		_name: "number",
+		_convertDataToExpr: function(/* anything */dataValue){
+			// summary:
+			//		override from _DataExpr
+			return parseFloat(dataValue);	//Number
+		}
+	});
+	var DateExpr = declare("dojox.grid.enhanced.plugins.filter.DateExpr", exprs._DataExpr, {
+		// summary:
+		//		A condition expression wrapper for date values
+		_name: "date",
+		_convertData: function(/* anything */dataValue){
+			// summary:
+			//		override from _DataExpr
+			if(dataValue instanceof Date){
+				return dataValue;
+			}else if(typeof dataValue == "number"){
+				return new Date(dataValue);
+			}else{
+				var res = dateLocale.parse(String(dataValue), lang.mixin({selector: this._name}, this._convertArgs));
+				if(!res){
+					throw new Error("Datetime parse failed: " + dataValue);
+				}
+				return res;
+			}
+		},
+		toObject: function(){
+			// summary:
+			//		Overrided from _DataExpr.toObject
+			if(this._value instanceof Date){
+				var tmp = this._value;
+				this._value = this._value.valueOf();
+				var res = this.inherited(arguments);
+				this._value = tmp;
+				return res;
+			}else{
+				return this.inherited(arguments);
+			}
+		}
+	});
+	var TimeExpr = declare("dojox.grid.enhanced.plugins.filter.TimeExpr", DateExpr, {
+		// summary:
+		//		A condition expression wrapper for time values
+		_name: "time"
+	});
+
+	return lang.mixin({
+		BooleanExpr: BooleanExpr,
+		StringExpr: StringExpr,
+		NumberExpr: NumberExpr,
+		DateExpr: DateExpr,
+		TimeExpr: TimeExpr
+	}, exprs);
+});

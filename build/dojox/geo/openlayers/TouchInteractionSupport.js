@@ -1,8 +1,250 @@
-//>>built
-define("dojox/geo/openlayers/TouchInteractionSupport","dojo/_base/declare dojo/_base/connect dojo/_base/html dojo/_base/lang dojo/_base/event dojo/_base/window".split(" "),function(h,c,f,k,e,g){return h("dojox.geo.openlayers.TouchInteractionSupport",null,{_map:null,_centerTouchLocation:null,_touchMoveListener:null,_touchEndListener:null,_initialFingerSpacing:null,_initialScale:null,_tapCount:null,_tapThreshold:null,_lastTap:null,constructor:function(a){this._map=a;this._centerTouchLocation=new OpenLayers.LonLat(0,
-0);a=this._map.div;c.connect(a,"touchstart",this,this._touchStartHandler);c.connect(a,"touchmove",this,this._touchMoveHandler);c.connect(a,"touchend",this,this._touchEndHandler);this._tapCount=0;this._lastTap={x:0,y:0};this._tapThreshold=100},_getTouchBarycenter:function(a){var b=a.touches;a=b[0];var d=null,d=1<b.length?b[1]:b[0],b=f.marginBox(this._map.div);return{x:(a.pageX+d.pageX)/2-b.l,y:(a.pageY+d.pageY)/2-b.t}},_getFingerSpacing:function(a){a=a.touches;var b=-1;2<=a.length&&(b=a[1].pageX-a[0].pageX,
-a=a[1].pageY-a[0].pageY,b=Math.sqrt(b*b+a*a));return b},_isDoubleTap:function(a){var b=!1;a=a.touches;if(0<this._tapCount&&1==a.length){var d=a[0].pageX-this._lastTap.x,c=a[0].pageY-this._lastTap.y;d*d+c*c<this._tapThreshold?b=!0:this._tapCount=0}this._tapCount++;this._lastTap.x=a[0].pageX;this._lastTap.y=a[0].pageY;setTimeout(k.hitch(this,function(){this._tapCount=0}),300);return b},_doubleTapHandler:function(a){a=a.touches;var b=f.marginBox(this._map.div);a=this._map.getLonLatFromPixel(new OpenLayers.Pixel(a[0].pageX-
-b.l,a[0].pageY-b.t));this._map.setCenter(new OpenLayers.LonLat(a.lon,a.lat),this._map.getZoom()+1)},_touchStartHandler:function(a){e.stop(a);if(this._isDoubleTap(a))this._doubleTapHandler(a);else{var b=this._getTouchBarycenter(a);this._centerTouchLocation=this._map.getLonLatFromPixel(new OpenLayers.Pixel(b.x,b.y));this._initialFingerSpacing=this._getFingerSpacing(a);this._initialScale=this._map.getScale();this._touchMoveListener||(this._touchMoveListener=c.connect(g.global,"touchmove",this,this._touchMoveHandler));
-this._touchEndListener||(this._touchEndListener=c.connect(g.global,"touchend",this,this._touchEndHandler))}},_touchEndHandler:function(a){e.stop(a);0==a.touches.length?(this._touchMoveListener&&(c.disconnect(this._touchMoveListener),this._touchMoveListener=null),this._touchEndListener&&(c.disconnect(this._touchEndListener),this._touchEndListener=null)):(a=this._getTouchBarycenter(a),this._centerTouchLocation=this._map.getLonLatFromPixel(new OpenLayers.Pixel(a.x,a.y)))},_touchMoveHandler:function(a){e.stop(a);
-var b=this._getTouchBarycenter(a),d=this._map.getLonLatFromPixel(new OpenLayers.Pixel(b.x,b.y)),b=d.lon-this._centerTouchLocation.lon,d=d.lat-this._centerTouchLocation.lat,c=1;2<=a.touches.length&&(c=this._getFingerSpacing(a)/this._initialFingerSpacing,this._map.zoomToScale(this._initialScale/c));a=this._map.getCenter();this._map.setCenter(new OpenLayers.LonLat(a.lon-b,a.lat-d))}})});
-//@ sourceMappingURL=TouchInteractionSupport.js.map
+define([
+	"dojo/_base/declare",
+	"dojo/_base/connect",
+	"dojo/_base/html",
+	"dojo/_base/lang",
+	"dojo/_base/event",
+	"dojo/_base/window"
+], function(declare, connect, html, lang, event, win){
+
+	return declare("dojox.geo.openlayers.TouchInteractionSupport", null, {
+		// summary:
+		//		class to handle touch interactions on a OpenLayers.Map widget
+		// tags:
+		//		private
+
+		_map: null,
+		_centerTouchLocation: null,
+		_touchMoveListener: null,
+		_touchEndListener: null,
+		_initialFingerSpacing: null,
+		_initialScale: null,
+		_tapCount: null,
+		_tapThreshold: null,
+		_lastTap: null,
+
+		constructor: function(map){
+			// summary:
+			//		Constructs a new TouchInteractionSupport instance
+			// map: OpenLayers.Map
+			//		the Map widget this class provides touch navigation for.
+			this._map = map;
+			this._centerTouchLocation = new OpenLayers.LonLat(0, 0);
+
+			var div = this._map.div;
+
+			// install touch listeners
+			connect.connect(div, "touchstart", this, this._touchStartHandler);
+			connect.connect(div, "touchmove", this, this._touchMoveHandler);
+			connect.connect(div, "touchend", this, this._touchEndHandler);
+
+			this._tapCount = 0;
+			this._lastTap = {
+				x: 0,
+				y: 0
+			};
+			this._tapThreshold = 100; // square distance in pixels
+
+		},
+
+		_getTouchBarycenter: function(touchEvent){
+			// summary:
+			//		returns the midpoint of the two first fingers (or the first finger location if only one)
+			// touchEvent: TouchEvent
+			//		a touch event
+			// returns:
+			//		the midpoint as an {x,y} object.
+			// tags:
+			//		private
+			var touches = touchEvent.touches;
+			var firstTouch = touches[0];
+			var secondTouch = null;
+			if(touches.length > 1){
+				secondTouch = touches[1];
+			}else{
+				secondTouch = touches[0];
+			}
+
+			var marginBox = html.marginBox(this._map.div);
+
+			var middleX = (firstTouch.pageX + secondTouch.pageX) / 2.0 - marginBox.l;
+			var middleY = (firstTouch.pageY + secondTouch.pageY) / 2.0 - marginBox.t;
+
+			return {
+				x: middleX,
+				y: middleY
+			}; // Object
+
+		},
+
+		_getFingerSpacing: function(touchEvent){
+			// summary:
+			//		computes the distance between the first two fingers
+			// touchEvent: Event
+			//		a touch event
+			// returns: float
+			//		a distance. -1 if less that 2 fingers
+			// tags:
+			//		private
+			var touches = touchEvent.touches;
+			var spacing = -1;
+			if(touches.length >= 2){
+				var dx = (touches[1].pageX - touches[0].pageX);
+				var dy = (touches[1].pageY - touches[0].pageY);
+				spacing = Math.sqrt(dx * dx + dy * dy);
+			}
+			return spacing;
+		},
+
+		_isDoubleTap: function(touchEvent){
+			// summary:
+			//		checks whether the specified touchStart event is a double tap 
+			//		(i.e. follows closely a previous touchStart at approximately the same location)
+			// touchEvent: TouchEvent
+			//		a touch event
+			// returns: boolean
+			//		true if this event is considered a double tap
+			// tags:
+			//		private
+			var isDoubleTap = false;
+			var touches = touchEvent.touches;
+			if((this._tapCount > 0) && touches.length == 1){
+				// test distance from last tap
+				var dx = (touches[0].pageX - this._lastTap.x);
+				var dy = (touches[0].pageY - this._lastTap.y);
+				var distance = dx * dx + dy * dy;
+				if(distance < this._tapThreshold){
+					isDoubleTap = true;
+				}else{
+					this._tapCount = 0;
+				}
+			}
+			this._tapCount++;
+			this._lastTap.x = touches[0].pageX;
+			this._lastTap.y = touches[0].pageY;
+			setTimeout(lang.hitch(this, function(){
+				this._tapCount = 0;
+			}), 300);
+
+			return isDoubleTap;
+		},
+
+		_doubleTapHandler: function(touchEvent){
+			// summary:
+			//		action performed on the map when a double tap was triggered 
+			// touchEvent: TouchEvent
+			//		a touch event
+			// tags:
+			//		private
+
+			// perform a basic 2x zoom on touch
+			var touches = touchEvent.touches;
+			var marginBox = html.marginBox(this._map.div);
+			var offX = touches[0].pageX - marginBox.l;
+			var offY = touches[0].pageY - marginBox.t;
+			// clicked map point before zooming
+			var mapPoint = this._map.getLonLatFromPixel(new OpenLayers.Pixel(offX, offY));
+			// zoom increment power
+			this._map.setCenter(new OpenLayers.LonLat(mapPoint.lon, mapPoint.lat), this._map.getZoom() + 1);
+		},
+
+		_touchStartHandler: function(touchEvent){
+			// summary:
+			//		action performed on the map when a touch start was triggered 
+			// touchEvent: Event
+			//		a touch event
+			// tags:
+			//		private
+			event.stop(touchEvent);
+
+			// test double tap
+			if(this._isDoubleTap(touchEvent)){
+				this._doubleTapHandler(touchEvent);
+				return;
+			}
+
+			// compute map midpoint between fingers		
+			var middlePoint = this._getTouchBarycenter(touchEvent);
+
+			this._centerTouchLocation = this._map.getLonLatFromPixel(new OpenLayers.Pixel(middlePoint.x, middlePoint.y));
+
+			// store initial finger spacing to compute zoom later
+			this._initialFingerSpacing = this._getFingerSpacing(touchEvent);
+
+			// store initial map scale
+			this._initialScale = this._map.getScale();
+
+			// install touch move and up listeners (if not done by other fingers before)
+			if(!this._touchMoveListener){
+				this._touchMoveListener = connect.connect(win.global, "touchmove", this, this._touchMoveHandler);
+			}
+			if(!this._touchEndListener){
+				this._touchEndListener = connect.connect(win.global, "touchend", this, this._touchEndHandler);
+			}
+		},
+
+		_touchEndHandler: function(touchEvent){
+			// summary:
+			//		action performed on the map when a touch end was triggered 
+			// touchEvent: Event
+			//		a touch event
+			// tags:
+			//		private
+			event.stop(touchEvent);
+
+			var touches = touchEvent.touches;
+
+			if(touches.length == 0){
+				// disconnect listeners only when all fingers are up
+				if(this._touchMoveListener){
+					connect.disconnect(this._touchMoveListener);
+					this._touchMoveListener = null;
+				}
+				if(this._touchEndListener){
+					connect.disconnect(this._touchEndListener);
+					this._touchEndListener = null;
+				}
+			}else{
+				// recompute touch center
+				var middlePoint = this._getTouchBarycenter(touchEvent);
+
+				this._centerTouchLocation = this._map.getLonLatFromPixel(new OpenLayers.Pixel(middlePoint.x, middlePoint.y));
+			}
+		},
+
+		_touchMoveHandler: function(touchEvent){
+			// summary:
+			//		action performed on the map when a touch move was triggered 
+			// touchEvent: Event
+			//		a touch event
+			// tags:
+			//		private
+
+			// prevent browser interaction
+			event.stop(touchEvent);
+
+			var middlePoint = this._getTouchBarycenter(touchEvent);
+
+			// compute map offset
+			var mapPoint = this._map.getLonLatFromPixel(new OpenLayers.Pixel(middlePoint.x, middlePoint.y));
+			var mapOffsetLon = mapPoint.lon - this._centerTouchLocation.lon;
+			var mapOffsetLat = mapPoint.lat - this._centerTouchLocation.lat;
+
+			// compute scale factor
+			var scaleFactor = 1;
+			var touches = touchEvent.touches;
+			if(touches.length >= 2){
+				var fingerSpacing = this._getFingerSpacing(touchEvent);
+				scaleFactor = fingerSpacing / this._initialFingerSpacing;
+				// weird openlayer bug: setting several times the same scale value lead to visual zoom...
+				this._map.zoomToScale(this._initialScale / scaleFactor);
+			}
+
+			// adjust map center on barycenter
+			var currentMapCenter = this._map.getCenter();
+			this._map.setCenter(new OpenLayers.LonLat(currentMapCenter.lon - mapOffsetLon, currentMapCenter.lat
+																																											- mapOffsetLat));
+
+		}
+	});
+});

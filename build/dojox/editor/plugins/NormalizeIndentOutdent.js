@@ -1,20 +1,870 @@
-//>>built
-define("dojox/editor/plugins/NormalizeIndentOutdent",["dojo","dijit","dojox","dijit/_editor/_Plugin","dojo/_base/declare"],function(g,k,n,m){var l=g.declare("dojox.editor.plugins.NormalizeIndentOutdent",m,{indentBy:40,indentUnits:"px",setEditor:function(a){this.editor=a;a._indentImpl=g.hitch(this,this._indentImpl);a._outdentImpl=g.hitch(this,this._outdentImpl);a._indentoutdent_queryCommandEnabled||(a._indentoutdent_queryCommandEnabled=a.queryCommandEnabled);a.queryCommandEnabled=g.hitch(this,this._queryCommandEnabled);
-a.customUndo=!0},_queryCommandEnabled:function(a){var c=a.toLowerCase(),b,e,d,f="marginLeft";this._isLtr()||(f="marginRight");if("indent"===c){if(c=this.editor,(b=k.range.getSelection(c.window))&&0<b.rangeCount){b=b.getRangeAt(0);for(e=b.startContainer;e&&e!==c.document&&e!==c.editNode;){d=this._getTagName(e);if("li"===d){for(a=e.previousSibling;a&&1!==a.nodeType;)a=a.previousSibling;return a&&"li"===this._getTagName(a)?!0:!1}if(this._isIndentableElement(d))return!0;e=e.parentNode}if(this._isRootInline(b.startContainer))return!0}}else if("outdent"===
-c){if(c=this.editor,(b=k.range.getSelection(c.window))&&0<b.rangeCount){b=b.getRangeAt(0);for(e=b.startContainer;e&&e!==c.document&&e!==c.editNode;){d=this._getTagName(e);if("li"===d)return this.editor._indentoutdent_queryCommandEnabled(a);if(this._isIndentableElement(d)){if(a=e.style?e.style[f]:"")if(a=this._convertIndent(a),1<=a/this.indentBy)return!0;return!1}e=e.parentNode}this._isRootInline(b.startContainer)}}else return this.editor._indentoutdent_queryCommandEnabled(a);return!1},_indentImpl:function(a){a=
-this.editor;var c=k.range.getSelection(a.window);if(c&&0<c.rangeCount){var c=c.getRangeAt(0),b=c.startContainer,e,d;if(c.startContainer===c.endContainer)if(this._isRootInline(c.startContainer)){for(b=c.startContainer;b&&b.parentNode!==a.editNode;)b=b.parentNode;for(;b&&b.previousSibling&&(this._isTextElement(b)||1===b.nodeType&&this._isInlineFormat(this._getTagName(b)));)b=b.previousSibling;b&&(1===b.nodeType&&!this._isInlineFormat(this._getTagName(b)))&&(b=b.nextSibling);if(b){d=a.document.createElement("div");
-g.place(d,b,"after");d.appendChild(b);for(e=d.nextSibling;e&&(this._isTextElement(e)||1===e.nodeType&&this._isInlineFormat(this._getTagName(e)));)d.appendChild(e),e=d.nextSibling;this._indentElement(d);a._sCall("selectElementChildren",[d]);a._sCall("collapse",[!0])}}else for(;b&&b!==a.document&&b!==a.editNode;){c=this._getTagName(b);if("li"===c){this._indentList(b);break}else if(this._isIndentableElement(c)){this._indentElement(b);break}b=b.parentNode}else{var f,b=c.startContainer;for(e=c.endContainer;b&&
-this._isTextElement(b)&&b.parentNode!==a.editNode;)b=b.parentNode;for(;e&&this._isTextElement(e)&&e.parentNode!==a.editNode;)e=e.parentNode;if(e===a.editNode||e===a.document.body){for(f=b;f.nextSibling&&a._sCall("inSelection",[f]);)f=f.nextSibling;e=f;if(e===a.editNode||e===a.document.body){c=this._getTagName(b);if("li"===c)this._indentList(b);else if(this._isIndentableElement(c))this._indentElement(b);else if(this._isTextElement(b)||this._isInlineFormat(c)){d=a.document.createElement("div");g.place(d,
-b,"after");for(a=b;a&&(this._isTextElement(a)||1===a.nodeType&&this._isInlineFormat(this._getTagName(a)));)d.appendChild(a),a=d.nextSibling;this._indentElement(d)}return}}e=e.nextSibling;for(f=b;f&&f!==e;){if(1===f.nodeType){c=this._getTagName(f);if(g.isIE&&"p"===c&&this._isEmpty(f)){f=f.nextSibling;continue}"li"===c?(d&&(this._isEmpty(d)?d.parentNode.removeChild(d):this._indentElement(d),d=null),this._indentList(f)):!this._isInlineFormat(c)&&this._isIndentableElement(c)?(d&&(this._isEmpty(d)?d.parentNode.removeChild(d):
-this._indentElement(d),d=null),f=this._indentElement(f)):this._isInlineFormat(c)&&(d||(d=a.document.createElement("div"),g.place(d,f,"after")),d.appendChild(f),f=d)}else this._isTextElement(f)&&(d||(d=a.document.createElement("div"),g.place(d,f,"after")),d.appendChild(f),f=d);f=f.nextSibling}d&&(this._isEmpty(d)?d.parentNode.removeChild(d):this._indentElement(d))}}},_indentElement:function(a){var c="marginLeft";this._isLtr()||(c="marginRight");var b=this._getTagName(a);if("ul"===b||"ol"===b)b=this.editor.document.createElement("div"),
-g.place(b,a,"after"),b.appendChild(a),a=b;(b=a.style?a.style[c]:"")?(b=this._convertIndent(b),b=parseInt(b,10)+this.indentBy+this.indentUnits):b=this.indentBy+this.indentUnits;g.style(a,c,b);return a},_outdentElement:function(a){var c="marginLeft";this._isLtr()||(c="marginRight");var b=a.style?a.style[c]:"";b&&(b=this._convertIndent(b),b=0<b-this.indentBy?parseInt(b,10)-this.indentBy+this.indentUnits:"",g.style(a,c,b))},_outdentImpl:function(a){var c=this.editor,b=k.range.getSelection(c.window);if(b&&
-0<b.rangeCount){var b=b.getRangeAt(0),e=b.startContainer;if(b.startContainer===b.endContainer){for(;e&&e!==c.document&&e!==c.editNode;){b=this._getTagName(e);if("li"===b)return this._outdentList(e);if(this._isIndentableElement(b))return this._outdentElement(e);e=e.parentNode}c.document.execCommand("outdent",!1,a)}else{c=b.startContainer;for(a=b.endContainer;c&&3===c.nodeType;)c=c.parentNode;for(;a&&3===a.nodeType;)a=a.parentNode;for(a=a.nextSibling;c&&c!==a;)1===c.nodeType&&(b=this._getTagName(c),
-"li"===b?this._outdentList(c):this._isIndentableElement(b)&&this._outdentElement(c)),c=c.nextSibling}}return null},_indentList:function(a){for(var c=this.editor,b,e,d=a.parentNode,f=a.previousSibling;f&&1!==f.nodeType;)f=f.previousSibling;b=null;d=this._getTagName(d);"ol"===d?b="ol":"ul"===d&&(b="ul");if(b&&f&&"li"==f.tagName.toLowerCase()){if(f.childNodes)for(d=0;d<f.childNodes.length;d++){var h=f.childNodes[d];if(3===h.nodeType){if(g.trim(h.nodeValue)&&e)break}else if(1===h.nodeType&&!e)b===h.tagName.toLowerCase()&&
-(e=h);else break}e?e.appendChild(a):(b=c.document.createElement(b),g.style(b,{paddingTop:"0px",paddingBottom:"0px"}),e=c.document.createElement("li"),g.style(e,{listStyleImage:"none",listStyleType:"none"}),f.appendChild(b),b.appendChild(a));c._sCall("selectElementChildren",[a]);c._sCall("collapse",[!0])}},_outdentList:function(a){var c=this.editor,b=a.parentNode,e=null,d=b.tagName?b.tagName.toLowerCase():"";"ol"===d?e="ol":"ul"===d&&(e="ul");var d=b.parentNode,f=this._getTagName(d);if("li"===f||"ol"===
-f||"ul"===f){if("ol"===f||"ul"===f){for(d=b.previousSibling;d&&(1!==d.nodeType||1===d.nodeType&&"li"!==this._getTagName(d));)d=d.previousSibling;if(d)d.appendChild(b);else{for(f=d=a;d.previousSibling;)d=d.previousSibling,1===d.nodeType&&"li"===this._getTagName(d)&&(f=d);f!==a?(g.place(f,b,"before"),f.appendChild(b),d=f):(d=c.document.createElement("li"),g.place(d,b,"before"),d.appendChild(b));g.style(b,{paddingTop:"0px",paddingBottom:"0px"})}}for(f=a.previousSibling;f&&1!==f.nodeType;)f=f.previousSibling;
-for(var h=a.nextSibling;h&&1!==h.nodeType;)h=h.nextSibling;if(f){if(h){e=c.document.createElement(e);g.style(e,{paddingTop:"0px",paddingBottom:"0px"});for(a.appendChild(e);a.nextSibling;)e.appendChild(a.nextSibling)}g.place(a,d,"after")}else g.place(a,d,"after"),a.appendChild(b);b&&this._isEmpty(b)&&b.parentNode.removeChild(b);d&&this._isEmpty(d)&&d.parentNode.removeChild(d);c._sCall("selectElementChildren",[a]);c._sCall("collapse",[!0])}else c.document.execCommand("outdent",!1,null)},_isEmpty:function(a){if(a.childNodes){var c=
-!0,b;for(b=0;b<a.childNodes.length;b++){var e=a.childNodes[b];if(1===e.nodeType){if("p"!==this._getTagName(e)||g.trim(e.innerHTML)){c=!1;break}}else if(this._isTextElement(e)){if((e=g.trim(e.nodeValue))&&"\x26nbsp;"!==e&&"\u00a0"!==e){c=!1;break}}else{c=!1;break}}return c}return!0},_isIndentableElement:function(a){switch(a){case "p":case "div":case "h1":case "h2":case "h3":case "center":case "table":case "ul":case "ol":return!0;default:return!1}},_convertIndent:function(a){a=(a+"").toLowerCase();
-var c=0<a.indexOf("px")?"px":0<a.indexOf("em")?"em":"px";a=a.replace(/(px;?|em;?)/gi,"");"px"===c?"em"===this.indentUnits&&(a=Math.ceil(a/12)):"px"===this.indentUnits&&(a*=12);return a},_isLtr:function(){var a=g.getComputedStyle(this.editor.document.body);return a?"ltr"==a.direction:!0},_isInlineFormat:function(a){switch(a){case "a":case "b":case "strong":case "s":case "strike":case "i":case "u":case "em":case "sup":case "sub":case "span":case "font":case "big":case "cite":case "q":case "img":case "small":return!0;
-default:return!1}},_getTagName:function(a){var c="";a&&1===a.nodeType&&(c=a.tagName?a.tagName.toLowerCase():"");return c},_isRootInline:function(a){var c=this.editor;if(this._isTextElement(a)&&a.parentNode===c.editNode||1===a.nodeType&&this._isInlineFormat(a)&&a.parentNode===c.editNode)return!0;if(this._isTextElement(a)&&this._isInlineFormat(this._getTagName(a.parentNode))){for(a=a.parentNode;a&&a!==c.editNode&&this._isInlineFormat(this._getTagName(a));)a=a.parentNode;if(a===c.editNode)return!0}return!1},
-_isTextElement:function(a){return a&&3===a.nodeType||4===a.nodeType?!0:!1}});g.subscribe(k._scopeName+".Editor.getPlugin",null,function(a){!a.plugin&&"normalizeindentoutdent"===a.args.name.toLowerCase()&&(a.plugin=new l({indentBy:"indentBy"in a.args?0<a.args.indentBy?a.args.indentBy:40:40,indentUnits:"indentUnits"in a.args?"em"==a.args.indentUnits.toLowerCase()?"em":"px":"px"}))});return l});
-//@ sourceMappingURL=NormalizeIndentOutdent.js.map
+define([
+	"dojo",
+	"dijit",
+	"dojox",
+	"dijit/_editor/_Plugin",
+	"dojo/_base/declare"
+], function(dojo, dijit, dojox, _Plugin) {
+
+var NormalizeIndentOutdent = dojo.declare("dojox.editor.plugins.NormalizeIndentOutdent", _Plugin, {
+	// summary:
+	//		This plugin provides improved indent and outdent handling to
+	//		the editor.  It tries to generate valid HTML, as well as be
+	//		consistent about how it indents and outdents lists and blocks/elements.
+
+	// indentBy: [public] number
+	//		The amount to indent by.  Valid values are 1+.  This is combined with
+	//		the indentUnits parameter to determine how much to indent or outdent
+	//		by for regular text.  It does not affect lists.
+	indentBy: 40,
+	
+	// indentUnits: [public] String
+	//		The units to apply to the indent amount.  Usually 'px', but can also
+	//		be em.
+	indentUnits: "px",
+
+	setEditor: function(editor){
+		// summary:
+		//		Over-ride for the setting of the editor.
+		// editor: Object
+		//		The editor to configure for this plugin to use.
+		this.editor = editor;
+
+		// Register out indent handler via the builtin over-ride mechanism.
+		editor._indentImpl = dojo.hitch(this, this._indentImpl);
+		editor._outdentImpl = dojo.hitch(this, this._outdentImpl);
+
+		// Take over the query command enabled function, we want to prevent
+		// indent of first items in a list, etc.
+		if(!editor._indentoutdent_queryCommandEnabled){
+			editor._indentoutdent_queryCommandEnabled = editor.queryCommandEnabled;
+		}
+		editor.queryCommandEnabled = dojo.hitch(this, this._queryCommandEnabled);
+
+		// We need the custom undo code since we manipulate the dom
+		// outside of the browser natives and only customUndo really handles
+		// that.  It will incur a performance hit, but should hopefully be
+		// relatively small.
+		editor.customUndo = true;
+	},
+
+	_queryCommandEnabled: function(command){
+		// summary:
+		//		An over-ride for the editor's query command enabled,
+		//		so that we can prevent indents, etc, on bad elements
+		//		or positions (like first element in a list).
+		// command:
+		//		The command passed in to check enablement.
+		// tags:
+		//		private
+		var c = command.toLowerCase();
+		var ed, sel, range, node, tag, prevNode;
+		var style = "marginLeft";
+		if(!this._isLtr()){
+			style = "marginRight";
+		}
+		if(c === "indent"){
+			ed = this.editor;
+			sel = dijit.range.getSelection(ed.window);
+			if(sel && sel.rangeCount > 0){
+				range = sel.getRangeAt(0);
+				node = range.startContainer;
+
+				// Check for li nodes first, we handle them a certain way.
+				while(node && node !== ed.document && node !== ed.editNode){
+					tag = this._getTagName(node);
+					if(tag === "li"){
+						
+						prevNode = node.previousSibling;
+						while(prevNode && prevNode.nodeType !== 1){
+							prevNode = prevNode.previousSibling;
+						}
+						if(prevNode && this._getTagName(prevNode) === "li"){
+							return true;
+						}else{
+							// First item, disallow
+							return false;
+						}
+					}else if(this._isIndentableElement(tag)){
+						return true;
+					}
+					node = node.parentNode;
+				}
+				if(this._isRootInline(range.startContainer)){
+					return true;
+				}
+			}
+		}else if(c === "outdent"){
+			ed = this.editor;
+			sel = dijit.range.getSelection(ed.window);
+			if(sel && sel.rangeCount > 0){
+				range = sel.getRangeAt(0);
+				node = range.startContainer;
+				// Check for li nodes first, we handle them a certain way.
+				while(node && node !== ed.document && node !== ed.editNode){
+					tag = this._getTagName(node);
+					if(tag === "li"){
+						// Standard list, we can ask the browser.
+						return this.editor._indentoutdent_queryCommandEnabled(command);
+					}else if(this._isIndentableElement(tag)){
+						// Block, we need to handle the indent check.
+						var cIndent = node.style?node.style[style]:"";
+						if(cIndent){
+							cIndent = this._convertIndent(cIndent);
+							if(cIndent/this.indentBy >= 1){
+								return true;
+							}
+						}
+						return false;
+					}
+					node = node.parentNode;
+				}
+				if(this._isRootInline(range.startContainer)){
+					return false;
+				}
+			}
+		}else{
+			return this.editor._indentoutdent_queryCommandEnabled(command);
+		}
+		return false;
+	},
+
+	_indentImpl: function(/*String*/ html) {
+		// summary:
+		//		Improved implementation of indent, generates correct indent for
+		//		ul/ol
+		var ed = this.editor;
+
+		var sel = dijit.range.getSelection(ed.window);
+		if(sel && sel.rangeCount > 0){
+			var range = sel.getRangeAt(0);
+			var node = range.startContainer;
+			var tag, start, end, div;
+			
+
+			if(range.startContainer === range.endContainer){
+				// No selection, just cursor point, we need to see if we're
+				// in an indentable block, or similar.
+				if(this._isRootInline(range.startContainer)){
+					// Text at the 'root' of the document,
+					// we'll try to indent it and all inline selements around it
+					// as they are visually a single line.
+
+					// First, we need to find the toplevel inline element that is rooted
+					// to the document 'editNode'
+					start = range.startContainer;
+					while(start && start.parentNode !== ed.editNode){
+						start = start.parentNode;
+					}
+
+					// Now we need to walk up its siblings and look for the first one in the rooting
+					// that isn't inline or text, as we want to grab all of that for indent.
+					while(start && start.previousSibling && (
+							this._isTextElement(start) ||
+							(start.nodeType === 1 && this._isInlineFormat(this._getTagName(start))
+						))){
+						start = start.previousSibling;
+					}
+					if(start && start.nodeType === 1 && !this._isInlineFormat(this._getTagName(start))){
+						// Adjust slightly, we're one node too far back in this case.
+						start = start.nextSibling;
+					}
+
+					// Okay, we have a configured start, lets grab everything following it that's
+					// inline and make it an indentable block!
+					if(start){
+						div = ed.document.createElement("div");
+						dojo.place(div, start, "after");
+						div.appendChild(start);
+						end = div.nextSibling;
+						while(end && (
+							this._isTextElement(end) ||
+							(end.nodeType === 1 &&
+								this._isInlineFormat(this._getTagName(end)))
+							)){
+							// Add it.
+							div.appendChild(end);
+							end = div.nextSibling;
+						}
+						this._indentElement(div);
+						ed._sCall("selectElementChildren", [div]);
+						ed._sCall("collapse", [true]);
+					}
+				}else{
+					while(node && node !== ed.document && node !== ed.editNode){
+						tag = this._getTagName(node);
+						if(tag === "li"){
+							this._indentList(node);
+							return;
+						}else if(this._isIndentableElement(tag)){
+							this._indentElement(node);
+							return;
+						}
+						node = node.parentNode;
+					}
+				}
+			}else{
+				var curNode;
+				// multi-node select.  We need to scan over them.
+				// Find the two containing nodes at start and end.
+				// then move the end one node past.  Then ... lets see
+				// what we can indent!
+				start = range.startContainer;
+				end = range.endContainer;
+				// Find the non-text nodes.
+
+				while(start && this._isTextElement(start) && start.parentNode !== ed.editNode){
+					start = start.parentNode;
+				}
+				while(end && this._isTextElement(end) && end.parentNode !== ed.editNode){
+					end = end.parentNode;
+				}
+				if(end === ed.editNode || end === ed.document.body){
+					// Okay, selection end is somewhere after start, we need to find the last node
+					// that is safely in the range.
+					curNode = start;
+					while(curNode.nextSibling &&
+						ed._sCall("inSelection", [curNode])){
+						curNode = curNode.nextSibling;
+					}
+					end = curNode;
+					if(end === ed.editNode || end === ed.document.body){
+						// Unable to determine real selection end, so just make it
+						// a single node indent of start + all following inline styles, if
+						// present, then just exit.
+						tag = this._getTagName(start);
+						if(tag === "li"){
+							this._indentList(start);
+						}else if(this._isIndentableElement(tag)){
+							this._indentElement(start);
+						}else if(this._isTextElement(start) ||
+								 this._isInlineFormat(tag)){
+							// inline element or textnode, So we want to indent it somehow
+							div = ed.document.createElement("div");
+							dojo.place(div, start, "after");
+
+							// Find and move all inline tags following the one we inserted also into the
+							// div so we don't split up content funny.
+							var next = start;
+							while(next && (
+								this._isTextElement(next) ||
+								(next.nodeType === 1 &&
+								this._isInlineFormat(this._getTagName(next))))){
+								div.appendChild(next);
+								next = div.nextSibling;
+							}
+							this._indentElement(div);
+						}
+						return;
+					}
+				}
+				
+				// Has a definite end somewhere, so lets try to indent up to it.
+				// requires looking at the selections and in some cases, moving nodes
+				// into indentable blocks.
+				end = end.nextSibling;
+				curNode = start;
+				while(curNode && curNode !== end){
+					if(curNode.nodeType === 1){
+						tag = this._getTagName(curNode);
+						if(dojo.isIE){
+							// IE sometimes inserts blank P tags, which we want to skip
+							// as they end up indented, which messes up layout.
+							if(tag === "p" && this._isEmpty(curNode)){
+								curNode = curNode.nextSibling;
+								continue;
+							}
+						}
+						if(tag === "li"){
+							if(div){
+								if(this._isEmpty(div)){
+									div.parentNode.removeChild(div);
+								}else{
+									this._indentElement(div);
+								}
+								div = null;
+							}
+							this._indentList(curNode);
+						}else if(!this._isInlineFormat(tag) && this._isIndentableElement(tag)){
+							if(div){
+								if(this._isEmpty(div)){
+									div.parentNode.removeChild(div);
+								}else{
+									this._indentElement(div);
+								}
+								div = null;
+							}
+							curNode = this._indentElement(curNode);
+						}else if(this._isInlineFormat(tag)){
+							// inline tag.
+							if(!div){
+								div = ed.document.createElement("div");
+								dojo.place(div, curNode, "after");
+								div.appendChild(curNode);
+								curNode = div;
+							}else{
+								div.appendChild(curNode);
+								curNode = div;
+							}
+						}
+					}else if(this._isTextElement(curNode)){
+						if(!div){
+							div = ed.document.createElement("div");
+							dojo.place(div, curNode, "after");
+							div.appendChild(curNode);
+							curNode = div;
+						}else{
+							div.appendChild(curNode);
+							curNode = div;
+						}
+					}
+					curNode = curNode.nextSibling;
+				}
+				// Okay, indent everything we merged if we haven't yet..
+				if(div){
+					if(this._isEmpty(div)){
+						div.parentNode.removeChild(div);
+					}else{
+						this._indentElement(div);
+					}
+					div = null;
+				}
+			}
+		}
+	},
+
+	_indentElement: function(node){
+		// summary:
+		//		Function to indent a block type tag.
+		// node:
+		//		The node who's content to indent.
+		// tags:
+		//		private
+		var style = "marginLeft";
+		if(!this._isLtr()){
+			style = "marginRight";
+		}
+		var tag = this._getTagName(node);
+		if(tag === "ul" || tag === "ol"){
+			// Lists indent funny, so lets wrap them in a div
+			// and indent the div instead.
+			var div = this.editor.document.createElement("div");
+			dojo.place(div, node, "after");
+			div.appendChild(node);
+			node = div;
+		}
+		var cIndent = node.style?node.style[style]:"";
+		if(cIndent){
+			cIndent = this._convertIndent(cIndent);
+			cIndent = (parseInt(cIndent, 10) + this.indentBy) + this.indentUnits;
+		}else{
+			cIndent = this.indentBy + this.indentUnits;
+		}
+		dojo.style(node, style, cIndent);
+		return node; //Return the node that was indented.
+	},
+
+	_outdentElement: function(node){
+		// summary:
+		//		Function to outdent a block type tag.
+		// node:
+		//		The node who's content to outdent.
+		// tags:
+		//		private
+		var style = "marginLeft";
+		if(!this._isLtr()){
+			style = "marginRight";
+		}
+		var cIndent = node.style?node.style[style]:"";
+		if(cIndent){
+			cIndent = this._convertIndent(cIndent);
+			if(cIndent - this.indentBy > 0){
+				cIndent = (parseInt(cIndent, 10) - this.indentBy) + this.indentUnits;
+			}else{
+				cIndent = "";
+			}
+			dojo.style(node, style, cIndent);
+		}
+	},
+
+	_outdentImpl: function(/*String*/ html) {
+		// summary:
+		//		Improved implementation of outdent, generates correct indent for
+		//		ul/ol and other elements.
+		// tags:
+		//		private
+		var ed = this.editor;
+		var sel = dijit.range.getSelection(ed.window);
+		if(sel && sel.rangeCount > 0){
+			var range = sel.getRangeAt(0);
+			var node = range.startContainer;
+			var tag;
+
+			if(range.startContainer === range.endContainer){
+				// Check for li nodes first, we handle them a certain way.
+				while(node && node !== ed.document && node !== ed.editNode){
+					tag = this._getTagName(node);
+					if(tag === "li"){
+						return this._outdentList(node);
+					}else if(this._isIndentableElement(tag)){
+						return this._outdentElement(node);
+					}
+					node = node.parentNode;
+				}
+				ed.document.execCommand("outdent", false, html);
+			}else{
+				// multi-node select.  We need to scan over them.
+				// Find the two containing nodes at start and end.
+				// then move the end one node past.  Then ... lets see
+				// what we can outdent!
+				var start = range.startContainer;
+				var end =  range.endContainer;
+				// Find the non-text nodes.
+				while(start && start.nodeType === 3){
+					start = start.parentNode;
+				}
+				while(end && end.nodeType === 3){
+					end = end.parentNode;
+				}
+				end = end.nextSibling;
+				var curNode = start;
+				while(curNode && curNode !== end){
+					if(curNode.nodeType === 1){
+						tag = this._getTagName(curNode);
+						if(tag === "li"){
+							this._outdentList(curNode);
+						}else if(this._isIndentableElement(tag)){
+							this._outdentElement(curNode);
+						}
+
+					}
+					curNode = curNode.nextSibling;
+				}
+			}
+		}
+		return null;
+	},
+
+
+	_indentList: function(listItem){
+		// summary:
+		//		Internal function to handle indenting a list element.
+		// listItem:
+		//		The list item to indent.
+		// tags:
+		//		private
+		var ed = this.editor;
+		var newList, li;
+		var listContainer = listItem.parentNode;
+		var prevTag = listItem.previousSibling;
+		
+		// Ignore text, we want elements.
+		while(prevTag && prevTag.nodeType !== 1){
+			prevTag = prevTag.previousSibling;
+		}
+		var type = null;
+		var tg = this._getTagName(listContainer);
+		
+		// Try to determine what kind of list item is here to indent.
+		if(tg === "ol"){
+			type = "ol";
+		}else if(tg === "ul"){
+			type = "ul";
+		}
+		
+		// Only indent list items actually in a list.
+		// Bail out if the list is malformed somehow.
+		if(type){
+			// There is a previous node in the list, so we want to append a new list
+			// element after it that contains a new list of the content to indent it.
+			if(prevTag && prevTag.tagName.toLowerCase() == "li"){
+				// Lets see if we can merge this into another  (Eg,
+				// does the sibling li contain an embedded list already of
+				// the same type?  if so, we move into that one.
+				var embList;
+				if(prevTag.childNodes){
+					var i;
+					for(i = 0; i < prevTag.childNodes.length; i++){
+						var n = prevTag.childNodes[i];
+						if(n.nodeType === 3){
+							if(dojo.trim(n.nodeValue)){
+								if(embList){
+									// Non-empty text after list, exit, can't embed.
+									break;
+								}
+							}
+						}else if(n.nodeType === 1 && !embList){
+							// See if this is a list container.
+							if(type === n.tagName.toLowerCase()){
+								embList = n;
+							}
+						}else{
+							// Other node present, break, can't embed.
+							break;
+						}
+					}
+				}
+				if(embList){
+					// We found a list to merge to, so merge.
+					embList.appendChild(listItem);
+				}else{
+					// Nope, wasn't an embedded list container,
+					// So lets just create a new one.
+					newList = ed.document.createElement(type);
+					dojo.style(newList, {
+						paddingTop: "0px",
+						paddingBottom: "0px"
+					});
+					li = ed.document.createElement("li");
+					dojo.style(li, {
+						listStyleImage: "none",
+						listStyleType: "none"
+					});
+					prevTag.appendChild(newList);
+					newList.appendChild(listItem);
+				}
+
+				// Move cursor.
+				ed._sCall("selectElementChildren", [listItem]);
+				ed._sCall("collapse", [true]);
+			}
+		}
+	},
+
+	_outdentList: function(listItem){
+		// summary:
+		//		Internal function to handle outdenting a list element.
+		// listItem:
+		//		The list item to outdent.
+		// tags:
+		//		private
+		var ed = this.editor;
+		var list = listItem.parentNode;
+		var type = null;
+		var tg = list.tagName ? list.tagName.toLowerCase() : "";
+		var li;
+
+		// Try to determine what kind of list contains the item.
+		if(tg === "ol"){
+			type = "ol";
+		}else if(tg === "ul"){
+			type = "ul";
+		}
+
+		// Check to see if it is a nested list, as outdenting is handled differently.
+		var listParent = list.parentNode;
+		var lpTg = this._getTagName(listParent);
+		
+		// We're in a list, so we need to outdent this specially.
+		// Check for welformed and malformed lists (<ul><ul></ul>U/ul> type stuff).
+		if(lpTg === "li" || lpTg === "ol" || lpTg === "ul"){
+			if(lpTg === "ol" || lpTg === "ul"){
+				// Okay, we need to fix this up, this is invalid html,
+				// So try to combine this into a previous element before
+				// de do a shuffle of the nodes, to build an HTML compliant
+				// list.
+				var prevListLi = list.previousSibling;
+				while(prevListLi && (prevListLi.nodeType !== 1 ||
+						(prevListLi.nodeType === 1 &&
+						this._getTagName(prevListLi) !== "li"))
+					){
+					prevListLi = prevListLi.previousSibling;
+				}
+				if(prevListLi){
+					// Move this list up into the previous li
+					// to fix malformation.
+					prevListLi.appendChild(list);
+					listParent = prevListLi;
+				}else{
+					li = listItem;
+					var firstItem = listItem;
+					while(li.previousSibling){
+						li = li.previousSibling;
+						if(li.nodeType === 1 && this._getTagName(li) === "li"){
+							firstItem = li;
+						}
+					}
+
+					if(firstItem !== listItem){
+						dojo.place(firstItem, list, "before");
+						firstItem.appendChild(list);
+						listParent = firstItem;
+					}else{
+						// No previous list item in a malformed list
+						// ... so create one  and move into that.
+						li = ed.document.createElement("li");
+						dojo.place(li, list, "before");
+						li.appendChild(list);
+						listParent = li;
+					}
+					dojo.style(list, {
+						paddingTop: "0px",
+						paddingBottom: "0px"
+					});
+				}
+			}
+
+			// find the previous node, if any,
+			// non-text.
+			var prevLi = listItem.previousSibling;
+			while(prevLi && prevLi.nodeType !== 1){
+				prevLi = prevLi.previousSibling;
+			}
+			var nextLi = listItem.nextSibling;
+			while(nextLi && nextLi.nodeType !== 1){
+				nextLi = nextLi.nextSibling;
+			}
+
+			if(!prevLi){
+				// Top item in a nested list, so just move it out
+				// and then shuffle the remaining indented list into it.
+				dojo.place(listItem, listParent, "after");
+				listItem.appendChild(list);
+			}else if(!nextLi){
+				// Last item in a nested list, shuffle it out after
+				// the nsted list only.
+				dojo.place(listItem, listParent, "after");
+			}else{
+				// Item is in the middle of an embedded  list, so we
+				// have to split it.
+
+				// Move all the items following current list item into
+				// a list after it.
+				var newList = ed.document.createElement(type);
+				dojo.style(newList, {
+					paddingTop: "0px",
+					paddingBottom: "0px"
+				});
+				listItem.appendChild(newList);
+				while(listItem.nextSibling){
+					newList.appendChild(listItem.nextSibling);
+				}
+
+				// Okay, now place the list item after the
+				// current list parent (li).
+				dojo.place(listItem, listParent, "after");
+			}
+			
+			// Clean up any empty lists left behind.
+			if(list && this._isEmpty(list)){
+				list.parentNode.removeChild(list);
+			}
+			if(listParent && this._isEmpty(listParent)){
+				listParent.parentNode.removeChild(listParent);
+			}
+			
+			// Move our cursor to the list item we moved.
+			ed._sCall("selectElementChildren", [listItem]);
+			ed._sCall("collapse", [true]);
+		}else{
+			// Not in a nested list, so we can just defer to the
+			// browser and hope it outdents right.
+			ed.document.execCommand("outdent", false, null);
+		}
+	},
+
+	_isEmpty: function(node){
+		// summary:
+		//		Internal function to determine if a node is 'empty'
+		//		Eg, contains only blank text.  Used to determine if
+		//		an empty list element should be removed or not.
+		// node:
+		//		The node to check.
+		// tags:
+		//		private
+		if(node.childNodes){
+			var empty = true;
+			var i;
+			for(i = 0; i < node.childNodes.length; i++){
+				var n = node.childNodes[i];
+				if(n.nodeType === 1){
+					if(this._getTagName(n) === "p"){
+						if(!dojo.trim(n.innerHTML)){
+							continue;
+						}
+					}
+					empty = false;
+					break;
+				}else if(this._isTextElement(n)){
+					// Check for empty text.
+					var nv = dojo.trim(n.nodeValue);
+					if(nv && nv !=="&nbsp;" && nv !== "\u00A0"){
+						empty = false;
+						break;
+					}
+				}else{
+					empty = false;
+					break;
+				}
+			}
+			return empty;
+		}else{
+			return true;
+		}
+	},
+
+	_isIndentableElement: function(tag){
+		// summary:
+		//		Internal function to detect what element types
+		//		are indent-controllable by us.
+		// tag:
+		//		The tag to check
+		// tags:
+		//		private
+		switch(tag){
+			case "p":
+			case "div":
+			case "h1":
+			case "h2":
+			case "h3":
+			case "center":
+			case "table":
+			case "ul":
+			case "ol":
+				return true;
+			default:
+				return false;
+		}
+	},
+
+	_convertIndent: function(indent){
+		// summary:
+		//		Function to convert the current indent style to
+		//		the units we're using by some heuristic.
+		// indent:
+		//		The indent amount to convert.
+		// tags:
+		//		private
+		var pxPerEm = 12;
+		indent = indent + "";
+		indent = indent.toLowerCase();
+		var curUnit = (indent.indexOf("px") > 0) ? "px" : (indent.indexOf("em") > 0) ? "em" : "px";
+		indent = indent.replace(/(px;?|em;?)/gi, "");
+		if(curUnit === "px"){
+			if(this.indentUnits === "em"){
+				indent = Math.ceil(indent/pxPerEm);
+			}
+		}else{
+			if(this.indentUnits === "px"){
+				indent = indent * pxPerEm;
+			}
+		}
+		return indent;
+	},
+
+	_isLtr: function(){
+		// summary:
+		//		Function to detect if the editor body is in RTL or LTR.
+		// tags:
+		//		private
+		var editDoc = this.editor.document.body;
+		var cs = dojo.getComputedStyle(editDoc);
+		return cs ? cs.direction == "ltr" : true;
+	},
+
+	_isInlineFormat: function(tag){
+		// summary:
+		//		Function to determine if the current tag is an inline
+		//		element that does formatting, as we don't want to
+		//		break/indent around it, as it can screw up text.
+		// tag:
+		//		The tag to examine
+		// tags:
+		//		private
+		switch(tag){
+			case "a":
+			case "b":
+			case "strong":
+			case "s":
+			case "strike":
+			case "i":
+			case "u":
+			case "em":
+			case "sup":
+			case "sub":
+			case "span":
+			case "font":
+			case "big":
+			case "cite":
+			case "q":
+			case "img":
+			case "small":
+				return true;
+			default:
+				return false;
+		}
+	},
+
+	_getTagName: function(node){
+		// summary:
+		//		Internal function to get the tag name of an element
+		//		if any.
+		// node:
+		//		The node to look at.
+		// tags:
+		//		private
+		var tag = "";
+		if(node && node.nodeType === 1){
+			tag = node.tagName?node.tagName.toLowerCase():"";
+		}
+		return tag;
+	},
+
+	_isRootInline: function(node){
+		// summary:
+		//		This functions tests whether an indicated node is in root as inline
+		//		or rooted inline elements in the page.
+		// node:
+		//		The node to start at.
+		// tags:
+		//		private
+		var ed = this.editor;
+		if(this._isTextElement(node) && node.parentNode === ed.editNode){
+			return true;
+		}else if(node.nodeType === 1 && this._isInlineFormat(node) && node.parentNode === ed.editNode){
+			return true;
+		}else if(this._isTextElement(node) && this._isInlineFormat(this._getTagName(node.parentNode))){
+			node = node.parentNode;
+			while(node && node !== ed.editNode && this._isInlineFormat(this._getTagName(node))){
+				node = node.parentNode;
+			}
+			if(node === ed.editNode){
+				return true;
+			}
+		}
+		return false;
+	},
+
+	_isTextElement: function(node){
+		// summary:
+		//		Helper function to check for text nodes.
+		// node:
+		//		The node to check.
+		// tags:
+		//		private
+		if(node && node.nodeType === 3 || node.nodeType === 4){
+			return true;
+		}
+		return false;
+	}
+});
+
+// Register this plugin.
+dojo.subscribe(dijit._scopeName + ".Editor.getPlugin",null,function(o){
+	if(o.plugin){ return; }
+	var name = o.args.name.toLowerCase();
+	if(name === "normalizeindentoutdent"){
+		o.plugin = new NormalizeIndentOutdent({
+			indentBy: ("indentBy" in o.args) ?
+				(o.args.indentBy > 0 ? o.args.indentBy : 40) :
+				40,
+			indentUnits: ("indentUnits" in o.args) ?
+				(o.args.indentUnits.toLowerCase() == "em"? "em" : "px") :
+				"px"
+		});
+	}
+});
+
+return NormalizeIndentOutdent;
+
+});

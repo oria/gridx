@@ -1,4 +1,74 @@
-//>>built
-define("dijit/form/_RadioButtonMixin","dojo/_base/array dojo/_base/declare dojo/dom-attr dojo/_base/lang dojo/query ../registry".split(" "),function(d,e,f,c,g,h){return e("dijit.form._RadioButtonMixin",null,{type:"radio",_getRelatedWidgets:function(){var a=[];g("input[type\x3dradio]",this.focusNode.form||this.ownerDocument).forEach(c.hitch(this,function(b){b.name==this.name&&b.form==this.focusNode.form&&(b=h.getEnclosingWidget(b))&&a.push(b)}));return a},_setCheckedAttr:function(a){this.inherited(arguments);
-this._created&&a&&d.forEach(this._getRelatedWidgets(),c.hitch(this,function(a){a!=this&&a.checked&&a.set("checked",!1)}))},_getSubmitValue:function(a){return null==a?"on":a},_onClick:function(a){return this.checked||this.disabled?(a.stopPropagation(),a.preventDefault(),!1):this.readOnly?(a.stopPropagation(),a.preventDefault(),d.forEach(this._getRelatedWidgets(),c.hitch(this,function(a){f.set(this.focusNode||this.domNode,"checked",a.checked)})),!1):this.inherited(arguments)}})});
-//@ sourceMappingURL=_RadioButtonMixin.js.map
+define([
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/dom-attr", // domAttr.set
+	"dojo/_base/lang", // lang.hitch
+	"dojo/query!css2", // query
+	"../registry"    // registry.getEnclosingWidget
+], function(array, declare, domAttr, lang, query, registry){
+
+	// module:
+	//		dijit/form/_RadioButtonMixin
+
+	return declare("dijit.form._RadioButtonMixin", null, {
+		// summary:
+		//		Mixin to provide widget functionality for an HTML radio button
+
+		// type: [private] String
+		//		type attribute on `<input>` node.
+		//		Users should not change this value.
+		type: "radio",
+
+		_getRelatedWidgets: function(){
+			// Private function needed to help iterate over all radio buttons in a group.
+			var ary = [];
+			query("input[type=radio]", this.focusNode.form || this.ownerDocument).forEach(// can't use name= since query doesn't support [] in the name
+				lang.hitch(this, function(inputNode){
+					if(inputNode.name == this.name && inputNode.form == this.focusNode.form){
+						var widget = registry.getEnclosingWidget(inputNode);
+						if(widget){
+							ary.push(widget);
+						}
+					}
+				})
+			);
+			return ary;
+		},
+
+		_setCheckedAttr: function(/*Boolean*/ value){
+			// If I am being checked then have to deselect currently checked radio button
+			this.inherited(arguments);
+			if(!this._created){
+				return;
+			}
+			if(value){
+				array.forEach(this._getRelatedWidgets(), lang.hitch(this, function(widget){
+					if(widget != this && widget.checked){
+						widget.set('checked', false);
+					}
+				}));
+			}
+		},
+
+		_getSubmitValue: function(/*String*/ value){
+			return value == null ? "on" : value;
+		},
+
+		_onClick: function(/*Event*/ e){
+			if(this.checked || this.disabled){ // nothing to do
+				e.stopPropagation();
+				e.preventDefault();
+				return false;
+			}
+			if(this.readOnly){ // ignored by some browsers so we have to resync the DOM elements with widget values
+				e.stopPropagation();
+				e.preventDefault();
+				array.forEach(this._getRelatedWidgets(), lang.hitch(this, function(widget){
+					domAttr.set(this.focusNode || this.domNode, 'checked', widget.checked);
+				}));
+				return false;
+			}
+			return this.inherited(arguments);
+		}
+	});
+});

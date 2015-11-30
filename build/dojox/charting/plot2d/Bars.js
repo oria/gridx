@@ -1,11 +1,311 @@
-//>>built
-define("dojox/charting/plot2d/Bars","dojo/_base/lang dojo/_base/array dojo/_base/declare dojo/has ./CartesianBase ./_PlotEvents ./common dojox/gfx/fx dojox/lang/utils dojox/lang/functional dojox/lang/functional/reversed".split(" "),function(r,A,y,E,F,G,s,H,t,I,J){var K=J.lambda("item.purgeGroup()");return y("dojox.charting.plot2d.Bars",[F,G],{defaultParams:{gap:0,animate:null,enableCache:!1},optionalParams:{minBarSize:1,maxBarSize:1,stroke:{},outline:{},shadow:{},fill:{},filter:{},styleFunc:null,
-font:"",fontColor:""},constructor:function(a,b){this.opt=r.clone(r.mixin(this.opt,this.defaultParams));t.updateWithObject(this.opt,b);t.updateWithPattern(this.opt,b,this.optionalParams);this.animate=this.opt.animate},getSeriesStats:function(){var a=s.collectSimpleStats(this.series),b;a.hmin-=0.5;a.hmax+=0.5;b=a.hmin;a.hmin=a.vmin;a.vmin=b;b=a.hmax;a.hmax=a.vmax;a.vmax=b;return a},createRect:function(a,b,d){var e;this.opt.enableCache&&0<a._rectFreePool.length?(e=a._rectFreePool.pop(),e.setShape(d),
-b.add(e)):e=b.createRect(d);this.opt.enableCache&&a._rectUsePool.push(e);return e},createLabel:function(a,b,d,e){this.opt.labels&&"outside"==this.opt.labelStyle?this.renderLabel(a,d.x+d.width+this.opt.labelOffset,d.y+d.height/2,this._getLabel(isNaN(b.y)?b:b.y),e,"start"):this.inherited(arguments)},render:function(a,b){if(this.zoom&&!this.isDataDirty())return this.performZoom(a,b);this.dirty=this.isDirty();this.resetEvents();var d;this.dirty&&(A.forEach(this.series,K),this._eventSeries={},this.cleanGroup(),
-d=this.getGroup(),I.forEachRev(this.series,function(a){a.cleanGroup(d)}));for(var e=this.chart.theme,u=this._hScaler.scaler.getTransformerFromModel(this._hScaler),s=this._vScaler.scaler.getTransformerFromModel(this._vScaler),z=Math.max(0,this._hScaler.bounds.lower),v=u(z),t=this.events(),w=this.getBarProperties(),p=this.series.length-1;0<=p;--p){var c=this.series[p];if(!this.dirty&&!c.dirty)e.skip(),this._reconnectEvents(c.name);else{c.cleanGroup();this.opt.enableCache&&(c._rectFreePool=(c._rectFreePool?
-c._rectFreePool:[]).concat(c._rectUsePool?c._rectUsePool:[]),c._rectUsePool=[]);var B=e.next("bar",[this.opt,c]),C=Array(c.data.length);d=c.group;for(var q=A.some(c.data,function(a){return"number"==typeof a||a&&!a.hasOwnProperty("x")}),h=q?Math.max(0,Math.floor(this._vScaler.bounds.from-1)):0,y=q?Math.min(c.data.length,Math.ceil(this._vScaler.bounds.to)):c.data.length;h<y;++h){var n=c.data[h];if(null!=n){var l=this.getValue(n,h,p,q),g=u(l.y),x=Math.abs(g-v),f,m;this.opt.styleFunc||"number"!=typeof n?
-(f="number"!=typeof n?[n]:[],this.opt.styleFunc&&f.push(this.opt.styleFunc(n)),f=e.addMixin(B,"bar",f,!0)):f=e.post(B,"bar");if(0<=x&&1<=w.height){g={x:b.l+(l.y<z?g:v),y:a.height-b.b-s(l.x+1.5)+w.gap+w.thickness*(this.series.length-p-1),width:x,height:w.height};f.series.shadow&&(m=r.clone(g),m.x+=f.series.shadow.dx,m.y+=f.series.shadow.dy,m=this.createRect(c,d,m).setFill(f.series.shadow.color).setStroke(f.series.shadow),this.animate&&this._animateBar(m,b.l+v,-x));var k=this._plotFill(f.series.fill,
-a,b),k=this._shapeFill(k,g),k=this.createRect(c,d,g).setFill(k).setStroke(f.series.stroke);k.setFilter&&f.series.filter&&k.setFilter(f.series.filter);c.dyn.fill=k.getFill();c.dyn.stroke=k.getStroke();if(t){var D={element:"bar",index:h,run:c,shape:k,shadow:m,cx:l.y,cy:l.x+1.5,x:q?h:c.data[h].x,y:q?c.data[h]:c.data[h].y};this._connectEvents(D);C[h]=D}!isNaN(l.py)&&l.py>z&&(g.x+=u(l.py),g.width-=u(l.py));this.createLabel(d,n,g,f);this.animate&&this._animateBar(k,b.l+v,-x)}}}this._eventSeries[c.name]=
-C;c.dirty=!1}}this.dirty=!1;E("dojo-bidi")&&this._checkOrientation(this.group,a,b);return this},getValue:function(a,b,d,e){e?(d="number"==typeof a?a:a.y,a=b):(d=a.y,a=a.x-1);return{y:d,x:a}},getBarProperties:function(){var a=s.calculateBarSize(this._vScaler.bounds.scale,this.opt);return{gap:a.gap,height:a.size,thickness:0}},_animateBar:function(a,b,d){0==d&&(d=1);H.animateTransform(r.delegate({shape:a,duration:1200,transform:[{name:"translate",start:[b-b/d,0],end:[0,0]},{name:"scale",start:[1/d,1],
-end:[1,1]},{name:"original"}]},this.animate)).play()}})});
-//@ sourceMappingURL=Bars.js.map
+define(["dojo/_base/lang", "dojo/_base/array", "dojo/_base/declare", "dojo/has", "./CartesianBase", "./_PlotEvents", "./common",
+	"dojox/gfx/fx", "dojox/lang/utils", "dojox/lang/functional", "dojox/lang/functional/reversed"], 
+	function(lang, arr, declare, has, CartesianBase, _PlotEvents, dc, fx, du, df, dfr){
+		
+	/*=====
+	declare("dojox.charting.plot2d.__BarCtorArgs", dojox.charting.plot2d.__DefaultCtorArgs, {
+		// summary:
+		//		Additional keyword arguments for bar charts.
+	
+		// minBarSize: Number?
+		//		The minimum size for a bar in pixels.  Default is 1.
+		minBarSize: 1,
+	
+		// maxBarSize: Number?
+		//		The maximum size for a bar in pixels.  Default is 1.
+		maxBarSize: 1,
+
+		// stroke: dojox.gfx.Stroke?
+		//		An optional stroke to use for any series on the plot.
+		stroke:		{},
+
+		// outline: dojox.gfx.Stroke?
+		//		An optional stroke used to outline any series on the plot.
+		outline:	{},
+
+		// shadow: dojox.gfx.Stroke?
+		//		An optional stroke to use to draw any shadows for a series on a plot.
+		shadow:		{},
+
+		// fill: dojox.gfx.Fill?
+		//		Any fill to be used for elements on the plot.
+		fill:		{},
+
+		// filter: dojox.gfx.Filter?
+	 	//		An SVG filter to be used for elements on the plot. gfx SVG renderer must be used and dojox/gfx/svgext must
+	 	//		be required for this to work.
+	 	filter:		{},
+
+		// styleFunc: Function?
+		//		A function that returns a styling object for the a given data item.
+		styleFunc:	null,
+
+		// font: String?
+		//		A font definition to be used for labels and other text-based elements on the plot.
+		font:		"",
+
+		// fontColor: String|dojo.Color?
+		//		The color to be used for any text-based elements on the plot.
+		fontColor:	"",
+		
+		// enableCache: Boolean?
+		//		Whether the bars rect are cached from one rendering to another. This improves the rendering performance of
+		//		successive rendering but penalize the first rendering.  Default false.
+		enableCache: false
+	});
+	=====*/
+	var purgeGroup = dfr.lambda("item.purgeGroup()");
+
+	return declare("dojox.charting.plot2d.Bars", [CartesianBase, _PlotEvents], {
+		// summary:
+		//		The plot object representing a bar chart (horizontal bars).
+		defaultParams: {
+			gap:	0,		// gap between columns in pixels
+			animate: null,   // animate bars into place
+			enableCache: false
+		},
+		optionalParams: {
+			minBarSize:	1,	// minimal bar width in pixels
+			maxBarSize:	1,	// maximal bar width in pixels
+			// theme component
+			stroke:		{},
+			outline:	{},
+			shadow:		{},
+			fill:		{},
+			filter:	    {},
+			styleFunc:  null,
+			font:		"",
+			fontColor:	""
+		},
+
+		constructor: function(chart, kwArgs){
+			// summary:
+			//		The constructor for a bar chart.
+			// chart: dojox/charting/Chart
+			//		The chart this plot belongs to.
+			// kwArgs: dojox.charting.plot2d.__BarCtorArgs?
+			//		An optional keyword arguments object to help define the plot.
+			this.opt = lang.clone(lang.mixin(this.opt, this.defaultParams));
+			du.updateWithObject(this.opt, kwArgs);
+			du.updateWithPattern(this.opt, kwArgs, this.optionalParams);
+			this.animate = this.opt.animate;
+			this.renderingOptions = { "shape-rendering": "crispEdges" };
+		},
+
+		getSeriesStats: function(){
+			// summary:
+			//		Calculate the min/max on all attached series in both directions.
+			// returns: Object
+			//		{hmin, hmax, vmin, vmax} min/max in both directions.
+			var stats = dc.collectSimpleStats(this.series), t;
+			stats.hmin -= 0.5;
+			stats.hmax += 0.5;
+			t = stats.hmin, stats.hmin = stats.vmin, stats.vmin = t;
+			t = stats.hmax, stats.hmax = stats.vmax, stats.vmax = t;
+			return stats; // Object
+		},
+		
+		createRect: function(run, creator, params){
+			var rect;
+			if(this.opt.enableCache && run._rectFreePool.length > 0){
+				rect = run._rectFreePool.pop();
+				rect.setShape(params);
+				// was cleared, add it back
+				creator.add(rect);
+			}else{
+				rect = creator.createRect(params);
+			}
+			if(this.opt.enableCache){
+				run._rectUsePool.push(rect);
+			}
+			return rect;
+		},
+
+		createLabel: function(group, value, bbox, theme){
+			if(this.opt.labels && this.opt.labelStyle == "outside"){
+				var y = bbox.y + bbox.height / 2;
+				var x = bbox.x + bbox.width + this.opt.labelOffset;
+				this.renderLabel(group, x, y, this._getLabel(isNaN(value.y)?value:value.y), theme, "start");
+          	}else{
+				this.inherited(arguments);
+			}
+		},
+
+		render: function(dim, offsets){
+			// summary:
+			//		Run the calculations for any axes for this plot.
+			// dim: Object
+			//		An object in the form of { width, height }
+			// offsets: Object
+			//		An object of the form { l, r, t, b}.
+			// returns: dojox/charting/plot2d/Bars
+			//		A reference to this plot for functional chaining.
+			if(this.zoom && !this.isDataDirty()){
+				return this.performZoom(dim, offsets); // dojox/charting/plot2d/Bars
+			}
+			this.dirty = this.isDirty();
+			this.resetEvents();
+			var s;
+			if(this.dirty){
+				arr.forEach(this.series, purgeGroup);
+				this._eventSeries = {};
+				this.cleanGroup();
+				s = this.getGroup();
+				df.forEachRev(this.series, function(item){ item.cleanGroup(s); });
+			}
+			var t = this.chart.theme,
+				ht = this._hScaler.scaler.getTransformerFromModel(this._hScaler),
+				vt = this._vScaler.scaler.getTransformerFromModel(this._vScaler),
+				baseline = Math.max(0, this._hScaler.bounds.lower),
+				baselineWidth = ht(baseline),
+				events = this.events();
+			var bar = this.getBarProperties();
+
+			var actualLength = this.series.length;
+			arr.forEach(this.series, function(serie){if(serie.hidden){actualLength--;}});
+			var z = actualLength;
+			for(var i = this.series.length - 1; i >= 0; --i){
+				var run = this.series[i];
+				if(!this.dirty && !run.dirty){
+					t.skip();
+					this._reconnectEvents(run.name);
+					continue;
+				}
+				run.cleanGroup();
+				if(this.opt.enableCache){
+					run._rectFreePool = (run._rectFreePool?run._rectFreePool:[]).concat(run._rectUsePool?run._rectUsePool:[]);
+					run._rectUsePool = [];
+				}
+				var theme = t.next("bar", [this.opt, run]);
+				if(run.hidden){
+					run.dyn.fill = theme.series.fill;
+					run.dyn.stroke = theme.series.stroke;
+					continue;
+				}
+				z--;
+
+				var	eventSeries = new Array(run.data.length);
+				s = run.group;	
+				var indexed = arr.some(run.data, function(item){
+					return typeof item == "number" || (item && !item.hasOwnProperty("x"));
+				});
+				// on indexed charts we can easily just interate from the first visible to the last visible
+				// data point to save time
+				var min = indexed?Math.max(0, Math.floor(this._vScaler.bounds.from - 1)):0;
+				var max = indexed?Math.min(run.data.length, Math.ceil(this._vScaler.bounds.to)):run.data.length;
+				for(var j = min; j < max; ++j){
+					var value = run.data[j];
+					if(value != null){
+						var val = this.getValue(value, j, i, indexed),
+							hv = ht(val.y),
+							w = Math.abs(hv - baselineWidth),
+							finalTheme,
+							sshape;
+						if(this.opt.styleFunc || typeof value != "number"){
+							var tMixin = typeof value != "number" ? [value] : [];
+							if(this.opt.styleFunc){
+								tMixin.push(this.opt.styleFunc(value));
+							}
+							finalTheme = t.addMixin(theme, "bar", tMixin, true);
+						}else{
+							finalTheme = t.post(theme, "bar");
+						}
+						if(w >= 0 && bar.height >= 1){
+							var rect = {
+								x: offsets.l + (val.y < baseline ? hv : baselineWidth),
+								y: dim.height - offsets.b - vt(val.x + 1.5) + bar.gap + bar.thickness * (actualLength - z - 1),
+								// y: dim.height - offsets.b - vt(val.x + 1.5) + bar.gap + bar.thickness * z,
+								width: w,
+								height: bar.height
+							};
+							if(finalTheme.series.shadow){
+								var srect = lang.clone(rect);
+								srect.x += finalTheme.series.shadow.dx;
+								srect.y += finalTheme.series.shadow.dy;
+								sshape = this.createRect(run, s, srect).setFill(finalTheme.series.shadow.color).setStroke(finalTheme.series.shadow);
+								if(this.animate){
+									this._animateBar(sshape, offsets.l + baselineWidth, -w);
+								}
+							}
+							var specialFill = this._plotFill(finalTheme.series.fill, dim, offsets);
+							specialFill = this._shapeFill(specialFill, rect);
+							var shape = this.createRect(run, s, rect).setFill(specialFill).setStroke(finalTheme.series.stroke);
+							if(shape.setFilter && finalTheme.series.filter){
+								shape.setFilter(finalTheme.series.filter);
+							}
+							run.dyn.fill   = shape.getFill();
+							run.dyn.stroke = shape.getStroke();
+							if(events){
+								var o = {
+									element: "bar",
+									index:   j,
+									run:     run,
+									shape:   shape,
+									shadow:	 sshape,
+									cx:      val.y,
+									cy:      val.x + 1.5,
+									x:	     indexed?j:run.data[j].x,
+									y:	 	 indexed?run.data[j]:run.data[j].y
+								};
+								this._connectEvents(o);
+								eventSeries[j] = o;
+							}
+							// if val.py is here, this means we are stacking and we need to subtract previous
+							// value to get the high in which we will lay out the label
+							if(!isNaN(val.py) && val.py > baseline){
+								rect.x += ht(val.py);
+								rect.width -= ht(val.py);
+							}
+							this.createLabel(s, value, rect, finalTheme);
+							if(this.animate){
+								this._animateBar(shape, offsets.l + baselineWidth, -w);
+							}
+						}
+					}
+				}
+				this._eventSeries[run.name] = eventSeries;
+				run.dirty = false;
+			}
+			this.dirty = false;
+			// chart mirroring starts
+			if(has("dojo-bidi")){
+				this._checkOrientation(this.group, dim, offsets);
+			}
+			// chart mirroring ends
+			return this;	//	dojox/charting/plot2d/Bars
+		},
+		getValue: function(value, j, seriesIndex, indexed){
+			var y, x;
+			if(indexed){
+				if(typeof value == "number"){
+					y = value;
+				}else{
+					y = value.y;
+				}
+				x = j;
+			}else{
+				y = value.y;
+				x = value.x -1;
+			}
+			return {y:y, x:x};
+		},	
+		getBarProperties: function(){
+			var f = dc.calculateBarSize(this._vScaler.bounds.scale, this.opt);
+			return {gap: f.gap, height: f.size, thickness: 0};
+		},
+		_animateBar: function(shape, hoffset, hsize){
+			if(hsize==0){
+				hsize = 1;
+			}
+			fx.animateTransform(lang.delegate({
+				shape: shape,
+				duration: 1200,
+				transform: [
+					{name: "translate", start: [hoffset - (hoffset/hsize), 0], end: [0, 0]},
+					{name: "scale", start: [1/hsize, 1], end: [1, 1]},
+					{name: "original"}
+				]
+			}, this.animate)).play();
+		}
+	});
+});

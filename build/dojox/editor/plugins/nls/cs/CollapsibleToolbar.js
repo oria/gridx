@@ -1,3 +1,6 @@
-//>>built
-define("dojox/editor/plugins/nls/cs/CollapsibleToolbar",{collapse:"Sbalit panel n\u00e1stroj\u016f editoru",expand:"Rozbalit panel n\u00e1stroj\u016f editoru"});
-//@ sourceMappingURL=CollapsibleToolbar.js.map
+define(
+({
+	"collapse": "Sbalit panel nástrojů editoru",
+	"expand": "Rozbalit panel nástrojů editoru"
+})
+);

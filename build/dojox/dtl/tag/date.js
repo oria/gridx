@@ -1,4 +1,42 @@
-//>>built
-define("dojox/dtl/tag/date",["dojo/_base/lang","../_base","../utils/date"],function(c,e,f){var d=c.getObject("tag.date",!0,e);d.NowNode=function(a,b){this._format=a;this.format=new f.DateFormat(a);this.contents=b};c.extend(d.NowNode,{render:function(a,b){this.contents.set(this.format.format(new Date));return this.contents.render(a,b)},unrender:function(a,b){return this.contents.unrender(a,b)},clone:function(a){return new this.constructor(this._format,this.contents.clone(a))}});d.now=function(a,b){var c=
-b.split_contents();if(2!=c.length)throw Error("'now' statement takes one argument");return new d.NowNode(c[1].slice(1,-1),a.create_text_node())};return d});
-//@ sourceMappingURL=date.js.map
+define([
+	"dojo/_base/lang",
+	"../_base",
+	"../utils/date"
+], function(lang,dd,ddud){
+
+	var date = lang.getObject("tag.date", true, dd);
+	/*=====
+	 date = {
+	 	// TODO: summary
+	 };
+	 =====*/
+
+	date.NowNode = function(format, node){
+		this._format = format;
+		this.format = new ddud.DateFormat(format);
+		this.contents = node;
+	};
+	lang.extend(date.NowNode, {
+		render: function(context, buffer){
+			this.contents.set(this.format.format(new Date()));
+			return this.contents.render(context, buffer);
+		},
+		unrender: function(context, buffer){
+			return this.contents.unrender(context, buffer);
+		},
+		clone: function(buffer){
+			return new this.constructor(this._format, this.contents.clone(buffer));
+		}
+	});
+
+	date.now = function(parser, token){
+		// Split by either :" or :'
+		var parts = token.split_contents();
+		if(parts.length != 2){
+			throw new Error("'now' statement takes one argument");
+		}
+		return new date.NowNode(parts[1].slice(1, -1), parser.create_text_node());
+	};
+
+	return date;
+});

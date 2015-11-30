@@ -1,3 +1,28 @@
-//>>built
-define("dojox/rpc/ProxiedPath",["dojo","dojox","dojox/rpc/Service"],function(g,e){e.rpc.envelopeRegistry.register("PROXIED-PATH",function(b){return"PROXIED-PATH"==b},{serialize:function(b,f,c){var a,d=e.rpc.getTarget(b,f);if(g.isArray(c))for(a=0;a<c.length;a++)d+="/"+(null==c[a]?"":c[a]);else for(a in c)d+="/"+a+"/"+c[a];return{data:"",target:(f.proxyUrl||b.proxyUrl)+"?url\x3d"+encodeURIComponent(d)}},deserialize:function(b){return b}})});
-//@ sourceMappingURL=ProxiedPath.js.map
+define("dojox/rpc/ProxiedPath", ["dojo", "dojox", "dojox/rpc/Service"], function(dojo, dojox) {
+
+dojox.rpc.envelopeRegistry.register(
+	"PROXIED-PATH",function(str){return str == "PROXIED-PATH"},{
+		serialize:function(smd, method, data){
+			var i;
+			var target = dojox.rpc.getTarget(smd, method);
+			if(dojo.isArray(data)){
+				for(i = 0; i < data.length;i++){
+					target += '/' + (data[i] == null ? "" : data[i]);
+				}
+			}else{
+				for(i in data){
+					target += '/' + i + '/' + data[i];
+				}
+			}
+			return {
+				data:'',
+				target: (method.proxyUrl || smd.proxyUrl) + "?url=" + encodeURIComponent(target)
+			};
+		},
+		deserialize:function(results){
+			return results;
+		}
+	}
+);
+
+});

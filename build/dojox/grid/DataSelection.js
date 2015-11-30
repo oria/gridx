@@ -1,5 +1,81 @@
-//>>built
-define("dojox/grid/DataSelection",["dojo/_base/declare","./_SelectionPreserver","./Selection"],function(d,e,c){return d("dojox.grid.DataSelection",c,{constructor:function(a){a.keepSelection&&(this.preserver=new e(this))},destroy:function(){this.preserver&&this.preserver.destroy()},getFirstSelected:function(){var a=c.prototype.getFirstSelected.call(this);return-1==a?null:this.grid.getItem(a)},getNextSelected:function(a){a=this.grid.getItemIndex(a);a=c.prototype.getNextSelected.call(this,a);return-1==
-a?null:this.grid.getItem(a)},getSelected:function(){for(var a=[],b=0,c=this.selected.length;b<c;b++)this.selected[b]&&a.push(this.grid.getItem(b));return a},addToSelection:function(a){if("none"!=this.mode){var b=null,b="number"==typeof a||"string"==typeof a?a:this.grid.getItemIndex(a);c.prototype.addToSelection.call(this,b)}},deselect:function(a){if("none"!=this.mode){var b=null,b="number"==typeof a||"string"==typeof a?a:this.grid.getItemIndex(a);c.prototype.deselect.call(this,b)}},deselectAll:function(a){var b=
-null;a||"number"==typeof a?(b="number"==typeof a||"string"==typeof a?a:this.grid.getItemIndex(a),c.prototype.deselectAll.call(this,b)):this.inherited(arguments)}})});
-//@ sourceMappingURL=DataSelection.js.map
+define([
+	"dojo/_base/declare",
+	"./_SelectionPreserver",
+	"./Selection"
+], function(declare, _SelectionPreserver, Selection){
+	
+return declare("dojox.grid.DataSelection", Selection, {
+	constructor: function(grid){
+		if(grid.keepSelection){
+			this.preserver = new _SelectionPreserver(this);
+		}
+	},
+	
+	destroy: function(){
+		if(this.preserver){
+			this.preserver.destroy();
+		}
+	},
+	
+	getFirstSelected: function(){
+		var idx = Selection.prototype.getFirstSelected.call(this);
+
+		if(idx == -1){ return null; }
+		return this.grid.getItem(idx);
+	},
+
+	getNextSelected: function(inPrev){
+		var old_idx = this.grid.getItemIndex(inPrev);
+		var idx = Selection.prototype.getNextSelected.call(this, old_idx);
+
+		if(idx == -1){ return null; }
+		return this.grid.getItem(idx);
+	},
+
+	getSelected: function(){
+		var result = [];
+		for(var i=0, l=this.selected.length; i<l; i++){
+			if(this.selected[i]){
+				result.push(this.grid.getItem(i));
+			}
+		}
+		return result;
+	},
+
+	addToSelection: function(inItemOrIndex){
+		if(this.mode == 'none'){ return; }
+		var idx = null;
+		if(typeof inItemOrIndex == "number" || typeof inItemOrIndex == "string"){
+			idx = inItemOrIndex;
+		}else{
+			idx = this.grid.getItemIndex(inItemOrIndex);
+		}
+		Selection.prototype.addToSelection.call(this, idx);
+	},
+
+	deselect: function(inItemOrIndex){
+		if(this.mode == 'none'){ return; }
+		var idx = null;
+		if(typeof inItemOrIndex == "number" || typeof inItemOrIndex == "string"){
+			idx = inItemOrIndex;
+		}else{
+			idx = this.grid.getItemIndex(inItemOrIndex);
+		}
+		Selection.prototype.deselect.call(this, idx);
+	},
+
+	deselectAll: function(inItemOrIndex){
+		var idx = null;
+		if(inItemOrIndex || typeof inItemOrIndex == "number"){
+			if(typeof inItemOrIndex == "number" || typeof inItemOrIndex == "string"){
+				idx = inItemOrIndex;
+			}else{
+				idx = this.grid.getItemIndex(inItemOrIndex);
+			}
+			Selection.prototype.deselectAll.call(this, idx);
+		}else{
+			this.inherited(arguments);
+		}
+	}
+});
+});

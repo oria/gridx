@@ -1,9 +1,237 @@
-//>>built
-define("dojox/storage/BehaviorStorageProvider",["dojo","dijit","dojox","dojo/require!dojox/storage/Provider,dojox/storage/manager"],function(c,h,g){c.provide("dojox.storage.BehaviorStorageProvider");c.require("dojox.storage.Provider");c.require("dojox.storage.manager");c.declare("dojox.storage.BehaviorStorageProvider",[g.storage.Provider],{store:null,storeName:"__dojox_BehaviorStorage",keys:[],initialize:function(){try{this.store=this._createStore(),this.store.load(this.storeName)}catch(a){throw Error("Store is not available: "+
-a);}this.keys=this.get("keys","dojoxSystemNS")||[];this.initialized=!0;g.storage.manager.loaded()},isAvailable:function(){return c.isIE&&5<=c.isIE},_createStore:function(){var a=c.create("link",{id:this.storeName+"Node",style:{display:"none"}},c.query("head")[0]);a.addBehavior("#default#userdata");return a},put:function(a,b,f,d){this._assertIsValidKey(a);d=d||this.DEFAULT_NAMESPACE;this._assertIsValidNamespace(d);var e=this.getFullKey(a,d);b=c.toJson(b);this.store.setAttribute(e,b);this.store.save(this.storeName);
-if(b=this.store.getAttribute(e)===b)this._addKey(e),this.store.setAttribute("__dojoxSystemNS_keys",c.toJson(this.keys)),this.store.save(this.storeName);f&&f(b?this.SUCCESS:this.FAILED,a,null,d)},get:function(a,b){this._assertIsValidKey(a);b=b||this.DEFAULT_NAMESPACE;this._assertIsValidNamespace(b);a=this.getFullKey(a,b);return c.fromJson(this.store.getAttribute(a))},getKeys:function(a){a=a||this.DEFAULT_NAMESPACE;this._assertIsValidNamespace(a);a="__"+a+"_";for(var b=[],c=0;c<this.keys.length;c++){var d=
-this.keys[c];this._beginsWith(d,a)&&(d=d.substring(a.length),b.push(d))}return b},clear:function(a){a=a||this.DEFAULT_NAMESPACE;this._assertIsValidNamespace(a);a="__"+a+"_";for(var b=[],f=0;f<this.keys.length;f++){var d=this.keys[f];this._beginsWith(d,a)&&b.push(d)}c.forEach(b,function(a){this.store.removeAttribute(a);this._removeKey(a)},this);this.put("keys",this.keys,null,"dojoxSystemNS");this.store.save(this.storeName)},remove:function(a,b){this._assertIsValidKey(a);b=b||this.DEFAULT_NAMESPACE;
-this._assertIsValidNamespace(b);a=this.getFullKey(a,b);this.store.removeAttribute(a);this._removeKey(a);this.put("keys",this.keys,null,"dojoxSystemNS");this.store.save(this.storeName)},getNamespaces:function(){var a=[this.DEFAULT_NAMESPACE],b={};b[this.DEFAULT_NAMESPACE]=!0;for(var c=/^__([^_]*)_/,d=0;d<this.keys.length;d++){var e=this.keys[d];!0==c.test(e)&&(e=e.match(c)[1],"undefined"==typeof b[e]&&(b[e]=!0,a.push(e)))}return a},isPermanent:function(){return!0},getMaximumSize:function(){return 64},
-hasSettingsUI:function(){return!1},isValidKey:function(a){return null===a||void 0===a?!1:/^[0-9A-Za-z_-]*$/.test(a)},isValidNamespace:function(a){return null===a||void 0===a?!1:/^[0-9A-Za-z-]*$/.test(a)},getFullKey:function(a,b){return"__"+b+"_"+a},_beginsWith:function(a,b){return b.length>a.length?!1:a.substring(0,b.length)===b},_assertIsValidNamespace:function(a){if(!1===this.isValidNamespace(a))throw Error("Invalid namespace given: "+a);},_assertIsValidKey:function(a){if(!1===this.isValidKey(a))throw Error("Invalid key given: "+
-a);},_addKey:function(a){this._removeKey(a);this.keys.push(a)},_removeKey:function(a){this.keys=c.filter(this.keys,function(b){return b!==a},this)}});g.storage.manager.register("dojox.storage.BehaviorStorageProvider",new g.storage.BehaviorStorageProvider)});
-//@ sourceMappingURL=BehaviorStorageProvider.js.map
+dojo.provide("dojox.storage.BehaviorStorageProvider");
+
+dojo.require("dojox.storage.Provider");
+dojo.require("dojox.storage.manager");
+
+dojo.declare(
+	"dojox.storage.BehaviorStorageProvider",
+	[dojox.storage.Provider],
+	{
+		store: null,
+
+		storeName: '__dojox_BehaviorStorage',
+
+		keys: [],
+
+		initialize: function(){
+			try{
+				this.store = this._createStore();
+				this.store.load(this.storeName);
+			}catch(e){
+				throw new Error("Store is not available: " + e);
+			}
+
+			var keys = this.get('keys','dojoxSystemNS');
+			this.keys = keys || [];
+
+			this.initialized = true;
+			dojox.storage.manager.loaded();
+
+		},
+
+		isAvailable: function(){ /*Boolean*/
+			// This is not completely true. UserData may
+			// be disabled in security settings. To *really*
+			// check if this is available, one needs to wait
+			// until the store is successfully initialized...
+			return dojo.isIE && dojo.isIE >= 5;
+		},
+
+		_createStore: function() {
+			var storeNode = dojo.create(
+				'link',
+				{id: this.storeName + 'Node', style: {'display':'none'}},
+				dojo.query('head')[0]
+			);
+			storeNode.addBehavior('#default#userdata');
+
+			return storeNode;
+		},
+
+		put: function(	/*string*/ key,
+						/*object*/ value,
+						/*function*/ resultsHandler,
+						/*string?*/ namespace){
+
+			this._assertIsValidKey(key);
+
+			namespace = namespace||this.DEFAULT_NAMESPACE;
+			this._assertIsValidNamespace(namespace);
+
+			var fullKey = this.getFullKey(key,namespace);
+			value = dojo.toJson(value);
+
+			this.store.setAttribute(fullKey, value);
+			this.store.save(this.storeName);
+
+			var success = this.store.getAttribute(fullKey) === value;
+			if(success){
+				this._addKey(fullKey);
+				this.store.setAttribute('__dojoxSystemNS_keys', dojo.toJson(this.keys));
+				this.store.save(this.storeName);
+			}
+
+			if(resultsHandler){
+				resultsHandler(success ? this.SUCCESS : this.FAILED, key, null, namespace);
+			}
+		},
+
+		get: function(/*string*/ key, /*string?*/ namespace){ /*Object*/
+			this._assertIsValidKey(key);
+
+			namespace = namespace||this.DEFAULT_NAMESPACE;
+			this._assertIsValidNamespace(namespace);
+
+			key = this.getFullKey(key, namespace);
+
+			return dojo.fromJson(this.store.getAttribute(key));
+		},
+
+		getKeys: function(/*string?*/ namespace){ /*Array*/
+			namespace = namespace||this.DEFAULT_NAMESPACE;
+			this._assertIsValidNamespace(namespace);
+
+			namespace = '__'+namespace+'_';
+
+			var keys = [];
+			for(var i = 0; i < this.keys.length; i++){
+				var currentKey = this.keys[i];
+				if(this._beginsWith(currentKey,namespace)){
+					currentKey = currentKey.substring(namespace.length);
+					keys.push(currentKey);
+				}
+			}
+
+			return keys;
+		},
+
+		clear: function(/*string?*/ namespace){
+			namespace = namespace||this.DEFAULT_NAMESPACE;
+			this._assertIsValidNamespace(namespace);
+
+			namespace = '__'+namespace+'_';
+
+			var keys = [];
+			for(var i = 0; i < this.keys.length; i++){
+				var currentKey = this.keys[i];
+				if(this._beginsWith(currentKey,namespace)){
+					keys.push(currentKey);
+				}
+			}
+
+			dojo.forEach(keys, function(key){
+				this.store.removeAttribute(key);
+				this._removeKey(key);
+			}, this);
+
+			this.put('keys', this.keys, null, 'dojoxSystemNS');
+			this.store.save(this.storeName);
+		},
+
+		remove: function(/*string*/ key, /*string?*/ namespace){
+			this._assertIsValidKey(key);
+
+			namespace = namespace||this.DEFAULT_NAMESPACE;
+			this._assertIsValidNamespace(namespace);
+
+			key = this.getFullKey(key, namespace);
+			this.store.removeAttribute(key);
+
+			this._removeKey(key);
+			this.put('keys', this.keys, null, 'dojoxSystemNS');
+			this.store.save(this.storeName);
+
+		},
+
+		getNamespaces: function(){ /*string[]*/
+
+
+			var results = [ this.DEFAULT_NAMESPACE];
+
+			var found = {};
+			found[this.DEFAULT_NAMESPACE] = true;
+			var tester = /^__([^_]*)_/;
+
+			for(var i = 0; i < this.keys.length; i++){
+				var currentKey = this.keys[i];
+				if(tester.test(currentKey) == true){
+					var currentNS = currentKey.match(tester)[1];
+					if(typeof found[currentNS] == "undefined"){
+						found[currentNS] = true;
+						results.push(currentNS);
+					}
+				}
+			}
+
+			return results;
+
+		},
+
+		isPermanent: function(){ /*Boolean*/
+			return true;
+		},
+
+		getMaximumSize: function(){ /* mixed */
+			// this *might* be more, depending on the zone
+			// of the current site. But 64k is guaranteed.
+			return 64;
+		},
+
+		hasSettingsUI: function(){ /*Boolean*/
+			return false;
+		},
+
+		isValidKey: function(/*string*/ keyName){ /*Boolean*/
+			if(keyName === null || keyName === undefined){
+				return false;
+			}
+
+			return /^[0-9A-Za-z_-]*$/.test(keyName);
+		},
+
+		isValidNamespace: function(/*string*/ keyName){ /*Boolean*/
+
+			if(keyName === null || keyName === undefined){
+				return false;
+			}
+
+			return /^[0-9A-Za-z-]*$/.test(keyName);
+		},
+
+		getFullKey: function(key, namespace){
+			// checks for valid namespace and
+			// key are already performed.
+			return "__" + namespace + "_" + key;
+		},
+
+		_beginsWith: function(/* string */ haystack, /* string */ needle) {
+			if(needle.length > haystack.length) {
+				return false;
+			}
+			return haystack.substring(0,needle.length) === needle;
+		},
+
+		_assertIsValidNamespace: function(/* string */ namespace){
+			if(this.isValidNamespace(namespace) === false){
+				throw new Error("Invalid namespace given: " + namespace);
+			}
+		},
+
+		_assertIsValidKey: function(/* string */ key){
+			if(this.isValidKey(key) === false){
+				throw new Error("Invalid key given: " + key);
+			}
+		},
+
+		_addKey: function(key){
+			this._removeKey(key);
+			this.keys.push(key);
+		},
+
+		_removeKey: function(key){
+			this.keys = dojo.filter(this.keys,function(item){ return item !== key;},this);
+		}
+	}
+);
+
+dojox.storage.manager.register("dojox.storage.BehaviorStorageProvider", new dojox.storage.BehaviorStorageProvider());

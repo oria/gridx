@@ -1,5 +1,67 @@
-//>>built
-define("dojox/charting/plot3d/Cylinders","dojox/gfx3d/matrix dojo/_base/declare dojo/_base/Color dojo/_base/kernel dojo/has ./Base".split(" "),function(m,e,n,p,q,r){return e("dojox.charting.plot3d.Cylinders",r,{constructor:function(b,d,a){this.depth="auto";this.gap=0;this.data=[];this.material={type:"plastic",finish:"shiny",color:"lime"};this.outline=null;a&&("depth"in a&&(this.depth=a.depth),"gap"in a&&(this.gap=a.gap),"material"in a&&(b=a.material,"string"==typeof b||b instanceof n?this.material.color=
-b:this.material=b),"outline"in a&&(this.outline=a.outline))},getDepth:function(){if("auto"==this.depth){var b=this.width;this.data&&this.data.length&&(b/=this.data.length);return b-2*this.gap}return this.depth},generate:function(b,d){if(!this.data)return this;for(var a=this.width/this.data.length,f=0,g=this.height,c=this.data,e=Math.max,h=void 0,c="string"==typeof c?c.split(""):c,h=h||p.global,k=c[0],l=1;l<c.length;k=e.call(h,k,c[l++]));g/=k;d||(d=b.view);for(c=0;c<this.data.length;++c,f+=a)d.createCylinder({center:{x:f+
-a/2,y:0,z:0},radius:a/2-this.gap,height:this.data[c]*g}).setTransform(m.rotateXg(-90)).setFill(this.material).setStroke(this.outline);q("dojo-bidi")&&this._checkOrientation(b)}})});
-//@ sourceMappingURL=Cylinders.js.map
+define(["dojox/gfx3d/matrix", "dojo/_base/declare", "dojo/_base/Color", "dojo/_base/kernel", "dojo/has", "./Base"],
+	function(matrix3d, declare, Color, kernel, has, Base) {
+
+	// reduce function borrowed from dojox.fun
+	var reduce = function(/*Array*/ a, /*Function|String|Array*/ f, /*Object?*/ o){
+		// summary:
+		//		repeatedly applies a binary function to an array from left
+		//		to right; returns the final value.
+		a = typeof a == "string" ? a.split("") : a; o = o || kernel.global;
+		var z = a[0];
+		for(var i = 1; i < a.length; z = f.call(o, z, a[i++]));
+		return z;	// Object
+	};
+
+	return declare("dojox.charting.plot3d.Cylinders", Base, {
+		constructor: function(width, height, kwArgs){
+			this.depth = "auto";
+			this.gap   = 0;
+			this.data  = [];
+			this.material = {type: "plastic", finish: "shiny", color: "lime"};
+			this.outline  = null;
+			if(kwArgs){
+				if("depth" in kwArgs){ this.depth = kwArgs.depth; }
+				if("gap"   in kwArgs){ this.gap   = kwArgs.gap; }
+				if("material" in kwArgs){
+					var m = kwArgs.material;
+					if(typeof m == "string" || m instanceof Color){
+						this.material.color = m;
+					}else{
+						this.material = m;
+					}
+				}
+				if("outline" in kwArgs){ this.outline = kwArgs.outline; }
+			}
+		},
+		getDepth: function(){
+			if(this.depth == "auto"){
+				var w = this.width;
+				if(this.data && this.data.length){
+					w = w / this.data.length;
+				}
+				return w - 2 * this.gap;
+			}
+			return this.depth;
+		},
+		generate: function(chart, creator){
+			if(!this.data){ return this; }
+			var step = this.width / this.data.length, org = 0,
+				scale = this.height / reduce(this.data, Math.max);
+			if(!creator){ creator = chart.view; }
+			for(var i = 0; i < this.data.length; ++i, org += step){
+				creator
+					.createCylinder({
+						center: {x: org + step / 2, y: 0, z: 0},
+						radius: step / 2 - this.gap,
+						height: this.data[i] * scale
+					})
+					.setTransform(matrix3d.rotateXg(-90))
+					.setFill(this.material).setStroke(this.outline);
+			}
+			if(has("dojo-bidi")){
+				this._checkOrientation(chart);
+			}
+		}
+	});
+});
+

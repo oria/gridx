@@ -1,5 +1,84 @@
-//>>built
-require({cache:{"url:dijit/form/templates/ComboButton.html":'\x3ctable class\x3d"dijit dijitReset dijitInline dijitLeft"\r\n\tcellspacing\x3d\'0\' cellpadding\x3d\'0\' role\x3d"presentation"\r\n\t\x3e\x3ctbody role\x3d"presentation"\x3e\x3ctr role\x3d"presentation"\r\n\t\t\x3e\x3ctd class\x3d"dijitReset dijitStretch dijitButtonNode" data-dojo-attach-point\x3d"buttonNode" data-dojo-attach-event\x3d"ondijitclick:__onClick,onkeydown:_onButtonKeyDown"\r\n\t\t\x3e\x3cdiv id\x3d"${id}_button" class\x3d"dijitReset dijitButtonContents"\r\n\t\t\tdata-dojo-attach-point\x3d"titleNode"\r\n\t\t\trole\x3d"button" aria-labelledby\x3d"${id}_label"\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitReset dijitInline dijitIcon" data-dojo-attach-point\x3d"iconNode" role\x3d"presentation"\x3e\x3c/div\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitReset dijitInline dijitButtonText" id\x3d"${id}_label" data-dojo-attach-point\x3d"containerNode" role\x3d"presentation"\x3e\x3c/div\r\n\t\t\x3e\x3c/div\r\n\t\t\x3e\x3c/td\r\n\t\t\x3e\x3ctd id\x3d"${id}_arrow" class\x3d\'dijitReset dijitRight dijitButtonNode dijitArrowButton\'\r\n\t\t\tdata-dojo-attach-point\x3d"_popupStateNode,focusNode,_buttonNode"\r\n\t\t\tdata-dojo-attach-event\x3d"onkeydown:_onArrowKeyDown"\r\n\t\t\ttitle\x3d"${optionsTitle}"\r\n\t\t\trole\x3d"button" aria-haspopup\x3d"true"\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitReset dijitArrowButtonInner" role\x3d"presentation"\x3e\x3c/div\r\n\t\t\t\x3e\x3cdiv class\x3d"dijitReset dijitArrowButtonChar" role\x3d"presentation"\x3e\x26#9660;\x3c/div\r\n\t\t\x3e\x3c/td\r\n\t\t\x3e\x3ctd style\x3d"display:none !important;"\r\n\t\t\t\x3e\x3cinput ${!nameAttrSetting} type\x3d"${type}" value\x3d"${value}" data-dojo-attach-point\x3d"valueNode" role\x3d"presentation"\r\n\t\t\t\tdata-dojo-attach-event\x3d"onclick:_onClick"\r\n\t\t/\x3e\x3c/td\x3e\x3c/tr\x3e\x3c/tbody\r\n\x3e\x3c/table\x3e\r\n'}});
-define("dijit/form/ComboButton",["dojo/_base/declare","dojo/keys","../focus","./DropDownButton","dojo/text!./templates/ComboButton.html"],function(d,c,b,e,f){return d("dijit.form.ComboButton",e,{templateString:f,_setIdAttr:"",_setTabIndexAttr:["focusNode","titleNode"],_setTitleAttr:"titleNode",optionsTitle:"",baseClass:"dijitComboButton",cssStateNodes:{buttonNode:"dijitButtonNode",titleNode:"dijitButtonContents",_popupStateNode:"dijitDownArrowButton"},_focusedNode:null,_onButtonKeyDown:function(a){if(a.keyCode==
-c[this.isLeftToRight()?"RIGHT_ARROW":"LEFT_ARROW"])b.focus(this._popupStateNode),a.stopPropagation(),a.preventDefault()},_onArrowKeyDown:function(a){if(a.keyCode==c[this.isLeftToRight()?"LEFT_ARROW":"RIGHT_ARROW"])b.focus(this.titleNode),a.stopPropagation(),a.preventDefault()},focus:function(a){this.disabled||b.focus("start"==a?this.titleNode:this._popupStateNode)}})});
-//@ sourceMappingURL=ComboButton.js.map
+define([
+	"dojo/_base/declare", // declare
+	"dojo/keys", // keys
+	"../focus", // focus.focus()
+	"./DropDownButton",
+	"dojo/text!./templates/ComboButton.html",
+	"../a11yclick"	// template uses ondijitclick
+], function(declare, keys, focus, DropDownButton, template){
+
+	// module:
+	//		dijit/form/ComboButton
+
+	return declare("dijit.form.ComboButton", DropDownButton, {
+		// summary:
+		//		A combination button and drop-down button.
+		//		Users can click one side to "press" the button, or click an arrow
+		//		icon to display the drop down.
+		//
+		// example:
+		// |	<button data-dojo-type="dijit/form/ComboButton" onClick="...">
+		// |		<span>Hello world</span>
+		// |		<div data-dojo-type="dijit/Menu">...</div>
+		// |	</button>
+		//
+		// example:
+		// |	var button1 = new ComboButton({label: "hello world", onClick: foo, dropDown: "myMenu"});
+		// |	dojo.body().appendChild(button1.domNode);
+		//
+
+		templateString: template,
+
+		// Map widget attributes to DOMNode attributes.
+		_setIdAttr: "", // override _FormWidgetMixin which puts id on the focusNode
+		_setTabIndexAttr: ["focusNode", "titleNode"],
+		_setTitleAttr: "titleNode",
+
+		// optionsTitle: String
+		//		Text that describes the options menu (accessibility)
+		optionsTitle: "",
+
+		baseClass: "dijitComboButton",
+
+		// Set classes like dijitButtonContentsHover or dijitArrowButtonActive depending on
+		// mouse action over specified node
+		cssStateNodes: {
+			"buttonNode": "dijitButtonNode",
+			"titleNode": "dijitButtonContents",
+			"_popupStateNode": "dijitDownArrowButton"
+		},
+
+		_focusedNode: null,
+
+		_onButtonKeyDown: function(/*Event*/ evt){
+			// summary:
+			//		Handler for right arrow key when focus is on left part of button
+			if(evt.keyCode == keys[this.isLeftToRight() ? "RIGHT_ARROW" : "LEFT_ARROW"]){
+				focus.focus(this._popupStateNode);
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
+		},
+
+		_onArrowKeyDown: function(/*Event*/ evt){
+			// summary:
+			//		Handler for left arrow key when focus is on right part of button
+			if(evt.keyCode == keys[this.isLeftToRight() ? "LEFT_ARROW" : "RIGHT_ARROW"]){
+				focus.focus(this.titleNode);
+				evt.stopPropagation();
+				evt.preventDefault();
+			}
+		},
+
+		focus: function(/*String*/ position){
+			// summary:
+			//		Focuses this widget to according to position, if specified,
+			//		otherwise on arrow node
+			// position:
+			//		"start" or "end"
+			if(!this.disabled){
+				focus.focus(position == "start" ? this.titleNode : this._popupStateNode);
+			}
+		}
+	});
+});

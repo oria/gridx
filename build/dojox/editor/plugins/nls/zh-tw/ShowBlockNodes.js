@@ -1,3 +1,5 @@
-//>>built
-define("dojox/editor/plugins/nls/zh-tw/ShowBlockNodes",{showBlockNodes:"\u986f\u793a HTML \u5340\u584a\u5143\u7d20"});
-//@ sourceMappingURL=ShowBlockNodes.js.map
+define(
+({
+	"showBlockNodes": "顯示 HTML 區塊元素"
+})
+);

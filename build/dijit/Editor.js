@@ -1,22 +1,875 @@
-//>>built
-define("dijit/Editor","require dojo/_base/array dojo/_base/declare dojo/Deferred dojo/i18n dojo/dom-attr dojo/dom-class dojo/dom-geometry dojo/dom-style dojo/keys dojo/_base/lang dojo/sniff dojo/string dojo/topic ./_Container ./Toolbar ./ToolbarSeparator ./layout/_LayoutWidget ./form/ToggleButton ./_editor/_Plugin ./_editor/plugins/EnterKeyHandling ./_editor/html ./_editor/range ./_editor/RichText ./main dojo/i18n!./_editor/nls/commands".split(" "),function(v,l,q,w,x,y,s,t,r,d,h,f,z,A,I,B,C,D,E,m,
-F,u,g,G,H){function e(a){return new m({command:a.name})}function n(a){return new m({buttonClass:E,command:a.name})}q=q("dijit.Editor",G,{plugins:null,extraPlugins:null,constructor:function(){h.isArray(this.plugins)||(this.plugins=["undo","redo","|","cut","copy","paste","|","bold","italic","underline","strikethrough","|","insertOrderedList","insertUnorderedList","indent","outdent","|","justifyLeft","justifyRight","justifyCenter","justifyFull",F]);this._plugins=[];this._editInterval=1E3*this.editActionInterval;
-f("ie")&&(this.events.push("onBeforeDeactivate"),this.events.push("onBeforeActivate"))},postMixInProperties:function(){this.setValueDeferred=new w;this.inherited(arguments)},postCreate:function(){this.inherited(arguments);this._steps=this._steps.slice(0);this._undoedSteps=this._undoedSteps.slice(0);h.isArray(this.extraPlugins)&&(this.plugins=this.plugins.concat(this.extraPlugins));this.commands=x.getLocalization("dijit._editor","commands",this.lang);f("webkit")&&r.set(this.domNode,"KhtmlUserSelect",
-"none")},startup:function(){this.inherited(arguments);this.toolbar||(this.toolbar=new B({ownerDocument:this.ownerDocument,dir:this.dir,lang:this.lang,"aria-label":this.id}),this.header.appendChild(this.toolbar.domNode));l.forEach(this.plugins,this.addPlugin,this);this.setValueDeferred.resolve(!0);s.add(this.iframe.parentNode,"dijitEditorIFrameContainer");s.add(this.iframe,"dijitEditorIFrame");y.set(this.iframe,"allowTransparency",!0);this.toolbar.startup();this.onNormalizedDisplayChanged()},destroy:function(){l.forEach(this._plugins,
-function(a){a&&a.destroy&&a.destroy()});this._plugins=[];this.toolbar.destroyRecursive();delete this.toolbar;this.inherited(arguments)},addPlugin:function(a,b){var c=h.isString(a)?{name:a}:h.isFunction(a)?{ctor:a}:a;if(!c.setEditor){var p={args:c,plugin:null,editor:this};c.name&&(m.registry[c.name]?p.plugin=m.registry[c.name](c):A.publish(H._scopeName+".Editor.getPlugin",p));if(!p.plugin)try{var d=c.ctor||h.getObject(c.name)||v(c.name);d&&(p.plugin=new d(c))}catch(e){throw Error(this.id+": cannot find plugin ["+
-c.name+"]");}if(!p.plugin)throw Error(this.id+": cannot find plugin ["+c.name+"]");a=p.plugin}1<arguments.length?this._plugins[b]=a:this._plugins.push(a);a.setEditor(this);h.isFunction(a.setToolbar)&&a.setToolbar(this.toolbar)},resize:function(a){a&&D.prototype.resize.apply(this,arguments)},layout:function(){var a=this._contentBox.h-(this.getHeaderHeight()+this.getFooterHeight()+t.getPadBorderExtents(this.iframe.parentNode).h+t.getMarginExtents(this.iframe.parentNode).h);this.editingArea.style.height=
-a+"px";this.iframe&&(this.iframe.style.height="100%");this._layoutMode=!0},_onIEMouseDown:function(a){var b,c=this.document.body,d=c.clientWidth,e=c.clientHeight,g=c.clientLeft,f=c.offsetWidth,h=c.offsetHeight,l=c.offsetLeft;/^rtl$/i.test(c.dir||"")?d<f&&(a.x>d&&a.x<f)&&(b=!0):a.x<g&&a.x>l&&(b=!0);b||e<h&&(a.y>e&&a.y<h)&&(b=!0);b||(delete this._cursorToStart,delete this._savedSelection,"BODY"==a.target.tagName&&this.defer("placeCursorAtEnd"),this.inherited(arguments))},onBeforeActivate:function(){this._restoreSelection()},
-onBeforeDeactivate:function(a){this.customUndo&&this.endEditing(!0);"BODY"!=a.target.tagName&&this._saveSelection()},customUndo:!0,editActionInterval:3,beginEditing:function(a){this._inEditing||(this._inEditing=!0,this._beginEditing(a));0<this.editActionInterval&&(this._editTimer&&this._editTimer.remove(),this._editTimer=this.defer("endEditing",this._editInterval))},_steps:[],_undoedSteps:[],execCommand:function(a){if(this.customUndo&&("undo"==a||"redo"==a))return this[a]();this.customUndo&&(this.endEditing(),
-this._beginEditing());var b=this.inherited(arguments);this.customUndo&&this._endEditing();return b},_pasteImpl:function(){return this._clipboardCommand("paste")},_cutImpl:function(){return this._clipboardCommand("cut")},_copyImpl:function(){return this._clipboardCommand("copy")},_clipboardCommand:function(a){var b;try{if(b=this.document.execCommand(a,!1,null),f("webkit")&&!b)throw{code:1011};}catch(c){if(1011==c.code||9==c.code&&f("opera"))b=z.substitute,alert(b(this.commands.systemShortcut,[this.commands[a],
-b(this.commands[f("mac")?"appleKey":"ctrlKey"],[{cut:"X",copy:"C",paste:"V"}[a]])]));b=!1}return b},queryCommandEnabled:function(a){return this.customUndo&&("undo"==a||"redo"==a)?"undo"==a?1<this._steps.length:0<this._undoedSteps.length:this.inherited(arguments)},_moveToBookmark:function(a){var b=a.mark,c=a.mark;a=a.isCollapsed;var d,e,k;if(c)if(9>f("ie")||9===f("ie")&&f("quirks"))if(h.isArray(c))b=[],l.forEach(c,function(a){b.push(g.getNode(a,this.editNode))},this),this.selection.moveToBookmark({mark:b,
-isCollapsed:a});else{if(c.startContainer&&c.endContainer&&(k=g.getSelection(this.window))&&k.removeAllRanges)k.removeAllRanges(),a=g.create(this.window),d=g.getNode(c.startContainer,this.editNode),e=g.getNode(c.endContainer,this.editNode),d&&e&&(a.setStart(d,c.startOffset),a.setEnd(e,c.endOffset),k.addRange(a))}else if((k=g.getSelection(this.window))&&k.removeAllRanges)k.removeAllRanges(),a=g.create(this.window),d=g.getNode(c.startContainer,this.editNode),e=g.getNode(c.endContainer,this.editNode),
-d&&e&&(a.setStart(d,c.startOffset),a.setEnd(e,c.endOffset),k.addRange(a))},_changeToStep:function(a,b){this.setValue(b.text);var c=b.bookmark;c&&this._moveToBookmark(c)},undo:function(){var a=!1;if(!this._undoRedoActive){this._undoRedoActive=!0;this.endEditing(!0);var b=this._steps.pop();b&&0<this._steps.length&&(this.focus(),this._changeToStep(b,this._steps[this._steps.length-1]),this._undoedSteps.push(b),this.onDisplayChanged(),delete this._undoRedoActive,a=!0);delete this._undoRedoActive}return a},
-redo:function(){var a=!1;if(!this._undoRedoActive){this._undoRedoActive=!0;this.endEditing(!0);var b=this._undoedSteps.pop();b&&0<this._steps.length&&(this.focus(),this._changeToStep(this._steps[this._steps.length-1],b),this._steps.push(b),this.onDisplayChanged(),a=!0);delete this._undoRedoActive}return a},endEditing:function(a){this._editTimer&&(this._editTimer=this._editTimer.remove());this._inEditing&&(this._endEditing(a),this._inEditing=!1)},_getBookmark:function(){var a=this.selection.getBookmark(),
-b=[];if(a&&a.mark){var c=a.mark;if(9>f("ie")||9===f("ie")&&f("quirks")){var d=g.getSelection(this.window);if(h.isArray(c))l.forEach(a.mark,function(a){b.push(g.getIndex(a,this.editNode).o)},this),a.mark=b;else if(d){var e;d.rangeCount&&(e=d.getRangeAt(0));a.mark=e?e.cloneRange():this.selection.getBookmark()}}try{a.mark&&a.mark.startContainer&&(b=g.getIndex(a.mark.startContainer,this.editNode).o,a.mark={startContainer:b,startOffset:a.mark.startOffset,endContainer:a.mark.endContainer===a.mark.startContainer?
-b:g.getIndex(a.mark.endContainer,this.editNode).o,endOffset:a.mark.endOffset})}catch(k){a.mark=null}}return a},_beginEditing:function(){0===this._steps.length&&this._steps.push({text:u.getChildrenHtml(this.editNode),bookmark:this._getBookmark()})},_endEditing:function(){var a=u.getChildrenHtml(this.editNode);this._undoedSteps=[];this._steps.push({text:a,bookmark:this._getBookmark()})},onKeyDown:function(a){!f("ie")&&(!this.iframe&&a.keyCode==d.TAB&&!this.tabIndent)&&this._saveSelection();if(this.customUndo){var b=
-a.keyCode;if(a.ctrlKey&&!a.shiftKey&&!a.altKey){if(90==b||122==b){a.stopPropagation();a.preventDefault();this.undo();return}if(89==b||121==b){a.stopPropagation();a.preventDefault();this.redo();return}}this.inherited(arguments);switch(b){case d.ENTER:case d.BACKSPACE:case d.DELETE:this.beginEditing();break;case 88:case 86:if(a.ctrlKey&&!a.altKey&&!a.metaKey){this.endEditing();88==a.keyCode?this.beginEditing("cut"):this.beginEditing("paste");this.defer("endEditing",1);break}default:if(!a.ctrlKey&&!a.altKey&&
-!a.metaKey&&(a.keyCode<d.F1||a.keyCode>d.F15)){this.beginEditing();break}case d.ALT:this.endEditing();break;case d.UP_ARROW:case d.DOWN_ARROW:case d.LEFT_ARROW:case d.RIGHT_ARROW:case d.HOME:case d.END:case d.PAGE_UP:case d.PAGE_DOWN:this.endEditing(!0);case d.CTRL:case d.SHIFT:case d.TAB:}}else this.inherited(arguments)},_onBlur:function(){this.inherited(arguments);this.endEditing(!0)},_saveSelection:function(){try{this._savedSelection=this._getBookmark()}catch(a){}},_restoreSelection:function(){this._savedSelection&&
-(delete this._cursorToStart,this.selection.isCollapsed()&&this._moveToBookmark(this._savedSelection),delete this._savedSelection)},onClick:function(){this.endEditing(!0);this.inherited(arguments)},replaceValue:function(a){this.customUndo?this.isClosed?this.setValue(a):(this.beginEditing(),a||(a="\x26#160;"),this.setValue(a),this.endEditing()):this.inherited(arguments)},_setDisabledAttr:function(a){this.setValueDeferred.then(h.hitch(this,function(){!this.disabled&&a||!this._buttonEnabledPlugins&&a?
-l.forEach(this._plugins,function(a){a.set("disabled",!0)}):this.disabled&&!a&&l.forEach(this._plugins,function(a){a.set("disabled",!1)})}));this.inherited(arguments)},_setStateClass:function(){try{this.inherited(arguments),this.document&&this.document.body&&r.set(this.document.body,"color",r.get(this.iframe,"color"))}catch(a){}}});h.mixin(m.registry,{undo:e,redo:e,cut:e,copy:e,paste:e,insertOrderedList:e,insertUnorderedList:e,indent:e,outdent:e,justifyCenter:e,justifyFull:e,justifyLeft:e,justifyRight:e,
-"delete":e,selectAll:e,removeFormat:e,unlink:e,insertHorizontalRule:e,bold:n,italic:n,underline:n,strikethrough:n,subscript:n,superscript:n,"|":function(){return new m({setEditor:function(a){this.editor=a;this.button=new C({ownerDocument:a.ownerDocument})}})}});return q});
-//@ sourceMappingURL=Editor.js.map
+define([
+	"require",
+	"dojo/_base/array", // array.forEach
+	"dojo/_base/declare", // declare
+	"dojo/Deferred", // Deferred
+	"dojo/i18n", // i18n.getLocalization
+	"dojo/dom-attr", // domAttr.set
+	"dojo/dom-class", // domClass.add
+	"dojo/dom-geometry",
+	"dojo/dom-style", // domStyle.set, get
+	"dojo/keys", // keys.F1 keys.F15 keys.TAB
+	"dojo/_base/lang", // lang.getObject lang.hitch
+	"dojo/sniff", // has("ie") has("mac") has("webkit")
+	"dojo/string", // string.substitute
+	"dojo/topic", // topic.publish()
+	"./_Container",
+	"./Toolbar",
+	"./ToolbarSeparator",
+	"./layout/_LayoutWidget",
+	"./form/ToggleButton",
+	"./_editor/_Plugin",
+	"./_editor/plugins/EnterKeyHandling",
+	"./_editor/html",
+	"./_editor/range",
+	"./_editor/RichText",
+	"./main", // dijit._scopeName
+	"dojo/i18n!./_editor/nls/commands"
+], function(require, array, declare, Deferred, i18n, domAttr, domClass, domGeometry, domStyle,
+			keys, lang, has, string, topic,
+			_Container, Toolbar, ToolbarSeparator, _LayoutWidget, ToggleButton,
+			_Plugin, EnterKeyHandling, html, rangeapi, RichText, dijit){
+
+	// module:
+	//		dijit/Editor
+
+	var Editor = declare("dijit.Editor", RichText, {
+		// summary:
+		//		A rich text Editing widget
+		//
+		// description:
+		//		This widget provides basic WYSIWYG editing features, based on the browser's
+		//		underlying rich text editing capability, accompanied by a toolbar (`dijit.Toolbar`).
+		//		A plugin model is available to extend the editor's capabilities as well as the
+		//		the options available in the toolbar.  Content generation may vary across
+		//		browsers, and clipboard operations may have different results, to name
+		//		a few limitations.  Note: this widget should not be used with the HTML
+		//		&lt;TEXTAREA&gt; tag -- see dijit/_editor/RichText for details.
+
+		// plugins: [const] Object[]
+		//		A list of plugin names (as strings) or instances (as objects)
+		//		for this widget.
+		//
+		//		When declared in markup, it might look like:
+		//	|	plugins="['bold',{name:'dijit._editor.plugins.FontChoice', command:'fontName', generic:true}]"
+		plugins: null,
+
+		// extraPlugins: [const] Object[]
+		//		A list of extra plugin names which will be appended to plugins array
+		extraPlugins: null,
+
+		constructor: function(/*===== params, srcNodeRef =====*/){
+			// summary:
+			//		Create the widget.
+			// params: Object|null
+			//		Initial settings for any of the attributes, except readonly attributes.
+			// srcNodeRef: DOMNode
+			//		The editor replaces the specified DOMNode.
+
+			if(!lang.isArray(this.plugins)){
+				this.plugins = ["undo", "redo", "|", "cut", "copy", "paste", "|", "bold", "italic", "underline", "strikethrough", "|",
+					"insertOrderedList", "insertUnorderedList", "indent", "outdent", "|", "justifyLeft", "justifyRight", "justifyCenter", "justifyFull",
+					EnterKeyHandling /*, "createLink"*/];
+			}
+
+			this._plugins = [];
+			this._editInterval = this.editActionInterval * 1000;
+
+			//IE will always lose focus when other element gets focus, while for FF and safari,
+			//when no iframe is used, focus will be lost whenever another element gets focus.
+			//For IE, we can connect to onBeforeDeactivate, which will be called right before
+			//the focus is lost, so we can obtain the selected range. For other browsers,
+			//no equivalent of onBeforeDeactivate, so we need to do two things to make sure
+			//selection is properly saved before focus is lost: 1) when user clicks another
+			//element in the page, in which case we listen to mousedown on the entire page and
+			//see whether user clicks out of a focus editor, if so, save selection (focus will
+			//only lost after onmousedown event is fired, so we can obtain correct caret pos.)
+			//2) when user tabs away from the editor, which is handled in onKeyDown below.
+			if(has("ie") || has("trident") || has("edge")){
+				this.events.push("onBeforeDeactivate");
+				this.events.push("onBeforeActivate");
+			}
+		},
+
+		postMixInProperties: function(){
+			// summary:
+			//	Extension to make sure a deferred is in place before certain functions
+			//	execute, like making sure all the plugins are properly inserted.
+
+			// Set up a deferred so that the value isn't applied to the editor
+			// until all the plugins load, needed to avoid timing condition
+			// reported in #10537.
+			this.setValueDeferred = new Deferred();
+			this.inherited(arguments);
+		},
+
+		postCreate: function(){
+			this.inherited(arguments);
+
+			//for custom undo/redo, if enabled.
+			this._steps = this._steps.slice(0);
+			this._undoedSteps = this._undoedSteps.slice(0);
+
+			if(lang.isArray(this.extraPlugins)){
+				this.plugins = this.plugins.concat(this.extraPlugins);
+			}
+
+			this.commands = i18n.getLocalization("dijit._editor", "commands", this.lang);
+
+			if(has("webkit")){
+				// Disable selecting the entire editor by inadvertent double-clicks.
+				// on buttons, title bar, etc.  Otherwise clicking too fast on
+				// a button such as undo/redo selects the entire editor.
+				domStyle.set(this.domNode, "KhtmlUserSelect", "none");
+			}
+		},
+
+		startup: function(){
+
+			this.inherited(arguments);
+
+			if(!this.toolbar){
+				// if we haven't been assigned a toolbar, create one
+				this.toolbar = new Toolbar({
+					ownerDocument: this.ownerDocument,
+					dir: this.dir,
+					lang: this.lang,
+					"aria-label": this.id
+				});
+				this.header.appendChild(this.toolbar.domNode);
+			}
+
+			array.forEach(this.plugins, this.addPlugin, this);
+
+			// Okay, denote the value can now be set.
+			this.setValueDeferred.resolve(true);
+
+			domClass.add(this.iframe.parentNode, "dijitEditorIFrameContainer");
+			domClass.add(this.iframe, "dijitEditorIFrame");
+			domAttr.set(this.iframe, "allowTransparency", true);
+
+			this.toolbar.startup();
+			this.onNormalizedDisplayChanged(); //update toolbar button status
+		},
+
+		destroy: function(){
+			array.forEach(this._plugins, function(p){
+				if(p && p.destroy){
+					p.destroy();
+				}
+			});
+			this._plugins = [];
+			this.toolbar.destroyRecursive();
+			delete this.toolbar;
+			this.inherited(arguments);
+		},
+		addPlugin: function(/*String||Object||Function*/ plugin, /*Integer?*/ index){
+			// summary:
+			//		takes a plugin name as a string or a plugin instance and
+			//		adds it to the toolbar and associates it with this editor
+			//		instance. The resulting plugin is added to the Editor's
+			//		plugins array. If index is passed, it's placed in the plugins
+			//		array at that index. No big magic, but a nice helper for
+			//		passing in plugin names via markup.
+			// plugin:
+			//		String, args object, plugin instance, or plugin constructor
+			// args:
+			//		This object will be passed to the plugin constructor
+			// index:
+			//		Used when creating an instance from
+			//		something already in this.plugins. Ensures that the new
+			//		instance is assigned to this.plugins at that index.
+			var args = lang.isString(plugin) ? {name: plugin} : lang.isFunction(plugin) ? {ctor: plugin} : plugin;
+			if(!args.setEditor){
+				var o = {"args": args, "plugin": null, "editor": this};
+				if(args.name){
+					// search registry for a plugin factory matching args.name, if it's not there then
+					// fallback to 1.0 API:
+					// ask all loaded plugin modules to fill in o.plugin if they can (ie, if they implement args.name)
+					// remove fallback for 2.0.
+					if(_Plugin.registry[args.name]){
+						o.plugin = _Plugin.registry[args.name](args);
+					}else{
+						topic.publish(dijit._scopeName + ".Editor.getPlugin", o);	// publish
+					}
+				}
+				if(!o.plugin){
+					try{
+						// TODO: remove lang.getObject() call in 2.0
+						var pc = args.ctor || lang.getObject(args.name) || require(args.name);
+						if(pc){
+							o.plugin = new pc(args);
+						}
+					}catch(e){
+						throw new Error(this.id + ": cannot find plugin [" + args.name + "]");
+					}
+				}
+				if(!o.plugin){
+					throw new Error(this.id + ": cannot find plugin [" + args.name + "]");
+				}
+				plugin = o.plugin;
+			}
+			if(arguments.length > 1){
+				this._plugins[index] = plugin;
+			}else{
+				this._plugins.push(plugin);
+			}
+			plugin.setEditor(this);
+			if(lang.isFunction(plugin.setToolbar)){
+				plugin.setToolbar(this.toolbar);
+			}
+		},
+
+		//the following 2 functions are required to make the editor play nice under a layout widget, see #4070
+
+		resize: function(size){
+			// summary:
+			//		Resize the editor to the specified size, see `dijit/layout/_LayoutWidget.resize()`
+			if(size){
+				// we've been given a height/width for the entire editor (toolbar + contents), calls layout()
+				// to split the allocated size between the toolbar and the contents
+				_LayoutWidget.prototype.resize.apply(this, arguments);
+			}
+			/*
+			 else{
+			 // do nothing, the editor is already laid out correctly.   The user has probably specified
+			 // the height parameter, which was used to set a size on the iframe
+			 }
+			 */
+		},
+		layout: function(){
+			// summary:
+			//		Called from `dijit/layout/_LayoutWidget.resize()`.  This shouldn't be called directly
+			// tags:
+			//		protected
+
+			// Converts the iframe (or rather the <div> surrounding it) to take all the available space
+			// except what's needed for the header (toolbars) and footer (breadcrumbs, etc).
+			// A class was added to the iframe container and some themes style it, so we have to
+			// calc off the added margins and padding too. See tracker: #10662
+			var areaHeight = (this._contentBox.h -
+				(this.getHeaderHeight() + this.getFooterHeight() +
+					domGeometry.getPadBorderExtents(this.iframe.parentNode).h +
+					domGeometry.getMarginExtents(this.iframe.parentNode).h));
+			this.editingArea.style.height = areaHeight + "px";
+			if(this.iframe){
+				this.iframe.style.height = "100%";
+			}
+			this._layoutMode = true;
+		},
+
+		_onIEMouseDown: function(/*Event*/ e){
+			// summary:
+			//		IE only to prevent 2 clicks to focus
+			// tags:
+			//		private
+			var outsideClientArea;
+			// IE 8's componentFromPoint is broken, which is a shame since it
+			// was smaller code, but oh well.  We have to do this brute force
+			// to detect if the click was scroller or not.
+			var b = this.document.body;
+			var clientWidth = b.clientWidth;
+			var clientHeight = b.clientHeight;
+			var clientLeft = b.clientLeft;
+			var offsetWidth = b.offsetWidth;
+			var offsetHeight = b.offsetHeight;
+			var offsetLeft = b.offsetLeft;
+
+			//Check for vertical scroller click.
+			if(/^rtl$/i.test(b.dir || "")){
+				if(clientWidth < offsetWidth && e.x > clientWidth && e.x < offsetWidth){
+					// Check the click was between width and offset width, if so, scroller
+					outsideClientArea = true;
+				}
+			}else{
+				// RTL mode, we have to go by the left offsets.
+				if(e.x < clientLeft && e.x > offsetLeft){
+					// Check the click was between width and offset width, if so, scroller
+					outsideClientArea = true;
+				}
+			}
+			if(!outsideClientArea){
+				// Okay, might be horiz scroller, check that.
+				if(clientHeight < offsetHeight && e.y > clientHeight && e.y < offsetHeight){
+					// Horizontal scroller.
+					outsideClientArea = true;
+				}
+			}
+			if(!outsideClientArea){
+				delete this._cursorToStart; // Remove the force to cursor to start position.
+				delete this._savedSelection; // new mouse position overrides old selection
+				if(e.target.tagName == "BODY"){
+					this.defer("placeCursorAtEnd");
+				}
+				this.inherited(arguments);
+			}
+		},
+		onBeforeActivate: function(){
+			this._restoreSelection();
+		},
+		onBeforeDeactivate: function(e){
+			// summary:
+			//		Called on IE right before focus is lost.   Saves the selected range.
+			// tags:
+			//		private
+			if(this.customUndo){
+				this.endEditing(true);
+			}
+			//in IE, the selection will be lost when other elements get focus,
+			//let's save focus before the editor is deactivated
+			if(e.target.tagName != "BODY"){
+				this._saveSelection();
+			}
+			//console.log('onBeforeDeactivate',this);
+		},
+
+		/* beginning of custom undo/redo support */
+
+		// customUndo: Boolean
+		//		Whether we shall use custom undo/redo support instead of the native
+		//		browser support. By default, we now use custom undo.  It works better
+		//		than native browser support and provides a consistent behavior across
+		//		browsers with a minimal performance hit.  We already had the hit on
+		//		the slowest browser, IE, anyway.
+		customUndo: true,
+
+		// editActionInterval: Integer
+		//		When using customUndo, not every keystroke will be saved as a step.
+		//		Instead typing (including delete) will be grouped together: after
+		//		a user stops typing for editActionInterval seconds, a step will be
+		//		saved; if a user resume typing within editActionInterval seconds,
+		//		the timeout will be restarted. By default, editActionInterval is 3
+		//		seconds.
+		editActionInterval: 3,
+
+		beginEditing: function(cmd){
+			// summary:
+			//		Called to note that the user has started typing alphanumeric characters, if it's not already noted.
+			//		Deals with saving undo; see editActionInterval parameter.
+			// tags:
+			//		private
+			if(!this._inEditing){
+				this._inEditing = true;
+				this._beginEditing(cmd);
+			}
+			if(this.editActionInterval > 0){
+				if(this._editTimer){
+					this._editTimer.remove();
+				}
+				this._editTimer = this.defer("endEditing", this._editInterval);
+			}
+		},
+
+		// TODO: declaring these in the prototype is meaningless, just create in the constructor/postCreate
+		_steps: [],
+		_undoedSteps: [],
+
+		execCommand: function(cmd){
+			// summary:
+			//		Main handler for executing any commands to the editor, like paste, bold, etc.
+			//		Called by plugins, but not meant to be called by end users.
+			// tags:
+			//		protected
+			if(this.customUndo && (cmd == 'undo' || cmd == 'redo')){
+				return this[cmd]();
+			}else{
+				if(this.customUndo){
+					this.endEditing();
+					this._beginEditing();
+				}
+				var r = this.inherited(arguments);
+				if(this.customUndo){
+					this._endEditing();
+				}
+				return r;
+			}
+		},
+
+		_pasteImpl: function(){
+			// summary:
+			//		Over-ride of paste command control to make execCommand cleaner
+			// tags:
+			//		Protected
+			return this._clipboardCommand("paste");
+		},
+
+		_cutImpl: function(){
+			// summary:
+			//		Over-ride of cut command control to make execCommand cleaner
+			// tags:
+			//		Protected
+			return this._clipboardCommand("cut");
+		},
+
+		_copyImpl: function(){
+			// summary:
+			//		Over-ride of copy command control to make execCommand cleaner
+			// tags:
+			//		Protected
+			return this._clipboardCommand("copy");
+		},
+
+		_clipboardCommand: function(cmd){
+			// summary:
+			//		Function to handle processing clipboard commands (or at least try to).
+			// tags:
+			//		Private
+			var r;
+			try{
+				// Try to exec the superclass exec-command and see if it works.
+				r = this.document.execCommand(cmd, false, null);
+				if(has("webkit") && !r){ //see #4598: webkit does not guarantee clipboard support from js
+					throw {}; // throw to show the warning
+				}
+			}catch(e){
+				//Ticket #18467 removed the checks to specific codes
+				// Warn user of platform limitation.  Cannot programmatically access clipboard. See ticket #4136
+				var sub = string.substitute,
+					accel = {cut: 'X', copy: 'C', paste: 'V'};
+				alert(sub(this.commands.systemShortcut,
+					[this.commands[cmd], sub(this.commands[has("mac") ? 'appleKey' : 'ctrlKey'], [accel[cmd]])]));
+				r = false;
+			}
+			return r;
+		},
+
+		queryCommandEnabled: function(cmd){
+			// summary:
+			//		Returns true if specified editor command is enabled.
+			//		Used by the plugins to know when to highlight/not highlight buttons.
+			// tags:
+			//		protected
+			if(this.customUndo && (cmd == 'undo' || cmd == 'redo')){
+				return cmd == 'undo' ? (this._steps.length > 1) : (this._undoedSteps.length > 0);
+			}else{
+				return this.inherited(arguments);
+			}
+		},
+		_moveToBookmark: function(b){
+			// summary:
+			//		Selects the text specified in bookmark b
+			// tags:
+			//		private
+			var bookmark = b.mark;
+			var mark = b.mark;
+			var col = b.isCollapsed;
+			var r, sNode, eNode, sel;
+			if(mark){
+				if(has("ie") < 9 || (has("ie") === 9 && has("quirks"))){
+					if(lang.isArray(mark)){
+						// IE CONTROL, have to use the native bookmark.
+						bookmark = [];
+						array.forEach(mark, function(n){
+							bookmark.push(rangeapi.getNode(n, this.editNode));
+						}, this);
+						this.selection.moveToBookmark({mark: bookmark, isCollapsed: col});
+					}else{
+						if(mark.startContainer && mark.endContainer){
+							// Use the pseudo WC3 range API.  This works better for positions
+							// than the IE native bookmark code.
+							sel = rangeapi.getSelection(this.window);
+							if(sel && sel.removeAllRanges){
+								sel.removeAllRanges();
+								r = rangeapi.create(this.window);
+								sNode = rangeapi.getNode(mark.startContainer, this.editNode);
+								eNode = rangeapi.getNode(mark.endContainer, this.editNode);
+								if(sNode && eNode){
+									// Okay, we believe we found the position, so add it into the selection
+									// There are cases where it may not be found, particularly in undo/redo, when
+									// IE changes the underlying DOM on us (wraps text in a <p> tag or similar.
+									// So, in those cases, don't bother restoring selection.
+									r.setStart(sNode, mark.startOffset);
+									r.setEnd(eNode, mark.endOffset);
+									sel.addRange(r);
+								}
+							}
+						}
+					}
+				}else{//w3c range
+					sel = rangeapi.getSelection(this.window);
+					if(sel && sel.removeAllRanges){
+						sel.removeAllRanges();
+						r = rangeapi.create(this.window);
+						sNode = rangeapi.getNode(mark.startContainer, this.editNode);
+						eNode = rangeapi.getNode(mark.endContainer, this.editNode);
+						if(sNode && eNode){
+							// Okay, we believe we found the position, so add it into the selection
+							// There are cases where it may not be found, particularly in undo/redo, when
+							// formatting as been done and so on, so don't restore selection then.
+							r.setStart(sNode, mark.startOffset);
+							r.setEnd(eNode, mark.endOffset);
+							sel.addRange(r);
+						}
+					}
+				}
+			}
+		},
+		_changeToStep: function(from, to){
+			// summary:
+			//		Reverts editor to "to" setting, from the undo stack.
+			// tags:
+			//		private
+			this.setValue(to.text);
+			var b = to.bookmark;
+			if(!b){
+				return;
+			}
+			this._moveToBookmark(b);
+		},
+		undo: function(){
+			// summary:
+			//		Handler for editor undo (ex: ctrl-z) operation
+			// tags:
+			//		private
+			var ret = false;
+			if(!this._undoRedoActive){
+				this._undoRedoActive = true;
+				this.endEditing(true);
+				var s = this._steps.pop();
+				if(s && this._steps.length > 0){
+					this.focus();
+					this._changeToStep(s, this._steps[this._steps.length - 1]);
+					this._undoedSteps.push(s);
+					this.onDisplayChanged();
+					delete this._undoRedoActive;
+					ret = true;
+				}
+				delete this._undoRedoActive;
+			}
+			return ret;
+		},
+		redo: function(){
+			// summary:
+			//		Handler for editor redo (ex: ctrl-y) operation
+			// tags:
+			//		private
+			var ret = false;
+			if(!this._undoRedoActive){
+				this._undoRedoActive = true;
+				this.endEditing(true);
+				var s = this._undoedSteps.pop();
+				if(s && this._steps.length > 0){
+					this.focus();
+					this._changeToStep(this._steps[this._steps.length - 1], s);
+					this._steps.push(s);
+					this.onDisplayChanged();
+					ret = true;
+				}
+				delete this._undoRedoActive;
+			}
+			return ret;
+		},
+		endEditing: function(ignore_caret){
+			// summary:
+			//		Called to note that the user has stopped typing alphanumeric characters, if it's not already noted.
+			//		Deals with saving undo; see editActionInterval parameter.
+			// tags:
+			//		private
+			if(this._editTimer){
+				this._editTimer = this._editTimer.remove();
+			}
+			if(this._inEditing){
+				this._endEditing(ignore_caret);
+				this._inEditing = false;
+			}
+		},
+
+		_getBookmark: function(){
+			// summary:
+			//		Get the currently selected text
+			// tags:
+			//		protected
+			var b = this.selection.getBookmark();
+			var tmp = [];
+			if(b && b.mark){
+				var mark = b.mark;
+				if(has("ie") < 9 || (has("ie") === 9 && has("quirks"))){
+					// Try to use the pseudo range API on IE for better accuracy.
+					var sel = rangeapi.getSelection(this.window);
+					if(!lang.isArray(mark)){
+						if(sel){
+							var range;
+							if(sel.rangeCount){
+								range = sel.getRangeAt(0);
+							}
+							if(range){
+								b.mark = range.cloneRange();
+							}else{
+								b.mark = this.selection.getBookmark();
+							}
+						}
+					}else{
+						// Control ranges (img, table, etc), handle differently.
+						array.forEach(b.mark, function(n){
+							tmp.push(rangeapi.getIndex(n, this.editNode).o);
+						}, this);
+						b.mark = tmp;
+					}
+				}
+				try{
+					if(b.mark && b.mark.startContainer){
+						tmp = rangeapi.getIndex(b.mark.startContainer, this.editNode).o;
+						b.mark = {startContainer: tmp,
+							startOffset: b.mark.startOffset,
+							endContainer: b.mark.endContainer === b.mark.startContainer ? tmp : rangeapi.getIndex(b.mark.endContainer, this.editNode).o,
+							endOffset: b.mark.endOffset};
+					}
+				}catch(e){
+					b.mark = null;
+				}
+			}
+			return b;
+		},
+		_beginEditing: function(){
+			// summary:
+			//		Called when the user starts typing alphanumeric characters.
+			//		Deals with saving undo; see editActionInterval parameter.
+			// tags:
+			//		private
+			if(this._steps.length === 0){
+				// You want to use the editor content without post filtering
+				// to make sure selection restores right for the 'initial' state.
+				// and undo is called.  So not using this.value, as it was 'processed'
+				// and the line-up for selections may have been altered.
+				this._steps.push({'text': html.getChildrenHtml(this.editNode), 'bookmark': this._getBookmark()});
+			}
+		},
+		_endEditing: function(){
+			// summary:
+			//		Called when the user stops typing alphanumeric characters.
+			//		Deals with saving undo; see editActionInterval parameter.
+			// tags:
+			//		private
+
+			// Avoid filtering to make sure selections restore.
+			var v = html.getChildrenHtml(this.editNode);
+
+			this._undoedSteps = [];//clear undoed steps
+			this._steps.push({text: v, bookmark: this._getBookmark()});
+		},
+		onKeyDown: function(e){
+			// summary:
+			//		Handler for onkeydown event.
+			// tags:
+			//		private
+
+			//We need to save selection if the user TAB away from this editor
+			//no need to call _saveSelection for IE, as that will be taken care of in onBeforeDeactivate
+			if(!has("ie") && !this.iframe && e.keyCode == keys.TAB && !this.tabIndent){
+				this._saveSelection();
+			}
+			if(!this.customUndo){
+				this.inherited(arguments);
+				return;
+			}
+			var k = e.keyCode;
+			if(e.ctrlKey && !e.shiftKey && !e.altKey){//undo and redo only if the special right Alt + z/y are not pressed #5892
+				if(k == 90 || k == 122){ //z, but also F11 key
+					e.stopPropagation();
+					e.preventDefault();
+					this.undo();
+					return;
+				}else if(k == 89 || k == 121){ //y
+					e.stopPropagation();
+					e.preventDefault();
+					this.redo();
+					return;
+				}
+			}
+			this.inherited(arguments);
+
+			switch(k){
+				case keys.ENTER:
+				case keys.BACKSPACE:
+				case keys.DELETE:
+					this.beginEditing();
+					break;
+				case 88: //x
+				case 86: //v
+					if(e.ctrlKey && !e.altKey && !e.metaKey){
+						this.endEditing();//end current typing step if any
+						if(e.keyCode == 88){
+							this.beginEditing('cut');
+						}else{
+							this.beginEditing('paste');
+						}
+						//use timeout to trigger after the paste is complete
+						this.defer("endEditing", 1);
+						break;
+					}
+				//pass through
+				default:
+					if(!e.ctrlKey && !e.altKey && !e.metaKey && (e.keyCode < keys.F1 || e.keyCode > keys.F15)){
+						this.beginEditing();
+						break;
+					}
+				//pass through
+				case keys.ALT:
+					this.endEditing();
+					break;
+				case keys.UP_ARROW:
+				case keys.DOWN_ARROW:
+				case keys.LEFT_ARROW:
+				case keys.RIGHT_ARROW:
+				case keys.HOME:
+				case keys.END:
+				case keys.PAGE_UP:
+				case keys.PAGE_DOWN:
+					this.endEditing(true);
+					break;
+				//maybe ctrl+backspace/delete, so don't endEditing when ctrl is pressed
+				case keys.CTRL:
+				case keys.SHIFT:
+				case keys.TAB:
+					break;
+			}
+		},
+		_onBlur: function(){
+			// summary:
+			//		Called from focus manager when focus has moved away from this editor
+			// tags:
+			//		protected
+
+			//this._saveSelection();
+			this.inherited(arguments);
+			this.endEditing(true);
+		},
+		_saveSelection: function(){
+			// summary:
+			//		Save the currently selected text in _savedSelection attribute
+			// tags:
+			//		private
+			try{
+				this._savedSelection = this._getBookmark();
+			}catch(e){ /* Squelch any errors that occur if selection save occurs due to being hidden simultaneously. */
+			}
+		},
+		_restoreSelection: function(){
+			// summary:
+			//		Re-select the text specified in _savedSelection attribute;
+			//		see _saveSelection().
+			// tags:
+			//		private
+			if(this._savedSelection){
+				// Clear off cursor to start, we're deliberately going to a selection.
+				delete this._cursorToStart;
+				// only restore the selection if the current range is collapsed
+				// if not collapsed, then it means the editor does not lose
+				// selection and there is no need to restore it
+				if(this.selection.isCollapsed()){
+					this._moveToBookmark(this._savedSelection);
+				}
+				delete this._savedSelection;
+			}
+		},
+
+		onClick: function(){
+			// summary:
+			//		Handler for when editor is clicked
+			// tags:
+			//		protected
+			this.endEditing(true);
+			this.inherited(arguments);
+		},
+
+		replaceValue: function(/*String*/ html){
+			// summary:
+			//		over-ride of replaceValue to support custom undo and stack maintenance.
+			// tags:
+			//		protected
+			if(!this.customUndo){
+				this.inherited(arguments);
+			}else{
+				if(this.isClosed){
+					this.setValue(html);
+				}else{
+					this.beginEditing();
+					if(!html){
+						html = "&#160;";	// &nbsp;
+					}
+					this.setValue(html);
+					this.endEditing();
+				}
+			}
+		},
+
+		_setDisabledAttr: function(/*Boolean*/ value){
+			this.setValueDeferred.then(lang.hitch(this, function(){
+				if((!this.disabled && value) || (!this._buttonEnabledPlugins && value)){
+					// Disable editor: disable all enabled buttons and remember that list
+					array.forEach(this._plugins, function(p){
+						p.set("disabled", true);
+					});
+				}else if(this.disabled && !value){
+					// Restore plugins to being active.
+					array.forEach(this._plugins, function(p){
+						p.set("disabled", false);
+					});
+				}
+			}));
+			this.inherited(arguments);
+		},
+
+		_setStateClass: function(){
+			try{
+				this.inherited(arguments);
+
+				// Let theme set the editor's text color based on editor enabled/disabled state.
+				// We need to jump through hoops because the main document (where the theme CSS is)
+				// is separate from the iframe's document.
+				if(this.document && this.document.body){
+					domStyle.set(this.document.body, "color", domStyle.get(this.iframe, "color"));
+				}
+			}catch(e){ /* Squelch any errors caused by focus change if hidden during a state change */
+			}
+		}
+	});
+
+	// Register the "default plugins", ie, the built-in editor commands
+	function simplePluginFactory(args){
+		return new _Plugin({ command: args.name });
+	}
+
+	function togglePluginFactory(args){
+		return new _Plugin({ buttonClass: ToggleButton, command: args.name });
+	}
+
+	lang.mixin(_Plugin.registry, {
+		"undo": simplePluginFactory,
+		"redo": simplePluginFactory,
+		"cut": simplePluginFactory,
+		"copy": simplePluginFactory,
+		"paste": simplePluginFactory,
+		"insertOrderedList": simplePluginFactory,
+		"insertUnorderedList": simplePluginFactory,
+		"indent": simplePluginFactory,
+		"outdent": simplePluginFactory,
+		"justifyCenter": simplePluginFactory,
+		"justifyFull": simplePluginFactory,
+		"justifyLeft": simplePluginFactory,
+		"justifyRight": simplePluginFactory,
+		"delete": simplePluginFactory,
+		"selectAll": simplePluginFactory,
+		"removeFormat": simplePluginFactory,
+		"unlink": simplePluginFactory,
+		"insertHorizontalRule": simplePluginFactory,
+
+		"bold": togglePluginFactory,
+		"italic": togglePluginFactory,
+		"underline": togglePluginFactory,
+		"strikethrough": togglePluginFactory,
+		"subscript": togglePluginFactory,
+		"superscript": togglePluginFactory,
+
+		"|": function(){
+			return new _Plugin({
+				setEditor: function(editor){
+					this.editor = editor;
+					this.button = new ToolbarSeparator({ownerDocument: editor.ownerDocument});
+				}
+			});
+		}
+	});
+
+	return Editor;
+});
